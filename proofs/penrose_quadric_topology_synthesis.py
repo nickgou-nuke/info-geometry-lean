@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit for the Penrose / quadric topology synthesis socket."""
+"""Audit for the Penrose / quadric topology synthesis deferred_interface."""
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
     assert cooperad["23"] == "outer"
     assert spin_tile_generators == 6
 
-    sockets = [
+    deferred_interfaces = [
         "actual de Rham comparison",
         "Dupont/Oaku beta-Gysin computation",
         "non-null LQG/Penrose spin-network interpretation",
@@ -31,8 +31,8 @@ def main():
     print("rank gap:", rank32 - os_rank24)
     print("cooperad split {1,2}|{3}:", cooperad)
     print("finite Penrose spin-tile generator count:", spin_tile_generators)
-    print("socketed bridges:")
-    for s in sockets:
+    print("deferred_interface bridges:")
+    for s in deferred_interfaces:
         print(" -", s)
     print("penrose_quadric_topology_synthesis.py: finite audit passed")
 

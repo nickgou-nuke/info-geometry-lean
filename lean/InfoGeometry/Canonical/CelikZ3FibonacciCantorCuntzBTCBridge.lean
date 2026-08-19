@@ -10,7 +10,7 @@ open InfoGeometry.Topology
 /-!
 # Çelik Z3 / Fibonacci / Cantor-Cuntz BTC bridge
 
-This module is a theorem-safe bridge socket.
+This module is a theorem-safe bridge interface.
 
 It does not identify Salih Çelik's `Z3`-graded Cartan/differential calculus
 with Fibonacci anyons by definitional equality.  Instead it records the exact

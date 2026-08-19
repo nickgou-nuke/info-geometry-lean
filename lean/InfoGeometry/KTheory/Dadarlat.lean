@@ -40,7 +40,7 @@ structure RationalK0Branch (G : Type*) [AddCommGroup G] where
   squareClosed : IsSquareClosed H
 
 /--
-Conservative Lean-owned replacement for the old theorem-shaped socket.
+Conservative Lean-owned replacement for the old theorem-shaped interface.
 
 The deep Dadarlat hypotheses are not reconstructed here.  Instead, this structure
 stores the actual finite algebraic consequences needed in this repository:

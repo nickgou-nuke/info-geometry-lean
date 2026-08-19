@@ -20,13 +20,13 @@ open InfoGeometry.Canonical.MetricTransport
 variable {R : Type*} [Ring R]
 
 -- Conformal property layer: explicit one-way transport bridges for diagnostic tests.
--- - DrazinSimilarityTransportWitness: similarity transport of the Drazin projector.
--- - MoorePenroseMetricTransportWitness: metric transport of the Moore--Penrose projector.
--- - ConformalMismatchTransportWitness: mismatch transport decomposition.
+-- - DrazinSimilarityTransportData: similarity transport of the Drazin projector.
+-- - MoorePenroseMetricTransportData: metric transport of the Moore--Penrose projector.
+-- - ConformalMismatchTransportData: mismatch transport decomposition.
 
 
 /-- Drazin projector similarity transport property. -/
-structure DrazinSimilarityTransportWitness (P P' : ProjectorPair R) where
+structure DrazinSimilarityTransportData (P P' : ProjectorPair R) where
   g : R
   gInv : R
   leftInv : gInv * g = 1
@@ -34,7 +34,7 @@ structure DrazinSimilarityTransportWitness (P P' : ProjectorPair R) where
   drazinProjector_transport : P'.PD = g * P.PD * gInv
 
 /-- Moore--Penrose projector metric transport property. -/
-structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
+structure MoorePenroseMetricTransportData (P P' : ProjectorPair R) where
   g : R
   gInv : R
   leftInv : gInv * g = 1
@@ -42,7 +42,7 @@ structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
   moorePenroseProjector_transport : P'.PMP = g * P.PMP * gInv
 
 /-- Conformal mismatch transport property. -/
-structure ConformalMismatchTransportWitness (P P' : ProjectorPair R) where
+structure ConformalMismatchTransportData (P P' : ProjectorPair R) where
   transport : SimilarityTransport P P'
   mismatch_fixedMetric_decomposition :
     mismatch_G P' = transport.g * mismatch_G P * transport.gInv - MPFixedTear P P' transport
@@ -53,7 +53,7 @@ This is intentionally explicit to avoid hidden assumptions.
 -/
 theorem drazinProjector_equivariant
     {P P' : ProjectorPair R}
-    (W : DrazinSimilarityTransportWitness P P') :
+    (W : DrazinSimilarityTransportData P P') :
     P'.PD = W.g * P.PD * W.gInv :=
   W.drazinProjector_transport
 
@@ -61,9 +61,9 @@ theorem drazinProjector_equivariant
 Similarity transport of the Moore--Penrose projector is not arbitrary in this lane.
 `metric-natural` naming marks the intended restricted surface.
 -/
-theorem moorePenroseProjector_equivariant_of_metricWitness
+theorem moorePenroseProjector_equivariant_of_metricData
     {P P' : ProjectorPair R}
-    (W : MoorePenroseMetricTransportWitness P P') :
+    (W : MoorePenroseMetricTransportData P P') :
     P'.PMP = W.g * P.PMP * W.gInv :=
   W.moorePenroseProjector_transport
 

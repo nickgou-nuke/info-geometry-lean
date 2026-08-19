@@ -1,7 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 
@@ -30,7 +28,7 @@ variable {A : LeeYangApproximants}
 /--
 Zero-free complement transfer induced by the convergence hypotheses.
 -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 def zeroFreeTransfer
     (limitF : ℂ → ℂ)
     (inner_zero_free : ∀ z : ℂ, InUnitDisk z → limitF z ≠ 0)
@@ -40,32 +38,8 @@ def zeroFreeTransfer
   inner_zero_free := inner_zero_free
   outer_zero_free := outer_zero_free
 
-/--
-Build the corrected Hurwitz property consumed by `PrimeHurwitzLimit`.
--/
-@[bridge_target_tag, rep_depth operator]
-def toCorrectHurwitzZeroTransferWitness
-    (limitF : ℂ → ℂ)
-    (locallyUniformRenormalizedLimit : LocallyUniformLimit A.renormZ limitF)
-    (nontrivial_in : ∃ z : ℂ, InUnitDisk z ∧ limitF z ≠ 0)
-    (nontrivial_out : ∃ z : ℂ, OutsideUnitDisk z ∧ limitF z ≠ 0)
-    (inner_zero_free : ∀ z : ℂ, InUnitDisk z → limitF z ≠ 0)
-    (outer_zero_free : ∀ z : ℂ, OutsideUnitDisk z → limitF z ≠ 0)
-    (xi_zero_iff_limit_zero : ∀ s : ℂ, s ≠ 1 → (Ξ.XiZero s ↔ limitF (cayley s) = 0)) :
-    CorrectHurwitzZeroTransferWitness Ξ A where
-  limitF := limitF
-  locallyUniformRenormalizedLimit := locallyUniformRenormalizedLimit
-  nontrivial_in := nontrivial_in
-  nontrivial_out := nontrivial_out
-  noSpuriousZeros := fun z hz =>
-    ZeroFreeDomainTransfer.zero_on_unit_of_inner_outer_zero_free
-      (zeroFreeTransfer limitF inner_zero_free outer_zero_free) hz
-  transfer := zeroFreeTransfer limitF inner_zero_free outer_zero_free
-  transfer_limitF := rfl
-  xi_zero_iff_limit_zero := xi_zero_iff_limit_zero
-
 /-- The convergence hypotheses map completed-`xi` zeros to the Lee--Yang circle. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem xiZeros_map_to_unit_circle
     (limitF : ℂ → ℂ)
     (locallyUniformRenormalizedLimit : LocallyUniformLimit A.renormZ limitF)
@@ -77,14 +51,24 @@ theorem xiZeros_map_to_unit_circle
     (s : ℂ)
     (hs_ne_one : s ≠ 1)
     (hs : Ξ.XiZero s) :
-    OnUnitCircle (cayley s) :=
-  corrected_hurwitz_xiZeros_map_to_unit_circle
-    (toCorrectHurwitzZeroTransferWitness limitF locallyUniformRenormalizedLimit nontrivial_in nontrivial_out inner_zero_free outer_zero_free xi_zero_iff_limit_zero) s hs_ne_one hs
+    OnUnitCircle (cayley s) := by
+  let H : CorrectHurwitzZeroTransferWitness Ξ A :=
+    { limitF := limitF
+      locallyUniformRenormalizedLimit := locallyUniformRenormalizedLimit
+      nontrivial_in := nontrivial_in
+      nontrivial_out := nontrivial_out
+      noSpuriousZeros := fun z hz =>
+        ZeroFreeDomainTransfer.zero_on_unit_of_inner_outer_zero_free
+          (zeroFreeTransfer limitF inner_zero_free outer_zero_free) hz
+      transfer := zeroFreeTransfer limitF inner_zero_free outer_zero_free
+      transfer_limitF := rfl
+      xi_zero_iff_limit_zero := xi_zero_iff_limit_zero }
+  exact corrected_hurwitz_xiZeros_map_to_unit_circle H s hs_ne_one hs
 
 /--
 Conditional RH theorem from prime Lee--Yang convergence hypotheses.
 -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem limitF_zero_on_unitCircle
     (limitF : ℂ → ℂ)
     (inner_zero_free : ∀ z : ℂ, InUnitDisk z → limitF z ≠ 0)
@@ -96,7 +80,7 @@ theorem limitF_zero_on_unitCircle
     (zeroFreeTransfer limitF inner_zero_free outer_zero_free) hz
 
 /-- Conditional RH theorem from prime Lee--Yang convergence hypotheses. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem RH_of_convergence
     (limitF : ℂ → ℂ)
     (locallyUniformRenormalizedLimit : LocallyUniformLimit A.renormZ limitF)
@@ -109,8 +93,18 @@ theorem RH_of_convergence
       (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
         (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
           (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹)) :
-    RiemannHypothesis Ξ :=
-  RH_from_Correct_Hurwitz_LeeYang
-    Ξ C _ (toCorrectHurwitzZeroTransferWitness limitF locallyUniformRenormalizedLimit nontrivial_in nontrivial_out inner_zero_free outer_zero_free xi_zero_iff_limit_zero)
+    RiemannHypothesis Ξ := by
+  let H : CorrectHurwitzZeroTransferWitness Ξ A :=
+    { limitF := limitF
+      locallyUniformRenormalizedLimit := locallyUniformRenormalizedLimit
+      nontrivial_in := nontrivial_in
+      nontrivial_out := nontrivial_out
+      noSpuriousZeros := fun z hz =>
+        ZeroFreeDomainTransfer.zero_on_unit_of_inner_outer_zero_free
+          (zeroFreeTransfer limitF inner_zero_free outer_zero_free) hz
+      transfer := zeroFreeTransfer limitF inner_zero_free outer_zero_free
+      transfer_limitF := rfl
+      xi_zero_iff_limit_zero := xi_zero_iff_limit_zero }
+  exact RH_from_Correct_Hurwitz_LeeYang Ξ C _ H
 
 end InfoGeometry.Canonical.PrimeLeeYangConvergence

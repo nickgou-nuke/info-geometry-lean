@@ -34,24 +34,28 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /-- A thin KMS packaging of the logarithmic monodromy lane. -/
 structure LogCFTKMSModularTriple where
   monodromy : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H
+  monodromy_laws : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws monodromy
   readout : KMSReadoutDatum (H →L[ℝ] H)
 
 /-- The canonical packaging built from the existing unipotent monodromy readout. -/
 def logCFTKMSCanonical
-    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H) :
+    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
     LogCFTKMSModularTriple (H := H) where
   monodromy := M
-  readout := unipotentMonodromyReadoutDatum M
+  monodromy_laws := hM
+  readout := unipotentMonodromyReadoutDatum M hM
 
 @[simp] theorem canonical_readout
-    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H) :
-    (logCFTKMSCanonical (H := H) M).readout =
-      unipotentMonodromyReadoutDatum M :=
+    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
+    (logCFTKMSCanonical (H := H) M hM).readout =
+      unipotentMonodromyReadoutDatum M hM :=
   rfl
 
 theorem logCFTKMS_beta_pos (T : LogCFTKMSModularTriple (H := H)) :
-    0 < T.readout.beta :=
-  T.readout.beta_pos
+    0 < (T.readout.beta : ℝ) :=
+  T.readout.beta.property
 
 theorem logCFTKMS_flow_zero (T : LogCFTKMSModularTriple (H := H)) :
     ∀ X : H →L[ℝ] H, T.readout.flow 0 X = X :=
@@ -72,9 +76,10 @@ The canonical logarithmic CFT KMS readout flow is continuous as a map on the
 product of time and bounded operators.
 -/
 theorem logCFTKMSCanonical_flow_continuous
-    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H) :
+    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
     Continuous (fun p : ℝ × (H →L[ℝ] H) =>
-      (logCFTKMSCanonical (H := H) M).readout.flow p.1 p.2) := by
+      (logCFTKMSCanonical (H := H) M hM).readout.flow p.1 p.2) := by
   have hflow :
       Continuous (fun p : ℝ × (H →L[ℝ] H) =>
         InfoGeometry.Physics.Algebra.continuousUnipotentFlow M p.1) :=
@@ -90,7 +95,7 @@ equivalence on the bounded-operator carrier, with inverse at `-t`.
 -/
 noncomputable def logCFTKMSCanonical_flowEquiv
     (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
-    (t : ℝ) :
+    (t : ℝ) (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
     EndH ≃L[ℝ] EndH := by
   let e : EndH ≃ₗ[ℝ] EndH :=
     { toLinearMap :=
@@ -104,14 +109,14 @@ noncomputable def logCFTKMSCanonical_flowEquiv
         ext x
         change ((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t) *
             InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t) * T) x = T x
-        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_neg_mul (M := M) t]
+        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_neg_mul M hM t]
         simp [ContinuousLinearMap.mul_apply]
       right_inv := by
         intro T
         ext x
         change ((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t *
             InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t)) * T) x = T x
-        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_mul_neg (M := M) t]
+        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_mul_neg M hM t]
         simp [ContinuousLinearMap.mul_apply] }
   exact ContinuousLinearEquiv.mk e
     (ContinuousLinearMap.mul ℝ EndH
@@ -121,12 +126,13 @@ noncomputable def logCFTKMSCanonical_flowEquiv
 
 @[simp] theorem logCFTKMSCanonical_flowEquiv_symm_apply_apply
     (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
-    (t : ℝ) (T : EndH) :
-    (logCFTKMSCanonical_flowEquiv (H := H) M t).symm
-        ((logCFTKMSCanonical (H := H) M).readout.flow t T) = T := by
+    (t : ℝ) (T : EndH)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
+    (logCFTKMSCanonical_flowEquiv (H := H) M t hM).symm
+        ((logCFTKMSCanonical (H := H) M hM).readout.flow t T) = T := by
   simpa [logCFTKMSCanonical_flowEquiv, logCFTKMSCanonical] using
     (ContinuousLinearEquiv.symm_apply_apply
-      (logCFTKMSCanonical_flowEquiv (H := H) M t) T)
+      (logCFTKMSCanonical_flowEquiv (H := H) M t hM) T)
 
 end
 

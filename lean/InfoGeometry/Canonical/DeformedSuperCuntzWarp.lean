@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.BostConnesSuperalgebra
 /-!
 # Deformed Super-Cuntz Warp
 
-This file gives a theorem-safe algebraic socket for the proposed
+This file gives theorem-safe algebraic data for the proposed
 `𝒪_{N|M}(q)` mechanism.
 
 It intentionally keeps the analytic/C*-completion and discrete-gravity
@@ -20,7 +20,7 @@ that data:
 
 No theorem here asserts existence of a universal C*-superalgebra, analytic
 Tomita--Takesaki modular flow, Regge calculus completion, or physical gravity
-law.  Those are model data/closure debt, not consequences of this finite socket.
+law.  Those are model data/closure debt, not consequences of this finite layer.
 -/
 
 noncomputable section
@@ -29,7 +29,7 @@ namespace InfoGeometry.Canonical.DeformedSuperCuntzWarp
 
 open scoped BigOperators
 
-/-! ## 1. Graded `q`-deformed super-Cuntz socket -/
+/-! ## 1. Graded `q`-deformed super-Cuntz data -/
 
 /-- The two parity grades used by the finite super-Cuntz API. -/
 inductive SuperGrade where
@@ -122,7 +122,7 @@ end DeformedSuperCuntzAlgebra
 /-! ## 2. Prime modular flow as edge scaling data -/
 
 /--
-A proof-carrying modular-flow socket for prime-labelled generators.
+A proof-carrying modular-flow datum for prime-labelled generators.
 
 `phase t p` may be a unitary phase (`p^{it}`) or an analytically continued real
 scale (`p^τ`), depending on the model.  This file only records the algebraic

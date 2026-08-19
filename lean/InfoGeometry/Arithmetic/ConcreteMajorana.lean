@@ -1,4 +1,4 @@
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
@@ -8,7 +8,7 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.ConcreteMajorana
 
 open Matrix
-open InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
+open InfoGeometry.Arithmetic.MajoranaPolyaHilbert
 
 /-!
 # Concrete two-by-two Clifford readout

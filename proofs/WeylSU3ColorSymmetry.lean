@@ -179,7 +179,7 @@ theorem swap12_transport_gl1_gl2_colorAction
   weyl_transport_to_colorAction swap12 gl1 gl2 gl3 (2 * Complex.I)
     gl1_comm_gl2 permMatrix_swap12_sq ψ
 
-/-! ## S₃ Weyl orbit structure (socketed)
+/-! ## S₃ Weyl orbit structure (deferred interface)
 
 The three positive root pairs of SU(3) are:
   α = {λ₁,λ₂},  β = {λ₄,λ₅},  α+β = {λ₆,λ₇}
@@ -189,7 +189,7 @@ generator reflections swap12 and swap23.  The explicit action of swap12
 on each Gell-Mann generator is computed below (and can be repeated for
 swap23 and for the full transport of all 16 commutators).
 
-These explicit actions are socketed — the structural transport lemma
+These explicit actions are deferred — the structural transport lemma
 `weylAct_transport` already handles arbitrary commutator identities
 without needing to compute the per-generator action.  The orbit data
 is supplied for verification. -/

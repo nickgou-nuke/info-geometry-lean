@@ -6,7 +6,7 @@ Finite statement mirrored in `ChemicalPotentialMetricBridge.lean`:
     E -> E - dmu
     det(P_mu sigma^mu) shifts by dmu^2 - 2*E*dmu.
 
-The continuum Tolman/Ehrenfest and Einstein-equation readings remain sockets.
+The continuum Tolman/Ehrenfest and Einstein-equation readings remain deferred_interfaces.
 """
 
 import sympy as sp

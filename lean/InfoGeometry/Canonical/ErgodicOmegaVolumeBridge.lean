@@ -13,7 +13,7 @@ Adapter from ergodic self-similar fixed operators to the standard-form
 
 This file does not prove a von Neumann ergodic theorem and does not construct a
 centralizer.  Those analytic facts are model-level input.  The bridge records
-the calibrated socket:
+the calibrated interface:
 
 * the ergodic owner supplies modular/scale fixed operators;
 * the standard-form owner supplies finite natural-cone face expectations;

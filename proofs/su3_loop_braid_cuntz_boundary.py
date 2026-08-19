@@ -12,7 +12,7 @@ Checks:
   * four symbolic Cuntz lanes can be read as boundary twistor/parafermion lanes
 
 Loop-group conformal nets, DHR sectors, and quantum SU_q(3) Cuntz-Krieger
-identifications are sockets in Lean, not proved by this audit.
+identifications are deferred_interfaces in Lean, not proved by this audit.
 """
 
 import sympy as sp

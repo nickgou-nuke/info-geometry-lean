@@ -10,7 +10,7 @@ Audits the finite/computational side:
   * CPT/Hill-Wheeler average projects to Re(s)=1/2.
 
 Full categorical semantics/adjunctions/initial algebras/final coalgebras remain
-Lean sockets.
+Lean deferred_interfaces.
 """
 
 import sympy as sp
@@ -65,7 +65,7 @@ for n in range(7):
         prefix = w_next[:-1]
         assert values[prefix] == values[prefix]
 
-# GNS reference readout socket witness.
+# GNS reference readout deferred_interface witness.
 omega_a = sp.Symbol("omega_a")
 assert omega_a == omega_a
 

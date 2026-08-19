@@ -7,6 +7,8 @@ import Mathlib.LinearAlgebra.Matrix.Rank
 
 namespace DAG
 
+universe u
+
 
 
 
@@ -162,6 +164,18 @@ def boundary2Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
       let (eU, eV) := tc.digons[i.val - tc.faces.size]
       if j.val = eU then 1 else if j.val = eV then 1 else 0
 
+theorem boundary1_get_eq_matrix
+    {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α)
+    (i : Fin tc.edges.size) (j : Fin tc.base.toGraph.nodes.size) :
+    ((boundary1 tc)[i.val]!)[j.val]! = boundary1Matrix tc i j := by
+  simp [boundary1, boundary1Matrix]
+
+theorem boundary2_get_eq_matrix
+    {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α)
+    (i : Fin (tc.faces.size + tc.digons.size)) (j : Fin tc.edges.size) :
+    ((boundary2 tc)[i.val]!)[j.val]! = boundary2Matrix tc i j := by
+  simp [boundary2, boundary2Matrix]
+
 /-- Hodge Laplacian = d1*d1^T + d2^T*d2 as Matrix. -/
 def laplacian1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
     Matrix (Fin tc.edges.size) (Fin tc.edges.size) ℚ :=
@@ -169,5 +183,55 @@ def laplacian1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
   let d2 := boundary2Matrix tc
   d1 * d1ᵀ + d2ᵀ * d2
 
-end DAG
+/-! ## Propositional boundary law -/
 
+/-- The coefficient of the boundary-of-boundary matrix at a face and vertex. -/
+def boundarySquaredCoefficient {α} [BEq α] [Hashable α]
+    (tc : TwoComplex α)
+    (f : Fin (tc.faces.size + tc.digons.size))
+    (v : Fin tc.base.toGraph.nodes.size) : ℚ :=
+  ∑ e : Fin tc.edges.size,
+    boundary2Matrix tc f e * boundary1Matrix tc e v
+
+/-- The native proposition that the stored incidence matrices form a chain complex. -/
+def BoundaryLaw {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Prop :=
+  ∀ f v, boundarySquaredCoefficient tc f v = 0
+
+/-! A finite boundary complex is a two-complex together with its actual
+    coefficient-level boundary law.  The executable Boolean checker remains
+    only a readout. -/
+def FiniteBoundaryComplex (α) [BEq α] [Hashable α] :=
+  { tc : TwoComplex α // BoundaryLaw tc }
+
+theorem boundarySquaredCoefficient_eq_mul_apply
+    {α : Type u} [BEq α] [Hashable α] (tc : TwoComplex α)
+    (f : Fin (tc.faces.size + tc.digons.size))
+    (v : Fin tc.base.toGraph.nodes.size) :
+    boundarySquaredCoefficient tc f v =
+      (boundary2Matrix tc * boundary1Matrix tc) f v := by
+  simp [boundarySquaredCoefficient, Matrix.mul_apply]
+
+theorem boundaryLaw_iff_matrix_zero
+    {α : Type u} [BEq α] [Hashable α] (tc : TwoComplex α) :
+    BoundaryLaw tc ↔ boundary2Matrix tc * boundary1Matrix tc = 0 := by
+  constructor
+  · intro h
+    ext f v
+    rw [← boundarySquaredCoefficient_eq_mul_apply]
+    exact h f v
+  · intro h f v
+    rw [boundarySquaredCoefficient_eq_mul_apply, h]
+    rfl
+
+theorem FiniteBoundaryComplex.boundary_matrix_zero
+    {α} [BEq α] [Hashable α] (K : FiniteBoundaryComplex α) :
+    boundary2Matrix K.1 * boundary1Matrix K.1 = 0 := by
+  ext f v
+  change (boundary2Matrix K.1 * boundary1Matrix K.1) f v = 0
+  calc
+    (boundary2Matrix K.1 * boundary1Matrix K.1) f v =
+        boundarySquaredCoefficient K.1 f v :=
+      (boundarySquaredCoefficient_eq_mul_apply K.1 f v).symm
+    _ = 0 := K.2 f v
+
+end DAG

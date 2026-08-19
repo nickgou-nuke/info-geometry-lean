@@ -28,7 +28,7 @@ from tools.alexandria.automathtext_arango_ingest import (  # noqa: E402
     EDGE_COLLECTIONS,
 )
 from tools.infra.arango_env import (  # noqa: E402
-    arango_endpoint,
+    alexandria_arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -306,7 +306,7 @@ def make_live_runner(args: argparse.Namespace) -> AqlRunner:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--endpoint", default=alexandria_arango_endpoint())
     parser.add_argument("--database", default="alexandria")
     parser.add_argument("--username", default=arango_username())
     parser.add_argument("--password", default=arango_password("alexandria_root"))

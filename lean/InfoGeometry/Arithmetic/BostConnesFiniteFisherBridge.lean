@@ -406,6 +406,20 @@ theorem finiteZetaCovariance_determinant_nonneg (N : ℕ) (β : ℝ) :
   exact charge_covariance_det_nonneg_of_dim_pos _ _ _
     (finiteZetaSpectrum_dim_pos N)
 
+/-! The zero second charge has zero variance and is orthogonal to every
+finite observable for the Gibbs covariance. -/
+
+theorem finiteZeta_secondCharge_variance_zero (N : ℕ) (β : ℝ) :
+    gibbsVar (finiteZetaSpectrum N) (-β) 0
+      (finiteZetaSpectrum N).charge2 = 0 := by
+  simp [finiteZetaSpectrum, gibbsVar, gibbsCov, gibbsMean]
+
+theorem finiteZeta_logCharge_secondCharge_covariance_zero
+    (N : ℕ) (β : ℝ) :
+    gibbsCov (finiteZetaSpectrum N) (-β) 0
+      (finiteZetaSpectrum N).charge1 (finiteZetaSpectrum N).charge2 = 0 := by
+  simp [finiteZetaSpectrum, gibbsCov, gibbsMean]
+
 /-! The second charge is identically zero in this finite zeta truncation.  Thus
 the two-charge covariance matrix is not merely positive semidefinite: it has
 rank at most one, with vanishing determinant. -/
@@ -417,6 +431,8 @@ theorem finiteZetaCovariance_determinant_eq_zero (N : ℕ) (β : ℝ) :
           (finiteZetaSpectrum N).charge2 -
         (gibbsCov (finiteZetaSpectrum N) (-β) 0
           (finiteZetaSpectrum N).charge1 (finiteZetaSpectrum N).charge2) ^ 2 = 0 := by
-  simp [finiteZetaSpectrum, gibbsVar, gibbsCov, gibbsMean]
+  rw [finiteZeta_secondCharge_variance_zero N β,
+    finiteZeta_logCharge_secondCharge_covariance_zero N β]
+  ring
 
 end InfoGeometry.Arithmetic.BostConnesFiniteFisherBridge

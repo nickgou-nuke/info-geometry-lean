@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Topology.SplitCliffordChargedFockWitnessTopological
+import InfoGeometry.Topology.SplitCliffordChargedFockTopological
 
 /-!
 # Topological packet for the charged-Fock Sugawara output
@@ -15,7 +15,7 @@ namespace InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological
 
 open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 open InfoGeometry.Canonical.CurrentSugawaraBridge
-open InfoGeometry.Topology.SplitCliffordChargedFockWitnessTopological
+open InfoGeometry.Topology.SplitCliffordChargedFockTopological
 open VirasoroProject
 
 noncomputable section
@@ -25,11 +25,11 @@ variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 /-- Sugawara morphism attached to the concrete charged-Fock property. -/
 def representedChargedFockSugawaraMorphism (α : 𝕜) :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  (representedChargedFockWitness (𝕜 := 𝕜) α).toCurrentSugawaraMorphism
+  (representedChargedFockData (𝕜 := 𝕜) α).toCurrentSugawaraMorphism
 
 @[simp] theorem representedChargedFockSugawaraMorphism_heisenberg (α : 𝕜) :
     (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).heisenberg =
-      (representedChargedFockWitness (𝕜 := 𝕜) α).toCurrentHeisenbergRep := by
+      (representedChargedFockData (𝕜 := 𝕜) α).toCurrentHeisenbergRep := by
   rfl
 
 theorem representedChargedFockSugawaraMorphism_central (α : 𝕜) :

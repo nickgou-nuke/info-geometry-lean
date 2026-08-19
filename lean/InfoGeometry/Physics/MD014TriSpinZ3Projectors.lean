@@ -8,7 +8,7 @@ Source: `github-nick:nickgou-nuke/MD`, file `014.md`.
 Chapter 14 discusses a proposed `TriSpin(1,3)` central extension, `Z₃`
 projectors, conformal groups, and speculative generation/CP interpretations.
 The source itself flags inconsistencies in the topology/covering discussion.
-This owner formalizes only the finite algebraic socket:
+This owner formalizes only the finite algebraic layer:
 
 * a finite `Z₃`-sector projector triple on `ℂ³`;
 * orthogonal idempotent, completeness, trace, and two-sided sector-eigenvalue readouts;

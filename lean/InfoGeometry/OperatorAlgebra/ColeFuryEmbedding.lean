@@ -48,24 +48,24 @@ theorem embed_add (X Y : SplitOct) : embed (X + Y) = embed X + embed Y := by
 /-! The aggregate horizon coordinates make `embed` a readout, not an
 injective embedding of the eight-dimensional Zorn carrier. -/
 
-def kernelWitness : SplitOct :=
+def kernelElement : SplitOct :=
   ⟨0, 0, 0, 1, -1, 0, 0, 0⟩
 
-theorem kernelWitness_ne_zero : kernelWitness ≠ (0 : SplitOct) := by
+theorem kernelElement_ne_zero : kernelElement ≠ (0 : SplitOct) := by
   intro h
   have hcoord := congrArg SplitOct.x1 h
   change (1 : ℤ) = 0 at hcoord
   norm_num at hcoord
 
-theorem embed_kernelWitness : embed kernelWitness = embed (0 : SplitOct) := by
-  unfold embed kernelWitness
+theorem embed_kernelElement : embed kernelElement = embed (0 : SplitOct) := by
+  unfold embed kernelElement
   native_decide
 
 theorem embed_not_injective : ¬ Function.Injective embed := by
   intro hinj
-  apply kernelWitness_ne_zero
+  apply kernelElement_ne_zero
   apply hinj
-  simpa using embed_kernelWitness
+  simpa using embed_kernelElement
 
 theorem quadrantReadout_not_injective : ¬ Function.Injective quadrantReadout := by
   exact embed_not_injective

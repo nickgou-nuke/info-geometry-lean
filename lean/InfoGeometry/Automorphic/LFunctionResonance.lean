@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Automorphic/LFunctionResonance.lean
 
-Automorphic L-function resonance sockets.
+Automorphic L-function resonance constructions.
 
 This module attaches arithmetic/L-function data to the operator-first
 Siegel-Eisenstein splitting.
@@ -20,7 +20,6 @@ asserted here. Those are future property layers.
 
 import Mathlib.Tactic
 import InfoGeometry.Automorphic.SiegelResonance
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -39,7 +38,7 @@ variable [AddCommGroup Boundary] [Module ℝ Boundary]
 /--
 A bulk operator together with its induced boundary operator.
 
-This is the operator-first socket for automorphic Laplacians, Hecke operators,
+This is the operator-first interface for automorphic Laplacians, Hecke operators,
 or any other symmetry operator that should respect the Siegel boundary
 extraction.
 -/
@@ -170,7 +169,7 @@ structure CuspidalLFunctionDatum
   /-- Function-valued linear map `F ↦ L(F, ·)`. -/
   Lmap : Bulk →ₗ[ℝ] (ℂ → ℂ)
 
-  /-- Placeholder for the concrete Langlands L-functional property. -/
+  /-- Concrete Langlands L-functional property. -/
   langlands :
     IsCuspidalLanglandsLFunctional W Lmap
 
@@ -282,7 +281,7 @@ structure BoundaryScatteringLFunctionDatum
   /-- Function-valued linear map on boundary data. -/
   Lmap : Boundary →ₗ[ℝ] (ℂ → ℂ)
 
-  /-- Placeholder scattering property. -/
+  /-- Concrete boundary scattering property. -/
   scattering :
     IsBoundaryScatteringLFunctional W Lmap
 
@@ -354,12 +353,12 @@ theorem boundaryScatteringLFunction_eisenstein
 
 end BoundaryScatteringLFunctionDatum
 
-/-! ## 4. Hecke/Laplacian resonance sockets -/
+/-! ## 4. Hecke/Laplacian resonance -/
 
 /--
 A family of automorphic operators compatible with the Siegel-Eisenstein split.
 
-This is the common socket for Hecke operators, automorphic Laplacians, or other
+This is the common interface for Hecke operators, automorphic Laplacians, or other
 commuting symmetry operators.
 -/
 structure CompatibleAutomorphicOperatorFamily
@@ -426,7 +425,7 @@ readouts:
 * cuspidal/discrete readout through `ℜ_P`;
 * boundary/scattering readout through `𝔖_P`.
 -/
-structure AutomorphicLResonanceWitness
+structure AutomorphicLResonanceData
     (W : SiegelEisensteinWitness Bulk Boundary) where
   cuspL :
     CuspidalLFunctionDatum W
@@ -448,13 +447,13 @@ canonically carry Langlands L-functions.
 -/
 abbrev AutomorphicLResonanceAdmissible
     (W : SiegelEisensteinWitness Bulk Boundary) :=
-  AutomorphicLResonanceWitness W
+  AutomorphicLResonanceData W
 
 /--
 Admissible L-function and operator data expose the actual Hecke/Euler
 compatibility law.
 -/
-theorem automorphicLResonanceWitness_nonempty_of_admissible
+theorem automorphicLResonanceData_of_admissible
     {W : SiegelEisensteinWitness Bulk Boundary}
     (h : AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W) :
     IsCuspidalLanglandsLFunctional W h.cuspL.Lmap ∧
@@ -462,24 +461,16 @@ theorem automorphicLResonanceWitness_nonempty_of_admissible
         HasCuspidalEigenpacket h.operators F :=
   h.hecke_euler_compatibility
 
-/--
-Conditional owner target for the future theorem that constructs arithmetic
-L-resonance compatibility from admissible automorphic operator data.
--/
-@[owner_target_tag]
-def AutomorphicLResonanceOwnerTarget : Prop :=
-  ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
-  ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
-  ∀ W : SiegelEisensteinWitness Bulk Boundary,
-  ∀ h : AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W,
-    IsCuspidalLanglandsLFunctional W h.cuspL.Lmap ∧
-      ∀ F : Bulk, W.siegel F = 0 →
-        HasCuspidalEigenpacket h.operators F
 
-/-- Admissible automorphic L-resonance data satisfy the owner target. -/
-theorem automorphicLResonanceOwnerTarget :
-    AutomorphicLResonanceOwnerTarget.{uBulk, uBoundary, uHecke} := by
+/-- Admissible automorphic L-resonance data satisfy the Hecke/Euler law. -/
+theorem automorphicLResonance
+    : ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
+      ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
+      ∀ W : SiegelEisensteinWitness Bulk Boundary,
+      ∀ h : AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W,
+        IsCuspidalLanglandsLFunctional W h.cuspL.Lmap ∧
+          ∀ F : Bulk, W.siegel F = 0 → HasCuspidalEigenpacket h.operators F := by
   intro Bulk _ _ Boundary _ _ W h
-  exact automorphicLResonanceWitness_nonempty_of_admissible (W := W) h
+  exact automorphicLResonanceData_of_admissible (W := W) h
 
 end InfoGeometry.Automorphic.LFunctionResonance

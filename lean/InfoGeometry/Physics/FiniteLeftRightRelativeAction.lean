@@ -63,6 +63,22 @@ theorem relativeAction_add (a b : A) :
   simp [relativeAction_apply, add_mul, mul_add, sub_eq_add_neg,
     add_assoc, add_left_comm, add_comm]
 
+/- The commutator action satisfies the Leibniz rule in its algebra argument. -/
+theorem relativeAction_mul (a b x : A) :
+    relativeAction (R := R) (a * b) x =
+      a * relativeAction (R := R) b x +
+        relativeAction (R := R) a x * b := by
+  simp only [relativeAction_apply]
+  noncomm_ring
+
+/- Inner commutators form a Lie action on the regular bimodule. -/
+theorem relativeAction_commutator (a b x : A) :
+    relativeAction (R := R) a (relativeAction (R := R) b x) -
+      relativeAction (R := R) b (relativeAction (R := R) a x) =
+        relativeAction (R := R) (a * b - b * a) x := by
+  simp only [relativeAction_apply]
+  noncomm_ring
+
 theorem relativeAction_neg (a : A) :
     relativeAction (R := R) (-a) = -relativeAction (R := R) a := by
   ext x

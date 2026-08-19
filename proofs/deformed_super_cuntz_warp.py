@@ -3,7 +3,7 @@
 SymPy + clifford + galgebra witness for the finite deformed super-Cuntz warp.
 
 This is not a C*-completion.  It checks the algebraic quotient relations used by
-Lean's `DeformedSuperCuntzWarp` socket and computes the corresponding finite
+Lean's `DeformedSuperCuntzWarp` deferred_interface and computes the corresponding finite
 Regge-style deficit mismatch.
 """
 from __future__ import annotations

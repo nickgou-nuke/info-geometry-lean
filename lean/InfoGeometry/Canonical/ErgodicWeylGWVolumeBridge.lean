@@ -8,8 +8,8 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
 
-Adapter joining the ergodic fixed-point socket to the existing Weyl/GW
-physical-volume socket.
+Adapter joining the ergodic fixed-point interface to the existing Weyl/GW
+physical-volume interface.
 
 This file does not introduce a new GW-volume owner and does not assert an
 infinite-dimensional determinant theorem.  Phase-volume/determinant invariance

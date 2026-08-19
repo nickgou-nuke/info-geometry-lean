@@ -6,7 +6,7 @@ Digest/formal layer:
 - momentum-space nonsymmorphicity arises from projective phases;
 - the example Pm -> k-NSG Pg has rho(Mx)rho(Ly)=-rho(Ly)rho(Mx),
   hence a half reciprocal-lattice translation ky -> ky+pi;
-- the Brillouin Klein bottle carries a Z2 classification socket.
+- the Brillouin Klein bottle carries a Z2 classification deferred_interface.
 """
 
 import sympy as sp
@@ -40,7 +40,7 @@ z = sp.exp(sp.I*ky)
 assert sp.simplify(sp.exp(sp.I*(ky+sp.pi)) + z) == 0
 print("   exp(i(ky+pi))=-exp(i ky), i.e. kappa_M=G_y/2 ✓")
 
-print("§4  Brillouin Klein Z2 classification socket")
+print("§4  Brillouin Klein Z2 classification deferred_interface")
 berry_flux, berry_phase = sp.symbols("berry_flux berry_phase", integer=True)
 # model the invariant only as parity of an integer representative
 nu_z2 = (berry_flux + berry_phase) % 2

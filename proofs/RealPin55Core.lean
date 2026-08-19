@@ -23,6 +23,17 @@ def vectorUnit (v : V55) (hv : IsUnit (Q55 v)) : Cl55ˣ :=
     ((vectorUnit v hv : Cl55ˣ) : Cl55) = ι55 v :=
   (CliffordAlgebra.isUnit_ι_of_isUnit Q55 hv).unit_spec
 
+/-- The canonical Clifford unit squares to the quadratic scalar. -/
+@[simp] theorem coe_vectorUnit_sq (v : V55) (hv : IsUnit (Q55 v)) :
+    (((vectorUnit v hv * vectorUnit v hv : Cl55ˣ) : Cl55)) =
+      algebraMap ℝ Cl55 (Q55 v) := by
+  change
+    ((vectorUnit v hv : Cl55ˣ) : Cl55) *
+        ((vectorUnit v hv : Cl55ˣ) : Cl55) =
+      algebraMap ℝ Cl55 (Q55 v)
+  rw [coe_vectorUnit]
+  exact CliffordAlgebra.ι_sq_scalar Q55 v
+
 theorem isUnit_Q55_of_normalized
     {v : V55}
     (hv : Q55 v = 1 ∨ Q55 v = -1) :

@@ -16,7 +16,7 @@ Principle:
 * Fierz residual vanishing is not inferred from modular fixedness alone, but
   from an explicit compatibility property for horizon zero-mode channels.
 
-This file is an abstract socket.  It does not replace the repo's concrete
+This file is an abstract interface.  It does not replace the repo's concrete
 Drazin, modular-flow, or Fierz readout owners.
 -/
 
@@ -354,7 +354,7 @@ theorem transported_support_eq_moving_boundary
   exact ((flow.flow t).map_mul D.A D.AD).symm
 
 /--
-State invariance socket for real expectation readouts.
+State invariance interface for real expectation readouts.
 
 This is the expectation-only substitute for trace cyclicity/conservation.
 -/

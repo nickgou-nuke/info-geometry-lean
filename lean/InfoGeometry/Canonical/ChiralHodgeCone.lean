@@ -41,7 +41,7 @@ verified premises.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields,
+[Exact theorem statements that remain unproved. No wrappers, interfaces, fields,
 witnesses, certificates, or renamed placeholders.]
 
 * Construct the infinite-dimensional standard-form natural cone.

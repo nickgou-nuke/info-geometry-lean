@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 
 This file does not invent new structure.  It repackages the native
 `InfoGeometry.OperatorAlgebra.TKKClosure.TKKLieClosure` into the abstract
-`TKKThreeGradedClosure` socket used by the literature-facing canonical layer.
+`TKKThreeGradedClosure` interface used by the literature-facing canonical layer.
 
 The sign convention is aligned with the native owner as follows:
 

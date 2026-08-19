@@ -15,7 +15,7 @@ The concrete owner-supported content is:
 * the concrete `e⁺/e⁻` commutator packet remains exactly zero.
 
 The abstract TKK route is recorded only as an explicit property packet over a
-Jordan triple system and its Lie closure socket.
+Jordan triple system and its Lie closure boundary.
 -/
 
 noncomputable section

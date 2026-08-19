@@ -70,6 +70,15 @@ def RelativeStatePair.compose
   source := R₁₂.source
   target := R₂₃.target
 
+@[rep_depth projective, simp] theorem RelativeStatePair.compose_density
+    (R₁₂ R₂₃ : RelativeStatePair α) (h : R₁₂.target = R₂₃.source) (a : α) :
+    (R₁₂.compose R₂₃).density a = R₁₂.density a * R₂₃.density a := by
+  unfold RelativeStatePair.compose
+  rw [RelativeStatePair.density, RelativeStatePair.density,
+    RelativeStatePair.density]
+  rw [relativeDensity_cocycle R₁₂.source R₁₂.target R₂₃.target a]
+  rw [h]
+
 @[rep_depth projective, simp] theorem RelativeStatePair.compose_logDensity
     (R₁₂ R₂₃ : RelativeStatePair α) (h : R₁₂.target = R₂₃.source) (a : α) :
     (R₁₂.compose R₂₃).logDensity a = R₁₂.logDensity a + R₂₃.logDensity a := by

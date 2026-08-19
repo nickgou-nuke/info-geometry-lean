@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Finite audit for q-super-Cuntz regularization socket.
+"""Finite audit for q-super-Cuntz regularization deferred_interface.
 
 Checks the theorem-proved finite content:
   eta = PB - PF = (-1)^F,
@@ -60,7 +60,7 @@ def main():
     print("fermionic q-anticommutator witness:")
     sp.pprint(fermionic_q_comm)
     print("Cayley stage: U†U=I and DKT(U)=U†")
-    print("Root-of-unity truncation / q-C*-completion / q→1 colimit remain sockets.")
+    print("Root-of-unity truncation / q-C*-completion / q→1 colimit remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

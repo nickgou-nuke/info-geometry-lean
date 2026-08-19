@@ -6,7 +6,7 @@ import InfoGeometry.Topology.DiscreteHodgeStabilizer
 /-!
 # Bayesian Markov / Discrete Dirac--Hodge Bridge
 
-Theorem-safe adapter between the Bayesian projection/Markov socket and the
+Theorem-safe adapter between the Bayesian projection/Markov definitions and the
 finite discrete Hodge stabilizer layer.
 
 No analytic convergence, CP construction, graph limit, or continuum spacetime

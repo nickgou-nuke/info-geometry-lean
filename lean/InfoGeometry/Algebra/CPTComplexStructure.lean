@@ -53,17 +53,26 @@ anticommute: r0·r5 = -r5·r0
 structure Cl11Atom (K : Type*) [Ring K] where
   r0 : K
   r5 : K
-  r0_sq : r0 * r0 = 1
-  r5_sq : r5 * r5 = -1
-  anticommute : r0 * r5 = -(r5 * r0)
+
+def Cl11AtomLaws {K : Type*} [Ring K] (A : Cl11Atom K) : Prop :=
+  A.r0 * A.r0 = 1 ∧
+  A.r5 * A.r5 = -1 ∧
+  A.r0 * A.r5 = -(A.r5 * A.r0)
 
 /-- Native Mathlib instantiation of the Cl(1,1) atom using 2x2 real matrices. -/
 def cl11MatrixAtom : Cl11Atom (Matrix (Fin 2) (Fin 2) ℝ) where
   r0 := !![0, 1; 1, 0]
   r5 := !![0, -1; 1, 0]
-  r0_sq := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
-  r5_sq := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
-  anticommute := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
+
+theorem cl11MatrixAtom_laws :
+    Cl11AtomLaws cl11MatrixAtom := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [cl11MatrixAtom, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [cl11MatrixAtom, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [cl11MatrixAtom, Matrix.mul_apply, Fin.sum_univ_two]
 
 variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 
@@ -71,25 +80,25 @@ variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 abbrev ComplexStructure : K := atom.r5
 
 /-- J² = -1: the complex structure ax!om. -/
-theorem complex_structure_sq_neg_one :
+theorem complex_structure_sq_neg_one (hatom : Cl11AtomLaws atom) :
     ComplexStructure atom * ComplexStructure atom = -1 :=
-  atom.r5_sq
+  hatom.2.1
 
 /-- The Euler operator B = r0·J = r0·r5. -/
 def EulerOperator : K := atom.r0 * ComplexStructure atom
 
 /-- B² = +1: the Euler operator is an involution. -/
-theorem euler_operator_sq_one :
+theorem euler_operator_sq_one (hatom : Cl11AtomLaws atom) :
     EulerOperator atom * EulerOperator atom = 1 := by
   dsimp [EulerOperator, ComplexStructure]
   have h_anti' : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
-    rw [atom.anticommute, neg_neg]
+    rw [hatom.2.2, neg_neg]
   calc
     (atom.r0 * atom.r5) * (atom.r0 * atom.r5)
         = atom.r0 * (atom.r5 * atom.r0) * atom.r5 := by noncomm_ring
     _ = atom.r0 * (-(atom.r0 * atom.r5)) * atom.r5 := by rw [h_anti']
     _ = -(atom.r0 * atom.r0) * (atom.r5 * atom.r5) := by noncomm_ring
-    _ = -(1 : K) * (-1 : K) := by rw [atom.r0_sq, atom.r5_sq]
+    _ = -(1 : K) * (-1 : K) := by rw [hatom.1, hatom.2.1]
     _ = 1 := by noncomm_ring
 
 /-! ## 2. Chiral projection operators -/
@@ -105,7 +114,7 @@ def chiralProjectorMinus : K := (1/2 : ℝ) • (1 - atom.r0)
 The two chiral sheets are orthogonal: P₊·P₋ = 0.
 Together they form a partition of unity: P₊ + P₋ = 1.
 -/
-theorem chiral_sheets_orthogonal :
+theorem chiral_sheets_orthogonal (hatom : Cl11AtomLaws atom) :
     chiralProjectorPlus atom * chiralProjectorMinus atom = 0 := by
   dsimp [chiralProjectorPlus, chiralProjectorMinus]
   calc
@@ -117,7 +126,7 @@ theorem chiral_sheets_orthogonal :
       have h : (1 + atom.r0) * (1 - atom.r0) = 0 := by
         calc
           (1 + atom.r0) * (1 - atom.r0) = 1 - atom.r0 * atom.r0 := by noncomm_ring
-          _ = 0 := by rw [atom.r0_sq]; noncomm_ring
+          _ = 0 := by rw [hatom.1]; noncomm_ring
       rw [h]
     _ = 0 := smul_zero _
 
@@ -135,7 +144,7 @@ theorem chiral_sheets_partition_unity :
 /-! ## 3. Compass reversal under Euler operator -/
 
 /-- The Euler operator reverses chiral sheets: `P₊ B = B P₋`. -/
-theorem euler_operator_reverses_chiral_sheets :
+theorem euler_operator_reverses_chiral_sheets (hatom : Cl11AtomLaws atom) :
     chiralProjectorPlus atom * EulerOperator atom =
       EulerOperator atom * chiralProjectorMinus atom := by
   dsimp [chiralProjectorPlus, chiralProjectorMinus, EulerOperator, ComplexStructure]
@@ -143,10 +152,10 @@ theorem euler_operator_reverses_chiral_sheets :
   congr 1
   calc
     (1 + atom.r0) * (atom.r0 * atom.r5) = atom.r0 * atom.r5 + atom.r5 := by
-      rw [add_mul, one_mul, ← mul_assoc, atom.r0_sq, one_mul]
+      rw [add_mul, one_mul, ← mul_assoc, hatom.1, one_mul]
     _ = atom.r0 * atom.r5 - atom.r0 * atom.r5 * atom.r0 := by
       have h : atom.r0 * atom.r5 * atom.r0 = - atom.r5 := by
-        rw [atom.anticommute, neg_mul, mul_assoc, atom.r0_sq, mul_one]
+        rw [hatom.2.2, neg_mul, mul_assoc, hatom.1, mul_one]
       rw [h]
       abel
     _ = atom.r0 * atom.r5 * (1 - atom.r0) := by

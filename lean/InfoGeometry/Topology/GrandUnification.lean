@@ -11,7 +11,7 @@ identity is a simple finite algebraic consequence.
 
 It does **not** prove grand unification, Lorentz/color unification, physical
 supersymmetry, or confinement.  The historical name of the file is retained as
-a compatibility location for finite topology sockets.
+a compatibility location for finite topology definitions.
 -/
 
 namespace InfoGeometry.Topology.GrandUnification

@@ -14,7 +14,7 @@ biquaternion/braid witnesses:
 * logarithm branches are shifted by integral `2πi` data.
 
 The point is deliberately theorem-honest and reusable: later braid/KZ/cyclic-cover
-models can instantiate this socket with their concrete monodromy matrices.
+models can instantiate this interface with their concrete monodromy matrices.
 -/
 
 noncomputable section

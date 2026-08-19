@@ -82,6 +82,16 @@ theorem nambuProjectors_mutually_annihilate :
   exact ⟨leftChiralProjector_comp_rightChiralProjector (E := E),
     rightChiralProjector_comp_leftChiralProjector (E := E)⟩
 
+@[simp] theorem nambuProjectorPlus_idempotent :
+    (nambuProjectorPlus (E := E)).comp (nambuProjectorPlus (E := E)) =
+      nambuProjectorPlus (E := E) :=
+  leftChiralProjector_idempotent (E := E)
+
+@[simp] theorem nambuProjectorMinus_idempotent :
+    (nambuProjectorMinus (E := E)).comp (nambuProjectorMinus (E := E)) =
+      nambuProjectorMinus (E := E) :=
+  rightChiralProjector_idempotent (E := E)
+
 /-- A finite real Nambu/BdG-shaped operator packet: normal plus pairing part.
 
 `normal` is sheet-preserving and `pairing` is sheet-exchanging.  This is an

@@ -174,7 +174,7 @@ theorem physicalVolume_weylInvariant
 end WeylGWVolumeCarrier
 
 /--
-Canonical fusion socket connecting projective GW counts, Drazin/GW volume, and
+Canonical fusion interface connecting projective GW counts, Drazin/GW volume, and
 Weyl gauge-fixed physical volume.
 
 This is a carrier.  The equality between the physical volume and the Drazin/GW
@@ -237,7 +237,7 @@ end ProjectiveDrazinWeylGWVolumeFusion
 /-! ## Determinant/RG/Weyl readout fusion -/
 
 /--
-Fusion socket for the three separate volume-readout mechanisms:
+Fusion interface for the three separate volume-readout mechanisms:
 
 * determinant-like phase volume under modular/ring flow,
 * renormalization fixed-point volume density,
@@ -321,7 +321,7 @@ variable [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]
 
 /--
-Fusion socket from standard-form natural-cone face volume to the projective
+Fusion interface from standard-form natural-cone face volume to the projective
 Weyl/GW physical-volume readout.
 
 The Ω-volume owner supplies finite localized expectations on cone faces.  The

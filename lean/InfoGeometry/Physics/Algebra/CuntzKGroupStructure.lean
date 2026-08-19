@@ -20,14 +20,17 @@ theorem cuntz_projectors_equiv_to_one
     (O2 : CuntzTwoAlgebra A) :
     murrayVonNeumannEquiv (O2.S1 * O2.S1_star) 1 ∧
       murrayVonNeumannEquiv (O2.S2 * O2.S2_star) 1 := by
+  rcases O2.2 with ⟨hS1, hS2, h12, h21, hcomp⟩
   constructor
-  · exact ⟨O2.S1_star, O2.S1, rfl, O2.hS1_iso⟩
-  · exact ⟨O2.S2_star, O2.S2, rfl, O2.hS2_iso⟩
+  · exact ⟨O2.S1_star, O2.S1, rfl, hS1⟩
+  · exact ⟨O2.S2_star, O2.S2, rfl, hS2⟩
 
 theorem cuntz_projection_completeness
     (O2 : CuntzTwoAlgebra A) :
     (O2.S1 * O2.S1_star) + (O2.S2 * O2.S2_star) = 1 :=
-  O2.h_completeness
+  by
+    rcases O2.2 with ⟨hS1, hS2, h12, h21, hcomp⟩
+    exact hcomp
 
 theorem k0_element_collapse {G : Type*} [AddCommGroup G]
     (x : G) (h : x + x = x) : x = 0 := by
@@ -46,7 +49,7 @@ theorem cuntz_k0_generator_trivial {G : Type*} [AddCommGroup G]
     h_equiv _ _ (cuntz_projectors_equiv_to_one O2).2
   have hsum : kClass 1 =
       kClass ((O2.S1 * O2.S1_star) + (O2.S2 * O2.S2_star)) := by
-    rw [O2.h_completeness]
+    rw [cuntz_projection_completeness O2]
   have hsplit : kClass ((O2.S1 * O2.S1_star) + (O2.S2 * O2.S2_star)) =
       kClass (O2.S1 * O2.S1_star) + kClass (O2.S2 * O2.S2_star) :=
     h_add _ _

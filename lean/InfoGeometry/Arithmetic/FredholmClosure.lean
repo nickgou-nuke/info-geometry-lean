@@ -78,6 +78,23 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
 
+/-- A finite cutoff determinant is nonzero when every included local factor is
+nonzero.  This is the exact finite counterpart of the nonvanishing condition
+needed before any Fredholm determinant or zeta calibration can be discussed.
+It makes no convergence or infinite-product claim. -/
+theorem regularizedDetStage_ne_zero
+    (factor : ℕ → ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, factor n ≠ 0) :
+    regularizedDetStage factor N ≠ 0 := by
+  classical
+  induction N with
+  | zero =>
+      simp [regularizedDetStage]
+  | succ N ih =>
+      rw [regularizedDetStage_succ]
+      exact mul_ne_zero (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
+        (hfactor N (Nat.lt_succ_self N))
+
 /- ## The Fredholm Closure Data -/
 
 /--

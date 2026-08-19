@@ -5,7 +5,7 @@ import Mathlib.Data.Nat.Squarefree
 /-!
 # Möbius Signature Equivalence
 
-Proves the "ParityTraceWitness": the Weyl group signature $\text{sgn}(w)$ 
+Proves the parity trace identity: the Weyl group signature $\text{sgn}(w)$
 is exactly the Möbius function $\mu(n)$ for the squarefree product of the 
 primes in the cutoff.
 -/

@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SelfDualChiralConeBoundary.lean
 
-Self-dual chiral cone boundary socket.
+Self-dual chiral cone boundary data.
 
 This module formalizes a narrow Operator-Erlangen reading of the phrase:
 

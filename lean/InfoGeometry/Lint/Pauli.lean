@@ -1,7 +1,7 @@
 import Lean
 import InfoGeometry.Meta.Trust
 import InfoGeometry.Meta.Admission
-import InfoGeometry.Lint.WitnessLint
+import InfoGeometry.Lint.VacuityPackLint
 import InfoGeometry.Lint.NonTriviality
 
 open Lean Elab Command InfoGeometry.Meta
@@ -75,8 +75,8 @@ def pauliLinter : Linter where
           if id.isIdent then
             let structName := (← getCurrNamespace) ++ id.getId
             if isInfoGeometry structName then
-              let pairs := detectWitnessPackPairs env structName
-              for diag in renderAllWitnessPackDiags structName pairs do
+              let pairs := detectVacuityPackPairs env structName
+              for diag in renderAllVacuityPackDiags structName pairs do
                 logError diag
 
       if declKind == ``Lean.Parser.Command.theorem ||

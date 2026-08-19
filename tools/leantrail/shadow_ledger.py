@@ -35,7 +35,7 @@ SAFE_TARGET_ROLES = {"fake_transport", "pure_conductor"}
 UNSAFE_REPLACEMENT_ROLES = {
     "contaminated",
     "closure_debt",
-    "dead_socket",
+    "deferred_interface",
     "unknown",
 }
 CRITIC_BLOCKING_SEVERITIES = {"high", "critical", "blocker"}

@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorBoundarySplitClifford
 import InfoGeometry.Canonical.CantorCl11Limit
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 import InfoGeometry.Canonical.WeylA1Character

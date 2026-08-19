@@ -81,7 +81,7 @@ def main() -> int:
     print("finite biquaternion-pair dual swap: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 33 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 33 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

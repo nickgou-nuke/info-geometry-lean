@@ -1,7 +1,7 @@
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 import InfoGeometry.OperatorAlgebra.CliffordCAR
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.Bridge
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.Bridge
 
 /-!
 # Boundary Majorana routing module

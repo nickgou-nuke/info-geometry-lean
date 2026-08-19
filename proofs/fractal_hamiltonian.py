@@ -30,7 +30,7 @@ gap_label_minus1_1 = -1 + phi
 assert sp.simplify(q - gap_label_minus1_1) == 0
 print("q=φ⁻¹=-1+φ ∈ Z+φZ ✓")
 
-print("\n§4 infinite theorem sockets")
-print("Cantor zero-measure spectrum and IDOS gap labeling remain explicit analytic sockets ✓")
+print("\n§4 infinite theorem deferred_interfaces")
+print("Cantor zero-measure spectrum and IDOS gap labeling remain explicit analytic deferred_interfaces ✓")
 
 print("\nfractal_hamiltonian.py: All identities verified")

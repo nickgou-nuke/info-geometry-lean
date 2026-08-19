@@ -258,7 +258,7 @@ theorem detailed_balance_of_cost_zero
 
 end BuresDetailedBalanceBridge
 
-/-! ## 6. KMS/Bilingual analyticity compatibility socket -/
+/-! ## 6. KMS/Bilingual analyticity compatibility -/
 
 /--
 Compatibility between bilingual analyticity and KMS/Wilson holonomy transport.

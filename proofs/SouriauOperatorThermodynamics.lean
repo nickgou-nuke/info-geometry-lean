@@ -163,7 +163,7 @@ theorem normalized_expectation_modularHamiltonianOp
 
 The regularized modular deviation is the operator-level Bregman divergence
 generator. Its second-order truncation `(ε²/2)·K²` is well-defined in any
-`Ring A` with `Algebra ℝ A`. The full exponential series is socketed. -/
+`Ring A` with `Algebra ℝ A`. The full exponential series is outside this finite owner. -/
 
 /-- Second-order truncation of the Goutev–Tonev regularized deviation:
 `(ε²/2)·K²`. This is the leading term of `exp(ε·K) - I - ε·K` and is
@@ -178,7 +178,7 @@ def identityOp : A := 1
 
 The second-order truncation `goutevTonevUnit` is proved above.  The full
 operator exponential `exp(ε·K)` is represented by an explicit parameter
-`expOp : A → A`; convergence/functional calculus is an analytic socket.
+`expOp : A → A`; convergence/functional calculus is outside this finite owner.
 
 The information unit is operatorial before it is scalar:
 

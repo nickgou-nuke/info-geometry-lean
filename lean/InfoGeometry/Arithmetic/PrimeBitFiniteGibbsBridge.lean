@@ -2,6 +2,7 @@ import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Inference.FiniteGibbsInference
 import InfoGeometry.Inference.GrandCanonicalGibbsFluctuationBridge
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 
 /-!
 # Finite Gibbs readout of the prime-bit lattice
@@ -23,6 +24,7 @@ open InfoGeometry.Arithmetic.PrimeBitLattice
 open InfoGeometry.GrandCanonical
 open InfoGeometry.Inference
 open InfoGeometry.Inference.FiniteGibbs
+open InfoGeometry.Thermodynamics.FiniteGibbsRelative
 
 /-- The finite powerset carrier underlying a prime-bit lattice. -/
 abbrev PrimeBitSubset (L : PrimeBitLattice) :=
@@ -45,6 +47,92 @@ def primeBitGibbsModel (L : PrimeBitLattice) :
 def primeBitGrandCanonicalParams (L : PrimeBitLattice) :
     GrandCanonicalParams (PrimeBitSubset L) :=
   fun S => primeBitEnergy L S.1
+
+/-- Cartan parameters presenting the same prime-bit Gibbs law in the finite
+Massieu owner.  This is a readout bridge, not a new state carrier. -/
+def primeBitCartanParameters (L : PrimeBitLattice) (β : ℝ) :
+    FiniteTemperature (PrimeBitSubset L) :=
+  fun S => -β * primeBitEnergy L S.1
+
+theorem primeBit_massieuPotential_eq_grandCanonical_potential
+    (L : PrimeBitLattice) (β : ℝ) :
+    massieuPotential (primeBitCartanParameters L β) =
+      GrandCanonical.potential (primeBitGrandCanonicalParams L) β := by
+  rfl
+
+theorem primeBit_relativeEntropy_eq_finiteGibbsRelativeEntropy
+    (L : PrimeBitLattice) (β γ : ℝ) :
+    relativeEntropy
+        (primeBitCartanParameters L β)
+        (primeBitCartanParameters L γ) =
+      InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy
+        (GrandCanonical.gibbsWeight
+          (primeBitGrandCanonicalParams L) β)
+         (GrandCanonical.gibbsWeight
+           (primeBitGrandCanonicalParams L) γ) := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy
+    (primeBitCartanParameters L β)
+    (primeBitCartanParameters L γ)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+      (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)]
+  rfl
+
+/-- The prime-bit relative deviance is the native Massieu-Bregman gap. -/
+theorem primeBit_relativeEntropy_eq_massieuBregman
+    (L : PrimeBitLattice) (β γ : ℝ) :
+    relativeEntropy
+        (primeBitCartanParameters L β)
+        (primeBitCartanParameters L γ) =
+      massieuBregman
+        (primeBitCartanParameters L β)
+        (primeBitCartanParameters L γ) := by
+  exact relativeEntropy_eq_massieuBregman
+    (primeBitCartanParameters L β)
+    (primeBitCartanParameters L γ)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+
+/-- Nonnegativity of the transported prime-bit finite relative entropy. -/
+theorem primeBit_relativeEntropy_nonneg
+    (L : PrimeBitLattice) (β γ : ℝ) :
+    0 ≤ relativeEntropy
+      (primeBitCartanParameters L β)
+      (primeBitCartanParameters L γ) := by
+  exact relativeEntropy_nonneg
+    (primeBitCartanParameters L β)
+    (primeBitCartanParameters L γ)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+
+/-- Equality is precisely the common additive Cartan-gauge orbit. -/
+theorem primeBit_relativeEntropy_eq_zero_iff_common_shift
+    (L : PrimeBitLattice) (β γ : ℝ) :
+    relativeEntropy
+        (primeBitCartanParameters L β)
+        (primeBitCartanParameters L γ) = 0 ↔
+      ∃ c : ℝ, ∀ S : PrimeBitSubset L,
+        primeBitCartanParameters L γ S =
+          primeBitCartanParameters L β S + c := by
+  exact relativeEntropy_eq_zero_iff_common_shift
+    (primeBitCartanParameters L β)
+    (primeBitCartanParameters L γ)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+
+/-- Strict finite Gibbs dissipation away from the common Cartan gauge orbit. -/
+theorem primeBit_relativeEntropy_pos_of_not_common_shift
+    (L : PrimeBitLattice) (β γ : ℝ)
+    (hnot : ¬ ∃ c : ℝ, ∀ S : PrimeBitSubset L,
+      primeBitCartanParameters L γ S =
+        primeBitCartanParameters L β S + c) :
+    0 < relativeEntropy
+      (primeBitCartanParameters L β)
+      (primeBitCartanParameters L γ) := by
+  exact relativeEntropy_pos_of_not_common_shift
+    (primeBitCartanParameters L β)
+    (primeBitCartanParameters L γ)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+    (InfoGeometry.Algebraic.CartanExponentialFamily.Z_pos _)
+    hnot
 
 theorem primeBitGrandCanonical_partition_eq_fermionic
     (L : PrimeBitLattice) (β : ℝ) :
@@ -71,6 +159,31 @@ theorem primeBitGrandCanonical_weight_eq_fermionic
       Real.exp (-β * primeBitEnergy L S.1) /
         GrandCanonical.partition (primeBitGrandCanonicalParams L) β := by
   rfl
+
+/-- The finite grand-canonical mean energy transported to the powerset
+    readout. -/
+theorem primeBitGrandCanonical_mean_eq_fermionic_weighted_energy
+    (L : PrimeBitLattice) (β : ℝ) :
+    GrandCanonical.mean (primeBitGrandCanonicalParams L) β =
+      ∑ S ∈ L.primes.powerset,
+        (Real.exp (-β * primeBitEnergy L S) /
+          primeBitFermionicPartition L β) * primeBitEnergy L S := by
+  classical
+  change
+    (∑ S : PrimeBitSubset L,
+      GrandCanonical.gibbsWeight
+          (primeBitGrandCanonicalParams L) β S *
+        primeBitEnergy L S.1) = _
+  simp_rw [primeBitGrandCanonical_weight_eq_fermionic]
+  rw [primeBitGrandCanonical_partition_eq_fermionic]
+  symm
+  rw [Finset.sum_subtype (F := primeBitSubsetFintype L)
+    L.primes.powerset
+    (show ∀ S : Finset ℕ,
+      S ∈ L.primes.powerset ↔ S ∈ L.primes.powerset from fun _ => Iff.rfl)
+    (fun S =>
+      (Real.exp (-β * primeBitEnergy L S) /
+        primeBitFermionicPartition L β) * primeBitEnergy L S)]
 
 theorem primeBitGibbs_partition_eq_fermionic
     (L : PrimeBitLattice) (ε : ℝ) :

@@ -362,72 +362,19 @@ theorem not_projected_extreme_of_no_gradeTwo_memory
 
 end NavierStokesFiveGradeResolution
 
-/-! ## 6. Guardrail owner targets -/
-
-/--
-Owner target for a Navier-Stokes operator snap bridge.
-
-This is intentionally model-gated: a concrete model must supply the routing
-law from projected extreme behavior to hidden-sector activation.
--/
-def NavierStokesOperatorSnapBridgeOwnerTarget
-    (State Classical Hidden : Type*) : Prop :=
-  ∀ B : NavierStokesOperatorSnapBridge State Classical Hidden,
-  ∀ s : State,
-    B.classical.ClassicalExtreme (B.classical.project s) →
-      B.operator.HiddenNontrivial (B.operator.hiddenReadout s)
-
-/-- Installed snap bridges satisfy the owner hidden-sector activation target. -/
-theorem navierStokesOperatorSnapBridgeOwnerTarget
-    (State Classical Hidden : Type*) :
-    NavierStokesOperatorSnapBridgeOwnerTarget State Classical Hidden := by
-  intro B s hExtreme
+theorem navierStokes_hidden_nontrivial
+    {State Classical Hidden : Type*}
+    (B : NavierStokesOperatorSnapBridge State Classical Hidden)
+    (s : State)
+    (hExtreme : B.classical.ClassicalExtreme (B.classical.project s)) :
+    B.operator.HiddenNontrivial (B.operator.hiddenReadout s) := by
   exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
 
-/--
-Owner target for a protected post-snap sector.
--/
-def ProtectedNavierStokesSnapSectorOwnerTarget
-    (State Charge : Type*) [Zero Charge] : Prop :=
-  ∀ S : ProtectedNavierStokesSnapSector State Charge,
-  ∀ t : ℝ,
-    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat
-
-/-- Installed protected snap sectors satisfy the owner no-relaxation target. -/
-theorem protectedNavierStokesSnapSectorOwnerTarget
-    (State Charge : Type*) [Zero Charge] :
-    ProtectedNavierStokesSnapSectorOwnerTarget State Charge := by
-  intro S t
-  exact S.cannot_relax_to_flat t
-
-/-!
-The installed-owner name is retained as an API alias; the proposition is
-owned by `NavierStokesOperatorSnapBridgeOwnerTarget` above.
--/
-abbrev NavierStokesOperatorSnapBridgeInstalledTarget
-    (State Classical Hidden : Type*) : Prop :=
-  NavierStokesOperatorSnapBridgeOwnerTarget State Classical Hidden
-
-/-- Installed snap bridges satisfy the hidden-sector activation target. -/
-theorem navierStokesOperatorSnapBridgeInstalledTarget
-    (State Classical Hidden : Type*) :
-    NavierStokesOperatorSnapBridgeInstalledTarget State Classical Hidden := by
-  intro B s hExtreme
-  exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
-
-/-!
-The installed-owner name is retained as an API alias; the proposition is
-owned by `ProtectedNavierStokesSnapSectorOwnerTarget` above.
--/
-abbrev ProtectedNavierStokesSnapSectorInstalledTarget
-    (State Charge : Type*) [Zero Charge] : Prop :=
-  ProtectedNavierStokesSnapSectorOwnerTarget State Charge
-
-/-- Installed protected snap sectors satisfy the no-relaxation target. -/
-theorem protectedNavierStokesSnapSectorInstalledTarget
-    (State Charge : Type*) [Zero Charge] :
-    ProtectedNavierStokesSnapSectorInstalledTarget State Charge := by
-  intro S t
+theorem protectedNavierStokes_no_relaxation
+    {State Charge : Type*} [Zero Charge]
+    (S : ProtectedNavierStokesSnapSector State Charge)
+    (t : ℝ) :
+    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat := by
   exact S.cannot_relax_to_flat t
 
 end InfoGeometry.Canonical.NavierStokesSnapBridge

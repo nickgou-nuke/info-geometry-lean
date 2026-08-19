@@ -129,8 +129,8 @@ def vacuity_hint(
         return "zero_dep_constructor_or_base_decl"
     if kind == "theorem" and dep_count <= 2:
         return "small_dep_theorem_review_if_capstone"
-    if name.endswith("Socket") or ".Socket." in name:
-        return "socket_boundary"
+    if name.endswith("DeferredInterface") or ".DeferredInterface." in name:
+        return "deferred_interface_boundary"
     return "ordinary"
 
 

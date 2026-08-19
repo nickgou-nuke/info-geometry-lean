@@ -50,6 +50,43 @@ def imaginaryCross (X Y : Imaginary) : Imaginary :=
     rw [realZornTrace_mul_comm Y.1 X.1]
     simp⟩
 
+/-- The imaginary product splits into its determinant-polar scalar channel and
+    its antisymmetric commutator channel.  This is the native split analogue
+    of the usual scalar-plus-cross decomposition; it does not identify the
+    split form with the definite Euclidean Fano model. -/
+theorem imaginary_mul_decomposition (X Y : Imaginary) :
+    X.1 * Y.1 =
+      (-(1 / 2 : ℝ) * imaginaryPolar X Y) • (1 : CanonicalZorn) +
+      (imaginaryCross X Y).1 := by
+  have hmul (A B : CanonicalZorn) :
+      A * B = InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A B := by
+    ext <;> rfl
+  have hanti := imaginary_anticommutator_eq X Y
+  have hanti' : X.1 * Y.1 + Y.1 * X.1 =
+      -(imaginaryPolar X Y) • (1 : CanonicalZorn) := by
+    rw [hmul, hmul]
+    exact hanti
+  unfold imaginaryCross
+  change X.1 * Y.1 =
+    (-(1 / 2 : ℝ) * imaginaryPolar X Y) • (1 : CanonicalZorn) +
+      (1 / 2 : ℝ) • (X.1 * Y.1 - Y.1 * X.1)
+  calc
+    X.1 * Y.1 =
+        (1 / 2 : ℝ) •
+          ((X.1 * Y.1 + Y.1 * X.1) + (X.1 * Y.1 - Y.1 * X.1)) := by
+      module
+    _ = (1 / 2 : ℝ) •
+          (-(imaginaryPolar X Y) • (1 : CanonicalZorn) +
+            (X.1 * Y.1 - Y.1 * X.1)) := by rw [hanti']
+    _ = (-(1 / 2 : ℝ) * imaginaryPolar X Y) • (1 : CanonicalZorn) +
+          (1 / 2 : ℝ) • (X.1 * Y.1 - Y.1 * X.1) := by
+      module
+
+theorem imaginary_mul_sub_swap_eq_two_cross (X Y : Imaginary) :
+    X.1 * Y.1 - Y.1 * X.1 = 2 • (imaginaryCross X Y).1 := by
+  unfold imaginaryCross
+  module
+
 @[simp] theorem imaginaryCross_swap (X Y : Imaginary) :
     imaginaryCross Y X = -imaginaryCross X Y := by
   apply Subtype.ext
@@ -57,11 +94,22 @@ def imaginaryCross (X Y : Imaginary) : Imaginary :=
     -((1 / 2 : ℝ) • (X.1 * Y.1 - Y.1 * X.1))
   module
 
+theorem imaginaryCross_coord_swap (X Y : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross Y X) =
+      -imaginaryCoordLinearEquiv (imaginaryCross X Y) := by
+  rw [imaginaryCross_swap]
+  exact map_neg imaginaryCoordLinearEquiv (imaginaryCross X Y)
+
 @[simp] theorem imaginaryCross_self (X : Imaginary) :
     imaginaryCross X X = 0 := by
   apply Subtype.ext
   change (1 / 2 : ℝ) • (X.1 * X.1 - X.1 * X.1) = 0
   simp
+
+theorem imaginaryCross_coord_self (X : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross X X) = 0 := by
+  rw [imaginaryCross_self]
+  exact map_zero imaginaryCoordLinearEquiv
 
 theorem imaginaryCross_add_left (X Y Z : Imaginary) :
     imaginaryCross (X + Y) Z = imaginaryCross X Z + imaginaryCross Y Z := by
@@ -96,6 +144,95 @@ theorem imaginaryCross_smul_right (r : ℝ) (X Y : Imaginary) :
     r • ((1 / 2 : ℝ) • (X.1 * Y.1 - Y.1 * X.1))
   rw [mul_smul, smul_mul]
   module
+
+theorem imaginaryCross_coord_add_left (X Y Z : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross (X + Y) Z) =
+      imaginaryCoordLinearEquiv (imaginaryCross X Z) +
+        imaginaryCoordLinearEquiv (imaginaryCross Y Z) := by
+  rw [imaginaryCross_add_left]
+  exact map_add imaginaryCoordLinearEquiv _ _
+
+theorem imaginaryCross_coord_add_right (X Y Z : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross X (Y + Z)) =
+      imaginaryCoordLinearEquiv (imaginaryCross X Y) +
+        imaginaryCoordLinearEquiv (imaginaryCross X Z) := by
+  rw [imaginaryCross_add_right]
+  exact map_add imaginaryCoordLinearEquiv _ _
+
+theorem imaginaryCross_coord_smul_left (r : ℝ) (X Y : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross (r • X) Y) =
+      r • imaginaryCoordLinearEquiv (imaginaryCross X Y) := by
+  rw [imaginaryCross_smul_left]
+  exact map_smul imaginaryCoordLinearEquiv r _
+
+theorem imaginaryCross_coord_smul_right (r : ℝ) (X Y : Imaginary) :
+    imaginaryCoordLinearEquiv (imaginaryCross X (r • Y)) =
+      r • imaginaryCoordLinearEquiv (imaginaryCross X Y) := by
+  rw [imaginaryCross_smul_right]
+  exact map_smul imaginaryCoordLinearEquiv r _
+
+/-- The native seven-coordinate realization of the imaginary commutator cross.
+It is transported from the canonical Zorn imaginary carrier; it is not
+identified with the compact Fano cross without an additional signature map. -/
+def imaginaryCrossSeven (u v : ImaginarySeven) : ImaginarySeven :=
+  imaginaryCoords_seven
+    (imaginaryCoordLinearEquiv
+      (imaginaryCross
+        (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm u))
+        (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm v))))
+
+@[simp] theorem imaginaryCrossSeven_swap (u v : ImaginarySeven) :
+    imaginaryCrossSeven v u = -imaginaryCrossSeven u v := by
+  unfold imaginaryCrossSeven
+  rw [imaginaryCross_swap]
+  rw [map_neg imaginaryCoordLinearEquiv, map_neg imaginaryCoords_seven]
+
+@[simp] theorem imaginaryCrossSeven_self (u : ImaginarySeven) :
+    imaginaryCrossSeven u u = 0 := by
+  simp only [imaginaryCrossSeven, imaginaryCross_self, map_zero]
+
+theorem imaginaryCrossSeven_add_left (u v w : ImaginarySeven) :
+    imaginaryCrossSeven (u + v) w =
+      imaginaryCrossSeven u w + imaginaryCrossSeven v w := by
+  simp only [imaginaryCrossSeven, map_add, imaginaryCross_add_left]
+
+theorem imaginaryCrossSeven_add_right (u v w : ImaginarySeven) :
+    imaginaryCrossSeven u (v + w) =
+      imaginaryCrossSeven u v + imaginaryCrossSeven u w := by
+  simp only [imaginaryCrossSeven, map_add, imaginaryCross_add_right]
+
+theorem imaginaryCrossSeven_smul_left (r : ℝ) (u v : ImaginarySeven) :
+    imaginaryCrossSeven (r • u) v = r • imaginaryCrossSeven u v := by
+  simp only [imaginaryCrossSeven, map_smul, imaginaryCross_smul_left]
+
+theorem imaginaryCrossSeven_smul_right (r : ℝ) (u v : ImaginarySeven) :
+    imaginaryCrossSeven u (r • v) = r • imaginaryCrossSeven u v := by
+  simp only [imaginaryCrossSeven, map_smul, imaginaryCross_smul_right]
+
+/- The split-signature seven-dimensional product is a genuine bilinear
+   tensor on the coordinate carrier.  It is kept separate from the compact
+   Fano convention, whose quadratic form has a different signature. -/
+noncomputable def imaginaryCrossSevenLinear :
+    ImaginarySeven →ₗ[ℝ] ImaginarySeven →ₗ[ℝ] ImaginarySeven :=
+  LinearMap.mk₂ ℝ imaginaryCrossSeven
+    imaginaryCrossSeven_add_left
+    imaginaryCrossSeven_smul_left
+    imaginaryCrossSeven_add_right
+    imaginaryCrossSeven_smul_right
+
+@[simp] theorem imaginaryCrossSevenLinear_apply
+    (u v : ImaginarySeven) :
+    imaginaryCrossSevenLinear u v = imaginaryCrossSeven u v := rfl
+
+/- The coordinate projection is an actual intertwiner for the intrinsic
+   split commutator tensor. -/
+theorem imaginaryCoords_seven_cross
+    (X Y : Imaginary) :
+    imaginaryCoords_seven (imaginaryCoordLinearEquiv (imaginaryCross X Y)) =
+      imaginaryCrossSeven
+        (imaginaryCoords_seven (imaginaryCoordLinearEquiv X))
+        (imaginaryCoords_seven (imaginaryCoordLinearEquiv Y)) := by
+  simp only [imaginaryCrossSeven, LinearEquiv.symm_apply_apply]
 
 /-! ## The product-induced scalar three-slot readout -/
 

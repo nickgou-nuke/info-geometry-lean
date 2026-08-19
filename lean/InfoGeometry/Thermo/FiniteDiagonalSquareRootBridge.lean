@@ -41,6 +41,16 @@ theorem gibbsDensity_posSemidef
   unfold gibbsDensity
   exact Matrix.PosSemidef.diagonal (fun i => gibbsWeight_nonneg H β i)
 
+/-- The finite Gibbs density is self-adjoint in the real transpose sense. -/
+theorem gibbsDensity_transpose
+    (H : Fin n → ℝ) (β : ℝ) :
+    (gibbsDensity H β).transpose = gibbsDensity H β := by
+  ext i j
+  by_cases h : i = j
+  · subst j
+    simp [gibbsDensity]
+  · simp [gibbsDensity, Matrix.transpose_apply, h, Ne.symm h]
+
 theorem gibbsDensity_trace_one
     (H : Fin n → ℝ) (β : ℝ) :
     Matrix.trace (gibbsDensity H β) = 1 := by

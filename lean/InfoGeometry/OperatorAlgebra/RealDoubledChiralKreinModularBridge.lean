@@ -23,7 +23,7 @@ variable {E : Type*}
 
 abbrev H₂ := DoubledSpace E
 
-/-- The existing modular sign/CPT socket instantiated by the doubled carrier. -/
+/-- The existing modular sign/CPT relation instantiated by the doubled carrier. -/
 noncomputable def doubledModularSignCPTDatum : ModularSignCPTDatum (H₂ (E := E)) where
   eps := gamma5 (E := E)
   J := etaChiral (E := E)

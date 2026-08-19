@@ -35,11 +35,7 @@ abbrev H : Type := UpperHalfPlane
 abbrev modularFD : Set H := ModularGroup.fd
 abbrev modularFDo : Set H := ModularGroup.fdo
 
-/--
-We introduce a target group `SpinGroup` as a placeholder for the rigorously
-derived Clifford spin group over `ℝ²`. It must be a mathematical group.
--/
-class SpinGroup (R : Type*) extends Group R
+abbrev SpinGroup (R : Type*) := Group R
 
 variable {R : Type*} [SpinGroup R]
 

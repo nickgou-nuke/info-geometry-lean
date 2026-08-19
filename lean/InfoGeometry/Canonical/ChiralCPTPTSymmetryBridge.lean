@@ -109,7 +109,7 @@ theorem canonicalCPTMirror_uses_canonical_PT :
       (canonicalCPTMirror (E := E)).grading.chi = gamma5 (E := E) := by
   exact ⟨rfl, rfl⟩
 
-/-! ## Canonical specialization of the existing chiral socket
+/-! ## Canonical specialization of the existing chiral interface
 
 `etaSplit` is the independently owned block-diagonal Krein fundamental
 symmetry.  It is not the native arrow-exchanging intertwiner for the root

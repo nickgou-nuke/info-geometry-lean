@@ -20,7 +20,7 @@ namespace IndividuatedCasimir
 
 open InfoGeometry.OperatorAlgebra
 
-/-! ## 1. The Algebraic Socket (Albedo) -/
+/-! ## 1. The Algebraic Core (Albedo) -/
 
 /--
 A constructively verified Operator Casimir.

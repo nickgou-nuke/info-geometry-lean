@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+import InfoGeometry.Canonical.CantorDiracZetaBrane
 
 /-!
 # InfoGeometry.Canonical.ZetaBraneCantorDirac
@@ -10,10 +10,10 @@ Lean skeleton for the Cantor/Dirac zeta-brane program.
 This file packages the architecture as a theorem-safe interface:
 * a generic `CantorDiracProgram` spine;
 * a non-commutative Operator Z_2-grading (Witten index);
-* a socketed finite-operator equivalence target.
+* a deferred finite-operator equivalence target.
 
-The actual Cantor--Dirac zeta-brane socket remains in
-`CantorDiracZetaBraneSocket`.  This file only makes the logical shape
+The actual Cantor--Dirac zeta-brane interface remains in
+`CantorDiracZetaBrane`.  This file only makes the logical shape
 machine-visible without claiming a new RH proof.
 -/
 
@@ -82,7 +82,7 @@ theorem mobiusParity_isUnit {Operator : Type*} [Monoid Operator]
 /--
 Finite Cantor-Dirac self-adjointness / unitarity calibration.
 
-This is the exact gap the skeleton leaves open.  It is recorded as a socket
+This is the exact gap the skeleton leaves open.  It is recorded as an interface
 interface instead of being turned into a fake theorem.
 -/
 theorem finiteCantorDirac_calibration_predicates_eq

@@ -60,7 +60,7 @@ def main() -> None:
     print("penrose_spin_tiling_config.py: finite incidence/signature audit passed")
     print(
         "Actual de Rham comparison, beta/Gysin relations, Penrose C*-algebra, "
-        "spin-network, Koszul, and GW claims remain sockets."
+        "spin-network, Koszul, and GW claims remain deferred_interfaces."
     )
 
 

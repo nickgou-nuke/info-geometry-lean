@@ -220,7 +220,7 @@ end HessianSusceptibilityBridge
 /--
 Dielectric/impedance response extracted from susceptibility.
 
-This material socket is needed before Fresnel coefficients can be computed.
+This material interface is needed before Fresnel coefficients can be computed.
 -/
 structure DielectricResponseDatum
     (Freq WaveVector : Type*) where

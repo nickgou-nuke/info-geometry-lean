@@ -20,7 +20,7 @@ states, creation and annihilation are partial basis maps, and the Hamiltonian
 readout is the finite prime-weighted number energy.
 
 Analytic specializations such as `holonomy s p = p^(1/2 - s)` are intentionally
-not hard-coded here. They belong to the analytic/socket layer.
+not hard-coded here. They belong to the analytic interface layer.
 
 No infinite Euler product.
 No analytic continuation.

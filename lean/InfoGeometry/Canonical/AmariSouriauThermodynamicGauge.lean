@@ -220,6 +220,11 @@ def thetaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
 /-- Native dual-coordinate relaxation field. -/
 def etaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
 
+/-- The primal and dual native relaxation fields coincide in this finite packet. -/
+theorem thetaFlow_eq_etaFlow (θ : Θ) :
+    F.thetaFlow θ = F.etaFlow θ := by
+  rfl
+
 /-- The target expectation coordinate is the target gradient of the log-partition potential. -/
 theorem target_dual_coord_eq_grad : F.ηStar = F.info.gradΨ F.θStar :=
   F.etaStar_eq_grad

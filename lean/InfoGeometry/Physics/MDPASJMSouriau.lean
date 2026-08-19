@@ -57,7 +57,7 @@ def emTensor (E B : Fin 3 → ℚ) : Tensor2 :=
      -E 1, B 2, 0, -B 0;
      -E 2, -B 1, B 0, 0]
 
-/-- Prequantization integrality socket made dependent: the integer `k` must
+/-- Prequantization integrality condition: the integer `k` must
 actually clear `2s/h`, i.e. `2s = k h`. -/
 def SpinPrequantized (s h : ℚ) : Prop := ∃ k : ℤ, 2 * s = k * h
 

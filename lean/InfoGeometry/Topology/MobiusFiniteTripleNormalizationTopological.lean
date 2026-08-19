@@ -32,7 +32,7 @@ instance riemannSphereTopologicalSpace : TopologicalSpace RiemannSphere := ⊥
 instance riemannSphereDiscreteTopology : DiscreteTopology RiemannSphere := ⟨rfl⟩
 
 /-- A canonical normalization property selected from the finite `0,1,∞` theorem. -/
-noncomputable def finiteTripleNormalizationWitness (p : FiniteTriple) :
+noncomputable def finiteTripleNormalizationMap (p : FiniteTriple) :
     MobiusTransform :=
   Classical.choose
     (MobiusFiniteTripleNormalization.maps_to_01inf_finite
@@ -41,10 +41,10 @@ noncomputable def finiteTripleNormalizationWitness (p : FiniteTriple) :
 /-- The normalized `0,1,∞` packet for a finite triple. -/
 def finiteTripleNormalizationPacket (p : FiniteTriple) :
     MobiusTransform × RiemannSphere × RiemannSphere × RiemannSphere :=
-  (finiteTripleNormalizationWitness p, some 0, some 1, none)
+  (finiteTripleNormalizationMap p, some 0, some 1, none)
 
 @[simp] theorem finiteTripleNormalizationPacket_fst (p : FiniteTriple) :
-    (finiteTripleNormalizationPacket p).1 = finiteTripleNormalizationWitness p := by
+    (finiteTripleNormalizationPacket p).1 = finiteTripleNormalizationMap p := by
   rfl
 
 @[simp] theorem finiteTripleNormalizationPacket_snd_fst (p : FiniteTriple) :
@@ -60,11 +60,11 @@ def finiteTripleNormalizationPacket (p : FiniteTriple) :
   rfl
 
 /-- The selected property satisfies the concrete `0,1,∞` normalization. -/
-theorem finiteTripleNormalizationWitness_spec (p : FiniteTriple) :
-    (finiteTripleNormalizationWitness p).eval (some p.1.1) = some 0 ∧
-    (finiteTripleNormalizationWitness p).eval (some p.1.2.1) = some 1 ∧
-    (finiteTripleNormalizationWitness p).eval (some p.1.2.2) = none := by
-  simpa [finiteTripleNormalizationWitness] using
+theorem finiteTripleNormalizationMap_spec (p : FiniteTriple) :
+    (finiteTripleNormalizationMap p).eval (some p.1.1) = some 0 ∧
+    (finiteTripleNormalizationMap p).eval (some p.1.2.1) = some 1 ∧
+    (finiteTripleNormalizationMap p).eval (some p.1.2.2) = none := by
+  simpa [finiteTripleNormalizationMap] using
     (Classical.choose_spec
       (MobiusFiniteTripleNormalization.maps_to_01inf_finite
         p.1.1 p.1.2.1 p.1.2.2 p.2.1 p.2.2.1 p.2.2.2))

@@ -10,8 +10,8 @@ states are fixed.  Group/basis transformations act by conjugating the operator
 and transforming the states; measurable quantities are the invariant/covariant
 matrix elements.
 
-The analytic GNS/Krein/Dirac/modular completion remains socketed elsewhere.  The
-kernel here is finite `2 × 2` complex linear algebra.
+The kernel here is finite `2 × 2` complex linear algebra; analytic completion
+is outside this owner.
 -/
 
 noncomputable section

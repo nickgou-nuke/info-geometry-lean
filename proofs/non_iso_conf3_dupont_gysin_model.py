@@ -13,7 +13,7 @@ For the finite audit we use the split D=4 quadratic form
 
 which is equivalent over C to any nondegenerate complex quadric.  The script
 checks the Boolean stratum poset, generic Jacobian ranks, and the Hasse cover
-graph used by the Lean socket.
+graph used by the Lean deferred_interface.
 """
 
 from __future__ import annotations

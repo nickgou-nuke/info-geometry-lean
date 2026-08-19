@@ -114,6 +114,16 @@ theorem splitZornNormalizedNullRayProjection_injective :
   apply Subtype.ext
   simpa using hscale.symm
 
+theorem splitZornNormalizedNullRayProjection_eq_iff
+    (X Y : SplitZornNormalizedNull) :
+    splitZornNormalizedNullRayProjection X =
+        splitZornNormalizedNullRayProjection Y ↔ X = Y := by
+  constructor
+  · intro h
+    exact splitZornNormalizedNullRayProjection_injective h
+  · intro h
+    simpa [h]
+
 theorem splitZornNormalizedNullRayProjection_range_iff
     (q : SplitZornNullRay) :
     q ∈ Set.range splitZornNormalizedNullRayProjection ↔

@@ -10,7 +10,7 @@ noncomputable section
 # InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
 
 Adapter from the bounded KMS Hestenes real-form bridge to the existing
-Hestenes/Krein vacuum-vector socket.
+Hestenes/Krein vacuum-vector interface.
 
 This is the point where the complex state-functional readout is identified
 with a real Krein vacuum expectation `[AΩ, Ω]_J`, when such an `Ω` property is

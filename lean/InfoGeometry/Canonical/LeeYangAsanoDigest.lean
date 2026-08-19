@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.LeeYangStabilityPacket
 # InfoGeometry.Canonical.LeeYangAsanoDigest
 
 Lean-native digest of the Asano/Ruelle proof family behind the Lee--Yang
-finite stability socket.
+finite stability interface.
 
 This file records the theorem shapes extracted from the literature:
 
@@ -999,44 +999,34 @@ theorem GraceSourceData.coordinate_affine
         z * D.Φ (Function.update y i 1) :=
   D.multiaffine i y z
 
-/--
-Grace theorem source claim for a multiaffine symmetric diagonal slice.
-
-The exact proof is literature-owned; the Lean file stores the theorem shape
-so that later formalization can target it directly.
--/
-@[rep_depth thermo]
-def GraceTheoremSourceClaim (n : ℕ) : Prop :=
-  ∀ (K : Set ℂ) (D : GraceSourceData n),
-    (∀ z : ℂ, D.Q.IsRoot z → z ∈ K) →
-      ∀ y : Fin n → ℂ, (∀ i : Fin n, y i ∉ K) → D.Φ y ≠ 0
-
-/--
+/-
 The exact finite Lee--Yang source claim is the theorem shape already used by
 the repository.
 -/
+/- Package the standard Lee--Yang property back into the source-claim shape. -/
 @[rep_depth thermo]
-def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
-  ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
-    (∀ y : Fin N → ℂ,
-      (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
-        multiPartition D lam y ≠ 0) ∧
-    (∀ y : Fin N → ℂ,
-      (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
-        multiPartition D lam y ≠ 0)
-
-/-- Package the standard Lee--Yang property back into the source-claim shape. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem leeYangPolydiscSourceClaim_of_property
     (LY : LeeYangPolydiscWitness) :
-    ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
+    ∀ N : ℕ, ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0) ∧
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0) := by
   intro N D lam hLam
   exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
 /-- Package the source claim into the standard Lee--Yang property surface. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 def leeYangPolydiscWitness_of_sourceClaim
-    (H : ∀ N : ℕ, LeeYangPolydiscSourceClaim N) :
+    (H : ∀ N : ℕ, ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0) ∧
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0)) :
     LeeYangPolydiscWitness := by
   constructor
   · intro N D lam hLam y hy

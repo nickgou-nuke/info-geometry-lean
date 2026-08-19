@@ -175,4 +175,16 @@ def ShadowStatus.multiplier : ShadowStatus → ℕ
 def totalSeverity (items : List (ShadowCone α)) : ℕ :=
 (items.map fun s => s.kind.severity * s.status.multiplier).sum
 
+/-! ### Developmental trace composition -/
+
+/--
+The finite shadow-weight readout is additive under concatenation of traces.
+Thus extending the retained shadow history does not require recomputing the
+contribution of its existing prefix.
+-/
+theorem totalSeverity_append
+(xs ys : List (ShadowCone α)) :
+totalSeverity (xs ++ ys) = totalSeverity xs + totalSeverity ys := by
+  simp [totalSeverity, List.map_append, List.sum_append]
+
 end InfoGeometry.SelfReference.Shadow

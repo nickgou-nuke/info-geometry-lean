@@ -108,10 +108,7 @@ theorem wallpaper_glide (v : Torus5D) :
   affine_weyl_projects_to_glide_reflection v
 
 theorem klein_bottle_presentation (p : Lattice2D) :
-    (WallpaperGroupPG.kleinBottlePresentation concretePG).glide
-        ((WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation
-          ((WallpaperGroupPG.kleinBottlePresentation concretePG).glide.symm p)) =
-      (WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation.symm p :=
+    concretePG.G (concretePG.T_y (concretePG.G.symm p)) = concretePG.T_y.symm p :=
   concrete_kleinBottlePresentation_relation p
 
 theorem wallpaperD4_compatible :
@@ -129,10 +126,7 @@ theorem pin55_d5_wallpaper_quotient_packet
       project_2d (weyl_reflect v alpha_12) = (v 1, v 0) ∧
       project_2d (affine_shift (weyl_reflect v alpha_12)) =
         (v 1 + 1, v 0 + 1) ∧
-      (WallpaperGroupPG.kleinBottlePresentation concretePG).glide
-          ((WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation
-            ((WallpaperGroupPG.kleinBottlePresentation concretePG).glide.symm p)) =
-        (WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation.symm p ∧
+      concretePG.G (concretePG.T_y (concretePG.G.symm p)) = concretePG.T_y.symm p ∧
       (∀ i : Fin 8, IsKleinCompatibleWallpaper (wallpaperD4 i)) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · simpa using Pin55.alpha12_split_reflection_eq_weyl_reflection v

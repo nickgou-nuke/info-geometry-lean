@@ -17,7 +17,7 @@ whose stratum component uses a Gysin map
 
   H^{2n-q}(S)(n-q) -> H^{2n-q+2}(S')(n-q+1).
 
-This script checks the integer degree identities that our Lean socket uses.
+This script checks the integer degree identities that our Lean deferred_interface uses.
 """
 
 from __future__ import annotations

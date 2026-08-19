@@ -55,6 +55,23 @@ theorem chiralMinus55_plus55_product_mem_grade_zero (i j : Fin 3) :
   exact annihilation55_mul_creation55_mem_grade_zero
     (Fin.castAdd 2 i) (Fin.castAdd 2 j)
 
+theorem chiral_product_mem_grade (s t : Bool × Fin 3) :
+    (if s.1 then chiralPlus55 s.2 else chiralMinus55 s.2) *
+        (if t.1 then chiralPlus55 t.2 else chiralMinus55 t.2) ∈
+      if s.1 then
+        if t.1 then cl55GradeSubmodule 2 else cl55GradeSubmodule 0
+      else
+        if t.1 then cl55GradeSubmodule 0 else cl55GradeSubmodule (-2) := by
+  cases s with
+  | mk sb si =>
+      cases t with
+      | mk tb ti =>
+          cases sb <;> cases tb
+          · exact chiralMinus55_product_mem_grade_neg_two si ti
+          · exact chiralMinus55_plus55_product_mem_grade_zero si ti
+          · exact chiralPlus55_minus55_product_mem_grade_zero si ti
+          · exact chiralPlus55_product_mem_grade_two si ti
+
 theorem chiralPlus55_anticommutator (i j : Fin 3) :
     chiralPlus55 i * chiralPlus55 j +
         chiralPlus55 j * chiralPlus55 i = 0 := by
@@ -146,6 +163,25 @@ theorem chiralMinus55_commutator_mem_grade_neg_two
   exact cl55_neg_one_neg_one_commutator_mem_grade_neg_two
     (chiralMinus55_mem_grade_neg_one i)
     (chiralMinus55_mem_grade_neg_one j)
+
+theorem chiral_commutator_mem_grade (s t : Bool × Fin 3) :
+    ((if s.1 then chiralPlus55 s.2 else chiralMinus55 s.2) *
+        (if t.1 then chiralPlus55 t.2 else chiralMinus55 t.2) -
+      (if t.1 then chiralPlus55 t.2 else chiralMinus55 t.2) *
+        (if s.1 then chiralPlus55 s.2 else chiralMinus55 s.2)) ∈
+      if s.1 then
+        if t.1 then cl55GradeSubmodule 2 else cl55GradeSubmodule 0
+      else
+        if t.1 then cl55GradeSubmodule 0 else cl55GradeSubmodule (-2) := by
+  cases s with
+  | mk sb si =>
+      cases t with
+      | mk tb ti =>
+          cases sb <;> cases tb
+          · exact chiralMinus55_commutator_mem_grade_neg_two si ti
+          · exact chiralMinus55_plus55_commutator_mem_grade_zero si ti
+          · exact chiralPlus55_minus55_commutator_mem_grade_zero si ti
+          · exact chiralPlus55_commutator_mem_grade_two si ti
 
 theorem chiralPlus55_spin_transport
     (g : Spin55) (i : Fin 3) :

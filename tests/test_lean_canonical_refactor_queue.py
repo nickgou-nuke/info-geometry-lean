@@ -64,7 +64,7 @@ theorem rooted_long (a : Nat) : a = a := by
   have h43 : a = a := h42
   exact h
 
-theorem packet_socket_long : Nonempty DemoPacket := by
+theorem packet_interface_long : Nonempty DemoPacket := by
   have h : DemoPacket := { carrier := Nat }
   exact ⟨h⟩
 '''.strip() + '\n', encoding='utf-8')
@@ -74,5 +74,5 @@ theorem packet_socket_long : Nonempty DemoPacket := by
     details = {row['name']: row for row in payload['targetDetails']}
     assert payload['closureRules'][-2].startswith('distinguish mathlib/repo-rooted')
     assert details['rooted_long']['authorityClass'] == 'mathlib_rooted_proof_chain'
-    assert details['packet_socket_long']['authorityClass'] == 'mixed_root_and_socket'
-    assert any(sig.startswith('socket:') for sig in details['packet_socket_long']['authoritySignals'])
+    assert details['packet_interface_long']['authorityClass'] == 'mixed_root_and_interface'
+    assert any(sig.startswith('interface:') for sig in details['packet_interface_long']['authoritySignals'])

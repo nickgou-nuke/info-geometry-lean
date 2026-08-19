@@ -73,11 +73,24 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 Minimal bridge package: modular Radon-Nikodym data together with a winding/time
 calibration and a positive circle radius for the de Rham winding theorems.
 -/
-structure BridgeData where
+structure BridgeDatum where
   modularData : ModularRadonNikodymData E
   calibration : ThermalTimeWindingCalibration
   radius : ℝ
-  radius_pos : 0 < radius
+
+def BridgeLaws (B : BridgeDatum (E := E)) : Prop :=
+  0 < B.radius
+
+def BridgeData := {B : BridgeDatum (E := E) // BridgeLaws B}
+
+namespace BridgeData
+
+abbrev modularData (B : BridgeData (E := E)) := B.1.modularData
+abbrev calibration (B : BridgeData (E := E)) := B.1.calibration
+abbrev radius (B : BridgeData (E := E)) := B.1.radius
+abbrev radius_pos (B : BridgeData (E := E)) : 0 < B.radius := B.2
+
+end BridgeData
 
 /--
 If a chosen thermal parameter `τ` is calibrated to the winding label `n`, then
@@ -177,11 +190,10 @@ the calibration.
 -/
 def cl11BridgeData (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (modularData : ModularRadonNikodymData E) (radius : ℝ) (h_radius : 0 < radius) :
-    BridgeData (E := E) where
-  modularData := modularData
-  calibration := cl11CanonicalCalibration
-  radius := radius
-  radius_pos := h_radius
+    BridgeData (E := E) :=
+  ⟨{ modularData := modularData
+     calibration := cl11CanonicalCalibration
+     radius := radius }, h_radius⟩
 
 /--
 The main calibration theorem: modular flow at integer winding time agrees with

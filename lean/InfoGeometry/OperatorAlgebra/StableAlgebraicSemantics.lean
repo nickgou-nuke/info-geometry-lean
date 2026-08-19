@@ -56,6 +56,36 @@ theorem map_squareZero
     f ε * f ε = 0 := by
   simpa [map_mul] using congrArg f hε
 
+/-- A square-zero representative remains square-zero in every direct-limit
+stage when its initial relation is preserved by the bonding maps. -/
+theorem directLimit_squareZero_of_transport
+    {Stage : Nat → Type uStage} [∀ n : Nat, Semiring (Stage n)]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (property : ∀ n : Nat, Stage n)
+    (squareZero_zero : property 0 * property 0 = 0)
+    (transport : ∀ n : Nat, bond n (property n) = property (n + 1))
+    (n : Nat) :
+    directLimitOf bond n (property n) * directLimitOf bond n (property n) = 0 := by
+  exact map_squareZero (directLimitOf bond n)
+    (InfoGeometry.Algebra.InductiveSuperClosureLemmas.squareZero_all
+      bond property squareZero_zero transport n)
+
+/-- The parabolic power law follows directly for a transported square-zero
+direct-limit representative. -/
+theorem directLimit_parabolic_pow_of_transport
+    {Stage : Nat → Type uStage} [∀ n : Nat, Semiring (Stage n)]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (property : ∀ n : Nat, Stage n)
+    (squareZero_zero : property 0 * property 0 = 0)
+    (transport : ∀ n : Nat, bond n (property n) = property (n + 1))
+    (n k : Nat) :
+    (1 + directLimitOf bond n (property n)) ^ k =
+      1 + k • directLimitOf bond n (property n) := by
+  exact one_add_squareZero_pow
+    (directLimitOf bond n (property n))
+    (directLimit_squareZero_of_transport bond property squareZero_zero transport n)
+    k
+
 /-! ## 2. Stable relations along a finite-to-colimit tower -/
 
 section Tower
@@ -88,25 +118,6 @@ theorem squareZero_stage (n : Nat) :
     T.property n * T.property n = 0 :=
   InfoGeometry.Algebra.InductiveSuperClosureLemmas.squareZero_all
     bond T.property T.squareZero_zero T.transport n
-
-/-- Canonical image of the stable generator at a finite stage. -/
-def colimitWitness (n : Nat) : DirectLimitSuperClosure bond :=
-  directLimitOf bond n (T.property n)
-
-/-- All compatible finite representatives define the same direct-limit element. -/
-theorem colimitWitness_eq_zeroStage (n : Nat) :
-    T.colimitWitness n = T.colimitWitness 0 := by
-  exact directLimitOf_eq_zero_stage bond T.property T.transport n
-
-/-- The direct-limit stable generator is square-zero. -/
-theorem colimitWitness_squareZero (n : Nat) :
-    T.colimitWitness n * T.colimitWitness n = 0 := by
-  exact map_squareZero (directLimitOf bond n) (T.squareZero_stage n)
-
-/-- The direct-limit stable generator satisfies the parabolic power law. -/
-theorem colimitWitness_parabolic_pow (n k : Nat) :
-    (1 + T.colimitWitness n) ^ k = 1 + k • T.colimitWitness n := by
-  exact one_add_squareZero_pow (T.colimitWitness n) (T.colimitWitness_squareZero n) k
 
 variable {Limit : Type uStage} [Semiring Limit]
 

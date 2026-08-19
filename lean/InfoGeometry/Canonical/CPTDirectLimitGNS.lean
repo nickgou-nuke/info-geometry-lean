@@ -14,7 +14,7 @@ identification:
 
 The file does **not** claim a canonical transported `StarRing` instance on the
 direct-limit carrier.  That is a separate carrier-transport theorem.  Here we
-record the explicit algebraic GNS socket over the identified carrier.
+record the explicit algebraic GNS interface over the identified carrier.
 -/
 
 noncomputable section

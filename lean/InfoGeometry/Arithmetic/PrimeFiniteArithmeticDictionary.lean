@@ -51,7 +51,7 @@ This is the local bridge:
 
 `Π = c*d = 1 - 2N`.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_readout_eq_booleanLocalParity
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -79,7 +79,7 @@ theorem carParity_readout_eq_booleanLocalParity
     norm_num
 
 /-- Occupied local mode: CAR parity readout is `-1`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_readout_eq_neg_one_of_mem
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -93,7 +93,7 @@ theorem carParity_readout_eq_neg_one_of_mem
   exact localParity_eq_neg_one_of_mem hp
 
 /-- Vacant local mode: CAR parity readout is `+1`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_readout_eq_one_of_not_mem
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -122,7 +122,7 @@ def carGlobalChiralityReadout
 If every local CAR number operator reads out as Boolean occupation, then the
 global CAR parity readout is exactly Boolean global chirality.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_booleanChirality
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -141,7 +141,7 @@ theorem carGlobalChiralityReadout_eq_booleanChirality
     (E p) χ p v.val (hN p hp)
 
 /-- The global CAR readout equals finite Boolean fermion parity. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_fermionParity
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -160,7 +160,7 @@ theorem carGlobalChiralityReadout_eq_fermionParity
 The global CAR readout equals the Möbius value of the represented square-free
 integer.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_mobius
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -182,7 +182,7 @@ theorem carGlobalChiralityReadout_eq_mobius
 Finite Dirac-square Hamiltonian agrees with the existing finite prime-bit
 energy and with the logarithm of the represented prime-bit integer.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finiteDiracHamiltonian_dictionary
     (L : InfoGeometry.Arithmetic.PrimeBitLattice)
     (ψ : InfoGeometry.Arithmetic.PrimeBitState L) :
@@ -205,7 +205,7 @@ number, chirality, and energy readout supplied by
 
 This is a bridge contract, not a new representation.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem exteriorSquareFreeState_dictionary
     {PrimeLabel : Type*}
     [DecidableEq PrimeLabel]
@@ -232,7 +232,7 @@ theorem exteriorSquareFreeState_dictionary
 Exterior local parity is the same `1 - 2N_p` law as the local CAR/Boolean
 parity readout.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem exteriorLocalParity_eq_one_sub_two_localOccupation
     {PrimeLabel : Type*}
     [DecidableEq PrimeLabel]
@@ -249,7 +249,7 @@ theorem exteriorLocalParity_eq_one_sub_two_localOccupation
     p S
 
 /-- The exterior Gamma readout is the Boolean chirality / fermion parity. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem exteriorGamma_eq_booleanChirality
     {PrimeLabel : Type*}
     [DecidableEq PrimeLabel]
@@ -261,7 +261,7 @@ theorem exteriorGamma_eq_booleanChirality
   rfl
 
 /-- The exterior Gamma readout also matches the `(-1)^N` Möbius sign law. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem exteriorMobius_eq_booleanMöbius
     {PrimeLabel : Type*}
     [DecidableEq PrimeLabel]

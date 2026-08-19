@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 
@@ -70,14 +69,12 @@ abbrev vertex {P : PrimeCutoff}
 variable {P : PrimeCutoff}
 
 /-- The Möbius readout on the exterior state is the global chirality `Γ`. -/
-@[bridge_target_tag]
 theorem mobius_eq_Gamma (B : PrimeExteriorSugawaraPacket P) :
     ArithmeticFunction.moebius (stateNat B.state) =
       InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma B.state := by
   exact InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge.mobius_stateNat_eq_Gamma B.state
 
 /-- The Sugawara readout on the attached Boolean vertex is the state cardinality. -/
-@[bridge_target_tag]
 theorem centralCharge_eq_card (B : PrimeExteriorSugawaraPacket P) :
     (booleanCubeSugawaraPacket P B.vertex).bridge.centralCharge = B.state.card := by
   rw [B.vertex_eq]

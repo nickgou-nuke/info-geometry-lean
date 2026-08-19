@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Reflection
-import InfoGeometry.Clifford.Cl55RealSplitPinKernelEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 import InfoGeometry.Clifford.Cl55WittQuadraticReflection
 
 namespace InfoGeometry.Clifford.Clifford55

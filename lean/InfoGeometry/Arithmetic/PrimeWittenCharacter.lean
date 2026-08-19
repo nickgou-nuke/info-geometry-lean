@@ -43,4 +43,23 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
       symm
       exact InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q
 
+/--
+The arbitrary finite Witten character specializes to the logarithmic
+Majorana prime-energy character.
+
+This identifies the common finite product while keeping the two owner
+carriers distinct.
+-/
+theorem finiteWittenCharacter_eq_logarithmicMajoranaLocalProduct
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (s : ℝ) :
+    finiteWittenCharacter P (fun p => Real.exp (-s * Real.log (p : ℝ))) =
+      ∏ p ∈ P.primes,
+        InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.localWittenCharacter p s := by
+  rw [finiteWittenCharacter_eq_eulerProduct]
+  refine Finset.prod_congr rfl ?_
+  intro p _hp
+  exact (
+    InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.localWittenCharacter_eq_reciprocalEulerFactor
+      p s).symm
+
 end InfoGeometry.Arithmetic.PrimeWittenCharacter

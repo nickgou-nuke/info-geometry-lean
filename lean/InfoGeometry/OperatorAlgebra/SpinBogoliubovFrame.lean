@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # Spin-Bogoliubov Frame
@@ -246,7 +245,7 @@ end SpinEinsteinReadoutCalibration
 Once a spin-Bogoliubov frame is supplied, visible deficit is exactly recovered
 hidden flow in every frame.
 -/
-theorem spinBogoliubovConservationOwnerTarget :
+theorem spinBogoliubovConservation :
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],
   ∀ [NormedAddCommGroup Comm], ∀ [NormedSpace ℝ Comm],
@@ -261,7 +260,7 @@ theorem spinBogoliubovConservationOwnerTarget :
 /--
 Calibrated heat as hidden information.
 -/
-theorem spinHeatHiddenInformationOwnerTarget :
+theorem spinHeatHiddenInformation :
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],
   ∀ [NormedAddCommGroup Comm], ∀ [NormedSpace ℝ Comm],
@@ -287,7 +286,7 @@ attribute [rep_depth operator]
   SpinHeatCalibration.heat_nonneg
   SpinHeatCalibration.heat_eq_zero_of_inertial
   SpinEinsteinReadoutCalibration
-  spinBogoliubovConservationOwnerTarget
-  spinHeatHiddenInformationOwnerTarget
+  spinBogoliubovConservation
+  spinHeatHiddenInformation
 
 end InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame

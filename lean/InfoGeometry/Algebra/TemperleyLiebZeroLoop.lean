@@ -164,4 +164,22 @@ theorem right_left_right :
     simp [leftGenerator, rightGenerator, pairEntry, Matrix.mul_apply,
       Fintype.sum_prod_type, Fin.sum_univ_two, Complex.I_mul_I]
 
+/-! ### The finite zero-loop chain Hamiltonian -/
+
+/-- The open three-site zero-loop TL Hamiltonian on the existing carrier. -/
+def chainHamiltonian : Matrix Triple Triple ℂ :=
+  -(leftGenerator + rightGenerator)
+
+/-- Its square is the adjacent TL anticommutator.  This is the exact finite
+    algebraic reduction; no continuum or scaling-limit claim is made. -/
+theorem chainHamiltonian_sq :
+    chainHamiltonian * chainHamiltonian =
+      leftGenerator * rightGenerator + rightGenerator * leftGenerator := by
+  unfold chainHamiltonian
+  rw [neg_mul, mul_neg, neg_neg]
+  simp only [add_mul, mul_add]
+  rw [leftGenerator_sq_zero, rightGenerator_sq_zero]
+  simp only [zero_add, add_zero]
+  rw [add_comm]
+
 end InfoGeometry.Algebra.TemperleyLiebZeroLoop

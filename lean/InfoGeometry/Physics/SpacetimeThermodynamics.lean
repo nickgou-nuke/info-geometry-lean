@@ -41,7 +41,9 @@ structure ExecutableSpacetime where
   
   -- 5. Geometry is Entropy: The macroscopic volume equals the exponential
   --    of the exact trace partition of the KMS state.
-  geometry_is_entropy : total_partition_zeta 2 modular_engine tracePartition zetaProduct
+  geometry_is_entropy :
+    (∀ n > 0, modular_engine.eigenvalue n = Real.log n) ∧
+      tracePartition = zetaProduct
 
 /--
   Theorem: The Cuntz Engine dictates that the thermodynamic flow of the 
@@ -53,8 +55,8 @@ structure ExecutableSpacetime where
   spacetime inherits the scale-invariant entropy of the modular Hamiltonian.
 -/
 theorem time_is_renormalization (spacetime : ExecutableSpacetime) : 
-    total_partition_zeta 2 spacetime.modular_engine
-      spacetime.tracePartition spacetime.zetaProduct := by
+    (∀ n > 0, spacetime.modular_engine.eigenvalue n = Real.log n) ∧
+      spacetime.tracePartition = spacetime.zetaProduct := by
   exact spacetime.geometry_is_entropy
 
 end InfoGeometry

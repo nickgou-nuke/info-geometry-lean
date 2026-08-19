@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.EA.ChebotarevSecondMainTermWitness
+import Omega.EA.ChebotarevSecondMainTerm
 
 namespace Omega.EA
 
@@ -23,7 +23,7 @@ theorem paper_kernel_chebotarev_statistical_convergence
       chebotarevOscillationLowerBound witnessCoeff := by
   refine ⟨tvBound_h, chiSqBound_h, klBound_h, sqrtGapRate_h, ?_⟩
   · rcases
-      paper_kernel_chebotarev_second_main_term_witness witnessCoeff witnessCoeff_ne_zero with
+      kernel_chebotarev_second_main_term witnessCoeff witnessCoeff_ne_zero with
         ⟨_hexp, hnonzero, hosc⟩
     exact ⟨hnonzero, hosc⟩
 

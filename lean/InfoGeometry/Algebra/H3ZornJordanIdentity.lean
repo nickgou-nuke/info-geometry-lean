@@ -186,23 +186,6 @@ theorem H3ZornJordanProductLaw_iff_TJordanCommutation :
   · intro h x y
     exact (H3ZornJordanProductLawAt_iff_TJordanCommutation x y).2 (h x y)
 
-/-- Paper-facing closure target.  It is packaged as a proposition so the
-installed instance can live in the companion owner file. -/
-def H3ZornJordanIdentityTarget : Prop :=
-  H3ZornJordanProductLaw
-
-/-- The product law is exactly the current paper-facing target. -/
-theorem H3ZornJordanIdentityTarget_iff_product_law :
-    H3ZornJordanIdentityTarget ↔ H3ZornJordanProductLaw := by
-  rfl
-
-/-- The paper-facing target is equivalent to the scalar-free `T`-commutation
-law. -/
-theorem H3ZornJordanIdentityTarget_iff_TJordanCommutation :
-    H3ZornJordanIdentityTarget ↔ TJordanCommutation := by
-  rw [H3ZornJordanIdentityTarget_iff_product_law,
-    H3ZornJordanProductLaw_iff_TJordanCommutation]
-
 /-- McCrimmon's quadratic-representation identities close the scalar-free
 `T`-commutation law. -/
 theorem TJordanCommutation_holds : TJordanCommutation := by

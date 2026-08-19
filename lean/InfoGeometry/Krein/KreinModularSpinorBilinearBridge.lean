@@ -23,26 +23,24 @@ noncomputable def modularChargePairing (u v : X.H) : ℝ :=
 noncomputable def phaseSymplecticForm (u v : X.H) : ℝ :=
   ⟪u, X.K v⟫_ℝ
 
-structure BilinearAdjointWitness where
-  epsilon_selfAdjoint : ∀ u v, ⟪u, X.ε v⟫_ℝ = ⟪X.ε u, v⟫_ℝ
-  phase_skew : ∀ u v, ⟪X.K u, v⟫_ℝ = -⟪u, X.K v⟫_ℝ
-
 theorem kreinMetric_symmetric
-    (W : BilinearAdjointWitness X) (u v : X.H) :
+    (hε : ∀ u v, ⟪u, X.ε v⟫_ℝ = ⟪X.ε u, v⟫_ℝ)
+    (u v : X.H) :
     kreinMetric X u v = kreinMetric X v u := by
   unfold kreinMetric
   calc
-    ⟪u, X.ε v⟫_ℝ = ⟪X.ε u, v⟫_ℝ := W.epsilon_selfAdjoint u v
+    ⟪u, X.ε v⟫_ℝ = ⟪X.ε u, v⟫_ℝ := hε u v
     _ = ⟪v, X.ε u⟫_ℝ := by
       simpa using (real_inner_comm (X.ε u) v).symm
 
 theorem phaseSymplecticForm_skew
-    (W : BilinearAdjointWitness X) (u v : X.H) :
+    (hK : ∀ u v, ⟪X.K u, v⟫_ℝ = -⟪u, X.K v⟫_ℝ)
+    (u v : X.H) :
     phaseSymplecticForm X v u = -phaseSymplecticForm X u v := by
   unfold phaseSymplecticForm
   calc
     ⟪v, X.K u⟫_ℝ = ⟪X.K u, v⟫_ℝ := real_inner_comm _ _
-    _ = -⟪u, X.K v⟫_ℝ := W.phase_skew u v
+    _ = -⟪u, X.K v⟫_ℝ := hK u v
 
 theorem modularChargePairing_eq_neg_phaseSymplecticForm
     (u v : X.H) :
@@ -60,14 +58,29 @@ theorem modularChargePairing_eq_neg_phaseSymplecticForm
   simp
 
 theorem modularChargePairing_skew
-    (W : BilinearAdjointWitness X) (u v : X.H) :
+    (hK : ∀ u v, ⟪X.K u, v⟫_ℝ = -⟪u, X.K v⟫_ℝ)
+    (u v : X.H) :
     modularChargePairing X v u = -modularChargePairing X u v := by
   calc
     modularChargePairing X v u = -phaseSymplecticForm X v u :=
       modularChargePairing_eq_neg_phaseSymplecticForm X v u
-    _ = -(-phaseSymplecticForm X u v) := by rw [phaseSymplecticForm_skew X W u v]
+    _ = -(-phaseSymplecticForm X u v) := by rw [phaseSymplecticForm_skew X hK u v]
     _ = -modularChargePairing X u v := by
       rw [modularChargePairing_eq_neg_phaseSymplecticForm X u v]
+
+theorem phaseSymplecticForm_self
+    (hK : ∀ u v, ⟪X.K u, v⟫_ℝ = -⟪u, X.K v⟫_ℝ)
+    (u : X.H) :
+    phaseSymplecticForm X u u = 0 := by
+  have h := phaseSymplecticForm_skew X hK u u
+  linarith
+
+theorem modularChargePairing_self
+    (hK : ∀ u v, ⟪X.K u, v⟫_ℝ = -⟪u, X.K v⟫_ℝ)
+    (u : X.H) :
+    modularChargePairing X u u = 0 := by
+  have h := modularChargePairing_skew X hK u u
+  linarith
 
 noncomputable def kreinAdjointBilinear (C : X.H →L[ℝ] X.H) (u v : X.H) : ℝ :=
   kreinMetric X u (C v)

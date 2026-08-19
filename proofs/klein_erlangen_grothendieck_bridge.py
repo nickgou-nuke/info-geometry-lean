@@ -38,7 +38,7 @@ def main() -> None:
     assert -1 + 1 == 0 and 2 + 1 not in grades
 
     print("klein_erlangen_grothendieck_bridge.py: finite Plucker/TKK/K3 audit passed")
-    print("Klein parametrization, TKK≅so(2,4), motives, Langlands remain sockets.")
+    print("Klein parametrization, TKK≅so(2,4), motives, Langlands remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

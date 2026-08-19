@@ -216,7 +216,7 @@ theorem C_conj_P_right
 
 end DIIICPTBranchDatum
 
-/-! ## 3. Topological data socket -/
+/-! ## 3. Topological data -/
 
 /--
 A coarse DIII topological phase label.
@@ -241,7 +241,7 @@ structure DIIITopologicalInvariant
 
 /--
 A DIII topological superfluid model is a DIII symmetry datum together with a
-topological invariant socket.
+topological invariant datum.
 -/
 structure DIIITopologicalSuperfluid
     (Op : Type*) [Ring Op] where

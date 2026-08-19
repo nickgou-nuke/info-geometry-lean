@@ -38,7 +38,7 @@ echo "▶ [3/5] Semantic vacuity gate on all InfoGeometry files..."
 python3 tools/quality/semantic_vacuity_gate.py "$SCAN_ROOT" --fail-on error > artifacts/vacuity_infogeometry.txt 2>&1 || {
     echo "  ⚠️  Semantic vacuity errors in InfoGeometry (structural):"
     cat artifacts/vacuity_infogeometry.txt
-    # Don't fail - these are structural design choices (sockets with Prop fields)
+    # Don't fail - these are structural design choices (interfaces with Prop fields)
 }
 
 # 4. Full axiom audit (informational)

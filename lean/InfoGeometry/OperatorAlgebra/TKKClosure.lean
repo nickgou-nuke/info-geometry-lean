@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/TKKClosure.lean
 
-Tits-Kantor-Koecher closure sockets for the reflection-sensitive
+Tits-Kantor-Koecher closure data for the reflection-sensitive
 O(4,4)/Pin(4,4) and projective Möbius stack.
 
 The architectural point is:
@@ -22,7 +22,7 @@ The architectural point is:
   belongs to the ambient conformal compactification, modeled here by the
   projective null rays of signature `(5,5)` and by `O(5,5)`/`Pin(5,5)` data.
 
-This file is an owner-level socket.  It does not construct a concrete Clifford
+This file is an owner-level interface.  It does not construct a concrete Clifford
 algebra or a concrete Jordan triple system; it records the dependency graph and
 proof-carrying closure laws needed by concrete models.
 -/
@@ -31,8 +31,6 @@ import Mathlib.Algebra.Lie.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.KleinianTwist
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -41,7 +39,7 @@ namespace InfoGeometry.OperatorAlgebra
 /-! ## 1. Jordan triple input for TKK -/
 
 /--
-A real Jordan triple system socket.
+A real Jordan triple system interface.
 
 The intended product is written `{x y z}` and is symmetric in the outer
 variables.  The Jordan triple identity is included explicitly because concrete
@@ -102,7 +100,7 @@ theorem triple_identity_eq_zero
 
 end JordanTripleSystem
 
-/-! ## 2. Abstract Lie socket and TKK grades -/
+/-! ## 2. Abstract Lie interface and TKK grades -/
 
 /-- TKK grading labels. -/
 inductive TKKGrade where
@@ -128,13 +126,13 @@ theorem mirror_mirror
 end TKKGrade
 
 /--
-A lightweight Lie algebra socket.
+A lightweight Lie algebra interface.
 
 This avoids committing the repository to a concrete `LieAlgebra` realization at
 this owner layer.  Downstream modules can replace it by Mathlib's Lie algebra
 API once the concrete carrier is chosen.
 -/
-structure LieSocket
+structure LieData
     (L : Type*) [AddCommGroup L] [Module ℝ L] where
   bracket : L → L → L
 
@@ -154,14 +152,14 @@ structure LieSocket
           bracket z (bracket x y)
         = 0
 
-namespace LieSocket
+namespace LieData
 
 variable
     {L : Type*} [AddCommGroup L] [Module ℝ L]
-    (𝔤 : LieSocket L)
+    (𝔤 : LieData L)
 
 /-!
-The socket laws determine a genuine Mathlib `LieRing`.  The adapter is kept
+The interface laws determine a genuine Mathlib `LieRing`.  The adapter is kept
 separate from `TKKLieClosure` so existing projection-based callers remain
 source-compatible while downstream concrete models can use native Lie APIs.
 -/
@@ -206,7 +204,7 @@ def toLieRing : LieRing L where
     convert h using 1
     all_goals abel
 
-end LieSocket
+end LieData
 
 /-! ## 3. TKK Lie closure -/
 
@@ -225,7 +223,7 @@ structure TKKLieClosure
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] where
   jordan : JordanTripleSystem J
-  lie : LieSocket L
+  lie : LieData L
 
   /-- Negative grade, interpreted as translations/system states. -/
   neg : J →ₗ[ℝ] L
@@ -310,7 +308,7 @@ theorem bracket_neg_pos
   T.neg_pos_bracket x y
 
 /-- Re-export: the opposite cross-bracket is the negative of the grade-zero
-structure element, by Lie-socket skew symmetry. -/
+structure element, by Lie-interface skew symmetry. -/
 theorem bracket_pos_neg
     (x y : J) :
     T.lie.bracket (T.pos y) (T.neg x) = -T.zero x y := by
@@ -325,7 +323,7 @@ theorem bracket_zero_neg
   T.zero_neg_action x y z
 
 /-- Re-export: the opposite translation/structure bracket is the negative of
-the induced triple action, by Lie-socket skew symmetry. -/
+the induced triple action, by Lie-interface skew symmetry. -/
 theorem bracket_neg_zero
     (x y z : J) :
     T.lie.bracket (T.neg z) (T.zero x y) =
@@ -519,7 +517,7 @@ The Stinespring-Tomita interpretation of TKK closure.
 
 The negative grade is the system/observable side, the positive grade is the
 commutant/environment mirror side, and inversion is the algebraic gear shift
-that swaps them.  This is a compatibility socket, not a theorem of bare TKK.
+that swaps them.  This is a compatibility interface, not a theorem of bare TKK.
 -/
 structure StinespringTomitaTKKClinch
     (Op J L : Type*)
@@ -535,7 +533,7 @@ structure StinespringTomitaTKKClinch
 /--
 Compatibility data for constructing a TKK/Möbius closure.
 
-This is the non-vacuous replacement for the former compatibility socket: a
+This is the non-vacuous replacement for the former compatibility interface: a
 compatible model carries exactly the Jordan triple, three-graded Lie closure,
 inversion closure, reflection-sensitive Pin/Möbius projective action, and group
 closure certificates required to build `TKKMobiusGroupClosure`.
@@ -597,7 +595,7 @@ Construct the TKK closure layer from explicit compatibility data.
 Concrete modules must supply the Jordan triple system, the three-grade Lie
 closure, and the conformal/projective Pin-Möbius action.
 -/
-theorem tkkClosureOwnerTarget :
+theorem tkkClosure_properties :
   ∀ (J L V W PinBase PinConf : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]

@@ -75,34 +75,9 @@ current interface consumed by the Sugawara bridge.
 def toCurrentHeisenbergRep
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentHeisenbergRep 𝕜 V where
-  J := W.J
-  trunc := W.trunc
-  comm := W.comm
-
-@[simp]
-theorem toCurrentHeisenbergRep_J
-    (W : SplitCliffordHeisenbergWitness 𝕜 V)
-    (n : Int) :
-    (W.toCurrentHeisenbergRep).J n = W.J n :=
-  rfl
-
-@[simp]
-theorem toCurrentHeisenbergRep_trunc
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    (W.toCurrentHeisenbergRep).trunc = W.trunc :=
-  rfl
-
-/--
-Readout form of the bridge into the existing current interface.
--/
-theorem toCurrentHeisenbergRep_readout
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    W.toCurrentHeisenbergRep.J = W.J
-      ∧ W.toCurrentHeisenbergRep.trunc = W.trunc
-      ∧ ∀ m n,
-          (W.toCurrentHeisenbergRep.J m).commutator (W.toCurrentHeisenbergRep.J n) =
-            if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
-  exact ⟨rfl, rfl, W.toCurrentHeisenbergRep.comm⟩
+  J := J W
+  trunc := trunc W
+  comm := comm W
 
 /--
 Pack the property into the downstream Sugawara morphism interface.
@@ -114,27 +89,6 @@ noncomputable def toCurrentSugawaraMorphism
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentSugawaraMorphism 𝕜 V :=
   CurrentSugawaraMorphism.ofHeisenberg W.toCurrentHeisenbergRep
-
-@[simp]
-theorem toCurrentSugawaraMorphism_heisenberg
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep :=
-  rfl
-
-@[simp]
-theorem toCurrentSugawaraMorphism_virasoro
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    W.toCurrentSugawaraMorphism.virasoro =
-      (W.toCurrentHeisenbergRep).currentSugawaraRepresentation :=
-  rfl
-
-/-- Every split-Clifford current property yields a Sugawara morphism package with the expected readout. -/
-theorem toCurrentSugawaraMorphism_readout
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep
-      ∧ W.toCurrentSugawaraMorphism.virasoro =
-        W.toCurrentHeisenbergRep.currentSugawaraRepresentation := by
-  exact ⟨rfl, rfl⟩
 
 /--
 Sugawara representation obtained from the existing owner surface.

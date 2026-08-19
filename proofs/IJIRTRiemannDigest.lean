@@ -36,7 +36,7 @@ def CriticalStrip := {s : ℂ // 0 < s.re ∧ s.re < 1}
 def CriticalLine (s : ℂ) : Prop := s.re = 1 / 2
 
 /-- Riemann-Hypothesis statement as a predicate over a chosen zero predicate.
-This is a statement/socket, not a proof that the analytic zeta zero predicate is
+This is a statement/interface, not a proof that the analytic zeta zero predicate is
 inhabited or classified. -/
 def RiemannHypothesisFor (zetaZero : ℂ → Prop) : Prop :=
   ∀ s : CriticalStrip, zetaZero s.val → CriticalLine s.val

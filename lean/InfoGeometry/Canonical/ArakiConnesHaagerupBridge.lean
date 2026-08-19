@@ -37,11 +37,11 @@ structure ArakiConnesHaagerupTriad
   standard :
     NaturalConeStandardFormInterface Alg Hilb NormalPositive
 
-  /-- Connes cocycle / projective Weyl transport socket. -/
+  /-- Connes cocycle / projective Weyl transport channel. -/
   connesCocycle :
     ℝ → Alg
 
-  /-- Araki relative entropy readout socket. -/
+  /-- Araki relative entropy readout. -/
   arakiRelativeEntropy :
     NormalPositive → NormalPositive → ℝ
 
@@ -79,7 +79,7 @@ theorem eval_eq_vector_readout_of_normal
 
 end ArakiConnesHaagerupTriad
 
-/-! ## Cantor extension socket -/
+/-! ## Cantor extension -/
 
 /--
 Standard-form Cantor cone system with explicit dyadic weights.

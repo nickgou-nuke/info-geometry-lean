@@ -15,7 +15,6 @@ exceptional finite algebra is isomorphic to a Virasoro algebra.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -132,7 +131,7 @@ the historical boundary-charge and hidden-memory names denote the same
 finite-ledger projection.  It does not assert an exceptional Sugawara theorem.
 ```
 -/
-theorem exceptionalAffineVirasoroBridgeOwnerTarget :
+theorem exceptionalAffineVirasoroBridge_centralCharge_eq_hiddenGradeMemory :
   ∀ (Finite Affine Vir State Charge : Type*)
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]

@@ -74,6 +74,25 @@ theorem stateNat_pos
   unfold stateNat
   exact Finset.prod_pos (fun n hn => (natSetOfState_prime_mem S n hn).pos)
 
+/-- The logarithmic energy of the encoded square-free integer is the
+    exterior square-free energy of its occupied prime modes. -/
+theorem stateNat_log_eq_squareFreeEnergy
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    Real.log (stateNat S : ℝ) =
+      SquareFreePrimeState.squareFreeEnergy
+        (fun p : PrimeMode P => Real.log (p.1 : ℝ)) S := by
+  have h_ne_zero : ∀ n ∈ natSetOfState S, (n : ℝ) ≠ 0 := by
+    intro n hn
+    exact_mod_cast (natSetOfState_prime_mem S n hn).ne_zero
+  unfold stateNat SquareFreePrimeState.squareFreeEnergy
+  rw [Nat.cast_prod, Real.log_prod h_ne_zero]
+  unfold natSetOfState
+  rw [Finset.sum_map]
+  apply Finset.sum_congr rfl
+  intro p hp
+  rfl
+
 theorem mobius_stateNat_eq_fermionParitySign
     {P : PrimeCutoff}
     (S : SquareFreeState P) :

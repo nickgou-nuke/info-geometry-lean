@@ -21,7 +21,7 @@ This module records the correct hierarchy:
   ambient split signature is `(5,5)`.  The conformal group is then modeled by
   projective `O(5,5)`/`Pin(5,5)` data.
 
-The file is an owner-level socket.  It does not construct concrete Clifford
+The file is an owner-level interface.  It does not construct concrete Clifford
 algebras; it keeps the reflection/projective/conformal dependency graph honest.
 -/
 
@@ -29,7 +29,6 @@ import Mathlib.Tactic
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -133,7 +132,7 @@ end SplitQuadratic44
 /--
 A projective ray represented by a nonzero vector.
 
-This is intentionally a representative-level socket rather than a quotient.
+This is intentionally a representative-level interface rather than a quotient.
 The equivalence relation is `SameProjectiveRay`.
 -/
 structure ProjectiveRay
@@ -306,7 +305,7 @@ deriving DecidableEq, Repr
 /--
 Abstract Pin cover of the full `O(4,4)` group.
 
-Concrete Clifford modules should instantiate this socket with the actual Pin
+Concrete Clifford modules should instantiate this interface with the actual Pin
 group in `Cℓ(4,4)`.  The important architectural point is that this cover is
 for the full orthogonal group, not just the special/identity component.
 -/
@@ -336,27 +335,6 @@ structure Pin44CoverDatum
   oddReflection_component :
     (cover oddReflection oddReflection_isPin).component =
       O44Component.reflection
-
-namespace Pin44CoverDatum
-
-variable
-    {V PinEl : Type*}
-    [AddCommGroup V] [Module ℝ V]
-    [Monoid PinEl]
-    {Q : SplitQuadratic44 V}
-    (P : Pin44CoverDatum (V := V) (PinEl := PinEl) Q)
-
-/-- The odd-reflection lane is witnessed by an actual odd Pin element whose
-orthogonal image lies in the reflection component. -/
-theorem odd_reflection_socket :
-    ∃ a : PinEl, ∃ ha : P.isPin a,
-      P.parity a = PinParity.odd ∧
-        (P.cover a ha).component = O44Component.reflection :=
-  ⟨P.oddReflection, P.oddReflection_isPin,
-    P.oddReflection_parity, P.oddReflection_component⟩
-
-end Pin44CoverDatum
-
 
 /--
 A chiral volume/sign operator attached to the Pin cover.
@@ -646,7 +624,7 @@ theorem actRay_respects_same
 end Orthogonal55
 
 /--
-A conformal compactification socket for the `(4,4)` base carrier.
+A conformal compactification interface for the `(4,4)` base carrier.
 
 The image of the base space lies in the projective null cone of the ambient
 `(5,5)` space.  The distinguished `inversion` is an ambient orthogonal

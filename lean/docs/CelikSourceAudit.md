@@ -49,7 +49,7 @@ finite binary tree / cylinders
   -> finite Cantor endpoint/function-space data
   -> signed switch/tilt operators
   -> finite Clifford/Pauli representation
-  -> infinite Cantor `L²(K)` representation socket
+  -> infinite Cantor `L²(K)` representation  interface
   -> inductive-limit / Fock-equivalence target
 ```
 
@@ -58,7 +58,7 @@ Lean owners:
 - `InfoGeometry.Canonical.CelikKocakCantorOperators`
 - `InfoGeometry.Canonical.CelikKocakPaperFormalism`
 - `InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge`
-- `InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket`
+- `InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFock Interface`
 - `InfoGeometry.Canonical.CelikKocakCuntzFockBridge`
 - `InfoGeometry.Topology.FractalCantorFockWitness`
 
@@ -124,7 +124,7 @@ The Salih Celik lane is separate:
 ```
 
 That material may become relevant to graded quantum/super differential
-calculus, ternary nilpotence, or Yang--Baxter sockets, but it is not the source
+calculus, ternary nilpotence, or Yang--Baxter  interfaces, but it is not the source
 for the Cantor/Fock/Gromov spine.
 
 ## Core Dictionary
@@ -159,7 +159,7 @@ The reviewed papers do not, by themselves, close these repo claims:
   the Cuntz map;
 - Cayley compactification or KMS thermodynamics from finite Gromov products.
 
-Those should remain sockets, witnesses, or explicitly conditional bridges until
+Those should remain  interfaces, witnesses, or explicitly conditional bridges until
 the required hypotheses are formalized.
 
 ## Naming Correction

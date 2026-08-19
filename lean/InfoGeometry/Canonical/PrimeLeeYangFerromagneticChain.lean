@@ -1,7 +1,8 @@
-import Mathlib.Data.Real.Basic
+import Mathlib
 import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Tactic.Linarith
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!
@@ -23,7 +24,7 @@ ferromagnetic facts:
 
 It also defines a finite Ising Hamiltonian with external field/fugacity
 readout. The actual Lee--Yang circle theorem for the resulting partition
-polynomial is deliberately a property socket; this file does not prove
+polynomial is deliberately a property interface; this file does not prove
 Lee--Yang stability, analytic continuation of `xi`, or RH.
 -/
 
@@ -156,6 +157,22 @@ theorem couplingMatrix_symm
     (i j : Fin n) :
     C.couplingMatrix i j = C.couplingMatrix j i :=
   C.coupling_symm i j
+
+/-- The prime coupling matrix is the scalar Gram matrix of the logarithmic
+site-energy vector. -/
+theorem couplingMatrix_eq_smul_vecMulVec :
+    C.couplingMatrix =
+      C.kappa • Matrix.vecMulVec C.siteEnergy C.siteEnergy := by
+  ext i j
+  simp [couplingMatrix, coupling, Matrix.vecMulVec]
+  ring
+
+/-- The rank-one prime coupling matrix is positive semidefinite. -/
+theorem couplingMatrix_posSemidef :
+    Matrix.PosSemidef C.couplingMatrix := by
+  rw [C.couplingMatrix_eq_smul_vecMulVec]
+  exact (Matrix.posSemidef_vecMulVec_self_star C.siteEnergy).smul
+    C.kappa_nonneg
 
 /-! ## Hamiltonian and fugacity readout -/
 
@@ -401,11 +418,65 @@ theorem centeredSpinCoupling_pos
   exact mul_pos (mul_pos (div_pos hκ (by norm_num)) (C.siteEnergy_pos i))
     (C.siteEnergy_pos j)
 
+/-- Matrix form of the centered rank-one prime coupling. -/
+def centeredSpinCouplingMatrix : Matrix (Fin n) (Fin n) ℝ :=
+  fun i j => C.centeredSpinCoupling i j
+
+@[simp]
+theorem centeredSpinCouplingMatrix_apply
+    (i j : Fin n) :
+    C.centeredSpinCouplingMatrix i j = C.centeredSpinCoupling i j :=
+  rfl
+
+theorem centeredSpinCouplingMatrix_eq_smul_vecMulVec :
+    C.centeredSpinCouplingMatrix =
+      (C.kappa / 2) • Matrix.vecMulVec C.siteEnergy C.siteEnergy := by
+  ext i j
+  simp [centeredSpinCouplingMatrix, centeredSpinCoupling, Matrix.vecMulVec]
+  ring
+
+/-- The centered prime coupling matrix is positive semidefinite. -/
+theorem centeredSpinCouplingMatrix_posSemidef :
+    Matrix.PosSemidef C.centeredSpinCouplingMatrix := by
+  rw [C.centeredSpinCouplingMatrix_eq_smul_vecMulVec]
+  exact (Matrix.posSemidef_vecMulVec_self_star C.siteEnergy).smul
+    (div_nonneg C.kappa_nonneg (by norm_num))
+
 /-- Centered Lee--Yang external field `hᵢ(w) = -w/2 log(pᵢ)`. -/
 def centeredField
     (w : ℝ)
     (i : Fin n) : ℝ :=
   -(w / 2) * C.siteEnergy i
+
+/-- The centered field energy is the scalar pairing with centered logarithmic energy. -/
+theorem fieldEnergy_centeredField_eq_mul_centeredLogEnergy
+    (w : ℝ)
+    (σ : SpinConfiguration (n := n)) :
+    fieldEnergy (C.centeredField w) σ =
+      w * C.centeredLogEnergy σ := by
+  rw [centeredLogEnergy_eq_half_spinSum]
+  unfold fieldEnergy centeredField
+  rw [← Finset.sum_neg_distrib]
+  calc
+    ∑ i : Fin n, -(-(w / 2) * C.siteEnergy i * IsingSpin.sign (σ i)) =
+        ∑ i : Fin n, w * (1 / 2 * (C.siteEnergy i * IsingSpin.sign (σ i))) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          ring
+    _ = w * ∑ i : Fin n, 1 / 2 * (C.siteEnergy i * IsingSpin.sign (σ i)) := by
+      rw [Finset.mul_sum]
+    _ = w * (1 / 2 * ∑ i : Fin n, C.siteEnergy i * IsingSpin.sign (σ i)) := by
+      congr 1
+      rw [Finset.mul_sum]
+
+/-- The centered Ising Hamiltonian splits into pair energy and centered field energy. -/
+theorem isingHamiltonian_centeredField_eq_pairEnergy_add_mul_centeredLogEnergy
+    (w : ℝ)
+    (σ : SpinConfiguration (n := n)) :
+    C.isingHamiltonian (C.centeredField w) σ =
+      C.pairEnergy σ + w * C.centeredLogEnergy σ := by
+  rw [isingHamiltonian_eq_pair_add_field,
+    fieldEnergy_centeredField_eq_mul_centeredLogEnergy]
 
 /-- Complex shifted Riemann/Mellin parameter `w = s - 1/2`. -/
 def shiftedRiemannParameter
@@ -429,6 +500,15 @@ theorem shiftedPrimeFugacity_normSq_of_criticalLine
     simp [Complex.mul_re, hs]
   rw [Complex.normSq_eq_norm_sq, Complex.norm_exp, hre]
   norm_num
+
+/-- The critical-line fugacity readout is a Lee--Yang circle point in the
+canonical predicate used by the finite polynomial bridge. -/
+theorem shiftedPrimeFugacity_onLeeYangCircle_of_criticalLine
+    (s : ℂ)
+    (hs : OnCriticalLine s)
+    (i : Fin n) :
+    OnLeeYangCircle (C.shiftedPrimeFugacity s i) := by
+  exact C.shiftedPrimeFugacity_normSq_of_criticalLine s hs i
 
 /--
 Centered occupation coupling
@@ -473,28 +553,13 @@ usual positivity/stability proof.  This structure stores only the polynomial
 readout data; the Lee--Yang theorem must be supplied explicitly to any theorem
 that uses it.
 -/
-@[socket_debt_tag]
-structure LeeYangStabilityWitness where
-  /-- The finite chain whose partition polynomial is being property. -/
-  chain : PrimeFerromagneticChain n
-  partitionPolynomial : Polynomial ℂ
-  fieldToFugacity : (Fin n → ℝ) → ℂ
-  /-- Actual Lee--Yang root-location law for the stored polynomial. -/
-  leeYangRootLocationLaw :
-    ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z
-
-namespace LeeYangStabilityWitness
-
-variable (W : LeeYangStabilityWitness (n := n))
-
-/-- Apply an externally proved Lee--Yang circle theorem to the stored polynomial. -/
 theorem root_lies_on_leeYang_circle
+    (partitionPolynomial : Polynomial ℂ)
+    (hLeeYang : ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     (z : ℂ)
-    (hz : W.partitionPolynomial.IsRoot z) :
+    (hz : partitionPolynomial.IsRoot z) :
     OnLeeYangCircle z :=
-  W.leeYangRootLocationLaw z hz
-
-end LeeYangStabilityWitness
+  hLeeYang z hz
 
 end PrimeFerromagneticChain
 

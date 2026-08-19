@@ -72,7 +72,8 @@ theorem bosonizedOdd_self_anticommutator
     InfoGeometry.Algebra.SupergradedBracket.anticommutator
         (bosonizedOdd (R := R) Γ G) (bosonizedOdd (R := R) Γ G) =
       (2 : R) • primitiveEven (R := R) E := by
-  rw [InfoGeometry.Algebra.SupergradedBracket.anticommutator]
+  simp only [InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+    InfoGeometry.Algebra.InvariantTransport.anticommutator]
   rw [bosonizedOdd_sq_of_involution (R := R) Γ G hΓ hodd, hGsq]
   simp [two_smul]
 

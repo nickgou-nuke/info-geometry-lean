@@ -68,7 +68,7 @@ verified premises.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields,
+[Exact theorem statements that remain unproved. No wrappers, interfaces, fields,
 witnesses, certificates, or renamed placeholders.]
 
 * Prove the matrix-exponential quadratic remainder estimate from Taylor
@@ -131,6 +131,27 @@ theorem dikinOmega_nonneg_of_nonneg {t : ℝ}
   unfold dikinOmega
   linarith
 
+theorem dikinOmega_pos_of_pos {t : ℝ}
+    (ht : 0 < t) :
+    0 < dikinOmega t := by
+  have hpos : 0 < 1 + t := by linarith
+  have hne : 1 + t ≠ 1 := by linarith
+  have hlog : Real.log (1 + t) < (1 + t) - 1 :=
+    Real.log_lt_sub_one_of_pos hpos hne
+  unfold dikinOmega
+  linarith
+
+/-- On the nonnegative half-line, the lower Dikin envelope vanishes only at zero. -/
+theorem dikinOmega_eq_zero_iff {t : ℝ} (ht : 0 ≤ t) :
+    dikinOmega t = 0 ↔ t = 0 := by
+  constructor
+  · intro h
+    by_contra hne
+    have hpos : 0 < t := lt_of_le_of_ne ht (Ne.symm hne)
+    exact (ne_of_gt (dikinOmega_pos_of_pos hpos)) h
+  · intro h
+    simpa [h] using dikinOmega_zero
+
 /-- `ω*(t)` is nonnegative on its natural domain `t < 1`. -/
 theorem dikinOmegaStar_nonneg_of_lt_one {t : ℝ}
     (ht : t < 1) :
@@ -140,6 +161,27 @@ theorem dikinOmegaStar_nonneg_of_lt_one {t : ℝ}
     Real.log_le_sub_one_of_pos hpos
   unfold dikinOmegaStar
   linarith
+
+theorem dikinOmegaStar_pos_of_neg {t : ℝ}
+    (ht : t < 0) :
+    0 < dikinOmegaStar t := by
+  have hpos : 0 < 1 - t := by linarith
+  have hne : 1 - t ≠ 1 := by linarith
+  have hlog : Real.log (1 - t) < (1 - t) - 1 :=
+    Real.log_lt_sub_one_of_pos hpos hne
+  unfold dikinOmegaStar
+  linarith
+
+/-- On the nonpositive half-line, the upper Dikin envelope vanishes only at zero. -/
+theorem dikinOmegaStar_eq_zero_iff {t : ℝ} (ht : t ≤ 0) :
+    dikinOmegaStar t = 0 ↔ t = 0 := by
+  constructor
+  · intro h
+    by_contra hne
+    have hneg : t < 0 := lt_of_le_of_ne ht hne
+    exact (ne_of_gt (dikinOmegaStar_pos_of_neg hneg)) h
+  · intro h
+    simpa [h] using dikinOmegaStar_zero
 
 /--
 Self-concordant Dikin sandwich for a matrix Bregman divergence `D` measured in
@@ -204,6 +246,34 @@ theorem matrix_bregman_zero_of_dikin_envelope_radius_zero {n : ℕ}
   have hge : 0 ≤ D x x :=
     matrix_bregman_nonneg_of_dikin_envelope hsc x x
   exact le_antisymm hle hge
+
+theorem dikin_radius_zero_of_matrix_bregman_zero {n : ℕ}
+    {D : MatrixEnd n → MatrixEnd n → ℝ}
+    {localRadius : MatrixEnd n → MatrixEnd n → ℝ}
+    (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
+    (x y : MatrixEnd n)
+    (hzero : D x y = 0) :
+    localRadius x y = 0 := by
+  by_contra hr
+  have hnonneg : 0 ≤ localRadius x y := hsc.1 x y
+  have hpos : 0 < localRadius x y :=
+    lt_of_le_of_ne hnonneg (Ne.symm hr)
+  have hstrict : 0 < dikinOmega (localRadius x y) :=
+    dikinOmega_pos_of_pos hpos
+  have hlower : dikinOmega (localRadius x y) ≤ D x y :=
+    hsc.2.1 x y
+  linarith
+
+theorem matrix_bregman_diag_zero_iff_dikin_radius_diag_zero {n : ℕ}
+    {D : MatrixEnd n → MatrixEnd n → ℝ}
+    {localRadius : MatrixEnd n → MatrixEnd n → ℝ}
+    (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
+    (x : MatrixEnd n) :
+    D x x = 0 ↔ localRadius x x = 0 := by
+  constructor
+  · exact dikin_radius_zero_of_matrix_bregman_zero hsc x x
+  · intro hradius
+    exact matrix_bregman_zero_of_dikin_envelope_radius_zero hsc x hradius
 
 /-! ## Operator-valued modular Hamiltonian remainder -/
 
@@ -547,6 +617,12 @@ representation.
 def HasQuadraticBregmanBound {n : ℕ} (K : MatrixEnd n) : Prop :=
   ∀ ε : ℝ, ε * ‖K‖ ≤ 1 →
     ‖exponentialRemainder K ε‖ ≤ ε ^ 2 * ‖K‖ ^ 2
+
+/-- The zero generator satisfies the quadratic remainder bound exactly. -/
+theorem hasQuadraticBregmanBound_zero {n : ℕ} :
+    HasQuadraticBregmanBound (0 : MatrixEnd n) := by
+  intro ε _
+  simp [exponentialRemainder]
 
 /-- Scalar size of the matrix Bregman exponential remainder. -/
 noncomputable def matrixBregmanSize {n : ℕ}

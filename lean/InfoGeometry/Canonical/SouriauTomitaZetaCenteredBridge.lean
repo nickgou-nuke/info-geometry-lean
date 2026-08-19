@@ -49,6 +49,18 @@ def centeredParameter (x : CenteredChart) : ℂ :=
     (centeredParameter x).im = x.v := by
   simp [centeredParameter]
 
+theorem centeredParameter_functionalDual (x : CenteredChart) :
+    centeredParameter (ZetaCenteredChart.functionalDual x) =
+      1 - centeredParameter x := by
+  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.functionalDual]
+  · ring
+
+theorem centeredParameter_criticalMirror (x : CenteredChart) :
+    centeredParameter (ZetaCenteredChart.criticalMirror x) =
+      1 - star (centeredParameter x) := by
+  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.criticalMirror]
+  · ring
+
 /-- Critical-line predicate in centered coordinates. -/
 def centeredCriticalLine (x : CenteredChart) : Prop :=
   x.u = 0
@@ -146,37 +158,13 @@ variable {Symmetry : Type v}
 @[rep_depth operator]
 theorem tomita_deltaLog_eq_souriau_moment_geometricTemperature
     (C : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)) :
-    C.toRealModularLogData =
+    C.modularHamiltonian =
       C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature := by
-  rw [C.tomita_deltaLog_eq_thermalGenerator,
-    C.souriauModularGenerator_eq_moment_geometricTemperature]
+  calc
+    C.modularHamiltonian = C.souriauMoment.thermalGenerator := rfl
+    _ = C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature :=
+      C.souriauModularGenerator_eq_moment_geometricTemperature
 
 end TomitaReadback
-
-/--
-Witness-gated Ramanujan/Lambert socket.
-
-This is intentionally a socket, not an analytic theorem: the tracked repo already
-uses the same discipline for Ramanujan's odd-zeta transform.
--/
-def RamanujanLambertTransform
-    (oddZetaReadout lambertSeriesSide bernoulliCorrectionSide : ℕ → ℂ) : Prop :=
-  ∀ m, oddZetaReadout m = lambertSeriesSide m + bernoulliCorrectionSide m
-
-structure RamanujanLambertSocket where
-  oddZetaReadout : ℕ → ℂ
-  lambertSeriesSide : ℕ → ℂ
-  bernoulliCorrectionSide : ℕ → ℂ
-  transform :
-    RamanujanLambertTransform oddZetaReadout lambertSeriesSide bernoulliCorrectionSide
-
-namespace RamanujanLambertSocket
-
-theorem oddZeta_eq_lambert_plus_bernoulli
-    (R : RamanujanLambertSocket) (m : ℕ) :
-    R.oddZetaReadout m = R.lambertSeriesSide m + R.bernoulliCorrectionSide m :=
-  R.transform m
-
-end RamanujanLambertSocket
 
 end InfoGeometry.Canonical.SouriauTomitaZetaCenteredBridge

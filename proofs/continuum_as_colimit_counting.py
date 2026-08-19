@@ -8,7 +8,7 @@ Checks the finite kernels:
   * GNS-like expectation is a reference-state readout.
 
 Analytic measure limits, C*-completion, and Hilbert-space GNS completion remain
-Lean sockets.
+Lean deferred_interfaces.
 """
 
 import math

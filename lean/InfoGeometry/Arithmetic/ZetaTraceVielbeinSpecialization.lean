@@ -112,7 +112,7 @@ Prime-gas vielbein carrier.
 This packages the local Jacobians, global trace-log action, and both
 supervolume readouts as a single interface.
 -/
-structure PrimeVielbeinCarrier where
+structure PrimeVielbeinData where
   convergenceDomain : ℂ → Prop
   localJacobian : Nat.Primes → ℂ → ℂ
   localVolumeFactor : Nat.Primes → ℂ → ℂ
@@ -122,7 +122,7 @@ structure PrimeVielbeinCarrier where
   eulerSupervolume : ℂ → ℂ
 
 /-- Canonical zeta-trace prime-vielbein carrier. -/
-def canonicalPrimeVielbein : PrimeVielbeinCarrier where
+def canonicalPrimeVielbein : PrimeVielbeinData where
   convergenceDomain := fun s => 1 < s.re
   localJacobian := primeLocalJacobian
   localVolumeFactor := primeLocalVolumeFactor

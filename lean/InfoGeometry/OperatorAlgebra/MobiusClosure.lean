@@ -228,7 +228,7 @@ theorem invariantReadout_inv_eq
 /--
 The paired readout that remembers both chart representatives.
 
-This is the formal socket for symmetrized visible/hidden memory accounting:
+This is the formal relation for symmetrized visible/hidden memory accounting:
 under inversion, the two components swap.
 -/
 def symmetrizedReadout

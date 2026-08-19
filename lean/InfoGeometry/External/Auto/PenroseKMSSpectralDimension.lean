@@ -9,7 +9,8 @@ This module formalizes:
 * A Cantor/Penrose spectral-zeta abscissa property;
 * The tripotent algebraic scale poles `{+1,-1,0}`.
 
-We removed vacuous structural sockets and proved the honest algebraic identities directly.
+Vacuous structural declarations were removed; the honest algebraic identities
+are proved directly.
 -/
 
 noncomputable section

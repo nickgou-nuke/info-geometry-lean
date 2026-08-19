@@ -1,4 +1,4 @@
-"""SymPy witness: log-det self-concordant barrier and Super-Kähler socket.
+"""SymPy witness: log-det self-concordant barrier and Super-Kähler deferred_interface.
 
 For the positive biquaternion/Hermitian cone, the canonical barrier is
     f(X) = -log det(X).

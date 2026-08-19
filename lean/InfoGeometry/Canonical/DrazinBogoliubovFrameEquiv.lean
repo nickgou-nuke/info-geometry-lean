@@ -107,14 +107,25 @@ structure ChiralDrazinKreinPackage where
   A : EndH
   AD : EndH
   k : ℕ
-  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse A AD k
   ΓS : EndH
   J : EndH
   eps : EndH
   K : EndH
-  form_preserved : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (J x) (J y) = KreinSpace.kreinInner (H := H₂) x y
-  drazin_split_compatible : J * drazinProjection A AD = drazinProjection A AD * J
-  cl11_laws : eps * eps = 1 ∧ J * J = -1 ∧ eps * J = -J * eps
+
+/-! The package is a carrier of operators.  Its Drazin/Krein laws are
+explicit propositions below rather than fields hidden in a data wrapper. -/
+
+def ChiralDrazinKreinPackage.HasDrazinLaw
+    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
+  InfoGeometry.Canonical.Drazin.IsDrazinInverse P.A P.AD P.k
+
+def ChiralDrazinKreinPackage.HasKreinCl11Laws
+    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
+  (∀ x y : H₂,
+      KreinSpace.kreinInner (H := H₂) (P.J x) (P.J y) =
+        KreinSpace.kreinInner (H := H₂) x y) ∧
+    P.J * drazinProjection P.A P.AD = drazinProjection P.A P.AD * P.J ∧
+    P.eps * P.eps = 1 ∧ P.J * P.J = -1 ∧ P.eps * P.J = -P.J * P.eps
 
 /--
 A Bogoliubov frame represented over a fixed owner package.
@@ -122,11 +133,17 @@ A Bogoliubov frame represented over a fixed owner package.
 structure BogoliubovFrameOver (P : ChiralDrazinKreinPackage (E := E)) where
   U : EndH
   Uinv : EndH
-  left_inv : Uinv.comp U = 1
-  right_inv : U.comp Uinv = 1
-  compatible_with_drazin_split : U * drazinProjection P.A P.AD = drazinProjection P.A P.AD * U
-  compatible_with_phase_axis : U * P.J = P.J * U
-  compatible_with_krein_form : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (U x) (U y) = KreinSpace.kreinInner (H := H₂) x y
+
+def BogoliubovFrameOver.HasFrameLaws
+    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
+  ∀ (F : BogoliubovFrameOver (E := E) P),
+    F.Uinv.comp F.U = 1 ∧
+    F.U.comp F.Uinv = 1 ∧
+    F.U * drazinProjection P.A P.AD = drazinProjection P.A P.AD * F.U ∧
+    F.U * P.J = P.J * F.U ∧
+    (∀ x y : H₂,
+      KreinSpace.kreinInner (H := H₂) (F.U x) (F.U y) =
+        KreinSpace.kreinInner (H := H₂) x y)
 
 /--
 Frame equivalence relation: existence of a structure-preserving automorphism

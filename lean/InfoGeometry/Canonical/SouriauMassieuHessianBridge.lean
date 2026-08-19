@@ -134,6 +134,85 @@ theorem gibbsVar_nonneg_of_dim_pos
   gibbsVar_nonneg spec θ₁ θ₂ f
     (partitionZ_pos_of_dim_pos spec θ₁ θ₂ h_dim)
 
+theorem gibbsVar_eq_zero_of_constant
+    (spec : TwoChargeSpectrum) (θ₁ θ₂ c : ℝ)
+    (f : Fin spec.dim → ℝ)
+    (hZ : 0 < partitionZ spec θ₁ θ₂)
+    (hf : ∀ i, f i = c) :
+    gibbsVar spec θ₁ θ₂ f = 0 := by
+  have hsum :
+      (∑ i : Fin spec.dim, gibbsWeight spec θ₁ θ₂ i * f i) =
+        c * partitionZ spec θ₁ θ₂ := by
+    rw [partitionZ]
+    calc
+      (∑ i : Fin spec.dim, gibbsWeight spec θ₁ θ₂ i * f i) =
+          ∑ i : Fin spec.dim, c * gibbsWeight spec θ₁ θ₂ i := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [hf i]
+        ring
+      _ = c * ∑ i : Fin spec.dim, gibbsWeight spec θ₁ θ₂ i := by
+        rw [Finset.mul_sum]
+  have hmean : gibbsMean spec θ₁ θ₂ f = c := by
+    unfold gibbsMean
+    rw [hsum]
+    field_simp [ne_of_gt hZ]
+  unfold gibbsVar gibbsCov
+  simp [hmean, hf]
+
+theorem gibbsVar_eq_zero_imp_eq_gibbsMean
+    (spec : TwoChargeSpectrum) (θ₁ θ₂ : ℝ)
+    (f : Fin spec.dim → ℝ)
+    (hZ : 0 < partitionZ spec θ₁ θ₂)
+    (hvar : gibbsVar spec θ₁ θ₂ f = 0) :
+    ∀ i, f i = gibbsMean spec θ₁ θ₂ f := by
+  unfold gibbsVar gibbsCov at hvar
+  have hnum :
+      (∑ i : Fin spec.dim,
+        gibbsWeight spec θ₁ θ₂ i *
+          (f i - gibbsMean spec θ₁ θ₂ f) *
+            (f i - gibbsMean spec θ₁ θ₂ f)) = 0 := by
+    rcases (div_eq_zero_iff.mp hvar) with h | h
+    · exact h
+    · exact False.elim ((ne_of_gt hZ) h)
+  have hsum :
+      ∑ i : Fin spec.dim,
+        gibbsWeight spec θ₁ θ₂ i *
+          (f i - gibbsMean spec θ₁ θ₂ f) ^ 2 = 0 := by
+    calc
+      _ = ∑ i : Fin spec.dim,
+          gibbsWeight spec θ₁ θ₂ i *
+            (f i - gibbsMean spec θ₁ θ₂ f) *
+              (f i - gibbsMean spec θ₁ θ₂ f) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        ring
+      _ = 0 := hnum
+  have hrows :=
+    (Fintype.sum_eq_zero_iff_of_nonneg
+      (fun i => mul_nonneg
+        (gibbsWeight_nonneg spec θ₁ θ₂ i)
+        (sq_nonneg _))).mp hsum
+  intro i
+  have hi := congrFun hrows i
+  have hsq : (f i - gibbsMean spec θ₁ θ₂ f) ^ 2 = 0 := by
+    rcases mul_eq_zero.mp hi with hweight | hsquare
+    · exact False.elim ((ne_of_gt (gibbsWeight_pos spec θ₁ θ₂ i)) hweight)
+    · exact hsquare
+  exact sub_eq_zero.mp (sq_eq_zero_iff.mp hsq)
+
+theorem gibbsVar_eq_zero_iff_eq_gibbsMean
+    (spec : TwoChargeSpectrum) (θ₁ θ₂ : ℝ)
+    (f : Fin spec.dim → ℝ)
+    (hZ : 0 < partitionZ spec θ₁ θ₂) :
+    gibbsVar spec θ₁ θ₂ f = 0 ↔
+      ∀ i, f i = gibbsMean spec θ₁ θ₂ f := by
+  constructor
+  · exact gibbsVar_eq_zero_imp_eq_gibbsMean spec θ₁ θ₂ f hZ
+  · intro hf
+    unfold gibbsVar gibbsCov
+    simp [hf]
+
 /-- 🏆 THEOREM 2: Universal Quadratic Form Non-Negativity (Hessian PSD):
     For any test vector (a, b) ∈ ℝ², the 2x2 charge covariance quadratic form is non-negative:
     $$a² \operatorname{Var}(Q₁) + 2ab \operatorname{Cov}(Q₁, Q₂) + b² \operatorname{Var}(Q₂) = \operatorname{Var}(a Q₁ + b Q₂) \ge 0$$ -/

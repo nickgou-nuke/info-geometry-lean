@@ -221,7 +221,7 @@ theorem Pleft_sub_Pright :
 
 /--
 Export the constructive involution as the broader proof-carrying
-`CircularPolarization` socket.
+`CircularPolarization` interface.
 -/
 def toCircularPolarization : CircularPolarization Op where
   chi := C.chi
@@ -254,7 +254,7 @@ end ChiralInvolution
 /-! ## 2. Symmetries preserving the involution preserve the projectors -/
 
 /--
-A minimal real-algebra symmetry action socket for chiral involutions.
+A minimal real-algebra symmetry action for chiral involutions.
 
 This is deliberately small: it records only the preservation laws needed to
 prove that `chi`-preserving dynamics preserves the derived projectors.
@@ -380,7 +380,7 @@ end ChiralInvolutionAction
 /--
 Constructing chiral projector stages from involutions.
 -/
-theorem chiralProjectorFromInvolutionOwnerTarget :
+theorem chiralProjectorFromInvolution_properties :
   ∀ (Op : Type*) [Ring Op] [Algebra ℝ Op],
   ∀ C : ChiralInvolution Op,
     C.Pleft * C.Pleft = C.Pleft ∧

@@ -55,7 +55,6 @@ import InfoGeometry.Prequantum.Connection
 import InfoGeometry.Prequantum.Quotient
 import InfoGeometry.Projective.TwistorBridge
 import InfoGeometry.Exploration.Symphony.Basic
-import InfoGeometry.Exploration.Symphony.Draft
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Unstable.YangMillsBridge
 

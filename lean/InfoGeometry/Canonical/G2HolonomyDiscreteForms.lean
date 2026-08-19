@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.SplitG2DiscreteHodgeCalibration
 import InfoGeometry.Canonical.SplitG2DiscreteCoframePullback
-import InfoGeometry.Canonical.SplitG2DiscreteCurvatureWitness
+import InfoGeometry.Canonical.SplitG2DiscreteCurvature
 
 namespace InfoGeometry.Canonical
 
@@ -16,14 +16,14 @@ It does not introduce a smooth Hodge star or a manifold torsion-free theorem.
 structure SplitG2DiscreteForms (E : Type*) (K : FiniteOrientedCellComplex) where
   calibration : SplitG2DiscreteHodgeCalibration K
   coframe : SplitG2DiscreteCoframe K
-  curvatureWitness : SplitG2DiscreteCurvatureWitness E
+  curvatureData : SplitG2DiscreteCurvatureData E
 
 namespace SplitG2DiscreteForms
 
 variable {E : Type*} {K : FiniteOrientedCellComplex}
 
 abbrev connection (D : SplitG2DiscreteForms E K) : SplitG2GaugeConnection E :=
-  D.curvatureWitness.connection
+  D.curvatureData.connection
 
 abbrev phi (D : SplitG2DiscreteForms E K) : RationalColorCochain K 3 :=
   D.calibration.phi
@@ -43,7 +43,7 @@ theorem flat_triangle
     (D : SplitG2DiscreteForms E K)
     (e₁ e₂ e₃ : E) :
     curvature D.connection e₁ e₂ e₃ = SplitG2Automorphism.id :=
-  D.curvatureWitness.flat_triangle e₁ e₂ e₃
+  D.curvatureData.flat_triangle e₁ e₂ e₃
 
 theorem flat_triangle_apply
     (D : SplitG2DiscreteForms E K)
@@ -61,15 +61,15 @@ theorem flat_triangle_preserves_threeForm
         (curvature D.connection e₁ e₂ e₃ y)
         (curvature D.connection e₁ e₂ e₃ z) =
       canonicalSplitG2ThreeFormValue x y z := by
-  exact D.curvatureWitness.flat_triangle_preserves_threeForm e₁ e₂ e₃ x y z
+  exact D.curvatureData.flat_triangle_preserves_threeForm e₁ e₂ e₃ x y z
 
-theorem torsion_free_socket
+theorem closed_forms_and_flat_curvature
     (D : SplitG2DiscreteForms E K) :
     rationalCoboundary K 3 (phi D) = 0 ∧
       rationalCoboundary K 4 (psi D) = 0 ∧
       ∀ e₁ e₂ e₃ : E,
         curvature D.connection e₁ e₂ e₃ = SplitG2Automorphism.id :=
-  ⟨D.phi_closed, D.psi_closed, D.curvatureWitness.flat_triangle⟩
+  ⟨D.phi_closed, D.psi_closed, D.curvatureData.flat_triangle⟩
 
 end SplitG2DiscreteForms
 

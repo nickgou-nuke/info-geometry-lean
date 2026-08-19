@@ -89,4 +89,30 @@ theorem stageLogPartition_succ (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : �
     rw [Real.log_mul (ne_of_gt h1) (ne_of_gt h2)]
   · rw [mul_one, add_zero]
 
+/-! Closed finite form of the additive prime-cutoff recurrence. -/
+
+theorem stageLogPartition_eq_sum
+    (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : ℝ) :
+    Real.log (finiteEulerProduct (primeCutoffRegister n) energyWeight β μ) =
+      ∑ k ∈ Finset.range n,
+        if _h : Nat.Prime (k + 1) then
+          Real.log (1 + Real.exp (-β * (energyWeight (k + 1) - μ)))
+        else
+          0 := by
+  induction n with
+  | zero =>
+      have hprimes : primesUpto 0 = ∅ := by
+        ext p
+        constructor
+        · intro hp
+          have hle : p ≤ 0 := (mem_primesUpto_iff.mp hp).1
+          have hpos : 0 < p := (mem_primesUpto_iff.mp hp).2.pos
+          omega
+        · intro hp
+          simp at hp
+      simp [finiteEulerProduct, hprimes]
+  | succ n ih =>
+      rw [stageLogPartition_succ n energyWeight β μ, ih]
+      rw [Finset.sum_range_succ]
+
 end InfoGeometry.Categorical.PrimeThermodynamicLogRecurrence

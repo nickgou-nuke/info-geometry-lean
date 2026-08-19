@@ -44,6 +44,65 @@ theorem inducedMap_unique (τ : F ⟶ G) (h : colimit F ⟶ colimit G)
   intro j
   rw [hh j, inducedMap_on_stage]
 
+theorem inducedMap_id :
+    inducedMap (𝟙 F) = 𝟙 (colimit F) := by
+  apply colimit.hom_ext
+  intro j
+  rw [inducedMap_on_stage]
+  simp
+
+theorem inducedMap_comp
+    {H : J ⥤ TopCat} [HasColimit H]
+    (τ : F ⟶ G) (υ : G ⟶ H) :
+    inducedMap (τ ≫ υ) = inducedMap τ ≫ inducedMap υ := by
+  apply colimit.hom_ext
+  intro j
+  calc
+    colimit.ι F j ≫ inducedMap (τ ≫ υ) =
+        (τ ≫ υ).app j ≫ colimit.ι H j := inducedMap_on_stage (τ ≫ υ) j
+    _ = (τ.app j ≫ υ.app j) ≫ colimit.ι H j := by rfl
+    _ = τ.app j ≫ (υ.app j ≫ colimit.ι H j) := Category.assoc _ _ _
+    _ = τ.app j ≫ (colimit.ι G j ≫ inducedMap υ) := by
+      rw [inducedMap_on_stage]
+    _ = (τ.app j ≫ colimit.ι G j) ≫ inducedMap υ :=
+      (Category.assoc _ _ _).symm
+    _ = (colimit.ι F j ≫ inducedMap τ) ≫ inducedMap υ := by
+      rw [inducedMap_on_stage]
+    _ = colimit.ι F j ≫ inducedMap τ ≫ inducedMap υ :=
+      Category.assoc _ _ _
+
+noncomputable def inducedMapIso (e : F ≅ G) :
+    colimit F ≅ colimit G where
+  hom := inducedMap e.hom
+  inv := inducedMap e.inv
+  hom_inv_id := by
+    rw [← inducedMap_comp, e.hom_inv_id, inducedMap_id]
+  inv_hom_id := by
+    rw [← inducedMap_comp, e.inv_hom_id, inducedMap_id]
+
+theorem inducedMapIso_trans
+    {H : J ⥤ TopCat} [HasColimit H]
+    (e : F ≅ G) (f : G ≅ H) :
+    inducedMapIso (e.trans f) =
+      (inducedMapIso e).trans (inducedMapIso f) := by
+  apply Iso.ext
+  exact inducedMap_comp e.hom f.hom
+
+theorem inducedMapIso_refl :
+    inducedMapIso (Iso.refl F) = Iso.refl (colimit F) := by
+  apply Iso.ext
+  exact inducedMap_id
+
+theorem inducedMapIso_hom_on_stage (e : F ≅ G) (j : J) :
+    colimit.ι F j ≫ (inducedMapIso e).hom =
+      e.hom.app j ≫ colimit.ι G j := by
+  exact inducedMap_on_stage e.hom j
+
+theorem inducedMapIso_inv_on_stage (e : F ≅ G) (j : J) :
+    colimit.ι G j ≫ (inducedMapIso e).inv =
+      e.inv.app j ≫ colimit.ι F j := by
+  exact inducedMap_on_stage e.inv j
+
 theorem inducedMap_intertwines
     (η : F ⟶ F) (θ : G ⟶ G) (τ : F ⟶ G)
     (hτ : η ≫ τ = τ ≫ θ) :

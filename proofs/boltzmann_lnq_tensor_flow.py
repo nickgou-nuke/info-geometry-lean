@@ -103,7 +103,7 @@ def boltzmann(energies: np.ndarray, beta: float) -> tuple[np.ndarray, float]:
 
 def vector_field(theta: np.ndarray, expected_logq: np.ndarray, target: np.ndarray, params: FlowParams) -> np.ndarray:
     # A deliberately simple dissipative feedback law.  It is not asserted to be
-    # physical; it just supplies a finite flow socket over ln(Q)-observables.
+    # physical; it just supplies a finite flow deferred_interface over ln(Q)-observables.
     return -params.damping * theta + params.feedback * (target - expected_logq)
 
 

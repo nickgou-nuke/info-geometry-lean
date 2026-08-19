@@ -31,6 +31,10 @@ theorem idx_card_pow_two (n : ℕ) :
   | succ n ih =>
       simp [Idx, Fintype.card_prod, ih, pow_succ, Nat.mul_comm]
 
+@[simp] theorem card_idx_zero : Fintype.card (Idx 0) = 1 := by
+  change Fintype.card (Fin 1) = 1
+  exact Fintype.card_fin 1
+
 /-- Noncomputable cardinality equivalence between the tensor index and the
 standard full spinor index `Fin (2^n)`. -/
 noncomputable def idxEquivFinPowTwo (n : ℕ) : Idx n ≃ Fin (2 ^ n) :=

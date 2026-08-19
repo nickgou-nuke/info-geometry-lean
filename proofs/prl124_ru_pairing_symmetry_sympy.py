@@ -24,7 +24,7 @@ assert list(degs.values())==[2,4,6,10,6] and sum(degs.values())==28 and 2*sum(de
 reaction={'projectile':(36,18),'target':(54,26),'evap_n':2}
 assert reaction['projectile'][0]+reaction['target'][0]-reaction['evap_n']==88
 assert reaction['projectile'][1]+reaction['target'][1]==44
-# Pairing-plus-multipole/isospin-conserving Hamiltonian socket: monopole, quadrupole, T=1 pair, T=0 pair.
+# Pairing-plus-multipole/isospin-conserving Hamiltonian deferred_interface: monopole, quadrupole, T=1 pair, T=0 pair.
 hamiltonian_terms=4
 assert hamiltonian_terms==4
 print({'doi':'10.1103/PhysRevLett.124.062501','A':A,'Z':Z,'N':N,'twoTz':twoTz,'su2_spin_generators':len(su2_generators),'su2_isospin_generators':len(iso_generators),'cartan_generators':cartan,'total_generators':6,'su2_roots':roots,'spin_C2_I14':casimir(14),'isospin_C2_T1':casimir(1),'isovector_pair':isovector,'isoscalar_pair':isoscalar,'band_spins':band,'new_gamma_keV':gammas,'omega_normal':omega_normal,'omega_Ru88':omega_ru,'omega_delay':omega_ru-omega_normal,'omega_ratio':omega_ru/omega_normal,'fpgd_degeneracies':degs,'fpgd_total_per_species':sum(degs.values()),'fpgd_total_pn':2*sum(degs.values()),'reaction_product':(88,44),'hamiltonian_terms':hamiltonian_terms,'edges':6})

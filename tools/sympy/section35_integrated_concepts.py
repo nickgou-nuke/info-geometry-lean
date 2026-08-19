@@ -78,7 +78,7 @@ def main() -> int:
     print("finite biquaternion dual/chiral shadow: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 35 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 35 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

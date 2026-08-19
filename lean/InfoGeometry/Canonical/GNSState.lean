@@ -13,7 +13,7 @@ open InfoGeometry.Canonical.CantorCuntzBasis
 /-!
 # Finite-Cylinder GNS State
 
-This file replaces the abstract generated `CuntzAlgebra` socket with the
+This file replaces the abstract generated `CuntzAlgebra` interface with the
 finite-cylinder substrate needed before a real GNS completion can be built.
 
 The carrier is the finitely supported real vector space on finite binary
@@ -76,7 +76,7 @@ verified premises.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields,
+[Exact theorem statements that remain unproved. No wrappers, interfaces, fields,
 witnesses, certificates, or renamed placeholders.]
 
 * Prove the explicit unitary identification with the concrete Hilbert/Cantor

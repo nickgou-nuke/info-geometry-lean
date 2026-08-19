@@ -1301,7 +1301,7 @@ import Omega.POM.VisibleWalshGramTransfer
 import Omega.POM.VisibleWalshSectorwiseInheritance
 import Omega.POM.VisibleWalshParsevalFrame
 import Omega.POM.GoldenDriftWalkLdpRate
-import Omega.POM.WitnessExtractionOptimalSuccess
+import Omega.POM.OptimalSuccessBound
 import Omega.POM.DerivedBinaryAdmissibilityGoldenRateFloor
 import Omega.POM.DerivedBinaryAdmissibilityGoldenTopophase
 import Omega.POM.ZeroTempConcentration

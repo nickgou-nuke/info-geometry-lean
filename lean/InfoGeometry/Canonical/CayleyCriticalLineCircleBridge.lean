@@ -1,6 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -72,6 +70,24 @@ theorem cayleyToFugacity_cayleyToTemperature
   unfold cayleyToFugacity cayleyToTemperature
   field_simp [hz]
   ring
+
+theorem cayleyToFugacity_injective_of_ne_one
+    {s t : ℂ} (hs : 1 - s ≠ 0) (ht : 1 - t ≠ 0)
+    (h : cayleyToFugacity s = cayleyToFugacity t) :
+    s = t := by
+  have h' := congrArg cayleyToTemperature h
+  rw [cayleyToTemperature_cayleyToFugacity s hs,
+    cayleyToTemperature_cayleyToFugacity t ht] at h'
+  exact h'
+
+theorem cayleyToTemperature_injective_of_ne_neg_one
+    {z w : ℂ} (hz : 1 + z ≠ 0) (hw : 1 + w ≠ 0)
+    (h : cayleyToTemperature z = cayleyToTemperature w) :
+    z = w := by
+  have h' := congrArg cayleyToFugacity h
+  rw [cayleyToFugacity_cayleyToTemperature z hz,
+    cayleyToFugacity_cayleyToTemperature w hw] at h'
+  exact h'
 
 /--
 The Cayley transform maps the critical line to the Lee--Yang unit circle.
@@ -225,7 +241,29 @@ theorem cayleyToFugacity_one_sub_eq_inv
   field_simp [hs, h1s]
   ring
 
-/-! ## Prime-gas Lee--Yang approximation socket -/
+/-! The inverse Cayley chart carries fugacity inversion back to reflection. -/
+theorem cayleyToTemperature_inv_eq_one_sub
+    {z : ℂ} (hz : z ≠ 0) (hz' : 1 + z ≠ 0) :
+    cayleyToTemperature z⁻¹ = 1 - cayleyToTemperature z := by
+  unfold cayleyToTemperature
+  field_simp [hz, hz']
+  have hden : z + 1 ≠ 0 := by simpa [add_comm] using hz'
+  rw [show 1 + z = z + 1 by ring, div_self hden]
+  ring
+
+/-! The unit-circle condition is stable under fugacity inversion. -/
+theorem onLeeYangCircle_inv
+    {z : ℂ} (hz : OnLeeYangCircle z) :
+    OnLeeYangCircle z⁻¹ := by
+  have hz0 : z ≠ 0 := by
+    intro h
+    subst z
+    norm_num [OnLeeYangCircle] at hz
+  unfold OnLeeYangCircle at hz ⊢
+  rw [Complex.normSq_inv, hz]
+  simp
+
+/-! ## Prime-gas Lee--Yang approximation interface -/
 
 /--
 Finite-volume Lee--Yang approximation scheme for the completed

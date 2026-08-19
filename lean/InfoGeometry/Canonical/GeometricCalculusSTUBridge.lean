@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Applications.STUBlackHoleQubit
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry/Canonical/GeometricCalculusSTUBridge.lean
@@ -179,21 +178,16 @@ The construction remains property-gated: the Clifford resolvent family,
 boundary, observer, and flux/entropy equality must still be supplied by future
 analytic geometry.
 -/
-@[owner_target_tag]
-def STUQubitBoundaryFluxOwnerTarget : Prop :=
+theorem stuQubitBoundaryFlux_eq_hyperdeterminantEntropy :
   ∀ (E : Type uE) (P : Type uP)
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P],
     ∀ D : STUQubitBoundaryDatum.{uE, uP, uΩ} E P,
       D.geometry = stuQubitChargeGeometry →
-        ∀ W : STUQubitBoundaryFluxBridge.{uE, uP, uΩ, uΩ} D,
+        ∀ W : STUQubitBoundaryFluxBridge D,
           FluxEqualsQuarticEntropy
             D.A W.resolvent D.boundary W.normalizationFactor W.observer
-            D.geometry D.boundaryCharges
-
-/-- A supplied STU boundary bridge reads out scalar flux as quartic entropy. -/
-theorem stuQubitBoundaryFluxOwnerTarget :
-    STUQubitBoundaryFluxOwnerTarget.{uE, uP, uΩ} := by
+            D.geometry D.boundaryCharges := by
   intro E P _ _ _ _ _ D _ W
   exact STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy W
 

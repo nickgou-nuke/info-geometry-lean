@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SplitOctonionRegularProjectors
 import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Physics.HestenesKreinOperatorCalculus
 
 /-!
 # Split-octonion boost to Bogoliubov generator
@@ -23,6 +24,11 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
 
 /-- A representation contract for one split-octonion boost plane. -/
 structure SplitOctonionBoostRepresentation
@@ -68,6 +74,20 @@ theorem rho_hyperbolicOperatorFlow_eq_propagator
     R.rho (hyperbolicOperatorFlow g eta) = R.propagator eta := by
   unfold hyperbolicOperatorFlow propagator
   rw [R.map_add, R.map_smul, R.map_smul, R.map_id, R.generator_eq]
+
+/-- The represented hyperbolic propagator is the genuine exponential flow of
+the Bogoliubov connection generator.  The square-one identity is supplied by
+the representation contract, and the closed `cosh`/`sinh` form is the native
+Mathlib exponential theorem. -/
+theorem propagator_eq_normedSpace_exp
+    (R : SplitOctonionBoostRepresentation (E := E) g V)
+    (hg : Quaternion.normSq g = 1) (eta : ℝ) :
+    NormedSpace.exp (eta • V.connectionGenerator) = R.propagator eta := by
+  have hsq : V.connectionGenerator ^ 2 = (1 : EndH) := by
+    simpa [pow_two] using R.generator_sq hg
+  simpa [propagator] using
+    (InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_one
+      V.connectionGenerator hsq eta)
 
 theorem propagator_zero
     (R : SplitOctonionBoostRepresentation (E := E) g V) :

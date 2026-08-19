@@ -1,7 +1,6 @@
 import InfoGeometry.Canonical.CuntzCliffordBottBridge
 import InfoGeometry.Canonical.CuntzMapKreinBridge
-import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 
 /-!
 # Çelik--Koçak Split Fock Data as a Cuntz Clock
@@ -25,7 +24,7 @@ Cuntz clock and Bott bonding maps.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 The analytic infinite Fock completion, `O_2`/CAR isomorphism, K-theory
-vanishing, and historical attribution beyond the existing socket citation.
+vanishing, and historical attribution beyond the existing interface citation.
 -/
 
 set_option autoImplicit false
@@ -36,7 +35,7 @@ namespace InfoGeometry.Canonical.CelikKocakCuntzFockBridge
 
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Canonical.CuntzCliffordBottBridge
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 variable {Op : Type*} [Ring Op] [StarRing Op]

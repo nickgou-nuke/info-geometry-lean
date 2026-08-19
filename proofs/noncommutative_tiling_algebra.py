@@ -54,7 +54,7 @@ thin = 1/phi**2
 assert_zero("1/phi + 1/phi^2 = 1", thick + thin - 1)
 print("relative thick/thin frequencies normalized ✓")
 
-print("\n§5 spectral triple/groupoid sockets")
-print("C*(G), von Neumann trace, K0 gap labels, and Connes spectral triple are sockets; finite anchors verified ✓")
+print("\n§5 spectral triple/groupoid deferred_interfaces")
+print("C*(G), von Neumann trace, K0 gap labels, and Connes spectral triple are deferred_interfaces; finite anchors verified ✓")
 
 print("\nnoncommutative_tiling_algebra.py: All identities verified")

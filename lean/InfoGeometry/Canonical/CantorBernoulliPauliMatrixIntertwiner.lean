@@ -178,7 +178,8 @@ theorem pauliCuntzMomentumRepresentation_lorentz_intertwines
         (Matrix.toEuclideanLin
           (InfoGeometry.Physics.LorentzChiralCuntzBridge.chiralConjAct g
             (pauliMomentum P)) x) := by
-      rw [InfoGeometry.Physics.LorentzChiralCuntzBridge.pauliMomentum_spinLorentzAction]
+      rw [InfoGeometry.Physics.LorentzChiralCuntzBridge.spinLorentzAction,
+        pauliMomentum_fourMomentumOfMatrix]
 
 /-- The Cantor matrix action of the momentum extracted from a chiral
     supercharge anticommutator.  This packages the existing finite
@@ -189,7 +190,8 @@ def pauliCuntzSuperchargeMomentumRepresentation
   pauliCuntzMomentumRepresentation S.P
 
 theorem pauliCuntzSuperchargeMomentumRepresentation_intertwines
-    (S : ChiralSUSYMomentum) (x : SpinorSpace) :
+    (S : ChiralSUSYMomentum) (hS : ChiralSUSYMomentumLaws S)
+    (x : SpinorSpace) :
     pauliCuntzSuperchargeMomentumRepresentation S (spinorToCantorL2 x) =
       spinorToCantorL2
         (Matrix.toEuclideanLin (momentumSpinorFromSupercharges S) x) := by
@@ -199,6 +201,6 @@ theorem pauliCuntzSuperchargeMomentumRepresentation_intertwines
       exact pauliCuntzMomentumRepresentation_intertwines S.P x
     _ = spinorToCantorL2
         (Matrix.toEuclideanLin (momentumSpinorFromSupercharges S) x) := by
-      rw [momentum_from_supercharges S]
+      rw [momentum_from_supercharges S hS]
 
 end InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner

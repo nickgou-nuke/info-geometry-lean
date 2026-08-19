@@ -77,19 +77,33 @@ theorem fibonacciPathCount_initial :
     fibonacciPathCount 0 = 1 ∧ fibonacciPathCount 1 = 1 := by
   simp [fibonacciPathCount]
 
-theorem admissiblePathSpace_nonempty : Nonempty AdmissiblePathSpace := by
-  refine ⟨⟨fun _ => 1, ?_⟩⟩
+def constantOnePath : AdmissiblePathSpace :=
+  ⟨fun _ => 1, by
+    intro i
+    simp [fibonacciAdjacency]⟩
+
+theorem constantOnePath_is_admissible :
+    ∀ i, fibonacciAdjacency (constantOnePath.1 i)
+      (constantOnePath.1 (i + 1)) = 1 := by
   intro i
-  simp [fibonacciAdjacency]
+  exact constantOnePath.2 i
+
+theorem admissiblePathSpace_nonempty : Nonempty AdmissiblePathSpace := by
+  exact ⟨constantOnePath⟩
+
+def tailPath (x : AdmissiblePathSpace) : AdmissiblePathSpace :=
+  ⟨fun n => x.1 (n + 1), by
+    intro n
+    exact x.2 (n + 1)⟩
+
+theorem tailPath_apply (x : AdmissiblePathSpace) (n : ℕ) :
+    (tailPath x).1 n = x.1 (n + 1) := by
+  rfl
 
 theorem admissiblePathSpace_tail
     (x : AdmissiblePathSpace) :
     ∃ y : AdmissiblePathSpace, ∀ n : ℕ, y.1 n = x.1 (n + 1) := by
-  refine ⟨⟨fun n => x.1 (n + 1), ?_⟩, ?_⟩
-  · intro n
-    exact x.2 (n + 1)
-  · intro n
-    rfl
+  exact ⟨tailPath x, fun n => tailPath_apply x n⟩
 
 theorem admissiblePath_next_eq_one_of_head_zero
     (x : AdmissiblePathSpace) (hx : x.1 0 = 0) :

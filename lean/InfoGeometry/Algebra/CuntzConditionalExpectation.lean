@@ -70,7 +70,8 @@ theorem expectation_matrix_unit (n : ℕ) (i j : Fin n) :
 /-- E(P_i) = P_i. Projectors are fixed. -/
 theorem expectation_projector (n : ℕ) (i : Fin n) :
     expectation n (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
-  simp [expectation_matrix_unit]
+  rw [expectation_matrix_unit]
+  rw [if_pos rfl]
 
 /-- E is idempotent on matrix units: E(E(E_{ij})) = E(E_{ij}). -/
 theorem expectation_idempotent_matrix_unit (n : ℕ) (i j : Fin n) :
@@ -78,8 +79,9 @@ theorem expectation_idempotent_matrix_unit (n : ℕ) (i j : Fin n) :
     expectation n (cuntzS n i * cuntzSdag n j) := by
   rw [expectation_matrix_unit]
   by_cases hij : i = j
-  · subst hij; simp [expectation_projector]
-  · simp [hij]
+  · subst hij
+    rw [if_pos rfl, expectation_projector]
+  · rw [if_neg hij, map_zero]
 
 /-- E is unital: E(1) = 1. -/
 theorem expectation_one (n : ℕ) : expectation n 1 = 1 := by

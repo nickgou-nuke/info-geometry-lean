@@ -410,7 +410,7 @@ theorem phase_compact
 /-- Direct eigenmode transfer through a bounded realization.
 
 The hypotheses are the precise graph-intertwining and eigenmode equations; no
-structure stores them as evidence fields.
+structure stores them as explicit hypothesis fields.
 -/
 theorem bounded_realization_transfers_eigenmode
     {Op H Domain : Type*}
@@ -484,17 +484,19 @@ theorem even_periodic
 theorem kms_lower_boundary
     {Observable : Type*} [Monoid Observable]
     (strip : HestenesKreinKMSStripData Observable)
+    (hstrip : HestenesKreinKMSStripLaw strip)
     (t : ℝ) (a b : Observable) :
     strip.omega_eval a
       (strip.analytic.sigmaC (t : ℂ) b) =
     strip.omega_eval a
       (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma strip.analytic.modular t b) :=
-  strip.boundary_lower t a b
+  hstrip.1 t a b
 
 /-- Upper KMS boundary identity, directly from genuine strip data. -/
 theorem kms_upper_boundary
     {Observable : Type*} [Monoid Observable]
     (strip : HestenesKreinKMSStripData Observable)
+    (hstrip : HestenesKreinKMSStripLaw strip)
     (t : ℝ) (a b : Observable) :
     strip.omega_eval a
       (strip.analytic.sigmaC
@@ -502,18 +504,19 @@ theorem kms_upper_boundary
     strip.omega_eval
       (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma strip.analytic.modular
         (t + strip.analytic.beta) b) a :=
-  strip.boundary_upper t a b
+  hstrip.2 t a b
 
 /-- Constructive KMS boundary law of an actual modular thermal state. -/
 theorem modularThermalState_kms_boundary
     {Observable : Type*} [Monoid Observable]
     (thermalState : ModularThermalState Observable)
+    (hK : KMSBoundaryLaw thermalState.kms)
     (t : ℝ) (a b : Observable) :
     thermalState.kms.omega_eval a
       (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma thermalState.kms.modular t b) =
     thermalState.kms.omega_eval
       (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma thermalState.kms.modular
         (t + thermalState.kms.beta) b) a :=
-  thermalState.kms.kms_boundary t a b
+  KMSBoundaryLaw.boundary thermalState.kms hK t a b
 
 end InfoGeometry.Topology.CantorDiracOperator

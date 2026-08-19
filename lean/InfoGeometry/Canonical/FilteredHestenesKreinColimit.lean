@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 import InfoGeometry.Canonical.HestenesAnalyticity
+import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 
 /-!
 # Filtered Hestenes--Krein colimit
@@ -128,6 +129,13 @@ carrier. -/
 theorem ι_bond_apply (n : ℕ) (x : DoubledSpace (C.Base n)) :
     C.ι (n + 1) (C.bond n x) = C.ι n x :=
   (C.toFilteredPhaseCone).include_bond_apply n x
+
+/-- Compatible representatives remain equal after any finite number of
+    filtered Hestenes--Krein transitions. -/
+theorem ι_bondIterate_apply
+    (n m : ℕ) (x : DoubledSpace (C.Base n)) :
+    C.ι (n + m) ((C.toFilteredPhaseCone).bondIterate n m x) = C.ι n x :=
+  (C.toFilteredPhaseCone).ι_bondIterate_apply n m x
 
 end HestenesKreinCone
 

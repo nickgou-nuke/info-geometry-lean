@@ -502,7 +502,7 @@ theorem tracePartition_eq_zetaReadout
 
 end ThreeLayerIdeleSymmetry
 
-/-! ## Proof-carrying adelic quotient socket -/
+/-! ## Adelic quotient equivalence -/
 
 /--
 Proof-carrying decomposition packet for a concrete construction of the rational
@@ -512,27 +512,24 @@ Supplying this packet is the precise place where a future full adelic owner can
 prove that its quotient model is equivalent to the product of the positive-scale
 and arithmetic/Galois layers.  This module only consumes that equivalence.
 -/
-structure RationalIdeleClassDecomposition (ClassGroup G : Type*) where
-  toLayers : ClassGroup → IdeleClassLayer G
-  fromLayers : IdeleClassLayer G → ClassGroup
-  left_inv : ∀ c : ClassGroup, fromLayers (toLayers c) = c
-  right_inv : ∀ x : IdeleClassLayer G, toLayers (fromLayers x) = x
+def RationalIdeleClassEquiv (ClassGroup G : Type*) : Type _ :=
+  ClassGroup ≃ IdeleClassLayer G
 
-namespace RationalIdeleClassDecomposition
+namespace RationalIdeleClassEquiv
 
 variable {ClassGroup G : Type*}
-variable (D : RationalIdeleClassDecomposition ClassGroup G)
+variable (D : RationalIdeleClassEquiv ClassGroup G)
 
 /-- Round-trip from an idele class to the layer decomposition and back. -/
 theorem from_to (c : ClassGroup) :
-    D.fromLayers (D.toLayers c) = c :=
-  D.left_inv c
+    D.symm (D.toFun c) = c :=
+  D.symm_apply_apply c
 
 /-- Round-trip from layer data to the class-group model and back. -/
 theorem to_from (x : IdeleClassLayer G) :
-    D.toLayers (D.fromLayers x) = x :=
-  D.right_inv x
+    D.toFun (D.symm x) = x :=
+  D.apply_symm_apply x
 
-end RationalIdeleClassDecomposition
+end RationalIdeleClassEquiv
 
 end InfoGeometry.Arithmetic.IdeleClassZetaSymmetry

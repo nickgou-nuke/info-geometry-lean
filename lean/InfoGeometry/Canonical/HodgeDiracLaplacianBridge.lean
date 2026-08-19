@@ -4,7 +4,7 @@ import Mathlib.Tactic
 /-!
 # InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 
-Thin algebraic Hodge--Dirac--Laplacian socket.
+Thin algebraic Hodge--Dirac--Laplacian interface.
 
 This file does not construct a global Hodge theory and does not assert a
 signature-independent `*² = -1` law.  The Hodge/phase convention is supplied as
@@ -148,7 +148,7 @@ This is intentionally a property-gated interface for downstream affine/Sugawara
 calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
-abbrev CentralReadoutWitness
+abbrev CentralReadoutCommutes
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
   ∀ A : Op, Commute (centralReadout C) A
@@ -168,7 +168,7 @@ def IsCentralReadoutFromLaplacianAnomaly
 theorem centralReadout_eq_carrier_of_property
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
-    (W : CentralReadoutWitness C) :
+    (W : CentralReadoutCommutes C) :
     centralReadout C = centralReadout C ∧
       IsCentralReadoutFromLaplacianAnomaly C :=
   ⟨rfl, W⟩
@@ -178,7 +178,7 @@ theorem centralReadout_eq_carrier_of_property
 theorem centralReadout_isCentral_of_property
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
-    (W : CentralReadoutWitness C) :
+    (W : CentralReadoutCommutes C) :
     IsCentralReadoutFromLaplacianAnomaly C := by
   exact W
 

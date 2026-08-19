@@ -87,6 +87,17 @@ namespace InfiniteCoadjointOrbitMetriplecticContext
 variable {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
 variable (C : InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg)
 
+/-!
+The total entropy-production channel is nonnegative once the two native
+metriple-ctic laws are combined.  This is a derived theorem, not an additional
+context field: the reversible contribution vanishes by the Casimir law and the
+remaining metric contribution is nonnegative by the Onsager law.
+-/
+theorem totalEntropyRate_nonnegative (x : Orbit) :
+    0 ≤ C.totalEntropyRate x := by
+  rw [C.total_entropy_split x, C.casimir_reversible x]
+  simpa using C.onsager_metric_nonnegative x
+
 /--
 Canonical dimension-agnostic constructor where the selected coadjoint orbit is
 the image of the moment map.
@@ -1342,6 +1353,21 @@ theorem massieu_eq_log_partition_at (β : LieAlg) :
 theorem fisher_hessian_eq_covariance (β : LieAlg) :
     C.fisherHessian β = C.momentCovariance β :=
   C.fisher_eq_covariance β
+
+-- theorem-class: bridge
+/--
+The Massieu second variation is the moment covariance after identifying the
+intermediate Fisher/Hessian readout.  This is the finite algebraic
+composition used by concrete orbit models to pass from the potential to the
+covariance form.
+-/
+@[rep_depth transport]
+theorem massieu_hessian_eq_moment_covariance (β : LieAlg) :
+    C.massieuHessian β = C.momentCovariance β := by
+  calc
+    C.massieuHessian β = C.fisherHessian β :=
+      congrFun C.second_variation_eq_fisher_proof β
+    _ = C.momentCovariance β := C.fisher_eq_covariance β
 
 -- theorem-class: bridge
 /-- Fisher symmetry in the full coadjoint-orbit Hessian interface. -/

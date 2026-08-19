@@ -18,7 +18,7 @@ namespace InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 
 open InfoGeometry.OperatorAlgebra
 
-/-! ## 1. Quadratic Krein cone sockets -/
+/-! ## 1. Quadratic Krein cone interfaces -/
 
 /--
 A Krein quadratic datum on a carrier with real scaling.
@@ -77,7 +77,7 @@ end KreinQuadraticDatum
 /--
 Projective ray equivalence by nonzero real scalar rescaling.
 
-This is a relation-level socket; quotient/projective-space constructions can
+This is a relation-level interface; quotient/projective-space constructions can
 be added later when needed.
 -/
 def SameProjectiveRay
@@ -328,7 +328,7 @@ end IsNonzeroKreinNull
 /-! ## 6. Projective absolute boundary versus interior metric -/
 
 /--
-A socket separating the Krein isotropic cone from an interior Poincare-type
+A relation separating the Krein isotropic cone from an interior Poincare-type
 metric domain.
 
 The null cone is the projective absolute/boundary.  Hyperbolic/Poincare

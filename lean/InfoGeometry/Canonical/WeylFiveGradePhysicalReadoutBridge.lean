@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.WeylGWVolumeBridge
 open InfoGeometry.Canonical.WeylBKMDriftMassBridge
 open InfoGeometry.Canonical.WeylNormalizedCARCCRBridge
 
-/-- Tags for the already-normalized physical readout sockets. -/
+/-- Tags for the already-normalized physical readouts. -/
 @[rep_depth operator]
 inductive PhysicalReadoutKind where
   | volume

@@ -42,4 +42,31 @@ theorem actualCompletedXiDatum_concrete_norm_schwarz (s : ℂ) :
       Complex.normSq (riemannXi s) := by
   exact xi_norm_schwarz riemannXi actualCompletedXiDatum_concrete s
 
+theorem actualCompletedXiDatum_concrete_zero_reflection (s : ℂ) :
+    riemannXi (1 - s) = 0 ↔ riemannXi s = 0 := by
+  rw [riemannXi_one_sub]
+
+theorem actualCompletedXiDatum_concrete_zero_schwarz (s : ℂ) :
+    riemannXi (star s) = 0 ↔ star (riemannXi s) = 0 := by
+  rw [actualXiSchwarzHypothesis_concrete]
+
+theorem actualCompletedXiDatum_concrete_zero_reflection_schwarz (s : ℂ) :
+    riemannXi (1 - star s) = 0 ↔ riemannXi s = 0 := by
+  rw [riemannXi_one_sub, actualXiSchwarzHypothesis_concrete]
+  simp
+
+theorem actualCompletedXiDatum_concrete_normSq_zero_iff (s : ℂ) :
+    Complex.normSq (riemannXi s) = 0 ↔ riemannXi s = 0 := by
+  exact Complex.normSq_eq_zero
+
+theorem actualCompletedXiDatum_concrete_normSq_zero_reflection (s : ℂ) :
+    Complex.normSq (riemannXi (1 - s)) = 0 ↔
+      Complex.normSq (riemannXi s) = 0 := by
+  rw [actualCompletedXiDatum_concrete_norm_func]
+
+theorem actualCompletedXiDatum_concrete_normSq_zero_schwarz (s : ℂ) :
+    Complex.normSq (riemannXi (star s)) = 0 ↔
+      Complex.normSq (riemannXi s) = 0 := by
+  rw [actualCompletedXiDatum_concrete_norm_schwarz]
+
 end InfoGeometry.Canonical.ActualCompletedXiDatumBridge

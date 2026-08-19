@@ -260,6 +260,13 @@ theorem D_plus_mul_D_minus (n : Fin 3) : D_plus n * D_minus n = 0 := by
     unfold D_plus D_minus oneZ J
     apply zorn_ext <;> dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ, negZ, smulZ, addZ, zeroZ, oneZ, J] <;> norm_num
 
+theorem D_minus_mul_D_plus (n : Fin 3) : D_minus n * D_plus n = 0 := by
+  fin_cases n
+  all_goals
+    change mulZ (D_minus _) (D_plus _) = 0
+    unfold D_minus D_plus oneZ J
+    apply zorn_ext <;> dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ, negZ, smulZ, addZ, zeroZ, oneZ, J] <;> norm_num
+
 theorem G_plus_nilpotent (n : Fin 3) : G_plus n * G_plus n = 0 := by
   fin_cases n
   all_goals
@@ -280,6 +287,35 @@ theorem G_plus_mul_G_minus (n : Fin 3) : G_plus n * G_minus n = D_minus n := by
     change mulZ (G_plus _) (G_minus _) = D_minus _
     unfold G_plus G_minus D_minus I j J oneZ
     apply zorn_ext <;> dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ, negZ, smulZ, addZ, zeroZ, I, j, J, oneZ] <;> norm_num
+
+theorem G_minus_mul_G_plus (n : Fin 3) : G_minus n * G_plus n = D_plus n := by
+  fin_cases n
+  all_goals
+    change mulZ (G_minus _) (G_plus _) = D_plus _
+    unfold G_minus G_plus D_plus I j J oneZ
+    apply zorn_ext <;> dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ, negZ, smulZ, addZ, zeroZ, I, j, J, oneZ] <;> norm_num
+
+theorem D_plus_add_D_minus (n : Fin 3) :
+    D_plus n + D_minus n = oneZ := by
+  fin_cases n
+  all_goals
+    change addZ (D_plus _) (D_minus _) = oneZ
+    unfold D_plus D_minus oneZ J
+    apply zorn_ext <;> dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ, negZ, smulZ, addZ, zeroZ, oneZ, J] <;> norm_num
+
+theorem G_ladder_anticommutator (n : Fin 3) :
+    G_plus n * G_minus n + G_minus n * G_plus n = oneZ := by
+  rw [G_plus_mul_G_minus, G_minus_mul_G_plus]
+  calc
+    D_minus n + D_plus n = D_plus n + D_minus n := by
+      fin_cases n
+      all_goals
+        change addZ (D_minus _) (D_plus _) = addZ (D_plus _) (D_minus _)
+        unfold D_minus D_plus oneZ J
+        apply zorn_ext <;>
+          dsimp only [zero_val, addZ_val, smulZ_val, ZornCell.mulZ,
+            negZ, smulZ, addZ, zeroZ, oneZ, J] <;> norm_num
+    _ = oneZ := D_plus_add_D_minus n
 
 /-
 ### Consolidated synthesis lemma

@@ -104,7 +104,7 @@ structure MobiusCoefficient where
 
 /-! ## Native Mathlib Mobius coefficient
 
-The general `MobiusCoefficient` socket remains available for model-specific
+The general `MobiusCoefficient` interface remains available for model-specific
 coefficients.  The canonical arithmetic coefficient below is not an evidence
 packet: it is Mathlib's `ArithmeticFunction.moebius`, coerced to `ℝ`.
 -/

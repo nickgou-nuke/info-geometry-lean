@@ -66,8 +66,7 @@ This is a theorem-carrying summary rather than a new theorem source.
 theorem anomaly_owner_packet
     (K : CertifiedInverseKernel E)
     (CI : ConformalInference E)
-    (S : SuperKMSEquilibriumState)
-    (_P : ParityTraceWitness) :
+    (S : SuperKMSEquilibriumState) :
     (K.drazinProjector * K.geometricCartanGenerator
         - K.geometricCartanGenerator * K.drazinProjector
         = K.rightAnomalyGenerator - K.leftAnomalyGenerator)

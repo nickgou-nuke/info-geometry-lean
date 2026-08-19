@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness
+import InfoGeometry.Canonical.Cl11TensorInductiveLimit
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
 
 /-!
@@ -14,19 +14,19 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalComparison
 
-open InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness
+open InfoGeometry.Canonical.Cl11TensorInductiveLimit
 open InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
 open InfoGeometry.Canonical.CliffordCARTopologicalColimit
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 @[simp] theorem tensorInductiveLimit_inj_eq_ofStage
     (n : ℕ)
-    (A : InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness.Stage n) :
+    (A : InfoGeometry.Canonical.Cl11TensorInductiveLimit.Stage n) :
     cl11TensorInductiveLimit.inj n A = ofStage n A := rfl
 
 theorem tensorInductiveLimit_comparison_stage
     (n : ℕ)
-    (A : InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness.Stage n) :
+    (A : InfoGeometry.Canonical.Cl11TensorInductiveLimit.Stage n) :
     algebraicToTopological
         (cl11TensorInductiveLimit.inj n A) =
       topologicalInjection n A := by
@@ -34,10 +34,10 @@ theorem tensorInductiveLimit_comparison_stage
   exact algebraicToTopological_ofStage n A
 
 theorem algebraicToTopological_unique
-    (f : InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness.Limit →
+    (f : InfoGeometry.Canonical.Cl11TensorInductiveLimit.Limit →
       topologicalColimit)
     (hf : ∀ (n : ℕ)
-      (A : InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness.Stage n),
+      (A : InfoGeometry.Canonical.Cl11TensorInductiveLimit.Stage n),
       f (ofStage n A) = topologicalInjection n A) :
     f = algebraicToTopological := by
   funext x

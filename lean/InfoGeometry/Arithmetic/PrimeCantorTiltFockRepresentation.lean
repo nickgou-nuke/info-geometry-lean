@@ -93,7 +93,7 @@ def tiltOp {P : PrimeRegister} {R : Type*} [Neg R]
 /--
 The switch operator squares to the identity.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem switchOp_sq
     {P : PrimeRegister} {R : Type*} [DecidableEq ℕ]
     (p : ℕ) (hp : p ∈ P.primes) :
@@ -108,7 +108,7 @@ theorem switchOp_sq
 /--
 The tilt operator squares to the identity.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem tiltOp_sq
     {P : PrimeRegister} {R : Type*} [AddGroup R]
     (p : ℕ) :
@@ -125,7 +125,7 @@ Tilt and switch anticommute:
 
 `T_p S_p = - S_p T_p`.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem tilt_switch_anticomm
     {P : PrimeRegister} {R : Type*} [AddGroup R] [DecidableEq ℕ]
     (p : ℕ) (hp : p ∈ P.primes) :
@@ -160,7 +160,7 @@ def splitDOp {P : PrimeRegister} {R : Type*} [Neg R] [DecidableEq ℕ]
 /--
 The split operator `d_p = S_p T_p` squares to `-1`.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem splitDOp_sq
     {P : PrimeRegister} {R : Type*} [AddGroup R] [DecidableEq ℕ]
     (p : ℕ) (hp : p ∈ P.primes) :
@@ -177,7 +177,7 @@ theorem splitDOp_sq
 /--
 The local parity `c_p d_p` is exactly the tilt operator.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem switch_splitDOp_eq_tilt
     {P : PrimeRegister} {R : Type*} [AddGroup R] [DecidableEq ℕ]
     (p : ℕ) (hp : p ∈ P.primes) :

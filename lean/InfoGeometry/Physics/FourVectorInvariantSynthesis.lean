@@ -36,7 +36,7 @@ theorem finite_four_vector_invariant_packet
       minkowskiSq (spinLorentzAction g pM) = minkowskiSq pM ∧
       (JonesSpinor.stokesMinkowski4 J).q = 0 := by
   exact ⟨diracSlash_sq pD,
-    pauliMomentum_spinLorentzAction g pM,
+    (by rw [spinLorentzAction, pauliMomentum_fourMomentumOfMatrix]),
     spinLorentzAction_preserves_minkowskiSq g pM,
     JonesSpinor.stokesMinkowski4_q J⟩
 

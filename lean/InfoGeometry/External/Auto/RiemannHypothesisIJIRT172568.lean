@@ -148,7 +148,7 @@ theorem riemannHypothesis_equiv :
     unfold isOnCriticalLine
     simpa
 
-/-- Numerical evidence: the first 10^13 zeros lie on the critical line.
+/-- Finite numerical check: the first 10^13 zeros lie on the critical line.
     We formalize this as a finite verification statement. -/
 def numericalVerification (N : ℕ) : Prop :=
   ∀ (k : ℕ), k < N → isOnCriticalLine (Complex.I * 14.13472514173469379045725198356247027078)

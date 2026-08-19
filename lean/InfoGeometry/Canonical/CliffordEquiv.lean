@@ -233,7 +233,7 @@ theorem mem_complexSubalgebra_iff {A : Type*} [Ring A] [Algebra ℝ A]
     rw [h_re, h_im, h_I]
     rw [← Algebra.smul_def]
 
-/-! ## 4. Color-ladder socket and Clifford bivector equivalence -/
+/-! ## 4. Color-ladder interface and Clifford bivector equivalence -/
 
 /-- Peirce ladder complex J over ℤ. -/
 def peirceJ : SplitOctonions.Multiplication.SplitOct := ⟨0, 0, 1, 0, 0, -1, 0, 0⟩

@@ -21,6 +21,8 @@ namespace InfoGeometry.Arithmetic.SplitCliffordRealization
 universe uK
 
 variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
+variable (hAtom : Cl11AtomLaws atom)
+include hAtom
 
 /-! ## Euler/chirality identities -/
 
@@ -29,7 +31,7 @@ theorem euler_anticommutes_r0 :
     EulerOperator atom * atom.r0 = -(atom.r0 * EulerOperator atom) := by
   dsimp [EulerOperator, ComplexStructure]
   have hanti : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
-    rw [atom.anticommute, neg_neg]
+    rw [hAtom.2.2, neg_neg]
   calc
     (atom.r0 * atom.r5) * atom.r0
         = atom.r0 * (atom.r5 * atom.r0) := by noncomm_ring
@@ -41,19 +43,19 @@ theorem euler_anticommutes_r5 :
     EulerOperator atom * atom.r5 = -(atom.r5 * EulerOperator atom) := by
   dsimp [EulerOperator, ComplexStructure]
   have hanti : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
-    rw [atom.anticommute, neg_neg]
+    rw [hAtom.2.2, neg_neg]
   have hright : atom.r5 * (atom.r0 * atom.r5) = atom.r0 := by
     calc
       atom.r5 * (atom.r0 * atom.r5)
           = (atom.r5 * atom.r0) * atom.r5 := by noncomm_ring
       _ = (-(atom.r0 * atom.r5)) * atom.r5 := by rw [hanti]
       _ = -(atom.r0 * (atom.r5 * atom.r5)) := by noncomm_ring
-      _ = -(atom.r0 * (-1)) := by rw [atom.r5_sq]
+          _ = -(atom.r0 * (-1)) := by rw [hAtom.2.1]
       _ = atom.r0 := by noncomm_ring
   calc
     (atom.r0 * atom.r5) * atom.r5
         = atom.r0 * (atom.r5 * atom.r5) := by noncomm_ring
-    _ = atom.r0 * (-1) := by rw [atom.r5_sq]
+    _ = atom.r0 * (-1) := by rw [hAtom.2.1]
     _ = -atom.r0 := by noncomm_ring
     _ = -(atom.r5 * (atom.r0 * atom.r5)) := by rw [hright]
 
@@ -61,7 +63,7 @@ omit [Algebra ℝ K] in
 theorem euler_anticommutes_J :
     EulerOperator atom * ComplexStructure atom =
       -(ComplexStructure atom * EulerOperator atom) := by
-  simpa [ComplexStructure] using euler_anticommutes_r5 atom
+  simpa [ComplexStructure] using euler_anticommutes_r5 atom hAtom
 
 theorem euler_anticommutes_linear_combination (a b : ℝ) :
     EulerOperator atom * (a • atom.r0 + b • atom.r5) =
@@ -73,7 +75,7 @@ theorem euler_anticommutes_linear_combination (a b : ℝ) :
       rw [mul_add, mul_smul_comm, mul_smul_comm]
     _ = a • (-(atom.r0 * EulerOperator atom)) +
             b • (-(atom.r5 * EulerOperator atom)) := by
-      rw [euler_anticommutes_r0 atom, euler_anticommutes_r5 atom]
+      rw [euler_anticommutes_r0 atom hAtom, euler_anticommutes_r5 atom hAtom]
     _ = -(a • (atom.r0 * EulerOperator atom) +
             b • (atom.r5 * EulerOperator atom)) := by
       rw [smul_neg, smul_neg]
@@ -100,7 +102,7 @@ theorem chiral_sheets_orthogonal_rev :
         calc
           (1 - atom.r0) * (1 + atom.r0)
               = 1 - atom.r0 * atom.r0 := by noncomm_ring
-          _ = 0 := by rw [atom.r0_sq]; noncomm_ring
+          _ = 0 := by rw [hAtom.1]; noncomm_ring
       rw [h]
     _ = 0 := smul_zero _
 
@@ -108,7 +110,7 @@ theorem chiral_plus_idempotent :
     chiralProjectorPlus atom * chiralProjectorPlus atom =
       chiralProjectorPlus atom := by
   have hpart := chiral_sheets_partition_unity atom
-  have horth := chiral_sheets_orthogonal atom
+  have horth := chiral_sheets_orthogonal atom hAtom
   symm
   calc
     chiralProjectorPlus atom
@@ -124,7 +126,7 @@ theorem chiral_minus_idempotent :
     chiralProjectorMinus atom * chiralProjectorMinus atom =
       chiralProjectorMinus atom := by
   have hpart := chiral_sheets_partition_unity atom
-  have horth := chiral_sheets_orthogonal_rev atom
+  have horth := chiral_sheets_orthogonal_rev atom hAtom
   symm
   calc
     chiralProjectorMinus atom
@@ -155,7 +157,7 @@ theorem even_odd_orthogonal : evenProjector atom * oddProjector atom = 0 := by
     _ = (1 / 4 : ℝ) • (1 - EulerOperator atom * EulerOperator atom) := by
       congr 1
       noncomm_ring
-    _ = (1 / 4 : ℝ) • (1 - 1 : K) := by rw [euler_operator_sq_one atom]
+    _ = (1 / 4 : ℝ) • (1 - 1 : K) := by rw [euler_operator_sq_one atom hAtom]
     _ = (1 / 4 : ℝ) • (0 : K) := by congr 1; noncomm_ring
     _ = 0 := smul_zero _
 
@@ -181,7 +183,7 @@ theorem euler_fixes_even :
           (EulerOperator atom * 1 + EulerOperator atom * EulerOperator atom) := by
       rw [mul_add]
     _ = (1 / 2 : ℝ) • (EulerOperator atom + 1) := by
-      rw [mul_one, euler_operator_sq_one atom]
+      rw [mul_one, euler_operator_sq_one atom hAtom]
     _ = (1 / 2 : ℝ) • (1 + EulerOperator atom) := by
       congr 1
       abel
@@ -198,7 +200,7 @@ theorem euler_flips_odd :
           (EulerOperator atom * 1 - EulerOperator atom * EulerOperator atom) := by
       rw [mul_sub]
     _ = (1 / 2 : ℝ) • (EulerOperator atom - 1) := by
-      rw [mul_one, euler_operator_sq_one atom]
+      rw [mul_one, euler_operator_sq_one atom hAtom]
     _ = (1 / 2 : ℝ) • (-(1 - EulerOperator atom)) := by
       congr 1
       noncomm_ring
@@ -216,7 +218,7 @@ theorem clifford_square_identity (p q : K)
     (atom.r0 * p + atom.r5 * q) * (atom.r0 * p + atom.r5 * q) =
       (p * p - q * q) + atom.r0 * atom.r5 * (p * q - q * p) := by
   have hanti : atom.r5 * atom.r0 = -(atom.r0 * atom.r5) := by
-    rw [atom.anticommute, neg_neg]
+    rw [hAtom.2.2, neg_neg]
   have h00 : (atom.r0 * p) * (atom.r0 * p) = atom.r0 * atom.r0 * (p * p) := by
     calc
       (atom.r0 * p) * (atom.r0 * p)
@@ -255,7 +257,7 @@ theorem clifford_square_identity (p q : K)
       rw [h00, h05, h50, h55]
     _ = 1 * (p * p) + atom.r0 * atom.r5 * (p * q) +
           ((-(atom.r0 * atom.r5)) * (q * p) + (-1) * (q * q)) := by
-      rw [atom.r0_sq, atom.r5_sq, hanti]
+      rw [hAtom.1, hAtom.2.1, hanti]
     _ = (p * p - q * q) + atom.r0 * atom.r5 * (p * q - q * p) := by
       noncomm_ring
 
@@ -268,7 +270,7 @@ theorem clifford_square_identity_commuting (p q : K)
     (hpq_comm : p * q = q * p) :
     (atom.r0 * p + atom.r5 * q) * (atom.r0 * p + atom.r5 * q) =
       (p * p - q * q) := by
-  rw [clifford_square_identity atom p q hp hq hp5 hq5]
+  rw [clifford_square_identity atom hAtom p q hp hq hp5 hq5]
   rw [hpq_comm, sub_self, mul_zero, add_zero]
 
 /-! ## Combined Dirac square with explicit commutation premises -/
@@ -301,7 +303,7 @@ theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
       Dcl * Dcl =
         (p * p - q * q) + atom.r0 * atom.r5 * (p * q - q * p) := by
     subst Dcl
-    exact clifford_square_identity atom p q hp_comm_r0 hq_comm_r0 hp_comm_r5 hq_comm_r5
+    exact clifford_square_identity atom hAtom p q hp_comm_r0 hq_comm_r0 hp_comm_r5 hq_comm_r5
   have h_sq_chi : Dchi * Dchi = Q * Q := by
     subst Dchi
     calc
@@ -371,38 +373,35 @@ theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
       rw [h_sq_cl, h_sq_chi]
       simp [add_assoc]
 
-def eulerAsChirality (atom : Cl11Atom K) : ChiralityOperator atom where
+def eulerAsChirality (atom : Cl11Atom K) (hAtom : Cl11AtomLaws atom) : ChiralityOperator atom where
   rho := EulerOperator atom
-  rho_sq_one := euler_operator_sq_one atom
-  anticomm_r0 := euler_anticommutes_r0 atom
-  anticomm_r5 := euler_anticommutes_r5 atom
+  rho_sq_one := euler_operator_sq_one atom hAtom
+  anticomm_r0 := euler_anticommutes_r0 atom hAtom
+  anticomm_r5 := euler_anticommutes_r5 atom hAtom
 
 /-! ## Packet -/
 
-abbrev SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) :=
-  Cl11Atom K
+structure SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) where
+  cl11 : Cl11Atom K
+  laws : Cl11AtomLaws cl11
 
 namespace SplitCliffordRealizationPacket
 
-abbrev cl11 {K : Type*} [Ring K] [Algebra ℝ K] {n : ℕ}
-    (P : SplitCliffordRealizationPacket K n) : Cl11Atom K :=
-  P
-
 theorem euler_sq_one (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * EulerOperator P.cl11 = 1 :=
-  euler_operator_sq_one P.cl11
+  euler_operator_sq_one P.cl11 P.laws
 
 theorem euler_anticomm_r0 (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * P.cl11.r0 = -(P.cl11.r0 * EulerOperator P.cl11) :=
-  euler_anticommutes_r0 P.cl11
+  euler_anticommutes_r0 P.cl11 P.laws
 
 theorem euler_anticomm_r5 (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * P.cl11.r5 = -(P.cl11.r5 * EulerOperator P.cl11) :=
-  euler_anticommutes_r5 P.cl11
+  euler_anticommutes_r5 P.cl11 P.laws
 
 theorem chiral_orthogonal (P : SplitCliffordRealizationPacket K n) :
     chiralProjectorPlus P.cl11 * chiralProjectorMinus P.cl11 = 0 :=
-  chiral_sheets_orthogonal P.cl11
+  chiral_sheets_orthogonal P.cl11 P.laws
 
 theorem chiral_partition (P : SplitCliffordRealizationPacket K n) :
     chiralProjectorPlus P.cl11 + chiralProjectorMinus P.cl11 = 1 :=
@@ -410,19 +409,19 @@ theorem chiral_partition (P : SplitCliffordRealizationPacket K n) :
 
 theorem even_odd_orthogonal (P : SplitCliffordRealizationPacket K n) :
     evenProjector P.cl11 * oddProjector P.cl11 = 0 :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.even_odd_orthogonal P.cl11
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.even_odd_orthogonal P.cl11 P.laws
 
 theorem even_odd_partition (P : SplitCliffordRealizationPacket K n) :
     evenProjector P.cl11 + oddProjector P.cl11 = 1 :=
-  even_odd_partition_unity P.cl11
+  even_odd_partition_unity P.cl11 P.laws
 
 theorem euler_fixes_even (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * evenProjector P.cl11 = evenProjector P.cl11 :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_fixes_even P.cl11
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_fixes_even P.cl11 P.laws
 
 theorem euler_flips_odd (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * oddProjector P.cl11 = -(oddProjector P.cl11) :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.cl11
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.cl11 P.laws
 
 theorem car_nilpotence :
     ∀ i : Fin n, ann n i * ann n i = 0 :=
@@ -439,8 +438,9 @@ theorem car_identity :
 
 end SplitCliffordRealizationPacket
 
-def mkRealization (cl11 : Cl11Atom K) (n : ℕ) : SplitCliffordRealizationPacket K n :=
-  cl11
+def mkRealization (cl11 : Cl11Atom K) (n : ℕ) (laws : Cl11AtomLaws cl11) :
+    SplitCliffordRealizationPacket K n :=
+  ⟨cl11, laws⟩
 
 /-- Owner target for the split Clifford realization lane. -/
 abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] (n : ℕ) :
@@ -448,8 +448,9 @@ abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] (n 
   SplitCliffordRealizationPacket K n
 
 /-- The split Clifford realization packet is constructible directly. -/
-def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ) :
+def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ)
+    (laws : Cl11AtomLaws cl11) :
     SplitCliffordRealizationTarget K n :=
-  mkRealization cl11 n
+  mkRealization cl11 n laws
 
 end InfoGeometry.Arithmetic.SplitCliffordRealization

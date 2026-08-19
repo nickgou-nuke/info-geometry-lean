@@ -1,10 +1,10 @@
 import Mathlib.Tactic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Arithmetic.MoebiusSignature
 
-open InfoGeometry.Topology.FractalCantorFockWitness.CantorBoundaryFunctionSpace
+open InfoGeometry.Topology.FractalCantorFock.CantorBoundaryFunctionSpace
 
 /-!
 # Cyclic Cocycle on the Cantor Boundary

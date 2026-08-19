@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SymPy witness for the Amari--Souriau thermodynamic gauge socket.
+SymPy witness for the Amari--Souriau thermodynamic gauge deferred_interface.
 
 Finite quadratic log-partition model:
     Ψ(θ) = 1/2 θᵀ A θ
@@ -12,7 +12,7 @@ and the natural-gradient flow linearizes in dual coordinates:
     θdot = -A⁻¹ ∇D = -(θ-θ*)
     ηdot = A θdot = -(η-η*).
 
-This is a symbolic witness only; Lean owns the theorem-safe socket.
+This is a symbolic witness only; Lean owns the theorem-safe deferred_interface.
 """
 from sympy import Matrix, Rational, diff, simplify, symbols
 

@@ -52,10 +52,8 @@ def test_hestenes_dirac_finite_tilt_shell_declares_current_density_readout():
 
 def test_hestenes_dirac_finite_tilt_shell_bridge_declares_current_density_reexport():
     text = ROOT.joinpath("lean", "InfoGeometry", "Clifford", "FiniteTiltDiracShellBridge.lean").read_text()
-    assert "theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge" in text
+    assert "theorem finiteTiltDiracShellBridge_properties" in text
     assert "finiteTiltCurrentDensity_eq_boundaryCurrent" in text
-    assert "def FiniteTiltDiracShellBridgeOwnerTarget" in text
-    assert "theorem finiteTiltDiracShellBridgeOwnerTarget" in text
 
 
 def test_hestenes_dirac_finite_tilt_shell_builds():
@@ -215,12 +213,9 @@ def test_hestenes_cauchy_riemann_module_declares_real_hestenes_spinor_and_cr_bri
     assert "theorem spinor_mul_reverse" in text
     assert "theorem bivector_i_squared" in text
     assert "theorem krein_inner_symmetry" in text
-    assert "structure HestenesPartialDerivs" in text
     assert "def satisfy_hestenes_cr" in text
     assert "structure StandardCRComponents" in text
     assert "theorem hestenes_cr_equivalence" in text
-    assert "structure WeierstrassAnalyticSocket" in text
-    assert "structure HestenesAnalyticSocket" in text
     assert "axiom " not in text
 
 
@@ -300,5 +295,3 @@ def test_split_quaternion_nilpotent_flow_module_builds():
         timeout=240,
     )
     assert result.returncode == 0, result.stdout
-
-

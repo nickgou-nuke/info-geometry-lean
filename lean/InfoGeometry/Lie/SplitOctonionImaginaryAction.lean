@@ -53,6 +53,63 @@ noncomputable def imaginaryCoordLinearEquiv : Imaginary ≃ₗ[ℝ] ImaginaryCoo
 @[simp] theorem imaginaryCoordLinearEquiv_symm_val (c : ImaginaryCoords) :
     (imaginaryCoordLinearEquiv.symm c : CanonicalZorn) = ⟨c.1, -c.1, c.2.1, c.2.2⟩ := rfl
 
+/-- The seven free coordinates of a trace-zero split-octonion element in a
+finite Fano-plane coordinate carrier.  The order is scalar trace coordinate,
+the three upper-vector coordinates, then the three lower-vector coordinates.
+-/
+abbrev ImaginarySeven := Fin 7 → ℝ
+
+noncomputable def imaginaryCoords_seven : ImaginaryCoords ≃ₗ[ℝ] ImaginarySeven where
+  toFun c := ![c.1, c.2.1 0, c.2.1 1, c.2.1 2, c.2.2 0, c.2.2 1, c.2.2 2]
+  invFun v := (v 0, ![v 1, v 2, v 3], ![v 4, v 5, v 6])
+  left_inv c := by
+    rcases c with ⟨a, x, y⟩
+    apply Prod.ext
+    · rfl
+    · apply Prod.ext
+      · funext i
+        fin_cases i <;> rfl
+      · funext i
+        fin_cases i <;> rfl
+  right_inv v := by
+    funext i
+    fin_cases i <;> rfl
+  map_add' c d := by
+    funext i
+    fin_cases i <;> simp
+  map_smul' r c := by
+    funext i
+    fin_cases i <;> simp
+
+@[simp] theorem imaginaryCoords_seven_apply_zero (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 0 = c.1 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_upper_zero (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 1 = c.2.1 0 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_upper_one (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 2 = c.2.1 1 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_upper_two (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 3 = c.2.1 2 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_lower_zero (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 4 = c.2.2 0 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_lower_one (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 5 = c.2.2 1 := rfl
+
+@[simp] theorem imaginaryCoords_seven_apply_lower_two (c : ImaginaryCoords) :
+    imaginaryCoords_seven c 6 = c.2.2 2 := rfl
+
+theorem detZ_imaginaryCoord (c : ImaginaryCoords) :
+    ZornMatrix.detZ (imaginaryCoordLinearEquiv.symm c).1 =
+      -(c.1 ^ 2) -
+        (c.2.1 0 * c.2.2 0 + c.2.1 1 * c.2.2 1 + c.2.1 2 * c.2.2 2) := by
+  simp [imaginaryCoordLinearEquiv, ZornMatrix.detZ,
+    InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three]
+  ring
+
 /-- The imaginary split-octonion space has real dimension seven. -/
 theorem finrank_imaginary : Module.finrank ℝ Imaginary = 7 := by
   calc
@@ -95,6 +152,13 @@ def NormLevel (c : ℝ) : Set Imaginary :=
 
 @[simp] theorem mem_normLevel_iff (c : ℝ) (X : Imaginary) :
     X ∈ NormLevel c ↔ ZornMatrix.detZ X.1 = c := Iff.rfl
+
+theorem imaginaryCoord_mem_null_iff (c : ImaginaryCoords) :
+    imaginaryCoordLinearEquiv.symm c ∈ NormLevel 0 ↔
+      c.1 ^ 2 +
+          (c.2.1 0 * c.2.2 0 + c.2.1 1 * c.2.2 1 + c.2.1 2 * c.2.2 2) = 0 := by
+  rw [mem_normLevel_iff, detZ_imaginaryCoord]
+  constructor <;> intro h <;> linarith
 
 /-- Every imaginary norm level is invariant under every split-octonion
 multiplication automorphism. -/

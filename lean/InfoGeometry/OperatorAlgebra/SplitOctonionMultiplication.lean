@@ -228,6 +228,21 @@ theorem leftRegular_normZ_mul (X Y : SplitOct) :
     normZ (leftRegular X Y) = normZ X * normZ Y := by
   simp [leftRegular, normZ_mul]
 
+/-- Right-regular action on the true nonassociative `SplitOct` carrier. -/
+def rightRegular (X : SplitOct) : SplitOct → SplitOct :=
+  fun Y => mulZ Y X
+
+/-- Right-regular multiplication inherits norm composition from `mulZ`. -/
+theorem rightRegular_normZ_mul (X Y : SplitOct) :
+    normZ (rightRegular X Y) = normZ Y * normZ X := by
+  simp [rightRegular, normZ_mul]
+
+theorem rightRegular_mul_defect (X Y Z : SplitOct) :
+    subZ (rightRegular X (rightRegular Y Z))
+        (rightRegular (mulZ Y X) Z) =
+      associator Z Y X := by
+  rfl
+
 /-- First diagonal idempotent. -/
 def ePlus : SplitOct := ⟨1, 0, 0, 0, 0, 0, 0, 0⟩
 
@@ -373,6 +388,22 @@ theorem down_sq_zero (i : Fin 3) : mulZ (down i) (down i) = zeroZ := by
 theorem up_mul_down_same (i : Fin 3) : mulZ (up i) (down i) = ePlus := by
   fin_cases i <;> decide
 theorem down_mul_up_same (i : Fin 3) : mulZ (down i) (up i) = eMinus := by
+  fin_cases i <;> decide
+
+/-- The two Peirce idempotents sum to the Zorn identity `⟨1,1,0,...⟩`. -/
+theorem ePlus_add_eMinus : ePlus + eMinus = ⟨1, 1, 0, 0, 0, 0, 0, 0⟩ := by
+  ext <;> simp [ePlus, eMinus]
+
+/-- Jordan (anticommutator) combination of matched chiral pairs equals the
+    Peirce identity `ePlus + eMinus`. -/
+theorem anticommutator_up_down_same (i : Fin 3) :
+    mulZ (up i) (down i) + mulZ (down i) (up i) = ePlus + eMinus := by
+  fin_cases i <;> decide
+
+/-- Lie (commutator) combination of matched chiral pairs equals the
+    Peirce difference `ePlus - eMinus`. -/
+theorem commutator_up_down_same (i : Fin 3) :
+    mulZ (up i) (down i) - mulZ (down i) (up i) = ePlus - eMinus := by
   fin_cases i <;> decide
 
 theorem up0_mul_up1 : mulZ up0 up1 = down2 := by decide

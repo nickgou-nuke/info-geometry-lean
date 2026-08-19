@@ -59,9 +59,102 @@ lemma gradeCLM_selfAdjoint :
 noncomputable def gradeConj (A : H →L[ℝ] H) : H →L[ℝ] H :=
   (gradeCLM (H := H)).comp (A.comp (gradeCLM (H := H)))
 
+lemma gradeConj_involutive (A : H →L[ℝ] H) :
+    gradeConj (H := H) (gradeConj (H := H) A) = A := by
+  unfold gradeConj
+  ext x
+  change (KreinGradedModule.grade (H := H))
+      ((KreinGradedModule.grade (H := H))
+        (A ((KreinGradedModule.grade (H := H))
+          ((KreinGradedModule.grade (H := H)) x)))) = A x
+  simp [KreinGradedModule.grade_invol]
+
+lemma gradeConj_mul (A B : H →L[ℝ] H) :
+    gradeConj (H := H) (A * B) =
+      gradeConj (H := H) A * gradeConj (H := H) B := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply, gradeCLM_apply,
+    KreinGradedModule.grade_invol]
+
+lemma gradeConj_add (A B : H →L[ℝ] H) :
+    gradeConj (H := H) (A + B) =
+      gradeConj (H := H) A + gradeConj (H := H) B := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply, add_comm, add_left_comm, add_assoc]
+
+lemma gradeConj_smul (a : ℝ) (A : H →L[ℝ] H) :
+    gradeConj (H := H) (a • A) = a • gradeConj (H := H) A := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply]
+
+lemma gradeConj_neg (A : H →L[ℝ] H) :
+    gradeConj (H := H) (-A) = -gradeConj (H := H) A := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply]
+
 def IsEven (A : H →L[ℝ] H) : Prop := gradeConj (H := H) A = A
 
 def IsOdd (A : H →L[ℝ] H) : Prop := gradeConj (H := H) A = -A
+
+lemma isEven_mul {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsEven (H := H) B) :
+    IsEven (H := H) (A * B) := by
+  unfold IsEven at hA hB ⊢
+  rw [gradeConj_mul, hA, hB]
+
+lemma isOdd_mul_odd {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsOdd (H := H) B) :
+    IsEven (H := H) (A * B) := by
+  unfold IsOdd at hA hB
+  unfold IsEven
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+lemma isEven_mul_odd {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsOdd (H := H) B) :
+    IsOdd (H := H) (A * B) := by
+  unfold IsEven at hA
+  unfold IsOdd at hB ⊢
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+lemma isOdd_mul_even {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsEven (H := H) B) :
+    IsOdd (H := H) (A * B) := by
+  unfold IsOdd at hA ⊢
+  unfold IsEven at hB
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+lemma isEven_add {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsEven (H := H) B) :
+    IsEven (H := H) (A + B) := by
+  unfold IsEven at hA hB ⊢
+  rw [gradeConj_add, hA, hB]
+
+lemma isOdd_add {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsOdd (H := H) B) :
+    IsOdd (H := H) (A + B) := by
+  unfold IsOdd at hA hB ⊢
+  rw [gradeConj_add, hA, hB]
+  simpa [add_comm]
+
+lemma isEven_smul (a : ℝ) {A : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) :
+    IsEven (H := H) (a • A) := by
+  unfold IsEven at hA ⊢
+  rw [gradeConj_smul, hA]
+
+lemma isOdd_smul (a : ℝ) {A : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) :
+    IsOdd (H := H) (a • A) := by
+  unfold IsOdd at hA ⊢
+  rw [gradeConj_smul, hA]
+  simp
 
 /-- Chirality projector `(Id + Γ)/2`. -/
 noncomputable def gradeProjPlus : H →L[ℝ] H :=
@@ -77,6 +170,92 @@ lemma gradeProj_sum :
   ext x
   simp [gradeProjPlus, gradeProjMinus, sub_eq_add_neg]
   module
+
+lemma gradeProjPlus_idempotent :
+    (gradeProjPlus (H := H)).comp (gradeProjPlus (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjMinus_idempotent :
+    (gradeProjMinus (H := H)).comp (gradeProjMinus (H := H)) =
+      gradeProjMinus (H := H) := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjPlus_comp_minus :
+    (gradeProjPlus (H := H)).comp (gradeProjMinus (H := H)) = 0 := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjMinus_comp_plus :
+    (gradeProjMinus (H := H)).comp (gradeProjPlus (H := H)) = 0 := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeCLM_comp_gradeProjPlus :
+    (gradeCLM (H := H)).comp (gradeProjPlus (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeCLM_comp_gradeProjMinus :
+    (gradeCLM (H := H)).comp (gradeProjMinus (H := H)) =
+      -(gradeProjMinus (H := H)) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjPlus_comp_gradeCLM :
+    (gradeProjPlus (H := H)).comp (gradeCLM (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjMinus_comp_gradeCLM :
+    (gradeProjMinus (H := H)).comp (gradeCLM (H := H)) =
+      -(gradeProjMinus (H := H)) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+lemma gradeProjPlus_isEven :
+    IsEven (H := H) (gradeProjPlus (H := H)) := by
+  unfold IsEven gradeConj
+  ext x
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply]
+
+lemma gradeProjMinus_isEven :
+    IsEven (H := H) (gradeProjMinus (H := H)) := by
+  unfold IsEven gradeConj
+  ext x
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply]
 
 end KreinGradedModule
 
@@ -122,6 +301,27 @@ lemma rho_ι_sq_scalar (v : V) :
     _ = algebraMap ℝ (H →L[ℝ] H) (Q v) := by
           simp
 
+lemma rho_ι_anticommutator (v w : V) :
+    rho (Q := Q) (CliffordAlgebra.ι Q v) *
+          rho (Q := Q) (CliffordAlgebra.ι Q w) +
+        rho (Q := Q) (CliffordAlgebra.ι Q w) *
+          rho (Q := Q) (CliffordAlgebra.ι Q v) =
+      algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q v w) := by
+  calc
+    rho (Q := Q) (CliffordAlgebra.ι Q v) *
+          rho (Q := Q) (CliffordAlgebra.ι Q w) +
+        rho (Q := Q) (CliffordAlgebra.ι Q w) *
+          rho (Q := Q) (CliffordAlgebra.ι Q v) =
+      rho (Q := Q) ((CliffordAlgebra.ι Q v) *
+          (CliffordAlgebra.ι Q w) +
+        (CliffordAlgebra.ι Q w) * (CliffordAlgebra.ι Q v)) := by
+          simp
+    _ = rho (Q := Q)
+        (algebraMap ℝ (CliffordAlgebra Q) (QuadraticMap.polar Q v w)) := by
+          rw [CliffordAlgebra.ι_mul_ι_add_swap (Q := Q) v w]
+    _ = algebraMap ℝ (H →L[ℝ] H) (QuadraticMap.polar Q v w) := by
+          simp
+
 lemma rho_ι_isOdd (v : V) :
     KreinGradedModule.IsOdd (H := H) (rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
   let Γ : H →L[ℝ] H := KreinGradedModule.gradeCLM (H := H)
@@ -142,10 +342,40 @@ lemma rho_ι_isOdd (v : V) :
           rw [hΓΓ]
     _ = -A := by simp
 
+lemma rho_ι_mul_isEven (v w : V) :
+    KreinGradedModule.IsEven (H := H)
+      (rho (Q := Q) (CliffordAlgebra.ι Q v) *
+        rho (Q := Q) (CliffordAlgebra.ι Q w)) := by
+  exact KreinGradedModule.isOdd_mul_odd
+    (rho_ι_isOdd (Q := Q) v) (rho_ι_isOdd (Q := Q) w)
+
+lemma rho_ι_anticommutator_isEven (v w : V) :
+    KreinGradedModule.IsEven (H := H)
+      (rho (Q := Q) (CliffordAlgebra.ι Q v) *
+          rho (Q := Q) (CliffordAlgebra.ι Q w) +
+        rho (Q := Q) (CliffordAlgebra.ι Q w) *
+          rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
+  exact KreinGradedModule.isEven_add
+    (rho_ι_mul_isEven (Q := Q) v w)
+    (rho_ι_mul_isEven (Q := Q) w v)
+
 lemma rho_ι_isKreinSelfAdjoint (v : V) :
     KreinSpace.IsKreinSelfAdjoint (H := H)
       (rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
   exact (inferInstance : SymmetricCliffordModule V H Q).kreinSelfAdj_ι v
+
+lemma rho_ι_anticommutator_isKreinSelfAdjoint (v w : V) :
+    KreinSpace.IsKreinSelfAdjoint (H := H)
+      (rho (Q := Q) (CliffordAlgebra.ι Q v) *
+          rho (Q := Q) (CliffordAlgebra.ι Q w) +
+        rho (Q := Q) (CliffordAlgebra.ι Q w) *
+          rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
+  unfold KreinSpace.IsKreinSelfAdjoint
+  rw [KreinSpace.kreinAdjoint_add,
+    KreinSpace.kreinAdjoint_mul, KreinSpace.kreinAdjoint_mul,
+    rho_ι_isKreinSelfAdjoint (Q := Q) v,
+    rho_ι_isKreinSelfAdjoint (Q := Q) w]
+  simp [add_comm]
 
 end SymmetricCliffordModule
 

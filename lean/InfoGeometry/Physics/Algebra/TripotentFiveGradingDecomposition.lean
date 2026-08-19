@@ -134,27 +134,27 @@ def tripotentFiveGradeLinearEquiv (e : R) (he : e * e * e = e) :
     (e : R) (he : e * e * e = e) (x : R) :
     tripotentFiveGradeLinearEquiv e he x = fiveGradeDecomposeLinear e x := rfl
 
-structure TripotentFiveGradeBracketLaws (e : R) where
-  bracket_neg_one_pos_one : ∀ X Y : R,
+def TripotentFiveGradeBracketLaws (e : R) : Prop :=
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .negOne → Y ∈ fiveGradeRange e .posOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .zero
-  bracket_zero_zero : ∀ X Y : R,
+      ⁅X, Y⁆ ∈ fiveGradeRange e .zero) ∧
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .zero → Y ∈ fiveGradeRange e .zero →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .zero
-  bracket_pos_one_pos_one : ∀ X Y : R,
+      ⁅X, Y⁆ ∈ fiveGradeRange e .zero) ∧
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .posOne → Y ∈ fiveGradeRange e .posOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo
-  bracket_neg_one_neg_one : ∀ X Y : R,
+      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo) ∧
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .negOne → Y ∈ fiveGradeRange e .negOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo
-  bracket_zero_pos_two : ∀ X Y : R,
+      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo) ∧
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .zero → Y ∈ fiveGradeRange e .posTwo →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo
-  bracket_zero_neg_two : ∀ X Y : R,
+      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo) ∧
+  (∀ X Y : R,
     X ∈ fiveGradeRange e .zero → Y ∈ fiveGradeRange e .negTwo →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo
-  bracket_pos_two_pos_two_zero : ∀ X Y : R,
-    X ∈ fiveGradeRange e .posTwo → Y ∈ fiveGradeRange e .posTwo → ⁅X, Y⁆ = 0
+      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo) ∧
+  (∀ X Y : R,
+    X ∈ fiveGradeRange e .posTwo → Y ∈ fiveGradeRange e .posTwo → ⁅X, Y⁆ = 0)
 
 def tripotentFiveGrading
     (e : R) (he : e * e * e = e)
@@ -167,13 +167,13 @@ def tripotentFiveGrading
   gPosTwo := fiveGradeRange e .posTwo
   decomposition := tripotentFiveGradeLinearEquiv e he
   decomposition_symm_apply := by intro v; rfl
-  bracket_neg_one_pos_one := H.bracket_neg_one_pos_one
-  bracket_zero_zero := H.bracket_zero_zero
-  bracket_pos_one_pos_one := H.bracket_pos_one_pos_one
-  bracket_neg_one_neg_one := H.bracket_neg_one_neg_one
-  bracket_zero_pos_two := H.bracket_zero_pos_two
-  bracket_zero_neg_two := H.bracket_zero_neg_two
-  bracket_pos_two_pos_two_zero := H.bracket_pos_two_pos_two_zero
+  bracket_neg_one_pos_one := H.1
+  bracket_zero_zero := H.2.1
+  bracket_pos_one_pos_one := H.2.2.1
+  bracket_neg_one_neg_one := H.2.2.2.1
+  bracket_zero_pos_two := H.2.2.2.2.1
+  bracket_zero_neg_two := H.2.2.2.2.2.1
+  bracket_pos_two_pos_two_zero := H.2.2.2.2.2.2
 
 end
 end InfoGeometry.Physics.Algebra

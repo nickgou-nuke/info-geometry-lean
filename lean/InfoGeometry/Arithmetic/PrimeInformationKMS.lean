@@ -78,6 +78,115 @@ theorem normalizedProbability_sum_eq_one (modes : Finset ℕ) (beta : ℝ) (h_no
   rw [← Finset.sum_div]
   exact div_self (partition_pos modes beta h_nonempty).ne'
 
+/-- The normalized prime log-energy is the finite weighted-energy quotient. -/
+@[rep_depth thermo]
+theorem normalizedProbability_logEnergy_eq_weighted_quotient
+    (modes : Finset ℕ) (beta : ℝ) :
+    Finset.sum modes (fun p =>
+      normalizedProbability modes beta p * Real.log p) =
+      (Finset.sum modes (fun p => boltzmannWeight beta p * Real.log p)) /
+        partition modes beta := by
+  unfold normalizedProbability
+  calc
+    (∑ p ∈ modes, (boltzmannWeight beta p / partition modes beta) * Real.log p) =
+        ∑ p ∈ modes, (boltzmannWeight beta p * Real.log p) /
+          partition modes beta := by
+      apply Finset.sum_congr rfl
+      intro p hp
+      ring
+    _ = (∑ p ∈ modes, boltzmannWeight beta p * Real.log p) /
+          partition modes beta := by
+      rw [Finset.sum_div]
+
+/-- The normalized finite mean of the prime log-energy. -/
+@[rep_depth thermo]
+def normalizedLogEnergyMean (modes : Finset ℕ) (beta : ℝ) : ℝ :=
+  ∑ p ∈ modes, normalizedProbability modes beta p * Real.log p
+
+/-- The normalized finite variance of the prime log-energy. -/
+@[rep_depth thermo]
+def normalizedLogEnergyVariance (modes : Finset ℕ) (beta : ℝ) : ℝ :=
+  ∑ p ∈ modes,
+    normalizedProbability modes beta p *
+      (Real.log p - normalizedLogEnergyMean modes beta) ^ 2
+
+/-- The normalized finite logarithmic score has zero expectation. -/
+@[rep_depth thermo]
+theorem normalizedLogEnergyScore_mean_zero
+    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
+    ∑ p ∈ modes,
+      normalizedProbability modes beta p *
+        (-(Real.log p - normalizedLogEnergyMean modes beta)) = 0 := by
+  let μ := normalizedLogEnergyMean modes beta
+  have hnorm :
+      ∑ p ∈ modes, normalizedProbability modes beta p = 1 :=
+    normalizedProbability_sum_eq_one modes beta h_nonempty
+  have hcenter :
+      ∑ p ∈ modes,
+        normalizedProbability modes beta p * (Real.log p - μ) = 0 := by
+    simp_rw [mul_sub]
+    rw [Finset.sum_sub_distrib]
+    rw [← Finset.sum_mul]
+    dsimp [μ, normalizedLogEnergyMean]
+    rw [hnorm]
+    ring
+  calc
+    (∑ p ∈ modes,
+        normalizedProbability modes beta p *
+          (-(Real.log p - μ))) =
+        -(∑ p ∈ modes,
+          normalizedProbability modes beta p * (Real.log p - μ)) := by
+      rw [← Finset.sum_neg_distrib]
+      apply Finset.sum_congr rfl
+      intro p hp
+      ring
+    _ = 0 := by rw [hcenter]; ring
+
+/-- Normalized finite probabilities are nonnegative on the active cutoff. -/
+@[rep_depth thermo]
+theorem normalizedProbability_nonneg
+    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty)
+    (p : ℕ) (hp : p ∈ modes) :
+    0 ≤ normalizedProbability modes beta p := by
+  unfold normalizedProbability boltzmannWeight
+  exact div_nonneg (le_of_lt (Real.exp_pos _))
+    (le_of_lt (partition_pos modes beta h_nonempty))
+
+/-- The finite Fisher score-square readout is nonnegative. -/
+@[rep_depth thermo]
+theorem normalizedLogEnergyScoreSquare_nonneg
+    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
+    0 ≤ ∑ p ∈ modes,
+      normalizedProbability modes beta p *
+        (-(Real.log p - normalizedLogEnergyMean modes beta)) ^ 2 := by
+  apply Finset.sum_nonneg
+  intro p hp
+  exact mul_nonneg
+    (normalizedProbability_nonneg modes beta h_nonempty p hp)
+    (sq_nonneg _)
+
+/-- The finite score-square readout is exactly the normalized log-energy
+    variance. -/
+@[rep_depth thermo]
+theorem normalizedLogEnergyScoreSquare_eq_variance
+    (modes : Finset ℕ) (beta : ℝ) :
+    (∑ p ∈ modes,
+      normalizedProbability modes beta p *
+        (-(Real.log p - normalizedLogEnergyMean modes beta)) ^ 2) =
+      normalizedLogEnergyVariance modes beta := by
+  unfold normalizedLogEnergyVariance
+  apply Finset.sum_congr rfl
+  intro p hp
+  rw [neg_sq]
+
+/-- The normalized finite log-energy variance is nonnegative. -/
+@[rep_depth thermo]
+theorem normalizedLogEnergyVariance_nonneg
+    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
+    0 ≤ normalizedLogEnergyVariance modes beta := by
+  rw [← normalizedLogEnergyScoreSquare_eq_variance]
+  exact normalizedLogEnergyScoreSquare_nonneg modes beta h_nonempty
+
 /--
 Normalized surprisal is `β log p + log Z` on the finite cutoff.
 
@@ -168,6 +277,16 @@ theorem finiteFullSUSYProduct_eq_one
     (hdenom : finitePrimeDenominator P β ≠ 0) :
     finiteFullSUSYProduct P β = 1 := by
   exact PrimeSuperalgebra.finiteFullSUSYProduct_eq_one P β hdenom
+
+/-- The named Möbius supertrace cancels the finite bosonic partition. -/
+@[rep_depth thermo]
+theorem mobiusSupertrace_mul_finiteBosonicPrimePartition_eq_one
+    (P : PrimeCutoff) (β : ℝ)
+    (hdenom : finitePrimeDenominator P β ≠ 0) :
+    mobiusSupertrace P β * finiteBosonicPrimePartition P β = 1 := by
+  simpa [mobiusSupertrace] using
+    (PrimeSuperalgebra.finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
+      P β hdenom)
 
 /-! ## 3. KMS normalization and Massieu/Bregman readouts -/
 

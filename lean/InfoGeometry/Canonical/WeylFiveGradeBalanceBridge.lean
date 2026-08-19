@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
 
-Canonical socket for five-grade Weyl balance.
+Canonical interface for five-grade Weyl balance.
 
 The repository already owns a five-graded algebra/accounting lane in
 `OperatorAlgebra.FiveGradedInformationLedger`.  This file does not redefine that
@@ -32,7 +32,7 @@ open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 /-! ## 1. Pure finite Weyl-grade bookkeeping -/
 
-/-- The five Weyl grades used by the projective normalization sockets. -/
+/-- The five Weyl grades used by the projective normalization interfaces. -/
 @[rep_depth operator]
 inductive WeylFiveGrade where
   | negTwo
@@ -117,7 +117,7 @@ end WeylFiveGradeAssignment
 /-! ## 3. Fusion with the existing five-graded algebra owner -/
 
 /--
-Canonical socket connecting the finite Weyl-grade bookkeeping to an existing
+Canonical interface connecting the finite Weyl-grade bookkeeping to an existing
 five-grading on a Lie algebra.
 -/
 @[rep_depth operator]

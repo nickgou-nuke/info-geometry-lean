@@ -4,7 +4,7 @@
 Usage:
   lake env lean --run tools/lean_graph/DumpLeanGraph.lean SupergradedCuntzBdG.lean \
     | python3 tools/lean_graph/check_dump_shape.py \
-        --expect-name SupergradedCuntzBdG.KMSStateSocket
+        --expect-name SupergradedCuntzBdG.KMSStateDeferredInterface
 """
 
 from __future__ import annotations

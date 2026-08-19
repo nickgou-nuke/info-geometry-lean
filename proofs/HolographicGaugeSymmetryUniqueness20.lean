@@ -7,7 +7,7 @@ This is a thin bookkeeping capstone over
 `HolographicGaugeSymmetryUniqueness.lean`.  It exposes the audit table as an
 explicit 6-conjunct theorem of finite algebraic witnesses.
 
-No analytic socket is discharged here; the finite algebraic shadow is proved.
+No analytic completion is asserted here; the finite algebraic shadow is proved.
 -/
 
 noncomputable section

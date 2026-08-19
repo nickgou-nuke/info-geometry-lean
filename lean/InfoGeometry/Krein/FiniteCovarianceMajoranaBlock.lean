@@ -61,6 +61,39 @@ theorem covarianceProjection_self_adjoint {c : ℝ} :
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
+/-- The finite covariance projection is positive semidefinite as a Gram matrix. -/
+theorem covarianceProjection_posSemidef {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
+    Matrix.PosSemidef (covarianceProjection c) := by
+  let v : Fin 2 → ℝ := fun i =>
+    match i with
+    | 0 => Real.sqrt c
+    | 1 => Real.sqrt (1 - c)
+  have hgram : covarianceProjection c = Matrix.gram ℝ v := by
+    ext i j
+    fin_cases i <;> fin_cases j
+    all_goals
+      simp [covarianceProjection, v, Matrix.gram, hc, sub_nonneg.mpr hc1]
+      <;> ring
+  rw [hgram]
+  exact Matrix.posSemidef_gram ℝ v
+
+/-- The finite covariance projection has unit trace. -/
+theorem covarianceProjection_trace {c : ℝ} :
+    Matrix.trace (covarianceProjection c) = 1 := by
+  simp [covarianceProjection, Matrix.trace_fin_two]
+
+/-- The induced finite fundamental symmetry is trace-free. -/
+theorem fundamentalSymmetry_trace {c : ℝ} :
+    Matrix.trace (fundamentalSymmetry c) = 0 := by
+  simp [fundamentalSymmetry, covarianceProjection, Matrix.trace_fin_two]
+  ring
+
+theorem fundamentalSymmetry_self_adjoint {c : ℝ} :
+    (fundamentalSymmetry c).transpose = fundamentalSymmetry c := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [fundamentalSymmetry, covarianceProjection]
+
 theorem fundamentalSymmetry_sq {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
     fundamentalSymmetry c * fundamentalSymmetry c = 1 := by
   have hP := covarianceProjection_sq hc hc1

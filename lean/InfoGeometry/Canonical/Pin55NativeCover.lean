@@ -1,5 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
-import InfoGeometry.Clifford.Cl55WittPinKernelEvidence
+import InfoGeometry.Clifford.Cl55WittPinKernel
 import InfoGeometry.Clifford.Cl55WittPinSignatureBoundary
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup
 

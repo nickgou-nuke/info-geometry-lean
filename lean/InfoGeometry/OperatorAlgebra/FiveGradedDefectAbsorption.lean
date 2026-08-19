@@ -13,14 +13,13 @@ Thus `[g_-1, g_+1]` still lands in `g_0`. The `g_+2` memory sector absorbs
 defects through same-side brackets, contact terms, cocycles, or
 representation-specific closure maps, not by violating the grading rule.
 
-This file is an accounting socket. It does not prove a concrete `E7`, `E8`,
+This file is an accounting interface. It does not prove a concrete `E7`, `E8`,
 Virasoro, black-hole unitarity, Page-curve, or holographic-recovery theorem.
 -/
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -37,7 +36,7 @@ variable
 /--
 Same positive-grade brackets land in the top contact/memory grade.
 
-This reuses the repository's existing constructive five-grading socket from
+This reuses the repository's existing constructive five-grading interface from
 `SuperTKKConformalClosure`.
 -/
 theorem plus_one_plus_one_mem_plus_two
@@ -193,7 +192,7 @@ theorem ricciFlux_eq_plusTwoReadout_of_curvature_stationary
 
 end TKKDefectAbsorbedInPlusTwo
 
-/-! ## 4. Black-hole information ledger socket -/
+/-! ## 4. Black-hole information ledger interface -/
 
 /--
 A black-hole information ledger in a five-graded extension.
@@ -363,7 +362,7 @@ theorem recursive_visibleLoss_eq_gradeTwoGain
 
 end GradeTwoInformationLedger
 
-/-! ## 6. BPS/central-charge bound socket -/
+/-! ## 6. BPS/central-charge bound interface -/
 
 /--
 A BPS/central-charge bound.
@@ -433,7 +432,7 @@ Five-grade defect absorption readout.
 Once a five-grade absorption property is supplied, every old closure defect is
 represented in the `g_+2` memory sector.
 -/
-theorem fiveGradeDefectAbsorptionOwnerTarget :
+theorem fiveGradeDefectAbsorption_mem_plusTwo :
   ∀ (L State Defect : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Defect] [Module ℝ Defect],
@@ -448,17 +447,10 @@ theorem fiveGradeDefectAbsorptionOwnerTarget :
 /--
 Owner target for installing a BPS/central-charge bound.
 -/
-def BPSBoundOwnerTarget
-    (State : Type*) : Prop :=
-  ∀ B : BPSBoundDatum State,
+theorem bpsBound_properties
+    {State : Type*} (B : BPSBoundDatum State) :
     (∀ s : State, 0 ≤ B.centralNorm s) ∧
-      (∀ s : State, B.centralNorm s ≤ B.mass s)
-
-/-- Installed BPS data satisfy the central-norm lower-bound target. -/
-theorem bpsBoundOwnerTarget
-    (State : Type*) :
-    BPSBoundOwnerTarget State := by
-  intro B
+      (∀ s : State, B.centralNorm s ≤ B.mass s) := by
   exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

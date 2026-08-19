@@ -37,12 +37,12 @@ theorem finite_g2two_order_packet :
     g2twoOrder = 12096 ∧
       psu33Order * 2 = g2twoOrder ∧
       pgl33Order ≠ g2twoOrder ∧
-      outerC2WitnessDegree = 63 ∧
-      2 * outerC2WitnessTranspositions + outerC2WitnessFixedPoints =
-        outerC2WitnessDegree := by
+      outerC2ProfileDegree = 63 ∧
+      2 * outerC2ProfileTranspositions + outerC2ProfileFixedPoints =
+        outerC2ProfileDegree := by
   exact ⟨rfl, psu33_order_is_half_g2two,
     pgl33_order_ne_g2two_order, rfl,
-    outerC2Witness_cycle_profile_accounting⟩
+    outerC2Profile_cycle_accounting⟩
 
 /-- The finite split Zorn octonion carrier over `F₂` has `2^8 = 256` elements. -/
 theorem splitOctF2_card_packet :

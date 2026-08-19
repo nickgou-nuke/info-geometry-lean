@@ -48,6 +48,15 @@ theorem entropy_preserving_iterate
       intro x
       rw [Function.iterate_succ_apply, ih, hf]
 
+theorem entropy_preserving_iterate_maps_leaf
+    {X R : Type*}
+    (S : X → R) (f : X → X)
+    (hf : ∀ x, S (f x) = S x)
+    (c : R) (k : ℕ) :
+    Set.MapsTo (f^[k]) (entropyLeaf S c) (entropyLeaf S c) := by
+  intro x hx
+  exact (entropy_preserving_iterate S f hf k x).trans hx
+
 def conjugate
     {n R : Type*} [Fintype n] [Semiring R]
     (U V A : Matrix n n R) : Matrix n n R :=
@@ -64,6 +73,14 @@ theorem trace_conjugate
       simpa [conjugate] using Matrix.trace_mul_comm (U * A) V
     _ = Matrix.trace ((V * U) * A) := by rw [Matrix.mul_assoc]
     _ = Matrix.trace A := by simp [hVU]
+
+theorem trace_conjugate_iff
+    {n R : Type*} [Fintype n] [DecidableEq n]
+    [CommSemiring R]
+    (U V A : Matrix n n R)
+    (hVU : V * U = 1) (c : R) :
+    Matrix.trace (conjugate U V A) = c ↔ Matrix.trace A = c := by
+  rw [trace_conjugate U V A hVU]
 
 theorem conjugate_maps_trace_leaf
     {n R : Type*} [Fintype n] [DecidableEq n]

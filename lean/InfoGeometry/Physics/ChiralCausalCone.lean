@@ -64,6 +64,21 @@ theorem σPlus_eq_carAnn : σPlus = SplitClifford.carAnn := by
 theorem σMinus_eq_carCre : σMinus = SplitClifford.carCre := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [σMinus, SplitClifford.carCre]
 
+theorem σPlus_conjTranspose : σPlus.conjTranspose = σMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σPlus, σMinus, Matrix.conjTranspose_apply]
+
+theorem σMinus_conjTranspose : σMinus.conjTranspose = σPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σPlus, σMinus, Matrix.conjTranspose_apply]
+
+theorem σ3c_conjTranspose : σ3c.conjTranspose = σ3c := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ3c, Matrix.conjTranspose_apply]
+
 /-! ## `Cl(1,1)` atom to chiral CAR basis bridge -/
 
 /-- Entrywise complexification of the real `Cl(1,1)` CPT atom matrices. -/

@@ -4,7 +4,6 @@ import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 
@@ -64,6 +63,75 @@ theorem cayleyInv_cayley
 def OnUnitCircle
     (z : ℂ) : Prop :=
   Complex.normSq z = 1
+
+@[rep_depth operator]
+theorem onUnitCircle_mul
+    (z w : ℂ) (hz : OnUnitCircle z) (hw : OnUnitCircle w) :
+    OnUnitCircle (z * w) := by
+  unfold OnUnitCircle at *
+  rw [Complex.normSq_mul, hz, hw]
+  norm_num
+
+@[rep_depth operator]
+theorem onUnitCircle_inv
+    (z : ℂ) (hz : OnUnitCircle z) :
+    OnUnitCircle z⁻¹ := by
+  unfold OnUnitCircle at *
+  rw [Complex.normSq_inv, hz]
+  norm_num
+
+@[rep_depth operator]
+theorem onUnitCircle_inv_iff (z : ℂ) :
+    OnUnitCircle z⁻¹ ↔ OnUnitCircle z := by
+  constructor
+  · intro hz
+    simpa using onUnitCircle_inv z⁻¹ hz
+  · exact onUnitCircle_inv z
+
+@[rep_depth operator]
+theorem onUnitCircle_div
+    (z w : ℂ) (hz : OnUnitCircle z) (hw : OnUnitCircle w) :
+    OnUnitCircle (z / w) := by
+  rw [div_eq_mul_inv]
+  exact onUnitCircle_mul z w⁻¹ hz (onUnitCircle_inv w hw)
+
+@[rep_depth operator]
+theorem onUnitCircle_pow
+    (z : ℂ) (hz : OnUnitCircle z) :
+    ∀ m : ℕ, OnUnitCircle (z ^ m)
+  | 0 => by
+      simp [OnUnitCircle]
+  | m + 1 => by
+      rw [pow_succ]
+      exact onUnitCircle_mul (z ^ m) z (onUnitCircle_pow z hz m) hz
+
+@[rep_depth operator]
+theorem onUnitCircle_finset_prod
+    {ι : Type*} (s : Finset ι) (f : ι → ℂ)
+    (hf : ∀ i ∈ s, OnUnitCircle (f i)) :
+    OnUnitCircle (s.prod f) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simp [OnUnitCircle]
+  | @insert i s hi ih =>
+      rw [Finset.prod_insert hi]
+      exact onUnitCircle_mul _ _ (hf i (by simp))
+        (ih (fun j hj => hf j (by simp [hj])))
+
+@[rep_depth operator]
+theorem onUnitCircle_neg
+    (z : ℂ) (hz : OnUnitCircle z) :
+    OnUnitCircle (-z) := by
+  unfold OnUnitCircle at *
+  rw [Complex.normSq_neg, hz]
+
+@[rep_depth operator]
+theorem onUnitCircle_conj
+    (z : ℂ) (hz : OnUnitCircle z) :
+    OnUnitCircle (star z) := by
+  unfold OnUnitCircle at *
+  simpa [Complex.normSq] using hz
 
 /-- The open disk inside the Lee--Yang unit circle. -/
 @[rep_depth operator]
@@ -320,7 +388,7 @@ structure HurwitzZeroTransferWitness
     ∀ s : ℂ, Ξ.XiZero s → zeroFreeTransfer.limitF (cayley s) = 0
 
 /-- Hurwitz conclusion: every completed-`xi` zero maps to the Lee--Yang circle. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -333,7 +401,7 @@ theorem hurwitz_xiZeros_map_to_unit_circle
     (HurwitzZeroTransferWitness.xiZero_to_limitZero H s hs)
 
 /-- Conditional RH theorem from the Lee--Yang/Hurwitz package. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem RH_of_Hurwitz_LeeYang_limit
     (Ξ : CompletedXiZeroPredicate)
     (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -352,7 +420,7 @@ theorem RH_of_Hurwitz_LeeYang_limit
   exact critical_of_unit s hs_ne_one hcircle
 
 /-- The Hurwitz/Lee--Yang conclusion with the canonical Cayley witness. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem RH_of_Hurwitz_LeeYang_limit_cayley
     (Ξ : CompletedXiZeroPredicate)
     (A : LeeYangApproximants)
@@ -420,7 +488,7 @@ def CorrectHurwitzZeroTransferWitness.toHurwitzZeroTransferWitness
       exact (H.xi_zero_iff_limit_zero s (Ξ.zero_ne_one s hs)).mp hs }
 
 /-- Zero-location transfer for the corrected split-domain Hurwitz property. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem corrected_hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -441,7 +509,7 @@ theorem corrected_hurwitz_xiZeros_map_to_unit_circle
 Final conditional RH theorem from the corrected split-domain
 Hurwitz/Lee--Yang package.
 -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem RH_from_Correct_Hurwitz_LeeYang
     (Ξ : CompletedXiZeroPredicate)
     (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -460,7 +528,7 @@ theorem RH_from_Correct_Hurwitz_LeeYang
   exact critical_of_unit s hs_ne_one hcircle
 
 /-- The corrected split-domain conclusion with the canonical Cayley witness. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem RH_from_Correct_Hurwitz_LeeYang_cayley
     (Ξ : CompletedXiZeroPredicate)
     (A : LeeYangApproximants)

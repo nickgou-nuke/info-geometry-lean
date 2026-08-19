@@ -13,7 +13,7 @@ from tools.infra.arango_causal_memory import (
 
 class CapturingMemory(ArangoCausalMemory):
     def __init__(self):
-        super().__init__(ArangoTarget("http://localhost:8529", "db", "", ""))
+        super().__init__(ArangoTarget("http://127.0.0.1:8530", "db", "", ""))
         self.captured = None
 
     def execute_aql(self, query, bind_vars=None, *, allow_write=False, batch_size=1000):

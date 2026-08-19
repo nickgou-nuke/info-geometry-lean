@@ -23,15 +23,15 @@ except Exception:  # pragma: no cover - fallback for unusual invocation environm
 
 SORRY_RE = re.compile(r"(?<![A-Za-z0-9_'])\bsorry\b(?![A-Za-z0-9_'])")
 FIELD_PROXY_RE = re.compile(
-    r"^\s+(?P<name>[A-Za-z0-9_']*(?:_law|_valid|_readback|_certificate|_witness|_socket))\s*:",
+    r"^\s+(?P<name>[A-Za-z0-9_']*(?:_law|_valid|_readback|_certificate|_witness|_interface))\s*:",
     re.MULTILINE,
 )
-PROP_SOCKET_RE = re.compile(
-    r"^\s+(?P<name>[A-Za-z0-9_']*(?:law|valid|readback|certificate|witness|socket)[A-Za-z0-9_']*)\s*:\s*Prop\b",
+PROP_INTERFACE_RE = re.compile(
+    r"^\s+(?P<name>[A-Za-z0-9_']*(?:law|valid|readback|certificate|witness|interface)[A-Za-z0-9_']*)\s*:\s*Prop\b",
     re.MULTILINE,
 )
 DECL_RE = re.compile(r"^\s*(?:theorem|lemma)\s+(?P<name>[A-Za-z0-9_']+)\b")
-PROXY_USE_RE = re.compile(r"\b[A-Za-z0-9_'.]+_(?:law|certificate|witness|readback|valid|socket)\b")
+PROXY_USE_RE = re.compile(r"\b[A-Za-z0-9_'.]+_(?:law|certificate|witness|readback|valid|interface)\b")
 
 
 def lean_files(root: Path):
@@ -78,7 +78,7 @@ def main() -> int:
 
         for label, regex in [
             ("proxy_field", FIELD_PROXY_RE),
-            ("prop_socket", PROP_SOCKET_RE),
+            ("prop_interface", PROP_INTERFACE_RE),
         ]:
             matches = list(regex.finditer(text))
             if matches:
@@ -107,7 +107,7 @@ def main() -> int:
     print("Proof heartbeat")
     print("===============")
     print(f"root: {root}")
-    for key in ["sorry", "proxy_field", "prop_socket", "reexport_proxy"]:
+    for key in ["sorry", "proxy_field", "prop_interface", "reexport_proxy"]:
         print(f"{key}: {counts[key]}")
         for item in examples[key][: args.top]:
             print(f"  - {item}")

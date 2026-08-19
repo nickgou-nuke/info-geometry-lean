@@ -58,6 +58,16 @@ theorem actualRiemannZetaLogDerivative_mellin_factorization
   rw [actualRiemannZetaLogDerivative_eq_vonMangoldt_LSeries hs]
   exact actualRiemannZetaMellinTriplet_mangoldt_factorization hs
 
+/-- Native Mathlib logarithmic-derivative form of the convergent Mellin
+factorization. -/
+theorem neg_logDeriv_riemannZeta_eq_vonMangoldt_LSeries
+    {s : ℂ} (hs : 1 < s.re) :
+    -logDeriv riemannZeta s = L ↗Λ s := by
+  calc
+    -logDeriv riemannZeta s = actualRiemannZetaLogDerivative s :=
+      (actualRiemannZetaLogDerivative_eq_neg_logDeriv s).symm
+    _ = L ↗Λ s := actualRiemannZetaLogDerivative_eq_vonMangoldt_LSeries hs
+
 theorem dirichletSeriesZeta_mangoldt_reconstruction
     {s : ℂ} (hs : 1 < s.re) :
     InfoGeometry.Arithmetic.RiemannZetaEquivalences.dirichletSeriesZeta s * L ↗Λ s =

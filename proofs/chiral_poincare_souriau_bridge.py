@@ -1,6 +1,6 @@
 """SymPy witness: chiral supercharges -> Poincare momentum -> Souriau beta vector.
 
-This is the executable finite-dimensional shadow of the Lean socket:
+This is the executable finite-dimensional shadow of the Lean deferred_interface:
   {Q_alpha, Qbar_dotbeta} = 2 sigma^mu_{alpha dotbeta} P_mu.
 The Pauli-soldered matrix P_{alpha dotalpha} has determinant P^2, and the
 Souriau inverse-temperature four-vector beta is the dual covector paired with P.

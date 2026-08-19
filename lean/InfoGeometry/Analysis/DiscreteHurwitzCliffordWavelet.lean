@@ -177,51 +177,25 @@ namespace CliffordCascadeSystem
 variable {F : ParaunitaryCliffordFilterBank}
 
 /-- The normalized branches supply the pointwise sum rule. -/
-def sumRuleWitness (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
+theorem sumRule_of_cascade (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
   F.sum_normSq_eq_one_of_normalizedBranches C.branchNormalization
 
-/-- The explicit convergence property carried by the cascade packet. -/
-def convergenceWitness (C : CliffordCascadeSystem F) : Prop :=
-  letI := C.signalNorm
-  Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit)
+theorem cascade_converges (C : CliffordCascadeSystem F) :
+    letI := C.signalNorm
+    Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit) :=
+  C.cascadeConverges
 
-/-- Compatibility alias for the old over-strong name. -/
-def regularityWitness (C : CliffordCascadeSystem F) : Prop :=
-  C.convergenceWitness
-
-/-- Convergence in the owned signal norm. -/
-def cascadeConvergesInSignalNorm (C : CliffordCascadeSystem F) : Prop :=
-  C.convergenceWitness
-
-/-- Compatibility alias for the old `L²`-sounding name. -/
-def cascadeConvergesL2 (C : CliffordCascadeSystem F) : Prop :=
-  C.cascadeConvergesInSignalNorm
-
-/-- Compactness of the scaling-approximation image. -/
-def scalingApproximation_range_compact (C : CliffordCascadeSystem F) : Prop :=
-  letI := C.signalNorm
-  IsCompact (Set.range C.scalingApproximation)
-
-/-- Compatibility alias for the old compact-uniform name. -/
-def compactUniformUpgrade (C : CliffordCascadeSystem F) : Prop :=
-  C.scalingApproximation_range_compact
-
-/-- Reconstruction exists because the owner carries a concrete left inverse. -/
-def reconstructionWitnessExists (C : CliffordCascadeSystem F) : Prop :=
-  ∃ R : C.Signal → C.Signal, ∀ s, R (C.analysis s) = s
-
-/-- Compatibility alias for the old existential name. -/
-def reconstructionExists (C : CliffordCascadeSystem F) : Prop :=
-  C.reconstructionWitnessExists
-
-theorem reconstruction_exists (C : CliffordCascadeSystem F) :
-    C.reconstructionWitnessExists := by
-  exact ⟨C.synthesis, C.reconstruction_leftInverse⟩
+theorem scalingApproximation_range_isCompact (C : CliffordCascadeSystem F) :
+    letI := C.signalNorm
+    IsCompact (Set.range C.scalingApproximation) :=
+  C.compactRange
 
 theorem reconstructed_signal (C : CliffordCascadeSystem F) (s : C.Signal) :
     C.synthesis (C.analysis s) = s :=
   C.reconstruction_leftInverse s
 
+/- The reconstruction theorem above is the direct left-inverse fact; no
+   existential reconstruction interface is needed. -/
 end CliffordCascadeSystem
 
 end InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet

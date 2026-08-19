@@ -47,6 +47,14 @@ theorem relativeEntropy_eq_normalizedSpinorOverlap (M : SpinorLikelihoodModel St
     M.innovationScalar = Real.log (M.bilinear / M.normalizer) :=
   M.logLikelihoodRatio_of_spinorBilinear_hyp.symm
 
+/-- The supplied likelihood-ratio law has the expected additive logarithmic
+    form whenever the spinor bilinear is strictly positive. -/
+theorem innovationScalar_eq_log_bilinear_sub_log_normalizer
+    (M : SpinorLikelihoodModel State) (hbilinear : 0 < M.bilinear) :
+    M.innovationScalar = Real.log M.bilinear - Real.log M.normalizer := by
+  rw [← M.logLikelihoodRatio_of_spinorBilinear_hyp]
+  rw [Real.log_div hbilinear.ne' M.spinorBilinear_normalizer_pos_hyp.ne']
+
 theorem FenchelLegendre_dual_of_momentPotential (M : SpinorLikelihoodModel State) :
     M.innovationScalar + Real.log M.normalizer = Real.log M.bilinear :=
   M.FenchelLegendre_dual_of_momentPotential_hyp

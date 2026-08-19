@@ -35,6 +35,61 @@ def modularActionInverse
     (rho rhoInv X : SixStateOperator) : SixStateOperator :=
   rhoInv * X * rho
 
+theorem modularAction_inverse_left
+    (rho rhoInv X : SixStateOperator)
+    (h₁ : rhoInv * rho = 1) (h₂ : rho * rhoInv = 1) :
+    modularActionInverse rho rhoInv (modularAction rho rhoInv X) = X := by
+  unfold modularAction modularActionInverse
+  calc
+    rhoInv * (rho * X * rhoInv) * rho =
+        (rhoInv * rho) * X * (rhoInv * rho) := by noncomm_ring
+    _ = X := by rw [h₁, one_mul, mul_one]
+
+theorem modularAction_inverse_right
+    (rho rhoInv X : SixStateOperator)
+    (h₁ : rhoInv * rho = 1) (h₂ : rho * rhoInv = 1) :
+    modularAction rho rhoInv (modularActionInverse rho rhoInv X) = X := by
+  unfold modularAction modularActionInverse
+  calc
+    rho * (rhoInv * X * rho) * rhoInv =
+        (rho * rhoInv) * X * (rho * rhoInv) := by noncomm_ring
+    _ = X := by rw [h₂, one_mul, mul_one]
+
+@[simp] theorem modularAction_one (X : SixStateOperator) :
+    modularAction (1 : SixStateOperator) 1 X = X := by
+  simp [modularAction]
+
+theorem modularAction_comp
+    (rho rhoInv sigma sigmaInv X : SixStateOperator) :
+    modularAction rho rhoInv (modularAction sigma sigmaInv X) =
+      modularAction (rho * sigma) (sigmaInv * rhoInv) X := by
+  simp [modularAction, Matrix.mul_assoc]
+
+/-- The finite modular action is an equivalence when its inverse witnesses hold. -/
+def modularActionEquiv
+    (rho rhoInv : SixStateOperator)
+    (h₁ : rhoInv * rho = 1) (h₂ : rho * rhoInv = 1) :
+    SixStateOperator ≃ SixStateOperator where
+  toFun := modularAction rho rhoInv
+  invFun := modularActionInverse rho rhoInv
+  left_inv := modularAction_inverse_left rho rhoInv
+    (h₁ := h₁) (h₂ := h₂)
+  right_inv := modularAction_inverse_right rho rhoInv
+    (h₁ := h₁) (h₂ := h₂)
+
+@[simp] theorem modularActionEquiv_apply
+    (rho rhoInv : SixStateOperator)
+    (h₁ : rhoInv * rho = 1) (h₂ : rho * rhoInv = 1)
+    (X : SixStateOperator) :
+    modularActionEquiv rho rhoInv h₁ h₂ X = modularAction rho rhoInv X := rfl
+
+@[simp] theorem modularActionEquiv_symm_apply
+    (rho rhoInv : SixStateOperator)
+    (h₁ : rhoInv * rho = 1) (h₂ : rho * rhoInv = 1)
+    (X : SixStateOperator) :
+    (modularActionEquiv rho rhoInv h₁ h₂).symm X =
+      modularActionInverse rho rhoInv X := rfl
+
 theorem leftAction_rightAction_commute
     (A B X : SixStateOperator) :
     leftAction A (rightAction B X) =

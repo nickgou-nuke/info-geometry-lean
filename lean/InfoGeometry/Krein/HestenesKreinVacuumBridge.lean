@@ -23,7 +23,7 @@ local instance instTopologicalRingEndH : IsTopologicalRing EndH := inferInstance
 local instance instCompleteSpaceEndH : CompleteSpace EndH := inferInstance
 
 /--
-Vacuum vector socket for the Hestenes/Krein real KMS packet.
+Vacuum vector data for the Hestenes/Krein real KMS packet.
 
 This file does not prove a global Haagerup--Araki standard-form uniqueness
 statement.  The cyclic/separating/uniqueness content remains an explicit
@@ -86,12 +86,46 @@ variable (V : HestenesKreinVacuum P)
 def vacuumRealState (A : EndH) : ℝ :=
   P.hestenesExpectation V.omega A
 
+@[simp] theorem vacuumRealState_zero :
+    V.vacuumRealState (0 : EndH) = 0 := by
+  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation]
+
+theorem vacuumRealState_add (A B : EndH) :
+    V.vacuumRealState (A + B) =
+      V.vacuumRealState A + V.vacuumRealState B := by
+  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation,
+    inner_add_left]
+
+theorem vacuumRealState_smul (r : ℝ) (A : EndH) :
+    V.vacuumRealState (r • A) = r * V.vacuumRealState A := by
+  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation,
+    real_inner_smul_left]
+
+theorem vacuumRealState_neg (A : EndH) :
+    V.vacuumRealState (-A) = -V.vacuumRealState A := by
+  simpa using V.vacuumRealState_smul (-1) A
+
+theorem vacuumRealState_sub (A B : EndH) :
+    V.vacuumRealState (A - B) =
+      V.vacuumRealState A - V.vacuumRealState B := by
+  simp [sub_eq_add_neg, V.vacuumRealState_add, V.vacuumRealState_neg]
+
 /-- The vacuum state is normalized on the identity observable. -/
 @[rep_depth krein]
 theorem vacuumRealState_id :
     V.vacuumRealState (1 : EndH) = 1 := by
   unfold vacuumRealState HestenesKreinKMSPacket.hestenesExpectation
   simpa using V.omega_normalized
+
+theorem vacuumRealState_eq_zero_of_annihilates_vacuum
+    (A : EndH) (hA : A V.omega = 0) :
+    V.vacuumRealState A = 0 := by
+  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation, hA]
+
+theorem vacuumRealState_eq_of_apply_eq
+    (A B : EndH) (hAB : A V.omega = B V.omega) :
+    V.vacuumRealState A = V.vacuumRealState B := by
+  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation, hAB]
 
 /-- The rotor fixes the vacuum vector. -/
 @[rep_depth krein]

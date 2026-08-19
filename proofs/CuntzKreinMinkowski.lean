@@ -39,7 +39,7 @@ This file proves the FINITE algebraic identities:
   - η² = I (using Cuntz orthogonality S_i* S_j = 0 for i≠j)
 
 The full C*-algebraic O₂ with genuine isometries S_i* S_i = I (not just
-projective corners) and the TKK scale-up to (1,3) remain socketed.
+projective corners) and the TKK scale-up to (1,3) remain outside this finite owner.
 -/
 
 noncomputable section

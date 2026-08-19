@@ -6,7 +6,7 @@ namespace InfoGeometry.Physics
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 
 /-!
-# Cantor-continuum socket for supergraded Dirac transport
+# Cantor-continuum transport for supergraded Dirac data
 
 This owner records only the readout and transport theorems supported by the
 existing finite-prefix Cantor boundary and the explicit Witten transport

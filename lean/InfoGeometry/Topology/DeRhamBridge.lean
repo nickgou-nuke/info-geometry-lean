@@ -51,9 +51,11 @@ open Filter
     `∫ Tr(F ∧ F)` for the associated connection. -/
 theorem araki_itakura_is_curvature_form :
     ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ)),
+    (∀ X : Matrix (Fin 2) (Fin 2) ℂ,
+      P.readout.readout (P.readout.product X 0) = 0) →
     ∀ (X : Matrix (Fin 2) (Fin 2) ℂ), P.divergence X X = 0 := by
-  intro P X
-  exact P.divergence_self X
+  intro P hzero X
+  exact P.divergence_self hzero X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;

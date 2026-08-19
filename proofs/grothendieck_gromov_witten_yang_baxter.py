@@ -3,7 +3,7 @@
 
 Checks the polynomial Grothendieck-class identity and the braid/Yang--Baxter
 word identity at the finite symbolic level.  Gromov--Witten and geometric
-Grothendieck-ring interpretations remain mathematical sockets.
+Grothendieck-ring interpretations remain mathematical deferred_interfaces.
 """
 
 import sympy as sp
@@ -32,7 +32,7 @@ def main() -> None:
     print("inclusion-exclusion expression matches factorized polynomial")
     print("candidate E_c(u,v) = [U4] with L=uv")
     sp.pprint(sp.factor(Ec))
-    print("Gromov-Witten and geometric Grothendieck-class interpretation remain sockets.")
+    print("Gromov-Witten and geometric Grothendieck-class interpretation remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

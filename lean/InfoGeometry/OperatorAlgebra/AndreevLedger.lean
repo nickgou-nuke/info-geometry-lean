@@ -195,8 +195,21 @@ theorem particle_hole_flips_energy
             rw [hψ]
     _ = -(ε • B.theta ψ) := by
             rw [B.theta.map_smul]
-    _ = (-ε) • B.theta ψ := by
+        _ = (-ε) • B.theta ψ := by
             simp
+
+/-- Particle-hole energy pairing is reversible. -/
+theorem particle_hole_flips_energy_iff
+    {ψ : V}
+    {ε : ℝ} :
+    B.IsEnergyEigenvector ψ ε ↔
+      B.IsEnergyEigenvector (B.theta ψ) (-ε) := by
+  constructor
+  · intro hψ
+    exact B.particle_hole_flips_energy hψ
+  · intro hθψ
+    have h := B.particle_hole_flips_energy hθψ
+    simpa [B.theta_involutive ψ] using h
 
 /-- Particle-hole symmetry preserves the zero-energy subspace. -/
 theorem particle_hole_preserves_zeroMode
@@ -258,58 +271,5 @@ theorem theta_mode_eq_mode
   (B.mem_fixed_iff M.mode).mp M.fixed
 
 end MajoranaZeroMode
-
-/-! ## 5. Vortex-core memory, property-gated (Native Closure Mandated: Closure Debt) -/
-
-/--
-A property that a particular vortex core carries a Majorana zero mode.
-
-This is deliberately not derived from the mere existence of a vortex. In
-physical models, vortex-core Majorana modes require topological superconducting
-conditions and an actual BdG/topological proof.
--/
-structure VortexCoreMajoranaWitness
-    (Core V : Type*)
-    [AddCommGroup V] [Module ℝ V]
-    (B : BdGHamiltonianLedger V) where
-  /-- Vortex core label/location. -/
-  core : Core
-
-  /-- Majorana zero mode attached to this core. -/
-  majorana : MajoranaZeroMode B
-
-  /-- Core-indexed linear subspace of states localized at the vortex core. -/
-  localizationSubspace : Core → Submodule ℝ V
-
-  /-- The Majorana mode belongs to the localization subspace of its core. -/
-  localized_at_core :
-    majorana.mode ∈ localizationSubspace core
-
-namespace VortexCoreMajoranaWitness
-
-variable
-    {Core V : Type*}
-    [AddCommGroup V] [Module ℝ V]
-    {B : BdGHamiltonianLedger V}
-
-variable (W : VortexCoreMajoranaWitness Core V B)
-
-/-- The vortex-core property supplies a BdG zero mode. -/
-theorem core_mode_zero :
-    B.IsZeroMode W.majorana.mode :=
-  W.majorana.zero_energy
-
-/-- The vortex-core property supplies particle-hole self-conjugacy. -/
-theorem core_mode_fixed :
-    W.majorana.mode ∈ B.Fixed :=
-  W.majorana.fixed
-
-/-- The vortex-core Majorana mode lies in the core's owned localization
-subspace. -/
-theorem core_mode_localized :
-    W.majorana.mode ∈ W.localizationSubspace W.core :=
-  W.localized_at_core
-
-end VortexCoreMajoranaWitness
 
 end InfoGeometry.OperatorAlgebra.AndreevLedger

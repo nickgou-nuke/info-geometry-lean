@@ -104,20 +104,4 @@ theorem flipBlock_crossRatio (a b c d : ℚ) (A : Matrix (Fin 2) (Fin 2) ℚ) (h
   have hden : labels.ζ i - labels.ζ k ≠ 0 := labels.nonzero_den hik
   field_simp [hden]
 
-/--
-Open theorem target for the full gauge covariance formula.
-
-This is intentionally a proposition, not a theorem.  The closed file above
-proves the affine chart identities; the general Möbius relabeling theorem must
-add the required nonzero gauge and transformed-denominator hypotheses before it
-can be promoted.
--/
-def flipBlock_mobius_gauge_covariant_target (T : MobiusMap ℚ) : Prop :=
-    let ζ' : ι → ℚ := mobiusComp T labels.ζ
-    let A' := !![(ζ' i - ζ' l) / (ζ' i - ζ' k), (ζ' i - ζ' j) / (ζ' i - ζ' k);
-                 (ζ' l - ζ' k) / (ζ' i - ζ' k), (ζ' j - ζ' k) / (ζ' i - ζ' k)]
-    A' = !![leftGauge T (labels.ζ k), 0; 0, leftGauge T (labels.ζ i)] *
-         flipBlock labels i k j l hik *
-         !![(leftGauge T (labels.ζ l))⁻¹, 0; 0, (leftGauge T (labels.ζ j))⁻¹]
-
 end InfoGeometry.Topology.Delaunay

@@ -64,7 +64,7 @@ structure LFunctionHamiltonianFlowBridge
 
   /-- Proof-carrying partition packet for the character and denominator readout. -/
   packet :
-    SouriauWeylPartitionPacket G
+    SouriauWeylPartitionData G
 
   /-- The partition packet and the twisted base bridge live at the same temperature. -/
   packet_beta_eq_twisted :
@@ -96,7 +96,7 @@ structure LFunctionHamiltonianFlowBridgeDebt
 
   /-- Missing partition packet instantiation. -/
   packet :
-    SouriauWeylPartitionPacket G
+    SouriauWeylPartitionData G
 
   /-- Missing equality between packet beta and twisted temperature. -/
   packet_beta_eq_twisted :

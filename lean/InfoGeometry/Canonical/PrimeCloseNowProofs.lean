@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.PrimeCloseNowProofs
 
-Mathlib-based closure of the elementary sockets:
+Mathlib-based closure of the elementary interfaces:
 
 * Cayley critical-line algebra, in real coordinates.
 * Ferromagnetic positivity of the prime Hopfield matrix.

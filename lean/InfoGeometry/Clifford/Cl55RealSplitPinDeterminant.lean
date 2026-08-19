@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.StdBasis
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelCenter
 import InfoGeometry.Clifford.Cl55WittPinAction
 import InfoGeometry.Clifford.Cl55RealSplitPinReflectionImage
-import InfoGeometry.Clifford.Cl55RealSplitPinReflectionEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinReflectionBridge
 
 namespace InfoGeometry.Clifford.Clifford55
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 import Omega.Conclusion.ArtinDeterminantMinimalVisibleQuotient
-import Omega.EA.ChebotarevSecondMainTermWitness
+import Omega.EA.ChebotarevSecondMainTerm
 
 namespace Omega.DerivedConsequences
 
@@ -27,7 +27,7 @@ structure derived_artin_visible_hull_joint_minimality_entropy_obstruction_data w
 /-- The square shadow of the dominant hidden-channel witness. -/
 def derived_artin_visible_hull_joint_minimality_entropy_obstruction_entropy_shadow
     (h : derived_artin_visible_hull_joint_minimality_entropy_obstruction_data) (n : ℕ) : ℝ :=
-  |kernelWitnessTerm h.dominantCoeff n| ^ 2
+  |kernelProjectedTerm h.dominantCoeff n| ^ 2
 
 /-- The joint visible quotient is uniquely minimal, any determinant-preserving further quotient
 must remain inside the determinant kernel, the chosen dominant hidden character therefore cannot
@@ -58,7 +58,7 @@ theorem paper_derived_artin_visible_hull_joint_minimality_entropy_obstruction
   letI := h.joint.instCommGroupG
   rcases paper_conclusion_artin_determinant_minimal_visible_quotient h.joint with
     ⟨_, hcriterion, hminimal⟩
-  rcases paper_kernel_chebotarev_second_main_term_witness h.dominantCoeff h.dominantCoeff_ne_zero
+  rcases kernel_chebotarev_second_main_term h.dominantCoeff h.dominantCoeff_ne_zero
       with ⟨_, hnonzero, hoscillation⟩
   have hle : h.furtherKernel ≤ h.joint.N_det := by
     exact (hcriterion h.furtherKernel).1 h.furtherKernel_preserves_determinant

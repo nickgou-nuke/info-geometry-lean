@@ -4,8 +4,8 @@ import Mathlib
 # Golden q-CCR anchors
 
 This module fixes the Kuzmin q-CCR deformation parameter at the Penrose/Fibonacci
-KMS scale.  The analytic statement "for `|q| < 1` the Fock-image q-CCR algebra
-is Cuntz--Toeplitz" remains the socket in `ProjectiveCuntzToeplitzCARCCR`; here
+KMS scale.  The analytic Cuntz--Toeplitz identification is outside this finite
+scalar owner; here
 we prove the scalar bridge
 
 `q = exp(-log φ) = φ⁻¹ = thickFreq`, and `|q| < 1`.

@@ -50,14 +50,97 @@ namespace FourMomentum
 
 end FourMomentum
 
-/-- Minkowski quadratic/Casimir with mostly-minus convention. -/
-def minkowskiSq (P : FourMomentum) : ℂ :=
-  P.E ^ 2 - P.px ^ 2 - P.py ^ 2 - P.pz ^ 2
-
 /-- Pauli soldering: `P_{α dotα}=P_μ σ^μ_{α dotα}`. -/
 def pauliMomentum (P : FourMomentum) : M2C :=
   !![P.E + P.pz, P.px - Complex.I * P.py;
      P.px + Complex.I * P.py, P.E - P.pz]
+
+/-- x-momentum recovered by inverse Pauli trace. -/
+def recoverPx (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ1)
+
+/-- y-momentum recovered by inverse Pauli trace. -/
+def recoverPy (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ2)
+
+/-- z-momentum recovered by inverse Pauli trace. -/
+def recoverPz (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ3)
+
+/-- Energy recovered by inverse Pauli trace. -/
+def recoverE (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace A
+
+@[simp] theorem recoverE_pauliMomentum (P : FourMomentum) :
+    recoverE (pauliMomentum P) = P.E := by
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverE, pauliMomentum, Matrix.trace, Fin.sum_univ_two]
+  ring
+
+@[simp] theorem recoverPx_pauliMomentum (P : FourMomentum) :
+    recoverPx (pauliMomentum P) = P.px := by
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Fin.sum_univ_two]
+  ring
+
+@[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :
+    recoverPy (pauliMomentum P) = P.py := by
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Fin.sum_univ_two]
+  ring_nf
+  simp
+
+@[simp] theorem recoverPz_pauliMomentum (P : FourMomentum) :
+    recoverPz (pauliMomentum P) = P.pz := by
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Fin.sum_univ_two]
+  ring
+
+/-- Componentwise addition of complexified four-momenta. -/
+def addFourMomentum (P Q : FourMomentum) : FourMomentum :=
+  ⟨P.E + Q.E, P.px + Q.px, P.py + Q.py, P.pz + Q.pz⟩
+
+/-- Pauli soldering is linear with respect to four-momentum addition. -/
+@[simp] theorem pauliMomentum_add (P Q : FourMomentum) :
+    pauliMomentum (addFourMomentum P Q) = pauliMomentum P + pauliMomentum Q := by
+  rcases P with ⟨E₁, px₁, py₁, pz₁⟩
+  rcases Q with ⟨E₂, px₂, py₂, pz₂⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  simp [addFourMomentum, pauliMomentum, Matrix.add_apply, Fin.sum_univ_two]
+  <;>
+  ring_nf <;>
+  simp [Complex.ext_iff, Complex.I_mul_I] <;>
+  norm_num <;>
+  simp_all [Complex.ext_iff, Complex.I_mul_I] <;>
+  norm_num <;>
+  linarith <;>
+    constructor <;> trivial
+
+/-- Zero four-momentum. -/
+def zeroFourMomentum : FourMomentum :=
+  ⟨0, 0, 0, 0⟩
+
+/-- Extensionality for `FourMomentum` via `pauliMomentum`. -/
+lemma fourMomentum_ext_of_pauliMomentum_eq {P Q : FourMomentum} (h : pauliMomentum P = pauliMomentum Q) : P = Q := by
+  have h₁ : P.E = Q.E := by
+    have h₂ := congr_arg recoverE h
+    simp [recoverE_pauliMomentum] at h₂
+    exact h₂
+  have h₂ : P.px = Q.px := by
+    have h₃ := congr_arg recoverPx h
+    simp [recoverPx_pauliMomentum] at h₃
+    exact h₃
+  have h₃ : P.py = Q.py := by
+    have h₄ := congr_arg recoverPy h
+    simp [recoverPy_pauliMomentum] at h₄
+    exact h₄
+  have h₄ : P.pz = Q.pz := by
+    have h₅ := congr_arg recoverPz h
+    simp [recoverPz_pauliMomentum] at h₅
+    exact h₅
+  ext <;> simp_all [FourMomentum.E, FourMomentum.px, FourMomentum.py, FourMomentum.pz]
+  <;> aesop
+
+/-- Minkowski quadratic/Casimir with mostly-minus convention. -/
+def minkowskiSq (P : FourMomentum) : ℂ :=
+  P.E ^ 2 - P.px ^ 2 - P.py ^ 2 - P.pz ^ 2
 
 /-- Explicit determinant of the Pauli-soldered momentum matrix: the mass Casimir. -/
 theorem det_pauliMomentum (P : FourMomentum) :
@@ -124,64 +207,54 @@ theorem exp_neg_half_pauliLogAbsDet_eq_sqrt_abs_minkowskiSq
 structure ChiralSUSYMomentum where
   P : FourMomentum
   antiQQbar : M2C
-  susy_anticomm : antiQQbar = (2 : ℂ) • pauliMomentum P
+
+def ChiralSUSYMomentumLaws (S : ChiralSUSYMomentum) : Prop :=
+  S.antiQQbar = (2 : ℂ) • pauliMomentum S.P
 
 /-- Momentum spinor matrix from the supercharge anticommutator. -/
 def momentumSpinorFromSupercharges (S : ChiralSUSYMomentum) : M2C :=
   (1 / 2 : ℂ) • S.antiQQbar
 
 /-- The supercharge square/anticommutator recovers the Pauli-soldered momentum. -/
-theorem momentum_from_supercharges (S : ChiralSUSYMomentum) :
+theorem momentum_from_supercharges (S : ChiralSUSYMomentum)
+    (hS : ChiralSUSYMomentumLaws S) :
     momentumSpinorFromSupercharges S = pauliMomentum S.P := by
-  rw [momentumSpinorFromSupercharges, S.susy_anticomm]
+  rw [momentumSpinorFromSupercharges, hS]
   ext i j
   simp [Matrix.smul_apply]
 
-/-- Energy recovered by inverse Pauli trace. -/
-def recoverE (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace A
+/-- Inverse Pauli soldering: recover four-momentum components from the soldered matrix. -/
+def fourMomentumOfMatrix (A : M2C) : FourMomentum :=
+  ⟨recoverE A, recoverPx A, recoverPy A, recoverPz A⟩
 
-/-- x-momentum recovered by inverse Pauli trace. -/
-def recoverPx (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ1)
-
-/-- y-momentum recovered by inverse Pauli trace. -/
-def recoverPy (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ2)
-
-/-- z-momentum recovered by inverse Pauli trace. -/
-def recoverPz (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ3)
-
-@[simp] theorem recoverE_pauliMomentum (P : FourMomentum) :
-    recoverE (pauliMomentum P) = P.E := by
-  rcases P with ⟨E, px, py, pz⟩
-  simp [recoverE, pauliMomentum, Matrix.trace, Fin.sum_univ_two]
-  ring
-
-@[simp] theorem recoverPx_pauliMomentum (P : FourMomentum) :
-    recoverPx (pauliMomentum P) = P.px := by
-  rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Fin.sum_univ_two]
-  ring
-
-@[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :
-    recoverPy (pauliMomentum P) = P.py := by
-  rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Fin.sum_univ_two]
-  ring_nf
-  simp
-
-@[simp] theorem recoverPz_pauliMomentum (P : FourMomentum) :
-    recoverPz (pauliMomentum P) = P.pz := by
-  rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Fin.sum_univ_two]
-  ring
+@[simp] theorem pauliMomentum_fourMomentumOfMatrix (X : M2C) :
+    pauliMomentum (fourMomentumOfMatrix X) = X := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  simp [fourMomentumOfMatrix, recoverE, recoverPx, recoverPy, recoverPz,
+    pauliMomentum, σ1, σ2, σ3, Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply]
+  <;>
+  ring_nf <;>
+  simp [Complex.ext_iff, Complex.I_mul_I, Fin.sum_univ_two] <;>
+  norm_num <;>
+  (try constructor <;> simp_all [Matrix.trace, Fin.sum_univ_two] <;> ring_nf <;> norm_num <;>
+    simp_all [Complex.ext_iff, Complex.I_mul_I] <;>
+    norm_num) <;>
+  (try ring_nf) <;>
+  (try simp_all [Complex.ext_iff, Complex.I_mul_I, Fin.sum_univ_two]) <;>
+  (try norm_num)
 
 /-- The inverse Pauli transform recovers all four components from `{Q,Q̄}/2`. -/
-theorem supercharge_pauli_inverse (S : ChiralSUSYMomentum) :
+theorem supercharge_pauli_inverse (S : ChiralSUSYMomentum)
+    (hS : ChiralSUSYMomentumLaws S) :
     recoverE (momentumSpinorFromSupercharges S) = S.P.E ∧
     recoverPx (momentumSpinorFromSupercharges S) = S.P.px ∧
     recoverPy (momentumSpinorFromSupercharges S) = S.P.py ∧
     recoverPz (momentumSpinorFromSupercharges S) = S.P.pz := by
-  rw [momentum_from_supercharges S]
-  simp
+  rw [momentum_from_supercharges S hS]
+  constructor <;>
+  (try simp_all [recoverE_pauliMomentum, recoverPx_pauliMomentum, recoverPy_pauliMomentum, recoverPz_pauliMomentum, FourMomentum.E, FourMomentum.px, FourMomentum.py, FourMomentum.pz]) <;>
+  (try aesop)
 
 /-! ## Twistor/null factorization -/
 

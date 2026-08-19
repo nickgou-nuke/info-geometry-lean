@@ -37,7 +37,7 @@ slack = lam * 0
 assert_zero("complementary slackness for active equality residual", slack)
 print("KKT toy anchor verified ✓")
 
-print("\n§4 sockets")
-print("Full spectrahedral shadows, SDP duality, and projective-dual boundaries remain theorem-honest sockets ✓")
+print("\n§4 deferred_interfaces")
+print("Full spectrahedral shadows, SDP duality, and projective-dual boundaries remain theorem-honest deferred_interfaces ✓")
 
 print("\nconvex_algebraic_duality.py: All identities verified")

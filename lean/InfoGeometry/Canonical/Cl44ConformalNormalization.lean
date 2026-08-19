@@ -1,7 +1,6 @@
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Exceptional.Freudenthal
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # `Cl(4,4)` conformal normalization
@@ -342,21 +341,10 @@ theorem nativeCl44ConformalRoute
     SplitTrialityKernel.trialitySupercharge_sq_eq_id T⟩
 end NativeOperatorRoute
 
-/-! ## 7. Compatibility owner target -/
-
-/--
-Compatibility target for the dimension normalization.  The actual operatorial
-owner is `NativeCl44ConformalRoute`.
--/
-@[owner_target_tag]
-def Cl44ConformalNormalizationOwnerTarget : Prop :=
-  QuadraticLightConeConformalRoute
-    ∧ SpinFactorConformalRoute
-    ∧ TrialityLeviPlacement
-
-/-- The corrected normalization owner target is inhabited. -/
-theorem cl44ConformalNormalizationOwnerTarget :
-    Cl44ConformalNormalizationOwnerTarget :=
+theorem cl44ConformalNormalization_properties :
+    QuadraticLightConeConformalRoute ∧
+      SpinFactorConformalRoute ∧
+      TrialityLeviPlacement :=
   ⟨QuadraticLightConeConformalRoute.canonical,
     SpinFactorConformalRoute.canonical,
     TrialityLeviPlacement.canonical⟩

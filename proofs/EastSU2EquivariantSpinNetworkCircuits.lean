@@ -23,7 +23,7 @@ skeleton:
   and `5` for three qubits.
 
 Full Schur-gate synthesis, twirling equivalence, generalized-permutation
-universality, hardware compilation, and VQE benchmark claims remain sockets.
+universality, hardware compilation, and VQE benchmark claims remain outside this finite owner.
 -/
 
 noncomputable section

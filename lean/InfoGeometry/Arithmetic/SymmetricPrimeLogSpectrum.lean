@@ -58,6 +58,43 @@ def finitePrimeWave (S : Finset ℕ) (t : ℝ) : ℂ :=
     (primeWeight n : ℂ) *
       phasePair t (logFrequency n))
 
+/-! ## Finite absorption readout -/
+
+/-- The real cosine amplitude underlying a finite symmetric prime-log packet. -/
+def finitePrimeWaveCosine (S : Finset ℕ) (t : ℝ) : ℝ :=
+  S.sum (fun n =>
+    primeWeight n * (2 * Real.cos (t * logFrequency n)))
+
+/-- A finite spectral notch is an explicit zero of the finite wave amplitude. -/
+def absorptionNotch (S : Finset ℕ) (t : ℝ) : Prop :=
+  finitePrimeWave S t = 0
+
+/-- The complex paired-wave readout is the cast of its real cosine amplitude. -/
+theorem finitePrimeWave_eq_coe_cosine (S : Finset ℕ) (t : ℝ) :
+    finitePrimeWave S t = (finitePrimeWaveCosine S t : ℂ) := by
+  unfold finitePrimeWave finitePrimeWaveCosine
+  rw [Complex.ofReal_sum]
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [phasePair_eq_two_cos]
+  simp
+
+/-- A finite notch is equivalent to vanishing of the real cosine amplitude. -/
+theorem absorptionNotch_iff_cosine_zero (S : Finset ℕ) (t : ℝ) :
+    absorptionNotch S t ↔ finitePrimeWaveCosine S t = 0 := by
+  unfold absorptionNotch
+  rw [finitePrimeWave_eq_coe_cosine]
+  norm_cast
+
+/-- The real cosine amplitude is even in spectral time. -/
+theorem finitePrimeWaveCosine_neg (S : Finset ℕ) (t : ℝ) :
+    finitePrimeWaveCosine S (-t) = finitePrimeWaveCosine S t := by
+  unfold finitePrimeWaveCosine
+  apply Finset.sum_congr rfl
+  intro n hn
+  rw [show (-t) * logFrequency n = -(t * logFrequency n) by ring]
+  rw [Real.cos_neg]
+
 /-- Every finite prime-log packet is even in spectral time. -/
 theorem finitePrimeWave_neg (S : Finset ℕ) (t : ℝ) :
     finitePrimeWave S (-t) = finitePrimeWave S t := by
@@ -65,6 +102,12 @@ theorem finitePrimeWave_neg (S : Finset ℕ) (t : ℝ) :
   apply Finset.sum_congr rfl
   intro n hn
   rw [phasePair_neg_time]
+
+/-- Finite absorption notches are even under spectral-time reflection. -/
+theorem absorptionNotch_neg (S : Finset ℕ) (t : ℝ) :
+    absorptionNotch S (-t) ↔ absorptionNotch S t := by
+  unfold absorptionNotch
+  rw [finitePrimeWave_neg]
 
 end InfoGeometry.Arithmetic.SymmetricPrimeLogSpectrum
 

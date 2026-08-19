@@ -606,7 +606,7 @@ variable (C : RawCARAlgebra A)
 /--
 Forget the explicit central field after an explicit `central = 1` normalization.
 
-This is only a normalization map, not a theorem socket: the CAR law with
+This is only a normalization map, not a theorem interface: the CAR law with
 `central` is converted to the existing normalized `RawCARModeCompletion`.
 -/
 def toModeCompletion (hK : C.central = 1) : RawCARModeCompletion A where

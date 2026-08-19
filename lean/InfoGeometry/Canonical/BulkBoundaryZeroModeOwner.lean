@@ -44,7 +44,7 @@ structure DimensionAgnosticBoundaryZeroModeOwner
     (localOp : KitaevCell → EndS)
     (chain : List KitaevCell) where
   boundaryWitness :
-    BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain
+    BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain
 
 
 /-- Canonical kernel readout from the promoted owner packet. -/
@@ -58,7 +58,7 @@ theorem owner_hasZeroMode
     HasZeroMode (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
   exact hasZeroMode_of_operatorZeroModeWitness (S := S)
-    (operatorZeroModeWitnessOfBoundaryLocalizedPlus
+    (operatorZeroMode_of_boundaryLocalizedPlus
       (M := M) (P0 := P0) localOp chain O.boundaryWitness)
 
 /-- Canonical explicit zero-mode readout from the promoted owner packet. -/
@@ -72,7 +72,7 @@ theorem owner_exists_zeroMode
     ∃ v : S,
       (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧ v ≠ 0 := by
   exact exists_zeroMode_of_operatorZeroModeWitness (S := S)
-    (operatorZeroModeWitnessOfBoundaryLocalizedPlus
+    (operatorZeroMode_of_boundaryLocalizedPlus
       (M := M) (P0 := P0) localOp chain O.boundaryWitness)
 
 /--

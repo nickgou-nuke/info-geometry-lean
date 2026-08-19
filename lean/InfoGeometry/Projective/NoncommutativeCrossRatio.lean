@@ -35,6 +35,22 @@ theorem innerDerivation_mul (H A B : R) :
   unfold innerDerivation
   noncomm_ring
 
+theorem innerDerivation_add_right (H A B : R) :
+    innerDerivation H (A + B) =
+      innerDerivation H A + innerDerivation H B := by
+  unfold innerDerivation
+  noncomm_ring
+
+theorem innerDerivation_add_left (H K A : R) :
+    innerDerivation (H + K) A =
+      innerDerivation H A + innerDerivation K A := by
+  unfold innerDerivation
+  noncomm_ring
+
+@[simp] theorem innerDerivation_self (H : R) :
+    innerDerivation H H = 0 := by
+  simp [innerDerivation]
+
 end InnerDerivation
 
 /-! ## Ordered noncommutative cross-ratio -/
@@ -67,6 +83,28 @@ def rightAffine (a b P : R) : R :=
 /-- Left affine action `P ↦ a * P + b` on a noncommutative affine chart. -/
 def leftAffine (a b P : R) : R :=
   a * P + b
+
+theorem rightAffine_comp
+    (a b c d P : R) :
+    rightAffine a b (rightAffine c d P) =
+      rightAffine (c * a) (d * a + b) P := by
+  unfold rightAffine
+  noncomm_ring
+
+theorem leftAffine_comp
+    (a b c d P : R) :
+    leftAffine a b (leftAffine c d P) =
+      leftAffine (a * c) (a * d + b) P := by
+  unfold leftAffine
+  noncomm_ring
+
+@[simp] theorem rightAffine_identity (P : R) :
+    rightAffine 1 0 P = P := by
+  simp [rightAffine]
+
+@[simp] theorem leftAffine_identity (P : R) :
+    leftAffine 1 0 P = P := by
+  simp [leftAffine]
 
 /-- Inner conjugation by `a`, used for the noncommutative left-affine law. -/
 def conjugateBy (a x : R) : R :=

@@ -104,7 +104,7 @@ theorem solder_gl1_gl3
 
 /-- Full SU(3) Gell-Mann table acts correctly on the realized parafermion color
 spinor.  This is the precise proof-backed replacement of the old
-`respectsSU3Commutator` socket. -/
+`respectsSU3Commutator` interface. -/
 theorem solder_su3_color_action_all_commutators
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (R : ParafermionRealization V) :

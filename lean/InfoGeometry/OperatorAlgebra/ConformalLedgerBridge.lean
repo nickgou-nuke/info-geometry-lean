@@ -17,7 +17,7 @@ ledger identity is available.
 
 This module uses the already-compiled `StinespringDilation` heat APIs
 (`DissipativeChannel`, `BregmanDivergenceDatum`, `HeatEqualsHiddenInformation`)
-and the `TKKConformalClosure.TKKRicciFluxDatum` socket. It is complementary to
+and the `TKKConformalClosure.TKKRicciFluxDatum` interface. It is complementary to
 `TKKFluxBalance`, which decomposes the closure defect itself into hidden,
 material, and topological ledgers.
 -/
@@ -25,7 +25,6 @@ material, and topological ledgers.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -459,7 +458,7 @@ Conformal ledger bridge readout.
 Once the conformal thermodynamic ledger is supplied, heat, hidden information,
 and scalarized TKK Ricci flux agree by the bridge laws.
 -/
-theorem conformalLedgerBridgeOwnerTarget :
+theorem conformalLedgerBridge_readout :
   ∀ (Sys Comm L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]

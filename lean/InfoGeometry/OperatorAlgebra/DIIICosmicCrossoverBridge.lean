@@ -89,26 +89,18 @@ theorem cosmicCrossoverInterpretation_holds :
       D.cptClosure.theta D.P_right = D.P_left :=
   ⟨D.cptClosure_theta_P_left, D.cptClosure_theta_P_right⟩
 
-/--
-The DIII CPT branch constructs a cosmic Andreev crossover property whose old/new
-data are the left/right chiral projectors.
--/
-def toCosmicCrossoverWitness : CosmicCrossoverWitness Op where
-  boundary := D.toAndreevBoundaryDatum
-  oldNullData := D.P_left
-  newMetricData := D.P_right
-  reflection := D.cptClosure_theta_P_left
-
 /-- The DIII chiral diagonal survives the CPT/crossover closure. -/
 theorem cpt_crossover_diagonal_fixed :
     D.P_left + D.P_right ∈ D.cptClosure.Fixed :=
-  (D.toCosmicCrossoverWitness).crossover_diagonal_fixed
+  D.cptClosure.diagonal_fixed_of_swap
+    D.cptClosure_theta_P_left D.cptClosure_theta_P_right
 
 /-- The DIII chiral imbalance is anti-fixed by the CPT/crossover closure. -/
 theorem cpt_chiral_imbalance_anti_fixed :
     D.cptClosure.theta (D.P_left - D.P_right) =
       -(D.P_left - D.P_right) :=
-  (D.toCosmicCrossoverWitness).crossover_imbalance_anti_fixed
+  D.cptClosure.difference_anti_fixed_of_swap
+    D.cptClosure_theta_P_left D.cptClosure_theta_P_right
 
 end DIIICPTBranchDatum
 

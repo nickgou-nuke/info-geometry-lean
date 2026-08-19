@@ -1,6 +1,5 @@
 import Mathlib.Topology.Order.HullKernel
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimitiveSetHullKernelBridge
@@ -32,7 +31,6 @@ Mathlib's hull-kernel Galois connection.
 This is a direct specialization of `PrimitiveSpectrum.gc`; the bridge is the
 carrier-level instantiation, not a new theorem.
 -/
-@[bridge_target_tag]
 theorem primitiveSetCarrier_hullKernel_gc :
     GaloisConnection
       (fun S : Set PrimitiveSetCarrier =>
@@ -48,7 +46,6 @@ carrier.
 
 This is the closure side of the same Galois connection.
 -/
-@[bridge_target_tag]
 theorem primitiveSetCarrier_hullKernel_closureOperator
     (S : Set PrimitiveSetCarrier) :
     (PrimitiveSpectrum.gc (α := Set ℕ) (T := PrimitiveSetCarrier)).closureOperator S

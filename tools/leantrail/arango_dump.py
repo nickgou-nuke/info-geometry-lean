@@ -11,7 +11,7 @@ dependency edges to compute its downstream/upstream cone.
 Usage:
   # Full graph dump
   python3 tools/leantrail/arango_dump.py                       \
-    --endpoint http://localhost:8529                            \
+    --endpoint http://localhost:8530                            \
     --database LeanAST                                          \
     --collection Theorems                                       \
     --edges ProofSteps                                          \

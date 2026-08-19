@@ -213,7 +213,7 @@ def candidateAdmissible
 
 end FinitePrimitiveMaxEntData
 
-/-! ## 3. Souriau calibration socket -/
+/-! ## 3. Souriau calibration interface -/
 
 /--
 Souriau-style primitive zeta calibration.
@@ -240,15 +240,6 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
   /-- Calibrated model-specific objective (action/readout) over `State`. -/
   objectiveReadout : State → ℝ
 
-  /--
-  Legacy compatibility name for legacy free-energy/action wording.
-
-  This field is intentionally aligned with `objectiveReadout`; the bridge does
-  not claim physical Helmholtz free energy unless the model supplies that
-  interpretation separately.
-  -/
-  freeEnergyReadout : State → ℝ
-
   /-- Partition calibration against the restricted finite zeta partition. -/
   partition_eq_finiteZetaPartition :
     ∀ A : Finset ℕ, ∀ β : ℝ,
@@ -265,15 +256,19 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
     ∀ A : Finset ℕ,
       entropyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
 
-  /-- Legacy free-energy/action readout is calibrated to the primary objective. -/
-  freeEnergy_eq_objective :
-    ∀ A : Finset ℕ,
-      freeEnergyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
-
 namespace PrimitiveSouriauZetaCalibration
 
 variable {State : Type*}
 variable (C : PrimitiveSouriauZetaCalibration State)
+
+/-- The legacy free-energy name is the calibrated objective readout. -/
+def freeEnergyReadout : State → ℝ :=
+  C.objectiveReadout
+
+theorem freeEnergy_eq_objective (A : Finset ℕ) :
+    C.freeEnergyReadout (C.stateOfFinset A) =
+      C.objectiveReadout (C.stateOfFinset A) := by
+  rfl
 
 /-- The calibrated model partition is nonnegative on encoded finite supports. -/
 theorem partitionReadout_nonneg
@@ -563,7 +558,6 @@ def identityPrimitiveSouriauZetaCalibration :
   partitionReadout := primitiveFiniteZetaPartition
   entropyReadout := primitiveWeightSum
   objectiveReadout := primitiveWeightSum
-  freeEnergyReadout := primitiveWeightSum
   partition_eq_finiteZetaPartition := by
     intro A β
     rfl
@@ -571,9 +565,6 @@ def identityPrimitiveSouriauZetaCalibration :
     intro A
     rfl
   entropy_eq_objective := by
-    intro A
-    rfl
-  freeEnergy_eq_objective := by
     intro A
     rfl
 

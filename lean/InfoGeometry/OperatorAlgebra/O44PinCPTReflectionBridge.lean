@@ -53,16 +53,16 @@ structure CPTPin44ReflectionCalibration
     Pin.parity timeReversalPin = PinParity.odd
 
   /-- Explicit Pin element carrying the reflection component. -/
-  reflectionSocketCertificate : PinEl
+  reflectionPin : PinEl
 
-  reflectionSocketCertificate_isPin :
-    Pin.isPin reflectionSocketCertificate
+  reflectionPin_isPin :
+    Pin.isPin reflectionPin
 
-  reflectionSocketCertificate_odd :
-    Pin.parity reflectionSocketCertificate = PinParity.odd
+  reflectionPin_odd :
+    Pin.parity reflectionPin = PinParity.odd
 
-  reflectionSocketCertificate_component :
-    (Pin.cover reflectionSocketCertificate reflectionSocketCertificate_isPin).component =
+  reflectionPin_component :
+    (Pin.cover reflectionPin reflectionPin_isPin).component =
       O44Component.reflection
 
   /-- Charge conjugation is an internal/state-level involution. -/
@@ -139,16 +139,16 @@ theorem parity_timeReversal_outside_even_sector :
       Pin.parity C.timeReversalPin ≠ PinParity.even :=
   ⟨C.parityPin_not_even, C.timeReversalPin_not_even⟩
 
-/-- The full Pin socket is the retained reflection lane, not merely Spin. -/
-theorem odd_reflection_socket_available
+/-- The full Pin interface is the retained reflection lane, not merely Spin. -/
+theorem reflection_component_exists
     (C : CPTPin44ReflectionCalibration Q Pin State) :
     ∃ a : PinEl, ∃ ha : Pin.isPin a,
       Pin.parity a = PinParity.odd ∧
         (Pin.cover a ha).component = O44Component.reflection :=
-  ⟨C.reflectionSocketCertificate,
-    C.reflectionSocketCertificate_isPin,
-    C.reflectionSocketCertificate_odd,
-    C.reflectionSocketCertificate_component⟩
+  ⟨C.reflectionPin,
+    C.reflectionPin_isPin,
+    C.reflectionPin_odd,
+    C.reflectionPin_component⟩
 
 /-- Charge conjugation squares to the identity on states. -/
 theorem chargeConjugation_sq

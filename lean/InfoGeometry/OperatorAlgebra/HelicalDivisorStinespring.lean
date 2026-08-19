@@ -269,7 +269,7 @@ def hiddenSheetChargeOf
 
 end HelicalStinespringAccounting
 
-/-! ## 6. Spectral-function calibration socket -/
+/-! ## 6. Spectral-function calibration interface -/
 
 /--
 Calibration saying that a concrete spectral determinant or L-function supplies

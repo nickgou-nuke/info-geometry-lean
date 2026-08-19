@@ -9,7 +9,7 @@ noncomputable section
 # KMS Condition Bridge
 
 This file connects the bounded Souriau/Drazin modular-flow calibration to the
-repository's KMS readout socket.
+repository's KMS readout data.
 
 It does not prove analytic strip continuation from bounded algebra alone.  The
 KMS boundary law, state invariance, and support-stability preservation are
@@ -36,7 +36,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-KMS socket for a bounded Souriau/Drazin modular flow.
+KMS data for a bounded Souriau/Drazin modular flow.
 
 `bounded.flow : ℝ → EndH` is the already-calibrated bounded generator flow.
 `kmsFlow : ℝ → EndH → EndH` is the observable action used for KMS readouts,
@@ -113,8 +113,7 @@ variable (K : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))
 def toKMSReadoutDatum : KMSReadoutDatum EndH where
   flow := K.kmsFlow
   state := K.state
-  beta := K.beta
-  beta_pos := K.beta_pos
+  beta := ⟨K.beta, K.beta_pos⟩
   flow_zero := K.kmsFlow_zero
   flow_add := K.kmsFlow_add
   flow_invariant := K.state_invariant

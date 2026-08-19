@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 
 /-!
@@ -25,6 +26,7 @@ namespace InfoGeometry.Arithmetic.PrimonSplitChiralFiniteCutoff
 
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 open InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 
 /-- Prime energy `E_p = log p`. -/
 def primeEnergy (p : ℕ) : ℝ :=
@@ -33,6 +35,13 @@ def primeEnergy (p : ℕ) : ℝ :=
 /-- A finite prime cutoff, reused from the finite primon character lane. -/
 def primeCutoff (Λ : ℕ) : Finset ℕ :=
   PrimonMajoranaWittenCharacter.primeCutoff Λ
+
+/-- The prime cutoff presented as the canonical finite prime register. -/
+def primeCutoffRegister (Λ : ℕ) :
+    InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister :=
+  ⟨primeCutoff Λ, by
+    intro p hp
+    exact (PrimonMajoranaWittenCharacter.mem_primeCutoff_iff.mp hp).2⟩
 
 /-- Chiral fermionic mode weight `exp(ν - β log p)`. -/
 def chiralModeWeight (β ν : ℝ) (p : ℕ) : ℝ :=
@@ -46,6 +55,28 @@ lemma chiralModeWeight_pos (β ν : ℝ) (p : ℕ) :
 /-- Left chiral finite partition on a prime cutoff. -/
 def chiralPartitionLeft (Λ : ℕ) (β ν : ℝ) : ℝ :=
   Finset.prod (primeCutoff Λ) (fun p => 1 + chiralModeWeight β ν p)
+
+/-! ## Canonical grand-canonical bridge -/
+
+/--
+The left chiral product is the canonical finite grand-canonical Euler product.
+
+The chemical potential is `ν / β`; the explicit nonzero-temperature premise is
+needed only for the algebraic reparameterization of the exponent.
+-/
+theorem chiralPartitionLeft_eq_finiteEulerProduct
+    (Λ : ℕ) (β ν : ℝ) (hβ : β ≠ 0) :
+    chiralPartitionLeft Λ β ν =
+      finiteEulerProduct (primeCutoffRegister Λ)
+        logPrimeEnergyWeight β (ν / β) := by
+  unfold chiralPartitionLeft finiteEulerProduct chiralModeWeight
+  refine Finset.prod_congr (by simp [primeCutoffRegister]) ?_
+  intro p hp
+  congr 1
+  unfold primeEnergy logPrimeEnergyWeight
+  congr 1
+  field_simp [hβ]
+  ring
 
 lemma chiralPartitionLeft_pos (Λ : ℕ) (β ν : ℝ) :
     0 < chiralPartitionLeft Λ β ν := by

@@ -93,7 +93,7 @@ def geometricCoreProjector
   normalizationFactor • stokesBoundaryIntegral Ω R.resolvent
 
 /--
-Finite monogenicity socket on a parameterized volume.
+Finite monogenicity predicate on a parameterized volume.
 
 Until a full Dirac-operator API is supplied, monogenicity is represented by the
 non-vacuous algebraic resolvent commutation law along the parameterized volume.
@@ -109,7 +109,7 @@ def IsMonogenicOn
     (param : Volume → P) : Prop :=
   ∀ v : Volume, R.resolvent (param v) * A = A * R.resolvent (param v)
 
-/-- Non-vacuous Stokes defect/flux socket: every boundary resolvent has zero
+/-- Stokes defect/flux predicate: every boundary resolvent has zero
 commutator defect against the surgery operator. -/
 def BoundaryFluxEqualsDefectSum
     {E P : Type*}
@@ -119,25 +119,6 @@ def BoundaryFluxEqualsDefectSum
     (R : CliffordResolventFamily (P := P) A)
     (_Ω : DirectedBoundary P) : Prop :=
   ∀ p : P, R.resolvent p * A - A * R.resolvent p = 0
-
-/--
-Stokes property for the Clifford resolvent field.
-
-The fields are proofs of named predicates, not arbitrary `Prop` slots.
--/
-structure StokesTheoremWitness
-    {E P : Type*}
-    [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup P] [NormedSpace ℝ P]
-    (A : RealEnd E)
-    (R : CliffordResolventFamily (P := P) A)
-    (Ω : DirectedBoundary P) where
-  Volume : Type*
-  parameterization : Volume → P
-  monogenic :
-    IsMonogenicOn A R Ω Volume parameterization
-  boundaryFluxEqDefectSum :
-    BoundaryFluxEqualsDefectSum A R Ω
 
 namespace GeometricCoreProjector
 

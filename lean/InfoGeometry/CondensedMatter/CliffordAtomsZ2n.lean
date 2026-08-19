@@ -2,7 +2,7 @@
 InfoGeometry/CondensedMatter/CliffordAtomsZ2n.lean
 
 Split Clifford atoms, local `Z2^n` charge bookkeeping, and the separate
-global-anomaly socket.
+global-anomaly boundary.
 
 This file records the algebraic part of the slogan
 
@@ -46,27 +46,14 @@ structure SplitCliffordAtomSystem
   /-- Negative-square generator of atom `i`. -/
   f : ι → Op
 
-  /-- Split sign: `eᵢ² = +1`. -/
-  e_sq :
-    ∀ i : ι, e i * e i = 1
-
-  /-- Split sign: `fᵢ² = -1`. -/
-  f_sq :
-    ∀ i : ι, f i * f i = -1
-
-  /-- Same-atom Clifford anticommutation, oriented for calculations. -/
-  f_mul_e :
-    ∀ i : ι, f i * e i = -(e i * f i)
-
-  /--
-  The local Cartan products commute.
-
-  For a concrete graded tensor product this follows from the fact that two
-  odd swaps occur between distinct even products.  Here it remains a
-  proof-carrying socket.
-  -/
-  H_comm :
-    ∀ i j : ι, (e i * f i) * (e j * f j) = (e j * f j) * (e i * f i)
+def SplitCliffordAtomSystemLaws
+    {ι Op : Type*} [Ring Op]
+    (A : SplitCliffordAtomSystem ι Op) : Prop :=
+  (∀ i : ι, A.e i * A.e i = 1) ∧
+  (∀ i : ι, A.f i * A.f i = -1) ∧
+  (∀ i : ι, A.f i * A.e i = -(A.e i * A.f i)) ∧
+  (∀ i j : ι, (A.e i * A.f i) * (A.e j * A.f j) =
+    (A.e j * A.f j) * (A.e i * A.f i))
 
 namespace SplitCliffordAtomSystem
 
@@ -79,6 +66,7 @@ def H (i : ι) : Op :=
 
 /-- Each local Cartan product squares to `1`. -/
 theorem H_sq
+    (hA : SplitCliffordAtomSystemLaws A)
     (i : ι) :
     A.H i * A.H i = 1 := by
   calc
@@ -87,19 +75,20 @@ theorem H_sq
     _ = A.e i * (A.f i * A.e i) * A.f i := by
         noncomm_ring
     _ = A.e i * (-(A.e i * A.f i)) * A.f i := by
-        rw [A.f_mul_e i]
+        rw [hA.2.2.1 i]
     _ = -(A.e i * A.e i) * (A.f i * A.f i) := by
         noncomm_ring
     _ = -(1 : Op) * (-1 : Op) := by
-        rw [A.e_sq i, A.f_sq i]
+        rw [hA.1 i, hA.2.1 i]
     _ = 1 := by
         simp
 
 /-- The local Cartan products commute. -/
 theorem H_comm'
+    (hA : SplitCliffordAtomSystemLaws A)
     (i j : ι) :
     A.H i * A.H j = A.H j * A.H i :=
-  A.H_comm i j
+  hA.2.2.2 i j
 
 end SplitCliffordAtomSystem
 
@@ -108,10 +97,6 @@ end SplitCliffordAtomSystem
 /-- A local `Z2^n` Clifford charge assignment, represented as Boolean bits. -/
 abbrev Z2Charge (ι : Type*) :=
   ι → Bool
-
-/-- The four-bit local charge space of four split Clifford atoms. -/
-abbrev Z2FourCharge :=
-  Z2Charge (Fin 4)
 
 /-- Flip the `i`-th local Clifford bit. -/
 def flipBit
@@ -137,14 +122,59 @@ theorem flipBit_other
     flipBit i charge j = charge j := by
   simp [flipBit, Function.update_of_ne hij]
 
+@[simp]
+theorem flipBit_involutive
+    {ι : Type*} [DecidableEq ι]
+    (i : ι)
+    (charge : Z2Charge ι) :
+    flipBit i (flipBit i charge) = charge := by
+  funext j
+  by_cases hji : j = i
+  · subst j
+    simp [flipBit]
+  · rw [flipBit_other hji, flipBit_other hji]
+
+def flipBitEquiv
+    {ι : Type*} [DecidableEq ι]
+    (i : ι) : Z2Charge ι ≃ Z2Charge ι where
+  toFun := flipBit i
+  invFun := flipBit i
+  left_inv charge := flipBit_involutive i charge
+  right_inv charge := flipBit_involutive i charge
+
+theorem flipBit_comm
+    {ι : Type*} [DecidableEq ι]
+    {i j : ι}
+    (hij : i ≠ j)
+    (charge : Z2Charge ι) :
+    flipBit i (flipBit j charge) = flipBit j (flipBit i charge) := by
+  funext k
+  by_cases hki : k = i
+  · subst k
+    simp [flipBit, hij]
+  · by_cases hkj : k = j
+    · subst k
+      simp [flipBit, hki]
+    · simp [flipBit, hki, hkj, Ne.symm hij]
+
+theorem flipBitEquiv_comm
+    {ι : Type*} [DecidableEq ι]
+    {i j : ι}
+    (hij : i ≠ j) :
+    (flipBitEquiv i).trans (flipBitEquiv j) =
+      (flipBitEquiv j).trans (flipBitEquiv i) := by
+  apply Equiv.ext
+  intro charge
+  simpa [flipBitEquiv] using (flipBit_comm hij charge).symm
+
 /--
-A proof-carrying socket saying that a chosen Clifford edge operator realizes
+A proof-carrying action datum saying that a chosen Clifford edge operator realizes
 the expected hypercube move on local charge readouts.
 
 This is the formal version of: the `i`-th Clifford generator flips the `i`-th
 Cartan bit and leaves the other bits fixed.
 -/
-structure CliffordHypercubeAction
+structure CliffordHypercubeActionData
     (ι Op State : Type*) [DecidableEq ι] where
   /-- Edge operator associated to the `i`-th Clifford atom. -/
   edge : ι → Op
@@ -155,10 +185,15 @@ structure CliffordHypercubeAction
   /-- Local charge readout of a state. -/
   charge : State → Z2Charge ι
 
-  /-- Acting by the `i`-th edge flips exactly the `i`-th bit. -/
-  edge_charge :
-    ∀ (i : ι) (v : State),
-      charge (act (edge i) v) = flipBit i (charge v)
+def CliffordHypercubeActionLaw
+    {ι Op State : Type*} [DecidableEq ι]
+    (A : CliffordHypercubeActionData ι Op State) : Prop :=
+  ∀ (i : ι) (v : State),
+    A.charge (A.act (A.edge i) v) = flipBit i (A.charge v)
+
+def CliffordHypercubeAction
+    (ι Op State : Type*) [DecidableEq ι] :=
+  { A : CliffordHypercubeActionData ι Op State // CliffordHypercubeActionLaw A }
 
 namespace CliffordHypercubeAction
 
@@ -169,22 +204,79 @@ variable (A : CliffordHypercubeAction ι Op State)
 theorem edge_flips_own_bit
     (i : ι)
     (v : State) :
+    A.1.charge (A.1.act (A.1.edge i) v) i = !A.1.charge v i := by
+  rw [A.2]
+  simp
+
+theorem edge_preserves_other_bit
+    (hA : CliffordHypercubeActionLaw A.1)
+    {i j : ι}
+    (hij : j ≠ i)
+    (v : State) :
+    A.1.charge (A.1.act (A.1.edge i) v) j = A.1.charge v j := by
+  rw [hA]
+  simp [hij]
+
+theorem edge_charge_involutive
+    (hA : CliffordHypercubeActionLaw A.1)
+    (i : ι)
+    (v : State) :
+    A.1.charge (A.1.act (A.1.edge i) (A.1.act (A.1.edge i) v)) =
+      A.1.charge v := by
+  rw [hA, hA, flipBit_involutive]
+
+theorem edge_charge_comm
+    (hA : CliffordHypercubeActionLaw A.1)
+    {i j : ι}
+    (hij : i ≠ j)
+    (v : State) :
+    A.1.charge (A.1.act (A.1.edge i) (A.1.act (A.1.edge j) v)) =
+      A.1.charge (A.1.act (A.1.edge j) (A.1.act (A.1.edge i) v)) := by
+  rw [hA, hA, hA, hA]
+  exact flipBit_comm hij (A.1.charge v)
+
+end CliffordHypercubeAction
+
+/- Old law-parametrized statements are subsumed by the subtype field above. -/
+/-
+    (hA : CliffordHypercubeActionLaw A)
+    (i : ι)
+    (v : State) :
     A.charge (A.act (A.edge i) v) i = !A.charge v i := by
-  rw [A.edge_charge]
+  rw [hA]
   simp
 
 /-- The `i`-th Clifford edge preserves every other bit. -/
 theorem edge_preserves_other_bit
+    (hA : CliffordHypercubeActionLaw A)
     {i j : ι}
     (hij : j ≠ i)
     (v : State) :
     A.charge (A.act (A.edge i) v) j = A.charge v j := by
-  rw [A.edge_charge]
+  rw [hA]
   simp [hij]
 
-end CliffordHypercubeAction
+theorem edge_charge_involutive
+    (hA : CliffordHypercubeActionLaw A)
+    (i : ι)
+    (v : State) :
+    A.charge (A.act (A.edge i) (A.act (A.edge i) v)) = A.charge v := by
+  rw [hA, hA, flipBit_involutive]
 
-/-! ## 3. Four-atom chirality socket -/
+theorem edge_charge_comm
+    (hA : CliffordHypercubeActionLaw A)
+    {i j : ι}
+    (hij : i ≠ j)
+    (v : State) :
+    A.charge (A.act (A.edge i) (A.act (A.edge j) v)) =
+      A.charge (A.act (A.edge j) (A.act (A.edge i) v)) := by
+  rw [hA, hA, hA, hA]
+  exact flipBit_comm hij (A.charge v)
+
+end CliffordHypercubeAction
+ -/
+
+/-! ## 3. Four-atom chirality action -/
 
 /--
 The four-atom total chirality package.
@@ -197,7 +289,7 @@ Its square is recorded as a proof-carrying field, rather than inferred from a
 particular multiplication normal form.  This keeps the file representation
 agnostic while making the `8 + 8` chiral split available to concrete models.
 -/
-structure FourAtomChirality
+structure FourAtomChiralityData
     (Op : Type*) [Ring Op] where
   /-- Local split Clifford atom system indexed by four atoms. -/
   atoms : SplitCliffordAtomSystem (Fin 4) Op
@@ -205,144 +297,99 @@ structure FourAtomChirality
   /-- Total chirality/volume element. -/
   Gamma : Op
 
-  /-- `Gamma` is the ordered product of the four local Cartan involutions. -/
-  Gamma_def :
-    Gamma =
-      ((atoms.H 0 * atoms.H 1) * atoms.H 2) * atoms.H 3
+def FourAtomChiralityLaws
+    {Op : Type*} [Ring Op] (C : FourAtomChiralityData Op) : Prop :=
+  SplitCliffordAtomSystemLaws C.atoms ∧
+  C.Gamma = ((C.atoms.H 0 * C.atoms.H 1) * C.atoms.H 2) * C.atoms.H 3 ∧
+  C.Gamma * C.Gamma = 1
 
-  /-- Total chirality is an involution. -/
-  Gamma_sq :
-    Gamma * Gamma = 1
+def FourAtomChirality
+    (Op : Type*) [Ring Op] :=
+  { C : FourAtomChiralityData Op // FourAtomChiralityLaws C }
 
 namespace FourAtomChirality
 
 variable {Op : Type*} [Ring Op]
 variable (C : FourAtomChirality Op)
 
+theorem sq_mul_of_sq_one_of_commute
+    {a b : Op}
+    (ha : a * a = 1) (hb : b * b = 1)
+    (hab : a * b = b * a) :
+    (a * b) * (a * b) = 1 := by
+  calc
+    (a * b) * (a * b) = a * (b * a) * b := by noncomm_ring
+    _ = a * (a * b) * b := by rw [hab]
+    _ = (a * a) * (b * b) := by noncomm_ring
+    _ = 1 := by rw [ha, hb]; simp
+
+theorem total_chirality_sq_from_atoms :
+    C.1.Gamma * C.1.Gamma = 1 := by
+  let h0 := C.1.atoms.H 0
+  let h1 := C.1.atoms.H 1
+  let h2 := C.1.atoms.H 2
+  let h3 := C.1.atoms.H 3
+  have h01 : (h0 * h1) * (h0 * h1) = 1 := by
+    exact sq_mul_of_sq_one_of_commute
+      (C.1.atoms.H_sq C.2.1 0) (C.1.atoms.H_sq C.2.1 1)
+      (C.1.atoms.H_comm' C.2.1 0 1)
+  have h23 : (h2 * h3) * (h2 * h3) = 1 := by
+    exact sq_mul_of_sq_one_of_commute
+      (C.1.atoms.H_sq C.2.1 2) (C.1.atoms.H_sq C.2.1 3)
+      (C.1.atoms.H_comm' C.2.1 2 3)
+  have hcomm : (h0 * h1) * (h2 * h3) = (h2 * h3) * (h0 * h1) := by
+    dsimp [h0, h1, h2, h3]
+    calc
+      (C.1.atoms.H 0 * C.1.atoms.H 1) * (C.1.atoms.H 2 * C.1.atoms.H 3) =
+          C.1.atoms.H 0 * (C.1.atoms.H 1 * C.1.atoms.H 2) * C.1.atoms.H 3 := by
+            noncomm_ring
+      _ = C.1.atoms.H 0 * (C.1.atoms.H 2 * C.1.atoms.H 1) * C.1.atoms.H 3 := by
+            rw [C.1.atoms.H_comm' C.2.1 1 2]
+      _ = (C.1.atoms.H 0 * C.1.atoms.H 2) * C.1.atoms.H 1 * C.1.atoms.H 3 := by
+            noncomm_ring
+      _ = (C.1.atoms.H 2 * C.1.atoms.H 0) * C.1.atoms.H 1 * C.1.atoms.H 3 := by
+            rw [C.1.atoms.H_comm' C.2.1 0 2]
+      _ = C.1.atoms.H 2 * C.1.atoms.H 0 * (C.1.atoms.H 1 * C.1.atoms.H 3) := by
+            noncomm_ring
+      _ = C.1.atoms.H 2 * C.1.atoms.H 0 * (C.1.atoms.H 3 * C.1.atoms.H 1) := by
+            rw [C.1.atoms.H_comm' C.2.1 1 3]
+      _ = C.1.atoms.H 2 * C.1.atoms.H 0 * C.1.atoms.H 3 * C.1.atoms.H 1 := by
+            noncomm_ring
+      _ = C.1.atoms.H 2 * (C.1.atoms.H 0 * C.1.atoms.H 3) * C.1.atoms.H 1 := by
+            noncomm_ring
+      _ = C.1.atoms.H 2 * (C.1.atoms.H 3 * C.1.atoms.H 0) * C.1.atoms.H 1 := by
+            rw [C.1.atoms.H_comm' C.2.1 0 3]
+      _ = (C.1.atoms.H 2 * C.1.atoms.H 3) *
+          (C.1.atoms.H 0 * C.1.atoms.H 1) := by
+            noncomm_ring
+  rw [C.2.2.1]
+  simpa [h0, h1, h2, h3, mul_assoc] using
+    (sq_mul_of_sq_one_of_commute h01 h23 hcomm)
+
 /-- The total chirality squares to `1`. -/
 theorem total_chirality_sq :
-    C.Gamma * C.Gamma = 1 :=
-  C.Gamma_sq
+    C.1.Gamma * C.1.Gamma = 1 :=
+  C.total_chirality_sq_from_atoms
+
+theorem total_chirality_pow_four :
+    C.1.Gamma ^ 4 = 1 := by
+  have hsq : C.1.Gamma ^ 2 = 1 := by
+    simpa [pow_two] using C.total_chirality_sq
+  rw [show (4 : ℕ) = 2 * 2 by norm_num, pow_mul, hsq]
+  simp
 
 /-- Local Cartan products square to `1` inside the four-atom package. -/
 theorem local_H_sq
     (i : Fin 4) :
-    C.atoms.H i * C.atoms.H i = 1 :=
-  C.atoms.H_sq i
+    C.1.atoms.H i * C.1.atoms.H i = 1 :=
+  C.1.atoms.H_sq C.2.1 i
 
 /-- Local Cartan products commute inside the four-atom package. -/
 theorem local_H_comm
     (i j : Fin 4) :
-    C.atoms.H i * C.atoms.H j = C.atoms.H j * C.atoms.H i :=
-  C.atoms.H_comm' i j
+    C.1.atoms.H i * C.1.atoms.H j = C.1.atoms.H j * C.1.atoms.H i :=
+  C.1.atoms.H_comm' C.2.1 i j
 
 end FourAtomChirality
-
-/-! ## 4. Local signs versus global cyclic anomaly -/
-
-/--
-An abstract global anomaly readout.
-
-The `index` type is deliberately independent of the local Boolean charge
-space.  Examples include a free integer winding invariant, a parity invariant,
-or an interacting cyclic invariant such as `ZMod 16`.
--/
-abbrev GlobalAnomalyClass := Σ indexType : Type*, indexType
-
-namespace GlobalAnomalyClass
-
-/-- Carrier of the global index. -/
-abbrev indexType (C : GlobalAnomalyClass) : Type := C.1
-
-/-- Chosen global anomaly/index value. -/
-abbrev index (C : GlobalAnomalyClass) : C.indexType := C.2
-
-end GlobalAnomalyClass
-
-/--
-Concrete shape of a cyclic `Z16` anomaly readout.
-
-This is only one possible global backend; it is not the same object as
-`Z2FourCharge`.
--/
-def Z16AnomalyClass (index : ZMod 16) : GlobalAnomalyClass :=
-  ⟨ZMod 16, index⟩
-
-/--
-Bridge from local Clifford signs to a global anomaly/index class.
-
-The compatibility field is the important part: it prevents identifying the
-local address space `Z2^4` with a cyclic global invariant such as `Z16`.
--/
-structure LocalToGlobalAnomalyDatum where
-  /-- Local four-bit Clifford address. -/
-  localCharge : Z2FourCharge
-
-  /-- Global anomaly or stacking class. -/
-  globalClass : GlobalAnomalyClass
-
-  /-- Encoding of local four-bit Clifford addresses into the global index carrier. -/
-  indexMap : Z2FourCharge → globalClass.indexType
-
-  /-- Compatibility is the concrete equation relating the chosen local address to the global index. -/
-  indexMap_localCharge :
-    indexMap localCharge = globalClass.index
-
-namespace LocalToGlobalAnomalyDatum
-
-variable (D : LocalToGlobalAnomalyDatum)
-
-/-- Compatibility readout of the local four-bit address in the global index. -/
-theorem local_charge_is_four_bit :
-    D.indexMap D.localCharge = D.globalClass.index :=
-  D.indexMap_localCharge
-
-/-- The local-to-global bridge evaluates the supplied index map to the global index. -/
-theorem indexMap_localCharge_eq :
-    D.indexMap D.localCharge = D.globalClass.index :=
-  D.local_charge_is_four_bit
-
-end LocalToGlobalAnomalyDatum
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for a concrete model connecting four split Clifford atoms to a
-global anomaly class.
-
-This carries the actual property data directly:
-- the four-atom chirality package,
-- the hypercube action on states,
-- the local-to-global anomaly datum.
--/
-structure CliffordAtomsZ2nOwnerTarget
-    (Op State : Type*) [Ring Op] where
-  fourAtomChirality : FourAtomChirality Op
-  hypercubeAction : CliffordHypercubeAction (Fin 4) Op State
-  anomalyDatum : LocalToGlobalAnomalyDatum
-
-namespace CliffordAtomsZ2nOwnerTarget
-
-variable {Op State : Type*} [Ring Op]
-
-/-- The owner target exposes the four-atom chirality package directly. -/
-def fourAtomChirality_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    FourAtomChirality Op :=
-  T.fourAtomChirality
-
-/-- The owner target exposes the local hypercube action directly. -/
-def hypercubeAction_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    CliffordHypercubeAction (Fin 4) Op State :=
-  T.hypercubeAction
-
-/-- The owner target exposes the local-to-global anomaly datum directly. -/
-def anomalyDatum_of
-    (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    LocalToGlobalAnomalyDatum :=
-  T.anomalyDatum
-
-end CliffordAtomsZ2nOwnerTarget
 
 end InfoGeometry.CondensedMatter.CliffordAtomsZ2n

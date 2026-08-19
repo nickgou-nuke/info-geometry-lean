@@ -78,13 +78,14 @@ theorem turing_target_hamiltonian_even
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetGamma targetH : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
     (gamma_intertwines : ∀ x, map (stage.Gamma x) = targetGamma (map x))
     (hamiltonian_intertwines : ∀ x, map (stage.H x) = targetH (map x)) :
     targetGamma.comp targetH = targetH.comp targetGamma :=
-  InfoGeometry.Physics.target_hamiltonian_even stage targetGamma targetH map
+  InfoGeometry.Physics.target_hamiltonian_even stage hstage targetGamma targetH map
     map_surjective gamma_intertwines hamiltonian_intertwines
 
 theorem turing_target_witten_odd
@@ -92,13 +93,14 @@ theorem turing_target_witten_odd
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetGamma targetQ : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
     (gamma_intertwines : ∀ x, map (stage.Gamma x) = targetGamma (map x))
     (charge_intertwines : ∀ x, map (stage.Q x) = targetQ (map x)) :
     targetGamma.comp targetQ = - targetQ.comp targetGamma :=
-  InfoGeometry.Physics.target_witten_odd stage targetGamma targetQ map
+  InfoGeometry.Physics.target_witten_odd stage hstage targetGamma targetQ map
     map_surjective gamma_intertwines charge_intertwines
 
 theorem turing_target_susy_algebra
@@ -106,13 +108,14 @@ theorem turing_target_susy_algebra
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetQ targetH : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
     (charge_intertwines : ∀ x, map (stage.Q x) = targetQ (map x))
     (hamiltonian_intertwines : ∀ x, map (stage.H x) = targetH (map x)) :
     targetQ.comp targetQ = targetH :=
-  InfoGeometry.Physics.target_susy_algebra stage targetQ targetH map
+  InfoGeometry.Physics.target_susy_algebra stage hstage targetQ targetH map
     map_surjective charge_intertwines hamiltonian_intertwines
 
 end

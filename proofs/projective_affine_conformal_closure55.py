@@ -8,7 +8,7 @@ Finite audit for the projective affine conformal closure:
   spectral CPT s ↦ 1-conj(s) fixes Re(s)=1/2
 
 Pin(5,5), full Clifford action, and Cantor/Cuntz boundary realization remain
-explicit sockets in Lean.
+explicit deferred_interfaces in Lean.
 """
 
 import sympy as sp

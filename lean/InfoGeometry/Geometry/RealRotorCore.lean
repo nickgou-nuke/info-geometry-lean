@@ -13,7 +13,11 @@ The complex compatibility layer, when needed, must be downstream only.
 -/
 
 import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Geometry.RealUpperHalfPlane
 
@@ -69,6 +73,133 @@ theorem normSq_eq_zero_iff (z : RealChiralPhase) :
     rcases h0 with ⟨hs, hb⟩
     simp [normSq, hs, hb]
 
+/-! Differential readout of the two real Madelung quadratures. -/
+
+theorem hasDerivAt_normSq_of_components
+    (a b : ℝ → ℝ) (da db t : ℝ)
+    (ha : HasDerivAt a da t) (hb : HasDerivAt b db t) :
+    HasDerivAt (fun u => normSq (a u, b u))
+      (2 * a t * da + 2 * b t * db) t := by
+  have haa := ha.mul ha
+  have hbb := hb.mul hb
+  have hsum := haa.add hbb
+  unfold normSq
+  convert hsum using 1
+  · funext u
+    simp [RealChiralPhase.scalar, RealChiralPhase.bivector,
+      Pi.add_apply, Pi.mul_apply, pow_two]
+  · ring
+
+/-- A skew rotation of the two quadratures preserves their density to first order. -/
+theorem hasDerivAt_normSq_of_skew_rotation
+    (a b : ℝ → ℝ) (ω t : ℝ)
+    (ha : HasDerivAt a (-ω * b t) t)
+    (hb : HasDerivAt b (ω * a t) t) :
+    HasDerivAt (fun u => normSq (a u, b u)) 0 t := by
+  have h := hasDerivAt_normSq_of_components a b
+    (-ω * b t) (ω * a t) t ha hb
+  convert h using 1; ring
+
+/-- Radial and phase numerators of a pair of real chiral amplitudes. -/
+def radialNumerator (z dz : RealChiralPhase) : ℝ :=
+  z.scalar * dz.scalar + z.bivector * dz.bivector
+
+def phaseNumerator (z dz : RealChiralPhase) : ℝ :=
+  z.scalar * dz.bivector - z.bivector * dz.scalar
+
+/-- The radial/phase numerators satisfy the two-dimensional Gram identity. -/
+theorem radial_phase_gram_identity (z dz : RealChiralPhase) :
+    radialNumerator z dz ^ 2 + phaseNumerator z dz ^ 2 =
+      normSq z * normSq dz := by
+  simp only [radialNumerator, phaseNumerator, normSq]
+  ring
+
+/-! Normalized radial and angular rates for a nonzero chiral amplitude. -/
+
+/-- The radial logarithmic rate `(1/2) ρ'/ρ` in chiral coordinates. -/
+def chiralRadialRate (z dz : RealChiralPhase) : ℝ :=
+  radialNumerator z dz / normSq z
+
+/-- The angular phase rate in chiral coordinates. -/
+def chiralPhaseRate (z dz : RealChiralPhase) : ℝ :=
+  phaseNumerator z dz / normSq z
+
+/-- Finite Madelung current numerator with explicit scale constants. -/
+def phaseCurrent (hbar mass : ℝ) (z dz : RealChiralPhase) : ℝ :=
+  (hbar / mass) * phaseNumerator z dz
+
+theorem hasDerivAt_log_normSq_of_components
+    (a b : ℝ → ℝ) (da db t : ℝ)
+    (ha : HasDerivAt a da t) (hb : HasDerivAt b db t)
+    (hρ : normSq (a t, b t) ≠ 0) :
+    HasDerivAt (fun u => Real.log (normSq (a u, b u)))
+      (2 * chiralRadialRate (a t, b t) (da, db)) t := by
+  have hnorm := hasDerivAt_normSq_of_components a b da db t ha hb
+  have hlog := (Real.hasDerivAt_log hρ).comp t hnorm
+  convert hlog using 1
+  unfold chiralRadialRate radialNumerator
+  field_simp [hρ]
+
+theorem chiralPhaseRate_mul_normSq
+    (z dz : RealChiralPhase) (hρ : normSq z ≠ 0) :
+    normSq z * chiralPhaseRate z dz = phaseNumerator z dz := by
+  unfold chiralPhaseRate
+  field_simp [hρ]
+
+theorem chiralRadialRate_mul_normSq
+    (z dz : RealChiralPhase) (hρ : normSq z ≠ 0) :
+    normSq z * chiralRadialRate z dz = radialNumerator z dz := by
+  unfold chiralRadialRate
+  field_simp [hρ]
+
+theorem phaseCurrent_eq_density_mul_phaseRate
+    (hbar mass : ℝ) (z dz : RealChiralPhase) (hρ : normSq z ≠ 0) :
+    phaseCurrent hbar mass z dz =
+      (hbar / mass) * (normSq z * chiralPhaseRate z dz) := by
+  unfold phaseCurrent
+  rw [chiralPhaseRate_mul_normSq z dz hρ]
+
+/-! The stationary-current readout is a genuine differential identity. -/
+
+theorem hasDerivAt_phaseNumerator_of_components
+    (a b da db : ℝ → ℝ) (dda ddb t : ℝ)
+    (ha : HasDerivAt a (da t) t) (hb : HasDerivAt b (db t) t)
+    (hda : HasDerivAt da dda t) (hdb : HasDerivAt db ddb t) :
+    HasDerivAt
+      (fun u => phaseNumerator (a u, b u) (da u, db u))
+      (a t * ddb - b t * dda) t := by
+  have hleft := ha.mul hdb
+  have hright := hb.mul hda
+  have hsub := hleft.sub hright
+  convert hsub using 1; ring
+
+theorem hasDerivAt_phaseCurrent_of_components
+    (hbar mass : ℝ) (a b da db : ℝ → ℝ) (dda ddb t : ℝ)
+    (ha : HasDerivAt a (da t) t) (hb : HasDerivAt b (db t) t)
+    (hda : HasDerivAt da dda t) (hdb : HasDerivAt db ddb t) :
+    HasDerivAt
+      (fun u => phaseCurrent hbar mass
+        (a u, b u) (da u, db u))
+      ((hbar / mass) * (a t * ddb - b t * dda)) t := by
+  have hnum := hasDerivAt_phaseNumerator_of_components
+    a b da db dda ddb t ha hb hda hdb
+  have hcurrent := hnum.const_mul (hbar / mass)
+  simpa [phaseCurrent] using hcurrent
+
+theorem hasDerivAt_phaseCurrent_zero_of_stationary_condition
+    (hbar mass : ℝ) (a b da db : ℝ → ℝ) (dda ddb t : ℝ)
+    (ha : HasDerivAt a (da t) t) (hb : HasDerivAt b (db t) t)
+    (hda : HasDerivAt da dda t) (hdb : HasDerivAt db ddb t)
+    (hstationary : a t * ddb = b t * dda) :
+    HasDerivAt
+      (fun u => phaseCurrent hbar mass
+        (a u, b u) (da u, db u)) 0 t := by
+  have hcurrent := hasDerivAt_phaseCurrent_of_components
+    hbar mass a b da db dda ddb t ha hb hda hdb
+  convert hcurrent using 1
+  rw [hstationary]
+  ring
+
 /-- Multiplication in the real rotor plane, with `J² = -1`. -/
 def mul (z w : RealChiralPhase) : RealChiralPhase where
   fst := z.scalar * w.scalar - z.bivector * w.bivector
@@ -98,6 +229,12 @@ theorem mul_scalar (z w : RealChiralPhase) :
 @[simp]
 theorem mul_bivector (z w : RealChiralPhase) :
     (z * w).bivector = z.scalar * w.bivector + z.bivector * w.scalar := rfl
+
+/-- The real chiral rotor norm is multiplicative. -/
+theorem normSq_mul (z w : RealChiralPhase) :
+    normSq (z * w) = normSq z * normSq w := by
+  simp only [normSq, mul_scalar, mul_bivector]
+  ring
 
 @[simp]
 theorem normSq_one : normSq (1 : RealChiralPhase) = 1 := by

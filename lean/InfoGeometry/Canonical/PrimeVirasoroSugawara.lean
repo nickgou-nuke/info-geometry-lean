@@ -12,7 +12,7 @@ import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 Prime-indexed OPE, affine-current, and Sugawara/Virasoro bridge.
 
-This file is a theorem-safe algebraic socket.  It connects the existing
+This file is a theorem-safe algebraic interface.  It connects the existing
 prime Majorana OPE grammar to the existing affine-current / Virasoro owner
 surface, but it does not construct a vertex operator algebra, prove a
 Gromov--Witten interpretation, assert a topological string partition function,
@@ -47,8 +47,8 @@ Prime current OPE packet.
 carrier used by the OPE backend, and `Coeff` is the symbolic singular-coefficient
 carrier.  The repository now contains owner-side same-mode and off-diagonal
 current-action laws for `j_p = c_p d_p`, together with specialized transport of
-those laws into the symbolic `MobiusCurrentOPE` socket in a concrete owner
-corridor.  This file still keeps the symbolic current socket and the level-one
+those laws into the symbolic `MobiusCurrentOPE` interface in a concrete owner
+corridor.  This file still keeps the symbolic current interface and the level-one
 current-current OPE as property fields because it does not yet choose a
 Laurent-series/OPE realization identifying this symbolic carrier with the
 concrete owner current and its level-one current-current law.
@@ -60,7 +60,7 @@ structure PrimeCurrentOPEPacket
   splitMajorana :
     SplitMajoranaOPE PrimeLabel Field Coeff
 
-  /-- Current socket for `j_p = :c_p d_p:`. -/
+  /-- Current interface for `j_p = :c_p d_p:`. -/
   mobiusCurrent :
     MobiusCurrentOPE PrimeLabel Field
 
@@ -75,7 +75,7 @@ The level-one current-current OPE law attached to the prime current packet.
 The remaining debt is now precise: the repository already contains owner-side
 same-mode and off-diagonal current-action laws for `j_p = c_p d_p`, together
 with specialized transport of those laws into the symbolic `MobiusCurrentOPE`
-socket, and it already contains a concrete owner current with the correct
+interface, and it already contains a concrete owner current with the correct
 level-one Heisenberg commutator.  What is still missing here is the
 Laurent/OPE realization that transports that owner current-current theorem into
 the symbolic `PrimeCurrentOPEPacket` interface.
@@ -111,7 +111,7 @@ Concrete level-one current-current readback on the canonical infinite-current
 owner carrier.
 
 This theorem is the exact owner theorem currently available to the prime
-Sugawara corridor.  The direct `CurrentCurrentLevelOneEvidence` theorems expose
+Sugawara corridor.  The direct `CurrentCurrentLevelOne` theorems expose
 this typed owner result; the remaining gap is the Laurent/OPE
 realization transporting it into the symbolic `Field` carrier.
 -/

@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
-import InfoGeometry.Meta.OwnerTarget
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 /-!
@@ -15,7 +14,7 @@ This file is a finite-cutoff owner surface for the primon Majorana character:
 * local Euler/Witten factor `1 - exp (-s log p)`;
 * spinor square-root amplitude `exp (-(s/2) log p)`;
 * finite Witten character as a finite product;
-* split-Majorana CAR and OPE sockets;
+* split-Majorana CAR and OPE laws;
 * signed `2 × 2` Pfaffian block readout;
 * two-state Hamiltonian Witten trace.
 
@@ -142,13 +141,13 @@ theorem finiteSpinorPairing_eq_wittenCharacter
   intro p _hp
   exact localSpinorPairing_plus_minus s p
 
-/-! ## 4. Split-Majorana CAR and OPE sockets -/
+/-! ## 4. Split-Majorana CAR and OPE laws -/
 
 /-- Anticommutator in a ring. -/
 def anticommutator {Op : Type*} [Ring Op] (x y : Op) : Op :=
   x * y + y * x
 
-/-- Law-bearing split-Majorana CAR socket. -/
+/-- Law-bearing split-Majorana CAR datum. -/
 structure SplitMajoranaCAR
     (Prime Op : Type*) [DecidableEq Prime] [Ring Op] where
   c : Prime → Op
@@ -165,7 +164,7 @@ structure SplitMajoranaCAR
 open QuadraticForm
 
 /-- 
-Native Mathlib construction of the split-Majorana CAR socket using the universal Clifford algebra.
+Native Mathlib construction of the split-Majorana CAR datum using the universal Clifford algebra.
 This explicitly proves that the CAR algebraic relations can be satisfied without contradiction
 (thereby paying off the formal closure debt of the previous mock `structure`).
 -/
@@ -251,7 +250,7 @@ Transport a concrete split-Majorana OPE owner datum to the arithmetic property
 packet.
 
 This is an owner-side transport: the equalities live in the datum itself, and
-the arithmetic socket merely re-expresses their proposition-valued readouts.
+the arithmetic layer merely re-expresses their proposition-valued readouts.
 -/
 def toArithmeticSplitMajoranaOPE
     (O : SplitMajoranaOPEDatum Prime Field Singular) :
@@ -397,18 +396,10 @@ theorem finiteTwoStateWittenTrace_eq_wittenCharacter
   intro p _hp
   exact localTwoStateWittenTrace_eq_localWittenFactor p s
 
-/-! ## 7. Owner target -/
-
-/-- Owner target for the finite primon Majorana Witten character surface. -/
-@[owner_target_tag]
-def PrimonMajoranaWittenCharacterOwnerTarget : Prop :=
-  ∀ (P : Finset ℕ) (s : ℝ),
-    finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
-    finiteSpinorPairing P s = finiteWittenCharacter P s ∧
-    finiteMajoranaPfaffian P s = finiteWittenCharacter P s
+/-! ## 7. Finite Majorana/Witten identities -/
 
 /-- The finite two-state trace, spinor pairing, and signed Pfaffian products agree. -/
-theorem primonMajoranaWittenCharacterOwnerTarget :
+theorem primonMajoranaWittenCharacter_properties :
     ∀ (P : Finset ℕ) (s : ℝ),
       finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
       finiteSpinorPairing P s = finiteWittenCharacter P s ∧

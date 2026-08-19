@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 
 Sugawara binding for KAN-organized lightcone affine currents.
 
-The KAN socket owns the affine/Virasoro bridge.  This module adds only the
+The KAN bridge owns the affine/Virasoro structure.  This module adds only the
 normal-ordered mode sum needed to construct the corresponding Sugawara datum;
 no parallel bridge and no bridge-equality evidence are stored.
 -/
@@ -21,7 +21,7 @@ open InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 open InfoGeometry.OperatorAlgebra.WeylWeightBalance
 
 /--
-Carrier binding a KAN/lightcone affine socket to a supplied Sugawara mode-sum
+Carrier binding a KAN/lightcone affine bridge to a supplied Sugawara mode-sum
 datum.
 -/
 @[rep_depth operator]
@@ -30,7 +30,7 @@ structure Calibration
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
-  /-- KAN/Bogoliubov-shadowed lightcone affine-current socket. -/
+  /-- KAN/Bogoliubov-shadowed lightcone affine-current bridge. -/
   kanAffine :
     InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge.Bridge
       E Finite Alg Bog Korth Asplit Nshear CartanDiag
@@ -148,7 +148,7 @@ theorem virasoro_centralTerm_eq_zero_of_not_modeBalanced
   simp
 
 /--
-Affine central selector for the lightcone current socket vanishes away from the
+Affine central selector for the lightcone current bridge vanishes away from the
 balanced mode sector.
 -/
 @[rep_depth operator]

@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.ModularRegularSupport
 
-Theorem-safe socket for the statement:
+Native theorem layer for the statement:
 
 * the regular support is fixed by a modular/spectral flow;
 * the complementary support is therefore fixed when the flow is unital and
@@ -39,10 +39,34 @@ namespace ModularRegularSupport
 
 variable {Op : Type*} [Ring Op] (M : ModularRegularSupport Op)
 
+theorem flow_zero :
+    ∀ t : ℝ, M.modularFlow t 0 = 0 := by
+  intro t
+  have h := M.flow_sub t (1 : Op) 1
+  simpa using h
+
+theorem flow_neg (t : ℝ) (X : Op) :
+    M.modularFlow t (-X) = -M.modularFlow t X := by
+  have h := M.flow_sub t (0 : Op) X
+  simpa [M.flow_zero t] using h
+
+theorem flow_add (t : ℝ) (X Y : Op) :
+    M.modularFlow t (X + Y) = M.modularFlow t X + M.modularFlow t Y := by
+  have h := M.flow_sub t X (-Y)
+  simpa [sub_eq_add_neg, M.flow_neg t Y] using h
+
 /-- Complementary support relative to the regular modular support. -/
 @[rep_depth krein]
 def noiseSupport : Op :=
   1 - M.regularSupport
+
+theorem regularSupport_add_noiseSupport :
+    M.regularSupport + M.noiseSupport = 1 := by
+  simp [noiseSupport]
+
+theorem noiseSupport_add_regularSupport :
+    M.noiseSupport + M.regularSupport = 1 := by
+  simp [noiseSupport, add_comm]
 
 /--
 If the flow fixes the regular support and preserves `1` and subtraction, it
@@ -64,4 +88,3 @@ theorem noise_invariant :
 end ModularRegularSupport
 
 end InfoGeometry.Canonical
-

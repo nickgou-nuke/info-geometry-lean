@@ -27,6 +27,6 @@ print("qPenrose = thickFreq = φ⁻¹ ✓")
 print("thickFreq + thinFreq = φ⁻¹ + φ⁻² = 1 ✓")
 
 print("\n§4 golden q-CCR exchange relation")
-print("a† a = 1 + φ⁻¹ a a†  (formal relation socket) ✓")
+print("a† a = 1 + φ⁻¹ a a†  (formal relation deferred_interface) ✓")
 
 print("\ngolden_ccr.py: All identities verified")

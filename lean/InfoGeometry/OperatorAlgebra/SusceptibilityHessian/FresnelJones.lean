@@ -42,7 +42,7 @@ end FresnelCoefficientReadout
 /--
 Eigen-response of the susceptibility/Hessian in the `s/p` polarization basis.
 
-This is a state-indexed calibration socket: a concrete material/interface
+This is a state-indexed calibration interface: a concrete material/interface
 model supplies the laws saying these are the local eigenchannel readouts.
 -/
 def StatePolarizationEigenResponse (State : Type*) :=

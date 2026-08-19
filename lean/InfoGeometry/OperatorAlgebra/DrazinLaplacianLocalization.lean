@@ -112,7 +112,7 @@ structure GWDrazinLaplacianBridge
     (G T Target Coeff Op State : Type*) [Add Op] [Mul Op] where
   /-- Underlying finite GW/Erlangen localization packet. -/
   virtualLocalization :
-    VirtualLocalizationOrbitPacket G T Target Coeff
+    VirtualLocalizationOrbitData G T Target Coeff
   /-- Drazin-Laplacian calibration used on localization sectors. -/
   laplacianCalibration :
     DrazinLaplacianCalibration Op State

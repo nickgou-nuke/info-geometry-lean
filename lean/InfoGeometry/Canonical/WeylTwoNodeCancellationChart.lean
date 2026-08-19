@@ -41,15 +41,10 @@ def nodes : Fin 2 → ℝ
   | 0 => C.x
   | 1 => C.y
 
-/-- The finite Vandermonde property for the two-node chart. -/
-@[rep_depth thermo]
-def denominatorWitness : Fin 2 → ℝ :=
-  C.nodes
-
 /-- The denominator determinant is the 2x2 Vandermonde determinant. -/
 @[rep_depth thermo]
 def denominator : ℝ :=
-  FiniteVandermondeExclusionWitness.determinant C.denominatorWitness
+  FiniteVandermondeExclusionWitness.determinant C.nodes
 
 /-- The concrete alternating Gibbs numerator `exp x - exp y`. -/
 @[rep_depth thermo]
@@ -70,7 +65,7 @@ noncomputable def quotient (_h : C.NoncollisionDomain) : ℝ :=
 @[rep_depth thermo]
 theorem denominator_eq :
     C.denominator = C.y - C.x := by
-  unfold denominator denominatorWitness
+  unfold denominator
   simp [FiniteVandermondeExclusionWitness.determinant,
     FiniteVandermondeExclusionWitness.matrix, nodes, Matrix.det_fin_two]
 

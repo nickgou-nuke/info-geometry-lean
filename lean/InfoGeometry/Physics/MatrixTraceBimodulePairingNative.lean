@@ -17,6 +17,24 @@ def jordanActionNative (A X : TraceOperatorSpace n) : TraceOperatorSpace n :=
 def commutatorActionNative (A X : TraceOperatorSpace n) : TraceOperatorSpace n :=
   leftActionNative A X - rightActionNative A X
 
+theorem tracePairing_native_comm (X Y : TraceOperatorSpace n) :
+    tracePairingNative X Y = tracePairingNative Y X := by
+  unfold tracePairingNative
+  exact Matrix.trace_mul_comm X Y
+
+theorem commutatorActionNative_mul (A X Y : TraceOperatorSpace n) :
+    commutatorActionNative A (X * Y) =
+      commutatorActionNative A X * Y + X * commutatorActionNative A Y := by
+  dsimp [commutatorActionNative, leftActionNative, rightActionNative]
+  noncomm_ring
+
+theorem commutatorActionNative_jacobi (A B X : TraceOperatorSpace n) :
+    commutatorActionNative A (commutatorActionNative B X) -
+        commutatorActionNative B (commutatorActionNative A X) =
+      commutatorActionNative (A * B - B * A) X := by
+  dsimp [commutatorActionNative, leftActionNative, rightActionNative]
+  noncomm_ring
+
 theorem left_right_tracePairing_native (A X Y : TraceOperatorSpace n) :
     tracePairingNative (leftActionNative A X) Y =
       tracePairingNative X (rightActionNative A Y) := by

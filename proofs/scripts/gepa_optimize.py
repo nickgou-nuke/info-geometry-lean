@@ -194,11 +194,11 @@ def pass_antipatterns(decls):
         name = d["name"]
         deps = set(d.get("deps", []))
 
-        # Socket detection: definitions depending only on boundary-marker names.
+        # Deferred-interface detection: definitions depending only on boundary-marker names.
         if d["kind"] == "def" and len(deps) > 3:
-            if all(dep.endswith("Socket") or dep.endswith("Target") or "Prop" in dep or "True" in dep
+            if all(dep.endswith("DeferredInterface") or dep.endswith("Target") or "Prop" in dep or "True" in dep
                    for dep in deps if dep.split(".")[-1] not in ("mk", "injEq")):
-                warnings.append({"name": name, "type": "likely_socket", "deps": list(deps)})
+                warnings.append({"name": name, "type": "likely_deferred_interface", "deps": list(deps)})
 
         if d.get("vacuity_hint") == "zero_dep_user_theorem_check_source":
             warnings.append({"name": name, "type": "zero_dep_theorem", "deps": list(deps)})

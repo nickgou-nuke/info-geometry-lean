@@ -43,22 +43,25 @@ theorem cycleClass_eq_iff_difference_boundary
   · rintro ⟨z, hz⟩
     exact LinearMap.mem_range.mpr ⟨z, hz⟩
 
-noncomputable def BoundaryVanishingWitness.toHomologyLinearMap
-    (ω : BoundaryVanishingWitness B) : Homology B →ₗ[ℝ] ℝ :=
+noncomputable def toHomologyLinearMap
+    (ω : C →ₗ[ℝ] ℝ)
+    (hω : ∀ y : C, ω (B.d y) = 0) : Homology B →ₗ[ℝ] ℝ :=
   Submodule.liftQ (boundariesInCycles B)
-    (ω.1.comp (cycles B).subtype)
+    (ω.comp (cycles B).subtype)
     (by
       intro x hx
-      change x.1 ∈ LinearMap.range B.d at hx
+      change (x : C) ∈ LinearMap.range B.d at hx
       rcases LinearMap.mem_range.mp hx with ⟨z, hz⟩
-      change ω.1 x.1 = 0
+      change ω (x : C) = 0
       rw [← hz]
-      exact ω.2 z)
+      exact hω z)
 
-@[simp] theorem BoundaryVanishingWitness.toHomologyLinearMap_cycleClass
-    (ω : BoundaryVanishingWitness B) (x : cycles B) :
-    BoundaryVanishingWitness.toHomologyLinearMap B ω (cycleClass B x) = ω.1 x := by
-  rfl
+@[simp] theorem toHomologyLinearMap_cycleClass
+    (ω : C →ₗ[ℝ] ℝ)
+    (hω : ∀ y : C, ω (B.d y) = 0)
+    (x : cycles B) :
+    toHomologyLinearMap B ω hω (cycleClass B x) = ω x := by
+  simp [toHomologyLinearMap, cycleClass]
 
 end RealBoundaryOperator
 

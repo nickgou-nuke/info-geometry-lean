@@ -97,11 +97,10 @@ def transportJaynesPair
     (hmassΦ : PreservesMass Φ)
     (href : MapsReference Φ P.reference S)
     (hobs : MapsObservation Φ P.observation obs') :
-    FiniteJaynesPair κ where
-  reference := S
-  observation := obs'
-  equal_mass := by
-    exact map_equal_mass Φ P.reference S P.observation obs' hmassΦ href hobs P.equal_mass
+    FiniteJaynesPair κ :=
+  ⟨{ reference := S
+     observation := obs' }, by
+      exact map_equal_mass Φ P.reference S P.observation obs' hmassΦ href hobs P.equal_mass⟩
 
 /-- The transported Jaynes pair has the transported centered score. -/
 theorem transportJaynesPair_centeredScore
@@ -116,6 +115,7 @@ theorem transportJaynesPair_centeredScore
     Φ (centeredScore P.reference P.observation) =
       centeredScore (transportJaynesPair Φ P S obs' hmassΦ href hobs).reference
         (transportJaynesPair Φ P S obs' hmassΦ href hobs).observation := by
+  change Φ (centeredScore P.reference P.observation) = centeredScore S obs'
   exact map_centeredScore Φ P.reference S P.observation obs' hsub href hobs
 
 omit [Fintype ι] in

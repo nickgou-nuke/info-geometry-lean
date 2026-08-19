@@ -42,4 +42,17 @@ theorem hasTrivialRadical : LieAlgebra.HasTrivialRadical ℝ Der := by
 theorem canonicalZornIsKilling : LieAlgebra.IsKilling ℝ Der := by
   exact inferInstance
 
+theorem canonicalZorn_radical_eq_killingCompl :
+    LieAlgebra.radical ℝ Der =
+      LieIdeal.killingCompl ℝ Der ⊤ := by
+  letI : LieAlgebra.HasTrivialRadical ℝ Der := hasTrivialRadical
+  letI : LieAlgebra.IsKilling ℝ Der := canonicalZornIsKilling
+  rw [LieAlgebra.HasTrivialRadical.radical_eq_bot]
+  simp
+
+theorem canonicalZorn_killingForm_nondegenerate :
+    (killingForm ℝ Der).Nondegenerate := by
+  letI : LieAlgebra.IsKilling ℝ Der := canonicalZornIsKilling
+  exact LieAlgebra.IsKilling.killingForm_nondegenerate ℝ Der
+
 end InfoGeometry.Lie.CanonicalZornNoAbelianIdeal

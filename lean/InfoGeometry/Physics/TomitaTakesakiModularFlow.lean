@@ -44,6 +44,16 @@ theorem tomita_image_eq_commutant
     obtain ⟨x, hx, hxy⟩ := hT.commutant_is_image hy
     exact ⟨x, hx, hxy⟩
 
+theorem tomita_image_image
+    (T : TomitaConjugationData A) (M : Set A) :
+    tomitaImage A T (tomitaImage A T M) = M := by
+  ext y
+  constructor
+  · rintro ⟨z, ⟨x, hx, rfl⟩, rfl⟩
+    simpa [T.J_involutive x] using hx
+  · intro hy
+    exact ⟨T.J y, ⟨y, hy, rfl⟩, T.J_involutive y⟩
+
 /-- Algebraic modular flow data: a one-parameter group action on the carrier.
 The preservation field records invariance of a chosen observable set. -/
 structure ModularFlowData where
@@ -72,5 +82,10 @@ theorem modular_flow_group_law
     (F : ModularFlowData A) (t s : ℝ) (x : A) :
     F.sigma (t + s) x = F.sigma t (F.sigma s x) :=
   F.sigma_add t s x
+
+theorem modular_flow_commute
+    (F : ModularFlowData A) (t s : ℝ) (x : A) :
+    F.sigma t (F.sigma s x) = F.sigma s (F.sigma t x) := by
+  rw [← F.sigma_add t s x, ← F.sigma_add s t x, add_comm]
 
 end InfoGeometry.Physics

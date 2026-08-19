@@ -21,7 +21,7 @@ doubled_cartan_carrier = 2 * cartan_rank
 o55_carrier = 10
 full_o55_generators = 45
 active_o55_generators = 15
-scalar_base_socket = 1
+scalar_base_deferred_interface = 1
 p6m_non_equiv_psa = 16
 
 print("torus cycles =", torus_cycles)
@@ -34,7 +34,7 @@ print("doubled Cartan carrier =", doubled_cartan_carrier)
 print("O(5,5) carrier =", o55_carrier)
 print("full o(5,5) generators =", full_o55_generators)
 print("active o(5,5) generators =", active_o55_generators)
-print("p6m PSA count = active + scalar =", active_o55_generators + scalar_base_socket)
+print("p6m PSA count = active + scalar =", active_o55_generators + scalar_base_deferred_interface)
 
 assert torus_cycles == 2
 assert F * F_inv == sp.eye(3)
@@ -45,6 +45,6 @@ assert klein_glide_orientation == -1
 assert doubled_cartan_carrier == o55_carrier == 10
 assert full_o55_generators == 45
 assert active_o55_generators == 15
-assert active_o55_generators + scalar_base_socket == p6m_non_equiv_psa
+assert active_o55_generators + scalar_base_deferred_interface == p6m_non_equiv_psa
 
 print("torus_klein_o55_bridge.py: bridge audit passed")

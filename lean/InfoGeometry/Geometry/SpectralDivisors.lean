@@ -724,7 +724,7 @@ theorem boundaryIntegral_ne_zero_iff_enclosedMultiplicity_ne_zero
 
 end DivisorWindingCalibration
 
-/-! ## 7. Topological index / K-homology pairing socket -/
+/-! ## 7. Topological index / K-homology pairing -/
 
 /--
 A topological index datum extracted from a concrete winding datum.

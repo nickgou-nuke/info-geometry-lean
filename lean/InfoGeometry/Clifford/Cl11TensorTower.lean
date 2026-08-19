@@ -135,6 +135,30 @@ theorem hestenesPhaseBase_eq_neg_bivector_J_base :
   fin_cases i <;> fin_cases j <;>
     norm_num [hestenesPhaseBase, bivector_J_base]
 
+/-! The finite scalar/phase plane carried by the existing Hestenes axis. -/
+
+/-- The coefficient realization of `a + K b` in the finite real matrix carrier. -/
+def hestenesPhasePlane (a b : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  a • (1 : Matrix (Fin 2) (Fin 2) ℝ) + b • hestenesPhaseBase
+
+@[simp] theorem hestenesPhasePlane_zero :
+    hestenesPhasePlane 0 0 = 0 := by
+  simp [hestenesPhasePlane]
+
+theorem hestenesPhasePlane_mul (a b c d : ℝ) :
+    hestenesPhasePlane a b * hestenesPhasePlane c d =
+      hestenesPhasePlane (a * c - b * d) (a * d + b * c) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [hestenesPhasePlane, hestenesPhaseBase, Matrix.mul_apply,
+      Fin.sum_univ_two]
+    <;> ring
+
+theorem hestenesPhasePlane_normSq_mul (a b c d : ℝ) :
+    (a * c - b * d) ^ 2 + (a * d + b * c) ^ 2 =
+      (a ^ 2 + b ^ 2) * (c ^ 2 + d ^ 2) := by
+  ring
+
 /-- The creation atom is the split-Witt half-sum `(γ₀ + γ₁)/2`. -/
 theorem wittCreationBase_eq_half_gamma_sum :
     wittCreationBase = (1 / 2 : ℝ) • (gamma_0_base + gamma_1_base) := by
@@ -204,8 +228,54 @@ theorem realEncodedWitt_anticomm :
         (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   rw [realEncodedWittCreationBase_eq, realEncodedWittAnnihilationBase_eq]
   ext i j; fin_cases i <;> fin_cases j <;>
-    norm_num [wittCreationBase, wittAnnihilationBase, Matrix.mul_apply, Fin.sum_univ_two,
+      norm_num [wittCreationBase, wittAnnihilationBase, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.add_apply]
+
+theorem realEncodedWittCreation_mul_annihilation :
+    realEncodedWittCreationBase * realEncodedWittAnnihilationBase =
+      !![(1 : ℝ), 0; 0, 0] := by
+  rw [realEncodedWittCreationBase_eq, realEncodedWittAnnihilationBase_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [wittCreationBase, wittAnnihilationBase, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
+theorem realEncodedWittAnnihilation_mul_creation :
+    realEncodedWittAnnihilationBase * realEncodedWittCreationBase =
+      !![(0 : ℝ), 0; 0, 1] := by
+  rw [realEncodedWittCreationBase_eq, realEncodedWittAnnihilationBase_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [wittCreationBase, wittAnnihilationBase, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
+theorem realEncodedWittCreation_projector_idempotent :
+    (!![(1 : ℝ), 0; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) *
+        !![(1 : ℝ), 0; 0, 0] = !![(1 : ℝ), 0; 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem realEncodedWittAnnihilation_projector_idempotent :
+    (!![(0 : ℝ), 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℝ) *
+        !![(0 : ℝ), 0; 0, 1] = !![(0 : ℝ), 0; 0, 1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem realEncodedWitt_projectors_orthogonal_left :
+    (!![(1 : ℝ), 0; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) *
+        !![(0 : ℝ), 0; 0, 1] = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem realEncodedWitt_projectors_orthogonal_right :
+    (!![(0 : ℝ), 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℝ) *
+        !![(1 : ℝ), 0; 0, 0] = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Real gamma_0 matrix for the Cl(1,1) atom at stage 1. -/
 noncomputable def gamma_0 : MatStage 1 := InfoGeometry.Clifford.TowerMatrix.kronPow gamma_0_base 1
@@ -419,6 +489,33 @@ noncomputable def stageEmbedLieHom (n : ℕ) : MatStage n →ₗ⁅ℝ⁆ MatSta
 /-- Binary-volume normalized matrix trace. -/
 def normalizedTrace (n : ℕ) (A : MatStage n) : ℝ :=
   Matrix.trace A / (2 : ℝ) ^ n
+
+@[simp] theorem normalizedTrace_zero (n : ℕ) :
+    normalizedTrace n (0 : MatStage n) = 0 := by
+  simp [normalizedTrace]
+
+theorem normalizedTrace_add (n : ℕ) (A B : MatStage n) :
+    normalizedTrace n (A + B) = normalizedTrace n A + normalizedTrace n B := by
+  simp [normalizedTrace, Matrix.trace_add, add_div]
+
+theorem normalizedTrace_smul (n : ℕ) (r : ℝ) (A : MatStage n) :
+    normalizedTrace n (r • A) = r * normalizedTrace n A := by
+  simp [normalizedTrace, Matrix.trace_smul, smul_eq_mul, mul_div_assoc]
+
+@[simp] theorem normalizedTrace_one (n : ℕ) :
+    normalizedTrace n (1 : MatStage n) = 1 := by
+  simp [normalizedTrace, Matrix.trace, Matrix.diag, TowerMatrix.idx_card_pow_two]
+
+theorem normalizedTrace_mul_comm (n : ℕ) (A B : MatStage n) :
+    normalizedTrace n (A * B) = normalizedTrace n (B * A) := by
+  unfold normalizedTrace
+  rw [Matrix.trace_mul_comm]
+
+theorem normalizedTrace_commutator (n : ℕ) (A B : MatStage n) :
+    normalizedTrace n ⁅A, B⁆ = 0 := by
+  unfold normalizedTrace
+  rw [Ring.lie_def, Matrix.trace_sub, Matrix.trace_mul_comm]
+  simp
 
 @[simp] theorem trace_fin_two_one :
     Matrix.trace (1 : Matrix (Fin 2) (Fin 2) ℝ) = 2 := by

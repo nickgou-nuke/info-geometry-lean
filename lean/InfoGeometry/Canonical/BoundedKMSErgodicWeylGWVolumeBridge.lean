@@ -9,8 +9,8 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
 
-Adapter joining the state-functional bounded-KMS ergodic fixed-point socket to
-the existing projective Weyl/GW physical-volume socket.
+Adapter joining the state-functional bounded-KMS ergodic fixed-point interface to
+the existing projective Weyl/GW physical-volume interface.
 
 This file does not introduce a new determinant or GW-volume owner.  Phase
 volume/determinant invariance is explicit model data.  The proved content is

@@ -91,6 +91,20 @@ theorem theta_cocycle (D : Datum (G := G) (M := M)) (g h : G) :
     D.theta (g * h) = D.theta g + D.dualAction g (D.theta h) :=
   D.theta_mul g h
 
+theorem theta_inv (D : Datum (G := G) (M := M)) (g : G) :
+    D.theta g⁻¹ = -D.dualAction g⁻¹ (D.theta g) := by
+  have h := D.theta_mul g⁻¹ g
+  rw [inv_mul_cancel, D.theta_one] at h
+  exact eq_neg_of_add_eq_zero_left h.symm
+
+theorem dualAction_theta_inv (D : Datum (G := G) (M := M)) (g : G) :
+    D.dualAction g (D.theta g⁻¹) = -D.theta g := by
+  rw [theta_inv D, map_neg]
+  have h := D.dualAction_mul g g⁻¹
+  rw [mul_inv_cancel, D.dualAction_one] at h
+  have h' := congrArg (fun T : M →+ M => T (D.theta g)) h
+  simpa [AddMonoidHom.comp_apply] using congrArg Neg.neg h'.symm
+
 theorem affineAction_isAffine (D : Datum (G := G) (M := M)) (g : G)
     (μ ν : M) :
     affineAction D g (μ + ν) =
@@ -103,6 +117,16 @@ theorem affineAction_sub (D : Datum (G := G) (M := M))
       D.dualAction g (μ - ν) := by
   simp [affineAction, map_sub, sub_eq_add_neg, add_assoc, add_comm,
     add_left_comm]
+
+theorem affineAction_inv_apply (D : Datum (G := G) (M := M))
+    (g : G) (μ : M) :
+    affineAction D g⁻¹ (affineAction D g μ) = μ := by
+  simpa [← affineAction_mul, affineAction_one]
+
+theorem affineAction_apply_inv (D : Datum (G := G) (M := M))
+    (g : G) (μ : M) :
+    affineAction D g (affineAction D g⁻¹ μ) = μ := by
+  simpa [← affineAction_mul, affineAction_one]
 
 theorem AffineMomentMap.moment_eq_affineAction
     (D : Datum (G := G) (M := M)) (X : Type*)

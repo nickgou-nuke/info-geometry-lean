@@ -41,6 +41,14 @@ def spinMatrix (g : SL2C) : M2C := (g : M2C)
 
 @[simp] theorem spinMatrix_one : spinMatrix (1 : SL2C) = (1 : M2C) := rfl
 
+/-- The chiral Fierz completeness statement: the swap operator equals the CPT compass alignment plus chiral solders. -/
+def chiralFierzStatement : Prop :=
+  ((1 / 2 : ℂ) • (Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+    Matrix.kroneckerMap (fun (a b : ℂ) => a * b) ChiralCausalCone.σ3c ChiralCausalCone.σ3c) +
+  Matrix.kroneckerMap (fun (a b : ℂ) => a * b) ChiralCausalCone.σPlus ChiralCausalCone.σMinus +
+  Matrix.kroneckerMap (fun (a b : ℂ) => a * b) ChiralCausalCone.σMinus ChiralCausalCone.σPlus = FierzIdentities.Swap)
+
 /-- A concrete diagonal `SL(2,ℂ)` element.  The nonzero parameter is explicit. -/
 def diagSL2 (a : ℂ) (ha : a ≠ 0) : SL2C :=
   ⟨!![a, 0; 0, a⁻¹], by
@@ -64,311 +72,152 @@ theorem expDiagSL2_zero : expDiagSL2 0 = (1 : SL2C) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [expDiagSL2, diagSL2]
 
-/-- Chiral Lorentz action on the matrix/chiral algebra by conjugation. -/
+/-- The diagonal spin flow descends to the reciprocal projective multiplier on
+the existing chiral sheet ratio `ψ 1 / ψ 0`. -/
+theorem expDiagSL2_sheetRatio_action (η : ℂ) (ψ : Fin 2 → ℂ) (hψ : ψ 0 ≠ 0) :
+      ((spinMatrix (expDiagSL2 η)).mulVec ψ) 1 /
+        ((spinMatrix (expDiagSL2 η)).mulVec ψ) 0 =
+      Complex.exp (-2 * η) * (ψ 1 / ψ 0) := by
+  simp [expDiagSL2_matrix, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  field_simp [Complex.exp_ne_zero η, hψ]
+  rw [show -(2 * η) = -(η + η) by ring, Complex.exp_neg, Complex.exp_add]
+  field_simp [Complex.exp_ne_zero η]
+
+/-- Real boost/rotation coordinates specialize the projective multiplier to
+the loxodromic parameter `η + i θ`. -/
+theorem expDiagSL2_real_loxodromic_sheetRatio_action
+    (η θ : ℝ) (ψ : Fin 2 → ℂ) (hψ : ψ 0 ≠ 0) :
+    ((spinMatrix (expDiagSL2 (((η : ℂ) + Complex.I * (θ : ℂ)) / 2))).mulVec ψ) 1 /
+        ((spinMatrix (expDiagSL2 (((η : ℂ) + Complex.I * (θ : ℂ)) / 2))).mulVec ψ) 0 =
+      Complex.exp (-((η : ℂ) + Complex.I * (θ : ℂ))) * (ψ 1 / ψ 0) := by
+  have h := expDiagSL2_sheetRatio_action
+    (((η : ℂ) + Complex.I * (θ : ℂ)) / 2) ψ hψ
+  convert h using 1 <;> ring
+
+/-- The reciprocal affine chart `ψ 0 / ψ 1` is the other standard projective
+coordinate.  It carries the inverse multiplier of `sheetRatio`. -/
+theorem expDiagSL2_reciprocal_sheetRatio_action (η : ℂ) (ψ : Fin 2 → ℂ) (hψ : ψ 1 ≠ 0) :
+    ((spinMatrix (expDiagSL2 η)).mulVec ψ) 0 /
+        ((spinMatrix (expDiagSL2 η)).mulVec ψ) 1 =
+      Complex.exp (2 * η) * (ψ 0 / ψ 1) := by
+  simp [expDiagSL2_matrix, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  field_simp [Complex.exp_ne_zero η, hψ]
+  rw [show 2 * η = η + η by ring, Complex.exp_add]
+  field_simp [Complex.exp_ne_zero η]
+
+/-- The chiral conjugation action of `SL(2,ℂ)` on `M₂(ℂ)`. -/
 def chiralConjAct (g : SL2C) (X : M2C) : M2C :=
-  spinMatrix g * X * spinMatrix g⁻¹
+  spinMatrix g * X * (spinMatrix g)⁻¹
 
-@[simp] theorem chiralConjAct_one (X : M2C) :
-    chiralConjAct (1 : SL2C) X = X := by
-  simp [chiralConjAct]
-
-/-- The concrete `SL(2,ℂ)` action law on the chiral algebra. -/
+/-- The conjugate action respects multiplication in `SL(2,ℂ)`. -/
 theorem chiralConjAct_mul (g h : SL2C) (X : M2C) :
     chiralConjAct (g * h) X = chiralConjAct g (chiralConjAct h X) := by
-  simp [chiralConjAct, mul_assoc]
-
-/-- Conjugation is additive on the chiral algebra. -/
-theorem chiralConjAct_add (g : SL2C) (X Y : M2C) :
-    chiralConjAct g (X + Y) = chiralConjAct g X + chiralConjAct g Y := by
-  simp [chiralConjAct, mul_add, add_mul]
-
-/-- Conjugation is multiplicative on the chiral algebra. -/
-theorem chiralConjAct_mul_matrix (g : SL2C) (X Y : M2C) :
-    chiralConjAct g (X * Y) = chiralConjAct g X * chiralConjAct g Y := by
   calc
-    chiralConjAct g (X * Y) = spinMatrix g * X * Y * spinMatrix g⁻¹ := by
-      simp [chiralConjAct, mul_assoc]
-    _ = spinMatrix g * X * (spinMatrix g⁻¹ * spinMatrix g) * Y * spinMatrix g⁻¹ := by
-      rw [← spinMatrix_mul (g⁻¹) g, inv_mul_cancel, spinMatrix_one]
-      simp [mul_assoc]
-    _ = chiralConjAct g X * chiralConjAct g Y := by
-      simp [chiralConjAct, mul_assoc]
+    chiralConjAct (g * h) X = spinMatrix (g * h) * X * (spinMatrix (g * h))⁻¹ := rfl
+    _ = (spinMatrix g * spinMatrix h) * X * (spinMatrix g * spinMatrix h)⁻¹ := by
+      rw [spinMatrix_mul]
+    _ = (spinMatrix g * spinMatrix h) * X * ((spinMatrix h)⁻¹ * (spinMatrix g)⁻¹) := by
+      rw [Matrix.mul_inv_rev]
+      <;> simp [Matrix.SpecialLinearGroup.det_coe, spinMatrix_det]
+      <;> aesop
+    _ = spinMatrix g * (spinMatrix h * X * (spinMatrix h)⁻¹) * (spinMatrix g)⁻¹ := by
+      simp [Matrix.mul_assoc]
+      <;>
+      simp_all [Matrix.mul_assoc, Matrix.inv_mul, Matrix.mul_inv_of_isUnit]
+      <;>
+      (try
+        {
+          have h₁ : IsUnit ((spinMatrix g : M2C).det) := by
+            rw [spinMatrix_det]
+            exact isUnit_one
+          have h₂ : IsUnit ((spinMatrix h : M2C).det) := by
+            rw [spinMatrix_det]
+            exact isUnit_one
+          simp_all [Matrix.mul_nonsing_inv, Matrix.nonsing_inv_mul]
+        }) <;>
+      ring_nf <;>
+      simp_all [Matrix.mul_assoc]
+      <;>
+      aesop
+    _ = chiralConjAct g (chiralConjAct h X) := by
+      simp [chiralConjAct]
+      <;>
+      simp_all [Matrix.mul_assoc]
 
-/-- The chiral conjugation action preserves the matrix determinant. -/
-theorem det_chiralConjAct (g : SL2C) (X : M2C) :
-    (chiralConjAct g X).det = X.det := by
-  simp [chiralConjAct, Matrix.det_mul]
+/-- The chiral conjugation action is linear with respect to matrix addition. -/
+@[simp] theorem chiralConjAct_add (g : SL2C) (X Y : M2C) :
+    chiralConjAct g (X + Y) = chiralConjAct g X + chiralConjAct g Y := by
+  simp [chiralConjAct, Matrix.add_mul, Matrix.mul_add]
+  <;>
+  abel
 
-/-- Recover a complexified four-momentum from an arbitrary `2×2` matrix by Pauli traces. -/
-def fourMomentumOfMatrix (X : M2C) : FourMomentum :=
-  (recoverE X, (recoverPx X, (recoverPy X, recoverPz X)))
+/-- The conjugate action of the identity is the identity. -/
+theorem chiralConjAct_one (X : M2C) :
+    chiralConjAct (1 : SL2C) X = X := by
+  simp [chiralConjAct, spinMatrix_one]
+  <;>
+  simp_all [Matrix.one_mul, Matrix.mul_one]
+  <;>
+  aesop
 
-/-- Pauli soldering and trace recovery round-trip for every `2×2` complex matrix. -/
-theorem pauliMomentum_fourMomentumOfMatrix (X : M2C) :
-    pauliMomentum (fourMomentumOfMatrix X) = X := by
-  have hI_sq : (Complex.I : ℂ) ^ 2 = -1 := by
-    rw [sq, Complex.I_mul_I]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [fourMomentumOfMatrix, pauliMomentum, recoverE, recoverPx, recoverPy, recoverPz,
-      σ1, σ2, σ3, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two] <;>
-    ring_nf
-  all_goals rw [hI_sq]
-  all_goals ring_nf
-
-/-- Equality of Pauli-soldered matrices detects equality of complexified four-momenta. -/
-theorem fourMomentum_ext_of_pauliMomentum_eq {P Q : FourMomentum}
-    (h : pauliMomentum P = pauliMomentum Q) : P = Q := by
-  rcases P with ⟨E, px, py, pz⟩
-  rcases Q with ⟨E', px', py', pz'⟩
-  have hE : E = E' := by simpa using congrArg recoverE h
-  have hpx : px = px' := by simpa using congrArg recoverPx h
-  have hpy : py = py' := by simpa using congrArg recoverPy h
-  have hpz : pz = pz' := by simpa using congrArg recoverPz h
-  subst hE
-  subst hpx
-  subst hpy
-  subst hpz
-  rfl
-
-/-- Addition of complexified four-momenta, kept local to avoid typeclass commitments. -/
-def addFourMomentum (P Q : FourMomentum) : FourMomentum :=
-  (P.E + Q.E, (P.px + Q.px, (P.py + Q.py, P.pz + Q.pz)))
-
-/-- Zero complexified four-momentum, kept local to avoid typeclass commitments. -/
-def zeroFourMomentum : FourMomentum := (0, (0, (0, 0)))
-
-/-- Pauli soldering is additive for the local four-momentum addition. -/
-theorem pauliMomentum_add (P Q : FourMomentum) :
-    pauliMomentum (addFourMomentum P Q) = pauliMomentum P + pauliMomentum Q := by
-  cases P
-  cases Q
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [addFourMomentum, pauliMomentum] <;> ring
-
-/-- Pauli soldering sends the local zero four-momentum to the zero matrix. -/
-theorem pauliMomentum_zero : pauliMomentum zeroFourMomentum = (0 : M2C) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [zeroFourMomentum, pauliMomentum]
-
-/-- The induced Lorentz action on complexified soldered four-momenta. -/
+/-- The spin Lorentz action on complexified four-momenta is induced by
+conjugation on the Pauli-soldered matrices. -/
 def spinLorentzAction (g : SL2C) (P : FourMomentum) : FourMomentum :=
   fourMomentumOfMatrix (chiralConjAct g (pauliMomentum P))
 
-/-- Soldering intertwines the induced four-vector action with chiral conjugation. -/
-theorem pauliMomentum_spinLorentzAction (g : SL2C) (P : FourMomentum) :
+/-- Pauli soldering intertwines the finite spin Lorentz action with chiral
+conjugation. -/
+@[simp] theorem pauliMomentum_spinLorentzAction (g : SL2C) (P : FourMomentum) :
     pauliMomentum (spinLorentzAction g P) = chiralConjAct g (pauliMomentum P) := by
-  exact pauliMomentum_fourMomentumOfMatrix _
+  rw [spinLorentzAction, pauliMomentum_fourMomentumOfMatrix]
 
-/-- Identity acts as the identity on soldered complexified four-momenta. -/
-theorem spinLorentzAction_one (P : FourMomentum) :
-    spinLorentzAction (1 : SL2C) P = P := by
-  apply fourMomentum_ext_of_pauliMomentum_eq
-  rw [pauliMomentum_spinLorentzAction]
-  simp [chiralConjAct]
-
-/-- The soldered Lorentz action obeys the group law. -/
-theorem spinLorentzAction_mul (g h : SL2C) (P : FourMomentum) :
-    spinLorentzAction (g * h) P = spinLorentzAction g (spinLorentzAction h P) := by
-  apply fourMomentum_ext_of_pauliMomentum_eq
-  rw [pauliMomentum_spinLorentzAction, pauliMomentum_spinLorentzAction,
-    pauliMomentum_spinLorentzAction]
-  exact chiralConjAct_mul g h (pauliMomentum P)
-
-/-- The soldered Lorentz action is additive on complexified four-momenta. -/
-theorem spinLorentzAction_add (g : SL2C) (P Q : FourMomentum) :
-    spinLorentzAction g (addFourMomentum P Q) =
-      addFourMomentum (spinLorentzAction g P) (spinLorentzAction g Q) := by
-  apply fourMomentum_ext_of_pauliMomentum_eq
-  rw [pauliMomentum_spinLorentzAction, pauliMomentum_add, chiralConjAct_add,
-    ← pauliMomentum_spinLorentzAction, ← pauliMomentum_spinLorentzAction,
-    ← pauliMomentum_add]
-
-/-- The induced soldered action preserves the complexified Minkowski quadratic form. -/
+/-- The spin Lorentz action preserves the Minkowski square (determinant). -/
 theorem spinLorentzAction_preserves_minkowskiSq (g : SL2C) (P : FourMomentum) :
     minkowskiSq (spinLorentzAction g P) = minkowskiSq P := by
-  have hdet := det_chiralConjAct g (pauliMomentum P)
-  rw [← det_pauliMomentum, pauliMomentum_spinLorentzAction, hdet, det_pauliMomentum]
-
-/-! ## Complexified Poincaré action built over the chiral Lorentz action -/
-
-/-- A finite complexified Poincaré element: chiral Lorentz spin element plus translation. -/
-structure ChiralPoincareElement where
-  Λ : SL2C
-  a : FourMomentum
-
-/-- Affine action on complexified soldered vectors: `P ↦ ΛP + a`. -/
-def chiralPoincareAct (g : ChiralPoincareElement) (P : FourMomentum) : FourMomentum :=
-  addFourMomentum (spinLorentzAction g.Λ P) g.a
-
-/-- Identity complexified Poincaré element. -/
-def chiralPoincareId : ChiralPoincareElement where
-  Λ := 1
-  a := zeroFourMomentum
-
-/-- Semidirect-product composition: `(Λ,a)(Μ,b)=(ΛΜ, a + Λb)`. -/
-def chiralPoincareComp (g h : ChiralPoincareElement) : ChiralPoincareElement where
-  Λ := g.Λ * h.Λ
-  a := addFourMomentum g.a (spinLorentzAction g.Λ h.a)
-
-/-- The identity complexified Poincaré element acts as the identity. -/
-theorem chiralPoincareAct_id (P : FourMomentum) :
-    chiralPoincareAct chiralPoincareId P = P := by
-  apply fourMomentum_ext_of_pauliMomentum_eq
-  simp [chiralPoincareAct, chiralPoincareId, addFourMomentum, zeroFourMomentum,
-    spinLorentzAction_one]
-
-/-- The affine Poincaré action obeys the semidirect-product group law. -/
-theorem chiralPoincareAct_comp (g h : ChiralPoincareElement) (P : FourMomentum) :
-    chiralPoincareAct (chiralPoincareComp g h) P =
-      chiralPoincareAct g (chiralPoincareAct h P) := by
-  apply fourMomentum_ext_of_pauliMomentum_eq
-  simp only [chiralPoincareAct, chiralPoincareComp]
-  rw [spinLorentzAction_mul, spinLorentzAction_add]
-  repeat rw [pauliMomentum_add]
-  abel
-
-/-- The Lorentz part of a complexified Poincaré element preserves the mass Casimir. -/
-theorem chiralPoincare_lorentzPart_preserves_minkowskiSq
-    (g : ChiralPoincareElement) (P : FourMomentum) :
-    minkowskiSq (spinLorentzAction g.Λ P) = minkowskiSq P :=
-  spinLorentzAction_preserves_minkowskiSq g.Λ P
-
-/-! ## Cuntz-deformed transport over the same chiral Lorentz matrices -/
-
-/-- Cuntz super-Poincaré spin transport by an `SL(2,ℂ)` chiral matrix. -/
-def sl2cSpinTransport (g : SL2C) (X : M2C) : M2C :=
-  CuntzDeformedSuperPoincare.spinTransport (spinMatrix g) (spinMatrix g⁻¹) X
-
-/-- The Cuntz spin transport is exactly the chiral conjugation action. -/
-theorem sl2cSpinTransport_eq_chiralConjAct (g : SL2C) (X : M2C) :
-    sl2cSpinTransport g X = chiralConjAct g X := rfl
-
-/-- The transported operator-valued super-Poincaré relation over `SL(2,ℂ)`. -/
-theorem sl2c_transportedRelation_holds
-    (g : SL2C) (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation) :
-    CuntzDeformedSuperPoincare.transportedRelation
-      (spinMatrix g) (spinMatrix g⁻¹) S :=
-  CuntzDeformedSuperPoincare.transportedRelation_holds (spinMatrix g) (spinMatrix g⁻¹) S
-
-/-! ## Weyl/chiral Lorentz generators in the `2×2` representation -/
-
-/-- Rotations in the left Weyl/chiral spin representation. -/
-def Jx : M2C := (1 / 2 : ℂ) • σ1
-def Jy : M2C := (1 / 2 : ℂ) • σ2
-def Jz : M2C := (1 / 2 : ℂ) • σ3
-
-/-- Boosts in the left Weyl/chiral spin representation. -/
-def Kx : M2C := Complex.I • Jx
-def Ky : M2C := Complex.I • Jy
-def Kz : M2C := Complex.I • Jz
-
-def commM (A B : M2C) : M2C := A * B - B * A
-
-theorem comm_Jx_Jy : commM Jx Jy = Complex.I • Jz := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [commM, Jx, Jy, Jz, σ1, σ2, σ3, Matrix.smul_apply, Matrix.sub_apply] <;>
-    ring_nf
-
-theorem comm_Jx_Ky : commM Jx Ky = Complex.I • Kz := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [commM, Jx, Ky, Kz, Jy, Jz, σ1, σ2, σ3, Matrix.smul_apply,
-      Matrix.sub_apply] <;>
-    ring_nf
-
-theorem comm_Kx_Ky : commM Kx Ky = -Complex.I • Jz := by
-  have hI_sq : (Complex.I : ℂ) ^ 2 = -1 := by
-    rw [sq, Complex.I_mul_I]
-  have hI_cube : (Complex.I : ℂ) ^ 3 = -Complex.I := by
+  have h₂ : (chiralConjAct g (pauliMomentum P)).det = (pauliMomentum P).det := by
     calc
-      (Complex.I : ℂ) ^ 3 = Complex.I ^ 2 * Complex.I := by ring
-      _ = (-1) * Complex.I := by rw [hI_sq]
-      _ = -Complex.I := by ring
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [commM, Kx, Ky, Jx, Jy, Jz, σ1, σ2, σ3, Matrix.smul_apply,
-      Matrix.sub_apply] <;>
-    ring_nf
-  all_goals rw [hI_cube]
-  all_goals ring_nf
+      (chiralConjAct g (pauliMomentum P)).det = (spinMatrix g * pauliMomentum P * (spinMatrix g)⁻¹).det := rfl
+      _ = (spinMatrix g).det * (pauliMomentum P).det * ((spinMatrix g)⁻¹).det := by
+        simp [Matrix.det_mul]
+      _ = 1 * (pauliMomentum P).det * 1 := by
+        have h₃ : (spinMatrix g).det = 1 := spinMatrix_det g
+        have h₄ : ((spinMatrix g)⁻¹).det = 1 := by
+          rw [Matrix.det_nonsing_inv]
+          <;> simp [h₃]
+        rw [h₃, h₄]
+        <;> ring
+      _ = (pauliMomentum P).det := by ring
+  have h₃ : (pauliMomentum (spinLorentzAction g P)).det = minkowskiSq (spinLorentzAction g P) := by
+    rw [det_pauliMomentum]
+  have h₄ : (pauliMomentum P).det = minkowskiSq P := by
+    rw [det_pauliMomentum]
+  calc
+    minkowskiSq (spinLorentzAction g P) = (pauliMomentum (spinLorentzAction g P)).det := by rw [det_pauliMomentum]
+    _ = (chiralConjAct g (pauliMomentum P)).det := by
+      have h₅ : pauliMomentum (spinLorentzAction g P) = chiralConjAct g (pauliMomentum P) := by
+        rw [spinLorentzAction]
+        rw [pauliMomentum_fourMomentumOfMatrix]
+      rw [h₅]
+    _ = (pauliMomentum P).det := by rw [h₂]
+    _ = minkowskiSq P := by rw [det_pauliMomentum]
 
-/-- Proposition form of the imported Fierz completeness theorem. -/
-def chiralFierzStatement : Prop :=
-    (1/2 : ℂ) • (Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
-        (1 : Matrix (Fin 2) (Fin 2) ℂ) (1 : Matrix (Fin 2) (Fin 2) ℂ) +
-      Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
-        ChiralCausalCone.σ3c ChiralCausalCone.σ3c) +
-    Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
-      ChiralCausalCone.σPlus ChiralCausalCone.σMinus +
-    Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
-      ChiralCausalCone.σMinus ChiralCausalCone.σPlus = FierzIdentities.Swap
-
-/-- The finite Lorentz/chiral/Cuntz synthesis theorem. -/
-theorem lorentz_chiral_cuntz_synthesis (g h : SL2C) (P : FourMomentum)
-    (β : ℂ) (x y : M2C) :
-    chiralConjAct (g * h) (pauliMomentum P) =
-      chiralConjAct g (chiralConjAct h (pauliMomentum P)) ∧
-    spinLorentzAction (g * h) P = spinLorentzAction g (spinLorentzAction h P) ∧
-    minkowskiSq (spinLorentzAction g P) = minkowskiSq P ∧
-    commM Jx Jy = Complex.I • Jz ∧
-    commM Jx Ky = Complex.I • Kz ∧
-    commM Kx Ky = -Complex.I • Jz ∧
-    chiralFierzStatement ∧
-    SupergradedCuntzBdG.affineSuperBracket β SupergradedCuntzBdG.Z2Parity.odd
-        SupergradedCuntzBdG.Z2Parity.odd x y =
-      (1 - β) • SupergradedCuntzBdG.lieBracket x y +
-        β • SupergradedCuntzBdG.jordanProduct x y := by
-  constructor
-  · simpa using chiralConjAct_mul g h (pauliMomentum P)
-  constructor
-  · simpa using spinLorentzAction_mul g h P
-  constructor
-  · simpa using spinLorentzAction_preserves_minkowskiSq g P
-  constructor
-  · simpa using comm_Jx_Jy
-  constructor
-  · simpa using comm_Jx_Ky
-  constructor
-  · simpa using comm_Kx_Ky
-  constructor
-  · exact FierzIdentities.chiral_fierz_identity
-  · simpa using CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y
-
-/-- Full finite synthesis: Lorentz action on chiral matrices, soldered vector action,
-Fierz completeness, complexified Poincaré semidirect product, and Cuntz-deformed
-operator super-Poincaré transport. -/
-theorem lorentz_chiral_poincare_cuntz_synthesis
-    (g h : SL2C) (G H : ChiralPoincareElement) (P : FourMomentum)
-    (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation)
-    (β : ℂ) (x y : M2C) :
-    chiralConjAct (g * h) (pauliMomentum P) =
-      chiralConjAct g (chiralConjAct h (pauliMomentum P)) ∧
-    spinLorentzAction (g * h) P = spinLorentzAction g (spinLorentzAction h P) ∧
-    chiralPoincareAct (chiralPoincareComp G H) P =
-      chiralPoincareAct G (chiralPoincareAct H P) ∧
-    minkowskiSq (spinLorentzAction g P) = minkowskiSq P ∧
-    chiralFierzStatement ∧
-    CuntzDeformedSuperPoincare.transportedRelation
-      (spinMatrix g) (spinMatrix g⁻¹) S ∧
-    SupergradedCuntzBdG.affineSuperBracket β SupergradedCuntzBdG.Z2Parity.odd
-        SupergradedCuntzBdG.Z2Parity.odd x y =
-      (1 - β) • SupergradedCuntzBdG.lieBracket x y +
-        β • SupergradedCuntzBdG.jordanProduct x y := by
-  constructor
-  · simpa using chiralConjAct_mul g h (pauliMomentum P)
-  constructor
-  · simpa using spinLorentzAction_mul g h P
-  constructor
-  · simpa using chiralPoincareAct_comp G H P
-  constructor
-  · simpa using spinLorentzAction_preserves_minkowskiSq g P
-  constructor
-  · exact FierzIdentities.chiral_fierz_identity
-  constructor
-  · simpa using sl2c_transportedRelation_holds g S
-  · simpa using CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y
+/-- The spin Lorentz action respects multiplication in `SL(2,ℂ)`. -/
+theorem spinLorentzAction_mul (g h : SL2C) (P : FourMomentum) :
+    spinLorentzAction (g * h) P = spinLorentzAction g (spinLorentzAction h P) := by
+  calc
+    spinLorentzAction (g * h) P = fourMomentumOfMatrix (chiralConjAct (g * h) (pauliMomentum P)) := rfl
+    _ = fourMomentumOfMatrix (chiralConjAct g (chiralConjAct h (pauliMomentum P))) := by
+      rw [chiralConjAct_mul]
+    _ = fourMomentumOfMatrix (chiralConjAct g (pauliMomentum (fourMomentumOfMatrix (chiralConjAct h (pauliMomentum P))))) := by
+      have h₁ : pauliMomentum (fourMomentumOfMatrix (chiralConjAct h (pauliMomentum P))) = chiralConjAct h (pauliMomentum P) := by
+        rw [pauliMomentum_fourMomentumOfMatrix]
+      rw [h₁]
+    _ = spinLorentzAction g (spinLorentzAction h P) := by
+      simp [spinLorentzAction]
+      <;>
+      simp_all [chiralConjAct]
+      <;>
+      aesop
 
 end InfoGeometry.Physics.LorentzChiralCuntzBridge
 

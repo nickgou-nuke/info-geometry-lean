@@ -1,5 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinVolumeAnticommutation
-import InfoGeometry.Clifford.Cl55RealSplitPinKernelEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 
 namespace InfoGeometry.Clifford.Clifford55
 

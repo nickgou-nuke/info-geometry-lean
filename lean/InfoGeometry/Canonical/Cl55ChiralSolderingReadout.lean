@@ -102,6 +102,19 @@ theorem mixed_anticommutator (i j : Fin 3) :
       if i = j then 1 else 0 := by
   simpa [chiralReadout] using chiralMinus55_plus55_anticommutator i j
 
+theorem chiralReadout_anticommutator (s t : ChiralIndex) :
+    chiralReadout s * chiralReadout t + chiralReadout t * chiralReadout s =
+      if s.1 = t.1 then 0 else if s.2 = t.2 then 1 else 0 := by
+  cases s with
+  | mk sb si =>
+      cases t with
+      | mk tb ti =>
+          cases sb <;> cases tb
+          · simpa using minus_anticommutator si ti
+          · simpa [chiralReadout] using mixed_anticommutator si ti
+          · simpa [chiralReadout] using chiralPlus55_minus55_anticommutator si ti
+          · simpa using plus_anticommutator si ti
+
 theorem plus_commutator_mem_grade_two (i j : Fin 3) :
     chiralReadout (true, i) * chiralReadout (true, j) -
         chiralReadout (true, j) * chiralReadout (true, i) ∈
@@ -136,6 +149,16 @@ theorem spin_chiralReadout_minus_grade (g : Spin55) (i : Fin 3) :
     spinCliffordRingEquiv g (chiralReadout (false, i)) ∈
       spinTransportedCl55GradeSubmodule g (-1) := by
   simpa [chiralReadout] using chiralMinus55_spin_transport g i
+
+theorem spin_chiralReadout_grade (g : Spin55) (s : ChiralIndex) :
+    spinCliffordRingEquiv g (chiralReadout s) ∈
+      if s.1 then spinTransportedCl55GradeSubmodule g 1
+      else spinTransportedCl55GradeSubmodule g (-1) := by
+  cases s with
+  | mk b i =>
+      cases b
+      · exact spin_chiralReadout_minus_grade g i
+      · exact spin_chiralReadout_plus_grade g i
 
 end
 

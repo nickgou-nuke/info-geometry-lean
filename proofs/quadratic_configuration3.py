@@ -87,7 +87,7 @@ def main() -> None:
     assert cooperad_gen(Block.pair23_1, Gen(Edge.e13, Kind.alpha)) == (Factor.outer, Kind.alpha)
 
     print("quadratic_configuration3.py: finite arity-3 quadric configuration contracts passed")
-    print("Analytic de Rham comparison, quadric angular class, Arnold relations, and full cooperad remain sockets.")
+    print("Analytic de Rham comparison, quadric angular class, Arnold relations, and full cooperad remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

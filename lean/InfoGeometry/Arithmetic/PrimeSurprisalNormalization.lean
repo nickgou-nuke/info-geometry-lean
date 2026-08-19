@@ -44,6 +44,30 @@ lemma normalizedWeight_pos {α : Type*} {w : α → ℝ} {Z : ℝ}
   unfold normalizedWeight
   exact div_pos hw hZ
 
+/-- Partition-normalized weights form a finite probability distribution. -/
+theorem normalizedWeight_sum_eq_one
+    {α : Type*} [Fintype α] (w : α → ℝ)
+    (hZ : 0 < ∑ x, w x) :
+    ∑ a, normalizedWeight w (∑ x, w x) a = 1 := by
+  unfold normalizedWeight
+  rw [← Finset.sum_div]
+  exact div_self (ne_of_gt hZ)
+
+/-- The normalized finite energy readout is the weighted-energy quotient. -/
+theorem normalizedWeight_energy_sum_eq_weighted_quotient
+    {α : Type*} [Fintype α] (w energy : α → ℝ) :
+    (∑ a, normalizedWeight w (∑ x, w x) a * energy a) =
+      (∑ a, w a * energy a) / ∑ x, w x := by
+  unfold normalizedWeight
+  calc
+    (∑ a, (w a / ∑ x, w x) * energy a) =
+        ∑ a, (w a * energy a) / ∑ x, w x := by
+      apply Finset.sum_congr rfl
+      intro a ha
+      ring
+    _ = (∑ a, w a * energy a) / ∑ x, w x := by
+      rw [← Finset.sum_div]
+
 /-- Surprisal associated to a normalized weight. -/
 def normalizedSurprisal {α : Type*} (w : α → ℝ) (Z : ℝ) (a : α) : ℝ :=
   -Real.log (normalizedWeight w Z a)

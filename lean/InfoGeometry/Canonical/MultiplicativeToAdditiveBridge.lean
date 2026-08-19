@@ -61,6 +61,14 @@ theorem map_mul (B : DefectiveAbelianizingBridge M S) (x y : M) :
     B.character (x * y) = B.defect x y * (B.character x * B.character y) :=
   B.map_mul_defect x y
 
+/-- A unit defect is exactly the ordinary multiplicativity law. -/
+theorem map_mul_of_defect_one
+    (B : DefectiveAbelianizingBridge M S) (x y : M)
+    (hdefect : ∀ x y, B.defect x y = 1) :
+    B.character (x * y) = B.character x * B.character y := by
+  rw [B.map_mul_defect x y, hdefect x y]
+  simp
+
 end DefectiveAbelianizingBridge
 
 namespace ExactAbelianizingBridge
@@ -180,6 +188,35 @@ theorem additiveInvariant_mul
   rw [DefectiveAbelianizingBridge.map_mul B.toDefectiveAbelianizingBridge,
     AdditiveLinearization.map_mul_apply B.toAdditiveLinearization,
     AdditiveLinearization.map_mul_apply B.toAdditiveLinearization]
+
+/-- A defective bridge is exact on any pair whose descent defect is one. -/
+theorem additiveInvariant_mul_of_defect_one
+    (B : DefectiveMultiplicativeToAdditiveBridge M S A) (x y : M)
+    (hdefect : ∀ u v, B.toDefectiveAbelianizingBridge.defect u v = 1) :
+    B.additiveInvariant (x * y) =
+      B.additiveInvariant x + B.additiveInvariant y := by
+  unfold additiveInvariant
+  have hmul := DefectiveAbelianizingBridge.map_mul_of_defect_one
+    B.toDefectiveAbelianizingBridge x y hdefect
+  rw [hmul, AdditiveLinearization.map_mul_apply B.toAdditiveLinearization]
+
+/-!
+The exactness condition is local: a single product is additive whenever its
+descent defect is the unit.  This is strictly stronger than requiring every
+pair in the source to have unit defect.
+-/
+theorem additiveInvariant_mul_of_defect_one_at
+    (B : DefectiveMultiplicativeToAdditiveBridge M S A) (x y : M)
+    (hdefect : B.toDefectiveAbelianizingBridge.defect x y = 1) :
+    B.additiveInvariant (x * y) =
+      B.additiveInvariant x + B.additiveInvariant y := by
+  unfold additiveInvariant
+  rw [B.toDefectiveAbelianizingBridge.map_mul_defect x y, hdefect]
+  simp only [one_mul]
+  simpa using
+    B.toAdditiveLinearization.map_mul_apply
+      (B.toDefectiveAbelianizingBridge.character x)
+      (B.toDefectiveAbelianizingBridge.character y)
 
 end DefectiveMultiplicativeToAdditiveBridge
 

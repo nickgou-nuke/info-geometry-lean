@@ -41,7 +41,7 @@ theorem standard_split_octonion_derivations_span :
 
 theorem canonical_rotation_is_derivation :
     InfoGeometry.Lie.G2FromSplitOctonions.IsDeriv
-      InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness.rot01Derivation :=
+      InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationData.rot01Derivation :=
   InfoGeometry.Lie.G2FromSplitOctonions.D01_deriv
 
 end InfoGeometry.Lie.RealSplitOctonionG2Classification

@@ -152,6 +152,14 @@ theorem cross_basis_decomposition (x y : ZornVec3 R) :
   ext i
   fin_cases i <;> simp [cross, basis]
 
+/-- Vector triple product Jacobi identity:
+    `cross x (cross y z) + cross y (cross z x) + cross z (cross x y) = 0`.
+    This is the coordinate manifestation of the ε_ijk Levi-Civita cyclic sum.
+-/
+theorem cross_jacobi (x y z : ZornVec3 R) :
+    cross x (cross y z) + cross y (cross z x) + cross z (cross x y) = fun _ => 0 := by
+  ext i <;> fin_cases i <;> simp [cross, ZornVec3.cross] <;> ring
+
 /-- Coordinate dot product is symmetric over a commutative ring. -/
 theorem dot_comm (x y : ZornVec3 R) :
     dot x y = dot y x := by
@@ -1757,6 +1765,29 @@ theorem norm_inverseCandidate {K : Type*} [Field K]
   unfold inverseCandidate
   rw [← mul_scalar, norm_mul, norm_scalar, norm_conj]
   ring
+
+/-- Zorn quadratic identity: `X² - tr(X)·X + N(X)·1 = 0`.
+
+This is the coordinate manifestation of the characteristic polynomial
+`λ² - tr(X)λ + N(X) = 0` evaluated at the matrix `X` itself.
+-/
+theorem quadratic_identity (X : ZornVectorMatrix R) :
+    sub (mul X X) (smul (trace X) X) = neg (smul (norm X) one) := by
+  cases X with
+  | mk a v w b =>
+  apply ZornVectorMatrix.ext
+  · simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot]
+    ring
+  · funext i
+    fin_cases i <;>
+    simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, ZornVec3.cross] <;>
+    ring
+  · funext i
+    fin_cases i <;>
+    simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, ZornVec3.cross] <;>
+    ring
+  · simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, Fin.sum_univ_three]
+    ring
 
 /-- On the non-isotropic locus, the inverse candidate has norm `(norm X)⁻¹`. -/
 theorem norm_inverseCandidate_of_ne_zero {K : Type*} [Field K]

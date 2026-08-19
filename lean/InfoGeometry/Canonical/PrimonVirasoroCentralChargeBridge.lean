@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
 import InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
@@ -39,6 +38,7 @@ open InfoGeometry.Arithmetic.ArithmeticKMS
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 open InfoGeometry.Canonical.PrimeGasSuperKMS
+open InfoGeometry.Canonical.AlgebraicKMSStateColimit
 open InfoGeometry.Canonical.PrimeVirasoroSugawara
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
@@ -50,9 +50,11 @@ open InfoGeometry.KK.RealSplitKreinKasparovCycle
 Prime-to-Virasoro compatibility packet.
 
 `ArithmeticKMSData` carries the finite primon gas support and Gibbs flow.
-`PrimeGasSuperKMSBridge` carries the even/odd supertemperature split.
+`PrimeGasSuperKMSBridge` carries an invertible density in the native
+noncommutative colimit algebra; its KMS boundary is expressed by the
+corresponding inner algebra automorphism.
 `MassieuPlanckWeylScalarCalibration` carries the Souriau/Massieu scalar lane.
-`PrimeVielbeinCarrier` carries the zeta-trace prime volume lane.
+`PrimeVielbeinData` carries the zeta-trace prime volume lane.
 `PrimeSugawaraVirasoroPacket` carries the prime Sugawara/Virasoro lane.
 `TopologicalCentralChargePackage` carries the operatorial central charge lane.
 
@@ -107,7 +109,7 @@ structure PrimonVirasoroCentralChargeBridge
     massieu.weylScalar = arithmeticPartition
 
   /-- Canonical prime zeta-trace carrier. -/
-  primeVielbein : PrimeVielbeinCarrier
+  primeVielbein : PrimeVielbeinData
 
   /-- The prime zeta-trace carrier is the canonical one already owned by the repo. -/
   primeVielbein_eq_canonical :
@@ -195,11 +197,14 @@ theorem partitionPotential_eq_log_arithmeticPartition :
       P.massieu.partitionPotential_eq_log_weylScalar
     _ = Real.log P.arithmeticPartition := by rw [P.massieuWeylScalar_eq_arithmeticPartition]
 
-/-- The prime gas packet has vanishing odd supertemperature. -/
+/-- The prime gas packet carries the native noncommutative KMS boundary law. -/
 @[rep_depth thermo]
-theorem primeGas_oddTemperature_eq_zero :
-    P.primeGas.superTemperature.oddTemperature = 0 :=
-  P.primeGas.superTemperature_odd_eq_zero
+theorem primeGas_kms_boundary
+    (x y : Carrier) :
+    deltaWeightedFunctional P.primeGas.density (x * y) =
+      deltaWeightedFunctional P.primeGas.density
+        (y * P.primeGas.imaginaryTime x) :=
+  P.primeGas.kms_boundary x y
 
 /-- The prime zeta-trace carrier is the canonical one from the repository. -/
 @[rep_depth thermo]
@@ -210,12 +215,12 @@ theorem primeVielbein_eq_canonical :
 /-- The prime trace-log supervolume equals the Riemann zeta function on the standard half-plane. -/
 @[rep_depth thermo]
 theorem primeTraceLogSupervolume_eq_riemannZeta :
-    let V : PrimeVielbeinCarrier := P.primeVielbein
-    InfoGeometry.Arithmetic.PrimeVielbeinCarrier.traceLogSupervolume V P.zetaParameter =
+    let V : PrimeVielbeinData := P.primeVielbein
+    InfoGeometry.Arithmetic.PrimeVielbeinData.traceLogSupervolume V P.zetaParameter =
       riemannZeta P.zetaParameter := by
   dsimp
   rw [P.primeVielbein_eq_canonical]
-  simpa [InfoGeometry.Arithmetic.PrimeVielbeinCarrier.traceLogSupervolume] using
+  simpa [InfoGeometry.Arithmetic.PrimeVielbeinData.traceLogSupervolume] using
     canonicalPrimeVielbein_traceLogSupervolume_eq_riemannZeta
       (s := P.zetaParameter) P.zetaParameter_re_gt_one
 
@@ -233,7 +238,7 @@ theorem virasoroCentralCharge_eq_sugawara :
   P.virasoroCentralCharge_eq
 
 /-- Bridge re-export of the finite Sugawara cardinality specialization. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
     (S : Finset PrimeLabel)
     (hlevel : P.primeVirasoro.affineVirasoro.level = 1)
@@ -245,13 +250,6 @@ theorem primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
     P.primeVirasoro.affineVirasoro.centralCharge = (S.card : ℝ) :=
   PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
     P.primeVirasoro S hlevel hdim hdual hcc
-
-/-- The Virasoro central charge is calibrated by the Sugawara owner theorem. -/
-@[rep_depth operator]
-theorem virasoroCentralCharge_calibrated :
-    P.primeVirasoro.affineVirasoro.centralCharge =
-      P.primeVirasoro.affineVirasoro.centralCharge :=
-  rfl
 
 end Bridge
 

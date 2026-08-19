@@ -162,7 +162,7 @@ def test_enqueue_leantrail_goal_sets_task_kind(monkeypatch) -> None:
     monkeypatch.setattr(queue_tool, "import_rows", fake_import_rows)
 
     result = queue_tool.enqueue_leantrail_goal(
-        "http://127.0.0.1:8530",
+        "http://127.0.0.1:8540",
         "hive_live",
         "root",
         "alexandria_root",

@@ -2,7 +2,7 @@
 """External finite-shape audit for QuaternionQuanticsBackendDigest.lean.
 
 This does not validate QuatIca or trainsum numerics.  It checks the finite
-bookkeeping socketed into Lean: quaternion real storage, complex doubling,
+bookkeeping deferred_interface into Lean: quaternion real storage, complex doubling,
 quantics dimensions, and a simple uniform tensor-train storage formula.
 """
 

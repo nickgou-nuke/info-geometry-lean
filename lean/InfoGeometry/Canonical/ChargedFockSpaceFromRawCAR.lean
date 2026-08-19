@@ -30,7 +30,7 @@ Heisenberg current representation.
 noncomputable def chargedFockSpaceWitnessFromRawCAR
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
-    SplitCARCurrentWitness 𝕜 A (ChargedFockSpace 𝕜 α) where
+    SplitCARCurrentProperty 𝕜 A (ChargedFockSpace 𝕜 α) where
   source := C
   J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
   trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc

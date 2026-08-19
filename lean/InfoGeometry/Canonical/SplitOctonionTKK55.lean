@@ -872,8 +872,8 @@ theorem abstractTKKToNativeOrthogonal_map_lie
         abstractTKKToNativeOrthogonal e⁆ := by
   exact abstractTKKToNativeOrthogonal.map_lie d e
 
-noncomputable def abstractTKKLieSocket :
-    InfoGeometry.OperatorAlgebra.LieSocket AbstractTKKCarrier where
+noncomputable def abstractTKKLieData :
+    InfoGeometry.OperatorAlgebra.LieData AbstractTKKCarrier where
   bracket := abstractTKKBracket
   bracket_skew := abstractTKKBracket_skew
   bracket_add_left := abstractTKKBracket_add_left

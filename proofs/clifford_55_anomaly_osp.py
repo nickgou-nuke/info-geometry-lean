@@ -1,4 +1,4 @@
-"""SymPy witness: Cl(5,5) factorization, anomaly cancellation, Bott/osp socket.
+"""SymPy witness: Cl(5,5) factorization, anomaly cancellation, Bott/osp deferred_interface.
 
 Checks:
 - dim Cl(5,5)=2^10=1024;

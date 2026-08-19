@@ -52,4 +52,23 @@ theorem freeEnergy_rate_nonpos (sys : MetriplecticDissipativeSystem n)
   have h_pos := h_onsager_pos sys.grad_F
   linarith
 
+theorem freeEnergy_rate_neg (sys : MetriplecticDissipativeSystem n)
+    (h_onsager_pos : ∀ A : Matrix n n ℂ,
+      0 ≤ (trace (star A * sys.Onsager A)).re)
+    (h_onsager_strict :
+      0 < (trace (star sys.grad_F * sys.Onsager sys.grad_F)).re)
+    (h_unitary_F_inv :
+      (trace (star sys.grad_F *
+        (- Complex.I • (sys.H * sys.rho - sys.rho * sys.H)))).re = 0) :
+    freeEnergyRate sys < 0 := by
+  have h_nonpos := freeEnergy_rate_nonpos sys h_onsager_pos h_unitary_F_inv
+  dsimp [freeEnergyRate, stateEvolution, unitaryFlow, commutator]
+  rw [mul_sub, trace_sub, Complex.sub_re]
+  have h_un :
+      (trace (star sys.grad_F *
+        (-Complex.I • (sys.H * sys.rho - sys.rho * sys.H)))).re = 0 :=
+    h_unitary_F_inv
+  rw [h_un, zero_sub]
+  linarith
+
 end MetriplecticDissipation

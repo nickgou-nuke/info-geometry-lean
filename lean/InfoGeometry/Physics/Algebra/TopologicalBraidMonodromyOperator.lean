@@ -20,7 +20,9 @@ structure ContinuousMonodromyOperator (H : Type*)
     [NormedAddCommGroup H] [NormedSpace ℝ H] where
   lambda : ℝ
   N : H →L[ℝ] H
-  h_nilpotent : N.comp N = 0
+
+def ContinuousMonodromyOperatorLaws (M : ContinuousMonodromyOperator H) : Prop :=
+  M.N.comp M.N = 0
 
 variable (M : ContinuousMonodromyOperator H)
 
@@ -44,12 +46,13 @@ def continuousUnipotentFlow (t : ℝ) : H →L[ℝ] H :=
 /--
 The unipotent shadow composes by addition of its parameter.
 -/
-theorem continuousUnipotentFlow_add (s t : ℝ) :
+theorem continuousUnipotentFlow_add (hM : ContinuousMonodromyOperatorLaws M)
+    (s t : ℝ) :
     continuousUnipotentFlow M s * continuousUnipotentFlow M t =
       continuousUnipotentFlow M (s + t) := by
   ext x
   have hN : M.N (M.N x) = 0 := by
-    exact congrArg (fun f : H →L[ℝ] H => f x) M.h_nilpotent
+    exact congrArg (fun f : H →L[ℝ] H => f x) hM
   simp [continuousUnipotentFlow, hN, add_comm, add_left_comm, add_assoc,
     add_smul]
 
@@ -57,7 +60,8 @@ theorem continuousUnipotentFlow_add (s t : ℝ) :
 The `n`-fold product of the unipotent shadow is the shadow at the scaled
 parameter `n`.
 -/
-theorem continuousUnipotentFlow_pow (t : ℝ) (n : ℕ) :
+theorem continuousUnipotentFlow_pow (hM : ContinuousMonodromyOperatorLaws M)
+    (t : ℝ) (n : ℕ) :
     (continuousUnipotentFlow M t) ^ n =
       continuousUnipotentFlow M ((n : ℝ) * t) := by
   induction n with
@@ -72,26 +76,28 @@ theorem continuousUnipotentFlow_pow (t : ℝ) (n : ℕ) :
         _ = continuousUnipotentFlow M ((n : ℝ) * t) *
               continuousUnipotentFlow M t := by rw [ih]
         _ = continuousUnipotentFlow M (((n : ℝ) * t) + t) := by
-              exact continuousUnipotentFlow_add M ((n : ℝ) * t) t
+              exact continuousUnipotentFlow_add M hM ((n : ℝ) * t) t
         _ = continuousUnipotentFlow M (((n + 1 : ℕ) : ℝ) * t) := by
               simp [Nat.cast_add, add_mul, add_comm]
 
 /--
 The unipotent flow has a right inverse at `-t`.
 -/
-theorem continuousUnipotentFlow_mul_neg (t : ℝ) :
+theorem continuousUnipotentFlow_mul_neg
+    (hM : ContinuousMonodromyOperatorLaws M) (t : ℝ) :
     continuousUnipotentFlow M t * continuousUnipotentFlow M (-t) =
       (1 : H →L[ℝ] H) := by
-  rw [continuousUnipotentFlow_add]
+  rw [continuousUnipotentFlow_add M hM]
   simp [continuousUnipotentFlow]
 
 /--
 The unipotent flow has a left inverse at `-t`.
 -/
-theorem continuousUnipotentFlow_neg_mul (t : ℝ) :
+theorem continuousUnipotentFlow_neg_mul
+    (hM : ContinuousMonodromyOperatorLaws M) (t : ℝ) :
     continuousUnipotentFlow M (-t) * continuousUnipotentFlow M t =
       (1 : H →L[ℝ] H) := by
-  rw [continuousUnipotentFlow_add]
+  rw [continuousUnipotentFlow_add M hM]
   simp [continuousUnipotentFlow]
 
 theorem continuous_continuousUnipotentFlow :
@@ -113,7 +119,8 @@ noncomputable def continuousModularMonodromyFlow (t : ℝ) : H →L[ℝ] H :=
   ext x
   simp [continuousModularMonodromyFlow]
 
-theorem modular_flow_group_homomorphism (t s : ℝ) :
+theorem modular_flow_group_homomorphism
+    (hM : ContinuousMonodromyOperatorLaws M) (t s : ℝ) :
     continuousModularMonodromyFlow M (t + s) =
       (continuousModularMonodromyFlow M t).comp
         (continuousModularMonodromyFlow M s) := by
@@ -123,7 +130,7 @@ theorem modular_flow_group_homomorphism (t s : ℝ) :
     ContinuousLinearMap.one_apply, ContinuousLinearMap.map_add,
     ContinuousLinearMap.map_smul]
   have hN : M.N (M.N x) = 0 := by
-    exact congrArg (fun f : H →L[ℝ] H => f x) M.h_nilpotent
+    exact congrArg (fun f : H →L[ℝ] H => f x) hM
   rw [add_mul, Real.exp_add]
   simp only [smul_add, smul_smul, hN, smul_zero, add_zero]
   module
@@ -142,7 +149,8 @@ theorem continuous_continuousModularMonodromyFlow :
 The modular monodromy flow is a continuous linear equivalence with inverse
 given by the negated parameter.
 -/
-noncomputable def continuousModularMonodromyFlowEquiv (t : ℝ) :
+noncomputable def continuousModularMonodromyFlowEquiv
+    (hM : ContinuousMonodromyOperatorLaws M) (t : ℝ) :
     H ≃L[ℝ] H := by
   let e : H ≃ₗ[ℝ] H :=
     { toLinearMap := continuousModularMonodromyFlow M t
@@ -154,7 +162,7 @@ noncomputable def continuousModularMonodromyFlowEquiv (t : ℝ) :
               (continuousModularMonodromyFlow M (-t)).comp
                 (continuousModularMonodromyFlow M t) := by
           simpa [continuousModularMonodromyFlow_zero, add_comm] using
-            (modular_flow_group_homomorphism (M := M) (-t) t)
+            (modular_flow_group_homomorphism (M := M) hM (-t) t)
         have hx := congrArg (fun f : H →L[ℝ] H => f x) h
         simpa [ContinuousLinearMap.comp_apply] using hx.symm
       right_inv := by
@@ -164,7 +172,7 @@ noncomputable def continuousModularMonodromyFlowEquiv (t : ℝ) :
               (continuousModularMonodromyFlow M t).comp
               (continuousModularMonodromyFlow M (-t)) := by
           simpa [continuousModularMonodromyFlow_zero, add_comm] using
-            (modular_flow_group_homomorphism (M := M) t (-t))
+              (modular_flow_group_homomorphism (M := M) hM t (-t))
         have hx := congrArg (fun f : H →L[ℝ] H => f x) h
         simpa [ContinuousLinearMap.comp_apply] using hx.symm }
   exact ContinuousLinearEquiv.mk e
@@ -173,17 +181,18 @@ noncomputable def continuousModularMonodromyFlowEquiv (t : ℝ) :
 
 @[simp] theorem continuousModularMonodromyFlowEquiv_symm_apply_apply
     (t : ℝ) (x : H) :
-    (continuousModularMonodromyFlowEquiv M t).symm
+    (continuousModularMonodromyFlowEquiv M hM t).symm
         (continuousModularMonodromyFlow M t x) = x := by
   simpa [continuousModularMonodromyFlowEquiv] using
-    (ContinuousLinearEquiv.symm_apply_apply
-      (continuousModularMonodromyFlowEquiv M t) x)
+      (ContinuousLinearEquiv.symm_apply_apply
+      (continuousModularMonodromyFlowEquiv M hM t) x)
 
 /--
 The square-zero unipotent shadow is a one-parameter family of continuous
 linear equivalences, with inverse obtained by negating the parameter.
 -/
-noncomputable def continuousUnipotentFlowEquiv (t : ℝ) :
+noncomputable def continuousUnipotentFlowEquiv
+    (hM : ContinuousMonodromyOperatorLaws M) (t : ℝ) :
     H ≃L[ℝ] H := by
   let e : H ≃ₗ[ℝ] H :=
     { toLinearMap := continuousUnipotentFlow M t
@@ -193,7 +202,7 @@ noncomputable def continuousUnipotentFlowEquiv (t : ℝ) :
         have h :
             continuousUnipotentFlow M (-t) *
                 continuousUnipotentFlow M t = (1 : H →L[ℝ] H) := by
-          rw [continuousUnipotentFlow_add]
+          rw [continuousUnipotentFlow_add M hM]
           simp [continuousUnipotentFlow]
         simpa using congrArg (fun f : H →L[ℝ] H => f x) h
       right_inv := by
@@ -201,7 +210,7 @@ noncomputable def continuousUnipotentFlowEquiv (t : ℝ) :
         have h :
             continuousUnipotentFlow M t *
                 continuousUnipotentFlow M (-t) = (1 : H →L[ℝ] H) := by
-          rw [continuousUnipotentFlow_add]
+          rw [continuousUnipotentFlow_add M hM]
           simp [continuousUnipotentFlow]
         simpa using congrArg (fun f : H →L[ℝ] H => f x) h }
   exact ContinuousLinearEquiv.mk e
@@ -209,16 +218,16 @@ noncomputable def continuousUnipotentFlowEquiv (t : ℝ) :
     ((continuousUnipotentFlow M (-t)).continuous)
 
 @[simp] theorem continuousUnipotentFlowEquiv_zero :
-    continuousUnipotentFlowEquiv M 0 = ContinuousLinearEquiv.refl ℝ H := by
+    continuousUnipotentFlowEquiv M hM 0 = ContinuousLinearEquiv.refl ℝ H := by
   ext x
   simp [continuousUnipotentFlowEquiv, continuousUnipotentFlow]
 
 @[simp] theorem continuousUnipotentFlowEquiv_symm_apply_apply (t : ℝ) (x : H) :
-    (continuousUnipotentFlowEquiv M t).symm
+    (continuousUnipotentFlowEquiv M hM t).symm
         (continuousUnipotentFlow M t x) = x := by
   simpa [continuousUnipotentFlowEquiv] using
-    (ContinuousLinearEquiv.symm_apply_apply
-      (continuousUnipotentFlowEquiv M t) x)
+      (ContinuousLinearEquiv.symm_apply_apply
+      (continuousUnipotentFlowEquiv M hM t) x)
 
 /--
 The norm of the unipotent factor grows at most linearly in the winding
@@ -246,15 +255,16 @@ theorem continuous_monodromy_norm_bound (n : ℕ) :
 /--
 The modular flow equivalences compose additively in the flow parameter.
 -/
-theorem continuousModularMonodromyFlowEquiv_comp (t s : ℝ) :
-    (continuousModularMonodromyFlowEquiv M t).trans
-        (continuousModularMonodromyFlowEquiv M s) =
-      continuousModularMonodromyFlowEquiv M (t + s) := by
+theorem continuousModularMonodromyFlowEquiv_comp
+    (hM : ContinuousMonodromyOperatorLaws M) (t s : ℝ) :
+    (continuousModularMonodromyFlowEquiv M hM t).trans
+        (continuousModularMonodromyFlowEquiv M hM s) =
+      continuousModularMonodromyFlowEquiv M hM (t + s) := by
   ext x
   change continuousModularMonodromyFlow M s
       (continuousModularMonodromyFlow M t x) =
     continuousModularMonodromyFlow M (t + s) x
-  have h := modular_flow_group_homomorphism (M := M) s t
+  have h := modular_flow_group_homomorphism (M := M) hM s t
   have hx := congrArg (fun f : H →L[ℝ] H => f x) h.symm
   simpa [add_comm, Homeomorph.trans] using hx
 

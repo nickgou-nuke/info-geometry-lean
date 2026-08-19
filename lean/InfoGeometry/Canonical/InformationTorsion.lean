@@ -39,18 +39,44 @@ def IsTorsionFree (conn : Connection E) : Prop :=
   informationTorsion conn = 0
 
 /-- Structure `FlatDualConnections`. -/
-structure FlatDualConnections (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+structure FlatDualConnectionsData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   dual : DualConnections E
-  torsion_free_nabla : IsTorsionFree dual.nabla
-  torsion_free_nablaStar : IsTorsionFree dual.nablaStar
+
+def FlatDualConnectionsLaws
+    (D : FlatDualConnectionsData E) : Prop :=
+  IsTorsionFree D.dual.nabla ∧ IsTorsionFree D.dual.nablaStar
+
+def FlatDualConnections (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  {D : FlatDualConnectionsData E // FlatDualConnectionsLaws D}
+
+namespace FlatDualConnections
+
+abbrev dual (D : FlatDualConnections E) := D.1.dual
+abbrev torsion_free_nabla (D : FlatDualConnections E) : IsTorsionFree D.dual.nabla := D.2.1
+abbrev torsion_free_nablaStar (D : FlatDualConnections E) : IsTorsionFree D.dual.nablaStar := D.2.2
+
+end FlatDualConnections
 
 /--
 A Twisted Information System where the update rule has torsion.
 This occurs when the dually-flat structure is broken, leading to path-dependent
 belief updates even for identical sets of evidence.
 -/
-structure TwistedInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+structure TwistedInferenceData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   dual : DualConnections E
-  has_torsion : informationTorsion dual.nabla ≠ 0
+
+def TwistedInferenceLaws
+    (T : TwistedInferenceData E) : Prop :=
+  informationTorsion T.dual.nabla ≠ 0
+
+def TwistedInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  {T : TwistedInferenceData E // TwistedInferenceLaws T}
+
+namespace TwistedInference
+
+abbrev dual (T : TwistedInference E) := T.1.dual
+abbrev has_torsion (T : TwistedInference E) : informationTorsion T.dual.nabla ≠ 0 := T.2
+
+end TwistedInference
 
 end InfoGeometry.Canonical.InformationTorsion

@@ -29,48 +29,13 @@ def unitRmove (a b c : unitSector)
     (_x : unitFusionSpace a b c) (_y : unitFusionSpace b a c) : ℚ :=
   1
 
-/-- Concrete finite normalization obligations for the strict unit-sector datum.
-They mention the actual move maps rather than using a vacuous `True` field. -/
-def unitPentagon : Prop :=
-  ∀ (a b c d e f : PUnit.{0})
-    (x y z w : PUnit.{0}),
-    unitFmove a b c d e f x y z w = 1
-
-def unitHexagonLeft : Prop :=
-  ∀ (a b c : PUnit.{0}) (x y : PUnit.{0}),
-    unitRmove a b c x y = 1
-
-def unitHexagonRight : Prop :=
-  ∀ (a b c : PUnit.{0}) (x y : PUnit.{0}),
-    unitRmove a b c x y = 1
-
 noncomputable def unitFusionDatum : QuantumG2FusionCoherenceDatum ℚ where
   SimpleSector := unitSector
   fusionMultiplicity := fun _ _ _ => 1
   FusionSpace := unitFusionSpace
   Fmove := unitFmove
   Rmove := unitRmove
-  F_pentagon := unitPentagon
-  FR_hexagon_left := unitHexagonLeft
-  FR_hexagon_right := unitHexagonRight
 
-theorem unitFusionDatum_pentagon :
-    unitFusionDatum.F_pentagon :=
-  by
-    intro a b c d e f x y z w
-    rfl
-
-theorem unitFusionDatum_hexagon_left :
-    unitFusionDatum.FR_hexagon_left :=
-  by
-    intro a b c x y
-    rfl
-
-theorem unitFusionDatum_hexagon_right :
-    unitFusionDatum.FR_hexagon_right :=
-  by
-    intro a b c x y
-    rfl
 
 theorem unitFusionDatum_Fmove_eq_one
     (a b c d e f : unitSector)

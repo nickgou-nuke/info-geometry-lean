@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
 import InfoGeometry.Canonical.HestenesKreinCPTColimitContinuation
-import InfoGeometry.Clifford.Cl55WittPinKernelEvidence
+import InfoGeometry.Clifford.Cl55WittPinKernel
 import InfoGeometry.Topology.KleinBerryPhase
 
 /-!

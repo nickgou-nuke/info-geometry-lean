@@ -1,8 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.MellinTransform
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Analysis.MellinZetaScaling
@@ -20,7 +18,7 @@ The infinite identity
 
 requires analytic convergence, Tonelli/Fubini interchange, and decay
 hypotheses.  This module deliberately does not expose that infinite statement
-as a property socket; only the finite orbit-sum identity below is owned here.
+as a property interface; only the finite orbit-sum identity below is owned here.
 
 The intended interpretation is:
 
@@ -69,7 +67,7 @@ Finite Mellin orbit-sum factorization.
 
 This is the finite, kernel-checkable part of the Cook identity.
 -/
-@[bridge_target_tag, rep_depth projective]
+@[rep_depth projective]
 theorem finite_sample_sum_factor
     (A : Finset ℕ)
     (f : Func) :
@@ -100,7 +98,7 @@ The additive finite orbit sum gives a Dirichlet-weight sum; the product over
 orbit labels gives the multiplicative character carried by the same scaling
 weights.
 -/
-@[bridge_target_tag, rep_depth projective]
+@[rep_depth projective]
 theorem finite_sample_product_factor
     (A : Finset ℕ)
     (f : Func) :
@@ -143,7 +141,7 @@ def finiteMultiplicativeWeightProduct
 /--
 The finite orbit-sum factor is exactly the finite Dirichlet weight sum.
 -/
-@[bridge_target_tag, rep_depth projective]
+@[rep_depth projective]
 theorem finite_sample_sum_factor_as_dirichlet_weight
     {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
     (D : FiniteMellinScalingDatum Func R)
@@ -158,7 +156,7 @@ theorem finite_sample_sum_factor_as_dirichlet_weight
 The finite multiplicative orbit product is exactly the finite product of
 Mellin scaling weights.
 -/
-@[bridge_target_tag, rep_depth projective]
+@[rep_depth projective]
 theorem finite_sample_product_factor_as_multiplicative_weight
     {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
     (D : FiniteMellinScalingDatum Func R)
@@ -169,14 +167,8 @@ theorem finite_sample_product_factor_as_multiplicative_weight
     finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card := by
   simpa [finiteMultiplicativeWeightProduct] using D.finite_sample_product_factor A f
 
-/--
-The finite Mellin scaling owner target is discharged by the finite bridge.
-
-This records the finite orbit-sum factorization, the Dirichlet weight sum, and
-the finite multiplicative orbit-character product. The infinite zeta
-interchange remains socketed.
--/
-theorem mellinZetaScalingOwnerTarget :
+/-! The finite orbit-sum and orbit-product factorizations. -/
+theorem finite_mellin_scaling_factorization :
   ∀ {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
     (D : FiniteMellinScalingDatum Func R)
     (A : Finset ℕ) (f : Func),
@@ -190,19 +182,5 @@ theorem mellinZetaScalingOwnerTarget :
   intro Func R inst1 inst2 D A f
   exact ⟨D.finite_sample_sum_factor A f,
     finite_sample_product_factor_as_multiplicative_weight D A f⟩
-
-@[owner_target_tag, bridge_target_tag, rep_depth projective]
-theorem mellinZetaScaling_packet
-    {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
-    (D : FiniteMellinScalingDatum Func R)
-    (A : Finset ℕ) (f : Func) :
-      D.Mellin (Finset.sum A (fun n => D.sample n f))
-        =
-      finiteDirichletWeightSum A D.weight * D.Mellin f
-      ∧
-      (∏ n ∈ A, D.Mellin (D.sample n f))
-        =
-      finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card :=
-  mellinZetaScalingOwnerTarget D A f
 
 end InfoGeometry.Analysis.MellinZetaScaling

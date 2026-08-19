@@ -218,14 +218,14 @@ theorem klein_bottle_trace_absorption
   InfoGeometry.Canonical.KleinBottleTopology.klein_topology_trace_closure
     M Pparity hOrth hTrace
 
-/-- Concrete `2×2` topological socket readback of finite Andreev/DIII isometry and
+ /-- Concrete `2×2` topological readback of finite Andreev/DIII isometry and
 trace-zero data. -/
-theorem concreteTopologicalSocket2_packet :
-    (concreteTopologicalSocket2.inv.closure.moebiusParity.transpose *
-        concreteTopologicalSocket2.inv.closure.moebiusParity =
-      concreteTopologicalSocket2.inv.closure.I) ∧
-    concreteTopologicalSocket2.inv.closure.gromovWittenIndex = 0 := by
-  simpa [concreteTopologicalSocket2] using
+theorem concreteTopologicalInvariants2_packet :
+    ((InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.moebiusParity.transpose *
+        (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.moebiusParity =
+      (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.I) ∧
+    (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.gromovWittenIndex = 0 := by
+  simpa [InfoGeometry.Projective.Topology.concreteTopologicalInvariants2] using
     concreteAndreevHorizon_information_preservation
 
 end InfoGeometry.Projective.KasparovKreinDIIIBridge

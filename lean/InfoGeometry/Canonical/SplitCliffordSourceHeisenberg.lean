@@ -20,21 +20,6 @@ open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 open InfoGeometry.Canonical.SplitCliffordSourceCurrent
 
 /--
-Bundle a proved endomorphism-valued current family into the split Heisenberg
-bridge property.
--/
-def packagedHeisenbergWitness
-    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V]
-    (Jlift : Int → V →ₗ[𝕜] V)
-    (hTruncLift : ∀ v : V, ∀ᶠ l : Int in atTop, Jlift l v = 0)
-    (hCommLift : SplitSourceEndWickLaw Jlift) :
-    SplitCliffordHeisenbergWitness 𝕜 V where
-  J := Jlift
-  trunc := hTruncLift
-  comm := hCommLift
-
-/--
 `truncLift`: extract eventual truncation from the concrete charged-Fock source
 current property.
 -/

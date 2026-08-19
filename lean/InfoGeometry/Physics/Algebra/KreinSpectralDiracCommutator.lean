@@ -19,7 +19,10 @@ variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
 structure KreinSpaceStructure (H : Type*) [NormedAddCommGroup H]
     [NormedSpace ℝ H] where
   J : H →L[ℝ] H
-  hJ_involution : J.comp J = 1
+
+def KreinSpaceStructureLaws
+    (K : KreinSpaceStructure H) : Prop :=
+  K.J.comp K.J = 1
 
 def kreinOperatorAdjoint (K : KreinSpaceStructure H) (_T Tstar : H →L[ℝ] H) : H →L[ℝ] H :=
   K.J.comp (Tstar.comp K.J)

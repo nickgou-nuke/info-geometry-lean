@@ -111,17 +111,17 @@ theorem finite_andreev_right_kasparov_defect_zero :
             Matrix.mul_apply, Matrix.transpose_apply]
   exact hco
 
-/-- The concrete topological socket and the DIII time-reversal operator coincide. -/
-theorem concrete_topological_socket_matches_diii_time :
-    concreteTopologicalSocket2.inv.closure.moebiusParity = DIII_TimeReversal := by
+/-- The concrete topological interface and the DIII time-reversal operator coincide. -/
+theorem concrete_topological_invariants_matches_diii_time :
+    concreteTopologicalInvariants2.closure.moebiusParity = DIII_TimeReversal := by
   rfl
 
 /-- Concrete topological trace-zero and Kasparov isometry assumptions assemble into an
 anomaly-preserving DIII-Andreev bridge. -/
 theorem concrete_diii_andreev_bridge_packet :
-    (concreteTopologicalSocket2.inv.closure.moebiusParity.transpose *
-      concreteTopologicalSocket2.inv.closure.moebiusParity =
-      concreteTopologicalSocket2.inv.closure.I) ∧
+    (concreteTopologicalInvariants2.closure.moebiusParity.transpose *
+      concreteTopologicalInvariants2.closure.moebiusParity =
+      concreteTopologicalInvariants2.closure.I) ∧
     (KasparovPacket2.leftDefect = 0) ∧ (KasparovPacket2.rightDefect = 0) := by
   constructor
   · have h_top :
@@ -130,7 +130,7 @@ theorem concrete_diii_andreev_bridge_packet :
       ext i j
       fin_cases i <;> fin_cases j <;>
         norm_num [mobiusParity2, Matrix.mul_apply, Matrix.transpose_apply]
-    simpa [concreteTopologicalSocket2, concreteSpinTopologicalInvariants2,
+    simpa [concreteTopologicalInvariants2, concreteSpinTopologicalInvariants2,
       mobiusClosureFromConformalInversion2, mobiusClosure2,
       DIII_TimeReversal] using h_top
   constructor

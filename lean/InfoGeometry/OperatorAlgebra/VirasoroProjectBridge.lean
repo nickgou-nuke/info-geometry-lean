@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/VirasoroProjectBridge.lean
 
-Partial transport between the abstract Virasoro socket and the
+Partial transport between the abstract Virasoro interface and the
 `VirasoroProject` surface.
 
 This file is honest about its scope:

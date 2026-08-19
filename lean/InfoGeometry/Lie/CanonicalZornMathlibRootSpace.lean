@@ -123,4 +123,43 @@ theorem mathlib_rootSpace_eq_span_rootDerivation (i : nonzeroIndex) :
     exact Submodule.smul_mem _ c
       (rootDerivation_mem_mathlib_rootSpace i)
 
+theorem mem_mathlib_rootSpace_iff_exists_scalar
+    (i : nonzeroIndex) (D : Der) :
+    D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra (nativeRootWeight i) ↔
+      ∃ c : ℝ, D = c • rootDerivation i.1 := by
+  have hspan := mathlib_rootSpace_eq_span_rootDerivation i
+  constructor
+  · intro hD
+    have hD' : D ∈ ℝ ∙ rootDerivation i.1 := hspan ▸ hD
+    rcases Submodule.mem_span_singleton.mp hD' with ⟨c, hc⟩
+    exact ⟨c, hc.symm⟩
+  · rintro ⟨c, rfl⟩
+    have hD' : c • rootDerivation i.1 ∈ ℝ ∙ rootDerivation i.1 :=
+      Submodule.smul_mem _ c (Submodule.mem_span_singleton_self _)
+    have hm := congrArg
+      (fun S : Submodule ℝ Der => c • rootDerivation i.1 ∈ S) hspan.symm
+    exact Eq.mp hm hD'
+
+theorem mem_mathlib_rootSpace_iff_existsUnique_scalar
+    (i : nonzeroIndex) (D : Der) :
+    D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra (nativeRootWeight i) ↔
+      ∃! c : ℝ, D = c • rootDerivation i.1 := by
+  constructor
+  · intro hD
+    obtain ⟨c, hc⟩ :=
+      (mem_mathlib_rootSpace_iff_exists_scalar i D).mp hD
+    refine ⟨c, hc, ?_⟩
+    intro d hd
+    have hzero : (c - d) • rootDerivation i.1 = 0 := by
+      calc
+        (c - d) • rootDerivation i.1 =
+            c • rootDerivation i.1 - d • rootDerivation i.1 := sub_smul _ _ _
+        _ = D - D := by rw [← hc, ← hd]
+        _ = 0 := sub_self D
+    rcases smul_eq_zero.mp hzero with hcd | hroot
+    · exact (sub_eq_zero.mp hcd).symm
+    · exact False.elim (rootDerivation_ne_zero i.1 hroot)
+  · rintro ⟨c, hc, -⟩
+    exact (mem_mathlib_rootSpace_iff_exists_scalar i D).mpr ⟨c, hc⟩
+
 end InfoGeometry.Lie.CanonicalZornMathlibRootSpace

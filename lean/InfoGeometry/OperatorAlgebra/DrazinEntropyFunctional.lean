@@ -74,7 +74,7 @@ end DrazinStableReadout
 /--
 Algebraic refinement of `DrazinStableReadout`.
 
-This optional layer ties the thermodynamic/readout socket to actual
+This optional layer ties the thermodynamic/readout interface to actual
 `DrazinInverseData` for the operator attached to each valid state.
 -/
 structure AlgebraicDrazinStableReadout
@@ -263,7 +263,7 @@ Operator-information extraction tied directly to the Drazin readout.
 
 The extracted stable component is explicitly the regular part, and the
 singular component is explicitly the nilpotent residue.  This avoids arbitrary
-proposition-valued law sockets that would not add mathematical content.
+proposition-valued law interfaces that would not add mathematical content.
 -/
 structure DrazinInformationExtraction (Op State : Type*) [Add Op] [Mul Op] where
   readout : DrazinStableReadout Op State

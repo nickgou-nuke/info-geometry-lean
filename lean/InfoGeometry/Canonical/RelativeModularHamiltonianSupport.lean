@@ -55,6 +55,25 @@ noncomputable def supportRestrictedModularHamiltonianOperator
     supportRestrictedModularHamiltonianOperator (n := n) s q q0 i j = 0 := by
   simp [supportRestrictedModularHamiltonianOperator, diagMatrix, hij]
 
+/- The trace records exactly the modular Hamiltonian entries retained by the
+   finite support cut. -/
+theorem trace_supportRestrictedModularHamiltonianOperator
+    (s : Finset (Fin n)) (q q0 : PositiveRay (Fin n)) :
+    Matrix.trace (supportRestrictedModularHamiltonianOperator (n := n) s q q0) =
+      ∑ i ∈ s, relativeModularHamiltonianOperator (n := n) q q0 i i := by
+  rw [Matrix.trace]
+  classical
+  unfold supportRestrictedModularHamiltonianOperator diagMatrix
+  simp only [Matrix.diag_apply, Matrix.diagonal_apply_eq]
+  change
+    (∑ i : Fin n,
+        if i ∈ s then relativeModularHamiltonianOperator (n := n) q q0 i i
+        else 0) = ∑ i ∈ s, relativeModularHamiltonianOperator (n := n) q q0 i i
+  simp only [relativeModularHamiltonianOperator_diag]
+  rw [← Finset.sum_filter (s := Finset.univ)
+    (p := fun i : Fin n => i ∈ s)]
+  simp only [Finset.filter_mem_eq_inter, Finset.univ_inter]
+
 @[rep_depth operator]
 theorem supportRestrictedModularHamiltonianOperator_eq_supportProjector_mul
     (s : Finset (Fin n)) (q q0 : PositiveRay (Fin n)) :
@@ -153,6 +172,14 @@ theorem supportRestrictedModularHamiltonianOperator_cocycle
     rw [supportRestrictedModularHamiltonianOperator_offdiag (hij := hij)]
     rw [supportRestrictedModularHamiltonianOperator_offdiag (hij := hij)]
     ring
+
+theorem trace_supportRestrictedModularHamiltonianOperator_cocycle
+    (s : Finset (Fin n)) (q q0 q1 : PositiveRay (Fin n)) :
+    Matrix.trace (supportRestrictedModularHamiltonianOperator (n := n) s q q1) =
+      Matrix.trace (supportRestrictedModularHamiltonianOperator (n := n) s q q0) +
+        Matrix.trace (supportRestrictedModularHamiltonianOperator (n := n) s q0 q1) := by
+  rw [supportRestrictedModularHamiltonianOperator_cocycle (n := n) s q q0 q1]
+  exact Matrix.trace_add _ _
 
 /--
 Capstone package for the support-restricted finite Hamiltonian lane:

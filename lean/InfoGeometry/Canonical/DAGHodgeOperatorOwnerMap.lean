@@ -1,8 +1,6 @@
 import Mathlib.Tactic
 import DAG.GraphHodge
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap

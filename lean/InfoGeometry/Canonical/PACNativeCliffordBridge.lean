@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Projective.Cl55NullBoundaryBridge
 
 /-!
 # Native bridge from the PAC `(5,5)` record to `Cl(5,5)` vectors
@@ -19,6 +20,9 @@ namespace InfoGeometry.Canonical.PACNativeCliffordBridge
 
 open ProjectiveAffineConformalClosure55
 open InfoGeometry.Clifford.Clifford55
+open InfoGeometry.Projective
+open InfoGeometry.Projective.Cl55NullBoundaryBridge
+open InfoGeometry.Projective.ProjectiveNullBoundaryDatum
 
 def pac55ToV55 (X : PACSplit55) : V55 :=
   (![X.x0, X.x1, X.x2, X.x3, X.u],
@@ -92,12 +96,122 @@ theorem pac55ToV55_clifford_smul (a : ℝ) (X : PACSplit55) :
   rw [pac55ToV55_smul]
   exact (ι55 : V55 →ₗ[ℝ] Cl55).map_smul a (pac55ToV55 X)
 
+@[simp] theorem pac55ToV55_pacSplit55Zero :
+    pac55ToV55 pacSplit55Zero = (0 : V55) := by
+  apply Prod.ext
+  · funext i
+    fin_cases i <;> rfl
+  · funext i
+    fin_cases i <;> rfl
+
 theorem pac55ToV55_projective_line_readout
     {X Y : PACSplit55} (h : sameProjectiveLine55 X Y) :
     ∃ a : ℝ, a ≠ 0 ∧
       ι55 (pac55ToV55 Y) = a • ι55 (pac55ToV55 X) := by
   rcases h with ⟨a, ha, rfl⟩
   exact ⟨a, ha, pac55ToV55_clifford_smul a X⟩
+
+/-! ## Native projective-null boundary descent -/
+
+/-- The chosen nonzero null representative of a PAC projective point,
+transported to the native V55 carrier and then quotiented by native unit
+scaling. The choice is harmless because the target is already a projective
+quotient; all subsequent Pin actions use the native boundary owner. -/
+noncomputable def pacProjectiveNonzeroNull55_to_nativeBoundary
+    (P : ProjectiveNonzeroNull55) : Cl55NullBoundaryBridge.Boundary :=
+  nullMk datum
+    { Z := pac55ToV55 (projectiveNonzeroNull55_representative P)
+      null := by
+        change Q55 (pac55ToV55 (projectiveNonzeroNull55_representative P)) = 0
+        rw [pac55ToV55_Q55]
+        exact projectiveNonzeroNull55_representative_null P
+      nonzero := by
+        intro hzero
+        change pac55ToV55 (projectiveNonzeroNull55_representative P) =
+          (0 : V55) at hzero
+        have hzero' :
+            pac55ToV55 (projectiveNonzeroNull55_representative P) =
+              pac55ToV55 pacSplit55Zero := by
+          rw [pac55ToV55_pacSplit55Zero]
+          exact hzero
+        have hrep :
+            projectiveNonzeroNull55_representative P =
+              pacSplit55Zero := by
+          exact pac55Equiv.injective hzero'
+        exact projectiveNonzeroNull55_representative_nonzero P hrep }
+
+@[simp] theorem pacProjectiveNonzeroNull55_to_nativeBoundary_mk
+    (P : ProjectiveNonzeroNull55) :
+    pacProjectiveNonzeroNull55_to_nativeBoundary P =
+      nullMk datum
+        { Z := pac55ToV55 (projectiveNonzeroNull55_representative P)
+          null := by
+            change Q55 (pac55ToV55 (projectiveNonzeroNull55_representative P)) = 0
+            rw [pac55ToV55_Q55]
+            exact projectiveNonzeroNull55_representative_null P
+          nonzero := by
+            intro hzero
+            change pac55ToV55 (projectiveNonzeroNull55_representative P) =
+              (0 : V55) at hzero
+            have hzero' :
+                pac55ToV55 (projectiveNonzeroNull55_representative P) =
+                  pac55ToV55 pacSplit55Zero := by
+              rw [pac55ToV55_pacSplit55Zero]
+              exact hzero
+            have hrep :
+                projectiveNonzeroNull55_representative P =
+                  pacSplit55Zero :=
+              pac55Equiv.injective hzero'
+            exact projectiveNonzeroNull55_representative_nonzero P hrep } :=
+  rfl
+
+theorem pacProjectiveNonzeroNull55_to_nativeBoundary_eq_of_eq
+    {P Q : ProjectiveNonzeroNull55} (hPQ : P = Q) :
+    pacProjectiveNonzeroNull55_to_nativeBoundary P =
+      pacProjectiveNonzeroNull55_to_nativeBoundary Q := by
+  rw [hPQ]
+
+/-- Any other nonzero null representative of the same PAC projective point
+gives the same native projective-null boundary point. -/
+theorem pacProjectiveNonzeroNull55_to_nativeBoundary_independent
+    (P : ProjectiveNonzeroNull55)
+    (X : PACSplit55)
+    (hPX : projectiveMk55 X = P.1)
+    (hXnull : Q55 X = 0)
+    (hXne : X ≠ pacSplit55Zero) :
+    pacProjectiveNonzeroNull55_to_nativeBoundary P =
+      nullMk datum
+        { Z := pac55ToV55 X
+          null := by
+            change Q55 (pac55ToV55 X) = 0
+            rw [pac55ToV55_Q55]
+            exact hXnull
+          nonzero := by
+            intro hzero
+            change pac55ToV55 X = (0 : V55) at hzero
+            apply hXne
+            apply pac55Equiv.injective
+            change pac55ToV55 X = pac55ToV55 pacSplit55Zero
+            rw [pac55ToV55_pacSplit55Zero]
+            exact hzero } := by
+  have hproj :
+      projectiveMk55 (projectiveNonzeroNull55_representative P) =
+        projectiveMk55 X := by
+    exact
+      (projectiveNonzeroNull55_representative_projective P).trans hPX.symm
+  have hline :
+      sameProjectiveLine55
+        (projectiveNonzeroNull55_representative P) X := by
+    exact Quotient.exact hproj
+  rcases hline with ⟨a, ha, hscale⟩
+  rw [pacProjectiveNonzeroNull55_to_nativeBoundary_mk]
+  apply (nullMk_eq_iff_rayRel datum _ _).2
+  refine ⟨Units.mk0 a ha, ?_⟩
+  change
+    (a : ℝ) •
+        pac55ToV55 (projectiveNonzeroNull55_representative P) =
+      pac55ToV55 X
+  rw [← pac55ToV55_smul, hscale]
 
 end InfoGeometry.Canonical.PACNativeCliffordBridge
 

@@ -2,7 +2,7 @@
 """SymPy witness for HolographicGaugeSymmetryUniqueness20.lean.
 
 Checks the 6 finite algebraic witnesses and records the 14 analytic/geometric
-socket labels used by the 20-conjunct Lean capstone.
+deferred-interface labels used by the 20-conjunct Lean capstone.
 """
 
 import sympy as sp
@@ -54,8 +54,8 @@ avg = sp.simplify((s + (1 - sp.conjugate(s))) / 2)
 assert sp.simplify(sp.re(avg) - sp.Rational(1, 2)) == 0
 assert sp.simplify(1 - sp.conjugate(avg) - avg) == 0
 
-# 7-20: socket labels, deliberately not computational claims.
-sockets = [
+# 7-20: deferred-interface labels, deliberately not computational claims.
+deferred_interfaces = [
     "cuntzBoundaryAlgebra",
     "yangBaxterUnitaryInCuntz",
     "braidEndomorphismRepresentation",
@@ -68,10 +68,10 @@ sockets = [
     "suq3CuntzKriegerAnchor",
     "pin55AnomalyFilter",
     "uniquenessOfBoundaryGaugeShadow",
-    "gravitationalQDeformationSocket",
-    "classicalSU3LimitSocket",
+    "gravitationalQDeformationDeferredInterface",
+    "classicalSU3LimitDeferredInterface",
 ]
-assert len(sockets) == 14
-assert len(set(sockets)) == 14
+assert len(deferred_interfaces) == 14
+assert len(set(deferred_interfaces)) == 14
 
-print("holographic_gauge_symmetry_uniqueness20.py: 6 finite witnesses + 14 sockets passed")
+print("holographic_gauge_symmetry_uniqueness20.py: 6 finite witnesses + 14 deferred_interfaces passed")

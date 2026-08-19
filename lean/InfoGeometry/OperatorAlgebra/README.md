@@ -7,7 +7,7 @@ This directory contains the formal bridges between the Info-Geometry abstract th
 | Module | Status | Certified | Mandate IX | Notes |
 | :--- | :--- | :--- | :--- | :--- |
 | `VirasoroProjectBridge` | **CERTIFIED** | 2026-05-09 | VERIFIED | Bridge to `kkytola/VirasoroProject`. |
-| `AffineVirasoroBridge` | **STABLE** | N/A | N/A | Abstract socket definitions. |
+| `AffineVirasoroBridge` | **STABLE** | N/A | N/A | Abstract  interface definitions. |
 
 ## Key Learnings (Memorized)
 

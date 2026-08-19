@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 /-!
 # InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit
 
-Prime-specific Hurwitz--Clifford discrete wavelet cascade socket.
+Prime-specific Hurwitz--Clifford discrete wavelet cascade interface.
 
 This file connects finite prime Lee--Yang approximants to a discrete
 Hurwitz--Clifford cascade reconstruction.

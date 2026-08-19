@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 import InfoGeometry.Canonical.LeeYangAsanoFullReduction
 
@@ -56,13 +55,13 @@ def endpointAlternativeHolds
 /--
 Klein-four / Möbius-CPT compactification property.
 
-This is the geometric socket for the missing global argument.
+This is the geometric interface for the missing global argument.
 
 The property says: under the nondegenerate Asano hypotheses and a contracted
 root, the compactified V4 orbit analysis selects one endpoint representative
 and proves that its endpoint alternative holds.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure AsanoKleinV4CompactificationCertificate where
   /-- Selected V4 chart element. This makes the finite symmetry reduction explicit. -/
   symmetry :

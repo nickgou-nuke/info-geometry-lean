@@ -72,6 +72,33 @@ theorem wordIsometry3_range_projection_idempotent (μ : CuntzWord3) :
       rw [wordIsometry3_isometry]
     _ = wordIsometry3 μ * star (wordIsometry3 μ) := by simp
 
+@[simp] theorem wordIsometry3_range_projection_star (μ : CuntzWord3) :
+    star (wordIsometry3 μ * star (wordIsometry3 μ)) =
+      wordIsometry3 μ * star (wordIsometry3 μ) := by
+  simp [star_mul]
+
+theorem wordIsometry3_range_projection_mul (μ : CuntzWord3) :
+    (wordIsometry3 μ * star (wordIsometry3 μ)) * wordIsometry3 μ =
+      wordIsometry3 μ := by
+  calc
+    (wordIsometry3 μ * star (wordIsometry3 μ)) * wordIsometry3 μ =
+        wordIsometry3 μ * (star (wordIsometry3 μ) * wordIsometry3 μ) := by
+          simp [mul_assoc]
+    _ = wordIsometry3 μ * 1 := by rw [wordIsometry3_isometry]
+    _ = wordIsometry3 μ := by simp
+
+theorem wordIsometry3_star_mul_range_projection (μ : CuntzWord3) :
+    star (wordIsometry3 μ) *
+        (wordIsometry3 μ * star (wordIsometry3 μ)) =
+      star (wordIsometry3 μ) := by
+  calc
+    star (wordIsometry3 μ) *
+          (wordIsometry3 μ * star (wordIsometry3 μ)) =
+        (star (wordIsometry3 μ) * wordIsometry3 μ) *
+          star (wordIsometry3 μ) := by simp [mul_assoc]
+    _ = 1 * star (wordIsometry3 μ) := by rw [wordIsometry3_isometry]
+    _ = star (wordIsometry3 μ) := by simp
+
 theorem wordIsometry3_orthogonal_of_ne_of_length_eq
     (μ ν : CuntzWord3) (hμν : μ ≠ ν)
     (hlen : μ.length = ν.length) :

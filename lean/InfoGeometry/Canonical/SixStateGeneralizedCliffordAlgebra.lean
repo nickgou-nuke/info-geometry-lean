@@ -214,6 +214,18 @@ theorem sixWeylZ_mul_sixWeylX (ω : ℂ) (hω : ω ^ 3 = 1) :
   simp [sixWeylRoot, Matrix.kroneckerMap_apply, smul_eq_mul]
   ring
 
+/-! The mixed Weyl relation propagates to every power of the shift. -/
+
+theorem sixWeylZ_mul_sixWeylX_pow (ω : ℂ) (hω : ω ^ 3 = 1) (n : ℕ) :
+    sixWeylZ ω * sixWeylX ^ n =
+      (sixWeylRoot ω ^ n) • (sixWeylX ^ n * sixWeylZ ω) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ, ← mul_assoc, ih, smul_mul_assoc, mul_assoc]
+      rw [sixWeylZ_mul_sixWeylX ω hω]
+      simp [pow_succ, smul_smul, mul_assoc]
+
 /-- The induced phase has sixth power one. -/
 theorem sixWeylRoot_six (ω : ℂ) (hω : ω ^ 3 = 1) :
     sixWeylRoot ω ^ 6 = 1 := by

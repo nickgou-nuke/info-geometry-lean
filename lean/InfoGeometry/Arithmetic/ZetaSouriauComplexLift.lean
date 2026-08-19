@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
@@ -17,7 +16,7 @@ This file follows the repository formula/function policy:
 
 * formulas are plain `def`s with explicit arguments;
 * theorems call the formula functions directly;
-* no sockets, no certificates, no property fields.
+* no certificates or property fields.
 
 The mathematical move is simple: take the classical real thermodynamic formulas
 
@@ -96,7 +95,7 @@ lemma modeWeight_ne_zero
   exact Complex.exp_ne_zero _
 
 /-- Mode weight factored through the circular polarization basis. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem modeWeight_eq_circular
     (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
     modeWeight s E μ p =
@@ -113,7 +112,7 @@ def circularModeWeight
     circularBoltzmannPhase (E p - μ p) s
 
 /-- Circular mode weight is the same as the original mode weight. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem circularModeWeight_eq_modeWeight
     (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
     circularModeWeight s E μ p = modeWeight s E μ p := by
@@ -132,7 +131,7 @@ def circularMicrostateWeight [DecidableEq ι]
   InfoGeometry.Arithmetic.PrimonFinite.weight (circularModeWeight s E μ) S
 
 /-- Circular microstate weight equals the original microstate weight. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem circularMicrostateWeight_eq_microstateWeight [DecidableEq ι]
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
     circularMicrostateWeight s E μ S = microstateWeight s E μ S := by
@@ -176,20 +175,20 @@ def chiralBoltzmannWeight (E : ℝ) (s : ℂ) : ChiralScalar :=
   splitChiralBoltzmannWeight E (splitTemperature s)
 
 /-- The split-chiral Boltzmann weight is the pair of left/right weights. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem chiralBoltzmannWeight_eq_pair (E : ℝ) (s : ℂ) :
     chiralBoltzmannWeight E s =
       (chiralBoltzmannLeftWeight E s, chiralBoltzmannRightWeight E s) := by
   rfl
 
 /-- Left part of the split-chiral Boltzmann weight. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem leftPart_chiralBoltzmannWeight (E : ℝ) (s : ℂ) :
     leftPart (chiralBoltzmannWeight E s) = chiralBoltzmannLeftWeight E s := by
   rfl
 
 /-- Right part of the split-chiral Boltzmann weight. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem rightPart_chiralBoltzmannWeight (E : ℝ) (s : ℂ) :
     rightPart (chiralBoltzmannWeight E s) = chiralBoltzmannRightWeight E s := by
   rfl
@@ -207,7 +206,7 @@ def chiralMicrostateWeight [DecidableEq ι]
   InfoGeometry.Arithmetic.PrimonFinite.weight (chiralModeWeight s E μ) S
 
 /-- Chiral local weight reduces to the split thermodynamic basis. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem chiralModeWeight_eq_splitChiralBoltzmannWeight
     (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
     chiralModeWeight s E μ p =
@@ -215,7 +214,7 @@ theorem chiralModeWeight_eq_splitChiralBoltzmannWeight
   rfl
 
 /-- Chiral microstate weight reduces to the split thermodynamic basis. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem chiralMicrostateWeight_eq_split [DecidableEq ι]
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
     chiralMicrostateWeight s E μ S =
@@ -246,7 +245,7 @@ def bosonPartition
   InfoGeometry.Arithmetic.PrimonFinite.ZB modes (modeWeight s E μ)
 
 /-- Fermionic finite partition product formula. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem fermionPartition_eq_prod
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     fermionPartition modes s E μ =
@@ -256,7 +255,7 @@ theorem fermionPartition_eq_prod
       (modes := modes) (q := modeWeight s E μ))
 
 /-- Fermionic finite partition written in circular polarization coordinates. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem fermionPartition_eq_circularProd
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     fermionPartition modes s E μ =
@@ -267,7 +266,7 @@ theorem fermionPartition_eq_circularProd
   rw [circularModeWeight_eq_modeWeight]
 
 /-- Signed/Möbius finite partition product formula. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem signedPartition_eq_prod
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     signedPartition modes s E μ =
@@ -277,7 +276,7 @@ theorem signedPartition_eq_prod
       (modes := modes) (q := modeWeight s E μ))
 
 /-- Signed/Möbius finite partition written in circular polarization coordinates. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem signedPartition_eq_circularProd
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     signedPartition modes s E μ =
@@ -288,7 +287,7 @@ theorem signedPartition_eq_circularProd
   rw [circularModeWeight_eq_modeWeight]
 
 /-- Bosonic finite partition product formula. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem bosonPartition_eq_prod_inv
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     bosonPartition modes s E μ =
@@ -304,7 +303,7 @@ lemma bosonPartition_ne_zero
     (modes := modes) (q := modeWeight s E μ) h
 
 /-- Bosonic finite partition written in circular polarization coordinates. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem bosonPartition_eq_circularProd_inv
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
     bosonPartition modes s E μ =
@@ -314,7 +313,7 @@ theorem bosonPartition_eq_circularProd_inv
   rw [circularModeWeight_eq_modeWeight]
 
 /-- Finite boson/signed-fermion cancellation. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem boson_mul_signedPartition_eq_one
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
     (h : ∀ p ∈ modes, (1 - modeWeight s E μ p) ≠ 0) :
@@ -341,7 +340,7 @@ def circularDensity
     (fermionPartition modes s E μ)⁻¹
 
 /-- Circular density equals the original density. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem circularDensity_eq_density [DecidableEq ι]
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
     (S : FState ι) :
@@ -350,7 +349,7 @@ theorem circularDensity_eq_density [DecidableEq ι]
   rw [circularMicrostateWeight_eq_microstateWeight]
 
 /-- The finite normalized fermionic density sums to one when `Z_F ≠ 0`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem density_sum_eq_one
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
     (hZ : fermionPartition modes s E μ ≠ 0) :
@@ -404,7 +403,7 @@ def circularMassieuMinus (Z : ℂ) : ℂ :=
   circularPhaseCoord (massieu Z)
 
 /-- The Massieu readout reconstructs from its circular split. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem massieu_circular_reconstruct (Z : ℂ) :
     massieu Z = circularMassieuPlus Z + circularMassieuMinus Z := by
   unfold circularMassieuPlus circularMassieuMinus circularAmplitudeCoord
@@ -429,7 +428,7 @@ def circularFreeEnergyMinus (Z : ℂ) : ℂ :=
   circularPhaseCoord (freeEnergy Z)
 
 /-- The free-energy readout reconstructs from its circular split. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem freeEnergy_circular_reconstruct (Z : ℂ) :
     freeEnergy Z =
       circularFreeEnergyPlus Z + circularFreeEnergyMinus Z := by
@@ -455,7 +454,7 @@ def circularGrandPotentialMinus (s Z : ℂ) : ℂ :=
   circularPhaseCoord (grandPotential s Z)
 
 /-- The grand-potential readout reconstructs from its circular split. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem grandPotential_circular_reconstruct (s Z : ℂ) :
     grandPotential s Z =
       circularGrandPotentialPlus s Z + circularGrandPotentialMinus s Z := by
@@ -496,31 +495,31 @@ def vonMangoldtForce (zeta dzeta : ℂ → ℂ) (s : ℂ) : ℂ :=
   logDerivativeForce zeta dzeta s
 
 /-- Grand-potential formula unfolds to its Massieu expression. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem grandPotential_eq_neg_inv_mul_massieu (s Z : ℂ) :
     grandPotential s Z = -s⁻¹ * massieu Z := by
   rfl
 
 /-- `massieuOf` is the Massieu function applied to `Z`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem massieuOf_eq (Z : ℂ → ℂ) (s : ℂ) :
     massieuOf Z s = massieu (Z s) := by
   rfl
 
 /-- `freeEnergyOf` is the free-energy function applied to `Z`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem freeEnergyOf_eq (Z : ℂ → ℂ) (s : ℂ) :
     freeEnergyOf Z s = freeEnergy (Z s) := by
   rfl
 
 /-- `grandPotentialOf` is the grand-potential function applied to `Z`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem grandPotentialOf_eq (Z : ℂ → ℂ) (s : ℂ) :
     grandPotentialOf Z s = grandPotential s (Z s) := by
   rfl
 
 /-- Completed Massieu is definitionally the negative logarithm of `xi`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem completedMassieu_eq (xi : ℂ → ℂ) (s : ℂ) :
     completedMassieu xi s = -Complex.log (xi s) := by
   rfl
@@ -563,7 +562,7 @@ def circularThermalWeightMinus
   circularPhaseCoord (thermalWeight s E μ S)
 
 /-- The thermal weight reconstructs from its circular split. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem thermalWeight_circular_reconstruct
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
     thermalWeight s E μ S =
@@ -601,7 +600,7 @@ def circularThermalVacuumMinus
   circularPhaseCoord (thermalVacuumAmplitude s E μ S)
 
 /-- The thermal-vacuum amplitude reconstructs from its circular split. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem thermalVacuumAmplitude_circular_reconstruct
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
     thermalVacuumAmplitude s E μ S =
@@ -614,7 +613,7 @@ theorem thermalVacuumAmplitude_circular_reconstruct
       (thermalVacuumAmplitude s E μ S)
 
 /-- Thermal-vacuum amplitude squares to the thermal weight. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem thermalVacuumAmplitude_mul_self_eq_weight
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
     thermalVacuumAmplitude s E μ S *
@@ -639,7 +638,7 @@ Finite complex KMS boundary condition:
 
 `ρ(S) A(S,T) = ρ(T) σ_s(A)(S,T)`.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem kms_periodicity
     (s : SouriauTemperature) (E μ : ι → ℝ)
     (A : Kernel (ι := ι)) (S T : FState ι) :
@@ -673,7 +672,7 @@ def bregman
   Phi x - Phi y - gradPhi y * (x - y)
 
 /-- Diagonal vanishing of the complex Bregman formula. -/
-@[bridge_target_tag, simp, rep_depth thermo]
+@[simp, rep_depth thermo]
 theorem bregman_self_eq_zero
     (Phi gradPhi : ℂ → ℂ) (x : ℂ) :
     bregman Phi gradPhi x x = 0 := by
@@ -700,7 +699,7 @@ def regularizedBregman
   realBregman A firstOrderAt x y + ε * ‖x - y‖ ^ 2
 
 /-- Regularized Bregman nonnegativity from base nonnegativity and `ε ≥ 0`. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem regularizedBregman_nonneg
     (A : ℂ → ℝ) (firstOrderAt : ℂ → ℂ → ℝ)
     (ε : ℝ) (hε : 0 ≤ ε)
@@ -735,25 +734,25 @@ def antiunitaryReflection (s : ℂ) : ℂ :=
   1 - star s
 
 /-- The functional reflection is an involution. -/
-@[bridge_target_tag, simp, rep_depth thermo]
+@[simp, rep_depth thermo]
 theorem functionalReflection_involutive (s : ℂ) :
     functionalReflection (functionalReflection s) = s := by
   simp [functionalReflection]
 
 /-- The conjugation reflection is an involution. -/
-@[bridge_target_tag, simp, rep_depth thermo]
+@[simp, rep_depth thermo]
 theorem conjugationReflection_involutive (s : ℂ) :
     conjugationReflection (conjugationReflection s) = s := by
   simp [conjugationReflection]
 
 /-- The antiunitary reflection is an involution. -/
-@[bridge_target_tag, simp, rep_depth thermo]
+@[simp, rep_depth thermo]
 theorem antiunitaryReflection_involutive (s : ℂ) :
     antiunitaryReflection (antiunitaryReflection s) = s := by
   simp [antiunitaryReflection]
 
 /-- The antiunitary fixed locus is the critical line. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem fixed_antiunitaryReflection_iff_criticalLine (s : ℂ) :
     s = antiunitaryReflection s ↔ CriticalLine s := by
   constructor
@@ -773,7 +772,7 @@ theorem fixed_antiunitaryReflection_iff_criticalLine (s : ℂ) :
     · simp [antiunitaryReflection]
 
 /-- Points on the critical line are fixed by the antiunitary reflection. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem antiunitaryReflection_eq_self_of_criticalLine
     {s : ℂ} (hs : CriticalLine s) :
     antiunitaryReflection s = s := by
@@ -816,7 +815,7 @@ def finitePrimeSignedPartition (P : PrimeRegister) (s : ℂ) : ℂ :=
   signedPartition P.primes s primeEnergy zeroChemicalPotential
 
 /-- Product formula for finite prime bosonic partition. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeBosonPartition_eq_prod
     (P : PrimeRegister) (s : ℂ) :
     finitePrimeBosonPartition P s =
@@ -831,7 +830,7 @@ lemma finitePrimeBosonPartition_ne_zero
     (modes := P.primes) (s := s) (E := primeEnergy) (μ := zeroChemicalPotential) h
 
 /-- Product formula for finite prime signed/Möbius partition. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeSignedPartition_eq_prod
     (P : PrimeRegister) (s : ℂ) :
     finitePrimeSignedPartition P s =
@@ -856,7 +855,7 @@ def finitePrimeGrandPotential (P : PrimeRegister) (s : ℂ) : ℂ :=
   grandPotential s (finitePrimeBosonPartition P s)
 
 /-- Grand potential formula for the finite prime partition. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeGrandPotential_eq
     (P : PrimeRegister) (s : ℂ) :
     finitePrimeGrandPotential P s =

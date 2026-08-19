@@ -30,6 +30,54 @@ variable {A : Type*} [CStarAlgebra A] [PartialOrder A]
 def operatorItakuraSaito (Delta logDelta : A) : A :=
   Delta - logDelta - 1
 
+/-- Centered form of the operatorial Itakura--Saito deviance.  This is a
+    purely additive identity and does not identify `logDelta` with a
+    functional-calculus logarithm of `Delta`. -/
+theorem operatorItakuraSaito_eq_centered (Delta logDelta : A) :
+    operatorItakuraSaito Delta logDelta = (Delta - 1) - logDelta := by
+  unfold operatorItakuraSaito
+  abel
+
+/-! ## Complement and perturbation readouts -/
+
+/-- The complement of a relative modular element is its perturbation from the
+    unit, whenever the perturbation decomposition is supplied. -/
+theorem relative_complement_eq_perturbation
+    (Delta X : A) (hDelta : Delta = 1 + X) :
+    Delta - 1 = X := by
+  rw [hDelta]
+  abel
+
+/-- Centered Itakura--Saito form in a supplied perturbation coordinate.  This
+    is an additive noncommutative identity; no power series is involved. -/
+theorem operatorItakuraSaito_eq_perturbation_sub_log
+    (Delta logDelta X : A) (hDelta : Delta = 1 + X) :
+    operatorItakuraSaito Delta logDelta = X - logDelta := by
+  rw [operatorItakuraSaito_eq_centered,
+    relative_complement_eq_perturbation Delta X hDelta]
+
+/-! ## Explicit modular-Hamiltonian readout -/
+
+/-- If the supplied logarithmic modular datum is the negative of a
+    Hamiltonian witness `K`, the centered operatorial IS expression is
+    literally `Delta - 1 + K`.  The hypothesis is explicit: this theorem
+    does not infer a functional-calculus logarithm from arbitrary algebra
+    elements. -/
+theorem operatorItakuraSaito_eq_delta_sub_one_add_hamiltonian
+    (Delta logDelta K : A) (hK : logDelta = -K) :
+    operatorItakuraSaito Delta logDelta = Delta - 1 + K := by
+  unfold operatorItakuraSaito
+  rw [hK]
+  abel
+
+/-- A normalized linear readout annihilates the relative complement. -/
+theorem complement_expectation_eq_zero
+    (phi : A →ₚ[ℂ] ℂ) (Delta : A)
+    (hDelta : phi Delta = phi 1) :
+    phi (Delta - 1) = 0 := by
+  rw [map_sub, hDelta]
+  simp
+
 /-- Araki's relative-entropy readout for a supplied logarithmic modular datum. -/
 def arakiRelativeEntropy (phi : A →ₚ[ℂ] ℂ) (logDelta : A) : ℂ :=
   -phi logDelta

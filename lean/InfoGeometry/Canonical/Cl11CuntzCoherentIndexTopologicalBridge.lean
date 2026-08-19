@@ -1,7 +1,10 @@
 import InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
+import InfoGeometry.Canonical.Cl11JordanWignerDirectLimit
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Clifford.CliffordBitWordEquivalence
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Coherent finite-index realization of the Cl(1,1) tower
@@ -30,6 +33,8 @@ open InfoGeometry.Canonical.JordanWignerCantorRepresentation
 open InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
+open InfoGeometry.Algebra.CliffordBitWordEquivalence
+open InfoGeometry.Algebra.PrimonColimitAlgebra
 
 /-! The topological trace owners are parameterized by a successor family.
 Expose the native concrete successor as that family once, so every colimit
@@ -69,8 +74,10 @@ def coherentComplexifyClStageTopCatHom (n : ℕ) :
     TopCat.of (ClStage n) ⟶ TopCat.of (CoherentComplexStage n) :=
   TopCat.ofHom
     { toFun := coherentComplexifyClStage n
-      continuous_toFun :=
-        (coherentComplexifyClStage n).toLinearMap.continuous_of_finiteDimensional }
+      continuous_toFun := by
+        letI : T2Space ℝ := TopologicalSpace.t2Space_of_metrizableSpace
+        letI : T2Space (ClStage n) := instT2SpaceMatrix
+        exact (coherentComplexifyClStage n).toLinearMap.continuous_of_finiteDimensional }
 
 def coherentConcreteStepTopCatHom (n : ℕ) :
     TopCat.of (CoherentComplexStage n) ⟶
@@ -143,9 +150,9 @@ theorem coherentComplexifyClStage_trace (n : ℕ) (A : ClStage n) :
 
 theorem coherentComplexifyClStage_normalizedTrace (n : ℕ) (A : ClStage n) :
     matrixTraceFunctional n (coherentComplexifyClStage n A) =
-      Complex.ofReal (normalizedTrace n A) := by
+      Complex.ofReal (InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace n A) := by
   rw [matrixTraceFunctional_apply, coherentComplexifyClStage_trace]
-  unfold normalizedTrace
+  unfold InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace
   rw [Complex.ofReal_div]
   simp [div_eq_mul_inv, mul_comm]
 
@@ -291,6 +298,18 @@ theorem coherentComplexificationColimit_realTrace_stage (n : ℕ) (A : ClStage n
     coherentComplexifyClStage_normalizedTrace]
   rfl
 
+theorem coherentComplexificationColimit_realTrace_stage_eq_tauInfinity
+    (n : ℕ) (A : ClStage n) :
+    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData concrete_trace_compatible
+        (coherentComplexificationColimitMap
+          (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A)) =
+      tauInfinity
+        (cliffordBitWordColimitEquiv
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n A)) := by
+  rw [coherentComplexificationColimit_realTrace_stage,
+    InfoGeometry.Canonical.Cl11JordanWignerDirectLimit.tauInfinity_cliffordBitWordColimitEquiv_stage]
+
 /-! The coherent complexification preserves the finite cyclic Markov readout.
 The statement remains stagewise because the target `TopCat` colimit carries
 no multiplication supplied by this comparison map. -/
@@ -307,7 +326,7 @@ theorem coherentComplexificationColimit_realTrace_stage_cyclic
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n (B * A))) := by
   rw [coherentComplexificationColimit_realTrace_stage,
     coherentComplexificationColimit_realTrace_stage]
-  unfold normalizedTrace
+  unfold InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace
   rw [Matrix.trace_mul_comm]
 
 theorem coherentComplexificationColimit_realTrace_stage_commutator
@@ -318,7 +337,7 @@ theorem coherentComplexificationColimit_realTrace_stage_commutator
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n
             (A * B - B * A))) = 0 := by
   rw [coherentComplexificationColimit_realTrace_stage]
-  unfold normalizedTrace
+  unfold InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace
   rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self, zero_div]
 
 theorem coherentComplexificationColimit_realTrace_unique
@@ -496,21 +515,24 @@ noncomputable def normalizedTraceLimit :
       InfoGeometry.Clifford.Cl11MarkovJonesEngine.normalizedTraceLinear n A := by
   rfl
 
-theorem normalizedTraceLimit_factorization :
-    (fun x =>
+theorem normalizedTraceLimit_factorization (x : Limit) :
+    Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap
+        (coherentAlgebraicToTopological x) =
+      normalizedTraceLimit x := by
+  refine DirectLimit.induction
+    (f := fun m n h => bondMap stageBond m n h)
+    (C := fun x =>
       Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap
-        (coherentAlgebraicToTopological x)) =
-      normalizedTraceLimit := by
-  funext x
-  induction x using DirectLimit.induction with
-  | _ n A =>
-      change Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap
+          (coherentAlgebraicToTopological x) =
+        normalizedTraceLimit x) ?_ x
+  intro n A
+  · change Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap
           (coherentAlgebraicToTopological (ofStage n A)) =
         normalizedTraceLimit (ofStage n A)
-      rw [coherentAlgebraicToTopological_ofStage,
-        Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap_inclusion,
-        normalizedTraceLimit_ofStage]
-      rfl
+    rw [coherentAlgebraicToTopological_ofStage,
+      Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap_inclusion,
+      normalizedTraceLimit_ofStage]
+    rfl
 
 /-- The stagewise involution readout descends to an additive endomorphism of
     the concrete algebraic direct limit. -/
@@ -529,7 +551,7 @@ noncomputable def limitStarAddHom : Limit →+ Limit where
         rw [DirectLimit.add_def, DirectLimit.lift_def]
         change stageStarMap n (A + B) =
           stageStarMap n A + stageStarMap n B
-        exact map_add _ A B
+        exact (stageStarMap n).map_add A B
   map_zero' := by
     have hzero :
         (0 : Limit) =
@@ -539,7 +561,7 @@ noncomputable def limitStarAddHom : Limit →+ Limit where
         (f := fun m n h => bondMap stageBond m n h) 0
     conv_lhs => rw [hzero]
     rw [DirectLimit.lift_def]
-    exact map_zero (stageStarMap 0)
+    exact (stageStarMap 0).map_zero
 
 @[simp] theorem limitStarAddHom_ofStage (n : ℕ) (A : ClStage n) :
     limitStarAddHom (ofStage n A) = stageStarMap n A := by

@@ -11,7 +11,7 @@ This module bundles the already-installed property-gated corridors:
 * projective temperature inversion;
 * prime/von-Mangoldt projective partition;
 * projective relative-entropy readouts and Weyl-gauge decompositions;
-* finite arithmetic KMS sockets.
+* finite arithmetic KMS interfaces.
 
 It does not prove the Erdős primitive-set theorem, Bost-Connes theorem, KMS
 existence/uniqueness, the prime number theorem, analytic continuation, or a
@@ -26,7 +26,6 @@ import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -149,7 +148,7 @@ theorem itakura_shape_scale_right
 /-! ## 2. Owner target -/
 
 /-- The owner target follows directly from the supplied property bundle. -/
-theorem primitiveSouriauPipelineOwnerTarget :
+theorem primitiveSouriauPipeline :
     ∀ (State : Type*) (P : PrimitiveSouriauPipelineData State),
       1 < betaInvert P.u ∧
       0 ≤ projectiveArithmeticGibbsPartition P.support P.u ∧

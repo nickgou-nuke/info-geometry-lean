@@ -5,7 +5,7 @@ import Mathlib
 
 A theorem-honest scalar bridge between the macroscopic Bekenstein--Hawking
 formula `π sqrt(J₄)` and the microscopic Fibonacci/Penrose entropy `N log φ`.
-The exceptional/Freudenthal origin of `J₄` remains a socket; the entropy algebra
+The exceptional/Freudenthal origin of `J₄` remains outside this finite owner; the entropy algebra
 is proved without axioms or `sorry`.
 -/
 

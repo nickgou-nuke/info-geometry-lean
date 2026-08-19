@@ -51,6 +51,80 @@ noncomputable def gibbsProb (E : Ω → ℝ) (ε : ℝ) (ω : Ω) : ℝ :=
 noncomputable def expectation (P : Ω → ℝ) (f : Ω → ℝ) : ℝ :=
   ∑ ω, P ω * f ω
 
+lemma expectation_add (P f g : Ω → ℝ) :
+    expectation P (fun ω => f ω + g ω) =
+      expectation P f + expectation P g := by
+  simp [expectation, mul_add, Finset.sum_add_distrib]
+
+lemma expectation_smul (P f : Ω → ℝ) (c : ℝ) :
+    expectation P (fun ω => c * f ω) = c * expectation P f := by
+  unfold expectation
+  calc
+    ∑ ω, P ω * (c * f ω) =
+        ∑ ω, c * (P ω * f ω) := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          ring
+    _ = c * ∑ ω, P ω * f ω := by
+          rw [Finset.mul_sum]
+
+noncomputable def expectationLinear (P : Ω → ℝ) :
+    (Ω → ℝ) →ₗ[ℝ] ℝ where
+  toFun := expectation P
+  map_add' f g := by
+    simpa [Pi.add_apply] using expectation_add P f g
+  map_smul' c f := by
+    simpa [Pi.smul_apply] using expectation_smul P f c
+
+@[simp] lemma expectationLinear_apply (P f : Ω → ℝ) :
+    expectationLinear P f = expectation P f :=
+  rfl
+
+lemma expectationLinear_const_of_sum_one (P : Ω → ℝ) (c : ℝ)
+    (hP : ∑ ω, P ω = 1) :
+    expectationLinear P (fun _ => c) = c := by
+  unfold expectationLinear expectation
+  calc
+    ∑ ω, P ω * c = c * ∑ ω, P ω := by
+      calc
+        ∑ ω, P ω * c = ∑ ω, c * P ω := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          ring
+        _ = c * ∑ ω, P ω := by
+          rw [Finset.mul_sum]
+    _ = c := by rw [hP]; ring
+
+lemma expectation_add_constant (P f : Ω → ℝ) (c : ℝ) :
+    expectation P (fun ω => f ω + c) =
+      expectation P f + c * (∑ ω, P ω) := by
+  unfold expectation
+  simp_rw [mul_add]
+  rw [Finset.sum_add_distrib]
+  congr 1
+  calc
+    (∑ ω, P ω * c) = ∑ ω, c * P ω := by
+      apply Finset.sum_congr rfl
+      intro ω hω
+      ring
+    _ = c * ∑ ω, P ω := by
+      rw [Finset.mul_sum]
+
+lemma expectation_const_of_sum_one (P : Ω → ℝ) (c : ℝ)
+    (hP : ∑ ω, P ω = 1) :
+    expectation P (fun _ => c) = c := by
+  unfold expectation
+  calc
+    ∑ ω, P ω * c = c * ∑ ω, P ω := by
+      calc
+        ∑ ω, P ω * c = ∑ ω, c * P ω := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          ring
+        _ = c * ∑ ω, P ω := by
+          rw [Finset.mul_sum]
+    _ = c := by rw [hP]; ring
+
 /-- Internal energy `U_ε = E_{P_ε}[E]`. -/
 noncomputable def internalEnergy (E : Ω → ℝ) (ε : ℝ) : ℝ :=
   expectation (gibbsProb E ε) E
@@ -80,6 +154,66 @@ lemma weight_pos (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
     0 < weight E ε ω := by
   unfold weight
   exact Real.exp_pos _
+
+/-- A constant energy shift contributes one common multiplicative weight factor. -/
+lemma weight_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) (ω : Ω) :
+    weight (fun ω => E ω + c) ε ω =
+      Real.exp (-c / ε) * weight E ε ω := by
+  unfold weight
+  change Real.exp (-(E ω + c) / ε) =
+    Real.exp (-c / ε) * Real.exp (-(E ω) / ε)
+  rw [show -(E ω + c) / ε = (-c / ε) + (-(E ω) / ε) by
+        field_simp [hε] <;> ring,
+    Real.exp_add]
+
+/-- The partition function transforms covariantly under a constant energy shift. -/
+lemma Z_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    Z (fun ω => E ω + c) ε =
+      Real.exp (-c / ε) * Z E ε := by
+  unfold Z
+  calc
+    ∑ ω, weight (fun ω => E ω + c) ε ω =
+        ∑ ω, Real.exp (-c / ε) * weight E ε ω := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          exact weight_add_constant E c ε hε ω
+    _ = Real.exp (-c / ε) * ∑ ω, weight E ε ω := by
+          rw [Finset.mul_sum]
+
+/-- The log-partition function transforms by the additive gauge term. -/
+lemma logZ_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    logZ (fun ω => E ω + c) ε = logZ E ε - c / ε := by
+  unfold logZ
+  rw [Z_add_constant E c ε hε]
+  rw [Real.log_mul (Real.exp_ne_zero _) (Z_ne_zero E ε), Real.log_exp]
+  ring
+
+/-- Free energy is affine-covariant under a common energy gauge shift. -/
+lemma freeEnergy_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    freeEnergy (fun ω => E ω + c) ε = freeEnergy E ε + c := by
+  unfold freeEnergy logZ
+  rw [Z_add_constant E c ε hε]
+  rw [Real.log_mul (Real.exp_ne_zero _) (Z_ne_zero E ε), Real.log_exp]
+  field_simp [hε]
+  ring
+
+/-- The soft-minimum inherits the same energy gauge covariance. -/
+lemma softMin_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    softMin (fun ω => E ω + c) ε = softMin E ε + c := by
+  exact freeEnergy_add_constant E c ε hε
+
+/-- Gibbs probabilities are invariant under a common energy gauge shift. -/
+lemma gibbsProb_add_constant_invariant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) (ω : Ω) :
+    gibbsProb (fun ω => E ω + c) ε ω = gibbsProb E ε ω := by
+  unfold gibbsProb
+  rw [weight_add_constant E c ε hε ω, Z_add_constant E c ε hε]
+  field_simp [Real.exp_ne_zero, Z_ne_zero E ε]
 
 omit [Nonempty Ω] in
 lemma softMin_def (E : Ω → ℝ) (ε : ℝ) :
@@ -112,11 +246,66 @@ lemma gibbsProb_sum_one (E : Ω → ℝ) (ε : ℝ) :
     _ = Z E ε / Z E ε := by simp [Z]
     _ = 1 := by exact div_self hZne
 
+/-- Internal energy is affine-covariant under a common energy gauge shift. -/
+lemma internalEnergy_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    internalEnergy (fun ω => E ω + c) ε = internalEnergy E ε + c := by
+  unfold internalEnergy expectation
+  simp_rw [gibbsProb_add_constant_invariant E c ε hε]
+  simp_rw [mul_add]
+  rw [Finset.sum_add_distrib]
+  have hconstant :
+      (∑ ω, gibbsProb E ε ω * c) = c := by
+    calc
+      (∑ ω, gibbsProb E ε ω * c) =
+          c * ∑ ω, gibbsProb E ε ω := by
+            calc
+              (∑ ω, gibbsProb E ε ω * c) =
+                  ∑ ω, c * gibbsProb E ε ω := by
+                    apply Finset.sum_congr rfl
+                    intro ω hω
+                    ring
+              _ = c * ∑ ω, gibbsProb E ε ω := by
+                    rw [Finset.mul_sum]
+      _ = c := by rw [gibbsProb_sum_one]; ring
+  rw [hconstant]
+
+/-- Shannon entropy is invariant under a common energy gauge shift. -/
+lemma shannonEntropy_add_constant
+    (E : Ω → ℝ) (c ε : ℝ) (hε : ε ≠ 0) :
+    shannonEntropy (fun ω => E ω + c) ε = shannonEntropy E ε := by
+  unfold shannonEntropy expectation
+  simp_rw [gibbsProb_add_constant_invariant E c ε hε]
+
 lemma log_gibbsProb (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
     Real.log (gibbsProb E ε ω) = -(E ω) / ε - logZ E ε := by
   unfold gibbsProb weight logZ
   rw [Real.log_div (by positivity) (Z_ne_zero E ε)]
   simp
+
+/-- The normalized Gibbs weight is the exponential of the log-partition readout. -/
+lemma gibbsProb_eq_exp_sub_logZ (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
+    gibbsProb E ε ω =
+      Real.exp (-(E ω) / ε - logZ E ε) := by
+  unfold gibbsProb weight logZ
+  rw [Real.exp_sub, Real.exp_log (Z_pos E ε)]
+
+/-- The exponential-family form is normalized by the log-partition function. -/
+lemma exp_sub_logZ_sum_one (E : Ω → ℝ) (ε : ℝ) :
+    ∑ ω, Real.exp (-(E ω) / ε - logZ E ε) = 1 := by
+  calc
+    ∑ ω, Real.exp (-(E ω) / ε - logZ E ε) =
+        ∑ ω, gibbsProb E ε ω := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          exact (gibbsProb_eq_exp_sub_logZ E ε ω).symm
+    _ = 1 := gibbsProb_sum_one E ε
+
+lemma neg_log_gibbsProb_eq_energy_div_add_logZ
+    (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
+    -Real.log (gibbsProb E ε ω) = E ω / ε + logZ E ε := by
+  rw [log_gibbsProb]
+  ring
 
 lemma shannonEntropy_eq_internal_div_add_logZ
     (E : Ω → ℝ) (ε : ℝ) :
@@ -186,5 +375,39 @@ lemma epsilon_mul_shannonEntropy
   (internalEnergy_sub_freeEnergy (E := E) (ε := ε) hε).symm
 
 end Finite
+
+end InfoGeometry.Thermo
+namespace InfoGeometry.Thermo
+
+variable {Ω : Type*}
+
+/-!
+The finite prior/degeneracy correction is already contained in the Gibbs
+weight: shifting the energy by `- ε log h - μ` factors the weight into the
+chemical, prior, and Boltzmann contributions.  This is the native finite
+identity used by the projective Gibbs construction.
+-/
+theorem gibbs_weight_prior_factorization
+    (E h : Ω → ℝ) (ε μ : ℝ) (ω : Ω)
+    (hε : ε ≠ 0) (hh : 0 < h ω) :
+    weight (fun x => E x - ε * Real.log (h x) - μ) ε ω =
+      Real.exp (μ / ε) * h ω * weight E ε ω := by
+  unfold weight
+  have harg :
+      -(E ω - ε * Real.log (h ω) - μ) / ε =
+        μ / ε + Real.log (h ω) + (-E ω / ε) := by
+    field_simp [hε]
+    ring
+  rw [harg, Real.exp_add, Real.exp_add, Real.exp_log hh]
+
+theorem gibbs_partition_prior_factorization
+    [Fintype Ω] (E h : Ω → ℝ) (ε μ : ℝ) (hε : ε ≠ 0)
+    (hh : ∀ ω, 0 < h ω) :
+    Z (fun x => E x - ε * Real.log (h x) - μ) ε =
+      Real.exp (μ / ε) * ∑ ω, h ω * weight E ε ω := by
+  unfold Z
+  simp_rw [gibbs_weight_prior_factorization E h ε μ _ hε (hh _)]
+  simp_rw [mul_assoc]
+  rw [← Finset.mul_sum]
 
 end InfoGeometry.Thermo

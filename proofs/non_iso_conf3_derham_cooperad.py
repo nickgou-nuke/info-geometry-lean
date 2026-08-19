@@ -38,7 +38,7 @@ def main() -> None:
         assert len(outer) == 2
 
     print("non_iso_conf3_derham_cooperad.py: finite candidate/cooperad audit passed")
-    print("Actual de Rham comparison and relation choice remain sockets.")
+    print("Actual de Rham comparison and relation choice remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

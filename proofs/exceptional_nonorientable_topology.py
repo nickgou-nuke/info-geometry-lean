@@ -9,7 +9,7 @@ Digest/formal layer:
       2 A_p = 0,   2 A_pq = 0.
 - For the two-band braid group B2 ≅ Z, these force A_p=A_pq=0 because Z is torsion-free.
 - Gapless total EP charge on nonorientable spaces has the corresponding boundary word form,
-  enabling nonorientable/non-Abelian charge inversion sockets.
+  enabling nonorientable/non-Abelian charge inversion deferred_interfaces.
 """
 
 import sympy as sp

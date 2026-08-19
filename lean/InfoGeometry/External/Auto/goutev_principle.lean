@@ -64,11 +64,15 @@ structure KMSJaynesBridge (A : Type*) [Semiring A] [StarRing A] [Module ℂ A] w
 def kmsToJaynes {A : Type*} [Semiring A] [StarRing A] [Module ℂ A]
     (kms : KMSState A) : JaynesMaxEnt A where
   state := kms.state
-  entropy := 0
+  entropy := kms.β
 
 /-- The KMS/Jaynes bridge preserves the normalized state exactly. -/
 theorem kms_equivalent_jaynes {A : Type*} [Semiring A] [StarRing A] [Module ℂ A]
     (kms : KMSState A) : (kmsToJaynes kms).state = kms.state := rfl
+
+/-- The finite bridge retains the KMS inverse-temperature coordinate. -/
+theorem kmsToJaynes_entropy {A : Type*} [Semiring A] [StarRing A] [Module ℂ A]
+    (kms : KMSState A) : (kmsToJaynes kms).entropy = kms.β := rfl
 
 /-══════════════════════════════════════════════════════════════════════
   LAYER 3 : WEYL ALGEBRA & GAUGE — CCR(V, b)

@@ -15,7 +15,7 @@ This file stays on the algebraic side:
 * pointwise projections of fields and kernels.
 
 No bridge tags.
-No socket imports.
+No deferred-interface imports.
 No property carrier.
 No Virasoro placeholder.
 -/
@@ -113,6 +113,30 @@ theorem projectMinus_eq_smul_minusCoeff (z : SplitComplex) :
   cases z
   ext <;> simp [projectMinus, minusCoeff, eMinus,
     SplitComplex.mul, SplitComplex.smul] <;> ring
+
+theorem plusCoeff_projectPlus (z : SplitComplex) :
+    plusCoeff (projectPlus z) = plusCoeff z := by
+  cases z
+  simp [projectPlus, plusCoeff, ePlus, SplitComplex.mul]
+  ring
+
+theorem minusCoeff_projectPlus (z : SplitComplex) :
+    minusCoeff (projectPlus z) = 0 := by
+  cases z
+  simp [projectPlus, minusCoeff, ePlus, SplitComplex.mul]
+  ring
+
+theorem plusCoeff_projectMinus (z : SplitComplex) :
+    plusCoeff (projectMinus z) = 0 := by
+  cases z
+  simp [projectMinus, plusCoeff, eMinus, SplitComplex.mul]
+  ring
+
+theorem minusCoeff_projectMinus (z : SplitComplex) :
+    minusCoeff (projectMinus z) = minusCoeff z := by
+  cases z
+  simp [projectMinus, minusCoeff, eMinus, SplitComplex.mul]
+  ring
 
 /-- `P₊² = P₊`. -/
 theorem projectPlus_idempotent (z : SplitComplex) :

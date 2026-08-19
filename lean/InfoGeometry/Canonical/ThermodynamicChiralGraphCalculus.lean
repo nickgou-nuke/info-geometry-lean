@@ -785,7 +785,7 @@ inductive TriangleVertex : Type
 /-- Oriented edges of the explicit triangle example. -/
 inductive TriangleEdge : Type
   | AB | BC | CA
-  deriving DecidableEq
+  deriving DecidableEq, Fintype
 
 namespace ChiralTriangleGraph
 
@@ -835,6 +835,22 @@ def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex Triangl
     | TriangleEdge.AB => Real.log (T.kAB / T.kBA)
     | TriangleEdge.BC => Real.log (T.kBC / T.kCB)
     | TriangleEdge.CA => Real.log (T.kCA / T.kAC)
+
+theorem graph_entropyProduction_nonneg_of_pos
+    (T : ChiralTriangleRates)
+    (hAB : 0 < T.kAB) (hBA : 0 < T.kBA)
+    (hBC : 0 < T.kBC) (hCB : 0 < T.kCB)
+    (hCA : 0 < T.kCA) (hAC : 0 < T.kAC) :
+    0 ≤ DirectedThermoGraph.entropyProduction (graph T) := by
+  apply DirectedThermoGraph.entropyProduction_nonneg_of_pointwise
+  intro e
+  cases e with
+  | AB =>
+      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hAB hBA
+  | BC =>
+      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hBC hCB
+  | CA =>
+      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hCA hAC
 
 /-- The ordered oriented triangle cycle `A → B → C → A`. -/
 def cycle : Cycle TriangleEdge where
@@ -994,7 +1010,7 @@ namespace ThermodynamicGraphLambdaData
 /-- Construct a packet from the actual syntax and probability obligations.
 
 The graph readout fields are supplied by their native definitions and theorems;
-they are not additional semantic property sockets. -/
+they are not additional semantic property fields. -/
 def ofReadouts
     (term : ThermoTerm)
     (V E : Type)

@@ -36,14 +36,4 @@ example (p n : ℕ+) (hp : Nat.Prime (p.val)) :
     BostConnesSystem.liouville (p * n) = - BostConnesSystem.liouville n :=
   BostConnesSystem.liouville_prime_mul p n hp n.property
 
-/-- Explicit statement shape for the categorical/Hestenes--Krein colimit
-capstone socket.  Any future capstone proof must supply the missing colimit
-bridge as an argument instead of claiming it in this file. -/
-def rhColimitCapstoneSocket (RH colimitZetaBridge mobiusColimitBridge : Prop) : Prop :=
-  colimitZetaBridge → mobiusColimitBridge → RH
-
-/-- Ledger entry for the still-open categorical colimit specialization. -/
-def colimitSpecializationDebt : String :=
-  "Open: prove the Hestenes--Krein filtered-colimit zeta bridge in the categorical owner."
-
 end InfoGeometry.Arithmetic

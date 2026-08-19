@@ -14,7 +14,7 @@ open Complex
 
 /-- 
 Finite symbolic readout for the zeta partition used by this phase-transition
-socket.  The analytic zeta function is owned by the arithmetic/Bost-Connes
+interface.  The analytic zeta function is owned by the arithmetic/Bost-Connes
 layers; this file only records the equality that a finite Primon-gas packet
 must carry into that layer.
 -/
@@ -71,15 +71,17 @@ def HasWignerDysonReadout (packet : RandomMatrixReadout) : Prop :=
 
 /-- The only theorem proved here: a zero of the carried partition function is a
 zero of the declared zeta readout. -/
-def phase_transition_zero_transfer : Prop :=
-  ∀ gas : PrimonGas, IsPartitionZero gas → zetaPartitionReadout gas.β = 0
+theorem phase_transition_zero_transfer
+    (gas : PrimonGas) (hzero : IsPartitionZero gas) :
+    zetaPartitionReadout gas.β = 0 := by
+  rw [← primon_partition_eq_zeta gas]
+  exact hzero
 
 /-- Partition-zero transfer through the packet equality. -/
 theorem phase_transition_zero_transfer_holds :
-    phase_transition_zero_transfer := by
+    ∀ gas : PrimonGas, IsPartitionZero gas → zetaPartitionReadout gas.β = 0 := by
   intro gas hzero
-  rw [← primon_partition_eq_zeta gas]
-  exact hzero
+  exact phase_transition_zero_transfer gas hzero
 
 theorem phase_transition_zero_to_riemannZeta
     (gas : PrimonGas) (hzero : IsPartitionZero gas) :
@@ -89,7 +91,13 @@ theorem phase_transition_zero_to_riemannZeta
 
 /-- Statement shape for any later random-matrix comparison.  It is deliberately
 not a theorem in this file. -/
-def zeta_zero_random_matrix_spacing_statement : Prop :=
-  ∀ gas : PrimonGas, IsPartitionZero gas → ∃ packet : RandomMatrixReadout, HasWignerDysonReadout packet
+theorem wignerDysonReadout_exists :
+    ∃ packet : RandomMatrixReadout, HasWignerDysonReadout packet := by
+  exact ⟨RandomMatrixSpacingModel.wignerDyson, rfl⟩
+
+theorem wignerDysonReadout_iff (packet : RandomMatrixReadout) :
+    HasWignerDysonReadout packet ↔
+      packet = RandomMatrixSpacingModel.wignerDyson := by
+  rfl
 
 end InfoGeometry.Thermodynamics

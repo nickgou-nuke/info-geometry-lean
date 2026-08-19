@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import InfoGeometry.Physics.HestenesKreinOperatorCalculus
 
 open Matrix Complex
 open scoped Matrix Norms.Operator
@@ -39,7 +40,7 @@ verified premises.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields,
+[Exact theorem statements that remain unproved. No wrappers, interfaces, fields,
 witnesses, certificates, or renamed placeholders.]
 
 * Prove that `modularDelta ε` agrees with `NormedSpace.exp (ε • phaseAxis)`
@@ -57,9 +58,8 @@ namespace InfoGeometry.Canonical.BregmanDeformation
 The concrete real phase-axis generator in the two-dimensional rotation lane.
 
 It is the matrix representation of multiplication by the internal complex
-structure unit, with `phaseAxis^2 = -1`.  It is not the self-adjoint modular
-Hamiltonian; the self-adjoint diagonal Hamiltonian is owned by
-`InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian`.
+structure unit, with `phaseAxis^2 = -1`.  It is not a self-adjoint
+Hamiltonian; it is the real phase-axis generator for this rotation lane.
 -/
 def phaseAxis : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![0, -1], ![1, 0]]
@@ -100,6 +100,21 @@ theorem modularDelta_commutes_phaseAxis (ε : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j
     <;> simp [modularDelta, phaseAxis, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+The explicit finite rotation is the Hestenes exponential of its real phase
+axis.  This is the concrete matrix bridge from the closed-form deformation to
+the native real elliptic-generator calculus.
+-/
+theorem modularDelta_eq_exp_phaseAxis (ε : ℝ) :
+    modularDelta ε =
+      NormedSpace.exp (ε • phaseAxis) := by
+  rw [InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_neg_one
+    phaseAxis]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [modularDelta, phaseAxis]
+  · simpa [pow_two] using phaseAxis_sq
 
 /--
 The regularized modular shape deformation `Δ - I - x`.

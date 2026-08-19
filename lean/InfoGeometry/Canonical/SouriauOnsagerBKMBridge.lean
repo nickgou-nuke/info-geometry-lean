@@ -171,6 +171,17 @@ def kuboMoriIntegrand
   finiteOperatorTrace
     (D.rpow s * star A * D.rpow (1 - s) * B)
 
+theorem kuboMoriIntegrand_one_one
+    (D : FaithfulDensityOperator n) (s : ℝ) :
+    D.kuboMoriIntegrand (1 : FiniteOperatorAlgebra n)
+        (1 : FiniteOperatorAlgebra n) s = 1 := by
+  unfold kuboMoriIntegrand
+  simp only [star_one, mul_one]
+  rw [← D.rpow_add]
+  have hs : s + (1 - s) = 1 := by ring
+  rw [hs, D.rpow_one]
+  exact D.trace_one
+
 /-- At a fixed Cartan/modular-flow parameter `s`, the Kubo--Mori kernel is a
 complex-linear functional of the transported observable `B`.
 
@@ -292,6 +303,33 @@ def maximallyMixedFaithfulDensityTwo :
           matrixOfOp
               (ContinuousLinearMap.id ℂ
                 (FiniteHilbertSpace 2)) =
+            1
+        exact matrixOfOp_id]
+    simp [Matrix.trace]
+
+/-! The same canonical faithful density is available at every dyadic UHF
+dimension.  This supplies the finite-state datum for the existing filtered
+BKM kernel without asserting transition compatibility. -/
+
+def maximallyMixedFaithfulDensityPowTwo (n : ℕ) :
+    FaithfulDensityOperator (2 ^ n) where
+  rho :=
+    (1 / (2 ^ n : ℝ)) •
+      (1 : FiniteOperatorAlgebra (2 ^ n))
+  strictlyPositive := by
+    exact IsStrictlyPositive.smul
+      (by positivity : (0 : ℝ) < 1 / (2 ^ n : ℝ))
+      isStrictlyPositive_one
+  trace_one := by
+    unfold finiteOperatorTrace
+    rw [matrixOfOp_real_smul]
+    rw [show
+      matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+          (1 : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ) by
+        change
+          matrixOfOp
+              (ContinuousLinearMap.id ℂ
+                (FiniteHilbertSpace (2 ^ n))) =
             1
         exact matrixOfOp_id]
     simp [Matrix.trace]

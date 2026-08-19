@@ -104,6 +104,23 @@ theorem properCarrier_inductiveColimit_eq_univ
     Set.iUnion K = (Set.univ : Set E) :=
   iUnion_eq_univ_of_finiteCarrierStage K hstage
 
+/-- A finite-stage witness gives an explicit membership witness in the union. -/
+theorem properCarrier_inductiveColimit_stage_readback
+    {E : Type u}
+    (K : ℕ → Set E)
+    (hstage : HasFiniteCarrierStage K)
+    (x : E) (hx : x ∈ K (hstage.stage x)) :
+    x ∈ Set.iUnion K := by
+  exact Set.mem_iUnion.mpr ⟨hstage.stage x, hx⟩
+
+/-- Membership in the inductive union is equivalent to membership at some stage. -/
+theorem properCarrier_inductiveColimit_mem_iff_exists_stage
+    {E : Type u}
+    (K : ℕ → Set E)
+    (x : E) :
+    x ∈ Set.iUnion K ↔ ∃ n : ℕ, x ∈ K n := by
+  exact Set.mem_iUnion
+
 /-- Standalone colimit membership readback: membership is dual positivity. -/
 theorem properCarrier_inductiveColimit_mem_iff_dualPositive
     {E : Type u}

@@ -6,8 +6,8 @@ import Mathlib.NumberTheory.Real.GoldenRatio
 
 A theorem-honest scalar bridge between the macroscopic Bekenstein--Hawking
 formula `π sqrt(J₄)` and the microscopic Fibonacci/Penrose entropy `N log φ`.
-The exceptional/Freudenthal origin of `J₄` remains a socket; the entropy algebra
-is proved without axioms or `sorry`.
+The exceptional/Freudenthal origin of `J₄` is intentionally not asserted here;
+the scalar entropy algebra below is proved without axioms or `sorry`.
 -/
 
 noncomputable section
@@ -28,27 +28,21 @@ def BekensteinHawkingEntropy (J4 : ℝ) : ℝ :=
 def FibonacciMicroEntropy (N : ℝ) : ℝ :=
   N * penroseBeta
 
-/-- Holographic black-hole datum: macro entropy equals micro entropy. -/
-structure HolographicBlackHole where
-  J4 : ℝ
-  N : ℝ
-  h_J4_nonneg : 0 ≤ J4
-  holographic_principle : BekensteinHawkingEntropy J4 = FibonacciMicroEntropy N
-
 /-- If `π sqrt(J₄)=N log φ`, then the quartic invariant is quantized by the
 Fibonacci entropy unit. -/
-theorem black_hole_area_quantization (bh : HolographicBlackHole) :
-    bh.J4 = (bh.N * penroseBeta / Real.pi) ^ 2 := by
-  have h := bh.holographic_principle
+theorem black_hole_area_quantization (J4 N : ℝ) (h_J4_nonneg : 0 ≤ J4)
+    (holographic_principle : BekensteinHawkingEntropy J4 = FibonacciMicroEntropy N) :
+    J4 = (N * penroseBeta / Real.pi) ^ 2 := by
+  have h := holographic_principle
   dsimp [BekensteinHawkingEntropy, FibonacciMicroEntropy] at h
-  have h_div : Real.sqrt bh.J4 = (bh.N * penroseBeta) / Real.pi := by
+  have h_div : Real.sqrt J4 = (N * penroseBeta) / Real.pi := by
     calc
-      Real.sqrt bh.J4 = (Real.pi * Real.sqrt bh.J4) / Real.pi := by
+      Real.sqrt J4 = (Real.pi * Real.sqrt J4) / Real.pi := by
         rw [mul_div_cancel_left₀ _ Real.pi_ne_zero]
-      _ = (bh.N * penroseBeta) / Real.pi := by rw [h]
-  have h_sq : (Real.sqrt bh.J4) ^ 2 = ((bh.N * penroseBeta) / Real.pi) ^ 2 := by
+      _ = (N * penroseBeta) / Real.pi := by rw [h]
+  have h_sq : (Real.sqrt J4) ^ 2 = ((N * penroseBeta) / Real.pi) ^ 2 := by
     rw [h_div]
-  rw [Real.sq_sqrt bh.h_J4_nonneg] at h_sq
+  rw [Real.sq_sqrt h_J4_nonneg] at h_sq
   exact h_sq
 
 /-- The integer-defect version of the same entropy. -/

@@ -131,24 +131,55 @@ The remaining closure obligation is stated over the canonical direct-limit
 carrier. The carrier, ring structure, injections, and transition law are
 derived from Mathlib's quotient direct limit rather than supplied as fields.
 -/
-def LimitPassageSocket (C : InductiveOperatorChain) : Prop :=
+def limitPassage (C : InductiveOperatorChain) : Prop :=
   ∀ (Q0 Qsharp0 : C.Stage 0),
     (∀ n, SupergradedClosureAt (R := C.Stage n)
       (C.iterMap n Q0) (C.iterMap n Qsharp0)) →
-    SupergradedClosureAt (R := LimitStage C)
+      SupergradedClosureAt (R := LimitStage C)
       (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0)
 
-namespace LimitPassageSocket
+/-!
+The direct-limit passage is already forced by the stage-zero closure.
+
+`SupergradedClosureAt` is a finite conjunction of ring identities, and
+`limitEmbed C 0` is a ring homomorphism.  Thus no additional colimit interface
+is needed for this algebraic closure: the universal direct-limit carrier
+preserves the four identities coefficientwise.
+-/
+theorem limitPassage_of_stage_zero
+    (C : InductiveOperatorChain) :
+    limitPassage C := by
+  intro Q0 Qsharp0 hStages
+  rcases hStages 0 with ⟨h1, h2, h3, h4⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have h := congrArg (limitEmbed C 0) h1
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h2
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h3
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h4
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+
+namespace LimitPassage
 
 variable {C : InductiveOperatorChain}
 
-theorem limit_closure_stable (h : LimitPassageSocket C)
+theorem limit_closure_stable (h : limitPassage C)
     (Q0 Qsharp0 : C.Stage 0)
     (hStages : ∀ n, SupergradedClosureAt (R := C.Stage n)
       (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
     SupergradedClosureAt (R := LimitStage C)
       (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0) :=
   h Q0 Qsharp0 hStages
+
+theorem limit_closure_stable_of_stage_zero
+    (Q0 Qsharp0 : C.Stage 0)
+    (hStages : ∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
+    SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0) :=
+  limit_closure_stable (limitPassage_of_stage_zero C) Q0 Qsharp0 hStages
 
 instance : Ring (LimitStage C) := inferInstance
 
@@ -160,6 +191,6 @@ theorem embed_compatible (n : ℕ) (x : C.Stage n) :
   exact InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bond
     C.Bonding n x
 
-end LimitPassageSocket
+end LimitPassage
 
 end InfoGeometry.Canonical.InductiveClosurePacket

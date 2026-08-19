@@ -6,7 +6,7 @@ import InfoGeometry.Categorical.ModularDoubledRealHopfTransport
 /-!
 # Varlamov V₄ / trifactor / Klein-glide bridge
 
-This module links three already finite sockets:
+This module links three already finite interfaces:
 
 * the Varlamov-style `A₁ × A₁` Klein-four sign-root table;
 * the tripotent/trifactor spectrum `{-1,0,+1}`;
@@ -60,41 +60,10 @@ theorem sectorV4_involution (s : TripotentState) :
     sectorV4 s * sectorV4 s = V4Group.I := by
   cases s <;> rfl
 
-/-- A finite property bundling the tripotent/V₄ cycle with a `pg` Klein relation. -/
-abbrev VarlamovTrifactorKleinWitness : Type :=
-  Σ' _klein : KleinBottlePresentationWitness,
-    (∀ s : TripotentState,
-      sectorV4 (TripotentState.trialityCycle
-        (TripotentState.trialityCycle (TripotentState.trialityCycle s))) = sectorV4 s) ∧
-      (∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I) ∧
-        (∀ s : TripotentState, sectorV4 s ≠ V4Group.I)
-
-namespace VarlamovTrifactorKleinWitness
-
-abbrev klein (W : VarlamovTrifactorKleinWitness) : KleinBottlePresentationWitness :=
-  W.1
-
-abbrev sector_cycle_cube (W : VarlamovTrifactorKleinWitness) :
-    ∀ s : TripotentState,
-      sectorV4 (TripotentState.trialityCycle
-        (TripotentState.trialityCycle (TripotentState.trialityCycle s))) = sectorV4 s :=
-  W.2.1
-
-abbrev sector_involution (W : VarlamovTrifactorKleinWitness) :
-    ∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I :=
-  W.2.2.1
-
-abbrev sector_nonidentity (W : VarlamovTrifactorKleinWitness) :
-    ∀ s : TripotentState, sectorV4 s ≠ V4Group.I :=
-  W.2.2.2
-
-end VarlamovTrifactorKleinWitness
-
 /-- Read back the finite Klein-bottle presentation relation from any bridge property. -/
-theorem property_klein_relation (W : VarlamovTrifactorKleinWitness) (p : Lattice2D) :
-    W.klein.glide (W.klein.yTranslation (W.klein.glide.symm p)) =
-      W.klein.yTranslation.symm p :=
-  W.klein.glide_conjugates_yTranslation_to_inverse p
+theorem property_klein_relation (pg : WallpaperGroupPG) (p : Lattice2D) :
+    pg.G (pg.T_y (pg.G.symm p)) = pg.T_y.symm p :=
+  WallpaperGroupPG.kleinBottlePresentation_relation pg p
 
 end InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
 

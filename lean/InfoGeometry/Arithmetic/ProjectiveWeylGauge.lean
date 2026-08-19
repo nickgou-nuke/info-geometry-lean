@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Arithmetic/ProjectiveWeylGauge.lean
 
-Weyl-gauge decomposition sockets for projective arithmetic KL readouts.
+Weyl-gauge decomposition data for projective arithmetic KL readouts.
 
 This module reuses the finite shape/scale KL machinery from
 `PrimitiveProjectiveRays` and the compact temperature coordinate from

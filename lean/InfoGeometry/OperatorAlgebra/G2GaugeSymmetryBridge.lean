@@ -43,6 +43,19 @@ theorem addZ_zeroZ_eq (X : SplitOct) : X + zeroZ = X := by
 theorem scaleZ_zeroZ_eq (c : ℤ) : scaleZ c zeroZ = zeroZ := by
   ext <;> simp [scaleZ, zeroZ]
 
+theorem zero_isValidGaugeGenerator :
+    isValidGaugeGenerator (fun _ => zeroZ) := by
+  unfold isValidGaugeGenerator
+  constructor
+  · intro X Y
+    exact Eq.symm (addZ_zeroZ_eq zeroZ)
+  · constructor
+    · intro c X
+      exact Eq.symm (scaleZ_zeroZ_eq c)
+    · intro X Y
+      rw [mulZ_zeroZ_eq, zeroZ_mulZ_eq]
+      exact Eq.symm (addZ_zeroZ_eq zeroZ)
+
 /--
 Theorem: The zero operator is a trivial G₂ derivation, proving 𝔤₂ is inhabited.
 -/

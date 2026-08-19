@@ -37,9 +37,9 @@ structure FiniteG2HodgeDatum where
     action D * embeddedSplitOctonionHodgeDirac =
       embeddedSplitOctonionHodgeDirac * action D
 
-/-! ## Finite Fredholm/Kasparov-style phase socket
+/-! ## Finite Fredholm/Kasparov-style phase interface
 
-This is intentionally an algebraic finite-dimensional socket.  It records the
+This is intentionally an algebraic finite-dimensional interface.  It records the
 phase, grading, oddness, and equivariance laws which are available here, but it
 does not assert compactness, completeness, or an analytic `KK`-class.
 -/

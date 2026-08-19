@@ -2,7 +2,6 @@ import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.ErlangenInductiveClosure
 
 /-!
@@ -27,9 +26,9 @@ The packet assembles three layers:
    bonding chain is exactly the vacuum/KKT complementary slackness condition.
    The central-lane commutation is the Fenchel-Legendre dual feasibility bound.
 
-3. **Colimit Socket (explicit closure debt):**
+3. **Colimit interface (explicit closure debt):**
    The topological completion `A_∞ = colim A_n` inheriting the invariant packet
-   is recorded as a proof-carrying socket, not as an ax!om. The finite chain
+   is recorded as a proof-carrying interface, not as an ax!om. The finite chain
    theorems are unconditional; the colimit passage is gated.
 
 ## Relationship to existing files
@@ -324,12 +323,12 @@ theorem inductive_invariance_packet
 /-! ## 5. Concrete algebraic colimit realization -/
 
 /--
-Colimit invariance socket for the TKK inductive chain.
+Colimit invariance interface for the TKK inductive chain.
 
 This records the topological completion passage `A_∞ = colim_n A_n` and the
 statement that the invariant packet survives into the completed algebra.
 
-Per repository mandate, this is a proof-carrying socket (explicit closure debt),
+Per repository mandate, this is a proof-carrying interface (explicit closure debt),
 not an ax!om. The finite chain theorems above are unconditional; the colimit
 passage requires analytic input (completeness, continuity of the grading
 predicates, norm closure of the invariant lanes).

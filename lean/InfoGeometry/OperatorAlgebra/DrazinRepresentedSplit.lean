@@ -14,7 +14,6 @@ polarization live safely in the associative represented operator algebra.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -398,7 +397,7 @@ end DrazinRepresentedSplitCompatibility
 A compatible represented split carries an extracted represented split,
 circular-polarization, and Drazin core/null projector package.
 -/
-theorem drazinRepresentedSplitOwnerTarget
+theorem drazinRepresentedSplit_properties
     (Core Split Op : Type*)
     [Ring Op] [Module ℝ Op]
     (C : DrazinRepresentedSplitCompatibility Core Split Op) :

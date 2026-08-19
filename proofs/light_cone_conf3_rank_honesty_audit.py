@@ -12,7 +12,7 @@ quadric complement
 
 Conclusion: the naive independent-product specialization is NOT equal to the
 known point-count polynomial.  This does not compute Betti numbers by itself,
-but it is a serious warning that the rank-32 product model is only a socketed
+but it is a serious warning that the rank-32 product model is only a deferred_interface
 candidate/projection, not an established de Rham theorem.
 """
 

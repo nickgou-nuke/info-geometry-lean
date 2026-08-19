@@ -189,6 +189,31 @@ def mulZ (X Y : ZornCell R) : ZornCell R where
 instance instMulZornCell : Mul (ZornCell R) where
   mul := mulZ
 
+def oneZ : ZornCell R where
+  r := 1
+  s := 1
+  x1 := 0
+  x2 := 0
+  x3 := 0
+  y1 := 0
+  y2 := 0
+  y3 := 0
+
+theorem detZ_oneZ :
+    detZ (oneZ : ZornCell R) = 1 := by
+  unfold detZ oneZ
+  ring
+
+theorem mulZ_one (X : ZornCell R) :
+    mulZ X oneZ = X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  congr <;> simp [mulZ, oneZ]
+
+theorem one_mulZ (X : ZornCell R) :
+    mulZ oneZ X = X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  congr <;> simp [mulZ, oneZ]
+
 /-- Coordinate composition identity for `mulZ`. -/
 theorem detZ_mulZ (X Y : ZornCell R) :
     detZ (mulZ X Y) = detZ X * detZ Y := by

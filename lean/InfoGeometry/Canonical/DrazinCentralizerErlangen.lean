@@ -4,9 +4,9 @@ import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture
 
 /-!
-# Drazin centralizer Erlangen socket
+# Drazin centralizer Erlangen data
 
-Final theorem-safe socket:
+Final theorem-safe data:
 
 ```text
 Drazin stabilization
@@ -27,7 +27,7 @@ This file does not introduce a competing modular-flow API.  It uses the repo
 `InfoGeometry.OperatorAlgebra.Thermodynamics.ModularFlow`.
 
 It also does not claim that arbitrary observables satisfy Fierz identities.
-Residual vanishing is kept as an explicit law of the supplied socket.
+Residual vanishing is kept as an explicit law of the supplied data.
 -/
 
 noncomputable section
@@ -229,7 +229,7 @@ def sanctuaryExpectationFierzVector
     InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates :=
   centralizerExpectationFierzVector S.state C S.horizon
 
-/-! ## 2A. State-relative Witten balance socket -/
+/-! ## 2A. State-relative Witten balance -/
 
 /--
 State-relative boson/fermion balance.
@@ -274,7 +274,7 @@ def IsStateRelativeWittenBalanced
     (W : StateRelativeWittenBalance Obs) : Prop :=
   stateRelativeWittenIndex W = 0
 
-/-! ## 3. Final centralizer Erlangen socket -/
+/-! ## 3. Final centralizer Erlangen data -/
 
 /--
 Final expectation-only Drazin/Fierz centralizer law.

@@ -104,7 +104,7 @@ lemma e_tmul_eta_mem_leftTarget (eta : M2C) :
 for the q-scaled swap exchange map `qCrossMap i`. This proves that the Kauffman
 braid exchange preserves the relation submodule.
 
-This closes the `ChiralLeftTauTarget` socket. -/
+This proves the `ChiralLeftTauTarget` ideal condition. -/
 theorem chiral_left_tau_ideal :
     IsLeftTauIdeal (K := ℂ) (H := M2C) (H_dual := M2C)
     R_chiral_tensor (qCrossMap (K := ℂ) Complex.I) := by

@@ -104,6 +104,43 @@ theorem chiralPlusSum_minusSum_commutator_mem_grade_zero :
 /-- The first-order colour-summed chiral Dirac operator. -/
 def chiralDiracSum : Cl55 := chiralPlusSum + chiralMinusSum
 
+/-- The split-real negative supercharge obtained from the two chiral rails. -/
+def qMinusSum : Cl55 := chiralPlusSum - chiralMinusSum
+
+theorem qMinusSum_sq : qMinusSum * qMinusSum = (-3 : Cl55) := by
+  have h := chiralMinusSum_plusSum_anticommutator
+  calc
+    qMinusSum * qMinusSum =
+        chiralPlusSum * chiralPlusSum -
+          (chiralPlusSum * chiralMinusSum +
+            chiralMinusSum * chiralPlusSum) +
+          chiralMinusSum * chiralMinusSum := by
+            simp [qMinusSum]
+            noncomm_ring
+    _ = -3 := by
+      rw [chiralPlusSum_sq, chiralMinusSum_sq]
+      simpa [add_comm] using congrArg (fun x : Cl55 => -x) h
+
+theorem chiralDiracSum_qMinusSum_anticommutator :
+    chiralDiracSum * qMinusSum + qMinusSum * chiralDiracSum = 0 := by
+  calc
+    chiralDiracSum * qMinusSum + qMinusSum * chiralDiracSum =
+        2 • (chiralPlusSum * chiralPlusSum) -
+          2 • (chiralMinusSum * chiralMinusSum) := by
+            simp [chiralDiracSum, qMinusSum]
+            noncomm_ring
+    _ = 0 := by rw [chiralPlusSum_sq, chiralMinusSum_sq]; simp
+
+theorem qMinusSum_add_chiralDiracSum :
+    qMinusSum + chiralDiracSum = (2 : ℝ) • chiralPlusSum := by
+  rw [qMinusSum, chiralDiracSum]
+  module
+
+theorem chiralDiracSum_sub_qMinusSum :
+    chiralDiracSum - qMinusSum = (2 : ℝ) • chiralMinusSum := by
+  rw [qMinusSum, chiralDiracSum]
+  module
+
 theorem chiralDiracSum_sq : chiralDiracSum * chiralDiracSum = (3 : Cl55) := by
   simp only [chiralDiracSum, add_mul, mul_add, chiralPlusSum_sq,
     chiralMinusSum_sq, zero_add, add_zero]

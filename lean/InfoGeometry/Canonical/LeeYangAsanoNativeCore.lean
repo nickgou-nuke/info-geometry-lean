@@ -92,6 +92,18 @@ theorem z₂_eq_asanoRootMap_of_asanoPhi_eq_zero
     _ = -((A + B * z1) / (C + D * z1)) := by ring
 
 @[rep_depth thermo]
+theorem asanoPhi_eq_zero_iff_eq_asanoRootMap
+    {A B C D z1 z2 : ℂ}
+    (hden : C + D * z1 ≠ 0) :
+    asanoPhi A B C D z1 z2 = 0 ↔
+      z2 = asanoRootMap A B C D z1 := by
+  constructor
+  · exact z₂_eq_asanoRootMap_of_asanoPhi_eq_zero hden
+  · intro hroot
+    rw [hroot]
+    exact asanoPhi_rootMap_zero hden
+
+@[rep_depth thermo]
 theorem asano_contraction_D_eq_zero_no_root
     {K1 K2 : Set ℂ}
     {A B C z : ℂ}

@@ -384,6 +384,18 @@ theorem sigmaComplexEquiv_symm_eq (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
   rw [sigmaComplexEquiv_symm_apply]
   rfl
 
+theorem sigmaComplexEquiv_trans (n : ℕ) (primes : Fin n → ℕ) (z w : ℂ) :
+    (sigmaComplexEquiv n primes z).trans (sigmaComplexEquiv n primes w) =
+      sigmaComplexEquiv n primes (z + w) := by
+  apply AlgEquiv.ext
+  intro x
+  change sigmaComplex n primes w (sigmaComplex n primes z x) =
+    sigmaComplex n primes (z + w) x
+  have h := congrArg
+    (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F x)
+    (sigmaComplex_add n primes w z)
+  simpa [AlgHom.comp_apply, add_comm] using h.symm
+
 /-- Projectors P_i = S_i Sdag_i are fixed by σ_z for any complex z:
     σ_z(P_i) = p_i^{iz} · p_i^{-iz} · P_i = P_i. -/
 @[simp] theorem sigmaComplex_fixes_projector (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (i : Fin n) :

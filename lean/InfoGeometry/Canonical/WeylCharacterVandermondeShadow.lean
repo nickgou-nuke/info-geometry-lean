@@ -67,9 +67,6 @@ structure D4CharacterVandermondePacket where
     ∨ numerator = spinorEvenCharacter β
     ∨ numerator = spinorOddCharacter β
     ∨ numerator = diracSpinorCharacter β
-  denominatorWitness : Fin 4 → ℝ
-  denominatorWitness_nodes :
-    denominatorWitness = denominatorNodes
 
 namespace D4CharacterVandermondePacket
 
@@ -79,33 +76,31 @@ variable (P : D4CharacterVandermondePacket)
 @[rep_depth thermo]
 theorem denominator_eq_vandermonde :
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-        P.denominatorWitness =
+        P.denominatorNodes =
       Matrix.det (Matrix.vandermonde P.denominatorNodes) := by
   unfold VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.matrix
-  rw [P.denominatorWitness_nodes]
+  rfl
 
 /-- The denominator zero-locus is exactly collision of two distinct nodes. -/
 @[rep_depth thermo]
 theorem denominator_eq_zero_iff_collision :
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-        P.denominatorWitness = 0 ↔
+        P.denominatorNodes = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorNodes i = P.denominatorNodes j ∧ i ≠ j := by
-  rw [← P.denominatorWitness_nodes]
   exact
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision
-      P.denominatorWitness
+      P.denominatorNodes
 
 /-- Nonzero denominator is equivalent to injectivity of the denominator nodes. -/
 @[rep_depth thermo]
 theorem denominator_ne_zero_iff_injective :
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-        P.denominatorWitness ≠ 0 ↔ Function.Injective P.denominatorNodes := by
-  rw [← P.denominatorWitness_nodes]
+        P.denominatorNodes ≠ 0 ↔ Function.Injective P.denominatorNodes := by
   exact
     VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_ne_zero_iff_injective
-      P.denominatorWitness
+      P.denominatorNodes
 
 /--
 Finite shadow packet:
@@ -120,12 +115,12 @@ theorem finite_character_denominator_packet :
       ∨ P.numerator = diracSpinorCharacter P.β)
     ∧
     (VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-        P.denominatorWitness = 0 ↔
+        P.denominatorNodes = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorNodes i = P.denominatorNodes j ∧ i ≠ j)
     ∧
     (VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-        P.denominatorWitness ≠ 0 ↔ Function.Injective P.denominatorNodes) := by
+        P.denominatorNodes ≠ 0 ↔ Function.Injective P.denominatorNodes) := by
   exact
     ⟨P.numerator_eq_vector,
       P.denominator_eq_zero_iff_collision,

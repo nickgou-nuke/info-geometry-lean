@@ -171,6 +171,62 @@ theorem rootMinus_mul_rootPlus_mem_circularGradeSubmodule_add
     rw [hzero]
     exact (circularGradeSubmodule 0).zero_mem
 
+theorem rootPlus_mul_rootMinus_eq_ite (a b : Fin 3) :
+    rootPlus a * rootMinus b = if a = b then uPlus else 0 := by
+  by_cases h : a = b
+  · subst b
+    simp only [if_pos rfl]
+    exact rootPlus_mul_rootMinus a
+  · have hzero : rootPlus a * rootMinus b = 0 := by
+      fin_cases a <;> fin_cases b <;>
+        simp_all [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+          iUnit, jUnit, kQuaternionUnit, lUnit,
+          InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+          InfoGeometry.Canonical.ZornMatrix.mul,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          InfoGeometry.Canonical.ZornMatrix.dot,
+          InfoGeometry.Canonical.ZornMatrix.cross] <;>
+        (try fin_cases ‹Fin 3›) <;> norm_num
+    simp [h, hzero]
+
+theorem rootMinus_mul_rootPlus_eq_ite (a b : Fin 3) :
+    rootMinus a * rootPlus b = if a = b then uMinus else 0 := by
+  by_cases h : a = b
+  · subst b
+    simp only [if_pos rfl]
+    exact rootMinus_mul_rootPlus a
+  · have hzero : rootMinus a * rootPlus b = 0 := by
+      fin_cases a <;> fin_cases b <;>
+        simp_all [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+          iUnit, jUnit, kQuaternionUnit, lUnit,
+          InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+          InfoGeometry.Canonical.ZornMatrix.mul,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          InfoGeometry.Canonical.ZornMatrix.dot,
+          InfoGeometry.Canonical.ZornMatrix.cross] <;>
+        (try fin_cases ‹Fin 3›) <;> norm_num
+    simp [h, hzero]
+
+theorem root_mixed_commutator_eq_ite (a b : Fin 3) :
+    rootPlus a * rootMinus b - rootMinus b * rootPlus a =
+      if a = b then lUnit else 0 := by
+  rw [rootPlus_mul_rootMinus_eq_ite, rootMinus_mul_rootPlus_eq_ite]
+  by_cases h : a = b
+  · subst b
+    simp only [if_pos rfl]
+    exact uPlus_sub_uMinus
+  · simp only [if_neg h, if_neg (Ne.symm h), sub_zero]
+
+theorem root_mixed_anticommutator_eq_ite (a b : Fin 3) :
+    rootPlus a * rootMinus b + rootMinus b * rootPlus a =
+      if a = b then 1 else 0 := by
+  rw [rootPlus_mul_rootMinus_eq_ite, rootMinus_mul_rootPlus_eq_ite]
+  by_cases h : a = b
+  · subst b
+    simp only [if_pos rfl]
+    exact uPlus_add_uMinus
+  · simp only [if_neg h, if_neg (Ne.symm h), add_zero]
+
 theorem rootPlus_mul_self_mem_circularGradeSubmodule_add (a : Fin 3) :
     rootPlus a * rootPlus a ∈
       circularGradeSubmodule (circularGrade 1 + circularGrade 1) := by
@@ -264,6 +320,61 @@ theorem rootPlus_zero_mul_rootPlus_one :
       Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
+theorem rootPlus_one_mul_rootPlus_two :
+    rootPlus 1 * rootPlus 2 = rootMinus 0 := by
+  ext <;>
+    simp [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+      iUnit, jUnit, kQuaternionUnit, lUnit, zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases ‹Fin 3›) <;> norm_num
+
+theorem rootPlus_two_mul_rootPlus_zero :
+    rootPlus 2 * rootPlus 0 = rootMinus 1 := by
+  ext <;>
+    simp [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+      iUnit, jUnit, kQuaternionUnit, lUnit, zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases ‹Fin 3›) <;> norm_num
+
+theorem rootPlus_one_mul_rootPlus_zero :
+    rootPlus 1 * rootPlus 0 = -rootMinus 2 := by
+  ext <;>
+    simp [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+      iUnit, jUnit, kQuaternionUnit, lUnit, zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases ‹Fin 3›) <;> norm_num
+
+theorem rootPlus_two_mul_rootPlus_one :
+    rootPlus 2 * rootPlus 1 = -rootMinus 0 := by
+  ext <;>
+    simp [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+      iUnit, jUnit, kQuaternionUnit, lUnit, zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases ‹Fin 3›) <;> norm_num
+
+theorem rootPlus_zero_mul_rootPlus_two :
+    rootPlus 0 * rootPlus 2 = -rootMinus 1 := by
+  ext <;>
+    simp [rootPlus, rootMinus, chiralNull, ellBasis, quaternionBasis,
+      iUnit, jUnit, kQuaternionUnit, lUnit, zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases ‹Fin 3›) <;> norm_num
+
 theorem rootPlus_zero_mul_rootPlus_one_mem_grade_add :
     rootPlus 0 * rootPlus 1 ∈
       circularGradeSubmodule (circularGrade 1 + circularGrade 2) := by
@@ -348,5 +459,14 @@ theorem circularAxialGrading_not_derivation :
   rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul,
     smul_add]
+
+theorem rootPlus_associator_zero_one_two :
+    (rootPlus 0 * rootPlus 1) * rootPlus 2 -
+        rootPlus 0 * (rootPlus 1 * rootPlus 2) =
+      uMinus - uPlus := by
+  rw [rootPlus_zero_mul_rootPlus_one,
+    rootPlus_one_mul_rootPlus_two,
+    rootMinus_mul_rootPlus,
+    rootPlus_mul_rootMinus]
 
 end InfoGeometry.Lie.SplitOctonionCircularZ3Grading

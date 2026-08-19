@@ -44,15 +44,12 @@ def gamma3_maj : MajoranaMatrix :=
       0,  1,  0,  0]
 
 /-- Signature-square obligations for the displayed matrices. -/
-def majoranaSignatureSquaresStatement : Prop :=
-  gamma0_maj * gamma0_maj = 1 ∧
-  gamma1_maj * gamma1_maj = 1 ∧
-  gamma2_maj * gamma2_maj = -1 ∧
-  gamma3_maj * gamma3_maj = -1
+theorem majoranaSignatureSquares :
+    gamma0_maj * gamma0_maj = 1 ∧
+      gamma1_maj * gamma1_maj = 1 ∧
+      gamma2_maj * gamma2_maj = -1 ∧
+      gamma3_maj * gamma3_maj = -1 := by
 
-/-- The displayed real Majorana matrices satisfy their stated signature squares. -/
-theorem majoranaSignatureSquares : majoranaSignatureSquaresStatement := by
-  unfold majoranaSignatureSquaresStatement
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
@@ -134,11 +131,9 @@ noncomputable def gamma5_maj : MajoranaMatrix :=
   gamma0_maj * gamma1_maj * gamma2_maj * gamma3_maj
 
 /-- Statement for the grading identity. -/
-def gamma5_maj_sq_statement : Prop := gamma5_maj * gamma5_maj = 1
+theorem gamma5_maj_sq : gamma5_maj * gamma5_maj = 1 := by
+  unfold gamma5_maj
 
-/-- The displayed volume element has the expected real grading square. -/
-theorem gamma5_maj_sq : gamma5_maj_sq_statement := by
-  unfold gamma5_maj_sq_statement gamma5_maj
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
@@ -152,14 +147,12 @@ noncomputable def chiralProjectorR : MajoranaMatrix := (1 / 2 : ℝ) • (1 + ga
 noncomputable def chiralSupertrace (A : MajoranaMatrix) : ℝ := Matrix.trace (gamma5_maj * A)
 
 /-- Statement for the basic chiral trace identities. -/
-def chiralTraceStatement : Prop :=
-  chiralSupertrace 1 = 0 ∧
-  Matrix.trace chiralProjectorL = 2 ∧
-  Matrix.trace chiralProjectorR = 2
+theorem chiralTrace :
+    chiralSupertrace 1 = 0 ∧
+      Matrix.trace chiralProjectorL = 2 ∧
+      Matrix.trace chiralProjectorR = 2 := by
+  unfold chiralSupertrace chiralProjectorL chiralProjectorR
 
-/-- The displayed chiral grading has vanishing supertrace and balanced traces. -/
-theorem chiralTrace : chiralTraceStatement := by
-  unfold chiralTraceStatement chiralSupertrace chiralProjectorL chiralProjectorR
   have hgamma5 : gamma5_maj =
       !![ 0,  0,  0,  1;
           0,  0, -1,  0;
@@ -184,14 +177,12 @@ noncomputable def cuntzGeneratorPlus : MajoranaMatrix := (1 / 2 : ℝ) • (gamm
 noncomputable def cuntzGeneratorMinus : MajoranaMatrix := (1 / 2 : ℝ) • (gamma0_maj - gamma2_maj)
 
 /-- Statement for the nilpotent/anticommutator identities. -/
-def cuntzGeneratorStatement : Prop :=
-  cuntzGeneratorPlus * cuntzGeneratorPlus = 0 ∧
-  cuntzGeneratorMinus * cuntzGeneratorMinus = 0 ∧
-  cuntzGeneratorPlus * cuntzGeneratorMinus + cuntzGeneratorMinus * cuntzGeneratorPlus = 1
+theorem cuntzGenerator :
+    cuntzGeneratorPlus * cuntzGeneratorPlus = 0 ∧
+      cuntzGeneratorMinus * cuntzGeneratorMinus = 0 ∧
+      cuntzGeneratorPlus * cuntzGeneratorMinus +
+        cuntzGeneratorMinus * cuntzGeneratorPlus = 1 := by
 
-/-- The displayed generators satisfy the finite nilpotent Cuntz relations. -/
-theorem cuntzGenerator : cuntzGeneratorStatement := by
-  unfold cuntzGeneratorStatement
   have h0 : gamma0_maj * gamma0_maj = (1 : MajoranaMatrix) :=
     majoranaSignatureSquares.1
   have h2 : gamma2_maj * gamma2_maj = (-1 : MajoranaMatrix) :=

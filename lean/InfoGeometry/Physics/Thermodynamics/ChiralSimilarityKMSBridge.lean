@@ -66,8 +66,7 @@ def InvariantReadout.toKMSReadoutDatum
     InfoGeometry.OperatorAlgebra.HorizonKMS.KMSReadoutDatum (BdGBlock ℝ) where
   flow := chiralSimilarityFlow
   state := R.state
-  beta := beta
-  beta_pos := hbeta
+  beta := ⟨beta, hbeta⟩
   flow_zero := chiralSimilarityFlow_zero
   flow_add := chiralSimilarityFlow_add
   flow_invariant := R.invariant

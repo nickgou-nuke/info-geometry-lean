@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Finite witness for the split-idempotent 5-weight socket.
+"""Finite check for the split-idempotent 5-weight interface.
 
 Uses the algebra K×K with E=(2,0), Ebar=(0,2), so E²=2E, Ebar²=2Ebar,
 and E*Ebar=0. This mirrors the Lean normalization; it is witness evidence only.

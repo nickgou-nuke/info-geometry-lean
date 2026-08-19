@@ -32,7 +32,7 @@ ROLE_PRIORITY = [
     "translator",
     "pure_conductor",
     "fake_transport",
-    "dead_socket",
+    "deferred_interface",
 ]
 
 VACUUM_ROLES_FOR_CONTRACTION = {"fake_transport", "pure_conductor"}

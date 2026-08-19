@@ -25,29 +25,10 @@ omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
 /-- Ordinary commutator `⁅A, B⁆` in `LieAlgebra`. -/
 lemma comm_eq_lie (A B : EndH H) : comm A B = ⁅A, B⁆ := rfl
 
-@[simp] lemma gradeConj_add (A B : EndH H) :
-    gradeConj (H := H) (A + B) = gradeConj (H := H) A + gradeConj (H := H) B := by
-  unfold gradeConj
-  simp
-
-@[simp] lemma gradeConj_neg (A : EndH H) :
-    gradeConj (H := H) (-A) = -gradeConj (H := H) A := by
-  unfold gradeConj
-  simp
-
 @[simp] lemma gradeConj_sub (A B : EndH H) :
     gradeConj (H := H) (A - B) = gradeConj (H := H) A - gradeConj (H := H) B := by
-  simp [sub_eq_add_neg]
-
-@[simp] lemma gradeConj_smul (r : ℝ) (A : EndH H) :
-    gradeConj (H := H) (r • A) = r • gradeConj (H := H) A := by
-  unfold gradeConj
-  simp
-
-lemma gradeConj_involutive (A : EndH H) :
-    gradeConj (H := H) (gradeConj (H := H) A) = A := by
-  ext x
-  simp [gradeConj, ContinuousLinearMap.comp_assoc, KreinGradedModule.grade_invol]
+  rw [sub_eq_add_neg, gradeConj_add, gradeConj_neg]
+  simp only [sub_eq_add_neg]
 
 /-- Even projection in the `Γ`-conjugation splitting. -/
 noncomputable def evenPart (A : EndH H) : EndH H :=
@@ -66,12 +47,14 @@ lemma evenPart_add_oddPart (A : EndH H) :
 lemma evenPart_isEven (A : EndH H) :
     IsEven (H := H) (evenPart (H := H) A) := by
   unfold IsEven evenPart
-  simp [gradeConj_involutive, add_comm]
+  rw [gradeConj_smul, gradeConj_add, gradeConj_involutive]
+  module
 
 lemma oddPart_isOdd (A : EndH H) :
     IsOdd (H := H) (oddPart (H := H) A) := by
   unfold IsOdd oddPart
-  simp [gradeConj_involutive, sub_eq_add_neg]
+  rw [gradeConj_smul, gradeConj_sub, gradeConj_involutive]
+  module
 
 lemma evenPart_eq_of_isEven {A : EndH H} (hA : IsEven (H := H) A) :
     evenPart (H := H) A = A := by

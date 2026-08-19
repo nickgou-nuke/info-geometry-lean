@@ -14,7 +14,7 @@ thermodynamic-curvature path packet.  This file adds:
 
 * graph-path readbacks through `ThermodynamicChiralGraphCalculus`;
 * collapse of exact closed-loop path constraints to detailed balance; and
-* compatibility with the explicit Bayesian projection socket.
+* compatibility with the explicit Bayesian projection interface.
 
 No analytic MaxCal existence theorem, CP map construction, KMS uniqueness
 theorem, or continuous path-integral result is asserted here.

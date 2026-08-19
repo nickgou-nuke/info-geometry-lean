@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinCentralizerErlangen
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 
 /-!
@@ -24,7 +24,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.DrazinMajoranaMellinBridge
 
 open InfoGeometry.Canonical.DrazinCentralizerErlangen
-open InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
+open InfoGeometry.Arithmetic.MajoranaPolyaHilbert
 
 /--
 Calibration packet for the Drazin centralizer and Majorana/Mellin sector.

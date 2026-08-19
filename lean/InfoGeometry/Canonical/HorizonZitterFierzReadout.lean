@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 
 Optional Fierz/channel readout layer for horizon zitter modes.
 
-The core `HorizonZitterModes` module is the real operator-algebraic socket:
+The core `HorizonZitterModes` module is the real operator-algebraic interface:
 modular flow, Drazin horizon, chiral/CPT involution, frequency Drazin
 projector, harmonic envelope, and zero-mode predicates.
 

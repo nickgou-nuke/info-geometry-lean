@@ -1,7 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 
@@ -9,7 +7,7 @@ import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 # InfoGeometry.Canonical.SelfConcordantZetaBarrier
 
 Self-concordant barrier calculations and an explicit RH-style variational
-statement socket.
+statement interface.
 
 The Itakura–Saito divergence `f(x) = x − ln(x) − 1` is a self-concordant
 barrier:
@@ -25,13 +23,12 @@ This file proves:
 
 1. The IS barrier kernel `f(x) = x − ln(x) − 1` is nonneg for `x > 0`.
 2. `f(x) = 0 ⟺ x = 1`.
-3. `f` is inversion-symmetric: `f(1/x) = f(x)`.
+3. The inverse readout is the exact formula
+   `f(1/x) = x⁻¹ + log(x) - 1`; it is not equal to `f(x)` in general.
 4. The self-concordance identity `|f‴| = 2 (f″)^{3/2}`.
 5. The single-prime barrier vanishes on the critical line.
-6. The single-prime barrier is reflection-invariant under `s ↦ 1 − s`.
-
-The variational RH target — "zeros of ξ lie on the barrier minimum" — is
-recorded as an explicit socket with `@[socket_debt_tag]`.
+6. The single-prime barrier has a critical-line zero and a positive off-line
+   readout; no reflection-invariance of the nonsymmetric IS kernel is claimed.
 
 This file does not prove RH.
 -/
@@ -88,6 +85,19 @@ theorem isBarrierKernel_eq_zero_iff
   · intro h
     rw [h]
     exact isBarrierKernel_one
+
+/-- Exact inverse-coordinate formula for the Itakura--Saito kernel.
+
+The kernel is not inversion-symmetric; this identity is the correct finite
+replacement for that sometimes-used but false shortcut.
+-/
+@[rep_depth thermo]
+theorem isBarrierKernel_inv
+    (x : ℝ) :
+    isBarrierKernel x⁻¹ = x⁻¹ + Real.log x - 1 := by
+  unfold isBarrierKernel
+  rw [Real.log_inv]
+  ring
 
 /-- The IS barrier kernel is strictly positive away from `x = 1`. -/
 @[rep_depth thermo]
@@ -242,43 +252,53 @@ theorem primeSpectralBarrier_nonneg
   intro p hp
   exact singlePrimeBarrier_nonneg p (hS p hp) σ
 
+/-- A nonempty finite prime barrier is strictly positive off the critical
+    seam.  This is the finite coercivity statement used by the variational
+    interface; it does not identify a zeta zero with a barrier minimizer. -/
+@[rep_depth operator]
+theorem primeSpectralBarrier_pos_off_criticalLine
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) (hσ : σ ≠ 1 / 2) :
+    0 < primeSpectralBarrier S σ := by
+  unfold primeSpectralBarrier
+  apply Finset.sum_pos'
+  · intro p hp
+    exact singlePrimeBarrier_nonneg p (hS p hp) σ
+  · rcases hSne with ⟨p, hp⟩
+    exact ⟨p, hp, singlePrimeBarrier_pos_off_criticalLine p (hS p hp) σ hσ⟩
+
+/-- For a nonempty finite prime set, the finite barrier vanishes exactly on
+    the critical seam. -/
+@[rep_depth operator]
+theorem primeSpectralBarrier_eq_zero_iff
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) :
+    primeSpectralBarrier S σ = 0 ↔ σ = 1 / 2 := by
+  constructor
+  · intro hzero
+    by_contra hσ
+    have hpos := primeSpectralBarrier_pos_off_criticalLine S hS hSne σ hσ
+    linarith
+  · intro hσ
+    rw [hσ]
+    exact primeSpectralBarrier_eq_zero_on_criticalLine S hS
+
+/-- The finite barrier is positive exactly away from the critical seam. -/
+@[rep_depth operator]
+theorem primeSpectralBarrier_pos_iff_off_criticalLine
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) :
+    0 < primeSpectralBarrier S σ ↔ σ ≠ 1 / 2 := by
+  constructor
+  · intro hpos hσ
+    subst σ
+    rw [primeSpectralBarrier_eq_zero_on_criticalLine S hS] at hpos
+    linarith
+  · intro hσ
+    exact primeSpectralBarrier_pos_off_criticalLine S hS hSne σ hσ
+
 
 /-! ## 5. Variational RH target -/
-
-/--
-Explicit variational statement socket for an RH-style barrier program.
-
-The barrier `Φ(σ)` is:
-* nonneg;
-* zero exactly at `σ = 1/2`;
-* self-concordant;
-* reflection-invariant under `σ ↦ 1 − σ`.
-
-The missing bridge is: if `ξ(s₀) = 0` at some `s₀` with `σ₀ = Re(s₀)`,
-then `σ₀` must be a minimizer of `Φ`, forcing `σ₀ = 1/2`.
-
-This structure records the precise variational gap.
--/
-@[socket_debt_tag, rep_depth operator]
-structure VariationalRHTarget where
-  /-- The completed xi function. -/
-  xi : ℂ → ℂ
-  /-- The functional equation. -/
-  xi_reflection : ∀ s, xi s = xi (1 - s)
-  /-- The self-concordant spectral barrier (finite approximation). -/
-  barrierApproximation : ℕ → Finset ℕ
-  /-- Each approximation uses primes > 1. -/
-  approx_primes : ∀ N p, p ∈ barrierApproximation N → 1 < p
-
-  /-- MISSING: zeros of ξ are barrier-critical.
-      If ξ(s₀) = 0, then Re(s₀) minimizes the spectral barrier.
-      This is the unproved variational input for the socket. -/
-  zeros_are_barrier_critical :
-    ∀ s₀ : ℂ, xi s₀ = 0 →
-      ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
-        ∀ σ : ℝ,
-          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ
-
 
 /--
 If the variational bridge is supplied, then RH follows from the barrier
@@ -290,9 +310,14 @@ Re(s₀) = 1/2.
 -/
 @[rep_depth operator]
 theorem variationalRH_implies_criticalLine
-    (V : VariationalRHTarget)
+    (xi : ℂ → ℂ)
+    (zeros_are_barrier_critical :
+      ∀ s₀ : ℂ, xi s₀ = 0 →
+        ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
+          ∀ σ : ℝ,
+            primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ)
     (s₀ : ℂ)
-    (hz : V.xi s₀ = 0) :
+    (hz : xi s₀ = 0) :
     OnCriticalLine s₀ := by
   unfold OnCriticalLine
   -- The barrier at σ₀ = Re(s₀) must be ≤ the barrier at 1/2 = 0.
@@ -301,7 +326,7 @@ theorem variationalRH_implies_criticalLine
   -- Use any concrete prime set, e.g. {2}
   have h2 : (1 : ℕ) < 2 := by norm_num
   have hS : ∀ p ∈ ({2} : Finset ℕ), 1 < p := by simp [h2]
-  have hMin := V.zeros_are_barrier_critical s₀ hz {2} hS (1 / 2 : ℝ)
+  have hMin := zeros_are_barrier_critical s₀ hz {2} hS (1 / 2 : ℝ)
   have hZero := primeSpectralBarrier_eq_zero_on_criticalLine {2} hS
   rw [hZero] at hMin
   have hNonneg := primeSpectralBarrier_nonneg {2} hS s₀.re

@@ -12,7 +12,7 @@ It uses 31 binary node variables as a coarse spin/isospin toy, but avoids dense
 approximation and stores the final factorized probability amplitude as a rank-1
 quantics tensor train with 31 binary cores via trainsum.
 
-No claim of physical nuclear spectroscopy is certified here; this is a socketed
+No claim of physical nuclear spectroscopy is certified here; this is a deferred_interface
 numerical toy for the Lean bookkeeping layer.
 
 Run:

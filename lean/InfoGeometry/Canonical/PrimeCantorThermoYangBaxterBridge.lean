@@ -34,6 +34,7 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeGasSuperKMS
+open InfoGeometry.Canonical.AlgebraicKMSStateColimit
 open InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
@@ -56,16 +57,15 @@ theorem riemannReflection_eq_fugacityInversion
 
 /-- Conditional RH readout remains routed through the property-gated Lee--Yang bridge. -/
 theorem conditional_RH_from_primeLeeYang
-    {n : ℕ}
-    (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))
-    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    (partitionPolynomial : Polynomial ℂ)
+    (hLeeYang : ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
-    (hz : W.partitionPolynomial.IsRoot z)
+    (hz : partitionPolynomial.IsRoot z)
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) :=
-  partitionRoot_mapsToCriticalLine W hLeeYang hz hpole
+  by exact cayleyToTemperature_mem_criticalLine_of_unitCircle z (hLeeYang z hz) hpole
 
-/-! ## Prime chain and zero-temperature KMS readouts -/
+/-! ## Prime chain and noncommutative KMS readout -/
 
 /-- Prime-chain couplings are ferromagnetic and symmetric. -/
 theorem primeChain_coupling_nonnegative_symmetric
@@ -75,15 +75,15 @@ theorem primeChain_coupling_nonnegative_symmetric
     0 ≤ C.couplingMatrix i j ∧ C.couplingMatrix i j = C.couplingMatrix j i :=
   ⟨C.couplingMatrix_entry_nonneg i j, C.couplingMatrix_symm i j⟩
 
-/-- The super-KMS bridge exposes the zero odd-temperature boundary and detailed balance. -/
-theorem primeGas_superKMS_zeroOdd_and_detailedBalance
-    (B : PrimeGasSuperKMSBridge) :
-    B.superTemperature.oddTemperature = 0 ∧
-      B.kmsTarget.absorption =
-        B.kmsTarget.spontaneousEmission + B.kmsTarget.stimulatedEmission :=
-  ⟨B.superTemperature_odd_eq_zero, B.detailedBalance⟩
+/-- The primon bridge exposes the native noncommutative KMS boundary law. -/
+theorem primeGas_superKMS_boundary
+    (B : PrimeGasSuperKMSBridge)
+    (x y : Carrier) :
+    deltaWeightedFunctional B.density (x * y) =
+      deltaWeightedFunctional B.density (y * B.imaginaryTime x) :=
+  B.kms_boundary x y
 
-/-! ## Cantor binary words, prime parity, and finite Euler product readbacks -/
+/-! ## Cantor binary words and finite Euler-product structure -/
 
 /-- The binary Cantor cylinder splits into root, left child, and right child. -/
 theorem cantorCylinder_binarySplit
@@ -93,21 +93,6 @@ theorem cantorCylinder_binarySplit
         ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w false)
         ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w true) :=
   TypeIIIModularCantorSystem.closedCylinder_split w
-
-/-- Finite prime supertrace readback equals the finite inverse Euler product. -/
-theorem primeSupertrace_eq_inverseEulerProduct
-    (P : FermionicPrimeRegister)
-    (x : ℕ → ℂ) :
-    finiteSupertraceDirichlet P x = finiteInverseEulerProduct P x :=
-  finiteSupertrace_readback P x
-
-/-- Möbius parity is read back from the finite fermionic prime register. -/
-theorem mobiusParity_eq_fermionParity
-    (P : FermionicPrimeRegister)
-    (ψ : FermionicPrimeState P) :
-    ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
-      fermionParity P ψ :=
-  mobiusParity_readback P ψ
 
 /-! ## Hodge--Dirac and Yang--Baxter owner readouts -/
 

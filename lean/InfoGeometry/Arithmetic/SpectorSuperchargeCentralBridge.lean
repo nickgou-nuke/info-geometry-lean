@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
 # InfoGeometry.Arithmetic.SpectorSuperchargeCentralBridge
 
 Finite bridge from the Spector/Witten prime-bit corridor to the existing
-supercharge and central-charge sockets.
+supercharge and central-charge interfaces.
 
 This file does not prove a supersymmetric field theory, a super-Virasoro
 representation, a BPS bound, or an infinite zeta theorem.  It packages the

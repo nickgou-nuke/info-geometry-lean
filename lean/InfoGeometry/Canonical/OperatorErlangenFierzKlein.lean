@@ -94,10 +94,10 @@ def OperatorFierzChannelsAreHorizonZeroModes
   (∀ μ : I4, IsModularZeroMode flow (C.vector μ D.AD)) ∧
   (∀ μ : I4, IsModularZeroMode flow (C.axial μ D.AD))
 
-/-! ## 2. Operator Erlangen socket -/
+/-! ## 2. Operator Erlangen data -/
 
 /--
-Operator Erlangen Fierz--Klein socket.
+Operator Erlangen Fierz--Klein data.
 
 This structure represents the Type III operator lift of the classical
 Fierz--Klein bridge:
@@ -218,7 +218,7 @@ end OperatorErlangenFierzKlein
 
 /-! ## 3. Owner target -/
 
-/-- Parameterized owner target for the operator Erlangen Fierz--Klein socket. -/
+/-- Parameterized owner target for the operator Erlangen Fierz--Klein data. -/
 @[rep_depth operator]
 def OperatorErlangenFierzKleinTarget
     (Obs : Type u)

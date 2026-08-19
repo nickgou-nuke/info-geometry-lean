@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
-import InfoGeometry.Arithmetic.HilbertPolyaBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Meta.Architecture
 import Omega.Zeta.XiHilbertPolyaNinefoldEquivalenceDoubledSelfadjointCompression

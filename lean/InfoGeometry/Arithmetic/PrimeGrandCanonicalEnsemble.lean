@@ -133,6 +133,22 @@ theorem potential_eq_log_finiteEulerProduct (P : PrimeRegister) (energyWeight : 
   change Real.log (InfoGeometry.GrandCanonical.partitionGC (primeGrandCanonicalParams P energyWeight) β μ) = Real.log (finiteEulerProduct P energyWeight β μ)
   rw [partition_eq_finiteEulerProduct]
 
+/-! The finite Massieu potential is additively the sum of local log factors. -/
+theorem potential_eq_sum_local_log_finiteEulerProduct
+    (P : PrimeRegister) (energyWeight : ℕ → ℝ) (β μ : ℝ) :
+    InfoGeometry.GrandCanonical.potentialGC (primeGrandCanonicalParams P energyWeight) β μ =
+      ∑ p ∈ P.primes,
+        Real.log (1 + Real.exp (-β * (energyWeight p - μ))) := by
+  rw [potential_eq_log_finiteEulerProduct]
+  unfold finiteEulerProduct
+  have hne : ∀ p ∈ P.primes,
+      (1 + Real.exp (-β * (energyWeight p - μ))) ≠ 0 := by
+    intro p hp
+    have hpos : 0 < (1 : ℝ) + Real.exp (-β * (energyWeight p - μ)) := by
+      exact add_pos_of_pos_of_nonneg zero_lt_one (Real.exp_pos _).le
+    exact hpos.ne'
+  rw [Real.log_prod hne]
+
 /-! ## 5. Log-energy specialization -/
 
 /-- The logarithmic prime-energy specialization `lam p = log p`. -/

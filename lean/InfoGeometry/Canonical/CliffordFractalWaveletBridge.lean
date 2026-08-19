@@ -23,8 +23,6 @@ Four Ontological Sieve Stages:
 
 import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinDilationGap
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -52,11 +50,11 @@ inductive CliffordFractalWaveletFierzChannel where
   | L : CliffordFractalWaveletFierzChannel
 
 -- ============================================================================
--- Core Socket: Clifford Fractal Wavelet Pipeline
+-- Clifford fractal wavelet pipeline
 -- ============================================================================
 
 /--
-The Clifford Fractal Wavelet Socket: Complete infrastructure for the
+The Clifford Fractal Wavelet system: complete infrastructure for the
 "Clifford Fractal Wavelets → Fierz–Klein Geometry" pipeline.
 
 CRITICAL INSIGHT: The physical object x_phys is ONLY recognized by the Lean
@@ -64,8 +62,7 @@ compiler if it is explicitly sandwiched between both Drazin support (p_A)
 and Hodge harmonic projector (H_L). This hardcodes the philosophy into the
 type system itself.
 -/
-@[socket_debt_tag]
-structure CliffordFractalWaveletSocket
+structure CliffordFractalWaveletSystem
     (Op : Type*)
     [Ring Op] [Star Op] [SMul ℝ Op] where
 
@@ -187,7 +184,7 @@ structure CliffordFractalWaveletSocket
 -- ============================================================================
 
 /--
-Tilt/switch Clifford admissibility for this socket.
+Tilt/switch Clifford admissibility for this system.
 
 This packages the representation-level fact that the Cantor tilt and switch
 operators really supply the Clifford action used by the wavelet bridge.
@@ -195,7 +192,7 @@ operators really supply the Clifford action used by the wavelet bridge.
 def TiltSwitchCliffordAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Prop :=
+    (S : CliffordFractalWaveletSystem Op) : Prop :=
   (∀ j, S.T j * S.T j = 1) ∧
     (∀ j, S.S j * S.S j = 1) ∧
     (∀ j, S.T j * S.S j = -(S.S j * S.T j)) ∧
@@ -229,7 +226,7 @@ structure FierzPauliKofinkAdmissible
   K_sq :
     (coords CliffordFractalWaveletFierzChannel.axialvector)^2 =
       -((coords CliffordFractalWaveletFierzChannel.vector)^2)
-  /-- Fierz orthogonality identity `J · K = 0`, scalarized for this socket. -/
+  /-- Fierz orthogonality identity `J · K = 0`, scalarized for this system. -/
   J_dot_K :
     coords CliffordFractalWaveletFierzChannel.vector *
       coords CliffordFractalWaveletFierzChannel.axialvector = 0
@@ -244,7 +241,7 @@ defect channel that isolates the Krein-null boundary sector.
 def KreinDrazinNullDefectAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Prop :=
+    (S : CliffordFractalWaveletSystem Op) : Prop :=
   S.pA = S.A * S.AD ∧
     S.HL = 1 - S.L * S.LD ∧
     S.x_phys = S.HL * (S.pA * S.x_raw * S.pA) * S.HL
@@ -253,14 +250,14 @@ def KreinDrazinNullDefectAdmissible
 abbrev DrazinHodgeEnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Prop :=
+    (S : CliffordFractalWaveletSystem Op) : Prop :=
   KreinDrazinNullDefectAdmissible S
 
 /-- Backwards-compatible short name for the Krein-Drazin null-defect property. -/
 abbrev EnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Prop :=
+    (S : CliffordFractalWaveletSystem Op) : Prop :=
   DrazinHodgeEnvelopeAdmissible S
 
 /-- Scalarized Fierz--Klein residual for the derived outgoing null channel. -/
@@ -302,7 +299,7 @@ theorem CliffordFractalWaveletFierzKleinResidual_eq_zero_iff
 def ProjectiveWeylClosureAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Prop :=
+    (S : CliffordFractalWaveletSystem Op) : Prop :=
   ∀ c : ℝ, c ≠ 0 →
     (CliffordFractalWaveletFierzKleinResidual
         (fun channel => c * S.coords channel) = 0 ↔
@@ -311,7 +308,7 @@ def ProjectiveWeylClosureAdmissible
 theorem projectiveWeylClosureAdmissible_native
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) :
+    (S : CliffordFractalWaveletSystem Op) :
     ProjectiveWeylClosureAdmissible S := by
   intro c hc
   rw [CliffordFractalWaveletFierzKleinResidual_smul]
@@ -386,11 +383,11 @@ structure CliffordFractalWaveletFierzKleinLaw
     (Op : Type*)
     [Ring Op] [Star Op] [SMul ℝ Op] where
 
-  /-- The socket: complete Clifford wavelet infrastructure. -/
-  socket : CliffordFractalWaveletSocket Op
+  /-- The system : complete Clifford wavelet infrastructure. -/
+  system : CliffordFractalWaveletSystem Op
 
   /-- Fierz--Pauli--Kofink property; separate from Clifford anticommutation. -/
-  fierz_admissible : FierzPauliKofinkAdmissible socket.coords
+  fierz_admissible : FierzPauliKofinkAdmissible system.coords
 
 -- ============================================================================
 -- Physical Envelope Definition
@@ -410,18 +407,18 @@ def physicalCliffordFractalWavelet
 theorem physical_wavelet_envelope_expanded
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) :
+    (S : CliffordFractalWaveletSystem Op) :
     S.x_phys =
       (1 - S.L * S.LD) *
         ((S.A * S.AD) * S.x_raw * (S.A * S.AD)) *
         (1 - S.L * S.LD) := by
   rw [S.x_phys_def, S.pA_def, S.HL_def]
 
-/-- Theorem: The socket's x_phys matches the physical envelope definition. -/
+/-- The system's `x_phys` matches the physical envelope definition. -/
 theorem physical_wavelet_envelope
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) :
+    (S : CliffordFractalWaveletSystem Op) :
     S.x_phys = physicalCliffordFractalWavelet S.pA S.HL S.x_raw :=
   S.x_phys_def
 
@@ -429,15 +426,15 @@ theorem physical_wavelet_envelope
 theorem physical_wavelet_envelope_of_admissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) :
+    (S : CliffordFractalWaveletSystem Op) :
     S.x_phys = physicalCliffordFractalWavelet S.pA S.HL S.x_raw :=
   S.x_phys_def
 
-/-- Tilt/switch admissibility reads back the socket's Clifford anticommutation law. -/
+/-- Tilt/switch admissibility reads back the system's Clifford anticommutation law. -/
 theorem gamma_anticomm_of_tiltSwitchClifford
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) :
+    (S : CliffordFractalWaveletSystem Op) :
     ∀ i j, i ≠ j → S.gamma i * S.gamma j = -(S.gamma j * S.gamma i) :=
   S.gamma_anticomm
 
@@ -445,7 +442,7 @@ theorem gamma_anticomm_of_tiltSwitchClifford
 theorem observableOfWord_eq_operatorOfWavelet
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op)
+    (S : CliffordFractalWaveletSystem Op)
     (w : S.BinaryWord) :
     S.observableOfWord w = S.operatorOfWavelet (S.waveletOfWord w) :=
   S.observableOfWord_def w
@@ -506,7 +503,7 @@ structure StabilizationFilter (Op : Type*)
 -/
 structure GeometricEmergence (Op : Type*)
     [Ring Op] [Star Op] [SMul ℝ Op] where
-  socket : CliffordFractalWaveletSocket Op
+  system : CliffordFractalWaveletSystem Op
   law : CliffordFractalWaveletFierzKleinLaw Op
 
 -- ============================================================================
@@ -532,22 +529,20 @@ structure GeometricEmergence (Op : Type*)
     Geometry emerges from the Fierz--Klein readout of projectivized
     Krein-Drazin null defects of Clifford fractal wavelets.
 -/
-@[bridge_target_tag]
 theorem clifford_fractal_wavelets_to_geometry
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op)
+    (S : CliffordFractalWaveletSystem Op)
     (hFierz : FierzPauliKofinkAdmissible S.coords) :
     CliffordFractalWaveletFierzKleinResidual S.coords = 0 := by
   exact hFierz.R_null
 
 /- The Fierz component of a packaged closure law supplies the quadric law. -/
-@[bridge_target_tag]
 theorem CliffordFractalWaveletFierzKleinLaw.quadric_zero
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
     (law : CliffordFractalWaveletFierzKleinLaw Op) :
-    CliffordFractalWaveletFierzKleinResidual law.socket.coords = 0 :=
-  clifford_fractal_wavelets_to_geometry law.socket law.fierz_admissible
+    CliffordFractalWaveletFierzKleinResidual law.system.coords = 0 :=
+  clifford_fractal_wavelets_to_geometry law.system law.fierz_admissible
 
 end InfoGeometry.Canonical

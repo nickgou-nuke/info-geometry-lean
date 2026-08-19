@@ -81,30 +81,6 @@ variable {P0 : KPolarization (S := S) M}
 variable {Op State : Type*} [Add Op] [Mul Op]
 variable (B : DIIIZ2DivisionEntropyBridge (S := S) M P0 Op State)
 
-/--
-The repo-owned bulk-boundary lane supplies a structure-valued boundary
-zero-mode property from `topologicalIndexZ2 = 1`.
--/
-def boundaryZeroModeWitness :
-    BoundaryLocalizedZeroModeWitness
-      (M := M) (P0 := P0) B.localOp B.chain :=
-  boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
-    (M := M) (P0 := P0)
-    B.localOp B.chain
-    B.topologicalIndexZ2_eq_one
-    B.simplifiedBoundaryModel
-
-/-- The same topological sector gives an operator zero-mode property. -/
-def operatorZeroModeWitness :
-    OperatorZeroModeWitness
-      (S := S)
-      (globalChainOperatorFromOpenChain (S := S) B.localOp B.chain) :=
-  operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
-    (M := M) (P0 := P0)
-    B.localOp B.chain
-    B.topologicalIndexZ2_eq_one
-    B.simplifiedBoundaryModel
-
 /-- The nontrivial DIII sector has a surface zero mode. -/
 theorem hasSurfaceZeroMode :
     HasZeroMode

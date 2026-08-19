@@ -34,7 +34,7 @@ variable {betaMinus : Type*} [Fintype betaMinus] [Nonempty betaMinus]
 
 /-- A polarized relative-modular pair together with its canonical generalized-metric
 fixpoint realization on the doubled carrier. -/
-structure GeneralizedMetricPolarizedWitness
+structure GeneralizedMetricPolarizedData
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (α : Type*) [Fintype α] [Nonempty α]
     (betaPlus : Type*) [Fintype betaPlus] [Nonempty betaPlus]
@@ -50,9 +50,9 @@ structure GeneralizedMetricPolarizedWitness
         (polarized.minus.lift b) = polarized.minus.lift b
 
 @[rep_depth krein]
-noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricWitness
+noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricData
     (R : PolarizedRelativeModularPair H α betaPlus betaMinus) :
-    GeneralizedMetricPolarizedWitness H α betaPlus betaMinus where
+    GeneralizedMetricPolarizedData H α betaPlus betaMinus where
   polarized := R
   plus_fixed := fun b =>
     tomitaGeneralizedMetricSeed_plusProjector_eq_self_of_mem_plusSheet
@@ -67,7 +67,7 @@ noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricWitness
     GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
       (R.plus.lift b) = R.plus.lift b := by
   simpa using
-    (PolarizedRelativeModularPair.toGeneralizedMetricWitness (R := R)).plus_fixed b
+    (PolarizedRelativeModularPair.toGeneralizedMetricData (R := R)).plus_fixed b
 
 @[rep_depth krein, simp] theorem
     PolarizedRelativeModularPair.minus_lift_fixed_by_tomitaGeneralizedMetric
@@ -75,7 +75,7 @@ noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricWitness
     GeneralizedMetricSeed.minusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
       (R.minus.lift b) = R.minus.lift b := by
   simpa using
-    (PolarizedRelativeModularPair.toGeneralizedMetricWitness (R := R)).minus_fixed b
+    (PolarizedRelativeModularPair.toGeneralizedMetricData (R := R)).minus_fixed b
 
 end PolarizedWitness
 

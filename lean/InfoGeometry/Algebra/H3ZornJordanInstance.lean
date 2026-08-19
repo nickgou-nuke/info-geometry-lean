@@ -55,7 +55,7 @@ theorem h3ZornTJordanCommutation : TJordanCommutation :=
   H3ZornJordanProductLaw_iff_TJordanCommutation.mp h3ZornJordanProductLaw
 
 /-- Native closure of the paper-facing Jordan identity target. -/
-theorem h3ZornJordanIdentityTarget : H3ZornJordanIdentityTarget :=
+theorem h3ZornJordanProductLaw_closed : H3ZornJordanProductLaw :=
   h3ZornJordanProductLaw
 
 /--

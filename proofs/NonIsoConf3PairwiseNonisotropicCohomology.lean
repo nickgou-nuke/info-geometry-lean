@@ -49,7 +49,7 @@ theorem product_leray_vs_os_alpha_gap :
   product_vs_os_rank_gap
 
 /-- Every arity-three collision has an internal alpha edge and an internal beta
-edge.  This is the finite cooperad bookkeeping used by the de Rham socket. -/
+edge.  This is the finite cooperad bookkeeping used by the de Rham interface. -/
 theorem cooperad_internal_alpha_beta :
     (∀ b : BlockDecomp3, ∃ e : Edge3,
       cooperadOnAlpha b e = (TargetFactor.internal, GenKind.alpha)) ∧
@@ -57,7 +57,7 @@ theorem cooperad_internal_alpha_beta :
       cooperadOnBeta b e = (TargetFactor.internal, GenKind.beta)) :=
   ⟨cooperad_alpha_has_internal_edge, cooperad_beta_has_internal_edge⟩
 
-/-- Conditional de Rham/cooperad theorem: once the analytic socket identifies
+/-- Conditional de Rham/cooperad theorem: once the analytic interface identifies
 the product/Leray presentation with the actual de Rham model, the computed
 rank is `32` and the arity-three cooperad bookkeeping is compatible. -/
 theorem pairwise_nonisotropic_derham_product_leray
@@ -74,7 +74,7 @@ theorem pairwise_nonisotropic_derham_product_leray
     cooperad_alpha_has_internal_edge,
     cooperad_beta_has_internal_edge⟩
 
-/-- Rank-decision bridge: the Dupont/Gysin rank socket selects the rank-32
+/-- Rank-decision bridge: the Dupont/Gysin rank interface selects the rank-32
 product/Leray branch over the rank-24 OS-alpha branch. -/
 theorem rank_decision_selects_product_leray :
     ¬ tripleDependent expectedCodimData ∧
@@ -85,4 +85,3 @@ theorem rank_decision_selects_product_leray :
   ⟨h.1, h.2.1, h.2.2.1, h.2.2.2⟩
 
 end NonIsoConf3PairwiseNonisotropicCohomology
-

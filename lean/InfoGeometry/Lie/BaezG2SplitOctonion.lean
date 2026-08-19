@@ -199,7 +199,7 @@ theorem IsNonAssocDerivation.commutator
   rw [hsub_mul, hmul_sub]
   abel
 
-open InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+open InfoGeometry.Lie.RealSplitOctonionDerivationData
 
 /-- The repository's canonical real split-Cayley/Zorn carrier. -/
 abbrev SplitCayley := InfoGeometry.Lie.RealSplitOctonionDerivation.SplitCayley

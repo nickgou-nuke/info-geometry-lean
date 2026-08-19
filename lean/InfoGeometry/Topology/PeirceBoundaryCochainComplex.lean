@@ -1,4 +1,4 @@
-import InfoGeometry.Topology.PeirceDifferentialFormSocket
+import InfoGeometry.Topology.PeirceDifferentialForm
 import InfoGeometry.Topology.DiscreteDiracHodge
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge
 

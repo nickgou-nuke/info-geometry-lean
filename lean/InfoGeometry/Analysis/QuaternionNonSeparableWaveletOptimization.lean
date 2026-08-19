@@ -3,7 +3,6 @@ import Mathlib.Algebra.Quaternion
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
@@ -41,7 +40,7 @@ the KKT residual property.
 structure QuaternionNonSeparableWaveletOptimizationProblem where
   filterBank : ParaunitaryCliffordFilterBank
   cascade : CliffordCascadeSystem filterBank
-  kktCertificate : KarushKuhnTuckerResidualCertificate
+  kktCertificate : KarushKuhnTuckerThermodynamicData
 
 namespace QuaternionNonSeparableWaveletOptimizationProblem
 
@@ -69,11 +68,11 @@ Optimization objective: the sum of the five Boolean KKT residual indicators.
 @[rep_depth operator]
 def objective
     (P : QuaternionNonSeparableWaveletOptimizationProblem) : ℝ :=
-  (if P.kktCertificate.toThermodynamicData.primalFeasible then (0 : ℝ) else 1) +
-  (if P.kktCertificate.toThermodynamicData.dualFeasible then (0 : ℝ) else 1) +
-  (if P.kktCertificate.toThermodynamicData.stationarity then (0 : ℝ) else 1) +
-  (if P.kktCertificate.toThermodynamicData.complementarySlackness then (0 : ℝ) else 1) +
-  (if P.kktCertificate.toThermodynamicData.finitePartitionAdmissible then (0 : ℝ) else 1)
+  (if P.kktCertificate.primalFeasible then (0 : ℝ) else 1) +
+  (if P.kktCertificate.dualFeasible then (0 : ℝ) else 1) +
+  (if P.kktCertificate.stationarity then (0 : ℝ) else 1) +
+  (if P.kktCertificate.complementarySlackness then (0 : ℝ) else 1) +
+  (if P.kktCertificate.finitePartitionAdmissible then (0 : ℝ) else 1)
 
 /-- The residual objective is nonnegative because every indicator is `0` or `1`. -/
 @[rep_depth operator]
@@ -86,7 +85,7 @@ theorem objectiveLowerBound
 /-- The finite-partition admissibility condition induced by the residual property. -/
 @[rep_depth operator]
 def finitePartitionAdmissible (P : QuaternionNonSeparableWaveletOptimizationProblem) : Prop :=
-  P.kktCertificate.toThermodynamicData.finitePartitionAdmissible
+  P.kktCertificate.finitePartitionAdmissible
 
 end QuaternionNonSeparableWaveletOptimizationProblem
 
@@ -101,14 +100,6 @@ admissibility property carried by the owner datum.
 theorem quaternionNonSeparableWavelet_finitePartitionAdmissible
     (P : QuaternionNonSeparableWaveletOptimizationProblem) :
     P.finitePartitionAdmissible := by
-  change P.kktCertificate.toThermodynamicData.finitePartitionAdmissible
-  exact P.kktCertificate.finitePartitionAdmissible
-
-/-- Backward-compatible public theorem name, now carrying the actual owner-side claim. -/
-@[rep_depth operator]
-theorem quaternionNonSeparableWaveletOwnerTarget
-    (P : QuaternionNonSeparableWaveletOptimizationProblem) :
-    P.finitePartitionAdmissible :=
-  quaternionNonSeparableWavelet_finitePartitionAdmissible P
+  exact P.kktCertificate.finitePartitionAdmissible_proof
 
 end InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization

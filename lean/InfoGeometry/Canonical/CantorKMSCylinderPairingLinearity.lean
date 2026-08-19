@@ -148,6 +148,18 @@ theorem cylinderKMSGNSHermitianPairing_smul_right
         cylinderKMSGNSHermitianPairing_smul 1 c one_ne_zero hc x y
       _ = c * cylinderKMSGNSHermitianPairing x y := by simp
 
+@[simp] theorem cylinderKMSGNSHermitianPairing_zero_left
+    (y : cylinderKMSGNSQuotient) :
+    cylinderKMSGNSHermitianPairing 0 y = 0 := by
+  simpa using cylinderKMSGNSHermitianPairing_smul_left
+    (c := (0 : ℂ)) (x := (0 : cylinderKMSGNSQuotient)) (y := y)
+
+@[simp] theorem cylinderKMSGNSHermitianPairing_zero_right
+    (x : cylinderKMSGNSQuotient) :
+    cylinderKMSGNSHermitianPairing x 0 = 0 := by
+  simpa using cylinderKMSGNSHermitianPairing_smul_right
+    (c := (0 : ℂ)) (x := x) (y := (0 : cylinderKMSGNSQuotient))
+
 theorem cylinderKMSGNSHermitianPairing_left_kernel
     (x : cylinderKMSGNSQuotient) :
     (∀ y, cylinderKMSGNSHermitianPairing x y = 0) ↔ x = 0 := by

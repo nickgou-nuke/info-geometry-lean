@@ -116,6 +116,11 @@ theorem sum_eq_one_iff_exists_one_add_scalar_Ebar (z : Cs) :
         InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
         InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
 
+/-! The affine description can be read directly as a stabilizer equation. -/
+theorem mul_E_eq_E_iff_exists_one_add_scalar_Ebar (z : Cs) :
+    mul z E = E ↔ ∃ t : ℚ, z = add one (mul (scalar t) Ebar) := by
+  rw [mul_E_eq_E_iff, sum_eq_one_iff_exists_one_add_scalar_Ebar]
+
 /-- The homogeneous `E`-line annihilator equation `re+im=0` is exactly `t Ebar`. -/
 theorem sum_eq_zero_iff_exists_scalar_Ebar (z : Cs) :
     z.re + z.im = 0 ↔ ∃ t : ℚ, z = mul (scalar t) Ebar := by
@@ -140,6 +145,10 @@ theorem sum_eq_zero_iff_exists_scalar_Ebar (z : Cs) :
         InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
         InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
         InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
+
+theorem mul_E_eq_zero_iff_exists_scalar_Ebar (z : Cs) :
+    mul z E = zero ↔ ∃ t : ℚ, z = mul (scalar t) Ebar := by
+  rw [mul_E_eq_zero_iff, sum_eq_zero_iff_exists_scalar_Ebar]
 
 @[simp] theorem add_zero (x : Cs) : add x zero = x := by
   cases x

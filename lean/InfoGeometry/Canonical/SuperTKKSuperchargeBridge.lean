@@ -24,7 +24,7 @@ The supercharges are constructed as:
 - `qRight` : odd generators landing in `g₋₁` (mixed with `qLeft` → translation)
 - Same-chirality pairs land in `g₋₂` / `g₊₂`
 
-This is the source-side construction replacing the socket/ax!om in `SuperTKKConformalClosure`.
+This is the source-side construction replacing the interface/ax!om in `SuperTKKConformalClosure`.
 -/
 
 namespace InfoGeometry.Canonical.SuperTKKSuperchargeBridge

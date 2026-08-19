@@ -37,6 +37,25 @@ noncomputable def BosonicPrimonFactor (X : ℂ) : ℂ :=
 noncomputable def FermionicPrimonFactor (X : ℂ) : ℂ :=
   1 + X
 
+/-! The inverse-zeta fermionic factor uses the opposite sign.  It is kept
+separate from `FermionicPrimonFactor`, whose `1 + X` convention is used by
+the ratio identity below. -/
+
+/-- Signed fermionic Euler factor for the inverse-zeta normalization. -/
+def SignedFermionicPrimonFactor (X : ℂ) : ℂ :=
+  1 - X
+
+theorem bosonic_mul_signedFermionic_eq_one {X : ℂ} (hX : X ≠ 1) :
+    BosonicPrimonFactor X * SignedFermionicPrimonFactor X = 1 := by
+  unfold BosonicPrimonFactor SignedFermionicPrimonFactor
+  rw [inv_mul_cancel₀]
+  exact sub_ne_zero.mpr hX.symm
+
+theorem signedFermionic_mul_bosonic_eq_one {X : ℂ} (hX : X ≠ 1) :
+    SignedFermionicPrimonFactor X * BosonicPrimonFactor X = 1 := by
+  rw [mul_comm]
+  exact bosonic_mul_signedFermionic_eq_one hX
+
 /--
 **Main Theorem 1: Supersymmetric Primon Boson-Fermion Ratio Identity**
 Proves natively that the product of the Bosonic factor and inverse Fermionic factor equals the doubled-frequency Bosonic factor:

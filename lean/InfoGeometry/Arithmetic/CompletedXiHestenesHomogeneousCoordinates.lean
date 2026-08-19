@@ -99,6 +99,13 @@ theorem projectiveRatio_hestenesEpsilon
       -projectiveRatio (p, q) := by
   simpa [projectiveRatio, hestenesEpsilon] using (div_neg p)
 
+theorem projectiveRatio_hestenesSwap
+    {p q : ℂ} (hp : p ≠ 0) (hq : q ≠ 0) :
+    projectiveRatio (hestenesSwap (p, q)) =
+      (projectiveRatio (p, q))⁻¹ := by
+  unfold projectiveRatio hestenesSwap
+  field_simp [hp, hq]
+
 theorem hestenesK_eq_swap_epsilon (X : HomogeneousCoord) :
     hestenesK X = hestenesSwap (hestenesEpsilon X) := by
   rfl
@@ -210,6 +217,34 @@ theorem projectiveRatio_cartanFlow
       rw [hexp]
     _ = p * (Real.exp (-t) : ℂ) * (Real.exp (t * 2) : ℂ) := by
       ring
+
+theorem cartanFlow_zero (X : HomogeneousCoord) :
+    cartanFlow 0 X = X := by
+  rcases X with ⟨p, q⟩
+  simp [cartanFlow]
+
+theorem cartanFlow_add (t u : ℝ) (X : HomogeneousCoord) :
+    cartanFlow (t + u) X = cartanFlow t (cartanFlow u X) := by
+  rcases X with ⟨p, q⟩
+  apply Prod.ext
+  · dsimp [cartanFlow]
+    rw [Real.exp_add]
+    push_cast
+    ring
+  · dsimp [cartanFlow]
+    rw [show -(t + u) = (-t) + (-u) by ring, Real.exp_add]
+    push_cast
+    ring
+
+theorem cartanFlow_neg (t : ℝ) (X : HomogeneousCoord) :
+    cartanFlow (-t) (cartanFlow t X) = X := by
+  rw [← cartanFlow_add]
+  simp [cartanFlow_zero]
+
+theorem cartanFlow_neg_right (t : ℝ) (X : HomogeneousCoord) :
+    cartanFlow t (cartanFlow (-t) X) = X := by
+  rw [← cartanFlow_add]
+  simp [cartanFlow_zero]
 
 theorem hestenesSwap_cartanFlow_swap
     (t : ℝ) (X : HomogeneousCoord) :

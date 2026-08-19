@@ -3,6 +3,7 @@ import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 import InfoGeometry.Optics.OperatorCausalSoldering
 import InfoGeometry.Optics.AbelianOperatorValuedConnection
 import InfoGeometry.Optics.JonesPoincareSphere
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Chiral four-vector operator synthesis
@@ -27,6 +28,35 @@ open InfoGeometry.Optics.OperatorValuedConnection
 open InfoGeometry.Optics.JonesPoincareSphere
 
 def matrixCommutator (A B : M2C) : M2C := A * B - B * A
+
+theorem matrixCommutator_swap (A B : M2C) :
+    matrixCommutator A B = -matrixCommutator B A := by
+  unfold matrixCommutator
+  simp [sub_eq_add_neg, add_comm]
+
+theorem matrixCommutator_self (A : M2C) :
+    matrixCommutator A A = 0 := by
+  unfold matrixCommutator
+  simp
+
+theorem matrixCommutator_add_left (A B C : M2C) :
+    matrixCommutator (A + B) C =
+      matrixCommutator A C + matrixCommutator B C := by
+  unfold matrixCommutator
+  noncomm_ring
+
+theorem matrixCommutator_add_right (A B C : M2C) :
+    matrixCommutator A (B + C) =
+      matrixCommutator A B + matrixCommutator A C := by
+  unfold matrixCommutator
+  noncomm_ring
+
+theorem matrixCommutator_jacobi (A B C : M2C) :
+    matrixCommutator A (matrixCommutator B C) +
+        matrixCommutator B (matrixCommutator C A) +
+        matrixCommutator C (matrixCommutator A B) = 0 := by
+  unfold matrixCommutator
+  noncomm_ring
 
 /-! ## Canonical soldering compatibility -/
 
@@ -116,7 +146,7 @@ theorem pauli_four_vector_lorentz_readout
     pauliMomentum (spinLorentzAction g P) =
         chiralConjAct g (pauliMomentum P) ∧
       minkowskiSq (spinLorentzAction g P) = minkowskiSq P :=
-  ⟨pauliMomentum_spinLorentzAction g P,
+  ⟨by rw [spinLorentzAction, pauliMomentum_fourMomentumOfMatrix],
     spinLorentzAction_preserves_minkowskiSq g P⟩
 
 theorem stokes_four_vector_is_null (J : JonesSpinor) :
@@ -141,7 +171,7 @@ theorem finite_chiral_four_vector_synthesis
       (JonesSpinor.stokesMinkowski4 J).q = 0 ∧
       (operatorSolderingAction v = 0 ↔ v = 0) := by
   exact ⟨pauli_commutator_sigma1_sigma2,
-    pauliMomentum_spinLorentzAction g P,
+    (by rw [spinLorentzAction, pauliMomentum_fourMomentumOfMatrix]),
     spinLorentzAction_preserves_minkowskiSq g P,
     JonesSpinor.stokesMinkowski4_q J,
     operatorSolderingAction_eq_zero_iff v⟩

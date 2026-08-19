@@ -251,6 +251,36 @@ theorem fibTensorHom_right_eqToHom
     FibHom.id (fibTensorObj X Y₁)
   exact fibTensorHom_id X Y₁
 
+theorem fibTensorHom_eqToHom_eqToHom
+    {X₁ X₂ Y₁ Y₂ : FibCat} (hX : X₁ = X₂) (hY : Y₁ = Y₂) :
+    fibTensorHom (CategoryTheory.eqToHom hX) (CategoryTheory.eqToHom hY) =
+      CategoryTheory.eqToHom (congrArg₂ fibTensorObj hX hY) := by
+  cases hX
+  cases hY
+  change fibTensorHom (FibHom.id X₁) (FibHom.id Y₁) =
+    FibHom.id (fibTensorObj X₁ Y₁)
+  exact fibTensorHom_id X₁ Y₁
+
+theorem fibEqToHom_comp_eqToHom
+    {X Y Z : FibCat} (h₁ : X = Y) (h₂ : Y = Z) :
+    FibHom.comp (CategoryTheory.eqToHom h₁)
+        (CategoryTheory.eqToHom h₂) =
+      CategoryTheory.eqToHom (h₁.trans h₂) := by
+  cases h₁
+  cases h₂
+  change FibHom.comp (FibHom.id X) (FibHom.id X) = FibHom.id X
+  ext <;> simp [FibHom.comp, FibHom.id]
+
+theorem fibEqToHom_comp_eqToHom_comp_eqToHom
+    {W X Y Z : FibCat} (h₁ : W = X) (h₂ : X = Y) (h₃ : Y = Z) :
+    FibHom.comp
+        (FibHom.comp (CategoryTheory.eqToHom h₁)
+          (CategoryTheory.eqToHom h₂))
+        (CategoryTheory.eqToHom h₃) =
+      CategoryTheory.eqToHom ((h₁.trans h₂).trans h₃) := by
+  rw [fibEqToHom_comp_eqToHom h₁ h₂,
+    fibEqToHom_comp_eqToHom (h₁.trans h₂) h₃]
+
 /-- The skeletal equality-transport associator satisfies Mac Lane's pentagon.
 
 This is the strict skeletal coherence packet supplied by the verified fusion

@@ -27,7 +27,7 @@ local instance instCompleteSpaceEndH : CompleteSpace EndH := inferInstance
 /--
 Hestenes/Krein real-form KMS packet.
 
-This is the theorem-safe real translation of the modular/KMS socket:
+This is the theorem-safe real translation of the modular/KMS data:
 
 * the abstract complex unit is represented by a real phase axis `K` with `K² = -1`;
 * the modular dynamics is a repository-native `OperatorFlow` on bounded real

@@ -25,6 +25,10 @@ DEFAULT_PATTERNS = Path(__file__).with_name("semantic_vacuity_patterns.json")
 
 DECL_RE = re.compile(r"^\s*(theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
 CARRIER_RE = re.compile(r"^\s*(structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
+TYPE_SURFACE_RE = re.compile(
+    r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+"
+    r"([A-Za-z_][A-Za-z0-9_'.]*)[^\n]*:\s*Type(?:\s+\d+|\s+_)\s*:?="
+)
 FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.+?)\s*$")
 DIRECT_ALIAS_ABBREV_RE = re.compile(
     r"^\s*(?:noncomputable\s+)?abbrev\s+([A-Za-z_][A-Za-z0-9_'.]*)\b[^:=\n]*:=\s*([A-Za-z0-9_'.]+)\b",
@@ -251,6 +255,22 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
                     )
                 )
 
+    type_surface_cfg = categories.get("typed_surface_name", {})
+    type_surface_re = re.compile(type_surface_cfg.get("name_regex", r"a^"))
+    if type_surface_cfg:
+        for i, line in enumerate(lines, 1):
+            tm = TYPE_SURFACE_RE.match(line)
+            if tm and type_surface_re.search(tm.group(1)):
+                findings.append(
+                    Finding(
+                        rel,
+                        i,
+                        "typed_surface_name",
+                        type_surface_cfg.get("severity", "warning"),
+                        tm.group(1),
+                        "definition-level Type surface uses witness/interface/packet vocabulary; inspect for a concrete owner theorem",
+                    )
+                )
     dynamic_cfg = categories.get("dynamic_literal_definition", {})
     dynamic_tokens = [str(t).lower() for t in dynamic_cfg.get("name_tokens", [])]
     if dynamic_cfg:

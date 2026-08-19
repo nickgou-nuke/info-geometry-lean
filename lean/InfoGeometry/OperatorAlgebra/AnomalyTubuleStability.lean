@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/AnomalyTubuleStability.lean
 
-Anomaly and topological readout sockets for stable defect/tubule sectors.
+Anomaly and topological readouts for stable defect/tubule sectors.
 
 The local Clifford/Drazin/Krein algebra may expose defect directions, but a
 stable global object requires an invariant readout: an index, residue, cyclic
@@ -144,7 +144,7 @@ theorem not_defect_of_flatFrame
 
 end AnomalousFlowData
 
-/-! ## 3. Specialized anomaly sockets -/
+/-! ## 3. Specialized anomaly data -/
 
 /--
 Chiral anomaly structure.
@@ -198,7 +198,7 @@ structure WeylAnomaly
   determinantVariation_nonzero :
     determinantVariation ≠ 0
 
-/-! ## 4. DIII interacting invariant socket -/
+/-! ## 4. DIII interacting invariant -/
 
 /--
 Free-to-interacting DIII invariant bridge.
@@ -264,7 +264,7 @@ end CliffordToDIIIInteractionBridge
 /--
 A stable tubule/defect sector structure.
 
-The point of this socket is the strict qualification: a local defect becomes a
+The point of this datum is the strict qualification: a local defect becomes a
 stable global object only after a nonzero anomaly/topological readout proves
 that it cannot be removed by local gauge choices.
 -/

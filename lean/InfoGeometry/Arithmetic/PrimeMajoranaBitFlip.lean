@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
-import InfoGeometry.Meta.SocketTarget
 
 
 noncomputable section

@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Algebra/LightConePair.lean
 
-A theorem-safe local lightcone compensation socket.
+A theorem-safe local lightcone compensation interface.
 
 This file proves only the finite associative-algebra identities following from
 nilpotent generators `ePlus`, `eMinus` with anticommutator one.  It does not

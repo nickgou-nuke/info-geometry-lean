@@ -195,7 +195,7 @@ end Bridge
 
 /--
 Projective-shadow bridge enriched with a theorem-safe binary-word natural-cone
-face-localization socket.
+face-localization interface.
 
 This keeps the projective GW/Weyl cancellation layer separate from the
 standard-form natural-cone face layer.  The face bridge is supplied as an

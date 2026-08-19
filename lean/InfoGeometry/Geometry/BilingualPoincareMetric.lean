@@ -16,7 +16,6 @@ import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -1141,7 +1140,7 @@ def MobiusIsometryLaw
     (M : BilingualMobiusSymmetry H Q) : Prop :=
   IsPoincareIsometry G M.aut
 
-/-! ### Spectral reconstruction socket -/
+/-! ### Spectral reconstruction -/
 
 /--
 A spectral or cyclic reconstruction backend for the Poincare metric.

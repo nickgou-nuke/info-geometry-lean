@@ -3,8 +3,6 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Dynamics.ModularThermalState
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge
@@ -106,30 +104,6 @@ end SquarefreeMobiusKreinSector
 /-! ## 3. Hestenes--Krein direct doubling -/
 
 /--
-Witness that a complex Tomita modular conjugation has been transported to the
-real doubled/Krein category.
-
-The intended doctrine is categorical:
-
-* in the complex Hilbert category, Tomita `J` is antiunitary/conjugate-linear;
-* after realification, it is a real-linear involutive isometry;
-* anti-linearity becomes anti-commutation with the complex structure;
-* a model may then identify the realified Tomita operator with a Krein
-  fundamental symmetry or polarization.
--/
-structure TomitaKreinRealificationWitness where
-  ComplexCarrier : Type*
-  RealCarrier : Type*
-  complexStructure : Type*
-  tomitaJ : Type*
-  realifiedJ : Type*
-  kreinSymmetry : Type*
-
-namespace TomitaKreinRealificationWitness
-
-end TomitaKreinRealificationWitness
-
-/--
 Doubled Krein TFD sector.
 
 `KreinJ` is a real-linear fundamental symmetry.  It is not Tomita's
@@ -142,30 +116,19 @@ structure DoubledKreinTFDSector where
   DirectDoubledCarrier : Type*
   KreinJ : Type*
   Liouvillian : Type*
-  tomitaKreinRealification : TomitaKreinRealificationWitness
+  ComplexCarrier : Type*
+  RealCarrier : Type*
+  complexStructure : Type*
+  tomitaJ : Type*
+  realifiedJ : Type*
+  kreinSymmetry : Type*
 
 namespace DoubledKreinTFDSector
 
 end DoubledKreinTFDSector
 
-/-! ## 4. Type III modular socket -/
-
 /--
-Modular/Tomita socket for Type III or non-tracial versions.
-
-No trace, density matrix, determinant, or partition function is assumed here.
--/
-@[socket_debt_tag]
-structure TypeIIIModularPrimonSocket (A : Type*) [Monoid A] where
-  modularState : InfoGeometry.Dynamics.ModularThermalState A
-  standardFormData : Type*
-  naturalConeData : Type*
-  faithfulNormalStateOrWeight : Type*
-  modularFlowReadout : Type*
-  nontracialReadout : Type*
-
-/--
-Supertrace/index readout socket.
+Supertrace/index readout interface.
 
 This is finite/semifinite or index-pairing data.  It is not an automatic
 global Type III trace.
@@ -188,10 +151,10 @@ theorem parity_eq_inverse_zeta_theorem
 
 end MobiusSupertraceReadout
 
-/-! ## 5. TFD/Krein duality and Hestenes orbit sockets -/
+/-! ## 5. TFD/Krein duality and Hestenes orbit interfaces -/
 
 /--
-TFD/Krein readout duality socket.
+TFD/Krein readout duality interface.
 
 The formula comparing a TFD expectation with a Krein graded readout is valid
 only after a model supplies a translation and a property.
@@ -223,35 +186,6 @@ namespace HestenesKreinOrbitChannel
 
 end HestenesKreinOrbitChannel
 
-/--
-Witness-gated zeta-zero socket.
-
-Riemann zero locations are not inferred from TFD, Krein parity, or Hestenes
-winding periodicity.  They require a separate analytic/spectral property.
--/
-@[socket_debt_tag]
-structure WitnessGatedZetaZeroSocket where
-  spectralObject : Type*
-  zetaZeroReadout : Type*
-  /-- Complex-valued spectral function whose zero set is being tracked. -/
-  spectralFunction : ℂ → ℂ
-  /-- Open domain on which the continuation agrees with the spectral function. -/
-  continuationDomain : Set ℂ
-  continuationDomain_open : IsOpen continuationDomain
-  /-- Candidate analytic continuation. -/
-  continuation : ℂ → ℂ
-  continuation_eq_function :
-    ∀ z, z ∈ continuationDomain → continuation z = spectralFunction z
-  continuation_holomorphic : DifferentiableOn ℂ continuation continuationDomain
-  /-- The tracked zero locus is defined by the supplied continuation. -/
-  zeroLocation : Set ℂ
-  zeroLocation_spec :
-    ∀ z, z ∈ zeroLocation ↔ continuation z = 0
-
-namespace WitnessGatedZetaZeroSocket
-
-end WitnessGatedZetaZeroSocket
-
 /-! ## 6. Full bridge packet -/
 
 /--
@@ -262,11 +196,9 @@ structure PrimonTFDKreinMobiusBridge (A : Type*) [Monoid A] where
   bosonicTFD : BosonicPrimonTFDModel
   squarefreeKrein : SquarefreeMobiusKreinSector
   doubledKrein : DoubledKreinTFDSector
-  typeIIIModular : TypeIIIModularPrimonSocket A
   supertraceReadout : MobiusSupertraceReadout
   duality : TFDKreinSupertraceDuality
   orbit : HestenesKreinOrbitChannel
-  zetaZeroSocket : WitnessGatedZetaZeroSocket
 
 
 end InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge

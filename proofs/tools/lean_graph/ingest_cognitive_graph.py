@@ -14,7 +14,7 @@ Default target:
   graph:    CompiledTheoryCognitiveGraph
 
 Collections:
-  lean_theorems      canonical declarations/theorems/sockets from AST graph JSON
+  lean_theorems      canonical declarations/theorems/deferred_interfaces from AST graph JSON
   ast_nodes          optional normalized AST/InfoTree nodes from syntax JSONL
   source_documents   external papers, markdown, bib, code, PDF metadata
   infotree_edges     declaration dependency/reference edges

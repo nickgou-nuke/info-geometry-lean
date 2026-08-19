@@ -8,6 +8,54 @@ open scoped BigOperators
 
 abbrev SquareFreePrimeState (PrimeLabel : Type*) := Finset PrimeLabel
 
+/-! ## Finite Boolean-coordinate form of the exterior carrier -/
+
+/-
+The square-free carrier is a finite subset carrier.  When the label type is
+finite, its Boolean-coordinate presentation is an actual equivalence, not a
+second algebra or a colimit interface.
+-/
+
+def toBooleanCoordinates {PrimeLabel : Type*} [DecidableEq PrimeLabel]
+    (S : SquareFreePrimeState PrimeLabel) : PrimeLabel → Bool :=
+  fun p => decide (p ∈ S)
+
+def ofBooleanCoordinates {PrimeLabel : Type*} [Fintype PrimeLabel]
+    (b : PrimeLabel → Bool) : SquareFreePrimeState PrimeLabel :=
+  Finset.univ.filter (fun p => b p = true)
+
+def booleanCoordinatesEquiv (PrimeLabel : Type*) [Fintype PrimeLabel]
+    [DecidableEq PrimeLabel] :
+    SquareFreePrimeState PrimeLabel ≃ (PrimeLabel → Bool) where
+  toFun := toBooleanCoordinates
+  invFun := ofBooleanCoordinates
+  left_inv := by
+    intro S
+    ext p
+    simp [toBooleanCoordinates, ofBooleanCoordinates]
+  right_inv := by
+    intro b
+    funext p
+    simp [toBooleanCoordinates, ofBooleanCoordinates]
+
+@[simp] theorem booleanCoordinatesEquiv_apply_mem
+    {PrimeLabel : Type*} [Fintype PrimeLabel] [DecidableEq PrimeLabel]
+    (S : SquareFreePrimeState PrimeLabel) (p : PrimeLabel) :
+    booleanCoordinatesEquiv PrimeLabel S p = decide (p ∈ S) := rfl
+
+@[simp] theorem booleanCoordinatesEquiv_symm_apply
+    {PrimeLabel : Type*} [Fintype PrimeLabel] [DecidableEq PrimeLabel]
+    (b : PrimeLabel → Bool) :
+    (booleanCoordinatesEquiv PrimeLabel).symm b =
+      Finset.univ.filter (fun p => b p = true) := rfl
+
+theorem card_squareFreePrimeState
+    (PrimeLabel : Type*) [Fintype PrimeLabel] [DecidableEq PrimeLabel] :
+    Fintype.card (SquareFreePrimeState PrimeLabel) =
+      2 ^ Fintype.card PrimeLabel := by
+  simpa [Fintype.card_fun, Fintype.card_bool] using
+    Fintype.card_congr (booleanCoordinatesEquiv PrimeLabel)
+
 namespace SquareFreePrimeState
 
 variable {PrimeLabel : Type*} [DecidableEq PrimeLabel]

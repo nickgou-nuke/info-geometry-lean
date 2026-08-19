@@ -204,6 +204,20 @@ theorem liouvilleParity_sq (n : ℕ) :
   rw [h, pow_mul]
   norm_num
 
+theorem liouvilleParity_eq_one_or_neg_one (n : ℕ) :
+    InfoGeometry.BostConnes.liouvilleParity n = 1 ∨
+      InfoGeometry.BostConnes.liouvilleParity n = -1 := by
+  have hsq : (InfoGeometry.BostConnes.liouvilleParity n : ℤ) ^ 2 = 1 := by
+    simpa [pow_two] using liouvilleParity_sq n
+  exact sq_eq_one_iff.mp hsq
+
+theorem is_bosonic_sector_or_negated (n : ℕ) :
+    is_bosonic_sector n ∨
+      InfoGeometry.BostConnes.liouvilleParity n = -1 := by
+  rcases liouvilleParity_eq_one_or_neg_one n with h | h
+  · exact Or.inl h
+  · exact Or.inr h
+
 /-- The duplicated grading statement is reduced to `liouvilleParity_sq`. -/
 theorem thermofield_preserves_grading (n : ℕ) :
     (InfoGeometry.BostConnes.liouvilleParity n : ℤ) *

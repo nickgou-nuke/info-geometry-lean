@@ -36,7 +36,7 @@ structure LanglandsSugawaraBridge
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     (Finite Affine Vir State : Type*)
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]
@@ -45,7 +45,7 @@ structure LanglandsSugawaraBridge
 
   /-- Strong arithmetic property for the projected L-function. -/
   resonance :
-    LanglandsPrimeResonanceStrongWitness P
+    LanglandsPrimeResonanceStrongData P
 
   /-- Exceptional affine/Virasoro central-charge bridge with complex readout. -/
   affineVirasoro :
@@ -76,7 +76,7 @@ variable
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    {P : ProjectedAutomorphicLFunctionWitness W}
+    {P : ProjectedAutomorphicLFunctionData W}
     {Finite Affine Vir State : Type*}
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]
@@ -96,22 +96,14 @@ def completedL :
     ℂ → ℂ :=
   B.resonance.completed.completedL
 
-/--
-The bridge packages the supplied Euler/completed data as a
-`LanglandsPrimeResonanceWitness`.
--/
-def toLanglandsPrimeResonanceWitness :
-    LanglandsPrimeResonanceWitness P :=
-  B.resonance.toWeakWitness
-
-/--
-Central charge equals the selected completed L-function value by the supplied
-calibration.
--/
+/-- Central charge equals the selected completed L-function value by the supplied
+calibration. -/
 theorem centralCharge_eq_completedL :
     B.affineVirasoro.centralChargeReadout B.state =
-      B.completedL B.spectralPoint :=
-  B.centralCharge_eq_completedL_value
+      B.completedL B.spectralPoint := by
+  change B.affineVirasoro.centralChargeReadout B.state =
+    B.resonance.completed.completedL B.spectralPoint
+  exact B.centralCharge_eq_completedL_value
 
 /--
 If the completed L-function on the bridge is identified with the projected
@@ -148,51 +140,5 @@ theorem hiddenGradeMemory_eq_completedL :
   exact B.centralCharge_eq_completedL
 
 end LanglandsSugawaraBridge
-
-/--
-Installed owner target for the Langlands/Sugawara bridge.
-
-Once the bridge property is supplied, it packages the strong
-`LanglandsPrimeResonanceStrongWitness` already carried by the bridge and
-exposes the central-charge/completed-L calibration.
--/
-def LanglandsSugawaraBridgeInstalledTarget
-    {Bulk : Type uBulk} {Boundary : Type uBoundary}
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    {W : SiegelEisensteinWitness Bulk Boundary}
-    (P : ProjectedAutomorphicLFunctionWitness W)
-    (Finite Affine Vir State : Type*)
-    [AddCommGroup Finite] [Module ℝ Finite]
-    [AddCommGroup Affine] [Module ℝ Affine]
-    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-    [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P Finite Affine Vir State) :=
-  ∃ _ : LanglandsPrimeResonanceStrongWitness P,
-    B.affineVirasoro.centralChargeReadout B.state =
-      B.completedL B.spectralPoint
-
-/--
-The installed target data follows from the supplied bridge property.
--/
-def langlandsSugawaraBridgeInstalledTarget :
-    ∀ {Bulk : Type uBulk} {Boundary : Type uBoundary}
-      [AddCommGroup Bulk] [Module ℝ Bulk]
-      [AddCommGroup Boundary] [Module ℝ Boundary]
-      {W : SiegelEisensteinWitness Bulk Boundary}
-      (P : ProjectedAutomorphicLFunctionWitness W)
-      (Finite Affine Vir State : Type*)
-      [AddCommGroup Finite] [Module ℝ Finite]
-      [AddCommGroup Affine] [Module ℝ Affine]
-      [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-      [AddCommGroup State] [Module ℝ State]
-      (B : LanglandsSugawaraBridge P Finite Affine Vir State),
-    LanglandsSugawaraBridgeInstalledTarget
-      (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
-  intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State
-    _ _ _ _ _ _ _ _ _ _ B
-  refine ⟨?_, ?_⟩
-  · exact B.resonance
-  · exact B.centralCharge_eq_completedL
 
 end InfoGeometry.Automorphic

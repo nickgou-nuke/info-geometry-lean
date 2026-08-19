@@ -45,15 +45,10 @@ def nodes : Fin 3 → ℝ
 noncomputable def expNodes : Fin 3 → ℝ :=
   fun i => Real.exp (C.nodes i)
 
-/-- Finite Vandermonde property for the denominator lane. -/
-@[rep_depth thermo]
-def denominatorWitness : Fin 3 → ℝ :=
-  C.nodes
-
 /-- Denominator value. -/
 @[rep_depth thermo]
 def denominator : ℝ :=
-  FiniteVandermondeExclusionWitness.determinant C.denominatorWitness
+  FiniteVandermondeExclusionWitness.determinant C.nodes
 
 /-- Numerator value: Vandermonde determinant of the exponential nodes. -/
 @[rep_depth thermo]
@@ -73,10 +68,10 @@ noncomputable def quotient (_h : C.NoncollisionDomain) : ℝ :=
 /-- Denominator zero is exactly collision of two scalar nodes. -/
 @[rep_depth thermo]
 theorem denominator_eq_zero_iff_collision :
-    C.denominator = 0 ↔
+  C.denominator = 0 ↔
       ∃ i j : Fin 3, C.nodes i = C.nodes j ∧ i ≠ j :=
   FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision
-    C.denominatorWitness
+    C.nodes
 
 /-- Numerator zero is exactly collision of two exponential nodes. -/
 @[rep_depth thermo]

@@ -21,7 +21,6 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -119,7 +118,7 @@ theorem diracSouriauCasimir_fixed_under_conjugation
   simp only [Matrix.mul_smul, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_one]
   rw [huv]
 
-/-! ## 3. Owner theorem -/
+/-! ## 3. Casimir invariance theorem -/
 
 /--
 Owner theorem for algebraic Casimir anchoring.
@@ -127,7 +126,7 @@ Owner theorem for algebraic Casimir anchoring.
 Once a verified Casimir and an explicit inverse pair are displayed, conjugation
 fixes the Casimir.  This is not a modular-flow theorem.
 -/
-theorem casimirInvarianceOwnerTarget :
+theorem verifiedCasimir_invariant_under_inverse_pair :
   ∀ (Op : Type*) [Ring Op],
   ∀ (G : Type*) [Group G],
   ∀ (α : SymmetryAction G Op),

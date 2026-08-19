@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.WeylIntegrationFixedPoint
 import InfoGeometry.Canonical.LieOrbitAdjointInvariants
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Arithmetic.MoebiusSignature
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.CantorDiracOperator
 import InfoGeometry.Analysis.MellinZetaScaling
@@ -15,8 +15,8 @@ import InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator
 open scoped BigOperators
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.LieOrbitAdjointInvariants
-open InfoGeometry.Topology.FractalCantorFockWitness
-open InfoGeometry.Topology.FractalCantorFockWitness.CantorBoundaryFunctionSpace
+open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFock.CantorBoundaryFunctionSpace
 open InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 
 /-!
@@ -29,7 +29,7 @@ signature.
 ## Connection map
 
 FormalPrimeRootSystem          → δ_L(t) = ∏ (1 - e^{-α_p})
-FractalCantorFockWitness       → tilt/switch Cl(1,1) atoms at Cantor addresses
+FractalCantorFock             → tilt/switch Cl(1,1) atoms at Cantor addresses
 CuntzCantorSpectralTriple      → Dirac D on the Cantor set
 MoebiusSignature               → ε(w) = μ (Weyl sign = Möbius)
 ConnesCocycle                  → D_Xω = H₂ - H₁ (vanishes on fiber boundary)
@@ -63,7 +63,7 @@ The tilt operator at Cantor address j is an involution:
 
   tilt j ∘ tilt j = 1
 
-Source: FractalCantorFockWitness.CantorBoundaryFunctionSpace.tilt_sq
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.tilt_sq
 -/
 theorem tiltGrading_sq (j : ℕ) :
     (tilt j) * (tilt j) = 1 :=
@@ -74,7 +74,7 @@ The switch operator at Cantor address j is an involution:
 
   switch j ∘ switch j = 1
 
-Source: FractalCantorFockWitness.CantorBoundaryFunctionSpace.switch_sq
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.switch_sq
 -/
 theorem switchGrading_sq (j : ℕ) :
     (switch j) * (switch j) = 1 :=
@@ -86,7 +86,7 @@ relation:
 
   tilt j · switch j + switch j · tilt j = 0
 
-Source: FractalCantorFockWitness.CantorBoundaryFunctionSpace.tilt_switch_anticomm
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.tilt_switch_anticomm
 -/
 theorem tiltSwitch_anticomm (j : ℕ) :
     (tilt j) * (switch j) = -((switch j) * (tilt j)) :=
@@ -137,7 +137,7 @@ under the fiber direction flow.
 
 This combines:
 1. The combinatorial Weyl denominator identity (FormalPrimeRootSystem)
-2. The Cl(1,1) root character on the Cantor boundary (FractalCantorFockWitness)
+2. The Cl(1,1) root character on the Cantor boundary (FractalCantorFock)
 3. The coadjoint orbit geometry (SouriauCoadjointOrbitMetriplecticTheorem)
 4. The Connes cocycle vanishing (ConnesRadonNikodymCocycle)
 5. The adjoint orbit determinant invariance (LieOrbitAdjointInvariants)

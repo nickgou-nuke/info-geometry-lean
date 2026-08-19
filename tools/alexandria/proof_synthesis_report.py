@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from tools.alexandria.arango_ingest import db_url, request_json
-from tools.infra.arango_env import arango_endpoint, arango_password, arango_username, load_repo_arango_env
+from tools.infra.arango_env import alexandria_arango_endpoint, arango_password, arango_username, load_repo_arango_env
 
 
 LEAN_ANCHORS = [
@@ -179,7 +179,7 @@ def main() -> int:
     ap.add_argument("--min-member-count", type=int, default=1)
     ap.add_argument("--max-depth", type=int, default=6)
     ap.add_argument("--limit", type=int, default=25)
-    ap.add_argument("--endpoint", default=arango_endpoint())
+    ap.add_argument("--endpoint", default=alexandria_arango_endpoint())
     ap.add_argument("--database", default="alexandria")
     ap.add_argument("--username", default=arango_username())
     ap.add_argument("--password", default=arango_password("alexandria_root"))

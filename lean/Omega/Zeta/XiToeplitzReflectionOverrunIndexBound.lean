@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
 import Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
-import Omega.Zeta.XiHorizonReflectionFiniteWitness
+import Omega.Zeta.XiHorizonReflectionBound
 
 namespace Omega.Zeta
 
@@ -54,7 +54,7 @@ theorem paper_xi_toeplitz_reflection_overrun_index_bound
   refine ⟨hKernel, hPSD, hReadable, h4κ, h2κ, hStrict, ⟨N₀, hN₀, D.prefixSchur,
     D.badAtMinimal, ?_⟩⟩
   intro hSchur
-  rcases paper_xi_horizon_reflection_finite_witness D.alpha hSchur with ⟨_, hNoBad⟩
+  rcases xi_horizon_reflection_bound D.alpha hSchur with ⟨_, hNoBad⟩
   exact hNoBad ⟨D.minimalBadLevel, D.badAtMinimal⟩
 
 end Omega.Zeta

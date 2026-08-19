@@ -73,6 +73,29 @@ theorem xi_sub_eta_eq_log_s :
   unfold xi eta
   ring
 
+/-- Weyl reflection swaps the two diagonal coordinates. -/
+theorem xi_swap :
+    xi s r = xi r s := by
+  unfold xi
+  ring
+
+theorem eta_swap :
+    eta s r = -eta r s := by
+  unfold eta
+  ring
+
+theorem xi_mul_common_scale {a : Real} (ha : 0 < a) (hr : 0 < r) (hs : 0 < s) :
+    xi (a * r) (a * s) = Real.log a + xi r s := by
+  unfold xi
+  rw [Real.log_mul ha.ne' hr.ne', Real.log_mul ha.ne' hs.ne']
+  ring
+
+theorem eta_mul_common_scale {a : Real} (ha : 0 < a) (hr : 0 < r) (hs : 0 < s) :
+    eta (a * r) (a * s) = eta r s := by
+  unfold eta
+  rw [Real.log_mul ha.ne' hr.ne', Real.log_mul ha.ne' hs.ne']
+  ring
+
 /-- Exponential corollary: `exp (xi + eta) = r` under `r > 0`. -/
 theorem exp_xi_add_eta_eq_r (hr : 0 < r) :
     Real.exp (xi r s + eta r s) = r := by

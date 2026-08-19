@@ -17,7 +17,7 @@ import Omega.EA.ChebotarevMobiusAdams
 import Omega.EA.ChebotarevPlancherelNonabelian
 import Omega.EA.ChebotarevPlancherelEnergy
 import Omega.EA.ChebotarevQuotientRelativeEntropyChain
-import Omega.EA.ChebotarevSecondMainTermWitness
+import Omega.EA.ChebotarevSecondMainTerm
 import Omega.EA.ChebotarevStatisticalConvergence
 import Omega.EA.ChebotarevVisibleHiddenCharacterEnergy
 import Omega.EA.ChiRigidityShadow

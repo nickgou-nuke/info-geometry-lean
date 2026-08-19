@@ -51,7 +51,7 @@ def antiOppositeRingEquiv
   rfl
 
 /-! The existing two-sheet carrier can now be instantiated from the native
-opposite-ring equivalence.  This is the algebraic Morita-side witness; an
+opposite-ring equivalence.  This is the algebraic Morita-side construction; an
 analytic Hilbert-bimodule Morita theorem still requires its own module data. -/
 def AntiAutomorphism.toTwoSheetedAlgebra
     {K A : Type*} [CommRing K] [Ring A] [Algebra K A]

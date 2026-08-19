@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.HolographicSouriauReconstruction
 # Wallpaper symmetries compatible with the Klein-bottle Cartan shadow
 
 Finite exact-rational audit layer for wallpaper point symmetries compatible with
-the Brillouin Klein-bottle cell used in the five-graded `O(5,5)`/Pin socket.
+the Brillouin Klein-bottle cell used in the five-graded `O(5,5)`/Pin interface.
 
 The concrete finite result is the signed-permutation point group `D₄` generated
 by the Brillouin twist `T² = -I` and glide `G T = - T G`.  These eight matrices
@@ -142,7 +142,7 @@ theorem classified_is_compatible
 
 end WallpaperKleinClassification
 
-/-- Five-graded Cartan shadow for the split `O(5,5)`/Pin socket.  The Cartan and
+/-- Five-graded Cartan shadow for the split `O(5,5)`/Pin interface.  The Cartan and
 grade-compatibility claims are intentionally explicit predicates. -/
 structure Pin55CartanWallpaperData where
   cartan : Set Mat10Q
@@ -173,23 +173,6 @@ theorem klein_compatible_readout (S : Pin55CartanWallpaperData) (i : Fin 8) :
   wallpaperD4_is_klein_compatible i
 
 end Pin55CartanWallpaperData
-
-/-- Canonical finite socket using the proved compatibility theorem for the eight
-point symmetries; the Cartan/five-grade preservation premises are supplied by
-the Pin(5,5) owner. -/
-def pin55WallpaperSocketOfPremises
-    (cartan : Set Mat10Q) (grade : Fin 5 → Set Mat10Q)
-    (wallpaperAction : Fin 8 → Mat10Q → Mat10Q)
-    (hCartan :
-      ∀ i : Fin 8, ∀ X : Mat10Q,
-        X ∈ cartan → wallpaperAction i X ∈ cartan)
-    (hGrade :
-      ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-        X ∈ grade g → wallpaperAction i X ∈ grade g) :
-    Pin55CartanWallpaperData where
-  cartan := cartan
-  grade := grade
-  wallpaperAction := wallpaperAction
 
 end
 

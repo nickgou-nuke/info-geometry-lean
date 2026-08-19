@@ -62,7 +62,7 @@ qval = sp.Rational(1, 2)
 bound = 1 / sp.sqrt(1 - abs(qval))
 assert bound == sp.sqrt(2)
 print("bounded-representation norm scale 1/sqrt(1-|q|) checked at q=1/2 ✓")
-print("Kuzmin theorem socket: for |q|<1, Fock-image E_{n,q} ≅ E_{n,0} ≅ KO_n ✓")
+print("Kuzmin theorem deferred_interface: for |q|<1, Fock-image E_{n,q} ≅ E_{n,0} ≅ KO_n ✓")
 
 print("\n§5 Toeplitz bulk-boundary vacuum defect")
 S = sp.Matrix([[0, 0], [1, 0]])

@@ -650,10 +650,10 @@ theorem etaChiral_comp_right_projector :
     simp [etaChiral, leftChiralProjector, rightChiralProjector, gamma5,
       modular_j, spectral_epsilon, one_div, sub_eq_add_neg]
 
-/-! ## 6. Hyperbolic-flow socket -/
+/-! ## 6. Hyperbolic-flow interface -/
 
 /--
-Witness socket for a real hyperbolic primon flow.
+Deferred interface for a real hyperbolic primon flow.
 
 The exponential `exp(t L)` is not constructed here.  A concrete owner module may
 supply such a flow together with preservation of the chosen Krein form and any

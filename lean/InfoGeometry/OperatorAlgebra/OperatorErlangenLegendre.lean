@@ -173,88 +173,24 @@ def diagonalPrimitiveGuard :
 
 end OperatorErlangenLegendrePacket
 
-/-- Owner target for a supplied operator Erlangen--Legendre packet. -/
-def OperatorErlangenLegendreTarget
-    (Obs : Type uObs)
-    (Sym : Type uSym)
-    (StateSpace : Type uState)
-    [Ring Obs]
-    [Group Sym] : Prop :=
-  ∀ P : OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace,
-    (∀ (ω : StateSpace) (x : Obs),
-      P.modularDerivation ω x =
-        P.modularGenerator ω * x - x * P.modularGenerator ω) ∧
-    (∀ (ω : StateSpace) (g : Sym),
-      P.stabilizer ω g ↔
-        ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x) ∧
-    (∀ ω : StateSpace,
-      P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω))
-
-/-- Readout theorem for the operator Erlangen--Legendre owner target. -/
-theorem operatorErlangenLegendreTarget
-    {Obs : Type uObs}
-    {Sym : Type uSym}
-    {StateSpace : Type uState}
-    [Ring Obs]
-    [Group Sym] :
-    OperatorErlangenLegendreTarget.{uObs, uSym, uState, uPol} Obs Sym StateSpace := by
+/-- Native operator Erlangen--Legendre readout theorem. -/
+theorem operatorErlangenLegendre
+    {Obs : Type uObs} {Sym : Type uSym} {StateSpace : Type uState}
+    [Ring Obs] [Group Sym] :
+    ∀ P : OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace,
+      (∀ (ω : StateSpace) (x : Obs),
+        P.modularDerivation ω x =
+          P.modularGenerator ω * x - x * P.modularGenerator ω) ∧
+      (∀ (ω : StateSpace) (g : Sym),
+        P.stabilizer ω g ↔
+          ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x) ∧
+      (∀ ω : StateSpace,
+        P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω)) := by
   intro P
   exact ⟨
     (fun ω x => P.modular_derivation_commutator ω x),
     (fun ω g => P.stabilizer_iff_eval_invariant ω g),
     (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight ω)⟩
 
-/-! ## Conditional Hilbert--Polya socket -/
-
-/--
-Conditional Hilbert--Polya operator packet.
-
-This is only a socket.  The zero/spectrum equivalence is a supplied field, not
-a theorem proved here.  Therefore this file does not prove RH and does not
-construct a self-adjoint Riemann-zero operator.
--/
-structure HilbertPolyaOperatorPacket where
-  /-- Underlying Hilbert/spectral carrier. -/
-  SpectralCarrier :
-    Type uH
-
-  /-- Spectral generator datum. -/
-  spectralGenerator :
-    Type uD
-
-  /-- Completed zeta/xi-style spectral determinant readout. -/
-  completedZeta :
-    ℂ → ℂ
-
-  /-- Predicate that a real ordinate is a spectral value of the supplied generator. -/
-  IsSpectralValue :
-    ℝ → Prop
-
-  /--
-  Supplied equivalence between critical-line zeroes and spectral values.
-
-  This is the nontrivial Hilbert--Polya content and remains explicitly
-  property-bearing.
-  -/
-  zero_iff_spectral_value :
-    ∀ γ : ℝ,
-      completedZeta ((1 / 2 : ℂ) + Complex.I * (γ : ℂ)) = 0 ↔
-        IsSpectralValue γ
-
-namespace HilbertPolyaOperatorPacket
-
-variable (P : HilbertPolyaOperatorPacket.{uH, uD})
-
-/--
-If a Hilbert--Polya packet is supplied, its critical-line zeroes are exactly
-the spectral values supplied by the packet.
--/
-theorem criticalLine_zero_iff_spectral_value :
-    ∀ γ : ℝ,
-      P.completedZeta ((1 / 2 : ℂ) + Complex.I * (γ : ℂ)) = 0 ↔
-        P.IsSpectralValue γ :=
-  P.zero_iff_spectral_value
-
-end HilbertPolyaOperatorPacket
 
 end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre

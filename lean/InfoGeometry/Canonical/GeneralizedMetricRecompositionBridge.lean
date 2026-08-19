@@ -41,10 +41,10 @@ local notation "H2" => DoubledSpace H
 /-- The canonical generalized-metric property induced by the polarized pair
 underlying a recomposition package. -/
 @[rep_depth krein]
-noncomputable def PolarizedRecompositionData.toGeneralizedMetricWitness
+noncomputable def PolarizedRecompositionData.toGeneralizedMetricData
     (R : PolarizedRecompositionData H α βplus βminus) :
-    GeneralizedMetricPolarizedWitness H α βplus βminus :=
-  PolarizedRelativeModularPair.toGeneralizedMetricWitness (R := R.polarized)
+    GeneralizedMetricPolarizedData H α βplus βminus :=
+  PolarizedRelativeModularPair.toGeneralizedMetricData (R := R.polarized)
 
 /-- Metric transport of a plus-sector lift lands on the minus side. -/
 @[rep_depth krein]
@@ -70,10 +70,10 @@ noncomputable def PolarizedRecompositionData.minusMetricTransportLift
       (GeneralizedMetricSeed.metric_comp_plusProjector
         (G := (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)))
   have hfix :=
-    (PolarizedRecompositionData.toGeneralizedMetricWitness R).plus_fixed b
+    (PolarizedRecompositionData.toGeneralizedMetricData R).plus_fixed b
   have hfix' :
       GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) u = u := by
-    simpa [u, PolarizedRecompositionData.toGeneralizedMetricWitness] using hfix
+    simpa [u, PolarizedRecompositionData.toGeneralizedMetricData] using hfix
   calc
     GeneralizedMetricSeed.minusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
         (PolarizedRecompositionData.plusMetricTransportLift R b)
@@ -97,10 +97,10 @@ noncomputable def PolarizedRecompositionData.minusMetricTransportLift
       (GeneralizedMetricSeed.metric_comp_minusProjector
         (G := (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)))
   have hfix :=
-    (PolarizedRecompositionData.toGeneralizedMetricWitness R).minus_fixed b
+    (PolarizedRecompositionData.toGeneralizedMetricData R).minus_fixed b
   have hfix' :
       GeneralizedMetricSeed.minusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) u = u := by
-    simpa [u, PolarizedRecompositionData.toGeneralizedMetricWitness] using hfix
+    simpa [u, PolarizedRecompositionData.toGeneralizedMetricData] using hfix
   calc
     GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
         (PolarizedRecompositionData.minusMetricTransportLift R b)

@@ -63,9 +63,8 @@ FILES = [
     "lean/InfoGeometry/Arithmetic/LPrimitive.lean",
     "lean/InfoGeometry/Arithmetic/PrimeSpinorSquareRootBoost.lean",
     "lean/InfoGeometry/Arithmetic/ArithmeticSuperchargeHopfBridge.lean",
-    "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket.lean",
+    "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertDeferredInterface.lean",
 ]
 
 for f in FILES:
     process_file(f)
-

@@ -6,9 +6,9 @@ Usage:
   python3 tools/quality/mission_judge.py <lean_file> <response_file> <baseline_debt_count>
 
 Exit codes:
-  0 = DONE   (socket closed, all checks pass)
+  0 = DONE   (interface closed, all checks pass)
   1 = CONTINUE (keep working, some check failed)
-  2 = BLOCKED  (kernel error unrelated to the socket — skip and auto-pause)
+  2 = BLOCKED  (kernel error unrelated to the interface — skip and auto-pause)
 
 The judge enforces the Closure Mission Loop standard:
   1. Lean kernel must pass (lake env lean <file>)
@@ -129,7 +129,7 @@ def judge(
         reasons.append("derivation chain not documented in response")
 
     # Classify BLOCKED vs CONTINUE
-    # BLOCKED = kernel error unrelated to the socket (toolchain issue, import error)
+    # BLOCKED = kernel error unrelated to the interface (toolchain issue, import error)
     status = "done" if done else ("blocked" if (not kernel_pass and "import" in kernel_err.lower()) else "continue")
 
     return {

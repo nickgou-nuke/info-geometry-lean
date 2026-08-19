@@ -72,19 +72,28 @@ operator equation rather than manufacturing supercharges. -/
 structure ChiralOperatorPresentation where
   antiQQbar : M2C
   Pspinor : M2C
-  super_poincare : antiQQbar = (2 : ℂ) • Pspinor
+
+def ChiralOperatorPresentationLaws (S : ChiralOperatorPresentation) : Prop :=
+  S.antiQQbar = (2 : ℂ) • S.Pspinor
 
 /-- Existing Pauli-soldered chiral SUSY data gives the operator presentation. -/
 def fromChiralSUSYMomentum
-    (S : ChiralPoincareSouriauBridge.ChiralSUSYMomentum) : ChiralOperatorPresentation where
+    (S : ChiralPoincareSouriauBridge.ChiralSUSYMomentum)
+    :
+    ChiralOperatorPresentation where
   antiQQbar := S.antiQQbar
   Pspinor := ChiralPoincareSouriauBridge.pauliMomentum S.P
-  super_poincare := S.susy_anticomm
+
+theorem fromChiralSUSYMomentum_laws
+    (S : ChiralPoincareSouriauBridge.ChiralSUSYMomentum)
+    (hS : ChiralPoincareSouriauBridge.ChiralSUSYMomentumLaws S) :
+    ChiralOperatorPresentationLaws (fromChiralSUSYMomentum S) := hS
 
 /-- The reused Pauli presentation has the already-proved determinant/Casimir. -/
 theorem fromChiralSUSYMomentum_det
     (S : ChiralPoincareSouriauBridge.ChiralSUSYMomentum) :
-    (fromChiralSUSYMomentum S).Pspinor.det = ChiralPoincareSouriauBridge.minkowskiSq S.P := by
+    (fromChiralSUSYMomentum S).Pspinor.det =
+      ChiralPoincareSouriauBridge.minkowskiSq S.P := by
   exact ChiralPoincareSouriauBridge.det_pauliMomentum S.P
 
 /-- Left/right spin transport of an operator spinor matrix. -/
@@ -93,9 +102,10 @@ def spinTransport (L R X : M2C) : M2C := L * X * R
 /-- The operator equation `{Q,Qbar}=2P` is preserved by applying the same
 left/right spin transport to both sides. -/
 theorem spinTransport_super_poincare
-    (L R : M2C) (S : ChiralOperatorPresentation) :
+    (L R : M2C) (S : ChiralOperatorPresentation)
+    (hS : ChiralOperatorPresentationLaws S) :
     spinTransport L R S.antiQQbar = (2 : ℂ) • spinTransport L R S.Pspinor := by
-  rw [S.super_poincare]
+  rw [hS]
   ext i j
   simp [spinTransport, Matrix.mul_apply, Fin.sum_univ_two]
   ring
@@ -107,9 +117,10 @@ def transportedRelation (L R : M2C) (S : ChiralOperatorPresentation) : Prop :=
   spinTransport L R S.antiQQbar = (2 : ℂ) • spinTransport L R S.Pspinor
 
 /-- Every chiral operator presentation satisfies its transported relation. -/
-theorem transportedRelation_holds (L R : M2C) (S : ChiralOperatorPresentation) :
+theorem transportedRelation_holds (L R : M2C) (S : ChiralOperatorPresentation)
+    (hS : ChiralOperatorPresentationLaws S) :
     transportedRelation L R S :=
-  spinTransport_super_poincare L R S
+  spinTransport_super_poincare L R S hS
 
 /-- The central-charge commutation rule remains operator-valued after transport,
 provided the transported charge is central in the target operator algebra. -/
@@ -130,22 +141,28 @@ needed for composition; no analytic Lie group structure is asserted. -/
 structure OperatorPoincareElement where
   Λ : FourVector → FourVector
   a : FourVector
-  preserves_pair : ∀ p q, minkowskiPair (Λ p) (Λ q) = minkowskiPair p q
+
+def OperatorPoincareElementLaws (g : OperatorPoincareElement) : Prop :=
+  ∀ p q, minkowskiPair (g.Λ p) (g.Λ q) = minkowskiPair p q
 
 /-- Action on momentum ignores translations, as usual for the coadjoint momentum
 four-vector in this finite presentation. -/
 def actMomentum (g : OperatorPoincareElement) (p : FourVector) : FourVector := g.Λ p
 
 /-- Lorentz part of a Poincaré element preserves the mass Casimir. -/
-theorem actMomentum_preserves_mass (g : OperatorPoincareElement) (p : FourVector) :
+theorem actMomentum_preserves_mass (g : OperatorPoincareElement)
+    (hg : OperatorPoincareElementLaws g) (p : FourVector) :
     minkowskiSq (actMomentum g p) = minkowskiSq p := by
-  exact g.preserves_pair p p
+  exact hg p p
 
 /-- Identity Poincaré element. -/
 def poincareId : OperatorPoincareElement where
   Λ := id
   a := ⟨0, 0, 0, 0⟩
-  preserves_pair := by intro p q; rfl
+
+theorem poincareId_laws : OperatorPoincareElementLaws poincareId := by
+  intro p q
+  rfl
 
 /-- Composition of the Lorentz parts, with translations composed by the usual
 affine rule `a₁ + Λ₁ a₂`. -/
@@ -155,35 +172,22 @@ def poincareComp (g h : OperatorPoincareElement) : OperatorPoincareElement where
     (g.a.t + (g.Λ h.a).t,
       (g.a.x + (g.Λ h.a).x,
         (g.a.y + (g.Λ h.a).y, g.a.z + (g.Λ h.a).z)))
-  preserves_pair := by
-    intro p q
-    simp
-    rw [g.preserves_pair, h.preserves_pair]
 
-/-- Composition acts on momentum by composition of Lorentz maps. -/
-theorem poincareComp_actMomentum (g h : OperatorPoincareElement) (p : FourVector) :
-    actMomentum (poincareComp g h) p = actMomentum g (actMomentum h p) := rfl
+theorem poincareComp_laws (g h : OperatorPoincareElement)
+    (hg : OperatorPoincareElementLaws g)
+    (hh : OperatorPoincareElementLaws h) :
+    OperatorPoincareElementLaws (poincareComp g h) := by
+  intro p q
+  simp [poincareComp]
+  rw [hg, hh]
 
 /-- A concrete x-boost is a Poincaré element. -/
 def boostXPoincare (φ : ℝ) : OperatorPoincareElement where
   Λ := LorentzBoostMinkowski.boostX φ
   a := ⟨0, 0, 0, 0⟩
-  preserves_pair := LorentzBoostMinkowski.boostX_preserves_minkowskiPair φ
 
-/-- The operator Poincaré presentation recovers the standard x-boost mass invariance. -/
-theorem boostXPoincare_preserves_mass (φ : ℝ) (p : FourVector) :
-    minkowskiSq (actMomentum (boostXPoincare φ) p) = minkowskiSq p :=
-  actMomentum_preserves_mass (boostXPoincare φ) p
-
-#check cuntzDeformed_odd_odd_beta_zero
-#check cuntzDeformed_odd_odd_beta_one
-#check cuntzDeformed_odd_odd_lie_jordan_split
-#check fromChiralSUSYMomentum
-#check fromChiralSUSYMomentum_det
-#check spinTransport_super_poincare
-#check transportedRelation_holds
-#check transported_central_charge_commutes
-#check poincareComp_actMomentum
-#check boostXPoincare_preserves_mass
+theorem boostXPoincare_laws (φ : ℝ) :
+    OperatorPoincareElementLaws (boostXPoincare φ) :=
+  LorentzBoostMinkowski.boostX_preserves_minkowskiPair φ
 
 end InfoGeometry.Physics.CuntzDeformedSuperPoincare

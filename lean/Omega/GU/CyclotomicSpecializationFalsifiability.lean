@@ -4,7 +4,7 @@ namespace Omega.GU
 
 universe u
 
-/-- Exceptional cyclotomic layers form a finite witness set under residual gcd triviality. -/
+/-- Exceptional cyclotomic layers form a finite set under residual gcd triviality. -/
 theorem paper_gut_cyclotomic_specialization_falsifiability
     (BivariatePolynomial : Type u)
     (nontrivialCommonFactor : BivariatePolynomial → Prop)
@@ -20,7 +20,7 @@ theorem paper_gut_cyclotomic_specialization_falsifiability
     (exceptionalLayersForceExtraGcdAtInfinitelyManyLevels :
       Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} → extraGcdAtInfinitelyManyLevels) :
     residualGcdTrivial →
-      ∃ witnessSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ witnessSet := by
+      ∃ exceptionalSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ exceptionalSet := by
   intro hResidual
   have hnotInfinite : ¬ Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} := by
     intro hInfinite
@@ -51,7 +51,7 @@ theorem paper_cyclotomic_specialization_falsifiability
     (exceptionalLayersForceExtraGcdAtInfinitelyManyLevels :
       Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} → extraGcdAtInfinitelyManyLevels) :
     residualGcdTrivial →
-      ∃ witnessSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ witnessSet := by
+      ∃ exceptionalSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ exceptionalSet := by
   exact paper_gut_cyclotomic_specialization_falsifiability BivariatePolynomial
     nontrivialCommonFactor infinitelyManyCommonSlowModes residualGcdTrivial
     extraGcdAtInfinitelyManyLevels Layer exceptionalLayer specializationRigidity

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.StandardIntegralSplitOctonionMultiplication
+import InfoGeometry.Geometry.KleinFourTag
 
 namespace InfoGeometry.Canonical
 
@@ -10,7 +11,7 @@ This owner deliberately does not identify the independently defined
 requiring a consistent multiplication convention.
 -/
 
-abbrev KleinFour := ZMod 2 × ZMod 2
+abbrev KleinFour := InfoGeometry.Geometry.KleinFourTag.Tag
 
 def gradeOfBasis : IntegralSplitBasis → KleinFour
   | .one => (0, 0)

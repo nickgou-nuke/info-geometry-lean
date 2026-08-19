@@ -313,25 +313,12 @@ def VerifiedQuadraticCasimir.toIndividuatedCasimir
     IndividuatedCasimir A :=
   C.element
 
-/-! ## 7. Owner target -/
+/-! ## 7. Native quadratic Casimir theorem -/
 
-/--
-Owner target for a constructive quadratic Casimir.
-
-This target is intentionally non-vacuous: it requires an actual verified
-quadratic Casimir datum, not a bare centrality postulat3.
--/
-def ConstructiveCasimirOwnerTarget
-    (A ι : Type*) [Ring A] [Fintype ι] : Prop :=
-  ∀ C : VerifiedQuadraticCasimir A ι,
-    IsCentral C.element ∧ IsUnitConjugationInvariant C.element
-
-/--
-The owner target is constructively discharged.
--/
-theorem constructiveCasimirOwnerTarget
+theorem constructiveCasimir
     (A ι : Type*) [Ring A] [Fintype ι] :
-    ConstructiveCasimirOwnerTarget A ι := by
+    ∀ C : VerifiedQuadraticCasimir A ι,
+      IsCentral C.element ∧ IsUnitConjugationInvariant C.element := by
   intro C
   exact ⟨C.isCentral, C.unitConjugationInvariant⟩
 

@@ -37,7 +37,7 @@ T^n = T \implies \operatorname{Spec}_{\neq 0}(T) \subset \mu_{n-1} = \{ \zeta \i
 - `fibonacciSpin_pow_five_eq_one`: $(e^{2\pi i (2/5)})^5 = 1$.
 - `fibonacciSpin_in_sixPotentHull`: $e^{2\pi i (2/5)} \in \operatorname{Roots}(z^6 - z)$.
 - `fibonacci_twist_minimal_nPotency`: 6 is the strictly minimal potency degree $n > 1$ with $\theta_\tau^n = \theta_\tau$.
-- `fibonacci_hasBoundarySpinWitness`: Exact witness certificate for `HasBoundarySpinWitness 6 θ_τ (2/5)`.
+- `fibonacci_boundarySpinRelation`: The explicit phase/potency relation for the Fibonacci twist.
 -/
 
 noncomputable section
@@ -193,12 +193,6 @@ theorem fibonacciSpin_hullPoly_eq_zero :
   dsimp [hullPoly]
   rw [sub_eq_zero]
   exact fibonacciSpin_in_sixPotentHull
-
-/-- Fibonacci Spin Witness: It satisfies the repository `HasBoundarySpinWitness` predicate. -/
-theorem fibonacci_hasBoundarySpinWitness :
-    HasBoundarySpinWitness 6 fibonacciTopologicalTwist georgievHadjiivanovFibonacciSpin := by
-  dsimp [HasBoundarySpinWitness, fibonacciTopologicalTwist]
-  refine ⟨rfl, fibonacciSpin_in_sixPotentHull⟩
 
 /-- Fibonacci twist power is 1 iff exponent is a multiple of 5. -/
 theorem fibonacci_twist_pow_eq_one_iff (k : ℕ) :

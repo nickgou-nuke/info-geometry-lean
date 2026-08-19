@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
@@ -20,24 +19,5 @@ completed-`xi` determinant.
 noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
-
-@[socket_debt_tag]
-abbrev ZeroModeProtectionPacket
-    (CompletedXiReadout ProtectionReadout : Type) :=
-  CompletedXiReadout × ProtectionReadout
-
-namespace ZeroModeProtectionPacket
-
-def defectFreeLimit
-    {CompletedXiReadout ProtectionReadout : Type}
-    (P : ZeroModeProtectionPacket CompletedXiReadout ProtectionReadout) :
-    CompletedXiReadout := P.1
-
-def protectionReadout
-    {CompletedXiReadout ProtectionReadout : Type}
-    (P : ZeroModeProtectionPacket CompletedXiReadout ProtectionReadout) :
-    ProtectionReadout := P.2
-
-end ZeroModeProtectionPacket
 
 end InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection

@@ -2,7 +2,7 @@ import InfoGeometry.Physics.FreeEntropySouriauBridge
 import Mathlib.Tactic.Linarith
 
 /-!
-# Free-entropy calibration and variation packet
+# Free-entropy calibration and variation data
 
 This file is a small owner surface for the variation/calibration layer after the
 Souriau/free-entropy bridge.
@@ -30,7 +30,7 @@ readout data, and boundary calibration data.
 The fields are explicit readouts rather than hidden assumptions.  Vanishing of
 the residuals below is what imposes stationarity and boundary calibration.
 -/
-structure CalibrationVariationPacket where
+structure CalibrationVariationData where
   /-- Massieu-Planck contribution to `S_free`. -/
   massieu : ℝ
   /-- KL/Bregman informational deviation contribution. -/
@@ -71,29 +71,29 @@ structure CalibrationVariationPacket where
   boundaryNewtonG : ℝ
 
 /-- Value of the explicit `S_free` functional attached to the packet. -/
-def S_free (P : CalibrationVariationPacket) : ℝ :=
+def S_free (P : CalibrationVariationData) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.S_free
     P.massieu P.kl P.incidenceFriction P.freeEnergy P.lambdaInc P.lambdaFree
 
 /-- First variation of the packet `S_free` functional. -/
-def S_freeFirstVariation (P : CalibrationVariationPacket) : ℝ :=
+def S_freeFirstVariation (P : CalibrationVariationData) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.S_freeFirstVariation
     P.dMassieu P.dKL P.dIncidenceFriction P.dFreeEnergy P.lambdaInc P.lambdaFree
 
 /-- `S_free` stationarity is exactly vanishing of the explicit first variation. -/
-theorem S_free_stationary_iff (P : CalibrationVariationPacket) :
+theorem S_free_stationary_iff (P : CalibrationVariationData) :
     S_freeFirstVariation P = 0 ↔
       P.dMassieu - P.dKL - P.lambdaInc * P.dIncidenceFriction -
         P.lambdaFree * P.dFreeEnergy = 0 := by
   rfl
 
 /-- Effective stress readout of the incidence, anomaly, free, and Souriau layers. -/
-def effectiveStressReadout (P : CalibrationVariationPacket) : ℝ :=
+def effectiveStressReadout (P : CalibrationVariationData) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.effectiveStressTensorReadout
     P.incidenceStress P.anomalyStress P.freeStress P.souriauStress
 
 /-- Scalar Einstein residual using the effective stress readout. -/
-def effectiveEinsteinResidual (P : CalibrationVariationPacket) : ℝ :=
+def effectiveEinsteinResidual (P : CalibrationVariationData) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.effectiveEinsteinResidual
     P.einsteinTensor P.newtonG P.incidenceStress P.anomalyStress P.freeStress
     P.souriauStress
@@ -103,13 +103,13 @@ def boundaryHawkingEntropy (area newtonG : ℝ) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.bekensteinHawkingEntropy area newtonG
 
 /-- Boundary calibration residual for `S_BH = A / (4G)`. -/
-def boundaryHawkingCalibrationResidual (P : CalibrationVariationPacket) : ℝ :=
+def boundaryHawkingCalibrationResidual (P : CalibrationVariationData) : ℝ :=
   InfoGeometry.Physics.FreeEntropySouriauBridge.boundaryBHCalibrationResidual
     P.boundaryEntropy P.boundaryArea P.boundaryNewtonG
 
 /-- The boundary calibration theorem written directly as `S_BH = A / (4G)`. -/
 theorem boundaryHawkingCalibrationResidual_eq_zero_iff_area_over_fourG
-    (P : CalibrationVariationPacket) :
+    (P : CalibrationVariationData) :
     boundaryHawkingCalibrationResidual P = 0 ↔
       P.boundaryEntropy = P.boundaryArea / (4 * P.boundaryNewtonG) := by
   unfold boundaryHawkingCalibrationResidual
@@ -126,13 +126,13 @@ The complete scalar calibration/stationarity condition for this packet:
 free-entropy stationarity, effective Einstein balance, and boundary Hawking
 calibration.
 -/
-def calibratedStationary (P : CalibrationVariationPacket) : Prop :=
+def calibratedStationary (P : CalibrationVariationData) : Prop :=
   S_freeFirstVariation P = 0 ∧
     effectiveEinsteinResidual P = 0 ∧
       boundaryHawkingCalibrationResidual P = 0
 
 /-- Expands the complete scalar calibration/stationarity condition. -/
-theorem calibratedStationary_iff (P : CalibrationVariationPacket) :
+theorem calibratedStationary_iff (P : CalibrationVariationData) :
     calibratedStationary P ↔
       (P.dMassieu - P.dKL - P.lambdaInc * P.dIncidenceFriction -
           P.lambdaFree * P.dFreeEnergy = 0) ∧

@@ -70,7 +70,7 @@ theorem ribbon_twist_eq_minus_id (n : ℕ) (inv : SpinTopologicalInvariants n) :
   dsimp [ribbonTwist]
   exact inv.closure.centralizer_loop
 
-/-- The spin-structure obstruction socket is either present or absent. -/
+/-- The spin-structure obstruction is either present or absent. -/
 theorem w2_obstruction_cases (n : ℕ) (inv : SpinTopologicalInvariants n) :
     inv.w2_obstruction = true ∨ inv.w2_obstruction = false := by
   cases inv.w2_obstruction <;> simp

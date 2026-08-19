@@ -31,7 +31,7 @@ This module keeps the proof surface finite and algebraic:
 * prime-register particle counts are taken from the finite prime-bit carrier;
 * the hyperbolic Bogoliubov bracket closure is imported from the canonical
   projector-super algebra;
-* no sockets, certificates, or CFT central-charge claims are introduced here.
+* no placeholder interfaces, certificates, or CFT central-charge claims are introduced here.
 -/
 
 noncomputable section

@@ -163,8 +163,37 @@ theorem bijective_waveletTransform_has_inverse
     (W : CliffordWaveletModel) (hBijective : Function.Bijective W.waveletTransform) :
     ∃ inverse,
       Function.LeftInverse inverse W.waveletTransform ∧
-        Function.RightInverse inverse W.waveletTransform := by
+      Function.RightInverse inverse W.waveletTransform := by
   exact Function.bijective_iff_has_inverse.mp hBijective
+
+/-- The canonical inverse selected by Mathlib for a bijective wavelet transform.
+
+This is a function-level construction, not an additional reconstruction field:
+the stored `reconstruction` is identified with it only when that equality is
+proved separately.
+-/
+noncomputable def bijectiveWaveletInverse
+    (W : CliffordWaveletModel)
+    (_hBijective : Function.Bijective W.waveletTransform) :
+    (SimilitudeParameter W.V → W.A) → W.Signal :=
+  letI : Nonempty W.Signal := ⟨W.wavelet⟩
+  Function.invFun W.waveletTransform
+
+theorem bijectiveWaveletInverse_leftInverse
+    (W : CliffordWaveletModel)
+    (hBijective : Function.Bijective W.waveletTransform) :
+    Function.LeftInverse (bijectiveWaveletInverse W hBijective)
+      W.waveletTransform := by
+  letI : Nonempty W.Signal := ⟨W.wavelet⟩
+  exact Function.leftInverse_invFun hBijective.1
+
+theorem bijectiveWaveletInverse_rightInverse
+    (W : CliffordWaveletModel)
+    (hBijective : Function.Bijective W.waveletTransform) :
+    Function.RightInverse (bijectiveWaveletInverse W hBijective)
+      W.waveletTransform := by
+  letI : Nonempty W.Signal := ⟨W.wavelet⟩
+  exact Function.rightInverse_invFun hBijective.2
 
 end CliffordWaveletModel
 

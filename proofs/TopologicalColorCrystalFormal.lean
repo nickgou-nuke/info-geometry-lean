@@ -11,7 +11,7 @@ Finite theorem-honest condensed-matter layer:
 
 * Bott periodicity is represented as discrete Clifford/crystal translations
   by periods `2` (complex) and `8` (real), with analytic Clifford equivalences
-  socketed rather than claimed.
+  deferred rather than claimed.
 * The `SU(3)` Cartan/Weyl chamber is represented as a fundamental Brillouin
   wedge in the `(λ₃,λ₈)` plane.
 * The Brillouin Klein bottle is represented by an orientation-reversing glide
@@ -21,7 +21,7 @@ Finite theorem-honest condensed-matter layer:
   Γ-point recovers the usual `SU(3)` commutator.
 
 Full topological band theory, K-theory Bott isomorphisms, Bloch spectral theorem,
-and analytic Brillouin-zone quotient topology remain explicit sockets.
+and analytic Brillouin-zone quotient topology remain deferred interfaces.
 -/
 
 noncomputable section

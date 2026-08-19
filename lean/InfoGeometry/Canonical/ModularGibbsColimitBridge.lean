@@ -18,5 +18,5 @@ The maintained owners are:
 
 This file remains only as a stable docs-only import path.  A future genuine
 colimit theorem must carry typed operator maps and their multiplicative/state
-compatibility, rather than reintroducing the old tuple socket.
+compatibility, rather than reintroducing the old tuple interface.
 -/

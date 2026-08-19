@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Section 28 repaired: finite Einstein--torsion--spinor tensor socket
+# Section 28 repaired: finite Einstein--torsion--spinor tensor interface
 
 The source `section28.txt` sketches modified Einstein equations with torsion and
 spinor coupling, but it overstates several analytic/geometric facts.  In

@@ -15,7 +15,6 @@ The key distinction:
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -302,7 +301,7 @@ end LFunctionHelicalBranch
 Once a helical Stinespring calibration is supplied, the hidden sector carries
 the visible sheet charge.
 -/
-theorem helicalStinespringOwnerTarget :
+theorem helicalStinespring_sheet_eq_visible :
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
@@ -327,7 +326,7 @@ theorem helicalStinespring_sheet_packet
     K.hiddenHelix.sheet (D.hiddenFlow x) = K.visibleHelix.sheet x ∧
       K.hiddenHelix.sheet (D.hiddenFlow (K.visibleHelix.flow (2 * Real.pi) x)) =
         K.visibleHelix.sheet x + 1 := by
-  exact ⟨helicalStinespringOwnerTarget Sys Comm C D K x,
+  exact ⟨helicalStinespring_sheet_eq_visible Sys Comm C D K x,
     K.one_turn_hidden_charge x⟩
 
 end InfoGeometry.OperatorAlgebra.HelicalTimeStinespring

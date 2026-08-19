@@ -20,7 +20,7 @@ The weighted Hodge-square readout is exactly the prime-weighted number operator.
 No infinite Euler product.
 No analytic continuation.
 No Hilbert--Polya claim.
-No RH/Mertens socket.
+No RH/Mertens interface.
 -/
 
 noncomputable section

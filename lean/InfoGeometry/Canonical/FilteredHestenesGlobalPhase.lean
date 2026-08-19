@@ -11,14 +11,14 @@ open InfoGeometry.Canonical.FilteredHestenesKreinColimit
 open InfoGeometry.Canonical.FilteredHestenesGlobalOperator
 
 /-- The compatible finite-stage family formed by the Hestenes clock axes. -/
-def clockAxisFamily (C : HestenesKreinCone) : LinearFamily C where
-  op := fun n => clockAxis (E := C.Base n)
-  op_hestenes := by
-    intro n
-    rfl
-  op_bond := by
-    intro n
-    exact C.bond_hestenes n
+def clockAxisFamily (C : HestenesKreinCone) : LinearFamily C :=
+  ⟨{ op := fun n => clockAxis (E := C.Base n) },
+    ⟨(by
+        intro n
+        rfl),
+      (by
+        intro n
+        exact C.bond_hestenes n)⟩⟩
 
 namespace HestenesKreinCone
 

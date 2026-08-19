@@ -51,6 +51,19 @@ def diracSquare (Delta : A) : BdGBlock A :=
   rw [diracSquare_eq_diagonal]
   simp
 
+theorem diracSquare_trace (Delta : A) :
+    Matrix.trace (diracSquare Delta) =
+      Delta * star Delta + star Delta * Delta := by
+  rw [diracSquare_eq_diagonal]
+  simp [Matrix.trace, Fin.sum_univ_two]
+
+theorem diracSquare_trace_of_twoSidedIsometry
+    (Delta : A)
+    (hLeft : Delta * star Delta = 1)
+    (hRight : star Delta * Delta = 1) :
+    Matrix.trace (diracSquare Delta) = (1 : A) + 1 := by
+  rw [diracSquare_trace, hLeft, hRight]
+
 theorem diracSquare_eq_one_of_twoSidedIsometry
     (Delta : A)
     (hLeft : Delta * star Delta = 1)
@@ -60,6 +73,18 @@ theorem diracSquare_eq_one_of_twoSidedIsometry
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [hLeft, hRight]
+
+theorem diracSquare_eq_one_iff (Delta : A) :
+    diracSquare Delta = (1 : BdGBlock A) ↔
+      Delta * star Delta = 1 ∧ star Delta * Delta = 1 := by
+  constructor
+  · intro h
+    have hLeft := congrArg (fun M : BdGBlock A => M 0 0) h
+    have hRight := congrArg (fun M : BdGBlock A => M 1 1) h
+    rw [diracSquare_eq_diagonal] at hLeft hRight
+    exact ⟨by simpa using hLeft, by simpa using hRight⟩
+  · rintro ⟨hLeft, hRight⟩
+    exact diracSquare_eq_one_of_twoSidedIsometry Delta hLeft hRight
 
 /-!
 `Matrix (Fin 2) (Fin 2) A` has Mathlib's native star instance, namely
@@ -91,6 +116,44 @@ abbrev bdgStar (M : BdGBlock A) : BdGBlock A := star M
   fin_cases i <;> fin_cases j <;>
     simp [diracOperator, chiralGrading, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-! These finite identities are the theorem-safe spectral shadow of the
+particle-hole/chiral picture.  They do not assert an analytic spectrum. -/
+
+theorem diracOperator_trace_zero (Delta : A) :
+    Matrix.trace (diracOperator Delta) = 0 := by
+  simp [diracOperator, Matrix.trace, Fin.sum_univ_two]
+
+theorem chiral_conjugation_dirac_neg (Delta : A) :
+    chiralGrading * diracOperator Delta * chiralGrading =
+      -diracOperator Delta := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralGrading, diracOperator, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem chiral_conjugation_diracSquare (Delta : A) :
+    chiralGrading * (diracOperator Delta * diracOperator Delta) *
+        chiralGrading = diracOperator Delta * diracOperator Delta := by
+  change chiralGrading * diracSquare Delta * chiralGrading = diracSquare Delta
+  rw [diracSquare_eq_diagonal]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralGrading, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem diracSquare_commutes_with_chirality (Delta : A) :
+    diracSquare Delta * chiralGrading =
+      chiralGrading * diracSquare Delta := by
+  rw [diracSquare_eq_diagonal]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralGrading, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem diracSquare_self_adjoint (Delta : A) :
+    bdgStar (diracSquare Delta) = diracSquare Delta := by
+  rw [diracSquare_eq_diagonal]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgStar, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- Connes' commutator differential on the BdG block carrier. -/
 def connesDifferential (D a : BdGBlock A) : BdGBlock A :=
   D * a - a * D
@@ -99,9 +162,27 @@ def connesDifferential (D a : BdGBlock A) : BdGBlock A :=
     connesDifferential D 1 = 0 := by
   simp [connesDifferential]
 
+@[simp] theorem connesDifferential_zero (D : BdGBlock A) :
+    connesDifferential D 0 = 0 := by
+  simp [connesDifferential]
+
+@[simp] theorem connesDifferential_self (D : BdGBlock A) :
+    connesDifferential D D = 0 := by
+  simp [connesDifferential]
+
+theorem connesDifferential_eq_zero_iff (D a : BdGBlock A) :
+    connesDifferential D a = 0 ↔ D * a = a * D := by
+  simp [connesDifferential, sub_eq_zero]
+
 theorem connesDifferential_add (D a b : BdGBlock A) :
     connesDifferential D (a + b) =
       connesDifferential D a + connesDifferential D b := by
+  unfold connesDifferential
+  noncomm_ring
+
+theorem connesDifferential_sub (D a b : BdGBlock A) :
+    connesDifferential D (a - b) =
+      connesDifferential D a - connesDifferential D b := by
   unfold connesDifferential
   noncomm_ring
 
@@ -132,5 +213,20 @@ theorem bdg_chiral_block_matrix_synthesis (Delta : A) (D a b : BdGBlock A) :
       connesDifferential D a * b + a * connesDifferential D b) :=
   ⟨chiralGrading_sq, dirac_self_adjoint Delta,
     dirac_anticommutes_with_chirality Delta, connesDifferential_mul D a b⟩
+
+/-! The quadratic/trace readout is packaged separately so downstream users can
+reuse it without unpacking the basic spectral-triple synthesis. -/
+theorem bdg_chiral_block_matrix_quadratic_synthesis (Delta : A) :
+    Matrix.trace (diracOperator Delta) = 0 ∧
+    diracSquare Delta =
+      !![Delta * star Delta, 0;
+         0, star Delta * Delta] ∧
+    Matrix.trace (diracSquare Delta) =
+      Delta * star Delta + star Delta * Delta ∧
+    chiralGrading * (diracSquare Delta) * chiralGrading = diracSquare Delta := by
+  exact ⟨diracOperator_trace_zero Delta,
+    diracSquare_eq_diagonal Delta,
+    diracSquare_trace Delta,
+    chiral_conjugation_diracSquare Delta⟩
 
 end InfoGeometry.Physics

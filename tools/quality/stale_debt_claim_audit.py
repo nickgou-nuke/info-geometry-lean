@@ -44,7 +44,7 @@ DEBT_RE = re.compile(
     r"open\s+debt|closure\s+debt|remaining\s+debt|real\s+open\s+debt|"
     r"missing\s+(?:theorem|lemma|owner|declaration|bridge|construction|substrate)|"
     r"not\s+formalized|not\s+yet\s+formalized|incomplete|placeholder|"
-    r"conjectural\s+socket|conditional\s+socket|TODO|FIXME|proof\s+hole|unproven|"
+    r"conjectural\s+interface|conditional\s+interface|TODO|FIXME|proof\s+hole|unproven|"
     r"external\s+certificate"
     r")\b",
     re.IGNORECASE,
@@ -118,7 +118,7 @@ COMMON_TOKENS = {
     "prop",
     "rfl",
     "shape",
-    "socket",
+    "interface",
     "sorry",
     "split",
     "state",

@@ -85,9 +85,9 @@ theorem posterior_harmonic_protected
 
 /-- A protected harmonic `K₃` packet has zero carrier when both closed and coclosed. -/
 theorem K3_harmonic_packet_zero
-    (P : K3HodgeModePacket) :
-    P.ω = 0 :=
-  P.harmonic_eq_zero
+    {ω : Fin 3 → ℝ} (h : K3HarmonicMode ω) :
+    ω = 0 :=
+  K3HarmonicMode.eq_zero h
 
 end HodgeProtection
 

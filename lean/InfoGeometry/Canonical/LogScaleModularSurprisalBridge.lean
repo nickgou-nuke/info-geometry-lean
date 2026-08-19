@@ -66,6 +66,13 @@ theorem modularAutomorphism_add {A : Type*} [AddCommGroup A] [Module ℂ A]
   rw [show -(s + t) = (-t) + (-s) by ring, D.flow_add]
   simp only [LinearMap.comp_assoc]
 
+theorem modularAutomorphism_commute {A : Type*} [AddCommGroup A] [Module ℂ A]
+    (D : ModularSurprisalDatum A) (s t : ℝ) (O : A →ₗ[ℂ] A) :
+    modularAutomorphism D s (modularAutomorphism D t O) =
+      modularAutomorphism D t (modularAutomorphism D s O) := by
+  rw [← modularAutomorphism_add D s t O,
+    ← modularAutomorphism_add D t s O, add_comm]
+
 /-- Arithmetic multiplication becomes composition of the induced modular
     automorphisms at logarithmic time. -/
 theorem modularAutomorphism_log_mul {A : Type*} [AddCommGroup A] [Module ℂ A]
@@ -83,6 +90,12 @@ theorem modularAutomorphism_neg {A : Type*} [AddCommGroup A] [Module ℂ A]
   simp [modularAutomorphism, LinearMap.comp_assoc]
   rw [← LinearMap.comp_assoc, flow_neg_comp D t]
   simp
+
+theorem modularAutomorphism_neg_right {A : Type*} [AddCommGroup A] [Module ℂ A]
+    (D : ModularSurprisalDatum A) (t : ℝ) (O : A →ₗ[ℂ] A) :
+    modularAutomorphism D t (modularAutomorphism D (-t) O) = O := by
+  rw [← modularAutomorphism_add D t (-t) O]
+  simpa using modularAutomorphism_zero D O
 
 /-- 
 The central modular surprisal equivalence (Future Analytic Target).
@@ -110,6 +123,11 @@ theorem prime_modular_sampling_eq_surprisal_flow {A : Type*} [AddCommGroup A] [M
     (D : ModularSurprisalDatum A) (p : ℕ) (_hp : Nat.Prime p) :
     dirichletModularSample D p = D.U (Real.log p) := by
   rfl
+
+@[simp] theorem dirichletModularSample_one {A : Type*} [AddCommGroup A] [Module ℂ A]
+    (D : ModularSurprisalDatum A) :
+    dirichletModularSample D 1 = LinearMap.id := by
+  simpa [dirichletModularSample] using D.flow_zero
 
 /-- Positive arithmetic multiplication is represented by composition of the
     corresponding logarithmic modular samples. -/

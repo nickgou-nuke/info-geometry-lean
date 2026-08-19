@@ -9,7 +9,7 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.HestenesCPTONNDualityBridge
 
-property-gated (Native Closure Mandated: Closure Debt) CPT / `O(N,N)` duality socket for the Hestenes--Krein arithmetic
+property-gated (Native Closure Mandated: Closure Debt) CPT / `O(N,N)` duality interface for the Hestenes--Krein arithmetic
 closure lane.
 
 This file deliberately does **not** construct the full continuous `O(N,N)` group,
@@ -24,7 +24,7 @@ backend theorems.  The purpose here is narrower and theorem-safe:
 * prove the local consequences used by the already sealed Hestenes--Krein,
   Connes--Wilson, Möbius, and D4/Hurwitz pipelines.
 
-Thus `θ` and `O(N,N)` are installed as calibrated symmetry sockets, not as new
+Thus `θ` and `O(N,N)` are installed as calibrated symmetry data, not as new
 unproved primitives contaminating the core DAG.
 -/
 
@@ -126,6 +126,58 @@ variable (B : Bridge (E := E))
 @[rep_depth operator]
 def thetaConjugate (A : EndH) : EndH :=
   B.theta * A * B.theta
+
+@[simp]
+theorem thetaConjugate_mul (A C : EndH) :
+    B.thetaConjugate (A * C) = B.thetaConjugate A * B.thetaConjugate C := by
+  unfold thetaConjugate
+  calc
+    B.theta * (A * C) * B.theta = B.theta * A * C * B.theta := by
+          noncomm_ring
+    _ = B.theta * A * (B.theta * B.theta) * C * B.theta := by
+          rw [B.theta_involutive]
+          simp
+    _ = (B.theta * A * B.theta) * (B.theta * C * B.theta) := by
+          noncomm_ring
+
+@[simp]
+theorem thetaConjugate_thetaConjugate (A : EndH) :
+    B.thetaConjugate (B.thetaConjugate A) = A := by
+  unfold thetaConjugate
+  calc
+    B.theta * (B.theta * A * B.theta) * B.theta =
+        B.theta * B.theta * A * B.theta * B.theta := by
+          noncomm_ring
+    _ = A := by
+          simp [B.theta_involutive, mul_assoc]
+
+@[simp]
+theorem thetaConjugate_zero :
+    B.thetaConjugate (0 : EndH) = 0 := by
+  simp [thetaConjugate]
+
+@[simp]
+theorem thetaConjugate_one :
+    B.thetaConjugate (1 : EndH) = 1 := by
+  simp [thetaConjugate, B.theta_involutive]
+
+theorem thetaConjugate_add (A C : EndH) :
+    B.thetaConjugate (A + C) = B.thetaConjugate A + B.thetaConjugate C := by
+  simp [thetaConjugate, add_mul, mul_add]
+
+theorem thetaConjugate_neg (A : EndH) :
+    B.thetaConjugate (-A) = -B.thetaConjugate A := by
+  simp [thetaConjugate]
+
+theorem thetaConjugate_eq_self_of_commute
+    (A : EndH) (hA : B.theta * A = A * B.theta) :
+    B.thetaConjugate A = A := by
+  unfold thetaConjugate
+  calc
+    B.theta * A * B.theta = A * B.theta * B.theta := by
+      rw [hA]
+    _ = A := by
+      rw [mul_assoc, B.theta_involutive, mul_one]
 
 /-- Readback: CPT is an involution. -/
 @[rep_depth krein]

@@ -2,7 +2,7 @@ import Omega.StableArithmetic.StableAuditPrimeFieldRedundancy
 import Omega.StableArithmetic.IntegralAffineClosure
 import Omega.StableArithmetic.AffineFibonacciDashboardClosure
 import Omega.StableArithmetic.MedialityFailure
-import Omega.StableArithmetic.NonAffineWitness
+import Omega.StableArithmetic.NonAffineTable
 import Omega.StableArithmetic.PrimeStabilization
 import Omega.StableArithmetic.PrimaryClosure
 import Omega.StableArithmetic.StableAuditDashboardDisjoint

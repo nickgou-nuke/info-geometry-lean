@@ -60,4 +60,37 @@ theorem Swap_mul_Swap : Swap * Swap = (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin
     rw [Matrix.mul_apply, Fintype.sum_prod_type]
     simp [Swap, Fin.sum_univ_two]
 
+/-- The tensor-factor exchange is self-transpose. -/
+theorem Swap_transpose : Swap.transpose = Swap := by
+  ext ⟨a, b⟩ ⟨c, d⟩
+  by_cases had : a = d <;> by_cases hbc : b = c <;>
+    simp [Swap, had, hbc, eq_comm]
+
+theorem Swap_conjTranspose : Swap.conjTranspose = Swap := by
+  ext ⟨a, b⟩ ⟨c, d⟩
+  by_cases had : a = d <;> by_cases hbc : b = c <;>
+    simp [Swap, Matrix.conjTranspose, had, hbc, eq_comm]
+
+theorem Swap_trace : Matrix.trace Swap = 2 := by
+  rw [Matrix.trace, Fintype.sum_prod_type]
+  simp only [Matrix.diag, Swap, Fin.sum_univ_two, ite_true]
+  norm_num
+
+/-- The swap is unitary in the finite tensor-factor representation. -/
+theorem Swap_conjTranspose_mul_Swap :
+    Swap.conjTranspose * Swap =
+      (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) := by
+  rw [Swap_conjTranspose, Swap_mul_Swap]
+
+/-- The swap has both left and right inverse `Swap`. -/
+theorem Swap_mul_left :
+    Swap * Swap * Swap = Swap := by
+  rw [Swap_mul_Swap]
+  simp
+
+theorem Swap_mul_right :
+    Swap * (Swap * Swap) = Swap := by
+  rw [Swap_mul_Swap]
+  simp
+
 end InfoGeometry.Physics.FierzIdentities

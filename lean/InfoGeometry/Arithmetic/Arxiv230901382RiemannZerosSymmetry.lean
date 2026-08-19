@@ -82,9 +82,25 @@ def conjCoord (s : ZetaCoordinate) : ZetaCoordinate where
   sigma := s.sigma
   omega := -s.omega
 
+theorem oneMinus_involutive (s : ZetaCoordinate) :
+    oneMinus (oneMinus s) = s := by
+  cases s
+  simp [oneMinus]
+
+theorem conjCoord_involutive (s : ZetaCoordinate) :
+    conjCoord (conjCoord s) = s := by
+  cases s
+  simp [conjCoord]
+
 /-- Critical-line predicate `σ=1/2`. -/
 def OnCriticalLine (s : ZetaCoordinate) : Prop :=
   s.sigma = (1 / 2 : ℝ)
+
+theorem oneMinus_eq_conj_iff_onCriticalLine (s : ZetaCoordinate) :
+    oneMinus s = conjCoord s ↔ OnCriticalLine s := by
+  cases s
+  simp [oneMinus, conjCoord, OnCriticalLine]
+  constructor <;> intro h <;> linarith
 
 /-- The paper's finite scalar `PT` equality for an abstract zeta readout. -/
 def PTScalarCondition (zeta : ZetaCoordinate → ℂ) (s : ZetaCoordinate) : Prop :=

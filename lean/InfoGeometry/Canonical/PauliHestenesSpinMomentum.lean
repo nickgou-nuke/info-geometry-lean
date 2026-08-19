@@ -322,6 +322,21 @@ def IsLightlike
     (P : PauliParavector) : Prop :=
   P.IsNull
 
+theorem isNull_or_isTimelike_or_isSpacelike
+    (P : PauliParavector) :
+    P.IsNull ∨ P.IsTimelike ∨ P.IsSpacelike := by
+  rcases lt_trichotomy P.minkowskiNormSq 0 with hneg | hzero | hpos
+  · exact Or.inr (Or.inr hneg)
+  · exact Or.inl hzero
+  · exact Or.inr (Or.inl hpos)
+
+theorem isNull_isFutureNull_or_isPastNull
+    {P : PauliParavector} (hP : P.IsNull) :
+    P.IsFutureNull ∨ P.IsPastNull := by
+  rcases le_total 0 P.energy with hfuture | hpast
+  · exact Or.inl ⟨hP, hfuture⟩
+  · exact Or.inr ⟨hP, hpast⟩
+
 /--
 A future-null paravector has a singular Pauli representative.
 -/

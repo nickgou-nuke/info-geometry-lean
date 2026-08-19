@@ -65,15 +65,15 @@
     },
     {
       "module": "InfoGeometry.Krein.HestenesD4HurwitzBridge",
-      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-interface"
     },
     {
       "module": "InfoGeometry.Krein.HestenesCPTONNDualityBridge",
-      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-interface"
     },
     {
       "module": "InfoGeometry.Krein.HestenesAffineO55ClosureBridge",
-      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-interface"
     }
   ],
   "expectedSubregions": [
@@ -81,7 +81,7 @@
     "souriau-kms-modular-energy-accounting",
     "hestenes-krein-real-geometry-vacuum-readout",
     "connes-wilson-moebius-projective-holonomy",
-    "d4-hurwitz-o55-affine-arithmetic-socket"
+    "d4-hurwitz-o55-affine-arithmetic-interface"
   ],
   "auditQueries": [
     "declaration dual schematic",

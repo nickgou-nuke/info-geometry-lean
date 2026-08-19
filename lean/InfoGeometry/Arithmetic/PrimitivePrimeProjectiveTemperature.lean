@@ -96,6 +96,38 @@ lemma arithmeticPrimeInvertedPartitionDensity_pos_of_mem_positive_weight
     (inv_pos.mpr (sq_pos_of_ne_zero (ne_of_gt hu.1)))
     (arithmeticPrimeRestrictedPartition_pos_of_mem_positive_weight hnA hΛ hn)
 
+/-- The compact-coordinate density is nonzero under the same finite support
+condition. -/
+theorem arithmeticPrimeInvertedPartitionDensity_ne_zero_of_mem_positive_weight
+    {A : Finset ℕ} {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    arithmeticPrimeInvertedPartitionDensity A u ≠ 0 := by
+  exact ne_of_gt
+    (arithmeticPrimeInvertedPartitionDensity_pos_of_mem_positive_weight
+      hu hnA hΛ hn)
+
+/-- Away from the singular coordinate `u = 0`, the inverted density and the
+restricted partition have the same zero set. -/
+theorem arithmeticPrimeInvertedPartitionDensity_eq_zero_iff
+    {A : Finset ℕ} {u : ℝ} (hu : u ≠ 0) :
+    arithmeticPrimeInvertedPartitionDensity A u = 0 ↔
+      arithmeticPrimeRestrictedPartition A (betaInvert u) = 0 := by
+  unfold arithmeticPrimeInvertedPartitionDensity
+  have hu2 : u ^ 2 ≠ 0 := pow_ne_zero 2 hu
+  have hinv : (u ^ 2)⁻¹ ≠ 0 := inv_ne_zero hu2
+  rw [mul_eq_zero]
+  exact or_iff_right hinv
+
+/-- Away from `u = 0`, the inverted density is positive exactly when the
+restricted partition is positive. -/
+theorem arithmeticPrimeInvertedPartitionDensity_pos_iff
+    {A : Finset ℕ} {u : ℝ} (hu : u ≠ 0) :
+    0 < arithmeticPrimeInvertedPartitionDensity A u ↔
+      0 < arithmeticPrimeRestrictedPartition A (betaInvert u) := by
+  unfold arithmeticPrimeInvertedPartitionDensity
+  have hinv : 0 < (u ^ 2)⁻¹ := inv_pos.mpr (sq_pos_of_ne_zero hu)
+  exact (mul_pos_iff_of_pos_left hinv)
+
 /--
 On positive-weight states, the finite von Mangoldt partition is the ordinary
 prime-weighted Gibbs sum.
@@ -112,13 +144,13 @@ theorem arithmeticPrimeRestrictedPartition_eq_exp_sum_of_supportedAbove_two
   have hn1 : 1 < n := lt_of_lt_of_le Nat.one_lt_two (hA hn)
   simp [primitiveMellinKernel, hn1]
 
-/-! ## 2. Compact-interval calibration socket -/
+/-! ## 2. Compact-interval calibration interface -/
 
 /--
 Witness that projective temperature inversion transports the finite von
 Mangoldt partition integral from `(1, ∞)` to `(0, 1)`.
 
-This is a calibration socket, not a proof of a general measure-substitution
+This is a calibration interface, not a proof of a general measure-substitution
 theorem or an analytic statement about `ζ`.
 -/
 def ArithmeticPrimeTemperatureInversionCalibration (A : Finset ℕ) : Prop :=

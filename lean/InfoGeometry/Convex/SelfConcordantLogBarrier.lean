@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Convex.SelfConcordantLogBarrier
@@ -23,7 +22,7 @@ on `x > 0`.
 No zeta theorem.
 No analytic continuation.
 No RH claim.
-No socket.
+No additional interface.
 No property.
 -/
 
@@ -135,19 +134,13 @@ The native self-concordant logarithmic barrier owner target is closed.
 This is deliberately only the standard positive-line log barrier.  It is not
 a theorem about `-log ζ`.
 -/
-theorem selfConcordantLogBarrierOwnerTarget :
-    OneDimSelfConcordantCurvature
-      logBarrierHessian
-      logBarrierThirdAbs
-      (Set.Ioi (0 : ℝ)) :=
-  logBarrier_selfConcordant_on_Ioi
-
-@[owner_target_tag, rep_depth thermo]
-theorem selfConcordantLogBarrier_packet :
+theorem selfConcordantLogBarrier_properties :
     (∀ x, x ∈ Set.Ioi (0 : ℝ) →
       logBarrierThirdAbs x ≤ 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) ∧
       (∀ {x : ℝ}, 0 < x →
         logBarrierThirdAbs x = 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) := by
-  exact ⟨selfConcordantLogBarrierOwnerTarget, fun hx => logBarrier_selfConcordant_exact hx⟩
+  refine ⟨?_, fun hx => logBarrier_selfConcordant_exact hx⟩
+  intro x hx
+  exact logBarrier_selfConcordant_core hx
 
 end InfoGeometry.Convex.SelfConcordantLogBarrier

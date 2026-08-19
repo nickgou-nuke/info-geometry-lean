@@ -9,7 +9,7 @@ This module records the concrete algebraic/calculus core behind Chapter 3:
 * the scalar log barrier `f(x)=-log x` has Hessian `1/x²` and saturates the
   self-concordance identity `(f''')² = 4(f'')³` in algebraic form;
 * the nilpotent boundary operator is square-zero;
-* Super-Kähler and self-concordant global claims are represented as sockets.
+* Super-Kähler and self-concordant global claims are outside this finite owner.
 -/
 
 noncomputable section

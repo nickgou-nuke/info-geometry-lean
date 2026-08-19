@@ -35,17 +35,12 @@ theorem thermalPluckerDeterminant_eq_sq (r s : ℝ) :
   rw [hdiff, det_spacetimeMatrix]
   ring
 
-/-- Statement shape for any later colimit/amplituhedron interpretation of the
-same determinant calculation. -/
-def nicaAmplituhedronVolume_from_twistorDeterminants_statement : Prop :=
-  ∀ readout01 readout23 volume : ℝ,
-    volume = Real.sqrt ((readout01) ^ 2) * Real.sqrt ((readout23) ^ 2)
-
 /-- The unrestricted volume-identification statement is inconsistent: the
 unconstrained volume parameter cannot equal the prescribed value for all
 inputs.  This keeps the later colimit/amplituhedron bridge theorem-honest. -/
 theorem nicaAmplituhedronVolume_statement_false :
-    ¬ nicaAmplituhedronVolume_from_twistorDeterminants_statement := by
+    ¬ (∀ readout01 readout23 volume : ℝ,
+      volume = Real.sqrt (readout01 ^ 2) * Real.sqrt (readout23 ^ 2)) := by
   intro h
   have hbad := h 1 1 0
   norm_num at hbad

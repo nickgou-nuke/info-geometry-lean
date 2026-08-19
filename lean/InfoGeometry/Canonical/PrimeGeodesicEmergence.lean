@@ -70,21 +70,4 @@ structure PrimeGeodesicEmergence
   orbit : PrimeGeodesicOrbit
   orientifold : KleinBottleOrientifold
 
-/--
-Bridge packet tying prime-gas MaxEnt data to prime-orbit emergence.
-
-This is the honest “number theory from geometry” surface: the prime gas is a
-Jaynes packet, and the orbit emergence/orientifold data are explicit
-hypotheses.
--/
-@[rep_depth transport]
-structure PrimeGeodesicEmergencePacket
-    (D : PrimeGasJaynesData) (A : Type u) [Mul A] [One A] [Neg A] where
-  primeGas :
-    PrimeGasJaynesData.PrimeGasJaynesConjecture D
-  emergence : PrimeGeodesicEmergence A
-  orbitEnergy_eq_log_label : emergence.orbit.energy = Real.log emergence.orbit.label
-  primeOrbit : Nat.Prime emergence.orbit.label
-  squareFreeSupport : Squarefree emergence.orbit.label
-
 end InfoGeometry.Canonical.PrimeGeodesicEmergence

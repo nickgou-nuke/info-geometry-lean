@@ -194,7 +194,7 @@ structure GWOccupationPacket where
   /-- Every distinguished finite flip is non-singular for the reference measure.
 
   This is the native Mathlib measure-theoretic contract replacing the former
-  untyped property socket. -/
+  untyped property interface. -/
   finiteFlipQuasiInvarianceWitness :
     ∀ g : FiniteFlipGroup,
       MeasureTheory.Measure.QuasiMeasurePreserving
@@ -323,42 +323,6 @@ structure SplitQuadraticModel where
 
 attribute [instance] SplitQuadraticModel.norm SplitQuadraticModel.module
   SplitQuadraticModel.inner SplitQuadraticModel.complete
-
-
-/--
-Fermi-Fock non-splitting guard.
-
-The paper notes that the basic Fermi-Fock representation is irreducible over
-`R` and does not split in the infinite-dimensional setting.  This packet
-records that as a guard against treating CAR/Fock data as automatically
-real-split.
--/
-structure FermiFockRealSplitGuardPacket where
-  /-- The represented real Clifford/Fock carrier. -/
-  fermiFockRepresentation : RealCliffordHilbertModulePacket
-
-  /-- Occupation-space measure data used by the splitting criterion. -/
-  occupation : GWOccupationPacket
-
-  /-- Representative of the finite-flip orbit carrying the discrete sector. -/
-  orbitRepresentative : occupation.OccupationSpace
-
-  /-- The finite-flip orbit is genuinely finite. -/
-  discreteOrbit_finite :
-    Set.Finite
-      {y : occupation.OccupationSpace |
-        ∃ g : occupation.FiniteFlipGroup,
-          occupation.flipAction orbitRepresentative g = y}
-
-  /-- The reflected measure is not equivalent to the reference measure. -/
-  reflectedMeasure_not_equivalent :
-    ¬ (occupation.measureData ≪ occupation.reflectedMeasureData ∧
-      occupation.reflectedMeasureData ≪ occupation.measureData)
-
-  /-- No GW real splitting property exists for this occupation packet. -/
-  noInvariantRealForm :
-    ¬ Nonempty {W : GWRealSplittingWitness // W.gw = occupation}
-
 
 /--
 Bridge to the split doubled-Krein lane.

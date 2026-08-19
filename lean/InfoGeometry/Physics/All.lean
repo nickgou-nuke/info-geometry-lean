@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.Cl11ChiralCARBridge
 import InfoGeometry.Physics.ChiralSpinorFierzBridge
+import InfoGeometry.Physics.CuntzTransitionGramBridge
 import InfoGeometry.Physics.ThreeColorSL3ZornAction
 import InfoGeometry.Physics.SplitOctonionBraidSU3Nonabelian
 import InfoGeometry.Physics.ThreeColorSL3MatrixConjugation
@@ -98,6 +99,7 @@ import InfoGeometry.Physics.SpacetimeThermodynamics
 import InfoGeometry.Physics.KagomeKleinIncompatibility
 import InfoGeometry.Physics.KleinBottleDefects
 import InfoGeometry.Physics.KleinBottleCosmology
+import InfoGeometry.Physics.KleinBottleSpectrum
 import InfoGeometry.Physics.KleinTransitionGlideSkeleton
 import InfoGeometry.Physics.ParafermionDefectBridge
 import InfoGeometry.Physics.ElectronParafermionFlow
@@ -130,6 +132,7 @@ import InfoGeometry.Physics.FineStructureModels
 import InfoGeometry.Physics.MatrixTraceBimodulePairing
 import InfoGeometry.Physics.MatrixTraceBimodulePairingNative
 import InfoGeometry.Physics.FiniteMetriplecticDynamics
+import InfoGeometry.Physics.FiniteStationaryCurrent
 import InfoGeometry.Physics.SupergradedDiracCrystal
 import InfoGeometry.Physics.SupergradedDiracCrystalTopCatColimit
 import InfoGeometry.Physics.WittenOddSquareEvenBridge
@@ -185,6 +188,7 @@ import InfoGeometry.Physics.Algebra.TopologicalBraidMonodromyOperator
 import InfoGeometry.Physics.Algebra.TopologicalKreinMonodromyBridge
 import InfoGeometry.Physics.Thermodynamics.TopologicalMonodromyKMSBridge
 import InfoGeometry.Physics.Thermodynamics.LogCFTKMSModularTriple
+import InfoGeometry.Physics.LogCFTFiniteJordanBridge
 import InfoGeometry.Physics.Algebra.LogCFTDiracCommutator
 import InfoGeometry.Physics.Algebra.CuntzToeplitzBraidRepresentation
 import InfoGeometry.Physics.Algebra.CuntzKGroupStructure

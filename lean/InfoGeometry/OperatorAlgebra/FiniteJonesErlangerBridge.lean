@@ -16,7 +16,6 @@ covariant rather than fixed.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -178,7 +177,7 @@ theorem diagonalGauge_brewster_det_zero
   rw [diagonalGauge_preserves_brewsterEvent_jones G rs hrs]
   exact det2_brewsterEvent_jones rs hrs
 
-/-! ## 4. Erlanger readout socket -/
+/-! ## 4. Erlanger readout -/
 
 /--
 A finite Jones Erlanger invariant under diagonal phase gauges.
@@ -219,7 +218,7 @@ theorem brewsterCoreProjector_is_fixed_Erlanger_object
       brewsterCoreProjector :=
   diagonalGauge_preserves_brewsterCoreProjector G
 
-/-! ## 5. Covariance warning socket -/
+/-! ## 5. Covariance warning -/
 
 /--
 A general Jones conjugation action.
@@ -241,7 +240,7 @@ def transportedBrewsterCoreProjector
     (U Uinv : JonesMat) : JonesMat :=
   generalJonesConjugate U Uinv brewsterCoreProjector
 
-/-! ## 6. Owner target -/
+/-! ## 6. Diagonal gauge consequences -/
 
 /--
 Owner target for the finite Jones Erlanger bridge.
@@ -249,19 +248,14 @@ Owner target for the finite Jones Erlanger bridge.
 The diagonal phase stabilizer fixes the Brewster core projector and preserves
 Brewster rank collapse.
 -/
-@[owner_target_tag]
-def FiniteJonesErlangerBridgeOwnerTarget : Prop :=
+theorem finiteJonesErlangerBridge :
   (∀ G : DiagonalJonesGauge,
     G.conjugate brewsterCoreProjector = brewsterCoreProjector)
   ∧
   (∀ G : DiagonalJonesGauge,
    ∀ rs : ℂ,
    ∀ hrs : rs ≠ 0,
-    det2 (G.conjugate (brewsterEvent rs hrs).jones) = 0)
-
-/-- The owner target follows from the diagonal-gauge invariance theorems. -/
-theorem finiteJonesErlangerBridgeOwnerTarget :
-    FiniteJonesErlangerBridgeOwnerTarget := by
+    det2 (G.conjugate (brewsterEvent rs hrs).jones) = 0) := by
   constructor
   · intro G
     exact diagonalGauge_preserves_brewsterCoreProjector G

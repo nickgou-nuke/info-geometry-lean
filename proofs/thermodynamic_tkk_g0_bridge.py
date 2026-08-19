@@ -50,7 +50,7 @@ def verify_chemical_potential_to_g0():
     assert q_phase != 0
     assert q_weyl != 0
 
-    # Protected finite label flow: analytic operator flow is socketed in Lean,
+    # Protected finite label flow: analytic operator flow is deferred_interface in Lean,
     # but the V4/Mobius labels themselves are invariant.
     v4_labels = ["1", "eta", "J", "etaJ"]
     mobius_labels = ["id", "parity", "inversion", "parityInversion"]

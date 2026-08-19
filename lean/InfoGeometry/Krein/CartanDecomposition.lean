@@ -92,6 +92,94 @@ noncomputable def cartanInvolutionGroup (U : HessianOrthogonalGroup E) :
     HessianOrthogonalGroup E :=
   modular_jHessianOrthogonal * U * modular_jHessianOrthogonal
 
+lemma modular_jHessianOrthogonal_square :
+    (modular_jHessianOrthogonal (E := E)) *
+        modular_jHessianOrthogonal (E := E) = 1 := by
+  apply HessianOrthogonalGroup.ext
+  intro x
+  change neutralJ (E := E) (neutralJ (E := E) x) = x
+  exact KreinSpace.J_invol x
+
+@[simp] lemma cartanInvolutionGroup_one :
+    cartanInvolutionGroup (E := E) 1 = 1 := by
+  simp [cartanInvolutionGroup, modular_jHessianOrthogonal_square]
+
+lemma cartanInvolutionGroup_mul (U V : HessianOrthogonalGroup E) :
+    cartanInvolutionGroup (E := E) (U * V) =
+      cartanInvolutionGroup (E := E) U *
+        cartanInvolutionGroup (E := E) V := by
+  simp only [cartanInvolutionGroup]
+  calc
+    modular_jHessianOrthogonal (E := E) * U * V *
+          modular_jHessianOrthogonal (E := E) =
+        modular_jHessianOrthogonal (E := E) * U *
+          (modular_jHessianOrthogonal (E := E) *
+            modular_jHessianOrthogonal (E := E)) * V *
+          modular_jHessianOrthogonal (E := E) := by
+            rw [modular_jHessianOrthogonal_square]
+            simp
+    _ = (modular_jHessianOrthogonal (E := E) * U *
+          modular_jHessianOrthogonal (E := E)) *
+        (modular_jHessianOrthogonal (E := E) * V *
+          modular_jHessianOrthogonal (E := E)) := by
+            simp only [mul_assoc]
+
+@[simp] lemma cartanInvolutionGroup_involutive
+    (U : HessianOrthogonalGroup E) :
+    cartanInvolutionGroup (E := E)
+        (cartanInvolutionGroup (E := E) U) = U := by
+  simp only [cartanInvolutionGroup]
+  calc
+    modular_jHessianOrthogonal (E := E) *
+          (modular_jHessianOrthogonal (E := E) * U *
+            modular_jHessianOrthogonal (E := E)) *
+          modular_jHessianOrthogonal (E := E) =
+        (modular_jHessianOrthogonal (E := E) *
+          modular_jHessianOrthogonal (E := E)) * U *
+          (modular_jHessianOrthogonal (E := E) *
+            modular_jHessianOrthogonal (E := E)) := by
+              simp only [mul_assoc]
+    _ = U := by
+          rw [modular_jHessianOrthogonal_square]
+          simp
+
+noncomputable def cartanInvolutionGroupHom :
+    HessianOrthogonalGroup E →* HessianOrthogonalGroup E where
+  toFun := cartanInvolutionGroup
+  map_one' := cartanInvolutionGroup_one (E := E)
+  map_mul' := cartanInvolutionGroup_mul (E := E)
+
+@[simp] lemma cartanInvolutionGroupHom_apply
+    (U : HessianOrthogonalGroup E) :
+    cartanInvolutionGroupHom (E := E) U =
+      cartanInvolutionGroup (E := E) U :=
+  rfl
+
+lemma cartanInvolutionGroup_inv (U : HessianOrthogonalGroup E) :
+    cartanInvolutionGroup (E := E) U⁻¹ =
+      (cartanInvolutionGroup (E := E) U)⁻¹ := by
+  exact map_inv (cartanInvolutionGroupHom (E := E)) U
+
+lemma cartanInvolutionGroup_injective :
+    Function.Injective (cartanInvolutionGroup (E := E)) := by
+  intro U V h
+  have h' := congrArg (cartanInvolutionGroup (E := E)) h
+  simpa only [cartanInvolutionGroup_involutive] using h'
+
+lemma cartanInvolutionGroup_surjective :
+    Function.Surjective (cartanInvolutionGroup (E := E)) := by
+  intro U
+  refine ⟨cartanInvolutionGroup (E := E) U, ?_⟩
+  exact cartanInvolutionGroup_involutive (E := E) U
+
+noncomputable def cartanInvolutionGroupEquiv :
+    HessianOrthogonalGroup E ≃* HessianOrthogonalGroup E where
+  toFun := cartanInvolutionGroup (E := E)
+  invFun := cartanInvolutionGroup (E := E)
+  left_inv := cartanInvolutionGroup_involutive (E := E)
+  right_inv := cartanInvolutionGroup_involutive (E := E)
+  map_mul' := cartanInvolutionGroup_mul (E := E)
+
 end Group
 
 end InfoGeometry.Krein

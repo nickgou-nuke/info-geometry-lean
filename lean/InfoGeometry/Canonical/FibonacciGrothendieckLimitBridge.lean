@@ -66,6 +66,14 @@ theorem fibFusionLZeroReadout_tensorMap
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroReadout_tensorMap L m n h x
 
 omit [CharZero 𝕜] in
+theorem fibFusionGrothendieck_lzero_lift_of
+    (L : V →ₗ[𝕜] V) (n : Nat) (x : fibFusionClass) :
+    fibFusionLZeroLift L (fibFusionOf n x) =
+      fibFusionLZeroReadout L n x :=
+  InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_of
+    L n x
+
+omit [CharZero 𝕜] in
 theorem fibFusionGrothendieck_lzero_lift_of_vector
     (L : V →ₗ[𝕜] V) (n : Nat) :
     InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroLift (V := V) (𝕜 := 𝕜) L

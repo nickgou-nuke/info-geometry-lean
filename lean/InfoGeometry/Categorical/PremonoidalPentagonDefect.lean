@@ -34,6 +34,13 @@ structure PremonoidalPentagonDefectDatum (Obj : Type*) where
   
   /-- Identity coherence cell. -/
   id : ∀ X : Obj, Hom X X
+
+  id_comp : ∀ {X Y : Obj} (f : Hom X Y), comp (id X) f = f
+
+  comp_id : ∀ {X Y : Obj} (f : Hom X Y), comp f (id Y) = f
+
+  comp_assoc : ∀ {W X Y Z : Obj} (f : Hom W X) (g : Hom X Y)
+    (h : Hom Y Z), comp (comp f g) h = comp f (comp g h)
   
   /-- The associator structural isomorphism: $(X \otimes Y) \otimes Z \to X \otimes (Y \otimes Z)$. -/
   a : ∀ X Y Z : Obj, Hom (tensor (tensor X Y) Z) (tensor X (tensor Y Z))
@@ -71,5 +78,17 @@ If $q$ is the identity, then the strict Pentagon is recovered.
 -/
 def IsMonoidalRegime {Obj : Type*} (D : PremonoidalPentagonDefectDatum Obj) : Prop :=
   ∀ W X Y Z : Obj, D.q W X Y Z = D.id (D.tensor (D.tensor (D.tensor W X) Y) Z)
+
+theorem pentagon_of_isMonoidalRegime
+    {Obj : Type*} (D : PremonoidalPentagonDefectDatum Obj)
+    (hD : IsMonoidalRegime D)
+    (W X Y Z : Obj) :
+    D.comp (D.tensorHom (D.a W X Y) (D.id Z))
+        (D.comp (D.a W (D.tensor X Y) Z)
+          (D.tensorHom (D.id W) (D.a X Y Z))) =
+      D.comp (D.a (D.tensor W X) Y Z)
+        (D.a W X (D.tensor Y Z)) := by
+  rw [D.q_pentagon W X Y Z, hD W X Y Z]
+  rw [D.id_comp]
 
 end InfoGeometry.Categorical.PremonoidalPentagonDefect

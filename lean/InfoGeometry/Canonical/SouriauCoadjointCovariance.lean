@@ -66,6 +66,48 @@ theorem dual_pairing_invariance
     coadjoint (act.Ad g) μ (act.Ad g β) = μ β := by
   simp [coadjoint]
 
+/-! ## Differential transport of a potential -/
+
+theorem hasFDerivAt_precompose_inverse
+    (g : V ≃L[ℝ] V) (ψ : V → ℝ) (x : V)
+    (φ : V →L[ℝ] ℝ) (hψ : HasFDerivAt ψ φ x) :
+    HasFDerivAt (fun y => ψ (g.symm y))
+      (φ.comp (g.symm : V →L[ℝ] V)) (g x) := by
+  have hg : HasFDerivAt (fun y : V => g.symm y)
+      (g.symm : V →L[ℝ] V) (g x) := g.symm.hasFDerivAt
+  have hψ' : HasFDerivAt ψ φ (g.symm (g x)) := by
+    simpa using hψ
+  simpa [Function.comp_def] using hψ'.comp (g x) hg
+
+theorem hasFDerivAt_precompose_inverse_coadjoint
+    (g : V ≃L[ℝ] V) (ψ : V → ℝ) (x : V)
+    (φ : LieDual V) (hψ : HasFDerivAt ψ φ x) :
+    HasFDerivAt (fun y => ψ (g.symm y))
+      (coadjoint g φ) (g x) := by
+  simpa [coadjoint] using
+    hasFDerivAt_precompose_inverse g ψ x φ hψ
+
+theorem legendreMap_precompose_inverse_naturality
+    (g : V ≃L[ℝ] V) (ψ : V → ℝ)
+    (legendre : V → LieDual V) (x : V)
+    (hlegendre : HasFDerivAt ψ (legendre x) x) :
+    HasFDerivAt (fun y => ψ (g.symm y))
+      (coadjoint g (legendre x)) (g x) := by
+  exact hasFDerivAt_precompose_inverse_coadjoint
+    g ψ x (legendre x) hlegendre
+
+theorem legendre_pairing_transport_invariant
+    (g : V ≃L[ℝ] V) (legendre : V → LieDual V)
+    (x v : V) :
+    coadjoint g (legendre x) (g v) = legendre x v := by
+  simp [coadjoint]
+
+theorem coadjoint_symm_coadjoint
+    (g : V ≃L[ℝ] V) (μ : LieDual V) :
+    coadjoint g.symm (coadjoint g μ) = μ := by
+  ext v
+  simp [coadjoint]
+
 /-- Souriau Group Entropy S(β) = ⟨β, Q(β)⟩ + Ψ(β) -/
 def souriauEntropy (sys : SouriauThermodynamicAction G V) (β : V) : ℝ :=
   sys.heatVector β β + sys.Psi β

@@ -93,36 +93,20 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
 /--
 Analytic property required for the Fredholm half-plane claim.
 
-This is intentionally a data interface: the repo does not currently contain a
-trace-class Fredholm determinant theorem proving this property from first
-principles.
+This is a proposition about an explicitly supplied determinant.  The repo does
+not currently contain a trace-class Fredholm determinant theorem proving this
+property for a canonical determinant.
 -/
-def FredholmHalfPlaneCertificate : Type _ :=
-  {determinant : ℂ → ℂ //
-    ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0}
+def FredholmHalfPlaneProperty (determinant : ℂ → ℂ) : Prop :=
+  ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
 
-namespace FredholmHalfPlaneCertificate
-
-/-- The Fredholm determinant carried by the property. -/
-abbrev determinant (C : FredholmHalfPlaneCertificate) : ℂ → ℂ :=
-  C.1
-
-/-- The half-plane nonvanishing law carried by the property. -/
-theorem determinant_ne_zero
-    (C : FredholmHalfPlaneCertificate)
+theorem fredholmHalfPlaneProperty_ne_zero
+    {determinant : ℂ → ℂ}
+    (hdet : FredholmHalfPlaneProperty determinant)
     (s : ℂ)
     (hs : (1 / 2 : ℝ) < s.re) :
-    determinant C s ≠ 0 :=
-  C.2 s hs
-
-/-- Construct a Fredholm half-plane property from its determinant law. -/
-def mk
-    (determinant : ℂ → ℂ)
-    (h : ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0) :
-    FredholmHalfPlaneCertificate :=
-  ⟨determinant, h⟩
-
-end FredholmHalfPlaneCertificate
+    determinant s ≠ 0 :=
+  hdet s hs
 
 /--
 **Formulation 4 (Fredholm Invertibility).**
@@ -132,8 +116,10 @@ property supplies nonvanishing on the open half-plane, the local readout is
 nonzero there.
 -/
 theorem fredholm_determinant_nonzero_on_critical_halfplane
-    (C : FredholmHalfPlaneCertificate) {s : ℂ} (hs : (1 / 2 : ℝ) < s.re) :
-    C.determinant s ≠ 0 :=
-  C.determinant_ne_zero s hs
+    {determinant : ℂ → ℂ}
+    (hdet : FredholmHalfPlaneProperty determinant)
+    {s : ℂ} (hs : (1 / 2 : ℝ) < s.re) :
+    determinant s ≠ 0 :=
+  fredholmHalfPlaneProperty_ne_zero hdet s hs
 
 end InfoGeometry.Arithmetic.RiemannHypothesis

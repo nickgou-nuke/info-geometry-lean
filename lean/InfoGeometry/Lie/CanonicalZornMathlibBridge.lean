@@ -38,6 +38,16 @@ theorem rootDerivation_mem_mathlib_rootSpace (i : nonzeroIndex) :
       LieAlgebra.rootSpace axialCartanLieSubalgebra (nativeRootWeight i) := by
   exact CanonicalZornCartanRootSystem.rootDerivation_mem_rootSpace i
 
+theorem cartan_bracket_rootDerivation
+    (H : axialCartanLieSubalgebra) (i : nonzeroIndex) :
+    ⁅(H : Der), rootDerivation i.1⁆ =
+      (nativeRootWeight i H) • rootDerivation i.1 := by
+  change ⁅(H : Der), rootDerivation i.1⁆ =
+    (rootWeight i.1 (axialCartanLieEquiv.symm H)) • rootDerivation i.1
+  rw [← adCartan_rootDerivation (axialCartanLieEquiv.symm H) i.1]
+  rw [adCartan_apply, axialCartanLieEquiv.apply_symm_apply]
+  rfl
+
 theorem nativeCartan_le_mathlib_rootSpace_zero :
     axialCartanLieSubalgebra.toLieSubmodule ≤
       LieAlgebra.rootSpace axialCartanLieSubalgebra 0 := by
@@ -241,6 +251,32 @@ theorem rootDerivation_bracket_mem_mathlib_rootSpace_add
   exact lie_bracket_mem_mathlib_rootSpace_add
     (rootDerivation_mem_mathlib_rootSpace i)
     (rootDerivation_mem_mathlib_rootSpace j)
+
+theorem lie_bracket_eq_zero_of_sum_not_nativeRootWeight
+    {χ ψ : axialCartanLieSubalgebra → ℝ} {X Y : Der}
+    (hX : X ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra χ)
+    (hY : Y ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra ψ)
+    (hχψ : ∀ k : Fin 14,
+      (fun x : axialCartanLieSubalgebra =>
+        rootWeight k (axialCartanLieEquiv.symm x)) ≠ χ + ψ) :
+    ⁅X, Y⁆ = 0 := by
+  have hbot :
+      LieAlgebra.rootSpace axialCartanLieSubalgebra (χ + ψ) = ⊥ :=
+    mathlib_rootSpace_eq_bot_of_not_native_rootWeight (χ + ψ) hχψ
+  have hmem := lie_bracket_mem_mathlib_rootSpace_add hX hY
+  rw [hbot] at hmem
+  simpa using hmem
+
+theorem rootDerivation_bracket_eq_zero_of_sum_not_nativeRootWeight
+    (i j : nonzeroIndex)
+    (hχ : ∀ k : Fin 14,
+      (fun x : axialCartanLieSubalgebra =>
+        rootWeight k (axialCartanLieEquiv.symm x)) ≠
+          (nativeRootWeight i + nativeRootWeight j)) :
+    ⁅rootDerivation i.1, rootDerivation j.1⁆ = 0 := by
+  exact lie_bracket_eq_zero_of_sum_not_nativeRootWeight
+    (rootDerivation_mem_mathlib_rootSpace i)
+    (rootDerivation_mem_mathlib_rootSpace j) hχ
 
 theorem rootDerivation_bracket_mem_nativeCartan_of_opposite
     (i j : nonzeroIndex)

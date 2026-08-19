@@ -9,7 +9,7 @@ Audits finite condensed-matter/topological-crystal kernels:
   * SU(3) loop-current Bloch-mode commutator at Γ and generic mode addition.
 
 Analytic Bott isomorphisms, K-theory, Bloch spectral theorem, and Klein-bottle
-quotient topology are sockets in Lean.
+quotient topology are deferred_interfaces in Lean.
 """
 
 import sympy as sp

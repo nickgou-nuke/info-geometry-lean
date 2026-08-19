@@ -21,7 +21,6 @@ and an ER-style identification can evade that contradiction only by proving
 
 import Mathlib.Tactic
 import InfoGeometry.Geometry.EntanglementGeometry
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -102,7 +101,7 @@ remove the weakest shadow: a claimed entanglement datum can expose concrete
 left/right observables, their marginal readouts, and their joint correlation
 readout.
 -/
-structure ObservableCorrelationWitness
+structure ObservableCorrelationData
     (Q : BipartiteQuantumSystem)
     (R : BipartiteReadout Q)
     (state : Q.State) where
@@ -133,12 +132,12 @@ structure ObservableCorrelationWitness
   correlation_eq :
     R.correlation state leftObs rightObs = jointValue
 
-namespace ObservableCorrelationWitness
+namespace ObservableCorrelationData
 
 variable {Q : BipartiteQuantumSystem}
 variable {R : BipartiteReadout Q}
 variable {state : Q.State}
-variable (W : ObservableCorrelationWitness Q R state)
+variable (W : ObservableCorrelationData Q R state)
 
 /-- The left marginal value is read from the chosen left observable. -/
 theorem left_readout :
@@ -155,7 +154,7 @@ theorem joint_readout :
     R.correlation state W.leftObs W.rightObs = W.jointValue :=
   W.correlation_eq
 
-end ObservableCorrelationWitness
+end ObservableCorrelationData
 
 /--
 An entanglement datum with an explicit observable property.
@@ -176,7 +175,7 @@ structure ReadoutEntanglementDatum
   max_entangled : MaxEntangled state
 
   /-- Explicit finite observable-correlation property for the state. -/
-  property : ObservableCorrelationWitness Q R state
+  property : ObservableCorrelationData Q R state
 
 namespace ReadoutEntanglementDatum
 
@@ -458,29 +457,15 @@ theorem bridgeLength_monotone_after_thermalization
 
 end ComplexityBridgeBackend
 
-/-! ## 6. Owner target -/
+/-! ## 6. Native entanglement monogamy theorem -/
 
-/--
-Owner target for the finite entanglement/monogamy/complexity layer.
--/
-@[owner_target_tag]
-def EntanglementMonogamyOwnerTarget : Prop :=
-  ∀ (System : Type)
-    (MaxEntangled Independent : System → System → Prop),
-    (∀ A B C,
-      MaxEntangled A B →
-      MaxEntangled A C →
-      Independent B C →
-      False) →
-    ∀ B A R : System,
-      MaxEntangled B A →
-      MaxEntangled B R →
-      Independent A R →
-      False
-
-/-- The AMPS-style monogamy obstruction is constructively discharged. -/
-theorem entanglementMonogamyOwnerTarget :
-    EntanglementMonogamyOwnerTarget := by
+theorem entanglement_monogamy
+    : ∀ (System : Type)
+        (MaxEntangled Independent : System → System → Prop),
+      (∀ A B C,
+        MaxEntangled A B → MaxEntangled A C → Independent B C → False) →
+      ∀ B A R : System,
+        MaxEntangled B A → MaxEntangled B R → Independent A R → False := by
   intro System MaxEntangled Independent hmonogamy B A R hBA hBR hAR
   exact hmonogamy B A R hBA hBR hAR
 

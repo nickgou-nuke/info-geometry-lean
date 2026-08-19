@@ -4,6 +4,9 @@ import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.FilteredDirectInverseColimit
+import InfoGeometry.Canonical.SouriauOnsagerBKMBridge
+import InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit
 
 /-!
 # Raw matrix trace tower interface
@@ -21,6 +24,9 @@ namespace InfoGeometry.Canonical.CuntzMatrixTraceTower
 
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 open CategoryTheory CategoryTheory.Limits
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix
+open SouriauOnsagerBKM
 
 open scoped Kronecker
 
@@ -293,6 +299,40 @@ theorem traceColimitFunctional_inclusion_one (T : Data)
   rw [traceColimitFunctional_inclusion T hT]
   exact matrixTraceState_one n
 
+/- The descended trace retains finite cyclicity on every canonical stage. -/
+theorem traceColimitFunctional_inclusion_mul_comm
+    (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (n : ℕ) (A B : MatrixStage n) :
+    traceColimitFunctional T hT
+        (traceColimitInclusion T n (A * B)) =
+      traceColimitFunctional T hT
+        (traceColimitInclusion T n (B * A)) := by
+  rw [traceColimitFunctional_inclusion T hT,
+    traceColimitFunctional_inclusion T hT]
+  exact matrixTraceState_mul_comm n A B
+
+/- The descended trace preserves the involution on every finite stage. -/
+theorem traceColimitFunctional_inclusion_star (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (n : ℕ) (A : MatrixStage n) :
+    star (traceColimitFunctional T hT (traceColimitInclusion T n A)) =
+      traceColimitFunctional T hT (traceColimitInclusion T n (star A)) := by
+  rw [traceColimitFunctional_inclusion T hT,
+    traceColimitFunctional_inclusion T hT]
+  exact matrixTraceState_star n A
+
+/- The colimit readout retains the finite positive-real-part shadow on `A* A`. -/
+theorem traceColimitFunctional_inclusion_star_mul_self_nonneg
+    (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (n : ℕ) (A : MatrixStage n) :
+    0 ≤
+      (traceColimitFunctional T hT
+        (traceColimitInclusion T n (star A * A))).re := by
+  rw [traceColimitFunctional_inclusion T hT]
+  exact matrixTraceState_realPart_star_mul_self_nonneg n A
+
 /-- The compatible normalized trace is the unique linear readout on the
 colimit with the prescribed finite-stage values. -/
 theorem traceColimitFunctional_unique (T : Data)
@@ -319,5 +359,277 @@ theorem traceColimitInclusion_transition
       traceColimitInclusion T m A := by
   have h := (colimit.cocone (moduleDiagram T)).w (homOfLE hmn)
   exact congrArg (fun f => f A) h
+
+/-! The same concrete matrix tower is exposed through the filtered linear
+system owner used by the operatorial BKM transport.  The transition maps are
+the existing star-algebra maps viewed as linear maps; no new coefficient-level
+embedding is introduced. -/
+
+def concreteFilteredDirectSystem :
+    FilteredColimit.DirectInductiveSystem ℂ ℕ
+      (fun n => MatrixStage n) where
+  f := fun {i j} hij => (concreteMap hij).toAlgHom.toLinearMap
+  f_id := by
+    intro i
+    apply LinearMap.ext
+    intro A
+    change concreteMap (le_refl i) A = A
+    rw [concreteMap_id]
+    rfl
+  f_comp := by
+    intro i j k hij hjk
+    apply LinearMap.ext
+    intro A
+    have h := congrArg
+      (fun f : MatrixStage i →⋆ₐ[ℂ] MatrixStage k => f A)
+      (concreteMap_comp hij hjk)
+    simpa [StarAlgHom.comp_apply] using h
+
+def concreteTraceInductiveCocone :
+    FilteredColimit.InductiveCocone ℂ concreteFilteredDirectSystem
+      (traceColimit concreteStep) := by
+  refine ⟨fun n => traceColimitInclusion concreteStep n, ?_⟩
+  intro i j hij
+  apply LinearMap.ext
+  intro A
+  change traceColimitInclusion concreteStep j
+      (concreteMap hij A) = traceColimitInclusion concreteStep i A
+  exact traceColimitInclusion_transition concreteStep hij A
+
+/-! Operator-stage realization of the same tower.  The matrix coordinate
+equivalence is used only to transport the already-owned transition maps and
+the already-owned trace cocone. -/
+
+def operatorToMatrixLinearMap (n : ℕ) :
+    FiniteOperatorAlgebra (2 ^ n) →ₗ[ℂ] MatrixStage n where
+  toFun := matrixOfOp
+  map_add' := by
+    intro A B
+    exact matrixOfOp_add A B
+  map_smul' := by
+    intro c A
+    exact matrixOfOp_complex_smul c A
+
+lemma matrixOp_smul (n : ℕ) (c : ℂ)
+    (M : Matrix (Fin n) (Fin n) ℂ) :
+    CblinfunMatrix.matrixOp (c • M) =
+      c • CblinfunMatrix.matrixOp M := by
+  apply CblinfunMatrix.matrixOfOp_injective
+  simp only [CblinfunMatrix.matrixOfOp_matrixOp, matrixOfOp_complex_smul]
+
+lemma matrixOp_add {ι κ : Type*} [Fintype ι] [Fintype κ]
+    [DecidableEq ι] [DecidableEq κ]
+    (M N : Matrix κ ι ℂ) :
+    CblinfunMatrix.matrixOp (M + N) =
+      CblinfunMatrix.matrixOp M + CblinfunMatrix.matrixOp N := by
+  apply matrixOfOp_injective
+  simp [matrixOfOp_add]
+
+/-! ### The same finite tower in operator coordinates
+
+The operator presentation is transported through the already-owned finite
+matrix coordinate equivalence.  This keeps the noncommutative operator
+carrier and the concrete matrix colimit tied to the same transition maps.
+-/
+
+def operatorBond {i j : ℕ} (hij : i ≤ j) :
+    FiniteOperatorAlgebra (2 ^ i) →ₗ[ℂ] FiniteOperatorAlgebra (2 ^ j) where
+  toFun A := CblinfunMatrix.matrixOp (concreteMap hij (matrixOfOp A))
+  map_add' := by
+    intro A B
+    rw [matrixOfOp_add, map_add, matrixOp_add]
+  map_smul' := by
+    intro c A
+    change CblinfunMatrix.matrixOp (concreteMap hij (matrixOfOp (c • A))) =
+      c • CblinfunMatrix.matrixOp (concreteMap hij (matrixOfOp A))
+    rw [matrixOfOp_complex_smul, map_smul, matrixOp_smul]
+
+theorem operatorBond_matrixOfOp {i j : ℕ} (hij : i ≤ j)
+    (A : FiniteOperatorAlgebra (2 ^ i)) :
+    matrixOfOp (operatorBond hij A) =
+      concreteMap hij (matrixOfOp A) := by
+  simp [operatorBond]
+
+def concreteOperatorFilteredDirectSystem :
+    @FilteredColimit.DirectInductiveSystem ℂ _ ℕ _
+      (fun n => FiniteOperatorAlgebra (2 ^ n))
+      (fun _ => ContinuousLinearMap.addCommGroup)
+      (fun _ => ContinuousLinearMap.module) where
+  f := fun {i j} hij => operatorBond hij
+  f_id := by
+    intro i
+    apply LinearMap.ext
+    intro A
+    apply matrixOfOp_injective
+    rw [operatorBond_matrixOfOp, concreteMap_id]
+    rfl
+  f_comp := by
+    intro i j k hij hjk
+    apply LinearMap.ext
+    intro A
+    apply matrixOfOp_injective
+    change matrixOfOp (operatorBond hjk (operatorBond hij A)) = _
+    rw [operatorBond_matrixOfOp, operatorBond_matrixOfOp,
+      operatorBond_matrixOfOp]
+    exact congrArg (fun f => f (matrixOfOp A))
+      (concreteMap_comp hij hjk)
+
+def concreteOperatorTraceInductiveCocone :
+    FilteredColimit.InductiveCocone ℂ
+      concreteOperatorFilteredDirectSystem
+      (traceColimit concreteStep) := by
+  refine ⟨fun n =>
+    (traceColimitInclusion concreteStep n).comp (operatorToMatrixLinearMap n), ?_⟩
+  intro i j hij
+  apply LinearMap.ext
+  intro A
+  change traceColimitInclusion concreteStep j
+      (matrixOfOp (operatorBond hij A)) =
+    traceColimitInclusion concreteStep i (matrixOfOp A)
+  rw [operatorBond_matrixOfOp]
+  exact traceColimitInclusion_transition concreteStep hij (matrixOfOp A)
+
+/-! ### Finite operator and BKM readouts on the concrete colimit -/
+
+theorem traceColimitFunctional_inclusion_matrixOfOp
+    (n : ℕ) (A : FiniteOperatorAlgebra (2 ^ n)) :
+    traceColimitFunctional concreteStep concrete_trace_compatible
+        (traceColimitInclusion concreteStep n (matrixOfOp A)) =
+      (1 / (2 ^ n : ℂ)) * finiteOperatorTrace A := by
+  rw [traceColimitFunctional_inclusion]
+  rfl
+
+theorem maximallyMixed_bkm_kernel_identity
+    (n : ℕ) (s : ℝ) :
+    (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s
+        (1 : FiniteOperatorAlgebra (2 ^ n)) = 1 := by
+  rw [FaithfulDensityOperator.kuboMoriKernelFunctional_apply]
+  exact FaithfulDensityOperator.kuboMoriIntegrand_one_one
+    (maximallyMixedFaithfulDensityPowTwo n) s
+
+theorem maximallyMixed_bkm_kernel_eq_normalized_trace
+    (n : ℕ) (s : ℝ) (B : FiniteOperatorAlgebra (2 ^ n)) :
+    (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s B =
+      (1 / (2 ^ n : ℂ)) * finiteOperatorTrace B := by
+  rw [FaithfulDensityOperator.kuboMoriKernelFunctional_apply]
+  unfold FaithfulDensityOperator.kuboMoriIntegrand
+  simp only [star_one, mul_one]
+  rw [← (maximallyMixedFaithfulDensityPowTwo n).rpow_add]
+  have hs : s + (1 - s) = 1 := by ring
+  rw [hs, (maximallyMixedFaithfulDensityPowTwo n).rpow_one]
+  change finiteOperatorTrace
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))) * B) = _
+  unfold finiteOperatorTrace
+  change Matrix.trace (matrixOfOp
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))).comp B)) = _
+  rw [matrixOfOp_comp, matrixOfOp_real_smul]
+  have h_one : matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+      (1 : MatrixStage n) := by
+    change matrixOfOp
+        (ContinuousLinearMap.id ℂ (FiniteHilbertSpace (2 ^ n))) = 1
+    exact matrixOfOp_id
+  rw [h_one, Matrix.smul_mul, one_mul, Matrix.trace_smul]
+  simp [smul_eq_mul]
+
+theorem traceColimitFunctional_inclusion_bkm
+    (n : ℕ) (s : ℝ) (B : FiniteOperatorAlgebra (2 ^ n)) :
+    traceColimitFunctional concreteStep concrete_trace_compatible
+        (traceColimitInclusion concreteStep n (matrixOfOp B)) =
+      (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s B := by
+  rw [traceColimitFunctional_inclusion_matrixOfOp,
+    maximallyMixed_bkm_kernel_eq_normalized_trace]
+
+theorem maximallyMixed_bkm_kernel_compatible
+    {i j : ℕ} (hij : i ≤ j) (s : ℝ)
+    (B : FiniteOperatorAlgebra (2 ^ i)) :
+    (maximallyMixedFaithfulDensityPowTwo j).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ j)) s (operatorBond hij B) =
+      (maximallyMixedFaithfulDensityPowTwo i).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ i)) s B := by
+  rw [maximallyMixed_bkm_kernel_eq_normalized_trace,
+    maximallyMixed_bkm_kernel_eq_normalized_trace]
+  unfold finiteOperatorTrace
+  rw [operatorBond_matrixOfOp]
+  simpa [matrixTraceState, finiteOperatorTrace] using
+    (concreteMap_trace hij (matrixOfOp B))
+
+theorem concreteOperator_bkm_colimit_descent
+    (s : ℝ) (n : ℕ) :
+    (traceColimitFunctional concreteStep concrete_trace_compatible).comp
+        ((traceColimitInclusion concreteStep n).comp
+          (operatorToMatrixLinearMap n)) =
+      (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s := by
+  ext B
+  exact traceColimitFunctional_inclusion_bkm n s B
+
+theorem concreteOperator_bkm_dual_inverse_transition
+    (s : ℝ) {i j : ℕ} (hij : i ≤ j) :
+    FilteredColimit.InductiveCocone.dualInverseTransition
+        concreteOperatorFilteredDirectSystem hij
+        (InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit.stageKernel
+          (fun n => 2 ^ n)
+          (fun n => maximallyMixedFaithfulDensityPowTwo n)
+          (fun _ => (1 : FiniteOperatorAlgebra _)) s j) =
+      InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit.stageKernel
+        (fun n => 2 ^ n)
+        (fun n => maximallyMixedFaithfulDensityPowTwo n)
+        (fun _ => (1 : FiniteOperatorAlgebra _)) s i := by
+  refine
+    InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit.stageKernel_compatible_of_colimit_descent
+      (dim := fun n => 2 ^ n)
+      (sys := concreteOperatorFilteredDirectSystem)
+      (D := fun n => maximallyMixedFaithfulDensityPowTwo n)
+      (A := fun _ => (1 : FiniteOperatorAlgebra _))
+      (s := s)
+      (cocone := concreteOperatorTraceInductiveCocone)
+      (Phi := traceColimitFunctional concreteStep concrete_trace_compatible)
+      ?_ hij
+  intro n
+  exact concreteOperator_bkm_colimit_descent s n
+
+theorem concreteOperator_bkm_colimit_readout_independent
+    (s : ℝ) {i j : ℕ} (hij : i ≤ j)
+    (B : FiniteOperatorAlgebra (2 ^ i)) :
+    traceColimitFunctional concreteStep concrete_trace_compatible
+        (traceColimitInclusion concreteStep j
+          (matrixOfOp (operatorBond hij B))) =
+      (maximallyMixedFaithfulDensityPowTwo i).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ i)) s B := by
+  exact
+    InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit.stageKernel_colimit_readout_independent
+      (dim := fun n => 2 ^ n)
+      (sys := concreteOperatorFilteredDirectSystem)
+      (D := fun n => maximallyMixedFaithfulDensityPowTwo n)
+      (A := fun _ => (1 : FiniteOperatorAlgebra _))
+      (s := s)
+      (cocone := concreteOperatorTraceInductiveCocone)
+      (Phi := traceColimitFunctional concreteStep concrete_trace_compatible)
+      (hdesc := by
+        intro n
+        exact concreteOperator_bkm_colimit_descent s n)
+      hij B
+
+theorem traceColimitFunctional_inclusion_bkm_identity
+    (n : ℕ) (s : ℝ) :
+    traceColimitFunctional concreteStep concrete_trace_compatible
+        (traceColimitInclusion concreteStep n
+          (matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)))) =
+      (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s
+        (1 : FiniteOperatorAlgebra (2 ^ n)) := by
+  have hmat :
+      matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+        (1 : MatrixStage n) := by
+    change matrixOfOp
+        (ContinuousLinearMap.id ℂ (FiniteHilbertSpace (2 ^ n))) = 1
+    exact matrixOfOp_id
+  rw [hmat, traceColimitFunctional_inclusion]
+  change matrixTraceState n (1 : MatrixStage n) = _
+  rw [matrixTraceState_one]
+  exact (maximallyMixed_bkm_kernel_identity n s).symm
 
 end InfoGeometry.Canonical.CuntzMatrixTraceTower

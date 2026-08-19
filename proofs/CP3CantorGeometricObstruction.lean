@@ -16,7 +16,7 @@ interface, and then packages the corrected bridge:
 * the exact Cuntz relations on the Cantor boundary are the proved algebraic
   replacement for a false global geometric isomorphism.
 
-Full analytic topology, quotient manifolds, and C*-completion remain sockets.
+Full analytic topology, quotient manifolds, and C*-completion remain outside this finite owner.
 -/
 
 noncomputable section

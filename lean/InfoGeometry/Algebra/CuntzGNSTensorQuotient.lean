@@ -16,16 +16,39 @@ namespace InfoGeometry.Algebra.CuntzGNSTensorQuotient
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
 
-structure CuntzGNSState (n : ℕ) where
-  toLinearMap : CuntzAlg n →ₗ[ℂ] ℂ
-  normalized : toLinearMap 1 = 1
-  positive : ∀ x : CuntzAlg n,
-    0 ≤ (toLinearMap (star x * x)).re
-  nullRel : CuntzAlg n → CuntzAlg n → Prop
-  null_refl : ∀ x, nullRel x x
-  null_symm : ∀ {x y}, nullRel x y → nullRel y x
-  null_trans : ∀ {x y z}, nullRel x y → nullRel y z → nullRel x z
-  null_left_stable : ∀ a {x y}, nullRel x y → nullRel (a * x) (a * y)
+def CuntzGNSStateLaws (n : ℕ)
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (nullRel : CuntzAlg n → CuntzAlg n → Prop) : Prop :=
+  (φ 1 = 1) ∧
+  (∀ x : CuntzAlg n, 0 ≤ (φ (star x * x)).re) ∧
+  (∀ x, nullRel x x) ∧
+  (∀ {x y}, nullRel x y → nullRel y x) ∧
+  (∀ {x y z}, nullRel x y → nullRel y z → nullRel x z) ∧
+  (∀ a {x y}, nullRel x y → nullRel (a * x) (a * y))
+
+def CuntzGNSState (n : ℕ) :=
+  {d : (CuntzAlg n →ₗ[ℂ] ℂ) ×
+      (CuntzAlg n → CuntzAlg n → Prop) // CuntzGNSStateLaws n d.1 d.2}
+
+namespace CuntzGNSState
+
+def toLinearMap (F : CuntzGNSState n) : CuntzAlg n →ₗ[ℂ] ℂ := F.1.1
+def nullRel (F : CuntzGNSState n) : CuntzAlg n → CuntzAlg n → Prop := F.1.2
+
+theorem normalized (F : CuntzGNSState n) : F.toLinearMap 1 = 1 := F.2.1
+theorem positive (F : CuntzGNSState n) (x : CuntzAlg n) :
+    0 ≤ (F.toLinearMap (star x * x)).re := F.2.2.1 x
+theorem null_refl (F : CuntzGNSState n) (x : CuntzAlg n) : F.nullRel x x := F.2.2.2.1 x
+theorem null_symm (F : CuntzGNSState n) {x y : CuntzAlg n} :
+    F.nullRel x y → F.nullRel y x := F.2.2.2.2.1
+theorem null_trans (F : CuntzGNSState n) {x y z : CuntzAlg n} :
+    F.nullRel x y → F.nullRel y z → F.nullRel x z := F.2.2.2.2.2.1
+theorem null_left_stable (F : CuntzGNSState n) (a : CuntzAlg n) {x y : CuntzAlg n} :
+    F.nullRel x y → F.nullRel (a * x) (a * y) := by
+  change F.1.2 x y → F.1.2 (a * x) (a * y)
+  exact F.2.2.2.2.2.2 a
+
+end CuntzGNSState
 
 def gnsSetoid (F : CuntzGNSState n) : Setoid (CuntzAlg n) where
   r := F.nullRel

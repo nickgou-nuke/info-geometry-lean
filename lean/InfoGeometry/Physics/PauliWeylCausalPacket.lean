@@ -24,6 +24,31 @@ open InfoGeometry.Geometry.ParavectorZornBoundary
 def causalPacket (t x y z : ℂ) : CausalOperatorCoordinates ℂ :=
   ⟨t, z, x, y⟩
 
+theorem causalPacket_injective :
+    Function.Injective
+      (fun p : ℂ × (ℂ × (ℂ × ℂ)) =>
+        causalPacket p.1 p.2.1 p.2.2.1 p.2.2.2) := by
+  intro a b h
+  rcases a with ⟨t, x, y, z⟩
+  rcases b with ⟨t', x', y', z'⟩
+  injection h with ht hz hx hy
+  cases ht
+  cases hz
+  cases hx
+  cases hy
+  rfl
+
+theorem causalPacket_eq_iff
+    (t x y z t' x' y' z' : ℂ) :
+    causalPacket t x y z = causalPacket t' x' y' z' ↔
+      t = t' ∧ x = x' ∧ y = y' ∧ z = z' := by
+  constructor
+  · intro h
+    injection h with ht hz hx hy
+    exact ⟨ht, hx, hy, hz⟩
+  · rintro ⟨rfl, rfl, rfl, rfl⟩
+    rfl
+
 /-- Pauli/Weyl soldering is the existing causal reconstruction of that packet. -/
 theorem solder_eq_reconstruct_causalPacket (t x y z : ℂ) :
     SolderingSpinConnectionBogoliubov.solder t x y z =
@@ -41,6 +66,19 @@ theorem causalCoordinates_solder (t x y z : ℂ) :
       causalPacket t x y z := by
   rw [solder_eq_reconstruct_causalPacket]
   exact causalCoordinates_reconstruct (causalPacket t x y z)
+
+theorem solder_eq_iff
+    (t x y z t' x' y' z' : ℂ) :
+    SolderingSpinConnectionBogoliubov.solder t x y z =
+        SolderingSpinConnectionBogoliubov.solder t' x' y' z' ↔
+      t = t' ∧ x = x' ∧ y = y' ∧ z = z' := by
+  constructor
+  · intro h
+    have hc := congrArg causalCoordinates h
+    rw [causalCoordinates_solder, causalCoordinates_solder] at hc
+    exact (causalPacket_eq_iff t x y z t' x' y' z').mp hc
+  · rintro ⟨rfl, rfl, rfl, rfl⟩
+    rfl
 
 /-- The two circular chiral coefficients recover the Cartesian transverse
     coordinates used by the Zorn boundary. -/

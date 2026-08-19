@@ -244,4 +244,21 @@ noncomputable def realTwoPlaneEquivKleinLocus : RealTwoPlane ≃ KleinLocus :=
   framePlaneQuotientEquivTwoPlane.symm.trans
     framePlaneQuotientEquivKleinLocus
 
+@[simp] theorem realTwoPlaneEquivKleinLocus_apply
+    (P : RealTwoPlane) :
+    realTwoPlaneEquivKleinLocus P =
+      framePlaneQuotientEquivKleinLocus
+        (framePlaneQuotientEquivTwoPlane.symm P) :=
+  rfl
+
+theorem realTwoPlaneEquivKleinLocus_eq_iff
+    (P Q : RealTwoPlane) :
+    realTwoPlaneEquivKleinLocus P = realTwoPlaneEquivKleinLocus Q ↔
+      P = Q := by
+  constructor
+  · intro h
+    exact realTwoPlaneEquivKleinLocus.injective h
+  · intro h
+    simpa [h]
+
 end InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv

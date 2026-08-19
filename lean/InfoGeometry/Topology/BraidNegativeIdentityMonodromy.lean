@@ -59,29 +59,4 @@ theorem negative_root_doubles_to_identity (A : M2C) (d : ℕ) (h : A ^ d = -(1 :
   rw [show 2 * d = d + d by rw [two_mul], pow_add, h]
   simp
 
-/-- The imported finite Majorana bivectors give an 8×8 integer negative-identity law. -/
-theorem majorana_bivectors_negative_identity_bridge :
-    InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector12 *
-        InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector12 =
-      -(1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) ∧
-    InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector23 *
-        InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector23 =
-      -(1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) := by
-  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_bivector_squares
-
-/-- The imported finite Majorana braid gates have projective inverse numerators. -/
-theorem majorana_projective_inverse_bridge :
-    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
-        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12InvNumerator =
-      (2 : ℤ) • (1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) ∧
-    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
-        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23InvNumerator =
-      (2 : ℤ) • (1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) := by
-  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_projective_inverses
-
-#check spinorHalfTwist_sq
-#check B2_full_twist_negative
-#check B3_full_twist_negative
-#check negative_root_doubles_to_identity
-
 end InfoGeometry.Topology.BraidNegativeIdentityMonodromy

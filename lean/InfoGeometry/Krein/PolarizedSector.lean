@@ -100,6 +100,21 @@ theorem spectralMinusProj_apply_idempotent (u : H2) :
   simpa [ContinuousLinearMap.comp_apply] using
     congrArg (fun F : H2 →L[ℝ] H2 => F u) (spectralMinusProj_idempotent (E := E))
 
+omit [CompleteSpace E] in
+/-! The two spectral projectors annihilate each other. -/
+theorem spectralPlusProj_apply_minusProj_zero (u : H2) :
+    Pplus (Pminus u) = 0 := by
+  rw [spectralPlusProj_apply_eq_plusPoint,
+    spectralMinusProj_apply_eq_minusPoint]
+  simp [plusPoint, minusPoint]
+
+omit [CompleteSpace E] in
+theorem spectralMinusProj_apply_plusProj_zero (u : H2) :
+    Pminus (Pplus u) = 0 := by
+  rw [spectralMinusProj_apply_eq_minusPoint,
+    spectralPlusProj_apply_eq_plusPoint]
+  simp [plusPoint, minusPoint]
+
 /-- Pointwise spectral decomposition into positive and negative sectors. -/
 theorem spectralProj_decomposition (u : H2) :
     Pplus u + Pminus u = u := by

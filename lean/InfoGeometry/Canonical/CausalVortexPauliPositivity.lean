@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors.
 -/
-import InfoGeometry.Canonical.CausalVortexPauliWitness
+import InfoGeometry.Canonical.CausalVortexPauliMajorana
 
 /-!
 # Quadratic-form positivity for the finite Cooper-pair property

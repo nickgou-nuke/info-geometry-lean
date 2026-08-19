@@ -191,7 +191,7 @@ theorem langlandsSugawaraBridge_nonempty_of_purification
     (P : CuspidalEigenpacket R chi)
     (s : State)
     {W_L : SiegelEisensteinWitness Bulk Boundary}
-    (P_L : ProjectedAutomorphicLFunctionWitness W_L)
+    (P_L : ProjectedAutomorphicLFunctionData W_L)
     {BridgeVir BridgeState : Type*}
     [AddCommGroup BridgeVir] [Module ℝ BridgeVir]
     [LieRing BridgeVir] [LieAlgebra ℝ BridgeVir]

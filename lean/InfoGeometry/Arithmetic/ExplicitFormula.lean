@@ -36,17 +36,15 @@ noncomputable def zeroSum (x : ℝ) (zeros : Finset ℂ) : ℂ :=
 noncomputable def explicitConstantTerm (x : ℝ) : ℝ :=
   Real.log (2 * Real.pi) + (1 / 2 : ℝ) * Real.log (1 - x ^ (-2 : ℝ))
 
-/-! A finite certificate carrying zero metadata and a supplied equality. -/
-structure ExplicitFormula (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x) where
-  -- All zeros are non-trivial: 0 < Re(ρ) < 1
-  zeros_nontrivial : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1
-  -- The explicit formula holds
-  formula_holds : (smoothedChebyshevPsi x : ℂ) = (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)
-  -- All zeros come in conjugate pairs (from functional equation)
-  zeros_conjugate_pairs : ∀ ρ ∈ zeros, star ρ ∈ zeros
+/-! The finite explicit-formula proposition. -/
+def explicitFormula (x : ℝ) (zeros : Finset ℂ) (_hx : 1 < x) : Prop :=
+  (∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1) ∧
+  ((smoothedChebyshevPsi x : ℂ) =
+    (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) ∧
+  (∀ ρ ∈ zeros, star ρ ∈ zeros)
 
-/-! Construct the finite certificate from explicit inputs. -/
-theorem explicitFormula_of_supplied_data
+/-! The proposition follows directly from its three component facts. -/
+theorem explicitFormula_of_data
     (x : ℝ) (hx : 1 < x)
     (zeros : Finset ℂ)
     (hzeros : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1)
@@ -54,8 +52,17 @@ theorem explicitFormula_of_supplied_data
     (hformula :
       (smoothedChebyshevPsi x : ℂ) =
         (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) :
-    ExplicitFormula x zeros hx := by
+    explicitFormula x zeros hx := by
   exact ⟨hzeros, hformula, hconj⟩
+
+theorem explicitFormula_components
+    (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x)
+    (h : explicitFormula x zeros hx) :
+    (∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1) ∧
+      ((smoothedChebyshevPsi x : ℂ) =
+        (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) ∧
+      (∀ ρ ∈ zeros, star ρ ∈ zeros) := by
+  exact h
 
 /-- Finite main-term readout used for the zero-counting placeholder.
 

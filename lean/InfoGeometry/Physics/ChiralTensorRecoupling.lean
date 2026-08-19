@@ -567,4 +567,16 @@ end TwoQubitSchurCoefficients
 
 #check e_factors_through_cl11_atom
 
+/-! A TL projector at loop parameter `2` cannot itself be a nonzero
+nilpotent.  Hence the logarithmic Jordan direction must arise from a derived
+Hamiltonian or an indecomposable representation, not by identifying it with
+the TL generator. -/
+theorem tl_parameter_two_nilpotent_eq_zero (x : SpinPair)
+    (h_tl : x * x = (2 : ℂ) • x)
+    (h_nil : x * x = 0) :
+    x = 0 := by
+  have hsmul : (2 : ℂ) • x = 0 := by
+    rw [← h_tl, h_nil]
+  exact (smul_eq_zero.mp hsmul).resolve_left (by norm_num)
+
 end ChiralTensorRecoupling

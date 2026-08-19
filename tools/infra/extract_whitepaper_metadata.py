@@ -174,7 +174,7 @@ def main():
 
     # Theorem Section
     latex_content.append(r"\section{Verified Theorem and Module Directory}")
-    latex_content.append("This section presents a structured, computer-verified directory of definitions, theorems, and mathematical sockets extracted from the repository's semantic graph.\n")
+    latex_content.append("This section presents a structured, computer-verified directory of definitions and theorems extracted from the repository's semantic graph.\n")
     
     # Group LLM by submodule
     latex_content.append(r"\subsection{InfoGeometry.LLM Submodules}")

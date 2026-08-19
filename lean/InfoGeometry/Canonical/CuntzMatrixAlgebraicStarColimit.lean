@@ -107,6 +107,10 @@ def stageInjection (i : ℕ) : MatrixStage i →⋆ₐ[ℂ] Carrier where
     stageInjection i (star x) = star (stageInjection i x) := by
   exact map_star (stageInjection i) x
 
+@[simp] theorem stageInjection_smul (i : ℕ) (c : ℂ) (x : MatrixStage i) :
+    stageInjection i (c • x) = c • stageInjection i x := by
+  exact map_smul (stageInjection i) c x
+
 theorem stageInjection_transition {i j : ℕ} (hij : i ≤ j) (x : MatrixStage i) :
     stageInjection j (rawMap hij x) = stageInjection i x := by
   exact DirectLimit.Ring.of_f

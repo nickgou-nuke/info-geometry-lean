@@ -34,11 +34,13 @@ theorem matrix_unit_mul (n : ℕ) (i j k l : Fin n) :
 /-- Matrix unit dagger: E_{ij}† = E_{ji} -/
 theorem matrix_unit_star (n : ℕ) (i j : Fin n) :
     star (E n i j) = E n j i := by
-  simp [E, star_mul, star_cuntzS, star_cuntzSdag]
+  unfold E
+  rw [star_mul, star_cuntzSdag, star_cuntzS]
 
 /-- Diagonal matrix units are the range projectors: E_{ii} = P_i -/
 theorem matrix_unit_diag_eq_projector (n : ℕ) (i : Fin n) :
-    E n i i = cuntzS n i * cuntzSdag n i := rfl
+    E n i i = cuntzS n i * cuntzSdag n i := by
+  rfl
 
 /-- Matrix units are partial isometries: E_{ij} E_{ji} = P_i -/
 theorem matrix_unit_partial_isometry (n : ℕ) (i j : Fin n) :
@@ -52,11 +54,30 @@ theorem matrix_unit_partial_isometry (n : ℕ) (i j : Fin n) :
 theorem matrix_unit_sq_off_diag (n : ℕ) (i j : Fin n) (hij : i ≠ j) :
     E n i j * E n i j = 0 := by
   rw [matrix_unit_mul n i j i j]
-  simp [hij, Ne.symm hij]
+  rw [if_neg (Ne.symm hij)]
 
 /-- Matrix units form a complete system: Σ_i E_{ii} = Σ_i P_i = 1 -/
 theorem matrix_unit_sum_diag_eq_one (n : ℕ) :
     (∑ i : Fin n, E n i i) = 1 := by
-  simp [E, cuntz_ranges_sum_one n]
+  unfold E
+  exact cuntz_ranges_sum_one n
+
+/-! ## Finite coefficient transport
+
+The matrix-unit sector carries arbitrary (not necessarily symmetric)
+coefficients.  The following definition and multiplication theorem make the
+finite matrix algebra law explicit inside the Cuntz quotient.
+-/
+
+def coefficientOperator (n : ℕ) (a : Fin n → Fin n → ℂ) : CuntzAlg n :=
+  ∑ i : Fin n, ∑ j : Fin n, a i j • E n i j
+
+theorem coefficientOperator_mul_expanded (n : ℕ)
+    (a b : Fin n → Fin n → ℂ) :
+    coefficientOperator n a * coefficientOperator n b =
+      ∑ i : Fin n, ∑ j : Fin n, ∑ k : Fin n, ∑ l : Fin n,
+        (a i j * b k l) • (E n i j * E n k l) := by
+  unfold coefficientOperator
+  simp_rw [Finset.sum_mul, Finset.mul_sum, smul_mul_smul]
 
 end InfoGeometry.Algebra.CuntzMatrixUnits

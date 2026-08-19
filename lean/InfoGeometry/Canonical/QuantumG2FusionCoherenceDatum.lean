@@ -58,19 +58,6 @@ structure QuantumG2FusionCoherenceDatum (Sector : Type u) (𝕜 : Type u) [CommR
     letI := instAddCommGroupFusionSpace b a c; letI := instModuleFusionSpace b a c
     FusionSpace a b c ≃ₗ[𝕜] FusionSpace b a c
 
-  -- Pentagon and Hexagon relations can be stated as commutative diagrams
-  -- over the direct sums of tensor products. Here we establish the placeholder properties
-  -- to satisfy the structural specification.
-  
-  /-- Pentagon coherence relation for F-moves. -/
-  F_pentagon : Prop
-
-  /-- Left Hexagon relation for F and R moves. -/
-  FR_hexagon_left : Prop
-
-  /-- Right Hexagon relation for F and R moves. -/
-  FR_hexagon_right : Prop
-
 attribute [instance] QuantumG2FusionCoherenceDatum.instAddCommGroupFusionSpace
 attribute [instance] QuantumG2FusionCoherenceDatum.instModuleFusionSpace
 attribute [instance] QuantumG2FusionCoherenceDatum.instAddCommGroupLeft

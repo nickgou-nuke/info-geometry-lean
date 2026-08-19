@@ -11,7 +11,7 @@ This script makes the finite part of the light-cone model explicit:
 4. Arity-3 cooperad split for block `pair12|3`:
    `e12` internal, `e13`,`e23` outer.
 
-No analytic de Rham theorem is proved here; it is represented in Lean as a socket.
+No analytic de Rham theorem is proved here; it is represented in Lean as a deferred_interface.
 """
 
 from __future__ import annotations

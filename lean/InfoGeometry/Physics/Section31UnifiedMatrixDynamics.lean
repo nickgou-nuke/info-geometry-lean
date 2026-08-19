@@ -7,8 +7,7 @@ import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 Section 31 substantially repeats the Pauli/Bloch/Minkowski matrix framework that
 is already formalized in
 `InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite`.  This file uses that
-owner as a stepping stone and adds only the missing theorem-safe finite dynamics
-socket:
+owner as a stepping stone and adds the following finite dynamics theorems:
 
 * matrix commutator and Jacobi/curvature action identity;
 * constant-connection covariant derivative `D_Γ X = [Γ,X]`;
@@ -84,7 +83,7 @@ theorem covDerivConst_conjugation_covariant (U V Γ X : Mat2)
     covDerivConst (U * Γ * V) (U * X * V) = U * covDerivConst Γ X * V := by
   simpa [covDerivConst] using commutator_conjugation_covariant U V Γ X hVU
 
-/-- Repaired Section 31 finite packet combining precession and curvature-action sockets. -/
+/-- Repaired Section 31 finite packet combining precession and curvature-action identities. -/
 theorem repaired_section31_dynamics_packet
     (ω1 ω2 ω3 n1 n2 n3 : ℂ) (Γ Λ X : Mat2) :
     vonNeumannRHS ω1 ω2 ω3 n1 n2 n3 =

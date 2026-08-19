@@ -55,6 +55,13 @@ def dirichletAppendZero (n : ℕ) :
     dirichletAppendZero n a (Fin.last (n + 1)) = 0 := by
   simp [dirichletAppendZero]
 
+theorem dirichletAppendZero_injective (n : ℕ) :
+    Function.Injective (dirichletAppendZero n) := by
+  intro a b h
+  funext i
+  have h' := congrArg (fun x : DirichletStage (n + 1) => x i.castSucc) h
+  simpa using h'
+
 def dirichletStageFunctor : ℕ ⥤ ModuleCat ℂ :=
   Functor.ofSequence (fun n =>
     ModuleCat.ofHom (dirichletAppendZero n))

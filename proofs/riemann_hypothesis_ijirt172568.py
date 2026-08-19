@@ -13,7 +13,7 @@ Numerically audits four themes discussed in the paper:
 
 Theorem-honesty boundary: this script is an audit/witness only.  It does not
 prove RH, PNT, prime-gap asymptotics, Hilbert--Pólya, or GUE universality.
-Lean proof kernels and explicit sockets live in IJIRTRiemannDigest.lean.
+Lean proof kernels and explicit deferred_interfaces live in IJIRTRiemannDigest.lean.
 
 Usage:
   python riemann_hypothesis_ijirt172568.py          # run all computations
@@ -583,13 +583,13 @@ def run_all(show_plots: bool = False):
 
     Theme 2 (PNT):   π(x) ∼ x/ln(x) is numerically illustrated.
                       π(10^6) = {primepi(1000000)}, 10^6/ln(10^6) = {1e6/math.log(1e6):.1f}
-                      Analytic PNT remains external/socketed here: ✓
+                      Analytic PNT remains external/deferred_interface here: ✓
 
     Theme 3 (Gaps):  Average gaps scale with ln(p_n) in the finite sample.
                       Single gaps fluctuate; no asymptotic theorem is proved: ✓
 
     Theme 4 (RMT):   ζ-zero spacings are compared to a Wigner-surmise model.
-                      GUE universality / Hilbert--Pólya remain socketed: ✓
+                      GUE universality / Hilbert--Pólya remain deferred_interface: ✓
     """)
 
     # ── Optional plots ────────────────────────────────────────────────

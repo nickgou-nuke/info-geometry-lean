@@ -49,6 +49,6 @@ assert_zero("p lies on p∧q", (p.dot(line)))
 assert_zero("q lies on p∧q", (q.dot(line)))
 print("homogeneous point-line dual incidence verified ✓")
 
-print("\n§5 operator algebra socket")
-print("tiling hull/groupoid/higher-rank Cuntz-Krieger layer is a C*-algebra socket; finite automaton anchors above ✓")
+print("\n§5 operator algebra deferred_interface")
+print("tiling hull/groupoid/higher-rank Cuntz-Krieger layer is a C*-algebra deferred_interface; finite automaton anchors above ✓")
 print("\nprojective_penrose_pga.py: All identities verified")

@@ -12,7 +12,7 @@ open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR (ExteriorCARPair)
 open InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_limit_readout_eq_booleanLocalParity
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
     {L : Type*} [Ring L]
@@ -42,7 +42,7 @@ theorem carParity_limit_readout_eq_booleanLocalParity
     rw [hpar', hOcc]
     norm_num
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_limit_readout_eq_neg_one_of_mem
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
     {L : Type*} [Ring L]
@@ -57,7 +57,7 @@ theorem carParity_limit_readout_eq_neg_one_of_mem
   rw [carParity_limit_readout_eq_booleanLocalParity ι P χ n p S hN]
   exact localParity_eq_neg_one_of_mem hp
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem carParity_limit_readout_eq_one_of_not_mem
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
     {L : Type*} [Ring L]

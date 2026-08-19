@@ -50,7 +50,6 @@ import InfoGeometry.Automorphic.LFunctionResonance
 import InfoGeometry.CondensedMatter.DIIISuperfluid
 import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
-import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

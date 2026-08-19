@@ -116,7 +116,7 @@ This is the clean case where the modular Hamiltonian has no zero-mode sector,
 so the sign operator satisfies `eps² = 1`.
 
 The field `Kmod` is required to be `J ∘ eps`; the complex-structure law is
-stored as a proof-carrying field at this socket layer.
+stored as a proof field at this interface layer.
 -/
 structure ModularSignCPTDatum
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
@@ -204,7 +204,7 @@ The dynamically generated modular phase axis squares to `-1`.
 
 This is the real Clifford calculation:
 
-At this abstract socket layer this is re-exported from the datum. A concrete
+At this abstract interface layer this is re-exported from the datum. A concrete
 functional-calculus layer can later prove the property from `eps_square`,
 `J_square`, and `J_eps_anticomm`.
 -/
@@ -676,60 +676,35 @@ theorem complexStructure_square :
 
 end DynamicModularCPTAlgebra
 
-/-! ## 4. Owner targets -/
-
-/--
-Compatibility predicate for constructing a modular sign/CPT datum from
-Tomita-Takesaki data.
-
-The compatibility content is the primitive Clifford pair: two involutions
-`eps` and `J` satisfying `J ε = - ε J`.  From these relations the phase-axis
-square law is proved by `ModularSignCPTRelations.Kmod_square`.
--/
-def ModularSignCPTCompatibility
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Type _ :=
-  ModularSignCPTRelations H
-
 /--
 The full/gapped datum is constructed from primitive Clifford relations.
 
 This remains intentionally compatibility-gated: abstract normed real Hilbert
-data alone do not construct the modular sign and conjugation witnesses.
+data alone do not construct the modular sign and conjugation maps.
 -/
-theorem modularSignCPTDatumOwnerTarget :
-  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    ModularSignCPTCompatibility H →
-      ∃ R : ModularSignCPTRelations H,
-        R.eps.comp R.eps = 1 ∧
-          R.J.comp R.J = 1 ∧
-          R.J.comp R.eps = -(R.eps.comp R.J) ∧
-          R.Kmod = R.J.comp R.eps ∧
-          R.Kmod.comp R.Kmod = -(1 : EndR H) := by
-  intro H _ _ h
-  let R : ModularSignCPTRelations H := h
-  exact ⟨R, R.eps_square, R.J_square, R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square⟩
-
-/-- Compatibility predicate for constructing the partial zero-mode-aware datum. -/
-def PartialModularSignCPTCompatibility
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Type _ :=
-  PartialModularSignCPTRelations H
+theorem modularSignCPT_properties
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : ModularSignCPTRelations H) :
+    R.eps.comp R.eps = 1 ∧
+      R.J.comp R.J = 1 ∧
+      R.J.comp R.eps = -(R.eps.comp R.J) ∧
+      R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -(1 : EndR H) :=
+  ⟨R.eps_square, R.J_square, R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square⟩
 
 /-- The partial datum is constructed from primitive zero-mode-aware relations. -/
-theorem partialModularSignCPTDatumOwnerTarget :
-  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    PartialModularSignCPTCompatibility H →
-      ∃ R : PartialModularSignCPTRelations H,
-        R.support.comp R.support = R.support ∧
-          R.eps.comp R.eps = R.support ∧
-          R.J.comp R.J = 1 ∧
-          R.J.comp R.eps = -(R.eps.comp R.J) ∧
-          R.Kmod = R.J.comp R.eps ∧
-          R.Kmod.comp R.Kmod = -R.support ∧
-          R.support.comp R.Kmod = R.Kmod ∧
-          R.Kmod.comp R.support = R.Kmod := by
-  intro H _ _ h
-  let R : PartialModularSignCPTRelations H := h
-  exact ⟨R, R.support_idempotent, R.eps_square, R.J_square,
+theorem partialModularSignCPT_properties
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : PartialModularSignCPTRelations H) :
+    R.support.comp R.support = R.support ∧
+      R.eps.comp R.eps = R.support ∧
+      R.J.comp R.J = 1 ∧
+      R.J.comp R.eps = -(R.eps.comp R.J) ∧
+      R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -R.support ∧
+      R.support.comp R.Kmod = R.Kmod ∧
+      R.Kmod.comp R.support = R.Kmod :=
+  ⟨R.support_idempotent, R.eps_square, R.J_square,
     R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square, R.support_Kmod,
     R.Kmod_support⟩
 

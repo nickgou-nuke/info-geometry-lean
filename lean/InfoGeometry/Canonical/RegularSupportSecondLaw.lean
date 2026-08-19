@@ -438,23 +438,16 @@ theorem property_leakage_energy_zero
   leakage_energy_zero_of_modular_fixed_support
     C.state C.flow C.support C.support_fixed
 
-/-- Owner target for the regular-support Second Law socket over a fixed algebra. -/
 @[rep_depth krein]
-def RegularSupportSecondLawTarget
-    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] : Prop :=
-  ∀ S : RegularHeatDefectMemorySplit Op,
-    (∀ x : Op,
-      InRegularCorner S.support x →
-        0 ≤ entropyProduction S.compressedState S.dissipator x) ∧
-    (∀ x : Op,
-      S.defectReadout.readout x =
-        S.defectReadout.readout (S.support.q * x * S.support.q))
-
-/-- Readout theorem for the regular-support Second Law target. -/
-@[rep_depth krein]
-theorem regularSupportSecondLawTarget
+theorem regularSupportSecondLaw_properties
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] :
-    RegularSupportSecondLawTarget Op := by
+    (∀ S : RegularHeatDefectMemorySplit Op,
+      (∀ x : Op,
+        InRegularCorner S.support x →
+          0 ≤ entropyProduction S.compressedState S.dissipator x) ∧
+      (∀ x : Op,
+        S.defectReadout.readout x =
+          S.defectReadout.readout (S.support.q * x * S.support.q))) := by
   intro S
   exact ⟨
     (fun x hx => split_second_law_on_regular_corner S x hx),

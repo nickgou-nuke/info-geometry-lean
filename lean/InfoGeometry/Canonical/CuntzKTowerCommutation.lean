@@ -59,7 +59,7 @@ abbrev TowerLimit : Type :=
 * `S_left_commutes_K_limit_from_one`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses,
+[Exact theorem statements that remain unproved. No wrappers, interfaces, fields, witnesses,
 certificates, or renamed placeholders.]
 
 * Identify the analytic `S_left` on the intended `ℓ²` Cantor-boundary completion

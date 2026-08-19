@@ -158,7 +158,7 @@ structure WittOrthogonalDatum where
   block : WittBlockMatrix
   block_is_witt_skew : IsWittSkew block
 
-/-! A representation-independent transport socket.  The native pairing and
+/-! A representation-independent transport interface.  The native pairing and
 the coordinate `etaW` pairing are related by an explicit linear equivalence;
 no analytic completion is involved. -/
 structure PairingTransport (E : Type*) [AddCommGroup E] [Module ℝ E] where

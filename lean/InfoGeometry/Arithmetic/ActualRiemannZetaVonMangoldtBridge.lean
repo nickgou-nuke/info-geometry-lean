@@ -18,6 +18,12 @@ open ArithmeticFunction
 def actualRiemannZetaLogDerivative (s : ℂ) : ℂ :=
   -deriv riemannZeta s / riemannZeta s
 
+/-- The repository's von-Mangoldt sign convention is the negative of
+Mathlib's native logarithmic derivative. -/
+theorem actualRiemannZetaLogDerivative_eq_neg_logDeriv (s : ℂ) :
+    actualRiemannZetaLogDerivative s = -logDeriv riemannZeta s := by
+  simp [actualRiemannZetaLogDerivative, logDeriv, neg_div]
+
 theorem vonMangoldt_LSeries_eq_actualRiemannZetaLogDerivative
     {s : ℂ} (hs : 1 < s.re) :
     L ↗Λ s = actualRiemannZetaLogDerivative s := by

@@ -9,7 +9,7 @@ This script deliberately checks only the finite algebraic layer mirrored by
 * detailed balance is the zero-affinity condition log(r12*r23/r13) = 0.
 
 The analytic de Rham comparison and physical continuum interpretation remain
-external sockets in Lean.
+external deferred_interfaces in Lean.
 """
 
 from __future__ import annotations

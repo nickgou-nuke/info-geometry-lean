@@ -20,7 +20,6 @@ commutant. That routing is a proof-carrying Tomita/Stinespring property.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -340,20 +339,13 @@ The compatibility name is the Stinespring-Tomita owner itself. Concrete
 implementations are therefore represented directly by the dilation carrying
 complete positivity, representation, compression, and Tomita routing laws.
 -/
-abbrev StinespringTomitaDilationCompatibility
-    (Op GlobalOp : Type*)
-    [Ring Op] [Module ℝ Op]
-    [Ring GlobalOp] [Module ℝ GlobalOp]
-    (Φ : LocalChannel Op) :=
-  StinespringTomitaDilation Op GlobalOp Φ
-
 /-- Construct the Stinespring-Tomita dilation from compatibility data. -/
-theorem stinespringTomitaDilationOwnerTarget
+theorem stinespringTomitaDilation_properties
     (Op GlobalOp : Type*)
     [Ring Op] [Module ℝ Op]
     [Ring GlobalOp] [Module ℝ GlobalOp]
     (Φ : LocalChannel Op)
-    (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
+    (h : StinespringTomitaDilation Op GlobalOp Φ) :
     (∀ x : Op,
         Φ.map x =
           h.compress (h.globalEvolution (h.embed x))) ∧
@@ -367,34 +359,5 @@ theorem stinespringTomitaDilationOwnerTarget
   · exact h.embed_mem_observable
   · exact h.leakage_mem_commutant
   · exact h.accounting
-
-/-!
-The chiral-lightcone compatibility name is likewise the concrete dilation
-owner, not a one-field property packet.
--/
-abbrev StinespringTomitaChiralLightconeCompatibility
-    (Op GlobalOp H : Type*)
-    [Ring Op] [Module ℝ Op]
-    [Ring GlobalOp] [Module ℝ GlobalOp]
-    [AddCommGroup H] [Module ℝ H]
-    (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H)
-    (C : ModuleCircularPolarization H)
-    (Φ : LocalChannel Op) :=
-  StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ
-
-/-- Construct the chiral-lightcone Stinespring-Tomita refinement from compatibility data. -/
-theorem stinespringTomitaChiralLightconeOwnerTarget :
-  ∀ (Op GlobalOp H : Type*)
-    [Ring Op] [Module ℝ Op]
-    [Ring GlobalOp] [Module ℝ GlobalOp]
-    [AddCommGroup H] [Module ℝ H],
-  ∀ (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H),
-  ∀ (C : ModuleCircularPolarization H),
-  ∀ Φ : LocalChannel Op,
-    StinespringTomitaChiralLightconeCompatibility Op GlobalOp H Q C Φ →
-      Nonempty
-        (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) := by
-  intro Op GlobalOp H _ _ _ _ _ _ Q C Φ h
-  exact ⟨h⟩
 
 end InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone

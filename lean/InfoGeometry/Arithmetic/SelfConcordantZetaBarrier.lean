@@ -9,7 +9,7 @@ A theorem-safe Lean 4 surface for the proposed Nesterov--Nemirovski /
 Souriau--zeta barrier layer.
 
 This file provides GENUINE mathematical theorems with native Mathlib proofs.
-No empty sockets — every bound is a proved theorem with explicit constants.
+No empty interfaces — every bound is a proved theorem with explicit constants.
 -/
 
 noncomputable section

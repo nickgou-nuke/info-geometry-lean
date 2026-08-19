@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
-"""Repo-native auto-tagger for owner-target and socket-debt contracts.
+"""Repo-native auto-tagger for owner-target contracts.
 
 This tool is intentionally narrow:
 
 * `def ...OwnerTarget : Prop` gets `@[owner_target_tag]`.
-* `structure ...Socket` gets `@[socket_debt_tag]`.
-
-For socket structures, if a `rep_depth` attribute is already present in the
-local attribute stack, it is normalized into a single combined attribute line:
-
-  @[socket_debt_tag, rep_depth ...]
-
 For owner-target defs, any nearby `rep_depth` attribute is removed. In this
 repo, owner-target contracts are plain tagged `Prop` defs.
 
@@ -26,10 +19,8 @@ from pathlib import Path
 from typing import Iterable, Tuple
 
 OWNER_IMPORT = "import InfoGeometry.Meta.OwnerTarget"
-SOCKET_IMPORT = "import InfoGeometry.Meta.SocketTarget"
 
 OWNER_DEF_RE = re.compile(r"^(\s*)def\s+([A-Za-z0-9_']*OwnerTarget[A-Za-z0-9_']*)\s*:\s*Prop\b")
-SOCKET_STRUCT_RE = re.compile(r"^(\s*)structure\s+([A-Za-z0-9_']*Socket[A-Za-z0-9_']*)\b")
 ATTR_RE = re.compile(r"^\s*@\[(.*)\]\s*$")
 REP_DEPTH_RE = re.compile(r"^\s*rep_depth\s+(.+?)\s*$")
 REP_DEPTH_ANY_RE = re.compile(r"\brep_depth\s+(.+)$")
@@ -40,7 +31,6 @@ class FilePlan:
     path: Path
     modified: bool
     owner_hits: int
-    socket_hits: int
     imports_added: list[str]
 
 
@@ -116,37 +106,6 @@ def normalize_owner_stack(stack: list[str]) -> list[str]:
     return normalized
 
 
-def normalize_socket_stack(stack: list[str]) -> list[str]:
-    """Return a normalized socket-debt attribute stack."""
-    other_attrs: list[str] = []
-    rep_expr: str | None = None
-
-    for line in stack:
-        body = parse_attr_body(line)
-        if body is None:
-            other_attrs.append(line)
-            continue
-
-        if "socket_debt_tag" in body:
-            if rep_expr is None:
-                rep_expr = rep_depth_expr_any(body) or rep_expr
-            continue
-
-        expr = rep_depth_expr_any(body)
-        if expr is not None:
-            rep_expr = rep_expr or expr
-            continue
-
-        other_attrs.append(line)
-
-    if rep_expr is not None:
-        head = f"@[socket_debt_tag, rep_depth {rep_expr}]\n"
-    else:
-        head = "@[socket_debt_tag]\n"
-
-    return [head, *other_attrs]
-
-
 def replace_stack(lines: list[str], start: int, end: int, new_stack: list[str]) -> None:
     lines[start:end] = new_stack
 
@@ -169,15 +128,12 @@ def process_file(
     path: Path,
     dry_run: bool = False,
     owner_import: str = OWNER_IMPORT,
-    socket_import: str = SOCKET_IMPORT,
 ) -> FilePlan:
     lines = path.read_text().splitlines(keepends=True)
     comment_mask = build_block_comment_mask(lines)
     modified = False
     owner_hits = 0
-    socket_hits = 0
     need_owner_import = False
-    need_socket_import = False
 
     i = 0
     while i < len(lines):
@@ -201,30 +157,12 @@ def process_file(
             i += 1
             continue
 
-        socket_match = SOCKET_STRUCT_RE.match(line)
-        if socket_match:
-            need_socket_import = True
-            start, end = attr_stack_bounds(lines, i)
-            new_stack = normalize_socket_stack(lines[start:end])
-            if new_stack != lines[start:end]:
-                replace_stack(lines, start, end, new_stack)
-                modified = True
-                socket_hits += 1
-                i = start + len(new_stack)
-                continue
-            i += 1
-            continue
-
         i += 1
 
     imports_added: list[str] = []
     if need_owner_import and ensure_import(lines, owner_import):
         imports_added.append(owner_import)
         modified = True
-    if need_socket_import and ensure_import(lines, socket_import):
-        imports_added.append(socket_import)
-        modified = True
-
     if modified:
         if not dry_run:
             path.write_text("".join(lines))
@@ -233,7 +171,6 @@ def process_file(
         path=path,
         modified=modified,
         owner_hits=owner_hits,
-        socket_hits=socket_hits,
         imports_added=imports_added,
     )
 
@@ -255,11 +192,6 @@ def main() -> int:
         default=OWNER_IMPORT,
         help="Owner-target import to inject when needed",
     )
-    parser.add_argument(
-        "--socket-import",
-        default=SOCKET_IMPORT,
-        help="Socket-debt import to inject when needed",
-    )
     args = parser.parse_args()
 
     root = Path(args.root)
@@ -268,25 +200,23 @@ def main() -> int:
             path,
             dry_run=args.dry_run,
             owner_import=args.owner_import,
-            socket_import=args.socket_import,
         )
         for path in iter_lean_files(root)
     ]
 
     modified = [p for p in plans if p.modified]
     owner_total = sum(p.owner_hits for p in plans)
-    socket_total = sum(p.socket_hits for p in plans)
 
     mode = "dry-run" if args.dry_run else "write"
     print(f"auto_tagger[{mode}]: scanned {len(plans)} files")
-    print(f"auto_tagger[{mode}]: owner hits={owner_total}, socket hits={socket_total}")
+    print(f"auto_tagger[{mode}]: owner hits={owner_total}")
     print(f"auto_tagger[{mode}]: modified files={len(modified)}")
 
     if modified:
         for plan in modified[:50]:
             imports = ", ".join(plan.imports_added) if plan.imports_added else "-"
             print(
-                f"  {plan.path}: owner={plan.owner_hits} socket={plan.socket_hits} imports={imports}"
+                f"  {plan.path}: owner={plan.owner_hits} imports={imports}"
             )
         if len(modified) > 50:
             print(f"  ... {len(modified) - 50} more")

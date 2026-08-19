@@ -2,7 +2,7 @@ import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Canonical.ZornCliffordRepresentation
-import Mathlib.Topology.Algebra.Module.FiniteDimensionBilinear
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.Algebra.Group.End
 
 /-!
@@ -16,10 +16,10 @@ linear equivalence
 
 `coordLE : ZornMatrix ℝ ≃ₗ[ℝ] (Fin 8 → ℝ)`.
 
-The coordinate carrier is finite-dimensional, so the transported bilinear
-multiplication and every transported linear endomorphism are continuous.
-Consequently every canonical Zorn derivation exponentiates to a genuine
-multiplication-preserving linear equivalence and hence to a native `MulEquiv`.
+The coordinate carrier is finite-dimensional.  Hence linear maps out of it are
+continuous.  We use that fact twice to turn the algebraic bilinear Zorn product
+into the curried continuous bilinear map required by
+`ContinuousDerivationExponential`.
 
 No associativity hypothesis on the Zorn product is used.
 -/
@@ -44,7 +44,7 @@ abbrev V8 := Fin 8 → ℝ
 ## Continuous coordinate realization
 -/
 
-/-- Zorn multiplication transported to the native coordinate carrier. -/
+/-- Zorn multiplication transported algebraically to the coordinate carrier. -/
 def coordMulLinear : V8 →ₗ[ℝ] V8 →ₗ[ℝ] V8 where
   toFun u :=
     { toFun := fun v => coordLE (coordLE.symm u * coordLE.symm v)
@@ -63,12 +63,44 @@ def coordMulLinear : V8 →ₗ[ℝ] V8 →ₗ[ℝ] V8 where
     ext v
     rw [map_smul, smul_mul', map_smul]
 
+/-- For fixed left input, transported Zorn multiplication is continuous linear. -/
+noncomputable def coordMulRight (u : V8) : V8 →L[ℝ] V8 :=
+  (coordMulLinear u).toContinuousLinearMap
+
+@[simp]
+theorem coordMulRight_apply (u v : V8) :
+    coordMulRight u v = coordLE (coordLE.symm u * coordLE.symm v) := by
+  rfl
+
+/-- The left input depends linearly on a continuous-linear right multiplication map. -/
+noncomputable def coordMulOuterLinear : V8 →ₗ[ℝ] (V8 →L[ℝ] V8) where
+  toFun := coordMulRight
+  map_add' := by
+    intro u v
+    apply ContinuousLinearMap.ext
+    intro w
+    change
+      coordLE (coordLE.symm (u + v) * coordLE.symm w) =
+        coordLE (coordLE.symm u * coordLE.symm w) +
+          coordLE (coordLE.symm v * coordLE.symm w)
+    rw [map_add, add_mul', map_add]
+  map_smul' := by
+    intro r u
+    apply ContinuousLinearMap.ext
+    intro v
+    change
+      coordLE (coordLE.symm (r • u) * coordLE.symm v) =
+        r • coordLE (coordLE.symm u * coordLE.symm v)
+    rw [map_smul, smul_mul', map_smul]
+
 /--
-The transported Zorn multiplication as a continuous bilinear map.
-Continuity is automatic in the finite-dimensional coordinate model.
+The transported Zorn multiplication as a curried continuous bilinear map.
+
+Only `Mathlib.Topology.Algebra.Module.FiniteDimension` is required: continuity
+is introduced by `LinearMap.toContinuousLinearMap` in each argument.
 -/
 noncomputable def coordMul : V8 →L[ℝ] V8 →L[ℝ] V8 :=
-  coordMulLinear.toContinuousBilinearMap
+  coordMulOuterLinear.toContinuousLinearMap
 
 @[simp]
 theorem coordMul_apply (u v : V8) :
@@ -78,7 +110,7 @@ theorem coordMul_apply (u v : V8) :
 @[simp]
 theorem coordMul_coordLE (X Y : CZ) :
     coordMul (coordLE X) (coordLE Y) = coordLE (X * Y) := by
-  simp [coordMul]
+  simp [coordMul_apply]
 
 /-- Transport a canonical Zorn endomorphism to the coordinate space. -/
 def coordEndLinear (D : EndCZ) : Module.End ℝ V8 :=
@@ -172,7 +204,8 @@ theorem coordFlow_neg_apply_flow
     (t : ℝ)
     (u : V8) :
     coordFlow (-D) t (coordFlow D t u) = u := by
-  simp [coordFlow, coordEnd_neg]
+  rw [coordFlow, coordFlow, coordEnd_neg]
+  exact CDE.flow_neg_apply_flow (coordEnd D) t u
 
 /-- Positive coordinate flow is a left inverse of the negative-generator flow. -/
 @[simp]
@@ -181,7 +214,8 @@ theorem coordFlow_apply_neg_flow
     (t : ℝ)
     (u : V8) :
     coordFlow D t (coordFlow (-D) t u) = u := by
-  simp [coordFlow, coordEnd_neg]
+  rw [coordFlow, coordFlow, coordEnd_neg]
+  exact CDE.flow_apply_flow_neg (coordEnd D) t u
 
 /-- The coordinate exponential flow preserves transported Zorn multiplication. -/
 theorem coordFlow_map_mul
@@ -387,14 +421,13 @@ theorem zornFlow_map_one
     (hD : CZD.IsDerivation D)
     (t : ℝ) :
     zornFlowLinearEquiv D t (1 : CZ) = 1 := by
-  have h :=
-    zornFlow_map_mul
-      D
-      hD
-      t
-      (1 : CZ)
-      ((zornFlowLinearEquiv D t).symm 1)
-  simpa only [zorn_one_mul, LinearEquiv.apply_symm_apply, zorn_mul_one] using h.symm
+  let y : CZ := (zornFlowLinearEquiv D t).symm 1
+  have hy : zornFlowLinearEquiv D t y = (1 : CZ) := by
+    dsimp [y]
+    exact (zornFlowLinearEquiv D t).apply_symm_apply 1
+  have hm := zornFlow_map_mul D hD t (1 : CZ) y
+  rw [zorn_one_mul, hy, zorn_mul_one] at hm
+  exact hm.symm
 
 /-!
 ## Genuine multiplicative automorphisms

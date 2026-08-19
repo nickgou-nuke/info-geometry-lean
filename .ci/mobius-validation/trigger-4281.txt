@@ -1,0 +1,1 @@
+Compile InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket with Lean 4.28.1 and mathlib commit 1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515.

@@ -43,16 +43,16 @@ jobs:
           lake exe cache get
       - name: Compile RegularActionAssociator
         working-directory: .agent-validate
-        run: lake env lean lean/InfoGeometry/Algebra/Zorn/RegularActionAssociator.lean
+        run: lake build InfoGeometry.Algebra.Zorn.RegularActionAssociator
       - name: Compile DualFlatCurvature
         working-directory: .agent-validate
-        run: lake env lean lean/InfoGeometry/Geometry/Statistical/DualFlatCurvature.lean
+        run: lake build InfoGeometry.Geometry.Statistical.DualFlatCurvature
       - name: Compile AmariZornRegularActionBridge
         working-directory: .agent-validate
-        run: lake env lean lean/InfoGeometry/Bridge/AmariZornRegularActionBridge.lean
+        run: lake build InfoGeometry.Bridge.AmariZornRegularActionBridge
       - name: Compile AmariZornDerivationBridge
         working-directory: .agent-validate
-        run: lake env lean lean/InfoGeometry/Bridge/AmariZornDerivationBridge.lean
+        run: lake build InfoGeometry.Bridge.AmariZornDerivationBridge
       - name: Reject placeholders in new modules
         run: |
           if grep -RInE '\b(sorry|admit)\b' \

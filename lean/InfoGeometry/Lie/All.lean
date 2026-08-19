@@ -6,6 +6,8 @@ import InfoGeometry.Lie.SplitOctonionStandardDerivation
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
+import InfoGeometry.Lie.DerivationExponentialRepresentation
+import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.RealSplitOctonionDerivation
 import InfoGeometry.Lie.RealSplitOctonionDerivationWitness

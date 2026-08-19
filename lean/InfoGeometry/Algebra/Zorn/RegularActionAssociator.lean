@@ -88,6 +88,6 @@ theorem rightRegular_commutes_with_all_left_iff (y : A) :
     intro z
     have hassoc : associator x z y = 0 := h x z
     change x * (z * y) = (x * z) * y
-    simpa [associator_apply] using sub_eq_zero.mp hassoc
+    simpa [associator_apply] using (sub_eq_zero.mp hassoc).symm
 
 end InfoGeometry.Algebra

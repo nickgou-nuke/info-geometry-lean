@@ -77,9 +77,7 @@ theorem zornFlow_zero_apply
   change CZDE.zornFlowLinearEquiv D.1 0 X = X
   exact CZDE.zornFlowLinearEquiv_zero_apply D.1 X
 
-/--
-Negative time is a left inverse of positive time.
--/
+/-- Negative time is a left inverse of positive time. -/
 @[simp]
 theorem zornFlow_neg_apply_flow
     (D : CZD.canonicalZornDerivations)
@@ -87,14 +85,10 @@ theorem zornFlow_neg_apply_flow
     (X : CZ) :
     CZDE.zornFlowMulEquiv D (-t)
         (CZDE.zornFlowMulEquiv D t X) = X := by
-  rw [← zero_add t]
-  nth_rw 1 [← neg_add_cancel t]
-  rw [zornFlow_add_apply]
-  exact zornFlow_zero_apply D X
+  rw [← zornFlow_add_apply D (-t) t X]
+  simp
 
-/--
-Positive time is a left inverse of negative time.
--/
+/-- Positive time is a left inverse of negative time. -/
 @[simp]
 theorem zornFlow_apply_neg_flow
     (D : CZD.canonicalZornDerivations)
@@ -138,7 +132,7 @@ theorem zornFlow_neg
   apply MulEquiv.ext
   intro X
   apply (CZDE.zornFlowMulEquiv D t).injective
-  rw [MulEquiv.apply_symm_apply]
+  rw [MulAut.apply_inv_self]
   exact zornFlow_apply_neg_flow D t X
 
 /-!

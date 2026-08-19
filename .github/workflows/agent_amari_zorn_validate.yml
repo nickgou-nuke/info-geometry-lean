@@ -15,15 +15,43 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Resolve dependencies
-        run: lake update
+      - name: Create isolated native Mathlib project
+        run: |
+          rm -rf .agent-validate
+          mkdir .agent-validate
+          ln -s ../lean .agent-validate/lean
+          cat > .agent-validate/lean-toolchain <<'EOF'
+          leanprover/lean4:v4.28.1
+          EOF
+          cat > .agent-validate/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package amariZornValidation where
+            srcDir := "lean"
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+
+          lean_lib InfoGeometry where
+            globs := #[.andSubmodules `InfoGeometry]
+          EOF
+      - name: Resolve Mathlib and fetch native cache
+        working-directory: .agent-validate
+        run: |
+          lake update
+          lake exe cache get
       - name: Compile RegularActionAssociator
+        working-directory: .agent-validate
         run: lake env lean lean/InfoGeometry/Algebra/Zorn/RegularActionAssociator.lean
       - name: Compile DualFlatCurvature
+        working-directory: .agent-validate
         run: lake env lean lean/InfoGeometry/Geometry/Statistical/DualFlatCurvature.lean
       - name: Compile AmariZornRegularActionBridge
+        working-directory: .agent-validate
         run: lake env lean lean/InfoGeometry/Bridge/AmariZornRegularActionBridge.lean
       - name: Compile AmariZornDerivationBridge
+        working-directory: .agent-validate
         run: lake env lean lean/InfoGeometry/Bridge/AmariZornDerivationBridge.lean
       - name: Reject placeholders in new modules
         run: |

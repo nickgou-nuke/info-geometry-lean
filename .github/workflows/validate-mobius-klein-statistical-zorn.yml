@@ -1,0 +1,47 @@
+name: Validate Möbius Klein statistical Zorn packet
+
+on:
+  push:
+    branches:
+      - agent/mobius-klein-statistical-zorn
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Create isolated mathlib project
+        run: |
+          mkdir -p .ci/mobius-validation
+          cat > .ci/mobius-validation/lean-toolchain <<'EOF'
+          leanprover/lean4:v4.28.1
+          EOF
+          cat > .ci/mobius-validation/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package mobiusValidation
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.0"
+
+          lean_lib InfoGeometry where
+            srcDir := "../../lean"
+          EOF
+      - name: Fetch mathlib cache
+        working-directory: .ci/mobius-validation
+        run: |
+          lake update
+          lake exe cache get
+      - name: Compile packet
+        working-directory: .ci/mobius-validation
+        run: |
+          lake build InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket
+          lake env lean ../../lean/InfoGeometry/Canonical/MobiusKleinStatisticalZornPacket.lean

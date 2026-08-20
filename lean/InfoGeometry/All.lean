@@ -5388,7 +5388,6 @@ import InfoGeometry.Modular.DerivationShortExactSequence
 import InfoGeometry.Modular.DualExponentialBerezinianAutomorphismBridge
 import InfoGeometry.Modular.DualExponentialCommutatorBridge
 import InfoGeometry.Modular.Noncommutative
-import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import InfoGeometry.Modular.DualFlowLieAlgebraBridge
 import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Modular.MatrixKMSModularState
@@ -7387,3 +7386,4 @@ import InfoGeometry.NCG.CategoricalColimitStateDescent
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.NCG.DualExponentialTrifoldBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
+import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog

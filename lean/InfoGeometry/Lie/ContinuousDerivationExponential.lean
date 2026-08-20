@@ -813,6 +813,18 @@ theorem flowLinearEquiv_preserves_idempotent
       flowLinearEquiv D t x := by
   rw [← flowLinearEquiv_map_mul mul D hD t x x, hx]
 
+/-- The bundled analytic exponential transports square-zero elements. -/
+theorem flowLinearEquiv_preserves_square_zero
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x : A)
+    (hx : mul x x = 0) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t x) = 0 := by
+  rw [← flowLinearEquiv_map_mul mul D hD t x x, hx]
+  exact (flowLinearEquiv D t).map_zero
+
 /-- The bundled analytic exponential transports both orientations of
 orthogonality without assuming commutativity. -/
 theorem flowLinearEquiv_preserves_two_sided_orthogonality

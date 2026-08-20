@@ -136,7 +136,7 @@ import InfoGeometry.OperatorAlgebra.SheetConnection
 import InfoGeometry.OperatorAlgebra.MariGeometryLift
 import InfoGeometry.OperatorAlgebra.CommutantIntertwine
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
-import InfoGeometry.CompleteUnifiedBundle
+import InfoGeometry.Canonical.CompleteUnifiedBundle
 
 namespace InfoGeometry
 
@@ -159,21 +159,25 @@ theorem grand_unification_verified {A : Type*} [Ring A]
     -- (2) Center generates zero modular flow
     (K * X = X * K → K * X - X * K = 0) := by
   constructor
-  · have h_zero : D_map 0 = 0 := by
-      have hz : D_map 0 + D_map 0 = D_map 0 + 0 := by
-        rw [add_zero, ← h_add, add_zero]
-      exact add_left_cancel hz
+  · -- Proof of Master Commutator via pure Leibniz expansion
+    have h_zero : D_map 0 = 0 := by
+      have hz := h_add 0 0
+      rw [add_zero] at hz
+      have hz_eq : D_map 0 + D_map 0 = D_map 0 + 0 := by
+        rw [hz.symm, add_zero]
+      exact add_left_cancel hz_eq
     have h_neg : ∀ z, D_map (-z) = - D_map z := by
       intro z
-      have hz : D_map z + D_map (-z) = 0 := by
-        rw [← h_add, add_neg_cancel, h_zero]
-      exact eq_neg_of_add_eq_zero_right hz
+      have hz' : D_map (-z) + D_map z = 0 := by
+        rw [← h_add, neg_add_cancel, h_zero]
+      exact eq_neg_of_add_eq_zero_left hz'
     have h_sub : ∀ x y, D_map (x - y) = D_map x - D_map y := by
       intro x y
       rw [sub_eq_add_neg, h_add, h_neg, ← sub_eq_add_neg]
     rw [h_sub, h_leibniz, h_leibniz]
     abel
-  · intro h_comm
+  · -- Proof of Thermal Time Invariance
+    intro h_comm
     rw [h_comm, sub_self]
 
 end InfoGeometry

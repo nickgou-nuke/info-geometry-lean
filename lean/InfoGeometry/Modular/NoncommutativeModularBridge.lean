@@ -302,6 +302,14 @@ theorem innerConjugation_adK (u : Aˣ) (K X : A) :
     ← innerConjugation_mul u K X,
     ← innerConjugation_mul u X K]
 
+theorem innerConjugation_commutator (u : Aˣ) (X Y : A) :
+    innerConjugation u (X * Y - Y * X) =
+      innerConjugation u X * innerConjugation u Y -
+        innerConjugation u Y * innerConjugation u X := by
+  rw [innerConjugation_sub,
+    ← innerConjugation_mul u X Y,
+    ← innerConjugation_mul u Y X]
+
 theorem innerConjugation_comp (u v : Aˣ) (X : A) :
     innerConjugation u (innerConjugation v X) =
       innerConjugation (u * v) X := by

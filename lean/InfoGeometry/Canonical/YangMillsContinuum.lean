@@ -226,8 +226,7 @@ theorem modularAutomorphismGroup_map_smul
     (M : ModularRadonNikodymData E) (r : ℝ) (A : EndH E) (t : ℝ) :
     modularAutomorphismGroup M t (r • A) =
       r • modularAutomorphismGroup M t A := by
-  simp [modularAutomorphismGroup, InfoGeometry.Krein.modular_shift,
-    InfoGeometry.Krein.krein_modular_shift, smul_mul_assoc, mul_smul_comm]
+  simp [modularAutomorphismGroup, InfoGeometry.Krein.krein_modular_shift]
 
 /--
 Infinitesimal modular-flow generator at the origin:

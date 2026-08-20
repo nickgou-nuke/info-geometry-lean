@@ -168,9 +168,9 @@ variable {A : Type*} [AddCommGroup A] [Module R A]
 /-- 🏆 THEOREM: Outer flow automorphism U_D(t) preserves the non-associative / split-octonion product:
     U_D(t)(x ⋆ y) = (U_D(t) x) ⋆ (U_D(t) y) -/
 theorem outer_flow_preserves_product
-    (alg : InfoGeometry.Algebra.NonAssocPeirceFrame.NonAssocUnitalAlgebra R A)
-    (F : InfoGeometry.Algebra.NonAssocPeirceFrame.NonAssocAlgEnd alg) (x y : A) :
-    F (alg.mul x y) = alg.mul (F x) (F y) :=
+    (mul : A →ₗ[R] A →ₗ[R] A) (one : A)
+    (F : InfoGeometry.Algebra.NonAssocPeirceFrame.NonAssocAlgEnd mul one) (x y : A) :
+    F (mul x y) = mul (F x) (F y) :=
   F.map_mul' x y
 
 end InfoGeometry.NCG

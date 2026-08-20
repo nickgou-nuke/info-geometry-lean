@@ -205,15 +205,16 @@ theorem gaugeTransform_commutator (u : Aˣ) (X Y : A) :
   have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
   simp only [← mul_assoc, hu, one_mul]
 
-/-- Gauge conjugation is multiplicative on observables. -/
 theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
     gaugeTransform u (X * Y) = gaugeTransform u X * gaugeTransform u Y := by
   dsimp [gaugeTransform]
-  rw [← mul_assoc]
-  rw [← mul_assoc, ← mul_assoc]
   have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
-  rw [hu]
-  simp
+  calc
+    (u : A) * (X * Y) * (u⁻¹ : Aˣ).val
+        = (u : A) * X * 1 * Y * (u⁻¹ : Aˣ).val := by simp only [mul_assoc, mul_one]
+      _ = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y * (u⁻¹ : Aˣ).val := by rw [hu]
+      _ = ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * Y * (u⁻¹ : Aˣ).val) := by
+        simp only [mul_assoc]
 
 /-- Gauge conjugation is linear over the declared scalar algebra. -/
 theorem gaugeTransform_smul (u : Aˣ) (r : R) (X : A) :

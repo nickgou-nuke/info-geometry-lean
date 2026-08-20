@@ -267,6 +267,14 @@ theorem flow_apply_derivation
     apply HasDerivAt.unique h₁ h₂
   rw [h₃]
 
+/-- The exponential flow commutes with its infinitesimal generator. -/
+theorem flow_commutes_with_derivation
+    (D : EndA)
+    (t : ℝ) :
+    flow D t * D = D * flow D t := by
+  ext x
+  exact flow_apply_derivation D t x
+
 /-- A vector annihilated by the generator is fixed by the whole exponential flow. -/
 theorem flow_fixed_of_derivation_eq_zero
     (D : EndA)
@@ -288,15 +296,6 @@ theorem flow_fixed_of_derivation_eq_zero
     exact (hder s).deriv
   have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
   simpa using hconst
-
-/-- A generator-fixed vector is fixed by the bundled exponential equivalence. -/
-theorem flowLinearEquiv_fixed_of_derivation_eq_zero
-    (D : EndA)
-    (x : A)
-    (hx : D x = 0)
-    (t : ℝ) :
-    flowLinearEquiv D t x = x := by
-  exact flow_fixed_of_derivation_eq_zero D x hx t
 
 /-!
 ## Product evolution
@@ -477,6 +476,18 @@ theorem U_D_map_mul
       mul (U_D D t x) (U_D D t y) :=
   flow_map_mul mul D hD t x y
 
+/-- The analytic derivation flow transports the noncommutative commutator. -/
+theorem flow_map_commutator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    flow D t (mul x y - mul y x) =
+      mul (flow D t x) (flow D t y) -
+        mul (flow D t y) (flow D t x) := by
+  rw [map_sub, flow_map_mul mul D hD, flow_map_mul mul D hD]
+
 /-!
 ## Exponential automorphism as a linear equivalence
 -/
@@ -514,6 +525,24 @@ theorem flowLinearEquiv_symm_apply
     (flowLinearEquiv D t).symm x =
       flow (-D) t x := by
   rfl
+
+/-- A generator-fixed vector is fixed by the bundled exponential equivalence. -/
+theorem flowLinearEquiv_fixed_of_derivation_eq_zero
+    (D : EndA)
+    (x : A)
+    (hx : D x = 0)
+    (t : ℝ) :
+    flowLinearEquiv D t x = x := by
+  exact flow_fixed_of_derivation_eq_zero D x hx t
+
+/-- A derivation-fixed unit is preserved by the exponential flow. -/
+theorem flow_preserves_unit_of_derivation_eq_zero
+    (D : EndA)
+    (one : A)
+    (hD_one : D one = 0)
+    (t : ℝ) :
+    flow D t one = one := by
+  exact flow_fixed_of_derivation_eq_zero D one hD_one t
 
 /--
 Strong automorphism statement in multiplication-preserving linear-equivalence form.

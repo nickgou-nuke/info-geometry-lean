@@ -25,7 +25,7 @@ noncomputable section
 open ContinuousLinearMap
 open InnerProductSpace
 
-namespace InfoGeometry.EndToEnd
+namespace InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
 
 /-!
 =============================================================================
@@ -193,6 +193,6 @@ theorem geometric_commutator_uncertainty_bound
   rw [h_normSq_comm]
   exact h_bound
 
-end InfoGeometry.EndToEnd
+end InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
 
 end noncomputable section

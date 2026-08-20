@@ -228,6 +228,16 @@ def adK (K : A) : A →ₗ[ℤ] A where
 @[simp]
 theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
 
+theorem adK_add (K L X : A) :
+    adK (K + L) X = adK K X + adK L X := by
+  simp only [adK_apply, add_mul, mul_add]
+  abel
+
+theorem adK_neg (K X : A) :
+    adK (-K) X = -adK K X := by
+  simp only [adK_apply, neg_mul, mul_neg]
+  abel
+
 /-- 
   THEOREM 4: The Modular Commutator is an exact Derivation:
   ad_K(X * Y) = (ad_K X) * Y + X * (ad_K Y)

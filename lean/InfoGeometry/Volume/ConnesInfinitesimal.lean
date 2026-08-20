@@ -331,6 +331,25 @@ noncomputable def modularHamiltonianActionAlgEquiv
     modularHamiltonianActionAlgEquiv (H := H) K t A =
       modularHamiltonianAction (H := H) K A t := rfl
 
+theorem modularHamiltonianActionAlgEquiv_add
+    (K : AlgebraEnd H) (s t : ℝ) :
+    modularHamiltonianActionAlgEquiv (H := H) K (s + t) =
+      (modularHamiltonianActionAlgEquiv (H := H) K t).trans
+        (modularHamiltonianActionAlgEquiv (H := H) K s) := by
+  exact expTransportAlgEquiv_add K s t
+
+@[simp] theorem modularHamiltonianActionAlgEquiv_zero
+    (K : AlgebraEnd H) :
+    modularHamiltonianActionAlgEquiv (H := H) K 0 =
+      (AlgEquiv.refl : AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H) := by
+  exact expTransportAlgEquiv_zero K
+
+theorem modularHamiltonianActionAlgEquiv_neg
+    (K : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianActionAlgEquiv (H := H) K (-t) =
+      (modularHamiltonianActionAlgEquiv (H := H) K t).symm := by
+  exact expTransportAlgEquiv_neg K t
+
 /-- A finite modular Hamiltonian flow is inverted by reversing its time. -/
 theorem modularHamiltonianAction_neg_left
     (K A : AlgebraEnd H) (t : ℝ) :

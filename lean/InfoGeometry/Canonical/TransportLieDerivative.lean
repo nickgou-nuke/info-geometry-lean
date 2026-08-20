@@ -379,8 +379,14 @@ theorem expTransportAlgEquiv_neg
     expTransportAlgEquiv X (-t) = (expTransportAlgEquiv X t).symm := by
   ext A₀
   apply (expTransportAlgEquiv X t).injective
-  change expTransport X (expTransport X A₀ (-t)) t = A₀
-  exact expTransport_neg_left X A₀ t
+  have hleft :
+      (expTransportAlgEquiv X t) ((expTransportAlgEquiv X (-t)) A₀) = A₀ := by
+    change expTransport X (expTransport X A₀ (-t)) t = A₀
+    exact expTransport_neg_left X A₀ t
+  have hright :
+      (expTransportAlgEquiv X t) ((expTransportAlgEquiv X t).symm A₀) = A₀ :=
+    (expTransportAlgEquiv X t).apply_symm_apply A₀
+  exact hleft.trans hright.symm
 
 /--
 Exact exponential conjugation fixes a seed that commutes with the generator.

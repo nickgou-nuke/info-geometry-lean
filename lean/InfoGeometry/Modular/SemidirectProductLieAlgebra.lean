@@ -230,6 +230,18 @@ def inr : M →ₗ⁅R⁆ SemidirectProduct L M where
   · simp
   · simp
 
+theorem bracket_mem_range_inr (x : SemidirectProduct L M) (m : M) :
+    ∃ n : M,
+      (inr (R := R) (L := L) (M := M)) n =
+        ⁅x, (inr (R := R) (L := L) (M := M)) m⁆ := by
+  refine ⟨⁅x.2, m⁆ + ⁅x.1, m⁆, ?_⟩
+  apply Prod.ext
+  · change (0 : L) = ⁅x.1, (0 : L)⁆
+    simp
+  · change ⁅x.2, m⁆ + ⁅x.1, m⁆ =
+      ⁅x.2, m⁆ + ⁅x.1, m⁆ - ⁅(0 : L), x.2⁆
+    simp
+
 /-- Canonical Projection: $\mathfrak{g} \ltimes \mathfrak{h} \to \mathfrak{g}$. -/
 def fst : SemidirectProduct L M →ₗ⁅R⁆ L where
   toFun p := p.1

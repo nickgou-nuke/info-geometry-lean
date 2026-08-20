@@ -103,10 +103,7 @@ theorem cast_tau_mul (X Y : SplitOct) :
     cast (tau (mulZ X Y)) = cast (tau X) * cast (tau Y) := by
   rw [tau_mulZ, cast_mul]
 
-noncomputable section
-set_option maxHeartbeats 1000000
-
-def canonicalCast (X : SplitOct) : CanonicalZorn :=
+noncomputable def canonicalCast (X : SplitOct) : CanonicalZorn :=
   paperCanonicalLinearEquiv (cast X)
 
 theorem canonicalCast_mul (X Y : SplitOct) :

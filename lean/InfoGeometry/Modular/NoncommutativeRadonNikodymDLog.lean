@@ -264,4 +264,27 @@ theorem dlogL_rnUnit (D : NoncommutativeDerivation A) (u v : Aˣ) :
   have h_inv_inv : ((v⁻¹ : Aˣ)⁻¹ : Aˣ).val = (v : Aˣ).val := rfl
   rw [h_inv_inv, sub_eq_add_neg]
 
+/-- Left logarithmic derivative of a relative unit along a composable chain.
+
+The first leg is transported by the inverse second leg, as required in the
+noncommutative Maurer--Cartan product rule.
+-/
+theorem dlogL_rnUnit_chain (D : NoncommutativeDerivation A)
+    (u v w : Aˣ) :
+    dlogL D (rnUnit u w) =
+      (rnUnit v w)⁻¹.val * dlogL D (rnUnit u v) *
+          (rnUnit v w).val + dlogL D (rnUnit v w) := by
+  rw [rnUnit_chain_rule]
+  exact dlogL_mul_noncommutative D (rnUnit u v) (rnUnit v w)
+
+/-- Right logarithmic derivative of a relative unit along a composable chain. -/
+theorem dlogR_rnUnit_chain (D : NoncommutativeDerivation A)
+    (u v w : Aˣ) :
+    dlogR D (rnUnit u w) =
+      dlogR D (rnUnit u v) +
+        (rnUnit u v).val * dlogR D (rnUnit v w) *
+          (rnUnit u v)⁻¹.val := by
+  rw [rnUnit_chain_rule]
+  exact dlogR_mul_noncommutative D (rnUnit u v) (rnUnit v w)
+
 end InfoGeometry.Modular.Noncommutative

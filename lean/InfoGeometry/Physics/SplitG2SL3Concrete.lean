@@ -30,6 +30,10 @@ instance : Neg SL3 where
   neg X := ⟨-X.1, by simp [X.2]⟩
 @[simp] theorem neg_val (X : SL3) : (-X).1 = -X.1 := rfl
 
+instance : SMul ℝ SL3 where
+  smul r X := ⟨r • X.1, by simp [X.2]⟩
+@[simp] theorem smul_val (r : ℝ) (X : SL3) : (r • X).1 = r • X.1 := rfl
+
 /-- The commutator bracket on the trace-zero carrier. -/
 def commutator (X Y : SL3) : SL3 :=
   ⟨X.1 * Y.1 - Y.1 * X.1, by
@@ -67,6 +71,22 @@ theorem commutator_skew (X Y : SL3) :
     X.1 * Y.1 - Y.1 * X.1 =
       -(Y.1 * X.1 - X.1 * Y.1)
   noncomm_ring
+
+theorem commutator_smul_left (r : ℝ) (X Y : SL3) :
+    commutator (r • X) Y = r • commutator X Y := by
+  apply Subtype.ext
+  change
+    (r • X.1) * Y.1 - Y.1 * (r • X.1) =
+      r • (X.1 * Y.1 - Y.1 * X.1)
+  simp only [smul_mul_assoc, mul_smul_comm, smul_sub]
+
+theorem commutator_smul_right (r : ℝ) (X Y : SL3) :
+    commutator X (r • Y) = r • commutator X Y := by
+  apply Subtype.ext
+  change
+    X.1 * (r • Y.1) - (r • Y.1) * X.1 =
+      r • (X.1 * Y.1 - Y.1 * X.1)
+  simp only [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 theorem commutator_jacobi (X Y Z : SL3) :
     commutator X (commutator Y Z) +

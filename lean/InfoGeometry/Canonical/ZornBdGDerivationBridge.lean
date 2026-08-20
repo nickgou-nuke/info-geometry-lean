@@ -571,4 +571,75 @@ theorem cartan_seed_generates_conjugate_pairing
 
 end G2BdGOrbit
 
+/-!
+=============================================================================
+PART 4: Star Compatibility and BdG Orbit Preservation
+=============================================================================
+-/
+
+namespace BdGStarOrbitPreservation
+
+open ZornVectorMatrixAlgebra
+open ZornBdGSolderingReadout
+open PauliSolderedCrossProductBridge
+
+/-- Canonical conjugation on the scalar Zorn carrier over `ℂ`.
+    This is the involution compatible with the particle-hole BdG readout. -/
+def zornStar (Z : Zorn ℂ) : Zorn ℂ where
+  a := Z.b
+  u := fun i => - Z.u i
+  v := fun i => - Z.v i
+  b := Z.a
+
+/-- The star involution is an involution on the scalar Zorn carrier. -/
+@[simp]
+theorem zornStar_involutive (Z : Zorn ℂ) :
+    zornStar (zornStar Z) = Z := by
+  ext <;> simp [zornStar]
+
+/-- THEOREM: The first-order BdG orbit preserves the reduced Zorn norm.
+    For any derivation `D` and scalar parameter `t`,
+    `ZornVectorMatrixAlgebra.zornNorm (G2BdGOrbit.firstOrderFlow D Z₀ t) = ZornVectorMatrixAlgebra.zornNorm Z₀`. -/
+theorem bdgOrbit_preserves_reducedNorm
+    (D : Zorn ℂ → Zorn ℂ)
+    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (Z₀ : Zorn ℂ)
+    (t : ℂ) :
+    ZornVectorMatrixAlgebra.zornNorm
+        (G2BdGOrbit.firstOrderFlow D Z₀ t) =
+      ZornVectorMatrixAlgebra.zornNorm Z₀ := by
+  ext <;> simp [G2BdGOrbit.firstOrderFlow, ZornVectorMatrixAlgebra.zornNorm, ZornVectorMatrixAlgebra.dotR] <;> ring
+
+/-- THEOREM: A self-adjoint normal seed remains self-adjoint along the first-order orbit.
+    If `Z₀ = zornStar Z₀`, then `G2BdGOrbit.firstOrderFlow D Z₀ t = zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t)`. -/
+theorem bdgOrbit_selfAdjoint
+    (D : Zorn ℂ → Zorn ℂ)
+    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (hstar : ∀ Z : Zorn ℂ, D (zornStar Z) = zornStar (D Z))
+    (Z₀ : Zorn ℂ)
+    (hZ₀ : zornStar Z₀ = Z₀)
+    (t : ℂ) :
+    zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t) =
+      G2BdGOrbit.firstOrderFlow D Z₀ t := by
+  dsimp [G2BdGOrbit.firstOrderFlow, zornStar]
+  have hDstar := hstar Z₀
+  rw [hZ₀, hDstar] at hDstar
+  simp [hDstar]
+  ext <;> simp [zornStar, ZornVectorMatrixAlgebra.zornSMul, ZornVectorMatrixAlgebra.zornAdd] <;> ring
+
+/-- THEOREM: A particle-hole-compatible seed stays particle-hole-compatible along the orbit.
+    If `Z₀` satisfies `zornStar Z₀ = Z₀`, then the first-order flow preserves that relation. -/
+theorem bdgOrbit_particleHole
+    (D : Zorn ℂ → Zorn ℂ)
+    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (hstar : ∀ Z : Zorn ℂ, D (zornStar Z) = zornStar (D Z))
+    (Z₀ : Zorn ℂ)
+    (hZ₀ : zornStar Z₀ = Z₀)
+    (t : ℂ) :
+    zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t) =
+      G2BdGOrbit.firstOrderFlow D Z₀ t :=
+  bdgOrbit_selfAdjoint D hD hstar Z₀ hZ₀ t
+
+end BdGStarOrbitPreservation
+
 end InfoGeometry.Canonical.ZornBdGDerivationBridge

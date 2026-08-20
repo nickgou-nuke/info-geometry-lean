@@ -272,10 +272,12 @@ theorem innerConjugation_sub (u : Aˣ) (X Y : A) :
 theorem innerConjugation_adK (u : Aˣ) (K X : A) :
     innerConjugation u (adK K X) =
       adK (innerConjugation u K) (innerConjugation u X) := by
+  change innerConjugation u (K * X - X * K) =
+    innerConjugation u K * innerConjugation u X -
+      innerConjugation u X * innerConjugation u K
   rw [innerConjugation_sub,
     ← innerConjugation_mul u K X,
     ← innerConjugation_mul u X K]
-  rfl
 
 theorem innerConjugation_comp (u v : Aˣ) (X : A) :
     innerConjugation u (innerConjugation v X) =

@@ -7397,3 +7397,4 @@ import InfoGeometry.Information.UniversalConvexDualityQuadrangle
 import InfoGeometry.Information.MasterArchetypeConvexDuality
 import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Information.SouriauLieGroupThermodynamics
+import InfoGeometry.Canonical.ZornBdGDerivationBridge

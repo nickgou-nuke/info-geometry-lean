@@ -3335,6 +3335,7 @@ import InfoGeometry.Canonical.CanonicalDerivationSpinBivector55
 import InfoGeometry.Continuous.Exactness
 import InfoGeometry.Canonical.DeRhamUnifiedCorridor
 import InfoGeometry.CompleteUnifiedBundle
+import InfoGeometry.Canonical.ZornBdGDerivationBridge
 
 namespace InfoGeometry
 

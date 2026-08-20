@@ -7376,3 +7376,4 @@ import InfoGeometry.NCG.DerivationExponentialAutomorphism
 import InfoGeometry.NCG.G2DerivationTraces
 import InfoGeometry.Canonical.OperatorModularBridge
 import InfoGeometry.NCG.NoncommutativeConnectionCurvature
+import InfoGeometry.NCG.NoncommutativeNoetherPoisson

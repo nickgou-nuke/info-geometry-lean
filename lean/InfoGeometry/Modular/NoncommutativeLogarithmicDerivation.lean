@@ -144,15 +144,6 @@ theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
           (↑(u⁻¹) : A) := by
       rw [hv, mul_one]
 
-/-- The right noncommutative logarithmic inversion law. -/
-theorem dlogR_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
-    dlogR D (u⁻¹) =
-      -((↑(u⁻¹) : A) * dlogR D u * (u : A)) := by
-  rw [dlogR_eq_conjugate_dlogL, dlogL_inv,
-    dlogR_eq_conjugate_dlogL]
-  simp only [Units.val_inv_eq_inv_val, mul_assoc]
-  rw [u.inv_val, one_mul]
-
 /-- 🏆 THEOREM 4: Noncommutative Logarithmic Product Rule (Maurer–Cartan):
     dlog_L(u * v) = v⁻¹ * dlog_L(u) * v + dlog_L(v)
     This is the exact non-abelian chain rule without assuming commutativity! -/
@@ -203,6 +194,15 @@ theorem dlogL_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
             _ = 1 * D (u : A) * (↑(u⁻¹) : A) := by rw [hunit]
             _ = D (u : A) * (↑(u⁻¹) : A) := by rw [one_mul]
         rw [hrewrite]
+
+/-- The right noncommutative logarithmic inversion law. -/
+theorem dlogR_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
+    dlogR D (u⁻¹) =
+      -((↑(u⁻¹) : A) * dlogR D u * (u : A)) := by
+  rw [dlogR_eq_conjugate_dlogL (D := D) (u := u⁻¹),
+    dlogL_inv D hD u, dlogR_eq_conjugate_dlogL (D := D) u]
+  simp only [inv_inv, mul_neg, neg_mul, mul_assoc]
+  rw [u.inv_val, one_mul]
 
 /-!
 =============================================================================

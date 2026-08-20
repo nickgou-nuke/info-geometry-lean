@@ -7,12 +7,13 @@ import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 
 /-!
-# The $\mathfrak{so}(5,5)$ Matrix Lie Subalgebra
+# The $\mathfrak{so}(5,5)$ Matrix Lie Subalgebra (Levi/Witt Basis)
 
 This module constructs the exact 45-dimensional matrix Lie subalgebra:
   `so55LieSubalgebra : LieSubalgebra ℝ Mat10`
-defined by the split signature condition:
+defined in the native Levi/Witt basis by the split signature condition:
   `Mᵀ * eta55 + eta55 * M = 0`
+where `eta55 := eta55LeviMat10`.
 
 All Lie algebraic closure properties:
 1. `isSO55_zero`
@@ -30,9 +31,12 @@ open Matrix
 open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
-open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 
 abbrev Mat10 := Matrix (Fin 10) (Fin 10) ℝ
+
+/-- The canonical (5,5) Levi metric on Fin 10. -/
+def eta55LeviMat10 : Mat10 :=
+  fun i j => eta55Levi (fin10Equiv i) (fin10Equiv j)
 
 /-- The split-signature metric in the Levi/Witt basis used by the canonical derivation map. -/
 abbrev eta55 : Mat10 := eta55LeviMat10
@@ -125,12 +129,5 @@ def so55LieSubalgebra : LieSubalgebra ℝ Mat10 where
   zero_mem' := isSO55_zero
   smul_mem' c {M} hM := isSO55_smul c hM
   lie_mem' {M N} hM hN := isSO55_bracket hM hN
-
-theorem derivationToSO55_mem_so55LieSubalgebra (D : Derivation) :
-    derivationToSO55 D ∈ so55LieSubalgebra := by
-  change IsSO55Matrix (derivationToSO55 D)
-  exact so44ToSO55_preserves_etaSkew
-    (canonicalDerivationFinMatrix D)
-    (canonicalDerivationFinMatrix_isEtaSkew D)
 
 end InfoGeometry.Lie.SO55MatrixSubalgebra

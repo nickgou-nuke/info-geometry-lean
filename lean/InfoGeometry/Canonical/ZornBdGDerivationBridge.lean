@@ -586,26 +586,16 @@ open PauliSolderedCrossProductBridge
 /-- Canonical conjugation on the scalar Zorn carrier over `ℂ`.
     This is the involution compatible with the particle-hole BdG readout. -/
 def zornStar (Z : Zorn ℂ) : Zorn ℂ where
-  a := (Z.a)⁻¹
+  a := Z.b
   u := fun i => - Z.u i
   v := fun i => - Z.v i
-  b := (Z.b)⁻¹
+  b := Z.a
 
 /-- The star involution is an involution on the scalar Zorn carrier. -/
 @[simp]
 theorem zornStar_involutive (Z : Zorn ℂ) :
     zornStar (zornStar Z) = Z := by
   ext <;> simp [zornStar]
-  · change ((Z.a)⁻¹)⁻¹ = Z.a
-    simp
-  · rename_i i
-    change -(- Z.u i) = Z.u i
-    simp
-  · rename_i i
-    change -(- Z.v i) = Z.v i
-    simp
-  · change ((Z.b)⁻¹)⁻¹ = Z.b
-    simp
 
 /-- THEOREM: The BdG readout respects the star involution.
     For every split-octonion Zorn matrix `Z`,

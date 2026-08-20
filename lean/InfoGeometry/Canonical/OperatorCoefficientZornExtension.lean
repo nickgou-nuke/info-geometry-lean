@@ -269,10 +269,8 @@ theorem derivationCommutesStar_commutator
     (X : OpZorn H) :
     opDerivationCommutator D₁ D₂ (opZornStar X) =
       opZornStar (opDerivationCommutator D₁ D₂ X) := by
-  dsimp [opDerivationCommutator]
-  rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply,
-    h₂ X, h₁ (D₂.toLinearMap X), h₂ X,
-    h₁ (D₁.toLinearMap X)]
+  dsimp [opDerivationCommutator, LinearMap.sub_apply, LinearMap.comp_apply]
+  rw [h₂ X, h₁ (D₂.toLinearMap X), h₁ X, h₂ (D₁.toLinearMap X)]
   exact (opZornStar_sub
     (D₁.toLinearMap (D₂.toLinearMap X))
     (D₂.toLinearMap (D₁.toLinearMap X))).symm
@@ -286,5 +284,17 @@ structure OpAutomorphism (H : Type*) [NormedAddCommGroup H] [InnerProductSpace �
 theorem liftAutomorphism_mul (Φ : OpAutomorphism H) (X Y : OpZorn H) :
     Φ.toLinearEquiv (X * Y) = Φ.toLinearEquiv X * Φ.toLinearEquiv Y :=
   Φ.map_mul' X Y
+
+/--
+The inverse of an operator-valued Zorn automorphism also preserves the
+multiplication.  This is derived from the forward multiplicativity and the
+injectivity of the underlying linear equivalence; no associativity of the
+Zorn product is used.
+-/
+theorem liftAutomorphism_inv_mul (Φ : OpAutomorphism H) (X Y : OpZorn H) :
+    Φ.toLinearEquiv.symm (X * Y) =
+      Φ.toLinearEquiv.symm X * Φ.toLinearEquiv.symm Y := by
+  apply Φ.toLinearEquiv.injective
+  simp only [LinearEquiv.apply_symm_apply, Φ.map_mul']
 
 end InfoGeometry.Canonical.OperatorCoefficientZornExtension

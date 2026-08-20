@@ -7394,3 +7394,4 @@ import InfoGeometry.Algebra.ExplogRN
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
 import InfoGeometry.Information.UniversalDualityQuadrangle
 import InfoGeometry.Information.UniversalConvexDualityQuadrangle
+import InfoGeometry.Information.MasterArchetypeConvexDuality

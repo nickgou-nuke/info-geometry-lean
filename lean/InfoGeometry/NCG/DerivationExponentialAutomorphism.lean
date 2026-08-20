@@ -14,22 +14,9 @@ namespace InfoGeometry.NCG
 variable {R : Type*} [CommRing R]
 variable {A : Type*} [Ring A] [Algebra R A]
 
-/-- An R-algebra derivation D : A → A satisfying the Leibniz rule:
-    D(x * y) = D(x) * y + x * D(y) -/
-structure AlgebraDerivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
-  toLinearMap : A →ₗ[R] A
-  leibniz' : ∀ x y, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
-
 namespace AlgebraDerivation
 
 variable (D : AlgebraDerivation R A)
-
-instance : CoeFun (AlgebraDerivation R A) (fun _ => A → A) where
-  coe D := D.toLinearMap
-
-@[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.toLinearMap.map_add x y
-@[simp] theorem map_smul (r : R) (x : A) : D (r • x) = r • D x := D.toLinearMap.map_smul r x
-@[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
 /-- The Second-Order Derivation Operator: D²(x) = D(D(x)) -/
 def D2 (x : A) : A := D (D x)

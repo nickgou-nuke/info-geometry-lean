@@ -247,7 +247,8 @@ theorem centeredGibbsObservable_qgt_real_eq_fisherSouriauMatrix
         _ = _ := by
           rw [hroot]
           ring
-    simp_rw [hterm]
+  have hsum := Finset.sum_congr rfl hterm
+  rw [hsum]
     unfold fisherSouriauMatrix
     norm_cast
   have hi0 :

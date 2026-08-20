@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Algebra.Group.MinimalAxioms
 import Mathlib.Tactic
 
 noncomputable section
@@ -37,29 +38,34 @@ instance : Add (Derivation A) where
     { toFun := D.toFun + E.toFun
       map_add' := by
         intro x y
-        simp only [Pi.add_apply, D.map_add, E.map_add, add_assoc]
+        simp only [Pi.add_apply, D.map_add', E.map_add']
+        abel
       leibniz' := by
         intro x y
-        simp only [Pi.add_apply, D.leibniz, E.leibniz]
+        simp only [Pi.add_apply, D.leibniz', E.leibniz']
+        simp only [add_mul, mul_add]
         abel }
 
 instance : Neg (Derivation A) where
   neg D :=
-    { toFun := -D.toFun
+    { toFun := (-D.toFun)
       map_add' := by
         intro x y
-        simp only [Pi.neg_apply, D.map_add, neg_add]
+        simp only [Pi.neg_apply, D.map_add', neg_add]
       leibniz' := by
         intro x y
-        simp only [Pi.neg_apply, D.leibniz, neg_add]
+        simp only [Pi.neg_apply, D.leibniz']
+        simp only [neg_add, neg_mul]
         abel }
 
-instance : AddGroup (Derivation A) where
-  add_assoc _ _ _ := by ext x; simp [add_assoc]
-  zero_add _ := by ext x; simp
-  add_zero _ := by ext x; simp
-  neg_add_cancel _ := by ext x; simp
-  add_comm _ _ := by ext x; simp [add_comm]
+instance : AddGroup (Derivation A) :=
+  AddGroup.ofLeftAxioms
+    (by intro D E F; ext x; simp only [Pi.add_apply]; abel)
+    (by intro D; ext x; rfl)
+    (by intro D; ext x; simp only [Pi.neg_apply, Pi.add_apply]; abel)
+
+instance : AddCommGroup (Derivation A) :=
+  AddCommGroup.mk (by intro D E; ext x; simp only [Pi.add_apply]; abel)
 
 variable (D : Derivation A)
 
@@ -241,9 +247,12 @@ noncomputable def modularDerivationAddHom : A →+ Derivation A where
   toFun := modularDerivation
   map_zero' := by
     ext X
-    simp [modularDerivation, adK]
+    change (0 : A) * X - X * 0 = 0
+    simp
   map_add' K L := by
     ext X
+    change modularDerivation (K + L) X =
+      modularDerivation K X + modularDerivation L X
     exact modularDerivation_add_apply K L X
 
 def Inn : AddSubgroup (Derivation A) :=

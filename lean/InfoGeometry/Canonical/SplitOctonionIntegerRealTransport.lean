@@ -90,7 +90,7 @@ theorem cast_mul (X Y : SplitOct) :
       InfoGeometry.Algebra.Vec3.dot]
     ring
 
-theorem cast_tau :
+theorem cast_tau (X : SplitOct) :
     cast (tau X) =
       { a := (cast X).a
         v := ![(cast X).v 0, -(cast X).v 1, -(cast X).v 2]

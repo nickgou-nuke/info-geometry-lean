@@ -1,3 +1,4 @@
+import Mathlib
 import InfoGeometry.Physics.FiniteRelativeModularOperator
 
 /-!
@@ -29,53 +30,56 @@ theorem relativeLogEigenvalue_swap
   unfold relativeLogEigenvalue
   ring
 
-noncomputable def leftSurprisalMatrix {n : ℕ} (p : Fin n → ℝ) : MatrixCarrier n :=
+noncomputable def leftSurprisalMatrix {n : ℕ} (p : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℂ :=
   Matrix.diagonal (fun i => ((-Real.log (p i) : ℝ) : ℂ))
 
-noncomputable def rightSurprisalMatrix {n : ℕ} (q : Fin n → ℝ) : MatrixCarrier n :=
+noncomputable def rightSurprisalMatrix {n : ℕ} (q : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℂ :=
   Matrix.diagonal (fun j => ((-Real.log (q j) : ℝ) : ℂ))
 
-noncomputable def relativeLogAction {n : ℕ} (p q : Fin n → ℝ) : EndCarrier n :=
+noncomputable def relativeLogAction {n : ℕ} (p q : Fin n → ℝ) :
+    Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ] Matrix (Fin n) (Fin n) ℂ :=
   leftAction (R := ℂ) (leftSurprisalMatrix p) -
     rightAction (R := ℂ) (rightSurprisalMatrix q)
 
 theorem diagonal_mul_matrixUnit {n : ℕ} (d : Fin n → ℂ) (i j : Fin n) :
-    Matrix.diagonal d * Matrix.single i j 1 =
-      d i • Matrix.single i j 1 := by
+    Matrix.diagonal d * matrixUnit i j =
+      d i • matrixUnit i j := by
   ext a b
   by_cases ha : a = i
   · subst a
-    simp [Matrix.diagonal_mul, Matrix.single]
-  · have hia : ¬ i = a := fun h => ha h.symm
-    simp [Matrix.diagonal_mul, Matrix.single, hia]
+    by_cases hb : b = j
+    · subst b
+      simp [matrixUnit, Matrix.diagonal_mul]
+    · simp [matrixUnit, Matrix.diagonal_mul, hb]
+  · simp [matrixUnit, Matrix.diagonal_mul, ha]
 
 theorem matrixUnit_mul_diagonal {n : ℕ} (d : Fin n → ℂ) (i j : Fin n) :
-    Matrix.single i j 1 * Matrix.diagonal d =
-      d j • Matrix.single i j 1 := by
+    matrixUnit i j * Matrix.diagonal d =
+      d j • matrixUnit i j := by
   ext a b
   by_cases hb : b = j
   · subst b
-    simp [Matrix.mul_diagonal, Matrix.single]
-  · have hjb : ¬ j = b := fun h => hb h.symm
-    simp [Matrix.mul_diagonal, Matrix.single, hjb]
+    by_cases ha : a = i
+    · subst a
+      simp [matrixUnit, Matrix.mul_diagonal]
+    · simp [matrixUnit, Matrix.mul_diagonal, ha]
+  · simp [matrixUnit, Matrix.mul_diagonal, hb]
 
 theorem leftSurprisalAction_matrixUnit
     {n : ℕ} (p : Fin n → ℝ) (i j : Fin n) :
     leftAction (R := ℂ) (leftSurprisalMatrix p) (matrixUnit i j) =
       ((-Real.log (p i) : ℝ) : ℂ) • matrixUnit i j := by
   unfold leftAction leftSurprisalMatrix
-  simpa only [LinearMap.mulLeft_apply] using
-    (diagonal_mul_matrixUnit
-      (fun i => ((-Real.log (p i) : ℝ) : ℂ)) i j)
+  simp only [leftAction_apply]
+  exact diagonal_mul_matrixUnit (fun i => ((-Real.log (p i) : ℝ) : ℂ)) i j
 
 theorem rightSurprisalAction_matrixUnit
     {n : ℕ} (q : Fin n → ℝ) (i j : Fin n) :
     rightAction (R := ℂ) (rightSurprisalMatrix q) (matrixUnit i j) =
       ((-Real.log (q j) : ℝ) : ℂ) • matrixUnit i j := by
   unfold rightAction rightSurprisalMatrix
-  simpa only [LinearMap.mulRight_apply] using
-    (matrixUnit_mul_diagonal
-      (fun j => ((-Real.log (q j) : ℝ) : ℂ)) i j)
+  simp only [rightAction_apply]
+  exact matrixUnit_mul_diagonal (fun j => ((-Real.log (q j) : ℝ) : ℂ)) i j
 
 theorem relativeLogAction_eq_leftRightSurprisal
     {n : ℕ} (p q : Fin n → ℝ) :
@@ -87,15 +91,12 @@ theorem relativeLogAction_matrixUnit
     {n : ℕ} (p q : Fin n → ℝ) (i j : Fin n) :
     relativeLogAction p q (matrixUnit i j) =
       ((relativeLogEigenvalue (p i) (q j) : ℝ) : ℂ) • matrixUnit i j := by
-  unfold relativeLogAction leftSurprisalMatrix rightSurprisalMatrix
-  change (Matrix.diagonal (fun i => ((-Real.log (p i) : ℝ) : ℂ)) *
-      matrixUnit i j) -
-      (matrixUnit i j * Matrix.diagonal (fun j => ((-Real.log (q j) : ℝ) : ℂ))) = _
-  unfold matrixUnit
+  simp only [relativeLogAction, LinearMap.sub_apply, leftSurprisalMatrix, rightSurprisalMatrix,
+    leftAction_apply, rightAction_apply]
   rw [diagonal_mul_matrixUnit, matrixUnit_mul_diagonal]
   unfold relativeLogEigenvalue
   ext a b
-  by_cases hia : i = a <;> by_cases hjb : j = b <;>
-    simp [Matrix.single, hia, hjb]
+  by_cases ha : a = i <;> by_cases hb : b = j <;>
+    simp [matrixUnit, ha, hb] <;> ring
 
 end InfoGeometry.OperatorAlgebra.FiniteRelativeModularLogBridge

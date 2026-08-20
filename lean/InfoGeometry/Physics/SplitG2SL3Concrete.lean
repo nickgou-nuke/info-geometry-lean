@@ -46,19 +46,25 @@ theorem commutator_trace_zero (X Y : SL3) :
 theorem commutator_add_left (X Y Z : SL3) :
     commutator (X + Y) Z = commutator X Z + commutator Y Z := by
   apply Subtype.ext
-  simp only [commutator_val, add_val]
+  change
+    (X.1 + Y.1) * Z.1 - Z.1 * (X.1 + Y.1) =
+      (X.1 * Z.1 - Z.1 * X.1) + (Y.1 * Z.1 - Z.1 * Y.1)
   noncomm_ring
 
 theorem commutator_add_right (X Y Z : SL3) :
     commutator X (Y + Z) = commutator X Y + commutator X Z := by
   apply Subtype.ext
-  simp only [commutator_val, add_val]
+  change
+    X.1 * (Y.1 + Z.1) - (Y.1 + Z.1) * X.1 =
+      (X.1 * Y.1 - Y.1 * X.1) + (X.1 * Z.1 - Z.1 * X.1)
   noncomm_ring
 
 theorem commutator_skew (X Y : SL3) :
     commutator X Y = -commutator Y X := by
   apply Subtype.ext
-  simp only [commutator_val, neg_val]
+  change
+    X.1 * Y.1 - Y.1 * X.1 =
+      -(Y.1 * X.1 - X.1 * Y.1)
   noncomm_ring
 
 theorem commutator_jacobi (X Y Z : SL3) :
@@ -66,7 +72,13 @@ theorem commutator_jacobi (X Y Z : SL3) :
         commutator Y (commutator Z X) +
         commutator Z (commutator X Y) = 0 := by
   apply Subtype.ext
-  simp only [commutator_val, add_val, zero_val]
+  change
+    (X.1 * (Y.1 * Z.1 - Z.1 * Y.1) -
+        (Y.1 * Z.1 - Z.1 * Y.1) * X.1) +
+      (Y.1 * (Z.1 * X.1 - X.1 * Z.1) -
+        (Z.1 * X.1 - X.1 * Z.1) * Y.1) +
+      (Z.1 * (X.1 * Y.1 - Y.1 * X.1) -
+        (X.1 * Y.1 - Y.1 * X.1) * Z.1) = 0
   noncomm_ring
 
 end InfoGeometry.Physics.SplitG2SL3Concrete

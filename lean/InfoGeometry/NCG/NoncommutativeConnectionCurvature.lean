@@ -65,6 +65,13 @@ theorem map_one : D 1 = 0 := by
 def covariantDerivative (A_conn : A) (X : A) : A :=
   D X + (A_conn * X - X * A_conn)
 
+/-- The covariant derivative preserves the algebraic identity element. -/
+@[simp]
+theorem covariantDerivative_one (A_conn : A) :
+    covariantDerivative D A_conn 1 = 0 := by
+  dsimp [covariantDerivative]
+  rw [D.map_one, mul_one, one_mul, sub_self, zero_add]
+
 /-- 🏆 THEOREM 1: The Covariant Derivative satisfies the Noncommutative Leibniz Rule:
     ∇_D(X * Y) = ∇_D(X) * Y + X * ∇_D(Y) -/
 theorem covariantDerivative_leibniz (A_conn : A) (X Y : A) :
@@ -102,6 +109,11 @@ theorem derivation_inv_unit (u : Aˣ) :
     θ = u * D(u⁻¹) -/
 def pureGaugeForm (u : Aˣ) : A :=
   (u : A) * D (u⁻¹ : Aˣ).val
+
+@[simp]
+theorem pureGaugeForm_one :
+    pureGaugeForm D (1 : Aˣ) = 0 := by
+  simp [pureGaugeForm]
 
 /-- Equivalence to negative right-derivative:
     θ = - D(u) * u⁻¹ -/
@@ -146,6 +158,12 @@ theorem gaugeTransform_inv (u : Aˣ) (X : A) :
 /-- Gauge transformation of a connection one-form. -/
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
   (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u
+
+/-- The identity gauge leaves the connection one-form unchanged. -/
+@[simp]
+theorem gaugeTransformConnection_one (A_conn : A) :
+    gaugeTransformConnection D (1 : Aˣ) A_conn = A_conn := by
+  simp [gaugeTransformConnection, pureGaugeForm]
 
 /-!
 =============================================================================

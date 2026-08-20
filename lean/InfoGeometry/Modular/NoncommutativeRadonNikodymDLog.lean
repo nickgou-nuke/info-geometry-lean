@@ -85,6 +85,16 @@ def dlogL (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
 def dlogR (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
   D (u.val) * (u⁻¹ : Aˣ).val
 
+/-- The right logarithmic derivative detects stationary units exactly. -/
+theorem dlogR_eq_zero_iff (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogR D u = 0 ↔ D u.val = 0 := by
+  constructor
+  · intro h
+    have h' := congrArg (fun x : A => x * u.val) h
+    simpa [dlogR, mul_assoc, u.inv_val] using h'
+  · intro h
+    simp [dlogR, h]
+
 @[simp]
 theorem dlogL_one (D : NoncommutativeDerivation A) :
     dlogL D 1 = 0 := by

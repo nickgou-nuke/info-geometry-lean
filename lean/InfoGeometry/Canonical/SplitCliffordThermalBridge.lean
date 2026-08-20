@@ -28,6 +28,7 @@ open InfoGeometry.Canonical.KreinDiracPolarizationBridge
 open InfoGeometry.Canonical.KreinDiracSpectralLift
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
+open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Krein
 
@@ -143,9 +144,9 @@ theorem transportedThermalGenerator_eq_transportDirac_of_vacuumTransported
     (IST : InfoSpectralTriple H₂)
     (T : RealBogoliubovTransform (S := H₂) M)
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E)
     (x : E) (scalar Λ : ℝ)
-    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (V : SplitVielbein K x) (Γ : RicciMongeAmpere.SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
     transportedThermalGenerator (E := E) B IST T
       (einsteinInducedChemicalPotential R K x scalar Λ V Γ) = transportDirac IST T := by

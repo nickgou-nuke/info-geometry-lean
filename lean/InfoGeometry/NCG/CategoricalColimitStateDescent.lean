@@ -156,6 +156,25 @@ theorem kms_condition_transition_pullback
     rw [← map_mul]
   rw [← M.intertwines, h_kms, h_map, C.compatible]
 
+/-- Multi-step KMS pullback along the iterated transition map. -/
+theorem kms_condition_transitionN_pullback
+    (C : StateCocone S)
+    (n k : ℕ) (a b : S.Stage n)
+    (h_kms :
+      C.state (n + k)
+          (S.transitionN n k a * M.flow (n + k) (S.transitionN n k b)) =
+        C.state (n + k)
+          (S.transitionN n k b * S.transitionN n k a)) :
+    C.state (n + k)
+        (S.transitionN n k a * S.transitionN n k (M.flow n b)) =
+      C.state n (b * a) := by
+  rw [← M.flow_transitionN n k b, h_kms]
+  have h_map :
+      S.transitionN n k b * S.transitionN n k a =
+        S.transitionN n k (b * a) := by
+    rw [← map_mul]
+  rw [h_map, C.state_transitionN]
+
 end ModularFlowCocone
 
 end DirectSystem

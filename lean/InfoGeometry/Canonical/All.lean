@@ -2336,6 +2336,7 @@ import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
 import InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
+import InfoGeometry.Canonical.NoncommutativeSpectralTriple
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorFenchelRegularCone

@@ -14,9 +14,9 @@ namespace InfoGeometry.NCG
 variable {R : Type*} [CommRing R]
 variable {A : Type*} [Ring A] [Algebra R A]
 
-namespace AlgebraDerivation
+namespace CyclicAlgebraDerivation
 
-variable (D : AlgebraDerivation R A)
+variable (D : CyclicAlgebraDerivation R A)
 
 /-- The Second-Order Derivation Operator: D²(x) = D(D(x)) -/
 def D2 (x : A) : A := D (D x)
@@ -55,6 +55,6 @@ theorem flowOrderOne_mul (t : R) (x y : A) :
   rw [h_expand, h_comm1, h_comm2, h_comm3]
   abel
 
-end AlgebraDerivation
+end CyclicAlgebraDerivation
 
 end InfoGeometry.NCG

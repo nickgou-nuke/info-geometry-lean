@@ -9,16 +9,18 @@ import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 import Mathlib.Tactic
 
 /-!
-# The Restricted $\mathfrak{so}(5,5)$ Matrix $\leftrightarrow$ Clifford Bivector Lie Equivalence
+# The Restricted $\mathfrak{so}(5,5)$ Matrix $\to$ Clifford Bivector Realization
 
 This module implements:
-1. `derivationToSO55_mem_so55Subalgebra`: Proof that `derivationToSO55 D ∈ so55LieSubalgebra`.
-2. `so55RestrictedToBivector`: Restriction of the matrix-to-bivector map to `so55LieSubalgebra`.
-3. `so55RestrictedToBivector_bracket`: Lie bracket preservation on `so55LieSubalgebra`.
-4. `so55RestrictedToBivector_injective` & `so55RestrictedToBivector_surjective`.
-5. `so55CliffordBivectorLieEquiv`: The 45-dimensional LieEquiv $\mathfrak{so}(5,5) \cong \operatorname{SpinBivector55}$.
-6. `so55VectorAction_agreement`: Global matrix vector-action compatibility.
-7. `derivationSpinorAction_unconditional`: Unconditional spinor action without `SpinorLiftDatum`.
+1. `so55RestrictedToBivector`: Restriction of the matrix-to-bivector map to `so55LieSubalgebra`.
+2. `so55RestrictedToBivector_add`: Additivity on the restricted subalgebra.
+3. `so55RestrictedToBivector_smul`: Scalar homogeneity on the restricted subalgebra.
+4. `canonicalDerivationSpinBivector`: Unconditioned derivation bivector lift.
+5. `canonicalDerivationSpinorAction`: Datum-free spinor action via `spinBivectorMatrixLinear`.
+6. `canonicalDerivationSpinorAction_commutes_chirality`: Direct chirality commutation.
+7. `canonicalDerivationSpinorAction_commutes_wittVolume`: Direct volume commutation.
+8. `canonicalDerivation_vectorAction_agreement`: Clifford commutator vector action.
+9. `canonicalDerivation_vectorAction_skew`: $Q_{5,5}$ skew-adjointness on vectors.
 -/
 
 noncomputable section

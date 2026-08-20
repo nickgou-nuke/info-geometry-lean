@@ -131,6 +131,13 @@ theorem soldering_form_extracts_metric (ψ : NormalizedState H) (X Y : EndH) :
   dsimp [solderingForm, fubiniStudyMetric]
   rw [QGT_eq_inner_projOrth]
 
+/- The extracted quadratic form is positive semidefinite on every tangent
+direction represented by an observable. -/
+theorem soldering_form_metric_nonneg (ψ : NormalizedState H) (X : EndH) :
+    0 ≤ fubiniStudyMetric ψ X X := by
+  rw [fubiniStudyMetric_self_eq_normSq]
+  exact sq_nonneg _
+
 /-- 
   THEOREM: Soldering Form Symplectic Extraction.
   The Berry gauge curvature is the pullback of the imaginary symplectic form

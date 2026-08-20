@@ -41,10 +41,18 @@ def gibbsState (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
     (fun x => (Real.sqrt (realGibbsWeight D beta x) : ℂ))
   norm_sq := by
     simp only [PiLp.inner_apply, RCLike.inner_apply, starRingEnd_apply]
-    simp only [← starRingEnd_apply, map_ofReal]
+    simp only [← starRingEnd_apply]
+    have hstar : ∀ x : State,
+        starRingEnd ℂ (Real.sqrt (realGibbsWeight D beta x) : ℂ) =
+          (Real.sqrt (realGibbsWeight D beta x) : ℂ) := by
+      intro x
+      change Complex.conj (Real.sqrt (realGibbsWeight D beta x) : ℂ) = _
+      exact Complex.conj_ofReal _
+    simp_rw [hstar]
     change (∑ x : State,
       (Real.sqrt (realGibbsWeight D beta x) : ℂ) *
         (Real.sqrt (realGibbsWeight D beta x) : ℂ)) = 1
+    simp_rw [← Complex.ofReal_mul]
     rw [← Complex.ofReal_sum]
     congr 1
     rw [show (∑ x : State, Real.sqrt (realGibbsWeight D beta x) ^ 2) = 1 by

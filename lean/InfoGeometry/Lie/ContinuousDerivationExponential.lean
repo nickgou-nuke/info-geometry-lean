@@ -787,6 +787,20 @@ theorem flow_associator
       z
   ]
 
+/-- The bundled analytic exponential transports the associator. -/
+theorem flowLinearEquiv_map_associator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y z : A) :
+    flowLinearEquiv D t (associator mul x y z) =
+      associator mul
+        (flowLinearEquiv D t x)
+        (flowLinearEquiv D t y)
+        (flowLinearEquiv D t z) := by
+  exact flow_associator mul D hD t x y z
+
 /--
 An idempotent remains idempotent under the derivation exponential.
 -/

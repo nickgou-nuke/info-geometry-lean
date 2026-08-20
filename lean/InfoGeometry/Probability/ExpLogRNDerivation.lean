@@ -161,6 +161,28 @@ theorem hasDerivAt_exp_potential
   rw [h_comm] at h
   exact h
 
+/-- The logarithm of the exponential potential has the original derivative. -/
+theorem hasDerivAt_log_exp_potential
+    (K : ℝ → ℝ) (K' : ℝ) (t : ℝ)
+    (h_diff : HasDerivAt K K' t) :
+    HasDerivAt (fun s => Real.log (Real.exp (K s))) K' t := by
+  simpa using h_diff
+
+/-- The exponential of the logarithmic density has the original derivative. -/
+theorem hasDerivAt_exp_log_density
+    (rho : ℝ → ℝ) (rho' : ℝ) (t : ℝ)
+    (h_diff : HasDerivAt rho rho' t)
+    (h_pos : 0 < rho t) :
+    HasDerivAt (fun s => Real.exp (Real.log (rho s))) rho' t := by
+  have hlog : HasDerivAt (fun s => Real.log (rho s))
+      (rho' / rho t) t :=
+    hasDerivAt_log_radon_nikodym rho rho' t h_diff h_pos
+  have hexp := HasDerivAt.exp hlog
+  have hne : rho t ≠ 0 := ne_of_gt h_pos
+  have hder : rho t * (rho' / rho t) = rho' := by
+    field_simp
+  simpa [Real.exp_log h_pos, hder] using hexp
+
 /-- 
   THEOREM: The Fundamental `explogRNder` Inversion Identities:
   1. log(exp(K)) = K

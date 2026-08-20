@@ -1,7 +1,6 @@
 import InfoGeometry.Lie.SplitG2SL3ModuleDecomposition
 import InfoGeometry.Lie.SplitG2SL3Concrete
 import InfoGeometry.Lie.SouriauBregmanDualityBridge
-import InfoGeometry.Lie.CartanCosetRiemannCurvatureBridge
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Lie.SplitOctonionImaginaryThreeForm
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor

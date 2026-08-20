@@ -311,6 +311,13 @@ theorem adK_eq_zero_iff_central (K : A) :
     intro X
     simp [adK_apply, h X]
 
+/-- The commutator of two inner modular flows vanishes exactly when their
+    generator commutator is central. -/
+theorem linearMapCommutator_adK_eq_zero_iff_central (K L : A) :
+    linearMapCommutator (adK K) (adK L) = 0 ↔
+      ∀ X, (K * L - L * K) * X = X * (K * L - L * K) := by
+  rw [linearMapCommutator_adK, adK_eq_zero_iff_central]
+
 /-! ### Logarithmic Radon–Nikodym Derivative on Commutative Algebras -/
 
 variable {R : Type*} [CommRing R]

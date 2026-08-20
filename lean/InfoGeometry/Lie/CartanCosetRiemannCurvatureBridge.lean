@@ -128,12 +128,7 @@ theorem riemann_curvature_skew
     (X Y Z : V) :
     nomizuRiemannCurvature bracket X Y Z = - nomizuRiemannCurvature bracket Y X Z := by
   dsimp [nomizuRiemannCurvature]
-  rw [h_lie.skew X Y]
-  have h_neg : bracket (-bracket Y X) Z = - bracket (bracket Y X) Z := by
-    have h1 : -bracket Y X = (-1 : ℝ) • bracket Y X := by simp only [neg_smul, one_smul]
-    rw [h1, h_lie.smul_left (-1)]
-    simp only [neg_smul, one_smul]
-  rw [h_neg, neg_neg]
+  rw [h_lie.skew X Y, h_lie.skew (bracket Y X) Z, neg_neg]
 
 /--
   THEOREM: First Bianchi Identity for Nomizu Curvature:
@@ -147,18 +142,8 @@ theorem first_bianchi_identity
     nomizuRiemannCurvature bracket Z X Y = 0 := by
   dsimp [nomizuRiemannCurvature]
   have h_jacobi := h_lie.jacobi X Y Z
-  have h_skew1 : -bracket (bracket X Y) Z = bracket Z (bracket X Y) := by
-    rw [h_lie.skew (bracket X Y) Z, neg_neg]
-  have h_skew2 : -bracket (bracket Y Z) X = bracket X (bracket Y Z) := by
-    rw [h_lie.skew (bracket Y Z) X, neg_neg]
-  have h_skew3 : -bracket (bracket Z X) Y = bracket Y (bracket Z X) := by
-    rw [h_lie.skew (bracket Z X) Y, neg_neg]
-  rw [h_skew1, h_skew2, h_skew3]
-  calc
-    bracket Z (bracket X Y) + bracket X (bracket Y Z) + bracket Y (bracket Z X)
-      = bracket X (bracket Y Z) + bracket Y (bracket Z X) + bracket Z (bracket X Y) := by
-        abel
-    _ = 0 := h_jacobi
+  rw [h_lie.skew (bracket X Y) Z, h_lie.skew (bracket Y Z) X, h_lie.skew (bracket Z X) Y] at h_jacobi
+  exact h_jacobi
 
 /-!
 =============================================================================

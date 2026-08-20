@@ -94,10 +94,8 @@ theorem iterated_leibniz
           omega
         rw [hindex]
       rw [hsecond]
-      let f : ℕ → ℕ → A :=
-        fun i j => iterD D i x * iterD D j y
-      simpa [f, add_comm, Nat.succ_eq_add_one] using
-        (Finset.sum_choose_succ_nsmul f n).symm
+      rw [add_comm]
+      exact (sum_choose_succ_nsmul (fun i j => iterD D i x * iterD D j y) n).symm
 
 /-! ## Unit annihilation -/
 
@@ -108,11 +106,14 @@ theorem derivation_kills_unit
     (unit_mul : ∀ a : A, one * a = a)
     (mul_unit : ∀ a : A, a * one = a) :
     D one = 0 := by
-  have h1 := D.leibniz one one
-  simp only [unit_mul, mul_unit] at h1
+  have h1 : D one = D one + D one := by
+    have h := D.leibniz one one
+    simp only [unit_mul, mul_unit] at h
+    exact h
   have h2 : D one + 0 = D one + D one := by
-    rw [add_zero, h1]
-  exact add_left_cancel h2
+    rw [add_zero]
+    exact h1
+  exact (add_left_cancel h2).symm
 
 /-- Every positive iterate annihilates a vector already annihilated by `D`. -/
 theorem iterD_eq_zero_of_apply_eq_zero
@@ -343,13 +344,10 @@ theorem map_ePlus_of_fixed
     (hI : F I = I) :
     F (ePlus one half I) = ePlus one half I := by
   unfold ePlus
-  calc
-    F (half • (one + I)) = half • F (one + I) :=
-      F.toLinearEquiv.map_smul half (one + I)
-    _ = half • (F one + F I) := by
-      rw [F.toLinearEquiv.map_add]
-    _ = half • (one + I) := by
-      rw [F.map_one, hI]
+  have h1 : F.toLinearEquiv (one + I) = F.toLinearEquiv one + F.toLinearEquiv I :=
+    map_add F.toLinearEquiv one I
+  show F.toLinearEquiv (half • (one + I)) = half • (one + I)
+  rw [map_smul, h1, F.map_one, hI]
 
 /-- A multiplicative equivalence fixing `I` fixes `e₋`. -/
 theorem map_eMinus_of_fixed
@@ -359,13 +357,10 @@ theorem map_eMinus_of_fixed
     (hI : F I = I) :
     F (eMinus one half I) = eMinus one half I := by
   unfold eMinus
-  calc
-    F (half • (one - I)) = half • F (one - I) :=
-      F.toLinearEquiv.map_smul half (one - I)
-    _ = half • (F one - F I) := by
-      rw [F.toLinearEquiv.map_sub]
-    _ = half • (one - I) := by
-      rw [F.map_one, hI]
+  have h1 : F.toLinearEquiv (one - I) = F.toLinearEquiv one - F.toLinearEquiv I :=
+    map_sub F.toLinearEquiv one I
+  show F.toLinearEquiv (half • (one - I)) = half • (one - I)
+  rw [map_smul, h1, F.map_one, hI]
 
 end InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 

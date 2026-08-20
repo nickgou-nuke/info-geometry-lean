@@ -1,12 +1,3 @@
-/--!
-# Continuous Information Geometry: The Positive Orthant as a Smooth Manifold
-
-This module formalizes the positive orthant as a smooth manifold with corners,
-providing the foundation for continuous information geometry.
-
-All proofs are native Lean 4 + Mathlib 4.28.1 with zero `sorry`.
--/
-
 import Mathlib.Analysis.Calculus.ContDiff.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Analysis.Calculus.FTC
@@ -18,6 +9,15 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
+
+/--!
+# Continuous Information Geometry: The Positive Orthant as a Smooth Manifold
+
+This module formalizes the positive orthant as a smooth manifold with corners,
+providing the foundation for continuous information geometry.
+
+All proofs are native Lean 4 + Mathlib 4.28.1 with zero `sorry`.
+-/
 
 noncomputable
 

@@ -265,6 +265,8 @@ all_infogeometry_files = all_lean_files
 def importers_by_module(files: list[Path] | None = None) -> dict[str, list[str]]:
     importers: dict[str, list[str]] = defaultdict(list)
     for path in files or all_infogeometry_files():
+        if not path.is_file():
+            continue
         text = audit_constructivity.strip_comments(path.read_text(encoding="utf-8"))
         owner = module_name(path)
         for match in IMPORT_RE.finditer(text):

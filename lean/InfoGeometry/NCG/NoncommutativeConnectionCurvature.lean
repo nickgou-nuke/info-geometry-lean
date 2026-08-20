@@ -188,13 +188,10 @@ theorem pureGaugeForm_mul (u v : Aˣ) :
   dsimp [pureGaugeForm]
   rw [mul_inv_rev, Units.val_mul, D.leibniz]
   simp only [mul_add, add_mul, mul_assoc]
-  have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
   have hv : (v : A) * (v⁻¹ : Aˣ).val = 1 := Units.mul_inv v
-  rw [← mul_assoc (u : A) (v : A), ← mul_assoc (D (v⁻¹ : Aˣ).val),
-    ← mul_assoc (u : A), hu, one_mul, hv, one_mul]
-  abel
+  congr 1
+  simp only [← mul_assoc, hv, one_mul]
 
-/-- Conjugation of an observable by an invertible element. -/
 /-- Conjugation by the identity unit is the identity transformation. -/
 @[simp]
 theorem gaugeTransform_one (X : A) :

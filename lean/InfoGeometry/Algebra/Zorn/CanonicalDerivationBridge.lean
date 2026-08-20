@@ -4,6 +4,8 @@ import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Subalgebra
 
+set_option synthInstance.maxHeartbeats 100000
+
 /-!
 # Canonical and Kingdon realization of the Zorn derivation Lie algebra
 

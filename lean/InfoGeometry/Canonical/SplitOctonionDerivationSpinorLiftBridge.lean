@@ -2,6 +2,8 @@ import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
+import InfoGeometry.Canonical.RealUHFFiniteMatrixNormedCarrier
+import Mathlib.Analysis.Normed.Algebra.Exponential
 
 /-!
 # Split-octonion derivations through a supplied `Cl(5,5)` spinor lift
@@ -231,5 +233,34 @@ theorem nativeDerivationSpinorAction_commutes_chiralDiracMinus
     nativeDerivationSpinorAction N D * chiralDiracMinusOp =
       chiralDiracMinusOp * nativeDerivationSpinorAction N D := by
   exact g2Spin_commutes_chiralDiracMinus (nativeDerivationSpinorRepresentation N D)
+
+/-! Finite exponential consequences of a supplied native lift. -/
+noncomputable def nativeDerivationSpinorFlow
+    (N : NativeSpinorLiftDatum) (D : Derivation) (t : ℝ) : Mat32 :=
+  NormedSpace.exp (t • nativeDerivationSpinorAction N D)
+
+theorem nativeDerivationSpinorFlow_commutes_chirality
+    (N : NativeSpinorLiftDatum) (D : Derivation) (t : ℝ) :
+    nativeDerivationSpinorFlow N D t * MasterChirality =
+      MasterChirality * nativeDerivationSpinorFlow N D t := by
+  have hbase : Commute (nativeDerivationSpinorAction N D) MasterChirality :=
+    nativeDerivationSpinorAction_commutes_chirality N D
+  have hscaled : Commute (t • nativeDerivationSpinorAction N D) MasterChirality :=
+    hbase.smul_left t
+  exact (hscaled.exp_left).eq
+
+theorem nativeDerivationSpinorFlow_commutes_hodge
+    (N : NativeSpinorLiftDatum) (D : Derivation) (t : ℝ) :
+    nativeDerivationSpinorFlow N D t * embeddedSplitOctonionHodgeDirac =
+      embeddedSplitOctonionHodgeDirac * nativeDerivationSpinorFlow N D t := by
+  have hbase :
+      Commute (nativeDerivationSpinorAction N D)
+        embeddedSplitOctonionHodgeDirac :=
+    nativeDerivationSpinorAction_commutes_hodge N D
+  have hscaled :
+      Commute (t • nativeDerivationSpinorAction N D)
+        embeddedSplitOctonionHodgeDirac :=
+    hbase.smul_left t
+  exact (hscaled.exp_left).eq
 
 end InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge

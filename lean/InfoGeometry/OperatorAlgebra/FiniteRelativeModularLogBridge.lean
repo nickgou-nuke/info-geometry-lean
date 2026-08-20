@@ -1,4 +1,4 @@
-import InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
+import InfoGeometry.Physics.FiniteRelativeModularOperator
 
 /-!
 # Finite relative modular logarithmic bridge
@@ -10,7 +10,7 @@ general matrix logarithm or Tomita--Takesaki functional calculus is claimed.
 
 namespace InfoGeometry.OperatorAlgebra.FiniteRelativeModularLogBridge
 
-open InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
+open InfoGeometry.Physics.FiniteRelativeModularOperator
 open InfoGeometry.Physics.RegularBimoduleCommutant
 
 noncomputable def relativeLogEigenvalue (p q : ℝ) : ℝ :=

@@ -478,23 +478,23 @@ theorem scalar_schur_berezinian_packet
 
 /-! ## Compatibility aliases for the original scalar API -/
 
-abbrev zorn_norm := zornNorm
-
 theorem berezinian_eq_zorn_norm_div_sq
     (α β u v : F)
     (hβ : β ≠ 0) :
     berezinianScalar α β u v =
-      zorn_norm α β u v / β ^ 2 :=
+      zornNorm α β u v / β ^ 2 :=
   berezinian_eq_zornNorm_div_sq α β u v hβ
 
 theorem zorn_norm_eq_schur_mul_beta
     (α β u v : F)
     (hβ : β ≠ 0) :
-    zorn_norm α β u v =
+    zornNorm α β u v =
       schurComplement α β u v * β :=
   zornNorm_eq_schur_mul_beta α β u v hβ
 
 end ZornNormSchurScalarSpecialization
+
+namespace BdGSchurBerezinianCompatibility
 
 open ZornNormSchurScalarSpecialization
 

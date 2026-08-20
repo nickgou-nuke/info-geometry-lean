@@ -17,6 +17,7 @@ This module formalizes:
 4. Derivation of unit inverses: `D(u⁻¹) = - u⁻¹ D(u) u⁻¹`.
 5. Noncommutative Maurer-Cartan 1-forms `θ = u D(u⁻¹)` and the quadratic identity `θ² = - D(u) D(u⁻¹)`.
 6. Noncommutative Maurer-Cartan Flatness Theorem: `D(u) D(u⁻¹) + θ² = 0`.
+7. Noncommutative Gauge Equivariance: `∇_{Aᵘ}(Xᵘ) = (∇_A(X))ᵘ`.
 
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
@@ -48,6 +49,7 @@ instance : CoeFun (AlgebraDerivation R A) (fun _ => A → A) where
 @[simp] theorem map_zero : D 0 = 0 := D.toLinearMap.map_zero
 @[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
+/-- Derivation annihilates 1 in any ring -/
 @[simp]
 theorem map_one : D 1 = 0 := by
   have h : D 1 = D 1 + D 1 := by
@@ -105,13 +107,95 @@ def pureGaugeForm (u : Aˣ) : A :=
     θ = - D(u) * u⁻¹ -/
 theorem pureGaugeForm_eq_neg (u : Aˣ) :
     pureGaugeForm D u = - (D (u : A) * (u⁻¹ : Aˣ).val) := by
-  dsimp [pureGaugeForm]
-  have h : D ((u : A) * (u⁻¹ : Aˣ).val) = 0 := by
-    rw [Units.mul_inv, map_one]
-  rw [D.leibniz] at h
-  exact eq_neg_of_add_eq_zero_right h
+  unfold pureGaugeForm
+  rw [D.derivation_inv_unit, mul_neg]
+  congr 1
+  calc
+    (u : A) * ((u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val) =
+        ((u : A) * (u⁻¹ : Aˣ).val) * D (u : A) * (u⁻¹ : Aˣ).val := by
+          simp only [mul_assoc]
+    _ = D (u : A) * (u⁻¹ : Aˣ).val := by
+          have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+          rw [hu, one_mul]
 
-/-- 🏆 THEOREM 3: The Maurer-Cartan Quadratic Identity:
+/-- Conjugation of an observable by an invertible element. -/
+def gaugeTransform (u : Aˣ) (X : A) : A :=
+  (u : A) * X * (u⁻¹ : Aˣ).val
+
+/-- Gauge transformation of a connection one-form. -/
+def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
+  (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u
+
+/-- 🏆 THEOREM 3: Covariant derivatives are equivariant under simultaneous gauge
+    transformation of the connection and observable. -/
+theorem covariantDerivative_gauge_equivariant (u : Aˣ) (A_conn X : A) :
+    covariantDerivative D (gaugeTransformConnection D u A_conn)
+        (gaugeTransform u X) =
+      gaugeTransform u (covariantDerivative D A_conn X) := by
+  dsimp [covariantDerivative, gaugeTransformConnection, gaugeTransform, pureGaugeForm]
+  have hu_inv : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  have hu_val : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  have h_D_conj : D ((u : A) * X * (u⁻¹ : Aˣ).val) =
+      D (u : A) * X * (u⁻¹ : Aˣ).val +
+      (u : A) * D X * (u⁻¹ : Aˣ).val +
+      (u : A) * X * D (u⁻¹ : Aˣ).val := by
+    calc
+      D ((u : A) * X * (u⁻¹ : Aˣ).val)
+        = D ((u : A) * X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := D.leibniz ((u : A) * X) _
+      _ = (D (u : A) * X + (u : A) * D X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by rw [D.leibniz]
+      _ = D (u : A) * X * (u⁻¹ : Aˣ).val + (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
+        simp only [add_mul, add_assoc]
+  have h_comm1 : ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
+      (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - D (u : A) * X * (u⁻¹ : Aˣ).val := by
+    have h_prod1 : ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
+        (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by
+      calc
+        ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
+          = (u : A) * A_conn * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+        _ = (u : A) * A_conn * 1 * X * (u⁻¹ : Aˣ).val := by rw [hu_inv]
+        _ = (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+    have h_prod2 : ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
+        - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by
+      calc
+        ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
+          = (pureGaugeForm D u) * ((u : A) * X * (u⁻¹ : Aˣ).val) := rfl
+        _ = (- (D (u : A) * (u⁻¹ : Aˣ).val)) * ((u : A) * X * (u⁻¹ : Aˣ).val) := by rw [pureGaugeForm_eq_neg]
+        _ = - ((D (u : A) * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)) := by rw [neg_mul]
+        _ = - (D (u : A) * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_assoc]
+        _ = - (D (u : A) * 1 * X * (u⁻¹ : Aˣ).val) := by rw [hu_inv]
+        _ = - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_one, mul_assoc]
+    rw [add_mul, h_prod1, h_prod2, sub_eq_add_neg]
+  have h_comm2 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) =
+      (u : A) * X * A_conn * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
+    have h_prod3 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val) =
+        (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+      calc
+        ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val)
+          = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+        _ = (u : A) * X * 1 * A_conn * (u⁻¹ : Aˣ).val := by rw [hu_inv]
+        _ = (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+    have h_prod4 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val) =
+        (u : A) * X * D (u⁻¹ : Aˣ).val := by
+      calc
+        ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val)
+          = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * D (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+        _ = (u : A) * X * 1 * D (u⁻¹ : Aˣ).val := by rw [hu_inv]
+        _ = (u : A) * X * D (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+    rw [mul_add, h_prod3, h_prod4]
+  have h_combine :
+      D ((u : A) * X * (u⁻¹ : Aˣ).val) +
+          (((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) -
+           ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val))
+        = (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+    rw [h_D_conj, h_comm1, h_comm2]
+    abel
+  have h_factor : (u : A) * (D X + (A_conn * X - X * A_conn)) * (u⁻¹ : Aˣ).val =
+      (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+    simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
+    abel
+  rw [h_combine, ← h_factor]
+
+/-- 🏆 THEOREM 4: The Maurer-Cartan Quadratic Identity:
     θ² = - D(u) * D(u⁻¹) -/
 theorem pureGaugeForm_sq (u : Aˣ) :
     pureGaugeForm D u * pureGaugeForm D u = - (D (u : A) * D (u⁻¹ : Aˣ).val) := by
@@ -134,10 +218,12 @@ theorem pureGaugeForm_sq (u : Aˣ) :
         (u : A) * (u⁻¹ : Aˣ).val * D (u : A) * D (u⁻¹ : Aˣ).val =
             ((u : A) * (u⁻¹ : Aˣ).val) * D (u : A) * D (u⁻¹ : Aˣ).val := by
               simp only [mul_assoc]
-        _ = 1 * D (u : A) * D (u⁻¹ : Aˣ).val := by rw [Units.mul_inv]
+        _ = 1 * D (u : A) * D (u⁻¹ : Aˣ).val := by
+          have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+          rw [hu]
     _ = - (D (u : A) * D (u⁻¹ : Aˣ).val) := by rw [one_mul]
 
-/-- 🏆 THEOREM 4: Noncommutative Maurer-Cartan Flatness:
+/-- 🏆 THEOREM 5: Noncommutative Maurer-Cartan Flatness:
     D(u) * D(u⁻¹) + θ² = 0 -/
 theorem maurer_cartan_flatness (u : Aˣ) :
     D (u : A) * D (u⁻¹ : Aˣ).val + pureGaugeForm D u * pureGaugeForm D u = 0 := by
@@ -146,3 +232,5 @@ theorem maurer_cartan_flatness (u : Aˣ) :
 end AlgebraDerivation
 
 end InfoGeometry.NCG
+
+end noncomputable section

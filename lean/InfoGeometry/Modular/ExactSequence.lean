@@ -26,6 +26,41 @@ namespace Derivation
 instance : CoeFun (Derivation A) (fun _ => A → A) where
   coe D := D.toFun
 
+instance : Zero (Derivation A) where
+  zero :=
+    { toFun := 0
+      map_add' := by simp
+      leibniz' := by simp }
+
+instance : Add (Derivation A) where
+  add D E :=
+    { toFun := D.toFun + E.toFun
+      map_add' := by
+        intro x y
+        simp only [Pi.add_apply, D.map_add, E.map_add, add_assoc]
+      leibniz' := by
+        intro x y
+        simp only [Pi.add_apply, D.leibniz, E.leibniz]
+        abel }
+
+instance : Neg (Derivation A) where
+  neg D :=
+    { toFun := -D.toFun
+      map_add' := by
+        intro x y
+        simp only [Pi.neg_apply, D.map_add, neg_add]
+      leibniz' := by
+        intro x y
+        simp only [Pi.neg_apply, D.leibniz, neg_add]
+        abel }
+
+instance : AddGroup (Derivation A) where
+  add_assoc _ _ _ := by ext x; simp [add_assoc]
+  zero_add _ := by ext x; simp
+  add_zero _ := by ext x; simp
+  neg_add_cancel _ := by ext x; simp
+  add_comm _ _ := by ext x; simp [add_comm]
+
 variable (D : Derivation A)
 
 @[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.map_add' x y
@@ -192,6 +227,36 @@ theorem commutator_eq_modularDerivation (D : Derivation A) (K : A) :
     Derivation.derivationCommutator D (modularDerivation K) = modularDerivation (D K) := by
   ext X
   exact dual_flow_commutator D K X
+
+/-!
+## The additive inner quotient
+
+The quotient below is deliberately additive.  It records the quotient by
+inner derivations without claiming a splitting of the derivation extension.
+The latter requires additional section data and is not a consequence of the
+ideal theorem alone.
+-/
+
+noncomputable def modularDerivationAddHom : A →+ Derivation A where
+  toFun := modularDerivation
+  map_zero' := by
+    ext X
+    simp [modularDerivation, adK]
+  map_add' K L := by
+    ext X
+    exact modularDerivation_add_apply K L X
+
+def Inn : AddSubgroup (Derivation A) :=
+  AddMonoidHom.range (modularDerivationAddHom (A := A))
+
+abbrev Out := Derivation A ⧸ Inn (A := A)
+
+noncomputable def quotientProjection : Derivation A →+ Out (A := A) :=
+  QuotientAddGroup.mk' (Inn (A := A))
+
+theorem quotientProjection_ker :
+    (quotientProjection (A := A)).ker = Inn (A := A) := by
+  exact QuotientAddGroup.ker_mk' (Inn (A := A))
 
 /-- 
   THEOREM 6: Adiabatic Limit (The Stable Vacuum).

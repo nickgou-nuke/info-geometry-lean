@@ -496,8 +496,6 @@ theorem zorn_norm_eq_schur_mul_beta
 
 end ZornNormSchurScalarSpecialization
 
-namespace BdGSchurBerezinianCompatibility
-
 open ZornNormSchurScalarSpecialization
 
 variable {F : Type*} [Field F]

@@ -8,7 +8,7 @@ import InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 import InfoGeometry.Optics.OperatorDerivationForms
 import InfoGeometry.Geometry.ParaHessianMixedPotential
 import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
-import InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
+import InfoGeometry.Physics.FiniteRelativeModularOperator
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
 import InfoGeometry.Volume.ConnesInfinitesimal
 
@@ -217,37 +217,32 @@ end RelativeModular
 
 section FiniteTomita
 
-open InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
+open InfoGeometry.Physics.FiniteRelativeModularOperator
 
 variable {n : ℕ}
 
 /-- The finite left-right relative modular operator is an actual linear
     equivalence, not an unconstrained operator parameter. -/
 theorem finite_relativeDelta_is_linearEquiv
-    (ρ σ : InvertibleMatrix n) :
-    Function.Bijective (relativeModular ρ σ) := by
-  exact (relativeModularEquiv ρ σ).bijective
+    (D : RelativeModularData ℂ (Matrix (Fin n) (Fin n) ℂ))
+    (hD : D.HasTwoSidedInverses) :
+    Function.Bijective D.delta := by
+  exact (D.deltaEquiv hD).bijective
 
 /-- The finite relative modular operator sends the identity carrier to the
     left/right operator ratio. -/
 theorem finite_relativeDelta_identity
-    (ρ σ : InvertibleMatrix n) :
-    relativeModular ρ σ (1 : MatrixCarrier n) = ρ.val * σ.inv := by
-  rw [relativeModular_apply]
-  simp
+    (D : RelativeModularData ℂ (Matrix (Fin n) (Fin n) ℂ)) :
+    D.delta 1 = D.rho * D.sigmaInv := by
+  rw [D.delta_apply, mul_one]
 
 /-- Matrix-unit readout of the finite Tomita relative modular operator. -/
 theorem finite_relativeDelta_matrixUnit
-    (p pinv q qinv : Fin n → ℂ)
-    (hp : ∀ i, p i * pinv i = 1)
-    (hp' : ∀ i, pinv i * p i = 1)
-    (hq : ∀ i, q i * qinv i = 1)
-    (hq' : ∀ i, qinv i * q i = 1)
+    (p q : Fin n → ℂ)
     (i j : Fin n) :
-    relativeModular (diagonalInvertible p pinv hp hp')
-        (diagonalInvertible q qinv hq hq') (matrixUnit i j) =
-      (p i * qinv j) • matrixUnit i j := by
-  exact diagonal_relativeModular_matrixUnit p pinv q qinv hp hp' hq hq' i j
+    diagonalRelativeModularEnd p q (matrixUnit i j) =
+      (p i * (q j)⁻¹) • matrixUnit i j := by
+  exact diagonalRelativeModularEnd_matrixUnit p q i j
 
 /-- Native Duhamel/Frechet normalization at the zero relative generator. -/
 theorem duhamel_relative_generator_zero

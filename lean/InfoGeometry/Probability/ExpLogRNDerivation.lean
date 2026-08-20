@@ -111,6 +111,22 @@ theorem dlog_mul
       _ = (v⁻¹ : Aˣ).val * D (v : A) := by rw [mul_one]
   rw [h_left, h_right]
 
+/-- Bundled multiplicative-to-additive logarithmic derivative homomorphism. -/
+def dlogMonoidHom (D : A → A) (hD : IsDerivation D) :
+    Aˣ →* Multiplicative A where
+  toFun u := Multiplicative.ofAdd (dlog D u)
+  map_one' := by
+    apply Multiplicative.ext
+    simp [dlog, derivation_one D hD]
+  map_mul' u v := by
+    apply Multiplicative.ext
+    exact dlog_mul D hD u v
+
+@[simp]
+theorem dlogMonoidHom_apply
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    dlogMonoidHom D hD u = Multiplicative.ofAdd (dlog D u) := rfl
+
 /-- THEOREM: Logarithmic derivation of the unit element is zero. -/
 @[simp]
 theorem dlog_one
@@ -159,6 +175,14 @@ theorem dlog_pow
   | succ n ih =>
       rw [pow_succ, dlog_mul D hD, ih]
       simp only [succ_nsmul, add_comm]
+
+theorem dlogMonoidHom_pow
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) (n : ℕ) :
+    dlogMonoidHom D hD (u ^ n) =
+      Multiplicative.ofAdd (n • dlog D u) := by
+  rw [map_pow, dlogMonoidHom_apply]
+  apply Multiplicative.ext
+  simpa using dlog_pow D hD u n
 
 /-!
 =============================================================================

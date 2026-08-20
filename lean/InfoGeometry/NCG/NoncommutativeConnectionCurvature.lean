@@ -187,10 +187,16 @@ theorem pureGaugeForm_mul (u v : Aˣ) :
         pureGaugeForm D u := by
   dsimp [pureGaugeForm]
   rw [mul_inv_rev, Units.val_mul, D.leibniz]
-  simp only [mul_add, add_mul, mul_assoc]
+  simp only [mul_add, mul_assoc]
   have hv : (v : A) * (v⁻¹ : Aˣ).val = 1 := Units.mul_inv v
   congr 1
   simp only [← mul_assoc, hv, one_mul]
+
+theorem pureGaugeForm_mul_gauge (u v : Aˣ) :
+    pureGaugeForm D (u * v) =
+      gaugeTransform u (pureGaugeForm D v) + pureGaugeForm D u := by
+  rw [pureGaugeForm_mul]
+  rfl
 
 /-- Conjugation by the identity unit is the identity transformation. -/
 @[simp]

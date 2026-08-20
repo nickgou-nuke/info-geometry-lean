@@ -7420,3 +7420,6 @@ import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Statistical.DualFlatCurvature
 import InfoGeometry.Bridge.AmariZornDerivationBridge
 import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
+import InfoGeometry.Canonical.ScalarLogBarrier
+import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
+import InfoGeometry.Canonical.FiniteInformationGeometryArchitecture

@@ -244,6 +244,7 @@ import InfoGeometry.Algebra.CuntzModularTreeFlowBridge
 import InfoGeometry.Algebra.SplitOctonionPeirceExteriorBridge
 import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
+import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 /-!
 # InfoGeometry.Algebra.All
 

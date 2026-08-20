@@ -3351,6 +3351,8 @@ import InfoGeometry.Canonical.FiniteScalarLogLaplace
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
+import InfoGeometry.Canonical.ScalarLogBarrier
+import InfoGeometry.Canonical.FiniteInformationGeometryArchitecture
 
 namespace InfoGeometry
 

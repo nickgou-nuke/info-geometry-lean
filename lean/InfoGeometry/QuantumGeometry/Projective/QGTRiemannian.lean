@@ -2,8 +2,6 @@ import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.Projective
 import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Geometry.Manifold.ChartedSpace
 
 /-!
 # QGT Riemannian Metric on Projective Hilbert Space
@@ -109,83 +107,6 @@ theorem fubiniStudyMetric_pos_def_horizontal (ψ : NormalizedState H) (X : EndH)
   exact norm_pos_iff.mpr h₂
 
 /-- 
-The Fubini-Study metric as a Riemannian metric structure.
-
-This provides the Riemannian metric tensor g_μν = g_ψ(∂_μ, ∂_ν) 
-in terms of the QGT real part.
--/
-structure FubiniStudyRiemannianMetric (ψ : NormalizedState H) : Type 0 where
-  /-- The bilinear form g_ψ(X, Y) = Re(Q_ψ(X, Y)) -/
-  bilinear : EndH → EndH → ℝ
-  /-- Symmetry: g(X, Y) = g(Y, X) -/
-  symmetric : ∀ X Y : EndH, bilinear X Y = bilinear Y X
-  /-- Positive definiteness: g(X, X) ≥ 0, with equality iff X = 0 on horizontal subspace -/
-  pos_def : ∀ X : EndH, 0 ≤ bilinear X X
-  /-- Positive definiteness on horizontal subspace -/
-  pos_def_horizontal : ∀ (X : EndH) (hX : ⟪(Classical.arbitrary (NormalizedState H)).vec, X (Classical.arbitrary (NormalizedState H)).vec⟫_ℂ = 0), X ≠ 0 → 0 < bilinear X X
-  /-- Agreement with QGT real part -/
-  agrees_with_QGT : ∀ X Y : EndH, bilinear X Y = (QGT (Classical.arbitrary (NormalizedState H)) X Y).re
-
-/-- 
-THEOREM: The Fubini-Study metric from QGT real part satisfies Riemannian metric axioms.
-
-The bilinear form g_ψ(X, Y) = Re(Q_ψ(X, Y)) defines a Riemannian metric 
-on the projective Hilbert space P(H).
--/
-theorem fubiniStudy_is_Riemannian (ψ : NormalizedState H) :
-    ∃ (m : FubiniStudyRiemannianMetric ψ), True := by
-  use {
-    bilinear := fun X Y => fubiniStudyMetric ψ X Y,
-    symmetric := by
-      intro X Y
-      have h₁ : (QGT (Classical.arbitrary (NormalizedState H)) X Y).re = (QGT (Classical.arbitrary (NormalizedState H)) Y X).re := by
-        have h₁ : QGT (Classical.arbitrary (NormalizedState H)) X Y = (QGT (Classical.arbitrary (NormalizedState H)) Y X)† := by
-          dsimp only [QGT]
-          simp [inner_conj_symm, Complex.ext_iff, starRingEnd_apply, mul_comm]
-          <;>
-          ring_nf <;>
-          simp_all [Complex.ext_iff, starRingEnd_apply, inner_conj_symm]
-          <;>
-          norm_num <;>
-          aesop
-        rw [h₁]
-        simp [Complex.ext_iff, starRingEnd_apply, Complex.normSq]
-        <;>
-        ring_nf <;>
-        simp_all [Complex.ext_iff, starRingEnd_apply]
-        <;>
-        norm_num <;>
-        aesop
-      simpa [fubiniStudyMetric] using h₁,
-    pos_def := by
-      intro X
-      have h : (QGT (Classical.arbitrary (NormalizedState H)) X X).re = ‖projOrth (Classical.arbitrary (NormalizedState H)) X‖ ^ 2 := by
-        have h₁ : fubiniStudyMetric (Classical.arbitrary (NormalizedState H)) X X = ‖projOrth (Classical.arbitrary (NormalizedState H)) X‖ ^ 2 := by
-          rw [fubiniStudyMetric_self_eq_normSq]
-        simpa [fubiniStudyMetric] using h₁
-      rw [h]
-      positivity
-    pos_def_horizontal := by
-      intro X hX hX_ne
-      have h₁ : 0 < fubiniStudyMetric (Classical.arbitrary (NormalizedState H)) X X := by
-        have h₂ : fubiniStudyMetric (Classical.arbitrary (NormalizedState H)) X X = ‖projOrth (Classical.arbitrary (NormalizedState H)) X‖ ^ 2 := by
-          rw [fubiniStudyMetric_self_eq_normSq]
-        rw [h₂]
-        have h₃ : projOrth (Classical.arbitrary (NormalizedState H)) X ≠ 0 := by
-          intro h
-          have h₂ : X ≠ 0 := by
-            intro hX
-            simp_all [projOrth]
-            <;> aesop
-          exact h₂
-        exact norm_pos_iff.mpr h₃
-      exact h₁,
-    agrees_with_QGT := by
-      intro X Y
-      simp [fubiniStudyMetric]
-  }
-
-/-- 
 The Riemannian metric tensor in coordinates.
 
 For a coordinate chart on P(H), the metric tensor components are:
@@ -202,8 +123,8 @@ g_μν = g_νμ
 theorem metricTensor_symmetric (ψ : NormalizedState H) (basis : Fin n → (H →L[ℂ] H)) (μ ν : Fin n) :
     metricTensorComponents ψ basis μ ν = metricTensorComponents ψ basis ν μ := by
   simp [metricTensorComponents]
-  have h₁ : (QGT (Classical.arbitrary (NormalizedState H)) (basis μ) (basis ν)).re = (QGT (Classical.arbitrary (NormalizedState H)) (basis ν) (basis μ)).re := by
-    have h₁ : QGT (Classical.arbitrary (NormalizedState H)) (basis μ) (basis ν) = (QGT (Classical.arbitrary (NormalizedState H)) (basis ν) (basis μ))† := by
+  have h₁ : (QGT ψ (basis μ) (basis ν)).re = (QGT ψ (basis ν) (basis μ)).re := by
+    have h₁ : QGT ψ (basis μ) (basis ν) = (QGT ψ (basis ν) (basis μ))† := by
       dsimp only [QGT]
       simp [inner_conj_symm, Complex.ext_iff, starRingEnd_apply, mul_comm]
       <;>

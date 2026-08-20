@@ -1,0 +1,87 @@
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
+noncomputable section
+
+open Matrix
+open BigOperators
+
+namespace InfoGeometry.Modular.KMS
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {R : Type*} [CommRing R]
+
+local notation "Mat" => Matrix ι ι R
+
+/-- The Linear Expectation Functional of a Density Matrix ρ: ω_ρ(A) = Tr(ρ * A). -/
+def expectation (ρ A : Mat) : R :=
+  Matrix.trace (ρ * A)
+
+/-- Normalization of the trace functional: ω_ρ(1) = Tr(ρ). -/
+@[simp]
+theorem expectation_one (ρ : Mat) : expectation ρ 1 = Matrix.trace ρ := by
+  dsimp [expectation]
+  rw [mul_one]
+
+/-- Linearity: ω_ρ(A + B) = ω_ρ(A) + ω_ρ(B). -/
+theorem expectation_add (ρ A B : Mat) :
+    expectation ρ (A + B) = expectation ρ A + expectation ρ B := by
+  dsimp [expectation]
+  rw [mul_add, Matrix.trace_add]
+
+/-- The Modular Automorphism: σ_ρ(B) = ρ * B * ρ⁻¹ for an invertible density matrix ρ. -/
+def modularAutomorphism (ρ ρ_inv B : Mat) : Mat :=
+  ρ * B * ρ_inv
+
+/--
+  MASTER THEOREM: The Finite KMS Modular Condition:
+  ω_ρ(A * σ_ρ(B)) = ω_ρ(B * A)
+  for any density matrix ρ and invertible element ρ with ρ_inv * ρ = 1.
+-/
+theorem kms_modular_condition (ρ ρ_inv A B : Mat)
+    (h_left : ρ_inv * ρ = 1) :
+    expectation ρ (A * modularAutomorphism ρ ρ_inv B) = expectation ρ (B * A) := by
+  dsimp [expectation, modularAutomorphism]
+  calc
+    Matrix.trace (ρ * (A * (ρ * B * ρ_inv)))
+      = Matrix.trace ((ρ * A * ρ * B) * ρ_inv) := by
+        simp only [mul_assoc]
+    _ = Matrix.trace (ρ_inv * (ρ * A * ρ * B)) := by
+        rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace ((ρ_inv * ρ) * (A * ρ * B)) := by
+        simp only [mul_assoc]
+    _ = Matrix.trace (1 * (A * ρ * B)) := by rw [h_left]
+    _ = Matrix.trace (A * (ρ * B)) := by simp only [one_mul, mul_assoc]
+    _ = Matrix.trace ((ρ * B) * A) := by
+        rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace (ρ * (B * A)) := by simp only [mul_assoc]
+
+/-- THEOREM: Stationarity of the KMS state under its own Modular Flow:
+    ω_ρ(σ_ρ(A)) = ω_ρ(A). -/
+theorem kms_state_stationary (ρ ρ_inv A : Mat)
+    (h_left : ρ_inv * ρ = 1) :
+    expectation ρ (modularAutomorphism ρ ρ_inv A) = expectation ρ A := by
+  have h := kms_modular_condition ρ ρ_inv 1 A h_left
+  rw [one_mul, mul_one] at h
+  exact h
+
+/-- THEOREM: Invariance under Commuting Symmetries:
+    If [B, ρ] = 0, then σ_ρ(B) = B. -/
+theorem modular_fixed_point_of_commute (ρ ρ_inv B : Mat)
+    (h_right : ρ * ρ_inv = 1)
+    (h_comm : B * ρ = ρ * B) :
+    modularAutomorphism ρ ρ_inv B = B := by
+  dsimp [modularAutomorphism]
+  calc ρ * B * ρ_inv
+    _ = (ρ * B) * ρ_inv := by rw [mul_assoc]
+    _ = (B * ρ) * ρ_inv := by rw [h_comm]
+    _ = B * (ρ * ρ_inv) := by rw [mul_assoc]
+    _ = B * 1 := by rw [h_right]
+    _ = B := by rw [mul_one]
+
+end InfoGeometry.Modular.KMS

@@ -246,6 +246,21 @@ theorem fisher_pos_def_of_separating
       exact mul_pos hw_pos hsq_pos
   exact Finset.sum_pos' h_nonneg h_exists_pos
 
+theorem massieu_fisher_classical_master
+    (D : CartanSouriauDatum State) (beta v : Fin 2 → ℝ) (i : Fin 2)
+    (hv : v ≠ 0)
+    (hseparates : ∀ w : Fin 2 → ℝ, w ≠ 0 →
+      ∃ x y : State, (∑ j : Fin 2, w j * (D.momentMap x j - D.momentMap y j)) ≠ 0) :
+    (deriv (fun t => deriv (fun t' => souriauMassieu D (βSlice beta i t')) t) (beta i) =
+      chargeCovariance D beta i i) ∧
+    (0 ≤ deriv (fun t => deriv (fun t' => souriauMassieu D (βSlice beta i t')) t) (beta i)) ∧
+    (0 ≤ ∑ j : Fin 2, ∑ k : Fin 2, v j * chargeCovariance D beta j k * v k) ∧
+    (0 < ∑ j : Fin 2, ∑ k : Fin 2, v j * chargeCovariance D beta j k * v k) := by
+  exact ⟨hessian_diag_eq_cov D beta i,
+    hessian_diag_pos_semidef D beta i,
+    fisher_pos_semidef D beta v,
+    fisher_pos_def_of_separating D beta v hv hseparates⟩
+
 end InfoGeometry.Canonical.MassieuFisherClassical
 
 end noncomputable section

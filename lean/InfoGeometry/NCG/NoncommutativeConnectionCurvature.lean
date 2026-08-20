@@ -19,7 +19,7 @@ This module formalizes:
 6. Noncommutative Maurer-Cartan Flatness Theorem: `D(u) D(u⁻¹) + θ² = 0`.
 7. Noncommutative Gauge Equivariance: `∇_{Aᵘ}(Xᵘ) = (∇_A(X))ᵘ` decomposed into explicit helper lemmas.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section
@@ -209,14 +209,11 @@ theorem gaugeTransform_commutator (u : Aˣ) (X Y : A) :
 theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
     gaugeTransform u (X * Y) = gaugeTransform u X * gaugeTransform u Y := by
   dsimp [gaugeTransform]
+  rw [← mul_assoc]
+  rw [← mul_assoc, ← mul_assoc]
   have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
-  calc
-    gaugeTransform u X * gaugeTransform u Y = ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * Y * (u⁻¹ : Aˣ).val) := rfl
-    _ = ((u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y * (u⁻¹ : Aˣ).val) := by
-      simp only [mul_assoc, hu, one_mul]
-    _ = (u : A) * X * Y * (u⁻¹ : Aˣ).val := by
-      simp only [mul_assoc]
-    _ = gaugeTransform u (X * Y) := rfl
+  rw [hu]
+  simp
 
 /-- Gauge conjugation is linear over the declared scalar algebra. -/
 theorem gaugeTransform_smul (u : Aˣ) (r : R) (X : A) :

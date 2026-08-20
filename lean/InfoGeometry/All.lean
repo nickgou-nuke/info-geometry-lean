@@ -7387,3 +7387,5 @@ import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.NCG.DualExponentialTrifoldBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
+import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
+import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport

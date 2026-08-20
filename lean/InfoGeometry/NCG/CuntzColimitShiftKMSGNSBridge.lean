@@ -18,7 +18,7 @@ This module formalizes the grand noncommutative operator algebra unification:
 5. The Modular KMS state functional $\phi$ satisfying shift invariance $\phi(\Phi(X)) = \phi(X)$ and the generator KMS scaling.
 6. The GNS (Gel'fand-Naimark-Segal) sesquilinear inner product and GNS left-regular action.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

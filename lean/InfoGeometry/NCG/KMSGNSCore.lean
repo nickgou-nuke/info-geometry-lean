@@ -28,7 +28,7 @@ and the Gel'fand-Naimark-Segal (GNS) construction on non-commutative $*$-algebra
    If an endomorphism `Φ : A → A` preserves the state (`φ(Φ(x)) = φ(x)`),
    the GNS inner product is isometric: `⟨Φ(a), Φ(b)⟩_φ = ⟨a, b⟩_φ`.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

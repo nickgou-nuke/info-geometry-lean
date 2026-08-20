@@ -18,7 +18,7 @@ This module establishes the full finite-dimensional operator-algebraic theory of
 5. 🏆 The Modular Centralizer Characterization:
    `Δ(X) = X ↔ [ρ, X] = 0 ↔ [K, X] = 0`.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

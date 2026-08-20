@@ -498,6 +498,41 @@ theorem zornFlowMulEquiv_preserves_central
   rw [zornFlowMulEquiv_apply_neg] at hcomm
   exact hcomm
 
+theorem zornFlowMulEquiv_isCentral_iff
+    (D : canonicalZornDerivations)
+    (X : CZ)
+    (t : ℝ) :
+    (∀ Y : CZ,
+      zornFlowMulEquiv D t X * Y = Y * zornFlowMulEquiv D t X) ↔
+      ∀ Y : CZ, X * Y = Y * X := by
+  constructor
+  · intro h Y
+    have hcomm := h (zornFlowMulEquiv D t Y)
+    exact (zornFlowMulEquiv_commute_iff D X Y t).mp hcomm
+  · intro h
+    exact zornFlowMulEquiv_preserves_central D X h t
+
+theorem zornFlowMulEquiv_map_idempotent
+    (D : canonicalZornDerivations)
+    (t : ℝ)
+    {X : CZ}
+    (hX : X * X = X) :
+    zornFlowMulEquiv D t X * zornFlowMulEquiv D t X =
+      zornFlowMulEquiv D t X := by
+  rw [← map_mul (zornFlowMulEquiv D t), hX]
+
+theorem zornFlowMulEquiv_map_two_sided_orthogonal
+    (D : canonicalZornDerivations)
+    (t : ℝ)
+    {X Y : CZ}
+    (hXY : X * Y = 0)
+    (hYX : Y * X = 0) :
+    zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y = 0 ∧
+      zornFlowMulEquiv D t Y * zornFlowMulEquiv D t X = 0 := by
+  constructor
+  · rw [← map_mul (zornFlowMulEquiv D t), hXY, map_zero]
+  · rw [← map_mul (zornFlowMulEquiv D t), hYX, map_zero]
+
 noncomputable def zornDerivationExpAutomorphism
     (D : canonicalZornDerivations) : CZ ≃* CZ :=
   zornFlowMulEquiv D 1

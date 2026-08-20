@@ -90,12 +90,7 @@ theorem isSO55Levi_bracket {M N : Mat10} (hM : IsSO55LeviMatrix M) (hN : IsSO55L
   abel
 
 /-- The native $\mathfrak{so}(5,5)$ Levi matrix Lie subalgebra on Fin 10. -/
-def so55LeviLieSubalgebra : LieSubalgebra ℝ Mat10 where
-  carrier := { M : Mat10 | IsSO55LeviMatrix M }
-  add_mem' {M N} hM hN := isSO55Levi_add hM hN
-  zero_mem' := isSO55Levi_zero
-  smul_mem' c {M} hM := isSO55Levi_smul c hM
-  lie_mem' {M N} hM hN := isSO55Levi_bracket hM hN
+abbrev so55LeviLieSubalgebra : LieSubalgebra ℝ Mat10 := so55LieSubalgebra
 
 theorem so44ToSO55_apply (M : Mat8) (i j : Fin 10) :
     so44ToSO55 M i j = so44ToSO55Sum M (fin10Equiv i) (fin10Equiv j) := by

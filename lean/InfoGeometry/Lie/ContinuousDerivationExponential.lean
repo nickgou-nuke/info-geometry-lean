@@ -582,6 +582,19 @@ theorem flowLinearEquiv_map_mul
       mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) := by
   exact exponential_derivation_is_automorphism mul D hD t x y
 
+/-- The analytic exponential transports the noncommutative commutator. -/
+theorem flowLinearEquiv_map_commutator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    flowLinearEquiv D t (mul x y - mul y x) =
+      mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) -
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) := by
+  rw [map_sub, flowLinearEquiv_map_mul mul D hD,
+    flowLinearEquiv_map_mul mul D hD]
+
 /-!
 ## One-parameter-group laws
 -/

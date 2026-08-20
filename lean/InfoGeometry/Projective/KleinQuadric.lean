@@ -101,159 +101,104 @@ def add (P Q : Plucker6 R) : Plucker6 R where
   p23 := P.p23 + Q.p23
 
 /--
-Quadratic homogeneity of the Klein form.
+The polar bilinear form associated to the Klein quadric:
 
-  Q(λP) = λ² Q(P).
+  B(P, Q) = p01 q23 + q01 p23 - (p02 q13 + q02 p13) + (p03 q12 + q03 p12).
 -/
+def kleinPolar (P Q : Plucker6 R) : R :=
+  P.p01 * Q.p23 + Q.p01 * P.p23 -
+    (P.p02 * Q.p13 + Q.p02 * P.p13) +
+    (P.p03 * Q.p12 + Q.p03 * P.p12)
+
+/-- Klein polarization identity: Q(P + Q) = Q(P) + Q(Q) + B(P, Q). -/
+theorem kleinQ_add (P Q : Plucker6 R) :
+    kleinQ (add P Q) = kleinQ P + kleinQ Q + kleinPolar P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold kleinQ add kleinPolar
+  ring
+
+/-- The polar bilinear form is symmetric. -/
+theorem kleinPolar_comm (P Q : Plucker6 R) :
+    kleinPolar P Q = kleinPolar Q P := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold kleinPolar
+  ring
+
+/-- The diagonal of the polar form is `2 * Q(P)`. -/
+theorem kleinPolar_self (P : Plucker6 R) :
+    kleinPolar P P = 2 * kleinQ P := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  unfold kleinPolar kleinQ
+  ring
+
+/-- Polar incidence: two Plücker points are conjugate with respect to the quadric. -/
+def Incident (P Q : Plucker6 R) : Prop :=
+  kleinPolar P Q = 0
+
+/-- Scaling Plücker coordinates scales the Klein quadratic form by `l²`. -/
 theorem kleinQ_scale (l : R) (P : Plucker6 R) :
     kleinQ (scale l P) = l ^ 2 * kleinQ P := by
   rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
   unfold kleinQ scale
   ring
 
-/--
-The Klein quadric equation is preserved by arbitrary scalar scaling.
--/
-theorem isKlein_scale_of
-    (l : R) (P : Plucker6 R)
-    (hP : IsKlein P) :
-    IsKlein (scale l P) := by
-  unfold IsKlein at *
-  rw [kleinQ_scale l P, hP]
+/-- Scaling the first argument scales the polar form by `l`. -/
+theorem kleinPolar_scale_left (l : R) (P Q : Plucker6 R) :
+    kleinPolar (scale l P) Q = l * kleinPolar P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold kleinPolar scale
+  ring
+
+/-- Scaling the second argument scales the polar form by `m`. -/
+theorem kleinPolar_scale_right (m : R) (P Q : Plucker6 R) :
+    kleinPolar P (scale m Q) = m * kleinPolar P Q := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
+  unfold kleinPolar scale
   ring
 
 /--
-For nonzero scalars over a ring with no zero divisors, the Klein equation is
-equivalent after scaling.
+The Klein quadric condition is projectively well-defined.
+
+Scaling by a nonzero scalar does not change whether a Plücker vector lies on the Klein quadric.
 -/
 theorem isKlein_scale_iff
     [NoZeroDivisors R]
-    (l : R) (hl : l ≠ 0)
-    (P : Plucker6 R) :
+    (l : R) (hl : l ≠ 0) (P : Plucker6 R) :
     IsKlein (scale l P) ↔ IsKlein P := by
+  unfold IsKlein
+  rw [kleinQ_scale]
   constructor
   · intro h
-    unfold IsKlein at *
-    rw [kleinQ_scale l P] at h
     have hl2 : l ^ 2 ≠ 0 := pow_ne_zero 2 hl
-    exact (mul_eq_zero.mp h).resolve_left hl2
-  · intro h
-    exact isKlein_scale_of l P h
-
-/--
-The polar form associated to the Klein quadratic form:
-
-  B(P,Q) = Q(P+Q) - Q(P) - Q(Q).
--/
-def polar (P Q : Plucker6 R) : R :=
-  kleinQ (add P Q) - kleinQ P - kleinQ Q
-
-/--
-Expanded coordinate formula for the Klein polar form.
--/
-theorem polar_formula (P Q : Plucker6 R) :
-    polar P Q =
-      P.p01 * Q.p23 + Q.p01 * P.p23
-      - (P.p02 * Q.p13 + Q.p02 * P.p13)
-      + (P.p03 * Q.p12 + Q.p03 * P.p12) := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
-  unfold polar kleinQ add
-  ring
-
-/--
-Left homogeneity of the Klein polar form.
--/
-theorem polar_scale_left (l : R) (P Q : Plucker6 R) :
-    polar (scale l P) Q = l * polar P Q := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
-  unfold polar kleinQ add scale
-  ring
-
-/--
-Right homogeneity of the Klein polar form.
--/
-theorem polar_scale_right (l : R) (P Q : Plucker6 R) :
-    polar P (scale l Q) = l * polar P Q := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases Q with ⟨q01, q02, q03, q12, q13, q23⟩
-  unfold polar kleinQ add scale
-  ring
-
-/--
-Directional expansion of the Klein quadric:
-  Q(P + τX) = Q(P) + τ B(P,X) + τ² Q(X).
--/
-theorem kleinQ_add_scale (τ : R) (P X : Plucker6 R) :
-    kleinQ (add P (scale τ X)) = kleinQ P + τ * polar P X + τ ^ 2 * kleinQ X := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases X with ⟨x01, x02, x03, x12, x13, x23⟩
-  simp [kleinQ, add, scale, polar]
-  ring
-
-/--
-Euler homogeneous contraction for the Klein quadric:
-  B(P,P) = 2 Q(P).
--/
-theorem polar_self (P : Plucker6 R) :
-    polar P P = 2 * kleinQ P := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  simp [polar, kleinQ, add]
-  ring
-
-/--
-Polar incidence associated to the Klein quadric.
--/
-def Incident (P Q : Plucker6 R) : Prop :=
-  polar P Q = 0
-
-/--
-Left projective scaling preserves and reflects Klein polar incidence.
--/
-theorem incident_scale_left_iff
-    [NoZeroDivisors R]
-    (l : R) (hl : l ≠ 0)
-    (P Q : Plucker6 R) :
-    Incident (scale l P) Q ↔ Incident P Q := by
-  unfold Incident
-  rw [polar_scale_left l P Q]
-  constructor
-  · intro h
-    exact (mul_eq_zero.mp h).resolve_left hl
+    rcases mul_eq_zero.mp h with hzero | hq
+    · exact False.elim (hl2 hzero)
+    · exact hq
   · intro h
     rw [h, mul_zero]
 
 /--
-Right projective scaling preserves and reflects Klein polar incidence.
--/
-theorem incident_scale_right_iff
-    [NoZeroDivisors R]
-    (l : R) (hl : l ≠ 0)
-    (P Q : Plucker6 R) :
-    Incident P (scale l Q) ↔ Incident P Q := by
-  unfold Incident
-  rw [polar_scale_right l P Q]
-  constructor
-  · intro h
-    exact (mul_eq_zero.mp h).resolve_left hl
-  · intro h
-    rw [h, mul_zero]
-
-/--
-Independent projective scaling preserves and reflects Klein polar incidence.
+Projective scaling preserves and reflects Klein polar incidence.
 -/
 theorem incident_scale_iff
     [NoZeroDivisors R]
     (l m : R) (hl : l ≠ 0) (hm : m ≠ 0)
     (P Q : Plucker6 R) :
     Incident (scale l P) (scale m Q) ↔ Incident P Q := by
-  calc
-    Incident (scale l P) (scale m Q)
-        ↔ Incident P (scale m Q) :=
-          incident_scale_left_iff l hl P (scale m Q)
-    _   ↔ Incident P Q :=
-          incident_scale_right_iff m hm P Q
+  unfold Incident
+  rw [kleinPolar_scale_left, kleinPolar_scale_right]
+  constructor
+  · intro h
+    rcases mul_eq_zero.mp h with hl0 | hrest
+    · exact False.elim (hl hl0)
+    · rcases mul_eq_zero.mp hrest with hm0 | hpolar
+      · exact False.elim (hm hm0)
+      · exact hpolar
+  · intro h
+    rw [h, mul_zero, mul_zero]
 
 end Plucker6
 
@@ -295,8 +240,6 @@ theorem wedge_swap (u v : Vec4 R) :
 
 end Vec4
 
-end InfoGeometry.Projective.KleinQuadric
-
 /-!
 =============================================================================
 Penrose Twistors & The Grassmannian Gr(2, 4) Embedding
@@ -323,6 +266,8 @@ def twistorConjugation {R : Type*} (Z : Twistor R) : Twistor R where
   THEOREM: Grassmannian Gr(2, 4) Lines are Null Rays on the Klein Quadric.
   For any two twistors Z₁, Z₂, their wedge product lies identically on the Klein Quadric.
 -/
-theorem gr24_twistor_line_on_klein_quadric (Z₁ Z₂ : Twistor R) :
+theorem gr24_twistor_line_on_klein_quadric {R : Type*} [CommRing R] (Z₁ Z₂ : Twistor R) :
     Plucker6.IsKlein (Vec4.wedge Z₁ Z₂) :=
   Vec4.wedge_isKlein Z₁ Z₂
+
+end InfoGeometry.Projective.KleinQuadric

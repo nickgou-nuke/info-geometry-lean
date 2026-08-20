@@ -7391,3 +7391,4 @@ import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Information.FisherRaoMadelungIsometry
 import InfoGeometry.Algebra.ExplogRN
+import InfoGeometry.Probability.FisherRaoMadelungIsometry

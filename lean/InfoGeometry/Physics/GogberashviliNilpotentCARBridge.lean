@@ -325,10 +325,17 @@ theorem full_car_packet
 
 /-! ## Compatibility aliases for the original frozen API -/
 
-abbrev D_plus := DPlus
-abbrev D_minus := DMinus
-abbrev G_plus := GPlus
-abbrev G_minus := GMinus
+@[inline] abbrev D_plus {K A : Type*} [Field K] [Ring A] [Algebra K A] (J : A) : A :=
+  DPlus (K := K) J
+
+@[inline] abbrev D_minus {K A : Type*} [Field K] [Ring A] [Algebra K A] (J : A) : A :=
+  DMinus (K := K) J
+
+@[inline] abbrev G_plus {K A : Type*} [Field K] [Ring A] [Algebra K A] (I j : A) : A :=
+  GPlus (K := K) I j
+
+@[inline] abbrev G_minus {K A : Type*} [Field K] [Ring A] [Algebra K A] (I j : A) : A :=
+  GMinus (K := K) I j
 
 theorem D_plus_add_D_minus
     (h2 : (2 : K) ≠ 0) (J : A) :
@@ -428,7 +435,6 @@ theorem schur_scalar_formula
       zornNorm α β u v / β := by
   unfold schurComplement zornNorm
   field_simp [hβ]
-  ring
 
 /-- The Zorn norm reconstructs from the Schur complement and the pivot. -/
 theorem zornNorm_eq_schur_mul_beta
@@ -448,7 +454,6 @@ theorem berezinian_eq_zornNorm_div_sq
   unfold berezinianScalar
   rw [schur_scalar_formula α β u v hβ]
   field_simp [hβ]
-  ring
 
 /-- Scalar Berezinian equals the ordinary determinant divided by the squared
 lower-right block. -/
@@ -483,7 +488,8 @@ theorem scalar_schur_berezinian_packet
 
 /-! ## Compatibility aliases for the original scalar API -/
 
-abbrev zorn_norm := zornNorm
+@[inline] abbrev zorn_norm {F : Type*} [Field F] (α β u v : F) : F :=
+  zornNorm α β u v
 
 theorem berezinian_eq_zorn_norm_div_sq
     (α β u v : F)
@@ -564,15 +570,5 @@ theorem bdg_schur_berezinian_packet
 end BdGSchurBerezinianCompatibility
 
 end InfoGeometry.Algebra
-
-namespace InfoGeometry.Physics
-
-export InfoGeometry.Algebra (
-  GogberashviliNilpotentCARBridge
-  ZornNormSchurScalarSpecialization
-  BdGSchurBerezinianCompatibility
-)
-
-end InfoGeometry.Physics
 
 end noncomputable section

@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
+set_option maxHeartbeats 800000
 
 noncomputable section
 namespace InfoGeometry.Lie.CanonicalZornDerivationDimension

@@ -159,4 +159,48 @@ theorem adK_bracket (K₁ K₂ X : A) :
         abel
     _ = adK (adK K₁ K₂) X := by rfl
 
+
+/-!
+=============================================================================
+PART 4: Phenomenological Corollaries (The Dictionary of Reality)
+=============================================================================
+-/
+
+/-- 
+  THEOREM 5: Semidirect Lie Action Equality
+  The derivation commutator [D, modularDerivation K] is strictly equal
+  to modularDerivation (D K).
+-/
+theorem commutator_eq_modularDerivation (D : Derivation A) (K : A) :
+    Derivation.derivationCommutator D (modularDerivation K) = modularDerivation (D K) := by
+  ext X
+  exact dual_flow_commutator D K X
+
+/-- 
+  THEOREM 6: Adiabatic Limit (The Stable Vacuum).
+  When the spacetime derivation preserves the state generator D(K) = 0,
+  the spacetime flow and modular thermal flow commute identically:
+    [D, ad_K] = 0
+-/
+theorem adiabatic_commutator_zero (D : Derivation A) (K : A) (h_adiabatic : D K = 0) :
+    Derivation.derivationCommutator D (modularDerivation K) = modularDerivation 0 := by
+  rw [commutator_eq_modularDerivation, h_adiabatic]
+
+/-- 
+  THEOREM 7: Central Projection (The Classical Vacuum).
+  When K is in the center Z(A), its modular derivation is zero,
+  and therefore commutes with all spacetime derivations:
+    K ∈ Z(A) ⟹ [D, ad_K] = 0
+-/
+theorem central_commutator_zero (D : Derivation A) (K : A) (h_center : ∀ X, K * X = X * K) :
+    ∀ X, Derivation.bracket D (modularDerivation K) X = 0 := by
+  intro X
+  have h_ker : modularDerivation K = modularDerivation 0 := by
+    ext Y
+    dsimp [modularDerivation, adK]
+    rw [h_center Y, sub_self, mul_zero, zero_mul, sub_self]
+  rw [h_ker]
+  dsimp [Derivation.bracket, modularDerivation, adK]
+  simp only [mul_zero, zero_mul, sub_self, D.map_zero]
+
 end InfoGeometry.Modular.ExactSequence

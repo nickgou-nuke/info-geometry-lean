@@ -32,6 +32,13 @@ namespace InfoGeometry.MasterRegistry
 open InfoGeometry.EndToEnd
 open InfoGeometry.Modular
 open InfoGeometry.Canonical.CompleteUnifiedBundle
+open InfoGeometry.Algebra.Grothendieck
+open InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
+open InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
+open InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
+open InfoGeometry.Categorical.ZornBraidColimit
+open InfoGeometry.Canonical.PhysicalBdGPairingBridge
+open InfoGeometry.QuantumGeometry.Projective
 
 /-!
 =============================================================================

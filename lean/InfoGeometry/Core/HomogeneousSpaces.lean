@@ -1,15 +1,13 @@
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.GroupTheory.GroupAction.Basic
+import Mathlib.GroupTheory.GroupAction.Quotient
 import InfoGeometry.Core.SymmetricSpaces
 
 /-!
 # Core homogeneous spaces
 
 Owner-first quotient homogeneous-space package:
-- canonical left `G`-action on `G ⧸ H` for any subgroup `H ≤ G`;
-- basepoint `eH`;
+- basepoint `eH` in `G ⧸ H`;
 - exact stabilizer of the basepoint;
-- transitivity / homogeneous-space theorem;
+- transitivity / homogeneous-space theorem for the canonical left action;
 - Cartan fixed-subgroup specialization `G / Fix(θ)`.
 -/
 
@@ -23,69 +21,38 @@ variable {G : Type*} [Group G]
 def quotientBasepoint (H : Subgroup G) : G ⧸ H :=
   QuotientGroup.mk (1 : G)
 
-/-- Left multiplication on `G ⧸ H`. -/
-instance instMulActionQuotientLeftRel (H : Subgroup G) : MulAction G (G ⧸ H) where
-  smul g :=
-    Quotient.map (fun x : G => g * x) <| by
-      intro a b hab
-      apply QuotientGroup.leftRel_apply.mpr
-      simpa [mul_assoc] using (show a⁻¹ * b ∈ H from
-        QuotientGroup.leftRel_apply.mp hab)
-  one_smul := by
-    intro x
-    refine Quotient.inductionOn x ?_
-    intro a
-    rfl
-  mul_smul := by
-    intro g h x
-    refine Quotient.inductionOn x ?_
-    intro a
-    rfl
-
 @[simp] theorem smul_mk (H : Subgroup G) (g x : G) :
-    g • (QuotientGroup.mk x : G ⧸ H) = QuotientGroup.mk (g * x) :=
+    g • (QuotientGroup.mk x : G ⧸ H) = QuotientGroup.mk (g * x) := by
   rfl
 
 @[simp] theorem smul_basepoint (H : Subgroup G) (g : G) :
     g • quotientBasepoint H = (QuotientGroup.mk g : G ⧸ H) := by
-  simp [quotientBasepoint, smul_mk]
+  simp [quotientBasepoint]
 
 /-- The stabilizer of the quotient basepoint is exactly `H`. -/
 theorem stabilizer_quotientBasepoint_eq (H : Subgroup G) :
     MulAction.stabilizer G (quotientBasepoint H) = H := by
-  ext g
-  constructor
-  · intro hg
-    have hEq : (QuotientGroup.mk g : G ⧸ H) = QuotientGroup.mk (1 : G) := by
-      simpa [quotientBasepoint] using hg
-    have hmem : g⁻¹ * (1 : G) ∈ H := QuotientGroup.eq.mp hEq
-    simpa using H.inv_mem hmem
-  · intro hg
-    change g • quotientBasepoint H = quotientBasepoint H
-    have hmem : (g * (1 : G))⁻¹ * (1 : G) ∈ H := by
-      simpa using H.inv_mem hg
-    simpa [quotientBasepoint, smul_mk, mul_assoc] using
-      (QuotientGroup.eq.mpr hmem : (QuotientGroup.mk (g * (1 : G)) : G ⧸ H) = QuotientGroup.mk (1 : G))
+  simp [quotientBasepoint, MulAction.stabilizer_quotient]
 
 /-- Minimal transitivity predicate for a group action. -/
 def IsHomogeneousSpace (G X : Type*) [Group G] [MulAction G X] : Prop :=
   ∀ x y : X, ∃ g : G, g • x = y
 
-/-- The left action of `G` on `G ⧸ H` is transitive. -/
+/-- The canonical left action of `G` on `G ⧸ H` is transitive. -/
 theorem quotient_isHomogeneousSpace (H : Subgroup G) :
     IsHomogeneousSpace G (G ⧸ H) := by
   intro x
-  refine Quotient.inductionOn x ?_
+  refine Quotient.inductionOn' x ?_
   intro a y
-  refine Quotient.inductionOn y ?_
+  refine Quotient.inductionOn' y ?_
   intro b
-  exact ⟨b * a⁻¹, by simp [smul_mk, mul_assoc]⟩
+  refine ⟨b * a⁻¹, ?_⟩
+  simp [mul_assoc]
 
 /-- Every quotient class is reached from the basepoint by left translation. -/
 theorem exists_smul_quotientBasepoint_eq (H : Subgroup G) (x : G ⧸ H) :
     ∃ g : G, g • quotientBasepoint H = x := by
-  simpa [IsHomogeneousSpace] using
-    (quotient_isHomogeneousSpace (G := G) H) (quotientBasepoint H) x
+  exact (quotient_isHomogeneousSpace (G := G) H) (quotientBasepoint H) x
 
 @[simp] theorem orbit_quotientBasepoint_univ (H : Subgroup G) :
     MulAction.orbit G (quotientBasepoint H) = Set.univ := by
@@ -94,8 +61,8 @@ theorem exists_smul_quotientBasepoint_eq (H : Subgroup G) (x : G ⧸ H) :
   · intro _
     simp
   · intro _
-    rcases exists_smul_quotientBasepoint_eq (G := G) H x with ⟨g, rfl⟩
-    exact ⟨g, rfl⟩
+    rcases exists_smul_quotientBasepoint_eq (G := G) H x with ⟨g, hg⟩
+    exact ⟨g, hg⟩
 
 end QuotientAction
 

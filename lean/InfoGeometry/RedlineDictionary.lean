@@ -25,10 +25,6 @@ open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.SouriauModularBregmanOperator
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
-import InfoGeometry.Analysis.LieExponentialTraceDeterminant
-import InfoGeometry.Analysis.MatrixPathDeformationEntropy
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
-import InfoGeometry.Volume.ZeroJacobianWeylBoundary
 
 /-!
 =============================================================================

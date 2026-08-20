@@ -326,8 +326,10 @@ def IsRingDerivation (D : A →ₗ[ℤ] A) : Prop :=
 theorem IsRingDerivation.map_one (D : A →ₗ[ℤ] A)
     (hD : IsRingDerivation D) : D 1 = 0 := by
   have h := hD 1 1
-  rw [mul_one, one_mul] at h
-  linear_combination -h
+  have hone : (1 : A) * 1 = 1 := mul_one 1
+  rw [hone, mul_one, one_mul] at h
+  have h2 : (D 1 + D 1) - D 1 = D 1 - D 1 := congrArg (fun x => x - D 1) h.symm
+  simpa using h2
 
 @[simp] theorem adK_isRingDerivation (K : A) : IsRingDerivation (adK K) := by
   intro X Y
@@ -404,9 +406,11 @@ theorem dlogRNNoncomm_inv (D : A →ₗ[ℤ] A) (hD : IsRingDerivation D)
   have hzero : D Δ * inv_Δ + Δ * D inv_Δ = 0 := by
     have h := hD Δ inv_Δ
     rw [hInv, IsRingDerivation.map_one D hD] at h
-    exact h
+    exact h.symm
   have hsolve : Δ * D inv_Δ = -(D Δ * inv_Δ) := by
-    exact eq_neg_of_add_eq_zero_left hzero
+    have h_add : Δ * D inv_Δ + D Δ * inv_Δ = 0 := by
+      rw [add_comm, hzero]
+    exact eq_neg_of_add_eq_zero_left h_add
   dsimp [dlogRNNoncomm]
   calc
     Δ * D inv_Δ = -(D Δ * inv_Δ) := hsolve

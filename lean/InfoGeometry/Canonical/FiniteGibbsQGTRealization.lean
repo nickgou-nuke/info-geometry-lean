@@ -8,6 +8,8 @@ import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 
+set_option linter.unusedSectionVars false
+
 noncomputable section
 
 open scoped BigOperators
@@ -250,31 +252,31 @@ theorem centeredGibbsObservable_qgt_real_eq_fisherSouriauMatrix
     simp_rw [hterm]
     unfold fisherSouriauMatrix
     norm_cast
-    have hi0 :
-        @inner ℂ (GibbsHilbert State) _
-            (centeredGibbsObservable D beta i (gibbsVector D beta))
-            (gibbsVector D beta) = 0 := by
-      rw [← inner_conj_symm]
-      rw [hi]
-      simp
-    have hj0 :
-        @inner ℂ (GibbsHilbert State) _
-            (centeredGibbsObservable D beta j (gibbsVector D beta))
-            (gibbsVector D beta) = 0 := by
-      rw [← inner_conj_symm]
-      rw [hj]
-      simp
-    change
-      (@inner ℂ (GibbsHilbert State) _
+  have hi0 :
+      @inner ℂ (GibbsHilbert State) _
           (centeredGibbsObservable D beta i (gibbsVector D beta))
-          (centeredGibbsObservable D beta j (gibbsVector D beta)) -
-        @inner ℂ (GibbsHilbert State) _
-          (centeredGibbsObservable D beta i (gibbsVector D beta))
-          (gibbsVector D beta) *
-        @inner ℂ (GibbsHilbert State) _
-          (gibbsVector D beta)
-          (centeredGibbsObservable D beta j (gibbsVector D beta))).re = _
-    rw [hih, hi0, hj]
-    norm_num
+          (gibbsVector D beta) = 0 := by
+    rw [← inner_conj_symm]
+    rw [hi]
+    simp
+  have hj0 :
+      @inner ℂ (GibbsHilbert State) _
+          (centeredGibbsObservable D beta j (gibbsVector D beta))
+          (gibbsVector D beta) = 0 := by
+    rw [← inner_conj_symm]
+    rw [hj]
+    simp
+  change
+    (@inner ℂ (GibbsHilbert State) _
+        (centeredGibbsObservable D beta i (gibbsVector D beta))
+        (centeredGibbsObservable D beta j (gibbsVector D beta)) -
+      @inner ℂ (GibbsHilbert State) _
+        (centeredGibbsObservable D beta i (gibbsVector D beta))
+        (gibbsVector D beta) *
+      @inner ℂ (GibbsHilbert State) _
+        (gibbsVector D beta)
+        (centeredGibbsObservable D beta j (gibbsVector D beta))).re = _
+  rw [hih, hi0, hj]
+  norm_num
 
 end InfoGeometry.Canonical.FiniteGibbsQGTRealization

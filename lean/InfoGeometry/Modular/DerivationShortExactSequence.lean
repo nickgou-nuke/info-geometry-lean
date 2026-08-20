@@ -5,6 +5,7 @@ import Mathlib.Tactic
 
 import InfoGeometry.EndToEnd
 import InfoGeometry.Modular.DualFlowLieAlgebraBridge
+import InfoGeometry.Modular.SemidirectProductLieAlgebra
 
 noncomputable section
 
@@ -77,7 +78,7 @@ theorem derivation_short_exact_sequence_summary (D : Derivation A) (K X : A) :
   exact ⟨ker_adK_eq_center K, master_dual_flow_commutator D K X, inn_is_lie_ideal D K⟩
 
 /-!
-### Bundled Native Mathlib Short Exact Sequence
+### Bundled Native Mathlib Short Exact Sequence & Semidirect Product
 -/
 variable {R : Type*} [CommRing R] [Algebra R A]
 
@@ -96,5 +97,11 @@ theorem native_mathlib_derivation_short_exact_sequence :
     Function.Surjective (toOut R A) ∧
     ((LieDerivation.ad R A).ker = LieAlgebra.center R A) :=
   FullLieAlgebra.derivation_short_exact_sequence R A
+
+/-- The fully instantiated native Semidirect Product Lie Algebra Out(A) ⋉ Inn(A). -/
+abbrev SemidirectDerivationLieAlgebra (L M : Type*) [LieRing L] [LieAlgebra R L]
+    [LieRing M] [LieAlgebra R M] [LieRingModule L M] [LieModule R L M]
+    [InfoGeometry.Modular.Semidirect.LieDerivationAction L M] :=
+  InfoGeometry.Modular.Semidirect.SemidirectProduct L M
 
 end InfoGeometry.Modular.DerivationShortExactSequence

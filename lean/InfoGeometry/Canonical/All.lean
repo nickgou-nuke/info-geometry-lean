@@ -3346,6 +3346,8 @@ import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
 import InfoGeometry.Canonical.PhysicalBdGPairingBridgeAntiLinear
 import InfoGeometry.Canonical.ZornPeirceExponentialTransport
 import InfoGeometry.Canonical.BdGSchurBerezinianCompatibility
+import InfoGeometry.Canonical.FiniteScalarLogLaplace
+import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 
 namespace InfoGeometry
 

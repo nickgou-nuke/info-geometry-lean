@@ -31,6 +31,39 @@ structure ExpectationCoordinateData (State Observable : Type*) where
   coordinate : State → Observable → PositiveRay (Fin n)
   fiber : PositiveRay (Fin n) → Type*
 
+/-! A pointwise-positive observable readout is enough to construct a projective
+coordinate.  Positivity is explicit because an arbitrary operator expectation
+need not define a point of the positive cone. -/
+structure PositiveObservableReadout (State Observable : Type*) where
+  expectation : State → Observable → Fin n → ℝ
+  positive : ∀ ψ X i, 0 < expectation ψ X i
+
+namespace PositiveObservableReadout
+
+variable {State Observable : Type*}
+  (R : PositiveObservableReadout (n := n) State Observable)
+
+noncomputable def toExpectationCoordinateData
+    (fiber : PositiveRay (Fin n) → Type*) :
+    ExpectationCoordinateData (n := n) State Observable where
+  coordinate := fun ψ X =>
+    Quotient.mk _
+      ({ mass := R.expectation ψ X
+         pos := fun i => R.positive ψ X i } :
+        InfoGeometry.PositiveMeasure (Fin n) ℝ)
+  fiber := fiber
+
+@[simp] theorem toExpectationCoordinateData_coordinate
+    (fiber : PositiveRay (Fin n) → Type*) (ψ : State) (X : Observable) :
+    (R.toExpectationCoordinateData fiber).coordinate ψ X =
+      Quotient.mk _
+        ({ mass := R.expectation ψ X
+           pos := fun i => R.positive ψ X i } :
+          InfoGeometry.PositiveMeasure (Fin n) ℝ) :=
+  rfl
+
+end PositiveObservableReadout
+
 namespace ExpectationCoordinateData
 
 variable {State Observable : Type*}
@@ -41,6 +74,52 @@ def basePoint (ψ : State) (X : Observable) : PositiveRay (Fin n) :=
 
 def fiberAt (ψ : State) (X : Observable) : Type* :=
   E.fiber (E.basePoint ψ X)
+
+/-! The relative potential pulled back along two observable coordinates of one
+state.  The state is part of the pullback data; no identification of the
+state space with a smooth manifold is required. -/
+noncomputable def transitionPotential
+    (ψ : State) (X₀ X₁ : Observable) : ℝ :=
+  anchoredPotential (n := n) (E.basePoint ψ X₀) (E.basePoint ψ X₁)
+
+noncomputable def potentialField
+    (base : PositiveRay (Fin n)) (ψ : State) (X : Observable) : ℝ :=
+  anchoredPotential (n := n) base (E.basePoint ψ X)
+
+theorem transitionPotential_self (ψ : State) (X : Observable) :
+    E.transitionPotential ψ X X = 0 := by
+  simpa [transitionPotential, anchoredPotential] using
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential_self
+      (n := n) (E.basePoint ψ X)
+
+theorem transitionPotential_antisymm
+    (ψ : State) (X₀ X₁ : Observable) :
+    E.transitionPotential ψ X₁ X₀ = -E.transitionPotential ψ X₀ X₁ := by
+  simpa [transitionPotential, anchoredPotential] using
+    InfoGeometry.Canonical.RelativeModularPotentialExactCocycle.relativeModularVolumePotential_antisymm
+      (n := n) (E.basePoint ψ X₀) (E.basePoint ψ X₁)
+
+theorem transitionPotential_transitive
+    (ψ : State) (X₀ X₁ X₂ : Observable) :
+    E.transitionPotential ψ X₀ X₂ =
+      E.transitionPotential ψ X₀ X₁ + E.transitionPotential ψ X₁ X₂ := by
+  simpa [transitionPotential, anchoredPotential] using
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential_cocycle
+      (n := n) (E.basePoint ψ X₀) (E.basePoint ψ X₁) (E.basePoint ψ X₂)
+
+theorem transitionPotential_closed_loop
+    (ψ : State) (X₀ X₁ : Observable) :
+    E.transitionPotential ψ X₀ X₁ + E.transitionPotential ψ X₁ X₀ = 0 := by
+  have h := E.transitionPotential_antisymm ψ X₀ X₁
+  linarith
+
+theorem transitionPotential_eq_potentialField_difference
+    (base : PositiveRay (Fin n)) (ψ : State) (X₀ X₁ : Observable) :
+    E.transitionPotential ψ X₀ X₁ =
+      E.potentialField base ψ X₁ - E.potentialField base ψ X₀ := by
+  simpa [transitionPotential, potentialField] using
+    (transition_eq_anchoredPotential_sub
+      (n := n) base (E.basePoint ψ X₀) (E.basePoint ψ X₁))
 
 @[simp] theorem basePoint_def (ψ : State) (X : Observable) :
     E.basePoint ψ X = E.coordinate ψ X :=

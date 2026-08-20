@@ -40,6 +40,8 @@ import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.Canonical.SouriauThermodynamicCoadjointOrbitBridge
+import InfoGeometry.Canonical.RedLine
+import InfoGeometry.Canonical.QuantumAlgebraObservableBase
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

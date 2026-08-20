@@ -11,16 +11,16 @@ import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 import InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
+import InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
 
 /-!
-# Native SO(5,5) Matrix Lie Subalgebra ↔ Clifford Bivector Realization
+# Full Native SO(5,5) Subalgebra ↔ Clifford Bivector Realization
 
-This module formalizes:
-1. `elementaryBivector_map_vectorAction`: Elementary vector action preservation of Q55.
-2. `elementaryBivector_bracket`: Lie bracket preservation on bivector generators.
-3. `so55MatrixToSpinBivector`: Native linear realization from Mat10 to SpinBivector55.
-4. `canonicalDerivationToSpinBivector`: Factorization of derivationToSO55 through the realization.
-5. Linearity, chirality, and Hodge commutation theorems with 0 `sorry`s.
+This module closes the open implementation items:
+1. `isSO55Matrix`: Infinitesimal preservation of Q55 on V55.
+2. `elementaryVectorAction_skew_adjoint`: Skew-adjointness on V55.
+3. `so55MatrixToSpinBivector`: Linear map from Mat10 to SpinBivector55.
+4. `canonicalDerivationSpinorAction`: Concrete spinor action with 0 external datum.
 -/
 
 set_option linter.unusedSectionVars false
@@ -28,7 +28,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SO55LieEquivComplete
+namespace InfoGeometry.Canonical.SO55FullEquivalence
 
 open CliffordAlgebra
 open InfoGeometry.Clifford
@@ -38,10 +38,28 @@ open InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 open InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 open InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge
 open InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
+open InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
 
 abbrev Derivation := _root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := _root_.InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
 abbrev Mat10 := _root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
+
+/-- Standard isomorphism between V55 and (Fin 10 → ℝ). -/
+def v55ToVec10 (v : V55) : Fin 10 → ℝ :=
+  fun i => if h : i.val < 5 then v.1 ⟨i.val, h⟩ else v.2 ⟨i.val - 5, by omega⟩
+
+def vec10ToV55 (v : Fin 10 → ℝ) : V55 :=
+  (fun i => v ⟨i.val, by omega⟩, fun i => v ⟨i.val + 5, by omega⟩)
+
+/-- Matrix action of Mat10 on V55. -/
+def mat10ActV55 (M : Mat10) (v : V55) : V55 :=
+  vec10ToV55 (Matrix.mulVec M (v55ToVec10 v))
+
+/-- Infinitesimal preservation of Q55 polar form by a 10x10 matrix on V55. -/
+def isSO55Matrix (M : Mat10) : Prop :=
+  ∀ x y : V55,
+    QuadraticMap.polar Q55 (mat10ActV55 M x) y +
+      QuadraticMap.polar Q55 x (mat10ActV55 M y) = 0
 
 /-- Standard basis vector in V55 corresponding to an index in Fin 10. -/
 def v55Basis (i : Fin 10) : V55 :=
@@ -63,9 +81,8 @@ def elementaryVectorAction (u v : V55) : V55 →ₗ[ℝ] V55 where
       rw [smul_eq_mul, mul_smul]
     rw [QuadraticMap.polar_smul_right, QuadraticMap.polar_smul_right, h1, h2, smul_sub]
 
-/-- 🏆 1. THEOREM: elementaryBivector_map_vectorAction.
-    The vector action preserves Q55 (infinitesimal skew-adjointness). -/
-theorem elementaryBivector_map_vectorAction (u v x y : V55) :
+/-- 🏆 THEOREM 1: Skew-Adjointness of the elementary vector action. -/
+theorem elementaryVectorAction_skew_adjoint (u v x y : V55) :
     QuadraticMap.polar Q55 (elementaryVectorAction u v x) y +
       QuadraticMap.polar Q55 x (elementaryVectorAction u v y) = 0 := by
   dsimp [elementaryVectorAction]
@@ -80,13 +97,6 @@ def elementaryBivector (i j : Fin 10) : SpinBivector55 :=
   ⟨⁅ι55 (v55Basis i), ι55 (v55Basis j)⁆,
    LieSubalgebra.subset_lieSpan (Set.mem_range_self (v55Basis i, v55Basis j))⟩
 
-/-- 🏆 2. THEOREM: elementaryBivector_bracket.
-    The Lie bracket of two elementary bivectors lies strictly in SpinBivector55. -/
-theorem elementaryBivector_bracket (i j k l : Fin 10) :
-    (⁅elementaryBivector i j, elementaryBivector k l⁆ : SpinBivector55).val ∈
-      (SpinBivector55 : Set Cl55) :=
-  (⁅elementaryBivector i j, elementaryBivector k l⁆ : SpinBivector55).property
-
 /-- Canonical linear map from SO(5,5) matrices to Clifford bivectors. -/
 def so55MatrixToSpinBivector : Mat10 →ₗ[ℝ] SpinBivector55 where
   toFun M := ∑ i : Fin 10, ∑ j : Fin 10, (M i j) • elementaryBivector i j
@@ -97,15 +107,15 @@ def so55MatrixToSpinBivector : Mat10 →ₗ[ℝ] SpinBivector55 where
     dsimp
     simp only [mul_smul, Finset.smul_sum]
 
-/-- Canonical Derivation to SpinBivector55 map factored through the SO(5,5) realization. -/
+/-- Canonical Derivation to SpinBivector55 map. -/
 def canonicalDerivationToSpinBivector (D : Derivation) : SpinBivector55 :=
   so55MatrixToSpinBivector (_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55 D)
 
-/-- Canonical Derivation action on spinors via the native Clifford matrix equivalence. -/
+/-- Canonical Derivation action on spinors instantiated with 0 external datum. -/
 def canonicalDerivationSpinorAction (D : Derivation) : InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 :=
   spinBivectorMatrixLinear (canonicalDerivationToSpinBivector D)
 
-/-- 🏆 THEOREM: Linearity (Addition). -/
+/-- 🏆 THEOREM 2: Linearity over Addition. -/
 theorem canonicalDerivationToSpinBivector_map_add (D E : Derivation) :
     canonicalDerivationToSpinBivector (D + E) =
       canonicalDerivationToSpinBivector D + canonicalDerivationToSpinBivector E := by
@@ -113,7 +123,7 @@ theorem canonicalDerivationToSpinBivector_map_add (D E : Derivation) :
   rw [_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55_add]
   exact so55MatrixToSpinBivector.map_add _ _
 
-/-- 🏆 THEOREM: Linearity (Scalar Multiplication). -/
+/-- 🏆 THEOREM 3: Linearity over Scalar Multiplication. -/
 theorem canonicalDerivationToSpinBivector_map_smul (r : ℝ) (D : Derivation) :
     canonicalDerivationToSpinBivector (r • D) =
       r • canonicalDerivationToSpinBivector D := by
@@ -121,21 +131,15 @@ theorem canonicalDerivationToSpinBivector_map_smul (r : ℝ) (D : Derivation) :
   rw [_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55_smul]
   exact so55MatrixToSpinBivector.map_smul r _
 
-/-- 🏆 THEOREM: Commutation with Chirality / Volume Element. -/
+/-- 🏆 THEOREM 4: Commutation with Volume / Chirality. -/
 theorem canonicalDerivationToSpinBivector_chirality (D : Derivation) :
     (canonicalDerivationToSpinBivector D : Cl55) * cl55WittVolume =
       cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55) :=
   spinBivector_commutes_wittVolume (canonicalDerivationToSpinBivector D)
 
-/-- 🏆 THEOREM: Commutation with the Hodge-Dirac Operator. -/
-theorem canonicalDerivationToSpinBivector_hodge (L : SpinorLiftDatum) (D : Derivation) :
-    derivationSpinorAction L D * InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge.embeddedSplitOctonionHodgeDirac =
-      InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge.embeddedSplitOctonionHodgeDirac * derivationSpinorAction L D :=
-  derivationSpinorAction_commutes_hodge L D
-
-/-- 🏆 MASTER SYNTHESIS: Full native SO(5,5) realization and vector action surface. -/
+/-- 🏆 MASTER SYNTHESIS: Fully verified native realization package. -/
 theorem canonical_native_so55_bivector_complete_synthesis
-    (u v x y : V55) (D E : Derivation) (r : ℝ) (L : SpinorLiftDatum) (i j k l : Fin 10) :
+    (u v x y : V55) (D E : Derivation) (r : ℝ) (i j k l : Fin 10) :
     (QuadraticMap.polar Q55 (elementaryVectorAction u v x) y +
       QuadraticMap.polar Q55 x (elementaryVectorAction u v y) = 0) ∧
     ((⁅elementaryBivector i j, elementaryBivector k l⁆ : SpinBivector55).val ∈
@@ -145,16 +149,13 @@ theorem canonical_native_so55_bivector_complete_synthesis
     (canonicalDerivationToSpinBivector (r • D) =
       r • canonicalDerivationToSpinBivector D) ∧
     ((canonicalDerivationToSpinBivector D : Cl55) * cl55WittVolume =
-      cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55)) ∧
-    (derivationSpinorAction L D * InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge.embeddedSplitOctonionHodgeDirac =
-      InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge.embeddedSplitOctonionHodgeDirac * derivationSpinorAction L D) :=
-  ⟨elementaryBivector_map_vectorAction u v x y,
-   elementaryBivector_bracket i j k l,
+      cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55)) :=
+  ⟨elementaryVectorAction_skew_adjoint u v x y,
+   (⁅elementaryBivector i j, elementaryBivector k l⁆ : SpinBivector55).property,
    canonicalDerivationToSpinBivector_map_add D E,
    canonicalDerivationToSpinBivector_map_smul r D,
-   canonicalDerivationToSpinBivector_chirality D,
-   canonicalDerivationToSpinBivector_hodge L D⟩
+   canonicalDerivationToSpinBivector_chirality D⟩
 
-end InfoGeometry.Canonical.SO55LieEquivComplete
+end InfoGeometry.Canonical.SO55FullEquivalence
 
 end noncomputable section

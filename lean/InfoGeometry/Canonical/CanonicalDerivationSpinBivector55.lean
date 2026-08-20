@@ -43,7 +43,7 @@ open InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 open InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 open InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 open InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
-open InfoGeometry.Canonical.SO55LieEquivComplete
+open InfoGeometry.Canonical.SO55FullEquivalence
 
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
@@ -53,13 +53,13 @@ abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
 theorem canonicalDerivationToSpinBivector_map_add (D E : Derivation) :
     canonicalDerivationToSpinBivector (D + E) =
       canonicalDerivationToSpinBivector D + canonicalDerivationToSpinBivector E :=
-  SO55LieEquivComplete.canonicalDerivationToSpinBivector_map_add D E
+  SO55FullEquivalence.canonicalDerivationToSpinBivector_map_add D E
 
 /-- 🏆 THEOREM 2: Linearity over Scalar Multiplication -/
 theorem canonicalDerivationToSpinBivector_map_smul (r : ℝ) (D : Derivation) :
     canonicalDerivationToSpinBivector (r • D) =
       r • canonicalDerivationToSpinBivector D :=
-  SO55LieEquivComplete.canonicalDerivationToSpinBivector_map_smul r D
+  SO55FullEquivalence.canonicalDerivationToSpinBivector_map_smul r D
 
 /-- 🏆 THEOREM 3: Preservation of Lie Bracket -/
 theorem canonicalDerivationToSpinBivector_map_lie
@@ -76,13 +76,13 @@ theorem canonicalDerivationToSpinBivector_vector_agrees (D : Derivation) :
 theorem canonicalDerivationToSpinBivector_chirality (D : Derivation) :
     (canonicalDerivationToSpinBivector D : Cl55) * cl55WittVolume =
       cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55) :=
-  SO55LieEquivComplete.canonicalDerivationToSpinBivector_chirality D
+  SO55FullEquivalence.canonicalDerivationToSpinBivector_chirality D
 
 /-- 🏆 THEOREM 6: Commutation with Embedded Split-Octonion Hodge Dirac -/
 theorem canonicalDerivationToSpinBivector_hodge (L : SpinorLiftDatum) (D : Derivation) :
     derivationSpinorAction L D * embeddedSplitOctonionHodgeDirac =
       embeddedSplitOctonionHodgeDirac * derivationSpinorAction L D :=
-  SO55LieEquivComplete.canonicalDerivationToSpinBivector_hodge L D
+  derivationSpinorAction_commutes_hodge L D
 
 /-- 🏆 MASTER SYNTHESIS -/
 theorem canonical_derivation_spin_bivector55_synthesis

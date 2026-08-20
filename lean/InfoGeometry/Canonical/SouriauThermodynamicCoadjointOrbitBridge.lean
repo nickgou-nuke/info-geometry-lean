@@ -12,7 +12,8 @@ nonzero-cocycle case remains affine coadjoint covariance in the imported owner.
 namespace InfoGeometry.Canonical.SouriauThermodynamicCoadjointOrbitBridge
 
 open SouriauCoadjoint
-open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCoadjointBridge
+open InfoGeometry.Lie
+open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 
 variable {G V : Type*}
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]

@@ -10,6 +10,9 @@ import InfoGeometry.Measure.Normalized
 import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Canonical.DeRhamModularPotentialBridge
+import InfoGeometry.Canonical.QuantumAlgebraObservableBase
+import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
@@ -68,6 +71,65 @@ theorem log_exponential_duality_cocycle
     (InfoGeometry.Canonical.RelativePotentialCore.relativeDensity q q1 a =
       Real.exp (-InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q1 a)) := by
   exact InfoGeometry.Canonical.RelativePotentialCore.log_exponential_duality_cocycle q q0 q1 a
+
+/-! The finite de Rham shadow is exported from its dedicated owner.  These
+names are discrete exact-form statements on positive rays; they do not claim
+the existence of a smooth manifold or a full differential-form library. -/
+export InfoGeometry.Canonical.DeRhamModularPotentialBridge (
+  StatisticalManifold
+  ZeroForm
+  OneForm
+  scalarPotential_zeroForm
+  dZeroForm
+  modularPotential_is_exact_oneForm
+  dOneForm
+  discrete_exterior_derivative_sq_zero
+  modularPotential_antisymm
+  modularPotential_closed_loop
+  path_independence_of_exact_oneForm
+  IsClosedOneForm
+  IsExactOneForm
+  modularPotential_is_closed_oneForm
+  modularPotential_is_exact_oneForm'
+  modular_potential_closed_and_exact
+  gibbs_distribution_is_exponential_map
+  modularHamiltonian
+  modular_flow_is_exponential
+)
+
+export InfoGeometry.Canonical.QuantumAlgebraObservableBase (
+  QuantumAlgebraBundleBase
+  ExpectationCoordinateData
+  PositiveObservableReadout
+)
+
+export InfoGeometry.Canonical.QuantumAlgebraObservableBase.ExpectationCoordinateData (
+  basePoint
+  fiberAt
+  transitionPotential
+  potentialField
+  transitionPotential_self
+  transitionPotential_antisymm
+  transitionPotential_transitive
+  transitionPotential_closed_loop
+  transitionPotential_eq_potentialField_difference
+)
+
+export InfoGeometry.Canonical.QuantumAlgebraObservableBase.PositiveObservableReadout (
+  toExpectationCoordinateData
+  toExpectationCoordinateData_coordinate
+)
+
+export InfoGeometry.Canonical.HomogeneousModularFlows (
+  HomogeneousSpace
+  quotient_is_homogeneous_space
+  quotient_basepoint_stabilizer
+  maurerCartanDerivative
+  maurerCartanPath
+  maurerCartanPath_eq_logarithmicBridge
+  capstone_logarithmicBridge_factors_maurerCartan
+  maurerCartanDerivative_mul_eq_add
+)
 
 
 export InfoGeometry.Jordan (

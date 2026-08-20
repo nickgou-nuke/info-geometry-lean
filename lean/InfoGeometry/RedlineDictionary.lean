@@ -131,24 +131,24 @@ PART 6: The Complete Dictionary Structure
 /-- Canonical dictionary for the Lie/Jacobian corridor -/
 structure LieJacobianDictionary (n : Type*) [Fintype n] [DecidableEq n] where
   lieFlow_to_jacobian : ∀ (A : Matrix n n ℝ) (t : ℝ), (lieExponentialPath A t).det = Real.exp (t * Matrix.trace A)
-  jacobian_to_negLog : ∀ (A : Matrix n n ℝ) (t : ℝ), -Real.log ( (lieExponentialPath A t).det ) = - (t * Matrix.trace A)
+  jacobian_to_negLog : ∀ (A : Matrix n n ℝ) (t : ℝ), -Real.log ((lieExponentialPath A t).det) = - (t * Matrix.trace A)
   negLog_deriv : ∀ (A : Matrix n n ℝ) (t : ℝ), deriv (fun s => -Real.log ((lieExponentialPath A s).det)) t = -Matrix.trace A
 
 /-- Canonical dictionary for the relative density / modular potential corridor -/
-structure RelativeDensityDictionary {α : Type*} [Fintype α] [Nonempty α] where
+structure RelativeDensityDictionary (α : Type*) [Fintype α] [Nonempty α] where
   density_cocycle : ∀ (q q₀ q₁ : PositiveRay α) (a : α), relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a
   potential_cocycle : ∀ (q q₀ q₁ : PositiveRay α) (a : α), relativeModularPotential q q₁ a = relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a
   exp_log_duality : ∀ (q q₀ : PositiveRay α) (a : α), relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a)
   potential_antisymm : ∀ (q q₀ : PositiveRay α) (a : α), relativeModularPotential q₀ q a = -relativeModularPotential q q₀ a
 
 /-- Canonical dictionary for the modular operator Δ = exp(-K) corridor -/
-structure ModularOperatorDictionary {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+structure ModularOperatorDictionary (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   delta_from_hamiltonian : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)), modularDeltaFromHamiltonian (E := E) Kmod = NormedSpace.exp (-Kmod)
   beta_flow_group : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β γ : ℝ), modularBetaFlow (E := E) Kmod (β + γ) = modularBetaFlow (E := E) Kmod β * modularBetaFlow (E := E) Kmod γ
   beta_flow_neg : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β : ℝ), modularBetaFlow (E := E) Kmod (-β) * modularBetaFlow (E := E) Kmod β = modularIdentity (E := E)
 
 /-- The complete Redline dictionary -/
-structure RedlineDictionary (n : Type*) [Fintype n] [DecidableEq n] {α : Type*} [Fintype α] [Nonempty α] {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+structure RedlineDictionary (n : Type*) [Fintype n] [DecidableEq n] (α : Type*) [Fintype α] [Nonempty α] (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   lie_jacobian : LieJacobianDictionary n
   relative_density : RelativeDensityDictionary α
   modular_operator : ModularOperatorDictionary E

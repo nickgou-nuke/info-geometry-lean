@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.QuantumAlgebraObservableBase
 import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.RicciMongeAmpere
@@ -55,6 +56,16 @@ References:
 namespace InfoGeometry.Canonical.RedLine
 
 universe u
+
+export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (
+  coordinateCLM
+  coordinateCLM_apply
+  coordinateLogPotential
+  hasFDerivAt_coordinateLogPotential
+  differentiableOn_coordinateLogPotential
+  coordinateLogPotential_contDiffOn
+  integral_coordinateLogRate_eq_potential_sub
+)
 
 /-! The native Redline cocycle package.  This is an export-surface theorem:
 the relative-potential owner remains the authority for the three component

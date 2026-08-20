@@ -228,6 +228,22 @@ theorem modularAutomorphismGroup_map_smul
       r • modularAutomorphismGroup M t A := by
   simp [modularAutomorphismGroup, InfoGeometry.Krein.krein_modular_shift]
 
+theorem modularAutomorphismGroup_map_neg
+    (M : ModularRadonNikodymData E) (A : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (-A) =
+      -modularAutomorphismGroup M t A := by
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
+      (H := E) M.modularHamiltonian t).map_neg A
+
+theorem modularAutomorphismGroup_map_sub
+    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (A - B) =
+      modularAutomorphismGroup M t A - modularAutomorphismGroup M t B := by
+  simpa [sub_eq_add_neg] using
+    (modularAutomorphismGroup_map_add (M := M) A (-B) t).trans
+      (by rw [modularAutomorphismGroup_map_neg (M := M) B t])
+
 /--
 Infinitesimal modular-flow generator at the origin:
 the derivative of `σ_τ(A)` at `τ = 0` is the commutator with the modular Hamiltonian.

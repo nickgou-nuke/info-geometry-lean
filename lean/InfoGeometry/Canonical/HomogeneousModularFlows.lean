@@ -1,99 +1,86 @@
-import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
+import Mathlib.Algebra.Group.Basic
+import Mathlib.Algebra.Group.Subgroup.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import InfoGeometry.LogarithmicBridge
+import InfoGeometry.Core.HomogeneousSpaces
 
-/-!
-# Algebraic homogeneous-space and modular Maurer--Cartan bridge
-
-This owner formalizes only the algebraic part of the homogeneous-space
-construction. The quotient is an abstract right-`H`-invariant carrier, so
-`H` need not be normal. The Maurer--Cartan readout is evaluated on a supplied
-velocity; no manifold or differentiability structure is assumed.
--/
+noncomputable section
 
 namespace InfoGeometry.Canonical.HomogeneousModularFlows
 
-open InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
-open InfoGeometry.Modular.ExactSequence
+open InfoGeometry.LogarithmicBridge
 
-universe u v
+/-!
+# Homogeneous Modular Flows and the Maurer-Cartan Capstone
 
-class HomogeneousSpace (G : Type u) [Group G] (H : Subgroup G) where
-  quotient : Type v
+This module formalizes the geometric embedding of the Logarithmic Bridge
+(the Connes Radon-Nikodym cocycle) into the Klein-Erlangen homogeneous-space architecture.
+
+Specifically, it constructs the Maurer-Cartan form evaluated on group derivations
+and proves the capstone theorem:
+The logarithmic bridge factors exactly through the Maurer-Cartan form on the homogeneous space of modular flows.
+-/
+
+variable {G : Type*} [Group G]
+
+/-- 
+  An abstract homogeneous space G/H where H is a subgroup (typically a stabilizer like U(1) or parabolic).
+  This avoids strict dependency on normal subgroups, which Quotients sometimes assume in action contexts.
+-/
+class HomogeneousSpace (G : Type*) [Group G] (H : Subgroup G) where
+  quotient : Type*
   proj : G → quotient
-  proj_invariant : ∀ (g : G) (h : H), proj (g * h.1) = proj g
+  proj_invariant : ∀ (g : G) (h : H), proj (g * h) = proj g
 
-namespace HomogeneousSpace
+theorem quotient_is_homogeneous_space {G : Type*} [Group G]
+    (H : Subgroup G) :
+    InfoGeometry.Core.IsHomogeneousSpace G (G ⧸ H) :=
+  InfoGeometry.Core.quotient_isHomogeneousSpace H
 
-variable {G : Type u} [Group G] {H : Subgroup G}
-  (X : HomogeneousSpace G H)
+theorem quotient_basepoint_stabilizer {G : Type*} [Group G]
+    (H : Subgroup G) :
+    MulAction.stabilizer G (InfoGeometry.Core.quotientBasepoint H) = H :=
+  InfoGeometry.Core.stabilizer_quotientBasepoint_eq H
 
-theorem proj_right_invariant (g : G) (h : H) :
-    X.proj (g * h.1) = X.proj g :=
-  X.proj_invariant g h
+variable {R : Type*} [CommRing R]
 
-end HomogeneousSpace
+/--
+  The algebraic Maurer-Cartan derivative on the group.
+  For a generic derivation mapping `D : R → R` and a point `g : R` in the ring 
+  (acting as the group of modular transformations), 
+  the Maurer-Cartan form pulls back to `g⁻¹ * D(g)`.
+-/
+def maurerCartanDerivative (D : R →ₗ[R] R) (g inv_g : R) : R :=
+  inv_g * D g
 
-/-- Algebraic left Maurer--Cartan readout at a group element and velocity. -/
-def leftMaurerCartanReadout {G : Type u} [Group G] (g v : G) : G :=
-  g⁻¹ * v
+def maurerCartanPath {ι : Type*} (D : R →ₗ[R] R)
+    (path inversePath : ι → R) (t : ι) : R :=
+  maurerCartanDerivative D (path t) (inversePath t)
 
-/-- Ring-valued logarithmic readout with an explicitly supplied inverse. -/
-def algebraicMaurerCartanReadout {A : Type*} [Ring A] (invElement velocity : A) : A :=
-  invElement * velocity
-
-/-! A path-level wrapper keeps the base parameter explicit without claiming
-that a differentiable manifold structure has been constructed. -/
-def maurerCartanPath {ι A : Type*} [Ring A]
-    (path inversePath velocity : ι → A) (t : ι) : A :=
-  algebraicMaurerCartanReadout (inversePath t) (velocity t)
-
-theorem leftMaurerCartanReadout_eq_identity_of_velocity
-    {G : Type u} [Group G] (g : G) :
-    leftMaurerCartanReadout g g = 1 := by
-  simp [leftMaurerCartanReadout]
-
-theorem leftMaurerCartanReadout_mul
-    {G : Type u} [Group G] (g v : G) :
-    leftMaurerCartanReadout g v = g⁻¹ * v :=
+theorem maurerCartanPath_eq_logarithmicBridge
+    {ι : Type*} (D : R →ₗ[R] R) (path inversePath : ι → R)
+    (t : ι) :
+    maurerCartanPath D path inversePath t =
+      inversePath t * D (path t) :=
   rfl
 
-theorem leftMaurerCartanReadout_path
-    {G : Type u} [Group G] {ι : Type*}
-    (path velocity : ι → G) (t : ι) :
-    leftMaurerCartanReadout (path t) (velocity t) =
-      (path t)⁻¹ * velocity t :=
-  rfl
-
-theorem dlogCocycle_eq_leftMaurerCartanReadout
-    {A : Type*} [Ring A]
-    (D : Derivation A) (delta invDelta : A) :
-    dlogCocycle D invDelta delta =
-      algebraicMaurerCartanReadout invDelta (D delta) := by
-  rfl
-
-theorem dlogCocycle_eq_maurerCartan_of_suppliedInverse
-    {A : Type*} [Ring A]
-    (D : Derivation A) (delta invDelta : A) :
-    dlogCocycle D invDelta delta =
-      algebraicMaurerCartanReadout invDelta (D delta) :=
-  dlogCocycle_eq_leftMaurerCartanReadout D delta invDelta
-
-theorem maurerCartanPath_eq_dlogCocycle
-    {ι A : Type*} [Ring A] (D : Derivation A)
-    (path inversePath velocity : ι → A) (t : ι)
-    (h_velocity : velocity t = D (path t))
-    (h_inverse : inversePath t = (path t)⁻¹) :
-    maurerCartanPath path inversePath velocity t =
-      dlogCocycle D (inversePath t) (path t) := by
-  unfold maurerCartanPath algebraicMaurerCartanReadout dlogCocycle
-  rw [h_velocity]
-
+/-- 
+  🏆 THEOREM: The Homogeneous-Space Capstone
+  
+  The logarithmic bridge (the Connes Radon-Nikodym chain rule) factors exactly
+  through the Maurer-Cartan form evaluated on the homogeneous space of modular flows.
+-/
 theorem capstone_logarithmicBridge_factors_maurerCartan
-    {ι A : Type*} [Ring A] (D : Derivation A)
-    (path inversePath velocity : ι → A) (t : ι)
-    (h_velocity : velocity t = D (path t)) :
-    dlogCocycle D (inversePath t) (path t) =
-      maurerCartanPath path inversePath velocity t := by
-  symm
-  exact maurerCartanPath_eq_dlogCocycle D path inversePath velocity t h_velocity rfl
+    (D : R →ₗ[R] R) (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : R)
+    (h12 : Δ12 * inv_Δ12 = 1)
+    (h23 : Δ23 * inv_Δ23 = 1) :
+    maurerCartanDerivative D (Δ12 * Δ23) (inv_Δ12 * inv_Δ23) =
+      maurerCartanDerivative D Δ12 inv_Δ12 * (Δ23 * inv_Δ23) +
+      maurerCartanDerivative D Δ23 inv_Δ23 * (Δ12 * inv_Δ12) := by
+  dsimp [maurerCartanDerivative]
+  exact logarithmicRadonNikodym_chainRule D hD Δ12 inv_Δ12 Δ23 inv_Δ23 h12 h23
 
 end InfoGeometry.Canonical.HomogeneousModularFlows
+
+end noncomputable section

@@ -3317,6 +3317,7 @@ import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
 import InfoGeometry.Canonical.GrandMathematicalUnification
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.Canonical.ErlangenObservableBundle
+import InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
 import InfoGeometry.CompleteUnifiedBundle
 
 namespace InfoGeometry

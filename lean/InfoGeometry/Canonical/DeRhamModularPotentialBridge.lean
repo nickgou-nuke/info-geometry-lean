@@ -112,13 +112,14 @@ theorem gibbs_distribution_is_exponential_map
   ring
 
 /-- The modular Hamiltonian generates the modular flow. -/
-noncomputable def modularHamiltonian (q : PositiveRay α) : α → ℝ :=
-  fun a => -relativeLogDensity q q a
+/-- The modular Hamiltonian for a pair (q, q₀) is K = -V(q, q₀). -/
+noncomputable def modularHamiltonian (q q₀ : PositiveRay α) : α → ℝ :=
+  fun a => -relativeModularPotential q q₀ a
 
 /-- The modular flow is the exponential of the modular Hamiltonian. -/
 theorem modular_flow_is_exponential
     (q q₀ : PositiveRay α) (a : α) :
-    relativeDensity q q₀ a = Real.exp (modularHamiltonian q a) := by
+    relativeDensity q q₀ a = Real.exp (modularHamiltonian q q₀ a) := by
   unfold modularHamiltonian
   rw [relativeDensity_eq_exp_relativeLogDensity]
   rw [relativeModularPotential_eq_neg_relativeLogDensity]

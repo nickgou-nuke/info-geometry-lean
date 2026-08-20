@@ -484,6 +484,20 @@ theorem zornFlowMulEquiv_apply_neg
       (zornFlowLinearEquiv D.1 (-t) X) = X
   exact zornFlowLinearEquiv_neg_apply_symm D.1 t X
 
+theorem zornFlowMulEquiv_preserves_central
+    (D : canonicalZornDerivations)
+    (X : CZ)
+    (hX : ∀ Y : CZ, X * Y = Y * X)
+    (t : ℝ) :
+    ∀ Y : CZ,
+      zornFlowMulEquiv D t X * Y = Y * zornFlowMulEquiv D t X := by
+  intro Y
+  have hcomm :=
+    (zornFlowMulEquiv_commute_iff D X (zornFlowMulEquiv D (-t) Y) t).mpr
+      (hX (zornFlowMulEquiv D (-t) Y))
+  rw [zornFlowMulEquiv_apply_neg] at hcomm
+  exact hcomm
+
 noncomputable def zornDerivationExpAutomorphism
     (D : canonicalZornDerivations) : CZ ≃* CZ :=
   zornFlowMulEquiv D 1

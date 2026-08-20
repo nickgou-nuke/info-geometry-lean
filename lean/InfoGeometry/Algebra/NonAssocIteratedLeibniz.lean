@@ -113,6 +113,58 @@ theorem iterated_leibniz_nsmul
 
       exact (Finset.sum_choose_succ_nsmul f n).symm
 
+/-! ## Honest first-order exponential in a square-zero image regime -/
+
+section FirstOrder
+
+variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A)
+
+/-- The truncated exponential `1 + tD` on the underlying module. -/
+def firstOrderExp (t : R) (D : A →ₗ[R] A) : A →ₗ[R] A :=
+  LinearMap.id + t • D
+
+theorem firstOrderExp_apply (t : R) (D : A →ₗ[R] A) (x : A) :
+    firstOrderExp t D x = x + t • D x := by
+  rfl
+
+theorem firstOrderExp_map_mul
+    (t : R) (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hDmul : ∀ x y, mul (D x) (D y) = 0)
+    (x y : A) :
+    firstOrderExp t D (mul x y) =
+      mul (firstOrderExp t D x) (firstOrderExp t D y) := by
+  rw [firstOrderExp_apply, firstOrderExp_apply, firstOrderExp_apply, hD]
+  simp only [mul.map_add, mul.map_smul, LinearMap.map_add,
+    LinearMap.map_smul, LinearMap.add_apply, LinearMap.smul_apply,
+    hDmul, smul_zero, add_zero, smul_add]
+  abel
+
+theorem firstOrderExp_map_one
+    (t : R) (D : A →ₗ[R] A) (one : A)
+    (hD_one : D one = 0) :
+    firstOrderExp t D one = one := by
+  rw [firstOrderExp_apply, hD_one, smul_zero, add_zero]
+
+theorem firstOrderExp_inverse
+    (t : R) (D : A →ₗ[R] A)
+    (hD2 : ∀ x, D (D x) = 0)
+    (x : A) :
+    firstOrderExp (-t) D (firstOrderExp t D x) = x := by
+  rw [firstOrderExp_apply, firstOrderExp_apply]
+  simp only [map_add, map_smul, hD2, smul_zero, add_zero]
+  module
+
+theorem firstOrderExp_inverse'
+    (t : R) (D : A →ₗ[R] A)
+    (hD2 : ∀ x, D (D x) = 0)
+    (x : A) :
+    firstOrderExp t D (firstOrderExp (-t) D x) = x := by
+  simpa using firstOrderExp_inverse (-t) D hD2 x
+
+end FirstOrder
+
 end IteratedLeibniz
 
 section Unit
@@ -310,11 +362,31 @@ instance : CoeFun (NonAssocAlgEquiv mul one) (fun _ => A → A) where
 
 @[simp] theorem map_zero (F : NonAssocAlgEquiv mul one) : F 0 = 0 := F.toLinearMap.map_zero
 
+@[simp] theorem map_add (F : NonAssocAlgEquiv mul one) (x y : A) :
+    F (x + y) = F x + F y := F.toLinearMap.map_add x y
+
+@[simp] theorem map_smul (F : NonAssocAlgEquiv mul one) (r : R) (x : A) :
+    F (r • x) = r • F x := F.toLinearMap.map_smul r x
+
 theorem left_inv (F : NonAssocAlgEquiv mul one) (x : A) :
     F.invFun (F x) = x := F.left_inv' x
 
 theorem right_inv (F : NonAssocAlgEquiv mul one) (x : A) :
     F (F.invFun x) = x := F.right_inv' x
+
+theorem injective (F : NonAssocAlgEquiv mul one) : Function.Injective F := by
+  intro x y h
+  rw [← F.left_inv' x, ← F.left_inv' y, h]
+
+theorem invFun_map_mul (F : NonAssocAlgEquiv mul one) (x y : A) :
+    F.invFun (mul x y) = mul (F.invFun x) (F.invFun y) := by
+  apply F.injective
+  simp only [F.right_inv', F.map_mul]
+
+theorem invFun_map_one (F : NonAssocAlgEquiv mul one) :
+    F.invFun one = one := by
+  apply F.injective
+  simp only [F.right_inv', F.map_one]
 
 theorem map_idempotent (F : NonAssocAlgEquiv mul one) {e : A}
     (he : mul e e = e) : mul (F e) (F e) = F e := by
@@ -323,6 +395,10 @@ theorem map_idempotent (F : NonAssocAlgEquiv mul one) {e : A}
 theorem map_orthogonal (F : NonAssocAlgEquiv mul one) {e f : A}
     (hef : mul e f = 0) : mul (F e) (F f) = 0 := by
   rw [← F.map_mul, hef, F.map_zero]
+
+theorem map_orthogonal_rev (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hfe : mul f e = 0) : mul (F f) (F e) = 0 := by
+  rw [← F.map_mul, hfe, F.map_zero]
 
 theorem map_square_zero (F : NonAssocAlgEquiv mul one) {q : A}
     (hq : mul q q = 0) : mul (F q) (F q) = 0 := by

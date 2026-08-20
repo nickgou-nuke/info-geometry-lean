@@ -19,7 +19,7 @@ This module formalizes the exact mathematical interplay between:
 3. **Modular KMS Tilt (Connes Cocycle Perturbation)**: Perturbing a positive state by an
    invertible operator `h` to produce `ω_h(X) = ω(h X h) / ω(h²)`.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

@@ -267,6 +267,37 @@ theorem flow_apply_derivation
     apply HasDerivAt.unique h₁ h₂
   rw [h₃]
 
+/-- A vector annihilated by the generator is fixed by the whole exponential flow. -/
+theorem flow_fixed_of_derivation_eq_zero
+    (D : EndA)
+    (x : A)
+    (hx : D x = 0)
+    (t : ℝ) :
+    flow D t x = x := by
+  have hder : ∀ s : ℝ,
+      HasDerivAt (fun r : ℝ => flow D r x) 0 s := by
+    intro s
+    have h := (hasStrictDerivAt_orbit_right D x s).hasDerivAt
+    simpa [hx] using h
+  have hdiff : Differentiable ℝ (fun r : ℝ => flow D r x) := by
+    intro s
+    exact (hder s).differentiableAt
+  have hzero : ∀ s : ℝ,
+      deriv (fun r : ℝ => flow D r x) s = 0 := by
+    intro s
+    exact (hder s).deriv
+  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
+  simpa using hconst
+
+/-- A generator-fixed vector is fixed by the bundled exponential equivalence. -/
+theorem flowLinearEquiv_fixed_of_derivation_eq_zero
+    (D : EndA)
+    (x : A)
+    (hx : D x = 0)
+    (t : ℝ) :
+    flowLinearEquiv D t x = x := by
+  exact flow_fixed_of_derivation_eq_zero D x hx t
+
 /-!
 ## Product evolution
 -/
@@ -801,6 +832,22 @@ theorem flow_preserves_zero_product_rev
         (flow D t x) =
       0 := by
   exact flow_preserves_zero_product mul D hD t y x hyx
+
+/-- Both oriented zero-product relations are transported independently. -/
+theorem flow_preserves_two_sided_orthogonality
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A)
+    (hxy : mul x y = 0)
+    (hyx : mul y x = 0) :
+    mul (flow D t x) (flow D t y) = 0 ∧
+      mul (flow D t y) (flow D t x) = 0 := by
+  exact ⟨
+    flow_preserves_zero_product mul D hD t x y hxy,
+    flow_preserves_zero_product_rev mul D hD t x y hyx
+  ⟩
 
 /--
 Vanishing of an associator is preserved by the derivation exponential.

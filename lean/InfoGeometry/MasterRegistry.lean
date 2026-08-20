@@ -14,6 +14,7 @@ import InfoGeometry.Continuous.FisherScore
 import InfoGeometry.Canonical.ErlangenObservableBundle
 import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.KMSGNS
+import InfoGeometry.EndToEnd
 
 noncomputable section
 
@@ -34,14 +35,14 @@ I. DYNAMIC CORE (The Engine of Time)
 
 section DynamicCore
 
-variable {A : Type*} [Ring A] [Algebra ℂ A]
-
 /-- 
   MASTER THEOREM 1 (The Engine of Backreaction):
   Spacetime derivations intertwine with modular inner derivations:
     [D, ad_K](X) = ad_{D(K)}(X)
 -/
-theorem master_dual_flow_commutator (D : InfoGeometry.EndToEnd.Derivation A) (K X : A) :
+theorem master_dual_flow_commutator
+    {A : Type*} [Ring A] [Algebra ℂ A]
+    (D : InfoGeometry.EndToEnd.Derivation A) (K X : A) :
     D (InfoGeometry.EndToEnd.adK K X) - InfoGeometry.EndToEnd.adK K (D X) =
       InfoGeometry.EndToEnd.adK (D K) X :=
   InfoGeometry.EndToEnd.master_dual_flow_commutator D K X
@@ -51,7 +52,9 @@ theorem master_dual_flow_commutator (D : InfoGeometry.EndToEnd.Derivation A) (K 
   The thermal flow vanishes if and only if the generator is central:
     ad_K = 0 ↔ K ∈ Z(A)
 -/
-theorem master_thermal_time_kernel (K : A) :
+theorem master_thermal_time_kernel
+    {A : Type*} [Ring A] [Algebra ℂ A]
+    (K : A) :
     (∀ X, InfoGeometry.EndToEnd.adK K X = 0) ↔ (∀ X, K * X = X * K) :=
   InfoGeometry.EndToEnd.thermal_time_kernel K
 
@@ -60,7 +63,9 @@ theorem master_thermal_time_kernel (K : A) :
   The inner modular generator is an exact derivation on the algebra:
     ad_K(X * Y) = (ad_K X) * Y + X * (ad_K Y)
 -/
-theorem master_inn_is_lie_ideal (K X Y : A) :
+theorem master_inn_is_lie_ideal
+    {A : Type*} [Ring A] [Algebra ℂ A]
+    (K X Y : A) :
     InfoGeometry.Modular.adK K (X * Y) =
       (InfoGeometry.Modular.adK K X) * Y + X * (InfoGeometry.Modular.adK K Y) :=
   InfoGeometry.Modular.adK_is_derivation K X Y

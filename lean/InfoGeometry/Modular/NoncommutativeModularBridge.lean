@@ -226,6 +226,39 @@ theorem NCDerivation.dlog_inv (D : NCDerivation A) (u : Aˣ) :
     D.dlog (u⁻¹) = -((u : A) * D.dlog u * (↑(u⁻¹) : A)) :=
   InfoGeometry.Modular.Noncommutative.dlog_inv D.toLinearMap D.leibniz' u
 
+/- Algebraic modular conjugation by a unit. -/
+def innerConjugation (u : Aˣ) (X : A) : A :=
+  (u : A) * X * (↑(u⁻¹) : A)
+
+theorem innerConjugation_one (u : Aˣ) : innerConjugation u (1 : A) = 1 := by
+  simp [innerConjugation]
+
+theorem innerConjugation_mul (u : Aˣ) (X Y : A) :
+    innerConjugation u (X * Y) =
+      innerConjugation u X * innerConjugation u Y := by
+  unfold innerConjugation
+  simp only [mul_assoc, u.inv_val, one_mul]
+
+theorem innerConjugation_add (u : Aˣ) (X Y : A) :
+    innerConjugation u (X + Y) =
+      innerConjugation u X + innerConjugation u Y := by
+  simp only [innerConjugation, add_mul, mul_add]
+
+theorem innerConjugation_comp (u v : Aˣ) (X : A) :
+    innerConjugation u (innerConjugation v X) =
+      innerConjugation (u * v) X := by
+  unfold innerConjugation
+  simp only [Units.val_mul, mul_inv_rev, mul_assoc, v.inv_val, one_mul]
+
+theorem innerConjugation_inverse (u : Aˣ) (X : A) :
+    innerConjugation (u⁻¹) (innerConjugation u X) = X := by
+  calc
+    innerConjugation (u⁻¹) (innerConjugation u X) =
+        innerConjugation (u⁻¹ * u) X :=
+      innerConjugation_comp (u⁻¹) u X
+    _ = innerConjugation 1 X := by rw [inv_mul_cancel]
+    _ = X := by simp [innerConjugation]
+
 end InfoGeometry.Modular.Noncommutative
 
 end noncomputable section

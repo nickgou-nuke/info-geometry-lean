@@ -323,6 +323,12 @@ theorem linearMapCommutator_adK_eq_zero_iff_central (K L : A) :
 def IsRingDerivation (D : A →ₗ[ℤ] A) : Prop :=
   ∀ x y, D (x * y) = D x * y + x * D y
 
+theorem IsRingDerivation.map_one (D : A →ₗ[ℤ] A)
+    (hD : IsRingDerivation D) : D 1 = 0 := by
+  have h := hD 1 1
+  rw [mul_one, one_mul] at h
+  linear_combination -h
+
 @[simp] theorem adK_isRingDerivation (K : A) : IsRingDerivation (adK K) := by
   intro X Y
   exact adK_is_derivation K X Y
@@ -390,6 +396,21 @@ theorem dlogRNNoncomm_mul_adK (K : A)
         dlogRNNoncomm (adK K) Δ23 inv_Δ23 := by
   exact dlogRNNoncomm_mul (adK K) (adK_isRingDerivation K)
     Δ12 inv_Δ12 Δ23 inv_Δ23 h12 h23 hK12 hΔ12
+
+theorem dlogRNNoncomm_inv (D : A →ₗ[ℤ] A) (hD : IsRingDerivation D)
+    (Δ inv_Δ : A) (hInv : Δ * inv_Δ = 1)
+    (hComm : Commute (D Δ) inv_Δ) :
+    dlogRNNoncomm D inv_Δ Δ = -dlogRNNoncomm D Δ inv_Δ := by
+  have hzero : D Δ * inv_Δ + Δ * D inv_Δ = 0 := by
+    have h := hD Δ inv_Δ
+    rw [hInv, IsRingDerivation.map_one D hD] at h
+    exact h
+  have hsolve : Δ * D inv_Δ = -(D Δ * inv_Δ) := by
+    exact eq_neg_of_add_eq_zero_left hzero
+  dsimp [dlogRNNoncomm]
+  calc
+    Δ * D inv_Δ = -(D Δ * inv_Δ) := hsolve
+    _ = -(inv_Δ * D Δ) := by rw [hComm.eq]
 
 /-! ### Logarithmic Radon–Nikodym Derivative on Commutative Algebras -/
 

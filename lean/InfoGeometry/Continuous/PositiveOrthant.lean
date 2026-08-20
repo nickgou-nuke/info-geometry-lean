@@ -66,8 +66,8 @@ instance : Inhabited (PositiveOrthant α) :=
 instance : Nonempty (PositiveOrthant α) :=
   ⟨default⟩
 
-theorem isOpenEmbedding_val : IsOpenEmbedding (Subtype.val : PositiveOrthant α → EuclideanSpace ℝ α) :=
-  isOpen_positiveOrthantCone.isOpenEmbedding_subtypeVal
+theorem isOpenEmbedding_val : IsOpenEmbedding (Subtype.val : PositiveOrthant α → EuclideanSpace ℝ α) := by
+  exact isOpen_positiveOrthantCone.isOpenEmbedding_subtypeVal
 
 instance : ChartedSpace (EuclideanSpace ℝ α) (PositiveOrthant α) :=
   isOpenEmbedding_val.singletonChartedSpace
@@ -80,8 +80,8 @@ def coord (i : α) (x : PositiveOrthant α) : ℝ :=
   x.val i
 
 /-- coord i is strictly positive. -/
-theorem coord_pos (i : α) (x : PositiveOrthant α) : 0 < coord i x :=
-  x.property i
+theorem coord_pos (i : α) (x : PositiveOrthant α) : 0 < coord i x := by
+  exact x.property i
 
 /-- The coordinate evaluation map is smooth ($C^\infty$) on the positive orthant. -/
 theorem smooth_coord (i : α) (n : WithTop ℕ∞) :

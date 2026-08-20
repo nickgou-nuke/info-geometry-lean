@@ -53,13 +53,12 @@ def inCommutant (M : Set B) (b : B) : Prop :=
 def commutant (M : Set B) : Set B :=
   {b : B | inCommutant M b}
 
-/- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
+/-- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
 theorem zero_mem_commutant (M : Set B) : (0 : B) ∈ commutant M := by
-  intro m _
-  simp [bracket]
-  <;> simp_all [sub_eq_add_neg]
-  <;> ring_nf
-  <;> simp_all
+  intro m hm
+  have _ := hm
+  dsimp [bracket]
+  simp
 
 /-- 🏆 THEOREM 2: The commutant is closed under addition. -/
 theorem add_mem_commutant (M : Set B) {b₁ b₂ : B}

@@ -2,20 +2,6 @@ import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 
-/-!
-# The Short Exact Sequence of Derivations and the Lie Ideal of Modular Flows
-
-This module formalizes:
-1. The kernel of the modular map: ker(ad) = Z(A) (the center of the algebra).
-2. The Lie ideal theorem: [Der(A), Inn(A)] ⊆ Inn(A), proving that the inner modular
-   flows form a strict Lie ideal inside the full spacetime derivation algebra.
-3. The exact algebraic foundation of the semidirect decomposition:
-     Total Symmetry ≅ Out(A) ⋉ Inn(A)
-     (Spacetime Geometry ⋉ Quantum Thermodynamics)
-
-All proofs are natively verified in Lean 4 with zero `sorry`s.
--/
-
 noncomputable section
 
 namespace InfoGeometry.Modular.ExactSequence

@@ -129,6 +129,123 @@ theorem fisher_pos_semidef
   have hsq : 0 ≤ (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 := sq_nonneg _
   exact mul_nonneg hw hsq
 
+/-- THEOREM 4: Full Fisher Matrix is Strictly Positive Definite (PD) under Separating Charges.
+    If charges separate microstates, then for all v ≠ 0, vᵀ F v > 0. -/
+theorem fisher_pos_def_of_separating
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (v : Fin 2 → ℝ) (hv : v ≠ 0)
+    (hseparates : ∀ w : Fin 2 → ℝ, w ≠ 0 →
+      ∃ x y : State, (∑ i : Fin 2, w i * (D.momentMap x i - D.momentMap y i)) ≠ 0) :
+    0 < ∑ i : Fin 2, ∑ j : Fin 2, v i * chargeCovariance D beta i j * v j := by
+  have h_identity : (∑ i : Fin 2, ∑ j : Fin 2, v i * chargeCovariance D beta i j * v j) =
+      ∑ x : State, realGibbsWeight D beta x *
+        (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 := by
+    dsimp [chargeCovariance]
+    calc
+      ∑ i : Fin 2, ∑ j : Fin 2, v i * (∑ x : State, realGibbsWeight D beta x *
+          (D.momentMap x i - souriauChargeMean D beta i) *
+          (D.momentMap x j - souriauChargeMean D beta j)) * v j
+        = ∑ i : Fin 2, ∑ j : Fin 2, ∑ x : State,
+            realGibbsWeight D beta x *
+            (v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+            (v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          apply Finset.sum_congr rfl
+          intro j _
+          rw [Finset.mul_sum, Finset.sum_mul]
+          apply Finset.sum_congr rfl
+          intro x _
+          ring
+      _ = ∑ i : Fin 2, ∑ x : State, ∑ j : Fin 2,
+            realGibbsWeight D beta x *
+            (v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+            (v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          rw [Finset.sum_comm]
+      _ = ∑ x : State, ∑ i : Fin 2, ∑ j : Fin 2,
+            realGibbsWeight D beta x *
+            (v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+            (v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+          rw [Finset.sum_comm]
+      _ = ∑ x : State, realGibbsWeight D beta x *
+            (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+            (∑ j : Fin 2, v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+          apply Finset.sum_congr rfl
+          intro x _
+          calc
+            ∑ i : Fin 2, ∑ j : Fin 2,
+                realGibbsWeight D beta x *
+                (v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+                (v j * (D.momentMap x j - souriauChargeMean D beta j))
+              = ∑ i : Fin 2, (realGibbsWeight D beta x * (v i * (D.momentMap x i - souriauChargeMean D beta i))) *
+                  ∑ j : Fin 2, (v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+                apply Finset.sum_congr rfl
+                intro i _
+                rw [← Finset.mul_sum]
+            _ = (∑ i : Fin 2, (realGibbsWeight D beta x * (v i * (D.momentMap x i - souriauChargeMean D beta i)))) *
+                  ∑ j : Fin 2, (v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+                rw [← Finset.sum_mul]
+            _ = realGibbsWeight D beta x *
+                  (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) *
+                  (∑ j : Fin 2, v j * (D.momentMap x j - souriauChargeMean D beta j)) := by
+                rw [← Finset.mul_sum]
+      _ = ∑ x : State, realGibbsWeight D beta x *
+            (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 := by
+          apply Finset.sum_congr rfl
+          intro x _
+          ring
+  rw [h_identity]
+  have h_nonneg : ∀ x ∈ (Finset.univ : Finset State),
+      0 ≤ realGibbsWeight D beta x *
+        (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 := by
+    intro x _
+    have hw : 0 ≤ realGibbsWeight D beta x := by
+      unfold realGibbsWeight
+      exact div_nonneg (Real.exp_pos _).le (realGibbsPartition_pos D beta).le
+    have hsq : 0 ≤ (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 := sq_nonneg _
+    exact mul_nonneg hw hsq
+  rcases hseparates v hv with ⟨x, y, hdiff⟩
+  have h_not_both_zero :
+      (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ≠ 0 ∨
+      (∑ i : Fin 2, v i * (D.momentMap y i - souriauChargeMean D beta i)) ≠ 0 := by
+    by_contra h_both_zero
+    push_neg at h_both_zero
+    rcases h_both_zero with ⟨hx, hy⟩
+    have h_sub : (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) -
+                 (∑ i : Fin 2, v i * (D.momentMap y i - souriauChargeMean D beta i)) = 0 := by
+      rw [hx, hy, sub_self]
+    have h_sub_eq : (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) -
+                    (∑ i : Fin 2, v i * (D.momentMap y i - souriauChargeMean D beta i)) =
+                    ∑ i : Fin 2, v i * (D.momentMap x i - D.momentMap y i) := by
+      rw [← Finset.sum_sub_distrib]
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+    rw [h_sub_eq] at h_sub
+    exact hdiff h_sub
+  have h_exists_pos : ∃ x0 ∈ (Finset.univ : Finset State),
+      0 < realGibbsWeight D beta x0 *
+        (∑ i : Fin 2, v i * (D.momentMap x0 i - souriauChargeMean D beta i)) ^ 2 := by
+    cases h_not_both_zero with
+    | inl hx =>
+      refine ⟨x, Finset.mem_univ x, ?_⟩
+      have hw_pos : 0 < realGibbsWeight D beta x := by
+        unfold realGibbsWeight
+        exact div_pos (Real.exp_pos _) (realGibbsPartition_pos D beta)
+      have hsq_pos : 0 < (∑ i : Fin 2, v i * (D.momentMap x i - souriauChargeMean D beta i)) ^ 2 :=
+        sq_pos_of_ne_zero hx
+      exact mul_pos hw_pos hsq_pos
+    | inr hy =>
+      refine ⟨y, Finset.mem_univ y, ?_⟩
+      have hw_pos : 0 < realGibbsWeight D beta y := by
+        unfold realGibbsWeight
+        exact div_pos (Real.exp_pos _) (realGibbsPartition_pos D beta)
+      have hsq_pos : 0 < (∑ i : Fin 2, v i * (D.momentMap y i - souriauChargeMean D beta i)) ^ 2 :=
+        sq_pos_of_ne_zero hy
+      exact mul_pos hw_pos hsq_pos
+  exact Finset.sum_pos' h_nonneg h_exists_pos
+
 end InfoGeometry.Canonical.MassieuFisherClassical
 
 end noncomputable section

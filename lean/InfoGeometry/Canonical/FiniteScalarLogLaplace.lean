@@ -241,9 +241,9 @@ theorem hasDerivAt_mean (θ : ℝ) :
     (F.hasDerivAt_partition θ) (F.partition_ne_zero θ)
   have heq : (F.secondMomentNumerator θ * F.partition θ - F.firstMomentNumerator θ * F.firstMomentNumerator θ) / (F.partition θ) ^ 2 = F.variance θ := by
     dsimp [variance, secondMoment, mean]
-    field_simp
-    ring
-  exact heq ▸ h
+    field_simp [F.partition_ne_zero θ]
+  rw [← heq]
+  exact h
 
 @[simp] theorem deriv_mean (θ : ℝ) :
     deriv F.mean θ = F.variance θ :=
@@ -318,8 +318,7 @@ theorem kl_eq_bregman_reverse (θ η : ℝ) :
           ((Real.log (F.weight i) + θ * F.statistic i - F.logPartition θ) -
             (Real.log (F.weight i) + η * F.statistic i - F.logPartition η)) =
         (θ - η) * (F.probability θ i * F.statistic i) +
-          (F.logPartition η - F.logPartition θ) * F.probability θ i := by
-    ring
+          (F.logPartition η - F.logPartition θ) * F.probability θ i := by ring
   simp_rw [hpoint]
   rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
   rw [← F.mean_eq_expectation, F.sum_probability]

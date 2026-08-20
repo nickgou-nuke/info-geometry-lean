@@ -199,6 +199,36 @@ theorem modularAutomorphismGroup_map_commutator
           (NormedSpace.exp (t • M.modularHamiltonian) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) := by
             repeat rw [mul_assoc]
 
+@[simp] theorem modularAutomorphismGroup_map_one
+    (M : ModularRadonNikodymData E) (t : ℝ) :
+    modularAutomorphismGroup M t (1 : EndH E) = 1 := by
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
+      (H := E) M.modularHamiltonian t).map_one
+
+theorem modularAutomorphismGroup_map_mul
+    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (A * B) =
+      modularAutomorphismGroup M t A * modularAutomorphismGroup M t B := by
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
+      (H := E) M.modularHamiltonian t).map_mul A B
+
+theorem modularAutomorphismGroup_map_add
+    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (A + B) =
+      modularAutomorphismGroup M t A + modularAutomorphismGroup M t B := by
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
+      (H := E) M.modularHamiltonian t).map_add A B
+
+theorem modularAutomorphismGroup_map_smul
+    (M : ModularRadonNikodymData E) (r : ℝ) (A : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (r • A) =
+      r • modularAutomorphismGroup M t A := by
+  simp [modularAutomorphismGroup, InfoGeometry.Krein.modular_shift,
+    InfoGeometry.Krein.krein_modular_shift, smul_mul_assoc, mul_smul_comm]
+
 /--
 Infinitesimal modular-flow generator at the origin:
 the derivative of `σ_τ(A)` at `τ = 0` is the commutator with the modular Hamiltonian.

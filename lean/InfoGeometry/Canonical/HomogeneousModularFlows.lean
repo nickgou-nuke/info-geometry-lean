@@ -4,6 +4,7 @@ import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 import InfoGeometry.Core.HomogeneousSpaces
+import InfoGeometry.LogarithmicBridge
 
 noncomputable section
 
@@ -72,6 +73,20 @@ theorem maurerCartanDerivative_mul_eq_add
   rw [capstone_logarithmicBridge_factors_maurerCartan D hD Δ12 inv_Δ12 Δ23 inv_Δ23]
   rw [h12, h23]
   ring
+
+/-! The normalized Maurer--Cartan product rule is the same theorem as the
+    logarithmic Radon--Nikodym chain rule, after unfolding the common
+    left-invariant derivative expression. -/
+theorem maurerCartanDerivative_eq_logarithmicRadonNikodym
+    (D : R →ₗ[R] R) (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : R)
+    (h12 : Δ12 * inv_Δ12 = 1)
+    (h23 : Δ23 * inv_Δ23 = 1) :
+    maurerCartanDerivative D (Δ12 * Δ23) (inv_Δ12 * inv_Δ23) =
+      inv_Δ12 * D Δ12 + inv_Δ23 * D Δ23 := by
+  simpa [maurerCartanDerivative] using
+    (InfoGeometry.LogarithmicBridge.logarithmicRadonNikodym_chainRule_of_inverses
+      D hD Δ12 inv_Δ12 Δ23 inv_Δ23 h12 h23)
 
 /-! The unit-group form supplies the inverse witnesses canonically. -/
 theorem maurerCartanUnit_mul_eq_add

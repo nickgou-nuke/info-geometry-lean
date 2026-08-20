@@ -1,9 +1,4 @@
-import Mathlib.Algebra.Star.SelfAdjoint
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-import Mathlib.Topology.Algebra.Module.Star
-import Mathlib.Tactic
+import Mathlib
 
 set_option autoImplicit false
 

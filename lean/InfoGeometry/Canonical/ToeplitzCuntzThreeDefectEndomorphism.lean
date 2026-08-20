@@ -50,7 +50,6 @@ theorem defectLeftMul_idempotent :
 theorem defectLeftMul_comp_hamiltonian :
     defectLeftMul g * leftMulLinear g.susyHamiltonian = 0 := by
   ext x
-  simp only [defectLeftMul, leftMulLinear_apply, LinearMap.mul_apply]
   change g.P0 * (g.susyHamiltonian * x) = 0
   rw [← mul_assoc, susyHamiltonian_defect_annihilation_left g, zero_mul]
 

@@ -1,10 +1,10 @@
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 import InfoGeometry.Algebra.PrimonColimitAlgebra
-import InfoGeometry.TraceFormula.ColimitTrace
 import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
 import InfoGeometry.TraceFormula.DeRhamHolonomyStokes
 import InfoGeometry.TraceFormula.FiniteISColimitInverseLimitSearch
+import InfoGeometry.KMSGNS
 
 /-!
 # Finite-to-colimit Primon Hamiltonian readouts

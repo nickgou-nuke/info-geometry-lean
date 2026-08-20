@@ -6,8 +6,8 @@ import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 import InfoGeometry.Analysis.MatrixPathDeformationEntropy
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary
+import InfoGeometry.KMSGNS
 
 /-! Owner-import surface only; proof authority remains in imported owners. -/
 

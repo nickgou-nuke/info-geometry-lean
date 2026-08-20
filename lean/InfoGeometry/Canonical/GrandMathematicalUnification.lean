@@ -4,8 +4,6 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
-import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Modular.Classification
 import InfoGeometry.QuantumGeometry.Projective.Basic
 import InfoGeometry.QuantumGeometry.Projective.QGT
@@ -13,6 +11,7 @@ import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
 import InfoGeometry.Canonical.PhysicalBdGPairingBridge
 import InfoGeometry.Canonical.CompleteUnifiedBundle
+import InfoGeometry.KMSGNS
 
 /-!
 # The Grand Mathematical Unification: 5-Pillar Architecture in Native Lean 4

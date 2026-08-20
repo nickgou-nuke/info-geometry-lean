@@ -8,13 +8,13 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Canonical.PhysicalBdGPairingBridge
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.Projective.Quotient
 import InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
 import InfoGeometry.OperatorAlgebra.ChiralRailPlane
 import InfoGeometry.Canonical.TriadicSynthesisDictionary
+import InfoGeometry.KMSGNS
 
 open ContinuousLinearMap
 open scoped InnerProductSpace

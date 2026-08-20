@@ -4,12 +4,11 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
-import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.QuantumGeometry.Projective.Basic
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.Canonical.CompleteUnifiedBundle
+import InfoGeometry.KMSGNS
 
 /-!
 # The Erlangen–Langlands Principal Quantum Thermodynamic Bundle

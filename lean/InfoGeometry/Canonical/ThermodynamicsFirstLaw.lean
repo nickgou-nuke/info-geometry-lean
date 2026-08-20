@@ -5,10 +5,10 @@ import Mathlib.Tactic
 
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
-import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RedlineGrandSynthesis
 import InfoGeometry.Canonical.DeRhamThermodynamicPotential
+import InfoGeometry.KMSGNS
 
 /-!
 # The First Law of Thermodynamics as the Derivation Exact Sequence

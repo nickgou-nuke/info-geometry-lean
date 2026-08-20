@@ -174,6 +174,13 @@ theorem dlogR_mul_of_commute (D : NoncommutativeDerivation A) (u v : Aˣ)
           simp only [mul_assoc]
     _ = dlogR D u + dlogR D v := by rw [hu, mul_one]
 
+/- A central left factor removes the conjugation term in the right cocycle. -/
+theorem dlogR_mul_of_central (D : NoncommutativeDerivation A) (c u : Aˣ)
+    (h_central : ∀ x, (c : Aˣ).val * x = x * (c : Aˣ).val) :
+    dlogR D (c * u) = dlogR D c + dlogR D u := by
+  apply dlogR_mul_of_commute
+  exact h_central (dlogR D u)
+
 /-- 🏆 THEOREM 3: Noncommutative Inversion Duality:
     dlog_L(u⁻¹) = - dlog_R(u) -/
 theorem dlogL_inv_eq_neg_dlogR (D : NoncommutativeDerivation A) (u : Aˣ) :

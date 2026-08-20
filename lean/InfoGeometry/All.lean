@@ -251,6 +251,7 @@ import InfoGeometry.Algebra.NilpotentModularAutomorphism
 import InfoGeometry.Algebra.NilpotentNonunit
 import InfoGeometry.Algebra.NoFaithfulAssociativeModel
 import InfoGeometry.Algebra.NonAssocDerivation
+import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.OnCuntzNAryIFSBridge

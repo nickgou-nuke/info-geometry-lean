@@ -407,7 +407,7 @@ the modular derivation:
 
   ω(D X) = 0.
 
-This is the exact infinitesimal stationarity theorem.
+This is the exact infinitesimal thermal stationarity theorem.
 -/
 theorem linearizedKMS_stationary
     (ω : NormalizedLinearFunctional A)

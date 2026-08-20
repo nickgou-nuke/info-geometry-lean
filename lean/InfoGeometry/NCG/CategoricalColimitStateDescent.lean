@@ -79,13 +79,13 @@ theorem transitionN_add (n k : ℕ) (x y : S.Stage n) :
 
 theorem transitionN_smul (n k : ℕ) (r : R) (x : S.Stage n) :
     S.transitionN n k (r • x) = r • S.transitionN n k x := by
-  exact (S.transitionN n k).map_smul r x
+  exact _root_.map_smul (S.transitionN n k) r x
 
 theorem transitionN_zero_element (n k : ℕ) :
     S.transitionN n k 0 = 0 := by
   exact (S.transitionN n k).map_zero
 
-theorem transitionN_one (n k : ℕ) :
+theorem transitionN_map_one (n k : ℕ) :
     S.transitionN n k 1 = 1 := by
   exact (S.transitionN n k).map_one
 

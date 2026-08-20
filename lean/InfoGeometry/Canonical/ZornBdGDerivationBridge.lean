@@ -53,7 +53,7 @@ theorem sigmaVec_add (u v : Fin 3 → ℂ) :
     sigmaVec (u + v) = sigmaVec u + sigmaVec v := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, Pi.add_apply, add_mul, mul_add]
+    simp [sigmaVec, Pi.add_apply, mul_add]
     <;> ring
 
 theorem sigmaVec_smul (c : ℂ) (u : Fin 3 → ℂ) :
@@ -62,6 +62,17 @@ theorem sigmaVec_smul (c : ℂ) (u : Fin 3 → ℂ) :
   fin_cases i <;> fin_cases j <;>
     simp [sigmaVec, Pi.smul_apply, smul_eq_mul]
     <;> ring
+
+/-- The Pauli soldering is a bundled complex-linear map. -/
+def sigmaVecLinear :
+    (Fin 3 → ℂ) →ₗ[ℂ] Matrix (Fin 2) (Fin 2) ℂ where
+  toFun := sigmaVec
+  map_add' := sigmaVec_add
+  map_smul' := sigmaVec_smul
+
+@[simp]
+theorem sigmaVecLinear_apply (u : Fin 3 → ℂ) :
+    sigmaVecLinear u = sigmaVec u := rfl
 
 theorem sigmaVec_zero : sigmaVec (fun _ => 0) = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> { simp [sigmaVec] }
@@ -101,10 +112,10 @@ theorem sigmaVec_injective : Function.Injective sigmaVec := by
   have hz : sigmaVec (u - v) = 0 := by
     rw [sigmaVec_sub, h, sub_self]
   have hzero := (sigmaVec_eq_zero_iff (u - v)).mp hz
-  funext i
-  have hi := hzero i
-  have hii : u i = v i := sub_eq_zero.mp hi
-  exact hii
+  ext i
+  have hi : (u - v) i = 0 := hzero i
+  change u i - v i = 0 at hi
+  exact sub_eq_zero.mp hi
 
 /--
   THEOREM 1: The Fundamental Pauli Product Identity
@@ -278,6 +289,16 @@ theorem zorn_mul_one (X : Zorn R) : X * (1 : Zorn R) = X := by
 /-- The split (4,4) composition norm: N(Z) = a b - u · v -/
 def zornNorm (X : Zorn R) : R :=
   X.a * X.b - dotR X.u X.v
+
+@[simp]
+theorem zornNorm_one : zornNorm (1 : Zorn R) = 1 := by
+  change (1 : R) * 1 - (0 * 0 + 0 * 0 + 0 * 0) = 1
+  ring
+
+theorem zornNorm_scalar_one (c : R) :
+    zornNorm (c • (1 : Zorn R)) = c * c := by
+  change (c * 1) * (c * 1) - (c * 0 * (c * 0) + c * 0 * (c * 0) + c * 0 * (c * 0)) = c * c
+  ring
 
 /-- Predicate stating that D is a derivation on the Zorn algebra -/
 def IsZornDerivation (D : Zorn R → Zorn R) : Prop :=

@@ -48,6 +48,21 @@ theorem coordinateSurprisalPotential_contDiffOn
     (Real.contDiffAt_log).2 (ne_of_gt hxi)
   exact ((hlog.comp x ((coordinateCLM i).contDiff.contDiffAt)).neg).contDiffWithinAt
 
+def totalSurprisalPotential : Chart α → ℝ :=
+  fun x => ∑ i : α, coordinateSurprisalPotential i x
+
+theorem totalSurprisalPotential_contDiffOn :
+    ContDiffOn ℝ (⊤ : WithTop ℕ∞) (totalSurprisalPotential (α := α))
+      (interior (InfoGeometry.Projective.positiveOrthantCone (α := α) :
+        Set (Chart α))) := by
+  unfold totalSurprisalPotential
+  exact ContDiffOn.sum (fun i _ =>
+    coordinateSurprisalPotential_contDiffOn i)
+
+theorem totalSurprisalPotential_apply (x : Chart α) :
+    totalSurprisalPotential x =
+      ∑ i : α, coordinateSurprisalPotential i x := rfl
+
 theorem integral_coordinateSurprisalRate_eq_potential_sub
     (i : α) {γ : ℝ → Chart α} {a b : ℝ}
     (hγ : ∀ t ∈ Set.uIcc a b, DifferentiableAt ℝ γ t)

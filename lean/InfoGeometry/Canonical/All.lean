@@ -3327,6 +3327,7 @@ import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
 import InfoGeometry.Canonical.DeRhamThermodynamicPotential
 import InfoGeometry.Canonical.ThermodynamicsFirstLaw
 import InfoGeometry.Canonical.EmergentSpacetimeQuantumGeometryBridge
+import InfoGeometry.Canonical.EmergentSouriauQGTBridge
 import InfoGeometry.Continuous.DeRhamUnifiedCorridor
 import InfoGeometry.CompleteUnifiedBundle
 

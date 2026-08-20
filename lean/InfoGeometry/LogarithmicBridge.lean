@@ -115,6 +115,20 @@ theorem logarithmicRadonNikodym_chainRule
     _ = (inv_Δ12 * D Δ12) * (Δ23 * inv_Δ23) + (inv_Δ23 * D Δ23) * (Δ12 * inv_Δ12) := by
         ring
 
+/-! The additive logarithmic-derivative form requires the inverse factors to
+    cancel.  The preceding theorem is the product-rule expansion; this is its
+    normalized modular form. -/
+theorem logarithmicRadonNikodym_chainRule_of_inverses
+    (D : R →ₗ[R] R) (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : R)
+    (h12 : Δ12 * inv_Δ12 = 1)
+    (h23 : Δ23 * inv_Δ23 = 1) :
+    (inv_Δ12 * inv_Δ23) * (D (Δ12 * Δ23)) =
+      inv_Δ12 * D Δ12 + inv_Δ23 * D Δ23 := by
+  rw [logarithmicRadonNikodym_chainRule D hD Δ12 inv_Δ12 Δ23 inv_Δ23]
+  rw [h12, h23]
+  ring
+
 /-!
 =============================================================================
 PART 3: The Zero-Jacobian Weyl Boundary Bridge

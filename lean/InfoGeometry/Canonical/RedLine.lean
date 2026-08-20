@@ -98,22 +98,6 @@ export InfoGeometry.Continuous.DeRhamBridge (
   exactOneForm_path_integral
 )
 
-export InfoGeometry.Continuous.PositiveOrthantChart (
-  Chart
-  PositiveOrthant
-  mem_positiveOrthant
-  isOpen_positiveOrthant
-  PositiveOrthantManifold
-  toAmbient
-  toAmbient_apply
-  toAmbient_injective
-  coordinate_positive
-  projCoord
-  projCoord_apply
-  coordinateLogPotential_contDiffOn
-  hasFDerivAt_coordinateLogPotential
-)
-
 export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (
   coordinateCLM
   coordinateCLM_apply

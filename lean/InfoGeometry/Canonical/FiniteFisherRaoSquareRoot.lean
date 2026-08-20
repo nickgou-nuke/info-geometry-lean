@@ -35,7 +35,7 @@ namespace StrictProbability
 variable (P : StrictProbability ι)
 
 /-- Tangent vectors to the affine probability hyperplane. -/
-def Tangent : Type u :=
+def Tangent (P : StrictProbability ι) : Type u :=
   {h : ι → ℝ // ∑ i : ι, h i = 0}
 
 /-- Fisher-Rao bilinear pairing. -/
@@ -43,7 +43,7 @@ def fisherPair (h k : ι → ℝ) : ℝ :=
   ∑ i : ι, h i * k i / P.probability i
 
 /-- Ordinary Euclidean pairing on finite coordinate vectors. -/
-def euclideanPair (h k : ι → ℝ) : ℝ :=
+def euclideanPair (P : StrictProbability ι) (h k : ι → ℝ) : ℝ :=
   ∑ i : ι, h i * k i
 
 /-- The radius-two square-root amplitude. -/
@@ -146,4 +146,3 @@ end StrictProbability
 end InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
 
 end noncomputable section
-

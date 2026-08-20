@@ -26,7 +26,7 @@ theorem eq_of_hasFDerivAt_zero
       HasFDerivAt F (0 : ℝ →L[ℝ] E) t)
     (s t : ℝ) :
     F s = F t := by
-  apply is_const_of_fderiv_eq_zero
+  apply is_const_of_fderiv_eq_zero (𝕜 := ℝ)
   · intro x
     exact (hF x).differentiableAt
   · intro x

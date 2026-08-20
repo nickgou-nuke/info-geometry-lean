@@ -165,6 +165,11 @@ theorem innerNCDerivation_eq_zero_iff (K : A) :
     rw [h X]
     simp
 
+theorem innerNCDerivation_commutes_iff (K₁ K₂ : A) :
+    ncDerivationCommutator (innerNCDerivation K₁) (innerNCDerivation K₂) = 0 ↔
+      ∀ X : A, adK K₁ K₂ * X = X * adK K₁ K₂ := by
+  rw [innerNCDerivation_bracket, innerNCDerivation_eq_zero_iff]
+
 def dlog (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)
 

@@ -492,7 +492,8 @@ theorem zornFlowMulEquiv_preserves_central
     ∀ Y : CZ,
       zornFlowMulEquiv D t X * Y = Y * zornFlowMulEquiv D t X := by
   intro Y
-  have hcomm :=
+  have hcomm : zornFlowMulEquiv D t X * zornFlowMulEquiv D t (zornFlowMulEquiv D (-t) Y) =
+      zornFlowMulEquiv D t (zornFlowMulEquiv D (-t) Y) * zornFlowMulEquiv D t X :=
     (zornFlowMulEquiv_commute_iff D X (zornFlowMulEquiv D (-t) Y) t).mpr
       (hX (zornFlowMulEquiv D (-t) Y))
   rw [zornFlowMulEquiv_apply_neg] at hcomm

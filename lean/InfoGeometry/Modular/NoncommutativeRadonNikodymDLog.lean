@@ -102,6 +102,20 @@ def dlogL (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
 def dlogR (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
   D (u.val) * (u⁻¹ : Aˣ).val
 
+/-- The right logarithmic derivative of an inner derivation is the associated
+    noncommutative gauge shift. -/
+theorem dlogR_innerDerivationOf (K : A) (u : Aˣ) :
+    dlogR (innerDerivationOf K) u =
+      K - (u : A) * K * (u⁻¹ : Aˣ).val := by
+  dsimp [dlogR, innerDerivationOf]
+  have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  calc
+    (K * (u : A) - (u : A) * K) * (u⁻¹ : Aˣ).val =
+        (K * (u : A)) * (u⁻¹ : Aˣ).val -
+          ((u : A) * K) * (u⁻¹ : Aˣ).val := by rw [sub_mul]
+    _ = K - (u : A) * K * (u⁻¹ : Aˣ).val := by
+      rw [mul_assoc, hu, mul_one]
+
 /-- The right logarithmic derivative detects stationary units exactly. -/
 theorem dlogR_eq_zero_iff (D : NoncommutativeDerivation A) (u : Aˣ) :
     dlogR D u = 0 ↔ D u.val = 0 := by

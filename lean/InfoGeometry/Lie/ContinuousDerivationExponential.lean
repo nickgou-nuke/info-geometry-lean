@@ -696,6 +696,22 @@ theorem flow_preserves_idempotent
   ]
 
 /--
+A continuous derivation preserves Peirce idempotents under its exponential flow.
+
+If `e` satisfies `mul e e = e`, then `flow D t e` also satisfies
+`mul (flow D t e) (flow D t e) = flow D t e`.
+-/
+theorem continuous_derivation_preserves_peirce
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (e : A)
+    (he : mul e e = e) :
+    mul (flow D t e) (flow D t e) = flow D t e :=
+  flow_preserves_idempotent mul D hD t e he
+
+/--
 A square-zero element remains square-zero under the derivation exponential.
 -/
 theorem flow_preserves_square_zero

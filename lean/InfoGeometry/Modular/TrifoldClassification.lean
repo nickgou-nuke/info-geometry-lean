@@ -190,6 +190,11 @@ theorem projVol_projChir_orthogonal (two_n_inv : R) (S : State) :
   rw [h]
   simp
 
+/-- Alias: projVol_projChir_ortho -/
+theorem projVol_projChir_ortho (two_n_inv : R) (S : State) :
+    projVol two_n_inv (projChir two_n_inv S) = (0, 0) :=
+  projVol_projChir_orthogonal two_n_inv S
+
 theorem beta_projVol (two_n_inv : R) (S : State) : beta two_n_inv (projVol two_n_inv S) = 0 := by
   dsimp [beta, projVol, superTrace]
   simp only [Matrix.trace_smul, Matrix.trace_one, smul_eq_mul]
@@ -211,10 +216,8 @@ PART 6: Completeness (Partition of Unity) and Shape Idempotency
 =============================================================================
 -/
 
-/-- 
-  THEOREM 5: Partition of Unity (Completeness)
-  π_vol(S) + π_chir(S) + π_shape(S) = S
--/
+/-- THEOREM 5: Partition of Unity (Completeness)
+  π_vol(S) + π_chir(S) + π_shape(S) = S -/
 theorem trifold_partition_of_unity (two_n_inv : R) (S : State) :
     (projVol two_n_inv S).1 + (projChir two_n_inv S).1 + (projShape two_n_inv S).1 = S.1 ∧
     (projVol two_n_inv S).2 + (projChir two_n_inv S).2 + (projShape two_n_inv S).2 = S.2 := by
@@ -224,6 +227,12 @@ theorem trifold_partition_of_unity (two_n_inv : R) (S : State) :
     abel
   · simp only [sub_smul]
     abel
+
+/-- Alias: proj_partition_of_unity -/
+theorem proj_partition_of_unity (two_n_inv : R) (S : State) :
+    (projVol two_n_inv S).1 + (projChir two_n_inv S).1 + (projShape two_n_inv S).1 = S.1 ∧
+    (projVol two_n_inv S).2 + (projChir two_n_inv S).2 + (projShape two_n_inv S).2 = S.2 :=
+  trifold_partition_of_unity two_n_inv S
 
 theorem alpha_projShape (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (S : State) :
     alpha two_n_inv (projShape two_n_inv S) = 0 := by
@@ -337,5 +346,31 @@ theorem mem_shape_iff_traces_zero (two_n_inv : R) (h_two_n : (2 * (Fintype.card 
     dsimp [projShape]
     rw [h_a, h_b]
     simp
+
+/-- Alias: projShape_fixed_iff -/
+theorem projShape_fixed_iff (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (S : State) :
+    projShape two_n_inv S = S ↔ totalTrace S = 0 ∧ superTrace S = 0 :=
+  mem_shape_iff_traces_zero two_n_inv h_two_n S
+
+/-- THEOREM 8: The pure shape projector outputs traceless and supertraceless elements. -/
+theorem projShape_traceless (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (S : State) :
+    totalTrace (projShape two_n_inv S) = 0 ∧ superTrace (projShape two_n_inv S) = 0 := by
+  have ha := alpha_projShape two_n_inv h_two_n S
+  have hb := beta_projShape two_n_inv h_two_n S
+  have h_tr : totalTrace (projShape two_n_inv S) = 0 := by
+    calc totalTrace (projShape two_n_inv S) = totalTrace (projShape two_n_inv S) * 1 := (mul_one _).symm
+    _ = totalTrace (projShape two_n_inv S) * ((2 * (Fintype.card ι : R)) * two_n_inv) := by rw [h_two_n]
+    _ = (totalTrace (projShape two_n_inv S) * two_n_inv) * (2 * (Fintype.card ι : R)) := by ring
+    _ = alpha two_n_inv (projShape two_n_inv S) * (2 * (Fintype.card ι : R)) := rfl
+    _ = 0 * (2 * (Fintype.card ι : R)) := by rw [ha]
+    _ = 0 := by ring
+  have h_str : superTrace (projShape two_n_inv S) = 0 := by
+    calc superTrace (projShape two_n_inv S) = superTrace (projShape two_n_inv S) * 1 := (mul_one _).symm
+    _ = superTrace (projShape two_n_inv S) * ((2 * (Fintype.card ι : R)) * two_n_inv) := by rw [h_two_n]
+    _ = (superTrace (projShape two_n_inv S) * two_n_inv) * (2 * (Fintype.card ι : R)) := by ring
+    _ = beta two_n_inv (projShape two_n_inv S) * (2 * (Fintype.card ι : R)) := rfl
+    _ = 0 * (2 * (Fintype.card ι : R)) := by rw [hb]
+    _ = 0 := by ring
+  exact ⟨h_tr, h_str⟩
 
 end InfoGeometry.Modular.Classification

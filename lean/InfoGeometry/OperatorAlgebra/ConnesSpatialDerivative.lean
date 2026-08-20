@@ -241,7 +241,7 @@ theorem chain_rule_assoc
       (D.chain_rule φ ψ ξ).symm
     _ = D.spatialDerivative φ ψ *
         (D.spatialDerivative ψ η * D.spatialDerivative η ξ) := by
-        rw [D.chain_rule]
+        rw [D.chain_rule ψ η ξ, D.chain_rule φ ψ ξ]
 
 end ConnesSpatialDerivative
 

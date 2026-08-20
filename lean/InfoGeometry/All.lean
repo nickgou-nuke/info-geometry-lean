@@ -7412,3 +7412,4 @@ import InfoGeometry.Lie.CartanCosetRiemannCurvatureBridge
 import InfoGeometry.EndToEnd.KMS
 import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge
 import InfoGeometry.Canonical.MoebiusKleinStatisticalZornSynthesis
+import InfoGeometry.Physics.FiniteSpinDensityRelativeModularBridge

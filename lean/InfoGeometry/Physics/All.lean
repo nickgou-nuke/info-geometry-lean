@@ -51,6 +51,7 @@ import InfoGeometry.Physics.ParabolicClock
 import InfoGeometry.Physics.KreinHestenesTransportClock
 import InfoGeometry.Physics.FiniteLeftRightRelativeAction
 import InfoGeometry.Physics.FiniteRelativeModularOperator
+import InfoGeometry.Physics.FiniteSpinDensityRelativeModularBridge
 import InfoGeometry.Physics.FiniteRelativeModularLogBridge
 import InfoGeometry.Physics.FiniteModularCentralizer
 import InfoGeometry.Physics.FiniteChiralSpectralSymmetry

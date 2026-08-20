@@ -155,6 +155,10 @@ theorem derivation_inv_unit (u : Aˣ) :
 def pureGaugeForm (u : Aˣ) : A :=
   (u : A) * D (u⁻¹ : Aˣ).val
 
+/-! Conjugation of observables by an invertible element. -/
+def gaugeTransform (u : Aˣ) (X : A) : A :=
+  (u : A) * X * (u⁻¹ : Aˣ).val
+
 @[simp]
 theorem pureGaugeForm_one :
     pureGaugeForm D (1 : Aˣ) = 0 := by
@@ -176,10 +180,21 @@ theorem pureGaugeForm_eq_neg (u : Aˣ) :
           have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
           rw [hu, one_mul]
 
-/-- Conjugation of an observable by an invertible element. -/
-def gaugeTransform (u : Aˣ) (X : A) : A :=
-  (u : A) * X * (u⁻¹ : Aˣ).val
+/-- The Maurer--Cartan form satisfies the noncommutative cocycle law. -/
+theorem pureGaugeForm_mul (u v : Aˣ) :
+    pureGaugeForm D (u * v) =
+      (u : A) * pureGaugeForm D v * (u⁻¹ : Aˣ).val +
+        pureGaugeForm D u := by
+  dsimp [pureGaugeForm]
+  rw [mul_inv_rev, Units.val_mul, D.leibniz]
+  simp only [mul_add, add_mul, mul_assoc]
+  have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  have hv : (v : A) * (v⁻¹ : Aˣ).val = 1 := Units.mul_inv v
+  rw [← mul_assoc (u : A) (v : A), ← mul_assoc (D (v⁻¹ : Aˣ).val),
+    ← mul_assoc (u : A), hu, one_mul, hv, one_mul]
+  abel
 
+/-- Conjugation of an observable by an invertible element. -/
 /-- Conjugation by the identity unit is the identity transformation. -/
 @[simp]
 theorem gaugeTransform_one (X : A) :

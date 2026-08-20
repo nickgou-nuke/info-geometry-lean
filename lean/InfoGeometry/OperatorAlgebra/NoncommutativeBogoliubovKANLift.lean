@@ -288,23 +288,36 @@ variable {A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : T
 variable (P : NoncommutativeModularToBogoliubovKANData
   A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag)
 
-/--
-The operator-owner is the primary noncommutative packet of the bridge.
+/-- Connes cocycle multiplicative chain rule on the bridge packet. -/
+theorem bridge_connesCocycle_chain_rule
+    (φ ψ η : Weight) (t : ℝ) :
+    P.modularCore.connesCocycle.cocycle φ ψ t * P.modularCore.connesCocycle.cocycle ψ η t =
+      P.modularCore.connesCocycle.cocycle φ η t :=
+  P.modularCore.connesCocycle_chain_rule φ ψ η t
 
-This theorem is a re-exported projection to keep downstream callers explicit.
--/
-@[simp] theorem primary_modular_owner_is_noncommutative :
-    NoncommutativeModularToBogoliubovKANData.modularCore P = P.modularCore := by
-  rfl
+/-- Spatial derivative multiplicative chain rule on the bridge packet. -/
+theorem bridge_spatialDerivative_chain
+    (φ ψ η : Weight) :
+    P.modularCore.spatialDerivative.spatialDerivative φ ψ *
+        P.modularCore.spatialDerivative.spatialDerivative ψ η =
+      P.modularCore.spatialDerivative.spatialDerivative φ η :=
+  P.modularCore.spatialDerivative_chain φ ψ η
 
-/--
-Diagonal shadow can be extracted separately without changing the operator owner.
+/-- Modular flow multiplicativity on the bridge packet. -/
+theorem bridge_modularFlow_mul
+    (t : ℝ) (x y : A) :
+    P.modularCore.modularFlow.flow t (x * y) =
+      P.modularCore.modularFlow.flow t x * P.modularCore.modularFlow.flow t y :=
+  P.modularCore.modularFlow_mul t x y
 
-This keeps the commutative shadow in its role as a readout packet.
--/
-theorem diagonal_shadow_available :
-    P.bogoliubovShadow = P.bogoliubovShadow := by
-  rfl
+omit [CompleteSpace E] in
+/-- Cartan decomposition of the modular generator on the bridge shadow. -/
+theorem bridge_cartan_decomposition
+    (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
+    BogoliubovKANShadowData.cartanGaugeShadow (E := E) H +
+        BogoliubovKANShadowData.cartanScaleShadow (E := E) H =
+      BogoliubovTransport.modularTransportGenerator (E := E) H :=
+  BogoliubovKANShadowData.cartanGaugeShadow_add_cartanScaleShadow (E := E) H
 
 /-- The bridge exposes the noncommutative owner property; the shadow does not replace it. -/
 theorem operator_owner_has_noncommuting_pair

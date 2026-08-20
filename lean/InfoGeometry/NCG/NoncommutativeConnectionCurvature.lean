@@ -122,6 +122,26 @@ theorem pureGaugeForm_eq_neg (u : Aˣ) :
 def gaugeTransform (u : Aˣ) (X : A) : A :=
   (u : A) * X * (u⁻¹ : Aˣ).val
 
+/-- Conjugation by the identity unit is the identity transformation. -/
+@[simp]
+theorem gaugeTransform_one (X : A) :
+    gaugeTransform (1 : Aˣ) X = X := by
+  simp [gaugeTransform]
+
+/-- Observable conjugation is a genuine left action of the unit group. -/
+theorem gaugeTransform_mul (u v : Aˣ) (X : A) :
+    gaugeTransform u (gaugeTransform v X) =
+      gaugeTransform (u * v) X := by
+  simp only [gaugeTransform, Units.val_mul, Units.inv_mul]
+  simp only [mul_assoc]
+
+/-- Every gauge transformation is inverted by conjugation with the inverse
+unit. -/
+theorem gaugeTransform_inv (u : Aˣ) (X : A) :
+    gaugeTransform (u⁻¹) (gaugeTransform u X) = X := by
+  rw [← gaugeTransform_mul]
+  simp [gaugeTransform]
+
 /-- Gauge transformation of a connection one-form. -/
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
   (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u

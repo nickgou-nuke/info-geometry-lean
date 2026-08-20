@@ -180,9 +180,7 @@ theorem dlogMonoidHom_pow
     (D : A → A) (hD : IsDerivation D) (u : Aˣ) (n : ℕ) :
     dlogMonoidHom D hD (u ^ n) =
       Multiplicative.ofAdd (n • dlog D u) := by
-  rw [map_pow, dlogMonoidHom_apply]
-  apply Multiplicative.ext
-  simpa using dlog_pow D hD u n
+  rw [map_pow, dlogMonoidHom_apply, ofAdd_nsmul]
 
 /-!
 =============================================================================

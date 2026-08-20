@@ -31,6 +31,23 @@ def IsDerivation (D : A →ₗ[R] A) : Prop :=
   ∀ x y : A,
     D (mul x y) = mul (D x) y + mul x (D y)
 
+/-- The commutator of two linear endomorphisms. -/
+def derivationCommutator (D E : A →ₗ[R] A) : A →ₗ[R] A :=
+  D.comp E - E.comp D
+
+/-- Derivations are closed under the endomorphism commutator, without any
+associativity assumption on the underlying multiplication. -/
+theorem derivationCommutator_isDerivation
+    (D E : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hE : IsDerivation mul E) :
+    IsDerivation mul (derivationCommutator D E) := by
+  intro x y
+  simp only [derivationCommutator, LinearMap.sub_apply, LinearMap.comp_apply]
+  rw [hE x y, D.map_add, hD (E x) y, hD x (E y),
+    hD x y, E.map_add, hE (D x) y, hE x (D y)]
+  abel
+
 /-- The `n`-fold iterate of a linear endomorphism. -/
 def iterD (D : A →ₗ[R] A) (n : ℕ) : A →ₗ[R] A :=
   D ^ n

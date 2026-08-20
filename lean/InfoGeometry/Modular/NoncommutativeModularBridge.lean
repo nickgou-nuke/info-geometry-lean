@@ -264,6 +264,19 @@ theorem innerConjugation_add (u : Aˣ) (X Y : A) :
       innerConjugation u X + innerConjugation u Y := by
   simp only [innerConjugation, add_mul, mul_add]
 
+theorem innerConjugation_sub (u : Aˣ) (X Y : A) :
+    innerConjugation u (X - Y) =
+      innerConjugation u X - innerConjugation u Y := by
+  simp only [innerConjugation, mul_sub, sub_mul]
+
+theorem innerConjugation_adK (u : Aˣ) (K X : A) :
+    innerConjugation u (adK K X) =
+      adK (innerConjugation u K) (innerConjugation u X) := by
+  rw [innerConjugation_sub,
+    ← innerConjugation_mul u K X,
+    ← innerConjugation_mul u X K]
+  rfl
+
 theorem innerConjugation_comp (u v : Aˣ) (X : A) :
     innerConjugation u (innerConjugation v X) =
       innerConjugation (u * v) X := by

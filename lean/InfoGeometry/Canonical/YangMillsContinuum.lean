@@ -243,7 +243,8 @@ theorem modularAutomorphismGroup_fixed_all_iff_commute
     have hEq : M.modularHamiltonian * A = A * M.modularHamiltonian := sub_eq_zero.mp hSub
     exact hEq.symm
   · intro hComm t
-    exact modularShift_eq_self_of_commute M.modularHamiltonian A t hComm
+    simpa [modularAutomorphismGroup] using
+      (modularShift_eq_self_of_commute M.modularHamiltonian A t hComm)
 
 /-- Scalar derivative corollary for the modular automorphism group at `τ = 0`. -/
 theorem deriv_modularAutomorphismGroup_zero_eq_commutator

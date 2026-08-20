@@ -5384,7 +5384,7 @@ import InfoGeometry.MirrorPhase.ZornsFurnace
 import InfoGeometry.Modular.Classification
 import InfoGeometry.Modular.DerivationShortExactSequence
 import InfoGeometry.Modular.DualExponentialCommutatorBridge
-import InfoGeometry.Modular.NoncommutativeModularBridge
+import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import InfoGeometry.Modular.NoncommutativeLogarithmicDerivation
 import InfoGeometry.Modular.DualFlowLieAlgebraBridge
 import InfoGeometry.Modular.ExactSequence

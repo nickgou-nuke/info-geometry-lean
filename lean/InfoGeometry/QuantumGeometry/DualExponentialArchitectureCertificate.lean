@@ -18,6 +18,8 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+
 noncomputable section
 
 open ContinuousLinearMap

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Canonical.FiniteCartanLogLaplace
 import InfoGeometry.Canonical.MoebiusKleinStatisticalZornSynthesis
 import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge

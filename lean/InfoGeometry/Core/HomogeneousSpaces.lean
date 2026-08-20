@@ -28,8 +28,9 @@ instance instMulActionQuotientLeftRel (H : Subgroup G) : MulAction G (G ⧸ H) w
   smul g :=
     Quotient.map (fun x : G => g * x) <| by
       intro a b hab
-      change (g * a)⁻¹ * (g * b) ∈ H
-      simpa [mul_assoc] using hab
+      apply QuotientGroup.leftRel_apply.mpr
+      simpa [mul_assoc] using (show a⁻¹ * b ∈ H from
+        QuotientGroup.leftRel_apply.mp hab)
   one_smul := by
     intro x
     refine Quotient.inductionOn x ?_
@@ -61,9 +62,10 @@ theorem stabilizer_quotientBasepoint_eq (H : Subgroup G) :
     simpa using H.inv_mem hmem
   · intro hg
     change g • quotientBasepoint H = quotientBasepoint H
-    have hmem : g⁻¹ * (1 : G) ∈ H := by
+    have hmem : (g * (1 : G))⁻¹ * (1 : G) ∈ H := by
       simpa using H.inv_mem hg
-    exact QuotientGroup.eq.mpr hmem
+    simpa [quotientBasepoint, smul_mk, mul_assoc] using
+      (QuotientGroup.eq.mpr hmem : (QuotientGroup.mk (g * (1 : G)) : G ⧸ H) = QuotientGroup.mk (1 : G))
 
 /-- Minimal transitivity predicate for a group action. -/
 def IsHomogeneousSpace (G X : Type*) [Group G] [MulAction G X] : Prop :=

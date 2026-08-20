@@ -3350,6 +3350,7 @@ import InfoGeometry.Canonical.BdGSchurBerezinianCompatibility
 import InfoGeometry.Canonical.FiniteScalarLogLaplace
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 import InfoGeometry.Canonical.MeanValueInvariant
+import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
 
 namespace InfoGeometry
 

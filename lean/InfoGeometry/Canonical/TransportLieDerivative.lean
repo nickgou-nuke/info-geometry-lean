@@ -341,6 +341,16 @@ noncomputable def expTransportAlgEquiv
     (expTransport_one_seed X t)
     (fun A₁ A₂ => expTransport_mul_seed X A₁ A₂ t)
 
+/-- The finite transport equivalences form an additive one-parameter group. -/
+theorem expTransportAlgEquiv_add
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (s t : ℝ) :
+    expTransportAlgEquiv X (s + t) =
+      (expTransportAlgEquiv X t).trans (expTransportAlgEquiv X s) := by
+  ext A₀
+  exact expTransport_add_time X A₀ s t
+
 /--
 Exact exponential conjugation fixes a seed that commutes with the generator.
 

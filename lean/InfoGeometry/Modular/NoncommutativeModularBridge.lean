@@ -192,15 +192,16 @@ theorem dlog_inv (D : A →ₗ[ℤ] A) (hD : IsDerivation D) (u : Aˣ) :
         rw [← mul_assoc, hunit, one_mul]
       exact congrArg Neg.neg hrewrite.symm
 
-def NCDerivation.dlog (D : NCDerivation A) (u : Aˣ) : A := dlog D.toLinearMap u
+def NCDerivation.dlog (D : NCDerivation A) (u : Aˣ) : A :=
+  InfoGeometry.Modular.Noncommutative.dlog D.toLinearMap u
 
 theorem NCDerivation.dlog_mul (D : NCDerivation A) (u v : Aˣ) :
     D.dlog (u * v) = (↑(v⁻¹) : A) * D.dlog u * (v : A) + D.dlog v :=
-  dlog_mul D.toLinearMap D.leibniz' u v
+  InfoGeometry.Modular.Noncommutative.dlog_mul D.toLinearMap D.leibniz' u v
 
 theorem NCDerivation.dlog_inv (D : NCDerivation A) (u : Aˣ) :
     D.dlog (u⁻¹) = -((u : A) * D.dlog u * (↑(u⁻¹) : A)) :=
-  dlog_inv D.toLinearMap D.leibniz' u
+  InfoGeometry.Modular.Noncommutative.dlog_inv D.toLinearMap D.leibniz' u
 
 end InfoGeometry.Modular.Noncommutative
 

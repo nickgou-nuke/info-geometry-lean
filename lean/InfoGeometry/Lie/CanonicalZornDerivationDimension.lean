@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivation
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false

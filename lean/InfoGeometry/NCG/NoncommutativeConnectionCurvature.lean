@@ -211,12 +211,12 @@ theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
   dsimp [gaugeTransform]
   have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
   calc
-    (u : A) * (X * Y) * (u⁻¹ : Aˣ).val =
-        (u : A) * X * Y * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
-    _ = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y *
-        (u⁻¹ : Aˣ).val := by simp only [hu, mul_one]
-    _ = ((u : A) * X * (u⁻¹ : Aˣ).val) *
-        ((u : A) * Y * (u⁻¹ : Aˣ).val) := by simp only [mul_assoc]
+    gaugeTransform u X * gaugeTransform u Y = ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * Y * (u⁻¹ : Aˣ).val) := rfl
+    _ = ((u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y * (u⁻¹ : Aˣ).val) := by
+      simp only [mul_assoc, hu, one_mul]
+    _ = (u : A) * X * Y * (u⁻¹ : Aˣ).val := by
+      simp only [mul_assoc]
+    _ = gaugeTransform u (X * Y) := rfl
 
 /-- Gauge conjugation is linear over the declared scalar algebra. -/
 theorem gaugeTransform_smul (u : Aˣ) (r : R) (X : A) :

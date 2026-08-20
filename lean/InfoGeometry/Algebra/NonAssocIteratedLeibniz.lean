@@ -282,6 +282,56 @@ theorem map_eMinus_of_fixed
     _ = half • (one - I) := by
           rw [F.map_one, hI]
 
+/-! ## Explicit multiplicative equivalences -/
+
+section Equiv
+
+variable {R A : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A) (one : A)
+
+/-- A multiplicative linear equivalence for a possibly nonassociative product. -/
+structure NonAssocAlgEquiv where
+  toLinearMap : A →ₗ[R] A
+  invFun : A → A
+  map_mul' : ∀ x y, toLinearMap (mul x y) = mul (toLinearMap x) (toLinearMap y)
+  map_one' : toLinearMap one = one
+  left_inv' : ∀ x, invFun (toLinearMap x) = x
+  right_inv' : ∀ x, toLinearMap (invFun x) = x
+
+namespace NonAssocAlgEquiv
+
+instance : CoeFun (NonAssocAlgEquiv mul one) (fun _ => A → A) where
+  coe F := F.toLinearMap
+
+@[simp] theorem map_mul (F : NonAssocAlgEquiv mul one) (x y : A) :
+    F (mul x y) = mul (F x) (F y) := F.map_mul' x y
+
+@[simp] theorem map_one (F : NonAssocAlgEquiv mul one) : F one = one := F.map_one'
+
+@[simp] theorem map_zero (F : NonAssocAlgEquiv mul one) : F 0 = 0 := F.toLinearMap.map_zero
+
+theorem left_inv (F : NonAssocAlgEquiv mul one) (x : A) :
+    F.invFun (F x) = x := F.left_inv' x
+
+theorem right_inv (F : NonAssocAlgEquiv mul one) (x : A) :
+    F (F.invFun x) = x := F.right_inv' x
+
+theorem map_idempotent (F : NonAssocAlgEquiv mul one) {e : A}
+    (he : mul e e = e) : mul (F e) (F e) = F e := by
+  rw [← F.map_mul, he]
+
+theorem map_orthogonal (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hef : mul e f = 0) : mul (F e) (F f) = 0 := by
+  rw [← F.map_mul, hef, F.map_zero]
+
+theorem map_square_zero (F : NonAssocAlgEquiv mul one) {q : A}
+    (hq : mul q q = 0) : mul (F q) (F q) = 0 := by
+  rw [← F.map_mul, hq, F.map_zero]
+
+end NonAssocAlgEquiv
+
+end Equiv
+
 end Transport
 
 end InfoGeometry.Algebra.NonAssocIteratedLeibniz

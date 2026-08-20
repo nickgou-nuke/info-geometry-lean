@@ -4,7 +4,6 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-
 import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.KleinBottleTomitaCrosscapBridge
@@ -22,13 +21,13 @@ This module formalizes:
    $J : B \to B$ with $J^2 = \mathrm{id}$, $J(xy) = J(y)J(x)$, $J(x^*) = (Jx)^*$,
    mapping the system $\mathcal{M}$ to its thermal environment $\mathcal{M}'$:
    $J(\mathcal{M}) = \mathcal{M}'$.
-3. **Commutant Automorphism Flow (Backward Thermal Time)**:
+3. **Commutator Automorphism Flow (Backward Thermal Time)**:
    Conjugation of modular flow by $J$ yields an automorphism of the commutant $\mathcal{M}'$.
 4. **The Non-Commutative Klein Bottle Horizon**:
    Crosscap identification between the observable universe $\mathcal{M}$
    and the thermal heat bath $\mathcal{M}'$.
 
-All theorems are 100% verified in native Mathlib with zero `sorry`s.
+All theorems use only native Mathlib lemmas with zero axioms beyond foundations.
 -/
 
 noncomputable section
@@ -54,10 +53,13 @@ def inCommutant (M : Set B) (b : B) : Prop :=
 def commutant (M : Set B) : Set B :=
   {b : B | inCommutant M b}
 
-/-- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
+/- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
 theorem zero_mem_commutant (M : Set B) : (0 : B) ∈ commutant M := by
   intro m _
   simp [bracket]
+  <;> simp_all [sub_eq_add_neg]
+  <;> ring_nf
+  <;> simp_all
 
 /-- 🏆 THEOREM 2: The commutant is closed under addition. -/
 theorem add_mem_commutant (M : Set B) {b₁ b₂ : B}
@@ -67,14 +69,26 @@ theorem add_mem_commutant (M : Set B) {b₁ b₂ : B}
   have h1m := h₁ m hm
   have h2m := h₂ m hm
   dsimp [bracket] at *
-  calc m * (b₁ + b₂) - (b₁ + b₂) * m
-    _ = (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) := by
-      simp only [mul_add, add_mul]
-      abel
-    _ = 0 + 0 := by rw [h1m, h2m]
-    _ = 0 := add_zero 0
+  have h₃ : m * (b₁ + b₂) - (b₁ + b₂) * m = (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) := by
+    calc
+      m * (b₁ + b₂) - (b₁ + b₂) * m = (m * b₁ + m * b₂) - (b₁ * m + b₂ * m) := by
+        simp [mul_add, add_mul]
+      _ = (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) := by
+        abel
+  rw [h₃]
+  have h₄ : (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) = 0 := by
+    have h₄ : m * b₁ - b₁ * m = 0 := by
+      have h₅ : m * b₁ - b₁ * m = 0 := by
+        simpa [bracket] using h₁ m hm
+      exact h₅
+    have h₅ : m * b₂ - b₂ * m = 0 := by
+      have h₆ : m * b₂ - b₂ * m = 0 := by
+        simpa [bracket] using h₂ m hm
+      exact h₆
+    rw [h₄, h₅]
+    <;> simp [add_zero]
 
-/-- 🏆 THEOREM 3: The commutant is closed under multiplication (Subalgebra Property). -/
+/-- 🏆 THEOREM 2: The commutant is closed under multiplication (Subalgebra Property). -/
 theorem mul_mem_commutant (M : Set B) {b₁ b₂ : B}
     (h₁ : b₁ ∈ commutant M) (h₂ : b₂ ∈ commutant M) :
     b₁ * b₂ ∈ commutant M := by
@@ -82,28 +96,43 @@ theorem mul_mem_commutant (M : Set B) {b₁ b₂ : B}
   have h1m := h₁ m hm
   have h2m := h₂ m hm
   dsimp [bracket] at *
-  have hm1 : m * b₁ = b₁ * m := eq_of_sub_eq_zero h1m
-  have hm2 : m * b₂ = b₂ * m := eq_of_sub_eq_zero h2m
-  calc m * (b₁ * b₂) - (b₁ * b₂) * m
-    _ = (m * b₁) * b₂ - b₁ * (b₂ * m) := by simp only [mul_assoc]
-    _ = (b₁ * m) * b₂ - b₁ * (m * b₂) := by rw [hm1, ← hm2]
-    _ = b₁ * (m * b₂) - b₁ * (m * b₂) := by simp only [mul_assoc]
-    _ = 0 := sub_self _
+  have hm1 : m * b₁ = b₁ * m := by
+    have h₁' : m * b₁ - b₁ * m = 0 := by simpa [bracket] using h₁ m hm
+    have h₂' : m * b₁ = b₁ * m := by
+      apply eq_of_sub_eq_zero
+      simpa [sub_eq_add_neg] using h₁'
+    exact h₂'
+  have hm2 : m * b₂ = b₂ * m := by
+    have h₁' : m * b₂ - b₂ * m = 0 := by simpa [bracket] using h₂ m hm
+    have h₂' : m * b₂ = b₂ * m := by
+      apply eq_of_sub_eq_zero
+      simpa [sub_eq_add_neg] using h₁'
+    exact h₂'
+  calc
+    m * (b₁ * b₂) - (b₁ * b₂) * m = (m * b₁) * b₂ - b₁ * (b₂ * m) := by
+      simp only [mul_assoc]
+    _ = (b₁ * m) * b₂ - b₁ * (m * b₂) := by rw [hm1, hm2]
+    _ = b₁ * (m * b₂) - b₁ * (m * b₂) := by simp [mul_assoc]
+    _ = 0 := by simp [sub_self]
 
-/-- 🏆 THEOREM 4: The Center of an algebra is the intersection of the algebra with its commutant. -/
+/-- The Center of an algebra is the intersection of the algebra with its commutant. -/
 def centerOf (M : Set B) : Set B :=
   {c ∈ M | ∀ m ∈ M, bracket m c = 0}
 
+/- 🏆 THEOREM 4: The Center of an algebra is the intersection of the algebra with its commutant. -/
 theorem center_eq_inter_commutant (M : Set B) :
     centerOf M = M ∩ commutant M := by
-  ext c
-  simp [centerOf, commutant, inCommutant]
+  apply Set.ext_iff.mpr
+  intro c
+  simp only [centerOf, commutant, inCommutant, Set.mem_inter_iff, Set.mem_setOf_eq]
+  <;>
+  aesop
 
-/-! =========================================================================
+/-- =========================================================================
     PART 2: Tomita Modular Reflection Datum (J M J = M')
     ========================================================================= -/
 
-/-- Tomita-Takesaki Modular Reflection Datum on an algebra B with a distinguished sub-algebra M. -/
+/-- Tomita-Takesaki Modular Reflection Datum on an algebra B with a distinguished subalgebra M. -/
 structure TomitaCommutantDatum (B : Type*) [Ring B] where
   /-- The system subalgebra M (observable world) -/
   M : Set B
@@ -152,10 +181,8 @@ theorem quantum_klein_bottle_duality (D : TomitaCommutantDatum B) :
     (0 : B) ∈ commutant D.M ∧
     centerOf D.M = D.M ∩ commutant D.M ∧
     (∀ m m' : B, m ∈ D.M → m' ∈ D.M → bracket m (D.J m') = 0) := by
-  refine ⟨zero_mem_commutant D.M, center_eq_inter_commutant D.M, ?_⟩
+  refine' ⟨zero_mem_commutant D.M, center_eq_inter_commutant D.M, ?_⟩
   intro m m' hm hm'
   exact tomita_crosscap_commutation D m m' hm hm'
 
 end InfoGeometry.Canonical.TomitaCommutant
-
-end noncomputable section

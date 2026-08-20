@@ -61,6 +61,15 @@ theorem state_modular_invariance {σ : A → A} {φ : A →ₗ[R] R}
   simp only [mul_one, one_mul] at h
   exact h.symm
 
+theorem state_modular_invariance_iterate {σ : A → A} {φ : A →ₗ[R] R}
+    (hKMS : KMSState σ φ) (n : ℕ) (a : A) :
+    φ (σ^[n] a) = φ a := by
+  induction n generalizing a with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      rw [ih (σ a), state_modular_invariance hKMS]
+
 /-- 🏆 THEOREM 2: Centralizer Commutativity:
     If `x` is in the modular fixed-point subalgebra (`σ(x) = x`), then `φ(x * y) = φ(y * x)`. -/
 theorem centralizer_comm {σ : A → A} {φ : A →ₗ[R] R}
@@ -107,6 +116,16 @@ theorem gnsInner_add_right (φ : S →ₗ[R] R) (a b₁ b₂ : S) :
   dsimp [gnsInner]
   rw [star_add, add_mul, φ.map_add]
 
+@[simp]
+theorem gnsInner_zero_left (φ : S →ₗ[R] R) (b : S) :
+    gnsInner φ 0 b = 0 := by
+  simp [gnsInner]
+
+@[simp]
+theorem gnsInner_zero_right (φ : S →ₗ[R] R) (a : S) :
+    gnsInner φ a 0 = 0 := by
+  simp [gnsInner]
+
 /-- 🏆 THEOREM 6: GNS Left-Regular Representation *-Intertwining:
     `⟨x * a, b⟩_φ = ⟨a, star x * b⟩_φ` -/
 theorem gnsInner_left_regular (φ : S →ₗ[R] R) (x a b : S) :
@@ -115,6 +134,14 @@ theorem gnsInner_left_regular (φ : S →ₗ[R] R) (x a b : S) :
   have h : star b * (x * a) = star (star x * b) * a := by
     simp only [star_mul, star_star, mul_assoc]
   rw [h]
+
+theorem gnsInner_left_regular_mul (φ : S →ₗ[R] R) (x y a b : S) :
+    gnsInner φ ((x * y) * a) b =
+      gnsInner φ a ((star y * star x) * b) := by
+  rw [← mul_assoc x y a]
+  rw [gnsInner_left_regular φ x (y * a) b]
+  rw [gnsInner_left_regular φ y a (star x * b)]
+  simp only [star_mul]
 
 /-- 🏆 THEOREM 7: GNS Endomorphism Invariance (Shift / Tilt Isometry):
     If `Φ : S → S` is a $*$-homomorphism preserving `φ`, then `⟨Φ(a), Φ(b)⟩_φ = ⟨a, b⟩_φ`. -/

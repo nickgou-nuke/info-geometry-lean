@@ -85,7 +85,8 @@ theorem covariantDerivative_add (A_conn X Y : A) :
 @[simp]
 theorem covariantDerivative_zero (A_conn : A) :
     covariantDerivative D A_conn 0 = 0 := by
-  simp [covariantDerivative]
+  dsimp [covariantDerivative]
+  rw [D.map_zero, mul_zero, zero_mul, sub_self, add_zero]
 
 /-- Covariant differentiation is linear over the scalar algebra. -/
 theorem covariantDerivative_smul (r : R) (A_conn X : A) :
@@ -95,6 +96,15 @@ theorem covariantDerivative_smul (r : R) (A_conn X : A) :
   rw [D.map_smul]
   simp only [smul_mul_assoc, mul_smul_comm]
   rw [smul_add, smul_sub]
+
+/-- Covariant differentiation commutes with additive subtraction. -/
+theorem covariantDerivative_sub (A_conn X Y : A) :
+    covariantDerivative D A_conn (X - Y) =
+      covariantDerivative D A_conn X - covariantDerivative D A_conn Y := by
+  dsimp [covariantDerivative]
+  rw [D.map_sub]
+  simp only [sub_mul, mul_sub]
+  abel
 
 /-- 🏆 THEOREM 1: The Covariant Derivative satisfies the Noncommutative Leibniz Rule:
     ∇_D(X * Y) = ∇_D(X) * Y + X * ∇_D(Y) -/
@@ -137,7 +147,8 @@ def pureGaugeForm (u : Aˣ) : A :=
 @[simp]
 theorem pureGaugeForm_one :
     pureGaugeForm D (1 : Aˣ) = 0 := by
-  simp [pureGaugeForm]
+  dsimp [pureGaugeForm]
+  simp only [inv_one, Units.val_one, D.map_one, mul_zero]
 
 /-- Equivalence to negative right-derivative:
     θ = - D(u) * u⁻¹ -/
@@ -162,14 +173,15 @@ def gaugeTransform (u : Aˣ) (X : A) : A :=
 @[simp]
 theorem gaugeTransform_one (X : A) :
     gaugeTransform (1 : Aˣ) X = X := by
-  simp [gaugeTransform]
+  dsimp [gaugeTransform]
+  simp only [inv_one, Units.val_one, one_mul, mul_one]
 
 /-- Observable conjugation is a genuine left action of the unit group. -/
 theorem gaugeTransform_mul (u v : Aˣ) (X : A) :
     gaugeTransform u (gaugeTransform v X) =
       gaugeTransform (u * v) X := by
   simp only [gaugeTransform, Units.val_mul]
-  have hinv : (u * v)⁻¹ = v⁻¹ * u⁻¹ := by simp
+  have hinv : (u * v)⁻¹ = v⁻¹ * u⁻¹ := mul_inv_rev u v
   rw [hinv, Units.val_mul]
   simp only [mul_assoc]
 
@@ -177,7 +189,15 @@ theorem gaugeTransform_mul (u v : Aˣ) (X : A) :
 unit. -/
 theorem gaugeTransform_inv (u : Aˣ) (X : A) :
     gaugeTransform (u⁻¹) (gaugeTransform u X) = X := by
-  simp [gaugeTransform, mul_assoc]
+  dsimp [gaugeTransform]
+  have hu_inv : ((u⁻¹ : Aˣ)⁻¹ : Aˣ).val = (u : A) := rfl
+  rw [hu_inv]
+  calc
+    (u⁻¹ : Aˣ).val * ((u : A) * X * (u⁻¹ : Aˣ).val) * (u : A) =
+      ((u⁻¹ : Aˣ).val * (u : A)) * X * ((u⁻¹ : Aˣ).val * (u : A)) := by
+        simp only [mul_assoc]
+    _ = 1 * X * 1 := by rw [Units.inv_mul]
+    _ = X := by rw [one_mul, mul_one]
 
 /-- Gauge transformation of a connection one-form. -/
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
@@ -187,7 +207,8 @@ def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
 @[simp]
 theorem gaugeTransformConnection_one (A_conn : A) :
     gaugeTransformConnection D (1 : Aˣ) A_conn = A_conn := by
-  simp [gaugeTransformConnection, pureGaugeForm]
+  dsimp [gaugeTransformConnection]
+  simp only [pureGaugeForm_one, inv_one, Units.val_one, one_mul, mul_one, add_zero]
 
 /-!
 =============================================================================
@@ -325,11 +346,14 @@ theorem gaugeTransformConnection_comp (u v : Aˣ) (A_conn : A) :
   simp only [← mul_assoc, hu', one_mul]
   abel
 
-/-- The affine gauge action on connections is inverted by the inverse unit. -/
 theorem gaugeTransformConnection_inv (u : Aˣ) (A_conn : A) :
     gaugeTransformConnection D (u⁻¹) (gaugeTransformConnection D u A_conn) = A_conn := by
-  rw [← gaugeTransformConnection_comp D (u⁻¹) u A_conn]
-  simp
+  calc
+    gaugeTransformConnection D (u⁻¹) (gaugeTransformConnection D u A_conn) =
+        gaugeTransformConnection D (u⁻¹ * u) A_conn :=
+      (gaugeTransformConnection_comp D u (u⁻¹) A_conn).symm
+    _ = gaugeTransformConnection D (1 : Aˣ) A_conn := by rw [inv_mul_cancel]
+    _ = A_conn := gaugeTransformConnection_one D A_conn
 
 /-- 🏆 THEOREM 4: Noncommutative Maurer-Cartan Flatness:
     D(u) * D(u⁻¹) + θ² = 0 -/

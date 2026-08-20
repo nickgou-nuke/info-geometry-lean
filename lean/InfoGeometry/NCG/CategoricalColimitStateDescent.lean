@@ -67,6 +67,16 @@ theorem transitionN_star (n k : ℕ) (x : S.Stage n) :
              star (S.transition (n + k) (S.transitionN n k x))
       rw [ih, S.transition_star]
 
+theorem transitionN_mul (n k : ℕ) (x y : S.Stage n) :
+    S.transitionN n k (x * y) =
+      S.transitionN n k x * S.transitionN n k y := by
+  exact (S.transitionN n k).map_mul x y
+
+theorem transitionN_star_mul (n k : ℕ) (x y : S.Stage n) :
+    S.transitionN n k (star x * y) =
+      star (S.transitionN n k x) * S.transitionN n k y := by
+  rw [S.transitionN_mul, S.transitionN_star]
+
 /-- A compatible state cocone on the direct system:
     a family of normalized linear functionals ω_n : Stage n → R satisfying
     ω_{n+1}(ι_n(x)) = ω_n(x). -/

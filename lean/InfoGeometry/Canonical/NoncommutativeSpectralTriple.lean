@@ -30,6 +30,20 @@ theorem ncDiff_add (D a b : A) : ncDiff D (a + b) = ncDiff D a + ncDiff D b := b
   simp only [mul_add, add_mul]
   abel
 
+@[simp]
+theorem ncDiff_zero (D : A) : ncDiff D 0 = 0 := by
+  dsimp [ncDiff]
+  simp
+
+theorem ncDiff_neg (D a : A) : ncDiff D (-a) = -ncDiff D a := by
+  dsimp [ncDiff]
+  simp only [mul_neg, neg_mul]
+  abel
+
+theorem ncDiff_sub (D a b : A) : ncDiff D (a - b) = ncDiff D a - ncDiff D b := by
+  rw [sub_eq_add_neg, ncDiff_add, ncDiff_neg]
+  rw [sub_eq_add_neg]
+
 /-- 🏆 THEOREM 1: The Non-Commutative Leibniz Rule (NC Product Rule):
     d_D(a * b) = (d_D a) * b + a * (d_D b) -/
 theorem ncDiff_mul (D a b : A) :
@@ -58,6 +72,18 @@ theorem ncDiff_commutator (D E a : A) :
   simp only [mul_assoc, mul_sub, sub_mul]
   abel
 
+/-- The pointwise Jacobi identity for the commutator differentials. -/
+theorem ncDiff_jacobi (D E F a : A) :
+    (ncDiff D (ncDiff E (ncDiff F a)) -
+        ncDiff E (ncDiff D (ncDiff F a))) +
+      (ncDiff E (ncDiff F (ncDiff D a)) -
+        ncDiff F (ncDiff E (ncDiff D a))) +
+      (ncDiff F (ncDiff D (ncDiff E a)) -
+        ncDiff D (ncDiff F (ncDiff E a))) = 0 := by
+  dsimp [ncDiff]
+  simp only [mul_assoc, mul_sub, sub_mul]
+  abel_nf
+
 /-- Anticommutation with Star Involution when D is self-adjoint: (d_D a)* = - d_D(a*) -/
 theorem ncDiff_star [StarRing A] (D a : A) (hD : star D = D) :
     star (ncDiff D a) = - ncDiff D (star a) := by
@@ -74,6 +100,15 @@ SECTION 2: Gauge Fluctuations of the Dirac Operator (Inner Fluctuations)
 /-- The fluctuating Dirac operator: D_A = D + A -/
 def fluctuatedDirac (D A_gauge : A) : A :=
   D + A_gauge
+
+/-- Fluctuating the Dirac operator adds the inner commutator with the gauge
+    potential to the original noncommutative differential. -/
+theorem ncDiff_fluctuatedDirac (D A_gauge a : A) :
+    ncDiff (fluctuatedDirac D A_gauge) a =
+      ncDiff D a + (A_gauge * a - a * A_gauge) := by
+  dsimp [fluctuatedDirac, ncDiff]
+  simp only [add_mul, mul_add]
+  abel
 
 /-- The Unitary Gauge Transformation of a gauge field A:
     A^u = u * A * u_inv + u * d_D(u_inv) -/

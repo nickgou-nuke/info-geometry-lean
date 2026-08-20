@@ -1,6 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
+import InfoGeometry.Lie.RealSplitOctonionG2Classification
 
 /-!
 # Concrete `sl₃` stabilizer carrier
@@ -80,5 +81,19 @@ theorem commutator_jacobi (X Y Z : SL3) :
       (Z.1 * (X.1 * Y.1 - Y.1 * X.1) -
         (X.1 * Y.1 - Y.1 * X.1) * Z.1) = 0
   noncomm_ring
+
+/-!
+The existing canonical Zorn owner supplies the genuine fourteen-dimensional
+derivation space.  The following theorem records only the numerical
+compatibility with the intended `8 + 3 + 3` grading; it does not assert an
+unproved linear equivalence between the carriers.
+-/
+
+theorem canonical_derivation_finrank_matches_grade_sum :
+    Module.finrank ℝ
+        InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations =
+      8 + 3 + 3 := by
+  rw [InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank]
+  decide
 
 end InfoGeometry.Physics.SplitG2SL3Concrete

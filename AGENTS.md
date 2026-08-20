@@ -147,7 +147,7 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 **CRITICAL**: Behavioral rules ("do not edit dirty submodules") are insufficient. The environment MUST be structurally locked.
 - **Action**: All agents are structurally forbidden from editing or traversing the `.lake/packages/` directory. The entire directory must remain read-only (`chmod -R a-w .lake/packages`).
 - **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json` require explicit human approval. Agents shall NOT blindly run `lake update` or touch vendored dependency toolchains.
-- **Enforcement**: This is the difference between "should not happen" and "cannot happen." If an agent encounters a broken import, they must work within the currently pinned `v4.28.0` Mathlib cache instead of attempting to blindly pull or shift the toolchain manifest.
+- **Enforcement**: This is the difference between "should not happen" and "cannot happen." If an agent encounters a broken import, they must work within the currently pinned `v4.28.1` Mathlib cache instead of attempting to blindly pull or shift the toolchain manifest.
 
 ## Sequential Build and Test Mandate
 **CRITICAL**: To prevent compilation race conditions, lock file contention, and resource saturation:

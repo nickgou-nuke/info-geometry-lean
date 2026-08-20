@@ -11,25 +11,30 @@ Lie subalgebra.
 
 namespace InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 
-variable (D : InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations)
+open InfoGeometry.Lie.CanonicalZornDerivation
+open InfoGeometry.Lie.CanonicalZornDerivationExponential
+
+variable (D : canonicalZornDerivations)
 
 /-- Pointwise one-parameter group law for a canonical Zorn derivation. -/
 theorem zornFlow_add_apply
     (s t : ℝ)
-    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
-    InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv D.1 (s + t) X =
-      InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv D.1 s
-        (InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv D.1 t X) := by
-  exact InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv_add_apply D.1 s t X
+    (X : CZ) :
+    zornFlowLinearEquiv D.1 (s + t) X =
+      zornFlowLinearEquiv D.1 s
+        (zornFlowLinearEquiv D.1 t X) := by
+  exact zornFlowLinearEquiv_add_apply D.1 s t X
 
 /-- Negative time of the Zorn flow inverts the positive-time flow. -/
 @[simp]
 theorem zornFlow_apply_neg_flow
     (t : ℝ)
-    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
-    InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv D.1 t
-        (InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv D.1 (-t) X) =
+    (X : CZ) :
+    zornFlowLinearEquiv D.1 t
+        (zornFlowLinearEquiv D.1 (-t) X) =
       X := by
-  exact InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv_neg_apply D.1 t X
+  have h := zornFlowLinearEquiv_neg_eq_symm D.1 t
+  rw [h]
+  exact LinearEquiv.apply_symm_apply (zornFlowLinearEquiv D.1 t) X
 
 end InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup

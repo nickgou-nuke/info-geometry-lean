@@ -30,13 +30,14 @@ theorem colorProject_eq_chiralUpper_sum (Z : ZornMatrix R) :
   cases Z with
   | mk a b x y =>
       apply ZornMatrix.ext
-      · simp [chiralUpperBasis, Fin.sum_univ_three, smul_a, smul_b]
-      · simp [chiralUpperBasis, Fin.sum_univ_three, smul_a, smul_b]
+      · simp [chiralUpperBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b]
+      · simp [chiralUpperBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b]
       · funext c
         fin_cases c <;>
-          simp [chiralUpperBasis, Fin.sum_univ_three, smul_x, smul_y]
-      · simp [chiralUpperBasis, Fin.sum_univ_three, smul_a, smul_b,
-          smul_x, smul_y]
+          simp [chiralUpperBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
+      · funext c
+        fin_cases c <;>
+          simp [chiralUpperBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
 
 theorem anticolorProject_eq_chiralLower_sum (Z : ZornMatrix R) :
     anticolorProject Z = ∑ i : Fin 3, Z.y i • chiralLowerBasis i := by
@@ -44,28 +45,36 @@ theorem anticolorProject_eq_chiralLower_sum (Z : ZornMatrix R) :
   cases Z with
   | mk a b x y =>
       apply ZornMatrix.ext
-      · simp [chiralLowerBasis, Fin.sum_univ_three, smul_a, smul_b]
-      · simp [chiralLowerBasis, Fin.sum_univ_three, smul_a, smul_b]
-      · simp [chiralLowerBasis, Fin.sum_univ_three, smul_x, smul_y]
+      · simp [chiralLowerBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b]
+      · simp [chiralLowerBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b]
       · funext c
         fin_cases c <;>
-          simp [chiralLowerBasis, Fin.sum_univ_three, smul_x, smul_y]
+          simp [chiralLowerBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
+      · funext c
+        fin_cases c <;>
+          simp [chiralLowerBasis, Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
 
 theorem peircePlusPlus_eq_scalar_chiralPlus (Z : ZornMatrix R) :
     peirceComponent zornPlus zornPlus Z = Z.a • zornPlus := by
   rw [peirce_plus_plus_apply]
   cases Z with
   | mk a b x y =>
-      apply ZornMatrix.ext <;>
-        simp [zornPlus, smul_a, smul_b, smul_x, smul_y]
+      apply ZornMatrix.ext
+      · simp [zornPlus, InfoGeometry.Canonical.ZornMatrix.smul_a]
+      · simp [zornPlus, InfoGeometry.Canonical.ZornMatrix.smul_b]
+      · funext c; fin_cases c <;> simp [zornPlus, InfoGeometry.Canonical.ZornMatrix.smul_x]
+      · funext c; fin_cases c <;> simp [zornPlus, InfoGeometry.Canonical.ZornMatrix.smul_y]
 
 theorem peirceMinusMinus_eq_scalar_chiralMinus (Z : ZornMatrix R) :
     peirceComponent zornMinus zornMinus Z = Z.b • zornMinus := by
   rw [peirce_minus_minus_apply]
   cases Z with
   | mk a b x y =>
-      apply ZornMatrix.ext <;>
-        simp [zornMinus, smul_a, smul_b, smul_x, smul_y]
+      apply ZornMatrix.ext
+      · simp [zornMinus, InfoGeometry.Canonical.ZornMatrix.smul_a]
+      · simp [zornMinus, InfoGeometry.Canonical.ZornMatrix.smul_b]
+      · funext c; fin_cases c <;> simp [zornMinus, InfoGeometry.Canonical.ZornMatrix.smul_x]
+      · funext c; fin_cases c <;> simp [zornMinus, InfoGeometry.Canonical.ZornMatrix.smul_y]
 
 theorem zorn_chiral_peirce_decomposition (Z : ZornMatrix R) :
     Z = Z.a • zornPlus + Z.b • zornMinus +
@@ -75,17 +84,17 @@ theorem zorn_chiral_peirce_decomposition (Z : ZornMatrix R) :
   | mk a b x y =>
       apply ZornMatrix.ext
       · simp [chiralUpperBasis, chiralLowerBasis, zornPlus, zornMinus,
-          Fin.sum_univ_three, smul_a, smul_b, smul_x, smul_y]
+          Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
       · simp [chiralUpperBasis, chiralLowerBasis, zornPlus, zornMinus,
-          Fin.sum_univ_three, smul_a, smul_b, smul_x, smul_y]
+          Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
       · funext c
         fin_cases c <;>
           simp [chiralUpperBasis, chiralLowerBasis, zornPlus, zornMinus,
-            Fin.sum_univ_three, smul_a, smul_b, smul_x, smul_y]
+            Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
       · funext c
         fin_cases c <;>
           simp [chiralUpperBasis, chiralLowerBasis, zornPlus, zornMinus,
-            Fin.sum_univ_three, smul_a, smul_b, smul_x, smul_y]
+            Fin.sum_univ_three, InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.smul_b, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.smul_y]
 
 /--
 Left-ideal / upper-chiral reconstruction, exposed under the user-facing name

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
 import InfoGeometry.Canonical.CayleyWittenPeirceParityBridge
 import InfoGeometry.Canonical.NeutralDualPair
 import InfoGeometry.Canonical.NeutralDualPairClifford

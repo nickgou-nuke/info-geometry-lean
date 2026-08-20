@@ -1,1 +1,1 @@
-/media/goutev/SP DS72/auto/proofs/YangBaxterQSwap.lean
+../proofs/YangBaxterQSwap.lean

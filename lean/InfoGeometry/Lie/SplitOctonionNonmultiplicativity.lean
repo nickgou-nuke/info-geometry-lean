@@ -175,12 +175,19 @@ def e : CanonicalZorn ≃ₗ[ℝ] SplitCl44Carrier where
     · apply Prod.ext <;> { dsimp; ring }
     · ext i <;> { nomatch i }
   map_smul' r Z := by
-    dsimp
-    have h_a : (r • Z).a = r * Z.a := rfl
-    have h_b : (r • Z).b = r * Z.b := rfl
-    have h_x : (r • Z).x = r • Z.x := rfl
-    have h_y : (r • Z).y = r • Z.y := rfl
-    rw [h_a, h_b, h_x, h_y]
+    change (
+      ((r * Z.a - r * Z.b)/2, (r * Z.a + r * Z.b)/2),
+      ((r * Z.x 0 + r * Z.y 0)/2, (r * Z.x 0 - r * Z.y 0)/2),
+      ((r * Z.x 1 + r * Z.y 1)/2, (r * Z.x 1 - r * Z.y 1)/2),
+      ((r * Z.x 2 + r * Z.y 2)/2, (r * Z.x 2 - r * Z.y 2)/2),
+      fun _ => (0, 0)
+    ) = r • (
+      ((Z.a - Z.b)/2, (Z.a + Z.b)/2),
+      ((Z.x 0 + Z.y 0)/2, (Z.x 0 - Z.y 0)/2),
+      ((Z.x 1 + Z.y 1)/2, (Z.x 1 - Z.y 1)/2),
+      ((Z.x 2 + Z.y 2)/2, (Z.x 2 - Z.y 2)/2),
+      fun _ => (0, 0)
+    )
     refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ ?_)))
     · apply Prod.ext <;> { dsimp; ring }
     · apply Prod.ext <;> { dsimp; ring }

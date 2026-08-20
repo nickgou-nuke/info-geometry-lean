@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornCliffordRepresentation
+import InfoGeometry.Canonical.ZornChiralPeirceDecomposition
 
 /-!
 # Four-corner Peirce soldering for the native Zorn carrier
@@ -31,7 +32,11 @@ def cornerMM (X : ChiralZorn) : ChiralZorn :=
 theorem cornerPP_eq_nPlus (X : ChiralZorn) :
     cornerPP X = X.a • zornPlus := by
   rw [cornerPP, peirce_plus_plus_apply]
-  ext <;> simp [zornPlus, smul_a, smul_b, smul_x, smul_y]
+  apply ZornMatrix.ext
+  · simp [zornPlus, ZornMatrix.smul_a]
+  · simp [zornPlus, ZornMatrix.smul_b]
+  · funext i; fin_cases i <;> simp [zornPlus, ZornMatrix.smul_x]
+  · funext i; fin_cases i <;> simp [zornPlus, ZornMatrix.smul_y]
 
 theorem cornerPM_eq_sigmaPlus_sum (X : ChiralZorn) :
     cornerPM X = ∑ i : Fin 3, X.x i • chiralUpperBasis i := by
@@ -44,7 +49,11 @@ theorem cornerMP_eq_sigmaMinus_sum (X : ChiralZorn) :
 theorem cornerMM_eq_nMinus (X : ChiralZorn) :
     cornerMM X = X.b • zornMinus := by
   rw [cornerMM, peirce_minus_minus_apply]
-  ext <;> simp [zornMinus, smul_a, smul_b, smul_x, smul_y]
+  apply ZornMatrix.ext
+  · simp [zornMinus, ZornMatrix.smul_a]
+  · simp [zornMinus, ZornMatrix.smul_b]
+  · funext i; fin_cases i <;> simp [zornMinus, ZornMatrix.smul_x]
+  · funext i; fin_cases i <;> simp [zornMinus, ZornMatrix.smul_y]
 
 theorem peirce_four_corner_decomposition (X : ChiralZorn) :
     X = cornerPP X + cornerPM X + cornerMP X + cornerMM X := by
@@ -66,15 +75,13 @@ def chiralVectorProject (X : ChiralZorn) : ChiralZorn :=
 @[simp] theorem chiralVectorProject_a (X : ChiralZorn) :
     (chiralVectorProject X).a = 0 := by
   change (colorProject X + anticolorProject X).a = 0
-  rw [colorProject_apply, anticolorProject_apply]
-  rw [add_def]
+  rw [colorProject_apply, anticolorProject_apply, ZornMatrix.add_def]
   simp
 
 @[simp] theorem chiralVectorProject_b (X : ChiralZorn) :
     (chiralVectorProject X).b = 0 := by
   change (colorProject X + anticolorProject X).b = 0
-  rw [colorProject_apply, anticolorProject_apply]
-  rw [add_def]
+  rw [colorProject_apply, anticolorProject_apply, ZornMatrix.add_def]
   simp
 
 theorem chiralVectorProject_eq_color_add_anticolor (X : ChiralZorn) :
@@ -86,20 +93,23 @@ theorem chiralVectorProject_apply (X : ChiralZorn) :
     chiralVectorProject X =
       { a := 0, b := 0, x := X.x, y := X.y } := by
   rw [chiralVectorProject_eq_color_add_anticolor,
-    colorProject_apply, anticolorProject_apply, add_def]
-  cases X
-  simp [ZornMatrix.add_def]
+    colorProject_apply, anticolorProject_apply, ZornMatrix.add_def]
+  apply ZornMatrix.ext <;> simp
 
 theorem chiralVectorProject_add (X Y : ChiralZorn) :
     chiralVectorProject (X + Y) = chiralVectorProject X + chiralVectorProject Y := by
-  rw [chiralVectorProject_apply, chiralVectorProject_apply,
-    chiralVectorProject_apply]
-  ext <;> simp [add_def, add_a, add_b, add_x, add_y]
+  rw [chiralVectorProject_apply, chiralVectorProject_apply, chiralVectorProject_apply,
+    ZornMatrix.add_def, ZornMatrix.add_def]
+  apply ZornMatrix.ext <;> simp
 
 theorem chiralVectorProject_smul (r : ℚ) (X : ChiralZorn) :
     chiralVectorProject (r • X) = r • chiralVectorProject X := by
   rw [chiralVectorProject_apply, chiralVectorProject_apply]
-  ext <;> simp [add_def, add_a, add_b, add_x, add_y, smul_a, smul_b, smul_x, smul_y]
+  apply ZornMatrix.ext
+  · simp [ZornMatrix.smul_a]
+  · simp [ZornMatrix.smul_b]
+  · funext i; simp [ZornMatrix.smul_x]
+  · funext i; simp [ZornMatrix.smul_y]
 
 /-- The mixed Peirce sector as a linear endomorphism of the native Zorn carrier. -/
 def chiralVectorProjectLinear : ChiralZorn →ₗ[ℚ] ChiralZorn where

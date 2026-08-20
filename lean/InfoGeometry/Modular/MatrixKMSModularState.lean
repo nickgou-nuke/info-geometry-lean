@@ -77,6 +77,18 @@ theorem modularAutomorphism_smul (ρ ρ_inv A : Mat) (r : R) :
   dsimp [modularAutomorphism]
   rw [Matrix.mul_smul, smul_mul_assoc]
 
+theorem modularAutomorphism_mul (ρ ρ_inv A B : Mat)
+    (h_left : ρ_inv * ρ = 1) :
+    modularAutomorphism ρ ρ_inv (A * B) =
+      modularAutomorphism ρ ρ_inv A * modularAutomorphism ρ ρ_inv B := by
+  dsimp [modularAutomorphism]
+  calc
+    ρ * (A * B) * ρ_inv = (ρ * A) * 1 * (B * ρ_inv) := by
+      rw [mul_one]
+      simp only [mul_assoc]
+    _ = (ρ * A) * (ρ_inv * ρ) * (B * ρ_inv) := by rw [h_left]
+    _ = (ρ * A * ρ_inv) * (ρ * B * ρ_inv) := by simp only [mul_assoc]
+
 /- The finite modular automorphism bundled as an `R`-linear map. -/
 def modularAutomorphismLinear (ρ ρ_inv : Mat) : Mat →ₗ[R] Mat where
   toFun := modularAutomorphism ρ ρ_inv

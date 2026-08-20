@@ -17,6 +17,10 @@ This module formalizes:
 All proofs are complete in native Mathlib with zero `sorry`s.
 -/
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+set_option linter.unusedVariables false
+
 noncomputable section
 
 open Matrix

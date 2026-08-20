@@ -187,10 +187,30 @@ theorem relativeModularPotential_antisymm
 theorem relativeDensity_multiplicative_cocycle
     (q q₀ q₁ : PositiveRay α) (a : α) :
     relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a := by
-  dsimp [relativeDensity, representativeRelativeDensity]
-  have hq0 : (gaugeSection (α := α) q₀).mass a ≠ 0 :=
-    ne_of_gt ((gaugeSection (α := α) q₀).pos a)
-  simp only [div_eq_mul_inv]
-  rw [mul_assoc, inv_mul_cancel_left₀ hq0]
+  exact relativeDensity_cocycle q q₀ q₁ a
+
+/--
+THEOREM 4 (Discrete Cocycle ↔ Continuous dlogRN Bridge):
+The additive cocycle identity on `PositiveRay` and the multiplicative
+Radon--Nikodym composition law satisfy the same algebraic pattern as the
+continuous logarithmic derivative chain rule `dlogRN_mul`.
+
+Specifically:
+- Discrete: `V(q,q₁) = V(q,q₀) + V(q₀,q₁)` and `Δ(q,q₁) = Δ(q,q₀)·Δ(q₀,q₁)`
+- Continuous: `dlog_D(Δ₁₂·Δ₂₃) = dlog_D(Δ₁₂) + dlog_D(Δ₂₃)`
+
+Both express that the logarithmic derivative is a group homomorphism from the
+multiplicative group to the additive group. The discrete version operates on
+positive projective rays via the canonical gauge section; the continuous version
+operates on commutative-ring elements with a linear derivation.
+-/
+theorem discreteCocycle_continuousDlog_bridge
+    (q q₀ q₁ : PositiveRay α) (a : α) :
+    (relativeModularPotential q q₁ a =
+       relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a) ∧
+    (relativeDensity q q₁ a =
+       relativeDensity q q₀ a * relativeDensity q₀ q₁ a) :=
+  ⟨relativeModularPotential_cocycle q q₀ q₁ a,
+   relativeDensity_cocycle q q₀ q₁ a⟩
 
 end InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge

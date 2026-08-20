@@ -42,7 +42,7 @@ open InfoGeometry.Clifford.Cl55SpinorChirality
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 open InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 open InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
-open InfoGeometry.Canonical.SO55RestrictedEquiv
+open InfoGeometry.Canonical.SO55RestrictedLemmas
 
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55

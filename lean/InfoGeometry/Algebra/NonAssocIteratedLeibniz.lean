@@ -168,6 +168,55 @@ end FirstOrder
 
 end IteratedLeibniz
 
+section DerivationBracket
+
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [AddCommGroup A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A)
+
+/-- The commutator of two linear endomorphisms. -/
+def derivationCommutator (D E : A →ₗ[R] A) : A →ₗ[R] A :=
+  D.comp E - E.comp D
+
+/-- Derivations are closed under the endomorphism commutator, without any
+associativity assumption on the underlying multiplication. -/
+theorem derivationCommutator_isDerivation
+    (D E : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hE : IsDerivation mul E) :
+    IsDerivation mul (derivationCommutator D E) := by
+  intro x y
+  simp only [derivationCommutator, LinearMap.sub_apply, LinearMap.comp_apply]
+  rw [hE x y, D.map_add, hD (E x) y, hD x (E y),
+    hD x y, E.map_add, hE (D x) y, hE x (D y)]
+  rw [LinearMap.map_sub, LinearMap.map_sub]
+  simp
+  abel
+
+/-- The commutator of a derivation with itself is zero. -/
+theorem derivationCommutator_self (D : A →ₗ[R] A) :
+    derivationCommutator D D = 0 := by
+  ext x
+  simp [derivationCommutator]
+
+/-- Swapping the entries negates the derivation commutator. -/
+theorem derivationCommutator_swap (D E : A →ₗ[R] A) :
+    derivationCommutator E D = -derivationCommutator D E := by
+  ext x
+  simp [derivationCommutator, sub_eq_add_neg]
+
+/-- The derivation commutator satisfies the Jacobi identity. -/
+theorem derivationCommutator_jacobi (D E F : A →ₗ[R] A) :
+    derivationCommutator D (derivationCommutator E F) +
+        derivationCommutator E (derivationCommutator F D) +
+        derivationCommutator F (derivationCommutator D E) = 0 := by
+  ext x
+  simp only [derivationCommutator, LinearMap.add_apply, LinearMap.sub_apply,
+    LinearMap.comp_apply]
+  abel
+
+end DerivationBracket
+
 section Unit
 
 variable {R : Type*} [CommRing R]

@@ -121,17 +121,17 @@ theorem diagonalMode_action (q z : ℂ) :
 
 /-- A multiplier is elliptic when its modulus is one. -/
 def IsEllipticMultiplier (ρ : ℂ) : Prop :=
-  Complex.abs ρ = 1
+  ‖ρ‖ = 1
 
 /-- A multiplier is loxodromic when its modulus is not one. -/
 def IsLoxodromicMultiplier (ρ : ℂ) : Prop :=
-  Complex.abs ρ ≠ 1
+  ‖ρ‖ ≠ 1
 
 /-- Every complex multiplier satisfies the exact elliptic/loxodromic modulus dichotomy. -/
 theorem multiplier_elliptic_or_loxodromic (ρ : ℂ) :
     IsEllipticMultiplier ρ ∨ IsLoxodromicMultiplier ρ := by
   simpa [IsEllipticMultiplier, IsLoxodromicMultiplier] using
-    (eq_or_ne (Complex.abs ρ) 1)
+    (eq_or_ne ‖ρ‖ 1)
 
 /--
 The reciprocal diagonal representative has determinant one, acts by `q²`, and
@@ -200,25 +200,31 @@ theorem even_add_odd_eq (p : SheetPair ℝ) :
 theorem evenSheetProjector_idempotent (p : SheetPair ℝ) :
     evenSheetProjector (evenSheetProjector p) = evenSheetProjector p := by
   rcases p with ⟨x, y⟩
-  ext <;> simp [evenSheetProjector] <;> ring
+  dsimp [evenSheetProjector]
+  ext <;> ring
 
 /-- The odd projector is idempotent. -/
 theorem oddSheetProjector_idempotent (p : SheetPair ℝ) :
     oddSheetProjector (oddSheetProjector p) = oddSheetProjector p := by
   rcases p with ⟨x, y⟩
-  ext <;> simp [oddSheetProjector] <;> ring
+  dsimp [oddSheetProjector]
+  ext <;> ring
 
 /-- The even and odd projectors are mutually annihilating. -/
 theorem evenSheetProjector_oddSheetProjector (p : SheetPair ℝ) :
     evenSheetProjector (oddSheetProjector p) = 0 := by
   rcases p with ⟨x, y⟩
-  ext <;> simp [evenSheetProjector, oddSheetProjector] <;> ring
+  ext
+  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
+  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
 
 /-- The odd and even projectors are mutually annihilating. -/
 theorem oddSheetProjector_evenSheetProjector (p : SheetPair ℝ) :
     oddSheetProjector (evenSheetProjector p) = 0 := by
   rcases p with ⟨x, y⟩
-  ext <;> simp [evenSheetProjector, oddSheetProjector] <;> ring
+  ext
+  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
+  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
 
 /-- Sheet exchange acts by eigenvalue `+1` on the even sector. -/
 theorem sheetSwap_even (p : SheetPair ℝ) :
@@ -249,7 +255,7 @@ theorem sheetMode_mul
     (q r : K) (p : SheetPair K) :
     sheetMode (q * r) p = sheetMode q (sheetMode r p) := by
   rcases p with ⟨x, y⟩
-  ext <;> simp [sheetMode, mul_assoc, mul_comm, mul_left_comm]
+  ext <;> simp [sheetMode, mul_comm, mul_left_comm]
 
 /--
 Exact Klein presentation relation on the two-sheet carrier:
@@ -399,12 +405,12 @@ theorem gaussianMomentMatrix_det (μ σ : ℝ) :
   simp [gaussianMomentMatrix, momentMatrix_det]
 
 /-- Poisson second-moment matrix. -/
-def poissonMomentMatrix (λ : ℝ) : Mat2R :=
-  momentMatrix λ λ
+def poissonMomentMatrix (lam : ℝ) : Mat2R :=
+  momentMatrix lam lam
 
 /-- Poisson determinant equals its mean/variance parameter. -/
-theorem poissonMomentMatrix_det (λ : ℝ) :
-    Matrix.det (poissonMomentMatrix λ) = λ := by
+theorem poissonMomentMatrix_det (lam : ℝ) :
+    Matrix.det (poissonMomentMatrix lam) = lam := by
   simp [poissonMomentMatrix, momentMatrix_det]
 
 /-- Congruence transforms scale a `2 × 2` moment determinant by `det(A)²`. -/
@@ -546,6 +552,15 @@ open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
 abbrev ZornInt := ZornCell ℤ
+
+@[ext]
+theorem ZornCell_ext {R : Type*} {a b : ZornCell R}
+    (hr : a.r = b.r) (hs : a.s = b.s)
+    (hx1 : a.x1 = b.x1) (hx2 : a.x2 = b.x2) (hx3 : a.x3 = b.x3)
+    (hy1 : a.y1 = b.y1) (hy2 : a.y2 = b.y2) (hy3 : a.y3 = b.y3) :
+    a = b := by
+  cases a; cases b
+  congr
 
 /-- The first unipotent Zorn generator. -/
 def S1 : ZornInt :=

@@ -166,6 +166,8 @@ theorem first_bianchi_identity
 def nomizuSectionalCurvature (bracket : V → V → V) (B : V → V → ℝ) (X Y : V) : ℝ :=
   B (bracket X Y) (bracket X Y)
 
+omit [Module ℝ V] in
+
 /--
   THEOREM: Sectional curvature vanishes on commuting tangent vectors:
   $[X, Y] = 0 \implies K(X, Y) = 0$.
@@ -175,6 +177,7 @@ theorem sectional_curvature_commuting_zero
     (hB_zero : ∀ v, B 0 v = 0)
     (X Y : V) (h_comm : bracket X Y = 0) :
     nomizuSectionalCurvature bracket B X Y = 0 := by
+  set_option linter.unusedSectionVars false in
   dsimp [nomizuSectionalCurvature]
   rw [h_comm]
   exact hB_zero 0

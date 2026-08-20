@@ -340,13 +340,6 @@ theorem map_sub (x y : A) : D (x - y) = D x - D y := by
   | succ n ih =>
       rw [Nat.cast_succ, D.map_add, ih, D.map_one, add_zero]
 
-@[simp] theorem map_intCast (z : ℤ) : D (z : A) = 0 := by
-  cases z with
-  | ofNat n => exact D.map_natCast n
-  | negSucc n =>
-      rw [Int.cast_negSucc, D.map_neg]
-      simp [D.map_natCast]
-
 /-- 
   MASTER THEOREM: The Dual-Flow Commutator Identity is 100% Generic for any Ring Derivation.
   [D, ad_K](X) = ad_{D(K)}(X)

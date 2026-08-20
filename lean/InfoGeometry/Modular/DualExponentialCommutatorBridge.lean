@@ -31,6 +31,23 @@ def adK (K : A) (X : A) : A :=
 @[simp]
 theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
 
+theorem adK_map_add (K x y : A) :
+    adK K (x + y) = adK K x + adK K y := by
+  dsimp [adK]
+  simp only [mul_add, add_mul]
+  abel
+
+theorem adK_leibniz (K x y : A) :
+    adK K (x * y) = adK K x * y + x * adK K y := by
+  dsimp [adK]
+  calc
+    K * (x * y) - (x * y) * K =
+        (K * x * y - x * K * y) + (x * K * y - x * y * K) := by
+          simp only [mul_assoc]
+          abel
+    _ = (K * x - x * K) * y + x * (K * y - y * K) := by
+          simp only [sub_mul, mul_sub, mul_assoc]
+
 /-- An additive map D is a derivation if it satisfies the Leibniz product rule. -/
 structure RingDerivation (A : Type*) [Ring A] where
   toFun : A → A
@@ -41,6 +58,15 @@ namespace RingDerivation
 
 instance : CoeFun (RingDerivation A) (fun _ => A → A) where
   coe D := D.toFun
+
+def innerRingDerivation (K : A) : RingDerivation A where
+  toFun := adK K
+  map_add' := adK_map_add K
+  leibniz' := adK_leibniz K
+
+@[simp]
+theorem innerRingDerivation_apply (K X : A) :
+    innerRingDerivation K X = adK K X := rfl
 
 variable (D : RingDerivation A)
 
@@ -61,6 +87,16 @@ theorem map_neg (x : A) : D (-x) = - D x := by
 theorem map_sub (x y : A) : D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
 
+@[simp]
+theorem map_one : D 1 = 0 := by
+  have h : D 1 + D 1 = D 1 + 0 := by
+    calc
+      D 1 + D 1 = D 1 * 1 + 1 * D 1 := by rw [mul_one, one_mul]
+      _ = D (1 * 1) := (D.leibniz 1 1).symm
+      _ = D 1 := by rw [mul_one]
+      _ = D 1 + 0 := by rw [add_zero]
+  exact add_left_cancel h
+
 /-- 
   THEOREM 1: The Master Commutator Identity between Outer and Inner Derivations
   [D, ad_K](X) = ad_{D(K)}(X)
@@ -73,6 +109,13 @@ theorem derivation_adK_comm (K X : A) :
   dsimp [adK]
   rw [D.map_sub, D.leibniz, D.leibniz]
   abel
+
+/-! The inner derivations form a Lie subalgebra under the commutator. -/
+
+theorem adK_bracket (K₁ K₂ X : A) :
+    adK K₁ (adK K₂ X) - adK K₂ (adK K₁ X) = adK (adK K₁ K₂) X := by
+  dsimp [adK]
+  noncomm_ring
 
 /-- 
   THEOREM 2: Adiabatic / Invariant Commutation
@@ -94,6 +137,17 @@ theorem adK_eq_zero_of_central (K : A) (h_central : ∀ x, K * x = x * K) (X : A
     adK K X = 0 := by
   dsimp [adK]
   rw [h_central X, sub_self]
+
+theorem central_of_adK_eq_zero (K : A) (h_zero : ∀ X, adK K X = 0) (X : A) :
+    K * X = X * K := by
+  exact sub_eq_zero.mp (h_zero X)
+
+theorem adK_eq_zero_iff_central (K : A) :
+    (∀ X, adK K X = 0) ↔ ∀ X, K * X = X * K := by
+  constructor
+  · exact central_of_adK_eq_zero K
+  · intro h X
+    exact adK_eq_zero_of_central K h X
 
 end RingDerivation
 

@@ -242,7 +242,34 @@ theorem modularAutomorphismGroup_map_sub
       modularAutomorphismGroup M t A - modularAutomorphismGroup M t B := by
   simpa [sub_eq_add_neg] using
     (modularAutomorphismGroup_map_add (M := M) A (-B) t).trans
-      (by rw [modularAutomorphismGroup_map_neg (M := M) B t])
+    (by rw [modularAutomorphismGroup_map_neg (M := M) B t])
+
+theorem modularAutomorphismGroup_map_pow
+    (M : ModularRadonNikodymData E) (A : EndH E) (n : ℕ) (t : ℝ) :
+    modularAutomorphismGroup M t (A ^ n) =
+      (modularAutomorphismGroup M t A) ^ n := by
+  induction n with
+  | zero => simp [modularAutomorphismGroup_map_one (M := M) t]
+  | succ n ih =>
+      rw [pow_succ, modularAutomorphismGroup_map_mul, ih, pow_succ]
+
+theorem modularAutomorphismGroup_commute_iff
+    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
+    Commute (modularAutomorphismGroup M t A)
+      (modularAutomorphismGroup M t B) ↔ Commute A B := by
+  let e : EndH E ≃ₐ[ℝ] EndH E :=
+    InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
+      (H := E) M.modularHamiltonian t
+  have he : e A * e B = e B * e A ↔ A * B = B * A := by
+    constructor
+    · intro h
+      apply e.injective
+      rw [e.map_mul, e.map_mul]
+      exact h
+    · intro h
+      rw [e.map_mul, e.map_mul]
+      exact congrArg e h
+  simpa [e, modularAutomorphismGroup] using he
 
 /--
 Infinitesimal modular-flow generator at the origin:

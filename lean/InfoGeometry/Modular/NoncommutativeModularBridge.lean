@@ -314,7 +314,7 @@ theorem innerConjugation_eq_of_central (u : Aˣ) (K : A)
     (hK : ∀ X : A, K * X = X * K) :
     innerConjugation u K = K := by
   unfold innerConjugation
-  rw [← hK (u : A), ← mul_assoc]
+  rw [← hK (u : A), mul_assoc]
   have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
   rw [hu, mul_one]
 

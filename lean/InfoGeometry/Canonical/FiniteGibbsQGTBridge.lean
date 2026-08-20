@@ -110,7 +110,7 @@ theorem fubiniStudyMetric_gibbsDiagonal
     change star (Real.sqrt (realGibbsWeight D beta x) : ℂ) = _
     exact RCLike.conj_ofReal _
   simp_rw [hstar]
-  simp_rw [← Complex.ofReal_mul]
+  -- The remaining expression is the real part of the diagonal covariance.
   rw [← Complex.ofReal_sum]
   apply congrArg Complex.re
   congr 1

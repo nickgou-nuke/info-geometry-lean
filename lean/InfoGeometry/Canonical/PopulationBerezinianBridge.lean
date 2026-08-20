@@ -34,12 +34,6 @@ PART 1: Two-State Population Ray
 =============================================================================
 -/
 
-/-- The correct projective carrier for populations:
-    A ray in ℝ²_{>0} with canonical representative (p_e, p_g) where
-    p_e = N_e/(N_e+N_g), p_g = N_g/(N_e+N_g).
-    This lives in PositiveRay (Fin 2). -/
-def populationRay : Unit := ()
-
 /-- The population ratio survives projectivization:
     p_e / p_g = N_e / N_g -/
 theorem populationRatioSurvives (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :

@@ -59,35 +59,11 @@ structure G2Derivation where
     A basis can be constructed from the Peirce components. -/
 def g2Dimension : ℕ := 14
 
-/-- The Peirce decomposition of g₂(₂):
-    g₂(₂) = g₂(₀) ⊕ g₂(₁) ⊕ g₂(-₁)
-    where g₂(₀) ≃ gl(2) ⊕ sl(3) (the stabilizer of the idempotents)
-    and g₂(±₁) are the 6-dimensional nilpotent sectors. -/
-
 /-!
 =============================================================================
 PART 2: Triality and Spin(8) Representation
 =============================================================================
 -/
-
-/-- The triality automorphism of Spin(8) permutes the three 8-dimensional
-    representations: vector (8_v), left-spinor (8_s), right-spinor (8_c).
-    In the split-octonion frame:
-    - 8_v  = Peirce vector sector (J_n, j_n)
-    - 8_s  = Left spinor = CAR annihilation (u₋)
-    - 8_c  = Right spinor = CAR creation (u₊) -/
-
-/-- The SplitTrialityFockBridge already identifies:
-    vectorToLeftSpinor = cliffordConcreteAnnihilation
-    vectorToRightSpinor = cliffordConcreteCreation
-    The anticommutator matches the CAR anticommutator. -/
-
-/-- The G₂(₂) derivations embed into so(4,4) (the automorphisms of the split-octonions).
-    Via triality, this gives representations on the spinor spaces. -/
-
-/-- The spin(8) bivectors (generators) in the CAR realization:
-    B_{ij} = γ_i γ_j for i < j
-    These generate the braid group via the exchange operator. -/
 
 /-!
 =============================================================================
@@ -121,26 +97,10 @@ PART 4: G₂(₂) Derivation Flow → Braiding
 =============================================================================
 -/
 
-/-- The nilpotent derivations (g₂(₁) and g₂(-₁)) correspond to the braid generators.
-    Specifically, the 6-dimensional nilpotent sector gives the 6 exchange operators
-    for 4 Majorana modes (or 3 pairs). -/
-
-/-- The stabilizer g₂(₀) ≃ gl(2) ⊕ sl(3) acts as the "fixed" gauge transformations
-    that preserve the idempotents e₊, e₋. This is the modular flow that preserves
-    the chiral sheets. -/
-
 /-!
 =============================================================================
 PART 5: Connection to Andreev Reflection
 =============================================================================
 -/
-
-/-- The Andreev reflection (quarter-turn A² = -I) is the physical manifestation
-    of the modular complex structure K = Jε.
-    In the Majorana language, Andreev reflection is the particle-hole conjugation
-    that maps γ ↦ γ (Majorana condition). -/
-
-/-- The braiding of Majoranas is topologically protected because it corresponds
-    to the nontrivial homotopy of the G₂(₂) nilpotent flows. -/
 
 end InfoGeometry.Canonical.G2ToBraidChain

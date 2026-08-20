@@ -9,7 +9,7 @@ import InfoGeometry.Analysis.MatrixPathDeformationEntropy
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary
 
-/-! Owner-import surface only; proof authority remains in the imported owners. -/
+/-! Owner-import surface only; proof authority remains in imported owners. -/
 
 noncomputable section
 

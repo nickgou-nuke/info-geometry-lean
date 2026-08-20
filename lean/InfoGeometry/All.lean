@@ -7425,3 +7425,5 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Canonical.FiniteInformationGeometryArchitecture
 import InfoGeometry.Canonical.TripotentLeftRightPeirceProjectors
 import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
+import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
+import InfoGeometry.Arithmetic.All

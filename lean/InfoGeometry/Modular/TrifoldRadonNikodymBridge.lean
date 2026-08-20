@@ -247,6 +247,17 @@ theorem adK_is_derivation (K : A) (X Y : A) :
 theorem adK_one (K : A) : adK K 1 = 0 := by
   simp [adK_apply]
 
+theorem adK_eq_zero_iff_central (K : A) :
+    adK K = 0 ↔ ∀ X, K * X = X * K := by
+  constructor
+  · intro h X
+    have hX := congrArg (fun T : A →ₗ[ℤ] A => T X) h
+    exact sub_eq_zero.mp (by simpa [adK_apply] using hX)
+  · intro h
+    apply LinearMap.ext
+    intro X
+    simp [adK_apply, h X]
+
 /-! ### Logarithmic Radon–Nikodym Derivative on Commutative Algebras -/
 
 variable {R : Type*} [CommRing R]

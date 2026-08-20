@@ -49,6 +49,15 @@ theorem ncDiff_one (D : A) : ncDiff D 1 = 0 := by
   dsimp [ncDiff]
   simp only [mul_one, one_mul, sub_self]
 
+/-- The commutator of two inner noncommutative differentials is inner again.
+    This is the pointwise Jacobi identity for the associative commutator. -/
+theorem ncDiff_commutator (D E a : A) :
+    ncDiff D (ncDiff E a) - ncDiff E (ncDiff D a) =
+      ncDiff (ncDiff D E) a := by
+  dsimp [ncDiff]
+  simp only [mul_assoc, mul_sub, sub_mul]
+  abel
+
 /-- Anticommutation with Star Involution when D is self-adjoint: (d_D a)* = - d_D(a*) -/
 theorem ncDiff_star [StarRing A] (D a : A) (hD : star D = D) :
     star (ncDiff D a) = - ncDiff D (star a) := by
@@ -122,6 +131,23 @@ theorem gaugeTransform_transitive
   rw [h3] at h2
   dsimp [fluctuatedDirac] at h2
   exact add_left_cancel h2.symm
+
+/-- The identity unit acts trivially on gauge potentials. -/
+@[simp]
+theorem gaugeTransform_one (D A_gauge : A) :
+    gaugeTransform D A_gauge 1 1 = A_gauge := by
+  dsimp [gaugeTransform]
+  simp [ncDiff]
+
+/-- A two-sided unitary gauge element has the expected inverse action. -/
+theorem gaugeTransform_inverse
+    (D A_gauge u u_inv : A)
+    (h_right : u * u_inv = 1)
+    (h_left : u_inv * u = 1) :
+    gaugeTransform D (gaugeTransform D A_gauge u u_inv) u_inv u = A_gauge := by
+  have h := gaugeTransform_transitive D A_gauge u u_inv u_inv u
+      h_right h_right h_left
+  simpa [h_left, h_right] using h
 
 /-!
 =============================================================================

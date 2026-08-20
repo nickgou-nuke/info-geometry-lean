@@ -34,7 +34,7 @@ I. DYNAMIC CORE (The Engine of Time)
 
 section DynamicCore
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [Algebra ℂ A]
 
 /-- 
   MASTER THEOREM 1 (The Engine of Backreaction):

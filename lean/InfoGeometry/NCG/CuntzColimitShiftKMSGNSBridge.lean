@@ -67,6 +67,14 @@ theorem cuntzShift_add (S : ι → A) (X Y : A) :
   congr 1; ext i
   simp only [mul_add, add_mul]
 
+theorem cuntzShift_sub (S : ι → A) (X Y : A) :
+    cuntzShift S (X - Y) = cuntzShift S X - cuntzShift S Y := by
+  dsimp [cuntzShift]
+  rw [← Finset.sum_sub_distrib]
+  congr 1
+  ext i
+  simp only [mul_sub, sub_mul]
+
 /-- 🏆 THEOREM 5: The Cuntz Shift Preserves the Involution: `Φ(X^*) = (Φ(X))^*` -/
 theorem cuntzShift_star (S : ι → A) (X : A) :
     cuntzShift S (star X) = star (cuntzShift S X) := by
@@ -104,6 +112,11 @@ theorem cuntzShift_mul {S : ι → A} (hS : CuntzFamily S) (X Y : A) :
         congr 1; ext i
         simp
   exact h_sum_inner.symm
+
+theorem cuntzShift_comm {S : ι → A} (hS : CuntzFamily S) (X Y : A) :
+    cuntzShift S (X * Y - Y * X) =
+      cuntzShift S X * cuntzShift S Y - cuntzShift S Y * cuntzShift S X := by
+  rw [cuntzShift_sub, cuntzShift_mul hS, cuntzShift_mul hS]
 
 /-!
 =============================================================================

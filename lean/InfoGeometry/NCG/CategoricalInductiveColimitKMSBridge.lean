@@ -74,6 +74,13 @@ theorem modular_flow_intertwine (F : ModularFlow (R := R) sys) {i j : I} (hij : 
     exact (LinearMap.congr_fun h x).symm
   rw [h_comm, c.eval_comm hij (F.flow i x)]
 
+theorem modular_flow_intertwine_trans (F : ModularFlow (R := R) sys)
+    {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) (x : A i) :
+    c.leg k (F.flow k (sys.trans hjk (sys.trans hij x))) =
+      c.leg i (F.flow i x) := by
+  rw [c.modular_flow_intertwine F hjk (sys.trans hij x),
+    c.modular_flow_intertwine F hij x]
+
 /-- 🏆 THEOREM 3: State Consistency on the Colimit:
     Any linear functional `φ_∞` on the colimit target evaluates consistently across stages:
     `φ_∞(ψ_j(f_{i, j}(x))) = φ_∞(ψ_i(x))` -/

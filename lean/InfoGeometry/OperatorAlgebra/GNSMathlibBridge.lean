@@ -15,6 +15,25 @@ linear functional, namely the image of `1` in the Hilbert completion.
 noncomputable def cyclicVector : f.GNS :=
   (f.toPreGNS (1 : A) : f.GNS)
 
+/-! The following lemmas expose the algebraic representation laws at the
+level of the concrete GNS bridge.  Keeping these as named facts avoids
+unfolding the completion construction in downstream operator arguments. -/
+
+@[simp]
+theorem gnsStarAlgHom_map_one :
+    f.gnsStarAlgHom (1 : A) = 1 := by
+  exact f.gnsStarAlgHom.map_one
+
+@[simp]
+theorem gnsStarAlgHom_map_mul (a b : A) :
+    f.gnsStarAlgHom (a * b) = f.gnsStarAlgHom a * f.gnsStarAlgHom b := by
+  exact f.gnsStarAlgHom.map_mul a b
+
+@[simp]
+theorem gnsStarAlgHom_map_star (a : A) :
+    f.gnsStarAlgHom (star a) = star (f.gnsStarAlgHom a) := by
+  exact map_star f.gnsStarAlgHom a
+
 /--
 The GNS representation sends the cyclic vector `Λ(1)` to `Λ(a)`.
 

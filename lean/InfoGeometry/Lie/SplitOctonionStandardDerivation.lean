@@ -118,9 +118,9 @@ theorem directCanonicalStanDerMap_apply_normal_form (x y z : CanonicalZorn) :
   have hinner :
       (kingdonStandardDerivation X Y) Z =
       ((X * Y - Y * X) * Z - Z * (X * Y - Y * X)) -
-        3 • ((X * Y) * Z - X * (Y * Z)) := by
-    change stanDerMap _ _ _ = _
-    rw [stanDerMap_apply_normal_form
+        (3 : ℕ) • ((X * Y) * Z - X * (Y * Z)) := by
+    change stanDerMap (R := ℝ) _ _ _ = _
+    rw [stanDerMap_apply_normal_form (R := ℝ)
       (InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin)
       (InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin)]
     rw [associator_apply]
@@ -129,10 +129,10 @@ theorem directCanonicalStanDerMap_apply_normal_form (x y z : CanonicalZorn) :
         kingdonCanonicalLinearEquiv ((kingdonStandardDerivation X Y) Z) := ht.symm
     _ = kingdonCanonicalLinearEquiv
         (((X * Y - Y * X) * Z - Z * (X * Y - Y * X)) -
-          3 • ((X * Y) * Z - X * (Y * Z))) := congrArg _ hinner
+          (3 : ℕ) • ((X * Y) * Z - X * (Y * Z))) := congrArg _ hinner
     _ = ((x * y - y * x) * z - z * (x * y - y * x)) -
         3 • ((x * y) * z - x * (y * z)) := by
-      simp only [X, Y, Z, map_sub, map_nsmul, zMul_eq_canonical_mul,
+      simp only [map_sub, map_nsmul, X, Y, Z, zMul_eq_canonical_mul,
         kingdonCanonicalLinearEquiv_mul, LinearEquiv.apply_symm_apply]
 
 /-- Baez's standard derivation with canonical split-octonion inputs. -/

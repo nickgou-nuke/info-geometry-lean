@@ -39,6 +39,7 @@ namespace InfoGeometry.Canonical.ErlangenObservableBundle
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.QuantumGeometry.Projective
+open scoped InnerProductSpace
 
 universe u
 
@@ -147,11 +148,11 @@ theorem observableExpectation_conj_eq
   calc
     starRingEnd ℂ ⟪X.op ψ.vec, ψ.vec⟫_ℂ =
         ⟪ψ.vec, X.op ψ.vec⟫_ℂ := by
-      exact inner_conj_symm (X.op ψ.vec) ψ.vec
+      exact inner_conj_symm (𝕜 := ℂ) ψ.vec (X.op ψ.vec)
     _ = ⟪ψ.vec, (ContinuousLinearMap.adjoint X.op) ψ.vec⟫_ℂ := by
       rw [X.is_self_adjoint]
     _ = ⟪X.op ψ.vec, ψ.vec⟫_ℂ := by
-      exact ContinuousLinearMap.adjoint_inner_right X.op ψ.vec ψ.vec
+      exact ContinuousLinearMap.adjoint_inner_right (𝕜 := ℂ) X.op ψ.vec ψ.vec
 
 /-- 
   THEOREM 6 (QGT Decomposition over Observable Coordinates):

@@ -20,6 +20,12 @@ variable {State : Type*} [Fintype State] [Nonempty State]
 
 abbrev GibbsHilbert (State : Type*) := EuclideanSpace ℂ State
 
+theorem realGibbsWeight_pos (D : CartanSouriauDatum State)
+    (beta : Fin 2 → ℝ) (x : State) :
+    0 < realGibbsWeight D beta x := by
+  unfold realGibbsWeight
+  exact div_pos (Real.exp_pos _) (realGibbsPartition_pos D beta)
+
 def diagonalObservable (f : State → ℝ) : GibbsHilbert State →L[ℂ] GibbsHilbert State :=
   LinearMap.toContinuousLinearMap
     { toFun := fun v => WithLp.toLp (2 : ENNReal) (fun x => (f x : ℂ) * v x)

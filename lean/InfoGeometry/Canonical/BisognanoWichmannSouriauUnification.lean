@@ -72,7 +72,7 @@ STAGE 2: Modular Time Identification
   THEOREM 2.1: The modular-to-proper time identification correctly matches the
   wedge boost rapidity parameter $\theta = 2\pi \tau_{\mathrm{mod}}$.
 -/
-theorem modular_to_proper_rapidity_match (obs : UnruhTemperature.RindlerObserver) (tau_mod : ℝ) :
+theorem modular_to_proper_rapidity_match (obs : RindlerObserver) (tau_mod : ℝ) :
     rapidity obs (properTime_of_modularTime obs tau_mod) = wedgeBoostParameter tau_mod := by
   exact rapidity_properTime_eq_wedgeBoostParameter obs tau_mod
 
@@ -96,7 +96,7 @@ STAGE 3: KMS Thermal Periodicity & Exact Unruh Temperature
   THEOREM 3.1: The fundamental KMS unit modular period $\Delta \tau_{\mathrm{mod}} = 1$
   induces the exact thermal inverse temperature $\beta = 2\pi / a$.
 -/
-theorem kms_modular_period_to_inverse_temperature (obs : UnruhTemperature.RindlerObserver) :
+theorem kms_modular_period_to_inverse_temperature (obs : RindlerObserver) :
     inverseTemperature obs = (2 * Real.pi) / obs.a := by
   exact inverseTemperature_eq obs
 
@@ -104,7 +104,7 @@ theorem kms_modular_period_to_inverse_temperature (obs : UnruhTemperature.Rindle
   THEOREM 3.2: Exact Unruh Temperature Theorem:
   The thermal temperature perceived by an accelerating observer is strictly $T_U = a / (2\pi)$.
 -/
-theorem unruh_temperature_value (obs : UnruhTemperature.RindlerObserver) :
+theorem unruh_temperature_value (obs : RindlerObserver) :
     unruhTemperature obs = obs.a / (2 * Real.pi) := by
   exact unruhTemperature_eq obs
 
@@ -112,7 +112,7 @@ theorem unruh_temperature_value (obs : UnruhTemperature.RindlerObserver) :
   THEOREM 3.3: Positivity of Unruh Radiation:
   For every physical observer with positive acceleration $a > 0$, the perceived temperature is strictly positive.
 -/
-theorem unruh_temperature_strictly_positive (obs : UnruhTemperature.RindlerObserver) :
+theorem unruh_temperature_strictly_positive (obs : RindlerObserver) :
     0 < unruhTemperature obs := by
   exact unruhTemperature_pos obs
 
@@ -142,7 +142,7 @@ STAGE 5: The Unified Bisognano–Wichmann – Souriau Synthesis Structure
   and resulting thermodynamic temperature into a single coherent structure.
 -/
 structure UnruhSouriauPacket where
-  obs : UnruhTemperature.RindlerObserver
+  obs : RindlerObserver
   beta_thermal : ℝ
   h_beta : beta_thermal = (2 * Real.pi) / obs.a
   temperature : ℝ
@@ -152,7 +152,7 @@ structure UnruhSouriauPacket where
 /--
   Constructor for the canonical Unruh–Souriau packet from any accelerating observer.
 -/
-def makeUnruhSouriauPacket (obs : UnruhTemperature.RindlerObserver) : UnruhSouriauPacket where
+def makeUnruhSouriauPacket (obs : RindlerObserver) : UnruhSouriauPacket where
   obs := obs
   beta_thermal := inverseTemperature obs
   h_beta := inverseTemperature_eq obs
@@ -170,7 +170,7 @@ def makeUnruhSouriauPacket (obs : UnruhTemperature.RindlerObserver) : UnruhSouri
   5. The horizon reflection $J$ preserves operator traces.
 -/
 theorem bisognano_wichmann_souriau_unification_master
-    (obs : UnruhTemperature.RindlerObserver)
+    (obs : RindlerObserver)
     (coords : RindlerCoordinates) (tau : ℝ)
     {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
     (J A : Matrix (Fin n) (Fin n) ℝ) (hJ : J * J = 1) :

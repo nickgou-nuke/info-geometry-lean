@@ -238,7 +238,7 @@ def gaugeTransformLinear (u : Aˣ) : A →ₗ[R] A where
 
 @[simp]
 theorem gaugeTransformLinear_apply (u : Aˣ) (X : A) :
-    (gaugeTransformLinear (R := R) u) X = gaugeTransform u X := rfl
+    (gaugeTransformLinear (R := R) (A := A) u) X = gaugeTransform u X := rfl
 
 /-- Gauge conjugation commutes with natural powers of an observable. -/
 theorem gaugeTransform_pow (u : Aˣ) (X : A) (n : ℕ) :

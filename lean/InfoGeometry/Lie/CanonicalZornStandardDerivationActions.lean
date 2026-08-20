@@ -14,6 +14,9 @@ namespace InfoGeometry.Lie.CanonicalZornStandardDerivationActions
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 100000
+
 open InfoGeometry.Lie.SplitOctonionStandardDerivation
 open InfoGeometry.Lie.CanonicalZornProductBasis
 open InfoGeometry.Lie.CanonicalZornDerivation

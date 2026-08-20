@@ -66,6 +66,13 @@ theorem jordan_conjugate (U U_inv A B : Mat)
 def IsSLD (ρ L A : Mat) : Prop :=
   jordan ρ L = 2 • A
 
+theorem isSLD_conjugate (ρ L A U U_inv : Mat)
+    (hU' : U_inv * U = 1) (h : IsSLD ρ L A) :
+    IsSLD (U * ρ * U_inv) (U * L * U_inv) (U * A * U_inv) := by
+  unfold IsSLD at h ⊢
+  rw [jordan_conjugate U U_inv ρ L hU', h]
+  simp only [Matrix.smul_mul, Matrix.mul_smul]
+
 /-- Noncommutative Quantum Fisher Inner Product with respect to density operator ρ:
     `g_ρ(L₁, L₂) = 1/2 * Tr(ρ * {L₁, L₂})` -/
 def sldFisherInner (ρ L₁ L₂ : Mat) : R :=

@@ -43,6 +43,23 @@ theorem jordan_comm (A B : Mat) : jordan A B = jordan B A := by
   dsimp [jordan]
   rw [add_comm]
 
+/- Conjugation by a two-sided inverse preserves the Jordan product. -/
+theorem jordan_conjugate (U U_inv A B : Mat)
+    (hU' : U_inv * U = 1) :
+    jordan (U * A * U_inv) (U * B * U_inv) =
+      U * jordan A B * U_inv := by
+  have h_conj_prod (X Y : Mat) :
+      (U * X * U_inv) * (U * Y * U_inv) = U * (X * Y) * U_inv := by
+    calc
+      (U * X * U_inv) * (U * Y * U_inv) =
+          U * X * (U_inv * U) * Y * U_inv := by
+            simp only [mul_assoc]
+      _ = U * X * 1 * Y * U_inv := by rw [hU']
+      _ = U * (X * Y) * U_inv := by simp only [mul_one, mul_assoc]
+  unfold jordan
+  rw [h_conj_prod A B, h_conj_prod B A]
+  simp only [← Matrix.mul_add, ← Matrix.add_mul]
+
 /-- The Symmetric Logarithmic Derivative (SLD) Lyapunov equation:
     `L` is the SLD of observable `A` with respect to density matrix `ρ` if
     `1/2 * {ρ, L} = A`, i.e., `ρ * L + L * ρ = 2 * A`. -/

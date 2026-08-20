@@ -38,11 +38,8 @@ variable (D : Derivation A)
 @[simp]
 theorem map_one : D 1 = 0 := by
   have h : D 1 = D 1 + D 1 := by
-    have h1 := D.leibniz 1 1
-    rw [mul_one, one_mul] at h1
-    exact h1.symm
-  have h0 : D 1 + 0 = D 1 + D 1 := by rw [add_zero, h]
-  exact (add_left_cancel h0).symm
+    simpa using D.leibniz 1 1
+  exact self_eq_add_left.mp h
 
 end Derivation
 

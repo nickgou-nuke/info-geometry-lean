@@ -8,6 +8,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Topology.Defs.Induced
 import Mathlib.Tactic
 
 /--!
@@ -50,32 +51,52 @@ def PositiveOrthant : Set (α → ℝ) :=
 
 @[simp]
 theorem mem_positiveOrthant (μ : α → ℝ) : μ ∈ PositiveOrthant ↔ ∀ a : α, 0 < μ a :=
-  rfl
+  ⟨fun h => h, fun h => h⟩
 
 /- The positive orthant is open in the product topology on ℝ^α -/
 theorem isOpen_positiveOrthant : IsOpen (PositiveOrthant : Set (α → ℝ)) := by
-  have hopen : IsOpen (⋂ a : α, (fun μ : α → ℝ => μ a) ⁻¹' Set.Ioi (0 : ℝ)) := by
-    simpa using
-      isOpen_biInter_finset (s := (Finset.univ : Finset α))
-        (fun a ha => isOpen_Ioi.preimage (continuous_apply a))
-  simpa [PositiveOrthant, Set.setOf_forall] using hopen
+  have h₁ : IsOpen (PositiveOrthant : Set (α → ℝ)) := by
+    have h₂ : (PositiveOrthant : Set (α → ℝ)) = ⋂ (a : α), {μ : α → ℝ | 0 < μ a} := by
+      ext μ
+      simp [PositiveOrthant]
+      <;>
+      aesop
+    rw [h₂]
+    apply isOpen_iInter
+    intro a
+    have h₃ : IsOpen {μ : α → ℝ | 0 < μ a} := by
+      have h₄ : Continuous (fun μ : α → ℝ => μ a) := by
+        exact continuous_fst
+      have h₅ : IsOpen (Set.Ioi (0 : ℝ)) := isOpen_Ioi
+      exact h₅.preimage h₄
+    exact h₃
+  exact h₁
 
 /- The positive orthant as a smooth manifold.
    It inherits the smooth structure from the ambient space α → ℝ
    which is a smooth manifold via `modelWithCornersSelf ℝ (α → ℝ)`.
    Since PositiveOrthant is open, it inherits the smooth structure. -/
-def PositiveOrthantManifold (α : Type*) [Fintype α] :=
+def PositiveOrthantManifold : Type* :=
   {μ : α → ℝ // μ ∈ PositiveOrthant}
 
+instance : TopologicalSpace PositiveOrthantManifold :=
+  inferInstance
+
+instance : SmoothManifoldWithCorners ℝ (α → ℝ) PositiveOrthantManifold := by
+  have h₁ : IsOpen (PositiveOrthant : Set (α → ℝ)) := isOpen_positiveOrthant
+  -- The ambient space α → ℝ has a smooth manifold structure via modelWithCornersSelf
+  -- The positive orthant is open, so it inherits the smooth structure
+  infer_instance
+
 /- The inclusion map from the positive orthant manifold to the ambient space -/
-def toAmbient : PositiveOrthantManifold α → (α → ℝ) := Subtype.val
+def toAmbient : PositiveOrthantManifold → (α → ℝ) := Subtype.val
 
 @[simp]
-theorem toAmbient_injective : Function.Injective (toAmbient (α := α)) := by
+theorem toAmbient_injective : Function.Injective (toAmbient : PositiveOrthantManifold → (α → ℝ)) := by
   exact Subtype.val_injective
 
 /- The tangent space at any point of the positive orthant is canonically α → ℝ -/
-def tangentSpaceAt (μ : PositiveOrthantManifold α) := (α → ℝ)
+def tangentSpaceAt (μ : PositiveOrthantManifold) : Type* := (α → ℝ)
 
 /- The projection map from the ambient space to the coordinate a -/
 def projCoord (a : α) : (α → ℝ) →L[ℝ] ℝ :=
@@ -86,5 +107,3 @@ theorem projCoord_apply (a : α) (μ : α → ℝ) : projCoord a μ = μ a := by
   simp [projCoord, ContinuousLinearMap.proj_apply]
 
 end InfoGeometry.Continuous.PositiveOrthant
-
-end

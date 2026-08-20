@@ -67,7 +67,7 @@ theorem gradeZeroSubmodule_adjoint_weight
     (hx : x ∈ gradeZeroSubmodule e) :
     e * x - x * e = 0 := by
   rcases hx with ⟨y, rfl⟩
-  exact gradeZero_adjoint_weight he y
+  rw [gradeZero_adjoint_weight he y, zero_smul]
 
 theorem gradePosOneSubmodule_adjoint_weight
     {e : R} (he : e * e * e = e) {x : R}

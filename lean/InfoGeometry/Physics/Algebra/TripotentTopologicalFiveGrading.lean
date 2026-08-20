@@ -71,7 +71,7 @@ def continuousJointPeirceProjector
       continuousJointPeirceProjector e left right := by
   ext x
   have h := congrArg (fun f : Module.End ℝ A => f x)
-    (jointPeirceProjector_idempotent (e := e) (left := left) (right := right) he)
+    (jointPeirceProjector_mul_self (e := e) (left := left) (right := right) he)
   simpa [ContinuousLinearMap.mul_apply, continuousJointPeirceProjector_apply] using h
 
 @[simp] theorem continuousJointPeirceProjector_mul_eq_zero_of_left_ne
@@ -82,8 +82,8 @@ def continuousJointPeirceProjector
       0 := by
   ext x
   have h := congrArg (fun f : Module.End ℝ A => f x)
-    (jointPeirceProjector_mul_eq_zero_of_left_ne (e := e) he hleft
-      (right := right) (right' := right'))
+    (jointPeirceProjector_mul_eq_zero_of_left_ne (e := e) (he := he) (left₁ := left)
+      (left₂ := left') (right₁ := right) (right₂ := right') hleft)
   simpa [ContinuousLinearMap.mul_apply, continuousJointPeirceProjector_apply] using h
 
 @[simp] theorem continuousJointPeirceProjector_mul_eq_zero_of_right_ne
@@ -94,8 +94,8 @@ def continuousJointPeirceProjector
       0 := by
   ext x
   have h := congrArg (fun f : Module.End ℝ A => f x)
-    (jointPeirceProjector_mul_eq_zero_of_right_ne (e := e) he hright
-      (left := left) (left' := left'))
+    (jointPeirceProjector_mul_eq_zero_of_right_ne (e := e) (he := he) (left₁ := left)
+      (left₂ := left') (right₁ := right) (right₂ := right') hright)
   simpa [ContinuousLinearMap.mul_apply, continuousJointPeirceProjector_apply] using h
 
 /-- Continuous grouped projector indexed by the five algebraic grades. -/

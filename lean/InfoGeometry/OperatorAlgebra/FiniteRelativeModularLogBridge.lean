@@ -91,7 +91,7 @@ theorem relativeLogAction_matrixUnit
       ((relativeLogEigenvalue (p i) (q j) : ℝ) : ℂ) • matrixUnit i j := by
   change (leftSurprisalMatrix p * matrixUnit i j) -
       (matrixUnit i j * rightSurprisalMatrix q) = _
-  rw [diagonal_mul_matrixUnit, matrixUnit_mul_diagonal]
+  rw [leftSurprisalMatrix, rightSurprisalMatrix, diagonal_mul_matrixUnit, matrixUnit_mul_diagonal]
   unfold relativeLogEigenvalue
   ext a b
   by_cases ha : a = i <;> by_cases hb : b = j <;>

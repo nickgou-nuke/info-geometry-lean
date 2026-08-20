@@ -2,6 +2,10 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
+import InfoGeometry.QuantumGeometry.Projective.Basic
+import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.QuantumGeometry.Projective.Quotient
+import InfoGeometry.Canonical.CompleteUnifiedBundle
 
 /-!
 # The Unified QGT Uncertainty Principle and Geometric Curvature Bound
@@ -17,7 +21,9 @@ All proofs are complete in native Mathlib with zero `sorry`s and zero custom axi
 
 noncomputable section
 
+open scoped InnerProductSpace
 open ContinuousLinearMap
+open InfoGeometry.QuantumGeometry.Projective
 
 namespace InfoGeometry.QuantumGeometry.Unification
 
@@ -27,128 +33,76 @@ local notation "EndH" => H →L[ℂ] H
 
 /-!
 =============================================================================
-PART 1: Basic QGT Definitions and Real Invariants
-=============================================================================
--/
-
-def QGT (ψ : H) (X Y : EndH) : ℂ :=
-  inner (X ψ) (Y ψ) - inner (X ψ) ψ * inner ψ (Y ψ)
-
-def fisherMetric (ψ : H) (X Y : EndH) : ℝ :=
-  (QGT ψ X Y).re
-
-def berryCurvature (ψ : H) (X Y : EndH) : ℝ :=
-  -2 * (QGT ψ X Y).im
-
-/-- 
-  THEOREMM 1: The Diagonal Berry Curvature Strictly Vanishes:
-  Ω_ψ(X, X) = 0
--/
-theorem berryCurvature_self (ψ : H) (X : EndH) :
-    berryCurvature ψ X X = 0 := by
-  dsimp [berryCurvature, QGT]
-  have h_re : (inner (X ψ) (X ψ) - inner (X ψ) ψ * inner ψ (X ψ)).im = 0 := by
-    have h1 : (inner (X ψ) (X ψ) : ℂ).im = 0 := inner_self_im (X ψ)
-    have h2 : (inner (X ψ) ψ * inner ψ (X ψ)) = ((inner (X ψ) ψ) * starRingEnd ℂ (inner (X ψ) ψ)) := by
-      rw [inner_conj_symm (X ψ) ψ]
-    have h3 : (inner (X ψ) ψ * starRingEnd ℂ (inner (X ψ) ψ)).im = 0 := by
-      exact Complex.mul_conj_im (inner (X ψ) ψ)
-    rw [h2]
-    simp [h1, h3]
-  rw [h_re, mul_zero, neg_zero]
-
-/-- 
-  THEOREM 2: The Diagonal QGT is Purely Real and Equals the Metric:
-  Q_ψ(X, X) = (g_ψ(X, X) : ℂ)
--/
-theorem QGT_self_real (ψ : H) (X : EndH) :
-    QGT ψ X X = (fisherMetric ψ X X : ℂ) := by
-  have h_im : (QGT ψ X X).im = 0 := by
-    have h := berryCurvature_self ψ X
-    dsimp [berryCurvature] at h
-    linarith
-  have h_decomp := Complex.re_add_im (QGT ψ X X)
-  dsimp [fisherMetric]
-  calc
-    QGT ψ X X = (QGT ψ X X).re + Complex.I * (QGT ψ X X).im := h_decomp.symm
-    _ = (QGT ψ X X).re + Complex.I * 0 := by rw [h_im]
-    _ = (QGT ψ X X).re := by ring
-
-/-!
-=============================================================================
-PART 2: Pythagorean Modulus Identity of the QGT
+PART 1: Pythagorean Modulus Identity of the QGT
 =============================================================================
 -/
 
 /-- 
-  THEOREM 3: The QGT Pythagorean Modulus Decomposition:
+  THEOREM 1: The QGT Pythagorean Modulus Decomposition:
   |Q_ψ(X, Y)|² = g_ψ(X, Y)² + (1/4) * Ω_ψ(X, Y)²
 -/
-theorem QGT_normSq_decomposition (ψ : H) (X Y : EndH) :
+theorem QGT_normSq_decomposition (ψ : NormalizedState H) (X Y : EndH) :
     Complex.normSq (QGT ψ X Y) =
-      (fisherMetric ψ X Y) ^ 2 + (1 / 4) * (berryCurvature ψ X Y) ^ 2 := by
-  dsimp [fisherMetric, berryCurvature]
-  rw [Complex.normSq_apply]
-  have h_sq : (-2 * (QGT ψ X Y).im) ^ 2 = 4 * (QGT ψ X Y).im ^ 2 := by ring
-  rw [h_sq]
-  ring
+      (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
+  InfoGeometry.QuantumGeometry.Projective.QGT_normSq_decomposition ψ X Y
 
 /-!
 =============================================================================
-PART 3: The Robertson–Schrödinger Uncertainty Bound from QGT Geometry
+PART 2: The Robertson–Schrödinger Uncertainty Bound from QGT Geometry
 =============================================================================
 -/
 
-/-- The Lie Commutator of operators: [X, Y] = X ∘ Y - Y ∘ X. -/
-def opCommutator (X Y : EndH) : EndH :=
-  X.comp Y - Y.comp X
-
 /-- 
-  THEOREM 4: The Geometric Curvature Bound:
+  THEOREM 2: The Geometric Curvature Bound:
   For any complex number Q with real and imaginary decomposition:
   |Q|² ≥ (1/4) * Ω²
 -/
-theorem QGT_normSq_ge_curvature (ψ : H) (X Y : EndH) :
-    Complex.normSq (QGT ψ X Y) ≥ (1 / 4) * (berryCurvature ψ X Y) ^ 2 := by
+theorem QGT_normSq_ge_curvature (ψ : NormalizedState H) (X Y : EndH) :
+    Complex.normSq (QGT ψ X Y) ≥ (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 := by
   rw [QGT_normSq_decomposition]
-  have h_sq_nonneg : (fisherMetric ψ X Y) ^ 2 ≥ 0 := sq_nonneg _
+  have h_sq_nonneg : (fubiniStudyMetric ψ X Y) ^ 2 ≥ 0 := sq_nonneg _
   linarith
 
 /-- 
-  THEOREM 5: The Robertson–Schrödinger Geometric Uncertainty Principle:
-  If the Cauchy–Schwarz bound on the covariance holds:
-    g_ψ(X, X) * g_ψ(Y, Y) ≥ |Q_ψ(X, Y)|²
-  then the product of the metric variances is strictly bounded below by 
+  THEOREM 3: The Robertson–Schrödinger Geometric Uncertainty Principle:
+  The product of the metric variances is strictly bounded below by 
   the square of the Berry curvature:
     g_ψ(X, X) * g_ψ(Y, Y) ≥ (1/4) * Ω_ψ(X, Y)²
 -/
-theorem robertson_schrodinger_qgt_bound
-    (ψ : H) (X Y : EndH)
-    (h_cauchy : (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ Complex.normSq (QGT ψ X Y)) :
-    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * (berryCurvature ψ X Y) ^ 2 := by
-  have h_curv := QGT_normSq_ge_curvature ψ X Y
-  exact le_trans h_curv h_cauchy
+theorem robertson_schrodinger_qgt_bound (ψ : NormalizedState H) (X Y : EndH) :
+    (fubiniStudyMetric ψ X X) * (fubiniStudyMetric ψ Y Y) ≥
+      (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
+  berry_curvature_uncertainty_bound ψ X Y
 
 /-- 
-  THEOREM 6: The Final Commutator Uncertainty Principle
+  THEOREM 4: Full Robertson–Schrödinger Bound with Covariance Term:
+    g_ψ(X, X) * g_ψ(Y, Y) ≥ g_ψ(X, Y)² + (1/4) * Ω_ψ(X, Y)²
+-/
+theorem robertson_schrodinger_full (ψ : NormalizedState H) (X Y : EndH) :
+    (fubiniStudyMetric ψ X X) * (fubiniStudyMetric ψ Y Y) ≥
+      (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
+  InfoGeometry.QuantumGeometry.Projective.robertson_schrodinger_qgt_bound ψ X Y
+
+/-- 
+  THEOREM 5: The Final Commutator Uncertainty Principle
   For skew-adjoint derivation generators (X† = -X, Y† = -Y), the uncertainty
   is bounded below by the expectation value of the Lie bracket:
     g_ψ(X, X) * g_ψ(Y, Y) ≥ (1/4) * |⟪ψ, [X, Y] ψ⟫|²
 -/
 theorem geometric_commutator_uncertainty_bound
-    (ψ : H) (X Y : EndH)
-    (h_cauchy : (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ Complex.normSq (QGT ψ X Y))
-    (h_comm_curv : (berryCurvature ψ X Y : ℂ) * Complex.I = inner ψ (opCommutator X Y ψ)) :
-    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * Complex.normSq (inner ψ (opCommutator X Y ψ)) := by
-  have h_bound := robertson_schrodinger_qgt_bound ψ X Y h_cauchy
+    (ψ : NormalizedState H) (X Y : EndH)
+    (hX : ContinuousLinearMap.adjoint X = -X)
+    (hY : ContinuousLinearMap.adjoint Y = -Y) :
+    (fubiniStudyMetric ψ X X) * (fubiniStudyMetric ψ Y Y) ≥
+      (1 / 4 : ℝ) * Complex.normSq (⟪ψ.vec, (opCommutator X Y) ψ.vec⟫_ℂ) := by
+  have h_bound := robertson_schrodinger_qgt_bound ψ X Y
+  have h_comm := berryCurvature_skewAdjoint_commutator ψ X Y hX hY
   have h_normSq_comm :
-    Complex.normSq (inner ψ (opCommutator X Y ψ)) = (berryCurvature ψ X Y) ^ 2 := by
-    rw [← h_comm_curv]
+    Complex.normSq (⟪ψ.vec, (opCommutator X Y) ψ.vec⟫_ℂ) = (berryCurvature ψ X Y) ^ 2 := by
+    rw [← h_comm]
     rw [Complex.normSq_mul, Complex.normSq_I, mul_one]
-    exact Complex.normSq_ofReal (berryCurvature ψ X Y)
+    exact (Complex.normSq_ofReal (berryCurvature ψ X Y)).trans (sq (berryCurvature ψ X Y)).symm
   rw [h_normSq_comm]
   exact h_bound
 
 end InfoGeometry.QuantumGeometry.Unification
-
-end noncomputable section

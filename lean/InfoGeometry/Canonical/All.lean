@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.BdGSchurBerezinianCompatibility
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
 import InfoGeometry.Canonical.ZornPeirceExponentialTransport
 import InfoGeometry.Canonical.CayleyWittenPeirceParityBridge

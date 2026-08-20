@@ -132,6 +132,33 @@ theorem cuntzShift_comm {S : ι → A} (hS : CuntzFamily S) (X Y : A) :
       cuntzShift S X * cuntzShift S Y - cuntzShift S Y * cuntzShift S X := by
   rw [cuntzShift_sub, cuntzShift_mul hS, cuntzShift_mul hS]
 
+theorem cuntzShift_star_mul {S : ι → A} (hS : CuntzFamily S) (X Y : A) :
+    cuntzShift S (star X * Y) =
+      star (cuntzShift S X) * cuntzShift S Y := by
+  rw [cuntzShift_mul hS, cuntzShift_star]
+
+/-- The Cuntz shift bundled as a native ring homomorphism. -/
+def cuntzShiftRingHom {S : ι → A} (hS : CuntzFamily S) : A →+* A where
+  toFun := cuntzShift S
+  map_one' := cuntzShift_one hS
+  map_mul' := cuntzShift_mul hS
+  map_zero' := cuntzShift_zero S
+  map_add' := cuntzShift_add S
+
+@[simp]
+theorem cuntzShiftRingHom_apply {S : ι → A} (hS : CuntzFamily S) (X : A) :
+    cuntzShiftRingHom hS X = cuntzShift S X := rfl
+
+theorem cuntzShiftRingHom_map_star {S : ι → A} (hS : CuntzFamily S) (X : A) :
+    cuntzShiftRingHom hS (star X) = star (cuntzShiftRingHom hS X) := by
+  exact cuntzShift_star S X
+
+theorem cuntzShiftRingHom_map_star_mul {S : ι → A} (hS : CuntzFamily S)
+    (X Y : A) :
+    cuntzShiftRingHom hS (star X * Y) =
+      star (cuntzShiftRingHom hS X) * cuntzShiftRingHom hS Y := by
+  exact cuntzShift_star_mul hS X Y
+
 /-!
 =============================================================================
 PART 2: Modular KMS State and GNS Construction on Cuntz Algebras
@@ -142,6 +169,15 @@ PART 2: Modular KMS State and GNS Construction on Cuntz Algebras
     if it is shift-invariant `φ(Φ(X)) = φ(X)` -/
 structure KMSState (S : ι → A) (φ : A →ₗ[ℤ] A) : Prop where
   shift_invariant : ∀ X, φ (cuntzShift S X) = φ X
+
+theorem KMSState.shift_invariant_iterate {S : ι → A} (φ : A →ₗ[ℤ] A)
+    (hKMS : KMSState S φ) (n : ℕ) (X : A) :
+    φ ((cuntzShift S)^[n] X) = φ X := by
+  induction n generalizing X with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      rw [ih (cuntzShift S X), hKMS.shift_invariant]
 
 /-- The GNS Sesquilinear Inner Product induced by linear functional `φ`:
     `⟨a, b⟩_φ = φ(b^* * a)` -/
@@ -172,6 +208,20 @@ theorem gnsInner_shift_invariant {S : ι → A} (hS : CuntzFamily S)
   dsimp [gnsInner]
   rw [← cuntzShift_star, ← cuntzShift_mul hS]
   exact hKMS.shift_invariant (star b * a)
+
+theorem gnsInner_shift_invariant_iterate {S : ι → A} (hS : CuntzFamily S)
+    (φ : A →ₗ[ℤ] A) (hKMS : KMSState S φ) (n : ℕ) (a b : A) :
+    gnsInner φ ((cuntzShift S)^[n] a) ((cuntzShift S)^[n] b) =
+      gnsInner φ a b := by
+  induction n generalizing a b with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      have hb : (cuntzShift S)^[n + 1] b =
+          (cuntzShift S)^[n] (cuntzShift S b) :=
+        Function.iterate_succ_apply (cuntzShift S) n b
+      rw [hb, ih]
+      exact gnsInner_shift_invariant hS φ hKMS a b
 
 end InfoGeometry.NCG.CuntzColimit
 

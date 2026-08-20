@@ -77,11 +77,24 @@ theorem flow_add_apply
     σ.flow (s + t) x = σ.flow s (σ.flow t x) :=
   σ.flow_add s t x
 
+theorem flow_commute
+    (s t : ℝ) (x : Op) :
+    σ.flow s (σ.flow t x) = σ.flow t (σ.flow s x) := by
+  rw [← σ.flow_add s t x, ← σ.flow_add t s x]
+  rw [add_comm]
+
 theorem flow_neg_apply
     (t : ℝ)
     (x : Op) :
     σ.flow (-t) (σ.flow t x) = x := by
   rw [← σ.flow_add (-t) t x]
+  simp
+
+theorem flow_neg_apply'
+    (t : ℝ)
+    (x : Op) :
+    σ.flow t (σ.flow (-t) x) = x := by
+  rw [← σ.flow_add t (-t) x]
   simp
 
 theorem flow_mul_apply

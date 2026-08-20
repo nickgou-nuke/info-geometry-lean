@@ -138,10 +138,12 @@ theorem gnsInner_left_regular (φ : S →ₗ[R] R) (x a b : S) :
 theorem gnsInner_left_regular_mul (φ : S →ₗ[R] R) (x y a b : S) :
     gnsInner φ ((x * y) * a) b =
       gnsInner φ a ((star y * star x) * b) := by
-  rw [← mul_assoc x y a]
-  rw [gnsInner_left_regular φ x (y * a) b]
-  rw [gnsInner_left_regular φ y a (star x * b)]
-  simp only [star_mul]
+  calc
+    gnsInner φ ((x * y) * a) b = gnsInner φ (x * (y * a)) b := by
+      rw [mul_assoc]
+    _ = gnsInner φ (y * a) (star x * b) := gnsInner_left_regular φ x (y * a) b
+    _ = gnsInner φ a (star y * (star x * b)) := gnsInner_left_regular φ y a (star x * b)
+    _ = gnsInner φ a ((star y * star x) * b) := by rw [mul_assoc]
 
 /-- 🏆 THEOREM 7: GNS Endomorphism Invariance (Shift / Tilt Isometry):
     If `Φ : S → S` is a $*$-homomorphism preserving `φ`, then `⟨Φ(a), Φ(b)⟩_φ = ⟨a, b⟩_φ`. -/
@@ -164,6 +166,19 @@ def connesPerturb (φ : S →ₗ[R] R) (h : S) : S →ₗ[R] R where
     have h_smul : h * (r • x) * h = r • (h * x * h) := by
       simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
     simp only [h_smul, φ.map_smul, smul_eq_mul, RingHom.id_apply]
+
+@[simp]
+theorem connesPerturb_apply (φ : S →ₗ[R] R) (h x : S) :
+    connesPerturb φ h x = φ (h * x * h) := rfl
+
+theorem connesPerturb_one (φ : S →ₗ[R] R) (h : S) :
+    connesPerturb φ h 1 = φ (h * h) := by
+  simp [connesPerturb]
+
+theorem connesPerturb_normalized (φ : S →ₗ[R] R) (h : S)
+    (h_norm : φ (h * h) = 1) :
+    connesPerturb φ h 1 = 1 := by
+  rw [connesPerturb_one, h_norm]
 
 end InfoGeometry.NCG.Core
 

@@ -150,6 +150,38 @@ instance : Zero (NCDerivation A) where
         intro X Y
         simp }
 
+@[simp]
+theorem innerNCDerivation_zero :
+    innerNCDerivation (0 : A) = (0 : NCDerivation A) := by
+  apply NCDerivation.ext
+  intro X
+  have hz : (0 : NCDerivation A).toLinearMap = 0 := rfl
+  rw [hz]
+  simp [innerNCDerivation, adKLinear, adK]
+
+@[simp]
+theorem innerNCDerivation_one :
+    innerNCDerivation (1 : A) = (0 : NCDerivation A) := by
+  apply NCDerivation.ext
+  intro X
+  have hz : (0 : NCDerivation A).toLinearMap = 0 := rfl
+  rw [hz]
+  simp [innerNCDerivation, adKLinear, adK]
+
+@[simp]
+theorem ncDerivationCommutator_zero_left (D : NCDerivation A) (X : A) :
+    ncDerivationCommutator 0 D X = 0 := by
+  have hz : (0 : NCDerivation A).toLinearMap = 0 := rfl
+  rw [ncDerivationCommutator_apply, hz]
+  simp
+
+@[simp]
+theorem ncDerivationCommutator_zero_right (D : NCDerivation A) (X : A) :
+    ncDerivationCommutator D 0 X = 0 := by
+  have hz : (0 : NCDerivation A).toLinearMap = 0 := rfl
+  rw [ncDerivationCommutator_apply, hz]
+  simp
+
 theorem innerNCDerivation_eq_zero_iff (K : A) :
     innerNCDerivation K = 0 ↔ ∀ X : A, K * X = X * K := by
   constructor
@@ -164,6 +196,24 @@ theorem innerNCDerivation_eq_zero_iff (K : A) :
     change K * X - X * K = 0
     rw [h X]
     simp
+
+theorem innerNCDerivation_eq_zero_of_central (K : A)
+    (hK : ∀ X : A, K * X = X * K) :
+    innerNCDerivation K = 0 := by
+  exact (innerNCDerivation_eq_zero_iff K).2 hK
+
+theorem ncDerivationCommutator_inner_eq_zero_of_central_image
+    (D : NCDerivation A) (K : A)
+    (hDK : ∀ X : A, D K * X = X * D K) :
+    ncDerivationCommutator D (innerNCDerivation K) = 0 := by
+  rw [ncDerivationCommutator_inner]
+  exact innerNCDerivation_eq_zero_of_central (D K) hDK
+
+theorem ncDerivationCommutator_inner_eq_zero_iff
+    (D : NCDerivation A) (K : A) :
+    ncDerivationCommutator D (innerNCDerivation K) = 0 ↔
+      ∀ X : A, D K * X = X * D K := by
+  rw [ncDerivationCommutator_inner, innerNCDerivation_eq_zero_iff]
 
 theorem innerNCDerivation_commutes_iff (K₁ K₂ : A) :
     ncDerivationCommutator (innerNCDerivation K₁) (innerNCDerivation K₂) = 0 ↔

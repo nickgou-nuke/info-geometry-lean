@@ -430,6 +430,22 @@ theorem flow_map_mul
       unfold interaction
       rw [flow_apply_flow_neg]
 
+/-- Notation and canonical owner definition for the Geometric Flow `U_D(t) = exp(tD)`. -/
+noncomputable def U_D (D : EndA) (t : ℝ) : EndA :=
+  flow D t
+
+/-- 🏆 THEOREM: The Geometric Flow `U_D(t) = exp(tD)` strictly preserves non-associative products:
+    `U_D(t)(x ⋆ y) = (U_D(t) x) ⋆ (U_D(t) y)` -/
+theorem U_D_map_mul
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    U_D D t (mul x y) =
+      mul (U_D D t x) (U_D D t y) :=
+  flow_map_mul mul D hD t x y
+
 /-!
 ## Exponential automorphism as a linear equivalence
 -/

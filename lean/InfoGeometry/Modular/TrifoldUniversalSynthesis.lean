@@ -271,6 +271,29 @@ theorem ber_exp_chiral_weyl (β : ℝ) (n : ℕ) :
   calc
     ((n : ℝ) * -β) - ((n : ℝ) * β) = - (2 * (n : ℝ) * β) := by ring
 
+/-- 🏆 THEOREM 11: Common Weyl Mode as the Negative Normalized Log-Determinant:
+    α = - (1 / 2n) * log(det Δ) -/
+theorem alpha_eq_neg_log_det (α : ℝ) (n : ℕ) (hn : n ≠ 0) :
+    - (1 / (2 * (n : ℝ))) * Real.log (Real.exp (- (2 * (n : ℝ) * α))) = α := by
+  rw [Real.log_exp]
+  have h2n : (2 * (n : ℝ)) ≠ 0 := by
+    have h2 : (2 : ℝ) ≠ 0 := by norm_num
+    have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hn
+    exact mul_ne_zero h2 hn'
+  calc
+    - (1 / (2 * (n : ℝ))) * -(2 * (n : ℝ) * α) = (1 / (2 * (n : ℝ))) * (2 * (n : ℝ) * α) := by ring
+    _ = ((1 / (2 * (n : ℝ))) * (2 * (n : ℝ))) * α := by ring
+    _ = 1 * α := by rw [one_div_mul_cancel h2n]
+    _ = α := one_mul α
+
+/-- 🏆 THEOREM 12: Chiral Radon-Nikodym Mode as the Negative Normalized Log-Berezinian:
+    β = - (1 / 2n) * log(Ber Δ) -/
+theorem beta_eq_neg_log_ber (β : ℝ) (n : ℕ) (hn : n ≠ 0) :
+    - (1 / (2 * (n : ℝ))) * Real.log (berDiagonal ((Real.exp (-β)) ^ n) ((Real.exp β) ^ n)) = β := by
+  rw [ber_exp_chiral_weyl]
+  exact alpha_eq_neg_log_det β n hn
+
 end InfoGeometry.Modular.Trifold
 
 end noncomputable section
+

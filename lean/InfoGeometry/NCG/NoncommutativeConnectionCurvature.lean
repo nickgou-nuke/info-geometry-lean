@@ -123,6 +123,16 @@ theorem covariantDerivative_leibniz (A_conn : A) (X Y : A) :
         X * (D Y + (A_conn * Y - Y * A_conn)) := by
           simp only [add_mul, mul_add]
 
+/-- The covariant derivative acts on noncommutative commutators by the
+    induced derivation rule. -/
+theorem covariantDerivative_commutator (A_conn X Y : A) :
+    covariantDerivative D A_conn (X * Y - Y * X) =
+      covariantDerivative D A_conn X * Y + X * covariantDerivative D A_conn Y -
+        (covariantDerivative D A_conn Y * X +
+          Y * covariantDerivative D A_conn X) := by
+  rw [covariantDerivative_sub, covariantDerivative_leibniz,
+    covariantDerivative_leibniz]
+
 /-- 🏆 THEOREM 2: Derivation of the Inverse Unit:
     D(u⁻¹) = - u⁻¹ * D(u) * u⁻¹ -/
 theorem derivation_inv_unit (u : Aˣ) :
@@ -184,6 +194,15 @@ theorem gaugeTransform_mul (u v : Aˣ) (X : A) :
   have hinv : (u * v)⁻¹ = v⁻¹ * u⁻¹ := mul_inv_rev u v
   rw [hinv, Units.val_mul]
   simp only [mul_assoc]
+
+/-- Gauge conjugation preserves the noncommutative commutator bracket. -/
+theorem gaugeTransform_commutator (u : Aˣ) (X Y : A) :
+    gaugeTransform u (X * Y - Y * X) =
+      gaugeTransform u X * gaugeTransform u Y -
+        gaugeTransform u Y * gaugeTransform u X := by
+  dsimp [gaugeTransform]
+  simp only [mul_sub, sub_mul, mul_assoc]
+  abel
 
 /-- Every gauge transformation is inverted by conjugation with the inverse
 unit. -/

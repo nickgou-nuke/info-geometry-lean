@@ -351,6 +351,25 @@ theorem expTransportAlgEquiv_add
   ext A₀
   exact expTransport_add_time X A₀ s t
 
+/-- The zero-time transport equivalence is the identity equivalence. -/
+theorem expTransportAlgEquiv_zero
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) :
+    expTransportAlgEquiv X 0 = AlgEquiv.refl ℝ A := by
+  ext A₀
+  simp
+
+/-- The negative-time transport is the inverse equivalence. -/
+theorem expTransportAlgEquiv_neg_trans
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) :
+    (expTransportAlgEquiv X (-t)).trans (expTransportAlgEquiv X t) =
+      AlgEquiv.refl ℝ A := by
+  ext A₀
+  exact expTransport_neg_left X A₀ t
+
 /--
 Exact exponential conjugation fixes a seed that commutes with the generator.
 

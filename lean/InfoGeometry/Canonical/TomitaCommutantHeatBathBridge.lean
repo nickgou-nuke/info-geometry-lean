@@ -53,14 +53,12 @@ def inCommutant (M : Set B) (b : B) : Prop :=
 def commutant (M : Set B) : Set B :=
   {b : B | inCommutant M b}
 
-/-- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
+/- 🏆 THEOREM 1: Zero is in the commutant of any subset. -/
 theorem zero_mem_commutant (M : Set B) : (0 : B) ∈ commutant M := by
-  intro m hm
-  have _ := hm
-  dsimp [bracket]
-  simp
+  intro m _
+  simp [bracket]
 
-/-- 🏆 THEOREM 2: The commutant is closed under addition. -/
+/- 🏆 THEOREM 2: The commutant is closed under addition. -/
 theorem add_mem_commutant (M : Set B) {b₁ b₂ : B}
     (h₁ : b₁ ∈ commutant M) (h₂ : b₂ ∈ commutant M) :
     b₁ + b₂ ∈ commutant M := by
@@ -75,19 +73,12 @@ theorem add_mem_commutant (M : Set B) {b₁ b₂ : B}
       _ = (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) := by
         abel
   rw [h₃]
-  have h₄ : (m * b₁ - b₁ * m) + (m * b₂ - b₂ * m) = 0 := by
-    have h₄ : m * b₁ - b₁ * m = 0 := by
-      have h₅ : m * b₁ - b₁ * m = 0 := by
-        simpa [bracket] using h₁ m hm
-      exact h₅
-    have h₅ : m * b₂ - b₂ * m = 0 := by
-      have h₆ : m * b₂ - b₂ * m = 0 := by
-        simpa [bracket] using h₂ m hm
-      exact h₆
-    rw [h₄, h₅]
-    <;> simp [add_zero]
+  have h₄ : m * b₁ - b₁ * m = 0 := by simpa [bracket] using h₁ m hm
+  have h₅ : m * b₂ - b₂ * m = 0 := by simpa [bracket] using h₂ m hm
+  rw [h₄, h₅]
+  <;> simp [add_zero]
 
-/-- 🏆 THEOREM 2: The commutant is closed under multiplication (Subalgebra Property). -/
+/- 🏆 THEOREM 3: The commutant is closed under multiplication (Subalgebra Property). -/
 theorem mul_mem_commutant (M : Set B) {b₁ b₂ : B}
     (h₁ : b₁ ∈ commutant M) (h₂ : b₂ ∈ commutant M) :
     b₁ * b₂ ∈ commutant M := by
@@ -125,7 +116,7 @@ theorem center_eq_inter_commutant (M : Set B) :
   intro c
   simp only [centerOf, commutant, inCommutant, Set.mem_inter_iff, Set.mem_setOf_eq]
   <;>
-  aesop
+  tauto
 
 /-- =========================================================================
     PART 2: Tomita Modular Reflection Datum (J M J = M')
@@ -185,3 +176,5 @@ theorem quantum_klein_bottle_duality (D : TomitaCommutantDatum B) :
   exact tomita_crosscap_commutation D m m' hm hm'
 
 end InfoGeometry.Canonical.TomitaCommutant
+
+end noncomputable section

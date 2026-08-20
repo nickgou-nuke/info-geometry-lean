@@ -8,7 +8,7 @@ import Mathlib.Tactic
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
-namespace InfoGeometry.Probability.FisherRaoMadelung
+namespace InfoGeometry.Probability.FisherRaoMadelungIsometry
 
 /-!
 # The Fisher–Rao Metric and the Madelung $\sqrt{\rho}$ Isometry
@@ -74,4 +74,4 @@ theorem legendre_fenchel_identity (psi : ℝ → ℝ) (theta : ℝ) (eta : ℝ) 
   dsimp [legendreDual]
   ring
 
-end InfoGeometry.Probability.FisherRaoMadelung
+end InfoGeometry.Probability.FisherRaoMadelungIsometry

@@ -49,8 +49,62 @@ def sigmaVec (u : Fin 3 → ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![u 2, u 0 - Complex.I * u 1],
     ![u 0 + Complex.I * u 1, -u 2]]
 
+theorem sigmaVec_add (u v : Fin 3 → ℂ) :
+    sigmaVec (u + v) = sigmaVec u + sigmaVec v := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sigmaVec, Pi.add_apply, add_mul, mul_add]
+    <;> ring
+
+theorem sigmaVec_smul (c : ℂ) (u : Fin 3 → ℂ) :
+    sigmaVec (c • u) = c • sigmaVec u := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sigmaVec, Pi.smul_apply, smul_eq_mul]
+    <;> ring
+
 theorem sigmaVec_zero : sigmaVec (fun _ => 0) = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> { simp [sigmaVec] }
+
+theorem sigmaVec_eq_zero_iff (u : Fin 3 → ℂ) :
+    sigmaVec u = 0 ↔ ∀ i, u i = 0 := by
+  constructor
+  · intro h i
+    fin_cases i
+    · have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) h
+      have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 1 0) h
+      simp [sigmaVec] at h01 h10
+      change u 0 = 0
+      linear_combination (1 / 2 : ℂ) * (h01 + h10)
+    · have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) h
+      have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 1 0) h
+      simp [sigmaVec] at h01 h10
+      change u 1 = 0
+      have hprod : Complex.I * u 1 = 0 := by
+        linear_combination (1 / 2 : ℂ) * (h10 - h01)
+      exact (mul_eq_zero.mp hprod).resolve_left Complex.I_ne_zero
+    · have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h
+      simp only [sigmaVec, Matrix.zero_apply] at h00
+      change u 2 = 0 at h00
+      exact h00
+  · intro h
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [sigmaVec, h]
+
+theorem sigmaVec_sub (u v : Fin 3 → ℂ) :
+    sigmaVec (u - v) = sigmaVec u - sigmaVec v := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec, sub_eq_add_neg] <;> ring
+
+theorem sigmaVec_injective : Function.Injective sigmaVec := by
+  intro u v h
+  have hz : sigmaVec (u - v) = 0 := by
+    rw [sigmaVec_sub, h, sub_self]
+  have hzero := (sigmaVec_eq_zero_iff (u - v)).mp hz
+  funext i
+  have hi := hzero i
+  have hii : u i = v i := sub_eq_zero.mp hi
+  exact hii
 
 /--
   THEOREM 1: The Fundamental Pauli Product Identity
@@ -350,6 +404,28 @@ def normalSeed (a b : ℂ) : Zorn ℂ where
   v := fun _ => 0
   b := b
 
+theorem normalSeed_eq_scalar_iff (a b : ℂ) :
+    normalSeed a b = a • (1 : Zorn ℂ) ↔ a = b := by
+  constructor
+  · intro h
+    have hb := congrArg Zorn.b h
+    simp only [normalSeed] at hb
+    change b = a * 1 at hb
+    simpa using hb.symm
+  · intro hab
+    subst b
+    ext
+    · change a = a * 1
+      ring
+    · rename_i i
+      change (0 : ℂ) = a * 0
+      ring
+    · rename_i i
+      change (0 : ℂ) = a * 0
+      ring
+    · change a = a * 1
+      ring
+
 /-- First-order Taylor flow under a derivation D: Z(t) = Z₀ + t • D(Z₀) -/
 def firstOrderFlow (D : Zorn ℂ → Zorn ℂ) (Z₀ : Zorn ℂ) (t : ℂ) : Zorn ℂ :=
   Z₀ + (t • D Z₀)
@@ -405,6 +481,41 @@ theorem cartan_seed_generates_pairing
       t * ((D (normalSeed a b)).u 0 + Complex.I * (D (normalSeed a b)).u 1)
     ring
   · change -(t * (D (normalSeed a b)).u 2) = t * (-(D (normalSeed a b)).u 2)
+    ring
+
+/- The lower-left BdG channel is transported by the second Zorn vector
+component.  It is proved separately because no relation between the two
+off-diagonal components is assumed. -/
+theorem cartan_seed_generates_conjugate_pairing
+    (D : Zorn ℂ → Zorn ℂ) (a b t : ℂ) :
+    block21 (bdgReadout (firstOrderFlow D (normalSeed a b) t)) =
+      t • sigmaVec (D (normalSeed a b)).v := by
+  rw [bdgReadout_block21_eq_sigmaVec]
+  have hv : (firstOrderFlow D (normalSeed a b) t).v =
+      fun i => t * (D (normalSeed a b)).v i := by
+    change (fun i => (normalSeed a b).v i + t * (D (normalSeed a b)).v i) =
+      fun i => t * (D (normalSeed a b)).v i
+    ext i
+    change (0 : ℂ) + t * (D (normalSeed a b)).v i =
+      t * (D (normalSeed a b)).v i
+    ring
+  rw [hv]
+  ext i j
+  fin_cases i <;> fin_cases j
+  · change t * (D (normalSeed a b)).v 2 = t * (D (normalSeed a b)).v 2
+    rfl
+  · change t * (D (normalSeed a b)).v 0 -
+      Complex.I * (t * (D (normalSeed a b)).v 1) =
+      t * ((D (normalSeed a b)).v 0 -
+        Complex.I * (D (normalSeed a b)).v 1)
+    ring
+  · change t * (D (normalSeed a b)).v 0 +
+      Complex.I * (t * (D (normalSeed a b)).v 1) =
+      t * ((D (normalSeed a b)).v 0 +
+        Complex.I * (D (normalSeed a b)).v 1)
+    ring
+  · change -(t * (D (normalSeed a b)).v 2) =
+      t * (-(D (normalSeed a b)).v 2)
     ring
 
 end G2BdGOrbit

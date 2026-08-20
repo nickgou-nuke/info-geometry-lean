@@ -5404,6 +5404,7 @@ import InfoGeometry.Monster.MonsterMoonshineThermal
 import InfoGeometry.Monster.MoonshineGradedDimensions
 import InfoGeometry.NCG.NoncommutativeCyclicCocycle
 import InfoGeometry.NCG.NoncommutativeDifferentialCalculus
+import InfoGeometry.NCG.NoncommutativeKMSModularState
 import InfoGeometry.NCG.NoncommutativeOperatorMonotoneMetric
 import InfoGeometry.Network.All
 import InfoGeometry.Network.DeformationPositivity

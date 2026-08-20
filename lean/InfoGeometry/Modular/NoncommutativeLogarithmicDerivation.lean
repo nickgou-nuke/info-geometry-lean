@@ -144,6 +144,20 @@ theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
           (↑(u⁻¹) : A) := by
       rw [hv, mul_one]
 
+theorem dlogR_mul_of_commute (D : A →ₗ[ℤ] A)
+    (hD : IsNCDerivation D) (u v : Aˣ)
+    (hcomm : Commute (u : A) (dlogR D v)) :
+    dlogR D (u * v) = dlogR D u + dlogR D v := by
+  rw [dlogR_mul D hD u v]
+  have hconj : (u : A) * dlogR D v * (↑(u⁻¹) : A) = dlogR D v := by
+    calc
+      (u : A) * dlogR D v * (↑(u⁻¹) : A) =
+          dlogR D v * (u : A) * (↑(u⁻¹) : A) := by
+        rw [hcomm.eq]
+      _ = dlogR D v := by
+        rw [u.val_inv, mul_one]
+  rw [hconj]
+
 /-- 🏆 THEOREM 4: Noncommutative Logarithmic Product Rule (Maurer–Cartan):
     dlog_L(u * v) = v⁻¹ * dlog_L(u) * v + dlog_L(v)
     This is the exact non-abelian chain rule without assuming commutativity! -/

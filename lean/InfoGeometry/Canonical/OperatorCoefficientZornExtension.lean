@@ -185,6 +185,7 @@ theorem opZornStar_neg (X : OpZorn H) :
 @[simp] theorem op_mul_v (X Y : OpZorn H) (i : Fin 3) : (X * Y).v i = Y.a * X.v i + X.b * Y.v i + (opCross X.u Y.u) i := rfl
 @[simp] theorem op_mul_b (X Y : OpZorn H) : (X * Y).b = X.b * Y.b + opDot X.v Y.u := rfl
 
+
 /-!
 =============================================================================
 PART 2: Operator Derivations & Automorphisms

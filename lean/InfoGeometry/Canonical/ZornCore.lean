@@ -99,6 +99,43 @@ instance : Mul Zorn where
 /-- Determinant (Norm) -/
 def det (Z : Zorn) : ℝ := Z.a * Z.b - dot Z.u Z.v
 
+/-! ## Conjugation and the scalar norm shadow -/
+
+def conjugate (Z : Zorn) : Zorn :=
+  ⟨Z.b, -Z.u, -Z.v, Z.a⟩
+
+@[simp] theorem conjugate_add (X Y : Zorn) :
+    conjugate (X + Y) = conjugate X + conjugate Y := by
+  apply Zorn.ext'
+  · rfl
+  · ext i
+    simp [conjugate, add_comm]
+  · ext i
+    simp [conjugate, add_comm]
+  · rfl
+
+@[simp] theorem conjugate_neg (X : Zorn) :
+    conjugate (-X) = -conjugate X := by
+  apply Zorn.ext'
+  · rfl
+  · ext i
+    simp [conjugate]
+  · ext i
+    simp [conjugate]
+  · rfl
+
+@[simp] theorem conjugate_involutive (Z : Zorn) :
+    conjugate (conjugate Z) = Z := by
+  apply Zorn.ext'
+  · rfl
+  · simp [conjugate]
+  · simp [conjugate]
+  · rfl
+
+@[simp] theorem det_conjugate (Z : Zorn) :
+    det (conjugate Z) = det Z := by
+  simp [det, conjugate, dot] <;> ring
+
 /-- Associator: (XY)Z - X(YZ) -/
 def associator (X Y Z : Zorn) : Zorn := (X * Y) * Z - X * (Y * Z)
 
@@ -108,6 +145,63 @@ def associator (X Y Z : Zorn) : Zorn := (X * Y) * Z - X * (Y * Z)
 
 def U (u : Vec3) : Zorn := ⟨0, u, 0, 0⟩
 def L (v : Vec3) : Zorn := ⟨0, 0, v, 0⟩
+
+@[simp] theorem cross_self (u : Vec3) : cross u u = 0 := by
+  funext i
+  fin_cases i <;> simp [cross] <;> ring
+
+@[simp] theorem det_U (u : Vec3) : det (U u) = 0 := by
+  simp [det, U, dot]
+
+@[simp] theorem det_L (v : Vec3) : det (L v) = 0 := by
+  simp [det, L, dot]
+
+theorem U_mul_U (u v : Vec3) : U u * U v = L (cross u v) := by
+  apply Zorn.ext'
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+
+theorem L_mul_L (u v : Vec3) : L u * L v = U (-(cross u v)) := by
+  apply Zorn.ext'
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+
+@[simp] theorem U_square_zero (u : Vec3) : U u * U u = 0 := by
+  rw [U_mul_U, cross_self]
+  rfl
+
+@[simp] theorem L_square_zero (v : Vec3) : L v * L v = 0 := by
+  rw [L_mul_L, cross_self]
+  apply Zorn.ext'
+  all_goals simp [U, L]
+
+theorem U_mul_L (u v : Vec3) :
+    U u * L v = ⟨dot u v, 0, 0, 0⟩ := by
+  apply Zorn.ext'
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+
+theorem L_mul_U (u v : Vec3) :
+    L u * U v = ⟨0, 0, 0, dot u v⟩ := by
+  apply Zorn.ext'
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · funext i
+    fin_cases i <;> simp [U, L, dot, cross, Fin.sum_univ_three]
+  · simp [U, L, dot, cross, Fin.sum_univ_three]
 
 def e1 : Vec3 := ![1, 0, 0]
 def e2 : Vec3 := ![0, 1, 0]

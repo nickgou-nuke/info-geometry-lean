@@ -3,7 +3,11 @@ import Mathlib.Algebra.Ring.MinimalAxioms
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic
+import Mathlib.Algebra.Group.TransferInstance
+import Mathlib.Algebra.Module.TransferInstance
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
 
 /-!
 # Zorn vector matrices: split-octonion invariant interface

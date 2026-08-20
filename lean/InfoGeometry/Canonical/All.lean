@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
+import InfoGeometry.Canonical.ZornPeirceExponentialTransport
 import InfoGeometry.Canonical.CayleyWittenPeirceParityBridge
 import InfoGeometry.Canonical.NeutralDualPair
 import InfoGeometry.Canonical.NeutralDualPairClifford
@@ -3337,6 +3338,8 @@ import InfoGeometry.Canonical.DeRhamUnifiedCorridor
 import InfoGeometry.CompleteUnifiedBundle
 import InfoGeometry.Canonical.ZornBdGDerivationBridge
 import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
+import InfoGeometry.Canonical.PhysicalBdGPairingBridgeAntiLinear
+import InfoGeometry.Canonical.ZornPeirceExponentialTransport
 import InfoGeometry.Canonical.BdGSchurBerezinianCompatibility
 
 namespace InfoGeometry

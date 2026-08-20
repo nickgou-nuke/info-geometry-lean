@@ -11,6 +11,7 @@ import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Continuous.PositiveOrthant
 import InfoGeometry.Canonical.SouriauMassieuHessianBridge
+import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import InfoGeometry.Canonical.EmergentSpacetimeQuantumGeometryBridge
 
 /-!
@@ -42,6 +43,8 @@ open _root_.InfoGeometry.Canonical.PositiveRayCore
 open _root_.InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Continuous.PositiveOrthant
 open InfoGeometry.Canonical.SouriauMassieuHessianBridge
+open InfoGeometry.Lie
+open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 open InfoGeometry.Canonical.EmergentSpacetime
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -90,15 +93,21 @@ theorem modular_flow_trajectory_projection (ψ : NormalizedState H) (K X : EndH)
   The second variation (covariance) of the statistical Massieu potential equals
   the real symmetric part of the Quantum Geometric Tensor (QGT).
 -/
-theorem hessian_potential_eq_qgt_metric (ψ : NormalizedState H) (X Y : EndH) :
-    fubiniStudyMetric ψ X Y = (QGT ψ X Y).re ∧
-    0 ≤ fubiniStudyMetric ψ X X := by
-  constructor
-  · rfl
-  · have h := QGT_eq_inner_projOrth ψ X X
-    dsimp [fubiniStudyMetric]
-    rw [h]
-    exact @inner_self_nonneg ℂ H _ _ _ (projOrth ψ X)
+theorem hessian_potential_eq_qgt_metric
+    {State : Type*} [Fintype State] [Nonempty State]
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2)
+    (ψ : NormalizedState H) (X : EndH)
+    (hQ : fubiniStudyMetric ψ X X = fisherSouriauMatrix D beta i i) :
+    deriv (fun t => deriv
+      (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
+      (QGT ψ X X).re := by
+  calc
+    deriv (fun t => deriv
+        (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
+        fisherSouriauMatrix D beta i i :=
+      fisherSouriauMatrix_eq_massieuHessian D beta i
+    _ = fubiniStudyMetric ψ X X := hQ.symm
+    _ = (QGT ψ X X).re := rfl
 
 /-! =========================================================================
     PART 4: Soldering Form on Projective Space extracts the Metric

@@ -202,7 +202,16 @@ theorem gaugeTransform_commutator (u : Aˣ) (X Y : A) :
         gaugeTransform u Y * gaugeTransform u X := by
   dsimp [gaugeTransform]
   simp only [mul_sub, sub_mul, mul_assoc]
-  abel
+  have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  simp only [← mul_assoc, hu, one_mul]
+
+/-- Gauge conjugation commutes with natural powers of an observable. -/
+theorem gaugeTransform_pow (u : Aˣ) (X : A) (n : ℕ) :
+    gaugeTransform u (X ^ n) = (gaugeTransform u X) ^ n := by
+  induction n with
+  | zero => simp [gaugeTransform_one]
+  | succ n ih =>
+      rw [pow_succ, gaugeTransform_mul, ih, pow_succ]
 
 /-- Every gauge transformation is inverted by conjugation with the inverse
 unit. -/

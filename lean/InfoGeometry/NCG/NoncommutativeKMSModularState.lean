@@ -239,6 +239,18 @@ theorem innerModularShiftRingHom_bijective (ρ ρ_inv : Mat)
   · exact innerModularShift_injective ρ ρ_inv h_right h_left
   · exact innerModularShift_surjective ρ ρ_inv h_right h_left
 
+/-- The invertible inner modular shift as a native ring equivalence. -/
+def innerModularShiftRingEquiv (ρ ρ_inv : Mat)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) : Mat ≃+* Mat :=
+  RingEquiv.ofBijective (innerModularShiftRingHom ρ ρ_inv h_right h_left)
+    (innerModularShiftRingHom_bijective ρ ρ_inv h_right h_left)
+
+theorem innerModularShiftRingEquiv_inverse_apply (ρ ρ_inv : Mat)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) (X : Mat) :
+    innerModularShiftRingEquiv ρ ρ_inv h_right h_left
+        (innerModularShift ρ_inv ρ X) = X := by
+  exact innerModularShift_inv ρ_inv ρ X h_left h_right
+
 theorem innerModularShift_comm (ρ ρ_inv X Y : Mat)
     (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
     innerModularShift ρ ρ_inv (comm X Y) =

@@ -69,7 +69,7 @@ theorem universal_legendre_fenchel_pairing (psi : ℝ → ℝ) (theta eta : ℝ)
     The exponential flow of a nilpotent derivation preserves non-associative products. -/
 theorem universal_nilpotent_derivation_automorphism
     {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
-    (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
+    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A)
     (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
     (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K) (x y : A) :
     nilpotentExpStep2 D t (mul x y) =
@@ -100,11 +100,39 @@ structure MasterArchetypeTheoremBundle where
     4 * ((rho' / (2 * Real.sqrt rho_val)) ^ 2) = (rho' ^ 2) / rho_val
   legendre_duality : ∀ (psi : ℝ → ℝ) (theta eta : ℝ),
     psi theta + (theta * eta - psi theta) = theta * eta
+  nilpotent_automorphism : ∀ {K A : Type*} [Field K] [CharZero K]
+    [AddCommGroup A] [Module K A]
+    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A)
+    (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K) (x y : A),
+    nilpotentExpStep2 D t (mul x y) =
+      mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y)
+  nilpotent_equivalence : ∀ {K A : Type*} [Field K] [CharZero K]
+    [AddCommGroup A] [Module K A]
+    (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
+    (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
+    (hD2 : D.comp D = 0) (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K),
+    NonAssocAlgEquiv mul one
+  peirce_stabilizer : ∀ {K A : Type*} [Field K] [CharZero K]
+    [AddCommGroup A] [Module K A]
+    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A) (hD_one : D one = 0)
+    (t : K) (I : A) (hDI : D I = 0),
+    nilpotentExpStep2 D t (InfoGeometry.Algebra.PeirceTransport.ePlus (K := K) one I) =
+        InfoGeometry.Algebra.PeirceTransport.ePlus (K := K) one I ∧
+      nilpotentExpStep2 D t (InfoGeometry.Algebra.PeirceTransport.eMinus (K := K) one I) =
+        InfoGeometry.Algebra.PeirceTransport.eMinus (K := K) one I
 
 /-- Canonical instance of the Master Archetype Theorem Bundle. -/
 def masterArchetypeTheoremBundle : MasterArchetypeTheoremBundle where
   log_homomorphism := fun D hD u v => universal_log_functor_mul D hD u v
   madelung_isometry := fun rho' rho_val h_pos => universal_madelung_isometry rho' rho_val h_pos
   legendre_duality := fun psi theta eta => by ring
+  nilpotent_automorphism := fun mul D hD h_cross t x y =>
+    universal_nilpotent_derivation_automorphism mul D hD h_cross t x y
+  nilpotent_equivalence := fun mul one D hD hD2 h_one h_cross t =>
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t
+  peirce_stabilizer := fun mul one D hD_one t I hDI =>
+    universal_peirce_frame_stabilizer mul one D hD_one t I hDI
 
 end InfoGeometry.Information.MasterArchetypeConvexDuality

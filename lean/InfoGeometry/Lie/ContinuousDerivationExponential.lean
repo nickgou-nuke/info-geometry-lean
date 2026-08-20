@@ -688,8 +688,12 @@ theorem flowLinearEquivGroupHom_neg
     (t : ℝ) :
     flowLinearEquivGroupHom D (Multiplicative.ofAdd (-t)) =
       (flowLinearEquivGroupHom D (Multiplicative.ofAdd t))⁻¹ := by
+  have h := map_inv
+    (flowLinearEquivGroupHom D)
+    (Multiplicative.ofAdd t)
+  change flowLinearEquiv D (-t) = (flowLinearEquiv D t)⁻¹ at h
   change flowLinearEquiv D (-t) = (flowLinearEquiv D t)⁻¹
-  exact flowLinearEquiv_neg_eq_symm D t
+  exact h
 
 /-- The infinitesimal generator of the automorphism flow is D. -/
 theorem deriv_flow_at_zero
@@ -770,6 +774,31 @@ theorem flowLinearEquiv_preserves_commute
         mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) = 0 := by
     simpa using hmap.symm
   exact sub_eq_zero.mp hzero
+
+/-- Commutation is reflected as well as preserved by the invertible flow. -/
+theorem flowLinearEquiv_commute_iff
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (x y : A)
+    (t : ℝ) :
+    (mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) =
+      mul (flowLinearEquiv D t y) (flowLinearEquiv D t x)) ↔
+    mul x y = mul y x := by
+  constructor
+  · intro h
+    have hmap :
+        flowLinearEquiv D t (mul x y - mul y x) = 0 := by
+      rw [flowLinearEquiv_map_commutator mul D hD, h, sub_self]
+    have hmap' :
+        flowLinearEquiv D t (mul x y - mul y x) =
+          flowLinearEquiv D t 0 := by
+      simpa using hmap
+    have hzero : mul x y - mul y x = 0 :=
+      (flowLinearEquiv D t).injective hmap'
+    exact sub_eq_zero.mp hzero
+  · intro h
+    exact flowLinearEquiv_preserves_commute mul D hD x y h t
 
 /-!
 ## Transport of nonassociative algebraic structure

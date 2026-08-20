@@ -207,12 +207,16 @@ theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
   constructor
   · intro h x
     have hx := congrArg (fun E : NoncommutativeDerivation A => E x) h
+    have hx' : K * x - x * K = L * x - x * L := by
+      simpa [innerDerivationOf_apply] using hx
     calc
-      K * x - x * K = (K - L) * x + L * x - x * K := by
-        noncomm_ring
-      _ = x * (K - L) + L * x - x * K := by rw [hx]
-      _ = L * x - x * L := by
-        noncomm_ring
+      (K - L) * x = K * x - L * x := by rw [sub_mul]
+      _ = (K * x - x * K) + (x * K - L * x) := by
+        abel
+      _ = (L * x - x * L) + (x * K - L * x) := by rw [hx']
+      _ = x * (K - L) := by
+        rw [mul_sub]
+        abel
   · intro h
     apply NoncommutativeDerivation.ext
     intro x
@@ -220,10 +224,12 @@ theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
     simp only [innerDerivationOf_apply]
     calc
       K * x - x * K = (K - L) * x + L * x - x * K := by
-        noncomm_ring
+        rw [sub_mul]
+        abel
       _ = x * (K - L) + L * x - x * K := by rw [hx]
       _ = L * x - x * L := by
-        noncomm_ring
+        rw [mul_sub]
+        abel
 
 /-- Noncommutative Left Logarithmic Derivative:
     dlog_L(u) = u⁻¹ * D(u) -/

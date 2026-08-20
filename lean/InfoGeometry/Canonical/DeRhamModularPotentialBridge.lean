@@ -3,9 +3,9 @@ import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
 
 /-!
-# Finite exact-potential shadow
+# Finite Exact-Potential Shadow and de Rham Cohomology
 
-This owner records the finite groupoid analogue of an exact de Rham potential.
+This module records the finite groupoid analogue of an exact de Rham potential.
 The coordinate `a : α` remains explicit: a relative modular potential is a
 coordinate-valued transition function on positive rays.
 -/
@@ -29,7 +29,7 @@ abbrev OneForm (α : Type u) := PositiveRay α → PositiveRay α → α → ℝ
 noncomputable def scalarPotential_zeroForm (q : PositiveRay α) : ZeroForm α :=
   fun x a => relativeModularPotential q x a
 
-/-- The discrete exterior derivative of a 0-form. -/
+/-- The discrete exterior derivative of a 0-form: (d₀ f)(x, x₀) = f(x₀) - f(x). -/
 noncomputable def dZeroForm (f : ZeroForm α) : OneForm α :=
   fun x x₀ a => f x₀ a - f x a
 
@@ -41,10 +41,11 @@ theorem modularPotential_is_exact_oneForm (q x x₀ : PositiveRay α) :
   dsimp [dZeroForm, scalarPotential_zeroForm]
   linarith [relativeModularPotential_transitive_cocycle q x x₀ a]
 
-/-- The discrete exterior derivative of a 1-form on a 2-simplex. -/
+/-- The discrete exterior derivative of a 1-form on a 2-simplex:
+    (d₁ ω)(x, x₀, x₁) = ω(x₀, x₁) - ω(x, x₁) + ω(x, x₀). -/
 noncomputable def dOneForm (ω : OneForm α) :
     PositiveRay α → PositiveRay α → PositiveRay α → α → ℝ :=
-  fun x x₀ x₁ a => ω x₀ x₁ a - ω x x₀ a + ω x x₁ a
+  fun x x₀ x₁ a => ω x₀ x₁ a - ω x x₁ a + ω x x₀ a
 
 /-- d² = 0 on the statistical manifold (First Law of Thermodynamics). -/
 theorem discrete_exterior_derivative_sq_zero (f : ZeroForm α)
@@ -61,21 +62,18 @@ theorem modularPotential_antisymm (q q₀ : PositiveRay α) :
   exact relativeModularPotential_antisymm q q₀ a
 
 /-- Closed loop: V(q, q₀) + V(q₀, q) = 0. -/
-theorem modularPotential_closed_loop (q q₀ : PositiveRay α) :
-    relativeModularPotential q q₀ + relativeModularPotential q₀ q =
-      fun _ => 0 := by
-  funext a
-  rw [modularPotential_antisymm]
-  ring
+theorem modularPotential_closed_loop (q q₀ : PositiveRay α) (a : α) :
+    relativeModularPotential q q₀ a + relativeModularPotential q₀ q a = 0 := by
+  have h_anti := relativeModularPotential_antisymm q q₀ a
+  linarith
 
 /-- Path independence: V(q, q₀) + V(q₀, q₁) = V(q, q₁). -/
-theorem path_independence_of_exact_oneForm (q q₀ q₁ : PositiveRay α) :
-    relativeModularPotential q q₀ + relativeModularPotential q₀ q₁ =
-      relativeModularPotential q q₁ := by
-  funext a
+theorem path_independence_of_exact_oneForm (q q₀ q₁ : PositiveRay α) (a : α) :
+    relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a =
+      relativeModularPotential q q₁ a := by
   exact (relativeModularPotential_transitive_cocycle q q₀ q₁ a).symm
 
-/-- A 1-form is closed if its d² = 0. -/
+/-- A 1-form is closed if its d₁ is zero. -/
 def IsClosedOneForm (ω : OneForm α) : Prop :=
   ∀ (x x₀ x₁ : PositiveRay α) (a : α), dOneForm ω x x₀ x₁ a = 0
 
@@ -88,7 +86,8 @@ theorem modularPotential_is_closed_oneForm :
     IsClosedOneForm (relativeModularPotential (α := α)) := by
   intro x x₀ x₁ a
   unfold dOneForm
-  linarith [relativeModularPotential_transitive_cocycle x x₀ x₁ a]
+  have h_cocycle := relativeModularPotential_transitive_cocycle x x₀ x₁ a
+  linarith
 
 /-- The modular potential 1-form is exact. -/
 theorem modularPotential_is_exact_oneForm' (q : PositiveRay α) :
@@ -109,7 +108,7 @@ theorem gibbs_distribution_is_exponential_map
     relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a) := by
   rw [relativeDensity_eq_exp_relativeLogDensity]
   rw [relativeModularPotential_eq_neg_relativeLogDensity]
-  abel
+  ring_nf
 
 /-- The modular Hamiltonian for a pair (q, q₀) is K = -V(q, q₀). -/
 noncomputable def modularHamiltonian (q q₀ : PositiveRay α) : α → ℝ :=
@@ -122,7 +121,7 @@ theorem modular_flow_is_exponential
   unfold modularHamiltonian
   rw [relativeDensity_eq_exp_relativeLogDensity]
   rw [relativeModularPotential_eq_neg_relativeLogDensity]
-  ring
+  ring_nf
 
 /-- The canonical dictionary of algebraic thermodynamics. -/
 theorem canonical_dictionary_of_algebraic_thermodynamics :
@@ -134,8 +133,6 @@ theorem canonical_dictionary_of_algebraic_thermodynamics :
    fun q q₀ a => by
      rw [relativeDensity_eq_exp_relativeLogDensity]
      rw [relativeModularPotential_eq_neg_relativeLogDensity]
-     rw [relativeLogDensity_eq_logDensity_sub_logDensity]
-     field_simp
-     rw [Real.exp_log (div_pos ((gaugeSection (α := α) q₀).pos a) ((gaugeSection (α := α) q).pos a))]⟩
+     ring_nf⟩
 
 end InfoGeometry.Canonical.DeRhamModularPotentialBridge

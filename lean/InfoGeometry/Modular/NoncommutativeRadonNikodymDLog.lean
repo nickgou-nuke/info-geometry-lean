@@ -116,6 +116,44 @@ theorem dlogR_innerDerivationOf (K : A) (u : Aˣ) :
     _ = K - (u : A) * K * (u⁻¹ : Aˣ).val := by
       rw [mul_assoc, hu, mul_one]
 
+/-- The left logarithmic derivative of an inner derivation is the opposite
+    conjugation shift. -/
+theorem dlogL_innerDerivationOf (K : A) (u : Aˣ) :
+    dlogL (innerDerivationOf K) u =
+      (u⁻¹ : Aˣ).val * K * (u : A) - K := by
+  dsimp [dlogL, innerDerivationOf]
+  have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  calc
+    (u⁻¹ : Aˣ).val * (K * (u : A) - (u : A) * K) =
+        (u⁻¹ : Aˣ).val * (K * (u : A)) -
+          (u⁻¹ : Aˣ).val * ((u : A) * K) := by rw [mul_sub]
+    _ = (u⁻¹ : Aˣ).val * K * (u : A) -
+        ((u⁻¹ : Aˣ).val * (u : A)) * K := by simp only [mul_assoc]
+    _ = (u⁻¹ : Aˣ).val * K * (u : A) - K := by rw [hu, one_mul]
+
+/-- Vanishing of the left inner logarithmic derivative is exactly the
+    centralizer condition for the implementing element and unit. -/
+theorem dlogL_innerDerivationOf_eq_zero_iff (K : A) (u : Aˣ) :
+    dlogL (innerDerivationOf K) u = 0 ↔ Commute K (u : A) := by
+  rw [dlogL_innerDerivationOf]
+  constructor
+  · intro h
+    have hconj : (u⁻¹ : Aˣ).val * K * (u : A) = K := sub_eq_zero.mp h
+    calc
+      K * (u : A) = ((u : A) * (u⁻¹ : Aˣ).val) * K * (u : A) := by
+        rw [Units.mul_inv, one_mul]
+      _ = (u : A) * ((u⁻¹ : Aˣ).val * K * (u : A)) := by
+        simp only [mul_assoc]
+      _ = (u : A) * K := by rw [hconj]
+  · intro h
+    apply sub_eq_zero.mpr
+    calc
+      (u⁻¹ : Aˣ).val * K * (u : A) =
+          (u⁻¹ : Aˣ).val * (K * (u : A)) := by simp only [mul_assoc]
+      _ = (u⁻¹ : Aˣ).val * ((u : A) * K) := by rw [h.eq]
+      _ = K := by
+        rw [← mul_assoc, Units.inv_mul, one_mul]
+
 /-- The right logarithmic derivative detects stationary units exactly. -/
 theorem dlogR_eq_zero_iff (D : NoncommutativeDerivation A) (u : Aˣ) :
     dlogR D u = 0 ↔ D u.val = 0 := by

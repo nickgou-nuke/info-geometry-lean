@@ -178,6 +178,18 @@ theorem toNonAssocAlgEquiv_zero_apply
   change nilpotentExpStep2 D 0 x = x
   simp
 
+/- A generator-fixed vector is fixed by every bundled nilpotent flow. -/
+theorem toNonAssocAlgEquiv_fixed_of_derivation_eq_zero
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A) (hx : D x = 0) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x = x := by
+  change nilpotentExpStep2 D t x = x
+  rw [nilpotentExpStep2_apply, hx, smul_zero, add_zero]
+
 /-- Negative parameters give the pointwise inverse flow. -/
 theorem toNonAssocAlgEquiv_neg_apply
     (D : A →ₗ[K] A)

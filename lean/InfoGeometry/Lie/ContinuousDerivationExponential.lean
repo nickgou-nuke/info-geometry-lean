@@ -726,6 +726,32 @@ theorem flowLinearEquiv_neg_apply
   rw [flowLinearEquiv_neg_eq_symm]
   exact (flowLinearEquiv D t).symm_apply_apply x
 
+/-! ## Transport of central elements -/
+
+/-- A multiplicative derivation flow preserves the center of the product. -/
+theorem flowLinearEquiv_preserves_central
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (x : A)
+    (hx : ∀ y : A, mul x y = mul y x)
+    (t : ℝ) :
+    ∀ y : A,
+      mul (flowLinearEquiv D t x) y =
+        mul y (flowLinearEquiv D t x) := by
+  intro y
+  let z : A := flowLinearEquiv D (-t) y
+  have hz : mul x z = mul z x := hx z
+  have hmap := congrArg (flowLinearEquiv D t) hz
+  rw [flowLinearEquiv_map_mul mul D hD,
+    flowLinearEquiv_map_mul mul D hD] at hmap
+  have hzflow : flowLinearEquiv D t z = y := by
+    dsimp [z]
+    have h := flowLinearEquiv_add_apply D t (-t) y
+    simpa using h.symm
+  rw [hzflow] at hmap
+  exact hmap
+
 /-!
 ## Transport of nonassociative algebraic structure
 -/

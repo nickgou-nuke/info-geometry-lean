@@ -105,11 +105,40 @@ def pureGaugeForm (u : Aˣ) : A :=
     θ = - D(u) * u⁻¹ -/
 theorem pureGaugeForm_eq_neg (u : Aˣ) :
     pureGaugeForm D u = - (D (u : A) * (u⁻¹ : Aˣ).val) := by
-  dsimp [pureGaugeForm]
-  have h : D ((u : A) * (u⁻¹ : Aˣ).val) = 0 := by
-    rw [Units.mul_inv, map_one]
-  rw [D.leibniz] at h
-  exact eq_neg_of_add_eq_zero_right h
+  unfold pureGaugeForm
+  rw [D.derivation_inv_unit, mul_neg]
+  congr 1
+  calc
+    (u : A) * ((u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val) =
+        ((u : A) * (u⁻¹ : Aˣ).val) * D (u : A) * (u⁻¹ : Aˣ).val := by
+          simp only [mul_assoc]
+    _ = D (u : A) * (u⁻¹ : Aˣ).val := by
+          have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+          rw [hu, one_mul]
+
+/-- Conjugation of an observable by an invertible element. -/
+def gaugeTransform (u : Aˣ) (X : A) : A :=
+  (u : A) * X * (u⁻¹ : Aˣ).val
+
+/-- Gauge transformation of a connection one-form. -/
+def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
+  (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u
+
+/-- Covariant derivatives are equivariant under simultaneous gauge
+    transformation of the connection and observable. -/
+theorem covariantDerivative_gauge_equivariant (u : Aˣ) (A_conn X : A) :
+    covariantDerivative D (gaugeTransformConnection D u A_conn)
+        (gaugeTransform u X) =
+      gaugeTransform u (covariantDerivative D A_conn X) := by
+  simp only [covariantDerivative, gaugeTransformConnection, gaugeTransform]
+  rw [pureGaugeForm_eq_neg, D.leibniz, D.leibniz,
+    D.derivation_inv_unit]
+  simp only [mul_add, add_mul, sub_mul, mul_sub, mul_assoc,
+    smul_eq_mul, neg_one_mul, one_mul]
+  have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  have hui : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  simp only [hu, hui, one_mul, mul_one]
+  abel
 
 /-- 🏆 THEOREM 3: The Maurer-Cartan Quadratic Identity:
     θ² = - D(u) * D(u⁻¹) -/
@@ -128,7 +157,15 @@ theorem pureGaugeForm_sq (u : Aˣ) :
     _ = (u : A) * (- ((u⁻¹ : Aˣ).val * D (u : A))) * D (u⁻¹ : Aˣ).val := by rw [h_inv]
     _ = - ((u : A) * (u⁻¹ : Aˣ).val * D (u : A) * D (u⁻¹ : Aˣ).val) := by
         simp only [mul_neg, neg_mul, mul_assoc]
-    _ = - (1 * D (u : A) * D (u⁻¹ : Aˣ).val) := by rw [Units.mul_inv]
+    _ = - (1 * D (u : A) * D (u⁻¹ : Aˣ).val) := by
+      congr 1
+      calc
+        (u : A) * (u⁻¹ : Aˣ).val * D (u : A) * D (u⁻¹ : Aˣ).val =
+            ((u : A) * (u⁻¹ : Aˣ).val) * D (u : A) * D (u⁻¹ : Aˣ).val := by
+              simp only [mul_assoc]
+        _ = 1 * D (u : A) * D (u⁻¹ : Aˣ).val := by
+          have hu : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+          rw [hu]
     _ = - (D (u : A) * D (u⁻¹ : Aˣ).val) := by rw [one_mul]
 
 /-- 🏆 THEOREM 4: Noncommutative Maurer-Cartan Flatness:

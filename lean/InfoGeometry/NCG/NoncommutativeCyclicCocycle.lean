@@ -230,6 +230,18 @@ theorem noncommutativeSLDFisher_symm (τ : TracialFunctional R A) (two_inv : R) 
   dsimp [noncommutativeSLDFisher]
   rw [jordanProduct_comm]
 
+@[simp]
+theorem noncommutativeSLDFisher_zero_left
+    (τ : TracialFunctional R A) (two_inv : R) (ρ L : A) :
+    noncommutativeSLDFisher τ two_inv ρ 0 L = 0 := by
+  simp [noncommutativeSLDFisher, jordanProduct]
+
+@[simp]
+theorem noncommutativeSLDFisher_zero_right
+    (τ : TracialFunctional R A) (two_inv : R) (ρ L : A) :
+    noncommutativeSLDFisher τ two_inv ρ L 0 = 0 := by
+  simp [noncommutativeSLDFisher, jordanProduct]
+
 /-- 🏆 THEOREM 5: Additivity in the first argument:
     g_ρ(L₁ + L₁', L₂) = g_ρ(L₁, L₂) + g_ρ(L₁', L₂) -/
 theorem noncommutativeSLDFisher_add_left (τ : TracialFunctional R A) (two_inv : R) (ρ L1 L1' L2 : A) :

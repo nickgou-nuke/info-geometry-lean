@@ -118,26 +118,52 @@ def zornBiAction (Z : CanonicalZorn) (pq : BiSplitOctonions) : BiSplitOctonions 
 Proves natively that the chiral action of any Zorn matrix Z squares to the scalar
 value given by the negative determinant.
 -/
+@[simp] theorem mul_neg (Z W : CanonicalZorn) : Z * (-W) = - (Z * W) := by
+  refine ZornMatrix.ext ?_ ?_ (funext fun i => ?_) (funext fun i => ?_)
+  · dsimp [mul, dot, cross]; ring
+  · dsimp [mul, dot, cross]; ring
+  · fin_cases i <;> { dsimp [mul, dot, cross]; ring }
+  · fin_cases i <;> { dsimp [mul, dot, cross]; ring }
+
+@[simp] theorem neg_mul (Z W : CanonicalZorn) : (-Z) * W = - (Z * W) := by
+  refine ZornMatrix.ext ?_ ?_ (funext fun i => ?_) (funext fun i => ?_)
+  · dsimp [mul, dot, cross]; ring
+  · dsimp [mul, dot, cross]; ring
+  · fin_cases i <;> { dsimp [mul, dot, cross]; ring }
+  · fin_cases i <;> { dsimp [mul, dot, cross]; ring }
+
+theorem zorn_mul_conj_mul (Z W : CanonicalZorn) :
+    Z * (zornConj Z * W) = ZornMatrix.detZ Z • W := by
+  rcases Z with ⟨Za, Zb, Zx, Zy⟩
+  rcases W with ⟨Wa, Wb, Wx, Wy⟩
+  refine ZornMatrix.ext ?_ ?_ (funext fun i => ?_) (funext fun i => ?_)
+  · dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring
+  · dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring
+  · fin_cases i <;> { dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring }
+  · fin_cases i <;> { dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring }
+
+theorem zornConj_mul_zorn_mul (Z W : CanonicalZorn) :
+    zornConj Z * (Z * W) = ZornMatrix.detZ Z • W := by
+  rcases Z with ⟨Za, Zb, Zx, Zy⟩
+  rcases W with ⟨Wa, Wb, Wx, Wy⟩
+  refine ZornMatrix.ext ?_ ?_ (funext fun i => ?_) (funext fun i => ?_)
+  · dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring
+  · dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring
+  · fin_cases i <;> { dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring }
+  · fin_cases i <;> { dsimp [zornConj, ZornMatrix.detZ, mul, dot, cross]; ring }
+
+/--
+**The Clifford Square Law on Bi-Split-Octonions:**
+Proves natively that the chiral action of any Zorn matrix Z squares to the scalar
+value given by the negative determinant.
+-/
 theorem zornBiAction_sq (Z : CanonicalZorn) (pq : BiSplitOctonions) :
     zornBiAction Z (zornBiAction Z pq) = - ZornMatrix.detZ Z • pq := by
-  rcases Z with ⟨Za, Zb, Zx, Zy⟩
-  rcases pq with ⟨⟨pa, pb, px, py⟩, ⟨qa, qb, qx, qy⟩⟩
-  dsimp [zornBiAction, zornConj, ZornMatrix.detZ, mul, dot, cross]
   refine Prod.ext ?_ ?_
-  · ext1
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
-    · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
-  · ext1
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
-    · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
+  · change Z * -(zornConj Z * pq.1) = (-ZornMatrix.detZ Z) • pq.1
+    rw [mul_neg, zorn_mul_conj_mul, neg_smul]
+  · change -(zornConj Z * (Z * pq.2)) = (-ZornMatrix.detZ Z) • pq.2
+    rw [zornConj_mul_zorn_mul, neg_smul]
 
 end BiActionSection
 
@@ -158,7 +184,7 @@ def e : CanonicalZorn ≃ₗ[ℝ] SplitCl44Carrier where
     ((Z.x 0 + Z.y 0)/2, (Z.x 0 - Z.y 0)/2),
     ((Z.x 1 + Z.y 1)/2, (Z.x 1 - Z.y 1)/2),
     ((Z.x 2 + Z.y 2)/2, (Z.x 2 - Z.y 2)/2),
-    fun _ => (0, 0)
+    fun i => Fin.elim0 i
   )
   invFun v := {
     a := v.1.1 + v.1.2
@@ -169,50 +195,36 @@ def e : CanonicalZorn ≃ₗ[ℝ] SplitCl44Carrier where
   map_add' Z W := by
     dsimp
     refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ ?_)))
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · ext i <;> { nomatch i }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · funext i; exact Fin.elim0 i
   map_smul' r Z := by
-    change (
-      ((r * Z.a - r * Z.b)/2, (r * Z.a + r * Z.b)/2),
-      ((r * Z.x 0 + r * Z.y 0)/2, (r * Z.x 0 - r * Z.y 0)/2),
-      ((r * Z.x 1 + r * Z.y 1)/2, (r * Z.x 1 - r * Z.y 1)/2),
-      ((r * Z.x 2 + r * Z.y 2)/2, (r * Z.x 2 - r * Z.y 2)/2),
-      fun _ => (0, 0)
-    ) = r • (
-      ((Z.a - Z.b)/2, (Z.a + Z.b)/2),
-      ((Z.x 0 + Z.y 0)/2, (Z.x 0 - Z.y 0)/2),
-      ((Z.x 1 + Z.y 1)/2, (Z.x 1 - Z.y 1)/2),
-      ((Z.x 2 + Z.y 2)/2, (Z.x 2 - Z.y 2)/2),
-      fun _ => (0, 0)
-    )
+    dsimp
     refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ ?_)))
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · ext i <;> { nomatch i }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · funext i; exact Fin.elim0 i
   left_inv Z := by
     rcases Z with ⟨a, b, x, y⟩
     dsimp
-    ext1
+    refine ZornMatrix.ext ?_ ?_ (funext fun i => ?_) (funext fun i => ?_)
     · ring
     · ring
-    · ext i
-      fin_cases i <;> { dsimp; ring }
-    · ext i
-      fin_cases i <;> { dsimp; ring }
+    · fin_cases i <;> { dsimp; ring }
+    · fin_cases i <;> { dsimp; ring }
   right_inv v := by
     rcases v with ⟨⟨t0, s0⟩, ⟨t1, s1⟩, ⟨t2, s2⟩, ⟨t3, s3⟩, f⟩
     dsimp
     refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ ?_)))
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · apply Prod.ext <;> { dsimp; ring }
-    · ext i <;> { nomatch i }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · ext <;> { dsimp; ring }
+    · funext i; exact Fin.elim0 i
 
 /--
 Global compatibility showing that the pullback of the hyperbolic signature (4,4) quadratic form
@@ -223,6 +235,7 @@ theorem splitCl44Quad_compat_global (Z : CanonicalZorn) :
   dsimp [e, SplitCl44Quad, InfoGeometry.Clifford.ClNNBilinear.hyperbolicQuadratic, ZornMatrix.detZ, dot]
   rw [Qsplit_succ_apply 3, Qsplit_succ_apply 2, Qsplit_succ_apply 1, Qsplit_succ_apply 0, Qsplit_zero_apply]
   rw [CliffordTower.Q11_apply, CliffordTower.Q11_apply, CliffordTower.Q11_apply, CliffordTower.Q11_apply]
+  dsimp [InfoGeometry.Clifford.splitQ11]
   ring
 
 /--

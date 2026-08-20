@@ -4,6 +4,8 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
+import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
+import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 
 noncomputable section
 
@@ -135,5 +137,93 @@ theorem so44ToSO55SumLieHom_injective :
     Function.Injective so44ToSO55SumLieHom := by
   intro M N h
   exact so44ToSO55Sum_injective h
+
+theorem so44ToSO55_eq_reindex (M : Mat8) :
+    so44ToSO55 M = Matrix.reindex fin10Equiv.symm fin10Equiv.symm (so44ToSO55Sum M) := by
+  ext i j
+  dsimp [so44ToSO55, Matrix.reindex, so44ToSO55Sum, fromBlocks]
+  rcases fin10Equiv i with a | a <;> rcases fin10Equiv j with b | b <;> rfl
+
+def eta55LeviMat10 : Matrix (Fin 10) (Fin 10) ℝ :=
+  Matrix.reindex fin10Equiv.symm fin10Equiv.symm eta55Levi
+
+theorem so44ToSO55_preserves_etaSkew (M : Mat8) (hM : IsEtaSkew eta44 M) :
+    IsEtaSkew eta55LeviMat10 (so44ToSO55 M) := by
+  dsimp [IsEtaSkew, eta55LeviMat10]
+  have h := so44ToSO55Sum_preserves_etaSkew M hM
+  dsimp [IsEtaSkew] at h
+  ext i j
+  rw [so44ToSO55_eq_reindex]
+  dsimp [Matrix.reindex]
+  have h_entry := congrFun (congrFun h (fin10Equiv i)) (fin10Equiv j)
+  have hmul1 : ((submatrix (so44ToSO55Sum M) ⇑fin10Equiv ⇑fin10Equiv)ᵀ *
+      submatrix eta55Levi ⇑fin10Equiv ⇑fin10Equiv) i j =
+      ((so44ToSO55Sum M)ᵀ * eta55Levi) (fin10Equiv i) (fin10Equiv j) := by
+    dsimp [Matrix.mul_apply]
+    have hequiv : ∑ k : Fin 10, (so44ToSO55Sum M) (fin10Equiv k) (fin10Equiv i) * eta55Levi (fin10Equiv k) (fin10Equiv j) =
+                  ∑ s : Fin 8 ⊕ Fin 2, (so44ToSO55Sum M) s (fin10Equiv i) * eta55Levi s (fin10Equiv j) := by
+      exact (fin10Equiv.sum_comp (fun s => (so44ToSO55Sum M) s (fin10Equiv i) * eta55Levi s (fin10Equiv j)))
+    exact hequiv
+  have hmul2 : (submatrix eta55Levi ⇑fin10Equiv ⇑fin10Equiv *
+      submatrix (so44ToSO55Sum M) ⇑fin10Equiv ⇑fin10Equiv) i j =
+      (eta55Levi * (so44ToSO55Sum M)) (fin10Equiv i) (fin10Equiv j) := by
+    dsimp [Matrix.mul_apply]
+    have hequiv : ∑ k : Fin 10, eta55Levi (fin10Equiv i) (fin10Equiv k) * (so44ToSO55Sum M) (fin10Equiv k) (fin10Equiv j) =
+                  ∑ s : Fin 8 ⊕ Fin 2, eta55Levi (fin10Equiv i) s * (so44ToSO55Sum M) s (fin10Equiv j) := by
+      exact (fin10Equiv.sum_comp (fun s => eta55Levi (fin10Equiv i) s * (so44ToSO55Sum M) s (fin10Equiv j)))
+    exact hequiv
+  change ((submatrix (so44ToSO55Sum M) ⇑fin10Equiv ⇑fin10Equiv)ᵀ * submatrix eta55Levi ⇑fin10Equiv ⇑fin10Equiv) i j +
+         (submatrix eta55Levi ⇑fin10Equiv ⇑fin10Equiv * submatrix (so44ToSO55Sum M) ⇑fin10Equiv ⇑fin10Equiv) i j = 0
+  rw [hmul1, hmul2]
+  exact h_entry
+
+theorem wittIndex_fin8Equiv (i : Fin 8) :
+    SplitOctonionDerivationWittBlockRealization.wittIndex (fin8Equiv i) = i := by
+  ext
+  dsimp [fin8Equiv, SplitOctonionDerivationWittBlockRealization.wittIndex]
+  split_ifs with h
+  · rfl
+  · dsimp; omega
+
+theorem canonicalDerivationFinMatrix_isEtaSkew (D : SplitOctonionDerivationWittOrthogonalBridge.Derivation) :
+    IsEtaSkew eta44 (SplitOctonionDerivationWittBlockRealization.canonicalDerivationFinMatrix D) := by
+  dsimp [IsEtaSkew, eta44, SplitOctonionDerivationWittBlockRealization.canonicalDerivationFinMatrix]
+  have h := SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix_eta_skew D
+  ext i j
+  have h_entry := congrFun (congrFun h (fin8Equiv i)) (fin8Equiv j)
+  have hmul1 : ((LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D))ᵀ *
+      submatrix etaW ⇑fin8Equiv ⇑fin8Equiv) i j =
+      ((SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D)ᵀ * etaW) (fin8Equiv i) (fin8Equiv j) := by
+    dsimp [Matrix.mul_apply]
+    have hequiv : ∑ k : Fin 8, (LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D)) k i * etaW (fin8Equiv k) (fin8Equiv j) =
+                  ∑ s : Fin 4 ⊕ Fin 4, (SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D) s (fin8Equiv i) * etaW s (fin8Equiv j) := by
+      rw [← fin8Equiv.sum_comp (fun s => (SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D) s (fin8Equiv i) * etaW s (fin8Equiv j))]
+      apply Finset.sum_congr rfl
+      intro k _
+      dsimp [SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix, LinearMap.toMatrix', LinearMap.toMatrix]
+      rw [wittIndex_fin8Equiv, wittIndex_fin8Equiv]
+    exact hequiv
+  have hmul2 : (submatrix etaW ⇑fin8Equiv ⇑fin8Equiv *
+      LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D)) i j =
+      (etaW * (SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D)) (fin8Equiv i) (fin8Equiv j) := by
+    dsimp [Matrix.mul_apply]
+    have hequiv : ∑ k : Fin 8, etaW (fin8Equiv i) (fin8Equiv k) * (LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D)) k j =
+                  ∑ s : Fin 4 ⊕ Fin 4, etaW (fin8Equiv i) s * (SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D) s (fin8Equiv j) := by
+      rw [← fin8Equiv.sum_comp (fun s => etaW (fin8Equiv i) s * (SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix D) s (fin8Equiv j))]
+      apply Finset.sum_congr rfl
+      intro k _
+      dsimp [SplitOctonionDerivationWittBlockRealization.canonicalDerivationMatrix, LinearMap.toMatrix', LinearMap.toMatrix]
+      rw [wittIndex_fin8Equiv, wittIndex_fin8Equiv]
+    exact hequiv
+  change ((LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D))ᵀ * submatrix etaW ⇑fin8Equiv ⇑fin8Equiv) i j +
+         (submatrix etaW ⇑fin8Equiv ⇑fin8Equiv * LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D)) i j = 0
+  rw [hmul1, hmul2]
+  exact h_entry
+
+theorem derivationToSO55_isEtaSkew (D : SplitOctonionDerivationWittOrthogonalBridge.Derivation) :
+    IsEtaSkew eta55LeviMat10 (SplitOctonionDerivationSO55Bridge.derivationToSO55 D) := by
+  dsimp [SplitOctonionDerivationSO55Bridge.derivationToSO55]
+  exact so44ToSO55_preserves_etaSkew (SplitOctonionDerivationWittBlockRealization.canonicalDerivationFinMatrix D)
+    (canonicalDerivationFinMatrix_isEtaSkew D)
 
 end InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge

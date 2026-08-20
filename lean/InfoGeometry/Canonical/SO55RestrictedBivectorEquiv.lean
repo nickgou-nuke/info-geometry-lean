@@ -1,5 +1,7 @@
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import InfoGeometry.Lie.SO55MatrixLieSubalgebra
+import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
+import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
@@ -9,7 +11,8 @@ import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 import Mathlib.Tactic
 
 /-!
-# Proved Native SO(5,5) Linear Maps and Vector Commutator Action
+# Proved Native SO(5,5) Linear Maps, Levi Metric Preservation, and Vector Commutator Action
+File: `lean/InfoGeometry/Canonical/SO55RestrictedBivectorEquiv.lean`
 -/
 
 noncomputable section
@@ -18,6 +21,8 @@ namespace InfoGeometry.Canonical.SO55RestrictedLemmas
 
 open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 open InfoGeometry.Lie.SO55MatrixSubalgebra
+open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
+open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.Cl55SpinBivectorImage
 open InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
@@ -25,10 +30,53 @@ open InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 open InfoGeometry.Clifford.Cl55SpinorChirality
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 open CliffordAlgebra
+open Matrix
 
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
+abbrev Mat8 := Matrix (Fin 8) (Fin 8) ℝ
 abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
+abbrev Mat10Sum := Matrix (Fin 8 ⊕ Fin 2) (Fin 8 ⊕ Fin 2) ℝ
+
+/-- The exact (5,5) Levi metric transported to Fin 10 via the canonical coordinate bijection. -/
+def eta55FromSum : Mat10 :=
+  fun i j => eta55Levi (fin10Equiv i) (fin10Equiv j)
+
+/-- Condition for a Mat10 to be skew-adjoint with respect to eta55FromSum. -/
+def IsSO55LeviMatrix (M : Mat10) : Prop :=
+  Mᵀ * eta55FromSum + eta55FromSum * M = 0
+
+theorem so44ToSO55_apply (M : Mat8) (i j : Fin 10) :
+    so44ToSO55 M i j = so44ToSO55Sum M (fin10Equiv i) (fin10Equiv j) := by
+  dsimp [so44ToSO55, so44ToSO55Sum]
+  rcases fin10Equiv i with a | a <;> rcases fin10Equiv j with b | b <;> rfl
+
+/-- 🏆 THEOREM: so44ToSO55 of any skew-symmetric 8x8 matrix preserves eta55FromSum on Fin 10. -/
+theorem so44ToSO55_preserves_eta55FromSum (M : Mat8) (hM : IsEtaSkew eta44 M) :
+    IsSO55LeviMatrix (so44ToSO55 M) := by
+  dsimp [IsSO55LeviMatrix]
+  ext i j
+  dsimp [transpose, Matrix.mul_apply, eta55FromSum]
+  have h1 : (∑ k : Fin 10, so44ToSO55 M k i * eta55Levi (fin10Equiv k) (fin10Equiv j)) =
+      ∑ s : Fin 8 ⊕ Fin 2, so44ToSO55Sum M s (fin10Equiv i) * eta55Levi s (fin10Equiv j) := by
+    rw [← fin10Equiv.symm.sum_comp]
+    apply Finset.sum_congr rfl
+    intro k _
+    rw [so44ToSO55_apply]
+    simp
+  have h2 : (∑ k : Fin 10, eta55Levi (fin10Equiv i) (fin10Equiv k) * so44ToSO55 M k j) =
+      ∑ s : Fin 8 ⊕ Fin 2, eta55Levi (fin10Equiv i) s * so44ToSO55Sum M s (fin10Equiv j) := by
+    rw [← fin10Equiv.symm.sum_comp]
+    apply Finset.sum_congr rfl
+    intro k _
+    rw [so44ToSO55_apply]
+    simp
+  rw [h1, h2]
+  have hskew : (so44ToSO55Sum M)ᵀ * eta55Levi + eta55Levi * (so44ToSO55Sum M) = 0 :=
+    so44ToSO55Sum_preserves_etaSkew M hM
+  have hij := congrFun (congrFun hskew (fin10Equiv i)) (fin10Equiv j)
+  dsimp [transpose, Matrix.mul_apply] at hij
+  exact hij
 
 /-- Standard basis of V55 for indices in Fin 10. -/
 def v55Basis (i : Fin 10) : V55 :=
@@ -57,7 +105,7 @@ theorem so55RestrictedToBivector_add (M N : so55LieSubalgebra) :
 theorem so55RestrictedToBivector_smul (r : ℝ) (M : so55LieSubalgebra) :
     so55RestrictedToBivector (r • M) = r • so55RestrictedToBivector M := by
   dsimp [so55RestrictedToBivector]
-  simp only [mul_smul, Finset.smul_sum]
+  simp only [Finset.smul_sum, smul_smul]
 
 /-- 3. Bundled LinearMap from so55LieSubalgebra to SpinBivector55. -/
 def so55RestrictedToBivectorLinear : so55LieSubalgebra →ₗ[ℝ] SpinBivector55 where
@@ -77,7 +125,7 @@ def canonicalDerivationSpinBivectorLinear : Derivation →ₗ[ℝ] SpinBivector5
     simp only [derivationToSO55_add, Matrix.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' r D := by
     dsimp [canonicalDerivationSpinBivector]
-    simp only [derivationToSO55_smul, Matrix.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
+    simp only [derivationToSO55_smul, Matrix.smul_apply, smul_eq_mul, Finset.smul_sum, smul_smul]
 
 /-- 6. Unconditional Spinor Action without SpinorLiftDatum. -/
 def canonicalDerivationSpinorAction (D : Derivation) :

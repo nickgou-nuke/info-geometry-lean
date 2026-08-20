@@ -333,8 +333,8 @@ noncomputable abbrev PHS_operator (C₀ : EndH) : EndNambu :=
 /-- An involutive internal map gives an involutive linear sheet swap. -/
 theorem linearSheetSwap_sq
     (C₀ : EndH)
-    (hC : C₀.comp C₀ = id ℂ H) :
-    (linearSheetSwap C₀).comp (linearSheetSwap C₀) = id ℂ NambuH := by
+    (hC : C₀.comp C₀ = ContinuousLinearMap.id ℂ H) :
+    (linearSheetSwap C₀).comp (linearSheetSwap C₀) = ContinuousLinearMap.id ℂ NambuH := by
   apply ContinuousLinearMap.ext
   intro x
   have hfst : C₀ (C₀ x.fst) = x.fst := by
@@ -403,9 +403,9 @@ theorem bdg_swap_particle_hole_symmetry
     (h Δ : EndH)
     (hh : adjoint h = h)
     (hΔ : adjoint Δ = -Δ) :
-    (PHS_operator (id ℂ H)).comp (H_BdG h Δ) =
-      (-H_BdG h Δ).comp (PHS_operator (id ℂ H)) := by
-  apply bdg_particle_hole_symmetry h Δ (id ℂ H)
+    (PHS_operator (ContinuousLinearMap.id ℂ H)).comp (H_BdG h Δ) =
+      (-H_BdG h Δ).comp (PHS_operator (ContinuousLinearMap.id ℂ H)) := by
+  apply bdg_particle_hole_symmetry h Δ (ContinuousLinearMap.id ℂ H)
   · simp [hh]
   · simp [hΔ]
   · simp [hh]
@@ -581,7 +581,7 @@ equivalence. -/
 structure InvertibleHoleBlock (h : EndH) where
   equiv : H ≃L[ℂ] H
   equiv_toContinuousLinearMap :
-    equiv.toContinuousLinearMap = holeBlock h
+    (equiv : H →L[ℂ] H) = holeBlock h
 
 namespace InvertibleHoleBlock
 
@@ -590,10 +590,10 @@ variable (I : InvertibleHoleBlock h)
 
 /-- Genuine inverse of the physical hole block. -/
 def inverse : EndH :=
-  I.equiv.symm.toContinuousLinearMap
+  (I.equiv.symm : H →L[ℂ] H)
 
 @[simp] theorem holeBlock_comp_inverse :
-    (holeBlock h).comp I.inverse = id ℂ H := by
+    (holeBlock h).comp I.inverse = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change holeBlock h (I.equiv.symm x) = x
@@ -601,7 +601,7 @@ def inverse : EndH :=
   exact I.equiv.apply_symm_apply x
 
 @[simp] theorem inverse_comp_holeBlock :
-    I.inverse.comp (holeBlock h) = id ℂ H := by
+    I.inverse.comp (holeBlock h) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change I.equiv.symm (holeBlock h x) = x
@@ -639,7 +639,7 @@ noncomputable def eliminatedHoleMap
 noncomputable def schurGraphEmbedding
     {h : EndH} (Δ : EndH)
     (I : InvertibleHoleBlock h) : H →L[ℂ] NambuH :=
-  nambuPairMap (id ℂ H) (eliminatedHoleMap Δ I)
+  nambuPairMap (ContinuousLinearMap.id ℂ H) (eliminatedHoleMap Δ I)
 
 @[simp] theorem BdG_Schur_Complement_apply
     (h Δ : EndH) (I : InvertibleHoleBlock h) (u : H) :
@@ -729,15 +729,15 @@ theorem H_BdG_schurGraph_eq_zero_iff
 
 /-- Particle diagonal block of `H_BdG - E`. -/
 noncomputable def shiftedParticleBlock (h : EndH) (E : ℂ) : EndH :=
-  h - E • id ℂ H
+  h - E • ContinuousLinearMap.id ℂ H
 
 /-- Hole diagonal block of `H_BdG - E`. -/
 noncomputable def shiftedHoleBlock (h : EndH) (E : ℂ) : EndH :=
-  holeBlock h - E • id ℂ H
+  holeBlock h - E • ContinuousLinearMap.id ℂ H
 
 /-- Spectrally shifted BdG operator `H_BdG - E I`. -/
 noncomputable def spectralBdG (h Δ : EndH) (E : ℂ) : EndNambu :=
-  H_BdG h Δ - E • id ℂ NambuH
+  H_BdG h Δ - E • ContinuousLinearMap.id ℂ NambuH
 
 @[simp] theorem shiftedParticleBlock_zero (h : EndH) :
     shiftedParticleBlock h 0 = h := by
@@ -780,7 +780,7 @@ continuous linear equivalence. -/
 structure InvertibleShiftedHoleBlock (h : EndH) (E : ℂ) where
   equiv : H ≃L[ℂ] H
   equiv_toContinuousLinearMap :
-    equiv.toContinuousLinearMap = shiftedHoleBlock h E
+    (equiv : H →L[ℂ] H) = shiftedHoleBlock h E
 
 namespace InvertibleShiftedHoleBlock
 
@@ -789,10 +789,10 @@ variable (I : InvertibleShiftedHoleBlock h E)
 
 /-- Genuine inverse of the shifted hole block. -/
 def inverse : EndH :=
-  I.equiv.symm.toContinuousLinearMap
+  (I.equiv.symm : H →L[ℂ] H)
 
 @[simp] theorem shiftedHoleBlock_comp_inverse :
-    (shiftedHoleBlock h E).comp I.inverse = id ℂ H := by
+    (shiftedHoleBlock h E).comp I.inverse = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change shiftedHoleBlock h E (I.equiv.symm x) = x
@@ -800,7 +800,7 @@ def inverse : EndH :=
   exact I.equiv.apply_symm_apply x
 
 @[simp] theorem inverse_comp_shiftedHoleBlock :
-    I.inverse.comp (shiftedHoleBlock h E) = id ℂ H := by
+    I.inverse.comp (shiftedHoleBlock h E) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change I.equiv.symm (shiftedHoleBlock h E x) = x
@@ -831,7 +831,7 @@ noncomputable def eliminatedHoleMap_at
 noncomputable def schurGraphEmbedding_at
     {h : EndH} (Δ : EndH) {E : ℂ}
     (I : InvertibleShiftedHoleBlock h E) : H →L[ℂ] NambuH :=
-  nambuPairMap (id ℂ H) (eliminatedHoleMap_at Δ I)
+  nambuPairMap (ContinuousLinearMap.id ℂ H) (eliminatedHoleMap_at Δ I)
 
 @[simp] theorem BdG_Schur_Complement_at_apply
     (h Δ : EndH) (E : ℂ)

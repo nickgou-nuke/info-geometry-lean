@@ -284,9 +284,8 @@ theorem jointPeirce_reconstruction (e x : R) :
       (projPos e + projZero e + projNeg e) *
         x * (projPos e + projZero e + projNeg e) := by
           noncomm_ring
-    _ = 1 * x * 1 := by
-      rw [proj_sum_eq_id, proj_sum_eq_id]
-    _ = x := by simp
+    _ = x := by
+      rw [proj_sum_eq_id, proj_sum_eq_id, one_mul, mul_one]
 
 /-- Adjoint weight of a joint Peirce component. -/
 theorem jointPeirceProjector_adjoint_weight
@@ -401,7 +400,7 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
       (-2 : ℝ) • gradeNegTwoProjector e x := by
   have h := jointPeirceProjector_adjoint_weight he .neg .pos x
   dsimp [gradeNegTwoProjector, peirceScalar] at h ⊢
-  norm_num at h
+  rw [show ((-1 : ℝ) - 1) = -2 by norm_num] at h
   exact h
 
 @[simp] theorem gradePosOne_adjoint_weight
@@ -466,5 +465,3 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
     _ = (0 : ℝ) • (a + b + c) := by simp
 
 end InfoGeometry.Physics.Algebra
-
-end noncomputable section

@@ -7395,3 +7395,4 @@ import InfoGeometry.Probability.FisherRaoMadelungIsometry
 import InfoGeometry.Information.UniversalDualityQuadrangle
 import InfoGeometry.Information.UniversalConvexDualityQuadrangle
 import InfoGeometry.Information.MasterArchetypeConvexDuality
+import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge

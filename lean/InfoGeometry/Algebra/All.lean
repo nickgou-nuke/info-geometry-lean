@@ -242,6 +242,7 @@ import InfoGeometry.Algebra.ThompsonBraidedCoherenceBridge
 import InfoGeometry.Algebra.CantorTwistedThompsonCoherence
 import InfoGeometry.Algebra.CuntzModularTreeFlowBridge
 import InfoGeometry.Algebra.SplitOctonionPeirceExteriorBridge
+import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 /-!
 # InfoGeometry.Algebra.All
 

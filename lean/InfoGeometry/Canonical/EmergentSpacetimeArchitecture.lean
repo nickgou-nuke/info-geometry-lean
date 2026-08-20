@@ -53,6 +53,7 @@ open InfoGeometry.Canonical.SouriauMassieuHessianBridge
 open InfoGeometry.Lie
 open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 open InfoGeometry.Canonical.ErlangenObservableBundle
+open InfoGeometry.Canonical.EmergentSpacetime
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 variable {α : Type*} [Fintype α] [Nonempty α]

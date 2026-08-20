@@ -25,8 +25,25 @@ namespace InfoGeometry.Canonical.FiniteCartanLogLaplace
 
 universe u v
 
-variable {Mode : Type u} {Coord : Type v}
-variable [Fintype Mode] [Nonempty Mode] [Fintype Coord]
+variable {Coord : Type v} [Fintype Coord]
+
+/-- Finite Cartan pairing. -/
+def pair (β q : Coord → ℝ) : ℝ :=
+  ∑ a : Coord, β a * q a
+
+@[simp] theorem pair_add (β γ q : Coord → ℝ) :
+    pair (β + γ) q = pair β q + pair γ q := by
+  classical
+  unfold pair
+  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
+
+@[simp] theorem pair_smul (t : ℝ) (β q : Coord → ℝ) :
+    pair (t • β) q = t * pair β q := by
+  classical
+  unfold pair
+  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum]
+
+variable {Mode : Type u} [Fintype Mode]
 
 /-- A finite positive family carrying a finite-dimensional charge vector. -/
 structure Family (Mode : Type u) (Coord : Type v)
@@ -37,15 +54,12 @@ structure Family (Mode : Type u) (Coord : Type v)
 
 namespace Family
 
+variable [Nonempty Mode]
 variable (F : Family Mode Coord)
-
-/-- Finite Cartan pairing. -/
-def pair (β q : Coord → ℝ) : ℝ :=
-  ∑ a : Coord, β a * q a
 
 /-- Unnormalized Cartan exponential weight. -/
 def unnormalized (β : Coord → ℝ) (m : Mode) : ℝ :=
-  F.weight m * Real.exp (F.pair β (F.charge m))
+  F.weight m * Real.exp (pair β (F.charge m))
 
 /-- Finite Cartan partition function. -/
 def partition (β : Coord → ℝ) : ℝ :=
@@ -62,18 +76,6 @@ def probability (β : Coord → ℝ) (m : Mode) : ℝ :=
 /-- Expected charge coordinate. -/
 def expectedCharge (β : Coord → ℝ) (a : Coord) : ℝ :=
   ∑ m : Mode, F.probability β m * F.charge m a
-
-@[simp] theorem pair_add (β γ q : Coord → ℝ) :
-    F.pair (β + γ) q = F.pair β q + F.pair γ q := by
-  classical
-  unfold pair
-  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-
-@[simp] theorem pair_smul (t : ℝ) (β q : Coord → ℝ) :
-    F.pair (t • β) q = t * F.pair β q := by
-  classical
-  unfold pair
-  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum]
 
 @[simp] theorem unnormalized_pos (β : Coord → ℝ) (m : Mode) :
     0 < F.unnormalized β m := by
@@ -99,7 +101,7 @@ def scalarRestriction
     (β v : Coord → ℝ) :
     FiniteScalarLogLaplace.Family Mode where
   weight := fun m => F.unnormalized β m
-  statistic := fun m => F.pair v (F.charge m)
+  statistic := fun m => pair v (F.charge m)
   weight_pos := F.unnormalized_pos β
 
 /-- The scalar restriction has exactly the Cartan affine-line weights. -/
@@ -108,7 +110,7 @@ theorem scalarRestriction_unnormalized
     (F.scalarRestriction β v).unnormalized t m =
       F.unnormalized (β + t • v) m := by
   unfold scalarRestriction FiniteScalarLogLaplace.Family.unnormalized unnormalized
-  rw [F.pair_add, F.pair_smul, Real.exp_add]
+  rw [pair_add, pair_smul, Real.exp_add]
   ring
 
 /-- Partition readout along a Cartan affine line. -/
@@ -143,7 +145,7 @@ theorem scalarRestriction_mean
     (β v : Coord → ℝ) (t : ℝ) :
     (F.scalarRestriction β v).mean t =
       ∑ m : Mode,
-        F.probability (β + t • v) m * F.pair v (F.charge m) := by
+        F.probability (β + t • v) m * pair v (F.charge m) := by
   rw [(F.scalarRestriction β v).mean_eq_expectation]
   apply Finset.sum_congr rfl
   intro m hm
@@ -153,8 +155,8 @@ theorem scalarRestriction_mean
 /-- Pairing with the expected charge equals expectation of the paired charge. -/
 theorem pair_expectedCharge
     (β v : Coord → ℝ) :
-    F.pair v (F.expectedCharge β) =
-      ∑ m : Mode, F.probability β m * F.pair v (F.charge m) := by
+    pair v (F.expectedCharge β) =
+      ∑ m : Mode, F.probability β m * pair v (F.charge m) := by
   classical
   unfold pair expectedCharge
   calc
@@ -182,7 +184,7 @@ theorem hasDerivAt_cartanLine_logPartition
     (β v : Coord → ℝ) (t : ℝ) :
     HasDerivAt
       (fun s => F.logPartition (β + s • v))
-      (F.pair v (F.expectedCharge (β + t • v)))
+      (pair v (F.expectedCharge (β + t • v)))
       t := by
   have h := (F.scalarRestriction β v).hasDerivAt_logPartition t
   have hfun :
@@ -200,10 +202,10 @@ theorem hasDerivAt_cartanLine_logPartition
 theorem hasDerivAt_cartanLine_logPartition_zero
     (β v : Coord → ℝ) :
     HasDerivAt
-      (fun s => F.logPartition (β + s • v))
-      (F.pair v (F.expectedCharge β))
-      0 := by
-  have h := F.hasDerivAt_cartanLine_logPartition β v 0
+      (fun s : ℝ => F.logPartition (β + s • v))
+      (pair v (F.expectedCharge β))
+      (0 : ℝ) := by
+  have h := F.hasDerivAt_cartanLine_logPartition β v (0 : ℝ)
   simpa [zero_smul] using h
 
 /-- The second directional derivative is the scalar-restriction variance. -/

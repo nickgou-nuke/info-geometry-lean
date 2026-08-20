@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
+import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 import InfoGeometry.Topology.SymbolicLatentSpace
 
 /-!
@@ -13,13 +13,13 @@ continuous observable family.
 
 namespace InfoGeometry.Topology.TripotentFiveGradeSymbolicLatent
 
-open InfoGeometry.Canonical
+open InfoGeometry.Physics.Algebra
 open InfoGeometry.Topology
 
 noncomputable section
 
-local instance : TopologicalSpace FiveGrade := ⊥
-local instance : DiscreteTopology FiveGrade := discreteTopology_bot FiveGrade
+instance : TopologicalSpace FiveGrade := ⊥
+instance : DiscreteTopology FiveGrade := discreteTopology_bot FiveGrade
 
 /-- One-hot observable attached to a single five-grade label. -/
 def fiveGradeIndicator (k : FiveGrade) : SymbolicLatentObservable FiveGrade :=
@@ -28,6 +28,10 @@ def fiveGradeIndicator (k : FiveGrade) : SymbolicLatentObservable FiveGrade :=
 /-- The finite symbolic latent system of five one-hot grade observables. -/
 def fiveGradeSystem : FiniteSymbolicLatentSystem FiveGrade FiveGrade :=
   fun k => fiveGradeIndicator k
+
+@[simp] theorem fiveGradeIndicator_apply (k g : FiveGrade) :
+    fiveGradeIndicator k g = if g = k then (1 : ℝ) else 0 :=
+  rfl
 
 @[simp] theorem fiveGradeIndicator_apply_self (k : FiveGrade) :
     fiveGradeIndicator k k = 1 := by
@@ -41,48 +45,38 @@ def fiveGradeSystem : FiniteSymbolicLatentSystem FiveGrade FiveGrade :=
 theorem fiveGradeObservationMap_injective :
     Function.Injective (symbolicObservationMap fiveGradeSystem) := by
   intro x y hxy
-  by_cases h : x = y
-  · exact h
-  · exfalso
-    have hyx : y ≠ x := by
-      intro hyx
-      apply h
-      exact hyx.symm
-    have hx := congrArg (fun f => f x) hxy
-    simp [symbolicObservationMap, fiveGradeSystem, fiveGradeIndicator, hyx] at hx
+  by_contra h
+  have hyx : y ≠ x := by intro hyx; exact h hyx.symm
+  have hx := congrArg (fun f => f x) hxy
+  simp only [symbolicObservationMap, fiveGradeSystem, fiveGradeIndicator_apply, if_true, if_neg hyx] at hx
+  norm_num at hx
 
 /-- Each one-hot grade observable has a singleton 1-fiber. -/
 theorem fiveGradeIndicator_fiber_one (k : FiveGrade) :
     (fiveGradeIndicator k).fiber 1 = {k} := by
   ext g
-  constructor
-  · intro hg
-    by_cases h : g = k
-    · exact h
-    · exfalso
-      have hbad := hg
-      simp [SymbolicLatentObservable.fiber, fiveGradeIndicator, h] at hbad
-  · intro hg
-    subst hg
-    simp [SymbolicLatentObservable.fiber, fiveGradeIndicator]
+  simp only [SymbolicLatentObservable.fiber, Set.mem_preimage, Set.mem_singleton_iff,
+    fiveGradeIndicator_apply]
+  split_ifs with h
+  · simp [h]
+  · simp [h]
 
 /-- The one-hot solution set is a singleton and therefore compact. -/
 theorem fiveGradeSystem_solutionSet_singleton (k : FiveGrade) :
     fiveGradeSystem.solutionSet (fun j => if j = k then (1 : ℝ) else 0) = {k} := by
   ext x
+  simp only [FiniteSymbolicLatentSystem.solutionSet, Set.mem_setOf_eq, Set.mem_singleton_iff,
+    fiveGradeSystem, fiveGradeIndicator_apply]
   constructor
   · intro hx
-    by_cases h : x = k
+    have hxk := hx k
+    simp only [if_true] at hxk
+    split_ifs at hxk with h
     · exact h
-    · exfalso
-      have hxk := hx k
-      simp [fiveGradeSystem, fiveGradeIndicator, h] at hxk
-  · intro hx
-    subst x
-    intro j
-    by_cases h : j = k
-    · simp [fiveGradeSystem, fiveGradeIndicator, h, eq_comm]
-    · simp [fiveGradeSystem, fiveGradeIndicator, h, eq_comm]
+    · norm_num at hxk
+  · intro hx j
+    subst hx
+    simp only [eq_comm]
 
 theorem fiveGradeSystem_solutionSet_isCompact (k : FiveGrade) :
     IsCompact (fiveGradeSystem.solutionSet (fun j => if j = k then (1 : ℝ) else 0)) := by

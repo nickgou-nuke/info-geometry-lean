@@ -323,8 +323,6 @@ theorem full_car_packet
       DPlus_add_DMinus h2 J,
       GPlus_GMinus_CAR h2 I j J hI hj hcross hJ⟩
 
-/-! ## Compatibility aliases for the original frozen API -/
-
 abbrev D_plus := DPlus
 abbrev D_minus := DMinus
 abbrev G_plus := GPlus
@@ -332,63 +330,60 @@ abbrev G_minus := GMinus
 
 theorem D_plus_add_D_minus
     (h2 : (2 : K) ≠ 0) (J : A) :
-    D_plus (K := K) J + D_minus (K := K) J = 1 :=
+    D_plus J + D_minus J = 1 :=
   DPlus_add_DMinus h2 J
 
 theorem D_plus_idempotent
     (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
-    D_plus (K := K) J * D_plus (K := K) J = D_plus (K := K) J :=
+    D_plus J * D_plus J = D_plus J :=
   DPlus_idempotent h2 J hJ
 
 theorem D_minus_idempotent
     (h2 : (2 : K) ≠ 0) (J : A) (hJ : J * J = 1) :
-    D_minus (K := K) J * D_minus (K := K) J = D_minus (K := K) J :=
+    D_minus J * D_minus J = D_minus J :=
   DMinus_idempotent h2 J hJ
 
 theorem D_plus_mul_D_minus
     (J : A) (hJ : J * J = 1) :
-    D_plus (K := K) J * D_minus (K := K) J = 0 :=
+    D_plus J * D_minus J = 0 :=
   DPlus_mul_DMinus J hJ
 
 theorem D_minus_mul_D_plus
     (J : A) (hJ : J * J = 1) :
-    D_minus (K := K) J * D_plus (K := K) J = 0 :=
+    D_minus J * D_plus J = 0 :=
   DMinus_mul_DPlus J hJ
 
 theorem G_plus_square_zero
     (I j : A) (hI : I * I = 1) (hj : j * j = -1)
     (hanti : I * j + j * I = 0) :
-    G_plus (K := K) I j * G_plus (K := K) I j = 0 :=
+    G_plus I j * G_plus I j = 0 :=
   GPlus_square_zero I j hI hj hanti
 
 theorem G_minus_square_zero
     (I j : A) (hI : I * I = 1) (hj : j * j = -1)
     (hanti : I * j + j * I = 0) :
-    G_minus (K := K) I j * G_minus (K := K) I j = 0 :=
+    G_minus I j * G_minus I j = 0 :=
   GMinus_square_zero I j hI hj hanti
 
 theorem G_plus_mul_G_minus
     (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1)
     (hcross : j * I = -(I * j)) (hJ : J = I * j) :
-    G_plus (K := K) I j * G_minus (K := K) I j =
-      D_minus (K := K) J :=
+    G_plus I j * G_minus I j = D_minus J :=
   GPlus_mul_GMinus h2 I j J hI hj hcross hJ
 
 theorem G_minus_mul_G_plus
     (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1)
     (hcross : j * I = -(I * j)) (hJ : J = I * j) :
-    G_minus (K := K) I j * G_plus (K := K) I j =
-      D_plus (K := K) J :=
+    G_minus I j * G_plus I j = D_plus J :=
   GMinus_mul_GPlus h2 I j J hI hj hcross hJ
 
 theorem G_plus_G_minus_CAR
     (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1)
     (hcross : j * I = -(I * j)) (hJ : J = I * j) :
-    G_plus (K := K) I j * G_minus (K := K) I j +
-      G_minus (K := K) I j * G_plus (K := K) I j = 1 :=
+    G_plus I j * G_minus I j + G_minus I j * G_plus I j = 1 :=
   GPlus_GMinus_CAR h2 I j J hI hj hcross hJ
 
 end GogberashviliNilpotentCARBridge

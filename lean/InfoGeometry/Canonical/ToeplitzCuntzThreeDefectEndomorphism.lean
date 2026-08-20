@@ -25,7 +25,7 @@ variable {A : Type*} [Ring A] [StarRing A] [Algebra ℝ A]
 variable (g : ToeplitzCuntzThreeGenerators A)
 
 /-- Left multiplication by the native Toeplitz defect `P₀`. -/
-def defectLeftMul : Module.End ℝ A := leftMulOp g.P0
+def defectLeftMul : Module.End ℝ A := leftMulLinear g.P0
 
 @[simp] theorem defectLeftMul_apply (x : A) :
     defectLeftMul g x = g.P0 * x :=
@@ -33,7 +33,7 @@ def defectLeftMul : Module.End ℝ A := leftMulOp g.P0
 
 /-- The bilateral Peirce-sandwich action of the native defect `P₀`. -/
 def defectSandwich : Module.End ℝ A :=
-  (leftMulOp g.P0).comp (rightMulOp g.P0)
+  (leftMulLinear g.P0).comp (rightMulLinear g.P0)
 
 @[simp] theorem defectSandwich_apply (x : A) :
     defectSandwich g x = g.P0 * (x * g.P0) :=
@@ -48,9 +48,9 @@ theorem defectLeftMul_idempotent :
 
 /-- The defect action kills the active Toeplitz Hamiltonian on the right. -/
 theorem defectLeftMul_comp_hamiltonian :
-    defectLeftMul g * leftMulOp g.susyHamiltonian = 0 := by
+    defectLeftMul g * leftMulLinear g.susyHamiltonian = 0 := by
   ext x
-  simp only [defectLeftMul, leftMulOp_apply]
+  simp only [defectLeftMul, leftMulLinear_apply, LinearMap.mul_apply]
   change g.P0 * (g.susyHamiltonian * x) = 0
   rw [← mul_assoc, susyHamiltonian_defect_annihilation_left g, zero_mul]
 
@@ -61,7 +61,8 @@ theorem defectLeftMul_ne_zero (hP0 : g.P0 ≠ 0) :
   have h1 : defectLeftMul g (1 : A) = (0 : A) := by
     rw [h]
     rfl
-  simpa using hP0 (by simpa [defectLeftMul] using h1)
+  simp only [defectLeftMul, leftMulLinear_apply, mul_one] at h1
+  exact hP0 h1
 
 /-! The sandwich is a genuine idempotent endomorphism, but it is not yet
 identified with a `ProjectedCliffordShadow` readout. -/
@@ -81,10 +82,11 @@ theorem defectSandwich_ne_zero (hP0 : g.P0 ≠ 0) :
   have h1 : defectSandwich g (1 : A) = (0 : A) := by
     rw [h]
     rfl
-  have hp : g.P0 * g.P0 = 0 := by
-    simpa [defectSandwich] using h1
-  apply hP0
-  rw [defectProjection_sq g] at hp
-  exact hp
+  have hp : g.P0 * (1 * g.P0) = 0 := by
+    have hx : defectSandwich g (1 : A) = g.P0 * (1 * g.P0) := rfl
+    rw [← hx, h]
+    rfl
+  rw [one_mul, defectProjection_sq g] at hp
+  exact hP0 hp
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeDefectEndomorphism

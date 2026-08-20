@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
+import InfoGeometry.Canonical.MadelungFisherRaoSynthesisBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
@@ -7,7 +8,6 @@ import InfoGeometry.Canonical.IBFrozenModularBridge
 import InfoGeometry.Jordan.LogDet
 import InfoGeometry.MeasureProjective
 import InfoGeometry.Measure.Normalized
-import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.DeRhamModularPotentialBridge
@@ -20,7 +20,7 @@ import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
 import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
 import InfoGeometry.Continuous.DeRhamBridge
-import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
+import InfoGeometry.Continuous.PositiveOrthant
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.RicciMongeAmpere
@@ -62,16 +62,6 @@ namespace InfoGeometry.Canonical.RedLine
 
 universe u
 
-export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (
-  coordinateCLM
-  coordinateCLM_apply
-  coordinateLogPotential
-  hasFDerivAt_coordinateLogPotential
-  differentiableOn_coordinateLogPotential
-  coordinateLogPotential_contDiffOn
-  integral_coordinateLogRate_eq_potential_sub
-)
-
 export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
   coordinateSurprisalPotential
   hasFDerivAt_coordinateSurprisalPotential
@@ -102,6 +92,22 @@ export InfoGeometry.Continuous.DeRhamBridge (
   zeroForm_contDiffOn_positiveOrthant
   exactOneForm_is_derivative
   exactOneForm_path_integral
+)
+
+export InfoGeometry.Continuous.PositiveOrthantChart (
+  Chart
+  PositiveOrthant
+  mem_positiveOrthant
+  isOpen_positiveOrthant
+  PositiveOrthantManifold
+  toAmbient
+  toAmbient_apply
+  toAmbient_injective
+  coordinate_positive
+  projCoord
+  projCoord_apply
+  coordinateLogPotential_contDiffOn
+  hasFDerivAt_coordinateLogPotential
 )
 
 export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (
@@ -159,6 +165,32 @@ export InfoGeometry.Canonical.DeRhamModularPotentialBridge (
   gibbs_distribution_is_exponential_map
   modularHamiltonian
   modular_flow_is_exponential
+)
+
+/-! The general exact-form lemmas and their positive-ray specialization are
+    both exposed on the canonical RedLine surface. -/
+export InfoGeometry.Canonical.DeRhamPotential (
+  ZeroForm
+  OneForm
+  dZeroForm
+  dZeroForm_apply
+  exact_oneForm_cocycle
+  exact_oneForm_antisymm
+  exact_oneForm_self
+  dZeroForm_linear
+  modularZeroForm
+  relativeModularPotential_eq_dZeroForm
+  modularZeroForm_deriv_independent
+  relativeModularPotential_path_independence
+)
+
+export InfoGeometry.Canonical.MadelungFisherRaoSynthesisBridge (
+  madelung_fisher_rao_line_element
+  madelung_quantum_potential_linearization
+  bohm_potential_eq_surprisal_laplacian_sub_gradientSq
+  surprisalBohmReadout
+  doubled_surprisal_bohm_common_readout
+  doubled_surprisal_bohm_relative_readout
 )
 
 export InfoGeometry.Canonical.QuantumAlgebraObservableBase (

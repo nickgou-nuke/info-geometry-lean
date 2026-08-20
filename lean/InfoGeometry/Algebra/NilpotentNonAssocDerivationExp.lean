@@ -244,6 +244,21 @@ theorem toNonAssocAlgEquiv_map_square_zero
   rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
   exact (nilpotentExpStep2 D t).map_zero
 
+/-- The bundled nilpotent automorphism transports a resolution of the unit. -/
+theorem toNonAssocAlgEquiv_map_resolution
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x y : A)
+    (hxy : x + y = one) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x +
+        toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t y = one := by
+  change nilpotentExpStep2 D t x + nilpotentExpStep2 D t y = one
+  rw [← (nilpotentExpStep2 D t).map_add, hxy,
+    nilpotentExpStep2_one one D t h_one]
+
 /-- The nilpotent exponential transports both orientations of orthogonality. -/
 theorem nilpotentExpStep2_map_two_sided_orthogonal
     (D : A →ₗ[K] A)

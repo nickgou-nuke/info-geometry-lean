@@ -22,6 +22,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.SO55RestrictedLemmas
 
 open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
+open InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 open InfoGeometry.Lie.SO55MatrixSubalgebra
 open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
@@ -132,6 +133,23 @@ theorem so44ToSO55_preserves_eta55FromSum (M : Mat8) (hM : IsEtaSkew eta44 M) :
 theorem so44ToSO55_mem_so55LeviSubalgebra (M : Mat8) (hM : IsEtaSkew eta44 M) :
     so44ToSO55 M ∈ so55LeviLieSubalgebra :=
   so44ToSO55_preserves_eta55FromSum M hM
+
+theorem derivationToSO55_mem_so55LeviSubalgebra (D : Derivation) :
+    derivationToSO55 D ∈ so55LeviLieSubalgebra := by
+  exact so44ToSO55_mem_so55LeviSubalgebra
+    (canonicalDerivationFinMatrix D)
+    (canonicalDerivationFinMatrix_isEtaSkew D)
+
+/-- 🏆 THEOREM: Derivation to SO(5,5) matrix strictly lands in the authoritative so55LieSubalgebra -/
+theorem derivationToSO55_mem_so55LieSubalgebra (D : Derivation) :
+    derivationToSO55 D ∈ so55LieSubalgebra := by
+  have h := so44ToSO55_preserves_eta55FromSum
+    (canonicalDerivationFinMatrix D)
+    (canonicalDerivationFinMatrix_isEtaSkew D)
+  dsimp [so55LieSubalgebra, Set.mem_setOf_eq, IsSO55Matrix, eta55,
+         InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge.eta55LeviMat10,
+         Matrix.reindex, eta55FromSum, IsSO55LeviMatrix] at *
+  exact h
 
 /-- Standard basis of V55 for indices in Fin 10. -/
 def v55Basis (i : Fin 10) : V55 :=

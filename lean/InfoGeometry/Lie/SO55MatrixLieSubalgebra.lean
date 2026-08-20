@@ -2,6 +2,8 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
+import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
+import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 
 /-!
@@ -25,21 +27,52 @@ noncomputable section
 namespace InfoGeometry.Lie.SO55MatrixSubalgebra
 
 open Matrix
+open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
+open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
+open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
+open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 
 abbrev Mat10 := Matrix (Fin 10) (Fin 10) ℝ
 
-/-- The split-signature metric in the Levi/Witt basis used by the derivation map. -/
-abbrev eta55 : Mat10 :=
-  InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge.eta55LeviMat10
+/-- The split-signature metric in the Levi/Witt basis used by the canonical derivation map. -/
+abbrev eta55 : Mat10 := eta55LeviMat10
+
+theorem etaW_transpose : etaWᵀ = etaW := by
+  ext (i|i) (j|j)
+  · rfl
+  · dsimp [etaW, fromBlocks, transpose, Matrix.one_apply]
+    simp [eq_comm]
+  · dsimp [etaW, fromBlocks, transpose, Matrix.one_apply]
+    simp [eq_comm]
+  · rfl
+
+theorem eta44_transpose : eta44ᵀ = eta44 := by
+  ext i j
+  dsimp [eta44, Matrix.reindex]
+  have h := congrFun (congrFun etaW_transpose (fin8Equiv i)) (fin8Equiv j)
+  exact h
+
+theorem eta2_transpose : eta2ᵀ = eta2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+theorem eta55Levi_transpose : eta55Leviᵀ = eta55Levi := by
+  ext (i|i) (j|j)
+  · dsimp [eta55Levi, fromBlocks, transpose]
+    have h := congrFun (congrFun eta44_transpose i) j
+    exact h
+  · rfl
+  · rfl
+  · dsimp [eta55Levi, fromBlocks, transpose]
+    have h := congrFun (congrFun eta2_transpose i) j
+    exact h
 
 /-- $\eta_{5,5}$ is symmetric: $\eta_{5,5}^T = \eta_{5,5}$. -/
 theorem eta55_transpose : eta55ᵀ = eta55 := by
   ext i j
-  dsimp [eta55]
-  by_cases hij : i = j
-  · subst hij; simp
-  · have hji : ¬ j = i := fun h => hij h.symm
-    simp [hij, hji]
+  dsimp [eta55, eta55LeviMat10, Matrix.reindex]
+  have h := congrFun (congrFun eta55Levi_transpose (fin10Equiv i)) (fin10Equiv j)
+  exact h
 
 /-- Condition for a 10x10 matrix to be skew-adjoint with respect to $\eta_{5,5}$. -/
 def IsSO55Matrix (M : Mat10) : Prop :=
@@ -92,5 +125,12 @@ def so55LieSubalgebra : LieSubalgebra ℝ Mat10 where
   zero_mem' := isSO55_zero
   smul_mem' c {M} hM := isSO55_smul c hM
   lie_mem' {M N} hM hN := isSO55_bracket hM hN
+
+theorem derivationToSO55_mem_so55LieSubalgebra (D : Derivation) :
+    derivationToSO55 D ∈ so55LieSubalgebra := by
+  change IsSO55Matrix (derivationToSO55 D)
+  exact so44ToSO55_preserves_etaSkew
+    (canonicalDerivationFinMatrix D)
+    (canonicalDerivationFinMatrix_isEtaSkew D)
 
 end InfoGeometry.Lie.SO55MatrixSubalgebra

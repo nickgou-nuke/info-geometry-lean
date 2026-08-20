@@ -15,7 +15,11 @@ variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
 
 def leftAction (a : A) : A →ₗ[R] A := LinearMap.mulLeft R a
 
+@[simp] theorem leftAction_apply (a x : A) : leftAction (R := R) a x = a * x := rfl
+
 def rightAction (b : A) : A →ₗ[R] A := LinearMap.mulRight R b
+
+@[simp] theorem rightAction_apply (b x : A) : rightAction (R := R) b x = x * b := rfl
 
 def leftCommutant : Set (A →ₗ[R] A) :=
   {T | ∀ a : A, T.comp (leftAction a) = (leftAction a).comp T}

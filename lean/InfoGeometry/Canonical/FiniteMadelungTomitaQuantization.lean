@@ -522,28 +522,27 @@ theorem finite_spectral_divisor_readout
 
 
 theorem finite_relative_modular_bijective
-    (ρ σ : InvertibleMatrix 2) :
-    Function.Bijective (relativeModular ρ σ) := by
-  exact InfoGeometry.Canonical.OperatorialItakuraSaitoFramework.finite_relativeDelta_is_linearEquiv ρ σ
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ (Matrix (Fin 2) (Fin 2) ℂ))
+    (hD : D.HasTwoSidedInverses) :
+    Function.Bijective D.delta := by
+  exact InfoGeometry.Canonical.OperatorialItakuraSaitoFramework.finite_relativeDelta_is_linearEquiv D hD
 
 theorem finite_relative_modular_identity
-    (ρ σ : InvertibleMatrix 2) :
-    relativeModular ρ σ (1 : MatrixCarrier 2) = ρ.val * σ.inv := by
-  exact InfoGeometry.Canonical.OperatorialItakuraSaitoFramework.finite_relativeDelta_identity ρ σ
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ (Matrix (Fin 2) (Fin 2) ℂ)) :
+    D.delta 1 = D.rho * D.sigmaInv := by
+  exact InfoGeometry.Canonical.OperatorialItakuraSaitoFramework.finite_relativeDelta_identity D
 
 theorem finite_relative_modular_inverse_left
-    (ρ σ : InvertibleMatrix 2) (X : FiniteComplexCarrier) :
-    relativeModularInverse ρ σ (relativeModular ρ σ X) = X := by
-  have h := congrArg (fun T : FiniteRelativeEnd => T X)
-    (relativeModular_inverse_mul ρ σ)
-  simpa [LinearMap.comp_apply] using h
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ (Matrix (Fin 2) (Fin 2) ℂ))
+    (hD : D.HasTwoSidedInverses) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    D.deltaInv (D.delta X) = X := by
+  exact (D.deltaEquiv hD).left_inv X
 
 theorem finite_relative_modular_inverse_right
-    (ρ σ : InvertibleMatrix 2) (X : FiniteComplexCarrier) :
-    relativeModular ρ σ (relativeModularInverse ρ σ X) = X := by
-  have h := congrArg (fun T : FiniteRelativeEnd => T X)
-    (relativeModular_mul_inverse ρ σ)
-  simpa [LinearMap.comp_apply] using h
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ (Matrix (Fin 2) (Fin 2) ℂ))
+    (hD : D.HasTwoSidedInverses) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    D.delta (D.deltaInv X) = X := by
+  exact (D.deltaEquiv hD).right_inv X
 
 /-! ## Finite diagonal surprisal and direct-limit trace readout -/
 

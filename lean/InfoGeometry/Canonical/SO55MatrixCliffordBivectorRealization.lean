@@ -51,6 +51,19 @@ def v55ToVec10 (v : V55) : Fin 10 → ℝ :=
 def vec10ToV55 (v : Fin 10 → ℝ) : V55 :=
   (fun i => v ⟨i.val, by omega⟩, fun i => v ⟨i.val + 5, by omega⟩)
 
+@[simp] theorem v55ToVec10_vec10ToV55 (v : Fin 10 → ℝ) :
+    v55ToVec10 (vec10ToV55 v) = v := by
+  funext i
+  by_cases h : i.val < 5
+  · simp [v55ToVec10, vec10ToV55, h]
+  · have hi : i.val - 5 + 5 = i.val := by omega
+    simp [v55ToVec10, vec10ToV55, h, hi]
+
+@[simp] theorem vec10ToV55_v55ToVec10 (v : V55) :
+    vec10ToV55 (v55ToVec10 v) = v := by
+  rcases v with ⟨vplus, vminus⟩
+  ext i <;> simp [v55ToVec10, vec10ToV55]
+
 /-- Matrix action of Mat10 on V55. -/
 def mat10ActV55 (M : Mat10) (v : V55) : V55 :=
   vec10ToV55 (Matrix.mulVec M (v55ToVec10 v))

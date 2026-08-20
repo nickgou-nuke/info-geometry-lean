@@ -1,25 +1,3 @@
-/-
-=============================================================================
-                  InfoGeometry: Master Registry Module
-=============================================================================
-
-The Dual Exponential Architecture:
-A Machine-Checked Mathematical Foundation for Spacetime Geometry,
-Topological Superconductivity, and Quantum Modular Thermodynamics.
-
-Exposing the 6 Master Theorems:
-I. DYNAMIC CORE (The Engine of Time)
-   1. master_dual_flow_commutator : [D, ad_K](X) = ad_{D(K)}(X)
-   2. master_thermal_time_kernel  : ad_K = 0 ↔ K ∈ Z(A)
-   3. master_inn_is_lie_ideal     : ad_K is an exact derivation
-II. KINEMATIC CORE (The Superselection Rules)
-   4. master_trifold_completeness : K = α • I + β • Γ + K₀
-   5. master_projector_orthogonality : Tr(K₀) = 0 ∧ STr(K₀) = 0
-   6. master_pure_shape_criterion : α = 0 ∧ β = 0 → K = K₀
-
-Zero Custom Axioms • Zero Sorries • Fully Native Mathlib 4
--/
-
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Data.Complex.Basic
@@ -28,14 +6,21 @@ import Mathlib.Tactic
 
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
+import InfoGeometry.QuantumGeometry.Projective.Basic
+import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Canonical.CompleteUnifiedBundle
+import InfoGeometry.QuantumGeometry.TensorBridge
 
 noncomputable section
+
+open scoped InnerProductSpace
+open InfoGeometry.QuantumGeometry.Projective
 
 namespace InfoGeometry.MasterRegistry
 
 open InfoGeometry.EndToEnd
 open InfoGeometry.Modular
+open InfoGeometry.Canonical.CompleteUnifiedBundle
 
 /-!
 =============================================================================
@@ -132,5 +117,57 @@ theorem master_pure_shape_criterion (two_n_inv : R) (A B : SubMat)
   exact h_rec
 
 end KinematicCore
+
+/-!
+=============================================================================
+III. GEOMETRIC & QUANTUM UNCERTAINTY CORE
+=============================================================================
+-/
+
+section UncertaintyCore
+
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+
+local notation "EndH" => H →L[ℂ] H
+
+/-- 
+  MASTER THEOREM 7 (QGT Holographic Pythagorean Identity):
+  The modulus-squared of the Quantum Geometric Tensor decomposes into the
+  orthogonal sum of the Fisher metric and the Berry curvature:
+    |Q_ψ(X, Y)|² = g_ψ(X, Y)² + (1/4) * Ω_ψ(X, Y)²
+-/
+theorem master_qgt_pythagorean_norm (ψ : NormalizedState H) (X Y : EndH) :
+    Complex.normSq (QGT ψ X Y) =
+      (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
+  InfoGeometry.QuantumGeometry.TensorBridge.QGT_normSq_decomposition ψ X Y
+
+/-- 
+  MASTER THEOREM 8 (Berry Curvature is the Commutator Expectation):
+  For skew-adjoint geometric derivations (X† = -X, Y† = -Y), the Berry
+  curvature equals the expectation value of the Lie bracket:
+    Ω_ψ(X, Y) • i = ⟪ψ, [X, Y] ψ⟫_ℂ
+-/
+theorem master_berry_commutator_identity (ψ : NormalizedState H) (X Y : EndH)
+    (hX : ContinuousLinearMap.adjoint X = -X)
+    (hY : ContinuousLinearMap.adjoint Y = -Y) :
+    (berryCurvature ψ X Y : ℂ) * Complex.I =
+      ⟪ψ.vec, (InfoGeometry.QuantumGeometry.Projective.opCommutator X Y ψ.vec)⟫_ℂ :=
+  InfoGeometry.QuantumGeometry.TensorBridge.berryCurvature_eq_commutator_expectation ψ X Y hX hY
+
+/-- 
+  MASTER THEOREM 9 (Universal Robertson–Schrödinger Uncertainty):
+  The product of the metric variances is strictly bounded below by the
+  expectation value of the Lie bracket of geometric derivations:
+    g_ψ(X, X) * g_ψ(Y, Y) ≥ (1/4) * |⟪ψ, [X, Y] ψ⟫|²
+-/
+theorem master_robertson_schrodinger_uncertainty (ψ : NormalizedState H) (X Y : EndH)
+    (hX : ContinuousLinearMap.adjoint X = -X)
+    (hY : ContinuousLinearMap.adjoint Y = -Y) :
+    (fubiniStudyMetric ψ X X) * (fubiniStudyMetric ψ Y Y) ≥
+      (1 / 4 : ℝ) * Complex.normSq
+        (⟪ψ.vec, (InfoGeometry.QuantumGeometry.Projective.opCommutator X Y ψ.vec)⟫_ℂ) :=
+  (InfoGeometry.QuantumGeometry.TensorBridge.robertson_schrodinger_full_uncertainty ψ X Y hX hY).2
+
+end UncertaintyCore
 
 end InfoGeometry.MasterRegistry

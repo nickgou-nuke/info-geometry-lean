@@ -222,6 +222,54 @@ def fiveGradeRecomposeLinear (e : R) :
     fiveGradeComponentLinear, fiveGradeProjector,
     LinearMap.add_apply] using h
 
+private lemma decompose_recompose_component
+    {e : R} (he : e * e * e = e)
+    (k : FiveGrade)
+    (vNegTwo : fiveGradeRange e .negTwo)
+    (vNegOne : fiveGradeRange e .negOne)
+    (vZero : fiveGradeRange e .zero)
+    (vPosOne : fiveGradeRange e .posOne)
+    (vPosTwo : fiveGradeRange e .posTwo) :
+    fiveGradeProjector e k (vNegTwo.1 + vNegOne.1 + vZero.1 + vPosOne.1 + vPosTwo.1) =
+      (match k with
+       | .negTwo => vNegTwo.1
+       | .negOne => vNegOne.1
+       | .zero => vZero.1
+       | .posOne => vPosOne.1
+       | .posTwo => vPosTwo.1) := by
+  rw [map_add, map_add, map_add, map_add]
+  cases k
+  · rw [fiveGradeProjector_apply_range_self he,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vZero,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosTwo]
+    simp
+  · rw [fiveGradeProjector_apply_range_self he,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegTwo,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vZero,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosTwo]
+    simp
+  · rw [fiveGradeProjector_apply_range_self he,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegTwo,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosTwo]
+    simp
+  · rw [fiveGradeProjector_apply_range_self he,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegTwo,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vZero,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosTwo]
+    simp
+  · rw [fiveGradeProjector_apply_range_self he,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegTwo,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vNegOne,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vZero,
+        fiveGradeProjector_apply_range_eq_zero_of_ne he (by decide) vPosOne]
+    simp
+
 /-- Decomposing a recomposed coordinate tuple returns the tuple. -/
 @[simp] theorem fiveGrade_decompose_recompose
     {e : R} (he : e * e * e = e)
@@ -229,37 +277,13 @@ def fiveGradeRecomposeLinear (e : R) :
     fiveGradeDecomposeLinear e
       (fiveGradeRecomposeLinear e v) = v := by
   rcases v with ⟨⟨⟨⟨vNegTwo, vNegOne⟩, vZero⟩, vPosOne⟩, vPosTwo⟩
-  ext
-  · apply Subtype.ext
-    simp only [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear,
-      fiveGradeComponentLinear, LinearMap.coe_mk, AddHom.coe_mk,
-      map_add, fiveGradeProjector_apply_range_self he,
-      fiveGradeProjector_apply_range_eq_zero_of_ne he,
-      add_zero, zero_add]
-  · apply Subtype.ext
-    simp only [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear,
-      fiveGradeComponentLinear, LinearMap.coe_mk, AddHom.coe_mk,
-      map_add, fiveGradeProjector_apply_range_self he,
-      fiveGradeProjector_apply_range_eq_zero_of_ne he,
-      add_zero, zero_add]
-  · apply Subtype.ext
-    simp only [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear,
-      fiveGradeComponentLinear, LinearMap.coe_mk, AddHom.coe_mk,
-      map_add, fiveGradeProjector_apply_range_self he,
-      fiveGradeProjector_apply_range_eq_zero_of_ne he,
-      add_zero, zero_add]
-  · apply Subtype.ext
-    simp only [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear,
-      fiveGradeComponentLinear, LinearMap.coe_mk, AddHom.coe_mk,
-      map_add, fiveGradeProjector_apply_range_self he,
-      fiveGradeProjector_apply_range_eq_zero_of_ne he,
-      add_zero, zero_add]
-  · apply Subtype.ext
-    simp only [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear,
-      fiveGradeComponentLinear, LinearMap.coe_mk, AddHom.coe_mk,
-      map_add, fiveGradeProjector_apply_range_self he,
-      fiveGradeProjector_apply_range_eq_zero_of_ne he,
-      add_zero, zero_add]
+  dsimp [fiveGradeDecomposeLinear, fiveGradeRecomposeLinear, fiveGradeComponentLinear]
+  refine Prod.ext (Prod.ext (Prod.ext (Prod.ext ?_ ?_) ?_) ?_) ?_
+  · exact Subtype.ext (decompose_recompose_component he .negTwo vNegTwo vNegOne vZero vPosOne vPosTwo)
+  · exact Subtype.ext (decompose_recompose_component he .negOne vNegTwo vNegOne vZero vPosOne vPosTwo)
+  · exact Subtype.ext (decompose_recompose_component he .zero vNegTwo vNegOne vZero vPosOne vPosTwo)
+  · exact Subtype.ext (decompose_recompose_component he .posOne vNegTwo vNegOne vZero vPosOne vPosTwo)
+  · exact Subtype.ext (decompose_recompose_component he .posTwo vNegTwo vNegOne vZero vPosOne vPosTwo)
 
 /--
 The carrier is linearly equivalent to the product of its five grade ranges.
@@ -289,104 +313,6 @@ def tripotentFiveGradeLinearEquiv
         (v.1.2 : R)) +
         (v.2 : R)) :=
   rfl
-
-/-! ## Conditional packaging into the repository TKK five-grading socket -/
-
-section LiePackaging
-
-/--
-The bracket closure laws required by the repository's
-`SuperTKKConformalClosure.FiveGrading` structure.
-
-They are kept explicit here: the linear projector decomposition alone does not
-silently assert a TKK identification.
--/
-structure TripotentFiveGradeBracketLaws
-    (e : R) where
-  bracket_neg_one_pos_one :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .negOne →
-      Y ∈ fiveGradeRange e .posOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .zero
-
-  bracket_zero_zero :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .zero →
-      Y ∈ fiveGradeRange e .zero →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .zero
-
-  bracket_pos_one_pos_one :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .posOne →
-      Y ∈ fiveGradeRange e .posOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo
-
-  bracket_neg_one_neg_one :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .negOne →
-      Y ∈ fiveGradeRange e .negOne →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo
-
-  bracket_zero_pos_two :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .zero →
-      Y ∈ fiveGradeRange e .posTwo →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .posTwo
-
-  bracket_zero_neg_two :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .zero →
-      Y ∈ fiveGradeRange e .negTwo →
-      ⁅X, Y⁆ ∈ fiveGradeRange e .negTwo
-
-  bracket_pos_two_pos_two_zero :
-    ∀ X Y : R,
-      X ∈ fiveGradeRange e .posTwo →
-      Y ∈ fiveGradeRange e .posTwo →
-      ⁅X, Y⁆ = 0
-
-/--
-Package the direct decomposition and supplied bracket laws into the native
-repository five-grading structure.
--/
-def tripotentFiveGrading
-    (e : R) (he : e * e * e = e)
-    (H : TripotentFiveGradeBracketLaws e) :
-    InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure.FiveGrading R where
-  gNegTwo := fiveGradeRange e .negTwo
-  gNegOne := fiveGradeRange e .negOne
-  gZero := fiveGradeRange e .zero
-  gPosOne := fiveGradeRange e .posOne
-  gPosTwo := fiveGradeRange e .posTwo
-
-  decomposition := tripotentFiveGradeLinearEquiv e he
-
-  decomposition_symm_apply := by
-    intro v
-    rfl
-
-  bracket_neg_one_pos_one :=
-    H.bracket_neg_one_pos_one
-
-  bracket_zero_zero :=
-    H.bracket_zero_zero
-
-  bracket_pos_one_pos_one :=
-    H.bracket_pos_one_pos_one
-
-  bracket_neg_one_neg_one :=
-    H.bracket_neg_one_neg_one
-
-  bracket_zero_pos_two :=
-    H.bracket_zero_pos_two
-
-  bracket_zero_neg_two :=
-    H.bracket_zero_neg_two
-
-  bracket_pos_two_pos_two_zero :=
-    H.bracket_pos_two_pos_two_zero
-
-end LiePackaging
 
 end
 

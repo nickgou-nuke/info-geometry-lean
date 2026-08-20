@@ -214,17 +214,13 @@ theorem oddSheetProjector_idempotent (p : SheetPair ℝ) :
 theorem evenSheetProjector_oddSheetProjector (p : SheetPair ℝ) :
     evenSheetProjector (oddSheetProjector p) = 0 := by
   rcases p with ⟨x, y⟩
-  ext
-  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
-  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
+  ext <;> dsimp [evenSheetProjector, oddSheetProjector] <;> ring
 
 /-- The odd and even projectors are mutually annihilating. -/
 theorem oddSheetProjector_evenSheetProjector (p : SheetPair ℝ) :
     oddSheetProjector (evenSheetProjector p) = 0 := by
   rcases p with ⟨x, y⟩
-  ext
-  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
-  · dsimp [evenSheetProjector, oddSheetProjector]; simp; ring
+  ext <;> dsimp [evenSheetProjector, oddSheetProjector] <;> ring
 
 /-- Sheet exchange acts by eigenvalue `+1` on the even sector. -/
 theorem sheetSwap_even (p : SheetPair ℝ) :

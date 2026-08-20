@@ -37,10 +37,12 @@ variable (D : Derivation A)
 /-- THEOREM 1: Every derivation strictly annihilates the identity. -/
 @[simp]
 theorem map_one : D 1 = 0 := by
-  have h := D.leibniz 1 1
-  rw [mul_one, one_mul] at h
-  have h_eq : D 1 = D 1 + D 1 := h.symm
-  exact self_eq_add_self.mp h_eq.symm
+  have h : D 1 = D 1 + D 1 := by
+    calc D 1 = D (1 * 1) := by rw [mul_one]
+    _ = D 1 * 1 + 1 * D 1 := D.leibniz 1 1
+    _ = D 1 + D 1 := by rw [mul_one, one_mul]
+  have h0 : D 1 + 0 = D 1 + D 1 := by rw [add_zero, h]
+  exact add_left_cancel h0
 
 end Derivation
 
@@ -68,7 +70,7 @@ theorem thermal_time_kernel (K : A) :
   · intro h X
     have hX := h X
     dsimp [adK] at hX
-    linear_combination hX
+    exact sub_eq_zero.mp hX
   · intro h X
     dsimp [adK]
     rw [h X, sub_self]
@@ -85,7 +87,7 @@ local notation "EndH" => H →L[ℂ] H
 
 /-- Quantum Geometric Tensor (QGT). -/
 def QGT (ψ : H) (X Y : EndH) : ℂ :=
-  inner (X ψ) (Y ψ) - inner (X ψ) ψ * inner ψ (Y ψ)
+  inner (𝕜 := ℂ) (X ψ) (Y ψ) - inner (𝕜 := ℂ) (X ψ) ψ * inner (𝕜 := ℂ) ψ (Y ψ)
 
 /-- Quantum Fisher Information / Fubini-Study Metric. -/
 def fisherMetric (ψ : H) (X Y : EndH) : ℝ :=
@@ -142,14 +144,14 @@ theorem robertson_schrodinger_qgt_bound
 theorem geometric_commutator_uncertainty_bound
     (ψ : H) (X Y : EndH)
     (h_cauchy : (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ Complex.normSq (QGT ψ X Y))
-    (h_comm_curv : (berryCurvature ψ X Y : ℂ) * I = inner ψ (opCommutator X Y ψ)) :
-    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * Complex.normSq (inner ψ (opCommutator X Y ψ)) := by
+    (h_comm_curv : (berryCurvature ψ X Y : ℂ) * I = inner (𝕜 := ℂ) ψ (opCommutator X Y ψ)) :
+    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * Complex.normSq (inner (𝕜 := ℂ) ψ (opCommutator X Y ψ)) := by
   have h_bound := robertson_schrodinger_qgt_bound ψ X Y h_cauchy
   have h_normSq_comm :
-    Complex.normSq (inner ψ (opCommutator X Y ψ)) = (berryCurvature ψ X Y) ^ 2 := by
+    Complex.normSq (inner (𝕜 := ℂ) ψ (opCommutator X Y ψ)) = (berryCurvature ψ X Y) ^ 2 := by
     rw [← h_comm_curv]
     rw [Complex.normSq_mul, Complex.normSq_I, mul_one]
-    exact Complex.normSq_ofReal (berryCurvature ψ X Y)
+    simp [sq]
   rw [h_normSq_comm]
   exact h_bound
 
@@ -189,8 +191,7 @@ theorem kms_zero_beta_is_trace (ω : QuantumState A) (D : Derivation A)
     (h_kms : IsInfinitesimalKMS ω D 0) : ∀ X Y : A, ω (X * Y) = ω (Y * X) := by
   intro X Y
   have h := h_kms X Y
-  have h_zero_beta : I * (0 : ℂ) * ω (X * D Y) = 0 := by ring
-  rw [h_zero_beta] at h
+  simp only [Real.cast_zero, mul_zero, zero_mul] at h
   exact sub_eq_zero.mp h.symm
 
 /-- 

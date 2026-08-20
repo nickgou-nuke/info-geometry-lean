@@ -141,6 +141,8 @@ import InfoGeometry.QuantumGeometry.CompleteUnifiedBundle
 import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.Modular.Classification
 import InfoGeometry.Modular.ExactSequence
+import InfoGeometry.Modular.DualExponentialCommutatorBridge
+import InfoGeometry.Modular.DerivationShortExactSequence
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.MasterRegistry
 

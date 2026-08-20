@@ -163,6 +163,35 @@ theorem firstOrderExp_map_one
     firstOrderExp t D one = one := by
   rw [firstOrderExp_apply, hD_one, smul_zero, add_zero]
 
+/-- The square-zero first-order flow transports both orientations of
+orthogonality.  No associativity of `mul` is used. -/
+theorem firstOrderExp_map_two_sided_orthogonal
+    (t : R) (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hDmul : ∀ x y, mul (D x) (D y) = 0)
+    {e f : A}
+    (hef : mul e f = 0)
+    (hfe : mul f e = 0) :
+    mul (firstOrderExp t D e) (firstOrderExp t D f) = 0 ∧
+      mul (firstOrderExp t D f) (firstOrderExp t D e) = 0 := by
+  constructor
+  · rw [← firstOrderExp_map_mul mul t D hD hDmul e f, hef]
+    simp
+  · rw [← firstOrderExp_map_mul mul t D hD hDmul f e, hfe]
+    simp
+
+/-- The square-zero first-order flow transports idempotents. -/
+theorem firstOrderExp_map_idempotent
+    (t : R) (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hDmul : ∀ x y, mul (D x) (D y) = 0)
+    {e : A}
+    (he : mul e e = e) :
+    mul (firstOrderExp t D e) (firstOrderExp t D e) =
+      firstOrderExp t D e := by
+  rw [← firstOrderExp_map_mul mul t D hD hDmul e e, he]
+
+
 /-- A vector fixed by the generator is fixed by the first-order flow. -/
 theorem firstOrderExp_fixed_of_derivation_eq_zero
     (t : R) (D : A →ₗ[R] A) (x : A) (hx : D x = 0) :
@@ -534,6 +563,32 @@ theorem invFun_map_one
     F.invFun one = one := by
   apply F.injective
   simp only [F.right_inv', F.map_one]
+
+@[simp] theorem invFun_map_zero
+    (F : NonAssocAlgEquiv mul one) :
+    F.invFun 0 = 0 := by
+  apply F.injective
+  simp only [F.right_inv', F.map_zero]
+
+theorem invFun_map_orthogonal
+    (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hef : mul e f = 0) :
+    mul (F.invFun e) (F.invFun f) = 0 := by
+  rw [← F.invFun_map_mul, hef, F.invFun_map_zero]
+
+theorem invFun_map_orthogonal_rev
+    (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hfe : mul f e = 0) :
+    mul (F.invFun f) (F.invFun e) = 0 := by
+  rw [← F.invFun_map_mul, hfe, F.invFun_map_zero]
+
+theorem invFun_map_two_sided_orthogonal
+    (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hef : mul e f = 0) (hfe : mul f e = 0) :
+    mul (F.invFun e) (F.invFun f) = 0 ∧
+      mul (F.invFun f) (F.invFun e) = 0 := by
+  exact ⟨invFun_map_orthogonal (mul := mul) (one := one) F hef,
+    invFun_map_orthogonal_rev (mul := mul) (one := one) F hfe⟩
 
 theorem map_idempotent
     (F : NonAssocAlgEquiv mul one) {e : A}

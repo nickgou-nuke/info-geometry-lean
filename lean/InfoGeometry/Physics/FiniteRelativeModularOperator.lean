@@ -173,13 +173,13 @@ def deltaEquiv
     (D : RelativeModularData R A)
     (hD : D.HasTwoSidedInverses) (X : A) :
     D.deltaEquiv hD X = D.rho * X * D.sigmaInv := by
-  simpa [deltaEquiv] using D.delta_apply X
+  simp [deltaEquiv, D.delta_apply X]
 
 @[simp] theorem deltaEquiv_symm_apply
     (D : RelativeModularData R A)
     (hD : D.HasTwoSidedInverses) (X : A) :
     (D.deltaEquiv hD).symm X = D.rhoInv * X * D.sigma := by
-  simpa [deltaEquiv] using D.deltaInv_apply X
+  simp [deltaEquiv, D.deltaInv_apply X]
 
 /-- Re-export of the finite bimodule formula. -/
 theorem delta_bimodule_formula
@@ -258,7 +258,11 @@ theorem diagonalRelativeModularData_hasTwoSidedInverses
     (hp : ∀ i, p i ≠ 0)
     (hq : ∀ i, q i ≠ 0) :
     (diagonalRelativeModularData p q).HasTwoSidedInverses := by
-  refine ⟨?_, ?_, ?_, ?_⟩
+  refine
+    { rhoInv_mul_rho := ?_
+      rho_mul_rhoInv := ?_
+      sigmaInv_mul_sigma := ?_
+      sigma_mul_sigmaInv := ?_ }
   all_goals
     ext i j
     by_cases hij : i = j

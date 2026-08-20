@@ -34,9 +34,42 @@ theorem expectation_add (ρ A B : Mat) :
   dsimp [expectation]
   rw [mul_add, Matrix.trace_add]
 
+@[simp]
+theorem expectation_zero (ρ : Mat) : expectation ρ 0 = 0 := by
+  dsimp [expectation]
+  simp
+
+theorem expectation_smul (ρ A : Mat) (r : R) :
+    expectation ρ (r • A) = r • expectation ρ A := by
+  dsimp [expectation]
+  rw [Matrix.mul_smul, Matrix.trace_smul]
+  simp only [smul_eq_mul]
+
+theorem expectation_sub (ρ A B : Mat) :
+    expectation ρ (A - B) = expectation ρ A - expectation ρ B := by
+  simp [expectation, sub_eq_add_neg]
+
 /-- The Modular Automorphism: σ_ρ(B) = ρ * B * ρ⁻¹ for an invertible density matrix ρ. -/
 def modularAutomorphism (ρ ρ_inv B : Mat) : Mat :=
   ρ * B * ρ_inv
+
+theorem modularAutomorphism_add (ρ ρ_inv A B : Mat) :
+    modularAutomorphism ρ ρ_inv (A + B) =
+      modularAutomorphism ρ ρ_inv A + modularAutomorphism ρ ρ_inv B := by
+  dsimp [modularAutomorphism]
+  rw [mul_add, add_mul]
+
+theorem modularAutomorphism_smul (ρ ρ_inv A : Mat) (r : R) :
+    modularAutomorphism ρ ρ_inv (r • A) =
+      r • modularAutomorphism ρ ρ_inv A := by
+  dsimp [modularAutomorphism]
+  rw [Matrix.mul_smul, smul_mul_assoc]
+
+@[simp]
+theorem modularAutomorphism_zero (ρ ρ_inv : Mat) :
+    modularAutomorphism ρ ρ_inv 0 = 0 := by
+  dsimp [modularAutomorphism]
+  simp
 
 /--
   MASTER THEOREM: The Finite KMS Modular Condition:

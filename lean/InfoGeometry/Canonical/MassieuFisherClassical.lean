@@ -40,6 +40,11 @@ lemma chargeCovariance_diag_eq_chargeVariance
   ext x
   ring
 
+theorem fisherMatrix_diag_eq_chargeVariance
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2) :
+    FisherMatrix D beta i i = souriauChargeVariance D beta i := by
+  exact chargeCovariance_diag_eq_chargeVariance D beta i
+
 /-- THEOREM 1: Massieu Hessian = Charge Covariance (diagonal case) -/
 theorem hessian_diag_eq_cov
     (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2) :
@@ -245,6 +250,15 @@ theorem fisher_pos_def_of_separating
         sq_pos_of_ne_zero hy
       exact mul_pos hw_pos hsq_pos
   exact Finset.sum_pos' h_nonneg h_exists_pos
+
+theorem fisherMatrix_symmetric
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
+    Matrix.transpose (FisherMatrix D beta) = FisherMatrix D beta := by
+  ext i j
+  dsimp [FisherMatrix, chargeCovariance, Matrix.transpose_apply]
+  apply Finset.sum_congr rfl
+  intro x hx
+  ring
 
 theorem massieu_fisher_classical_master
     (D : CartanSouriauDatum State) (beta v : Fin 2 → ℝ) (i : Fin 2)

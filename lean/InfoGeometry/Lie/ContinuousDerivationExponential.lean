@@ -649,9 +649,12 @@ noncomputable def flowLinearEquivGroupHom
     Multiplicative ℝ →* (A ≃ₗ[ℝ] A) where
   toFun τ := flowLinearEquiv D τ.toAdd
   map_one' := by
-    simp using flowLinearEquiv_zero D
+    change flowLinearEquiv D 0 = (1 : A ≃ₗ[ℝ] A)
+    exact flowLinearEquiv_zero D
   map_mul' σ τ := by
-    simp using flowLinearEquiv_add D σ.toAdd τ.toAdd
+    change flowLinearEquiv D (σ.toAdd + τ.toAdd) =
+      flowLinearEquiv D σ.toAdd * flowLinearEquiv D τ.toAdd
+    exact flowLinearEquiv_add D σ.toAdd τ.toAdd
 
 @[simp]
 theorem flowLinearEquivGroupHom_apply
@@ -674,11 +677,9 @@ theorem flowLinearEquivGroupHom_add
     flowLinearEquivGroupHom D (Multiplicative.ofAdd (s + t)) =
       flowLinearEquivGroupHom D (Multiplicative.ofAdd s) *
         flowLinearEquivGroupHom D (Multiplicative.ofAdd t) := by
-  simp using
-    map_mul
-      (flowLinearEquivGroupHom D)
-      (Multiplicative.ofAdd s)
-      (Multiplicative.ofAdd t)
+  change flowLinearEquiv D (s + t) =
+    flowLinearEquiv D s * flowLinearEquiv D t
+  exact flowLinearEquiv_add D s t
 
 /-- Negative time maps to the inverse linear equivalence. -/
 @[simp]
@@ -687,10 +688,8 @@ theorem flowLinearEquivGroupHom_neg
     (t : ℝ) :
     flowLinearEquivGroupHom D (Multiplicative.ofAdd (-t)) =
       (flowLinearEquivGroupHom D (Multiplicative.ofAdd t))⁻¹ := by
-  simp using
-    map_inv
-      (flowLinearEquivGroupHom D)
-      (Multiplicative.ofAdd t)
+  change flowLinearEquiv D (-t) = (flowLinearEquiv D t)⁻¹
+  exact flowLinearEquiv_neg_eq_symm D t
 
 /-- The infinitesimal generator of the automorphism flow is D. -/
 theorem deriv_flow_at_zero
@@ -751,6 +750,26 @@ theorem flowLinearEquiv_preserves_central
     simpa using h.symm
   rw [hzflow] at hmap
   exact hmap
+
+/-! ## Transport of commuting pairs -/
+
+/-- The derivation flow preserves commutation relations. -/
+theorem flowLinearEquiv_preserves_commute
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (x y : A)
+    (hxy : mul x y = mul y x)
+    (t : ℝ) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) =
+      mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) := by
+  have hmap := flowLinearEquiv_map_commutator mul D hD t x y
+  rw [hxy] at hmap
+  have hzero :
+      mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) -
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) = 0 := by
+    simpa using hmap.symm
+  exact sub_eq_zero.mp hzero
 
 /-!
 ## Transport of nonassociative algebraic structure

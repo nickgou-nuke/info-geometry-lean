@@ -356,7 +356,7 @@ theorem expTransportAlgEquiv_zero
     {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
       [CompleteSpace A]
     (X : A) :
-    expTransportAlgEquiv X 0 = AlgEquiv.refl ℝ A := by
+    expTransportAlgEquiv X 0 = (AlgEquiv.refl : A ≃ₐ[ℝ] A) := by
   ext A₀
   simp
 
@@ -366,7 +366,7 @@ theorem expTransportAlgEquiv_neg_trans
       [CompleteSpace A]
     (X : A) (t : ℝ) :
     (expTransportAlgEquiv X (-t)).trans (expTransportAlgEquiv X t) =
-      AlgEquiv.refl ℝ A := by
+      (AlgEquiv.refl : A ≃ₐ[ℝ] A) := by
   ext A₀
   exact expTransport_neg_left X A₀ t
 

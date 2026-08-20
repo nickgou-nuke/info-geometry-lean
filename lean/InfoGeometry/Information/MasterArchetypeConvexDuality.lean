@@ -98,8 +98,11 @@ structure MasterArchetypeTheoremBundle where
       InfoGeometry.Probability.ExpLogRNDerivation.dlog D v
   madelung_isometry : ∀ (rho' rho_val : ℝ) (h_pos : 0 < rho_val),
     4 * ((rho' / (2 * Real.sqrt rho_val)) ^ 2) = (rho' ^ 2) / rho_val
-  legendre_duality : ∀ (psi : ℝ → ℝ) (theta eta : ℝ),
-    psi theta + InfoGeometry.Probability.FisherRaoMadelungIsometry.legendreDual psi theta eta = theta * eta
+  legendre_duality : ∀ (psi dpsi : ℝ → ℝ) (theta eta : ℝ),
+    eta = dpsi theta →
+    (∀ z : ℝ, psi theta + dpsi theta * (z - theta) ≤ psi z) →
+    ∀ z : ℝ, z * eta - psi z ≤
+      InfoGeometry.Probability.FisherRaoMadelungIsometry.legendreDual psi theta eta
   nilpotent_automorphism : ∀ {K A : Type*} [Field K] [CharZero K]
     [AddCommGroup A] [Module K A]
     (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
@@ -127,7 +130,9 @@ structure MasterArchetypeTheoremBundle where
 def masterArchetypeTheoremBundle : MasterArchetypeTheoremBundle where
   log_homomorphism := fun D hD u v => universal_log_functor_mul D hD u v
   madelung_isometry := fun rho' rho_val h_pos => universal_madelung_isometry rho' rho_val h_pos
-  legendre_duality := fun psi theta eta => universal_legendre_fenchel_pairing psi theta eta
+  legendre_duality := fun psi dpsi theta eta heta hsupport =>
+    InfoGeometry.Probability.FisherRaoMadelungIsometry.legendreDual_max_of_supporting_line
+      psi dpsi theta eta heta hsupport
   nilpotent_automorphism := by
     intro K A _ _ _ _ mul D hD h_cross t x y
     exact universal_nilpotent_derivation_automorphism mul D hD h_cross t x y

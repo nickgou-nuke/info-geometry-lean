@@ -3,6 +3,7 @@ import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Tactic
+import InfoGeometry.NCG.NoncommutativeCyclicCocycle
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false

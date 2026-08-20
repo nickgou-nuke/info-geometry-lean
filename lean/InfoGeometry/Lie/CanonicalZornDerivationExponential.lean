@@ -206,12 +206,15 @@ noncomputable def coordFlow (D : EndCZ) (t : ℝ) : V8 →L[ℝ] V8 :=
 @[simp]
 theorem coordFlow_zero (D : EndCZ) :
     coordFlow D 0 = 1 := by
-  simp [coordFlow]
+  dsimp [coordFlow]
+  exact flow_zero (coordEnd D)
 
 @[simp]
 theorem coordFlow_neg_generator (D : EndCZ) (t : ℝ) :
     coordFlow (-D) t = coordFlow D (-t) := by
-  simp [coordFlow, coordEnd_neg]
+  dsimp [coordFlow]
+  rw [coordEnd_neg]
+  exact flow_neg_generator (coordEnd D) t
 
 theorem coordFlow_add_apply (D : EndCZ) (s t : ℝ) (u : V8) :
     coordFlow D (s + t) u = coordFlow D s (coordFlow D t u) := by
@@ -295,8 +298,6 @@ theorem zornFlowLinearEquiv_neg_generator (D : EndCZ) (t : ℝ) :
   rw [coordLE_zornFlowLinearEquiv, coordLE_zornFlowLinearEquiv, coordEnd_neg]
   have h := flow_neg_generator (coordEnd D) t
   rw [h]
-  <;> simp [coordLE_zornFlowLinearEquiv]
-  <;> rfl
 
 @[simp]
 theorem zornFlowLinearEquiv_neg_apply (D : EndCZ) (t : ℝ) (X : CZ) :

@@ -138,4 +138,33 @@ theorem legendre_fenchel_identity (psi : ℝ → ℝ) (theta : ℝ) (eta : ℝ) 
   dsimp [legendreDual]
   ring
 
+/-- A supporting line makes the Legendre dual potential maximal at its
+    supporting parameter.  This is the finite one-dimensional
+    Legendre--Fenchel inequality, stated without assuming differentiability
+    or convexity beyond the supplied supporting-line hypothesis. -/
+theorem legendreDual_max_of_supporting_line
+    (psi dpsi : ℝ → ℝ) (theta eta : ℝ)
+    (heta : eta = dpsi theta)
+    (hsupport : ∀ z : ℝ,
+      psi theta + dpsi theta * (z - theta) ≤ psi z) :
+    ∀ z : ℝ, z * eta - psi z ≤ legendreDual psi theta eta := by
+  intro z
+  dsimp [legendreDual]
+  rw [heta]
+  linarith [hsupport z]
+
+/-- Strict supporting lines give strict dual optimality away from the
+    supporting parameter. -/
+theorem legendreDual_strict_max_of_strict_supporting_line
+    (psi dpsi : ℝ → ℝ) (theta eta : ℝ)
+    (heta : eta = dpsi theta)
+    (hstrict : ∀ z : ℝ, z ≠ theta →
+      psi theta + dpsi theta * (z - theta) < psi z) :
+    ∀ z : ℝ, z ≠ theta →
+      z * eta - psi z < legendreDual psi theta eta := by
+  intro z hne
+  dsimp [legendreDual]
+  rw [heta]
+  linarith [hstrict z hne]
+
 end InfoGeometry.Probability.FisherRaoMadelungIsometry

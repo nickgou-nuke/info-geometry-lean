@@ -127,18 +127,40 @@ PART 3: Hessian-of-Potential = QGT Theorem
 =============================================================================
 -/
 
-/-- 
-  THEOREM: Hessian of Massieu Potential is the Quantum Fisher / Fubini-Study Metric.
-  The second variation (covariance) of the statistical Massieu potential equals
-  the real symmetric part of the Quantum Geometric Tensor (QGT).
+/-!
+  The Massieu Hessian is first identified with the Fisher--Souriau metric.
+  The QGT identification is a separate soldering statement below: it requires
+  an explicit realization of the Fisher--Souriau metric by a projective state.
 -/
-theorem hessian_potential_eq_qgt_metric
+theorem massieu_hessian_eq_fisher_souriau_metric
     {State : Type*} [Fintype State] [Nonempty State]
     (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2) :
     deriv (fun t => deriv
       (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
       fisherSouriauMatrix D beta i i :=
   fisherSouriauMatrix_eq_massieuHessian D beta i
+
+/-!
+  Once a projective realization of the Fisher--Souriau metric is supplied,
+  the same Hessian is the real part of the QGT.  The hypothesis is explicit:
+  no identification between unrelated statistical and Hilbert-space data is
+  inferred by definition.
+-/
+theorem hessian_potential_eq_qgt_metric
+    {State : Type*} [Fintype State] [Nonempty State]
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2)
+    (ψ : NormalizedState H) (X : EndH)
+    (hQ : fubiniStudyMetric ψ X X = fisherSouriauMatrix D beta i i) :
+    deriv (fun t => deriv
+      (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
+      (QGT ψ X X).re := by
+  calc
+    deriv (fun t => deriv
+        (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
+        fisherSouriauMatrix D beta i i :=
+      massieu_hessian_eq_fisher_souriau_metric D beta i
+    _ = fubiniStudyMetric ψ X X := hQ.symm
+    _ = (QGT ψ X X).re := rfl
 
 /-!
 =============================================================================

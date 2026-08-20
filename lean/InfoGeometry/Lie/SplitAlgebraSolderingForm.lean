@@ -51,6 +51,12 @@ theorem canonicalSoldering_norm_pullback (X : SplitCarrier) :
     circularPeirceBasis_coordinate_eq_equivFun]
   rfl
 
+/-! The soldering form identifies the split null cone with the coordinate
+    null cone.  This is the zero-locus form of the quadratic pullback above. -/
+theorem canonicalSoldering_null_cone (X : SplitCarrier) :
+    detZ X = 0 ↔ circularNormQuad (canonicalSoldering X) = 0 := by
+  rw [← canonicalSoldering_norm_pullback]
+
 theorem canonicalSoldering_flow_equivariant (t : ℝ) (X : SplitCarrier) :
     canonicalSoldering (hyperbolicFlowZorn t X) =
       hyperbolicFlowCoordinate t (canonicalSoldering X) := by
@@ -62,5 +68,17 @@ theorem canonicalSoldering_flow_preserves_norm (t : ℝ) (X : SplitCarrier) :
       circularNormQuad (canonicalSoldering X) := by
   rw [canonicalSoldering_flow_equivariant]
   exact circularNormQuad_hyperbolicFlow t (canonicalSoldering X)
+
+theorem canonicalSoldering_flow_preserves_null_cone (t : ℝ) (X : SplitCarrier) :
+    detZ (hyperbolicFlowZorn t X) = 0 ↔ detZ X = 0 := by
+  constructor
+  · intro h
+    apply (canonicalSoldering_null_cone X).mpr
+    rw [← canonicalSoldering_flow_preserves_norm t X]
+    exact (canonicalSoldering_null_cone (hyperbolicFlowZorn t X)).mp h
+  · intro h
+    apply (canonicalSoldering_null_cone (hyperbolicFlowZorn t X)).mpr
+    rw [canonicalSoldering_flow_preserves_norm t X]
+    exact (canonicalSoldering_null_cone X).mp h
 
 end InfoGeometry.Lie.SplitAlgebraSolderingForm

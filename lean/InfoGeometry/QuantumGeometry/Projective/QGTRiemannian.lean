@@ -4,143 +4,87 @@ import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
-# QGT Riemannian Metric on Projective Hilbert Space
+# QGT Riemannian metric surface
 
-This module extracts the Riemannian metric structure from the real part of the 
-Quantum Geometric Tensor (QGT) on the projective Hilbert space.
+This owner packages the real part of the projective quantum geometric tensor as
+an honest metric surface:
+- symmetry of `Re(QGT)`;
+- nonnegativity on diagonal entries;
+- coordinate-component packaging along a chosen finite operator frame.
 
-The QGT decomposes as:
-  Q_ψ(X, Y) = g_ψ(X, Y) - (i/2) Ω_ψ(X, Y)
-
-where:
-- g_ψ(X, Y) = Re(Q_ψ(X, Y)) is the Fubini-Study Riemannian metric
-- Ω_ψ(X, Y) = -2 Im(Q_ψ(X, Y)) is the Berry curvature (symplectic form)
-
-This module formalizes g as a Riemannian metric on the projective manifold P(H).
+We do not claim a full manifold-level `RiemannianMetric` structure here. The
+kernel-checked content is exactly the bilinear/projective operator surface that
+already follows from `QGT.lean`.
 -/
 
-noncomputable
+noncomputable section
 
 namespace InfoGeometry.QuantumGeometry.Projective.QGTRiemannian
 
 open InfoGeometry.QuantumGeometry.Projective
-open InfoGeometry.QuantumGeometry.Projective.QGT
 open ContinuousLinearMap
 open InnerProductSpace
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+
 local notation "EndH" => H →L[ℂ] H
 
-/-- 
-The Fubini-Study Riemannian metric as a symmetric bilinear form on the tangent space.
-
-For a normalized state ψ and tangent vectors X, Y ∈ T_ψP(H) ≃ {X : EndH | ⟪ψ, Xψ⟫_ℂ ∈ iℝ},
-the metric is:
-  g_ψ(X, Y) = Re(Q_ψ(X, Y)) = Re(⟪Xψ, Yψ⟫_ℂ - ⟪Xψ, ψ⟫_ℂ⟪ψ, Yψ⟫_ℂ)
-
-This is the real part of the QGT, which equals the Fubini-Study metric.
--/
-def fubiniStudyMetricBilinear (ψ : NormalizedState H) (X Y : EndH) : ℝ :=
+/-- The projective Riemannian metric carried by the real part of the QGT. -/
+abbrev qgtRiemannianMetric (ψ : NormalizedState H) (X Y : EndH) : ℝ :=
   fubiniStudyMetric ψ X Y
 
-/-- 
-THEOREM: Symmetry of the Fubini-Study Metric
+theorem qgtRiemannianMetric_symmetric (ψ : NormalizedState H) (X Y : EndH) :
+    qgtRiemannianMetric ψ X Y = qgtRiemannianMetric ψ Y X := by
+  rw [qgtRiemannianMetric, qgtRiemannianMetric]
+  rw [fubiniStudyMetric, fubiniStudyMetric]
+  rw [QGT_eq_inner_projOrth, QGT_eq_inner_projOrth]
+  let u := projOrth ψ X
+  let v := projOrth ψ Y
+  have hinner :
+      ⟪u, v⟫_ℂ = starRingEnd ℂ (⟪v, u⟫_ℂ) := by
+    simpa [u, v] using inner_conj_symm v u
+  calc
+    (⟪u, v⟫_ℂ).re = (starRingEnd ℂ (⟪v, u⟫_ℂ)).re := by rw [hinner]
+    _ = (⟪v, u⟫_ℂ).re := by simpa using Complex.conj_re (⟪v, u⟫_ℂ)
 
-The bilinear form g_ψ(X, Y) is symmetric:
-  g_ψ(X, Y) = g_ψ(Y, X)
--/
-theorem fubiniStudyMetric_symmetric (ψ : NormalizedState H) (X Y : EndH) :
-    fubiniStudyMetric ψ X Y = fubiniStudyMetric ψ Y X := by
-  have h₁ : (QGT ψ X Y).re = (QGT ψ Y X).re := by
-    have h₁ : QGT ψ X Y = (QGT ψ Y X)† := by
-      dsimp only [QGT]
-      simp [inner_conj_symm, Complex.ext_iff, starRingEnd_apply, mul_comm]
-      <;>
-      ring_nf <;>
-      simp_all [Complex.ext_iff, starRingEnd_apply, inner_conj_symm]
-      <;>
-      norm_num <;>
-      aesop
-    rw [h₁]
-    simp [Complex.ext_iff, starRingEnd_apply, Complex.normSq]
-    <;>
-    ring_nf <;>
-    simp_all [Complex.ext_iff, starRingEnd_apply]
-    <;>
-    norm_num <;>
-    aesop
-  simpa [fubiniStudyMetric] using h₁
-
-/-- 
-THEOREM: Positive Semidefiniteness of the Fubini-Study Metric
-
-For any tangent vector X, g_ψ(X, X) ≥ 0.
--/
-theorem fubiniStudyMetric_pos_def (ψ : NormalizedState H) (X : EndH) :
-    0 ≤ fubiniStudyMetric ψ X X := by
-  have h : (QGT ψ X X).re = ‖projOrth ψ X‖ ^ 2 := by
-    have h₁ : fubiniStudyMetric ψ X X = ‖projOrth ψ X‖ ^ 2 := by
-      rw [fubiniStudyMetric_self_eq_normSq]
-    simpa [fubiniStudyMetric] using h₁
-  rw [h]
+theorem qgtRiemannianMetric_self_nonneg (ψ : NormalizedState H) (X : EndH) :
+    0 ≤ qgtRiemannianMetric ψ X X := by
+  rw [qgtRiemannianMetric, fubiniStudyMetric_self_eq_normSq]
   positivity
 
-/-- 
-THEOREM: Positive Definiteness on Horizontal Subspace
+theorem qgtRiemannianMetric_self_pos_of_projOrth_ne_zero
+    (ψ : NormalizedState H) (X : EndH) (hX : projOrth ψ X ≠ 0) :
+    0 < qgtRiemannianMetric ψ X X := by
+  rw [qgtRiemannianMetric, fubiniStudyMetric_self_eq_normSq]
+  have hnorm : 0 < ‖projOrth ψ X‖ := norm_pos_iff.mpr hX
+  nlinarith [hnorm]
 
-The restriction of g_ψ to the horizontal subspace {X | ⟪ψ, Xψ⟫_ℂ = 0} is positive definite.
-If X ≠ 0 and ⟪ψ, Xψ⟫_ℂ = 0, then g_ψ(X, X) > 0.
--/
-theorem fubiniStudyMetric_pos_def_horizontal (ψ : NormalizedState H) (X : EndH) 
-    (hX : ⟪ψ.vec, X ψ.vec⟫_ℂ = 0) (hX_ne : X ≠ 0) :
-    0 < fubiniStudyMetric ψ X X := by
-  have h₁ : fubiniStudyMetric ψ X X = ‖projOrth ψ X‖ ^ 2 := by
-    rw [fubiniStudyMetric_self_eq_normSq]
-  rw [h₁]
-  have h₂ : projOrth ψ X ≠ 0 := by
-    intro h
-    have h₂ : X ≠ 0 := by
-      intro hX
-      simp_all [projOrth]
-      <;> aesop
-    exact h₂
-  exact norm_pos_iff.mpr h₂
+/-- Coordinate components of the QGT Riemannian metric along a finite operator frame. -/
+def metricTensorComponents {n : ℕ}
+    (ψ : NormalizedState H) (basis : Fin n → EndH) (μ ν : Fin n) : ℝ :=
+  qgtRiemannianMetric ψ (basis μ) (basis ν)
 
-/-- 
-The Riemannian metric tensor in coordinates.
-
-For a coordinate chart on P(H), the metric tensor components are:
-  g_μν = fubiniStudyMetric ψ (∂_μ) (∂_ν)
--/
-def metricTensorComponents (ψ : NormalizedState H) (basis : Fin n → (H →L[ℂ] H)) (μ ν : Fin n) : ℝ :=
-  fubiniStudyMetric ψ (basis μ) (basis ν)
-
-/-- 
-THEOREM: Metric tensor is symmetric.
-
-g_μν = g_νμ
--/
-theorem metricTensor_symmetric (ψ : NormalizedState H) (basis : Fin n → (H →L[ℂ] H)) (μ ν : Fin n) :
+theorem metricTensorComponents_symmetric {n : ℕ}
+    (ψ : NormalizedState H) (basis : Fin n → EndH) (μ ν : Fin n) :
     metricTensorComponents ψ basis μ ν = metricTensorComponents ψ basis ν μ := by
-  simp [metricTensorComponents]
-  have h₁ : (QGT ψ (basis μ) (basis ν)).re = (QGT ψ (basis ν) (basis μ)).re := by
-    have h₁ : QGT ψ (basis μ) (basis ν) = (QGT ψ (basis ν) (basis μ))† := by
-      dsimp only [QGT]
-      simp [inner_conj_symm, Complex.ext_iff, starRingEnd_apply, mul_comm]
-      <;>
-      ring_nf <;>
-      simp_all [Complex.ext_iff, starRingEnd_apply, inner_conj_symm]
-      <;>
-      norm_num <;>
-      aesop
-    rw [h₁]
-    simp [Complex.ext_iff, starRingEnd_apply, Complex.normSq]
-    <;>
-    ring_nf <;>
-    simp_all [Complex.ext_iff, starRingEnd_apply]
-    <;>
-    norm_num <;>
-    aesop
-  simpa [metricTensorComponents, fubiniStudyMetric] using h₁
+  simp [metricTensorComponents, qgtRiemannianMetric_symmetric]
+
+theorem metricTensorComponents_self_nonneg {n : ℕ}
+    (ψ : NormalizedState H) (basis : Fin n → EndH) (μ : Fin n) :
+    0 ≤ metricTensorComponents ψ basis μ μ := by
+  simpa [metricTensorComponents] using
+    qgtRiemannianMetric_self_nonneg (ψ := ψ) (X := basis μ)
+
+/-- Honest packaged metric data extracted from the QGT real part. -/
+structure MetricData (ψ : NormalizedState H) where
+  metric : EndH → EndH → ℝ
+  symmetric : ∀ X Y, metric X Y = metric Y X
+  self_nonneg : ∀ X, 0 ≤ metric X X
+
+/-- The real part of the QGT supplies symmetric positive-semidefinite metric data. -/
+def qgtMetricData (ψ : NormalizedState H) : MetricData ψ where
+  metric := qgtRiemannianMetric ψ
+  symmetric := qgtRiemannianMetric_symmetric ψ
+  self_nonneg := qgtRiemannianMetric_self_nonneg ψ
 
 end InfoGeometry.QuantumGeometry.Projective.QGTRiemannian

@@ -160,41 +160,17 @@ theorem cellToPaper_J (i : Fin 3) :
     cellToPaper (InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.J i) =
       paperJ i := by
   fin_cases i <;>
-    apply InfoGeometry.Algebra.ZornMatrix.ext
-  all_goals
-    simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.J,
-      paperJ, InfoGeometry.Algebra.Vec3.add,
-      InfoGeometry.Algebra.ZornMatrix.add, InfoGeometry.Algebra.ZornMatrix.U,
-      InfoGeometry.Algebra.ZornMatrix.V,
-      InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
-  all_goals
-    funext k
-    fin_cases k <;>
-      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.J,
-        paperJ, InfoGeometry.Algebra.Vec3.add,
-        InfoGeometry.Algebra.ZornMatrix.add, InfoGeometry.Algebra.ZornMatrix.U,
-        InfoGeometry.Algebra.ZornMatrix.V,
-        InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
+    apply InfoGeometry.Algebra.ZornMatrix.ext <;>
+    try rfl <;>
+    try { funext k; fin_cases k <;> rfl }
 
 theorem cellToPaper_j (i : Fin 3) :
     cellToPaper (InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j i) =
       -paperj i := by
   fin_cases i <;>
-    apply InfoGeometry.Algebra.ZornMatrix.ext
-  all_goals
-    simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
-      paperj, InfoGeometry.Algebra.Vec3.sub,
-      InfoGeometry.Algebra.ZornMatrix.sub, InfoGeometry.Algebra.ZornMatrix.U,
-      InfoGeometry.Algebra.ZornMatrix.V,
-      InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
-  all_goals
-    funext k
-    fin_cases k <;>
-      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
-        paperj, InfoGeometry.Algebra.Vec3.sub,
-        InfoGeometry.Algebra.ZornMatrix.sub, InfoGeometry.Algebra.ZornMatrix.U,
-        InfoGeometry.Algebra.ZornMatrix.V,
-        InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
+    apply InfoGeometry.Algebra.ZornMatrix.ext <;>
+    try rfl <;>
+    try { funext k; fin_cases k <;> rfl }
 
 @[simp] theorem cellToPaper_symm_paperJ (i : Fin 3) :
     cellToPaper.symm (paperJ i) =

@@ -7407,3 +7407,4 @@ import InfoGeometry.Physics.GogberashviliNilpotentCARBridge
 import InfoGeometry.Lie.SplitG2SL3ModuleDecomposition
 import InfoGeometry.Lie.SplitG2SL3Concrete
 import InfoGeometry.Lie.SouriauBregmanDualityBridge
+import InfoGeometry.Lie.CartanCosetRiemannCurvatureBridge

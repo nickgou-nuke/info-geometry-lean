@@ -649,9 +649,9 @@ noncomputable def flowLinearEquivGroupHom
     Multiplicative ℝ →* (A ≃ₗ[ℝ] A) where
   toFun τ := flowLinearEquiv D τ.toAdd
   map_one' := by
-    simpa using flowLinearEquiv_zero D
+    simp using flowLinearEquiv_zero D
   map_mul' σ τ := by
-    simpa using flowLinearEquiv_add D σ.toAdd τ.toAdd
+    simp using flowLinearEquiv_add D σ.toAdd τ.toAdd
 
 @[simp]
 theorem flowLinearEquivGroupHom_apply
@@ -674,7 +674,7 @@ theorem flowLinearEquivGroupHom_add
     flowLinearEquivGroupHom D (Multiplicative.ofAdd (s + t)) =
       flowLinearEquivGroupHom D (Multiplicative.ofAdd s) *
         flowLinearEquivGroupHom D (Multiplicative.ofAdd t) := by
-  simpa using
+  simp using
     map_mul
       (flowLinearEquivGroupHom D)
       (Multiplicative.ofAdd s)
@@ -687,7 +687,7 @@ theorem flowLinearEquivGroupHom_neg
     (t : ℝ) :
     flowLinearEquivGroupHom D (Multiplicative.ofAdd (-t)) =
       (flowLinearEquivGroupHom D (Multiplicative.ofAdd t))⁻¹ := by
-  simpa using
+  simp using
     map_inv
       (flowLinearEquivGroupHom D)
       (Multiplicative.ofAdd t)

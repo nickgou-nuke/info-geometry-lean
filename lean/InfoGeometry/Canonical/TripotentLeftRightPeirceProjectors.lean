@@ -25,6 +25,8 @@ namespace InfoGeometry.Physics.Algebra
 
 noncomputable section
 
+set_option linter.unusedSectionVars false
+
 variable {R : Type*} [Ring R] [Algebra ℝ R]
 
 local notation "EndR" => Module.End ℝ R
@@ -33,13 +35,13 @@ local notation "EndR" => Module.End ℝ R
 def leftMulLinear (a : R) : EndR where
   toFun x := a * x
   map_add' x y := mul_add a x y
-  map_smul' c x := Algebra.mul_smul_comm a c x
+  map_smul' c x := mul_smul_comm c a x
 
 /-- Right multiplication by an algebra element. -/
 def rightMulLinear (a : R) : EndR where
   toFun x := x * a
   map_add' x y := add_mul x y a
-  map_smul' c x := Algebra.smul_mul_assoc c x a
+  map_smul' c x := smul_mul_assoc c x a
 
 @[simp] theorem leftMulLinear_apply (a x : R) :
     leftMulLinear a x = a * x :=
@@ -109,188 +111,166 @@ def peirceProjector (e : R) : PeirceSign → R
     peirceProjector e .neg = projNeg e :=
   rfl
 
-/-- The three projectors reconstruct the unit. -/
-@[simp] theorem peirceProjectors_sum_eq_one (e : R) :
-    peirceProjector e .pos +
-        peirceProjector e .zero +
-        peirceProjector e .neg = 1 := by
-  simpa [peirceProjector] using (proj_sum_eq_id (T := e))
+/-! ## Elementary eigenvalue properties -/
 
-/-- Each selected projector is idempotent. -/
-@[simp] theorem peirceProjector_idempotent
-    {e : R} (he : e * e * e = e)
-    (s : PeirceSign) :
-    peirceProjector e s * peirceProjector e s =
-      peirceProjector e s := by
-  cases s with
-  | pos => simpa [peirceProjector] using (projPos_idempotent he)
-  | zero => simpa [peirceProjector] using (projZero_idempotent he)
-  | neg => simpa [peirceProjector] using (projNeg_idempotent he)
-
-/-- Distinct selected projectors are orthogonal in either ordered product. -/
-@[simp] theorem peirceProjector_mul_eq_zero_of_ne
-    {e : R} (he : e * e * e = e)
-    {s t : PeirceSign} (hst : s ≠ t) :
-    peirceProjector e s * peirceProjector e t = 0 := by
-  cases s <;> cases t <;>
-    simp_all [peirceProjector,
-      projPos_mul_projNeg_eq_zero he,
-      projNeg_mul_projPos_eq_zero he,
-      projPos_mul_projZero_eq_zero he,
-      projZero_mul_projPos_eq_zero he,
-      projNeg_mul_projZero_eq_zero he,
-      projZero_mul_projNeg_eq_zero he]
-
-/-- Left spectral law for the selected projector. -/
 @[simp] theorem e_mul_peirceProjector
-    {e : R} (he : e * e * e = e)
-    (s : PeirceSign) :
+    {e : R} (he : e * e * e = e) (s : PeirceSign) :
     e * peirceProjector e s =
       peirceScalar s • peirceProjector e s := by
-  cases s with
-  | pos => simpa [peirceProjector, peirceScalar] using (mul_projPos he)
-  | zero => simpa [peirceProjector, peirceScalar] using (mul_projZero he)
-  | neg => simpa [peirceProjector, peirceScalar] using (mul_projNeg he)
+  cases s
+  · simpa [peirceScalar] using mul_projPos he
+  · simpa [peirceScalar] using mul_projZero he
+  · simpa [peirceScalar] using mul_projNeg he
 
-/-- Right spectral law for the selected projector. -/
 @[simp] theorem peirceProjector_mul_e
-    {e : R} (he : e * e * e = e)
-    (s : PeirceSign) :
+    {e : R} (he : e * e * e = e) (s : PeirceSign) :
     peirceProjector e s * e =
       peirceScalar s • peirceProjector e s := by
-  cases s with
-  | pos => simpa [peirceProjector, peirceScalar] using (projPos_mul he)
-  | zero => simpa [peirceProjector, peirceScalar] using (projZero_mul he)
-  | neg => simpa [peirceProjector, peirceScalar] using (projNeg_mul he)
+  cases s
+  · simpa [peirceScalar] using projPos_mul he
+  · simpa [peirceScalar] using projZero_mul he
+  · simpa [peirceScalar] using projNeg_mul he
 
-/-- Left Peirce projector acting on the algebra carrier. -/
-def leftPeirceProjector (e : R) (s : PeirceSign) : EndR :=
+/-! ## Left/right Peirce operators -/
+
+/-- Left Peirce projector. -/
+def peirceLeft (e : R) (s : PeirceSign) : EndR :=
   leftMulLinear (peirceProjector e s)
 
-/-- Right Peirce projector acting on the algebra carrier. -/
-def rightPeirceProjector (e : R) (s : PeirceSign) : EndR :=
+/-- Right Peirce projector. -/
+def peirceRight (e : R) (s : PeirceSign) : EndR :=
   rightMulLinear (peirceProjector e s)
 
-/-- Joint left/right Peirce projector. -/
+/-- Joint Peirce projector `P_{λ, μ}(x) = P_λ * x * P_μ`. -/
 def jointPeirceProjector
     (e : R) (left right : PeirceSign) : EndR :=
-  (leftPeirceProjector e left).comp
-    (rightPeirceProjector e right)
-
-@[simp] theorem leftPeirceProjector_apply
-    (e x : R) (s : PeirceSign) :
-    leftPeirceProjector e s x = peirceProjector e s * x :=
-  rfl
-
-@[simp] theorem rightPeirceProjector_apply
-    (e x : R) (s : PeirceSign) :
-    rightPeirceProjector e s x = x * peirceProjector e s :=
-  rfl
+  (peirceLeft e left).comp (peirceRight e right)
 
 @[simp] theorem jointPeirceProjector_apply
-    (e x : R) (left right : PeirceSign) :
+    (e : R) (left right : PeirceSign) (x : R) :
     jointPeirceProjector e left right x =
-      peirceProjector e left *
-        (x * peirceProjector e right) :=
+      peirceProjector e left * (x * peirceProjector e right) :=
   rfl
 
-/-- Every joint projector is idempotent. -/
-@[simp] theorem jointPeirceProjector_idempotent
+/-- Left and right Peirce projectors commute. -/
+theorem peirceLeft_comp_peirceRight
+    (e : R) (left right : PeirceSign) :
+    (peirceLeft e left).comp (peirceRight e right) =
+      (peirceRight e right).comp (peirceLeft e left) :=
+  leftMulLinear_comp_rightMulLinear _ _
+
+/-! ## Idempotence and orthogonality -/
+
+@[simp] theorem peirceProjector_mul_self
+    {e : R} (he : e * e * e = e) (s : PeirceSign) :
+    peirceProjector e s * peirceProjector e s =
+      peirceProjector e s := by
+  cases s
+  · exact projPos_idempotent he
+  · exact projZero_idempotent he
+  · exact projNeg_idempotent he
+
+theorem peirceProjector_mul_eq_zero_of_ne
     {e : R} (he : e * e * e = e)
-    (left right : PeirceSign) :
+    {s₁ s₂ : PeirceSign} (hne : s₁ ≠ s₂) :
+    peirceProjector e s₁ * peirceProjector e s₂ = 0 := by
+  cases s₁ <;> cases s₂ <;> try contradiction
+  · exact projPos_mul_projZero_eq_zero he
+  · exact projPos_mul_projNeg_eq_zero he
+  · exact projZero_mul_projPos_eq_zero he
+  · exact projZero_mul_projNeg_eq_zero he
+  · exact projNeg_mul_projPos_eq_zero he
+  · exact projNeg_mul_projZero_eq_zero he
+
+@[simp] theorem peirceLeft_mul_self
+    {e : R} (he : e * e * e = e) (s : PeirceSign) :
+    peirceLeft e s * peirceLeft e s = peirceLeft e s := by
+  ext x
+  simp only [peirceLeft, leftMulLinear_apply, Module.End.mul_apply]
+  rw [← mul_assoc, peirceProjector_mul_self he]
+
+@[simp] theorem peirceRight_mul_self
+    {e : R} (he : e * e * e = e) (s : PeirceSign) :
+    peirceRight e s * peirceRight e s = peirceRight e s := by
+  ext x
+  simp only [peirceRight, rightMulLinear_apply, Module.End.mul_apply]
+  rw [mul_assoc, peirceProjector_mul_self he]
+
+@[simp] theorem jointPeirceProjector_mul_self
+    {e : R} (he : e * e * e = e) (left right : PeirceSign) :
     jointPeirceProjector e left right *
         jointPeirceProjector e left right =
       jointPeirceProjector e left right := by
   ext x
-  change
-    peirceProjector e left *
-        ((peirceProjector e left *
-            (x * peirceProjector e right)) *
-          peirceProjector e right) =
-      peirceProjector e left *
-        (x * peirceProjector e right)
   calc
-    peirceProjector e left *
-        ((peirceProjector e left *
-            (x * peirceProjector e right)) *
-          peirceProjector e right) =
-      (peirceProjector e left * peirceProjector e left) *
-        (x *
-          (peirceProjector e right * peirceProjector e right)) := by
-            noncomm_ring
-    _ = peirceProjector e left *
-        (x * peirceProjector e right) := by
-          rw [peirceProjector_idempotent he,
-            peirceProjector_idempotent he]
+    jointPeirceProjector e left right (jointPeirceProjector e left right x) =
+      peirceProjector e left *
+        ((peirceProjector e left * (x * peirceProjector e right)) *
+          peirceProjector e right) := rfl
+    _ = (peirceProjector e left * peirceProjector e left) *
+        x *
+        (peirceProjector e right * peirceProjector e right) := by
+          simp [mul_assoc]
+    _ = peirceProjector e left * (x * peirceProjector e right) := by
+      rw [peirceProjector_mul_self he, peirceProjector_mul_self he]
+      simp [mul_assoc]
 
-/-- Distinct left labels force orthogonality of joint projectors. -/
 theorem jointPeirceProjector_mul_eq_zero_of_left_ne
     {e : R} (he : e * e * e = e)
-    {left left' right right' : PeirceSign}
-    (hleft : left ≠ left') :
-    jointPeirceProjector e left right *
-        jointPeirceProjector e left' right' = 0 := by
+    {left₁ left₂ right₁ right₂ : PeirceSign}
+    (hne : left₁ ≠ left₂) :
+    jointPeirceProjector e left₁ right₁ *
+        jointPeirceProjector e left₂ right₂ = 0 := by
   ext x
-  change
-    peirceProjector e left *
-        ((peirceProjector e left' *
-            (x * peirceProjector e right')) *
-          peirceProjector e right) = 0
   calc
-    peirceProjector e left *
-        ((peirceProjector e left' *
-            (x * peirceProjector e right')) *
-          peirceProjector e right) =
-      (peirceProjector e left * peirceProjector e left') *
-        (x *
-          (peirceProjector e right' * peirceProjector e right)) := by
-            noncomm_ring
+    (jointPeirceProjector e left₁ right₁ *
+        jointPeirceProjector e left₂ right₂) x =
+      peirceProjector e left₁ *
+        ((peirceProjector e left₂ * (x * peirceProjector e right₂)) *
+          peirceProjector e right₁) := rfl
+    _ = (peirceProjector e left₁ * peirceProjector e left₂) *
+        (x * peirceProjector e right₂) *
+        peirceProjector e right₁ := by
+          simp [mul_assoc]
     _ = 0 := by
-      rw [peirceProjector_mul_eq_zero_of_ne he hleft]
-      simp
+      rw [peirceProjector_mul_eq_zero_of_ne he hne, zero_mul, zero_mul]
 
-/-- Distinct right labels force orthogonality of joint projectors. -/
 theorem jointPeirceProjector_mul_eq_zero_of_right_ne
     {e : R} (he : e * e * e = e)
-    {left left' right right' : PeirceSign}
-    (hright : right ≠ right') :
-    jointPeirceProjector e left right *
-        jointPeirceProjector e left' right' = 0 := by
+    {left₁ left₂ right₁ right₂ : PeirceSign}
+    (hne : right₁ ≠ right₂) :
+    jointPeirceProjector e left₁ right₁ *
+        jointPeirceProjector e left₂ right₂ = 0 := by
   ext x
-  have hrev : right' ≠ right := by
-    exact fun h => hright h.symm
-  change
-    peirceProjector e left *
-        ((peirceProjector e left' *
-            (x * peirceProjector e right')) *
-          peirceProjector e right) = 0
   calc
-    peirceProjector e left *
-        ((peirceProjector e left' *
-            (x * peirceProjector e right')) *
-          peirceProjector e right) =
-      (peirceProjector e left * peirceProjector e left') *
-        (x *
-          (peirceProjector e right' * peirceProjector e right)) := by
-            noncomm_ring
+    (jointPeirceProjector e left₁ right₁ *
+        jointPeirceProjector e left₂ right₂) x =
+      peirceProjector e left₁ *
+        ((peirceProjector e left₂ * (x * peirceProjector e right₂)) *
+          peirceProjector e right₁) := rfl
+    _ = peirceProjector e left₁ *
+        (peirceProjector e left₂ * x *
+          (peirceProjector e right₂ * peirceProjector e right₁)) := by
+            simp [mul_assoc]
     _ = 0 := by
-      rw [peirceProjector_mul_eq_zero_of_ne he hrev]
-      simp
+      rw [peirceProjector_mul_eq_zero_of_ne he (Ne.symm hne), mul_zero, mul_zero]
 
-/--
-The nine joint Peirce components reconstruct every algebra element.
--/
+/-! ## Reconstruction identity -/
+
+/-- The nine joint Peirce components reconstruct the element `x`. -/
 theorem jointPeirce_reconstruction (e x : R) :
     jointPeirceProjector e .pos .pos x +
-    jointPeirceProjector e .pos .zero x +
-    jointPeirceProjector e .pos .neg x +
-    jointPeirceProjector e .zero .pos x +
-    jointPeirceProjector e .zero .zero x +
-    jointPeirceProjector e .zero .neg x +
-    jointPeirceProjector e .neg .pos x +
-    jointPeirceProjector e .neg .zero x +
-    jointPeirceProjector e .neg .neg x = x := by
-  simp only [jointPeirceProjector_apply, peirceProjector]
+        jointPeirceProjector e .pos .zero x +
+        jointPeirceProjector e .pos .neg x +
+        jointPeirceProjector e .zero .pos x +
+        jointPeirceProjector e .zero .zero x +
+        jointPeirceProjector e .zero .neg x +
+        jointPeirceProjector e .neg .pos x +
+        jointPeirceProjector e .neg .zero x +
+        jointPeirceProjector e .neg .neg x =
+      x := by
+  simp only [jointPeirceProjector_apply, peirceProjector_pos,
+    peirceProjector_zero, peirceProjector_neg]
   calc
     projPos e * (x * projPos e) +
         projPos e * (x * projZero e) +
@@ -304,9 +284,9 @@ theorem jointPeirce_reconstruction (e x : R) :
       (projPos e + projZero e + projNeg e) *
         x * (projPos e + projZero e + projNeg e) := by
           noncomm_ring
-    _ = x := by
-      rw [proj_sum_eq_id (T := e), proj_sum_eq_id (T := e)]
-      simp
+    _ = 1 * x * 1 := by
+      rw [proj_sum_eq_id, proj_sum_eq_id]
+    _ = x := by simp
 
 /-- Adjoint weight of a joint Peirce component. -/
 theorem jointPeirceProjector_adjoint_weight
@@ -339,17 +319,7 @@ theorem jointPeirceProjector_adjoint_weight
         peirceScalar right •
           (peirceProjector e left *
             (x * peirceProjector e right)) := by
-            rw [Algebra.smul_mul_assoc
-              (peirceScalar left)
-              (peirceProjector e left)
-              (x * peirceProjector e right)]
-            rw [Algebra.mul_smul_comm
-              x (peirceScalar right)
-              (peirceProjector e right)]
-            rw [Algebra.mul_smul_comm
-              (peirceProjector e left)
-              (peirceScalar right)
-              (x * peirceProjector e right)]
+            rw [smul_mul_assoc, mul_smul_comm, mul_smul_comm]
     _ = (peirceScalar left - peirceScalar right) •
           (peirceProjector e left *
             (x * peirceProjector e right)) := by
@@ -397,24 +367,42 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
     gradeZeroProjector, gradePosOneProjector, gradePosTwoProjector,
     LinearMap.add_apply, LinearMap.id_apply]
   have h := jointPeirce_reconstruction e x
-  noncomm_ring_nf at h ⊢
-  exact h
+  calc
+    jointPeirceProjector e .neg .pos x +
+        (jointPeirceProjector e .zero .pos x + jointPeirceProjector e .neg .zero x) +
+        (jointPeirceProjector e .pos .pos x + jointPeirceProjector e .zero .zero x + jointPeirceProjector e .neg .neg x) +
+        (jointPeirceProjector e .pos .zero x + jointPeirceProjector e .zero .neg x) +
+        jointPeirceProjector e .pos .neg x =
+      jointPeirceProjector e .pos .pos x +
+        jointPeirceProjector e .pos .zero x +
+        jointPeirceProjector e .pos .neg x +
+        jointPeirceProjector e .zero .pos x +
+        jointPeirceProjector e .zero .zero x +
+        jointPeirceProjector e .zero .neg x +
+        jointPeirceProjector e .neg .pos x +
+        jointPeirceProjector e .neg .zero x +
+        jointPeirceProjector e .neg .neg x := by abel
+    _ = x := h
 
 @[simp] theorem gradePosTwo_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradePosTwoProjector e x -
         gradePosTwoProjector e x * e =
       (2 : ℝ) • gradePosTwoProjector e x := by
-  simpa [gradePosTwoProjector, peirceScalar] using
-    jointPeirceProjector_adjoint_weight he .pos .neg x
+  have h := jointPeirceProjector_adjoint_weight he .pos .neg x
+  dsimp [gradePosTwoProjector, peirceScalar] at h ⊢
+  norm_num at h
+  exact h
 
 @[simp] theorem gradeNegTwo_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradeNegTwoProjector e x -
         gradeNegTwoProjector e x * e =
       (-2 : ℝ) • gradeNegTwoProjector e x := by
-  simpa [gradeNegTwoProjector, peirceScalar] using
-    jointPeirceProjector_adjoint_weight he .neg .pos x
+  have h := jointPeirceProjector_adjoint_weight he .neg .pos x
+  dsimp [gradeNegTwoProjector, peirceScalar] at h ⊢
+  norm_num at h
+  exact h
 
 @[simp] theorem gradePosOne_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
@@ -452,30 +440,31 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
     _ = -a + -b := by
       simpa [a, b, peirceScalar] using
         congrArg₂ (fun u v : R => u + v) ha hb
-    _ = (-1 : ℝ) • (a + b) := by simp
+    _ = (-1 : ℝ) • (a + b) := by
+      simp
 
 @[simp] theorem gradeZero_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradeZeroProjector e x -
-        gradeZeroProjector e x * e = 0 := by
+        gradeZeroProjector e x * e =
+      (0 : ℝ) • gradeZeroProjector e x := by
   let a := jointPeirceProjector e .pos .pos x
   let b := jointPeirceProjector e .zero .zero x
   let c := jointPeirceProjector e .neg .neg x
   have ha := jointPeirceProjector_adjoint_weight he .pos .pos x
   have hb := jointPeirceProjector_adjoint_weight he .zero .zero x
   have hc := jointPeirceProjector_adjoint_weight he .neg .neg x
-  change e * (a + b + c) - (a + b + c) * e = 0
+  change e * (a + b + c) - (a + b + c) * e = (0 : ℝ) • (a + b + c)
   calc
     e * (a + b + c) - (a + b + c) * e =
-        (e * a - a * e) +
-          (e * b - b * e) +
-          (e * c - c * e) := by
-            noncomm_ring
+        (e * a - a * e) + (e * b - b * e) + (e * c - c * e) := by
+          noncomm_ring
     _ = 0 := by
       simpa [a, b, c, peirceScalar] using
         congrArg₂ (fun u v : R => u + v)
           (congrArg₂ (fun u v : R => u + v) ha hb) hc
-
-end
+    _ = (0 : ℝ) • (a + b + c) := by simp
 
 end InfoGeometry.Physics.Algebra
+
+end noncomputable section

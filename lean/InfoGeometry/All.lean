@@ -7401,3 +7401,6 @@ import InfoGeometry.Canonical.ZornBdGDerivationBridge
 import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.GogberashviliNilpotentCARBridge
+import InfoGeometry.Physics.SplitG2SL3ModuleDecomposition
+import InfoGeometry.Physics.SplitOctonionDerivationSpinRep
+import InfoGeometry.Physics.BdGSchurBerezinianCompatibility

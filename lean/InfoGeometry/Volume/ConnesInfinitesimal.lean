@@ -321,6 +321,16 @@ noncomputable def modularHamiltonianActionAlgHom
     modularHamiltonianActionAlgHom (H := H) K t A =
       modularHamiltonianAction (H := H) K A t := rfl
 
+/-- The finite modular flow packaged as an `ℝ`-algebra equivalence. -/
+noncomputable def modularHamiltonianActionAlgEquiv
+    (K : AlgebraEnd H) (t : ℝ) : AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H :=
+  expTransportAlgEquiv K t
+
+@[simp] theorem modularHamiltonianActionAlgEquiv_apply
+    (K A : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianActionAlgEquiv (H := H) K t A =
+      modularHamiltonianAction (H := H) K A t := rfl
+
 /-- A finite modular Hamiltonian flow is inverted by reversing its time. -/
 theorem modularHamiltonianAction_neg_left
     (K A : AlgebraEnd H) (t : ℝ) :

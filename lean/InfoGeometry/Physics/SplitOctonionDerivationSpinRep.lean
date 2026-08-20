@@ -106,7 +106,7 @@ theorem rhoSL3_offdiagonal_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (i j : Fin 3) :
     rhoSL3 A (inclMinus i) (inclPlus j) = 0 := by
   dsimp [rhoSL3, inclPlus, inclMinus]
   constructor
-  · rfl
+  · rw [dif_pos i.isLt]
   · rw [dif_pos j.isLt]
 
 /-- THEOREM 2 (Diagonal blocks of ρ_pair are zero): -/
@@ -114,9 +114,11 @@ theorem rhoPair_diagonal_zero (u v : Fin 3 → ℝ) (i j : Fin 3) :
     rhoPair u v (inclPlus i) (inclPlus j) = 0 ∧
     rhoPair u v (inclMinus i) (inclMinus j) = 0 := by
   dsimp [rhoPair, inclPlus, inclMinus]
+  have h1 : ¬ (i.val + 3 < 3) := by omega
+  have h2 : ¬ (j.val + 3 < 3) := by omega
   constructor
-  · rfl
-  · rfl
+  · rw [dif_pos i.isLt, dif_pos j.isLt]
+  · rw [dif_neg h1, if_neg h2]
 
 /-- THEOREM 3 (Pairing Matrix is Skew-Symmetric): -/
 theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :

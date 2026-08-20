@@ -297,6 +297,14 @@ variable {A : Type*} [Ring A] (D : GenericDerivation A)
 instance : CoeFun (GenericDerivation A) (fun _ => A → A) where
   coe D := D.toFun
 
+@[ext] theorem extensionality {D E : GenericDerivation A}
+    (h : ∀ x, D x = E x) : D = E := by
+  cases D
+  cases E
+  congr
+  funext x
+  exact h x
+
 @[simp] theorem innerDerivation_apply (K X : A) :
     innerDerivation K X = adK K X := rfl
 
@@ -316,6 +324,28 @@ theorem map_neg (x : A) : D (-x) = - D x := by
 @[simp]
 theorem map_sub (x y : A) : D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
+
+@[simp] theorem map_one : D 1 = 0 := by
+  have h : D 1 + D 1 = D 1 + 0 := by
+    calc
+      D 1 + D 1 = D 1 * 1 + 1 * D 1 := by rw [mul_one, one_mul]
+      _ = D (1 * 1) := (D.leibniz 1 1).symm
+      _ = D 1 := by rw [mul_one]
+      _ = D 1 + 0 := by rw [add_zero]
+  exact add_left_cancel h
+
+@[simp] theorem map_natCast (n : ℕ) : D (n : A) = 0 := by
+  induction n with
+  | zero => simp [D.map_zero]
+  | succ n ih =>
+      rw [Nat.cast_succ, D.map_add, ih, D.map_one, add_zero]
+
+@[simp] theorem map_intCast (z : ℤ) : D (z : A) = 0 := by
+  cases z with
+  | ofNat n => exact D.map_natCast n
+  | negSucc n =>
+      rw [Int.cast_negSucc, D.map_neg]
+      simp [D.map_natCast]
 
 /-- 
   MASTER THEOREM: The Dual-Flow Commutator Identity is 100% Generic for any Ring Derivation.
@@ -378,6 +408,13 @@ theorem commutator_derivation_innerDerivation
     (D : GenericDerivation A) (K X : A) :
     commutator D (innerDerivation K) X = innerDerivation (D K) X := by
   exact D.master_dual_flow_commutator K X
+
+theorem commutator_derivation_innerDerivation_eq
+    (D : GenericDerivation A) (K : A) :
+    commutator D (innerDerivation K) = innerDerivation (D K) := by
+  apply extensionality
+  intro X
+  exact commutator_derivation_innerDerivation D K X
 
 /-- 
   THEOREM: Adiabatic Decoupling

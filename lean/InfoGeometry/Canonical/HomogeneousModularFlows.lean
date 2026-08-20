@@ -1,14 +1,12 @@
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
-import InfoGeometry.LogarithmicBridge
+import Mathlib.Tactic
 import InfoGeometry.Core.HomogeneousSpaces
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.HomogeneousModularFlows
-
-open InfoGeometry.LogarithmicBridge
 
 /-!
 # Homogeneous Modular Flows and the Maurer-Cartan Capstone
@@ -32,15 +30,18 @@ class HomogeneousSpace (G : Type*) [Group G] (H : Subgroup G) where
   proj : G → quotient
   proj_invariant : ∀ (g : G) (h : H), proj (g * h) = proj g
 
+/-! The concrete left-coset quotient is the canonical homogeneous-space
+instance. These wrappers connect this capstone to the owner of the quotient
+action and its stabilizer theorem. -/
 theorem quotient_is_homogeneous_space {G : Type*} [Group G]
     (H : Subgroup G) :
     InfoGeometry.Core.IsHomogeneousSpace G (G ⧸ H) :=
-  InfoGeometry.Core.quotient_isHomogeneousSpace H
+    InfoGeometry.Core.quotient_isHomogeneousSpace H
 
 theorem quotient_basepoint_stabilizer {G : Type*} [Group G]
     (H : Subgroup G) :
     MulAction.stabilizer G (InfoGeometry.Core.quotientBasepoint H) = H :=
-  InfoGeometry.Core.stabilizer_quotientBasepoint_eq H
+    InfoGeometry.Core.stabilizer_quotientBasepoint_eq H
 
 variable {R : Type*} [CommRing R]
 
@@ -79,7 +80,8 @@ theorem capstone_logarithmicBridge_factors_maurerCartan
       maurerCartanDerivative D Δ12 inv_Δ12 * (Δ23 * inv_Δ23) +
       maurerCartanDerivative D Δ23 inv_Δ23 * (Δ12 * inv_Δ12) := by
   dsimp [maurerCartanDerivative]
-  exact logarithmicRadonNikodym_chainRule D hD Δ12 inv_Δ12 Δ23 inv_Δ23 h12 h23
+  rw [hD Δ12 Δ23]
+  ring
 
 end InfoGeometry.Canonical.HomogeneousModularFlows
 

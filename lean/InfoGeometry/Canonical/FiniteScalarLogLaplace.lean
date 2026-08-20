@@ -23,6 +23,8 @@ noncomputable section
 open Finset
 open scoped BigOperators
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.FiniteScalarLogLaplace
 
 universe u
@@ -188,11 +190,15 @@ theorem hasDerivAt_unnormalized (θ : ℝ) (i : ι) :
     HasDerivAt (fun t => F.unnormalized t i)
       (F.unnormalized θ i * F.statistic i) θ := by
   unfold unnormalized
-  have h1 : HasDerivAt (fun t => t * F.statistic i) (F.statistic i) θ := by
-    simpa [id] using (hasDerivAt_id θ).mul_const (F.statistic i)
-  have h2 := h1.exp
-  have h3 := h2.const_mul (F.weight i)
-  exact h3.congr_deriv (by ring)
+  have h1 : HasDerivAt (fun t : ℝ => t * F.statistic i) (F.statistic i) θ := by
+    simpa using (hasDerivAt_id θ).mul_const (F.statistic i)
+  have h2 : HasDerivAt (fun t : ℝ => Real.exp (t * F.statistic i))
+      (Real.exp (θ * F.statistic i) * F.statistic i) θ :=
+    h1.exp
+  have h3 : HasDerivAt (fun t : ℝ => F.weight i * Real.exp (t * F.statistic i))
+      (F.weight i * (Real.exp (θ * F.statistic i) * F.statistic i)) θ :=
+    h2.const_mul (F.weight i)
+  simpa [mul_assoc] using h3
 
 /-- Derivative of the finite partition function. -/
 theorem hasDerivAt_partition (θ : ℝ) :
@@ -233,11 +239,11 @@ theorem hasDerivAt_mean (θ : ℝ) :
     HasDerivAt F.mean (F.variance θ) θ := by
   have h := (F.hasDerivAt_firstMomentNumerator θ).fun_div
     (F.hasDerivAt_partition θ) (F.partition_ne_zero θ)
-  unfold mean
-  refine h.congr_deriv ?_
-  dsimp [variance, secondMoment, mean]
-  field_simp [F.partition_ne_zero θ]
-  ring
+  have heq : (F.secondMomentNumerator θ * F.partition θ - F.firstMomentNumerator θ * F.firstMomentNumerator θ) / (F.partition θ) ^ 2 = F.variance θ := by
+    dsimp [variance, secondMoment, mean]
+    field_simp [F.partition_ne_zero θ]
+    ring
+  exact heq ▸ h
 
 @[simp] theorem deriv_mean (θ : ℝ) :
     deriv F.mean θ = F.variance θ :=

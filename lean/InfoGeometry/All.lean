@@ -5397,6 +5397,7 @@ import InfoGeometry.Modular.PSL2Z
 import InfoGeometry.Modular.SemidirectProductLieAlgebra
 import InfoGeometry.Modular.TrifoldClassification
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
+import InfoGeometry.Modular.TrifoldUniversalSynthesis
 import InfoGeometry.ModularVolumePotential
 import InfoGeometry.Monster.MathieuMoonshineMockModularBridge
 import InfoGeometry.Monster.MonsterMoonshineThermal

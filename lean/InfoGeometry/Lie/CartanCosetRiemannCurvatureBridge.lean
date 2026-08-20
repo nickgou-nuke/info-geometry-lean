@@ -148,7 +148,10 @@ theorem first_bianchi_identity
   rw [h_lie.skew (bracket X Y) Z, h_lie.skew (bracket Y Z) X, h_lie.skew (bracket Z X) Y]
   simp only [neg_neg]
   have h_jac := h_lie.jacobi X Y Z
-  linear_combination h_jac
+  calc
+    bracket Z (bracket X Y) + bracket X (bracket Y Z) + bracket Y (bracket Z X)
+      = bracket X (bracket Y Z) + bracket Y (bracket Z X) + bracket Z (bracket X Y) := by abel
+    _ = 0 := h_jac
 
 /-!
 =============================================================================
@@ -167,7 +170,6 @@ def nomizuSectionalCurvature (bracket : V → V → V) (B : V → V → ℝ) (X 
   THEOREM: Sectional curvature vanishes on commuting tangent vectors:
   $[X, Y] = 0 \implies K(X, Y) = 0$.
 -/
-omit [Module ℝ V] in
 theorem sectional_curvature_commuting_zero
     (bracket : V → V → V) (B : V → V → ℝ)
     (hB_zero : ∀ v, B 0 v = 0)

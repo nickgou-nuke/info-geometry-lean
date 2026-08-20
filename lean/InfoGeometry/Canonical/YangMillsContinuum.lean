@@ -73,6 +73,10 @@ noncomputable def modularHamiltonian
 def commutator (K A : EndH E) : EndH E :=
   K * A - A * K
 
+@[simp] theorem commutator_eq_lie (K A : EndH E) :
+    commutator K A = ⁅K, A⁆ := by
+  rfl
+
 @[simp] lemma modularOperator_eq_rn
     (M : ModularRadonNikodymData E) :
     M.modularOperator = M.rnDerivative • idEndH E := rfl
@@ -173,8 +177,41 @@ theorem hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
     HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
       (commutator M.modularHamiltonian A) 0 := by
   simpa [modularAutomorphismGroup] using
-    (hasDerivAt_modularShift_zero_eq_commutator
+      (hasDerivAt_modularShift_zero_eq_commutator
       (K := M.modularHamiltonian) (A := A))
+
+theorem hasDerivAt_modularAutomorphismGroup_zero_eq_lie
+    (M : ModularRadonNikodymData E) (A : EndH E) :
+    HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
+      ⁅M.modularHamiltonian, A⁆ 0 := by
+  simpa only [commutator_eq_lie] using
+    (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
+      (M := M) (A := A))
+
+theorem modularAutomorphismGroup_fixed_all_iff_commute
+    (M : ModularRadonNikodymData E) (A : EndH E) :
+    (∀ t : ℝ, modularAutomorphismGroup M t A = A) ↔
+      Commute A M.modularHamiltonian := by
+  constructor
+  · intro hFixed
+    have hDeriv :
+        HasDerivAt (fun t : ℝ => modularAutomorphismGroup M t A) 0 0 := by
+      have hConst :
+          (fun t : ℝ => modularAutomorphismGroup M t A) = fun _ : ℝ => A := by
+        funext t
+        exact hFixed t
+      rw [hConst]
+      simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := A))
+    have hFlowDeriv :=
+      (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
+        (M := M) (A := A)).deriv
+    have hBracket : commutator M.modularHamiltonian A = 0 := by
+      exact hFlowDeriv.symm.trans hDeriv.deriv
+    exact sub_eq_zero.mp hBracket
+  · intro hComm t
+    simpa [modularAutomorphismGroup] using
+      (InfoGeometry.Canonical.expTransport_eq_self_of_commute
+        M.modularHamiltonian A t hComm)
 
 /-- Scalar derivative corollary for the modular automorphism group at `τ = 0`. -/
 theorem deriv_modularAutomorphismGroup_zero_eq_commutator

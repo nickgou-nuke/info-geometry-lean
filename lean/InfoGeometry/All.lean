@@ -5382,6 +5382,7 @@ import InfoGeometry.Meta.Vacuity
 import InfoGeometry.MirrorPhase.WardIdentitiesAttention
 import InfoGeometry.MirrorPhase.ZornsFurnace
 import InfoGeometry.Modular.Classification
+import InfoGeometry.Modular.ConcreteOperatorModularBridge
 import InfoGeometry.Modular.DerivationShortExactSequence
 import InfoGeometry.Modular.DualExponentialBerezinianAutomorphismBridge
 import InfoGeometry.Modular.DualExponentialCommutatorBridge

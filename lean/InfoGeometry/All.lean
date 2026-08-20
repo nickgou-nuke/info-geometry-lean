@@ -5383,6 +5383,7 @@ import InfoGeometry.MirrorPhase.WardIdentitiesAttention
 import InfoGeometry.MirrorPhase.ZornsFurnace
 import InfoGeometry.Modular.Classification
 import InfoGeometry.Modular.DerivationShortExactSequence
+import InfoGeometry.Modular.DualExponentialBerezinianAutomorphismBridge
 import InfoGeometry.Modular.DualExponentialCommutatorBridge
 import InfoGeometry.Modular.Noncommutative
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog

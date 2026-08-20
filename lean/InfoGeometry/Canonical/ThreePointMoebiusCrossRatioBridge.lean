@@ -34,7 +34,7 @@ theorem crossRatio_eval_z2
   unfold crossRatio
   have h₂₁ : z₂ - z₁ ≠ 0 := sub_ne_zero.mpr h₁₂.symm
   have h₂₃' : z₂ - z₃ ≠ 0 := sub_ne_zero.mpr h₂₃
-  field_simp [h₂₁, h₂₃'] <;> ring
+  field_simp [h₂₁, h₂₃']
 
 /-- The denominator of the normalizing cross-ratio vanishes at the third point. -/
 @[simp]
@@ -56,9 +56,6 @@ def threePointNormalizer
   γ := z₂ - z₁
   δ := -z₃ * (z₂ - z₁)
   det_ne_zero := by
-    change
-      (z₂ - z₃) * (-z₃ * (z₂ - z₁)) -
-          (-z₁ * (z₂ - z₃)) * (z₂ - z₁) ≠ 0
     rw [show
       (z₂ - z₃) * (-z₃ * (z₂ - z₁)) -
           (-z₁ * (z₂ - z₃)) * (z₂ - z₁) =

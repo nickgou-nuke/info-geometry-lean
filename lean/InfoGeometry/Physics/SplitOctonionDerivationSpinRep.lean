@@ -105,22 +105,16 @@ theorem rhoSL3_offdiagonal_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (i j : Fin 3) :
     rhoSL3 A (inclPlus i) (inclMinus j) = 0 ∧
     rhoSL3 A (inclMinus i) (inclPlus j) = 0 := by
   constructor
-  · dsimp [rhoSL3, inclPlus, inclMinus]
-    simp [dif_pos i.isLt, dif_neg (by omega), dif_pos j.isLt]
-  · dsimp [rhoSL3, inclPlus, inclMinus]
-    simp [dif_neg (by omega), dif_pos j.isLt, dif_pos i.isLt]
+  · fin_cases i <;> fin_cases j <;> simp [rhoSL3, inclPlus, inclMinus]
+  · fin_cases i <;> fin_cases j <;> simp [rhoSL3, inclPlus, inclMinus]
 
 /-- THEOREM 2 (Diagonal blocks of ρ_pair are zero): -/
 theorem rhoPair_diagonal_zero (u v : Fin 3 → ℝ) (i j : Fin 3) :
     rhoPair u v (inclPlus i) (inclPlus j) = 0 ∧
     rhoPair u v (inclMinus i) (inclMinus j) = 0 := by
   constructor
-  · dsimp [rhoPair, inclPlus, inclMinus]
-    simp [dif_pos i.isLt, dif_pos j.isLt]
-  · dsimp [rhoPair, inclPlus, inclMinus]
-    have h1 : ¬ (i.val + 3 < 3) := by omega
-    have h2 : ¬ (j.val + 3 < 3) := by omega
-    simp [dif_neg h1, dif_neg h2]
+  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclPlus, inclMinus]
+  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclPlus, inclMinus]
 
 /-- THEOREM 3 (Pairing Matrix is Skew-Symmetric): -/
 theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :

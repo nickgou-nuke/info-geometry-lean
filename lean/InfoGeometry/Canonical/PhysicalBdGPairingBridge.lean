@@ -697,9 +697,12 @@ theorem H_BdG_on_schurGraph
   have hInv :
       holeBlock h (I.inverse (adjoint Δ u)) = adjoint Δ u :=
     I.holeBlock_inverse_apply (adjoint Δ u)
+  have hAdj : adjoint h (I.inverse (adjoint Δ u)) = -adjoint Δ u := by
+    have hneg := congrArg Neg.neg hInv
+    exact hneg
   apply nambu_ext
   · simp [BdG_Schur_Complement_apply, schurGraphEmbedding, eliminatedHoleMap]
-  · simp [schurGraphEmbedding, eliminatedHoleMap, H_BdG_snd, hInv]
+  · simp [schurGraphEmbedding, eliminatedHoleMap, H_BdG_snd, map_neg, hAdj]
 
 /-- Operator-level Schur graph identity. -/
 theorem H_BdG_comp_schurGraphEmbedding
@@ -879,7 +882,7 @@ theorem spectralBdG_on_schurGraph
     I.shiftedHoleBlock_inverse_apply (adjoint Δ u)
   apply nambu_ext
   · simp [BdG_Schur_Complement_at_apply, schurGraphEmbedding_at, eliminatedHoleMap_at]
-  · simp [schurGraphEmbedding_at, eliminatedHoleMap_at, spectralBdG_snd, hInv]
+  · simp [schurGraphEmbedding_at, eliminatedHoleMap_at, spectralBdG_snd, map_neg, hInv]
 
 /-- Operator-level energy-dependent Schur identity. -/
 theorem spectralBdG_comp_schurGraphEmbedding

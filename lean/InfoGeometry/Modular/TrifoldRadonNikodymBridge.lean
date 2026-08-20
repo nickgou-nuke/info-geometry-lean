@@ -265,6 +265,12 @@ theorem IsLinearDerivation.map_one (D : R →ₗ[R] R)
 def dlogRN (D : R →ₗ[R] R) (Δ inv_Δ : R) : R :=
   inv_Δ * D Δ
 
+@[simp] theorem dlogRN_one (D : R →ₗ[R] R)
+    (hD : IsLinearDerivation D) :
+    dlogRN D 1 1 = 0 := by
+  dsimp [dlogRN]
+  rw [IsLinearDerivation.map_one D hD, mul_zero]
+
 /--
   THEOREM 5: The Logarithmic Radon–Nikodym Chain Rule (Group Homomorphism):
   dlog_D(Δ₁₂ * Δ₂₃) = dlog_D(Δ₁₂) + dlog_D(Δ₂₃)

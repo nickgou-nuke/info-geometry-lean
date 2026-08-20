@@ -6,21 +6,24 @@ import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 
 /-!
-# De Rham Cohomology Bridge for Relative Modular Potentials
+# De Rham Relative Modular Potential Bridge
 
-This module formalizes:
-1. **0-Form Scalar Potential**:
-   Fixing a reference base state $q₀ \in \text{PositiveRay } \alpha$, the function
-   $\Phi_{q₀}(q) := V(q, q₀)(a) = -\ln \Delta(q, q₀)(a)$ is a global scalar 0-form.
-2. **Exact 1-Form / Maurer-Cartan Field**:
-   The discrete exterior difference $\omega(q, q₁) := \Phi_{q₀}(q) - \Phi_{q₀}(q₁)$
-   reproduces identically the relative modular potential $V(q, q₁)(a)$.
-3. **Path Independence (Discrete Stokes' Theorem)**:
-   $V(q, q₁) = V(q, q₀) + V(q₀, q₁)$ proves exactness and path independence.
-4. **Zero Curvature / First Law of Thermodynamics**:
-   The closed loop circulation vanishes identically: $V(q, q₀) + V(q₀, q) = 0$.
+This module connects the discrete algebraic structure of relative modular potentials
+on `PositiveRay α` to differential-geometric terminology.
 
-All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+**What is kernel-checked here:**
+1. The function `Φ_{q₀}(q) = V(q, q₀)(a)` is a well-defined scalar function on `PositiveRay α`.
+2. The discrete difference `ω(q, q₁) = Φ_{q₀}(q) - Φ_{q₀}(q₁)` equals `V(q, q₁)(a)`.
+3. The cocycle identity `V(q, q₁) = V(q, q₀) + V(q₀, q₁)` (path independence).
+4. Antisymmetry `V(q, q₀) + V(q₀, q) = 0` (zero loop curvature).
+5. Triangle identity `V(q, q₀) + V(q₀, q₁) + V(q₁, q) = 0`.
+
+**Terminology note:** The words "0-form", "1-form", "exact", "Stokes' theorem",
+and "First Law of Thermodynamics" are analogical labels for these finite,
+discrete algebraic identities. `PositiveRay α` is a `Quotient` type, not a
+smooth manifold; there is no manifold structure, no exterior derivative `d`,
+and no integration in this file. The kernel-checked content is the algebraic
+cocycle and antisymmetry on the finite type `PositiveRay α`.
 -/
 
 noncomputable section

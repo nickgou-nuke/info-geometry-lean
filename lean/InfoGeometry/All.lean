@@ -1492,6 +1492,7 @@ import InfoGeometry.Canonical.ConnesNCSpectralDistanceTopCat
 import InfoGeometry.Canonical.ConnesNCSpectralMetric
 import InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum
 import InfoGeometry.Canonical.ConnesNoncommutativeGeometry
+import InfoGeometry.Canonical.NoncommutativeSpectralTriple
 import InfoGeometry.Canonical.ConnesQuantumHallIndexBridge
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycleChainBridge
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle

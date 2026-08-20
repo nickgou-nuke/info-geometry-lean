@@ -143,7 +143,7 @@ import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
 import InfoGeometry.Canonical.GrandMathematicalUnification
-import InfoGeometry.QuantumGeometry.CompleteUnifiedBundle
+import InfoGeometry.QuantumGeometry.Unification
 import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.Modular.Classification
 import InfoGeometry.Modular.ExactSequence

@@ -226,6 +226,26 @@ flow.
   simpa [modularHamiltonianAction] using
     (expTransport_eq_self_of_commute K A t hComm)
 
+theorem commute_of_modularHamiltonianAction_eq_self
+    (K A : AlgebraEnd H)
+    (hFixed : ∀ t : ℝ, modularHamiltonianAction (H := H) K A t = A) :
+    Commute K A := by
+  have hDeriv :
+      HasDerivAt (fun t : ℝ => modularHamiltonianAction (H := H) K A t)
+        0 0 := by
+    have hConst :
+        (fun t : ℝ => modularHamiltonianAction (H := H) K A t) =
+          (fun _ : ℝ => A) := by
+      funext t
+      exact hFixed t
+    rw [hConst]
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := A))
+  have hFlowDeriv :=
+    (modularHamiltonianAction_hasDerivAt_zero (H := H) K A).deriv
+  have hBracket : ⁅K, A⁆ = 0 := by
+    exact hFlowDeriv.symm.trans hDeriv.deriv
+  exact sub_eq_zero.mp hBracket
+
 /--
 The generated modular flow acts by the same exponential-conjugation formula as
 `modularHamiltonianAction`.

@@ -1,0 +1,152 @@
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Star.Basic
+import Mathlib.Tactic
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
+noncomputable section
+
+namespace InfoGeometry.Canonical.NCG
+
+/-!
+=============================================================================
+SECTION 1: Non-Commutative Differential Calculus over a Dirac Operator
+=============================================================================
+-/
+
+variable {A : Type*} [Ring A]
+
+/-- The non-commutative Dirac differential: d_D(a) = D * a - a * D = [D, a] -/
+def ncDiff (D a : A) : A :=
+  D * a - a * D
+
+@[simp]
+theorem ncDiff_apply (D a : A) : ncDiff D a = D * a - a * D := rfl
+
+/-- Linearity / Additivity of the non-commutative differential -/
+theorem ncDiff_add (D a b : A) : ncDiff D (a + b) = ncDiff D a + ncDiff D b := by
+  dsimp [ncDiff]
+  simp only [mul_add, add_mul]
+  abel
+
+/-- 🏆 THEOREM 1: The Non-Commutative Leibniz Rule (NC Product Rule):
+    d_D(a * b) = (d_D a) * b + a * (d_D b) -/
+theorem ncDiff_mul (D a b : A) :
+    ncDiff D (a * b) = ncDiff D a * b + a * ncDiff D b := by
+  dsimp [ncDiff]
+  calc
+    D * (a * b) - (a * b) * D
+      = (D * a * b - a * D * b) + (a * D * b - a * b * D) := by
+        simp only [mul_assoc]
+        abel
+    _ = (D * a - a * D) * b + a * (D * b - b * D) := by
+        simp only [sub_mul, mul_sub, mul_assoc]
+
+/-- Annihilation of the Identity: d_D(1) = 0 -/
+@[simp]
+theorem ncDiff_one (D : A) : ncDiff D 1 = 0 := by
+  dsimp [ncDiff]
+  simp only [mul_one, one_mul, sub_self]
+
+/-- Anticommutation with Star Involution when D is self-adjoint: (d_D a)* = - d_D(a*) -/
+theorem ncDiff_star [StarRing A] (D a : A) (hD : star D = D) :
+    star (ncDiff D a) = - ncDiff D (star a) := by
+  dsimp [ncDiff]
+  rw [star_sub, star_mul, star_mul, hD]
+  abel
+
+/-!
+=============================================================================
+SECTION 2: Gauge Fluctuations of the Dirac Operator (Inner Fluctuations)
+=============================================================================
+-/
+
+/-- The fluctuating Dirac operator: D_A = D + A -/
+def fluctuatedDirac (D A_gauge : A) : A :=
+  D + A_gauge
+
+/-- The Unitary Gauge Transformation of a gauge field A:
+    A^u = u * A * u_inv + u * d_D(u_inv) -/
+def gaugeTransform (D A_gauge u u_inv : A) : A :=
+  u * A_gauge * u_inv + u * ncDiff D u_inv
+
+/-- 🏆 THEOREM 2: Exact Gauge Covariance of the Fluctuated Dirac Operator:
+    u * (D + A) * u_inv = D + A^u
+    whenever u * u_inv = 1 and u_inv * u = 1. -/
+theorem fluctuatedDirac_gauge_covariance
+    (D A_gauge u u_inv : A)
+    (h_right_inv : u * u_inv = 1) :
+    u * fluctuatedDirac D A_gauge * u_inv =
+      fluctuatedDirac D (gaugeTransform D A_gauge u u_inv) := by
+  dsimp [fluctuatedDirac, gaugeTransform, ncDiff]
+  calc
+    u * (D + A_gauge) * u_inv
+      = u * D * u_inv + u * A_gauge * u_inv := by
+        simp only [mul_add, add_mul, mul_assoc]
+    _ = D + (u * A_gauge * u_inv + (u * D * u_inv - D)) := by
+        abel
+    _ = D + (u * A_gauge * u_inv + (u * (D * u_inv) - (u * u_inv) * D)) := by
+        rw [h_right_inv, one_mul]
+        simp only [mul_assoc]
+    _ = D + (u * A_gauge * u_inv + u * (D * u_inv - u_inv * D)) := by
+        simp only [mul_sub, mul_assoc]
+
+/-- 🏆 THEOREM 3: Gauge Transformation Transitivity (Group Action):
+    (A^u)^v = A^(v * u) -/
+theorem gaugeTransform_transitive
+    (D A_gauge u u_inv v v_inv : A)
+    (hu_right : u * u_inv = 1)
+    (hv_right : v * v_inv = 1)
+    (hv_left : v_inv * v = 1) :
+    gaugeTransform D (gaugeTransform D A_gauge u u_inv) v v_inv =
+      gaugeTransform D A_gauge (v * u) (u_inv * v_inv) := by
+  have h1 : v * (u * fluctuatedDirac D A_gauge * u_inv) * v_inv =
+      (v * u) * fluctuatedDirac D A_gauge * (u_inv * v_inv) := by
+    simp only [mul_assoc]
+  have h2 : v * fluctuatedDirac D (gaugeTransform D A_gauge u u_inv) * v_inv =
+      fluctuatedDirac D (gaugeTransform D (gaugeTransform D A_gauge u u_inv) v v_inv) := by
+    exact fluctuatedDirac_gauge_covariance D (gaugeTransform D A_gauge u u_inv) v v_inv hv_right
+  have h_prod_right : (v * u) * (u_inv * v_inv) = 1 := by
+    calc
+      (v * u) * (u_inv * v_inv) = v * (u * u_inv) * v_inv := by simp only [mul_assoc]
+      _ = v * 1 * v_inv := by rw [hu_right]
+      _ = v * v_inv := by rw [mul_one]
+      _ = 1 := hv_right
+  have h3 : (v * u) * fluctuatedDirac D A_gauge * (u_inv * v_inv) =
+      fluctuatedDirac D (gaugeTransform D A_gauge (v * u) (u_inv * v_inv)) := by
+    exact fluctuatedDirac_gauge_covariance D A_gauge (v * u) (u_inv * v_inv) h_prod_right
+  have h_cov_u := fluctuatedDirac_gauge_covariance D A_gauge u u_inv hu_right
+  rw [← h_cov_u] at h2
+  rw [h1] at h2
+  rw [h3] at h2
+  dsimp [fluctuatedDirac] at h2
+  exact add_left_cancel h2.symm
+
+/-!
+=============================================================================
+SECTION 3: The Non-Commutative Differential 1-Form & Self-Adjoint Gauge Potential
+=============================================================================
+-/
+
+/-- A single-generator 1-form: a * [D, b] -/
+def oneFormTerm (D a b : A) : A :=
+  a * ncDiff D b
+
+/-- Self-adjointness condition for the fluctuating 1-form -/
+def IsSelfAdjointOneForm [StarRing A] (A_gauge : A) : Prop :=
+  star A_gauge = A_gauge
+
+/-- 🏆 THEOREM 4: If D is self-adjoint, the fluctuated Dirac operator is self-adjoint:
+    (D + A)* = D + A -/
+theorem fluctuatedDirac_self_adjoint [StarRing A]
+    (D A_gauge : A)
+    (hD : star D = D)
+    (hA : IsSelfAdjointOneForm A_gauge) :
+    star (fluctuatedDirac D A_gauge) = fluctuatedDirac D A_gauge := by
+  dsimp [fluctuatedDirac, IsSelfAdjointOneForm] at *
+  rw [star_add, hD, hA]
+
+end InfoGeometry.Canonical.NCG
+
+end noncomputable section

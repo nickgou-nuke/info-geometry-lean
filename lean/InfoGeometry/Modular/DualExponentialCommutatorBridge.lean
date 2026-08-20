@@ -136,6 +136,25 @@ def commutator (D₁ D₂ : RingDerivation A) : RingDerivation A where
 theorem commutator_apply (D₁ D₂ : RingDerivation A) (X : A) :
     commutator D₁ D₂ X = D₁ (D₂ X) - D₂ (D₁ X) := rfl
 
+theorem commutator_skew (D₁ D₂ : RingDerivation A) (X : A) :
+    commutator D₁ D₂ X = -commutator D₂ D₁ X := by
+  dsimp [commutator]
+  abel
+
+@[simp]
+theorem commutator_self (D : RingDerivation A) (X : A) :
+    commutator D D X = 0 := by
+  dsimp [commutator]
+  abel
+
+theorem commutator_jacobi (D₁ D₂ D₃ : RingDerivation A) (X : A) :
+    commutator D₁ (commutator D₂ D₃) X +
+        commutator D₂ (commutator D₃ D₁) X +
+        commutator D₃ (commutator D₁ D₂) X = 0 := by
+  dsimp [commutator]
+  rw [D₁.map_sub, D₂.map_sub, D₃.map_sub]
+  abel
+
 /-- BUNDLED THEOREM: [D, Inn(K)] = Inn(D(K)) as bundled derivation equality -/
 theorem commutator_innerDerivation_eq (D : RingDerivation A) (K : A) :
     commutator D (innerDerivation K) = innerDerivation (D K) := by
@@ -148,6 +167,14 @@ theorem adK_bracket (K₁ K₂ X : A) :
     adK K₁ (adK K₂ X) - adK K₂ (adK K₁ X) = adK (adK K₁ K₂) X := by
   dsimp [adK]
   noncomm_ring
+
+theorem commutator_innerDerivation_innerDerivation
+    (K₁ K₂ : A) :
+    commutator (innerDerivation K₁) (innerDerivation K₂) =
+      innerDerivation (adK K₁ K₂) := by
+  apply extensionality
+  intro X
+  exact adK_bracket K₁ K₂ X
 
 /-- 
   THEOREM 2: Adiabatic / Invariant Commutation

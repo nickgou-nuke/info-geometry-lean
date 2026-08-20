@@ -264,11 +264,15 @@ theorem modularAutomorphismGroup_commute_iff
     constructor
     · intro h
       apply e.injective
-      rw [e.map_mul, e.map_mul]
-      exact h
+      calc
+        e (A * B) = e A * e B := e.map_mul A B
+        _ = e B * e A := h
+        _ = e (B * A) := (e.map_mul B A).symm
     · intro h
-      rw [e.map_mul, e.map_mul]
-      exact congrArg e h
+      calc
+        e A * e B = e (A * B) := (e.map_mul A B).symm
+        _ = e (B * A) := congrArg e h
+        _ = e B * e A := e.map_mul B A
   simpa [e, modularAutomorphismGroup] using he
 
 /--
@@ -318,6 +322,21 @@ theorem modularShift_eq_self_of_commute
           rw [hz]
     _ = A * 1 := by rw [NormedSpace.exp_zero]
     _ = A := mul_one A
+
+@[simp] theorem modularAutomorphismGroup_modularHamiltonian
+    (M : ModularRadonNikodymData E) (t : ℝ) :
+    modularAutomorphismGroup M t M.modularHamiltonian =
+      M.modularHamiltonian := by
+  simpa [modularAutomorphismGroup] using
+    (modularShift_eq_self_of_commute M.modularHamiltonian
+      M.modularHamiltonian t (Commute.refl M.modularHamiltonian))
+
+theorem modularAutomorphismGroup_commute_modularHamiltonian_iff
+    (M : ModularRadonNikodymData E) (A : EndH E) (t : ℝ) :
+    Commute (modularAutomorphismGroup M t A) M.modularHamiltonian ↔
+      Commute A M.modularHamiltonian := by
+  simpa only [modularAutomorphismGroup_modularHamiltonian] using
+    (modularAutomorphismGroup_commute_iff M A M.modularHamiltonian t)
 
 /--
 Modular flow fixes an observable for all parameter times `t` if and only if

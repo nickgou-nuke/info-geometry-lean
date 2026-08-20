@@ -236,7 +236,7 @@ noncomputable def rawH_BdG (h Δ : EndH) : RawEndNambu :=
 @[simp] theorem rawH_BdG_apply (h Δ : EndH) (u v : H) :
     rawH_BdG h Δ (u, v) =
       (h u + Δ v, adjoint Δ u - adjoint h v) := by
-  simp [rawH_BdG, holeBlock]
+  simp [rawH_BdG, holeBlock, sub_eq_add_neg]
 
 /--
 Bounded Bogoliubov--de Gennes operator on the genuine Hilbert direct sum
@@ -384,12 +384,15 @@ theorem bdg_linearSheetSwap_anticommutes
     simpa [comp_apply] using hv
   apply ContinuousLinearMap.ext
   intro x
+  rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply]
   apply nambu_ext
-  · show C₀ (H_BdG h Δ x).snd = -(H_BdG h Δ (linearSheetSwap C₀ x)).fst
-    rw [H_BdG_snd, H_BdG_fst, linearSheetSwap_fst, linearSheetSwap_snd, map_sub, h1 x.fst, h2 x.snd]
+  · rw [linearSheetSwap_fst, H_BdG_snd, map_sub, h1 x.fst, h2 x.snd]
+    change -Δ (C₀ x.fst) - h (C₀ x.snd) = -(H_BdG h Δ (linearSheetSwap C₀ x)).fst
+    rw [H_BdG_fst, linearSheetSwap_fst, linearSheetSwap_snd]
     abel
-  · show C₀ (H_BdG h Δ x).fst = -(H_BdG h Δ (linearSheetSwap C₀ x)).snd
-    rw [H_BdG_fst, H_BdG_snd, linearSheetSwap_fst, linearSheetSwap_snd, map_add, h3 x.fst, h4 x.snd]
+  · rw [linearSheetSwap_snd, H_BdG_fst, map_add, h3 x.fst, h4 x.snd]
+    change adjoint h (C₀ x.fst) + -adjoint Δ (C₀ x.snd) = -(H_BdG h Δ (linearSheetSwap C₀ x)).snd
+    rw [H_BdG_snd, linearSheetSwap_fst, linearSheetSwap_snd]
     abel
 
 /-- Legacy theorem name retained for compatibility. -/

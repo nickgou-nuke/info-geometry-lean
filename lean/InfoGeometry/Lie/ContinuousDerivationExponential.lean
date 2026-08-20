@@ -499,6 +499,20 @@ theorem exponential_derivation_is_automorphism
         (flowLinearEquiv D t y) := by
   exact flow_map_mul mul D hD t x y
 
+/**
+Product preservation stated directly for the bundled linear equivalence.
+This is the form needed by downstream relation-transport lemmas.
+*/
+theorem flowLinearEquiv_map_mul
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    flowLinearEquiv D t (mul x y) =
+      mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) := by
+  exact exponential_derivation_is_automorphism mul D hD t x y
+
 /-!
 ## One-parameter-group laws
 -/
@@ -770,6 +784,23 @@ theorem flow_preserves_zero_product
   ]
   exact
     (flow D t).map_zero
+
+/-
+The opposite orientation is a separate theorem because no commutativity of the
+underlying product is assumed.
+-/
+theorem flow_preserves_zero_product_rev
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A)
+    (hyx : mul y x = 0) :
+    mul
+        (flow D t y)
+        (flow D t x) =
+      0 := by
+  exact flow_preserves_zero_product mul D hD t y x hyx
 
 /--
 Vanishing of an associator is preserved by the derivation exponential.

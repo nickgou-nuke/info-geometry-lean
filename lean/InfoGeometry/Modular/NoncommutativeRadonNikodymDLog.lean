@@ -20,7 +20,7 @@ This module establishes the exact non-commutative formalization of:
    `dlog_L(u⁻¹) = - dlog_R(u)`
 5. The relative Noncommutative Radon–Nikodym unit `Δ_{u, v} = u * v⁻¹` and chain rule.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

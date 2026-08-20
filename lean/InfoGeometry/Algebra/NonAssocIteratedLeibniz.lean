@@ -163,6 +163,12 @@ theorem firstOrderExp_map_one
     firstOrderExp t D one = one := by
   rw [firstOrderExp_apply, hD_one, smul_zero, add_zero]
 
+/-- A vector fixed by the generator is fixed by the first-order flow. -/
+theorem firstOrderExp_fixed_of_derivation_eq_zero
+    (t : R) (D : A →ₗ[R] A) (x : A) (hx : D x = 0) :
+    firstOrderExp t D x = x := by
+  rw [firstOrderExp_apply, hx, smul_zero, add_zero]
+
 theorem firstOrderExp_inverse
     (t : R) (D : A →ₗ[R] A)
     (hD2 : ∀ x, D (D x) = 0)
@@ -178,6 +184,18 @@ theorem firstOrderExp_inverse'
     (x : A) :
     firstOrderExp t D (firstOrderExp (-t) D x) = x := by
   simpa using firstOrderExp_inverse (-t) D hD2 x
+
+/-- The truncated flow has the additive parameter law in the square-zero
+image regime. -/
+theorem firstOrderExp_add_apply
+    (s t : R) (D : A →ₗ[R] A)
+    (hD2 : ∀ x, D (D x) = 0)
+    (x : A) :
+    firstOrderExp (s + t) D x =
+      firstOrderExp s D (firstOrderExp t D x) := by
+  rw [firstOrderExp_apply, firstOrderExp_apply, firstOrderExp_apply]
+  simp only [map_add, map_smul, hD2, smul_zero, add_zero]
+  module
 
 end FirstOrder
 

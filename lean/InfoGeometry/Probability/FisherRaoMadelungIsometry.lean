@@ -32,6 +32,22 @@ theorem hasDerivAt_madelung_amplitude
     HasDerivAt (fun s => Real.sqrt (rho s)) (rho' / (2 * Real.sqrt (rho t))) t := by
   exact HasDerivAt.sqrt h_diff (ne_of_gt h_pos)
 
+/-- Positive densities have a nonzero Madelung amplitude. -/
+theorem madelung_amplitude_pos
+    (rho_val : ℝ) (h_pos : 0 < rho_val) :
+    0 < Real.sqrt rho_val :=
+  Real.sqrt_pos.2 h_pos
+
+theorem madelung_amplitude_ne_zero
+    (rho_val : ℝ) (h_pos : 0 < rho_val) :
+    Real.sqrt rho_val ≠ 0 :=
+  ne_of_gt (madelung_amplitude_pos rho_val h_pos)
+
+theorem madelung_amplitude_sq
+    (rho_val : ℝ) (h_pos : 0 < rho_val) :
+    (Real.sqrt rho_val) ^ 2 = rho_val :=
+  Real.sq_sqrt (le_of_lt h_pos)
+
 /-- 🏆 THEOREM: The Fisher–Rao Metric Isometry:
     4 * (d/dt √ρ(t))² = (ρ'(t))² / ρ(t)
     The quadratic form on the flat amplitude space equals the Fisher–Rao energy on the density manifold. -/
@@ -40,7 +56,8 @@ theorem fisher_rao_madelung_isometry
     let dpsi := rho' / (2 * Real.sqrt rho_val)
     4 * (dpsi ^ 2) = (rho' ^ 2) / rho_val := by
   dsimp
-  have h_sq : (Real.sqrt rho_val) ^ 2 = rho_val := Real.sq_sqrt (le_of_lt h_pos)
+  have h_sq : (Real.sqrt rho_val) ^ 2 = rho_val :=
+    madelung_amplitude_sq rho_val h_pos
   calc
     4 * (rho' / (2 * Real.sqrt rho_val)) ^ 2
         = 4 * (rho' ^ 2 / (4 * (Real.sqrt rho_val) ^ 2)) := by ring
@@ -73,6 +90,41 @@ theorem bregmanDivergence_self (psi : ℝ → ℝ) (dpsi : ℝ → ℝ) (theta :
     bregmanDivergence psi dpsi theta theta = 0 := by
   dsimp [bregmanDivergence]
   ring
+
+/-- A supporting-line inequality for `psi` gives nonnegativity of its
+one-dimensional Bregman divergence. -/
+theorem bregmanDivergence_nonneg_of_supporting_line
+    (psi dpsi : ℝ → ℝ) (theta1 theta2 : ℝ)
+    (hsupport : psi theta2 + dpsi theta2 * (theta1 - theta2) ≤ psi theta1) :
+    0 ≤ bregmanDivergence psi dpsi theta1 theta2 := by
+  dsimp [bregmanDivergence]
+  linarith
+
+/-- Strict supporting lines characterize the zero set of the Bregman
+divergence under the stated hypothesis. -/
+theorem bregmanDivergence_pos_of_strict_supporting_line
+    (psi dpsi : ℝ → ℝ) (theta1 theta2 : ℝ)
+    (hstrict : theta1 ≠ theta2 →
+      psi theta2 + dpsi theta2 * (theta1 - theta2) < psi theta1)
+    (hne : theta1 ≠ theta2) :
+    0 < bregmanDivergence psi dpsi theta1 theta2 := by
+  dsimp [bregmanDivergence]
+  linarith [hstrict hne]
+
+theorem bregmanDivergence_eq_zero_iff_of_strict_supporting_line
+    (psi dpsi : ℝ → ℝ) (theta1 theta2 : ℝ)
+    (hstrict : theta1 ≠ theta2 →
+      psi theta2 + dpsi theta2 * (theta1 - theta2) < psi theta1) :
+    bregmanDivergence psi dpsi theta1 theta2 = 0 ↔ theta1 = theta2 := by
+  constructor
+  · intro hzero
+    by_contra hne
+    have hpos := bregmanDivergence_pos_of_strict_supporting_line
+      psi dpsi theta1 theta2 hstrict hne
+    linarith
+  · intro hEq
+    subst theta1
+    exact bregmanDivergence_self psi dpsi theta2
 
 /-- 🏆 THEOREM: Legendre–Fenchel Dual Conjugate (Entropy):
     S(η) = θ · η - Ψ(θ) where η = Ψ'(θ) -/

@@ -199,6 +199,17 @@ theorem dlog_mul (D : A →ₗ[ℤ] A) (hD : IsDerivation D) (u v : Aˣ) :
       _ = _ := by rw [hu, one_mul]
   rw [hterm]
 
+/- The three-factor form records the noncommutative cocycle coherence: the
+   contribution from the first factor is transported through both later
+   factors, in their order. -/
+theorem dlog_mul_three (D : A →ₗ[ℤ] A) (hD : IsDerivation D)
+    (u v w : Aˣ) :
+    dlog D (u * v * w) =
+      (↑(w⁻¹) : A) * (↑(v⁻¹) : A) * dlog D u * (v : A) * (w : A) +
+        (↑(w⁻¹) : A) * dlog D v * (w : A) + dlog D w := by
+  rw [dlog_mul D hD (u * v) w, dlog_mul D hD u v]
+  simp only [mul_assoc, add_mul, mul_add]
+
 theorem dlog_mul_of_central_right (D : A →ₗ[ℤ] A)
     (hD : IsDerivation D) (u v : Aˣ)
     (hv : ∀ x : A, (v : A) * x = x * (v : A)) :
@@ -215,6 +226,23 @@ theorem dlog_mul_of_central_right (D : A →ₗ[ℤ] A)
         have hvunit : (↑(v⁻¹) : A) * (v : A) = 1 := v.inv_val
         rw [hvunit]
       _ = dlog D u := by rw [one_mul]
+  rw [hconj]
+
+theorem dlog_mul_of_commute_right (D : A →ₗ[ℤ] A)
+    (hD : IsDerivation D) (u v : Aˣ)
+    (hcomm : Commute (dlog D u) (v : A)) :
+    dlog D (u * v) = dlog D u + dlog D v := by
+  rw [dlog_mul D hD u v]
+  have hconj : (↑(v⁻¹) : A) * dlog D u * (v : A) = dlog D u := by
+    calc
+      (↑(v⁻¹) : A) * dlog D u * (v : A) =
+          (↑(v⁻¹) : A) * (dlog D u * (v : A)) := by
+        rw [mul_assoc]
+      _ = (↑(v⁻¹) : A) * ((v : A) * dlog D u) := by
+        rw [hcomm.eq]
+      _ = ((↑(v⁻¹) : A) * (v : A)) * dlog D u := by
+        rw [mul_assoc]
+      _ = dlog D u := by simp
   rw [hconj]
 
 theorem dlog_inv (D : A →ₗ[ℤ] A) (hD : IsDerivation D) (u : Aˣ) :
@@ -266,9 +294,42 @@ theorem innerNCDerivation_dlog (K : A) (u : Aˣ) :
     _ = (↑(u⁻¹) : A) * K * (u : A) - K := by
       rw [← mul_assoc (a := (↑(u⁻¹) : A)) (b := (u : A)), hu, one_mul]
 
+theorem innerNCDerivation_dlog_eq_zero_iff (K : A) (u : Aˣ) :
+    (innerNCDerivation K).dlog u = 0 ↔ Commute K (u : A) := by
+  constructor
+  · intro h
+    have h' : (↑(u⁻¹) : A) * K * (u : A) = K := by
+      exact sub_eq_zero.mp (by simpa [innerNCDerivation_dlog K u] using h)
+    have h'' := congrArg (fun z : A => (u : A) * z) h'
+    simp only [mul_assoc] at h''
+    have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+    rw [← mul_assoc (a := (u : A)) (b := (↑(u⁻¹) : A)), hu,
+      one_mul] at h''
+    change K * (u : A) = (u : A) * K
+    exact h''
+  · intro h
+    rw [innerNCDerivation_dlog K u]
+    have hu : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+    rw [mul_assoc, h.eq, ← mul_assoc, hu, one_mul, sub_self]
+
 /- Algebraic modular conjugation by a unit. -/
 def innerConjugation (u : Aˣ) (X : A) : A :=
   (u : A) * X * (↑(u⁻¹) : A)
+
+/-- The logarithmic derivative of an inner derivation is the displacement
+    between a generator and its inverse-unit conjugate.  This is the
+    noncommutative form of the modular cocycle increment. -/
+theorem innerNCDerivation_dlog_eq_innerConjugation_inverse_sub
+    (K : A) (u : Aˣ) :
+    (innerNCDerivation K).dlog u = innerConjugation (u⁻¹) K - K := by
+  simpa [innerConjugation] using innerNCDerivation_dlog K u
+
+theorem innerNCDerivation_dlog_eq_zero_iff_conjugation_fixed
+    (K : A) (u : Aˣ) :
+    (innerNCDerivation K).dlog u = 0 ↔
+      innerConjugation (u⁻¹) K = K := by
+  rw [innerNCDerivation_dlog_eq_innerConjugation_inverse_sub]
+  exact sub_eq_zero
 
 theorem innerConjugation_one (u : Aˣ) : innerConjugation u (1 : A) = 1 := by
   simp [innerConjugation]
@@ -332,6 +393,105 @@ theorem innerConjugation_inverse (u : Aˣ) (X : A) :
       innerConjugation_comp (u⁻¹) u X
     _ = innerConjugation 1 X := by rw [inv_mul_cancel]
     _ = X := by simp [innerConjugation]
+
+/-- Unit conjugation, bundled as the native ring automorphism of `A`. -/
+def innerConjugationRingEquiv (u : Aˣ) : A ≃+* A :=
+  RingEquiv.ofBijective
+    ({ toFun := innerConjugation u
+       map_one' := innerConjugation_one u
+       map_mul' := innerConjugation_mul u
+       map_zero' := by simp [innerConjugation]
+       map_add' := innerConjugation_add u } : A →+* A)
+    (by
+      constructor
+      · intro X Y h
+        have h' := congrArg (innerConjugation (u⁻¹)) h
+        simpa [innerConjugation_inverse] using h'
+      · intro X
+        refine ⟨innerConjugation (u⁻¹) X, ?_⟩
+        simpa using innerConjugation_inverse (u⁻¹) X)
+
+@[simp] theorem innerConjugationRingEquiv_apply (u : Aˣ) (X : A) :
+    innerConjugationRingEquiv u X = innerConjugation u X := by
+  simp [innerConjugationRingEquiv]
+
+theorem innerNCDerivation_dlog_eq_ringEquiv_sub (K : A) (u : Aˣ) :
+    (innerNCDerivation K).dlog u =
+      innerConjugationRingEquiv (u⁻¹) K - K := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact innerNCDerivation_dlog_eq_innerConjugation_inverse_sub K u
+
+theorem innerConjugationRingEquiv_commutator (u : Aˣ) (X Y : A) :
+    innerConjugationRingEquiv u (X * Y - Y * X) =
+      innerConjugationRingEquiv u X * innerConjugationRingEquiv u Y -
+        innerConjugationRingEquiv u Y * innerConjugationRingEquiv u X := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact innerConjugation_commutator u X Y
+
+theorem innerConjugationRingEquiv_mul_apply (u v : Aˣ) (X : A) :
+    innerConjugationRingEquiv (u * v) X =
+      innerConjugationRingEquiv u (innerConjugationRingEquiv v X) := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact (innerConjugation_comp u v X).symm
+
+theorem innerConjugationRingEquiv_inv_apply (u : Aˣ) (X : A) :
+    innerConjugationRingEquiv (u⁻¹) (innerConjugationRingEquiv u X) = X := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact innerConjugation_inverse u X
+
+theorem innerConjugationRingEquiv_map_adK (u : Aˣ) (K X : A) :
+    innerConjugationRingEquiv u (adK K X) =
+      adK (innerConjugationRingEquiv u K)
+        (innerConjugationRingEquiv u X) := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact innerConjugation_adK u K X
+
+theorem innerConjugationRingEquiv_fixed_iff (u : Aˣ) (K : A) :
+    innerConjugationRingEquiv u K = K ↔ Commute K (u : A) := by
+  constructor
+  · intro h
+    have h' := congrArg (fun z : A => z * (u : A)) h
+    change ((u : A) * K * (↑(u⁻¹) : A)) * (u : A) = K * (u : A) at h'
+    have hu : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+    rw [mul_assoc, hu, mul_one] at h'
+    change K * (u : A) = (u : A) * K
+    exact h'.symm
+  · intro h
+    simp only [innerConjugationRingEquiv_apply]
+    unfold innerConjugation
+    have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+    rw [← h.eq, mul_assoc, hu, mul_one]
+
+theorem innerConjugationRingEquiv_fixed_iff_dlog_eq_zero
+    (u : Aˣ) (K : A) :
+    innerConjugationRingEquiv u K = K ↔
+      (innerNCDerivation K).dlog u = 0 := by
+  rw [innerConjugationRingEquiv_fixed_iff,
+    innerNCDerivation_dlog_eq_zero_iff]
+
+theorem innerConjugation_central_iff (u : Aˣ) (K : A) :
+    (∀ X : A, innerConjugation u K * X = X * innerConjugation u K) ↔
+      ∀ X : A, K * X = X * K := by
+  constructor
+  · intro hK X
+    have hz : innerConjugation u (adK K X) = 0 := by
+      rw [innerConjugation_adK]
+      exact sub_eq_zero.mpr (hK (innerConjugation u X))
+    have hz' := congrArg (innerConjugation (u⁻¹)) hz
+    have hz0 : innerConjugation (u⁻¹) (0 : A) = 0 := by
+      simp [innerConjugation]
+    rw [innerConjugation_inverse, hz0] at hz'
+    exact sub_eq_zero.mp hz'
+  · intro hK X
+    rw [innerConjugation_eq_of_central u K hK]
+    exact hK X
+
+theorem innerConjugationRingEquiv_central_iff (u : Aˣ) (K : A) :
+    (∀ X : A, innerConjugationRingEquiv u K * X =
+      X * innerConjugationRingEquiv u K) ↔
+      ∀ X : A, K * X = X * K := by
+  simp only [innerConjugationRingEquiv_apply]
+  exact innerConjugation_central_iff u K
 
 end InfoGeometry.Modular.Noncommutative
 

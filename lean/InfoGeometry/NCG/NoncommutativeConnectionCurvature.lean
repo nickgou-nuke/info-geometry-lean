@@ -325,6 +325,12 @@ theorem gaugeTransformConnection_comp (u v : Aˣ) (A_conn : A) :
   simp only [← mul_assoc, hu', one_mul]
   abel
 
+/-- The affine gauge action on connections is inverted by the inverse unit. -/
+theorem gaugeTransformConnection_inv (u : Aˣ) (A_conn : A) :
+    gaugeTransformConnection D (u⁻¹) (gaugeTransformConnection D u A_conn) = A_conn := by
+  rw [← gaugeTransformConnection_comp D u⁻¹ u A_conn]
+  simp
+
 /-- 🏆 THEOREM 4: Noncommutative Maurer-Cartan Flatness:
     D(u) * D(u⁻¹) + θ² = 0 -/
 theorem maurer_cartan_flatness (u : Aˣ) :

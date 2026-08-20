@@ -60,6 +60,12 @@ theorem commutator_modular_apply (D : Derivation A) (K X : A) :
     commutator D (modularDerivation K) X = modularDerivation (D K) X :=
   master_dual_flow_commutator D K X
 
+theorem commutator_modular_eq (D : Derivation A) (K : A) :
+    commutator D (modularDerivation K) = modularDerivation (D K) := by
+  apply Derivation.extensionality
+  intro X
+  exact commutator_modular_apply D K X
+
 theorem inn_is_lie_ideal (D : Derivation A) (K : A) :
     ∃ K' : A, ∀ X : A, commutator D (modularDerivation K) X = modularDerivation K' X := by
   use D K
@@ -70,6 +76,13 @@ theorem inner_derivation_bracket (K₁ K₂ : A) (X : A) :
     commutator (modularDerivation K₁) (modularDerivation K₂) X =
       modularDerivation (adK K₁ K₂) X :=
   commutator_modular_apply (modularDerivation K₁) K₂ X
+
+theorem inner_derivation_bracket_eq (K₁ K₂ : A) :
+    commutator (modularDerivation K₁) (modularDerivation K₂) =
+      modularDerivation (adK K₁ K₂) := by
+  apply Derivation.extensionality
+  intro X
+  exact inner_derivation_bracket K₁ K₂ X
 
 theorem derivation_short_exact_sequence_summary (D : Derivation A) (K X : A) :
     ((∀ Y, adK K Y = 0) ↔ (∀ Y, K * Y = Y * K)) ∧

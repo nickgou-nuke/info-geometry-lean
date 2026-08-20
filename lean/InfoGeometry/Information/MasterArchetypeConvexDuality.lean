@@ -102,7 +102,7 @@ structure MasterArchetypeTheoremBundle where
     psi theta + (theta * eta - psi theta) = theta * eta
   nilpotent_automorphism : ∀ {K A : Type*} [Field K] [CharZero K]
     [AddCommGroup A] [Module K A]
-    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A)
+    (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
     (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
     (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K) (x y : A),
     nilpotentExpStep2 D t (mul x y) =

@@ -11,12 +11,12 @@ import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.DeRhamModularPotentialBridge
+import InfoGeometry.Canonical.DeRhamThermodynamicPotential
 import InfoGeometry.Canonical.QuantumAlgebraObservableBase
 import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
-import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
 import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
 import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
 import InfoGeometry.Continuous.DeRhamBridge
@@ -79,15 +79,12 @@ export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
   integral_coordinateSurprisalRate_eq_potential_sub
   coordinateSurprisalPotential_difference
   coordinateSurprisalPotential_closed_loop
-)
-
-export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
-  coordinateSurprisalPotential
-  hasFDerivAt_coordinateSurprisalPotential
-  coordinateSurprisalPotential_contDiffOn
-  integral_coordinateSurprisalRate_eq_potential_sub
-  coordinateSurprisalPotential_difference
-  coordinateSurprisalPotential_closed_loop
+  coordinateFisherMetric
+  coordinateFisherMetric_comm
+  coordinateFisherMetric_nonneg
+  coordinateFisherMetric_pos_of_coordinate_ne_zero
+  coordinateFisherMetric_pos_of_ne_zero
+  coordinateFisherMetric_eq_zero_of_zero
 )
 
 export InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge (

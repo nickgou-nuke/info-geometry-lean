@@ -182,6 +182,13 @@ theorem dlogMonoidHom_pow
       Multiplicative.ofAdd (n • dlog D u) := by
   rw [map_pow, dlogMonoidHom_apply, ofAdd_nsmul]
 
+/-- The bundled logarithmic derivative sends unit inverses to additive inverses. -/
+theorem dlogMonoidHom_inv
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    dlogMonoidHom D hD (u⁻¹) =
+      (dlogMonoidHom D hD u)⁻¹ := by
+  exact map_inv (dlogMonoidHom D hD) u
+
 /-!
 =============================================================================
 PART 2: Analytic Differentiable Calculus of the Radon–Nikodym Density

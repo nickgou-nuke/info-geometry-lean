@@ -72,6 +72,23 @@ theorem transitionN_mul (n k : ℕ) (x y : S.Stage n) :
       S.transitionN n k x * S.transitionN n k y := by
   exact (S.transitionN n k).map_mul x y
 
+theorem transitionN_add (n k : ℕ) (x y : S.Stage n) :
+    S.transitionN n k (x + y) =
+      S.transitionN n k x + S.transitionN n k y := by
+  exact (S.transitionN n k).map_add x y
+
+theorem transitionN_smul (n k : ℕ) (r : R) (x : S.Stage n) :
+    S.transitionN n k (r • x) = r • S.transitionN n k x := by
+  exact (S.transitionN n k).map_smul r x
+
+theorem transitionN_zero_element (n k : ℕ) :
+    S.transitionN n k 0 = 0 := by
+  exact (S.transitionN n k).map_zero
+
+theorem transitionN_one (n k : ℕ) :
+    S.transitionN n k 1 = 1 := by
+  exact (S.transitionN n k).map_one
+
 theorem transitionN_star_mul (n k : ℕ) (x y : S.Stage n) :
     S.transitionN n k (star x * y) =
       star (S.transitionN n k x) * S.transitionN n k y := by

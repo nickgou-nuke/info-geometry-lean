@@ -64,7 +64,9 @@ def dimSubspace : ℕ := Fintype.card ι
 theorem trace_fromBlocks_diag (A B : SubMat) :
     Matrix.trace (Matrix.fromBlocks A (0 : SubMat) (0 : SubMat) B) =
       Matrix.trace A + Matrix.trace B := by
-  simp [Matrix.trace, Fintype.sum_sum_type]
+  dsimp [Matrix.trace]
+  rw [Fintype.sum_sum_type]
+  simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂]
 
 /-- 🏆 THEOREM 1: Trace of the Identity Operator `Tr(I₂ₙ) = 2n` -/
 theorem trace_IdDoubled :

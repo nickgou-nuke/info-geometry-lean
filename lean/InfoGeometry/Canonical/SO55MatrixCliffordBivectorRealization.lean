@@ -104,7 +104,7 @@ theorem canonicalDerivationToSpinBivector_map_lie
 theorem canonicalDerivationToSpinBivector_vector_agrees (D : Derivation) :
     _root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55 D =
       _root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55LieHom D := by
-  rfl
+  dsimp [_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55LieHom]
 
 /-- 🏆 THEOREM 5: Commutation with Chirality / Volume Element. -/
 theorem canonicalDerivationToSpinBivector_chirality (X : SpinBivector55) :

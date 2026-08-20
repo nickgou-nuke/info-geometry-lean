@@ -249,8 +249,8 @@ theorem centeredGibbsObservable_qgt_real_eq_fisherSouriauMatrix
           ring
   have hsum := Finset.sum_congr rfl hterm
   rw [hsum]
-    unfold fisherSouriauMatrix
-    norm_cast
+  unfold fisherSouriauMatrix
+  norm_cast
   have hi0 :
       @inner ℂ (GibbsHilbert State) _
           (centeredGibbsObservable D beta i (gibbsVector D beta))

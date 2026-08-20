@@ -54,18 +54,36 @@ instance : Neg (Derivation A) where
         simp only [Pi.neg_apply, D.map_add', neg_add]
       leibniz' := by
         intro x y
-        simp only [Pi.neg_apply, D.leibniz']
-        simp only [neg_add, neg_mul]
-        abel }
+        change -(D.toFun (x * y)) =
+          (-D.toFun x) * y + x * (-D.toFun y)
+        rw [D.leibniz']
+        simp only [neg_add, neg_mul, mul_neg] }
 
 instance : AddGroup (Derivation A) :=
   AddGroup.ofLeftAxioms
-    (by intro D E F; ext x; simp only [Pi.add_apply]; abel)
-    (by intro D; ext x; rfl)
-    (by intro D; ext x; simp only [Pi.neg_apply, Pi.add_apply]; abel)
+    (by
+      intro D E F
+      ext x
+      change (D.toFun x + E.toFun x) + F.toFun x =
+        D.toFun x + (E.toFun x + F.toFun x)
+      abel)
+    (by
+      intro D
+      ext x
+      change 0 + D.toFun x = D.toFun x
+      simp)
+    (by
+      intro D
+      ext x
+      change -D.toFun x + D.toFun x = 0
+      simp)
 
 instance : AddCommGroup (Derivation A) :=
-  AddCommGroup.mk (by intro D E; ext x; simp only [Pi.add_apply]; abel)
+  AddCommGroup.mk (by
+    intro D E
+    ext x
+    change D.toFun x + E.toFun x = E.toFun x + D.toFun x
+    abel)
 
 variable (D : Derivation A)
 

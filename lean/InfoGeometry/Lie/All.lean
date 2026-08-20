@@ -105,6 +105,8 @@ import InfoGeometry.Lie.CanonicalZornStandardDerivationCovariance
 import InfoGeometry.Lie.CanonicalZornProductBasis
 import InfoGeometry.Lie.CanonicalZornStandardDerivationActions
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationCentralKernel
 import InfoGeometry.Lie.CanonicalZornDerivationFlow
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge

@@ -159,23 +159,21 @@ theorem grand_unification_verified {A : Type*} [Ring A]
     -- (2) Center generates zero modular flow
     (K * X = X * K → K * X - X * K = 0) := by
   constructor
-  · -- Proof of Master Commutator via pure Leibniz expansion
+  · have h_zero : D_map 0 = 0 := by
+      have hz : D_map 0 + D_map 0 = D_map 0 + 0 := by
+        rw [add_zero, ← h_add, add_zero]
+      exact add_left_cancel hz
+    have h_neg : ∀ z, D_map (-z) = - D_map z := by
+      intro z
+      have hz : D_map z + D_map (-z) = 0 := by
+        rw [← h_add, add_neg_cancel, h_zero]
+      exact eq_neg_of_add_eq_zero_right hz
     have h_sub : ∀ x y, D_map (x - y) = D_map x - D_map y := by
       intro x y
-      have h_neg : ∀ z, D_map (-z) = - D_map z := by
-        intro z
-        have h_zero : D_map 0 = 0 := by
-          have hz := h_add 0 0
-          rw [add_zero] at hz
-          exact (self_eq_add_left.mp hz.symm).symm
-        have hz' : D_map (z + -z) = D_map z + D_map (-z) := h_add z (-z)
-        rw [add_neg_cancel, h_zero] at hz'
-        exact eq_neg_of_add_eq_zero_right hz'
       rw [sub_eq_add_neg, h_add, h_neg, ← sub_eq_add_neg]
     rw [h_sub, h_leibniz, h_leibniz]
     abel
-  · -- Proof of Thermal Time Invariance
-    intro h_comm
+  · intro h_comm
     rw [h_comm, sub_self]
 
 end InfoGeometry

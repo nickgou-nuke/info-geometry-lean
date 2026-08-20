@@ -171,6 +171,12 @@ theorem densityColimitUnit_coe (D : ∀ n : ℕ, MatrixStage n)
     (densityColimitUnit D hD0 : Carrier) = stageInjection 0 (D 0) := by
   simp [densityColimitUnit]
 
+theorem densityColimitUnit_coe_stage
+    (D : ∀ n : ℕ, MatrixStage n) (hD : DensityCompatible D)
+    (hD0 : IsUnit (D 0)) (n : ℕ) :
+    (densityColimitUnit D hD0 : Carrier) = stageInjection n (D n) := by
+  rw [densityColimitUnit_coe, ← densityCompatible_stageInjection D hD n]
+
 /-- The descended compatible weighted functional is exactly weighting by the
 single colimit density unit. -/
 theorem weightedColimitFunctional_eq_deltaWeighted

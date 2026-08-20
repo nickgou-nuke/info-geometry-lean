@@ -97,6 +97,15 @@ theorem state_modular_invariant (F : ModularFlow (R := R) sys) (phi_inf : A_inf 
     phi_inf (c.leg j (F.flow j (sys.trans hij x))) = phi_inf (c.leg i x) := by
   rw [c.modular_flow_intertwine F hij x, h_inv i x]
 
+theorem state_modular_invariant_trans
+    (F : ModularFlow (R := R) sys) (phi_inf : A_inf →ₗ[R] R)
+    (h_inv : ∀ i (x : A i), phi_inf (c.leg i (F.flow i x)) = phi_inf (c.leg i x))
+    {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) (x : A i) :
+    phi_inf (c.leg k
+      (F.flow k (sys.trans hjk (sys.trans hij x)))) =
+      phi_inf (c.leg i x) := by
+  rw [c.modular_flow_intertwine_trans F hij hjk x, h_inv i x]
+
 end InductiveCocone
 
 end InfoGeometry.NCG.ColimitKMS

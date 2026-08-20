@@ -55,7 +55,8 @@ theorem hasDerivAt_hessian {x : ℝ} (hx : x ≠ 0) :
   have hpow : x ^ 2 ≠ 0 := pow_ne_zero 2 hx
   have h := (hasDerivAt_pow 2 x).inv hpow
   convert h using 1
-  field_simp [hx] <;> ring
+  field_simp [hx]
+  ring
 
 @[simp] theorem deriv_barrier {x : ℝ} (hx : x ≠ 0) :
     deriv barrier x = gradient x :=
@@ -80,7 +81,8 @@ theorem thirdDerivative_sq_eq_four_mul_hessian_cube
     {x : ℝ} (hx : x ≠ 0) :
     (thirdDerivative x) ^ 2 = 4 * (hessian x) ^ 3 := by
   unfold thirdDerivative hessian
-  field_simp [hx] <;> ring
+  field_simp [hx]
+  ring
 
 /-- Directional scalar self-concordance equality. -/
 theorem directional_selfConcordance_sq
@@ -98,8 +100,7 @@ theorem directional_selfConcordance_sq
 theorem barrier_inv (x : ℝ) :
     barrier x⁻¹ = -barrier x := by
   unfold barrier
-  rw [Real.log_inv]
-  ring
+  rw [Real.log_inv, neg_neg]
 
 end InfoGeometry.Canonical.ScalarLogBarrier
 

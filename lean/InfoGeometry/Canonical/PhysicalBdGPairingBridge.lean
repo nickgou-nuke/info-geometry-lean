@@ -118,6 +118,16 @@ theorem nambu_ext {x y : NambuH}
   change (x.fst, x.snd) = (y.fst, y.snd)
   exact Prod.ext hfst hsnd
 
+@[simp] theorem nambuMk_eq_zero_iff (u v : H) :
+    nambuMk u v = 0 ↔ u = 0 ∧ v = 0 := by
+  constructor
+  · intro h
+    have h1 : (nambuMk u v).fst = (0 : NambuH).fst := congrArg (fun x : NambuH => x.fst) h
+    have h2 : (nambuMk u v).snd = (0 : NambuH).snd := congrArg (fun x : NambuH => x.snd) h
+    exact ⟨h1, h2⟩
+  · rintro ⟨rfl, rfl⟩
+    rfl
+
 /-- The `L²`-Nambu inner product is the sum of the two sector inner products. -/
 @[simp] theorem nambu_inner (x y : NambuH) :
     inner ℂ x y = inner ℂ x.fst y.fst + inner ℂ x.snd y.snd := by
@@ -717,7 +727,7 @@ theorem H_BdG_schurGraph_eq_zero_iff
     H_BdG h Δ (schurGraphEmbedding Δ I u) = 0 ↔
       BdG_Schur_Complement h Δ I u = 0 := by
   rw [H_BdG_on_schurGraph]
-  simp [nambu_ext_iff]
+  simp
 
 /-! ## 8. Spectral-parameter Schur complement -/
 
@@ -743,7 +753,9 @@ noncomputable def spectralBdG (h Δ : EndH) (E : ℂ) : EndNambu :=
 
 @[simp] theorem spectralBdG_zero (h Δ : EndH) :
     spectralBdG h Δ 0 = H_BdG h Δ := by
-  simp [spectralBdG, zero_smul]
+  apply ContinuousLinearMap.ext
+  intro x
+  simp [spectralBdG]
 
 @[simp] theorem shiftedParticleBlock_apply
     (h : EndH) (E : ℂ) (u : H) :
@@ -776,41 +788,35 @@ structure InvertibleShiftedHoleBlock (h : EndH) (E : ℂ) where
   equiv_toContinuousLinearMap :
     (equiv : H →L[ℂ] H) = shiftedHoleBlock h E
 
-namespace InvertibleShiftedHoleBlock
-
-variable {h : EndH} {E : ℂ}
-
 /-- Genuine inverse of the shifted hole block. -/
-def inverse (I : InvertibleShiftedHoleBlock h E) : EndH :=
+def InvertibleShiftedHoleBlock.inverse {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) : EndH :=
   (I.equiv.symm : H →L[ℂ] H)
 
-@[simp] theorem shiftedHoleBlock_comp_inverse (I : InvertibleShiftedHoleBlock h E) :
-    (shiftedHoleBlock h E).comp I.inverse = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem InvertibleShiftedHoleBlock.shiftedHoleBlock_comp_inverse {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) :
+    (shiftedHoleBlock h E).comp (InvertibleShiftedHoleBlock.inverse I) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change shiftedHoleBlock h E (I.equiv.symm x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_shiftedHoleBlock (I : InvertibleShiftedHoleBlock h E) :
-    I.inverse.comp (shiftedHoleBlock h E) = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem InvertibleShiftedHoleBlock.inverse_comp_shiftedHoleBlock {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) :
+    (InvertibleShiftedHoleBlock.inverse I).comp (shiftedHoleBlock h E) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change I.equiv.symm (shiftedHoleBlock h E x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem shiftedHoleBlock_inverse_apply (I : InvertibleShiftedHoleBlock h E) (x : H) :
-    shiftedHoleBlock h E (I.inverse x) = x := by
-  have hx := congrArg (fun T : EndH => T x) I.shiftedHoleBlock_comp_inverse
+@[simp] theorem InvertibleShiftedHoleBlock.shiftedHoleBlock_inverse_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
+    shiftedHoleBlock h E (InvertibleShiftedHoleBlock.inverse I x) = x := by
+  have hx := congrArg (fun T : EndH => T x) (InvertibleShiftedHoleBlock.shiftedHoleBlock_comp_inverse I)
   simpa [comp_apply] using hx
 
-@[simp] theorem inverse_shiftedHoleBlock_apply (I : InvertibleShiftedHoleBlock h E) (x : H) :
-    I.inverse (shiftedHoleBlock h E x) = x := by
-  have hx := congrArg (fun T : EndH => T x) I.inverse_comp_shiftedHoleBlock
+@[simp] theorem InvertibleShiftedHoleBlock.inverse_shiftedHoleBlock_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
+    InvertibleShiftedHoleBlock.inverse I (shiftedHoleBlock h E x) = x := by
+  have hx := congrArg (fun T : EndH => T x) (InvertibleShiftedHoleBlock.inverse_comp_shiftedHoleBlock I)
   simpa [comp_apply] using hx
-
-end InvertibleShiftedHoleBlock
 
 /-- Energy-dependent upper Schur complement of `H_BdG - E`. -/
 noncomputable def BdG_Schur_Complement_at
@@ -906,7 +912,7 @@ theorem spectralBdG_schurGraph_eq_zero_iff
     spectralBdG h Δ E (schurGraphEmbedding_at Δ I u) = 0 ↔
       BdG_Schur_Complement_at h Δ E I u = 0 := by
   rw [spectralBdG_on_schurGraph]
-  simp [nambu_ext_iff]
+  simp
 
 /-! ## 9. Consolidated theorem packets -/
 

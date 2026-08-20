@@ -322,10 +322,14 @@ noncomputable def expTransportLinearEquiv
   LinearEquiv.ofBijective (expTransportLinear X t) (by
     constructor
     · intro A₁ A₂ h
+      change expTransport X A₁ t = expTransport X A₂ t at h
       have h' := congrArg (fun B => expTransport X B (-t)) h
-      simpa only [expTransport_neg_right] using h'
+      dsimp at h'
+      rw [expTransport_neg_right X A₁ t, expTransport_neg_right X A₂ t] at h'
+      exact h'
     · intro A₀
       refine ⟨expTransport X A₀ (-t), ?_⟩
+      change expTransport X (expTransport X A₀ (-t)) t = A₀
       exact expTransport_neg_left X A₀ t)
 
 /-- The finite exponential transport as an `ℝ`-algebra equivalence. -/

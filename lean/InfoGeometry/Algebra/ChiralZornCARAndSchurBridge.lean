@@ -11,7 +11,7 @@ This file closes two finite algebraic layers with native Mathlib structures.
 * For a scalar `2 × 2` block, its determinant/Zorn-norm shadow, Schur
   complement, and scalar Berezinian satisfy exact field identities.
 
-The CAR result is deliberately modewise and associative.  It does not install
+The CAR result is deliberately modewise and associative. It does not install
 an associative multiplication on the full split-octonion Zorn carrier.
 -/
 
@@ -325,10 +325,10 @@ theorem full_car_packet
 
 /-! ## Compatibility aliases for the original frozen API -/
 
-def D_plus (J : A) : A := DPlus (K := K) J
-def D_minus (J : A) : A := DMinus (K := K) J
-def G_plus (I j : A) : A := GPlus (K := K) I j
-def G_minus (I j : A) : A := GMinus (K := K) I j
+abbrev D_plus := DPlus
+abbrev D_minus := DMinus
+abbrev G_plus := GPlus
+abbrev G_minus := GMinus
 
 theorem D_plus_add_D_minus
     (h2 : (2 : K) ≠ 0) (J : A) :
@@ -371,14 +371,16 @@ theorem G_plus_mul_G_minus
     (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1)
     (hcross : j * I = -(I * j)) (hJ : J = I * j) :
-    G_plus (K := K) I j * G_minus (K := K) I j = D_minus (K := K) J :=
+    G_plus (K := K) I j * G_minus (K := K) I j =
+      D_minus (K := K) J :=
   GPlus_mul_GMinus h2 I j J hI hj hcross hJ
 
 theorem G_minus_mul_G_plus
     (h2 : (2 : K) ≠ 0) (I j J : A)
     (hI : I * I = 1) (hj : j * j = -1)
     (hcross : j * I = -(I * j)) (hJ : J = I * j) :
-    G_minus (K := K) I j * G_plus (K := K) I j = D_plus (K := K) J :=
+    G_minus (K := K) I j * G_plus (K := K) I j =
+      D_plus (K := K) J :=
   GMinus_mul_GPlus h2 I j J hI hj hcross hJ
 
 theorem G_plus_G_minus_CAR
@@ -414,22 +416,26 @@ def zornNorm (α β u v : F) : F :=
 @[simp]
 theorem det_blockMatrix
     (α β u v : F) :
-    Matrix.det (blockMatrix α β u v) = zornNorm α β u v := by
+    Matrix.det (blockMatrix α β u v) =
+      zornNorm α β u v := by
   simp [blockMatrix, zornNorm, Matrix.det_fin_two]
 
 /-- The Schur complement is the Zorn norm divided by the pivot. -/
 theorem schur_scalar_formula
     (α β u v : F)
     (hβ : β ≠ 0) :
-    schurComplement α β u v = zornNorm α β u v / β := by
+    schurComplement α β u v =
+      zornNorm α β u v / β := by
   unfold schurComplement zornNorm
   field_simp [hβ]
+  ring
 
 /-- The Zorn norm reconstructs from the Schur complement and the pivot. -/
 theorem zornNorm_eq_schur_mul_beta
     (α β u v : F)
     (hβ : β ≠ 0) :
-    zornNorm α β u v = schurComplement α β u v * β := by
+    zornNorm α β u v =
+      schurComplement α β u v * β := by
   rw [schur_scalar_formula α β u v hβ]
   exact (div_mul_cancel₀ (zornNorm α β u v) hβ).symm
 
@@ -437,10 +443,12 @@ theorem zornNorm_eq_schur_mul_beta
 theorem berezinian_eq_zornNorm_div_sq
     (α β u v : F)
     (hβ : β ≠ 0) :
-    berezinianScalar α β u v = zornNorm α β u v / β ^ 2 := by
+    berezinianScalar α β u v =
+      zornNorm α β u v / β ^ 2 := by
   unfold berezinianScalar
   rw [schur_scalar_formula α β u v hβ]
   field_simp [hβ]
+  ring
 
 /-- Scalar Berezinian equals the ordinary determinant divided by the squared
 lower-right block. -/
@@ -456,10 +464,14 @@ theorem berezinian_eq_det_div_sq
 theorem scalar_schur_berezinian_packet
     (α β u v : F)
     (hβ : β ≠ 0) :
-    Matrix.det (blockMatrix α β u v) = zornNorm α β u v ∧
-      schurComplement α β u v = zornNorm α β u v / β ∧
-      zornNorm α β u v = schurComplement α β u v * β ∧
-      berezinianScalar α β u v = zornNorm α β u v / β ^ 2 ∧
+    Matrix.det (blockMatrix α β u v) =
+        zornNorm α β u v ∧
+      schurComplement α β u v =
+        zornNorm α β u v / β ∧
+      zornNorm α β u v =
+        schurComplement α β u v * β ∧
+      berezinianScalar α β u v =
+        zornNorm α β u v / β ^ 2 ∧
       berezinianScalar α β u v =
         Matrix.det (blockMatrix α β u v) / β ^ 2 := by
   exact
@@ -471,17 +483,20 @@ theorem scalar_schur_berezinian_packet
 
 /-! ## Compatibility aliases for the original scalar API -/
 
-def zorn_norm (α β u v : F) : F :=
-  zornNorm α β u v
+abbrev zorn_norm := zornNorm
 
 theorem berezinian_eq_zorn_norm_div_sq
-    (α β u v : F) (hβ : β ≠ 0) :
-    berezinianScalar α β u v = zorn_norm α β u v / β ^ 2 :=
+    (α β u v : F)
+    (hβ : β ≠ 0) :
+    berezinianScalar α β u v =
+      zorn_norm α β u v / β ^ 2 :=
   berezinian_eq_zornNorm_div_sq α β u v hβ
 
 theorem zorn_norm_eq_schur_mul_beta
-    (α β u v : F) (hβ : β ≠ 0) :
-    zorn_norm α β u v = schurComplement α β u v * β :=
+    (α β u v : F)
+    (hβ : β ≠ 0) :
+    zorn_norm α β u v =
+      schurComplement α β u v * β :=
   zornNorm_eq_schur_mul_beta α β u v hβ
 
 end ZornNormSchurScalarSpecialization
@@ -493,14 +508,16 @@ open ZornNormSchurScalarSpecialization
 variable {F : Type*} [Field F]
 
 /-- Scalar particle-hole/BdG block. -/
-def bdgBlock (h Δ : F) : Matrix (Fin 2) (Fin 2) F :=
+def bdgBlock (h Δ : F) :
+    Matrix (Fin 2) (Fin 2) F :=
   blockMatrix h (-h) Δ Δ
 
 /-- The scalar BdG determinant is the negative quadratic gap. -/
 @[simp]
 theorem det_bdgBlock
     (h Δ : F) :
-    Matrix.det (bdgBlock h Δ) = -(h ^ 2 + Δ ^ 2) := by
+    Matrix.det (bdgBlock h Δ) =
+      -(h ^ 2 + Δ ^ 2) := by
   rw [bdgBlock, det_blockMatrix]
   unfold zornNorm
   ring
@@ -509,7 +526,8 @@ theorem det_bdgBlock
 theorem schur_bdgBlock
     (h Δ : F)
     (hh : h ≠ 0) :
-    schurComplement h (-h) Δ Δ = (h ^ 2 + Δ ^ 2) / h := by
+    schurComplement h (-h) Δ Δ =
+      (h ^ 2 + Δ ^ 2) / h := by
   rw [schur_scalar_formula]
   · unfold zornNorm
     field_simp [hh]
@@ -532,8 +550,10 @@ theorem berezinian_bdgBlock
 theorem bdg_schur_berezinian_packet
     (h Δ : F)
     (hh : h ≠ 0) :
-    Matrix.det (bdgBlock h Δ) = -(h ^ 2 + Δ ^ 2) ∧
-      schurComplement h (-h) Δ Δ = (h ^ 2 + Δ ^ 2) / h ∧
+    Matrix.det (bdgBlock h Δ) =
+        -(h ^ 2 + Δ ^ 2) ∧
+      schurComplement h (-h) Δ Δ =
+        (h ^ 2 + Δ ^ 2) / h ∧
       berezinianScalar h (-h) Δ Δ =
         -(h ^ 2 + Δ ^ 2) / h ^ 2 := by
   exact

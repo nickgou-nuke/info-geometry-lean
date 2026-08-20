@@ -212,7 +212,7 @@ theorem derivationCommutator_jacobi (D E F : A →ₗ[R] A) :
         derivationCommutator F (derivationCommutator D E) = 0 := by
   ext x
   simp only [derivationCommutator, LinearMap.add_apply, LinearMap.sub_apply,
-    LinearMap.comp_apply]
+    LinearMap.comp_apply, LinearMap.map_sub, LinearMap.zero_apply]
   abel
 
 end DerivationBracket

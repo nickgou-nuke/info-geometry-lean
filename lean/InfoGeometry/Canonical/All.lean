@@ -3330,8 +3330,6 @@ import InfoGeometry.Canonical.EmergentSpacetimeQuantumGeometryBridge
 import InfoGeometry.Canonical.EmergentSouriauQGTBridge
 import InfoGeometry.Canonical.FiniteGibbsQGTRealization
 import InfoGeometry.Canonical.TomitaCommutantHeatBathBridge
-import InfoGeometry.Canonical.DerivationToSpinBivector55Bridge
-import InfoGeometry.Canonical.SO55MatrixCliffordBivectorRealization
 import InfoGeometry.Canonical.CanonicalDerivationSpinBivector55
 import InfoGeometry.Continuous.Exactness
 import InfoGeometry.Canonical.DeRhamUnifiedCorridor

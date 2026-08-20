@@ -3316,6 +3316,7 @@ import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
 import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
 import InfoGeometry.Canonical.GrandMathematicalUnification
 import InfoGeometry.Canonical.CompleteUnifiedBundle
+import InfoGeometry.Canonical.ErlangenObservableBundle
 import InfoGeometry.CompleteUnifiedBundle
 
 namespace InfoGeometry

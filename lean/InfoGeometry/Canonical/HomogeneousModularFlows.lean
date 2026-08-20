@@ -36,6 +36,16 @@ end HomogeneousSpace
 def leftMaurerCartanReadout {G : Type u} [Group G] (g v : G) : G :=
   g⁻¹ * v
 
+/-- Ring-valued logarithmic readout with an explicitly supplied inverse. -/
+def algebraicMaurerCartanReadout {A : Type*} [Ring A] (invElement velocity : A) : A :=
+  invElement * velocity
+
+/-! A path-level wrapper keeps the base parameter explicit without claiming
+that a differentiable manifold structure has been constructed. -/
+def maurerCartanPath {ι A : Type*} [Ring A]
+    (path inversePath velocity : ι → A) (t : ι) : A :=
+  algebraicMaurerCartanReadout (inversePath t) (velocity t)
+
 theorem leftMaurerCartanReadout_eq_identity_of_velocity
     {G : Type u} [Group G] (g : G) :
     leftMaurerCartanReadout g g = 1 := by
@@ -54,20 +64,36 @@ theorem leftMaurerCartanReadout_path
   rfl
 
 theorem dlogCocycle_eq_leftMaurerCartanReadout
-    {A : Type*} [Ring A] [Group A]
-    (D : Derivation A) (delta invDelta : A)
-    (h_inv : invDelta = delta⁻¹) :
+    {A : Type*} [Ring A]
+    (D : Derivation A) (delta invDelta : A) :
     dlogCocycle D invDelta delta =
-      leftMaurerCartanReadout delta (D delta) := by
-  rw [h_inv]
-  simp only [dlogCocycle, leftMaurerCartanReadout]
+      algebraicMaurerCartanReadout invDelta (D delta) := by
   rfl
 
-theorem dlogCocycle_eq_maurerCartan_of_unit
-    {A : Type*} [Ring A] [Group A]
-    (D : Derivation A) (delta : A) :
-    dlogCocycle D (delta⁻¹) delta =
-      leftMaurerCartanReadout delta (D delta) :=
-  dlogCocycle_eq_leftMaurerCartanReadout D delta delta⁻¹ rfl
+theorem dlogCocycle_eq_maurerCartan_of_suppliedInverse
+    {A : Type*} [Ring A]
+    (D : Derivation A) (delta invDelta : A) :
+    dlogCocycle D invDelta delta =
+      algebraicMaurerCartanReadout invDelta (D delta) :=
+  dlogCocycle_eq_leftMaurerCartanReadout D delta invDelta
+
+theorem maurerCartanPath_eq_dlogCocycle
+    {ι A : Type*} [Ring A] (D : Derivation A)
+    (path inversePath velocity : ι → A) (t : ι)
+    (h_velocity : velocity t = D (path t))
+    (h_inverse : inversePath t = (path t)⁻¹) :
+    maurerCartanPath path inversePath velocity t =
+      dlogCocycle D (inversePath t) (path t) := by
+  unfold maurerCartanPath algebraicMaurerCartanReadout dlogCocycle
+  rw [h_velocity]
+
+theorem capstone_logarithmicBridge_factors_maurerCartan
+    {ι A : Type*} [Ring A] (D : Derivation A)
+    (path inversePath velocity : ι → A) (t : ι)
+    (h_velocity : velocity t = D (path t)) :
+    dlogCocycle D (inversePath t) (path t) =
+      maurerCartanPath path inversePath velocity t := by
+  symm
+  exact maurerCartanPath_eq_dlogCocycle D path inversePath velocity t h_velocity rfl
 
 end InfoGeometry.Canonical.HomogeneousModularFlows

@@ -138,6 +138,164 @@ theorem deriv_expTransport_at_zero_eq_zero_of_commute
   unfold expTransport
   simp [mul_assoc, mul_add, add_mul]
 
+/-- The exponential conjugation transport is multiplicative in its seed. -/
+theorem expTransport_mul_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₁ A₂ : A) (t : ℝ) :
+    expTransport X (A₁ * A₂) t =
+      expTransport X A₁ t * expTransport X A₂ t := by
+  have hScaledNeg : Commute (t • (-X)) (t • X) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_left
+  have hInv :
+      NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X) = 1 := by
+    rw [← NormedSpace.exp_add_of_commute hScaledNeg]
+    simp
+  unfold expTransport
+  calc
+    (NormedSpace.exp (t • X) * (A₁ * A₂)) * NormedSpace.exp (t • (-X)) =
+        NormedSpace.exp (t • X) *
+          (A₁ * (A₂ * NormedSpace.exp (t • (-X)))) := by
+            simp only [mul_assoc]
+    _ = (NormedSpace.exp (t • X) * A₁) *
+          (NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X)) *
+          (A₂ * NormedSpace.exp (t • (-X))) := by
+            rw [hInv]
+            simp only [mul_one, mul_assoc]
+    _ = ((NormedSpace.exp (t • X) * A₁) * NormedSpace.exp (t • (-X))) *
+          ((NormedSpace.exp (t • X) * A₂) * NormedSpace.exp (t • (-X))) := by
+            simp only [mul_assoc]
+
+/-- Exponential conjugation preserves the associative-algebra Lie bracket. -/
+theorem expTransport_lie
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₁ A₂ : A) (t : ℝ) :
+    expTransport X ⁅A₁, A₂⁆ t =
+      ⁅expTransport X A₁ t, expTransport X A₂ t⁆ := by
+  have hScaledNeg : Commute (t • (-X)) (t • X) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_left
+  have hInv :
+      NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X) = 1 := by
+    rw [← NormedSpace.exp_add_of_commute hScaledNeg]
+    simp
+  unfold expTransport
+  rw [Ring.lie_def, Ring.lie_def]
+  calc
+    (NormedSpace.exp (t • X) * (A₁ * A₂ - A₂ * A₁)) *
+          NormedSpace.exp (t • (-X)) =
+        (NormedSpace.exp (t • X) * A₁) *
+            (A₂ * NormedSpace.exp (t • (-X))) -
+          (NormedSpace.exp (t • X) * A₂) *
+            (A₁ * NormedSpace.exp (t • (-X))) := by
+              simp only [sub_mul, mul_sub, mul_assoc]
+    _ = ((NormedSpace.exp (t • X) * A₁) *
+            (NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X))) *
+          (A₂ * NormedSpace.exp (t • (-X))) -
+        ((NormedSpace.exp (t • X) * A₂) *
+            (NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X))) *
+          (A₁ * NormedSpace.exp (t • (-X))) := by
+            rw [hInv]
+            simp only [mul_one]
+    _ = ((NormedSpace.exp (t • X) * A₁) *
+            NormedSpace.exp (t • (-X))) *
+          ((NormedSpace.exp (t • X) * A₂) *
+            NormedSpace.exp (t • (-X))) -
+        ((NormedSpace.exp (t • X) * A₂) *
+            NormedSpace.exp (t • (-X))) *
+          ((NormedSpace.exp (t • X) * A₁) *
+            NormedSpace.exp (t • (-X))) := by
+            simp only [mul_assoc]
+
+/-- Exponential conjugation fixes the multiplicative identity. -/
+@[simp] theorem expTransport_one_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) :
+    expTransport X 1 t = 1 := by
+  have hScaledNeg : Commute (t • X) (t • (-X)) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_right
+  unfold expTransport
+  rw [mul_one, ← NormedSpace.exp_add_of_commute hScaledNeg]
+  simp
+
+/-- Exponential conjugation transports the zero seed to zero. -/
+@[simp] theorem expTransport_zero_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) :
+    expTransport X 0 t = 0 := by
+  unfold expTransport
+  simp
+
+/-- Exponential conjugation is scalar-linear in its seed. -/
+theorem expTransport_smul_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) (r : ℝ) (t : ℝ) :
+    expTransport X (r • A₀) t = r • expTransport X A₀ t := by
+  unfold expTransport
+  simp only [smul_mul_assoc, mul_smul_comm]
+
+/-- Exponential conjugation preserves all natural powers of an observable. -/
+theorem expTransport_pow_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) (n : ℕ) (t : ℝ) :
+    expTransport X (A₀ ^ n) t = (expTransport X A₀ t) ^ n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ, expTransport_mul_seed, ih, pow_succ]
+
+/-- Exponential conjugation satisfies the additive-time composition law. -/
+theorem expTransport_add_time
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) (s t : ℝ) :
+    expTransport X A₀ (s + t) =
+      expTransport X (expTransport X A₀ t) s := by
+  have hcomm : Commute (s • X) (t • X) :=
+    ((Commute.refl X).smul_left s).smul_right t
+  have hcommNeg : Commute (t • (-X)) (s • (-X)) :=
+    ((Commute.refl (-X)).smul_left t).smul_right s
+  have hneg : (s + t) • (-X) = t • (-X) + s • (-X) := by
+    module
+  unfold expTransport
+  rw [add_smul, NormedSpace.exp_add_of_commute hcomm, hneg,
+    NormedSpace.exp_add_of_commute hcommNeg]
+  noncomm_ring
+
+/-- Exponential conjugation at time zero is the identity on every seed. -/
+@[simp] theorem expTransport_zero_time
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) :
+    expTransport X A₀ 0 = A₀ := by
+  unfold expTransport
+  simp
+
+/-- Applying the inverse-time transport after the forward transport is the identity. -/
+theorem expTransport_neg_left
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) :
+    expTransport X (expTransport X A₀ (-t)) t = A₀ := by
+  rw [← expTransport_add_time X A₀ t (-t)]
+  simp
+
+/-- Applying the forward transport after the inverse-time transport is the identity. -/
+theorem expTransport_neg_right
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) :
+    expTransport X (expTransport X A₀ t) (-t) = A₀ := by
+  rw [← expTransport_add_time X A₀ (-t) t]
+  simp
+
 /--
 Exact exponential conjugation fixes a seed that commutes with the generator.
 

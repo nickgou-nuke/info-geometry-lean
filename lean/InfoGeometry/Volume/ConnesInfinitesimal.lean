@@ -277,6 +277,40 @@ theorem modularHamiltonianAction_add
     NormedSpace.exp_add_of_commute hcommNeg]
   noncomm_ring
 
+/-- The finite modular Hamiltonian action is multiplicative on observables. -/
+theorem modularHamiltonianAction_mul
+    (K A B : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianAction (H := H) K (A * B) t =
+      modularHamiltonianAction (H := H) K A t *
+        modularHamiltonianAction (H := H) K B t := by
+  exact expTransport_mul_seed K A B t
+
+/-- The finite modular Hamiltonian action preserves operator commutators. -/
+theorem modularHamiltonianAction_lie
+    (K A B : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianAction (H := H) K ⁅A, B⁆ t =
+      ⁅modularHamiltonianAction (H := H) K A t,
+        modularHamiltonianAction (H := H) K B t⁆ := by
+  exact expTransport_lie K A B t
+
+/-- The finite modular Hamiltonian action fixes the identity operator. -/
+@[simp] theorem modularHamiltonianAction_one
+    (K : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianAction (H := H) K 1 t = 1 := by
+  exact expTransport_one_seed K t
+
+theorem modularHamiltonianAction_smul
+    (K A : AlgebraEnd H) (r t : ℝ) :
+    modularHamiltonianAction (H := H) K (r • A) t =
+      r • modularHamiltonianAction (H := H) K A t := by
+  exact expTransport_smul_seed K A r t
+
+theorem modularHamiltonianAction_pow
+    (K A : AlgebraEnd H) (n : ℕ) (t : ℝ) :
+    modularHamiltonianAction (H := H) K (A ^ n) t =
+      (modularHamiltonianAction (H := H) K A t) ^ n := by
+  exact expTransport_pow_seed K A n t
+
 /-- A finite modular Hamiltonian flow is inverted by reversing its time. -/
 theorem modularHamiltonianAction_neg_left
     (K A : AlgebraEnd H) (t : ℝ) :

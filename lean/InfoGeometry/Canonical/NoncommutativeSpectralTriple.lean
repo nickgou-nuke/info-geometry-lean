@@ -103,6 +103,10 @@ theorem ncDiff_fluctuatedDirac (D A_gauge a : A) :
 def gaugeTransform (D A_gauge u u_inv : A) : A :=
   u * A_gauge * u_inv + u * ncDiff D u_inv
 
+/-- Gauge transformation with the inverse supplied by the native unit group. -/
+def gaugeTransformUnit (D A_gauge : A) (u : Aˣ) : A :=
+  gaugeTransform D A_gauge (u : A) (↑(u⁻¹) : A)
+
 /-- 🏆 THEOREM 2: Exact Gauge Covariance of the Fluctuated Dirac Operator:
     u * (D + A) * u_inv = D + A^u
     whenever u * u_inv = 1 and u_inv * u = 1. -/
@@ -123,6 +127,12 @@ theorem fluctuatedDirac_gauge_covariance
         simp only [mul_assoc]
     _ = D + (u * A_gauge * u_inv + u * (D * u_inv - u_inv * D)) := by
         simp only [mul_sub, mul_assoc]
+
+theorem fluctuatedDirac_gauge_covariance_unit
+    (D A_gauge : A) (u : Aˣ) :
+    (u : A) * fluctuatedDirac D A_gauge * (↑(u⁻¹) : A) =
+      fluctuatedDirac D (gaugeTransformUnit D A_gauge u) := by
+  exact fluctuatedDirac_gauge_covariance D A_gauge (u : A) (↑(u⁻¹) : A) u.val_inv
 
 /-- 🏆 THEOREM 3: Gauge Transformation Transitivity (Group Action):
     (A^u)^v = A^(v * u) -/
@@ -171,6 +181,26 @@ theorem gaugeTransform_inverse
   have h := gaugeTransform_transitive D A_gauge u u_inv u_inv u
       h_right h_left h_right
   simpa [h_left, h_right] using h
+
+theorem gaugeTransformUnit_inverse (D A_gauge : A) (u : Aˣ) :
+    gaugeTransformUnit D (gaugeTransformUnit D A_gauge u) (u⁻¹) = A_gauge := by
+  unfold gaugeTransformUnit
+  exact gaugeTransform_inverse D A_gauge (u : A) (↑(u⁻¹) : A)
+    u.val_inv u.inv_val
+
+@[simp]
+theorem gaugeTransformUnit_one (D A_gauge : A) :
+    gaugeTransformUnit D A_gauge 1 = A_gauge := by
+  unfold gaugeTransformUnit
+  simp [gaugeTransform_one]
+
+theorem gaugeTransformUnit_transitive (D A_gauge : A) (u v : Aˣ) :
+    gaugeTransformUnit D (gaugeTransformUnit D A_gauge u) v =
+      gaugeTransformUnit D A_gauge (v * u) := by
+  unfold gaugeTransformUnit
+  simpa [Units.val_mul] using
+    (gaugeTransform_transitive D A_gauge (u : A) (↑(u⁻¹) : A)
+      (v : A) (↑(v⁻¹) : A) u.val_inv v.val_inv v.inv_val)
 
 /-!
 =============================================================================

@@ -3309,6 +3309,7 @@ import InfoGeometry.Canonical.HestenesKreinAndreevBdGColimit
 import InfoGeometry.Canonical.ZetaEulerLaurentMonodromy
 import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
 import InfoGeometry.Canonical.ErlangenLanglandsQuantumBundle
+import InfoGeometry.Canonical.GrandMathematicalUnification
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.CompleteUnifiedBundle
 

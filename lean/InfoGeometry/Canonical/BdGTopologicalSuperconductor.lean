@@ -38,7 +38,7 @@ PART 1: Real Doubled BdG/DIII Carrier
 =============================================================================
 -/
 
-/-- The repository's RealBdG structure already provides:
+/- The repository's RealBdG structure already provides:
     - Real complex structure K = Jε with K² = -I
     - BdG datum: Hamiltonian H, particle-hole C, time-reversal T, chiral S
     - RealBdGDIIIAtom specializes to DIII class:
@@ -71,7 +71,7 @@ def particleHoleOperator : Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ :=
 def particleHoleSymmetry (H : PhysicalBdGMatrix) : Prop :=
   particleHoleOperator * physicalBdGMatrix H = - (physicalBdGMatrix H).map star * particleHoleOperator
 
-/-- The repository's RealBdGNambuGorkovFusion currently uses a different block structure. -/
+/- The repository's RealBdGNambuGorkovFusion currently uses a different block structure. -/
 
 /-!
 =============================================================================

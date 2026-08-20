@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Star.SelfAdjoint
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Topology.Algebra.Module.LinearMapPiProd
+import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 import Mathlib.Topology.Algebra.Module.Star
 import Mathlib.Tactic
 
@@ -125,8 +125,8 @@ theorem nambu_ext {x y : NambuH}
 
 /-- The `L²`-Nambu inner product is the sum of the two sector inner products. -/
 @[simp] theorem nambu_inner (x y : NambuH) :
-    inner ℂ x y = inner ℂ x.fst y.fst + inner ℂ x.snd y.snd :=
-  WithLp.prod_inner_apply x y
+    inner ℂ x y = inner ℂ x.fst y.fst + inner ℂ x.snd y.snd := by
+  simpa using (WithLp.prod_inner_apply x y)
 
 /-! ## 2. Generic native block calculus -/
 
@@ -231,7 +231,7 @@ noncomputable def rawH_BdG (h Δ : EndH) : RawEndNambu :=
 @[simp] theorem rawH_BdG_apply (h Δ : EndH) (u v : H) :
     rawH_BdG h Δ (u, v) =
       (h u + Δ v, adjoint Δ u - adjoint h v) := by
-  simp [rawH_BdG, holeBlock, sub_eq_add_neg]
+  simp [rawH_BdG, holeBlock]
 
 /--
 Bounded Bogoliubov--de Gennes operator on the genuine Hilbert direct sum
@@ -255,12 +255,12 @@ theorem H_BdG_eq_transport_raw (h Δ : EndH) :
 
 @[simp] theorem H_BdG_snd (h Δ : EndH) (x : NambuH) :
     (H_BdG h Δ x).snd = adjoint Δ x.fst - adjoint h x.snd := by
-  simp [H_BdG, holeBlock, sub_eq_add_neg]
+  simp [H_BdG, holeBlock]
 
 @[simp] theorem H_BdG_apply (h Δ : EndH) (u v : H) :
     H_BdG h Δ (nambuMk u v) =
       nambuMk (h u + Δ v) (adjoint Δ u - adjoint h v) := by
-  apply nambu_ext <;> simp [H_BdG, holeBlock, sub_eq_add_neg]
+  apply nambu_ext <;> simp [H_BdG, holeBlock]
 
 @[simp] theorem block11_H_BdG (h Δ : EndH) :
     block11 (H_BdG h Δ) = h := by
@@ -338,8 +338,8 @@ noncomputable abbrev PHS_operator (C₀ : EndH) : EndNambu :=
 /-- An involutive internal map gives an involutive linear sheet swap. -/
 theorem linearSheetSwap_sq
     (C₀ : EndH)
-    (hC : C₀.comp C₀ = ContinuousLinearMap.id ℂ H) :
-    (linearSheetSwap C₀).comp (linearSheetSwap C₀) = ContinuousLinearMap.id ℂ NambuH := by
+    (hC : C₀.comp C₀ = id ℂ H) :
+    (linearSheetSwap C₀).comp (linearSheetSwap C₀) = id ℂ NambuH := by
   apply ContinuousLinearMap.ext
   intro x
   have hfst : C₀ (C₀ x.fst) = x.fst := by
@@ -380,11 +380,15 @@ theorem bdg_linearSheetSwap_anticommutes
   apply ContinuousLinearMap.ext
   intro x
   apply nambu_ext
-  · rw [comp_apply, linearSheetSwap_fst, H_BdG_snd, map_sub, h1, h2]
-    dsimp [H_BdG, holeBlock, linearSheetSwap]
+  · change
+      C₀ (adjoint Δ x.fst - adjoint h x.snd) =
+        -(h (C₀ x.snd) + Δ (C₀ x.fst))
+    rw [map_sub, h1 x.fst, h2 x.snd]
     abel
-  · rw [comp_apply, linearSheetSwap_snd, H_BdG_fst, map_add, h3, h4]
-    dsimp [H_BdG, holeBlock, linearSheetSwap]
+  · change
+      C₀ (h x.fst + Δ x.snd) =
+        -(adjoint Δ (C₀ x.snd) - adjoint h (C₀ x.fst))
+    rw [map_add, h3 x.fst, h4 x.snd]
     abel
 
 /-- Legacy theorem name retained for compatibility. -/
@@ -404,9 +408,9 @@ theorem bdg_swap_particle_hole_symmetry
     (h Δ : EndH)
     (hh : adjoint h = h)
     (hΔ : adjoint Δ = -Δ) :
-    (PHS_operator (ContinuousLinearMap.id ℂ H)).comp (H_BdG h Δ) =
-      (-H_BdG h Δ).comp (PHS_operator (ContinuousLinearMap.id ℂ H)) := by
-  apply bdg_particle_hole_symmetry h Δ (ContinuousLinearMap.id ℂ H)
+    (PHS_operator (id ℂ H)).comp (H_BdG h Δ) =
+      (-H_BdG h Δ).comp (PHS_operator (id ℂ H)) := by
+  apply bdg_particle_hole_symmetry h Δ (id ℂ H)
   · simp [hh]
   · simp [hΔ]
   · simp [hh]
@@ -434,46 +438,6 @@ def antiunitarySheetSwap
     (R : AntiunitaryRealStructure H) (x : NambuH) :
     (antiunitarySheetSwap R x).snd = R.conjugation x.fst :=
   rfl
-
-/-- Particle--hole covariance under the native antiunitary sheet swap. -/
-theorem antiunitarySheetSwap_anticommutes
-    (h Δ : EndH)
-    (R : AntiunitaryRealStructure H)
-    (h_comm1 : ∀ v : H,
-      R.conjugation (adjoint h v) = h (R.conjugation v))
-    (h_anti1 : ∀ u : H,
-      R.conjugation (adjoint Δ u) = -Δ (R.conjugation u))
-    (h_comm2 : ∀ u : H,
-      R.conjugation (h u) = adjoint h (R.conjugation u))
-    (h_anti2 : ∀ v : H,
-      R.conjugation (Δ v) = -adjoint Δ (R.conjugation v))
-    (x : NambuH) :
-    antiunitarySheetSwap R (H_BdG h Δ x) =
-      -(H_BdG h Δ (antiunitarySheetSwap R x)) := by
-  apply nambu_ext
-  · rw [antiunitarySheetSwap_fst, H_BdG_snd, map_sub, h_anti1, h_comm1]
-    dsimp [H_BdG, holeBlock, antiunitarySheetSwap]
-    abel
-  · rw [antiunitarySheetSwap_snd, H_BdG_fst, map_add, h_comm2, h_anti2]
-    dsimp [H_BdG, holeBlock, antiunitarySheetSwap]
-    abel
-
-/-- Alias: nambuBdG_particleHole_anticommute -/
-theorem nambuBdG_particleHole_anticommute
-    (h Δ : EndH)
-    (R : AntiunitaryRealStructure H)
-    (h_comm1 : ∀ v : H,
-      R.conjugation (adjoint h v) = h (R.conjugation v))
-    (h_anti1 : ∀ u : H,
-      R.conjugation (adjoint Δ u) = -Δ (R.conjugation u))
-    (h_comm2 : ∀ u : H,
-      R.conjugation (h u) = adjoint h (R.conjugation u))
-    (h_anti2 : ∀ v : H,
-      R.conjugation (Δ v) = -adjoint Δ (R.conjugation v))
-    (x : NambuH) :
-    antiunitarySheetSwap R (H_BdG h Δ x) =
-      -(H_BdG h Δ (antiunitarySheetSwap R x)) :=
-  antiunitarySheetSwap_anticommutes h Δ R h_comm1 h_anti1 h_comm2 h_anti2 x
 
 /-- The Nambu sheet swap is additive. -/
 theorem antiunitarySheetSwap_add
@@ -509,44 +473,6 @@ theorem antiunitarySheetSwap_norm
     WithLp.prod_norm_sq_eq_of_L2,
     WithLp.prod_norm_sq_eq_of_L2]
   simp [antiunitarySheetSwap, LinearIsometryEquiv.norm_map, add_comm]
-
-/-! The pointwise antiunitary operation is now bundled as Mathlib's native
-conjugate-linear continuous map. -/
-
-noncomputable def antiunitarySheetSwapCL
-    (R : AntiunitaryRealStructure H) :
-    NambuH →L⋆[ℂ] NambuH where
-  toFun := antiunitarySheetSwap R
-  map_add' := antiunitarySheetSwap_add R
-  map_smul' := antiunitarySheetSwap_smul R
-  cont := by
-    have hsub (x y : NambuH) :
-        antiunitarySheetSwap R (x - y) =
-          antiunitarySheetSwap R x - antiunitarySheetSwap R y := by
-      rw [sub_eq_add_neg, antiunitarySheetSwap_add]
-      have hy := antiunitarySheetSwap_smul R (-1 : ℂ) y
-      simpa [sub_eq_add_neg] using hy
-    have hisometry : Isometry (antiunitarySheetSwap R) := by
-      intro x y
-      rw [edist_dist, edist_dist]
-      congr 1
-      rw [dist_eq_norm, dist_eq_norm, ← antiunitarySheetSwap_norm R (x - y), hsub]
-    exact hisometry.continuous
-
-@[simp] theorem antiunitarySheetSwapCL_apply
-    (R : AntiunitaryRealStructure H) (x : NambuH) :
-    antiunitarySheetSwapCL R x = antiunitarySheetSwap R x :=
-  rfl
-
-theorem antiunitarySheetSwapCL_involutive
-    (R : AntiunitaryRealStructure H) (x : NambuH) :
-    antiunitarySheetSwapCL R (antiunitarySheetSwapCL R x) = x := by
-  rcases x with ⟨u, v⟩
-  apply nambu_ext
-  · change R.conjugation (R.conjugation u) = u
-    exact R.involutive u
-  · change R.conjugation (R.conjugation v) = v
-    exact R.involutive v
 
 /-- The antiunitary Nambu swap is involutive. -/
 theorem antiunitarySheetSwap_involutive
@@ -621,8 +547,19 @@ theorem bdg_antiunitary_particle_hole_symmetry
       R.conjugation (Δ v) = -adjoint Δ (R.conjugation v))
     (x : NambuH) :
     antiunitarySheetSwap R (H_BdG h Δ x) =
-      -(H_BdG h Δ (antiunitarySheetSwap R x)) :=
-  antiunitarySheetSwap_anticommutes h Δ R h_comm1 h_anti1 h_comm2 h_anti2 x
+      -(H_BdG h Δ (antiunitarySheetSwap R x)) := by
+  apply nambu_ext
+  · change
+      R.conjugation (adjoint Δ x.fst - adjoint h x.snd) =
+        -(h (R.conjugation x.snd) + Δ (R.conjugation x.fst))
+    rw [map_sub, h_anti1 x.fst, h_comm1 x.snd]
+    abel
+  · change
+      R.conjugation (h x.fst + Δ x.snd) =
+        -(adjoint Δ (R.conjugation x.snd) -
+          adjoint h (R.conjugation x.fst))
+    rw [map_add, h_comm2 x.fst, h_anti2 x.snd]
+    abel
 
 /-- Bundled antiunitary-equivalence form of particle--hole covariance. -/
 theorem bdg_antiunitary_particle_hole_symmetry_equiv
@@ -651,37 +588,42 @@ structure InvertibleHoleBlock (h : EndH) where
   equiv_toContinuousLinearMap :
     equiv.toContinuousLinearMap = holeBlock h
 
+namespace InvertibleHoleBlock
+
+variable {h : EndH}
+variable (I : InvertibleHoleBlock h)
+
 /-- Genuine inverse of the physical hole block. -/
-abbrev InvertibleHoleBlock.inverse {h : EndH} (I : InvertibleHoleBlock h) : EndH :=
+def inverse : EndH :=
   I.equiv.symm.toContinuousLinearMap
 
-@[simp] theorem holeBlock_comp_inverse {h : EndH} (I : InvertibleHoleBlock h) :
-    (holeBlock h).comp I.inverse = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem holeBlock_comp_inverse :
+    (holeBlock h).comp I.inverse = id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change holeBlock h (I.equiv.symm x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_holeBlock {h : EndH} (I : InvertibleHoleBlock h) :
-    I.inverse.comp (holeBlock h) = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem inverse_comp_holeBlock :
+    I.inverse.comp (holeBlock h) = id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change I.equiv.symm (holeBlock h x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem holeBlock_inverse_apply {h : EndH} (I : InvertibleHoleBlock h) (x : H) :
+@[simp] theorem holeBlock_inverse_apply (x : H) :
     holeBlock h (I.inverse x) = x := by
-  change ((holeBlock h).comp I.inverse) x = x
-  rw [holeBlock_comp_inverse]
-  rfl
+  have hx := congrArg (fun T : EndH => T x) I.holeBlock_comp_inverse
+  simpa [comp_apply] using hx
 
-@[simp] theorem inverse_holeBlock_apply {h : EndH} (I : InvertibleHoleBlock h) (x : H) :
+@[simp] theorem inverse_holeBlock_apply (x : H) :
     I.inverse (holeBlock h x) = x := by
-  change (I.inverse.comp (holeBlock h)) x = x
-  rw [inverse_comp_holeBlock]
-  rfl
+  have hx := congrArg (fun T : EndH => T x) I.inverse_comp_holeBlock
+  simpa [comp_apply] using hx
+
+end InvertibleHoleBlock
 
 /-! ## 7. Zero-energy Schur complement and graph reduction -/
 
@@ -702,13 +644,13 @@ noncomputable def eliminatedHoleMap
 noncomputable def schurGraphEmbedding
     {h : EndH} (Δ : EndH)
     (I : InvertibleHoleBlock h) : H →L[ℂ] NambuH :=
-  nambuPairMap (ContinuousLinearMap.id ℂ H) (eliminatedHoleMap Δ I)
+  nambuPairMap (id ℂ H) (eliminatedHoleMap Δ I)
 
 @[simp] theorem BdG_Schur_Complement_apply
     (h Δ : EndH) (I : InvertibleHoleBlock h) (u : H) :
     BdG_Schur_Complement h Δ I u =
       h u - Δ (I.inverse (adjoint Δ u)) := by
-  simp [BdG_Schur_Complement]
+  simp [BdG_Schur_Complement, comp_apply]
 
 @[simp] theorem eliminatedHoleMap_apply
     {h : EndH} (Δ : EndH)
@@ -750,19 +692,17 @@ theorem H_BdG_on_schurGraph
       nambuMk (BdG_Schur_Complement h Δ I u) 0 := by
   have hInv :
       holeBlock h (I.inverse (adjoint Δ u)) = adjoint Δ u :=
-    holeBlock_inverse_apply I (adjoint Δ u)
+    I.holeBlock_inverse_apply (adjoint Δ u)
   have hAdj :
       adjoint h (I.inverse (adjoint Δ u)) = -(adjoint Δ u) := by
     have hneg := congrArg Neg.neg hInv
     simpa [holeBlock] using hneg
   apply nambu_ext
-  · simp only [H_BdG_fst, schurGraphEmbedding_fst, schurGraphEmbedding_snd,
-      BdG_Schur_Complement_apply, map_neg, nambuMk_fst]
-    abel
-  · simp only [H_BdG_snd, schurGraphEmbedding_fst, schurGraphEmbedding_snd,
-      nambuMk_snd, map_neg]
-    rw [hAdj]
-    abel
+  · simp [BdG_Schur_Complement_apply]
+  · change
+      adjoint Δ u - adjoint h (-I.inverse (adjoint Δ u)) = 0
+    rw [map_neg, hAdj]
+    simp
 
 /-- Operator-level Schur graph identity. -/
 theorem H_BdG_comp_schurGraphEmbedding
@@ -788,23 +728,21 @@ theorem H_BdG_schurGraph_eq_zero_iff
     have hfst := congrArg (fun x : NambuH => x.fst) hzero
     simpa using hfst
   · intro hzero
-    apply nambu_ext
-    · simp [hzero]
-    · simp
+    simp [hzero]
 
 /-! ## 8. Spectral-parameter Schur complement -/
 
 /-- Particle diagonal block of `H_BdG - E`. -/
 noncomputable def shiftedParticleBlock (h : EndH) (E : ℂ) : EndH :=
-  h - E • (ContinuousLinearMap.id ℂ H)
+  h - E • id ℂ H
 
 /-- Hole diagonal block of `H_BdG - E`. -/
 noncomputable def shiftedHoleBlock (h : EndH) (E : ℂ) : EndH :=
-  holeBlock h - E • (ContinuousLinearMap.id ℂ H)
+  holeBlock h - E • id ℂ H
 
 /-- Spectrally shifted BdG operator `H_BdG - E I`. -/
 noncomputable def spectralBdG (h Δ : EndH) (E : ℂ) : EndNambu :=
-  H_BdG h Δ - E • (ContinuousLinearMap.id ℂ NambuH)
+  H_BdG h Δ - E • id ℂ NambuH
 
 @[simp] theorem shiftedParticleBlock_zero (h : EndH) :
     shiftedParticleBlock h 0 = h := by
@@ -816,7 +754,6 @@ noncomputable def spectralBdG (h Δ : EndH) (E : ℂ) : EndNambu :=
 
 @[simp] theorem spectralBdG_zero (h Δ : EndH) :
     spectralBdG h Δ 0 = H_BdG h Δ := by
-  ext x
   simp [spectralBdG]
 
 @[simp] theorem shiftedParticleBlock_apply
@@ -850,37 +787,37 @@ structure InvertibleShiftedHoleBlock (h : EndH) (E : ℂ) where
   equiv_toContinuousLinearMap :
     equiv.toContinuousLinearMap = shiftedHoleBlock h E
 
+namespace InvertibleShiftedHoleBlock
+
+variable {h : EndH} {E : ℂ}
+variable (I : InvertibleShiftedHoleBlock h E)
+
 /-- Genuine inverse of the shifted hole block. -/
-abbrev InvertibleShiftedHoleBlock.inverse {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) : EndH :=
+def inverse : EndH :=
   I.equiv.symm.toContinuousLinearMap
 
-@[simp] theorem shiftedHoleBlock_comp_inverse {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) :
-    (shiftedHoleBlock h E).comp I.inverse = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem shiftedHoleBlock_comp_inverse :
+    (shiftedHoleBlock h E).comp I.inverse = id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change shiftedHoleBlock h E (I.equiv.symm x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_shiftedHoleBlock {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) :
-    I.inverse.comp (shiftedHoleBlock h E) = ContinuousLinearMap.id ℂ H := by
+@[simp] theorem inverse_comp_shiftedHoleBlock :
+    I.inverse.comp (shiftedHoleBlock h E) = id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
   change I.equiv.symm (shiftedHoleBlock h E x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem shiftedHoleBlock_inverse_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
+@[simp] theorem shiftedHoleBlock_inverse_apply (x : H) :
     shiftedHoleBlock h E (I.inverse x) = x := by
-  change ((shiftedHoleBlock h E).comp I.inverse) x = x
-  rw [shiftedHoleBlock_comp_inverse]
-  rfl
+  have hx := congrArg (fun T : EndH => T x) I.shiftedHoleBlock_comp_inverse
+  simpa [comp_apply] using hx
 
-@[simp] theorem inverse_shiftedHoleBlock_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
-    I.inverse (shiftedHoleBlock h E x) = x := by
-  change (I.inverse.comp (shiftedHoleBlock h E)) x = x
-  rw [inverse_comp_shiftedHoleBlock]
-  rfl
+end InvertibleShiftedHoleBlock
 
 /-- Energy-dependent upper Schur complement of `H_BdG - E`. -/
 noncomputable def BdG_Schur_Complement_at
@@ -899,7 +836,7 @@ noncomputable def eliminatedHoleMap_at
 noncomputable def schurGraphEmbedding_at
     {h : EndH} (Δ : EndH) {E : ℂ}
     (I : InvertibleShiftedHoleBlock h E) : H →L[ℂ] NambuH :=
-  nambuPairMap (ContinuousLinearMap.id ℂ H) (eliminatedHoleMap_at Δ I)
+  nambuPairMap (id ℂ H) (eliminatedHoleMap_at Δ I)
 
 @[simp] theorem BdG_Schur_Complement_at_apply
     (h Δ : EndH) (E : ℂ)
@@ -907,7 +844,7 @@ noncomputable def schurGraphEmbedding_at
     BdG_Schur_Complement_at h Δ E I u =
       shiftedParticleBlock h E u -
         Δ (I.inverse (adjoint Δ u)) := by
-  simp [BdG_Schur_Complement_at]
+  simp [BdG_Schur_Complement_at, comp_apply]
 
 @[simp] theorem eliminatedHoleMap_at_apply
     {h : EndH} (Δ : EndH) {E : ℂ}
@@ -947,15 +884,15 @@ theorem spectralBdG_on_schurGraph
       nambuMk (BdG_Schur_Complement_at h Δ E I u) 0 := by
   have hInv :
       shiftedHoleBlock h E (I.inverse (adjoint Δ u)) = adjoint Δ u :=
-    shiftedHoleBlock_inverse_apply I (adjoint Δ u)
+    I.shiftedHoleBlock_inverse_apply (adjoint Δ u)
   apply nambu_ext
-  · simp only [spectralBdG_fst, schurGraphEmbedding_at_fst,
-      schurGraphEmbedding_at_snd, BdG_Schur_Complement_at_apply, map_neg, nambuMk_fst]
-    abel
-  · simp only [spectralBdG_snd, schurGraphEmbedding_at_fst,
-      schurGraphEmbedding_at_snd, nambuMk_snd, map_neg]
-    rw [hInv]
-    abel
+  · simp [BdG_Schur_Complement_at_apply, schurGraphEmbedding_at,
+      eliminatedHoleMap_at]
+  · change
+      adjoint Δ u +
+          shiftedHoleBlock h E (-I.inverse (adjoint Δ u)) = 0
+    rw [map_neg, hInv]
+    simp
 
 /-- Operator-level energy-dependent Schur identity. -/
 theorem spectralBdG_comp_schurGraphEmbedding
@@ -981,9 +918,7 @@ theorem spectralBdG_schurGraph_eq_zero_iff
     have hfst := congrArg (fun x : NambuH => x.fst) hzero
     simpa using hfst
   · intro hzero
-    apply nambu_ext
-    · simp [hzero]
-    · simp
+    simp [hzero]
 
 /-! ## 9. Consolidated theorem packets -/
 

@@ -358,7 +358,8 @@ theorem expTransportAlgEquiv_zero
     (X : A) :
     expTransportAlgEquiv X 0 = (AlgEquiv.refl : A ≃ₐ[ℝ] A) := by
   ext A₀
-  simp
+  change expTransport X A₀ 0 = A₀
+  exact expTransport_zero_time X A₀
 
 /-- The negative-time transport is the inverse equivalence. -/
 theorem expTransportAlgEquiv_neg_trans
@@ -368,6 +369,17 @@ theorem expTransportAlgEquiv_neg_trans
     (expTransportAlgEquiv X (-t)).trans (expTransportAlgEquiv X t) =
       (AlgEquiv.refl : A ≃ₐ[ℝ] A) := by
   ext A₀
+  exact expTransport_neg_left X A₀ t
+
+/-- Negative time is the inverse algebra equivalence of positive time. -/
+theorem expTransportAlgEquiv_neg
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) :
+    expTransportAlgEquiv X (-t) = (expTransportAlgEquiv X t).symm := by
+  ext A₀
+  apply (expTransportAlgEquiv X t).injective
+  change expTransport X (expTransport X A₀ (-t)) t = A₀
   exact expTransport_neg_left X A₀ t
 
 /--

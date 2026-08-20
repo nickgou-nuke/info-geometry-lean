@@ -3318,6 +3318,7 @@ import InfoGeometry.Canonical.GrandMathematicalUnification
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.Canonical.ErlangenObservableBundle
 import InfoGeometry.Canonical.SouriauCoadjointOrbitBridge
+import InfoGeometry.Canonical.DeRhamRelativeModularPotential
 import InfoGeometry.CompleteUnifiedBundle
 
 namespace InfoGeometry

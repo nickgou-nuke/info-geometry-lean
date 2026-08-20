@@ -154,6 +154,23 @@ def innerDerivationOf (K : A) : NoncommutativeDerivation A where
 theorem innerDerivationOf_apply (K X : A) :
     innerDerivationOf K X = K * X - X * K := rfl
 
+/-- The inner-derivation assignment is additive in its generator, pointwise. -/
+theorem innerDerivationOf_add_apply (K L x : A) :
+    innerDerivationOf (K + L) x =
+      innerDerivationOf K x + innerDerivationOf L x := by
+  simp only [innerDerivationOf_apply, add_mul, mul_add]
+  abel
+
+@[simp]
+theorem innerDerivationOf_zero_apply (x : A) :
+    innerDerivationOf (0 : A) x = 0 := by
+  simp [innerDerivationOf_apply]
+
+theorem innerDerivationOf_neg_apply (K x : A) :
+    innerDerivationOf (-K) x = -(innerDerivationOf K x) := by
+  simp only [innerDerivationOf_apply, neg_mul, mul_neg]
+  abel
+
 /-- The bundled commutator of inner derivations is inner again. -/
 theorem commutatorDerivation_inner_apply
     (K₁ K₂ x : A) :

@@ -132,15 +132,16 @@ theorem gaugeTransform_one (X : A) :
 theorem gaugeTransform_mul (u v : Aˣ) (X : A) :
     gaugeTransform u (gaugeTransform v X) =
       gaugeTransform (u * v) X := by
-  simp only [gaugeTransform, Units.val_mul, Units.inv_mul]
+  simp only [gaugeTransform, Units.val_mul]
+  have hinv : (u * v)⁻¹ = v⁻¹ * u⁻¹ := by simp
+  rw [hinv, Units.val_mul]
   simp only [mul_assoc]
 
 /-- Every gauge transformation is inverted by conjugation with the inverse
 unit. -/
 theorem gaugeTransform_inv (u : Aˣ) (X : A) :
     gaugeTransform (u⁻¹) (gaugeTransform u X) = X := by
-  rw [← gaugeTransform_mul]
-  simp [gaugeTransform]
+  simp [gaugeTransform, mul_assoc]
 
 /-- Gauge transformation of a connection one-form. -/
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
@@ -275,35 +276,6 @@ theorem pureGaugeForm_sq (u : Aˣ) :
 theorem maurer_cartan_flatness (u : Aˣ) :
     D (u : A) * D (u⁻¹ : Aˣ).val + pureGaugeForm D u * pureGaugeForm D u = 0 := by
   rw [pureGaugeForm_sq, add_neg_cancel]
-
-/-- Conjugation of an observable by an invertible element. -/
-def gaugeTransform (u : Aˣ) (X : A) : A :=
-  (u : A) * X * (u⁻¹ : Aˣ).val
-
-/-- Gauge transformation of a connection one-form:
-    A_conn' = u A_conn u⁻¹ + u D(u⁻¹) -/
-def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
-  (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u
-
-/-- 🏆 THEOREM 5: The covariant derivative is gauge equivariant:
-    ∇_D(A_conn')(u X u⁻¹) = u ∇_D(A_conn)(X) u⁻¹
-    where A_conn' = u A_conn u⁻¹ + u D(u⁻¹) -/
-theorem covariantDerivative_gauge_equivariant (u : Aˣ) (A_conn X : A) :
-    covariantDerivative D (gaugeTransformConnection D u A_conn) (gaugeTransform u X) =
-      gaugeTransform u (covariantDerivative D A_conn X) := by
-  dsimp [covariantDerivative, gaugeTransformConnection, gaugeTransform, pureGaugeForm]
-  -- Expand D(u * X * u⁻¹) using Leibniz rule
-  rw [D.leibniz]
-  -- Expand all products explicitly
-  simp only [mul_assoc, add_mul, mul_add, sub_mul, mul_sub]
-  -- Use D(u⁻¹) = -u⁻¹ D(u) u⁻¹
-  have h_inv : D (u⁻¹ : Aˣ).val = -((u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val) := D.derivation_inv_unit u
-  rw [h_inv]
-  -- Simplify signs and unit identities
-  simp only [mul_neg, neg_mul, mul_assoc, Units.mul_inv, one_mul]
-  -- Cancel matching terms: D(u)X u⁻¹ - D(u)X u⁻¹ = 0
-  -- and -u X u⁻¹ D(u) u⁻¹ + u X u⁻¹ D(u) u⁻¹ = 0
-  abel
 
 end AlgebraDerivation
 

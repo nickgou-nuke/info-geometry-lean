@@ -12,7 +12,7 @@ namespace InfoGeometry
 
 open Classical
 
-/-- On the Riemann sphere, every two distinct points sorry a third distinct point. -/
+/-- On the Riemann sphere, every two distinct points possess a third distinct point. -/
 lemma exists_third_riemannSphere (z1 z2 : RiemannSphere) (h12 : z1 ≠ z2) :
     ∃ z3 : RiemannSphere, z1 ≠ z3 ∧ z3 ≠ z2 ∧ z2 ≠ z3 := by
   cases z1 with

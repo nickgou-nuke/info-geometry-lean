@@ -26,7 +26,6 @@ InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefD
 InfoGeometry.Canonical.CuntzCanonicalKMSFunctional | legacy owner depends on the missing Algebra.CuntzAlgebra and assumes a diagonal coefficient projection absent from the native quotient API
 InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization | Hodge wedge characterization requires explicit metricStar34 basis-action theorems not present in the native owner; former file contained sorry-based zero and uniqueness wrappers
 InfoGeometry.Exploration.Symphony.Basic | exploratory symphony lane is intentionally outside the authoritative `InfoGeometry.All` coverage spine
-InfoGeometry.Exploration.Symphony.Draft | draft symphony-attention lane contains placeholder/sorry scaffolding and is intentionally excluded from strict coverage
 InfoGeometry.Canonical.BerryHolonomy | imports the quarantined BerryPhase owner and therefore remains outside the stable authority surface
 InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge | imports the quarantined BerryPhase owner and remains a dependent quarantine surface
 InfoGeometry.Canonical.CalabiYauGrandDualityBridge | imports the quarantined CalabiYauBridge owner and remains a dependent quarantine surface

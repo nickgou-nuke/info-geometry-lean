@@ -328,7 +328,7 @@ theorem gaugeTransformConnection_comp (u v : Aˣ) (A_conn : A) :
 /-- The affine gauge action on connections is inverted by the inverse unit. -/
 theorem gaugeTransformConnection_inv (u : Aˣ) (A_conn : A) :
     gaugeTransformConnection D (u⁻¹) (gaugeTransformConnection D u A_conn) = A_conn := by
-  rw [← gaugeTransformConnection_comp D u⁻¹ u A_conn]
+  rw [← gaugeTransformConnection_comp D (u⁻¹) u A_conn]
   simp
 
 /-- 🏆 THEOREM 4: Noncommutative Maurer-Cartan Flatness:

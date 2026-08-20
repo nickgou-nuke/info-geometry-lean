@@ -280,6 +280,14 @@ theorem noncommutativeSLDFisher_smul_right
   rw [noncommutativeSLDFisher_smul_left]
   rw [noncommutativeSLDFisher_symm τ two_inv ρ L2 L1]
 
+theorem noncommutativeSLDFisher_smul_state
+    (τ : TracialFunctional R A) (two_inv r : R) (ρ L1 L2 : A) :
+    noncommutativeSLDFisher τ two_inv (r • ρ) L1 L2 =
+      r * noncommutativeSLDFisher τ two_inv ρ L1 L2 := by
+  dsimp [noncommutativeSLDFisher, jordanProduct]
+  simp only [smul_mul_assoc, map_smul]
+  simp [smul_eq_mul, mul_left_comm]
+
 /-- 🏆 THEOREM 7: Scaling reduction on self-pairing:
     For any state ρ and generator L: g_ρ(L, L) = τ(ρ * L²). -/
 theorem noncommutativeSLDFisher_self (τ : TracialFunctional R A) (two_inv : R)

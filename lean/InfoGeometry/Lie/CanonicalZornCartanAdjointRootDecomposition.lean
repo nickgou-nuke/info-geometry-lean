@@ -756,8 +756,10 @@ theorem finrank_shortRootSpan : Module.finrank ℝ shortRootSpan = 6 := by
       (fun i : Fin 6 => rootDerivation (shortRootIndex i)) :=
     rootDerivation_nonzero_linearIndependent.comp shortRootIndex
       shortRootIndex_injective
-  rw [show Set.range (fun i : Fin 6 => rootDerivation (shortRootIndex i)) =
-      Set.range (fun i : Fin 6 => rootDerivation (shortRootIndex i)) by rfl]
+  have hspan : shortRootSpan = Submodule.span ℝ (Set.range (fun i : Fin 6 => rootDerivation (shortRootIndex i))) := by
+    dsimp [shortRootSpan]
+    rw [← Set.range_comp]
+  rw [hspan]
   exact finrank_span_eq_card hli
 
 theorem finrank_longRootSpan : Module.finrank ℝ longRootSpan = 6 := by
@@ -767,8 +769,10 @@ theorem finrank_longRootSpan : Module.finrank ℝ longRootSpan = 6 := by
       (fun i : Fin 6 => rootDerivation (longRootIndex i)) :=
     rootDerivation_nonzero_linearIndependent.comp longRootIndex
       longRootIndex_injective
-  rw [show Set.range (fun i : Fin 6 => rootDerivation (longRootIndex i)) =
-      Set.range (fun i : Fin 6 => rootDerivation (longRootIndex i)) by rfl]
+  have hspan : longRootSpan = Submodule.span ℝ (Set.range (fun i : Fin 6 => rootDerivation (longRootIndex i))) := by
+    dsimp [longRootSpan]
+    rw [← Set.range_comp]
+  rw [hspan]
   exact finrank_span_eq_card hli
 
 end InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition

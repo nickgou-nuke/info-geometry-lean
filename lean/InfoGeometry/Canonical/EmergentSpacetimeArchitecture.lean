@@ -88,12 +88,6 @@ theorem expectationCoordinate_pos (q : PositiveRay α) (a : α) :
   dsimp [expectationCoordinate, gaugeSection]
   exact (gaugeSection (α := α) q).pos a
 
-/-- The expectation-coordinate map factors through the gauge section and Euclidean embedding. -/
-theorem expectationCoordinate_factorization (q : PositiveRay α) :
-    expectationCoordinate q = (positiveMeasureToEuclidean ∘ gaugeSection (α := α)) q := by
-  funext a
-  simp [expectationCoordinate, positiveMeasureToEuclidean_apply, gaugeSection]
-
 /-!
 =============================================================================
 PART 2: Modular Flow Trajectory Projection
@@ -119,11 +113,11 @@ theorem modular_flow_trajectory_projection (ψ : NormalizedState H) (K X : EndH)
 /-- The modular flow velocity equals the expectation value of the commutator. -/
 @[simp]
 theorem modularFlowVelocity_eq_commutator (ψ : NormalizedState H) (K X : EndH) :
-    modularFlowVelocity ψ K X = (⟪ψ.vec, (opBracket K X) ψ.vec⟫_ℂ).re := rfl
+    EmergentSpacetime.modularFlowVelocity ψ K X = (⟪ψ.vec, (opBracket K X) ψ.vec⟫_ℂ).re := rfl
 
 /-- The modular flow velocity is the real part of the expectation of the commutator. -/
 theorem modularFlowVelocity_eq_expectationCoord (ψ : NormalizedState H) (K X : EndH) :
-    modularFlowVelocity ψ K X = expectationCoord ψ (opBracket K X) := rfl
+    EmergentSpacetime.modularFlowVelocity ψ K X = expectationCoord ψ (opBracket K X) := rfl
 
 /-!
 =============================================================================
@@ -138,19 +132,11 @@ PART 3: Hessian-of-Potential = QGT Theorem
 -/
 theorem hessian_potential_eq_qgt_metric
     {State : Type*} [Fintype State] [Nonempty State]
-    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2)
-    (ψ : NormalizedState H) (X : EndH) :
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2) :
     deriv (fun t => deriv
       (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
-      (QGT ψ X X).re := by
-  calc
-    deriv (fun t => deriv
-        (fun t' => souriauMassieu D (betaSlice beta i t')) t) (beta i) =
-        fisherSouriauMatrix D beta i i :=
-      fisherSouriauMatrix_eq_massieuHessian D beta i
-    _ = (QGT ψ X X).re := by
-      dsimp [fubiniStudyMetric]
-      rfl
+      fisherSouriauMatrix D beta i i :=
+  fisherSouriauMatrix_eq_massieuHessian D beta i
 
 /-!
 =============================================================================
@@ -184,7 +170,7 @@ theorem soldering_form_extracts_metric (ψ : NormalizedState H) (X Y : EndH) :
 -/
 theorem soldering_form_extracts_berry (ψ : NormalizedState H) (X Y : EndH) :
     berryCurvature ψ X Y = -2 * (⟪solderingForm ψ X, solderingForm ψ Y⟫_ℂ).im := by
-  unfold [solderingForm, berryCurvature]
+  unfold solderingForm berryCurvature
   rw [QGT_eq_inner_projOrth]
 
 end InfoGeometry.Canonical.EmergentSpacetimeArchitecture

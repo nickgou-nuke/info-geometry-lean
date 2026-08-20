@@ -31,7 +31,8 @@ def adK (K : A) : A →ₗ[ℤ] A where
     rw [hL, hR, smul_sub]
 
 @[simp]
-theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
+theorem adK_apply (K X : A) : adK K X = K * X - X * K := by
+  dsimp [adK]
 
 /-- 
   THEOREM 1: The Modular Commutator is a Genuine Derivation.
@@ -52,7 +53,8 @@ theorem adK_is_derivation (K : A) (X Y : A) :
 /-- THEOREM 2: The Modular Derivation annihilates the identity element: ad_K(1) = 0. -/
 @[simp]
 theorem adK_one (K : A) : adK K 1 = 0 := by
-  simp [adK_apply]
+  dsimp [adK]
+  rw [mul_one, one_mul, sub_self]
 
 /-!
 =============================================================================
@@ -91,5 +93,3 @@ theorem dlogRN_mul (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
   rw [h_expand, h12, h23, mul_one, mul_one, add_comm]
 
 end InfoGeometry.Modular
-
-end noncomputable section

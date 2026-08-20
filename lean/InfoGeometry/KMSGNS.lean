@@ -22,17 +22,17 @@ repository.
 
 ## Canonical Owner Files
 
-| Concept | Owner File | Namespace |
+| Concept | Owner File | Key Theorems |
 |:---|:---|:---|
-| Modular derivation algebra | `InfoGeometry.Modular.ExactSequence` | `InfoGeometry.Modular` |
-| Noncommutative dlog | `InfoGeometry.Modular.Noncommutative` | `InfoGeometry.Modular.Noncommutative` |
-| Trifold synthesis | `InfoGeometry.Modular.TrifoldRadonNikodymBridge` | `InfoGeometry.Modular` |
-| Concrete modular bridge | `InfoGeometry.Modular.ConcreteOperatorModularBridge` | `InfoGeometry.Modular.ConcreteBridge` |
-| KMS modular state | `InfoGeometry.NCG.NoncommutativeKMSModularState` | `InfoGeometry.NCG.KMS` |
-| Cuntz KMS/GNS | `InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge` | `InfoGeometry.NCG.CuntzColimit` |
-| Colimit KMS descent | `InfoGeometry.NCG.CategoricalInductiveColimitKMSBridge` | `InfoGeometry.NCG.ColimitKMS` |
-| GNS tower | `InfoGeometry.NCG.CategoricalColimitStateDescent` | `InfoGeometry.NCG` |
-| Colimit trace | `InfoGeometry.TraceFormula.ColimitTrace` | `InfoGeometry.TraceFormula.ColimitTrace` |
+| Modular derivation algebra | `InfoGeometry.Modular.ExactSequence` | `adK`, `dual_flow_commutator`, `modularDerivation` |
+| Noncommutative dlog | `InfoGeometry.Modular.Noncommutative` | `dlogL`, `dlogR`, `dlogL_mul_noncommutative` |
+| Trifold synthesis | `InfoGeometry.Modular.TrifoldRadonNikodymBridge` | `trifold_reconstruction`, `trace_K_zero`, `superTrace_K_zero` |
+| Concrete modular bridge | `InfoGeometry.Modular.ConcreteOperatorModularBridge` | `concrete_modular_deriv_eq_adK` |
+| KMS modular state | `InfoGeometry.NCG.NoncommutativeKMSModularState` | `connes_cyclic_1_cocycle_identity`, `noncommutativeSLDFisher_symm` |
+| Cuntz KMS/GNS | `InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge` | Cuntz relations, shift Φ, KMS invariance |
+| Colimit KMS descent | `InfoGeometry.NCG.CategoricalInductiveColimitKMSBridge` | Modular automorphism intertwining |
+| GNS tower | `InfoGeometry.NCG.CategoricalColimitStateDescent` | GNS isometric embedding |
+| Colimit trace | `InfoGeometry.TraceFormula.ColimitTrace` | `colimitTrace`, `normalizedTraceLin` |
 
 ## Usage
 
@@ -100,11 +100,14 @@ open InfoGeometry.Modular.Noncommutative
 -- SECTION 4: Trifold Synthesis
 -- ============================================================================
 
-open InfoGeometry.Modular.TrifoldRadonNikodymBridge
-
---   alphaCommon, betaChiral, K_zero
---   trace_K_zero, superTrace_K_zero
---   trifold_reconstruction : K = αI + βΓ + K₀
+-- The TrifoldRadonNikodymBridge theorems live in InfoGeometry.Modular
+-- namespace. Reference them with full paths:
+--   InfoGeometry.Modular.alphaCommon
+--   InfoGeometry.Modular.betaChiral
+--   InfoGeometry.Modular.K_zero
+--   InfoGeometry.Modular.trace_K_zero
+--   InfoGeometry.Modular.superTrace_K_zero
+--   InfoGeometry.Modular.trifold_reconstruction
 
 -- ============================================================================
 -- SECTION 5: Concrete Operator Modular Bridge

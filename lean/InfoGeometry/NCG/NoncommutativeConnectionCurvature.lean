@@ -165,6 +165,21 @@ theorem gaugeTransformConnection_one (A_conn : A) :
     gaugeTransformConnection D (1 : Aˣ) A_conn = A_conn := by
   simp [gaugeTransformConnection, pureGaugeForm]
 
+/-- The affine gauge action on connections is inverted by the inverse unit. -/
+theorem gaugeTransformConnection_inv (u : Aˣ) (A_conn : A) :
+    gaugeTransformConnection D (u⁻¹) (gaugeTransformConnection D u A_conn) = A_conn := by
+  dsimp [gaugeTransformConnection, pureGaugeForm]
+  have h_inv : D (u⁻¹ : Aˣ).val =
+      - ((u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val) :=
+    D.derivation_inv_unit u
+  rw [h_inv]
+  simp only [inv_inv]
+  have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  have hui : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  simp only [mul_add, add_mul, mul_neg, neg_mul, sub_eq_add_neg]
+  simp only [← mul_assoc, hu, hui, one_mul, mul_one, neg_one_smul]
+  abel_nf
+
 /-!
 =============================================================================
 Focused Helper Lemmas for Gauge Equivariance

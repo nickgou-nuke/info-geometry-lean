@@ -132,8 +132,8 @@ theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
   rw [hD _ _, add_mul]
   have hv : (v : A) * (↑(v⁻¹) : A) = 1 := v.val_inv
   calc
-    (D (u : A) * (v : A) + (u : A) * D (v : A)) *
-        ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) =
+    D (u : A) * (v : A) * ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) +
+        (u : A) * D (v : A) * ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) =
       (D (u : A) * ((v : A) * (↑(v⁻¹) : A))) *
           (↑(u⁻¹) : A) +
         (u : A) * (D (v : A) * (↑(v⁻¹) : A)) *
@@ -143,6 +143,15 @@ theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
         (u : A) * (D (v : A) * (↑(v⁻¹) : A)) *
           (↑(u⁻¹) : A) := by
       rw [hv, mul_one]
+
+/-- The right noncommutative logarithmic inversion law. -/
+theorem dlogR_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
+    dlogR D (u⁻¹) =
+      -((↑(u⁻¹) : A) * dlogR D u * (u : A)) := by
+  rw [dlogR_eq_conjugate_dlogL, dlogL_inv,
+    dlogR_eq_conjugate_dlogL]
+  simp only [Units.val_inv_eq_inv_val, mul_assoc]
+  rw [u.inv_val, one_mul]
 
 /-- 🏆 THEOREM 4: Noncommutative Logarithmic Product Rule (Maurer–Cartan):
     dlog_L(u * v) = v⁻¹ * dlog_L(u) * v + dlog_L(v)

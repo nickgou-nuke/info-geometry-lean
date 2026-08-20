@@ -219,10 +219,8 @@ noncomputable def zornFlowRealAutGroupHom
     (D : canonicalZornDerivations) :
     Multiplicative ℝ →* RealSplitOctonionAut where
   toFun τ := zornFlowRealAut D τ.toAdd
-  map_one' := by
-    simpa using zornFlowRealAut_zero D
-  map_mul' σ τ := by
-    simpa using zornFlowRealAut_add D σ.toAdd τ.toAdd
+  map_one' := zornFlowRealAut_zero D
+  map_mul' σ τ := zornFlowRealAut_add D σ.toAdd τ.toAdd
 
 @[simp]
 theorem zornFlowRealAutGroupHom_apply
@@ -246,9 +244,8 @@ theorem zornFlowRealAutGroupHom_add
     zornFlowRealAutGroupHom D (Multiplicative.ofAdd (s + t)) =
       zornFlowRealAutGroupHom D (Multiplicative.ofAdd s) *
         zornFlowRealAutGroupHom D (Multiplicative.ofAdd t) := by
-  simpa using
-    map_mul (zornFlowRealAutGroupHom D)
-      (Multiplicative.ofAdd s) (Multiplicative.ofAdd t)
+  exact map_mul (zornFlowRealAutGroupHom D)
+    (Multiplicative.ofAdd s) (Multiplicative.ofAdd t)
 
 /-- Negative time becomes the group inverse. -/
 @[simp]
@@ -257,8 +254,7 @@ theorem zornFlowRealAutGroupHom_neg
     (t : ℝ) :
     zornFlowRealAutGroupHom D (Multiplicative.ofAdd (-t)) =
       (zornFlowRealAutGroupHom D (Multiplicative.ofAdd t))⁻¹ := by
-  simpa using
-    map_inv (zornFlowRealAutGroupHom D) (Multiplicative.ofAdd t)
+  exact map_inv (zornFlowRealAutGroupHom D) (Multiplicative.ofAdd t)
 
 /-!
 ## Time-one exponential and complete packet

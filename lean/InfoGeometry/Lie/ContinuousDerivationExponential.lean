@@ -89,7 +89,8 @@ noncomputable def flow
 theorem flow_zero
     (D : EndA) :
     flow D 0 = 1 := by
-  simp [flow]
+  dsimp [flow]
+  rw [zero_smul, NormedSpace.exp_zero]
 
 /-- Scalar multiples of a fixed operator commute. -/
 theorem smul_commute_smul
@@ -118,7 +119,8 @@ theorem flow_neg_generator
     (D : EndA)
     (t : ℝ) :
     flow (-D) t = flow D (-t) := by
-  simp [flow, smul_neg, neg_smul]
+  dsimp [flow]
+  rw [smul_neg, neg_smul]
 
 /-- `Φ_t Φ_{-t} = 1`. -/
 theorem flow_mul_flow_neg

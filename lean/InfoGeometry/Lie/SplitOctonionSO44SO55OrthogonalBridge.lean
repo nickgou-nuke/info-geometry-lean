@@ -5,7 +5,6 @@ import Mathlib.Tactic
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
-import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 
 noncomputable section
 
@@ -219,11 +218,5 @@ theorem canonicalDerivationFinMatrix_isEtaSkew (D : SplitOctonionDerivationWittO
          (submatrix etaW ⇑fin8Equiv ⇑fin8Equiv * LinearMap.toMatrix' (SplitOctonionDerivationWittBlockRealization.transportedDerivation D)) i j = 0
   rw [hmul1, hmul2]
   exact h_entry
-
-theorem derivationToSO55_isEtaSkew (D : SplitOctonionDerivationWittOrthogonalBridge.Derivation) :
-    IsEtaSkew eta55LeviMat10 (SplitOctonionDerivationSO55Bridge.derivationToSO55 D) := by
-  dsimp [SplitOctonionDerivationSO55Bridge.derivationToSO55]
-  exact so44ToSO55_preserves_etaSkew (SplitOctonionDerivationWittBlockRealization.canonicalDerivationFinMatrix D)
-    (canonicalDerivationFinMatrix_isEtaSkew D)
 
 end InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge

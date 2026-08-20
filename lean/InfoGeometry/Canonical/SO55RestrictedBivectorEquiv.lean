@@ -2,6 +2,7 @@ import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import InfoGeometry.Lie.SO55MatrixLieSubalgebra
 import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
+import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
@@ -22,6 +23,7 @@ namespace InfoGeometry.Canonical.SO55RestrictedLemmas
 open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 open InfoGeometry.Lie.SO55MatrixSubalgebra
 open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
+open InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.Cl55SpinBivectorImage
@@ -77,6 +79,54 @@ theorem so44ToSO55_preserves_eta55FromSum (M : Mat8) (hM : IsEtaSkew eta44 M) :
   have hij := congrFun (congrFun hskew (fin10Equiv i)) (fin10Equiv j)
   dsimp [transpose, Matrix.mul_apply] at hij
   exact hij
+
+/-- The exact so(5,5) Levi Lie subalgebra inside Mat10. -/
+def so55LeviLieSubalgebra : LieSubalgebra ℝ Mat10 where
+  carrier := { M : Mat10 | IsSO55LeviMatrix M }
+  add_mem' {M N} hM hN := by
+    dsimp [IsSO55LeviMatrix] at *
+    calc (M + N)ᵀ * eta55FromSum + eta55FromSum * (M + N)
+      _ = (Mᵀ + Nᵀ) * eta55FromSum + (eta55FromSum * M + eta55FromSum * N) := by rw [transpose_add, mul_add]
+      _ = (Mᵀ * eta55FromSum + eta55FromSum * M) + (Nᵀ * eta55FromSum + eta55FromSum * N) := by rw [add_mul]; abel
+      _ = 0 + 0 := by rw [hM, hN]
+      _ = 0 := add_zero 0
+  zero_mem' := by
+    dsimp [IsSO55LeviMatrix]
+    simp
+  smul_mem' c {M} hM := by
+    dsimp [IsSO55LeviMatrix] at *
+    calc (c • M)ᵀ * eta55FromSum + eta55FromSum * (c • M)
+      _ = c • (Mᵀ * eta55FromSum) + c • (eta55FromSum * M) := by rw [transpose_smul, smul_mul, Matrix.mul_smul]
+      _ = c • (Mᵀ * eta55FromSum + eta55FromSum * M) := by rw [smul_add]
+      _ = c • (0 : Mat10) := by rw [hM]
+      _ = 0 := smul_zero c
+  lie_mem' {M N} hM hN := by
+    dsimp [IsSO55LeviMatrix] at *
+    have hM_eq : Mᵀ * eta55FromSum = - (eta55FromSum * M) := eq_neg_of_add_eq_zero_left hM
+    have hN_eq : Nᵀ * eta55FromSum = - (eta55FromSum * N) := eq_neg_of_add_eq_zero_left hN
+    change (M * N - N * M)ᵀ * eta55FromSum + eta55FromSum * (M * N - N * M) = 0
+    rw [transpose_sub, transpose_mul, transpose_mul, sub_mul]
+    rw [mul_assoc, mul_assoc]
+    rw [hM_eq, hN_eq]
+    rw [mul_neg, mul_neg]
+    rw [← mul_assoc, ← mul_assoc]
+    rw [hN_eq, hM_eq]
+    rw [neg_mul, neg_mul, neg_neg, neg_neg]
+    rw [mul_sub, mul_assoc, mul_assoc]
+    abel
+
+/-- 🏆 THEOREM: derivationToSO55 preserves the (5,5) Levi metric -/
+theorem derivationToSO55_isSO55LeviMatrix (D : Derivation) :
+    IsSO55LeviMatrix (derivationToSO55 D) := by
+  dsimp [derivationToSO55]
+  exact so44ToSO55_preserves_eta55FromSum (canonicalDerivationFinMatrix D)
+    (canonicalDerivationFinMatrix_isEtaSkew D)
+
+/-- 🏆 THEOREM: derivationToSO55 lands in the so55LeviLieSubalgebra -/
+theorem derivationToSO55_mem_so55LeviLieSubalgebra (D : Derivation) :
+    derivationToSO55 D ∈ so55LeviLieSubalgebra :=
+  derivationToSO55_isSO55LeviMatrix D
+
 
 /-- Standard basis of V55 for indices in Fin 10. -/
 def v55Basis (i : Fin 10) : V55 :=

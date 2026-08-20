@@ -139,6 +139,9 @@ import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.QuantumGeometry.CompleteUnifiedBundle
 import InfoGeometry.QuantumGeometry.TensorBridge
+import InfoGeometry.Modular.Classification
+import InfoGeometry.Modular.ExactSequence
+import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.MasterRegistry
 
 namespace InfoGeometry

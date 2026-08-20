@@ -354,6 +354,19 @@ mass ratio induced by canonical normalization.
     (μ := gaugeSection (α := α) q)
     (ν := gaugeSection (α := α) q0) a
 
+@[simp] theorem relativeDensity_eq_exp_neg_relativeModularPotential
+    (q q0 : PositiveRay α) (a : α) :
+    relativeDensity q q0 a = Real.exp (-relativeModularPotential q q0 a) := by
+  rw [relativeModularPotential_eq_neg_relativeLogDensity, neg_neg]
+  exact relativeDensity_eq_exp_relativeLogDensity q q0 a
+
+@[simp] theorem relativeModularPotential_eq_neg_log_relativeDensity
+    (q q0 : PositiveRay α) (a : α) :
+  relativeModularPotential q q0 a = -Real.log (relativeDensity q q0 a) := by
+  rw [relativeDensity_eq_exp_neg_relativeModularPotential]
+  rw [Real.log_exp]
+  ring
+
 @[rep_depth projective, simp]
 theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
     (q q0 : PositiveRay α) (a : α) :
@@ -607,6 +620,20 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
     (μ := gaugeSection (α := α) q)
     (ν := gaugeSection (α := α) q0)
     (ξ := gaugeSection (α := α) q1) a
+
+/-- 
+  THE FUNDAMENTAL FUNCTOR THEOREM:
+  The relative density multiplicative 1-cocycle Δ(q, q₁) = Δ(q, q₀) · Δ(q₀, q₁)
+  translates under -ln into the modular potential additive 1-cocycle:
+    V(q, q₁) = V(q, q₀) + V(q₀, q₁)
+-/
+theorem log_exponential_duality_cocycle (q q0 q1 : PositiveRay α) (a : α) :
+    (relativeDensity q q1 a = relativeDensity q q0 a * relativeDensity q0 q1 a) ∧
+    (relativeModularPotential q q1 a = relativeModularPotential q q0 a + relativeModularPotential q0 q1 a) ∧
+    (relativeDensity q q1 a = Real.exp (-relativeModularPotential q q1 a)) := by
+  exact ⟨relativeDensity_cocycle q q0 q1 a,
+         relativeModularPotential_cocycle q q0 q1 a,
+         relativeDensity_eq_exp_neg_relativeModularPotential q q1 a⟩
 
 attribute [rep_depth projective]
   representativeRelativeDensity

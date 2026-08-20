@@ -127,6 +127,13 @@ theorem gaugeTransform_trans (conn : A) (u v : Aˣ) :
     _ = (v * u : Aˣ) * conn * (↑((v * u)⁻¹) : A) + (v * u : Aˣ) * D (↑((v * u)⁻¹) : A) := by
           rw [h_leibniz, h_expand]
 
+/-- Gauge transformation by a unit is inverted by the gauge transformation
+of its inverse. -/
+theorem gaugeTransform_inv (conn : A) (u : Aˣ) :
+    gaugeTransform D (gaugeTransform D conn u) u⁻¹ = conn := by
+  rw [gaugeTransform_trans D conn u⁻¹ u]
+  simpa using gaugeTransform_one D conn
+
 end NCDerivation
 
 end InfoGeometry.NCG.Calculus

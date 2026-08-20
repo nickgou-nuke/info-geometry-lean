@@ -235,7 +235,13 @@ theorem innerNCDerivation_dlog (K : A) (u : Aˣ) :
   change (↑(u⁻¹) : A) * (K * (u : A) - (u : A) * K) =
     (↑(u⁻¹) : A) * K * (u : A) - K
   have hu : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
-  rw [mul_sub, mul_assoc, hu, one_mul]
+  calc
+    (↑(u⁻¹) : A) * (K * (u : A) - (u : A) * K) =
+        (↑(u⁻¹) : A) * K * (u : A) -
+          (↑(u⁻¹) : A) * ((u : A) * K) := by
+      rw [mul_sub, mul_assoc]
+    _ = (↑(u⁻¹) : A) * K * (u : A) - K := by
+      rw [← mul_assoc (a := (↑(u⁻¹) : A)) (b := (u : A)), hu, one_mul]
 
 /- Algebraic modular conjugation by a unit. -/
 def innerConjugation (u : Aˣ) (X : A) : A :=

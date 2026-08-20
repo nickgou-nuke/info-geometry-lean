@@ -47,7 +47,8 @@ noncomputable def dOneForm (ω : OneForm α) :
     PositiveRay α → PositiveRay α → PositiveRay α → α → ℝ :=
   fun x x₀ x₁ a => ω x₀ x₁ a - ω x x₁ a + ω x x₀ a
 
-/-- d² = 0 on the statistical manifold (First Law of Thermodynamics). -/
+/- d² = 0 is purely algebraic and does not use the finite-ray instances. -/
+omit [Fintype α] [Nonempty α] in
 theorem discrete_exterior_derivative_sq_zero (f : ZeroForm α)
     (x x₀ x₁ : PositiveRay α) (a : α) :
     dOneForm (dZeroForm f) x x₀ x₁ a = 0 := by
@@ -80,6 +81,56 @@ def IsClosedOneForm (ω : OneForm α) : Prop :=
 /-- A 1-form is exact if it is the exterior derivative of a 0-form. -/
 def IsExactOneForm (ω : OneForm α) : Prop :=
   ∃ f : ZeroForm α, ∀ x x₀, ω x x₀ = dZeroForm f x x₀
+
+omit [Fintype α] [Nonempty α] in
+theorem exact_oneForm_is_closed {ω : OneForm α}
+    (hω : IsExactOneForm ω) : IsClosedOneForm ω := by
+  rcases hω with ⟨f, hf⟩
+  intro x x₀ x₁ a
+  unfold dOneForm
+  rw [hf x₀ x₁, hf x x₁, hf x x₀]
+  exact discrete_exterior_derivative_sq_zero f x x₀ x₁ a
+
+omit [Fintype α] [Nonempty α] in
+theorem exact_oneForm_path_independence {ω : OneForm α}
+    (hω : IsExactOneForm ω)
+    (x x₀ x₁ : PositiveRay α) (a : α) :
+    ω x x₁ a = ω x x₀ a + ω x₀ x₁ a := by
+  have hclosed := exact_oneForm_is_closed hω x x₀ x₁ a
+  unfold dOneForm at hclosed
+  linarith
+
+omit [Fintype α] [Nonempty α] in
+theorem exact_oneForm_closed_loop {ω : OneForm α}
+    (hω : IsExactOneForm ω)
+    (x x₀ : PositiveRay α) (a : α) :
+    ω x x₀ a + ω x₀ x a = 0 := by
+  rcases hω with ⟨f, hf⟩
+  rw [hf x x₀, hf x₀ x]
+  simp [dZeroForm]
+
+omit [Fintype α] [Nonempty α] in
+theorem path_independence_to_exact_oneForm
+    (base : PositiveRay α) {ω : OneForm α}
+    (hpath : ∀ x x₀ x₁ a, ω x x₁ a = ω x x₀ a + ω x₀ x₁ a) :
+    IsExactOneForm ω := by
+  refine ⟨fun x a => ω base x a, ?_⟩
+  intro x x₀
+  funext a
+  have h := hpath base x x₀ a
+  unfold dZeroForm
+  linarith
+
+omit [Fintype α] [Nonempty α] in
+theorem exact_oneForm_iff_path_independence
+    (base : PositiveRay α) (ω : OneForm α) :
+    IsExactOneForm ω ↔
+      ∀ x x₀ x₁ a, ω x x₁ a = ω x x₀ a + ω x₀ x₁ a := by
+  constructor
+  · intro hω
+    exact fun x x₀ x₁ a => exact_oneForm_path_independence hω x x₀ x₁ a
+  · intro hpath
+    exact path_independence_to_exact_oneForm base hpath
 
 /-- The modular potential 1-form is closed. -/
 theorem modularPotential_is_closed_oneForm :

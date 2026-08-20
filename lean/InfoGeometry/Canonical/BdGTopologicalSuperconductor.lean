@@ -44,7 +44,6 @@ PART 1: Real Doubled BdG/DIII Carrier
     - RealBdGDIIIAtom specializes to DIII class:
       T = K, C = J, S = -ε with T² = -I, C² = I
     - Concrete split-Cl(1,1) CAR pair for fermionic operators -/
-def bdgCarrierSummary : Unit := ()
 
 /-- The physical BdG matrix structure:
     H_BdG = [[h, Δ], [Δ†, -h*]] in Nambu space -/
@@ -73,7 +72,6 @@ def particleHoleSymmetry (H : PhysicalBdGMatrix) : Prop :=
   particleHoleOperator * physicalBdGMatrix H = - (physicalBdGMatrix H).map star * particleHoleOperator
 
 /-- The repository's RealBdGNambuGorkovFusion currently uses a different block structure. -/
-def physicalBdGPairingBridgeNeeded : Unit := ()
 
 /-!
 =============================================================================
@@ -81,11 +79,6 @@ PART 2: Andreev Reflection
 =============================================================================
 -/
 
-def andreevBoundarySummary : Unit := ()
-def fermionicAndreevSummary : Unit := ()
-def andreevNotModularConjugation : Unit := ()
-def modularConjugationMobiusAction : Unit := ()
-def andreevMobiusBridgeNeeded : Unit := ()
 
 /-!
 =============================================================================
@@ -93,9 +86,6 @@ PART 3: Bandgap vs Unit Circle
 =============================================================================
 -/
 
-def unitCircleIsScattering : Unit := ()
-def bandgapIsSpectral : Unit := ()
-def circleNotGapEdge : Unit := ()
 
 /-!
 =============================================================================
@@ -114,8 +104,6 @@ structure MajoranaZeroMode (H : PhysicalBdGMatrix) where
     wavefunction (i, n) = star (wavefunction (1 - i, n))
   topologicalProtection : True
 
-def berNeutralityNotMajorana : Unit := ()
-def zeroModeImpliesBerConstraint : Unit := ()
 
 /-!
 =============================================================================
@@ -123,8 +111,6 @@ PART 5: Pairing Potential and Schur Complement
 =============================================================================
 -/
 
-def physicalPairingNotYetBridged : Unit := ()
-def schurComplementNotGap : Unit := ()
 
 /-!
 =============================================================================
@@ -132,8 +118,6 @@ PART 6: Classification and Geometry Corrections
 =============================================================================
 -/
 
-def classificationIsAZNotCFT : Unit := ()
-def splitOctonionIsPseudoRiemannian : Unit := ()
 
 /-!
 =============================================================================
@@ -141,9 +125,6 @@ PART 7: Braiding Chain
 =============================================================================
 -/
 
-def braidingIsBivectorNotDerivation : Unit := ()
-def trialityFockBridgeExists : Unit := ()
-def g2ToBraidChainNeeded : Unit := ()
 
 /-!
 =============================================================================
@@ -151,6 +132,5 @@ PART 8: Corrected Physical Hierarchy
 =============================================================================
 -/
 
-def finalHierarchySummary : Unit := ()
 
 end InfoGeometry.Canonical.BdGTopologicalSuperconductor

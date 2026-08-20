@@ -44,31 +44,12 @@ def physicalBdGMatrix {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGDa
 def bulkTopologicalInvariant1D {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGData N) : ℤ :=
   if (H.Δ.det).re > 0 then 1 else -1
 
-/-- Bulk-boundary correspondence shadow: nontrivial bulk invariant implies boundary existence. -/
-theorem bulkBoundaryCorrespondence {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGData N) :
-    bulkTopologicalInvariant1D H ≠ 1 →
-    ∃ (_ : PhysicalBdGData N), True := by
-  intro _
-  exact ⟨⟨H.h, H.Δ⟩, trivial⟩
-
 /-- Properly parameterized Majorana zero mode for a BdG Hamiltonian `H`. -/
 structure MajoranaZeroModeOf {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGData N) where
   wavefunction : Fin 2 × N → ℂ
   zeroEnergy : (physicalBdGMatrix H).mulVec wavefunction = 0
   particleHoleSelfConjugate : ∀ (i : Fin 2) (n : N), wavefunction (i, n) = star (wavefunction (1 - i, n))
   normalization : ∑ i : Fin 2 × N, ‖wavefunction i‖ ^ 2 = 1
-
-/-- The Berezinian neutrality (Ber=1) is not sufficient for Majorana zero mode. -/
-theorem berNeutralityNotMajorana {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGData N) :
-    (∃ (_ : MajoranaZeroModeOf H), True) → True := by
-  intro _
-  trivial
-
-/-- Zero mode implies Berezinian constraint structure. -/
-theorem zeroModeImpliesBerConstraint {N : Type*} [Fintype N] [DecidableEq N] (H : PhysicalBdGData N) :
-    (∃ (_ : MajoranaZeroModeOf H), True) → True := by
-  intro _
-  trivial
 
 /-- Fu-Kane model: topological insulator surface with pairing. -/
 structure FuKaneModel where
@@ -84,13 +65,13 @@ def fuKaneMajoranaWavefunction (model : FuKaneModel) (r : ℝ) : ℂ :=
 /-- Zero mode existence under non-zero vorticity. -/
 theorem fuKaneZeroModeExists (model : FuKaneModel) :
     model.vortexWinding ≠ 0 →
-    ∃ (H : PhysicalBdGData (Fin 1)), ∃ (_ : MajoranaZeroModeOf H), True := by
+    ∃ (H : PhysicalBdGData (Fin 1)), Nonempty (MajoranaZeroModeOf H) := by
   intro _
   use ⟨0, 0⟩
   have h_zero_mat : physicalBdGMatrix (⟨0, 0⟩ : PhysicalBdGData (Fin 1)) = 0 := by
     ext ⟨i, a⟩ ⟨j, b⟩
     fin_cases i <;> fin_cases j <;> simp [physicalBdGMatrix]
-  refine ⟨⟨fun _ => (1 : ℂ) / (Real.sqrt 2 : ℂ), ?_, ?_, ?_⟩, trivial⟩
+  refine ⟨⟨fun _ => (1 : ℂ) / (Real.sqrt 2 : ℂ), ?_, ?_, ?_⟩⟩
   · rw [h_zero_mat, Matrix.zero_mulVec]
   · intro i n
     dsimp

@@ -53,6 +53,7 @@ noncomputable def toExpectationCoordinateData
         InfoGeometry.PositiveMeasure (Fin n) ℝ)
   fiber := fiber
 
+omit [Nonempty (Fin n)] in
 @[simp] theorem toExpectationCoordinateData_coordinate
     (fiber : PositiveRay (Fin n) → Type*) (ψ : State) (X : Observable) :
     (R.toExpectationCoordinateData fiber).coordinate ψ X =
@@ -88,9 +89,7 @@ noncomputable def potentialField
 
 theorem transitionPotential_self (ψ : State) (X : Observable) :
     E.transitionPotential ψ X X = 0 := by
-  simpa [transitionPotential, anchoredPotential] using
-    InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential_self
-      (n := n) (E.basePoint ψ X)
+  simp [transitionPotential, anchoredPotential]
 
 theorem transitionPotential_antisymm
     (ψ : State) (X₀ X₁ : Observable) :
@@ -121,6 +120,14 @@ theorem transitionPotential_eq_potentialField_difference
     (transition_eq_anchoredPotential_sub
       (n := n) base (E.basePoint ψ X₀) (E.basePoint ψ X₁))
 
+theorem bundlePotentialField_transport
+    (base : PositiveRay (Fin n)) (ψ : State) (X₀ X₁ : Observable) :
+    E.potentialField base ψ X₁ =
+      E.potentialField base ψ X₀ + E.transitionPotential ψ X₀ X₁ := by
+  have h := E.transitionPotential_eq_potentialField_difference base ψ X₀ X₁
+  linarith
+
+omit [Nonempty (Fin n)] in
 @[simp] theorem basePoint_def (ψ : State) (X : Observable) :
     E.basePoint ψ X = E.coordinate ψ X :=
   rfl
@@ -149,9 +156,7 @@ noncomputable def potentialField (base : PositiveRay (Fin n)) (o : Observable) :
 
 theorem transitionPotential_self (o : Observable) :
     B.transitionPotential o o = 0 := by
-  simpa [transitionPotential, anchoredPotential, basePoint] using
-    InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential_self
-      (n := n) (B.basePoint o)
+  simp [transitionPotential, anchoredPotential, basePoint]
 
 theorem transitionPotential_antisymm (o₀ o₁ : Observable) :
     B.transitionPotential o₁ o₀ = -B.transitionPotential o₀ o₁ := by
@@ -185,6 +190,13 @@ theorem transitionPotential_eq_potentialField_difference
   simpa [transitionPotential, potentialField, basePoint] using
     (transition_eq_anchoredPotential_sub
       (n := n) base (B.basePoint o₀) (B.basePoint o₁))
+
+theorem potentialField_transport
+    (base : PositiveRay (Fin n)) (o₀ o₁ : Observable) :
+    B.potentialField base o₁ =
+      B.potentialField base o₀ + B.transitionPotential o₀ o₁ := by
+  have h := B.transitionPotential_eq_potentialField_difference base o₀ o₁
+  linarith
 
 end QuantumAlgebraBundleBase
 

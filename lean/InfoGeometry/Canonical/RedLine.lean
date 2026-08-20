@@ -90,6 +90,11 @@ export InfoGeometry.Canonical.DeRhamModularPotentialBridge (
   path_independence_of_exact_oneForm
   IsClosedOneForm
   IsExactOneForm
+  exact_oneForm_is_closed
+  exact_oneForm_path_independence
+  exact_oneForm_closed_loop
+  path_independence_to_exact_oneForm
+  exact_oneForm_iff_path_independence
   modularPotential_is_closed_oneForm
   modularPotential_is_exact_oneForm'
   modular_potential_closed_and_exact
@@ -114,6 +119,11 @@ export InfoGeometry.Canonical.QuantumAlgebraObservableBase.ExpectationCoordinate
   transitionPotential_transitive
   transitionPotential_closed_loop
   transitionPotential_eq_potentialField_difference
+  bundlePotentialField_transport
+)
+
+export InfoGeometry.Canonical.QuantumAlgebraObservableBase.QuantumAlgebraBundleBase (
+  potentialField_transport
 )
 
 export InfoGeometry.Canonical.QuantumAlgebraObservableBase.PositiveObservableReadout (
@@ -123,13 +133,14 @@ export InfoGeometry.Canonical.QuantumAlgebraObservableBase.PositiveObservableRea
 
 export InfoGeometry.Canonical.HomogeneousModularFlows (
   HomogeneousSpace
-  quotient_is_homogeneous_space
-  quotient_basepoint_stabilizer
+  quotientHomogeneousSpace
+  quotient_projection_surjective
   maurerCartanDerivative
   maurerCartanPath
   maurerCartanPath_eq_logarithmicBridge
   capstone_logarithmicBridge_factors_maurerCartan
   maurerCartanDerivative_mul_eq_add
+  maurerCartanUnit_mul_eq_add
 )
 
 export InfoGeometry.Canonical.MaurerCartanFactorization (
@@ -147,6 +158,21 @@ export InfoGeometry.Canonical.MaurerCartanFactorization (
   maurerCartanForm
   logarithmicBridgeFactorsThroughMaurerCartan
   grand_maurer_cartan_unification_summary
+)
+
+/-! The homogeneous-space theorems remain owned by the core quotient-action
+package; this surface exports them without restating their proofs. -/
+export InfoGeometry.Core (
+  quotientBasepoint
+  smul_mk
+  smul_basepoint
+  stabilizer_quotientBasepoint_eq
+  IsHomogeneousSpace
+  quotient_isHomogeneousSpace
+  exists_smul_quotientBasepoint_eq
+  orbit_quotientBasepoint_univ
+  cartan_fixedQuotient_isHomogeneousSpace
+  stabilizer_cartan_fixedQuotientBasepoint_eq
 )
 
 

@@ -521,6 +521,14 @@ theorem zornFlowMulEquiv_map_idempotent
       zornFlowMulEquiv D t X := by
   rw [← map_mul (zornFlowMulEquiv D t), hX]
 
+@[simp]
+theorem zornFlowMulEquiv_map_zero
+    (D : canonicalZornDerivations)
+    (t : ℝ) :
+    zornFlowMulEquiv D t 0 = 0 := by
+  change (zornFlowLinearEquiv D.1 t) 0 = 0
+  exact map_zero (zornFlowLinearEquiv D.1 t)
+
 theorem zornFlowMulEquiv_map_two_sided_orthogonal
     (D : canonicalZornDerivations)
     (t : ℝ)
@@ -530,8 +538,10 @@ theorem zornFlowMulEquiv_map_two_sided_orthogonal
     zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y = 0 ∧
       zornFlowMulEquiv D t Y * zornFlowMulEquiv D t X = 0 := by
   constructor
-  · rw [← map_mul (zornFlowMulEquiv D t), hXY, map_zero]
-  · rw [← map_mul (zornFlowMulEquiv D t), hYX, map_zero]
+  · rw [← (zornFlowMulEquiv D t).map_mul X Y, hXY]
+    exact zornFlowMulEquiv_map_zero D t
+  · rw [← (zornFlowMulEquiv D t).map_mul Y X, hYX]
+    exact zornFlowMulEquiv_map_zero D t
 
 noncomputable def zornDerivationExpAutomorphism
     (D : canonicalZornDerivations) : CZ ≃* CZ :=

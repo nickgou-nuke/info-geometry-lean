@@ -3,8 +3,8 @@ import InfoGeometry.Arithmetic.AmariZetaDuallyFlatGeometry
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
 import InfoGeometry.Clifford.ThermodynamicZetaGeometry
 import InfoGeometry.Krein.FiniteCovarianceMajoranaBlock
-import InfoGeometry.TraceFormula.ColimitTrace
 import InfoGeometry.Clifford.CliffordBitWordEquivalence
+import InfoGeometry.KMSGNS
 
 /-!
 # Amari--Cayley quantum bridge

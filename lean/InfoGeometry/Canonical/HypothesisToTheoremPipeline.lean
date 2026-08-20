@@ -6,8 +6,8 @@ import Mathlib.Tactic
 
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
 import InfoGeometry.Canonical.PhysicalBdGPairingBridge
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Modular.DualFlowLieAlgebraBridge
+import InfoGeometry.KMSGNS
 
 /-!
 # Hypothesis-to-Theorem Canonical Pipeline

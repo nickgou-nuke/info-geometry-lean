@@ -1,6 +1,6 @@
 import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
-import InfoGeometry.TraceFormula.ColimitTrace
 import InfoGeometry.Topology.SymbolicLatentBoundaryInverseLimitCompHaus
+import InfoGeometry.KMSGNS
 
 /-!
 # Finite Itakura--Saito search surface over direct and inverse limits

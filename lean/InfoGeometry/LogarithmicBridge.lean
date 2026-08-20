@@ -12,8 +12,8 @@ import Mathlib.Tactic
 
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 import InfoGeometry.Analysis.MatrixPathDeformationEntropy
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary
+import InfoGeometry.KMSGNS
 
 /-!
 # The Logarithmic Bridge: The Redline Archetype (Lie/Jacobian Corridor)

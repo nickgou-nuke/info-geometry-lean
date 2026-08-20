@@ -4,10 +4,10 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.KleinBottleTomitaCrosscapBridge
 import InfoGeometry.Canonical.ThermodynamicsFirstLaw
+import InfoGeometry.KMSGNS
 
 noncomputable section
 

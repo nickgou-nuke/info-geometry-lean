@@ -73,6 +73,38 @@ def IsLinearDerivation (D : R →ₗ[R] R) : Prop :=
 def dlogRN (D : R →ₗ[R] R) (Δ_val inv_Δ : R) : R :=
   inv_Δ * D Δ_val
 
+@[simp]
+theorem dlogRN_one (D : R →ₗ[R] R) (hD : IsLinearDerivation D) :
+    dlogRN D 1 1 = 0 := by
+  have h := hD 1 1
+  have h' : D 1 = D 1 + D 1 := by
+    simpa only [mul_one, one_mul] using h
+  have h'' : D 1 + 0 = D 1 + D 1 := by simpa using h'
+  have hzero : D 1 = 0 := (add_left_cancel h'').symm
+  simp [dlogRN, hzero]
+
+theorem dlogRN_inv_unit (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
+    (u : Rˣ) :
+    dlogRN D (↑(u⁻¹) : R) (↑u : R) =
+      -dlogRN D (↑u : R) (↑(u⁻¹) : R) := by
+  have h := hD (↑u : R) (↑(u⁻¹) : R)
+  have huv : (↑u : R) * (↑(u⁻¹) : R) = 1 := u.val_inv
+  have hone : D 1 = 0 := by
+    have h1 := hD 1 1
+    have h1' : D 1 = D 1 + D 1 := by
+      simpa only [mul_one, one_mul] using h1
+    have h1'' : D 1 + 0 = D 1 + D 1 := by simpa using h1'
+    exact (add_left_cancel h1'').symm
+  rw [huv, hone] at h
+  have hinv :
+      (↑u : R) * D (↑(u⁻¹) : R) =
+        -(D (↑u : R) * (↑(u⁻¹) : R)) :=
+    eq_neg_of_add_eq_zero_right h.symm
+  dsimp [dlogRN]
+  rw [hinv]
+  congr 1
+  ring
+
 /--
   THEOREM 3: The Logarithmic Radon-Nikodym Chain Rule.
   dlog_D(Δ₁₂ * Δ₂₃) = dlog_D(Δ₁₂) + dlog_D(Δ₂₃)
@@ -91,5 +123,15 @@ theorem dlogRN_mul (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
       (inv_Δ12 * D Δ12) * (Δ23 * inv_Δ23) + (inv_Δ23 * D Δ23) * (Δ12 * inv_Δ12) := by
     ring
   rw [h_expand, h12, h23, mul_one, mul_one, add_comm]
+
+theorem dlogRN_units_mul (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
+    (u v : Rˣ) :
+    dlogRN D (↑(u * v) : R) (↑((u * v)⁻¹) : R) =
+      dlogRN D (↑u : R) (↑(u⁻¹) : R) +
+        dlogRN D (↑v : R) (↑(v⁻¹) : R) := by
+  have h := dlogRN_mul D hD
+      (↑u : R) (↑(u⁻¹) : R) (↑v : R) (↑(v⁻¹) : R)
+      u.val_inv v.val_inv
+  simpa [dlogRN, Units.val_mul, mul_comm, mul_left_comm, mul_assoc] using h
 
 end InfoGeometry.Modular

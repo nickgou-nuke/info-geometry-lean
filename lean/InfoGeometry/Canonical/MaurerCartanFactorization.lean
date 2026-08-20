@@ -2,8 +2,8 @@ import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
+import InfoGeometry.KMSGNS
 
-import InfoGeometry.Modular.ExactSequence
 
 /-!
 # Maurer-Cartan Factorization: The Master Capstone of Modular Geometry

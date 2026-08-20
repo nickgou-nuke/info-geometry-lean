@@ -4,7 +4,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.PrimonColimitAlgebra
 import InfoGeometry.TraceFormula.DeterminantBondNative
-import InfoGeometry.TraceFormula.ColimitTrace
+import InfoGeometry.KMSGNS
 
 /-!
 # Finite Itakura--Saito and determinant normalization

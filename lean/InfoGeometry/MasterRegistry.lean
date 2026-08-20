@@ -4,7 +4,6 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
 import InfoGeometry.QuantumGeometry.Projective.Basic
 import InfoGeometry.QuantumGeometry.Projective.QGT
@@ -14,6 +13,7 @@ import InfoGeometry.LogarithmicBridge
 import InfoGeometry.Continuous.FisherScore
 import InfoGeometry.Canonical.ErlangenObservableBundle
 import InfoGeometry.Canonical.HomogeneousModularFlows
+import InfoGeometry.KMSGNS
 
 noncomputable section
 

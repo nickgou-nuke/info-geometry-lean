@@ -13,6 +13,7 @@ import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.LogarithmicBridge
 import InfoGeometry.Continuous.FisherScore
 import InfoGeometry.Canonical.ErlangenObservableBundle
+import InfoGeometry.Canonical.HomogeneousModularFlows
 
 noncomputable section
 

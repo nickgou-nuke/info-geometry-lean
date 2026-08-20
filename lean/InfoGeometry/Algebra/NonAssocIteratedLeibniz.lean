@@ -230,6 +230,40 @@ theorem derivationCommutator_jacobi (D E F : A →ₗ[R] A) :
     LinearMap.comp_apply, LinearMap.map_sub, LinearMap.zero_apply]
   abel
 
+/-- The derivation commutator is additive in its left entry. -/
+theorem derivationCommutator_add_left
+    (D₁ D₂ E : A →ₗ[R] A) :
+    derivationCommutator (D₁ + D₂) E =
+      derivationCommutator D₁ E + derivationCommutator D₂ E := by
+  ext x
+  simp [derivationCommutator]
+  abel
+
+/-- The derivation commutator is additive in its right entry. -/
+theorem derivationCommutator_add_right
+    (D E₁ E₂ : A →ₗ[R] A) :
+    derivationCommutator D (E₁ + E₂) =
+      derivationCommutator D E₁ + derivationCommutator D E₂ := by
+  ext x
+  simp [derivationCommutator]
+  abel
+
+/-- The derivation commutator is homogeneous in its left entry. -/
+theorem derivationCommutator_smul_left
+    (r : R) (D E : A →ₗ[R] A) :
+    derivationCommutator (r • D) E = r • derivationCommutator D E := by
+  ext x
+  simp [derivationCommutator]
+  rw [smul_sub]
+
+/-- The derivation commutator is homogeneous in its right entry. -/
+theorem derivationCommutator_smul_right
+    (r : R) (D E : A →ₗ[R] A) :
+    derivationCommutator D (r • E) = r • derivationCommutator D E := by
+  ext x
+  simp [derivationCommutator]
+  rw [smul_sub]
+
 end DerivationBracket
 
 section Unit

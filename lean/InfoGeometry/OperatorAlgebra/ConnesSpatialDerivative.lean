@@ -224,6 +224,25 @@ theorem chain_rule_apply
       D.spatialDerivative φ η :=
   D.chain_rule φ ψ η
 
+/-- Four composable weight comparisons are coherent under reassociation. -/
+theorem chain_rule_assoc
+    (φ ψ η ξ : Weight) :
+    (D.spatialDerivative φ ψ * D.spatialDerivative ψ η) *
+        D.spatialDerivative η ξ =
+      D.spatialDerivative φ ψ *
+        (D.spatialDerivative ψ η * D.spatialDerivative η ξ) := by
+  calc
+    (D.spatialDerivative φ ψ * D.spatialDerivative ψ η) *
+        D.spatialDerivative η ξ =
+      D.spatialDerivative φ η * D.spatialDerivative η ξ := by
+        rw [D.chain_rule]
+    _ = D.spatialDerivative φ ξ := D.chain_rule φ η ξ
+    _ = D.spatialDerivative φ ψ * D.spatialDerivative ψ ξ :=
+      (D.chain_rule φ ψ ξ).symm
+    _ = D.spatialDerivative φ ψ *
+        (D.spatialDerivative ψ η * D.spatialDerivative η ξ) := by
+        rw [D.chain_rule]
+
 end ConnesSpatialDerivative
 
 /-! ## 5. Symmetric Hamiltonian is derived, not primitive -/

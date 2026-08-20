@@ -99,6 +99,14 @@ def modularDerivation (K : A) : Derivation A where
       _ = (K * x - x * K) * y + x * (K * y - y * K) := by
           simp only [sub_mul, mul_sub, mul_assoc]
 
+/-! Inner derivations are additive in their generating element. -/
+theorem modularDerivation_add_apply (K L X : A) :
+    modularDerivation (K + L) X =
+      modularDerivation K X + modularDerivation L X := by
+  dsimp [modularDerivation, adK]
+  simp only [add_mul, mul_add]
+  abel
+
 /-- 
   THEOREM 1: The Exact Kernel of the Modular Map.
   ad_K is identically the zero derivation if and only if K is in the center Z(A):
@@ -158,6 +166,15 @@ theorem adK_bracket (K₁ K₂ X : A) :
         simp only [mul_sub, sub_mul, mul_assoc]
         abel
     _ = adK (adK K₁ K₂) X := by rfl
+
+/-! The pointwise inner-bracket identity lifts to the bundled derivation
+    commutator. -/
+theorem commutator_modular_eq_modular_commutator (K₁ K₂ : A) :
+    Derivation.derivationCommutator (modularDerivation K₁)
+        (modularDerivation K₂) =
+      modularDerivation (adK K₁ K₂) := by
+  ext X
+  exact adK_bracket K₁ K₂ X
 
 
 /-!

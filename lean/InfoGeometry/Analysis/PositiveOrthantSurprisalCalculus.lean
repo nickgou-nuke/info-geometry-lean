@@ -56,14 +56,14 @@ theorem totalSurprisalPotential_contDiffOn :
       (interior (InfoGeometry.Projective.positiveOrthantCone (α := α) :
         Set (Chart α))) := by
   unfold totalSurprisalPotential
-  apply ContDiffOn.sum
-  intro i x hx
-  have hxi : 0 < x i :=
-    (InfoGeometry.Projective.mem_interior_positiveOrthantCone_iff
-      (α := α) x).mp hx i
-  have hlog : ContDiffAt ℝ (⊤ : WithTop ℕ∞) Real.log (x i) :=
-    (Real.contDiffAt_log).2 (ne_of_gt hxi)
-  exact ((hlog.comp x ((coordinateCLM i).contDiff.contDiffAt)).neg).contDiffWithinAt
+  exact ContDiffOn.sum (fun i _ => by
+    intro x hx
+    have hxi : 0 < x i :=
+      (InfoGeometry.Projective.mem_interior_positiveOrthantCone_iff
+        (α := α) x).mp hx i
+    have hlog : ContDiffAt ℝ (⊤ : WithTop ℕ∞) Real.log (x i) :=
+      (Real.contDiffAt_log).2 (ne_of_gt hxi)
+    exact ((hlog.comp x ((coordinateCLM i).contDiff.contDiffAt)).neg).contDiffWithinAt)
 
 theorem totalSurprisalPotential_apply (x : Chart α) :
     totalSurprisalPotential x =

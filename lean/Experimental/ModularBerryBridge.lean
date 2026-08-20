@@ -25,17 +25,6 @@ noncomputable def rnModularHamiltonian
   (-Real.log M.rnDerivative) • idEndH E
 
 /--
-Historical negative-log readback, now stated directly for the
-`ModularRadonNikodymData` owner.
--/
-@[simp]
-theorem modularHamiltonian_eq_neg_log_delta
-    (M : ModularRadonNikodymData E) :
-    rnModularHamiltonian M =
-      (-Real.log M.rnDerivative) • idEndH E :=
-  rfl
-
-/--
 Historical modular-transport readback.  The transport is no longer stored
 twice: it is the modular automorphism group owned by `M`.
 -/

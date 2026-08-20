@@ -12,7 +12,7 @@ namespace DAG
 
 open Matrix
 
-structure LawfulTwoComplex
+structure BoundaryTwoComplex
     {R : Type} [Semiring R]
     {α : Type} [BEq α] [Hashable α]
     (tc : TwoComplex α)
@@ -31,13 +31,13 @@ structure HodgeStarData
   star0_involution : ∀ f v, star0 (star0 f) v = f v
   star1_involution : ∀ f e, star1 (star1 f) e = f e
 
-def LawfulTwoComplex.toGeneralized
+def BoundaryTwoComplex.toGeneralized
     {R : Type} [Semiring R] [StarRing R]
     {α : Type} [BEq α] [Hashable α]
     {tc : TwoComplex α}
     {d1 : Fin tc.edges.size → Fin tc.base.toGraph.nodes.size → R}
     {d2 : Fin (tc.faces.size + tc.digons.size) → Fin tc.edges.size → R}
-    (lawful : LawfulTwoComplex tc d1 d2)
+    (lawful : BoundaryTwoComplex tc d1 d2)
     (stars : HodgeStarData (R := R) tc) :
     GeneralizedTwoComplex R (Fin tc.base.toGraph.nodes.size)
       (Fin tc.edges.size) (Fin (tc.faces.size + tc.digons.size)) :=
@@ -56,7 +56,7 @@ theorem TwoComplex.toGeneralized_boundary_squared_zero
     (tc : TwoComplex α)
     (d1 : Fin tc.edges.size → Fin tc.base.toGraph.nodes.size → R)
     (d2 : Fin (tc.faces.size + tc.digons.size) → Fin tc.edges.size → R)
-    (lawful : LawfulTwoComplex tc d1 d2)
+    (lawful : BoundaryTwoComplex tc d1 d2)
     (f : Fin (tc.faces.size + tc.digons.size))
     (v : Fin tc.base.toGraph.nodes.size) :
     ∑ e, d2 f e * d1 e v = 0 :=

@@ -33,6 +33,29 @@ variable {A : Type*} [CommRing A]
 def IsDerivation (D : A → A) : Prop :=
   (∀ x y, D (x + y) = D x + D y) ∧ (∀ x y, D (x * y) = D x * y + x * D y)
 
+theorem isDerivation_zero : IsDerivation (0 : A → A) := by
+  constructor <;> simp
+
+theorem isDerivation_add {D E : A → A}
+    (hD : IsDerivation D) (hE : IsDerivation E) :
+    IsDerivation (D + E) := by
+  constructor
+  · intro x y
+    simp only [Pi.add_apply, hD.1 x y, hE.1 x y]
+    abel
+  · intro x y
+    simp only [Pi.add_apply, hD.2 x y, hE.2 x y]
+    ring
+
+theorem isDerivation_neg {D : A → A}
+    (hD : IsDerivation D) : IsDerivation (-D) := by
+  constructor
+  · intro x y
+    simp only [Pi.neg_apply, hD.1 x y, neg_add]
+  · intro x y
+    simp only [Pi.neg_apply, hD.2 x y, neg_add, neg_mul]
+    ring
+
 /-- THEOREM: Every derivation strictly annihilates the multiplicative unit 1. -/
 theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
   have hmul : D 1 = D 1 + D 1 := by

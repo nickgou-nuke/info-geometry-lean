@@ -16,6 +16,10 @@ import InfoGeometry.Canonical.HomogeneousModularFlows
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
+import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
+import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
+import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
+import InfoGeometry.Continuous.DeRhamBridge
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
@@ -66,6 +70,41 @@ export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (
   differentiableOn_coordinateLogPotential
   coordinateLogPotential_contDiffOn
   integral_coordinateLogRate_eq_potential_sub
+)
+
+export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
+  coordinateSurprisalPotential
+  hasFDerivAt_coordinateSurprisalPotential
+  coordinateSurprisalPotential_contDiffOn
+  integral_coordinateSurprisalRate_eq_potential_sub
+  coordinateSurprisalPotential_difference
+  coordinateSurprisalPotential_closed_loop
+)
+
+export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
+  coordinateSurprisalPotential
+  hasFDerivAt_coordinateSurprisalPotential
+  coordinateSurprisalPotential_contDiffOn
+  integral_coordinateSurprisalRate_eq_potential_sub
+  coordinateSurprisalPotential_difference
+  coordinateSurprisalPotential_closed_loop
+)
+
+export InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge (
+  trajectoryPotential
+  hasDerivAt_trajectoryPotential
+  deriv_trajectoryPotential
+  trajectoryPotential_difference
+  trajectoryPotential_closed_loop
+)
+
+export InfoGeometry.Continuous.DeRhamBridge (
+  zeroForm
+  exactOneForm
+  zeroForm_hasFDerivAt
+  zeroForm_contDiffOn_positiveOrthant
+  exactOneForm_is_derivative
+  exactOneForm_path_integral
 )
 
 export InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus (

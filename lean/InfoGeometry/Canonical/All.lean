@@ -3324,6 +3324,7 @@ import InfoGeometry.Canonical.SuperHolographicEffectiveActionBridge
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RedlineGrandSynthesis
 import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
+import InfoGeometry.Canonical.DeRhamThermodynamicPotential
 import InfoGeometry.CompleteUnifiedBundle
 
 namespace InfoGeometry

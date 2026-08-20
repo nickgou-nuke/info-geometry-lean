@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Physics.TripotentAdjointDerivation
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 
 /-!
@@ -30,26 +31,6 @@ set_option linter.unusedSectionVars false
 variable {R : Type*} [Ring R] [Algebra ℝ R]
 
 local notation "EndR" => Module.End ℝ R
-
-/-- Left multiplication by an algebra element. -/
-def leftMulLinear (a : R) : EndR where
-  toFun x := a * x
-  map_add' x y := mul_add a x y
-  map_smul' c x := mul_smul_comm c a x
-
-/-- Right multiplication by an algebra element. -/
-def rightMulLinear (a : R) : EndR where
-  toFun x := x * a
-  map_add' x y := add_mul x y a
-  map_smul' c x := smul_mul_assoc c x a
-
-@[simp] theorem leftMulLinear_apply (a x : R) :
-    leftMulLinear a x = a * x :=
-  rfl
-
-@[simp] theorem rightMulLinear_apply (a x : R) :
-    rightMulLinear a x = x * a :=
-  rfl
 
 /-- Left and right multiplication commute in an associative algebra. -/
 theorem leftMulLinear_comp_rightMulLinear (a b : R) :

@@ -88,11 +88,15 @@ def leftMulLinear (e : A) : A →ₗ[ℝ] A where
   map_add' x y := mul_add e x y
   map_smul' c x := Algebra.mul_smul_comm c e x
 
+@[simp] theorem leftMulLinear_apply (e x : A) : leftMulLinear e x = e * x := rfl
+
 /-- Right multiplication by `e`, as an `ℝ`-linear map. -/
 def rightMulLinear (e : A) : A →ₗ[ℝ] A where
   toFun x := x * e
   map_add' x y := add_mul x y e
   map_smul' c x := Algebra.smul_mul_assoc c x e
+
+@[simp] theorem rightMulLinear_apply (e x : A) : rightMulLinear e x = x * e := rfl
 
 /-- The bundled inner derivation `L_e - R_e`. -/
 def adLinear (e : A) : A →ₗ[ℝ] A :=

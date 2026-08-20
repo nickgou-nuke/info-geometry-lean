@@ -75,7 +75,7 @@ theorem bdg_particle_hole_anticommutation
     (h_anti2 : ∀ v : H, R_struct.conjugation (Δ v) = -ContinuousLinearMap.adjoint Δ (R_struct.conjugation v))
     (x : WithLp 2 (H × H)) :
     antiunitarySheetSwap R_struct (H_BdG h Δ x) = -(H_BdG h Δ (antiunitarySheetSwap R_struct x)) :=
-  antiunitarySheetSwap_anticommutes h Δ R_struct h_comm1 h_anti1 h_comm2 h_anti2 x
+  bdg_antiunitary_particle_hole_symmetry h Δ R_struct h_comm1 h_anti1 h_comm2 h_anti2 x
 
 /-!
 =============================================================================

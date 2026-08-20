@@ -295,6 +295,8 @@ theorem gaussian_fisher_curvature
     let dpsi := fun s => gaussianMoment sigma_sq s
     deriv dpsi theta = gaussianFisherMetric sigma_sq := by
   dsimp [gaussianMoment, gaussianFisherMetric]
-  rw [((hasDerivAt_id' theta).const_mul sigma_sq).deriv, mul_one]
+  have h : HasDerivAt (fun s => sigma_sq * s) sigma_sq theta := by
+    simpa using (hasDerivAt_id theta).const_mul sigma_sq
+  exact h.deriv
 
 end InfoGeometry.Information.UniversalConvexDualityQuadrangle

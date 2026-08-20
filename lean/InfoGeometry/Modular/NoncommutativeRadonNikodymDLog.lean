@@ -199,6 +199,23 @@ theorem innerDerivationOf_eq_zero_iff_central (K : A) :
   · intro h x
     simp [innerDerivationOf_apply, h x]
 
+theorem commutatorDerivation_inner_right_eq_zero_iff_central
+    (D : NoncommutativeDerivation A) (K : A) :
+    (∀ x : A,
+      commutatorDerivation D (innerDerivationOf K) x = 0) ↔
+      ∀ x : A, D K * x = x * D K := by
+  rw [show (∀ x : A,
+      commutatorDerivation D (innerDerivationOf K) x = 0) ↔
+      ∀ x : A, innerDerivationOf (D K) x = 0 by
+        constructor
+        · intro h x
+          rw [← commutatorDerivation_inner_right_apply D K x]
+          exact h x
+        · intro h x
+          rw [commutatorDerivation_inner_right_apply D K x]
+          exact h x]
+  exact innerDerivationOf_eq_zero_iff_central (D K)
+
 /-- Equality of two inner derivations is equality of their commutators with
 every element; this is the quotient-by-centre formulation of inner data. -/
 theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
@@ -206,30 +223,28 @@ theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
       ∀ x : A, (K - L) * x = x * (K - L) := by
   constructor
   · intro h x
-    have hx := congrArg (fun E : NoncommutativeDerivation A => E x) h
-    have hx' : K * x - x * K = L * x - x * L := by
-      simpa [innerDerivationOf_apply] using hx
+    have hx : (innerDerivationOf K) x = (innerDerivationOf L) x := by rw [h]
+    simp only [innerDerivationOf_apply] at hx
     calc
-      (K - L) * x = K * x - L * x := by rw [sub_mul]
-      _ = (K * x - x * K) + (x * K - L * x) := by
+      (K - L) * x = (K * x - x * K) - (L * x - x * L) + x * (K - L) := by
+        rw [sub_mul, mul_sub]
         noncomm_ring
-      _ = (L * x - x * L) + (x * K - L * x) := by rw [hx']
+      _ = (L * x - x * L) - (L * x - x * L) + x * (K - L) := by rw [hx]
       _ = x * (K - L) := by
-        rw [mul_sub]
-        noncomm_ring
+        rw [sub_self, zero_add]
   · intro h
     apply NoncommutativeDerivation.ext
     intro x
     have hx := h x
     simp only [innerDerivationOf_apply]
     calc
-      K * x - x * K = (K - L) * x + L * x - x * K := by
+      K * x - x * K = (K - L) * x + (L * x - x * K) := by
         rw [sub_mul]
-        abel
-      _ = x * (K - L) + L * x - x * K := by rw [hx]
+        noncomm_ring
+      _ = x * (K - L) + (L * x - x * K) := by rw [hx]
       _ = L * x - x * L := by
         rw [mul_sub]
-        abel
+        noncomm_ring
 
 /-- Noncommutative Left Logarithmic Derivative:
     dlog_L(u) = u⁻¹ * D(u) -/

@@ -7389,3 +7389,4 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
+import InfoGeometry.Probability.ExpLogRNDerivation

@@ -33,7 +33,7 @@ PART 1: Basic QGT Definitions and Real Invariants
 -/
 
 def QGT (ψ : H) (X Y : EndH) : ℂ :=
-  inner (X ψ) (Y ψ) - inner (X ψ) ψ * inner ψ (Y ψ)
+  @inner ℂ H _ (X ψ) (Y ψ) - @inner ℂ H _ (X ψ) ψ * @inner ℂ H _ ψ (Y ψ)
 
 def fisherMetric (ψ : H) (X Y : EndH) : ℝ :=
   (QGT ψ X Y).re
@@ -48,12 +48,12 @@ def berryCurvature (ψ : H) (X Y : EndH) : ℝ :=
 theorem berryCurvature_self (ψ : H) (X : EndH) :
     berryCurvature ψ X X = 0 := by
   dsimp [berryCurvature, QGT]
-  have h_re : (inner (X ψ) (X ψ) - inner (X ψ) ψ * inner ψ (X ψ)).im = 0 := by
-    have h1 : (inner (X ψ) (X ψ) : ℂ).im = 0 := inner_self_im (X ψ)
-    have h2 : (inner (X ψ) ψ * inner ψ (X ψ)) = ((inner (X ψ) ψ) * starRingEnd ℂ (inner (X ψ) ψ)) := by
+  have h_re : (@inner ℂ H _ (X ψ) (X ψ) - @inner ℂ H _ (X ψ) ψ * @inner ℂ H _ ψ (X ψ)).im = 0 := by
+    have h1 : (@inner ℂ H _ (X ψ) (X ψ) : ℂ).im = 0 := inner_self_im (X ψ)
+    have h2 : (@inner ℂ H _ (X ψ) ψ * @inner ℂ H _ ψ (X ψ)) = ((@inner ℂ H _ (X ψ) ψ) * starRingEnd ℂ (@inner ℂ H _ (X ψ) ψ)) := by
       rw [inner_conj_symm (X ψ) ψ]
-    have h3 : (inner (X ψ) ψ * starRingEnd ℂ (inner (X ψ) ψ)).im = 0 := by
-      exact Complex.mul_conj_im (inner (X ψ) ψ)
+    have h3 : ((@inner ℂ H _ (X ψ) ψ) * starRingEnd ℂ (@inner ℂ H _ (X ψ) ψ)).im = 0 := by
+      exact Complex.mul_conj_im (@inner ℂ H _ (X ψ) ψ)
     rw [h2]
     simp [h1, h3]
   rw [h_re, mul_zero, neg_zero]
@@ -139,19 +139,19 @@ theorem robertson_schrodinger_qgt_bound
 theorem geometric_commutator_uncertainty_bound
     (ψ : H) (X Y : EndH)
     (h_cauchy : (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ Complex.normSq (QGT ψ X Y))
-    (h_comm_curv : (berryCurvature ψ X Y : ℂ) * Complex.I = ⟪ψ, opCommutator X Y ψ⟫_ℂ) :
-    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * Complex.normSq (⟪ψ, opCommutator X Y ψ⟫_ℂ) := by
+    (h_comm_curv : (berryCurvature ψ X Y : ℂ) * Complex.I = @inner ℂ H _ ψ (opCommutator X Y ψ)) :
+    (fisherMetric ψ X X) * (fisherMetric ψ Y Y) ≥ (1 / 4) * Complex.normSq (@inner ℂ H _ ψ (opCommutator X Y ψ)) := by
   have h_bound := robertson_schrodinger_qgt_bound ψ X Y h_cauchy
   have h_normSq_comm :
-    Complex.normSq (⟪ψ, opCommutator X Y ψ⟫_ℂ) = (berryCurvature ψ X Y) ^ 2 := by
-    rw [← h_comm_curv]
-    rw [Complex.normSq_mul, Complex.normSq_I, mul_one]
-    <;> simp [Complex.normSq_ofReal]
+    Complex.normSq (@inner ℂ H _ ψ (opCommutator X Y ψ)) = (berryCurvature ψ X Y) ^ 2 := by
+    have h1 : (@inner ℂ H _ ψ (opCommutator X Y ψ) : ℂ) = (berryCurvature ψ X Y : ℂ) * Complex.I := by
+      rw [h_comm_curv]
+      <;> ring_nf
+    rw [h1]
+    simp [Complex.normSq_mul, Complex.normSq_I, Complex.normSq_ofReal, mul_one]
     <;> ring_nf
+    <;> simp [Complex.normSq_ofReal]
     <;> norm_cast
-    <;> simp_all [Complex.ext_iff, pow_two]
-    <;> norm_num
-    <;> linarith
   rw [h_normSq_comm]
   exact h_bound
 

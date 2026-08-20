@@ -69,16 +69,14 @@ theorem leftSurprisalAction_matrixUnit
     {n : ℕ} (p : Fin n → ℝ) (i j : Fin n) :
     leftAction (R := ℂ) (leftSurprisalMatrix p) (matrixUnit i j) =
       ((-Real.log (p i) : ℝ) : ℂ) • matrixUnit i j := by
-  unfold leftAction leftSurprisalMatrix
-  simp only [leftAction_apply]
+  change leftSurprisalMatrix p * matrixUnit i j = _
   exact diagonal_mul_matrixUnit (fun i => ((-Real.log (p i) : ℝ) : ℂ)) i j
 
 theorem rightSurprisalAction_matrixUnit
     {n : ℕ} (q : Fin n → ℝ) (i j : Fin n) :
     rightAction (R := ℂ) (rightSurprisalMatrix q) (matrixUnit i j) =
       ((-Real.log (q j) : ℝ) : ℂ) • matrixUnit i j := by
-  unfold rightAction rightSurprisalMatrix
-  simp only [rightAction_apply]
+  change matrixUnit i j * rightSurprisalMatrix q = _
   exact matrixUnit_mul_diagonal (fun j => ((-Real.log (q j) : ℝ) : ℂ)) i j
 
 theorem relativeLogAction_eq_leftRightSurprisal
@@ -91,8 +89,8 @@ theorem relativeLogAction_matrixUnit
     {n : ℕ} (p q : Fin n → ℝ) (i j : Fin n) :
     relativeLogAction p q (matrixUnit i j) =
       ((relativeLogEigenvalue (p i) (q j) : ℝ) : ℂ) • matrixUnit i j := by
-  simp only [relativeLogAction, LinearMap.sub_apply, leftSurprisalMatrix, rightSurprisalMatrix,
-    leftAction_apply, rightAction_apply]
+  change (leftSurprisalMatrix p * matrixUnit i j) -
+      (matrixUnit i j * rightSurprisalMatrix q) = _
   rw [diagonal_mul_matrixUnit, matrixUnit_mul_diagonal]
   unfold relativeLogEigenvalue
   ext a b

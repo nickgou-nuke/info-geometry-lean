@@ -11,6 +11,7 @@ import InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
 import InfoGeometry.Arithmetic.IndexTheorem
 import InfoGeometry.Thermal.FiniteMatrix
 import InfoGeometry.Canonical.MadelungScaleQuantum
+import InfoGeometry.Physics.FiniteRelativeModularOperator
 
 /-!
 # Finite Madelung--Tomita quantization
@@ -44,7 +45,7 @@ open InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
 open InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
-open InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
+open InfoGeometry.Physics.FiniteRelativeModularOperator
 open InfoGeometry.Algebra.EulerLaurentDerivation
 
 /-! ## Finite polar/Madelung carrier -/
@@ -276,24 +277,27 @@ theorem finite_CCR_identity_impossible {n : ℕ} (hn : 0 < n)
 
 /-! ## Relative-modular IS action and Hamiltonian commutator -/
 
-abbrev FiniteComplexCarrier := MatrixCarrier 2
-abbrev FiniteRelativeEnd := EndCarrier 2
+abbrev FiniteComplexCarrier := Matrix (Fin 2) (Fin 2) ℂ
+abbrev FiniteRelativeEnd := Matrix (Fin 2) (Fin 2) ℂ →ₗ[ℂ] Matrix (Fin 2) (Fin 2) ℂ
 
 def finiteRelativeISAction
-    (ρ σ : InvertibleMatrix 2) (logDelta : FiniteRelativeEnd)
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ FiniteComplexCarrier)
+    (logDelta : FiniteRelativeEnd)
     (X : FiniteComplexCarrier) : FiniteComplexCarrier :=
-  relativeModular ρ σ X - X - logDelta X
+  D.delta X - X - logDelta X
 
 def finiteRelativeHamiltonianAction
-    (ρ σ : InvertibleMatrix 2) (K : FiniteRelativeEnd)
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ FiniteComplexCarrier)
+    (K : FiniteRelativeEnd)
     (X : FiniteComplexCarrier) : FiniteComplexCarrier :=
-  relativeModular ρ σ X - X + K X
+  D.delta X - X + K X
 
 theorem finite_relative_modular_is_hamiltonian_action
-    (ρ σ : InvertibleMatrix 2) (logDelta K : FiniteRelativeEnd)
+    (D : InfoGeometry.Physics.FiniteRelativeModularOperator.RelativeModularData ℂ FiniteComplexCarrier)
+    (logDelta K : FiniteRelativeEnd)
     (hK : ∀ X, logDelta X = -(K X)) (X : FiniteComplexCarrier) :
-    finiteRelativeISAction ρ σ logDelta X =
-      finiteRelativeHamiltonianAction ρ σ K X := by
+    finiteRelativeISAction D logDelta X =
+      finiteRelativeHamiltonianAction D K X := by
   unfold finiteRelativeISAction finiteRelativeHamiltonianAction
   rw [hK X]
   simp [sub_eq_add_neg, add_assoc]

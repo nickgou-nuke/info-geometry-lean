@@ -586,13 +586,12 @@ structure InvertibleHoleBlock (h : EndH) where
 namespace InvertibleHoleBlock
 
 variable {h : EndH}
-variable (I : InvertibleHoleBlock h)
 
 /-- Genuine inverse of the physical hole block. -/
-def inverse : EndH :=
+def inverse (I : InvertibleHoleBlock h) : EndH :=
   (I.equiv.symm : H →L[ℂ] H)
 
-@[simp] theorem holeBlock_comp_inverse :
+@[simp] theorem holeBlock_comp_inverse (I : InvertibleHoleBlock h) :
     (holeBlock h).comp I.inverse = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -600,7 +599,7 @@ def inverse : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_holeBlock :
+@[simp] theorem inverse_comp_holeBlock (I : InvertibleHoleBlock h) :
     I.inverse.comp (holeBlock h) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -608,12 +607,12 @@ def inverse : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem holeBlock_inverse_apply (x : H) :
+@[simp] theorem holeBlock_inverse_apply (I : InvertibleHoleBlock h) (x : H) :
     holeBlock h (I.inverse x) = x := by
   have hx := congrArg (fun T : EndH => T x) I.holeBlock_comp_inverse
   simpa [comp_apply] using hx
 
-@[simp] theorem inverse_holeBlock_apply (x : H) :
+@[simp] theorem inverse_holeBlock_apply (I : InvertibleHoleBlock h) (x : H) :
     I.inverse (holeBlock h x) = x := by
   have hx := congrArg (fun T : EndH => T x) I.inverse_comp_holeBlock
   simpa [comp_apply] using hx
@@ -695,8 +694,8 @@ theorem H_BdG_on_schurGraph
   apply nambu_ext
   · simp [BdG_Schur_Complement_apply]
   · change
-      adjoint Δ u - adjoint h (-I.inverse (adjoint Δ u)) = 0
-    rw [map_neg, hAdj]
+      adjoint Δ u + holeBlock h (-I.inverse (adjoint Δ u)) = 0
+    rw [map_neg, hInv]
     simp
 
 /-- Operator-level Schur graph identity. -/
@@ -718,12 +717,7 @@ theorem H_BdG_schurGraph_eq_zero_iff
     H_BdG h Δ (schurGraphEmbedding Δ I u) = 0 ↔
       BdG_Schur_Complement h Δ I u = 0 := by
   rw [H_BdG_on_schurGraph]
-  constructor
-  · intro hzero
-    have hfst := congrArg (fun x : NambuH => x.fst) hzero
-    simpa using hfst
-  · intro hzero
-    simp [hzero]
+  simp [nambu_ext_iff]
 
 /-! ## 8. Spectral-parameter Schur complement -/
 
@@ -749,7 +743,7 @@ noncomputable def spectralBdG (h Δ : EndH) (E : ℂ) : EndNambu :=
 
 @[simp] theorem spectralBdG_zero (h Δ : EndH) :
     spectralBdG h Δ 0 = H_BdG h Δ := by
-  simp [spectralBdG]
+  simp [spectralBdG, zero_smul]
 
 @[simp] theorem shiftedParticleBlock_apply
     (h : EndH) (E : ℂ) (u : H) :
@@ -785,13 +779,12 @@ structure InvertibleShiftedHoleBlock (h : EndH) (E : ℂ) where
 namespace InvertibleShiftedHoleBlock
 
 variable {h : EndH} {E : ℂ}
-variable (I : InvertibleShiftedHoleBlock h E)
 
 /-- Genuine inverse of the shifted hole block. -/
-def inverse : EndH :=
+def inverse (I : InvertibleShiftedHoleBlock h E) : EndH :=
   (I.equiv.symm : H →L[ℂ] H)
 
-@[simp] theorem shiftedHoleBlock_comp_inverse :
+@[simp] theorem shiftedHoleBlock_comp_inverse (I : InvertibleShiftedHoleBlock h E) :
     (shiftedHoleBlock h E).comp I.inverse = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -799,7 +792,7 @@ def inverse : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_shiftedHoleBlock :
+@[simp] theorem inverse_comp_shiftedHoleBlock (I : InvertibleShiftedHoleBlock h E) :
     I.inverse.comp (shiftedHoleBlock h E) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -807,9 +800,14 @@ def inverse : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem shiftedHoleBlock_inverse_apply (x : H) :
+@[simp] theorem shiftedHoleBlock_inverse_apply (I : InvertibleShiftedHoleBlock h E) (x : H) :
     shiftedHoleBlock h E (I.inverse x) = x := by
   have hx := congrArg (fun T : EndH => T x) I.shiftedHoleBlock_comp_inverse
+  simpa [comp_apply] using hx
+
+@[simp] theorem inverse_shiftedHoleBlock_apply (I : InvertibleShiftedHoleBlock h E) (x : H) :
+    I.inverse (shiftedHoleBlock h E x) = x := by
+  have hx := congrArg (fun T : EndH => T x) I.inverse_comp_shiftedHoleBlock
   simpa [comp_apply] using hx
 
 end InvertibleShiftedHoleBlock
@@ -908,12 +906,7 @@ theorem spectralBdG_schurGraph_eq_zero_iff
     spectralBdG h Δ E (schurGraphEmbedding_at Δ I u) = 0 ↔
       BdG_Schur_Complement_at h Δ E I u = 0 := by
   rw [spectralBdG_on_schurGraph]
-  constructor
-  · intro hzero
-    have hfst := congrArg (fun x : NambuH => x.fst) hzero
-    simpa using hfst
-  · intro hzero
-    simp [hzero]
+  simp [nambu_ext_iff]
 
 /-! ## 9. Consolidated theorem packets -/
 

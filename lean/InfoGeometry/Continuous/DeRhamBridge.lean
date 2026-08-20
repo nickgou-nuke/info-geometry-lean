@@ -2,6 +2,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.Analysis.LogVolumePathIntegral
+import InfoGeometry.Continuous.PositiveOrthant
 
 /-!
 # The finite positive-orthant exact-form bridge

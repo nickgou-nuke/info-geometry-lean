@@ -62,12 +62,14 @@ theorem integral_coordinateSurprisalRate_eq_potential_sub
   simp only [coordinateSurprisalPotential]
   ring
 
+omit [Fintype α] in
 theorem coordinateSurprisalPotential_difference
     (i : α) (x y : Chart α) :
     coordinateSurprisalPotential i y - coordinateSurprisalPotential i x =
       -coordinateLogPotential i y + coordinateLogPotential i x := by
   simp [coordinateSurprisalPotential]
 
+omit [Fintype α] in
 theorem coordinateSurprisalPotential_closed_loop
     (i : α) (x y : Chart α) (hxy : y i = x i) :
     coordinateSurprisalPotential i y = coordinateSurprisalPotential i x := by
@@ -82,6 +84,52 @@ theorem coordinateFisherMetric_comm (x v w : Chart α) :
   apply Finset.sum_congr rfl
   intro i hi
   rw [mul_comm]
+
+theorem coordinateFisherMetric_add_left (x v₁ v₂ w : Chart α) :
+    coordinateFisherMetric x (v₁ + v₂) w =
+      coordinateFisherMetric x v₁ w + coordinateFisherMetric x v₂ w := by
+  unfold coordinateFisherMetric
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  change (v₁ i + v₂ i) * w i / (x i) ^ 2 =
+    v₁ i * w i / (x i) ^ 2 + v₂ i * w i / (x i) ^ 2
+  ring
+
+theorem coordinateFisherMetric_add_right (x v w₁ w₂ : Chart α) :
+    coordinateFisherMetric x v (w₁ + w₂) =
+      coordinateFisherMetric x v w₁ + coordinateFisherMetric x v w₂ := by
+  unfold coordinateFisherMetric
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  change v i * (w₁ i + w₂ i) / (x i) ^ 2 =
+    v i * w₁ i / (x i) ^ 2 + v i * w₂ i / (x i) ^ 2
+  ring
+
+theorem coordinateFisherMetric_smul_left (x : Chart α) (c : ℝ)
+    (v w : Chart α) :
+    coordinateFisherMetric x (c • v) w =
+      c * coordinateFisherMetric x v w := by
+  unfold coordinateFisherMetric
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  change (c * v i) * w i / (x i) ^ 2 =
+    c * (v i * w i / (x i) ^ 2)
+  ring
+
+theorem coordinateFisherMetric_smul_right (x : Chart α) (c : ℝ)
+    (v w : Chart α) :
+    coordinateFisherMetric x v (c • w) =
+      c * coordinateFisherMetric x v w := by
+  unfold coordinateFisherMetric
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  change v i * (c * w i) / (x i) ^ 2 =
+    c * (v i * w i / (x i) ^ 2)
+  ring
 
 theorem coordinateFisherMetric_nonneg (x v : Chart α) :
     0 ≤ coordinateFisherMetric x v v := by

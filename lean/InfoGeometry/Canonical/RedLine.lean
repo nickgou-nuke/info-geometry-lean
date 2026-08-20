@@ -71,6 +71,10 @@ export InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus (
   coordinateSurprisalPotential_closed_loop
   coordinateFisherMetric
   coordinateFisherMetric_comm
+  coordinateFisherMetric_add_left
+  coordinateFisherMetric_add_right
+  coordinateFisherMetric_smul_left
+  coordinateFisherMetric_smul_right
   coordinateFisherMetric_nonneg
   coordinateFisherMetric_pos_of_coordinate_ne_zero
   coordinateFisherMetric_pos_of_ne_zero

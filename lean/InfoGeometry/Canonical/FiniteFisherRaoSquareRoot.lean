@@ -124,7 +124,7 @@ theorem amplitude_orthogonal_differential (h : P.Tangent) :
     rw [twoSqrtAmplitude_apply, twoSqrtDifferential_apply]
     have hsqrt : Real.sqrt (P.probability i) ≠ 0 :=
       (Real.sqrt_ne_zero').2 (P.probability_pos i)
-    field_simp [hsqrt] <;> ring
+    field_simp [hsqrt]
   simp_rw [hpoint]
   rw [← Finset.mul_sum, h.2]
   ring

@@ -7419,3 +7419,4 @@ import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Statistical.DualFlatCurvature
 import InfoGeometry.Bridge.AmariZornDerivationBridge
+import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot

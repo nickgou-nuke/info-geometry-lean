@@ -13,6 +13,8 @@ manifold.  The coordinate logarithm is the scalar 0-form and its Fréchet
 derivative is the corresponding exact chart 1-form.
 -/
 
+set_option linter.unusedSectionVars false
+
 noncomputable section
 
 namespace InfoGeometry.Continuous.DeRhamBridge

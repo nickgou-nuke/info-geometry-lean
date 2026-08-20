@@ -129,3 +129,5 @@ theorem relativeModularPotential_path_independence (q q₁ q₂ : PositiveRay α
   relativeModularPotential_cocycle q q₁ q₂ a
 
 end InfoGeometry.Canonical.DeRhamPotential
+
+end noncomputable section

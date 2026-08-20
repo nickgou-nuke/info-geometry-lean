@@ -102,6 +102,35 @@ def dlogL (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
 def dlogR (D : NoncommutativeDerivation A) (u : Aˣ) : A :=
   D (u.val) * (u⁻¹ : Aˣ).val
 
+/-- The right logarithmic derivative is the unit-conjugate of the left one. -/
+theorem dlogR_eq_conjugate_dlogL
+    (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogR D u = (u : Aˣ).val * dlogL D u * (u⁻¹ : Aˣ).val := by
+  dsimp [dlogL, dlogR]
+  calc
+    D (u.val) * (u⁻¹ : Aˣ).val =
+        ((u : Aˣ).val * (u⁻¹ : Aˣ).val) * D (u.val) *
+          (u⁻¹ : Aˣ).val := by
+            rw [Units.mul_inv, one_mul]
+    _ = (u : Aˣ).val *
+          ((u⁻¹ : Aˣ).val * D (u.val)) *
+            (u⁻¹ : Aˣ).val := by
+          simp only [mul_assoc]
+
+/-- The inverse conjugation recovers the left logarithmic derivative. -/
+theorem dlogL_eq_conjugate_dlogR
+    (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogL D u = (u⁻¹ : Aˣ).val * dlogR D u * (u : Aˣ).val := by
+  dsimp [dlogL, dlogR]
+  calc
+    (u⁻¹ : Aˣ).val * D (u.val) =
+        ((u⁻¹ : Aˣ).val * D (u.val)) *
+          ((u⁻¹ : Aˣ).val * (u : Aˣ).val) := by
+            rw [Units.inv_mul, mul_one]
+    _ = (u⁻¹ : Aˣ).val *
+          (D (u.val) * (u⁻¹ : Aˣ).val) * (u : Aˣ).val := by
+          simp only [mul_assoc]
+
 /-- The right logarithmic derivative of an inner derivation is the associated
     noncommutative gauge shift. -/
 theorem dlogR_innerDerivationOf (K : A) (u : Aˣ) :

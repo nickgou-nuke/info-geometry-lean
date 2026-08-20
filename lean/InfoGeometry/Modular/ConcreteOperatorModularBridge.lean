@@ -52,6 +52,20 @@ theorem concrete_modular_deriv_leibniz
   rw [concrete_modular_deriv_eq_adK, concrete_modular_deriv_eq_adK, concrete_modular_deriv_eq_adK]
   exact adK_is_derivation M.modularHamiltonian X Y
 
+/-- The infinitesimal concrete modular action is a derivation of the
+operator commutator bracket. -/
+theorem concrete_modular_deriv_commutator
+    (M : ModularRadonNikodymData E) (X Y : EndH E) :
+    deriv (fun τ : ℝ =>
+      modularAutomorphismGroup M τ (X * Y - Y * X)) 0 =
+      (deriv (fun τ : ℝ => modularAutomorphismGroup M τ X) 0) * Y +
+        X * (deriv (fun τ : ℝ => modularAutomorphismGroup M τ Y) 0) -
+      ((deriv (fun τ : ℝ => modularAutomorphismGroup M τ Y) 0) * X +
+        Y * (deriv (fun τ : ℝ => modularAutomorphismGroup M τ X) 0)) := by
+  simp_rw [concrete_modular_deriv_eq_adK]
+  simp only [adK_apply, mul_sub, sub_mul, mul_assoc]
+  abel
+
 /-- 
   🏆 THEOREM 3: The concrete modular derivative annihilates the identity operator:
   d/dτ σ_τ(I) |_{τ=0} = 0.

@@ -238,6 +238,49 @@ theorem adK_neg (K X : A) :
   simp only [adK_apply, neg_mul, mul_neg]
   abel
 
+@[simp]
+theorem adK_zero : adK (0 : A) = 0 := by
+  apply LinearMap.ext
+  intro X
+  simp [adK_apply]
+
+@[simp]
+theorem adK_one_generator : adK (1 : A) = 0 := by
+  apply LinearMap.ext
+  intro X
+  simp [adK_apply]
+
+theorem adK_generator_add (K L : A) :
+    adK (K + L) = adK K + adK L := by
+  apply LinearMap.ext
+  intro X
+  exact adK_add K L X
+
+theorem adK_generator_neg (K : A) :
+    adK (-K) = -adK K := by
+  apply LinearMap.ext
+  intro X
+  exact adK_neg K X
+
+theorem adK_bracket (K L X : A) :
+    adK K (adK L X) - adK L (adK K X) =
+      adK (K * L - L * K) X := by
+  simp only [adK_apply, mul_sub, sub_mul, mul_assoc]
+  noncomm_ring
+
+def linearMapCommutator (F G : A →ₗ[ℤ] A) : A →ₗ[ℤ] A :=
+  F.comp G - G.comp F
+
+@[simp]
+theorem linearMapCommutator_apply (F G : A →ₗ[ℤ] A) (X : A) :
+    linearMapCommutator F G X = F (G X) - G (F X) := rfl
+
+theorem linearMapCommutator_adK (K L : A) :
+    linearMapCommutator (adK K) (adK L) = adK (K * L - L * K) := by
+  apply LinearMap.ext
+  intro X
+  exact adK_bracket K L X
+
 /-- 
   THEOREM 4: The Modular Commutator is an exact Derivation:
   ad_K(X * Y) = (ad_K X) * Y + X * (ad_K Y)

@@ -226,6 +226,17 @@ theorem NCDerivation.dlog_inv (D : NCDerivation A) (u : Aˣ) :
     D.dlog (u⁻¹) = -((u : A) * D.dlog u * (↑(u⁻¹) : A)) :=
   InfoGeometry.Modular.Noncommutative.dlog_inv D.toLinearMap D.leibniz' u
 
+/- The logarithmic derivative of an inner derivation is a unit conjugate
+   difference. -/
+theorem innerNCDerivation_dlog (K : A) (u : Aˣ) :
+    (innerNCDerivation K).dlog u =
+      (↑(u⁻¹) : A) * K * (u : A) - K := by
+  unfold NCDerivation.dlog dlog
+  change (↑(u⁻¹) : A) * (K * (u : A) - (u : A) * K) =
+    (↑(u⁻¹) : A) * K * (u : A) - K
+  have hu : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+  rw [mul_sub, mul_assoc, hu, one_mul]
+
 /- Algebraic modular conjugation by a unit. -/
 def innerConjugation (u : Aˣ) (X : A) : A :=
   (u : A) * X * (↑(u⁻¹) : A)
@@ -237,7 +248,10 @@ theorem innerConjugation_mul (u : Aˣ) (X Y : A) :
     innerConjugation u (X * Y) =
       innerConjugation u X * innerConjugation u Y := by
   unfold innerConjugation
-  simp only [mul_assoc, u.inv_val, one_mul]
+  simp only [mul_assoc]
+  rw [← mul_assoc (a := (↑(u⁻¹) : A)) (b := (u : A))]
+  have hu : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+  rw [hu, one_mul]
 
 theorem innerConjugation_add (u : Aˣ) (X Y : A) :
     innerConjugation u (X + Y) =
@@ -248,7 +262,7 @@ theorem innerConjugation_comp (u v : Aˣ) (X : A) :
     innerConjugation u (innerConjugation v X) =
       innerConjugation (u * v) X := by
   unfold innerConjugation
-  simp only [Units.val_mul, mul_inv_rev, mul_assoc, v.inv_val, one_mul]
+  simp only [Units.val_mul, mul_inv_rev, mul_assoc]
 
 theorem innerConjugation_inverse (u : Aˣ) (X : A) :
     innerConjugation (u⁻¹) (innerConjugation u X) = X := by

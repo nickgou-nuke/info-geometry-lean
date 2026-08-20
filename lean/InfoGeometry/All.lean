@@ -7371,3 +7371,4 @@ import InfoGeometry.NCG.NoncommutativeCyclicCocycle
 import InfoGeometry.NCG.BerezinianSuperdeterminant
 import InfoGeometry.NCG.DerivationExponentialAutomorphism
 import InfoGeometry.NCG.G2DerivationTraces
+import InfoGeometry.Canonical.OperatorModularBridge

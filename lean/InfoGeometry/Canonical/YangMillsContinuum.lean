@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.ModularWeldBridge
 import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Canonical.TransportLieDerivative
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
 set_option linter.unnecessarySimpa false
@@ -188,14 +189,45 @@ theorem hasDerivAt_modularAutomorphismGroup_zero_eq_lie
     (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
       (M := M) (A := A))
 
+/--
+Exact modular shift fixes an observable that commutes with the modular generator.
+-/
+theorem modularShift_eq_self_of_commute
+    (K A : EndH E) (t : ℝ) (hComm : A * K = K * A) :
+    modularShift (E := E) K t A = A := by
+  have hCommute : Commute A K := hComm
+  have hCommScaled : Commute A (t • K) := by simpa using hCommute.smul_right t
+  have hCommExp : Commute A (NormedSpace.exp (t • K)) := by simpa using hCommScaled.exp_right
+  have hScaledNeg : Commute (t • K) ((-t) • K) := by
+    rw [neg_smul]
+    exact (Commute.refl (t • K)).neg_right
+  dsimp [modularShift, InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
+  calc
+    (NormedSpace.exp (t • K) * A) * NormedSpace.exp ((-t) • K)
+        = (A * NormedSpace.exp (t • K)) * NormedSpace.exp ((-t) • K) := by
+            rw [hCommExp.eq]
+    _ = A * (NormedSpace.exp (t • K) * NormedSpace.exp ((-t) • K)) := by
+          rw [mul_assoc]
+    _ = A * NormedSpace.exp (t • K + (-t) • K) := by
+          rw [← NormedSpace.exp_add_of_commute hScaledNeg]
+    _ = A * NormedSpace.exp (0 : EndH E) := by
+          have hz : t • K + (-t) • K = (0 : EndH E) := by
+            rw [neg_smul, add_neg_cancel]
+          rw [hz]
+    _ = A * 1 := by rw [NormedSpace.exp_zero]
+    _ = A := mul_one A
+
+/--
+Modular flow fixes an observable for all parameter times `t` if and only if
+the observable commutes with the modular Hamiltonian generator.
+-/
 theorem modularAutomorphismGroup_fixed_all_iff_commute
     (M : ModularRadonNikodymData E) (A : EndH E) :
-    (∀ t : ℝ, modularAutomorphismGroup M t A = A) ↔
-      Commute A M.modularHamiltonian := by
+    (∀ t : ℝ, modularAutomorphismGroup M t A = A) ↔ A * M.modularHamiltonian = M.modularHamiltonian * A := by
   constructor
   · intro hFixed
     have hDeriv :
-        HasDerivAt (fun t : ℝ => modularAutomorphismGroup M t A) 0 0 := by
+        HasDerivAt (fun t : ℝ => modularAutomorphismGroup M t A) (0 : EndH E) 0 := by
       have hConst :
           (fun t : ℝ => modularAutomorphismGroup M t A) = fun _ : ℝ => A := by
         funext t
@@ -207,11 +239,11 @@ theorem modularAutomorphismGroup_fixed_all_iff_commute
         (M := M) (A := A)).deriv
     have hBracket : commutator M.modularHamiltonian A = 0 := by
       exact hFlowDeriv.symm.trans hDeriv.deriv
-    exact sub_eq_zero.mp hBracket
+    have hSub : M.modularHamiltonian * A - A * M.modularHamiltonian = 0 := hBracket
+    have hEq : M.modularHamiltonian * A = A * M.modularHamiltonian := sub_eq_zero.mp hSub
+    exact hEq.symm
   · intro hComm t
-    simpa [modularAutomorphismGroup] using
-      (InfoGeometry.Canonical.expTransport_eq_self_of_commute
-        M.modularHamiltonian A t hComm)
+    exact modularShift_eq_self_of_commute M.modularHamiltonian A t hComm
 
 /-- Scalar derivative corollary for the modular automorphism group at `τ = 0`. -/
 theorem deriv_modularAutomorphismGroup_zero_eq_commutator

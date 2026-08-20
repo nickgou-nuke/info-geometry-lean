@@ -7390,3 +7390,4 @@ import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Information.FisherRaoMadelungIsometry
+import InfoGeometry.Algebra.ExplogRN

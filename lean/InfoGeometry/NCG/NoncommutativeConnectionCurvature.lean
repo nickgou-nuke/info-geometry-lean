@@ -30,8 +30,6 @@ namespace InfoGeometry.NCG
 variable {R : Type*} [CommRing R]
 variable {A : Type*} [Ring A] [Algebra R A]
 
-/-- An R-algebra derivation D : A → A satisfying the Leibniz rule:
-    D(x * y) = D(x) * y + x * D(y) -/
 structure AlgebraDerivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
   toLinearMap : A →ₗ[R] A
   leibniz' : ∀ x y, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
@@ -46,20 +44,24 @@ instance : CoeFun (AlgebraDerivation R A) (fun _ => A → A) where
 @[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.toLinearMap.map_add x y
 @[simp] theorem map_smul (r : R) (x : A) : D (r • x) = r • D x := D.toLinearMap.map_smul r x
 @[simp] theorem map_sub (x y : A) : D (x - y) = D x - D y := D.toLinearMap.map_sub x y
-@[simp] theorem map_neg (x : A) : D (-x) = - D x := D.toLinearMap.map_neg x
+@[simp] theorem map_neg (x : A) : D (-x) = -D x := D.toLinearMap.map_neg x
 @[simp] theorem map_zero : D 0 = 0 := D.toLinearMap.map_zero
 @[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
-/-- Derivation annihilates 1 in any ring -/
-@[simp]
-theorem map_one : D 1 = 0 := by
+@[simp] theorem map_one : D 1 = 0 := by
   have h : D 1 = D 1 + D 1 := by
     calc
       D 1 = D (1 * 1) := by rw [mul_one]
       _ = D 1 * 1 + 1 * D 1 := D.leibniz 1 1
       _ = D 1 + D 1 := by rw [mul_one, one_mul]
-  have h2 : (D 1 + D 1) - D 1 = D 1 - D 1 := congrArg (fun x => x - D 1) h.symm
-  simpa using h2
+  have h' : D 1 + D 1 = D 1 + 0 := by simpa using h.symm
+  exact add_left_cancel h'
+
+end AlgebraDerivation
+
+namespace AlgebraDerivation
+
+variable (D : AlgebraDerivation R A)
 
 /-- Noncommutative connection covariant derivative associated to derivation D and connection 1-form A_conn:
     ∇_D(X) = D(X) + [A_conn, X] -/

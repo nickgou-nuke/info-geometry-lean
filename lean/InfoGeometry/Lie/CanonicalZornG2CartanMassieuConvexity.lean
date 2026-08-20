@@ -142,7 +142,7 @@ theorem souriauMassieu_strictConvex
       dsimp
       ring
     have hab_t : a • (1 : ℝ) + b • (0 : ℝ) = a := by
-      simp
+      simp only [smul_eq_mul, mul_one, mul_zero, add_zero]
     rw [hab_t] at h_line_convex_def
     have hf0 : souriauMassieu D (betaLine y v 0) = souriauMassieu D y := by
       congr 1; ext i; unfold betaLine; ring

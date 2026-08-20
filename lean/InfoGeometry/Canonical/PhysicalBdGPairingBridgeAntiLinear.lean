@@ -61,7 +61,9 @@ noncomputable def PHS_operator_equiv
     { toFun := PHS_operator C₀
       invFun := PHS_operator C₀
       map_add' := (PHS_operator C₀).map_add
-      map_smul' := (PHS_operator C₀).map_smul
+      map_smul' := by
+        intro z ψ
+        exact map_smulₛₗ (PHS_operator C₀) z ψ
       left_inv := by
         intro ψ
         exact PHS_operator_sq C₀ hC₀ ψ
@@ -75,13 +77,18 @@ noncomputable def PHS_operator_equiv
     (C₀ : AntiEndH)
     (hC₀ : ∀ x : H, C₀ (C₀ x) = x)
     (ψ : NambuH) :
-    PHS_operator_equiv C₀ hC₀ ψ = PHS_operator C₀ ψ := rfl
+    PHS_operator_equiv C₀ hC₀ ψ = PHS_operator C₀ ψ := by
+  simp [PHS_operator_equiv]
 
 @[simp] theorem PHS_operator_equiv_symm_apply
     (C₀ : AntiEndH)
     (hC₀ : ∀ x : H, C₀ (C₀ x) = x)
     (ψ : NambuH) :
-    (PHS_operator_equiv C₀ hC₀).symm ψ = PHS_operator C₀ ψ := rfl
+    (PHS_operator_equiv C₀ hC₀).symm ψ = PHS_operator C₀ ψ := by
+  apply (PHS_operator_equiv C₀ hC₀).injective
+  rw [(PHS_operator_equiv C₀ hC₀).apply_symm_apply]
+  rw [PHS_operator_equiv_apply]
+  exact (PHS_operator_sq C₀ hC₀ ψ).symm
 
 /-- Pointwise anti-linear BdG particle-hole symmetry. -/
 theorem bdg_particle_hole_symmetry

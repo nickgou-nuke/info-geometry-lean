@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Group.TransferInstance
 import Mathlib.Algebra.Module.TransferInstance
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation

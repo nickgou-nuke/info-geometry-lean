@@ -1,3 +1,5 @@
+import InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
+import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Canonical.GrothendieckGroup
 import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
@@ -139,5 +141,20 @@ theorem gw_projectiveHamiltonianProfile_self
     projectiveCountHamiltonianProfile
         B.counts B.counts B.counts_pos B.counts_pos i = 0 :=
   B.projectiveHamiltonianProfile_self i
+
+
+/-- 
+The Peirce Frame K₀ Motive Invariance under Symmetry-Adapted Action:
+For any symmetry-adapted Peirce frame, the sum of the K₀ motive classes
+reconstructs the Grothendieck unit class [1].
+-/
+theorem peirce_k0_motive_erlangen_invariance {R : Type*} [Ring R]
+    (e_plus e_minus : PeirceProjectorGrothendieckClass.Idempotent R)
+    (h_ortho : PeirceProjectorGrothendieckClass.Orthogonal e_plus e_minus)
+    (h_unit : e_plus.val + e_minus.val = 1) :
+    PeirceProjectorGrothendieckClass.k0Class e_plus +
+    PeirceProjectorGrothendieckClass.k0Class e_minus =
+      grothendieckMap R (1 : R) :=
+  PeirceProjectorGrothendieckClass.peirce_k0_motive_sum e_plus e_minus h_ortho h_unit
 
 end InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge

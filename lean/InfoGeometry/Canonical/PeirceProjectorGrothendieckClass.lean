@@ -22,6 +22,8 @@ namespace InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
 
 noncomputable section
 
+section PolynomialCalculus
+
 open InfoGeometry.Physics.Algebra
 
 variable {R : Type*} [Ring R] [Algebra ℝ R]
@@ -58,11 +60,17 @@ theorem peirce_projector_class_sum_of_tripotent
       classOf (1 : R) := by
   exact peirce_projector_class_sum T
 
+end PolynomialCalculus
+
 /-!
 =============================================================================
 K₀ Idempotent Motive Construction & Peirce Frame Partition
 =============================================================================
 -/
+
+section K0Motive
+
+variable {R : Type*} [Ring R]
 
 /-- An algebraic idempotent in ring R. -/
 structure Idempotent (R : Type*) [Ring R] where
@@ -104,6 +112,8 @@ theorem peirce_k0_motive_sum (e_plus e_minus : Idempotent R)
   rw [← k0Class_addOrtho e_plus e_minus h_ortho]
   dsimp [k0Class, addOrtho]
   rw [h_unit]
+
+end K0Motive
 
 end
 end InfoGeometry.Canonical.PeirceProjectorGrothendieckClass

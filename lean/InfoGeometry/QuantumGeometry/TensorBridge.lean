@@ -1,17 +1,3 @@
-/-
-=============================================================================
-           InfoGeometry.QuantumGeometry: TensorBridge
-=============================================================================
-
-The Holographic Decomposition and Quantum Geometric Tensor Bridge:
-1. Holographic QGT Decomposition: Q_ψ(X, Y) = g_ψ(X, Y) - (i/2) Ω_ψ(X, Y)
-2. Cross-Variance Skew Cancellation for Lie Derivations
-3. Exact Berry Curvature Commutator Expectation Value: Ω_ψ(X, Y) = ⟨ψ | i[X, Y] | ψ⟩
-4. Full Robertson–Schrödinger Uncertainty Bound from QGT Geometry
-
-Zero Custom Axioms • Zero Sorries • Fully Native Mathlib 4
--/
-
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Data.Complex.Basic
@@ -48,12 +34,7 @@ PART 1: Holographic Decomposition of the QGT: Q = g - (i/2) Ω
 theorem QGT_decomposition (ψ : NormalizedState H) (X Y : EndH) :
     QGT ψ X Y = (fubiniStudyMetric ψ X Y : ℂ) - (Complex.I / 2) * (berryCurvature ψ X Y : ℂ) := by
   dsimp [fubiniStudyMetric, berryCurvature]
-  have h_re_im := Complex.re_add_im (QGT ψ X Y)
-  calc
-    QGT ψ X Y = (QGT ψ X Y).re + Complex.I * (QGT ψ X Y).im := h_re_im.symm
-    _ = (QGT ψ X Y).re - (Complex.I / 2) * (-2 * (QGT ψ X Y).im) := by
-      push_cast
-      ring
+  apply Complex.ext <;> simp
 
 /-!
 =============================================================================

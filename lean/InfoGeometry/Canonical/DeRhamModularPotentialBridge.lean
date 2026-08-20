@@ -134,8 +134,8 @@ theorem canonical_dictionary_of_algebraic_thermodynamics :
    fun q q₀ a => by
      rw [relativeDensity_eq_exp_relativeLogDensity]
      rw [relativeModularPotential_eq_neg_relativeLogDensity]
-     rw [relativeLogDensity_eq_log_sub_log]
+     rw [relativeLogDensity_eq_logDensity_sub_logDensity]
      field_simp
-     rw [Real.exp_log (div_pos ((gaugeSection (α := α) q₀).pos a) ((gaugeSection (α := α) q).pos a))]
+     rw [Real.exp_log (div_pos ((gaugeSection (α := α) q₀).pos a) ((gaugeSection (α := α) q).pos a))]⟩
 
 end InfoGeometry.Canonical.DeRhamModularPotentialBridge

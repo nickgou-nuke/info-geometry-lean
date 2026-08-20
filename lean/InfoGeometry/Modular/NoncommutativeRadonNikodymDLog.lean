@@ -187,6 +187,30 @@ theorem commutatorDerivation_inner_right
   intro x
   exact commutatorDerivation_inner_right_apply D K x
 
+/-- The same outer/inner intertwiner with the inner derivation on the left.
+It is the antisymmetric companion of `commutatorDerivation_inner_right`. -/
+theorem commutatorDerivation_inner_left_apply
+    (D : NoncommutativeDerivation A) (K x : A) :
+    commutatorDerivation (innerDerivationOf K) D x =
+      innerDerivationOf (-D K) x := by
+  calc
+    commutatorDerivation (innerDerivationOf K) D x =
+        -commutatorDerivation D (innerDerivationOf K) x := by
+          rw [commutatorDerivation_swap]
+    _ = -innerDerivationOf (D K) x := by
+          rw [commutatorDerivation_inner_right_apply]
+    _ = innerDerivationOf (-D K) x := by
+          simp only [innerDerivationOf_apply, neg_mul, mul_neg]
+          abel
+
+theorem commutatorDerivation_inner_left
+    (D : NoncommutativeDerivation A) (K : A) :
+    commutatorDerivation (innerDerivationOf K) D =
+      innerDerivationOf (-D K) := by
+  apply NoncommutativeDerivation.ext
+  intro x
+  exact commutatorDerivation_inner_left_apply D K x
+
 /-- The kernel of the inner-derivation map is exactly the ring centre,
 stated pointwise without assuming commutativity of `A`. -/
 theorem innerDerivationOf_eq_zero_iff_central (K : A) :

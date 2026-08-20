@@ -48,6 +48,23 @@ theorem superTrace_fromBlocks (A B C D : SubMat) :
     superTrace (fromBlocks A B C D) = Matrix.trace A - Matrix.trace D := by
   dsimp [superTrace, toBlocks₁₁, toBlocks₂₂]
 
+@[simp]
+theorem trace_Gamma_zero :
+    Matrix.trace (Gamma : BlockMat) = 0 := by
+  dsimp [Gamma]
+  have h : Matrix.trace (fromBlocks (1 : SubMat) 0 0 (-1 : SubMat)) =
+      Matrix.trace (1 : SubMat) + Matrix.trace (-1 : SubMat) := by
+    simp [Matrix.trace, Fintype.sum_sum_type]
+  rw [h, Matrix.trace_one, Matrix.trace_neg, Matrix.trace_one]
+  ring
+
+@[simp]
+theorem superTrace_identityDoubled_zero :
+    superTrace (identityDoubled : BlockMat) = 0 := by
+  dsimp [superTrace, identityDoubled, toBlocks₁₁, toBlocks₂₂]
+  simp only [Matrix.trace_one]
+  ring
+
 /-- THEOREM: Supertrace of a block-diagonal commutator vanishes:
     STr([M, N]) = 0 for block-diagonal M, N. -/
 theorem superTrace_block_commutator (A B C D : SubMat) :

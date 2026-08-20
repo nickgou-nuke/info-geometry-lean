@@ -71,6 +71,16 @@ theorem map_one : D 1 = 0 := by
   have h2 : (D 1 + D 1) - D 1 = D 1 - D 1 := congrArg (fun x => x - D 1) h.symm
   simpa using h2
 
+/-- Every derivation annihilates the natural-number scalar line. -/
+@[simp]
+theorem map_nsmul_one (n : ℕ) : D (n • (1 : A)) = 0 := by
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [succ_nsmul, D.map_add, ih, D.map_one]
+      simp
+
 @[ext]
 theorem ext {D E : NoncommutativeDerivation A}
     (h : ∀ x : A, D x = E x) : D = E := by

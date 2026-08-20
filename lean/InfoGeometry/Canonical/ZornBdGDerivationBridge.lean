@@ -211,7 +211,7 @@ def zornMul (X Y : Zorn R) : Zorn R where
   v := fun i => Y.a * X.v i + X.b * Y.v i + crossR X.u Y.u i
   b := X.b * Y.b + dotR X.v Y.u
 
-instance : Mul (Zorn R) := ⟨zornMul⟩
+instance zornMulInstance : Mul (Zorn R) := ⟨zornMul⟩
 
 /-- The Unit element of the Zorn algebra: 1_𝕆s = [[1, 0], [0, 1]] -/
 def zornOne : Zorn R where
@@ -239,6 +239,20 @@ def zornSMul (c : R) (X : Zorn R) : Zorn R where
   b := c * X.b
 
 instance : SMul R (Zorn R) := ⟨zornSMul⟩
+
+@[simp] theorem zornMul_a (X Y : Zorn R) :
+    (X * Y).a = X.a * Y.a + dotR X.u Y.v := rfl
+
+@[simp] theorem zornMul_u (X Y : Zorn R) :
+    (X * Y).u = fun i =>
+      X.a * Y.u i + Y.b * X.u i - crossR X.v Y.v i := rfl
+
+@[simp] theorem zornMul_v (X Y : Zorn R) :
+    (X * Y).v = fun i =>
+      Y.a * X.v i + X.b * Y.v i + crossR X.u Y.u i := rfl
+
+@[simp] theorem zornMul_b (X Y : Zorn R) :
+    (X * Y).b = X.b * Y.b + dotR X.v Y.u := rfl
 
 /-- THEOREM: Left multiplication by 1 is the identity -/
 @[simp]
@@ -298,6 +312,22 @@ theorem zornNorm_one : zornNorm (1 : Zorn R) = 1 := by
 theorem zornNorm_scalar_one (c : R) :
     zornNorm (c • (1 : Zorn R)) = c * c := by
   change (c * 1) * (c * 1) - (c * 0 * (c * 0) + c * 0 * (c * 0) + c * 0 * (c * 0)) = c * c
+  ring
+
+/-- The reduced Zorn norm is multiplicative, hence is a composition norm. -/
+theorem zornNorm_mul (X Y : Zorn R) :
+    zornNorm (X * Y) = zornNorm X * zornNorm Y := by
+  dsimp [zornNorm, dotR, crossR]
+  change (X.a * Y.a + (X.u 0 * Y.v 0 + X.u 1 * Y.v 1 + X.u 2 * Y.v 2)) *
+         (X.b * Y.b + (X.v 0 * Y.u 0 + X.v 1 * Y.u 1 + X.v 2 * Y.u 2)) -
+         ((X.a * Y.u 0 + Y.b * X.u 0 - (X.v 1 * Y.v 2 - X.v 2 * Y.v 1)) *
+          (Y.a * X.v 0 + X.b * Y.v 0 + (X.u 1 * Y.u 2 - X.u 2 * Y.u 1)) +
+          (X.a * Y.u 1 + Y.b * X.u 1 - (X.v 2 * Y.v 0 - X.v 0 * Y.v 2)) *
+          (Y.a * X.v 1 + X.b * Y.v 1 + (X.u 2 * Y.u 0 - X.u 0 * Y.u 2)) +
+          (X.a * Y.u 2 + Y.b * X.u 2 - (X.v 0 * Y.v 1 - X.v 1 * Y.v 0)) *
+          (Y.a * X.v 2 + X.b * Y.v 2 + (X.u 0 * Y.u 1 - X.u 1 * Y.u 0))) =
+         (X.a * X.b - (X.u 0 * X.v 0 + X.u 1 * X.v 1 + X.u 2 * X.v 2)) *
+         (Y.a * Y.b - (Y.u 0 * Y.v 0 + Y.u 1 * Y.v 1 + Y.u 2 * Y.v 2))
   ring
 
 /-- Predicate stating that D is a derivation on the Zorn algebra -/

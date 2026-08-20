@@ -544,6 +544,15 @@ theorem flow_preserves_unit_of_derivation_eq_zero
     flow D t one = one := by
   exact flow_fixed_of_derivation_eq_zero D one hD_one t
 
+/-- Unit preservation for the bundled exponential equivalence. -/
+theorem flowLinearEquiv_preserves_unit_of_derivation_eq_zero
+    (D : EndA)
+    (one : A)
+    (hD_one : D one = 0)
+    (t : ℝ) :
+    flowLinearEquiv D t one = one := by
+  exact flowLinearEquiv_fixed_of_derivation_eq_zero D one hD_one t
+
 /--
 Strong automorphism statement in multiplication-preserving linear-equivalence form.
 -/

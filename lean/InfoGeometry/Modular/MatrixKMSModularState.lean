@@ -77,6 +77,12 @@ theorem modularAutomorphism_smul (ρ ρ_inv A : Mat) (r : R) :
   dsimp [modularAutomorphism]
   rw [Matrix.mul_smul, smul_mul_assoc]
 
+theorem modularAutomorphism_sub (ρ ρ_inv A B : Mat) :
+    modularAutomorphism ρ ρ_inv (A - B) =
+      modularAutomorphism ρ ρ_inv A - modularAutomorphism ρ ρ_inv B := by
+  dsimp [modularAutomorphism]
+  rw [mul_sub, sub_mul]
+
 theorem modularAutomorphism_mul (ρ ρ_inv A B : Mat)
     (h_left : ρ_inv * ρ = 1) :
     modularAutomorphism ρ ρ_inv (A * B) =
@@ -88,6 +94,14 @@ theorem modularAutomorphism_mul (ρ ρ_inv A B : Mat)
       simp only [mul_assoc]
     _ = (ρ * A) * (ρ_inv * ρ) * (B * ρ_inv) := by rw [h_left]
     _ = (ρ * A * ρ_inv) * (ρ * B * ρ_inv) := by simp only [mul_assoc]
+
+theorem modularAutomorphism_commutator (ρ ρ_inv A B : Mat)
+    (h_left : ρ_inv * ρ = 1) :
+    modularAutomorphism ρ ρ_inv (A * B - B * A) =
+      modularAutomorphism ρ ρ_inv A * modularAutomorphism ρ ρ_inv B -
+        modularAutomorphism ρ ρ_inv B * modularAutomorphism ρ ρ_inv A := by
+  rw [modularAutomorphism_sub, modularAutomorphism_mul ρ ρ_inv A B h_left,
+    modularAutomorphism_mul ρ ρ_inv B A h_left]
 
 theorem modularAutomorphism_inverse_comp (ρ ρ_inv B : Mat)
     (h_left : ρ_inv * ρ = 1) :

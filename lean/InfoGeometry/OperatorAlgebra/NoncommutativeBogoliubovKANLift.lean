@@ -319,6 +319,28 @@ theorem bridge_cartan_decomposition
       BogoliubovTransport.modularTransportGenerator (E := E) H :=
   BogoliubovKANShadowData.cartanGaugeShadow_add_cartanScaleShadow (E := E) H
 
+/-- The gauge part of any doubled-space generator in the shadow is phase-linear. -/
+theorem bridge_cartanGaugeShadow_isPhaseLinear
+    (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
+    BogoliubovTransport.IsPhaseLinear (E := E)
+      (BogoliubovKANShadowData.cartanGaugeShadow (E := E) H) :=
+  BogoliubovKANShadowData.cartanGaugeShadow_isPhaseLinear (E := E) H
+
+/-- The scaling/shadow part of any doubled-space generator is phase-antilinear. -/
+theorem bridge_cartanScaleShadow_isPhaseAntilinear
+    (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
+    BogoliubovTransport.IsPhaseAntilinear (E := E)
+      (BogoliubovKANShadowData.cartanScaleShadow (E := E) H) :=
+  BogoliubovKANShadowData.cartanScaleShadow_isPhaseAntilinear (E := E) H
+
+/-- The phase-axis force on the doubled carrier vanishes identically on the gauge sector. -/
+theorem bridge_gaugePart_phaseAxisForce_zero
+    (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
+    BogoliubovTransport.phaseAxisForce (E := E)
+      (BogoliubovKANShadowData.cartanGaugeShadow (E := E) H) = 0 :=
+  BogoliubovTransport.phaseAxisForce_eq_zero_of_IsPhaseLinear (E := E) _
+    (BogoliubovKANShadowData.cartanGaugeShadow_isPhaseLinear (E := E) H)
+
 /-- The bridge exposes the noncommutative owner property; the shadow does not replace it. -/
 theorem operator_owner_has_noncommuting_pair
     (P : NoncommutativeModularToBogoliubovKANData

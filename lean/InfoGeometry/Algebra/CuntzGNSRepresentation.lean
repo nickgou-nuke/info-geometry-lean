@@ -202,6 +202,24 @@ theorem kmsInner_cuntz_ranges_decomposition
       unfold kmsInner
       rw [Finset.mul_sum, map_sum]
 
+theorem kmsInner_cuntz_ranges_decomposition_right
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (x y : CuntzAlg n) :
+    kmsInner φ x y =
+      ∑ i : Fin n, kmsInner φ x
+        (leftMultiplication n (cuntzS n i)
+          (leftMultiplication n (cuntzSdag n i) y)) := by
+  calc
+    kmsInner φ x y = kmsInner φ x
+        (∑ i : Fin n,
+          leftMultiplication n (cuntzS n i)
+            (leftMultiplication n (cuntzSdag n i) y)) := by
+              rw [leftMultiplication_cuntz_ranges_sum_one]
+    _ = ∑ i : Fin n, kmsInner φ x
+        (leftMultiplication n (cuntzS n i)
+          (leftMultiplication n (cuntzSdag n i) y)) := by
+      unfold kmsInner
+      rw [star_sum, Finset.sum_mul, map_sum]
+
 theorem leftMultiplication_cuntz_qccr_zero
     (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
     leftMultiplication n (cuntzSdag n i)

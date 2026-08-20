@@ -91,8 +91,8 @@ abbrev modularSign := P.modularPhase
 theorem connesCocycle_same_weight
     (φ : Weight)
     (t : ℝ) :
-    P.connesCocycle.cocycle φ φ t = 1 := by
-  simpa [connesCocycleDerivative] using (P.connesCocycle.same_weight_apply φ t)
+    P.connesCocycle.cocycle φ φ t = 1 :=
+  P.connesCocycle.same_weight_apply φ t
 
 theorem connesCocycle_chain_rule
     (φ ψ η : Weight)
@@ -123,6 +123,18 @@ theorem modularFlow_mul
       P.modularFlow.flow t x * P.modularFlow.flow t y :=
   P.modularFlow.flow_mul_apply t x y
 
+@[simp]
+theorem modularFlow_zero
+    (x : A) :
+    P.modularFlow.flow 0 x = x :=
+  P.modularFlow.flow_zero_apply x
+
+theorem modularFlow_add
+    (s t : ℝ) (x : A) :
+    P.modularFlow.flow (s + t) x =
+      P.modularFlow.flow s (P.modularFlow.flow t x) :=
+  P.modularFlow.flow_add_apply s t x
+
 /-- The carrier is explicitly noncommutative; this is the owner-side property. -/
 theorem exists_noncommuting_pair
     (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core) :
@@ -136,8 +148,8 @@ type-III backend, not through a bare trace on the base algebra.
 theorem typeIII_baseIntegral_eq_modularWeight_integral
     (x : A) :
     P.typeIIIIntegration.baseIntegral x =
-      P.typeIIIIntegration.modularWeight.integral x :=
-  rfl
+      P.typeIIIIntegration.modularWeight.integral x := by
+  dsimp [TypeIIIIntegrationDatum.baseIntegral]
 
 /--
 Trace-like scalar readout is routed through the crossed-product/core trace
@@ -146,14 +158,14 @@ backend.
 theorem typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
     (x : A) :
     P.typeIIIIntegration.coreTraceOfBase x =
-      P.typeIIIIntegration.coreTrace.traceOfEmbedded x :=
-  rfl
+      P.typeIIIIntegration.coreTrace.traceOfEmbedded x := by
+  dsimp [TypeIIIIntegrationDatum.coreTraceOfBase]
 
 /-- The separately selected modular-weight readout remains explicitly weight-based. -/
 theorem modularWeight_integral_eq_weight_integral
     (x : A) :
-    P.modularWeight.integral x = P.modularWeight.weight.integral x :=
-  rfl
+    P.modularWeight.integral x = P.modularWeight.weight.integral x := by
+  dsimp [ModularWeightDatum.integral]
 
 end NoncommutativeModularOperatorLift
 
@@ -319,6 +331,7 @@ theorem bridge_cartan_decomposition
       BogoliubovTransport.modularTransportGenerator (E := E) H :=
   BogoliubovKANShadowData.cartanGaugeShadow_add_cartanScaleShadow (E := E) H
 
+omit [CompleteSpace E] in
 /-- The gauge part of any doubled-space generator in the shadow is phase-linear. -/
 theorem bridge_cartanGaugeShadow_isPhaseLinear
     (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
@@ -326,6 +339,7 @@ theorem bridge_cartanGaugeShadow_isPhaseLinear
       (BogoliubovKANShadowData.cartanGaugeShadow (E := E) H) :=
   BogoliubovKANShadowData.cartanGaugeShadow_isPhaseLinear (E := E) H
 
+omit [CompleteSpace E] in
 /-- The scaling/shadow part of any doubled-space generator is phase-antilinear. -/
 theorem bridge_cartanScaleShadow_isPhaseAntilinear
     (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :
@@ -333,6 +347,7 @@ theorem bridge_cartanScaleShadow_isPhaseAntilinear
       (BogoliubovKANShadowData.cartanScaleShadow (E := E) H) :=
   BogoliubovKANShadowData.cartanScaleShadow_isPhaseAntilinear (E := E) H
 
+omit [CompleteSpace E] in
 /-- The phase-axis force on the doubled carrier vanishes identically on the gauge sector. -/
 theorem bridge_gaugePart_phaseAxisForce_zero
     (H : BogoliubovKANShadowData.doubledKreinEnd (E := E)) :

@@ -7398,3 +7398,6 @@ import InfoGeometry.Information.MasterArchetypeConvexDuality
 import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Information.SouriauLieGroupThermodynamics
 import InfoGeometry.Canonical.ZornBdGDerivationBridge
+import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
+import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
+import InfoGeometry.Physics.GogberashviliNilpotentCARBridge

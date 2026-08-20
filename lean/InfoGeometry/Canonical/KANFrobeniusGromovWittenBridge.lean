@@ -63,6 +63,12 @@ def prepotentialToWDVV {dim : ℕ} (F : GromovWittenPrepotential dim) : FiniteWD
   structureConstants := F.F3
   associativity := F.wdvv
 
+/-- The induced WDVV structure constants satisfy full associativity. -/
+theorem prepotentialToWDVV_associativity {dim : ℕ} (F : GromovWittenPrepotential dim) (i j k l : Fin dim) :
+    (∑ a : Fin dim, F.F3 i j a * F.F3 a k l) =
+      ∑ a : Fin dim, F.F3 j k a * F.F3 i a l :=
+  F.wdvv i j k l
+
 /--
 A Gauge Transformation on the Moduli Space (e.g., KAN internal gauge).
 -/

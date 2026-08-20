@@ -458,6 +458,23 @@ theorem antiunitarySheetSwap_anticommutes
     dsimp [H_BdG, holeBlock, antiunitarySheetSwap]
     abel
 
+/-- Alias: nambuBdG_particleHole_anticommute -/
+theorem nambuBdG_particleHole_anticommute
+    (h Δ : EndH)
+    (R : AntiunitaryRealStructure H)
+    (h_comm1 : ∀ v : H,
+      R.conjugation (adjoint h v) = h (R.conjugation v))
+    (h_anti1 : ∀ u : H,
+      R.conjugation (adjoint Δ u) = -Δ (R.conjugation u))
+    (h_comm2 : ∀ u : H,
+      R.conjugation (h u) = adjoint h (R.conjugation u))
+    (h_anti2 : ∀ v : H,
+      R.conjugation (Δ v) = -adjoint Δ (R.conjugation v))
+    (x : NambuH) :
+    antiunitarySheetSwap R (H_BdG h Δ x) =
+      -(H_BdG h Δ (antiunitarySheetSwap R x)) :=
+  antiunitarySheetSwap_anticommutes h Δ R h_comm1 h_anti1 h_comm2 h_anti2 x
+
 /-- The Nambu sheet swap is additive. -/
 theorem antiunitarySheetSwap_add
     (R : AntiunitaryRealStructure H) (x y : NambuH) :

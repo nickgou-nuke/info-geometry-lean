@@ -510,6 +510,44 @@ theorem antiunitarySheetSwap_norm
     WithLp.prod_norm_sq_eq_of_L2]
   simp [antiunitarySheetSwap, LinearIsometryEquiv.norm_map, add_comm]
 
+/-! The pointwise antiunitary operation is now bundled as Mathlib's native
+conjugate-linear continuous map. -/
+
+noncomputable def antiunitarySheetSwapCL
+    (R : AntiunitaryRealStructure H) :
+    NambuH →L⋆[ℂ] NambuH where
+  toFun := antiunitarySheetSwap R
+  map_add' := antiunitarySheetSwap_add R
+  map_smul' := antiunitarySheetSwap_smul R
+  cont := by
+    have hsub (x y : NambuH) :
+        antiunitarySheetSwap R (x - y) =
+          antiunitarySheetSwap R x - antiunitarySheetSwap R y := by
+      rw [sub_eq_add_neg, antiunitarySheetSwap_add]
+      have hy := antiunitarySheetSwap_smul R (-1 : ℂ) y
+      simpa [sub_eq_add_neg] using hy
+    have hisometry : Isometry (antiunitarySheetSwap R) := by
+      intro x y
+      rw [edist_dist, edist_dist]
+      congr 1
+      rw [dist_eq_norm, dist_eq_norm, ← antiunitarySheetSwap_norm R (x - y), hsub]
+    exact hisometry.continuous
+
+@[simp] theorem antiunitarySheetSwapCL_apply
+    (R : AntiunitaryRealStructure H) (x : NambuH) :
+    antiunitarySheetSwapCL R x = antiunitarySheetSwap R x :=
+  rfl
+
+theorem antiunitarySheetSwapCL_involutive
+    (R : AntiunitaryRealStructure H) (x : NambuH) :
+    antiunitarySheetSwapCL R (antiunitarySheetSwapCL R x) = x := by
+  rcases x with ⟨u, v⟩
+  apply nambu_ext
+  · change R.conjugation (R.conjugation u) = u
+    exact R.involutive u
+  · change R.conjugation (R.conjugation v) = v
+    exact R.involutive v
+
 /-- The antiunitary Nambu swap is involutive. -/
 theorem antiunitarySheetSwap_involutive
     (R : AntiunitaryRealStructure H) :

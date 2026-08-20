@@ -33,6 +33,11 @@ def adMap (A : Matrix n n R) : Matrix n n R →ₗ[R] Matrix n n R where
 theorem adMap_apply (A X : Matrix n n R) :
     adMap (n := n) A X = X * A - A * X := rfl
 
+@[simp] theorem adMap_self (A : Matrix n n R) :
+    adMap (n := n) A A = 0 := by
+  ext i j
+  simp [adMap_apply]
+
 @[simp] theorem adMap_zero :
     adMap (n := n) (0 : Matrix n n R) = 0 := by
   ext X

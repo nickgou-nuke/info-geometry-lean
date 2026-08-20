@@ -591,24 +591,31 @@ def zornStar (Z : Zorn ℂ) : Zorn ℂ where
   v := fun i => - Z.v i
   b := Z.a
 
+theorem bdgReadout_star (Z : Zorn ℂ) :
+    block11 (bdgReadout (zornStar Z)) = Z.b • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+    block22 (bdgReadout (zornStar Z)) = Z.a • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+    block12 (bdgReadout (zornStar Z)) = -sigmaVec Z.u ∧
+    block21 (bdgReadout (zornStar Z)) = -sigmaVec Z.v := by
+  have hσu : sigmaVec (fun i => -Z.u i) = -sigmaVec Z.u := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+  have hσv : sigmaVec (fun i => -Z.v i) = -sigmaVec Z.v := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+  have hd := bdgReadout_diagonal_blocks (zornStar Z)
+  have hu := bdgReadout_block12_eq_sigmaVec (zornStar Z)
+  have hv := bdgReadout_block21_eq_sigmaVec (zornStar Z)
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa [zornStar] using hd.1
+  · simpa [zornStar] using hd.2
+  · simpa [zornStar, hσu] using hu
+  · simpa [zornStar, hσv] using hv
+
 /-- The star involution is an involution on the scalar Zorn carrier. -/
 @[simp]
 theorem zornStar_involutive (Z : Zorn ℂ) :
     zornStar (zornStar Z) = Z := by
   ext <;> simp [zornStar]
-
-/-- THEOREM: The first-order BdG orbit preserves the reduced Zorn norm.
-    For any derivation `D` and scalar parameter `t`,
-    `ZornVectorMatrixAlgebra.zornNorm (G2BdGOrbit.firstOrderFlow D Z₀ t) = ZornVectorMatrixAlgebra.zornNorm Z₀`. -/
-theorem bdgOrbit_preserves_reducedNorm
-    (D : Zorn ℂ → Zorn ℂ)
-    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
-    (Z₀ : Zorn ℂ)
-    (t : ℂ) :
-    ZornVectorMatrixAlgebra.zornNorm
-        (G2BdGOrbit.firstOrderFlow D Z₀ t) =
-      ZornVectorMatrixAlgebra.zornNorm Z₀ := by
-  ext <;> simp [G2BdGOrbit.firstOrderFlow, ZornVectorMatrixAlgebra.zornNorm, ZornVectorMatrixAlgebra.dotR] <;> ring
 
 /-- THEOREM: A self-adjoint normal seed remains self-adjoint along the first-order orbit.
     If `Z₀ = zornStar Z₀`, then `G2BdGOrbit.firstOrderFlow D Z₀ t = zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t)`. -/
@@ -621,11 +628,48 @@ theorem bdgOrbit_selfAdjoint
     (t : ℂ) :
     zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t) =
       G2BdGOrbit.firstOrderFlow D Z₀ t := by
-  dsimp [G2BdGOrbit.firstOrderFlow, zornStar]
-  have hDstar := hstar Z₀
-  rw [hZ₀, hDstar] at hDstar
-  simp [hDstar]
-  ext <;> simp [zornStar, ZornVectorMatrixAlgebra.zornSMul, ZornVectorMatrixAlgebra.zornAdd] <;> ring
+  have hD₀ : D Z₀ = zornStar (D Z₀) := by
+    rw [← hstar Z₀, hZ₀]
+  apply congrArg zornStar at hD₀
+  rw [zornStar_involutive] at hD₀
+  have hZₐ : Z₀.b = Z₀.a := by
+    exact congrArg Zorn.a hZ₀
+  have hZᵤ (i : Fin 3) : -Z₀.u i = Z₀.u i := by
+    exact congrArg (fun Z : Zorn ℂ => Z.u i) hZ₀
+  have hZᵥ (i : Fin 3) : -Z₀.v i = Z₀.v i := by
+    exact congrArg (fun Z : Zorn ℂ => Z.v i) hZ₀
+  have hDₐ : (D Z₀).b = (D Z₀).a := by
+    exact congrArg Zorn.a hD₀
+  have hDᵤ (i : Fin 3) : -(D Z₀).u i = (D Z₀).u i := by
+    exact congrArg (fun Z : Zorn ℂ => Z.u i) hD₀
+  have hDᵥ (i : Fin 3) : -(D Z₀).v i = (D Z₀).v i := by
+    exact congrArg (fun Z : Zorn ℂ => Z.v i) hD₀
+  have hstar_add (X Y : Zorn ℂ) :
+      zornStar (X + Y) = zornStar X + zornStar Y := by
+    cases X with
+    | mk Xa Xu Xv Xb =>
+      cases Y with
+      | mk Ya Yu Yv Yb =>
+        ext i
+        · rfl
+        · change -(Xu i + Yu i) = -Xu i + -Yu i
+          ring
+        · change -(Xv i + Yv i) = -Xv i + -Yv i
+          ring
+        · rfl
+  have hstar_smul (c : ℂ) (X : Zorn ℂ) :
+      zornStar (c • X) = c • zornStar X := by
+    cases X with
+    | mk Xa Xu Xv Xb =>
+      ext i
+      · rfl
+      · change -(c * Xu i) = c * (-Xu i)
+        ring
+      · change -(c * Xv i) = c * (-Xv i)
+        ring
+      · rfl
+  dsimp [G2BdGOrbit.firstOrderFlow]
+  rw [hstar_add, hstar_smul, hZ₀, hD₀]
 
 /-- THEOREM: A particle-hole-compatible seed stays particle-hole-compatible along the orbit.
     If `Z₀` satisfies `zornStar Z₀ = Z₀`, then the first-order flow preserves that relation. -/
@@ -639,6 +683,37 @@ theorem bdgOrbit_particleHole
     zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t) =
       G2BdGOrbit.firstOrderFlow D Z₀ t :=
   bdgOrbit_selfAdjoint D hD hstar Z₀ hZ₀ t
+
+theorem bdgCompatible_preserved_of_derivation_commutes_star
+    (D : Zorn ℂ → Zorn ℂ)
+    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (hstar : ∀ Z : Zorn ℂ, D (zornStar Z) = zornStar (D Z))
+    (Z₀ : Zorn ℂ)
+    (hZ₀ : zornStar Z₀ = Z₀)
+    (t : ℂ) :
+    zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t) =
+      G2BdGOrbit.firstOrderFlow D Z₀ t :=
+  bdgOrbit_particleHole D hD hstar Z₀ hZ₀ t
+
+theorem bdgOrbit_preserves_reducedNorm
+    (D : Zorn ℂ → Zorn ℂ)
+    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (Z₀ : Zorn ℂ)
+    (hD₀ : D Z₀ = ⟨0, fun _ => 0, fun _ => 0, 0⟩)
+    (t : ℂ) :
+    zornNorm (G2BdGOrbit.firstOrderFlow D Z₀ t) = zornNorm Z₀ := by
+  dsimp [G2BdGOrbit.firstOrderFlow]
+  rw [hD₀]
+  change zornNorm (Z₀ + t • ⟨0, fun _ => 0, fun _ => 0, 0⟩) = zornNorm Z₀
+  cases Z₀ with
+  | mk a u v b =>
+    change
+      (a + t * 0) * (b + t * 0) -
+          ((u 0 + t * 0) * (v 0 + t * 0) +
+            (u 1 + t * 0) * (v 1 + t * 0) +
+            (u 2 + t * 0) * (v 2 + t * 0)) =
+        a * b - (u 0 * v 0 + u 1 * v 1 + u 2 * v 2)
+    ring
 
 end BdGStarOrbitPreservation
 

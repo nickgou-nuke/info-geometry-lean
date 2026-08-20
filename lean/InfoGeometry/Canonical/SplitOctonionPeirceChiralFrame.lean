@@ -102,6 +102,11 @@ theorem transportedEPlus_mul_transportedEMinus (U : SplitOctonionAutCandidate R)
   change U ePlus * U eMinus = 0
   rw [← hU.2, ePlus_mul_eMinus, map_zero]
 
+theorem transportedEMinus_mul_transportedEPlus (U : SplitOctonionAutCandidate R) (hU : IsSplitOctonionAut U) :
+    transportedEMinus (R := R) U * transportedEPlus (R := R) U = 0 := by
+  change U eMinus * U ePlus = 0
+  rw [← hU.2, eMinus_mul_ePlus, map_zero]
+
 theorem transportedGPlus_square_zero (U : SplitOctonionAutCandidate R) (hU : IsSplitOctonionAut U) (i : Fin 3) :
     transportedGPlus (R := R) U i * transportedGPlus (R := R) U i = 0 := by
   change U (gPlus i) * U (gPlus i) = 0

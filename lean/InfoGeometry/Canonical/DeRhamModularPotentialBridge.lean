@@ -109,9 +109,8 @@ theorem gibbs_distribution_is_exponential_map
     relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a) := by
   rw [relativeDensity_eq_exp_relativeLogDensity]
   rw [relativeModularPotential_eq_neg_relativeLogDensity]
-  ring
+  abel
 
-/-- The modular Hamiltonian generates the modular flow. -/
 /-- The modular Hamiltonian for a pair (q, q₀) is K = -V(q, q₀). -/
 noncomputable def modularHamiltonian (q q₀ : PositiveRay α) : α → ℝ :=
   fun a => -relativeModularPotential q q₀ a

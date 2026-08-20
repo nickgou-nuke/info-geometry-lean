@@ -1,5 +1,4 @@
-import Mathlib.LinearAlgebra.Projectivization.Action
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+import Mathlib
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 namespace InfoGeometry.Canonical

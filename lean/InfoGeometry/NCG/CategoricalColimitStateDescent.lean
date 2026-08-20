@@ -57,17 +57,6 @@ theorem transitionN_one (n : ℕ) (x : S.Stage n) :
     S.transitionN n 1 x = S.transition n x := by
   dsimp [transitionN]
 
-theorem transitionN_comp_cast (n k l : ℕ) (x : S.Stage n) :
-    cast (congrArg S.Stage (Nat.add_assoc n k l).symm :
-      S.Stage (n + (k + l)) = S.Stage ((n + k) + l))
-        (S.transitionN n (k + l) x) =
-      S.transitionN (n + k) l (S.transitionN n k x) := by
-  induction l with
-  | zero => simp [transitionN]
-  | succ l ih =>
-      simp only [transitionN]
-      simpa [Nat.add_assoc] using congrArg (S.transition (n + k + l)) ih
-
 /-- Multi-step transition preserves star involution. -/
 theorem transitionN_star (n k : ℕ) (x : S.Stage n) :
     S.transitionN n k (star x) = star (S.transitionN n k x) := by

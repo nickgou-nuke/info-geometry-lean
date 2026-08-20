@@ -232,6 +232,13 @@ theorem innerModularShiftRingHom_apply (ρ ρ_inv : Mat)
     innerModularShiftRingHom ρ ρ_inv h_right h_left X =
       innerModularShift ρ ρ_inv X := rfl
 
+theorem innerModularShiftRingHom_bijective (ρ ρ_inv : Mat)
+    (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
+    Function.Bijective (innerModularShiftRingHom ρ ρ_inv h_right h_left) := by
+  constructor
+  · exact innerModularShift_injective ρ ρ_inv h_right h_left
+  · exact innerModularShift_surjective ρ ρ_inv h_right h_left
+
 theorem innerModularShift_comm (ρ ρ_inv X Y : Mat)
     (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
     innerModularShift ρ ρ_inv (comm X Y) =

@@ -64,6 +64,20 @@ noncomputable def ofConeInteriorStateSpace :
 noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure α ℝ :=
   InfoGeometry.Projective.Normalize.normalizeOnProj (α := α)
 
+/-- The canonical affine chart coordinates of a positive projective ray. -/
+@[rep_depth projective]
+noncomputable def chartCoordinates (q : PositiveRay α) : EuclideanSpace ℝ α :=
+  WithLp.toLp (2 : ENNReal) (fun a => gaugeSection (α := α) q a)
+
+@[simp] theorem chartCoordinates_apply (q : PositiveRay α) (a : α) :
+    chartCoordinates (α := α) q a = gaugeSection (α := α) q a := by
+  rfl
+
+theorem chartCoordinates_pos (q : PositiveRay α) (a : α) :
+    0 < chartCoordinates (α := α) q a := by
+  rw [chartCoordinates_apply]
+  exact (gaugeSection (α := α) q).pos a
+
 @[rep_depth projective, simp] theorem gaugeSection_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     gaugeSection (α := α) (Quotient.mk _ μ) =
       InfoGeometry.PositiveMeasure.normalize (α := α) (R := ℝ) μ := by

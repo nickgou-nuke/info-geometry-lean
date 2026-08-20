@@ -168,6 +168,16 @@ theorem qgt_observable_coordinate_decomposition
        (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2) := by
   refine ⟨rfl, rfl, QGT_normSq_decomposition ψ X Y⟩
 
+theorem typed_observableCoordinate_qgt_decomposition
+    (ψ : NormalizedState H)
+    (X Y : ObservableCoordinate H) :
+    (fubiniStudyMetric ψ X.op Y.op = (QGT ψ X.op Y.op).re) ∧
+    (berryCurvature ψ X.op Y.op = -2 * (QGT ψ X.op Y.op).im) ∧
+    (Complex.normSq (QGT ψ X.op Y.op) =
+      (fubiniStudyMetric ψ X.op Y.op) ^ 2 +
+        (1 / 4 : ℝ) * (berryCurvature ψ X.op Y.op) ^ 2) := by
+  exact qgt_observable_coordinate_decomposition ψ X.op Y.op
+
 /-- 
   THEOREM 7 (The Universal Uncertainty on Observable Coordinates):
   The metric variance product of two observable coordinates bounds the
@@ -179,6 +189,75 @@ theorem observable_coordinate_uncertainty_bound
       (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
   berry_curvature_uncertainty_bound ψ X Y
 
+/-!
+=============================================================================
+PART 4: Expectation Coordinates and Modular Flow Velocities
+=============================================================================
+-/
+
+/-! A supplied normalized fiber-state section and observable-coordinate family
+    determine a genuine expectation-value chart on the positive-ray base. -/
+def expectationCoordinateMap
+    (state : PositiveRay α → NormalizedState H)
+    (coordinates : α → ObservableCoordinate H) :
+    PositiveRay α → EuclideanSpace ℝ α :=
+  fun q => (EuclideanSpace.equiv α ℝ).symm
+    (fun i => (observableExpectation (state q) (coordinates i)).re)
+
+omit [Fintype α] [Nonempty α] in
+theorem expectationCoordinateMap_apply
+    (state : PositiveRay α → NormalizedState H)
+    (coordinates : α → ObservableCoordinate H)
+    (q : PositiveRay α) (i : α) :
+    (expectationCoordinateMap state coordinates q) i =
+      (observableExpectation (state q) (coordinates i)).re := by
+  rfl
+
+omit [Fintype α] [Nonempty α] in
+theorem expectationCoordinateMap_im_eq_zero
+    (state : PositiveRay α → NormalizedState H)
+    (coordinates : α → ObservableCoordinate H)
+    (q : PositiveRay α) (i : α) :
+    (observableExpectation (state q) (coordinates i)).im = 0 := by
+  have h := observableExpectation_conj_eq (state q) (coordinates i)
+  apply Complex.ext_iff.mp at h
+  have him : -(observableExpectation (state q) (coordinates i)).im =
+      (observableExpectation (state q) (coordinates i)).im := by
+    simpa using h.2
+  linarith
+
+/-! The modular-flow velocity of an observable is the expectation of its
+    commutator with the generator.  The statement is intentionally operator
+    valued; no external time parameter or differentiability hypothesis is
+    smuggled into this algebraic readout. -/
+def modularFlowVelocity
+    (ψ : NormalizedState H) (K X : EndH) : ℂ :=
+  ⟪(opCommutator K X) ψ.vec, ψ.vec⟫_ℂ
+
+omit [Fintype α] [Nonempty α] in
+theorem modularFlowVelocity_eq_expectation_commutator
+    (ψ : NormalizedState H) (K X : EndH) :
+    modularFlowVelocity ψ K X =
+      ⟪(opCommutator K X) ψ.vec, ψ.vec⟫_ℂ := by
+  rfl
+
+/-- 🏆 THEOREM: Nonnegativity of the extracted Fubini-Study / Fisher metric:
+    g_ψ(X, X) ≥ 0 for any operator generator X. -/
+theorem fubiniStudyMetric_nonnegative (ψ : NormalizedState H) (X : EndH) :
+    0 ≤ fubiniStudyMetric ψ X X := by
+  rw [fubiniStudyMetric_self_eq_normSq]
+  exact sq_nonneg ‖projOrth ψ X‖
+
+/-- 🏆 THEOREM: Metric extraction from QGT real part as Riemannian structure:
+    g_ψ(X, Y) = Re(Q_ψ(X, Y)). -/
+theorem qgt_metric_real_part (ψ : NormalizedState H) (X Y : EndH) :
+    fubiniStudyMetric ψ X Y = (QGT ψ X Y).re := rfl
+
+/-- 🏆 THEOREM: Variance of observable coordinate X is the QGT real metric. -/
+theorem qgt_real_part_is_variance (ψ : NormalizedState H) (X : EndH) :
+    (QGT ψ X X).re = fubiniStudyMetric ψ X X := rfl
+
 end InfoGeometry.Canonical.ErlangenObservableBundle
 
 end noncomputable section
+

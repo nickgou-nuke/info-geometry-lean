@@ -51,7 +51,35 @@ local notation "EndH" => H →L[ℂ] H
 def expectationCoord (ψ : NormalizedState H) (X : EndH) : ℝ :=
   (⟪ψ.vec, X ψ.vec⟫_ℂ).re
 
-/-- 
+/-- The infinitesimal coordinate velocity read from a modular commutator. -/
+def modularFlowVelocity (ψ : NormalizedState H) (K X : EndH) : ℝ :=
+  (⟪ψ.vec, (opCommutator K X) ψ.vec⟫_ℂ).re
+
+theorem modularFlowVelocity_eq_expectationCoord
+    (ψ : NormalizedState H) (K X : EndH) :
+    modularFlowVelocity ψ K X = expectationCoord ψ (opCommutator K X) := rfl
+
+theorem metric_extraction_from_qgt
+    (ψ : NormalizedState H) (X Y : EndH) :
+    fubiniStudyMetric ψ X Y = (QGT ψ X Y).re := rfl
+
+theorem expectationCoord_eq_observableExpectation_re
+    (ψ : NormalizedState H)
+    (X : InfoGeometry.Canonical.ErlangenObservableBundle.ObservableCoordinate H) :
+    expectationCoord ψ X.op =
+      (InfoGeometry.Canonical.ErlangenObservableBundle.observableExpectation ψ X).re := by
+  have hinner :
+      ⟪ψ.vec, X.op ψ.vec⟫_ℂ = ⟪X.op ψ.vec, ψ.vec⟫_ℂ := by
+    calc
+      ⟪ψ.vec, X.op ψ.vec⟫_ℂ =
+          ⟪ψ.vec, (ContinuousLinearMap.adjoint X.op) ψ.vec⟫_ℂ := by
+            rw [X.is_self_adjoint]
+      _ = ⟪X.op ψ.vec, ψ.vec⟫_ℂ := by
+        exact ContinuousLinearMap.adjoint_inner_right (𝕜 := ℂ) X.op ψ.vec ψ.vec
+  simp only [expectationCoord,
+    InfoGeometry.Canonical.ErlangenObservableBundle.observableExpectation, hinner]
+
+/--
   THEOREM 1: Quantum Geometric Tensor Hermitian Decomposition.
   The QGT decomposes identically into the real symmetric Riemannian metric (gravity)
   and the imaginary antisymmetric symplectic Berry curvature (gauge field strength):
@@ -65,7 +93,7 @@ theorem qgt_hermitian_decomposition (ψ : NormalizedState H) (X Y : EndH) :
   · dsimp [fubiniStudyMetric, berryCurvature]
     simp
 
-/-- 
+/--
   THEOREM 2: Metric Symmetry and Berry Antisymmetry via Horizontal Projection.
   The real and imaginary components correspond to the horizontal Gram projection.
 -/
@@ -79,7 +107,7 @@ theorem qgt_components_horizontal (ψ : NormalizedState H) (X Y : EndH) :
   · dsimp [berryCurvature]
     rw [h]
 
-/-- 
+/--
   THEOREM 3: Robertson-Schrödinger Unified Geometry Bound.
   The product of metric uncertainties dominates both the covariance squared
   and the gauge curvature squared:
@@ -90,7 +118,7 @@ theorem robertson_schrodinger_unified (ψ : NormalizedState H) (X Y : EndH) :
       (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
   robertson_schrodinger_qgt_bound ψ X Y
 
-/-- 
+/--
   MASTER THEOREM: The Unified Pipeline of Emergent Geometry.
   Connects quantum operator observables to statistical coordinates,
   thermodynamic potential differences, and non-commutative geometry bounds.
@@ -109,6 +137,59 @@ theorem emergent_geometry_pipeline
   refine ⟨qgt_hermitian_decomposition ψ X Y,
           robertson_schrodinger_unified ψ X Y,
           heat_is_logarithmic_volume_dilation q q₁ a⟩
+
+/--
+  THEOREM 4: The Redline potential is the exact logarithmic potential of the relative density.
+  The modular potential $\Phi_{q_0}(q) = -\ln \Delta(q_0, q)$ satisfies:
+    $d\Phi_{q_0}(q_0, q_1, q_2) = \Phi(q_1, q_2)$
+-/
+theorem redline_potential_is_logarithmic
+    (α : Type*) [Fintype α] [Nonempty α]
+    (q q₁ : PositiveRay α) (a : α) :
+    relativeModularPotential q q₁ a =
+      -Real.log (relativeDensity q q₁ a) := by
+  have h := heat_is_logarithmic_volume_dilation q q₁ a
+  rw [h, Real.log_exp]
+  ring
+
+/--
+  THEOREM 5: The Fisher Score 1-form is the exact exterior derivative of the modular potential.
+  The Maurer-Cartan structure $\omega = d\Phi$ holds identically:
+    $\omega_{q_0}(q, q_1) = \Phi(q_0, q_1)$
+-/
+theorem fisher_score_is_exact_derivative
+    (α : Type*) [Fintype α] [Nonempty α]
+    (q₀ q₁ q₂ : PositiveRay α) (a : α) :
+    dZeroForm (modularZeroForm q₀ a) q₁ q₂ = relativeModularPotential q₁ q₂ a :=
+  relativeModularPotential_eq_dZeroForm q₀ q₁ q₂ a
+
+/--
+  THEOREM 6: Path independence of the Redline potential on the positive orthant.
+  The modular potential satisfies the cocycle condition:
+    $\Phi(q, q_2) = \Phi(q, q_1) + \Phi(q_1, q_2)$
+-/
+theorem redline_path_independence
+    (α : Type*) [Fintype α] [Nonempty α]
+    (q q₁ q₂ : PositiveRay α) (a : α) :
+    relativeModularPotential q q₂ a =
+      relativeModularPotential q q₁ a + relativeModularPotential q₁ q₂ a :=
+  relativeModularPotential_path_independence q q₁ q₂ a
+
+/--
+  THEOREM 7: The modular 1-form is closed (Maurer-Cartan $d^2 = 0$).
+  The exterior derivative of the Fisher score vanishes:
+    $d\omega = 0$
+-/
+theorem modular_force_is_closed_mc
+    (α : Type*) [Fintype α] [Nonempty α]
+    (q₀ q₁ q₂ : PositiveRay α) (a : α) :
+    dOneForm (fun x y => relativeModularPotential x y a) q₀ q₁ q₂ = 0 := by
+  unfold dOneForm
+  change relativeModularPotential q₁ q₂ a -
+      relativeModularPotential q₀ q₂ a +
+      relativeModularPotential q₀ q₁ a = 0
+  rw [relativeModularPotential_path_independence q₀ q₁ q₂ a]
+  ring
 
 end InfoGeometry.Canonical.EmergentSpacetime
 

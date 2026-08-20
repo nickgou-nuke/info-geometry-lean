@@ -296,3 +296,33 @@ theorem wedge_swap (u v : Vec4 R) :
 end Vec4
 
 end InfoGeometry.Projective.KleinQuadric
+
+/-!
+=============================================================================
+Penrose Twistors & The Grassmannian Gr(2, 4) Embedding
+=============================================================================
+-/
+
+/-- A Penrose twistor in homogeneous coordinates Z = (ω₀, ω₁, π₀, π₁). -/
+abbrev Twistor (R : Type*) := Vec4 R
+
+/-- Penrose Twistor Conjugation swapping chiral spinor components: C(ω, π) = (π, ω). -/
+def twistorConjugation {R : Type*} (Z : Twistor R) : Twistor R where
+  x0 := Z.x2
+  x1 := Z.x3
+  x2 := Z.x0
+  x3 := Z.x1
+
+/-- Twistor conjugation is an involution: C ∘ C = id. -/
+@[simp] theorem twistorConjugation_involutive {R : Type*} (Z : Twistor R) :
+    twistorConjugation (twistorConjugation Z) = Z := by
+  cases Z
+  rfl
+
+/-- 
+  THEOREM: Grassmannian Gr(2, 4) Lines are Null Rays on the Klein Quadric.
+  For any two twistors Z₁, Z₂, their wedge product lies identically on the Klein Quadric.
+-/
+theorem gr24_twistor_line_on_klein_quadric (Z₁ Z₂ : Twistor R) :
+    Plucker6.IsKlein (Vec4.wedge Z₁ Z₂) :=
+  Vec4.wedge_isKlein Z₁ Z₂

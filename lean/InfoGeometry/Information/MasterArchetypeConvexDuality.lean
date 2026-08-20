@@ -128,10 +128,12 @@ def masterArchetypeTheoremBundle : MasterArchetypeTheoremBundle where
   log_homomorphism := fun D hD u v => universal_log_functor_mul D hD u v
   madelung_isometry := fun rho' rho_val h_pos => universal_madelung_isometry rho' rho_val h_pos
   legendre_duality := fun psi theta eta => by ring
-  nilpotent_automorphism := fun mul D hD h_cross t x y =>
-    universal_nilpotent_derivation_automorphism mul D hD h_cross t x y
-  nilpotent_equivalence := fun mul one D hD hD2 h_one h_cross t =>
-    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t
+  nilpotent_automorphism := by
+    intro K A _ _ _ _ mul D hD h_cross t x y
+    exact universal_nilpotent_derivation_automorphism mul D hD h_cross t x y
+  nilpotent_equivalence := by
+    intro K A _ _ _ _ mul one D hD hD2 h_one h_cross t
+    exact toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t
   peirce_stabilizer := fun mul one D hD_one t I hDI =>
     universal_peirce_frame_stabilizer mul one D hD_one t I hDI
 

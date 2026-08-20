@@ -59,6 +59,14 @@ theorem bracket_add_right (X Y Z : A) :
   simp only [bracket, add_mul, mul_add]
   abel
 
+theorem bracket_smul_left (r : R) (X Y : A) :
+    bracket (r • X) Y = r • bracket X Y := by
+  simp only [bracket, smul_mul_assoc, mul_smul_comm, smul_sub]
+
+theorem bracket_smul_right (r : R) (X Y : A) :
+    bracket X (r • Y) = r • bracket X Y := by
+  simp only [bracket, smul_mul_assoc, mul_smul_comm, smul_sub]
+
 /-- 🏆 THEOREM 2: The Noncommutative Jacobi Identity:
     [X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]] = 0 -/
 theorem bracket_jacobi (X Y Z : A) :

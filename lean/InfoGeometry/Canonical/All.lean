@@ -1,3 +1,5 @@
+import InfoGeometry.Canonical.MoebiusKleinStatisticalZornSynthesis
+import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge
 import InfoGeometry.Canonical.BisognanoWichmannSouriauUnification
 import InfoGeometry.Canonical.BdGSchurBerezinianCompatibility
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame

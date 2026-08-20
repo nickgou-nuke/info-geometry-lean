@@ -1,8 +1,4 @@
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.BigOperators.Basic
-import Mathlib.Algebra.Module.Basic
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Tactic
+import Mathlib
 
 /-!
 # Chiral Zorn CAR, scalar Schur complement, and BdG Berezinian
@@ -21,20 +17,11 @@ an associative multiplication on the full split-octonion Zorn carrier.
 
 noncomputable section
 
-open scoped BigOperators
-open scoped Matrix
-
 namespace InfoGeometry.Algebra
 
 namespace GogberashviliNilpotentCARBridge
 
 variable {K A : Type*} [Field K] [Ring A] [Algebra K A]
-
-/-!
-=============================================================================
-PART 1: CAR Projectors and Nilpotent Modes from a Split Triad
-=============================================================================
--/
 
 /-- Positive primitive idempotent associated with an involution `J`. -/
 def DPlus (J : A) : A :=
@@ -52,12 +39,6 @@ def GPlus (I j : A) : A :=
 def GMinus (I j : A) : A :=
   (2 : K)⁻¹ • (I - j)
 
-/-!
-=============================================================================
-PART 2: Algebraic Infrastructure
-=============================================================================
--/
-
 private theorem smul_mul_smul
     (r s : K) (x y : A) :
     (r • x) * (s • y) = (r * s) • (x * y) := by
@@ -74,12 +55,6 @@ private theorem inv_two_sq_mul_two
           rw [inv_mul_cancel₀ h2]
     _ = (2 : K)⁻¹ := by
           rw [mul_one]
-
-/-!
-=============================================================================
-PART 3: Split-Triad Identities
-=============================================================================
--/
 
 /-- The split triad determines an involutive projector axis `J² = 1`. -/
 theorem J_square_one
@@ -310,39 +285,15 @@ theorem GPlus_GMinus_CAR
     GMinus_mul_GPlus h2 I j J hI hj hcross hJ]
   simpa [add_comm] using DPlus_add_DMinus h2 J
 
-/-!
-=============================================================================
-PART 4: Complete Finite CAR Packet
-=============================================================================
--/
-
-/-- The split triad determines an involutive projector axis. -/
-theorem split_triad_J_square_one
-    (I j : A)
-    (hI : I * I = 1)
-    (hj : j * j = -1)
-    (hcross : j * I = -(I * j)) :
-    (I * j) * (I * j) = 1 := by
-  calc
-    (I * j) * (I * j) = I * (j * I) * j := by
-      simp only [mul_assoc]
-    _ = I * (-(I * j)) * j := by
-      rw [hcross]
-    _ = -((I * I) * (j * j)) := by
-      simp only [mul_neg, neg_mul, mul_assoc]
-    _ = 1 := by
-      rw [hI, hj]
-      simp
-
 /-- Complete finite CAR packet, with every projector law derived from the
 split-triad hypotheses. -/
 theorem full_car_packet
     (h2 : (2 : K) ≠ 0)
-    (I j : A)
+    (I j J : A)
     (hI : I * I = 1)
     (hj : j * j = -1)
-    (hcross : j * I = -(I * j)) :
-    let J := I * j
+    (hcross : j * I = -(I * j))
+    (hJ : J = I * j) :
     J * J = 1 ∧
       DPlus (K := K) J * DPlus (K := K) J = DPlus (K := K) J ∧
       DMinus (K := K) J * DMinus (K := K) J = DMinus (K := K) J ∧
@@ -350,15 +301,12 @@ theorem full_car_packet
       DMinus (K := K) J * DPlus (K := K) J = 0 ∧
       GPlus (K := K) I j * GPlus (K := K) I j = 0 ∧
       GMinus (K := K) I j * GMinus (K := K) I j = 0 ∧
-      GPlus (K := K) I j * GMinus (K := K) I j =
-        DMinus (K := K) J ∧
-      GMinus (K := K) I j * GPlus (K := K) I j =
-        DPlus (K := K) J ∧
+      GPlus (K := K) I j * GMinus (K := K) I j = DMinus (K := K) J ∧
+      GMinus (K := K) I j * GPlus (K := K) I j = DPlus (K := K) J ∧
       DPlus (K := K) J + DMinus (K := K) J = 1 ∧
       GPlus (K := K) I j * GMinus (K := K) I j +
         GMinus (K := K) I j * GPlus (K := K) I j = 1 := by
-  intro
-  have hJsq : J * J = 1 := split_triad_J_square_one I j hI hj hcross
+  have hJsq : J * J = 1 := J_square_one I j J hI hj hcross hJ
   have hanti : I * j + j * I = 0 := by
     rw [hcross]
     abel
@@ -370,10 +318,10 @@ theorem full_car_packet
       DMinus_mul_DPlus J hJsq,
       GPlus_square_zero I j hI hj hanti,
       GMinus_square_zero I j hI hj hanti,
-      GPlus_mul_GMinus h2 I j J hI hj hcross rfl,
-      GMinus_mul_GPlus h2 I j J hI hj hcross rfl,
+      GPlus_mul_GMinus h2 I j J hI hj hcross hJ,
+      GMinus_mul_GPlus h2 I j J hI hj hcross hJ,
       DPlus_add_DMinus h2 J,
-      GPlus_GMinus_CAR h2 I j J hI hj hcross rfl⟩
+      GPlus_GMinus_CAR h2 I j J hI hj hcross hJ⟩
 
 /-! ## Compatibility aliases for the original frozen API -/
 
@@ -444,12 +392,6 @@ theorem G_plus_G_minus_CAR
   GPlus_GMinus_CAR h2 I j J hI hj hcross hJ
 
 end GogberashviliNilpotentCARBridge
-
-/-!
-=============================================================================
-PART 5: Scalar Schur Complement and Berezinian
-=============================================================================
--/
 
 namespace ZornNormSchurScalarSpecialization
 
@@ -558,12 +500,6 @@ theorem zorn_norm_eq_schur_mul_beta
   zornNorm_eq_schur_mul_beta α β u v hβ
 
 end ZornNormSchurScalarSpecialization
-
-/-!
-=============================================================================
-PART 6: BdG Scalar Block Compatibility
-=============================================================================
--/
 
 namespace BdGSchurBerezinianCompatibility
 

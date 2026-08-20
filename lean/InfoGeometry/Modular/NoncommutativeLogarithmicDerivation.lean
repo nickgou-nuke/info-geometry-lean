@@ -155,7 +155,8 @@ theorem dlogR_mul_of_commute (D : A →ₗ[ℤ] A)
           dlogR D v * (u : A) * (↑(u⁻¹) : A) := by
         rw [hcomm.eq]
       _ = dlogR D v := by
-        rw [u.val_inv, mul_one]
+        have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+        rw [mul_assoc, hu, mul_one]
   rw [hconj]
 
 /-- 🏆 THEOREM 4: Noncommutative Logarithmic Product Rule (Maurer–Cartan):
@@ -231,6 +232,11 @@ theorem dlogR_adK (K : A) (u : Aˣ) :
       rw [sub_mul, mul_assoc]
     _ = K - (u : A) * K * (↑(u⁻¹) : A) := by
       rw [hu, mul_one]
+
+theorem dlogR_adK_eq_conjugate_dlogL_adK (K : A) (u : Aˣ) :
+    dlogR (adK K) u =
+      (u : A) * dlogL (adK K) u * (↑(u⁻¹) : A) := by
+  exact dlogR_eq_conjugate_dlogL (adK K) u
 
 /-!
 =============================================================================

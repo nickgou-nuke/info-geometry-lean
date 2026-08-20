@@ -131,10 +131,16 @@ theorem innerModularShift_comm (ρ ρ_inv X Y : Mat)
     (h_right : ρ * ρ_inv = 1) (h_left : ρ_inv * ρ = 1) :
     innerModularShift ρ ρ_inv (comm X Y) =
       comm (innerModularShift ρ ρ_inv X) (innerModularShift ρ ρ_inv Y) := by
-  unfold comm
-  rw [innerModularShift_mul ρ ρ_inv X Y h_right h_left,
-    innerModularShift_mul ρ ρ_inv Y X h_right h_left]
-  rfl
+  calc
+    innerModularShift ρ ρ_inv (comm X Y) =
+        innerModularShift ρ ρ_inv (X * Y) -
+          innerModularShift ρ ρ_inv (Y * X) := by
+            simp [comm, innerModularShift, mul_sub, sub_mul]
+    _ = innerModularShift ρ ρ_inv X * innerModularShift ρ ρ_inv Y -
+          innerModularShift ρ ρ_inv Y * innerModularShift ρ ρ_inv X := by
+            rw [innerModularShift_mul ρ ρ_inv X Y h_right h_left,
+              innerModularShift_mul ρ ρ_inv Y X h_right h_left]
+    _ = comm (innerModularShift ρ ρ_inv X) (innerModularShift ρ ρ_inv Y) := rfl
 
 end InfoGeometry.NCG.KMS
 

@@ -101,6 +101,13 @@ theorem derivation_inv_unit (u : Aˣ) :
 def pureGaugeForm (u : Aˣ) : A :=
   (u : A) * D (u⁻¹ : Aˣ).val
 
+theorem pureGaugeForm_eq_neg (u : Aˣ) :
+    pureGaugeForm D u = - (D (u : A) * (u⁻¹ : Aˣ).val) := by
+  unfold pureGaugeForm
+  rw [D.derivation_inv_unit]
+  congr 1
+  rw [← mul_assoc, Units.mul_inv, one_mul]
+
 /-- 🏆 THEOREM 3: The Maurer-Cartan Quadratic Identity:
     θ² = - D(u) * D(u⁻¹) -/
 theorem pureGaugeForm_sq (u : Aˣ) :

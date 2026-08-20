@@ -591,17 +591,13 @@ equivalence. -/
 structure InvertibleHoleBlock (h : EndH) where
   equiv : H ≃L[ℂ] H
   equiv_toContinuousLinearMap :
-    (equiv : H →L[ℂ] H) = holeBlock h
-
-namespace InvertibleHoleBlock
-
-variable {h : EndH}
+    equiv.toContinuousLinearMap = holeBlock h
 
 /-- Genuine inverse of the physical hole block. -/
-def inverse (I : InvertibleHoleBlock h) : EndH :=
-  (I.equiv.symm : H →L[ℂ] H)
+def InvertibleHoleBlock.inverse {h : EndH} (I : InvertibleHoleBlock h) : EndH :=
+  I.equiv.symm.toContinuousLinearMap
 
-@[simp] theorem holeBlock_comp_inverse (I : InvertibleHoleBlock h) :
+@[simp] theorem InvertibleHoleBlock.holeBlock_comp_inverse {h : EndH} (I : InvertibleHoleBlock h) :
     (holeBlock h).comp I.inverse = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -609,7 +605,7 @@ def inverse (I : InvertibleHoleBlock h) : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.apply_symm_apply x
 
-@[simp] theorem inverse_comp_holeBlock (I : InvertibleHoleBlock h) :
+@[simp] theorem InvertibleHoleBlock.inverse_comp_holeBlock {h : EndH} (I : InvertibleHoleBlock h) :
     I.inverse.comp (holeBlock h) = ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
   intro x
@@ -617,17 +613,15 @@ def inverse (I : InvertibleHoleBlock h) : EndH :=
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
 
-@[simp] theorem holeBlock_inverse_apply (I : InvertibleHoleBlock h) (x : H) :
+@[simp] theorem InvertibleHoleBlock.holeBlock_inverse_apply {h : EndH} (I : InvertibleHoleBlock h) (x : H) :
     holeBlock h (I.inverse x) = x := by
-  have hx := congrArg (fun T : EndH => T x) I.holeBlock_comp_inverse
-  simpa [comp_apply] using hx
+  have hx := congrArg (fun T : EndH => T x) (InvertibleHoleBlock.holeBlock_comp_inverse I)
+  exact hx
 
-@[simp] theorem inverse_holeBlock_apply (I : InvertibleHoleBlock h) (x : H) :
+@[simp] theorem InvertibleHoleBlock.inverse_holeBlock_apply {h : EndH} (I : InvertibleHoleBlock h) (x : H) :
     I.inverse (holeBlock h x) = x := by
-  have hx := congrArg (fun T : EndH => T x) I.inverse_comp_holeBlock
-  simpa [comp_apply] using hx
-
-end InvertibleHoleBlock
+  have hx := congrArg (fun T : EndH => T x) (InvertibleHoleBlock.inverse_comp_holeBlock I)
+  exact hx
 
 /-! ## 7. Zero-energy Schur complement and graph reduction -/
 

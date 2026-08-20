@@ -142,6 +142,26 @@ theorem innerNCDerivation_bracket (K₁ K₂ : A) :
   intro X
   exact ncDerivationCommutator_inner_apply (innerNCDerivation K₁) K₂ X
 
+/- The bundled inner derivation has zero action exactly on central elements. -/
+instance : Zero (NCDerivation A) where
+  zero :=
+    { toLinearMap := 0
+      leibniz' := by
+        intro X Y
+        simp }
+
+theorem innerNCDerivation_eq_zero_iff (K : A) :
+    innerNCDerivation K = 0 ↔ ∀ X : A, K * X = X * K := by
+  constructor
+  · intro h X
+    have hX : innerNCDerivation K X = (0 : NCDerivation A) X :=
+      congrArg (fun E : NCDerivation A => E X) h
+    simpa [innerNCDerivation, adKLinear, adK] using hX
+  · intro h
+    apply NCDerivation.ext
+    intro X
+    simp [innerNCDerivation, adKLinear, adK, h X]
+
 def dlog (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)
 

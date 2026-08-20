@@ -7366,3 +7366,6 @@ import InfoGeometry.Canonical.SplitOctonionLeftRightAssociatorCommutantBridge
 import InfoGeometry.Canonical.ZornRegularMultiplicationClassificationBridge
 import InfoGeometry.Algebra.KleinSpinorOrbitClosure
 import InfoGeometry.NCG.NoncommutativeCyclicCocycle
+import InfoGeometry.NCG.BerezinianSuperdeterminant
+import InfoGeometry.NCG.DerivationExponentialAutomorphism
+import InfoGeometry.NCG.G2DerivationTraces

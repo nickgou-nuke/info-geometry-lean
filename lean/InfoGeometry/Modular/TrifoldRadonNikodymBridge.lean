@@ -323,6 +323,10 @@ theorem linearMapCommutator_adK_eq_zero_iff_central (K L : A) :
 def IsRingDerivation (D : A →ₗ[ℤ] A) : Prop :=
   ∀ x y, D (x * y) = D x * y + x * D y
 
+@[simp] theorem adK_isRingDerivation (K : A) : IsRingDerivation (adK K) := by
+  intro X Y
+  exact adK_is_derivation K X Y
+
 /-- The left logarithmic Radon--Nikodym derivative in a noncommutative ring. -/
 def dlogRNNoncomm (D : A →ₗ[ℤ] A) (Δ inv_Δ : A) : A :=
   inv_Δ * D Δ
@@ -374,6 +378,18 @@ theorem dlogRNNoncomm_mul (D : A →ₗ[ℤ] A) (hD : IsRingDerivation D)
     _ = inv_Δ12 * D Δ12 + inv_Δ23 * D Δ23 := by
           rw [h23, h12]
           simp
+
+theorem dlogRNNoncomm_mul_adK (K : A)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : A)
+    (h12 : inv_Δ12 * Δ12 = 1)
+    (h23 : inv_Δ23 * Δ23 = 1)
+    (hK12 : Commute inv_Δ23 (adK K Δ12))
+    (hΔ12 : Commute inv_Δ23 Δ12) :
+    dlogRNNoncomm (adK K) (Δ12 * Δ23) (inv_Δ12 * inv_Δ23) =
+      dlogRNNoncomm (adK K) Δ12 inv_Δ12 +
+        dlogRNNoncomm (adK K) Δ23 inv_Δ23 := by
+  exact dlogRNNoncomm_mul (adK K) (adK_isRingDerivation K)
+    Δ12 inv_Δ12 Δ23 inv_Δ23 h12 h23 hK12 hΔ12
 
 /-! ### Logarithmic Radon–Nikodym Derivative on Commutative Algebras -/
 

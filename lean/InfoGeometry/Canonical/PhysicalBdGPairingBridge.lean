@@ -385,13 +385,11 @@ theorem bdg_linearSheetSwap_anticommutes
   apply ContinuousLinearMap.ext
   intro x
   apply nambu_ext
-  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, linearSheetSwap_apply,
-      linearSheetSwap_fst, linearSheetSwap_snd, H_BdG_fst, H_BdG_snd]
-    rw [map_sub, h1 x.fst, h2 x.snd]
+  · show C₀ (H_BdG h Δ x).snd = -(H_BdG h Δ (linearSheetSwap C₀ x)).fst
+    rw [H_BdG_snd, H_BdG_fst, linearSheetSwap_fst, linearSheetSwap_snd, map_sub, h1 x.fst, h2 x.snd]
     abel
-  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, linearSheetSwap_apply,
-      linearSheetSwap_fst, linearSheetSwap_snd, H_BdG_fst, H_BdG_snd]
-    rw [map_add, h3 x.fst, h4 x.snd]
+  · show C₀ (H_BdG h Δ x).fst = -(H_BdG h Δ (linearSheetSwap C₀ x)).snd
+    rw [H_BdG_fst, H_BdG_snd, linearSheetSwap_fst, linearSheetSwap_snd, map_add, h3 x.fst, h4 x.snd]
     abel
 
 /-- Legacy theorem name retained for compatibility. -/

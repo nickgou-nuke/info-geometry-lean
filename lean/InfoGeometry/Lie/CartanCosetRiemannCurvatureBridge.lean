@@ -128,7 +128,11 @@ theorem riemann_curvature_skew
     (X Y Z : V) :
     nomizuRiemannCurvature bracket X Y Z = - nomizuRiemannCurvature bracket Y X Z := by
   dsimp [nomizuRiemannCurvature]
-  rw [h_lie.skew X Y, h_lie.skew (bracket Y X) Z, neg_neg]
+  rw [h_lie.skew X Y]
+  have h_neg : -bracket Y X = (-1 : ℝ) • bracket Y X := by
+    simp only [neg_smul, one_smul]
+  rw [h_neg, h_lie.smul_left (-1)]
+  simp only [neg_smul, one_smul, neg_neg]
 
 /--
   THEOREM: First Bianchi Identity for Nomizu Curvature:
@@ -141,9 +145,10 @@ theorem first_bianchi_identity
     nomizuRiemannCurvature bracket Y Z X +
     nomizuRiemannCurvature bracket Z X Y = 0 := by
   dsimp [nomizuRiemannCurvature]
-  have h_jacobi := h_lie.jacobi X Y Z
-  rw [h_lie.skew (bracket X Y) Z, h_lie.skew (bracket Y Z) X, h_lie.skew (bracket Z X) Y] at h_jacobi
-  exact h_jacobi
+  rw [h_lie.skew (bracket X Y) Z, h_lie.skew (bracket Y Z) X, h_lie.skew (bracket Z X) Y]
+  simp only [neg_neg]
+  have h_jac := h_lie.jacobi X Y Z
+  linear_combination h_jac
 
 /-!
 =============================================================================
@@ -162,6 +167,7 @@ def nomizuSectionalCurvature (bracket : V → V → V) (B : V → V → ℝ) (X 
   THEOREM: Sectional curvature vanishes on commuting tangent vectors:
   $[X, Y] = 0 \implies K(X, Y) = 0$.
 -/
+omit [Module ℝ V] in
 theorem sectional_curvature_commuting_zero
     (bracket : V → V → V) (B : V → V → ℝ)
     (hB_zero : ∀ v, B 0 v = 0)

@@ -128,6 +128,44 @@ theorem relativeModularPotential_path_independence (q q₁ q₂ : PositiveRay α
       relativeModularPotential q q₁ a + relativeModularPotential q₁ q₂ a :=
   relativeModularPotential_cocycle q q₁ q₂ a
 
+/-!
+=============================================================================
+PART 3: 2-Forms and De Rham Nilpotency (d² = 0)
+=============================================================================
+-/
+
+/-- A discrete 2-form on state space M (evaluating on oriented triangles / 2-simplices). -/
+def TwoForm (M : Type*) : Type _ := M → M → M → ℝ
+
+/-- The discrete exterior derivative d₁ : Ω¹(M) → Ω²(M). -/
+def dOneForm (ω : OneForm M) : TwoForm M :=
+  fun x y z => ω y z - ω x z + ω x y
+
+@[simp]
+theorem dOneForm_apply (ω : OneForm M) (x y z : M) :
+    dOneForm ω x y z = ω y z - ω x z + ω x y := rfl
+
+/-- 
+  🏆 MASTER THEOREM 7: Nilpotency of the de Rham Complex (d² = 0).
+  The second exterior derivative of any scalar 0-form vanishes identically on every 2-simplex:
+    d₁ (d₀ Φ) = 0
+-/
+theorem d_squared_zero (Φ : ZeroForm M) (x y z : M) :
+    dOneForm (dZeroForm Φ) x y z = 0 := by
+  dsimp [dOneForm, dZeroForm]
+  ring
+
+/-- 
+  🏆 THEOREM 8: The Thermodynamic Modular Force is Closed (Zero Curvature / Zero 2-Form).
+  For any base state q₀ and coordinate a : α, the exterior derivative of the modular force vanishes:
+    d₁ (d₀ (modularZeroForm q₀ a)) = 0
+-/
+theorem modular_force_is_closed
+    (q₀ : PositiveRay α) (a : α) (q₁ q₂ q₃ : PositiveRay α) :
+    dOneForm (dZeroForm (modularZeroForm q₀ a)) q₁ q₂ q₃ = 0 :=
+  d_squared_zero (modularZeroForm q₀ a) q₁ q₂ q₃
+
 end InfoGeometry.Canonical.DeRhamPotential
 
 end noncomputable section
+

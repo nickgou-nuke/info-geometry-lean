@@ -58,6 +58,27 @@ theorem exactOneForm_path_integral
       zeroForm i (γ b) - zeroForm i (γ a) := by
   exact integral_coordinateLogRate_eq_potential_sub i hγ hpos hint
 
+/-! The exact one-form has zero integral on a closed coordinate path. -/
+theorem exactOneForm_closed_loop
+    (i : α) {γ : ℝ → Chart α} {a b : ℝ}
+    (hγ : ∀ t ∈ Set.uIcc a b, DifferentiableAt ℝ γ t)
+    (hpos : ∀ t ∈ Set.uIcc a b, 0 < γ t i)
+    (hint : IntervalIntegrable
+      (logVolumeDifferential (fun t => γ t i)) volume a b)
+    (hloop : γ b = γ a) :
+    ∫ t in a..b, logVolumeDifferential (fun t => γ t i) t = 0 := by
+  rw [exactOneForm_path_integral i hγ hpos hint]
+  rw [hloop]
+  ring
+
+/-! Reversing the orientation negates the integral of the exact one-form. -/
+theorem exactOneForm_path_integral_antisymm
+    (i : α) {γ : ℝ → Chart α} {a b : ℝ}
+    :
+    (∫ t in b..a, logVolumeDifferential (fun t => γ t i) t) =
+      -∫ t in a..b, logVolumeDifferential (fun t => γ t i) t := by
+  rw [intervalIntegral.integral_symm]
+
 end InfoGeometry.Continuous.DeRhamBridge
 
 end noncomputable section

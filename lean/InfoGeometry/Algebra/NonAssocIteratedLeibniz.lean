@@ -124,9 +124,10 @@ variable (mul : A →ₗ[R] A →ₗ[R] A)
 def firstOrderExp (t : R) (D : A →ₗ[R] A) : A →ₗ[R] A :=
   LinearMap.id + t • D
 
-theorem firstOrderExp_apply (t : R) (D : A →ₗ[R] A) (x : A) :
+theorem firstOrderExp_apply
+    (t : R) (D : A →ₗ[R] A) (x : A) :
     firstOrderExp t D x = x + t • D x := by
-  rfl
+  dsimp [firstOrderExp]
 
 theorem firstOrderExp_map_mul
     (t : R) (D : A →ₗ[R] A)
@@ -372,59 +373,82 @@ namespace NonAssocAlgEquiv
 instance : CoeFun (NonAssocAlgEquiv mul one) (fun _ => A → A) where
   coe F := F.toLinearMap
 
-@[simp] theorem map_mul (F : NonAssocAlgEquiv mul one) (x y : A) :
+@[simp] theorem map_mul
+    (F : NonAssocAlgEquiv mul one) (x y : A) :
     F (mul x y) = mul (F x) (F y) := F.map_mul' x y
 
-@[simp] theorem map_one (F : NonAssocAlgEquiv mul one) : F one = one := F.map_one'
+@[simp] theorem map_one
+    (F : NonAssocAlgEquiv mul one) :
+    F one = one := F.map_one'
 
-@[simp] theorem map_zero (F : NonAssocAlgEquiv mul one) : F 0 = 0 := F.toLinearMap.map_zero
+@[simp] theorem map_zero
+    (F : NonAssocAlgEquiv mul one) :
+    F 0 = 0 := F.toLinearMap.map_zero
 
-@[simp] theorem map_add (F : NonAssocAlgEquiv mul one) (x y : A) :
+@[simp] theorem map_add
+    (F : NonAssocAlgEquiv mul one) (x y : A) :
     F (x + y) = F x + F y := F.toLinearMap.map_add x y
 
-@[simp] theorem map_smul (F : NonAssocAlgEquiv mul one) (r : R) (x : A) :
+@[simp] theorem map_smul
+    (F : NonAssocAlgEquiv mul one) (r : R) (x : A) :
     F (r • x) = r • F x := F.toLinearMap.map_smul r x
 
-theorem left_inv (F : NonAssocAlgEquiv mul one) (x : A) :
+theorem left_inv
+    (F : NonAssocAlgEquiv mul one) (x : A) :
     F.invFun (F x) = x := F.left_inv' x
 
-theorem right_inv (F : NonAssocAlgEquiv mul one) (x : A) :
+theorem right_inv
+    (F : NonAssocAlgEquiv mul one) (x : A) :
     F (F.invFun x) = x := F.right_inv' x
 
-theorem injective (F : NonAssocAlgEquiv mul one) : Function.Injective F := by
+theorem injective
+    (F : NonAssocAlgEquiv mul one) :
+    Function.Injective F := by
   intro x y h
   rw [← F.left_inv' x, ← F.left_inv' y, h]
 
-theorem invFun_map_mul (F : NonAssocAlgEquiv mul one) (x y : A) :
+theorem invFun_map_mul
+    (F : NonAssocAlgEquiv mul one) (x y : A) :
     F.invFun (mul x y) = mul (F.invFun x) (F.invFun y) := by
   apply F.injective
   simp only [F.right_inv', F.map_mul]
 
-theorem invFun_map_one (F : NonAssocAlgEquiv mul one) :
+theorem invFun_map_one
+    (F : NonAssocAlgEquiv mul one) :
     F.invFun one = one := by
   apply F.injective
   simp only [F.right_inv', F.map_one]
 
-theorem map_idempotent (F : NonAssocAlgEquiv mul one) {e : A}
-    (he : mul e e = e) : mul (F e) (F e) = F e := by
+theorem map_idempotent
+    (F : NonAssocAlgEquiv mul one) {e : A}
+    (he : mul e e = e) :
+    mul (F e) (F e) = F e := by
   rw [← F.map_mul, he]
 
-theorem map_orthogonal (F : NonAssocAlgEquiv mul one) {e f : A}
-    (hef : mul e f = 0) : mul (F e) (F f) = 0 := by
+theorem map_orthogonal
+    (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hef : mul e f = 0) :
+    mul (F e) (F f) = 0 := by
   rw [← F.map_mul, hef, F.map_zero]
 
-theorem map_orthogonal_rev (F : NonAssocAlgEquiv mul one) {e f : A}
-    (hfe : mul f e = 0) : mul (F f) (F e) = 0 := by
+theorem map_orthogonal_rev
+    (F : NonAssocAlgEquiv mul one) {e f : A}
+    (hfe : mul f e = 0) :
+    mul (F f) (F e) = 0 := by
   rw [← F.map_mul, hfe, F.map_zero]
 
-theorem map_two_sided_orthogonal (F : NonAssocAlgEquiv mul one) {e f : A}
+theorem map_two_sided_orthogonal
+    (F : NonAssocAlgEquiv mul one) {e f : A}
     (hef : mul e f = 0) (hfe : mul f e = 0) :
     mul (F e) (F f) = 0 ∧ mul (F f) (F e) = 0 := by
-  exact ⟨NonAssocAlgEquiv.map_orthogonal F hef,
-    NonAssocAlgEquiv.map_orthogonal_rev F hfe⟩
+  constructor
+  · rw [← F.map_mul, hef, F.map_zero]
+  · rw [← F.map_mul, hfe, F.map_zero]
 
-theorem map_square_zero (F : NonAssocAlgEquiv mul one) {q : A}
-    (hq : mul q q = 0) : mul (F q) (F q) = 0 := by
+theorem map_square_zero
+    (F : NonAssocAlgEquiv mul one) {q : A}
+    (hq : mul q q = 0) :
+    mul (F q) (F q) = 0 := by
   rw [← F.map_mul, hq, F.map_zero]
 
 end NonAssocAlgEquiv

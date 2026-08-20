@@ -192,6 +192,58 @@ theorem toNonAssocAlgEquiv_neg_apply
   simpa [neg_neg] using
     LinearMap.congr_fun (nilpotentExpStep2_comp_neg D hD2 (-t)) x
 
+/-- The bundled nilpotent automorphism transports the noncommutative
+commutator product. -/
+theorem toNonAssocAlgEquiv_map_commutator
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x y : A) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t
+        (mul x y - mul y x) =
+      mul (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x)
+        (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t y) -
+      mul (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t y)
+        (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x) := by
+  change nilpotentExpStep2 D t (mul x y - mul y x) =
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y) -
+      mul (nilpotentExpStep2 D t y) (nilpotentExpStep2 D t x)
+  rw [map_sub, nilpotentExpStep2_map_mul mul D hD h_cross,
+    nilpotentExpStep2_map_mul mul D hD h_cross]
+
+/-- The bundled nilpotent automorphism transports idempotents. -/
+theorem toNonAssocAlgEquiv_map_idempotent
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = x) :
+    mul (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x)
+      (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x) =
+      toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x := by
+  change mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) =
+    nilpotentExpStep2 D t x
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+
+/-- The bundled nilpotent automorphism transports square-zero elements. -/
+theorem toNonAssocAlgEquiv_map_square_zero
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = 0) :
+    mul (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x)
+      (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x) = 0 := by
+  change mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) = 0
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+  exact (nilpotentExpStep2 D t).map_zero
+
 /-- The nilpotent exponential transports both orientations of orthogonality. -/
 theorem nilpotentExpStep2_map_two_sided_orthogonal
     (D : A →ₗ[K] A)

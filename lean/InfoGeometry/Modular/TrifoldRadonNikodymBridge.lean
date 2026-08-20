@@ -318,6 +318,63 @@ theorem linearMapCommutator_adK_eq_zero_iff_central (K L : A) :
       ∀ X, (K * L - L * K) * X = X * (K * L - L * K) := by
   rw [linearMapCommutator_adK, adK_eq_zero_iff_central]
 
+/-- Leibniz rule for an additive `ℤ`-linear operator on a possibly
+    noncommutative ring. -/
+def IsRingDerivation (D : A →ₗ[ℤ] A) : Prop :=
+  ∀ x y, D (x * y) = D x * y + x * D y
+
+/-- The left logarithmic Radon--Nikodym derivative in a noncommutative ring. -/
+def dlogRNNoncomm (D : A →ₗ[ℤ] A) (Δ inv_Δ : A) : A :=
+  inv_Δ * D Δ
+
+/-- The noncommutative cocycle rule.  The displayed commutation hypotheses are
+    exactly those needed to move the second inverse through the first
+    derivative and the first factor through the second inverse. -/
+theorem dlogRNNoncomm_mul (D : A →ₗ[ℤ] A) (hD : IsRingDerivation D)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : A)
+    (h12 : inv_Δ12 * Δ12 = 1)
+    (h23 : inv_Δ23 * Δ23 = 1)
+    (hD12 : Commute inv_Δ23 (D Δ12))
+    (hΔ12 : Commute inv_Δ23 Δ12) :
+    dlogRNNoncomm D (Δ12 * Δ23) (inv_Δ12 * inv_Δ23) =
+      dlogRNNoncomm D Δ12 inv_Δ12 +
+        dlogRNNoncomm D Δ23 inv_Δ23 := by
+  dsimp [dlogRNNoncomm]
+  rw [hD Δ12 Δ23]
+  have hterm1 :
+      inv_Δ12 * (inv_Δ23 * (D Δ12 * Δ23)) =
+        (inv_Δ12 * D Δ12) * (inv_Δ23 * Δ23) := by
+    calc
+      inv_Δ12 * (inv_Δ23 * (D Δ12 * Δ23)) =
+          inv_Δ12 * ((inv_Δ23 * D Δ12) * Δ23) := by
+            simp only [mul_assoc]
+      _ = inv_Δ12 * ((D Δ12 * inv_Δ23) * Δ23) := by
+            rw [hD12.eq]
+      _ = (inv_Δ12 * D Δ12) * (inv_Δ23 * Δ23) := by
+            simp only [mul_assoc]
+  have hterm2 :
+      inv_Δ12 * (inv_Δ23 * (Δ12 * D Δ23)) =
+        (inv_Δ12 * Δ12) * (inv_Δ23 * D Δ23) := by
+    calc
+      inv_Δ12 * (inv_Δ23 * (Δ12 * D Δ23)) =
+          inv_Δ12 * ((inv_Δ23 * Δ12) * D Δ23) := by
+            simp only [mul_assoc]
+      _ = inv_Δ12 * ((Δ12 * inv_Δ23) * D Δ23) := by
+            rw [hΔ12.eq]
+      _ = (inv_Δ12 * Δ12) * (inv_Δ23 * D Δ23) := by
+            simp only [mul_assoc]
+  calc
+    (inv_Δ12 * inv_Δ23) *
+          (D Δ12 * Δ23 + Δ12 * D Δ23) =
+        (inv_Δ12 * D Δ12) * (inv_Δ23 * Δ23) +
+          (inv_Δ12 * Δ12) * (inv_Δ23 * D Δ23) := by
+            simp only [mul_add, mul_assoc]
+            rw [hterm1, hterm2]
+            simp only [mul_assoc]
+    _ = inv_Δ12 * D Δ12 + inv_Δ23 * D Δ23 := by
+          rw [h23, h12]
+          simp
+
 /-! ### Logarithmic Radon–Nikodym Derivative on Commutative Algebras -/
 
 variable {R : Type*} [CommRing R]

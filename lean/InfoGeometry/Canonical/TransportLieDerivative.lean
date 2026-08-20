@@ -258,6 +258,29 @@ noncomputable def expTransportAlgHom
     (expTransport_one_seed X t)
     (fun A₁ A₂ => expTransport_mul_seed X A₁ A₂ t)
 
+/-- The finite exponential transport as an `ℝ`-linear equivalence. -/
+noncomputable def expTransportLinearEquiv
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) : A ≃ₗ[ℝ] A :=
+  LinearEquiv.ofBijective (expTransportLinear X t) (by
+    constructor
+    · intro A₁ A₂ h
+      have h' := congrArg (fun B => expTransport X B (-t)) h
+      simpa only [expTransport_neg_right] using h'
+    · intro A₀
+      refine ⟨expTransport X A₀ (-t), ?_⟩
+      exact expTransport_neg_left X A₀ t)
+
+/-- The finite exponential transport as an `ℝ`-algebra equivalence. -/
+noncomputable def expTransportAlgEquiv
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) : A ≃ₐ[ℝ] A :=
+  AlgEquiv.ofLinearEquiv (expTransportLinearEquiv X t)
+    (expTransport_one_seed X t)
+    (fun A₁ A₂ => expTransport_mul_seed X A₁ A₂ t)
+
 /-- Exponential conjugation preserves all natural powers of an observable. -/
 theorem expTransport_pow_seed
     {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]

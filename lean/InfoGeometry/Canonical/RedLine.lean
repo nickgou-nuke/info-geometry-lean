@@ -132,9 +132,6 @@ export InfoGeometry.Canonical.QuantumAlgebraObservableBase.PositiveObservableRea
 )
 
 export InfoGeometry.Canonical.HomogeneousModularFlows (
-  HomogeneousSpace
-  quotientHomogeneousSpace
-  quotient_projection_surjective
   maurerCartanDerivative
   maurerCartanPath
   maurerCartanPath_eq_logarithmicBridge

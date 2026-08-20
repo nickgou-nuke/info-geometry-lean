@@ -20,35 +20,6 @@ and proves the capstone theorem:
 The logarithmic bridge factors exactly through the Maurer-Cartan form on the homogeneous space of modular flows.
 -/
 
-variable {G : Type*} [Group G]
-
-/-- 
-  An abstract homogeneous space G/H where H is a subgroup (typically a stabilizer like U(1) or parabolic).
-  This avoids strict dependency on normal subgroups, which Quotients sometimes assume in action contexts.
--/
-class HomogeneousSpace (G : Type*) [Group G] (H : Subgroup G) where
-  quotient : Type*
-  proj : G → quotient
-  proj_invariant : ∀ (g : G) (h : H), proj (g * h) = proj g
-
-/-- The canonical homogeneous-space interface for the left-coset quotient. -/
-instance quotientHomogeneousSpace {G : Type*} [Group G] (H : Subgroup G) :
-    HomogeneousSpace G H where
-  quotient := G ⧸ H
-  proj := QuotientGroup.mk
-  proj_invariant := by
-    intro g h
-    apply QuotientGroup.eq.mpr
-    simpa [mul_assoc] using H.mul_mem (H.inv_mem h) h
-
-theorem quotient_projection_surjective {G : Type*} [Group G]
-    (H : Subgroup G) :
-    Function.Surjective (QuotientGroup.mk : G → G ⧸ H) :=
-  QuotientGroup.mk_surjective
-
-/-! The concrete left-coset quotient is the canonical homogeneous-space
-instance. -/
-
 variable {R : Type*} [CommRing R]
 
 /--

@@ -218,41 +218,6 @@ theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
     _ = ((u : A) * X * (u⁻¹ : Aˣ).val) *
         ((u : A) * Y * (u⁻¹ : Aˣ).val) := by simp only [mul_assoc]
 
-theorem gaugeTransform_add (u : Aˣ) (X Y : A) :
-    gaugeTransform u (X + Y) = gaugeTransform u X + gaugeTransform u Y := by
-  dsimp [gaugeTransform]
-  simp only [add_mul, mul_add]
-
-/-- Observable conjugation packaged as a native ring homomorphism. -/
-def gaugeTransformRingHom (u : Aˣ) : A →+* A where
-  toFun := gaugeTransform u
-  map_one' := gaugeTransform_one
-  map_mul' := gaugeTransform_observable_mul u
-  map_zero' := by
-    dsimp [gaugeTransform]
-    simp
-  map_add' := gaugeTransform_add u
-
-theorem gaugeTransform_injective (u : Aˣ) :
-    Function.Injective (gaugeTransform u) := by
-  intro X Y h
-  have h' := congrArg (gaugeTransform (u⁻¹)) h
-  simpa [gaugeTransform_inv u X, gaugeTransform_inv u Y] using h'
-
-theorem gaugeTransform_surjective (u : Aˣ) :
-    Function.Surjective (gaugeTransform u) := by
-  intro X
-  refine ⟨gaugeTransform (u⁻¹) X, ?_⟩
-  exact gaugeTransform_inv (u⁻¹) X
-
-theorem gaugeTransformRingHom_bijective (u : Aˣ) :
-    Function.Bijective (gaugeTransformRingHom u) := by
-  exact ⟨gaugeTransform_injective u, gaugeTransform_surjective u⟩
-
-/-- Observable conjugation packaged as a native ring equivalence. -/
-def gaugeTransformRingEquiv (u : Aˣ) : A ≃+* A :=
-  RingEquiv.ofBijective (gaugeTransformRingHom u) (gaugeTransformRingHom_bijective u)
-
 /-- Gauge conjugation is linear over the declared scalar algebra. -/
 theorem gaugeTransform_smul (u : Aˣ) (r : R) (X : A) :
     gaugeTransform u (r • X) = r • gaugeTransform u X := by
@@ -273,7 +238,7 @@ def gaugeTransformLinear (u : Aˣ) : A →ₗ[R] A where
 
 @[simp]
 theorem gaugeTransformLinear_apply (u : Aˣ) (X : A) :
-    gaugeTransformLinear u X = gaugeTransform u X := rfl
+    (gaugeTransformLinear (R := R) u) X = gaugeTransform u X := rfl
 
 /-- Gauge conjugation commutes with natural powers of an observable. -/
 theorem gaugeTransform_pow (u : Aˣ) (X : A) (n : ℕ) :
@@ -296,6 +261,37 @@ theorem gaugeTransform_inv (u : Aˣ) (X : A) :
         simp only [mul_assoc]
     _ = 1 * X * 1 := by rw [Units.inv_mul]
     _ = X := by rw [one_mul, mul_one]
+
+/-- Observable conjugation packaged as a native ring homomorphism. -/
+def gaugeTransformRingHom (u : Aˣ) : A →+* A where
+  toFun := gaugeTransform u
+  map_one' := by simp [gaugeTransform]
+  map_mul' := gaugeTransform_observable_mul u
+  map_zero' := by
+    dsimp [gaugeTransform]
+    simp
+  map_add' := gaugeTransform_add u
+
+theorem gaugeTransform_injective (u : Aˣ) :
+    Function.Injective (gaugeTransform u) := by
+  intro X Y h
+  have h' := congrArg (gaugeTransform (u⁻¹)) h
+  rw [gaugeTransform_inv u X, gaugeTransform_inv u Y] at h'
+  exact h'
+
+theorem gaugeTransform_surjective (u : Aˣ) :
+    Function.Surjective (gaugeTransform u) := by
+  intro X
+  refine ⟨gaugeTransform (u⁻¹) X, ?_⟩
+  exact gaugeTransform_inv (u⁻¹) X
+
+theorem gaugeTransformRingHom_bijective (u : Aˣ) :
+    Function.Bijective (gaugeTransformRingHom u) := by
+  exact ⟨gaugeTransform_injective u, gaugeTransform_surjective u⟩
+
+/-- Observable conjugation packaged as a native ring equivalence. -/
+def gaugeTransformRingEquiv (u : Aˣ) : A ≃+* A :=
+  RingEquiv.ofBijective (gaugeTransformRingHom u) (gaugeTransformRingHom_bijective u)
 
 /-- Gauge transformation of a connection one-form. -/
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=

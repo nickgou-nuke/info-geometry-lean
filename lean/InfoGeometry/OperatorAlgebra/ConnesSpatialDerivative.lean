@@ -174,6 +174,24 @@ theorem chain_rule_apply
       C.cocycle φ η t :=
   C.chain_rule φ ψ η t
 
+/-- Four composable Connes cocycles are coherent under reassociation. -/
+theorem chain_rule_assoc
+    (φ ψ η ξ : Weight)
+    (t : ℝ) :
+    (C.cocycle φ ψ t * C.cocycle ψ η t) * C.cocycle η ξ t =
+      C.cocycle φ ψ t *
+        (C.cocycle ψ η t * C.cocycle η ξ t) := by
+  calc
+    (C.cocycle φ ψ t * C.cocycle ψ η t) * C.cocycle η ξ t =
+        C.cocycle φ η t * C.cocycle η ξ t := by
+          rw [C.chain_rule]
+    _ = C.cocycle φ ξ t := C.chain_rule φ η ξ t
+    _ = C.cocycle φ ψ t * C.cocycle ψ ξ t :=
+      (C.chain_rule φ ψ ξ t).symm
+    _ = C.cocycle φ ψ t *
+        (C.cocycle ψ η t * C.cocycle η ξ t) := by
+          rw [C.chain_rule ψ η ξ t, C.chain_rule φ ψ ξ t]
+
 end ConnesCocycleDerivative
 
 /-! ## 4. Spatial derivative data -/

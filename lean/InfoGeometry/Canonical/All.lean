@@ -3329,6 +3329,7 @@ import InfoGeometry.Canonical.ThermodynamicsFirstLaw
 import InfoGeometry.Canonical.EmergentSpacetimeQuantumGeometryBridge
 import InfoGeometry.Canonical.EmergentSouriauQGTBridge
 import InfoGeometry.Canonical.TomitaCommutantHeatBathBridge
+import InfoGeometry.Continuous.Exactness
 import InfoGeometry.Continuous.DeRhamUnifiedCorridor
 import InfoGeometry.CompleteUnifiedBundle
 

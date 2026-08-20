@@ -199,6 +199,24 @@ theorem dlog_mul (D : A →ₗ[ℤ] A) (hD : IsDerivation D) (u v : Aˣ) :
       _ = _ := by rw [hu, one_mul]
   rw [hterm]
 
+theorem dlog_mul_of_central_right (D : A →ₗ[ℤ] A)
+    (hD : IsDerivation D) (u v : Aˣ)
+    (hv : ∀ x : A, (v : A) * x = x * (v : A)) :
+    dlog D (u * v) = dlog D u + dlog D v := by
+  rw [dlog_mul D hD u v]
+  have hconj : (↑(v⁻¹) : A) * dlog D u * (v : A) = dlog D u := by
+    calc
+      (↑(v⁻¹) : A) * dlog D u * (v : A)
+          = (↑(v⁻¹) : A) * (dlog D u * (v : A)) := by
+            exact mul_assoc _ _ _
+      _ = (↑(v⁻¹) : A) * ((v : A) * dlog D u) := by rw [hv]
+      _ = ((↑(v⁻¹) : A) * (v : A)) * dlog D u := by rw [mul_assoc]
+      _ = 1 * dlog D u := by
+        have hvunit : (↑(v⁻¹) : A) * (v : A) = 1 := v.inv_val
+        rw [hvunit]
+      _ = dlog D u := by rw [one_mul]
+  rw [hconj]
+
 theorem dlog_inv (D : A →ₗ[ℤ] A) (hD : IsDerivation D) (u : Aˣ) :
     dlog D (u⁻¹) = -((u : A) * dlog D u * (↑(u⁻¹) : A)) := by
   unfold dlog

@@ -169,6 +169,36 @@ theorem modularAutomorphismGroup_additive
   intro s t A
   exact modularAutomorphismGroup_add (M := M) s t A
 
+theorem modularAutomorphismGroup_map_commutator
+    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
+    modularAutomorphismGroup M t (commutator A B) =
+      commutator (modularAutomorphismGroup M t A)
+        (modularAutomorphismGroup M t B) := by
+  dsimp [modularAutomorphismGroup, modularShift, commutator, InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
+  have hExpNeg : NormedSpace.exp ((-t) • M.modularHamiltonian) * NormedSpace.exp (t • M.modularHamiltonian) = 1 := by
+    have hComm : Commute ((-t) • M.modularHamiltonian) (t • M.modularHamiltonian) := by
+      rw [neg_smul]
+      exact (Commute.refl (t • M.modularHamiltonian)).neg_left
+    have hz : (-t) • M.modularHamiltonian + t • M.modularHamiltonian = 0 := by
+      rw [neg_smul, neg_add_cancel]
+    rw [← NormedSpace.exp_add_of_commute hComm, hz, NormedSpace.exp_zero]
+  simp only [mul_sub, sub_mul]
+  calc
+    NormedSpace.exp (t • M.modularHamiltonian) * (A * B) * NormedSpace.exp ((-t) • M.modularHamiltonian) -
+      NormedSpace.exp (t • M.modularHamiltonian) * (B * A) * NormedSpace.exp ((-t) • M.modularHamiltonian)
+      = (NormedSpace.exp (t • M.modularHamiltonian) * A * (NormedSpace.exp ((-t) • M.modularHamiltonian) *
+          NormedSpace.exp (t • M.modularHamiltonian)) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) -
+        (NormedSpace.exp (t • M.modularHamiltonian) * B * (NormedSpace.exp ((-t) • M.modularHamiltonian) *
+          NormedSpace.exp (t • M.modularHamiltonian)) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) := by
+            rw [hExpNeg]
+            simp only [mul_one]
+            repeat rw [mul_assoc]
+    _ = (NormedSpace.exp (t • M.modularHamiltonian) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) *
+          (NormedSpace.exp (t • M.modularHamiltonian) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) -
+        (NormedSpace.exp (t • M.modularHamiltonian) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) *
+          (NormedSpace.exp (t • M.modularHamiltonian) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) := by
+            repeat rw [mul_assoc]
+
 /--
 Infinitesimal modular-flow generator at the origin:
 the derivative of `σ_τ(A)` at `τ = 0` is the commutator with the modular Hamiltonian.

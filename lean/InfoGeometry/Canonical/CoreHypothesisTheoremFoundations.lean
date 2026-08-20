@@ -374,6 +374,11 @@ theorem commutator_innerDerivation (K₁ K₂ X : A) :
       innerDerivation (adK K₁ K₂) X := by
   exact adK_bracket K₁ K₂ X
 
+theorem commutator_derivation_innerDerivation
+    (D : GenericDerivation A) (K X : A) :
+    commutator D (innerDerivation K) X = innerDerivation (D K) X := by
+  exact D.master_dual_flow_commutator K X
+
 /-- 
   THEOREM: Adiabatic Decoupling
   If D(K) = 0, then [D, ad_K] = 0.

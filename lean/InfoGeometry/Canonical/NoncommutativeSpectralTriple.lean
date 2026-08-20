@@ -137,7 +137,7 @@ theorem gaugeTransform_transitive
 theorem gaugeTransform_one (D A_gauge : A) :
     gaugeTransform D A_gauge 1 1 = A_gauge := by
   dsimp [gaugeTransform]
-  simp [ncDiff]
+  simp
 
 /-- A two-sided unitary gauge element has the expected inverse action. -/
 theorem gaugeTransform_inverse
@@ -146,7 +146,7 @@ theorem gaugeTransform_inverse
     (h_left : u_inv * u = 1) :
     gaugeTransform D (gaugeTransform D A_gauge u u_inv) u_inv u = A_gauge := by
   have h := gaugeTransform_transitive D A_gauge u u_inv u_inv u
-      h_right h_right h_left
+      h_right h_left h_right
   simpa [h_left, h_right] using h
 
 /-!

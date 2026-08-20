@@ -212,7 +212,7 @@ theorem gaugeTransform_observable_mul (u : Aˣ) (X Y : A) :
   calc
     (u : A) * (X * Y) * (u⁻¹ : Aˣ).val
         = (u : A) * X * 1 * Y * (u⁻¹ : Aˣ).val := by simp only [mul_assoc, mul_one]
-      _ = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y * (u⁻¹ : Aˣ).val := by rw [hu]
+      _ = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * Y * (u⁻¹ : Aˣ).val := by rw [← hu]
       _ = ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * Y * (u⁻¹ : Aˣ).val) := by
         simp only [mul_assoc]
 

@@ -109,6 +109,7 @@ import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationCentralKernel
 import InfoGeometry.Lie.CanonicalZornDerivationFlow
+import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.RealSplitOctonionDerivation

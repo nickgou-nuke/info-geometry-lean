@@ -621,7 +621,7 @@ theorem zornStar_involutive (Z : Zorn ℂ) :
     If `Z₀ = zornStar Z₀`, then `G2BdGOrbit.firstOrderFlow D Z₀ t = zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t)`. -/
 theorem bdgOrbit_selfAdjoint
     (D : Zorn ℂ → Zorn ℂ)
-    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (_hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
     (hstar : ∀ Z : Zorn ℂ, D (zornStar Z) = zornStar (D Z))
     (Z₀ : Zorn ℂ)
     (hZ₀ : zornStar Z₀ = Z₀)
@@ -697,7 +697,7 @@ theorem bdgCompatible_preserved_of_derivation_commutes_star
 
 theorem bdgOrbit_preserves_reducedNorm
     (D : Zorn ℂ → Zorn ℂ)
-    (hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
+    (_hD : ZornVectorMatrixAlgebra.IsZornDerivation D)
     (Z₀ : Zorn ℂ)
     (hD₀ : D Z₀ = ⟨0, fun _ => 0, fun _ => 0, 0⟩)
     (t : ℂ) :

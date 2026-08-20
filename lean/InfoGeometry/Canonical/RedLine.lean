@@ -50,6 +50,25 @@ References:
 
 namespace InfoGeometry.Canonical.RedLine
 
+universe u
+
+/-! The native Redline cocycle package.  This is an export-surface theorem:
+the relative-potential owner remains the authority for the three component
+proofs, while this namespace exposes their joint multiplicative/additive/
+exponential statement to downstream Redline developments. -/
+theorem log_exponential_duality_cocycle
+    {α : Type u} [Fintype α] [Nonempty α]
+    (q q0 q1 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α) (a : α) :
+    (InfoGeometry.Canonical.RelativePotentialCore.relativeDensity q q1 a =
+      InfoGeometry.Canonical.RelativePotentialCore.relativeDensity q q0 a *
+        InfoGeometry.Canonical.RelativePotentialCore.relativeDensity q0 q1 a) ∧
+    (InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q1 a =
+      InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q0 a +
+        InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q0 q1 a) ∧
+    (InfoGeometry.Canonical.RelativePotentialCore.relativeDensity q q1 a =
+      Real.exp (-InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q1 a)) := by
+  exact InfoGeometry.Canonical.RelativePotentialCore.log_exponential_duality_cocycle q q0 q1 a
+
 
 export InfoGeometry.Jordan (
   logDetBarrier

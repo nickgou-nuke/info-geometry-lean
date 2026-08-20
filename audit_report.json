@@ -1,0 +1,1014 @@
+{
+  "inputs": {
+    "constructivity_scanner": "tools/quality/audit_constructivity.py::scan_file",
+    "exclude_prefixes": [],
+    "file_prefixes": [],
+    "impact_scope": "all InfoGeometry direct importers only",
+    "include_manifest_consistency": true,
+    "include_review_patterns": false,
+    "manifest_error": null,
+    "manifest_present": true,
+    "module_prefixes": [],
+    "mutates_quarantine_manifest": false,
+    "scope": "all",
+    "selected_file_count": 19227,
+    "source": "current checkout Lean source",
+    "transitive_impact_available": false,
+    "uses_folder_as_truth_label": false
+  },
+  "modules": [
+    {
+      "current_manifest_reason": null,
+      "direct_importer_count": 0,
+      "direct_importers": [],
+      "finding_categories": [
+        "proof-hole"
+      ],
+      "findings": [
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.K_sq",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 55,
+          "enclosing_decl_raw_name": "K_sq",
+          "line": 60,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.P_plus_idempotent",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 61,
+          "enclosing_decl_raw_name": "P_plus_idempotent",
+          "line": 64,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.P_minus_idempotent",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 65,
+          "enclosing_decl_raw_name": "P_minus_idempotent",
+          "line": 67,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.P_plus_orthogonal",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 68,
+          "enclosing_decl_raw_name": "P_plus_orthogonal",
+          "line": 70,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.P_complete",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 71,
+          "enclosing_decl_raw_name": "P_complete",
+          "line": 73,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.E_R_nilpotent",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 74,
+          "enclosing_decl_raw_name": "E_R_nilpotent",
+          "line": 77,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.E_L_nilpotent",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 78,
+          "enclosing_decl_raw_name": "E_L_nilpotent",
+          "line": 80,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.commutator_E_R_E_L",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 81,
+          "enclosing_decl_raw_name": "commutator_E_R_E_L",
+          "line": 85,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.anticommutator_E_R_E_L",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 86,
+          "enclosing_decl_raw_name": "anticommutator_E_R_E_L",
+          "line": 90,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.metric_compatibility",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 91,
+          "enclosing_decl_raw_name": "metric_compatibility",
+          "line": 97,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.symplectic_anti_compatibility",
+          "enclosing_decl_kind": "theorem",
+          "enclosing_decl_line": 98,
+          "enclosing_decl_raw_name": "symplectic_anti_compatibility",
+          "line": 102,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        },
+        {
+          "category": "proof-hole",
+          "detail": "sorry",
+          "enclosing_decl": "InfoGeometry.OperatorAlgebra.ChiralRailPlane.toZornBasis",
+          "enclosing_decl_kind": "def",
+          "enclosing_decl_line": 103,
+          "enclosing_decl_raw_name": "toZornBasis",
+          "line": 110,
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean"
+        }
+      ],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {},
+      "module": "InfoGeometry.OperatorAlgebra.ChiralRailPlane",
+      "path": "lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean",
+      "recommended_action": "split proved content from hole-bearing claims; rewrite or quarantine until no sorry/admit remains",
+      "semantic_status": "proof_hole_blocker",
+      "source_excerpts": [
+        {
+          "available": true,
+          "end": 63,
+          "line": 60,
+          "start": 57,
+          "text": "57: \n58: /-- K^2 = -1 -/\n59: theorem K_sq (plane : ChiralRailPlane R) : plane.K * plane.K = -(1 : Matrix (Fin 2) (Fin 2) R) := by\n60:   sorry\n61: \n62: /-- P_\u00b1 are idempotent and orthogonal. -/\n63: theorem P_plus_idempotent (plane : ChiralRailPlane R) : plane.P_plus * plane.P_plus = plane.P_plus := by"
+        },
+        {
+          "available": true,
+          "end": 67,
+          "line": 64,
+          "start": 61,
+          "text": "61: \n62: /-- P_\u00b1 are idempotent and orthogonal. -/\n63: theorem P_plus_idempotent (plane : ChiralRailPlane R) : plane.P_plus * plane.P_plus = plane.P_plus := by\n64:   sorry\n65: \n66: theorem P_minus_idempotent (plane : ChiralRailPlane R) : plane.P_minus * plane.P_minus = plane.P_minus := by\n67:   sorry"
+        },
+        {
+          "available": true,
+          "end": 70,
+          "line": 67,
+          "start": 64,
+          "text": "64:   sorry\n65: \n66: theorem P_minus_idempotent (plane : ChiralRailPlane R) : plane.P_minus * plane.P_minus = plane.P_minus := by\n67:   sorry\n68: \n69: theorem P_plus_orthogonal (plane : ChiralRailPlane R) : plane.P_plus * plane.P_minus = 0 := by\n70:   sorry"
+        },
+        {
+          "available": true,
+          "end": 73,
+          "line": 70,
+          "start": 67,
+          "text": "67:   sorry\n68: \n69: theorem P_plus_orthogonal (plane : ChiralRailPlane R) : plane.P_plus * plane.P_minus = 0 := by\n70:   sorry\n71: \n72: theorem P_complete (plane : ChiralRailPlane R) : plane.P_plus + plane.P_minus = (1 : Matrix (Fin 2) (Fin 2) R) := by\n73:   sorry"
+        },
+        {
+          "available": true,
+          "end": 76,
+          "line": 73,
+          "start": 70,
+          "text": "70:   sorry\n71: \n72: theorem P_complete (plane : ChiralRailPlane R) : plane.P_plus + plane.P_minus = (1 : Matrix (Fin 2) (Fin 2) R) := by\n73:   sorry\n74: \n75: /-- E_R and E_L are nilpotent. -/\n76: theorem E_R_nilpotent (plane : ChiralRailPlane R) : plane.E_R * plane.E_R = 0 := by"
+        },
+        {
+          "available": true,
+          "end": 80,
+          "line": 77,
+          "start": 74,
+          "text": "74: \n75: /-- E_R and E_L are nilpotent. -/\n76: theorem E_R_nilpotent (plane : ChiralRailPlane R) : plane.E_R * plane.E_R = 0 := by\n77:   sorry\n78: \n79: theorem E_L_nilpotent (plane : ChiralRailPlane R) : plane.E_L * plane.E_L = 0 := by\n80:   sorry"
+        },
+        {
+          "available": true,
+          "end": 83,
+          "line": 80,
+          "start": 77,
+          "text": "77:   sorry\n78: \n79: theorem E_L_nilpotent (plane : ChiralRailPlane R) : plane.E_L * plane.E_L = 0 := by\n80:   sorry\n81: \n82: /-- The commutator [E_R, E_L] = \u0393. -/\n83: theorem commutator_E_R_E_L (plane : ChiralRailPlane R) :"
+        },
+        {
+          "available": true,
+          "end": 88,
+          "line": 85,
+          "start": 82,
+          "text": "82: /-- The commutator [E_R, E_L] = \u0393. -/\n83: theorem commutator_E_R_E_L (plane : ChiralRailPlane R) :\n84:     plane.E_R * plane.E_L - plane.E_L * plane.E_R = plane.\u0393 := by\n85:   sorry\n86: \n87: /-- The anticommutator {E_R, E_L} = 1. -/\n88: theorem anticommutator_E_R_E_L (plane : ChiralRailPlane R) :"
+        }
+      ]
+    },
+    {
+      "current_manifest_reason": "draft symphony-attention lane contains placeholder/sorry scaffolding and is intentionally excluded from strict coverage",
+      "direct_importer_count": 0,
+      "direct_importers": [],
+      "finding_categories": [
+        "quarantine-manifest"
+      ],
+      "findings": [
+        {
+          "category": "quarantine-manifest",
+          "detail": "missing from InfoGeometry.Unstable.Quarantine (draft symphony-attention lane contains placeholder/sorry scaffolding and is intentionally excluded from strict coverage)",
+          "enclosing_decl": null,
+          "enclosing_decl_kind": null,
+          "enclosing_decl_line": null,
+          "enclosing_decl_raw_name": null,
+          "line": 1,
+          "path": "InfoGeometry.Exploration.Symphony.Draft"
+        }
+      ],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {},
+      "module": "InfoGeometry.Exploration.Symphony.Draft",
+      "path": "InfoGeometry.Exploration.Symphony.Draft",
+      "recommended_action": "fix quarantine manifest or InfoGeometry.Unstable.Quarantine import coverage",
+      "semantic_status": "quarantine_manifest_inconsistency",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "downgraded to a preparation layer, but still only packages readiness certificates beside compression/interpretation surrogates",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "path": "lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "bridge theorem layer depends on quarantined conformal synthesis and cannot yet live on the stable surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.AnomalyDilationBridge",
+      "path": "lean/InfoGeometry/Canonical/AnomalyDilationBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "finite scaffold hardcodes identity transport and metric replacement semantics",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.ChiralTorsionRelativeVolume",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.ChiralTorsionRelativeVolume"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.BeliefDynamics",
+      "path": "lean/InfoGeometry/Canonical/BeliefDynamics.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined BerryPhase owner and therefore remains outside the stable authority surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.BerryHolonomy",
+      "path": "lean/InfoGeometry/Canonical/BerryHolonomy.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "canonical bridge remains on the vacuity quarantine surface",
+      "direct_importer_count": 4,
+      "direct_importers": [
+        "InfoGeometry.Canonical.BerryHolonomy",
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 3,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.BerryHolonomy",
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 3
+      },
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "path": "lean/InfoGeometry/Canonical/BerryPhase.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "closure state stores the Ricci-flat/constant-density witness it later reprojects",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.CalabiYauGrandDualityBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.CalabiYauGrandDualityBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.CalabiYauBridge",
+      "path": "lean/InfoGeometry/Canonical/CalabiYauBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined CalabiYauBridge owner and remains a dependent quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.CalabiYauGrandDualityBridge",
+      "path": "lean/InfoGeometry/Canonical/CalabiYauGrandDualityBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined SouriauBerryPhaseMonodromyBridge owner and remains a dependent quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge",
+      "path": "lean/InfoGeometry/Canonical/CheegerMullerAnalyticTorsionBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "canonical bridge remains on the vacuity quarantine surface",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Quantum.DoubleCopyBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Quantum.DoubleCopyBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "other": 1
+      },
+      "module": "InfoGeometry.Canonical.ChiralAction",
+      "path": "lean/InfoGeometry/Canonical/ChiralAction.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "torsion/chiral bridge packages caller-supplied witnesses into theorem-shaped interfaces",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.Rosetta"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "path": "lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports quarantined BeliefDynamics and still sits on the review-surface facade path",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.Rosetta"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.ChiralTorsionRelativeVolume",
+      "path": "lean/InfoGeometry/Canonical/ChiralTorsionRelativeVolume.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "Ward identity is baked into the definition of the variation",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.ConformalWard",
+      "path": "lean/InfoGeometry/Canonical/ConformalWard.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "legacy owner depends on the missing Algebra.CuntzAlgebra and assumes a diagonal coefficient projection absent from the native quotient API",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.CuntzCanonicalKMSFunctional",
+      "path": "lean/InfoGeometry/Canonical/CuntzCanonicalKMSFunctional.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "bridge uses constant/zero trajectory surrogates in its canonical API",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.DiracRicciBridge",
+      "path": "lean/InfoGeometry/Canonical/DiracRicciBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined OperatorObservationPrequantumBridge owner and remains a dependent quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence",
+      "path": "lean/InfoGeometry/Canonical/ExpectationBilinearCommutantCorrespondence.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "capstone package depends on quarantined vacuous bridge modules",
+      "direct_importer_count": 3,
+      "direct_importers": [
+        "InfoGeometry.Canonical.DiracRicciBridge",
+        "InfoGeometry.Canonical.MasterSynthesis",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 2,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.DiracRicciBridge",
+        "InfoGeometry.Canonical.MasterSynthesis"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 2
+      },
+      "module": "InfoGeometry.Canonical.GrandSynthesis",
+      "path": "lean/InfoGeometry/Canonical/GrandSynthesis.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "grand-unification identity is promoted from tautological anomaly cancellation",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "path": "lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "vacuum-apex twistor closure is driven by a zero quadratic form surrogate",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 2
+      },
+      "module": "InfoGeometry.Canonical.HolographicEmergence",
+      "path": "lean/InfoGeometry/Canonical/HolographicEmergence.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "synthesis theorem repackages supplied witnesses and degenerate path choices",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.MasterSynthesis",
+      "path": "lean/InfoGeometry/Canonical/MasterSynthesis.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined Prequantum.Quotient surface and remains a dependent quarantine surface",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.OperatorObservationPrequantumBridge",
+      "path": "lean/InfoGeometry/Canonical/OperatorObservationPrequantumBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "canonical positive-ray/projective layer is only a namespace lift over RelativePotentialDiscreteBridge with no unique constructive load",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.PositiveRayProjectiveBridge",
+      "path": "lean/InfoGeometry/Canonical/PositiveRayProjectiveBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "red-line synthesis remains on the vacuity quarantine surface",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.Rosetta"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.RedLine",
+      "path": "lean/InfoGeometry/Canonical/RedLine.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "rosetta facade remains on the vacuity quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.Rosetta",
+      "path": "lean/InfoGeometry/Canonical/Rosetta.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "canonical SUSY/Bayesian facade is theorem-shaped packaging over lower Fock/Fierz/Bogoliubov statements with no unique constructive load",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.SUSYBayes",
+      "path": "lean/InfoGeometry/Canonical/SUSYBayes.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined BerryPhase owner and remains a dependent quarantine surface",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge",
+      "path": "lean/InfoGeometry/Canonical/SouriauBerryPhaseMonodromyBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "Hodge wedge characterization requires explicit metricStar34 basis-action theorems not present in the native owner; former file contained sorry-based zero and uniqueness wrappers",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization",
+      "path": "lean/InfoGeometry/Canonical/SplitG2HodgeWedgeCharacterization.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined SplitG2HodgeWedgeCharacterization owner and remains a dependent quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge",
+      "path": "lean/InfoGeometry/Canonical/StandardSplitQuaternionCalibrationBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "canonical Wilson-loop surface is only a facade/API layer with definitional wrapper theorems and no unique constructive load",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.Rosetta",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.Rosetta"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Canonical.WilsonLoop",
+      "path": "lean/InfoGeometry/Canonical/WilsonLoop.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "exploratory symphony lane is intentionally outside the authoritative `InfoGeometry.All` coverage spine",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Exploration.Symphony.Basic",
+      "path": "lean/InfoGeometry/Exploration/Symphony/Basic.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "scalarized covariant-derivative interface is mostly readback from stored prequantum bundle data plus universal Weyl scaling packaging",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Prequantum.Quotient",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Prequantum.Quotient"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "other": 1
+      },
+      "module": "InfoGeometry.Prequantum.Connection",
+      "path": "lean/InfoGeometry/Prequantum/Connection.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "quotient layer is a thin descent wrapper over the quarantined scalarized connection interface",
+      "direct_importer_count": 2,
+      "direct_importers": [
+        "InfoGeometry.Canonical.OperatorObservationPrequantumBridge",
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 1,
+      "forbidden_importers": [
+        "InfoGeometry.Canonical.OperatorObservationPrequantumBridge"
+      ],
+      "importer_class_counts": {
+        "allowed_unstable": 1,
+        "canonical": 1
+      },
+      "module": "InfoGeometry.Prequantum.Quotient",
+      "path": "lean/InfoGeometry/Prequantum/Quotient.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "twistor bridge is discharged by `zeroNullQuadraticForm := 0` and a scaled-zero anomaly form",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Projective.TwistorBridge",
+      "path": "lean/InfoGeometry/Projective/TwistorBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "imports the quarantined ChiralAction owner and remains a dependent quarantine surface",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Quantum.DoubleCopyBridge",
+      "path": "lean/InfoGeometry/Quantum/DoubleCopyBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    },
+    {
+      "current_manifest_reason": "bridge stores QFT obligations and later projects them out",
+      "direct_importer_count": 1,
+      "direct_importers": [
+        "InfoGeometry.Unstable.Quarantine"
+      ],
+      "finding_categories": [],
+      "findings": [],
+      "forbidden_importer_count": 0,
+      "forbidden_importers": [],
+      "importer_class_counts": {
+        "allowed_unstable": 1
+      },
+      "module": "InfoGeometry.Unstable.YangMillsBridge",
+      "path": "lean/InfoGeometry/Unstable/YangMillsBridge.lean",
+      "recommended_action": "review for possible dequarantine or update manifest reason",
+      "semantic_status": "manifested_quarantine_no_current_findings",
+      "source_excerpts": []
+    }
+  ],
+  "policy": {
+    "blocking_categories": [
+      "axiom",
+      "proof-hole",
+      "prop-constant",
+      "quarantine-manifest",
+      "trivial-theorem"
+    ],
+    "canonical_definition": "Canonical is a semantic status, not a folder name. A surface is a canonical candidate only when its exported mathematical claims are Lean-kernel checked, trust-clean, non-vacuous, rooted in mathlib or local owner theorems or checked constructive certificates, and free of dependency on unpromoted quarantine/prognosis material as theorem authority.",
+    "default_fail_statuses": [
+      "explicit_axiom_blocker",
+      "proof_hole_blocker",
+      "quarantine_manifest_inconsistency",
+      "vacuous_or_surrogate_surface"
+    ],
+    "graph_boundary": "DAG, InfoTree, Arango, retrieval, Hodge, Drazin, and spectral evidence are navigation/provenance diagnostics only. They never promote a claim without raw Lean descent and a proof/certificate owner.",
+    "prognosis_definition": "Prognosis/prima-materia is research guidance or literature material that may become mathematics later. It is allowed to guide search, but it is not proof authority until rewritten as a Lean theorem, checked certificate, or explicit hypothesis-bearing context.",
+    "quarantine_definition": "Quarantine is a controlled non-promotable holding status, not a claim that a file is worthless or permanently noncanonical. It is appropriate for proof holes, unapproved axioms, True-only/trivial theorem surfaces, stored-witness or graph-only bridges, diagnostic-only overlays, or external claims that still lack Lean owner proofs.",
+    "review_categories": [
+      "review-constant-function",
+      "review-identity-function",
+      "review-identity-linear-map",
+      "review-projection-theorem",
+      "scaled-zero-quadratic-form",
+      "universal-true-field",
+      "zero-quadratic-form"
+    ],
+    "schema": "info_geometry.semantic_content_audit.policy.v1",
+    "status_precedence": [
+      "proof_hole_blocker",
+      "explicit_axiom_blocker",
+      "vacuous_or_surrogate_surface",
+      "quarantine_manifest_inconsistency",
+      "review_scaffold_surface",
+      "manifested_quarantine_no_current_findings",
+      "constructivity_review_surface",
+      "content_clean_by_this_audit"
+    ],
+    "to_be_quarantined_definition": "A surface is to be quarantined only when current source evidence shows a proof hole, unapproved axiom, vacuous/surrogate theorem claim, graph-only or diagnostic-only support used as proof, or dependency on unpromoted material, and the surface cannot be immediately rewritten or split into a proved owner statement plus an explicitly non-authority hypothesis/prognosis lane."
+  },
+  "schema": "info_geometry.semantic_content_audit.v1",
+  "summary": {
+    "blocking_finding_count": 13,
+    "category_counts": {
+      "proof-hole": 12,
+      "quarantine-manifest": 1
+    },
+    "finding_count": 13,
+    "manifest_only_module_count": 34,
+    "manifested_without_current_findings": 34,
+    "modules_reported": 36,
+    "modules_with_current_findings": 2,
+    "modules_with_findings": 2,
+    "review_finding_count": 0,
+    "selected_file_count": 19227,
+    "semantic_status_counts": {
+      "manifested_quarantine_no_current_findings": 34,
+      "proof_hole_blocker": 1,
+      "quarantine_manifest_inconsistency": 1
+    }
+  }
+}

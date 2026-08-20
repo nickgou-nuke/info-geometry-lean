@@ -267,7 +267,8 @@ THEOREM 3: Exact Reconstruction of the Zorn Determinant from the Schur Complemen
 theorem zorn_norm_eq_schur_mul_beta (α β u v : F) (hβ : β ≠ 0) :
     zornNorm α β u v = (schurComplement α β u v) * β := by
   dsimp [zornNorm, schurComplement]
-  ring_nf
-  simp
+  rw [mul_sub, sub_mul]
+  rw [mul_inv_cancel hβ]
+  ring
 
 end ZornNormSchurScalarSpecialization

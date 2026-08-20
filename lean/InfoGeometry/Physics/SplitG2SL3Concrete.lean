@@ -94,6 +94,5 @@ theorem canonical_derivation_finrank_matches_grade_sum :
         InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations =
       8 + 3 + 3 := by
   rw [InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank]
-  decide
 
 end InfoGeometry.Physics.SplitG2SL3Concrete

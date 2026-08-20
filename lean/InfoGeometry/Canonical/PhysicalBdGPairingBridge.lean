@@ -552,13 +552,13 @@ theorem bdg_antiunitary_particle_hole_symmetry
     antiunitarySheetSwap R (H_BdG h Δ x) =
       -(H_BdG h Δ (antiunitarySheetSwap R x)) := by
   apply nambu_ext
-  · simp only [antiunitarySheetSwap_fst, antiunitarySheetSwap_snd, H_BdG_fst, H_BdG_snd,
-      ContinuousLinearMap.neg_apply, neg_fst, neg_snd, nambuMk_fst, nambuMk_snd]
-    rw [map_sub, h_anti1 x.fst, h_comm1 x.snd]
+  · rw [antiunitarySheetSwap_fst, H_BdG_snd, map_sub, h_anti1 x.fst, h_comm1 x.snd]
+    change -Δ (R.conjugation x.fst) - h (R.conjugation x.snd) = -(H_BdG h Δ (antiunitarySheetSwap R x)).fst
+    rw [H_BdG_fst, antiunitarySheetSwap_fst, antiunitarySheetSwap_snd]
     abel
-  · simp only [antiunitarySheetSwap_fst, antiunitarySheetSwap_snd, H_BdG_fst, H_BdG_snd,
-      ContinuousLinearMap.neg_apply, neg_fst, neg_snd, nambuMk_fst, nambuMk_snd]
-    rw [map_add, h_comm2 x.fst, h_anti2 x.snd]
+  · rw [antiunitarySheetSwap_snd, H_BdG_fst, map_add, h_comm2 x.fst, h_anti2 x.snd]
+    change adjoint h (R.conjugation x.fst) + -adjoint Δ (R.conjugation x.snd) = -(H_BdG h Δ (antiunitarySheetSwap R x)).snd
+    rw [H_BdG_snd, antiunitarySheetSwap_fst, antiunitarySheetSwap_snd]
     abel
 
 /-- Bundled antiunitary-equivalence form of particle--hole covariance. -/

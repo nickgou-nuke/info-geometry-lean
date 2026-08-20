@@ -270,8 +270,7 @@ theorem derivationCommutesStar_commutator
     opDerivationCommutator D₁ D₂ (opZornStar X) =
       opZornStar (opDerivationCommutator D₁ D₂ X) := by
   dsimp [opDerivationCommutator]
-  rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply,
-    h₂ X, h₁ (D₂.toLinearMap X), h₂ X,
+  rw [h₂ X, h₁ (D₂.toLinearMap X), h₂ X,
     h₁ (D₁.toLinearMap X)]
   exact (opZornStar_sub
     (D₁.toLinearMap (D₂.toLinearMap X))

@@ -7,7 +7,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Modular
+namespace InfoGeometry.Modular.ModularSurprisalDerivationBridge
 
 variable {A : Type*} [Ring A]
 
@@ -134,4 +134,4 @@ theorem dlogRN_units_mul (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
       u.val_inv v.val_inv
   simpa [dlogRN, Units.val_mul, mul_comm, mul_left_comm, mul_assoc] using h
 
-end InfoGeometry.Modular
+end InfoGeometry.Modular.ModularSurprisalDerivationBridge

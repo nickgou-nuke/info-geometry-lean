@@ -78,16 +78,6 @@ variable {A Weight Deriv Ham Phase Core : Type*}
 
 variable (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core)
 
-/-- Canonical projection naming used in the architectural statements. -/
-abbrev connesCocycleDerivative :=
-  P.connesCocycle
-
-/-- Canonical projection naming used in the architectural statements. -/
-abbrev relativeModularHamiltonian := P.relativeHamiltonian
-
-/-- Canonical projection naming used in the architectural statements. -/
-abbrev modularSign := P.modularPhase
-
 theorem connesCocycle_same_weight
     (φ : Weight)
     (t : ℝ) :

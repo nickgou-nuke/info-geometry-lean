@@ -113,6 +113,21 @@ theorem iterated_leibniz_nsmul
 
       exact (Finset.sum_choose_succ_nsmul f n).symm
 
+/-- Iterated Leibniz with binomial coefficients as ring scalars. -/
+theorem iterated_leibniz_smul
+    {R : Type*} [CommRing R]
+    {A : Type*} [AddCommGroup A] [Module R A]
+    (mul : A →ₗ[R] A →ₗ[R] A)
+    (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (n : ℕ) (x y : A) :
+    iterD D n (mul x y) =
+      ∑ k ∈ range (n + 1),
+        (n.choose k : R) •
+          (mul (iterD D k x) (iterD D (n - k) y)) := by
+  simpa only [Nat.cast_smul_eq_nsmul] using
+    (iterated_leibniz_nsmul mul D hD n x y)
+
 /-! ## Honest first-order exponential in a square-zero image regime -/
 
 section FirstOrder

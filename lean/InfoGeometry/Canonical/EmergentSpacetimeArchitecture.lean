@@ -184,7 +184,7 @@ theorem soldering_form_extracts_metric (ψ : NormalizedState H) (X Y : EndH) :
 -/
 theorem soldering_form_extracts_berry (ψ : NormalizedState H) (X Y : EndH) :
     berryCurvature ψ X Y = -2 * (⟪solderingForm ψ X, solderingForm ψ Y⟫_ℂ).im := by
-  dsimp [solderingForm, berryCurvature]
+  unfold [solderingForm, berryCurvature]
   rw [QGT_eq_inner_projOrth]
 
 end InfoGeometry.Canonical.EmergentSpacetimeArchitecture

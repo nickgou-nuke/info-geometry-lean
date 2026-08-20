@@ -212,11 +212,11 @@ theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
     calc
       (K - L) * x = K * x - L * x := by rw [sub_mul]
       _ = (K * x - x * K) + (x * K - L * x) := by
-        abel
+        noncomm_ring
       _ = (L * x - x * L) + (x * K - L * x) := by rw [hx']
       _ = x * (K - L) := by
         rw [mul_sub]
-        abel
+        noncomm_ring
   · intro h
     apply NoncommutativeDerivation.ext
     intro x

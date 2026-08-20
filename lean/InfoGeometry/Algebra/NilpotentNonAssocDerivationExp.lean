@@ -128,4 +128,42 @@ def toNonAssocAlgEnd (D : A →ₗ[K] A) (hD : IsDerivation mul D)
   map_mul' := fun x y => nilpotentExpStep2_map_mul mul D hD h_cross t x y
   map_one' := nilpotentExpStep2_one one D t h_one
 
+/-- The nilpotent exponential transports both orientations of orthogonality. -/
+theorem nilpotentExpStep2_map_two_sided_orthogonal
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x y : A)
+    (hxy : mul x y = 0)
+    (hyx : mul y x = 0) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y) = 0 ∧
+      mul (nilpotentExpStep2 D t y) (nilpotentExpStep2 D t x) = 0 := by
+  constructor
+  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x y, hxy]
+    exact (nilpotentExpStep2 D t).map_zero
+  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t y x, hyx]
+    exact (nilpotentExpStep2 D t).map_zero
+
+/-- The nilpotent exponential transports idempotents. -/
+theorem nilpotentExpStep2_map_idempotent
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = x) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) =
+      nilpotentExpStep2 D t x := by
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+
+/-- The nilpotent exponential transports square-zero elements. -/
+theorem nilpotentExpStep2_map_square_zero
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = 0) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) = 0 := by
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+  exact (nilpotentExpStep2 D t).map_zero
+
 end InfoGeometry.Algebra.NilpotentNonAssocDerivationExp

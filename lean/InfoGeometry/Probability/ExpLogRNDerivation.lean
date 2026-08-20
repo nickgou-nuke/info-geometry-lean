@@ -77,6 +77,16 @@ theorem isDerivation_commutator {D E : A → A}
 theorem derivationCommutator_apply (D E : A → A) (x : A) :
     derivationCommutator D E x = D (E x) - E (D x) := rfl
 
+theorem derivationCommutator_self (D : A → A) :
+    derivationCommutator D D = 0 := by
+  funext x
+  simp [derivationCommutator]
+
+theorem derivationCommutator_swap (D E : A → A) :
+    derivationCommutator E D = -derivationCommutator D E := by
+  funext x
+  simp [derivationCommutator, sub_eq_add_neg]
+
 /-- THEOREM: Every derivation strictly annihilates the multiplicative unit 1. -/
 theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
   have hmul : D 1 = D 1 + D 1 := by
@@ -86,6 +96,60 @@ theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
       _ = D 1 + D 1 := by rw [mul_one, one_mul]
   have h : D 1 + D 1 = D 1 + 0 := by rw [← hmul, add_zero]
   exact add_left_cancel h
+
+theorem derivation_map_zero (D : A → A) (hD : IsDerivation D) : D 0 = 0 := by
+  have h := hD.1 0 0
+  have h' : D 0 + D 0 = D 0 + 0 := by simpa using h.symm
+  exact add_left_cancel h'
+
+theorem derivationCommutator_one
+    (D E : A → A)
+    (hD : IsDerivation D) (hE : IsDerivation E) :
+    derivationCommutator D E 1 = 0 := by
+  dsimp [derivationCommutator]
+  rw [derivation_one E hE, derivation_map_zero D hD,
+    derivation_one D hD, derivation_map_zero E hE, sub_self]
+
+theorem derivation_map_neg (D : A → A) (hD : IsDerivation D) (x : A) :
+    D (-x) = -D x := by
+  have h := hD.1 x (-x)
+  rw [add_neg_cancel, derivation_map_zero D hD] at h
+  exact eq_neg_of_add_eq_zero_right h.symm
+
+theorem derivation_map_sub (D : A → A) (hD : IsDerivation D) (x y : A) :
+    D (x - y) = D x - D y := by
+  rw [sub_eq_add_neg, hD.1, derivation_map_neg D hD]
+  rw [sub_eq_add_neg]
+
+theorem derivationCommutator_jacobi
+    (D E F : A → A)
+    (hD : IsDerivation D) (hE : IsDerivation E) (hF : IsDerivation F)
+    (x : A) :
+    derivationCommutator D (derivationCommutator E F) x +
+        derivationCommutator E (derivationCommutator F D) x +
+        derivationCommutator F (derivationCommutator D E) x = 0 := by
+  dsimp [derivationCommutator]
+  rw [derivation_map_sub D hD, derivation_map_sub E hE,
+    derivation_map_sub F hF]
+  ring
+
+theorem derivationCommutator_add_left (D E F : A → A)
+    (hF : IsDerivation F) :
+    derivationCommutator (D + E) F =
+      derivationCommutator D F + derivationCommutator E F := by
+  funext x
+  simp only [Pi.add_apply, derivationCommutator]
+  rw [hF.1]
+  ring
+
+theorem derivationCommutator_add_right (D E F : A → A)
+    (hD : IsDerivation D) :
+    derivationCommutator D (E + F) =
+      derivationCommutator D E + derivationCommutator D F := by
+  funext x
+  simp only [Pi.add_apply, derivationCommutator]
+  rw [hD.1]
+  ring
 
 /-- 
   The Logarithmic Derivation (Score Function Generator):
@@ -173,6 +237,12 @@ theorem radon_nikodym_cocycle_dlog
     (rho_12 rho_23 : Aˣ) :
     dlog D (rho_12 * rho_23) = dlog D rho_12 + dlog D rho_23 :=
   dlog_mul D hD rho_12 rho_23
+
+theorem dlog_mul_three
+    (D : A → A) (hD : IsDerivation D)
+    (u v w : Aˣ) :
+    dlog D (u * v * w) = dlog D u + dlog D v + dlog D w := by
+  rw [dlog_mul D hD (u * v) w, dlog_mul D hD u v]
 
 /-!
 =============================================================================

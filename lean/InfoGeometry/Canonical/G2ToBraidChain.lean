@@ -63,7 +63,6 @@ def g2Dimension : ℕ := 14
     g₂(₂) = g₂(₀) ⊕ g₂(₁) ⊕ g₂(-₁)
     where g₂(₀) ≃ gl(2) ⊕ sl(3) (the stabilizer of the idempotents)
     and g₂(±₁) are the 6-dimensional nilpotent sectors. -/
-def g2PeirceDecomposition : Unit := ()
 
 /-!
 =============================================================================
@@ -77,22 +76,18 @@ PART 2: Triality and Spin(8) Representation
     - 8_v  = Peirce vector sector (J_n, j_n)
     - 8_s  = Left spinor = CAR annihilation (u₋)
     - 8_c  = Right spinor = CAR creation (u₊) -/
-def trialitySummary : Unit := ()
 
 /-- The SplitTrialityFockBridge already identifies:
     vectorToLeftSpinor = cliffordConcreteAnnihilation
     vectorToRightSpinor = cliffordConcreteCreation
     The anticommutator matches the CAR anticommutator. -/
-def trialityCarIdentification : Unit := ()
 
 /-- The G₂(₂) derivations embed into so(4,4) (the automorphisms of the split-octonions).
     Via triality, this gives representations on the spinor spaces. -/
-def g2ToSpin8Embedding : Unit := ()
 
 /-- The spin(8) bivectors (generators) in the CAR realization:
     B_{ij} = γ_i γ_j for i < j
     These generate the braid group via the exchange operator. -/
-def spin8Bivectors : Unit := ()
 
 /-!
 =============================================================================
@@ -120,33 +115,19 @@ def majoranaExchange {V : Type*} [AddCommGroup V] [Module ℝ V]
     (M : MajoranaOperators V) (i j : Fin 8) (_h : i ≠ j) : V →ₗ[ℝ] V :=
   (1 / Real.sqrt 2 : ℝ) • (LinearMap.id + (M.gamma i).comp (M.gamma j))
 
-/-- Braid relations: σ_i σ_{i+1} σ_i = σ_{i+1} σ_i σ_{i+1} -/
-theorem braidRelations {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (_M : MajoranaOperators V) : True := trivial
-
 /-!
 =============================================================================
 PART 4: G₂(₂) Derivation Flow → Braiding
 =============================================================================
 -/
 
-/-- The key bridge: G₂(₂) derivation flow corresponds to Majorana braiding.
-    For a derivation D in the nilpotent sector g₂(±₁), the flow e^{tD}
-    acts on the Peirce frame. Under the triality/CAR map, this becomes
-    a rotation in the Majorana bivector plane, i.e., a braid operation. -/
-theorem g2FlowToBraiding {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (_D : G2Derivation) (_t : ℝ) :
-    True := trivial
-
 /-- The nilpotent derivations (g₂(₁) and g₂(-₁)) correspond to the braid generators.
     Specifically, the 6-dimensional nilpotent sector gives the 6 exchange operators
     for 4 Majorana modes (or 3 pairs). -/
-def nilpotentDerivationsAsBraids : Unit := ()
 
 /-- The stabilizer g₂(₀) ≃ gl(2) ⊕ sl(3) acts as the "fixed" gauge transformations
     that preserve the idempotents e₊, e₋. This is the modular flow that preserves
     the chiral sheets. -/
-def stabilizerAsModularFlow : Unit := ()
 
 /-!
 =============================================================================
@@ -158,16 +139,8 @@ PART 5: Connection to Andreev Reflection
     of the modular complex structure K = Jε.
     In the Majorana language, Andreev reflection is the particle-hole conjugation
     that maps γ ↦ γ (Majorana condition). -/
-def andreevAsMajoranaConjugation : Unit := ()
-
-/-- The FermionicAndreevReflection map A(e,h) = (-h,e) has A² = -I.
-    This is the complex structure on the electron/hole plane.
-    In the BdG language, this is the action of K on the Nambu spinor. -/
-theorem andreevEqualsComplexStructure :
-    True := trivial
 
 /-- The braiding of Majoranas is topologically protected because it corresponds
     to the nontrivial homotopy of the G₂(₂) nilpotent flows. -/
-def braidingTopologicalProtection : Unit := ()
 
 end InfoGeometry.Canonical.G2ToBraidChain

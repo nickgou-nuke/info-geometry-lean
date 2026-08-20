@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.Subgroup.Basic
+import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 import InfoGeometry.Core.HomogeneousSpaces
@@ -30,18 +31,23 @@ class HomogeneousSpace (G : Type*) [Group G] (H : Subgroup G) where
   proj : G → quotient
   proj_invariant : ∀ (g : G) (h : H), proj (g * h) = proj g
 
-/-! The concrete left-coset quotient is the canonical homogeneous-space
-instance. These wrappers connect this capstone to the owner of the quotient
-action and its stabilizer theorem. -/
-theorem quotient_is_homogeneous_space {G : Type*} [Group G]
-    (H : Subgroup G) :
-    InfoGeometry.Core.IsHomogeneousSpace G (G ⧸ H) :=
-    InfoGeometry.Core.quotient_isHomogeneousSpace H
+/-- The canonical homogeneous-space interface for the left-coset quotient. -/
+instance quotientHomogeneousSpace {G : Type*} [Group G] (H : Subgroup G) :
+    HomogeneousSpace G H where
+  quotient := G ⧸ H
+  proj := QuotientGroup.mk
+  proj_invariant := by
+    intro g h
+    apply QuotientGroup.eq.mpr
+    simpa [mul_assoc] using H.mul_mem (H.inv_mem h) h
 
-theorem quotient_basepoint_stabilizer {G : Type*} [Group G]
+theorem quotient_projection_surjective {G : Type*} [Group G]
     (H : Subgroup G) :
-    MulAction.stabilizer G (InfoGeometry.Core.quotientBasepoint H) = H :=
-    InfoGeometry.Core.stabilizer_quotientBasepoint_eq H
+    Function.Surjective (QuotientGroup.mk : G → G ⧸ H) :=
+  QuotientGroup.mk_surjective
+
+/-! The concrete left-coset quotient is the canonical homogeneous-space
+instance. -/
 
 variable {R : Type*} [CommRing R]
 
@@ -95,6 +101,19 @@ theorem maurerCartanDerivative_mul_eq_add
   rw [capstone_logarithmicBridge_factors_maurerCartan D hD Δ12 inv_Δ12 Δ23 inv_Δ23]
   rw [h12, h23]
   ring
+
+/-! The unit-group form supplies the inverse witnesses canonically. -/
+theorem maurerCartanUnit_mul_eq_add
+    (D : R →ₗ[R] R) (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (u v : Rˣ) :
+    maurerCartanDerivative D ((u * v : Rˣ) : R) ((↑((u * v)⁻¹) : Rˣ) : R) =
+      maurerCartanDerivative D (u : R) ((↑(u⁻¹) : Rˣ) : R) +
+        maurerCartanDerivative D (v : R) ((↑(v⁻¹) : Rˣ) : R) := by
+  have h := maurerCartanDerivative_mul_eq_add D hD
+    (u : R) ((↑(u⁻¹) : Rˣ) : R)
+    (v : R) ((↑(v⁻¹) : Rˣ) : R)
+    (by simp) (by simp)
+  simpa [Units.val_mul, mul_comm] using h
 
 end InfoGeometry.Canonical.HomogeneousModularFlows
 

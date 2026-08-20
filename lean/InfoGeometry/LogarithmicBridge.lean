@@ -70,8 +70,6 @@ theorem lieFlow_negativeLogJacobian (A : Matrix n n ℝ) (t : ℝ) :
   have h_log_exp : Real.log (Real.exp (t * Matrix.trace A)) = t * Matrix.trace A := by
     rw [Real.log_exp]
   rw [h_log_exp]
-  <;> ring
-  <;> simp [Real.log_exp]
 
 /--
 THEOREM 2 (Matrix Path Deformation): For any positive-determinant matrix path J(t),
@@ -106,8 +104,7 @@ This is the algebraic backbone of the Connes cocycle in the commutative case.
 -/
 theorem logarithmicRadonNikodym_chainRule
     (D : R →ₗ[R] R) (hD : ∀ x y, D (x * y) = D x * y + x * D y)
-    (Δ12 inv_Δ12 Δ23 inv_Δ23 : R)
-    (h12 : Δ12 * inv_Δ12 = 1) (h23 : Δ23 * inv_Δ23 = 1) :
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : R) :
     (inv_Δ12 * inv_Δ23) * (D (Δ12 * Δ23)) =
       (inv_Δ12 * D Δ12) * (Δ23 * inv_Δ23) + (inv_Δ23 * D Δ23) * (Δ12 * inv_Δ12) := by
   rw [hD Δ12 Δ23]
@@ -153,30 +150,22 @@ PART 4: The Complete Kernel-Checked Core
 -/
 
 /--
-The canonical dictionary for the Lie/Jacobian corridor of the logarithmic bridge.
-This is a data structure, not a new proof; every field is a kernel-checked theorem
-from this module or its imports.
--/
-structure LieJacobianDictionary (n : Type*) [Fintype n] [DecidableEq n] where
-  /-- Lie flow determinant exponential redline. -/
-  lieFlow_to_jacobian : ∀ (A : Matrix n n ℝ) (t : ℝ),
-    (lieExponentialPath A t).det = Real.exp (t * Matrix.trace A)
-  /-- Negative log Jacobian = negative generator trace. -/
-  jacobian_to_negLog : ∀ (A : Matrix n n ℝ) (t : ℝ),
-    -Real.log ( (lieExponentialPath A t).det ) = - (t * Matrix.trace A)
-
-/--
 THEOREM 6 (Lie/Jacobian Corridor Complete):
-The Lie exponential redline corridor is verified in native Mathlib with zero axioms.
+The two defining redline identities hold simultaneously.  This is stated
+directly as a conjunction of theorem-owned propositions rather than as a
+witness structure or a vacuous evidence proposition.
 -/
 theorem lieJacobianCorridor_complete {n : Type*} [Fintype n] [DecidableEq n] :
-    ∃ (_dict : LieJacobianDictionary n), True := by
-  refine' ⟨
-    { lieFlow_to_jacobian := fun A t => det_lieExponentialPath A t
-      jacobian_to_negLog := fun A t => lieFlow_negativeLogJacobian A t
-    },
-    True.intro
-  ⟩
+    (∀ (A : Matrix n n ℝ) (t : ℝ),
+      (lieExponentialPath A t).det = Real.exp (t * Matrix.trace A)) ∧
+    (∀ (A : Matrix n n ℝ) (t : ℝ),
+      -Real.log ((lieExponentialPath A t).det) =
+        -(t * Matrix.trace A)) := by
+  constructor
+  · intro A t
+    exact det_lieExponentialPath A t
+  · intro A t
+    exact lieFlow_negativeLogJacobian A t
 
 end InfoGeometry.LogarithmicBridge
 

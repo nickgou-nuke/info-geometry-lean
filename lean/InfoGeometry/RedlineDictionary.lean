@@ -9,14 +9,7 @@ import InfoGeometry.Analysis.MatrixPathDeformationEntropy
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary
 
-/-!
-# Redline Dictionary
-
-This file is intentionally only an owner-import surface.  The mathematical
-statements are proved in the imported modules; no witness structures,
-`Nonempty` certificates, `True` propositions, or duplicate wrapper theorems
-are introduced here.
--/
+/-! Owner-import surface only; proof authority remains in the imported owners. -/
 
 noncomputable section
 

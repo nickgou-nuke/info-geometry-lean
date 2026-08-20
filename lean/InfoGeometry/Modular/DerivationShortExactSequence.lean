@@ -4,7 +4,6 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 
 import InfoGeometry.EndToEnd
-import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 
 /-!
 # The Derivation Short Exact Sequence: Spacetime and Quantum Thermodynamics
@@ -29,7 +28,6 @@ namespace InfoGeometry.Modular.DerivationShortExactSequence
 
 open InfoGeometry.EndToEnd
 open InfoGeometry.Modular
-open InfoGeometry.Modular.TrifoldRadonNikodymBridge
 
 variable {A : Type*} [Ring A]
 

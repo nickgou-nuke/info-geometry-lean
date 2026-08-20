@@ -135,6 +135,20 @@ theorem modularFlow_add
       P.modularFlow.flow s (P.modularFlow.flow t x) :=
   P.modularFlow.flow_add_apply s t x
 
+/-- Negative modular time is the inverse of positive modular time. -/
+theorem modularFlow_neg
+    (t : ℝ) (x : A) :
+    P.modularFlow.flow (-t) (P.modularFlow.flow t x) = x :=
+  InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_neg_apply
+    P.modularFlow t x
+
+/-- The inverse law also holds in the opposite composition order. -/
+theorem modularFlow_neg'
+    (t : ℝ) (x : A) :
+    P.modularFlow.flow t (P.modularFlow.flow (-t) x) = x := by
+  rw [← P.modularFlow.flow_add t (-t) x]
+  simp
+
 /-- The carrier is explicitly noncommutative; this is the owner-side property. -/
 theorem exists_noncommuting_pair
     (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core) :

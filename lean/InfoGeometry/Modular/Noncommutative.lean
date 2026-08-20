@@ -104,6 +104,16 @@ def IsNCDerivation (D : A →ₗ[ℤ] A) : Prop :=
 def dlogL (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)
 
+/-- The left logarithmic derivative detects stationary units exactly. -/
+theorem dlogL_eq_zero_iff (D : A →ₗ[ℤ] A) (u : Aˣ) :
+    dlogL D u = 0 ↔ D (u : A) = 0 := by
+  constructor
+  · intro h
+    have h' := congrArg (fun x : A => (u : A) * x) h
+    simpa [dlogL, mul_assoc, u.val_inv] using h'
+  · intro h
+    simp [dlogL, h]
+
 /-- Derivation annihilates 1 in any ring -/
 theorem derivation_map_one (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) : D 1 = 0 := by
   have h := hD 1 1
@@ -144,6 +154,28 @@ theorem dlogL_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
     _ = (↑(v⁻¹) : A) * ((↑(u⁻¹) : A) * D (u : A)) * (v : A) +
         (↑(v⁻¹) : A) * D (v : A) := by
           rw [hu, one_mul]
+
+/-- Under the precise commutation hypothesis that kills the conjugation term,
+the left noncommutative logarithmic derivative becomes additive. -/
+theorem dlogL_mul_of_commute (D : A →ₗ[ℤ] A)
+    (hD : IsNCDerivation D) (u v : Aˣ)
+    (hcomm : Commute (v : A) (dlogL D u)) :
+    dlogL D (u * v) = dlogL D u + dlogL D v := by
+  rw [dlogL_mul D hD u v]
+  have hconj :
+      (↑(v⁻¹) : A) * dlogL D u * (v : A) = dlogL D u := by
+    calc
+      (↑(v⁻¹) : A) * dlogL D u * (v : A) =
+          (↑(v⁻¹) : A) * (dlogL D u * (v : A)) := by
+        simp only [mul_assoc]
+      _ = (↑(v⁻¹) : A) * ((v : A) * dlogL D u) := by
+        rw [hcomm.eq]
+      _ = (↑(v⁻¹) : A) * (v : A) * dlogL D u := by
+        simp only [mul_assoc]
+      _ = dlogL D u := by
+        have hv : (↑(v⁻¹) : A) * (v : A) = 1 := v.inv_val
+        rw [hv, one_mul]
+  rw [hconj]
 
 /-- 
   THEOREM 6: Noncommutative Logarithmic Inversion Law.
@@ -201,6 +233,33 @@ theorem dlogL_adK (K : A) (u : Aˣ) :
         rw [hu]
     _ = (↑(u⁻¹) : A) * K * (u : A) - K := by
         rw [one_mul]
+
+/-- The inner logarithmic derivative vanishes exactly on the centralizer of
+the chosen unit. -/
+theorem dlogL_adK_eq_zero_iff (K : A) (u : Aˣ) :
+    dlogL (adK K) u = 0 ↔ Commute K (u : A) := by
+  rw [dlogL_adK]
+  constructor
+  · intro h
+    have hconj : (↑(u⁻¹) : A) * K * (u : A) = K := sub_eq_zero.mp h
+    calc
+      K * (u : A) = ((u : A) * (↑(u⁻¹) : A)) * K * (u : A) := by
+        have huv : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+        rw [huv, one_mul]
+      _ = (u : A) * ((↑(u⁻¹) : A) * K * (u : A)) := by
+        simp only [mul_assoc]
+      _ = (u : A) * K := by rw [hconj]
+  · intro hcomm
+    apply sub_eq_zero.mpr
+    calc
+      (↑(u⁻¹) : A) * K * (u : A) =
+          (↑(u⁻¹) : A) * (K * (u : A)) := by
+        simp only [mul_assoc]
+      _ = (↑(u⁻¹) : A) * ((u : A) * K) := by
+        rw [hcomm.eq]
+      _ = K := by
+        have hui : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+        rw [← mul_assoc, hui, one_mul]
 
 end InfoGeometry.Modular.Noncommutative
 

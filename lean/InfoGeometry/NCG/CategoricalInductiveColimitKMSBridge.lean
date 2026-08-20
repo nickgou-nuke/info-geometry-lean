@@ -137,6 +137,19 @@ variable {sys : InductiveSystem (R := R) A}
 variable {A_inf : Type*} [Ring A_inf] [StarRing A_inf] [Module R A_inf] [Algebra R A_inf]
 variable (c : StarAlgebraCocone sys A_inf)
 
+@[simp]
+theorem map_star_apply (i : I) (x : A i) :
+    c.leg i (star x) = star (c.leg i x) :=
+  c.map_star i x
+
+theorem map_mul_apply (i : I) (x y : A i) :
+    c.leg i (x * y) = c.leg i x * c.leg i y :=
+  c.map_mul i x y
+
+theorem map_star_mul_apply (i : I) (x y : A i) :
+    c.leg i (star x * y) = star (c.leg i x) * c.leg i y := by
+  rw [c.map_mul, c.map_star]
+
 /-- Cocone evaluation commutativity on $*$-algebra elements -/
 @[simp]
 theorem eval_comm {i j : I} (hij : i ≤ j) (x : A i) :

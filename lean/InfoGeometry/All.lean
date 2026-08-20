@@ -5404,6 +5404,7 @@ import InfoGeometry.Monster.MonsterMoonshineThermal
 import InfoGeometry.Monster.MoonshineGradedDimensions
 import InfoGeometry.NCG.CategoricalInductiveColimitKMSBridge
 import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
+import InfoGeometry.NCG.KMSGNSCore
 import InfoGeometry.NCG.NoncommutativeCyclicCocycle
 import InfoGeometry.NCG.NoncommutativeDifferentialCalculus
 import InfoGeometry.NCG.NoncommutativeKMSModularState

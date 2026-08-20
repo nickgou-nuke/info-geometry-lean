@@ -71,6 +71,17 @@ theorem map_one : D 1 = 0 := by
   have h2 : (D 1 + D 1) - D 1 = D 1 - D 1 := congrArg (fun x => x - D 1) h.symm
   simpa using h2
 
+@[ext]
+theorem ext {D E : NoncommutativeDerivation A}
+    (h : ∀ x : A, D x = E x) : D = E := by
+  cases D with
+  | mk D Dadd Dleib =>
+    cases E with
+    | mk E Eadd Eleib =>
+      congr
+      funext x
+      exact h x
+
 end NoncommutativeDerivation
 
 open NoncommutativeDerivation
@@ -151,6 +162,14 @@ theorem commutatorDerivation_inner_apply
   simp only [commutatorDerivation, innerDerivationOf]
   noncomm_ring
 
+theorem commutatorDerivation_inner
+    (K₁ K₂ : A) :
+    commutatorDerivation (innerDerivationOf K₁) (innerDerivationOf K₂) =
+      innerDerivationOf (K₁ * K₂ - K₂ * K₁) := by
+  apply NoncommutativeDerivation.ext
+  intro x
+  exact commutatorDerivation_inner_apply K₁ K₂ x
+
 /-- The outer/inner commutator intertwiner, pointwise. -/
 theorem commutatorDerivation_inner_right_apply
     (D : NoncommutativeDerivation A) (K x : A) :
@@ -159,6 +178,44 @@ theorem commutatorDerivation_inner_right_apply
   simp only [commutatorDerivation, innerDerivationOf]
   rw [D.map_sub, D.leibniz, D.leibniz]
   noncomm_ring
+
+theorem commutatorDerivation_inner_right
+    (D : NoncommutativeDerivation A) (K : A) :
+    commutatorDerivation D (innerDerivationOf K) =
+      innerDerivationOf (D K) := by
+  apply NoncommutativeDerivation.ext
+  intro x
+  exact commutatorDerivation_inner_right_apply D K x
+
+/-- The kernel of the inner-derivation map is exactly the ring centre,
+stated pointwise without assuming commutativity of `A`. -/
+theorem innerDerivationOf_eq_zero_iff_central (K : A) :
+    (∀ x : A, innerDerivationOf K x = 0) ↔
+      ∀ x : A, K * x = x * K := by
+  constructor
+  · intro h x
+    have hx := h x
+    simpa [innerDerivationOf_apply, sub_eq_zero] using hx
+  · intro h x
+    simp [innerDerivationOf_apply, h x]
+
+/-- Equality of two inner derivations is equality of their commutators with
+every element; this is the quotient-by-centre formulation of inner data. -/
+theorem innerDerivationOf_eq_iff_central_difference (K L : A) :
+    innerDerivationOf K = innerDerivationOf L ↔
+      ∀ x : A, (K - L) * x = x * (K - L) := by
+  constructor
+  · intro h x
+    have hx := congrArg (fun E : NoncommutativeDerivation A => E x) h
+    rw [sub_mul, mul_sub]
+    linear_combination hx
+  · intro h
+    apply NoncommutativeDerivation.ext
+    intro x
+    have hx := h x
+    simp only [innerDerivationOf_apply]
+    rw [sub_mul, mul_sub]
+    linear_combination hx
 
 /-- Noncommutative Left Logarithmic Derivative:
     dlog_L(u) = u⁻¹ * D(u) -/

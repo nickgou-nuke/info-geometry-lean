@@ -16,6 +16,7 @@ import InfoGeometry.Continuous.PositiveOrthant
 import InfoGeometry.Canonical.SouriauMassieuHessianBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
+import InfoGeometry.Canonical.EmergentSpacetimeQuantumGeometryBridge
 
 /-!
 # Emergent Spacetime Architecture

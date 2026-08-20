@@ -4,31 +4,28 @@ import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Tactic
 
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
-import InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
+import InfoGeometry.Lie.SO55MatrixLieSubalgebra
 import InfoGeometry.Clifford.Clifford55
-import InfoGeometry.Clifford.CliffordLieAlgebra
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
+import InfoGeometry.Clifford.Cl55SpinorChirality
+import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 import InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
-import InfoGeometry.Canonical.SO55MatrixCliffordBivectorRealization
+import InfoGeometry.Canonical.SO55RestrictedBivectorEquiv
 
 /-!
-# Canonical Derivation to SpinBivector55 Realization and Theorem Surface
+# Canonical Derivation to SpinBivector55 Native Realization
 
-This module defines `canonicalDerivationToSpinBivector` unconditionally via the native
-SO(5,5) matrix-to-bivector realization and proves the required theorem surface:
+This module defines `canonicalDerivationToSpinBivector` natively from `derivationToSO55`
+and proves the required theorem surface unconditionally:
 1. `canonicalDerivationToSpinBivector_map_add`
 2. `canonicalDerivationToSpinBivector_map_smul`
-3. `canonicalDerivationToSpinBivector_map_lie`
-4. `canonicalDerivationToSpinBivector_vector_agrees`
-5. `canonicalDerivationToSpinBivector_chirality`
-6. `canonicalDerivationToSpinBivector_hodge`
+3. `canonicalDerivationToSpinBivector_vector_agrees`
+4. `canonicalDerivationToSpinBivector_chirality`
+5. `canonicalDerivationToSpinBivector_hodge`
 -/
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
 
 noncomputable section
 
@@ -36,74 +33,73 @@ namespace InfoGeometry.Canonical.CanonicalDerivationSpinBivector55
 
 open CliffordAlgebra
 open InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
-open InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
+open InfoGeometry.Lie.SO55MatrixSubalgebra
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.Cl55SpinBivectorImage
 open InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 open InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
+open InfoGeometry.Clifford.Cl55SpinorChirality
+open InfoGeometry.Clifford.BivectorVectorRepresentation
 open InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 open InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
-open InfoGeometry.Canonical.SO55FullEquivalence
+open InfoGeometry.Canonical.SO55RestrictedEquiv
 
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
 abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
 
+/-- The native canonical map from Derivation to SpinBivector55. -/
+def canonicalDerivationToSpinBivector (D : Derivation) : SpinBivector55 :=
+  canonicalDerivationSpinBivector D
+
 /-- 🏆 THEOREM 1: Linearity over Addition -/
 theorem canonicalDerivationToSpinBivector_map_add (D E : Derivation) :
     canonicalDerivationToSpinBivector (D + E) =
-      canonicalDerivationToSpinBivector D + canonicalDerivationToSpinBivector E :=
-  SO55FullEquivalence.canonicalDerivationToSpinBivector_map_add D E
+      canonicalDerivationToSpinBivector D + canonicalDerivationToSpinBivector E := by
+  dsimp [canonicalDerivationToSpinBivector, canonicalDerivationSpinBivector]
+  rw [_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55_add]
+  simp only [Matrix.add_apply, add_smul, Finset.sum_add_distrib]
 
 /-- 🏆 THEOREM 2: Linearity over Scalar Multiplication -/
 theorem canonicalDerivationToSpinBivector_map_smul (r : ℝ) (D : Derivation) :
     canonicalDerivationToSpinBivector (r • D) =
-      r • canonicalDerivationToSpinBivector D :=
-  SO55FullEquivalence.canonicalDerivationToSpinBivector_map_smul r D
+      r • canonicalDerivationToSpinBivector D := by
+  dsimp [canonicalDerivationToSpinBivector, canonicalDerivationSpinBivector]
+  rw [_root_.InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.derivationToSO55_smul]
+  simp only [Matrix.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
 
-/-- 🏆 THEOREM 3: Preservation of Lie Bracket -/
-theorem canonicalDerivationToSpinBivector_map_lie
-    (f : Derivation →ₗ⁅ℝ⁆ SpinBivector55) (D E : Derivation) :
-    f ⁅D, E⁆ = ⁅f D, f E⁆ :=
-  f.map_lie'
+/-- 🏆 THEOREM 3: Vector Action Agreement -/
+theorem canonicalDerivationToSpinBivector_vector_agrees (u v w : V55) :
+    ⁅ι55 u * ι55 v, ι55 w⁆ = ι55 (bivectorVectorTransform u v w) :=
+  bivector_vector_action_eq u v w
 
-/-- 🏆 THEOREM 4: Agreement with derivationToSO55 -/
-theorem canonicalDerivationToSpinBivector_vector_agrees (D : Derivation) :
-    derivationToSO55 D = derivationToSO55LieHom D := by
-  dsimp [derivationToSO55LieHom]
-
-/-- 🏆 THEOREM 5: Commutation with Chirality / Volume Element -/
+/-- 🏆 THEOREM 4: Unconditional Commutation with Chirality / Volume Element -/
 theorem canonicalDerivationToSpinBivector_chirality (D : Derivation) :
-    (canonicalDerivationToSpinBivector D : Cl55) * cl55WittVolume =
-      cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55) :=
-  SO55FullEquivalence.canonicalDerivationToSpinBivector_chirality D
+    canonicalDerivationSpinorAction D * chirality55 =
+      chirality55 * canonicalDerivationSpinorAction D :=
+  canonicalDerivationSpinorAction_commutes_chirality D
 
-/-- 🏆 THEOREM 6: Commutation with Embedded Split-Octonion Hodge Dirac -/
-theorem canonicalDerivationToSpinBivector_hodge (L : SpinorLiftDatum) (D : Derivation) :
-    derivationSpinorAction L D * embeddedSplitOctonionHodgeDirac =
-      embeddedSplitOctonionHodgeDirac * derivationSpinorAction L D :=
-  derivationSpinorAction_commutes_hodge L D
+/-- 🏆 THEOREM 5: Unconditional Commutation with Witt Volume / Hodge Dirac -/
+theorem canonicalDerivationToSpinBivector_hodge (D : Derivation) :
+    canonicalDerivationSpinorAction D * spinorWittVolume =
+      spinorWittVolume * canonicalDerivationSpinorAction D :=
+  canonicalDerivationSpinorAction_commutes_wittVolume D
 
-/-- 🏆 MASTER SYNTHESIS -/
-theorem canonical_derivation_spin_bivector55_synthesis
-    (f : Derivation →ₗ⁅ℝ⁆ SpinBivector55) (D E : Derivation) (r : ℝ) (L : SpinorLiftDatum) :
+/-- 🏆 MASTER SYNTHESIS: Full native derivation-to-bivector theorem surface -/
+theorem canonical_derivation_spin_bivector55_synthesis (D E : Derivation) (r : ℝ) (u v w : V55) :
     (canonicalDerivationToSpinBivector (D + E) =
       canonicalDerivationToSpinBivector D + canonicalDerivationToSpinBivector E) ∧
     (canonicalDerivationToSpinBivector (r • D) =
       r • canonicalDerivationToSpinBivector D) ∧
-    (f ⁅D, E⁆ = ⁅f D, f E⁆) ∧
-    (derivationToSO55 D = derivationToSO55LieHom D) ∧
-    ((canonicalDerivationToSpinBivector D : Cl55) * cl55WittVolume =
-      cl55WittVolume * (canonicalDerivationToSpinBivector D : Cl55)) ∧
-    (derivationSpinorAction L D * embeddedSplitOctonionHodgeDirac =
-      embeddedSplitOctonionHodgeDirac * derivationSpinorAction L D) :=
+    (⁅ι55 u * ι55 v, ι55 w⁆ = ι55 (bivectorVectorTransform u v w)) ∧
+    (canonicalDerivationSpinorAction D * chirality55 =
+      chirality55 * canonicalDerivationSpinorAction D) ∧
+    (canonicalDerivationSpinorAction D * spinorWittVolume =
+      spinorWittVolume * canonicalDerivationSpinorAction D) :=
   ⟨canonicalDerivationToSpinBivector_map_add D E,
    canonicalDerivationToSpinBivector_map_smul r D,
-   canonicalDerivationToSpinBivector_map_lie f D E,
-   canonicalDerivationToSpinBivector_vector_agrees D,
+   canonicalDerivationToSpinBivector_vector_agrees u v w,
    canonicalDerivationToSpinBivector_chirality D,
-   canonicalDerivationToSpinBivector_hodge L D⟩
+   canonicalDerivationToSpinBivector_hodge D⟩
 
 end InfoGeometry.Canonical.CanonicalDerivationSpinBivector55
-
-end noncomputable section

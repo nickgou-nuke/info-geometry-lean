@@ -284,6 +284,14 @@ theorem map_orthogonal
     mul (F e) (F f) = 0 := by
   rw [← F.map_mul, hef, F.map_zero]
 
+/-- Multiplicative maps preserve the reverse orientation of orthogonality. -/
+theorem map_orthogonal_rev
+    (F : NonAssocAlgEnd mul one)
+    {e f : A}
+    (hfe : mul f e = 0) :
+    mul (F f) (F e) = 0 := by
+  rw [← F.map_mul, hfe, F.map_zero]
+
 /-- Multiplicative maps preserve square-zero elements. -/
 theorem map_square_zero
     (F : NonAssocAlgEnd mul one)

@@ -56,6 +56,27 @@ theorem isDerivation_neg {D : A → A}
     simp only [Pi.neg_apply, hD.2 x y, neg_add, neg_mul]
     ring
 
+/-- Pointwise commutator of two derivation maps. -/
+def derivationCommutator (D E : A → A) : A → A :=
+  fun x => D (E x) - E (D x)
+
+theorem isDerivation_commutator {D E : A → A}
+    (hD : IsDerivation D) (hE : IsDerivation E) :
+    IsDerivation (derivationCommutator D E) := by
+  constructor
+  · intro x y
+    dsimp [derivationCommutator]
+    rw [hE.1, hD.1, hD.1, hE.1]
+    abel
+  · intro x y
+    dsimp [derivationCommutator]
+    rw [hE.2 x y, hD.2 x y, hD.1, hE.1,
+      hD.2, hD.2, hE.2, hE.2]
+    ring
+
+theorem derivationCommutator_apply (D E : A → A) (x : A) :
+    derivationCommutator D E x = D (E x) - E (D x) := rfl
+
 /-- THEOREM: Every derivation strictly annihilates the multiplicative unit 1. -/
 theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
   have hmul : D 1 = D 1 + D 1 := by

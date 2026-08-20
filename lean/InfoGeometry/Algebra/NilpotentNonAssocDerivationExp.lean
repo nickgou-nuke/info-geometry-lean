@@ -128,6 +128,70 @@ def toNonAssocAlgEnd (D : A →ₗ[K] A) (hD : IsDerivation mul D)
   map_mul' := fun x y => nilpotentExpStep2_map_mul mul D hD h_cross t x y
   map_one' := nilpotentExpStep2_one one D t h_one
 
+/-- A square-nilpotent derivation exponential as a genuine multiplicative
+linear equivalence, with inverse given by the negative parameter. -/
+def toNonAssocAlgEquiv
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) : NonAssocIteratedLeibniz.NonAssocAlgEquiv mul one where
+  toLinearMap := nilpotentExpStep2 D t
+  invFun := nilpotentExpStep2 D (-t)
+  map_mul' := fun x y => nilpotentExpStep2_map_mul mul D hD h_cross t x y
+  map_one' := nilpotentExpStep2_one one D t h_one
+  left_inv' := by
+    intro x
+    have h := LinearMap.congr_fun (nilpotentExpStep2_comp_neg D hD2 (-t)) x
+    simpa [neg_neg] using h
+  right_inv' := by
+    intro x
+    have h := LinearMap.congr_fun (nilpotentExpStep2_comp_neg D hD2 t) x
+    exact h
+
+/-- The bundled nilpotent automorphisms satisfy the additive parameter law
+pointwise. -/
+theorem toNonAssocAlgEquiv_add_apply
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (s t : K) (x : A) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross (s + t) x =
+      toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross s
+        (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x) := by
+  change nilpotentExpStep2 D (s + t) x =
+    nilpotentExpStep2 D s (nilpotentExpStep2 D t x)
+  exact (LinearMap.congr_fun (nilpotentExpStep2_comp_add D hD2 s t) x).symm
+
+/-- The zero-parameter bundled nilpotent automorphism is pointwise the identity. -/
+theorem toNonAssocAlgEquiv_zero_apply
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (x : A) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross 0 x = x := by
+  change nilpotentExpStep2 D 0 x = x
+  simp
+
+/-- Negative parameters give the pointwise inverse flow. -/
+theorem toNonAssocAlgEquiv_neg_apply
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (hD2 : D.comp D = 0)
+    (h_one : D one = 0)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A) :
+    toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross (-t)
+        (toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t x) = x := by
+  change nilpotentExpStep2 D (-t) (nilpotentExpStep2 D t x) = x
+  simpa [neg_neg] using
+    LinearMap.congr_fun (nilpotentExpStep2_comp_neg D hD2 (-t)) x
+
 /-- The nilpotent exponential transports both orientations of orthogonality. -/
 theorem nilpotentExpStep2_map_two_sided_orthogonal
     (D : A →ₗ[K] A)

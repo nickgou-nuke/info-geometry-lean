@@ -420,8 +420,8 @@ theorem map_orthogonal_rev (F : NonAssocAlgEquiv mul one) {e f : A}
 theorem map_two_sided_orthogonal (F : NonAssocAlgEquiv mul one) {e f : A}
     (hef : mul e f = 0) (hfe : mul f e = 0) :
     mul (F e) (F f) = 0 ∧ mul (F f) (F e) = 0 := by
-  exact ⟨NonAssocAlgEquiv.map_orthogonal mul one F hef,
-    NonAssocAlgEquiv.map_orthogonal_rev mul one F hfe⟩
+  exact ⟨NonAssocAlgEquiv.map_orthogonal F hef,
+    NonAssocAlgEquiv.map_orthogonal_rev F hfe⟩
 
 theorem map_square_zero (F : NonAssocAlgEquiv mul one) {q : A}
     (hq : mul q q = 0) : mul (F q) (F q) = 0 := by

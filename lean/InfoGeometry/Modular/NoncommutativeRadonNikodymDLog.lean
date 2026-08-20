@@ -25,7 +25,7 @@ All proofs are complete in native Mathlib without custom axioms.
 
 noncomputable section
 
-namespace InfoGeometry.Modular.Noncommutative
+namespace InfoGeometry.Modular.NoncommutativeRN
 
 variable {A : Type*} [Ring A]
 
@@ -512,4 +512,4 @@ theorem dlogR_rnUnit_chain (D : NoncommutativeDerivation A)
   rw [rnUnit_chain_rule]
   exact dlogR_mul_noncommutative D (rnUnit u v) (rnUnit v w)
 
-end InfoGeometry.Modular.Noncommutative
+end InfoGeometry.Modular.NoncommutativeRN

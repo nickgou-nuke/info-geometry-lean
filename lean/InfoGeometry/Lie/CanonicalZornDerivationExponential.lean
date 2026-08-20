@@ -421,6 +421,42 @@ theorem zornFlowMulEquiv_map_one
   change zornFlowLinearEquiv D.1 t (1 : CZ) = 1
   exact zornFlow_map_one D.1 D.2 t
 
+theorem zornFlowMulEquiv_commute_iff
+    (D : canonicalZornDerivations)
+    (X Y : CZ)
+    (t : ℝ) :
+    (zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y =
+      zornFlowMulEquiv D t Y * zornFlowMulEquiv D t X) ↔
+    X * Y = Y * X := by
+  constructor
+  · intro h
+    change zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t Y =
+      zornFlowLinearEquiv D.1 t Y * zornFlowLinearEquiv D.1 t X at h
+    have hmap :
+        zornFlowLinearEquiv D.1 t (X * Y - Y * X) = 0 := by
+      rw [map_sub, zornFlow_map_mul D.1 D.2,
+        zornFlow_map_mul D.1 D.2, h, sub_self]
+    have hmap' :
+        zornFlowLinearEquiv D.1 t (X * Y - Y * X) =
+          zornFlowLinearEquiv D.1 t 0 := by
+      simpa only [map_zero] using hmap
+    have hzero : X * Y - Y * X = 0 :=
+      (zornFlowLinearEquiv D.1 t).injective hmap'
+    exact sub_eq_zero.mp hzero
+  · intro h
+    change zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t Y =
+      zornFlowLinearEquiv D.1 t Y * zornFlowLinearEquiv D.1 t X
+    rw [← sub_eq_zero]
+    calc
+      zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t Y -
+          zornFlowLinearEquiv D.1 t Y * zornFlowLinearEquiv D.1 t X =
+        zornFlowLinearEquiv D.1 t (X * Y) -
+          zornFlowLinearEquiv D.1 t (Y * X) := by
+            rw [zornFlow_map_mul D.1 D.2, zornFlow_map_mul D.1 D.2]
+      _ = zornFlowLinearEquiv D.1 t (X * Y - Y * X) := by
+            rw [map_sub]
+      _ = zornFlowLinearEquiv D.1 t 0 := by rw [h, sub_self]
+      _ = 0 := map_zero (zornFlowLinearEquiv D.1 t)
 theorem zornFlowMulEquiv_add_apply
     (D : canonicalZornDerivations)
     (s t : ℝ)
@@ -429,6 +465,24 @@ theorem zornFlowMulEquiv_add_apply
       zornFlowMulEquiv D s
         (zornFlowMulEquiv D t X) :=
   zornFlowLinearEquiv_add_apply D.1 s t X
+
+theorem zornFlowMulEquiv_neg_apply
+    (D : canonicalZornDerivations)
+    (t : ℝ)
+    (X : CZ) :
+    zornFlowMulEquiv D (-t) (zornFlowMulEquiv D t X) = X := by
+  change zornFlowLinearEquiv D.1 (-t)
+      (zornFlowLinearEquiv D.1 t X) = X
+  simpa using zornFlowLinearEquiv_neg_apply_symm D.1 (-t) X
+
+theorem zornFlowMulEquiv_apply_neg
+    (D : canonicalZornDerivations)
+    (t : ℝ)
+    (X : CZ) :
+    zornFlowMulEquiv D t (zornFlowMulEquiv D (-t) X) = X := by
+  change zornFlowLinearEquiv D.1 t
+      (zornFlowLinearEquiv D.1 (-t) X) = X
+  exact zornFlowLinearEquiv_neg_apply_symm D.1 t X
 
 noncomputable def zornDerivationExpAutomorphism
     (D : canonicalZornDerivations) : CZ ≃* CZ :=

@@ -191,6 +191,18 @@ theorem firstOrderExp_map_idempotent
       firstOrderExp t D e := by
   rw [← firstOrderExp_map_mul mul t D hD hDmul e e, he]
 
+/-- The square-zero first-order flow transports nilpotent elements of index
+two. -/
+theorem firstOrderExp_map_square_zero
+    (t : R) (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (hDmul : ∀ x y, mul (D x) (D y) = 0)
+    {q : A}
+    (hq : mul q q = 0) :
+    mul (firstOrderExp t D q) (firstOrderExp t D q) = 0 := by
+  rw [← firstOrderExp_map_mul mul t D hD hDmul q q, hq]
+  simp
+
 
 /-- A vector fixed by the generator is fixed by the first-order flow. -/
 theorem firstOrderExp_fixed_of_derivation_eq_zero
@@ -596,6 +608,12 @@ theorem map_idempotent
     mul (F e) (F e) = F e := by
   rw [← F.map_mul, he]
 
+theorem invFun_map_idempotent
+    (F : NonAssocAlgEquiv mul one) {e : A}
+    (he : mul e e = e) :
+    mul (F.invFun e) (F.invFun e) = F.invFun e := by
+  rw [← F.invFun_map_mul, he]
+
 theorem map_orthogonal
     (F : NonAssocAlgEquiv mul one) {e f : A}
     (hef : mul e f = 0) :
@@ -621,6 +639,12 @@ theorem map_square_zero
     (hq : mul q q = 0) :
     mul (F q) (F q) = 0 := by
   rw [← F.map_mul, hq, F.map_zero]
+
+theorem invFun_map_square_zero
+    (F : NonAssocAlgEquiv mul one) {q : A}
+    (hq : mul q q = 0) :
+    mul (F.invFun q) (F.invFun q) = 0 := by
+  rw [← F.invFun_map_mul, hq, F.invFun_map_zero]
 
 end NonAssocAlgEquiv
 

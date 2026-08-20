@@ -1,13 +1,25 @@
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
+import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import Mathlib.Tactic
 
 /-!
 # Zorn Derivation Exponential Automorphism
 
-This module provides the generic automorphism properties for the canonical
-Zorn derivation exponential, packaging the five core one-parameter group and
-multiplicativity theorems for split-octonion automorphisms.
+This module establishes the canonical owner for the exponentiated derivation flow
+on the split-octonionic Zorn matrix algebra.
+
+## Core Structure & Theorems:
+1. **Generic Exponential Flow Laws**:
+   - `expDerivation_zero`: $\Phi_0 = \mathrm{id}_{\mathbb{O}_s}$.
+   - `expDerivation_add`: $\Phi_{s+t} = \Phi_s \circ \Phi_t$.
+   - `expDerivation_mul`: $\Phi_t(X \circ Y) = \Phi_t(X) \circ \Phi_t(Y)$.
+   - `expDerivation_one`: $\Phi_1$ is a multiplicative automorphism.
+   - `expDerivation_inv`: $\Phi_{-t} \circ \Phi_t = \mathrm{id}$.
+2. **Determinant and Composition Norm Invariance**:
+   - `expDerivation_preserves_detZ`: $\det Z(\Phi_t X) = \det Z(X)$.
+3. **One-Parameter Group Homomorphism**:
+   - `expDerivation_groupHom`: group homomorphism $\text{Multiplicative } \mathbb{R} \to^* \operatorname{Aut}(\mathbb{O}_s)$.
 
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
@@ -23,7 +35,6 @@ open InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 variable (D : canonicalZornDerivations)
 
 /-- 🏆 THEOREM 1: Time-zero flow is the identity automorphism. -/
-@[simp]
 theorem expDerivation_zero (X : CZ) :
     zornFlowMulEquiv D 0 X = X :=
   zornFlowMulEquiv_zero_apply D X
@@ -47,10 +58,30 @@ theorem expDerivation_one (X Y : CZ) :
   zornDerivationExpAutomorphism_map_mul D X Y
 
 /-- 🏆 THEOREM 5: Inverse flow is given by the negative derivation generator. -/
-@[simp]
 theorem expDerivation_inv (t : ℝ) (X : CZ) :
     zornFlowLinearEquiv (-D.1) t (zornFlowLinearEquiv D.1 t X) = X :=
   zornFlowLinearEquiv_neg_apply D.1 t X
+
+/-- 🏆 THEOREM 6: Reverse inverse identity. -/
+theorem expDerivation_inv_rev (t : ℝ) (X : CZ) :
+    zornFlowLinearEquiv D.1 t (zornFlowLinearEquiv (-D.1) t X) = X :=
+  zornFlowLinearEquiv_apply_neg D.1 t X
+
+/-- 🏆 THEOREM 7: Derivation exponential preserves the split-octonion determinant / composition norm. -/
+theorem expDerivation_preserves_detZ (t : ℝ) (X : CZ) :
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X :=
+  InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlow_preserves_detZ D t X
+
+/-- 🏆 THEOREM 8: The canonical derivation flow as a group homomorphism into RealSplitOctonionAut. -/
+noncomputable def expDerivation_groupHom :
+    Multiplicative ℝ →* InfoGeometry.Canonical.RealSplitOctonionAut :=
+  InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlowRealAutGroupHom D
+
+@[simp]
+theorem expDerivation_groupHom_apply (t : ℝ) :
+    expDerivation_groupHom D (Multiplicative.ofAdd t) =
+      InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlowRealAut D t := rfl
 
 end InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
 

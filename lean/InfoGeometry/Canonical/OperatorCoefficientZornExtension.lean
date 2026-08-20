@@ -104,9 +104,90 @@ def opZornStar (X : OpZorn H) : OpZorn H where
 theorem opZornStar_involutive (X : OpZorn H) : opZornStar (opZornStar X) = X := by
   ext <;> simp [opZornStar]
 
+@[simp] theorem opZornStar_zero :
+    opZornStar (0 : OpZorn H) = 0 := by
+  apply OpZorn.ext
+  · change ContinuousLinearMap.adjoint (0 : H →L[ℂ] H) = 0
+    exact map_zero ContinuousLinearMap.adjoint
+  · funext i
+    change ContinuousLinearMap.adjoint (0 : H →L[ℂ] H) = 0
+    exact map_zero ContinuousLinearMap.adjoint
+  · funext i
+    change ContinuousLinearMap.adjoint (0 : H →L[ℂ] H) = 0
+    exact map_zero ContinuousLinearMap.adjoint
+  · change ContinuousLinearMap.adjoint (0 : H →L[ℂ] H) = 0
+    exact map_zero ContinuousLinearMap.adjoint
+
+theorem opZornStar_add (X Y : OpZorn H) :
+    opZornStar (X + Y) = opZornStar X + opZornStar Y := by
+  apply OpZorn.ext
+  · change ContinuousLinearMap.adjoint (X.a + Y.a) =
+      ContinuousLinearMap.adjoint X.a + ContinuousLinearMap.adjoint Y.a
+    exact map_add ContinuousLinearMap.adjoint X.a Y.a
+  · funext i
+    change ContinuousLinearMap.adjoint (X.u i + Y.u i) =
+      ContinuousLinearMap.adjoint (X.u i) + ContinuousLinearMap.adjoint (Y.u i)
+    exact map_add ContinuousLinearMap.adjoint (X.u i) (Y.u i)
+  · funext i
+    change ContinuousLinearMap.adjoint (X.v i + Y.v i) =
+      ContinuousLinearMap.adjoint (X.v i) + ContinuousLinearMap.adjoint (Y.v i)
+    exact map_add ContinuousLinearMap.adjoint (X.v i) (Y.v i)
+  · change ContinuousLinearMap.adjoint (X.b + Y.b) =
+      ContinuousLinearMap.adjoint X.b + ContinuousLinearMap.adjoint Y.b
+    exact map_add ContinuousLinearMap.adjoint X.b Y.b
+
+theorem opZornStar_sub (X Y : OpZorn H) :
+    opZornStar (X - Y) = opZornStar X - opZornStar Y := by
+  apply OpZorn.ext
+  · change ContinuousLinearMap.adjoint (X.a - Y.a) =
+      ContinuousLinearMap.adjoint X.a - ContinuousLinearMap.adjoint Y.a
+    exact map_sub ContinuousLinearMap.adjoint X.a Y.a
+  · funext i
+    change ContinuousLinearMap.adjoint (X.u i - Y.u i) =
+      ContinuousLinearMap.adjoint (X.u i) - ContinuousLinearMap.adjoint (Y.u i)
+    exact map_sub ContinuousLinearMap.adjoint (X.u i) (Y.u i)
+  · funext i
+    change ContinuousLinearMap.adjoint (X.v i - Y.v i) =
+      ContinuousLinearMap.adjoint (X.v i) - ContinuousLinearMap.adjoint (Y.v i)
+    exact map_sub ContinuousLinearMap.adjoint (X.v i) (Y.v i)
+  · change ContinuousLinearMap.adjoint (X.b - Y.b) =
+      ContinuousLinearMap.adjoint X.b - ContinuousLinearMap.adjoint Y.b
+    exact map_sub ContinuousLinearMap.adjoint X.b Y.b
+
+theorem opZornStar_neg (X : OpZorn H) :
+    opZornStar (-X) = -opZornStar X := by
+  apply OpZorn.ext
+  · change ContinuousLinearMap.adjoint (-X.a) = -ContinuousLinearMap.adjoint X.a
+    exact map_neg ContinuousLinearMap.adjoint X.a
+  · funext i
+    change ContinuousLinearMap.adjoint (-(X.u i)) =
+      -ContinuousLinearMap.adjoint (X.u i)
+    exact map_neg ContinuousLinearMap.adjoint (X.u i)
+  · funext i
+    change ContinuousLinearMap.adjoint (-(X.v i)) =
+      -ContinuousLinearMap.adjoint (X.v i)
+    exact map_neg ContinuousLinearMap.adjoint (X.v i)
+  · change ContinuousLinearMap.adjoint (-X.b) = -ContinuousLinearMap.adjoint X.b
+    exact map_neg ContinuousLinearMap.adjoint X.b
+
+@[simp] theorem op_add_a (X Y : OpZorn H) : (X + Y).a = X.a + Y.a := rfl
+@[simp] theorem op_add_u (X Y : OpZorn H) (i : Fin 3) : (X + Y).u i = X.u i + Y.u i := rfl
+@[simp] theorem op_add_v (X Y : OpZorn H) (i : Fin 3) : (X + Y).v i = X.v i + Y.v i := rfl
+@[simp] theorem op_add_b (X Y : OpZorn H) : (X + Y).b = X.b + Y.b := rfl
+
+@[simp] theorem op_sub_a (X Y : OpZorn H) : (X - Y).a = X.a - Y.a := rfl
+@[simp] theorem op_sub_u (X Y : OpZorn H) (i : Fin 3) : (X - Y).u i = X.u i - Y.u i := rfl
+@[simp] theorem op_sub_v (X Y : OpZorn H) (i : Fin 3) : (X - Y).v i = X.v i - Y.v i := rfl
+@[simp] theorem op_sub_b (X Y : OpZorn H) : (X - Y).b = X.b - Y.b := rfl
+
+@[simp] theorem op_mul_a (X Y : OpZorn H) : (X * Y).a = X.a * Y.a + opDot X.u Y.v := rfl
+@[simp] theorem op_mul_u (X Y : OpZorn H) (i : Fin 3) : (X * Y).u i = X.a * Y.u i + Y.b * X.u i - (opCross X.v Y.v) i := rfl
+@[simp] theorem op_mul_v (X Y : OpZorn H) (i : Fin 3) : (X * Y).v i = Y.a * X.v i + X.b * Y.v i + (opCross X.u Y.u) i := rfl
+@[simp] theorem op_mul_b (X Y : OpZorn H) : (X * Y).b = X.b * Y.b + opDot X.v Y.u := rfl
+
 /-!
 =============================================================================
-PART 2: Operator Derivations
+PART 2: Operator Derivations & Automorphisms
 =============================================================================
 -/
 
@@ -118,5 +199,92 @@ structure OpDerivation (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ
 /-- Derivation commutes with star condition -/
 def derivationCommutesStar (D : OpDerivation H) : Prop :=
   ∀ X : OpZorn H, D.toLinearMap (opZornStar X) = opZornStar (D.toLinearMap X)
+
+/-- A derivation commuting with the operator-Zorn involution preserves the
+star-fixed (self-adjoint) subspace. -/
+theorem derivation_preserves_star_fixed
+    (D : OpDerivation H)
+    (hstar : derivationCommutesStar D)
+    (X : OpZorn H)
+    (hX : opZornStar X = X) :
+    opZornStar (D.toLinearMap X) = D.toLinearMap X := by
+  calc
+    opZornStar (D.toLinearMap X) = D.toLinearMap (opZornStar X) :=
+      (hstar X).symm
+    _ = D.toLinearMap X := by rw [hX]
+
+/-- 🏆 THEOREM: Leibniz rule for lifted operator derivation -/
+theorem liftDerivation_leibniz (D : OpDerivation H) (X Y : OpZorn H) :
+    D.toLinearMap (X * Y) = D.toLinearMap X * Y + X * D.toLinearMap Y :=
+  D.leibniz X Y
+
+/-- Commutator of two operator derivations: [D₁, D₂] = D₁ ∘ D₂ - D₂ ∘ D₁ -/
+def opDerivationCommutator (D₁ D₂ : OpDerivation H) : OpZorn H →ₗ[ℂ] OpZorn H :=
+  D₁.toLinearMap.comp D₂.toLinearMap - D₂.toLinearMap.comp D₁.toLinearMap
+
+/-- Left multiplication distributes over subtraction -/
+theorem opZornMul_sub_left (X Y Z : OpZorn H) :
+    X * (Y - Z) = X * Y - X * Z := by
+  apply OpZorn.ext
+  · simp only [op_mul_a, op_sub_a, op_sub_v, opDot, mul_sub]
+    noncomm_ring
+  · ext i; fin_cases i <;>
+      simp only [op_mul_u, op_sub_u, op_sub_v, op_sub_b, opCross, mul_sub, sub_mul] <;>
+      noncomm_ring
+  · ext i; fin_cases i <;>
+      simp only [op_mul_v, op_sub_a, op_sub_u, op_sub_v, opCross, mul_sub, sub_mul] <;>
+      noncomm_ring
+  · simp only [op_mul_b, op_sub_b, op_sub_u, opDot, mul_sub]
+    noncomm_ring
+
+/-- Right multiplication distributes over subtraction -/
+theorem opZornMul_sub_right (X Y Z : OpZorn H) :
+    (X - Y) * Z = X * Z - Y * Z := by
+  apply OpZorn.ext
+  · simp only [op_mul_a, op_sub_a, op_sub_u, opDot, sub_mul]
+    noncomm_ring
+  · ext i; fin_cases i <;>
+      simp only [op_mul_u, op_sub_a, op_sub_u, op_sub_v, opCross, mul_sub, sub_mul] <;>
+      noncomm_ring
+  · ext i; fin_cases i <;>
+      simp only [op_mul_v, op_sub_u, op_sub_v, op_sub_b, opCross, mul_sub, sub_mul] <;>
+      noncomm_ring
+  · simp only [op_mul_b, op_sub_b, op_sub_v, opDot, sub_mul]
+    noncomm_ring
+
+/-- 🏆 THEOREM: Commutator of derivations satisfies the derivation Leibniz identity -/
+theorem liftDerivation_commutator (D₁ D₂ : OpDerivation H) (X Y : OpZorn H) :
+    opDerivationCommutator D₁ D₂ (X * Y) =
+      opDerivationCommutator D₁ D₂ X * Y + X * opDerivationCommutator D₁ D₂ Y := by
+  dsimp [opDerivationCommutator, LinearMap.sub_apply, LinearMap.comp_apply]
+  rw [D₂.leibniz X Y, map_add, D₁.leibniz, D₁.leibniz]
+  rw [D₁.leibniz X Y, map_add, D₂.leibniz, D₂.leibniz]
+  rw [opZornMul_sub_right, opZornMul_sub_left]
+  abel
+
+theorem derivationCommutesStar_commutator
+    (D₁ D₂ : OpDerivation H)
+    (h₁ : derivationCommutesStar D₁)
+    (h₂ : derivationCommutesStar D₂)
+    (X : OpZorn H) :
+    opDerivationCommutator D₁ D₂ (opZornStar X) =
+      opZornStar (opDerivationCommutator D₁ D₂ X) := by
+  dsimp [opDerivationCommutator]
+  rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply,
+    h₂ X, h₁ (D₂.toLinearMap X), h₂ X,
+    h₁ (D₁.toLinearMap X)]
+  exact (opZornStar_sub
+    (D₁.toLinearMap (D₂.toLinearMap X))
+    (D₂.toLinearMap (D₁.toLinearMap X))).symm
+
+/-- An automorphism of the operator-valued Zorn algebra -/
+structure OpAutomorphism (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] where
+  toLinearEquiv : OpZorn H ≃ₗ[ℂ] OpZorn H
+  map_mul' : ∀ (X Y : OpZorn H), toLinearEquiv (X * Y) = toLinearEquiv X * toLinearEquiv Y
+
+/-- 🏆 THEOREM: Lifted automorphism preserves the operator Zorn multiplication -/
+theorem liftAutomorphism_mul (Φ : OpAutomorphism H) (X Y : OpZorn H) :
+    Φ.toLinearEquiv (X * Y) = Φ.toLinearEquiv X * Φ.toLinearEquiv Y :=
+  Φ.map_mul' X Y
 
 end InfoGeometry.Canonical.OperatorCoefficientZornExtension

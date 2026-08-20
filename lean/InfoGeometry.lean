@@ -138,6 +138,7 @@ import InfoGeometry.OperatorAlgebra.CommutantIntertwine
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.QuantumGeometry.CompleteUnifiedBundle
+import InfoGeometry.QuantumGeometry.TensorBridge
 import InfoGeometry.MasterRegistry
 
 namespace InfoGeometry

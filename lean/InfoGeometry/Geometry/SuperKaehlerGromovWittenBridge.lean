@@ -108,3 +108,32 @@ theorem witten_index_is_weyl_denominator :
 end SuperKaehlerPrimeManifold
 
 end InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
+
+/-!
+=============================================================================
+Gromov Symplectic Non-Squeezing Capacity & Kähler Uncertainty
+=============================================================================
+-/
+
+/-- The Gromov Symplectic Area Capacity: C_Gromov(Ω) = (1/2) * |Ω|. -/
+def gromovSymplecticCapacity (omega : ℝ) : ℝ :=
+  (1 / 2 : ℝ) * |omega|
+
+/-- 
+  THEOREM: The Gromov Non-Squeezing Symplectic Capacity Bound.
+  Any metric variance product satisfying the Robertson-Schrödinger / QGT bound
+  is bounded below by the squared Gromov symplectic area capacity:
+    g(X, X) * g(Y, Y) ≥ (C_Gromov(Ω(X, Y)))²
+-/
+theorem gromov_nonsqueezing_capacity_bound (g_XX g_YY omega_XY : ℝ)
+    (h_qgt : g_XX * g_YY ≥ (1 / 4 : ℝ) * omega_XY ^ 2) :
+    g_XX * g_YY ≥ (gromovSymplecticCapacity omega_XY) ^ 2 := by
+  dsimp [gromovSymplecticCapacity]
+  have h_sq : ((1 / 2 : ℝ) * |omega_XY|) ^ 2 = (1 / 4 : ℝ) * omega_XY ^ 2 := by
+    calc
+      ((1 / 2 : ℝ) * |omega_XY|) ^ 2
+        = (1 / 2 : ℝ) ^ 2 * |omega_XY| ^ 2 := mul_pow (1 / 2 : ℝ) |omega_XY| 2
+      _ = (1 / 4 : ℝ) * |omega_XY| ^ 2 := by norm_num
+      _ = (1 / 4 : ℝ) * omega_XY ^ 2 := by rw [sq_abs]
+  rw [h_sq]
+  exact h_qgt

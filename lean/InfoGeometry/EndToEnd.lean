@@ -38,11 +38,11 @@ variable (D : Derivation A)
 @[simp]
 theorem map_one : D 1 = 0 := by
   have h : D 1 = D 1 + D 1 := by
-    calc D 1 = D (1 * 1) := by rw [mul_one]
-    _ = D 1 * 1 + 1 * D 1 := D.leibniz 1 1
-    _ = D 1 + D 1 := by rw [mul_one, one_mul]
+    have h1 := D.leibniz 1 1
+    rw [mul_one, one_mul] at h1
+    exact h1.symm
   have h0 : D 1 + 0 = D 1 + D 1 := by rw [add_zero, h]
-  exact add_left_cancel h0
+  exact (add_left_cancel h0).symm
 
 end Derivation
 
@@ -191,8 +191,8 @@ theorem kms_zero_beta_is_trace (ω : QuantumState A) (D : Derivation A)
     (h_kms : IsInfinitesimalKMS ω D 0) : ∀ X Y : A, ω (X * Y) = ω (Y * X) := by
   intro X Y
   have h := h_kms X Y
-  simp only [Real.cast_zero, mul_zero, zero_mul] at h
-  exact sub_eq_zero.mp h.symm
+  simp only [Complex.ofReal_zero, mul_zero, zero_mul] at h
+  exact (sub_eq_zero.mp h.symm).symm
 
 /-- 
   THEOREM 9 (Thermal Stationarity):

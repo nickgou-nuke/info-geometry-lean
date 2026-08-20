@@ -46,8 +46,8 @@ def gibbsState (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
         starRingEnd ℂ (Real.sqrt (realGibbsWeight D beta x) : ℂ) =
           (Real.sqrt (realGibbsWeight D beta x) : ℂ) := by
       intro x
-      change Complex.conj (Real.sqrt (realGibbsWeight D beta x) : ℂ) = _
-      exact Complex.conj_ofReal _
+      change star (Real.sqrt (realGibbsWeight D beta x) : ℂ) = _
+      exact RCLike.conj_ofReal _
     simp_rw [hstar]
     change (∑ x : State,
       (Real.sqrt (realGibbsWeight D beta x) : ℂ) *
@@ -55,11 +55,18 @@ def gibbsState (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
     simp_rw [← Complex.ofReal_mul]
     rw [← Complex.ofReal_sum]
     congr 1
-    rw [show (∑ x : State, Real.sqrt (realGibbsWeight D beta x) ^ 2) = 1 by
-      apply Finset.sum_congr rfl
-      intro x hx
-      rw [Real.sq_sqrt (le_of_lt (realGibbsWeight_pos D beta x))]]
-    exact realGibbsWeight_sum_eq_one D beta
+    calc
+      (∑ x : State, Real.sqrt (realGibbsWeight D beta x) *
+          Real.sqrt (realGibbsWeight D beta x)) =
+          ∑ x : State, Real.sqrt (realGibbsWeight D beta x) ^ 2 := by
+        apply Finset.sum_congr rfl
+        intro x hx
+        rw [pow_two]
+      _ = ∑ x : State, realGibbsWeight D beta x := by
+        apply Finset.sum_congr rfl
+        intro x hx
+        rw [Real.sq_sqrt (le_of_lt (realGibbsWeight_pos D beta x))]
+      _ = 1 := realGibbsWeight_sum_eq_one D beta
 
 theorem gibbsState_norm_sq (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
     ⟪(gibbsState D beta).vec, (gibbsState D beta).vec⟫_ℂ = 1 :=

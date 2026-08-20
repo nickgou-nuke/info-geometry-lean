@@ -233,6 +233,33 @@ theorem dlogR_adK (K : A) (u : Aˣ) :
     _ = K - (u : A) * K * (↑(u⁻¹) : A) := by
       rw [hu, mul_one]
 
+/-- The right logarithmic derivative of an inner derivation vanishes exactly
+when its generator commutes with the chosen unit. -/
+theorem dlogR_adK_eq_zero_iff (K : A) (u : Aˣ) :
+    dlogR (adK K) u = 0 ↔ Commute K (u : A) := by
+  rw [dlogR_adK]
+  constructor
+  · intro h
+    have hconj : K = (u : A) * K * (↑(u⁻¹) : A) := sub_eq_zero.mp h
+    calc
+      K * (u : A) = ((u : A) * K * (↑(u⁻¹) : A)) * (u : A) :=
+        congrArg (fun z : A => z * (u : A)) hconj
+      _ = (u : A) * K := by
+        have hui : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+        simp only [mul_assoc, hui, mul_one]
+  · intro hcomm
+    apply sub_eq_zero.mpr
+    calc
+      K = K * ((u : A) * (↑(u⁻¹) : A)) := by
+        have huv : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+        rw [huv, mul_one]
+      _ = (K * (u : A)) * (↑(u⁻¹) : A) := by
+        simp only [mul_assoc]
+      _ = ((u : A) * K) * (↑(u⁻¹) : A) := by
+        rw [hcomm.eq]
+      _ = (u : A) * K * (↑(u⁻¹) : A) := by
+        simp only [mul_assoc]
+
 theorem dlogR_adK_eq_conjugate_dlogL_adK (K : A) (u : Aˣ) :
     dlogR (adK K) u =
       (u : A) * dlogL (adK K) u * (↑(u⁻¹) : A) := by

@@ -30,7 +30,7 @@ variable {R : Type*} [CommRing R]
 /-- A quantum error-correcting code is a subspace of the ambient Hilbert space.
     We represent it by its orthogonal projection P_C.
 -/
-structure QuantumCode (R : Type*) [CommRing R] where
+structure QuantumCode (n : Type*) [Fintype n] (R : Type*) [CommRing R] [Star R] where
   /-- The code space projector P_C (idempotent). -/
   P_C : Matrix n n R
   /-- P_C is a projector: P_C^2 = P_C. -/
@@ -39,7 +39,7 @@ structure QuantumCode (R : Type*) [CommRing R] where
 /-! ## 2. Error operators -/
 
 /-- A family of error operators {E_a} on the ambient Hilbert space. -/
-structure ErrorOperators (R : Type*) [CommRing R] where
+structure ErrorOperators (n : Type*) [Fintype n] (R : Type*) [CommRing R] [Star R] where
   carrier : Type*
   E : carrier → Matrix n n R
 
@@ -48,7 +48,7 @@ structure ErrorOperators (R : Type*) [CommRing R] where
 /-- The Knill–Laflamme condition: P_C E_a† E_b P_C = α_{ab} P_C.
     This is the necessary and sufficient condition for error correction.
 -/
-def knillLaflammeCondition {R : Type*} [CommRing R] (code : QuantumCode R) (errors : ErrorOperators R) : Prop :=
+def knillLaflammeCondition (n : Type*) [Fintype n] {R : Type*} [CommRing R] [Star R] (code : QuantumCode n R) (errors : ErrorOperators n R) : Prop :=
   ∃ α : Matrix errors.carrier errors.carrier R,
     ∀ a b : errors.carrier,
       code.P_C * (errors.E a)ᴴ * (errors.E b) * code.P_C =
@@ -57,16 +57,16 @@ def knillLaflammeCondition {R : Type*} [CommRing R] (code : QuantumCode R) (erro
 /-- A recovery map R takes the corrupted state and returns the original code state.
     For the Knill–Laflamme condition to hold, such a map exists.
 -/
-def recoveryMap {R : Type*} [CommRing R] (code : QuantumCode R) (errors : ErrorOperators R) : Prop :=
-  ∃ R : Matrix n n R → Matrix n n R,
+def recoveryMap (n : Type*) [Fintype n] {R : Type*} [CommRing R] [Star R] (code : QuantumCode n R) (errors : ErrorOperators n R) : Prop :=
+  ∃ rec : Matrix n n R → Matrix n n R,
     ∀ (ρ : Matrix n n R) (a : errors.carrier),
       code.P_C * ρ * code.P_C = code.P_C →
-        R (errors.E a * ρ * (errors.E a)ᴴ) = ρ
+        rec (errors.E a * ρ * (errors.E a)ᴴ) = ρ
 
 /-- A code can correct a set of errors if the Knill–Laflamme condition holds. -/
-theorem canCorrectErrors {R : Type*} [CommRing R] (code : QuantumCode R) (errors : ErrorOperators R)
-    (hkl : knillLaflammeCondition code errors) :
-    recoveryMap code errors := by
+theorem canCorrectErrors (n : Type*) [Fintype n] {R : Type*} [CommRing R] [Star R] (code : QuantumCode n R) (errors : ErrorOperators n R)
+    (hkl : knillLaflammeCondition n code errors) :
+    recoveryMap n code errors := by
   sorry
 
 /-! ## 6. Distance of a code -/
@@ -74,7 +74,7 @@ theorem canCorrectErrors {R : Type*} [CommRing R] (code : QuantumCode R) (errors
 /-- The distance of a quantum code is the minimum weight of a correctable error.
     We assume the error carrier is finite for the distance to be well-defined.
 -/
-def codeDistance {R : Type*} [CommRing R] [Fintype errors.carrier] (errors : ErrorOperators R) : ℕ :=
+def codeDistance (n : Type*) [Fintype n] {R : Type*} [CommRing R] [Star R] (errors : ErrorOperators n R) [Fintype errors.carrier] : ℕ :=
   Fintype.card errors.carrier
 
 end InfoGeometry.Canonical.KnillLaflammeQEC

@@ -566,8 +566,8 @@ theorem canonicalEntropyProduction_nonneg_of_cramerRaoResponse
   have hDiag : 0 ≤ C.diagonalMetricResponse :=
     CramerRaoOperatorialResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
-  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
-    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
+  rw [InfoGeometry.Canonical.Operators.entropyProduction_eq_probe_hessian]
+  exact hDiag
 
 /--
 One-channel operatorial second-law gate from the regular Drazin/Krein cone.
@@ -584,8 +584,8 @@ theorem canonicalEntropyProduction_nonneg_of_regularCone
   have hDiag : 0 ≤ C.diagonalMetricResponse :=
     RegularConeXResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
-  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
-    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
+  rw [InfoGeometry.Canonical.Operators.entropyProduction_eq_probe_hessian]
+  exact hDiag
 
 /--
 Supergraded even/odd Onsager block packet on the operatorial carrier.

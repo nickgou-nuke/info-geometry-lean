@@ -88,6 +88,14 @@ instance : Mul (ZornMatrix R) where
 @[simp] theorem neg_def (z : ZornMatrix R) :
   -z = { a := -z.a, b := -z.b, x := -z.x, y := -z.y } := rfl
 
+@[simp] theorem smul_a (r : R) (z : ZornMatrix R) : (r • z).a = r * z.a := rfl
+
+@[simp] theorem smul_b (r : R) (z : ZornMatrix R) : (r • z).b = r * z.b := rfl
+
+@[simp] theorem smul_x (r : R) (z : ZornMatrix R) (i : Fin 3) : (r • z).x i = r * z.x i := rfl
+
+@[simp] theorem smul_y (r : R) (z : ZornMatrix R) (i : Fin 3) : (r • z).y i = r * z.y i := rfl
+
 /-- Zorn matrix identity. -/
 instance : One (ZornMatrix R) where
   one := { a := 1, b := 1, x := 0, y := 0 }

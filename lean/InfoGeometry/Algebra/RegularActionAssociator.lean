@@ -33,7 +33,6 @@ theorem leftRightCommutator_apply (x y z : A) :
     leftRightCommutator (R := R) x y z = -associator x z y := by
   unfold leftRightCommutator
   simp [LinearMap.sub_apply, LinearMap.comp_apply, L_map, R_map, associator_apply]
-  abel
 
 /--
 Under right alternativity, the regular-action commutator evaluates directly to
@@ -79,14 +78,9 @@ namespace ZornVectorMatrix
 /-- Canonical Zorn specialization of the regular-action/associator identity. -/
 theorem zorn_leftRightCommutator_apply
     (x y z : ZornVectorMatrix R) :
-    leftRightCommutator (R := R) x y z = associator x y z := by
-  have h := leftRightCommutator_apply_of_right_alternative
+    leftRightCommutator (R := R) x y z = _root_.associator x y z := by
+  exact leftRightCommutator_apply_of_right_alternative
     (R := R) zorn_right_alternative x y z
-  have h_assoc : _root_.associator x y z = ZornVectorMatrix.associator x y z := by
-    unfold _root_.associator ZornVectorMatrix.associator
-    simp [zvm_mul_def, zvm_neg_def, zvm_add_def, sub_eq_add_neg]
-  rw [h_assoc] at h
-  exact h
 
 /-- Canonical Zorn regular-action commutator is alternating in its parameters. -/
 theorem zorn_leftRightCommutator_swap
@@ -97,6 +91,16 @@ theorem zorn_leftRightCommutator_swap
     zorn_left_alternative
     zorn_right_alternative
     x y
+
+/-- Canonical Zorn diagonal regular-action commutator vanishes. -/
+theorem zorn_leftRightCommutator_self
+    (x : ZornVectorMatrix R) :
+    leftRightCommutator (R := R) x x = 0 := by
+  exact leftRightCommutator_self
+    (R := R)
+    zorn_left_alternative
+    zorn_right_alternative
+    x
 
 end ZornVectorMatrix
 

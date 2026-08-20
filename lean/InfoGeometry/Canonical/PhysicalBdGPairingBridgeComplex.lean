@@ -1,3 +1,8 @@
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Topology.Algebra.Module.LinearMapPiProd
+import Mathlib.Topology.Algebra.Module.Equiv
+import Mathlib.Tactic
+
 /-!
 # PhysicalBdGPairingBridgeComplex
 
@@ -13,10 +18,6 @@ This file uses only native Mathlib continuous-linear-map constructions:
 This complements the realified architecture in `PhysicalBdGPairingBridge.lean`
 which uses the repository's `DoubledSpace E` and real conjugation `κ`.
 -/
-
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-import Mathlib.Tactic
 
 noncomputable section
 
@@ -36,7 +37,6 @@ local notation "EndNambu" => NambuH →L[ℂ] NambuH
 -/
 
 /-- Hole-sector diagonal block `-h†`. -/
-@[rep_depth operator]
 noncomputable def holeBlock (h : EndH) : EndH :=
   -(ContinuousLinearMap.adjoint h)
 
@@ -45,7 +45,6 @@ Physical Bogoliubov-de Gennes operator
 
 `H_BdG = [[h, Δ], [Δ†, -h†]]`.
 -/
-@[rep_depth operator]
 noncomputable def H_BdG (h Δ : EndH) : EndNambu :=
   (h.coprod Δ).prod
     ((ContinuousLinearMap.adjoint Δ).coprod
@@ -64,25 +63,21 @@ theorem H_BdG_apply (h Δ : EndH) (u v : H) :
 -/
 
 /-- Upper-left block of an operator on `H × H`. -/
-@[rep_depth operator]
 def block11 (T : EndNambu) : EndH :=
   (ContinuousLinearMap.fst ℂ H H).comp
     (T.comp (ContinuousLinearMap.inl ℂ H H))
 
 /-- Upper-right block of an operator on `H × H`. -/
-@[rep_depth operator]
 def block12 (T : EndNambu) : EndH :=
   (ContinuousLinearMap.fst ℂ H H).comp
     (T.comp (ContinuousLinearMap.inr ℂ H H))
 
 /-- Lower-left block of an operator on `H × H`. -/
-@[rep_depth operator]
 def block21 (T : EndNambu) : EndH :=
   (ContinuousLinearMap.snd ℂ H H).comp
     (T.comp (ContinuousLinearMap.inl ℂ H H))
 
 /-- Lower-right block of an operator on `H × H`. -/
-@[rep_depth operator]
 def block22 (T : EndNambu) : EndH :=
   (ContinuousLinearMap.snd ℂ H H).comp
     (T.comp (ContinuousLinearMap.inr ℂ H H))
@@ -120,7 +115,6 @@ theorem block22_H_BdG (h Δ : EndH) :
 The physical upper-right inter-sheet coupling is exactly the
 superconducting pairing potential.
 -/
-@[rep_depth transport, capstone]
 theorem xi_eq_delta_sc (h Δ : EndH) :
     block12 (H_BdG h Δ) = Δ :=
   block12_H_BdG h Δ
@@ -137,7 +131,6 @@ Complex-linear Nambu sheet swap with an internal linear map `C₀`:
 This is an algebraic linear proxy. A physical antiunitary particle-hole
 operator requires conjugate-linearity or realification.
 -/
-@[rep_depth operator]
 def PHS_operator (C₀ : EndH) : EndNambu :=
   (C₀.comp (ContinuousLinearMap.snd ℂ H H)).prod
     (C₀.comp (ContinuousLinearMap.fst ℂ H H))
@@ -155,7 +148,6 @@ The four hypotheses are exactly the four block identities needed for
 
 `C H_BdG = - H_BdG C`.
 -/
-@[rep_depth operator]
 theorem bdg_particle_hole_symmetry
     (h Δ C₀ : EndH)
     (h_comm1 :
@@ -203,22 +195,11 @@ theorem bdg_particle_hole_symmetry
 
   apply ContinuousLinearMap.ext
   rintro ⟨u, v⟩
-  apply Prod.ext
-
-  · change
-      C₀
-          (ContinuousLinearMap.adjoint Δ u -
-            ContinuousLinearMap.adjoint h v)
-        =
-      -(h (C₀ v) + Δ (C₀ u))
+  ext
+  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, PHS_operator_apply, H_BdG_apply, Prod.fst_neg]
     rw [map_sub, h1 u, h2 v]
     abel
-
-  · change
-      C₀ (h u + Δ v)
-        =
-      -(ContinuousLinearMap.adjoint Δ (C₀ v) -
-          ContinuousLinearMap.adjoint h (C₀ u))
+  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, PHS_operator_apply, H_BdG_apply, Prod.snd_neg]
     rw [map_add, h3 u, h4 v]
     abel
 
@@ -230,7 +211,6 @@ theorem bdg_particle_hole_symmetry
 For the pure Nambu swap `C₀ = 1`, self-adjoint normal dynamics together
 with skew-adjoint pairing implies the linear proxy PHS relation.
 -/
-@[rep_depth operator]
 theorem bdg_swap_particle_hole_symmetry
     (h Δ : EndH)
     (hh :
@@ -259,24 +239,17 @@ Invertibility of the physical hole block `-h†`.
 Using a `ContinuousLinearEquiv` prevents an arbitrary endomorphism from
 being incorrectly called an inverse.
 -/
-@[rep_depth operator]
 structure InvertibleHoleBlock (h : EndH) where
   equiv : H ≃L[ℂ] H
   equiv_toContinuousLinearMap :
     equiv.toContinuousLinearMap = holeBlock h
 
-namespace InvertibleHoleBlock
-
-variable {h : EndH}
-variable (I : InvertibleHoleBlock h)
-
 /-- Genuine inverse of the physical hole block. -/
-@[rep_depth operator]
-def inverse : EndH :=
+def InvertibleHoleBlock.inverse {h : EndH} (I : InvertibleHoleBlock h) : EndH :=
   I.equiv.symm.toContinuousLinearMap
 
 @[simp]
-theorem holeBlock_comp_inverse :
+theorem InvertibleHoleBlock.holeBlock_comp_inverse {h : EndH} (I : InvertibleHoleBlock h) :
     (holeBlock h).comp I.inverse =
       ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
@@ -286,7 +259,7 @@ theorem holeBlock_comp_inverse :
   exact I.equiv.apply_symm_apply x
 
 @[simp]
-theorem inverse_comp_holeBlock :
+theorem InvertibleHoleBlock.inverse_comp_holeBlock {h : EndH} (I : InvertibleHoleBlock h) :
     I.inverse.comp (holeBlock h) =
       ContinuousLinearMap.id ℂ H := by
   apply ContinuousLinearMap.ext
@@ -294,8 +267,6 @@ theorem inverse_comp_holeBlock :
   change I.equiv.symm (holeBlock h x) = x
   rw [← I.equiv_toContinuousLinearMap]
   exact I.equiv.symm_apply_apply x
-
-end InvertibleHoleBlock
 
 /-!
 ## 6. Physical BdG Schur complement
@@ -313,7 +284,6 @@ for
 `C = Δ†`,
 `D = -h†`.
 -/
-@[rep_depth operator]
 noncomputable def BdG_Schur_Complement
     (h Δ : EndH)
     (I : InvertibleHoleBlock h) : EndH :=
@@ -337,7 +307,6 @@ theorem BdG_Schur_Complement_def
 ## 7. Complete block packet
 -/
 
-@[rep_depth transport, capstone]
 theorem physical_BdG_block_packet
     (h Δ : EndH) :
     block11 (H_BdG h Δ) = h
@@ -354,5 +323,3 @@ theorem physical_BdG_block_packet
   ⟩
 
 end InfoGeometry.Canonical.PhysicalBdGPairingBridgeComplex
-
-end noncomputable section

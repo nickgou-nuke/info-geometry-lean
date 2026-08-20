@@ -1,3 +1,10 @@
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Artanh
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Canonical.SupergradedMetriplecticCore
+
 /-!
 # PopulationBerezinianBridge
 
@@ -14,11 +21,7 @@ The audit identified:
 This file constructs the bridge and proves the exact relations.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.Module.Basic
-import Mathlib.LinearAlgebra.Matrix.Basic
-import InfoGeometry.Canonical.PositiveRayCore
-import InfoGeometry.Canonical.SupergradedMetriplecticCore
+noncomputable section
 
 namespace InfoGeometry.Canonical.PopulationBerezinianBridge
 
@@ -41,11 +44,9 @@ def populationRay : Unit := ()
     p_e / p_g = N_e / N_g -/
 theorem populationRatioSurvives (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     (N_e / (N_e + N_g)) / (N_g / (N_e + N_g)) = N_e / N_g := by
-  have h₁ : 0 < N_e + N_g := by linarith
-  field_simp [h₁.ne', hN_e.ne', hN_g.ne']
-  <;> ring
-  <;> field_simp [h₁.ne', hN_e.ne', hN_g.ne']
-  <;> ring
+  have h₁ : N_e + N_g ≠ 0 := by linarith
+  have h₂ : N_g ≠ 0 := by linarith
+  field_simp
 
 /-- The logarithmic inversion (relative surprisal):
     η = log(p_e) - log(p_g) = log(N_e/N_g) -/
@@ -54,22 +55,12 @@ def logInversion (p_e p_g : ℝ) : ℝ :=
 
 theorem logInversionEqRatio (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = Real.log (N_e / N_g) := by
-  have h₁ : 0 < N_e / (N_e + N_g) := by positivity
-  have h₂ : 0 < N_g / (N_e + N_g) := by positivity
-  have h₃ : 0 < N_e / N_g := by positivity
-  have h₄ : logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g))
-      = Real.log (N_e / (N_e + N_g)) - Real.log (N_g / (N_e + N_g)) := rfl
-  rw [h₄]
-  have h₅ : Real.log (N_e / (N_e + N_g)) - Real.log (N_g / (N_e + N_g))
-      = Real.log ((N_e / (N_e + N_g)) / (N_g / (N_e + N_g))) := by
-    rw [Real.log_div (by positivity) (by positivity)]
-    <;> ring_nf
-  rw [h₅]
-  have h₆ : (N_e / (N_e + N_g)) / (N_g / (N_e + N_g)) = N_e / N_g := by
-    have h₇ : 0 < N_e + N_g := by linarith
-    field_simp [h₇.ne', hN_e.ne', hN_g.ne']
-    <;> ring
-  rw [h₆]
+  have hsum : N_e + N_g ≠ 0 := by linarith
+  have hNg : N_g ≠ 0 := by linarith
+  unfold logInversion
+  rw [Real.log_div hN_e.ne' hsum, Real.log_div hN_g.ne' hsum]
+  ring_nf
+  rw [← Real.log_div hN_e.ne' hNg, div_eq_mul_inv]
 
 /-!
 =============================================================================
@@ -90,10 +81,10 @@ def berezinianPopulation (p_e p_g : ℝ) : ℝ :=
 
 theorem berezinianPopulationEqRatio (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     berezinianPopulation (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = N_e / N_g := by
-  have h₁ : 0 < N_e + N_g := by linarith
+  have h₁ : N_e + N_g ≠ 0 := by linarith
+  have h₂ : N_g ≠ 0 := by linarith
   simp [berezinianPopulation]
-  <;> field_simp [h₁.ne', hN_e.ne', hN_g.ne']
-  <;> ring
+  field_simp
 
 /-- The modular potential K_Ber = -log Ber(Δ_pop) = -η -/
 def modularPotentialBer (p_e p_g : ℝ) : ℝ :=
@@ -102,20 +93,9 @@ def modularPotentialBer (p_e p_g : ℝ) : ℝ :=
 /-- The relative surprisal η = log Ber(Δ_pop) = -K_Ber -/
 theorem logInversionEqNegModularPotential (p_e p_g : ℝ) (hp_e : 0 < p_e) (hp_g : 0 < p_g) :
     logInversion p_e p_g = -modularPotentialBer p_e p_g := by
-  have h₁ : 0 < berezinianPopulation p_e p_g := by
-    simp [berezinianPopulation]
-    positivity
-  have h₂ : modularPotentialBer p_e p_g = -Real.log (berezinianPopulation p_e p_g) := rfl
-  rw [h₂]
-  have h₃ : logInversion p_e p_g = Real.log p_e - Real.log p_g := rfl
-  rw [h₃]
-  have h₄ : Real.log p_e - Real.log p_g = Real.log (p_e / p_g) := by
-    rw [Real.log_div (by positivity) (by positivity)]
-  rw [h₄]
-  have h₅ : Real.log (p_e / p_g) = Real.log (berezinianPopulation p_e p_g) := by
-    simp [berezinianPopulation]
-  rw [h₅]
-  <;> ring
+  unfold logInversion modularPotentialBer berezinianPopulation
+  rw [Real.log_div hp_e.ne' hp_g.ne']
+  ring
 
 /-!
 =============================================================================
@@ -133,130 +113,67 @@ def populationImbalance (N_e N_g : ℝ) : ℝ := N_e - N_g
 theorem imbalanceEqTanH (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     populationImbalance N_e N_g
       = totalPopulation N_e N_g * Real.tanh (logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) / 2) := by
-  have h₁ : 0 < N_e + N_g := by linarith
-  have h₂ : logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = Real.log (N_e / N_g) :=
+  have hlog : logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = Real.log (N_e / N_g) :=
     logInversionEqRatio N_e N_g hN_e hN_g
-  rw [h₂]
-  have h₃ : populationImbalance N_e N_g = N_e - N_g := rfl
-  have h₄ : totalPopulation N_e N_g = N_e + N_g := rfl
-  rw [h₃, h₄]
-  have h₅ : Real.tanh (Real.log (N_e / N_g) / 2) = (N_e - N_g) / (N_e + N_g) := by
-    have h₆ : 0 < N_e / N_g := by positivity
-    have h₇ : Real.tanh (Real.log (N_e / N_g) / 2) = (N_e / N_g - 1) / (N_e / N_g + 1) := by
-      have h₈ : Real.tanh (Real.log (N_e / N_g) / 2) = (Real.exp (Real.log (N_e / N_g)) - 1) / (Real.exp (Real.log (N_e / N_g)) + 1) := by
-        rw [Real.tanh_eq_sinh_div_cosh]
-        have h₉ : Real.sinh (Real.log (N_e / N_g) / 2) = (Real.exp (Real.log (N_e / N_g) / 2) - Real.exp (-(Real.log (N_e / N_g) / 2))) / 2 := by
-          rw [Real.sinh_eq]
-          <;> ring_nf
-        have h₁₀ : Real.cosh (Real.log (N_e / N_g) / 2) = (Real.exp (Real.log (N_e / N_g) / 2) + Real.exp (-(Real.log (N_e / N_g) / 2))) / 2 := by
-          rw [Real.cosh_eq]
-          <;> ring_nf
-        rw [h₉, h₁₀]
-        have h₁₁ : Real.exp (Real.log (N_e / N_g) / 2) > 0 := Real.exp_pos _
-        have h₁₂ : Real.exp (-(Real.log (N_e / N_g) / 2)) > 0 := Real.exp_pos _
-        field_simp [h₁₁.ne', h₁₂.ne', Real.exp_neg, Real.exp_log (by positivity : (0 : ℝ) < N_e / N_g)]
-        <;> ring_nf
-        <;> field_simp [h₁₁.ne', h₁₂.ne']
-        <;> ring_nf
-        <;> field_simp [h₁₁.ne', h₁₂.ne']
-        <;> nlinarith [Real.add_one_le_exp (Real.log (N_e / N_g) / 2)]
-      rw [h₈]
-      have h₉ : Real.exp (Real.log (N_e / N_g)) = N_e / N_g := by
-        rw [Real.exp_log (by positivity)]
-      rw [h₉]
-      <;> field_simp [hN_e.ne', hN_g.ne']
-      <;> ring_nf
-      <;> field_simp [hN_e.ne', hN_g.ne']
-      <;> ring_nf
-    rw [h₇]
-    <;> field_simp [hN_e.ne', hN_g.ne']
-    <;> ring_nf
-    <;> field_simp [hN_e.ne', hN_g.ne']
-    <;> nlinarith
-  rw [h₅]
-  <;> field_simp [hN_e.ne', hN_g.ne', h₁.ne']
-  <;> ring_nf
-  <;> field_simp [hN_e.ne', hN_g.ne', h₁.ne']
-  <;> nlinarith
+  rw [hlog]
+  unfold populationImbalance totalPopulation
+  have h_ratio_pos : 0 < N_e / N_g := div_pos hN_e hN_g
+  let u := Real.exp (Real.log (N_e / N_g) / 2)
+  have hu_pos : 0 < u := Real.exp_pos _
+  have hu_ne : u ≠ 0 := hu_pos.ne'
+  have hu_sq : u ^ 2 = N_e / N_g := by
+    dsimp [u]
+    rw [sq, ← Real.exp_add]
+    have h2 : Real.log (N_e / N_g) / 2 + Real.log (N_e / N_g) / 2 = Real.log (N_e / N_g) := by ring
+    rw [h2, Real.exp_log h_ratio_pos]
+  have h_tanh : Real.tanh (Real.log (N_e / N_g) / 2) = (N_e - N_g) / (N_e + N_g) := by
+    rw [Real.tanh_eq_sinh_div_cosh, Real.sinh_eq, Real.cosh_eq]
+    have h_u_neg : Real.exp (-(Real.log (N_e / N_g) / 2)) = u⁻¹ := by
+      dsimp [u]
+      rw [Real.exp_neg]
+    rw [h_u_neg]
+    have h_cancel_two : ((u - u⁻¹) / 2) / ((u + u⁻¹) / 2) = (u - u⁻¹) / (u + u⁻¹) := by
+      rw [div_div_div_comm, div_self (by norm_num : (2:ℝ) ≠ 0), div_one]
+    rw [h_cancel_two]
+    have h_mult : (u - u⁻¹) / (u + u⁻¹) = (u ^ 2 - 1) / (u ^ 2 + 1) := by
+      calc (u - u⁻¹) / (u + u⁻¹)
+        _ = ((u - u⁻¹) * u) / ((u + u⁻¹) * u) := by rw [mul_div_mul_right _ _ hu_ne]
+        _ = (u ^ 2 - 1) / (u ^ 2 + 1) := by
+          congr 1
+          · rw [sub_mul, inv_mul_cancel₀ hu_ne, sq]
+          · rw [add_mul, inv_mul_cancel₀ hu_ne, sq]
+    rw [h_mult, hu_sq]
+    have hsum : N_e + N_g ≠ 0 := by linarith
+    field_simp
+  rw [h_tanh]
+  have hsum : N_e + N_g ≠ 0 := by linarith
+  field_simp
 
 /-- In terms of the Berezinian modular potential K_Ber = -log Ber(Δ_pop):
-    W = N tanh(-K_Ber/2)
-    K_Ber = -2 artanh(W/N)  (for |W/N| < 1) -/
+    W = N tanh(-K_Ber/2) -/
 theorem imbalanceEqTanHModular (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     populationImbalance N_e N_g
       = totalPopulation N_e N_g * Real.tanh (-modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) / 2) := by
-  have h₁ : modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = -logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) := by
-    have h₂ : 0 < N_e / (N_e + N_g) := by positivity
-    have h₃ : 0 < N_g / (N_e + N_g) := by positivity
-    have h₄ : logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = -modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) := by
-      rw [logInversionEqNegModularPotential (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) (by positivity) (by positivity)]
-    linarith
-  rw [h₁]
-  have h₂ : populationImbalance N_e N_g = totalPopulation N_e N_g * Real.tanh (logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) / 2) :=
-    imbalanceEqTanH N_e N_g hN_e hN_g
-  rw [h₂]
-  <;> ring_nf
-  <;> simp [Real.tanh_neg]
-  <;> ring_nf
+  have h1 : -modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) =
+      logInversion (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) :=
+    (logInversionEqNegModularPotential _ _ (by positivity) (by positivity)).symm
+  rw [h1]
+  exact imbalanceEqTanH N_e N_g hN_e hN_g
 
 /-- The artanh inversion: K_Ber = -2 artanh(W/N) -/
 theorem modularPotentialEqArtanh (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_g) :
     modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g))
-      = -2 * Real.arctanh (populationImbalance N_e N_g / totalPopulation N_e N_g) := by
-  have h₁ : populationImbalance N_e N_g / totalPopulation N_e N_g = (N_e - N_g) / (N_e + N_g) := by
-    simp [populationImbalance, totalPopulation]
-    <;> field_simp [hN_e.ne', hN_g.ne']
-    <;> ring_nf
-  rw [h₁]
-  have h₂ : modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = -Real.log (N_e / N_g) := by
-    have h₃ : 0 < N_e / (N_e + N_g) := by positivity
-    have h₄ : 0 < N_g / (N_e + N_g) := by positivity
-    have h₅ : modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = -Real.log (berezinianPopulation (N_e / (N_e + N_g)) (N_g / (N_e + N_g))) := rfl
-    rw [h₅]
-    have h₆ : berezinianPopulation (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) = N_e / N_g := by
-      rw [berezinianPopulationEqRatio N_e N_g hN_e hN_g]
-    rw [h₆]
-    <;> simp [Real.log_div (by positivity) (by positivity)]
-    <;> ring_nf
-  rw [h₂]
-  have h₃ : Real.arctanh ((N_e - N_g) / (N_e + N_g)) = Real.log (N_e / N_g) / 2 := by
-    have h₄ : 0 < N_e := hN_e
-    have h₅ : 0 < N_g := hN_g
-    have h₆ : (N_e - N_g : ℝ) / (N_e + N_g) > -1 := by
-      have h₇ : 0 < N_e + N_g := by linarith
-      have h₈ : (N_e - N_g : ℝ) / (N_e + N_g) > -1 := by
-        rw [gt_iff_lt]
-        rw [lt_div_iff (by positivity)]
-        nlinarith
-      exact h₈
-    have h₇ : (N_e - N_g : ℝ) / (N_e + N_g) < 1 := by
-      have h₈ : 0 < N_e + N_g := by linarith
-      have h₉ : (N_e - N_g : ℝ) / (N_e + N_g) < 1 := by
-        rw [div_lt_iff (by positivity)]
-        nlinarith
-      exact h₉
-    have h₈ : Real.arctanh ((N_e - N_g) / (N_e + N_g)) = Real.log (N_e / N_g) / 2 := by
-      have h₉ : Real.arctanh ((N_e - N_g) / (N_e + N_g)) = Real.log ((1 + (N_e - N_g) / (N_e + N_g)) / (1 - (N_e - N_g) / (N_e + N_g))) / 2 := by
-        rw [Real.arctanh_eq_half_log_div (by linarith) (by linarith)]
-        <;> ring_nf
-      rw [h₉]
-      have h₁₀ : (1 + (N_e - N_g) / (N_e + N_g)) / (1 - (N_e - N_g) / (N_e + N_g)) = N_e / N_g := by
-        have h₁₁ : 0 < N_e + N_g := by linarith
-        field_simp [h₁₁.ne', hN_e.ne', hN_g.ne']
-        <;> ring_nf
-        <;> field_simp [h₁₁.ne', hN_e.ne', hN_g.ne']
-        <;> nlinarith
-      rw [h₁₀]
-      have h₁₁ : Real.log (N_e / N_g) / 2 = Real.log (N_e / N_g) / 2 := rfl
-      have h₁₂ : Real.log (N_e / N_g) = Real.log (N_e / N_g) := rfl
-      have h₁₃ : Real.log ((N_e / N_g : ℝ)) = Real.log (N_e / N_g) := rfl
-      have h₁₄ : Real.log ((N_e / N_g : ℝ)) / 2 = Real.log (N_e / N_g) / 2 := rfl
-      field_simp [Real.log_div (by positivity) (by positivity)]
-      <;> ring_nf
-      <;> field_simp [Real.log_div (by positivity) (by positivity)]
-      <;> ring_nf
-    rw [h₈]
-  rw [h₃] at *
-  <;> linarith
+      = -2 * Real.artanh (populationImbalance N_e N_g / totalPopulation N_e N_g) := by
+  have h_imb := imbalanceEqTanHModular N_e N_g hN_e hN_g
+  have h_tot_pos : 0 < totalPopulation N_e N_g := by
+    unfold totalPopulation
+    linarith
+  have h_div : populationImbalance N_e N_g / totalPopulation N_e N_g =
+      Real.tanh (-modularPotentialBer (N_e / (N_e + N_g)) (N_g / (N_e + N_g)) / 2) := by
+    rw [h_imb]
+    have hne : totalPopulation N_e N_g ≠ 0 := h_tot_pos.ne'
+    field_simp
+  rw [h_div, Real.artanh_tanh]
+  ring
 
 end InfoGeometry.Canonical.PopulationBerezinianBridge

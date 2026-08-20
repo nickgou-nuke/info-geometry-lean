@@ -81,8 +81,8 @@ theorem trace_Gamma :
 theorem superTrace_identityDoubled :
     superTrace (identityDoubled : BlockMat) = 0 := by
   dsimp [superTrace, identityDoubled, Gamma]
-  have h_mul : fromBlocks (1 : SubMat) 0 0 (-1) * fromBlocks 1 0 0 1 =
-      fromBlocks (1 : SubMat) 0 0 (-1) := by
+  have h_mul : fromBlocks (1 : SubMat) 0 0 (-1 : SubMat) * fromBlocks (1 : SubMat) 0 0 (1 : SubMat) =
+      fromBlocks (1 : SubMat) 0 0 (-1 : SubMat) := by
     rw [fromBlocks_multiply]
     simp
   rw [h_mul, trace_fromBlocks_diag, Matrix.trace_one, Matrix.trace_neg, Matrix.trace_one]
@@ -98,7 +98,7 @@ theorem trace_blockDiag (A B : SubMat) :
 theorem superTrace_blockDiag (A B : SubMat) :
     superTrace (blockDiag A B) = Matrix.trace A - Matrix.trace B := by
   dsimp [superTrace, Gamma, blockDiag]
-  have h_mul : fromBlocks (1 : SubMat) 0 0 (-1) * fromBlocks A 0 0 B =
+  have h_mul : fromBlocks (1 : SubMat) 0 0 (-1 : SubMat) * fromBlocks A 0 0 B =
       fromBlocks A 0 0 (-B) := by
     rw [fromBlocks_multiply]
     simp
@@ -107,29 +107,25 @@ theorem superTrace_blockDiag (A B : SubMat) :
 
 /-! ### The Trifold Scalings and the Residual Shape Operator K₀ -/
 
-variable (two_n_inv : R)
-variable (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
-variable (n_pos : (Fintype.card ι : R) ≠ 0)
-
 /-- The Common Weyl Mode: α = Tr(K) / 2n -/
-def alphaCommon (A B : SubMat) : R :=
+def alphaCommon (two_n_inv : R) (A B : SubMat) : R :=
   (Matrix.trace A + Matrix.trace B) * two_n_inv
 
 /-- The Relative/Chiral Weyl Mode: β = STr(K) / 2n -/
-def betaChiral (A B : SubMat) : R :=
+def betaChiral (two_n_inv : R) (A B : SubMat) : R :=
   (Matrix.trace A - Matrix.trace B) * two_n_inv
 
 /-- 
   The Supertraceless Shape Operator K₀ = K - α I - β Γ
   Expressed explicitly in its diagonal sub-blocks.
 -/
-def K_zero (A B : SubMat) : BlockMat :=
+def K_zero (two_n_inv : R) (A B : SubMat) : BlockMat :=
   blockDiag
     (A - (alphaCommon two_n_inv A B + betaChiral two_n_inv A B) • (1 : SubMat))
     (B - (alphaCommon two_n_inv A B - betaChiral two_n_inv A B) • (1 : SubMat))
 
 /-- Helper scalar relation: (α + β) * n = Tr(A) -/
-lemma alpha_add_beta_mul_n (A B : SubMat) :
+lemma alpha_add_beta_mul_n (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (A B : SubMat) :
     (alphaCommon two_n_inv A B + betaChiral two_n_inv A B) * (Fintype.card ι : R) =
       Matrix.trace A := by
   dsimp [alphaCommon, betaChiral]
@@ -144,7 +140,7 @@ lemma alpha_add_beta_mul_n (A B : SubMat) :
     _ = Matrix.trace A := mul_one (Matrix.trace A)
 
 /-- Helper scalar relation: (α - β) * n = Tr(B) -/
-lemma alpha_sub_beta_mul_n (A B : SubMat) :
+lemma alpha_sub_beta_mul_n (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (A B : SubMat) :
     (alphaCommon two_n_inv A B - betaChiral two_n_inv A B) * (Fintype.card ι : R) =
       Matrix.trace B := by
   dsimp [alphaCommon, betaChiral]
@@ -164,11 +160,10 @@ lemma alpha_sub_beta_mul_n (A B : SubMat) :
   THEOREM 1: The Residual Operator K₀ is strictly Trace-Free.
   Tr(K₀) = 0
 -/
-theorem trace_K_zero (A B : SubMat) :
+theorem trace_K_zero (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (A B : SubMat) :
     Matrix.trace (K_zero two_n_inv A B) = 0 := by
   dsimp [K_zero]
-  rw [trace_blockDiag, Matrix.trace_sub, Matrix.trace_sub,
-      Matrix.trace_smul, Matrix.trace_smul, Matrix.trace_one, Matrix.trace_one]
+  simp only [trace_blockDiag, Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_one, smul_eq_mul]
   rw [alpha_add_beta_mul_n two_n_inv h_two_n A B]
   rw [alpha_sub_beta_mul_n two_n_inv h_two_n A B]
   ring
@@ -177,11 +172,10 @@ theorem trace_K_zero (A B : SubMat) :
   THEOREM 2: The Residual Operator K₀ is strictly Supertrace-Free.
   STr(K₀) = 0
 -/
-theorem superTrace_K_zero (A B : SubMat) :
+theorem superTrace_K_zero (two_n_inv : R) (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1) (A B : SubMat) :
     superTrace (K_zero two_n_inv A B) = 0 := by
   dsimp [K_zero]
-  rw [superTrace_blockDiag, Matrix.trace_sub, Matrix.trace_sub,
-      Matrix.trace_smul, Matrix.trace_smul, Matrix.trace_one, Matrix.trace_one]
+  simp only [superTrace_blockDiag, Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_one, smul_eq_mul]
   rw [alpha_add_beta_mul_n two_n_inv h_two_n A B]
   rw [alpha_sub_beta_mul_n two_n_inv h_two_n A B]
   ring
@@ -190,22 +184,20 @@ theorem superTrace_K_zero (A B : SubMat) :
   THEOREM 3: Exact Reconstruction of the Surprisal Operator:
   K = α • I + β • Γ + K₀
 -/
-theorem trifold_reconstruction (A B : SubMat) :
+theorem trifold_reconstruction (two_n_inv : R) (A B : SubMat) :
     blockDiag A B =
       (alphaCommon two_n_inv A B) • (identityDoubled : BlockMat) +
       (betaChiral two_n_inv A B) • (Gamma : BlockMat) +
       K_zero two_n_inv A B := by
   dsimp [blockDiag, identityDoubled, Gamma, K_zero]
-  ext i j
-  cases i <;> cases j
-  · simp only [fromBlocks_apply₁₁, add_apply, smul_apply, sub_apply, one_apply]
+  ext (i | i) (j | j)
+  · simp only [fromBlocks_apply₁₁, add_apply, smul_apply, sub_apply, one_apply, smul_eq_mul]
     ring
-  · simp only [fromBlocks_apply₁₂, add_apply, smul_apply, sub_apply, zero_apply]
+  · simp only [fromBlocks_apply₁₂, add_apply, smul_apply, sub_apply, zero_apply, smul_eq_mul]
     ring
-  · simp only [fromBlocks_apply₂₁, add_apply, smul_apply, sub_apply, zero_apply]
+  · simp only [fromBlocks_apply₂₁, add_apply, smul_apply, sub_apply, zero_apply, smul_eq_mul]
     ring
-  · simp only [fromBlocks_apply₂₂, add_apply, smul_apply, sub_apply, one_apply,
-               neg_apply, Pi.smul_apply, smul_eq_mul]
+  · simp only [fromBlocks_apply₂₂, add_apply, smul_apply, sub_apply, one_apply, neg_apply, smul_eq_mul]
     ring
 
 end TrifoldDecomposition
@@ -227,8 +219,7 @@ def adK (K : A) : A →ₗ[ℤ] A where
     simp only [mul_add, add_mul]
     abel
   map_smul' r X := by
-    simp only [mul_smul_comm, smul_mul_assoc, RingHom.id_apply]
-    abel
+    simp only [smul_sub, mul_smul_comm, smul_mul_assoc, RingHom.id_apply]
 
 @[simp]
 theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
@@ -281,7 +272,6 @@ theorem dlogRN_mul (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
       (inv_Δ12 * D Δ12) * (Δ23 * inv_Δ23) + (inv_Δ23 * D Δ23) * (Δ12 * inv_Δ12) := by
     ring
   rw [h_expand, h12, h23, mul_one, mul_one, add_comm]
-  ring
 
 /--
   THEOREM 6: Reflection of the Logarithmic Radon–Nikodym Derivative on Inverses:
@@ -294,19 +284,15 @@ theorem dlogRN_inv (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
   have h_one : D 1 = 0 := by
     have hD1 := hD 1 1
     rw [mul_one, one_mul] at hD1
-    have h_eq : D 1 = D 1 + D 1 := hD1.symm
-    exact self_eq_add_self.mp h_eq.symm
+    linear_combination -hD1
   dsimp [dlogRN]
   have h_prod : D (Δ * inv_Δ) = 0 := by rw [h, h_one]
   rw [hD Δ inv_Δ] at h_prod
-  have h_shift : Δ * D inv_Δ = - (D Δ * inv_Δ) := by
-    linear_combination h_prod
-  have h_final : inv_Δ * (Δ * D inv_Δ) = inv_Δ * (- (D Δ * inv_Δ)) := by
-    rw [h_shift]
-  have h_cancel : inv_Δ * (Δ * D inv_Δ) = (Δ * inv_Δ) * D inv_Δ := by ring
-  rw [h_cancel, h, one_mul] at h_final
-  rw [h_final]
-  ring
+  have h_shift : Δ * D inv_Δ = - (inv_Δ * D Δ) := by
+    calc Δ * D inv_Δ = D Δ * inv_Δ + Δ * D inv_Δ - D Δ * inv_Δ := by ring
+    _ = 0 - D Δ * inv_Δ := by rw [h_prod]
+    _ = - (inv_Δ * D Δ) := by ring
+  exact h_shift
 
 end ModularDerivations
 

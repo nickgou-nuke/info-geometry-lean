@@ -151,6 +151,15 @@ theorem commutatorDerivation_inner_apply
   simp only [commutatorDerivation, innerDerivationOf]
   noncomm_ring
 
+/-- The outer/inner commutator intertwiner, pointwise. -/
+theorem commutatorDerivation_inner_right_apply
+    (D : NoncommutativeDerivation A) (K x : A) :
+    commutatorDerivation D (innerDerivationOf K) x =
+      innerDerivationOf (D K) x := by
+  simp only [commutatorDerivation, innerDerivationOf]
+  rw [D.map_sub, D.leibniz, D.leibniz]
+  noncomm_ring
+
 /-- Noncommutative Left Logarithmic Derivative:
     dlog_L(u) = u⁻¹ * D(u) -/
 def dlogL (D : NoncommutativeDerivation A) (u : Aˣ) : A :=

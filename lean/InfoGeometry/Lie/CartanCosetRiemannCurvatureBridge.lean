@@ -39,13 +39,13 @@ namespace InfoGeometry.Lie.CartanCoset
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- A Lie bracket on a real vector space V. -/
-def IsLieBracket (bracket : V → V → V) : Prop :=
-  (∀ x y, bracket x y = - bracket y x) ∧
-  (∀ x y z, bracket (x + y) z = bracket x z + bracket y z) ∧
-  (∀ x y z, bracket x (y + z) = bracket x y + bracket x z) ∧
-  (∀ (c : ℝ) x y, bracket (c • x) y = c • bracket x y) ∧
-  (∀ (c : ℝ) x y, bracket x (c • y) = c • bracket x y) ∧
-  (∀ x y z, bracket x (bracket y z) + bracket y (bracket z x) + bracket z (bracket x y) = 0)
+structure IsLieBracket (bracket : V → V → V) : Prop where
+  skew : ∀ x y, bracket x y = - bracket y x
+  add_left : ∀ x y z, bracket (x + y) z = bracket x z + bracket y z
+  add_right : ∀ x y z, bracket x (y + z) = bracket x y + bracket x z
+  smul_left : ∀ (c : ℝ) x y, bracket (c • x) y = c • bracket x y
+  smul_right : ∀ (c : ℝ) x y, bracket x (c • y) = c • bracket x y
+  jacobi : ∀ x y z, bracket x (bracket y z) + bracket y (bracket z x) + bracket z (bracket x y) = 0
 
 /-!
 =============================================================================
@@ -109,7 +109,7 @@ def nomizuRiemannCurvature (bracket : V → V → V) (X Y Z : V) : V :=
   For $X, Y, Z \in \mathfrak{p}$, $R(X, Y)Z \in \mathfrak{p}$.
 -/
 theorem riemann_curvature_mem_tangent_space
-    (bracket : V → V → V) (h_lie : IsLieBracket bracket)
+    (bracket : V → V → V)
     (k_space p_space : Submodule ℝ V)
     (h_grading : CartanSymmetricGrading bracket k_space p_space)
     (X Y Z : V) (hX : X ∈ p_space) (hY : Y ∈ p_space) (hZ : Z ∈ p_space) :
@@ -128,14 +128,12 @@ theorem riemann_curvature_skew
     (X Y Z : V) :
     nomizuRiemannCurvature bracket X Y Z = - nomizuRiemannCurvature bracket Y X Z := by
   dsimp [nomizuRiemannCurvature]
-  have h_skew := h_lie.1 X Y
-  rw [h_skew]
-  have h_smul : bracket (-bracket Y X) Z = - bracket (bracket Y X) Z := by
-    have h_neg_one : -bracket Y X = (-1 : ℝ) • bracket Y X := by
-      simp only [neg_smul, one_smul]
-    rw [h_neg_one, h_lie.2.2.1 (-1) (bracket Y X) Z]
+  rw [h_lie.skew X Y]
+  have h_neg : bracket (-bracket Y X) Z = - bracket (bracket Y X) Z := by
+    have h1 : -bracket Y X = (-1 : ℝ) • bracket Y X := by simp only [neg_smul, one_smul]
+    rw [h1, h_lie.smul_left (-1)]
     simp only [neg_smul, one_smul]
-  rw [h_smul, neg_neg]
+  rw [h_neg, neg_neg]
 
 /--
   THEOREM: First Bianchi Identity for Nomizu Curvature:
@@ -148,16 +146,17 @@ theorem first_bianchi_identity
     nomizuRiemannCurvature bracket Y Z X +
     nomizuRiemannCurvature bracket Z X Y = 0 := by
   dsimp [nomizuRiemannCurvature]
-  have h_jacobi := h_lie.2.2.2.2 X Y Z
-  have h_skew1 := h_lie.1 (bracket X Y) Z
-  have h_skew2 := h_lie.1 (bracket Y Z) X
-  have h_skew3 := h_lie.1 (bracket Z X) Y
+  have h_jacobi := h_lie.jacobi X Y Z
+  have h_skew1 : -bracket (bracket X Y) Z = bracket Z (bracket X Y) := by
+    rw [h_lie.skew (bracket X Y) Z, neg_neg]
+  have h_skew2 : -bracket (bracket Y Z) X = bracket X (bracket Y Z) := by
+    rw [h_lie.skew (bracket Y Z) X, neg_neg]
+  have h_skew3 : -bracket (bracket Z X) Y = bracket Y (bracket Z X) := by
+    rw [h_lie.skew (bracket Z X) Y, neg_neg]
+  rw [h_skew1, h_skew2, h_skew3]
   calc
-    -bracket (bracket X Y) Z + -bracket (bracket Y Z) X + -bracket (bracket Z X) Y
-      = bracket Z (bracket X Y) + bracket X (bracket Y Z) + bracket Y (bracket Z X) := by
-        rw [h_skew1, h_skew2, h_skew3]
-        simp only [neg_neg]
-    _ = bracket X (bracket Y Z) + bracket Y (bracket Z X) + bracket Z (bracket X Y) := by
+    bracket Z (bracket X Y) + bracket X (bracket Y Z) + bracket Y (bracket Z X)
+      = bracket X (bracket Y Z) + bracket Y (bracket Z X) + bracket Z (bracket X Y) := by
         abel
     _ = 0 := h_jacobi
 

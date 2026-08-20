@@ -105,26 +105,18 @@ theorem rhoSL3_offdiagonal_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (i j : Fin 3) :
     rhoSL3 A (inclPlus i) (inclMinus j) = 0 ∧
     rhoSL3 A (inclMinus i) (inclPlus j) = 0 := by
   dsimp [rhoSL3, inclPlus, inclMinus]
-  have h1 : i.val < 3 := i.isLt
-  have h2 : ¬ (j.val + 3 < 3) := by omega
-  have h3 : ¬ (i.val + 3 < 3) := by omega
-  have h4 : j.val < 3 := j.isLt
   constructor
-  · rw [dif_pos h1, dif_neg h2]
-  · rw [dif_neg h3, dif_pos h4]
+  · rfl
+  · rw [dif_pos j.isLt]
 
 /-- THEOREM 2 (Diagonal blocks of ρ_pair are zero): -/
 theorem rhoPair_diagonal_zero (u v : Fin 3 → ℝ) (i j : Fin 3) :
     rhoPair u v (inclPlus i) (inclPlus j) = 0 ∧
     rhoPair u v (inclMinus i) (inclMinus j) = 0 := by
   dsimp [rhoPair, inclPlus, inclMinus]
-  have h1 : i.val < 3 := i.isLt
-  have h2 : j.val < 3 := j.isLt
-  have h3 : ¬ (i.val + 3 < 3) := by omega
-  have h4 : ¬ (j.val + 3 < 3) := by omega
   constructor
-  · rw [dif_pos h1, dif_pos h2]
-  · rw [dif_neg h3, dif_neg h4]
+  · rfl
+  · rfl
 
 /-- THEOREM 3 (Pairing Matrix is Skew-Symmetric): -/
 theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :
@@ -132,7 +124,7 @@ theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :
   dsimp [pairingMatrix]
   rcases i with ⟨i_val, hi⟩
   rcases j with ⟨j_val, hj⟩
-  interval_cases i_val <;> interval_cases j_val <;> simp
+  interval_cases i_val <;> interval_cases j_val <;> (try rfl) <;> (try simp)
 
 /-!
 =============================================================================

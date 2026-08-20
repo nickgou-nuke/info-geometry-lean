@@ -16,7 +16,7 @@ This module formalizes the exact bridge between:
 2. Additive logarithmic surprisal potentials `K = -log ρ`
 3. Infinitesimal derivations `D : A → A` and their logarithmic derivatives `dlog_D(u) = u⁻¹ D(u)`
 
-All proofs are complete in native Mathlib with zero custom axioms.
+All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
 
 namespace InfoGeometry.Algebra.ExplogRN
@@ -34,10 +34,7 @@ def IsDerivation (D : A → A) : Prop :=
   (∀ x y, D (x + y) = D x + D y) ∧ (∀ x y, D (x * y) = D x * y + x * D y)
 
 /-- THEOREM: Every derivation strictly annihilates the multiplicative unit 1. -/
-theorem derivation_one
-    (D : A → A)
-    (hD : IsDerivation D) :
-    D 1 = 0 := by
+theorem derivation_one (D : A → A) (hD : IsDerivation D) : D 1 = 0 := by
   have hmul : D 1 = D 1 + D 1 := by
     calc
       D 1 = D (1 * 1) := by rw [mul_one]
@@ -57,10 +54,7 @@ def dlog (D : A → A) (u : Aˣ) : A :=
   THEOREM: The Derivation of an Invertible Density Element:
   D(u⁻¹) = - u⁻² D(u)
 -/
-theorem derivation_inv
-    (D : A → A)
-    (hD : IsDerivation D)
-    (u : Aˣ) :
+theorem derivation_inv (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
     D (u⁻¹ : Aˣ).val = - (u⁻¹ : Aˣ).val * (u⁻¹ : Aˣ).val * D (u : A) := by
   have h_one : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
   have h_prod : D ((u : A) * (u⁻¹ : Aˣ).val) = 0 := by
@@ -85,10 +79,7 @@ theorem derivation_inv
   into additive potential generators:
   dlog_D(u · v) = dlog_D(u) + dlog_D(v)
 -/
-theorem dlog_mul
-    (D : A → A)
-    (hD : IsDerivation D)
-    (u v : Aˣ) :
+theorem dlog_mul (D : A → A) (hD : IsDerivation D) (u v : Aˣ) :
     dlog D (u * v) = dlog D u + dlog D v := by
   dsimp [dlog]
   rw [hD.2 (u : A) (v : A)]
@@ -113,9 +104,7 @@ theorem dlog_mul
 
 /-- THEOREM: Logarithmic derivation of the unit element is zero. -/
 @[simp]
-theorem dlog_one
-    (D : A → A)
-    (hD : IsDerivation D) :
+theorem dlog_one (D : A → A) (hD : IsDerivation D) :
     dlog D 1 = 0 := by
   dsimp [dlog]
   rw [derivation_one D hD, mul_zero]
@@ -124,10 +113,7 @@ theorem dlog_one
   THEOREM: Logarithmic derivation of the inverse density (Surprisal Reflection):
   dlog_D(u⁻¹) = - dlog_D(u)
 -/
-theorem dlog_inv
-    (D : A → A)
-    (hD : IsDerivation D)
-    (u : Aˣ) :
+theorem dlog_inv (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
     dlog D (u⁻¹) = - dlog D u := by
   have h := dlog_mul D hD u (u⁻¹)
   rw [mul_inv_cancel, dlog_one D hD] at h
@@ -139,26 +125,10 @@ theorem dlog_inv
   dlog_D(ρ₁₃) = dlog_D(ρ₁₂) + dlog_D(ρ₂₃)
 -/
 theorem radon_nikodym_cocycle_dlog
-    (D : A → A)
-    (hD : IsDerivation D)
+    (D : A → A) (hD : IsDerivation D)
     (rho_12 rho_23 : Aˣ) :
     dlog D (rho_12 * rho_23) = dlog D rho_12 + dlog D rho_23 :=
   dlog_mul D hD rho_12 rho_23
-
-/-- Power homomorphism for logarithmic derivatives. -/
-theorem dlog_pow
-    (D : A → A)
-    (hD : IsDerivation D)
-    (u : Aˣ)
-    (n : ℕ) :
-    dlog D (u ^ n) = n • dlog D u := by
-  induction n with
-  | zero =>
-      simp only [pow_zero, zero_smul]
-      exact dlog_one D hD
-  | succ n ih =>
-      rw [pow_succ, dlog_mul D hD, ih]
-      simp only [succ_nsmul, add_comm]
 
 /-!
 =============================================================================
@@ -171,9 +141,7 @@ PART 2: Analytic Differentiable Calculus of the Radon–Nikodym Density
   d/dt [log ρ(t)] = ρ'(t) / ρ(t)
 -/
 theorem hasDerivAt_log_radon_nikodym
-    (rho : ℝ → ℝ)
-    (rho' : ℝ)
-    (t : ℝ)
+    (rho : ℝ → ℝ) (rho' : ℝ) (t : ℝ)
     (h_diff : HasDerivAt rho rho' t)
     (h_pos : 0 < rho t) :
     HasDerivAt (fun s => Real.log (rho s)) (rho' / rho t) t := by
@@ -185,9 +153,7 @@ theorem hasDerivAt_log_radon_nikodym
   d/dt [exp(K(t))] = K'(t) • exp(K(t))
 -/
 theorem hasDerivAt_exp_potential
-    (K : ℝ → ℝ)
-    (K' : ℝ)
-    (t : ℝ)
+    (K : ℝ → ℝ) (K' : ℝ) (t : ℝ)
     (h_diff : HasDerivAt K K' t) :
     HasDerivAt (fun s => Real.exp (K s)) (K' * Real.exp (K t)) t := by
   have h := HasDerivAt.exp h_diff
@@ -195,28 +161,12 @@ theorem hasDerivAt_exp_potential
   rw [h_comm] at h
   exact h
 
-/-- The logarithm of the exponential potential has the original derivative. -/
-theorem hasDerivAt_log_exp_potential
-    (K : ℝ → ℝ)
-    (K' : ℝ)
-    (t : ℝ)
-    (h_diff : HasDerivAt K K' t) :
-    HasDerivAt (fun s => Real.log (Real.exp (K s))) K' t := by
-  have h_id : (fun s => Real.log (Real.exp (K s))) = K := by
-    ext s
-    exact Real.log_exp (K s)
-  rw [h_id]
-  exact h_diff
-
 /-- 
   THEOREM: The Fundamental `explogRNder` Inversion Identities:
   1. log(exp(K)) = K
   2. exp(log(ρ)) = ρ  (for ρ > 0)
 -/
-theorem explog_involutions
-    (K_val : ℝ)
-    (rho_val : ℝ)
-    (h_pos : 0 < rho_val) :
+theorem explog_involutions (K_val : ℝ) (rho_val : ℝ) (h_pos : 0 < rho_val) :
     Real.log (Real.exp K_val) = K_val ∧ Real.exp (Real.log rho_val) = rho_val := by
   exact ⟨Real.log_exp K_val, Real.exp_log h_pos⟩
 
@@ -225,9 +175,7 @@ theorem explog_involutions
   If ρ(t) = exp(K(t)), then dlog(ρ(t)) = K'(t).
 -/
 theorem dlog_density_eq_potential_derivative
-    (K : ℝ → ℝ)
-    (K' : ℝ)
-    (t : ℝ)
+    (K : ℝ → ℝ) (K' : ℝ) (t : ℝ)
     (h_diff : HasDerivAt K K' t) :
     let rho := fun s => Real.exp (K s)
     let rho' := K' * Real.exp (K t)

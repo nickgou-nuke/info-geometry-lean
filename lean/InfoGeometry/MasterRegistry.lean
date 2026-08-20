@@ -10,17 +10,6 @@ import InfoGeometry.QuantumGeometry.Projective.Basic
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Canonical.CompleteUnifiedBundle
 import InfoGeometry.QuantumGeometry.TensorBridge
-import InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
-import InfoGeometry.Canonical.GrothendieckFrobeniusGromovWittenUnifiedBridge
-import InfoGeometry.Algebra.Grothendieck
-import InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
-import InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
-import InfoGeometry.Canonical.KANFrobeniusGromovWittenBridge
-import InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
-import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
-import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
-import InfoGeometry.Projective.KleinQuadricMonodromy
-import InfoGeometry.Categorical.ZornBraidColimit
 
 noncomputable section
 
@@ -32,13 +21,6 @@ namespace InfoGeometry.MasterRegistry
 open InfoGeometry.EndToEnd
 open InfoGeometry.Modular
 open InfoGeometry.Canonical.CompleteUnifiedBundle
-open InfoGeometry.Algebra.Grothendieck
-open InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
-open InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
-open InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
-open InfoGeometry.Categorical.ZornBraidColimit
-open InfoGeometry.Canonical.PhysicalBdGPairingBridge
-open InfoGeometry.QuantumGeometry.Projective
 
 /-!
 =============================================================================

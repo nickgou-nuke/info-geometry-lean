@@ -82,6 +82,16 @@ theorem eta55_transpose : eta55ᵀ = eta55 := by
 def IsSO55Matrix (M : Mat10) : Prop :=
   Mᵀ * eta55 + eta55 * M = 0
 
+theorem isSO55_iff_transpose_mul_eq_neg_mul (M : Mat10) :
+    IsSO55Matrix M ↔ Mᵀ * eta55 = -(eta55 * M) := by
+  constructor
+  · intro h
+    exact eq_neg_of_add_eq_zero_left h
+  · intro h
+    dsimp [IsSO55Matrix]
+    rw [h]
+    simp
+
 theorem isSO55_zero : IsSO55Matrix (0 : Mat10) := by
   dsimp [IsSO55Matrix]
   simp
@@ -106,6 +116,20 @@ theorem isSO55_smul (c : ℝ) {M : Mat10} (hM : IsSO55Matrix M) :
     _ = c • (0 : Mat10) := by rw [hM]
     _ = 0 := smul_zero c
 
+theorem isSO55_neg {M : Mat10} (hM : IsSO55Matrix M) :
+    IsSO55Matrix (-M) := by
+  dsimp [IsSO55Matrix] at hM ⊢
+  calc
+    (-M)ᵀ * eta55 + eta55 * (-M) =
+        -(Mᵀ * eta55) + -(eta55 * M) := by
+          rw [transpose_neg, neg_mul, mul_neg]
+    _ = -(Mᵀ * eta55 + eta55 * M) := by rw [neg_add]
+    _ = 0 := by rw [hM, neg_zero]
+
+theorem isSO55_sub {M N : Mat10} (hM : IsSO55Matrix M) (hN : IsSO55Matrix N) :
+    IsSO55Matrix (M - N) := by
+  simpa only [sub_eq_add_neg] using isSO55_add hM (isSO55_neg hN)
+
 theorem isSO55_bracket {M N : Mat10} (hM : IsSO55Matrix M) (hN : IsSO55Matrix N) :
     IsSO55Matrix (⁅M, N⁆ : Mat10) := by
   dsimp [IsSO55Matrix] at *
@@ -129,5 +153,9 @@ def so55LieSubalgebra : LieSubalgebra ℝ Mat10 where
   zero_mem' := isSO55_zero
   smul_mem' c {M} hM := isSO55_smul c hM
   lie_mem' {M N} hM hN := isSO55_bracket hM hN
+
+@[simp]
+theorem mem_so55LieSubalgebra (M : Mat10) :
+    M ∈ so55LieSubalgebra ↔ IsSO55Matrix M := Iff.rfl
 
 end InfoGeometry.Lie.SO55MatrixSubalgebra

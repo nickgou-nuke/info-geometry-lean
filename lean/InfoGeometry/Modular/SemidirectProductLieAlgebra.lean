@@ -194,12 +194,121 @@ def inr : M →ₗ⁅R⁆ SemidirectProduct L M where
     · change ⁅m₁, m₂⁆ = ⁅m₁, m₂⁆ + ⁅(0 : L), m₂⁆ - ⁅(0 : L), m₁⁆
       rw [_root_.zero_lie, _root_.zero_lie, sub_zero, add_zero]
 
+@[simp] theorem bracket_inl_inr (l : L) (m : M) :
+    ⁅(inl (R := R) (L := L) (M := M)) l,
+      (inr (R := R) (L := L) (M := M)) m⁆ =
+      (inr (R := R) (L := L) (M := M)) ⁅l, m⁆ := by
+  apply Prod.ext
+  · change ⁅l, (0 : L)⁆ = 0
+    simp
+  · change ⁅(0 : M), m⁆ + ⁅l, m⁆ - ⁅(0 : L), (0 : M)⁆ = ⁅l, m⁆
+    simp
+
+@[simp] theorem bracket_inr_inl (m : M) (l : L) :
+    ⁅(inr (R := R) (L := L) (M := M)) m,
+      (inl (R := R) (L := L) (M := M)) l⁆ =
+      -(inr (R := R) (L := L) (M := M)) ⁅l, m⁆ := by
+  apply Prod.ext
+  · change ⁅(0 : L), l⁆ = -(0 : L)
+    simp
+  · change ⁅m, (0 : M)⁆ + ⁅(0 : L), (0 : M)⁆ - ⁅l, m⁆ = -⁅l, m⁆
+    simp
+
+@[simp] theorem bracket_inl_inl (l₁ l₂ : L) :
+    ⁅(inl (R := R) (L := L) (M := M)) l₁,
+      (inl (R := R) (L := L) (M := M)) l₂⁆ =
+      (inl (R := R) (L := L) (M := M)) ⁅l₁, l₂⁆ := by
+  apply Prod.ext
+  · rfl
+  · simp
+
+@[simp] theorem bracket_inr_inr (m₁ m₂ : M) :
+    ⁅(inr (R := R) (L := L) (M := M)) m₁,
+      (inr (R := R) (L := L) (M := M)) m₂⁆ =
+      (inr (R := R) (L := L) (M := M)) ⁅m₁, m₂⁆ := by
+  apply Prod.ext
+  · simp
+  · simp
+
 /-- Canonical Projection: $\mathfrak{g} \ltimes \mathfrak{h} \to \mathfrak{g}$. -/
 def fst : SemidirectProduct L M →ₗ⁅R⁆ L where
   toFun p := p.1
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   map_lie' := rfl
+
+theorem fst_surjective :
+    Function.Surjective (fun p : SemidirectProduct L M =>
+      (fst (R := R) (L := L) (M := M)) p) := by
+  intro l
+  exact ⟨(inl (R := R) (L := L) (M := M)) l, rfl⟩
+
+theorem decomposition (p : SemidirectProduct L M) :
+    p = (inl (R := R) (L := L) (M := M)) p.1 +
+        (inr (R := R) (L := L) (M := M)) p.2 := by
+  apply Prod.ext
+  · change p.1 = p.1 + 0
+    rw [add_zero]
+  · change p.2 = 0 + p.2
+    rw [zero_add]
+
+theorem fst_eq_zero_iff_mem_range_inr (p : SemidirectProduct L M) :
+    (fst (R := R) (L := L) (M := M)) p = 0 ↔
+      ∃ m : M, (inr (R := R) (L := L) (M := M)) m = p := by
+  constructor
+  · intro hp
+    refine ⟨p.2, ?_⟩
+    apply Prod.ext
+    · change (0 : L) = p.1
+      exact hp.symm
+    · rfl
+  · rintro ⟨m, rfl⟩
+    change (0 : L) = 0
+    rfl
+
+@[simp] theorem fst_inl (l : L) :
+    (fst (R := R) (L := L) (M := M))
+        ((inl (R := R) (L := L) (M := M)) l) = l := rfl
+
+@[simp] theorem fst_inr (m : M) :
+    (fst (R := R) (L := L) (M := M))
+        ((inr (R := R) (L := L) (M := M)) m) = 0 := rfl
+
+theorem inl_injective :
+    Function.Injective (fun l : L => (inl (R := R) (L := L) (M := M)) l) := by
+  intro l₁ l₂ h
+  exact congrArg Prod.fst h
+
+theorem inr_injective :
+    Function.Injective (fun m : M => (inr (R := R) (L := L) (M := M)) m) := by
+  intro m₁ m₂ h
+  exact congrArg Prod.snd h
+
+theorem mem_ker_fst_iff_mem_range_inr (p : SemidirectProduct L M) :
+    p ∈ (fst (R := R) (L := L) (M := M)).ker ↔
+      p ∈ (inr (R := R) (L := L) (M := M)).range := by
+  change p.1 = 0 ↔ ∃ m, (0, m) = p
+  constructor
+  · intro hp
+    refine ⟨p.2, ?_⟩
+    ext
+    · exact hp.symm
+    · rfl
+  · rintro ⟨m, hm⟩
+    have h1 := congrArg Prod.fst hm
+    exact h1.symm
+
+theorem semidirect_short_exact_sequence :
+    Function.Injective (fun m : M => (inr (R := R) (L := L) (M := M)) m) ∧
+    Function.Surjective (fst (R := R) (L := L) (M := M)) ∧
+    (∀ p : SemidirectProduct L M,
+      p ∈ (fst (R := R) (L := L) (M := M)).ker ↔
+        p ∈ (inr (R := R) (L := L) (M := M)).range) := by
+  exact ⟨inr_injective (R := R),
+    by
+      intro l
+      exact ⟨(l, 0), rfl⟩,
+    mem_ker_fst_iff_mem_range_inr (R := R)⟩
 
 end SemidirectProduct
 

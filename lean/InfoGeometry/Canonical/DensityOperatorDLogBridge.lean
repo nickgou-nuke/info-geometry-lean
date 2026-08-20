@@ -33,6 +33,16 @@ noncomputable def scalarDensityOperator (u : ℝˣ) : EndH E :=
   intro x
   apply DoubledSpace.ext <;> simp [scalarDensityOperator, idEndH, smul_smul]
 
+@[simp] theorem scalarDensityOperator_inv_mul (u : ℝˣ) :
+    scalarDensityOperator (E := E) (u⁻¹) * scalarDensityOperator (E := E) u =
+      idEndH E := by
+  rw [← scalarDensityOperator_mul, inv_mul_cancel, scalarDensityOperator_one]
+
+@[simp] theorem scalarDensityOperator_mul_inv (u : ℝˣ) :
+    scalarDensityOperator (E := E) u * scalarDensityOperator (E := E) (u⁻¹) =
+      idEndH E := by
+  rw [← scalarDensityOperator_mul, mul_inv_cancel, scalarDensityOperator_one]
+
 /-- Operator-valued logarithmic derivative of a scalar density unit. -/
 noncomputable def densityOperatorDLog
     (D : CommRingDerivation ℝ) (u : ℝˣ) : EndH E :=

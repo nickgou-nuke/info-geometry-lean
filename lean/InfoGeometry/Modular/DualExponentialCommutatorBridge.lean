@@ -26,15 +26,15 @@ def adK_dual (K : A) (X : A) : A :=
   K * X - X * K
 
 @[simp]
-theorem adK_apply (K X : A) : adK_dual K X = K * X - X * K := rfl
+theorem adK_dual_apply (K X : A) : adK_dual K X = K * X - X * K := rfl
 
-theorem adK_map_add (K x y : A) :
+theorem adK_dual_map_add (K x y : A) :
     adK_dual K (x + y) = adK_dual K x + adK_dual K y := by
   dsimp [adK_dual]
   simp only [mul_add, add_mul]
   abel
 
-theorem adK_leibniz (K x y : A) :
+theorem adK_dual_leibniz (K x y : A) :
     adK_dual K (x * y) = adK_dual K x * y + x * adK_dual K y := by
   dsimp [adK_dual]
   calc
@@ -104,8 +104,8 @@ theorem extensionality {D E : RingDerivation A}
 
 def innerDerivation (K : A) : RingDerivation A where
   toFun := adK_dual K
-  map_add' := adK_map_add K
-  leibniz' := adK_leibniz K
+  map_add' := adK_dual_map_add K
+  leibniz' := adK_dual_leibniz K
 
 @[simp]
 theorem innerDerivation_apply (K X : A) :
@@ -175,7 +175,7 @@ theorem commutator_innerDerivation_apply_of_invariant
   change adK_dual 0 X = 0
   simp [adK_dual]
 
-theorem adK_bracket (K₁ K₂ X : A) :
+theorem adK_dual_bracket (K₁ K₂ X : A) :
     adK_dual K₁ (adK_dual K₂ X) - adK_dual K₂ (adK_dual K₁ X) = adK_dual (adK_dual K₁ K₂) X := by
   dsimp [adK_dual]
   noncomm_ring
@@ -186,7 +186,7 @@ theorem commutator_innerDerivation_innerDerivation_eq (K₁ K₂ : A) :
   apply extensionality
   intro X
   rw [commutator_apply]
-  exact adK_bracket K₁ K₂ X
+  exact adK_dual_bracket K₁ K₂ X
 
 /-- 
   THEOREM 2: Adiabatic / Invariant Commutation
@@ -204,21 +204,21 @@ theorem derivation_adK_comm_of_invariant (K : A) (hK : D K = 0) (X : A) :
   If K is in the center of the ring (or a central scalar λ • 1), 
   its modular derivation is strictly zero: ad_K = 0.
 -/
-theorem adK_eq_zero_of_central (K : A) (h_central : ∀ x, K * x = x * K) (X : A) :
+theorem adK_dual_eq_zero_of_central (K : A) (h_central : ∀ x, K * x = x * K) (X : A) :
     adK_dual K X = 0 := by
   dsimp [adK_dual]
   rw [h_central X, sub_self]
 
-theorem central_of_adK_eq_zero (K : A) (h_zero : ∀ X, adK_dual K X = 0) (X : A) :
+theorem central_of_adK_dual_eq_zero (K : A) (h_zero : ∀ X, adK_dual K X = 0) (X : A) :
     K * X = X * K := by
   exact sub_eq_zero.mp (h_zero X)
 
-theorem adK_eq_zero_iff_central (K : A) :
+theorem adK_dual_eq_zero_iff_central (K : A) :
     (∀ X, adK_dual K X = 0) ↔ ∀ X, K * X = X * K := by
   constructor
-  · exact central_of_adK_eq_zero K
+  · exact central_of_adK_dual_eq_zero K
   · intro h X
-    exact adK_eq_zero_of_central K h X
+    exact adK_dual_eq_zero_of_central K h X
 
 end RingDerivation
 

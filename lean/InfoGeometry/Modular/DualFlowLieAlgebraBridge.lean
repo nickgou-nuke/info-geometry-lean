@@ -205,6 +205,10 @@ theorem ker_ad_eq_center :
     (LieDerivation.ad R A).ker = LieAlgebra.center R A :=
   LieDerivation.ad_ker_eq_center R A
 
+theorem ad_eq_zero_iff_mem_center (K : A) :
+    LieDerivation.ad R A K = 0 ↔ K ∈ LieAlgebra.center R A := by
+  rw [← LieHom.mem_ker, ker_ad_eq_center]
+
 theorem adiabatic_decoupling (D : Der R A) (K : A) (hK : D K = 0) :
     ⁅D, LieDerivation.ad R A K⁆ = 0 := by
   rw [master_dual_flow_commutator, hK, map_zero]
@@ -229,6 +233,10 @@ theorem ker_toOut :
 theorem surjective_toOut :
     Function.Surjective (toOut R A) :=
   Quot.mk_surjective
+
+theorem toOut_eq_zero_iff_mem_Inn (D : Der R A) :
+    toOut R A D = 0 ↔ D ∈ Inn R A := by
+  rw [← LieHom.mem_ker, ker_toOut]
 
 theorem derivation_short_exact_sequence :
     (toOut R A).ker = Inn R A ∧

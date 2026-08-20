@@ -11,10 +11,11 @@ import InfoGeometry.Canonical.PhysicalBdGPairingBridge
 import InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.Projective.Quotient
-import InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
+import InfoGeometry.EndToEnd
 import InfoGeometry.OperatorAlgebra.ChiralRailPlane
 import InfoGeometry.Canonical.TriadicSynthesisDictionary
 import InfoGeometry.KMSGNS
+import InfoGeometry.EndToEnd
 
 open ContinuousLinearMap
 open scoped InnerProductSpace
@@ -126,7 +127,7 @@ theorem log_radon_nikodym_homomorphism
 
 /-! Master Dual-Flow Commutator: Spacetime derivations intertwine with modular generators. -/
 theorem master_spacetime_modular_commutator
-    {A : Type*} [Ring A]
+    {A : Type*} [Ring A] [Algebra ℂ A]
     (D : InfoGeometry.EndToEnd.Derivation A)
     (K X : A) :
     D (InfoGeometry.EndToEnd.adK K X) - InfoGeometry.EndToEnd.adK K (D X) =
@@ -135,7 +136,7 @@ theorem master_spacetime_modular_commutator
 
 /-! The thermal kernel is central in the operator algebra. -/
 theorem modular_thermal_kernel_central
-    {A : Type*} [Ring A]
+    {A : Type*} [Ring A] [Algebra ℂ A]
     (K : A) :
     (∀ X, InfoGeometry.EndToEnd.adK K X = 0) ↔ (∀ X, K * X = X * K) :=
   InfoGeometry.EndToEnd.thermal_time_kernel K

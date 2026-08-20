@@ -69,6 +69,18 @@ instance : CoeFun (NCDerivation A) (fun _ => A → A) where
 theorem NCDerivation.leibniz (D : NCDerivation A) (x y : A) :
     D (x * y) = D x * y + x * D y := D.leibniz' x y
 
+@[ext] theorem NCDerivation.ext {D E : NCDerivation A}
+    (h : ∀ X, D X = E X) : D = E := by
+  cases D with
+  | mk D hD =>
+    cases E with
+    | mk E hE =>
+      have hDE : D = E := by
+        ext X
+        exact h X
+      cases hDE
+      rfl
+
 /-- The logarithmic derivative of a unit, with the inverse on the left. -/
 def dlog (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)
@@ -143,8 +155,16 @@ theorem ncDerivationCommutator_inner_apply
       innerNCDerivation (D K) X := by
   change D (adK K X) - adK K (D X) = adK (D K) X
   dsimp [adK]
-  rw [D.leibniz, D.leibniz]
+  rw [D.toLinearMap.map_sub, D.leibniz, D.leibniz]
   abel
+
+theorem ncDerivationCommutator_inner
+    (D : NCDerivation A) (K : A) :
+    ncDerivationCommutator D (innerNCDerivation K) =
+      innerNCDerivation (D K) := by
+  apply NCDerivation.ext
+  intro X
+  exact ncDerivationCommutator_inner_apply D K X
 
 theorem dlog_eq_zero_of_fixed (D : A →ₗ[ℤ] A) (u : Aˣ)
     (h : D (u : A) = 0) : dlog D u = 0 := by

@@ -240,6 +240,24 @@ theorem expTransport_smul_seed
   unfold expTransport
   simp only [smul_mul_assoc, mul_smul_comm]
 
+/-- The finite exponential transport packaged as an `ℝ`-linear map. -/
+noncomputable def expTransportLinear
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) : A →ₗ[ℝ] A where
+  toFun A₀ := expTransport X A₀ t
+  map_add' A₁ A₂ := expTransport_add_seed X A₁ A₂ t
+  map_smul' r A₀ := expTransport_smul_seed X A₀ r t
+
+/-- The finite exponential transport packaged as a unital algebra homomorphism. -/
+noncomputable def expTransportAlgHom
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+      [CompleteSpace A]
+    (X : A) (t : ℝ) : A →ₐ[ℝ] A :=
+  AlgHom.ofLinearMap (expTransportLinear X t)
+    (expTransport_one_seed X t)
+    (fun A₁ A₂ => expTransport_mul_seed X A₁ A₂ t)
+
 /-- Exponential conjugation preserves all natural powers of an observable. -/
 theorem expTransport_pow_seed
     {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]

@@ -5388,6 +5388,7 @@ import InfoGeometry.Modular.NoncommutativeModularBridge
 import InfoGeometry.Modular.DualFlowLieAlgebraBridge
 import InfoGeometry.Modular.ExactSequence
 import InfoGeometry.Modular.MatrixKMSModularState
+import InfoGeometry.Modular.ModularSurprisalDerivationBridge
 import InfoGeometry.Modular.NambuGradedSuperalgebraBridge
 import InfoGeometry.Modular.PSL2Z
 import InfoGeometry.Modular.SemidirectProductLieAlgebra

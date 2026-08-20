@@ -25,8 +25,26 @@ namespace InfoGeometry.Canonical.FiniteCartanLogLaplace
 
 universe u v
 
-variable {Mode : Type u} {Coord : Type v}
-variable [Fintype Mode] [Nonempty Mode] [Fintype Coord]
+variable {Coord : Type v} [Fintype Coord]
+
+/-- Finite Cartan pairing. -/
+def pair (β q : Coord → ℝ) : ℝ :=
+  ∑ a : Coord, β a * q a
+
+@[simp] theorem pair_add (β γ q : Coord → ℝ) :
+    pair (β + γ) q = pair β q + pair γ q := by
+  classical
+  unfold pair
+  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
+
+@[simp] theorem pair_smul (t : ℝ) (β q : Coord → ℝ) :
+    pair (t • β) q = t * pair β q := by
+  classical
+  unfold pair
+  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum]
+
+universe w
+variable {Mode : Type u} [Fintype Mode]
 
 /-- A finite positive family carrying a finite-dimensional charge vector. -/
 structure Family (Mode : Type u) (Coord : Type v)
@@ -37,11 +55,8 @@ structure Family (Mode : Type u) (Coord : Type v)
 
 namespace Family
 
+variable [Nonempty Mode]
 variable (F : Family Mode Coord)
-
-/-- Finite Cartan pairing. -/
-def pair (F : Family Mode Coord) (β q : Coord → ℝ) : ℝ :=
-  ∑ a : Coord, β a * q a
 
 /-- Unnormalized Cartan exponential weight. -/
 def unnormalized (β : Coord → ℝ) (m : Mode) : ℝ :=
@@ -62,18 +77,6 @@ def probability (β : Coord → ℝ) (m : Mode) : ℝ :=
 /-- Expected charge coordinate. -/
 def expectedCharge (β : Coord → ℝ) (a : Coord) : ℝ :=
   ∑ m : Mode, F.probability β m * F.charge m a
-
-@[simp] theorem pair_add (β γ q : Coord → ℝ) :
-    pair (β + γ) q = pair β q + pair γ q := by
-  classical
-  unfold pair
-  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-
-@[simp] theorem pair_smul (t : ℝ) (β q : Coord → ℝ) :
-    pair (t • β) q = t * pair β q := by
-  classical
-  unfold pair
-  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum]
 
 @[simp] theorem unnormalized_pos (β : Coord → ℝ) (m : Mode) :
     0 < F.unnormalized β m := by
@@ -192,7 +195,7 @@ theorem hasDerivAt_cartanLine_logPartition
     exact F.scalarRestriction_logPartition β v s
   rw [hfun] at h
   have hmean := F.scalarRestriction_mean β v t
-  have hpair := pair_expectedCharge F (β + t • v) v
+  have hpair := F.pair_expectedCharge (β + t • v) v
   rw [hmean, ← hpair] at h
   exact h
 

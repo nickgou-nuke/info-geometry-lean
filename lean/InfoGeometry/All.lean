@@ -7416,3 +7416,6 @@ import InfoGeometry.Physics.FiniteSpinDensityRelativeModularBridge
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Canonical.FiniteScalarLogLaplace
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
+import InfoGeometry.Canonical.MeanValueInvariant
+import InfoGeometry.Statistical.DualFlatCurvature
+import InfoGeometry.Bridge.AmariZornDerivationBridge

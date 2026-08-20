@@ -36,9 +36,9 @@ def Grothendieck (M) [AddCommMonoid M] : Type _ := Quotient (grothendieckSetoid 
 - `grothendieckProdEquiv : Grothendieck (A × B) ≃+ Grothendieck A × Grothendieck B`
 - `grothendieckEquivInt : Grothendieck ℕ ≃+ ℤ` — **this is K₀(Spec F) ≅ ℤ**
 
-**Gap:** The Fibonacci fusion algebra `τ ⊗ τ = 1 ⊕ τ` is not yet expressed as a
-Grothendieck semiring structure. The file `FibonacciGrothendieckLimit.lean`
-starts this but uses `AddCommGroup.DirectLimit`, not `Algebra.Grothendieck`.
+**Closed owner theorems for Fibonacci Fusion Ring:**
+- `FibonacciGrothendieckRing.lean`: Expresses the additive Grothendieck completion `FibonacciK0 := Grothendieck FibFusionMonoid` using `Algebra/Grothendieck.lean` and connects to the concrete `ℤ²` fusion-ring model `τ² = 1 + τ`.
+- `K0FibonacciRing.lean`: Ring isomorphism between `FibonacciK0` and the golden quadratic integer ring $\mathbb{Z}[\tau]/(\tau^2 - \tau - 1)$.
 
 ---
 

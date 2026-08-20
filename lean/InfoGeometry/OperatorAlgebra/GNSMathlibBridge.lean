@@ -30,6 +30,21 @@ theorem gnsStarAlgHom_map_mul (a b : A) :
   exact f.gnsStarAlgHom.map_mul a b
 
 @[simp]
+theorem gnsStarAlgHom_map_smul (r : ℂ) (a : A) :
+    f.gnsStarAlgHom (r • a) = r • f.gnsStarAlgHom a := by
+  exact map_smul f.gnsStarAlgHom r a
+
+@[simp]
+theorem gnsStarAlgHom_map_add (a b : A) :
+    f.gnsStarAlgHom (a + b) = f.gnsStarAlgHom a + f.gnsStarAlgHom b := by
+  exact f.gnsStarAlgHom.map_add a b
+
+@[simp]
+theorem gnsStarAlgHom_map_zero :
+    f.gnsStarAlgHom (0 : A) = 0 := by
+  exact f.gnsStarAlgHom.map_zero
+
+@[simp]
 theorem gnsStarAlgHom_map_star (a : A) :
     f.gnsStarAlgHom (star a) = star (f.gnsStarAlgHom a) := by
   exact map_star f.gnsStarAlgHom a
@@ -62,6 +77,12 @@ theorem cyclicVector_inner_gnsStarAlgHom (a : A) :
       ((f.toPreGNS a : f.PreGNS) : f.GNS)⟫_ℂ = f a
   simp [PositiveLinearMap.preGNS_inner_def]
 
+/-- The cyclic-vector norm coefficient is the state evaluated at the unit. -/
+@[simp]
+theorem cyclicVector_inner_self :
+    ⟪cyclicVector f, cyclicVector f⟫_ℂ = f 1 := by
+  simpa using cyclicVector_inner_gnsStarAlgHom f (1 : A)
+
 /--
 The adjoint matrix coefficient reads the functional on `star a`.
 -/
@@ -72,6 +93,17 @@ theorem gnsStarAlgHom_cyclicVector_inner (a : A) :
   rw [cyclicVector]
   change ⟪((f.toPreGNS a : f.PreGNS) : f.GNS),
       ((f.toPreGNS (1 : A) : f.PreGNS) : f.GNS)⟫_ℂ = f (star a)
+  simp [PositiveLinearMap.preGNS_inner_def]
+
+/-- General GNS matrix coefficients recover the positive functional on
+    `star a * b`. -/
+@[simp]
+theorem gnsStarAlgHom_matrix_coefficient (a b : A) :
+    ⟪f.gnsStarAlgHom a (cyclicVector f),
+      f.gnsStarAlgHom b (cyclicVector f)⟫_ℂ = f (star a * b) := by
+  rw [gnsStarAlgHom_apply_cyclicVector, gnsStarAlgHom_apply_cyclicVector]
+  change ⟪((f.toPreGNS a : f.PreGNS) : f.GNS),
+      ((f.toPreGNS b : f.PreGNS) : f.GNS)⟫_ℂ = f (star a * b)
   simp [PositiveLinearMap.preGNS_inner_def]
 
 end InfoGeometry.OperatorAlgebra.GNSMathlibBridge

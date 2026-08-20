@@ -65,6 +65,100 @@ theorem canonicalShift_one :
   simp_rw [h_one]
   exact C.completeness'
 
+/-- The canonical Cuntz shift is additive on the ambient algebra. -/
+theorem canonicalShift_add (X Y : A) :
+    C.canonicalShift (X + Y) = C.canonicalShift X + C.canonicalShift Y := by
+  dsimp [canonicalShift]
+  simp only [mul_add, add_mul]
+  rw [Finset.sum_add_distrib]
+
+/-- The canonical Cuntz shift preserves subtraction. -/
+theorem canonicalShift_sub (X Y : A) :
+    C.canonicalShift (X - Y) = C.canonicalShift X - C.canonicalShift Y := by
+  dsimp [canonicalShift]
+  simp only [mul_sub, sub_mul]
+  rw [Finset.sum_sub_distrib]
+
+/-- The canonical Cuntz shift preserves additive inverses. -/
+theorem canonicalShift_neg (X : A) :
+    C.canonicalShift (-X) = -C.canonicalShift X := by
+  dsimp [canonicalShift]
+  simp only [mul_neg, neg_mul]
+  rw [Finset.sum_neg_distrib]
+
+/-- The canonical Cuntz shift sends zero to zero. -/
+@[simp] theorem canonicalShift_zero :
+    C.canonicalShift (0 : A) = 0 := by
+  dsimp [canonicalShift]
+  simp
+
+/-- The canonical Cuntz shift commutes with repeated addition. -/
+theorem canonicalShift_nsmul (X : A) (n : ℕ) :
+    C.canonicalShift (n • X) = n • C.canonicalShift X := by
+  induction n with
+  | zero => simp [C.canonicalShift_zero]
+  | succ n ih =>
+      rw [succ_nsmul, C.canonicalShift_add, ih, succ_nsmul]
+
+/-- The canonical shift intertwines each generating isometry with its adjoint. -/
+theorem shift_intertwines (j : ι) (X : A) :
+    star (C.S j) * C.canonicalShift X = X * star (C.S j) := by
+  dsimp [canonicalShift]
+  rw [Finset.mul_sum]
+  calc
+    ∑ i, star (C.S j) * (C.S i * X * star (C.S i)) =
+        ∑ i, if j = i then X * star (C.S j) else 0 := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [show star (C.S j) * (C.S i * X * star (C.S i)) =
+              (star (C.S j) * C.S i) * X * star (C.S i) by
+                simp only [mul_assoc], C.isometry' j i]
+          by_cases h : j = i <;> simp [h]
+    _ = X * star (C.S j) := by simp
+
+/-- The canonical Cuntz shift is multiplicative. -/
+theorem canonicalShift_mul (X Y : A) :
+    C.canonicalShift (X * Y) = C.canonicalShift X * C.canonicalShift Y := by
+  dsimp [canonicalShift]
+  calc
+    ∑ i, C.S i * (X * Y) * star (C.S i) =
+        ∑ i, C.S i * X * (Y * star (C.S i)) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          simp only [mul_assoc]
+    _ = ∑ i, C.S i * X * (star (C.S i) * C.canonicalShift Y) := by
+          simp_rw [C.shift_intertwines]
+    _ = (∑ i, C.S i * X * star (C.S i)) * C.canonicalShift Y := by
+          rw [Finset.sum_mul]
+          apply Finset.sum_congr rfl
+          intro i hi
+          simp only [mul_assoc]
+
+/-- The canonical Cuntz shift preserves noncommutative commutators. -/
+theorem canonicalShift_commutator (X Y : A) :
+    C.canonicalShift (X * Y - Y * X) =
+      C.canonicalShift X * C.canonicalShift Y -
+        C.canonicalShift Y * C.canonicalShift X := by
+  rw [C.canonicalShift_sub, C.canonicalShift_mul, C.canonicalShift_mul]
+
+/-- The canonical shift commutes with natural powers of an observable. -/
+theorem canonicalShift_pow (X : A) (n : ℕ) :
+    C.canonicalShift (X ^ n) = (C.canonicalShift X) ^ n := by
+  induction n with
+  | zero => simp [C.canonicalShift_one]
+  | succ n ih =>
+      rw [pow_succ, C.canonicalShift_mul, ih, pow_succ]
+
+/-- The canonical Cuntz shift preserves the star operation. -/
+theorem canonicalShift_star (X : A) :
+    C.canonicalShift (star X) = star (C.canonicalShift X) := by
+  dsimp [canonicalShift]
+  rw [star_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [star_mul, star_mul, star_star]
+  simp only [mul_assoc]
+
 /-- 🏆 THEOREM 2: Left Inverse Projection (Left Inverse of the Shift on Generators):
     S_j* * Φ(X) * S_j = X -/
 theorem shift_left_inverse (j : ι) (X : A) :
@@ -117,6 +211,18 @@ instance : CoeFun (PositiveState R A) (fun _ => A → R) where
 def gnsInner (a b : A) : R :=
   ω (star b * a)
 
+/-- Additivity of the GNS pre-inner product in its first argument. -/
+theorem gnsInner_add_left (a c b : A) :
+    ω.gnsInner (a + c) b = ω.gnsInner a b + ω.gnsInner c b := by
+  dsimp [gnsInner]
+  rw [mul_add, ω.map_add]
+
+/-- Additivity of the GNS pre-inner product in its second argument. -/
+theorem gnsInner_add_right (a b c : A) :
+    ω.gnsInner a (b + c) = ω.gnsInner a b + ω.gnsInner a c := by
+  dsimp [gnsInner]
+  rw [star_add, add_mul, ω.map_add]
+
 /-- 🏆 THEOREM 3: Left Regular Action is a Star Representation:
     ⟨X * a, b⟩_ω = ⟨a, X* * b⟩_ω -/
 theorem gns_adjoint_action (X a b : A) :
@@ -134,6 +240,19 @@ theorem gns_shift_vacuum_isometry
     (h_inv : ∀ X, ω (C.canonicalShift X) = ω X) :
     ω.gnsInner (C.canonicalShift 1) (C.canonicalShift 1) = ω.gnsInner 1 1 := by
   simp [gnsInner]
+
+/-- State invariance upgrades the canonical shift to a GNS pre-inner-product
+    isometry on all observables. -/
+theorem gns_shift_isometry
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (C : CuntzSystem ι A)
+    (h_inv : ∀ X, ω (C.canonicalShift X) = ω X)
+    (a b : A) :
+    ω.gnsInner (C.canonicalShift a) (C.canonicalShift b) =
+      ω.gnsInner a b := by
+  dsimp [gnsInner]
+  rw [← C.canonicalShift_star b, ← C.canonicalShift_mul]
+  exact h_inv (star b * a)
 
 end PositiveState
 
@@ -167,5 +286,14 @@ theorem modularTilt_commute (ω : PositiveState R A) (h : Aˣ) (inv_norm : R) (X
     inv_norm * ω ((h : A) * X * (h : A))
       = inv_norm * ω ((h : A) * ((h : A) * X)) := by rw [mul_assoc, ← h_comm]
     _ = inv_norm * ω ((h : A) * (h : A) * X) := by rw [mul_assoc]
+
+/-- The modular tilt is additive on observables. -/
+theorem modularTilt_add (ω : PositiveState R A) (h : Aˣ) (inv_norm : R)
+    (X Y : A) :
+    modularTilt ω h inv_norm (X + Y) =
+      modularTilt ω h inv_norm X + modularTilt ω h inv_norm Y := by
+  dsimp [modularTilt]
+  rw [mul_add, add_mul, ω.map_add]
+  simp only [mul_add]
 
 end InfoGeometry.NCG

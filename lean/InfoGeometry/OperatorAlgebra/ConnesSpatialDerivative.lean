@@ -110,6 +110,16 @@ theorem flow_mul
     σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
   flow_mul_apply σ t x y
 
+theorem flow_commute
+    (s t : ℝ) (x : A) :
+    σ.flow s (σ.flow t x) = σ.flow t (σ.flow s x) := by
+  exact InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_commute σ s t x
+
+theorem flow_neg_apply'
+    (t : ℝ) (x : A) :
+    σ.flow t (σ.flow (-t) x) = x := by
+  exact InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_neg_apply' σ t x
+
 end ModularFlow
 
 /-! ## 3. Connes cocycle derivative data -/

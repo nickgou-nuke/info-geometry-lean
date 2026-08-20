@@ -7385,3 +7385,4 @@ import InfoGeometry.NCG.NoncommutativeNoetherPoisson
 import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
 import InfoGeometry.NCG.CategoricalColimitStateDescent
 import InfoGeometry.Algebra.NonAssocPeirceFrame
+import InfoGeometry.NCG.DualExponentialTrifoldBridge

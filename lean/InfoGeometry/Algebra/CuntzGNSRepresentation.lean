@@ -144,6 +144,17 @@ theorem leftMultiplication_cuntz_isometry
   rw [leftMultiplication_mul, cuntz_isometry]
   simp [leftMultiplication]
 
+theorem leftMultiplication_cuntz_orthogonal
+    (n : ℕ) (i j : Fin n) (x : CuntzAlg n) :
+    leftMultiplication n (cuntzSdag n i)
+        (leftMultiplication n (cuntzS n j) x) =
+      if i = j then x else 0 := by
+  rw [leftMultiplication_mul, cuntz_orthogonality]
+  split_ifs with hij
+  · subst j
+    simp [leftMultiplication]
+  · simp [leftMultiplication]
+
 /-- Each Cuntz generator acts isometrically for the algebraic GNS form.
 This is the sesquilinear-form shadow of the relation `Sᵢ* Sᵢ = 1`. -/
 theorem kmsInner_leftMultiplication_cuntz_isometry

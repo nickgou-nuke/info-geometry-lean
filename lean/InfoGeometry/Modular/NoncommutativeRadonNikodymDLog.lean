@@ -95,6 +95,16 @@ theorem dlogR_eq_zero_iff (D : NoncommutativeDerivation A) (u : Aˣ) :
   · intro h
     simp [dlogR, h]
 
+/-- The left logarithmic derivative detects stationary units as well. -/
+theorem dlogL_eq_zero_iff (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogL D u = 0 ↔ D u.val = 0 := by
+  constructor
+  · intro h
+    have h' := congrArg (fun x : A => u.val * x) h
+    simpa [dlogL, mul_assoc, u.val_inv] using h'
+  · intro h
+    simp [dlogL, h]
+
 @[simp]
 theorem dlogL_one (D : NoncommutativeDerivation A) :
     dlogL D 1 = 0 := by

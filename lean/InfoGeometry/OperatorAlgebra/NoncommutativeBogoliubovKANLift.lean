@@ -135,6 +135,13 @@ theorem modularFlow_add
       P.modularFlow.flow s (P.modularFlow.flow t x) :=
   P.modularFlow.flow_add_apply s t x
 
+theorem modularFlow_commute
+    (s t : ℝ) (x : A) :
+    P.modularFlow.flow s (P.modularFlow.flow t x) =
+      P.modularFlow.flow t (P.modularFlow.flow s x) := by
+  rw [← P.modularFlow.flow_add s t x, ← P.modularFlow.flow_add t s x]
+  rw [add_comm]
+
 /-- Negative modular time is the inverse of positive modular time. -/
 theorem modularFlow_neg
     (t : ℝ) (x : A) :

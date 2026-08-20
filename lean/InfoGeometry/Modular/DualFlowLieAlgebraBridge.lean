@@ -76,6 +76,18 @@ theorem bracket_leibniz (D₁ D₂ : RingDerivation A) (x y : A) :
       D₁.leibniz, D₂.map_add, D₂.leibniz, D₂.leibniz]
   noncomm_ring
 
+theorem bracket_skew (D₁ D₂ : RingDerivation A) (x : A) :
+    bracket D₁ D₂ x = -bracket D₂ D₁ x := by
+  dsimp [bracket]
+  abel
+
+@[simp]
+theorem bracket_self (D : RingDerivation A) (x : A) :
+    bracket D D x = 0 := by
+  dsimp [bracket]
+  abel
+
+
 /-- The Lie bracket of derivations packaged as a bundled Derivation. -/
 def derivationCommutator (D₁ D₂ : RingDerivation A) : RingDerivation A where
   toFun := bracket D₁ D₂
@@ -84,6 +96,18 @@ def derivationCommutator (D₁ D₂ : RingDerivation A) : RingDerivation A where
     rw [D₂.map_add, D₁.map_add, D₁.map_add, D₂.map_add]
     abel
   leibniz' := bracket_leibniz D₁ D₂
+
+@[simp]
+theorem derivationCommutator_apply (D₁ D₂ : RingDerivation A) (x : A) :
+    derivationCommutator D₁ D₂ x = bracket D₁ D₂ x := rfl
+
+theorem bracket_jacobi (D₁ D₂ D₃ : RingDerivation A) (x : A) :
+    bracket D₁ (derivationCommutator D₂ D₃) x +
+        bracket D₂ (derivationCommutator D₃ D₁) x +
+        bracket D₃ (derivationCommutator D₁ D₂) x = 0 := by
+  dsimp [bracket, derivationCommutator]
+  rw [D₁.map_sub, D₂.map_sub, D₃.map_sub]
+  abel
 
 end RingDerivation
 
@@ -122,6 +146,17 @@ theorem dual_flow_commutator (D : RingDerivation A) (K X : A) :
   dsimp [adK]
   rw [D.map_sub, D.leibniz, D.leibniz]
   noncomm_ring
+
+theorem bracket_modularDerivation (D : RingDerivation A) (K X : A) :
+    RingDerivation.bracket D (modularDerivation K) X = adK (D K) X := by
+  dsimp [RingDerivation.bracket, modularDerivation]
+  exact dual_flow_commutator D K X
+
+theorem bracket_modularDerivations (K₁ K₂ X : A) :
+    RingDerivation.bracket (modularDerivation K₁) (modularDerivation K₂) X =
+      adK (adK K₁ K₂) X := by
+  dsimp [RingDerivation.bracket, modularDerivation]
+  exact adK_bracket K₁ K₂ X
 
 theorem adiabatic_decoupling (D : RingDerivation A) (K : A) (hK : D K = 0) (X : A) :
     D (adK K X) - adK K (D X) = 0 := by

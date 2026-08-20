@@ -58,6 +58,15 @@ theorem densityOperatorDLog_mul
   intro x
   apply DoubledSpace.ext <;> simp [densityOperatorDLog, dlog_mul, add_smul, idEndH]
 
+theorem densityOperatorDLog_inv
+    (D : CommRingDerivation ℝ) (u : ℝˣ) :
+    densityOperatorDLog (E := E) D (u⁻¹) =
+      -densityOperatorDLog (E := E) D u := by
+  apply ContinuousLinearMap.ext
+  intro x
+  apply DoubledSpace.ext <;>
+    simp [densityOperatorDLog, dlog_inv, idEndH]
+
 /-- Bundled multiplicative-to-additive interpretation of `dlog` on scalar density operators. -/
 def densityOperatorDLogHom
     (D : CommRingDerivation ℝ) : ℝˣ →* Multiplicative (EndH E) where

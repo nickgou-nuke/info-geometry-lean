@@ -89,6 +89,28 @@ theorem modularAutomorphism_mul (ρ ρ_inv A B : Mat)
     _ = (ρ * A) * (ρ_inv * ρ) * (B * ρ_inv) := by rw [h_left]
     _ = (ρ * A * ρ_inv) * (ρ * B * ρ_inv) := by simp only [mul_assoc]
 
+theorem modularAutomorphism_inverse_comp (ρ ρ_inv B : Mat)
+    (h_left : ρ_inv * ρ = 1) :
+    modularAutomorphism ρ_inv ρ
+        (modularAutomorphism ρ ρ_inv B) = B := by
+  dsimp [modularAutomorphism]
+  calc
+    ρ_inv * (ρ * B * ρ_inv) * ρ =
+        (ρ_inv * ρ) * B * (ρ_inv * ρ) := by simp only [mul_assoc]
+    _ = 1 * B * 1 := by rw [h_left]
+    _ = B := by simp
+
+theorem modularAutomorphism_inverse_comp' (ρ ρ_inv B : Mat)
+    (h_right : ρ * ρ_inv = 1) :
+    modularAutomorphism ρ ρ_inv
+        (modularAutomorphism ρ_inv ρ B) = B := by
+  dsimp [modularAutomorphism]
+  calc
+    ρ * (ρ_inv * B * ρ) * ρ_inv =
+        (ρ * ρ_inv) * B * (ρ * ρ_inv) := by simp only [mul_assoc]
+    _ = 1 * B * 1 := by rw [h_right]
+    _ = B := by simp
+
 /- The finite modular automorphism bundled as an `R`-linear map. -/
 def modularAutomorphismLinear (ρ ρ_inv : Mat) : Mat →ₗ[R] Mat where
   toFun := modularAutomorphism ρ ρ_inv
@@ -104,6 +126,12 @@ theorem modularAutomorphism_zero (ρ ρ_inv : Mat) :
     modularAutomorphism ρ ρ_inv 0 = 0 := by
   dsimp [modularAutomorphism]
   simp
+
+theorem modularAutomorphism_one (ρ ρ_inv : Mat)
+    (h_right : ρ * ρ_inv = 1) :
+    modularAutomorphism ρ ρ_inv 1 = 1 := by
+  dsimp [modularAutomorphism]
+  rw [mul_one, h_right]
 
 /--
   MASTER THEOREM: The Finite KMS Modular Condition:

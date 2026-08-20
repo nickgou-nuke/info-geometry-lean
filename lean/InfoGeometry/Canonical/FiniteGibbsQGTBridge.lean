@@ -78,4 +78,46 @@ theorem gibbsState_norm_sq (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ)
     ⟪(gibbsState D beta).vec, (gibbsState D beta).vec⟫_ℂ = 1 :=
   (gibbsState D beta).norm_sq
 
+def gibbsMean (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ)
+    (f : State → ℝ) : ℝ :=
+  ∑ x : State, realGibbsWeight D beta x * f x
+
+def gibbsCovariance (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ)
+    (f g : State → ℝ) : ℝ :=
+  ∑ x : State, realGibbsWeight D beta x *
+    (f x - gibbsMean D beta f) * (g x - gibbsMean D beta g)
+
+theorem gibbsMean_eq_souriauChargeMean
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i : Fin 2) :
+    gibbsMean D beta (fun x => D.momentMap x i) =
+      souriauChargeMean D beta i := rfl
+
+theorem fubiniStudyMetric_gibbsDiagonal
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ)
+    (f g : State → ℝ) :
+    fubiniStudyMetric (gibbsState D beta)
+      (diagonalObservable f) (diagonalObservable g) =
+      gibbsCovariance D beta f g := by
+  unfold fubiniStudyMetric QGT gibbsCovariance gibbsMean
+    diagonalObservable gibbsState
+  simp only [PiLp.inner_apply, RCLike.inner_apply, starRingEnd_apply,
+    map_add, map_sub]
+  simp only [← starRingEnd_apply]
+  have hstar : ∀ x : State,
+      starRingEnd ℂ (Real.sqrt (realGibbsWeight D beta x) : ℂ) =
+        (Real.sqrt (realGibbsWeight D beta x) : ℂ) := by
+    intro x
+    change star (Real.sqrt (realGibbsWeight D beta x) : ℂ) = _
+    exact RCLike.conj_ofReal _
+  simp_rw [hstar]
+  simp_rw [← Complex.ofReal_mul]
+  rw [← Complex.ofReal_sum]
+  apply congrArg Complex.re
+  congr 1
+  simp_rw [← Complex.ofReal_mul]
+  rw [← Complex.ofReal_sum]
+  congr 1
+  rw [realGibbsWeight_sum_eq_one D beta]
+  ring
+
 end InfoGeometry.Canonical.FiniteGibbsQGTBridge

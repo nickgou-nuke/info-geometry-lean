@@ -102,7 +102,6 @@ structure MajoranaZeroMode (H : PhysicalBdGMatrix) where
   zeroEnergy : (physicalBdGMatrix H).mulVec wavefunction = 0
   particleHoleSelfConjugate : ∀ (i : Fin 2) (n : Fin 3),
     wavefunction (i, n) = star (wavefunction (1 - i, n))
-  topologicalProtection : True
 
 
 /-!

@@ -139,6 +139,12 @@ theorem tracialFunctional_inner_commutator_zero
     τ (K * X - X * K) = 0 := by
   rw [τ.map_sub, τ.cyclic K X, sub_self]
 
+theorem tracialFunctional_innerAlgebraDerivation_zero
+    (τ : TracialFunctional R A) (K X : A) :
+    τ (innerAlgebraDerivation (R := R) K X) = 0 := by
+  rw [innerAlgebraDerivation_apply]
+  exact tracialFunctional_inner_commutator_zero τ K X
+
 /-- 🏆 THEOREM 1: Cyclic Leibniz Identity for Traces and Derivations:
     τ(x * D(y)) + τ(y * D(x)) = τ(D(x * y)) -/
 theorem cyclic_leibniz_identity (τ : TracialFunctional R A) (D : AlgebraDerivation R A) (x y : A) :
@@ -159,6 +165,21 @@ theorem connes_cocycle_skew_symmetric (τ : TracialFunctional R A) (D : AlgebraD
   have h2 : connesCyclic1Cocycle τ D y x + connesCyclic1Cocycle τ D x y = 0 := by
     rw [add_comm, h]
   exact eq_neg_of_add_eq_zero_right h2
+
+theorem connesCyclic1Cocycle_inner_skew
+    (τ : TracialFunctional R A) (K x y : A) :
+    connesCyclic1Cocycle τ (innerAlgebraDerivation (R := R) K) x y =
+      -connesCyclic1Cocycle τ (innerAlgebraDerivation (R := R) K) y x := by
+  exact connes_cocycle_skew_symmetric τ (innerAlgebraDerivation (R := R) K)
+    (tracialFunctional_innerAlgebraDerivation_zero τ K) x y
+
+theorem connesCyclic1Cocycle_inner_eq_zero_of_central
+    (τ : TracialFunctional R A) (K x y : A)
+    (hK : ∀ z : A, K * z = z * K) :
+    connesCyclic1Cocycle τ (innerAlgebraDerivation (R := R) K) x y = 0 := by
+  change τ (x * (K * y - y * K)) = 0
+  have hzero : K * y - y * K = 0 := sub_eq_zero.mpr (hK y)
+  rw [hzero, mul_zero, τ.map_zero]
 
 /-- 🏆 THEOREM 3: Alain Connes' Cyclic 1-Cocycle Identity on Noncommutative Algebras:
     φ(x * y, z) - φ(x, y * z) + φ(z * x, y) = 0

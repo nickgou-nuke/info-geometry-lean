@@ -85,6 +85,22 @@ def dlogL (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
 def dlogR (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   D (u : A) * (↑(u⁻¹) : A)
 
+/-- The right logarithmic derivative is the unit-conjugate of the left one.
+    This is the noncommutative Maurer--Cartan conversion law. -/
+theorem dlogR_eq_conjugate_dlogL (D : A →ₗ[ℤ] A) (u : Aˣ) :
+    dlogR D u =
+      (u : A) * dlogL D u * (↑(u⁻¹) : A) := by
+  unfold dlogR dlogL
+  have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+  calc
+    D (u : A) * (↑(u⁻¹) : A) =
+        ((u : A) * (↑(u⁻¹) : A)) * D (u : A) *
+          (↑(u⁻¹) : A) := by
+      rw [hu, one_mul]
+    _ = (u : A) * ((↑(u⁻¹) : A) * D (u : A)) *
+          (↑(u⁻¹) : A) := by
+      simp only [mul_assoc]
+
 /-- Derivation annihilates 1 in any ring -/
 theorem derivation_map_one (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) : D 1 = 0 := by
   have h := hD 1 1
@@ -104,6 +120,29 @@ theorem dlogR_one (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) :
     dlogR D 1 = 0 := by
   dsimp [dlogR]
   rw [derivation_map_one D hD, zero_mul]
+
+/-- The right noncommutative logarithmic product rule. -/
+theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
+    dlogR D (u * v) =
+      dlogR D u + (u : A) * dlogR D v * (↑(u⁻¹) : A) := by
+  unfold dlogR
+  rw [mul_inv_rev]
+  change D ((u : A) * (v : A)) *
+      ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) = _
+  rw [hD _ _, add_mul]
+  have hv : (v : A) * (↑(v⁻¹) : A) = 1 := v.val_inv
+  calc
+    (D (u : A) * (v : A) + (u : A) * D (v : A)) *
+        ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) =
+      (D (u : A) * ((v : A) * (↑(v⁻¹) : A))) *
+          (↑(u⁻¹) : A) +
+        (u : A) * (D (v : A) * (↑(v⁻¹) : A)) *
+          (↑(u⁻¹) : A) := by
+      simp only [mul_assoc]
+    _ = D (u : A) * (↑(u⁻¹) : A) +
+        (u : A) * (D (v : A) * (↑(v⁻¹) : A)) *
+          (↑(u⁻¹) : A) := by
+      rw [hv, mul_one]
 
 /-- 🏆 THEOREM 4: Noncommutative Logarithmic Product Rule (Maurer–Cartan):
     dlog_L(u * v) = v⁻¹ * dlog_L(u) * v + dlog_L(v)

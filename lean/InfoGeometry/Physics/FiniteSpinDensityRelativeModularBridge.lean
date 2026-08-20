@@ -92,23 +92,22 @@ theorem spinRelativeModularData_affinity_fixed
     (A rhoInv sigmaInv : M2C)
     (hSigma : rightDensityMatrix A * sigmaInv = 1) :
     (spinRelativeModularData A rhoInv sigmaInv).delta A = A := by
-  change densityMatrix A * A * sigmaInv = A
-  rw [spinDensity_intertwines]
+  rw [spinRelativeModularData_delta_apply, spinDensity_intertwines]
   simpa [mul_assoc] using congrArg (fun X : M2C => A * X) hSigma
 
 /-- The adjoint amplitude intertwines the right density with the left density. -/
 theorem rightDensityMatrix_mul_conjTranspose_eq
     (A : M2C) :
     rightDensityMatrix A * Aᴴ = Aᴴ * densityMatrix A := by
-  unfold rightDensityMatrix densityMatrix rightGram gram
+  unfold rightDensityMatrix densityMatrix rightGram HestenesSpinDensityXpQuantization.gram
   calc
     ((gramTrace A : ℂ)⁻¹ • (Aᴴ * A)) * Aᴴ =
         (gramTrace A : ℂ)⁻¹ • ((Aᴴ * A) * Aᴴ) := by
-      simpa only [Matrix.smul_mul]
+      simp only [Matrix.smul_mul]
     _ = (gramTrace A : ℂ)⁻¹ • (Aᴴ * (A * Aᴴ)) := by
       rw [mul_assoc]
     _ = Aᴴ * ((gramTrace A : ℂ)⁻¹ • (A * Aᴴ)) := by
-      simpa only [Matrix.mul_smul]
+      simp only [Matrix.mul_smul]
 
 /-- The adjoint amplitude is fixed by the reversed relative modular operator
 when the supplied left-density factor is a right inverse. -/
@@ -133,7 +132,7 @@ theorem spinRelativeModularData_deltaInv_affinity_fixed
     (A rhoInv sigmaInv : M2C)
     (hRho : rhoInv * densityMatrix A = 1) :
     (spinRelativeModularData A rhoInv sigmaInv).deltaInv A = A := by
-  change rhoInv * A * rightDensityMatrix A = A
+  rw [spinRelativeModularData_deltaInv_apply]
   calc
     rhoInv * A * rightDensityMatrix A =
         rhoInv * (A * rightDensityMatrix A) := by rw [mul_assoc]
@@ -156,18 +155,22 @@ def spinRelativeModularEquiv
     (hInv :
       (spinRelativeModularData A rhoInv sigmaInv).HasTwoSidedInverses) :
     spinRelativeModularEquiv A rhoInv sigmaInv hInv A = A := by
-  change (spinRelativeModularData A rhoInv sigmaInv).delta A = A
-  exact spinRelativeModularData_affinity_fixed
-    A rhoInv sigmaInv hInv.sigma_mul_sigmaInv
+  have h := spinRelativeModularData_affinity_fixed A rhoInv sigmaInv hInv.sigma_mul_sigmaInv
+  unfold spinRelativeModularEquiv
+  rw [RelativeModularData.deltaEquiv_apply]
+  rw [spinRelativeModularData_delta_apply] at h
+  exact h
 
 @[simp] theorem spinRelativeModularEquiv_symm_affinity_fixed
     (A rhoInv sigmaInv : M2C)
     (hInv :
       (spinRelativeModularData A rhoInv sigmaInv).HasTwoSidedInverses) :
     (spinRelativeModularEquiv A rhoInv sigmaInv hInv).symm A = A := by
-  change (spinRelativeModularData A rhoInv sigmaInv).deltaInv A = A
-  exact spinRelativeModularData_deltaInv_affinity_fixed
-    A rhoInv sigmaInv hInv.rhoInv_mul_rho
+  have h := spinRelativeModularData_deltaInv_affinity_fixed A rhoInv sigmaInv hInv.rhoInv_mul_rho
+  unfold spinRelativeModularEquiv
+  rw [RelativeModularData.deltaEquiv_symm_apply]
+  rw [spinRelativeModularData_deltaInv_apply] at h
+  exact h
 
 /-- Consolidated finite state-dependent modular packet. -/
 theorem finite_spin_density_relative_modular_chain

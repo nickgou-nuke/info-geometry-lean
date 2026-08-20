@@ -59,6 +59,27 @@ theorem sldFisherInner_smul_left (c : ℂ) (rho L₁ L₂ : Mat) :
   simp only [smul_eq_mul]
   ring
 
+/-- Scalar compatibility in the second SLD argument. -/
+theorem sldFisherInner_smul_right (c : ℂ) (rho L₁ L₂ : Mat) :
+    sldFisherInner rho L₁ (c • L₂) = c * sldFisherInner rho L₁ L₂ := by
+  dsimp [sldFisherInner, jordanProd]
+  have h : L₁ * (c • L₂) + (c • L₂) * L₁ =
+      c • (L₁ * L₂ + L₂ * L₁) := by
+    simp only [mul_smul_comm, smul_mul_assoc, smul_add]
+  rw [h, mul_smul_comm, Matrix.trace_smul]
+  simp only [smul_eq_mul]
+  ring
+
+@[simp]
+theorem sldFisherInner_zero_left (rho L₂ : Mat) :
+    sldFisherInner rho 0 L₂ = 0 := by
+  simpa using sldFisherInner_smul_left (n := n) (c := (0 : ℂ)) rho (1 : Mat) L₂
+
+@[simp]
+theorem sldFisherInner_zero_right (rho L₁ : Mat) :
+    sldFisherInner rho L₁ 0 = 0 := by
+  simpa using sldFisherInner_smul_right (n := n) (c := (0 : ℂ)) rho L₁ (1 : Mat)
+
 /-- Symmetry under cyclic trace property or commutativity -/
 theorem sldFisherInner_comm (rho L₁ L₂ : Mat) :
     sldFisherInner rho L₁ L₂ = sldFisherInner rho L₂ L₁ := by

@@ -47,7 +47,19 @@ theorem expectation_smul (ρ A : Mat) (r : R) :
 
 theorem expectation_sub (ρ A B : Mat) :
     expectation ρ (A - B) = expectation ρ A - expectation ρ B := by
-  simp [expectation, sub_eq_add_neg]
+  dsimp [expectation]
+  rw [mul_sub, Matrix.trace_sub]
+
+/-- The finite expectation functional bundled as an `R`-linear map. -/
+def expectationLinear (ρ : Mat) : Mat →ₗ[R] R where
+  toFun := expectation ρ
+  map_add' A B := expectation_add ρ A B
+  map_smul' r A := by
+    simpa [smul_eq_mul] using expectation_smul ρ A r
+
+@[simp]
+theorem expectationLinear_apply (ρ A : Mat) :
+    expectationLinear ρ A = expectation ρ A := rfl
 
 /-- The Modular Automorphism: σ_ρ(B) = ρ * B * ρ⁻¹ for an invertible density matrix ρ. -/
 def modularAutomorphism (ρ ρ_inv B : Mat) : Mat :=
@@ -64,6 +76,16 @@ theorem modularAutomorphism_smul (ρ ρ_inv A : Mat) (r : R) :
       r • modularAutomorphism ρ ρ_inv A := by
   dsimp [modularAutomorphism]
   rw [Matrix.mul_smul, smul_mul_assoc]
+
+/- The finite modular automorphism bundled as an `R`-linear map. -/
+def modularAutomorphismLinear (ρ ρ_inv : Mat) : Mat →ₗ[R] Mat where
+  toFun := modularAutomorphism ρ ρ_inv
+  map_add' A B := modularAutomorphism_add ρ ρ_inv A B
+  map_smul' r A := modularAutomorphism_smul ρ ρ_inv A r
+
+@[simp]
+theorem modularAutomorphismLinear_apply (ρ ρ_inv B : Mat) :
+    modularAutomorphismLinear ρ ρ_inv B = modularAutomorphism ρ ρ_inv B := rfl
 
 @[simp]
 theorem modularAutomorphism_zero (ρ ρ_inv : Mat) :

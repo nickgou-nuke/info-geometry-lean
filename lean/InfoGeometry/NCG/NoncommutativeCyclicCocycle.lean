@@ -270,7 +270,7 @@ theorem noncommutativeSLDFisher_smul_left
       r * noncommutativeSLDFisher τ two_inv ρ L1 L2 := by
   dsimp [noncommutativeSLDFisher, jordanProduct]
   simp only [smul_mul_assoc, mul_smul_comm, map_add, map_smul, mul_add]
-  ring
+  simp [smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
 
 theorem noncommutativeSLDFisher_smul_right
     (τ : TracialFunctional R A) (two_inv r : R) (ρ L1 L2 : A) :

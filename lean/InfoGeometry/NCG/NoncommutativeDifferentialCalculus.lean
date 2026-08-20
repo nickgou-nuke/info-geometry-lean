@@ -131,8 +131,8 @@ theorem gaugeTransform_trans (conn : A) (u v : Aˣ) :
 of its inverse. -/
 theorem gaugeTransform_inv (conn : A) (u : Aˣ) :
     gaugeTransform D (gaugeTransform D conn u) u⁻¹ = conn := by
-  rw [gaugeTransform_trans D conn u⁻¹ u]
-  simpa using gaugeTransform_one D conn
+  rw [gaugeTransform_trans D conn u u⁻¹]
+  simp only [inv_mul_cancel, gaugeTransform_one]
 
 end NCDerivation
 

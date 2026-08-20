@@ -69,7 +69,7 @@ theorem universal_legendre_fenchel_pairing (psi : ℝ → ℝ) (theta eta : ℝ)
     The exponential flow of a nilpotent derivation preserves non-associative products. -/
 theorem universal_nilpotent_derivation_automorphism
     {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
-    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A)
+    (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
     (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
     (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K) (x y : A) :
     nilpotentExpStep2 D t (mul x y) =
@@ -109,7 +109,7 @@ structure MasterArchetypeTheoremBundle where
       mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y)
   nilpotent_equivalence : ∀ {K A : Type*} [Field K] [CharZero K]
     [AddCommGroup A] [Module K A]
-    (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
+    (mul : A →ₗ[K] A →ₗ[K] A) (one : A) (D : A →ₗ[K] A)
     (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
     (hD2 : D.comp D = 0) (h_one : D one = 0)
     (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K),

@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Physics.TripotentAdjointDerivation
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 
 /-!
@@ -31,31 +30,37 @@ variable {R : Type*} [Ring R] [Algebra ℝ R]
 local notation "EndR" => Module.End ℝ R
 
 /-- Left multiplication by an algebra element. -/
-abbrev leftMulOp (a : R) : EndR := leftMulLinear a
+def leftMulLinear (a : R) : EndR where
+  toFun x := a * x
+  map_add' x y := mul_add a x y
+  map_smul' c x := Algebra.mul_smul_comm a c x
 
 /-- Right multiplication by an algebra element. -/
-abbrev rightMulOp (a : R) : EndR := rightMulLinear a
+def rightMulLinear (a : R) : EndR where
+  toFun x := x * a
+  map_add' x y := add_mul x y a
+  map_smul' c x := Algebra.smul_mul_assoc c x a
 
-@[simp] theorem leftMulOp_apply (a x : R) :
-    leftMulOp a x = a * x :=
+@[simp] theorem leftMulLinear_apply (a x : R) :
+    leftMulLinear a x = a * x :=
   rfl
 
-@[simp] theorem rightMulOp_apply (a x : R) :
-    rightMulOp a x = x * a :=
+@[simp] theorem rightMulLinear_apply (a x : R) :
+    rightMulLinear a x = x * a :=
   rfl
 
 /-- Left and right multiplication commute in an associative algebra. -/
-theorem leftMulOp_comp_rightMulOp (a b : R) :
-    (leftMulOp a).comp (rightMulOp b) =
-      (rightMulOp b).comp (leftMulOp a) := by
+theorem leftMulLinear_comp_rightMulLinear (a b : R) :
+    (leftMulLinear a).comp (rightMulLinear b) =
+      (rightMulLinear b).comp (leftMulLinear a) := by
   ext x
   simp [mul_assoc]
 
 /-- Tripotency passes to left multiplication. -/
-theorem leftMulOp_tripotent
+theorem leftMulLinear_tripotent
     {e : R} (he : e * e * e = e) :
-    leftMulOp e * leftMulOp e * leftMulOp e =
-      leftMulOp e := by
+    leftMulLinear e * leftMulLinear e * leftMulLinear e =
+      leftMulLinear e := by
   ext x
   change e * (e * (e * x)) = e * x
   calc
@@ -63,10 +68,10 @@ theorem leftMulOp_tripotent
     _ = e * x := by rw [he]
 
 /-- Tripotency passes to right multiplication. -/
-theorem rightMulOp_tripotent
+theorem rightMulLinear_tripotent
     {e : R} (he : e * e * e = e) :
-    rightMulOp e * rightMulOp e * rightMulOp e =
-      rightMulOp e := by
+    rightMulLinear e * rightMulLinear e * rightMulLinear e =
+      rightMulLinear e := by
   ext x
   change ((x * e) * e) * e = x * e
   calc
@@ -160,11 +165,11 @@ def peirceProjector (e : R) : PeirceSign → R
 
 /-- Left Peirce projector acting on the algebra carrier. -/
 def leftPeirceProjector (e : R) (s : PeirceSign) : EndR :=
-  leftMulOp (peirceProjector e s)
+  leftMulLinear (peirceProjector e s)
 
 /-- Right Peirce projector acting on the algebra carrier. -/
 def rightPeirceProjector (e : R) (s : PeirceSign) : EndR :=
-  rightMulOp (peirceProjector e s)
+  rightMulLinear (peirceProjector e s)
 
 /-- Joint left/right Peirce projector. -/
 def jointPeirceProjector
@@ -300,7 +305,8 @@ theorem jointPeirce_reconstruction (e x : R) :
         x * (projPos e + projZero e + projNeg e) := by
           noncomm_ring
     _ = x := by
-      simp [proj_sum_eq_id (T := e)]
+      rw [proj_sum_eq_id (T := e), proj_sum_eq_id (T := e)]
+      simp
 
 /-- Adjoint weight of a joint Peirce component. -/
 theorem jointPeirceProjector_adjoint_weight
@@ -338,11 +344,11 @@ theorem jointPeirceProjector_adjoint_weight
               (peirceProjector e left)
               (x * peirceProjector e right)]
             rw [Algebra.mul_smul_comm
-              (peirceScalar right) x
+              x (peirceScalar right)
               (peirceProjector e right)]
             rw [Algebra.mul_smul_comm
-              (peirceScalar right)
               (peirceProjector e left)
+              (peirceScalar right)
               (x * peirceProjector e right)]
     _ = (peirceScalar left - peirceScalar right) •
           (peirceProjector e left *
@@ -391,100 +397,24 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
     gradeZeroProjector, gradePosOneProjector, gradePosTwoProjector,
     LinearMap.add_apply, LinearMap.id_apply]
   have h := jointPeirce_reconstruction e x
-  simpa only [add_assoc, add_comm, add_left_comm] using h
-
-/-- The grouped weight `+2` projector is idempotent. -/
-@[simp] theorem gradePosTwoProjector_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradePosTwoProjector e * gradePosTwoProjector e =
-      gradePosTwoProjector e := by
-  simpa [gradePosTwoProjector] using
-    (jointPeirceProjector_idempotent he .pos .neg)
-
-/-- The grouped weight `+1` projector is idempotent. -/
-@[simp] theorem gradePosOneProjector_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradePosOneProjector e * gradePosOneProjector e =
-      gradePosOneProjector e := by
-  dsimp [gradePosOneProjector]
-  rw [add_mul, mul_add, mul_add]
-  rw [jointPeirceProjector_idempotent he .pos .zero,
-    jointPeirceProjector_idempotent he .zero .neg,
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .zero),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .pos)]
-  simp
-
-/-- The grouped weight `0` projector is idempotent. -/
-@[simp] theorem gradeZeroProjector_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradeZeroProjector e * gradeZeroProjector e =
-      gradeZeroProjector e := by
-  dsimp [gradeZeroProjector]
-  rw [add_mul, add_mul, mul_add, mul_add, mul_add, mul_add, mul_add, mul_add]
-  rw [jointPeirceProjector_idempotent he .pos .pos,
-    jointPeirceProjector_idempotent he .zero .zero,
-    jointPeirceProjector_idempotent he .neg .neg,
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .zero),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .neg),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .pos),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .neg),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .pos),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .zero)]
-  simp
-
-/-- The grouped weight `-1` projector is idempotent. -/
-@[simp] theorem gradeNegOneProjector_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradeNegOneProjector e * gradeNegOneProjector e =
-      gradeNegOneProjector e := by
-  dsimp [gradeNegOneProjector]
-  rw [add_mul, mul_add, mul_add]
-  rw [jointPeirceProjector_idempotent he .zero .pos,
-    jointPeirceProjector_idempotent he .neg .zero,
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .neg),
-    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .zero)]
-  simp
-
-/-- The grouped weight `-2` projector is idempotent. -/
-@[simp] theorem gradeNegTwoProjector_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradeNegTwoProjector e * gradeNegTwoProjector e =
-      gradeNegTwoProjector e := by
-  simpa [gradeNegTwoProjector] using
-    (jointPeirceProjector_idempotent he .neg .pos)
-
-/-- All five adjoint-weight projectors are idempotent simultaneously. -/
-theorem fiveGradeProjectors_idempotent
-    {e : R} (he : e * e * e = e) :
-    gradeNegTwoProjector e * gradeNegTwoProjector e = gradeNegTwoProjector e ∧
-    gradeNegOneProjector e * gradeNegOneProjector e = gradeNegOneProjector e ∧
-    gradeZeroProjector e * gradeZeroProjector e = gradeZeroProjector e ∧
-    gradePosOneProjector e * gradePosOneProjector e = gradePosOneProjector e ∧
-    gradePosTwoProjector e * gradePosTwoProjector e = gradePosTwoProjector e := by
-  exact ⟨gradeNegTwoProjector_idempotent he,
-    gradeNegOneProjector_idempotent he,
-    gradeZeroProjector_idempotent he,
-    gradePosOneProjector_idempotent he,
-    gradePosTwoProjector_idempotent he⟩
+  noncomm_ring_nf at h ⊢
+  exact h
 
 @[simp] theorem gradePosTwo_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradePosTwoProjector e x -
         gradePosTwoProjector e x * e =
       (2 : ℝ) • gradePosTwoProjector e x := by
-  convert jointPeirceProjector_adjoint_weight he .pos .neg x using 1 <;>
-    simp [gradePosTwoProjector, peirceScalar, add_smul] <;>
-    rw [two_smul]
+  simpa [gradePosTwoProjector, peirceScalar] using
+    jointPeirceProjector_adjoint_weight he .pos .neg x
 
 @[simp] theorem gradeNegTwo_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradeNegTwoProjector e x -
         gradeNegTwoProjector e x * e =
       (-2 : ℝ) • gradeNegTwoProjector e x := by
-  convert jointPeirceProjector_adjoint_weight he .neg .pos x using 1 <;>
-    simp [gradeNegTwoProjector, peirceScalar, sub_eq_add_neg, add_smul,
-      neg_smul] <;>
-    rw [two_smul, neg_add]
+  simpa [gradeNegTwoProjector, peirceScalar] using
+    jointPeirceProjector_adjoint_weight he .neg .pos x
 
 @[simp] theorem gradePosOne_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :

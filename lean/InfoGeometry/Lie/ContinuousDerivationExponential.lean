@@ -801,6 +801,36 @@ theorem flowLinearEquiv_map_associator
         (flowLinearEquiv D t z) := by
   exact flow_associator mul D hD t x y z
 
+/-- The bundled analytic exponential transports idempotents. -/
+theorem flowLinearEquiv_preserves_idempotent
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x : A)
+    (hx : mul x x = x) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t x) =
+      flowLinearEquiv D t x := by
+  rw [← flowLinearEquiv_map_mul mul D hD t x x, hx]
+
+/-- The bundled analytic exponential transports both orientations of
+orthogonality without assuming commutativity. -/
+theorem flowLinearEquiv_preserves_two_sided_orthogonality
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A)
+    (hxy : mul x y = 0)
+    (hyx : mul y x = 0) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) = 0 ∧
+      mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) = 0 := by
+  constructor
+  · rw [← flowLinearEquiv_map_mul mul D hD t x y, hxy]
+    exact (flowLinearEquiv D t).map_zero
+  · rw [← flowLinearEquiv_map_mul mul D hD t y x, hyx]
+    exact (flowLinearEquiv D t).map_zero
+
 /--
 An idempotent remains idempotent under the derivation exponential.
 -/

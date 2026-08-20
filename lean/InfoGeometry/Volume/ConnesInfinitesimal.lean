@@ -311,6 +311,16 @@ theorem modularHamiltonianAction_pow
       (modularHamiltonianAction (H := H) K A t) ^ n := by
   exact expTransport_pow_seed K A n t
 
+/-- The finite modular flow packaged as an `ℝ`-algebra homomorphism. -/
+noncomputable def modularHamiltonianActionAlgHom
+    (K : AlgebraEnd H) (t : ℝ) : AlgebraEnd H →ₐ[ℝ] AlgebraEnd H :=
+  expTransportAlgHom K t
+
+@[simp] theorem modularHamiltonianActionAlgHom_apply
+    (K A : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianActionAlgHom (H := H) K t A =
+      modularHamiltonianAction (H := H) K A t := rfl
+
 /-- A finite modular Hamiltonian flow is inverted by reversing its time. -/
 theorem modularHamiltonianAction_neg_left
     (K A : AlgebraEnd H) (t : ℝ) :

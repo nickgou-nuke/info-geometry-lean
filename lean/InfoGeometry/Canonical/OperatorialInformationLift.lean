@@ -220,7 +220,7 @@ theorem normalized_logTransportedThermalOperatorialInformationLift_of_vacuumTran
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
     (x : E) (scalar Λ : ℝ)
-    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (V : SplitVielbein K x) (Γ : RicciMongeAmpere.SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ)
     {X Y : PolarizedMajorana (S := H₂) M} (h : X ⟶ Y) :
     HasDerivAt

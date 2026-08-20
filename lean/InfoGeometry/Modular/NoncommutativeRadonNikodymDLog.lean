@@ -156,6 +156,24 @@ theorem dlogR_mul_noncommutative (D : NoncommutativeDerivation A) (u v : Aˣ) :
     _ = D (u.val) * (u⁻¹ : Aˣ).val +
         (u.val * (D (v.val) * (v⁻¹ : Aˣ).val)) * (u⁻¹ : Aˣ).val := by rw [one_mul]
 
+/-- Under the precise commutation hypothesis that kills the conjugation term,
+the right noncommutative logarithmic derivative becomes additive. -/
+theorem dlogR_mul_of_commute (D : NoncommutativeDerivation A) (u v : Aˣ)
+    (h_comm : Commute (u : Aˣ).val (dlogR D v)) :
+    dlogR D (u * v) = dlogR D u + dlogR D v := by
+  rw [dlogR_mul_noncommutative]
+  have hu : (u : Aˣ).val * (u⁻¹ : Aˣ).val = 1 := by
+    rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
+  calc
+    dlogR D u + (u : Aˣ).val * dlogR D v * (u⁻¹ : Aˣ).val
+        = dlogR D u + ((u : Aˣ).val * dlogR D v) * (u⁻¹ : Aˣ).val := by
+          simp only [mul_assoc]
+    _ = dlogR D u + ((dlogR D v) * (u : Aˣ).val) * (u⁻¹ : Aˣ).val := by
+          rw [h_comm.eq]
+    _ = dlogR D u + dlogR D v * ((u : Aˣ).val * (u⁻¹ : Aˣ).val) := by
+          simp only [mul_assoc]
+    _ = dlogR D u + dlogR D v := by rw [hu, mul_one]
+
 /-- 🏆 THEOREM 3: Noncommutative Inversion Duality:
     dlog_L(u⁻¹) = - dlog_R(u) -/
 theorem dlogL_inv_eq_neg_dlogR (D : NoncommutativeDerivation A) (u : Aˣ) :

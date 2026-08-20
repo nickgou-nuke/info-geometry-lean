@@ -41,6 +41,24 @@ theorem bracket_skew (X Y : A) :
   dsimp [bracket]
   abel
 
+/-- Vanishing of the commutator bracket is exactly multiplicative
+commutation in the ambient ring. -/
+theorem bracket_eq_zero_iff (X Y : A) :
+    bracket X Y = 0 ↔ X * Y = Y * X := by
+  simp [bracket, sub_eq_zero]
+
+@[simp]
+theorem bracket_add_left (X Y Z : A) :
+    bracket (X + Y) Z = bracket X Z + bracket Y Z := by
+  simp only [bracket, add_mul, mul_add]
+  abel
+
+@[simp]
+theorem bracket_add_right (X Y Z : A) :
+    bracket X (Y + Z) = bracket X Y + bracket X Z := by
+  simp only [bracket, add_mul, mul_add]
+  abel
+
 /-- 🏆 THEOREM 2: The Noncommutative Jacobi Identity:
     [X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]] = 0 -/
 theorem bracket_jacobi (X Y Z : A) :

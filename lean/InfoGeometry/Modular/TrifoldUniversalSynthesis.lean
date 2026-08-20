@@ -296,4 +296,3 @@ theorem beta_eq_neg_log_ber (β : ℝ) (n : ℕ) (hn : n ≠ 0) :
 end InfoGeometry.Modular.Trifold
 
 end noncomputable section
-

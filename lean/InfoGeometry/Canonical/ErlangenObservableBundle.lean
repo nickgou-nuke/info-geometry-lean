@@ -133,6 +133,26 @@ structure ObservableCoordinate (H : Type*) [NormedAddCommGroup H] [InnerProductS
   op : H →L[ℂ] H
   is_self_adjoint : ContinuousLinearMap.adjoint op = op
 
+/-! The scalar expectation is kept complex-valued until self-adjointness is
+    used.  This avoids silently treating an arbitrary operator expectation as
+    a positive projective coordinate. -/
+def observableExpectation
+    (ψ : NormalizedState H) (X : ObservableCoordinate H) : ℂ :=
+  ⟪X.op ψ.vec, ψ.vec⟫_ℂ
+
+theorem observableExpectation_conj_eq
+    (ψ : NormalizedState H) (X : ObservableCoordinate H) :
+    starRingEnd ℂ (observableExpectation ψ X) = observableExpectation ψ X := by
+  dsimp [observableExpectation]
+  calc
+    starRingEnd ℂ ⟪X.op ψ.vec, ψ.vec⟫_ℂ =
+        ⟪ψ.vec, X.op ψ.vec⟫_ℂ := by
+      exact inner_conj_symm (X.op ψ.vec) ψ.vec
+    _ = ⟪ψ.vec, (ContinuousLinearMap.adjoint X.op) ψ.vec⟫_ℂ := by
+      rw [X.is_self_adjoint]
+    _ = ⟪X.op ψ.vec, ψ.vec⟫_ℂ := by
+      exact ContinuousLinearMap.adjoint_inner_right X.op ψ.vec ψ.vec
+
 /-- 
   THEOREM 6 (QGT Decomposition over Observable Coordinates):
   For any state ψ and observable coordinate generators X, Y, the Quantum Geometric Tensor

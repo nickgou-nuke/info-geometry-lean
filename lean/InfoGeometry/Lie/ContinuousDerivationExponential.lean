@@ -802,6 +802,24 @@ theorem flowLinearEquiv_commute_iff
   · intro h
     exact flowLinearEquiv_preserves_commute mul D hD x y h t
 
+/-- The invertible derivation flow preserves centrality in both directions. -/
+theorem flowLinearEquiv_isCentral_iff
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (x : A)
+    (t : ℝ) :
+    (∀ y : A,
+      mul (flowLinearEquiv D t x) y =
+        mul y (flowLinearEquiv D t x)) ↔
+      ∀ y : A, mul x y = mul y x := by
+  constructor
+  · intro h y
+    exact (flowLinearEquiv_commute_iff mul D hD x y t).mp
+      (h (flowLinearEquiv D t y))
+  · intro h
+    exact flowLinearEquiv_preserves_central mul D hD x h t
+
 /-!
 ## Transport of nonassociative algebraic structure
 -/

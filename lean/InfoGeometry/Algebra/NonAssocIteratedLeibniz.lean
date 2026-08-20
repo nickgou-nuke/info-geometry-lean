@@ -1,0 +1,287 @@
+import Mathlib.Algebra.Module.LinearMap.End
+import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Tactic
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
+open Finset
+open BigOperators
+
+namespace InfoGeometry.Algebra.NonAssocIteratedLeibniz
+
+/-!
+# Iterated Derivations and Multiplicative Frame Transport
+
+This module owns:
+1. The general iterated Leibniz rule for an arbitrary bilinear multiplication (associative or non-associative) using native Mathlib Pascal reindexing (`Finset.sum_choose_succ_nsmul`).
+2. Annihilation of any two-sided unit by a derivation (`D one = 0`) and all its positive iterates (`iterD D n one = 0`).
+3. Preservation of algebraic relations (idempotents, orthogonalities, square-zero elements) under certified multiplicative linear endomorphisms (`NonAssocAlgEnd`).
+4. Stabilizer invariance of positive and negative chiral sheets.
+-/
+
+section IteratedLeibniz
+
+variable {R : Type*} [CommSemiring R]
+variable {A : Type*} [AddCommMonoid A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A)
+
+/-- Leibniz rule for the supplied bilinear multiplication. -/
+def IsDerivation (D : A →ₗ[R] A) : Prop :=
+  ∀ x y : A,
+    D (mul x y) = mul (D x) y + mul x (D y)
+
+/-- The `n`-fold iterate of a linear endomorphism. -/
+def iterD (D : A →ₗ[R] A) (n : ℕ) : A →ₗ[R] A :=
+  D ^ n
+
+@[simp] theorem iterD_zero (D : A →ₗ[R] A) :
+    iterD D 0 = LinearMap.id :=
+  rfl
+
+/-- Successor iteration with `D` on the outside. -/
+@[simp] theorem iterD_succ (D : A →ₗ[R] A) (n : ℕ) :
+    iterD D (n + 1) = D.comp (iterD D n) := by
+  change D ^ (n + 1) = D.comp (D ^ n)
+  exact Module.End.iterate_succ' (f' := D) n
+
+@[simp] theorem iterD_succ_apply
+    (D : A →ₗ[R] A) (n : ℕ) (x : A) :
+    iterD D (n + 1) x = D (iterD D n x) := by
+  rw [iterD_succ, LinearMap.comp_apply]
+
+/--
+General iterated Leibniz rule, stated with native natural-number scalar
+multiplication.
+
+No associativity of `mul` is used anywhere.
+-/
+theorem iterated_leibniz_nsmul
+    (D : A →ₗ[R] A)
+    (hD : IsDerivation mul D)
+    (n : ℕ) (x y : A) :
+    iterD D n (mul x y) =
+      ∑ k ∈ range (n + 1),
+        n.choose k •
+          (mul (iterD D k x) (iterD D (n - k) y)) := by
+  induction n with
+  | zero =>
+      rw [Finset.sum_range_one]
+      dsimp [iterD]
+      rw [Nat.choose_self, one_nsmul]
+  | succ n ih =>
+      rw [iterD_succ_apply, ih, map_sum]
+      have h_step : ∀ k : ℕ,
+          D (n.choose k • (mul (iterD D k x) (iterD D (n - k) y))) =
+            n.choose k • (mul (iterD D (k + 1) x) (iterD D (n - k) y)) +
+            n.choose k • (mul (iterD D k x) (iterD D (n - k + 1) y)) := by
+        intro k
+        rw [_root_.map_nsmul, hD, nsmul_add]
+        congr 2
+        · rw [iterD_succ_apply]
+        · rw [iterD_succ_apply]
+      simp_rw [h_step]
+      rw [sum_add_distrib]
+
+      have hsub :
+          (∑ k ∈ range (n + 1),
+              n.choose k •
+                (mul (iterD D k x)
+                  (iterD D (n - k + 1) y))) =
+            ∑ k ∈ range (n + 1),
+              n.choose k •
+                (mul (iterD D k x)
+                  (iterD D (n + 1 - k) y)) := by
+        apply sum_congr rfl
+        intro k hk
+        have hk_le : k ≤ n :=
+          Nat.le_of_lt_succ (mem_range.mp hk)
+        have hnk :
+            n - k + 1 = n + 1 - k := by
+          simpa [Nat.succ_eq_add_one] using
+            (Nat.succ_sub hk_le).symm
+        rw [hnk]
+
+      rw [hsub, add_comm]
+
+      let f : ℕ → ℕ → A :=
+        fun i j => mul (iterD D i x) (iterD D j y)
+
+      change (∑ i ∈ range (n + 1), n.choose i • f i (n + 1 - i)) +
+             (∑ i ∈ range (n + 1), n.choose i • f (i + 1) (n - i)) =
+             ∑ i ∈ range (n + 1 + 1), (n + 1).choose i • f i (n + 1 - i)
+
+      exact (Finset.sum_choose_succ_nsmul f n).symm
+
+end IteratedLeibniz
+
+section Unit
+
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [AddCommGroup A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A)
+
+/-- A derivation annihilates any supplied two-sided unit. -/
+theorem derivation_kills_one
+    (D : A →ₗ[R] A)
+    (one : A)
+    (h_unit_left : ∀ a : A, mul one a = a)
+    (h_unit_right : ∀ a : A, mul a one = a)
+    (hD : IsDerivation mul D) :
+    D one = 0 := by
+  have h : D one = D one + D one := by
+    have h_leib := hD one one
+    have h_left : mul one one = one := h_unit_left one
+    have h_right_done : mul (D one) one = D one := h_unit_right (D one)
+    have h_left_done : mul one (D one) = D one := h_unit_left (D one)
+    rw [h_left] at h_leib
+    rw [h_right_done, h_left_done] at h_leib
+    exact h_leib
+  have h' : D one + D one = D one + 0 := by
+    rw [← h, add_zero]
+  exact add_left_cancel h'
+
+/-- Every positive iterate annihilates a point already annihilated by `D`. -/
+theorem iterD_eq_zero_of_apply_eq_zero
+    (D : A →ₗ[R] A)
+    (x : A)
+    (hx : D x = 0)
+    (n : ℕ)
+    (hn : 0 < n) :
+    iterD D n x = 0 := by
+  cases n with
+  | zero =>
+      omega
+  | succ k =>
+      simp [iterD, pow_succ, Module.End.mul_apply, hx]
+
+/-- In particular, all positive iterates annihilate the unit. -/
+theorem iterD_kills_one
+    (D : A →ₗ[R] A)
+    (one : A)
+    (hD_one : D one = 0)
+    (n : ℕ)
+    (hn : 0 < n) :
+    iterD D n one = 0 :=
+  iterD_eq_zero_of_apply_eq_zero D one hD_one n hn
+
+end Unit
+
+/-! ## Certified multiplicative transport -/
+
+section Transport
+
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [AddCommGroup A] [Module R A]
+variable (mul : A →ₗ[R] A →ₗ[R] A)
+variable (one : A)
+
+/--
+A unital multiplicative linear endomorphism of a potentially nonassociative
+algebra.
+
+This is the exact structure required by the frame-transport theorems.
+-/
+structure NonAssocAlgEnd where
+  toLinearMap : A →ₗ[R] A
+
+  map_mul' :
+    ∀ x y : A,
+      toLinearMap (mul x y) =
+        mul (toLinearMap x) (toLinearMap y)
+
+  map_one' :
+    toLinearMap one = one
+
+namespace NonAssocAlgEnd
+
+instance : CoeFun (NonAssocAlgEnd mul one) (fun _ => A → A) where
+  coe F := F.toLinearMap
+
+variable {mul one}
+
+@[simp] theorem map_mul
+    (F : NonAssocAlgEnd mul one)
+    (x y : A) :
+    F (mul x y) = mul (F x) (F y) :=
+  F.map_mul' x y
+
+@[simp] theorem map_one
+    (F : NonAssocAlgEnd mul one) :
+    F one = one :=
+  F.map_one'
+
+@[simp] theorem map_zero
+    (F : NonAssocAlgEnd mul one) :
+    F 0 = 0 :=
+  F.toLinearMap.map_zero
+
+/-- Multiplicative maps preserve idempotents. -/
+theorem map_idempotent
+    (F : NonAssocAlgEnd mul one)
+    {e : A}
+    (he : mul e e = e) :
+    mul (F e) (F e) = F e := by
+  rw [← F.map_mul, he]
+
+/-- Multiplicative maps preserve an oriented orthogonality relation. -/
+theorem map_orthogonal
+    (F : NonAssocAlgEnd mul one)
+    {e f : A}
+    (hef : mul e f = 0) :
+    mul (F e) (F f) = 0 := by
+  rw [← F.map_mul, hef, F.map_zero]
+
+/-- Multiplicative maps preserve square-zero elements. -/
+theorem map_square_zero
+    (F : NonAssocAlgEnd mul one)
+    {q : A}
+    (hq : mul q q = 0) :
+    mul (F q) (F q) = 0 := by
+  rw [← F.map_mul, hq, F.map_zero]
+
+end NonAssocAlgEnd
+
+/--
+Peirce coordinates with an explicit half-scalar.
+
+Using an explicit `half` keeps this definition valid over a general
+commutative ring. A concrete owner may supply `half = ⅟ (2 : R)`.
+-/
+def ePlus (half : R) (I : A) : A :=
+  half • (one + I)
+
+def eMinus (half : R) (I : A) : A :=
+  half • (one - I)
+
+theorem map_ePlus_of_fixed
+    (F : NonAssocAlgEnd mul one)
+    (half : R) (I : A)
+    (hI : F I = I) :
+    F (ePlus one half I) = ePlus one half I := by
+  calc
+    F (half • (one + I))
+        = half • F (one + I) :=
+          F.toLinearMap.map_smul half (one + I)
+    _ = half • (F one + F I) := by
+          rw [F.toLinearMap.map_add]
+    _ = half • (one + I) := by
+          rw [F.map_one, hI]
+
+theorem map_eMinus_of_fixed
+    (F : NonAssocAlgEnd mul one)
+    (half : R) (I : A)
+    (hI : F I = I) :
+    F (eMinus one half I) = eMinus one half I := by
+  calc
+    F (half • (one - I))
+        = half • F (one - I) :=
+          F.toLinearMap.map_smul half (one - I)
+    _ = half • (F one - F I) := by
+          rw [F.toLinearMap.map_sub]
+    _ = half • (one - I) := by
+          rw [F.map_one, hI]
+
+end Transport
+
+end InfoGeometry.Algebra.NonAssocIteratedLeibniz

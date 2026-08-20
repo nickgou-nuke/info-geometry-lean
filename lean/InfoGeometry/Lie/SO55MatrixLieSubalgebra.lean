@@ -2,6 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
+import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 
 /-!
 # The $\mathfrak{so}(5,5)$ Matrix Lie Subalgebra
@@ -27,11 +28,9 @@ open Matrix
 
 abbrev Mat10 := Matrix (Fin 10) (Fin 10) ℝ
 
-/-- The signature metric for (5,5) spacetime: diagonal entries (+1, +1, +1, +1, +1, -1, -1, -1, -1, -1). -/
-def eta55 : Mat10 := fun i j =>
-  if i = j then
-    if i.val < 5 then 1 else -1
-  else 0
+/-- The split-signature metric in the Levi/Witt basis used by the derivation map. -/
+abbrev eta55 : Mat10 :=
+  InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge.eta55LeviMat10
 
 /-- $\eta_{5,5}$ is symmetric: $\eta_{5,5}^T = \eta_{5,5}$. -/
 theorem eta55_transpose : eta55ᵀ = eta55 := by

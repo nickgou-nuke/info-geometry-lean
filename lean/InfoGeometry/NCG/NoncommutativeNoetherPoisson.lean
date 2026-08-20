@@ -102,7 +102,7 @@ theorem derivation_bracket_invariant
     D (bracket H Q) = 0 := by
   dsimp [bracket]
   rw [D.map_sub, hD_leibniz, hD_leibniz, hH, hQ]
-  simp
+  simp only [zero_mul, mul_zero, add_zero, sub_self]
 
 /- Every Leibniz derivation transports the commutator bracket by the
    corresponding Leibniz rule. -/
@@ -113,7 +113,6 @@ theorem derivation_bracket_leibniz
     D (bracket X Y) = bracket (D X) Y + bracket X (D Y) := by
   dsimp [bracket]
   rw [D.map_sub, hD_leibniz, hD_leibniz]
-  simp only [sub_mul, mul_sub]
   abel
 
 end InfoGeometry.NCG

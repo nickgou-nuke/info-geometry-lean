@@ -202,7 +202,21 @@ theorem dlogR_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
   rw [dlogR_eq_conjugate_dlogL (D := D) (u := u⁻¹),
     dlogL_inv D hD u, dlogR_eq_conjugate_dlogL (D := D) u]
   simp only [inv_inv, mul_neg, neg_mul, mul_assoc]
-  rw [u.inv_val, one_mul]
+
+/-- The right logarithmic derivative of an inner derivation is the opposite
+    unit-conjugation displacement of its generator. -/
+theorem dlogR_adK (K : A) (u : Aˣ) :
+    dlogR (adK K) u =
+      K - (u : A) * K * (↑(u⁻¹) : A) := by
+  dsimp [dlogR, adK]
+  have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+  calc
+    (K * (u : A) - (u : A) * K) * (↑(u⁻¹) : A) =
+        K * ((u : A) * (↑(u⁻¹) : A)) -
+          (u : A) * K * (↑(u⁻¹) : A) := by
+      rw [sub_mul, mul_assoc]
+    _ = K - (u : A) * K * (↑(u⁻¹) : A) := by
+      rw [hu, mul_one]
 
 /-!
 =============================================================================

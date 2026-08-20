@@ -260,12 +260,12 @@ theorem H_BdG_eq_transport_raw (h Δ : EndH) :
 
 @[simp] theorem H_BdG_snd (h Δ : EndH) (x : NambuH) :
     (H_BdG h Δ x).snd = adjoint Δ x.fst - adjoint h x.snd := by
-  simp [H_BdG, holeBlock]
+  simp [H_BdG, holeBlock, sub_eq_add_neg]
 
 @[simp] theorem H_BdG_apply (h Δ : EndH) (u v : H) :
     H_BdG h Δ (nambuMk u v) =
       nambuMk (h u + Δ v) (adjoint Δ u - adjoint h v) := by
-  apply nambu_ext <;> simp [H_BdG, holeBlock]
+  apply nambu_ext <;> simp [H_BdG, holeBlock, sub_eq_add_neg]
 
 @[simp] theorem block11_H_BdG (h Δ : EndH) :
     block11 (H_BdG h Δ) = h := by
@@ -385,14 +385,12 @@ theorem bdg_linearSheetSwap_anticommutes
   apply ContinuousLinearMap.ext
   intro x
   apply nambu_ext
-  · change
-      C₀ (adjoint Δ x.fst - adjoint h x.snd) =
-        -(h (C₀ x.snd) + Δ (C₀ x.fst))
+  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, linearSheetSwap_apply,
+      linearSheetSwap_fst, linearSheetSwap_snd, H_BdG_fst, H_BdG_snd]
     rw [map_sub, h1 x.fst, h2 x.snd]
     abel
-  · change
-      C₀ (h x.fst + Δ x.snd) =
-        -(adjoint Δ (C₀ x.snd) - adjoint h (C₀ x.fst))
+  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, linearSheetSwap_apply,
+      linearSheetSwap_fst, linearSheetSwap_snd, H_BdG_fst, H_BdG_snd]
     rw [map_add, h3 x.fst, h4 x.snd]
     abel
 
@@ -554,15 +552,12 @@ theorem bdg_antiunitary_particle_hole_symmetry
     antiunitarySheetSwap R (H_BdG h Δ x) =
       -(H_BdG h Δ (antiunitarySheetSwap R x)) := by
   apply nambu_ext
-  · change
-      R.conjugation (adjoint Δ x.fst - adjoint h x.snd) =
-        -(h (R.conjugation x.snd) + Δ (R.conjugation x.fst))
+  · simp only [antiunitarySheetSwap_fst, antiunitarySheetSwap_snd, H_BdG_fst, H_BdG_snd,
+      ContinuousLinearMap.neg_apply, neg_fst, neg_snd, nambuMk_fst, nambuMk_snd]
     rw [map_sub, h_anti1 x.fst, h_comm1 x.snd]
     abel
-  · change
-      R.conjugation (h x.fst + Δ x.snd) =
-        -(adjoint Δ (R.conjugation x.snd) -
-          adjoint h (R.conjugation x.fst))
+  · simp only [antiunitarySheetSwap_fst, antiunitarySheetSwap_snd, H_BdG_fst, H_BdG_snd,
+      ContinuousLinearMap.neg_apply, neg_fst, neg_snd, nambuMk_fst, nambuMk_snd]
     rw [map_add, h_comm2 x.fst, h_anti2 x.snd]
     abel
 
@@ -692,10 +687,12 @@ theorem H_BdG_on_schurGraph
       holeBlock h (I.inverse (adjoint Δ u)) = adjoint Δ u :=
     I.holeBlock_inverse_apply (adjoint Δ u)
   have hAdj : adjoint h (I.inverse (adjoint Δ u)) = -adjoint Δ u := by
-    have hneg := congrArg Neg.neg hInv
+    have hneg : -holeBlock h (I.inverse (adjoint Δ u)) = -adjoint Δ u := by rw [hInv]
+    dsimp [holeBlock] at hneg
+    rw [neg_neg] at hneg
     exact hneg
   apply nambu_ext
-  · simp [BdG_Schur_Complement_apply, schurGraphEmbedding, eliminatedHoleMap]
+  · simp [BdG_Schur_Complement_apply, schurGraphEmbedding, eliminatedHoleMap, sub_eq_add_neg]
   · simp [schurGraphEmbedding, eliminatedHoleMap, H_BdG_snd, map_neg, hAdj]
 
 /-- Operator-level Schur graph identity. -/
@@ -801,12 +798,12 @@ def InvertibleShiftedHoleBlock.inverse {h : EndH} {E : ℂ} (I : InvertibleShift
 @[simp] theorem InvertibleShiftedHoleBlock.shiftedHoleBlock_inverse_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
     shiftedHoleBlock h E (InvertibleShiftedHoleBlock.inverse I x) = x := by
   have hx := congrArg (fun T : EndH => T x) (InvertibleShiftedHoleBlock.shiftedHoleBlock_comp_inverse I)
-  simpa [comp_apply] using hx
+  exact hx
 
 @[simp] theorem InvertibleShiftedHoleBlock.inverse_shiftedHoleBlock_apply {h : EndH} {E : ℂ} (I : InvertibleShiftedHoleBlock h E) (x : H) :
     InvertibleShiftedHoleBlock.inverse I (shiftedHoleBlock h E x) = x := by
   have hx := congrArg (fun T : EndH => T x) (InvertibleShiftedHoleBlock.inverse_comp_shiftedHoleBlock I)
-  simpa [comp_apply] using hx
+  exact hx
 
 /-- Energy-dependent upper Schur complement of `H_BdG - E`. -/
 noncomputable def BdG_Schur_Complement_at
@@ -875,7 +872,7 @@ theorem spectralBdG_on_schurGraph
       shiftedHoleBlock h E (I.inverse (adjoint Δ u)) = adjoint Δ u :=
     I.shiftedHoleBlock_inverse_apply (adjoint Δ u)
   apply nambu_ext
-  · simp [BdG_Schur_Complement_at_apply, schurGraphEmbedding_at, eliminatedHoleMap_at]
+  · simp [BdG_Schur_Complement_at_apply, schurGraphEmbedding_at, eliminatedHoleMap_at, sub_eq_add_neg]
   · simp [schurGraphEmbedding_at, eliminatedHoleMap_at, spectralBdG_snd, map_neg, hInv]
 
 /-- Operator-level energy-dependent Schur identity. -/

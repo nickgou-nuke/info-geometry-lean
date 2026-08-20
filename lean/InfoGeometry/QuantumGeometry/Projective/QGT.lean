@@ -60,6 +60,10 @@ def QGT (ψ : NormalizedState H) (X Y : EndH) : ℂ :=
 def fubiniStudyMetric (ψ : NormalizedState H) (X Y : EndH) : ℝ :=
   (QGT ψ X Y).re
 
+/-- Pure-state Quantum Fisher Information Metric (unscaled / Fubini-Study normalized). -/
+abbrev fisherMetric (ψ : NormalizedState H) (X Y : EndH) : ℝ :=
+  fubiniStudyMetric ψ X Y
+
 /-- Antisymmetric Berry curvature symplectic component: Ω_ψ(X, Y) = -2 * Im(Q_ψ(X, Y)) -/
 def berryCurvature (ψ : NormalizedState H) (X Y : EndH) : ℝ :=
   -2 * (QGT ψ X Y).im
@@ -122,6 +126,10 @@ theorem fubiniStudyMetric_phase_invariant (ψ : NormalizedState H) (X Y : EndH) 
   dsimp [fubiniStudyMetric]
   rw [QGT_phase_invariant ψ X Y c hc]
 
+theorem fisherMetric_phase_invariant (ψ : NormalizedState H) (X Y : EndH) (c : ℂ) (hc : starRingEnd ℂ c * c = 1) :
+    fisherMetric (phaseRotate ψ c hc) X Y = fisherMetric ψ X Y :=
+  fubiniStudyMetric_phase_invariant ψ X Y c hc
+
 theorem berryCurvature_phase_invariant (ψ : NormalizedState H) (X Y : EndH) (c : ℂ) (hc : starRingEnd ℂ c * c = 1) :
     berryCurvature (phaseRotate ψ c hc) X Y = berryCurvature ψ X Y := by
   dsimp [berryCurvature]
@@ -153,6 +161,10 @@ theorem fubiniStudyMetric_self_eq_normSq (ψ : NormalizedState H) (X : EndH) :
   have h := InnerProductSpace.norm_sq_eq_re_inner (𝕜 := ℂ) (projOrth ψ X)
   exact h.symm
 
+theorem fisherMetric_self_eq_normSq (ψ : NormalizedState H) (X : EndH) :
+    fisherMetric ψ X X = ‖projOrth ψ X‖ ^ 2 :=
+  fubiniStudyMetric_self_eq_normSq ψ X
+
 /-!
 =============================================================================
 PART 3: Native Cauchy–Schwarz and Full Robertson–Schrödinger Inequality
@@ -174,16 +186,15 @@ theorem QGT_cauchy_schwarz (ψ : NormalizedState H) (X Y : EndH) :
     simpa [u] using fubiniStudyMetric_self_eq_normSq ψ X
   have hY : fubiniStudyMetric ψ Y Y = ‖v‖ ^ 2 := by
     simpa [v] using fubiniStudyMetric_self_eq_normSq ψ Y
-  
+
   have hCS : Complex.normSq (⟪u, v⟫_ℂ) ≤ ‖u‖ ^ 2 * ‖v‖ ^ 2 := by
-    have h1 : ‖(⟪u, v⟫_ℂ : ℂ)‖ ≤ ‖u‖ * ‖v‖ := by
-      exact norm_inner_le_norm u v
+    have h1 : ‖(⟪u, v⟫_ℂ : ℂ)‖ ≤ ‖u‖ * ‖v‖ := norm_inner_le_norm u v
     calc
       Complex.normSq (⟪u, v⟫_ℂ) = ‖(⟪u, v⟫_ℂ : ℂ)‖ ^ 2 := by
         rw [Complex.normSq_eq_norm_sq]
       _ ≤ (‖u‖ * ‖v‖) ^ 2 := by gcongr
       _ = ‖u‖ ^ 2 * ‖v‖ ^ 2 := by ring
-  
+
   calc
     Complex.normSq (QGT ψ X Y) = Complex.normSq (⟪u, v⟫_ℂ) := by rw [hQ]
     _ ≤ ‖u‖ ^ 2 * ‖v‖ ^ 2 := hCS
@@ -212,6 +223,12 @@ theorem robertson_schrodinger_qgt_bound (ψ : NormalizedState H) (X Y : EndH) :
   linarith
 
 theorem robertson_schrodinger_uncertainty (ψ : NormalizedState H) (X Y : EndH) :
+    fubiniStudyMetric ψ X X * fubiniStudyMetric ψ Y Y ≥
+      (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
+  robertson_schrodinger_qgt_bound ψ X Y
+
+/-- Compatibility alias for full Robertson-Schrödinger inequality. -/
+theorem robertson_schrodinger_full (ψ : NormalizedState H) (X Y : EndH) :
     fubiniStudyMetric ψ X X * fubiniStudyMetric ψ Y Y ≥
       (fubiniStudyMetric ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature ψ X Y) ^ 2 :=
   robertson_schrodinger_qgt_bound ψ X Y
@@ -251,24 +268,29 @@ theorem berryCurvature_skewAdjoint_commutator (ψ : NormalizedState H) (X Y : En
     (hY : ContinuousLinearMap.adjoint Y = -Y) :
     (berryCurvature ψ X Y : ℂ) * Complex.I =
       ⟪ψ.vec, (opCommutator X Y) ψ.vec⟫_ℂ := by
-  have h_adj_X : ∀ u v : H, ⟪X u, v⟫_ℂ = -⟪u, X v⟫_ℂ := by
-    intro u v
+  have h_adj_X (u v : H) :
+      ⟪X u, v⟫_ℂ = -⟪u, X v⟫_ℂ := by
     calc
-      ⟪X u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint X v⟫_ℂ := by rw [adjoint_inner_right]
+      ⟪X u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint X v⟫_ℂ := by
+        exact (adjoint_inner_right X u v).symm
       _ = ⟪u, (-X) v⟫_ℂ := by rw [hX]
-      _ = ⟪u, -(X v)⟫_ℂ := by simp [ContinuousLinearMap.neg_apply]
-      _ = -⟪u, X v⟫_ℂ := by rw [inner_neg_right]
+      _ = -⟪u, X v⟫_ℂ := by simp
 
-  have h_adj_Y : ∀ u v : H, ⟪Y u, v⟫_ℂ = -⟪u, Y v⟫_ℂ := by
-    intro u v
+  have h_adj_Y (u v : H) :
+      ⟪Y u, v⟫_ℂ = -⟪u, Y v⟫_ℂ := by
     calc
-      ⟪Y u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint Y v⟫_ℂ := by rw [adjoint_inner_right]
+      ⟪Y u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint Y v⟫_ℂ := by
+        exact (adjoint_inner_right Y u v).symm
       _ = ⟪u, (-Y) v⟫_ℂ := by rw [hY]
-      _ = ⟪u, -(Y v)⟫_ℂ := by simp [ContinuousLinearMap.neg_apply]
-      _ = -⟪u, Y v⟫_ℂ := by rw [inner_neg_right]
+      _ = -⟪u, Y v⟫_ℂ := by simp
 
-  have hX_im : ⟪X ψ.vec, ψ.vec⟫_ℂ = -⟪ψ.vec, X ψ.vec⟫_ℂ := h_adj_X ψ.vec ψ.vec
-  have hY_im : ⟪Y ψ.vec, ψ.vec⟫_ℂ = -⟪ψ.vec, Y ψ.vec⟫_ℂ := h_adj_Y ψ.vec ψ.vec
+  have hX_im :
+      ⟪X ψ.vec, ψ.vec⟫_ℂ = -⟪ψ.vec, X ψ.vec⟫_ℂ :=
+    h_adj_X ψ.vec ψ.vec
+
+  have hY_im :
+      ⟪Y ψ.vec, ψ.vec⟫_ℂ = -⟪ψ.vec, Y ψ.vec⟫_ℂ :=
+    h_adj_Y ψ.vec ψ.vec
 
   have h_cross :
       ⟪X ψ.vec, ψ.vec⟫_ℂ * ⟪ψ.vec, Y ψ.vec⟫_ℂ -
@@ -277,33 +299,33 @@ theorem berryCurvature_skewAdjoint_commutator (ψ : NormalizedState H) (X Y : En
     ring
 
   have h_Q_sub :
-      QGT ψ X Y - QGT ψ Y X = ⟪X ψ.vec, Y ψ.vec⟫_ℂ - ⟪Y ψ.vec, X ψ.vec⟫_ℂ := by
+      QGT ψ X Y - QGT ψ Y X =
+        ⟪X ψ.vec, Y ψ.vec⟫_ℂ - ⟪Y ψ.vec, X ψ.vec⟫_ℂ := by
     dsimp only [QGT]
     linear_combination -h_cross
 
   have h_comm :
-      ⟪ψ.vec, opCommutator X Y ψ.vec⟫_ℂ =
-        -(⟪X ψ.vec, Y ψ.vec⟫_ℂ - ⟪Y ψ.vec, X ψ.vec⟫_ℂ) := by
+      ⟪X ψ.vec, Y ψ.vec⟫_ℂ - ⟪Y ψ.vec, X ψ.vec⟫_ℂ =
+        -⟪ψ.vec, opCommutator X Y ψ.vec⟫_ℂ := by
     rw [opCommutator_apply, inner_sub_right]
-    have hXY : ⟪ψ.vec, X (Y ψ.vec)⟫_ℂ = -⟪X ψ.vec, Y ψ.vec⟫_ℂ := by
+    have hXY :
+        ⟪ψ.vec, X (Y ψ.vec)⟫_ℂ = -⟪X ψ.vec, Y ψ.vec⟫_ℂ := by
       have h := h_adj_X ψ.vec (Y ψ.vec)
       linear_combination h
-    have hYX : ⟪ψ.vec, Y (X ψ.vec)⟫_ℂ = -⟪Y ψ.vec, X ψ.vec⟫_ℂ := by
+    have hYX :
+        ⟪ψ.vec, Y (X ψ.vec)⟫_ℂ = -⟪Y ψ.vec, X ψ.vec⟫_ℂ := by
       have h := h_adj_Y ψ.vec (X ψ.vec)
       linear_combination h
     rw [hXY, hYX]
     ring
 
-  have h_Q_symm : QGT ψ Y X = starRingEnd ℂ (QGT ψ X Y) := by
-    dsimp only [QGT] at *
-    rw [map_sub, map_mul]
-    have h1 : starRingEnd ℂ (⟪X ψ.vec, Y ψ.vec⟫_ℂ) = ⟪Y ψ.vec, X ψ.vec⟫_ℂ :=
-      inner_conj_symm (Y ψ.vec) (X ψ.vec)
-    have h2 : starRingEnd ℂ (⟪X ψ.vec, ψ.vec⟫_ℂ) = ⟪ψ.vec, X ψ.vec⟫_ℂ :=
-      inner_conj_symm ψ.vec (X ψ.vec)
-    have h3 : starRingEnd ℂ (⟪ψ.vec, Y ψ.vec⟫_ℂ) = ⟪Y ψ.vec, ψ.vec⟫_ℂ :=
-      inner_conj_symm (Y ψ.vec) ψ.vec
-    rw [h1, h2, h3]
+  have h_Q_symm :
+      QGT ψ Y X = starRingEnd ℂ (QGT ψ X Y) := by
+    dsimp only [QGT]
+    rw [map_sub, map_mul,
+      inner_conj_symm (Y ψ.vec) (X ψ.vec),
+      inner_conj_symm ψ.vec (X ψ.vec),
+      inner_conj_symm (Y ψ.vec) ψ.vec]
     ring
 
   have h_Q_im : QGT ψ X Y - QGT ψ Y X = -((berryCurvature ψ X Y : ℂ) * Complex.I) := by
@@ -318,7 +340,9 @@ theorem berryCurvature_skewAdjoint_commutator (ψ : NormalizedState H) (X Y : En
             rw [h_Q_im]
             ring
     _ = -(⟪X ψ.vec, Y ψ.vec⟫_ℂ - ⟪Y ψ.vec, X ψ.vec⟫_ℂ) := by rw [h_Q_sub]
-    _ = ⟪ψ.vec, opCommutator X Y ψ.vec⟫_ℂ := by rw [← h_comm]
+    _ = ⟪ψ.vec, opCommutator X Y ψ.vec⟫_ℂ := by
+          rw [h_comm]
+          ring
 
 theorem berryCurvature_eq_commutator
     (ψ : NormalizedState H) (X Y : EndH)
@@ -343,8 +367,10 @@ PART 5: Bundled Lie Algebra Representations and Uncertainty
 -/
 structure SkewAdjointLieRep (𝔤 : Type*) [LieRing 𝔤] [LieAlgebra ℝ 𝔤] where
   toLieHom : 𝔤 →ₗ⁅ℝ⁆ EndH
-  map_lie' : ∀ x y : 𝔤, opCommutator (toLieHom x) (toLieHom y) = toLieHom (⁅x, y⁆)
   is_skew' : ∀ X : 𝔤, ContinuousLinearMap.adjoint (toLieHom X) = -(toLieHom X)
+
+theorem opCommutator_eq_lie (X Y : EndH) :
+    opCommutator X Y = ⁅X, Y⁆ := rfl
 
 /-- 
   MASTER CAPSTONE THEOREM:
@@ -369,15 +395,182 @@ theorem lie_rep_uncertainty_bound
       (ρ.is_skew' X)
       (ρ.is_skew' Y)
   have h_lie_comm :
-      opCommutator (ρ.toLieHom X) (ρ.toLieHom Y) = ρ.toLieHom (⁅X, Y⁆) :=
-    ρ.map_lie' X Y
+      opCommutator (ρ.toLieHom X) (ρ.toLieHom Y) = ρ.toLieHom (⁅X, Y⁆) := by
+    rw [opCommutator_eq_lie]
+    exact (ρ.toLieHom.map_lie X Y).symm
   have h_normSq :
       Complex.normSq (⟪ψ.vec, ρ.toLieHom (⁅X, Y⁆) ψ.vec⟫_ℂ) =
         (berryCurvature ψ (ρ.toLieHom X) (ρ.toLieHom Y)) ^ 2 := by
-    rw [← h_lie_comm, ← h_comm, Complex.normSq_mul, Complex.normSq_I, mul_one, Complex.normSq_ofReal]
-    ring
+    rw [← h_lie_comm, ← h_comm, Complex.normSq_mul, Complex.normSq_I, mul_one]
+    simpa [pow_two] using
+      (Complex.normSq_ofReal (berryCurvature ψ (ρ.toLieHom X) (ρ.toLieHom Y)))
   rw [h_normSq]
   exact h_curv
+
+/-- Compatibility alias for derivation uncertainty bound. -/
+theorem lie_derivation_uncertainty_bound
+    {𝔤 : Type*} [LieRing 𝔤] [LieAlgebra ℝ 𝔤]
+    (ρ : SkewAdjointLieRep 𝔤)
+    (ψ : NormalizedState H) (X Y : 𝔤) :
+    (fubiniStudyMetric ψ (ρ.toLieHom X) (ρ.toLieHom X)) *
+        (fubiniStudyMetric ψ (ρ.toLieHom Y) (ρ.toLieHom Y)) ≥
+      (1 / 4 : ℝ) * Complex.normSq (⟪ψ.vec, ρ.toLieHom (⁅X, Y⁆) ψ.vec⟫_ℂ) :=
+  lie_rep_uncertainty_bound ρ ψ X Y
+
+/-!
+=============================================================================
+PART 6: Unbundled Raw Vector API (ψ : H with ⟪ψ, ψ⟫ = 1)
+=============================================================================
+-/
+
+/-- Raw QGT evaluated on any Hilbert vector ψ : H. -/
+def QGTRaw (ψ : H) (X Y : EndH) : ℂ :=
+  ⟪X ψ, Y ψ⟫_ℂ - ⟪X ψ, ψ⟫_ℂ * ⟪ψ, Y ψ⟫_ℂ
+
+/-- Raw Fubini–Study metric evaluated on any Hilbert vector ψ : H. -/
+def fubiniStudyMetricRaw (ψ : H) (X Y : EndH) : ℝ :=
+  (QGTRaw ψ X Y).re
+
+/-- Raw Berry curvature evaluated on any Hilbert vector ψ : H. -/
+def berryCurvatureRaw (ψ : H) (X Y : EndH) : ℝ :=
+  -2 * (QGTRaw ψ X Y).im
+
+/-- Raw horizontal projection evaluated on any Hilbert vector ψ : H. -/
+def projOrthRaw (ψ : H) (X : EndH) : H :=
+  X ψ - ⟪ψ, X ψ⟫_ℂ • ψ
+
+@[simp]
+theorem inner_state_projOrth_raw (ψ : H) (X : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    ⟪ψ, projOrthRaw ψ X⟫_ℂ = 0 := by
+  dsimp only [projOrthRaw]
+  rw [inner_sub_right, inner_smul_right, h_norm, mul_one, sub_self]
+
+theorem QGT_eq_inner_projOrth_raw (ψ : H) (X Y : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    QGTRaw ψ X Y = ⟪projOrthRaw ψ X, projOrthRaw ψ Y⟫_ℂ := by
+  dsimp only [QGTRaw, projOrthRaw]
+  rw [inner_sub_left, inner_sub_right, inner_sub_right]
+  rw [inner_smul_left, inner_smul_right, inner_smul_left, inner_smul_right]
+  rw [h_norm, mul_one]
+  have h_conj_X : starRingEnd ℂ (⟪ψ, X ψ⟫_ℂ) = ⟪X ψ, ψ⟫_ℂ :=
+    inner_conj_symm (X ψ) ψ
+  rw [h_conj_X]
+  ring
+
+theorem fubiniStudyMetric_self_eq_normSq_raw (ψ : H) (X : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    fubiniStudyMetricRaw ψ X X = ‖projOrthRaw ψ X‖ ^ 2 := by
+  dsimp only [fubiniStudyMetricRaw]
+  rw [QGT_eq_inner_projOrth_raw ψ X X h_norm]
+  have h := InnerProductSpace.norm_sq_eq_re_inner (𝕜 := ℂ) (projOrthRaw ψ X)
+  exact h.symm
+
+theorem QGT_cauchy_schwarz_raw (ψ : H) (X Y : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    Complex.normSq (QGTRaw ψ X Y) ≤
+      fubiniStudyMetricRaw ψ X X * fubiniStudyMetricRaw ψ Y Y := by
+  let u := projOrthRaw ψ X
+  let v := projOrthRaw ψ Y
+  have hQ : QGTRaw ψ X Y = ⟪u, v⟫_ℂ := by
+    simpa [u, v] using QGT_eq_inner_projOrth_raw ψ X Y h_norm
+  have hX : fubiniStudyMetricRaw ψ X X = ‖u‖ ^ 2 := by
+    simpa [u] using fubiniStudyMetric_self_eq_normSq_raw ψ X h_norm
+  have hY : fubiniStudyMetricRaw ψ Y Y = ‖v‖ ^ 2 := by
+    simpa [v] using fubiniStudyMetric_self_eq_normSq_raw ψ Y h_norm
+  have hCS : Complex.normSq (⟪u, v⟫_ℂ) ≤ ‖u‖ ^ 2 * ‖v‖ ^ 2 := by
+    have h1 : ‖(⟪u, v⟫_ℂ : ℂ)‖ ≤ ‖u‖ * ‖v‖ := norm_inner_le_norm u v
+    calc
+      Complex.normSq (⟪u, v⟫_ℂ) = ‖(⟪u, v⟫_ℂ : ℂ)‖ ^ 2 := by
+        rw [Complex.normSq_eq_norm_sq]
+      _ ≤ (‖u‖ * ‖v‖) ^ 2 := by gcongr
+      _ = ‖u‖ ^ 2 * ‖v‖ ^ 2 := by ring
+  calc
+    Complex.normSq (QGTRaw ψ X Y) = Complex.normSq (⟪u, v⟫_ℂ) := by rw [hQ]
+    _ ≤ ‖u‖ ^ 2 * ‖v‖ ^ 2 := hCS
+    _ = fubiniStudyMetricRaw ψ X X * fubiniStudyMetricRaw ψ Y Y := by rw [hX, hY]
+
+theorem QGT_normSq_decomposition_raw (ψ : H) (X Y : EndH) :
+    Complex.normSq (QGTRaw ψ X Y) =
+      (fubiniStudyMetricRaw ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvatureRaw ψ X Y) ^ 2 := by
+  dsimp only [fubiniStudyMetricRaw, berryCurvatureRaw]
+  rw [Complex.normSq_apply]
+  ring
+
+theorem robertson_schrodinger_qgt_bound_raw (ψ : H) (X Y : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    fubiniStudyMetricRaw ψ X X * fubiniStudyMetricRaw ψ Y Y ≥
+      (fubiniStudyMetricRaw ψ X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvatureRaw ψ X Y) ^ 2 := by
+  have h := QGT_cauchy_schwarz_raw ψ X Y h_norm
+  rw [QGT_normSq_decomposition_raw] at h
+  exact h
+
+theorem berry_curvature_uncertainty_bound_raw (ψ : H) (X Y : EndH) (h_norm : ⟪ψ, ψ⟫_ℂ = (1 : ℂ)) :
+    fubiniStudyMetricRaw ψ X X * fubiniStudyMetricRaw ψ Y Y ≥
+      (1 / 4 : ℝ) * (berryCurvatureRaw ψ X Y) ^ 2 := by
+  have h := robertson_schrodinger_qgt_bound_raw ψ X Y h_norm
+  have h_sq_nonneg : (fubiniStudyMetricRaw ψ X Y) ^ 2 ≥ 0 := sq_nonneg _
+  linarith
+
+theorem berryCurvature_eq_commutator_raw (ψ : H) (X Y : EndH)
+    (hX : ContinuousLinearMap.adjoint X = -X)
+    (hY : ContinuousLinearMap.adjoint Y = -Y) :
+    (berryCurvatureRaw ψ X Y : ℂ) * Complex.I = ⟪ψ, opCommutator X Y ψ⟫_ℂ := by
+  have h_adj_X (u v : H) : ⟪X u, v⟫_ℂ = -⟪u, X v⟫_ℂ := by
+    calc
+      ⟪X u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint X v⟫_ℂ := (adjoint_inner_right X u v).symm
+      _ = ⟪u, (-X) v⟫_ℂ := by rw [hX]
+      _ = -⟪u, X v⟫_ℂ := by simp
+
+  have h_adj_Y (u v : H) : ⟪Y u, v⟫_ℂ = -⟪u, Y v⟫_ℂ := by
+    calc
+      ⟪Y u, v⟫_ℂ = ⟪u, ContinuousLinearMap.adjoint Y v⟫_ℂ := (adjoint_inner_right Y u v).symm
+      _ = ⟪u, (-Y) v⟫_ℂ := by rw [hY]
+      _ = -⟪u, Y v⟫_ℂ := by simp
+
+  have hX_im : ⟪X ψ, ψ⟫_ℂ = -⟪ψ, X ψ⟫_ℂ := h_adj_X ψ ψ
+  have hY_im : ⟪Y ψ, ψ⟫_ℂ = -⟪ψ, Y ψ⟫_ℂ := h_adj_Y ψ ψ
+
+  have h_cross :
+      ⟪X ψ, ψ⟫_ℂ * ⟪ψ, Y ψ⟫_ℂ - ⟪Y ψ, ψ⟫_ℂ * ⟪ψ, X ψ⟫_ℂ = 0 := by
+    rw [hX_im, hY_im]
+    ring
+
+  have h_Q_sub :
+      QGTRaw ψ X Y - QGTRaw ψ Y X = ⟪X ψ, Y ψ⟫_ℂ - ⟪Y ψ, X ψ⟫_ℂ := by
+    dsimp only [QGTRaw]
+    linear_combination -h_cross
+
+  have h_comm :
+      ⟪X ψ, Y ψ⟫_ℂ - ⟪Y ψ, X ψ⟫_ℂ = -⟪ψ, opCommutator X Y ψ⟫_ℂ := by
+    rw [opCommutator_apply, inner_sub_right]
+    have hXY : ⟪ψ, X (Y ψ)⟫_ℂ = -⟪X ψ, Y ψ⟫_ℂ := by
+      have h := h_adj_X ψ (Y ψ)
+      linear_combination h
+    have hYX : ⟪ψ, Y (X ψ)⟫_ℂ = -⟪Y ψ, X ψ⟫_ℂ := by
+      have h := h_adj_Y ψ (X ψ)
+      linear_combination h
+    rw [hXY, hYX]
+    ring
+
+  have h_Q_symm : QGTRaw ψ Y X = starRingEnd ℂ (QGTRaw ψ X Y) := by
+    dsimp only [QGTRaw]
+    rw [map_sub, map_mul,
+      inner_conj_symm (Y ψ) (X ψ),
+      inner_conj_symm ψ (X ψ),
+      inner_conj_symm (Y ψ) ψ]
+    ring
+
+  have h_Q_im : QGTRaw ψ X Y - QGTRaw ψ Y X = -((berryCurvatureRaw ψ X Y : ℂ) * Complex.I) := by
+    rw [h_Q_symm, Complex.sub_conj]
+    dsimp only [berryCurvatureRaw]
+    push_cast
+    ring
+
+  calc
+    (berryCurvatureRaw ψ X Y : ℂ) * Complex.I
+        = -(QGTRaw ψ X Y - QGTRaw ψ Y X) := by
+            rw [h_Q_im]
+            ring
+    _ = -(⟪X ψ, Y ψ⟫_ℂ - ⟪Y ψ, X ψ⟫_ℂ) := by rw [h_Q_sub]
+    _ = ⟪ψ, opCommutator X Y ψ⟫_ℂ := by
+          rw [h_comm]
+          ring
 
 end InfoGeometry.QuantumGeometry.Projective
 

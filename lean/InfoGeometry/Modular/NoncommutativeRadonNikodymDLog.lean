@@ -381,6 +381,17 @@ theorem rnUnit_chain_rule (u v w : Aˣ) :
   dsimp [rnUnit]
   group
 
+@[simp]
+theorem rnUnit_self (u : Aˣ) :
+    rnUnit u u = 1 := by
+  dsimp [rnUnit]
+  exact mul_inv_cancel u
+
+theorem rnUnit_swap (u v : Aˣ) :
+    rnUnit v u = (rnUnit u v)⁻¹ := by
+  dsimp [rnUnit]
+  group
+
 /-- Right logarithmic cocycle of a relative Radon--Nikodym unit. -/
 theorem dlogR_rnUnit (D : NoncommutativeDerivation A) (u v : Aˣ) :
     dlogR D (rnUnit u v) =
@@ -388,6 +399,16 @@ theorem dlogR_rnUnit (D : NoncommutativeDerivation A) (u v : Aˣ) :
   dsimp [rnUnit]
   rw [dlogR_mul_noncommutative, dlogR_inv_eq_neg_dlogL]
   simp only [mul_neg, neg_mul, sub_eq_add_neg]
+
+@[simp]
+theorem dlogR_rnUnit_self (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogR D (rnUnit u u) = 0 := by
+  rw [rnUnit_self, dlogR_one]
+
+theorem dlogL_rnUnit_swap (D : NoncommutativeDerivation A) (u v : Aˣ) :
+    dlogL D (rnUnit v u) = -dlogR D (rnUnit u v) := by
+  rw [rnUnit_swap]
+  exact dlogL_inv_eq_neg_dlogR D (rnUnit u v)
 
 /-- Noncommutative Logarithmic Cocycle of relative Radon-Nikodym unit:
     dlog_L(Δ_{u, v}) = v * dlog_L(u) * v⁻¹ - dlog_R(v) -/
@@ -398,6 +419,16 @@ theorem dlogL_rnUnit (D : NoncommutativeDerivation A) (u v : Aˣ) :
   rw [dlogL_mul_noncommutative, dlogL_inv_eq_neg_dlogR]
   have h_inv_inv : ((v⁻¹ : Aˣ)⁻¹ : Aˣ).val = (v : Aˣ).val := rfl
   rw [h_inv_inv, sub_eq_add_neg]
+
+@[simp]
+theorem dlogL_rnUnit_self (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogL D (rnUnit u u) = 0 := by
+  rw [rnUnit_self, dlogL_one]
+
+theorem dlogR_rnUnit_swap (D : NoncommutativeDerivation A) (u v : Aˣ) :
+    dlogR D (rnUnit v u) = -dlogL D (rnUnit u v) := by
+  rw [rnUnit_swap]
+  exact dlogR_inv_eq_neg_dlogL D (rnUnit u v)
 
 /-- Left logarithmic derivative of a relative unit along a composable chain.
 

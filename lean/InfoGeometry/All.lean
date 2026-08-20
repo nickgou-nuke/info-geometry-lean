@@ -7392,3 +7392,5 @@ import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Information.FisherRaoMadelungIsometry
 import InfoGeometry.Algebra.ExplogRN
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
+import InfoGeometry.Information.UniversalDualityQuadrangle
+import InfoGeometry.Information.UniversalConvexDualityQuadrangle

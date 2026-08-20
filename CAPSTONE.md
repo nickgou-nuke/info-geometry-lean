@@ -192,6 +192,7 @@ $$P_C E_a^\dagger E_b P_C = \alpha_{ab} P_C \implies \exists \mathcal{R}(\rho) =
 
 | Subsystem | Canonical Path | Description | Proof Status |
 | :--- | :--- | :--- | :--- |
+| **Master Keystone** | [`lean/InfoGeometry/Canonical/CompleteUnifiedBundle.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CompleteUnifiedBundle.lean) | Master end-to-end unification tying Peirce CAR, Nambu-BdG, Krein-Cartan, Modular flow, and Projective QGT | **Closed (0 sorry)** |
 | **Nambu-BdG** | [`lean/InfoGeometry/Canonical/PhysicalBdGPairingBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PhysicalBdGPairingBridge.lean) | Bounded $H_{\mathrm{BdG}}$ on $\operatorname{WithLp}\,2\,(H \times H)$, PHS anticommutation, Schur self-energy | **Closed (84 theorems, 0 sorry)** |
 | **Krein-Cartan** | [`lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean) | `KreinSpaceDatum`, `CartanInvolution`, positive Hilbert inner product $\langle u, v\rangle_J = \eta(u, Jv)$, skew-adjoint conversion | **Closed (0 sorry)** |
 | **Krein Soldering** | [`lean/InfoGeometry/QuantumGeometry/Projective/KreinSolderingBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/Projective/KreinSolderingBridge.lean) | Fundamental symmetry $J^2 = 1, J^\dagger = J$, $(J \circ A)^\dagger = -(J \circ A)$, positive Hilbert reduction | **Closed (0 sorry)** |

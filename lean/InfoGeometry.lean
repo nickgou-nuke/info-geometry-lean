@@ -136,3 +136,4 @@ import InfoGeometry.OperatorAlgebra.SheetConnection
 import InfoGeometry.OperatorAlgebra.MariGeometryLift
 import InfoGeometry.OperatorAlgebra.CommutantIntertwine
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
+import InfoGeometry.Canonical.CompleteUnifiedBundle

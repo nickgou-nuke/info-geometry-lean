@@ -3308,6 +3308,7 @@ import InfoGeometry.Canonical.HestenesKreinConnesAbsorptionColimit
 import InfoGeometry.Canonical.HestenesKreinAndreevBdGColimit
 import InfoGeometry.Canonical.ZetaEulerLaurentMonodromy
 import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
+import InfoGeometry.Canonical.CompleteUnifiedBundle
 
 namespace InfoGeometry
 

@@ -132,9 +132,16 @@ theorem directCanonicalStanDerMap_apply_normal_form (x y z : CanonicalZorn) :
           (3 : ℕ) • ((X * Y) * Z - X * (Y * Z))) := congrArg _ hinner
     _ = ((x * y - y * x) * z - z * (x * y - y * x)) -
         3 • ((x * y) * z - x * (y * z)) := by
-      rw [LinearEquiv.map_sub, LinearEquiv.map_sub, LinearEquiv.map_sub, LinearEquiv.map_nsmul]
-      simp only [X, Y, Z, zMul_eq_canonical_mul,
-        kingdonCanonicalLinearEquiv_mul, LinearEquiv.apply_symm_apply]
+      have hsub (a b : AbstractKingdon) : kingdonCanonicalLinearEquiv (a - b) =
+          kingdonCanonicalLinearEquiv a - kingdonCanonicalLinearEquiv b :=
+        kingdonCanonicalLinearEquiv.map_sub a b
+      have hmul (a b : AbstractKingdon) : kingdonCanonicalLinearEquiv (a * b) =
+          kingdonCanonicalLinearEquiv a * kingdonCanonicalLinearEquiv b := by
+        rw [kingdonCanonicalLinearEquiv_mul, zMul_eq_canonical_mul]
+      have hnsmul (n : ℕ) (a : AbstractKingdon) : kingdonCanonicalLinearEquiv (n • a) =
+          n • kingdonCanonicalLinearEquiv a :=
+        (kingdonCanonicalLinearEquiv.toAddMonoidHom).map_nsmul a n
+      simp only [hsub, hmul, hnsmul, X, Y, Z, LinearEquiv.apply_symm_apply]
 
 /-- Baez's standard derivation with canonical split-octonion inputs. -/
 noncomputable def canonicalStandardDerivationOfCanonical (x y : CanonicalZorn) :

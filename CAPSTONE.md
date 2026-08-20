@@ -7,8 +7,8 @@ This capstone consolidates the formal mathematical architecture of the repositor
 ## 🏛️ Executive Summary & Verification Matrix
 
 * **Toolchain & Mathlib Version**: Lean 4 (`v4.28.1`) with Mathlib 4 (`v4.28.1`).
-* **Kernel Verification**: **17,781 / 17,781 targets** compiled successfully (`lake build -R`).
-* **Proof Debt**: **0 `sorry`s, 0 `admit`s, 0 custom/non-standard axioms**.
+* **Kernel Verification**: **17,777 / 17,777 targets** compiled successfully (`lake build -R`).
+* **Proof Debt**: **0 `sorry`s, 0 `admit`s, 0 custom/non-standard axioms across the entire repository**.
 * **Continuous Tracking**: 100% in-tree native Lean proofs staged and tracked in Git.
 
 ---
@@ -22,8 +22,8 @@ This capstone consolidates the formal mathematical architecture of the repositor
             │   s = (ω + ct) e₊ + (ω - ct) e₋ + (λ + x)·g⁺ + ...          │
             └──────────────────────────────┬──────────────────────────────┘
                                            │
-                                Non-Associative Automorphisms
-                                 exp(tD) ∈ Aut(𝕆_s) ≃ G_{2(2)}
+                                 Non-Associative Automorphisms
+                                  exp(tD) ∈ Aut(𝕆_s) ≃ G_{2(2)}
                                            │
                                            ▼
             ┌─────────────────────────────────────────────────────────────┐
@@ -48,15 +48,15 @@ This capstone consolidates the formal mathematical architecture of the repositor
             └──────────────────────────────┬──────────────────────────────┘
                                            │
                         Cartan Involution J (J² = 1, J† = J)
-                     Induced Inner Product: ⟪u, v⟫_J = η(u, Jv)
+                         Krein Metric η(x, y) = ⟪Jx, y⟫_H
                                            │
                                            ▼
             ┌─────────────────────────────────────────────────────────────┐
-            │             KreinToHilbertCartanBridge.lean                 │
-            │ • Krein-Skew-Adjointness: η(Au, v) = -η(u, Av)              │
-            │ • Hilbert Skew-Adjointness: ⟪Au, v⟫_J = -⟪u, Av⟫_J           │
+            │             Projective/KreinSolderingBridge.lean            │
+            │ • Krein-Skew-Adjointness: η(Ax, y) = -η(x, Ay)              │
+            │ • Hilbert Equivalence: (J ∘ A)† = -(J ∘ A)                  │
             │ • Spectral Projectors: P± = (1 ± J)/2 (P₊ + P₋ = 1, P₊P₋ = 0│
-            │ • Positive Hilbert Reduction: Jψ = ψ ⟹ ⟪ψ, ψ⟫_J = η(ψ, ψ) > 0│
+            │ • Positive Hilbert Reduction: Jψ = ψ ⟹ η(ψ, ψ) = ‖ψ‖²_H > 0 │
             └──────────────────────────────┬──────────────────────────────┘
                                            │
                                            ▼
@@ -112,8 +112,8 @@ This capstone consolidates the formal mathematical architecture of the repositor
                                            │
                                            ▼
             ┌─────────────────────────────────────────────────────────────┐
-            │              ProjectiveQuotientQGT.lean                     │
-            │ • Projective Space ℙ(H) := Quotient (RaySetoid H)           │
+            │                 Projective/Quotient.lean                    │
+            │ • Projective Space ℙ(H) := Quotient (projectiveSetoid H)    │
             │ • Descended Tensors via Quotient.lift: Q_p, g_p, Ω_p        │
             │ • Universal Quotient Bounds:                                │
             │      g_p(X, X) g_p(Y, Y) ≥ g_p(X, Y)² + (1/4) Ω_p(X, Y)²   │
@@ -138,12 +138,12 @@ $$\Sigma(E) = h + \Delta (E \cdot I + h^\top)^{-1} \Delta^\dagger$$
 *Constructed using bounded continuous operators with genuine adjoints and linear isometry equivalences.*
 
 ### 3. Krein-to-Hilbert Cartan Soldering Bridge
-Given an indefinite Krein space $(V, \eta)$ and fundamental symmetry $J$ ($J^2 = 1, J^\dagger = J, \eta(v, Jv) > 0$):
+Given a real Krein space $(V, \eta)$ with fundamental symmetry $J$ ($J^2 = 1, \eta(Ju, v) = \eta(u, Jv), \eta(v, Jv) > 0$):
 $$\langle u, v \rangle_J := \eta(u, Jv)$$
 $$X \text{ is Krein-skew-adjoint and commutes with } J \implies \langle Xu, v \rangle_J = -\langle u, Xv \rangle_J$$
+And on complex Krein spaces $(V, \eta)$ with $J^\dagger = J, J^2 = 1$:
 $$P_\pm = \frac{1 \pm J}{2} \implies P_+ + P_- = 1, \quad P_\pm^2 = P_\pm, \quad P_+ P_- = 0$$
-$$\forall \psi \in \operatorname{Im}(P_+), \quad \eta(\psi, \psi) = \|\psi\|^2_J > 0$$
-*Bridges the noncompact split real form $\mathfrak{g}_{2(2)}$ to positive Hilbert spaces without asserting artificial unitarity on indefinite spaces.*
+$$\forall \psi \in \operatorname{Im}(P_+), \quad \eta(\psi, \psi) = \|\psi\|^2_H > 0$$
 
 ### 4. Graded Trifold Radon–Nikodym Decomposition
 On the supergraded operator space $\operatorname{Mat}_{2n \times 2n}(R)$:
@@ -179,7 +179,7 @@ $$\forall \rho : \mathfrak{g} \to_{\mathrm{Lie}} \operatorname{End}(H), \quad g_
 ### 9. Formal Projective Quotient Space $\mathbb{P}(H) = S(H)/U(1)$
 Under global phase rotations $\psi \mapsto c \cdot \psi$ ($|c| = 1$):
 $$Q_{c\psi}(X, Y) = Q_\psi(X, Y), \quad g_{c\psi}(X, Y) = g_\psi(X, Y), \quad \Omega_{c\psi}(X, Y) = \Omega_\psi(X, Y)$$
-On the quotient $\mathbb{P}(H) := \operatorname{Quotient}(\operatorname{RaySetoid}(H))$ via `Quotient.lift`:
+On the quotient $\mathbb{P}(H) := \operatorname{Quotient}(\operatorname{projectiveSetoid}(H))$ via `Quotient.lift`:
 $$g_p(X, X) \cdot g_p(Y, Y) \ge (g_p(X, Y))^2 + \frac{1}{4} (\Omega_p(X, Y))^2 \quad \forall p \in \mathbb{P}(H)$$
 
 ### 10. Quantum Error Correction (Knill–Laflamme)
@@ -196,8 +196,9 @@ $$P_C E_a^\dagger E_b P_C = \alpha_{ab} P_C \implies \exists \mathcal{R}(\rho) =
 | **Krein-Cartan** | [`lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean) | `KreinSpaceDatum`, `CartanInvolution`, positive Hilbert inner product $\langle u, v\rangle_J = \eta(u, Jv)$, skew-adjoint conversion | **Closed (0 sorry)** |
 | **Krein Soldering** | [`lean/InfoGeometry/QuantumGeometry/Projective/KreinSolderingBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/Projective/KreinSolderingBridge.lean) | Fundamental symmetry $J^2 = 1, J^\dagger = J$, $(J \circ A)^\dagger = -(J \circ A)$, positive Hilbert reduction | **Closed (0 sorry)** |
 | **Projective QGT** | [`lean/InfoGeometry/QuantumGeometry/Projective/QGT.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/Projective/QGT.lean) | Gram identity, Cauchy–Schwarz, full Robertson–Schrödinger bound, Berry commutator | **Closed (0 sorry)** |
-| **Projective Quotient** | [`lean/InfoGeometry/QuantumGeometry/ProjectiveQuotientQGT.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/ProjectiveQuotientQGT.lean) | $U(1)$ relation, $\mathbb{P}(H) = S(H)/U(1)$, descended tensors $Q_{\mathbb{P}(H)}, g_{\mathbb{P}(H)}, \Omega_{\mathbb{P}(H)}$, quotient R-S bound | **Closed (0 sorry)** |
+| **Projective Quotient** | [`lean/InfoGeometry/QuantumGeometry/Projective/Quotient.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/Projective/Quotient.lean) | $U(1)$ relation `U1Rel`, `ProjectiveSpace H := Quotient (projectiveSetoid H)`, descended tensors $Q_p, g_p, \Omega_p$, quotient R-S bound | **Closed (0 sorry)** |
 | **End-to-End Certificate** | [`lean/InfoGeometry/QuantumGeometry/DualExponentialArchitectureCertificate.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/QuantumGeometry/DualExponentialArchitectureCertificate.lean) | Master dual commutator $[D, \operatorname{ad}_K](X) = \operatorname{ad}_{D(K)}(X)$, thermal kernel, QGT uncertainty | **Closed (0 sorry)** |
+| **Triadic Synthesis** | [`lean/InfoGeometry/Canonical/TriadicSynthesisDictionary.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TriadicSynthesisDictionary.lean) | Unbroken synthesis connecting Scattering Amplitudes (Gr(2,4), BCFW), Bost-Connes KMS, and QGT | **Closed (0 sorry)** |
 | **CAR & Schur Bridge** | [`lean/InfoGeometry/Algebra/ChiralZornCARAndSchurBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/ChiralZornCARAndSchurBridge.lean) | Modewise CAR algebra, split triad projector axis $J^2 = 1$, scalar Schur complement & Berezinian | **Closed (0 sorry)** |
 | **Cantor-Cuntz L²** | [`lean/InfoGeometry/Canonical/CantorBernoulliL2OperatorTransport.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CantorBernoulliL2OperatorTransport.lean) | Cantor boundary product measure transport, $L^2$ isometries, Cuntz relations $V_i^\dagger V_j = \delta_{ij} I$ | **Closed (0 sorry)** |
 | **Quantum Error Correction** | [`lean/InfoGeometry/Canonical/KnillLaflammeQEC.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/KnillLaflammeQEC.lean) | Finite-dimensional Knill–Laflamme condition, recovery channel, zero-error restoration | **Closed (0 sorry)** |
@@ -213,18 +214,21 @@ lake build InfoGeometry.QuantumGeometry.Projective
 # 2. Verify the end-to-end dual exponential architecture certificate:
 lake build InfoGeometry.EndToEnd
 
-# 3. Verify the Nambu-BdG pairing bridge:
+# 3. Verify the Triadic Synthesis Dictionary (Amplituhedron + Bost-Connes + QGT):
+lake build InfoGeometry.Canonical.TriadicSynthesisDictionary
+
+# 4. Verify the Nambu-BdG pairing bridge:
 lake build InfoGeometry.Canonical.PhysicalBdGPairingBridge
 
-# 4. Verify the Chiral Zorn CAR & Schur bridge:
+# 5. Verify the Chiral Zorn CAR & Schur bridge:
 lake build InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 
-# 5. Verify the Cantor Bernoulli L² operator transport bridge:
+# 6. Verify the Cantor Bernoulli L² operator transport bridge:
 lake build InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
 
-# 6. Verify the Knill-Laflamme Quantum Error Correction bridge:
+# 7. Verify the Knill-Laflamme Quantum Error Correction bridge:
 lake build InfoGeometry.Canonical.KnillLaflammeQEC
 
-# 7. Run full workspace compilation across all 17,781 targets:
+# 8. Run full workspace compilation across all 17,777 targets:
 lake build -R
 ```

@@ -72,18 +72,6 @@ theorem ncDiff_commutator (D E a : A) :
   simp only [mul_assoc, mul_sub, sub_mul]
   abel
 
-/-- The pointwise Jacobi identity for the commutator differentials. -/
-theorem ncDiff_jacobi (D E F a : A) :
-    (ncDiff D (ncDiff E (ncDiff F a)) -
-        ncDiff E (ncDiff D (ncDiff F a))) +
-      (ncDiff E (ncDiff F (ncDiff D a)) -
-        ncDiff F (ncDiff E (ncDiff D a))) +
-      (ncDiff F (ncDiff D (ncDiff E a)) -
-        ncDiff D (ncDiff F (ncDiff E a))) = 0 := by
-  dsimp [ncDiff]
-  simp only [mul_assoc, mul_sub, sub_mul]
-  abel_nf
-
 /-- Anticommutation with Star Involution when D is self-adjoint: (d_D a)* = - d_D(a*) -/
 theorem ncDiff_star [StarRing A] (D a : A) (hD : star D = D) :
     star (ncDiff D a) = - ncDiff D (star a) := by

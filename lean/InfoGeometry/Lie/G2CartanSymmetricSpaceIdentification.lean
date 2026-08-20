@@ -3,8 +3,11 @@ import Mathlib.Tactic
 
 import InfoGeometry.Architecture.SymmetricSpace
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Lie.CanonicalZornRootSystemComparison
+import InfoGeometry.Lie.CanonicalZornG2CartanMellinBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
 import InfoGeometry.Lie.CanonicalZornG2SouriauTomitaBridge
@@ -24,86 +27,68 @@ namespace InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification
 
 open InfoGeometry.Architecture.SymmetricSpace
 open InfoGeometry.Lie.CanonicalZornDerivation
+open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 open InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+open InfoGeometry.Lie.CanonicalZornRootSystemComparison
+open InfoGeometry.Lie.CanonicalZornG2CartanMellinBridge
 open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
-open InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
+open InfoGeometry.Lie.CanonicalZornG2SouriauTomitaBridge
+open InfoGeometry.Lie
 
 /-! ## 1. Dimension Theorems -/
 
-/-- THEOREM: The Cartan Lie subalgebra K has dimension 2.
-    This follows from `axialCartanLieSubalgebra_finrank` and
-    `tracelessWeight_finrank`, which are both kernel-verified. -/
+/-- THEOREM: The Cartan Lie subalgebra K has dimension 2. -/
 theorem cartanLieSubalgebra_finrank :
-    Module.finrank ℝ (axialCartanLieSubalgebra : Type*) = 2 := by
-  rw [← axialCartanLieSubalgebra_finrank]
-  exact tracelessWeight_finrank
+    Module.finrank ℝ axialCartanLieSubalgebra = 2 :=
+  axialCartanLieSubalgebra_finrank
 
-/-- THEOREM: The full G₂(₂) derivation algebra has dimension 14.
-    This follows from `rootDerivationBasis_span` and `Module.finrank_basis`. -/
+/-- THEOREM: The full G₂(₂) derivation algebra has dimension 14. -/
 theorem g2Full_dim_eq_fourteen :
-    Module.finrank ℝ (canonicalZornDerivations : Type*) = 14 := by
-  rw [rootDerivationBasis_span]
-  exact Module.finrank_basis rootDerivationBasis
+    Module.finrank ℝ canonicalZornDerivations = 14 :=
+  finrank_canonicalZornDerivations
 
 /-! ## 2. Moment Map as Cartan Projection -/
 
 /-- THEOREM: The Souriau moment map on `G2Cartan` is exactly the
-    simple-weight projection onto the Cartan subalgebra.
-    This is by definition of `canonicalCartanSouriauDatum`. -/
+    simple-weight projection onto the Cartan subalgebra. -/
 theorem momentMap_cartanProjection (x : G2Cartan) (i : Fin 2) :
     canonicalCartanSouriauDatum.momentMap x i =
-      simpleWeightOnCartan i x := by
-  rw [canonicalCartanSouriauDatum]
+      simpleWeightOnCartan i x :=
   rfl
 
 /-! ## 3. Gibbs Kernel as Cartan Character -/
 
-/-- THEOREM: The Gibbs kernel equals the rank-two Cartan Mellin character.
-    This is the content of `unnormalizedGibbsKernel_eq_cartanCharacter`,
-    which is kernel-verified. -/
+/-- THEOREM: The Gibbs kernel equals the rank-two Cartan Mellin character. -/
 theorem gibbsKernel_cartanCharacter (D : CartanSouriauDatum G2Cartan) (x : G2Cartan) :
     unnormalizedGibbsKernel D x =
-      rankTwoCartanMellinCharacter D.beta (D.momentMap x) := by
-  exact unnormalizedGibbsKernel_eq_cartanCharacter D x
+      rankTwoCartanMellinCharacter D.beta (D.momentMap x) :=
+  unnormalizedGibbsKernel_eq_cartanCharacter D x
 
 /-! ## 4. Massieu Potential as Log Partition -/
 
-/-- THEOREM: The Massieu potential is the logarithm of the Gibbs partition.
-    This follows directly from the definitions of `souriauMassieu` and
-    `realGibbsPartition`, which are both kernel-verified. -/
-theorem souriauMassieu_gibbsLogPartition (beta : Fin 2 → ℝ) :
-    souriauMassieu beta = log (realGibbsPartition beta) := by
-  rw [souriauMassieu, realGibbsPartition]
+/-- THEOREM: The Massieu potential is the logarithm of the Gibbs partition. -/
+theorem souriauMassieu_gibbsLogPartition
+    {State : Type*} [Fintype State] [Nonempty State]
+    (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) :
+    souriauMassieu D beta = Real.log (realGibbsPartition D beta) :=
   rfl
 
 /-! ## 5. Root Space Dimension -/
 
-/-- THEOREM: The root space sum (orthogonal complement of Cartan) has dimension 12.
-    This follows from the direct-sum decomposition proved in
-    `cartanRootSpan_isComplement_rootSpaceSum`, together with the
-    dimension counts `cartanRootSpan_finrank = 2` and `g2Full_dim_eq_fourteen = 14`. -/
+/-- THEOREM: The root space sum (orthogonal complement of Cartan) has dimension 12. -/
 theorem rootSpaceSum_dim_eq_twelve :
-    Module.finrank ℝ (rootSpaceSum : Type*) = 12 := by
-  have h_compl : Module.finrank ℝ (rootSpaceSum : Type*) =
-      Module.finrank ℝ (canonicalZornDerivations : Type*) -
-        Module.finrank ℝ (cartanRootSpan : Type*) := by
-    rw [Module.finrank_eq_of_isCompl cartanRootSpan_isComplement_rootSpaceSum]
-  have h_total : Module.finrank ℝ (canonicalZornDerivations : Type*) = 14 :=
-    g2Full_dim_eq_fourteen
-  have h_cartan : Module.finrank ℝ (cartanRootSpan : Type*) = 2 :=
-    cartanRootSpan_finrank
-  rw [h_compl, h_total, h_cartan]
-  norm_num
+    Module.finrank ℝ rootSpaceSum = 12 :=
+  rootSpaceSum_finrank
 
 /-! ## 6. Tomita Bridge: Modular Hamiltonian = Cartan Moment -/
 
-/-- THEOREM: The Tomita modular Hamiltonian is the represented Cartan moment.
-    This is `toSouriauTomitaLogContext_modularHamiltonian`, kernel-verified. -/
+/-- THEOREM: The Tomita modular Hamiltonian is the represented Cartan moment. -/
 theorem tomitaModularHamiltonian_eq_cartanMoment
-    (R : CartanMomentRepresentation H) (geometricTemperature : Cartan) :
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    (R : CartanMomentRepresentation H) (geometricTemperature : CanonicalZornG2CartanMellinBridge.Cartan) :
     (toSouriauTomitaLogContext R geometricTemperature).modularHamiltonian =
-      R.momentOperator geometricTemperature := by
-  exact toSouriauTomitaLogContext_modularHamiltonian R geometricTemperature
+      R.momentOperator geometricTemperature :=
+  toSouriauTomitaLogContext_modularHamiltonian R geometricTemperature
 
 end InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification

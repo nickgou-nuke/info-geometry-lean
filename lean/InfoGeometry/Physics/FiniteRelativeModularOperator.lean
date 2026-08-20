@@ -205,7 +205,7 @@ def deltaEquiv
     (X : A) :
     D.deltaEquiv hD X =
       D.rho * X * D.sigmaInv := by
-  simpa [deltaEquiv] using D.delta_apply X
+  simp [deltaEquiv, D.delta_apply X]
 
 @[simp] theorem deltaEquiv_symm_apply
     (D : RelativeModularData R A)
@@ -213,7 +213,7 @@ def deltaEquiv
     (X : A) :
     (D.deltaEquiv hD).symm X =
       D.rhoInv * X * D.sigma := by
-  simpa [deltaEquiv] using D.deltaInv_apply X
+  simp [deltaEquiv, D.deltaInv_apply X]
 
 /-- Re-export of the finite bimodule formula. -/
 theorem delta_bimodule_formula

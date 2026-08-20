@@ -190,6 +190,12 @@ theorem dlogL_inv_eq_neg_dlogR (D : NoncommutativeDerivation A) (u : Aˣ) :
   have h_inv_inv : ((u⁻¹ : Aˣ)⁻¹ : Aˣ).val = u.val := rfl
   rw [h_inv_inv, h_shift]
 
+theorem dlogR_inv_eq_neg_dlogL (D : NoncommutativeDerivation A) (u : Aˣ) :
+    dlogR D (u⁻¹) = - dlogL D u := by
+  have h := dlogL_inv_eq_neg_dlogR D (u⁻¹)
+  rw [inv_inv] at h
+  rw [h, neg_neg]
+
 /-- 🏆 THEOREM 4: Noncommutative Commuting Homomorphism:
     If v commutes with dlog_L(u), then dlog_L(u * v) = dlog_L(u) + dlog_L(v). -/
 theorem dlogL_mul_of_commute (D : NoncommutativeDerivation A) (u v : Aˣ)
@@ -222,6 +228,14 @@ theorem rnUnit_chain_rule (u v w : Aˣ) :
     rnUnit u w = rnUnit u v * rnUnit v w := by
   dsimp [rnUnit]
   group
+
+/-- Right logarithmic cocycle of a relative Radon--Nikodym unit. -/
+theorem dlogR_rnUnit (D : NoncommutativeDerivation A) (u v : Aˣ) :
+    dlogR D (rnUnit u v) =
+      dlogR D u - (u : Aˣ).val * dlogL D v * (u⁻¹ : Aˣ).val := by
+  dsimp [rnUnit]
+  rw [dlogR_mul_noncommutative, dlogR_inv_eq_neg_dlogL]
+  simp only [mul_neg, neg_mul, sub_eq_add_neg]
 
 /-- Noncommutative Logarithmic Cocycle of relative Radon-Nikodym unit:
     dlog_L(Δ_{u, v}) = v * dlog_L(u) * v⁻¹ - dlog_R(v) -/

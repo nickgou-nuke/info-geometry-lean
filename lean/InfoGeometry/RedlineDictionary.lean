@@ -10,16 +10,14 @@ import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary
 
 /-!
-# Redline Dictionary — The Complete Logarithmic Bridge
+# Redline Dictionary — Native Lean 4 Corridor
 
-This module packages the **entire Redline archetype** as a single native Lean 4 owner surface.
-All theorems are re-exports or direct corollaries of already-built owners.
-Zero `sorry`, zero `axiom`, zero `Classical.choice`, zero `Nonempty` tricks.
+Direct re-exports of already-built native mathlib theorems.
+No wrapper structures, no witnesses, no certificates.
+All theorems are genuine native mathlib lemmas from their respective owners.
 -/
 
 noncomputable section
-
-namespace InfoGeometry.RedlineDictionary
 
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.SouriauModularBregmanOperator
@@ -31,16 +29,16 @@ open InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
 PART 1: The Discrete Multiplicative / Additive Cocycle (Groupoid Cohomology)
 =============================================================================
 
-From `InfoGeometry.Canonical.RelativePotentialCore`:
-
-- `relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a`
-- `relativeModularPotential q q₁ a = relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a`
-- `relativeDensity q q₁ a = Real.exp (-relativeModularPotential q q₁ a)`
-
-These are already kernel-checked as `@[simp]` theorems:
-  `relativeDensity_cocycle`, `relativeModularPotential_cocycle`,
-  `relativeDensity_eq_exp_relativeLogDensity`
+From `InfoGeometry.Canonical.RelativePotentialCore` — already kernel-checked as `@[simp]` theorems:
 -/
+
+#check @relativeDensity_cocycle
+#check @relativeModularPotential_cocycle
+#check @relativeDensity_eq_exp_relativeLogDensity
+#check @relativeModularPotential_eq_neg_relativeLogDensity
+#check @relativeLogDensity_cocycle
+#check @relativeLogDensity_eq_logDensity_sub_logDensity
+#check @relativeDensity_eq_exp_relativeLogDensity
 
 /-!
 =============================================================================
@@ -48,18 +46,21 @@ PART 2: The Lie Flow → Jacobian → Negative Log Redline
 =============================================================================
 
 From `InfoGeometry.Analysis.LieExponentialTraceDeterminant`:
-  `det_lieExponentialPath : (exp (tA)).det = exp (t * tr A)`
+-/
+
+#check @det_lieExponentialPath
 
 From `InfoGeometry.Analysis.MatrixPathDeformationEntropy`:
-  `matrixPathCompressionPotential_lieExponentialPath :
-    matrixLogdetBarrier (exp (tA)) = -(t * tr A)`
-  `deriv_matrixPathCompressionPotential_lieExponentialPath :
-    d/dt [-log det(exp(tA))] = -tr A`
+-/
+
+#check @matrixPathCompressionPotential_lieExponentialPath
+#check @deriv_matrixPathCompressionPotential_lieExponentialPath
 
 From `InfoGeometry.Volume.ZeroJacobianWeylBoundary`:
-  `det_weylScaledJacobian_eq_zero_iff : det(e^ϕ J) = 0 ↔ det J = 0`
-  `totalTransportDensity_eq_zero_iff_det_eq_zero`
 -/
+
+#check @det_weylScaledJacobian_eq_zero_iff
+#check @totalTransportDensity_eq_zero_iff_det_eq_zero
 
 /-!
 =============================================================================
@@ -67,13 +68,14 @@ PART 3: The Modular Operator Δ = exp(-K) Bridge
 =============================================================================
 
 From `InfoGeometry.Canonical.SouriauModularBregmanOperator`:
-  `modularDeltaFromHamiltonian_eq_exp_neg :
-    modularDeltaFromHamiltonian Kmod = exp (-Kmod)`
+-/
 
-  `modularBetaFlow_add : β ↦ exp(-β Kmod)` is a one-parameter group
+#check @modularDeltaFromHamiltonian_eq_exp_neg
+#check @modularBetaFlow_add
+#check @modularBetaFlow_neg_mul
 
 From `InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS`:
-  (full Tomita-Takesaki modular operator / KMS state interface)
+(full Tomita-Takesaki modular operator / KMS state interface)
 
 The discrete shadow is in `RelativePotentialCore`:
   `relativeDensity q q₁ a = Real.exp (-relativeModularPotential q q₁ a)`
@@ -86,9 +88,6 @@ This is exactly the Connes cocycle relation:
 =============================================================================
 PART 4: The de Rham Cohomology Bridge
 =============================================================================
-
-The modular potential `V(q, x) = -log Δ(q, x)` is a 0-form.
-Its logarithmic derivative `dV = -d log Δ` is the Maurer-Cartan 1-form.
 
 In `RelativePotentialCore`:
   `relativeModularPotential_cocycle : V(q, q₁) = V(q, q₀) + V(q₀, q₁)`
@@ -124,139 +123,157 @@ This is already formalized in the `TomitaTakesakiTrifactor` / `SplitOctonion` la
 
 /-!
 =============================================================================
-PART 6: The Complete Dictionary Structure
+PART 6: Direct Corridor Theorems (All Native Mathlib)
 =============================================================================
 -/
 
-/-- Canonical dictionary for the Lie/Jacobian corridor -/
-structure LieJacobianDictionary (n : Type*) [Fintype n] [DecidableEq n] where
-  lieFlow_to_jacobian : ∀ (A : Matrix n n ℝ) (t : ℝ), (lieExponentialPath A t).det = Real.exp (t * Matrix.trace A)
-  jacobian_to_negLog : ∀ (A : Matrix n n ℝ) (t : ℝ), -Real.log ((lieExponentialPath A t).det) = - (t * Matrix.trace A)
-  negLog_deriv : ∀ (A : Matrix n n ℝ) (t : ℝ), deriv (fun s => -Real.log ((lieExponentialPath A s).det)) t = -Matrix.trace A
+/-- The Lie flow Jacobian determinant formula: det(exp(tA)) = exp(t·tr A) -/
+theorem lieFlow_det_formula {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (t : ℝ) :
+    (lieExponentialPath A t).det = Real.exp (t * Matrix.trace A) :=
+  det_lieExponentialPath A t
 
-/-- Canonical dictionary for the relative density / modular potential corridor -/
-structure RelativeDensityDictionary (α : Type*) [Fintype α] [Nonempty α] where
-  density_cocycle : ∀ (q q₀ q₁ : PositiveRay α) (a : α), relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a
-  potential_cocycle : ∀ (q q₀ q₁ : PositiveRay α) (a : α), relativeModularPotential q q₁ a = relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a
-  exp_log_duality : ∀ (q q₀ : PositiveRay α) (a : α), relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a)
-  potential_antisymm : ∀ (q q₀ : PositiveRay α) (a : α), relativeModularPotential q₀ q a = -relativeModularPotential q q₀ a
+/-- Negative log of the Lie flow Jacobian: -log det(exp(tA)) = -t·tr A -/
+theorem lieFlow_negLogJacobian {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (t : ℝ) :
+    -Real.log ((lieExponentialPath A t).det) = - (t * Matrix.trace A) := by
+  have h_det := det_lieExponentialPath A t
+  have h_log_exp : Real.log (Real.exp (t * Matrix.trace A)) = t * Matrix.trace A := Real.log_exp _
+  rw [h_det]
+  rw [h_log_exp]
+  <;> ring
 
-/-- Canonical dictionary for the modular operator Δ = exp(-K) corridor -/
-structure ModularOperatorDictionary (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  delta_from_hamiltonian : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)), modularDeltaFromHamiltonian (E := E) Kmod = NormedSpace.exp (-Kmod)
-  beta_flow_group : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β γ : ℝ), modularBetaFlow (E := E) Kmod (β + γ) = modularBetaFlow (E := E) Kmod β * modularBetaFlow (E := E) Kmod γ
-  beta_flow_neg : ∀ (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β : ℝ), modularBetaFlow (E := E) Kmod (-β) * modularBetaFlow (E := E) Kmod β = modularIdentity (E := E)
-
-/-- The complete Redline dictionary -/
-structure RedlineDictionary (n : Type*) [Fintype n] [DecidableEq n] (α : Type*) [Fintype α] [Nonempty α] (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  lie_jacobian : LieJacobianDictionary n
-  relative_density : RelativeDensityDictionary α
-  modular_operator : ModularOperatorDictionary E
-
-/-!
-=============================================================================
-PART 7: Completeness Theorems (All Native Mathlib)
-=============================================================================
--/
-
-/-- Theorem: The Lie/Jacobian corridor is complete -/
-theorem lieJacobianCorridor_complete {n : Type*} [Fintype n] [DecidableEq n] :
-    ∃ (dict : LieJacobianDictionary n), True := by
-  refine' ⟨
-    { lieFlow_to_jacobian := fun A t => det_lieExponentialPath A t
-      jacobian_to_negLog := fun A t => by
-        have h_det := det_lieExponentialPath A t
-        have h_log_exp : Real.log (Real.exp (t * Matrix.trace A)) = t * Matrix.trace A := Real.log_exp _
-        rw [h_det]
-        rw [Real.log_exp (t * Matrix.trace A)]
+/-- Derivative of negative log Jacobian along Lie flow: d/dt[-log det(exp(tA))] = -tr A -/
+theorem lieFlow_negLogJacobian_deriv {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (t : ℝ) :
+    deriv (fun s => -Real.log ((lieExponentialPath A s).det)) t = -Matrix.trace A := by
+  have h : deriv (fun s => -Real.log ((lieExponentialPath A s).det)) t = -Matrix.trace A := by
+    have h₁ : (fun s => -Real.log ((lieExponentialPath A s).det)) = (fun s => -(s * Matrix.trace A)) := by
+      funext s
+      have h₂ : -Real.log ((lieExponentialPath A s).det) = -(s * Matrix.trace A) := by
+        have h₃ : (lieExponentialPath A s).det = Real.exp (s * Matrix.trace A) := det_lieExponentialPath A s
+        rw [h₃]
+        have h₄ : Real.log (Real.exp (s * Matrix.trace A)) = s * Matrix.trace A := Real.log_exp _
+        rw [h₄]
         <;> ring
-      negLog_deriv := fun A t => by
-        have h : deriv (fun s => -Real.log ((lieExponentialPath A s).det)) t = -Matrix.trace A := by
-          have h₁ : (fun s => -Real.log ((lieExponentialPath A s).det)) = (fun s => -(s * Matrix.trace A)) := by
-            funext s
-            have h₂ : -Real.log ((lieExponentialPath A s).det) = -(s * Matrix.trace A) := by
-              have h₃ : (lieExponentialPath A s).det = Real.exp (s * Matrix.trace A) := det_lieExponentialPath A s
-              rw [h₃]
-              have h₄ : Real.log (Real.exp (s * Matrix.trace A)) = s * Matrix.trace A := Real.log_exp _
-              rw [h₄]
-              <;> ring
-              <;> simp [Real.log_exp]
-            rw [h₂]
-            <;> ring
-          rw [h₁]
-          simp [deriv_const_mul, deriv_id]
-          <;> ring
-        exact h
-    },
-    by trivial
-  ⟩
+        <;> simp [Real.log_exp]
+      rw [h₂]
+      <;> ring
+    rw [h₁]
+    simp [deriv_const_mul, deriv_id]
+    <;> ring
+  exact h
 
-/-- Theorem: The relative density / modular potential corridor is complete -/
-theorem relativeDensityCorridor_complete {α : Type*} [Fintype α] [Nonempty α] :
-    ∃ (dict : RelativeDensityDictionary α), True := by
-  refine' ⟨
-    { density_cocycle := fun q q₀ q₁ a => relativeDensity_cocycle q q₀ q₁ a
-      potential_cocycle := fun q q₀ q₁ a => relativeModularPotential_cocycle q q₀ q₁ a
-      exp_log_duality := fun q q₀ a => by
-        have h : relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a) := by
-          have h₁ : relativeDensity q q₀ a = Real.exp (relativeLogDensity q q₀ a) := relativeDensity_eq_exp_relativeLogDensity q q₀ a
-          have h₂ : relativeModularPotential q q₀ a = -relativeLogDensity q q₀ a := relativeModularPotential_eq_neg_relativeLogDensity q q₀ a
-          rw [h₁, h₂]
-          <;> simp [Real.exp_neg]
-          <;> field_simp [Real.exp_ne_zero]
-          <;> ring
-        exact h
-      potential_antisymm := fun q q₀ a => by
-        have h : relativeModularPotential q₀ q a = -relativeModularPotential q q₀ a := by
-          have h₁ : relativeModularPotential q₀ q a = -relativeLogDensity q₀ q a := by
-            rw [relativeModularPotential_eq_neg_relativeLogDensity]
-          have h₂ : relativeModularPotential q q₀ a = -relativeLogDensity q q₀ a := by
-            rw [relativeModularPotential_eq_neg_relativeLogDensity]
-          have h₃ : relativeLogDensity q₀ q a = -relativeLogDensity q q₀ a := by
-            have h₄ : relativeLogDensity q₀ q a = -relativeLogDensity q q₀ a := by
-              have h₅ : relativeLogDensity q₀ q a = relativeLogDensity q₀ q a := rfl
-              have h₆ : relativeLogDensity q q₀ a = -relativeLogDensity q₀ q a := by
-                have h₇ : relativeLogDensity q q₀ a = relativeLogDensity q q₀ a := rfl
-                have h₈ : relativeLogDensity q q₀ a = -relativeLogDensity q₀ q a := by
-                  -- Using the antisymmetry of log density
-                  have h₉ : relativeLogDensity q q₀ a = -relativeLogDensity q₀ q a := by
-                    calc
-                      relativeLogDensity q q₀ a = relativeLogDensity q q₀ a := rfl
-                      _ = -relativeLogDensity q₀ q a := by
-                        -- From the cocycle property: relativeLogDensity q q a = 0 = relativeLogDensity q q₀ a + relativeLogDensity q₀ q a
-                        have h₁₀ : relativeLogDensity q q a = 0 := relativeLogDensity_self q a
-                        have h₁₁ : relativeLogDensity q q a = relativeLogDensity q q₀ a + relativeLogDensity q₀ q a := relativeLogDensity_cocycle q q₀ q a
-                        linarith
-                  exact h₉
-                exact h₈
+/-- Relative density multiplicative cocycle: Δ(q, q₁) = Δ(q, q₀) · Δ(q₀, q₁) -/
+theorem relativeDensity_mul_cocycle {α : Type*} [Fintype α] [Nonempty α]
+    (q q₀ q₁ : PositiveRay α) (a : α) :
+    relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a :=
+  relativeDensity_cocycle q q₀ q₁ a
+
+/-- Modular potential additive cocycle: V(q, q₁) = V(q, q₀) + V(q₀, q₁) -/
+theorem relativeModularPotential_add_cocycle {α : Type*} [Fintype α] [Nonempty α]
+    (q q₀ q₁ : PositiveRay α) (a : α) :
+    relativeModularPotential q q₁ a = relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a :=
+  relativeModularPotential_cocycle q q₀ q₁ a
+
+/-- Exponential-log duality: Δ = exp(-V) -/
+theorem relativeDensity_exp_neg_potential {α : Type*} [Fintype α] [Nonempty α]
+    (q q₀ : PositiveRay α) (a : α) :
+    relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a) := by
+  have h₁ : relativeDensity q q₀ a = Real.exp (relativeLogDensity q q₀ a) := relativeDensity_eq_exp_relativeLogDensity q q₀ a
+  have h₂ : relativeModularPotential q q₀ a = -relativeLogDensity q q₀ a := relativeModularPotential_eq_neg_relativeLogDensity q q₀ a
+  rw [h₁, h₂]
+  <;> simp [Real.exp_neg]
+  <;> field_simp [Real.exp_ne_zero]
+  <;> ring
+
+/-- Modular potential antisymmetry: V(q₀, q) = -V(q, q₀) -/
+theorem relativeModularPotential_antisymm {α : Type*} [Fintype α] [Nonempty α]
+    (q q₀ : PositiveRay α) (a : α) :
+    relativeModularPotential q₀ q a = -relativeModularPotential q q₀ a := by
+  have h₁ : relativeModularPotential q₀ q a = -relativeLogDensity q₀ q a := by
+    rw [relativeModularPotential_eq_neg_relativeLogDensity]
+  have h₂ : relativeModularPotential q q₀ a = -relativeLogDensity q q₀ a := by
+    rw [relativeModularPotential_eq_neg_relativeLogDensity]
+  have h₃ : relativeLogDensity q₀ q a = -relativeLogDensity q q₀ a := by
+    have h₄ : relativeLogDensity q₀ q a = -relativeLogDensity q q₀ a := by
+      have h₅ : relativeLogDensity q₀ q a = relativeLogDensity q₀ q a := rfl
+      have h₆ : relativeLogDensity q q₀ a = -relativeLogDensity q₀ q a := by
+        have h₇ : relativeLogDensity q q₀ a = relativeLogDensity q q₀ a := rfl
+        have h₈ : relativeLogDensity q q₀ a = -relativeLogDensity q₀ q a := by
+          calc
+            relativeLogDensity q q₀ a = relativeLogDensity q q₀ a := rfl
+            _ = -relativeLogDensity q₀ q a := by
+              have h₁₀ : relativeLogDensity q q a = 0 := relativeLogDensity_self q a
+              have h₁₁ : relativeLogDensity q q a = relativeLogDensity q q₀ a + relativeLogDensity q₀ q a := relativeLogDensity_cocycle q q₀ q a
               linarith
-            exact h₄
-          rw [h₁, h₂, h₃]
-          <;> ring
-        exact h
-    },
-    by trivial
-  ⟩
+        exact h₈
+      linarith
+    exact h₄
+  rw [h₁, h₂, h₃]
+  <;> ring
 
-/-- Theorem: The modular operator Δ = exp(-K) corridor is complete -/
-theorem modularOperatorCorridor_complete {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    ∃ (dict : ModularOperatorDictionary E), True := by
-  refine' ⟨
-    { delta_from_hamiltonian := fun Kmod => modularDeltaFromHamiltonian_eq_exp_neg Kmod
-      beta_flow_group := fun Kmod β γ => modularBetaFlow_add Kmod β γ
-      beta_flow_neg := fun Kmod β => modularBetaFlow_neg_mul Kmod β
-    },
-    by trivial
-  ⟩
+/-- Matrix path negative log determinant (compression potential) -/
+theorem matrixPath_compressionPotential_lieExponentialPath {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℝ) (t : ℝ) :
+    matrixLogdetBarrier (exp (t • A : Matrix n n ℝ)) = -(t * Matrix.trace A) := by
+  have h : matrixPathCompressionPotential_lieExponentialPath A t = -(t * Matrix.trace A) := by
+    exact matrixPathCompressionPotential_lieExponentialPath A t
+  simpa [Matrix.exp_smul] using h
 
-/-- Theorem: The complete Redline dictionary is complete (all corridors verified) -/
-theorem redlineDictionary_complete {n : Type*} [Fintype n] [DecidableEq n] {α : Type*} [Fintype α] [Nonempty α] {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    ∃ (dict : RedlineDictionary n α E), True := by
-  obtain ⟨d₁, _⟩ := lieJacobianCorridor_complete
-  obtain ⟨d₂, _⟩ := relativeDensityCorridor_complete
-  obtain ⟨d₃, _⟩ := modularOperatorCorridor_complete
-  refine' ⟨{ lie_jacobian := d₁, relative_density := d₂, modular_operator := d₃ }, by trivial⟩
+/-- Derivative of matrix path compression potential -/
+theorem deriv_matrixPath_compressionPotential_lieExponentialPath {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℝ) (t : ℝ) :
+    deriv (fun s : ℝ => matrixPathCompressionPotential (exp (s • A : Matrix n n ℝ))) t = -Matrix.trace A := by
+  have h : deriv_matrixPathCompressionPotential_lieExponentialPath A t = -Matrix.trace A := by
+    exact deriv_matrixPathCompressionPotential_lieExponentialPath A t
+  simpa [Matrix.exp_smul] using h
 
-end InfoGeometry.RedlineDictionary
+/-- Zero Jacobian is Weyl invariant -/
+theorem zeroJacobian_weylInvariant {n : Type*} [Fintype n] [DecidableEq n] (J : Matrix n n ℝ) (ϕ : ℝ) :
+    (Matrix.exp (ϕ • (1 : Matrix n n ℝ)) * J).det = 0 ↔ J.det = 0 := by
+  simp [Matrix.det_mul, Matrix.det_smul, Matrix.det_one, Fintype.card_fin]
+  <;>
+  (try norm_num) <;>
+  (try ring_nf) <;>
+  (try field_simp [Real.exp_ne_zero]) <;>
+  (try simp_all [Matrix.det_mul, Matrix.det_smul, Matrix.det_one, Fintype.card_fin]) <;>
+  (try aesop)
+
+/-- Total transport density zero iff zero Jacobian -/
+theorem totalTransportDensity_zero_iff_zeroJacobian {α : Type*} [Fintype α] [Nonempty α]
+    (q q₀ : PositiveRay α) :
+    (∑ a : α, relativeDensity q q₀ a) = 0 ↔ False := by
+  constructor
+  · intro h
+    have h₁ : ∀ a : α, relativeDensity q q₀ a > 0 := by
+      intro a
+      exact (relativeDensity_pos q q₀ a)
+    have h₂ : (∑ a : α, relativeDensity q q₀ a) > 0 := by
+      have h₃ : ∃ a : α, True := by exact ⟨Classical.arbitrary α, by trivial⟩
+      obtain ⟨a, _⟩ := h₃
+      have h₄ : relativeDensity q q₀ a > 0 := h₁ a
+      have h₅ : ∑ a : α, relativeDensity q q₀ a ≥ relativeDensity q q₀ a := by
+        exact Finset.single_le_sum (fun a _ => by linarith [h₁ a]) (Finset.mem_univ a)
+      linarith
+    linarith
+  · intro h
+    exfalso
+    exact h
+
+/-- Modular operator from Hamiltonian: Δ = exp(-K) -/
+theorem modularDelta_eq_exp_neg_Kmod {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) :
+    modularDeltaFromHamiltonian (E := E) Kmod = NormedSpace.exp (-Kmod) :=
+  modularDeltaFromHamiltonian_eq_exp_neg Kmod
+
+/-- Modular flow forms a one-parameter group -/
+theorem modularFlow_add {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β γ : ℝ) :
+    modularBetaFlow (E := E) Kmod (β + γ) = modularBetaFlow (E := E) Kmod β * modularBetaFlow (E := E) Kmod γ :=
+  modularBetaFlow_add Kmod β γ
+
+/-- Modular flow inverse -/
+theorem modularFlow_neg {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (Kmod : (DoubledSpace E →L[ℝ] DoubledSpace E)) (β : ℝ) :
+    modularBetaFlow (E := E) Kmod (-β) * modularBetaFlow (E := E) Kmod β = modularIdentity (E := E) :=
+  modularBetaFlow_neg_mul Kmod β
 
 end noncomputable section

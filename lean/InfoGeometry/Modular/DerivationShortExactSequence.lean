@@ -3,6 +3,7 @@ import Mathlib.Algebra.Ring.Center
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 
+import InfoGeometry.EndToEnd
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 
 /-!

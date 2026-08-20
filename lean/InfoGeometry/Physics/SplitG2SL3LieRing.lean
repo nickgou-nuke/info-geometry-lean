@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Lie.Derivation.AdjointAction
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -105,5 +106,15 @@ noncomputable def inclusion : SL3 →ₗ⁅ℝ⁆ Matrix3 where
     inclusion X = X.1 := by
   change X.1 = X.1
   rfl
+
+/-! The intrinsic adjoint action, in Mathlib's derivation carrier. -/
+
+noncomputable def adjointAction : SL3 →ₗ⁅ℝ⁆ LieDerivation ℝ SL3 SL3 :=
+  LieDerivation.ad ℝ SL3
+
+@[simp] theorem adjointAction_apply (X Y : SL3) :
+    adjointAction X Y = ⁅X, Y⁆ := by
+  change -⁅Y, X⁆ = ⁅X, Y⁆
+  exact lie_skew X Y
 
 end InfoGeometry.Physics.SplitG2SL3LieRing

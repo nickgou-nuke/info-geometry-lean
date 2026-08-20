@@ -109,6 +109,20 @@ theorem kmsInner_leftMultiplication_star
   simp [kmsInner, leftMultiplication, star_mul]
   rw [mul_assoc]
 
+/-! The adjoint relation iterates over products.  This is the algebraic
+pre-GNS form of the fact that the left regular representation reverses the
+involution when taking adjoints. -/
+
+theorem kmsInner_leftMultiplication_mul
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (a b x y : CuntzAlg n) :
+    kmsInner φ (leftMultiplication n (a * b) x) y =
+      kmsInner φ x (leftMultiplication n (star b * star a) y) := by
+  rw [← leftMultiplication_comp, ← leftMultiplication_comp]
+  simp only [LinearMap.comp_apply]
+  rw [kmsInner_leftMultiplication_star φ a]
+  rw [kmsInner_leftMultiplication_star φ b]
+
 theorem leftMultiplication_cuntz_isometry
     (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
     leftMultiplication n (cuntzSdag n i)

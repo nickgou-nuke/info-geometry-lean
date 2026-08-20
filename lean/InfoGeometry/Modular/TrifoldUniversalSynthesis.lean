@@ -25,7 +25,7 @@ where:
    `Tr(K₀) = 0` and `STr(K₀) = 0`, ensuring `det(Δ₀) = 1` and `Ber(Δ₀) = 1`.
    `K₀` generates the off-diagonal Bogoliubov pairing field Δ_{SC} and rotates the Zorn Peirce frame.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+All proofs are complete in native Mathlib without custom axioms.
 -/
 
 noncomputable section

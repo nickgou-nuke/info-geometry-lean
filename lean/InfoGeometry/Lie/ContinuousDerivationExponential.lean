@@ -499,10 +499,10 @@ theorem exponential_derivation_is_automorphism
         (flowLinearEquiv D t y) := by
   exact flow_map_mul mul D hD t x y
 
-/**
+/--
 Product preservation stated directly for the bundled linear equivalence.
 This is the form needed by downstream relation-transport lemmas.
-*/
+-/
 theorem flowLinearEquiv_map_mul
     (mul : A →L[ℝ] A →L[ℝ] A)
     (D : EndA)

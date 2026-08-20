@@ -101,15 +101,12 @@ def cellToPaper : Cell ≃ₗ[ℝ] Paper where
   · simp [cellToPaper, ZornCell.mulZ, InfoGeometry.Algebra.ZornMatrix.mul,
       InfoGeometry.Algebra.Vec3.dot]
 
-@[simp] theorem cellToPaper_one :
-    cellToPaper (1 : Cell) = (1 : Paper) := by
-  apply InfoGeometry.Algebra.ZornMatrix.ext
-  · rfl
-  · funext i
-    fin_cases i <;> rfl
-  · funext i
-    fin_cases i <;> rfl
-  · rfl
+theorem cellToPaper_detZ (X : Cell) :
+    InfoGeometry.Algebra.ZornMatrix.zornNorm (cellToPaper X) =
+      ZornCell.detZ X := by
+  change X.r * X.s -
+      (X.x1 * X.y1 + X.x2 * X.y2 + X.x3 * X.y3) = _
+  rfl
 
 @[simp] theorem cellToPaper_oneZ :
     cellToPaper InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ =
@@ -173,6 +170,8 @@ theorem cellToPaper_j (i : Fin 3) :
   all_goals
     simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
       paperj,
+      InfoGeometry.Algebra.Vec3.sub,
+      InfoGeometry.Algebra.ZornMatrix.sub,
       InfoGeometry.Algebra.ZornMatrix.U,
       InfoGeometry.Algebra.ZornMatrix.V,
       InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
@@ -181,6 +180,8 @@ theorem cellToPaper_j (i : Fin 3) :
     fin_cases k <;>
       simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
         paperj,
+        InfoGeometry.Algebra.Vec3.sub,
+        InfoGeometry.Algebra.ZornMatrix.sub,
         InfoGeometry.Algebra.ZornMatrix.U,
         InfoGeometry.Algebra.ZornMatrix.V,
         InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
@@ -211,11 +212,12 @@ def cellToCanonical : Cell ≃ₗ[ℝ] Canonical :=
       paperCanonicalLinearEquiv (cellToPaper Y)
   rw [cellToPaper_mul, paperCanonicalLinearEquiv_mul]
 
-@[simp] theorem cellToCanonical_one :
-    cellToCanonical (1 : Cell) = (1 : Canonical) := by
-  change paperCanonicalLinearEquiv (cellToPaper 1) = 1
-  rw [cellToPaper_one]
-  ext <;> rfl
+theorem cellToCanonical_norm (X : Cell) :
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (cellToCanonical X) =
+      ZornCell.detZ X := by
+  rw [cellToCanonical, LinearEquiv.trans_apply]
+  rw [← paperCanonicalLinearEquiv_norm]
+  exact cellToPaper_detZ X
 
 @[simp] theorem cellToCanonical_oneZ :
     cellToCanonical InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ =

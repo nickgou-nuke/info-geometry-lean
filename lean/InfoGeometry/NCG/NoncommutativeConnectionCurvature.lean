@@ -17,7 +17,7 @@ This module formalizes:
 4. Derivation of unit inverses: `D(u⁻¹) = - u⁻¹ D(u) u⁻¹`.
 5. Noncommutative Maurer-Cartan 1-forms `θ = u D(u⁻¹)` and the quadratic identity `θ² = - D(u) D(u⁻¹)`.
 6. Noncommutative Maurer-Cartan Flatness Theorem: `D(u) D(u⁻¹) + θ² = 0`.
-7. Noncommutative Gauge Equivariance: `∇_{Aᵘ}(Xᵘ) = (∇_A(X))ᵘ`.
+7. Noncommutative Gauge Equivariance: `∇_{Aᵘ}(Xᵘ) = (∇_A(X))ᵘ` decomposed into explicit helper lemmas.
 
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
@@ -126,74 +126,101 @@ def gaugeTransform (u : Aˣ) (X : A) : A :=
 def gaugeTransformConnection (u : Aˣ) (A_conn : A) : A :=
   (u : A) * A_conn * (u⁻¹ : Aˣ).val + pureGaugeForm D u
 
+/-!
+=============================================================================
+Focused Helper Lemmas for Gauge Equivariance
+=============================================================================
+-/
+
+/-- Helper 1: Derivation of conjugated observable -/
+theorem gauge_derivation_conjugated (u : Aˣ) (X : A) :
+    D (gaugeTransform u X) =
+      D (u : A) * X * (u⁻¹ : Aˣ).val +
+      (u : A) * D X * (u⁻¹ : Aˣ).val +
+      (u : A) * X * D (u⁻¹ : Aˣ).val := by
+  dsimp [gaugeTransform]
+  calc
+    D ((u : A) * X * (u⁻¹ : Aˣ).val)
+      = D ((u : A) * X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := D.leibniz ((u : A) * X) _
+    _ = (D (u : A) * X + (u : A) * D X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by rw [D.leibniz]
+    _ = D (u : A) * X * (u⁻¹ : Aˣ).val + (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
+      simp only [add_mul, add_assoc]
+
+/-- Helper 2: Action of gauge-transformed connection on the left -/
+theorem gauge_left_connection_prod (u : Aˣ) (A_conn X : A) :
+    (gaugeTransformConnection D u A_conn) * (gaugeTransform u X) =
+      (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - D (u : A) * X * (u⁻¹ : Aˣ).val := by
+  dsimp [gaugeTransformConnection, gaugeTransform, pureGaugeForm]
+  have hu_inv : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  have h_prod1 : ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
+      (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by
+    calc
+      ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
+        = (u : A) * A_conn * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+      _ = (u : A) * A_conn * 1 * X * (u⁻¹ : Aˣ).val := by rw [hu_inv]
+      _ = (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+  have h_prod2 : ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
+      - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by
+    calc
+      ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
+        = (pureGaugeForm D u) * ((u : A) * X * (u⁻¹ : Aˣ).val) := rfl
+      _ = (- (D (u : A) * (u⁻¹ : Aˣ).val)) * ((u : A) * X * (u⁻¹ : Aˣ).val) := by rw [pureGaugeForm_eq_neg]
+      _ = - ((D (u : A) * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)) := by rw [neg_mul]
+      _ = - (D (u : A) * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_assoc]
+      _ = - (D (u : A) * 1 * X * (u⁻¹ : Aˣ).val) := by rw [hu_inv]
+      _ = - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_one, mul_assoc]
+  rw [add_mul, h_prod1, h_prod2, sub_eq_add_neg]
+
+/-- Helper 3: Action of gauge-transformed connection on the right -/
+theorem gauge_right_connection_prod (u : Aˣ) (A_conn X : A) :
+    (gaugeTransform u X) * (gaugeTransformConnection D u A_conn) =
+      (u : A) * X * A_conn * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
+  dsimp [gaugeTransformConnection, gaugeTransform, pureGaugeForm]
+  have hu_inv : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  have h_prod3 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val) =
+      (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+    calc
+      ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val)
+        = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+      _ = (u : A) * X * 1 * A_conn * (u⁻¹ : Aˣ).val := by rw [hu_inv]
+      _ = (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+  have h_prod4 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val) =
+      (u : A) * X * D (u⁻¹ : Aˣ).val := by
+    calc
+      ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val)
+        = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * D (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
+      _ = (u : A) * X * 1 * D (u⁻¹ : Aˣ).val := by rw [hu_inv]
+      _ = (u : A) * X * D (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
+  rw [mul_add, h_prod3, h_prod4]
+
 /-- 🏆 THEOREM 3: Covariant derivatives are equivariant under simultaneous gauge
     transformation of the connection and observable. -/
 theorem covariantDerivative_gauge_equivariant (u : Aˣ) (A_conn X : A) :
     covariantDerivative D (gaugeTransformConnection D u A_conn)
         (gaugeTransform u X) =
       gaugeTransform u (covariantDerivative D A_conn X) := by
-  dsimp [covariantDerivative, gaugeTransformConnection, gaugeTransform, pureGaugeForm]
-  have hu_inv : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
-  have hu_val : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
-  have h_D_conj : D ((u : A) * X * (u⁻¹ : Aˣ).val) =
-      D (u : A) * X * (u⁻¹ : Aˣ).val +
-      (u : A) * D X * (u⁻¹ : Aˣ).val +
-      (u : A) * X * D (u⁻¹ : Aˣ).val := by
-    calc
-      D ((u : A) * X * (u⁻¹ : Aˣ).val)
-        = D ((u : A) * X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := D.leibniz ((u : A) * X) _
-      _ = (D (u : A) * X + (u : A) * D X) * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by rw [D.leibniz]
-      _ = D (u : A) * X * (u⁻¹ : Aˣ).val + (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
-        simp only [add_mul, add_assoc]
-  have h_comm1 : ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
-      (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - D (u : A) * X * (u⁻¹ : Aˣ).val := by
-    have h_prod1 : ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
-        (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by
-      calc
-        ((u : A) * A_conn * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
-          = (u : A) * A_conn * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
-        _ = (u : A) * A_conn * 1 * X * (u⁻¹ : Aˣ).val := by rw [hu_inv]
-        _ = (u : A) * A_conn * X * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
-    have h_prod2 : ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) =
-        - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by
-      calc
-        ((u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)
-          = (pureGaugeForm D u) * ((u : A) * X * (u⁻¹ : Aˣ).val) := rfl
-        _ = (- (D (u : A) * (u⁻¹ : Aˣ).val)) * ((u : A) * X * (u⁻¹ : Aˣ).val) := by rw [pureGaugeForm_eq_neg]
-        _ = - ((D (u : A) * (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val)) := by rw [neg_mul]
-        _ = - (D (u : A) * ((u⁻¹ : Aˣ).val * (u : A)) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_assoc]
-        _ = - (D (u : A) * 1 * X * (u⁻¹ : Aˣ).val) := by rw [hu_inv]
-        _ = - (D (u : A) * X * (u⁻¹ : Aˣ).val) := by simp only [mul_one, mul_assoc]
-    rw [add_mul, h_prod1, h_prod2, sub_eq_add_neg]
-  have h_comm2 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) =
-      (u : A) * X * A_conn * (u⁻¹ : Aˣ).val + (u : A) * X * D (u⁻¹ : Aˣ).val := by
-    have h_prod3 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val) =
+  dsimp [covariantDerivative]
+  have h_D := gauge_derivation_conjugated D u X
+  have h_left := gauge_left_connection_prod D u A_conn X
+  have h_right := gauge_right_connection_prod D u A_conn X
+  have h_sum :
+      D (gaugeTransform u X) +
+          ((gaugeTransformConnection D u A_conn) * (gaugeTransform u X) -
+           (gaugeTransform u X) * (gaugeTransformConnection D u A_conn)) =
+        (u : A) * D X * (u⁻¹ : Aˣ).val +
+        (u : A) * A_conn * X * (u⁻¹ : Aˣ).val -
         (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
-      calc
-        ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val)
-          = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
-        _ = (u : A) * X * 1 * A_conn * (u⁻¹ : Aˣ).val := by rw [hu_inv]
-        _ = (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
-    have h_prod4 : ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val) =
-        (u : A) * X * D (u⁻¹ : Aˣ).val := by
-      calc
-        ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * D (u⁻¹ : Aˣ).val)
-          = (u : A) * X * ((u⁻¹ : Aˣ).val * (u : A)) * D (u⁻¹ : Aˣ).val := by simp only [mul_assoc]
-        _ = (u : A) * X * 1 * D (u⁻¹ : Aˣ).val := by rw [hu_inv]
-        _ = (u : A) * X * D (u⁻¹ : Aˣ).val := by simp only [mul_one, mul_assoc]
-    rw [mul_add, h_prod3, h_prod4]
-  have h_combine :
-      D ((u : A) * X * (u⁻¹ : Aˣ).val) +
-          (((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val) * ((u : A) * X * (u⁻¹ : Aˣ).val) -
-           ((u : A) * X * (u⁻¹ : Aˣ).val) * ((u : A) * A_conn * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val))
-        = (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
-    rw [h_D_conj, h_comm1, h_comm2]
+    rw [h_D, h_left, h_right]
     abel
-  have h_factor : (u : A) * (D X + (A_conn * X - X * A_conn)) * (u⁻¹ : Aˣ).val =
-      (u : A) * D X * (u⁻¹ : Aˣ).val + (u : A) * A_conn * X * (u⁻¹ : Aˣ).val - (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+  have h_target :
+      gaugeTransform u (covariantDerivative D A_conn X) =
+        (u : A) * D X * (u⁻¹ : Aˣ).val +
+        (u : A) * A_conn * X * (u⁻¹ : Aˣ).val -
+        (u : A) * X * A_conn * (u⁻¹ : Aˣ).val := by
+    dsimp [gaugeTransform, covariantDerivative]
     simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
     abel
-  rw [h_combine, ← h_factor]
+  exact h_sum.trans h_target.symm
 
 /-- 🏆 THEOREM 4: The Maurer-Cartan Quadratic Identity:
     θ² = - D(u) * D(u⁻¹) -/

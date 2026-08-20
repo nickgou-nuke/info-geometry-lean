@@ -130,6 +130,18 @@ theorem leftMultiplication_cuntz_isometry
   rw [leftMultiplication_mul, cuntz_isometry]
   simp [leftMultiplication]
 
+/-- Each Cuntz generator acts isometrically for the algebraic GNS form.
+This is the sesquilinear-form shadow of the relation `Sᵢ* Sᵢ = 1`. -/
+theorem kmsInner_leftMultiplication_cuntz_isometry
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (i : Fin n) (x y : CuntzAlg n) :
+    kmsInner φ (leftMultiplication n (cuntzS n i) x)
+        (leftMultiplication n (cuntzS n i) y) =
+      kmsInner φ x y := by
+  rw [kmsInner_leftMultiplication_star φ (cuntzS n i)]
+  rw [star_cuntzS]
+  rw [leftMultiplication_cuntz_isometry]
+
 theorem leftMultiplication_cuntz_qccr_zero
     (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
     leftMultiplication n (cuntzSdag n i)

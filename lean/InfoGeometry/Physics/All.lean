@@ -1,6 +1,7 @@
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.GogberashviliNilpotentCARBridge
 import InfoGeometry.Physics.SplitG2SL3ModuleDecomposition
+import InfoGeometry.Physics.SplitG2SL3Concrete
 import InfoGeometry.Physics.SplitOctonionDerivationSpinRep
 import InfoGeometry.Physics.BdGSchurBerezinianCompatibility
 import InfoGeometry.Physics.Cl11ChiralCARBridge

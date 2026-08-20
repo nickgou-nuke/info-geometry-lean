@@ -157,8 +157,7 @@ theorem map_neg (x : A) :
 @[simp]
 theorem map_smul (c : ℂ) (x : A) :
     ω (c • x) = c * ω x := by
-  simpa [smul_eq_mul] using
-    ω.toLinearMap.map_smul c x
+  rw [LinearMap.map_smul, smul_eq_mul]
 
 @[simp]
 theorem map_one :

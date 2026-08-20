@@ -7409,3 +7409,4 @@ import InfoGeometry.Lie.SplitG2SL3Concrete
 import InfoGeometry.Lie.SplitOctonionDerivationSpinRep
 import InfoGeometry.Lie.SouriauBregmanDualityBridge
 import InfoGeometry.Lie.CartanCosetRiemannCurvatureBridge
+import InfoGeometry.EndToEnd.KMS

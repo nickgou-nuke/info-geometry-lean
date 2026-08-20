@@ -255,6 +255,12 @@ variable {R : Type*} [CommRing R]
 def IsLinearDerivation (D : R →ₗ[R] R) : Prop :=
   ∀ x y, D (x * y) = D x * y + x * D y
 
+theorem IsLinearDerivation.map_one (D : R →ₗ[R] R)
+    (hD : IsLinearDerivation D) : D 1 = 0 := by
+  have h := hD 1 1
+  rw [mul_one, one_mul] at h
+  linear_combination -h
+
 /-- The Logarithmic Radon–Nikodym Derivation: dlog_D(Δ) = Δ⁻¹ • D(Δ) -/
 def dlogRN (D : R →ₗ[R] R) (Δ inv_Δ : R) : R :=
   inv_Δ * D Δ

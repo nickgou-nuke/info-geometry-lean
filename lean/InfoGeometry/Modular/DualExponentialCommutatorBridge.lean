@@ -82,6 +82,42 @@ theorem map_neg (x : A) : D (-x) = - D x := by
 theorem map_sub (x y : A) : D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
 
+theorem extensionality {D E : RingDerivation A}
+    (h : ∀ x, D x = E x) : D = E := by
+  cases D
+  cases E
+  congr
+  funext x
+  exact h x
+
+/-! ### Bundled inner derivations and their commutators -/
+
+def innerDerivation (K : A) : RingDerivation A where
+  toFun := adK K
+  map_add' := adK_map_add K
+  leibniz' := adK_leibniz K
+
+@[simp]
+theorem innerDerivation_apply (K X : A) :
+    innerDerivation K X = adK K X := rfl
+
+def commutator (D₁ D₂ : RingDerivation A) : RingDerivation A where
+  toFun := fun X => D₁ (D₂ X) - D₂ (D₁ X)
+  map_add' := by
+    intro x y
+    rw [D₂.map_add, D₁.map_add, D₁.map_add, D₂.map_add]
+    abel
+  leibniz' := by
+    intro x y
+    rw [D₂.leibniz, D₁.leibniz, D₁.map_add, D₁.leibniz,
+      D₁.leibniz, D₂.map_add, D₂.leibniz, D₂.leibniz]
+    simp only [sub_mul, mul_sub]
+    abel
+
+@[simp]
+theorem commutator_apply (D₁ D₂ : RingDerivation A) (X : A) :
+    commutator D₁ D₂ X = D₁ (D₂ X) - D₂ (D₁ X) := rfl
+
 /-- 
   THEOREM 1: The Master Commutator Identity between Outer and Inner Derivations
   [D, ad_K](X) = ad_{D(K)}(X)
@@ -96,6 +132,25 @@ theorem derivation_adK_comm (K X : A) :
   -- D(K) * X + K * D(X) - (D(X) * K + X * D(K)) - (K * D(X) - D(X) * K)
   -- = D(K) * X - X * D(K)
   abel
+
+theorem commutator_innerDerivation_eq (D : RingDerivation A) (K : A) :
+    commutator D (innerDerivation K) = innerDerivation (D K) := by
+  apply extensionality
+  intro X
+  exact derivation_adK_comm D K X
+
+theorem adK_bracket (K₁ K₂ X : A) :
+    adK K₁ (adK K₂ X) - adK K₂ (adK K₁ X) = adK (adK K₁ K₂) X := by
+  dsimp [adK]
+  noncomm_ring
+
+theorem commutator_innerDerivation_innerDerivation_eq (K₁ K₂ : A) :
+    commutator (innerDerivation K₁) (innerDerivation K₂) =
+      innerDerivation (adK K₁ K₂) := by
+  apply extensionality
+  intro X
+  rw [commutator_apply]
+  exact adK_bracket K₁ K₂ X
 
 /-- 
   THEOREM 2: Adiabatic / Invariant Commutation

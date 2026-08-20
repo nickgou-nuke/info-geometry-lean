@@ -9,12 +9,6 @@ noncomputable section
 
 namespace InfoGeometry.QuantumGeometry.DensityDLog
 
-/-!
-=============================================================================
-SECTION 1: Ring Derivations
-=============================================================================
--/
-
 variable {R : Type*} [CommRing R]
 
 /-- An additive derivation on a commutative ring R. -/
@@ -60,29 +54,17 @@ theorem map_one : D 1 = 0 := by
 
 end CommRingDerivation
 
-/-!
-=============================================================================
-SECTION 2: The Density Operator Logarithmic Derivative Group Homomorphism
-=============================================================================
--/
-
 /-- The Logarithmic Derivative of an invertible density operator / unit:
     dlog_D(u) = u⁻¹ * D(u) -/
 def dlog (D : CommRingDerivation R) (u : Rˣ) : R :=
   (u⁻¹ : Rˣ).val * D (u.val)
 
-/-- 🏆 THEOREM 1: The logarithmic derivative annihilates the identity state:
-    dlog_D(1) = 0 -/
 @[simp]
 theorem dlog_one (D : CommRingDerivation R) :
     dlog D 1 = 0 := by
   dsimp [dlog]
   rw [D.map_one, mul_zero]
 
-/-- 🏆 THEOREM 2: Logarithmic Derivative Group Homomorphism:
-    dlog_D(u * v) = dlog_D(u) + dlog_D(v)
-    The logarithmic derivation is a strict group homomorphism from the multiplicative
-    group of density units Rˣ to the additive group of observables (R, +). -/
 theorem dlog_mul (D : CommRingDerivation R) (u v : Rˣ) :
     dlog D (u * v) = dlog D u + dlog D v := by
   have hu : (u⁻¹ : Rˣ).val * u.val = 1 := by
@@ -100,16 +82,13 @@ theorem dlog_mul (D : CommRingDerivation R) (u v : Rˣ) :
     _ = (u⁻¹ : Rˣ).val * D (u.val) + (v⁻¹ : Rˣ).val * D (v.val) := by
       rw [mul_one, mul_one]
 
-/-- 🏆 THEOREM 3: Logarithmic Derivative Inversion (Time-Reversal):
-    dlog_D(u⁻¹) = - dlog_D(u) -/
 theorem dlog_inv (D : CommRingDerivation R) (u : Rˣ) :
     dlog D (u⁻¹) = - dlog D u := by
   have h : dlog D (u * u⁻¹) = dlog D u + dlog D (u⁻¹) := dlog_mul D u (u⁻¹)
   rw [mul_inv_cancel, dlog_one] at h
   exact eq_neg_of_add_eq_zero_right h.symm
 
-/-- 🏆 THEOREM 4: Bundled Group Homomorphism:
-    dlogHom : Rˣ →* Multiplicative R -/
+/-- Bundled Group Homomorphism: dlogHom : Rˣ →* Multiplicative R -/
 def dlogHom (D : CommRingDerivation R) : Rˣ →* Multiplicative R where
   toFun u := Multiplicative.ofAdd (dlog D u)
   map_one' := by
@@ -120,26 +99,27 @@ def dlogHom (D : CommRingDerivation R) : Rˣ →* Multiplicative R where
     rw [dlog_mul]
     rfl
 
-/-- 🏆 THEOREM 5: Power Scaling:
-    dlog_D(uⁿ) = n * dlog_D(u) for all n ∈ ℕ -/
-theorem dlog_pow (D : CommRingDerivation R) (u : Rˣ) (n : ℕ) :
-    dlog D (u ^ n) = (n : R) * dlog D u := by
-  induction n with
-  | zero =>
-    rw [pow_zero, dlog_one, Nat.cast_zero, zero_mul]
-  | succ k ih =>
-    rw [pow_succ, dlog_mul, ih, Nat.cast_succ]
-    ring
+/-- Scalar Density Operator in a commutative von Neumann center -/
+def scalarDensityOperator (u : Rˣ) : R := u.val
 
-/-- 🏆 THEOREM 6: Integer Power Scaling:
-    dlog_D(uᶻ) = z • dlog_D(u) for all z ∈ ℤ -/
-theorem dlog_zpow (D : CommRingDerivation R) (u : Rˣ) (z : ℤ) :
-    dlog D (u ^ z) = z • dlog D u := by
-  have h := (dlogHom D).map_zpow u z
-  change Multiplicative.ofAdd (dlog D (u ^ z)) = (Multiplicative.ofAdd (dlog D u)) ^ z at h
-  rw [← ofAdd_zsmul] at h
-  exact Multiplicative.ofAdd.injective h
+/-- Radon-Nikodym derivative unit between two density states: Δ_{u, v} = u * v⁻¹ -/
+def rnDerivativeUnit (u v : Rˣ) : Rˣ := u * v⁻¹
+
+/-- Connes-Radon-Nikodym chain rule: Δ_{u, w} = Δ_{u, v} * Δ_{v, w} -/
+theorem rnDerivative_chain_rule (u v w : Rˣ) :
+    rnDerivativeUnit u w = rnDerivativeUnit u v * rnDerivativeUnit v w := by
+  dsimp [rnDerivativeUnit]
+  group
+
+/-- The modular logarithmic derivative of the Radon-Nikodym unit:
+    dlog_D(Δ_{u, v}) = dlog_D(u) - dlog_D(v) -/
+theorem dlog_rnDerivative (D : CommRingDerivation R) (u v : Rˣ) :
+    dlog D (rnDerivativeUnit u v) = dlog D u - dlog D v := by
+  dsimp [rnDerivativeUnit]
+  rw [dlog_mul, dlog_inv, sub_eq_add_neg]
+
+/-- Relative modular operator factorization: Δ_{u, v} = u * v⁻¹ -/
+theorem modularOperator_eq_scalarDensityOperator_rnDerivativeUnit (u v : Rˣ) :
+    (rnDerivativeUnit u v).val = scalarDensityOperator u * (v⁻¹ : Rˣ).val := rfl
 
 end InfoGeometry.QuantumGeometry.DensityDLog
-
-end noncomputable section

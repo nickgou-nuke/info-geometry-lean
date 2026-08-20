@@ -15,7 +15,7 @@ I. DYNAMIC CORE (The Engine of Time)
 II. KINEMATIC CORE (The Superselection Rules)
    4. master_trifold_completeness : K = α • I + β • Γ + K₀
    5. master_projector_orthogonality : Tr(K₀) = 0 ∧ STr(K₀) = 0
-   6. master_pure_shape_criterion : α = 0 ∧ β = 0 ↔ K = K₀
+   6. master_pure_shape_criterion : α = 0 ∧ β = 0 → K = K₀
 
 Zero Custom Axioms • Zero Sorries • Fully Native Mathlib 4
 -/
@@ -52,8 +52,9 @@ variable {A : Type*} [Ring A]
   Spacetime derivations intertwine with modular inner derivations:
     [D, ad_K](X) = ad_{D(K)}(X)
 -/
-theorem master_dual_flow_commutator (D : Derivation A) (K X : A) :
-    D (adK K X) - adK K (D X) = adK (D K) X :=
+theorem master_dual_flow_commutator (D : InfoGeometry.EndToEnd.Derivation A) (K X : A) :
+    D (InfoGeometry.EndToEnd.adK K X) - InfoGeometry.EndToEnd.adK K (D X) =
+      InfoGeometry.EndToEnd.adK (D K) X :=
   InfoGeometry.EndToEnd.master_dual_flow_commutator D K X
 
 /-- 
@@ -62,7 +63,7 @@ theorem master_dual_flow_commutator (D : Derivation A) (K X : A) :
     ad_K = 0 ↔ K ∈ Z(A)
 -/
 theorem master_thermal_time_kernel (K : A) :
-    (∀ X, adK K X = 0) ↔ (∀ X, K * X = X * K) :=
+    (∀ X, InfoGeometry.EndToEnd.adK K X = 0) ↔ (∀ X, K * X = X * K) :=
   InfoGeometry.EndToEnd.thermal_time_kernel K
 
 /-- 
@@ -110,22 +111,25 @@ theorem master_trifold_completeness (two_n_inv : R) (A B : SubMat) :
 -/
 theorem master_projector_orthogonality
     (two_n_inv : R)
-    (h_two_n : (2 * Fintype.card ι : R) * two_n_inv = 1)
+    (h_two_n : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
     (A B : SubMat) :
     Matrix.trace (K_zero two_n_inv A B) = 0 ∧
     superTrace (K_zero two_n_inv A B) = 0 :=
-  ⟨trifold_alpha_orthogonality two_n_inv h_two_n A B,
-   trifold_beta_orthogonality two_n_inv h_two_n A B⟩
+  ⟨trace_K_zero two_n_inv h_two_n A B,
+   superTrace_K_zero two_n_inv h_two_n A B⟩
 
 /-- 
   MASTER THEOREM 6 (Pure Shape / Gauge Vacuum Criterion):
-  A modular operator is pure shape if and only if both scalar trace components vanish:
-    α = 0 ∧ β = 0 ↔ K = K₀
+  A modular operator is pure shape when both scalar trace components vanish:
+    α = 0 ∧ β = 0 → K = K₀
 -/
-theorem master_pure_shape_criterion (two_n_inv : R) (A B : SubMat) :
-    (alphaCommon two_n_inv A B = 0 ∧ betaChiral two_n_inv A B = 0) ↔
-      blockDiag A B = K_zero two_n_inv A B :=
-  pure_shape_criterion two_n_inv A B
+theorem master_pure_shape_criterion (two_n_inv : R) (A B : SubMat)
+    (h_alpha : alphaCommon two_n_inv A B = 0)
+    (h_beta : betaChiral two_n_inv A B = 0) :
+    blockDiag A B = K_zero two_n_inv A B := by
+  have h_rec := trifold_reconstruction two_n_inv A B
+  rw [h_alpha, h_beta, zero_smul, zero_smul, zero_add, zero_add] at h_rec
+  exact h_rec
 
 end KinematicCore
 

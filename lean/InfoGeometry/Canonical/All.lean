@@ -3353,6 +3353,8 @@ import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
 import InfoGeometry.Canonical.ScalarLogBarrier
 import InfoGeometry.Canonical.FiniteInformationGeometryArchitecture
+import InfoGeometry.Canonical.TripotentLeftRightPeirceProjectors
+import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
 
 namespace InfoGeometry
 

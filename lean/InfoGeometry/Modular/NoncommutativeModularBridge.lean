@@ -156,11 +156,14 @@ theorem innerNCDerivation_eq_zero_iff (K : A) :
   · intro h X
     have hX : innerNCDerivation K X = (0 : NCDerivation A) X :=
       congrArg (fun E : NCDerivation A => E X) h
-    simpa [innerNCDerivation, adKLinear, adK] using hX
+    change K * X - X * K = 0 at hX
+    exact sub_eq_zero.mp hX
   · intro h
     apply NCDerivation.ext
     intro X
-    simp [innerNCDerivation, adKLinear, adK, h X]
+    change K * X - X * K = 0
+    rw [h X]
+    simp
 
 def dlog (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)

@@ -1,14 +1,12 @@
 # Sorry/Admit/Axiom Audit Report
 
-Total files with debt: 120
+Total files with debt: 134
 
-## Stale Scaffolding / Test Artifacts (Total Hits: 22)
+## Stale Scaffolding / Test Artifacts (Total Hits: 17)
 - `lean/InfoGeometry/Meta/StrictDef.lean`: 4 hits
 - `lean/InfoGeometry/Meta/HonestyPolicy.lean`: 4 hits
-- `lean/InfoGeometry/Meta/SocketTarget.lean`: 3 hits
 - `lean/InfoGeometry/Lint/Pauli.lean`: 2 hits
 - `lean/InfoGeometry/Lint/NonTriviality.lean`: 2 hits
-- `lean/InfoGeometry/Eval/SorryFillerTest.lean`: 2 hits
 - `lean/InfoGeometry/Meta/ClosureAttribute.lean`: 2 hits
 - `lean/InfoGeometry/Meta/Admission.lean`: 1 hits
 - `lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean`: 1 hits
@@ -22,44 +20,61 @@ Total files with debt: 120
 - `lean/InfoGeometry/Algebra/ZeckendorfBijection.lean`: 2 hits
 - `lean/InfoGeometry/Algebra/GoldenMeanShift.lean`: 2 hits
 
-## Intentional Assumption Modules (Total Hits: 12)
+## Intentional Assumption Modules (Total Hits: 30)
+- `lean/InfoGeometry/Canonical/GNSCARColimit.lean`: 2 hits
+- `lean/InfoGeometry/Categorical/FibonacciBraidDirectLimit.lean`: 1 hits
 - `lean/InfoGeometry/Categorical/PremonoidalPentagonDefect.lean`: 1 hits
+- `lean/InfoGeometry/Topology/RiemannZetaMathlibVicinityBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/CompletedZetaV4CharacterDecompositionBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/ZeroMultiplicityResidueBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/MontgomeryPairCorrelationBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/RiemannHypothesisHilbertPolyaBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/CompletedZetaPotentialAndRealGibbsFisherBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/FredholmRegularizedDeterminantBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/NativeMathlibZetaMetriplecticFlowBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/XiHardyZNormalizationBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/WeierstrassHadamardDivisorBridge.lean`: 1 hits
+- `lean/InfoGeometry/Topology/CompletedZetaV4CharacterBridge.lean`: 1 hits
 - `lean/InfoGeometry/Probability/HomologicalProbability.lean`: 1 hits
+- `lean/InfoGeometry/Quantum/ChiralSplitOctonionDerivationVielbein.lean`: 1 hits
 - `lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean`: 1 hits
 - `lean/InfoGeometry/External/Auto/BlackHoleHolography.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/CognitiveShadow.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/SpinCuntzTensorIntertwinerBridge.lean`: 1 hits
+- `lean/InfoGeometry/Canonical/ZetaSouriauMetriplecticFlowMasterBridge.lean`: 1 hits
+- `lean/InfoGeometry/Canonical/SouriauMetriplecticOptimalTransport.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/ThreePillarMomentumIntertwinerBridge.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/UnruhMonodromyCalibration.lean`: 1 hits
 - `lean/InfoGeometry/Algebra/SplitOctonionStandardDerivationThreeBracketBridge.lean`: 1 hits
 - `lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean`: 1 hits
 - `lean/InfoGeometry/Arithmetic/ZetaDihedral.lean`: 1 hits
+- `lean/InfoGeometry/Arithmetic/SpectralActionConfinement.lean`: 1 hits
 - `lean/InfoGeometry/Clifford/ConformalReflection55.lean`: 1 hits
 
-## Likely Removable Wrapper / Single Debt (Total Hits: 92)
-- `lean/InfoGeometry/Topology/MobiusNonParabolicRecovered.lean`: 1 hits
+## Likely Removable Wrapper / Single Debt (Total Hits: 91)
 - `lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean`: 1 hits
 - `lean/InfoGeometry/Topology/SymbolicLatentVaryingCarrierQuotientCompHausLimit.lean`: 1 hits
 - `lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean`: 1 hits
 - `lean/InfoGeometry/Topology/SymbolicLatentObservedPathImageCompHausEvaluation.lean`: 1 hits
+- `lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean`: 1 hits
 - `lean/InfoGeometry/Application/OperatorFreudenthalBoundary.lean`: 1 hits
 - `lean/InfoGeometry/SelfReference/Shadow.lean`: 1 hits
 - `lean/InfoGeometry/Automorphic/HeckePurification.lean`: 1 hits
-- `lean/InfoGeometry/OperatorAlgebra/GeneralizedNilpotentTripotent.lean`: 1 hits
 - `lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean`: 1 hits
+- `lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean`: 1 hits
 - `lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean`: 1 hits
-- `lean/InfoGeometry/OperatorAlgebra/TripotentFactorization.lean`: 1 hits
 - `lean/InfoGeometry/OperatorAlgebra/TripotentMatrix2x2.lean`: 1 hits
 - `lean/InfoGeometry/OperatorAlgebra/ChiralCliffordSplit.lean`: 1 hits
 - `lean/InfoGeometry/OperatorAlgebra/WittenMöbiusBraidBridge.lean`: 1 hits
+- `lean/InfoGeometry/Modular/TrifoldClassification.lean`: 1 hits
+- `lean/InfoGeometry/Modular/TrifoldRadonNikodymBridge.lean`: 1 hits
 - `lean/InfoGeometry/Analysis/LaplaceUniqueness.lean`: 1 hits
 - `lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean`: 1 hits
-- `lean/InfoGeometry/Canonical/SO3RotationFenchelWitness.lean`: 1 hits
-- `lean/InfoGeometry/Canonical/TomitaFisherMetric.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/ModularTensorInduction.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean`: 1 hits
+- `lean/InfoGeometry/Canonical/KnillLaflammeQEC.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean`: 1 hits
@@ -83,7 +98,7 @@ Total files with debt: 120
 - `lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/FenchelExpLogCore.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/DepthLogScaleInvariant.lean`: 1 hits
-- `lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean`: 1 hits
+- `lean/InfoGeometry/Canonical/SO3RotationFenchel.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/GeneralizedOperatorChiral.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean`: 1 hits
@@ -93,6 +108,7 @@ Total files with debt: 120
 - `lean/InfoGeometry/Canonical/SouriauInfinitesimalInvariance.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean`: 1 hits
+- `lean/InfoGeometry/Canonical/LeeYangAsanoScaleBoundedEscapeBridge.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean`: 1 hits
@@ -101,7 +117,6 @@ Total files with debt: 120
 - `lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/KreinCuntzKriegerPZeroBridge.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/BayesianConformalCompression.lean`: 1 hits
-- `lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean`: 1 hits
 - `lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean`: 1 hits
 - `lean/InfoGeometry/Algebra/AssociativityObstruction.lean`: 1 hits
@@ -127,6 +142,5 @@ Total files with debt: 120
 - `lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean`: 1 hits
 - `lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean`: 1 hits
 - `lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean`: 1 hits
-- `lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean`: 1 hits
 - `lean/InfoGeometry/Clifford/FanoOctonionParavector.lean`: 1 hits
 

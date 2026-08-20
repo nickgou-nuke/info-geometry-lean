@@ -2513,3 +2513,10 @@ wrote /tmp/proof_gap_report.tex
 ## Review-Only Surrogate Audit
 
 ```text
+wrote /tmp/proof_gap_report.review.md (0 gaps)
+wrote /tmp/proof_gap_report.review.tex
+```
+
+## Mathless Proposition Audit
+
+```text

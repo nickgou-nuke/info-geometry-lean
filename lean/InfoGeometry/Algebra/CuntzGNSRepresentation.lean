@@ -33,6 +33,13 @@ def kmsInner
     (a b : CuntzAlg n) : ℂ :=
   φ (star b * a)
 
+theorem kmsInner_add_left
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (a₁ a₂ b : CuntzAlg n) :
+    kmsInner φ (a₁ + a₂) b =
+      kmsInner φ a₁ b + kmsInner φ a₂ b := by
+  unfold kmsInner
+  rw [mul_add, map_add]
+
 theorem star_smul_cuntzAlg (c : ℂ) (a : CuntzAlg n) :
     star (c • a) = c • star a := by
   obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) a
@@ -108,6 +115,13 @@ theorem kmsInner_leftMultiplication_star
       kmsInner φ x (leftMultiplication n (star a) y) := by
   simp [kmsInner, leftMultiplication, star_mul]
   rw [mul_assoc]
+
+theorem kmsInner_add_right
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (a b₁ b₂ : CuntzAlg n) :
+    kmsInner φ a (b₁ + b₂) =
+      kmsInner φ a b₁ + kmsInner φ a b₂ := by
+  unfold kmsInner
+  rw [star_add, add_mul, map_add]
 
 /-! The adjoint relation iterates over products.  This is the algebraic
 pre-GNS form of the fact that the left regular representation reverses the

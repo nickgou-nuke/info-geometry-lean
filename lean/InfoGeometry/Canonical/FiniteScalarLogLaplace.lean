@@ -241,7 +241,7 @@ theorem hasDerivAt_mean (θ : ℝ) :
     (F.hasDerivAt_partition θ) (F.partition_ne_zero θ)
   have heq : (F.secondMomentNumerator θ * F.partition θ - F.firstMomentNumerator θ * F.firstMomentNumerator θ) / (F.partition θ) ^ 2 = F.variance θ := by
     dsimp [variance, secondMoment, mean]
-    field_simp [F.partition_ne_zero θ]
+    field_simp
     ring
   exact heq ▸ h
 

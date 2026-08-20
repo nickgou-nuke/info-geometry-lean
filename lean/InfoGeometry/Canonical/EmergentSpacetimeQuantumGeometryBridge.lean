@@ -57,11 +57,13 @@ def modularFlowVelocity (ψ : NormalizedState H) (K X : EndH) : ℝ :=
 
 theorem modularFlowVelocity_eq_expectationCoord
     (ψ : NormalizedState H) (K X : EndH) :
-    modularFlowVelocity ψ K X = expectationCoord ψ (opCommutator K X) := rfl
+    modularFlowVelocity ψ K X = expectationCoord ψ (opCommutator K X) := by
+  dsimp [modularFlowVelocity, expectationCoord]
 
 theorem metric_extraction_from_qgt
     (ψ : NormalizedState H) (X Y : EndH) :
-    fubiniStudyMetric ψ X Y = (QGT ψ X Y).re := rfl
+    fubiniStudyMetric ψ X Y = (QGT ψ X Y).re := by
+  dsimp [fubiniStudyMetric]
 
 theorem expectationCoord_eq_observableExpectation_re
     (ψ : NormalizedState H)

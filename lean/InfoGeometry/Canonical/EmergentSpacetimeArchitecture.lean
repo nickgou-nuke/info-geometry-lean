@@ -113,11 +113,13 @@ theorem modular_flow_trajectory_projection (ψ : NormalizedState H) (K X : EndH)
 /-- The modular flow velocity equals the expectation value of the commutator. -/
 @[simp]
 theorem modularFlowVelocity_eq_commutator (ψ : NormalizedState H) (K X : EndH) :
-    EmergentSpacetime.modularFlowVelocity ψ K X = (⟪ψ.vec, (opBracket K X) ψ.vec⟫_ℂ).re := rfl
+    EmergentSpacetime.modularFlowVelocity ψ K X = (⟪ψ.vec, (opBracket K X) ψ.vec⟫_ℂ).re := by
+  dsimp [EmergentSpacetime.modularFlowVelocity, expectationCoord, opBracket]
 
 /-- The modular flow velocity is the real part of the expectation of the commutator. -/
 theorem modularFlowVelocity_eq_expectationCoord (ψ : NormalizedState H) (K X : EndH) :
-    EmergentSpacetime.modularFlowVelocity ψ K X = expectationCoord ψ (opBracket K X) := rfl
+    EmergentSpacetime.modularFlowVelocity ψ K X = expectationCoord ψ (opBracket K X) := by
+  dsimp [EmergentSpacetime.modularFlowVelocity, expectationCoord, opBracket]
 
 /-!
 =============================================================================

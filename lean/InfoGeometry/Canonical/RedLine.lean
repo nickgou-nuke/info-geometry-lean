@@ -13,6 +13,7 @@ import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.DeRhamModularPotentialBridge
 import InfoGeometry.Canonical.QuantumAlgebraObservableBase
 import InfoGeometry.Canonical.HomogeneousModularFlows
+import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
@@ -129,6 +130,23 @@ export InfoGeometry.Canonical.HomogeneousModularFlows (
   maurerCartanPath_eq_logarithmicBridge
   capstone_logarithmicBridge_factors_maurerCartan
   maurerCartanDerivative_mul_eq_add
+)
+
+export InfoGeometry.Canonical.MaurerCartanFactorization (
+  innerDerivationEquiv
+  innerDerivationEquiv_refl
+  innerDerivationEquiv_symm
+  innerDerivationEquiv_trans
+  outSetoid
+  ModularFlowHomogeneousSpace
+  modularFlowProjection
+  outZero
+  modularFlowProjection_inner_zero
+  exact_sequence_inner_iff_kernel
+  maurer_cartan_descent_well_defined
+  maurerCartanForm
+  logarithmicBridgeFactorsThroughMaurerCartan
+  grand_maurer_cartan_unification_summary
 )
 
 

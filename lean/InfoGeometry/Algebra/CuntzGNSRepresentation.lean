@@ -142,6 +142,52 @@ theorem kmsInner_leftMultiplication_cuntz_isometry
   rw [star_cuntzS]
   rw [leftMultiplication_cuntz_isometry]
 
+/-- Distinct Cuntz branches are orthogonal in the algebraic GNS form. -/
+theorem kmsInner_leftMultiplication_cuntz_orthogonal
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (i j : Fin n) (x y : CuntzAlg n) :
+    kmsInner φ (leftMultiplication n (cuntzS n i) x)
+        (leftMultiplication n (cuntzS n j) y) =
+      if i = j then kmsInner φ x y else 0 := by
+  rw [kmsInner_leftMultiplication_star φ (cuntzS n i)]
+  rw [star_cuntzS]
+  rw [leftMultiplication_mul]
+  rw [cuntz_orthogonality]
+  split_ifs with hij
+  · subst j
+    simp [leftMultiplication]
+  · simp [leftMultiplication, kmsInner]
+
+/-- The Cuntz range projections form a partition of the left-regular
+representation, transported from `∑ Sᵢ Sᵢ* = 1`. -/
+theorem leftMultiplication_cuntz_ranges_sum_one
+    (n : ℕ) (x : CuntzAlg n) :
+    (∑ i : Fin n,
+      leftMultiplication n (cuntzS n i)
+        (leftMultiplication n (cuntzSdag n i) x)) = x := by
+  simp only [leftMultiplication_apply, ← mul_assoc]
+  rw [← Finset.sum_mul]
+  rw [cuntz_ranges_sum_one]
+  simp
+
+theorem kmsInner_cuntz_ranges_decomposition
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (x y : CuntzAlg n) :
+    kmsInner φ x y =
+      ∑ i : Fin n, kmsInner φ
+        (leftMultiplication n (cuntzS n i)
+          (leftMultiplication n (cuntzSdag n i) x)) y := by
+  calc
+    kmsInner φ x y = kmsInner φ
+        (∑ i : Fin n,
+          leftMultiplication n (cuntzS n i)
+            (leftMultiplication n (cuntzSdag n i) x)) y := by
+              rw [leftMultiplication_cuntz_ranges_sum_one]
+    _ = ∑ i : Fin n, kmsInner φ
+        (leftMultiplication n (cuntzS n i)
+          (leftMultiplication n (cuntzSdag n i) x)) y := by
+      unfold kmsInner
+      rw [Finset.mul_sum, map_sum]
+
 theorem leftMultiplication_cuntz_qccr_zero
     (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
     leftMultiplication n (cuntzSdag n i)

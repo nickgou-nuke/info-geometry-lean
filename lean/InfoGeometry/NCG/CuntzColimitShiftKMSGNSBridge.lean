@@ -67,6 +67,20 @@ theorem cuntzShift_add (S : ι → A) (X Y : A) :
   congr 1; ext i
   simp only [mul_add, add_mul]
 
+@[simp]
+theorem cuntzShift_zero (S : ι → A) :
+    cuntzShift S 0 = 0 := by
+  dsimp [cuntzShift]
+  simp
+
+theorem cuntzShift_neg (S : ι → A) (X : A) :
+    cuntzShift S (-X) = -cuntzShift S X := by
+  dsimp [cuntzShift]
+  rw [← Finset.sum_neg_distrib]
+  congr 1
+  ext i
+  simp only [neg_mul, mul_neg]
+
 theorem cuntzShift_sub (S : ι → A) (X Y : A) :
     cuntzShift S (X - Y) = cuntzShift S X - cuntzShift S Y := by
   dsimp [cuntzShift]

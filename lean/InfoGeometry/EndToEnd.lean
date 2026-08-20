@@ -37,9 +37,10 @@ variable (D : Derivation A)
 /-- THEOREM 1: Every derivation strictly annihilates the identity. -/
 @[simp]
 theorem map_one : D 1 = 0 := by
-  have h : D 1 = D 1 + D 1 := by
-    simpa using D.leibniz 1 1
-  exact self_eq_add_left.mp h
+  have h : D 1 = D 1 + D 1 := by simpa using D.leibniz 1 1
+  calc D 1 = D 1 + D 1 - D 1 := (add_sub_cancel_right (D 1) (D 1)).symm
+  _ = D 1 - D 1 := by rw [← h]
+  _ = 0 := sub_self (D 1)
 
 end Derivation
 

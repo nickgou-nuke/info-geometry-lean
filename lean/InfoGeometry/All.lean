@@ -7410,3 +7410,5 @@ import InfoGeometry.Lie.SplitOctonionDerivationSpinRep
 import InfoGeometry.Lie.SouriauBregmanDualityBridge
 import InfoGeometry.Lie.CartanCosetRiemannCurvatureBridge
 import InfoGeometry.EndToEnd.KMS
+import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge
+import InfoGeometry.Canonical.MoebiusKleinStatisticalZornSynthesis

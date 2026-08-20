@@ -113,8 +113,8 @@ theorem rhoPair_diagonal_zero (u v : Fin 3 → ℝ) (i j : Fin 3) :
     rhoPair u v (inclPlus i) (inclPlus j) = 0 ∧
     rhoPair u v (inclMinus i) (inclMinus j) = 0 := by
   constructor
-  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclPlus, inclMinus]
-  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclPlus, inclMinus]
+  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclPlus]
+  · fin_cases i <;> fin_cases j <;> simp [rhoPair, inclMinus]
 
 /-- THEOREM 3 (Pairing Matrix is Skew-Symmetric): -/
 theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :

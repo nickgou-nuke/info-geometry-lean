@@ -121,6 +121,26 @@ theorem normSq_cayleyZ_critical (t : ℝ) :
   have hpos : (1 + t^2 : ℝ) ≠ 0 := by positivity
   exact div_self hpos
 
+/-!
+The preceding parametrized result has the following exact converse form on
+the domain where the Cayley denominator is nonzero.  The hypothesis is
+essential: at `β = 2`, Lean's field division convention gives `0 / 0 = 0`.
+-/
+theorem normSq_cayleyZ_eq_one_iff (β : ℂ) (hβ : 2 - β ≠ 0) :
+    normSq (cayleyZ β) = 1 ↔ β.re = 1 := by
+  dsimp [cayleyZ]
+  rw [normSq_div]
+  have hden_pos : 0 < normSq (2 - β) := normSq_pos.mpr hβ
+  have hden_ne : normSq (2 - β) ≠ 0 := ne_of_gt hden_pos
+  rw [div_eq_one_iff_eq hden_ne]
+  simp only [normSq_apply, sub_re, sub_im]
+  have h2re : (2 : ℂ).re = 2 := rfl
+  have h2im : (2 : ℂ).im = 0 := rfl
+  rw [h2re, h2im]
+  constructor
+  · intro h; nlinarith
+  · intro h; nlinarith
+
 /-- 🏆 THEOREM 3: The functional equation F induces inversion z ↦ 1/z. -/
 theorem cayleyZ_F (β : ℂ) :
     cayleyZ (F β) = (cayleyZ β)⁻¹ := by
@@ -158,6 +178,29 @@ theorem circle_reflection_fixed (z : ℂ) (hz : normSq z = 1) :
   have h1 : star z * z = 1 := by
     rw [hmul, hz, ofReal_one]
   exact inv_eq_of_mul_eq_one_right h1
+
+/-- 🏆 THEOREM: Full biconditional for critical circle reflection: (star z)⁻¹ = z ↔ |z|² = 1. -/
+theorem circle_reflection_fixed_iff (z : ℂ) (hz : z ≠ 0) :
+    (star z)⁻¹ = z ↔ normSq z = 1 := by
+  have h_star_ne : star z ≠ 0 := by
+    intro h0
+    have hz0 : z = 0 := by simpa using congrArg star h0
+    exact hz hz0
+  constructor
+  · intro h
+    have h1 : star z * z = star z * (star z)⁻¹ := by
+      congr 1
+      exact h.symm
+    have h2 : star z * (star z)⁻¹ = 1 := mul_inv_cancel₀ h_star_ne
+    have h3 : star z * z = (normSq z : ℂ) := by
+      rw [mul_comm]
+      exact mul_conj z
+    rw [h3, h2] at h1
+    have hre := congrArg Complex.re h1
+    simp only [ofReal_re, one_re] at hre
+    exact hre
+  · intro h
+    exact circle_reflection_fixed z h
 
 /-- The half-period twisted glide involution τ(z) = - 1 / star(z). -/
 noncomputable def tauGlide (z : ℂ) : ℂ :=

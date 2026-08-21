@@ -159,7 +159,6 @@ lemma modularAutomorphismGroup_add
 
 /-- The concrete modular orbit satisfies its generator equation at every time,
 obtained from the additive flow law and the derivative at the origin. -/
-set_option maxHeartbeats 800000 in
 theorem hasDerivAt_modularAutomorphismGroup_eq_commutator
     (M : ModularRadonNikodymData E) (A : EndH E) (t : ℝ) :
     HasDerivAt (fun s : ℝ => modularAutomorphismGroup M s A)
@@ -174,7 +173,8 @@ theorem hasDerivAt_modularAutomorphismGroup_eq_commutator
         (modularAutomorphismGroup M t A)) t := by
     have hinner : HasDerivAt (fun s : ℝ => s - t) 1 t :=
       (hasDerivAt_id t).sub_const t
-    have hcomp := HasDerivAt.comp t h0 hinner
+    set_option maxHeartbeats 800000 in
+    have hcomp := HasDerivAt.comp t hinner h0
     simpa [modularAutomorphismGroup] using hcomp
   convert hshift using 1
   funext s

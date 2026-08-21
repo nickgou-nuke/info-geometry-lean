@@ -61,8 +61,7 @@ theorem canonical_g2_flow_fixes_scalar
     (D : canonicalZornDerivations) (c t : ℝ) :
     InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv
         D.1 t (c • (1 : CZ)) = c • (1 : CZ) := by
-  exact InfoGeometry.Lie.CanonicalZornDerivationExponential
-    .zornFlowLinearEquiv_fixed_of_derivation_eq_zero D.1
+  exact InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv_fixed_of_derivation_eq_zero D.1
     (c • (1 : CZ)) (derivation_apply_scalar D c) t
 
 end InfoGeometry.Canonical.CanonicalZornG2IntegratedFrame

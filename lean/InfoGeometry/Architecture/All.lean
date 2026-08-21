@@ -5,6 +5,7 @@ import InfoGeometry.Architecture.CartanCosetManifold
 import InfoGeometry.Architecture.CartanNomizuCurvature
 import InfoGeometry.Architecture.CartanSectionalCurvature
 import InfoGeometry.Architecture.CartanFisherRaoIdentification
+import InfoGeometry.Architecture.MatrixSymmetricConeFisherRao
 
 namespace InfoGeometry
 

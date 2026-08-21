@@ -1,5 +1,9 @@
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Algebra.Category.AlgCat.Basic
+import Mathlib.Algebra.Category.AlgCat.Limits
+import Mathlib.CategoryTheory.Functor.OfSequence
+import Mathlib.CategoryTheory.Limits.Filtered
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
 
@@ -23,6 +27,48 @@ All proofs are complete in native Mathlib with zero `sorry`s and zero custom axi
 noncomputable section
 
 namespace InfoGeometry.Modular.Colimit
+
+open CategoryTheory CategoryTheory.Limits
+
+/-!  The following interface uses Mathlib's actual categorical colimit.  The
+    generic staged API above remains useful for algebraic calculations, while
+    this section records the descent statement against a genuine cocone. -/
+
+section Categorical
+
+variable {F : ℕ ⥤ AlgCat ℂ} [HasColimit F]
+
+/-- The state induced on a stage by a linear functional on the categorical
+colimit. -/
+def categoricalStageState (Omega : (colimit F : AlgCat ℂ) →ₗ[ℂ] ℂ) (n : ℕ) :
+    (F.obj n) →ₗ[ℂ] ℂ :=
+  Omega.comp (colimit.ι F n).hom.toLinearMap
+
+theorem categoricalStageState_rep_equality
+    (Omega : (colimit F : AlgCat ℂ) →ₗ[ℂ] ℂ)
+    (n m : ℕ) (x : F.obj n) (y : F.obj m)
+    (h : (colimit.ι F n) x = (colimit.ι F m) y) :
+    categoricalStageState Omega n x = categoricalStageState Omega m y := by
+  change Omega ((colimit.ι F n) x) = Omega ((colimit.ι F m) y)
+  rw [h]
+
+theorem categoricalStageState_kms_descent
+    (Omega : (colimit F : AlgCat ℂ) →ₗ[ℂ] ℂ)
+    (n : ℕ) (a bthermal bshift : F.obj n)
+    (hKMS : categoricalStageState Omega n (a * bthermal) =
+      categoricalStageState Omega n (bshift * a)) :
+      Omega ((colimit.ι F n) a * (colimit.ι F n) bthermal) =
+      Omega ((colimit.ι F n) bshift * (colimit.ι F n) a) := by
+  have hmul₁ := congrArg Omega ((colimit.ι F n).hom.map_mul a bthermal)
+  have hmul₂ := congrArg Omega ((colimit.ι F n).hom.map_mul bshift a)
+  change Omega ((colimit.ι F n).hom.toRingHom a *
+      (colimit.ι F n).hom.toRingHom bthermal) =
+    Omega ((colimit.ι F n).hom.toRingHom bshift *
+      (colimit.ι F n).hom.toRingHom a)
+  rw [← hmul₁, ← hmul₂]
+  simpa [categoricalStageState] using hKMS
+
+end Categorical
 
 variable {A : ℕ → Type*} [∀ n, Ring (A n)] [∀ n, Algebra ℂ (A n)]
 variable (iota : ∀ n, A n →ₐ[ℂ] A (n + 1))

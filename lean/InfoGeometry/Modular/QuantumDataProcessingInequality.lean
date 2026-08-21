@@ -8,6 +8,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 import InfoGeometry.Modular.Choi
 import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
+import InfoGeometry.Modular.EntropyMonotonicity
 
 /-!
 # Complete Positivity via Matrix Amplification and the Data Processing Inequality
@@ -126,6 +127,67 @@ structure CPTPMap (n : Type*) [Fintype n] where
 theorem data_processing_inequality (Φ : CPTPMap n) (ρ σ : QuantumDensityState n) :
     quantumRelEntropy (Φ.transform ρ) (Φ.transform σ) ≤ quantumRelEntropy ρ σ :=
   Φ.contractive ρ σ
+
+/-!
+The preceding `CPTPMap` is retained for compatibility with the older API.  The
+following channel is the non-circular finite result: its contractivity is
+derived from the log-sum inequality, rather than stored as a structure field.
+-/
+
+structure StrictColumnChannel (n : Type*) [Fintype n] where
+  prob : n → n → ℝ
+  prob_pos : ∀ k i, 0 < prob k i
+  prob_col_sum : ∀ i, ∑ k, prob k i = 1
+
+def applyStrictColumnChannel (T : StrictColumnChannel n)
+    (ρ : QuantumDensityState n) (k : n) : ℝ :=
+  ∑ i, T.prob k i * ρ.spec i
+
+def strictChannelState (T : StrictColumnChannel n)
+    (ρ : QuantumDensityState n) [Nonempty n] : QuantumDensityState n where
+  spec := applyStrictColumnChannel T ρ
+  pos k := sum_pos (fun i _ => mul_pos (T.prob_pos k i) (ρ.pos i)) univ_nonempty
+  trace_one := by
+    unfold applyStrictColumnChannel
+    rw [Finset.sum_comm]
+    calc
+      (∑ i, ∑ k, T.prob k i * ρ.spec i) =
+          ∑ i, (∑ k, T.prob k i) * ρ.spec i := by
+            apply Finset.sum_congr rfl
+            intro i _
+            rw [← Finset.sum_mul]
+      _ = ∑ i, 1 * ρ.spec i := by
+            apply Finset.sum_congr rfl
+            intro i _
+            rw [T.prob_col_sum i]
+      _ = 1 := by simpa using ρ.trace_one
+
+private theorem quantumRelEntropy_eq_klDivergence
+    (p q : QuantumDensityState n) :
+    quantumRelEntropy p q =
+      InfoGeometry.Modular.EntropyMonotonicity.klDivergence p.spec q.spec := by
+  unfold quantumRelEntropy toStateDist
+  unfold InfoGeometry.Modular.RelativeEntropy.relEntropy
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [Real.log_div (p.pos i).ne' (q.pos i).ne']
+
+theorem strict_channel_data_processing
+    [Nonempty n] (T : StrictColumnChannel n)
+    (ρ σ : QuantumDensityState n) :
+    quantumRelEntropy (strictChannelState T ρ)
+        (strictChannelState T σ) ≤ quantumRelEntropy ρ σ := by
+  rw [quantumRelEntropy_eq_klDivergence (strictChannelState T ρ)
+      (strictChannelState T σ), quantumRelEntropy_eq_klDivergence ρ σ]
+  let S : InfoGeometry.Modular.EntropyMonotonicity.StochasticChannel n n :=
+    { prob := T.prob
+      prob_nonneg := fun k i => (T.prob_pos k i).le
+      prob_col_sum := T.prob_col_sum }
+  have h := InfoGeometry.Modular.EntropyMonotonicity.data_processing_inequality
+    S ρ.spec σ.spec
+    (fun i => ρ.pos i) (fun i => σ.pos i) T.prob_pos
+  simpa [strictChannelState, applyStrictColumnChannel,
+    InfoGeometry.Modular.EntropyMonotonicity.applyChannel, S] using h
 
 end InfoGeometry.Modular.QuantumDPI
 

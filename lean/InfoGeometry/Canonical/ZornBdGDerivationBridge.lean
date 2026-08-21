@@ -534,6 +534,21 @@ theorem cartan_seed_generates_pairing
   · change -(t * (D (normalSeed a b)).u 2) = t * (-(D (normalSeed a b)).u 2)
     ring
 
+/-- Nonvanishing of the generated pairing requires a nonzero flow parameter
+    and a genuinely nonzero off-diagonal derivation component.  Noncentrality
+    of the diagonal seed alone does not imply this conclusion. -/
+theorem cartan_seed_pairing_ne_zero_of
+    (D : Zorn ℂ → Zorn ℂ) (a b t : ℂ)
+    (ht : t ≠ 0)
+    (hu : ∃ i, (D (normalSeed a b)).u i ≠ 0) :
+    block12 (bdgReadout (firstOrderFlow D (normalSeed a b) t)) ≠ 0 := by
+  rw [cartan_seed_generates_pairing]
+  intro hzero
+  have hsigma : sigmaVec (D (normalSeed a b)).u = 0 := by
+    exact (smul_eq_zero.mp hzero).resolve_left ht
+  obtain ⟨i, hi⟩ := hu
+  exact hi ((sigmaVec_eq_zero_iff _).mp hsigma i)
+
 /- The lower-left BdG channel is transported by the second Zorn vector
 component.  It is proved separately because no relation between the two
 off-diagonal components is assumed. -/
@@ -568,6 +583,19 @@ theorem cartan_seed_generates_conjugate_pairing
   · change -(t * (D (normalSeed a b)).v 2) =
       t * (-(D (normalSeed a b)).v 2)
     ring
+
+/-- The corresponding nonvanishing criterion for the lower-left BdG channel. -/
+theorem cartan_seed_conjugate_pairing_ne_zero_of
+    (D : Zorn ℂ → Zorn ℂ) (a b t : ℂ)
+    (ht : t ≠ 0)
+    (hv : ∃ i, (D (normalSeed a b)).v i ≠ 0) :
+    block21 (bdgReadout (firstOrderFlow D (normalSeed a b) t)) ≠ 0 := by
+  rw [cartan_seed_generates_conjugate_pairing]
+  intro hzero
+  have hsigma : sigmaVec (D (normalSeed a b)).v = 0 := by
+    exact (smul_eq_zero.mp hzero).resolve_left ht
+  obtain ⟨i, hi⟩ := hv
+  exact hi ((sigmaVec_eq_zero_iff _).mp hsigma i)
 
 end G2BdGOrbit
 
@@ -616,6 +644,61 @@ theorem bdgReadout_star (Z : Zorn ℂ) :
 theorem zornStar_involutive (Z : Zorn ℂ) :
     zornStar (zornStar Z) = Z := by
   ext <;> simp [zornStar]
+
+/-- The carrier involution preserves the reduced Zorn norm.  This is the
+    algebraic invariant actually needed by the BdG readout; no multiplicative
+    or anti-automorphism claim is implicit here. -/
+theorem zornStar_preserves_reducedNorm (Z : Zorn ℂ) :
+    zornNorm (zornStar Z) = zornNorm Z := by
+  cases Z with
+  | mk a u v b =>
+    dsimp [zornStar, zornNorm, dotR]
+    ring
+
+/-- The carrier involution is compatible with the Zorn product as an
+    anti-automorphism.  This supplies the algebraic content missing from a
+    mere involution-on-fields statement. -/
+theorem zornStar_mul_rev (X Y : Zorn ℂ) :
+    zornStar (X * Y) = zornStar Y * zornStar X := by
+  cases X with
+  | mk Xa Xu Xv Xb =>
+    cases Y with
+    | mk Ya Yu Yv Yb =>
+      ext
+      · simp [zornMul, zornStar, dotR, crossR]
+        ring
+      · rename_i i
+        fin_cases i <;> simp [zornMul, zornStar, dotR, crossR] <;> ring
+      · rename_i i
+        fin_cases i <;> simp [zornMul, zornStar, dotR, crossR] <;> ring
+      · simp [zornMul, zornStar, dotR, crossR]
+        ring
+
+theorem zornStar_add (X Y : Zorn ℂ) :
+    zornStar (X + Y) = zornStar X + zornStar Y := by
+  cases X with
+  | mk Xa Xu Xv Xb =>
+    cases Y with
+    | mk Ya Yu Yv Yb =>
+      ext i
+      · rfl
+      · change -(Xu i + Yu i) = -Xu i + -Yu i
+        ring
+      · change -(Xv i + Yv i) = -Xv i + -Yv i
+        ring
+      · rfl
+
+theorem zornStar_smul (c : ℂ) (X : Zorn ℂ) :
+    zornStar (c • X) = c • zornStar X := by
+  cases X with
+  | mk Xa Xu Xv Xb =>
+    ext i
+    · rfl
+    · change -(c * Xu i) = c * (-Xu i)
+      ring
+    · change -(c * Xv i) = c * (-Xv i)
+      ring
+    · rfl
 
 /-- THEOREM: A self-adjoint normal seed remains self-adjoint along the first-order orbit.
     If `Z₀ = zornStar Z₀`, then `G2BdGOrbit.firstOrderFlow D Z₀ t = zornStar (G2BdGOrbit.firstOrderFlow D Z₀ t)`. -/

@@ -31,7 +31,7 @@ noncomputable def positiveCoordinateEquiv :
     funext r
     simp
 
-theorem positive_coordinate_carriers_equivalent :
+noncomputable def positive_coordinate_carriers_equivalent :
     FinitePositiveCoordinates ≃ NativePositiveCoordinates :=
   positiveCoordinateEquiv
 

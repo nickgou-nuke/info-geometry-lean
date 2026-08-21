@@ -167,6 +167,22 @@ theorem conjugateAut_commutator (k g h : SplitOctF2Aut) :
       conjugateAut k (automorphismCommutator g h) := by
   simp [automorphismCommutator, conjugateAut, mul_assoc]
 
+theorem simple_root_commutator_ne_one :
+    automorphismCommutator (unipotentShortAut true) (unipotentLongAut true) ≠
+      (1 : SplitOctF2Aut) := by
+  intro h
+  have hcoord := congrArg
+    (fun f : SplitOctF2Aut => (f.1 up2).x0) h
+  revert hcoord
+  decide
+
+theorem simple_root_generators_do_not_commute :
+    unipotentShortAut true * unipotentLongAut true ≠
+      unipotentLongAut true * unipotentShortAut true := by
+  intro h
+  apply simple_root_commutator_ne_one
+  exact (automorphismCommutator_eq_one_iff _ _).2 h
+
 theorem conjugateAut_sq (g u : SplitOctF2Aut) (hu : u * u = 1) :
     conjugateAut g u * conjugateAut g u = 1 := by
   calc
@@ -262,6 +278,18 @@ noncomputable def cycleConjugatedLong : Fin 3 → SplitOctF2Aut
   | 1 => conjugateAut cycle012Aut (unipotentLongAut true)
   | 2 => conjugateAut (cycle012Aut * cycle012Aut) (unipotentLongAut true)
 
+theorem cycleConjugatedLong_injective :
+    Function.Injective cycleConjugatedLong := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    have h0 := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
+    have h1 := congrArg (fun f : SplitOctF2Aut => f.1 up1) h
+    have h2 := congrArg (fun f : SplitOctF2Aut => f.1 up2) h
+    revert h0 h1 h2
+    decide
+
 theorem cycleConjugatedShort_packet (i : Fin 3) :
     cycleConjugatedShort i * cycleConjugatedShort i = 1 ∧
     cycleConjugatedShort i ≠ (1 : SplitOctF2Aut) := by
@@ -319,6 +347,18 @@ theorem cycleConjugatedLongParam_comm (i : Fin 3) (s t : Bool) :
       cycleConjugatedLongParam i t * cycleConjugatedLongParam i s := by
   rw [← cycleConjugatedLongParam_add, ← cycleConjugatedLongParam_add,
     Bool.xor_comm]
+
+theorem cycleConjugatedShortParam_commutator_eq_one (i : Fin 3) (s t : Bool) :
+    automorphismCommutator (cycleConjugatedShortParam i s)
+      (cycleConjugatedShortParam i t) = 1 := by
+  exact (automorphismCommutator_eq_one_iff _ _).2
+    (cycleConjugatedShortParam_comm i s t)
+
+theorem cycleConjugatedLongParam_commutator_eq_one (i : Fin 3) (s t : Bool) :
+    automorphismCommutator (cycleConjugatedLongParam i s)
+      (cycleConjugatedLongParam i t) = 1 := by
+  exact (automorphismCommutator_eq_one_iff _ _).2
+    (cycleConjugatedLongParam_comm i s t)
 
 def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure

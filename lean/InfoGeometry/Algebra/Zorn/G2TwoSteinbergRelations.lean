@@ -47,6 +47,9 @@ def x6Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   else
     X
 
+lemma add2_self_cancel (u v : Bool) : add2 (add2 u v) v = u := by
+  cases u <;> cases v <;> rfl
+
 lemma x1_involutive (t : Bool) (X : SplitOctF2) :
     x1Fun t (x1Fun t X) = X :=
   unipotentShort_involutive t X
@@ -59,33 +62,25 @@ lemma x3_involutive (t : Bool) (X : SplitOctF2) :
     x3Fun t (x3Fun t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> simp [x3Fun, add2_self_cancel]
 
 lemma x4_involutive (t : Bool) (X : SplitOctF2) :
     x4Fun t (x4Fun t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> simp [x4Fun, add2_self_cancel]
 
 lemma x5_involutive (t : Bool) (X : SplitOctF2) :
     x5Fun t (x5Fun t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> simp [x5Fun, add2_self_cancel]
 
 lemma x6_involutive (t : Bool) (X : SplitOctF2) :
     x6Fun t (x6Fun t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> simp [x6Fun, add2_self_cancel]
 
 /-- Group commutator of two endomorphisms on SplitOctF2 -/
 def commutator (f g : SplitOctF2 → SplitOctF2) (X : SplitOctF2) : SplitOctF2 :=

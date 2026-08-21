@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics
+import InfoGeometry.Algebra.Zorn.G2CyclotomicPoincareFactorization
 import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity

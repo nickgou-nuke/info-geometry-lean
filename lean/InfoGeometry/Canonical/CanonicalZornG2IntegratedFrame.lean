@@ -51,6 +51,20 @@ theorem canonical_g2_flow_frame
   · exact zornFlow_preserves_detZ D t X
   · exact zornFlow_preserves_null D t X
 
+/-!
+The scalar kernel is transported to a fixed-point statement for the full
+exponential flow.  This is stronger than merely recording `D 1 = 0`: it
+identifies the entire scalar line as a pointwise invariant of the integrated
+automorphism family.
+-/
+theorem canonical_g2_flow_fixes_scalar
+    (D : canonicalZornDerivations) (c t : ℝ) :
+    InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv
+        D.1 t (c • (1 : CZ)) = c • (1 : CZ) := by
+  exact InfoGeometry.Lie.CanonicalZornDerivationExponential
+    .zornFlowLinearEquiv_fixed_of_derivation_eq_zero D.1
+    (c • (1 : CZ)) (derivation_apply_scalar D c) t
+
 end InfoGeometry.Canonical.CanonicalZornG2IntegratedFrame
 
 end noncomputable section

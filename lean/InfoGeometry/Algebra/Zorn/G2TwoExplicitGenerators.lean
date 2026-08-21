@@ -101,6 +101,13 @@ theorem conjugateAut_ne_one (g u : SplitOctF2Aut) (hu : u ≠ 1) :
   have h' := congrArg (fun z : SplitOctF2Aut => g⁻¹ * z * g) h
   simpa [conjugateAut, ← mul_assoc] using h'
 
+theorem conjugateAut_add (g : SplitOctF2Aut) (u : Bool → SplitOctF2Aut)
+    (hu : ∀ s t, u (s ^^ t) = u s * u t) (s t : Bool) :
+    conjugateAut g (u (s ^^ t)) =
+      conjugateAut g (u s) * conjugateAut g (u t) := by
+  rw [hu]
+  simp [conjugateAut, mul_assoc]
+
 noncomputable def swapConjugatedShort : SplitOctF2Aut :=
   conjugateAut swap01Aut (unipotentShortAut true)
 
@@ -128,8 +135,8 @@ theorem unipotentShortAut_add (s t : Bool) :
   · rfl
   · rfl
   · change X = (unipotentShortAut true * unipotentShortAut true).1 X
-    rw [← unipotentShortAut_order true]
-    rfl
+    simpa using congrArg (fun f : SplitOctF2Aut => f.1 X)
+      (unipotentShortAut_order true).symm
 
 theorem unipotentLongAut_add (s t : Bool) :
     unipotentLongAut (s ^^ t) =
@@ -142,8 +149,79 @@ theorem unipotentLongAut_add (s t : Bool) :
   · rfl
   · rfl
   · change X = (unipotentLongAut true * unipotentLongAut true).1 X
-    rw [← unipotentLongAut_order true]
-    rfl
+    simpa using congrArg (fun f : SplitOctF2Aut => f.1 X)
+      (unipotentLongAut_order true).symm
+
+theorem swapConjugatedShort_add (s t : Bool) :
+    conjugateAut swap01Aut (unipotentShortAut (s ^^ t)) =
+      conjugateAut swap01Aut (unipotentShortAut s) *
+        conjugateAut swap01Aut (unipotentShortAut t) := by
+  exact conjugateAut_add swap01Aut unipotentShortAut
+    unipotentShortAut_add s t
+
+theorem swapConjugatedLong_add (s t : Bool) :
+    conjugateAut swap01Aut (unipotentLongAut (s ^^ t)) =
+      conjugateAut swap01Aut (unipotentLongAut s) *
+        conjugateAut swap01Aut (unipotentLongAut t) := by
+  exact conjugateAut_add swap01Aut unipotentLongAut
+    unipotentLongAut_add s t
+
+private lemma short_mul_long_ne_one :
+    unipotentShortAut true * unipotentLongAut true ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have h' := congrArg
+    (fun z : SplitOctF2Aut => unipotentShortAut true * z) h
+  apply simple_root_generators_distinct
+  symm
+  simpa [← mul_assoc, unipotentShortAut_order true] using h'
+
+private lemma short_mul_long_ne_short :
+    unipotentShortAut true * unipotentLongAut true ≠ unipotentShortAut true := by
+  intro h
+  have h' := congrArg
+    (fun z : SplitOctF2Aut => unipotentShortAut true * z) h
+  apply unipotentLongAut_true_ne_one
+  simpa [← mul_assoc, unipotentShortAut_order true] using h'
+
+private lemma short_mul_long_ne_long :
+    unipotentShortAut true * unipotentLongAut true ≠ unipotentLongAut true := by
+  intro h
+  have h' := congrArg
+    (fun z : SplitOctF2Aut => z * unipotentLongAut true) h
+  apply unipotentShortAut_true_ne_one
+  simpa [mul_assoc, unipotentLongAut_order true] using h'
+
+def fourRootWords : Fin 4 → SplitOctF2Aut
+  | 0 => 1
+  | 1 => unipotentShortAut true
+  | 2 => unipotentLongAut true
+  | 3 => unipotentShortAut true * unipotentLongAut true
+
+theorem fourRootWords_injective : Function.Injective fourRootWords := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals dsimp [fourRootWords] at h
+  all_goals
+    first
+    | exact False.elim (unipotentShortAut_true_ne_one h)
+    | exact False.elim (unipotentShortAut_true_ne_one h.symm)
+    | exact False.elim (unipotentLongAut_true_ne_one h)
+    | exact False.elim (unipotentLongAut_true_ne_one h.symm)
+    | exact False.elim (simple_root_generators_distinct h)
+    | exact False.elim (simple_root_generators_distinct h.symm)
+    | exact False.elim (short_mul_long_ne_one h)
+    | exact False.elim (short_mul_long_ne_one h.symm)
+    | exact False.elim (short_mul_long_ne_short h)
+    | exact False.elim (short_mul_long_ne_short h.symm)
+    | exact False.elim (short_mul_long_ne_long h)
+    | exact False.elim (short_mul_long_ne_long h.symm)
+
+theorem finite_g2_carrier_card_lower_bound :
+    4 ≤ Fintype.card SplitOctF2Aut := by
+  have hc : Fintype.card (Fin 4) ≤ Fintype.card SplitOctF2Aut :=
+    Fintype.card_le_of_injective fourRootWords fourRootWords_injective
+  simpa using hc
 
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧

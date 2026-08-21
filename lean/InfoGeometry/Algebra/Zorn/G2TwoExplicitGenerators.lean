@@ -143,6 +143,25 @@ theorem simple_root_generators_distinct :
   revert h_apply
   decide
 
+theorem simple_root_product_pow_four :
+    (unipotentShortAut true * unipotentLongAut true) ^ 4 =
+      (1 : SplitOctF2Aut) := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  revert a b x0 x1 x2 y0 y1 y2
+  decide
+
+theorem simple_root_product_sq_ne_one :
+    (unipotentShortAut true * unipotentLongAut true) ^ 2 ≠
+      (1 : SplitOctF2Aut) := by
+  intro h
+  have h_apply := congrArg
+    (fun f : SplitOctF2Aut => (f.1 up2).x0) h
+  revert h_apply
+  decide
+
 def conjugateAut (g u : SplitOctF2Aut) : SplitOctF2Aut :=
   g * u * g⁻¹
 
@@ -224,6 +243,68 @@ theorem swapConjugatedLong_add (s t : Bool) :
         conjugateAut swap01Aut (unipotentLongAut t) := by
   exact conjugateAut_add swap01Aut unipotentLongAut
     unipotentLongAut_add s t
+
+/-!
+The cyclic Weyl representative produces further concrete root candidates by
+conjugation.  These definitions record only consequences of group
+conjugation; no claim of distinctness or of a completed BN-pair is made here.
+-/
+
+noncomputable def cycleConjugatedShort : Fin 3 → SplitOctF2Aut
+  | 0 => unipotentShortAut true
+  | 1 => conjugateAut cycle012Aut (unipotentShortAut true)
+  | 2 => conjugateAut (cycle012Aut * cycle012Aut) (unipotentShortAut true)
+
+noncomputable def cycleConjugatedLong : Fin 3 → SplitOctF2Aut
+  | 0 => unipotentLongAut true
+  | 1 => conjugateAut cycle012Aut (unipotentLongAut true)
+  | 2 => conjugateAut (cycle012Aut * cycle012Aut) (unipotentLongAut true)
+
+theorem cycleConjugatedShort_packet (i : Fin 3) :
+    cycleConjugatedShort i * cycleConjugatedShort i = 1 ∧
+    cycleConjugatedShort i ≠ (1 : SplitOctF2Aut) := by
+  fin_cases i
+  · exact ⟨unipotentShortAut_order true, unipotentShortAut_true_ne_one⟩
+  · exact ⟨conjugateAut_sq _ _ (unipotentShortAut_order true),
+      conjugateAut_ne_one _ _ unipotentShortAut_true_ne_one⟩
+  · exact ⟨conjugateAut_sq _ _ (unipotentShortAut_order true),
+      conjugateAut_ne_one _ _ unipotentShortAut_true_ne_one⟩
+
+theorem cycleConjugatedLong_packet (i : Fin 3) :
+    cycleConjugatedLong i * cycleConjugatedLong i = 1 ∧
+    cycleConjugatedLong i ≠ (1 : SplitOctF2Aut) := by
+  fin_cases i
+  · exact ⟨unipotentLongAut_order true, unipotentLongAut_true_ne_one⟩
+  · exact ⟨conjugateAut_sq _ _ (unipotentLongAut_order true),
+      conjugateAut_ne_one _ _ unipotentLongAut_true_ne_one⟩
+  · exact ⟨conjugateAut_sq _ _ (unipotentLongAut_order true),
+      conjugateAut_ne_one _ _ unipotentLongAut_true_ne_one⟩
+
+noncomputable def cycleConjugatedShortParam (i : Fin 3) (t : Bool) :
+    SplitOctF2Aut := if t then cycleConjugatedShort i else 1
+
+noncomputable def cycleConjugatedLongParam (i : Fin 3) (t : Bool) :
+    SplitOctF2Aut := if t then cycleConjugatedLong i else 1
+
+theorem cycleConjugatedShortParam_add (i : Fin 3) (s t : Bool) :
+    cycleConjugatedShortParam i (s ^^ t) =
+      cycleConjugatedShortParam i s * cycleConjugatedShortParam i t := by
+  cases s <;> cases t
+  · rfl
+  · simp [cycleConjugatedShortParam]
+  · simp [cycleConjugatedShortParam]
+  · simpa [cycleConjugatedShortParam] using
+      (cycleConjugatedShort_packet i).1.symm
+
+theorem cycleConjugatedLongParam_add (i : Fin 3) (s t : Bool) :
+    cycleConjugatedLongParam i (s ^^ t) =
+      cycleConjugatedLongParam i s * cycleConjugatedLongParam i t := by
+  cases s <;> cases t
+  · rfl
+  · simp [cycleConjugatedLongParam]
+  · simp [cycleConjugatedLongParam]
+  · simpa [cycleConjugatedLongParam] using
+      (cycleConjugatedLong_packet i).1.symm
 
 def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure

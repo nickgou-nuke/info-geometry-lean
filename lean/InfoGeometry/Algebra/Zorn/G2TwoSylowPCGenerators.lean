@@ -197,29 +197,65 @@ theorem pc6_injective : Function.Injective pc6Fun := by
   intro X Y h
   rw [← pc6_sq X, ← pc6_sq Y, h]
 
-def pc1Equiv : SplitOctF2 ≃ SplitOctF2 :=
+theorem pc2_four (X : SplitOctF2) :
+    pc2Fun (pc2Fun (pc2Fun (pc2Fun X))) = X := by
+  rw [pc2_sq, pc2_sq, pc6_sq]
+
+theorem pc3_four (X : SplitOctF2) :
+    pc3Fun (pc3Fun (pc3Fun (pc3Fun X))) = X := by
+  rw [pc3_sq, pc3_sq, pc6_sq]
+
+theorem pc2_injective : Function.Injective pc2Fun := by
+  intro X Y h
+  have h' := congrArg (fun Z => pc2Fun (pc2Fun (pc2Fun Z))) h
+  calc
+    X = pc2Fun (pc2Fun (pc2Fun (pc2Fun X))) := (pc2_four X).symm
+    _ = pc2Fun (pc2Fun (pc2Fun (pc2Fun Y))) := h'
+    _ = Y := pc2_four Y
+
+theorem pc3_injective : Function.Injective pc3Fun := by
+  intro X Y h
+  have h' := congrArg (fun Z => pc3Fun (pc3Fun (pc3Fun Z))) h
+  calc
+    X = pc3Fun (pc3Fun (pc3Fun (pc3Fun X))) := (pc3_four X).symm
+    _ = pc3Fun (pc3Fun (pc3Fun (pc3Fun Y))) := h'
+    _ = Y := pc3_four Y
+
+noncomputable def pc1Equiv : SplitOctF2 ≃ SplitOctF2 :=
   Equiv.ofBijective pc1Fun ⟨pc1_injective, by
     intro X
     exact ⟨pc1Fun X, pc1_sq X⟩⟩
 
-def pc4Equiv : SplitOctF2 ≃ SplitOctF2 :=
+noncomputable def pc4Equiv : SplitOctF2 ≃ SplitOctF2 :=
   Equiv.ofBijective pc4Fun ⟨pc4_injective, by
     intro X
     exact ⟨pc4Fun X, pc4_sq X⟩⟩
 
-def pc5Equiv : SplitOctF2 ≃ SplitOctF2 :=
+noncomputable def pc5Equiv : SplitOctF2 ≃ SplitOctF2 :=
   Equiv.ofBijective pc5Fun ⟨pc5_injective, by
     intro X
     exact ⟨pc5Fun X, pc5_sq X⟩⟩
 
-def pc6Equiv : SplitOctF2 ≃ SplitOctF2 :=
+noncomputable def pc6Equiv : SplitOctF2 ≃ SplitOctF2 :=
   Equiv.ofBijective pc6Fun ⟨pc6_injective, by
     intro X
     exact ⟨pc6Fun X, pc6_sq X⟩⟩
 
-def pc1Aut : SplitOctF2Aut := ⟨pc1Equiv, pc1_one, pc1_add, pc1_mul⟩
-def pc4Aut : SplitOctF2Aut := ⟨pc4Equiv, pc4_one, pc4_add, pc4_mul⟩
-def pc5Aut : SplitOctF2Aut := ⟨pc5Equiv, pc5_one, pc5_add, pc5_mul⟩
-def pc6Aut : SplitOctF2Aut := ⟨pc6Equiv, pc6_one, pc6_add, pc6_mul⟩
+noncomputable def pc2Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc2Fun ⟨pc2_injective, by
+    intro X
+    exact ⟨pc2Fun (pc2Fun (pc2Fun X)), pc2_four X⟩⟩
+
+noncomputable def pc3Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc3Fun ⟨pc3_injective, by
+    intro X
+    exact ⟨pc3Fun (pc3Fun (pc3Fun X)), pc3_four X⟩⟩
+
+noncomputable def pc1Aut : SplitOctF2Aut := ⟨pc1Equiv, pc1_one, pc1_add, pc1_mul⟩
+noncomputable def pc4Aut : SplitOctF2Aut := ⟨pc4Equiv, pc4_one, pc4_add, pc4_mul⟩
+noncomputable def pc5Aut : SplitOctF2Aut := ⟨pc5Equiv, pc5_one, pc5_add, pc5_mul⟩
+noncomputable def pc6Aut : SplitOctF2Aut := ⟨pc6Equiv, pc6_one, pc6_add, pc6_mul⟩
+noncomputable def pc2Aut : SplitOctF2Aut := ⟨pc2Equiv, pc2_one, pc2_add, pc2_mul⟩
+noncomputable def pc3Aut : SplitOctF2Aut := ⟨pc3Equiv, pc3_one, pc3_add, pc3_mul⟩
 
 end InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators

@@ -5,3 +5,4 @@ import InfoGeometry.Arithmetic.ZetaLogCylinderKleinGlide
 import InfoGeometry.Arithmetic.ChebyshevPrimeEnergyBound
 import InfoGeometry.Arithmetic.InvolutionParityProjectors
 import InfoGeometry.Arithmetic.ZetaBetaCayleyKleinBridge
+import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge

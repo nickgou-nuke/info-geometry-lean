@@ -1,6 +1,5 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 
@@ -47,8 +46,7 @@ lemma log_ge_one_sub_inv (x : ℝ) (hx : 0 < x) :
     ∑_i a_i * log(a_i / b_i) ≥ (∑_i a_i) * log((∑_i a_i) / (∑_i b_i))
 -/
 theorem log_sum_inequality
-    [Nonempty ι]
-    (a b : ι → ℝ)
+    (a b : ι → ℝ) [Nonempty ι]
     (ha : ∀ i, 0 < a i) (hb : ∀ i, 0 < b i) :
     (∑ i, a i) * Real.log ((∑ i, a i) / (∑ i, b i)) ≤ ∑ i, a i * Real.log (a i / b i) := by
   let A := ∑ i, a i
@@ -65,31 +63,26 @@ theorem log_sum_inequality
     have h_inv_u : u⁻¹ = (b i * A) / (a i * B) := inv_div (a i * B) (b i * A)
     rw [h_inv_u] at h_log
     have h_mul := mul_le_mul_of_nonneg_left h_log (le_of_lt (ha i))
+    have hai : a i ≠ 0 := ne_of_gt (ha i)
     have h_distrib : a i * (1 - (b i * A) / (a i * B)) = a i - (b i * A) / B := by
-      have hai : a i ≠ 0 := ne_of_gt (ha i)
-      calc
-        a i * (1 - (b i * A) / (a i * B))
-          = a i - a i * ((b i * A) / (a i * B)) := by ring
-        _ = a i - (a i * (b i * A)) / (a i * B) := by ring
-        _ = a i - (b i * A) / B := by
-          congr 1
-          rw [show a i * (b i * A) = (b i * A) * a i by ring, show a i * B = B * a i by ring]
-          exact mul_div_mul_right (b i * A) B hai
+      have h_calc : a i * ((b i * A) / (a i * B)) = (b i * A) / B := by
+        rw [mul_div, mul_comm (a i) (b i * A), mul_comm (a i) B, mul_div_mul_right (b i * A) B hai]
+      rw [mul_sub, mul_one, h_calc]
     rw [h_distrib] at h_mul
     exact h_mul
 
   have h_sum_le : (∑ i, (a i - (b i * A) / B)) ≤ ∑ i, a i * Real.log ((a i * B) / (b i * A)) :=
-    sum_le_sum (fun i _ => h_term i)
+    Finset.sum_le_sum (fun i _ => h_term i)
 
   have h_sum_lhs : ∑ i, (a i - (b i * A) / B) = 0 := by
     calc
       ∑ i, (a i - (b i * A) / B)
-        = (∑ i, a i) - (∑ i, (b i * A) / B) := by rw [sum_sub_distrib]
+        = (∑ i, a i) - (∑ i, (b i * A) / B) := by rw [Finset.sum_sub_distrib]
       _ = A - (∑ i, b i * (A / B)) := by
         dsimp [A]
-        apply congr_arg (fun x => A - x)
+        congr 1
         apply sum_congr rfl; intro i _; ring
-      _ = A - (∑ i, b i) * (A / B) := by rw [← sum_mul]
+      _ = A - (∑ i, b i) * (A / B) := by rw [← Finset.sum_mul]
       _ = A - B * (A / B) := rfl
       _ = A - A := by rw [mul_div_cancel₀ A (ne_of_gt hB)]
       _ = 0 := sub_self A
@@ -101,22 +94,24 @@ theorem log_sum_inequality
     have h_ab : 0 < a i / b i := div_pos (ha i) (hb i)
     have h_AB : 0 < A / B := div_pos hA hB
     have h_prod : (a i * B) / (b i * A) = (a i / b i) / (A / B) := by
-      field_simp
+      rw [div_div_eq_mul_div, div_mul_eq_mul_div, div_div]
     rw [h_prod, Real.log_div (ne_of_gt h_ab) (ne_of_gt h_AB)]
 
-  have h_trans : 0 ≤ (∑ i, a i * Real.log (a i / b i)) - A * Real.log (A / B) := by
+  have h_sum_split : (∑ i, a i * Real.log ((a i * B) / (b i * A))) =
+      (∑ i, a i * Real.log (a i / b i)) - A * Real.log (A / B) := by
     calc
-      0 ≤ ∑ i, a i * Real.log ((a i * B) / (b i * A)) := h_sum_le
-      _ = ∑ i, a i * (Real.log (a i / b i) - Real.log (A / B)) := by
-        apply sum_congr rfl; intro i _; rw [h_split_log i]
-      _ = ∑ i, (a i * Real.log (a i / b i) - a i * Real.log (A / B)) := by
-        apply sum_congr rfl; intro i _; ring
+      ∑ i, a i * Real.log ((a i * B) / (b i * A))
+        = ∑ i, (a i * Real.log (a i / b i) - a i * Real.log (A / B)) := by
+          apply sum_congr rfl; intro i _
+          rw [h_split_log i, mul_sub]
       _ = (∑ i, a i * Real.log (a i / b i)) - (∑ i, a i * Real.log (A / B)) := by
-        rw [sum_sub_distrib]
+          rw [Finset.sum_sub_distrib]
       _ = (∑ i, a i * Real.log (a i / b i)) - (∑ i, a i) * Real.log (A / B) := by
-        rw [← sum_mul]
+          rw [← Finset.sum_mul]
       _ = (∑ i, a i * Real.log (a i / b i)) - A * Real.log (A / B) := rfl
 
+  rw [h_sum_split] at h_sum_le
+  dsimp [A, B] at h_sum_le ⊢
   linarith
 
 /-!
@@ -145,9 +140,8 @@ def klDivergence (p q : ι → ℝ) : ℝ :=
     D_KL(T p ∥ T q) ≤ D_KL(p ∥ q)
 -/
 theorem data_processing_inequality
-    [Nonempty ι]
     (T : StochasticChannel κ ι)
-    (p q : ι → ℝ)
+    (p q : ι → ℝ) [Nonempty ι]
     (hp : ∀ i, 0 < p i) (hq : ∀ i, 0 < q i)
     (hT_pos : ∀ k i, 0 < T.prob k i) :
     klDivergence (applyChannel T p) (applyChannel T q) ≤ klDivergence p q := by
@@ -161,10 +155,9 @@ theorem data_processing_inequality
     have h_b_pos (i : ι) : 0 < T.prob k i * q i := mul_pos (hT_pos k i) (hq i)
     exact log_sum_inequality (fun i => T.prob k i * p i) (fun i => T.prob k i * q i) h_a_pos h_b_pos
 
-  have h_sum_k :
-      (∑ k, (∑ i, T.prob k i * p i) * Real.log ((∑ i, T.prob k i * p i) / (∑ i, T.prob k i * q i))) ≤
+  have h_sum_k : (∑ k, (∑ i, T.prob k i * p i) * Real.log ((∑ i, T.prob k i * p i) / (∑ i, T.prob k i * q i))) ≤
       ∑ k, ∑ i, (T.prob k i * p i) * Real.log ((T.prob k i * p i) / (T.prob k i * q i)) :=
-    sum_le_sum (fun k _ => h_k k)
+    Finset.sum_le_sum (fun k _ => h_k k)
 
   -- Simplify the ratio (T_{k, i} * p_i) / (T_{k, i} * q_i) = p_i / q_i
   have h_ratio_cancel (k : κ) (i : ι) :
@@ -181,14 +174,17 @@ theorem data_processing_inequality
         ∑ i, p i * Real.log (p i / q i) := by
     calc
       (∑ k, ∑ i, (T.prob k i * p i) * Real.log (p i / q i))
-        = ∑ i, ∑ k, (T.prob k i * p i) * Real.log (p i / q i) := by rw [sum_comm]
+        = ∑ i, ∑ k, (T.prob k i * p i) * Real.log (p i / q i) := by rw [Finset.sum_comm]
       _ = ∑ i, (∑ k, T.prob k i * p i) * Real.log (p i / q i) := by
         apply sum_congr rfl; intro i _
-        rw [← sum_mul]
+        rw [← Finset.sum_mul]
       _ = ∑ i, ((∑ k, T.prob k i) * p i) * Real.log (p i / q i) := by
         apply sum_congr rfl; intro i _
-        rw [← sum_mul]
-      _ = ∑ i, (1 * p i) * Real.log (p i / q i) := by
+        rw [← Finset.sum_mul]
+      _ = ∑ i, (∑ k, T.prob k i) * (p i * Real.log (p i / q i)) := by
+        apply sum_congr rfl; intro i _
+        rw [mul_assoc]
+      _ = ∑ i, 1 * (p i * Real.log (p i / q i)) := by
         apply sum_congr rfl; intro i _
         rw [T.prob_col_sum i]
       _ = ∑ i, p i * Real.log (p i / q i) := by
@@ -216,10 +212,9 @@ structure StochasticSemigroup (ι : Type*) [Fintype ι] where
   proving the strict irreversibility and entropy dissipation forward in time.
 -/
 theorem entropy_monotonicity_flow
-    [Nonempty ι]
     (S : StochasticSemigroup ι)
-    (p q : ι → ℝ)
-    (t₁ s : ℝ)
+    (p q : ι → ℝ) [Nonempty ι]
+    (t₁ s : ℝ) (_hs : 0 ≤ s)
     (hp : ∀ i, 0 < applyChannel (S.channel t₁) p i)
     (hq : ∀ i, 0 < applyChannel (S.channel t₁) q i)
     (hS_pos : ∀ k i, 0 < (S.channel s).prob k i) :
@@ -236,7 +231,7 @@ theorem entropy_monotonicity_flow
       _ = ∑ i, ∑ m, ((S.channel s).prob k m * (S.channel t₁).prob m i) * p i := by
         apply sum_congr rfl; intro i _; rw [sum_mul]
       _ = ∑ m, ∑ i, (S.channel s).prob k m * ((S.channel t₁).prob m i * p i) := by
-        rw [sum_comm]
+        rw [Finset.sum_comm]
         apply sum_congr rfl; intro m _
         apply sum_congr rfl; intro i _; ring
       _ = ∑ m, (S.channel s).prob k m * (∑ i, (S.channel t₁).prob m i * p i) := by
@@ -253,7 +248,7 @@ theorem entropy_monotonicity_flow
       _ = ∑ i, ∑ m, ((S.channel s).prob k m * (S.channel t₁).prob m i) * q i := by
         apply sum_congr rfl; intro i _; rw [sum_mul]
       _ = ∑ m, ∑ i, (S.channel s).prob k m * ((S.channel t₁).prob m i * q i) := by
-        rw [sum_comm]
+        rw [Finset.sum_comm]
         apply sum_congr rfl; intro m _
         apply sum_congr rfl; intro i _; ring
       _ = ∑ m, (S.channel s).prob k m * (∑ i, (S.channel t₁).prob m i * q i) := by

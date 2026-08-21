@@ -164,6 +164,12 @@ theorem krausMap_tensorAmplification_rankOne_posSemidef
   rw [← choiMatrix_eq_tensorAmplification_rankOne]
   exact choiMatrix_krausMap_posSemidef V
 
+theorem tensorAmplification_rankOne_posSemidef_of_choiPositive
+    (E : MatrixMap (n := n)) (hE : ChoiPositive E) :
+    (tensorAmplification E (rankOne maximallyEntangled)).PosSemidef := by
+  rw [← choiMatrix_eq_tensorAmplification_rankOne]
+  exact hE
+
 /-- Finite complete positivity: every matrix amplification preserves the
 positive-semidefinite cone.  The amplification construction is intentionally
 left as a separate owner because its index/type transport is nontrivial. -/

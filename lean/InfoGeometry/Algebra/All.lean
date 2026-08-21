@@ -4,6 +4,8 @@ import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
+import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
+import InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
 import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.Zorn.G2TwoIdempotentGeometry
 import InfoGeometry.Algebra.Zorn.G2SteinbergPositiveRoots

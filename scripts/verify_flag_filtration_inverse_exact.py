@@ -51,7 +51,7 @@ def factor(a, parameter):
 
 M = I
 for k in range(6):
-    M = mm(factor(constants[k], e[k]), M)
+    M = mm(M, factor(constants[k], e[k]))
 
 def inv_factor(k, parameter):
     return factor(inverses[k], parameter)
@@ -61,32 +61,32 @@ def zero(x):
 
 p0 = M[2][7]
 assert zero(p0 + e[0])
-M1 = mm(M, inv_factor(0, p0))
+M1 = mm(inv_factor(0, p0), M)
 
 p1 = M1[3][2]
 assert zero(p1 + e[1])
-M2 = mm(M1, inv_factor(1, p1))
+M2 = mm(inv_factor(1, p1), M1)
 
-p2 = M2[0][2]
+p2 = M2[3][7]
 assert zero(p2 + e[2])
-M3 = mm(M2, inv_factor(2, p2))
+M3 = mm(inv_factor(2, p2), M2)
 
-p4 = M3[0][7]
+p4 = M3[6][2]
 assert zero(p4 + e[4])
 p3 = red(M3[4][3] + p4)
 assert zero(p3 + e[3])
-M4 = mm(M3, inv_factor(3, p3))
-M5 = mm(M4, inv_factor(4, p4))
+M4 = mm(inv_factor(3, p3), M3)
+M5 = mm(inv_factor(4, p4), M4)
 
 p5 = red(M5[4][2])
 assert zero(p5 + e[5])
-M6 = mm(M5, inv_factor(5, p5))
+M6 = mm(inv_factor(5, p5), M5)
 
 residual = [(i, j, red(M6[i][j] + I[i][j]))
             for i in range(8) for j in range(8)
             if not zero(M6[i][j] + I[i][j])]
 assert not residual, residual
 print("FLAG_FILTRATION_INVERSE_SYMBOLIC=PASS")
-print("FLAG_PIVOTS=e0:M[2,7];e1:M1[3,2];e2:M2[0,2];"
-      "e4:M3[0,7];e3:M3[4,3]+e4;e5:M5[4,2]")
+print("FLAG_PIVOTS=e0:M[2,7];e1:M1[3,2];e2:M2[3,7];"
+      "e4:M3[6,2];e3:M3[4,3]+e4;e5:M5[4,2]")
 print("NO_ASSIGNMENT_ENUMERATION=PASS")

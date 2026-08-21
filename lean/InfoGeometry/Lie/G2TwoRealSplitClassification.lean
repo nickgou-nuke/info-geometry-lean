@@ -90,8 +90,11 @@ theorem g2two_order_formula :
   exact
     InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.g2two_order_formula
 
-/-- The exact value `|G₂(2)| = 12096`. -/
-theorem g2two_card_value : g2twoOrder = 12096 := by
+/-- The arithmetic value of the order-ledger constant is `12096`.
+
+This is not a theorem about `Fintype.card G2Two`; that carrier cardinality
+requires the separate enumeration premise below. -/
+theorem g2two_order_ledger_value : g2twoOrder = 12096 := by
   exact g2two_order_formula.trans (by norm_num)
 
 /-- `|G₂(2)| = 2 · |G₂(2)'|`, i.e. the derived subgroup `G₂(2)' ≅ PSU₃(3)`

@@ -68,7 +68,6 @@ theorem schur_eq_zornNorm_div_beta (α β u v : F) (hβ : β ≠ 0) :
     schurComplement α u v β = zornNormScalar α β u v / β := by
   dsimp [schurComplement, zornNormScalar]
   field_simp [hβ]
-  ring
 
 /-- 
   🏆 THEOREM 3: The scalar Zorn norm reconstructs from the Schur complement times the pivot β:

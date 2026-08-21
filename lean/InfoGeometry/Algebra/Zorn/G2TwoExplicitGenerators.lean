@@ -23,11 +23,18 @@ noncomputable def swap01Equiv : SplitOctF2 ≃ SplitOctF2 where
 
 theorem swap01_add (X Y : SplitOctF2) :
     swap01Fun (add X Y) = add (swap01Fun X) (swap01Fun Y) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  ext <;> simp [swap01Fun, add, add2, Bool.xor_comm]
 
 theorem swap01_mul (X Y : SplitOctF2) :
     swap01Fun (mul X Y) = mul (swap01Fun X) (swap01Fun Y) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  ext <;>
+    simp [swap01Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      Bool.xor_comm, Bool.xor_assoc, Bool.and_comm, Bool.and_left_comm,
+      Bool.and_assoc]
 
 noncomputable def swap01Aut : SplitOctF2Aut :=
   ⟨swap01Equiv, by
@@ -70,11 +77,18 @@ noncomputable def cycle012Equiv : SplitOctF2 ≃ SplitOctF2 where
 
 theorem cycle012_add (X Y : SplitOctF2) :
     cycle012Fun (add X Y) = add (cycle012Fun X) (cycle012Fun Y) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  ext <;> simp [cycle012Fun, add, add2]
 
 theorem cycle012_mul (X Y : SplitOctF2) :
     cycle012Fun (mul X Y) = mul (cycle012Fun X) (cycle012Fun Y) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  ext <;>
+    simp [cycle012Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      Bool.xor_comm, Bool.xor_assoc, Bool.and_comm, Bool.and_left_comm,
+      Bool.and_assoc]
 
 noncomputable def cycle012Aut : SplitOctF2Aut :=
   ⟨cycle012Equiv, by
@@ -84,6 +98,10 @@ noncomputable def cycle012Aut : SplitOctF2Aut :=
       exact cycle012_add X Y
     · intro X Y
       exact cycle012_mul X Y⟩
+
+theorem cycle012Aut_apply (X : SplitOctF2) :
+    cycle012Aut.1 X = cycle012Fun X :=
+  rfl
 
 theorem cycle012Aut_cube :
     cycle012Aut * cycle012Aut * cycle012Aut = (1 : SplitOctF2Aut) := by

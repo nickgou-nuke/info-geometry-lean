@@ -43,44 +43,23 @@ namespace Derivation
 
 variable (D : Derivation A)
 
-@[simp]
-theorem map_add
-    (x y : A) :
-    D (x + y) = D x + D y :=
-  D.map_add' x y
+@[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.map_add' x y
+@[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
 @[simp]
-theorem leibniz
-    (x y : A) :
-    D (x * y) = D x * y + x * D y :=
-  D.leibniz' x y
+theorem map_zero : D 0 = 0 := by
+  have h : D (0 + 0) = D 0 + D 0 := D.map_add 0 0
+  rw [add_zero] at h
+  exact (self_eq_add_left.mp h.symm).symm
 
 @[simp]
-theorem map_zero :
-    D 0 = 0 := by
-  have h : D 0 = D 0 + D 0 := by
-    calc
-      D 0 = D (0 + 0) := by rw [add_zero]
-      _ = D 0 + D 0 := D.map_add 0 0
-  have h_sub : D 0 - D 0 = (D 0 + D 0) - D 0 := by rw [← h]
-  rw [sub_self, add_sub_cancel_right] at h_sub
-  exact h_sub.symm
-
-@[simp]
-theorem map_neg
-    (x : A) :
-    D (-x) = - D x := by
-  have h : D x + D (-x) = 0 := by
-    calc
-      D x + D (-x) = D (x + -x) := (D.map_add x (-x)).symm
-      _ = D 0 := by rw [add_neg_cancel]
-      _ = 0 := D.map_zero
+theorem map_neg (x : A) : D (-x) = - D x := by
+  have h : D (x + -x) = D x + D (-x) := D.map_add x (-x)
+  rw [add_neg_cancel, D.map_zero] at h
   exact eq_neg_of_add_eq_zero_right h
 
 @[simp]
-theorem map_sub
-    (x y : A) :
-    D (x - y) = D x - D y := by
+theorem map_sub (x y : A) : D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
 
 end Derivation
@@ -89,29 +68,21 @@ end Derivation
 def opComm (T₁ T₂ : A → A) (X : A) : A :=
   T₁ (T₂ X) - T₂ (T₁ X)
 
-@[simp]
-theorem opComm_apply
-    (T₁ T₂ : A → A) (X : A) :
-    opComm T₁ T₂ X = T₁ (T₂ X) - T₂ (T₁ X) :=
-  rfl
+@[simp] theorem opComm_apply (T₁ T₂ : A → A) (X : A) :
+    opComm T₁ T₂ X = T₁ (T₂ X) - T₂ (T₁ X) := rfl
 
 /-- The Inner Modular Generator (Reversible Thermal Time): ad_K(X) = [K, X]. -/
 def adK (K X : A) : A :=
   K * X - X * K
 
-@[simp]
-theorem adK_apply
-    (K X : A) :
-    adK K X = K * X - X * K :=
-  rfl
+@[simp] theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
 
 /-- 
   THEOREM 1: The Modular Hamiltonian generates a genuine Leibniz Derivation:
   ad_K(X * Y) = (ad_K X) * Y + X * (ad_K Y)
   This guarantees that reversible modular time preserves algebraic products.
 -/
-theorem adK_is_derivation
-    (K X Y : A) :
+theorem adK_is_derivation (K X Y : A) :
     adK K (X * Y) = (adK K X) * Y + X * (adK K Y) := by
   dsimp [adK]
   calc

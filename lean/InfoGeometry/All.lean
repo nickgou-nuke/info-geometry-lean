@@ -7444,4 +7444,5 @@ import InfoGeometry.Synthesis.OnsagerOperatorDifferentialCalculus
 import InfoGeometry.Synthesis.All
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 import InfoGeometry.Modular.ModularTimeSemigroupBridge
+import InfoGeometry.Modular.SemidirectExteriorAlgebra
 

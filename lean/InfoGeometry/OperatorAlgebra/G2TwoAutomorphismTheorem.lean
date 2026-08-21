@@ -15,8 +15,8 @@ file reads back only through a conditional theorem.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
-* Exact `F₂` split-octonion carrier cardinality.
-* Exact `G₂(2)` order arithmetic.
+* Exact `F₂` split-octonion carrier cardinality (`256`).
+* Abstract `G₂(2)` order arithmetic and order comparisons.
 * Exact order separation between `G₂(2)`/`Aut(PSU₃(3))` and `PGL₃(3)`.
 * Concrete Zorn basis multiplication laws over `F₂`.
 * Explicit outer `C₂` property finite permutation readout: degree `63`,
@@ -195,6 +195,28 @@ theorem add_self (X : SplitOctF2) :
     add X X = zero := by
   native_decide +revert
 
+/-! The concrete Boolean addition is also an additive commutative group. -/
+
+instance : Zero SplitOctF2 := ⟨zero⟩
+instance : Add SplitOctF2 := ⟨add⟩
+instance : Neg SplitOctF2 := ⟨id⟩
+
+instance : AddCommGroup SplitOctF2 where
+  sub := fun X Y => add X Y
+  neg := id
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  add_assoc := add_assoc
+  zero_add := zero_add
+  add_zero := add_zero
+  add_comm := add_comm
+  sub_eq_add_neg := by
+    intro X Y
+    rfl
+  neg_add_cancel := by
+    intro X
+    exact add_self X
+
 theorem mul_add (X Y Z : SplitOctF2) :
     mul X (add Y Z) = add (mul X Y) (mul X Z) := by
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
@@ -288,7 +310,9 @@ theorem up0_mul_down0 : mul up0 down0 = ePlus := rfl
 
 theorem down0_mul_up0 : mul down0 up0 = eMinus := rfl
 
-/-- The order of the finite Chevalley group `G₂(2)`. -/
+/-- Reference value for the abstract finite Chevalley order formula.
+
+This constant is not asserted to be the cardinality of `SplitOctF2Aut`. -/
 def g2twoOrder : Nat := 12096
 
 /-- The order of the derived simple subgroup `G₂(2)' ≅ PSU₃(3)`. -/
@@ -389,10 +413,11 @@ noncomputable instance : Fintype SplitOctF2Aut := by
 /--
 The theorem-level finite classification readout.
 
-The premise is the explicit enumeration property produced by
-`tools/sympy/g2_2_automorphism_theorem.py`: the chosen finite
-unital additive/multiplicative equivalences of the Bool carrier have been
-counted, and the count is `12096`.
+The premise is an explicit enumeration theorem for the concrete carrier:
+the chosen finite unital additive/multiplicative equivalences of the Bool
+carrier have cardinality `12096`.  This file does not prove that premise;
+without it, the theorem below is not an identification of the concrete
+automorphism carrier with the abstract Chevalley order.
 -/
 theorem aut_splitOctF2_card_eq_g2twoOrder_from_enumeration
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :

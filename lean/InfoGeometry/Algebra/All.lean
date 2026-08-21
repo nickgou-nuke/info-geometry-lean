@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics
+import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AkivisLeftRegularBridge
@@ -143,6 +144,7 @@ import InfoGeometry.Algebra.LevGFQT
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.ChiralZornBasisSoldering
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
+import InfoGeometry.Algebra.ChiralCARTransport
 import InfoGeometry.Algebra.JordanTripleTKK
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Algebra.FiveGradedLieAntisymmetry

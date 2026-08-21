@@ -232,6 +232,57 @@ theorem canonical_derivation_exponential_packet (D : canonicalZornDerivations) (
     zornFlowMulEquiv D t (X * Y) = zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y := by
   exact map_mul (zornFlowMulEquiv D t) X Y
 
+/-! Algebraic relations transported by the multiplicative flow. -/
+
+def zornAnticommutator (X Y : CZ) : CZ := X * Y + Y * X
+
+theorem zornFlow_map_anticommutator
+    (D : canonicalZornDerivations) (t : ℝ) (X Y : CZ) :
+    zornFlowLinearEquiv D.1 t (zornAnticommutator X Y) =
+      zornAnticommutator (zornFlowLinearEquiv D.1 t X)
+        (zornFlowLinearEquiv D.1 t Y) := by
+  change zornFlowLinearEquiv D.1 t (X * Y + Y * X) =
+    zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t Y +
+      zornFlowLinearEquiv D.1 t Y * zornFlowLinearEquiv D.1 t X
+  rw [(zornFlowLinearEquiv D.1 t).map_add,
+    zornFlow_map_mul D.1 D.2 t X Y,
+    zornFlow_map_mul D.1 D.2 t Y X]
+
+theorem zornFlow_preserves_nilpotent
+    (D : canonicalZornDerivations) (t : ℝ) (X : CZ)
+    (hX : X * X = 0) :
+    zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t X = 0 := by
+  rw [← zornFlow_map_mul D.1 D.2 t X X, hX]
+  exact (zornFlowLinearEquiv D.1 t).map_zero
+
+theorem zornFlow_preserves_idempotent
+    (D : canonicalZornDerivations) (t : ℝ) (X : CZ)
+    (hX : X * X = X) :
+    zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t X =
+      zornFlowLinearEquiv D.1 t X := by
+  rw [← zornFlow_map_mul D.1 D.2 t X X, hX]
+
+theorem zornFlow_preserves_anticommutator_eq
+    (D : canonicalZornDerivations) (t : ℝ) (X Y C : CZ)
+    (hXY : zornAnticommutator X Y = C) :
+    zornAnticommutator (zornFlowLinearEquiv D.1 t X)
+        (zornFlowLinearEquiv D.1 t Y) =
+      zornFlowLinearEquiv D.1 t C := by
+  rw [← zornFlow_map_anticommutator D t X Y, hXY]
+
+theorem canonical_derivation_fixes_scalar_unit
+    (D : canonicalZornDerivations) (c : ℝ) :
+    D.1 (c • (1 : CZ)) = 0 := by
+  rw [map_smul]
+  have h := D.2 1 1
+  simp only [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_one,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.one_mul] at h
+  have hone : D.1 (1 : CZ) = 0 := by
+    have hcancel : (0 : CZ) = D.1 (1 : CZ) :=
+      add_left_cancel (by simpa using h)
+    exact hcancel.symm
+  rw [hone, smul_zero]
+
 /-- If `D X = 0`, then the Zorn flow fixes `X`: `Φ_t X = X`. -/
 theorem zornFlowLinearEquiv_fixed_of_derivation_eq_zero
     (D : EndCZ)

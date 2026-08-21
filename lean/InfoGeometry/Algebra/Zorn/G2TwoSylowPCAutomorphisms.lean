@@ -146,6 +146,20 @@ theorem pc3Aut_sq_eq_pc6Aut : pc3Aut * pc3Aut = pc6Aut := by
   intro X
   exact pc3_sq X
 
+theorem pc2Aut_inv_eq : pc2Aut⁻¹ = pc6Aut * pc2Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc6Fun (pc2Fun X) = pc2Fun (pc6Fun X)
+  exact (pc2_pc6 X).symm
+
+theorem pc3Aut_inv_eq : pc3Aut⁻¹ = pc6Aut * pc3Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc6Fun (pc3Fun X) = pc3Fun (pc6Fun X)
+  exact (pc3_pc6 X).symm
+
 theorem pc2Aut_pow_four : pc2Aut ^ 4 = 1 := by
   calc
     pc2Aut ^ 4 = (pc2Aut * pc2Aut) * (pc2Aut * pc2Aut) := by

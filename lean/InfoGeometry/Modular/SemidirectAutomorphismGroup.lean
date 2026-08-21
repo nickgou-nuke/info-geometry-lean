@@ -58,10 +58,6 @@ def inv (G: SemidirectGroup A) : SemidirectGroup A where
   aut  := G.aut.symm
   unit := (mapUnit G.aut.symm G.unit)⁻¹
 
-instance : Mul (SemidirectGroup A) := ⟨mul⟩
-instance : One (SemidirectGroup A) := ⟨one⟩
-instance : Inv (SemidirectGroup A) := ⟨inv⟩
-
 theorem ext_iff (G₁ G₂ : SemidirectGroup A) :
     G₁ = G₂ ↔ G₁.aut = G₂.aut ∧ G₁.unit = G₂.unit := by -- uses G₁ G₂
   constructor
@@ -74,7 +70,7 @@ theorem ext_iff (G₁ G₂ : SemidirectGroup A) :
     rfl
 
 theorem mul_assoc (G₁ G₂ G₃ : SemidirectGroup A) :
-    (G₁ * G₂) * G₃ = G₁ * (G₂ * G₃) := by -- uses G₁ G₂ G₃
+    mul (mul G₁ G₂) G₃ = mul G₁ (mul G₂ G₃) := by -- uses G₁ G₂ G₃
   apply (ext_iff _ _).mpr
   constructor
   · rfl
@@ -83,7 +79,7 @@ theorem mul_assoc (G₁ G₂ G₃ : SemidirectGroup A) :
     rw [mapUnit_mul, mapUnit_trans, _root_.mul_assoc]
 
 @[simp]
-theorem one_mul (G: SemidirectGroup A) : 1 * G = G := by -- uses G
+theorem one_mul (G: SemidirectGroup A) : mul one G = G := by -- uses G
   apply (ext_iff _ _).mpr
   constructor
   · rfl
@@ -91,7 +87,7 @@ theorem one_mul (G: SemidirectGroup A) : 1 * G = G := by -- uses G
     rw [mapUnit_refl, _root_.one_mul]
 
 @[simp]
-theorem mul_one (G: SemidirectGroup A) : G * 1 = G := by -- uses G
+theorem mul_one (G: SemidirectGroup A) : mul G one = G := by -- uses G
   apply (ext_iff _ _).mpr
   constructor
   · rfl
@@ -99,7 +95,7 @@ theorem mul_one (G: SemidirectGroup A) : G * 1 = G := by -- uses G
     rw [mapUnit_one, _root_.mul_one]
 
 @[simp]
-theorem mul_left_inv (G: SemidirectGroup A) : G⁻¹ * G = 1 := by -- uses G
+theorem mul_left_inv (G: SemidirectGroup A) : mul (inv G) G = one := by -- uses G
   apply (ext_iff _ _).mpr
   constructor
   · exact RingEquiv.ext (fun x => G.aut.trans_apply G.aut.symm x ▸ G.aut.symm_apply_apply x)
@@ -107,7 +103,7 @@ theorem mul_left_inv (G: SemidirectGroup A) : G⁻¹ * G = 1 := by -- uses G
     exact inv_mul_cancel _
 
 @[simp]
-theorem mul_right_inv (G: SemidirectGroup A) : G * G⁻¹ = 1 := by -- uses G
+theorem mul_right_inv (G: SemidirectGroup A) : mul G (inv G) = one := by -- uses G
   apply (ext_iff _ _).mpr
   constructor
   · exact RingEquiv.ext (fun x => G.aut.symm.trans_apply G.aut x ▸ G.aut.apply_symm_apply x)
@@ -120,6 +116,15 @@ theorem mul_right_inv (G: SemidirectGroup A) : G * G⁻¹ = 1 := by -- uses G
       rw [h_trans, h_symm, mapUnit_refl]
     rw [h_cancel]
     exact mul_inv_cancel _
+
+instance : Group (SemidirectGroup A) where
+  mul := mul
+  mul_assoc := mul_assoc
+  one := one
+  one_mul := one_mul
+  mul_one := mul_one
+  inv := inv
+  inv_mul_cancel := mul_left_inv
 
 end SemidirectGroup
 
@@ -181,18 +186,18 @@ theorem action_on_center (G: SemidirectGroup A) (x: A)
 
 theorem cartan_commuting_pair (g: RingEquiv A A) (u: Aˣ)
     (h_fix: SemidirectGroup.mapUnit g u = u) :
-    SemidirectGroup.mul ⟨g, 1⟩ ⟨RingEquiv.refl A, u⟩ = ⟨g, u⟩ ∧
-    SemidirectGroup.mul ⟨RingEquiv.refl A, u⟩ ⟨g, 1⟩ = ⟨g, u⟩ := by -- uses g u h_fix
+    (⟨g, 1⟩ : SemidirectGroup A) * ⟨RingEquiv.refl A, u⟩ = ⟨g, u⟩ ∧
+    (⟨RingEquiv.refl A, u⟩ : SemidirectGroup A) * ⟨g, 1⟩ = ⟨g, u⟩ := by -- uses g u h_fix
   constructor
   · apply (SemidirectGroup.ext_iff _ _).mpr
     constructor
     · rfl
-    · dsimp [SemidirectGroup.mul]
+    · change (1 : Aˣ) * SemidirectGroup.mapUnit g u = u
       rw [_root_.one_mul, h_fix]
   · apply (SemidirectGroup.ext_iff _ _).mpr
     constructor
     · rfl
-    · dsimp [SemidirectGroup.mul]
+    · change u * SemidirectGroup.mapUnit (RingEquiv.refl A) 1 = u
       rw [SemidirectGroup.mapUnit_one, _root_.mul_one]
 
 end InfoGeometry.Modular.Group

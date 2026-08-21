@@ -11,7 +11,7 @@ This module formalizes:
      D_{-log}(x, y) = (-log x) - (-log y) - (-y⁻¹)(x - y).
 3. THEOREM (Exact Equivalence): D_{-log}(x, y) = d_IS(x, y).
 4. THEOREM (Strict Non-Negativity): d_IS(x, y) ≥ 0 with d_IS(x, x) = 0.
-5. THEOREM (Weyl Scale Invariance): d_IS(c * x, c * y) = d_IS(x, y) for all c > 0.
+5. THEOREM (Weyl Scale Invariance): d_IS(c*x, c*y) = d_IS(x, y) for all c > 0.
 
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
@@ -54,12 +54,12 @@ theorem bregmanNegLog_eq_isDivergence (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
   dsimp [bregmanNegLog, isDivergence]
   rw [Real.log_div (ne_of_gt hx) (ne_of_gt hy)]
   have h_linear : (- y⁻¹) * (x - y) = - (x / y) + 1 := by
-    have h_cancel : y⁻¹ * y = 1 := inv_mul_cancel₀ (ne_of_gt hy)
-    have h_div : y⁻¹ * x = x / y := by rw [mul_comm, div_eq_mul_inv]
     calc
       (- y⁻¹) * (x - y) = - (y⁻¹ * (x - y)) := by ring
       _ = - (y⁻¹ * x - y⁻¹ * y) := by rw [mul_sub]
-      _ = - (x / y - 1) := by rw [h_cancel, h_div]
+      _ = - (x / y - 1) := by
+        have h_cancel : y⁻¹ * y = 1 := inv_mul_cancel₀ (ne_of_gt hy)
+        rw [h_cancel, mul_comm, div_eq_mul_inv]
       _ = - (x / y) + 1 := by ring
   rw [h_linear]
   ring
@@ -106,7 +106,7 @@ PART 4: Weyl Scale Invariance
     d_IS(c * x, c * y) = d_IS(x, y)  for all c > 0.
 -/
 theorem isDivergence_weyl_scale_invariant
-    (x y c : ℝ) (hc : 0 < c) :
+    (x y c : ℝ) (_hx : 0 < x) (_hy : 0 < y) (hc : 0 < c) :
     isDivergence (c * x) (c * y) = isDivergence x y := by
   dsimp [isDivergence]
   rw [mul_div_mul_left x y (ne_of_gt hc)]

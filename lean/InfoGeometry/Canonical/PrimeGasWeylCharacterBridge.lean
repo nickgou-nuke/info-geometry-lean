@@ -82,11 +82,24 @@ theorem souriau_entropy_eq_primeGas_entropy :
     B.souriau.entropyReadout = B.primeGas.entropyReadout :=
   B.entropy_eq
 
-/-- The Weyl-character readout is the stored prime-gas character readout. -/
+/-- Canonical theorem-backed constructor from prime-gas data. -/
+def ofPrimeGas (P : PrimeGasWeylData) : PrimeGasWeylCharacterBridge where
+  primeGas := P
+  souriau := ⟨P.beta, P.entropyReadout⟩
+  beta_eq := rfl
+  entropy_eq := rfl
+
 @[simp]
-theorem weylCharacter_eq_primeGas_character :
-    B.weylCharacter = B.primeGas.characterReadout :=
-  B.weylCharacter_eq
+theorem ofPrimeGas_beta (P : PrimeGasWeylData) :
+    (ofPrimeGas P).souriau.beta = P.beta := rfl
+
+@[simp]
+theorem ofPrimeGas_entropy (P : PrimeGasWeylData) :
+    (ofPrimeGas P).souriau.entropyReadout = P.entropyReadout := rfl
+
+@[simp]
+theorem ofPrimeGas_weylCharacter (P : PrimeGasWeylData) :
+    (ofPrimeGas P).weylCharacter = P.characterReadout := rfl
 
 end PrimeGasWeylCharacterBridge
 

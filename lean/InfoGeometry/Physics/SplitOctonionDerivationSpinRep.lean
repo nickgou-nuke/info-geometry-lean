@@ -228,13 +228,21 @@ theorem rhoDerivation_trace_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 �
 theorem superTrace_rhoPair_zero (u v : Fin 3 → ℝ) :
     superTrace (rhoPair u v) = 0 := by
   dsimp [superTrace, rhoPair]
-  rw [show (∑ i : Fin 6, - rhoPair u v i i) = -∑ i : Fin 6, rhoPair u v i i by simp [sum_neg]]
-  rw [show (∑ i : Fin 6, rhoPair u v i i) = 0 by
-        dsimp [rhoPair, Matrix.trace, Matrix.diag]
-        simp only [Fin.sum_univ_six, Fin.val_zero, Fin.val_one, Fin.val_two]
-        dsimp
-        ring]
-  ring
+  apply Finset.sum_eq_zero
+  intro i _
+  fin_cases i
+  · have := (rhoPair_diagonal_zero u v 0 0).left
+    simp [this, inclPlus]
+  · have := (rhoPair_diagonal_zero u v 1 1).left
+    simp [this, inclPlus]
+  · have := (rhoPair_diagonal_zero u v 2 2).left
+    simp [this, inclPlus]
+  · have := (rhoPair_diagonal_zero u v 0 0).right
+    simp [this, inclMinus]
+  · have := (rhoPair_diagonal_zero u v 1 1).right
+    simp [this, inclMinus]
+  · have := (rhoPair_diagonal_zero u v 2 2).right
+    simp [this, inclMinus]
 
 /-- THEOREM 15 (Supertrace of ρ_𝔰𝔩₃ is twice the trace of A): -/
 theorem superTrace_rhoSL3 (A : Matrix (Fin 3) (Fin 3) ℝ) :
@@ -242,14 +250,17 @@ theorem superTrace_rhoSL3 (A : Matrix (Fin 3) (Fin 3) ℝ) :
   dsimp [superTrace, rhoSL3, Matrix.trace, Matrix.diag, Matrix.transpose]
   simp only [Fin.sum_univ_six, Fin.val_zero, Fin.val_one, Fin.val_two]
   dsimp
+  rw [show (∑ i : Fin 3, A i i) = A 0 0 + A 1 1 + A 2 2 by
+        dsimp [Matrix.trace, Matrix.diag]
+        simp [Fin.sum_univ_three]]
   ring
 
 /-- THEOREM 16 (Supertrace of the full BdG derivation): -/
 theorem superTrace_rhoDerivation (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 → ℝ) :
     superTrace (rhoDerivation A u v) = 2 * Matrix.trace A := by
   dsimp [rhoDerivation, superTrace]
-  rw [superTrace_rhoSL3]
-  rw [superTrace_rhoPair_zero]
+  rw [Finset.sum_add]
+  rw [superTrace_rhoSL3, superTrace_rhoPair_zero]
   ring
 
 end InfoGeometry.Physics.SplitOctonionSpinRep

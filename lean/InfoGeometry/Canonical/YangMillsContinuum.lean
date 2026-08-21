@@ -264,9 +264,15 @@ theorem modularAutomorphismGroup_commute_iff
     constructor
     · intro h
       apply e.injective
-      rw [← e.map_mul, ← e.map_mul, h]
+      calc
+        e (A * B) = e A * e B := _root_.map_mul e A B
+        _ = e B * e A := h
+        _ = e (B * A) := (_root_.map_mul e B A).symm
     · intro h
-      rw [e.map_mul, e.map_mul, h]
+      calc
+        e A * e B = e (A * B) := (_root_.map_mul e A B).symm
+        _ = e (B * A) := congrArg e h
+        _ = e B * e A := _root_.map_mul e B A
   simpa [e, modularAutomorphismGroup] using he
 
 /--

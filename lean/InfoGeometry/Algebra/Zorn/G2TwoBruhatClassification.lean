@@ -15,7 +15,7 @@ abbrev WeylG2 := ZMod 6 × Bool
 
 /-- The 12-element Weyl parameter type has cardinality 12. -/
 theorem weylG2_card : Fintype.card WeylG2 = 12 := by
-  decide
+  norm_num [Fintype.card_prod, ZMod.card]
 
 /-- The 12 Coxeter lengths for W(G₂) sorted along the cyclotomic orbit. -/
 def weylLengthsList : List ℕ :=

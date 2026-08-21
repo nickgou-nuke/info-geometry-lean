@@ -130,6 +130,46 @@ def pc3Equiv : SplitOctF2 ≃ SplitOctF2 where
 def pc3Aut : SplitOctF2Aut :=
   ⟨pc3Equiv, pc3_one, pc3_add, pc3_mul⟩
 
+/-! The two non-involutory PC generators have square `pc6Aut`, as in the
+    CAS power relations.  These lemmas keep the relative PC orders separate
+    from the actual orders of the concrete carrier automorphisms. -/
+
+theorem pc2Aut_sq_eq_pc6Aut : pc2Aut * pc2Aut = pc6Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  exact pc2_sq X
+
+theorem pc3Aut_sq_eq_pc6Aut : pc3Aut * pc3Aut = pc6Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  exact pc3_sq X
+
+theorem pc2Aut_pow_four : pc2Aut ^ 4 = 1 := by
+  calc
+    pc2Aut ^ 4 = (pc2Aut * pc2Aut) * (pc2Aut * pc2Aut) := by
+      simp [pow_succ, mul_assoc]
+    _ = pc6Aut * pc6Aut := by rw [pc2Aut_sq_eq_pc6Aut]
+    _ = 1 := by
+      apply Subtype.ext
+      apply Equiv.ext
+      intro X
+      change pc6Fun (pc6Fun X) = X
+      exact pc6_sq X
+
+theorem pc3Aut_pow_four : pc3Aut ^ 4 = 1 := by
+  calc
+    pc3Aut ^ 4 = (pc3Aut * pc3Aut) * (pc3Aut * pc3Aut) := by
+      simp [pow_succ, mul_assoc]
+    _ = pc6Aut * pc6Aut := by rw [pc3Aut_sq_eq_pc6Aut]
+    _ = 1 := by
+      apply Subtype.ext
+      apply Equiv.ext
+      intro X
+      change pc6Fun (pc6Fun X) = X
+      exact pc6_sq X
+
 theorem pc6Aut_ne_one : pc6Aut ≠ 1 := by
   intro h
   have hx := congrArg (fun f : SplitOctF2Aut => (f.1 (basis8 7)).y0) h

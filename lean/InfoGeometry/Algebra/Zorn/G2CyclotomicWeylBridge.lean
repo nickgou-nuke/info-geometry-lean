@@ -50,14 +50,14 @@ unique transport parameter. -/
 theorem sector_section_coordinate (r : Root) :
     rotation r.2 (sectorSection (sector r)) = r := by
   rcases r with ⟨b, k⟩
-  rfl
+  simp [rotation, sectorSection, sector]
 
 theorem sector_section_coordinate_unique (r : Root) (k : ZMod 6)
     (h : rotation k (sectorSection (sector r)) = r) :
     k = r.2 := by
   rcases r with ⟨b, r₂⟩
   change (b, 0 + k) = (b, r₂) at h
-  exact sub_eq_zero.mp (by simpa using congrArg Prod.snd h)
+  simpa using congrArg Prod.snd h
 
 theorem sector_crossSection_unique (r : Root) :
     ∃! k : ZMod 6,

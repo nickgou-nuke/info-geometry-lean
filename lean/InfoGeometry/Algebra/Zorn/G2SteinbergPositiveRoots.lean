@@ -1,17 +1,20 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
+import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import Mathlib.Tactic
 
 /-!
-# Steinberg Positive Root Automorphisms of G₂(2)
+# Initial Steinberg Root Automorphisms of G₂(2)
 
-This module constructs the explicit unipotent root automorphisms $u_{\alpha} \in \operatorname{SplitOctF2Aut}$
-for positive roots of $G_2$ over $\mathbb{F}_2$ and proves the native Steinberg commutator relation:
+This module constructs three explicit unipotent root automorphisms in
+`SplitOctF2Aut` and proves their native relations.  It does not yet construct
+all six positive-root groups or the full unipotent radical:
 
 $$[u_S, u_L] = u_S u_L u_S u_L = u_{\alpha_1 + \alpha_2}$$
 
-All proofs are native Mathlib kernel-checked theorems with 0 `sorry`s.
+All proofs in this initial packet are native Mathlib kernel-checked theorems
+with 0 `sorry`s.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2SteinbergRoots
@@ -90,6 +93,24 @@ theorem uMid_sq : uMid * uMid = 1 := by
   intro i
   fin_cases i <;> decide
 
+theorem uMid_ne_one : uMid ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 4)) h
+  revert h0
+  decide
+
+theorem uMid_ne_uShort : uMid ≠ uShort := by
+  intro h
+  have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 4)) h
+  revert h0
+  decide
+
+theorem uMid_ne_uLong : uMid ≠ uLong := by
+  intro h
+  have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 4)) h
+  revert h0
+  decide
+
 /-- 🏆 THEOREM 2: Exact G₂ Steinberg Commutator Relation over 𝔽₂:
     [u_S, u_L] = u_S * u_L * u_S * u_L = u_{α₁ + α₂} -/
 theorem steinberg_commutator_short_long :
@@ -113,5 +134,110 @@ theorem uMid_commutes_uLong :
   apply automorphism_ext_of_basis
   intro i
   fin_cases i <;> decide
+
+theorem uMid_mem_candidateRootSubgroup :
+    uMid ∈ candidateRootSubgroup := by
+  rw [← steinberg_commutator_short_long]
+  have hs : uShort ∈ candidateRootSubgroup := by
+    change unipotentShortAut true ∈ candidateRootSubgroup
+    exact candidateRootFamily_mem 0
+  have hl : uLong ∈ candidateRootSubgroup := by
+    change unipotentLongAut true ∈ candidateRootSubgroup
+    exact candidateRootFamily_mem 3
+  exact candidateRootSubgroup.mul_mem
+    (candidateRootSubgroup.mul_mem
+      (candidateRootSubgroup.mul_mem hs hl) hs) hl
+
+theorem simpleRootCommutator_eq_uMid :
+    simpleRootCommutator = uMid := by
+  exact steinberg_commutator_short_long
+
+/-! Conjugated derived-root candidates.  These are genuine automorphisms, but
+their independence from the preceding packet is deliberately not asserted. -/
+
+noncomputable def uMidCycle : SplitOctF2Aut :=
+  conjugateAut cycle012Aut uMid
+
+noncomputable def uMidCycleSq : SplitOctF2Aut :=
+  conjugateAut (cycle012Aut * cycle012Aut) uMid
+
+noncomputable def uMidOrbit : Fin 3 → SplitOctF2Aut
+  | 0 => uMid
+  | 1 => uMidCycle
+  | 2 => uMidCycleSq
+
+theorem uMidOrbit_injective :
+    Function.Injective uMidOrbit := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    have h0 := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
+    have h1 := congrArg (fun f : SplitOctF2Aut => f.1 up1) h
+    have h2 := congrArg (fun f : SplitOctF2Aut => f.1 up2) h
+    revert h0 h1 h2
+    decide
+
+theorem uMidCycle_sq : uMidCycle * uMidCycle = 1 := by
+  exact conjugateAut_sq cycle012Aut uMid uMid_sq
+
+theorem uMidCycleSq_sq : uMidCycleSq * uMidCycleSq = 1 := by
+  exact conjugateAut_sq (cycle012Aut * cycle012Aut) uMid uMid_sq
+
+theorem uMidOrbit_zero_one_noncommuting :
+    uMidOrbit 0 * uMidOrbit 1 ≠ uMidOrbit 1 * uMidOrbit 0 := by
+  intro h
+  have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 4)) h
+  have h1 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 6)) h
+  revert h0 h1
+  decide
+
+theorem uMidCycle_ne_one : uMidCycle ≠ (1 : SplitOctF2Aut) := by
+  exact conjugateAut_ne_one cycle012Aut uMid uMid_ne_one
+
+theorem uMidCycleSq_ne_one : uMidCycleSq ≠ (1 : SplitOctF2Aut) := by
+  exact conjugateAut_ne_one (cycle012Aut * cycle012Aut) uMid uMid_ne_one
+
+/-!
+=============================================================================
+PART 4: Ordered 3-Root Unipotent Words and Exact Injectivity
+=============================================================================
+-/
+
+/-- The 8 ordered unipotent words from the 3 root elements uShort, uLong, uMid -/
+def unipotentWord3 (b : Bool × Bool × Bool) : SplitOctF2Aut :=
+  (if b.1 then uShort else 1) *
+  (if b.2.1 then uLong else 1) *
+  (if b.2.2 then uMid else 1)
+
+theorem unipotentWord3_b1 (b : Bool × Bool × Bool) :
+    ((unipotentWord3 b).1 up1).x0 = b.1 := by
+  rcases b with ⟨b1, b2, b3⟩
+  fin_cases b1 <;> fin_cases b2 <;> fin_cases b3 <;> rfl
+
+theorem unipotentWord3_b2 (b : Bool × Bool × Bool) :
+    ((unipotentWord3 b).1 up2).x1 = b.2.1 := by
+  rcases b with ⟨b1, b2, b3⟩
+  fin_cases b1 <;> fin_cases b2 <;> fin_cases b3 <;> rfl
+
+theorem unipotentWord3_b3 (b : Bool × Bool × Bool) :
+    ((unipotentWord3 b).1 up2).x0 = b.2.2 := by
+  rcases b with ⟨b1, b2, b3⟩
+  fin_cases b1 <;> fin_cases b2 <;> fin_cases b3 <;> rfl
+
+/-- 🏆 THEOREM: The 8 unipotent words formed by uShort, uLong, uMid are strictly distinct! -/
+theorem unipotentWord3_injective : Function.Injective unipotentWord3 := by
+  intro b c h
+  have h1 : ((unipotentWord3 b).1 up1).x0 = ((unipotentWord3 c).1 up1).x0 := by rw [h]
+  rw [unipotentWord3_b1 b, unipotentWord3_b1 c] at h1
+  have h2 : ((unipotentWord3 b).1 up2).x1 = ((unipotentWord3 c).1 up2).x1 := by rw [h]
+  rw [unipotentWord3_b2 b, unipotentWord3_b2 c] at h2
+  have h3 : ((unipotentWord3 b).1 up2).x0 = ((unipotentWord3 c).1 up2).x0 := by rw [h]
+  rw [unipotentWord3_b3 b, unipotentWord3_b3 c] at h3
+  rcases b with ⟨b1, b2, b3⟩
+  rcases c with ⟨c1, c2, c3⟩
+  dsimp at h1 h2 h3
+  subst h1 h2 h3
+  rfl
 
 end InfoGeometry.Algebra.Zorn.G2SteinbergRoots

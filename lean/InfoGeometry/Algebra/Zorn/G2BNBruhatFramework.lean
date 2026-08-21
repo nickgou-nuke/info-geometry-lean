@@ -206,6 +206,7 @@ theorem g2weylGroup_smul_admissible (w : g2weylGroup)
 theorem g2weylGroup_stabilizer_standard_eq_bot :
     MulAction.stabilizer g2weylGroup standardAdmissibleBasis7 = ⊥ := by
   ext w
+  simp only [MulAction.mem_stabilizer_iff, Subgroup.mem_bot]
   change (w : SplitOctF2Aut) • standardAdmissibleBasis7 =
     standardAdmissibleBasis7 ↔ w = 1
   have hiff : (w : SplitOctF2Aut) • standardAdmissibleBasis7 =

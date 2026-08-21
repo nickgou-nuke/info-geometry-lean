@@ -14,8 +14,11 @@ Print(Product(RelativeOrders(pcgs)));
 Print("\n");
 mat := fail;
 support := fail;
-Print("PC_RELORD=");
+Print("PC_RELATIVE_ORDERS=");
 Print(RelativeOrders(pcgs));
+Print("\n");
+Print("PC_ACTUAL_ORDERS=");
+Print(List(preimages, Order));
 Print("\n");
 for i in [1..Length(pcgs)] do
   relation := Image(psi, preimages[i]^RelativeOrders(pcgs)[i]);

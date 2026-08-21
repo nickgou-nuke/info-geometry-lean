@@ -1,7 +1,10 @@
 import Mathlib.Data.Nat.Basic
+import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
+
+open Polynomial
 
 /-- The length distribution of the 12 elements of the dihedral Weyl group W(G₂) ≅ D₁₂. -/
 def weylG2Lengths : List ℕ :=
@@ -19,6 +22,25 @@ def poincarePolynomialG2 (q : ℕ) : ℕ :=
 theorem poincarePolynomialG2_factor (q : ℕ) :
     poincarePolynomialG2 q = (1 + q) * (1 + q + q^2 + q^3 + q^4 + q^5) := by
   dsimp [poincarePolynomialG2]
+  ring
+
+/-! The same factorization over `ℤ[X]` records the cyclotomic content of the
+abstract Weyl length polynomial.  This is only a polynomial identity; it does
+not identify the polynomial with a concrete carrier cardinality. -/
+
+noncomputable def poincarePolynomialG2Poly : Polynomial ℤ :=
+  1 + 2 * X + 2 * X^2 + 2 * X^3 + 2 * X^4 + 2 * X^5 + X^6
+
+theorem poincarePolynomialG2Poly_eq_cyclotomic_product :
+    poincarePolynomialG2Poly =
+      (X + 1)^2 * (X^2 + X + 1) * (X^2 - X + 1) := by
+  dsimp [poincarePolynomialG2Poly]
+  ring
+
+theorem poincarePolynomialG2Poly_eq_length_factor :
+    poincarePolynomialG2Poly =
+      (X + 1) * (1 + X + X^2 + X^3 + X^4 + X^5) := by
+  dsimp [poincarePolynomialG2Poly]
   ring
 
 /-- THEOREM: At q = 2, the Poincaré polynomial evaluates to 189. -/

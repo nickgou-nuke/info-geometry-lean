@@ -76,7 +76,7 @@ theorem dissipatorTerm_star
       half * (star V_k * V_k * star X + star X * star V_k * V_k) := by
     rw [h_half_comm]
     simp only [mul_assoc]
-    abel
+    abel_nf
   rw [h_comm1]
   simp only [mul_assoc]
 

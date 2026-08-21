@@ -7454,4 +7454,8 @@ import InfoGeometry.Modular.Choi
 import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
 import InfoGeometry.Modular.QuantumDataProcessingInequality
 import InfoGeometry.Modular.EntropyMonotonicity
+import InfoGeometry.Architecture.CartanCosetManifold
+import InfoGeometry.Architecture.CartanNomizuCurvature
+import InfoGeometry.Architecture.CartanSectionalCurvature
+import InfoGeometry.Architecture.CartanFisherRaoIdentification
 

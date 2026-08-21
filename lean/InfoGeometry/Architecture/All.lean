@@ -1,6 +1,10 @@
 import InfoGeometry.Architecture.SpinFactor
 import InfoGeometry.Architecture.SymmetricSpace
 import InfoGeometry.Architecture.OctonionicFlow
+import InfoGeometry.Architecture.CartanCosetManifold
+import InfoGeometry.Architecture.CartanNomizuCurvature
+import InfoGeometry.Architecture.CartanSectionalCurvature
+import InfoGeometry.Architecture.CartanFisherRaoIdentification
 
 namespace InfoGeometry
 

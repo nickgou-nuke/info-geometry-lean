@@ -247,6 +247,8 @@ import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
+import InfoGeometry.Algebra.Zorn.FiniteChevalleyG2TwoBridge
+import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
 /-!
 # InfoGeometry.Algebra.All
 

@@ -50,6 +50,7 @@ def add2 (x y : F2Bit) : F2Bit := Bool.xor x y
 def mul2 (x y : F2Bit) : F2Bit := x && y
 
 /-- Eight-coordinate split Zorn octonion over `F₂`. -/
+@[ext]
 structure SplitOctF2 where
   a : F2Bit
   b : F2Bit
@@ -169,28 +170,92 @@ def add (X Y : SplitOctF2) : SplitOctF2 :=
   ⟨add2 X.a Y.a, add2 X.b Y.b, add2 X.x0 Y.x0, add2 X.x1 Y.x1,
     add2 X.x2 Y.x2, add2 X.y0 Y.y0, add2 X.y1 Y.y1, add2 X.y2 Y.y2⟩
 
-theorem add_zero (X : SplitOctF2) : add X zero = X := by
+theorem add_zero (X : SplitOctF2) :
+    add X zero = X := by
   native_decide +revert
 
-theorem zero_add (X : SplitOctF2) : add zero X = X := by
+theorem zero_add (X : SplitOctF2) :
+    add zero X = X := by
   native_decide +revert
 
-theorem add_comm (X Y : SplitOctF2) : add X Y = add Y X := by
-  native_decide +revert
+theorem add_comm (X Y : SplitOctF2) :
+    add X Y = add Y X := by
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  ext <;> (dsimp [add, add2]; simp [Bool.xor_comm])
 
-theorem add_assoc (X Y Z : SplitOctF2) : add (add X Y) Z = add X (add Y Z) := by
-  native_decide +revert
+theorem add_assoc (X Y Z : SplitOctF2) :
+    add (add X Y) Z = add X (add Y Z) := by
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
+  ext <;> (dsimp [add, add2]; simp)
 
-theorem add_self (X : SplitOctF2) : add X X = zero := by
+theorem add_self (X : SplitOctF2) :
+    add X X = zero := by
   native_decide +revert
 
 theorem mul_add (X Y Z : SplitOctF2) :
     mul X (add Y Z) = add (mul X Y) (mul X Z) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
+  ext
+  · dsimp [mul, add, add2, mul2, dot3]
+    revert a1 a2 a3 x01 x11 x21 y02 y12 y22 y03 y13 y23
+    decide
+  · dsimp [mul, add, add2, mul2, dot3]
+    revert b1 b2 b3 y01 y11 y21 x02 x12 x22 x03 x13 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross0]
+    revert a1 b2 b3 x01 x02 x03 y11 y21 y12 y22 y13 y23
+    decide
+  · dsimp [mul, add, add2, mul2, cross1]
+    revert a1 b2 b3 x11 x12 x13 y01 y21 y02 y22 y03 y23
+    decide
+  · dsimp [mul, add, add2, mul2, cross2]
+    revert a1 b2 b3 x21 x22 x23 y01 y11 y02 y12 y03 y13
+    decide
+  · dsimp [mul, add, add2, mul2, cross0]
+    revert b1 a2 a3 y01 y02 y03 x11 x21 x12 x22 x13 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross1]
+    revert b1 a2 a3 y11 y12 y13 x01 x21 x02 x22 x03 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross2]
+    revert b1 a2 a3 y21 y22 y23 x01 x11 x02 x12 x03 x13
+    decide
 
 theorem add_mul (X Y Z : SplitOctF2) :
     mul (add X Y) Z = add (mul X Z) (mul Y Z) := by
-  native_decide +revert
+  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
+  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
+  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
+  ext
+  · dsimp [mul, add, add2, mul2, dot3]
+    revert a1 a2 a3 x01 x11 x21 x02 x12 x22 y03 y13 y23
+    decide
+  · dsimp [mul, add, add2, mul2, dot3]
+    revert b1 b2 b3 y01 y11 y21 y02 y12 y22 x03 x13 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross0]
+    revert a1 a2 b3 x01 x02 x03 y11 y21 y12 y22 y13 y23
+    decide
+  · dsimp [mul, add, add2, mul2, cross1]
+    revert a1 a2 b3 x11 x12 x13 y01 y21 y02 y22 y03 y23
+    decide
+  · dsimp [mul, add, add2, mul2, cross2]
+    revert a1 a2 b3 x21 x22 x23 y01 y11 y02 y12 y03 y13
+    decide
+  · dsimp [mul, add, add2, mul2, cross0]
+    revert b1 b2 a3 y01 y02 y03 x11 x21 x12 x22 x13 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross1]
+    revert b1 b2 a3 y11 y12 y13 x01 x21 x02 x22 x03 x23
+    decide
+  · dsimp [mul, add, add2, mul2, cross2]
+    revert b1 b2 a3 y21 y22 y23 x01 x11 x02 x12 x03 x13
+    decide
 
 /-- The finite Zorn multiplication has the declared zero as a two-sided zero. -/
 theorem mul_zero (X : SplitOctF2) : mul X zero = zero := by
@@ -207,23 +272,17 @@ theorem one_mul (X : SplitOctF2) : mul one X = X := by
   native_decide +revert
 
 /-- Basic diagonal idempotent and orthogonality laws in the finite Zorn basis. -/
-theorem ePlus_mul_ePlus : mul ePlus ePlus = ePlus := by
-  rfl
+theorem ePlus_mul_ePlus : mul ePlus ePlus = ePlus := rfl
 
-theorem eMinus_mul_eMinus : mul eMinus eMinus = eMinus := by
-  rfl
+theorem eMinus_mul_eMinus : mul eMinus eMinus = eMinus := rfl
 
-theorem ePlus_mul_eMinus : mul ePlus eMinus = zero := by
-  rfl
+theorem ePlus_mul_eMinus : mul ePlus eMinus = zero := rfl
 
-theorem eMinus_mul_ePlus : mul eMinus ePlus = zero := by
-  rfl
+theorem eMinus_mul_ePlus : mul eMinus ePlus = zero := rfl
 
-theorem up0_mul_down0 : mul up0 down0 = ePlus := by
-  rfl
+theorem up0_mul_down0 : mul up0 down0 = ePlus := rfl
 
-theorem down0_mul_up0 : mul down0 up0 = eMinus := by
-  rfl
+theorem down0_mul_up0 : mul down0 up0 = eMinus := rfl
 
 /-- The order of the finite Chevalley group `G₂(2)`. -/
 def g2twoOrder : Nat := 12096
@@ -284,33 +343,37 @@ instance : Inv SplitOctF2Aut where
   inv f := ⟨f.1.symm, by
     rcases f.2 with ⟨hf1, hfadd, hfmul⟩
     refine ⟨?_, ?_, ?_⟩
-    · simpa using congrArg f.1.symm hf1
+    · apply f.1.injective
+      simp [hf1]
     · intro X Y
-      have h := hfadd (f.1.symm X) (f.1.symm Y)
-      simpa using congrArg f.1.symm h
+      apply f.1.injective
+      simp [hfadd]
     · intro X Y
-      have h := hfmul (f.1.symm X) (f.1.symm Y)
-      simpa using congrArg f.1.symm h⟩
+      apply f.1.injective
+      simp [hfmul]⟩
 
 instance : Group SplitOctF2Aut where
   mul_assoc f g h := by
     apply Subtype.ext
-    ext X
+    apply Equiv.ext
+    intro X
     rfl
   one_mul f := by
     apply Subtype.ext
-    ext X
+    apply Equiv.ext
+    intro X
     rfl
   mul_one f := by
     apply Subtype.ext
-    ext X
+    apply Equiv.ext
+    intro X
     rfl
   inv_mul_cancel f := by
     apply Subtype.ext
-    ext X
-    exact f.1.left_inv X
-  zpow_zero' f := by rfl
-  zpow_succ' f n := by rfl
+    apply Equiv.ext
+    intro X
+    dsimp [Mul.mul, Inv.inv, One.one, Equiv.trans]
+    exact f.1.right_inv X
 
 attribute [local instance] Classical.decEq
 

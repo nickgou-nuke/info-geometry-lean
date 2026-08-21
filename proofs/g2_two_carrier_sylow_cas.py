@@ -124,11 +124,28 @@ def main() -> None:
     if len(current) != 64:
         raise RuntimeError(f"greedy involution extraction reached {len(current)}")
     assert current <= aset
+    # A sixth involution from the same exact carrier enumeration gives a
+    # 64-element ordered binary-word chart.  This is a coordinate chart
+    # certificate, not yet a Lean proof of subgroup closure.
+    sixth = (2, 1, 64, 32, 128, 8, 4, 16)
+    assert sixth in aset
+    assert compose(sixth, sixth) == IDENTITY
+    ordered_words = set()
+    import itertools
+    for exponents in itertools.product((0, 1), repeat=6):
+        value = IDENTITY
+        for generator, exponent in zip(generators + [sixth], exponents):
+            if exponent:
+                value = compose(value, generator)
+        ordered_words.add(value)
+    assert len(ordered_words) == 64
     print(f"automorphism_count={len(auts)}")
     print(f"sylow_candidate_order={len(current)}")
-    print(f"generator_count={len(generators)}")
+    print(f"generator_count={len(generators) + 1}")
     for i, gen in enumerate(generators):
         print(f"generator_{i}=" + ",".join(map(str, gen)))
+    print("generator_5=" + ",".join(map(str, sixth)))
+    print(f"ordered_binary_word_count={len(ordered_words)}")
 
 
 if __name__ == "__main__":

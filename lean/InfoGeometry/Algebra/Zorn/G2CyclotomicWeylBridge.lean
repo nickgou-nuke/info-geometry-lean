@@ -66,6 +66,20 @@ theorem sector_crossSection_unique (r : Root) :
   intro k hk
   exact sector_section_coordinate_unique r k hk
 
+/-! The CAS six-cycle has no nontrivial stabilizer on a root sector. -/
+theorem rotation_section_free (b : Bool) (k : ZMod 6)
+    (h : rotation k (sectorSection b) = sectorSection b) :
+    k = 0 := by
+  apply sector_section_coordinate_unique (sectorSection b) k
+  simpa using h
+
+/-! The section meets each cyclic sector orbit in exactly its canonical point. -/
+theorem sectorSection_intersects_orbit_unique (b : Bool) (r : Root)
+    (hr : r.1 = b) :
+    ∃! k : ZMod 6, rotation k (sectorSection b) = r := by
+  subst b
+  exact sector_crossSection_unique r
+
 def dihedralAction : DihedralGroup 6 → Root → Root
   | r n, (b, k) => (b, k - n)
   | sr n, (b, k) => (b, n - k)

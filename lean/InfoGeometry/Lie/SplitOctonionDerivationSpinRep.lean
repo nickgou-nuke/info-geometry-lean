@@ -16,6 +16,8 @@ This module formalizes:
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
 
+set_option linter.unusedSectionVars false
+
 noncomputable section
 
 open Matrix
@@ -56,7 +58,6 @@ theorem Gamma_sq : Gamma (ι := ι) (R := R) * Gamma = 1 := by
   exact fromBlocks_one
 
 /-- THEOREM 2: Exact Reconstruction: M = M_diag + M_off. -/
-omit [Fintype ι] [DecidableEq ι] in
 theorem block_reconstruction (M : BlockMat) :
     diagComponent M + offDiagComponent M = M := by
   ext (i | i) (j | j) <;> simp [diagComponent, offDiagComponent, fromBlocks, toBlocks₁₁, toBlocks₁₂, toBlocks₂₁, toBlocks₂₂]
@@ -187,7 +188,6 @@ PART 4: Vanishing of Trace-Volume and Supertrace on the Pairing Sector
 def superTrace (M : BlockMat) : R :=
   Matrix.trace (Gamma * M)
 
-omit [DecidableEq ι] in
 @[simp]
 theorem trace_offDiagComponent (M : BlockMat) :
     Matrix.trace (offDiagComponent M) = 0 := by

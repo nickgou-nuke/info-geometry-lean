@@ -143,6 +143,67 @@ theorem automorphism_card_le_basis_maps_numeric :
       automorphism_card_le_basis_maps
     _ = 256 ^ 8 := by simp [splitOctF2_card]
 
+/-! The unit relation `1 = ePlus + eMinus` removes one free basis image. -/
+
+theorem ePlus_add_eMinus_eq_one : add ePlus eMinus = one := by
+  rfl
+
+theorem map_eMinus_from_ePlus (f : SplitOctF2Aut) :
+    f.1 eMinus = add one (f.1 ePlus) := by
+  have h := f.2.2.1 ePlus eMinus
+  rw [ePlus_add_eMinus_eq_one, f.2.1] at h
+  calc
+    f.1 eMinus = add zero (f.1 eMinus) := (zero_add _).symm
+    _ = add (add (f.1 ePlus) (f.1 ePlus)) (f.1 eMinus) := by
+      rw [add_self, zero_add]
+    _ = add (f.1 ePlus) (add (f.1 ePlus) (f.1 eMinus)) := by
+      rw [add_assoc]
+    _ = add (f.1 ePlus) one := by rw [h]
+    _ = add one (f.1 ePlus) := add_comm _ _
+
+def basis7 : Fin 7 → SplitOctF2 :=
+  ![ePlus, up0, up1, up2, down0, down1, down2]
+
+def basisRestriction7 (f : SplitOctF2Aut) : Fin 7 → SplitOctF2 :=
+  fun i => f.1 (basis7 i)
+
+theorem automorphism_ext_of_basis7
+    (f g : SplitOctF2Aut)
+    (h : ∀ i : Fin 7, f.1 (basis7 i) = g.1 (basis7 i)) :
+    f = g := by
+  apply automorphism_ext_of_basis f g
+  intro i
+  fin_cases i
+  · exact h 0
+  · change f.1 eMinus = g.1 eMinus
+    have h0 : f.1 ePlus = g.1 ePlus := by
+      simpa [basis7] using h 0
+    rw [map_eMinus_from_ePlus f, map_eMinus_from_ePlus g, h0]
+  · exact h 1
+  · exact h 2
+  · exact h 3
+  · exact h 4
+  · exact h 5
+  · exact h 6
+
+theorem basisRestriction7_injective :
+    Function.Injective basisRestriction7 := by
+  intro f g h
+  apply automorphism_ext_of_basis7 f g
+  intro i
+  exact congrFun h i
+
+theorem automorphism_card_le_basis7_maps :
+    Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 7 → SplitOctF2) := by
+  exact Fintype.card_le_of_injective basisRestriction7 basisRestriction7_injective
+
+theorem automorphism_card_le_basis7_maps_numeric :
+    Fintype.card SplitOctF2Aut ≤ 256 ^ 7 := by
+  calc
+    Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 7 → SplitOctF2) :=
+      automorphism_card_le_basis7_maps
+    _ = 256 ^ 7 := by simp [splitOctF2_card]
+
 theorem basisRestriction_preserves_mul
     (f : SplitOctF2Aut) (i j : Fin 8) :
     f.1 (mul (basis8 i) (basis8 j)) =

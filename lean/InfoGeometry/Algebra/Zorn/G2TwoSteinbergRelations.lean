@@ -19,28 +19,32 @@ def x1Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
 def x2Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   unipotentLong t X
 
-/-- r3: Short root α + β -/
+/-- Candidate coordinate involution for the label `α + β`.
+    Multiplicativity is not asserted here. -/
 def x3Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   if t then
     ⟨X.a, X.b, X.x0, add2 X.x1 X.x2, X.x2, add2 X.y0 X.y1, X.y1, X.y2⟩
   else
     X
 
-/-- r4: Short root 2α + β -/
+/-- Candidate coordinate involution for the label `2α + β`.
+    Multiplicativity is not asserted here. -/
 def x4Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   if t then
     ⟨X.a, X.b, add2 X.x0 X.x2, X.x1, X.x2, add2 X.y0 X.y2, X.y1, X.y2⟩
   else
     X
 
-/-- r5: Long root 3α + β -/
+/-- Candidate coordinate involution for the label `3α + β`.
+    Multiplicativity is not asserted here. -/
 def x5Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   if t then
     ⟨X.a, X.b, X.x0, X.x1, X.x2, X.y0, X.y1, add2 X.y2 (add2 X.x0 X.x1)⟩
   else
     X
 
-/-- r6: Long root 3α + 2β -/
+/-- Candidate coordinate involution for the label `3α + 2β`.
+    Multiplicativity is not asserted here. -/
 def x6Fun (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   if t then
     ⟨X.a, X.b, X.x0, X.x1, X.x2, add2 X.y0 (add2 X.x1 X.x2), X.y1, X.y2⟩
@@ -82,15 +86,13 @@ lemma x6_involutive (t : Bool) (X : SplitOctF2) :
   · rfl
   · ext <;> simp [x6Fun, add2_self_cancel]
 
-/-- Group commutator of two endomorphisms on SplitOctF2 -/
+/-- A fourfold composition used as a formal commutator expression. -/
 def commutator (f g : SplitOctF2 → SplitOctF2) (X : SplitOctF2) : SplitOctF2 :=
   f (g (f (g X)))
 
-/--
-THEOREM: Steinberg commutation relation between simple roots over 𝔽₂:
-  [x₁(1), x₂(1)] = x₁(1) x₂(1) x₁(1) x₂(1)
--/
-theorem x1_x2_commutator_identity (X : SplitOctF2) :
+/-- Definitional expansion of the chosen fourfold commutator expression.
+    This is not the Chevalley--Steinberg root commutator relation. -/
+theorem commutator_expands_for_x1_x2 (X : SplitOctF2) :
     commutator (x1Fun true) (x2Fun true) X =
       x1Fun true (x2Fun true (x1Fun true (x2Fun true X))) := by
   rfl

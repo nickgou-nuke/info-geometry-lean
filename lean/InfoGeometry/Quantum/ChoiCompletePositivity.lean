@@ -118,6 +118,14 @@ theorem krausChoi_posSemidef {ι : Type*} [Fintype ι] [DecidableEq ι]
       rw [Finset.sum_insert ha]
       exact Matrix.PosSemidef.add (rankOne_posSemidef _) ih
 
+/-- The Choi matrix of every finite Kraus map is positive semidefinite. -/
+theorem choiMatrix_krausMap_posSemidef
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Matrix n n ℂ) :
+    (choiMatrix (krausMap V)).PosSemidef := by
+  rw [choiMatrix_krausMap_eq_krausChoi V]
+  exact krausChoi_posSemidef V
+
 /-- Choi positivity of a finite matrix map. -/
 def ChoiPositive (E : MatrixMap (n := n)) : Prop :=
   (choiMatrix E).PosSemidef

@@ -9,24 +9,17 @@ open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
 def g2Fun (X : SplitOctF2) : SplitOctF2 :=
-  ⟨X.b ^^ X.x2 ^^ X.y0,
-    X.a ^^ X.x2 ^^ X.y0,
-    X.a ^^ X.b ^^ X.x1 ^^ X.x2 ^^ X.y2,
-    X.x2 ^^ X.y1,
-    X.y0,
-    X.x2,
-    X.x1 ^^ X.y0,
-    X.a ^^ X.b ^^ X.x0 ^^ X.x2 ^^ X.y0 ^^ X.y1⟩
+  ⟨X.a, X.b, X.x0, X.x1 ^^ X.x2, X.x2, X.y0, X.y1, X.y1 ^^ X.y2⟩
 
 def g4Fun (X : SplitOctF2) : SplitOctF2 :=
-  ⟨X.a ^^ X.x2,
-    X.b ^^ X.x2,
-    X.x0 ^^ X.y1,
-    X.x1 ^^ X.y0,
+  ⟨X.a ^^ X.x2 ^^ X.y0,
+    X.b ^^ X.x2 ^^ X.y0,
+    X.a ^^ X.b ^^ X.x0 ^^ X.x1 ^^ X.x2 ^^ X.y1,
+    X.x1 ^^ X.x2 ^^ X.y0,
     X.x2,
     X.y0,
-    X.y1,
-    X.a ^^ X.b ^^ X.x2 ^^ X.y2⟩
+    X.x2 ^^ X.y0 ^^ X.y1,
+    X.a ^^ X.b ^^ X.x1 ^^ X.y0 ^^ X.y1 ^^ X.y2⟩
 
 theorem g2Fun_add (X Y : SplitOctF2) :
     g2Fun (add X Y) = add (g2Fun X) (g2Fun Y) := by
@@ -69,6 +62,10 @@ lemma F2_mul_three (x : F2) : x * 3 = x := by
 lemma F2_mul_four (x : F2) : x * 4 = 0 := by
   fin_cases x <;> rfl
 
+lemma F2_bit_sq (x : Bool) :
+    bitToF2 x * bitToF2 x = bitToF2 x := by
+  cases x <;> simp [bitToF2]
+
 theorem g2Fun_mul (X Y : SplitOctF2) :
     g2Fun (mul X Y) = mul (g2Fun X) (g2Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
@@ -77,9 +74,8 @@ theorem g2Fun_mul (X Y : SplitOctF2) :
   all_goals
     simp only [g2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    ring_nf
-    simp only [F2_mul_two, F2_mul_three, F2_mul_four]
-    ring
+    try ring_nf
+    try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
@@ -90,8 +86,7 @@ theorem g4Fun_mul (X Y : SplitOctF2) :
     simp only [g4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
     ring_nf
-    simp only [F2_mul_two]
-    ring
+    simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun
@@ -120,5 +115,19 @@ theorem g4Aut_sq : g4Aut * g4Aut = 1 := by
   apply Subtype.ext
   apply Equiv.ext
   exact g4Fun_involutive
+
+theorem g2Aut_ne_one : g2Aut ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have hx := congrArg (fun f : SplitOctF2Aut => f.1 down1) h
+  have hy := congrArg SplitOctF2.y2 hx
+  dsimp [g2Aut, g2Equiv, g2Fun, up0, one] at hy
+  cases hy
+
+theorem g4Aut_ne_one : g4Aut ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have hx := congrArg (fun f : SplitOctF2Aut => f.1 up2) h
+  have ha := congrArg SplitOctF2.a hx
+  dsimp [g4Aut, g4Equiv, g4Fun, up2, one] at ha
+  cases ha
 
 end InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators

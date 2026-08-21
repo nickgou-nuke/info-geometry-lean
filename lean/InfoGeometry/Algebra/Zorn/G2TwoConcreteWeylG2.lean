@@ -284,13 +284,15 @@ theorem t_mem_weylG2Subgroup : t ∈ weylG2Subgroup := by
   exact Subgroup.subset_closure (by simp)
 
 theorem c_mem_weylG2Subgroup : c ∈ weylG2Subgroup := by
-  change swapCartanAut * cycle012Aut ∈ weylG2Subgroup
-  change swapCartanAut * cycle012Aut ∈ Subgroup.closure {s, t}
   have hs : s ∈ Subgroup.closure {s, t} := s_mem_weylG2Subgroup
   have ht : t ∈ Subgroup.closure {s, t} := t_mem_weylG2Subgroup
-  exact by
-    rw [show c = s * t by rfl]
-    exact Subgroup.mul_mem _ hs ht
+  have hst : c = s * t := by
+    dsimp [t]
+    calc
+      c = (s * s) * c := by rw [s_sq]; simp
+      _ = s * (s * c) := by simp [mul_assoc]
+  rw [hst]
+  exact Subgroup.mul_mem _ hs ht
 
 theorem weylNF_mem_weylG2Subgroup
     (k : ZMod 6) (refl : Bool) :
@@ -301,6 +303,24 @@ theorem weylNF_mem_weylG2Subgroup
       (Subgroup.pow_mem _ c_mem_weylG2Subgroup _)
   · simp [weylNF, h]
     exact Subgroup.pow_mem _ c_mem_weylG2Subgroup _
+
+noncomputable instance : Finite weylG2Subgroup :=
+  Finite.of_injective Subtype.val Subtype.val_injective
+
+noncomputable instance : Fintype weylG2Subgroup := Fintype.ofFinite _
+
+theorem weylG2_card_ge_twelve :
+    12 ≤ Fintype.card weylG2Subgroup := by
+  have hinj : Function.Injective
+      (fun p : ZMod 6 × Bool =>
+        (⟨weylNF p.1 p.2, weylNF_mem_weylG2Subgroup p.1 p.2⟩ : weylG2Subgroup)) := by
+    intro p q h
+    apply weylNF_injective
+    exact congrArg Subtype.val h
+  calc
+    12 = Fintype.card (ZMod 6 × Bool) := by
+      rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
+    _ ≤ Fintype.card weylG2Subgroup := Fintype.card_le_of_injective _ hinj
 
 theorem weylG2_card_eq_twelve : Fintype.card (ZMod 6 × Bool) = 12 := by
   rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]

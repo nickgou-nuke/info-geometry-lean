@@ -13,6 +13,7 @@ import InfoGeometry.Modular.QuantumDataProcessingInequality
 import InfoGeometry.Modular.EntropyMonotonicity
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
 import InfoGeometry.Modular.TensorDeterminantHomomorphism
+import InfoGeometry.Modular.ZetaRegularizedDeterminantBridge
 
 /-!
 # Modular Theory Module

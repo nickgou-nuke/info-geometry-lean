@@ -17,9 +17,9 @@ $$P_{W(G_2)}(X) = \Phi_2(X)^2 \cdot \Phi_3(X) \cdot \Phi_6(X).$$
 Specializing at $X = 2$ (the field order $|\mathbb{F}_2| = 2$) gives:
 $$P_{W(G_2)}(2) = \Phi_2(2)^2 \cdot \Phi_3(2) \cdot \Phi_6(2) = 3^2 \cdot 7 \cdot 3 = 189.$$
 
-Multiplying by the Borel subgroup cardinality $|B| = 2^6 = 64$ produces the exact
-group cardinality:
-$$|\operatorname{SplitOctF2Aut}| = 64 \cdot 189 = 12096.$$
+The final arithmetic theorem below is only an abstract weighted identity.  It
+does not identify a concrete Borel subgroup or the carrier
+`SplitOctF2Aut` with a Bruhat union.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2CyclotomicPoincare
@@ -102,9 +102,10 @@ theorem poincareSum_eval_two :
   simp only [eval_mul, eval_add, eval_pow, eval_X, eval_one]
   norm_num
 
-/-- 🏆 THEOREM 5: The global G₂(2) cardinality reduction formula:
-    |G₂(2)| = |B| · P(2) = 64 · 189 = 12096. -/
-theorem g2_cardinality_from_borel_and_poincare (cardB : ℕ) (hB : cardB = 64) :
+/-- THEOREM 5: Abstract Borel-weighted Poincaré arithmetic.  This is not a
+    cardinality theorem for `SplitOctF2Aut`; a concrete Bruhat partition is
+    required before that interpretation is available. -/
+theorem abstract_borel_weighted_poincare (cardB : ℕ) (hB : cardB = 64) :
     cardB * (eval (2 : ℤ) poincareSum).toNat = 12096 := by
   rw [hB, poincareSum_eval_two]
   rfl

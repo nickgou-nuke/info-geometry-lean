@@ -7429,4 +7429,5 @@ import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
 import InfoGeometry.Arithmetic.All
 import InfoGeometry.Synthesis
 import InfoGeometry.Modular.CommutantSemidirectProduct
+import InfoGeometry.Modular.SemidirectAutomorphismGroup
 

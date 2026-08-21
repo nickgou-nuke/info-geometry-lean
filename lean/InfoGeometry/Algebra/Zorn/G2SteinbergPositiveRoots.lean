@@ -189,9 +189,9 @@ theorem positiveRootPacket_ne_one (i : Fin 6) :
 theorem positiveRootPacket_injective :
     Function.Injective positiveRootPacket := by
   intro i j h
-  fin_cases i <;> fin_cases j
-  all_goals try rfl
+  fin_cases i <;> fin_cases j <;> try rfl
   all_goals
+    exfalso
     have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 0)) h
     have h1 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 1)) h
     have h2 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 2)) h
@@ -202,6 +202,39 @@ theorem positiveRootPacket_injective :
     have h7 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 7)) h
     revert h0 h1 h2 h3 h4 h5 h6 h7
     decide
+
+def positiveRootSubgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure (Set.range positiveRootPacket)
+
+theorem positiveRootPacket_mem_subgroup (i : Fin 6) :
+    positiveRootPacket i ∈ positiveRootSubgroup := by
+  exact Subgroup.subset_closure ⟨i, rfl⟩
+
+theorem positiveRootSubgroup_mul_mem {g h : SplitOctF2Aut}
+    (hg : g ∈ positiveRootSubgroup) (hh : h ∈ positiveRootSubgroup) :
+    g * h ∈ positiveRootSubgroup := by
+  exact positiveRootSubgroup.mul_mem hg hh
+
+theorem positiveRootSubgroup_inv_mem {g : SplitOctF2Aut}
+    (hg : g ∈ positiveRootSubgroup) : g⁻¹ ∈ positiveRootSubgroup := by
+  exact positiveRootSubgroup.inv_mem hg
+
+theorem positiveRootSubgroup_contains_packet_range :
+    Set.range positiveRootPacket ⊆ positiveRootSubgroup := by
+  intro g hg
+  exact Subgroup.subset_closure hg
+
+noncomputable def positiveRootPacketEquivRange :
+    Fin 6 ≃ Set.range positiveRootPacket :=
+  Equiv.ofBijective
+    (fun i => ⟨positiveRootPacket i, ⟨i, rfl⟩⟩)
+    ⟨by
+      intro i j h
+      exact positiveRootPacket_injective (Subtype.ext_iff.mp h),
+     by
+      intro x
+      rcases x with ⟨x, i, rfl⟩
+      exact ⟨i, rfl⟩⟩
 
 noncomputable def positiveRootAction (i : Fin 6) (t : Bool) : SplitOctF2Aut :=
   if t then positiveRootPacket i else 1
@@ -242,13 +275,6 @@ theorem positiveRootPacket_comm_0_2 :
 theorem positiveRootPacket_comm_0_5 :
     positiveRootPacket 0 * positiveRootPacket 5 =
       positiveRootPacket 5 * positiveRootPacket 0 := by
-  apply automorphism_ext_of_basis
-  intro i
-  fin_cases i <;> decide
-
-theorem positiveRootPacket_comm_1_2 :
-    positiveRootPacket 1 * positiveRootPacket 2 =
-      positiveRootPacket 2 * positiveRootPacket 1 := by
   apply automorphism_ext_of_basis
   intro i
   fin_cases i <;> decide

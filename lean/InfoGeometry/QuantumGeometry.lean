@@ -1,5 +1,6 @@
 import InfoGeometry.QuantumGeometry.NoncommutativePhaseSpace
 import InfoGeometry.QuantumGeometry.BerryKeatingDilationBridge
+import InfoGeometry.QuantumGeometry.TangentCotangentSymplecticBridge
 
 /-!
 # Quantum Geometry Module

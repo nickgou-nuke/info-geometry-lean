@@ -36,4 +36,18 @@ theorem positiveNativeIndex_injective :
     have h' := congrArg (fun k : NativeRootIndex => k.1) h
     simp [positiveNativeIndex, nativeShortSimpleIndex, nativeLongSimpleIndex] at h'
 
+noncomputable def positiveNativeIndexEquiv :
+    Fin 6 ≃ Set.range positiveNativeIndex :=
+  Equiv.ofBijective
+    (fun i => ⟨positiveNativeIndex i, ⟨i, rfl⟩⟩)
+    ⟨(fun i j h => positiveNativeIndex_injective (congrArg Subtype.val h)), by
+      intro y
+      rcases y.2 with ⟨i, hi⟩
+      exact ⟨i, Subtype.ext hi⟩⟩
+
+theorem positiveNativeRootCount :
+    Fintype.card (Set.range positiveNativeIndex) = 6 := by
+  rw [← Fintype.card_congr positiveNativeIndexEquiv]
+  rfl
+
 end InfoGeometry.Lie.CanonicalZornRootSystemComparison

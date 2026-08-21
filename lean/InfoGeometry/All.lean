@@ -7460,4 +7460,5 @@ import InfoGeometry.Architecture.CartanNomizuCurvature
 import InfoGeometry.Architecture.CartanSectionalCurvature
 import InfoGeometry.Architecture.CartanFisherRaoIdentification
 import InfoGeometry.InformationGeometry.TrifoldKLDivergenceDecomposition
+import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
 

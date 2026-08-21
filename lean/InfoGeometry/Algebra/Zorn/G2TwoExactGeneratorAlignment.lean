@@ -17,7 +17,10 @@ def casLongGenerator : SplitOctF2Aut := unipotentLongAut true
 theorem casLongGenerator_basis :
     basisRestriction7 casLongGenerator = casLongBasis := by
   funext i
-  fin_cases i <;> decide
+  fin_cases i <;>
+    simp [basisRestriction7, casLongGenerator, casLongBasis, basis7,
+      unipotentLongAut, unipotentLongEquiv, unipotentLong] <;>
+    decide
 
 theorem casLongGenerator_is_native_long :
     casLongGenerator = uLong := rfl

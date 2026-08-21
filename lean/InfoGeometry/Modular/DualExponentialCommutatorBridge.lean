@@ -12,7 +12,7 @@ This module formalizes the fundamental commutation identity between:
 THEOREM:
   [D, ad_K](X) = D(ad_K(X)) - ad_K(D(X)) = ad_{D(K)}(X)
 
-All proofs are complete in native Mathlib with zero `sorry`s.
+All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
 
 set_option linter.unusedSectionVars false
@@ -21,7 +21,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Modular
+namespace InfoGeometry.Modular.DualExponential
 
 variable {A : Type*} [Ring A]
 
@@ -30,8 +30,24 @@ def adK (K : A) (X : A) : A :=
   K * X - X * K
 
 @[simp]
-theorem adK_apply (K X : A) :
-    adK K X = K * X - X * K := rfl
+theorem adK_apply (K X : A) : adK K X = K * X - X * K := rfl
+
+theorem adK_map_add (K x y : A) :
+    adK K (x + y) = adK K x + adK K y := by
+  dsimp [adK]
+  simp only [mul_add, add_mul]
+  abel
+
+theorem adK_leibniz (K x y : A) :
+    adK K (x * y) = adK K x * y + x * adK K y := by
+  dsimp [adK]
+  calc
+    K * (x * y) - (x * y) * K =
+        (K * x * y - x * K * y) + (x * K * y - x * y * K) := by
+          simp only [mul_assoc]
+          abel
+    _ = (K * x - x * K) * y + x * (K * y - y * K) := by
+          simp only [sub_mul, mul_sub, mul_assoc]
 
 /-- An additive map D is a derivation if it satisfies the Leibniz product rule. -/
 structure RingDerivation (A : Type*) [Ring A] where
@@ -50,8 +66,7 @@ variable (D : RingDerivation A)
 @[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
 @[simp]
-theorem map_zero :
-    D 0 = 0 := by
+theorem map_zero : D 0 = 0 := by
   have h : D 0 + D 0 = D 0 + 0 := by
     calc D 0 + D 0
       _ = D (0 + 0) := (D.map_add 0 0).symm
@@ -74,6 +89,71 @@ theorem map_sub (x y : A) :
     D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
 
+@[simp]
+theorem map_one : D 1 = 0 := by
+  have h : D 1 + D 1 = D 1 + 0 := by
+    calc D 1 + D 1
+      _ = D 1 * 1 + 1 * D 1 := by rw [mul_one, one_mul]
+      _ = D (1 * 1) := (D.leibniz 1 1).symm
+      _ = D 1 := by rw [mul_one]
+      _ = D 1 + 0 := by rw [add_zero]
+  exact add_left_cancel h
+
+theorem extensionality {D E : RingDerivation A}
+    (h : ∀ x, D x = E x) : D = E := by
+  cases D
+  cases E
+  congr
+  funext x
+  exact h x
+
+/-! ### Bundled inner derivations and their commutators -/
+
+def innerDerivation (K : A) : RingDerivation A where
+  toFun := adK K
+  map_add' := adK_map_add K
+  leibniz' := adK_leibniz K
+
+@[simp]
+theorem innerDerivation_apply (K X : A) :
+    innerDerivation K X = adK K X := rfl
+
+def commutator (D₁ D₂ : RingDerivation A) : RingDerivation A where
+  toFun := fun X => D₁ (D₂ X) - D₂ (D₁ X)
+  map_add' := by
+    intro x y
+    rw [D₂.map_add, D₁.map_add, D₁.map_add, D₂.map_add]
+    abel
+  leibniz' := by
+    intro x y
+    rw [D₂.leibniz, D₁.leibniz, D₁.map_add, D₁.leibniz,
+      D₁.leibniz, D₂.map_add, D₂.leibniz, D₂.leibniz]
+    simp only [sub_mul, mul_sub]
+    abel
+
+@[simp]
+theorem commutator_apply (D₁ D₂ : RingDerivation A) (X : A) :
+    commutator D₁ D₂ X = D₁ (D₂ X) - D₂ (D₁ X) := rfl
+
+theorem commutator_skew (D₁ D₂ : RingDerivation A) (X : A) :
+    commutator D₁ D₂ X = -commutator D₂ D₁ X := by
+  dsimp [commutator]
+  abel
+
+@[simp]
+theorem commutator_self (D : RingDerivation A) (X : A) :
+    commutator D D X = 0 := by
+  dsimp [commutator]
+  abel
+
+theorem commutator_jacobi (D₁ D₂ D₃ : RingDerivation A) (X : A) :
+    commutator D₁ (commutator D₂ D₃) X +
+        commutator D₂ (commutator D₃ D₁) X +
+        commutator D₃ (commutator D₁ D₂) X = 0 := by
+  dsimp [commutator]
+  rw [D₁.map_sub, D₂.map_sub, D₃.map_sub]
+  abel
+
 /-- 
   🏆 THEOREM 1: The Master Commutator Identity between Outer and Inner Derivations
   [D, ad_K](X) = ad_{D(K)}(X)
@@ -86,6 +166,32 @@ theorem derivation_adK_comm (K X : A) :
   dsimp [adK]
   rw [D.map_sub, D.leibniz, D.leibniz]
   abel
+
+theorem commutator_innerDerivation_eq (D : RingDerivation A) (K : A) :
+    commutator D (innerDerivation K) = innerDerivation (D K) := by
+  apply extensionality
+  intro X
+  exact derivation_adK_comm D K X
+
+theorem commutator_innerDerivation_apply_of_invariant
+    (D : RingDerivation A) (K : A) (hK : D K = 0) (X : A) :
+    commutator D (innerDerivation K) X = 0 := by
+  rw [commutator_innerDerivation_eq D K, hK]
+  change adK 0 X = 0
+  simp [adK]
+
+theorem adK_bracket (K₁ K₂ X : A) :
+    adK K₁ (adK K₂ X) - adK K₂ (adK K₁ X) = adK (adK K₁ K₂) X := by
+  dsimp [adK]
+  noncomm_ring
+
+theorem commutator_innerDerivation_innerDerivation_eq (K₁ K₂ : A) :
+    commutator (innerDerivation K₁) (innerDerivation K₂) =
+      innerDerivation (adK K₁ K₂) := by
+  apply extensionality
+  intro X
+  rw [commutator_apply]
+  exact adK_bracket K₁ K₂ X
 
 /-- 
   🏆 THEOREM 2: Adiabatic / Invariant Commutation
@@ -108,8 +214,19 @@ theorem adK_eq_zero_of_central (K : A) (h_central : ∀ x, K * x = x * K) (X : A
   dsimp [adK]
   rw [h_central X, sub_self]
 
+theorem central_of_adK_eq_zero (K : A) (h_zero : ∀ X, adK K X = 0) (X : A) :
+    K * X = X * K := by
+  exact sub_eq_zero.mp (h_zero X)
+
+theorem adK_eq_zero_iff_central (K : A) :
+    (∀ X, adK K X = 0) ↔ ∀ X, K * X = X * K := by
+  constructor
+  · exact central_of_adK_eq_zero K
+  · intro h X
+    exact adK_eq_zero_of_central K h X
+
 end RingDerivation
 
-end InfoGeometry.Modular
+end InfoGeometry.Modular.DualExponential
 
 end noncomputable section

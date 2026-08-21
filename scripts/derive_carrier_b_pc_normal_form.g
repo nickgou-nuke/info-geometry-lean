@@ -23,10 +23,21 @@ Print("PC relative orders: ", rels, "\n");
 Print("PC coordinate product: ", Product(rels), "\n");
 
 Print("PC power relations (exponent vectors):\n");
+printVector := function(tag, vector)
+  local k;
+  Print(tag);
+  for k in [1..Length(vector)] do
+    Print(vector[k]);
+    if k < Length(vector) then Print(","); fi;
+  od;
+  Print("\n");
+end;
 for i in [1..Length(preimages)] do
   relation := Image(iso, preimages[i]^rels[i]);
   Print("p", i, "^", rels[i], " -> ",
     ExponentsOfPcElement(pcgs, relation), "\n");
+  printVector(Concatenation("PCPOWER ", String(i), " ", String(rels[i]), " "),
+    ExponentsOfPcElement(pcgs, relation));
 od;
 Print("PC conjugation relations (exponent vectors):\n");
 for i in [2..Length(preimages)] do
@@ -35,6 +46,8 @@ for i in [2..Length(preimages)] do
       preimages[i]^-1 * preimages[j] * preimages[i]);
     Print("p", i, "^-1 p", j, " p", i, " -> ",
       ExponentsOfPcElement(pcgs, relation), "\n");
+    printVector(Concatenation("PCCONJ ", String(i), " ", String(j), " "),
+      ExponentsOfPcElement(pcgs, relation));
   od;
 od;
 

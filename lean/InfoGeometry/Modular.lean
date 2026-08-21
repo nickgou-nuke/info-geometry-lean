@@ -2,6 +2,7 @@ import InfoGeometry.Modular.CommutantSemidirectProduct
 import InfoGeometry.Modular.SemidirectAutomorphismGroup
 import InfoGeometry.Modular.WeylPfaffianDeterminantTriple
 import InfoGeometry.Modular.DerivationLieIdeal
+import InfoGeometry.Modular.ModularTimeSemigroupBridge
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
 
 /-!

@@ -1,3 +1,4 @@
+import InfoGeometry.Algebra.Zorn.G2TwoChevalleyOrderArithmetic
 import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AkivisLeftRegularBridge

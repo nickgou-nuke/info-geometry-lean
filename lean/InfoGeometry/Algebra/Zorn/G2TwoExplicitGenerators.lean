@@ -381,6 +381,24 @@ theorem candidateRootFamily_same_root_commutator (i : Fin 6) (s t : Bool) :
   · exact cycleConjugatedLongParam_commutator_eq_one 1 s t
   · exact cycleConjugatedLongParam_commutator_eq_one 2 s t
 
+theorem candidateRootFamily_add (i : Fin 6) (s t : Bool) :
+    candidateRootFamily i (s ^^ t) =
+      candidateRootFamily i s * candidateRootFamily i t := by
+  fin_cases i
+  · exact cycleConjugatedShortParam_add 0 s t
+  · exact cycleConjugatedShortParam_add 1 s t
+  · exact cycleConjugatedShortParam_add 2 s t
+  · exact cycleConjugatedLongParam_add 0 s t
+  · exact cycleConjugatedLongParam_add 1 s t
+  · exact cycleConjugatedLongParam_add 2 s t
+
+theorem candidateRootFamily_true_square (i : Fin 6) :
+    candidateRootFamily i true * candidateRootFamily i true = 1 := by
+  have h := (candidateRootFamily_add i true true).symm
+  fin_cases i <;>
+    simpa [candidateRootFamily, cycleConjugatedShortParam,
+      cycleConjugatedLongParam] using h
+
 def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure
     ({unipotentShortAut true, unipotentLongAut true} : Set SplitOctF2Aut)
@@ -452,10 +470,74 @@ theorem fourRootSubgroupWords_injective :
     | exact False.elim (short_mul_long_ne_long h')
     | exact False.elim (short_mul_long_ne_long h'.symm)
 
+private lemma simpleRootSubgroup_product_sq_mem :
+    (unipotentShortAut true * unipotentLongAut true) ^ 2 ∈
+      simpleRootSubgroup := by
+  exact simpleRootSubgroup.mul_mem
+    simpleRootSubgroup_contains_product simpleRootSubgroup_contains_product
+
+private lemma simpleRootSubgroup_product_cube_mem :
+    (unipotentShortAut true * unipotentLongAut true) ^ 3 ∈
+      simpleRootSubgroup := by
+  exact simpleRootSubgroup.mul_mem
+    simpleRootSubgroup_product_sq_mem simpleRootSubgroup_contains_product
+
+private lemma simpleRootSubgroup_short_product_sq_mem :
+    unipotentShortAut true *
+        (unipotentShortAut true * unipotentLongAut true) ^ 2 ∈
+      simpleRootSubgroup := by
+  exact simpleRootSubgroup.mul_mem
+    simpleRootSubgroup_short_mem simpleRootSubgroup_product_sq_mem
+
+private lemma simpleRootSubgroup_short_product_cube_mem :
+    unipotentShortAut true *
+        (unipotentShortAut true * unipotentLongAut true) ^ 3 ∈
+      simpleRootSubgroup := by
+  exact simpleRootSubgroup.mul_mem
+    simpleRootSubgroup_short_mem simpleRootSubgroup_product_cube_mem
+
+def eightRootSubgroupWords : Fin 8 → simpleRootSubgroup
+  | 0 => ⟨1, simpleRootSubgroup.one_mem⟩
+  | 1 => ⟨unipotentShortAut true * unipotentLongAut true,
+    simpleRootSubgroup_contains_product⟩
+  | 2 => ⟨(unipotentShortAut true * unipotentLongAut true) ^ 2,
+    simpleRootSubgroup_product_sq_mem⟩
+  | 3 => ⟨(unipotentShortAut true * unipotentLongAut true) ^ 3,
+    simpleRootSubgroup_product_cube_mem⟩
+  | 4 => ⟨unipotentShortAut true, simpleRootSubgroup_short_mem⟩
+  | 5 => ⟨unipotentShortAut true *
+      (unipotentShortAut true * unipotentLongAut true) ^ 2,
+    simpleRootSubgroup_short_product_sq_mem⟩
+  | 6 => ⟨unipotentShortAut true *
+      (unipotentShortAut true * unipotentLongAut true) ^ 3,
+    simpleRootSubgroup_short_product_cube_mem⟩
+  | 7 => ⟨unipotentLongAut true, simpleRootSubgroup_long_mem⟩
+
+theorem eightRootSubgroupWords_injective :
+    Function.Injective eightRootSubgroupWords := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    have h' := congrArg (fun z : simpleRootSubgroup => (z : SplitOctF2Aut)) h
+    dsimp [eightRootSubgroupWords] at h'
+    have h0 := congrArg (fun f : SplitOctF2Aut => f.1 up0) h'
+    have h1 := congrArg (fun f : SplitOctF2Aut => f.1 up1) h'
+    have h2 := congrArg (fun f : SplitOctF2Aut => f.1 up2) h'
+    revert h0 h1 h2
+    decide
+
 noncomputable instance : Finite simpleRootSubgroup :=
   Finite.of_injective Subtype.val Subtype.val_injective
 
 noncomputable instance : Fintype simpleRootSubgroup := Fintype.ofFinite _
+
+theorem simpleRootSubgroup_card_lower_bound_eight :
+    8 ≤ Fintype.card simpleRootSubgroup := by
+  have hc : Fintype.card (Fin 8) ≤ Fintype.card simpleRootSubgroup :=
+    Fintype.card_le_of_injective eightRootSubgroupWords
+      eightRootSubgroupWords_injective
+  simpa using hc
 
 theorem simpleRootSubgroup_card_lower_bound :
     4 ≤ Fintype.card simpleRootSubgroup := by

@@ -186,6 +186,79 @@ theorem positiveRootPacket_ne_one (i : Fin 6) :
   · exact conjugateAut_ne_one cycle012Aut uMid uMid_ne_one
   · exact conjugateAut_ne_one (cycle012Aut * cycle012Aut) uMid uMid_ne_one
 
+noncomputable def unipotentWord6
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) : SplitOctF2Aut :=
+  (if b.1 then positiveRootPacket 0 else 1) *
+  (if b.2.1 then positiveRootPacket 1 else 1) *
+  (if b.2.2.1 then positiveRootPacket 2 else 1) *
+  (if b.2.2.2.1 then positiveRootPacket 3 else 1) *
+  (if b.2.2.2.2.1 then positiveRootPacket 4 else 1) *
+  (if b.2.2.2.2.2 then positiveRootPacket 5 else 1)
+
+theorem unipotentWord6_bit0
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 up1).x0 = b.1 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+theorem unipotentWord6_bit1
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 down1).y2 = b.2.1 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+theorem unipotentWord6_bit2
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 up2).x0 = b.2.2.1 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+theorem unipotentWord6_bit3
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 down2).y0 = b.2.2.2.1 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+theorem unipotentWord6_bit4
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 up0).x1 = b.2.2.2.2.1 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+theorem unipotentWord6_bit5
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
+    ((unipotentWord6 b).1 down2).y1 = b.2.2.2.2.2 := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  fin_cases b0 <;> fin_cases b1 <;> fin_cases b2 <;>
+    fin_cases b3 <;> fin_cases b4 <;> fin_cases b5 <;> rfl
+
+/-- 🏆 THEOREM: The 64 ordered unipotent words are strictly injective! -/
+theorem unipotentWord6_injective : Function.Injective unipotentWord6 := by
+  intro b c h
+  have h0 : ((unipotentWord6 b).1 up1).x0 = ((unipotentWord6 c).1 up1).x0 := by rw [h]
+  rw [unipotentWord6_bit0 b, unipotentWord6_bit0 c] at h0
+  have h1 : ((unipotentWord6 b).1 down1).y2 = ((unipotentWord6 c).1 down1).y2 := by rw [h]
+  rw [unipotentWord6_bit1 b, unipotentWord6_bit1 c] at h1
+  have h2 : ((unipotentWord6 b).1 up2).x0 = ((unipotentWord6 c).1 up2).x0 := by rw [h]
+  rw [unipotentWord6_bit2 b, unipotentWord6_bit2 c] at h2
+  have h3 : ((unipotentWord6 b).1 down2).y0 = ((unipotentWord6 c).1 down2).y0 := by rw [h]
+  rw [unipotentWord6_bit3 b, unipotentWord6_bit3 c] at h3
+  have h4 : ((unipotentWord6 b).1 up0).x1 = ((unipotentWord6 c).1 up0).x1 := by rw [h]
+  rw [unipotentWord6_bit4 b, unipotentWord6_bit4 c] at h4
+  have h5 : ((unipotentWord6 b).1 down2).y1 = ((unipotentWord6 c).1 down2).y1 := by rw [h]
+  rw [unipotentWord6_bit5 b, unipotentWord6_bit5 c] at h5
+  rcases b with ⟨b0, b1, b2, b3, b4, b5⟩
+  rcases c with ⟨c0, c1, c2, c3, c4, c5⟩
+  dsimp at h0 h1 h2 h3 h4 h5
+  subst h0 h1 h2 h3 h4 h5
+  rfl
+
+
 theorem positiveRootPacket_injective :
     Function.Injective positiveRootPacket := by
   intro i j h
@@ -203,7 +276,7 @@ theorem positiveRootPacket_injective :
     revert h0 h1 h2 h3 h4 h5 h6 h7
     decide
 
-def positiveRootSubgroup : Subgroup SplitOctF2Aut :=
+noncomputable def positiveRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure (Set.range positiveRootPacket)
 
 theorem positiveRootPacket_mem_subgroup (i : Fin 6) :
@@ -500,100 +573,39 @@ theorem uMidOrbit_mem_positiveRootSubgroup (i : Fin 3) :
   · exact positiveRootPacket_mem_subgroup 5
 
 
-/-!
-=============================================================================
-PART 5: Ordered 6-Root Unipotent Words and Exact 64-Element Injectivity
-=============================================================================
--/
 
-/-- The 64 ordered unipotent words formed by the 6 positive root automorphisms. -/
-noncomputable def unipotentWord6 (b : Fin 6 → Bool) : SplitOctF2Aut :=
-  positiveRootAction 0 (b 0) *
-  positiveRootAction 1 (b 1) *
-  positiveRootAction 2 (b 2) *
-  positiveRootAction 3 (b 3) *
-  positiveRootAction 4 (b 4) *
-  positiveRootAction 5 (b 5)
 
-theorem unipotentWord6_b0 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up1).x0 = b 0 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b1 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down1).y2 = b 1 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b2 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up2).x0 = b 2 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b3 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down2).y0 = b 3 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b4 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up0).x1 = b 4 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b5 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down2).y1 = b 5 := by
-  revert b
-  decide
-
-/-- 🏆 THEOREM: The 64 ordered unipotent words are strictly injective! -/
-theorem unipotentWord6_injective : Function.Injective unipotentWord6 := by
-  intro b c h
-  ext i
-  fin_cases i
-  · have h0 : ((unipotentWord6 b).1 up1).x0 = ((unipotentWord6 c).1 up1).x0 := by rw [h]
-    rw [unipotentWord6_b0 b, unipotentWord6_b0 c] at h0
-    exact h0
-  · have h1 : ((unipotentWord6 b).1 down1).y2 = ((unipotentWord6 c).1 down1).y2 := by rw [h]
-    rw [unipotentWord6_b1 b, unipotentWord6_b1 c] at h1
-    exact h1
-  · have h2 : ((unipotentWord6 b).1 up2).x0 = ((unipotentWord6 c).1 up2).x0 := by rw [h]
-    rw [unipotentWord6_b2 b, unipotentWord6_b2 c] at h2
-    exact h2
-  · have h3 : ((unipotentWord6 b).1 down2).y0 = ((unipotentWord6 c).1 down2).y0 := by rw [h]
-    rw [unipotentWord6_b3 b, unipotentWord6_b3 c] at h3
-    exact h3
-  · have h4 : ((unipotentWord6 b).1 up0).x1 = ((unipotentWord6 c).1 up0).x1 := by rw [h]
-    rw [unipotentWord6_b4 b, unipotentWord6_b4 c] at h4
-    exact h4
-  · have h5 : ((unipotentWord6 b).1 down2).y1 = ((unipotentWord6 c).1 down2).y1 := by rw [h]
-    rw [unipotentWord6_b5 b, unipotentWord6_b5 c] at h5
-    exact h5
-
-theorem positiveRootAction_mem_positiveRootSubgroup (i : Fin 6) (t : Bool) :
-    positiveRootAction i t ∈ positiveRootSubgroup := by
-  cases t
-  · simp [positiveRootAction]
-  · simp [positiveRootAction, positiveRootPacket_mem_subgroup i]
-
-theorem unipotentWord6_mem_positiveRootSubgroup (b : Fin 6 → Bool) :
+theorem unipotentWord6_mem_positiveRootSubgroup
+    (b : Bool × Bool × Bool × Bool × Bool × Bool) :
     unipotentWord6 b ∈ positiveRootSubgroup := by
   dsimp [unipotentWord6]
-  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 5 (b 5))
-  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 4 (b 4))
-  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 3 (b 3))
-  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 2 (b 2))
-  refine positiveRootSubgroup.mul_mem (positiveRootAction_mem_positiveRootSubgroup 0 (b 0)) (positiveRootAction_mem_positiveRootSubgroup 1 (b 1))
+  have h0 : (if b.1 then positiveRootPacket 0 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.1 <;> simp [h, positiveRootPacket_mem_subgroup 0]
+  have h1 : (if b.2.1 then positiveRootPacket 1 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.1 <;> simp [h, positiveRootPacket_mem_subgroup 1]
+  have h2 : (if b.2.2.1 then positiveRootPacket 2 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.2.1 <;> simp [h, positiveRootPacket_mem_subgroup 2]
+  have h3 : (if b.2.2.2.1 then positiveRootPacket 3 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.2.2.1 <;> simp [h, positiveRootPacket_mem_subgroup 3]
+  have h4 : (if b.2.2.2.2.1 then positiveRootPacket 4 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.2.2.2.1 <;> simp [h, positiveRootPacket_mem_subgroup 4]
+  have h5 : (if b.2.2.2.2.2 then positiveRootPacket 5 else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.2.2.2.2 <;> simp [h, positiveRootPacket_mem_subgroup 5]
+  exact positiveRootSubgroup.mul_mem
+    (positiveRootSubgroup.mul_mem
+      (positiveRootSubgroup.mul_mem
+        (positiveRootSubgroup.mul_mem
+          (positiveRootSubgroup.mul_mem h0 h1) h2) h3) h4) h5
 
 /-- 🏆 THEOREM: The positive root subgroup has cardinality at least 64! -/
 theorem positiveRootSubgroup_card_ge_64 :
     64 ≤ Fintype.card positiveRootSubgroup := by
-  have hinj : Function.Injective (fun b : Fin 6 → Bool => (⟨unipotentWord6 b, unipotentWord6_mem_positiveRootSubgroup b⟩ : positiveRootSubgroup)) := by
-    intro x y hxy
-    have hval : unipotentWord6 x = unipotentWord6 y := Subtype.ext_iff.mp hxy
-    exact unipotentWord6_injective hval
-  have hle := Fintype.card_le_of_injective _ hinj
-  have hcard : Fintype.card (Fin 6 → Bool) = 64 := by decide
-  rw [hcard] at hle
-  exact hle
+  let f : Bool × Bool × Bool × Bool × Bool × Bool → positiveRootSubgroup :=
+    fun b => ⟨unipotentWord6 b, unipotentWord6_mem_positiveRootSubgroup b⟩
+  have hf : Function.Injective f := by
+    intro b c h
+    exact unipotentWord6_injective (Subtype.ext_iff.mp h)
+  have hc := Fintype.card_le_of_injective f hf
+  simpa using hc
 
 end InfoGeometry.Algebra.Zorn.G2SteinbergRoots

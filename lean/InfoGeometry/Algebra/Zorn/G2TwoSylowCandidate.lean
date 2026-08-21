@@ -35,10 +35,6 @@ def sylowBasis : Fin 5 → Fin 7 → SplitOctF2
            ⟨false, false, false, false, false, true, false, false⟩,
            ⟨false, false, false, false, false, false, true, true⟩,
            ⟨false, false, false, false, false, false, false, true⟩]
-
-example : Decidable (admissibleBasis7 (sylowBasis 0)) := by
-  unfold admissibleBasis7
-  infer_instance
   | 4 => ![⟨true, false, false, false, false, false, false, true⟩,
            ⟨false, false, false, false, true, false, false, true⟩,
            ⟨false, false, false, true, false, false, false, false⟩,
@@ -46,18 +42,6 @@ example : Decidable (admissibleBasis7 (sylowBasis 0)) := by
            ⟨false, false, false, true, false, true, false, false⟩,
            ⟨false, false, true, false, false, true, false, false⟩,
            ⟨false, false, false, false, false, false, false, true⟩]
-
-noncomputable def casGenerator0Native : SplitOctF2Aut :=
-  swapCartanAut * (cycle012Aut * cycle012Aut)
-
-theorem casGenerator0Native_basis :
-    basisRestriction7 casGenerator0Native = sylowBasis 0 := by
-  funext i
-  fin_cases i <;> decide
-
-theorem sylowBasis0_admissible : admissibleBasis7 (sylowBasis 0) := by
-  rw [← casGenerator0Native_basis]
-  exact basisRestriction7_admissible casGenerator0Native
 
 noncomputable def sylowGenerator (i : Fin 5)
     (h : admissibleBasis7 (sylowBasis i)) : SplitOctF2Aut :=

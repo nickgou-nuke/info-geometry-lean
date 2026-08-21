@@ -50,10 +50,63 @@ theorem rankOne_posSemidef (v : (n × n) → ℂ) :
   rw [← hC]
   exact Matrix.posSemidef_self_mul_conjTranspose C
 
+def krausMap {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Mat) : MatrixMap (n := n) where
+  toFun X := ∑ a, V a * X * star (V a)
+  map_add' X Y := by
+    simp only [mul_add, add_mul, Finset.sum_add_distrib]
+  map_smul' c X := by
+    simp only [Finset.smul_sum]
+    apply Finset.sum_congr rfl
+    intro a ha
+    simp [mul_assoc, mul_left_comm, mul_comm]
+
+private theorem kraus_term_matrixUnit_apply
+    (V : Mat) (i j k l : n) :
+    (V * matrixUnit i j * star V) k l = V k i * star (V l j) := by
+  dsimp [matrixUnit, Matrix.mul_apply, Matrix.star_apply]
+  have h_inner (r : n) : (∑ c : n, V k c * (if c = i ∧ r = j then (1 : ℂ) else 0)) =
+      if r = j then V k i else 0 := by
+    rw [Finset.sum_eq_single i]
+    · simp only [true_and]
+      split_ifs <;> simp
+    · intro c _ hneq
+      have : (c = i ∧ r = j) = False := by simp [hneq]
+      simp [this]
+    · intro hi
+      exact False.elim (hi (Finset.mem_univ i))
+  
+  have h_outer : (∑ r : n, (∑ c : n, V k c * (if c = i ∧ r = j then (1 : ℂ) else 0)) * star (V l r)) =
+      V k i * star (V l j) := by
+    calc
+      (∑ r : n, (∑ c : n, V k c * (if c = i ∧ r = j then (1 : ℂ) else 0)) * star (V l r))
+        = ∑ r : n, (if r = j then V k i else 0) * star (V l r) := by
+          refine Finset.sum_congr rfl (fun r _ => by rw [h_inner r])
+      _ = V k i * star (V l j) := by
+        rw [Finset.sum_eq_single j]
+        · simp only [if_true]
+        · intro r _ hneq
+          simp only [if_neg hneq, zero_mul]
+        · intro hj
+          exact False.elim (hj (Finset.mem_univ j))
+  
+  exact h_outer
+
 /-- The finite Kraus Choi certificate, written as a sum of rank-one terms. -/
 def krausChoi {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : ι → Matrix n n ℂ) : Matrix (n × n) (n × n) ℂ :=
     ∑ r, rankOne (fun p => V r p.2 p.1)
+
+theorem choiMatrix_krausMap_eq_krausChoi
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Mat) :
+    choiMatrix (krausMap V) = krausChoi V := by
+  ext ⟨i, k⟩ ⟨j, l⟩
+  simp only [choiMatrix, krausMap, LinearMap.coe_mk, AddHom.coe_mk,
+    Matrix.sum_apply, krausChoi, rankOne]
+  apply Finset.sum_congr rfl
+  intro a ha
+  exact kraus_term_matrixUnit_apply (V a) i j k l
 
 theorem krausChoi_posSemidef {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : ι → Matrix n n ℂ) :

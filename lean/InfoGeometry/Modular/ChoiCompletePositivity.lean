@@ -59,6 +59,22 @@ theorem stdBasis_apply (i j a b : n) :
 def krausTerm (V_k : Mat) (X : Mat) : Mat :=
   V_k * X * star V_k
 
+/-- The Choi matrix of an arbitrary finite matrix superoperator. -/
+def choiMatrix (E : Mat →ₗ[ℂ] Mat) : BipartiteMat :=
+  Matrix.of (fun ⟨a, i⟩ ⟨b, j⟩ => E (stdBasis i j) a b)
+
+@[simp]
+theorem choiMatrix_apply (E : Mat →ₗ[ℂ] Mat) (a i b j : n) :
+    choiMatrix E ⟨a, i⟩ ⟨b, j⟩ = E (stdBasis i j) a b := rfl
+
+/-- A finite Kraus channel, as a complex-linear matrix superoperator. -/
+def krausChannel {ι : Type*} [Fintype ι] (V : ι → Mat) : Mat →ₗ[ℂ] Mat where
+  toFun X := ∑ k, krausTerm (V k) X
+  map_add' X Y := by
+    simp [krausTerm, mul_add, add_mul, Finset.sum_add_distrib]
+  map_smul' c X := by
+    simp [krausTerm, smul_mul_assoc, mul_smul_comm, Finset.smul_sum]
+
 /-- 
   The Choi matrix of a single Kraus channel:
   (Λ_{Φ_V})_{(a, i), (b, j)} = (Φ_V(E_{ij}))_{a, b} = V_{a, i} * conj(V_{b, j})
@@ -168,6 +184,16 @@ PART 3: Multichannel Complete Positivity (Choi's Theorem)
 /-- The Choi Matrix of a Multichannel Quantum Operation ℰ = ∑_k Φ_{V_k}. -/
 def multichannelChoiMatrix (V : ι → Mat) : BipartiteMat :=
   ∑ k, krausChoiMatrix (V k)
+
+theorem choiMatrix_krausChannel_eq_multichannel
+    {ι : Type*} [Fintype ι] (V : ι → Mat) :
+    choiMatrix (krausChannel V) = multichannelChoiMatrix V := by
+  ext ⟨a, i⟩ ⟨b, j⟩
+  dsimp [choiMatrix, krausChannel, multichannelChoiMatrix]
+  simp only [Matrix.sum_apply]
+  apply Finset.sum_congr rfl
+  intro k hk
+  exact kraus_on_stdBasis_eq_choi (V k) i j a b
 
 /-- 
   MASTER THEOREM 4 (Choi Complete Positivity):

@@ -553,40 +553,4 @@ theorem unipotentWord6_injective_of_coordinate_separators
   · have q := congrArg (fun f : SplitOctF2Aut => (f.1 down2).y1) h
     simpa [h5 b, h5 c] using q
 
-
-theorem unipotentWord6_b0 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up1).x0 = b 0 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b1 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down1).y2 = b 1 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b2 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up2).x0 = b 2 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b3 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down2).y0 = b 3 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b4 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 up0).x1 = b 4 := by
-  revert b
-  decide
-
-theorem unipotentWord6_b5 (b : Fin 6 → Bool) :
-    ((unipotentWord6 b).1 down2).y1 = b 5 := by
-  revert b
-  decide
-
-theorem unipotentWord6_injective : Function.Injective unipotentWord6 := by
-  exact unipotentWord6_injective_of_coordinate_separators
-    unipotentWord6_b0 unipotentWord6_b1 unipotentWord6_b2
-    unipotentWord6_b3 unipotentWord6_b4 unipotentWord6_b5
-
 end InfoGeometry.Algebra.Zorn.G2SteinbergRoots

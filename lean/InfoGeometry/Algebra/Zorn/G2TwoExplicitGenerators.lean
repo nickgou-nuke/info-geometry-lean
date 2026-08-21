@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
 
 /-!
 # A concrete finite split-Zorn automorphism
@@ -53,6 +54,37 @@ theorem swap01Aut_ne_one :
   intro h
   have h_apply := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
   have hx := congrArg (fun X : SplitOctF2 => X.x0) h_apply
-  simp [swap01Aut, swap01Equiv, swap01Fun, up0, up1] at hx
+  change false = true at hx
+  exact Bool.noConfusion hx
 
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+
+namespace InfoGeometry.Algebra.Zorn.G2Unipotent
+
+open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+
+theorem unipotentShortAut_true_ne_one :
+    unipotentShortAut true ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have h_apply := congrArg (fun f : SplitOctF2Aut => (f.1 up1).x0) h
+  revert h_apply
+  decide
+
+theorem unipotentLongAut_true_ne_one :
+    unipotentLongAut true ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have h_apply := congrArg (fun f : SplitOctF2Aut => (f.1 up2).x1) h
+  revert h_apply
+  decide
+
+theorem simple_root_generator_packet :
+    (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧
+    (unipotentLongAut true) * (unipotentLongAut true) = 1 ∧
+    unipotentShortAut true ≠ (1 : SplitOctF2Aut) ∧
+    unipotentLongAut true ≠ (1 : SplitOctF2Aut) := by
+  exact ⟨unipotentShortAut_order true,
+    unipotentLongAut_order true,
+    unipotentShortAut_true_ne_one,
+    unipotentLongAut_true_ne_one⟩
+
+end InfoGeometry.Algebra.Zorn.G2Unipotent

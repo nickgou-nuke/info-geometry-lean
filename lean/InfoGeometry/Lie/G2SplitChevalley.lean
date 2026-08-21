@@ -12,13 +12,17 @@ This file records the native finite and real split owners.  The finite order
 enumeration theorem is proved.
 -/
 
+noncomputable section
+
 namespace InfoGeometry.Lie.G2SplitChevalley
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
+open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 open InfoGeometry.Lie.CanonicalZornRootSystemComparison
+open InfoGeometry.Canonical
 
 abbrev FiniteChevalleyG2 := SplitOctF2Aut
 abbrev RealSplitG2 := RealSplitOctonionAut
@@ -40,3 +44,5 @@ theorem finite_chevalley_order_is_conditional_enumeration
   exact h
 
 end InfoGeometry.Lie.G2SplitChevalley
+
+end

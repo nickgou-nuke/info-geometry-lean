@@ -52,7 +52,6 @@ namespace InfoGeometry.Lie.G2TwoRealSplitClassification
 open InfoGeometry.Canonical
 open InfoGeometry.Lie.RealSplitOctonionG2Classification
 open InfoGeometry.Lie.BaezG2SplitOctonion
-open InfoGeometry.Lie.RealSplitOctonionDerivation
 open InfoGeometry.Lie.RealSplitOctonionDerivationData
 open InfoGeometry.Lie.CanonicalZornG2UnificationBridge
 open InfoGeometry.Lie.SplitG2RealFormCapstone
@@ -62,7 +61,10 @@ open InfoGeometry.Lie.CanonicalZornDerivationExponential
 open InfoGeometry.Lie.CanonicalZornRootSystemComparison
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 
--- Shorthands for the G2Two owner identifiers (avoid namespace-open shadowing).
+------------------------------------------------------------------
+/-! ## Shorthands for the G2Two owner identifiers -/
+------------------------------------------------------------------
+
 abbrev G2Two :=
   InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut
 
@@ -92,13 +94,9 @@ theorem g2two_order_formula :
 theorem g2two_card_value : g2twoOrder = 12096 := by
   exact g2two_order_formula.trans (by norm_num)
 
-/-- `G₂(2)` is the automorphism group of the split octonions over `𝔽₂`. -/
-def g2two_is_aut_split_oct_F2 : G2Two = SplitOctF2Aut := rfl
-
 /-- `|G₂(2)| = 2 · |G₂(2)'|`, i.e. the derived subgroup `G₂(2)' ≅ PSU₃(3)`
 has index 2. -/
-theorem g2two_derived_half : g2twoDerivedOrder * 2 = g2twoOrder := by
-  show g2twoOrder / 2 = g2twoDerivedOrder
+theorem g2two_derived_half : g2twoOrder / 2 = g2twoDerivedOrder := by
   exact
     InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.g2two_derived_order
 
@@ -115,8 +113,7 @@ verifier.  Given it, the group order equals `12096`. -/
 theorem g2two_card_from_enumeration
     (h_enum : Fintype.card G2Two = 12096) :
     Fintype.card G2Two = g2twoOrder :=
-  InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
-    .aut_splitOctF2_card_eq_g2twoOrder_from_enumeration h_enum
+  InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.aut_splitOctF2_card_eq_g2twoOrder_from_enumeration h_enum
 
 ------------------------------------------------------------------
 /-! ## `G_{2(2)}` — real split form -/
@@ -132,17 +129,18 @@ abbrev G2RealSplitDerivation := canonicalZornDerivations
 /-- The real split `G₂` derivation space has finite dimension `14` over `ℝ`. -/
 theorem g2_real_split_derivation_finrank :
     Module.finrank ℝ G2RealSplitDerivation = 14 :=
-  -- Kernel-checked theorem from `RealSplitOctonionG2Classification`.
   canonical_split_octonion_derivation_finrank
 
 /-- The `0-1` rotation derivation is a real-split-`G₂` derivation. -/
 theorem rot01Linear_is_g2_real_split_derivation :
-    IsNonAssocDerivation (R := ℝ) (A := SplitCayley) rot01Linear :=
+    IsNonAssocDerivation (R := ℝ)
+      (A := InfoGeometry.Lie.RealSplitOctonionDerivation.SplitCayley) rot01Linear :=
   InfoGeometry.Lie.BaezG2SplitOctonion.rot01Linear_is_derivation
 
 /-- The `0-1` rotation derivation is nonzero on `up0`. -/
 theorem rot01Linear_nonzero_on_up0 :
-    ∃ X : SplitCayley, rot01Linear X ≠ 0 :=
+    ∃ X : InfoGeometry.Lie.RealSplitOctonionDerivation.SplitCayley,
+      rot01Linear X ≠ 0 :=
   ⟨up0, rot01Real_nonzero_on_up0⟩
 
 ------------------------------------------------------------------
@@ -186,4 +184,4 @@ theorem g2_real_split_capstone :
 
 end InfoGeometry.Lie.G2TwoRealSplitClassification
 
-end noncomputable
+end

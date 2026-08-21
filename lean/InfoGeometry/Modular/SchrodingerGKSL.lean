@@ -29,7 +29,6 @@ open Finset
 namespace InfoGeometry.Modular.SchrodingerGKSL
 
 variable {n : Type*} [Fintype n]
-variable {ι : Type*} [Fintype ι]
 
 local notation "Mat" => Matrix n n ℂ
 
@@ -77,7 +76,7 @@ def schrodingerDissipatorTerm (V_k ρ : Mat) : Mat :=
 theorem trace_schrodingerDissipatorTerm_zero (V_k ρ : Mat) :
     Matrix.trace (schrodingerDissipatorTerm V_k ρ) = 0 := by
   dsimp [schrodingerDissipatorTerm]
-  rw [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_add]
+  rw [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_add, smul_eq_mul]
   
   -- Cyclic permutations of the trace
   have h_cyc1 : Matrix.trace (V_k * ρ * star V_k) = Matrix.trace (star V_k * V_k * ρ) := by
@@ -88,29 +87,22 @@ theorem trace_schrodingerDissipatorTerm_zero (V_k ρ : Mat) :
         simp only [mul_assoc]
   
   have h_cyc2 : Matrix.trace (ρ * star V_k * V_k) = Matrix.trace (star V_k * V_k * ρ) := by
-    have h_assoc : ρ * star V_k * V_k = ρ * (star V_k * V_k) := by simp only [mul_assoc]
-    rw [h_assoc]
-    exact Matrix.trace_mul_comm ρ (star V_k * V_k)
+    calc
+      Matrix.trace (ρ * star V_k * V_k) = Matrix.trace (ρ * (star V_k * V_k)) := by
+        simp only [mul_assoc]
+      _ = Matrix.trace (star V_k * V_k * ρ) := by
+        exact Matrix.trace_mul_comm ρ (star V_k * V_k)
   
   rw [h_cyc1, h_cyc2]
-  have h_two : Matrix.trace (star V_k * V_k * ρ) + Matrix.trace (star V_k * V_k * ρ) =
-      (2 : ℂ) * Matrix.trace (star V_k * V_k * ρ) := by ring
-  rw [h_two]
-  rw [smul_eq_mul]
-  have h_half_cancel : (1 / 2 : ℂ) * ((2 : ℂ) * Matrix.trace (star V_k * V_k * ρ)) =
-      Matrix.trace (star V_k * V_k * ρ) := by
-    calc
-      (1 / 2 : ℂ) * ((2 : ℂ) * Matrix.trace (star V_k * V_k * ρ))
-        = ((1 / 2 : ℂ) * 2) * Matrix.trace (star V_k * V_k * ρ) := by ring
-      _ = 1 * Matrix.trace (star V_k * V_k * ρ) := by norm_num
-      _ = Matrix.trace (star V_k * V_k * ρ) := one_mul _
-  rw [h_half_cancel, sub_self]
+  ring
 
 /-!
 =============================================================================
 PART 3: Full Multichannel Generator and Total Trace Preservation
 =============================================================================
 -/
+
+variable {ι : Type*} [Fintype ι]
 
 /-- The Full Multichannel Schrödinger Dissipator: 𝒟†(ρ) = ∑_k 𝒟†_{V_k}(ρ). -/
 def schrodingerDissipator (V : ι → Mat) (ρ : Mat) : Mat :=

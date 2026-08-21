@@ -51,8 +51,7 @@ theorem pc1_mul (X Y : SplitOctF2) :
     simp only [pc1Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two] <;>
-    ring
+    simp [F2_mul_two]
 
 theorem pc2_mul (X Y : SplitOctF2) :
     pc2Fun (mul X Y) = mul (pc2Fun X) (pc2Fun Y) := by
@@ -62,8 +61,7 @@ theorem pc2_mul (X Y : SplitOctF2) :
     simp only [pc2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two, F2_mul_four] <;>
-    ring
+    simp [F2_mul_two, F2_mul_four]
 
 theorem pc3_mul (X Y : SplitOctF2) :
     pc3Fun (mul X Y) = mul (pc3Fun X) (pc3Fun Y) := by
@@ -73,8 +71,7 @@ theorem pc3_mul (X Y : SplitOctF2) :
     simp only [pc3Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two, F2_mul_three, F2_mul_four] <;>
-    ring
+    simp [F2_mul_two, F2_mul_three, F2_mul_four]
 
 theorem pc4_mul (X Y : SplitOctF2) :
     pc4Fun (mul X Y) = mul (pc4Fun X) (pc4Fun Y) := by
@@ -84,8 +81,7 @@ theorem pc4_mul (X Y : SplitOctF2) :
     simp only [pc4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two] <;>
-    ring
+    simp [F2_mul_two]
 
 theorem pc5_mul (X Y : SplitOctF2) :
     pc5Fun (mul X Y) = mul (pc5Fun X) (pc5Fun Y) := by
@@ -95,8 +91,7 @@ theorem pc5_mul (X Y : SplitOctF2) :
     simp only [pc5Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two] <;>
-    ring
+    simp [F2_mul_two]
 
 theorem pc6_mul (X Y : SplitOctF2) :
     pc6Fun (mul X Y) = mul (pc6Fun X) (pc6Fun Y) := by
@@ -106,8 +101,7 @@ theorem pc6_mul (X Y : SplitOctF2) :
     simp only [pc6Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
-    simp only [F2_mul_two] <;>
-    ring
+    simp [F2_mul_two]
 
 theorem pc1_sq (X : SplitOctF2) : pc1Fun (pc1Fun X) = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
@@ -140,5 +134,92 @@ theorem pc3_sq (X : SplitOctF2) :
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   ext <;> dsimp [pc3Fun, pc6Fun, add2]
   all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
+
+theorem pc1_add (X Y : SplitOctF2) :
+    pc1Fun (add X Y) = add (pc1Fun X) (pc1Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc1Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc2_add (X Y : SplitOctF2) :
+    pc2Fun (add X Y) = add (pc2Fun X) (pc2Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc2Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc3_add (X Y : SplitOctF2) :
+    pc3Fun (add X Y) = add (pc3Fun X) (pc3Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc3Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc4_add (X Y : SplitOctF2) :
+    pc4Fun (add X Y) = add (pc4Fun X) (pc4Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc4Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc5_add (X Y : SplitOctF2) :
+    pc5Fun (add X Y) = add (pc5Fun X) (pc5Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc5Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc6_add (X Y : SplitOctF2) :
+    pc6Fun (add X Y) = add (pc6Fun X) (pc6Fun Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> dsimp [pc6Fun, add, add2]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+
+theorem pc1_one : pc1Fun one = one := by rfl
+theorem pc2_one : pc2Fun one = one := by rfl
+theorem pc3_one : pc3Fun one = one := by rfl
+theorem pc4_one : pc4Fun one = one := by rfl
+theorem pc5_one : pc5Fun one = one := by rfl
+theorem pc6_one : pc6Fun one = one := by rfl
+
+theorem pc1_injective : Function.Injective pc1Fun := by
+  intro X Y h
+  rw [← pc1_sq X, ← pc1_sq Y, h]
+theorem pc4_injective : Function.Injective pc4Fun := by
+  intro X Y h
+  rw [← pc4_sq X, ← pc4_sq Y, h]
+theorem pc5_injective : Function.Injective pc5Fun := by
+  intro X Y h
+  rw [← pc5_sq X, ← pc5_sq Y, h]
+theorem pc6_injective : Function.Injective pc6Fun := by
+  intro X Y h
+  rw [← pc6_sq X, ← pc6_sq Y, h]
+
+def pc1Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc1Fun ⟨pc1_injective, by
+    intro X
+    exact ⟨pc1Fun X, pc1_sq X⟩⟩
+
+def pc4Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc4Fun ⟨pc4_injective, by
+    intro X
+    exact ⟨pc4Fun X, pc4_sq X⟩⟩
+
+def pc5Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc5Fun ⟨pc5_injective, by
+    intro X
+    exact ⟨pc5Fun X, pc5_sq X⟩⟩
+
+def pc6Equiv : SplitOctF2 ≃ SplitOctF2 :=
+  Equiv.ofBijective pc6Fun ⟨pc6_injective, by
+    intro X
+    exact ⟨pc6Fun X, pc6_sq X⟩⟩
+
+def pc1Aut : SplitOctF2Aut := ⟨pc1Equiv, pc1_one, pc1_add, pc1_mul⟩
+def pc4Aut : SplitOctF2Aut := ⟨pc4Equiv, pc4_one, pc4_add, pc4_mul⟩
+def pc5Aut : SplitOctF2Aut := ⟨pc5Equiv, pc5_one, pc5_add, pc5_mul⟩
+def pc6Aut : SplitOctF2Aut := ⟨pc6Equiv, pc6_one, pc6_add, pc6_mul⟩
 
 end InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators

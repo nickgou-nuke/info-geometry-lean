@@ -3,21 +3,15 @@ import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import Mathlib.Tactic
 
-set_option maxHeartbeats 1000000
-
 namespace InfoGeometry.Algebra.Zorn.G2TwoExactSixGenerators
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
-open scoped BigOperators
-
 lemma F2_mul_two (x : F2) : x * 2 = 0 := by fin_cases x <;> rfl
 lemma F2_mul_three (x : F2) : x * 3 = x := by fin_cases x <;> rfl
 lemma F2_mul_four (x : F2) : x * 4 = 0 := by fin_cases x <;> rfl
-lemma F2_bit_sq (x : Bool) : bitToF2 x * bitToF2 x = bitToF2 x := by
-  cases x <;> simp [bitToF2]
 
 /- The six matrices exported by the carrier-level CAS artifact, written as
    coordinate maps.  The coordinate order is (a,b,x0,x1,x2,y0,y1,y2). -/
@@ -105,65 +99,60 @@ theorem g6_involutive (X : SplitOctF2) : g6 (g6 X) = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rfl
 
-theorem g1_one : g1 one = one := by rfl
-theorem g2_one : g2 one = one := by rfl
-theorem g3_one : g3 one = one := by rfl
-theorem g4_one : g4 one = one := by rfl
-theorem g5_one : g5 one = one := by rfl
-theorem g6_one : g6 one = one := by rfl
-
 theorem g1_mul (X Y : SplitOctF2) : g1 (mul X Y) = mul (g1 X) (g1 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g1, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf 
 
 theorem g2_mul (X Y : SplitOctF2) : g2 (mul X Y) = mul (g2 X) (g2 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g2, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;>
+    simp only [F2_mul_two] <;>
+    ring
 
 theorem g3_mul (X Y : SplitOctF2) : g3 (mul X Y) = mul (g3 X) (g3 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g3, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;>
+    simp only [F2_mul_two, F2_mul_three, F2_mul_four] <;>
+    ring
 
 theorem g4_mul (X Y : SplitOctF2) : g4 (mul X Y) = mul (g4 X) (g4 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g4, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;>
+    simp only [F2_mul_two] <;>
+    ring
 
 theorem g5_mul (X Y : SplitOctF2) : g5 (mul X Y) = mul (g5 X) (g5 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g5, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;>
+    simp only [F2_mul_two] <;>
+    ring
 
 theorem g6_mul (X Y : SplitOctF2) : g6 (mul X Y) = mul (g6 X) (g6 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
+  ext <;> rw [← bitToF2_eq_iff] <;>
     simp only [g6, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+      bitToF2_xor, bitToF2_and] <;>
+    ring_nf 
 
 end InfoGeometry.Algebra.Zorn.G2TwoExactSixGenerators

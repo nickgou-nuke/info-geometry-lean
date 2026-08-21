@@ -506,4 +506,43 @@ theorem deriv2_massieu_direction
   intro i hi
   ring
 
+/-- The same Hessian identity holds at every point of the finite exponential
+family trajectory, not only at its base point. -/
+theorem deriv2_massieu_direction_at
+    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ) :
+    deriv (fun s : ℝ =>
+      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t =
+      fisherMetric (fun i => θ i + t * X i) X X := by
+  let w : ι → ℝ := fun i => Real.exp (θ i)
+  have hcurve :
+      (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) =
+        (fun r : ℝ => InfoGeometry.Analytic.logSumExp w X r) := by
+    funext r
+    unfold massieuPotential massieu Phi Z
+    unfold InfoGeometry.Analytic.logSumExp
+      InfoGeometry.Analytic.logSumExpPartition
+    congr 1
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Real.exp_add]
+  rw [hcurve]
+  have hw : ∀ i, 0 < w i := fun i => Real.exp_pos _
+  rw [InfoGeometry.Analytic.logSumExp_secondDeriv_eq_variance w X hw t]
+  rw [InfoGeometry.Analytic.logSumExpVariance_eq_centered w X hw t]
+  have hweight (i : ι) :
+      InfoGeometry.Analytic.logSumExpWeight w X t i =
+        prob (fun j => θ j + t * X j) i := by
+    unfold InfoGeometry.Analytic.logSumExpWeight w
+      InfoGeometry.Analytic.logSumExpPartition prob Z
+    rw [Real.exp_add]
+    congr 1
+    apply Finset.sum_congr rfl
+    intro j hj
+    rw [Real.exp_add]
+  simp_rw [hweight]
+  simp [fisherMetric, fisherCov, expect, pow_two]
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
+
 end InfoGeometry.Thermodynamics.FiniteGibbsRelative

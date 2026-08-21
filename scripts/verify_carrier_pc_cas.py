@@ -15,7 +15,7 @@ import numpy as np
 from sympy import Poly, symbols
 
 ROOT = Path(__file__).resolve().parents[1]
-gap_script = ROOT / "scripts" / "derive_carrier_b_pc_normal_form.g"
+gap_script = ROOT / "scripts" / "export_carrier_pc_rows.g"
 run = subprocess.run(
     ["gap", "-q", str(gap_script)],
     cwd=ROOT,

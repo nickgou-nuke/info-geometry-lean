@@ -722,6 +722,7 @@ import InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauHorizontalFlow
 import InfoGeometry.Arithmetic.ZetaSouriauEntropyMetriplecticBridge
 import InfoGeometry.Arithmetic.ZetaSouriauFreeEnergyContourBridge
+import InfoGeometry.Arithmetic.ZetaCayleyKleinBottleBridge
 import InfoGeometry.Arithmetic.FiniteMangoldtEntropyBridge
 import InfoGeometry.Arithmetic.ZetaSouriauAttachmentMasterBridge
 import InfoGeometry.Arithmetic.ZetaSouriauOnsagerFactorizationBridge
@@ -5402,6 +5403,7 @@ import InfoGeometry.Modular.SemidirectProductLieAlgebra
 import InfoGeometry.Modular.TrifoldClassification
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Modular.TrifoldUniversalSynthesis
+import InfoGeometry.Zeta.ZetaCayleyKleinBottleBridge
 import InfoGeometry.ModularVolumePotential
 import InfoGeometry.Monster.MathieuMoonshineMockModularBridge
 import InfoGeometry.Monster.MonsterMoonshineThermal

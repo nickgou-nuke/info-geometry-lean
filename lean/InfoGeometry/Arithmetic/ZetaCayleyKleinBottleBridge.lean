@@ -15,15 +15,25 @@ def R (β : ℂ) : ℂ := 2 - star β
 @[simp] theorem C_apply (β : ℂ) : C β = star β := rfl
 @[simp] theorem R_apply (β : ℂ) : R β = 2 - star β := rfl
 
-theorem starRingEnd_two : (starRingEnd ℂ) (2 : ℂ) = 2 := map_ofNat (starRingEnd ℂ) 2
+theorem starRingEnd_two :
+    (starRingEnd ℂ) (2 : ℂ) = 2 :=
+  map_ofNat (starRingEnd ℂ) 2
 
-@[simp] theorem F_F (β : ℂ) : F (F β) = β := by
-  dsimp [F]; ring
+@[simp]
+theorem F_F (β : ℂ) :
+    F (F β) = β := by
+  dsimp [F]
+  ring
 
-@[simp] theorem C_C (β : ℂ) : C (C β) = β := by
-  dsimp [C]; exact star_star β
+@[simp]
+theorem C_C (β : ℂ) :
+    C (C β) = β := by
+  dsimp [C]
+  exact star_star β
 
-@[simp] theorem R_R (β : ℂ) : R (R β) = β := by
+@[simp]
+theorem R_R (β : ℂ) :
+    R (R β) = β := by
   dsimp [R]
   have hsub : (starRingEnd ℂ) (2 - (starRingEnd ℂ) β) = (starRingEnd ℂ) (2 : ℂ) - (starRingEnd ℂ) ((starRingEnd ℂ) β) :=
     map_sub (starRingEnd ℂ) 2 ((starRingEnd ℂ) β)
@@ -31,19 +41,24 @@ theorem starRingEnd_two : (starRingEnd ℂ) (2 : ℂ) = 2 := map_ofNat (starRing
   rw [hsub, starRingEnd_two, hss]
   ring
 
-theorem F_comp_C (β : ℂ) : F (C β) = R β := by
+theorem F_comp_C (β : ℂ) :
+    F (C β) = R β := by
   dsimp [F, C, R]
 
-theorem C_comp_F (β : ℂ) : C (F β) = R β := by
+theorem C_comp_F (β : ℂ) :
+    C (F β) = R β := by
   dsimp [F, C, R]
   have hsub : (starRingEnd ℂ) (2 - β) = (starRingEnd ℂ) (2 : ℂ) - (starRingEnd ℂ) β :=
     map_sub (starRingEnd ℂ) 2 β
   rw [hsub, starRingEnd_two]
 
-theorem F_comp_R (β : ℂ) : F (R β) = C β := by
-  dsimp [F, R, C]; ring
+theorem F_comp_R (β : ℂ) :
+    F (R β) = C β := by
+  dsimp [F, R, C]
+  ring
 
-theorem R_comp_F (β : ℂ) : R (F β) = C β := by
+theorem R_comp_F (β : ℂ) :
+    R (F β) = C β := by
   dsimp [F, R, C]
   have hsub : (starRingEnd ℂ) (2 - β) = (starRingEnd ℂ) (2 : ℂ) - (starRingEnd ℂ) β :=
     map_sub (starRingEnd ℂ) 2 β
@@ -51,7 +66,8 @@ theorem R_comp_F (β : ℂ) : R (F β) = C β := by
   ring
 
 /-- 🏆 THEOREM 1: The fixed points of R are precisely the critical line Re(β) = 1. -/
-theorem R_fixed_iff (β : ℂ) : R β = β ↔ β.re = 1 := by
+theorem R_fixed_iff (β : ℂ) :
+    R β = β ↔ β.re = 1 := by
   dsimp [R]
   constructor
   · intro h
@@ -78,10 +94,15 @@ noncomputable def cayleyZ (β : ℂ) : ℂ :=
 noncomputable def invCayleyZ (z : ℂ) : ℂ :=
   (2 * z) / (1 + z)
 
-@[simp] theorem cayleyZ_zero : cayleyZ 0 = 0 := by
-  dsimp [cayleyZ]; simp
+@[simp]
+theorem cayleyZ_zero :
+    cayleyZ 0 = 0 := by
+  dsimp [cayleyZ]
+  simp
 
-@[simp] theorem cayleyZ_one : cayleyZ 1 = 1 := by
+@[simp]
+theorem cayleyZ_one :
+    cayleyZ 1 = 1 := by
   dsimp [cayleyZ]
   have h21 : (2 : ℂ) - 1 = 1 := by ring
   rw [h21, div_one]
@@ -121,11 +142,8 @@ theorem normSq_cayleyZ_critical (t : ℝ) :
   have hpos : (1 + t^2 : ℝ) ≠ 0 := by positivity
   exact div_self hpos
 
-/-!
-The preceding parametrized result has the following exact converse form on
-the domain where the Cayley denominator is nonzero.  The hypothesis is
-essential: at `β = 2`, Lean's field division convention gives `0 / 0 = 0`.
--/
+/-- 🏆 THEOREM 2b: Exact general biconditional on the domain 2 - β ≠ 0:
+    |z(β)|² = 1 ↔ Re(β) = 1. -/
 theorem normSq_cayleyZ_eq_one_iff (β : ℂ) (hβ : 2 - β ≠ 0) :
     normSq (cayleyZ β) = 1 ↔ β.re = 1 := by
   dsimp [cayleyZ]
@@ -179,7 +197,7 @@ theorem circle_reflection_fixed (z : ℂ) (hz : normSq z = 1) :
     rw [hmul, hz, ofReal_one]
   exact inv_eq_of_mul_eq_one_right h1
 
-/-- 🏆 THEOREM: Full biconditional for critical circle reflection: (star z)⁻¹ = z ↔ |z|² = 1. -/
+/-- 🏆 THEOREM 6b: Full biconditional for critical circle reflection: (star z)⁻¹ = z ↔ |z|² = 1. -/
 theorem circle_reflection_fixed_iff (z : ℂ) (hz : z ≠ 0) :
     (star z)⁻¹ = z ↔ normSq z = 1 := by
   have h_star_ne : star z ≠ 0 := by
@@ -206,7 +224,8 @@ theorem circle_reflection_fixed_iff (z : ℂ) (hz : z ≠ 0) :
 noncomputable def tauGlide (z : ℂ) : ℂ :=
   - (star z)⁻¹
 
-@[simp] theorem tauGlide_apply (z : ℂ) :
+@[simp]
+theorem tauGlide_apply (z : ℂ) :
     tauGlide z = - (star z)⁻¹ := rfl
 
 /-- 🏆 THEOREM 7: The glide involution is an exact involution: τ(τ(z)) = z. -/

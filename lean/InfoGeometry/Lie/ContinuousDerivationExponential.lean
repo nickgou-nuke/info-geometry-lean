@@ -1,6 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Normed.Operator.Bilinear
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Tactic
 
 /-!
@@ -265,6 +266,36 @@ theorem hasStrictDerivAt_orbit_right
       (hasStrictDerivAt_flow_right D t)
       (hasStrictDerivAt_const t x)
   simpa [evalOp, ContinuousLinearMap.mul_apply] using h
+
+/--
+Integral form of the orbit equation:
+
+`∫ s in 0..t, D (Φ_s x) = Φ_t x - x`.
+
+This is the Banach-space fundamental theorem of calculus applied to the
+continuous exponential orbit.  It is independent of associativity of any
+additional multiplication on `A`.
+*/
+theorem flow_integral_generator
+    (D : EndA)
+    (x : A)
+    (t : ℝ) :
+    ∫ s in (0 : ℝ)..t, D (flow D s x) = flow D t x - x := by
+  have hderiv :
+      ∀ s ∈ Set.uIcc (0 : ℝ) t,
+        HasDerivAt (fun r : ℝ => flow D r x) (D (flow D s x)) s := by
+    intro s hs
+    exact (hasStrictDerivAt_orbit D x s).hasDerivAt
+  have hcont :
+      Continuous (fun s : ℝ => D (flow D s x)) := by
+    apply continuous_iff_continuousAt.mpr
+    intro s
+    exact (ContinuousLinearMap.continuous D).continuousAt.comp s
+      (hasStrictDerivAt_orbit D x s).continuousAt
+  simpa [flow_zero] using
+      (intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (a := (0 : ℝ)) (b := t) hderiv
+      (hcont.intervalIntegrable (μ := MeasureTheory.volume) 0 t))
 
 /--
 `D` commutes with its own exponential flow:

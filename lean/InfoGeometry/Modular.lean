@@ -4,6 +4,7 @@ import InfoGeometry.Modular.WeylPfaffianDeterminantTriple
 import InfoGeometry.Modular.DerivationLieIdeal
 import InfoGeometry.Modular.ModularTimeSemigroupBridge
 import InfoGeometry.Modular.SemidirectExteriorAlgebra
+import InfoGeometry.Modular.GKSLDissipatorAlgebraic
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
 
 /-!

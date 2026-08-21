@@ -30,9 +30,7 @@ def adK (K : A) : A →ₗ[ℤ] A where
     have hR : (r • X) * K = r • (X * K) := (AddMonoidHom.mulRight K).map_zsmul X r
     rw [hL, hR, smul_sub]
 
-@[simp]
-theorem adK_apply (K X : A) : adK K X = K * X - X * K := by
-  dsimp [adK]
+@[simp] theorem adK_apply (K : A) (X : A) : adK K X = K * X - X * K := rfl
 
 /-- 
   THEOREM 1: The Modular Commutator is a Genuine Derivation.
@@ -53,8 +51,7 @@ theorem adK_is_derivation (K : A) (X Y : A) :
 /-- THEOREM 2: The Modular Derivation annihilates the identity element: ad_K(1) = 0. -/
 @[simp]
 theorem adK_one (K : A) : adK K 1 = 0 := by
-  dsimp [adK]
-  rw [mul_one, one_mul, sub_self]
+  rw [adK_apply K 1, mul_one, one_mul, sub_self]
 
 /-!
 =============================================================================

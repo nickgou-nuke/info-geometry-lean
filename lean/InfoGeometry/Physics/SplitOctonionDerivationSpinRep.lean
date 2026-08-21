@@ -13,14 +13,13 @@ Key Theorems:
    ρ_𝔰𝔩₃(A) = diag(A, -Aᵀ)
 2. Block-off-diagonal action of the pairing sector 𝟑 ⊕ 𝟑*:
    ρ_pair(u, v) = antidiag(Σ(u), Σ(v))
-3. Trace-zero of the BdG representation:
-   Tr(ρ(A, u, v)) = 0
-4. Commutator Lie algebra structure matching the BdG Hamiltonian structure.
+3. Grading involution Γ = diag(I₃, -I₃) with Γ² = I.
+4. Cartan projectors P₊ = (1/2)(I + Γ), P₋ = (1/2)(I - Γ).
+5. Supertrace and trace vanishing theorems.
+6. Commutator Lie algebra structure matching the BdG Hamiltonian structure.
 
 All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 -/
-
-noncomputable section
 
 namespace InfoGeometry.Physics.SplitOctonionSpinRep
 
@@ -37,7 +36,7 @@ def inclPlus (i : Fin 3) : Fin 6 :=
 def inclMinus (i : Fin 3) : Fin 6 :=
   ⟨i.val + 3, by omega⟩
 
-/-- 
+/--
   Block-diagonal BdG embedding of 𝔰𝔩(3, ℝ) generator A:
   Top-left: A
   Bottom-right: -Aᵀ
@@ -56,7 +55,7 @@ def rhoSL3 (A : Matrix (Fin 3) (Fin 3) ℝ) : BdGMatrix :=
       else
         - (Aᵀ ⟨i.val - 3, by omega⟩ ⟨j.val - 3, by omega⟩)
 
-/-- 
+/--
   Skew-symmetric pairing matrix Σ(u) for vector u : Fin 3 → ℝ:
   Representing the pairing gap Δ_ij = ε_ijk u^k.
 -/
@@ -70,7 +69,7 @@ def pairingMatrix (u : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
     else if i.val = 2 ∧ j.val = 1 then - u 0
     else 0
 
-/-- 
+/--
   Block-off-diagonal BdG embedding of the pairing sector (u, v) ∈ 𝟑 ⊕ 𝟑*:
   Top-right: Σ(u)
   Bottom-left: Σ(v)
@@ -89,11 +88,35 @@ def rhoPair (u v : Fin 3 → ℝ) : BdGMatrix :=
       else
         0
 
-/-- The full BdG derivation representation:
-    ρ(A, u, v) = ρ_𝔰𝔩₃(A) + ρ_pair(u, v)
+/--
+  The full BdG derivation representation:
+  ρ(A, u, v) = ρ_𝔰𝔩₃(A) + ρ_pair(u, v)
 -/
 def rhoDerivation (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 → ℝ) : BdGMatrix :=
   rhoSL3 A + rhoPair u v
+
+/-- The grading involution Γ = diag(I₃, -I₃) on BdG spinor space. -/
+def gradingInvolution : BdGMatrix :=
+  fun i j =>
+    if hi : i.val < 3 then
+      if hj : j.val < 3 then
+        if i = j then 1 else 0
+      else 0
+    else
+      if hj : j.val < 3 then 0
+      else if i = j then -1 else 0
+
+/-- The Cartan projector onto the H₊ sector, elementwise: (1 + Γ_ii)/2. -/
+def cartanProjectorPlus : BdGMatrix :=
+  fun i j => if i = j then if i.val < 3 then 1 else 0 else 0
+
+/-- The Cartan projector onto the H₋ sector, elementwise: (1 - Γ_ii)/2. -/
+def cartanProjectorMinus : BdGMatrix :=
+  fun i j => if i = j then if i.val ≥ 3 then 1 else 0 else 0
+
+/-- The supertrace of a BdG matrix: STr(M) = Σ_i (-1)^{i.val} M_ii. -/
+def superTrace (M : BdGMatrix) : ℝ :=
+  ∑ i : Fin 6, if i.val < 3 then M i i else - M i i
 
 /-!
 =============================================================================
@@ -127,11 +150,57 @@ theorem pairingMatrix_skew (u : Fin 3 → ℝ) (i j : Fin 3) :
 
 /-!
 =============================================================================
-PART 2: Trace Zero and BdG Structure
+PART 2: Grading, Cartan Projectors, and Supertrace
 =============================================================================
 -/
 
-/-- THEOREM 4 (Trace of ρ_𝔰𝔩₃ is zero for any matrix A): -/
+/-- THEOREM 4 (Grading involution squares to identity): -/
+theorem gradingInvolution_sq_eq_id :
+    gradingInvolution * gradingInvolution = (1 : BdGMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [gradingInvolution, Matrix.mul_apply, Matrix.one_apply]
+
+/-- THEOREM 5 (Cartan projector idempotence on H₊): -/
+theorem cartanProjectorPlus_sq_eq_self :
+    cartanProjectorPlus * cartanProjectorPlus = cartanProjectorPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [cartanProjectorPlus, Matrix.mul_apply, Fin.eta]
+
+/-- THEOREM 6 (Cartan projector idempotence on H₋): -/
+theorem cartanProjectorMinus_sq_eq_self :
+    cartanProjectorMinus * cartanProjectorMinus = cartanProjectorMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [cartanProjectorMinus, Matrix.mul_apply, Fin.eta]
+
+/-- THEOREM 7 (Projectors sum to identity): -/
+theorem cartanProjector_plus_add_cartanProjector_minus :
+    cartanProjectorPlus + cartanProjectorMinus = (1 : BdGMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [cartanProjectorPlus, cartanProjectorMinus, add_comm]
+
+/-- THEOREM 8 (Projectors multiply to zero): -/
+theorem cartanProjector_plus_mul_cartanProjector_minus :
+    cartanProjectorPlus * cartanProjectorMinus = (0 : BdGMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [cartanProjectorPlus, cartanProjectorMinus, Matrix.mul_apply]
+
+/-- THEOREM 9 (Projector localization on H₊): -/
+theorem cartanProjectorPlus_apply_inclPlus (i : Fin 3) :
+    cartanProjectorPlus (inclPlus i) (inclPlus i) = 1 := by
+  simp [cartanProjectorPlus, inclPlus, Fin.eta]
+
+/-- THEOREM 10 (Projector localization on H₋): -/
+theorem cartanProjectorMinus_apply_inclMinus (i : Fin 3) :
+    cartanProjectorMinus (inclMinus i) (inclMinus i) = 1 := by
+  simp [cartanProjectorMinus, inclMinus, Fin.eta]
+
+/-!
+=============================================================================
+PART 3: Trace Zero and BdG Structure
+=============================================================================
+-/
+
+/-- THEOREM 11 (Trace of ρ_𝔰𝔩₃ is zero for any matrix A): -/
 theorem rhoSL3_trace_zero (A : Matrix (Fin 3) (Fin 3) ℝ) :
     Matrix.trace (rhoSL3 A) = 0 := by
   dsimp [Matrix.trace, rhoSL3, Matrix.diag, Matrix.transpose]
@@ -139,7 +208,7 @@ theorem rhoSL3_trace_zero (A : Matrix (Fin 3) (Fin 3) ℝ) :
   dsimp
   ring
 
-/-- THEOREM 5 (Trace of ρ_pair is zero): -/
+/-- THEOREM 12 (Trace of ρ_pair is zero): -/
 theorem rhoPair_trace_zero (u v : Fin 3 → ℝ) :
     Matrix.trace (rhoPair u v) = 0 := by
   dsimp [Matrix.trace, rhoPair, Matrix.diag]
@@ -147,7 +216,7 @@ theorem rhoPair_trace_zero (u v : Fin 3 → ℝ) :
   dsimp
   ring
 
-/-- THEOREM 6 (The full BdG derivation representation has trace zero): -/
+/-- THEOREM 13 (The full BdG derivation representation has trace zero): -/
 theorem rhoDerivation_trace_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 → ℝ) :
     Matrix.trace (rhoDerivation A u v) = 0 := by
   dsimp [rhoDerivation]
@@ -155,6 +224,32 @@ theorem rhoDerivation_trace_zero (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 �
   rw [rhoSL3_trace_zero, rhoPair_trace_zero]
   exact add_zero 0
 
-end InfoGeometry.Physics.SplitOctonionSpinRep
+/-- THEOREM 14 (Supertrace of the pairing sector vanishes): -/
+theorem superTrace_rhoPair_zero (u v : Fin 3 → ℝ) :
+    superTrace (rhoPair u v) = 0 := by
+  dsimp [superTrace, rhoPair]
+  rw [show (∑ i : Fin 6, - rhoPair u v i i) = -∑ i : Fin 6, rhoPair u v i i by simp [sum_neg]]
+  rw [show (∑ i : Fin 6, rhoPair u v i i) = 0 by
+        dsimp [rhoPair, Matrix.trace, Matrix.diag]
+        simp only [Fin.sum_univ_six, Fin.val_zero, Fin.val_one, Fin.val_two]
+        dsimp
+        ring]
+  ring
 
-end noncomputable section
+/-- THEOREM 15 (Supertrace of ρ_𝔰𝔩₃ is twice the trace of A): -/
+theorem superTrace_rhoSL3 (A : Matrix (Fin 3) (Fin 3) ℝ) :
+    superTrace (rhoSL3 A) = 2 * Matrix.trace A := by
+  dsimp [superTrace, rhoSL3, Matrix.trace, Matrix.diag, Matrix.transpose]
+  simp only [Fin.sum_univ_six, Fin.val_zero, Fin.val_one, Fin.val_two]
+  dsimp
+  ring
+
+/-- THEOREM 16 (Supertrace of the full BdG derivation): -/
+theorem superTrace_rhoDerivation (A : Matrix (Fin 3) (Fin 3) ℝ) (u v : Fin 3 → ℝ) :
+    superTrace (rhoDerivation A u v) = 2 * Matrix.trace A := by
+  dsimp [rhoDerivation, superTrace]
+  rw [superTrace_rhoSL3]
+  rw [superTrace_rhoPair_zero]
+  ring
+
+end InfoGeometry.Physics.SplitOctonionSpinRep

@@ -1,3 +1,4 @@
+import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AkivisLeftRegularBridge
 import InfoGeometry.Algebra.RealAlbertJordanOperator

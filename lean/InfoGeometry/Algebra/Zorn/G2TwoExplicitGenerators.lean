@@ -57,6 +57,47 @@ theorem swap01Aut_ne_one :
   change false = true at hx
   exact Bool.noConfusion hx
 
+def cycle012Fun : SplitOctF2 → SplitOctF2
+  | ⟨a, b, x0, x1, x2, y0, y1, y2⟩ =>
+      ⟨a, b, x1, x2, x0, y1, y2, y0⟩
+
+noncomputable def cycle012Equiv : SplitOctF2 ≃ SplitOctF2 where
+  toFun := cycle012Fun
+  invFun := fun ⟨a, b, x0, x1, x2, y0, y1, y2⟩ =>
+    ⟨a, b, x2, x0, x1, y2, y0, y1⟩
+  left_inv := by intro X; cases X <;> rfl
+  right_inv := by intro X; cases X <;> rfl
+
+theorem cycle012_add (X Y : SplitOctF2) :
+    cycle012Fun (add X Y) = add (cycle012Fun X) (cycle012Fun Y) := by
+  native_decide +revert
+
+theorem cycle012_mul (X Y : SplitOctF2) :
+    cycle012Fun (mul X Y) = mul (cycle012Fun X) (cycle012Fun Y) := by
+  native_decide +revert
+
+noncomputable def cycle012Aut : SplitOctF2Aut :=
+  ⟨cycle012Equiv, by
+    refine ⟨?_, ?_, ?_⟩
+    · rfl
+    · intro X Y
+      exact cycle012_add X Y
+    · intro X Y
+      exact cycle012_mul X Y⟩
+
+theorem cycle012Aut_cube :
+    cycle012Aut * cycle012Aut * cycle012Aut = (1 : SplitOctF2Aut) := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  cases X <;> rfl
+
+theorem cycle012Aut_ne_one : cycle012Aut ≠ (1 : SplitOctF2Aut) := by
+  intro h
+  have h_apply := congrArg (fun f : SplitOctF2Aut => (f.1 up0).x2) h
+  revert h_apply
+  decide
+
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 namespace InfoGeometry.Algebra.Zorn.G2Unipotent
@@ -254,14 +295,6 @@ theorem finite_g2_carrier_card_lower_bound :
   exact le_trans simpleRootSubgroup_card_lower_bound
     (Fintype.card_subtype_le (fun f : SplitOctF2Aut =>
       f ∈ simpleRootSubgroup))
-
-theorem simple_root_product_pow_four :
-    (unipotentShortAut true * unipotentLongAut true) ^ 4 =
-      (1 : SplitOctF2Aut) := by
-  apply Subtype.ext
-  apply Equiv.ext
-  intro X
-  cases X <;> rfl
 
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧

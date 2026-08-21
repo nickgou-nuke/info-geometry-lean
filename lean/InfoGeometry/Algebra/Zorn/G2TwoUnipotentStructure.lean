@@ -13,7 +13,9 @@ namespace InfoGeometry.Algebra.Zorn.G2TwoUnipotentStructure
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2SteinbergRoots
 
-/-- The unipotent radical U of G₂(2) is parameterized by 6 independent root coordinates in 𝔽₂. -/
+/-! The abstract six-coordinate space used for a prospective unipotent
+parameterization.  It is not identified here with the closure of the
+concrete packet in `SplitOctF2Aut`. -/
 abbrev UnipotentCoords := Fin 6 → ZMod 2
 
 /-- THEOREM: Cardinality of UnipotentCoords is 2⁶ = 64 by standard Mathlib Fintype.pi cardinality. -/
@@ -22,7 +24,7 @@ theorem unipotent_coords_card : Fintype.card UnipotentCoords = 64 := by
   rw [Fintype.card_fun, Fintype.card_fin, ZMod.card]
   rfl
 
-/-- Composition series factors for the 6-step unipotent filtration. -/
+/-! Numerical factors for an abstract six-step coordinate filtration. -/
 def filtrationStep (k : Fin 7) : ℕ := 2 ^ (6 - k.val)
 
 theorem filtration_top : filtrationStep 0 = 64 := rfl
@@ -38,6 +40,18 @@ theorem filtration_step_ratio (k : Fin 6) :
 /-- Explicit embedding of 6-dimensional unipotent coordinates into SplitOctF2Aut. -/
 noncomputable def coordsToAut (c : UnipotentCoords) : SplitOctF2Aut :=
   unipotentWord6 (fun i => (c i).val == 1)
+
+theorem coordsToAut_mem_positiveRootSubgroup (c : UnipotentCoords) :
+    coordsToAut c ∈ positiveRootSubgroup := by
+  exact unipotentWord6_mem_positiveRootSubgroup _
+
+def orderedRootWords : Set SplitOctF2Aut := Set.range unipotentWord6
+
+theorem orderedRootWords_subset_positiveRootSubgroup :
+    orderedRootWords ⊆ positiveRootSubgroup := by
+  intro g hg
+  rcases hg with ⟨b, rfl⟩
+  exact unipotentWord6_mem_positiveRootSubgroup b
 
 /-- The concrete injectivity statement requires six coordinate separators. -/
 theorem coordsToAut_injective_of_coordinate_separators
@@ -86,18 +100,5 @@ theorem coordsToAut_range_card_of_coordinate_separators
       (coordsToAut_injective_of_coordinate_separators h0 h1 h2 h3 h4 h5)).symm
   rw [Fintype.card_congr hequiv]
   exact unipotent_coords_card
-
-/-- 🏆 THEOREM: The 6-coordinate unipotent parametrization into SplitOctF2Aut is strictly injective! -/
-theorem coordsToAut_injective : Function.Injective coordsToAut := by
-  exact coordsToAut_injective_of_coordinate_separators
-    unipotentWord6_b0 unipotentWord6_b1 unipotentWord6_b2
-    unipotentWord6_b3 unipotentWord6_b4 unipotentWord6_b5
-
-/-- 🏆 THEOREM: The range of coordsToAut has cardinality exactly 64. -/
-theorem coordsToAut_range_card :
-    Fintype.card (Set.range coordsToAut) = 64 := by
-  exact coordsToAut_range_card_of_coordinate_separators
-    unipotentWord6_b0 unipotentWord6_b1 unipotentWord6_b2
-    unipotentWord6_b3 unipotentWord6_b4 unipotentWord6_b5
 
 end InfoGeometry.Algebra.Zorn.G2TwoUnipotentStructure

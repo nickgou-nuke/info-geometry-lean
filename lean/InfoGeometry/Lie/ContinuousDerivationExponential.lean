@@ -288,13 +288,19 @@ theorem flow_integral_generator
     exact (hasStrictDerivAt_orbit D x s).hasDerivAt
   have hcont :
       Continuous (fun s : ℝ => D (flow D s x)) := by
-    apply continuous_iff_continuousAt.mpr
-    intro s
-    exact D.continuous.continuousAt.comp (hasStrictDerivAt_orbit D x s).continuousAt
+    have horbit : Continuous (fun s : ℝ => flow D s x) := by
+      apply continuous_iff_continuousAt.mpr
+      intro s
+      exact (hasStrictDerivAt_orbit D x s).continuousAt
+    exact D.continuous.comp horbit
+  have hint :
+      IntervalIntegrable (fun s : ℝ => D (flow D s x))
+        MeasureTheory.volume 0 t := by
+    exact hcont.intervalIntegrable (μ := MeasureTheory.volume) 0 t
   simpa [flow_zero] using
       (intervalIntegral.integral_eq_sub_of_hasDerivAt
       (a := (0 : ℝ)) (b := t) hderiv
-      (hcont.intervalIntegrable (0 : ℝ) t))
+      hint)
 
 /--
 `D` commutes with its own exponential flow:

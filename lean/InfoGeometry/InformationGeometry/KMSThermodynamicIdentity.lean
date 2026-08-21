@@ -48,8 +48,9 @@ theorem partitionZ_pos [Nonempty ι] (K : ι → ℝ) : 0 < partitionZ K := by
 def gibbsProb (K : ι → ℝ) (i : ι) : ℝ :=
   Real.exp (-K i) / partitionZ K
 
-theorem gibbsProb_pos [Nonempty ι] (K : ι → ℝ) (i : ι) : 0 < gibbsProb K i :=
-  div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)
+theorem gibbsProb_pos [Nonempty ι] (K : ι → ℝ) (i : ι) : 0 < gibbsProb K i := by
+  dsimp [gibbsProb]
+  exact div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)
 
 @[simp]
 theorem gibbsProb_sum_one [Nonempty ι] (K : ι → ℝ) : ∑ i, gibbsProb K i = 1 := by

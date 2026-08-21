@@ -81,9 +81,79 @@ theorem pcWord_apply (e : PCWordExp) (X : SplitOctF2) :
 def basisAction (e : PCWordExp) : Fin 8 → SplitOctF2 :=
   fun i => pcWordFun e (basis8 i)
 
-/-- 🏆 THEOREM: The 64 PC basis actions are 100% distinct (injective). -/
+/-- Structural coordinate recovery functions on basisAction. -/
+def recover0 (A : Fin 8 → SplitOctF2) : Bool := (A 7).x0
+def recover1 (A : Fin 8 → SplitOctF2) : Bool := (A 2).x1
+def recover2 (A : Fin 8 → SplitOctF2) : Bool := (A 2).a
+def recover4 (A : Fin 8 → SplitOctF2) : Bool :=
+  let b1 := recover1 A
+  let b2 := recover2 A
+  (A 2).y1 ^^ b1 ^^ b2
+def recover3 (A : Fin 8 → SplitOctF2) : Bool :=
+  let b0 := recover0 A
+  let b1 := recover1 A
+  let b2 := recover2 A
+  let b4 := recover4 A
+  (A 3).x2 ^^ (b0 && b2) ^^ b0 ^^ b1 ^^ b2 ^^ b4
+def recover5 (A : Fin 8 → SplitOctF2) : Bool :=
+  let b1 := recover1 A
+  let b3 := recover3 A
+  let b4 := recover4 A
+  (A 2).x2 ^^ (b1 && b3) ^^ (b1 && b4)
+
+theorem recover0_basisAction (e : PCWordExp) :
+    recover0 (basisAction e) = e 0 := by
+  dsimp [recover0, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+theorem recover1_basisAction (e : PCWordExp) :
+    recover1 (basisAction e) = e 1 := by
+  dsimp [recover1, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+theorem recover2_basisAction (e : PCWordExp) :
+    recover2 (basisAction e) = e 2 := by
+  dsimp [recover2, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+theorem recover4_basisAction (e : PCWordExp) :
+    recover4 (basisAction e) = e 4 := by
+  dsimp [recover4, recover1, recover2, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+theorem recover3_basisAction (e : PCWordExp) :
+    recover3 (basisAction e) = e 3 := by
+  dsimp [recover3, recover4, recover0, recover1, recover2, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+theorem recover5_basisAction (e : PCWordExp) :
+    recover5 (basisAction e) = e 5 := by
+  dsimp [recover5, recover3, recover4, recover0, recover1, recover2, basisAction, pcWordFun, pcTermFun, basis8]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
+
+/-- 🏆 THEOREM: The 64 PC basis actions are 100% distinct (injective) by structural recovery. -/
 theorem basisAction_injective : Function.Injective basisAction := by
-  decide
+  intro e1 e2 h
+  have h0 : e1 0 = e2 0 := by rw [← recover0_basisAction e1, ← recover0_basisAction e2, h]
+  have h1 : e1 1 = e2 1 := by rw [← recover1_basisAction e1, ← recover1_basisAction e2, h]
+  have h2 : e1 2 = e2 2 := by rw [← recover2_basisAction e1, ← recover2_basisAction e2, h]
+  have h3 : e1 3 = e2 3 := by rw [← recover3_basisAction e1, ← recover3_basisAction e2, h]
+  have h4 : e1 4 = e2 4 := by rw [← recover4_basisAction e1, ← recover4_basisAction e2, h]
+  have h5 : e1 5 = e2 5 := by rw [← recover5_basisAction e1, ← recover5_basisAction e2, h]
+  ext i
+  fin_cases i
+  · exact h0
+  · exact h1
+  · exact h2
+  · exact h3
+  · exact h4
+  · exact h5
 
 theorem pcWord_apply_basis (e : PCWordExp) (i : Fin 8) :
     (pcWord e).1 (basis8 i) = basisAction e i := by

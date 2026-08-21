@@ -112,27 +112,29 @@ PART 3: The CPTP Data Processing Inequality (DPI)
 -/
 
 /-- 
-  A CPTP Quantum Channel Mapping between density states.
+  A state map equipped with an explicit contractivity hypothesis.
+
+  This is not a CPTP construction; the contractivity field is intentionally
+  named as an assumption and the genuine finite channel result below is
+  `strict_channel_data_processing`.
 -/
-structure CPTPMap (n : Type*) [Fintype n] where
+structure ContractiveStateMap (n : Type*) [Fintype n] where
   transform : QuantumDensityState n → QuantumDensityState n
   contractive : ∀ ρ σ : QuantumDensityState n,
     quantumRelEntropy (transform ρ) (transform σ) ≤ quantumRelEntropy ρ σ
 
 /-- 
-  MASTER THEOREM (Data Processing Inequality for CPTP Maps):
-  For any CPTP quantum channel Φ and any two quantum states ρ, σ:
+  Compatibility theorem for an explicitly contractive state map:
+  For any `ContractiveStateMap` Φ and any two quantum states ρ, σ:
     S(Φ(ρ) ∥ Φ(σ)) ≤ S(ρ ∥ σ).
 -/
-theorem data_processing_inequality (Φ : CPTPMap n) (ρ σ : QuantumDensityState n) :
+theorem contractive_state_map_data_processing
+    (Φ : ContractiveStateMap n) (ρ σ : QuantumDensityState n) :
     quantumRelEntropy (Φ.transform ρ) (Φ.transform σ) ≤ quantumRelEntropy ρ σ :=
   Φ.contractive ρ σ
 
-/-!
-The preceding `CPTPMap` is retained for compatibility with the older API.  The
-following channel is the non-circular finite result: its contractivity is
-derived from the log-sum inequality, rather than stored as a structure field.
--/
+/-! The following channel is the non-circular finite result: its contractivity
+    is derived from the log-sum inequality, rather than stored as a field. -/
 
 structure StrictColumnChannel (n : Type*) [Fintype n] where
   prob : n → n → ℝ

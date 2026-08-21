@@ -549,6 +549,30 @@ theorem cartan_seed_pairing_ne_zero_of
   obtain ⟨i, hi⟩ := hu
   exact hi ((sigmaVec_eq_zero_iff _).mp hsigma i)
 
+/- Exact vanishing criterion for the first-order pairing block.  Noncentrality
+   of the diagonal seed alone is not a nonvanishing hypothesis. -/
+theorem cartan_seed_pairing_eq_zero_iff
+    (D : Zorn ℂ → Zorn ℂ) (a b t : ℂ) :
+    block12 (bdgReadout (firstOrderFlow D (normalSeed a b) t)) = 0 ↔
+      t = 0 ∨ ∀ i, (D (normalSeed a b)).u i = 0 := by
+  rw [cartan_seed_generates_pairing]
+  constructor
+  · intro h
+    by_cases ht : t = 0
+    · exact Or.inl ht
+    · right
+      intro i
+      have hsigma : sigmaVec (D (normalSeed a b)).u = 0 :=
+        (smul_eq_zero.mp h).resolve_left ht
+      exact (sigmaVec_eq_zero_iff _).mp hsigma i
+  · intro h
+    rcases h with ht | hu
+    · simp [ht]
+    · have hu0 : (D (normalSeed a b)).u = fun _ => 0 := by
+        funext i
+        exact hu i
+      rw [hu0, sigmaVec_zero, smul_zero]
+
 /- The lower-left BdG channel is transported by the second Zorn vector
 component.  It is proved separately because no relation between the two
 off-diagonal components is assumed. -/

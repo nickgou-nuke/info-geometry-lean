@@ -16,13 +16,55 @@ namespace InfoGeometry.Algebra.Zorn.G2CyclotomicWeyl
 
 abbrev Root := Bool × ZMod 6
 
+/-- The sector projection forgets the cyclic root index. -/
+def sector : Root → Bool := Prod.fst
+
+/-- Canonical cross-section of the two sector orbits. -/
+def sectorSection : Bool → Root := fun b => (b, 0)
+
+@[simp] theorem sector_section (b : Bool) :
+    sector (sectorSection b) = b := rfl
+
+theorem sectorSection_injective : Function.Injective sectorSection := by
+  intro b1 b2 h
+  cases b1 <;> cases b2 <;> first | rfl | cases h
+
+theorem sector_surjective : Function.Surjective sector := by
+  intro b
+  exact ⟨sectorSection b, sector_section b⟩
+
+theorem root_eq_sectorSection_smul (r : Root) :
+    ∃ k : ZMod 6, r = (r.1, k) := by
+  exact ⟨r.2, rfl⟩
+
 open DihedralGroup
 
 def rotation (n : ZMod 6) (r : Root) : Root :=
   (r.1, r.2 + n)
 
 def reflection (r : Root) : Root :=
-  (r.1, -r.2)
+    (r.1, -r.2)
+
+/-! The section is not merely existential: the cyclic coordinate is its
+unique transport parameter. -/
+theorem sector_section_coordinate (r : Root) :
+    rotation r.2 (sectorSection (sector r)) = r := by
+  rcases r with ⟨b, k⟩
+  rfl
+
+theorem sector_section_coordinate_unique (r : Root) (k : ZMod 6)
+    (h : rotation k (sectorSection (sector r)) = r) :
+    k = r.2 := by
+  rcases r with ⟨b, r₂⟩
+  change (b, 0 + k) = (b, r₂) at h
+  exact sub_eq_zero.mp (by simpa using congrArg Prod.snd h)
+
+theorem sector_crossSection_unique (r : Root) :
+    ∃! k : ZMod 6,
+      rotation k (sectorSection (sector r)) = r := by
+  refine ⟨r.2, sector_section_coordinate r, ?_⟩
+  intro k hk
+  exact sector_section_coordinate_unique r k hk
 
 def dihedralAction : DihedralGroup 6 → Root → Root
   | r n, (b, k) => (b, k - n)
@@ -70,6 +112,18 @@ theorem dihedral_action_preserves_sector
     (g : DihedralGroup 6) (r : Root) :
     (g • r).1 = r.1 := by
   cases g <;> rcases r with ⟨b, k⟩ <;> rfl
+
+theorem sectorSection_represents_orbit (r : Root) :
+    ∃ g : DihedralGroup 6, g • sectorSection (sector r) = r := by
+  rcases r with ⟨b, k⟩
+  refine ⟨DihedralGroup.r (-k), ?_⟩
+  change (b, (0 : ZMod 6) - (-k)) = (b, k)
+  congr 1
+  abel
+
+theorem sectorSection_unique_sector (r : Root) (b : Bool)
+    (h : sector r = b) : sector r = sector (sectorSection b) := by
+  simpa [h]
 
 theorem dihedral_orbit_sector_closed (r : Root) (g : DihedralGroup 6) :
     (g • r).1 = r.1 :=

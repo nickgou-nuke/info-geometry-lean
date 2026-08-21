@@ -18,6 +18,10 @@ od;
 G := Group(gens);
 Print("generator_orders=", List(gens, Order), "\n");
 Print("generated_group_size=", Size(G), "\n");
+# These six involutions generate the full group.  Their 2^6 ordered products
+# are only a chart, not a subgroup: a closed subset containing all generators
+# would contain Group(gens), whose order is 12096.  The Sylow-2 normal form
+# below uses a separate PC generating set.
 S := SylowSubgroup(G, 2);
 Print("sylow_two_size=", Size(S), "\n");
 psi := IsomorphismPcGroup(S);

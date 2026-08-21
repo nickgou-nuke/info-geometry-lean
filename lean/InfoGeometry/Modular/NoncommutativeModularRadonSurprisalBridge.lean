@@ -52,13 +52,15 @@ theorem adK_is_derivation (K : A) (X Y : A) :
 
 /-- THEOREM 2: The Modular Derivation annihilates the identity element: ad_K(1) = 0. -/
 @[simp]
-theorem adK_one (K : A) : adK K 1 = 0 := by
-  simp [adK_apply]
+theorem adK_one (K : A) :
+    adK K 1 = 0 := by
+  rw [adK_apply K 1, mul_one, one_mul, sub_self]
 
 /-- THEOREM 3: The Modular Derivation annihilates its generator: ad_K(K) = 0. -/
 @[simp]
-theorem adK_self (K : A) : adK K K = 0 := by
-  simp [adK_apply]
+theorem adK_self (K : A) :
+    adK K K = 0 := by
+  rw [adK_apply K K, sub_self]
 
 /-- THEOREM 4: Vanishing of ad_K(X) is equivalent to commutation K * X = X * K. -/
 theorem adK_eq_zero_iff_commute (K X : A) :
@@ -131,7 +133,7 @@ theorem dlogR_one : D.dlogR (1 : Aˣ) = 0 := by
   THEOREM 6: Connes Noncommutative Gauge Cocycle Transformation (Left dlog).
   dlog_L(u * v) = v⁻¹ * dlog_L(u) * v + dlog_L(v)
 -/
-theorem dlogL_mul (u v : Aˣ) :
+theorem dlogL_mul (u : Aˣ) (v : Aˣ) :
     D.dlogL (u * v) = (v⁻¹ : Aˣ).val * D.dlogL u * (v : Aˣ).val + D.dlogL v := by
   dsimp [dlogL]
   rw [D.leibniz]
@@ -156,7 +158,7 @@ theorem dlogL_mul (u v : Aˣ) :
   THEOREM 7: Noncommutative Right Logarithmic Product Rule.
   dlog_R(u * v) = dlog_R(u) + u * dlog_R(v) * u⁻¹
 -/
-theorem dlogR_mul (u v : Aˣ) :
+theorem dlogR_mul (u : Aˣ) (v : Aˣ) :
     D.dlogR (u * v) = D.dlogR u + (u : Aˣ).val * D.dlogR v * (u⁻¹ : Aˣ).val := by
   dsimp [dlogR]
   rw [D.leibniz]
@@ -182,6 +184,7 @@ theorem dlogR_mul (u v : Aˣ) :
 -/
 theorem dlogL_inv_eq_neg_dlogR (u : Aˣ) :
     D.dlogL (u⁻¹) = - D.dlogR u := by
+  have _ := u
   have h_prod : D (u.val * (u⁻¹ : Aˣ).val) = 0 := by
     have hu : u.val * (u⁻¹ : Aˣ).val = 1 := by
       rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
@@ -197,7 +200,7 @@ theorem dlogL_inv_eq_neg_dlogR (u : Aˣ) :
   THEOREM 9: Commuting Additivity of the Logarithmic Derivation.
   If v commutes with dlog_L(u), then dlog_L(u * v) = dlog_L(u) + dlog_L(v).
 -/
-theorem dlogL_mul_of_commute (u v : Aˣ)
+theorem dlogL_mul_of_commute (u : Aˣ) (v : Aˣ)
     (h_comm : D.dlogL u * (v : Aˣ).val = (v : Aˣ).val * D.dlogL u) :
     D.dlogL (u * v) = D.dlogL u + D.dlogL v := by
   rw [D.dlogL_mul]
@@ -268,7 +271,8 @@ theorem trace_chiralWeyl : trace (chiralWeyl : Matrix (Fin 2) (Fin 2) R) = 0 := 
 
 /-- THEOREM 12: Trace of Shape Derivation vanishes (Traceless). -/
 @[simp]
-theorem trace_shapeDerivation (u v : R) : trace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 := by
+theorem trace_shapeDerivation (u : R) (v : R) :
+    trace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 := by
   dsimp [shapeDerivation, trace]
   simp
 
@@ -286,8 +290,10 @@ theorem supertrace_chiralWeyl : supertrace (chiralWeyl : Matrix (Fin 2) (Fin 2) 
 
 /-- THEOREM 15: Supertrace of Shape Derivation vanishes (Supertraceless). -/
 @[simp]
-theorem supertrace_shapeDerivation (u v : R) :
+theorem supertrace_shapeDerivation (u : R) (v : R) :
     supertrace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 := by
+  have _ := u
+  have _ := v
   dsimp [shapeDerivation, supertrace]
   simp
 
@@ -295,11 +301,11 @@ theorem supertrace_shapeDerivation (u v : R) :
   🏆 THEOREM 16: The Master Trace Readout (Common Radon–Nikodym Volume).
   Tr(K) = 2 • α
 -/
-theorem trace_trifoldSurprisal (α β u v : R) :
+theorem trace_trifoldSurprisal (α : R) (β : R) (u : R) (v : R) :
     trace (trifoldSurprisal α β u v) = (2 : R) * α := by
   dsimp [trifoldSurprisal]
   rw [trace_add, trace_add, trace_smul, trace_smul]
-  rw [trace_commonWeyl, trace_chiralWeyl, trace_shapeDerivation]
+  rw [trace_commonWeyl, trace_chiralWeyl, trace_shapeDerivation u v]
   simp only [smul_eq_mul, mul_zero, add_zero]
   ring
 
@@ -307,18 +313,18 @@ theorem trace_trifoldSurprisal (α β u v : R) :
   🏆 THEOREM 17: The Master Supertrace Readout (Chiral Berezinian Imbalance).
   STr(K) = 2 • β
 -/
-theorem supertrace_trifoldSurprisal (α β u v : R) :
+theorem supertrace_trifoldSurprisal (α : R) (β : R) (u : R) (v : R) :
     supertrace (trifoldSurprisal α β u v) = (2 : R) * β := by
   dsimp [trifoldSurprisal]
   rw [supertrace_add, supertrace_add, supertrace_smul, supertrace_smul]
-  rw [supertrace_commonWeyl, supertrace_chiralWeyl, supertrace_shapeDerivation]
+  rw [supertrace_commonWeyl, supertrace_chiralWeyl, supertrace_shapeDerivation u v]
   ring
 
 /-- 
   🏆 THEOREM 18: Pure Shape Derivations are both Traceless and Supertraceless.
   Tr(K₀) = 0 ∧ STr(K₀) = 0
 -/
-theorem shapeDerivation_traceless_and_supertraceless (u v : R) :
+theorem shapeDerivation_traceless_and_supertraceless (u : R) (v : R) :
     trace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 ∧
     supertrace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 :=
   ⟨trace_shapeDerivation u v, supertrace_shapeDerivation u v⟩

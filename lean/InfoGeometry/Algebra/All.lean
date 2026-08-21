@@ -249,6 +249,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
 import InfoGeometry.Algebra.Zorn.FiniteChevalleyG2TwoBridge
 import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
+import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 /-!
 # InfoGeometry.Algebra.All
 

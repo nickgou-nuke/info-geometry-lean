@@ -4,12 +4,10 @@ import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
 
-/-!
-# Native split `G₂` capstone
+/-! Native carrier-level bridge for the finite and real split `G₂` lanes.
 
-This file records the native finite and real split owners.  The finite order
-`12096` is intentionally kept conditional until a Chevalley/BN-pair
-enumeration theorem is proved.
+The finite order statement is deliberately conditional: the native carrier
+and group law do not constitute an enumeration of its elements.
 -/
 
 noncomputable section
@@ -34,15 +32,13 @@ theorem real_split_g2_derivation_finrank :
     Module.finrank ℝ RealSplitG2LieAlgebra = 14 := by
   exact finrank_canonicalZornDerivations
 
-theorem real_split_g2_root_count :
-    Fintype.card RootIndex = 12 := by
+theorem real_split_g2_root_count : Fintype.card RootIndex = 12 := by
   exact rootIndex_card
 
 theorem finite_chevalley_order_is_conditional_enumeration
     (h : Fintype.card FiniteChevalleyG2 = 12096) :
-    Fintype.card FiniteChevalleyG2 = 12096 := by
-  exact h
+    Fintype.card FiniteChevalleyG2 = 12096 := h
 
 end InfoGeometry.Lie.G2SplitChevalley
 
-end
+end noncomputable section

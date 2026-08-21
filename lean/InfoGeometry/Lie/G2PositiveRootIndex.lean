@@ -1,3 +1,4 @@
+import Mathlib.Data.ZMod.Basic
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
 
 /-!
@@ -9,6 +10,8 @@ native root owner.
 -/
 
 namespace InfoGeometry.Lie.CanonicalZornRootSystemComparison
+
+abbrev F2 := ZMod 2
 
 abbrev NativeRootIndex :=
   InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.nonzeroIndex
@@ -48,6 +51,39 @@ noncomputable def positiveNativeIndexEquiv :
 theorem positiveNativeRootCount :
     Fintype.card (Set.range positiveNativeIndex) = 6 := by
   rw [← Fintype.card_congr positiveNativeIndexEquiv]
+  rfl
+
+abbrev PositiveNativeRoot := Set.range positiveNativeIndex
+abbrev PositiveNativeCoordinates := PositiveNativeRoot → F2
+
+def nativeRootCoordinate (r : PositiveNativeRoot) (t : F2) :
+    PositiveNativeCoordinates :=
+  fun s => if s = r then t else 0
+
+def nativeRootSubgroup (r : PositiveNativeRoot) :
+    F2 →+ PositiveNativeCoordinates where
+  toFun := nativeRootCoordinate r
+  map_zero' := by
+    funext s
+    by_cases h : s = r <;> simp [nativeRootCoordinate, h]
+  map_add' s t := by
+    funext u
+    by_cases h : u = r <;> simp [nativeRootCoordinate, h]
+
+theorem nativeRootSubgroup_apply (r : PositiveNativeRoot) (t : F2) :
+    nativeRootSubgroup r t = nativeRootCoordinate r t :=
+  rfl
+
+theorem nativeRootSubgroup_injective (r : PositiveNativeRoot) :
+    Function.Injective (nativeRootSubgroup r) := by
+  intro s t h
+  have h_at := congrFun h r
+  simpa [nativeRootSubgroup, nativeRootCoordinate] using h_at
+
+theorem positiveNativeCoordinates_card :
+    Fintype.card PositiveNativeCoordinates = 64 := by
+  have hcard : Fintype.card PositiveNativeRoot = 6 := positiveNativeRootCount
+  simp only [PositiveNativeCoordinates, Fintype.card_fun, ZMod.card, hcard]
   rfl
 
 end InfoGeometry.Lie.CanonicalZornRootSystemComparison

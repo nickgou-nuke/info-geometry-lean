@@ -293,52 +293,18 @@ for label, prepend in (("lean_product", False), ("reverse_matrix_product", True)
             print("RECOVER e%d = %s" % (k, " + ".join(terms)))
         matrix_bits = [[coefficient_bits(M[i][j]) for j in range(8)]
                        for i in range(8)]
+        recovery_entries = sorted({(i, j) for expr in recovery_exprs
+                                   for monomial in expr
+                                   for i, j, _ in [entries[index]
+                                                  for index in monomial]})
+        for i, j in recovery_entries:
+            print("RECOVERY_ENTRY m%d%d = %s" % (i, j, str(M[i][j])))
+            print("FACTORED_ENTRY m%d%d = %s" %
+                  (i, j, str(sp.factor(M[i][j]))))
         for k, expr in enumerate(recovery_exprs):
             assert eval_recovery_bits(expr, matrix_bits) == 1 << (1 << k)
         print("CAS_SYMBOLIC_PC_WORD_RECOVERY=PASS")
 
-    basis = {}
-    for index, (_, _, vector) in enumerate(entries):
-        combo = 1 << index
-        while vector:
-            pivot = vector.bit_length() - 1
-            if pivot in basis:
-                vector ^= basis[pivot][0]
-                combo ^= basis[pivot][1]
-            else:
-                basis[pivot] = (vector, combo)
-                break
-
-    def span_representation(vector):
-        combo = 0
-        while vector:
-            pivot = vector.bit_length() - 1
-            if pivot not in basis:
-                return None
-            vector ^= basis[pivot][0]
-            combo ^= basis[pivot][1]
-        return combo
-
-    for k in range(6):
-        separator = None
-        # q ranges over polynomials in earlier variables; all candidates are
-        # tested by ideal-free GF(2) linear algebra on ANF coefficients.
-        for qmask in range(1 << (1 << k)):
-            target = 1 << (1 << k)
-            for monomial_index in range(1 << k):
-                if (qmask >> monomial_index) & 1:
-                    target ^= 1 << monomial_index
-            rep = span_representation(target)
-            if rep is not None:
-                separator = (qmask, rep)
-                break
-        if separator is None:
-            print("LINEAR_SEPARATOR", k, ": NONE")
-        else:
-            qmask, rep = separator
-            used = [entries[i][:2] for i in range(64) if (rep >> i) & 1]
-            q = [monomials[n] for n in range(1 << k) if (qmask >> n) & 1]
-            print("LINEAR_SEPARATOR", k, ": q=", q, "entries=", used)
     ideal_check = singular_injectivity_certificate(M)
     assert ideal_check[:6] == ["0"] * 6
     assert ideal_check[6] != "0"

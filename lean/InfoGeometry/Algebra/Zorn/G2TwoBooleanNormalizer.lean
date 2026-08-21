@@ -23,4 +23,11 @@ lemma bitToF2_eq_iff (a b : Bool) :
 lemma bitToF2_sq (a : Bool) : bitToF2 a * bitToF2 a = bitToF2 a := by
   cases a <;> simp [bitToF2]
 
+lemma bitToF2_map_ite {α : Type*} (p : Bool) (x y : α)
+    (q : α → Bool) :
+    bitToF2 (q (if p then x else y)) =
+      bitToF2 p * bitToF2 (q x) +
+        (1 + bitToF2 p) * bitToF2 (q y) := by
+  cases p <;> simp [bitToF2] <;> ring
+
 end InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer

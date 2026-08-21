@@ -2,6 +2,8 @@ import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 
+set_option synthInstance.maxHeartbeats 100000
+
 noncomputable section
 namespace InfoGeometry.Lie.SplitOctonionStandardDerivation
 

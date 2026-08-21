@@ -112,11 +112,6 @@ theorem flow_add
     (NormedSpace.exp_add_of_commute
       (smul_commute_smul D s t))
 
-/--
-Two exponential flows commute when their generators commute in the
-associative endomorphism algebra.  No associativity of the underlying
-bilinear multiplication on `A` is used here.
--/
 theorem flow_mul_comm_of_commute
     (D E : EndA)
     (hDE : Commute D E)
@@ -267,15 +262,6 @@ theorem hasStrictDerivAt_orbit_right
       (hasStrictDerivAt_const t x)
   simpa [evalOp, ContinuousLinearMap.mul_apply] using h
 
-/--
-Integral form of the orbit equation:
-
-`∫ s in 0..t, D (Φ_s x) = Φ_t x - x`.
-
-This is the Banach-space fundamental theorem of calculus applied to the
-continuous exponential orbit.  It is independent of associativity of any
-additional multiplication on `A`.
--/
 theorem flow_integral_generator
     (D : EndA)
     (x : A)
@@ -299,13 +285,12 @@ theorem flow_integral_generator
     exact hcont.continuousOn.intervalIntegrable
   simpa [flow_zero] using
       (intervalIntegral.integral_eq_sub_of_hasDerivAt
-      (a := (0 : ℝ)) (b := t) hderiv
-      hint)
+        (a := (0 : ℝ)) (b := t) hderiv hint)
 
 /--
 `D` commutes with its own exponential flow:
 
-`Φ_t (D x) = D (flow D t x)`.
+`Φ_t (D x) = D (Φ_t x)`.
 -/
 theorem flow_apply_derivation
     (D : EndA)
@@ -482,6 +467,7 @@ theorem flow_map_mul
       (fun z : A => flow D t z)
       (interaction_eq_initial
         mul D hD x y t)
+
   dsimp [interaction] at h
   rw [flow_apply_flow_neg] at h
   exact h.symm
@@ -536,36 +522,6 @@ theorem flowLinearEquiv_symm_apply
       flow (-D) t x := by
   rfl
 
-theorem flow_map_linear
-    (D : EndA) (t : ℝ) (x : A) :
-    D (flow D t x) = flow D t (D x) := by
-  have hcomm : Commute D (flow D t) := by
-    dsimp [flow]
-    exact ((Commute.refl D).smul_right t).exp_right
-  exact congrArg (fun T : EndA => T x) hcomm
-
-theorem flowLinearEquiv_fixed_of_derivation_eq_zero
-    (D : EndA)
-    (x : A)
-    (hD : D x = 0)
-    (t : ℝ) :
-    flowLinearEquiv D t x = x := by
-  let f : ℝ → A := fun s => flow D s x
-  have hderiv : ∀ s : ℝ, HasDerivAt f 0 s := by
-    intro s
-    have hz : D (flow D s x) = 0 := by
-      rw [← flow_apply_derivation D s x, hD]
-      exact map_zero (flow D s)
-    have horbit := (hasStrictDerivAt_orbit D x s).hasDerivAt
-    rw [hz] at horbit
-    simpa [f] using horbit
-  have hdiff : Differentiable ℝ f := fun s => (hderiv s).differentiableAt
-  have hzero : ∀ s : ℝ, deriv f s = 0 := fun s => (hderiv s).deriv
-  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
-  dsimp [f] at hconst
-  rw [flow_zero] at hconst
-  simpa [flowLinearEquiv] using hconst
-
 /--
 Strong automorphism statement in multiplication-preserving
 linear-equivalence form.
@@ -581,6 +537,115 @@ theorem exponential_derivation_is_automorphism
         (flowLinearEquiv D t x)
         (flowLinearEquiv D t y) := by
   exact flow_map_mul mul D hD t x y
+
+/-- Transport an algebraic observable relation through the exponential flow.
+
+If a product relation holds before transport, its transported form holds after
+transport.  The statement is deliberately equality-based: it applies equally
+to nilpotency, idempotency, anticommutators, and any other relation expressed
+in the bilinear multiplication.
+-/
+theorem flow_preserves_product_relation
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y z : A)
+    (hxy : mul x y = z) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) =
+      flowLinearEquiv D t z := by
+  rw [← exponential_derivation_is_automorphism mul D hD t x y, hxy]
+
+theorem flow_preserves_nilpotent
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x : A)
+    (hx : mul x x = 0) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t x) = 0 := by
+  have h := flow_preserves_product_relation mul D hD t x x 0 hx
+  simpa using h
+
+theorem flow_preserves_idempotent
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x : A)
+    (hx : mul x x = x) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t x) =
+      flowLinearEquiv D t x := by
+  exact flow_preserves_product_relation mul D hD t x x x hx
+
+theorem flow_preserves_anticommutator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    flowLinearEquiv D t (mul x y + mul y x) =
+      mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) +
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) := by
+  rw [(flowLinearEquiv D t).map_add,
+    exponential_derivation_is_automorphism mul D hD t x y,
+    exponential_derivation_is_automorphism mul D hD t y x]
+
+theorem flow_preserves_anticommutator_zero
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A)
+    (hxy : mul x y + mul y x = 0) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) +
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) = 0 := by
+  have h := flow_preserves_anticommutator mul D hD t x y
+  rw [hxy] at h
+  simpa using h.symm
+
+theorem flow_preserves_commutator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A) :
+    flowLinearEquiv D t (mul x y - mul y x) =
+      mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) -
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) := by
+  calc
+    flowLinearEquiv D t (mul x y - mul y x) =
+        flowLinearEquiv D t (mul x y) -
+          flowLinearEquiv D t (mul y x) :=
+      (flowLinearEquiv D t).map_sub _ _
+    _ = mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) -
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) := by
+      rw [exponential_derivation_is_automorphism mul D hD t x y,
+        exponential_derivation_is_automorphism mul D hD t y x]
+
+theorem flow_preserves_commutator_zero
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (x y : A)
+    (hxy : mul x y - mul y x = 0) :
+    mul (flowLinearEquiv D t x) (flowLinearEquiv D t y) -
+        mul (flowLinearEquiv D t y) (flowLinearEquiv D t x) = 0 := by
+  have h := flow_preserves_commutator mul D hD t x y
+  rw [hxy] at h
+  simpa using h.symm
+
+theorem flow_intertwines_inner_commutator
+    (mul : A →L[ℝ] A →L[ℝ] A)
+    (D : EndA)
+    (hD : IsDerivation mul D)
+    (t : ℝ)
+    (K X : A) :
+    flowLinearEquiv D t (mul K X - mul X K) =
+      mul (flowLinearEquiv D t K) (flowLinearEquiv D t X) -
+        mul (flowLinearEquiv D t X) (flowLinearEquiv D t K) := by
+  exact flow_preserves_commutator mul D hD t K X
 
 /-!
 ## One-parameter-group laws
@@ -640,21 +705,44 @@ theorem deriv_flow_at_zero
   have h := (hasStrictDerivAt_flow_left D 0).hasDerivAt.deriv
   simpa using h
 
-/-- If `D x = 0`, then the exponential orbit is constant: `Φ_t x = x`. -/
+theorem flow_map_linear
+    (D : EndA) (t : ℝ) (x : A) :
+    D (flow D t x) = flow D t (D x) := by
+  have hcomm : Commute D (flow D t) := by
+    dsimp [flow]
+    exact ((Commute.refl D).smul_right t).exp_right
+  exact congrArg (fun T : EndA => T x) hcomm
+
+theorem flowLinearEquiv_fixed_of_derivation_eq_zero
+    (D : EndA)
+    (x : A)
+    (hD : D x = 0)
+    (t : ℝ) :
+    flowLinearEquiv D t x = x := by
+  let f : ℝ → A := fun s => flow D s x
+  have hderiv : ∀ s : ℝ, HasDerivAt f 0 s := by
+    intro s
+    have hz : D (flow D s x) = 0 := by
+      rw [← flow_apply_derivation D s x, hD]
+      exact map_zero (flow D s)
+    have horbit := (hasStrictDerivAt_orbit D x s).hasDerivAt
+    rw [hz] at horbit
+    simpa [f] using horbit
+  have hdiff : Differentiable ℝ f := fun s => (hderiv s).differentiableAt
+  have hzero : ∀ s : ℝ, deriv f s = 0 := fun s => (hderiv s).deriv
+  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
+  dsimp [f] at hconst
+  rw [flow_zero] at hconst
+  simpa [flowLinearEquiv] using hconst
+
 theorem flow_apply_eq_self_of_apply_eq_zero
     (D : EndA)
     (x : A)
     (hx : D x = 0)
     (t : ℝ) :
     flow D t x = x := by
-  have hder : ∀ s : ℝ, HasDerivAt (fun r => flow D r x) 0 s := fun s => by
-    have h := (hasStrictDerivAt_orbit_right D x s).hasDerivAt
-    rw [hx, ContinuousLinearMap.map_zero] at h
-    exact h
-  have hdiff : Differentiable ℝ (fun r => flow D r x) := fun s => (hder s).differentiableAt
-  have hzero : ∀ s : ℝ, deriv (fun r => flow D r x) s = 0 := fun s => (hder s).deriv
-  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
-  simpa using hconst
+  have h := flowLinearEquiv_fixed_of_derivation_eq_zero D x hx t
+  exact h
 
 end InfoGeometry.Lie.ContinuousDerivationExponential
 

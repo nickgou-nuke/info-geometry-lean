@@ -5198,7 +5198,6 @@ import InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
 import InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
 import InfoGeometry.Krein.BoundedKMSHestenesPhaseVolumeBridge
 import InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
-import InfoGeometry.KreinCarrierInstances_tmp
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
 import InfoGeometry.Krein.CartanDecomposition

@@ -7437,4 +7437,5 @@ import InfoGeometry.QuantumGeometry.NoncommutativePhaseSpace
 import InfoGeometry.QuantumGeometry
 import InfoGeometry.Analysis.LogDetSelfConcordantBarrier
 import InfoGeometry.Analysis
+import InfoGeometry.Thermo.OnsagerOperatorClosure
 

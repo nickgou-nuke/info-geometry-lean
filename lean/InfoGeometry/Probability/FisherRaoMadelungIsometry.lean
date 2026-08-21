@@ -3,12 +3,15 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 namespace InfoGeometry.Probability.FisherRaoMadelungIsometry
+
+open BigOperators
 
 /-!
 # The Fisher–Rao Metric and the Madelung $\sqrt{\rho}$ Isometry
@@ -47,6 +50,30 @@ theorem madelung_amplitude_sq
     (rho_val : ℝ) (h_pos : 0 < rho_val) :
     (Real.sqrt rho_val) ^ 2 = rho_val :=
   Real.sq_sqrt (le_of_lt h_pos)
+
+/-- A finite normalized probability vector is sent to the unit sphere by
+the componentwise square-root map. -/
+theorem madelung_amplitude_norm_sq
+    {ι : Type*} [Fintype ι]
+    (p : ι → ℝ)
+    (hp : ∀ i, 0 ≤ p i)
+    (hsum : ∑ i, p i = 1) :
+    ∑ i, (Real.sqrt (p i)) ^ 2 = 1 := by
+  simp_rw [Real.sq_sqrt (hp _)]
+  exact hsum
+
+/-- The componentwise square-root map is injective on nonnegative finite
+vectors. -/
+theorem madelung_amplitude_injective
+    {ι : Type*} [Fintype ι]
+    {p q : ι → ℝ}
+    (hp : ∀ i, 0 ≤ p i)
+    (hq : ∀ i, 0 ≤ q i)
+    (h : ∀ i, Real.sqrt (p i) = Real.sqrt (q i)) :
+    p = q := by
+  funext i
+  have hsq := congrArg (fun x : ℝ => x ^ 2) (h i)
+  simpa [Real.sq_sqrt (hp i), Real.sq_sqrt (hq i)] using hsq
 
 /-- 🏆 THEOREM: The Fisher–Rao Metric Isometry:
     4 * (d/dt √ρ(t))² = (ρ'(t))² / ρ(t)

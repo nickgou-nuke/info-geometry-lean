@@ -18,6 +18,8 @@ log-Laplace owner.  Consequently:
 
 noncomputable section
 
+set_option linter.unusedSectionVars false
+
 open Finset
 open scoped BigOperators
 
@@ -95,6 +97,13 @@ def expectedCharge (β : Coord → ℝ) (a : Coord) : ℝ :=
 @[simp] theorem probability_pos (β : Coord → ℝ) (m : Mode) :
     0 < F.probability β m := by
   exact div_pos (F.unnormalized_pos β m) (F.partition_pos β)
+
+@[simp] theorem sum_probability (β : Coord → ℝ) :
+    ∑ m : Mode, F.probability β m = 1 := by
+  unfold probability
+  rw [← Finset.sum_div]
+  change F.partition β / F.partition β = 1
+  exact div_self (ne_of_gt (F.partition_pos β))
 
 /-- Scalar exponential family obtained by restricting to `β + t • v`. -/
 def scalarRestriction

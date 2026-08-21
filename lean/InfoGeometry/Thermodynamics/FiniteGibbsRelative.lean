@@ -1,5 +1,6 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
 import InfoGeometry.Probability.FiniteGibbsVariational
+import InfoGeometry.Analytic.LogSumExp
 
 /-!
 # Finite Gibbs relative thermodynamics
@@ -412,5 +413,97 @@ theorem finiteScalarRelativeCocycle_stateChain
       t * (χ i - φ i) = t * (ψ i - φ i) + t * (χ i - ψ i) := by
     ring
   rw [h, Real.exp_add]
+
+/-!
+The next theorem is the finite, fully analytic part of the convex-duality
+dictionary: the directional derivative of the Massieu potential is the Gibbs
+expectation.  The proof is reduced to the native finite log-sum-exp derivative
+and therefore makes no measure-theoretic or infinite-dimensional claim.
+-/
+
+theorem hasDerivAt_massieu_direction
+    [Nonempty ι] (θ X : FiniteTemperature ι) :
+    HasDerivAt
+      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i))
+      (expect θ X) 0 := by
+  let w : ι → ℝ := fun i => Real.exp (θ i)
+  have hcurve :
+      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i)) =
+        (fun t : ℝ => InfoGeometry.Analytic.logSumExp w X t) := by
+    funext t
+    unfold massieuPotential massieu Phi Z
+    unfold InfoGeometry.Analytic.logSumExp
+      InfoGeometry.Analytic.logSumExpPartition
+    congr 1
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Real.exp_add]
+  rw [hcurve]
+  have hpart := InfoGeometry.Analytic.hasDerivAt_logSumExpPartition w X 0
+  have hpos : 0 < InfoGeometry.Analytic.logSumExpPartition w X 0 := by
+    unfold InfoGeometry.Analytic.logSumExpPartition w
+    apply Finset.sum_pos
+    · intro i hi
+      positivity
+    · exact Finset.univ_nonempty
+  have hlog := hpart.log hpos.ne'
+  have htarget :
+      InfoGeometry.Analytic.logSumExpMoment1 w X 0 /
+          InfoGeometry.Analytic.logSumExpPartition w X 0 = expect θ X := by
+    unfold InfoGeometry.Analytic.logSumExpMoment1
+      InfoGeometry.Analytic.logSumExpPartition expect w
+    simp only [zero_mul, Real.exp_zero, mul_one]
+    unfold prob Z
+    have hZ : Z θ ≠ 0 := (Z_pos θ).ne'
+    have hsum_pos : 0 < ∑ x, Real.exp (θ x) := by
+      exact Finset.sum_pos (fun x _ => Real.exp_pos _) Finset.univ_nonempty
+    apply (div_eq_iff (ne_of_gt hsum_pos)).2
+    have hterm :
+        (∑ i, (Real.exp (θ i) / ∑ j, Real.exp (θ j)) * X i) =
+          (∑ i, Real.exp (θ i) * X i) / ∑ j, Real.exp (θ j) := by
+      rw [Finset.sum_div]
+      apply Finset.sum_congr rfl
+      intro i hi
+      ring
+    rw [hterm]
+    field_simp [ne_of_gt hsum_pos]
+  rw [htarget] at hlog
+  exact hlog
+
+/--
+The second directional derivative is the Fisher covariance.  This is the
+finite Hessian statement corresponding to the preceding mean-value theorem.
+-/
+theorem deriv2_massieu_direction
+    [Nonempty ι] (θ X : FiniteTemperature ι) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => massieuPotential (fun i => θ i + s * X i)) t) 0 =
+      fisherMetric θ X X := by
+  let w : ι → ℝ := fun i => Real.exp (θ i)
+  have hcurve :
+      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i)) =
+        (fun t : ℝ => InfoGeometry.Analytic.logSumExp w X t) := by
+    funext t
+    unfold massieuPotential massieu Phi Z
+    unfold InfoGeometry.Analytic.logSumExp
+      InfoGeometry.Analytic.logSumExpPartition
+    congr 1
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Real.exp_add]
+  rw [hcurve]
+  have hw : ∀ i, 0 < w i := fun i => Real.exp_pos _
+  rw [InfoGeometry.Analytic.logSumExp_secondDeriv_eq_variance w X hw 0]
+  rw [InfoGeometry.Analytic.logSumExpVariance_eq_centered w X hw 0]
+  have hweight (i : ι) :
+      InfoGeometry.Analytic.logSumExpWeight w X 0 i = prob θ i := by
+    unfold InfoGeometry.Analytic.logSumExpWeight w
+      InfoGeometry.Analytic.logSumExpPartition prob Z
+    simp
+  simp_rw [hweight]
+  simp [fisherMetric, fisherCov, expect, pow_two]
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
 
 end InfoGeometry.Thermodynamics.FiniteGibbsRelative

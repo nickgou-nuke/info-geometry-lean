@@ -74,6 +74,7 @@ import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeBridge
 import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeCARBridge
 import InfoGeometry.OperatorAlgebra.CliffordCARProjectors
 import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 
 namespace InfoGeometry.OperatorAlgebra
 

@@ -7438,5 +7438,6 @@ import InfoGeometry.QuantumGeometry
 import InfoGeometry.Analysis.LogDetSelfConcordantBarrier
 import InfoGeometry.Analysis
 import InfoGeometry.Thermo.OnsagerOperatorClosure
+import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
 import InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification
 

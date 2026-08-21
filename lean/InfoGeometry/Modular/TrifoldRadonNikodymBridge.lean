@@ -297,8 +297,9 @@ theorem adK_is_derivation (K : A) (X Y : A) :
         simp only [sub_mul, mul_sub, mul_assoc]
 
 @[simp]
-theorem adK_one (K : A) : adK K 1 = 0 := by
-  simp [adK_apply]
+theorem adK_one (K : A) :
+    adK K 1 = 0 := by
+  rw [adK_apply K 1, mul_one, one_mul, sub_self]
 
 theorem adK_eq_zero_iff_central (K : A) :
     adK K = 0 ↔ ∀ X, K * X = X * K := by
@@ -331,7 +332,9 @@ theorem IsRingDerivation.map_one (D : A →ₗ[ℤ] A)
   have h2 : (D 1 + D 1) - D 1 = D 1 - D 1 := congrArg (fun x => x - D 1) h.symm
   simpa using h2
 
-@[simp] theorem adK_isRingDerivation (K : A) : IsRingDerivation (adK K) := by
+@[simp]
+theorem adK_isRingDerivation (K : A) :
+    IsRingDerivation (adK K) := by
   intro X Y
   exact adK_is_derivation K X Y
 

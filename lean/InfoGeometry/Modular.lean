@@ -12,6 +12,7 @@ import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
 import InfoGeometry.Modular.QuantumDataProcessingInequality
 import InfoGeometry.Modular.EntropyMonotonicity
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
+import InfoGeometry.Modular.TensorDeterminantHomomorphism
 
 /-!
 # Modular Theory Module

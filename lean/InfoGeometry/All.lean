@@ -346,6 +346,7 @@ import InfoGeometry.Algebra.Zorn.Decomposition
 import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Algebra.Zorn.DiscreteColorBridge
 import InfoGeometry.Algebra.ZornDualLattice
+import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.G2ClassificationBoundaryClosure
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger

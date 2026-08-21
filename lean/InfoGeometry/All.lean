@@ -7445,4 +7445,5 @@ import InfoGeometry.Synthesis.All
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 import InfoGeometry.Modular.ModularTimeSemigroupBridge
 import InfoGeometry.Modular.SemidirectExteriorAlgebra
+import InfoGeometry.QuantumGeometry.TangentCotangentSymplecticBridge
 

@@ -48,15 +48,20 @@ variable (D : Derivation A)
 
 @[simp]
 theorem map_zero : D 0 = 0 := by
-  have h : D (0 + 0) = D 0 + D 0 := D.map_add 0 0
-  rw [add_zero] at h
-  exact (self_eq_add_left.mp h.symm).symm
+  have h : D 0 = D 0 + D 0 := by
+    calc D 0 = D (0 + 0) := by rw [add_zero]
+    _ = D 0 + D 0 := D.map_add 0 0
+  have h1 : D 0 - D 0 = (D 0 + D 0) - D 0 := congr_arg (fun x => x - D 0) h
+  rw [sub_self, add_sub_cancel_right] at h1
+  exact h1.symm
 
 @[simp]
 theorem map_neg (x : A) : D (-x) = - D x := by
   have h : D (x + -x) = D x + D (-x) := D.map_add x (-x)
   rw [add_neg_cancel, D.map_zero] at h
-  exact eq_neg_of_add_eq_zero_right h
+  have h_neg : - D x = - D x + (D x + D (-x)) := by rw [← h, add_zero]
+  rw [← add_assoc, neg_add_cancel, zero_add] at h_neg
+  exact h_neg.symm
 
 @[simp]
 theorem map_sub (x y : A) : D (x - y) = D x - D y := by

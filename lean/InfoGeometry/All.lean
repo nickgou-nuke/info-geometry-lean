@@ -7431,4 +7431,7 @@ import InfoGeometry.Synthesis
 import InfoGeometry.Modular.CommutantSemidirectProduct
 import InfoGeometry.Modular.SemidirectAutomorphismGroup
 import InfoGeometry.Modular.WeylPfaffianDeterminantTriple
+import InfoGeometry.Modular
+import InfoGeometry.QuantumGeometry.NoncommutativePhaseSpace
+import InfoGeometry.QuantumGeometry
 

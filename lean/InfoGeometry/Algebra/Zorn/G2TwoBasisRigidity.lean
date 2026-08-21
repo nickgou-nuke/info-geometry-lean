@@ -26,10 +26,22 @@ def basisExpansion (X : SplitOctF2) : SplitOctF2 :=
     (if X.y1 then down1 else zero))
     (if X.y2 then down2 else zero)
 
+lemma ite_a (c : Bool) (A B : SplitOctF2) : (if c then A else B).a = if c then A.a else B.a := by cases c <;> rfl
+lemma ite_b (c : Bool) (A B : SplitOctF2) : (if c then A else B).b = if c then A.b else B.b := by cases c <;> rfl
+lemma ite_x0 (c : Bool) (A B : SplitOctF2) : (if c then A else B).x0 = if c then A.x0 else B.x0 := by cases c <;> rfl
+lemma ite_x1 (c : Bool) (A B : SplitOctF2) : (if c then A else B).x1 = if c then A.x1 else B.x1 := by cases c <;> rfl
+lemma ite_x2 (c : Bool) (A B : SplitOctF2) : (if c then A else B).x2 = if c then A.x2 else B.x2 := by cases c <;> rfl
+lemma ite_y0 (c : Bool) (A B : SplitOctF2) : (if c then A else B).y0 = if c then A.y0 else B.y0 := by cases c <;> rfl
+lemma ite_y1 (c : Bool) (A B : SplitOctF2) : (if c then A else B).y1 = if c then A.y1 else B.y1 := by cases c <;> rfl
+lemma ite_y2 (c : Bool) (A B : SplitOctF2) : (if c then A else B).y2 = if c then A.y2 else B.y2 := by cases c <;> rfl
+
 theorem basisExpansion_eq (X : SplitOctF2) :
     basisExpansion X = X := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  ext <;> (dsimp [basisExpansion, add, add2, zero, ePlus, eMinus, up0, up1, up2, down0, down1, down2]; revert a b x0 x1 x2 y0 y1 y2; decide)
+  ext <;> dsimp [basisExpansion, add, add2, zero, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  all_goals
+    revert a b x0 x1 x2 y0 y1 y2
+    decide
 
 @[simp] theorem map_zero (f : SplitOctF2Aut) :
     f.1 zero = zero := by
@@ -101,9 +113,8 @@ theorem extendBasisMap_basisRestriction (f : SplitOctF2Aut) (X : SplitOctF2) :
 
 theorem basis8_injective : Function.Injective basis8 := by
   intro i j h
-  fin_cases i <;> fin_cases j <;> simp [basis8] at h ⊢
-  all_goals
-    cases h
+  revert i j
+  decide
 
 theorem basisRestriction_injective_on_basis (f : SplitOctF2Aut) :
     Function.Injective (basisRestriction f) := by
@@ -130,7 +141,7 @@ theorem automorphism_card_le_basis_maps_numeric :
   calc
     Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 8 → SplitOctF2) :=
       automorphism_card_le_basis_maps
-    _ = 256 ^ 8 := by native_decide
+    _ = 256 ^ 8 := by simp [splitOctF2_card]
 
 theorem basisRestriction_preserves_mul
     (f : SplitOctF2Aut) (i j : Fin 8) :

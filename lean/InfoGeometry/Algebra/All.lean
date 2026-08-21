@@ -27,6 +27,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
 import InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
 import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
+import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
@@ -248,6 +249,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
+import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 /-!
 # InfoGeometry.Algebra.All
 

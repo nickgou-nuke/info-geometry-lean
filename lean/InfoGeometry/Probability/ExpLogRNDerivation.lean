@@ -77,6 +77,22 @@ theorem dlog_mul (D : A → A) (hD : IsDerivation D) (u v : Aˣ) :
       _ = (↑v⁻¹ : A) * D (v : A) := by rw [mul_one]
   rw [h_left, h_right]
 
+/-! Bundled form of the multiplicative-to-additive logarithmic derivative. -/
+def dlogMonoidHom (D : A → A) (hD : IsDerivation D) :
+    Aˣ →* Multiplicative A where
+  toFun u := Multiplicative.ofAdd (dlog D u)
+  map_one' := by
+    apply Multiplicative.ext
+    simp [dlog, derivation_one D hD]
+  map_mul' u v := by
+    apply Multiplicative.ext
+    exact dlog_mul D hD u v
+
+@[simp]
+theorem dlogMonoidHom_apply
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    dlogMonoidHom D hD u = Multiplicative.ofAdd (dlog D u) := rfl
+
 /-- THEOREM: Logarithmic derivation of the unit element is zero. -/
 @[simp]
 theorem dlog_one (D : A → A) (hD : IsDerivation D) :
@@ -104,6 +120,29 @@ theorem radon_nikodym_cocycle_dlog
     (rho_12 rho_23 : Aˣ) :
     dlog D (rho_12 * rho_23) = dlog D rho_12 + dlog D rho_23 :=
   dlog_mul D hD rho_12 rho_23
+
+theorem dlog_pow
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) (n : ℕ) :
+    dlog D (u ^ n) = n • dlog D u := by
+  induction n with
+  | zero =>
+      simp only [pow_zero, zero_smul]
+      exact dlog_one D hD
+  | succ n ih =>
+      rw [pow_succ, dlog_mul D hD, ih]
+      simp only [succ_nsmul, add_comm]
+
+theorem dlogMonoidHom_pow
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) (n : ℕ) :
+    dlogMonoidHom D hD (u ^ n) =
+      Multiplicative.ofAdd (n • dlog D u) := by
+  rw [map_pow, dlogMonoidHom_apply, ofAdd_nsmul]
+
+theorem dlogMonoidHom_inv
+    (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    dlogMonoidHom D hD (u⁻¹) =
+      (dlogMonoidHom D hD u)⁻¹ := by
+  exact map_inv (dlogMonoidHom D hD) u
 
 /-!
 =============================================================================
@@ -134,6 +173,16 @@ theorem hasDerivAt_exp_potential
   have h := HasDerivAt.exp h_diff
   rw [mul_comm] at h
   exact h
+
+theorem hasDerivAt_log_exp_potential
+    (K : ℝ → ℝ) (K' : ℝ) (t : ℝ)
+    (h_diff : HasDerivAt K K' t) :
+    HasDerivAt (fun s => Real.log (Real.exp (K s))) K' t := by
+  have h_id : (fun s => Real.log (Real.exp (K s))) = K := by
+    ext s
+    exact Real.log_exp (K s)
+  rw [h_id]
+  exact h_diff
 
 /-- 
   THEOREM: The Fundamental `explogRNder` Inversion Identities:

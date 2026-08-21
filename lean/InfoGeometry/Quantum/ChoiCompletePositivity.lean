@@ -41,30 +41,6 @@ def maximallyEntangled : (n × n) → ℂ :=
 def rankOne (v : (n × n) → ℂ) : Matrix (n × n) (n × n) ℂ :=
   fun a b => v a * star (v b)
 
-/-! ## Kraus readout and its Choi decomposition -/
-
-variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-
-def krausMap (V : ι → Mat) : MatrixMap (n := n) where
-  toFun X := ∑ a, V a * X * star (V a)
-  map_add' X Y := by
-    simp only [mul_add, add_mul, Finset.sum_add_distrib]
-    abel
-  map_smul' c X := by
-    simp only [smul_eq_mul, mul_assoc, Finset.smul_sum]
-    rw [show (∑ a, c * (V a * X * star (V a))) =
-      c * ∑ a, V a * X * star (V a) by rw [Finset.mul_sum]]
-
-def krausVector (V : ι → Mat) (a : ι) : (n × n) → ℂ :=
-  fun i => V a i.2 i.1
-
-theorem choiMatrix_krausMap_eq_sum_rankOne (V : ι → Mat) :
-    choiMatrix (krausMap (n := n) V) =
-      ∑ a, rankOne (krausVector (n := n) V a) := by
-  ext i k j l
-  simp [choiMatrix, krausMap, matrixUnit, rankOne, krausVector,
-    Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
-
 theorem rankOne_posSemidef (v : (n × n) → ℂ) :
     (rankOne v).PosSemidef := by
   let C : Matrix (n × n) Unit ℂ := fun a _ => v a
@@ -75,11 +51,11 @@ theorem rankOne_posSemidef (v : (n × n) → ℂ) :
   exact Matrix.posSemidef_self_mul_conjTranspose C
 
 /-- The finite Kraus Choi certificate, written as a sum of rank-one terms. -/
-def krausChoi {ι : Type*} [Fintype ι]
+def krausChoi {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : ι → Matrix n n ℂ) : Matrix (n × n) (n × n) ℂ :=
-  ∑ r, rankOne (fun p => V r p.1 p.2)
+    ∑ r, rankOne (fun p => V r p.2 p.1)
 
-theorem krausChoi_posSemidef {ι : Type*} [Fintype ι]
+theorem krausChoi_posSemidef {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : ι → Matrix n n ℂ) :
     (krausChoi V).PosSemidef := by
   unfold krausChoi

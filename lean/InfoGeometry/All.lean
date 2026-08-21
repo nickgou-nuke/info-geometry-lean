@@ -7442,4 +7442,5 @@ import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
 import InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification
 import InfoGeometry.Synthesis.OnsagerOperatorDifferentialCalculus
 import InfoGeometry.Synthesis.All
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 

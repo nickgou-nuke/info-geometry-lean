@@ -1,10 +1,11 @@
 import InfoGeometry.Modular.CommutantSemidirectProduct
 import InfoGeometry.Modular.SemidirectAutomorphismGroup
 import InfoGeometry.Modular.WeylPfaffianDeterminantTriple
+import InfoGeometry.Modular.DerivationLieIdeal
 
 /-!
 # Modular Theory Module
 
 Exports the algebraic commutant, semidirect product derivation, automorphism group,
-and Weyl–Pfaffian–Determinant triple framework.
+Lie ideal closure of inner derivations, and Weyl–Pfaffian–Determinant triple framework.
 -/

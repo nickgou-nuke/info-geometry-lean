@@ -84,6 +84,26 @@ theorem derivation_short_exact_sequence_summary (D : RingDerivation A) (K X : A)
     (∃ K' : A, ∀ Y : A, commutator D (modularDerivation K) Y = modularDerivation K' Y) := by
   exact ⟨ker_adK_eq_center K, master_dual_flow_commutator D K X, inn_is_lie_ideal D K⟩
 
+/--
+The algebraic dual-flow capstone.
+
+The outer derivation acts on the inner modular ideal through its value on the
+generator.  Consequently an invariant generator gives a commuting pair, while
+a central generator gives the zero inner derivation.  This is a purely
+associative ring-level statement; no analytic flow or physical interpretation
+is part of the theorem.
+-/
+theorem dual_flow_capstone (D : RingDerivation A) (K : A) :
+    (commutator D (modularDerivation K) = modularDerivation (D K)) ∧
+    (D K = 0 → ∀ X, commutator D (modularDerivation K) X = 0) ∧
+    ((∀ X, K * X = X * K) → ∀ X, modularDerivation K X = 0) := by
+  refine ⟨commutator_modular_eq D K, ?_, ?_⟩
+  · intro hK X
+    rw [commutator_modular_apply D K X, hK]
+    exact center_generates_zero_flow 0 (by intro Y; simp) X
+  · intro hK X
+    exact center_generates_zero_flow K hK X
+
 /-!
 ### Bundled Native Mathlib Short Exact Sequence & Semidirect Product
 -/

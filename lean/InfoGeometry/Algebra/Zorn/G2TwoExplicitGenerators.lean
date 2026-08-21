@@ -77,6 +77,74 @@ theorem unipotentLongAut_true_ne_one :
   revert h_apply
   decide
 
+theorem simple_root_generators_distinct :
+    unipotentShortAut true ≠ unipotentLongAut true := by
+  intro h
+  have h_apply := congrArg (fun f : SplitOctF2Aut => (f.1 up1).x0) h
+  revert h_apply
+  decide
+
+def conjugateAut (g u : SplitOctF2Aut) : SplitOctF2Aut :=
+  g * u * g⁻¹
+
+theorem conjugateAut_sq (g u : SplitOctF2Aut) (hu : u * u = 1) :
+    conjugateAut g u * conjugateAut g u = 1 := by
+  calc
+    conjugateAut g u * conjugateAut g u = g * (u * u) * g⁻¹ := by
+      simp [conjugateAut, mul_assoc]
+    _ = 1 := by rw [hu]; simp
+
+theorem conjugateAut_ne_one (g u : SplitOctF2Aut) (hu : u ≠ 1) :
+    conjugateAut g u ≠ 1 := by
+  intro h
+  apply hu
+  have h' := congrArg (fun z : SplitOctF2Aut => g⁻¹ * z * g) h
+  simpa [conjugateAut, ← mul_assoc] using h'
+
+noncomputable def swapConjugatedShort : SplitOctF2Aut :=
+  conjugateAut swap01Aut (unipotentShortAut true)
+
+noncomputable def swapConjugatedLong : SplitOctF2Aut :=
+  conjugateAut swap01Aut (unipotentLongAut true)
+
+theorem swapConjugated_generator_packet :
+    swapConjugatedShort * swapConjugatedShort = 1 ∧
+    swapConjugatedLong * swapConjugatedLong = 1 ∧
+    swapConjugatedShort ≠ (1 : SplitOctF2Aut) ∧
+    swapConjugatedLong ≠ (1 : SplitOctF2Aut) := by
+  exact ⟨conjugateAut_sq _ _ (unipotentShortAut_order true),
+    conjugateAut_sq _ _ (unipotentLongAut_order true),
+    conjugateAut_ne_one _ _ unipotentShortAut_true_ne_one,
+    conjugateAut_ne_one _ _ unipotentLongAut_true_ne_one⟩
+
+theorem unipotentShortAut_add (s t : Bool) :
+    unipotentShortAut (s ^^ t) =
+      unipotentShortAut s * unipotentShortAut t := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  cases s <;> cases t
+  · rfl
+  · rfl
+  · rfl
+  · change X = (unipotentShortAut true * unipotentShortAut true).1 X
+    rw [← unipotentShortAut_order true]
+    rfl
+
+theorem unipotentLongAut_add (s t : Bool) :
+    unipotentLongAut (s ^^ t) =
+      unipotentLongAut s * unipotentLongAut t := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  cases s <;> cases t
+  · rfl
+  · rfl
+  · rfl
+  · change X = (unipotentLongAut true * unipotentLongAut true).1 X
+    rw [← unipotentLongAut_order true]
+    rfl
+
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧
     (unipotentLongAut true) * (unipotentLongAut true) = 1 ∧

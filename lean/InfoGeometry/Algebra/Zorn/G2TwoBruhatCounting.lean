@@ -43,6 +43,17 @@ theorem poincarePolynomialG2Poly_eq_length_factor :
   dsimp [poincarePolynomialG2Poly]
   ring
 
+theorem poincarePolynomialG2Poly_eval_two :
+    eval 2 poincarePolynomialG2Poly = 189 := by
+  rw [poincarePolynomialG2Poly_eq_length_factor]
+  norm_num
+
+theorem cyclotomicG2Product_eval_two :
+    eval 2 ((X + 1)^2 * (X^2 + X + 1) * (X^2 - X + 1) : Polynomial ℤ) =
+      189 := by
+  rw [← poincarePolynomialG2Poly_eq_cyclotomic_product]
+  exact poincarePolynomialG2Poly_eval_two
+
 /-- THEOREM: At q = 2, the Poincaré polynomial evaluates to 189. -/
 theorem poincarePolynomialG2_at_two :
     poincarePolynomialG2 2 = 189 := by

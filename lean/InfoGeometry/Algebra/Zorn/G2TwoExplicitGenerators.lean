@@ -360,6 +360,27 @@ theorem cycleConjugatedLongParam_commutator_eq_one (i : Fin 3) (s t : Bool) :
   exact (automorphismCommutator_eq_one_iff _ _).2
     (cycleConjugatedLongParam_comm i s t)
 
+/-! A single indexed interface for the six concrete root candidates. -/
+
+noncomputable def candidateRootFamily : Fin 6 → Bool → SplitOctF2Aut
+  | 0 => cycleConjugatedShortParam 0
+  | 1 => cycleConjugatedShortParam 1
+  | 2 => cycleConjugatedShortParam 2
+  | 3 => cycleConjugatedLongParam 0
+  | 4 => cycleConjugatedLongParam 1
+  | 5 => cycleConjugatedLongParam 2
+
+theorem candidateRootFamily_same_root_commutator (i : Fin 6) (s t : Bool) :
+    automorphismCommutator (candidateRootFamily i s)
+      (candidateRootFamily i t) = 1 := by
+  fin_cases i
+  · exact cycleConjugatedShortParam_commutator_eq_one 0 s t
+  · exact cycleConjugatedShortParam_commutator_eq_one 1 s t
+  · exact cycleConjugatedShortParam_commutator_eq_one 2 s t
+  · exact cycleConjugatedLongParam_commutator_eq_one 0 s t
+  · exact cycleConjugatedLongParam_commutator_eq_one 1 s t
+  · exact cycleConjugatedLongParam_commutator_eq_one 2 s t
+
 def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure
     ({unipotentShortAut true, unipotentLongAut true} : Set SplitOctF2Aut)

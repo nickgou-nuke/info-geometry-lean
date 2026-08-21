@@ -33,7 +33,7 @@ ZERO `sorry`s, and ZERO custom axioms.
 
 open Finset
 
-namespace InfoGeometry.Algebra.Zorn.G2Steinberg
+namespace InfoGeometry.Algebra.Zorn.G2TwoChevalleyOrderArithmetic
 
 /-! ### 1. Positive Roots and Root Heights -/
 
@@ -149,4 +149,4 @@ theorem bruhat_sum_eq_chevalley_formula :
     bruhatOrderExpression 2 = lieAlgebraG2OrderFormula 2 := by
   rw [bruhat_order_expression_at_two, lie_algebra_g2_formula_at_two]
 
-end InfoGeometry.Algebra.Zorn.G2Steinberg
+end InfoGeometry.Algebra.Zorn.G2TwoChevalleyOrderArithmetic

@@ -174,6 +174,12 @@ lemma modularFlowReadout_pos_of_mem_positive_weight
   rw [C.flow_eq_projectivePrimePartition A u hu]
   exact projectivePrimePartition_pos_of_mem_positive_weight hnA hΛ hn
 
+/-- Canonical self-calibrated instance for the standard arithmetic state space `Finset ℕ`. -/
+def standardCalibration : ProjectivePrimeCalibration (Finset ℕ) where
+  stateOfFinset := id
+  modularFlowReadout := fun A u => projectivePrimePartition A u
+  flow_eq_projectivePrimePartition := fun _ _ _ => rfl
+
 end ProjectivePrimeCalibration
 
 end InfoGeometry.Arithmetic.ProjectivePrimePartition

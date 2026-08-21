@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.Zorn.G2CyclotomicPoincareFactorization
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
+import InfoGeometry.Algebra.Zorn.G2TwoIdempotentGeometry
 import InfoGeometry.Algebra.Zorn.G2SteinbergPositiveRoots
 import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility

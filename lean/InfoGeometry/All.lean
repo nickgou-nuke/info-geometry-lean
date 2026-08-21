@@ -7447,4 +7447,5 @@ import InfoGeometry.Modular.ModularTimeSemigroupBridge
 import InfoGeometry.Modular.SemidirectExteriorAlgebra
 import InfoGeometry.QuantumGeometry.TangentCotangentSymplecticBridge
 import InfoGeometry.QuantumGeometry.KahlerSouriauInformationBridge
+import InfoGeometry.Modular.GKSLDissipatorAlgebraic
 

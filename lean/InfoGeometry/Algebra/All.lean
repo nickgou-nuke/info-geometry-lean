@@ -268,6 +268,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoDihedralSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
+import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
 /-!
 # InfoGeometry.Algebra.All
@@ -278,4 +279,3 @@ Umbrella module for the algebra layer.
 namespace InfoGeometry
 
 end InfoGeometry
-import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2

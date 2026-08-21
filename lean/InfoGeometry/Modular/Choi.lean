@@ -42,7 +42,7 @@ theorem krausChannel_choi_posSemidef
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : ι → Mat) :
     (choiMatrix (krausChannel V)).PosSemidef := by
-  exact InfoGeometry.Quantum.Choi.choiMatrix_krausMap_posSemidef V
+  exact choi_matrix_positive_semidefinite V
 
 end InfoGeometry.Modular.Choi
 

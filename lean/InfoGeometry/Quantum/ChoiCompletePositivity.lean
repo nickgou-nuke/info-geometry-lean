@@ -130,6 +130,40 @@ theorem choiMatrix_krausMap_posSemidef
 def ChoiPositive (E : MatrixMap (n := n)) : Prop :=
   (choiMatrix E).PosSemidef
 
+/-! The following finite amplification makes the Choi--Jamiołkowski formula
+literal at the level of matrix entries. -/
+
+def tensorAmplification (E : MatrixMap (n := n))
+    (X : Matrix (n × n) (n × n) ℂ) : Matrix (n × n) (n × n) ℂ :=
+  fun (i, k) (j, l) =>
+    E (fun a b => X (i, a) (j, b)) k l
+
+theorem choiMatrix_eq_tensorAmplification_rankOne
+    (E : MatrixMap (n := n)) :
+    choiMatrix E = tensorAmplification E (rankOne maximallyEntangled) := by
+  ext ⟨i, k⟩ ⟨j, l⟩
+  dsimp [choiMatrix, tensorAmplification]
+  have hslice :
+      (fun a b => rankOne maximallyEntangled (i, a) (j, b)) =
+        matrixUnit i j := by
+    funext a b
+    dsimp [rankOne, maximallyEntangled, matrixUnit]
+    split_ifs with h1 h2 h3 <;> simp_all
+  rw [hslice]
+
+theorem krausMap_choiPositive
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Matrix n n ℂ) :
+  ChoiPositive (krausMap V) :=
+  choiMatrix_krausMap_posSemidef V
+
+theorem krausMap_tensorAmplification_rankOne_posSemidef
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Matrix n n ℂ) :
+    (tensorAmplification (krausMap V) (rankOne maximallyEntangled)).PosSemidef := by
+  rw [← choiMatrix_eq_tensorAmplification_rankOne]
+  exact choiMatrix_krausMap_posSemidef V
+
 /-- Finite complete positivity: every matrix amplification preserves the
 positive-semidefinite cone.  The amplification construction is intentionally
 left as a separate owner because its index/type transport is nontrivial. -/

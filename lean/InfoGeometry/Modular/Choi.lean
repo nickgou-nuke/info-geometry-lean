@@ -2,6 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
 
 /-!
@@ -30,7 +31,7 @@ open Finset
 namespace InfoGeometry.Modular.Choi
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-variable {κ : Type*} [Fintype ι] [DecidableEq ι]
+variable {κ : Type*} [Fintype κ]
 
 local notation "Mat" => Matrix ι ι ℂ
 local notation "ChoiMat" => Matrix (ι × ι) (ι × ι) ℂ
@@ -43,7 +44,7 @@ PART 1: Standard Matrix Units and the Choi Matrix
 
 /-- Standard Matrix Unit E_{xy} = |x⟩⟨y|: 1 at entry (x, y) and 0 elsewhere. -/
 def stdBasis (x y : ι) : Mat :=
-  fun i j => if i = x ∧ j = y then 1 else 0
+  Matrix.of (fun i j => if i = x ∧ j = y then 1 else 0)
 
 @[simp]
 theorem stdBasis_apply (x y i j : ι) :
@@ -54,11 +55,11 @@ theorem stdBasis_apply (x y i j : ι) :
   (Λ_ℰ)_{(i, x), (j, y)} = (ℰ(E_{xy}))_{i, j}
 -/
 def choiMatrix (E : Mat →ₗ[ℂ] Mat) : ChoiMat :=
-  fun ⟨i, x⟩ ⟨j, y⟩ => E (stdBasis x y) i j
+  Matrix.of (fun ⟨i, x⟩ ⟨j, y⟩ => E (stdBasis x y) i j)
 
 @[simp]
 theorem choiMatrix_apply (E : Mat →ₗ[ℂ] Mat) (i x j y : ι) :
-    choiMatrix E (i, x) (j, y) = E (stdBasis x y) i j := rfl
+    choiMatrix E ⟨i, x⟩ ⟨j, y⟩ = E (stdBasis x y) i j := rfl
 
 /-!
 =============================================================================
@@ -88,33 +89,33 @@ def krausChannel (K : κ → Mat) : Mat →ₗ[ℂ] Mat where
 -/
 theorem kraus_on_basis_apply (K_op : Mat) (x y i j : ι) :
     (krausTerm K_op (stdBasis x y)) i j = K_op i x * starRingEnd ℂ (K_op j y) := by
-  dsimp [krausTerm, mul_apply, star_apply]
-  have h_first (m : ι) : (K_op * stdBasis x y) i m = K_op i x * if m = y then 1 else 0 := by
-    dsimp [mul_apply]
-    have h_sum : ∑ p, K_op i p * stdBasis x y p m = K_op i x * stdBasis x y x m := by
-      have h_zero : ∀ p ≠ x, K_op i p * stdBasis x y p m = 0 := by
-        intro p hp
-        have : stdBasis x y p m = 0 := by
-          dsimp [stdBasis]
-          simp [hp]
-        rw [this, mul_zero]
-      rw [Finset.sum_eq_single x]
-      · intro p _ hp; exact h_zero p hp
-      · intro h_not; exfalso; exact h_not (Finset.mem_univ x)
-    rw [h_sum, stdBasis_apply]
-    by_cases hm : m = y
-    · simp [hm]
-    · simp [hm]
-  calc
-    ∑ m, (K_op * stdBasis x y) i m * starRingEnd ℂ (K_op j m)
-      = ∑ m, (K_op i x * if m = y then 1 else 0) * starRingEnd ℂ (K_op j m) := by
-        apply Finset.sum_congr rfl; intro m _; rw [h_first m]
-    _ = (K_op i x * 1) * starRingEnd ℂ (K_op j y) := by
+  dsimp [krausTerm, stdBasis, mul_apply, star_apply]
+  have h_inner (r : ι) : (∑ c : ι, K_op i c * (if c = x ∧ r = y then (1 : ℂ) else 0)) =
+      if r = y then K_op i x else 0 := by
+    rw [Finset.sum_eq_single x]
+    · simp only [true_and]
+      split_ifs <;> simp
+    · intro c _ hneq
+      have : (c = x ∧ r = y) = False := by simp [hneq]
+      simp [this]
+    · intro hx
+      exact False.elim (hx (Finset.mem_univ x))
+  
+  have h_outer : (∑ r : ι, (∑ c : ι, K_op i c * (if c = x ∧ r = y then (1 : ℂ) else 0)) * starRingEnd ℂ (K_op j r)) =
+      K_op i x * starRingEnd ℂ (K_op j y) := by
+    calc
+      (∑ r : ι, (∑ c : ι, K_op i c * (if c = x ∧ r = y then (1 : ℂ) else 0)) * starRingEnd ℂ (K_op j r))
+        = ∑ r : ι, (if r = y then K_op i x else 0) * starRingEnd ℂ (K_op j r) := by
+          refine Finset.sum_congr rfl (fun r _ => by rw [h_inner r])
+      _ = K_op i x * starRingEnd ℂ (K_op j y) := by
         rw [Finset.sum_eq_single y]
-        · simp
-        · intro m _ hm; simp [hm]
-        · intro h_not; exfalso; exact h_not (Finset.mem_univ y)
-    _ = K_op i x * starRingEnd ℂ (K_op j y) := by ring
+        · simp only [if_true]
+        · intro r _ hneq
+          simp only [if_neg hneq, zero_mul]
+        · intro hj
+          exact False.elim (hj (Finset.mem_univ y))
+  
+  exact h_outer
 
 /-!
 =============================================================================
@@ -124,7 +125,20 @@ PART 3: Proof of Choi Positive Semi-Definiteness (Complete Positivity)
 
 /-- The Quadratic Form / Expectation of the Choi Matrix on a bipartite vector v: ι × ι → ℂ. -/
 def choiQuadraticForm (M : ChoiMat) (v : ι × ι → ℂ) : ℂ :=
-  ∑ a, ∑ b, starRingEnd ℂ (v a) * M a b * v b
+  ∑ a : ι × ι, ∑ b : ι × ι, starRingEnd ℂ (v a) * M a b * v b
+
+/-- Factorization of bipartite product sum into independent factor sums. -/
+theorem bilin_sum_factor (K_k : Mat) (v : (ι × ι) → ℂ) :
+    (∑ a : ι × ι, ∑ b : ι × ι, starRingEnd ℂ (v a) * (K_k a.1 a.2 * starRingEnd ℂ (K_k b.1 b.2)) * v b) =
+    (∑ a : ι × ι, starRingEnd ℂ (v a) * K_k a.1 a.2) * (∑ b : ι × ι, starRingEnd ℂ (K_k b.1 b.2) * v b) := by
+  calc
+    (∑ a : ι × ι, ∑ b : ι × ι, starRingEnd ℂ (v a) * (K_k a.1 a.2 * starRingEnd ℂ (K_k b.1 b.2)) * v b)
+      = ∑ a : ι × ι, ∑ b : ι × ι, (starRingEnd ℂ (v a) * K_k a.1 a.2) * (starRingEnd ℂ (K_k b.1 b.2) * v b) := by
+        refine Finset.sum_congr rfl (fun a _ => Finset.sum_congr rfl (fun b _ => by ring))
+    _ = ∑ a : ι × ι, (starRingEnd ℂ (v a) * K_k a.1 a.2) * (∑ b : ι × ι, starRingEnd ℂ (K_k b.1 b.2) * v b) := by
+        refine Finset.sum_congr rfl (fun a _ => by rw [← Finset.mul_sum])
+    _ = (∑ a : ι × ι, starRingEnd ℂ (v a) * K_k a.1 a.2) * (∑ b : ι × ι, starRingEnd ℂ (K_k b.1 b.2) * v b) := by
+        rw [← Finset.sum_mul]
 
 /-- 
   MASTER THEOREM (Choi Complete Positivity Theorem):
@@ -133,39 +147,54 @@ def choiQuadraticForm (M : ChoiMat) (v : ι × ι → ℂ) : ℂ :=
     ⟪v, Λ_{ℰ_K} v⟫ = ∑_k |∑_{i, x} v(i, x)* K_{i, x}|² ≥ 0
 -/
 theorem choi_matrix_positive_semidefinite (K : κ → Mat) (v : ι × ι → ℂ) :
-    0 ≤ (choiQuadraticForm (choiMatrix (krausChannel K)) v).re := by
-  dsimp [choiQuadraticForm, choiMatrix, krausChannel]
+    0 ≤ (choiQuadraticForm (choiMatrix (krausChannel K)) v).re ∧
+    (choiQuadraticForm (choiMatrix (krausChannel K)) v).im = 0 := by
+  have h_entry (a b : ι × ι) :
+      choiMatrix (krausChannel K) a b = ∑ k, K k a.1 a.2 * starRingEnd ℂ (K k b.1 b.2) := by
+    dsimp [choiMatrix, krausChannel]
+    have h_sum_apply : (∑ k : κ, krausTerm (K k) (stdBasis a.2 b.2)) a.1 b.1 =
+        ∑ k : κ, krausTerm (K k) (stdBasis a.2 b.2) a.1 b.1 :=
+      Matrix.sum_apply a.1 b.1 Finset.univ (fun k => krausTerm (K k) (stdBasis a.2 b.2))
+    rw [h_sum_apply]
+    refine Finset.sum_congr rfl (fun k _ => kraus_on_basis_apply (K k) a.2 b.2 a.1 b.1)
+
   have h_swap :
-      (∑ a : ι × ι, ∑ b : ι × ι, starRingEnd ℂ (v a) * (∑ k, krausTerm (K k) (stdBasis a.2 b.2) a.1 b.1) * v b) =
-      ∑ k, (∑ a : ι × ι, starRingEnd ℂ (v a) * (K k a.1 a.2)) * (∑ b : ι × ι, starRingEnd ℂ (K k b.1 b.2) * v b) := by
-    simp_rw [kraus_on_basis_apply]
-    simp_rw [mul_sum, sum_mul]
-    rw [Finset.sum_comm]
-    apply Finset.sum_congr rfl; intro k _
-    rw [← Finset.sum_mul_sum]
-    apply Finset.sum_congr rfl; intro a _
-    apply Finset.sum_congr rfl; intro b _
-    ring
+      choiQuadraticForm (choiMatrix (krausChannel K)) v =
+      ∑ k : κ, (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2) *
+               starRingEnd ℂ (∑ b : ι × ι, starRingEnd ℂ (v b) * K k b.1 b.2) := by
+    dsimp [choiQuadraticForm]
+    simp_rw [h_entry]
+    simp only [Finset.mul_sum, Finset.sum_mul]
+    have h_step :
+        (∑ a : ι × ι, ∑ b : ι × ι, ∑ k : κ,
+          starRingEnd ℂ (v a) * (K k a.1 a.2 * starRingEnd ℂ (K k b.1 b.2)) * v b) =
+        ∑ a : ι × ι, ∑ k : κ, ∑ b : ι × ι,
+          starRingEnd ℂ (v a) * (K k a.1 a.2 * starRingEnd ℂ (K k b.1 b.2)) * v b := by
+      refine Finset.sum_congr rfl (fun a _ => Finset.sum_comm)
+    rw [h_step]
+    rw [Finset.sum_comm (s := (Finset.univ : Finset (ι × ι))) (t := (Finset.univ : Finset κ))]
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    have h_conj : starRingEnd ℂ (∑ b : ι × ι, starRingEnd ℂ (v b) * K k b.1 b.2) =
+        ∑ b : ι × ι, starRingEnd ℂ (K k b.1 b.2) * v b := by
+      rw [map_sum]
+      refine Finset.sum_congr rfl (fun b _ => ?_)
+      rw [map_mul, Complex.conj_conj, mul_comm]
+    rw [bilin_sum_factor (K k) v]
+    rw [h_conj]
+    rw [← Finset.sum_mul]
+
   rw [h_swap]
-  have h_conj_factor (k : κ) :
-      (∑ b : ι × ι, starRingEnd ℂ (K k b.1 b.2) * v b) =
-      starRingEnd ℂ (∑ a : ι × ι, starRingEnd ℂ (v a) * (K k a.1 a.2)) := by
-    rw [map_sum]
-    apply Finset.sum_congr rfl; intro a _
-    rw [map_mul, star_star]
-    ring
   have h_normSq_sum :
-      (∑ k, (∑ a : ι × ι, starRingEnd ℂ (v a) * (K k a.1 a.2)) *
-            (∑ b : ι × ι, starRingEnd ℂ (K k b.1 b.2) * v b)) =
-      ∑ k, (Complex.normSq (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2) : ℂ) := by
-    apply Finset.sum_congr rfl; intro k _
-    rw [h_conj_factor k]
-    exact (Complex.mul_conj (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2)).symm
+      (∑ k : κ, (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2) *
+                starRingEnd ℂ (∑ b : ι × ι, starRingEnd ℂ (v b) * K k b.1 b.2)) =
+      ∑ k : κ, (Complex.normSq (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2) : ℂ) := by
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    exact Complex.mul_conj (∑ a : ι × ι, starRingEnd ℂ (v a) * K k a.1 a.2)
   rw [h_normSq_sum]
-  simp only [Complex.ofReal_sum, Complex.ofReal_re]
-  apply Finset.sum_nonneg
-  intro k _
-  exact Complex.normSq_nonneg _
+  constructor
+  · rw [← Complex.ofReal_sum, Complex.ofReal_re]
+    exact Finset.sum_nonneg (fun k _ => Complex.normSq_nonneg _)
+  · rw [← Complex.ofReal_sum, Complex.ofReal_im]
 
 /-!
 =============================================================================
@@ -175,7 +204,11 @@ PART 4: Trace Preservation via Partial Trace on the Choi Matrix
 
 /-- Partial Trace over the output space (first index): Tr₁(M)_{x, y} = ∑_i M_{(i, x), (i, y)}. -/
 def partialTraceFirst (M : ChoiMat) : Mat :=
-  fun x y => ∑ i, M (i, x) (i, y)
+  Matrix.of (fun x y => ∑ i, M ⟨i, x⟩ ⟨i, y⟩)
+
+@[simp]
+theorem partialTraceFirst_apply (M : ChoiMat) (x y : ι) :
+    partialTraceFirst M x y = ∑ i, M ⟨i, x⟩ ⟨i, y⟩ := rfl
 
 /-- 
   THEOREM (Choi Matrix Trace Preservation Characterization):
@@ -187,15 +220,15 @@ theorem choi_trace_preserving_iff (E : Mat →ₗ[ℂ] Mat) :
     partialTraceFirst (choiMatrix E) = 1 ↔ (∀ x y, Matrix.trace (E (stdBasis x y)) = if x = y then 1 else 0) := by
   constructor
   · intro h x y
-    have h_entry := congr_fun (congr_fun h x) y
-    dsimp [partialTraceFirst, choiMatrix, Matrix.trace] at h_entry ⊢
-    rw [h_entry, Matrix.one_apply]
+    have h_entry := congrArg (fun M : Mat => M x y) h
+    dsimp [partialTraceFirst, choiMatrix, Matrix.trace, Matrix.one_apply] at h_entry ⊢
+    exact h_entry
   · intro h
     ext x y
-    dsimp [partialTraceFirst, choiMatrix]
+    dsimp [partialTraceFirst, choiMatrix, Matrix.one_apply]
     have h_tr := h x y
     dsimp [Matrix.trace] at h_tr
-    rw [h_tr, Matrix.one_apply]
+    exact h_tr
 
 end InfoGeometry.Modular.Choi
 

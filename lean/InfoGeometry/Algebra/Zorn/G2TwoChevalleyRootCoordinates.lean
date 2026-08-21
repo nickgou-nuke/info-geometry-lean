@@ -62,6 +62,14 @@ theorem rootCoordinate_sum (x : PositiveRootCoordinates) :
   funext j
   simp [rootCoordinate]
 
+theorem rootCoordinate_sum_unique (x : PositiveRootCoordinates)
+    (c : PositiveRoot → F2)
+    (h : (∑ i : PositiveRoot, rootCoordinate i (c i)) = x) :
+    c = x := by
+  funext j
+  have hj := congrFun h j
+  simpa [rootCoordinate] using hj
+
 theorem positive_root_coordinates_additive :
     ∀ (x y : PositiveRootCoordinates),
       x + y = y + x := by

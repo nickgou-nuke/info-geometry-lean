@@ -118,6 +118,28 @@ theorem dlogL_eq_zero_iff (D : A →ₗ[ℤ] A) (u : Aˣ) :
   · intro h
     simp [dlogL, h]
 
+/-- The right logarithmic derivative detects stationary units exactly. -/
+theorem dlogR_eq_zero_iff (D : A →ₗ[ℤ] A) (u : Aˣ) :
+    dlogR D u = 0 ↔ D (u : A) = 0 := by
+  constructor
+  · intro h
+    have h' := congrArg (fun x : A => x * (u : A)) h
+    simpa [dlogR, mul_assoc, u.val_inv] using h'
+  · intro h
+    simp [dlogR, h]
+
+/-- The right logarithmic derivative vanishes on the identity unit. -/
+@[simp]
+theorem dlogR_one (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) :
+    dlogR D 1 = 0 := by
+  dsimp [dlogR]
+  have h := hD 1 1
+  have h_one : D (1 : A) = 0 := by
+    have h' : D 1 = D 1 + D 1 := by simpa only [mul_one, one_mul] using h
+    have h'' : D 1 + 0 = D 1 + D 1 := by simpa using h'
+    exact (add_left_cancel h'').symm
+  simp [h_one]
+
 /-- Derivation annihilates 1 in any ring -/
 theorem derivation_map_one (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) : D 1 = 0 := by
   have h := hD 1 1
@@ -253,6 +275,7 @@ theorem dlogR_mul_of_commute (D : A →ₗ[ℤ] A)
       _ = (dlogR D v) * ((u : A) * (↑(u⁻¹) : A)) := by
             simp only [mul_assoc]
       _ = dlogR D v := by
+            change dlogR D v * (u.val * u.inv) = dlogR D v
             rw [u.val_inv, mul_one]
   rw [hconj]
 
@@ -268,6 +291,14 @@ theorem dlogL_inv_eq_neg_dlogR (D : A →ₗ[ℤ] A)
         -(((u : A) * (↑(u⁻¹) : A)) * D (u : A) * (↑(u⁻¹) : A)) := by
           simp only [mul_assoc]
     _ = -(D (u : A) * (↑(u⁻¹) : A)) := by rw [hu, one_mul]
+
+/-- Inversion exchanges the right and left logarithmic derivatives. -/
+theorem dlogR_inv_eq_neg_dlogL (D : A →ₗ[ℤ] A)
+    (hD : IsNCDerivation D) (u : Aˣ) :
+    dlogR D (u⁻¹) = -dlogL D u := by
+  have h := dlogL_inv_eq_neg_dlogR D hD (u⁻¹)
+  have hneg := congrArg Neg.neg h
+  simpa using hneg.symm
 
 /-!
 =============================================================================
@@ -309,6 +340,34 @@ theorem dlogR_adK (K : A) (u : Aˣ) :
             rw [sub_mul]
             simp only [mul_assoc]
     _ = K - (u : A) * K * (↑(u⁻¹) : A) := by rw [hu, mul_one]
+
+/-- The right gauge shift vanishes exactly on the same centralizer. -/
+theorem dlogR_adK_eq_zero_iff (K : A) (u : Aˣ) :
+    dlogR (adK K) u = 0 ↔ Commute K (u : A) := by
+  rw [dlogR_adK]
+  constructor
+  · intro h
+    have hshift : (u : A) * K * (↑(u⁻¹) : A) = K :=
+      (sub_eq_zero.mp h).symm
+    calc
+      K * (u : A) = ((u : A) * K * (↑(u⁻¹) : A)) * (u : A) := by
+        rw [hshift]
+      _ = (u : A) * K * ((↑(u⁻¹) : A) * (u : A)) := by
+        simp only [mul_assoc]
+      _ = (u : A) * K := by
+        have hleft : (↑(u⁻¹) : A) * (u : A) = 1 := u.inv_val
+        rw [hleft, mul_one]
+  · intro hcomm
+    apply sub_eq_zero.mpr
+    calc
+      K = (K * (u : A)) * (↑(u⁻¹) : A) := by
+        have hright : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+        calc
+          K = K * 1 := (mul_one K).symm
+          _ = K * ((u : A) * (↑(u⁻¹) : A)) := by rw [hright]
+          _ = (K * (u : A)) * (↑(u⁻¹) : A) := by rw [mul_assoc]
+      _ = ((u : A) * K) * (↑(u⁻¹) : A) := by rw [hcomm.eq]
+      _ = (u : A) * K * (↑(u⁻¹) : A) := by simp only [mul_assoc]
 
 /-- The inner logarithmic derivative vanishes exactly on the centralizer of
 the chosen unit. -/

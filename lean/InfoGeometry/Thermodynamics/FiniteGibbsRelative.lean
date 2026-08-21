@@ -545,4 +545,23 @@ theorem deriv2_massieu_direction_at
   intro i hi
   ring
 
+/-- Convexity of the finite Massieu potential along every exponential-family
+trajectory. -/
+theorem deriv2_massieu_direction_at_nonneg
+    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ) :
+    0 ≤ deriv (fun s : ℝ =>
+      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t := by
+  rw [deriv2_massieu_direction_at]
+  exact fisherMetric_self_nonneg _ _ (Z_pos _)
+
+/-- Strict convexity holds along a direction that is not constant on the
+finite state space. -/
+theorem deriv2_massieu_direction_at_pos_of_nonconstant
+    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ)
+    (hX : ∃ i j : ι, X i ≠ X j) :
+    0 < deriv (fun s : ℝ =>
+      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t := by
+  rw [deriv2_massieu_direction_at]
+  exact fisherMetric_self_pos_of_nonconstant _ _ (Z_pos _) hX
+
 end InfoGeometry.Thermodynamics.FiniteGibbsRelative

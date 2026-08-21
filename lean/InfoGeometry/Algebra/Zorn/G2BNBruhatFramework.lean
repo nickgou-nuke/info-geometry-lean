@@ -92,34 +92,6 @@ theorem cycle012Aut_order_three :
 theorem g2weylGroup_finite : Finite g2weylGroup := by
   apply Finite.of_injective Subtype.val Subtype.val_injective
 
-private def concreteWeylWords : Fin 6 → g2weylGroup
-  | 0 => ⟨1, g2weylGroup.one_mem⟩
-  | 1 => ⟨cycle012Aut, cycle012Aut_mem_g2weylGroup⟩
-  | 2 => ⟨cycle012Aut * cycle012Aut, g2weylGroup.mul_mem
-      cycle012Aut_mem_g2weylGroup cycle012Aut_mem_g2weylGroup⟩
-  | 3 => ⟨swap01Aut, swap01Aut_mem_g2weylGroup⟩
-  | 4 => ⟨swap01Aut * cycle012Aut, g2weylGroup.mul_mem
-      swap01Aut_mem_g2weylGroup cycle012Aut_mem_g2weylGroup⟩
-  | 5 => ⟨swap01Aut * cycle012Aut * cycle012Aut, g2weylGroup.mul_mem
-      (g2weylGroup.mul_mem swap01Aut_mem_g2weylGroup
-        cycle012Aut_mem_g2weylGroup) cycle012Aut_mem_g2weylGroup⟩
-
-private theorem concreteWeylWords_injective :
-    Function.Injective concreteWeylWords := by
-  intro i j h
-  fin_cases i <;> fin_cases j <;>
-    try { rfl }
-  all_goals
-    exfalso
-    apply (by decide :
-      (swap01Aut : SplitOctF2Aut) ≠ cycle012Aut)
-    · exact congrArg Subtype.val h
-
-theorem concrete_weyl_subgroup_card_ge_six :
-    6 ≤ Fintype.card g2weylGroup := by
-  have hcard : Fintype.card (Fin 6) ≤ Fintype.card g2weylGroup :=
-    Fintype.card_le_of_injective concreteWeylWords concreteWeylWords_injective
-  simpa using hcard
 
 /-! ## Step 3: Root cyclotomy on the abstract side
 

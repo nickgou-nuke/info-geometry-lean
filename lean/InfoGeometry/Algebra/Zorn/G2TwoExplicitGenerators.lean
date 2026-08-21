@@ -237,6 +237,9 @@ theorem fourRootSubgroupWords_injective :
     | exact False.elim (short_mul_long_ne_long h')
     | exact False.elim (short_mul_long_ne_long h'.symm)
 
+noncomputable instance : Finite simpleRootSubgroup :=
+  Finite.of_injective Subtype.val Subtype.val_injective
+
 noncomputable instance : Fintype simpleRootSubgroup := Fintype.ofFinite _
 
 theorem simpleRootSubgroup_card_lower_bound :
@@ -246,37 +249,19 @@ theorem simpleRootSubgroup_card_lower_bound :
       fourRootSubgroupWords_injective
   simpa using hc
 
-def fourRootWords : Fin 4 → SplitOctF2Aut
-  | 0 => 1
-  | 1 => unipotentShortAut true
-  | 2 => unipotentLongAut true
-  | 3 => unipotentShortAut true * unipotentLongAut true
-
-theorem fourRootWords_injective : Function.Injective fourRootWords := by
-  intro i j h
-  fin_cases i <;> fin_cases j
-  all_goals try rfl
-  all_goals dsimp [fourRootWords] at h
-  all_goals
-    first
-    | exact False.elim (unipotentShortAut_true_ne_one h)
-    | exact False.elim (unipotentShortAut_true_ne_one h.symm)
-    | exact False.elim (unipotentLongAut_true_ne_one h)
-    | exact False.elim (unipotentLongAut_true_ne_one h.symm)
-    | exact False.elim (simple_root_generators_distinct h)
-    | exact False.elim (simple_root_generators_distinct h.symm)
-    | exact False.elim (short_mul_long_ne_one h)
-    | exact False.elim (short_mul_long_ne_one h.symm)
-    | exact False.elim (short_mul_long_ne_short h)
-    | exact False.elim (short_mul_long_ne_short h.symm)
-    | exact False.elim (short_mul_long_ne_long h)
-    | exact False.elim (short_mul_long_ne_long h.symm)
-
 theorem finite_g2_carrier_card_lower_bound :
     4 ≤ Fintype.card SplitOctF2Aut := by
-  have hc : Fintype.card (Fin 4) ≤ Fintype.card SplitOctF2Aut :=
-    Fintype.card_le_of_injective fourRootWords fourRootWords_injective
-  simpa using hc
+  exact le_trans simpleRootSubgroup_card_lower_bound
+    (Fintype.card_subtype_le (fun f : SplitOctF2Aut =>
+      f ∈ simpleRootSubgroup))
+
+theorem simple_root_product_pow_four :
+    (unipotentShortAut true * unipotentLongAut true) ^ 4 =
+      (1 : SplitOctF2Aut) := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  cases X <;> rfl
 
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧

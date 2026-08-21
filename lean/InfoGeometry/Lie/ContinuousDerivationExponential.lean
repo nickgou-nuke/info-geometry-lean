@@ -275,7 +275,7 @@ Integral form of the orbit equation:
 This is the Banach-space fundamental theorem of calculus applied to the
 continuous exponential orbit.  It is independent of associativity of any
 additional multiplication on `A`.
-*/
+-/
 theorem flow_integral_generator
     (D : EndA)
     (x : A)
@@ -290,12 +290,11 @@ theorem flow_integral_generator
       Continuous (fun s : ℝ => D (flow D s x)) := by
     apply continuous_iff_continuousAt.mpr
     intro s
-    exact (ContinuousLinearMap.continuous D).continuousAt.comp s
-      (hasStrictDerivAt_orbit D x s).continuousAt
+    exact D.continuous.continuousAt.comp (hasStrictDerivAt_orbit D x s).continuousAt
   simpa [flow_zero] using
       (intervalIntegral.integral_eq_sub_of_hasDerivAt
       (a := (0 : ℝ)) (b := t) hderiv
-      (hcont.intervalIntegrable (μ := MeasureTheory.volume) 0 t))
+      (hcont.intervalIntegrable (0 : ℝ) t))
 
 /--
 `D` commutes with its own exponential flow:

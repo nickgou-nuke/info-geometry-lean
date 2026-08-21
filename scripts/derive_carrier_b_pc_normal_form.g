@@ -22,10 +22,34 @@ rels := RelativeOrders(pcgs);
 Print("PC relative orders: ", rels, "\n");
 Print("PC coordinate product: ", Product(rels), "\n");
 
-# Validate the collector contract on the actual carrier: each coordinate word
-# maps through the CAS isomorphism to the same exponent vector in the PC
-# quotient, and every product of two coordinate words is collected back to a
-# coordinate word.  This is a CAS certificate only.
+Print("PC power relations (exponent vectors):\n");
+for i in [1..Length(preimages)] do
+  relation := Image(iso, preimages[i]^rels[i]);
+  Print("p", i, "^", rels[i], " -> ",
+    ExponentsOfPcElement(pcgs, relation), "\n");
+od;
+Print("PC conjugation relations (exponent vectors):\n");
+for i in [2..Length(preimages)] do
+  for j in [1..i-1] do
+    relation := Image(iso,
+      preimages[i]^-1 * preimages[j] * preimages[i]);
+    Print("p", i, "^-1 p", j, " p", i, " -> ",
+      ExponentsOfPcElement(pcgs, relation), "\n");
+  od;
+od;
+
+# Export the complete polycyclic relations.  These relations, together with
+# the relative orders, are the structural CAS certificate for multiplication
+# and uniqueness of collected coordinates; no word enumeration is used.
+for i in [1..Length(pcgs)] do
+  Print("power relation p", i, "^", rels[i], " = ", pcgs[i]^rels[i], "\n");
+od;
+for i in [1..Length(pcgs)] do for j in [i+1..Length(pcgs)] do
+  Print("conjugation relation p", j, "^p", i, " = ", pcgs[j]^pcgs[i], "\n");
+od; od;
+
+# Validate the collector contract on the actual carrier.  This is a CAS
+# certificate of the normal form, not a Lean proof.
 pc_words := [];
 pc_exponents := [];
 for e1 in [0..rels[1]-1] do for e2 in [0..rels[2]-1] do
@@ -54,22 +78,22 @@ for i in [1..Length(pc_words)] do
 od;
 Print("PC collector/chart/closure checks: PASS (", Length(Set(pc_words)),
   " coordinate words; ", Length(pc_words)^2, " products)\n");
+
 # Export the carrier matrices of the PC generators for symbolic Lean alignment.
 for i in [1..Length(preimages)] do
   mat := preimages[i];
-  columns := List([1..8], col ->
-    Filtered([1..8], row -> mat[row][col] <> Zero(GF(2))));
+  columns := List([1..8], function(col)
+    local row;
+    return Filtered([1..8], function(row)
+      return mat[row][col] <> Zero(GF(2));
+    end);
+  end);
   Print("p", i, " column supports = ", columns, "\n");
+  rows := List([1..8], function(row)
+    local col;
+    return Filtered([1..8], function(col)
+      return mat[row][col] <> Zero(GF(2));
+    end);
+  end);
+  Print("p", i, " row formulas = ", rows, "\n");
 od;
-
-# Corrected normal-form check: use the PC generators, not the original
-# arbitrary six-generator ordering.  Their relative orders are all two and
-# the collected coordinate product is 64.
-words := [];
-for e1 in [0,1] do for e2 in [0,1] do for e3 in [0,1] do
-for e4 in [0,1] do for e5 in [0,1] do for e6 in [0,1] do
-  Add(words, preimages[1]^e1 * preimages[2]^e2 * preimages[3]^e3 *
-      preimages[4]^e4 * preimages[5]^e5 * preimages[6]^e6);
-od; od; od; od; od; od;
-Print("PC collected binary words: ", Length(Set(words)), " of 64\n");
-if Length(Set(words)) <> 64 then Error("PC normal form failed"); fi;

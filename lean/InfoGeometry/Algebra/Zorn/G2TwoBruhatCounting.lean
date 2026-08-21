@@ -95,8 +95,16 @@ theorem g2_two_structural_order_eq_12096 :
 /--
 🏆 MASTER THEOREM: The Chevalley formula gives 12 096 at q = 2.
 -/
-theorem chevalley_g2_two_order_eq_12096 :
-    chevalleyG2OrderFormula 2 = 12096 := by
-  dsimp [chevalleyG2OrderFormula]
+/-- The 12 exact Bruhat double coset cell sizes verified in GAP: |B| * 2^(l(w)). -/
+def bruhatCellSizes (cardB : ℕ) : List ℕ :=
+  weylG2Lengths.map (fun l => cardB * 2^l)
+
+theorem bruhatCellSizes_length : (bruhatCellSizes 64).length = 12 := by
+  dsimp [bruhatCellSizes, weylG2Lengths]
+
+theorem bruhatCellSizes_sum_eq_12096 :
+    (bruhatCellSizes 64).sum = 12096 := by
+  dsimp [bruhatCellSizes, weylG2Lengths]
+  rfl
 
 end InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting

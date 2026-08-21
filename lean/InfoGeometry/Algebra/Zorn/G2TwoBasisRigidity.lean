@@ -82,6 +82,23 @@ theorem automorphism_ext_of_basis
 def basisRestriction (f : SplitOctF2Aut) : Fin 8 → SplitOctF2 :=
   fun i => f.1 (basis8 i)
 
+def extendBasisMap (v : Fin 8 → SplitOctF2) (X : SplitOctF2) : SplitOctF2 :=
+  add (add (add (add (add (add (add
+    (if X.a then v 0 else zero)
+    (if X.b then v 1 else zero))
+    (if X.x0 then v 2 else zero))
+    (if X.x1 then v 3 else zero))
+    (if X.x2 then v 4 else zero))
+    (if X.y0 then v 5 else zero))
+    (if X.y1 then v 6 else zero))
+    (if X.y2 then v 7 else zero)
+
+theorem extendBasisMap_basisRestriction (f : SplitOctF2Aut) (X : SplitOctF2) :
+    f.1 X = extendBasisMap (basisRestriction f) X := by
+  have h := map_basisExpansion f X
+  rw [basisExpansion_eq X] at h
+  exact h
+
 theorem basis8_injective : Function.Injective basis8 := by
   intro i j h
   fin_cases i <;> fin_cases j <;> simp [basis8] at h ⊢
@@ -101,6 +118,11 @@ theorem basisRestriction_injective :
   apply automorphism_ext_of_basis f g
   intro i
   exact congrFun h i
+
+/-- The carrier cardinality is bounded by the possible eight basis images. -/
+theorem automorphism_card_le_basis_maps :
+    Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 8 → SplitOctF2) := by
+  exact Fintype.card_le_of_injective basisRestriction basisRestriction_injective
 
 theorem basisRestriction_preserves_mul
     (f : SplitOctF2Aut) (i j : Fin 8) :

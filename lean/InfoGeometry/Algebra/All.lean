@@ -26,6 +26,7 @@ import InfoGeometry.Algebra.Zorn.PolarDecomposition
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
 import InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
+import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
 import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

@@ -34,6 +34,6 @@ theorem positiveNativeIndex_injective :
     try { rfl }
   all_goals
     have h' := congrArg (fun k : NativeRootIndex => k.1) h
-    norm_num at h'
+    simp [positiveNativeIndex, nativeShortSimpleIndex, nativeLongSimpleIndex] at h'
 
 end InfoGeometry.Lie.CanonicalZornRootSystemComparison

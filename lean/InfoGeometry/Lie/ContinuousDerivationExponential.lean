@@ -296,7 +296,7 @@ theorem flow_integral_generator
   have hint :
       IntervalIntegrable (fun s : ℝ => D (flow D s x))
         MeasureTheory.volume 0 t := by
-    exact hcont.intervalIntegrable (μ := MeasureTheory.volume) 0 t
+    exact hcont.continuousOn.intervalIntegrable
   simpa [flow_zero] using
       (intervalIntegral.integral_eq_sub_of_hasDerivAt
       (a := (0 : ℝ)) (b := t) hderiv

@@ -157,6 +157,165 @@ theorem uMid_mem_simpleRootSubgroup :
   rw [← simpleRootCommutator_eq_uMid]
   exact simpleRootCommutator_mem
 
+noncomputable def positiveRootPacket : Fin 6 → SplitOctF2Aut
+  | 0 => uShort
+  | 1 => uLong
+  | 2 => uMid
+  | 3 => conjugateAut cycle012Aut uLong
+  | 4 => conjugateAut cycle012Aut uMid
+  | 5 => conjugateAut (cycle012Aut * cycle012Aut) uMid
+
+theorem positiveRootPacket_sq (i : Fin 6) :
+    positiveRootPacket i * positiveRootPacket i = 1 := by
+  fin_cases i
+  · exact uShort_sq
+  · exact uLong_sq
+  · exact uMid_sq
+  · exact conjugateAut_sq cycle012Aut uLong uLong_sq
+  · exact conjugateAut_sq cycle012Aut uMid uMid_sq
+  · exact conjugateAut_sq (cycle012Aut * cycle012Aut) uMid uMid_sq
+
+theorem positiveRootPacket_ne_one (i : Fin 6) :
+    positiveRootPacket i ≠ (1 : SplitOctF2Aut) := by
+  fin_cases i
+  · exact unipotentShortAut_true_ne_one
+  · exact unipotentLongAut_true_ne_one
+  · exact uMid_ne_one
+  · exact conjugateAut_ne_one cycle012Aut uLong
+      unipotentLongAut_true_ne_one
+  · exact conjugateAut_ne_one cycle012Aut uMid uMid_ne_one
+  · exact conjugateAut_ne_one (cycle012Aut * cycle012Aut) uMid uMid_ne_one
+
+theorem positiveRootPacket_injective :
+    Function.Injective positiveRootPacket := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 0)) h
+    have h1 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 1)) h
+    have h2 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 2)) h
+    have h3 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 3)) h
+    have h4 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 4)) h
+    have h5 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 5)) h
+    have h6 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 6)) h
+    have h7 := congrArg (fun f : SplitOctF2Aut => f.1 (basis8 7)) h
+    revert h0 h1 h2 h3 h4 h5 h6 h7
+    decide
+
+noncomputable def positiveRootAction (i : Fin 6) (t : Bool) : SplitOctF2Aut :=
+  if t then positiveRootPacket i else 1
+
+theorem positiveRootAction_false (i : Fin 6) :
+    positiveRootAction i false = (1 : SplitOctF2Aut) := by
+  rfl
+
+theorem positiveRootAction_true (i : Fin 6) :
+    positiveRootAction i true = positiveRootPacket i := by
+  simp [positiveRootAction]
+
+theorem positiveRootAction_add (i : Fin 6) (s t : Bool) :
+    positiveRootAction i (s ^^ t) =
+      positiveRootAction i s * positiveRootAction i t := by
+  cases s <;> cases t
+  · rfl
+  · simp [positiveRootAction]
+  · simp [positiveRootAction]
+  · simpa [positiveRootAction] using (positiveRootPacket_sq i).symm
+
+theorem positiveRootAction_comm (i : Fin 6) (s t : Bool) :
+    positiveRootAction i s * positiveRootAction i t =
+      positiveRootAction i t * positiveRootAction i s := by
+  rw [← positiveRootAction_add, ← positiveRootAction_add, Bool.xor_comm]
+
+theorem positiveRootAction_ne_one (i : Fin 6) :
+    positiveRootAction i true ≠ (1 : SplitOctF2Aut) := by
+  simpa [positiveRootAction] using positiveRootPacket_ne_one i
+
+theorem positiveRootPacket_comm_0_2 :
+    positiveRootPacket 0 * positiveRootPacket 2 =
+      positiveRootPacket 2 * positiveRootPacket 0 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_comm_0_5 :
+    positiveRootPacket 0 * positiveRootPacket 5 =
+      positiveRootPacket 5 * positiveRootPacket 0 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_comm_1_2 :
+    positiveRootPacket 1 * positiveRootPacket 2 =
+      positiveRootPacket 2 * positiveRootPacket 1 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_comm_1_4 :
+    positiveRootPacket 1 * positiveRootPacket 4 =
+      positiveRootPacket 4 * positiveRootPacket 1 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_comm_3_4 :
+    positiveRootPacket 3 * positiveRootPacket 4 =
+      positiveRootPacket 4 * positiveRootPacket 3 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_comm_3_5 :
+    positiveRootPacket 3 * positiveRootPacket 5 =
+      positiveRootPacket 5 * positiveRootPacket 3 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_0_1 :
+    automorphismCommutator (positiveRootPacket 0) (positiveRootPacket 1) =
+      positiveRootPacket 2 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_0_3 :
+    automorphismCommutator (positiveRootPacket 0) (positiveRootPacket 3) =
+      positiveRootPacket 5 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_1_3 :
+    automorphismCommutator (positiveRootPacket 1) (positiveRootPacket 3) =
+      positiveRootPacket 4 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_2_4 :
+    automorphismCommutator (positiveRootPacket 2) (positiveRootPacket 4) =
+      positiveRootPacket 1 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_2_5 :
+    automorphismCommutator (positiveRootPacket 2) (positiveRootPacket 5) =
+      positiveRootPacket 0 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
+theorem positiveRootPacket_commutator_4_5 :
+    automorphismCommutator (positiveRootPacket 4) (positiveRootPacket 5) =
+      positiveRootPacket 3 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> decide
+
 /-! Conjugated derived-root candidates.  These are genuine automorphisms, but
 their independence from the preceding packet is deliberately not asserted. -/
 

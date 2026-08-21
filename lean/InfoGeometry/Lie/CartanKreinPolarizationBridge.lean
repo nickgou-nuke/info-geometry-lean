@@ -39,7 +39,7 @@ PART 1: Fundamental Symmetry and the Induced Positive Metric
 structure FundamentalSymmetry (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] where
   op : EndH
   is_self_adjoint : adjoint op = op
-  is_involution : op.comp op = id ℂ H
+  is_involution : op.comp op = ContinuousLinearMap.id ℂ H
 
 /-- The Krein-adjoint of an operator: T^‡ = J ∘ T† ∘ J. -/
 def kreinAdjoint (J : FundamentalSymmetry H) (T : EndH) : EndH :=
@@ -69,7 +69,7 @@ theorem cartanInvolution_of_isKreinSkew
       J.op.comp (J.op.comp ((adjoint T).comp J.op).comp J.op)
         = (J.op.comp J.op).comp ((adjoint T).comp (J.op.comp J.op)) := by
           simp only [comp_assoc]
-      _ = (id ℂ H).comp ((adjoint T).comp (id ℂ H)) := by rw [J.is_involution]
+      _ = (ContinuousLinearMap.id ℂ H).comp ((adjoint T).comp (ContinuousLinearMap.id ℂ H)) := by rw [J.is_involution]
       _ = adjoint T := by simp only [id_comp, comp_id]
   rw [hJJ] at h_wrap
   have h_neg : J.op.comp ((-T).comp J.op) = - (J.op.comp (T.comp J.op)) := by
@@ -82,12 +82,12 @@ theorem cartanInvolution_of_isKreinSkew
 theorem cartanInvolution_involutive (J : FundamentalSymmetry H) (T : EndH) :
     cartanInvolution J (cartanInvolution J T) = T := by
   dsimp [cartanInvolution]
-  have hJ : J.op.comp J.op = id ℂ H := J.is_involution
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
   calc
     J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
       = (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
         simp only [comp_assoc]
-    _ = (id ℂ H).comp (T.comp (id ℂ H)) := by rw [hJ]
+    _ = (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
     _ = T := by simp only [id_comp, comp_id]
 
 /-!
@@ -123,14 +123,14 @@ theorem cartan_reconstruction (J : FundamentalSymmetry H) (T : EndH) :
 theorem compactPart_cartan_eigenvalue (J : FundamentalSymmetry H) (T : EndH) :
     cartanInvolution J (compactPart J T) = compactPart J T := by
   dsimp [compactPart, cartanInvolution]
-  have hJ : J.op.comp J.op = id ℂ H := J.is_involution
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
   simp only [comp_smul, smul_comp, comp_add, add_comp]
   congr 1
   calc
     J.op.comp (T.comp J.op) + J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
       = J.op.comp (T.comp J.op) + (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
         simp only [comp_assoc]
-    _ = J.op.comp (T.comp J.op) + (id ℂ H).comp (T.comp (id ℂ H)) := by rw [hJ]
+    _ = J.op.comp (T.comp J.op) + (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
     _ = J.op.comp (T.comp J.op) + T := by simp only [id_comp, comp_id]
     _ = T + J.op.comp (T.comp J.op) := add_comm _ _
 
@@ -138,14 +138,14 @@ theorem compactPart_cartan_eigenvalue (J : FundamentalSymmetry H) (T : EndH) :
 theorem noncompactPart_cartan_eigenvalue (J : FundamentalSymmetry H) (T : EndH) :
     cartanInvolution J (noncompactPart J T) = - (noncompactPart J T) := by
   dsimp [noncompactPart, cartanInvolution]
-  have hJ : J.op.comp J.op = id ℂ H := J.is_involution
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
   simp only [comp_smul, smul_comp, comp_sub, sub_comp, smul_neg]
   congr 1
   calc
     J.op.comp (T.comp J.op) - J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
       = J.op.comp (T.comp J.op) - (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
         simp only [comp_assoc]
-    _ = J.op.comp (T.comp J.op) - (id ℂ H).comp (T.comp (id ℂ H)) := by rw [hJ]
+    _ = J.op.comp (T.comp J.op) - (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
     _ = J.op.comp (T.comp J.op) - T := by simp only [id_comp, comp_id]
     _ = - (T - J.op.comp (T.comp J.op)) := by abel
 
@@ -165,9 +165,9 @@ theorem compactPart_is_hilbert_skew
     (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
     adjoint (compactPart J T) = - (compactPart J T) := by
   dsimp [compactPart, cartanInvolution]
-  rw [adjoint_smul, adjoint_add, adjoint_comp, adjoint_comp, J.is_self_adjoint]
-  have h_half_conj : starRingEnd ℂ (1 / 2 : ℂ) = (1 / 2 : ℂ) := by
-    simp [Complex.conj_ofReal]
+  rw [map_smulₛₗ adjoint, map_add adjoint]
+  rw [adjoint_comp, adjoint_comp, J.is_self_adjoint]
+  have h_half_conj : star (1 / 2 : ℂ) = (1 / 2 : ℂ) := by norm_num
   rw [h_half_conj]
   have h_adjT : adjoint T = - (J.op.comp (T.comp J.op)) := by
     have h_inv := cartanInvolution_of_isKreinSkew J T hT
@@ -194,9 +194,9 @@ theorem noncompactPart_is_hilbert_self_adjoint
     (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
     adjoint (noncompactPart J T) = noncompactPart J T := by
   dsimp [noncompactPart, cartanInvolution]
-  rw [adjoint_smul, adjoint_sub, adjoint_comp, adjoint_comp, J.is_self_adjoint]
-  have h_half_conj : starRingEnd ℂ (1 / 2 : ℂ) = (1 / 2 : ℂ) := by
-    simp [Complex.conj_ofReal]
+  rw [map_smulₛₗ adjoint, map_sub adjoint]
+  rw [adjoint_comp, adjoint_comp, J.is_self_adjoint]
+  have h_half_conj : star (1 / 2 : ℂ) = (1 / 2 : ℂ) := by norm_num
   rw [h_half_conj]
   have h_adjT : adjoint T = - (J.op.comp (T.comp J.op)) := by
     have h_inv := cartanInvolution_of_isKreinSkew J T hT

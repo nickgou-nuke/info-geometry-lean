@@ -7472,4 +7472,6 @@ import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
 import InfoGeometry.Algebra.SplitAlbertF4Classification
 import InfoGeometry.Canonical.UHFModularColimit
 import InfoGeometry.Modular.KMSColimitExtension
+import InfoGeometry.InformationGeometry.ArakiDonaldVariational
+import InfoGeometry.Arithmetic.ChebyshevPrimeEnergyBound
 

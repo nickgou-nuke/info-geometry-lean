@@ -12,6 +12,27 @@ open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 abbrev PCExponent := Fin 6 → Bool
 abbrev PCMatrix := Matrix (Fin 8) (Fin 8) F2
 
+/-! The CAS-derived flag pivots, expressed over the existing matrix owner. -/
+
+def flagRecover0 (M : PCMatrix) : F2 := M 2 7
+def flagRecover1 (M : PCMatrix) : F2 := M 3 2
+def flagRecover2 (M : PCMatrix) : F2 := M 0 2
+def flagRecover4 (M : PCMatrix) : F2 :=
+  M 0 7 + (M 2 7 * M 0 2) + M 3 2 + M 0 2
+def flagRecover3 (M : PCMatrix) : F2 :=
+  M 4 3 + (M 2 7 * M 0 2) + M 2 7 + M 3 2 + M 0 2 + flagRecover4 M
+def flagRecover5 (M : PCMatrix) : F2 :=
+  M 4 2 + (M 3 2 * flagRecover3 M) + (M 3 2 * flagRecover4 M)
+
+def flagRecover (k : Fin 6) (M : PCMatrix) : F2 :=
+  match k with
+  | 0 => flagRecover0 M
+  | 1 => flagRecover1 M
+  | 2 => flagRecover2 M
+  | 3 => flagRecover3 M
+  | 4 => flagRecover4 M
+  | 5 => flagRecover5 M
+
 def pcMatrix (e : PCExponent) : PCMatrix := autMatrix (pcWord e)
 
 theorem pcMatrix_eq_of_word_eq {e f : PCExponent}
@@ -39,6 +60,12 @@ theorem pcWord_range_card_of_matrix_recoveries
   rw [Nat.card_eq_fintype_card]
   rw [Fintype.card_fun, Fintype.card_fin, Fintype.card_bool]
   norm_num
+
+theorem pcWord_injective_of_flag_recoveries
+    (hrecover : ∀ (k : Fin 6) (e : PCExponent),
+      flagRecover k (pcMatrix e) = bitToF2 (e k)) :
+    Function.Injective pcWord := by
+  exact pcWord_injective_of_matrix_recoveries flagRecover hrecover
 
 theorem conjugate_injective {α β : Type*} [Group α]
     (w : α) (f : β → α) (hf : Function.Injective f) :

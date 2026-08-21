@@ -52,6 +52,7 @@ theorem swap01Aut_ne_one :
     swap01Aut ≠ (1 : SplitOctF2Aut) := by
   intro h
   have h_apply := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
-  simpa [swap01Aut, swap01Equiv, swap01Fun] using h_apply
+  have hx := congrArg (fun X : SplitOctF2 => X.x0) h_apply
+  simp [swap01Aut, swap01Equiv, swap01Fun, up0, up1] at hx
 
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

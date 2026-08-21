@@ -124,6 +124,14 @@ theorem automorphism_card_le_basis_maps :
     Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 8 → SplitOctF2) := by
   exact Fintype.card_le_of_injective basisRestriction basisRestriction_injective
 
+/- The coordinate encoding gives the explicit finite upper bound. -/
+theorem automorphism_card_le_basis_maps_numeric :
+    Fintype.card SplitOctF2Aut ≤ 256 ^ 8 := by
+  calc
+    Fintype.card SplitOctF2Aut ≤ Fintype.card (Fin 8 → SplitOctF2) :=
+      automorphism_card_le_basis_maps
+    _ = 256 ^ 8 := by native_decide
+
 theorem basisRestriction_preserves_mul
     (f : SplitOctF2Aut) (i j : Fin 8) :
     f.1 (mul (basis8 i) (basis8 j)) =

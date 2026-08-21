@@ -99,8 +99,7 @@ theorem diagonal_kraus_trace_preserving (p : Fin n → ℝ)
   have h_mul : K * K.conjTranspose = 1 := by
     exact (Matrix.mul_eq_one_comm_of_card_eq (Fin n) (Fin n) ℂ (by rfl)).mpr hK
   rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc, Matrix.trace_mul_comm,
-    ← Matrix.mul_assoc, h_mul, Matrix.one_mul]
-  rw [Matrix.trace_diagonal]
+    ← Matrix.mul_assoc, h_mul, Matrix.one_mul, Matrix.trace_diagonal]
 
 /--
   **MASTER THEOREM**: Data Processing Inequality / Contractivity of Quantum Relative Entropy.

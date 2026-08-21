@@ -132,7 +132,7 @@ theorem chebyshev_interval_energy_bound
 
 /-- The divisibility form used for prime divisors of the central binomial
 coefficient.  The arithmetic hypothesis is kept explicit: the logarithmic
-bound itself only needs the resulting product inequality. */
+bound itself only needs the resulting product inequality. -/
 theorem chebyshev_theta_le_of_prod_dvd
     (n : ℕ) (P : Finset ℕ)
     (h_pos : ∀ p ∈ P, 0 < (p : ℝ))
@@ -151,8 +151,10 @@ theorem chebyshev_theta_le_of_prod_dvd
   have h_prod_nat_le : (∏ p ∈ P, p) ≤ Nat.choose (2 * n) n :=
     Nat.le_of_dvd h_choose_pos h_dvd
   have h_prod_le : (∏ p ∈ P, (p : ℝ)) ≤ (Nat.choose (2 * n) n : ℝ) := by
-    norm_cast
-    exact h_prod_nat_le
+    have h_cast_prod : ((∏ p ∈ P, p : ℕ) : ℝ) = ∏ p ∈ P, (p : ℝ) := by
+      simp
+    rw [← h_cast_prod]
+    exact_mod_cast h_prod_nat_le
   exact chebyshev_interval_energy_bound n P h_pos h_prod_le
 
 /-- 

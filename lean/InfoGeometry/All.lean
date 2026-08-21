@@ -7451,6 +7451,7 @@ import InfoGeometry.QuantumGeometry.TangentCotangentSymplecticBridge
 import InfoGeometry.QuantumGeometry.KahlerSouriauInformationBridge
 import InfoGeometry.Modular.GKSLDissipatorAlgebraic
 import InfoGeometry.Modular.SchrodingerGKSL
+import InfoGeometry.Modular.SchrodingerFlow
 import InfoGeometry.Modular.ChoiCompletePositivity
 import InfoGeometry.Modular.Choi
 import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
@@ -7478,4 +7479,5 @@ import InfoGeometry.Arithmetic.ChebyshevPrimeEnergyBound
 import InfoGeometry.Canonical.AmplituhedronDifferentialResidue
 import InfoGeometry.LLM.AttentionEntropyProductionFlow
 import InfoGeometry.Algebra.GogberashviliCARBridge
-
+import InfoGeometry.Algebra.GogberashviliNilpotentCARBridge
+import InfoGeometry.Algebra.ZornBdGDerivationBridge

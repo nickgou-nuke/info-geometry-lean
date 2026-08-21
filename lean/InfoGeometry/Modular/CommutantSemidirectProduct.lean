@@ -70,9 +70,10 @@ def bracket (D₁: Derivation A) (D₂: Derivation A) (x: A) : A :=
 theorem bracket_leibniz (D₁: Derivation A) (D₂: Derivation A) (x: A) (y: A) :
     bracket D₁ D₂ (x * y) = (bracket D₁ D₂ x) * y + x * (bracket D₁ D₂ y) := by
   dsimp [bracket]
-  rw [D₂.leibniz x y, D₁.leibniz (D₂ x) y, D₁.map_add,
-      D₁.leibniz x (D₂ y),
-      D₂.map_add, D₂.leibniz (D₁ x) y, D₂.leibniz x (D₁ y)]
+  rw [D₂.leibniz x y, D₁.leibniz x y,
+      D₁.map_add, D₂.map_add,
+      D₁.leibniz (D₂ x) y, D₁.leibniz x (D₂ y),
+      D₂.leibniz (D₁ x) y, D₂.leibniz x (D₁ y)]
   simp only [sub_mul, mul_sub]
   abel
 

@@ -160,6 +160,57 @@ theorem noncompactPart_is_hilbert_self_adjoint
   have h_sub : - cartanInvolution J T - - T = T - cartanInvolution J T := by abel
   rw [h_sub]
 
+/-- Corollary: on Krein-skew operators, `θ(T) = -T†`. -/
+theorem cartanInvolution_eq_neg_adjoint_of_isKreinSkew
+    (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
+    cartanInvolution J T = - adjoint T := by
+  have h_inv := cartanInvolution_of_isKreinSkew J T hT
+  have h_adj : adjoint T = - cartanInvolution J T := by
+    exact neg_eq_iff_eq_neg.mp h_inv.symm
+  rw [h_adj, neg_neg]
+
+/-- The compact part commutes with the fundamental symmetry. -/
+theorem compactPart_commutes_with_J
+    (J : FundamentalSymmetry H) (T : EndH) :
+    J.op.comp (compactPart J T) = (compactPart J T).comp J.op := by
+  dsimp only [compactPart, cartanInvolution]
+  rw [comp_smul, smul_comp, comp_add, add_comp]
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
+  have h_left : J.op.comp (J.op.comp (T.comp J.op)) = T.comp J.op := by
+    calc
+      J.op.comp (J.op.comp (T.comp J.op))
+        = (J.op.comp J.op).comp (T.comp J.op) := by simp only [comp_assoc]
+      _ = (ContinuousLinearMap.id ℂ H).comp (T.comp J.op) := by rw [hJ]
+      _ = T.comp J.op := by simp only [id_comp]
+  have h_right : (J.op.comp (T.comp J.op)).comp J.op = J.op.comp T := by
+    calc
+      (J.op.comp (T.comp J.op)).comp J.op
+        = J.op.comp (T.comp (J.op.comp J.op)) := by simp only [comp_assoc]
+      _ = J.op.comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
+      _ = J.op.comp T := by simp only [comp_id]
+  rw [h_left, h_right, add_comm]
+
+/-- The noncompact part anticommutes with the fundamental symmetry. -/
+theorem noncompactPart_anticommutes_with_J
+    (J : FundamentalSymmetry H) (T : EndH) :
+    J.op.comp (noncompactPart J T) = - ((noncompactPart J T).comp J.op) := by
+  dsimp only [noncompactPart, cartanInvolution]
+  rw [comp_smul, smul_comp, comp_sub, sub_comp, ← smul_neg]
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
+  have h_left : J.op.comp (J.op.comp (T.comp J.op)) = T.comp J.op := by
+    calc
+      J.op.comp (J.op.comp (T.comp J.op))
+        = (J.op.comp J.op).comp (T.comp J.op) := by simp only [comp_assoc]
+      _ = (ContinuousLinearMap.id ℂ H).comp (T.comp J.op) := by rw [hJ]
+      _ = T.comp J.op := by simp only [id_comp]
+  have h_right : (J.op.comp (T.comp J.op)).comp J.op = J.op.comp T := by
+    calc
+      (J.op.comp (T.comp J.op)).comp J.op
+        = J.op.comp (T.comp (J.op.comp J.op)) := by simp only [comp_assoc]
+      _ = J.op.comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
+      _ = J.op.comp T := by simp only [comp_id]
+  rw [h_left, h_right, neg_sub]
+
 end InfoGeometry.Lie.CartanKrein
 
 end noncomputable section

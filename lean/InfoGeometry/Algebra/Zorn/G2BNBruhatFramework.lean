@@ -2,6 +2,7 @@ import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
+import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import Mathlib.Tactic
 
 /-!

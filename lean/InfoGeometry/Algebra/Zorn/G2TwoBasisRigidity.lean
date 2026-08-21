@@ -204,6 +204,16 @@ theorem automorphism_card_le_basis7_maps_numeric :
       automorphism_card_le_basis7_maps
     _ = 256 ^ 7 := by simp [splitOctF2_card]
 
+theorem basisRestriction7_preserves_mul
+    (f : SplitOctF2Aut) (i j : Fin 7) :
+    f.1 (mul (basis7 i) (basis7 j)) =
+      mul (basisRestriction7 f i) (basisRestriction7 f j) := by
+  exact f.2.2.2 (basis7 i) (basis7 j)
+
+theorem basisRestriction7_preserves_unit (f : SplitOctF2Aut) :
+    f.1 one = one := by
+  exact f.2.1
+
 theorem basisRestriction_preserves_mul
     (f : SplitOctF2Aut) (i j : Fin 8) :
     f.1 (mul (basis8 i) (basis8 j)) =

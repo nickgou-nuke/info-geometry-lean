@@ -72,7 +72,7 @@ namespace InfoGeometry.Volume.NoncommutativeRNDerivative
 variable {A : Type*} [Ring A]
 
 /-- Left logarithmic derivative of a unit in a possibly noncommutative algebra. -/
-def noncommDlog (D : Derivation ℤ A A) (u : Aˣ) : A :=
+def noncommDlog (D : A → A) (u : Aˣ) : A :=
   (↑u⁻¹ : A) * D (u : A)
 
 /--
@@ -83,13 +83,25 @@ The noncommutative replacement for additive `dlog`:
 The conjugation term is essential; it disappears only under suitable
 commutation hypotheses.
 -/
-theorem noncommDlog_mul (D : Derivation ℤ A A) (u v : Aˣ) :
+theorem noncommDlog_mul (D : A → A)
+    (hLeibniz : ∀ x y : A, D (x * y) = D x * y + x * D y)
+    (u v : Aˣ) :
     noncommDlog D (u * v) =
       (↑v⁻¹ : A) * noncommDlog D u * (v : A) + noncommDlog D v := by
+  have hunit : (↑(u * v)⁻¹ : A) = (↑v⁻¹ : A) * (↑u⁻¹ : A) := by
+    rw [mul_inv_rev, Units.val_mul]
+  have hu : (↑u⁻¹ : A) * (↑u : A) = 1 := Units.inv_mul u
   dsimp [noncommDlog]
-  rw [Units.val_inv_mul, D.leibniz]
-  noncomm_ring
+  rw [hunit, hLeibniz (u : A) (v : A)]
+  calc
+    (↑v⁻¹ * ↑u⁻¹) * (D ↑u * ↑v + ↑u * D ↑v)
+        = (↑v⁻¹ * ↑u⁻¹ * (D ↑u * ↑v)) + (↑v⁻¹ * ↑u⁻¹ * (↑u * D ↑v)) := by
+          rw [mul_add]
+      _ = (↑v⁻¹ * (↑u⁻¹ * D ↑u) * ↑v) + (↑v⁻¹ * (((↑u⁻¹ : A) * (↑u : A)) * D ↑v)) := by
+          simp only [mul_assoc]
+      _ = (↑v⁻¹ * (↑u⁻¹ * D ↑u) * ↑v) + (↑v⁻¹ * (1 * D ↑v)) := by
+          rw [hu]
+      _ = ↑v⁻¹ * (↑u⁻¹ * D ↑u) * ↑v + ↑v⁻¹ * D ↑v := by
+          rw [one_mul]
 
 end InfoGeometry.Volume.NoncommutativeRNDerivative
-
-end noncomputable section

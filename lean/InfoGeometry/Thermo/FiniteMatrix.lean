@@ -125,19 +125,6 @@ theorem adH_leibniz (H X Y : Op n) :
   simp only [mul_assoc]
   abel
 
-/** The conjugation flow solves the commutator evolution equation. -/
-theorem hasStrictDerivAt_modularShift (M : ThermalModel n) (A : Op n) (t : ℝ) :
-    HasStrictDerivAt (fun s : ℝ => M.modularShift s A)
-      (adH M.H (M.modularShift t A)) t := by
-  unfold modularShift
-  have hleft := hasStrictDerivAt_exp_smul_const' M.H t
-  have hright :=
-    (hasStrictDerivAt_exp_smul_const' M.H (-t)).comp t
-      (hasStrictDerivAt_neg t)
-  have hleftA := hleft.mul_const A
-  have hprod := hleftA.mul hright
-  simpa [adH, LinearMap.sub_apply, mul_assoc, sub_eq_add_neg, add_assoc,
-    add_comm, add_left_comm] using hprod
 
 /-- Relation between log-density flow and Hamiltonian flow. -/
 lemma modularShiftFromLogDensity_eq_modularShift

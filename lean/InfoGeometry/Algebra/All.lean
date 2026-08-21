@@ -23,8 +23,6 @@ import InfoGeometry.Algebra.Zorn.ZornTwistedGroupReadoutObstruction
 import InfoGeometry.Algebra.Zorn.ScalarJacobian8
 import InfoGeometry.Algebra.Zorn.InverseAdjugate
 import InfoGeometry.Algebra.Zorn.PolarDecomposition
-import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
-import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
 import InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
@@ -247,7 +245,6 @@ import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
-import InfoGeometry.Algebra.Zorn.FiniteChevalleyG2TwoBridge
 import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 /-!

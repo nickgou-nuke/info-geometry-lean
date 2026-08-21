@@ -39,6 +39,34 @@ def K_zero (two_n_inv : R) (K : Matrix ι ι R × Matrix ι ι R) : Matrix ι ι
   (K.1 - (alpha two_n_inv K + beta two_n_inv K) • (1 : Matrix ι ι R),
    K.2 - (alpha two_n_inv K - beta two_n_inv K) • (1 : Matrix ι ι R))
 
+/-- The residual has zero total trace when `two_n_inv` is the inverse of `2 * n`. -/
+theorem K_zero_trace
+    (two_n_inv : R)
+    (h_norm : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
+    (K : Matrix ι ι R × Matrix ι ι R) :
+    Matrix.trace (K_zero two_n_inv K).1 + Matrix.trace (K_zero two_n_inv K).2 = 0 := by
+  dsimp [K_zero, alpha, beta]
+  simp only [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_one, smul_eq_mul]
+  calc
+    _ = (Matrix.trace K.1 + Matrix.trace K.2) -
+        (2 * (Fintype.card ι : R) * two_n_inv) *
+          (Matrix.trace K.1 + Matrix.trace K.2) := by ring
+    _ = 0 := by rw [h_norm]; ring
+
+/-- The residual has zero supertrace under the same normalization. -/
+theorem K_zero_superTrace
+    (two_n_inv : R)
+    (h_norm : (2 * (Fintype.card ι : R)) * two_n_inv = 1)
+    (K : Matrix ι ι R × Matrix ι ι R) :
+    Matrix.trace (K_zero two_n_inv K).1 - Matrix.trace (K_zero two_n_inv K).2 = 0 := by
+  dsimp [K_zero, alpha, beta]
+  simp only [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_one, smul_eq_mul]
+  calc
+    _ = (Matrix.trace K.1 - Matrix.trace K.2) -
+        (2 * (Fintype.card ι : R) * two_n_inv) *
+          (Matrix.trace K.1 - Matrix.trace K.2) := by ring
+    _ = 0 := by rw [h_norm]; ring
+
 /-- 
   MASTER THEOREM: Exact Trifold Scalar Decomposition of Relative Entropy:
   D_KL(ρ, 𝒦) = α • Tr(ρ) + β • STr(ρ) + D_KL(ρ, 𝒦₀)

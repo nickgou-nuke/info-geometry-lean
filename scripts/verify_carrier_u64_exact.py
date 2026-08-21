@@ -6,6 +6,7 @@ ON THE SPLIT OCTONION ALGEBRA OVER GF(2)
 
 import itertools
 import numpy as np
+from sympy import Poly, symbols
 
 # Basis ordering:
 # 0: a (ePlus)
@@ -83,48 +84,117 @@ def check_algebra_automorphism(M):
                 
     return True, "Valid algebra automorphism"
 
-# The 6 exact matrices from GAP:
+# The six exact matrices exported by the independent carrier CAS extractor.
+# They are stored row-wise; the extractor's integer tuples are column images.
 g1 = np.array([
-  [ 0, 1, 0, 0, 0, 1, 0, 0 ], [ 1, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 1, 0, 0, 0, 1 ], [ 0, 0, 0, 0, 1, 1, 1, 0 ], 
-  [ 0, 0, 0, 0, 0, 1, 0, 0 ], [ 0, 0, 0, 0, 1, 0, 0, 0 ], 
-  [ 0, 0, 0, 1, 0, 0, 0, 0 ], [ 1, 1, 1, 1, 0, 1, 0, 0 ]
+  [0,1,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,1], [0,0,0,0,0,0,1,0],
+  [0,0,0,0,0,1,0,0], [0,0,0,0,1,0,0,0], [0,0,0,1,0,0,0,0], [0,0,1,0,0,0,0,0]
 ], dtype=int)
 
 g2 = np.array([
-  [ 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0 ], 
-  [ 0, 0, 1, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 1, 1, 0, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 0, 0, 1, 0 ], [ 0, 0, 0, 0, 0, 0, 1, 1 ]
+  [0,1,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,1,1], [0,0,0,0,0,1,1,0],
+  [0,0,0,0,0,1,0,0], [0,0,0,0,1,0,0,0], [0,0,0,1,1,0,0,0], [0,0,1,1,1,0,0,0]
 ], dtype=int)
 
 g3 = np.array([
-  [ 1, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 1, 0, 0, 1, 0, 0, 0 ], 
-  [ 0, 0, 1, 0, 0, 0, 1, 0 ], [ 0, 0, 0, 1, 1, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 0, 0, 1, 0 ], [ 1, 1, 0, 0, 1, 0, 1, 1 ]
+  [0,1,0,0,1,1,0,0], [1,0,0,0,1,1,0,0], [1,1,0,1,1,0,0,1], [0,0,0,0,1,0,1,0],
+  [0,0,0,0,0,1,0,0], [0,0,0,0,1,0,0,0], [0,0,0,1,0,1,0,0], [1,1,1,0,1,1,1,0]
 ], dtype=int)
 
 g4 = np.array([
-  [ 1, 0, 0, 0, 1, 1, 0, 0 ], [ 0, 1, 0, 0, 1, 1, 0, 0 ], 
-  [ 1, 1, 1, 1, 1, 0, 1, 0 ], [ 0, 0, 0, 1, 1, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 1, 1, 0 ], [ 1, 1, 0, 1, 0, 1, 1, 1 ]
+  [1,0,0,0,0,0,0,0], [0,1,0,0,0,0,0,0], [0,0,1,0,0,0,0,0], [0,0,0,1,1,0,0,0],
+  [0,0,0,0,1,0,0,0], [0,0,0,0,0,1,0,0], [0,0,0,0,0,0,1,0], [0,0,0,0,0,0,1,1]
 ], dtype=int)
 
 g5 = np.array([
-  [ 1, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 1, 0, 0, 1, 0, 0, 0 ], 
-  [ 0, 0, 1, 1, 0, 1, 1, 0 ], [ 0, 0, 0, 1, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 0, 1, 1, 0 ], [ 1, 1, 0, 0, 1, 0, 0, 1 ]
+  [1,0,0,0,1,0,0,0], [0,1,0,0,1,0,0,0], [0,0,1,0,0,0,1,0], [0,0,0,1,0,1,0,0],
+  [0,0,0,0,1,0,0,0], [0,0,0,0,0,1,0,0], [0,0,0,0,0,0,1,0], [1,1,0,0,1,0,0,1]
 ], dtype=int)
 
 g6 = np.array([
-  [ 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0 ], 
-  [ 0, 0, 1, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 1, 0, 0, 0, 0 ], 
-  [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], 
-  [ 0, 0, 0, 0, 0, 0, 1, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 1 ]
+  [0,1,0,0,0,0,0,0], [1,0,0,0,0,0,0,0], [0,0,0,0,0,0,1,0], [0,0,0,0,0,1,0,0],
+  [0,0,0,0,0,0,0,1], [0,0,0,1,0,0,0,0], [0,0,1,0,0,0,0,0], [0,0,0,0,1,0,0,0]
 ], dtype=int)
+
+# Symbolic coordinate specifications for the two generators that are
+# transported into Lean by G2TwoOuterGenerators.lean.  An output coordinate
+# is represented by the XOR of the listed input coordinates; this is a
+# linear, non-enumerative certificate for the exported matrix rows.
+g2_coordinate_formula = ((1,), (0,), (6, 7), (5, 6), (5,), (4,), (3, 4), (2, 3, 4))
+g4_coordinate_formula = ((0,), (1,), (2,), (3, 4), (4,), (5,), (6,), (6, 7))
+
+# The Lean outer owners use the CAS extractor's third and fifth matrices:
+# `g2Fun = generator_2` and `g4Fun = generator_4` (zero-based extractor names).
+lean_g2_coordinate_formula = (
+    (1, 4, 5), (0, 4, 5), (0, 1, 3, 4, 7), (4, 6),
+    (5,), (4,), (3, 5), (0, 1, 2, 4, 5, 6)
+)
+lean_g4_coordinate_formula = (
+    (0, 4), (1, 4), (2, 6), (3, 5),
+    (4,), (5,), (6,), (0, 1, 4, 7)
+)
+
+def matrix_of_xor_formulas(formulas):
+    M = np.zeros((8, 8), dtype=int)
+    for row, coordinates in enumerate(formulas):
+        for column in coordinates:
+            M[row, column] ^= 1
+    return M
+
+assert np.array_equal(matrix_of_xor_formulas(g2_coordinate_formula), g2)
+assert np.array_equal(matrix_of_xor_formulas(g4_coordinate_formula), g4)
+assert np.array_equal(matrix_of_xor_formulas(lean_g2_coordinate_formula), g3)
+assert np.array_equal(matrix_of_xor_formulas(lean_g4_coordinate_formula), g5)
+
+print("Symbolic coordinate alignment: CAS labels and Lean outer-owner labels match")
+
+# Symbolic, non-enumerative proof over GF(2).  The following computation is
+# polynomial identity checking, not evaluation on the finite carrier.
+_z = symbols("a b x0 x1 x2 y0 y1 y2")
+_z2 = symbols("A B X0 X1 X2 Y0 Y1 Y2")
+
+def _xor(*terms):
+    result = 0
+    for term in terms:
+        result += term
+    return result
+
+def _zorn_mul_symbolic(left, right):
+    a, b, x0, x1, x2, y0, y1, y2 = left
+    A, B, X0, X1, X2, Y0, Y1, Y2 = right
+    return (
+        _xor(a*A, x0*Y0, x1*Y1, x2*Y2),
+        _xor(b*B, y0*X0, y1*X1, y2*X2),
+        _xor(a*X0, B*x0, y1*Y2, y2*Y1),
+        _xor(a*X1, B*x1, y2*Y0, y0*Y2),
+        _xor(a*X2, B*x2, y0*Y1, y1*Y0),
+        _xor(b*Y0, A*y0, x1*X2, x2*X1),
+        _xor(b*Y1, A*y1, x2*X0, x0*X2),
+        _xor(b*Y2, A*y2, x0*X1, x1*X0),
+    )
+
+def _apply_matrix_symbolic(matrix, vector):
+    return tuple(_xor(*(int(matrix[i, j]) * vector[j] for j in range(8)))
+                 for i in range(8))
+
+def _zero_mod_two(expr):
+    return Poly(expr, *_z, *_z2, modulus=2).is_zero
+
+def prove_symbolic_zorn_automorphism(matrix):
+    left = _z
+    right = _z2
+    product = _zorn_mul_symbolic(left, right)
+    mapped_product = _apply_matrix_symbolic(matrix, product)
+    product_of_mapped = _zorn_mul_symbolic(
+        _apply_matrix_symbolic(matrix, left),
+        _apply_matrix_symbolic(matrix, right),
+    )
+    return all(_zero_mod_two(x - y)
+               for x, y in zip(mapped_product, product_of_mapped))
+
+assert all(prove_symbolic_zorn_automorphism(M)
+           for M in (g1, g2, g3, g4, g5, g6))
+print("Symbolic GF(2) Zorn multiplication proof: all six generators pass")
 
 gens = [g1, g2, g3, g4, g5, g6]
 
@@ -145,45 +215,23 @@ def mat_pow(M, n):
         res = (res @ M) % 2
     return res
 
-print(f"  Order(g1) == 4: {np.array_equal(mat_pow(g1, 4), np.eye(8, dtype=int)) and not np.array_equal(mat_pow(g1, 2), np.eye(8, dtype=int))}")
-for i in range(1, 6):
-    print(f"  Order(g{i+1}) == 2: {np.array_equal(mat_pow(gens[i], 2), np.eye(8, dtype=int))}")
+for i, g in enumerate(gens, 1):
+    order_two = np.array_equal(mat_pow(g, 2), np.eye(8, dtype=int))
+    print(f"  Order(g{i}) == 2: {order_two}")
+    assert order_two
 
 print("\n================================================================")
-print("3. VERIFYING 64-WORD ORDERED PRODUCT INJECTIVITY")
+print("3. CAS BINARY-WORD CHART CHECK")
 print("================================================================")
-prods = {}
-for e in itertools.product([0, 1], repeat=6):
-    res = np.eye(8, dtype=int)
-    for i in range(6):
-        if e[i]:
-            res = (res @ gens[i]) % 2
-    prods[e] = tuple(res.flatten())
+ordered_words = set()
+for exponents in itertools.product((0, 1), repeat=6):
+    value = np.eye(8, dtype=int)
+    for exponent, generator in zip(exponents, gens):
+        if exponent:
+            value = (value @ generator) % 2
+    ordered_words.add(tuple(value.flatten()))
+print(f"  Distinct ordered binary words: {len(ordered_words)} of 64")
+assert len(ordered_words) == 64
 
-num_distinct = len(set(prods.values()))
-print(f"  Distinct ordered products g1^e1 ... g6^e6: {num_distinct} of 64")
-assert num_distinct == 64
-
-print("\n================================================================")
-print("4. VERIFYING SUBGROUP CLOSURE (IS THE SET OF 64 CLOSED?)")
-print("================================================================")
-prod_set = set(prods.values())
-closed = True
-for m1_t in prod_set:
-    M1 = np.array(m1_t, dtype=int).reshape((8, 8))
-    for m2_t in prod_set:
-        M2 = np.array(m2_t, dtype=int).reshape((8, 8))
-        M12 = (M1 @ M2) % 2
-        if tuple(M12.flatten()) not in prod_set:
-            closed = False
-            break
-    if not closed:
-        break
-
-print(f"  Is the 64-element set closed under multiplication? {closed} {'✅' if closed else '❌'}")
-assert closed
-
-print("\n🏆 COMPLETE CARRIER-LEVEL SUCCESS:")
-print("   - All 6 matrices are kernel-true SplitOctF2 automorphisms.")
-print("   - The 64 ordered products are 100% injective.")
-print("   - The 64 elements form a closed Sylow 2-subgroup B <= SplitOctF2Aut!")
+print("\nThe symbolic identities above are the valid CAS certificate.")
+print("The 64-word result is a CAS chart check, not yet a Lean closure theorem.")

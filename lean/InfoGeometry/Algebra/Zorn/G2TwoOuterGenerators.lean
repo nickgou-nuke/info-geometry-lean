@@ -9,17 +9,24 @@ open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
 def g2Fun (X : SplitOctF2) : SplitOctF2 :=
-  ⟨X.a, X.b, X.x0, X.x1 ^^ X.x2, X.x2, X.y0, X.y1, X.y1 ^^ X.y2⟩
+  ⟨X.b ^^ X.x2 ^^ X.y0,
+    X.a ^^ X.x2 ^^ X.y0,
+    X.a ^^ X.b ^^ X.x1 ^^ X.x2 ^^ X.y2,
+    X.x2 ^^ X.y1,
+    X.y0,
+    X.x2,
+    X.x1 ^^ X.y0,
+    X.a ^^ X.b ^^ X.x0 ^^ X.x2 ^^ X.y0 ^^ X.y1⟩
 
 def g4Fun (X : SplitOctF2) : SplitOctF2 :=
-  ⟨X.a ^^ X.x2 ^^ X.y0,
-    X.b ^^ X.x2 ^^ X.y0,
-    X.a ^^ X.b ^^ X.x0 ^^ X.x1 ^^ X.x2 ^^ X.y1,
-    X.x1 ^^ X.x2 ^^ X.y0,
+  ⟨X.a ^^ X.x2,
+    X.b ^^ X.x2,
+    X.x0 ^^ X.y1,
+    X.x1 ^^ X.y0,
     X.x2,
     X.y0,
-    X.x2 ^^ X.y0 ^^ X.y1,
-    X.a ^^ X.b ^^ X.x1 ^^ X.y0 ^^ X.y1 ^^ X.y2⟩
+    X.y1,
+    X.a ^^ X.b ^^ X.x2 ^^ X.y2⟩
 
 theorem g2Fun_add (X Y : SplitOctF2) :
     g2Fun (add X Y) = add (g2Fun X) (g2Fun Y) := by
@@ -74,8 +81,7 @@ theorem g2Fun_mul (X Y : SplitOctF2) :
   all_goals
     simp only [g2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    try ring_nf
-    try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
@@ -85,8 +91,7 @@ theorem g4Fun_mul (X Y : SplitOctF2) :
   all_goals
     simp only [g4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    ring_nf
-    simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun
@@ -116,18 +121,41 @@ theorem g4Aut_sq : g4Aut * g4Aut = 1 := by
   apply Equiv.ext
   exact g4Fun_involutive
 
+theorem g2Fun_ne_id : g2Fun ≠ id := by
+  intro h
+  have hx := congrFun h up0
+  have hy := congrArg SplitOctF2.y2 hx
+  simp [g2Fun, up0] at hy
+
+theorem g4Fun_ne_id : g4Fun ≠ id := by
+  intro h
+  have hx := congrFun h up2
+  have ha := congrArg SplitOctF2.a hx
+  simp [g4Fun, up2] at ha
+
 theorem g2Aut_ne_one : g2Aut ≠ (1 : SplitOctF2Aut) := by
   intro h
-  have hx := congrArg (fun f : SplitOctF2Aut => f.1 down1) h
-  have hy := congrArg SplitOctF2.y2 hx
-  dsimp [g2Aut, g2Equiv, g2Fun, up0, one] at hy
-  cases hy
+  have he := congrArg (fun f : SplitOctF2Aut => f.1) h
+  change g2Equiv = Equiv.refl SplitOctF2 at he
+  apply g2Fun_ne_id
+  funext X
+  exact congrArg (fun e : SplitOctF2 ≃ SplitOctF2 => e X) he
 
 theorem g4Aut_ne_one : g4Aut ≠ (1 : SplitOctF2Aut) := by
   intro h
-  have hx := congrArg (fun f : SplitOctF2Aut => f.1 up2) h
-  have ha := congrArg SplitOctF2.a hx
-  dsimp [g4Aut, g4Equiv, g4Fun, up2, one] at ha
-  cases ha
+  have he := congrArg (fun f : SplitOctF2Aut => f.1) h
+  change g4Equiv = Equiv.refl SplitOctF2 at he
+  apply g4Fun_ne_id
+  funext X
+  exact congrArg (fun e : SplitOctF2 ≃ SplitOctF2 => e X) he
+
+noncomputable def outerRootSubgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure {g2Aut, g4Aut}
+
+theorem g2Aut_mem_outerRootSubgroup : g2Aut ∈ outerRootSubgroup := by
+  exact Subgroup.subset_closure (by simp [outerRootSubgroup])
+
+theorem g4Aut_mem_outerRootSubgroup : g4Aut ∈ outerRootSubgroup := by
+  exact Subgroup.subset_closure (by simp [outerRootSubgroup])
 
 end InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators

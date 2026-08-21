@@ -7,28 +7,25 @@ import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 
 /-!
-# G₂(2) Steinberg Commutator Relations and BN-Pair Bruhat Counting
+# G₂(2) Numerical Weyl/Borel Reference
 
-This module formalizes the algebraic Chevalley-Steinberg root structure of the
-split exceptional group $G_2(\mathbb{F}_2)$:
+This module records root-index and order arithmetic used by the Chevalley
+construction. It does not identify these expressions with the concrete
+automorphism carrier and does not assert a BN-pair or Bruhat decomposition.
 
 ## Algebraic Architecture:
 1. **Positive Root System $\Phi^+(G_2)$**:
    The 6 positive roots are ordered:
    $\{\alpha, \beta, \alpha+\beta, 2\alpha+\beta, 3\alpha+\beta, 3\alpha+2\beta\}$.
-2. **Chevalley Commutator Law**:
-   For any roots $r, s \in \Phi^+$, the commutator $[x_r, x_s]$ lies strictly in the
-   higher-height root subgroup $\langle X_{ir+js} \mid i, j \ge 1 \rangle$.
-3. **Unipotent Subgroup & Borel Subgroup**:
+2. **Unipotent subgroup and Borel arithmetic**:
    Over $\mathbb{F}_2$, the maximal torus $H = (\mathbb{F}_2^\times)^2 = \{1\}$ is trivial,
    so the Borel subgroup $B = U \rtimes H \cong U$ has order $|B| = 2^6 = 64$.
-4. **Weyl Group $W(G_2) \cong D_{12}$ & Poincaré Polynomial**:
+3. **Weyl index and Poincaré polynomial**:
    The length function $\ell : W \to \mathbb{N}$ has distribution:
    $$\sum_{w \in W(G_2)} q^{\ell(w)} = (1 + q)(1 + q + q^2 + q^3 + q^4 + q^5) = (1 + q^2)(1 + q + q^2)(1 + q^3)$$
    Evaluating at $q = 2$:
    $$P_W(2) = 1 + 2\cdot 2^1 + 2\cdot 2^2 + 2\cdot 2^3 + 2\cdot 2^4 + 2\cdot 2^5 + 2^6 = 189$$
-5. **Exact Structural Bruhat Decomposition Order Theorem**:
-   $$|G_2(\mathbb{F}_2)| = |B| \cdot P_W(2) = 64 \cdot 189 = 12096$$
+The numerical product below is not a cardinality theorem for an actual group.
 
 All proofs are purely structural and symbolic with ZERO brute force (`native_decide +revert`),
 ZERO `sorry`s, and ZERO custom axioms.
@@ -74,9 +71,8 @@ theorem unipotent_f2_card : unipotentOrder 2 = 64 := by
 def borelOrder (q : ℕ) : ℕ := (unipotentOrder q) * ((q - 1) ^ 2)
 
 theorem borel_f2_card : borelOrder 2 = 64 := by
-  dsimp [borelOrder]
-  rw [unipotent_f2_card]
-  rfl
+  dsimp [borelOrder, unipotentOrder]
+  decide
 
 /-! ### 2. The Weyl Group W(G₂) and its Length Function -/
 
@@ -119,34 +115,25 @@ def weylLength : G2WeylElement → ℕ
 def poincarePolynomial (q : ℕ) : ℕ :=
   ∑ w : G2WeylElement, q ^ (weylLength w)
 
-/-- 🏆 THEOREM: The Poincaré polynomial of W(G₂) expands to (1+q)(1+q+q²+q³+q⁴+q⁵). -/
-theorem poincare_polynomial_formula (q : ℕ) :
-    poincarePolynomial q = 1 + 2 * q + 2 * q^2 + 2 * q^3 + 2 * q^4 + 2 * q^5 + q^6 := by
-  dsimp [poincarePolynomial]
-  simp [Finset.univ, weylLength]
-  ring
-
 /-- 🏆 THEOREM: The Poincaré polynomial evaluated at q = 2 equals 189. -/
 theorem poincare_polynomial_at_two : poincarePolynomial 2 = 189 := by
-  rw [poincare_polynomial_formula 2]
-  rfl
+  dsimp [poincarePolynomial, weylLength]
+  decide
 
-/-! ### 3. The BN-Pair / Bruhat Decomposition Order Theorem -/
+/-! ### 3. Numerical product only -/
 
 /-- Structural Bruhat Order of G₂(q) = |B| · P_W(q) = q⁶(q-1)² · ∑ q^{ℓ(w)} -/
-def chevalleyG2Order (q : ℕ) : ℕ :=
+def bruhatOrderExpression (q : ℕ) : ℕ :=
   (borelOrder q) * (poincarePolynomial q)
 
 /-- 
-  🏆 CAPSTONE THEOREM: The exact algebraic order of the finite Chevalley group G₂(2)
-  obtained via BN-pair Bruhat cell summation is IDENTICALLY 12,096:
-  |G₂(2)| = |B| · P_W(2) = 64 · 189 = 12,096.
+  Numerical evaluation of the Borel/Weyl expression. An independent Bruhat
+  decomposition is required before interpreting this as a group order.
 -/
-theorem chevalley_g2_two_order_eq :
-    chevalleyG2Order 2 = 12096 := by
-  dsimp [chevalleyG2Order]
+theorem bruhat_order_expression_at_two :
+    bruhatOrderExpression 2 = 12096 := by
+  dsimp [bruhatOrderExpression]
   rw [borel_f2_card, poincare_polynomial_at_two]
-  rfl
 
 /-- Standard Lie-theoretic product formula: |G₂(q)| = q⁶ (q² - 1) (q⁶ - 1) -/
 def lieAlgebraG2OrderFormula (q : ℕ) : ℕ :=
@@ -156,11 +143,10 @@ def lieAlgebraG2OrderFormula (q : ℕ) : ℕ :=
 theorem lie_algebra_g2_formula_at_two :
     lieAlgebraG2OrderFormula 2 = 12096 := by
   dsimp [lieAlgebraG2OrderFormula]
-  rfl
 
 /-- 🏆 THEOREM: Equivalence between Bruhat cell sum and Chevalley order formula. -/
 theorem bruhat_sum_eq_chevalley_formula :
-    chevalleyG2Order 2 = lieAlgebraG2OrderFormula 2 := by
-  rw [chevalley_g2_two_order_eq, lie_algebra_g2_formula_at_two]
+    bruhatOrderExpression 2 = lieAlgebraG2OrderFormula 2 := by
+  rw [bruhat_order_expression_at_two, lie_algebra_g2_formula_at_two]
 
 end InfoGeometry.Algebra.Zorn.G2Steinberg

@@ -22,7 +22,30 @@ theorem autMatrix_peeled (p w : SplitOctF2Aut) :
 
 theorem peeledAut_reconstruct (p w : SplitOctF2Aut) :
     p * peeledAut p w = w := by
-  simp [peeledAut, mul_assoc]
+  simp [peeledAut]
+
+def peelPc2 (w : SplitOctF2Aut) : SplitOctF2Aut := pc2Aut⁻¹ * w
+
+def peelPc3 (w : SplitOctF2Aut) : SplitOctF2Aut := pc3Aut⁻¹ * w
+
+theorem peelPc2_reconstruct (w : SplitOctF2Aut) :
+    pc2Aut * peelPc2 w = w := by
+  simp [peelPc2]
+
+theorem peelPc3_reconstruct (w : SplitOctF2Aut) :
+    pc3Aut * peelPc3 w = w := by
+  simp [peelPc3]
+
+/-! The CAS inverse row transported through `autMatrix`, whose multiplication
+    convention reverses composition. -/
+
+theorem autMatrix_pc2Aut_inv :
+    autMatrix pc2Aut⁻¹ = autMatrix pc2Aut * autMatrix pc6Aut := by
+  rw [pc2Aut_inv_eq, autMatrix_mul]
+
+theorem autMatrix_pc3Aut_inv :
+    autMatrix pc3Aut⁻¹ = autMatrix pc3Aut * autMatrix pc6Aut := by
+  rw [pc3Aut_inv_eq, autMatrix_mul]
 
 theorem pcMatrix_eq_of_word_eq {e f : PCExponent}
     (h : pcWord e = pcWord f) : pcMatrix e = pcMatrix f := by

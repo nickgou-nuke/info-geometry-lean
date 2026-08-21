@@ -162,6 +162,38 @@ theorem pc3Aut_inv_eq : pc3Aut⁻¹ = pc6Aut * pc3Aut := by
   show pc3Fun (pc3Fun (pc6Fun X)) = X
   rw [pc3_pc6, pc3_inverse_right]
 
+theorem pc1Aut_inv_eq : pc1Aut⁻¹ = pc1Aut := by
+  apply inv_eq_of_mul_eq_one_left
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc1Fun (pc1Fun X) = X
+  exact pc1_sq X
+
+theorem pc4Aut_inv_eq : pc4Aut⁻¹ = pc4Aut := by
+  apply inv_eq_of_mul_eq_one_left
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc4Fun (pc4Fun X) = X
+  exact pc4_sq X
+
+theorem pc5Aut_inv_eq : pc5Aut⁻¹ = pc5Aut := by
+  apply inv_eq_of_mul_eq_one_left
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc5Fun (pc5Fun X) = X
+  exact pc5_sq X
+
+theorem pc6Aut_inv_eq : pc6Aut⁻¹ = pc6Aut := by
+  apply inv_eq_of_mul_eq_one_left
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  change pc6Fun (pc6Fun X) = X
+  exact pc6_sq X
+
 theorem pc2Aut_pow_four : pc2Aut ^ 4 = 1 := by
   calc
     pc2Aut ^ 4 = (pc2Aut * pc2Aut) * (pc2Aut * pc2Aut) := by

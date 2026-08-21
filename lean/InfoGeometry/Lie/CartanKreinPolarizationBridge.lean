@@ -1,27 +1,7 @@
-import InfoGeometry.Krein.InvolutiveSelfDualCarrier
-import InfoGeometry.Krein.KreinCartanOperatorDecomposition
-import InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
-
-/-!
-# Cartan–Krein Polarization Bridge: DAG-Projected Compatibility Layer
-
-This file does not introduce a parallel carrier or parallel Cartan machinery.
-It projects the requested finite-polarization theorems onto the repo's
-true owner chain:
-
-* `InfoGeometry.Krein.InvolutiveSelfDualCarrier` owns `J`, `ε`,
-  `kreinPairing`, `ε_sq`, `J_sq`, and the split-`Cl(1,1)` identities.
-* `InfoGeometry.Krein.KreinCartanOperatorDecomposition` owns the Cartan
-  involution, compact/noncompact projections, and their idempotent/eigenvalue
-  structure.
-* `InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge` owns the
-  Krein-to-Hilbert soldering `hilbertInnerJ` and the master theorem
-  `krein_to_hilbert_skewAdjoint`.
-
-All proofs below are native rewrites/imports from those owners.
-There are zero `sorry`s, zero `axiom`s, and zero duplicate structures.
--/
 
 noncomputable section
 
@@ -29,104 +9,156 @@ open ContinuousLinearMap
 
 namespace InfoGeometry.Lie.CartanKrein
 
-variable (X : InfoGeometry.Krein.InvolutiveSelfDualCarrier)
+structure FundamentalSymmetry (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] where
+  op : H →L[ℂ] H
+  is_self_adjoint : adjoint op = op
+  is_involution : op.comp op = ContinuousLinearMap.id ℂ H
 
-/-!
-=============================================================================
-PART 1: Fundamental Symmetry from the True Carrier
-=============================================================================
--/
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
-/-- The fundamental symmetry `J` is the involutive operator from the carrier. -/
-abbrev fundamentalSymmetryJ : X.H →L[ℝ] X.H :=
-  X.J
+local notation "EndH" => H →L[ℂ] H
 
-/-- The Krein-adjoint on the carrier level: `T^‡ = J ∘ T ∘ J`. -/
-abbrev kreinAdjoint (T : X.H →L[ℝ] X.H) : X.H →L[ℝ] X.H :=
-  X.J.comp (T.comp X.J)
+def kreinAdjoint (J : FundamentalSymmetry H) (T : EndH) : EndH :=
+  J.op.comp ((adjoint T).comp J.op)
 
-/-- Krein-skew predicate on the carrier level: `T^‡ = -T`. -/
-def IsKreinSkew (T : X.H →L[ℝ] X.H) : Prop :=
-  kreinAdjoint X T = -T
+def IsKreinSkew (J : FundamentalSymmetry H) (T : EndH) : Prop :=
+  kreinAdjoint J T = -T
 
-/-- Cartan involution from the true owner. -/
-abbrev cartanInvolution (T : X.H →L[ℝ] X.H) : X.H →L[ℝ] X.H :=
-  InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanInvolution X T
+def cartanInvolution (J : FundamentalSymmetry H) (T : EndH) : EndH :=
+  J.op.comp (T.comp J.op)
 
-/-- Compact part from the true owner. -/
-abbrev compactPart (T : X.H →L[ℝ] X.H) : X.H →L[ℝ] X.H :=
-  InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanCompactPart X T
+@[simp]
+theorem cartanInvolution_apply (J : FundamentalSymmetry H) (T : EndH) :
+    cartanInvolution J T = J.op.comp (T.comp J.op) := rfl
 
-/-- Noncompact part from the true owner. -/
-abbrev noncompactPart (T : X.H →L[ℝ] X.H) : X.H →L[ℝ] X.H :=
-  InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanNoncompactPart X T
+theorem cartanInvolution_of_isKreinSkew
+    (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
+    cartanInvolution J T = - adjoint T := by
+  dsimp [IsKreinSkew, kreinAdjoint] at hT
+  have h_wrap := congrArg (fun S : EndH => J.op.comp (S.comp J.op)) hT
+  dsimp at h_wrap
+  have hJJ : J.op.comp ((J.op.comp ((adjoint T).comp J.op)).comp J.op) = adjoint T := by
+    calc
+      J.op.comp ((J.op.comp ((adjoint T).comp J.op)).comp J.op)
+        = (J.op.comp J.op).comp ((adjoint T).comp (J.op.comp J.op)) := by
+          simp only [comp_assoc]
+      _ = (ContinuousLinearMap.id ℂ H).comp ((adjoint T).comp (ContinuousLinearMap.id ℂ H)) := by rw [J.is_involution]
+      _ = adjoint T := by simp only [id_comp, comp_id]
+  rw [hJJ] at h_wrap
+  have h_neg : J.op.comp ((-T).comp J.op) = - (J.op.comp (T.comp J.op)) := by
+    simp only [comp_neg, neg_comp]
+  rw [h_neg] at h_wrap
+  rw [cartanInvolution_apply]
+  exact neg_eq_iff_eq_neg.mp h_wrap.symm
 
-/-!
-=============================================================================
-PART 2: DAG-Projected Theorems
-=============================================================================
--/
-
-/-- THEOREM 1: The Cartan involution is an involution.
-    Projected from `KreinCartanOperatorDecomposition.cartanInvolution_involutive`. -/
-theorem cartanInvolution_involutive (T : X.H →L[ℝ] X.H) :
-    cartanInvolution X (cartanInvolution X T) = T := by
-  exact InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanInvolution_involutive X T
-
-/-- THEOREM 2: Exact reconstruction `T = T_𝔨 + T_𝔭`.
-    Projected from `KreinCartanOperatorDecomposition.cartan_decomposition`. -/
-theorem cartan_reconstruction (T : X.H →L[ℝ] X.H) :
-    compactPart X T + noncompactPart X T = T := by
-  exact InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartan_decomposition X T
-
-/-- THEOREM 3: The compact part is Krein-skew.
-    Projected from the eigenstructure in `KreinCartanOperatorDecomposition`
-    together with the carrier's `J` involution. -/
-theorem compactPart_is_krein_skew (T : X.H →L[ℝ] X.H) :
-    IsKreinSkew X (compactPart X T) := by
-  have h :=
-    InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanInvolution_cartanCompactPart X T
-  dsimp [IsKreinSkew, kreinAdjoint, cartanInvolution, compactPart]
-  rw [h]
-  ext x
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.id_apply, ContinuousLinearMap.neg_apply]
-  have hJ (y : X.H) : X.J (X.J y) = y := by
-    simpa [ContinuousLinearMap.comp_apply]
-      using congrArg (fun f : X.H →L[ℝ] X.H => f y) X.J_sq
+theorem adjoint_cartanInvolution_of_isKreinSkew
+    (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
+    adjoint (cartanInvolution J T) = - T := by
+  dsimp [cartanInvolution]
   calc
-    X.J ((1 / 2 : ℝ) • (T x + X.J (T (X.J x)))) =
-        (1 / 2 : ℝ) • X.J (T x + X.J (T (X.J x))) := by rfl
-    _ = (1 / 2 : ℝ) • (X.J (T x) + X.J (X.J (T (X.J x)))) := by
-          rw [map_add]
-    _ = (1 / 2 : ℝ) • (X.J (T x) + T (X.J x)) := by rw [hJ (T (X.J x))]
-    _ = -((1 / 2 : ℝ) • (T x + X.J (T (X.J x)))) := by
-          simp only [smul_neg, neg_add, add_comm (X.J (T x)) (T (X.J x))]
+    adjoint (J.op.comp (T.comp J.op))
+      = (adjoint (T.comp J.op)).comp (adjoint J.op) := by rw [adjoint_comp]
+    _ = ((adjoint J.op).comp (adjoint T)).comp (adjoint J.op) := by rw [adjoint_comp]
+    _ = (J.op.comp (adjoint T)).comp J.op := by rw [J.is_self_adjoint]
+    _ = J.op.comp ((adjoint T).comp J.op) := by simp only [comp_assoc]
+    _ = kreinAdjoint J T := rfl
+    _ = -T := hT
 
-/-- THEOREM 4: The noncompact part is Krein-self-adjoint.
-    Projected from the eigenstructure in `KreinCartanOperatorDecomposition`. -/
-theorem noncompactPart_is_krein_self_adjoint (T : X.H →L[ℝ] X.H) :
-    kreinAdjoint X (noncompactPart X T) = noncompactPart X T := by
-  have h :=
-    InfoGeometry.Krein.KreinCartanOperatorDecomposition.cartanInvolution_cartanNoncompactPart X T
-  dsimp [kreinAdjoint, noncompactPart]
-  rw [h]
-  ext x
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.id_apply, ContinuousLinearMap.neg_apply]
-  have hJ (y : X.H) : X.J (X.J y) = y := by
-    simpa [ContinuousLinearMap.comp_apply]
-      using congrArg (fun f : X.H →L[ℝ] X.H => f y) X.J_sq
+theorem cartanInvolution_involutive (J : FundamentalSymmetry H) (T : EndH) :
+    cartanInvolution J (cartanInvolution J T) = T := by
+  dsimp [cartanInvolution]
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
   calc
-    X.J ((1 / 2 : ℝ) • (T x - X.J (T (X.J x)))) =
-        (1 / 2 : ℝ) • X.J (T x - X.J (T (X.J x))) := by rfl
-    _ = (1 / 2 : ℝ) • (X.J (T x) - X.J (X.J (T (X.J x)))) := by
-          rw [map_sub]
-    _ = (1 / 2 : ℝ) • (X.J (T x) - T (X.J x)) := by rw [hJ (T (X.J x))]
-    _ = (1 / 2 : ℝ) • (T x - X.J (T (X.J x))) := by
-          simp only [sub_neg_eq_add, add_comm, add_left_comm, add_assoc]
+    J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
+      = (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
+        simp only [comp_assoc]
+    _ = (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
+    _ = T := by simp only [id_comp, comp_id]
+
+def compactPart (J : FundamentalSymmetry H) (T : EndH) : EndH :=
+  (1 / 2 : ℂ) • (T + cartanInvolution J T)
+
+def noncompactPart (J : FundamentalSymmetry H) (T : EndH) : EndH :=
+  (1 / 2 : ℂ) • (T - cartanInvolution J T)
+
+theorem cartan_reconstruction (J : FundamentalSymmetry H) (T : EndH) :
+    compactPart J T + noncompactPart J T = T := by
+  unfold compactPart noncompactPart
+  rw [← smul_add]
+  have h_add : (T + cartanInvolution J T) + (T - cartanInvolution J T) = (2 : ℂ) • T := by
+    calc
+      (T + cartanInvolution J T) + (T - cartanInvolution J T)
+        = (T + T) + (cartanInvolution J T - cartanInvolution J T) := by abel
+      _ = (2 : ℂ) • T + 0 := by rw [two_smul, sub_self]
+      _ = (2 : ℂ) • T := by rw [add_zero]
+  rw [h_add, smul_smul]
+  have h_half : (1 / 2 : ℂ) * 2 = 1 := by ring
+  rw [h_half, one_smul]
+
+theorem compactPart_cartan_eigenvalue (J : FundamentalSymmetry H) (T : EndH) :
+    cartanInvolution J (compactPart J T) = compactPart J T := by
+  unfold compactPart cartanInvolution
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
+  simp only [comp_smul, smul_comp, comp_add, add_comp]
+  congr 1
+  calc
+    J.op.comp (T.comp J.op) + J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
+      = J.op.comp (T.comp J.op) + (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
+        simp only [comp_assoc]
+    _ = J.op.comp (T.comp J.op) + (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
+    _ = J.op.comp (T.comp J.op) + T := by simp only [id_comp, comp_id]
+    _ = T + J.op.comp (T.comp J.op) := add_comm _ _
+
+theorem noncompactPart_cartan_eigenvalue (J : FundamentalSymmetry H) (T : EndH) :
+    cartanInvolution J (noncompactPart J T) = - (noncompactPart J T) := by
+  unfold noncompactPart cartanInvolution
+  have hJ : J.op.comp J.op = ContinuousLinearMap.id ℂ H := J.is_involution
+  simp only [comp_smul, smul_comp, comp_sub, sub_comp]
+  have h_inner : J.op.comp (T.comp J.op) - J.op.comp ((J.op.comp (T.comp J.op)).comp J.op) =
+      - (T - J.op.comp (T.comp J.op)) := by
+    calc
+      J.op.comp (T.comp J.op) - J.op.comp ((J.op.comp (T.comp J.op)).comp J.op)
+        = J.op.comp (T.comp J.op) - (J.op.comp J.op).comp (T.comp (J.op.comp J.op)) := by
+          simp only [comp_assoc]
+      _ = J.op.comp (T.comp J.op) - (ContinuousLinearMap.id ℂ H).comp (T.comp (ContinuousLinearMap.id ℂ H)) := by rw [hJ]
+      _ = J.op.comp (T.comp J.op) - T := by simp only [id_comp, comp_id]
+      _ = - (T - J.op.comp (T.comp J.op)) := by abel
+  rw [h_inner, smul_neg]
+
+theorem starRingEnd_half : starRingEnd ℂ (1 / 2 : ℂ) = (1 / 2 : ℂ) := by
+  apply Complex.ext
+  · simp
+  · simp
+
+theorem compactPart_is_hilbert_skew
+    (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
+    adjoint (compactPart J T) = - (compactPart J T) := by
+  unfold compactPart
+  rw [map_smulₛₗ adjoint, map_add adjoint]
+  rw [starRingEnd_half]
+  have h_adjT : adjoint T = - cartanInvolution J T := by
+    have h_inv := cartanInvolution_of_isKreinSkew J T hT
+    exact neg_eq_iff_eq_neg.mp h_inv.symm
+  have h_adj_theta : adjoint (cartanInvolution J T) = - T :=
+    adjoint_cartanInvolution_of_isKreinSkew J T hT
+  rw [h_adjT, h_adj_theta]
+  have h_sum : - cartanInvolution J T + - T = - (T + cartanInvolution J T) := by abel
+  rw [h_sum, smul_neg]
+
+theorem noncompactPart_is_hilbert_self_adjoint
+    (J : FundamentalSymmetry H) (T : EndH) (hT : IsKreinSkew J T) :
+    adjoint (noncompactPart J T) = noncompactPart J T := by
+  unfold noncompactPart
+  rw [map_smulₛₗ adjoint, map_sub adjoint]
+  rw [starRingEnd_half]
+  have h_adjT : adjoint T = - cartanInvolution J T := by
+    have h_inv := cartanInvolution_of_isKreinSkew J T hT
+    exact neg_eq_iff_eq_neg.mp h_inv.symm
+  have h_adj_theta : adjoint (cartanInvolution J T) = - T :=
+    adjoint_cartanInvolution_of_isKreinSkew J T hT
+  rw [h_adjT, h_adj_theta]
+  have h_sub : - cartanInvolution J T - - T = T - cartanInvolution J T := by abel
+  rw [h_sub]
 
 end InfoGeometry.Lie.CartanKrein
 

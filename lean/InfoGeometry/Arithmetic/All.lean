@@ -1,5 +1,7 @@
 import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
 import InfoGeometry.Arithmetic.ZetaZ2ParitySpectralDecomposition
+import InfoGeometry.Arithmetic.InvolutionParityProjectors
+import InfoGeometry.Arithmetic.ZetaBetaCayleyKleinBridge
 
 namespace InfoGeometry.Arithmetic.All
 

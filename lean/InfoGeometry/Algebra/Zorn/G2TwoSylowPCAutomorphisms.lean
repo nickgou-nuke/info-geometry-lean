@@ -1,47 +1,60 @@
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
-
-set_option maxHeartbeats 1000000
+import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
+import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
+open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
 theorem pc1_add (X Y : SplitOctF2) :
     pc1Fun (add X Y) = add (pc1Fun X) (pc1Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc1Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc1Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc2_add (X Y : SplitOctF2) :
     pc2Fun (add X Y) = add (pc2Fun X) (pc2Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc2Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc2Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc3_add (X Y : SplitOctF2) :
     pc3Fun (add X Y) = add (pc3Fun X) (pc3Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc3Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc3Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc4_add (X Y : SplitOctF2) :
     pc4Fun (add X Y) = add (pc4Fun X) (pc4Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc4Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc4Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc5_add (X Y : SplitOctF2) :
     pc5Fun (add X Y) = add (pc5Fun X) (pc5Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc5Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc5Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc6_add (X Y : SplitOctF2) :
     pc6Fun (add X Y) = add (pc6Fun X) (pc6Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> simp [pc6Fun, add, add2, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc6Fun, add, add2, bitToF2_xor] <;>
+    ring
 
 theorem pc1_one : pc1Fun one = one := by rfl
 theorem pc2_one : pc2Fun one = one := by rfl
@@ -53,7 +66,9 @@ theorem pc6_one : pc6Fun one = one := by rfl
 theorem pc2_pc6 (X : SplitOctF2) :
     pc2Fun (pc6Fun X) = pc6Fun (pc2Fun X) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-  ext <;> simp [pc2Fun, pc6Fun, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc2Fun, pc6Fun, bitToF2_xor] <;>
+    ring
 
 theorem pc2_inverse_left (X : SplitOctF2) :
     pc6Fun (pc2Fun (pc2Fun X)) = X := by
@@ -66,7 +81,9 @@ theorem pc2_inverse_right (X : SplitOctF2) :
 theorem pc3_pc6 (X : SplitOctF2) :
     pc3Fun (pc6Fun X) = pc6Fun (pc3Fun X) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-  ext <;> simp [pc3Fun, pc6Fun, Bool.xor_left_comm, Bool.xor_comm]
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [pc3Fun, pc6Fun, bitToF2_xor] <;>
+    ring
 
 theorem pc3_inverse_left (X : SplitOctF2) :
     pc6Fun (pc3Fun (pc3Fun X)) = X := by
@@ -87,13 +104,13 @@ def pc1Aut : SplitOctF2Aut :=
   ⟨involutiveEquiv pc1Fun pc1_sq, pc1_one, pc1_add, pc1_mul⟩
 
 def pc4Aut : SplitOctF2Aut :=
-  ⟨involutiveEquiv pc4Fun pc4_sq, by exact pc4_one, pc4_add, pc4_mul⟩
+  ⟨involutiveEquiv pc4Fun pc4_sq, pc4_one, pc4_add, pc4_mul⟩
 
 def pc5Aut : SplitOctF2Aut :=
-  ⟨involutiveEquiv pc5Fun pc5_sq, by exact pc5_one, pc5_add, pc5_mul⟩
+  ⟨involutiveEquiv pc5Fun pc5_sq, pc5_one, pc5_add, pc5_mul⟩
 
 def pc6Aut : SplitOctF2Aut :=
-  ⟨involutiveEquiv pc6Fun pc6_sq, by exact pc6_one, pc6_add, pc6_mul⟩
+  ⟨involutiveEquiv pc6Fun pc6_sq, pc6_one, pc6_add, pc6_mul⟩
 
 def pc2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := pc2Fun
@@ -127,5 +144,41 @@ def pcSubgroup : Subgroup SplitOctF2Aut :=
 theorem pcGenerator_mem_pcSubgroup (i : Fin 6) :
     pcGenerator i ∈ pcSubgroup := by
   exact Subgroup.subset_closure ⟨i, rfl⟩
+
+def pcWord (e : Fin 6 → Bool) : SplitOctF2Aut :=
+  (List.ofFn (fun i : Fin 6 => if e i then pcGenerator i else 1)).prod
+
+theorem pcWord_mem_pcSubgroup (e : Fin 6 → Bool) :
+    pcWord e ∈ pcSubgroup := by
+  have hprod : ∀ (l : List SplitOctF2Aut),
+      (∀ x ∈ l, x ∈ pcSubgroup) → l.prod ∈ pcSubgroup := by
+    intro l
+    induction l with
+    | nil =>
+        intro _
+        exact pcSubgroup.one_mem
+    | cons a l ih =>
+        intro h
+        exact pcSubgroup.mul_mem (h a (by simp))
+          (ih (fun x hx => h x (by simp [hx])))
+  unfold pcWord
+  apply hprod
+  rw [List.forall_mem_ofFn_iff]
+  intro i
+  by_cases h : e i
+  · simp [h, pcGenerator_mem_pcSubgroup i]
+  · simp [h, pcSubgroup.one_mem]
+
+theorem pcWords_mul_mem_pcSubgroup (e f : Fin 6 → Bool) :
+    pcWord e * pcWord f ∈ pcSubgroup := by
+  exact pcSubgroup.mul_mem (pcWord_mem_pcSubgroup e) (pcWord_mem_pcSubgroup f)
+
+theorem pcWords_inv_mem_pcSubgroup (e : Fin 6 → Bool) :
+    (pcWord e)⁻¹ ∈ pcSubgroup := by
+  exact pcSubgroup.inv_mem (pcWord_mem_pcSubgroup e)
+
+theorem pcWord_parameter_card : Fintype.card (Fin 6 → Bool) = 64 := by
+  rw [Fintype.card_fun, Fintype.card_fin, Fintype.card_bool]
+  norm_num
 
 end InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms

@@ -27,11 +27,172 @@ theorem c_pow_six : c ^ 6 = 1 := by
   intro i
   fin_cases i <;> rfl
 
+theorem c_sq_up0 : (c ^ 2).1 up0 = up1 := by
+  simp [c, pow_two, cycle012Aut_apply, cycle012Fun, swapCartanAut,
+    swapCartanEquiv, swapCartanFun, up0, up1]
+
+theorem c_cube_up0 : (c ^ 3).1 up0 = down0 := by
+  simp [c, pow_succ, cycle012Aut_apply, cycle012Fun, swapCartanAut,
+    swapCartanEquiv, swapCartanFun, up0, down0]
+
+theorem c_pow_two_ne_one : c ^ 2 ≠ 1 := by
+  intro h
+  have h' := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
+  change (c ^ 2).1 up0 = (1 : SplitOctF2Aut).1 up0 at h'
+  rw [c_sq_up0] at h'
+  exact Bool.noConfusion (congrArg SplitOctF2.x1 h')
+
+theorem c_pow_three_ne_one : c ^ 3 ≠ 1 := by
+  intro h
+  have h' := congrArg (fun f : SplitOctF2Aut => f.1 up0) h
+  change (c ^ 3).1 up0 = (1 : SplitOctF2Aut).1 up0 at h'
+  rw [c_cube_up0] at h'
+  exact Bool.noConfusion (congrArg SplitOctF2.x0 h')
+
+theorem c_orderOf : orderOf c = 6 := by
+  apply orderOf_eq_of_pow_and_pow_div_prime (n := 6)
+  · norm_num
+  · exact c_pow_six
+  · intro p hp hdiv
+    have hp_le : p ≤ 6 := Nat.le_of_dvd (by norm_num) hdiv
+    interval_cases p
+    · norm_num at hp
+    · norm_num at hp
+    · simpa using c_pow_three_ne_one
+    · simpa using c_pow_two_ne_one
+    · norm_num at hdiv
+    · norm_num at hdiv
+    · norm_num at hp
+
+theorem c_inv_eq_pow_five : c⁻¹ = c ^ 5 := by
+  have h : c ^ 5 * c = 1 := by
+    calc
+      c ^ 5 * c = c ^ 6 := by rw [← pow_succ]
+      _ = 1 := c_pow_six
+  exact (eq_inv_of_mul_eq_one_left h).symm
+
+theorem c_pow_five_mul_c : c ^ 5 * c = 1 := by
+  calc
+    c ^ 5 * c = c ^ 6 := by rw [← pow_succ]
+    _ = 1 := c_pow_six
+
+theorem c_pow_mod (n : ℕ) : c ^ (n % 6) = c ^ n := by
+  have h := pow_mod_orderOf c n
+  rw [c_orderOf] at h
+  exact h
+
+theorem c_pow_add_mod (m n : ℕ) :
+    c ^ m * c ^ n = c ^ ((m + n) % 6) := by
+  rw [← pow_add, ← c_pow_mod]
+
+theorem c_mul_pow_five : c * c ^ 5 = 1 := by
+  calc
+    c * c ^ 5 = c ^ 6 := by rw [← pow_succ']
+    _ = 1 := c_pow_six
+
+theorem c_pow_inv_fin (i : Fin 6) :
+    (c ^ (i : ℕ))⁻¹ = c ^ ((6 - (i : ℕ)) % 6) := by
+  have h : c ^ (i : ℕ) * c ^ ((6 - (i : ℕ)) % 6) = 1 := by
+    fin_cases i <;> norm_num [c_pow_add_mod, c_pow_six,
+      c_mul_pow_five, c_pow_five_mul_c, c_inv_eq_pow_five]
+  exact inv_eq_of_mul_eq_one_right h
+
+theorem c_pow_injective :
+    Function.Injective (fun k : Fin 6 => c ^ (k : ℕ)) := by
+  intro i j h
+  have hmod : (i : ℕ) ≡ (j : ℕ) [MOD orderOf c] :=
+    (pow_eq_pow_iff_modEq.mp h)
+  rw [c_orderOf] at hmod
+  apply Fin.ext
+  exact hmod.eq_of_lt_of_lt i.isLt j.isLt
+
+theorem one_apply (X : SplitOctF2) :
+    (1 : SplitOctF2Aut).1 X = X := by
+  rfl
+
+theorem s_ne_c_pow (k : Fin 6) : s ≠ c ^ (k : ℕ) := by
+  fin_cases k <;> intro h
+  all_goals
+    have h' := congrArg
+      (fun f : SplitOctF2Aut =>
+        (f.1 ePlus, f.1 up0, f.1 up1, f.1 up2, f.1 down0, f.1 down1, f.1 down2)) h
+    norm_num [s, c, pow_succ, swap01Aut_apply, cycle012Aut_apply,
+      cycle012Fun, swap01Fun, swapCartanAut, swapCartanEquiv, swapCartanFun,
+      ePlus, up0, up1, up2, down0, down1, down2,
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.one, one_apply] at h'
+
 theorem s_c_s : s * c * s = c⁻¹ := by
   apply eq_inv_of_mul_eq_one_right
   apply automorphism_ext_of_basis
   intro i
   fin_cases i <;> rfl
+
+theorem s_conj_c_pow (n : ℕ) :
+    s * c ^ n * s = (c ^ n)⁻¹ := by
+  induction n with
+  | zero => simp [s_sq]
+  | succ n ih =>
+      rw [pow_succ]
+      calc
+        s * (c ^ n * c) * s =
+            (s * c ^ n * s) * (s * c * s) := by
+              calc
+                s * (c ^ n * c) * s = s * c ^ n * (c * s) := by
+                  simp [mul_assoc]
+                _ = s * c ^ n * (s * s) * (c * s) := by
+                  rw [s_sq]
+                  simp
+                _ = (s * c ^ n * s) * (s * c * s) := by
+                  simp [mul_assoc]
+        _ = (c ^ n)⁻¹ * c⁻¹ := by rw [ih, s_c_s]
+        _ = (c ^ n * c)⁻¹ := by group
+
+theorem c_pow_mul_s (n : ℕ) :
+    c ^ n * s = s * (c ^ n)⁻¹ := by
+  calc
+    c ^ n * s = s * (s * c ^ n * s) := by
+      calc
+        c ^ n * s = (s * s) * c ^ n * s := by
+          rw [s_sq]
+          simp
+        _ = s * (s * c ^ n * s) := by simp [mul_assoc]
+    _ = s * (c ^ n)⁻¹ := by rw [s_conj_c_pow]
+
+theorem c_pow_mul_s_mul_c_pow (i j : Fin 6) :
+    c ^ (i : ℕ) * (s * c ^ (j : ℕ)) =
+      s * c ^ (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6) := by
+  calc
+    c ^ (i : ℕ) * (s * c ^ (j : ℕ)) =
+        (c ^ (i : ℕ) * s) * c ^ (j : ℕ) := by simp [mul_assoc]
+    _ = (s * (c ^ (i : ℕ))⁻¹) * c ^ (j : ℕ) := by
+      rw [c_pow_mul_s]
+    _ = s * (c ^ ((6 - (i : ℕ)) % 6) * c ^ (j : ℕ)) := by
+      rw [c_pow_inv_fin]
+      simp [mul_assoc]
+    _ = s * c ^ (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6) := by
+      rw [c_pow_add_mod]
+
+theorem c_pow_mul_c_pow (i j : Fin 6) :
+    c ^ (i : ℕ) * c ^ (j : ℕ) =
+      c ^ (((i : ℕ) + (j : ℕ)) % 6) := by
+  exact c_pow_add_mod (i : ℕ) (j : ℕ)
+
+theorem s_mul_c_pow_mul_c_pow (i j : Fin 6) :
+    (s * c ^ (i : ℕ)) * c ^ (j : ℕ) =
+      s * c ^ (((i : ℕ) + (j : ℕ)) % 6) := by
+  rw [mul_assoc, c_pow_add_mod]
+
+theorem s_mul_c_pow_mul_s_mul_c_pow (i j : Fin 6) :
+    (s * c ^ (i : ℕ)) * (s * c ^ (j : ℕ)) =
+      c ^ (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6) := by
+  calc
+    (s * c ^ (i : ℕ)) * (s * c ^ (j : ℕ)) =
+        (s * c ^ (i : ℕ) * s) * c ^ (j : ℕ) := by simp [mul_assoc]
+    _ = (c ^ (i : ℕ))⁻¹ * c ^ (j : ℕ) := by rw [s_conj_c_pow]
+    _ = c ^ ((6 - (i : ℕ)) % 6) * c ^ (j : ℕ) := by
+      rw [c_pow_inv_fin]
+    _ = c ^ (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6) := by
+      rw [c_pow_add_mod]
 
 theorem t_sq : t * t = 1 := by
   apply automorphism_ext_of_basis
@@ -53,21 +214,95 @@ noncomputable def weylNF (k : ZMod 6) (refl : Bool) : SplitOctF2Aut :=
   if refl then s * c ^ k.val else c ^ k.val
 
 /-- All 12 Weyl normal form elements are strictly distinct. -/
+theorem c_pow_zmod_injective :
+    Function.Injective (fun k : ZMod 6 => c ^ k.val) := by
+  intro i j h
+  have hk : c ^ (i.val : ℕ) = c ^ (j.val : ℕ) := h
+  have hij : (⟨i.val, i.isLt⟩ : Fin 6) = ⟨j.val, j.isLt⟩ :=
+    c_pow_injective hk
+  exact (ZMod.val_injective 6) (congrArg Fin.val hij)
+
+theorem refl_pow_ne_rot_pow (i j : Fin 6) :
+    s * c ^ (i : ℕ) ≠ c ^ (j : ℕ) := by
+  intro h
+  have hs : s = c ^ (j : ℕ) * (c ^ (i : ℕ))⁻¹ := by
+    calc
+      s = s * 1 := by simp
+      _ = s * (c ^ (i : ℕ) * (c ^ (i : ℕ))⁻¹) := by simp
+      _ = (s * c ^ (i : ℕ)) * (c ^ (i : ℕ))⁻¹ := by
+        simp [mul_assoc]
+      _ = c ^ (j : ℕ) * (c ^ (i : ℕ))⁻¹ := by rw [h]
+  rw [c_pow_inv_fin i] at hs
+  let k : Fin 6 :=
+    ⟨((j : ℕ) + (6 - (i : ℕ)) % 6) % 6,
+      Nat.mod_lt _ (by norm_num)⟩
+  have hsk : s = c ^ (k : ℕ) := by
+    simpa [k] using hs.trans (c_pow_add_mod (j : ℕ) ((6 - (i : ℕ)) % 6))
+  exact s_ne_c_pow k hsk
+
 theorem weylNF_injective :
     Function.Injective (fun (p : ZMod 6 × Bool) => weylNF p.1 p.2) := by
-  intro ⟨k1, b1⟩ ⟨k2, b2⟩ h
-  fin_cases k1 <;> fin_cases k2 <;> cases b1 <;> cases b2
-  all_goals try rfl
-  all_goals
-    have h_eval := congrArg (fun f : SplitOctF2Aut => (f.1 (basis8 0), f.1 (basis8 2), f.1 (basis8 3), f.1 (basis8 4))) h
-    revert h_eval
-    decide
+  rintro ⟨k₁, b₁⟩ ⟨k₂, b₂⟩ h
+  cases b₁ <;> cases b₂
+  · exact Prod.ext (c_pow_zmod_injective h) rfl
+  · exfalso
+    have h' : c ^ k₁.val = s * c ^ k₂.val := by
+      simpa [weylNF] using h
+    exact refl_pow_ne_rot_pow
+      ⟨k₂.val, k₂.isLt⟩ ⟨k₁.val, k₁.isLt⟩ h'.symm
+  · exfalso
+    have h' : s * c ^ k₁.val = c ^ k₂.val := by
+      simpa [weylNF] using h
+    exact refl_pow_ne_rot_pow
+      ⟨k₁.val, k₁.isLt⟩ ⟨k₂.val, k₂.isLt⟩ h'
+  · have hk := congrArg (fun f : SplitOctF2Aut => s⁻¹ * f) h
+    simp [weylNF] at hk
+    exact Prod.ext (c_pow_zmod_injective hk) rfl
+
+noncomputable def weylNFEquiv :
+    (ZMod 6 × Bool) ≃ Set.range (fun p : ZMod 6 × Bool => weylNF p.1 p.2) :=
+  Equiv.ofInjective _ weylNF_injective
+
+noncomputable instance : Fintype (Set.range (fun p : ZMod 6 × Bool => weylNF p.1 p.2)) :=
+  Set.Finite.fintype (Set.finite_range _)
+
+theorem weylNF_image_card :
+    Fintype.card (Set.range (fun p : ZMod 6 × Bool => weylNF p.1 p.2)) = 12 := by
+  calc
+    Fintype.card (Set.range (fun p : ZMod 6 × Bool => weylNF p.1 p.2)) =
+        Fintype.card (ZMod 6 × Bool) := (Fintype.card_congr weylNFEquiv).symm
+    _ = 12 := by rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
 
 /-- The 12-element Weyl group W(G₂) as a concrete subtype of SplitOctF2Aut. -/
 def weylG2Subgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure {s, t}
 
+theorem s_mem_weylG2Subgroup : s ∈ weylG2Subgroup := by
+  exact Subgroup.subset_closure (by simp)
+
+theorem t_mem_weylG2Subgroup : t ∈ weylG2Subgroup := by
+  exact Subgroup.subset_closure (by simp)
+
+theorem c_mem_weylG2Subgroup : c ∈ weylG2Subgroup := by
+  change swapCartanAut * cycle012Aut ∈ weylG2Subgroup
+  change swapCartanAut * cycle012Aut ∈ Subgroup.closure {s, t}
+  have hs : s ∈ Subgroup.closure {s, t} := s_mem_weylG2Subgroup
+  have ht : t ∈ Subgroup.closure {s, t} := t_mem_weylG2Subgroup
+  exact by
+    rw [show c = s * t by rfl]
+    exact Subgroup.mul_mem _ hs ht
+
+theorem weylNF_mem_weylG2Subgroup
+    (k : ZMod 6) (refl : Bool) :
+    weylNF k refl ∈ weylG2Subgroup := by
+  by_cases h : refl
+  · simp [weylNF, h]
+    exact Subgroup.mul_mem _ s_mem_weylG2Subgroup
+      (Subgroup.pow_mem _ c_mem_weylG2Subgroup _)
+  · simp [weylNF, h]
+    exact Subgroup.pow_mem _ c_mem_weylG2Subgroup _
+
 theorem weylG2_card_eq_twelve : Fintype.card (ZMod 6 × Bool) = 12 := by
-  decide
+  rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
 
 end InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2

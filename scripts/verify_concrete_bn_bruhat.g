@@ -43,6 +43,27 @@ N := Group(weyl);
 if Size(N) <> 12 then Error("concrete Weyl subgroup order is not 12"); fi;
 if Size(Intersection(B, N)) <> 1 then Error("B intersect N is not trivial"); fi;
 
+# The Lean-aligned Coxeter pair is checked separately from the generic pair
+# search below: s is swap01 and c is swapCartan*cycle012, with t=s*c.
+leanS := weyl[1];
+leanC := weyl[3] * weyl[2];
+leanT := leanS * leanC;
+if Order(leanS) <> 2 or Order(leanC) <> 6 or Order(leanT) <> 2 then
+  Error("Lean-aligned Coxeter generators have wrong orders");
+fi;
+if leanC^2 = IdentityMat(8, F) or leanC^3 = IdentityMat(8, F) then
+  Error("Lean-aligned Coxeter element is not of exact order 6");
+fi;
+if leanS in Group(leanC) then
+  Error("reflection lies in the cyclic rotation subgroup");
+fi;
+if leanS * leanC * leanS <> leanC^-1 then
+  Error("Lean-aligned Coxeter conjugation failed");
+fi;
+if Group(leanS, leanT) <> N then
+  Error("Lean-aligned Coxeter pair does not generate N");
+fi;
+
 cells := DoubleCosets(G, B, B);
 if Length(cells) <> 12 then Error("number of concrete double cosets is not 12"); fi;
 if Sum(List(cells, Size)) <> Size(G) then
@@ -62,6 +83,11 @@ od;
 Print("carrier_group_size=", Size(G), "\n");
 Print("borel_sylow_two_size=", Size(B), "\n");
 Print("concrete_weyl_size=", Size(N), "\n");
+Print("coxeter_reflection_orders=", [Order(leanS), Order(leanT)], "\n");
+Print("coxeter_product_order=", Order(leanS * leanT), "\n");
+Print("coxeter_exact_order_checks=PASS\n");
+Print("reflection_rotation_cross_section=PASS\n");
+Print("coxeter_relation=PASS\n");
 Print("borel_intersect_weyl_size=", Size(Intersection(B, N)), "\n");
 Print("double_coset_count=", Length(cells), "\n");
 Print("double_coset_sizes=", List(cells, Size), "\n");

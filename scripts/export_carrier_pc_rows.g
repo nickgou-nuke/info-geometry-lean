@@ -5,6 +5,13 @@ psi := IsomorphismPcGroup(S);
 P := Image(psi);
 pcgs := Pcgs(P);
 preimages := List(GeneratorsOfGroup(P), x -> PreImagesRepresentative(psi, x));
+if Size(P) <> Product(RelativeOrders(pcgs)) then
+  Error("GAP PC normal-form cardinality mismatch");
+fi;
+Print("PC_PRESENTATION_CARDINALITY_CHECK=true\n");
+Print("PC_NORMAL_FORM_CARD=");
+Print(Product(RelativeOrders(pcgs)));
+Print("\n");
 mat := fail;
 support := fail;
 Print("PC_RELORD=");

@@ -219,4 +219,7 @@ import InfoGeometry.Lie.SplitOctonionWittSkewEndomorphismSubalgebra
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import InfoGeometry.Lie.CartanKrein
 import InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification
+import InfoGeometry.Lie.G2RealSplitLieGroupExponentialAtlas
 import InfoGeometry.Lie.G2SplitChevalley
+import InfoGeometry.Lie.G2TwoRealSplitClassification
+import InfoGeometry.Lie.CanonicalZornG2RootStarAction

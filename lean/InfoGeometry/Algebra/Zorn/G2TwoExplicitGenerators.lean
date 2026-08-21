@@ -552,6 +552,12 @@ theorem finite_g2_carrier_card_lower_bound :
     (Fintype.card_subtype_le (fun f : SplitOctF2Aut =>
       f ∈ simpleRootSubgroup))
 
+theorem finite_g2_carrier_card_lower_bound_eight :
+    8 ≤ Fintype.card SplitOctF2Aut := by
+  exact le_trans simpleRootSubgroup_card_lower_bound_eight
+    (Fintype.card_subtype_le (fun f : SplitOctF2Aut =>
+      f ∈ simpleRootSubgroup))
+
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧
     (unipotentLongAut true) * (unipotentLongAut true) = 1 ∧

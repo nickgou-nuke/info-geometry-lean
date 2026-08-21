@@ -54,7 +54,7 @@ theorem positive_roots_card : Fintype.card G2PositiveRoot = 6 := by
 def formalUnipotentOrder (q : ℕ) : ℕ := q ^ (Fintype.card G2PositiveRoot)
 
 theorem formalUnipotentOrder_two : formalUnipotentOrder 2 = 64 := by
-  dsimp [formalUnipotentOrder, positive_roots_card]
+  dsimp [formalUnipotentOrder]; decide
 
 /-- Formal Borel subgroup order polynomial: q⁶ (q - 1)² -/
 def formalBorelOrder (q : ℕ) : ℕ := (formalUnipotentOrder q) * ((q - 1) ^ 2)

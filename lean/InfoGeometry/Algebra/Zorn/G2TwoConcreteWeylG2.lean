@@ -209,6 +209,41 @@ theorem st_order_six : (s * t) ^ 6 = 1 := by
   rw [hst]
   exact c_pow_six
 
+/-- The G₂ Artin 6-Braid / Yang-Baxter relation: (st)³ = (ts)³. -/
+theorem st_artin_braid_relation :
+    s * t * s * t * s * t = t * s * t * s * t * s := by
+  have h_c3 : (s * t) ^ 3 = c ^ 3 := by
+    have hst : s * t = c := by
+      dsimp [t]
+      calc
+        s * (s * c) = (s * s) * c := by simp [mul_assoc]
+        _ = 1 * c := by rw [s_sq]
+        _ = c := by simp
+    rw [hst]
+  have h_c3_self_inv : (c ^ 3)⁻¹ = c ^ 3 := by
+    have h6 : c ^ 3 * c ^ 3 = 1 := by
+      calc
+        c ^ 3 * c ^ 3 = c ^ 6 := by rw [← pow_add]
+        _ = 1 := c_pow_six
+    exact (eq_inv_of_mul_eq_one_left h6).symm
+  have h_st3 : s * t * s * t * s * t = (s * t) ^ 3 := by
+    calc
+      s * t * s * t * s * t = (s * t) * (s * t) * (s * t) := by simp [mul_assoc]
+      _ = (s * t) ^ 3 := by
+        rw [pow_succ, pow_succ, pow_one, mul_assoc]
+  have h_ts3 : t * s * t * s * t * s = ((s * t) ^ 3)⁻¹ := by
+    calc
+      t * s * t * s * t * s = (t * s) * (t * s) * (t * s) := by simp [mul_assoc]
+      _ = (s * t)⁻¹ * (s * t)⁻¹ * (s * t)⁻¹ := by
+        have h_inv : (s * t)⁻¹ = t * s := by
+          rw [mul_inv_rev, show s⁻¹ = s by rw [inv_eq_iff_mul_eq_one]; exact s_sq,
+                         show t⁻¹ = t by rw [inv_eq_iff_mul_eq_one]; exact t_sq]
+        rw [h_inv]
+      _ = ((s * t) * (s * t) * (s * t))⁻¹ := by simp [mul_assoc]
+      _ = ((s * t) ^ 3)⁻¹ := by
+        rw [pow_succ, pow_succ, pow_one, mul_assoc]
+  rw [h_st3, h_ts3, h_c3, h_c3_self_inv]
+
 /-- The explicit 12 Weyl normal form elements indexed by ZMod 6 × Bool. -/
 noncomputable def weylNF (k : ZMod 6) (refl : Bool) : SplitOctF2Aut :=
   if refl then s * c ^ k.val else c ^ k.val

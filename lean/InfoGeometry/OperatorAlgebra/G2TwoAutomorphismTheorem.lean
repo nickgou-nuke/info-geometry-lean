@@ -258,17 +258,21 @@ theorem add_mul (X Y Z : SplitOctF2) :
     decide
 
 /-- The finite Zorn multiplication has the declared zero as a two-sided zero. -/
-theorem mul_zero (X : SplitOctF2) : mul X zero = zero := by
+theorem mul_zero (X : SplitOctF2) :
+    mul X zero = zero := by
   native_decide +revert
 
-theorem zero_mul (X : SplitOctF2) : mul zero X = zero := by
+theorem zero_mul (X : SplitOctF2) :
+    mul zero X = zero := by
   native_decide +revert
 
 /-- The finite Zorn multiplication has the declared unit as a two-sided unit. -/
-theorem mul_one (X : SplitOctF2) : mul X one = X := by
+theorem mul_one (X : SplitOctF2) :
+    mul X one = X := by
   native_decide +revert
 
-theorem one_mul (X : SplitOctF2) : mul one X = X := by
+theorem one_mul (X : SplitOctF2) :
+    mul one X = X := by
   native_decide +revert
 
 /-- Basic diagonal idempotent and orthogonality laws in the finite Zorn basis. -/

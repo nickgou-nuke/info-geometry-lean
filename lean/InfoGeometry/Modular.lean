@@ -15,6 +15,7 @@ import InfoGeometry.Modular.SelfConcordantBarrierTriple
 import InfoGeometry.Modular.TensorDeterminantHomomorphism
 import InfoGeometry.Modular.ZetaRegularizedDeterminantBridge
 import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
+import InfoGeometry.Modular.KMSColimitExtension
 
 /-!
 # Modular Theory Module

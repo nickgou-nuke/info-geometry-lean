@@ -304,6 +304,10 @@ theorem weylNF_mem_weylG2Subgroup
   · simp [weylNF, h]
     exact Subgroup.pow_mem _ c_mem_weylG2Subgroup _
 
+theorem weylNF_mul_rot_rot (k l : ZMod 6) :
+    weylNF k false * weylNF l false = weylNF (k + l) false := by
+  simp [weylNF, c_pow_add_mod, ZMod.val_add]
+
 noncomputable instance : Finite weylG2Subgroup :=
   Finite.of_injective Subtype.val Subtype.val_injective
 

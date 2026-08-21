@@ -508,11 +508,12 @@ noncomputable def unipotentWord6 (b : Fin 6 → Bool) : SplitOctF2Aut :=
   positiveRootAction 4 (b 4) *
   positiveRootAction 5 (b 5)
 
+
 theorem positiveRootAction_mem_positiveRootSubgroup (i : Fin 6) (t : Bool) :
     positiveRootAction i t ∈ positiveRootSubgroup := by
   cases t
   · simp [positiveRootAction]
-  · exact positiveRootPacket_mem_subgroup i
+  · simp [positiveRootAction, positiveRootPacket_mem_subgroup i]
 
 theorem unipotentWord6_mem_positiveRootSubgroup (b : Fin 6 → Bool) :
     unipotentWord6 b ∈ positiveRootSubgroup := by

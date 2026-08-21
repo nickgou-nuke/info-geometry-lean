@@ -74,19 +74,26 @@ noncomputable def cellEquiv :
   left_inv g := by
     rfl
   right_inv z := by
-    apply Sigma.ext (by
+    rcases z with ⟨w, g, hg⟩
+    dsimp
+    have hindex : chooseCell ts bp g = w := by
       by_contra hne
-      have h₁ : z.2.1 ∈ cell ts bp (chooseCell ts bp z.2.1) :=
-        chooseCell_mem ts bp z.2.1
-      have h₂ : z.2.1 ∈ cell ts bp z.1 := z.2.2
-      exact (Set.disjoint_left.1 (cell_disjoint ts bp hne) h₁) h₂)
+      have h₁ : g ∈ cell ts bp (chooseCell ts bp g) :=
+        chooseCell_mem ts bp g
+      have h₂ : g ∈ cell ts bp w := hg
+      exact (Set.disjoint_left.1 (cell_disjoint ts bp hne) h₁) h₂
+    subst hindex
     rfl
+
+noncomputable instance cellFintype [Fintype G] (bp : FiniteBruhatPartition ts)
+    (w : ts.W) : Fintype {g : G // g ∈ cell ts bp w} :=
+  letI : Finite {g : G // g ∈ cell ts bp w} :=
+    Finite.of_injective Subtype.val Subtype.val_injective
+  Fintype.ofFinite _
 
 theorem card_eq_sum_cell_cards (bp : FiniteBruhatPartition ts) [Fintype G] :
     Fintype.card G =
       ∑ w : ts.W, Fintype.card {g : G // g ∈ cell ts bp w} := by
-  classical
-  letI (w : ts.W) : Fintype {g : G // g ∈ cell ts bp w} := Fintype.ofFinite _
   rw [Fintype.card_congr (cellEquiv ts bp), Fintype.card_sigma]
 
 end FiniteBruhatPartition

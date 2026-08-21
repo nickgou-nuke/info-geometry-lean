@@ -217,6 +217,19 @@ theorem dihedralRootPermutationRep_injective :
     Function.Injective dihedralRootPermutationRep := by
   exact @MulAction.toPerm_injective (DihedralGroup 6) Root _ _ dihedralRootFaithfulSMul
 
+noncomputable def dihedralRootPermutationImageEquiv :
+    DihedralGroup 6 ≃ Set.range dihedralRootPermutationRep :=
+  Equiv.ofBijective
+    (fun g => ⟨dihedralRootPermutationRep g, ⟨g, rfl⟩⟩)
+    ⟨(fun _ _ hgh => dihedralRootPermutationRep_injective
+        (congrArg Subtype.val hgh)),
+      (fun y => ⟨y.2.choose, Subtype.ext y.2.choose_spec⟩)⟩
+
+theorem dihedralRootPermutationImage_card :
+    Fintype.card (Set.range dihedralRootPermutationRep) = 12 := by
+  rw [← Fintype.card_congr dihedralRootPermutationImageEquiv]
+  rw [DihedralGroup.card]
+
 theorem dihedral_stabilizer_mem_iff (b : Bool) (g : DihedralGroup 6) :
     g ∈ MulAction.stabilizer (DihedralGroup 6) (b, (0 : ZMod 6)) ↔
       g = DihedralGroup.r 0 ∨ g = DihedralGroup.sr 0 := by

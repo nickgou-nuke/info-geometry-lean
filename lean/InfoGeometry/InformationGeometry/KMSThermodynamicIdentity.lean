@@ -27,6 +27,8 @@ open Finset
 
 namespace InfoGeometry.InformationGeometry.KMS
 
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
 /-!
 =============================================================================
 PART 1: The Gibbs Partition Function and Equilibrium State
@@ -34,26 +36,23 @@ PART 1: The Gibbs Partition Function and Equilibrium State
 -/
 
 /-- The Gibbs/KMS Partition Function: Z(K) = ∑_i exp(-K_i). -/
-def partitionZ {ι : Type*} [Fintype ι] (K : ι → ℝ) : ℝ :=
+def partitionZ (K : ι → ℝ) : ℝ :=
   ∑ i, Real.exp (-K i)
 
-/-- Strict positivity of the partition function. -/
-theorem partitionZ_pos {ι : Type*} [Fintype ι] [Nonempty ι] (K : ι → ℝ) : 0 < partitionZ K := by
+/-- Strict positivity of the partition function on non-empty types. -/
+theorem partitionZ_pos [Nonempty ι] (K : ι → ℝ) : 0 < partitionZ K := by
   dsimp [partitionZ]
-  exact sum_pos (fun i _ => Real.exp_pos (-K i)) univ_nonempty
+  exact sum_pos (fun _ _ => Real.exp_pos _) univ_nonempty
 
 /-- The Equilibrium Gibbs/KMS Probability State: p_i = exp(-K_i) / Z(K). -/
-def gibbsProb {ι : Type*} [Fintype ι] (K : ι → ℝ) (i : ι) : ℝ :=
+def gibbsProb (K : ι → ℝ) (i : ι) : ℝ :=
   Real.exp (-K i) / partitionZ K
 
-/-- Strict positivity of the equilibrium Gibbs probabilities. -/
-theorem gibbsProb_pos {ι : Type*} [Fintype ι] [Nonempty ι] (K : ι → ℝ) (i : ι) : 0 < gibbsProb K i := by
-  dsimp [gibbsProb]
-  exact div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)
+theorem gibbsProb_pos [Nonempty ι] (K : ι → ℝ) (i : ι) : 0 < gibbsProb K i :=
+  div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)
 
-/-- Normalization of the Gibbs state: ∑_i p_i = 1. -/
 @[simp]
-theorem gibbsProb_sum_one {ι : Type*} [Fintype ι] [Nonempty ι] (K : ι → ℝ) : ∑ i, gibbsProb K i = 1 := by
+theorem gibbsProb_sum_one [Nonempty ι] (K : ι → ℝ) : ∑ i, gibbsProb K i = 1 := by
   dsimp [gibbsProb]
   rw [← sum_div]
   exact div_self (ne_of_gt (partitionZ_pos K))
@@ -65,22 +64,22 @@ PART 2: Free Energy, Internal Energy, and the Identity F = E - S
 -/
 
 /-- The Massieu–Planck / Helmholtz Free Energy: F(K) = - log Z(K). -/
-def freeEnergy {ι : Type*} [Fintype ι] (K : ι → ℝ) : ℝ :=
+def freeEnergy (K : ι → ℝ) : ℝ :=
   - Real.log (partitionZ K)
 
 /-- The Internal Energy Expectation: E(K) = ∑_i p_i * K_i. -/
-def internalEnergy {ι : Type*} [Fintype ι] (K : ι → ℝ) : ℝ :=
+def internalEnergy (K : ι → ℝ) : ℝ :=
   ∑ i, gibbsProb K i * K i
 
 /-- The Gibbs/von Neumann Entropy: S(K) = - ∑_i p_i * log(p_i). -/
-def gibbsEntropy {ι : Type*} [Fintype ι] (K : ι → ℝ) : ℝ :=
+def gibbsEntropy (K : ι → ℝ) : ℝ :=
   - ∑ i, gibbsProb K i * Real.log (gibbsProb K i)
 
 /-- 
   MASTER THEOREM 1 (The Fundamental Thermodynamic Identity F = E - S):
   F(K) = E(K) - S(K)
 -/
-theorem free_energy_eq_energy_sub_entropy {ι : Type*} [Fintype ι] [Nonempty ι] (K : ι → ℝ) :
+theorem free_energy_eq_energy_sub_entropy [Nonempty ι] (K : ι → ℝ) :
     freeEnergy K = internalEnergy K - gibbsEntropy K := by
   dsimp [gibbsEntropy, internalEnergy, freeEnergy, gibbsProb]
   have h_log_p (i : ι) :
@@ -91,7 +90,7 @@ theorem free_energy_eq_energy_sub_entropy {ι : Type*} [Fintype ι] [Nonempty ι
       (∑ i, (Real.exp (-K i) / partitionZ K) * Real.log (Real.exp (-K i) / partitionZ K)) =
         (∑ i, (Real.exp (-K i) / partitionZ K) * (-K i)) - Real.log (partitionZ K) := by
     simp_rw [h_log_p, mul_sub]
-    rw [Finset.sum_sub_distrib, ← Finset.sum_mul]
+    rw [sum_sub_distrib, ← sum_mul]
     have h_p_sum : (∑ i, Real.exp (-K i) / partitionZ K) = 1 := by
       rw [← sum_div]
       exact div_self (ne_of_gt (partitionZ_pos K))
@@ -112,7 +111,6 @@ PART 3: The Variational Principle (Free Energy Minimization)
 =============================================================================
 -/
 
-/-- Standard lower bound for the natural logarithm: 1 - 1/x ≤ log x for x > 0. -/
 lemma log_bound (x : ℝ) (hx : 0 < x) :
     1 - x⁻¹ ≤ Real.log x := by
   have h := Real.log_le_sub_one_of_pos (inv_pos.mpr hx)
@@ -126,8 +124,7 @@ lemma log_bound (x : ℝ) (hx : 0 < x) :
   proving that the physical free energy is the absolute minimum of the
   non-equilibrium free energy functional: F(K) = min_q (E_q - S_q).
 -/
-theorem variational_free_energy_principle
-    {ι : Type*} [Fintype ι] [Nonempty ι]
+theorem variational_free_energy_principle [Nonempty ι]
     (K : ι → ℝ) (q : ι → ℝ)
     (hq_pos : ∀ i, 0 < q i)
     (hq_sum : ∑ i, q i = 1) :
@@ -156,7 +153,7 @@ theorem variational_free_energy_principle
       _ = ∑ i, (q i - p i) := by
         apply sum_congr rfl; intro i _
         rw [mul_div_cancel₀ (p i) (ne_of_gt (hq_pos i))]
-      _ = (∑ i, q i) - (∑ i, p i) := by rw [Finset.sum_sub_distrib]
+      _ = (∑ i, q i) - (∑ i, p i) := by rw [sum_sub_distrib]
       _ = 1 - 1 := by rw [hq_sum, hp_sum]
       _ = 0 := sub_self 1
 
@@ -165,10 +162,8 @@ theorem variational_free_energy_principle
   -- Expand D_KL(q ∥ p) = ∑ q_i * log(q_i / p_i) = - S_q + E_q - F
   have h_expand (i : ι) :
       q i * Real.log (q i / p i) = q i * Real.log (q i) + q i * K i + q i * Real.log (partitionZ K) := by
-    have h_p_val : p i = Real.exp (-K i) / partitionZ K := rfl
-    have h_p_pos : 0 < Real.exp (-K i) / partitionZ K := div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)
-    rw [h_p_val]
-    rw [Real.log_div (ne_of_gt (hq_pos i)) (ne_of_gt h_p_pos)]
+    dsimp [p, gibbsProb]
+    rw [Real.log_div (ne_of_gt (hq_pos i)) (ne_of_gt (div_pos (Real.exp_pos (-K i)) (partitionZ_pos K)))]
     rw [Real.log_div (ne_of_gt (Real.exp_pos (-K i))) (ne_of_gt (partitionZ_pos K))]
     rw [Real.log_exp]
     ring

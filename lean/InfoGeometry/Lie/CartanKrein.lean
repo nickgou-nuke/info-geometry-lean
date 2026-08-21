@@ -1,5 +1,6 @@
 import InfoGeometry.Lie.CartanKreinPolarizationBridge
+import InfoGeometry.Lie.CartanKreinNeutralSignatureBridge
 
 /-!
-Forwarding shim for CartanKrein.
+Forwarding module for CartanKrein.
 -/

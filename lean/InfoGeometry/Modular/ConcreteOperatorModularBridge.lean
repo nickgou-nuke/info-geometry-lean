@@ -76,6 +76,15 @@ theorem concrete_modular_deriv_one
   rw [concrete_modular_deriv_eq_adK]
   exact adK_one M.modularHamiltonian
 
+/-- The concrete modular Hamiltonian has the expected noncommutative
+logarithmic Radon--Nikodym readout on every invertible observable. -/
+theorem concrete_modular_dlog_eq_gauge_shift
+    (M : ModularRadonNikodymData E) (u : (EndH E)ˣ) :
+    dlogL (adK M.modularHamiltonian) u =
+      (↑(u⁻¹) : EndH E) * M.modularHamiltonian * (u : EndH E) -
+        M.modularHamiltonian := by
+  exact dlogL_adK M.modularHamiltonian u
+
 /--
   🏆 THEOREM 4: Master Intertwiner between Outer Derivations and Concrete Modular Flow.
   [D, d/dτ σ_τ](A) = ad_{D(K)}(A)

@@ -7390,6 +7390,7 @@ import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.NCG.DualExponentialTrifoldBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
+import InfoGeometry.Modular.GrandUnifiedModularSynthesis
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Probability.ExpLogRNDerivation
@@ -7476,6 +7477,7 @@ import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
 import InfoGeometry.Algebra.SplitAlbertF4Classification
 import InfoGeometry.Canonical.UHFModularColimit
 import InfoGeometry.Modular.KMSColimitExtension
+import InfoGeometry.Modular.NoncommutativeModularRadonSurprisalBridge
 import InfoGeometry.InformationGeometry.ArakiDonaldVariational
 import InfoGeometry.InformationGeometry.BKMBipartiteTensor
 import InfoGeometry.Arithmetic.ChebyshevPrimeEnergyBound

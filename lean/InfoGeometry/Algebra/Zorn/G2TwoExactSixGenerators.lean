@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import Mathlib.Tactic
 
@@ -7,6 +8,7 @@ set_option maxHeartbeats 1000000
 namespace InfoGeometry.Algebra.Zorn.G2TwoExactSixGenerators
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
 open scoped BigOperators
@@ -117,7 +119,7 @@ theorem g1_mul (X Y : SplitOctF2) : g1 (mul X Y) = mul (g1 X) (g1 Y) := by
   all_goals
     simp only [g1, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+    ring_nf <;> try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 
 theorem g2_mul (X Y : SplitOctF2) : g2 (mul X Y) = mul (g2 X) (g2 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
@@ -125,6 +127,42 @@ theorem g2_mul (X Y : SplitOctF2) : g2 (mul X Y) = mul (g2 X) (g2 Y) := by
   ext <;> rw [← bitToF2_eq_iff]
   all_goals
     simp only [g2, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_xor, bitToF2_and]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+
+theorem g3_mul (X Y : SplitOctF2) : g3 (mul X Y) = mul (g3 X) (g3 Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> rw [← bitToF2_eq_iff]
+  all_goals
+    simp only [g3, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_xor, bitToF2_and]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+
+theorem g4_mul (X Y : SplitOctF2) : g4 (mul X Y) = mul (g4 X) (g4 Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> rw [← bitToF2_eq_iff]
+  all_goals
+    simp only [g4, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_xor, bitToF2_and]
+    ring_nf <;> try simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+
+theorem g5_mul (X Y : SplitOctF2) : g5 (mul X Y) = mul (g5 X) (g5 Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> rw [← bitToF2_eq_iff]
+  all_goals
+    simp only [g5, mul, add2, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_xor, bitToF2_and]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+
+theorem g6_mul (X Y : SplitOctF2) : g6 (mul X Y) = mul (g6 X) (g6 Y) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  ext <;> rw [← bitToF2_eq_iff]
+  all_goals
+    simp only [g6, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
     ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
 

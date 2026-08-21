@@ -80,20 +80,37 @@ Print("PC collector/chart/closure checks: PASS (", Length(Set(pc_words)),
   " coordinate words; ", Length(pc_words)^2, " products)\n");
 
 # Export the carrier matrices of the PC generators for symbolic Lean alignment.
-for i in [1..Length(preimages)] do
-  mat := preimages[i];
-  columns := List([1..8], function(col)
+columnSupports := function(mat)
+  local col;
+  return List([1..8], function(col)
     local row;
     return Filtered([1..8], function(row)
       return mat[row][col] <> Zero(GF(2));
     end);
   end);
-  Print("p", i, " column supports = ", columns, "\n");
-  rows := List([1..8], function(row)
+end;
+rowSupports := function(mat)
+  local row;
+  return List([1..8], function(row)
     local col;
     return Filtered([1..8], function(col)
       return mat[row][col] <> Zero(GF(2));
     end);
   end);
+end;
+for i in [1..Length(preimages)] do
+  mat := preimages[i];
+  columns := columnSupports(mat);
+  Print("p", i, " column supports = ", columns, "\n");
+  rows := rowSupports(mat);
   Print("p", i, " row formulas = ", rows, "\n");
+  Print("PCROW ", i, " ");
+  for r in [1..8] do
+    for c in [1..Length(rows[r])] do
+      Print(rows[r][c]);
+      if c < Length(rows[r]) then Print(","); fi;
+    od;
+    if r < 8 then Print(";"); fi;
+  od;
+  Print("\n");
 od;

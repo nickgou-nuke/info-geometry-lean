@@ -308,6 +308,21 @@ theorem weylNF_mul_rot_rot (k l : ZMod 6) :
     weylNF k false * weylNF l false = weylNF (k + l) false := by
   simp [weylNF, c_pow_add_mod, ZMod.val_add]
 
+theorem weylNF_mul_refl_rot (k l : ZMod 6) :
+    weylNF k true * weylNF l false = weylNF (k + l) true := by
+  simp [weylNF, c_pow_add_mod, ZMod.val_add, mul_assoc]
+
+theorem weylNF_mul_rot_refl_exists (k l : ZMod 6) :
+    ∃ m : ZMod 6,
+      weylNF k false * weylNF l true = weylNF m true := by
+  let i : Fin 6 := ⟨k.val, k.isLt⟩
+  let j : Fin 6 := ⟨l.val, l.isLt⟩
+  let m : ZMod 6 :=
+    (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6 : ℕ)
+  refine ⟨m, ?_⟩
+  simpa [weylNF, m, i, j, c_pow_mod] using
+    (c_pow_mul_s_mul_c_pow i j)
+
 noncomputable instance : Finite weylG2Subgroup :=
   Finite.of_injective Subtype.val Subtype.val_injective
 

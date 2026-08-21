@@ -76,4 +76,19 @@ theorem recover1_word (e : PCWordExp) :
   simp only [bitToF2_map_ite, bitToF2_xor, bitToF2_and]
   ring
 
+def recover2 (M : Matrix (Fin 8) (Fin 8) F2) : F2 :=
+  M 0 1 + M 0 2 + M 0 4 + M 0 6 + M 1 2 + M 1 4 + M 2 1 + M 2 7 +
+    M 3 5 + M 3 7 + M 0 0 * M 0 2 + M 0 0 * M 0 3 + M 0 0 * M 0 4 +
+    M 0 1 * M 0 3 + M 0 2 * M 0 4
+
+theorem recover2_word (e : PCWordExp) :
+    recover2 (fun i j => wordEntry e i j) = bitToF2 (e 2) := by
+  dsimp [recover2, wordEntry, pcWordFun, pcTermFun]
+  simp only [carrierToVec_zero, carrierToVec_one, carrierToVec_x0,
+    carrierToVec_x1, carrierToVec_x2, carrierToVec_y0,
+    carrierToVec_y1, carrierToVec_y2]
+  simp only [pc1Fun, pc2Fun, pc3Fun, pc4Fun, pc5Fun, pc6Fun]
+  simp only [bitToF2_map_ite, bitToF2_xor, bitToF2_and]
+  ring
+
 end InfoGeometry.Algebra.Zorn.G2TwoPCRecovery

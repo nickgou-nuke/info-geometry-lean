@@ -143,27 +143,29 @@ theorem simple_root_generators_distinct :
   revert h_apply
   decide
 
-theorem simple_root_product_pow_four :
-    (unipotentShortAut true * unipotentLongAut true) ^ 4 =
-      (1 : SplitOctF2Aut) := by
-  apply Subtype.ext
-  apply Equiv.ext
-  intro X
-  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  revert a b x0 x1 x2 y0 y1 y2
-  decide
-
-theorem simple_root_product_sq_ne_one :
-    (unipotentShortAut true * unipotentLongAut true) ^ 2 ≠
-      (1 : SplitOctF2Aut) := by
-  intro h
-  have h_apply := congrArg
-    (fun f : SplitOctF2Aut => (f.1 up2).x0) h
-  revert h_apply
-  decide
-
 def conjugateAut (g u : SplitOctF2Aut) : SplitOctF2Aut :=
   g * u * g⁻¹
+
+def automorphismCommutator (g h : SplitOctF2Aut) : SplitOctF2Aut :=
+  g * h * g⁻¹ * h⁻¹
+
+theorem automorphismCommutator_eq_one_iff (g h : SplitOctF2Aut) :
+    automorphismCommutator g h = 1 ↔ g * h = h * g := by
+  constructor
+  · intro hc
+    have hc' := congrArg (fun z : SplitOctF2Aut => z * h * g) hc
+    simpa [automorphismCommutator, mul_assoc] using hc'
+  · intro hcomm
+    calc
+      automorphismCommutator g h = (g * h) * (g⁻¹ * h⁻¹) := by
+        simp [automorphismCommutator, mul_assoc]
+      _ = (h * g) * (g⁻¹ * h⁻¹) := by rw [hcomm]
+      _ = 1 := by group
+
+theorem conjugateAut_commutator (k g h : SplitOctF2Aut) :
+    automorphismCommutator (conjugateAut k g) (conjugateAut k h) =
+      conjugateAut k (automorphismCommutator g h) := by
+  simp [automorphismCommutator, conjugateAut, mul_assoc]
 
 theorem conjugateAut_sq (g u : SplitOctF2Aut) (hu : u * u = 1) :
     conjugateAut g u * conjugateAut g u = 1 := by
@@ -305,6 +307,18 @@ theorem cycleConjugatedLongParam_add (i : Fin 3) (s t : Bool) :
   · simp [cycleConjugatedLongParam]
   · simpa [cycleConjugatedLongParam] using
       (cycleConjugatedLong_packet i).1.symm
+
+theorem cycleConjugatedShortParam_comm (i : Fin 3) (s t : Bool) :
+    cycleConjugatedShortParam i s * cycleConjugatedShortParam i t =
+      cycleConjugatedShortParam i t * cycleConjugatedShortParam i s := by
+  rw [← cycleConjugatedShortParam_add, ← cycleConjugatedShortParam_add,
+    Bool.xor_comm]
+
+theorem cycleConjugatedLongParam_comm (i : Fin 3) (s t : Bool) :
+    cycleConjugatedLongParam i s * cycleConjugatedLongParam i t =
+      cycleConjugatedLongParam i t * cycleConjugatedLongParam i s := by
+  rw [← cycleConjugatedLongParam_add, ← cycleConjugatedLongParam_add,
+    Bool.xor_comm]
 
 def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure

@@ -3449,6 +3449,7 @@ import InfoGeometry.Canonical.SplitOctonionBdGBridge
 import InfoGeometry.Canonical.SplitOctonionBdGTensorProduct
 import InfoGeometry.Canonical.SplitOctonionCanonicalThreeForm
 import InfoGeometry.Canonical.SplitOctonionChiralClosure
+import InfoGeometry.Canonical.SplitOctonionDerivationSpinRep
 import InfoGeometry.Canonical.SplitOctonionChiralFrame
 import InfoGeometry.Canonical.SplitOctonionChiralPeirceSoldering
 import InfoGeometry.Canonical.SplitOctonionChiralReflectionBridge

@@ -166,6 +166,30 @@ theorem swapConjugatedLong_add (s t : Bool) :
   exact conjugateAut_add swap01Aut unipotentLongAut
     unipotentLongAut_add s t
 
+def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure
+    ({unipotentShortAut true, unipotentLongAut true} : Set SplitOctF2Aut)
+
+theorem simpleRootSubgroup_short_mem :
+    unipotentShortAut true ∈ simpleRootSubgroup := by
+  exact Subgroup.subset_closure (by simp [simpleRootSubgroup])
+
+theorem simpleRootSubgroup_long_mem :
+    unipotentLongAut true ∈ simpleRootSubgroup := by
+  exact Subgroup.subset_closure (by simp [simpleRootSubgroup])
+
+theorem simpleRootSubgroup_contains_product :
+    unipotentShortAut true * unipotentLongAut true ∈ simpleRootSubgroup := by
+  exact simpleRootSubgroup.mul_mem
+    simpleRootSubgroup_short_mem simpleRootSubgroup_long_mem
+
+def fourRootSubgroupWords : Fin 4 → simpleRootSubgroup
+  | 0 => ⟨1, simpleRootSubgroup.one_mem⟩
+  | 1 => ⟨unipotentShortAut true, simpleRootSubgroup_short_mem⟩
+  | 2 => ⟨unipotentLongAut true, simpleRootSubgroup_long_mem⟩
+  | 3 => ⟨unipotentShortAut true * unipotentLongAut true,
+    simpleRootSubgroup_contains_product⟩
+
 private lemma short_mul_long_ne_one :
     unipotentShortAut true * unipotentLongAut true ≠ (1 : SplitOctF2Aut) := by
   intro h
@@ -190,6 +214,37 @@ private lemma short_mul_long_ne_long :
     (fun z : SplitOctF2Aut => z * unipotentLongAut true) h
   apply unipotentShortAut_true_ne_one
   simpa [mul_assoc, unipotentLongAut_order true] using h'
+
+theorem fourRootSubgroupWords_injective :
+    Function.Injective fourRootSubgroupWords := by
+  intro i j h
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    have h' := congrArg (fun z : simpleRootSubgroup => (z : SplitOctF2Aut)) h
+    dsimp [fourRootSubgroupWords] at h'
+    first
+    | exact False.elim (unipotentShortAut_true_ne_one h')
+    | exact False.elim (unipotentShortAut_true_ne_one h'.symm)
+    | exact False.elim (unipotentLongAut_true_ne_one h')
+    | exact False.elim (unipotentLongAut_true_ne_one h'.symm)
+    | exact False.elim (simple_root_generators_distinct h')
+    | exact False.elim (simple_root_generators_distinct h'.symm)
+    | exact False.elim (short_mul_long_ne_one h')
+    | exact False.elim (short_mul_long_ne_one h'.symm)
+    | exact False.elim (short_mul_long_ne_short h')
+    | exact False.elim (short_mul_long_ne_short h'.symm)
+    | exact False.elim (short_mul_long_ne_long h')
+    | exact False.elim (short_mul_long_ne_long h'.symm)
+
+noncomputable instance : Fintype simpleRootSubgroup := Fintype.ofFinite _
+
+theorem simpleRootSubgroup_card_lower_bound :
+    4 ≤ Fintype.card simpleRootSubgroup := by
+  have hc : Fintype.card (Fin 4) ≤ Fintype.card simpleRootSubgroup :=
+    Fintype.card_le_of_injective fourRootSubgroupWords
+      fourRootSubgroupWords_injective
+  simpa using hc
 
 def fourRootWords : Fin 4 → SplitOctF2Aut
   | 0 => 1

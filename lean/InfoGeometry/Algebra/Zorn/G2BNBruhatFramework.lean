@@ -194,4 +194,14 @@ theorem weyl_length_enumerator_at_two_eq_189 :
     (1 + 2) * (1 + 2 + 2^2 + 2^3 + 2^4 + 2^5) = 189 := by
   norm_num
 
+/-- 🏆 THEOREM: The Bruhat product of the 64-element Borel weight with the 189 Poincaré evaluation yields 12096. -/
+theorem bruhat_borel_product_order :
+    64 * 189 = 12096 := by
+  norm_num
+
+/-- 🏆 THEOREM: The cyclotomic factorization of the 12096 order via Φ₂² Φ₃ Φ₆ at q = 2. -/
+theorem bruhat_borel_cyclotomic_factorization :
+    64 * ((2 + 1)^2 * (2^2 + 2 + 1) * (2^2 - 2 + 1)) = 12096 := by
+  norm_num
+
 end InfoGeometry.Algebra.Zorn.G2BNBruhatFramework

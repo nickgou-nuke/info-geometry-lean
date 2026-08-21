@@ -508,6 +508,58 @@ noncomputable def unipotentWord6 (b : Fin 6 → Bool) : SplitOctF2Aut :=
   positiveRootAction 4 (b 4) *
   positiveRootAction 5 (b 5)
 
+theorem unipotentWord6_b0 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up1).x0 = b 0 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b1 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down1).y2 = b 1 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b2 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up2).x0 = b 2 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b3 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down2).y0 = b 3 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b4 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up0).x1 = b 4 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b5 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down2).y1 = b 5 := by
+  revert b
+  decide
+
+theorem unipotentWord6_injective : Function.Injective unipotentWord6 := by
+  intro b c h
+  ext i
+  fin_cases i
+  · have h0 : ((unipotentWord6 b).1 up1).x0 = ((unipotentWord6 c).1 up1).x0 := by rw [h]
+    rw [unipotentWord6_b0 b, unipotentWord6_b0 c] at h0
+    exact h0
+  · have h1 : ((unipotentWord6 b).1 down1).y2 = ((unipotentWord6 c).1 down1).y2 := by rw [h]
+    rw [unipotentWord6_b1 b, unipotentWord6_b1 c] at h1
+    exact h1
+  · have h2 : ((unipotentWord6 b).1 up2).x0 = ((unipotentWord6 c).1 up2).x0 := by rw [h]
+    rw [unipotentWord6_b2 b, unipotentWord6_b2 c] at h2
+    exact h2
+  · have h3 : ((unipotentWord6 b).1 down2).y0 = ((unipotentWord6 c).1 down2).y0 := by rw [h]
+    rw [unipotentWord6_b3 b, unipotentWord6_b3 c] at h3
+    exact h3
+  · have h4 : ((unipotentWord6 b).1 up0).x1 = ((unipotentWord6 c).1 up0).x1 := by rw [h]
+    rw [unipotentWord6_b4 b, unipotentWord6_b4 c] at h4
+    exact h4
+  · have h5 : ((unipotentWord6 b).1 down2).y1 = ((unipotentWord6 c).1 down2).y1 := by rw [h]
+    rw [unipotentWord6_b5 b, unipotentWord6_b5 c] at h5
+    exact h5
 
 theorem positiveRootAction_mem_positiveRootSubgroup (i : Fin 6) (t : Bool) :
     positiveRootAction i t ∈ positiveRootSubgroup := by
@@ -529,5 +581,42 @@ theorem unipotentWord6_mem_positiveRootSubgroup (b : Fin 6 → Bool) :
         (positiveRootAction_mem_positiveRootSubgroup 3 (b 3)))
       (positiveRootAction_mem_positiveRootSubgroup 4 (b 4)))
     (positiveRootAction_mem_positiveRootSubgroup 5 (b 5))
+
+theorem unipotentWord6_injective_of_coordinate_separators
+    (h0 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 up1).x0 = b 0)
+    (h1 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 down1).y2 = b 1)
+    (h2 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 up2).x0 = b 2)
+    (h3 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 down2).y0 = b 3)
+    (h4 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 up0).x1 = b 4)
+    (h5 : ∀ b : Fin 6 → Bool, ((unipotentWord6 b).1 down2).y1 = b 5) :
+    Function.Injective unipotentWord6 := by
+  intro b c h
+  funext i
+  fin_cases i
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 up1).x0) h
+    simpa [h0 b, h0 c] using q
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 down1).y2) h
+    simpa [h1 b, h1 c] using q
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 up2).x0) h
+    simpa [h2 b, h2 c] using q
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 down2).y0) h
+    simpa [h3 b, h3 c] using q
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 up0).x1) h
+    simpa [h4 b, h4 c] using q
+  · have q := congrArg (fun f : SplitOctF2Aut => (f.1 down2).y1) h
+    simpa [h5 b, h5 c] using q
+
+
+/-- 🏆 THEOREM: The positive root subgroup has cardinality at least 64! -/
+theorem positiveRootSubgroup_card_ge_64 :
+    64 ≤ Fintype.card positiveRootSubgroup := by
+  have hinj : Function.Injective (fun b : Fin 6 → Bool => (⟨unipotentWord6 b, unipotentWord6_mem_positiveRootSubgroup b⟩ : positiveRootSubgroup)) := by
+    intro x y hxy
+    have hval : unipotentWord6 x = unipotentWord6 y := Subtype.ext_iff.mp hxy
+    exact unipotentWord6_injective hval
+  have hle := Fintype.card_le_of_injective _ hinj
+  have hcard : Fintype.card (Fin 6 → Bool) = 64 := by decide
+  rw [hcard] at hle
+  exact hle
 
 end InfoGeometry.Algebra.Zorn.G2SteinbergRoots

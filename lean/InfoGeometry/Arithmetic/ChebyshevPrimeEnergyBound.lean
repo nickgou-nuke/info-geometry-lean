@@ -130,6 +130,31 @@ theorem chebyshev_interval_energy_bound
   rw [← h_log_prod] at h_log_le
   linarith
 
+/-- The divisibility form used for prime divisors of the central binomial
+coefficient.  The arithmetic hypothesis is kept explicit: the logarithmic
+bound itself only needs the resulting product inequality. */
+theorem chebyshev_theta_le_of_prod_dvd
+    (n : ℕ) (P : Finset ℕ)
+    (h_pos : ∀ p ∈ P, 0 < (p : ℝ))
+    (h_dvd : (∏ p ∈ P, p) ∣ Nat.choose (2 * n) n) :
+    chebyshevTheta P ≤ (n : ℝ) * Real.log 4 := by
+  have h_prod_nat_pos : 0 < ∏ p ∈ P, p := by
+    apply Finset.prod_pos
+    intro p hp
+    have hp' : 0 < p := by
+      exact_mod_cast h_pos p hp
+    exact hp'
+  have h_choose_pos : 0 < Nat.choose (2 * n) n := by
+    apply Nat.choose_pos
+    have : n ≤ 2 * n := by omega
+    exact this
+  have h_prod_nat_le : (∏ p ∈ P, p) ≤ Nat.choose (2 * n) n :=
+    Nat.le_of_dvd h_choose_pos h_dvd
+  have h_prod_le : (∏ p ∈ P, (p : ℝ)) ≤ (Nat.choose (2 * n) n : ℝ) := by
+    norm_cast
+    exact h_prod_nat_le
+  exact chebyshev_interval_energy_bound n P h_pos h_prod_le
+
 /-- 
   MASTER THEOREM 2: Chebyshev Prime Energy Dominance Bound.
   For any prime subset P whose product is bounded by M:

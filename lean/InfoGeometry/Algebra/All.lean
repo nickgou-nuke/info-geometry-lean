@@ -245,6 +245,7 @@ import InfoGeometry.Algebra.SplitOctonionPeirceExteriorBridge
 import InfoGeometry.Algebra.BaezG2DerivationExponentialBridge
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
+import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
 /-!
 # InfoGeometry.Algebra.All
 

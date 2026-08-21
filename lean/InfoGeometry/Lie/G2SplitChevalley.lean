@@ -48,6 +48,17 @@ theorem simple_root_generators_are_distinct :
     unipotentShortAut true ≠ unipotentLongAut true := by
   exact InfoGeometry.Algebra.Zorn.G2Unipotent.simple_root_generators_distinct
 
+theorem simple_root_parameter_laws (s t : Bool) :
+    unipotentShortAut (s ^^ t) =
+        unipotentShortAut s * unipotentShortAut t ∧
+    unipotentLongAut (s ^^ t) =
+        unipotentLongAut s * unipotentLongAut t := by
+  exact ⟨unipotentShortAut_add s t, unipotentLongAut_add s t⟩
+
+theorem finite_g2_carrier_has_four_distinct_words :
+    4 ≤ Fintype.card FiniteChevalleyG2 := by
+  exact finite_g2_carrier_card_lower_bound
+
 theorem finite_chevalley_order_conditional
     (h : Fintype.card FiniteChevalleyG2 = 12096) :
     Fintype.card FiniteChevalleyG2 = 12096 := h

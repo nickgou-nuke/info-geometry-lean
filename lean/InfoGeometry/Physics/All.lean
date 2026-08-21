@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.ZornBdGSuperconductingExponentialBridge
+import InfoGeometry.Physics.SplitOctonionDerivationSpinRep
 import InfoGeometry.Physics.GogberashviliNilpotentCARBridge
 import InfoGeometry.Physics.Cl11ChiralCARBridge
 import InfoGeometry.Physics.ChiralSpinorFierzBridge

@@ -7449,5 +7449,5 @@ import InfoGeometry.QuantumGeometry.TangentCotangentSymplecticBridge
 import InfoGeometry.QuantumGeometry.KahlerSouriauInformationBridge
 import InfoGeometry.Modular.GKSLDissipatorAlgebraic
 import InfoGeometry.Modular.SchrodingerGKSL
-import InfoGeometry.Modular.ChoiJamiolkowskiCompletePositivity
+import InfoGeometry.Modular.ChoiCompletePositivity
 

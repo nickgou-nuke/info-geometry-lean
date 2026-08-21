@@ -1,72 +1,39 @@
-import Mathlib.Algebra.Ring.Basic
+import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 
-/-!
-# The Berry–Keating Dilation Hamiltonian and Riemann Critical-Line Symmetry
-
-This module formalizes:
-1. The Symmetrized Berry–Keating Dilation Hamiltonian:
-     Ĥ_BK(D, K) = (1/2) • (Q̂(K) P̂(D) + P̂(D) Q̂(K))
-2. Exact Normal-Ordering Resolution:
-     Ĥ_BK(D, K) X = K * D(X) + (1/2) • (D(K) * X)
-3. The Dilation Commutator:
-     [Ĥ_BK(D, 1), Q̂(Y)] = Q̂(D(Y))
-4. The Critical Line Spectral Cancellation:
-     On scaling modes D(X) = s * X, the shifted Hamiltonian
-     Ĥ_symm X = (s + 1/2) • X cancels the -1/2 real shift on s = -1/2 + iE,
-     leaving purely real eigenvalues on the critical line Re(s) = 1/2.
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
--/
-
 noncomputable section
+
+open Complex
 
 namespace InfoGeometry.QuantumGeometry.BerryKeating
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [Algebra ℂ A]
 
-/-!
-=============================================================================
-PART 1: Bundled Derivations and Phase Space Operators
-=============================================================================
--/
+/-- A complex-linear derivation on an associative algebra A. -/
+structure ComplexDerivation (A : Type*) [Ring A] [Algebra ℂ A] where
+  toLinearMap : A →ₗ[ℂ] A
+  leibniz' : ∀ x y : A, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
 
-structure Derivation (A : Type*) [Ring A] where
-  toFun : A → A
-  map_add' : ∀ x y, toFun (x + y) = toFun x + toFun y
-  leibniz' : ∀ x y, toFun (x * y) = toFun x * y + x * toFun y
+namespace ComplexDerivation
 
-instance : CoeFun (Derivation A) (fun _ => A → A) where
-  coe D := D.toFun
+instance : CoeFun (ComplexDerivation A) (fun _ => A → A) where
+  coe D := D.toLinearMap
 
-namespace Derivation
+variable (D : ComplexDerivation A)
 
-variable (D : Derivation A)
-
-@[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.map_add' x y
+@[simp] theorem map_add (x y : A) : D (x + y) = D x + D y := D.toLinearMap.map_add x y
+@[simp] theorem map_smul (c : ℂ) (x : A) : D (c • x) = c • D x := D.toLinearMap.map_smul c x
 @[simp] theorem leibniz (x y : A) : D (x * y) = D x * y + x * D y := D.leibniz' x y
 
 @[simp]
-theorem map_zero : D 0 = 0 := by
-  have h : D 0 = D 0 + D 0 := by
-    calc D 0 = D (0 + 0) := by rw [add_zero]
-    _ = D 0 + D 0 := D.map_add' 0 0
-  have h1 : D 0 - D 0 = (D 0 + D 0) - D 0 := congr_arg (fun x => x - D 0) h
-  rw [sub_self, add_sub_cancel_right] at h1
-  exact h1.symm
+theorem map_zero : D 0 = 0 := D.toLinearMap.map_zero
 
 @[simp]
-theorem map_neg (x : A) : D (-x) = - D x := by
-  have h : D (x + -x) = D x + D (-x) := D.map_add x (-x)
-  rw [add_neg_cancel, D.map_zero] at h
-  have h_neg : - D x = - D x + (D x + D (-x)) := by rw [← h, add_zero]
-  rw [← add_assoc, neg_add_cancel, zero_add] at h_neg
-  exact h_neg.symm
+theorem map_neg (x : A) : D (-x) = - D x := D.toLinearMap.map_neg x
 
 @[simp]
-theorem map_sub (x y : A) : D (x - y) = D x - D y := by
-  rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
+theorem map_sub (x y : A) : D (x - y) = D x - D y := D.toLinearMap.map_sub x y
 
 @[simp]
 theorem map_one : D 1 = 0 := by
@@ -79,114 +46,187 @@ theorem map_one : D 1 = 0 := by
   rw [sub_self, add_sub_cancel_right] at h2
   exact h2.symm
 
-end Derivation
+end ComplexDerivation
 
 /-- Coordinate multiplication operator: Q̂(K) X = K * X. -/
 def opQ (K X : A) : A :=
   K * X
 
-/-- Momentum derivation operator: P̂(D) X = D(X). -/
-def opP (D : Derivation A) (X : A) : A :=
-  D X
-
 /-- General commutator of operators on A. -/
 def opComm (T₁ T₂ : A → A) (X : A) : A :=
   T₁ (T₂ X) - T₂ (T₁ X)
 
-/-!
-=============================================================================
-PART 2: The Symmetrized Berry–Keating Dilation Hamiltonian
-=============================================================================
--/
-
 /--
-  The Symmetrized Berry–Keating Hamiltonian:
-  Ĥ_BK(D, K) = (1/2) • (Q̂(K) P̂(D) + P̂(D) Q̂(K))
+  The Dimensionless Symmetrized Berry–Keating Dilation Operator:
+  B_{D, K}(X) = (1/2) • (K * D(X) + D(K * X))
 -/
-def opH_BK (half : A) (D : Derivation A) (K X : A) : A :=
-  half * (opQ K (opP D X) + opP D (opQ K X))
+def dimensionlessBK (D : ComplexDerivation A) (K X : A) : A :=
+  (1 / 2 : ℂ) • (K * D X + D (K * X))
 
 /--
   THEOREM 1 (Normal-Ordering Resolution):
-  Ĥ_BK(D, K) X = K * D(X) + (1/2) * (D(K) * X)
-
-  The symmetrized quantum Hamiltonian resolves into the classical scaling term
-  plus a quantum zero-point correction proportional to the derivative D(K).
+  B_{D, K}(X) = K * D(X) + (1/2) • (D(K) * X)
 -/
-theorem opH_BK_normal_ordered
-    (half : A) (h_half : (2 : A) * half = 1)
-    (h_half_comm : ∀ x : A, half * x = x * half)
-    (D : Derivation A) (K X : A) :
-    opH_BK half D K X = K * D X + half * (D K * X) := by
-  dsimp [opH_BK, opQ, opP]
+theorem dimensionlessBK_normal_ordered
+    (D : ComplexDerivation A) (K X : A) :
+    dimensionlessBK D K X = K * D X + (1 / 2 : ℂ) • (D K * X) := by
+  dsimp [dimensionlessBK]
   rw [D.leibniz K X]
-  have h_sum : K * D X + (D K * X + K * D X) = (2 : A) * (K * D X) + D K * X := by
+  have h_sum : K * D X + (D K * X + K * D X) = (2 : ℂ) • (K * D X) + D K * X := by
     calc
       K * D X + (D K * X + K * D X) = (K * D X + K * D X) + D K * X := by abel
-      _ = (2 : A) * (K * D X) + D K * X := by
-        have h2 : (2 : A) * (K * D X) = K * D X + K * D X := by
-          rw [two_mul]
-        rw [h2]
-  rw [h_sum, mul_add]
-  have h_two : half * ((2 : A) * (K * D X)) = K * D X := by
-    calc
-      half * ((2 : A) * (K * D X)) = (half * (2 : A)) * (K * D X) := (mul_assoc _ _ _).symm
-      _ = ((2 : A) * half) * (K * D X) := by rw [h_half_comm]
-      _ = 1 * (K * D X) := by rw [h_half]
-      _ = K * D X := one_mul _
-  rw [h_two]
+      _ = (2 : ℂ) • (K * D X) + D K * X := by
+        rw [two_smul]
+  rw [h_sum, smul_add]
+  have h_half_two : (1 / 2 : ℂ) • (2 : ℂ) • (K * D X) = K * D X := by
+    rw [smul_smul]
+    have h_prod : (1 / 2 : ℂ) * 2 = 1 := by ring
+    rw [h_prod, one_smul]
+  rw [h_half_two]
 
 /--
-  THEOREM 2 (The Scaling Commutator):
-  For K = 1, [Ĥ_BK(D, 1), Q̂(Y)] = Q̂(D(Y)).
-  The Hamiltonian generates dilation translations on coordinate fields.
+  THEOREM 2 (Berry–Keating Specialization D(K) = 1):
+  When D is a translation derivative with canonical coordinate K (D(K) = 1),
+  the dilation operator reduces to the Euler generator Θ = K * D plus the half-density shift:
+    B_{D, K}(X) = K * D(X) + (1/2) • X
 -/
-theorem opH_BK_comm_coordinate
-    (half : A) (h_half : (2 : A) * half = 1)
-    (h_half_comm : ∀ x : A, half * x = x * half)
-    (D : Derivation A) (Y X : A) :
-    opComm (opH_BK half D 1) (opQ Y) X = opQ (D Y) X := by
+theorem dimensionlessBK_eq_euler_add_half
+    (D : ComplexDerivation A) (K X : A) (hDK : D K = 1) :
+    dimensionlessBK D K X = K * D X + (1 / 2 : ℂ) • X := by
+  rw [dimensionlessBK_normal_ordered, hDK, one_mul]
+
+/--
+  THEOREM 3 (Derivation-Coordinate Commutator):
+  [D, Q̂(Y)] X = Q̂(D(Y)) X = D(Y) * X
+-/
+theorem derivation_comm_coordinate
+    (D : ComplexDerivation A) (Y X : A) :
+    opComm (fun Z => D Z) (opQ Y) X = opQ (D Y) X := by
   dsimp [opComm, opQ]
-  rw [opH_BK_normal_ordered half h_half h_half_comm D 1 (Y * X)]
-  rw [opH_BK_normal_ordered half h_half h_half_comm D 1 X]
-  rw [D.map_one]
-  simp only [zero_mul, mul_zero, add_zero, one_mul]
   rw [D.leibniz Y X]
   abel
 
+/--
+  THEOREM 4 (Berry–Keating Scaling Commutator):
+  When D(K) = 1, the dilation operator satisfies the fundamental scaling commutation relation:
+    [B_{D, K}, Q̂(K)] X = Q̂(K) X = K * X
+-/
+theorem dimensionlessBK_comm_coordinate
+    (D : ComplexDerivation A) (K X : A) (hDK : D K = 1) :
+    opComm (fun Z => dimensionlessBK D K Z) (opQ K) X = opQ K X := by
+  dsimp [opComm, opQ]
+  rw [dimensionlessBK_eq_euler_add_half D K (K * X) hDK,
+      dimensionlessBK_eq_euler_add_half D K X hDK]
+  rw [D.leibniz K X, hDK, one_mul]
+  have h_dist : K * (X + K * D X) = K * X + K * (K * D X) := by
+    rw [mul_add]
+  rw [h_dist]
+  have h_smul : (1 / 2 : ℂ) • (K * X) = K * ((1 / 2 : ℂ) • X) := by
+    rw [Algebra.mul_smul_comm]
+  calc
+    (K * X + K * (K * D X) + (1 / 2 : ℂ) • (K * X)) - K * (K * D X + (1 / 2 : ℂ) • X)
+      = (K * X + K * (K * D X) + (1 / 2 : ℂ) • (K * X)) - (K * (K * D X) + K * ((1 / 2 : ℂ) • X)) := by rw [mul_add]
+    _ = K * X := by
+      rw [h_smul]
+      abel
+
+/--
+  THEOREM 5 (Dimensionless Eigenmode Shift):
+  On an Euler eigenmode K * D(X) = α • X with canonical coordinate D(K) = 1:
+    B_{D, K}(X) = (α + 1/2) • X
+-/
+theorem dimensionlessBK_eigenmode
+    (D : ComplexDerivation A) (K X : A) (α : ℂ)
+    (hDK : D K = 1) (h_eigen : K * D X = α • X) :
+    dimensionlessBK D K X = (α + 1 / 2 : ℂ) • X := by
+  rw [dimensionlessBK_eq_euler_add_half D K X hDK, h_eigen, add_smul]
+
 /-!
 =============================================================================
-PART 3: The Riemann Critical Line Spectral Cancellation
+PART 3: Critical-Line Variable Identification & Real Energy Spectrum
 =============================================================================
 -/
 
-/--
-  The Symmetrized Shifted Dilation Operator:
-  Ĥ_symm X = D(X) + (1/2) • X
--/
-def opH_symm (half : A) (D : Derivation A) (X : A) : A :=
-  D X + half * X
+/-- The Riemann critical parameter s_ζ = 1/2 + i (E / ℏ). -/
+def criticalParameter (E hbar : ℝ) : ℂ :=
+  (1 / 2 : ℂ) + I * (E / hbar : ℂ)
+
+/-- The associated generalized Mellin scaling exponent α = s_ζ - 1 = -1/2 + i (E / ℏ). -/
+def criticalMellinExponent (E hbar : ℝ) : ℂ :=
+  criticalParameter E hbar - 1
+
+/-- Complex scalar representing real energy E. -/
+def realEnergyScalar (E : ℝ) : ℂ :=
+  (E : ℂ)
+
+@[simp]
+theorem criticalParameter_re (E hbar : ℝ) :
+    (criticalParameter E hbar).re = 1 / 2 := by
+  dsimp [criticalParameter]
+  simp
+
+@[simp]
+theorem criticalParameter_im (E hbar : ℝ) :
+    (criticalParameter E hbar).im = E / hbar := by
+  dsimp [criticalParameter]
+  simp
+
+theorem criticalMellinExponent_eq (E hbar : ℝ) :
+    criticalMellinExponent E hbar = (-1 / 2 : ℂ) + I * (E / hbar : ℂ) := by
+  dsimp [criticalMellinExponent, criticalParameter]
+  ring
 
 /--
-  THEOREM 3 (Critical Line Spectral Cancellation):
-  Let X be a scaling eigenmode: D(X) = s * X.
-  If s = -half + E (the critical line parameterization Re(s) = -1/2 + iE),
-  then the shifted eigenvalue is identically E:
-    Ĥ_symm X = E * X
-
-  The geometric half-weight (+1/2) exactly cancels the critical-line shift (-1/2).
+  THEOREM 6 (Half-Density Shift Cancellation):
+  The half-density shift α + 1/2 cancels the real -1/2 part, leaving the purely imaginary scaling rate i (E / ℏ):
+    α + 1/2 = i (E / ℏ)
 -/
-theorem critical_line_spectral_cancellation
-    (half : A)
-    (D : Derivation A) (X s E : A)
-    (h_eigen : D X = s * X)
-    (h_critical : s + half = E) :
-    opH_symm half D X = E * X := by
-  dsimp [opH_symm]
-  rw [h_eigen]
+theorem criticalMellinExponent_add_half (E hbar : ℝ) :
+    criticalMellinExponent E hbar + (1 / 2 : ℂ) = I * (E / hbar : ℂ) := by
+  rw [criticalMellinExponent_eq]
+  ring
+
+/--
+  THEOREM 7 (Scalar Phase Cancellation):
+  Multiplying the imaginary rate i (E / ℏ) by the physical quantum factor (-i ℏ) yields the exact real energy E:
+    (-i ℏ) * (i (E / ℏ)) = E
+-/
+theorem neg_I_hbar_mul_I_div (E hbar : ℝ) (h_hbar : hbar ≠ 0) :
+    (-I * (hbar : ℂ)) * (I * (E / hbar : ℂ)) = realEnergyScalar E := by
+  have h_I : I * I = -1 := I_mul_I
+  dsimp [realEnergyScalar]
   calc
-    s * X + half * X = (s + half) * X := (add_mul s half X).symm
-    _ = E * X := by rw [h_critical]
+    (-I * (hbar : ℂ)) * (I * (E / hbar : ℂ))
+      = - (I * I) * (hbar : ℂ) * (E / hbar : ℂ) := by ring
+    _ = - (-1) * (hbar : ℂ) * (E / hbar : ℂ) := by rw [h_I]
+    _ = (hbar : ℂ) * ((E : ℂ) / (hbar : ℂ)) := by ring
+    _ = (E : ℂ) := by
+      have h_hbar_c : (hbar : ℂ) ≠ 0 := by
+        exact ofReal_ne_zero.mpr h_hbar
+      exact mul_div_cancel₀ (E : ℂ) h_hbar_c
+
+/-- The Physical Berry–Keating Hamiltonian: H_BK = -i ℏ B_{D, K}. -/
+def opH_BK_physical (hbar : ℝ) (D : ComplexDerivation A) (K X : A) : A :=
+  (-I * (hbar : ℂ)) • dimensionlessBK D K X
+
+/--
+  THEOREM 8 (Master Berry–Keating Critical Mode Theorem):
+  For an Euler mode X satisfying K * D(X) = α • X with α = criticalMellinExponent(E, ℏ)
+  and canonical coordinate D(K) = 1, the physical Berry–Keating Hamiltonian
+  yields the exact real energy eigenvalue E:
+    H_BK(X) = (realEnergyScalar E) • X
+-/
+theorem berryKeating_critical_mode
+    (E hbar : ℝ) (h_hbar : hbar ≠ 0)
+    (D : ComplexDerivation A) (K X : A)
+    (hDK : D K = 1)
+    (h_mode : K * D X = (criticalMellinExponent E hbar) • X) :
+    opH_BK_physical hbar D K X = (realEnergyScalar E) • X := by
+  dsimp [opH_BK_physical]
+  rw [dimensionlessBK_eigenmode D K X (criticalMellinExponent E hbar) hDK h_mode]
+  rw [criticalMellinExponent_add_half E hbar]
+  rw [smul_smul]
+  rw [neg_I_hbar_mul_I_div E hbar h_hbar]
 
 end InfoGeometry.QuantumGeometry.BerryKeating
 

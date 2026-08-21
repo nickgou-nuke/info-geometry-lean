@@ -7477,4 +7477,5 @@ import InfoGeometry.InformationGeometry.BKMBipartiteTensor
 import InfoGeometry.Arithmetic.ChebyshevPrimeEnergyBound
 import InfoGeometry.Canonical.AmplituhedronDifferentialResidue
 import InfoGeometry.LLM.AttentionEntropyProductionFlow
+import InfoGeometry.Algebra.GogberashviliCARBridge
 

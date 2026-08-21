@@ -5264,6 +5264,8 @@ import InfoGeometry.Lie.BaezG2SplitOctonion
 import InfoGeometry.Lie.BRSTCohomology
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.ChevalleySpinorBlueprint
 import InfoGeometry.Lie.ChevalleySpinor
 import InfoGeometry.Lie.G2FromSplitOctonions

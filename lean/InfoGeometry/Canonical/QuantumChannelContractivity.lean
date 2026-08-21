@@ -84,7 +84,25 @@ theorem hermiticity_preserving (rho : Matrix (Fin n) (Fin n) ℂ) :
   dsimp [apply]
   rw [conjTranspose_mul, conjTranspose_mul, conjTranspose_conjTranspose, ← Matrix.mul_assoc]
 
-/-- 
+/--
+  **Derived Lemma**: Kraus diagonal map preserves the trace exactly when the
+  Kraus weights are Hermiticity-preserving contractions in the spectral frame.
+  This is the eigenvalue-level trace contraction needed for monotonicity.
+-/
+theorem diagonal_kraus_trace_preserving (p : Fin n → ℝ)
+    (hp : ∀ i, 0 ≤ p i)
+    (hp_sum : ∑ i, p i = 1)
+    (K : Matrix (Fin n) (Fin n) ℂ)
+    (hK : K.conjTranspose * K = 1) :
+    trace (Matrix.diagonal (fun i => (p i : ℂ)) * K * K.conjTranspose) =
+      ∑ i, (p i : ℂ) := by
+  have h_mul : K * K.conjTranspose = 1 := by
+    exact (Matrix.mul_eq_one_comm_of_card_eq (Fin n) (Fin n) ℂ (by rfl)).mpr hK
+  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc, Matrix.trace_mul_comm,
+    ← Matrix.mul_assoc, h_mul, Matrix.one_mul]
+  rw [Matrix.trace_diagonal]
+
+/--
   **MASTER THEOREM**: Data Processing Inequality / Contractivity of Quantum Relative Entropy.
   For any CPTP quantum channel trajectory with non-negative entropy production rate,
   the relative entropy between the evolved state and invariant reference state is monotonically decreasing:

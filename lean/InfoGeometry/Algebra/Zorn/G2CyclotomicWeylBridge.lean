@@ -167,6 +167,56 @@ theorem dihedral_stabilizer_card (b : Bool) :
   rw [horbit, hgroup] at h
   omega
 
+theorem dihedral_root_orbit_stabilizer_factorization (b : Bool) :
+    Fintype.card
+          (MulAction.orbit (DihedralGroup 6) (b, (0 : ZMod 6))) *
+        Fintype.card
+          (MulAction.stabilizer (DihedralGroup 6) (b, (0 : ZMod 6))) =
+      Fintype.card (DihedralGroup 6) := by
+  exact MulAction.card_orbit_mul_card_stabilizer_eq_card_group
+    (DihedralGroup 6) (b, (0 : ZMod 6))
+
+noncomputable instance dihedralRootFaithfulSMul :
+    FaithfulSMul (DihedralGroup 6) Root where
+  eq_of_smul_eq_smul := by
+    intro g h hh
+    cases g with
+    | r g =>
+      cases h with
+      | r h =>
+        have hz := congrArg (fun z : Root => z.2) (hh (false, 0))
+        change (0 : ZMod 6) - g = 0 - h at hz
+        simpa using congrArg Neg.neg hz
+      | sr h =>
+        have hz := congrArg (fun z : Root => z.2) (hh (false, 0))
+        have ho := congrArg (fun z : Root => z.2) (hh (false, 1))
+        change (0 : ZMod 6) - g = h - 0 at hz
+        change (1 : ZMod 6) - g = h - 1 at ho
+        have hbad : (1 : ZMod 6) = -1 := by
+          linear_combination ho - hz
+        exact False.elim ((by decide : ¬ ((1 : ZMod 6) = -1)) hbad)
+    | sr g =>
+      cases h with
+      | r h =>
+        have hz := congrArg (fun z : Root => z.2) (hh (false, 0))
+        have ho := congrArg (fun z : Root => z.2) (hh (false, 1))
+        change g - 0 = 0 - h at hz
+        change g - 1 = 1 - h at ho
+        have hbad : (1 : ZMod 6) = -1 := by
+          linear_combination hz - ho
+        exact False.elim ((by decide : ¬ ((1 : ZMod 6) = -1)) hbad)
+      | sr h =>
+        have hz := congrArg (fun z : Root => z.2) (hh (false, 0))
+        change g - 0 = h - 0 at hz
+        simpa using hz
+
+def dihedralRootPermutationRep : DihedralGroup 6 →* Equiv.Perm Root :=
+  MulAction.toPermHom (DihedralGroup 6) Root
+
+theorem dihedralRootPermutationRep_injective :
+    Function.Injective dihedralRootPermutationRep := by
+  exact @MulAction.toPerm_injective (DihedralGroup 6) Root _ _ dihedralRootFaithfulSMul
+
 theorem dihedral_stabilizer_mem_iff (b : Bool) (g : DihedralGroup 6) :
     g ∈ MulAction.stabilizer (DihedralGroup 6) (b, (0 : ZMod 6)) ↔
       g = DihedralGroup.r 0 ∨ g = DihedralGroup.sr 0 := by

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
+import InfoGeometry.Arithmetic.ZetaZ2ParitySpectralDecomposition
 
 namespace InfoGeometry.Arithmetic.All
 

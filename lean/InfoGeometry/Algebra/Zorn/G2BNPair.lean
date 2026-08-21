@@ -38,6 +38,59 @@ namespace TitsSystem
 
 variable {G : Type*} [Group G] (ts : TitsSystem G)
 
+/-! A finite Bruhat partition packages only the extra data needed to turn the
+abstract cell-cover axioms into a cardinality identity.  In particular, this
+does not manufacture a BN-pair for any concrete carrier. -/
+
+structure FiniteBruhatPartition (ts : TitsSystem G) where
+  representative : ts.W → ts.N
+  representative_toW : ∀ w, ts.toW (representative w) = w
+  cover : ∀ g : G, ∃ w : ts.W,
+    g ∈ doubleCoset ts.B (representative w : G)
+
+namespace FiniteBruhatPartition
+
+variable (bp : FiniteBruhatPartition ts)
+
+def cell (w : ts.W) : Set G :=
+  doubleCoset ts.B (bp.representative w : G)
+
+theorem cell_disjoint {w₁ w₂ : ts.W} (h : w₁ ≠ w₂) :
+    Disjoint (cell ts bp w₁) (cell ts bp w₂) := by
+  apply ts.cell_disjoint
+  simpa [bp.representative_toW] using h
+
+noncomputable def chooseCell (g : G) : ts.W :=
+  Classical.choose (FiniteBruhatPartition.cover bp g)
+
+theorem chooseCell_mem (g : G) :
+    g ∈ cell ts bp (chooseCell ts bp g) := by
+  exact Classical.choose_spec (FiniteBruhatPartition.cover bp g)
+
+noncomputable def cellEquiv :
+    G ≃ Σ w : ts.W, {g : G // g ∈ cell ts bp w} where
+  toFun g := ⟨chooseCell ts bp g, ⟨g, chooseCell_mem ts bp g⟩⟩
+  invFun z := z.2.1
+  left_inv g := by
+    rfl
+  right_inv z := by
+    apply Sigma.ext (by
+      by_contra hne
+      have h₁ : z.2.1 ∈ cell ts bp (chooseCell ts bp z.2.1) :=
+        chooseCell_mem ts bp z.2.1
+      have h₂ : z.2.1 ∈ cell ts bp z.1 := z.2.2
+      exact (Set.disjoint_left.1 (cell_disjoint ts bp hne) h₁) h₂)
+    rfl
+
+theorem card_eq_sum_cell_cards (bp : FiniteBruhatPartition ts) [Fintype G] :
+    Fintype.card G =
+      ∑ w : ts.W, Fintype.card {g : G // g ∈ cell ts bp w} := by
+  classical
+  letI (w : ts.W) : Fintype {g : G // g ∈ cell ts bp w} := Fintype.ofFinite _
+  rw [Fintype.card_congr (cellEquiv ts bp), Fintype.card_sigma]
+
+end FiniteBruhatPartition
+
 /-- Double coset contains its base representative. -/
 theorem self_mem_doubleCoset (g : G) :
     g ∈ doubleCoset ts.B g :=

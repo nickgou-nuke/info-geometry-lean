@@ -33,4 +33,10 @@ theorem cartanMixingAut_ne_one
     decide
   exact h1 h0
 
+theorem mixingBasis_zero_ne_ePlus : mixingBasis 0 ≠ ePlus := by
+  decide
+
+theorem mixingBasis_zero_ne_eMinus : mixingBasis 0 ≠ eMinus := by
+  decide
+
 end InfoGeometry.Algebra.Zorn.G2TwoCartanMixingGenerator

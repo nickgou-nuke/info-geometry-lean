@@ -157,6 +157,31 @@ lemma modularAutomorphismGroup_add
     (InfoGeometry.Krein.modular_shift_add
       (E := E) M.modularHamiltonian s t A)
 
+/-- The concrete modular orbit satisfies its generator equation at every time,
+obtained from the additive flow law and the derivative at the origin. -/
+set_option maxHeartbeats 800000 in
+theorem hasDerivAt_modularAutomorphismGroup_eq_commutator
+    (M : ModularRadonNikodymData E) (A : EndH E) (t : ℝ) :
+    HasDerivAt (fun s : ℝ => modularAutomorphismGroup M s A)
+      (commutator M.modularHamiltonian
+        (modularAutomorphismGroup M t A)) t := by
+  have h0 := hasDerivAt_modularShift_zero_eq_commutator
+    (E := E) M.modularHamiltonian (modularAutomorphismGroup M t A)
+  have hshift : HasDerivAt
+      (fun s : ℝ => modularAutomorphismGroup M (s - t)
+        (modularAutomorphismGroup M t A))
+      (commutator M.modularHamiltonian
+        (modularAutomorphismGroup M t A)) t := by
+    have hinner : HasDerivAt (fun s : ℝ => s - t) 1 t :=
+      (hasDerivAt_id t).sub_const t
+    have hcomp := HasDerivAt.comp t h0 hinner
+    simpa [modularAutomorphismGroup] using hcomp
+  convert hshift using 1
+  funext s
+  rw [← modularAutomorphismGroup_add M (s - t) t A]
+  congr 1
+  ring
+
 /--
 Additive-time law for modular automorphisms, stated directly as a theorem:
 `σ_{s+t} = σ_s ∘ σ_t`.

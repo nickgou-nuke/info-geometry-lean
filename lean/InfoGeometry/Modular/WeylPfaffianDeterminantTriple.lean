@@ -79,12 +79,12 @@ theorem berezinian_mul (A₁ A₂ D₁ D₂: FieldMat) :
   Isotropic scaling by s preserves the Berezinian:
   Ber(s • I, s • I) = 1  for all s ≠ 0.
 -/
-theorem berezinian_weyl_invariant (s: F) (hs: s ≠ 0) :
-    berezinian (s • (1: FieldMat)) (s • (1: FieldMat)) = 1 := by
+theorem berezinian_weyl_invariant (l_val : F) (hl : l_val ≠ 0) :
+    berezinian (l_val • (1 : FieldMat)) (l_val • (1 : FieldMat)) = 1 := by
   dsimp [berezinian]
-  have h_det_nonzero : Matrix.det (s • (1: FieldMat)) ≠ 0 := by
+  have h_det_nonzero : Matrix.det (l_val • (1 : FieldMat)) ≠ 0 := by
     rw [Matrix.det_smul, Matrix.det_one, mul_one]
-    exact pow_ne_zero n hs
+    exact pow_ne_zero n hl
   exact div_self h_det_nonzero
 
 end AlgebraicHomomorphisms

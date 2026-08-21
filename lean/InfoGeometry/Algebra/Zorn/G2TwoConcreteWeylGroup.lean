@@ -61,6 +61,24 @@ theorem swapCartanAut_sq : swapCartanAut * swapCartanAut = 1 := by
   intro i
   fin_cases i <;> decide
 
+theorem swapCartanAut_comm_cycle012 :
+    swapCartanAut * cycle012Aut = cycle012Aut * swapCartanAut := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem swapCartanAut_comm_swap01 :
+    swapCartanAut * swap01Aut = swap01Aut * swapCartanAut := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem swap01_cycle012_conjugate :
+    swap01Aut * cycle012Aut * swap01Aut = cycle012Aut * cycle012Aut := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
 /-- The concrete 12 Weyl automorphisms of SplitOctF2Aut. -/
 noncomputable def concreteWeylElement (i : Fin 12) : SplitOctF2Aut :=
   match i.1 with
@@ -141,5 +159,25 @@ theorem concreteWeylSubgroup_card_lower_bound :
     exact concreteWeylElement_injective h'
   have hc := Fintype.card_le_of_injective f hf
   simpa using hc
+
+/-! The next theorem records the exact closure statement still needed for an
+exact-order result.  Its proof is intentionally separate from the lower-bound
+argument, so no finite cardinality is smuggled into a subgroup classification. -/
+
+theorem concreteWeylSubgroup_generated_by_representatives :
+    concreteWeylSubgroup =
+      Subgroup.closure (Set.range (concreteWeylElement)) := by
+  apply le_antisymm
+  · refine (Subgroup.closure_le _).2 ?_
+    intro x hx
+    rcases hx with rfl | rfl | rfl
+    · exact Subgroup.subset_closure ⟨3, rfl⟩
+    · exact Subgroup.subset_closure ⟨1, rfl⟩
+    · exact Subgroup.subset_closure ⟨6, rfl⟩
+  · refine (Subgroup.closure_le _).2 ?_
+    intro x hx
+    rcases hx with ⟨i, rfl⟩
+    exact concreteWeylElement_mem i
+
 
 end InfoGeometry.Algebra.Zorn.G2ConcreteWeyl

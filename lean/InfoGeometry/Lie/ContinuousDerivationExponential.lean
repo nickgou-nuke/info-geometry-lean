@@ -111,6 +111,25 @@ theorem flow_add
     (NormedSpace.exp_add_of_commute
       (smul_commute_smul D s t))
 
+/--
+Two exponential flows commute when their generators commute in the
+associative endomorphism algebra.  No associativity of the underlying
+bilinear multiplication on `A` is used here.
+-/
+theorem flow_mul_comm_of_commute
+    (D E : EndA)
+    (hDE : Commute D E)
+    (s t : ℝ) :
+    flow D s * flow E t = flow E t * flow D s := by
+  have hscaled : Commute (s • D) (t • E) :=
+    (hDE.smul_left s).smul_right t
+  calc
+    flow D s * flow E t = NormedSpace.exp (s • D + t • E) := by
+      exact (NormedSpace.exp_add_of_commute hscaled).symm
+    _ = NormedSpace.exp (t • E + s • D) := by rw [add_comm]
+    _ = flow E t * flow D s := by
+      exact NormedSpace.exp_add_of_commute hscaled.symm
+
 /-- Negating the generator reverses the flow parameter. -/
 @[simp]
 theorem flow_neg_generator

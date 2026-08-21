@@ -585,6 +585,22 @@ theorem deriv_flow_at_zero
   have h := (hasStrictDerivAt_flow_left D 0).hasDerivAt.deriv
   simpa using h
 
+/-- If `D x = 0`, then the exponential orbit is constant: `Φ_t x = x`. -/
+theorem flow_apply_eq_self_of_apply_eq_zero
+    (D : EndA)
+    (x : A)
+    (hx : D x = 0)
+    (t : ℝ) :
+    flow D t x = x := by
+  have hder : ∀ s : ℝ, HasDerivAt (fun r => flow D r x) 0 s := fun s => by
+    have h := (hasStrictDerivAt_orbit_right D x s).hasDerivAt
+    rw [hx, ContinuousLinearMap.map_zero] at h
+    exact h
+  have hdiff : Differentiable ℝ (fun r => flow D r x) := fun s => (hder s).differentiableAt
+  have hzero : ∀ s : ℝ, deriv (fun r => flow D r x) s = 0 := fun s => (hder s).deriv
+  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
+  simpa using hconst
+
 end InfoGeometry.Lie.ContinuousDerivationExponential
 
 end noncomputable section

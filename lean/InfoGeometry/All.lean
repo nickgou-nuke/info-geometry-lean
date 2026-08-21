@@ -7394,6 +7394,7 @@ import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Information.FisherRaoMadelungIsometry
+import InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
 import InfoGeometry.Algebra.ExplogRN
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
 import InfoGeometry.Information.UniversalDualityQuadrangle

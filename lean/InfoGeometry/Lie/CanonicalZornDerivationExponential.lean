@@ -232,6 +232,19 @@ theorem canonical_derivation_exponential_packet (D : canonicalZornDerivations) (
     zornFlowMulEquiv D t (X * Y) = zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y := by
   exact map_mul (zornFlowMulEquiv D t) X Y
 
+/-- If `D X = 0`, then the Zorn flow fixes `X`: `Φ_t X = X`. -/
+theorem zornFlowLinearEquiv_fixed_of_derivation_eq_zero
+    (D : EndCZ)
+    (X : CZ)
+    (hX : D X = 0)
+    (t : ℝ) :
+    zornFlowLinearEquiv D t X = X := by
+  apply coordLE.injective
+  rw [coordLE_zornFlowLinearEquiv]
+  have hcoord : coordEnd D (coordLE X) = 0 := by
+    rw [coordEnd_coordLE, hX, map_zero]
+  exact flow_apply_eq_self_of_apply_eq_zero (coordEnd D) (coordLE X) hcoord t
+
 end InfoGeometry.Lie.CanonicalZornDerivationExponential
 
 end noncomputable section

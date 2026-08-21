@@ -11,44 +11,6 @@ import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
 
-/-!
-# Canonical Zorn derivation exponential into the native real automorphism group
-
-This module closes the exact finite-automorphism landing theorem for canonical
-real split-octonion derivations.
-
-The analytic owner
-`InfoGeometry.Lie.CanonicalZornDerivationExponential` proves that a canonical
-Zorn derivation `D` exponentiates to a multiplicative linear equivalence
-
-`zornFlowLinearEquiv D t : ZornMatrix ℝ ≃ₗ[ℝ] ZornMatrix ℝ`.
-
-The automorphism owner
-`InfoGeometry.Canonical.SplitOctonionAutomorphism` defines
-`RealSplitOctonionAut` as the subgroup of real linear equivalences preserving
-both the Zorn unit and the Zorn product.
-
-This file proves that every exponential derivation flow lies in that native
-automorphism group and packages the complete one-parameter flow as
-
-`Multiplicative ℝ →* RealSplitOctonionAut`.
-
-Since multiplication in `Multiplicative ℝ` is addition of real parameters,
-this is the precise theorem-safe form of
-
-`(ℝ,+) → Aut(𝕆_s)`.
-
-As consequences, the exponential flow preserves the canonical Zorn
-determinant/composition norm and the split null cone, using the already-proved
-native automorphism theorems.
-
-No global identification
-
-`RealSplitOctonionAut ≃ G₂(2)`
-
-is asserted here. That remains a distinct global classification theorem.
--/
-
 noncomputable section
 
 namespace InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
@@ -61,9 +23,38 @@ open InfoGeometry.Algebra.Zorn
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
-/-!
-## Landing in the native real split-octonion automorphism group
--/
+lemma one_a : (1 : CZ).a = 1 := rfl
+lemma one_b : (1 : CZ).b = 1 := rfl
+lemma one_x (i : Fin 3) : (1 : CZ).x i = 0 := rfl
+lemma one_y (i : Fin 3) : (1 : CZ).y i = 0 := rfl
+
+theorem zorn_mul_one (Z : CZ) : Z * 1 = Z := by
+  apply ZornMatrix.ext
+  · simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, one_a, one_b, one_x, one_y]
+  · simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, one_a, one_b, one_x, one_y]
+  · ext i; fin_cases i <;> simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.cross, one_a, one_b, one_x, one_y]
+  · ext i; fin_cases i <;> simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.cross, one_a, one_b, one_x, one_y]
+
+theorem zorn_one_mul (Z : CZ) : 1 * Z = Z := by
+  apply ZornMatrix.ext
+  · simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, one_a, one_b, one_x, one_y]
+  · simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, one_a, one_b, one_x, one_y]
+  · ext i; fin_cases i <;> simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.cross, one_a, one_b, one_x, one_y]
+  · ext i; fin_cases i <;> simp [ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.cross, one_a, one_b, one_x, one_y]
+
+/-- Every derivation exponential fixes the Zorn multiplicative unit. -/
+@[simp]
+theorem zornFlow_fixes_one
+    (D : canonicalZornDerivations)
+    (t : ℝ) :
+    zornFlowLinearEquiv D.1 t (1 : CZ) = 1 := by
+  have h_mul := zornFlow_map_mul D.1 D.2 t ((zornFlowLinearEquiv D.1 t).symm (1 : CZ)) (1 : CZ)
+  rw [LinearEquiv.apply_symm_apply] at h_mul
+  rw [zorn_mul_one] at h_mul
+  rw [LinearEquiv.apply_symm_apply] at h_mul
+  have h_one : (1 : CZ) = (1 : CZ) * zornFlowLinearEquiv D.1 t (1 : CZ) := h_mul
+  rw [zorn_one_mul] at h_one
+  exact h_one.symm
 
 /--
 The exponential flow of a canonical Zorn derivation, regarded as an element
@@ -75,11 +66,7 @@ noncomputable def zornFlowRealAut
   ⟨zornFlowLinearEquiv D.1 t, by
     constructor
     · -- Preserves the unit
-      change zornFlowLinearEquiv D.1 t (1 : CZ) = 1
-      have h₁ : zornFlowLinearEquiv D.1 t (1 : CZ) = 1 := by
-        have h₂ : zornFlowMulEquiv D t (1 : CZ) = 1 := zornFlowMulEquiv_map_one D t
-        simpa [zornFlowMulEquiv_apply] using h₂
-      exact h₁
+      exact zornFlow_fixes_one D t
     · -- Preserves multiplication
       intro X Y
       exact zornFlow_map_mul D.1 D.2 t X Y⟩
@@ -104,15 +91,6 @@ theorem zornFlowRealAut_apply
       SplitOctonionAutCandidate ℝ) X =
       zornFlowLinearEquiv D.1 t X := by
   rfl
-
-/-- Every derivation exponential fixes the Zorn multiplicative unit. -/
-@[simp]
-theorem zornFlow_fixes_one
-    (D : canonicalZornDerivations)
-    (t : ℝ) :
-    zornFlowLinearEquiv D.1 t (1 : CZ) = 1 := by
-  simpa using
-    (RealSplitOctonionAut.preserves_one (zornFlowRealAut D t))
 
 /-- Every derivation exponential preserves the full nonassociative Zorn product. -/
 theorem zornFlow_preserves_mul
@@ -203,13 +181,10 @@ theorem zornFlowRealAut_neg
   apply Subtype.ext
   apply LinearEquiv.ext
   intro X
-  change
-    zornFlowLinearEquiv D.1 (-t) X =
-      (zornFlowLinearEquiv D.1 t).symm X
+  change (zornFlowLinearEquiv D.1 (-t)) X = (zornFlowLinearEquiv D.1 t).symm X
   apply (zornFlowLinearEquiv D.1 t).injective
-  -- Use the neg_apply_symm lemma which gives Φ_t(Φ_{-t}(X)) = X
-  have h₁ := zornFlowLinearEquiv_neg_apply_symm D.1 t X
-  simpa [zornFlowLinearEquiv_neg_apply_symm] using h₁
+  rw [LinearEquiv.apply_symm_apply]
+  exact zornFlow_apply_neg_flow D t X
 
 /--
 The canonical derivation exponential as a genuine one-parameter subgroup of
@@ -266,7 +241,6 @@ noncomputable def zornDerivationExpRealAut
     RealSplitOctonionAut :=
   zornFlowRealAut D 1
 
-@[simp]
 theorem zornDerivationExpRealAut_apply
     (D : canonicalZornDerivations)
     (X : CZ) :
@@ -280,10 +254,9 @@ theorem zornDerivationExpRealAut_apply
 theorem zornDerivationExpRealAut_preserves_detZ
     (D : canonicalZornDerivations)
     (X : CZ) :
-    ZornMatrix.detZ ((zornFlowMulEquiv D 1).toEquiv X) =
+    ZornMatrix.detZ (((zornDerivationExpRealAut D : RealSplitOctonionAut) : SplitOctonionAutCandidate ℝ) X) =
       ZornMatrix.detZ X := by
-  simpa [zornDerivationExpRealAut_apply] using
-    zornFlow_preserves_detZ D 1 X
+  simp [zornFlow_preserves_detZ D 1 X]
 
 /-- Complete theorem-safe finite automorphism packet for a canonical derivation. -/
 theorem canonical_derivation_realAut_packet

@@ -80,7 +80,7 @@ theorem exp_transport_peirce_resolution
       zornFlowLinearEquiv D.1 t (zornMinus (R := ℝ)) = (1 : CZ)
   rw [← (zornFlowLinearEquiv D.1 t).map_add]
   rw [zornPlus_add_zornMinus]
-  exact zornFlow_map_one D.1 D.2 t
+  exact zornFlow_fixes_one D t
 
 theorem exp_transport_gPlus_square_zero
     (D : canonicalZornDerivations)
@@ -103,15 +103,8 @@ theorem exp_transport_fixed_of_derivation_eq_zero
     (X : CZ)
     (hX : D.1 X = 0)
     (t : ℝ) :
-    zornFlowLinearEquiv D.1 t X = X := by
-  apply coordLE.injective
-  rw [coordLE_zornFlowLinearEquiv]
-  have hcoord : coordEnd D.1 (coordLE X) = 0 := by
-    rw [coordEnd_coordLE, hX]
-    ext i
-    fin_cases i <;> rfl
-  exact flowLinearEquiv_fixed_of_derivation_eq_zero
-    (coordEnd D.1) (coordLE X) hcoord t
+    zornFlowLinearEquiv D.1 t X = X :=
+  zornFlowLinearEquiv_fixed_of_derivation_eq_zero D.1 X hX t
 
 theorem exp_transport_chiral_frame_fixed
     (D : canonicalZornDerivations)

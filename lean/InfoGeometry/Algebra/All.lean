@@ -268,10 +268,12 @@ import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoDihedralSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
+import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
+import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
 /-!
 # InfoGeometry.Algebra.All

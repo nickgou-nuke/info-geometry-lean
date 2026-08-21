@@ -317,16 +317,133 @@ theorem weylNF_mul_rot_refl_exists (k l : ZMod 6) :
       weylNF k false * weylNF l true = weylNF m true := by
   let i : Fin 6 := ⟨k.val, k.isLt⟩
   let j : Fin 6 := ⟨l.val, l.isLt⟩
-  let m : ZMod 6 :=
-    (((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6 : ℕ)
+  let n : ℕ := ((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6
+  let m : ZMod 6 := n
   refine ⟨m, ?_⟩
-  simpa [weylNF, m, i, j, c_pow_mod] using
-    (c_pow_mul_s_mul_c_pow i j)
+  have hn : n < 6 := by
+    dsimp [n]
+    exact Nat.mod_lt _ (by norm_num)
+  have hm : m.val = n := by
+    rw [show m = (n : ZMod 6) by rfl, ZMod.val_natCast]
+    exact Nat.mod_eq_of_lt hn
+  change c ^ k.val * (s * c ^ l.val) = s * c ^ m.val
+  rw [hm]
+  simpa [i, j, n] using c_pow_mul_s_mul_c_pow i j
+
+theorem weylNF_mul_refl_refl_exists (k l : ZMod 6) :
+    ∃ m : ZMod 6,
+      weylNF k true * weylNF l true = weylNF m false := by
+  let i : Fin 6 := ⟨k.val, k.isLt⟩
+  let j : Fin 6 := ⟨l.val, l.isLt⟩
+  let n : ℕ := ((6 - (i : ℕ)) % 6 + (j : ℕ)) % 6
+  let m : ZMod 6 := n
+  refine ⟨m, ?_⟩
+  have hn : n < 6 := by
+    dsimp [n]
+    exact Nat.mod_lt _ (by norm_num)
+  have hm : m.val = n := by
+    rw [show m = (n : ZMod 6) by rfl, ZMod.val_natCast]
+    exact Nat.mod_eq_of_lt hn
+  change (s * c ^ k.val) * (s * c ^ l.val) = c ^ m.val
+  rw [hm]
+  simpa [i, j, n] using s_mul_c_pow_mul_s_mul_c_pow i j
+
+theorem weylNF_mul_exists
+    (k l : ZMod 6) (b d : Bool) :
+    ∃ m : ZMod 6, ∃ e : Bool,
+      weylNF k b * weylNF l d = weylNF m e := by
+  cases b <;> cases d
+  · exact ⟨k + l, false, weylNF_mul_rot_rot k l⟩
+  · obtain ⟨m, hm⟩ := weylNF_mul_rot_refl_exists k l
+    exact ⟨m, true, hm⟩
+  · exact ⟨k + l, true, weylNF_mul_refl_rot k l⟩
+  · obtain ⟨m, hm⟩ := weylNF_mul_refl_refl_exists k l
+    exact ⟨m, false, hm⟩
+
+theorem weylNF_inv_exists (k : ZMod 6) (b : Bool) :
+    ∃ m : ZMod 6, ∃ e : Bool,
+      (weylNF k b)⁻¹ = weylNF m e := by
+  cases b
+  · let i : Fin 6 := ⟨k.val, k.isLt⟩
+    let n : ℕ := (6 - (i : ℕ)) % 6
+    let m : ZMod 6 := n
+    refine ⟨m, false, ?_⟩
+    have hn : n < 6 := by
+      dsimp [n]
+      exact Nat.mod_lt _ (by norm_num)
+    have hm : m.val = n := by
+      rw [show m = (n : ZMod 6) by rfl, ZMod.val_natCast]
+      exact Nat.mod_eq_of_lt hn
+    change (c ^ k.val)⁻¹ = c ^ m.val
+    rw [hm]
+    simpa [i, n] using c_pow_inv_fin i
+  · refine ⟨k, true, ?_⟩
+    apply (eq_inv_of_mul_eq_one_left ?_).symm
+    change (s * c ^ k.val) * (s * c ^ k.val) = 1
+    let i : Fin 6 := ⟨k.val, k.isLt⟩
+    have h := s_mul_c_pow_mul_s_mul_c_pow i i
+    have hz : ((6 - (i : ℕ)) % 6 + (i : ℕ)) % 6 = 0 := by
+      omega
+    simpa [i, hz] using h
+
+theorem weylG2Subgroup_coverage (x : SplitOctF2Aut)
+    (hx : x ∈ weylG2Subgroup) :
+    ∃ k : ZMod 6, ∃ b : Bool, x = weylNF k b := by
+  refine @Subgroup.closure_induction SplitOctF2Aut _ {s, t}
+    (fun x _ => ∃ k : ZMod 6, ∃ b : Bool, x = weylNF k b)
+    ?_ ?_ ?_ ?_ x hx
+  · intro y hy
+    rcases hy with rfl | rfl
+    · exact ⟨0, true, by simp [weylNF, s]
+        ⟩
+    · refine ⟨1, true, ?_⟩
+      change s * c = s * c ^ (1 : ℕ)
+      simp
+  · exact ⟨0, false, by simp [weylNF]
+      ⟩
+  · intro y z _ _ hy hz
+    rcases hy with ⟨k, b, hy⟩
+    rcases hz with ⟨l, d, hz⟩
+    obtain ⟨m, e, h⟩ := weylNF_mul_exists k l b d
+    exact ⟨m, e, by rw [hy, hz, h]⟩
+  · intro y _ ⟨k, b, h⟩
+    obtain ⟨m, e, hi⟩ := weylNF_inv_exists k b
+    exact ⟨m, e, h ▸ hi⟩
+
+theorem weylG2Subgroup_coverage_pair (x : weylG2Subgroup) :
+    ∃ p : ZMod 6 × Bool, x.1 = weylNF p.1 p.2 := by
+  rcases weylG2Subgroup_coverage x.1 x.2 with ⟨k, b, h⟩
+  exact ⟨(k, b), h⟩
 
 noncomputable instance : Finite weylG2Subgroup :=
   Finite.of_injective Subtype.val Subtype.val_injective
 
 noncomputable instance : Fintype weylG2Subgroup := Fintype.ofFinite _
+
+noncomputable def weylNFCoordinates (x : weylG2Subgroup) : ZMod 6 × Bool :=
+  Classical.choose (weylG2Subgroup_coverage_pair x)
+
+theorem weylNFCoordinates_spec (x : weylG2Subgroup) :
+    x.1 = weylNF (weylNFCoordinates x).1 (weylNFCoordinates x).2 :=
+  Classical.choose_spec (weylG2Subgroup_coverage_pair x)
+
+theorem weylNFCoordinates_injective :
+    Function.Injective weylNFCoordinates := by
+  intro x y h
+  apply Subtype.ext
+  calc
+    x.1 = weylNF (weylNFCoordinates x).1 (weylNFCoordinates x).2 :=
+      weylNFCoordinates_spec x
+    _ = weylNF (weylNFCoordinates y).1 (weylNFCoordinates y).2 := by
+      exact congrArg (fun p : ZMod 6 × Bool => weylNF p.1 p.2) h
+    _ = y.1 := (weylNFCoordinates_spec y).symm
+
+theorem weylG2_card_le_twelve :
+    Fintype.card weylG2Subgroup ≤ 12 := by
+  calc
+    Fintype.card weylG2Subgroup ≤ Fintype.card (ZMod 6 × Bool) :=
+      Fintype.card_le_of_injective _ weylNFCoordinates_injective
+    _ = 12 := by rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
 
 theorem weylG2_card_ge_twelve :
     12 ≤ Fintype.card weylG2Subgroup := by
@@ -341,7 +458,11 @@ theorem weylG2_card_ge_twelve :
       rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
     _ ≤ Fintype.card weylG2Subgroup := Fintype.card_le_of_injective _ hinj
 
-theorem weylG2_card_eq_twelve : Fintype.card (ZMod 6 × Bool) = 12 := by
+theorem weylG2_card_eq_twelve :
+    Fintype.card weylG2Subgroup = 12 := by
+  exact le_antisymm weylG2_card_le_twelve weylG2_card_ge_twelve
+
+theorem weyl_param_card_eq_twelve : Fintype.card (ZMod 6 × Bool) = 12 := by
   rw [Fintype.card_prod, ZMod.card, Fintype.card_bool]
 
 end InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2

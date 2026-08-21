@@ -130,6 +130,18 @@ def pc3Equiv : SplitOctF2 ≃ SplitOctF2 where
 def pc3Aut : SplitOctF2Aut :=
   ⟨pc3Equiv, pc3_one, pc3_add, pc3_mul⟩
 
+theorem pc2Aut_sq_eq_pc6Aut : pc2Aut * pc2Aut = pc6Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  exact pc2_sq X
+
+theorem pc3Aut_sq_eq_pc6Aut : pc3Aut * pc3Aut = pc6Aut := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  exact pc3_sq X
+
 def pcGenerator : Fin 6 → SplitOctF2Aut
   | 0 => pc1Aut
   | 1 => pc2Aut

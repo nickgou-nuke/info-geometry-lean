@@ -59,5 +59,9 @@ theorem finite_g2_carrier_has_four_distinct_words :
     4 ≤ Fintype.card FiniteChevalleyG2 := by
   exact finite_g2_carrier_card_lower_bound
 
+theorem finite_g2_carrier_has_eight_dihedral_words :
+    8 ≤ Fintype.card FiniteChevalleyG2 := by
+  exact finite_g2_carrier_card_lower_bound_eight
+
 end InfoGeometry.Lie.G2SplitChevalley
 end noncomputable section

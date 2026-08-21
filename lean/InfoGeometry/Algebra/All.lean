@@ -1,4 +1,4 @@
-import InfoGeometry.Algebra.Zorn.G2TwoChevalleyOrderArithmetic
+import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics
 import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AkivisLeftRegularBridge
@@ -252,10 +252,6 @@ import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
-import InfoGeometry.Algebra.Zorn.G2TwoSteinbergRelations
-import InfoGeometry.Algebra.Zorn.G2TwoUnipotentStructure
-import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
-import InfoGeometry.Algebra.Zorn.G2TwoChevalleyOrderArithmetic
 /-!
 # InfoGeometry.Algebra.All
 

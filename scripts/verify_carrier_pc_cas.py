@@ -29,6 +29,8 @@ if run.stderr:
 rows_by_name = {}
 power_relations = {}
 conjugation_relations = {}
+actual_orders = None
+relative_orders = None
 for line in run.stdout.splitlines():
     match = re.fullmatch(r"PCROW ([1-6]) ([0-9,;]*)", line.strip())
     if match:
@@ -45,6 +47,14 @@ for line in run.stdout.splitlines():
             int(x) for x in match.group(3).split(",") if x
         )
         continue
+    match = re.fullmatch(r"PC_ACTUAL_ORDERS=\[ ?([0-9, ]+) ?\]", line.strip())
+    if match:
+        actual_orders = tuple(int(x) for x in match.group(1).split(","))
+        continue
+    match = re.fullmatch(r"PC_RELATIVE_ORDERS=\[ ?([0-9, ]+) ?\]", line.strip())
+    if match:
+        relative_orders = tuple(int(x) for x in match.group(1).split(","))
+        continue
     match = re.fullmatch(r"PCCONJ ([1-6]) ([1-6]) ([0-9,]*)", line.strip())
     if match:
         conjugation_relations[(int(match.group(1)) - 1,
@@ -54,6 +64,8 @@ for line in run.stdout.splitlines():
 
 if set(rows_by_name) != {f"p{i}" for i in range(1, 7)}:
     raise AssertionError(f"missing GAP PC rows: {sorted(rows_by_name)}")
+assert actual_orders == (2, 4, 4, 2, 2, 2), actual_orders
+assert relative_orders == (2, 2, 2, 2, 2, 2), relative_orders
 
 def xor(*terms):
     return sum(terms)
@@ -133,4 +145,5 @@ for (i, j), exponents in conjugation_relations.items():
 print("GAP -> symbolic PC row transport: PASS")
 print("All six GAP-derived PC matrices preserve split-Zorn multiplication")
 print("GAP PC power relations: PASS")
+print("GAP PC actual orders [2,4,4,2,2,2]: PASS")
 print("GAP PC conjugation relations (15): PASS")

@@ -4,7 +4,9 @@ W = QQ[x0, x1, x2, y0, y1, y2, dx0, dx1, dx2, dy0, dy1, dy2,
 -- 1. Nilpotent derivations in the Weyl algebra:
 ds = x1 * dx0 + y0 * dy1
 dl = x2 * dx1 + y1 * dy2
-dm = x2 * dx0 + y0 * dy2
+-- The cross-root operator is sign-sensitive in the Weyl convention:
+-- the x-channel and y-channel acquire opposite signs.
+dm = -x2 * dx0 + y0 * dy2
 
 print "ds in Weyl algebra:"
 print ds

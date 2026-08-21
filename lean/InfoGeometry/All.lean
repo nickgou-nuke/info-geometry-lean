@@ -7459,6 +7459,7 @@ import InfoGeometry.Modular.EntropyMonotonicity
 import InfoGeometry.Architecture.CartanCosetManifold
 import InfoGeometry.Architecture.CartanNomizuCurvature
 import InfoGeometry.Architecture.CartanSectionalCurvature
+import InfoGeometry.Architecture.CartanGeodesicSymmetry
 import InfoGeometry.Architecture.CartanFisherRaoIdentification
 import InfoGeometry.InformationGeometry.TrifoldKLDivergenceDecomposition
 import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
@@ -7468,4 +7469,5 @@ import InfoGeometry.Modular.ZetaRegularizedDeterminantBridge
 import InfoGeometry.InformationGeometry.BKMMetricModularBridge
 import InfoGeometry.InformationGeometry.KMSThermodynamicIdentity
 import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
+import InfoGeometry.Algebra.SplitAlbertF4Classification
 

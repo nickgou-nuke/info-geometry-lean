@@ -5153,6 +5153,7 @@ import InfoGeometry.Information.NativeRelativeEntropy
 import InfoGeometry.Information.RelativeOrientation
 import InfoGeometry.InformationGeometry.TrifoldKLDivergenceDecomposition
 import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
+import InfoGeometry.InformationGeometry.BurgSteinSelfConcordance
 import InfoGeometry.Instanton.HilbertTwoPoints
 import InfoGeometry.Instanton.VortexPartition
 import InfoGeometry.Interpretation.ThermodynamicDictionary
@@ -7463,4 +7464,5 @@ import InfoGeometry.Architecture.CartanFisherRaoIdentification
 import InfoGeometry.InformationGeometry.TrifoldKLDivergenceDecomposition
 import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
 import InfoGeometry.InformationGeometry.BurgSteinSelfConcordance
+import InfoGeometry.Modular.TensorDeterminantHomomorphism
 

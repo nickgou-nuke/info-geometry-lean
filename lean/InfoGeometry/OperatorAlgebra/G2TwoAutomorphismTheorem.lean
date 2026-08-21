@@ -260,6 +260,58 @@ def IsSplitOctF2Aut (f : SplitOctF2 ≃ SplitOctF2) : Prop :=
 /-- The finite unital additive/multiplicative automorphism type of the carrier. -/
 def SplitOctF2Aut := { f : SplitOctF2 ≃ SplitOctF2 // IsSplitOctF2Aut f }
 
+private theorem isSplitOctF2Aut_comp (f g : SplitOctF2Aut) :
+    IsSplitOctF2Aut (f.1.trans g.1) := by
+  rcases f.2 with ⟨hf1, hfadd, hfmul⟩
+  rcases g.2 with ⟨hg1, hgadd, hgmul⟩
+  refine ⟨?_, ?_, ?_⟩
+  · simp [Equiv.trans_apply, hf1, hg1]
+  · intro X Y
+    simp [Equiv.trans_apply, hfadd, hgadd]
+  · intro X Y
+    simp [Equiv.trans_apply, hfmul, hgmul]
+
+instance : Mul SplitOctF2Aut where
+  mul f g := ⟨f.1.trans g.1, isSplitOctF2Aut_comp f g⟩
+
+instance : One SplitOctF2Aut where
+  one := ⟨Equiv.refl SplitOctF2, by
+    refine ⟨rfl, ?_, ?_⟩
+    · intro X Y; rfl
+    · intro X Y; rfl⟩
+
+instance : Inv SplitOctF2Aut where
+  inv f := ⟨f.1.symm, by
+    rcases f.2 with ⟨hf1, hfadd, hfmul⟩
+    refine ⟨?_, ?_, ?_⟩
+    · simpa using congrArg f.1.symm hf1
+    · intro X Y
+      have h := hfadd (f.1.symm X) (f.1.symm Y)
+      simpa using congrArg f.1.symm h
+    · intro X Y
+      have h := hfmul (f.1.symm X) (f.1.symm Y)
+      simpa using congrArg f.1.symm h⟩
+
+instance : Group SplitOctF2Aut where
+  mul_assoc f g h := by
+    apply Subtype.ext
+    ext X
+    rfl
+  one_mul f := by
+    apply Subtype.ext
+    ext X
+    rfl
+  mul_one f := by
+    apply Subtype.ext
+    ext X
+    rfl
+  inv_mul_cancel f := by
+    apply Subtype.ext
+    ext X
+    exact f.1.left_inv X
+  zpow_zero' f := by rfl
+  zpow_succ' f n := by rfl
+
 attribute [local instance] Classical.decEq
 
 noncomputable instance : Fintype SplitOctF2Aut := by

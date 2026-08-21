@@ -27,6 +27,7 @@ import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+import InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
 import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

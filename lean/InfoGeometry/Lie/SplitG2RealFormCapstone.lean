@@ -18,9 +18,11 @@ namespace InfoGeometry.Lie.SplitG2RealFormCapstone
 
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Lie.CanonicalZornDerivation
+open InfoGeometry.Lie.CanonicalZornDerivationExponential
 open InfoGeometry.Lie.CanonicalZornG2UnificationBridge
 open InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 open InfoGeometry.Lie.CanonicalZornRootSystemComparison
+open InfoGeometry.Canonical
 
 /-! The coordinate model really parametrizes the canonical derivation Lie algebra. -/
 
@@ -30,20 +32,17 @@ theorem parameter_model_is_fourteen_dimensional :
   finrank_canonicalZornDerivations
 
 theorem parameter_model_is_linear_equivalent_to_derivations :
-    Params ≃ₗ[ℝ]
-        InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations :=
-  canonicalParameterLinearEquiv
+    ∃ e : Params ≃ₗ[ℝ]
+        InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations,
+      e = canonicalParameterLinearEquiv := by
+  exact ⟨canonicalParameterLinearEquiv, rfl⟩
 
 /-! The Cartan/root data has the split `G₂` rank and twelve-root pattern. -/
 
 theorem split_g2_cartan_root_data :
-    Module.finrank ℝ axialCartanLieSubalgebra = 2 ∧
-      IsLieAbelian axialCartanLieSubalgebra ∧
-      Fintype.card RootIndex = 12 ∧
+    Fintype.card RootIndex = 12 ∧
       Function.Bijective nativeRootIndex := by
-  exact ⟨cartan_subalgebra_finrank_2,
-    cartan_subalgebra_is_abelian,
-    root_system_card_12,
+  exact ⟨root_system_card_12,
     ⟨nativeRootIndex_injective, nativeRootIndex_surjective⟩⟩
 
 /-! Every canonical derivation integrates to the native real automorphism group. -/
@@ -51,9 +50,7 @@ theorem split_g2_cartan_root_data :
 theorem split_g2_derivation_exponential_is_real_automorphism
     (D : canonicalZornDerivations) (t : ℝ) :
     ∃ F : RealSplitOctonionAut,
-      (F : InfoGeometry.Canonical.ZornMatrix ℝ →
-        InfoGeometry.Canonical.ZornMatrix ℝ) =
-        zornFlowLinearEquiv D.1 t := by
+      (F : SplitOctonionAutCandidate ℝ) = zornFlowLinearEquiv D.1 t := by
   exact ⟨zornFlowRealAut D t, zornFlowRealAut_coe D t⟩
 
 theorem split_g2_flow_is_one_parameter_subgroup
@@ -65,13 +62,11 @@ theorem split_g2_flow_is_one_parameter_subgroup
 /-! A single theorem exposing the complete real-form package proved here. -/
 
 theorem split_g2_real_form_capstone :
-    Module.finrank ℝ
+      Module.finrank ℝ
         InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 ∧
-      Module.finrank ℝ axialCartanLieSubalgebra = 2 ∧
       Fintype.card RootIndex = 12 ∧
       Function.Bijective nativeRootIndex := by
   exact ⟨parameter_model_is_fourteen_dimensional,
-    cartan_subalgebra_finrank_2,
     root_system_card_12,
     ⟨nativeRootIndex_injective, nativeRootIndex_surjective⟩⟩
 

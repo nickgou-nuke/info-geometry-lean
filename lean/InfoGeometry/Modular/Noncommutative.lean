@@ -104,6 +104,10 @@ def IsNCDerivation (D : A →ₗ[ℤ] A) : Prop :=
 def dlogL (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
   (↑(u⁻¹) : A) * D (u : A)
 
+/-- The right Maurer--Cartan logarithmic derivative of a unit. -/
+def dlogR (D : A →ₗ[ℤ] A) (u : Aˣ) : A :=
+  D (u : A) * (↑(u⁻¹) : A)
+
 /-- The left logarithmic derivative detects stationary units exactly. -/
 theorem dlogL_eq_zero_iff (D : A →ₗ[ℤ] A) (u : Aˣ) :
     dlogL D u = 0 ↔ D (u : A) = 0 := by
@@ -207,6 +211,64 @@ theorem dlogL_inv (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u : Aˣ) :
             _ = D (u : A) * (↑(u⁻¹) : A) := by rw [one_mul]
         rw [hrewrite]
 
+/-- The right noncommutative product rule. -/
+theorem dlogR_mul (D : A →ₗ[ℤ] A) (hD : IsNCDerivation D) (u v : Aˣ) :
+    dlogR D (u * v) =
+      dlogR D u + (u : A) * dlogR D v * (↑(u⁻¹) : A) := by
+  dsimp [dlogR]
+  have hprod : D ((u : A) * (v : A)) = D (u : A) * (v : A) +
+      (u : A) * D (v : A) := hD _ _
+  rw [hprod]
+  have h_inv : ((u * v)⁻¹ : Aˣ).val = (v⁻¹ : Aˣ).val * (u⁻¹ : Aˣ).val := by
+    rw [mul_inv_rev, Units.val_mul]
+  rw [h_inv]
+  have hv : (v : A) * (↑(v⁻¹) : A) = 1 := v.val_inv
+  calc
+    (D (u : A) * (v : A) + (u : A) * D (v : A)) *
+        ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) =
+        (D (u : A) * (v : A)) * ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) +
+          ((u : A) * D (v : A)) * ((↑(v⁻¹) : A) * (↑(u⁻¹) : A)) := by
+            rw [add_mul]
+    _ = D (u : A) * ((v : A) * (↑(v⁻¹) : A) * (↑(u⁻¹) : A)) +
+          ((u : A) * (D (v : A) * (↑(v⁻¹) : A))) * (↑(u⁻¹) : A) := by
+            simp only [mul_assoc]
+    _ = D (u : A) * (1 * (↑(u⁻¹) : A)) +
+          ((u : A) * (D (v : A) * (↑(v⁻¹) : A))) * (↑(u⁻¹) : A) := by rw [hv]
+    _ = D (u : A) * (↑(u⁻¹) : A) +
+          (u : A) * (D (v : A) * (↑(v⁻¹) : A)) * (↑(u⁻¹) : A) := by
+            rw [one_mul]
+
+/-- Right logarithmic additivity under the precise commutation condition. -/
+theorem dlogR_mul_of_commute (D : A →ₗ[ℤ] A)
+    (hD : IsNCDerivation D) (u v : Aˣ)
+    (hcomm : Commute (u : A) (dlogR D v)) :
+    dlogR D (u * v) = dlogR D u + dlogR D v := by
+  rw [dlogR_mul D hD u v]
+  have hconj :
+      (u : A) * dlogR D v * (↑(u⁻¹) : A) = dlogR D v := by
+    calc
+      (u : A) * dlogR D v * (↑(u⁻¹) : A) =
+          (dlogR D v) * (u : A) * (↑(u⁻¹) : A) := by
+            rw [hcomm.eq]
+      _ = (dlogR D v) * ((u : A) * (↑(u⁻¹) : A)) := by
+            simp only [mul_assoc]
+      _ = dlogR D v := by
+            rw [u.val_inv, mul_one]
+  rw [hconj]
+
+/-- Inversion exchanges left and right logarithmic derivatives. -/
+theorem dlogL_inv_eq_neg_dlogR (D : A →ₗ[ℤ] A)
+    (hD : IsNCDerivation D) (u : Aˣ) :
+    dlogL D (u⁻¹) = -dlogR D u := by
+  rw [dlogL_inv D hD u]
+  dsimp [dlogL, dlogR]
+  have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+  calc
+    -((u : A) * ((↑(u⁻¹) : A) * D (u : A)) * (↑(u⁻¹) : A)) =
+        -(((u : A) * (↑(u⁻¹) : A)) * D (u : A) * (↑(u⁻¹) : A)) := by
+          simp only [mul_assoc]
+    _ = -(D (u : A) * (↑(u⁻¹) : A)) := by rw [hu, one_mul]
+
 /-!
 =============================================================================
 SECTION 3: Inner Modular Logarithmic Derivatives as Discrete Gauge Shifts
@@ -233,6 +295,20 @@ theorem dlogL_adK (K : A) (u : Aˣ) :
         rw [hu]
     _ = (↑(u⁻¹) : A) * K * (u : A) - K := by
         rw [one_mul]
+
+/-- The right logarithmic derivative of an inner modular derivation is the
+right gauge shift of its generator. -/
+theorem dlogR_adK (K : A) (u : Aˣ) :
+    dlogR (adK K) u = K - (u : A) * K * (↑(u⁻¹) : A) := by
+  dsimp [dlogR, adK]
+  have hu : (u : A) * (↑(u⁻¹) : A) = 1 := u.val_inv
+  calc
+    (K * (u : A) - (u : A) * K) * (↑(u⁻¹) : A) =
+        K * ((u : A) * (↑(u⁻¹) : A)) -
+          (u : A) * K * (↑(u⁻¹) : A) := by
+            rw [sub_mul]
+            simp only [mul_assoc]
+    _ = K - (u : A) * K * (↑(u⁻¹) : A) := by rw [hu, mul_one]
 
 /-- The inner logarithmic derivative vanishes exactly on the centralizer of
 the chosen unit. -/

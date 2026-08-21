@@ -347,10 +347,10 @@ import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Algebra.Zorn.DiscreteColorBridge
 import InfoGeometry.Algebra.ZornDualLattice
 import InfoGeometry.Algebra.Zorn.G2ClassificationBoundaryClosure
-import InfoGeometry.Algebra.Zorn.G2FiniteChevalleyGroupBridge
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
 import InfoGeometry.Algebra.Zorn.Incidence
 import InfoGeometry.Algebra.Zorn.InverseAdjugate
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
@@ -365,8 +365,6 @@ import InfoGeometry.Algebra.Zorn.ScalarJacobian8
 import InfoGeometry.Algebra.Zorn.SplitCayley
 import InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
 import InfoGeometry.Algebra.Zorn.SplitCayleyZeroDivisors
-import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
-import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.SplitOctonionCayleyDicksonMatrixBridge
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCrossChannel

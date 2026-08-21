@@ -28,7 +28,8 @@ def basisExpansion (X : SplitOctF2) : SplitOctF2 :=
 
 theorem basisExpansion_eq (X : SplitOctF2) :
     basisExpansion X = X := by
-  cases X <;> native_decide
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  ext <;> (dsimp [basisExpansion, add, add2, zero, ePlus, eMinus, up0, up1, up2, down0, down1, down2]; revert a b x0 x1 x2 y0 y1 y2; decide)
 
 @[simp] theorem map_zero (f : SplitOctF2Aut) :
     f.1 zero = zero := by
@@ -36,6 +37,12 @@ theorem basisExpansion_eq (X : SplitOctF2) :
   rw [add_self] at h
   rw [add_self] at h
   exact h
+
+lemma map_ite_zero (f : SplitOctF2Aut) (c : Bool) (E : SplitOctF2) :
+    f.1 (if c then E else zero) = if c then f.1 E else zero := by
+  cases c
+  · simp [map_zero]
+  · rfl
 
 theorem map_basisExpansion (f : SplitOctF2Aut) (X : SplitOctF2) :
     f.1 (basisExpansion X) =
@@ -48,9 +55,10 @@ theorem map_basisExpansion (f : SplitOctF2Aut) (X : SplitOctF2) :
         (if X.y0 then f.1 down0 else zero))
         (if X.y1 then f.1 down1 else zero))
         (if X.y2 then f.1 down2 else zero) := by
-  simp only [basisExpansion, map_zero]
+  dsimp [basisExpansion]
   rw [f.2.2.1, f.2.2.1, f.2.2.1, f.2.2.1,
     f.2.2.1, f.2.2.1, f.2.2.1]
+  simp only [map_ite_zero]
 
 theorem automorphism_ext_of_basis
     (f g : SplitOctF2Aut)
@@ -60,6 +68,49 @@ theorem automorphism_ext_of_basis
   apply Equiv.ext
   intro X
   rw [← basisExpansion_eq X, map_basisExpansion, map_basisExpansion]
-  fin_cases X <;> simp [basis8] at h ⊢
+  have h0 := h 0
+  have h1 := h 1
+  have h2 := h 2
+  have h3 := h 3
+  have h4 := h 4
+  have h5 := h 5
+  have h6 := h 6
+  have h7 := h 7
+  dsimp [basis8] at h0 h1 h2 h3 h4 h5 h6 h7
+  rw [h0, h1, h2, h3, h4, h5, h6, h7]
+
+def basisRestriction (f : SplitOctF2Aut) : Fin 8 → SplitOctF2 :=
+  fun i => f.1 (basis8 i)
+
+theorem basis8_injective : Function.Injective basis8 := by
+  intro i j h
+  fin_cases i <;> fin_cases j <;> simp [basis8] at h ⊢
+  all_goals
+    cases h
+
+theorem basisRestriction_injective_on_basis (f : SplitOctF2Aut) :
+    Function.Injective (basisRestriction f) := by
+  intro i j h
+  apply basis8_injective
+  apply f.1.injective
+  exact h
+
+theorem basisRestriction_injective :
+    Function.Injective basisRestriction := by
+  intro f g h
+  apply automorphism_ext_of_basis f g
+  intro i
+  exact congrFun h i
+
+theorem basisRestriction_preserves_mul
+    (f : SplitOctF2Aut) (i j : Fin 8) :
+    f.1 (mul (basis8 i) (basis8 j)) =
+      mul (basisRestriction f i) (basisRestriction f j) := by
+  exact f.2.2.2 (basis8 i) (basis8 j)
+
+theorem basisRestriction_preserves_unit :
+    ∀ f : SplitOctF2Aut, f.1 one = one := by
+  intro f
+  exact f.2.1
 
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

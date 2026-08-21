@@ -152,6 +152,11 @@ theorem simpleRootCommutator_eq_uMid :
     simpleRootCommutator = uMid := by
   exact steinberg_commutator_short_long
 
+theorem uMid_mem_simpleRootSubgroup :
+    uMid ∈ simpleRootSubgroup := by
+  rw [← simpleRootCommutator_eq_uMid]
+  exact simpleRootCommutator_mem
+
 /-! Conjugated derived-root candidates.  These are genuine automorphisms, but
 their independence from the preceding packet is deliberately not asserted. -/
 

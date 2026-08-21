@@ -7466,4 +7466,5 @@ import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
 import InfoGeometry.InformationGeometry.BurgSteinSelfConcordance
 import InfoGeometry.Modular.TensorDeterminantHomomorphism
 import InfoGeometry.Modular.ZetaRegularizedDeterminantBridge
+import InfoGeometry.InformationGeometry.BKMMetricModularBridge
 

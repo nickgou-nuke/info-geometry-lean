@@ -1,55 +1,71 @@
-# CAS-only concrete BN/Bruhat certificate for the carrier.
-# GAP computes subgroup intersections and double cosets directly; no Lean
-# theorem or imported order formula is used here.
-Read("scripts/verify_carrier_u64_exact.g");
+# Concrete carrier-level BN/Bruhat audit for SplitOctF2Aut.
+#
+# This is a CAS certificate only.  It deliberately uses GAP's
+# DoubleCosets operation; it does not enumerate B x w x B in Python and it
+# does not turn the resulting order arithmetic into a Lean theorem.
 
 F := GF(2);
-matrixFromColumns := function(codes)
-  return List([1..8], function(i)
-    return List([1..8], function(j)
-      return ((Int(codes[j] / 2^(i-1)) mod 2) * One(F));
-    end);
-  end);
-end;
-
-weylGens := List([
-  [1,2,8,4,16,64,32,128],
-  [1,2,8,16,4,64,128,32],
-  [2,1,32,64,128,4,8,16]
-], matrixFromColumns);
-
+codes := [
+  [2,1,128,64,32,16,8,4],
+  [2,1,128,192,224,24,12,4],
+  [134,133,128,68,175,211,136,4],
+  [1,2,4,8,24,32,192,128],
+  [129,130,4,8,147,40,68,128],
+  [2,1,64,32,128,8,4,16]
+];
+gens := List(codes, c -> List([1..8], i ->
+  List([1..8], j -> ((Int(c[j] / 2^(i-1)) mod 2) * One(F)))));
+G := Group(gens);
+if Size(G) <> 12096 then Error("carrier group order is not 12096"); fi;
 B := SylowSubgroup(G, 2);
-N := Group(weylGens);
-H := Intersection(B, N);
-Print("BN group sizes: G=", Size(G), " B=", Size(B), " N=", Size(N),
-  " B_intersect_N=", Size(H), "\n");
-if Size(G) <> 12096 or Size(B) <> 64 or Size(N) <> 12 or Size(H) <> 1 then
-  Error("concrete BN size contract failed");
-fi;
-BNgenerated := Group(Concatenation(GeneratorsOfGroup(B), weylGens));
-if Size(BNgenerated) <> Size(G) then
-  Error("B and N do not generate the carrier");
+if Size(B) <> 64 then Error("Sylow 2 subgroup order is not 64"); fi;
+
+# Weyl representatives: the concrete A2 permutations together with the
+# Cartan swap.  These are the same carrier matrices used by the native
+# generator owners, expressed here independently in GAP.
+weylRows := [
+  [[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],
+   [0,0,0,1,0,0,0,0],[0,0,1,0,0,0,0,0],
+   [0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0],
+   [0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1]],
+  [[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],
+   [0,0,0,0,1,0,0,0],[0,0,1,0,0,0,0,0],
+   [0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,1],
+   [0,0,0,0,0,1,0,0],[0,0,0,0,0,0,1,0]],
+  [[0,1,0,0,0,0,0,0],[1,0,0,0,0,0,0,0],
+   [0,0,0,0,0,1,0,0],[0,0,0,0,0,0,1,0],
+   [0,0,0,0,0,0,0,1],[0,0,1,0,0,0,0,0],
+   [0,0,0,1,0,0,0,0],[0,0,0,0,1,0,0,0]]
+];
+weyl := List(weylRows, rows -> List(rows, row ->
+  List(row, x -> x * One(F))));
+N := Group(weyl);
+if Size(N) <> 12 then Error("concrete Weyl subgroup order is not 12"); fi;
+if Size(Intersection(B, N)) <> 1 then Error("B intersect N is not trivial"); fi;
+
+cells := DoubleCosets(G, B, B);
+if Length(cells) <> 12 then Error("number of concrete double cosets is not 12"); fi;
+if Sum(List(cells, Size)) <> Size(G) then
+  Error("concrete double cosets do not cover the carrier");
 fi;
 
-cells := List(AsList(N), w -> DoubleCoset(B, w, B));
-cellSizes := List(cells, Size);
-unionSize := Size(Union(cells));
-Print("Bruhat cell sizes: ", cellSizes, "\n");
-Print("Bruhat union size: ", unionSize, "\n");
-if Set(cellSizes) <> Set([64,128,256,512,1024,2048,4096]) then
-  Error("unexpected Bruhat cell size spectrum");
-fi;
-if Length(Set(cellSizes)) = 0 then Error("empty cell list"); fi;
+# Every double coset has a representative in the concrete Weyl subgroup.
+# Since DoubleCosets returns disjoint double cosets, this also certifies one
+# Weyl representative per cell once the intersection check above holds.
+cellWeylCounts := [];
+for d in cells do
+  count := Number(Elements(N), n -> n in d);
+  Add(cellWeylCounts, count);
+  if count <> 1 then Error("cell does not have a unique Weyl representative"); fi;
+od;
 
-# GAP's double-coset representatives are disjoint by construction.  Verify
-# the stronger concrete partition by comparing the sum of cell cardinalities
-# with the carrier order and by checking every B-double-coset has a unique
-# representative in the computed list.
-if Sum(cellSizes) <> Size(G) then
-  Error("Bruhat cell coverage failed");
-fi;
-if unionSize <> Size(G) then Error("Bruhat union is not the carrier"); fi;
-if Sum(cellSizes) <> unionSize then Error("Bruhat cells overlap"); fi;
-if Length(cells) <> 12 then Error("wrong number of Bruhat cells"); fi;
-Print("Concrete BN/Bruhat certificate: PASS (12 double cosets, total 12096)\n");
+Print("carrier_group_size=", Size(G), "\n");
+Print("borel_sylow_two_size=", Size(B), "\n");
+Print("concrete_weyl_size=", Size(N), "\n");
+Print("borel_intersect_weyl_size=", Size(Intersection(B, N)), "\n");
+Print("double_coset_count=", Length(cells), "\n");
+Print("double_coset_sizes=", List(cells, Size), "\n");
+Print("double_coset_sum=", Sum(List(cells, Size)), "\n");
+Print("unique_weyl_representative_counts=", cellWeylCounts, "\n");
+Print("CONCRETE_BN_BRUHAT_CAS=PASS\n");
 QUIT;

@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Tactic
 import InfoGeometry.Modular.ChoiCompletePositivity
@@ -18,6 +19,18 @@ local notation "AmpMat" => Matrix (r × n) (r × n) ℂ
 
 def blockK (V : Mat) : AmpMat :=
   fun a b => if a.1 = b.1 then V a.2 b.2 else 0
+
+def blockKDiag (V : Mat) : Matrix (n × r) (n × r) ℂ :=
+  Matrix.blockDiagonal (fun _ : r => V)
+
+theorem blockK_eq_reindex_blockDiagonal (V : Mat) :
+    blockK (r := r) V =
+      Matrix.reindex (Equiv.prodComm n r) (Equiv.prodComm n r)
+        (blockKDiag (r := r) V) := by
+  ext ⟨p, i⟩ ⟨q, j⟩
+  rfl
+
+
 
 @[simp] theorem blockK_apply (V : Mat) (a b : r × n) :
     blockK (r := r) V a b = if a.1 = b.1 then V a.2 b.2 else 0 := rfl

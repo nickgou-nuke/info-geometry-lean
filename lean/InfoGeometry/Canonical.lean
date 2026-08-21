@@ -1,4 +1,4 @@
-import Mathlib.Topology.Category.TopCat.Basic
+import Mathlib
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 /-!
@@ -89,7 +89,7 @@ def zornVectorMatrixRationalCartanChargeTopCat :
 
 @[simp] theorem zornVectorMatrixRationalCartanChargeTopCat_apply
     (X : ZornVectorMatrix ℚ) :
-    zornVectorMatrixRationalCartanChargeTopCat X =
+    zornVectorMatrixRationalCartanChargeTopCat.hom.toFun X =
       ZornVectorMatrix.cartanCharge X := rfl
 
 theorem zornVectorMatrixRationalCartanChargeTopCat_eq_projection :

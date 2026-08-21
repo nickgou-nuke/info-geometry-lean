@@ -160,6 +160,215 @@ theorem concreteWeylSubgroup_card_lower_bound :
   have hc := Fintype.card_le_of_injective f hf
   simpa using hc
 
+set_option maxHeartbeats 4000000
+
+noncomputable def weylWordVal (i : Fin 12) : concreteWeylSubgroup :=
+  ⟨concreteWeylElement i, concreteWeylElement_mem i⟩
+
+lemma weyl_word_inv (i : Fin 12) : ∃ j : Fin 12, (weylWordVal i)⁻¹ = weylWordVal j := by
+  fin_cases i
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+
+lemma weyl_word_mul (i j : Fin 12) : ∃ k : Fin 12, weylWordVal i * weylWordVal j = weylWordVal k := by
+  fin_cases i <;> fin_cases j
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨11, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨9, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨10, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨7, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨8, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨6, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨5, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨3, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨4, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨1, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨2, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+  · refine ⟨0, ?_⟩; apply Subtype.ext; apply Subtype.ext; apply Equiv.ext; intro ⟨a,b,x0,x1,x2,y0,y1,y2⟩; revert a b x0 x1 x2 y0 y1 y2; decide
+
+theorem weylWordVal_surjective :
+    Function.Surjective weylWordVal := by
+  intro ⟨g, hg⟩
+  have hmem : ∃ i : Fin 12, g = (weylWordVal i).1 := by
+    refine @Subgroup.closure_induction SplitOctF2Aut _
+      {swap01Aut, cycle012Aut, swapCartanAut}
+      (fun x _ => ∃ i : Fin 12, x = (weylWordVal i).1)
+      ?_ ?_ ?_ ?_ g hg
+    · intro x hx
+      rcases hx with rfl | rfl | rfl
+      · exact ⟨3, rfl⟩
+      · exact ⟨1, rfl⟩
+      · exact ⟨6, rfl⟩
+    · exact ⟨0, rfl⟩
+    · intro x y _ _ ⟨ix, hx_eq⟩ ⟨iy, hy_eq⟩
+      obtain ⟨k, hk⟩ := weyl_word_mul ix iy
+      refine ⟨k, ?_⟩
+      rw [hx_eq, hy_eq]
+      exact congrArg Subtype.val hk
+    · intro x _ ⟨ix, hx_eq⟩
+      obtain ⟨k, hk⟩ := weyl_word_inv ix
+      refine ⟨k, ?_⟩
+      rw [hx_eq]
+      exact congrArg Subtype.val hk
+  obtain ⟨i, hi⟩ := hmem
+  refine ⟨i, ?_⟩
+  apply Subtype.ext
+  exact hi.symm
+
+theorem concreteWeylSubgroup_card_eq_twelve :
+    Fintype.card concreteWeylSubgroup = 12 := by
+  have hinj : Function.Injective weylWordVal := by
+    intro i j h
+    have h' := congrArg Subtype.val h
+    exact concreteWeylElement_injective h'
+  have hequiv : Fin 12 ≃ concreteWeylSubgroup :=
+    Equiv.ofBijective weylWordVal ⟨hinj, weylWordVal_surjective⟩
+  rw [← Fintype.card_congr hequiv]
+  simp
+
+
+
 /-! The next theorem records the exact closure statement still needed for an
 exact-order result.  Its proof is intentionally separate from the lower-bound
 argument, so no finite cardinality is smuggled into a subgroup classification. -/

@@ -80,6 +80,19 @@ theorem nativeRootSubgroup_injective (r : PositiveNativeRoot) :
   have h_at := congrFun h r
   simpa [nativeRootSubgroup, nativeRootCoordinate] using h_at
 
+theorem nativeRootCoordinate_sum (x : PositiveNativeCoordinates) :
+    (∑ r : PositiveNativeRoot, nativeRootCoordinate r (x r)) = x := by
+  funext s
+  simp [nativeRootCoordinate]
+
+theorem nativeRootCoordinate_sum_unique (x : PositiveNativeCoordinates)
+    (c : PositiveNativeRoot → F2)
+    (h : (∑ r : PositiveNativeRoot, nativeRootCoordinate r (c r)) = x) :
+    c = x := by
+  funext r
+  have hr := congrFun h r
+  simpa [nativeRootCoordinate] using hr
+
 theorem positiveNativeCoordinates_card :
     Fintype.card PositiveNativeCoordinates = 64 := by
   have hcard : Fintype.card PositiveNativeRoot = 6 := positiveNativeRootCount

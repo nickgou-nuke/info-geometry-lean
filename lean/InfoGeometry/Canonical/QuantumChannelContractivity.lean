@@ -6,6 +6,8 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.InnerProductSpace.LinearMap
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Modular.ChoiCompletePositivity
+import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -15,6 +17,8 @@ noncomputable section
 
 open Matrix Complex
 open scoped InnerProductSpace
+open InfoGeometry.Modular.Choi
+open InfoGeometry.Modular.RelativeEntropy
 
 namespace QuantumChannelContractivity
 
@@ -79,6 +83,16 @@ theorem hermiticity_preserving (rho : Matrix (Fin n) (Fin n) ℂ) :
     (channel.apply rho).conjTranspose = channel.apply rho.conjTranspose := by
   dsimp [apply]
   rw [conjTranspose_mul, conjTranspose_mul, conjTranspose_conjTranspose, ← Matrix.mul_assoc]
+
+/-- 
+  **MASTER THEOREM**: Data Processing Inequality / Contractivity of Quantum Relative Entropy.
+  For any CPTP quantum channel trajectory with non-negative entropy production rate,
+  the relative entropy between the evolved state and invariant reference state is monotonically decreasing:
+    S(Φ_t(ρ) ∥ σ) ≤ S(ρ ∥ σ)
+-/
+theorem data_processing (traj : SemigroupTrajectory (Fin n)) (t : ℝ) (ht : 0 ≤ t) :
+    relEntropy (traj.state t) traj.inv_state ≤ relEntropy (traj.state 0) traj.inv_state :=
+  relEntropy_finite_time_contraction traj t ht
 
 end KrausQuantumChannel
 

@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
 import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
+import InfoGeometry.Lie.ContinuousDerivationExponential
 
 /-!
 # Exponential transport of the canonical Peirce frame

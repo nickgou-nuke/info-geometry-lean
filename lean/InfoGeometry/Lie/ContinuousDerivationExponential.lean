@@ -481,6 +481,36 @@ theorem flowLinearEquiv_symm_apply
       flow (-D) t x := by
   rfl
 
+theorem flow_map_linear
+    (D : EndA) (t : ℝ) (x : A) :
+    D (flow D t x) = flow D t (D x) := by
+  have hcomm : Commute D (flow D t) := by
+    dsimp [flow]
+    exact ((Commute.refl D).smul_right t).exp_right
+  exact congrArg (fun T : EndA => T x) hcomm
+
+theorem flowLinearEquiv_fixed_of_derivation_eq_zero
+    (D : EndA)
+    (x : A)
+    (hD : D x = 0)
+    (t : ℝ) :
+    flowLinearEquiv D t x = x := by
+  let f : ℝ → A := fun s => flow D s x
+  have hderiv : ∀ s : ℝ, HasDerivAt f 0 s := by
+    intro s
+    have hz : D (flow D s x) = 0 := by
+      rw [← flow_apply_derivation D s x, hD]
+      exact map_zero (flow D s)
+    have horbit := (hasStrictDerivAt_orbit D x s).hasDerivAt
+    rw [hz] at horbit
+    simpa [f] using horbit
+  have hdiff : Differentiable ℝ f := fun s => (hderiv s).differentiableAt
+  have hzero : ∀ s : ℝ, deriv f s = 0 := fun s => (hderiv s).deriv
+  have hconst := is_const_of_deriv_eq_zero hdiff hzero t 0
+  dsimp [f] at hconst
+  rw [flow_zero] at hconst
+  simpa [flowLinearEquiv] using hconst
+
 /--
 Strong automorphism statement in multiplication-preserving
 linear-equivalence form.

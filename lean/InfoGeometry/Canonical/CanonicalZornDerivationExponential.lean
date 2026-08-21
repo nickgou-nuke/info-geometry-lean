@@ -7,6 +7,7 @@ import Mathlib.Tactic
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
+import InfoGeometry.Lie.CanonicalZornDerivationCentralKernel
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
 import InfoGeometry.Canonical.ZornSpinor
@@ -21,6 +22,8 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornDerivationExponential
 open InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 
+local notation "CZ" => InfoGeometry.Lie.CanonicalZornDerivation.CZ
+
 /-!
 ## Landing in the native real split-octonion automorphism group
 -/
@@ -34,7 +37,15 @@ noncomputable def zornFlowRealAut
     (t : ℝ) : RealSplitOctonionAut :=
   ⟨zornFlowLinearEquiv D.1 t, by
     constructor
-    · exact zornFlow_map_one D.1 D.2 t
+    · apply InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.coordLE.injective
+      rw [InfoGeometry.Lie.CanonicalZornDerivationExponential.coordLE_zornFlowLinearEquiv]
+      have hcoord : coordEnd D.1
+          (InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.coordLE (1 : CZ)) = 0 := by
+        rw [coordEnd_coordLE, derivation_apply_one]
+        simp
+      exact InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv_fixed_of_derivation_eq_zero
+        (coordEnd D.1)
+        (InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.coordLE (1 : CZ)) hcoord t
     · intro X Y
       exact zornFlow_map_mul D.1 D.2 t X Y⟩
 
@@ -160,8 +171,10 @@ theorem zornFlowRealAut_neg
   change
     zornFlowLinearEquiv D.1 (-t) X =
       (zornFlowLinearEquiv D.1 t).symm X
-  have h := zornFlowLinearEquiv_neg_eq_symm D.1 t
-  rw [h]
+  apply (zornFlowLinearEquiv D.1 t).injective
+  rw [LinearEquiv.apply_symm_apply]
+  rw [← zornFlowLinearEquiv_add_apply D.1 t (-t)]
+  simp
 
 /--
 The canonical derivation exponential as a genuine one-parameter subgroup of

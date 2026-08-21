@@ -35,40 +35,46 @@ open InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 variable (D : canonicalZornDerivations)
 
 /-- 🏆 THEOREM 1: Time-zero flow is the identity automorphism. -/
-theorem expDerivation_zero (X : CZ) :
+theorem expDerivation_zero (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowMulEquiv D 0 X = X :=
   zornFlowMulEquiv_zero_apply D X
 
 /-- 🏆 THEOREM 2: 1-parameter group composition law: exp((s+t)D) = exp(sD) ∘ exp(tD). -/
-theorem expDerivation_add (s t : ℝ) (X : CZ) :
+theorem expDerivation_add (s t : ℝ)
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowMulEquiv D (s + t) X =
       zornFlowMulEquiv D s (zornFlowMulEquiv D t X) :=
   zornFlowMulEquiv_add_apply D s t X
 
 /-- 🏆 THEOREM 3: Exponentiated derivation preserves non-associative Zorn multiplication. -/
-theorem expDerivation_mul (t : ℝ) (X Y : CZ) :
+theorem expDerivation_mul (t : ℝ)
+    (X Y : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowMulEquiv D t (X * Y) =
       zornFlowMulEquiv D t X * zornFlowMulEquiv D t Y :=
   (zornFlowMulEquiv D t).map_mul X Y
 
 /-- 🏆 THEOREM 4: Time-one exponential automorphism. -/
-theorem expDerivation_one (X Y : CZ) :
+theorem expDerivation_one
+    (X Y : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornDerivationExpAutomorphism D (X * Y) =
       zornDerivationExpAutomorphism D X * zornDerivationExpAutomorphism D Y :=
   zornDerivationExpAutomorphism_map_mul D X Y
 
 /-- 🏆 THEOREM 5: Inverse flow is given by the negative derivation generator. -/
-theorem expDerivation_inv (t : ℝ) (X : CZ) :
+theorem expDerivation_inv (D : canonicalZornDerivations) (t : ℝ)
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowLinearEquiv (-D.1) t (zornFlowLinearEquiv D.1 t X) = X :=
   zornFlowLinearEquiv_neg_apply D.1 t X
 
 /-- 🏆 THEOREM 6: Reverse inverse identity. -/
-theorem expDerivation_inv_rev (t : ℝ) (X : CZ) :
+theorem expDerivation_inv_rev (D : canonicalZornDerivations) (t : ℝ)
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowLinearEquiv D.1 t (zornFlowLinearEquiv (-D.1) t X) = X :=
   zornFlowLinearEquiv_apply_neg D.1 t X
 
 /-- 🏆 THEOREM 7: Derivation exponential preserves the split-octonion determinant / composition norm. -/
-theorem expDerivation_preserves_detZ (t : ℝ) (X : CZ) :
+theorem expDerivation_preserves_detZ (t : ℝ)
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X :=
   InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlow_preserves_detZ D t X

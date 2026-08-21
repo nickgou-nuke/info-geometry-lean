@@ -107,6 +107,14 @@ def pc_word(exponents):
             result = (result @ matrix) % 2
     return result
 
+def matrix_inverse_from_order(matrix):
+    current = identity.copy()
+    for _ in range(1, 9):
+        current = (current @ matrix) % 2
+        if np.array_equal(current, identity):
+            return np.linalg.matrix_power(matrix, _ - 1) % 2
+    raise AssertionError("PC generator inverse was not found")
+
 # GAP's PC presentation has p2^2 = p6 and p3^2 = p6; the others square to 1.
 assert np.array_equal((pc[0] @ pc[0]) % 2, identity)
 assert np.array_equal((pc[1] @ pc[1]) % 2, pc[5])
@@ -119,7 +127,7 @@ for i, exponents in power_relations.items():
                           pc_word(exponents))
 assert len(conjugation_relations) == 15
 for (i, j), exponents in conjugation_relations.items():
-    lhs = (pc[i] @ pc[j] @ pc[i]) % 2
+    lhs = (matrix_inverse_from_order(pc[i]) @ pc[j] @ pc[i]) % 2
     assert np.array_equal(lhs, pc_word(exponents))
 
 print("GAP -> symbolic PC row transport: PASS")

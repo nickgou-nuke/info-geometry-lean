@@ -10,6 +10,7 @@ import InfoGeometry.Modular.ChoiCompletePositivity
 import InfoGeometry.Modular.Choi
 import InfoGeometry.Modular.QuantumRelativeEntropyMonotonicity
 import InfoGeometry.Modular.QuantumDataProcessingInequality
+import InfoGeometry.Modular.EntropyMonotonicity
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
 
 /-!

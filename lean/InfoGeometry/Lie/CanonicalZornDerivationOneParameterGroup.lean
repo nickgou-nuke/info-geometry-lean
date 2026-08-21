@@ -19,7 +19,7 @@ variable (D : canonicalZornDerivations)
 /-- Pointwise one-parameter group law for a canonical Zorn derivation. -/
 theorem zornFlow_add_apply
     (s t : ℝ)
-    (X : CZ) :
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowLinearEquiv D.1 (s + t) X =
       zornFlowLinearEquiv D.1 s
         (zornFlowLinearEquiv D.1 t X) := by
@@ -29,12 +29,20 @@ theorem zornFlow_add_apply
 @[simp]
 theorem zornFlow_apply_neg_flow
     (t : ℝ)
-    (X : CZ) :
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
     zornFlowLinearEquiv D.1 t
         (zornFlowLinearEquiv D.1 (-t) X) =
       X := by
-  have h := zornFlowLinearEquiv_neg_eq_symm D.1 t
-  rw [h]
-  exact LinearEquiv.apply_symm_apply (zornFlowLinearEquiv D.1 t) X
+  rw [← zornFlowLinearEquiv_add_apply, add_neg_cancel, zornFlowLinearEquiv_zero_apply]
+
+/-- Negative time followed by positive time is identity. -/
+@[simp]
+theorem zornFlow_neg_flow_apply
+    (t : ℝ)
+    (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
+    zornFlowLinearEquiv D.1 (-t)
+        (zornFlowLinearEquiv D.1 t X) =
+      X := by
+  rw [← zornFlowLinearEquiv_add_apply, neg_add_cancel, zornFlowLinearEquiv_zero_apply]
 
 end InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup

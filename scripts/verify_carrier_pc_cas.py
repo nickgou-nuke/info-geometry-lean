@@ -27,6 +27,8 @@ if run.stderr:
     raise AssertionError(f"GAP emitted diagnostics: {run.stderr}")
 
 rows_by_name = {}
+power_relations = {}
+conjugation_relations = {}
 for line in run.stdout.splitlines():
     match = re.fullmatch(r"PCROW ([1-6]) ([0-9,;]*)", line.strip())
     if match:
@@ -36,6 +38,19 @@ for line in run.stdout.splitlines():
         if len(rows) != 8:
             raise AssertionError(f"bad PCROW: {line}")
         rows_by_name[f"p{match.group(1)}"] = tuple(rows)
+        continue
+    match = re.fullmatch(r"PCPOWER ([1-6]) ([0-9]+) ([0-9,]*)", line.strip())
+    if match:
+        power_relations[int(match.group(1)) - 1] = tuple(
+            int(x) for x in match.group(3).split(",") if x
+        )
+        continue
+    match = re.fullmatch(r"PCCONJ ([1-6]) ([1-6]) ([0-9,]*)", line.strip())
+    if match:
+        conjugation_relations[(int(match.group(1)) - 1,
+                               int(match.group(2)) - 1)] = tuple(
+            int(x) for x in match.group(3).split(",") if x
+        )
 
 if set(rows_by_name) != {f"p{i}" for i in range(1, 7)}:
     raise AssertionError(f"missing GAP PC rows: {sorted(rows_by_name)}")
@@ -85,13 +100,29 @@ pc = [matrix_of_rows(rows_by_name[f"p{i}"]) for i in range(1, 7)]
 assert all(symbolic_automorphism(matrix) for matrix in pc)
 identity = np.eye(8, dtype=int)
 
+def pc_word(exponents):
+    result = identity.copy()
+    for matrix, exponent in zip(pc, exponents):
+        for _ in range(exponent):
+            result = (result @ matrix) % 2
+    return result
+
 # GAP's PC presentation has p2^2 = p6 and p3^2 = p6; the others square to 1.
 assert np.array_equal((pc[0] @ pc[0]) % 2, identity)
 assert np.array_equal((pc[1] @ pc[1]) % 2, pc[5])
 assert np.array_equal((pc[2] @ pc[2]) % 2, pc[5])
 for i in (3, 4, 5):
     assert np.array_equal((pc[i] @ pc[i]) % 2, identity)
+assert len(power_relations) == 6
+for i, exponents in power_relations.items():
+    assert np.array_equal(np.linalg.matrix_power(pc[i], 2) % 2,
+                          pc_word(exponents))
+assert len(conjugation_relations) == 15
+for (i, j), exponents in conjugation_relations.items():
+    lhs = (pc[i] @ pc[j] @ pc[i]) % 2
+    assert np.array_equal(lhs, pc_word(exponents))
 
 print("GAP -> symbolic PC row transport: PASS")
 print("All six GAP-derived PC matrices preserve split-Zorn multiplication")
 print("GAP PC power relations: PASS")
+print("GAP PC conjugation relations (15): PASS")

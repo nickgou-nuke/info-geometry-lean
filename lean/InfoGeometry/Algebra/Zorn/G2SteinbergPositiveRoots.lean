@@ -224,6 +224,9 @@ theorem positiveRootSubgroup_contains_packet_range :
   intro g hg
   exact Subgroup.subset_closure hg
 
+noncomputable instance positiveRootSubgroupFintype :
+    Fintype positiveRootSubgroup := Fintype.ofFinite _
+
 noncomputable def positiveRootPacketEquivRange :
     Fin 6 ≃ Set.range positiveRootPacket :=
   Equiv.ofBijective
@@ -235,6 +238,32 @@ noncomputable def positiveRootPacketEquivRange :
       intro x
       rcases x with ⟨x, i, rfl⟩
       exact ⟨i, rfl⟩⟩
+
+noncomputable instance positiveRootRangeFintype :
+    Fintype (Set.range positiveRootPacket) := Fintype.ofFinite _
+
+theorem positiveRootPacket_range_card :
+    Fintype.card (Set.range positiveRootPacket) = 6 := by
+  rw [← Fintype.card_congr positiveRootPacketEquivRange]
+  simp
+
+noncomputable def positiveRootRangeToSubgroup
+    (x : Set.range positiveRootPacket) : positiveRootSubgroup :=
+  ⟨x.1, positiveRootSubgroup_contains_packet_range x.2⟩
+
+theorem positiveRootRangeToSubgroup_injective :
+    Function.Injective positiveRootRangeToSubgroup := by
+  intro x y h
+  apply Subtype.ext
+  exact congrArg (fun z : positiveRootSubgroup => (z : SplitOctF2Aut)) h
+
+theorem positiveRootSubgroup_card_lower_bound_six :
+    6 ≤ Fintype.card positiveRootSubgroup := by
+  have hcard : Fintype.card (Set.range positiveRootPacket) ≤
+      Fintype.card positiveRootSubgroup :=
+    Fintype.card_le_of_injective positiveRootRangeToSubgroup
+      positiveRootRangeToSubgroup_injective
+  simpa [positiveRootPacket_range_card] using hcard
 
 noncomputable def positiveRootAction (i : Fin 6) (t : Bool) : SplitOctF2Aut :=
   if t then positiveRootPacket i else 1
@@ -429,5 +458,142 @@ theorem unipotentWord3_injective : Function.Injective unipotentWord3 := by
   dsimp at h1 h2 h3
   subst h1 h2 h3
   rfl
+
+theorem unipotentWord3_mem_positiveRootSubgroup
+    (b : Bool × Bool × Bool) :
+    unipotentWord3 b ∈ positiveRootSubgroup := by
+  have hs : (if b.1 then uShort else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.1 <;> simp [h]
+    exact positiveRootPacket_mem_subgroup 0
+  have hl : (if b.2.1 then uLong else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.1 <;> simp [h]
+    exact positiveRootPacket_mem_subgroup 1
+  have hm : (if b.2.2 then uMid else 1) ∈ positiveRootSubgroup := by
+    by_cases h : b.2.2 <;> simp [h]
+    exact positiveRootPacket_mem_subgroup 2
+  exact positiveRootSubgroup.mul_mem
+    (positiveRootSubgroup.mul_mem hs hl) hm
+
+theorem positiveRootSubgroup_card_lower_bound :
+    8 ≤ Fintype.card positiveRootSubgroup := by
+  let f : Bool × Bool × Bool → positiveRootSubgroup :=
+    fun b => ⟨unipotentWord3 b, unipotentWord3_mem_positiveRootSubgroup b⟩
+  have hf : Function.Injective f := by
+    intro b c h
+    exact unipotentWord3_injective (Subtype.ext_iff.mp h)
+  have hc := Fintype.card_le_of_injective f hf
+  simpa using hc
+
+theorem simpleRootSubgroup_le_positiveRootSubgroup :
+    simpleRootSubgroup ≤ positiveRootSubgroup := by
+  apply Subgroup.closure_mono
+  intro g hg
+  rcases hg with rfl | rfl
+  · exact ⟨0, rfl⟩
+  · exact ⟨1, rfl⟩
+
+theorem uMidOrbit_mem_positiveRootSubgroup (i : Fin 3) :
+    uMidOrbit i ∈ positiveRootSubgroup := by
+  fin_cases i
+  · exact positiveRootPacket_mem_subgroup 2
+  · exact positiveRootPacket_mem_subgroup 4
+  · exact positiveRootPacket_mem_subgroup 5
+
+
+/-!
+=============================================================================
+PART 5: Ordered 6-Root Unipotent Words and Exact 64-Element Injectivity
+=============================================================================
+-/
+
+/-- The 64 ordered unipotent words formed by the 6 positive root automorphisms. -/
+noncomputable def unipotentWord6 (b : Fin 6 → Bool) : SplitOctF2Aut :=
+  positiveRootAction 0 (b 0) *
+  positiveRootAction 1 (b 1) *
+  positiveRootAction 2 (b 2) *
+  positiveRootAction 3 (b 3) *
+  positiveRootAction 4 (b 4) *
+  positiveRootAction 5 (b 5)
+
+theorem unipotentWord6_b0 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up1).x0 = b 0 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b1 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down1).y2 = b 1 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b2 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up2).x0 = b 2 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b3 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down2).y0 = b 3 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b4 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 up0).x1 = b 4 := by
+  revert b
+  decide
+
+theorem unipotentWord6_b5 (b : Fin 6 → Bool) :
+    ((unipotentWord6 b).1 down2).y1 = b 5 := by
+  revert b
+  decide
+
+/-- 🏆 THEOREM: The 64 ordered unipotent words are strictly injective! -/
+theorem unipotentWord6_injective : Function.Injective unipotentWord6 := by
+  intro b c h
+  ext i
+  fin_cases i
+  · have h0 : ((unipotentWord6 b).1 up1).x0 = ((unipotentWord6 c).1 up1).x0 := by rw [h]
+    rw [unipotentWord6_b0 b, unipotentWord6_b0 c] at h0
+    exact h0
+  · have h1 : ((unipotentWord6 b).1 down1).y2 = ((unipotentWord6 c).1 down1).y2 := by rw [h]
+    rw [unipotentWord6_b1 b, unipotentWord6_b1 c] at h1
+    exact h1
+  · have h2 : ((unipotentWord6 b).1 up2).x0 = ((unipotentWord6 c).1 up2).x0 := by rw [h]
+    rw [unipotentWord6_b2 b, unipotentWord6_b2 c] at h2
+    exact h2
+  · have h3 : ((unipotentWord6 b).1 down2).y0 = ((unipotentWord6 c).1 down2).y0 := by rw [h]
+    rw [unipotentWord6_b3 b, unipotentWord6_b3 c] at h3
+    exact h3
+  · have h4 : ((unipotentWord6 b).1 up0).x1 = ((unipotentWord6 c).1 up0).x1 := by rw [h]
+    rw [unipotentWord6_b4 b, unipotentWord6_b4 c] at h4
+    exact h4
+  · have h5 : ((unipotentWord6 b).1 down2).y1 = ((unipotentWord6 c).1 down2).y1 := by rw [h]
+    rw [unipotentWord6_b5 b, unipotentWord6_b5 c] at h5
+    exact h5
+
+theorem positiveRootAction_mem_positiveRootSubgroup (i : Fin 6) (t : Bool) :
+    positiveRootAction i t ∈ positiveRootSubgroup := by
+  cases t
+  · simp [positiveRootAction]
+  · simp [positiveRootAction, positiveRootPacket_mem_subgroup i]
+
+theorem unipotentWord6_mem_positiveRootSubgroup (b : Fin 6 → Bool) :
+    unipotentWord6 b ∈ positiveRootSubgroup := by
+  dsimp [unipotentWord6]
+  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 5 (b 5))
+  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 4 (b 4))
+  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 3 (b 3))
+  refine positiveRootSubgroup.mul_mem ?_ (positiveRootAction_mem_positiveRootSubgroup 2 (b 2))
+  refine positiveRootSubgroup.mul_mem (positiveRootAction_mem_positiveRootSubgroup 0 (b 0)) (positiveRootAction_mem_positiveRootSubgroup 1 (b 1))
+
+/-- 🏆 THEOREM: The positive root subgroup has cardinality at least 64! -/
+theorem positiveRootSubgroup_card_ge_64 :
+    64 ≤ Fintype.card positiveRootSubgroup := by
+  have hinj : Function.Injective (fun b : Fin 6 → Bool => (⟨unipotentWord6 b, unipotentWord6_mem_positiveRootSubgroup b⟩ : positiveRootSubgroup)) := by
+    intro x y hxy
+    have hval : unipotentWord6 x = unipotentWord6 y := Subtype.ext_iff.mp hxy
+    exact unipotentWord6_injective hval
+  have hle := Fintype.card_le_of_injective _ hinj
+  have hcard : Fintype.card (Fin 6 → Bool) = 64 := by decide
+  rw [hcard] at hle
+  exact hle
 
 end InfoGeometry.Algebra.Zorn.G2SteinbergRoots

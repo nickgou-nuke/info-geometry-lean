@@ -2,7 +2,8 @@
 # This is an export artifact only; it is not imported by Lean.
 Read("scripts/verify_carrier_u64_exact.g");
 
-iso := IsomorphismPcGroup(B);
+S := SylowSubgroup(G, 2);
+iso := IsomorphismPcGroup(S);
 P := Image(iso);
 Print("PC group structure: ", StructureDescription(P), "\n");
 pcgens := GeneratorsOfGroup(P);
@@ -24,8 +25,9 @@ Print("PC coordinate product: ", Product(rels), "\n");
 # Export the carrier matrices of the PC generators for symbolic Lean alignment.
 for i in [1..Length(preimages)] do
   mat := preimages[i];
-  rows := List(mat, row -> Filtered([1..8], j -> row[j] <> Zero(GF(2))));
-  Print("p", i, " row supports = ", rows, "\n");
+  columns := List([1..8], col ->
+    Filtered([1..8], row -> mat[row][col] <> Zero(GF(2))));
+  Print("p", i, " column supports = ", columns, "\n");
 od;
 
 # Corrected normal-form check: use the PC generators, not the original

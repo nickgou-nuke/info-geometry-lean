@@ -130,17 +130,11 @@ def pc3Equiv : SplitOctF2 ≃ SplitOctF2 where
 def pc3Aut : SplitOctF2Aut :=
   ⟨pc3Equiv, pc3_one, pc3_add, pc3_mul⟩
 
-theorem pc2Aut_sq_eq_pc6Aut : pc2Aut * pc2Aut = pc6Aut := by
-  apply Subtype.ext
-  apply Equiv.ext
-  intro X
-  exact pc2_sq X
-
-theorem pc3Aut_sq_eq_pc6Aut : pc3Aut * pc3Aut = pc6Aut := by
-  apply Subtype.ext
-  apply Equiv.ext
-  intro X
-  exact pc3_sq X
+theorem pc6Aut_ne_one : pc6Aut ≠ 1 := by
+  intro h
+  have hx := congrArg (fun f : SplitOctF2Aut => (f.1 (basis8 7)).y0) h
+  revert hx
+  decide
 
 def pcGenerator : Fin 6 → SplitOctF2Aut
   | 0 => pc1Aut

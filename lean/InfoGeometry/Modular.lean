@@ -6,6 +6,7 @@ import InfoGeometry.Modular.ModularTimeSemigroupBridge
 import InfoGeometry.Modular.SemidirectExteriorAlgebra
 import InfoGeometry.Modular.GKSLDissipatorAlgebraic
 import InfoGeometry.Modular.SchrodingerGKSL
+import InfoGeometry.Modular.ChoiCompletePositivity
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
 
 /-!

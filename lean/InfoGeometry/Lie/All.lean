@@ -217,3 +217,4 @@ import InfoGeometry.Lie.CanonicalZornRootWittBlockBridge
 import InfoGeometry.Lie.G2WittImageCharacterizationBridge
 import InfoGeometry.Lie.SplitOctonionWittSkewEndomorphismSubalgebra
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
+import InfoGeometry.Lie.CartanKrein

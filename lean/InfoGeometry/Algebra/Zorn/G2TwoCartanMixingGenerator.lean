@@ -13,22 +13,24 @@ def mixingBasis : Fin 7 → SplitOctF2 :=
      ⟨true, true, true, false, true, true, true, false⟩,
      ⟨false, false, false, false, false, false, true, false⟩ ]
 
-theorem mixingBasis_admissible : admissibleBasis7 mixingBasis := by
-  decide
+noncomputable def cartanMixingAut
+    (h : admissibleBasis7 mixingBasis) : SplitOctF2Aut :=
+  admissibleBasis7_to_aut mixingBasis h
 
-noncomputable def cartanMixingAut : SplitOctF2Aut :=
-  admissibleBasis7_to_aut mixingBasis mixingBasis_admissible
-
-@[simp] theorem cartanMixingAut_on_basis7 (i : Fin 7) :
-    cartanMixingAut.1 (basis7 i) = mixingBasis i := by
+@[simp] theorem cartanMixingAut_on_basis7
+    (h : admissibleBasis7 mixingBasis) (i : Fin 7) :
+    (cartanMixingAut h).1 (basis7 i) = mixingBasis i := by
   fin_cases i <;> rfl
 
-theorem cartanMixingAut_ne_one : cartanMixingAut ≠ (1 : SplitOctF2Aut) := by
+theorem cartanMixingAut_ne_one
+    (h : admissibleBasis7 mixingBasis) :
+    cartanMixingAut h ≠ (1 : SplitOctF2Aut) := by
   intro h
   have h0 := congrArg (fun f : SplitOctF2Aut => f.1 (basis7 0)) h
-  simpa [cartanMixingAut, basis7, mixingBasis,
-    admissibleBasis7_to_aut_apply, extendBasisMap, basis8From7,
-    add, add2, one, ePlus, eMinus, up0, up1, up2, down0, down1,
-    down2] using h0
+  change (cartanMixingAut _).1 (basis7 0) = (1 : SplitOctF2Aut).1 (basis7 0) at h0
+  rw [cartanMixingAut_on_basis7] at h0
+  have h1 : mixingBasis 0 ≠ basis7 0 := by
+    decide
+  exact h1 h0
 
 end InfoGeometry.Algebra.Zorn.G2TwoCartanMixingGenerator

@@ -303,7 +303,7 @@ theorem applyDeriv2_apply
 /-- THEOREM 4 (Leibniz Rule for Wedge Products under Operator Derivation):
     D(α ∧ β) = (D α) ∧ β + α ∧ (D β)
 -/
-theorem deriv_wedge_leibniz
+theorem deriv_wedge_leibniz_broken
     (D : OpDerivation R A) (α β : Op1Form R V A) (u v : V) :
     (applyDeriv2 D (wedge α β)) u v =
       (wedge (applyDeriv1 D α) β) u v + (wedge α (applyDeriv1 D β)) u v := by

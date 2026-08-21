@@ -41,23 +41,20 @@ if set(rows_by_name) != {f"p{i}" for i in range(1, 7)}:
     raise AssertionError(f"missing GAP PC rows: {sorted(rows_by_name)}")
 
 def xor(*terms):
-    result = 0
-    for term in terms:
-        result ^= term
-    return result
+    return sum(terms)
 
 def zorn_mul(left, right):
-    a, x0, x1, x2, y0, y1, y2, b = left
-    A, X0, X1, X2, Y0, Y1, Y2, B = right
+    a, b, x0, x1, x2, y0, y1, y2 = left
+    A, B, X0, X1, X2, Y0, Y1, Y2 = right
     return (
         xor(a * A, x0 * Y0, x1 * Y1, x2 * Y2),
-        xor(a * X0, A * x0, y1 * Y2, y2 * Y1),
-        xor(a * X1, A * x1, y2 * Y0, y0 * Y2),
-        xor(a * X2, A * x2, y0 * Y1, y1 * Y0),
-        xor(b * Y0, A * y0, x1 * X2, x2 * X1),
-        xor(b * Y1, A * y1, x2 * X0, x0 * X2),
-        xor(b * Y2, A * y2, x0 * X1, x1 * X0),
         xor(b * B, y0 * X0, y1 * X1, y2 * X2),
+        xor(a * X0, B * x0, y1 * Y2, y2 * Y1),
+        xor(a * X1, B * x1, y2 * Y0, y0 * Y2),
+        xor(a * X2, B * x2, y0 * Y1, y1 * Y0),
+        xor(A * y0, b * Y0, x1 * X2, x2 * X1),
+        xor(A * y1, b * Y1, x2 * X0, x0 * X2),
+        xor(A * y2, b * Y2, x0 * X1, x1 * X0),
     )
 
 z = symbols("a x0 x1 x2 y0 y1 y2 b")

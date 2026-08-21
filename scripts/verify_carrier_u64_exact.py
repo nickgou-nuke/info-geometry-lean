@@ -5,6 +5,9 @@ ON THE SPLIT OCTONION ALGEBRA OVER GF(2)
 """
 
 import numpy as np
+import ast
+import re
+import subprocess
 from sympy import Poly, symbols
 
 # Basis ordering:
@@ -223,14 +226,23 @@ for i, g in enumerate(gens, 1):
 # they generate order 12096.  The Sylow-2 carrier is checked separately by
 # the polycyclic CAS artifact and by the symbolic PC formulas below.
 
-pc_row_formulas = {
-    "p1": ((0,3),(1,3),(2,7),(3,),(3,4,5),(5,),(0,1,3,6,7),(7,)),
-    "p2": ((0,7),(1,7),(2,),(2,3),(0,1,3,4,7),(2,3,5,6,7),(2,6,7),(7,)),
-    "p3": ((0,2,7),(1,2,7),(2,),(3,7),(0,1,3,4,6),(0,1,2,3,5,7),(2,6,7),(7,)),
-    "p4": ((0,),(1,),(2,),(3,),(3,4),(5,),(6,7),(7,)),
-    "p5": ((0,7),(1,7),(2,),(3,),(0,1,3,4,7),(3,5),(2,6,7),(7,)),
-    "p6": ((0,),(1,),(2,),(3,),(2,4),(5,7),(6,),(7,)),
-}
+def gap_pc_row_formulas():
+    output = subprocess.check_output(
+        ["gap", "-q", "scripts/export_carrier_pc_rows.g"], text=True)
+    rows = {}
+    for line in output.splitlines():
+        match = re.fullmatch(r"PC_ROW_(\d)_(\d)=\s*(\[.*\])", line.strip())
+        if match:
+            generator, row = (int(match.group(1)), int(match.group(2)))
+            rows.setdefault(generator, {})[row] = tuple(
+                column - 1 for column in ast.literal_eval(match.group(3)))
+    if set(rows) != set(range(1, 7)) or any(set(r) != set(range(1, 9)) for r in rows.values()):
+        raise RuntimeError("incomplete GAP PC row export")
+    return {f"p{i}": tuple(rows[i][row] for row in range(1, 9))
+            for i in range(1, 7)}
+
+pc_row_formulas = gap_pc_row_formulas()
+print("GAP-to-SymPy PC row export: PASS")
 
 def matrix_of_row_formulas(formulas):
     M = np.zeros((8, 8), dtype=int)

@@ -7470,4 +7470,6 @@ import InfoGeometry.InformationGeometry.BKMMetricModularBridge
 import InfoGeometry.InformationGeometry.KMSThermodynamicIdentity
 import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
 import InfoGeometry.Algebra.SplitAlbertF4Classification
+import InfoGeometry.Canonical.UHFModularColimit
+import InfoGeometry.Modular.KMSColimitExtension
 

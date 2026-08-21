@@ -75,6 +75,26 @@ theorem g2weylGroup_card_le_twelve :
   rw [concreteWeylSubgroup_card_eq_twelve] at h
   exact h
 
+def concreteN : Subgroup SplitOctF2Aut := concreteWeylSubgroup
+
+noncomputable instance : Finite concreteN := by
+  dsimp [concreteN]
+  infer_instance
+
+noncomputable instance : Fintype concreteN := Fintype.ofFinite _
+
+theorem concreteN_card_eq_twelve : Fintype.card concreteN = 12 := by
+  exact concreteWeylSubgroup_card_eq_twelve
+
+theorem concreteN_generated_by_representatives :
+    concreteN = Subgroup.closure (Set.range concreteWeylElement) := by
+  exact concreteWeylSubgroup_generated_by_representatives
+
+theorem concreteN_contains_cyclotomic_generators :
+    cycle012Aut ∈ concreteN ∧ swap01Aut ∈ concreteN ∧ swapCartanAut ∈ concreteN := by
+  exact ⟨cycle012Aut_mem_subgroup, swap01Aut_mem_subgroup,
+    swapCartanAut_mem_subgroup⟩
+
 theorem root_card_twelve : Fintype.card Root = 12 := by
   exact root_card
 

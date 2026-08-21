@@ -871,6 +871,21 @@ theorem simpleRootSubgroup_card_eq_eight :
   rw [← Fintype.card_congr hequiv]
   simp
 
+/-- The concrete two-generator subgroup has a genuine eight-element normal-form
+equivalence.  This is stronger than a cardinality calculation and is the
+reusable finite subgroup interface for later subgroup transport arguments. -/
+noncomputable def simpleRootSubgroupEquivFin8 :
+    Fin 8 ≃ simpleRootSubgroup :=
+  Equiv.ofBijective eightRootSubgroupWords
+    ⟨eightRootSubgroupWords_injective, eightRootSubgroupWords_surjective⟩
+
+@[simp] theorem simpleRootSubgroupEquivFin8_apply (i : Fin 8) :
+    simpleRootSubgroupEquivFin8 i = eightRootSubgroupWords i := rfl
+
+theorem simpleRootSubgroupEquivFin8_card :
+    Fintype.card simpleRootSubgroup = Fintype.card (Fin 8) := by
+  exact Fintype.card_congr simpleRootSubgroupEquivFin8.symm
+
 
 theorem simple_root_generator_packet :
     (unipotentShortAut true) * (unipotentShortAut true) = 1 ∧

@@ -114,4 +114,65 @@ theorem sylowGenerator_ne_one (i : Fin 5)
     have hy := congrArg (fun z : SplitOctF2 => z.y2) hj
     simp [sylowBasis, ePlus] at hy
 
+theorem sylowGenerator_injective
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) :
+    Function.Injective (fun i : Fin 5 => sylowGenerator i (h i)) := by
+  intro i j hij
+  have he := congrArg (fun f : SplitOctF2Aut =>
+      (f.1 (basis7 0), f.1 (basis7 2), f.1 (basis7 3),
+        f.1 (basis7 4), f.1 (basis7 5), f.1 (basis7 6))) hij
+  change
+    ((sylowGenerator i (h i)).1 (basis7 0),
+      (sylowGenerator i (h i)).1 (basis7 2),
+      (sylowGenerator i (h i)).1 (basis7 3),
+      (sylowGenerator i (h i)).1 (basis7 4),
+      (sylowGenerator i (h i)).1 (basis7 5),
+      (sylowGenerator i (h i)).1 (basis7 6)) =
+    ((sylowGenerator j (h j)).1 (basis7 0),
+      (sylowGenerator j (h j)).1 (basis7 2),
+      (sylowGenerator j (h j)).1 (basis7 3),
+      (sylowGenerator j (h j)).1 (basis7 4),
+      (sylowGenerator j (h j)).1 (basis7 5),
+      (sylowGenerator j (h j)).1 (basis7 6)) at he
+  fin_cases i <;> fin_cases j
+  all_goals try rfl
+  all_goals
+    simp only [sylowGenerator_on_basis7] at he
+    revert he
+    decide
+
+noncomputable def sylowCandidateSubgroup
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) :
+    Subgroup SplitOctF2Aut :=
+  Subgroup.closure (Set.range (fun i : Fin 5 => sylowGenerator i (h i)))
+
+noncomputable instance sylowCandidateSubgroup_finite
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) :
+    Finite (sylowCandidateSubgroup h) :=
+  Finite.of_injective Subtype.val Subtype.val_injective
+
+noncomputable instance sylowCandidateSubgroup_fintype
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) :
+    Fintype (sylowCandidateSubgroup h) :=
+  Fintype.ofFinite _
+
+theorem sylowGenerator_mem_candidateSubgroup
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) (i : Fin 5) :
+    sylowGenerator i (h i) ∈ sylowCandidateSubgroup h := by
+  exact Subgroup.subset_closure ⟨i, rfl⟩
+
+theorem sylowCandidateSubgroup_card_lower_bound
+    (h : ∀ i : Fin 5, admissibleBasis7 (sylowBasis i)) :
+    5 ≤ Fintype.card (sylowCandidateSubgroup h) := by
+  let f : Fin 5 → sylowCandidateSubgroup h := fun i =>
+    ⟨sylowGenerator i (h i), sylowGenerator_mem_candidateSubgroup h i⟩
+  have hf : Function.Injective f := by
+    intro i j hij
+    apply sylowGenerator_injective h
+    exact congrArg Subtype.val hij
+  have hc : Fintype.card (Fin 5) ≤
+      Fintype.card (sylowCandidateSubgroup h) :=
+    Fintype.card_le_of_injective f hf
+  simpa using hc
+
 end InfoGeometry.Algebra.Zorn.G2TwoSylowCandidate

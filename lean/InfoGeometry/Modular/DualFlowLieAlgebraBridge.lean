@@ -45,13 +45,15 @@ theorem map_zero : D 0 = 0 := by
   exact add_left_cancel h
 
 @[simp]
-theorem map_neg (x : A) : D (-x) = - D x := by
+theorem map_neg (x : A) :
+    D (-x) = - D x := by
   have h : D x + D (-x) = 0 := by
     rw [← D.map_add, add_neg_cancel, D.map_zero]
   exact eq_neg_of_add_eq_zero_right h
 
 @[simp]
-theorem map_sub (x y : A) : D (x - y) = D x - D y := by
+theorem map_sub (x y : A) :
+    D (x - y) = D x - D y := by
   rw [sub_eq_add_neg, D.map_add, D.map_neg, ← sub_eq_add_neg]
 
 @[simp]

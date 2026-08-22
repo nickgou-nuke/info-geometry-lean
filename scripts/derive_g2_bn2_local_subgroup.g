@@ -13,6 +13,9 @@ rows := [
 ];
 pcgens := List(rows, rs -> List([1..8], i -> List([1..8], j -> entry(j, rs[i]))));
 B := Group(pcgens);
+psi := IsomorphismPcGroup(B);
+P := Image(psi);
+pcgsP := Pcgs(P);
 s := PermutationMat((3,4)(6,7), 8, F);
 H := Intersection(B, B^s);
 Print("B_SIZE=", Size(B), "\n");
@@ -22,12 +25,11 @@ Print("H_PC_GENERATORS=", Length(Pcgs(H)), "\n");
 Hpc := Group(Concatenation([pcgens[1]], pcgens{[3..6]}));
 Print("H_GENERATED_BY_PC_COMPLEMENT=", Hpc = H, "\n");
 Print("INDEX_B_H=", Index(B,H), "\n");
-pcgs := Pcgs(B);
 for i in [1,3,4,5,6] do
   conjugate := s^-1 * pcgens[i] * s;
   Print("CONJ_PC_", i, "_IN_B=", conjugate in B);
   if conjugate in B then
-    Print(" EXP="); Print(ExponentsOfPcElement(pcgs, conjugate)); Print("\n");
+    Print(" EXP="); Print(ExponentsOfPcElement(pcgsP, Image(psi, conjugate))); Print("\n");
   else
     Print("\n");
   fi;
@@ -44,7 +46,7 @@ for i in [1,2,3,4,5,6] do
   conjugate := t^-1 * pcgens[i] * t;
   Print("CONJ_T_PC_", i, "_IN_B=", conjugate in B);
   if conjugate in B then
-    Print(" EXP="); Print(ExponentsOfPcElement(pcgs, conjugate)); Print("\n");
+    Print(" EXP="); Print(ExponentsOfPcElement(pcgsP, Image(psi, conjugate))); Print("\n");
   else
     Print("\n");
   fi;

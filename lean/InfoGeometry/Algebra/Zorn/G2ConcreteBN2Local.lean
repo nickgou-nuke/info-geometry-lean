@@ -31,6 +31,6 @@ theorem swap01_conj_pc0 :
     pc6Fun (pc4Fun (pc3Fun (pc1Fun (basis8 i))))
   fin_cases i <;>
     dsimp [swap01Fun, pc1Fun, pc3Fun, pc4Fun, pc6Fun, basis8] <;>
-    rfl
+    ext <;> simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
 
 end InfoGeometry.Algebra.Zorn.G2ConcreteBN2Local

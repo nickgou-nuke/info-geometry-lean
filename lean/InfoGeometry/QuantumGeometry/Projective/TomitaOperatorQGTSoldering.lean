@@ -42,7 +42,6 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 local notation "NambuH" => DoubledSpace H
 local notation "EndC" => NambuH →L[ℂ] NambuH
-local notation "Kℂ" => nambuClockAxis (H := H)
 
 /-- Use Mathlib's canonical real restriction of the complex Hilbert structure. -/
 local instance complexBaseRealInner : InnerProductSpace ℝ H :=
@@ -52,6 +51,7 @@ local instance complexBaseRealInner : InnerProductSpace ℝ H :=
 The doubled Hestenes/Tomita phase axis regarded as a complex-linear operator on
 the Nambu Hilbert carrier.
 -/
+set_option maxRecDepth 10000 in
 noncomputable def nambuClockAxis : EndC where
   toFun := fun u => clockAxis (E := H) u
   map_add' := by
@@ -65,12 +65,12 @@ noncomputable def nambuClockAxis : EndC where
 
 @[simp]
 theorem nambuClockAxis_apply (u : NambuH) :
-    Kℂ u = clockAxis (E := H) u := by
+    nambuClockAxis (H := H) u = clockAxis (E := H) u := by
   rfl
 
 /-- The complex and real readouts of the phase axis are literally the same map. -/
 theorem nambuClockAxis_restrictScalars_eq_clockAxis :
-    Kℂ.restrictScalars ℝ = clockAxis (E := H) := by
+    (nambuClockAxis (H := H)).restrictScalars ℝ = clockAxis (E := H) := by
   apply ContinuousLinearMap.ext
   intro u
   rfl
@@ -78,7 +78,8 @@ theorem nambuClockAxis_restrictScalars_eq_clockAxis :
 /-- The Nambu phase axis squares to `-1` also as a complex-linear operator. -/
 @[simp]
 theorem nambuClockAxis_sq :
-    Kℂ.comp Kℂ = -(ContinuousLinearMap.id ℂ NambuH) := by
+    (nambuClockAxis (H := H)).comp (nambuClockAxis (H := H)) =
+      -(ContinuousLinearMap.id ℂ NambuH) := by
   apply ContinuousLinearMap.ext
   intro u
   have h := congrArg
@@ -88,11 +89,11 @@ theorem nambuClockAxis_sq :
 
 /-- Positive Hestenes polarization: `K ψ = i ψ`. -/
 def IsPositiveClockPolarized (u : NambuH) : Prop :=
-  Kℂ u = Complex.I • u
+  nambuClockAxis (H := H) u = Complex.I • u
 
 /-- A complex tangent generator is phase-linear when it commutes with `K`. -/
 def CommutesClock (X : EndC) : Prop :=
-  X.comp Kℂ = Kℂ.comp X
+  X.comp (nambuClockAxis (H := H)) = (nambuClockAxis (H := H)).comp X
 
 /-- A phase-linear generator preserves the positive Hestenes polarization. -/
 theorem apply_positiveClockPolarized
@@ -103,7 +104,7 @@ theorem apply_positiveClockPolarized
   unfold CommutesClock at hX
   unfold IsPositiveClockPolarized at hu ⊢
   have hx := congrArg (fun T : EndC => T u) hX
-  change X (Kℂ u) = Kℂ (X u) at hx
+  change X (nambuClockAxis (H := H) u) = nambuClockAxis (H := H) (X u) at hx
   rw [hu] at hx
   rw [map_smul] at hx
   exact hx.symm
@@ -133,7 +134,8 @@ product.
 theorem nambu_real_inner_eq_re_complex_inner (u v : NambuH) :
     ⟪u, v⟫_ℝ = (⟪u, v⟫_ℂ).re := by
   rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
-  simp only [InnerProductSpace.real_inner_eq_re_inner, map_add]
+  rw [real_inner_eq_re_inner]
+  exact map_add Complex.re _ _
 
 /-- Operatorial real metric evaluated on projective horizontal tangent vectors. -/
 noncomputable def horizontalOperatorMetric
@@ -186,7 +188,7 @@ theorem horizontalOperatorBerry_eq_QGT_im
   simp only [ContinuousLinearMap.id_apply]
   change ⟪clockAxis (E := H) u, v⟫_ℝ = (QGT ψ X Y).im
   rw [nambu_real_inner_eq_re_complex_inner]
-  change (⟪Kℂ u, v⟫_ℂ).re = (QGT ψ X Y).im
+  change (⟪nambuClockAxis (H := H) u, v⟫_ℂ).re = (QGT ψ X Y).im
   unfold IsPositiveClockPolarized at hu
   rw [hu, inner_smul_left]
   rw [hQ]

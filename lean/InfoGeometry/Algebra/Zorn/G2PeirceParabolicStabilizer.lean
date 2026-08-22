@@ -282,3 +282,216 @@ theorem total_flags_card :
   parabolic_flag_card
 
 end InfoGeometry.Algebra.Zorn.HexagonIncidenceFiber
+
+namespace InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
+
+open Function
+open InfoGeometry.Algebra.Zorn.ParabolicFiberP1
+
+/-! =========================================================================
+    5. 7D Imaginary Split-Octonion Geometry & Flag Fiber Definition
+    ========================================================================= -/
+
+/-- The 7-dimensional imaginary (trace-zero) split-octonion carrier over 𝔽₂. -/
+abbrev OctImF2 := Fin 7 → ZMod 2
+
+/-- Split quadratic form on Im(𝕆) in standard Zorn basis:
+    `x₀ x₃ + x₁ x₄ + x₂ x₅ + x₆²` over 𝔽₂. -/
+def splitQuad (x : OctImF2) : ZMod 2 :=
+  x 0 * x 3 + x 1 * x 4 + x 2 * x 5 + (x 6)^2
+
+/-- Fano-plane / Zorn cross product on Im(𝕆). -/
+def octCross (x y : OctImF2) : OctImF2 :=
+  fun k => match k with
+  | 0 => x 6 * y 0 + y 6 * x 0 + x 4 * y 5 + x 5 * y 4
+  | 1 => x 6 * y 1 + y 6 * x 1 + x 5 * y 3 + x 3 * y 5
+  | 2 => x 6 * y 2 + y 6 * x 2 + x 3 * y 4 + x 4 * y 3
+  | 3 => x 6 * y 3 + y 6 * x 3 + x 1 * y 2 + x 2 * y 1
+  | 4 => x 6 * y 4 + y 6 * x 4 + x 2 * y 0 + x 0 * y 2
+  | 5 => x 6 * y 5 + y 6 * x 5 + x 0 * y 1 + x 1 * y 0
+  | 6 => (x 0 * y 3 + x 1 * y 4 + x 2 * y 5) + (y 0 * x 3 + y 1 * x 4 + y 2 * x 5)
+
+/-- Standard base isotropic point x₀ = e₀ (first basis vector). -/
+def basePoint : OctImF2 :=
+  fun k => if k = 0 then 1 else 0
+
+/-- Flag transversal predicate: y is non-zero, isotropic, orthogonal/collinear to x₀ (x₀ × y = 0),
+    and transversal to x₀ (y 0 = 0) selecting the unique line generator in the 2D plane {0, x₀, y, x₀ + y}. -/
+def isG2FlagTransversal (x₀ y : OctImF2) : Bool :=
+  (y ≠ 0) && (y 0 == 0) &&
+  (splitQuad x₀ == 0) &&
+  (splitQuad y == 0) &&
+  (octCross x₀ y == 0)
+
+/-- The fiber of all isotropic flag lines y completing x₀ into a flag (x₀, y). -/
+def LinesThroughPoint (x₀ : OctImF2) : Type :=
+  { y : OctImF2 // isG2FlagTransversal x₀ y = true }
+
+instance (x₀ : OctImF2) : Fintype (LinesThroughPoint x₀) := by
+  dsimp [LinesThroughPoint]
+  infer_instance
+
+instance (x₀ : OctImF2) : DecidableEq (LinesThroughPoint x₀) := by
+  dsimp [LinesThroughPoint]
+  infer_instance
+
+/--
+  🏆 MAIN GEOMETRIC THEOREM (Kernel Certified via decide):
+  The number of totally isotropic lines passing through the base point x₀ is exactly 3.
+-/
+theorem base_point_lines_card : Fintype.card (LinesThroughPoint basePoint) = 3 := by
+  decide
+
+/-- Line 0 : Spanned by e₄ = [0, 0, 0, 0, 1, 0, 0] corresponding to [1 : 0]. -/
+def line_zero : LinesThroughPoint basePoint :=
+  ⟨fun k => if k = 4 then 1 else 0, by decide⟩
+
+/-- Line ∞ : Spanned by e₅ = [0, 0, 0, 0, 0, 1, 0] corresponding to [0 : 1]. -/
+def line_infinity : LinesThroughPoint basePoint :=
+  ⟨fun k => if k = 5 then 1 else 0, by decide⟩
+
+/-- Line 1 : Spanned by e₄ + e₅ = [0, 0, 0, 0, 1, 1, 0] corresponding to [1 : 1]. -/
+def line_one : LinesThroughPoint basePoint :=
+  ⟨fun k => if k = 4 ∨ k = 5 then 1 else 0, by decide⟩
+
+/-- Exhaustion of lines through basePoint. -/
+theorem lines_through_basePoint_cases (l : LinesThroughPoint basePoint) :
+    l = line_zero ∨ l = line_infinity ∨ l = line_one := by
+  decide +revert
+
+/-- Distinctness lemmas for the canonical projective points. -/
+theorem pt_zero_ne_infinity : (pt_zero : ProjectiveLineF2) ≠ pt_infinity := by
+  decide
+
+theorem pt_zero_ne_one : (pt_zero : ProjectiveLineF2) ≠ pt_one := by
+  decide
+
+theorem pt_infinity_ne_one : (pt_infinity : ProjectiveLineF2) ≠ pt_one := by
+  decide
+
+/-- Distinctness lemmas for the canonical lines. -/
+theorem line_zero_ne_infinity : (line_zero : LinesThroughPoint basePoint) ≠ line_infinity := by
+  decide
+
+theorem line_zero_ne_one : (line_zero : LinesThroughPoint basePoint) ≠ line_one := by
+  decide
+
+theorem line_infinity_ne_one : (line_infinity : LinesThroughPoint basePoint) ≠ line_one := by
+  decide
+
+/-- Forward assignment from LinesThroughPoint(basePoint) to ℙ¹(𝔽₂). -/
+def lineToP1 (l : LinesThroughPoint basePoint) : ProjectiveLineF2 :=
+  ⟨(l.1 4, l.1 5), by decide +revert⟩
+
+/-- Inverse assignment from ℙ¹(𝔽₂) to LinesThroughPoint(basePoint). -/
+def p1ToLine : ProjectiveLineF2 → LinesThroughPoint basePoint
+  | ⟨(1, 0), _⟩ => line_zero
+  | ⟨(0, 1), _⟩ => line_infinity
+  | ⟨(1, 1), _⟩ => line_one
+  | ⟨(0, 0), h⟩ => False.elim (h rfl)
+
+/--
+  🏆 THEOREM (Geometric Line Fiber ≃ ℙ¹(𝔽₂)):
+  Constructive isomorphism between the 3 isotropic lines through x₀ and ℙ¹(𝔽₂).
+-/
+def linesThroughPointEquivP1 : LinesThroughPoint basePoint ≃ ProjectiveLineF2 where
+  toFun := lineToP1
+  invFun := p1ToLine
+  left_inv l := by
+    rcases lines_through_basePoint_cases l with rfl | rfl | rfl <;> rfl
+  right_inv p := by
+    obtain rfl | rfl | rfl := p1_f2_cases p <;> rfl
+
+/-! =========================================================================
+    6. Action of the Parabolic Subgroup on the Flag Fiber
+    ========================================================================= -/
+
+section ParabolicAction
+
+variable {G : Type*} [Group G]
+variable [MulAction G OctImF2]
+
+/-- Induced action of P on the line fiber LinesThroughPoint(basePoint). -/
+def parabolicFiberAction (P : Subgroup G) (hP_stab : ∀ p : P, (p : G) • basePoint = basePoint)
+    (p : P) (l : LinesThroughPoint basePoint)
+    (h_pres : ∀ (g : G) (y : OctImF2), isG2FlagTransversal basePoint y = true →
+      (g • basePoint = basePoint) → isG2FlagTransversal basePoint (g • y) = true) :
+    LinesThroughPoint basePoint :=
+  ⟨(p : G) • l.1, h_pres (p : G) l.1 l.2 (hP_stab p)⟩
+
+/-- Evaluation map sending a coset p · B₀ to the flag line p • y₀. -/
+def cosetToLine (B₀ P : Subgroup G) (standardLine : LinesThroughPoint basePoint)
+    (hP_stab : ∀ p : P, (p : G) • basePoint = basePoint)
+    (h_pres : ∀ (g : G) (y : OctImF2), isG2FlagTransversal basePoint y = true →
+      (g • basePoint = basePoint) → isG2FlagTransversal basePoint (g • y) = true)
+    (h_borel_stab : ∀ (b : P), (b : G) ∈ B₀ ↔ (b : G) • standardLine.1 = standardLine.1) :
+    ParabolicCosetSpace B₀ P → LinesThroughPoint basePoint :=
+  Quotient.lift
+    (fun (p : P) => parabolicFiberAction P hP_stab p standardLine h_pres)
+    (by
+      intro a b hab
+      change QuotientGroup.leftRel (B₀.subgroupOf P) a b at hab
+      rw [QuotientGroup.leftRel_apply, Subgroup.mem_subgroupOf, h_borel_stab] at hab
+      apply Subtype.ext
+      dsimp [parabolicFiberAction]
+      calc
+        (a : G) • standardLine.1
+          = (a : G) • (((a⁻¹ * b : P) : G) • standardLine.1) := by rw [hab]
+        _ = ((a : G) * ((a⁻¹ * b : P) : G)) • standardLine.1 := by rw [← mul_smul]
+        _ = ((a : G) * ((a : G)⁻¹ * (b : G))) • standardLine.1 := by simp only [Subgroup.coe_mul, Subgroup.coe_inv]
+        _ = (b : G) • standardLine.1 := by rw [mul_inv_cancel_left])
+
+/--
+  🏆 MAIN ISOMORPHISM THEOREM:
+  The 3 cosets in P ⧸ B₀ correspond bijectively to the 3 isotropic lines
+  passing through the fixed base point x₀.
+-/
+noncomputable def parabolicFiberEquivLines (B₀ P : Subgroup G) (standardLine : LinesThroughPoint basePoint)
+    (hP_stab : ∀ p : P, (p : G) • basePoint = basePoint)
+    (h_pres : ∀ (g : G) (y : OctImF2), isG2FlagTransversal basePoint y = true →
+      (g • basePoint = basePoint) → isG2FlagTransversal basePoint (g • y) = true)
+    (h_borel_stab : ∀ (b : P), (b : G) ∈ B₀ ↔ (b : G) • standardLine.1 = standardLine.1)
+    (h_trans : ∀ l : LinesThroughPoint basePoint, ∃ p : P, (p : G) • standardLine.1 = l.1) :
+    ParabolicCosetSpace B₀ P ≃ LinesThroughPoint basePoint :=
+  Equiv.ofBijective (cosetToLine B₀ P standardLine hP_stab h_pres h_borel_stab) ⟨
+    by
+      rintro ⟨a⟩ ⟨b⟩ hab
+      apply Quotient.sound
+      change QuotientGroup.leftRel (B₀.subgroupOf P) a b
+      rw [QuotientGroup.leftRel_apply, Subgroup.mem_subgroupOf, h_borel_stab]
+      have h_eq : (a : G) • standardLine.1 = (b : G) • standardLine.1 := by
+        injection hab with h_val
+      calc
+        ((a⁻¹ * b : P) : G) • standardLine.1
+          = ((a : G)⁻¹ * (b : G)) • standardLine.1 := by simp only [Subgroup.coe_mul, Subgroup.coe_inv]
+        _ = (a : G)⁻¹ • ((b : G) • standardLine.1) := by rw [mul_smul]
+        _ = (a : G)⁻¹ • ((a : G) • standardLine.1) := by rw [← h_eq]
+        _ = ((a : G)⁻¹ * (a : G)) • standardLine.1 := by rw [← mul_smul]
+        _ = (1 : G) • standardLine.1               := by rw [inv_mul_cancel]
+        _ = standardLine.1                         := by rw [one_smul],
+    by
+      intro l
+      obtain ⟨p, hp⟩ := h_trans l
+      refine ⟨Quotient.mk _ p, ?_⟩
+      apply Subtype.ext
+      dsimp [cosetToLine, parabolicFiberAction]
+      exact hp
+  ⟩
+
+/--
+  🏆 COROLLARY:
+  The number of cosets in P ⧸ B₀ is exactly equal to the number of lines through x₀ (3).
+-/
+theorem parabolic_cosets_card_eq_three (B₀ P : Subgroup G) (standardLine : LinesThroughPoint basePoint)
+    (hP_stab : ∀ p : P, (p : G) • basePoint = basePoint)
+    (h_pres : ∀ (g : G) (y : OctImF2), isG2FlagTransversal basePoint y = true →
+      (g • basePoint = basePoint) → isG2FlagTransversal basePoint (g • y) = true)
+    (h_borel_stab : ∀ (b : P), (b : G) ∈ B₀ ↔ (b : G) • standardLine.1 = standardLine.1)
+    (h_trans : ∀ l : LinesThroughPoint basePoint, ∃ p : P, (p : G) • standardLine.1 = l.1) :
+    Nat.card (ParabolicCosetSpace B₀ P) = 3 := by
+  rw [Nat.card_congr (parabolicFiberEquivLines B₀ P standardLine hP_stab h_pres h_borel_stab h_trans)]
+  rw [Nat.card_eq_fintype_card, base_point_lines_card]
+
+end ParabolicAction
+
+end InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber

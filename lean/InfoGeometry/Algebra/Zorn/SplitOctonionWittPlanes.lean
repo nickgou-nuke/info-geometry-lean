@@ -96,6 +96,7 @@ theorem splitPlaneI_sq (a b : ℝ) :
       simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals fin_cases i <;> norm_num
   simp only [splitPlaneI, zMul_add_left, zMul_add_right, zMul_smul_left,
     zMul_smul_right]
   change a • (a • zMul iUnit iUnit + b • zMul (ellBasis 1) iUnit) +
@@ -106,7 +107,6 @@ theorem splitPlaneI_sq (a b : ℝ) :
       simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross]
-    all_goals (try fin_cases i) <;> norm_num
   rw [i_sq, hEll, hcross]
   module
 
@@ -147,6 +147,7 @@ theorem imaginarySplitPlane_sq (a : Fin 3) (x y : ℝ) :
       simp [ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
         zMul, InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross]
+    all_goals fin_cases i <;> norm_num
   have hC : ∀ a : Fin 3,
       zMul (ellBasis a.succ) (quaternionBasis a.succ) =
         -zMul (quaternionBasis a.succ) (ellBasis a.succ) := by
@@ -155,8 +156,7 @@ theorem imaginarySplitPlane_sq (a : Fin 3) (x y : ℝ) :
       ext i <;>
       simp [ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
         zMul, InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross] <;>
-      all_goals (try fin_cases i) <;> norm_num
+        InfoGeometry.Canonical.ZornMatrix.cross]
   simp only [imaginarySplitPlane, zMul_add_left, zMul_add_right,
     zMul_smul_left, zMul_smul_right]
   change x • (x • zMul (quaternionBasis a.succ) (quaternionBasis a.succ) +

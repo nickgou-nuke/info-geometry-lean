@@ -296,6 +296,7 @@ import InfoGeometry.Algebra.Zorn.BruhatPeelingTransport
 import InfoGeometry.Algebra.Zorn.BruhatSubwordOrder
 import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
+import InfoGeometry.Algebra.Zorn.G2BruhatCardinalities
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!

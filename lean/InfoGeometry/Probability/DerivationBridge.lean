@@ -86,4 +86,24 @@ theorem dlogR_eq_smul_eval (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
   rw [smul_eq_mul]
   ring
 
+/-- Generalized transport: a mathlib `Derivation R A A` over any base commutative
+ring satisfies the repository predicate on its underlying function. -/
+theorem isDerivation_coe {R : Type*} [CommRing R] [Algebra R A] (D : Derivation R A A) :
+    IsDerivation (fun x => (D : A → A) x) := by
+  refine ⟨fun x y => by simpa only using D.map_add x y, fun x y => ?_⟩
+  have h := D.leibniz x y
+  simp only [smul_eq_mul] at h ⊢
+  rw [h]
+  ring
+
+/-- Squared commutative inverse rule for bundled mathlib derivations,
+transported from `ExpLogRNDerivation.derivation_inv_comm`:
+`D(u⁻¹) = - u⁻² · D(u)`. -/
+theorem derivation_inv_comm_ofMathlib {R : Type*} [CommRing R] [Algebra R A]
+    (D : Derivation R A A) (u : Aˣ) :
+    ((D : A → A)) ↑u⁻¹ = -((↑u⁻¹ : A) ^ 2) * ((D : A → A)) ↑u := by
+  have h := ExpLogRNDerivation.derivation_inv_comm _ (isDerivation_coe D) u
+  rw [pow_two]
+  linear_combination h
+
 end InfoGeometry.Probability.DerivationBridge

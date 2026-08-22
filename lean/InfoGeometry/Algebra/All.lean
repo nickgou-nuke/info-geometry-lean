@@ -331,6 +331,7 @@ import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 import InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport
+import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 /-!
 # InfoGeometry.Algebra.All
 

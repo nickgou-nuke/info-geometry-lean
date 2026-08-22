@@ -2,11 +2,8 @@ import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.BaseChange
-import Mathlib.LinearAlgebra.TensorProduct.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FreeModule.Basic
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
@@ -24,8 +21,6 @@ $$\mathfrak{g}_{2,\mathbb{C}} = \mathbb{C} \otimes_\mathbb{R} \operatorname{cano
 2. Lie algebra instances on `complexifiedDerivations` via `LieAlgebra.ExtendScalars`.
 3. `complexified_finrank`: Exact complex dimension $\dim_\mathbb{C}(\mathfrak{g}_{2,\mathbb{C}}) = 14$.
 4. `g2ChevalleyLieAlgebra`: Abstract 14-dimensional Chevalley presentation of $\mathfrak{g}_2(\mathbb{C})$.
-5. `complexifiedCoordinatesEquiv`: Explicit $\mathbb{C}$-linear equivalence
-   `complexifiedDerivations ≃ₗ[ℂ] g2ChevalleyLieAlgebra`.
 -/
 
 noncomputable section
@@ -38,35 +33,39 @@ open scoped TensorProduct
 
 /-- The complexified derivation space $\mathfrak{g}_{2,\mathbb{C}} = \mathbb{C} \otimes_\mathbb{R} \operatorname{Der}(\mathbb{O}_s)$. -/
 def complexifiedDerivations : Type :=
-  TensorProduct ℝ ℂ canonicalZornDerivations
+  ℂ ⊗[ℝ] canonicalZornDerivations
 
-instance : AddCommGroup complexifiedDerivations := by
-  dsimp [complexifiedDerivations]
-  infer_instance
+instance : AddCommGroup complexifiedDerivations :=
+  TensorProduct.addCommGroup
 
-instance : Module ℂ complexifiedDerivations := by
-  dsimp [complexifiedDerivations]
-  infer_instance
+instance : Module ℂ complexifiedDerivations :=
+  TensorProduct.leftModule
 
-instance : Module ℝ complexifiedDerivations := by
-  dsimp [complexifiedDerivations]
-  infer_instance
+instance : Module ℝ complexifiedDerivations :=
+  inferInstance
 
-instance : LieRing complexifiedDerivations := by
-  dsimp [complexifiedDerivations]
-  infer_instance
+instance : LieRing complexifiedDerivations :=
+  LieAlgebra.ExtendScalars.instLieRing ℝ ℂ canonicalZornDerivations
 
-instance : LieAlgebra ℂ complexifiedDerivations := by
-  dsimp [complexifiedDerivations]
-  infer_instance
+instance : LieAlgebra ℂ complexifiedDerivations :=
+  LieAlgebra.ExtendScalars.instLieAlgebra ℝ ℂ canonicalZornDerivations
 
-/-- Canonical real basis for `canonicalZornDerivations` coming from the 14 coordinates. -/
-def canonicalRealBasis : Basis (Fin 14) ℝ canonicalZornDerivations :=
-  (Basis.ofEquivFun canonicalParameterLinearEquiv.symm)
+instance : LieAlgebra ℝ complexifiedDerivations :=
+  LieAlgebra.ExtendScalars.instBaseLieAlgebra ℝ ℂ canonicalZornDerivations
 
-/-- Canonical complex basis for `complexifiedDerivations` obtained by base change. -/
-def complexifiedBasis : Basis (Fin 14) ℂ complexifiedDerivations :=
-  canonicalRealBasis.baseChange ℂ
+/-- The Lie bracket on complexified derivations. -/
+def complexifiedLieBracket (x y : complexifiedDerivations) : complexifiedDerivations :=
+  ⁅x, y⁆
+
+instance : Module.Free ℝ canonicalZornDerivations :=
+  Module.Free.of_divisionRing ℝ canonicalZornDerivations
+
+/-- 🏆 THEOREM: Exact complex dimension of complexified derivations is 14. -/
+theorem complexified_finrank :
+    Module.finrank ℂ complexifiedDerivations = 14 := by
+  change Module.finrank ℂ (ℂ ⊗[ℝ] canonicalZornDerivations) = 14
+  rw [Module.finrank_baseChange]
+  exact finrank_canonicalZornDerivations
 
 /-- The abstract 14-dimensional Chevalley presentation of $\mathfrak{g}_2(\mathbb{C})$. -/
 def g2ChevalleyLieAlgebra : Type :=
@@ -79,17 +78,6 @@ instance : AddCommGroup g2ChevalleyLieAlgebra := by
 instance : Module ℂ g2ChevalleyLieAlgebra := by
   dsimp [g2ChevalleyLieAlgebra]
   infer_instance
-
-/-- 🏆 THEOREM: Canonical $\mathbb{C}$-linear isomorphism $\mathfrak{g}_{2,\mathbb{C}} \simeq \mathbb{C}^{14}$. -/
-def complexifiedCoordinatesEquiv :
-    complexifiedDerivations ≃ₗ[ℂ] g2ChevalleyLieAlgebra :=
-  complexifiedBasis.equivFun
-
-/-- 🏆 THEOREM: Exact complex dimension of complexified derivations is 14. -/
-theorem complexified_finrank :
-    Module.finrank ℂ complexifiedDerivations = 14 := by
-  rw [complexifiedBasis.finrank]
-  simp
 
 /-- Dimension of the abstract Chevalley $\mathfrak{g}_2(\mathbb{C})$ Lie algebra is 14. -/
 theorem g2Chevalley_finrank :

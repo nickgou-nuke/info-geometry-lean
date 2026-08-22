@@ -43,6 +43,23 @@ theorem evaluateWord_cons (g : FlagGenerator × Int) (w : FlagWord) :
     evaluateWord (g :: w) = evaluateToken g * evaluateWord w := by
   rfl
 
+def flagGeneratedSubgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure (Set.range flagGeneratorValue)
+
+theorem evaluateToken_mem_flagGeneratedSubgroup (t : FlagGenerator × Int) :
+    evaluateToken t ∈ flagGeneratedSubgroup := by
+  apply Subgroup.zpow_mem
+  exact Subgroup.subset_closure ⟨t.1, rfl⟩
+
+theorem evaluateWord_mem_flagGeneratedSubgroup (w : FlagWord) :
+    evaluateWord w ∈ flagGeneratedSubgroup := by
+  induction w with
+  | nil => exact flagGeneratedSubgroup.one_mem
+  | cons t w ih =>
+      rw [evaluateWord_cons]
+      exact flagGeneratedSubgroup.mul_mem
+        (evaluateToken_mem_flagGeneratedSubgroup t) ih
+
 theorem evaluateWord_append (u v : FlagWord) :
     evaluateWord (u ++ v) = evaluateWord u * evaluateWord v := by
   simp [evaluateWord, List.map_append, List.prod_append]

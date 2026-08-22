@@ -39,7 +39,6 @@ set_option maxHeartbeats 2000000 in
 theorem bryantGen_diag_ne_zero (i : Fin 14) :
     bryantGen i (sr i) (ss i) ≠ 0 := by
   fin_cases i <;> simp [bryantGen, sr, ss, skewGen]
-    <;> norm_num
 
 set_option maxHeartbeats 2000000 in
 theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
@@ -57,13 +56,13 @@ theorem bryantGen_linearIndependent :
   simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
     Matrix.zero_apply] at h
   rw [Finset.sum_eq_single i, mul_eq_zero] at h
-  swap
-  · exact fun hc => absurd (hc (Finset.mem_univ i)) (by norm_num)
   · rcases h with h | h
     · exact h
     · exact absurd h (bryantGen_diag_ne_zero i)
   · intro j _ hj
     rw [bryantGen_cross_zero j i hj]
     exact mul_zero (g j)
+  · intro hc
+    exact absurd (hc (Finset.mem_univ i)) (by norm_num)
 
 end ScratchWilmot

@@ -2,7 +2,7 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Matrix.Basic
 
-namespace G2FlagWordCertificate
+namespace InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 
 def flagRepWords : Fin 189 → List (Fin 8 × Int) := ![
   [],
@@ -196,4 +196,4 @@ def flagRepWords : Fin 189 → List (Fin 8 × Int) := ![
   [((1 : Fin 8), -1), ((7 : Fin 8), 1), ((6 : Fin 8), 1), ((0 : Fin 8), 1), ((7 : Fin 8), 1), ((6 : Fin 8), 1), ((7 : Fin 8), 1), ((0 : Fin 8), 1), ((6 : Fin 8), 1), ((0 : Fin 8), 1)]
 ]
 
-end G2FlagWordCertificate
+end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

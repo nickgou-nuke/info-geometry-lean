@@ -65,12 +65,12 @@ def main() -> None:
         "import Mathlib.Data.Fin.Basic",
         "import Mathlib.Data.Matrix.Basic",
         "",
-        "namespace G2FlagWordCertificate",
+        "namespace InfoGeometry.Algebra.Zorn.G2FlagWordCertificate",
         "",
         "def flagRepWords : Fin 189 → List (Fin 8 × Int) := ![",
     ]
     lines += ["  " + lean_word(word) + ("," if i < 188 else "") for i, word in enumerate(words)]
-    lines += ["]", "", "end G2FlagWordCertificate", ""]
+    lines += ["]", "", "end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate", ""]
     args.output.write_text("\n".join(lines))
 
 

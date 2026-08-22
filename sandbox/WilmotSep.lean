@@ -48,8 +48,9 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
   all_goals
     simp only [bryantGen, sr, ss, skewGen, Matrix.of_apply, Matrix.smul_apply,
       smul_eq_mul, Matrix.sub_apply, Matrix.add_apply, Matrix.neg_apply]
-    split <;> split <;> first
+    split <;> split <;> split <;> split <;> first
       | norm_num
+      | rfl
       | (exfalso; exact absurd h (by exact fun hh => hh rfl))
 
 theorem bryantGen_linearIndependent :

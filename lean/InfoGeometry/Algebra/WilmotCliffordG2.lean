@@ -38,17 +38,6 @@ namespace InfoGeometry.Algebra.WilmotCliffordG2
 open Matrix
 open InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
 
-theorem skewGen_eq_single_sub (i j : Fin 7) :
-    skewGen i j = Matrix.single i j (1 : ℝ) - Matrix.single j i (1 : ℝ) := by
-  ext a b
-  dsimp [skewGen, Matrix.single, Matrix.sub_apply]
-  have h₁ : (a = i ∧ b = j) ↔ (i = a ∧ j = b) := by
-    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
-  have h₂ : (a = j ∧ b = i) ↔ (j = a ∧ i = b) := by
-    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
-  rw [if_congr h₁ (eq_self (1:ℝ)) (eq_self (0:ℝ))]
-  rw [if_congr h₂ (eq_self (1:ℝ)) (eq_self (0:ℝ))]
-
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)
     ========================================================================= -/
@@ -370,14 +359,6 @@ theorem matrixLieBracket_skew
   simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
   rw [hM, hN]
   simp [sub_eq_add_neg]
-
-theorem bryantGen_bracket_zero_three_cas_alignment :
-    matrixLieBracket (bryantGen 0) (bryantGen 3) =
-      (1 / 2 : ℝ) • (bryantGen 4 - bryantGen 11) := by
-  simp only [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
-    Matrix.smul_sub, Matrix.sub_smul, Matrix.smul_smul, smul_eq_mul,
-    Matrix.mul_sub, Matrix.sub_mul, Matrix.single_mul_single_same,
-    Matrix.single_mul_single_of_ne]
 
 /-- The Bryant span has the expected fourteen-dimensional real dimension. -/
 theorem wilmotG2Submodule_finrank :

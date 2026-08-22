@@ -34,6 +34,7 @@ def basis(index):
 
 target = mm(mm(s, M), s)
 print("BN2_BIG_CELL_SYMBOLIC=")
+passes = 0
 for index in range(6):
     right = basis(index)
     # a*s*PC(right) = target, hence a = target*(s*PC(right))^-1.
@@ -47,6 +48,7 @@ for index in range(6):
     if any(residual):
         print(f"RIGHT_COORD_{index}=FAIL")
         continue
+    passes += 1
     print(f"RIGHT_COORD_{index}=PASS")
     for coordinate, value in enumerate(left):
         print(
@@ -54,4 +56,8 @@ for index in range(6):
             f"{sp.Poly(value.subs(e[1], 1), *e, modulus=2).as_expr()}"
         )
 
+if passes == 0:
+    print("BN2_BIG_CELL_SYMBOLIC=FAIL")
+    raise SystemExit(1)
+print("BN2_BIG_CELL_SYMBOLIC=PASS")
 print("NO_ASSIGNMENT_ENUMERATION=PASS")

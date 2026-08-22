@@ -129,6 +129,37 @@ theorem bryantGen_six_entry :
     dsimp [bryantGen, skewGen]
     norm_num
 
+/-- The `(3,4)` entry separates the eighth Bryant generator. -/
+theorem bryantGen_seven_entry :
+      bryantGen 7 3 4 = (1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+/-- The `(3,5)` entry separates the ninth Bryant generator. -/
+theorem bryantGen_eight_entry :
+      bryantGen 8 3 5 = (1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+/-- The `(3,6)` entry separates the tenth Bryant generator. -/
+theorem bryantGen_nine_entry :
+      bryantGen 9 3 6 = (-1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+/-- The `(1,5)` entry separates the eleventh Bryant generator. -/
+theorem bryantGen_ten_entry :
+      bryantGen 10 1 5 = (-1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+/-- The `(1,6)` entry separates the twelfth Bryant generator. -/
+theorem bryantGen_eleven_entry :
+      bryantGen 11 1 6 = (-1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

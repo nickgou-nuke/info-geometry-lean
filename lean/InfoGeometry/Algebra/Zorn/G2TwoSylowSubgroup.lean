@@ -98,7 +98,8 @@ def recover5 (A : Fin 8 → SplitOctF2) : Bool :=
 theorem recover0_basisAction (e : PCWordExp) :
     recover0 (basisAction e) = e 0 := by
   dsimp [recover0, basisAction, pcWordFun, pcTermFun, basis8]
-  cases h : e 0 <;> simp [h]
+  rcases e 0 with _|_ <;> rcases e 1 with _|_ <;> rcases e 2 with _|_ <;>
+  rcases e 3 with _|_ <;> rcases e 4 with _|_ <;> rcases e 5 with _|_ <;> rfl
 
 theorem recover1_basisAction (e : PCWordExp) :
     recover1 (basisAction e) = e 1 := by

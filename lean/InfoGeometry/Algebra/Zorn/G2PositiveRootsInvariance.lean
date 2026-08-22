@@ -14,6 +14,8 @@ reflections `s₁` and `s₂`, and proves the structural root complement invaria
 with zero sorrys, zero custom axioms, and zero brute-force double-coset searches.
 -/
 
+set_option linter.unnecessarySeqFocus false
+
 namespace InfoGeometry.Algebra.Zorn.G2Roots
 
 /-! =========================================================================
@@ -53,13 +55,11 @@ def s2 (v : ℤ × ℤ) : ℤ × ℤ :=
 
 /-- THEOREM: `s₁` is an involution: `s₁ ∘ s₁ = id`. -/
 theorem s1_involutive (v : ℤ × ℤ) : s1 (s1 v) = v := by
-  dsimp [s1]
-  ext <;> dsimp <;> ring
+  ext <;> dsimp [s1] <;> ring
 
 /-- THEOREM: `s₂` is an involution: `s₂ ∘ s₂ = id`. -/
 theorem s2_involutive (v : ℤ × ℤ) : s2 (s2 v) = v := by
-  dsimp [s2]
-  ext <;> dsimp <;> ring
+  ext <;> dsimp [s2] <;> ring
 
 /-- THEOREM: `s₁` maps `α₁` to its negative `-α₁`. -/
 theorem s1_alpha1_neg : s1 alpha1 = (-1, 0) := by

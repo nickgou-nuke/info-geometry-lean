@@ -2,6 +2,7 @@ import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import InfoGeometry.Probability.DerivationBridge
 import Mathlib.Tactic
 
 namespace InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
@@ -13,28 +14,11 @@ def dlog (D : Derivation R A A) (u : Aˣ) : A :=
   (↑u⁻¹ : A) * D (u : A)
 
 /-- Derivation of the inverse of a unit in a commutative algebra:
-    `D(u⁻¹) = - (u⁻¹)² * D(u)`. -/
+    `D(u⁻¹) = - (u⁻¹)² * D(u)`. Wired to the canonical owner lemma via
+    `InfoGeometry.Probability.DerivationBridge.derivation_inv_comm_ofMathlib`. -/
 theorem derivation_unit_inv (D : Derivation R A A) (u : Aˣ) :
-    D (↑u⁻¹ : A) = - ((↑u⁻¹ : A) ^ 2) * D (u : A) := by
-  have h1 : D (1 : A) = 0 := D.map_one_eq_zero
-  have h_prod : (u : A) * (↑u⁻¹ : A) = 1 := Units.mul_inv u
-  have h_leibniz : D ((u : A) * (↑u⁻¹ : A)) = (u : A) * D (↑u⁻¹ : A) + (↑u⁻¹ : A) * D (u : A) := by
-    have h_l := D.leibniz (u : A) (↑u⁻¹ : A)
-    simp only [smul_eq_mul] at h_l
-    rw [h_l, add_comm]
-  rw [h_prod, h1] at h_leibniz
-  have h_eq : (u : A) * D (↑u⁻¹ : A) = - ((↑u⁻¹ : A) * D (u : A)) := by
-    linear_combination -h_leibniz
-  have h_mult : (↑u⁻¹ : A) * ((u : A) * D (↑u⁻¹ : A)) = (↑u⁻¹ : A) * (- ((↑u⁻¹ : A) * D (u : A))) := by
-    rw [h_eq]
-  have h_assoc : (↑u⁻¹ : A) * ((u : A) * D (↑u⁻¹ : A)) = D (↑u⁻¹ : A) := by
-    calc (↑u⁻¹ : A) * ((u : A) * D (↑u⁻¹ : A)) = ((↑u⁻¹ : A) * (u : A)) * D (↑u⁻¹ : A) := by ring
-      _ = 1 * D (↑u⁻¹ : A) := by rw [Units.inv_mul u]
-      _ = D (↑u⁻¹ : A) := by rw [one_mul]
-  calc
-    D (↑u⁻¹ : A) = (↑u⁻¹ : A) * ((u : A) * D (↑u⁻¹ : A)) := by rw [h_assoc]
-    _ = (↑u⁻¹ : A) * (- ((↑u⁻¹ : A) * D (u : A))) := by rw [h_mult]
-    _ = - ((↑u⁻¹ : A) ^ 2) * D (u : A) := by ring
+    D (↑u⁻¹ : A) = - ((↑u⁻¹ : A) ^ 2) * D (u : A) :=
+  InfoGeometry.Probability.DerivationBridge.derivation_inv_comm_ofMathlib D u
 
 /-- 🏆 THEOREM: The Logarithmic Derivative is a Group Homomorphism on Units:
     `dlog_D(u * v) = dlog_D(u) + dlog_D(v)`.

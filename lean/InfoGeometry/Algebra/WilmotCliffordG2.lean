@@ -93,6 +93,12 @@ theorem bryantGen_zero_entry :
   dsimp [bryantGen, skewGen]
   norm_num
 
+/-- The `(0,2)` entry separates the second Bryant generator. -/
+theorem bryantGen_one_entry :
+    bryantGen 1 0 2 = (-1 / 2 : ℝ) := by
+  dsimp [bryantGen, skewGen]
+  norm_num
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

@@ -219,6 +219,37 @@ theorem bryantGen_five_twelve_separated
   simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
   constructor <;> linarith
 
+/-- The two support coordinates of `G` and `N` separate their coefficients. -/
+theorem bryantGen_six_thirteen_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 6 = 0 ∧ g 13 = 0 := by
+  have h₁ := congrArg (fun M => M 0 5) hg
+  have h₂ := congrArg (fun M => M 2 3) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+/-- The fourteen displayed generators are linearly independent. -/
+theorem bryantGen_linearIndependent :
+    LinearIndependent ℝ bryantGen := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  fin_cases i
+  · exact (bryantGen_zero_seven_separated g hg).1
+  · exact (bryantGen_one_eight_separated g hg).1
+  · exact (bryantGen_two_nine_separated g hg).1
+  · exact (bryantGen_three_ten_separated g hg).1
+  · exact (bryantGen_four_eleven_separated g hg).1
+  · exact (bryantGen_five_twelve_separated g hg).1
+  · exact (bryantGen_six_thirteen_separated g hg).1
+  · exact (bryantGen_zero_seven_separated g hg).2
+  · exact (bryantGen_one_eight_separated g hg).2
+  · exact (bryantGen_two_nine_separated g hg).2
+  · exact (bryantGen_three_ten_separated g hg).2
+  · exact (bryantGen_four_eleven_separated g hg).2
+  · exact (bryantGen_five_twelve_separated g hg).2
+  · exact (bryantGen_six_thirteen_separated g hg).2
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

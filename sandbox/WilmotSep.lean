@@ -60,8 +60,11 @@ theorem bryantGen_linearIndependent :
   have h := congrArg (fun M : Matrix (Fin 7) (Fin 7) ℝ => M (sr i) (ss i)) hg
   simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
     Finset.sum_apply, Matrix.zero_apply] at h
+  simp only [Matrix.zero_apply] at h
   rw [Finset.sum_eq_single i, mul_eq_zero] at h
-  · exact h.resolve_left (bryantGen_diag_ne_zero i)
+  · rcases h with h | h
+    · exact h
+    · exact absurd h (bryantGen_diag_ne_zero i)
   · intro j _ hj
     rw [bryantGen_cross_zero j i hj]
   · simp

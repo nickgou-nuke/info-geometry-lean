@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics
+import InfoGeometry.Algebra.Zorn.G2BryantWilmotCliffordBridge
 import InfoGeometry.Algebra.Zorn.G2CyclotomicPoincareFactorization
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting

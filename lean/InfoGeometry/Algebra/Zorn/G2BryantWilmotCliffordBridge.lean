@@ -42,10 +42,28 @@ theorem bivector_apply_same (i : Fin 7) :
 
 theorem bivector_skew (i j : Fin 7) (r c : Fin 7) :
     bivector (R := R) i j c r = - bivector i j r c := by
-  fin_cases i <;> fin_cases j <;> fin_cases r <;> fin_cases c <;> {
-    dsimp [bivector]
-    try ring
-  }
+  dsimp [bivector]
+  by_cases hij : i = j
+  · simp [hij]
+  · by_cases h1 : r = i ∧ c = j
+    · have h2 : ¬(c = i ∧ r = j) := by
+        rintro ⟨rfl, rfl⟩
+        exact hij h1.1.symm
+      have h3 : c = j ∧ r = i := ⟨h1.2, h1.1⟩
+      simp [hij, h1, h2, h3]
+    · by_cases h2 : r = j ∧ c = i
+      · have h3 : ¬(c = j ∧ r = i) := by
+          rintro ⟨rfl, rfl⟩
+          exact hij h2.2.symm
+        have h4 : c = i ∧ r = j := ⟨h2.2, h2.1⟩
+        simp [hij, h1, h2, h3, h4]
+      · have h3 : ¬(c = i ∧ r = j) := by
+          rintro ⟨hca, hcb⟩
+          exact h2 ⟨hcb, hca⟩
+        have h4 : ¬(c = j ∧ r = i) := by
+          rintro ⟨hca, hcb⟩
+          exact h1 ⟨hcb, hca⟩
+        simp [hij, h1, h2, h3, h4]
 
 /-- The 14-parameter Bryant-Wilmot 𝔤₂ derivation matrix on `R⁷`. -/
 def bryantWilmotMatrix (c : Fin 14 → R) : Matrix (Fin 7) (Fin 7) R

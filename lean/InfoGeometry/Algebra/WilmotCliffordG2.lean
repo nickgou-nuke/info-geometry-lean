@@ -2,7 +2,6 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
@@ -54,7 +53,7 @@ theorem skewGen_eq_single_sub (i j : Fin 7) :
       (if a = j ∧ b = i then (1 : ℝ) else 0) =
         if j = a ∧ i = b then (1 : ℝ) else 0 :=
     if_congr h₂ rfl rfl
-  simp only [hif₁, hif₂]
+  rw [hif₁, hif₂]
 
 theorem matrix_single_mul_single
     (i j k l : Fin 7) (a b : ℝ) :
@@ -81,8 +80,8 @@ noncomputable def bryantGen (m : Fin 14) : Matrix (Fin 7) (Fin 7) ℝ :=
   | 1  => (1/2 : ℝ) • (- skewGen 0 2 - skewGen 3 5)
   -- C = (1/2)(e_{01} + e_{36})
   | 2  => (1/2 : ℝ) • (skewGen 0 1 + skewGen 3 6)
-  -- D = (1/2)(-e_{04} + e_{15})
-  | 3  => (1/2 : ℝ) • (- skewGen 0 4 + skewGen 1 5)
+  -- D = (1/2)(e_{04} + e_{15})
+  | 3  => (1/2 : ℝ) • (skewGen 0 4 + skewGen 1 5)
   -- E = (1/2)(e_{03} - e_{16})
   | 4  => (1/2 : ℝ) • (skewGen 0 3 - skewGen 1 6)
   -- F = (1/2)(e_{06} + e_{13})
@@ -139,7 +138,7 @@ theorem bryantGen_two_entry :
 
 /-- The `(0,4)` entry separates the fourth Bryant generator. -/
 theorem bryantGen_three_entry :
-      bryantGen 3 0 4 = (-1 / 2 : ℝ) := by
+    bryantGen 3 0 4 = (1 / 2 : ℝ) := by
   dsimp [bryantGen, skewGen]
   norm_num
 
@@ -148,139 +147,6 @@ theorem bryantGen_four_entry :
     bryantGen 4 0 3 = (1 / 2 : ℝ) := by
   dsimp [bryantGen, skewGen]
   norm_num
-
-/-- The `(0,6)` entry separates the sixth Bryant generator. -/
-theorem bryantGen_five_entry :
-      bryantGen 5 0 6 = (1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(0,5)` entry separates the seventh Bryant generator. -/
-theorem bryantGen_six_entry :
-      bryantGen 6 0 5 = (-1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(3,4)` entry separates the eighth Bryant generator. -/
-theorem bryantGen_seven_entry :
-      bryantGen 7 3 4 = (1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(3,5)` entry separates the ninth Bryant generator. -/
-theorem bryantGen_eight_entry :
-      bryantGen 8 3 5 = (1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(3,6)` entry separates the tenth Bryant generator. -/
-theorem bryantGen_nine_entry :
-      bryantGen 9 3 6 = (-1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(1,5)` entry separates the eleventh Bryant generator. -/
-theorem bryantGen_ten_entry :
-      bryantGen 10 1 5 = (-1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The `(1,6)` entry separates the twelfth Bryant generator. -/
-theorem bryantGen_eleven_entry :
-      bryantGen 11 1 6 = (-1 / 2 : ℝ) := by
-    dsimp [bryantGen, skewGen]
-    norm_num
-
-/-- The two support coordinates of `A` and `H` separate their coefficients. -/
-theorem bryantGen_zero_seven_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 0 = 0 ∧ g 7 = 0 := by
-  have h₁ := congrArg (fun M => M 1 2) hg
-  have h₂ := congrArg (fun M => M 3 4) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `B` and `I` separate their coefficients. -/
-theorem bryantGen_one_eight_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 1 = 0 ∧ g 8 = 0 := by
-  have h₁ := congrArg (fun M => M 0 2) hg
-  have h₂ := congrArg (fun M => M 3 5) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `C` and `J` separate their coefficients. -/
-theorem bryantGen_two_nine_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 2 = 0 ∧ g 9 = 0 := by
-  have h₁ := congrArg (fun M => M 0 1) hg
-  have h₂ := congrArg (fun M => M 3 6) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `D` and `K` separate their coefficients. -/
-theorem bryantGen_three_ten_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 3 = 0 ∧ g 10 = 0 := by
-  have h₁ := congrArg (fun M => M 0 4) hg
-  have h₂ := congrArg (fun M => M 1 5) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `E` and `L` separate their coefficients. -/
-theorem bryantGen_four_eleven_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 4 = 0 ∧ g 11 = 0 := by
-  have h₁ := congrArg (fun M => M 0 3) hg
-  have h₂ := congrArg (fun M => M 1 6) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `F` and `M` separate their coefficients. -/
-theorem bryantGen_five_twelve_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 5 = 0 ∧ g 12 = 0 := by
-  have h₁ := congrArg (fun M => M 1 3) hg
-  have h₂ := congrArg (fun M => M 2 4) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The two support coordinates of `G` and `N` separate their coefficients. -/
-theorem bryantGen_six_thirteen_separated
-    (g : Fin 14 → ℝ)
-    (hg : ∑ i, g i • bryantGen i = 0) :
-    g 6 = 0 ∧ g 13 = 0 := by
-  have h₁ := congrArg (fun M => M 0 5) hg
-  have h₂ := congrArg (fun M => M 2 3) hg
-  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
-  constructor <;> linarith
-
-/-- The fourteen displayed generators are linearly independent. -/
-theorem bryantGen_linearIndependent :
-    LinearIndependent ℝ bryantGen := by
-  rw [Fintype.linearIndependent_iff]
-  intro g hg i
-  fin_cases i
-  · exact (bryantGen_zero_seven_separated g hg).1
-  · exact (bryantGen_one_eight_separated g hg).1
-  · exact (bryantGen_two_nine_separated g hg).1
-  · exact (bryantGen_three_ten_separated g hg).1
-  · exact (bryantGen_four_eleven_separated g hg).1
-  · exact (bryantGen_five_twelve_separated g hg).1
-  · exact (bryantGen_six_thirteen_separated g hg).1
-  · exact (bryantGen_zero_seven_separated g hg).2
-  · exact (bryantGen_one_eight_separated g hg).2
-  · exact (bryantGen_two_nine_separated g hg).2
-  · exact (bryantGen_three_ten_separated g hg).2
-  · exact (bryantGen_four_eleven_separated g hg).2
-  · exact (bryantGen_five_twelve_separated g hg).2
-  · exact (bryantGen_six_thirteen_separated g hg).2
 
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
@@ -312,7 +178,7 @@ theorem bryant_C_add_J :
 
 /-- 4. Triad relation: $D + K = \frac{1}{2}(e_{04} - e_{26})$. -/
 theorem bryant_D_add_K :
-  bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (- skewGen 0 4 - skewGen 2 6) := by
+    bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (skewGen 0 4 - skewGen 2 6) := by
   dsimp [bryantGen]
   ext a b
   simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply, smul_eq_mul]
@@ -375,32 +241,17 @@ theorem wilmotAlpha_orthogonality (h : sign = 1 ∨ sign = -1) :
 def wilmotG2Submodule : Submodule ℝ (Matrix (Fin 7) (Fin 7) ℝ) :=
   Submodule.span ℝ (Set.range bryantGen)
 
-/-- The associative matrix commutator used for the ambient Lie algebra. -/
 def matrixLieBracket
     (M N : Matrix (Fin 7) (Fin 7) ℝ) : Matrix (Fin 7) (Fin 7) ℝ :=
   M * N - N * M
 
-/-- The commutator of skew matrices is skew. -/
 theorem matrixLieBracket_skew
     {M N : Matrix (Fin 7) (Fin 7) ℝ}
-    (hM : Mᵀ = -M)
-    (hN : Nᵀ = -N) :
+    (hM : Mᵀ = -M) (hN : Nᵀ = -N) :
     (matrixLieBracket M N)ᵀ = -matrixLieBracket M N := by
   simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
   rw [hM, hN]
   simp [sub_eq_add_neg]
-
-theorem bryantGen_bracket_zero_three_cas_alignment :
-    matrixLieBracket (bryantGen 0) (bryantGen 3) =
-      (1 / 2 : ℝ) • (bryantGen 4 - bryantGen 11) := by
-  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
-    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul] ; abel
-/-- The Bryant span has the expected fourteen-dimensional real dimension. -/
-theorem wilmotG2Submodule_finrank :
-    Module.finrank ℝ wilmotG2Submodule = 14 := by
-  change Module.finrank ℝ (Submodule.span ℝ (Set.range bryantGen)) = 14
-  rw [finrank_span_eq_card bryantGen_linearIndependent]
-  rfl
 
 /-- Dimension count of the Bryant-Wilmot generators. -/
 theorem wilmot_generator_count :

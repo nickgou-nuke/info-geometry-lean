@@ -113,6 +113,51 @@ noncomputable def fullRightMulLinear (X : CanonicalZorn) :
 @[simp] theorem fullRightMulLinear_apply (X Y : CanonicalZorn) :
     fullRightMulLinear X Y = Y * X := rfl
 
+/-- Full-space left multiplication by a canonical split octonion. -/
+noncomputable def fullLeftMulLinear (X : CanonicalZorn) :
+    CanonicalZorn →ₗ[ℝ] CanonicalZorn where
+  toFun Y := X * Y
+  map_add' Y Z :=
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_add X Y Z
+  map_smul' r Y :=
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul r X Y
+
+@[simp] theorem fullLeftMulLinear_apply (X Y : CanonicalZorn) :
+    fullLeftMulLinear X Y = X * Y := rfl
+
+/-- Conjugation identifies the left kernel of `X` with the right kernel of
+`conj X`.  This is the structural left/right bridge used for annihilator
+dimension statements. -/
+noncomputable def leftKernelConjEquiv (X : CanonicalZorn) :
+    LinearMap.ker (fullLeftMulLinear X) ≃ₗ[ℝ]
+      LinearMap.ker (fullRightMulLinear (canonicalConj X)) where
+  toFun Y := by
+    refine ⟨canonicalConj Y.1, ?_⟩
+    change canonicalConj Y.1 * canonicalConj X = 0
+    have hY : X * Y.1 = 0 := by
+      exact Y.property
+    rw [← canonicalConj_mul, hY, canonicalConj_zero]
+  invFun Y := by
+    refine ⟨canonicalConj Y.1, ?_⟩
+    change X * canonicalConj Y.1 = 0
+    have hY : Y.1 * canonicalConj X = 0 := by
+      exact Y.property
+    have hc := congrArg canonicalConj hY
+    rw [canonicalConj_mul, canonicalConj_zero] at hc
+    simpa only [canonicalConj_involutive] using hc
+  left_inv Y := by
+    apply Subtype.ext
+    exact canonicalConj_involutive Y.1
+  right_inv Y := by
+    apply Subtype.ext
+    exact canonicalConj_involutive Y.1
+  map_add' Y Z := by
+    apply Subtype.ext
+    exact canonicalConj_add Y.1 Z.1
+  map_smul' r Y := by
+    apply Subtype.ext
+    exact canonicalConj_smul r Y.1
+
 /-- Right alternativity transported to the canonical carrier. -/
 theorem canonical_right_alternative (X Y : CanonicalZorn) :
     (Y * X) * X = Y * (X * X) := by

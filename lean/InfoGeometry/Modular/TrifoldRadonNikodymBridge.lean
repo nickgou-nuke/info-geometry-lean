@@ -24,7 +24,7 @@ set_option linter.unusedSectionVars false
 open Matrix
 open BigOperators
 
-namespace InfoGeometry.Modular.TrifoldRadonNikodymBridge
+namespace InfoGeometry.Modular
 
 /-!
 =============================================================================
@@ -330,5 +330,5 @@ theorem dlogRN_inv (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
 
 end ModularDerivations
 
-end InfoGeometry.Modular.TrifoldRadonNikodymBridge
+end InfoGeometry.Modular
 

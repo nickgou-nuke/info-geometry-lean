@@ -70,4 +70,20 @@ theorem isotropic_iff_splitQuad_zero (X : Imaginary) :
   dsimp [Isotropic, zornNorm, boolToZMod]
   native_decide +revert
 
+/-! The native automorphism action can now be transported to the seven
+coordinates used by the finite Peirce geometry. -/
+
+def octImAction (g : SplitOctF2Aut) (v : OctImF2) : OctImF2 :=
+  imaginaryToOctIm (g • octImToImaginary v)
+
+theorem octImAction_isotropic (g : SplitOctF2Aut) (v : OctImF2)
+    (hv : splitQuad v = 0) :
+    splitQuad (octImAction g v) = 0 := by
+  unfold octImAction
+  apply (isotropic_iff_splitQuad_zero (g • octImToImaginary v)).mp
+  change Isotropic ((g⁻¹ : SplitOctF2Aut).1 (octImToImaginary v).1)
+  apply automorphism_map_isotropic (g⁻¹ : SplitOctF2Aut) (octImToImaginary v).1
+  exact (isotropic_iff_splitQuad_zero (octImToImaginary v)).mpr (by
+    simpa using hv)
+
 end InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge

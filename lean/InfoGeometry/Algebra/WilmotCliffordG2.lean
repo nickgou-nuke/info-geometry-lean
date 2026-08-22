@@ -322,7 +322,7 @@ theorem bryantGen_bracket_zero_one_cas_alignment :
     matrixLieBracket (bryantGen 0) (bryantGen 1) =
       (-1 / 2 : ℝ) • (bryantGen 2 + bryantGen 9) := by
   simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
-    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul]
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul]
   abel_nf
   norm_num [div_eq_mul_inv, matrix_single_neg]
   abel

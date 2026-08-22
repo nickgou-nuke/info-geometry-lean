@@ -220,6 +220,7 @@ import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 import InfoGeometry.Physics.Algebra.FibonacciNPotentInvariantPacketBridge
 import InfoGeometry.Physics.Algebra.NPotentZeroModeProjectorBridge
 import InfoGeometry.Physics.Algebra.NPotentHorizonInvariantPacket
+import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
 
 /-!
 # Physics Umbrella

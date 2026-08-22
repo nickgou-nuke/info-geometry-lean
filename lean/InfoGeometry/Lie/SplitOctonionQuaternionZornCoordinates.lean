@@ -34,6 +34,10 @@ abbrev QuaternionCoordinates := ℝ × Vec3
 abbrev CartesianCoordinates := QuaternionCoordinates × QuaternionCoordinates
 abbrev CZ := CanonicalZorn
 
+theorem cartesianCoordinates_finrank :
+    Module.finrank ℝ CartesianCoordinates = 8 := by
+  simp [CartesianCoordinates, QuaternionCoordinates, Vec3]
+
 /-- Euclidean quaternion norm in scalar/vector coordinates. -/
 def quaternionNorm (q : QuaternionCoordinates) : ℝ :=
   q.1 ^ 2 + dot q.2 q.2
@@ -71,6 +75,10 @@ def cartesianZornLinearEquiv : CartesianCoordinates ≃ₗ[ℝ] CZ where
   map_smul' c X := by
     ext i <;> simp [Equiv.smul_def, coordEquiv, smul_eq_mul] <;> ring
 
+theorem canonicalZorn_finrank : Module.finrank ℝ CZ = 8 := by
+  rw [← cartesianZornLinearEquiv.finrank_eq]
+  exact cartesianCoordinates_finrank
+
 @[simp] theorem cartesianZornLinearEquiv_apply
     (qr : CartesianCoordinates) :
     cartesianZornLinearEquiv qr =
@@ -91,8 +99,7 @@ theorem detZ_cartesianZornLinearEquiv (qr : CartesianCoordinates) :
         (cartesianZornLinearEquiv qr) =
       quaternionNorm qr.1 - quaternionNorm qr.2 := by
   rcases qr with ⟨⟨q0, q⟩, ⟨r0, r⟩⟩
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, quaternionNorm, dot,
-    Fin.sum_univ_three]
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, quaternionNorm, dot]
   ring
 
 /-- The normalized `ell` commutator in Cartesian coordinates: it kills the
@@ -115,7 +122,9 @@ theorem cartesianZorn_intertwines_ellGrading
     cartesianZornLinearEquiv (cartesianEllGrading qr) =
       diagEllGrading (cartesianZornLinearEquiv qr) := by
   rw [diagEllGrading_coord]
-  ext i <;> simp [cartesianEllGrading] <;> ring
+  ext i
+  simp [cartesianEllGrading]
+  ring
 
 /-- Bundled operator form of the exact conjugacy: the circular coordinate
 equivalence diagonalizes Cartesian exchange into the native ell grading. -/

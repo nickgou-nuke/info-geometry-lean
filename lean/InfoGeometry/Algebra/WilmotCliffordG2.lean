@@ -189,6 +189,26 @@ theorem bryantGen_two_nine_separated
   simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
   constructor <;> linarith
 
+/-- The two support coordinates of `D` and `K` separate their coefficients. -/
+theorem bryantGen_three_ten_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 3 = 0 ∧ g 10 = 0 := by
+  have h₁ := congrArg (fun M => M 0 4) hg
+  have h₂ := congrArg (fun M => M 1 5) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+/-- The two support coordinates of `E` and `L` separate their coefficients. -/
+theorem bryantGen_four_eleven_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 4 = 0 ∧ g 11 = 0 := by
+  have h₁ := congrArg (fun M => M 0 3) hg
+  have h₂ := congrArg (fun M => M 1 6) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

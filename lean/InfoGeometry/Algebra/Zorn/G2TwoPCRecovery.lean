@@ -111,6 +111,18 @@ lemma pcTermFun_basis8_6_y1 (i : Fin 6) (b : Bool) :
     (pcTermFun i b (basis8 6)).y1 = true := by
   cases b <;> fin_cases i <;> rfl
 
+lemma pcWordFun_x0_transport (e : PCWordExp) (X : SplitOctF2) :
+    (pcWordFun e X).x0 =
+      if e 0 then X.x0 ^^ X.y2 else X.x0 := by
+  simp [pcWordFun, pcTermFun_x0]
+
+lemma pcWordFun_x1_transport (e : PCWordExp) (X : SplitOctF2) :
+    (pcWordFun e X).x1 =
+      let x0' := if e 0 then X.x0 ^^ X.y2 else X.x0
+      let x1' := if e 1 then x0' ^^ X.x1 else X.x1
+      if e 2 then x1' ^^ X.y2 else x1' := by
+  simp [pcWordFun, pcTermFun_x0, pcTermFun_x1, pcTermFun_y2]
+
 lemma automorphism_mul_apply (g h : SplitOctF2Aut) (X : SplitOctF2) :
     (g * h).1 X = h.1 (g.1 X) := rfl
 
@@ -176,32 +188,20 @@ theorem extractBit0_pcWord (e : PCWordExp) :
     extractBit0 (G2TwoSylowSubgroup.pcWord e) = e 0 := by
   change ((G2TwoSylowSubgroup.pcWord e).1 (basis8 7)).x0 = e 0
   rw [pcWord_apply]
-  change
-    (pcTermFun 5 (e 5) (pcTermFun 4 (e 4)
-      (pcTermFun 3 (e 3) (pcTermFun 2 (e 2)
-        (pcTermFun 1 (e 1) (pcTermFun 0 (e 0) (basis8 7))))))).x0 = e 0
-  cases h : e 0 <;>
-      simp [pcTermFun_x0, basis8, ePlus, eMinus, up0, up1, up2,
-      down0, down1, down2]
+  rw [pcWordFun_x0_transport]
+  simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
 
 lemma pcWordFun_x1_basis8_2 (e : PCWordExp) :
     (pcWordFun e (basis8 2)).x1 = e 1 := by
-  change
-    (pcTermFun 5 (e 5) (pcTermFun 4 (e 4)
-      (pcTermFun 3 (e 3) (pcTermFun 2 (e 2)
-        (pcTermFun 1 (e 1) (pcTermFun 0 (e 0) (basis8 2))))))).x1 = e 1
-  simp [pcTermFun_x0, pcTermFun_y2, pcTermFun_x1, basis8, ePlus, eMinus,
-    up0, up1, up2, down0, down1, down2, Bool.xor_comm]
+  rw [pcWordFun_x1_transport]
+  simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
 
 lemma pcWordFun_x1_basis8_7_raw (e : PCWordExp) :
     (pcWordFun e (basis8 7)).x1 =
       if e 2 then (!e 1 || !e 0) else (e 1 && e 0) := by
-  change
-    (pcTermFun 5 (e 5) (pcTermFun 4 (e 4)
-      (pcTermFun 3 (e 3) (pcTermFun 2 (e 2)
-        (pcTermFun 1 (e 1) (pcTermFun 0 (e 0) (basis8 7))))))).x1 = _
-  simp [pcTermFun_x0, pcTermFun_y2, pcTermFun_x1, basis8, ePlus, eMinus,
-    up0, up1, up2, down0, down1, down2, Bool.xor_comm]
+  rw [pcWordFun_x1_transport]
+  simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2,
+    Bool.xor_comm]
 
 lemma pcWordFun_x0_basis8_6 (e : PCWordExp) :
     (pcWordFun e (basis8 6)).x0 = false := by
@@ -347,9 +347,17 @@ theorem extractBit5_pcWord (e : PCWordExp) :
 
 theorem extractBit2_pcWord (e : PCWordExp) :
     extractBit2 (G2TwoSylowSubgroup.pcWord e) = e 2 := by
-  have he : e = makeExp (e 0) (e 1) (e 2) (e 3) (e 4) (e 5) := pcWordExp_eq_makeExp e
-  rw [he]
-  cases (e 0) <;> cases (e 1) <;> cases (e 2) <;> cases (e 3) <;> cases (e 4) <;> cases (e 5) <;> rfl
+  change ((peel1 (peel0 (G2TwoSylowSubgroup.pcWord e))).1 (basis8 7)).x1 = e 2
+  dsimp [peel1]
+  rw [automorphism_mul_apply]
+  split_ifs
+  · rw [pc6pc2Aut_basis8_7]
+    rw [automorphism_map_add, automorphism_map_add, automorphism_map_add,
+      automorphism_map_add, automorphism_map_add]
+    rw [peel0_apply_basis8_4, peel0_apply_basis8_6, peel0_apply_basis8_7]
+    simp [pcWordFun_x1_basis8_4, pcWordFun_x1_basis8_6,
+      peel0_pcWord_basis8_7_x1, extractBit1, add, add2]
+  · simpa using peel0_pcWord_basis8_7_x1 e
 
 theorem extractAllBits_pcWord (e : PCWordExp) :
     extractAllBits (G2TwoSylowSubgroup.pcWord e) = e := by

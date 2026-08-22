@@ -4,6 +4,8 @@ import InfoGeometry.Canonical.SplitOctonionQuaternionChart
 import InfoGeometry.Canonical.SplitOctonionExpLog
 import InfoGeometry.Canonical.SplitOctonionRegularOperators
 import InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
+import InfoGeometry.Canonical.SplitOctonionConjugation
+import InfoGeometry.Canonical.SplitOctonionRegularNormOperators
 
 /-!
 # Bridge: canonical `SplitOctonion` carrier as a Manivel composition algebra
@@ -25,6 +27,7 @@ and additive cancellation is closed by `abel`.
 -/
 
 noncomputable section
+set_option maxHeartbeats 1000000
 
 namespace InfoGeometry.Algebra.SplitOctonionManivelBridge
 
@@ -133,21 +136,21 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
   mul_add := by
     intro x y z
     apply SplitOctonion.ext <;>
-      simp [mul_a, mul_b, add_a, add_b, star_add, add_mul, mul_add] <;> abel
+      simp [mul_a, mul_b, add_a, add_b, mul_add]
   add_mul := by
     intro x y z
     apply SplitOctonion.ext <;>
-      simp [mul_a, mul_b, add_a, add_b, star_add, add_mul, mul_add] <;> abel
+      simp [mul_a, mul_b, add_a, add_b, add_mul]
   mul_smul := by
     intro c x y
     apply SplitOctonion.ext <;>
-      simp [mul_a, mul_b, smul_a, smul_b, SplitOctonion.mul_smul,
-        SplitOctonion.smul_mul, star_smul, star_coe_real, smul_add]
+      simp [mul_a, mul_b, smul_a, smul_b,
+        smul_add]
   smul_mul := by
     intro c x y
     apply SplitOctonion.ext <;>
-      simp [mul_a, mul_b, smul_a, smul_b, SplitOctonion.mul_smul,
-        SplitOctonion.smul_mul, star_smul, star_coe_real, smul_add]
+      simp [mul_a, mul_b, smul_a, smul_b,
+        smul_add]
   q_mul := by
     intro X Y
     obtain ⟨a, b⟩ := X
@@ -166,6 +169,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
         = (b * star b).re * (d * star d).re := by
       rw [← hs1, ← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
+      exact mul_comm _ _
     have h3 : ((d * a) * star (d * a)).re
         = (a * star a).re * (d * star d).re := by
       rw [← normSq_eq_re_mul_star, normSq_mul_quat, mul_comm,
@@ -204,41 +208,16 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     apply SplitOctonion.ext
     · show star (X.a * Y.a + star Y.b * X.b)
         = star Y.a * star X.a + star (-X.b) * (-Y.b)
-      simp only [star_add, star_mul, star_neg, neg_mul, neg_neg, star_star,
-        neg_smul, one_smul]
-      abel
+      simp [star_add, star_mul, star_neg, neg_mul, star_star]
     · show -(Y.b * X.a + X.b * star Y.a)
         = (-X.b) * star Y.a + (-Y.b) * star (star X.a)
-      simp only [neg_add_rev, neg_mul, star_star]
-      abel
+      simp [neg_add_rev, neg_mul, star_star]
   mul_conj := by
     intro X
-    apply SplitOctonion.ext
-    · show X.a * star X.a + star (-X.b) * X.b = normSQ X • (1 : Quaternion ℝ)
-      rw [star_neg, neg_mul]
-      rw [show star X.b * X.b = ↑((X.b * star X.b).re) from
-        coe_re_mul_star' X.b]
-      rw [coe_re_mul_star, ← sub_eq_add_neg, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
-    · show (-X.b) * X.a + X.b * star (star X.a) = normSQ X • (0 : Quaternion ℝ)
-      rw [star_star, neg_mul, neg_add_cancel]
-      simp
+    simpa [manivelConj] using SplitOctonion.self_mul_splitConj X
   conj_mul := by
     intro X
-    apply SplitOctonion.ext
-    · show star X.a * X.a + star X.b * (-X.b) = normSQ X • (1 : Quaternion ℝ)
-      rw [neg_mul]
-      rw [show star X.a * X.a = ↑((X.a * star X.a).re) from
-        coe_re_mul_star' X.a]
-      rw [show star X.b * X.b = ↑((X.b * star X.b).re) from
-        coe_re_mul_star' X.b]
-      rw [← sub_eq_add_neg, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
-    · show X.b * star X.a + (-X.b) * star X.a = normSQ X • (0 : Quaternion ℝ)
-      rw [neg_mul, add_neg_cancel]
-      simp
+    simpa [manivelConj] using SplitOctonion.splitConj_mul_self X
   mul_mul_conj_right := by
     intro X Y
     apply SplitOctonion.ext
@@ -249,75 +228,60 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
         = (star Y.b * Y.b) * X.a + star Y.b * (X.b * star Y.a) := by
       rw [mul_add, ← mul_assoc]
     have e3 : X.a * (Y.a * star Y.a) = X.a * ↑((Y.a * star Y.a).re) := by
-      rw [coe_re_mul_star]
+      exact congrArg (fun z : Quaternion ℝ => X.a * z) (coe_re_mul_star Y.a)
     have e4 : (star Y.b * Y.b) * X.a = ↑((Y.b * star Y.b).re) * X.a := by
       rw [show star Y.b * Y.b = ↑((Y.b * star Y.b).re) from
         coe_re_mul_star' Y.b]
     · show (X * Y).a * star Y.a + star (-Y.b) * (X * Y).b = normSQ Y • X.a
-      rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, manivelConj_a,
-        star_neg, neg_mul, e1, e2, e3, e4]
+      rw [SplitOctonion.mul_a, SplitOctonion.mul_b, star_neg, neg_mul, e1, e2, e3, e4]
       abel
-      rw [mul_comm X.a (↑((Y.a * star Y.a).re)), ← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
+      rw [Quaternion.mul_coe_eq_smul, Quaternion.coe_mul_eq_smul]
+      simp only [neg_one_smul]
+      have hscalar :
+          (Y.a * star Y.a).re • X.a - (Y.b * star Y.b).re • X.a =
+            Y.normSQ • X.a := by
+        rw [← sub_smul]
+        rfl
+      simpa only [sub_eq_add_neg] using hscalar
     · show (-Y.b) * (X * Y).a + (X * Y).b * star (star Y.a) = normSQ Y • X.b
-      rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, manivelConj_a,
-        star_star]
+      rw [SplitOctonion.mul_a, SplitOctonion.mul_b, star_star]
       have f1 : (-Y.b) * (X.a * Y.a + star Y.b * X.b)
           = -(Y.b * X.a * Y.a) - ↑((Y.b * star Y.b).re) * X.b := by
-        rw [mul_add, neg_mul, neg_mul, mul_assoc, mul_assoc,
-          show Y.b * (star Y.b * X.b) = ↑((Y.b * star Y.b).re) * X.b from by
-            rw [← mul_assoc, coe_re_mul_star]]
-      have f2 : (Y.b * X.a + X.b * star Y.a) * star (star Y.a)
+        rw [mul_add, neg_mul, neg_mul, mul_assoc]
+        have hY : Y.b * (star Y.b * X.b) =
+            ↑((Y.b * star Y.b).re) * X.b := by
+          calc
+            Y.b * (star Y.b * X.b) = (Y.b * star Y.b) * X.b :=
+              (mul_assoc Y.b (star Y.b) X.b).symm
+            _ = ↑((Y.b * star Y.b).re) * X.b :=
+              congrArg (fun z : Quaternion ℝ => z * X.b) (coe_re_mul_star Y.b)
+        rw [hY]
+        abel
+      have f2 : (Y.b * X.a + X.b * star Y.a) * Y.a
           = Y.b * X.a * Y.a + ↑((Y.a * star Y.a).re) * X.b := by
-        rw [add_mul, mul_assoc, ← mul_assoc X.b (star Y.a) Y.a,
-          show star Y.a * Y.a = ↑((Y.a * star Y.a).re) from
+        simp only [add_mul, mul_assoc]
+        rw [show star Y.a * Y.a = ↑((Y.a * star Y.a).re) from
             coe_re_mul_star' Y.a]
+        rw [Quaternion.mul_coe_eq_smul, Quaternion.coe_mul_eq_smul]
       rw [f1, f2]
       abel
-      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
+      rw [neg_one_smul]
+      simp only [Quaternion.coe_mul_eq_smul]
+      have hscalar :
+          -((Y.b * star Y.b).re) • X.b + (Y.a * star Y.a).re • X.b =
+            Y.normSQ • X.b := by
+        calc
+          -((Y.b * star Y.b).re) • X.b + (Y.a * star Y.a).re • X.b =
+              (-((Y.b * star Y.b).re) + (Y.a * star Y.a).re) • X.b :=
+                (add_smul _ _ _).symm
+          _ = ((Y.a * star Y.a).re - (Y.b * star Y.b).re) • X.b := by
+                congr 1; ring
+          _ = Y.normSQ • X.b := by rfl
+      simpa only [neg_smul] using hscalar
   conj_mul_mul_left := by
     intro X Y
-    apply SplitOctonion.ext
-    have hA : star X.a * (X.a * Y.a + star Y.b * X.b)
-        = ↑((X.a * star X.a).re) * Y.a + (star X.a * star Y.b) * X.b := by
-      rw [add_mul, mul_assoc,
-        show star X.a * X.a = ↑((X.a * star X.a).re) from
-          coe_re_mul_star' X.a,
-        mul_assoc]
-    have hB : star (Y.b * X.a + X.b * star Y.a) * (-X.b)
-        = -((star X.a * star Y.b) * X.b) - ↑((X.b * star X.b).re) * Y.a := by
-      rw [star_add, star_mul, mul_assoc, star_mul, star_star]
-      rw [neg_mul, neg_mul, ← mul_assoc Y.a (star X.b) X.b,
-        show star X.b * X.b = ↑((X.b * star X.b).re) from
-          coe_re_mul_star' X.b,
-        mul_comm Y.a (↑((X.b * star X.b).re))]
-      abel
-    · show star X.a * (X * Y).a + star (X * Y).b * (-X.b) = normSQ X • Y.a
-      rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, hA, hB]
-      abel
-      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
-    · show (X * Y).b * star X.a + (-X.b) * star (X * Y).a = normSQ X • Y.b
-      rw [SplitOctonion.mul_b, SplitOctonion.mul_a, manivelConj_b]
-      rw [show star (X.a * Y.a + star Y.b * X.b)
-          = star Y.a * star X.a + star X.b * Y.b from by
-        rw [star_add, star_mul, star_mul, star_mul_star Y.b X.b]]
-      rw [neg_mul, mul_assoc, ← mul_assoc, mul_assoc, mul_assoc]
-      rw [show X.b * (star Y.a * star X.a) = (X.b * star Y.a) * star X.a from
-        (mul_assoc X.b (star Y.a) (star X.a)).symm]
-      abel
-      rw [show Y.b * (X.a * star X.a) = Y.b * ↑((X.a * star X.a).re) from by
-        rw [coe_re_mul_star]]
-      rw [mul_comm Y.b (↑((X.a * star X.a).re)),
-        show X.b * (star X.b * Y.b) = (X.b * star X.b) * Y.b from mul_assoc _ _ _,
-        coe_re_mul_star]
-      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
-      congr 1
-      rfl
+    simpa [manivelConj, leftRegular] using
+      SplitOctonion.splitConjugate_mul_leftRegular X Y
 
 @[simp] theorem splitOctonionCompositionAlgebra_q (X : SplitOctonion) :
     splitOctonionCompositionAlgebra.q X = normSQ X := rfl
@@ -357,7 +321,6 @@ with the pre-existing canonical `leftRegular` operator: no parallel API. -/
 theorem mulLeftLinear_eq_leftRegular (X : SplitOctonion) :
     CompositionAlgebra.mulLeftLinear splitOctonionCompositionAlgebra X
       = leftRegular X := by
-  funext y
-  simp [CompositionAlgebra.mulLeftLinear]
+  ext y <;> rfl
 
 end InfoGeometry.Algebra.SplitOctonionManivelBridge

@@ -191,7 +191,7 @@ def verify_gap_g2_2_order() -> dict[str, int | bool | list[int] | str]:
     code = r"""
 LoadPackage("atlasrep");;
 order := 2^6 * (2^6 - 1) * (2^2 - 1);;
-G := AtlasGroup("G2(2)");;
+ G := AtlasGroup("U3(3).2");;
 D := DerivedSubgroup(G);;
 Print("{\"formula_order\":", order,
   ",\"derived_order\":", order / 2,
@@ -230,7 +230,7 @@ def verify_gap_outer_c2_witness() -> dict[str, int | bool | str | list[str] | li
     """
     code = r"""
 LoadPackage("atlasrep");;
-G := AtlasGroup("G2(2)");;
+G := AtlasGroup("U3(3).2");;
 D := DerivedSubgroup(G);;
 h := First(RightTransversal(G,D), r -> not r in D);;
 Print("QUOTIENT_ORDER=", Size(G) / Size(D), "\n");

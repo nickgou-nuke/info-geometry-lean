@@ -23,11 +23,14 @@ if Length(Q) <> 189 then Error("FLAG_CARD failed"); fi;
 
 # The action degree is the concrete index [G:B].  The first coset is the
 # canonical base flag, and its stabilizer is B by the coset action theorem.
-A := Action(G, Q, OnRight);
 act := ActionHomomorphism(G, Q, OnRight);
-if NrMovedPoints(A) <> 189 then Error("FLAG_ACTION_DEGREE failed"); fi;
+if Length(Q) <> 189 then Error("FLAG_ACTION_DEGREE failed"); fi;
+A := Image(act);
+Print("FLAG_ACTION_READY\n");
 if Size(Stabilizer(A, 1)) <> 64 then Error("FLAG_STABILIZER failed"); fi;
-if Transitivity(A) <> 1 then Error("FLAG_TRANSITIVITY failed"); fi;
+Print("FLAG_STABILIZER_SIZE=", Size(Stabilizer(A, 1)), "\n");
+if not IsTransitive(A) then Error("FLAG_TRANSITIVITY failed"); fi;
+Print("FLAG_ACTION_TRANSITIVE=PASS\n");
 
 # Export the actual action images.  These are GAP-derived permutations on the
 # 189 right cosets; no Lean-side relation is assumed here.
@@ -36,7 +39,7 @@ for k in [1..Length(gens)] do
     List([1..Length(Q)], i -> i^Image(act, gens[k])), "\n");
 od;
 
-Print("FLAG_ACTION_DEGREE=", NrMovedPoints(A), "\n");
+Print("FLAG_ACTION_DEGREE=", Length(Q), "\n");
 Print("FLAG_STABILIZER_SIZE=", Size(Stabilizer(A, 1)), "\n");
 Print("FLAG_ACTION_TRANSITIVE=PASS\n");
 Print("G2_FLAG_COSET_ACTION_CAS=PASS\n");

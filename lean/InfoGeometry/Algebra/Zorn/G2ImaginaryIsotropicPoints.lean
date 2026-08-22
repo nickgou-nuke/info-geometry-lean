@@ -99,6 +99,41 @@ instance : DecidablePred (fun X : Imaginary =>
   change Decidable (zornNorm X.1 = false ∧ X ≠ zeroImaginary)
   exact inferInstance
 
+/-- The 63 nonzero isotropic points in the trace-zero carrier. -/
+def IsotropicPoint : Type :=
+  {X : Imaginary // Isotropic X.1 ∧ X ≠ zeroImaginary}
+
+instance : Fintype IsotropicPoint :=
+  Subtype.fintype (fun X : Imaginary => Isotropic X.1 ∧ X ≠ zeroImaginary)
+
+deriving instance DecidableEq for IsotropicPoint
+
+def actIsotropicPoint (f : SplitOctF2Aut) (X : IsotropicPoint) : IsotropicPoint :=
+  ⟨actImaginary f X.1,
+    ⟨automorphism_map_isotropic f⁻¹ X.1.1 X.1.2.1,
+      by
+        intro hzero
+        apply X.1.2.2
+        apply Subtype.ext
+        have hz := congrArg Subtype.val hzero
+        have hz' := congrArg f.1 hz
+        simpa [map_zero] using hz'⟩⟩
+
+instance : SMul SplitOctF2Aut IsotropicPoint where
+  smul := actIsotropicPoint
+
+instance : MulAction SplitOctF2Aut IsotropicPoint where
+  one_smul X := by
+    apply Subtype.ext
+    apply Subtype.ext
+    rfl
+  mul_smul f g X := by
+    apply Subtype.ext
+    apply Subtype.ext
+    change (f * g)⁻¹.1 X.1.1 = f⁻¹.1 (g⁻¹.1 X.1.1)
+    rw [mul_inv_rev]
+    rfl
+
 /-- Isotropic points in the trace-zero carrier, excluding zero. -/
 def isotropicPoints7 : Finset Imaginary :=
   Finset.univ.filter (fun X => Isotropic X.1 ∧ X ≠ zeroImaginary)

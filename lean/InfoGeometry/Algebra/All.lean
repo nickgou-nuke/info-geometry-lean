@@ -322,6 +322,10 @@ import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
+import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
+import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
+import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
+import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 /-!
 # InfoGeometry.Algebra.All
 

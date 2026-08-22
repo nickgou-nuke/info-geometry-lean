@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Finite split Cayley hexagon incidence witness for the Atlas `G2(2)` action.
+"""Finite split Cayley hexagon incidence witness for the Atlas `U3(3).2`
+action, the order-12096 realization isomorphic to `G2(2)`.
 
 This script derives the unique `G2(2)`-invariant line orbit of size 63 in the
 Atlas degree-63 permutation action, validates the generalized hexagon incidence
@@ -38,7 +39,7 @@ def parse_gap_value(value: str) -> Any:
 def run_gap_hexagon_certificate() -> dict[str, Any]:
     code = r'''
 LoadPackage("atlasrep");;
-G := AtlasGroup("G2(2)");;
+ G := AtlasGroup("U3(3).2");;
 D := DerivedSubgroup(G);;
 h := First(RightTransversal(G,D), r -> not r in D);;
 pts := [1..LargestMovedPoint(G)];;

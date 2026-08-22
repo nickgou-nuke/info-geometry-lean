@@ -26,7 +26,7 @@ GAP = Path("/home/goutev/miniforge3/envs/sage/bin/gap")
 def verify_gap_fixed_point_incidence() -> dict[str, Any]:
     code = r'''
 LoadPackage("atlasrep");;
-G := AtlasGroup("G2(2)");;
+ G := AtlasGroup("U3(3).2");;
 D := DerivedSubgroup(G);;
 h := First(RightTransversal(G,D), r -> not r in D);;
 pts := [1..LargestMovedPoint(G)];;

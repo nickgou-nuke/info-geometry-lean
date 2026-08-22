@@ -106,6 +106,18 @@ ab_coordinates = next(iter(sp.linsolve((legacy_columns, sp.Matrix([
     ab[i, j] for i in range(7) for j in range(7)])))))
 print(f"BRACKET_A_B_COORDINATES={ab_coordinates}")
 
+ac = legacy_generators[0] * legacy_generators[2] - legacy_generators[2] * legacy_generators[0]
+ac_claim = sp.Rational(1, 2) * (legacy_generators[1] + legacy_generators[8])
+assert ac == ac_claim
+
+ae = legacy_generators[0] * legacy_generators[4] - legacy_generators[4] * legacy_generators[0]
+ae_claim = -sp.Rational(1, 2) * (legacy_generators[3] + legacy_generators[10])
+assert ae == ae_claim
+
+af = legacy_generators[0] * legacy_generators[5] - legacy_generators[5] * legacy_generators[0]
+af_claim = sp.Rational(1, 2) * legacy_generators[13]
+assert af == af_claim
+
 print("G2_SO7_STABILIZER_DIM=14")
 for n, vector in enumerate(basis):
     support = [(pairs[i], value) for i, value in enumerate(vector) if value]

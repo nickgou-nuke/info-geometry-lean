@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
+import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
 
 /-!
@@ -70,6 +71,16 @@ theorem isotropic_iff_splitQuad_zero (X : Imaginary) :
   dsimp [Isotropic, zornNorm, boolToZMod]
   native_decide +revert
 
+def imaginaryProductProjection (X Y : Imaginary) : Imaginary :=
+  let Z := mul X.1 Y.1
+  ⟨⟨add2 Z.a Z.b, add2 Z.a Z.b, Z.x0, Z.x1, Z.x2,
+      Z.y0, Z.y1, Z.y2⟩, rfl⟩
+
+theorem octCross_imaginaryProductProjection (X Y : Imaginary) :
+    octCross (imaginaryToOctIm X) (imaginaryToOctIm Y) =
+      imaginaryToOctIm (imaginaryProductProjection X Y) := by
+  native_decide +revert
+
 /-! The native automorphism action can now be transported to the seven
 coordinates used by the finite Peirce geometry. -/
 
@@ -83,7 +94,90 @@ theorem octImAction_isotropic (g : SplitOctF2Aut) (v : OctImF2)
   apply (isotropic_iff_splitQuad_zero (g • octImToImaginary v)).mp
   change Isotropic ((g⁻¹ : SplitOctF2Aut).1 (octImToImaginary v).1)
   apply automorphism_map_isotropic (g⁻¹ : SplitOctF2Aut) (octImToImaginary v).1
+    (octImToImaginary v).2
   exact (isotropic_iff_splitQuad_zero (octImToImaginary v)).mpr (by
-    simpa using hv)
+    have hcoord : imaginaryToOctIm (octImToImaginary v) = v :=
+      imaginaryOctImEquiv.right_inv v
+    rw [hcoord]
+    exact hv)
+
+abbrev OctImIsotropicPoint := {v : OctImF2 // splitQuad v = 0 ∧ v ≠ 0}
+
+open InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
+
+def pointToOctIm (p : Point) : OctImIsotropicPoint :=
+  ⟨imaginaryToOctIm p.1,
+    ⟨(isotropic_iff_splitQuad_zero p.1).mp p.2.1, by
+      intro h
+      apply p.2.2
+      apply imaginaryOctImEquiv.injective
+      calc
+        imaginaryToOctIm p.1 = 0 := h
+        _ = imaginaryToOctIm zeroImaginary := by
+          symm
+          funext i
+          fin_cases i <;> rfl
+      ⟩⟩
+
+def octImToPoint (v : OctImIsotropicPoint) : Point :=
+  ⟨octImToImaginary v.1,
+    (isotropic_iff_splitQuad_zero (octImToImaginary v.1)).mpr (by
+      have hcoord : imaginaryToOctIm (octImToImaginary v.1) = v.1 :=
+        imaginaryOctImEquiv.right_inv v.1
+      rw [hcoord]
+      exact v.2.1), by
+    intro h
+    apply v.2.2
+    have hz := congrArg imaginaryToOctIm h
+    calc
+      v.1 = imaginaryToOctIm (octImToImaginary v.1) :=
+        (imaginaryOctImEquiv.right_inv v.1).symm
+      _ = imaginaryToOctIm zeroImaginary := hz
+      _ = 0 := by
+        funext i
+        fin_cases i <;> rfl⟩
+
+theorem pointToOctIm_left_inverse (p : Point) :
+    octImToPoint (pointToOctIm p) = p := by
+  apply Subtype.ext
+  exact imaginaryOctImEquiv.left_inv p.1
+
+theorem pointToOctIm_right_inverse (v : OctImIsotropicPoint) :
+    pointToOctIm (octImToPoint v) = v := by
+  apply Subtype.ext
+  exact imaginaryOctImEquiv.right_inv v.1
+
+noncomputable def pointOctImEquiv : Point ≃ OctImIsotropicPoint where
+  toFun := pointToOctIm
+  invFun := octImToPoint
+  left_inv := pointToOctIm_left_inverse
+  right_inv := pointToOctIm_right_inverse
+
+theorem octImIsotropicPoint_card : Fintype.card OctImIsotropicPoint = 63 := by
+  exact (Fintype.card_congr pointOctImEquiv).symm.trans point_card
+
+/-! Transport the native point action across the coordinate equivalence. -/
+
+noncomputable def octImPointPerm (g : SplitOctF2Aut) :
+    Equiv.Perm OctImIsotropicPoint :=
+  pointOctImEquiv.symm.trans ((MulAction.toPerm g).trans pointOctImEquiv)
+
+theorem octImPointPerm_one : octImPointPerm (1 : SplitOctF2Aut) = 1 := by
+  apply Equiv.ext
+  intro v
+  change pointToOctIm ((1 : SplitOctF2Aut) • octImToPoint v) = v
+  rw [one_smul, pointToOctIm_right_inverse]
+
+theorem octImPointPerm_apply (g : SplitOctF2Aut) (v : OctImIsotropicPoint) :
+    octImPointPerm g v = pointToOctIm (g • octImToPoint v) := by
+  rfl
+
+theorem octImPointPerm_mul (g h : SplitOctF2Aut) :
+    octImPointPerm (g * h) = octImPointPerm g * octImPointPerm h := by
+  apply Equiv.ext
+  intro v
+  change pointToOctIm ((g * h) • octImToPoint v) =
+    pointToOctIm (g • octImToPoint (pointToOctIm (h • octImToPoint v)))
+  rw [mul_smul, pointToOctIm_left_inverse]
 
 end InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge

@@ -223,8 +223,8 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     apply SplitOctonion.ext
     · show star X.a * X.a + star X.b * (-X.b) = normSQ X • (1 : Quaternion ℝ)
       rw [neg_mul]
-      rw [show star X.a * X.a = ↑((X.a * star X.a).re) from by
-        rw [← coe_re_mul_star, mul_comm]]
+      rw [show star X.a * X.a = ↑((X.a * star X.a).re) from
+        coe_re_mul_star' X.a]
       rw [show star X.b * X.b = ↑((X.b * star X.b).re) from
         coe_re_mul_star' X.b]
       rw [← sub_eq_add_neg, ← coe_sub, qsmul_eq_mul]
@@ -245,8 +245,8 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     have e3 : X.a * (Y.a * star Y.a) = X.a * ↑((Y.a * star Y.a).re) := by
       rw [coe_re_mul_star]
     have e4 : (star Y.b * Y.b) * X.a = ↑((Y.b * star Y.b).re) * X.a := by
-      rw [show star Y.b * Y.b = ↑((Y.b * star Y.b).re) from by
-        rw [← coe_re_mul_star, mul_comm]]
+      rw [show star Y.b * Y.b = ↑((Y.b * star Y.b).re) from
+        coe_re_mul_star' Y.b]
     · show (X * Y).a * star Y.a + star (-Y.b) * (X * Y).b = normSQ Y • X.a
       rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, manivelConj_a,
         star_neg, neg_mul, e1, e2, e3, e4]
@@ -265,8 +265,8 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       have f2 : (Y.b * X.a + X.b * star Y.a) * star (star Y.a)
           = Y.b * X.a * Y.a + ↑((Y.a * star Y.a).re) * X.b := by
         rw [add_mul, mul_assoc, ← mul_assoc X.b (star Y.a) Y.a,
-          show star Y.a * Y.a = ↑((Y.a * star Y.a).re) from by
-            rw [← coe_re_mul_star, mul_comm]]
+          show star Y.a * Y.a = ↑((Y.a * star Y.a).re) from
+            coe_re_mul_star' Y.a]
       rw [f1, f2]
       abel
       rw [← mul_sub, ← coe_sub, qsmul_eq_mul]
@@ -278,15 +278,15 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     have hA : star X.a * (X.a * Y.a + star Y.b * X.b)
         = ↑((X.a * star X.a).re) * Y.a + (star X.a * star Y.b) * X.b := by
       rw [add_mul, mul_assoc,
-        show star X.a * X.a = ↑((X.a * star X.a).re) from by
-          rw [← coe_re_mul_star, mul_comm],
+        show star X.a * X.a = ↑((X.a * star X.a).re) from
+          coe_re_mul_star' X.a,
         mul_assoc]
     have hB : star (Y.b * X.a + X.b * star Y.a) * (-X.b)
         = -((star X.a * star Y.b) * X.b) - ↑((X.b * star X.b).re) * Y.a := by
       rw [star_add, star_mul, mul_assoc, star_mul, star_star]
       rw [neg_mul, neg_mul, ← mul_assoc Y.a (star X.b) X.b,
-        show star X.b * X.b = ↑((X.b * star X.b).re) from by
-          rw [← coe_re_mul_star, mul_comm],
+        show star X.b * X.b = ↑((X.b * star X.b).re) from
+          coe_re_mul_star' X.b,
         mul_comm Y.a (↑((X.b * star X.b).re))]
       abel
     · show star X.a * (X * Y).a + star (X * Y).b * (-X.b) = normSQ X • Y.a

@@ -19,6 +19,8 @@ pcgens := List(rows, rs -> List([1..8], i -> List([1..8], j ->
 s := PermutationMat((3,4)(6,7), 8, F);
 r := PermutationMat((3,4,5)(6,7,8), 8, F);
 h := PermutationMat((1,2)(3,6)(4,7)(5,8), 8, F);
+c := h * r;
+t := s * c;
 G := Group(Concatenation(pcgens, [s, r, h]));
 U := Group(pcgens);
 
@@ -34,6 +36,12 @@ P := parabolics[1];
 if not IsSubgroup(P, U) then Error("U_NOT_SUBGROUP_OF_P"); fi;
 if Index(G, P) <> 63 then Error("PARABOLIC_INDEX failed"); fi;
 if Index(P, U) <> 3 then Error("PARABOLIC_FIBER failed"); fi;
+
+Pshort := Group(Concatenation(pcgens, [s]));
+Plong := Group(Concatenation(pcgens, [t]));
+if not (Size(Pshort) = 192 or Size(Plong) = 192) then
+  Error("SIMPLE_PARABOLIC_GENERATOR failed");
+fi;
 
 Q := RightCosets(G, P);
 A := Action(G, Q, OnRight);
@@ -54,6 +62,8 @@ Print("NORMALIZER_U_SIZE=", Size(Normalizer(G, U)), "\n");
 Print("P_SIZE=", Size(P), "\n");
 Print("G_OVER_P=", Index(G, P), "\n");
 Print("P_OVER_U=", Index(P, U), "\n");
+Print("P_SHORT_SIZE=", Size(Pshort), "\n");
+Print("P_LONG_SIZE=", Size(Plong), "\n");
 Print("PARABOLIC_ACTION_DEGREE=", Length(Q), "\n");
 Print("PARABOLIC_STABILIZER_SIZE=", Size(Stabilizer(A, 1)), "\n");
 Print("PARABOLIC_SCHUBERT_SIZES=", cellSizes, "\n");

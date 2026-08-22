@@ -46,10 +46,7 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
   have hne : j.val ≠ i.val := fun he => h (Fin.ext he)
   revert hne
   fin_cases i <;> fin_cases j <;>
-    simp [bryantGen, sr, ss, skewGen] <;>
-    first
-      | rfl
-      | norm_num
+    simp [bryantGen, sr, ss, skewGen]
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by
@@ -57,7 +54,7 @@ theorem bryantGen_linearIndependent :
   intro g hg i
   have h := congrArg (fun M : Matrix (Fin 7) (Fin 7) ℝ => M (sr i) (ss i)) hg
   simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
-    Finset.sum_apply, Matrix.zero_apply] at h
+    Matrix.zero_apply] at h
   rw [Finset.sum_eq_single i, mul_eq_zero] at h
   · rcases h with h | h
     · exact h
@@ -65,6 +62,6 @@ theorem bryantGen_linearIndependent :
   · intro j _ hj
     rw [bryantGen_cross_zero j i hj]
     exact mul_zero (g j)
-  · exact fun hc => absurd hc (Finset.mem_univ i)
+  · exact fun hc => absurd (hc (Finset.mem_univ i)) (by norm_num)
 
 end ScratchWilmot

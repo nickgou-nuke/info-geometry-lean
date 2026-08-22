@@ -1,9 +1,10 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic
 
 /-!
 # Exact Cardinalities of Bruhat and Schubert Cells for G₂(2)
@@ -56,6 +57,7 @@ At q = 2, the 12 Bruhat cells sum to exactly 189 cosets.
 -/
 theorem full_flag_coset_sum_189 :
     (∑ w : Fin 12, bruhatCellSize 2 w) = 189 := by
+  dsimp [bruhatCellSize, weylLength]
   decide
 
 /-! =========================================================================
@@ -87,6 +89,7 @@ and their exact sum equals the index `[G₂(2) : P] = 63`.
 -/
 theorem parabolic_coset_sum_63 :
     (∑ k : Fin 6, parabolicCellSize 2 k) = 63 := by
+  dsimp [parabolicCellSize, parabolicLength]
   decide
 
 /-! =========================================================================

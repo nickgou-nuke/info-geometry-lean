@@ -159,6 +159,16 @@ theorem bryantGen_eleven_entry :
     dsimp [bryantGen, skewGen]
     norm_num
 
+/-- The two support coordinates of `A` and `H` separate their coefficients. -/
+theorem bryantGen_zero_seven_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 0 = 0 ∧ g 7 = 0 := by
+  have h₁ := congrArg (fun M => M 1 2) hg
+  have h₂ := congrArg (fun M => M 3 4) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

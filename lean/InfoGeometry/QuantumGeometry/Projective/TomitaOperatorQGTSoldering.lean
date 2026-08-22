@@ -51,7 +51,6 @@ local instance complexBaseRealInner : InnerProductSpace ℝ H :=
 The doubled Hestenes/Tomita phase axis regarded as a complex-linear operator on
 the Nambu Hilbert carrier.
 -/
-set_option maxRecDepth 10000 in
 noncomputable def nambuClockAxis : EndC where
   toFun := fun u => clockAxis (E := H) u
   map_add' := by
@@ -60,7 +59,8 @@ noncomputable def nambuClockAxis : EndC where
   map_smul' := by
     intro c u
     apply DoubledSpace.ext <;>
-      simp [clockAxis, complex_i]
+      simp only [clockAxis_eq_complex_i]
+    simp [complex_i]
   cont := (clockAxis (E := H)).cont
 
 @[simp]
@@ -134,8 +134,7 @@ product.
 theorem nambu_real_inner_eq_re_complex_inner (u v : NambuH) :
     ⟪u, v⟫_ℝ = (⟪u, v⟫_ℂ).re := by
   rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
-  rw [real_inner_eq_re_inner]
-  exact map_add Complex.re _ _
+  simp only [real_inner_eq_re_inner, Complex.add_re]
 
 /-- Operatorial real metric evaluated on projective horizontal tangent vectors. -/
 noncomputable def horizontalOperatorMetric
@@ -166,8 +165,8 @@ theorem horizontalOperatorMetric_eq_fubiniStudyMetric
   rw [metricOfOperator_apply]
   simp only [ContinuousLinearMap.id_apply]
   rw [nambu_real_inner_eq_re_complex_inner]
-  rw [QGT_eq_inner_projOrth]
-  rfl
+  unfold fubiniStudyMetric
+  rw [← QGT_eq_inner_projOrth]
 
 /-- On the positive polarization sector the operatorial Berry seed is `Im Q`. -/
 theorem horizontalOperatorBerry_eq_QGT_im

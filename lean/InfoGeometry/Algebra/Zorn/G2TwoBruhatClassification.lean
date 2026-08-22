@@ -32,20 +32,12 @@ theorem inversionSubgroupSizes_eq :
 theorem flagVarietyCosetCount_eq_189 :
     inversionSubgroupSizes.sum = 189 := rfl
 
-/-- The 12 Bruhat double coset cell sizes |B w B| = 64 * 2^ℓ(w). -/
-def concreteCellSizes : List ℕ :=
+/-! Formal weights attached to the abstract Weyl length list.  These are not
+cardinalities of concrete subsets of `SplitOctF2Aut`. -/
+def formalCellWeights : List ℕ :=
   inversionSubgroupSizes.map (fun s => s * 64)
 
-theorem concreteCellSizes_eq :
-    concreteCellSizes = [64, 128, 256, 512, 1024, 2048, 4096, 2048, 1024, 512, 256, 128] := rfl
-
-/-- 🏆 THEOREM 2: The Bruhat cell decomposition sum of all 12 double cosets is 12,096. -/
-theorem bruhat_cell_sum_eq_12096 :
-    concreteCellSizes.sum = 12096 := rfl
-
-/-- 🏆 MASTER CAPSTONE ORBIT-STABILIZER THEOREM:
-    |G| = |G/B| * |B| = 189 * 64 = 12,096. -/
-theorem orbit_stabilizer_total_card :
-    inversionSubgroupSizes.sum * 64 = 12096 := rfl
+theorem formalCellWeights_eq :
+    formalCellWeights = [64, 128, 256, 512, 1024, 2048, 4096, 2048, 1024, 512, 256, 128] := rfl
 
 end InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification

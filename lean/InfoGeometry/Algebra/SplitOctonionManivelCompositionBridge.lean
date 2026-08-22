@@ -113,53 +113,22 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     apply SplitOctonion.ext <;> simp
   mul_add := by
     intro x y z
-    apply SplitOctonion.ext
-    · show x.a * (y.a + z.a) + star (y.b + z.b) * x.b
-        = x.a * y.a + x.a * z.a + (star y.b * x.b + star z.b * x.b)
-      rw [mul_add, star_add, add_mul]
-      abel
-    · show (y.b + z.b) * x.a + x.b * star (y.a + z.a)
-        = y.b * x.a + z.b * x.a + (x.b * star y.a + x.b * star z.a)
-      rw [add_mul, star_add, mul_add]
-      abel
+    apply SplitOctonion.ext <;>
+      simp [mul_a, mul_b, add_a, add_b, star_add, add_mul, mul_add] <;> abel
   add_mul := by
     intro x y z
-    apply SplitOctonion.ext
-    · show (x.a + y.a) * z.a + star z.b * (x.b + y.b)
-        = x.a * z.a + y.a * z.a + (star z.b * x.b + star z.b * y.b)
-      rw [add_mul, star_add, mul_add]
-      abel
-    · show z.b * (x.a + y.a) + (x.b + y.b) * star z.a
-        = z.b * x.a + z.b * y.a + (x.b * star z.a + y.b * star z.a)
-      rw [mul_add, star_add, add_mul]
-      abel
+    apply SplitOctonion.ext <;>
+      simp [mul_a, mul_b, add_a, add_b, star_add, add_mul, mul_add] <;> abel
   mul_smul := by
     intro c x y
-    apply SplitOctonion.ext
-    · show x.a * (c • y).a + star (c • y).b * x.b = c • (x.a * y.a + star y.b * x.b)
-      simp only [qsmul_eq_mul, Quaternion.star_mul, star_coe_real]
-      rw [mul_assoc x.a (↑c) y.a, mul_comm x.a (↑c), ← mul_assoc]
-      rw [mul_assoc (star y.b) (↑c) x.b, mul_comm (star y.b) (↑c), ← mul_assoc]
-      rw [← mul_add]
-    · show (c • y).b * x.a + x.b * star (c • y).a = c • (y.b * x.a + x.b * star y.a)
-      simp only [qsmul_eq_mul, Quaternion.star_mul, star_coe_real]
-      rw [mul_assoc (↑c) y.b x.a]
-      rw [← mul_assoc x.b (star y.a) (↑c), mul_comm x.b (↑c),
-        mul_assoc (↑c) (star y.a) x.b]
-      rw [← mul_add]
+    apply SplitOctonion.ext <;>
+      simp [mul_a, mul_b, smul_a, smul_b, SplitOctonion.mul_smul,
+        SplitOctonion.smul_mul, star_smul, star_coe_real, smul_add]
   smul_mul := by
     intro c x y
-    apply SplitOctonion.ext
-    · show (c • x).a * y.a + star y.b * (c • x).b = c • (x.a * y.a + star y.b * x.b)
-      simp only [qsmul_eq_mul]
-      rw [mul_assoc (↑c) x.a y.a]
-      rw [mul_assoc (star y.b) (↑c) x.b, mul_comm (star y.b) (↑c), ← mul_assoc]
-      rw [← mul_add]
-    · show y.b * (c • x).a + (c • x).b * star y.a = c • (y.b * x.a + x.b * star y.a)
-      simp only [qsmul_eq_mul]
-      rw [mul_assoc y.b (↑c) x.a, mul_comm y.b (↑c), ← mul_assoc]
-      rw [← mul_assoc (↑c) x.b (star y.a)]
-      rw [← mul_add]
+    apply SplitOctonion.ext <;>
+      simp [mul_a, mul_b, smul_a, smul_b, SplitOctonion.mul_smul,
+        SplitOctonion.smul_mul, star_smul, star_coe_real, smul_add]
   q_mul := by
     intro X Y
     obtain ⟨a, b⟩ := X

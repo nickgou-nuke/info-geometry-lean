@@ -158,6 +158,26 @@ theorem bryantGen_six_thirteen_separated
   simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
   constructor <;> linarith
 
+theorem bryantGen_linearIndependent :
+    LinearIndependent ℝ bryantGen := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  fin_cases i
+  · exact (bryantGen_zero_seven_separated g hg).1
+  · exact (bryantGen_one_eight_separated g hg).1
+  · exact (bryantGen_two_nine_separated g hg).1
+  · exact (bryantGen_three_ten_separated g hg).1
+  · exact (bryantGen_four_eleven_separated g hg).1
+  · exact (bryantGen_five_twelve_separated g hg).1
+  · exact (bryantGen_six_thirteen_separated g hg).1
+  · exact (bryantGen_zero_seven_separated g hg).2
+  · exact (bryantGen_one_eight_separated g hg).2
+  · exact (bryantGen_two_nine_separated g hg).2
+  · exact (bryantGen_three_ten_separated g hg).2
+  · exact (bryantGen_four_eleven_separated g hg).2
+  · exact (bryantGen_five_twelve_separated g hg).2
+  · exact (bryantGen_six_thirteen_separated g hg).2
+
 /-- THEOREM: Every Bryant-Wilmot generator is skew-symmetric: $G_m^T = - G_m$. -/
 theorem bryantGen_skew (m : Fin 14) :
     (bryantGen m)ᵀ = - bryantGen m := by
@@ -266,8 +286,46 @@ theorem wilmotAlpha_orthogonality (h : sign = 1 ∨ sign = -1) :
 def wilmotG2Submodule : Submodule ℝ (Matrix (Fin 7) (Fin 7) ℝ) :=
   Submodule.span ℝ (Set.range bryantGen)
 
+theorem wilmotG2Submodule_finrank :
+    Module.finrank ℝ wilmotG2Submodule = 14 := by
+  change Module.finrank ℝ (Submodule.span ℝ (Set.range bryantGen)) = 14
+  rw [finrank_span_eq_card bryantGen_linearIndependent]
+  rfl
+
 /-- Dimension count of the Bryant-Wilmot generators. -/
 theorem wilmot_generator_count :
     Fintype.card (Fin 14) = 14 := by rfl
+
+/-! =========================================================================
+    5. Matrix Lie bracket
+    ========================================================================= -/
+
+def matrixLieBracket
+    (M N : Matrix (Fin 7) (Fin 7) ℝ) : Matrix (Fin 7) (Fin 7) ℝ :=
+  M * N - N * M
+
+theorem matrixLieBracket_skew
+    {M N : Matrix (Fin 7) (Fin 7) ℝ}
+    (hM : Mᵀ = -M) (hN : Nᵀ = -N) :
+    (matrixLieBracket M N)ᵀ = -matrixLieBracket M N := by
+  simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
+  rw [hM, hN]
+  simp [sub_eq_add_neg]
+
+theorem bryantGen_bracket_zero_one_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 1) =
+      (-1 / 2 : ℝ) • (bryantGen 2 + bryantGen 9) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    matrix_single_mul_single, smul_add, Matrix.mul_sub, Matrix.sub_mul]
+  abel_nf
+  norm_num [div_eq_mul_inv]
+  abel
+
+theorem bryantGen_bracket_zero_two_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 2) =
+      (1 / 2 : ℝ) • (bryantGen 1 + bryantGen 8) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_add, Matrix.mul_sub, Matrix.sub_mul]
+  abel_nf
 
 end InfoGeometry.Algebra.WilmotCliffordG2

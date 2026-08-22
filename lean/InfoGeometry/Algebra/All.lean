@@ -9,7 +9,6 @@ import InfoGeometry.Algebra.Zorn.G2TwoCarrierCoordinateLemmas
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
-import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.Zorn.G2TwoIdempotentGeometry
 import InfoGeometry.Algebra.Zorn.G2SteinbergPositiveRoots
 import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
@@ -280,7 +279,6 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
-import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2FanoHammingBridge

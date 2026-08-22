@@ -825,8 +825,25 @@ theorem left_alternative_cancellation (X Y : SplitOct) :
 
 /-- Right alternative cancellation. -/
 theorem right_alternative_cancellation (X Y : SplitOct) : 
-    mulZ (mulZ Y X) (conjZ X) = mulZ (scalarZ (detZ X)) Y := by
+    mulZ (mulZ X Y) (conjZ Y) = mulZ (scalarZ (detZ Y)) X := by
   ext <;> simp [mulZ, conjZ, scalarZ, detZ] <;> ring_nf
+
+@[simp] theorem mulZ_zeroZ (X : SplitOct) : mulZ X zeroZ = zeroZ := by
+  ext <;> simp [mulZ, zeroZ]
+
+@[simp] theorem zeroZ_mulZ (X : SplitOct) : mulZ zeroZ X = zeroZ := by
+  ext <;> simp [mulZ, zeroZ]
+
+/-- 🏆 THEOREM (Manivel Lemma 2.3.9 / Theorem 2.3.10):
+    If `X ≠ 0` and `X·Y = 0` (i.e. `Y ∈ ker L_X`), then `normZ Y = 0` (the kernel is isotropic). -/
+theorem leftRegularLinear_ker_isotropic
+    {X : SplitOct} (hX : X ≠ zeroZ) :
+    ∀ Y : SplitOct, Y ∈ LinearMap.ker (leftRegularLinear X) → normZ Y = 0 := by
+  intro Y hY
+  have hmul : mulZ X Y = zeroZ := hY
+  have hcancel := right_alternative_cancellation X Y
+  rw [hmul, zeroZ_mulZ] at hcancel
+  exact scalarZ_mul_eq_zero_of_ne_zero hX hcancel.symm
 
 /-- Middle Moufang identity for the split octonions. -/
 theorem moufang_identity (X Y Z : SplitOct) : 

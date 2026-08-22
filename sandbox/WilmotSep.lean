@@ -46,6 +46,7 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     bryantGen j (sr i) (ss i) = 0 := by
   fin_cases i <;> fin_cases j <;>
     simp [bryantGen, sr, ss, skewGen]
+    <;> exact absurd h (by simp only [ne_eq, Fin.val_inj]; decide)
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

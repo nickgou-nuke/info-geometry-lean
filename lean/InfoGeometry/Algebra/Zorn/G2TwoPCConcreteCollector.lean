@@ -2,6 +2,14 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 namespace InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector
 
 open InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
@@ -65,9 +73,7 @@ theorem pcWord_mul_oneAtBit_five (e : PCExponent) (c : Bool) :
     funext i
     fin_cases i <;> cases he : e 5 <;> cases hc : c <;>
       simp [toggleLast, pcCombine, oneAtBit, oneAt, zeroPC, he, hc]
-  have hp : pcPrefix e = pcPrefix (toggleLast e c) := by
-    dsimp [pcPrefix]
-    congr 1 <;> simp [toggleLast]
+  have hp : pcPrefix e = pcPrefix (toggleLast e c) := rfl
   rw [hp]
   rw [hbits]
 
@@ -141,9 +147,9 @@ theorem pcWord_mul_oneAtBit_three (e : PCExponent) (c : Bool) :
       rw [← mul_assoc, InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication.pcWord_oneAtBit_mul]
     rw [hcollect]
     cases he : e 3
-    · simp [toggleThree, oneAtBit, oneAt, zeroPC, he,
+    · simp [toggleThree, oneAtBit, he,
         pcCombine_zero_left]
-    · simp [toggleThree, oneAtBit, oneAt, zeroPC, he]
+    · simp [toggleThree, oneAtBit, he]
       have h : pcCombine (oneAt 3) (oneAt 3) = zeroPC := by
         funext i
         fin_cases i <;> simp [pcCombine, oneAt, zeroPC]

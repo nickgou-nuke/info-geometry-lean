@@ -72,7 +72,7 @@ theorem pcCombine_inverse_apply_five (e : PCExponent) :
   rw [← bitToF2_eq_iff]
   simp only [pcCombine, pcInverse, bitToF2_xor, bitToF2_and]
   ring_nf
-  simp [F2_two_eq_zero, F2_mul_two, F2_mul_three, F2_mul_four]
+  simp [F2_two_eq_zero, F2_mul_four]
   change (0 : F2) = 0
   rfl
 
@@ -122,7 +122,7 @@ theorem pcCombine_left_inverse_apply_five (e : PCExponent) :
   rw [← bitToF2_eq_iff]
   simp only [pcCombine, pcInverse, bitToF2_xor, bitToF2_and]
   ring_nf
-  simp [F2_two_eq_zero, F2_mul_two, F2_mul_three, F2_mul_four]
+  simp [F2_two_eq_zero, F2_mul_four]
   rw [show bitToF2 false = 0 by rfl]
   ring
   change (0 : F2) = 0

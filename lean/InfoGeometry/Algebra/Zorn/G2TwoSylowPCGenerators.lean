@@ -154,28 +154,28 @@ theorem pc3_add (X Y : SplitOctF2) :
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc3Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc4_add (X Y : SplitOctF2) :
     pc4Fun (add X Y) = add (pc4Fun X) (pc4Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc4Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc5_add (X Y : SplitOctF2) :
     pc5Fun (add X Y) = add (pc5Fun X) (pc5Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc5Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc6_add (X Y : SplitOctF2) :
     pc6Fun (add X Y) = add (pc6Fun X) (pc6Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc6Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc1_one : pc1Fun one = one := by rfl
 theorem pc2_one : pc2Fun one = one := by rfl

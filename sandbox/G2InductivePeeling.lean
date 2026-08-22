@@ -65,9 +65,15 @@ and the conjugate of the tail:
 theorem conj_wordProd_cons (s : G) (hs : s * s = 1)
     (e : Fin 6 → G) (k : Fin 6) (L : List (Fin 6)) :
     s * wordProd e (k :: L) * s = (s * e k * s) * (s * wordProd e L * s) := by
-  group
-  rw [show s * wordProd e L * s = s * ((s * s) * (wordProd e L)) * s from by
-        rw [mul_assoc, ← mul_assoc s s, hs]"]
+  rw [wordProd_cons]
+  have hsplit : s * (e k * wordProd e L) * s = (s * e k * s) * (s * wordProd e L * s) := by
+    rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc]
+    congr 1
+    · rw [← mul_assoc s (e k * wordProd e L) s]
+      nth_rewrite 2 [← one_mul (wordProd e L)]
+      rw [← hs]
+    · rfl
+  exact hsplit
 
 /-! =========================================================================
     3. Structural Induction on Root Complement Words

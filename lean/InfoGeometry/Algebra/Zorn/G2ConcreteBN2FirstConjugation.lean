@@ -10,7 +10,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 
 /- CAS certificate: SymPy and GAP, using the explicit Lean carrier matrices,
-   give the word [0,0,1,0,1,0]. -/
+   give the word [0,0,1,0,1,1]. -/
 theorem swap01_conj_pc0 :
     swap01Aut⁻¹ * pcGenerator 0 * swap01Aut =
       G2TwoSylowSubgroup.pcWord (fun i => match i with
@@ -25,9 +25,7 @@ theorem swap01_conj_pc0 :
   rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
-      G2TwoSylowPCAutomorphisms.pc1Aut,
-      
-      involutiveEquiv,
+      G2TwoSylowPCAutomorphisms.pc1Aut, involutiveEquiv,
       pc1Fun, pc3Fun, pc5Fun, basis8, ePlus, eMinus, up0, up1, up2,
       pc6Fun, down0, down1, down2]
 

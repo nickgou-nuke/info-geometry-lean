@@ -409,6 +409,11 @@ theorem weyl_length_enumerator_at_two_eq_189 :
 def concreteBruhatCell (i : Fin 12) : Set SplitOctF2Aut :=
   doubleCoset unipotentSubgroup (concreteWeylElement i)
 
+noncomputable instance : Fintype unipotentSubgroup := Fintype.ofFinite _
+
+noncomputable instance (i : Fin 12) :
+    Fintype {g : SplitOctF2Aut // g ∈ concreteBruhatCell i} := Fintype.ofFinite _
+
 theorem concreteWeylElement_mem_concreteBruhatCell (i : Fin 12) :
     concreteWeylElement i ∈ concreteBruhatCell i := by
   exact ⟨1, unipotentSubgroup.one_mem, 1, unipotentSubgroup.one_mem, by simp⟩
@@ -429,6 +434,25 @@ theorem cell_left_mul_mem (i : Fin 12) (b x : SplitOctF2Aut)
   rcases hx with ⟨b₁, hb₁, b₂, hb₂, rfl⟩
   refine ⟨b * b₁, unipotentSubgroup.mul_mem hb hb₁, b₂, hb₂, ?_⟩
   group
+
+noncomputable def cellLeftEmbedding (i : Fin 12) :
+    unipotentSubgroup ↪ {g : SplitOctF2Aut // g ∈ concreteBruhatCell i} where
+  toFun b := ⟨(b : SplitOctF2Aut) * concreteWeylElement i,
+    left_mul_mem_concreteBruhatCell i (b : SplitOctF2Aut) b.2⟩
+  inj' b₁ b₂ h := by
+    apply Subtype.ext
+    apply mul_right_cancel
+    exact congrArg Subtype.val h
+
+theorem concreteBruhatCell_card_ge_64 (i : Fin 12) :
+    64 ≤ Fintype.card {g : SplitOctF2Aut // g ∈ concreteBruhatCell i} := by
+  have hcard : Fintype.card unipotentSubgroup = 64 := by
+    rw [← Nat.card_eq_fintype_card]
+    exact unipotentSubgroup_card
+  have hinj := Fintype.card_le_of_injective (cellLeftEmbedding i)
+    (cellLeftEmbedding i).injective
+  rw [hcard] at hinj
+  exact hinj
 
 theorem cell_right_mul_mem (i : Fin 12) (b x : SplitOctF2Aut)
     (hb : b ∈ unipotentSubgroup) (hx : x ∈ concreteBruhatCell i) :

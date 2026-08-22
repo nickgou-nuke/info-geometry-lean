@@ -318,6 +318,7 @@ import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
+import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!

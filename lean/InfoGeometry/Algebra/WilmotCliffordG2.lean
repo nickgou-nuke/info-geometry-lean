@@ -119,9 +119,15 @@ theorem bryantGen_four_entry :
 
 /-- The `(0,6)` entry separates the sixth Bryant generator. -/
 theorem bryantGen_five_entry :
-    bryantGen 5 0 6 = (1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
+      bryantGen 5 0 6 = (1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
+
+/-- The `(0,5)` entry separates the seventh Bryant generator. -/
+theorem bryantGen_six_entry :
+      bryantGen 6 0 5 = (-1 / 2 : ℝ) := by
+    dsimp [bryantGen, skewGen]
+    norm_num
 
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations

@@ -71,16 +71,6 @@ theorem isotropic_iff_splitQuad_zero (X : Imaginary) :
   dsimp [Isotropic, zornNorm, boolToZMod]
   native_decide +revert
 
-def imaginaryProductProjection (X Y : Imaginary) : Imaginary :=
-  let Z := mul X.1 Y.1
-  ⟨⟨add2 Z.a Z.b, add2 Z.a Z.b, Z.x0, Z.x1, Z.x2,
-      Z.y0, Z.y1, Z.y2⟩, rfl⟩
-
-theorem octCross_imaginaryProductProjection (X Y : Imaginary) :
-    octCross (imaginaryToOctIm X) (imaginaryToOctIm Y) =
-      imaginaryToOctIm (imaginaryProductProjection X Y) := by
-  native_decide +revert
-
 /-! The native automorphism action can now be transported to the seven
 coordinates used by the finite Peirce geometry. -/
 

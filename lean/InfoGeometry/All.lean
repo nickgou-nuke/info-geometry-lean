@@ -7527,10 +7527,9 @@ import InfoGeometry.Modular.ColimitFlowDerivation
 import InfoGeometry.Modular.ColimitKMSInfinitesimal
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
-import InfoGeometry.Modular.SuperKMS
-import InfoGeometry.Modular.TrifoldSuperKMS
-import InfoGeometry.Modular.CARChiralDerivation
-import InfoGeometry.Modular.CARModularFlow
-import InfoGeometry.Modular.CARColimitFlow
-import InfoGeometry.Modular.ColimitFlowDerivation
-import InfoGeometry.Modular.ColimitKMSInfinitesimal
+import InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport
+import InfoGeometry.Modular.ColimitGNS
+import InfoGeometry.Modular.TomitaChiralJ
+import InfoGeometry.Modular.TomitaCommutantDuality
+import InfoGeometry.Modular.KuboMoriMetric
+import InfoGeometry.Modular.ArakiHessianKuboMori

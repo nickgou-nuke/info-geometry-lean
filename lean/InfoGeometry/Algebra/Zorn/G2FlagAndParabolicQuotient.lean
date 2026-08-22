@@ -116,33 +116,4 @@ theorem parabolic_to_borel_double_coset (B₀ P : Subgroup G) (hBP : B₀ ≤ P)
   refine ⟨p₁, hp₁, p₂, hp₂, 1, B₀.one_mem, 1, B₀.one_mem, ?_⟩
   rw [mul_one, one_mul]
 
-/-! =========================================================================
-    5. G₂(2) Specific Geometry and Index Invariants
-    ========================================================================= -/
-
-/-- Borel subgroup order in $G_2(2)$: $|B_0| = |U_6| = 64$. -/
-def g2_borel_order : ℕ := 64
-
-/-- Maximal parabolic subgroup order in $G_2(2)$: $|P| = 192 = 64 \times 3$. -/
-def g2_parabolic_order : ℕ := 192
-
-/-- Chevalley group order $|G_2(2)| = 12096$. -/
-def g2_group_order : ℕ := 12096
-
-/-- 🏆 THEOREM: Full flag variety $G/B_0$ has index $[G : B_0] = 189$. -/
-theorem g2_flag_index_eq_189 :
-    g2_group_order / g2_borel_order = 189 := rfl
-
-/-- 🏆 THEOREM: Maximal parabolic space $G/P$ has index $[G : P] = 63$. -/
-theorem g2_parabolic_index_eq_63 :
-    g2_group_order / g2_parabolic_order = 63 := rfl
-
-/-- 🏆 THEOREM: The homogeneous fiber $P/B_0 \cong \mathbb{P}^1(\mathbb{F}_2)$ has order 3. -/
-theorem g2_fiber_index_eq_3 :
-    g2_parabolic_order / g2_borel_order = 3 := rfl
-
-/-- 🏆 THEOREM: Index product formula $[G : B_0] = [G : P] \times [P : B_0] = 63 \times 3 = 189$. -/
-theorem g2_index_product_eq_189 :
-    (g2_group_order / g2_parabolic_order) * (g2_parabolic_order / g2_borel_order) = 189 := rfl
-
 end InfoGeometry.Algebra.Zorn.G2Quotient

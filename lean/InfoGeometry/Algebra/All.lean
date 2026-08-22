@@ -322,11 +322,14 @@ import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
+import InfoGeometry.Algebra.Zorn.G2PeirceCarrierAudit
+import InfoGeometry.Algebra.Zorn.G2CrossProductCarrierAudit
 import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
+import InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport
 /-!
 # InfoGeometry.Algebra.All
 

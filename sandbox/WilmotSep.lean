@@ -26,7 +26,7 @@ noncomputable def bryantGen (m : Fin 14) : Matrix (Fin 7) (Fin 7) ℝ :=
 /-- Separating row coordinate: each generator's unique nonzero slot. -/
 def sr : Fin 14 → Fin 7 :=
   fun i => match i with
-  | 0 => 1 | 1 => 0 | 2 => 0 | 3 => 0 | 4 => 0 | 5 => 0 | 6 => 0
+  | 0 => 1 | 1 => 0 | 2 => 0 | 3 => 0 | 4 => 0 | 5 => 1 | 6 => 0
   | 7 => 5 | 8 => 4 | 9 => 4 | 10 => 2 | 11 => 2 | 12 => 2 | 13 => 2
 
 /-- Separating column coordinate. -/

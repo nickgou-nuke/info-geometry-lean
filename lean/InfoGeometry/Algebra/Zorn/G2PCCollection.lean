@@ -32,7 +32,7 @@ abbrev Gen := Fin 6
 abbrev Word := List Gen
 
 /-- Polycyclic exponent vector `v ∈ 𝔽₂⁶` representing `e₀^v₀ e₁^v₁ ... e₅^v₅`. -/
-def PCExp := Fin 6 → ZMod 2
+abbrev PCExp := Fin 6 → ZMod 2
 
 /-- Zero exponent vector representing the group identity `1 ∈ U₆`. -/
 def zeroExp : PCExp := fun _ => 0
@@ -141,7 +141,7 @@ Left multiplication by any generator `e_g` is an exact involution:
 -/
 theorem mulGen_involutive (g : Gen) (v : PCExp) :
     mulGen g (mulGen g v) = v := by
-  ext k
+  funext k
   fin_cases g <;> fin_cases k <;> {
     dsimp [mulGen]
     ring
@@ -184,8 +184,13 @@ Collecting a single letter `[g]` yields the standard basis vector `basisExp g`.
 -/
 theorem collectWord_singleton (g : Gen) :
     collectWord [g] = basisExp g := by
-  ext k
+  funext k
   fin_cases g <;> fin_cases k <;> rfl
+
+theorem zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
+  fin_cases x
+  · left; rfl
+  · right; rfl
 
 /--
 MAIN THEOREM (Normal Form Idempotence):
@@ -194,16 +199,13 @@ exponent vector `v`.
 -/
 theorem collectWord_toNormalWord (v : PCExp) :
     collectWord (toNormalWord v) = v := by
-  ext k
-  have h0 : v 0 = 0 ∨ v 0 = 1 := by fin_cases (v 0) <;> aesop
-  have h1 : v 1 = 0 ∨ v 1 = 1 := by fin_cases (v 1) <;> aesop
-  have h2 : v 2 = 0 ∨ v 2 = 1 := by fin_cases (v 2) <;> aesop
-  have h3 : v 3 = 0 ∨ v 3 = 1 := by fin_cases (v 3) <;> aesop
-  have h4 : v 4 = 0 ∨ v 4 = 1 := by fin_cases (v 4) <;> aesop
-  have h5 : v 5 = 0 ∨ v 5 = 1 := by fin_cases (v 5) <;> aesop
-  rcases h0 with r0 | r0 <;> rcases h1 with r1 | r1 <;>
-  rcases h2 with r2 | r2 <;> rcases h3 with r3 | r3 <;>
-  rcases h4 with r4 | r4 <;> rcases h5 with r5 | r5 <;> {
+  funext k
+  rcases zmod2_cases (v 0) with r0 | r0 <;>
+  rcases zmod2_cases (v 1) with r1 | r1 <;>
+  rcases zmod2_cases (v 2) with r2 | r2 <;>
+  rcases zmod2_cases (v 3) with r3 | r3 <;>
+  rcases zmod2_cases (v 4) with r4 | r4 <;>
+  rcases zmod2_cases (v 5) with r5 | r5 <;> {
     dsimp [toNormalWord, collectWord]
     rw [r0, r1, r2, r3, r4, r5]
     dsimp
@@ -216,15 +218,12 @@ Every canonical word produced by `toNormalWord v` is strictly sorted.
 -/
 theorem isSorted_toNormalWord (v : PCExp) :
     IsSortedPC (toNormalWord v) := by
-  have h0 : v 0 = 0 ∨ v 0 = 1 := by fin_cases (v 0) <;> aesop
-  have h1 : v 1 = 0 ∨ v 1 = 1 := by fin_cases (v 1) <;> aesop
-  have h2 : v 2 = 0 ∨ v 2 = 1 := by fin_cases (v 2) <;> aesop
-  have h3 : v 3 = 0 ∨ v 3 = 1 := by fin_cases (v 3) <;> aesop
-  have h4 : v 4 = 0 ∨ v 4 = 1 := by fin_cases (v 4) <;> aesop
-  have h5 : v 5 = 0 ∨ v 5 = 1 := by fin_cases (v 5) <;> aesop
-  rcases h0 with r0 | r0 <;> rcases h1 with r1 | r1 <;>
-  rcases h2 with r2 | r2 <;> rcases h3 with r3 | r3 <;>
-  rcases h4 with r4 | r4 <;> rcases h5 with r5 | r5 <;> {
+  rcases zmod2_cases (v 0) with r0 | r0 <;>
+  rcases zmod2_cases (v 1) with r1 | r1 <;>
+  rcases zmod2_cases (v 2) with r2 | r2 <;>
+  rcases zmod2_cases (v 3) with r3 | r3 <;>
+  rcases zmod2_cases (v 4) with r4 | r4 <;>
+  rcases zmod2_cases (v 5) with r5 | r5 <;> {
     dsimp [toNormalWord]
     rw [r0, r1, r2, r3, r4, r5]
     decide

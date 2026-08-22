@@ -294,7 +294,6 @@ import InfoGeometry.Algebra.ManivelMagicSquare
 import InfoGeometry.Algebra.WongRollingBallG2
 import InfoGeometry.Algebra.Zorn.BruhatPeelingTransport
 import InfoGeometry.Algebra.Zorn.BruhatSubwordOrder
-import InfoGeometry.Algebra.Zorn.BruhatPartialOrder
 import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.G2PositiveRootsInvariance
 import InfoGeometry.Algebra.Zorn.SL2F2LeviBN2

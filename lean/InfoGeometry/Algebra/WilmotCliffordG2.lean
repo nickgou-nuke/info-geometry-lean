@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions
@@ -36,6 +37,33 @@ namespace InfoGeometry.Algebra.WilmotCliffordG2
 
 open Matrix
 open InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
+
+theorem skewGen_eq_single_sub (i j : Fin 7) :
+    skewGen i j = Matrix.single i j (1 : ℝ) - Matrix.single j i (1 : ℝ) := by
+  ext a b
+  dsimp [skewGen, Matrix.single, Matrix.sub_apply]
+  have h₁ : (a = i ∧ b = j) ↔ (i = a ∧ j = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  have h₂ : (a = j ∧ b = i) ↔ (j = a ∧ i = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  have hif₁ :
+      (if a = i ∧ b = j then (1 : ℝ) else 0) =
+        if i = a ∧ j = b then (1 : ℝ) else 0 :=
+    if_congr h₁ rfl rfl
+  have hif₂ :
+      (if a = j ∧ b = i then (1 : ℝ) else 0) =
+        if j = a ∧ i = b then (1 : ℝ) else 0 :=
+    if_congr h₂ rfl rfl
+  rw [hif₁, hif₂]
+
+theorem matrix_single_mul_single
+    (i j k l : Fin 7) (a b : ℝ) :
+    Matrix.single i j a * Matrix.single k l b =
+      if j = k then Matrix.single i l (a * b) else 0 := by
+  by_cases h : j = k
+  · subst k
+    simp
+  · exact Matrix.single_mul_single_of_ne (c := a) h i l b
 
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)

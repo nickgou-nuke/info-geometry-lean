@@ -54,7 +54,7 @@ theorem skewGen_eq_single_sub (i j : Fin 7) :
       (if a = j ∧ b = i then (1 : ℝ) else 0) =
         if j = a ∧ i = b then (1 : ℝ) else 0 :=
     if_congr h₂ rfl rfl
-  rw [hif₁, hif₂]
+  simp only [hif₁, hif₂]
 
 theorem matrix_single_mul_single
     (i j k l : Fin 7) (a b : ℝ) :
@@ -63,7 +63,10 @@ theorem matrix_single_mul_single
   by_cases h : j = k
   · subst k
     simp
-  · exact Matrix.single_mul_single_of_ne (c := a) h i l b
+  · rw [if_neg h]
+    exact @Matrix.single_mul_single_of_ne (Fin 7) (Fin 7) (Fin 7) ℝ
+      inferInstance inferInstance inferInstance inferInstance inferInstance
+      a i j k l h b
 
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)
@@ -386,6 +389,13 @@ theorem matrixLieBracket_skew
   simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
   rw [hM, hN]
   simp [sub_eq_add_neg]
+
+theorem bryantGen_bracket_zero_three_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 3) =
+      (1 / 2 : ℝ) • (bryantGen 4 - bryantGen 11) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul] <;> abel
+  module
 
 /-- The Bryant span has the expected fourteen-dimensional real dimension. -/
 theorem wilmotG2Submodule_finrank :

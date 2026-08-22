@@ -50,9 +50,10 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     simp only [bryantGen, sr, ss, skewGen, Matrix.of_apply, Matrix.smul_apply,
       smul_eq_mul, Matrix.sub_apply, Matrix.add_apply, Matrix.neg_apply]
     <;> norm_num
+    <;> split <;> split <;> norm_num
     <;> first
       | rfl
-      | (intro hcon; exact absurd hcon (by norm_num))
+      | (exact (fun hcon => hcon rfl) (by norm_num : ¬ ((1:ℕ) = 2 ∧ 2 = 0)))
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

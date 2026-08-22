@@ -3,6 +3,12 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
+
 namespace InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -23,6 +29,44 @@ theorem s_sq : s * s = 1 := by
   exact swap01Aut_sq
 
 theorem c_pow_six : c ^ 6 = 1 := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem c_pow_two_eq_cycle012_sq :
+    c ^ 2 = cycle012Aut * cycle012Aut := by
+  calc
+    c ^ 2 = (swapCartanAut * cycle012Aut) *
+        (swapCartanAut * cycle012Aut) := rfl
+    _ = (swapCartanAut * swapCartanAut) *
+        (cycle012Aut * cycle012Aut) := by
+      calc
+        swapCartanAut * cycle012Aut *
+            (swapCartanAut * cycle012Aut) =
+            swapCartanAut * (cycle012Aut * swapCartanAut) * cycle012Aut := by
+              simp [mul_assoc]
+        _ = swapCartanAut * (swapCartanAut * cycle012Aut) *
+            cycle012Aut := by
+              rw [← swapCartanAut_comm_cycle012]
+        _ = (swapCartanAut * swapCartanAut) *
+            (cycle012Aut * cycle012Aut) := by
+              simp [mul_assoc]
+    _ = cycle012Aut * cycle012Aut := by
+      rw [swapCartanAut_sq]
+      simp
+
+theorem c_pow_three_eq_swapCartan : c ^ 3 = swapCartanAut := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem c_pow_four_eq_cycle012 : c ^ 4 = cycle012Aut := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem c_pow_five_eq_swapCartan_mul_cycle_sq :
+    c ^ 5 = swapCartanAut * (cycle012Aut * cycle012Aut) := by
   apply automorphism_ext_of_basis
   intro i
   fin_cases i <;> rfl
@@ -248,6 +292,170 @@ theorem st_artin_braid_relation :
 noncomputable def weylNF (k : ZMod 6) (refl : Bool) : SplitOctF2Aut :=
   if refl then s * c ^ k.val else c ^ k.val
 
+theorem zmod6_val_cast_fin (k : Fin 6) :
+    ((k.val : ZMod 6).val) = k.val := by
+  exact ZMod.val_cast_of_lt k.isLt
+
+theorem weylNF_fin (k : Fin 6) (refl : Bool) :
+    weylNF (k.val : ZMod 6) refl =
+      if refl then s * c ^ k.val else c ^ k.val := by
+  simp [weylNF, Nat.mod_eq_of_lt k.isLt]
+
+theorem weylNF_zero_false : weylNF 0 false = 1 := by
+  simp [weylNF]
+
+theorem weylNF_two_false : weylNF 2 false = cycle012Aut * cycle012Aut := by
+  change c ^ 2 = cycle012Aut * cycle012Aut
+  exact c_pow_two_eq_cycle012_sq
+
+theorem weylNF_three_false : weylNF 3 false = swapCartanAut := by
+  change c ^ 3 = swapCartanAut
+  exact c_pow_three_eq_swapCartan
+
+theorem weylNF_four_false : weylNF 4 false = cycle012Aut := by
+  change c ^ 4 = cycle012Aut
+  exact c_pow_four_eq_cycle012
+
+theorem weylNF_five_false :
+    weylNF 5 false = swapCartanAut * (cycle012Aut * cycle012Aut) := by
+  change c ^ 5 = swapCartanAut * (cycle012Aut * cycle012Aut)
+  exact c_pow_five_eq_swapCartan_mul_cycle_sq
+
+theorem weylNF_true_eq_s_mul_false (k : ZMod 6) :
+    weylNF k true = s * weylNF k false := by
+  simp [weylNF]
+
+theorem concreteWeylElement_one_eq_weylNF_four_false :
+    concreteWeylElement 1 = weylNF 4 false := by
+  change cycle012Aut = weylNF 4 false
+  rw [weylNF_four_false]
+
+theorem concreteWeylElement_zero_eq_weylNF_zero_false :
+    concreteWeylElement 0 = weylNF 0 false := by
+  change 1 = weylNF 0 false
+  rw [weylNF_zero_false]
+
+theorem concreteWeylElement_two_eq_weylNF_two_false :
+    concreteWeylElement 2 = weylNF 2 false := by
+  change cycle012Aut * cycle012Aut = weylNF 2 false
+  rw [weylNF_two_false]
+
+theorem concreteWeylElement_three_eq_weylNF_zero_true :
+    concreteWeylElement 3 = weylNF 0 true := by
+  change swap01Aut = weylNF 0 true
+  rw [weylNF_true_eq_s_mul_false]
+  simp [weylNF, s]
+
+theorem concreteWeylElement_six_eq_weylNF_three_false :
+    concreteWeylElement 6 = weylNF 3 false := by
+  change swapCartanAut = weylNF 3 false
+  rw [weylNF_three_false]
+
+theorem concreteWeylElement_seven_eq_weylNF_one_false :
+    concreteWeylElement 7 = weylNF 1 false := by
+  change swapCartanAut * cycle012Aut = weylNF 1 false
+  rfl
+
+theorem concreteWeylElement_eight_eq_weylNF_five_false :
+    concreteWeylElement 8 = weylNF 5 false := by
+  change swapCartanAut * (cycle012Aut * cycle012Aut) = weylNF 5 false
+  rw [weylNF_five_false]
+
+theorem concreteWeylElement_four_eq_weylNF_four_true :
+    concreteWeylElement 4 = weylNF 4 true := by
+  change swap01Aut * cycle012Aut = weylNF 4 true
+  rw [weylNF_true_eq_s_mul_false, weylNF_four_false]
+  rfl
+
+theorem concreteWeylElement_five_eq_weylNF_two_true :
+    concreteWeylElement 5 = weylNF 2 true := by
+  change swap01Aut * (cycle012Aut * cycle012Aut) = weylNF 2 true
+  rw [weylNF_true_eq_s_mul_false, weylNF_two_false]
+  rfl
+
+theorem concreteWeylElement_nine_eq_weylNF_three_true :
+    concreteWeylElement 9 = weylNF 3 true := by
+  change swapCartanAut * swap01Aut = weylNF 3 true
+  rw [weylNF_true_eq_s_mul_false, weylNF_three_false]
+  exact swapCartanAut_comm_swap01
+
+theorem concreteWeylElement_ten_eq_weylNF_one_true :
+    concreteWeylElement 10 = weylNF 1 true := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+theorem concreteWeylElement_eleven_eq_weylNF_five_true :
+    concreteWeylElement 11 = weylNF 5 true := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
+
+def concreteWeylIndex (i : Fin 12) : ZMod 6 × Bool :=
+  match i.1 with
+  | 0 => (0, false)
+  | 1 => (4, false)
+  | 2 => (2, false)
+  | 3 => (0, true)
+  | 4 => (4, true)
+  | 5 => (2, true)
+  | 6 => (3, false)
+  | 7 => (1, false)
+  | 8 => (5, false)
+  | 9 => (3, true)
+  | 10 => (1, true)
+  | 11 => (5, true)
+  | _ => (0, false)
+
+def concreteWeylIndexInv (p : ZMod 6 × Bool) : Fin 12 :=
+  match p.2, p.1.val with
+  | false, 0 => 0
+  | false, 1 => 7
+  | false, 2 => 2
+  | false, 3 => 6
+  | false, 4 => 1
+  | false, 5 => 8
+  | true, 0 => 3
+  | true, 1 => 10
+  | true, 2 => 5
+  | true, 3 => 9
+  | true, 4 => 4
+  | true, 5 => 11
+  | _, _ => 0
+
+theorem concreteWeylIndexInv_left (i : Fin 12) :
+    concreteWeylIndexInv (concreteWeylIndex i) = i := by
+  fin_cases i <;> rfl
+
+theorem concreteWeylIndexInv_right (p : ZMod 6 × Bool) :
+    concreteWeylIndex (concreteWeylIndexInv p) = p := by
+  rcases p with ⟨k, b⟩
+  fin_cases k <;> cases b <;> rfl
+
+noncomputable def concreteWeylIndexEquiv :
+    Fin 12 ≃ ZMod 6 × Bool where
+  toFun := concreteWeylIndex
+  invFun := concreteWeylIndexInv
+  left_inv := concreteWeylIndexInv_left
+  right_inv := concreteWeylIndexInv_right
+
+theorem concreteWeylElement_eq_weylNF_index (i : Fin 12) :
+    concreteWeylElement i =
+      weylNF (concreteWeylIndex i).1 (concreteWeylIndex i).2 := by
+  fin_cases i
+  · exact concreteWeylElement_zero_eq_weylNF_zero_false
+  · exact concreteWeylElement_one_eq_weylNF_four_false
+  · exact concreteWeylElement_two_eq_weylNF_two_false
+  · exact concreteWeylElement_three_eq_weylNF_zero_true
+  · exact concreteWeylElement_four_eq_weylNF_four_true
+  · exact concreteWeylElement_five_eq_weylNF_two_true
+  · exact concreteWeylElement_six_eq_weylNF_three_false
+  · exact concreteWeylElement_seven_eq_weylNF_one_false
+  · exact concreteWeylElement_eight_eq_weylNF_five_false
+  · exact concreteWeylElement_nine_eq_weylNF_three_true
+  · exact concreteWeylElement_ten_eq_weylNF_one_true
+  · exact concreteWeylElement_eleven_eq_weylNF_five_true
+
 /-- All 12 Weyl normal form elements are strictly distinct. -/
 theorem c_pow_zmod_injective :
     Function.Injective (fun k : ZMod 6 => c ^ k.val) := by
@@ -293,6 +501,16 @@ theorem weylNF_injective :
   · have hk := congrArg (fun f : SplitOctF2Aut => s⁻¹ * f) h
     simp [weylNF] at hk
     exact Prod.ext (c_pow_zmod_injective hk) rfl
+
+theorem concreteWeylElement_injective_aligned :
+    Function.Injective concreteWeylElement := by
+  intro i j h
+  have hw :
+      weylNF (concreteWeylIndex i).1 (concreteWeylIndex i).2 =
+        weylNF (concreteWeylIndex j).1 (concreteWeylIndex j).2 := by
+    rw [← concreteWeylElement_eq_weylNF_index i, h,
+      concreteWeylElement_eq_weylNF_index j]
+  exact concreteWeylIndexEquiv.injective (weylNF_injective hw)
 
 noncomputable def weylNFEquiv :
     (ZMod 6 × Bool) ≃ Set.range (fun p : ZMod 6 × Bool => weylNF p.1 p.2) :=

@@ -15,7 +15,7 @@ fi
 export ARCHON_SKIP_CLAUDE_PREFLIGHT=1
 export ARCHON_LLM_BASE_URL="https://openrouter.ai/api/v1"
 export ARCHON_LLM_API_KEY="${OPENROUTER_API_KEY}"
-export ARCHON_LLM_MODEL="${ARCHON_LLM_MODEL:-openrouter/owl-alpha}"
+export ARCHON_LLM_MODEL="${ARCHON_LLM_MODEL:-openrouter/stealth/ox-alpha}"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_API_KEY="${OPENROUTER_API_KEY}"
 

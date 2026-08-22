@@ -69,6 +69,7 @@ import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 import InfoGeometry.Quantum.ThermofieldDouble
 import InfoGeometry.Quantum.TwinWaveCayleyDickson
+import InfoGeometry.Quantum.QuantumCramerRaoBound
 
 namespace InfoGeometry
 

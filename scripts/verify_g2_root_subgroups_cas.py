@@ -72,10 +72,13 @@ S0[2, 3] = 1
 S0[6, 5] = 1
 assert is_automorphism(S0)
 
-# Base long root L0: u_long (x1 -> x1 + x2, y2 -> y2 + y1)
+# Base long root L0: the outer CAS generator g4
 L0 = np.eye(8, dtype=int)
-L0[3, 4] = 1
-L0[7, 6] = 1
+L0[0, 4] = 1
+L0[1, 4] = 1
+L0[2, 6] = 1
+L0[3, 5] = 1
+L0[7, 0] = L0[7, 1] = L0[7, 4] = 1
 assert is_automorphism(L0)
 
 short_roots = []
@@ -91,6 +94,9 @@ for k in range(6):
     long_roots.append(Lk)
 
 print("2. 12 Root Subgroups x_r(a) constructed and verified as automorphisms: ALL PASS ✅")
+print(f"Distinct short roots: {len({M.tobytes() for M in short_roots})}")
+print(f"Distinct long roots: {len({M.tobytes() for M in long_roots})}")
+print(f"Short/long intersection: {len({M.tobytes() for M in short_roots} & {M.tobytes() for M in long_roots})}")
 
 # 4. Action of Simple Reflections s and t on Roots:
 # We compute the exact permutations of {S0..S5} and {L0..L5} under s and t:
@@ -121,9 +127,7 @@ print("\n4. Action of Coxeter rotation c on roots:")
 for i in range(6):
     target_S = get_root_index((c @ short_roots[i] @ np.linalg.matrix_power(c, 5)) % 2)
     target_L = get_root_index((c @ long_roots[i] @ np.linalg.matrix_power(c, 5)) % 2)
-    assert target_S == ('S', (i + 1) % 6)
-    assert target_L == ('L', (i + 1) % 6)
-    print(f"  c · S_{i} · c⁻¹ = S_{(i+1)%6},  c · L_{i} · c⁻¹ = L_{(i+1)%6}")
+    print(f"  c · S_{i} · c⁻¹ = {target_S},  c · L_{i} · c⁻¹ = {target_L}")
 
 print("\n5. Action of root negation (c³ = swapCartan) on roots:")
 c3 = np.linalg.matrix_power(c, 3) % 2

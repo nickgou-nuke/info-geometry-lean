@@ -104,6 +104,26 @@ lemma matrixAction_ite_zero (M : Matrix (Fin 8) (Fin 8) F2)
 def autMatrix (f : SplitOctF2Aut) : Matrix (Fin 8) (Fin 8) F2 :=
   fun i j => carrierToVec (f.1 (basis8 j)) i
 
+theorem autMatrix_entry (f : SplitOctF2Aut) (i j : Fin 8) :
+    autMatrix f i j = carrierToVec (f.1 (basis8 j)) i := by
+  rfl
+
+theorem autMatrix_entry_x0 (f : SplitOctF2Aut) (j : Fin 8) :
+    autMatrix f 2 j = bitToF2 ((f.1 (basis8 j)).x0) := by
+  rfl
+
+theorem autMatrix_entry_x1 (f : SplitOctF2Aut) (j : Fin 8) :
+    autMatrix f 3 j = bitToF2 ((f.1 (basis8 j)).x1) := by
+  rfl
+
+theorem autMatrix_entry_x2 (f : SplitOctF2Aut) (j : Fin 8) :
+    autMatrix f 4 j = bitToF2 ((f.1 (basis8 j)).x2) := by
+  rfl
+
+theorem autMatrix_entry_y1 (f : SplitOctF2Aut) (j : Fin 8) :
+    autMatrix f 6 j = bitToF2 ((f.1 (basis8 j)).y1) := by
+  rfl
+
 theorem carrierToVec_basis8 (j : Fin 8) :
     carrierToVec (basis8 j) = fun i => if i = j then 1 else 0 := by
   fin_cases j <;> funext i <;> fin_cases i <;> rfl
@@ -142,6 +162,17 @@ theorem autMatrix_vec_action (f : SplitOctF2Aut) (v : Fin 8 → F2) :
       f.1 (vecToCarrier v) := by
   have h := autMatrix_action f (vecToCarrier v)
   simpa [matrixAction, carrierToVec_vecToCarrier] using h
+
+/-- THEOREM: The matrix representation map `autMatrix : SplitOctF2Aut → Matrix (Fin 8) (Fin 8) F2`
+is strictly injective. -/
+theorem autMatrix_injective : Function.Injective autMatrix := by
+  intro f g h
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  have hf : f.1 X = matrixAction (autMatrix f) X := (autMatrix_action f X).symm
+  have hg : g.1 X = matrixAction (autMatrix g) X := (autMatrix_action g X).symm
+  rw [hf, hg, h]
 
 theorem autMatrix_bijective (f : SplitOctF2Aut) :
     Function.Bijective (autMatrix f).mulVec := by
@@ -352,7 +383,7 @@ def longRootMatrix : Matrix (Fin 8) (Fin 8) F2 := ![
   ![0,0,0,0,0,0,1,0], ![0,0,0,0,0,0,1,1]]
 
 @[simp] lemma f2ToBit_bitToF2_add (a b : Bool) :
-    f2ToBit (bitToF2 a + bitToF2 b) = a ^^ b := by
+    f2ToBit (bitToF2 a + bitToF2 b) = (a ^^ b) := by
   cases a <;> cases b <;> rfl
 
 @[simp] lemma f2_add_self (z : F2) : z + z = 0 := by

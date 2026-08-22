@@ -7400,7 +7400,6 @@ import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Probability.DerivationBridge
 import InfoGeometry.Information.FisherRaoMadelungIsometry
 import InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
-import InfoGeometry.Algebra.ExplogRN
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
 import InfoGeometry.Information.UniversalDualityQuadrangle
 import InfoGeometry.Information.UniversalConvexDualityQuadrangle
@@ -7496,6 +7495,7 @@ import InfoGeometry.Algebra.Zorn.G2FanoHammingBridge
 import InfoGeometry.Combinatorics.BinaryPCGolayBridge
 import InfoGeometry.Algebra.Zorn.G2DicksonCubicInvariant
 import InfoGeometry.Algebra.Zorn.G2QuadraticCompatibility
+import InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry
 import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix

@@ -40,4 +40,9 @@ theorem flagCells_card (k : Fin 12) :
     (flagCells k).card = flagCellCard k := by
   fin_cases k <;> decide
 
+set_option maxRecDepth 100000 in
+theorem flagCells_total_card :
+    (∑ k : Fin 12, (flagCells k).card) = 189 := by
+  native_decide
+
 end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

@@ -30,6 +30,13 @@ if Size(G) <> 12096 then Error("G_SIZE failed"); fi;
 if Size(B) <> 64 then Error("B_SIZE failed"); fi;
 if Size(N) <> 12 then Error("N_SIZE failed"); fi;
 if Size(Intersection(B,N)) <> 1 then Error("BN_INTERSECTION failed"); fi;
+intersectionSizes := List(Elements(N), n -> Size(Intersection(B, B^n)));
+if Set(intersectionSizes) <> [1,2,4,8,16,32,64] then
+  Error("INTERSECTION_SIZE_PROFILE failed");
+fi;
+if Size(Intersection(B, B^s)) <> 32 then
+  Error("SIMPLE_REFLECTION_INTERSECTION failed");
+fi;
 
 dcs := DoubleCosetRepsAndSizes(G, B, B);
 if Length(dcs) <> 12 then Error("DOUBLE_COSET_COUNT failed"); fi;
@@ -48,6 +55,8 @@ Print("G_SIZE=PASS\n");
 Print("B_SIZE=PASS\n");
 Print("N_SIZE=PASS\n");
 Print("BN_INTERSECTION=PASS\n");
+Print("INTERSECTION_SIZE_PROFILE=PASS\n");
+Print("SIMPLE_REFLECTION_INTERSECTION=PASS\n");
 Print("DOUBLE_COSET_COUNT=PASS\n");
 Print("N_REPRESENTS_ALL_DOUBLE_COSETS=PASS\n");
 Print("DOUBLE_COSET_SUM=PASS\n");

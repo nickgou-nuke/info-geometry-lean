@@ -50,10 +50,8 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     simp only [bryantGen, sr, ss, skewGen, Matrix.of_apply, Matrix.smul_apply,
       smul_eq_mul, Matrix.sub_apply, Matrix.add_apply, Matrix.neg_apply]
     <;> norm_num
-    <;> split <;> split <;> norm_num
-    <;> first
-      | rfl
-      | (exact absurd (by norm_num) (by simp only [ne_eq, not_not]; exact fun hc => hc))
+    <;> (try norm_num) <;> (try exact absurd ‹j.val ≠ i.val› (by norm_num))
+    <;> try rfl
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by
@@ -61,7 +59,7 @@ theorem bryantGen_linearIndependent :
   intro g hg i
   have h := congrArg (fun M : Matrix (Fin 7) (Fin 7) ℝ => M (sr i) (ss i)) hg
   simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
-    Finset.sum_apply] at h
+    Finset.sum_apply, Matrix.zero_apply] at h
   rw [Finset.sum_eq_single i, mul_eq_zero] at h
   · exact h.resolve_left (bryantGen_diag_ne_zero i)
   · intro j _ hj

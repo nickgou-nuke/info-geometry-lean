@@ -66,14 +66,14 @@ theorem conj_wordProd_cons (s : G) (hs : s * s = 1)
     (e : Fin 6 → G) (k : Fin 6) (L : List (Fin 6)) :
     s * wordProd e (k :: L) * s = (s * e k * s) * (s * wordProd e L * s) := by
   rw [wordProd_cons]
-  have hsplit : s * (e k * wordProd e L) * s = (s * e k * s) * (s * wordProd e L * s) := by
-    rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc]
-    congr 1
-    · rw [← mul_assoc s (e k * wordProd e L) s]
-      nth_rewrite 2 [← one_mul (wordProd e L)]
-      rw [← hs]
-    · rfl
-  exact hsplit
+  have hkey : s * (e k * wordProd e L) = s * e k * wordProd e L := mul_assoc s (e k) _
+  calc
+    s * (e k * wordProd e L) * s
+      = (s * e k * wordProd e L) * s := by rw [hkey]
+    _ = (s * e k) * (wordProd e L * s) := mul_assoc _ _ _
+    _ = (s * e k) * ((s * s) * (wordProd e L * s)) := by
+        congr 2
+        rw [hs]
 
 /-! =========================================================================
     3. Structural Induction on Root Complement Words

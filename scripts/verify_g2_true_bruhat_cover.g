@@ -177,5 +177,3 @@ for i in [1..Length(Q)] do
   fw := Factorization(Gcorr, Representative(Q[i]));
   Print("FLAG_REP_EXT_", i-1, "=", ExtRepOfObj(fw), "\n");
 od;
-
-QUIT;

@@ -19,8 +19,7 @@ example : extractBit0 target = false := by
   simp [target, hinv, extractBit0, pcGenerator, pcTermFun,
     swap01Aut_apply,
     InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms.pc1Aut,
-    involutiveEquiv,
-    swap01Fun, basis8, pc1Fun, pc2Fun, pc3Fun, pc4Fun, pc5Fun, pc6Fun,
-    down2]
+    involutiveEquiv, swap01Fun, basis8, pc1Fun, pc2Fun, pc3Fun, pc4Fun,
+    pc5Fun, pc6Fun, down2]
 
 end AlignLeanRecovery

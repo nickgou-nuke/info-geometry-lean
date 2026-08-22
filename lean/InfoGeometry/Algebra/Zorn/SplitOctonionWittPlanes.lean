@@ -96,7 +96,6 @@ theorem splitPlaneI_sq (a b : ℝ) :
       simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross]
-    all_goals (try fin_cases i) <;> norm_num
   simp only [splitPlaneI, zMul_add_left, zMul_add_right, zMul_smul_left,
     zMul_smul_right]
   change a • (a • zMul iUnit iUnit + b • zMul (ellBasis 1) iUnit) +
@@ -147,8 +146,7 @@ theorem imaginarySplitPlane_sq (a : Fin 3) (x y : ℝ) :
       ext i <;>
       simp [ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
         zMul, InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross] <;>
-      all_goals (try fin_cases i) <;> norm_num
+        InfoGeometry.Canonical.ZornMatrix.cross]
   have hC : ∀ a : Fin 3,
       zMul (ellBasis a.succ) (quaternionBasis a.succ) =
         -zMul (quaternionBasis a.succ) (ellBasis a.succ) := by
@@ -275,8 +273,7 @@ arbitrary norm involution comes from octonion multiplication. -/
 theorem lUnit_left_mul_left_mul (X : CZ) :
     zMul lUnit (zMul lUnit X) = X := by
   ext i <;>
-    simp [lUnit, zMul, smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+    simp [lUnit, zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals fin_cases i <;> simp
@@ -289,8 +286,7 @@ theorem lUnit_left_det_neg (X : CZ) :
   simp [ZornMatrix.detZ, zMul, lUnit,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
-    smul_eq_mul, Equiv.smul_def,
-    InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+    smul_eq_mul]
   ring
 
 /-! Bilinear subtraction identities used by the concrete rank-one root
@@ -314,9 +310,7 @@ theorem ellBasis_i_right_mul :
   ext i <;>
     simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross,
-      smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals fin_cases i <;> norm_num
 
 theorem i_ellBasis_i_mul :
@@ -348,9 +342,7 @@ theorem ellBasis_i_right_lUnit :
   ext i <;>
     simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross,
-      smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals fin_cases i <;> norm_num
 
 theorem i_right_lUnit :

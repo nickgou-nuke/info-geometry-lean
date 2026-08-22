@@ -298,6 +298,8 @@ import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.G2PositiveRootsInvariance
 import InfoGeometry.Algebra.Zorn.SL2F2LeviBN2
 import InfoGeometry.Algebra.Zorn.G2SymbolicBN2Assembly
+import InfoGeometry.Algebra.Zorn.G2IndexTwoRankOneBN2
+import InfoGeometry.Algebra.Zorn.G2BN2InductivePeeling
 import InfoGeometry.Algebra.Zorn.G2PCCommutators
 import InfoGeometry.Algebra.Zorn.G2PCCollection
 import InfoGeometry.Algebra.Zorn.G2CosetActionHomomorphism

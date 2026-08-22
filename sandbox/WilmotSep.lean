@@ -41,11 +41,11 @@ theorem bryantGen_diag_ne_zero (i : Fin 14) :
     bryantGen i (sr i) (ss i) ≠ 0 := by
   fin_cases i <;> simp [bryantGen, sr, ss, skewGen] <;> norm_num
 
+set_option maxHeartbeats 2000000 in
 theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     bryantGen j (sr i) (ss i) = 0 := by
   fin_cases i <;> fin_cases j <;>
-    simp only [bryantGen, sr, ss, skewGen, Matrix.of_apply]
-    <;> split_ifs <;> rfl
+    simp [bryantGen, sr, ss, skewGen]
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

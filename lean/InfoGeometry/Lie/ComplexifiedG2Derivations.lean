@@ -51,6 +51,8 @@ instance : LieAlgebra ℝ complexifiedDerivations :=
 /-- 🏆 THEOREM: The complex dimension of complexified derivations is exactly 14. -/
 theorem complexified_finrank :
     Module.finrank ℂ complexifiedDerivations = 14 := by
+  letI : Module.Free ℝ canonicalZornDerivations :=
+    Module.Free.of_divisionRing ℝ canonicalZornDerivations
   change Module.finrank ℂ (ℂ ⊗[ℝ] canonicalZornDerivations) = 14
   rw [Module.finrank_baseChange]
   exact finrank_canonicalZornDerivations

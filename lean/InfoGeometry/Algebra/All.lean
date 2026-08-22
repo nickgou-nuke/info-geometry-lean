@@ -288,6 +288,7 @@ import InfoGeometry.Algebra.Zorn.G2QuadraticCompatibility
 import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
 import InfoGeometry.Algebra.RubenthalerE6Octonions
+import InfoGeometry.Algebra.WilmotCliffordG2
 /-!
 # InfoGeometry.Algebra.All
 

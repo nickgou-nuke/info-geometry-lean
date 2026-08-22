@@ -183,8 +183,6 @@ theorem eMinus_mul_ePlus
           congr 1
           abel
       _ = 0 := smul_zero _
-          abel_nf
-      _ = 0 := smul_zero _
 
 /-!
 =============================================================================

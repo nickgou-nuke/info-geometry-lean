@@ -394,9 +394,7 @@ theorem bryantGen_bracket_zero_three_cas_alignment :
     matrixLieBracket (bryantGen 0) (bryantGen 3) =
       (1 / 2 : ℝ) • (bryantGen 4 - bryantGen 11) := by
   simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
-    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul] <;> abel
-  module
-
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul] ; abel
 /-- The Bryant span has the expected fourteen-dimensional real dimension. -/
 theorem wilmotG2Submodule_finrank :
     Module.finrank ℝ wilmotG2Submodule = 14 := by

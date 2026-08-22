@@ -108,7 +108,6 @@ theorem integral_mul_embedding (x y : SplitOct) :
     cases y with
     | mk c d u0 u1 u2 v0 v1 v2 =>
       ext <;> simp [integralEmbedding, mul, mulZ]
-      all_goals norm_num
 
 theorem integral_lattice_mul_closed
     {x y : ZornSplitOctonion ℚ}

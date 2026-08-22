@@ -3,7 +3,6 @@ import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Tactic
 
-set_option maxRecDepth 100000
 
 /-!
 # Tomita/Hestenes operator tensor to projective QGT soldering
@@ -62,7 +61,7 @@ noncomputable def nambuClockAxis : EndC where
     intro c u
     change complex_i (c • u) = c • complex_i u
     apply DoubledSpace.ext
-    simp [complex_i_apply, WithLp.toLp_smul, smul_fst, smul_snd, complex_i]
+    simp only [complex_i_apply, WithLp.toLp_smul, smul_fst, smul_snd]
   cont := (clockAxis (E := H)).cont
 
 @[simp]

@@ -133,6 +133,27 @@ if Sum(List(leanOrbits, Length)) = 189 and
 else
   Print("EXACT_FLAG_ORBIT_PARTITIONS=FAIL\n");
 fi;
+sameIndexedOrbits := ForAll([1..12], i ->
+  Set(leanOrbits[i]) = Set(correctedOrbits[i]));
+if sameIndexedOrbits then
+  Print("LEAN_CORRECTED_INDEXED_ORBITS_EQUAL=PASS\n");
+else
+  Print("LEAN_CORRECTED_INDEXED_ORBITS_EQUAL=FAIL\n");
+fi;
+sameBaseCosets := ForAll([1..12], i ->
+  correctedW[i] in Set(List(Elements(B), b -> leanW[i] * b)));
+if sameBaseCosets then
+  Print("LEAN_CORRECTED_BASE_COSETS_EQUAL=PASS\n");
+else
+  Print("LEAN_CORRECTED_BASE_COSETS_EQUAL=FAIL\n");
+fi;
+if sameBaseCosets then
+  for i in [1..12] do
+    baseCorrection := leanW[i]^-1 * correctedW[i];
+    Print("LEAN_TO_CORRECTED_BASE_WITNESS_", i-1, "=",
+      ExtRepOfObj(Factorization(B, baseCorrection)), "\n");
+  od;
+fi;
 # Export the corrected orbit membership lists as a transport artifact.  The
 # indices are GAP's 1-based coset enumeration; Lean import must subtract one
 # and still prove the corresponding enumeration equivalence.

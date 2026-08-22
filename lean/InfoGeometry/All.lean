@@ -7500,6 +7500,7 @@ import InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
 import InfoGeometry.Algebra.Zorn.G2LeanCarrierMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2CarrierQuotientAction
+import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
 import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix

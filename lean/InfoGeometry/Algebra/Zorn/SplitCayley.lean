@@ -310,6 +310,11 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
   · simp [mul, dot]
 
 def conj (x : SplitCayley R) : SplitCayley R := ⟨x.b, -x.u, -x.v, x.a⟩
+
+@[simp] theorem conj_zero : conj (0 : SplitCayley R) = 0 := by
+  change ⟨0, -0, -0, 0⟩ = ⟨0, 0, 0, 0⟩
+  congr
+
 def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
 
 theorem conj_a_native (x : SplitCayley R) :
@@ -403,6 +408,11 @@ theorem norm_mul (x y : SplitCayley R) : norm (x * y) = norm x * norm y := by
   rcases x with ⟨a, u, v, b⟩
   simp [smul_def, norm, dot, Pi.smul_apply]
   ring
+
+@[simp] theorem norm_smul_one (r : R) :
+    norm (r • (1 : SplitCayley R)) = r * r := by
+  rw [norm_smul, norm_one]
+  simp
 
 theorem conj_mul_reverse (x y : SplitCayley R) :
     conj (x * y) = conj y * conj x := by

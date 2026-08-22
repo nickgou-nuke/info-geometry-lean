@@ -1,8 +1,10 @@
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
+import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import InfoGeometry.Algebra.Zorn.BruhatPeelingTransport
+import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.BruhatSubwordOrder
 import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
@@ -102,6 +104,19 @@ theorem bruhatCellWeights_sum_eq_12096 :
 def concreteBruhatCell (w : SplitOctF2Aut) : Set SplitOctF2Aut :=
   { g | ∃ b1 b2 : SplitOctF2Aut, b1 ∈ sylowTwoSubgroup ∧ b2 ∈ sylowTwoSubgroup ∧ g = b1 * w * b2 }
 
+theorem concreteBruhatCell_eq_exact_unipotentCell (w : SplitOctF2Aut) :
+    concreteBruhatCell w =
+      InfoGeometry.Algebra.Zorn.G2BNPair.doubleCoset
+        InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w := by
+  rw [concreteBruhatCell]
+  rw [InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.sylowTwoSubgroup_eq_unipotentSubgroup]
+  ext g
+  constructor
+  · rintro ⟨b₁, b₂, hb₁, hb₂, rfl⟩
+    exact ⟨b₁, hb₁, b₂, hb₂, rfl⟩
+  · rintro ⟨b₁, hb₁, b₂, hb₂, rfl⟩
+    exact ⟨b₁, b₂, hb₁, hb₂, rfl⟩
+
 /-- 🏆 THEOREM: Every Weyl element $w$ lies in its own Bruhat cell $C(w)$. -/
 theorem weyl_mem_concreteBruhatCell (w : SplitOctF2Aut) :
     w ∈ concreteBruhatCell w := by
@@ -145,6 +160,112 @@ theorem concreteBruhatCell_right_mul (w : SplitOctF2Aut) (b g : SplitOctF2Aut)
 /-- The union of the 12 concrete Bruhat cells in $\operatorname{SplitOctF2Aut}$. -/
 def concreteBruhatCovering : Set SplitOctF2Aut :=
   ⋃ p : WeylG2, concreteBruhatCell (weylNF p.1 p.2)
+
+/-- The concrete coverage obligation, kept separate from its generation
+consequence until the ambient Bruhat classification is proved. -/
+def concreteBruhatCoverObligation : Prop :=
+  ∀ g : SplitOctF2Aut, ∃ p : WeylG2,
+    g ∈ concreteBruhatCell (weylNF p.1 p.2)
+
+/-- The explicit coverage obligation is exactly the assertion that the
+    indexed union of the twelve cells is the whole carrier. -/
+theorem concreteBruhatCoverObligation_iff_covering_eq_univ :
+    concreteBruhatCoverObligation ↔ concreteBruhatCovering = Set.univ := by
+  constructor
+  · intro h
+    ext g
+    simp only [Set.mem_univ, iff_true]
+    simpa [concreteBruhatCovering] using h g
+  · intro h g
+    have hg : g ∈ concreteBruhatCovering := by
+      rw [h]
+      exact Set.mem_univ g
+    simpa [concreteBruhatCovering] using hg
+
+/-! The quotient-orbit transport is the concrete interface expected from a
+finite flag-space certificate.  The orbit-cover premise remains explicit. -/
+theorem concreteBruhatCoverObligation_of_quotient_orbit_cover
+    (hcover : ∀ g : SplitOctF2Aut, ∃ p : WeylG2, ∃ b : SplitOctF2Aut,
+      b ∈ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup ∧
+        b • (QuotientGroup.mk (weylNF p.1 p.2) :
+          SplitOctF2Aut ⧸
+            InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup) =
+          QuotientGroup.mk g) :
+    concreteBruhatCoverObligation := by
+  intro g
+  obtain ⟨p, b, hb, hq⟩ := hcover g
+  refine ⟨p, ?_⟩
+  rw [concreteBruhatCell_eq_exact_unipotentCell]
+  exact (InfoGeometry.Algebra.Zorn.G2BNPair.mem_doubleCoset_iff_quotient_smul
+    InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup
+      (weylNF p.1 p.2) g).2 ⟨b, hb, hq⟩
+
+/-- A finite flag-orbit partition transports directly to the concrete cover.
+The hypotheses are the exact finite certificate that must be supplied by the
+carrier-aligned CAS export and proved in Lean. -/
+theorem concreteBruhatCoverObligation_of_fin189_orbit_partition
+    (enum : Fin 189 ≃
+      SplitOctF2Aut ⧸ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup)
+    (p : Fin 12 → WeylG2)
+    (cells : Fin 12 → Finset (Fin 189))
+    (hcell : ∀ (k : Fin 12) (i : Fin 189), i ∈ cells k →
+      ∃ b : SplitOctF2Aut,
+        b ∈ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup ∧
+          enum i = b •
+            (QuotientGroup.mk (weylNF (p k).1 (p k).2) :
+              SplitOctF2Aut ⧸
+                InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup))
+    (hpartition : Finset.univ.biUnion cells = Finset.univ) :
+    concreteBruhatCoverObligation := by
+  apply concreteBruhatCoverObligation_of_quotient_orbit_cover
+  intro g
+  let i : Fin 189 := enum.symm (QuotientGroup.mk g)
+  have hi : i ∈ Finset.univ := Finset.mem_univ i
+  rw [← hpartition, Finset.mem_biUnion] at hi
+  obtain ⟨k, hk, hki⟩ := hi
+  obtain ⟨b, hb, hq⟩ := hcell k i hki
+  refine ⟨p k, b, hb, ?_⟩
+  have henum : enum i = QuotientGroup.mk g := by
+    dsimp [i]
+    exact enum.apply_symm_apply _
+  rw [henum] at hq
+  exact hq.symm
+
+/-- The finite flag certificate closes the concrete twelve-cell covering
+    exactly, once its enumeration and orbit-membership fields are supplied. -/
+theorem concreteBruhatCovering_eq_univ_of_fin189_orbit_partition
+    (enum : Fin 189 ≃
+      SplitOctF2Aut ⧸ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup)
+    (p : Fin 12 → WeylG2)
+    (cells : Fin 12 → Finset (Fin 189))
+    (hcell : ∀ (k : Fin 12) (i : Fin 189), i ∈ cells k →
+      ∃ b : SplitOctF2Aut,
+        b ∈ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup ∧
+          enum i = b •
+            (QuotientGroup.mk (weylNF (p k).1 (p k).2) :
+              SplitOctF2Aut ⧸
+                InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup))
+    (hpartition : Finset.univ.biUnion cells = Finset.univ) :
+    concreteBruhatCovering = Set.univ := by
+  apply concreteBruhatCoverObligation_iff_covering_eq_univ.mp
+  exact concreteBruhatCoverObligation_of_fin189_orbit_partition
+    enum p cells hcell hpartition
+
+/-- The exact generation consequence of a concrete 12-cell cover.  The
+covering hypothesis is kept explicit: this theorem does not manufacture the
+missing ambient Bruhat classification. -/
+theorem concreteGeneratedSubgroup_eq_top_of_bruhat_cover
+    (hcover : concreteBruhatCoverObligation) :
+    Subgroup.closure
+        ((sylowTwoSubgroup : Set SplitOctF2Aut) ∪
+          Set.range (fun p : WeylG2 => weylNF p.1 p.2)) = ⊤ := by
+  apply InfoGeometry.Algebra.Zorn.G2BNPair.closure_eq_top_of_doubleCoset_cover
+    sylowTwoSubgroup (Set.range (fun p : WeylG2 => weylNF p.1 p.2))
+  intro g
+  obtain ⟨p, hp⟩ := hcover g
+  refine ⟨weylNF p.1 p.2, ⟨p, rfl⟩, ?_⟩
+  simpa [concreteBruhatCell,
+    InfoGeometry.Algebra.Zorn.G2BNPair.doubleCoset] using hp
 
 /-- 🏆 THEOREM: Every Weyl normal form element lies in the concrete Bruhat covering. -/
 theorem weylNF_mem_concreteBruhatCovering (p : WeylG2) :

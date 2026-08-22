@@ -2760,6 +2760,7 @@ import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
+import InfoGeometry.Canonical.G2BruhatUHGBridge
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift

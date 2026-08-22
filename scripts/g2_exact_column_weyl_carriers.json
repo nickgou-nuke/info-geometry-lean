@@ -1,0 +1,24 @@
+{
+  "object": "G2_split_octonion_exact_column_weyl_carrier",
+  "basis": ["ePlus", "eMinus", "up0", "up1", "up2", "down0", "down1", "down2"],
+  "ring": "GF(2)",
+  "matrix_convention": "column_action",
+  "lean_matrix_law": "autMatrix(f * g) = autMatrix(g) * autMatrix(f)",
+  "pc_word_matrix_order": "M5^e5 * M4^e4 * M3^e3 * M2^e2 * M1^e1 * M0^e0",
+  "weyl_representative": "concreteWeylElement 11 = swapCartanAut * (swap01Aut * (cycle012Aut * cycle012Aut))",
+  "complement_generators": [1, 2, 3, 4, 5],
+  "conjugation_pc_vectors": {
+    "pc1": [0, 1, 1, 1, 0, 0],
+    "pc2": [0, 1, 1, 1, 1, 1],
+    "pc3": [0, 1, 0, 0, 1, 1],
+    "pc4": [0, 1, 1, 0, 0, 0],
+    "pc5": [0, 0, 0, 0, 0, 1]
+  },
+  "rank_one_witness": [1, 0, 0, 1, 0, 0],
+  "checks": {
+    "exact_matrix_classification": true,
+    "correctedT_squared": true,
+    "basis_aligned": true
+  },
+  "generator": "scripts/classify_exact_column_weyl_carriers.py"
+}

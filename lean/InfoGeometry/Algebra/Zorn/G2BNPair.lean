@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
@@ -14,6 +15,45 @@ namespace InfoGeometry.Algebra.Zorn.G2BNPair
 /-- Double coset of a subgroup B with a middle element g. -/
 def doubleCoset {G : Type*} [Group G] (B : Subgroup G) (g : G) : Set G :=
   { x : G | ∃ b1 ∈ B, ∃ b2 ∈ B, x = b1 * g * b2 }
+
+/-- Membership in a double coset is equivalent to reaching the corresponding
+left quotient class by left translation from the Borel subgroup.  This is the
+quotient/orbit interface used to transport a finite flag-orbit certificate
+into a group-level Bruhat cover. -/
+theorem mem_doubleCoset_iff_quotient_smul
+    {G : Type*} [Group G] (B : Subgroup G) (w g : G) :
+    g ∈ doubleCoset B w ↔ ∃ b : G, b ∈ B ∧
+      b • (QuotientGroup.mk w : G ⧸ B) = QuotientGroup.mk g := by
+  constructor
+  · rintro ⟨b₁, hb₁, b₂, hb₂, rfl⟩
+    refine ⟨b₁, hb₁, ?_⟩
+    change (QuotientGroup.mk (b₁ * w) : G ⧸ B) = QuotientGroup.mk (b₁ * w * b₂)
+    rw [QuotientGroup.eq]
+    simpa [mul_assoc] using hb₂
+  · rintro ⟨b, hb, hq⟩
+    change (QuotientGroup.mk (b * w) : G ⧸ B) = QuotientGroup.mk g at hq
+    rw [QuotientGroup.eq] at hq
+    change (b * w)⁻¹ * g ∈ B at hq
+    refine ⟨b, hb, (b * w)⁻¹ * g, hq, ?_⟩
+    simp [mul_assoc]
+
+/-! A double-coset cover is already a generation theorem once the middle
+representatives and the Borel subgroup are included among the generators. -/
+
+theorem closure_eq_top_of_doubleCoset_cover
+    {G : Type*} [Group G] (B : Subgroup G) (R : Set G)
+    (hcover : ∀ g : G, ∃ w ∈ R, g ∈ doubleCoset B w) :
+    Subgroup.closure ((B : Set G) ∪ R) = ⊤ := by
+  rw [Subgroup.eq_top_iff']
+  intro g
+  obtain ⟨w, hw, b₁, hb₁, b₂, hb₂, rfl⟩ := hcover g
+  have hb₁' : b₁ ∈ Subgroup.closure ((B : Set G) ∪ R) :=
+    Subgroup.subset_closure (Or.inl hb₁)
+  have hw' : w ∈ Subgroup.closure ((B : Set G) ∪ R) :=
+    Subgroup.subset_closure (Or.inr hw)
+  have hb₂' : b₂ ∈ Subgroup.closure ((B : Set G) ∪ R) :=
+    Subgroup.subset_closure (Or.inl hb₂)
+  exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hb₁' hw') hb₂'
 
 /-- Structure defining a Tits system / (B, N) pair on a group G. -/
 structure TitsSystem (G : Type*) [Group G] where

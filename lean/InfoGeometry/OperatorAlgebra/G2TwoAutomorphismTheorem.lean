@@ -403,12 +403,14 @@ instance : Group SplitOctF2Aut where
     dsimp [Mul.mul, Inv.inv, One.one, Equiv.trans]
     exact f.1.right_inv X
 
-attribute [local instance] Classical.decEq
-
-noncomputable instance : Fintype SplitOctF2Aut := by
-  classical
-  unfold SplitOctF2Aut
+instance : DecidablePred IsSplitOctF2Aut := fun f => by
+  dsimp [IsSplitOctF2Aut]
   infer_instance
+
+instance : Fintype SplitOctF2Aut := by
+  exact Fintype.subtype (Finset.univ.filter IsSplitOctF2Aut) (by
+    intro f
+    simp)
 
 /--
 The theorem-level finite classification readout.

@@ -123,6 +123,18 @@ def unipotentSubgroup : Subgroup SplitOctF2Aut where
     rw [pcWord_inv]
     exact ⟨pcInverse e, rfl⟩
 
+theorem sylowTwoSubgroup_eq_unipotentSubgroup :
+    G2TwoSylowSubgroup.sylowTwoSubgroup = unipotentSubgroup := by
+  apply le_antisymm
+  · refine (Subgroup.closure_le _).2 ?_
+    intro x hx
+    change x ∈ Set.range G2TwoSylowSubgroup.pcWord
+    rcases hx with ⟨i, rfl⟩
+    exact G2TwoPCConcreteFacts.pcGenerator_mem_pcWord_range i
+  · intro x hx
+    rcases hx with ⟨e, rfl⟩
+    exact G2TwoSylowSubgroup.pcWord_mem_sylow e
+
 /-- THEOREM: Exact cardinality 64 of the concrete unipotent subgroup U₆ ⊂ G₂(2). -/
 theorem unipotentSubgroup_card : Nat.card unipotentSubgroup = 64 := by
   have hc : Nat.card {x // x ∈ unipotentSubgroup.carrier} = 64 := by

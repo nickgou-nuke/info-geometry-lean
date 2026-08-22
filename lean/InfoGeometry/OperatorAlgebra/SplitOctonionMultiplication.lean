@@ -843,7 +843,9 @@ theorem leftRegularLinear_ker_isotropic
   have hmul : mulZ X Y = zeroZ := hY
   have hcancel := right_alternative_cancellation X Y
   rw [hmul, zeroZ_mulZ] at hcancel
-  exact scalarZ_mul_eq_zero_of_ne_zero hX hcancel.symm
+  have hs : mulZ (scalarZ (normZ Y)) X = zeroZ := by
+    simpa [normZ] using hcancel.symm
+  exact scalarZ_mul_eq_zero_of_ne_zero hX hs
 
 /-- Middle Moufang identity for the split octonions. -/
 theorem moufang_identity (X Y Z : SplitOct) : 

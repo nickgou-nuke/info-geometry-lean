@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions
@@ -36,6 +37,17 @@ namespace InfoGeometry.Algebra.WilmotCliffordG2
 
 open Matrix
 open InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
+
+theorem skewGen_eq_single_sub (i j : Fin 7) :
+    skewGen i j = Matrix.single i j (1 : ℝ) - Matrix.single j i (1 : ℝ) := by
+  ext a b
+  dsimp [skewGen, Matrix.single, Matrix.sub_apply]
+  have h₁ : (a = i ∧ b = j) ↔ (i = a ∧ j = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  have h₂ : (a = j ∧ b = i) ↔ (j = a ∧ i = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  rw [if_congr h₁ (eq_self (1:ℝ)) (eq_self (0:ℝ))]
+  rw [if_congr h₂ (eq_self (1:ℝ)) (eq_self (0:ℝ))]
 
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)

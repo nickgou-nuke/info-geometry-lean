@@ -51,7 +51,9 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     <;> first
       | rfl
       | (exfalso; simp only [ne_eq, not_not] at h; exact h (by decide))
-      | (exfalso; simp only [ne_eq] at h ⊢; exact h (by simp only [not_not]; decide))
+      | (exfalso; simp only [ne_eq, not_not] at h; exact h (by
+          simp only [Fin.val_inj, ne_eq]
+          fin_cases i <;> fin_cases j <;> decide))
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

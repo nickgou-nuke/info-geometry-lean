@@ -237,7 +237,7 @@ theorem zero_divisor_both_isotropic
 theorem ker_mulLeft_isotropic
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
     (CA : CompositionAlgebra K V) (x : V) (hx_ne : x ≠ 0)
-    (y : V) (hy : y ∈ LinearMap.ker (mulLeftLinear CA x)) :
+    (y : V) (hy : y ∈ LinearMap.ker (CompositionAlgebra.mulLeftLinear CA x)) :
     CA.isIsotropic y := by
   by_cases hy_zero : y = 0
   · simp [hy_zero, CompositionAlgebra.isIsotropic, CA.q_zero]
@@ -248,14 +248,14 @@ theorem ker_mulLeft_polarB_zero
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
     (CA : CompositionAlgebra K V) (x : V) (hx_ne : x ≠ 0)
     (u v : V)
-    (hu : u ∈ LinearMap.ker (mulLeftLinear CA x))
-    (hv : v ∈ LinearMap.ker (mulLeftLinear CA x)) :
+    (hu : u ∈ LinearMap.ker (CompositionAlgebra.mulLeftLinear CA x))
+    (hv : v ∈ LinearMap.ker (CompositionAlgebra.mulLeftLinear CA x)) :
     CA.polarB u v = 0 := by
   have huq := ker_mulLeft_isotropic CA x hx_ne u hu
   have hvq := ker_mulLeft_isotropic CA x hx_ne v hv
-  have huv : u + v ∈ LinearMap.ker (mulLeftLinear CA x) := by
-    change CA.mul x (u + v) = 0
-    rw [CA.mul_add, hu, hv, add_zero]
+  have huv : u + v ∈ LinearMap.ker (CompositionAlgebra.mulLeftLinear CA x) := by
+    rw [LinearMap.mem_ker] at hu hv ⊢
+    rw [LinearMap.map_add, hu, hv, add_zero]
   have huvq := ker_mulLeft_isotropic CA x hx_ne (u + v) huv
   dsimp [CompositionAlgebra.polarB]
   rw [huvq, huq, hvq]
@@ -283,6 +283,30 @@ theorem range_leftMul_polarB_zero
   rw [CA.q_mul, CA.q_mul, CA.q_mul]
   dsimp [CompositionAlgebra.isIsotropic] at hx
   rw [hx, zero_mul, zero_mul, zero_mul]
+  ring
+
+/** The left kernel is totally isotropic once the quadratic polarization law is
+    supplied.  The nonzero hypothesis on `x` is essential: for `x = 0` the
+    kernel is the whole algebra. -/
+theorem kernel_leftMul_polarB_zero
+    {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+    (CA : CompositionAlgebra K V) (x : V)
+    (hx : CA.isIsotropic x) (hx_ne : x ≠ 0)
+    (hpolar : ∀ u v : V,
+      CA.q (u + v) = CA.q u + CA.q v + CA.polarB u v)
+    (u v : V)
+    (hu : CA.mul x u = 0) (hv : CA.mul x v = 0) :
+    CA.polarB u v = 0 := by
+  have huq : CA.q u = 0 := by
+    by_cases hu0 : u = 0
+    · simp [hu0, CA.q_zero]
+    · exact zero_divisor_right_isotropic_of_nonzero_left CA x u hu hu0
+  have hvq : CA.q v = 0 := by
+    by_cases hv0 : v = 0
+    · simp [hv0, CA.q_zero]
+    · exact zero_divisor_right_isotropic_of_nonzero_left CA x v hv hv0
+  dsimp [CompositionAlgebra.polarB]
+  rw [hpolar, huq, hvq]
   ring
 
 /-! =========================================================================

@@ -292,6 +292,7 @@ import InfoGeometry.Algebra.RubenthalerE6Octonions
 import InfoGeometry.Algebra.WilmotCliffordG2
 import InfoGeometry.Algebra.Zorn.G2BryantWilmotCliffordBridge
 import InfoGeometry.Algebra.ManivelG2SplitOctonions
+import InfoGeometry.Algebra.ManivelMagicSquare
 /-!
 # InfoGeometry.Algebra.All
 

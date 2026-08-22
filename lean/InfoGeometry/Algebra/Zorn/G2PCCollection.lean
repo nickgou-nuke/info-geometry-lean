@@ -104,7 +104,7 @@ def mulGen (g : Gen) (v : PCExp) : PCExp :=
     | 2 => v 2 + v 0
     | 3 => v 3 + v 0 * v 2
     | 4 => v 4 + v 0 * v 3 + v 0 * v 2
-    | 5 => v 5 + v 0 * v 4 + v 0 * v 1 + v 0 * v 2 * v 3
+    | 5 => v 5 + v 0 * v 4 + v 0 * v 1 + v 0 * v 2 + v 0 * v 2 * v 3
   | 2 => fun k => match k with
     | 0 => v 0
     | 1 => v 1
@@ -134,6 +134,12 @@ def mulGen (g : Gen) (v : PCExp) : PCExp :=
     | 4 => v 4
     | 5 => v 5 + 1
 
+theorem zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
+  fin_cases x
+  · left; rfl
+  · right; rfl
+
+set_option maxHeartbeats 800000 in
 /--
 MAIN THEOREM (Involution Law for all 6 PC Generators):
 Left multiplication by any generator `e_g` is an exact involution:
@@ -141,10 +147,21 @@ Left multiplication by any generator `e_g` is an exact involution:
 -/
 theorem mulGen_involutive (g : Gen) (v : PCExp) :
     mulGen g (mulGen g v) = v := by
-  funext k
-  fin_cases g <;> fin_cases k <;> {
+  have hv_eval (i : Fin 6) : v i = match i with
+    | 0 => v 0 | 1 => v 1 | 2 => v 2 | 3 => v 3 | 4 => v 4 | 5 => v 5 := by
+    fin_cases i <;> rfl
+  rcases zmod2_cases (v 0) with r0 | r0 <;>
+  rcases zmod2_cases (v 1) with r1 | r1 <;>
+  rcases zmod2_cases (v 2) with r2 | r2 <;>
+  rcases zmod2_cases (v 3) with r3 | r3 <;>
+  rcases zmod2_cases (v 4) with r4 | r4 <;>
+  rcases zmod2_cases (v 5) with r5 | r5 <;> {
+    funext k
     dsimp [mulGen]
-    ring
+    rw [hv_eval k]
+    rw [r0, r1, r2, r3, r4, r5]
+    revert g k
+    decide
   }
 
 /-! =========================================================================
@@ -187,11 +204,7 @@ theorem collectWord_singleton (g : Gen) :
   funext k
   fin_cases g <;> fin_cases k <;> rfl
 
-theorem zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
-  fin_cases x
-  · left; rfl
-  · right; rfl
-
+set_option maxHeartbeats 800000 in
 /--
 MAIN THEOREM (Normal Form Idempotence):
 Collecting an already normalized word `toNormalWord v` reproduces the exact
@@ -199,6 +212,9 @@ exponent vector `v`.
 -/
 theorem collectWord_toNormalWord (v : PCExp) :
     collectWord (toNormalWord v) = v := by
+  have hv_eval (i : Fin 6) : v i = match i with
+    | 0 => v 0 | 1 => v 1 | 2 => v 2 | 3 => v 3 | 4 => v 4 | 5 => v 5 := by
+    fin_cases i <;> rfl
   rcases zmod2_cases (v 0) with r0 | r0 <;>
   rcases zmod2_cases (v 1) with r1 | r1 <;>
   rcases zmod2_cases (v 2) with r2 | r2 <;>
@@ -209,13 +225,10 @@ theorem collectWord_toNormalWord (v : PCExp) :
     dsimp [toNormalWord]
     rw [r0, r1, r2, r3, r4, r5]
     dsimp [collectWord, mulGen, zeroExp]
-    fin_cases k
-    · rw [r0]; rfl
-    · rw [r1]; rfl
-    · rw [r2]; rfl
-    · rw [r3]; rfl
-    · rw [r4]; rfl
-    · rw [r5]; rfl
+    rw [hv_eval k]
+    rw [r0, r1, r2, r3, r4, r5]
+    revert k
+    decide
   }
 
 /--

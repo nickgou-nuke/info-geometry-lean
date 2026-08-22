@@ -31,4 +31,5 @@ residual = [(i, j, red(conjugate[i][j] - I[i][j]))
 print("BN2_IDENTITY_RESIDUAL_ENTRIES=", len(residual))
 for i, j, value in residual:
     print(f"residual[{i},{j}]={sp.Poly(value, *e, modulus=2).as_expr()}")
-print("BN2_SYMBOLIC_CONJUGATE_STAGE=PASS")
+print("BN2_CONJUGATE_RECOVERY_ONLY=PASS")
+print("BN2_BIG_CELL_WITNESS=NOT_PROVED")

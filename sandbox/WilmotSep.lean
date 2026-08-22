@@ -50,7 +50,6 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     first
       | rfl
       | norm_num
-      | (refine absurd ?_ ?_; norm_num; exact fun hc => hc rfl)
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by
@@ -65,6 +64,7 @@ theorem bryantGen_linearIndependent :
     · exact absurd h (bryantGen_diag_ne_zero i)
   · intro j _ hj
     rw [bryantGen_cross_zero j i hj]
-    exact mul_zero g j
+    exact mul_zero (g j)
+  · exact fun hc => absurd hc (Finset.mem_univ i)
 
 end ScratchWilmot

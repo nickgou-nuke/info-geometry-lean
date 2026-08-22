@@ -1,17 +1,19 @@
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Fintype.Card
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
 /-!
-# G₂(2) Coset-Action Permutation Homomorphism on G/B (63 Points)
+# Abstract Contract for a Parabolic Coset Action on 63 Points
 
-Verifies the imported action homomorphism `ρ : G₂(2) → Sym(G/B)` on the 63 cosets:
-  1. Reflection involutions: `ρ(s₁)² = 1` and `ρ(s₂)² = 1`
-  2. Dihedral Coxeter braid relation: `(ρ(s₁) * ρ(s₂))⁶ = 1`
-  3. Unipotent involutions: `∀ i, ρ(eᵢ)² = 1`
-  4. Non-abelian PC commutator relations matching `U₆` structure constants
-  5. Base-point stabilizer: `ρ(B)` fixes coset `0 = 1 · B`
+This file contains only an abstract proposition-valued contract for a
+permutation action on a 63-point parabolic quotient.  It does not construct
+the concrete action from `SplitOctF2Aut`, does not import GAP arrays, and does
+not prove the Bruhat covering theorem.  In particular, `Fin 63` here must not
+be read as the full flag quotient by the order-64 subgroup (whose index is
+189).
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2CosetAction
@@ -25,10 +27,6 @@ def baseCoset : Coset := 0
 /-! =========================================================================
     1. Permutation Generator Representation
     ========================================================================= -/
-
-/-- Explicit action permutation constructor from a precomputed lookup map. -/
-def mkPerm (f : Coset → Coset) (h_inj : Function.Injective f) : Equiv.Perm Coset :=
-  Equiv.ofBijective f ⟨h_inj, Finite.injective_iff_surjective.mp h_inj⟩
 
 /-!
   The explicit functional arrays represent the action maps `ρ(g) : Fin 63 → Fin 63`
@@ -85,11 +83,12 @@ theorem verify_pc_comm_03 (sys : G2ActionSystem)
     (sys.perm_e 0 * sys.perm_e 3) ^ 2 = sys.perm_e 4 := by
   have h0 := sys.e_inv 0
   have h3 := sys.e_inv 3
-  have h_sq : (sys.perm_e 0 * sys.perm_e 3) ^ 2 = sys.perm_e 0 * sys.perm_e 3 * (sys.perm_e 0 * sys.perm_e 3) := by
-    ring
-  rw [h_sq]
-  rw [← permComm_of_involutions (sys.perm_e 0) (sys.perm_e 3) h0 h3]
-  exact h_comm
+  calc
+    (sys.perm_e 0 * sys.perm_e 3) ^ 2 =
+        permComm (sys.perm_e 0) (sys.perm_e 3) := by
+      simpa [pow_two, mul_assoc] using
+        (permComm_of_involutions (sys.perm_e 0) (sys.perm_e 3) h0 h3).symm
+    _ = sys.perm_e 4 := h_comm
 
 /--
 MAIN THEOREM (Action Homomorphism Stabilizer Property):

@@ -8,10 +8,12 @@ import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
 
 /-!
-# Concrete Bruhat Cell Decomposition and Covering for $G_2(\mathbb{F}_2)$
+# Concrete Bruhat Cell Definitions and Partial Structure for $G_2(\mathbb{F}_2)$
 
-This module formalizes the **concrete Bruhat decomposition**, structural peeling transport,
-and interval Poincaré polynomials of the Chevalley group $G_2(\mathbb{F}_2) \cong \operatorname{Aut}(\mathbb{O}'(\mathbb{F}_2))$:
+This module defines concrete Bruhat cells and proves their elementary invariance
+properties.  It does not yet prove global carrier coverage, pairwise cell
+disjointness, or the ambient group order; those require a concrete BN2/factor
+chart and a carrier-level normal-form theorem.
 
 ### 1. The 12-Element Dihedral Weyl Group $W(G_2) \cong D_{12}$
 - Parameterized by $\operatorname{WeylG2} = \mathbb{Z}/6\mathbb{Z} \times \operatorname{Bool}$.
@@ -26,10 +28,8 @@ and interval Poincaré polynomials of the Chevalley group $G_2(\mathbb{F}_2) \co
 - **Basepoint Inclusion**: $w \in C(w)$ (since $1 \in B$).
 - **Identity Cell**: $C(1) = B$.
 
-### 3. Bruhat Dimension Formula and Flag Variety
-- Cell sizes $|C(w)| = |B| \cdot 2^{\ell(w)} = 64 \cdot 2^{\ell(w)}$.
-- Sum of the 12 cell weights: $\sum_{w \in W} 64 \cdot 2^{\ell(w)} = 12096 = |G_2(\mathbb{F}_2)|$.
-- Flag variety coset count: $|G/B| = \sum_{w \in W} 2^{\ell(w)} = 189$.
+### 3. Bruhat Counting Targets
+- The displayed cell weights and sums are CAS targets, not concrete theorems in this file.
 
 ### 4. Standard Parabolic Subgroups
 - Short-root parabolic $P_1 = B \cup B s B$, size $64 \cdot (1 + 2) = 192$.
@@ -41,7 +41,8 @@ and interval Poincaré polynomials of the Chevalley group $G_2(\mathbb{F}_2) \co
 - Inductive Word Transport: $L.\operatorname{prod} \cdot (B w B) \subseteq \bigcup_{w'} B w' B$.
 - Double-Coset Multiplication Closure: $(B w_1 B) \cdot (B w_2 B) \subseteq \bigcup B w' B$.
 
-All theorems are proved natively in Lean 4 with 0 sorrys, 0 admits, and 0 custom axioms.
+The proved results in this file are limited to the explicitly stated elementary
+cell properties; no global Bruhat classification is claimed here.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification

@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Algebra.Lie.Basic
@@ -36,6 +37,28 @@ namespace InfoGeometry.Algebra.WilmotCliffordG2
 open Matrix
 open InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
 
+theorem skewGen_eq_single_sub (i j : Fin 7) :
+    skewGen i j = Matrix.single i j (1 : ℝ) - Matrix.single j i (1 : ℝ) := by
+  ext a b
+  dsimp [skewGen, Matrix.single, Matrix.sub_apply]
+  have h₁ : (a = i ∧ b = j) ↔ (i = a ∧ j = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  have h₂ : (a = j ∧ b = i) ↔ (j = a ∧ i = b) := by
+    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
+  rw [if_congr h₁ rfl rfl, if_congr h₂ rfl rfl]
+
+theorem matrix_single_mul_single
+    (i j k l : Fin 7) (a b : ℝ) :
+    Matrix.single i j a * Matrix.single k l b =
+      if j = k then Matrix.single i l (a * b) else 0 := by
+  by_cases h : j = k
+  · subst k
+    simp
+  · rw [if_neg h]
+    exact @Matrix.single_mul_single_of_ne (Fin 7) (Fin 7) (Fin 7) ℝ
+      inferInstance inferInstance inferInstance inferInstance inferInstance
+      a i j k l h b
+
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)
     ========================================================================= -/
@@ -50,7 +73,7 @@ noncomputable def bryantGen (m : Fin 14) : Matrix (Fin 7) (Fin 7) ℝ :=
   -- C = (1/2)(e_{01} + e_{36})
   | 2  => (1/2 : ℝ) • (skewGen 0 1 + skewGen 3 6)
   -- D = (1/2)(e_{04} + e_{15})
-  | 3  => (1/2 : ℝ) • (skewGen 0 4 + skewGen 1 5)
+  | 3  => (1/2 : ℝ) • (- skewGen 0 4 + skewGen 1 5)
   -- E = (1/2)(e_{03} - e_{16})
   | 4  => (1/2 : ℝ) • (skewGen 0 3 - skewGen 1 6)
   -- F = (1/2)(e_{06} + e_{13})
@@ -71,6 +94,69 @@ noncomputable def bryantGen (m : Fin 14) : Matrix (Fin 7) (Fin 7) ℝ :=
   | 12 => (1/2 : ℝ) • (- skewGen 0 6 + skewGen 2 4)
   -- N = (1/2)(e_{14} - e_{23})
   | 13 => (1/2 : ℝ) • (skewGen 1 4 - skewGen 2 3)
+
+theorem bryantGen_zero_seven_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 0 = 0 ∧ g 7 = 0 := by
+  have h₁ := congrArg (fun M => M 1 2) hg
+  have h₂ := congrArg (fun M => M 3 4) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_one_eight_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 1 = 0 ∧ g 8 = 0 := by
+  have h₁ := congrArg (fun M => M 0 2) hg
+  have h₂ := congrArg (fun M => M 3 5) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_two_nine_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 2 = 0 ∧ g 9 = 0 := by
+  have h₁ := congrArg (fun M => M 0 1) hg
+  have h₂ := congrArg (fun M => M 3 6) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_three_ten_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 3 = 0 ∧ g 10 = 0 := by
+  have h₁ := congrArg (fun M => M 0 4) hg
+  have h₂ := congrArg (fun M => M 1 5) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_four_eleven_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 4 = 0 ∧ g 11 = 0 := by
+  have h₁ := congrArg (fun M => M 0 3) hg
+  have h₂ := congrArg (fun M => M 1 6) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_five_twelve_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 5 = 0 ∧ g 12 = 0 := by
+  have h₁ := congrArg (fun M => M 1 3) hg
+  have h₂ := congrArg (fun M => M 2 4) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
+
+theorem bryantGen_six_thirteen_separated
+    (g : Fin 14 → ℝ)
+    (hg : ∑ i, g i • bryantGen i = 0) :
+    g 6 = 0 ∧ g 13 = 0 := by
+  have h₁ := congrArg (fun M => M 0 5) hg
+  have h₂ := congrArg (fun M => M 2 3) hg
+  simp [bryantGen, skewGen, Fin.sum_univ_succ] at h₁ h₂
+  constructor <;> linarith
 
 /-- THEOREM: Every Bryant-Wilmot generator is skew-symmetric: $G_m^T = - G_m$. -/
 theorem bryantGen_skew (m : Fin 14) :
@@ -117,7 +203,7 @@ theorem bryant_C_add_J :
 
 /-- 4. Triad relation: $D + K = \frac{1}{2}(e_{04} - e_{26})$. -/
 theorem bryant_D_add_K :
-    bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (skewGen 0 4 - skewGen 2 6) := by
+    bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (- skewGen 0 4 - skewGen 2 6) := by
   dsimp [bryantGen]
   ext a b
   simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply, smul_eq_mul]

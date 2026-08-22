@@ -181,4 +181,62 @@ def standardParabolicOrder : ℕ := 64 * (1 + 2)
 theorem standardParabolicOrder_eq_192 :
     standardParabolicOrder = 192 := rfl
 
+/-! =========================================================================
+    5. Standard Parabolics as Genuine Subgroups and BN Generation
+    ========================================================================= -/
+
+/-- The standard short-root parabolic subgroup $P_1 = \langle B, s \rangle$. -/
+def standardParabolicP1Subgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure ((sylowTwoSubgroup : Set SplitOctF2Aut) ∪ {s})
+
+/-- The standard long-root parabolic subgroup $P_2 = \langle B, t \rangle$. -/
+def standardParabolicP2Subgroup : Subgroup SplitOctF2Aut :=
+  Subgroup.closure ((sylowTwoSubgroup : Set SplitOctF2Aut) ∪ {t})
+
+/-- 🏆 THEOREM: The simple reflection $s$ lies in the standard parabolic subgroup $P_1$. -/
+theorem s_mem_standardParabolicP1Subgroup :
+    s ∈ standardParabolicP1Subgroup :=
+  Subgroup.subset_closure (Or.inr (Set.mem_singleton s))
+
+/-- 🏆 THEOREM: The simple reflection $t$ lies in the standard parabolic subgroup $P_2$. -/
+theorem t_mem_standardParabolicP2Subgroup :
+    t ∈ standardParabolicP2Subgroup :=
+  Subgroup.subset_closure (Or.inr (Set.mem_singleton t))
+
+/-- 🏆 THEOREM: The Borel subgroup $B$ is a subgroup of $P_1$. -/
+theorem sylow_le_standardParabolicP1Subgroup :
+    sylowTwoSubgroup ≤ standardParabolicP1Subgroup := by
+  intro g hg
+  exact Subgroup.subset_closure (Or.inl hg)
+
+/-- 🏆 THEOREM: The Borel subgroup $B$ is a subgroup of $P_2$. -/
+theorem sylow_le_standardParabolicP2Subgroup :
+    sylowTwoSubgroup ≤ standardParabolicP2Subgroup := by
+  intro g hg
+  exact Subgroup.subset_closure (Or.inl hg)
+
+/-- 🏆 THEOREM: The standard parabolic double coset $B \cup B s B$ is contained in $P_1$. -/
+theorem standardParabolicP1_subset_subgroup :
+    standardParabolicP1 ⊆ (standardParabolicP1Subgroup : Set SplitOctF2Aut) := by
+  rintro g (hg | hg)
+  · rw [concreteBruhatCell_one_eq_sylow] at hg
+    exact sylow_le_standardParabolicP1Subgroup hg
+  · rcases hg with ⟨b1, b2, hb1, hb2, rfl⟩
+    have hb1' : b1 ∈ standardParabolicP1Subgroup := sylow_le_standardParabolicP1Subgroup hb1
+    have hs' : s ∈ standardParabolicP1Subgroup := s_mem_standardParabolicP1Subgroup
+    have hb2' : b2 ∈ standardParabolicP1Subgroup := sylow_le_standardParabolicP1Subgroup hb2
+    exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hb1' hs') hb2'
+
+/-- 🏆 THEOREM: The standard parabolic double coset $B \cup B t B$ is contained in $P_2$. -/
+theorem standardParabolicP2_subset_subgroup :
+    standardParabolicP2 ⊆ (standardParabolicP2Subgroup : Set SplitOctF2Aut) := by
+  rintro g (hg | hg)
+  · rw [concreteBruhatCell_one_eq_sylow] at hg
+    exact sylow_le_standardParabolicP2Subgroup hg
+  · rcases hg with ⟨b1, b2, hb1, hb2, rfl⟩
+    have hb1' : b1 ∈ standardParabolicP2Subgroup := sylow_le_standardParabolicP2Subgroup hb1
+    have ht' : t ∈ standardParabolicP2Subgroup := t_mem_standardParabolicP2Subgroup
+    have hb2' : b2 ∈ standardParabolicP2Subgroup := sylow_le_standardParabolicP2Subgroup hb2
+    exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hb1' ht') hb2'
+
 end InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification

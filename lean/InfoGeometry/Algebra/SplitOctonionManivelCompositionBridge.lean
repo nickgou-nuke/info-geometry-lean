@@ -54,7 +54,8 @@ theorem coe_re_mul_star (u : Quaternion ℝ) : u * star u = ↑((u * star u).re)
 
 /-- Starred variant: `star u * u` is the embedded real part of `u * star u`. -/
 theorem coe_re_mul_star' (u : Quaternion ℝ) : star u * u = ↑((u * star u).re) := by
-  rw [← coe_re_mul_star, mul_comm]
+  have h1 : star u * u = ↑((star u * u).re) := Quaternion.star_mul_eq_coe u
+  rw [h1, re_mul_comm]
 
 /-- Peel lemma: star of `u * star v` is `v * star u`. -/
 theorem star_mul_star (u v : Quaternion ℝ) : star (u * star v) = v * star u := by
@@ -63,7 +64,8 @@ theorem star_mul_star (u v : Quaternion ℝ) : star (u * star v) = v * star u :=
 /-- Star equals twice-real-minus-self (componentwise on quaternions). -/
 theorem star_eq_two_re_sub (x : Quaternion ℝ) :
     star x = ↑(2 * x.re) - x := by
-  ext <;> simp <;> ring
+  ext <;> simp
+  ring
 
 /-- Multiplicativity of the quaternion norm-square (not provided by mathlib). -/
 theorem normSq_mul_quat (p q : Quaternion ℝ) :
@@ -160,18 +162,17 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
         = (a * star a).re * (c * star c).re := by
       rw [← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star,
         normSq_mul_quat]
-    have h2 : ((star d * b) * star (star d * b)).re
+    have h2 : ((star d * b) * (star b * d)).re
         = (b * star b).re * (d * star d).re := by
-      rw [← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
-        mul_comm (Quaternion.normSq d) (Quaternion.normSq b),
+      rw [← hs1, ← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
     have h3 : ((d * a) * star (d * a)).re
         = (a * star a).re * (d * star d).re := by
       rw [← normSq_eq_re_mul_star, normSq_mul_quat, mul_comm,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
-    have h4 : ((b * star c) * star (b * star c)).re
+    have h4 : ((b * star c) * (c * star b)).re
         = (b * star b).re * (c * star c).re := by
-      rw [← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
+      rw [← hs2, ← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
     show normSQ (⟨a, b⟩ * ⟨c, d⟩) = normSQ ⟨a, b⟩ * normSQ ⟨c, d⟩
     simp only [normSQ, SplitOctonion.mul_a, SplitOctonion.mul_b]
@@ -217,7 +218,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       rw [star_neg, neg_mul]
       rw [show star X.b * X.b = ↑((X.b * star X.b).re) from
         coe_re_mul_star' X.b]
-      rw [coe_re_mul_star, ← sub_eq_add_neg, ← coe_sub, qsmul_eq_mul]
+      rw [coe_re_mul_star, ← sub_eq_add_neg, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
     · show (-X.b) * X.a + X.b * star (star X.a) = normSQ X • (0 : Quaternion ℝ)
@@ -232,7 +233,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
         coe_re_mul_star' X.a]
       rw [show star X.b * X.b = ↑((X.b * star X.b).re) from
         coe_re_mul_star' X.b]
-      rw [← sub_eq_add_neg, ← coe_sub, qsmul_eq_mul]
+      rw [← sub_eq_add_neg, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
     · show X.b * star X.a + (-X.b) * star X.a = normSQ X • (0 : Quaternion ℝ)
@@ -256,7 +257,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, manivelConj_a,
         star_neg, neg_mul, e1, e2, e3, e4]
       abel
-      rw [mul_comm X.a (↑((Y.a * star Y.a).re)), ← mul_sub, ← coe_sub, qsmul_eq_mul]
+      rw [mul_comm X.a (↑((Y.a * star Y.a).re)), ← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
     · show (-Y.b) * (X * Y).a + (X * Y).b * star (star Y.a) = normSQ Y • X.b
@@ -274,7 +275,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
             coe_re_mul_star' Y.a]
       rw [f1, f2]
       abel
-      rw [← mul_sub, ← coe_sub, qsmul_eq_mul]
+      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
   conj_mul_mul_left := by
@@ -297,7 +298,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     · show star X.a * (X * Y).a + star (X * Y).b * (-X.b) = normSQ X • Y.a
       rw [SplitOctonion.mul_a, SplitOctonion.mul_b, manivelConj_b, hA, hB]
       abel
-      rw [← mul_sub, ← coe_sub, qsmul_eq_mul]
+      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
     · show (X * Y).b * star X.a + (-X.b) * star (X * Y).a = normSQ X • Y.b
@@ -314,7 +315,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       rw [mul_comm Y.b (↑((X.a * star X.a).re)),
         show X.b * (star X.b * Y.b) = (X.b * star X.b) * Y.b from mul_assoc _ _ _,
         coe_re_mul_star]
-      rw [← mul_sub, ← coe_sub, qsmul_eq_mul]
+      rw [← mul_sub, ← Quaternion.coe_sub, qsmul_eq_mul]
       congr 1
       rfl
 

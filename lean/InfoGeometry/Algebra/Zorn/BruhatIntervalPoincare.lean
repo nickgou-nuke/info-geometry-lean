@@ -16,6 +16,11 @@ polynomial `P_{[u, v]}(q) = ∑_{x ∈ [u, v]} q^(ℓ(x))` with zero sorrys and 
 -/
 
 open BigOperators
+open List
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.Algebra.Zorn.BruhatInterval
 
@@ -38,9 +43,9 @@ LEMMA: An element `x` belongs to `subwordFinset L` if and only if it is
 the product of a subword `L' <+ L`.
 -/
 theorem mem_subwordFinset (L : List G) (x : G) :
-    x ∈ subwordFinset L ↔ ∃ L' <+ L, L'.prod = x := by
+    x ∈ subwordFinset L ↔ ∃ L', L' <+ L ∧ L'.prod = x := by
   dsimp [subwordFinset]
-  rw [Finset.mem_toFinset, List.mem_map]
+  rw [List.mem_toFinset, List.mem_map]
   constructor
   · rintro ⟨l', hl', rfl⟩
     rw [List.mem_sublists] at hl'
@@ -54,13 +59,13 @@ theorem mem_subwordFinset (L : List G) (x : G) :
 theorem one_mem_subwordFinset (L : List G) :
     (1 : G) ∈ subwordFinset L := by
   rw [mem_subwordFinset]
-  exact ⟨[], List.nil_sublist L, rfl⟩
+  exact ⟨[], nil_sublist L, rfl⟩
 
 /-- The full subword evaluates to `L.prod ∈ subwordFinset L`. -/
 theorem prod_mem_subwordFinset (L : List G) :
     L.prod ∈ subwordFinset L := by
   rw [mem_subwordFinset]
-  exact ⟨L, List.Sublist.refl L, rfl⟩
+  exact ⟨L, Sublist.refl L, rfl⟩
 
 /--
 The finite Bruhat interval `[u, v]` constructed with respect to a reduced word `L_v`
@@ -91,10 +96,7 @@ def relativePoincarePoly (interval : Finset G) (len : G → ℕ) (len_u : ℕ) (
 /-- When `len_u = 0`, the relative Poincaré polynomial equals the absolute Poincaré polynomial. -/
 theorem relativePoincarePoly_zero (interval : Finset G) (len : G → ℕ) (q : R) :
     relativePoincarePoly interval len 0 q = poincarePoly interval len q := by
-  dsimp [relativePoincarePoly, poincarePoly]
-  congr 1
-  ext x
-  rw [Nat.sub_zero]
+  simp [relativePoincarePoly, poincarePoly]
 
 /-! =========================================================================
     3. Structural Evaluations: Singletons and Simple Reflections
@@ -114,27 +116,11 @@ LEMMA: For a non-trivial generator `s ≠ 1`, the subword down-set is `{1, s}`.
 -/
 theorem subwordFinset_singleton (s : G) (hs : s ≠ 1) :
     subwordFinset [s] = {1, s} := by
+  dsimp [subwordFinset, List.sublists]
   ext x
-  rw [mem_subwordFinset]
-  constructor
-  · rintro ⟨l', hsub, rfl⟩
-    have hcases : l' = [] ∨ l' = [s] := by
-      cases hsub with
-      | slnil => right; rfl
-      | cons _ h =>
-        cases h with
-        | slnil => left; rfl
-      | cons_cons _ h =>
-        cases h with
-        | slnil => right; rfl
-    rcases hcases with rfl | rfl
-    · simp only [List.prod_nil, Finset.mem_insert, Finset.mem_singleton, true_or]
-    · simp only [List.prod_singleton, Finset.mem_insert, Finset.mem_singleton, or_true]
-  · intro hx
-    simp only [Finset.mem_insert, Finset.mem_singleton] at hx
-    rcases hx with rfl | rfl
-    · exact ⟨[], List.nil_sublist [s], rfl⟩
-    · exact ⟨[s], List.Sublist.refl [s], by rw [List.prod_singleton]⟩
+  simp only [List.map, List.prod_nil, List.prod_cons, mul_one,
+    List.mem_toFinset, List.mem_cons, List.not_mem_nil, or_false,
+    Finset.mem_insert, Finset.mem_singleton]
 
 /--
 THEOREM (Simple Reflection Poincaré Polynomial):
@@ -145,7 +131,7 @@ theorem poincarePoly_simple_reflection (s : G) (hs : s ≠ 1) (len : G → ℕ)
     poincarePoly (subwordFinset [s]) len q = 1 + q := by
   rw [subwordFinset_singleton s hs]
   dsimp [poincarePoly]
-  rw [Finset.sum_pair hs.symm]
+  rw [Finset.sum_pair (by exact hs.symm)]
   rw [hlen1, hlens, pow_zero, pow_one]
 
 /-! =========================================================================

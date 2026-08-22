@@ -26,8 +26,8 @@ open List
 def WordOver (S : Set G) (L : List G) : Prop :=
   ∀ s ∈ L, s ∈ S
 
-/-- Sublists of words over `S` remain words over `S`. -/
 omit [Group G] in
+/-- Sublists of words over `S` remain words over `S`. -/
 theorem wordOver_sublist (S : Set G) {L₁ L₂ : List G}
     (hsub : L₁.Sublist L₂) (hL₂ : WordOver S L₂) :
     WordOver S L₁ := by
@@ -135,7 +135,7 @@ THEOREM (Bruhat Length Inequality):
 If `u ≤_B v`, the length of any reduced expression for `u` is bounded by
 the length of any reduced expression for `v`.
 -/
-theorem bruhatLE_length_le (S : Set G) (u v : G) (L_u L_v : List G)
+theorem bruhatLE_length_le (S : Set G) (u : G) (L_u L_v : List G)
     (h_red_u : IsReduced S L_u) (h_prod_u : L_u.prod = u)
     (h_red_v : IsReduced S L_v)
     (L' : List G) (hsub : L'.Sublist L_v) (h_prod_u' : L'.prod = u) :

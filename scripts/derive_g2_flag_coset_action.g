@@ -29,6 +29,13 @@ if NrMovedPoints(A) <> 189 then Error("FLAG_ACTION_DEGREE failed"); fi;
 if Size(Stabilizer(A, 1)) <> 64 then Error("FLAG_STABILIZER failed"); fi;
 if Transitivity(A) <> 1 then Error("FLAG_TRANSITIVITY failed"); fi;
 
+# Export the actual action images.  These are GAP-derived permutations on the
+# 189 right cosets; no Lean-side relation is assumed here.
+for k in [1..Length(gens)] do
+  Print("FLAG_PERM_", k-1, "=",
+    List([1..Length(Q)], i -> i^Image(act, gens[k])), "\n");
+od;
+
 Print("FLAG_ACTION_DEGREE=", NrMovedPoints(A), "\n");
 Print("FLAG_STABILIZER_SIZE=", Size(Stabilizer(A, 1)), "\n");
 Print("FLAG_ACTION_TRANSITIVE=PASS\n");

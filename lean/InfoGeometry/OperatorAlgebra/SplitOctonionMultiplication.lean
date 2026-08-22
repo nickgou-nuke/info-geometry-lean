@@ -497,6 +497,15 @@ def conjZ (X : SplitOct) : SplitOct :=
 def scalarZ (r : ℤ) : SplitOct :=
   ⟨r, r, 0, 0, 0, 0, 0, 0⟩
 
+theorem scalarZ_mul_eq_zero_of_ne_zero
+    {r : ℤ} {X : SplitOct} (hX : X ≠ zeroZ)
+    (h : mulZ (scalarZ r) X = zeroZ) : r = 0 := by
+  cases X with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    simp [scalarZ, mulZ, zeroZ] at hX h
+    rcases hX with hX | hX | hX | hX | hX | hX | hX | hX
+    all_goals omega
+
 /-! ## Trace/determinant truth cross-section -/
 
 /-- Coordinatewise scalar multiplication on the concrete Zorn carrier. -/

@@ -7491,6 +7491,7 @@ import InfoGeometry.Algebra.GogberashviliNilpotentCARBridge
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
 import InfoGeometry.Modular.ModularCocycleKMSBridge
 import InfoGeometry.Information.ModularCocycleKMSBridge
+import InfoGeometry.Information.ModularSurprisalDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2FanoHammingBridge
 import InfoGeometry.Combinatorics.BinaryPCGolayBridge
 import InfoGeometry.Algebra.Zorn.G2DicksonCubicInvariant
@@ -7500,7 +7501,6 @@ import InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
 import InfoGeometry.Algebra.Zorn.G2LeanCarrierMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2CarrierQuotientAction
-import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
 import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix

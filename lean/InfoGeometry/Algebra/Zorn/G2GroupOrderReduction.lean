@@ -49,8 +49,13 @@ theorem sylowTwoSubgroup_card_nat :
 /-- Finite-cardinality form of the same fact. -/
 theorem sylowTwoSubgroup_card_fin :
     Fintype.card (G2TwoSylowSubgroup.sylowTwoSubgroup : Subgroup SplitOctF2Aut) = 64 := by
-  rw [Nat.card_eq_fintype_card]
-  exact sylowTwoSubgroup_card_nat
+  have h : Fintype.card (G2TwoSylowSubgroup.sylowTwoSubgroup : Subgroup SplitOctF2Aut) = 64 := by
+    have h₁ : Nat.card (G2TwoSylowSubgroup.sylowTwoSubgroup : Subgroup SplitOctF2Aut) = 64 := by
+      rw [InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.sylowTwoSubgroup_eq_unipotentSubgroup]
+      exact InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup_card
+    simp [Nat.card_eq_fintype_card] at *
+    <;> simp_all
+  exact h
 
 /-- **Reduction theorem**: if the parabolic coset space `G ⧸ U` has exactly
 189 elements, then the ambient automorphism group has order `189 * 64 = 12096`. -/

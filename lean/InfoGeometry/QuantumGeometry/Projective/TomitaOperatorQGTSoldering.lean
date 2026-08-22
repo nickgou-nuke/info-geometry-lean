@@ -3,6 +3,8 @@ import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Tactic
 
+set_option maxRecDepth 100000
+
 /-!
 # Tomita/Hestenes operator tensor to projective QGT soldering
 
@@ -58,9 +60,9 @@ noncomputable def nambuClockAxis : EndC where
     exact (clockAxis (E := H)).map_add u v
   map_smul' := by
     intro c u
-    apply DoubledSpace.ext <;>
-      simp only [clockAxis_eq_complex_i]
-    simp [complex_i]
+    change complex_i (c • u) = c • complex_i u
+    apply DoubledSpace.ext
+    simp [complex_i_apply, WithLp.toLp_smul, smul_fst, smul_snd, complex_i]
   cont := (clockAxis (E := H)).cont
 
 @[simp]
@@ -134,7 +136,8 @@ product.
 theorem nambu_real_inner_eq_re_complex_inner (u v : NambuH) :
     ⟪u, v⟫_ℝ = (⟪u, v⟫_ℂ).re := by
   rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
-  simp only [real_inner_eq_re_inner, Complex.add_re]
+  rw [real_inner_eq_re_inner ℂ (u.ofLp.2) (v.ofLp.2)]
+  rw [← Complex.add_re]
 
 /-- Operatorial real metric evaluated on projective horizontal tangent vectors. -/
 noncomputable def horizontalOperatorMetric

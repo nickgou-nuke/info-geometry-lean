@@ -209,6 +209,17 @@ def associator (X Y Z : SplitOct) : SplitOct := subZ (mulZ (mulZ X Y) Z) (mulZ X
 def leftRegular (X : SplitOct) : SplitOct → SplitOct :=
   fun Y => mulZ X Y
 
+def leftRegularAddHom (X : SplitOct) : SplitOct →+ SplitOct where
+  toFun := leftRegular X
+  map_zero' := by
+    ext <;> simp [leftRegular, mulZ, zeroZ]
+  map_add' Y Z := by
+    ext <;> simp [leftRegular, mulZ, add, zeroZ]
+    <;> ring
+
+def leftRegularLinear (X : SplitOct) : SplitOct →ₗ[ℤ] SplitOct :=
+  (leftRegularAddHom X).toIntLinearMap
+
 /-- The failure of left-regular multiplication to be multiplicative is the
 negative of the explicit associator. -/
 theorem leftRegular_mul_defect (X Y Z : SplitOct) :
@@ -227,6 +238,13 @@ theorem leftRegular_mul_defect (X Y Z : SplitOct) :
 theorem leftRegular_normZ_mul (X Y : SplitOct) :
     normZ (leftRegular X Y) = normZ X * normZ Y := by
   simp [leftRegular, normZ_mul]
+
+theorem leftRegularLinear_range_isotropic (X : SplitOct)
+    (hX : normZ X = 0) :
+    ∀ Y : SplitOct, Y ∈ LinearMap.range (leftRegularLinear X) → normZ Y = 0 := by
+  intro Y hY
+  rcases hY with ⟨Z, rfl⟩
+  rw [leftRegular_normZ_mul, hX, zero_mul]
 
 /-- Right-regular action on the true nonassociative `SplitOct` carrier. -/
 def rightRegular (X : SplitOct) : SplitOct → SplitOct :=

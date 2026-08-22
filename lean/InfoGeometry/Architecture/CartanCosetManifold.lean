@@ -104,6 +104,40 @@ theorem leftAction_mul (K : Subgroup G) (g₁ g₂ : G) (x : CosetSpace G K) :
     change toCoset K ((g₁ * g₂) * a) = toCoset K (g₁ * (g₂ * a))
     rw [mul_assoc]
 
+/-! =========================================================================
+PART 1A: Quotient Incidence
+=============================================================================
+-/
+
+/-- Two quotient cosets are incident when they have a common representative. -/
+def cosetIncident (H K : Subgroup G) (c : CosetSpace G H) (d : CosetSpace G K) : Prop :=
+  ∃ x : G, toCoset H x = c ∧ toCoset K x = d
+
+/-- Quotient incidence is invariant under simultaneous left translation. -/
+theorem cosetIncident_leftAction (H K : Subgroup G) (g : G)
+    (c : CosetSpace G H) (d : CosetSpace G K) :
+    cosetIncident H K c d ↔
+      cosetIncident H K (leftAction H g c) (leftAction K g d) := by
+  constructor
+  · intro h
+    induction c using Quotient.inductionOn with | h c =>
+      induction d using Quotient.inductionOn with | h d =>
+        rcases h with ⟨x, hxc, hxd⟩
+        refine ⟨g * x, ?_, ?_⟩
+        · simpa [leftAction_toCoset] using congrArg (leftAction H g) hxc
+        · simpa [leftAction_toCoset] using congrArg (leftAction K g) hxd
+  · intro h
+    induction c using Quotient.inductionOn with | h c =>
+      induction d using Quotient.inductionOn with | h d =>
+        rcases h with ⟨x, hxc, hxd⟩
+        refine ⟨g⁻¹ * x, ?_, ?_⟩
+        · have h' := congrArg (leftAction H g⁻¹) hxc
+          rw [← leftAction_mul, inv_mul_cancel, leftAction_one] at h'
+          simpa [leftAction_toCoset] using h'
+        · have h' := congrArg (leftAction K g⁻¹) hxd
+          rw [← leftAction_mul, inv_mul_cancel, leftAction_one] at h'
+          simpa [leftAction_toCoset] using h'
+
 /-- THEOREM: The stabilizer of the origin o = eK is precisely the subgroup K. -/
 theorem stabilizer_origin_eq (K : Subgroup G) (g : G) :
     leftAction K g (origin K) = origin K ↔ g ∈ K := by
@@ -145,11 +179,13 @@ def cosetMetric (p_space : Submodule ℝ V) (K_rep : G → (V →ₗ[ℝ] V))
     (metric : InvariantInnerProduct p_space K_rep) (u v : V) : ℝ :=
   metric.inner u v
 
+omit [Group G] in
 @[simp]
 theorem cosetMetric_apply (p_space : Submodule ℝ V) (K_rep : G → (V →ₗ[ℝ] V))
     (metric : InvariantInnerProduct p_space K_rep) (u v : V) :
     cosetMetric p_space K_rep metric u v = metric.inner u v := rfl
 
+omit [Group G] in
 /-- THEOREM: The coset metric is strictly invariant under the isotropy group K. -/
 theorem cosetMetric_isotropy_invariant
     (p_space : Submodule ℝ V) (K_rep : G → (V →ₗ[ℝ] V))

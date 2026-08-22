@@ -78,4 +78,33 @@ theorem nativePreserves_mul
   intro p l
   exact (h₂ p l).trans (h₁ (π₂ p) (π₂ l))
 
+theorem nativePreserves_symm
+    {π : Equiv.Perm
+      InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint}
+    (h : NativePreservesIncidence π) :
+    NativePreservesIncidence π.symm := by
+  intro p l
+  have h' := h (π.symm p) (π.symm l)
+  simpa using h'.symm
+
+theorem nativePreserves_closure
+    (S : Set InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut)
+    (hS : ∀ g ∈ S,
+      NativePreservesIncidence (octImPointPerm g))
+    {g : InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut}
+    (hg : g ∈ Subgroup.closure S) :
+    NativePreservesIncidence (octImPointPerm g) := by
+  refine Subgroup.closure_induction (fun g hg => hS g hg) ?_ ?_ ?_ hg
+  · simpa [octImPointPerm_one] using nativePreserves_one
+  · intro g h _ _ hg hh
+    rw [octImPointPerm_mul]
+    exact nativePreserves_mul hg hh
+  · intro g _ hg
+    have hperm : octImPointPerm g⁻¹ = (octImPointPerm g)⁻¹ := by
+      have hmul := octImPointPerm_mul g g⁻¹
+      rw [mul_inv_cancel, octImPointPerm_one] at hmul
+      exact eq_inv_of_mul_eq_one_right hmul.symm
+    rw [hperm]
+    exact nativePreserves_symm hg
+
 end InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport

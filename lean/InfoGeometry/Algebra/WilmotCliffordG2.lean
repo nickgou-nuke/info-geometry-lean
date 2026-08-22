@@ -327,6 +327,40 @@ theorem bryantGen_bracket_zero_one_cas_alignment :
   norm_num [div_eq_mul_inv, matrix_single_neg]
   abel
 
+theorem bryantGen_bracket_zero_two_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 2) =
+      (1 / 2 : ℝ) • (bryantGen 1 + bryantGen 8) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul]
+  abel_nf
+
+theorem bryantGen_bracket_zero_four_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 4) =
+      (-1 / 2 : ℝ) • (bryantGen 3 + bryantGen 10) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul]
+  abel_nf
+  norm_num [div_eq_mul_inv, matrix_single_neg]
+  abel
+
+theorem bryantGen_bracket_zero_five_cas_alignment :
+    matrixLieBracket (bryantGen 0) (bryantGen 5) =
+      (1 / 2 : ℝ) • bryantGen 13 := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_sub, Matrix.mul_sub, Matrix.sub_mul, mul_add, add_mul]
+  abel_nf
+
+/- The coefficient vector for this bracket was first solved symbolically in
+SymPy (`CAS_BRACKET_1_2_COORDS=(-1/2,0,0,0,0,0,0,-1/2,0,...)`) and is then
+checked here by the kernel. -/
+theorem bryantGen_bracket_one_two_cas_alignment :
+    matrixLieBracket (bryantGen 1) (bryantGen 2) =
+      (-1 / 2 : ℝ) • (bryantGen 0 + bryantGen 7) := by
+  simp [matrixLieBracket, bryantGen, skewGen_eq_single_sub,
+    smul_add, Matrix.mul_sub, Matrix.sub_mul]
+  abel_nf
+  norm_num [div_eq_mul_inv, matrix_single_neg]
+
 theorem wilmotG2Submodule_finrank :
     Module.finrank ℝ wilmotG2Submodule = 14 := by
   change Module.finrank ℝ (Submodule.span ℝ (Set.range bryantGen)) = 14

@@ -352,8 +352,10 @@ theorem extractBit2_pcWord (e : PCWordExp) :
   rw [automorphism_mul_apply]
   split_ifs
   · rw [pc6pc2Aut_basis8_7]
-    rw [automorphism_map_add, automorphism_map_add, automorphism_map_add,
-      automorphism_map_add, automorphism_map_add]
+    have hsplit := automorphism_map_add
+      (peel0 (G2TwoSylowSubgroup.pcWord e)) (basis8 6) (basis8 7)
+    rw [hsplit]
+    rw [automorphism_map_add, automorphism_map_add, automorphism_map_add]
     rw [peel0_apply_basis8_4, peel0_apply_basis8_6, peel0_apply_basis8_7]
     simp [pcWordFun_x1_basis8_4, pcWordFun_x1_basis8_6,
       peel0_pcWord_basis8_7_x1, extractBit1, add, add2]

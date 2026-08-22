@@ -3,6 +3,12 @@ import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
+
 /-!
 # Cyclotomic model of the abstract `G₂` Weyl symmetry
 

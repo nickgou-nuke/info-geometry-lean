@@ -81,7 +81,7 @@ theorem g2Fun_mul (X Y : SplitOctF2) :
   all_goals
     simp only [g2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four]
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
@@ -91,7 +91,7 @@ theorem g4Fun_mul (X Y : SplitOctF2) :
   all_goals
     simp only [g4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
       bitToF2_xor, bitToF2_and]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four, F2_bit_sq]
+    ring_nf <;> simp [F2_mul_two]
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun

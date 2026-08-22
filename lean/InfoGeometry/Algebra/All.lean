@@ -6,6 +6,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoCarrierCoordinateLemmas
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
+import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
 import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.Zorn.G2TwoIdempotentGeometry
@@ -269,12 +270,23 @@ import InfoGeometry.Algebra.Zorn.G2TwoDihedralSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
+import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
+import InfoGeometry.Algebra.Zorn.G2TwoPCGroup
+import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2Basis
+import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication
+import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
+import InfoGeometry.Algebra.Zorn.G2FanoHammingBridge
+import InfoGeometry.Algebra.Zorn.G2DicksonCubicInvariant
+import InfoGeometry.Algebra.Zorn.G2QuadraticCompatibility
+import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
+import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
 /-!
 # InfoGeometry.Algebra.All
 

@@ -83,6 +83,23 @@ def cAction (r : G2Root) : G2Root :=
 def negAction (r : G2Root) : G2Root :=
   (r.1, r.2 + 3)
 
+theorem c_rootAut_c (r : G2Root) :
+    c * rootAut r * c⁻¹ = rootAut (cAction r) := by
+  rcases r with ⟨l, k⟩
+  dsimp [cAction, rootAut]
+  cases l <;> fin_cases k
+  all_goals
+    apply automorphism_ext_of_basis
+    intro i
+    fin_cases i <;> rfl
+
+theorem c_xRoot_c (r : G2Root) (a : Bool) :
+    c * xRoot r a * c⁻¹ = xRoot (cAction r) a := by
+  cases a
+  · simp [xRoot]
+  · simp only [xRoot, ↓reduceIte]
+    exact c_rootAut_c r
+
 theorem rootAut_neg (r : G2Root) :
     rootAut (negAction r) = c ^ 3 * rootAut r * (c ^ 3)⁻¹ := by
   rcases r with ⟨l, k⟩
@@ -93,6 +110,13 @@ theorem rootAut_neg (r : G2Root) :
     intro i
     fin_cases i <;> rfl
 
+theorem c3_xRoot_c3 (r : G2Root) (a : Bool) :
+    c ^ 3 * xRoot r a * (c ^ 3)⁻¹ = xRoot (negAction r) a := by
+  cases a
+  · simp [xRoot]
+  · simp only [xRoot, ↓reduceIte]
+    exact (rootAut_neg r).symm
+
 theorem s_rootAut_s (r : G2Root) :
     s * rootAut r * s = rootAut (sAction r) := by
   rcases r with ⟨l, k⟩
@@ -102,5 +126,20 @@ theorem s_rootAut_s (r : G2Root) :
     apply automorphism_ext_of_basis
     intro i
     fin_cases i <;> rfl
+
+theorem s_xRoot_s (r : G2Root) (a : Bool) :
+    s * xRoot r a * s = xRoot (sAction r) a := by
+  cases a
+  · simp [xRoot, s_sq]
+  · simp only [xRoot, ↓reduceIte]
+    exact s_rootAut_s r
+
+theorem rootAut_commutator_S0_S2 :
+    automorphismCommutator (rootAut (RootLength.Short, 0))
+      (rootAut (RootLength.Short, 2)) =
+      rootAut (RootLength.Short, 1) := by
+  apply automorphism_ext_of_basis
+  intro i
+  fin_cases i <;> rfl
 
 end InfoGeometry.Algebra.Zorn.G2TwoRootSystem

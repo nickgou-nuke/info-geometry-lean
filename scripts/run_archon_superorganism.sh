@@ -31,7 +31,7 @@ Defaults:
 
 Environment:
   LEANSTRAL_BASE_URL  Override default Leanstral endpoint (default: http://127.0.0.1:18889/v1)
-  OPENROUTER_PI_MODEL Override the pi assistant OpenRouter model (example: openrouter/openrouter/owl-alpha).
+  OPENROUTER_PI_MODEL Override the pi assistant OpenRouter model (example: openrouter/stealth/ox-alpha).
   If unset, model comes from .archon/config.yaml or the resolver output.
   ARCHON_FALLBACK_PI_MODEL Override the local fallback model when OpenRouter is unavailable.
   OPENROUTER_API_KEY  Required when Pi or Hermes use OpenRouter; set via env or .archon/.env.

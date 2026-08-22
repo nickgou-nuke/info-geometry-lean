@@ -6,8 +6,13 @@ import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
 
 The coordinate transposition `0 ↔ 1` in both vector slots is an actual
 automorphism of the characteristic-two Zorn multiplication.  This gives a
-native nontrivial generator for subsequent orbit/stabilizer constructions.
 -/
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 

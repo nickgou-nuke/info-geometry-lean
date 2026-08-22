@@ -59,7 +59,7 @@ def swapCartanAut : SplitOctF2Aut :=
 theorem swapCartanAut_sq : swapCartanAut * swapCartanAut = 1 := by
   apply automorphism_ext_of_basis
   intro i
-  fin_cases i <;> decide
+  fin_cases i <;> rfl
 
 theorem swapCartanAut_comm_cycle012 :
     swapCartanAut * cycle012Aut = cycle012Aut * swapCartanAut := by

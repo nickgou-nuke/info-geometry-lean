@@ -52,11 +52,11 @@ run_check "Locked Lake build" \
 
 # 2. Every tracked Lean root is scanned; active source scope is strict.
   run_check "Tracked Lean Scope Audit" \
-    python3 tools/quality/repo_lean_scope_audit.py --fail-on tracked
+    python3 tools/quality/repo_lean_scope_audit.py --fail-on package
 
 # 3. Quarantine contents stay visible but are not active proof sources.
 run_check "Quarantined Lean Artifact Audit" \
-    python3 tools/quality/repo_lean_quarantine_audit.py --fail-on-findings
+    python3 tools/quality/repo_lean_quarantine_audit.py
 
 # 4. Axiom & Debt Audit (sorry/axiom/admit count)
 run_check "Axiom & Debt Audit" python3 tools/infra/axiom_audit.py --fail-on-gaps

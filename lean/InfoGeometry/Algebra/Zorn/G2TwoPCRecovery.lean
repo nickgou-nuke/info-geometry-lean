@@ -347,9 +347,26 @@ theorem extractBit5_pcWord (e : PCWordExp) :
 
 theorem extractBit2_pcWord (e : PCWordExp) :
     extractBit2 (G2TwoSylowSubgroup.pcWord e) = e 2 := by
-  have he : e = makeExp (e 0) (e 1) (e 2) (e 3) (e 4) (e 5) := pcWordExp_eq_makeExp e
-  rw [he]
-  cases (e 0) <;> cases (e 1) <;> cases (e 2) <;> cases (e 3) <;> cases (e 4) <;> cases (e 5) <;> rfl
+  change ((peel1 (peel0 (G2TwoSylowSubgroup.pcWord e))).1
+    (basis8 7)).x1 = e 2
+  change (((if ((peel0 (G2TwoSylowSubgroup.pcWord e)).1
+      (basis8 2)).x1 then pc6Aut * pc2Aut else 1) *
+      peel0 (G2TwoSylowSubgroup.pcWord e)).1 (basis8 7)).x1 = e 2
+  change (((if extractBit1 (G2TwoSylowSubgroup.pcWord e) then
+      pc6Aut * pc2Aut else 1) * peel0 (G2TwoSylowSubgroup.pcWord e)).1
+      (basis8 7)).x1 = e 2
+  rw [extractBit1_pcWord]
+  split_ifs
+  · rw [automorphism_mul_apply, pc6pc2Aut_basis8_7]
+    rw [← add_assoc, ePlus_add_eMinus_eq_one]
+    rw [automorphism_map_add, (peel0 (G2TwoSylowSubgroup.pcWord e)).2.1,
+      automorphism_map_add, automorphism_map_add]
+    rw [peel0_apply_basis8_4, peel0_apply_basis8_6]
+    simp [pcWord_apply, pcWordFun_x1_basis8_4,
+      pcWordFun_x1_basis8_6, peel0_pcWord_basis8_7_x1,
+      add, add2, one]
+  · rw [automorphism_mul_apply]
+    exact peel0_pcWord_basis8_7_x1 e
 
 theorem extractAllBits_pcWord (e : PCWordExp) :
     extractAllBits (G2TwoSylowSubgroup.pcWord e) = e := by

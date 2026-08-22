@@ -1,6 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
@@ -342,6 +343,28 @@ theorem wilmotAlpha_orthogonality (h : sign = 1 ∨ sign = -1) :
 /-- The real subspace of $\mathfrak{so}(7)$ spanned by the 14 Bryant-Wilmot generators. -/
 def wilmotG2Submodule : Submodule ℝ (Matrix (Fin 7) (Fin 7) ℝ) :=
   Submodule.span ℝ (Set.range bryantGen)
+
+/-- The associative matrix commutator used for the ambient Lie algebra. -/
+def matrixLieBracket
+    (M N : Matrix (Fin 7) (Fin 7) ℝ) : Matrix (Fin 7) (Fin 7) ℝ :=
+  M * N - N * M
+
+/-- The commutator of skew matrices is skew. -/
+theorem matrixLieBracket_skew
+    {M N : Matrix (Fin 7) (Fin 7) ℝ}
+    (hM : Mᵀ = -M)
+    (hN : Nᵀ = -N) :
+    (matrixLieBracket M N)ᵀ = -matrixLieBracket M N := by
+  simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
+  rw [hM, hN]
+  simp [sub_eq_add_neg]
+
+/-- The Bryant span has the expected fourteen-dimensional real dimension. -/
+theorem wilmotG2Submodule_finrank :
+    Module.finrank ℝ wilmotG2Submodule = 14 := by
+  change Module.finrank ℝ (Submodule.span ℝ (Set.range bryantGen)) = 14
+  rw [finrank_span_eq_card bryantGen_linearIndependent]
+  rfl
 
 /-- Dimension count of the Bryant-Wilmot generators. -/
 theorem wilmot_generator_count :

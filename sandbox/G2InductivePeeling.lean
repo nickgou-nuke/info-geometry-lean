@@ -13,7 +13,7 @@ over arbitrary generator lists `L : List (Fin 6)` without finite coordinate enum
   2. Simple root peeling: Prepending the simple root `r` yields
      `s * wordProd (r :: L_comp) * s ∈ B s B` via the rank-1 Levi identity.
   3. Prepending complement letters `k ≠ r` preserves `B ∪ B s B` by left absorption.
-/
+-/
 
 variable {G : Type*} [Group G]
 
@@ -33,9 +33,7 @@ theorem wordProd_nil (e : Fin 6 → G) :
 
 @[simp]
 theorem wordProd_cons (e : Fin 6 → G) (k : Fin 6) (L : List (Fin 6)) :
-    wordProd e (k :: L) = e k * wordProd e L := by
-  dsimp [wordProd]
-  rw [List.map_cons, List.prod_cons]
+    wordProd e (k :: L) = e k * wordProd e L := rfl
 
 /-- Membership in the big Bruhat cell `B s B`. -/
 def InCellBsB (B : Subgroup G) (s x : G) : Prop :=
@@ -67,12 +65,9 @@ and the conjugate of the tail:
 theorem conj_wordProd_cons (s : G) (hs : s * s = 1)
     (e : Fin 6 → G) (k : Fin 6) (L : List (Fin 6)) :
     s * wordProd e (k :: L) * s = (s * e k * s) * (s * wordProd e L * s) := by
-  rw [wordProd_cons]
-  calc
-    s * (e k * wordProd e L) * s
-      = s * e k * (1 * (wordProd e L * s)) := by rw [one_mul, mul_assoc, mul_assoc]
-    _ = s * e k * ((s * s) * (wordProd e L * s)) := by rw [hs]
-    _ = (s * e k * s) * (s * wordProd e L * s) := by simp only [mul_assoc]
+  group
+  rw [show s * wordProd e L * s = s * ((s * s) * (wordProd e L)) * s from by
+        rw [mul_assoc, ← mul_assoc s s, hs]"]
 
 /-! =========================================================================
     3. Structural Induction on Root Complement Words
@@ -90,11 +85,11 @@ theorem comp_word_conj_mem (B : Subgroup G) (s : G) (hs : s * s = 1)
     s * wordProd e L * s ∈ B := by
   induction L with
   | nil =>
-    dsimp [wordProd]
-    calc
-      s * 1 * s = s * s := by rw [mul_one]
-      _ = 1 := hs
-      _ ∈ B := B.one_mem
+    have : s * wordProd e [] * s = 1 := by
+      dsimp [wordProd]
+      rw [mul_one, hs]
+    rw [this]
+    exact B.one_mem
   | cons k ks ih =>
     rw [conj_wordProd_cons s hs e k ks]
     have hk_ne : k ≠ r := hL k (List.Mem.head ks)

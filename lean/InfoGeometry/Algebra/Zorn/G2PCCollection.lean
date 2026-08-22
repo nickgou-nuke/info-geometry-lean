@@ -2,6 +2,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.List.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
 
 /-!
 # Normal Word Collection Algorithm for Polycyclic U₆ ⊂ G₂(2)
@@ -10,8 +11,13 @@ Formalizes the normal word collection algorithm transforming any uncollected wor
 `w : List (Fin 6)` over unipotent generators `e₀, ..., e₅` into canonical,
 strictly sorted polycyclic (PC) normal form `e₀^v₀ e₁^v₁ ... e₅^v₅` with `v ∈ 𝔽₂⁶`.
 
+Transition table (CAS-certified against the concrete 8×8 Zorn carrier,
+see `scratch/verify_pc_commutator_table.py` and `scratch/true_mulgen_table.json`;
+orders of the generators are `(2, 4, 4, 2, 2, 2)` with `e₁² = e₂² = e₅`):
+
 Proves:
-  1. Base involution identity: `mulGen g (mulGen g zeroExp) = zeroExp` (from `eᵢ² = 1`).
+  1. Base insertion: `mulGen g zeroExp = basisExp g`, and the order-4 law
+     `mulGen g^[4] v = v` for `g ∈ {1, 2}` with the central square correction.
   2. Normal form idempotence: `collectWord (toNormalWord v) = v`.
   3. Canonical sortedness: `IsSortedPC (toNormalWord v)`.
   4. Normalization idempotence: `normalizeWord (normalizeWord w) = normalizeWord w`.
@@ -81,67 +87,96 @@ instance (w : Word) : Decidable (IsSortedPC w) := by
 
 /--
 Left-multiplication action `mulGen(g, v) = e_g * (e₀^{v₀} ... e₅^{v₅})`
-derived by commuting `e_g` through lower generators via the G₂(2) PC relations:
-  - `[e₀, e₁] = e₂ e₃ e₄ e₅`
-  - `[e₀, e₂] = e₃ e₅`
-  - `[e₀, e₃] = e₄`
+derived by commuting `e_g` through lower generators via the CAS-certified
+G₂(2) PC relations (see `scratch/verify_pc_commutator_table.py`):
+  - `[e₀, e₁] = e₂ e₃ e₅`
+  - `[e₀, e₂] = e₅`
+  - `[e₀, e₄] = e₃`
+  - `[e₁, e₃] = e₅`
   - `[e₁, e₄] = e₅`
-  - `[e₂, e₃] = e₅`
+  - `[e₂, e₄] = e₅`
 -/
 def mulGen (g : Gen) (v : PCExp) : PCExp :=
   match g with
   | 0 => fun k => match k with
     | 0 => v 0 + 1
-    | 1 => v 1
-    | 2 => v 2
-    | 3 => v 3
-    | 4 => v 4
-    | 5 => v 5
+    | _ => v k
   | 1 => fun k => match k with
     | 0 => v 0
     | 1 => v 1 + 1
-    | 2 => v 2 + v 0
-    | 3 => v 3 + v 0 * v 2
-    | 4 => v 4 + v 0 * v 3 + v 0 * v 2
-    | 5 => v 5 + v 0 * v 4 + v 0 * v 1 + v 0 * v 2 * v 3
+    | 2 => v 0 + v 2
+    | 3 => v 0 + v 3
+    | 4 => v 4
+    | 5 => v 1 + v 5 + v 0 * v 1 + v 0 * v 2
   | 2 => fun k => match k with
     | 0 => v 0
     | 1 => v 1
     | 2 => v 2 + 1
-    | 3 => v 3 + v 0
-    | 4 => v 4
-    | 5 => v 5 + v 0 * v 2 + v 0 * v 3
+    | _ => if k = 5 then v 0 + v 2 + v 5 else v k
   | 3 => fun k => match k with
     | 0 => v 0
     | 1 => v 1
     | 2 => v 2
     | 3 => v 3 + 1
-    | 4 => v 4 + v 0
-    | 5 => v 5 + v 2 + v 0 * v 1
+    | _ => if k = 5 then v 1 + v 5 else v k
   | 4 => fun k => match k with
     | 0 => v 0
     | 1 => v 1
     | 2 => v 2
-    | 3 => v 3
+    | 3 => v 0 + v 3
     | 4 => v 4 + 1
-    | 5 => v 5 + v 1
+    | 5 => v 1 + v 2 + v 5 + v 0 * v 1
   | 5 => fun k => match k with
-    | 0 => v 0
-    | 1 => v 1
-    | 2 => v 2
-    | 3 => v 3
-    | 4 => v 4
     | 5 => v 5 + 1
+    | _ => v k
 
-/--
-THEOREM (Base Involution Law):
-Left multiplication by any generator `e_g` on the identity element is involutive:
-  `mulGen g (mulGen g zeroExp) = zeroExp` (since `e_g² = 1` in `U₆(𝔽₂)`).
--/
-theorem mulGen_involutive_zero (g : Gen) :
-    mulGen g (mulGen g zeroExp) = zeroExp := by
+/-- In `ZMod 2`, every element is its own additive inverse. -/
+theorem zmod2_add_self (x : ZMod 2) : x + x = 0 := by
+  revert x
+  decide
+
+/-- Insertion at the identity: left-multiplying by `e_g` on the identity
+produces exactly the standard basis exponent vector. -/
+theorem mulGen_zero_left (g : Gen) :
+    mulGen g zeroExp = basisExp g := by
   funext k
   fin_cases g <;> fin_cases k <;> rfl
+
+/-- The generator `e₁` has order 4: four-fold left multiplication is the
+identity transformation on every coordinate. -/
+theorem mulGen_1_iterate_four (v : PCExp) :
+    mulGen 1 (mulGen 1 (mulGen 1 (mulGen 1 v))) = v := by
+  funext k
+  have hval : ∀ x : ZMod 2, x = 0 ∨ x = 1 := by decide
+  rcases hval (v 0) with h0 | h0 <;> rcases hval (v 1) with h1 | h1 <;>
+    rcases hval (v 2) with h2 | h2 <;> rcases hval (v 3) with h3 | h3 <;>
+    rcases hval (v 4) with h4 | h4 <;> rcases hval (v 5) with h5 | h5 <;>
+    fin_cases k <;>
+      simp [mulGen, h0, h1, h2, h3, h4, h5, zmod2_add_self]
+
+/-- The generator `e₂` has order 4: four-fold left multiplication is the
+identity transformation on every coordinate. -/
+theorem mulGen_2_iterate_four (v : PCExp) :
+    mulGen 2 (mulGen 2 (mulGen 2 (mulGen 2 v))) = v := by
+  funext k
+  have hval : ∀ x : ZMod 2, x = 0 ∨ x = 1 := by decide
+  rcases hval (v 0) with h0 | h0 <;> rcases hval (v 1) with h1 | h1 <;>
+    rcases hval (v 2) with h2 | h2 <;> rcases hval (v 3) with h3 | h3 <;>
+    rcases hval (v 4) with h4 | h4 <;> rcases hval (v 5) with h5 | h5 <;>
+    fin_cases k <;>
+      simp [mulGen, h0, h1, h2, h3, h4, h5, zmod2_add_self]
+
+set_option maxHeartbeats 1000000 in
+/-- The central square law for `e₁`: squaring through `e₁` flips the maximal
+root generator `e₅` and fixes all other coordinates. -/
+theorem mulGen_1_square_center (v : PCExp) :
+    ∀ k, mulGen 1 (mulGen 1 v) k = if k = 5 then v 5 + 1 else v k := by
+  intro k
+  have hval : ∀ x : ZMod 2, x = 0 ∨ x = 1 := by decide
+  rcases hval (v 0) with h0 | h0 <;> rcases hval (v 1) with h1 | h1 <;>
+    rcases hval (v 2) with h2 | h2 <;> rcases hval (v 3) with h3 | h3 <;>
+    rcases hval (v 4) with h4 | h4 <;> rcases hval (v 5) with h5 | h5 <;>
+    fin_cases k <;> simp [mulGen, h0, h1, h2, h3, h4, h5] <;> rfl
 
 /-! =========================================================================
     4. Normal Word Collection Algorithm
@@ -243,7 +278,7 @@ theorem normalizeWord_idempotent (w : Word) :
 /--
 THEOREM (Derived Commutator Subgroup Preservation):
 Collecting any commutator word `[eᵢ, eⱼ, eᵢ, eⱼ]` vanishes on simple root
-components `v₀` and `v₁`, remaining strictly within `[U, U] = span(e₂, e₃, e₄, e₅)`.
+components `v₀` and `v₁`, remaining strictly within `[U, U] ⊆ span(e₂, e₃, e₄, e₅)`.
 -/
 theorem collectWord_commutator_derived (i j : Gen) :
     (collectWord [i, j, i, j]) 0 = 0 ∧ (collectWord [i, j, i, j]) 1 = 0 := by

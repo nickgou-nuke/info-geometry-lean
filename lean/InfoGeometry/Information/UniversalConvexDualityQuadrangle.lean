@@ -129,15 +129,6 @@ theorem dlog_inv
   rw [mul_inv_cancel, h_one] at h
   exact eq_neg_of_add_eq_zero_right h.symm
 
-/-- 🏆 THEOREM: Radon–Nikodym 3-cocycle chain rule:
-    dlog_D(ρ₁₃) = dlog_D(ρ₁₂) + dlog_D(ρ₂₃) -/
-theorem radon_nikodym_cocycle_dlog
-    (D : A → A)
-    (hD : IsDerivation D)
-    (rho_12 rho_23 : Aˣ) :
-    dlog D (rho_12 * rho_23) = dlog D rho_12 + dlog D rho_23 :=
-  dlog_mul D hD rho_12 rho_23
-
 /-!
 =============================================================================
 PILLAR 2: The Madelung Amplitude & Fisher–Rao Riemannian Isometry

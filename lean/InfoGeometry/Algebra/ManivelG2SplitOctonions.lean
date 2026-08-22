@@ -15,22 +15,25 @@ composition algebras, zero divisors, null-planes, vector cross products, associa
   HAL Id: hal-05212903, May 2025.
 
 ### Key Theorems Formalized:
-1. **Composition Algebras & Involution** (Manivel Def. 2.3.1, 2.3.2):
+1. **Composition Algebras & Alternativity** (Manivel Def. 2.3.1, 2.3.2):
    Norm multiplicativity $q(u v) = q(u) q(v)$, real/imaginary splitting, conjugation
-   $\bar{x} = 2 \mathrm{Re}(x) 1 - x$, and norm recovery $x \bar{x} = \bar{x} x = q(x) 1$.
-2. **Left/Right Multiplication and Isotropic Range / Kernels** (Manivel Lemma 2.3.9, Thm 2.3.10):
-   - $L_x(y) = x y$ maps $A$ into the isotropic cone whenever $x$ is isotropic ($q(x) = 0$).
-   - For every isotropic element $x$, $\bar{x} \in \ker L_x$ with $x \bar{x} = 0$.
-   - If $x$ is purely imaginary and isotropic, then $x^2 = 0$ (nilpotent of order 2).
-3. **Zero Divisors in Composition Algebras**:
-   In any integral domain, if $x y = 0$, then $q(x) = 0$ or $q(y) = 0$. If $q(y) \neq 0$, then $q(x) = 0$.
+   $\bar{x} = 2 \mathrm{Re}(x) 1 - x$, norm recovery $x \bar{x} = \bar{x} x = q(x) 1$,
+   and alternative cancellations $(x y) \bar{y} = q(y) x$, $\bar{x} (x y) = q(x) y$.
+2. **Zero Divisors are Both Isotropic** (Manivel Lemma 2.3.9):
+   Over any field $K$, if $x \cdot y = 0$ with $x \neq 0$ and $y \neq 0$, then
+   both $x$ and $y$ are isotropic: $q(x) = 0$ and $q(y) = 0$.
+3. **Totally Isotropic Left-Multiplication Kernel and Range** (Manivel Thm 2.3.10):
+   For any isotropic element $x$ ($q(x) = 0$):
+   - The image $x A = \operatorname{im}(L_x)$ is completely isotropic: $\forall z \in x A, q(z) = 0$
+     and $B(u, v) = 0$ for all $u, v \in x A$.
+   - The kernel $\ker(L_x)$ is completely isotropic: $\forall w \in \ker(L_x), q(w) = 0$
+     and $B(u, v) = 0$ for all $u, v \in \ker(L_x)$.
 4. **Null-Planes Structure** (Manivel Def. 2.3.12, Lemma 2.3.13):
    Every null-plane $N \subset \mathbb{O}_\mathbb{C}$ (subspace where $x y = 0$ for all $x, y \in N$)
    is isotropic ($q|_N = 0$) and purely imaginary ($\mathrm{Re}|_N = 0$).
 5. **Vector Cross Product Skew-Symmetry from Antiautomorphism** (Manivel Def. 2.3.5, Thm 2.3.6):
    Conjugation antiautomorphism $\overline{u v} = \bar{v} \bar{u}$ unconditionally proves
-   anticommutativity of the imaginary product and cross product $u \times v = - (v \times u)$
-   for all purely imaginary elements.
+   anticommutativity of the cross product $u \times v = - (v \times u)$ for all purely imaginary elements.
 
 All proofs are 100% native Lean 4 / Mathlib with 0 sorrys and 0 custom axioms.
 -/
@@ -53,6 +56,8 @@ structure CompositionAlgebra (R : Type*) (A : Type*) [CommRing R] [AddCommGroup 
   conj : A → A
   mul_one : ∀ x, mul x one = x
   one_mul : ∀ x, mul one x = x
+  mul_zero : ∀ x, mul x 0 = 0
+  zero_mul : ∀ x, mul 0 x = 0
   mul_add : ∀ x y z, mul x (y + z) = mul x y + mul x z
   add_mul : ∀ x y z, mul (x + y) z = mul x z + mul y z
   mul_smul : ∀ (c : R) x y, mul x (c • y) = c • mul x y
@@ -60,12 +65,16 @@ structure CompositionAlgebra (R : Type*) (A : Type*) [CommRing R] [AddCommGroup 
   q_mul : ∀ x y, q (mul x y) = q x * q y
   q_one : q one = 1
   q_zero : q 0 = 0
+  re_add : ∀ x y, re (x + y) = re x + re y
+  re_smul : ∀ (c : R) x, re (c • x) = c * re x
+  re_one : re one = 1
   conj_def : ∀ x, conj x = (2 * re x) • one - x
   conj_conj : ∀ x, conj (conj x) = x
   conj_mul_anti : ∀ x y, conj (mul x y) = mul (conj y) (conj x)
   mul_conj : ∀ x, mul x (conj x) = (q x) • one
   conj_mul : ∀ x, mul (conj x) x = (q x) • one
-  re_one : re one = 1
+  mul_mul_conj_right : ∀ x y, mul (mul x y) (conj y) = (q y) • x
+  conj_mul_mul_left : ∀ x y, mul (conj x) (mul x y) = (q x) • y
 
 namespace CompositionAlgebra
 
@@ -83,9 +92,18 @@ def isPurelyImaginary (CA : CompositionAlgebra R A) (x : A) : Prop :=
 def isIsotropic (CA : CompositionAlgebra R A) (x : A) : Prop :=
   CA.q x = 0
 
+/-- Polar symmetric bilinear form associated with $q$: $B(x, y) = q(x+y) - q(x) - q(y)$. -/
+def polarB (CA : CompositionAlgebra R A) (x y : A) : R :=
+  CA.q (x + y) - CA.q x - CA.q y
+
 /-- Left multiplication operator $L_x : A \to A$. -/
 def mulLeft (CA : CompositionAlgebra R A) (x : A) : A → A :=
   fun y => CA.mul x y
+
+def mulLeftLinear (CA : CompositionAlgebra R A) (x : A) : A →ₗ[R] A where
+  toFun := CA.mulLeft x
+  map_add' y z := CA.mul_add x y z
+  map_smul' c y := CA.mul_smul c x y
 
 /-- Right multiplication operator $R_x : A \to A$. -/
 def mulRight (CA : CompositionAlgebra R A) (x : A) : A → A :=
@@ -176,33 +194,99 @@ theorem nilpotent_is_isotropic_domain
   exact mul_self_eq_zero.mp hq.symm
 
 /-- 🏆 THEOREM 8 (Manivel Lemma 2.3.9):
-    In any field $K$, if $x \cdot y = 0$ with $q(y) \neq 0$, then $q(x) = 0$. -/
-theorem zero_divisor_left_isotropic
+    In any field $K$, if $x \cdot y = 0$ with $x \neq 0$, then $q(y) = 0$. -/
+theorem zero_divisor_right_isotropic_of_nonzero_left
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
     (CA : CompositionAlgebra K V) (x y : V)
     (h_prod : CA.mul x y = 0)
-    (hy_nonzero : CA.q y ≠ 0) :
-    CA.isIsotropic x := by
-  have hq : CA.q (CA.mul x y) = CA.q x * CA.q y := CA.q_mul x y
-  rw [h_prod, CA.q_zero] at hq
+    (hx_ne : x ≠ 0) :
+    CA.isIsotropic y := by
+  have hcancel := CA.mul_mul_conj_right x y
+  rw [h_prod, CA.zero_mul] at hcancel
   dsimp [CompositionAlgebra.isIsotropic]
-  exact (mul_eq_zero.mp hq.symm).resolve_right hy_nonzero
+  have h_smul := (smul_eq_zero.mp hcancel.symm).resolve_right hx_ne
+  exact h_smul
 
 /-- 🏆 THEOREM 9 (Manivel Lemma 2.3.9):
-    In any field $K$, if $x \cdot y = 0$ with $q(x) \neq 0$, then $q(y) = 0$. -/
-theorem zero_divisor_right_isotropic
+    In any field $K$, if $x \cdot y = 0$ with $y \neq 0$, then $q(x) = 0$. -/
+theorem zero_divisor_left_isotropic_of_nonzero_right
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
     (CA : CompositionAlgebra K V) (x y : V)
     (h_prod : CA.mul x y = 0)
-    (hx_nonzero : CA.q x ≠ 0) :
-    CA.isIsotropic y := by
-  have hq : CA.q (CA.mul x y) = CA.q x * CA.q y := CA.q_mul x y
-  rw [h_prod, CA.q_zero] at hq
+    (hy_ne : y ≠ 0) :
+    CA.isIsotropic x := by
+  have hcancel := CA.conj_mul_mul_left x y
+  rw [h_prod, CA.mul_zero] at hcancel
   dsimp [CompositionAlgebra.isIsotropic]
-  exact (mul_eq_zero.mp hq.symm).resolve_left hx_nonzero
+  have h_smul := (smul_eq_zero.mp hcancel.symm).resolve_right hy_ne
+  exact h_smul
+
+/-- 🏆 THEOREM 10 (Zero Divisors are Both Isotropic, Manivel Lemma 2.3.9):
+    In any field $K$, if $x \cdot y = 0$ with $x \neq 0$ and $y \neq 0$,
+    then both $x$ and $y$ are isotropic. -/
+theorem zero_divisor_both_isotropic
+    {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+    (CA : CompositionAlgebra K V) (x y : V)
+    (h_prod : CA.mul x y = 0)
+    (hx_ne : x ≠ 0)
+    (hy_ne : y ≠ 0) :
+    CA.isIsotropic x ∧ CA.isIsotropic y := by
+  exact ⟨zero_divisor_left_isotropic_of_nonzero_right CA x y h_prod hy_ne,
+         zero_divisor_right_isotropic_of_nonzero_left CA x y h_prod hx_ne⟩
+
+theorem ker_mulLeft_isotropic
+    {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+    (CA : CompositionAlgebra K V) (x : V) (hx_ne : x ≠ 0)
+    (y : V) (hy : y ∈ LinearMap.ker (mulLeftLinear CA x)) :
+    CA.isIsotropic y := by
+  by_cases hy_zero : y = 0
+  · simp [hy_zero, CompositionAlgebra.isIsotropic, CA.q_zero]
+  · apply zero_divisor_right_isotropic_of_nonzero_left CA x y
+      (show CA.mul x y = 0 from hy) hx_ne
+
+theorem ker_mulLeft_polarB_zero
+    {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
+    (CA : CompositionAlgebra K V) (x : V) (hx_ne : x ≠ 0)
+    (u v : V)
+    (hu : u ∈ LinearMap.ker (mulLeftLinear CA x))
+    (hv : v ∈ LinearMap.ker (mulLeftLinear CA x)) :
+    CA.polarB u v = 0 := by
+  have huq := ker_mulLeft_isotropic CA x hx_ne u hu
+  have hvq := ker_mulLeft_isotropic CA x hx_ne v hv
+  have huv : u + v ∈ LinearMap.ker (mulLeftLinear CA x) := by
+    change CA.mul x (u + v) = 0
+    rw [CA.mul_add, hu, hv, add_zero]
+  have huvq := ker_mulLeft_isotropic CA x hx_ne (u + v) huv
+  dsimp [CompositionAlgebra.polarB]
+  rw [huvq, huq, hvq]
+  ring
 
 /-! =========================================================================
-    3. Null-Planes in Complex / Split Octonions (Manivel Definition 2.3.12 & Lemma 2.3.13)
+    3. Totally Isotropic Subspaces and Bilinear Form (Manivel Section 2.3)
+    ========================================================================= -/
+
+/-- Polar bilinear form symmetry. -/
+theorem polarB_symm (CA : CompositionAlgebra R A) (x y : A) :
+    CA.polarB x y = CA.polarB y x := by
+  dsimp [CompositionAlgebra.polarB]
+  rw [add_comm x y]
+  ring
+
+/-- 🏆 THEOREM 11 (Image $x A$ is Totally Isotropic):
+    For any isotropic element $x$, the polar bilinear form vanishes on the entire image $\operatorname{im}(L_x)$. -/
+theorem range_leftMul_polarB_zero
+    (CA : CompositionAlgebra R A) (x : A)
+    (hx : CA.isIsotropic x) (u v : A) :
+    CA.polarB (CA.mul x u) (CA.mul x v) = 0 := by
+  dsimp [CompositionAlgebra.polarB]
+  rw [← CA.mul_add]
+  rw [CA.q_mul, CA.q_mul, CA.q_mul]
+  dsimp [CompositionAlgebra.isIsotropic] at hx
+  rw [hx, zero_mul, zero_mul, zero_mul]
+  ring
+
+/-! =========================================================================
+    4. Null-Planes in Complex / Split Octonions (Manivel Definition 2.3.12 & Lemma 2.3.13)
     ========================================================================= -/
 
 /-- A subspace $N \subseteq A$ is a **null-plane** (Manivel Definition 2.3.12)
@@ -210,7 +294,7 @@ theorem zero_divisor_right_isotropic
 def isNullPlane (CA : CompositionAlgebra R A) (N : Set A) : Prop :=
   ∀ x ∈ N, ∀ y ∈ N, CA.mul x y = 0
 
-/-- 🏆 THEOREM 10 (Manivel Lemma 2.3.13):
+/-- 🏆 THEOREM 12 (Manivel Lemma 2.3.13):
     Every null-plane in a composition algebra over a field is isotropic ($q|_N = 0$). -/
 theorem null_plane_is_isotropic
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
@@ -220,7 +304,7 @@ theorem null_plane_is_isotropic
   have h_nil : CA.mul x x = 0 := hN x hx x hx
   exact nilpotent_is_isotropic_domain CA x h_nil
 
-/-- 🏆 THEOREM 11 (Manivel Lemma 2.3.13):
+/-- 🏆 THEOREM 13 (Manivel Lemma 2.3.13):
     Over a field of characteristic $\neq 2$, if $x$ satisfies $(2 \mathrm{Re}(x)) \cdot x = 0$
     and $x \neq 0$, then $x$ is purely imaginary: $\mathrm{Re}(x) = 0$. -/
 theorem purely_imaginary_of_two_re_smul_zero
@@ -241,14 +325,14 @@ theorem purely_imaginary_of_two_re_smul_zero
   exact (mul_eq_zero.mp h_coeff).resolve_left h_char
 
 /-! =========================================================================
-    4. Vector Cross Product & Anticommutativity from Conjugation Antiautomorphism
+    5. Vector Cross Product & Anticommutativity from Conjugation Antiautomorphism
     ========================================================================= -/
 
 /-- The vector cross product on purely imaginary octonions: $u \times v = \mathrm{Im}(u v)$. -/
 def crossProduct (CA : CompositionAlgebra R A) (u v : A) : A :=
   CA.imPart (CA.mul u v)
 
-/-- 🏆 THEOREM 12 (Manivel Section 2.3 & 2.5):
+/-- 🏆 THEOREM 14 (Manivel Section 2.3 & 2.5):
     Conjugation of the product of two purely imaginary elements is their reversed product:
     $\overline{u v} = v u$. -/
 theorem conj_mul_purely_imaginary

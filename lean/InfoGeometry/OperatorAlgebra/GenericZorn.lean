@@ -52,6 +52,13 @@ def norm (x : ZornSplitOctonion R) : R :=
 def conjugate (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨x.b, x.a, -x.x0, -x.x1, -x.x2, -x.y0, -x.y1, -x.y2⟩
 
+@[simp] theorem conjugate_zero : conjugate (zero R) = zero R := by
+  ext <;> simp [conjugate, zero]
+
+theorem scalar_injective : Function.Injective (scalar : R → ZornSplitOctonion R) := by
+  intro r s h
+  exact congrArg ZornSplitOctonion.a h
+
 theorem norm_mul (x y : ZornSplitOctonion R) :
     norm (mul x y) = norm x * norm y := by
   cases x with
@@ -89,6 +96,9 @@ theorem norm_conjugate (x : ZornSplitOctonion R) :
   cases x
   simp [norm, conjugate]
   ring
+
+theorem norm_scalar (r : R) : norm (scalar r) = r * r := by
+  simp [norm, scalar]
 
 def integralEmbedding (x : SplitOct) : ZornSplitOctonion ℚ :=
   ⟨x.a, x.b, x.x0, x.x1, x.x2, x.y0, x.y1, x.y2⟩

@@ -54,13 +54,14 @@ theorem inCell_refl (B : Subgroup G) (w : G) : InCell B w w :=
 theorem inCell_mul_left_borel (B : Subgroup G) {x w : G} (b : G) (hb : b ∈ B)
     (hx : InCell B x w) : InCell B (b * x) w := by
   obtain ⟨b₁, hb₁, b₂, hb₂, rfl⟩ := hx
-  exact ⟨b * b₁, B.mul_mem hb hb₁, b₂, hb₂, by rw [mul_assoc, mul_assoc]⟩
+  exact ⟨b * b₁, B.mul_mem hb hb₁, b₂, hb₂, by simp [mul_assoc]⟩
 
 /-- Right Borel shift invariance: `b ∈ B ⟹ (B w B) * b ⊆ B w B`. -/
 theorem inCell_mul_right_borel (B : Subgroup G) {x w : G} (b : G) (hb : b ∈ B)
     (hx : InCell B x w) : InCell B (x * b) w := by
   obtain ⟨b₁, hb₁, b₂, hb₂, rfl⟩ := hx
-  exact ⟨b₁, hb₁, b₂ * b, B.mul_mem hb₂ hb, by rw [← mul_assoc, ← mul_assoc b₁ w b₂]⟩
+  refine ⟨b₁, hb₁, b₂ * b, B.mul_mem hb₂ hb, ?_⟩
+  simp only [mul_assoc]
 
 /-! =========================================================================
     2. The Local Peeling-Off Axiom (BN2)
@@ -77,15 +78,6 @@ def HasPeelingStep (B : Subgroup G) (S : Set G) : Prop :=
 /-! =========================================================================
     3. Structural Peeling-Off Inductive Transport
     ========================================================================= -/
-
-/-- Target cell candidate set under word transport. -/
-def WordTargets (G : Type*) : Type := Set G
-
-/--
-Inductive step: Peeling off a simple reflection `s` across an existing set of target cells.
--/
-def peelTargetsStep (S : Set G) (s : G) (targets : Set G) : Set G :=
-  if s ∈ S then targets ∪ (fun w => s * w) '' targets else targets
 
 /--
 THEOREM (Single Reflection Peeling Lemma):
@@ -115,8 +107,8 @@ theorem bruhat_word_peel_transport (B : Subgroup G) (S : Set G)
     simp only [List.prod_nil, one_mul]
     exact ⟨w₀, hx⟩
   | cons s ss ih =>
-    have hs : s ∈ S := hL s (List.mem_cons_self s ss)
-    have hss : ∀ s' ∈ ss, s' ∈ S := fun s' hs' => hL s' (List.mem_cons_of_mem s hs')
+    have hs : s ∈ S := hL s (List.mem_cons.2 (Or.inl rfl))
+    have hss : ∀ s' ∈ ss, s' ∈ S := fun s' hs' => hL s' (List.mem_cons.2 (Or.inr hs'))
     -- 1. Induction hypothesis peels off the tail `ss`
     obtain ⟨w_tail, hw_tail⟩ := ih hss w₀ x hx
     -- 2. Peeling lemma strips the head reflection `s`
@@ -149,8 +141,8 @@ theorem double_coset_mul_peeling (B : Subgroup G) (S : Set G)
   refine ⟨w', ?_⟩
   calc
     (b₁ * L₁.prod * b₂) * x₂
-      = b₁ * (L₁.prod * (b₂ * x₂)) := by rw [mul_assoc, mul_assoc b₁ L₁.prod (b₂ * x₂)]
-    _ = _ := by exact rfl
+      = b₁ * L₁.prod * (b₂ * x₂) := by simp only [mul_assoc]
+    _ = b₁ * (L₁.prod * (b₂ * x₂)) := by simp only [mul_assoc]
   exact h_final
 
 end InfoGeometry.Algebra.Zorn.BruhatPeeling

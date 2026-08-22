@@ -7,8 +7,8 @@ map; it does not enumerate Boolean assignments or search for witnesses.
 """
 import sympy as sp
 
-from verify_flag_filtration_inverse_exact import (I, constants, e, mm, factor,
-                                                   recover, red)
+from verify_pc_collector_symbolic import (I, gens as constants, e, mm, factor,
+                                          recover, red)
 
 # swap01 on the carrier basis (1-based supports from the GAP owner).
 s = [[int(j == i) for j in range(8)] for i in range(8)]
@@ -29,4 +29,6 @@ residual = [(i, j, red(conjugate[i][j] - I[i][j]))
             for i in range(8) for j in range(8)
             if red(conjugate[i][j] - I[i][j]) != 0]
 print("BN2_IDENTITY_RESIDUAL_ENTRIES=", len(residual))
+for i, j, value in residual:
+    print(f"residual[{i},{j}]={sp.Poly(value, *e, modulus=2).as_expr()}")
 print("BN2_SYMBOLIC_CONJUGATE_STAGE=PASS")

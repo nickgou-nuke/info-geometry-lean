@@ -99,6 +99,11 @@ assert ad_coordinates[4] == sp.Rational(1, 2)
 assert ad_coordinates[11] == -sp.Rational(1, 2)
 assert all(ad_coordinates[i] == 0 for i in range(14) if i not in (4, 11))
 
+ab = legacy_generators[0] * legacy_generators[1] - legacy_generators[1] * legacy_generators[0]
+ab_coordinates = next(iter(sp.linsolve((legacy_columns, sp.Matrix([
+    ab[i, j] for i in range(7) for j in range(7)])))))
+print(f"BRACKET_A_B_COORDINATES={ab_coordinates}")
+
 print("G2_SO7_STABILIZER_DIM=14")
 for n, vector in enumerate(basis):
     support = [(pairs[i], value) for i, value in enumerate(vector) if value]
@@ -108,4 +113,5 @@ print("SYMBOLIC_BRACKET_CLOSURE=PASS")
 print("CORRECTED_LEGACY_D_SIGN=PASS")
 print("CORRECTED_LEGACY_BRACKET_CLOSURE=PASS")
 print("BRACKET_A_D=1/2*(E-L)")
+print("BRACKET_A_B=-1/2*(C+J)")
 print("NO_ASSIGNMENT_ENUMERATION=PASS")

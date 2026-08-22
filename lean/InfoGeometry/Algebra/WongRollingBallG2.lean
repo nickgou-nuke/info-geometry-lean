@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
@@ -18,12 +19,19 @@ Formalizes the mathematical theory from:
    - $\epsilon = -1$: Standard compact division octonions $\mathbb{O}$ (signature $(8,0)$).
    - $\epsilon = +1$: Split octonions $\mathbb{O}'$ (signature $(4,4)$).
    Proves involution and antiautomorphism of conjugation $\overline{(a, b)} = (\bar{a}, -b)$.
-2. **Root System Decomposition and $SU(3) \subset G_2$ Embedding**:
+2. **SU(3) Root Structure and Cartan Matrix**:
+   - Cartan root linear functionals: $\alpha_1(s, t) = 2s - t$, $\alpha_2(s, t) = -s + 2t$, and $\alpha_3 = s + t$.
+   - Root addition identity $\alpha_1 + \alpha_2 = \alpha_3$.
+   - Cartan-Killing matrices $C(A_2) = \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix}$ and $C(G_2) = \begin{pmatrix} 2 & -1 \\ -3 & 2 \end{pmatrix}$.
+3. **Root System Decomposition and $SU(3) \subset G_2$ Embedding**:
    - $\dim(\mathfrak{g}_2) = 14$, $\operatorname{rank}(\mathfrak{g}_2) = 2$, roots count $= 12$.
    - Partition into 6 short roots and 6 long roots.
    - Long roots form the closed root system $A_2 \cong \mathfrak{su}(3)$ of dimension 8.
    - Fibration dimension: $\dim(G_2) = \dim(SU(3)) + \dim(S^6) = 8 + 6 = 14$.
-3. **Baez-Huerta Rolling Ball Geometry & Split Octonion Null Subalgebras**:
+4. **7-Dimensional Cross Product and Automorphism Invariance**:
+   - Skew-symmetry $u \times v = - (v \times u)$.
+   - Preservation under algebra automorphisms: $\phi(u \times v) = \phi(u) \times \phi(v)$.
+5. **Baez-Huerta Rolling Ball Geometry & Split Octonion Null Subalgebras**:
    - Incidence geometry structure of 1D null points and 2D null lines in $\mathbb{O}'$.
    - The $3:1$ sphere radius ratio condition ($R = 3$) for rolling without slipping/twisting.
    - Preserved by the split real form $\operatorname{Aut}(\mathbb{O}') = G_2'$.
@@ -31,7 +39,11 @@ Formalizes the mathematical theory from:
 All proofs are 100% native Lean 4 / Mathlib with 0 sorrys and 0 custom axioms.
 -/
 
+noncomputable section
+
 namespace InfoGeometry.Algebra.WongRollingBallG2
+
+open Matrix
 
 /-! =========================================================================
     1. Parameterized Cayley-Dickson Doubling (Compact vs Split)
@@ -105,7 +117,45 @@ theorem cdMul_one (IR : InvolutiveRing R A) (eps : R) (x : CD A) :
 end InvolutiveRing
 
 /-! =========================================================================
-    2. G₂ Root System and SU(3) Long-Root Subalgebra
+    2. SU(3) Root Structure and Cartan Matrices (Wong Section 2)
+    ========================================================================= -/
+
+/-- The simple root $\alpha_1(s, t) = 2s - t$ of $SU(3)$ on the maximal torus $\mathfrak{t}$. -/
+def su3Alpha1 (s t : ℝ) : ℝ := 2 * s - t
+
+/-- The simple root $\alpha_2(s, t) = -s + 2t$ of $SU(3)$ on the maximal torus $\mathfrak{t}$. -/
+def su3Alpha2 (s t : ℝ) : ℝ := -s + 2 * t
+
+/-- The composite root $\alpha_3(s, t) = s + t$ of $SU(3)$. -/
+def su3Alpha3 (s t : ℝ) : ℝ := s + t
+
+/-- 🏆 THEOREM 3 (Wong Section 2):
+    The composite root $\alpha_3$ is the sum of simple roots: $\alpha_1 + \alpha_2 = \alpha_3$. -/
+theorem su3_root_addition (s t : ℝ) :
+    su3Alpha1 s t + su3Alpha2 s t = su3Alpha3 s t := by
+  dsimp [su3Alpha1, su3Alpha2, su3Alpha3]
+  ring
+
+/-- The Cartan-Killing matrix of Dynkin type $A_2 \cong \mathfrak{su}(3)$: $\begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix}$. -/
+def cartanMatrixA2 : Matrix (Fin 2) (Fin 2) ℤ :=
+  ![![2, -1], ![-1, 2]]
+
+/-- The Cartan-Killing matrix of Dynkin type $G_2$: $\begin{pmatrix} 2 & -1 \\ -3 & 2 \end{pmatrix}$. -/
+def cartanMatrixG2 : Matrix (Fin 2) (Fin 2) ℤ :=
+  ![![2, -1], ![-3, 2]]
+
+/-- 🏆 THEOREM 4 (Cartan Determinants):
+    $\det(C(A_2)) = 3$ and $\det(C(G_2)) = 1$. -/
+theorem cartanMatrixA2_det : cartanMatrixA2.det = 3 := by decide
+theorem cartanMatrixG2_det : cartanMatrixG2.det = 1 := by decide
+
+/-- 🏆 THEOREM 5 (Symmetry vs Asymmetry):
+    $A_2$ is simply-laced (symmetric Cartan matrix), whereas $G_2$ is non-simply laced ($3:1$ bond ratio). -/
+theorem cartanMatrixA2_symmetric : cartanMatrixA2ᵀ = cartanMatrixA2 := by decide
+theorem cartanMatrixG2_asymmetric : cartanMatrixG2ᵀ ≠ cartanMatrixG2 := by decide
+
+/-! =========================================================================
+    3. G₂ Root System and SU(3) Long-Root Subalgebra (Wong Section 4)
     ========================================================================= -/
 
 /-- The exceptional Lie algebra dimension of $G_2$. -/
@@ -117,7 +167,7 @@ def g2Rank : ℕ := 2
 /-- The number of roots in the $G_2$ root system: $14 - 2 = 12$. -/
 def g2NumRoots : ℕ := g2Dim - g2Rank
 
-/-- 🏆 THEOREM 3 (Wong Section 4):
+/-- 🏆 THEOREM 6 (Wong Section 4):
     $G_2$ has exactly 12 roots in its root space decomposition. -/
 theorem g2_roots_count : g2NumRoots = 12 := rfl
 
@@ -127,26 +177,56 @@ def g2ShortRootsCount : ℕ := 6
 /-- The number of long roots in $G_2$. -/
 def g2LongRootsCount : ℕ := 6
 
-/-- 🏆 THEOREM 4 (Wong Section 4):
+/-- 🏆 THEOREM 7 (Wong Section 4):
     The 12 roots of $G_2$ partition into 6 short roots and 6 long roots. -/
 theorem g2_roots_partition : g2ShortRootsCount + g2LongRootsCount = g2NumRoots := rfl
 
 /-- The dimension of $SU(3) \cong A_2$: $\operatorname{rank}(A_2) + \text{roots}(A_2) = 2 + 6 = 8$. -/
 def su3Dim : ℕ := 2 + g2LongRootsCount
 
-/-- 🏆 THEOREM 5 (Wong Section 2 & 4):
+/-- 🏆 THEOREM 8 (Wong Section 2 & 4):
     The long roots of $G_2$ generate the 8-dimensional subalgebra $\mathfrak{su}(3) \cong \mathfrak{sl}(3, \mathbb{C})$. -/
 theorem su3_dimension : su3Dim = 8 := rfl
 
 /-- Dimension of the homogeneous 6-sphere $S^6 = G_2 / SU(3)$. -/
 def sphere6Dim : ℕ := 6
 
-/-- 🏆 THEOREM 6 (Wong Section 4 Fibration Dimension):
+/-- 🏆 THEOREM 9 (Wong Section 4 Fibration Dimension):
     The stabilizer fibration $G_2 / SU(3) \cong S^6$ gives $\dim(G_2) = \dim(SU(3)) + \dim(S^6) = 8 + 6 = 14$. -/
 theorem g2_fibration_dimension : su3Dim + sphere6Dim = g2Dim := rfl
 
 /-! =========================================================================
-    3. Baez-Huerta Rolling Ball Geometry & Split Octonion Null Subalgebras
+    4. 7-Dimensional Vector Cross Product and Automorphism Invariance
+    ========================================================================= -/
+
+/-- The vector cross product $u \times v = \frac{1}{2}(u v - v u)$ on imaginary elements. -/
+def crossProduct7 {A : Type*} [AddCommGroup A] [Module ℝ A]
+    (mul : A → A → A) (u v : A) : A :=
+  (1 / 2 : ℝ) • (mul u v - mul v u)
+
+/-- 🏆 THEOREM 10 (Skew-Symmetry of Cross Product):
+    $u \times v = - (v \times u)$. -/
+theorem crossProduct7_anticomm {A : Type*} [AddCommGroup A] [Module ℝ A]
+    (mul : A → A → A) (u v : A) :
+    crossProduct7 mul u v = - crossProduct7 mul v u := by
+  dsimp [crossProduct7]
+  rw [← smul_neg]
+  congr 1
+  abel
+
+/-- 🏆 THEOREM 11 (Automorphism Invariance of Cross Product):
+    Every algebra automorphism preserves the cross product: $\phi(u \times v) = \phi(u) \times \phi(v)$. -/
+theorem aut_preserves_crossProduct7 {A : Type*} [AddCommGroup A] [Module ℝ A]
+    (mul : A → A → A)
+    (phi : A ≃ₗ[ℝ] A)
+    (h_mul : ∀ x y, phi (mul x y) = mul (phi x) (phi y))
+    (u v : A) :
+    phi (crossProduct7 mul u v) = crossProduct7 mul (phi u) (phi v) := by
+  dsimp [crossProduct7]
+  rw [phi.map_smul, map_sub, h_mul, h_mul]
+
+/-! =========================================================================
+    5. Baez-Huerta Rolling Ball Geometry & Split Octonion Null Subalgebras
     ========================================================================= -/
 
 /-- An abstract incidence geometry of points and lines. -/
@@ -156,13 +236,13 @@ structure IncidenceGeometry (Point Line : Type*) where
 /-- The magical sphere radius ratio for the rolling ball geometry (Baez-Huerta 2014). -/
 def magicalBallRatio : ℝ := 3
 
-/-- 🏆 THEOREM 7 (Wong Section 5, Baez-Huerta 2014):
+/-- 🏆 THEOREM 12 (Wong Section 5, Baez-Huerta 2014):
     The rolling ball ratio $R = 3$ is strictly greater than 1 (fixed ball strictly larger than rolling ball). -/
 theorem magical_ratio_gt_one : magicalBallRatio > 1 := by
   dsimp [magicalBallRatio]
   norm_num
 
-/-- 🏆 THEOREM 8 (Wong Section 5):
+/-- 🏆 THEOREM 13 (Wong Section 5):
     Spinor cover ratio: $SU(2)$ double-covers $SO(3)$, giving the configuration space
     $SU(2) \times \mathbb{RP}^2$ for the rolling ball geometry. -/
 def spinorRollingSpaceDegree : ℕ := 2
@@ -173,7 +253,7 @@ theorem spinor_double_cover_degree : spinorRollingSpaceDegree = 2 := rfl
 def isNullSubalgebra {A : Type*} [Zero A] (mul : A → A → A) (V : Set A) : Prop :=
   ∀ x ∈ V, ∀ y ∈ V, mul x y = 0
 
-/-- 🏆 THEOREM 9 (Wong Section 5):
+/-- 🏆 THEOREM 14 (Wong Section 5):
     Any subset of a null subalgebra is a null subspace. -/
 theorem null_subalgebra_subset {A : Type*} [Zero A] (mul : A → A → A)
     (V W : Set A) (hVW : W ⊆ V) (hV : isNullSubalgebra mul V) :
@@ -181,7 +261,7 @@ theorem null_subalgebra_subset {A : Type*} [Zero A] (mul : A → A → A)
   intro x hx y hy
   exact hV x (hVW hx) y (hVW hy)
 
-/-- 🏆 THEOREM 10 (Symmetry Group of Rolling Ball Geometry):
+/-- 🏆 THEOREM 15 (Symmetry Group of Rolling Ball Geometry):
     The automorphism group of the split octonions $\operatorname{Aut}(\mathbb{O}')$
     preserves the incidence relation of null subalgebras: if $\phi \in \operatorname{Aut}(\mathbb{O}')$,
     then $\phi(V)$ is a null subalgebra if and only if $V$ is a null subalgebra. -/

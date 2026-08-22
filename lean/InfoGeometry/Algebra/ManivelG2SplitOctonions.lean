@@ -54,11 +54,14 @@ structure CompositionAlgebra (R : Type*) (A : Type*) [CommRing R] [AddCommGroup 
   one_mul : ∀ x, mul one x = x
   q_mul : ∀ x y, q (mul x y) = q x * q y
   q_one : q one = 1
+  q_zero : q 0 = 0
   conj_def : ∀ x, conj x = (2 * re x) • one - x
   conj_conj : ∀ x, conj (conj x) = x
   mul_conj : ∀ x, mul x (conj x) = (q x) • one
   conj_mul : ∀ x, mul (conj x) x = (q x) • one
   re_one : re one = 1
+
+namespace CompositionAlgebra
 
 variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
 
@@ -74,6 +77,8 @@ def isPurelyImaginary (CA : CompositionAlgebra R A) (x : A) : Prop :=
 def isIsotropic (CA : CompositionAlgebra R A) (x : A) : Prop :=
   CA.q x = 0
 
+end CompositionAlgebra
+
 /-! =========================================================================
     2. Zero Divisors and Nilpotents in Split Octonions (Manivel Lemma 2.3.9)
     ========================================================================= -/
@@ -87,16 +92,8 @@ theorem nilpotent_is_isotropic_domain
     (h_nil : CA.mul x x = 0) :
     CA.isIsotropic x := by
   have hq : CA.q (CA.mul x x) = CA.q x * CA.q x := CA.q_mul x x
-  rw [h_nil] at hq
-  have h_zero : CA.q (0 : V) = 0 := by
-    have h1 : CA.mul (0 : V) CA.one = 0 := by
-      have := CA.mul_one (0 : V)
-      exact this
-    have hq_mul : CA.q (CA.mul 0 CA.one) = CA.q 0 * CA.q CA.one := CA.q_mul 0 CA.one
-    rw [CA.mul_one, CA.q_one, mul_one] at hq_mul
-    exact rfl
-  rw [h_zero] at hq
-  dsimp [isIsotropic]
+  rw [h_nil, CA.q_zero] at hq
+  dsimp [CompositionAlgebra.isIsotropic]
   exact mul_self_eq_zero.mp hq.symm
 
 /-- 🏆 THEOREM (Manivel Lemma 2.3.9):
@@ -108,10 +105,8 @@ theorem zero_divisor_left_isotropic
     (hy_nonzero : CA.q y ≠ 0) :
     CA.isIsotropic x := by
   have hq : CA.q (CA.mul x y) = CA.q x * CA.q y := CA.q_mul x y
-  rw [h_prod] at hq
-  have h_zero : CA.q (0 : V) = 0 := rfl
-  rw [h_zero] at hq
-  dsimp [isIsotropic]
+  rw [h_prod, CA.q_zero] at hq
+  dsimp [CompositionAlgebra.isIsotropic]
   exact (mul_eq_zero.mp hq.symm).resolve_right hy_nonzero
 
 /-! =========================================================================
@@ -120,7 +115,8 @@ theorem zero_divisor_left_isotropic
 
 /-- A subspace $N \subseteq A$ is a **null-plane** (Manivel Definition 2.3.12)
     if the multiplication vanishes identically on $N$: $x \cdot y = 0$ for all $x, y \in N$. -/
-def isNullPlane (CA : CompositionAlgebra R A) (N : Set A) : Prop :=
+def isNullPlane {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+    (CA : CompositionAlgebra R A) (N : Set A) : Prop :=
   ∀ x ∈ N, ∀ y ∈ N, CA.mul x y = 0
 
 /-- 🏆 THEOREM 1 (Manivel Lemma 2.3.13):
@@ -142,7 +138,7 @@ theorem purely_imaginary_of_two_re_smul_zero
     (x : V) (hx_ne : x ≠ 0)
     (h_re_smul : (2 * CA.re x) • x = 0) :
     CA.isPurelyImaginary x := by
-  dsimp [isPurelyImaginary]
+  dsimp [CompositionAlgebra.isPurelyImaginary]
   have h_coeff : 2 * CA.re x = 0 := by
     by_contra hc
     have h_zero : x = 0 := by
@@ -157,13 +153,15 @@ theorem purely_imaginary_of_two_re_smul_zero
     ========================================================================= -/
 
 /-- The vector cross product on purely imaginary octonions: $u \times v = \mathrm{Im}(u v)$. -/
-def crossProduct (CA : CompositionAlgebra R A) (u v : A) : A :=
-  imPart CA (CA.mul u v)
+def crossProduct {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+    (CA : CompositionAlgebra R A) (u v : A) : A :=
+  CA.imPart (CA.mul u v)
 
 /-- Skew-symmetry of cross product for purely imaginary elements with anticommuting imaginary products. -/
 theorem crossProduct_anticomm
+    {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
     (CA : CompositionAlgebra R A) (u v : A)
-    (h_anti : imPart CA (CA.mul u v) = - imPart CA (CA.mul v u)) :
+    (h_anti : CA.imPart (CA.mul u v) = - CA.imPart (CA.mul v u)) :
     crossProduct CA u v = - crossProduct CA v u :=
   h_anti
 

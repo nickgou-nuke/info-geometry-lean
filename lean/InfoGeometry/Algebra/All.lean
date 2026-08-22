@@ -291,6 +291,7 @@ import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
 import InfoGeometry.Algebra.RubenthalerE6Octonions
 import InfoGeometry.Algebra.WilmotCliffordG2
 import InfoGeometry.Algebra.Zorn.G2BryantWilmotCliffordBridge
+import InfoGeometry.Algebra.ManivelG2SplitOctonions
 /-!
 # InfoGeometry.Algebra.All
 

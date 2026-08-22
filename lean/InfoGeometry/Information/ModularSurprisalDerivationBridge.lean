@@ -176,7 +176,8 @@ theorem dlogRN_inv (D : R →ₗ[R] R) (hD : IsLinearDerivation D)
   have h_prod2 : inv_Δ * Δ = 1 := h_inv'
   rw [h_prod1, h_prod2, dlogRN_one D hD] at h_chain
   have h_sum : dlogRN D Δ inv_Δ + dlogRN D inv_Δ Δ = 0 := h_chain.symm
-  exact eq_neg_of_add_eq_zero_right h_sum
+  rw [add_comm] at h_sum
+  exact eq_neg_of_add_eq_zero_left h_sum
 
 end LogarithmicRadonNikodym
 

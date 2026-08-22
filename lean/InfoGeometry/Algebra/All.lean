@@ -321,6 +321,7 @@ import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
+import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
 /-!
 # InfoGeometry.Algebra.All
 

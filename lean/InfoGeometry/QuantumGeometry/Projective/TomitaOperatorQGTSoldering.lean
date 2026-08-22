@@ -62,10 +62,10 @@ noncomputable def nambuClockAxis : EndC where
     change complex_i (c • u) = c • complex_i u
     apply DoubledSpace.ext
     · simp only [complex_i_apply, WithLp.toLp_smul, WithLp.smul_fst,
-        WithLp.toLp_fst, WithLp.toLp_snd]
-      rw [smul_neg]
+        WithLp.toLp_fst, WithLp.toLp_snd, WithLp.smul_snd, smul_neg]
     · rw [complex_i_apply, complex_i_apply]
-      simp only [WithLp.smul_snd]
+      change WithLp.fst (c • u) = c • WithLp.fst u
+      rfl
   cont := (clockAxis (E := H)).cont
 
 @[simp]

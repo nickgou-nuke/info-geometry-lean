@@ -7504,3 +7504,4 @@ import InfoGeometry.Algebra.Zorn.G2CarrierQuotientAction
 import InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra
 import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
+import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer

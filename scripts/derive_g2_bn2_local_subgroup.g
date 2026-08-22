@@ -16,6 +16,8 @@ B := Group(pcgens);
 psi := IsomorphismPcGroup(B);
 P := Image(psi);
 pcgsP := Pcgs(P);
+preimages := List(GeneratorsOfGroup(P), x -> PreImagesRepresentative(psi, x));
+Print("PC_PREIMAGES_MATCH_EXPORT=", ForAll([1..6], i -> preimages[i] = pcgens[i]), "\n");
 s := PermutationMat((3,4)(6,7), 8, F);
 H := Intersection(B, B^s);
 Print("B_SIZE=", Size(B), "\n");

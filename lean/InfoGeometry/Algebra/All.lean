@@ -324,6 +324,7 @@ import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
 import InfoGeometry.Algebra.Zorn.G2PeirceCarrierAudit
 import InfoGeometry.Algebra.Zorn.G2CrossProductCarrierAudit
+import InfoGeometry.Algebra.Zorn.G2NativeBaseFiber
 import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation

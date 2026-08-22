@@ -122,9 +122,7 @@ theorem cartesianZorn_intertwines_ellGrading
     cartesianZornLinearEquiv (cartesianEllGrading qr) =
       diagEllGrading (cartesianZornLinearEquiv qr) := by
   rw [diagEllGrading_coord]
-  ext i
-  simp [cartesianEllGrading]
-  ring
+  ext i <;> (simp [cartesianEllGrading] <;> ring)
 
 /-- Bundled operator form of the exact conjugacy: the circular coordinate
 equivalence diagonalizes Cartesian exchange into the native ell grading. -/

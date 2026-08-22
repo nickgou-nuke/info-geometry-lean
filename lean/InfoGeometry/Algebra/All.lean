@@ -302,8 +302,9 @@ import InfoGeometry.Algebra.Zorn.G2PCCommutators
 import InfoGeometry.Algebra.Zorn.G2PCCollection
 import InfoGeometry.Algebra.Zorn.G2CosetActionHomomorphism
 import InfoGeometry.Algebra.Zorn.G2BruhatCardinalities
-import InfoGeometry.Algebra.Zorn.G2SubgroupQuotientBridge
 import InfoGeometry.Algebra.Zorn.G2GAPCosetHomomorphismBridge
+import InfoGeometry.Algebra.Zorn.G2BigCellPolynomialWitnesses
+import InfoGeometry.Algebra.Zorn.G2SymbolicBN2
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
 import InfoGeometry.Algebra.Zorn.G2FlagAndParabolicQuotient
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg

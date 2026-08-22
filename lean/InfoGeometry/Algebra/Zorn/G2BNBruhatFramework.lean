@@ -561,25 +561,6 @@ theorem concreteBruhatCell_zero_disjoint (i : Fin 12) (hi : i ≠ 0) :
   exact concreteWeylElement_not_mem_concreteBruhatCell_zero hi
     (mem_concreteBruhatCell_zero_of_mem_unipotentSubgroup hroot)
 
-/-- The Coxeter lengths of the 12 concrete Weyl elements as a list. -/
-def concreteWeylLengthsList : List ℕ :=
-  [0, 4, 4, 1, 5, 3, 6, 2, 2, 5, 1, 3]
-
-/-- The theoretical sizes of the 12 Bruhat double cosets `B w_i B` over `𝔽₂`. -/
-def concreteBruhatCellSizesList : List ℕ :=
-  concreteWeylLengthsList.map (fun l => 64 * 2 ^ l)
-
-theorem concreteBruhatCellSizesList_eq :
-    concreteBruhatCellSizesList = [64, 1024, 1024, 128, 2048, 512, 4096, 256, 256, 2048, 128, 512] := rfl
-
-/-- 🏆 THEOREM: The sum of the 12 Bruhat cell sizes is exactly 12,096. -/
-theorem concreteBruhatCellSizesList_sum_eq_12096 :
-    concreteBruhatCellSizesList.sum = 12096 := rfl
-
-/-- 🏆 THEOREM: The sum of powers 2^(ℓ(w_i)) over the 12 representatives is exactly 189. -/
-theorem concreteWeylLengthsList_sum_powers_eq_189 :
-    (concreteWeylLengthsList.map (fun l => 2 ^ l)).sum = 189 := rfl
-
 /-- 🏆 THEOREM: The Sylow 2-subgroup of `SplitOctF2Aut` conditional on ambient card 12,096. -/
 noncomputable def sylowTwoSubgroupOfCard (hG : Nat.card SplitOctF2Aut = 12096) : Sylow 2 SplitOctF2Aut :=
   (unipotentSubgroup_isSylow_of_ambient_card hG).choose

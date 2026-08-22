@@ -56,6 +56,14 @@ theorem coe_re_mul_star (u : Quaternion ℝ) : u * star u = ↑((u * star u).re)
 theorem star_mul_star (u v : Quaternion ℝ) : star (u * star v) = v * star u := by
   rw [star_mul, star_star]
 
+/-- Multiplicativity of the quaternion norm-square (not provided by mathlib). -/
+theorem normSq_mul_quat (p q : Quaternion ℝ) :
+    Quaternion.normSq (p * q) = Quaternion.normSq p * Quaternion.normSq q := by
+  simp only [Quaternion.normSq_def']
+  simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+    Quaternion.imK_mul]
+  ring
+
 /-- Norm-square additivity of the polar form `(q * star q).re`. -/
 theorem normSq_re_add (u v : Quaternion ℝ) :
     ((u + v) * star (u + v)).re =
@@ -133,29 +141,30 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     intro X Y
     obtain ⟨a, b⟩ := X
     obtain ⟨c, d⟩ := Y
-    have hs1 : star (star d * b) = star b * d := star_mul_star d b
+    have hs1 : star (star d * b) = star b * d := by rw [star_mul, star_star]
     have hs2 : star (b * star c) = c * star b := star_mul_star b c
     have hcross : ((a * c) * (star b * d)).re = ((d * a) * (c * star b)).re := by
-      rw [re_mul_comm, ← mul_assoc (star b) d (a * c),
+      rw [re_mul_comm, mul_assoc (star b) d (a * c),
         re_mul_comm (star b) (d * (a * c)),
-        mul_assoc d a c, ← mul_assoc (d * a) c (star b)]
+        ← mul_assoc d a c, ← mul_assoc (d * a) c (star b)]
     have h1 : ((a * c) * star (a * c)).re
         = (a * star a).re * (c * star c).re := by
       rw [← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star,
-        Quaternion.normSq_mul]
+        normSq_mul_quat]
     have h2 : ((star d * b) * star (star d * b)).re
         = (b * star b).re * (d * star d).re := by
-      rw [hs1, ← normSq_eq_re_mul_star, Quaternion.normSq_mul, Quaternion.normSq_star,
+      rw [← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star, mul_comm,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
     have h3 : ((d * a) * star (d * a)).re
         = (a * star a).re * (d * star d).re := by
-      rw [← normSq_eq_re_mul_star, Quaternion.normSq_mul, mul_comm,
+      rw [← normSq_eq_re_mul_star, normSq_mul_quat, mul_comm,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
     have h4 : ((b * star c) * star (b * star c)).re
         = (b * star b).re * (c * star c).re := by
-      rw [hs2, ← normSq_eq_re_mul_star, Quaternion.normSq_mul, Quaternion.normSq_star,
+      rw [← normSq_eq_re_mul_star, normSq_mul_quat, Quaternion.normSq_star,
         ← normSq_eq_re_mul_star, ← normSq_eq_re_mul_star]
     show normSQ (⟨a, b⟩ * ⟨c, d⟩) = normSQ ⟨a, b⟩ * normSQ ⟨c, d⟩
+    simp only [normSQ, SplitOctonion.mul_a, SplitOctonion.mul_b]
     rw [normSq_re_add (a * c) (star d * b), normSq_re_add (d * a) (b * star c),
       hs1, hs2, h1, h2, h3, h4, hcross]
     ring

@@ -420,16 +420,6 @@ theorem dlog_prod {ι : Type*} (D : A → A) (hD : IsDerivation D)
       rw [Finset.prod_cons, Finset.sum_cons, dlog_mul D hD, ih]
 
 /--
-  THEOREM (The Radon–Nikodym 3-Cocycle Chain Rule):
-  dlog_D(ρ₁₂ · ρ₂₃) = dlog_D(ρ₁₂) + dlog_D(ρ₂₃)
--/
-theorem radon_nikodym_cocycle_dlog
-    (D : A → A) (hD : IsDerivation D)
-    (rho_12 rho_23 : Aˣ) :
-    dlog D (rho_12 * rho_23) = dlog D rho_12 + dlog D rho_23 :=
-  dlog_mul D hD rho_12 rho_23
-
-/--
   THEOREM (The Radon–Nikodym 4-Cocycle Chain Rule):
   dlog_D(ρ₁₂ · ρ₂₃ · ρ₃₄) = dlog_D(ρ₁₂) + dlog_D(ρ₂₃) + dlog_D(ρ₃₄).
 -/

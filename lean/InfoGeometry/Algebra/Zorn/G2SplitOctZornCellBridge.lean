@@ -1,6 +1,7 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.Zorn.Concrete
 import InfoGeometry.Algebra.Zorn.G2FiniteIsotropicPoints
+import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
 import Mathlib.Data.ZMod.Basic
 
 /-!
@@ -16,6 +17,7 @@ namespace InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.Concrete
 open InfoGeometry.Algebra.Zorn.G2FiniteIsotropicPoints
+open InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
 
 def boolToZMod (b : Bool) : ZMod 2 := if b then 1 else 0
 
@@ -95,14 +97,54 @@ theorem boolToZMod_eq_zero_iff (b : Bool) :
 
 theorem nativePolar_isotropic_sum_iff
     (X Y : SplitOctF2)
-    (hX_trace : X.a = X.b) (hY_trace : Y.a = Y.b)
     (hX_iso : zornNorm X = false) (hY_iso : zornNorm Y = false) :
     nativeIncident X Y ↔ zornNorm (add X Y) = false := by
   unfold nativeIncident nativePolar
   rw [ZornCell.polarZ]
   rw [← toZornCell_add X Y, detZ_toZornCell, detZ_toZornCell,
     detZ_toZornCell]
-  simp [hX_iso, hY_iso, boolToZMod_eq_zero_iff]
+  simp [hX_iso, hY_iso, boolToZMod]
+
+theorem traceZero_add {X Y : SplitOctF2}
+    (hX : TraceZero X) (hY : TraceZero Y) :
+    TraceZero (add X Y) := by
+  dsimp [TraceZero] at hX hY ⊢
+  simp [add, add2, hX, hY]
+
+theorem nativeIncident_map_iff
+    (f : SplitOctF2Aut) (X Y : SplitOctF2)
+    (hX_trace : TraceZero X) (hY_trace : TraceZero Y)
+    (hX_iso : Isotropic X) (hY_iso : Isotropic Y) :
+    nativeIncident (f.1 X) (f.1 Y) ↔ nativeIncident X Y := by
+  have hsum_trace : TraceZero (add X Y) := traceZero_add hX_trace hY_trace
+  have hsum_iso : Isotropic (add X Y) ↔
+      nativeIncident X Y := by
+    change zornNorm (add X Y) = false ↔ nativeIncident X Y
+    exact (nativePolar_isotropic_sum_iff X Y hX_iso hY_iso).symm
+  have hfx_trace : TraceZero (f.1 X) := automorphism_map_traceZero f X hX_trace
+  have hfy_trace : TraceZero (f.1 Y) := automorphism_map_traceZero f Y hY_trace
+  have hfx_iso : Isotropic (f.1 X) :=
+    automorphism_map_isotropic f X hX_trace hX_iso
+  have hfy_iso : Isotropic (f.1 Y) :=
+    automorphism_map_isotropic f Y hY_trace hY_iso
+  have hfsum_trace : TraceZero (f.1 (add X Y)) :=
+    automorphism_map_traceZero f (add X Y) hsum_trace
+  have hfsum_iso : Isotropic (f.1 (add X Y)) ↔ Isotropic (add X Y) := by
+    constructor
+    · intro h
+      have hi := automorphism_map_isotropic f⁻¹ (f.1 (add X Y))
+        hfsum_trace h
+      change Isotropic ((f.1).symm (f.1 (add X Y))) at hi
+      simpa using hi
+    · intro h
+      exact automorphism_map_isotropic f (add X Y) hsum_trace h
+  have hleft : nativeIncident (f.1 X) (f.1 Y) ↔
+      Isotropic (add (f.1 X) (f.1 Y)) := by
+    change nativeIncident (f.1 X) (f.1 Y) ↔
+      zornNorm (add (f.1 X) (f.1 Y)) = false
+    exact nativePolar_isotropic_sum_iff (f.1 X) (f.1 Y) hfx_iso hfy_iso
+  rw [hleft, ← f.2.2.1 X Y, hfsum_iso]
+  exact hsum_iso
 
 noncomputable def splitOctF2ZornCellEquiv :
     SplitOctF2 ≃ ZornCell (ZMod 2) where

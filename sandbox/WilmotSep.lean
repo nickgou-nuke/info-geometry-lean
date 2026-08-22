@@ -44,15 +44,15 @@ theorem bryantGen_diag_ne_zero (i : Fin 14) :
 set_option maxHeartbeats 2000000 in
 theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     bryantGen j (sr i) (ss i) = 0 := by
+  have : j.val ≠ i.val := fun he => h (Fin.ext he)
+  revert this
   fin_cases i <;> fin_cases j <;>
     simp only [bryantGen, sr, ss, skewGen, Matrix.of_apply, Matrix.smul_apply,
       smul_eq_mul, Matrix.sub_apply, Matrix.add_apply, Matrix.neg_apply]
     <;> norm_num
     <;> first
       | rfl
-      | (exfalso; simp only [ne_eq, not_not] at h; exact h (by decide))
-      | (exfalso; simp only [ne_eq, not_not] at h; exact h (by
-          cases j <;> cases i <;> simp))
+      | (intro hcon; exact absurd hcon (by norm_num))
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

@@ -311,10 +311,6 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
 
 def conj (x : SplitCayley R) : SplitCayley R := ⟨x.b, -x.u, -x.v, x.a⟩
 
-@[simp] theorem conj_zero : conj (0 : SplitCayley R) = 0 := by
-  change ⟨0, -0, -0, 0⟩ = ⟨0, 0, 0, 0⟩
-  congr
-
 def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
 
 theorem conj_a_native (x : SplitCayley R) :

@@ -257,7 +257,7 @@ theorem ker_mulLeft_polarB_zero
     rw [LinearMap.mem_ker] at hu hv ⊢
     rw [LinearMap.map_add, hu, hv, add_zero]
   have huvq := ker_mulLeft_isotropic CA x hx_ne (u + v) huv
-  dsimp [CompositionAlgebra.polarB]
+  change CA.q (u + v) - CA.q u - CA.q v = 0
   rw [huvq, huq, hvq]
   ring
 

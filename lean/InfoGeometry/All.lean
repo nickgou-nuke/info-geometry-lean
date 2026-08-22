@@ -7509,3 +7509,5 @@ import InfoGeometry.Modular.LocalHamiltonianDerivation
 import InfoGeometry.Modular.RadonNikodymDerivation
 import InfoGeometry.Modular.ModularColimitFlow
 import InfoGeometry.Modular.ModularColimitDerivation
+import InfoGeometry.Modular.ConnesCocycle
+import InfoGeometry.Modular.ConnesDifferentialEquation

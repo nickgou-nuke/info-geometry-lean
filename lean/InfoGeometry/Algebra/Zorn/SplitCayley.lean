@@ -58,6 +58,12 @@ theorem dot_neg_right (u v : Vec3 R) : dot u (-v) = -dot u v := by
   simp [dot]
   ring
 
+@[simp] theorem dot_zero_left (v : Vec3 R) : dot 0 v = 0 := by
+  simp [dot]
+
+@[simp] theorem dot_zero_right (u : Vec3 R) : dot u 0 = 0 := by
+  simp [dot]
+
 def cross (u v : Vec3 R) : Vec3 R := ![
   u 1 * v 2 - u 2 * v 1,
   u 2 * v 0 - u 0 * v 2,
@@ -67,6 +73,14 @@ theorem cross_eq_mathlib (u v : Vec3 R) :
     cross u v = crossProduct u v := by
   funext i
   fin_cases i <;> simp [cross, cross_apply]
+
+@[simp] theorem cross_zero_left (v : Vec3 R) : cross 0 v = 0 := by
+  ext i
+  fin_cases i <;> simp [cross]
+
+@[simp] theorem cross_zero_right (u : Vec3 R) : cross u 0 = 0 := by
+  ext i
+  fin_cases i <;> simp [cross]
 
 theorem cross_swap (u v : Vec3 R) : cross u v = -cross v u := by
   funext i
@@ -262,52 +276,28 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
   change mul { a := a, u := u, v := v, b := b }
       { a := 1, u := 0, v := 0, b := 1 } =
     { a := a, u := u, v := v, b := b }
-  apply ext
-  · simp [mul, dot]
-  · funext i
-    fin_cases i <;> simp [mul, cross]
-  · funext i
-    fin_cases i <;> simp [mul, cross]
-  · simp [mul, dot]
+  ext <;> simp [mul]
 
 @[simp] theorem one_mul (x : SplitCayley R) : (1 : SplitCayley R) * x = x := by
   rcases x with ⟨a, u, v, b⟩
   change mul (1 : SplitCayley R)
       { a := a, u := u, v := v, b := b } =
     { a := a, u := u, v := v, b := b }
-  apply ext
-  · simp [mul, dot]
-  · funext i
-    fin_cases i <;> simp [mul, cross]
-  · funext i
-    fin_cases i <;> simp [mul, cross]
-  · simp [mul, dot]
+  ext <;> simp [mul]
 
 @[simp] theorem mul_zero (x : SplitCayley R) : x * (0 : SplitCayley R) = 0 := by
   rcases x with ⟨a, u, v, b⟩
   change mul { a := a, u := u, v := v, b := b }
       { a := 0, u := 0, v := 0, b := 0 } =
         ({ a := 0, u := 0, v := 0, b := 0 } : SplitCayley R)
-  apply ext
-  · simp [mul, dot]
-  · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
-  · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
-  · simp [mul, dot]
+  ext <;> simp [mul]
 
 @[simp] theorem zero_mul (x : SplitCayley R) : (0 : SplitCayley R) * x = 0 := by
   rcases x with ⟨a, u, v, b⟩
   change mul ({ a := 0, u := 0, v := 0, b := 0 } : SplitCayley R)
       { a := a, u := u, v := v, b := b } =
         ({ a := 0, u := 0, v := 0, b := 0 } : SplitCayley R)
-  apply ext
-  · simp [mul, dot]
-  · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
-  · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
-  · simp [mul, dot]
+  ext <;> simp [mul]
 
 def conj (x : SplitCayley R) : SplitCayley R := ⟨x.b, -x.u, -x.v, x.a⟩
 

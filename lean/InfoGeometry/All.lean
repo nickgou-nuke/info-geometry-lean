@@ -7397,6 +7397,7 @@ import InfoGeometry.Modular.GrandUnifiedModularSynthesis
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Probability.ExpLogRNDerivation
+import InfoGeometry.Probability.DerivationBridge
 import InfoGeometry.Information.FisherRaoMadelungIsometry
 import InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
 import InfoGeometry.Algebra.ExplogRN

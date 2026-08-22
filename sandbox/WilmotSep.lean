@@ -53,7 +53,7 @@ theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     <;> split <;> split <;> norm_num
     <;> first
       | rfl
-      | (exact (fun hcon => hcon rfl) (by norm_num : ¬ ((1:ℕ) = 2 ∧ 2 = 0)))
+      | (exact absurd (by norm_num) (by simp only [ne_eq, not_not]; exact fun hc => hc))
 
 theorem bryantGen_linearIndependent :
     LinearIndependent ℝ bryantGen := by

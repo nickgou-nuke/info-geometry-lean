@@ -2,6 +2,7 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.ZMod.Basic
 
 namespace InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 
@@ -211,5 +212,24 @@ def flagCells : Fin 12 → Finset (Fin 189) := ![
   {4, 5, 58, 184, 82, 97, 59, 183, 81, 98, 171, 14, 121, 13, 169, 174, 168, 54, 165, 48, 172, 120, 176, 56, 166, 50, 107, 78, 105, 164, 162, 80},
   {25, 47, 177, 26, 72, 46, 179, 74}
 ]
+
+/- The CAS orbit order is `1,c,...,c^5,s,s*c,...,s*c^5`.  This is kept
+   separate from the unrelated `concreteWeylIndex` enumeration order. -/
+def flagWeyl : Fin 12 → (ZMod 6 × Bool)
+  | 0 => (0, false)
+  | 1 => (1, false)
+  | 2 => (2, false)
+  | 3 => (3, false)
+  | 4 => (4, false)
+  | 5 => (5, false)
+  | 6 => (0, true)
+  | 7 => (1, true)
+  | 8 => (2, true)
+  | 9 => (3, true)
+  | 10 => (4, true)
+  | 11 => (5, true)
+
+theorem flagWeyl_card : Fintype.card (Set.range flagWeyl) = 12 := by
+  native_decide
 
 end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

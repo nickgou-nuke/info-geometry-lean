@@ -315,6 +315,7 @@ import InfoGeometry.Algebra.Zorn.G2FlagWordCertificateEval
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
+import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!

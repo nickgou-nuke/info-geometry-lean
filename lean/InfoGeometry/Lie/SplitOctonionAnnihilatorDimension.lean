@@ -166,6 +166,31 @@ theorem realZornTrace_canonicalConj (X : CanonicalZorn) :
   dsimp [realZornTrace]
   rw [canonicalConj_a, canonicalConj_b, add_comm]
 
+theorem canonicalConj_mem_imaginary (X : Imaginary) :
+    canonicalConj X.1 ∈ Imaginary := by
+  rw [mem_imaginary_iff, realZornTrace_canonicalConj]
+  exact X.2
+
+theorem canonicalConj_ne_zero {X : Imaginary} (hX : X ≠ 0) :
+    canonicalConj X.1 ≠ 0 := by
+  intro h
+  apply hX
+  apply Subtype.ext
+  have hc := congrArg canonicalConj h
+  rw [canonicalConj_involutive, canonicalConj_zero] at hc
+  exact hc
+
+theorem canonicalConj_mem_normLevel_zero {X : Imaginary}
+    (hX : X ∈ NormLevel 0) :
+    (⟨canonicalConj X.1, canonicalConj_mem_imaginary X⟩ : Imaginary) ∈
+      NormLevel 0 := by
+  rw [mem_null_iff_square_zero]
+  have hsq := (mem_null_iff_square_zero X).mp hX
+  have hsq' : X.1 * X.1 = 0 := hsq
+  have hconj := congrArg canonicalConj hsq'
+  rw [canonicalConj_mul, canonicalConj_zero] at hconj
+  simpa only [canonicalConj_involutive] using hconj
+
 /-- Right alternativity transported to the canonical carrier. -/
 theorem canonical_right_alternative (X Y : CanonicalZorn) :
     (Y * X) * X = Y * (X * X) := by

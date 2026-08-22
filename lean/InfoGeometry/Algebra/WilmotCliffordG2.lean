@@ -1,5 +1,4 @@
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Algebra.Lie.Basic
@@ -36,36 +35,6 @@ namespace InfoGeometry.Algebra.WilmotCliffordG2
 
 open Matrix
 open InfoGeometry.Algebra.Zorn.G2KillingCartanMatrix
-
-theorem skewGen_eq_single_sub (i j : Fin 7) :
-    skewGen i j = Matrix.single i j (1 : ℝ) - Matrix.single j i (1 : ℝ) := by
-  ext a b
-  dsimp [skewGen, Matrix.single, Matrix.sub_apply]
-  have h₁ : (a = i ∧ b = j) ↔ (i = a ∧ j = b) := by
-    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
-  have h₂ : (a = j ∧ b = i) ↔ (j = a ∧ i = b) := by
-    constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1.symm, h2.symm⟩
-  have hif₁ :
-      (if a = i ∧ b = j then (1 : ℝ) else 0) =
-        if i = a ∧ j = b then (1 : ℝ) else 0 :=
-    if_congr h₁ rfl rfl
-  have hif₂ :
-      (if a = j ∧ b = i then (1 : ℝ) else 0) =
-        if j = a ∧ i = b then (1 : ℝ) else 0 :=
-    if_congr h₂ rfl rfl
-  rw [hif₁, hif₂]
-
-theorem matrix_single_mul_single
-    (i j k l : Fin 7) (a b : ℝ) :
-    Matrix.single i j a * Matrix.single k l b =
-      if j = k then Matrix.single i l (a * b) else 0 := by
-  by_cases h : j = k
-  · subst k
-    simp
-  · rw [if_neg h]
-    exact @Matrix.single_mul_single_of_ne (Fin 7) (Fin 7) (Fin 7) ℝ
-      inferInstance inferInstance inferInstance inferInstance inferInstance
-      a i j k l h b
 
 /-! =========================================================================
     1. The 14 Bryant-Wilmot Generators of 𝔤₂ in 𝔰𝔬(7) (0-indexed)
@@ -117,36 +86,6 @@ theorem bryantGen_skew (m : Fin 14) :
     repeat rw [hT]
     ring
   }
-
-/-- The `(1,2)` entry separates the first Bryant generator. -/
-theorem bryantGen_zero_entry :
-    bryantGen 0 1 2 = (1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
-
-/-- The `(0,2)` entry separates the second Bryant generator. -/
-theorem bryantGen_one_entry :
-    bryantGen 1 0 2 = (-1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
-
-/-- The `(0,1)` entry separates the third Bryant generator. -/
-theorem bryantGen_two_entry :
-    bryantGen 2 0 1 = (1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
-
-/-- The `(0,4)` entry separates the fourth Bryant generator. -/
-theorem bryantGen_three_entry :
-    bryantGen 3 0 4 = (1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
-
-/-- The `(0,3)` entry separates the fifth Bryant generator. -/
-theorem bryantGen_four_entry :
-    bryantGen 4 0 3 = (1 / 2 : ℝ) := by
-  dsimp [bryantGen, skewGen]
-  norm_num
 
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
@@ -240,18 +179,6 @@ theorem wilmotAlpha_orthogonality (h : sign = 1 ∨ sign = -1) :
 /-- The real subspace of $\mathfrak{so}(7)$ spanned by the 14 Bryant-Wilmot generators. -/
 def wilmotG2Submodule : Submodule ℝ (Matrix (Fin 7) (Fin 7) ℝ) :=
   Submodule.span ℝ (Set.range bryantGen)
-
-def matrixLieBracket
-    (M N : Matrix (Fin 7) (Fin 7) ℝ) : Matrix (Fin 7) (Fin 7) ℝ :=
-  M * N - N * M
-
-theorem matrixLieBracket_skew
-    {M N : Matrix (Fin 7) (Fin 7) ℝ}
-    (hM : Mᵀ = -M) (hN : Nᵀ = -N) :
-    (matrixLieBracket M N)ᵀ = -matrixLieBracket M N := by
-  simp only [matrixLieBracket, Matrix.transpose_sub, Matrix.transpose_mul]
-  rw [hM, hN]
-  simp [sub_eq_add_neg]
 
 /-- Dimension count of the Bryant-Wilmot generators. -/
 theorem wilmot_generator_count :

@@ -158,30 +158,6 @@ noncomputable def leftKernelConjEquiv (X : CanonicalZorn) :
     apply Subtype.ext
     exact canonicalConj_smul r Y.1
 
-/-/ The left kernel has the same four-dimensional null-annihilator size as
-the right kernel, by the conjugation bridge. -/
-theorem fullLeftMul_ker_finrank {X : Imaginary}
-    (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0) :
-    Module.finrank ℝ (LinearMap.ker (fullLeftMulLinear X.1)) = 4 := by
-  let htrace : realZornTrace X.1 = 0 := (mem_imaginary_iff X.1).mp X.2
-  let Xconj : Imaginary :=
-    ⟨canonicalConj X.1, by
-      rw [mem_imaginary_iff, canonicalConj_eq_trace_sub, htrace]
-      simp⟩
-  have hconj0 : Xconj ≠ 0 := by
-    intro h
-    apply hX0
-    apply Subtype.ext
-    have hzero : canonicalConj X.1 = 0 := congrArg Subtype.val h
-    rw [← canonicalConj_involutive X.1, hzero, canonicalConj_zero]
-  have hconjnull : Xconj ∈ NormLevel 0 := by
-    rw [mem_null_iff_square_zero]
-    change canonicalConj X.1 * canonicalConj X.1 = 0
-    rw [← canonicalConj_mul, (mem_null_iff_square_zero X).mp hXnull,
-      canonicalConj_zero]
-  rw [leftKernelConjEquiv X.1 |>.finrank_eq]
-  exact fullRightMul_ker_finrank hconj0 hconjnull
-
 /-- Right alternativity transported to the canonical carrier. -/
 theorem canonical_right_alternative (X Y : CanonicalZorn) :
     (Y * X) * X = Y * (X * X) := by
@@ -245,6 +221,35 @@ theorem fullRightMul_ker_finrank {X : Imaginary}
   have hrk := LinearMap.finrank_range_add_finrank_ker (fullRightMulLinear X.1)
   rw [fullRightMul_range_eq_ker hX0 hXnull, canonicalZorn_finrank] at hrk
   omega
+
+/-/ The left kernel has the same four-dimensional null-annihilator size as
+the right kernel, by the conjugation bridge. -/
+theorem fullLeftMul_ker_finrank {X : Imaginary}
+    (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0) :
+    Module.finrank ℝ (LinearMap.ker (fullLeftMulLinear X.1)) = 4 := by
+  let htrace : realZornTrace X.1 = 0 := (mem_imaginary_iff X.1).mp X.2
+  let Xconj : Imaginary :=
+    ⟨canonicalConj X.1, by
+      rw [mem_imaginary_iff, canonicalConj_eq_trace_sub, htrace]
+      simp [realZornTrace]⟩
+  have hconj0 : Xconj ≠ 0 := by
+    intro h
+    apply hX0
+    apply Subtype.ext
+    have hzero : canonicalConj X.1 = 0 := congrArg Subtype.val h
+    have hxzero : X.1 = 0 := by
+      rw [← canonicalConj_involutive X.1, hzero, canonicalConj_zero]
+    exact hxzero
+  have hconjnull : Xconj ∈ NormLevel 0 := by
+    rw [mem_null_iff_square_zero]
+    change canonicalConj X.1 * canonicalConj X.1 = 0
+    have hsq := (mem_null_iff_square_zero X).mp hXnull
+    change X.1 * X.1 = 0 at hsq
+    have hc := congrArg canonicalConj hsq
+    rw [canonicalConj_mul, canonicalConj_zero] at hc
+    simpa only [canonicalConj_involutive] using hc
+  rw [leftKernelConjEquiv X.1 |>.finrank_eq]
+  exact fullRightMul_ker_finrank hconj0 hconjnull
 
 /-- Polarization is the trace of conjugate-left multiplication. -/
 theorem canonicalPolar_eq_trace_conj_mul (X Z : CanonicalZorn) :

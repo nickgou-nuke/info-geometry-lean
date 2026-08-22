@@ -11,6 +11,7 @@ installed locally.
 
 ## Default ordering
 
+0. `protected-baseline-formalization` as the operating identity for any repository-wide formalization request; its gate checklist overrides closure claims.
 1. `lean4` for any Lean edit, build, or diagnostic work.
 2. `lean-proof` for theorem proving and `sorry` filling.
 3. `proof-only-mandate` for anti-cheat / no-wrapper policy enforcement.

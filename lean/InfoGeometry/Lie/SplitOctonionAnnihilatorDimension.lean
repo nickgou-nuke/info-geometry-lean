@@ -158,6 +158,30 @@ noncomputable def leftKernelConjEquiv (X : CanonicalZorn) :
     apply Subtype.ext
     exact canonicalConj_smul r Y.1
 
+/-/ The left kernel has the same four-dimensional null-annihilator size as
+the right kernel, by the conjugation bridge. -/
+theorem fullLeftMul_ker_finrank {X : Imaginary}
+    (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0) :
+    Module.finrank ℝ (LinearMap.ker (fullLeftMulLinear X.1)) = 4 := by
+  let htrace : realZornTrace X.1 = 0 := (mem_imaginary_iff X.1).mp X.2
+  let Xconj : Imaginary :=
+    ⟨canonicalConj X.1, by
+      rw [mem_imaginary_iff, canonicalConj_eq_trace_sub, htrace]
+      simp⟩
+  have hconj0 : Xconj ≠ 0 := by
+    intro h
+    apply hX0
+    apply Subtype.ext
+    have hzero : canonicalConj X.1 = 0 := congrArg Subtype.val h
+    rw [← canonicalConj_involutive X.1, hzero, canonicalConj_zero]
+  have hconjnull : Xconj ∈ NormLevel 0 := by
+    rw [mem_null_iff_square_zero]
+    change canonicalConj X.1 * canonicalConj X.1 = 0
+    rw [← canonicalConj_mul, (mem_null_iff_square_zero X).mp hXnull,
+      canonicalConj_zero]
+  rw [leftKernelConjEquiv X.1 |>.finrank_eq]
+  exact fullRightMul_ker_finrank hconj0 hconjnull
+
 /-- Right alternativity transported to the canonical carrier. -/
 theorem canonical_right_alternative (X Y : CanonicalZorn) :
     (Y * X) * X = Y * (X * X) := by

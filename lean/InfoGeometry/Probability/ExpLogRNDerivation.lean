@@ -357,6 +357,16 @@ theorem dlogL_eq_dlogR (D : A → A) (u : Aˣ) :
   exact mul_comm (↑u⁻¹ : A) (D (u : A))
 
 /--
+  THEOREM (Commutative Inverse Derivative Rule):
+  On a commutative density ring the non-commutative rule collapses to the squared form:
+  D(u⁻¹) = - u⁻² · D(u).
+-/
+theorem derivation_inv_comm (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    D (↑u⁻¹ : A) = -(↑u⁻¹ : A) * (↑u⁻¹ : A) * D (u : A) := by
+  rw [derivation_inv D hD u]
+  ring
+
+/--
   THEOREM (The Fundamental Logarithmic Homomorphism on Commutative Density Rings):
   dlog_D(u · v) = dlog_D(u) + dlog_D(v)
 -/

@@ -100,6 +100,8 @@ assert ad_coordinates[11] == -sp.Rational(1, 2)
 assert all(ad_coordinates[i] == 0 for i in range(14) if i not in (4, 11))
 
 ab = legacy_generators[0] * legacy_generators[1] - legacy_generators[1] * legacy_generators[0]
+ab_claim = -sp.Rational(1, 2) * (legacy_generators[2] + legacy_generators[9])
+assert ab == ab_claim
 ab_coordinates = next(iter(sp.linsolve((legacy_columns, sp.Matrix([
     ab[i, j] for i in range(7) for j in range(7)])))))
 print(f"BRACKET_A_B_COORDINATES={ab_coordinates}")

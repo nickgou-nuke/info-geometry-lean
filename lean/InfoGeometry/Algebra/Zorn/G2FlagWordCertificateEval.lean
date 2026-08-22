@@ -21,4 +21,23 @@ theorem flagCells_partition :
     Finset.univ.biUnion flagCells = Finset.univ := by
   decide
 
+def flagCellCard : Fin 12 → Nat
+  | 0 => 1
+  | 1 => 4
+  | 2 => 16
+  | 3 => 64
+  | 4 => 16
+  | 5 => 4
+  | 6 => 2
+  | 7 => 2
+  | 8 => 8
+  | 9 => 32
+  | 10 => 32
+  | 11 => 8
+
+set_option maxRecDepth 100000 in
+theorem flagCells_card (k : Fin 12) :
+    (flagCells k).card = flagCellCard k := by
+  fin_cases k <;> decide
+
 end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

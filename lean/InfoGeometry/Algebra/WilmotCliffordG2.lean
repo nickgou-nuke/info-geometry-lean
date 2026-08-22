@@ -87,6 +87,12 @@ theorem bryantGen_skew (m : Fin 14) :
     ring
   }
 
+/-- The `(1,2)` entry separates the first Bryant generator. -/
+theorem bryantGen_zero_entry :
+    bryantGen 0 1 2 = (1 / 2 : ℝ) := by
+  dsimp [bryantGen, skewGen]
+  norm_num
+
 /-! =========================================================================
     2. The 7 Bryant Triad Sum Relations
     ========================================================================= -/

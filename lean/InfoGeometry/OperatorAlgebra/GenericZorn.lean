@@ -61,6 +61,16 @@ theorem norm_mul (x y : ZornSplitOctonion R) :
       simp [norm, mul]
       ring_nf
 
+theorem norm_eq_zero_left_or_right_of_mul_eq_zero
+    [NoZeroDivisors R] (x y : ZornSplitOctonion R)
+    (hxy : mul x y = zero R) :
+    norm x = 0 ∨ norm y = 0 := by
+  have hnorm : norm x * norm y = 0 := by
+    have h := congrArg norm hxy
+    rw [norm_mul] at h
+    simpa [norm, zero] using h
+  exact eq_zero_or_eq_zero_of_mul_eq_zero hnorm
+
 theorem mul_conjugate (x : ZornSplitOctonion R) :
     mul x (conjugate x) = scalar (norm x) := by
   cases x

@@ -13,6 +13,9 @@ Proves reflexivity, identity minimality, subword dichotomy under generator peeli
 length preservation, and antisymmetry with zero axioms and zero sorrys.
 -/
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
 namespace InfoGeometry.Algebra.Zorn.BruhatOrder
 
 open List
@@ -96,8 +99,8 @@ Let `s :: L_w` be a word for `v`. Any subword evaluating to `u` either:
 -/
 theorem bruhat_subword_cons_dichotomy (s : G) (L_w : List G)
     (u : G) (L' : List G) (hsub : L' <+ (s :: L_w)) (hu : L'.prod = u) :
-    (∃ L_sub <+ L_w, L_sub.prod = u) ∨
-    (∃ L_sub <+ L_w, L_sub.prod = s⁻¹ * u ∧ u = s * L_sub.prod) := by
+    (∃ L_sub, L_sub <+ L_w ∧ L_sub.prod = u) ∨
+    (∃ L_sub, L_sub <+ L_w ∧ L_sub.prod = s⁻¹ * u ∧ u = s * L_sub.prod) := by
   rcases sublist_cons_cases s L_w L' hsub with h_drop | ⟨L_tail, rfl, h_keep⟩
   · left
     exact ⟨L', h_drop, hu⟩
@@ -110,7 +113,7 @@ theorem bruhat_subword_cons_dichotomy (s : G) (L_w : List G)
         _ = (s⁻¹ * s) * L_tail.prod := by rw [inv_mul_cancel]
         _ = s⁻¹ * (s * L_tail.prod) := by rw [mul_assoc]
         _ = s⁻¹ * u := by rw [h_prod]
-    exact ⟨L_tail, h_keep, h_inv, h_prod.symm⟩
+    exact ⟨L_tail, h_keep, h_inv, h_prod⟩
 
 /-! =========================================================================
     5. Length Bounding and Antisymmetry
@@ -141,19 +144,19 @@ theorem bruhatLE_antisymm (S : Set G) (u v : G)
     (L_u L_v : List G)
     (h_red_u : IsReduced S L_u) (h_prod_u : L_u.prod = u)
     (h_red_v : IsReduced S L_v) (h_prod_v : L_v.prod = v)
-    (h_uv : ∃ L' <+ L_v, L'.prod = u)
-    (h_vu : ∃ L'' <+ L_u, L''.prod = v) :
+    (h_uv : ∃ L', L' <+ L_v ∧ L'.prod = u)
+    (h_vu : ∃ L'', L'' <+ L_u ∧ L''.prod = v) :
     u = v := by
-  obtain ⟨L', hsub_uv, rfl⟩ := h_uv
-  obtain ⟨L'', hsub_vu, rfl⟩ := h_vu
+  obtain ⟨L', hsub_uv, h_prod_u'⟩ := h_uv
+  obtain ⟨L'', hsub_vu, h_prod_v'⟩ := h_vu
   have h_word_L' : WordOver S L' := wordOver_sublist S hsub_uv h_red_v.1
   have h_word_L'' : WordOver S L'' := wordOver_sublist S hsub_vu h_red_u.1
-  have h1 : L_u.length ≤ L'.length := h_red_u.2 L' h_word_L' rfl
+  have h1 : L_u.length ≤ L'.length := h_red_u.2 L' h_word_L' (by rw [h_prod_u', h_prod_u])
   have h2 : L'.length ≤ L_v.length := hsub_uv.length_le
-  have h3 : L_v.length ≤ L''.length := h_red_v.2 L'' h_word_L'' rfl
+  have h3 : L_v.length ≤ L''.length := h_red_v.2 L'' h_word_L'' (by rw [h_prod_v', h_prod_v])
   have h4 : L''.length ≤ L_u.length := hsub_vu.length_le
   have h_len_eq : L'.length = L_v.length := by omega
   have h_L'_eq : L' = L_v := hsub_uv.eq_of_length h_len_eq
-  rw [h_L'_eq]
+  rw [← h_prod_u', h_L'_eq, h_prod_v]
 
 end InfoGeometry.Algebra.Zorn.BruhatOrder

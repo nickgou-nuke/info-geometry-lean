@@ -85,6 +85,30 @@ theorem pcWord_inv (e : PCExponent) :
   rw [pcCombine_left_inverse]
   exact pcWord_zero_eq_one
 
+def pcCommutatorExponent (e f : PCExponent) : PCExponent :=
+  pcCombine (pcCombine (pcCombine e f) (pcInverse e)) (pcInverse f)
+
+theorem pcWord_commutator (e f : PCExponent) :
+    G2TwoSylowSubgroup.pcWord e * G2TwoSylowSubgroup.pcWord f *
+        (G2TwoSylowSubgroup.pcWord e)⁻¹ *
+          (G2TwoSylowSubgroup.pcWord f)⁻¹ =
+      G2TwoSylowSubgroup.pcWord (pcCommutatorExponent e f) := by
+  rw [pcWord_inv, pcWord_inv]
+  calc
+    (G2TwoSylowSubgroup.pcWord e * G2TwoSylowSubgroup.pcWord f) *
+        G2TwoSylowSubgroup.pcWord (pcInverse e) *
+          G2TwoSylowSubgroup.pcWord (pcInverse f) =
+        G2TwoSylowSubgroup.pcWord (pcCombine e f) *
+          G2TwoSylowSubgroup.pcWord (pcInverse e) *
+            G2TwoSylowSubgroup.pcWord (pcInverse f) := by
+              rw [_root_.InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector.pcWord_mul_pcWord]
+    _ = G2TwoSylowSubgroup.pcWord (pcCombine (pcCombine e f) (pcInverse e)) *
+          G2TwoSylowSubgroup.pcWord (pcInverse f) := by
+              rw [_root_.InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector.pcWord_mul_pcWord]
+    _ = G2TwoSylowSubgroup.pcWord (pcCommutatorExponent e f) := by
+              rw [_root_.InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector.pcWord_mul_pcWord]
+              rfl
+
 /-- THEOREM: The concrete 64-element unipotent 2-subgroup of `SplitOctF2Aut`.
 The Sylow property requires the ambient carrier cardinality. -/
 def unipotentSubgroup : Subgroup SplitOctF2Aut where

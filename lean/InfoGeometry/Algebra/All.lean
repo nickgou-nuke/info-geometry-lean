@@ -293,7 +293,11 @@ import InfoGeometry.Algebra.ManivelG2SplitOctonions
 import InfoGeometry.Algebra.ManivelMagicSquare
 import InfoGeometry.Algebra.WongRollingBallG2
 import InfoGeometry.Algebra.Zorn.BruhatPeelingTransport
-import InfoGeometry.Algebra.Zorn.BruhatPartialOrder
+import InfoGeometry.Algebra.Zorn.BruhatSubwordOrder
+import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
+import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
+import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
+import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!
 # InfoGeometry.Algebra.All
 

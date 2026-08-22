@@ -265,9 +265,9 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
   apply ext
   · simp [mul, dot]
   · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
+    fin_cases i <;> simp [mul, cross]
   · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
+    fin_cases i <;> simp [mul, cross]
   · simp [mul, dot]
 
 @[simp] theorem one_mul (x : SplitCayley R) : (1 : SplitCayley R) * x = x := by
@@ -278,9 +278,9 @@ instance : Mul (SplitCayley R) := ⟨mul⟩
   apply ext
   · simp [mul, dot]
   · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
+    fin_cases i <;> simp [mul, cross]
   · funext i
-    fin_cases i <;> simp [mul, cross] <;> rfl
+    fin_cases i <;> simp [mul, cross]
   · simp [mul, dot]
 
 @[simp] theorem mul_zero (x : SplitCayley R) : x * (0 : SplitCayley R) = 0 := by
@@ -345,9 +345,9 @@ theorem conj_b_native (x : SplitCayley R) :
       simp [dot]
       ring
     · change a • (-u) + a • u - cross v (-v) = (a * b - dot u v) • 0
-      simp [cross_self_neg, smul_def]
+      simp [cross_self_neg]
     · change b • (-v) + b • v + cross u (-u) = (a * b - dot u v) • 0
-      simp [cross_self_neg, smul_def]
+      simp [cross_self_neg]
     · change b * a + dot v (-u) = (a * b - dot u v) * 1
       simp [dot]
       ring
@@ -364,9 +364,9 @@ theorem conj_b_native (x : SplitCayley R) :
       simp [dot]
       ring
     · change b • u + b • (-u) - cross (-v) v = (a * b - dot u v) • 0
-      simp [cross_neg_self, smul_def]
+      simp [cross_neg_self]
     · change a • v + a • (-v) + cross (-u) u = (a * b - dot u v) • 0
-      simp [cross_neg_self, smul_def]
+      simp [cross_neg_self]
     · change a * b + dot (-v) u = (a * b - dot u v) * 1
       simp [dot]
       ring

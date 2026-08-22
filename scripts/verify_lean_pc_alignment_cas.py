@@ -29,6 +29,9 @@ def lean_rows(index):
         if any(term not in {f"X.{name}" for name in names} for term in terms):
             raise AssertionError(f"unsupported GF(2) expression: {field}")
         rows.append(tuple(i + 1 for i, name in enumerate(names) if parity[name]))
+    # Lean's `autMatrix` stores the image of basis `j` in column `j`:
+    # autMatrix f i j = (f (basis8 j))_i.  The GAP exporter prints row
+    # supports, so transpose the parsed coordinate table before comparing.
     return tuple(rows)
 
 gap = subprocess.run(["gap", "-q", str(ROOT / "scripts/export_carrier_pc_rows.g")],
@@ -44,9 +47,15 @@ for line in gap.stdout.splitlines():
 
 assert set(gap_rows) == set(range(1, 7))
 for index in range(1, 7):
-    assert lean_rows(index) == gap_rows[index], (
+    lean = lean_rows(index)
+    gap = gap_rows[index]
+    gap_columns = tuple(
+        tuple(row + 1 for row, support in enumerate(gap) if col + 1 in support)
+        for col in range(8)
+    )
+    assert lean == gap_columns, (
         f"PC alignment mismatch at generator {index}: "
-        f"Lean={lean_rows(index)} GAP={gap_rows[index]}"
+        f"Lean-output-rows={lean} GAP-transposed-columns={gap_columns}"
     )
 
 print("LEAN_PC_FORMULAS_EQUAL_GAP_PC_ROWS=PASS")

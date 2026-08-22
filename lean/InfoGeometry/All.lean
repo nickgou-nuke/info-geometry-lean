@@ -7519,4 +7519,5 @@ import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 import InfoGeometry.Modular.TrifactorTripotentUnification
 import InfoGeometry.Modular.KMSState
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
+import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 

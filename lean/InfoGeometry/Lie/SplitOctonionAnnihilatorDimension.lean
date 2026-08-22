@@ -231,7 +231,9 @@ theorem fullLeftMul_ker_finrank {X : Imaginary}
   let Xconj : Imaginary :=
     ⟨canonicalConj X.1, by
       rw [mem_imaginary_iff, canonicalConj_eq_trace_sub, htrace]
-      simp [realZornTrace]⟩
+      change -(X.1.a) + -(X.1.b) = 0
+      change X.1.a + X.1.b = 0 at htrace
+      linarith⟩
   have hconj0 : Xconj ≠ 0 := by
     intro h
     apply hX0

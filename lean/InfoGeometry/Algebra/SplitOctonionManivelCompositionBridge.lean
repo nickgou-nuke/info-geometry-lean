@@ -234,7 +234,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
         coe_re_mul_star' Y.b]
     · show (X * Y).a * star Y.a + star (-Y.b) * (X * Y).b = normSQ Y • X.a
       rw [SplitOctonion.mul_a, SplitOctonion.mul_b, star_neg, neg_mul, e1, e2, e3, e4]
-      abel
+      abel_nf
       rw [Quaternion.mul_coe_eq_smul, Quaternion.coe_mul_eq_smul]
       simp only [neg_one_smul]
       have hscalar :
@@ -264,7 +264,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
             coe_re_mul_star' Y.a]
         rw [Quaternion.mul_coe_eq_smul, Quaternion.coe_mul_eq_smul]
       rw [f1, f2]
-      abel
+      abel_nf
       rw [neg_one_smul]
       simp only [Quaternion.coe_mul_eq_smul]
       have hscalar :

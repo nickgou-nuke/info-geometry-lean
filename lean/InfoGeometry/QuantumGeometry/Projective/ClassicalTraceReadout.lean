@@ -107,10 +107,9 @@ theorem qgtAmariBase_e_connection_one
 theorem qgtAmariBase_m_connection_one
     (ψ : NormalizedState QubitH)
     (X Y : EndQ) :
-    m_connection (qgtAmariBase ψ X Y) 1 =
+    AmariBase.m_connection (qgtAmariBase ψ X Y) 1 =
       -fubiniStudyMetric ψ X Y := by
-  rw [duality]
-  simp [qgtAmariBase,
+  simp [AmariBase.m_connection, qgtAmariBase,
     quantumTrace_horizontalGramMatrix_re_eq_fubiniStudyMetric]
 
 /--
@@ -149,7 +148,8 @@ Finite stress-domain instantiation using the exact QGT trace as the scalar
 potential channel and zero density derivative/connection variation.
 -/
 def qgtTraceStressDatum
-    (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
+    (metric : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex →
+      InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex → ClassicalScalar)
     (ψ : NormalizedState QubitH)
     (X Y : EndQ) : DomainSeparatedStressDatum :=
   compactStressDatum metric (fun _ => 0)
@@ -157,7 +157,8 @@ def qgtTraceStressDatum
 
 /-- The scalar potential carried by the finite stress datum is exactly the QGT. -/
 theorem qgtTraceStressDatum_potential_eq_QGT
-    (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
+    (metric : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex →
+      InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex → ClassicalScalar)
     (ψ : NormalizedState QubitH)
     (X Y : EndQ) :
     (qgtTraceStressDatum metric ψ X Y).potential = QGT ψ X Y := by
@@ -170,11 +171,12 @@ metric table is symmetric; no additional quantum symmetry hypothesis is
 needed because the connection-variation channel is identically zero.
 -/
 theorem qgtTraceStressDatum_fullStress_symmetric
-    (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
+    (metric : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex →
+      InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex → ClassicalScalar)
     (hmetric : ∀ μ ν, metric μ ν = metric ν μ)
     (ψ : NormalizedState QubitH)
     (X Y : EndQ)
-    (μ ν : SpacetimeIndex) :
+    (μ ν : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex) :
     (qgtTraceStressDatum metric ψ X Y).fullStress μ ν =
       (qgtTraceStressDatum metric ψ X Y).fullStress ν μ := by
   apply DomainSeparatedStressDatum.fullStress_symmetric
@@ -186,14 +188,15 @@ theorem qgtTraceStressDatum_fullStress_symmetric
 Complete finite projective-QGT classical-readout packet.
 -/
 theorem projectiveQGT_classicalReadout_packet
-    (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
+    (metric : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex →
+      InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex → ClassicalScalar)
     (hmetric : ∀ μ ν, metric μ ν = metric ν μ)
     (ψ : NormalizedState QubitH)
     (X Y : EndQ)
-    (μ ν : SpacetimeIndex) :
+    (μ ν : InfoGeometry.Physics.Section34StrengthenedFormalism.SpacetimeIndex) :
     quantumTraceToClassical (horizontalGramMatrix ψ X Y) = QGT ψ X Y ∧
     (qgtAmariBase ψ X Y).e_connection 1 = fubiniStudyMetric ψ X Y ∧
-    m_connection (qgtAmariBase ψ X Y) 1 = -fubiniStudyMetric ψ X Y ∧
+    AmariBase.m_connection (qgtAmariBase ψ X Y) 1 = -fubiniStudyMetric ψ X Y ∧
     (qgtTraceStressDatum metric ψ X Y).fullStress μ ν =
       (qgtTraceStressDatum metric ψ X Y).fullStress ν μ := by
   exact ⟨

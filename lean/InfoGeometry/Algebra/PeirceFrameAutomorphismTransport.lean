@@ -54,7 +54,9 @@ theorem ePlus_add_eMinus (I : A) :
   calc
     (half : K) • (one + I) + (half : K) • (one - I)
         = (half : K) • ((one + I) + (one - I)) := by rw [← smul_add]
-      _ = (half : K) • (one + one + (I - I)) := by abel
+      _ = (half : K) • (one + one + (I - I)) := by
+        congr 1
+        abel_nf
       _ = (half : K) • (one + one + 0) := by rw [sub_self]
       _ = (half : K) • (one + one) := by rw [add_zero]
       _ = (half : K) • ((2 : K) • one) := by
@@ -111,13 +113,15 @@ theorem eMinus_idempotent
     mul (eMinus (K := K) one I) (eMinus (K := K) one I) = eMinus (K := K) one I := by
   dsimp [eMinus]
   have h_two_half : (2 : K) * (half : K) = 1 := half_two
+  have h_expand : mul (one - I) (one - I) = mul one one - mul one I - mul I one + mul I I := by
+    rw [LinearMap.map_sub₂, LinearMap.map_sub, LinearMap.map_sub]
+    abel
   calc
     mul ((half : K) • (one - I)) ((half : K) • (one - I))
         = ((half : K) * (half : K)) • mul (one - I) (one - I) := by
           rw [LinearMap.map_smul₂, LinearMap.map_smul, smul_smul]
       _ = ((half : K) * (half : K)) • (mul one one - mul one I - mul I one + mul I I) := by
-          rw [LinearMap.map_sub₂, LinearMap.map_sub, LinearMap.map_sub]
-          abel
+          rw [h_expand]
       _ = ((half : K) * (half : K)) • (one - I - I + one) := by
           rw [h_unit_left, h_unit_left, h_unit_right, hI_sq]
       _ = ((half : K) * (half : K)) • ((2 : K) • (one - I)) := by
@@ -141,13 +145,15 @@ theorem ePlus_mul_eMinus
     (I : A) (hI_sq : mul I I = one) :
     mul (ePlus (K := K) one I) (eMinus (K := K) one I) = 0 := by
   dsimp [ePlus, eMinus]
+  have h_expand : mul (one + I) (one - I) = mul one one - mul one I + mul I one - mul I I := by
+    rw [LinearMap.map_add₂, LinearMap.map_sub, LinearMap.map_sub]
+    abel
   calc
     mul ((half : K) • (one + I)) ((half : K) • (one - I))
         = ((half : K) * (half : K)) • mul (one + I) (one - I) := by
           rw [LinearMap.map_smul₂, LinearMap.map_smul, smul_smul]
       _ = ((half : K) * (half : K)) • (mul one one - mul one I + mul I one - mul I I) := by
-          rw [LinearMap.map_add₂, LinearMap.map_sub, LinearMap.map_sub]
-          abel
+          rw [h_expand]
       _ = ((half : K) * (half : K)) • (one - I + I - one) := by
           rw [h_unit_left, h_unit_left, h_unit_right, hI_sq]
       _ = ((half : K) * (half : K)) • 0 := by
@@ -162,18 +168,22 @@ theorem eMinus_mul_ePlus
     (I : A) (hI_sq : mul I I = one) :
     mul (eMinus (K := K) one I) (ePlus (K := K) one I) = 0 := by
   dsimp [ePlus, eMinus]
+  have h_expand : mul (one - I) (one + I) = mul one one + mul one I - mul I one - mul I I := by
+    rw [LinearMap.map_sub₂, LinearMap.map_add, LinearMap.map_add]
+    abel
   calc
     mul ((half : K) • (one - I)) ((half : K) • (one + I))
         = ((half : K) * (half : K)) • mul (one - I) (one + I) := by
           rw [LinearMap.map_smul₂, LinearMap.map_smul, smul_smul]
       _ = ((half : K) * (half : K)) • (mul one one + mul one I - mul I one - mul I I) := by
-          rw [LinearMap.map_sub₂, LinearMap.map_add, LinearMap.map_add]
-          abel
+          rw [h_expand]
       _ = ((half : K) * (half : K)) • (one + I - I - one) := by
           rw [h_unit_left, h_unit_left, h_unit_right, hI_sq]
       _ = ((half : K) * (half : K)) • 0 := by
           congr 1
           abel
+      _ = 0 := smul_zero _
+          abel_nf
       _ = 0 := smul_zero _
 
 /-!

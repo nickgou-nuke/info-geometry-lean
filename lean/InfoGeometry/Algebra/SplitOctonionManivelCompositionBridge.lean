@@ -52,6 +52,10 @@ theorem coe_re_mul_star (u : Quaternion ℝ) : u * star u = ↑((u * star u).re)
   rw [star_star] at h
   exact h
 
+/-- Starred variant: `star u * u` is the embedded real part of `u * star u`. -/
+theorem coe_re_mul_star' (u : Quaternion ℝ) : star u * u = ↑((u * star u).re) := by
+  rw [← coe_re_mul_star, mul_comm]
+
 /-- Peel lemma: star of `u * star v` is `v * star u`. -/
 theorem star_mul_star (u v : Quaternion ℝ) : star (u * star v) = v * star u := by
   rw [star_mul, star_star]
@@ -59,7 +63,7 @@ theorem star_mul_star (u v : Quaternion ℝ) : star (u * star v) = v * star u :=
 /-- Star equals twice-real-minus-self (componentwise on quaternions). -/
 theorem star_eq_two_re_sub (x : Quaternion ℝ) :
     star x = ↑(2 * x.re) - x := by
-  ext <;> simp
+  ext <;> simp <;> ring
 
 /-- Multiplicativity of the quaternion norm-square (not provided by mathlib). -/
 theorem normSq_mul_quat (p q : Quaternion ℝ) :
@@ -172,7 +176,7 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     show normSQ (⟨a, b⟩ * ⟨c, d⟩) = normSQ ⟨a, b⟩ * normSQ ⟨c, d⟩
     simp only [normSQ, SplitOctonion.mul_a, SplitOctonion.mul_b]
     rw [normSq_re_add (a * c) (star d * b), normSq_re_add (d * a) (b * star c),
-      h1, h2, h3, h4, hcross]
+      hs1, hs2, h1, h2, h3, h4, hcross]
     ring
   q_one := by simp [normSQ]
   q_zero := by simp [normSQ]
@@ -199,7 +203,8 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
     apply SplitOctonion.ext
     · show star (X.a * Y.a + star Y.b * X.b)
         = star Y.a * star X.a + star (-X.b) * (-Y.b)
-      simp only [star_add, star_mul, star_neg, neg_mul, neg_neg, star_star]
+      simp only [star_add, star_mul, star_neg, neg_mul, neg_neg, star_star,
+        neg_smul, one_smul]
       abel
     · show -(Y.b * X.a + X.b * star Y.a)
         = (-X.b) * star Y.a + (-Y.b) * star (star X.a)

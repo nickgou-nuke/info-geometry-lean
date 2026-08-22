@@ -309,6 +309,12 @@ import InfoGeometry.Algebra.Zorn.G2BigCellPolynomialWitnesses
 import InfoGeometry.Algebra.Zorn.G2SymbolicBN2
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
 import InfoGeometry.Algebra.Zorn.G2FlagAndParabolicQuotient
+import InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry
+import InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+import InfoGeometry.Algebra.Zorn.G2FlagWordCertificateEval
+import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
+import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
+import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!

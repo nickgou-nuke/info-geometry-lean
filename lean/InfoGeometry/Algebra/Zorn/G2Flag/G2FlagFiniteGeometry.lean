@@ -20,7 +20,7 @@ namespace InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 
-/- The 189 points of the full `G₂(2)` flag variety.
+/-- The 189 points of the full `G₂(2)` flag variety.
     This cardinality is proved structurally via the BN-pair quotient `G/B ≃ G2Flag`
     rather than by brute-force enumeration. -/
 theorem flag_card : Fintype.card G2Flag = 189 := by
@@ -47,6 +47,10 @@ theorem fanoIncidenceFlags_card : fanoIncidenceFlags.card = 21 := by
   native_decide
 
 /-- The 189-point G₂(2) flag type, defined as the incident pairs of the parabolic certificate. -/
-abbrev G2Flag := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicCertificate
+@[reducible]
+noncomputable def G2Flag := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicCertificate
+
+instance : Fintype G2Flag := by
+  infer_instance
 
 end InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry

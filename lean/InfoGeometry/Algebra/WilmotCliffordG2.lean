@@ -50,8 +50,8 @@ noncomputable def bryantGen (m : Fin 14) : Matrix (Fin 7) (Fin 7) ℝ :=
   | 1  => (1/2 : ℝ) • (- skewGen 0 2 - skewGen 3 5)
   -- C = (1/2)(e_{01} + e_{36})
   | 2  => (1/2 : ℝ) • (skewGen 0 1 + skewGen 3 6)
-  -- D = (1/2)(e_{04} + e_{15})
-  | 3  => (1/2 : ℝ) • (skewGen 0 4 + skewGen 1 5)
+  -- D = (1/2)(-e_{04} + e_{15})
+  | 3  => (1/2 : ℝ) • (- skewGen 0 4 + skewGen 1 5)
   -- E = (1/2)(e_{03} - e_{16})
   | 4  => (1/2 : ℝ) • (skewGen 0 3 - skewGen 1 6)
   -- F = (1/2)(e_{06} + e_{13})
@@ -108,7 +108,7 @@ theorem bryantGen_two_entry :
 
 /-- The `(0,4)` entry separates the fourth Bryant generator. -/
 theorem bryantGen_three_entry :
-    bryantGen 3 0 4 = (1 / 2 : ℝ) := by
+      bryantGen 3 0 4 = (-1 / 2 : ℝ) := by
   dsimp [bryantGen, skewGen]
   norm_num
 
@@ -281,7 +281,7 @@ theorem bryant_C_add_J :
 
 /-- 4. Triad relation: $D + K = \frac{1}{2}(e_{04} - e_{26})$. -/
 theorem bryant_D_add_K :
-    bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (skewGen 0 4 - skewGen 2 6) := by
+  bryantGen 3 + bryantGen 10 = (1/2 : ℝ) • (- skewGen 0 4 - skewGen 2 6) := by
   dsimp [bryantGen]
   ext a b
   simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply, smul_eq_mul]

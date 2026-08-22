@@ -146,6 +146,9 @@ instance : MulAction SplitOctF2Aut IsotropicPoint where
 def isotropicPoints7 : Finset Imaginary :=
   Finset.univ.filter (fun X => Isotropic X.1 ∧ X ≠ zeroImaginary)
 
+theorem isotropicPoint_card : Fintype.card IsotropicPoint = 63 := by
+  native_decide
+
 theorem isotropicPoints7_card : isotropicPoints7.card = 63 := by
   native_decide
 

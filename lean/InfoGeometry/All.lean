@@ -7511,3 +7511,4 @@ import InfoGeometry.Modular.ModularColimitFlow
 import InfoGeometry.Modular.ModularColimitDerivation
 import InfoGeometry.Modular.ConnesCocycle
 import InfoGeometry.Modular.ConnesDifferentialEquation
+import InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge

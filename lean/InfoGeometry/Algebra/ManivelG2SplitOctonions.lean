@@ -285,28 +285,30 @@ theorem range_leftMul_polarB_zero
   rw [hx, zero_mul, zero_mul, zero_mul]
   ring
 
-/** The left kernel is totally isotropic once the quadratic polarization law is
-    supplied.  The nonzero hypothesis on `x` is essential: for `x = 0` the
-    kernel is the whole algebra. -/
+/-- 🏆 THEOREM 12 (Kernel of Left-Multiplication is Totally Isotropic):
+    For any nonzero element `x ≠ 0`, the polar bilinear form vanishes on the entire kernel $\ker(L_x)$. -/
 theorem kernel_leftMul_polarB_zero
     {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
-    (CA : CompositionAlgebra K V) (x : V)
-    (hx : CA.isIsotropic x) (hx_ne : x ≠ 0)
-    (hpolar : ∀ u v : V,
-      CA.q (u + v) = CA.q u + CA.q v + CA.polarB u v)
+    (CA : CompositionAlgebra K V) (x : V) (hx_ne : x ≠ 0)
     (u v : V)
     (hu : CA.mul x u = 0) (hv : CA.mul x v = 0) :
     CA.polarB u v = 0 := by
   have huq : CA.q u = 0 := by
     by_cases hu0 : u = 0
     · simp [hu0, CA.q_zero]
-    · exact zero_divisor_right_isotropic_of_nonzero_left CA x u hu hu0
+    · exact zero_divisor_right_isotropic_of_nonzero_left CA x u hu hx_ne
   have hvq : CA.q v = 0 := by
     by_cases hv0 : v = 0
     · simp [hv0, CA.q_zero]
-    · exact zero_divisor_right_isotropic_of_nonzero_left CA x v hv hv0
+    · exact zero_divisor_right_isotropic_of_nonzero_left CA x v hv hx_ne
+  have huv : CA.mul x (u + v) = 0 := by
+    rw [CA.mul_add, hu, hv, add_zero]
+  have huvq : CA.q (u + v) = 0 := by
+    by_cases huv0 : u + v = 0
+    · simp [huv0, CA.q_zero]
+    · exact zero_divisor_right_isotropic_of_nonzero_left CA x (u + v) huv hx_ne
   dsimp [CompositionAlgebra.polarB]
-  rw [hpolar, huq, hvq]
+  rw [huvq, huq, hvq]
   ring
 
 /-! =========================================================================

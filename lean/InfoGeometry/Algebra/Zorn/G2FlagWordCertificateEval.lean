@@ -16,4 +16,9 @@ theorem flagRepresentative_mem (i : Fin 189) :
     flagRepresentative i ∈ flagGeneratedSubgroup := by
   exact evaluateWord_mem_flagGeneratedSubgroup (flagRepWords i)
 
+set_option maxRecDepth 100000 in
+theorem flagCells_partition :
+    Finset.univ.biUnion flagCells = Finset.univ := by
+  decide
+
 end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

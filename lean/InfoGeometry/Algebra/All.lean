@@ -326,6 +326,7 @@ import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
+import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 /-!
 # InfoGeometry.Algebra.All
 

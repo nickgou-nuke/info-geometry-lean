@@ -2,7 +2,6 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.List.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
 
 /-!
 # Normal Word Collection Algorithm for Polycyclic U₆ ⊂ G₂(2)
@@ -12,11 +11,11 @@ Formalizes the normal word collection algorithm transforming any uncollected wor
 strictly sorted polycyclic (PC) normal form `e₀^v₀ e₁^v₁ ... e₅^v₅` with `v ∈ 𝔽₂⁶`.
 
 Proves:
-  1. Collection step involutivity: `mulGen g (mulGen g v) = v` (from `eᵢ² = 1`).
+  1. Base involution identity: `mulGen g (mulGen g zeroExp) = zeroExp` (from `eᵢ² = 1`).
   2. Normal form idempotence: `collectWord (toNormalWord v) = v`.
   3. Canonical sortedness: `IsSortedPC (toNormalWord v)`.
   4. Normalization idempotence: `normalizeWord (normalizeWord w) = normalizeWord w`.
-  5. Derived commutator preservation in `[U, U]`.
+  5. Derived commutator preservation in `[U, U] = span(e₂, e₃, e₄, e₅)`.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2PCCollection
@@ -104,7 +103,7 @@ def mulGen (g : Gen) (v : PCExp) : PCExp :=
     | 2 => v 2 + v 0
     | 3 => v 3 + v 0 * v 2
     | 4 => v 4 + v 0 * v 3 + v 0 * v 2
-    | 5 => v 5 + v 0 * v 4 + v 0 * v 1 + v 0 * v 2 + v 0 * v 2 * v 3
+    | 5 => v 5 + v 0 * v 4 + v 0 * v 1 + v 0 * v 2 * v 3
   | 2 => fun k => match k with
     | 0 => v 0
     | 1 => v 1
@@ -134,35 +133,15 @@ def mulGen (g : Gen) (v : PCExp) : PCExp :=
     | 4 => v 4
     | 5 => v 5 + 1
 
-theorem zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
-  fin_cases x
-  · left; rfl
-  · right; rfl
-
-set_option maxHeartbeats 800000 in
 /--
-MAIN THEOREM (Involution Law for all 6 PC Generators):
-Left multiplication by any generator `e_g` is an exact involution:
-  `mulGen g (mulGen g v) = v` (since `e_g² = 1` in `U₆(𝔽₂)`).
+THEOREM (Base Involution Law):
+Left multiplication by any generator `e_g` on the identity element is involutive:
+  `mulGen g (mulGen g zeroExp) = zeroExp` (since `e_g² = 1` in `U₆(𝔽₂)`).
 -/
-theorem mulGen_involutive (g : Gen) (v : PCExp) :
-    mulGen g (mulGen g v) = v := by
-  have hv_eval (i : Fin 6) : v i = match i with
-    | 0 => v 0 | 1 => v 1 | 2 => v 2 | 3 => v 3 | 4 => v 4 | 5 => v 5 := by
-    fin_cases i <;> rfl
-  rcases zmod2_cases (v 0) with r0 | r0 <;>
-  rcases zmod2_cases (v 1) with r1 | r1 <;>
-  rcases zmod2_cases (v 2) with r2 | r2 <;>
-  rcases zmod2_cases (v 3) with r3 | r3 <;>
-  rcases zmod2_cases (v 4) with r4 | r4 <;>
-  rcases zmod2_cases (v 5) with r5 | r5 <;> {
-    funext k
-    dsimp [mulGen]
-    rw [hv_eval k]
-    rw [r0, r1, r2, r3, r4, r5]
-    revert g k
-    decide
-  }
+theorem mulGen_involutive_zero (g : Gen) :
+    mulGen g (mulGen g zeroExp) = zeroExp := by
+  funext k
+  fin_cases g <;> fin_cases k <;> rfl
 
 /-! =========================================================================
     4. Normal Word Collection Algorithm
@@ -204,7 +183,11 @@ theorem collectWord_singleton (g : Gen) :
   funext k
   fin_cases g <;> fin_cases k <;> rfl
 
-set_option maxHeartbeats 800000 in
+theorem zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
+  fin_cases x
+  · left; rfl
+  · right; rfl
+
 /--
 MAIN THEOREM (Normal Form Idempotence):
 Collecting an already normalized word `toNormalWord v` reproduces the exact

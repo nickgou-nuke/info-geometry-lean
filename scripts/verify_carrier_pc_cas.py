@@ -10,11 +10,12 @@ power relations.  It is a CAS gate; it is deliberately not imported by Lean.
 from pathlib import Path
 import subprocess
 import re
+import sys
 
 import numpy as np
 from sympy import Poly, symbols
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(sys.argv[0]).resolve().parents[1]
 gap_script = ROOT / "scripts" / "export_carrier_pc_rows.g"
 run = subprocess.run(
     ["gap", "-q", str(gap_script)],

@@ -118,6 +118,10 @@ af = legacy_generators[0] * legacy_generators[5] - legacy_generators[5] * legacy
 af_claim = sp.Rational(1, 2) * legacy_generators[13]
 assert af == af_claim
 
+bc = legacy_generators[1] * legacy_generators[2] - legacy_generators[2] * legacy_generators[1]
+bc_claim = -sp.Rational(1, 2) * (legacy_generators[0] + legacy_generators[7])
+assert bc == bc_claim
+
 print("G2_SO7_STABILIZER_DIM=14")
 for n, vector in enumerate(basis):
     support = [(pairs[i], value) for i, value in enumerate(vector) if value]

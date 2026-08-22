@@ -110,14 +110,22 @@ deriving instance DecidableEq for IsotropicPoint
 
 def actIsotropicPoint (f : SplitOctF2Aut) (X : IsotropicPoint) : IsotropicPoint :=
   ⟨actImaginary f X.1,
-    ⟨automorphism_map_isotropic f⁻¹ X.1.1 X.1.2.1,
+    ⟨(by
+        change Isotropic (f⁻¹.1 X.1.1)
+        exact automorphism_map_isotropic f⁻¹ X.1.1 X.1.2 X.2.1),
       by
         intro hzero
-        apply X.1.2.2
+        apply X.2.2
         apply Subtype.ext
-        have hz := congrArg Subtype.val hzero
+        have hz : f.1.symm X.1.1 = zero := by
+          change f.1.symm X.1.1 = zero
+          exact congrArg (fun Y : Imaginary => Y.1) hzero
         have hz' := congrArg f.1 hz
-        simpa [map_zero] using hz'⟩⟩
+        calc
+          X.1.1 = f.1 (f.1.symm X.1.1) :=
+            (f.1.apply_symm_apply X.1.1).symm
+          _ = f.1 zero := hz'
+          _ = zero := map_zero f⟩⟩
 
 instance : SMul SplitOctF2Aut IsotropicPoint where
   smul := actIsotropicPoint

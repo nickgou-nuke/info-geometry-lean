@@ -91,14 +91,14 @@ lemma pc6pc2_basis8_4 :
     (G2TwoSylowPCAutomorphisms.pc6Aut *
       G2TwoSylowPCAutomorphisms.pc2Aut).1 (basis8 4) = basis8 4 := by
   change pc2Fun (pc6Fun (basis8 4)) = _
-  ext <;> simp [pc2Fun, pc6Fun, basis8, ePlus, eMinus, add, add2,
+  ext <;> simp [pc2Fun, pc6Fun, basis8, ePlus, eMinus,
     up0, up1, up2, down0, down1, down2]
 
 lemma pc6pc2_basis8_5 :
     (G2TwoSylowPCAutomorphisms.pc6Aut *
       G2TwoSylowPCAutomorphisms.pc2Aut).1 (basis8 5) = basis8 5 := by
   change pc2Fun (pc6Fun (basis8 5)) = _
-  ext <;> simp [pc2Fun, pc6Fun, basis8, ePlus, eMinus, add, add2,
+  ext <;> simp [pc2Fun, pc6Fun, basis8, ePlus, eMinus,
     up0, up1, up2, down0, down1, down2]
 
 lemma pc6pc2_basis8_6 :
@@ -165,7 +165,7 @@ lemma peel1_sum_basis_y1 (f : SplitOctF2Aut) :
     rw [automorphism_map_add_y1 f (basis8 2) (basis8 4)]
     rw [← bitToF2_eq_iff]
     simp only [add2, bitToF2_xor]
-    ring_nf <;> simp [F2_mul_two, F2_mul_three, F2_mul_four]
+    ring_nf; simp [F2_mul_two, F2_mul_three, F2_mul_four]
   · rfl
 
 lemma extractBit2_pcWord (e : PCWordExp) :

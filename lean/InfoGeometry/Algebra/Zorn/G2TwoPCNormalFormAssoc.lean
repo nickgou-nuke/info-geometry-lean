@@ -45,7 +45,7 @@ theorem pcCombine_assoc_five (e f g : PCExponent) :
   rw [← bitToF2_eq_iff]
   simp only [bitToF2_xor, bitToF2_and]
   ring_nf
-  simp [pow_two, bitToF2_sq] <;> ring_nf <;> simp [F2_mul_two]
+  simp [pow_two, bitToF2_sq] ; ring_nf; simp [F2_mul_two]
 
 theorem pcCombine_assoc (e f g : PCExponent) :
     pcCombine (pcCombine e f) g = pcCombine e (pcCombine f g) := by

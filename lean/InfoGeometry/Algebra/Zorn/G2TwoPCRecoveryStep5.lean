@@ -55,7 +55,7 @@ lemma peel5_basis8_2 (f : SplitOctF2Aut) :
   dsimp [peel5]
   split
   · rw [mul_apply, pc6_basis8_2]
-  · simp [mul_apply]
+  · simp
 
 lemma peel5_basis8_2_x2 (f : SplitOctF2Aut) :
     ((peel5 f).1 (basis8 2)).x2 =

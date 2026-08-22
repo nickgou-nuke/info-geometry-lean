@@ -31,7 +31,6 @@ theorem pcMatrix_entry_x0_recovered (e : PCExponent) :
 theorem pcWord_autMatrix_entry_two_two (e : PCExponent) :
     autMatrix (G2TwoSylowSubgroup.pcWord e) 2 2 = 1 := by
   rw [autMatrix_entry_x0, G2TwoSylowSubgroup.pcWord_apply]
-  change bitToF2 ((pcWordFun e (basis8 2)).x0) = 1
   rw [pcWordFun_x0_basis8_2]
   rfl
 

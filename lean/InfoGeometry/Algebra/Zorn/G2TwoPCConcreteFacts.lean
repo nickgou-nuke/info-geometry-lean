@@ -18,6 +18,10 @@ theorem pcWord_zero_eq_one :
   dsimp [G2TwoSylowSubgroup.pcWord, G2TwoSylowSubgroup.pcTerm]
   simp
 
+theorem pcWord_zeroPC_eq_one :
+    G2TwoSylowSubgroup.pcWord zeroPC = 1 :=
+  pcWord_zero_eq_one
+
 theorem pcWord_oneAt_eq_generator (i : Fin 6) :
     G2TwoSylowSubgroup.pcWord (oneAt i) = pcGenerator i := by
   fin_cases i <;>

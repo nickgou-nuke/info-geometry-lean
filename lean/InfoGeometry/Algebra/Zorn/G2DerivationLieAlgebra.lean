@@ -1,7 +1,12 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 /-!
 # Lift of Discrete Fano Cross Product to Continuous 14D 𝔤₂(2) Lie Derivations
@@ -167,5 +172,91 @@ theorem g2_infinitesimal_dickson_inv
   rw [h_leib, h_split] at h_metric_deriv
   rw [h_dual (D u) v w, h_dual u (D v) w, h_dual u v (D w)] at h_metric_deriv
   exact h_metric_deriv
+
+/-! =========================================================================
+    6. 14-Parameter Explicit Derivation Matrix from McLewin's Thesis (Table 4)
+    ========================================================================= -/
+
+/--
+The explicit 14-parameter derivation matrix on `Im(𝕆) ≃ R⁷` parameterized by
+`p ∈ R¹⁴` (corresponding to Table 4 of McLewin, 2004, p. 24):
+- `p 0..p 5`: `λ₂..λ₇` (derivation values on `e₁`)
+- `p 6..p 10`: `μ₃..μ₇` (derivation values on `e₂`)
+- `p 11..p 13`: `ν₅..ν₇` (derivation values on `e₄`)
+-/
+def derivationMatrix (p : Fin 14 → R) : Matrix (Fin 7) (Fin 7) R
+  | 0, 0 => 0
+  | 0, 1 => -p 0
+  | 0, 2 => -p 1
+  | 0, 3 => -p 2
+  | 0, 4 => -p 3
+  | 0, 5 => -p 4
+  | 0, 6 => -p 5
+  | 1, 0 => p 0
+  | 1, 1 => 0
+  | 1, 2 => -p 6
+  | 1, 3 => -p 7
+  | 1, 4 => -p 8
+  | 1, 5 => -p 9
+  | 1, 6 => -p 10
+  | 2, 0 => p 1
+  | 2, 1 => p 6
+  | 2, 2 => 0
+  | 2, 3 => p 4 + p 8
+  | 2, 4 => -p 5 - p 7
+  | 2, 5 => -p 2 + p 10
+  | 2, 6 => p 3 - p 9
+  | 3, 0 => p 2
+  | 3, 1 => p 7
+  | 3, 2 => -p 4 - p 8
+  | 3, 3 => 0
+  | 3, 4 => -p 11
+  | 3, 5 => -p 12
+  | 3, 6 => -p 13
+  | 4, 0 => p 3
+  | 4, 1 => p 8
+  | 4, 2 => p 5 + p 7
+  | 4, 3 => p 11
+  | 4, 4 => 0
+  | 4, 5 => p 13 + p 0
+  | 4, 6 => -p 1 - p 12
+  | 5, 0 => p 4
+  | 5, 1 => p 9
+  | 5, 2 => p 2 - p 10
+  | 5, 3 => p 12
+  | 5, 4 => -p 0 - p 13
+  | 5, 5 => 0
+  | 5, 6 => p 6 + p 11
+  | 6, 0 => p 5
+  | 6, 1 => p 10
+  | 6, 2 => -p 3 + p 9
+  | 6, 3 => p 13
+  | 6, 4 => p 1 + p 12
+  | 6, 5 => -p 6 - p 11
+  | 6, 6 => 0
+
+/-- Application of the 14-parameter 𝔤₂ derivation on an imaginary octonion vector `u ∈ Im(𝕆)`. -/
+def derivationApp (p : Fin 14 → R) (u : Fin 7 → R) : Fin 7 → R
+  | 0 => - p 0 * u 1 - p 1 * u 2 - p 2 * u 3 - p 3 * u 4 - p 4 * u 5 - p 5 * u 6
+  | 1 => p 0 * u 0 - p 6 * u 2 - p 7 * u 3 - p 8 * u 4 - p 9 * u 5 - p 10 * u 6
+  | 2 => p 1 * u 0 + p 6 * u 1 + (p 4 + p 8) * u 3 - (p 5 + p 7) * u 4 + (-p 2 + p 10) * u 5 + (p 3 - p 9) * u 6
+  | 3 => p 2 * u 0 + p 7 * u 1 - (p 4 + p 8) * u 2 - p 11 * u 4 - p 12 * u 5 - p 13 * u 6
+  | 4 => p 3 * u 0 + p 8 * u 1 + (p 5 + p 7) * u 2 + p 11 * u 3 + (p 13 + p 0) * u 5 - (p 1 + p 12) * u 6
+  | 5 => p 4 * u 0 + p 9 * u 1 + (p 2 - p 10) * u 2 + p 12 * u 3 - (p 0 + p 13) * u 4 + (p 6 + p 11) * u 6
+  | 6 => p 5 * u 0 + p 10 * u 1 + (-p 3 + p 9) * u 2 + p 13 * u 3 + (p 1 + p 12) * u 4 - (p 6 + p 11) * u 5
+
+/-- 🏆 THEOREM: Every 𝔤₂ derivation action strictly preserves the standard bilinear metric. -/
+theorem derivationApp_preserves_bilinearForm (p : Fin 14 → R) (u v : Fin 7 → R) :
+    bilinearForm (derivationApp p u) v + bilinearForm u (derivationApp p v) = 0 := by
+  dsimp [bilinearForm, derivationApp]
+  ring
+
+/-- 🏆 THEOREM: Every 𝔤₂ derivation matrix is strictly skew-symmetric (embeds 𝔤₂ ↪ 𝔰𝔬(7)). -/
+theorem derivationMatrix_skew (p : Fin 14 → R) (i j : Fin 7) :
+    derivationMatrix p i j = - derivationMatrix p j i := by
+  fin_cases i <;> fin_cases j <;> {
+    dsimp [derivationMatrix]
+    try ring
+  }
 
 end InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra

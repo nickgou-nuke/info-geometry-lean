@@ -133,13 +133,12 @@ lemma pc1Aut_basis8_2 : pc1Aut.1 (basis8 2) = basis8 2 := by
 lemma pc1Aut_basis8_4 :
     pc1Aut.1 (basis8 4) = basis8 4 := by
   change G2TwoSylowPCGenerators.pc1Fun (basis8 4) = _
-  ext <;> simp [G2TwoSylowPCGenerators.pc1Fun, basis8, ePlus, eMinus, add, add2,
-    up0, up1, up2, down0, down1, down2]
+  ext <;> simp [G2TwoSylowPCGenerators.pc1Fun, basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
 
 lemma pc1Aut_basis8_6 :
     pc1Aut.1 (basis8 6) = basis8 6 := by
   change G2TwoSylowPCGenerators.pc1Fun (basis8 6) = _
-  ext <;> simp [G2TwoSylowPCGenerators.pc1Fun, basis8, ePlus, eMinus, add, add2,
+  ext <;> simp [G2TwoSylowPCGenerators.pc1Fun, basis8, ePlus, eMinus,
     up0, up1, up2, down0, down1, down2]
 
 lemma peel0_apply_basis8_4 (f : SplitOctF2Aut) :

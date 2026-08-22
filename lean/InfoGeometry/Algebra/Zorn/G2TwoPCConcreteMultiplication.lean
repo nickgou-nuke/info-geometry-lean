@@ -164,7 +164,7 @@ theorem pcWord_oneAt_one_mul_oneAt_zero :
     pc6Fun (pc4Fun (pc3Fun (pc2Fun (pc1Fun X))))
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   ext <;> dsimp [pc1Fun, pc2Fun, pc3Fun, pc4Fun, pc6Fun]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pcWord_oneAt_one_mul_oneAt_zero_pcCombine :
     G2TwoSylowSubgroup.pcWord (oneAt 1) *
@@ -209,7 +209,7 @@ theorem pcWord_oneAt_two_mul_oneAt_zero :
     pc6Fun (pc3Fun (pc1Fun X))
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   ext <;> dsimp [pc1Fun, pc3Fun, pc6Fun]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pcWord_oneAt_two_mul_oneAt_zero_pcCombine :
     G2TwoSylowSubgroup.pcWord (oneAt 2) *
@@ -1463,26 +1463,16 @@ theorem pcWord_oneAtBit_mul (i j : Fin 6) (b c : Bool) :
         G2TwoSylowSubgroup.pcWord (oneAtBit j c) =
       G2TwoSylowSubgroup.pcWord
         (pcCombine (oneAtBit i b) (oneAtBit j c)) := by
-  cases b <;> cases c
-  all_goals dsimp [oneAtBit]
-  · change G2TwoSylowSubgroup.pcWord zeroPC *
-      G2TwoSylowSubgroup.pcWord zeroPC = _
-    have hz : G2TwoSylowSubgroup.pcWord zeroPC = 1 := by
-      exact pcWord_zero_eq_one
-    rw [hz, one_mul, pcCombine_zero_left]
-    exact hz.symm
-  · change G2TwoSylowSubgroup.pcWord zeroPC *
-      G2TwoSylowSubgroup.pcWord (oneAt j) = _
-    have hz : G2TwoSylowSubgroup.pcWord zeroPC = 1 := by
-      exact pcWord_zero_eq_one
-    rw [hz, one_mul]
-    rw [pcCombine_zero_left]
-  · change G2TwoSylowSubgroup.pcWord (oneAt i) *
-      G2TwoSylowSubgroup.pcWord zeroPC = _
-    have hz : G2TwoSylowSubgroup.pcWord zeroPC = 1 := by
-      exact pcWord_zero_eq_one
-    rw [hz, mul_one]
-    rw [pcCombine_zero_right]
-  · simpa [oneAtBit] using pcWord_oneAt_mul i j
+  cases b
+  · cases c
+    · dsimp [oneAtBit]
+      rw [pcWord_zeroPC_eq_one, one_mul, pcCombine_zero_left, pcWord_zeroPC_eq_one]
+    · dsimp [oneAtBit]
+      rw [pcWord_zeroPC_eq_one, one_mul, pcCombine_zero_left]
+  · cases c
+    · dsimp [oneAtBit]
+      rw [pcWord_zeroPC_eq_one, mul_one, pcCombine_zero_right]
+    · dsimp [oneAtBit]
+      exact pcWord_oneAt_mul i j
 
 end InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication

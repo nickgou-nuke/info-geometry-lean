@@ -62,7 +62,7 @@ theorem pc4Aut_comm_pc6Aut :
   ext <;> dsimp [G2TwoSylowPCGenerators.pc4Fun,
     G2TwoSylowPCGenerators.pc6Fun,
     InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
+  all_goals simp [Bool.xor_left_comm]
 
 /- CAS export: PCCONJ 6 5 = (0,0,0,0,1,0). -/
 theorem pc5Aut_comm_pc6Aut :

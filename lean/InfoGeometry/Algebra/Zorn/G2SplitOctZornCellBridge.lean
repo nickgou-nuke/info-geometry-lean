@@ -91,7 +91,7 @@ def nativeIncident (X Y : SplitOctF2) : Prop := nativePolar X Y = 0
 
 theorem boolToZMod_eq_zero_iff (b : Bool) :
     boolToZMod b = 0 ↔ b = false := by
-  cases b <;> rfl
+  cases b <;> simp [boolToZMod]
 
 theorem nativePolar_isotropic_sum_iff
     (X Y : SplitOctF2)
@@ -100,7 +100,8 @@ theorem nativePolar_isotropic_sum_iff
     nativeIncident X Y ↔ zornNorm (add X Y) = false := by
   unfold nativeIncident nativePolar
   rw [ZornCell.polarZ]
-  rw [detZ_toZornCell, toZornCell_add, detZ_toZornCell]
+  rw [← toZornCell_add X Y, detZ_toZornCell, detZ_toZornCell,
+    detZ_toZornCell]
   simp [hX_iso, hY_iso, boolToZMod_eq_zero_iff]
 
 noncomputable def splitOctF2ZornCellEquiv :

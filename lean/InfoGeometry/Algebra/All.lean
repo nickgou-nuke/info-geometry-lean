@@ -295,7 +295,6 @@ import InfoGeometry.Algebra.ManivelG2SplitOctonions
 import InfoGeometry.Algebra.ManivelMagicSquare
 import InfoGeometry.Algebra.WongRollingBallG2
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
-import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
 /-!
 # InfoGeometry.Algebra.All
 

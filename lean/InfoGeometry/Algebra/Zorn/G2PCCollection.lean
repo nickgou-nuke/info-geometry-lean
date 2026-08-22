@@ -199,17 +199,23 @@ exponent vector `v`.
 -/
 theorem collectWord_toNormalWord (v : PCExp) :
     collectWord (toNormalWord v) = v := by
-  funext k
   rcases zmod2_cases (v 0) with r0 | r0 <;>
   rcases zmod2_cases (v 1) with r1 | r1 <;>
   rcases zmod2_cases (v 2) with r2 | r2 <;>
   rcases zmod2_cases (v 3) with r3 | r3 <;>
   rcases zmod2_cases (v 4) with r4 | r4 <;>
   rcases zmod2_cases (v 5) with r5 | r5 <;> {
-    dsimp [toNormalWord, collectWord]
+    funext k
+    dsimp [toNormalWord]
     rw [r0, r1, r2, r3, r4, r5]
-    dsimp
-    fin_cases k <;> rfl
+    dsimp [collectWord, mulGen, zeroExp]
+    fin_cases k
+    · rw [r0]; rfl
+    · rw [r1]; rfl
+    · rw [r2]; rfl
+    · rw [r3]; rfl
+    · rw [r4]; rfl
+    · rw [r5]; rfl
   }
 
 /--

@@ -33,7 +33,7 @@ def sr : Fin 14 → Fin 7 :=
 def ss : Fin 14 → Fin 7 :=
   fun i => match i with
   | 0 => 2 | 1 => 2 | 2 => 1 | 3 => 4 | 4 => 3 | 5 => 3 | 6 => 5
-  | 7 => 6 | 8 => 6 | 9 => 5 | 10 => 6 | 11 => 5 | 12 => 4 | 13 => 4
+  | 7 => 6 | 8 => 6 | 9 => 5 | 10 => 6 | 11 => 5 | 12 => 4 | 13 => 3
 
 set_option maxHeartbeats 2000000 in
 theorem bryantGen_diag_ne_zero (i : Fin 14) :
@@ -65,6 +65,6 @@ theorem bryantGen_linearIndependent :
     · exact absurd h (bryantGen_diag_ne_zero i)
   · intro j _ hj
     rw [bryantGen_cross_zero j i hj]
-    exact mul_zero
+    exact mul_zero g j
 
 end ScratchWilmot

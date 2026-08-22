@@ -140,14 +140,14 @@ theorem pc1_add (X Y : SplitOctF2) :
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc1Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc2_add (X Y : SplitOctF2) :
     pc2Fun (add X Y) = add (pc2Fun X) (pc2Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> dsimp [pc2Fun, add, add2]
-  all_goals simp [Bool.xor_left_comm, Bool.xor_comm, Bool.xor_assoc]
+  all_goals simp [Bool.xor_left_comm, Bool.xor_comm]
 
 theorem pc3_add (X Y : SplitOctF2) :
     pc3Fun (add X Y) = add (pc3Fun X) (pc3Fun Y) := by

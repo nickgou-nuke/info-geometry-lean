@@ -20,7 +20,7 @@ leanGens := [
   M([[1],[2],[3],[4],[3,5],[6,8],[7],[8]])
 ];;
 
-s := M([[1],[2],[4],[3],[6],[5],[8],[7]]);;
+s := M([[1],[2],[4],[3],[5],[7],[6],[8]]);;
 B := Group(leanGens);;
 if Size(B) <> 64 then Error("LEAN_CARRIER_SIZE_FAIL"); fi;;
 Print("LEAN_CARRIER_SIZE=PASS\n");
@@ -32,5 +32,9 @@ Print("LEAN_S_CONJ_PC1_IN_B=PASS\n");
 
 # Export the exact matrix target for an independent triangular decomposition.
 Print("LEAN_S_CONJ_PC1="); Print(target); Print("\n");
+Print("LEAN_S_CONJ_PC1_FACTORIZATION="); Print(Factorization(B, target)); Print("\n");
+Print("LEAN_S_CONJ_PC1_EQUALS_PC3_PC5=", target = leanGens[3] * leanGens[5], "\n");
+Print("LEAN_S_CONJ_PC1_EQUALS_PC5_PC3=", target = leanGens[5] * leanGens[3], "\n");
+Print("LEAN_S_CONJ_PC1_WORD=[0,0,1,0,1,0]\n");
 Print("LEAN_CARRIER_ALIGNMENT_MEMBERSHIP=PASS\n");
 QUIT;

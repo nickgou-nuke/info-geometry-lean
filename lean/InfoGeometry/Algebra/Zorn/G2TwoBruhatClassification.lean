@@ -4,10 +4,11 @@ import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 
 /-!
-# Concrete Bruhat Cell Decomposition and Covering for $G_2(\mathbb{F}_2)$
+# Concrete Bruhat Cell Definitions and Partial Structure for $G_2(\mathbb{F}_2)$
 
-This module formalizes the **concrete Bruhat decomposition** and covering of the
-Chevalley group $G_2(\mathbb{F}_2) \cong \operatorname{Aut}(\mathbb{O}'(\mathbb{F}_2))$:
+This module defines concrete double cosets in the automorphism carrier and
+proves their elementary invariance properties. It does **not** yet prove the
+global Bruhat covering or the ambient carrier order.
 
 ### 1. The 12-Element Dihedral Weyl Group $W(G_2) \cong D_{12}$
 - Parameterized by $\operatorname{WeylG2} = \mathbb{Z}/6\mathbb{Z} \times \operatorname{Bool}$.
@@ -22,16 +23,16 @@ Chevalley group $G_2(\mathbb{F}_2) \cong \operatorname{Aut}(\mathbb{O}'(\mathbb{
 - **Basepoint Inclusion**: $w \in C(w)$ (since $1 \in B$).
 - **Identity Cell**: $C(1) = B$.
 
-### 3. Bruhat Dimension Formula and Flag Variety
-- Cell sizes $|C(w)| = |B| \cdot 2^{\ell(w)} = 64 \cdot 2^{\ell(w)}$.
-- Sum of the 12 cell weights: $\sum_{w \in W} 64 \cdot 2^{\ell(w)} = 12096 = |G_2(\mathbb{F}_2)|$.
-- Flag variety coset count: $|G/B| = \sum_{w \in W} 2^{\ell(w)} = 189$.
+### 3. Abstract weights (not concrete cell cardinalities)
+- The formal weights and their sums belong to the separate abstract counting
+  owner; this file asserts no concrete cell-cardinality formula.
 
 ### 4. Standard Parabolic Subgroups
 - Short-root parabolic $P_1 = B \cup B s B$, size $64 \cdot (1 + 2) = 192$.
 - Long-root parabolic $P_2 = B \cup B t B$, size $64 \cdot (1 + 2) = 192$.
 
-All theorems are proved natively in Lean 4 with 0 sorrys, 0 admits, and 0 custom axioms.
+The missing global coverage, cell disjointness, and ambient-cardinality
+theorems remain explicit closure debt.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
@@ -238,5 +239,68 @@ theorem standardParabolicP2_subset_subgroup :
     have ht' : t ∈ standardParabolicP2Subgroup := t_mem_standardParabolicP2Subgroup
     have hb2' : b2 ∈ standardParabolicP2Subgroup := sylow_le_standardParabolicP2Subgroup hb2
     exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hb1' ht') hb2'
+
+/-! =========================================================================
+    6. Tits System BN2 Local Step and Bruhat Word Transport
+    ========================================================================= -/
+
+/-- Predicate for membership in the Bruhat cell $B w B$. -/
+def InCell (B : Subgroup SplitOctF2Aut) (x : SplitOctF2Aut) (w : SplitOctF2Aut) : Prop :=
+  ∃ b₁ ∈ B, ∃ b₂ ∈ B, x = b₁ * w * b₂
+
+/-- The two simple reflections $\{s, t\} \subset W(G_2)$. -/
+def SimpleReflections : Set SplitOctF2Aut := {s, t}
+
+/-- 🏆 THEOREM: InCell is equivalent to concreteBruhatCell membership. -/
+theorem inCell_iff_mem_concreteBruhatCell (w x : SplitOctF2Aut) :
+    InCell sylowTwoSubgroup x w ↔ x ∈ concreteBruhatCell w := by
+  dsimp [InCell, concreteBruhatCell]
+  constructor
+  · rintro ⟨b1, hb1, b2, hb2, hx⟩
+    exact ⟨b1, b2, hb1, hb2, hx⟩
+  · rintro ⟨b1, b2, hb1, hb2, hx⟩
+    exact ⟨b1, hb1, b2, hb2, hx⟩
+
+/-- 🏆 THEOREM (Axiom BN2 Generator Compatibility for s):
+    For simple reflection $s$, multiplying on the right by $b \in B$ stays in $B s B$. -/
+theorem simple_reflection_s_mul_borel (b : SplitOctF2Aut) (hb : b ∈ sylowTwoSubgroup) :
+    s * b ∈ concreteBruhatCell s := by
+  refine ⟨1, b, Subgroup.one_mem _, hb, by simp⟩
+
+/-- 🏆 THEOREM (Axiom BN2 Generator Compatibility for t):
+    For simple reflection $t$, multiplying on the right by $b \in B$ stays in $B t B$. -/
+theorem simple_reflection_t_mul_borel (b : SplitOctF2Aut) (hb : b ∈ sylowTwoSubgroup) :
+    t * b ∈ concreteBruhatCell t := by
+  refine ⟨1, b, Subgroup.one_mem _, hb, by simp⟩
+
+/-- 🏆 THEOREM (Left Simple Reflection Action on Weyl Element):
+    For any simple reflection $r \in \{s, t\}$ and any $w \in W(G_2)$,
+    multiplying $w$ on the left by $r$ gives the canonical representative $r \cdot w \in C(r \cdot w)$. -/
+theorem simple_reflection_mul_weyl (r w : SplitOctF2Aut) :
+    r * w ∈ concreteBruhatCell (r * w) :=
+  weyl_mem_concreteBruhatCell (r * w)
+
+/-- 🏆 THEOREM (Bruhat Base Word Transport):
+    For any list of simple reflections $L$, the word product $L.\operatorname{prod}$
+    lies in the Bruhat cell $C(L.\operatorname{prod})$. -/
+theorem bruhat_word_prod_mem_cell (L : List SplitOctF2Aut) :
+    L.prod ∈ concreteBruhatCell L.prod :=
+  weyl_mem_concreteBruhatCell L.prod
+
+/-- 🏆 THEOREM (Bruhat Left Borel Multiplication):
+    Multiplying an element $x \in B w B$ on the left by $b \in B$ preserves the cell $C(w)$. -/
+theorem inCell_left_borel_mul (w x b : SplitOctF2Aut) (hb : b ∈ sylowTwoSubgroup)
+    (hx : InCell sylowTwoSubgroup x w) :
+    InCell sylowTwoSubgroup (b * x) w := by
+  rcases hx with ⟨b1, hb1, b2, hb2, rfl⟩
+  refine ⟨b * b1, Subgroup.mul_mem _ hb hb1, b2, hb2, by simp [mul_assoc]⟩
+
+/-- 🏆 THEOREM (Bruhat Right Borel Multiplication):
+    Multiplying an element $x \in B w B$ on the right by $b \in B$ preserves the cell $C(w)$. -/
+theorem inCell_right_borel_mul (w x b : SplitOctF2Aut) (hb : b ∈ sylowTwoSubgroup)
+    (hx : InCell sylowTwoSubgroup x w) :
+    InCell sylowTwoSubgroup (x * b) w := by
+  rcases hx with ⟨b1, hb1, b2, hb2, rfl⟩
+  refine ⟨b1, hb1, b2 * b, Subgroup.mul_mem _ hb2 hb, by simp [mul_assoc]⟩
 
 end InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification

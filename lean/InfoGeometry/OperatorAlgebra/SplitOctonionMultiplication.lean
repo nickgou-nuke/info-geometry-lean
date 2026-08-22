@@ -212,9 +212,11 @@ def leftRegular (X : SplitOct) : SplitOct → SplitOct :=
 def leftRegularAddHom (X : SplitOct) : SplitOct →+ SplitOct where
   toFun := leftRegular X
   map_zero' := by
-    ext <;> simp [leftRegular, mulZ, zeroZ]
+    cases X
+    ext <;> simp [leftRegular, mulZ]
   map_add' Y Z := by
-    ext <;> simp [leftRegular, mulZ, add, zeroZ]
+    cases X; cases Y; cases Z
+    ext <;> simp [leftRegular, mulZ, add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
     <;> ring
 
 def leftRegularLinear (X : SplitOct) : SplitOct →ₗ[ℤ] SplitOct :=
@@ -244,7 +246,8 @@ theorem leftRegularLinear_range_isotropic (X : SplitOct)
     ∀ Y : SplitOct, Y ∈ LinearMap.range (leftRegularLinear X) → normZ Y = 0 := by
   intro Y hY
   rcases hY with ⟨Z, rfl⟩
-  rw [leftRegular_normZ_mul, hX, zero_mul]
+  dsimp [leftRegularLinear, leftRegularAddHom, leftRegular]
+  rw [normZ_mul, hX, zero_mul]
 
 /-- Right-regular action on the true nonassociative `SplitOct` carrier. -/
 def rightRegular (X : SplitOct) : SplitOct → SplitOct :=

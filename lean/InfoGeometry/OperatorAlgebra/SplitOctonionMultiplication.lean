@@ -500,11 +500,27 @@ def scalarZ (r : ℤ) : SplitOct :=
 theorem scalarZ_mul_eq_zero_of_ne_zero
     {r : ℤ} {X : SplitOct} (hX : X ≠ zeroZ)
     (h : mulZ (scalarZ r) X = zeroZ) : r = 0 := by
+  by_contra hr
+  apply hX
   cases X with
   | mk a b x0 x1 x2 y0 y1 y2 =>
-    simp [scalarZ, mulZ, zeroZ] at hX h
-    rcases hX with hX | hX | hX | hX | hX | hX | hX | hX
-    all_goals omega
+    have ha : r * a = 0 := by have := congrArg SplitOct.a h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hb : r * b = 0 := by have := congrArg SplitOct.b h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hx0 : r * x0 = 0 := by have := congrArg SplitOct.x0 h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hx1 : r * x1 = 0 := by have := congrArg SplitOct.x1 h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hx2 : r * x2 = 0 := by have := congrArg SplitOct.x2 h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hy0 : r * y0 = 0 := by have := congrArg SplitOct.y0 h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hy1 : r * y1 = 0 := by have := congrArg SplitOct.y1 h; simpa [scalarZ, mulZ, zeroZ] using this
+    have hy2 : r * y2 = 0 := by have := congrArg SplitOct.y2 h; simpa [scalarZ, mulZ, zeroZ] using this
+    ext <;> simp [zeroZ]
+    · exact (mul_eq_zero.mp ha).resolve_left hr
+    · exact (mul_eq_zero.mp hb).resolve_left hr
+    · exact (mul_eq_zero.mp hx0).resolve_left hr
+    · exact (mul_eq_zero.mp hx1).resolve_left hr
+    · exact (mul_eq_zero.mp hx2).resolve_left hr
+    · exact (mul_eq_zero.mp hy0).resolve_left hr
+    · exact (mul_eq_zero.mp hy1).resolve_left hr
+    · exact (mul_eq_zero.mp hy2).resolve_left hr
 
 /-! ## Trace/determinant truth cross-section -/
 

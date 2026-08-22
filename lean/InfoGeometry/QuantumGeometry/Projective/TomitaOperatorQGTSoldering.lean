@@ -61,7 +61,8 @@ noncomputable def nambuClockAxis : EndC where
     intro c u
     change complex_i (c • u) = c • complex_i u
     apply DoubledSpace.ext
-    simp only [complex_i_apply, WithLp.toLp_smul, smul_fst, smul_snd]
+    simp only [complex_i_apply, WithLp.toLp_smul, WithLp.smul_fst, WithLp.smul_snd,
+      WithLp.toLp_fst, WithLp.toLp_snd]
   cont := (clockAxis (E := H)).cont
 
 @[simp]
@@ -135,7 +136,8 @@ product.
 theorem nambu_real_inner_eq_re_complex_inner (u v : NambuH) :
     ⟪u, v⟫_ℝ = (⟪u, v⟫_ℂ).re := by
   rw [WithLp.prod_inner_apply, WithLp.prod_inner_apply]
-  rw [real_inner_eq_re_inner ℂ (u.ofLp.2) (v.ofLp.2)]
+  change (⟪u.ofLp.1, v.ofLp.1⟫_ℂ).re +
+      (⟪u.ofLp.2, v.ofLp.2⟫_ℂ).re = _
   rw [← Complex.add_re]
 
 /-- Operatorial real metric evaluated on projective horizontal tangent vectors. -/

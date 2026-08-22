@@ -101,13 +101,11 @@ else
 fi;
 # Quotient-orbit readout on the exact carrier G/B, before the more expensive
 # transition audit below.
-# Lean's `QuotientGroup.mk` uses left cosets `gB` (relation
-# `g⁻¹ * h ∈ B`) and left multiplication.  GAP's `RightCosets`/`OnRight`
-# models the opposite orientation (`Bg`).  Use `LeftCosets`/`OnLeft` here so
-# the exported orbit certificate has the same mathematical variance as Lean.
+# Lean's `QuotientGroup.mk` uses the relation `g⁻¹ * h ∈ B`, hence the carrier
+# is the `gB` coset space with left multiplication.  In GAP this is
+# `LeftCosets(G,B)`; the explicit action below avoids the `OnRight` variance.
 Q := LeftCosets(G, B);
-# Explicit left translation on the left-coset carrier.  We do not use GAP's
-# `OnRight`, whose variance is tied to `RightCosets`.
+# Explicit left translation on the `gB` carrier.
 OnLeftCosets := function(q, g)
   local target, pos;
   target := Set(List(Elements(B), b -> (g * Representative(q)) * b));

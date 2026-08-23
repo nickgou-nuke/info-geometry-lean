@@ -137,10 +137,10 @@ theorem phaseOrbit_eq_complex_iOrbit
   unfold phaseOrbit
   rw [modularComplexI_eq_complex_i]
 
+omit [CompleteSpace E] in
 /-- The Madelung phase orbit is the orbit of the native doubled-carrier clock
 axis.  This is a carrier-preserving identification; it does not identify the
 separate `Fin 2` matrix parabolic-clock carrier with `DoubledSpace E`. -/
-omit [CompleteSpace E] in
 theorem phaseOrbit_eq_clockAxisOrbit
     (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) :
     S.phaseOrbit θ =

@@ -10,6 +10,7 @@ import InfoGeometry.Physics.CuntzTransitionGramBridge
 import InfoGeometry.Physics.ThreeColorSL3ZornAction
 import InfoGeometry.Physics.SplitOctonionBraidSU3Nonabelian
 import InfoGeometry.Physics.ThreeColorSL3MatrixConjugation
+import InfoGeometry.Physics.ThreeColorSU3
 import InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
 import InfoGeometry.Physics.GellMannParafermionSolder
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge

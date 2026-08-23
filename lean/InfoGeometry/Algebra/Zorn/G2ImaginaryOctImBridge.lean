@@ -44,6 +44,60 @@ def octImToImaginary (v : OctImF2) : Imaginary :=
       zModToBool (v 1), zModToBool (v 2), zModToBool (v 3),
       zModToBool (v 4), zModToBool (v 5)⟩, rfl⟩
 
+theorem zModToBool_add (a b : ZMod 2) :
+    zModToBool (a + b) =
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2
+        (zModToBool a) (zModToBool b) := by
+  fin_cases a <;> fin_cases b <;> rfl
+
+theorem boolToZMod_add2 (a b : Bool) :
+    boolToZMod
+        (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 a b) =
+      boolToZMod a + boolToZMod b := by
+  cases a <;> cases b <;> rfl
+
+def imaginaryAdd (A B : Imaginary) : Imaginary :=
+  ⟨InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add A.1 B.1, by
+    dsimp [InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
+      TraceZero] at A B ⊢
+    rw [A.2, B.2]⟩
+
+theorem imaginaryToOctIm_imaginaryAdd (A B : Imaginary) :
+    imaginaryToOctIm (imaginaryAdd A B) =
+      imaginaryToOctIm A + imaginaryToOctIm B := by
+  funext i
+  fin_cases i
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.x0 B.1.x0) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.x1 B.1.x1) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.x2 B.1.x2) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.y0 B.1.y0) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.y1 B.1.y1) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.y2 B.1.y2) = _
+    exact boolToZMod_add2 _ _
+  · change boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2 A.1.a B.1.a) = _
+    exact boolToZMod_add2 _ _
+
+theorem actImaginary_imaginaryAdd (f : SplitOctF2Aut) (A B : Imaginary) :
+    G2ImaginaryIsotropicPoints.actImaginary f (imaginaryAdd A B) =
+      imaginaryAdd (G2ImaginaryIsotropicPoints.actImaginary f A)
+        (G2ImaginaryIsotropicPoints.actImaginary f B) := by
+  apply Subtype.ext
+  change f⁻¹.1 (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add A.1 B.1) =
+    InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add
+      (f⁻¹.1 A.1) (f⁻¹.1 B.1)
+  exact f⁻¹.2.2.1 A.1 B.1
+
+theorem automorphism_map_zero (f : SplitOctF2Aut) : f.1 zero = zero := by
+  calc
+    f.1 zero = f.1 (add zero zero) := by rw [add_zero]
+    _ = add (f.1 zero) (f.1 zero) := f.2.2.1 zero zero
+    _ = zero := add_self (f.1 zero)
+
 def imaginaryOctImEquiv : Imaginary ≃ OctImF2 where
   toFun := imaginaryToOctIm
   invFun := octImToImaginary

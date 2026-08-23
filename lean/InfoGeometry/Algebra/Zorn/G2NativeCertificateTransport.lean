@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
+import InfoGeometry.Algebra.Zorn.G2CASNativePointAction
 
 /-!
 # Explicit transport boundary for the finite incidence certificate
@@ -19,11 +20,11 @@ open InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 open InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 open InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate
+open InfoGeometry.Algebra.Zorn.G2CASNativePointEnumeration
 
 noncomputable def nativePointEnum : Fin 63 ≃
     InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint :=
-  pointEnum.trans
-    InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.pointOctImEquiv
+  pointEnum.trans pointOctImEquiv
 
 def nativeIncident
     (p l : InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) : Prop :=

@@ -26,9 +26,11 @@ w := [One(B), cycle, cycle^2, s, s*cycle, s*cycle^2,
 
 G := Group(Concatenation(pcgens, [s, cycle, cartan]));
 correctedT := cycle^2 * s * cartan;
-leanC := cycle * cartan;
-leanT := leanC * s;
-apiGeneratedGroup := Group(Concatenation(pcgens, [s, leanT]));
+ # `correctedT` is the exact matrix exported by Lean's `correctedT` through
+ # the contravariant `autMatrix` carrier law.  The former `leanT` candidate
+ # was a legacy Weyl word and is intentionally not part of this audit.
+apiGeneratedGroup := Group(Concatenation(pcgens, [s, correctedT]));
+leanC := s * correctedT;
 leanW := [One(B), leanC, leanC^2, leanC^3, leanC^4, leanC^5,
   s, s*leanC, s*leanC^2, s*leanC^3, s*leanC^4, s*leanC^5];
 leanCells := [];
@@ -83,8 +85,7 @@ Print("TRUE_BRUHAT_GROUP_ORDER=", Size(G), "\n");
 Print("LEAN_API_GENERATED_GROUP_ORDER=", Size(apiGeneratedGroup), "\n");
 Print("TRUE_BRUHAT_SIMPLE_GENERATOR_ORDERS=", Order(s), ",", Order(cartan*(s*cycle)), ", product=", Order(s*(cartan*(s*cycle))), "\n");
 Print("LEAN_CORRECTED_T_ORDERS=", Order(correctedT), ", product=", Order(s*correctedT), "\n");
-Print("LEAN_API_T_ORDERS=", Order(leanT), ", product=", Order(s*leanT), "\n");
-Print("LEAN_API_T_EQUALS_CORRECTED=", leanT = correctedT, "\n");
+Print("LEAN_API_T_ORDERS=", Order(correctedT), ", product=", Order(s*correctedT), "\n");
 Print("LEAN_API_CELL_SIZES=", List(leanCells, Size), "\n");
 Print("LEAN_API_UNION_SIZE=", Size(leanUnion), "\n");
 if Size(leanUnion) = 12096 and leanDisjoint then

@@ -272,7 +272,7 @@ theorem stanDerMap_apply_normal_form (a b x : A) :
   abel
 
 include hleft hright in
-private lemma alternative_commutator_product (c x y : A) :
+lemma alternative_commutator_product (c x y : A) :
     c * (x * y) - (x * y) * c =
       (c * x - x * c) * y + x * (c * y - y * c) -
         3 • associator c x y := by
@@ -292,6 +292,14 @@ private lemma alternative_commutator_product (c x y : A) :
   rw [hcxy, hxyc]
   simp only [sub_mul, mul_sub]
   rw [hxc]
+  abel
+
+include hleft hright in
+theorem commutator_leibniz_defect (c x y : A) :
+    (c * (x * y) - (x * y) * c) -
+        ((c * x - x * c) * y + x * (c * y - y * c)) =
+      -(3 • associator c x y) := by
+  rw [alternative_commutator_product hleft hright]
   abel
 
 include hleft hright in

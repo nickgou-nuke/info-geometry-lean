@@ -20,6 +20,7 @@ import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Thermo.RelativeTemperatureFirstLaw
 import InfoGeometry.Thermo.SusceptibilityHessian
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
+import InfoGeometry.Thermo.RelationalChiralPolarization
 import InfoGeometry.Thermo.OnsagerOperatorClosure
 import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
 import InfoGeometry.Thermo.ThermodynamicIdentities

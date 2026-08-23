@@ -183,7 +183,7 @@ private theorem rootWeight_four_short_add_long_not_mem_range :
   change rootWeight j (tracelessWeightEquiv (Pi.single 0 (1 : ℝ))) = _ at h0
   change rootWeight j (tracelessWeightEquiv (Pi.single 1 (1 : ℝ))) = _ at h1
   fin_cases j <;>
-    simp [Pi.smul_apply, Pi.add_apply, rootWeight, coordWeight,
+    simp [rootWeight, coordWeight,
       tracelessWeightEquiv] at h0 h1 <;>
     try norm_num at h0
 

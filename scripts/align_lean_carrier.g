@@ -1,14 +1,21 @@
-# CAS-only carrier alignment for the six explicit Lean PC automorphisms.
-# The matrices below are the coordinate maps in pc1Fun,...,pc6Fun, not GAP's
-# arbitrary Pcgs(U).  GAP matrices act on row vectors here, so the rows are
-# copied literally from the Lean coordinate formulas.
+# Fixed-basis CAS certificate for the explicit Lean PC carrier.
+#
+# This owner intentionally does not call SylowSubgroup, Pcgs, or any other
+# arbitrary GAP coordinate system.  The ordered matrices below are copied
+# from G2LeanCarrierMatrixAlignment.lean and all products are computed in that
+# exact Lean basis.
 F := GF(2);;
-entry := function(j, support)
-  if j in support then return One(F); fi;
-  return Zero(F);
-end;;
 M := function(rows)
-  return List(rows, r -> List([1..8], j -> entry(j, r)));
+  local m, i, j;
+  m := [];
+  for i in [1..8] do
+    Add(m, []);
+    for j in [1..8] do
+      if j in rows[i] then Add(m[i], One(F));
+      else Add(m[i], Zero(F)); fi;
+    od;
+  od;
+  return m;
 end;;
 
 leanGens := [
@@ -22,19 +29,30 @@ leanGens := [
 
 s := M([[1],[2],[4],[3],[5],[7],[6],[8]]);;
 B := Group(leanGens);;
-if Size(B) <> 64 then Error("LEAN_CARRIER_SIZE_FAIL"); fi;;
-Print("LEAN_CARRIER_SIZE=PASS\n");
+if Size(B) <> 64 then Error("LEAN_FIXED_CARRIER_SIZE_FAIL"); fi;;
+Print("LEAN_FIXED_CARRIER_SIZE=PASS\n");
 
-# The first local target is the conjugate of the first Lean generator.
-target := s^-1 * leanGens[1] * s;;
-if not target in B then Error("LEAN_CONJUGATE_MEMBERSHIP_FAIL"); fi;;
-Print("LEAN_S_CONJ_PC1_IN_B=PASS\n");
-
-# Export the exact matrix target for an independent triangular decomposition.
-Print("LEAN_S_CONJ_PC1="); Print(target); Print("\n");
-Print("LEAN_S_CONJ_PC1_FACTORIZATION="); Print(Factorization(B, target)); Print("\n");
-Print("LEAN_S_CONJ_PC1_EQUALS_PC3_PC5=", target = leanGens[3] * leanGens[5], "\n");
-Print("LEAN_S_CONJ_PC1_EQUALS_PC5_PC3=", target = leanGens[5] * leanGens[3], "\n");
-Print("LEAN_S_CONJ_PC1_WORD=[0,0,1,0,1,0]\n");
-Print("LEAN_CARRIER_ALIGNMENT_MEMBERSHIP=PASS\n");
+# Lean automorphism composition is represented contravariantly by autMatrix.
+# These are the five complement conjugations proved in the Lean owner.
+targets := [
+  s^-1 * leanGens[1] * s,
+  s^-1 * leanGens[3] * s,
+  s^-1 * leanGens[4] * s,
+  s^-1 * leanGens[5] * s,
+  s^-1 * leanGens[6] * s
+];;
+expected := [
+  leanGens[6] * leanGens[5] * leanGens[3],
+  leanGens[6] * leanGens[5] * leanGens[1],
+  leanGens[6],
+  leanGens[6] * leanGens[5] * leanGens[4],
+  leanGens[4]
+];;
+for k in [1..5] do
+  if targets[k] <> expected[k] then
+    Error("LEAN_FIXED_COMPLEMENT_CONJUGATION_FAIL_", k);
+  fi;
+od;
+Print("LEAN_FIXED_COMPLEMENT_CONJUGATIONS=PASS\n");
+Print("LEAN_FIXED_CARRIER_ALIGNMENT=PASS\n");
 QUIT;

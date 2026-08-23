@@ -6,12 +6,12 @@ import InfoGeometry.Physics.ZornMatrixSU3.Stabilizer
 /-!
 # InfoGeometry.Physics.ZornMatrixSU3
 
-**Zorn Matrices, Split Octonions, and SU(3) Color Symmetry**
+**Zorn Matrices, Split Octonions, and real cross-product symmetry**
 
 This file formalizes the Günaydin-Gürsey construction connecting:
 1. Zorn's vector-matrix representation of octonions
 2. Split octonions O_s with signature (4,4)
-3. SU(3) as the stabilizer subgroup of G₂
+3. The real cross-product stabilizer acting on the vector slots
 4. Color triplet/antitriplet representations from off-diagonal vectors
 
 ## Mathematical Structure
@@ -34,7 +34,7 @@ The split octonion norm is:
 N(M) = ab - x⃗·y⃗
 ```
 
-## Connection to Cl(1,1) and SU(3)
+## Connection to Cl(1,1) and the vector-slot decomposition
 
 The diagonal projectors:
 ```

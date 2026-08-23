@@ -23,11 +23,12 @@ Formalizes the mathematical theory from:
    - Cartan root linear functionals: $\alpha_1(s, t) = 2s - t$, $\alpha_2(s, t) = -s + 2t$, and $\alpha_3 = s + t$.
    - Root addition identity $\alpha_1 + \alpha_2 = \alpha_3$.
    - Cartan-Killing matrices $C(A_2) = \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix}$ and $C(G_2) = \begin{pmatrix} 2 & -1 \\ -3 & 2 \end{pmatrix}$.
-3. **Root System Decomposition and $SU(3) \subset G_2$ Embedding**:
+3. **Root System Decomposition and the long-root $A_2$ count**:
    - $\dim(\mathfrak{g}_2) = 14$, $\operatorname{rank}(\mathfrak{g}_2) = 2$, roots count $= 12$.
    - Partition into 6 short roots and 6 long roots.
-   - Long roots form the closed root system $A_2 \cong \mathfrak{su}(3)$ of dimension 8.
-   - Fibration dimension: $\dim(G_2) = \dim(SU(3)) + \dim(S^6) = 8 + 6 = 14$.
+   - The long-root count contributes the numerical $A_2$ dimension $2+6=8$.
+   - The file records the numerical identity $8+6=14$; it does not prove a
+     Lie-subalgebra embedding or a homogeneous-space fibration.
 4. **7-Dimensional Cross Product and Automorphism Invariance**:
    - Skew-symmetry $u \times v = - (v \times u)$.
    - Preservation under algebra automorphisms: $\phi(u \times v) = \phi(u) \times \phi(v)$.
@@ -155,7 +156,7 @@ theorem cartanMatrixA2_symmetric : cartanMatrixA2ᵀ = cartanMatrixA2 := by deci
 theorem cartanMatrixG2_asymmetric : cartanMatrixG2ᵀ ≠ cartanMatrixG2 := by decide
 
 /-! =========================================================================
-    3. G₂ Root System and SU(3) Long-Root Subalgebra (Wong Section 4)
+    3. G₂ Root System and long-root dimension count (Wong Section 4)
     ========================================================================= -/
 
 /-- The exceptional Lie algebra dimension of $G_2$. -/
@@ -181,18 +182,19 @@ def g2LongRootsCount : ℕ := 6
     The 12 roots of $G_2$ partition into 6 short roots and 6 long roots. -/
 theorem g2_roots_partition : g2ShortRootsCount + g2LongRootsCount = g2NumRoots := rfl
 
-/-- The dimension of $SU(3) \cong A_2$: $\operatorname{rank}(A_2) + \text{roots}(A_2) = 2 + 6 = 8$. -/
+/-- Numerical long-root dimension count `2 + 6 = 8`.  No Lie-subalgebra
+    identification is asserted here. -/
 def su3Dim : ℕ := 2 + g2LongRootsCount
 
-/-- 🏆 THEOREM 8 (Wong Section 2 & 4):
-    The long roots of $G_2$ generate the 8-dimensional subalgebra $\mathfrak{su}(3) \cong \mathfrak{sl}(3, \mathbb{C})$. -/
+/-- Numerical long-root dimension count. -/
 theorem su3_dimension : su3Dim = 8 := rfl
 
-/-- Dimension of the homogeneous 6-sphere $S^6 = G_2 / SU(3)$. -/
+/-- Numerical label for the six-dimensional complement; no quotient-space
+    construction is asserted here. -/
 def sphere6Dim : ℕ := 6
 
-/-- 🏆 THEOREM 9 (Wong Section 4 Fibration Dimension):
-    The stabilizer fibration $G_2 / SU(3) \cong S^6$ gives $\dim(G_2) = \dim(SU(3)) + \dim(S^6) = 8 + 6 = 14$. -/
+/-- Numerical identity `8 + 6 = 14`; the geometric fibration requires a
+    separate Lie-group development. -/
 theorem g2_fibration_dimension : su3Dim + sphere6Dim = g2Dim := rfl
 
 /-! =========================================================================

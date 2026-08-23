@@ -35,12 +35,10 @@ def ss : Fin 14 → Fin 7 :=
   | 0 => 2 | 1 => 2 | 2 => 1 | 3 => 4 | 4 => 3 | 5 => 3 | 6 => 5
   | 7 => 6 | 8 => 6 | 9 => 5 | 10 => 6 | 11 => 5 | 12 => 4 | 13 => 3
 
-set_option maxHeartbeats 2000000 in
 theorem bryantGen_diag_ne_zero (i : Fin 14) :
     bryantGen i (sr i) (ss i) ≠ 0 := by
   fin_cases i <;> simp [bryantGen, sr, ss, skewGen]
 
-set_option maxHeartbeats 2000000 in
 theorem bryantGen_cross_zero (j i : Fin 14) (h : j ≠ i) :
     bryantGen j (sr i) (ss i) = 0 := by
   have hne : j.val ≠ i.val := fun he => h (Fin.ext he)
@@ -63,6 +61,7 @@ theorem bryantGen_linearIndependent :
     rw [bryantGen_cross_zero j i hj]
     exact mul_zero (g j)
   · intro hc
-    exact absurd (hc (Finset.mem_univ i)) (by norm_num)
+    rcases hc with ⟨_,_⟩
+    exact absurd hc (by norm_num)
 
 end ScratchWilmot

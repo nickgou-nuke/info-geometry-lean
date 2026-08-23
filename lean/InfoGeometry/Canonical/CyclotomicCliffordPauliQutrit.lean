@@ -2,6 +2,7 @@ import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.RingTheory.RootsOfUnity.Complex
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
@@ -22,6 +23,11 @@ noncomputable section
 
 def cubicRoot : ℂ :=
   Complex.exp (2 * (Real.pi : ℂ) * Complex.I / 3)
+
+/-- The existing qutrit phase is a primitive third root of unity. -/
+theorem cubicRoot_is_primitive_root : IsPrimitiveRoot cubicRoot 3 := by
+  dsimp [cubicRoot]
+  exact Complex.isPrimitiveRoot_exp 3 (by decide)
 
 @[simp] theorem cubicRoot_pow_three : cubicRoot ^ 3 = 1 := by
   dsimp [cubicRoot]

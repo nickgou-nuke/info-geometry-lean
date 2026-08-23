@@ -43,6 +43,132 @@ def peel5 (f : SplitOctF2Aut) : SplitOctF2Aut :=
 def fullPeel (f : SplitOctF2Aut) : SplitOctF2Aut :=
   peel5 (peel34 (peel2 (peel1 (peel0 f))))
 
+/-- The first peel is exactly reversible for every automorphism. -/
+theorem peel0_reconstruct (f : SplitOctF2Aut) :
+    (if (f.1 (basis8 7)).x0 then pc1Aut else 1) * peel0 f = f := by
+  dsimp [peel0]
+  split_ifs
+  · have hsq : pc1Aut * pc1Aut = 1 := by
+      calc
+        pc1Aut * pc1Aut = pc1Aut⁻¹ * pc1Aut := by rw [pc1Aut_inv_eq]
+        _ = 1 := inv_mul_cancel _
+    rw [← mul_assoc, hsq]
+    exact one_mul f
+  · simp
+
+/-- The second raw pivot peel is reversed by the corresponding PC factor. -/
+theorem peel1_reconstruct (f : SplitOctF2Aut) :
+    (if (f.1 (basis8 2)).x1 then pc2Aut else 1) * peel1 f = f := by
+  dsimp [peel1]
+  split_ifs
+  · have hcancel : pc2Aut * (pc6Aut * pc2Aut) = 1 := by
+      calc
+        pc2Aut * (pc6Aut * pc2Aut) = pc2Aut * pc2Aut⁻¹ := by
+          rw [pc2Aut_inv_eq]
+        _ = 1 := mul_inv_cancel _
+    rw [← mul_assoc, hcancel]
+    exact one_mul f
+  · simp
+
+/-- The third raw pivot peel is reversed by the corresponding PC factor. -/
+theorem peel2_reconstruct (f : SplitOctF2Aut) :
+    (if (f.1 (basis8 7)).x1 then pc3Aut else 1) * peel2 f = f := by
+  dsimp [peel2]
+  split_ifs
+  · have hcancel : pc3Aut * (pc6Aut * pc3Aut) = 1 := by
+      calc
+        pc3Aut * (pc6Aut * pc3Aut) = pc3Aut * pc3Aut⁻¹ := by
+          rw [pc3Aut_inv_eq]
+        _ = 1 := mul_inv_cancel _
+    rw [← mul_assoc, hcancel]
+    exact one_mul f
+  · simp
+
+/-- The paired fourth/third peel is reversed in the opposite order. -/
+theorem peel34_reconstruct (f : SplitOctF2Aut) :
+    let e4 := (f.1 (basis8 2)).y1
+    let e3 := (f.1 (basis8 3)).x2 ^^ e4
+    (if e3 then pc4Aut else 1) * (if e4 then pc5Aut else 1) * peel34 f = f := by
+  have h4 : pc4Aut * pc4Aut = 1 := by
+    calc
+      pc4Aut * pc4Aut = pc4Aut⁻¹ * pc4Aut := by rw [pc4Aut_inv_eq]
+      _ = 1 := inv_mul_cancel _
+  have h5 : pc5Aut * pc5Aut = 1 := by
+    calc
+      pc5Aut * pc5Aut = pc5Aut⁻¹ * pc5Aut := by rw [pc5Aut_inv_eq]
+      _ = 1 := inv_mul_cancel _
+  dsimp [peel34]
+  split_ifs
+  · simp only [mul_assoc]
+    rw [← mul_assoc pc5Aut pc5Aut (pc4Aut * f), h5,
+      _root_.one_mul, ← mul_assoc, h4, _root_.one_mul]
+  · simp only [_root_.one_mul, _root_.mul_one]
+    rw [← mul_assoc, h4, _root_.one_mul]
+  · simp only [_root_.one_mul, _root_.mul_one]
+    rw [← mul_assoc, h5, _root_.one_mul]
+  · simp only [_root_.one_mul, _root_.mul_one]
+
+/- The final central peel has the same exact reconstruction law. -/
+theorem peel5_reconstruct (f : SplitOctF2Aut) :
+    (if (f.1 (basis8 2)).x2 then pc6Aut else 1) * peel5 f = f := by
+  dsimp [peel5]
+  split_ifs
+  · have hsq : pc6Aut * pc6Aut = 1 := by
+      calc
+        pc6Aut * pc6Aut = pc6Aut⁻¹ * pc6Aut := by rw [pc6Aut_inv_eq]
+        _ = 1 := inv_mul_cancel _
+    rw [← mul_assoc, hsq]
+    exact one_mul f
+  · simp
+
+/-! The six exact reversals compose into the PC factorization of any carrier
+    element.  The remaining factor is deliberately not identified with a
+    Weyl representative here. -/
+
+theorem fullPeel_pc_factorization (f : SplitOctF2Aut) :
+    let f1 := peel0 f
+    let f2 := peel1 f1
+    let f3 := peel2 f2
+    let f4 := peel34 f3
+    let f5 := peel5 f4
+    (if (f.1 (basis8 7)).x0 then pc1Aut else 1) *
+      (if (f1.1 (basis8 2)).x1 then pc2Aut else 1) *
+      (if (f2.1 (basis8 7)).x1 then pc3Aut else 1) *
+      (if (f3.1 (basis8 3)).x2 ^^ (f3.1 (basis8 2)).y1
+        then pc4Aut else 1) *
+      (if (f3.1 (basis8 2)).y1 then pc5Aut else 1) *
+      (if (f4.1 (basis8 2)).x2 then pc6Aut else 1) * f5 = f := by
+  dsimp
+  let f1 := peel0 f
+  let f2 := peel1 f1
+  let f3 := peel2 f2
+  let f4 := peel34 f3
+  let f5 := peel5 f4
+  have h0 :
+      (if (f.1 (basis8 7)).x0 then pc1Aut else 1) * f1 = f := by
+    simpa [f1] using peel0_reconstruct f
+  have h1 :
+      (if (f1.1 (basis8 2)).x1 then pc2Aut else 1) * f2 = f1 := by
+    simpa [f2] using peel1_reconstruct f1
+  have h2 :
+      (if (f2.1 (basis8 7)).x1 then pc3Aut else 1) * f3 = f2 := by
+    simpa [f3] using peel2_reconstruct f2
+  have h34 :
+      (if (f3.1 (basis8 3)).x2 ^^ (f3.1 (basis8 2)).y1
+        then pc4Aut else 1) *
+        (if (f3.1 (basis8 2)).y1 then pc5Aut else 1) * f4 = f3 := by
+    simpa [f4] using peel34_reconstruct f3
+  have h34R :
+      (if (f3.1 (basis8 3)).x2 ^^ (f3.1 (basis8 2)).y1
+        then pc4Aut else 1) *
+        ((if (f3.1 (basis8 2)).y1 then pc5Aut else 1) * f4) = f3 := by
+    simpa only [mul_assoc] using h34
+  have h5 :
+      (if (f4.1 (basis8 2)).x2 then pc6Aut else 1) * f5 = f4 := by
+    simpa [f5] using peel5_reconstruct f4
+  simp only [mul_assoc]
+  rw [h5, h34R, h2, h1, h0]
+
 /-- Extraction of bit 0 from an automorphism. -/
 def extractBit0 (f : SplitOctF2Aut) : Bool :=
   (f.1 (basis8 7)).x0

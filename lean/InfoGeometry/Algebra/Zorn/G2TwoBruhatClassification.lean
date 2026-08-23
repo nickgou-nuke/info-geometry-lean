@@ -2,12 +2,14 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import InfoGeometry.Algebra.Zorn.BruhatPeelingTransport
 import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.BruhatSubwordOrder
 import InfoGeometry.Algebra.Zorn.BruhatIntervalPoincare
 import InfoGeometry.Algebra.Zorn.LeviRootDecompositionBN2
+import InfoGeometry.Algebra.Zorn.G2PCRecoveryFactorization
 
 /-!
 # Concrete Bruhat Cell Definitions and Partial Structure for $G_2(\mathbb{F}_2)$
@@ -58,6 +60,9 @@ open InfoGeometry.Algebra.Zorn.BruhatPeeling
 open InfoGeometry.Algebra.Zorn.BruhatOrder
 open InfoGeometry.Algebra.Zorn.BruhatInterval
 open InfoGeometry.Algebra.Zorn.LeviDecomposition
+open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
+open InfoGeometry.Algebra.Zorn.G2PCRecoveryFactorization
+open InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 
 /-! =========================================================================
     1. The 12-Element Dihedral Weyl Group Parameter and Lengths
@@ -151,6 +156,33 @@ theorem concreteBruhatCell_right_mul (w : SplitOctF2Aut) (b g : SplitOctF2Aut)
     g * b ∈ concreteBruhatCell w := by
   rcases hg with ⟨b1, b2, hb1, hb2, rfl⟩
   refine ⟨b1, b2 * b, hb1, Subgroup.mul_mem _ hb2 hb, ?_⟩
+  simp [mul_assoc]
+
+/-! The one-sided PC peel preserves a double coset once the input is known to
+    lie in that cell.  This is the correct residual statement: it does not
+    collapse a general double-coset element to its Weyl representative. -/
+
+theorem fullPeel_mem_same_concreteBruhatCell
+    {f w : SplitOctF2Aut} (hf : f ∈ concreteBruhatCell w) :
+    fullPeel f ∈ concreteBruhatCell w := by
+  let q : SplitOctF2Aut := G2TwoSylowSubgroup.pcWord (extractAllBits f)
+  have hq : q ∈ sylowTwoSubgroup := by
+    exact G2TwoSylowSubgroup.pcWord_mem_sylow _
+  have hfactor : q * fullPeel f = f := by
+    simpa [q] using fullPeel_pcWord_factorization f
+  rcases hf with ⟨b₁, b₂, hb₁, hb₂, rfl⟩
+  have hres : fullPeel (b₁ * w * b₂) =
+      q⁻¹ * (b₁ * w * b₂) := by
+    calc
+      fullPeel (b₁ * w * b₂) = 1 * fullPeel (b₁ * w * b₂) := by simp
+      _ = (q⁻¹ * q) * fullPeel (b₁ * w * b₂) := by
+        rw [inv_mul_cancel]
+      _ = q⁻¹ * (q * fullPeel (b₁ * w * b₂)) := by
+        simp [mul_assoc]
+      _ = q⁻¹ * (b₁ * w * b₂) := by rw [hfactor]
+  rw [hres]
+  refine ⟨q⁻¹ * b₁, b₂, sylowTwoSubgroup.mul_mem
+    (sylowTwoSubgroup.inv_mem hq) hb₁, hb₂, ?_⟩
   simp [mul_assoc]
 
 /-! =========================================================================
@@ -324,6 +356,20 @@ theorem standardParabolicOrder_eq_192 :
 /-- The standard short-root parabolic subgroup $P_1 = \langle B, s \rangle$. -/
 def standardParabolicP1Subgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure ((sylowTwoSubgroup : Set SplitOctF2Aut) ∪ {s})
+
+theorem standardParabolicP1Subgroup_le_nativePointStabilizer :
+    standardParabolicP1Subgroup ≤ nativePointStabilizer := by
+  rw [standardParabolicP1Subgroup]
+  apply (Subgroup.closure_le _).2
+  intro g hg
+  rcases hg with hg | hg
+  · have hSylow : sylowTwoSubgroup ≤ nativePointStabilizer := by
+      rw [← pcSubgroup_eq_sylowTwoSubgroup]
+      exact pcSubgroup_le_nativePointStabilizer
+    exact hSylow hg
+  · have hs : g = s := Set.mem_singleton_iff.mp hg
+    subst g
+    exact InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer.swap01Aut_pointData_fix
 
 /-- The standard long-root parabolic subgroup $P_2 = \langle B, t \rangle$. -/
 def standardParabolicP2Subgroup : Subgroup SplitOctF2Aut :=

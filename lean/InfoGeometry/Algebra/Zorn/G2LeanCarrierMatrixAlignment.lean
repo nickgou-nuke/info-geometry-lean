@@ -91,6 +91,28 @@ theorem autMatrix_pc4Aut_eq : autMatrix pc4Aut = pc4Matrix := by native_decide
 theorem autMatrix_pc5Aut_eq : autMatrix pc5Aut = pc5Matrix := by native_decide
 theorem autMatrix_pc6Aut_eq : autMatrix pc6Aut = pc6Matrix := by native_decide
 
+/-! The CAS carrier is indexed by the same ordered six-generator chart.  The
+individual matrix equalities above therefore assemble into one reusable
+generator-level transport theorem. -/
+
+def casPCMatrix : Fin 6 → Matrix (Fin 8) (Fin 8) F2
+  | 0 => pc1Matrix
+  | 1 => pc2Matrix
+  | 2 => pc3Matrix
+  | 3 => pc4Matrix
+  | 4 => pc5Matrix
+  | 5 => pc6Matrix
+
+theorem autMatrix_pcGenerator_eq_casPCMatrix (i : Fin 6) :
+    autMatrix (pcGenerator i) = casPCMatrix i := by
+  fin_cases i
+  · exact autMatrix_pc1Aut_eq
+  · exact autMatrix_pc2Aut_eq
+  · exact autMatrix_pc3Aut_eq
+  · exact autMatrix_pc4Aut_eq
+  · exact autMatrix_pc5Aut_eq
+  · exact autMatrix_pc6Aut_eq
+
 def swap01Matrix : Matrix (Fin 8) (Fin 8) F2 :=
   ![![1, 0, 0, 0, 0, 0, 0, 0],
     ![0, 1, 0, 0, 0, 0, 0, 0],

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Meta.Architecture
@@ -107,6 +108,36 @@ theorem det_pauliMatrix_eq_zero_of_null
     Matrix.det (pauliMatrix v) = 0 := by
   rw [det_pauliMatrix, hv]
   simp
+
+/-! Finite kernel refinements are proved from the native matrix theorem. -/
+
+@[rep_depth operator]
+theorem pauliMatrix_det_zero_iff_exists_nonzero_kernel
+    (v : Minkowski4) :
+    Matrix.det (pauliMatrix v) = 0 ↔
+      ∃ w : Fin 2 → ℂ, w ≠ 0 ∧ Matrix.mulVec (pauliMatrix v) w = 0 := by
+  simpa using
+    (Matrix.exists_mulVec_eq_zero_iff (M := pauliMatrix v)).symm
+
+@[rep_depth operator]
+theorem isNull_iff_pauliMatrix_det_zero
+    (v : Minkowski4) :
+    v.IsNull ↔ Matrix.det (pauliMatrix v) = 0 := by
+  constructor
+  · intro hv
+    exact det_pauliMatrix_eq_zero_of_null hv
+  · intro hdet
+    have hcomplex : ((v.q : ℝ) : ℂ) = 0 := by
+      simpa [det_pauliMatrix] using hdet
+    exact Complex.ofReal_eq_zero.mp hcomplex
+
+@[rep_depth operator]
+theorem isNull_iff_exists_nonzero_pauli_kernel
+    (v : Minkowski4) :
+    v.IsNull ↔
+      ∃ w : Fin 2 → ℂ, w ≠ 0 ∧ Matrix.mulVec (pauliMatrix v) w = 0 := by
+  rw [isNull_iff_pauliMatrix_det_zero,
+    pauliMatrix_det_zero_iff_exists_nonzero_kernel]
 
 /-- Energy-momentum mass shell in Pauli determinant form. -/
 @[rep_depth operator]

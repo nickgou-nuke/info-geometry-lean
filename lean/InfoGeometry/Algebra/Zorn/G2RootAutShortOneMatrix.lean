@@ -43,21 +43,22 @@ theorem autMatrix_rootAut_short_one_eq_C2 :
 
 /-- The canonical PC word `[0,0,1,0,0,0]` is the third PC generator. -/
 theorem pcWord_shortOnePCExp_eq_pc3Aut :
-    pcWord shortOnePCExp = pc3Aut := by
+    G2TwoSylowSubgroup.pcWord shortOnePCExp = pc3Aut := by
   dsimp [shortOnePCExp]
   simpa [pcGenerator] using pcWord_oneAt_eq_generator (2 : Fin 6)
 
 /-- Matrix form of the first root/PC-word alignment. -/
 theorem autMatrix_rootAut_short_one_eq_pcWord :
     autMatrix (rootAut (RootLength.Short, (1 : ZMod 6))) =
-      autMatrix (pcWord shortOnePCExp) := by
+      autMatrix (G2TwoSylowSubgroup.pcWord shortOnePCExp) := by
   rw [autMatrix_rootAut_short_one_eq_C2,
     pcWord_shortOnePCExp_eq_pc3Aut,
     autMatrix_pc3Aut_eq_C2]
 
 /-- First native root/PC-word equality. -/
 theorem rootAut_short_one_eq_pcWord :
-    rootAut (RootLength.Short, (1 : ZMod 6)) = pcWord shortOnePCExp := by
+    rootAut (RootLength.Short, (1 : ZMod 6)) =
+      G2TwoSylowSubgroup.pcWord shortOnePCExp := by
   apply autMatrix_injective
   exact autMatrix_rootAut_short_one_eq_pcWord
 

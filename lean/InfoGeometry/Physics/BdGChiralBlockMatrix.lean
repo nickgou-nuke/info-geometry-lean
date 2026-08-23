@@ -116,6 +116,28 @@ abbrev bdgStar (M : BdGBlock A) : BdGBlock A := star M
   fin_cases i <;> fin_cases j <;>
     simp [diracOperator, chiralGrading, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-! The off-diagonal Dirac block sends the first chiral sheet to the second. -/
+theorem diracOperator_mulVec_inl (Delta : A) (x : A) :
+    Matrix.mulVec (diracOperator Delta) ![x, 0] = ![0, star Delta * x] := by
+  funext i
+  fin_cases i <;>
+    simp [diracOperator, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+
+/-! The off-diagonal Dirac block sends the second chiral sheet to the first. -/
+theorem diracOperator_mulVec_inr (Delta : A) (y : A) :
+    Matrix.mulVec (diracOperator Delta) ![0, y] = ![Delta * y, 0] := by
+  funext i
+  fin_cases i <;>
+    simp [diracOperator, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+
+/-! A nonzero off-diagonal parameter produces a nonzero sheet-mixing action. -/
+theorem diracOperator_mulVec_inr_ne_zero {Delta : A} (hDelta : Delta ≠ 0) :
+    Matrix.mulVec (diracOperator Delta) ![0, 1] ≠ 0 := by
+  rw [diracOperator_mulVec_inr]
+  intro h
+  apply hDelta
+  simpa using congrFun h 0
+
 /-! These finite identities are the theorem-safe spectral shadow of the
 particle-hole/chiral picture.  They do not assert an analytic spectrum. -/
 

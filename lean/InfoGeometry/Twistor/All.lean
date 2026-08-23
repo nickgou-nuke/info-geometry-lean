@@ -64,7 +64,7 @@ import InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
-import InfoGeometry.Twistor.ChiralTwistorSheets
+import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling
 import InfoGeometry.Twistor.RollingSpinorMobiusBridge
 import InfoGeometry.Twistor.PhaseNativePluckerBridge

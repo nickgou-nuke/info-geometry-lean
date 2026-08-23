@@ -50,7 +50,6 @@ theorem fibonacci_square_obstruction
     (Φ : BoundaryToFibonacci)
     (hΦ : IntertwinesFirstGenerator Φ) :
     (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) * Φ = 0 := by
-  have hright := congrArg (fun A : BoundaryToFibonacci => A * JonesBraidB3.s0) hΦ
   have hstep :
       Φ * (JonesBraidB3.s0 * JonesBraidB3.s0) =
         (R * R) * Φ := by
@@ -84,7 +83,6 @@ theorem direct_intertwiner_eq_zero_of_left_inverse
     (hL : L * (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) = 1) :
     Φ = 0 := by
   have hobs := fibonacci_square_obstruction Φ hΦ
-  have hleft := congrArg (fun A : BoundaryToFibonacci => L * A) hobs
   calc
     Φ = (1 : Matrix (Fin 2) (Fin 2) ℂ) * Φ := by simp
     _ = (L * (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ))) * Φ := by rw [hL]

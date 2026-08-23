@@ -33,6 +33,19 @@ def jordanLmul (a : A) : Module.End R A where
 @[simp] theorem jordanLmul_apply (a x : A) :
     jordanLmul (R := R) a x = a * x := rfl
 
+/-- A Leibniz endomorphism acts on left Jordan multiplication by commutator:
+`[D, L_a] = L_(D a)`. -/
+theorem lie_derivation_jordanLmul
+    (D : Module.End R A)
+    (hD : NonAssocDerivation.IsLeibniz R A D)
+    (a : A) :
+    ⁅D, jordanLmul (R := R) a⁆ = jordanLmul (R := R) (D a) := by
+  ext x
+  simp only [Ring.lie_def, Module.End.mul_apply, LinearMap.sub_apply,
+    jordanLmul_apply]
+  rw [hD a x]
+  abel
+
 /-- The commutator of two left Jordan multiplication operators. -/
 def jordanInnerDerivation (a b : A) : Module.End R A :=
   ⁅jordanLmul (R := R) a, jordanLmul (R := R) b⁆
@@ -124,6 +137,16 @@ algebra, bundled in its derivation Lie subalgebra. -/
 noncomputable def h3ZornJordanInnerDerivation (a b : H3Zorn ℝ) :
     NonAssocDerivation.derivations ℝ (H3Zorn ℝ) :=
   jordanInnerDerivationBundled (R := ℝ) a b
+
+/-- Split-Albert specialization of the derivation/left-multiplication
+commutator law. -/
+theorem h3Zorn_derivation_lie_jordanLmul
+    (D : NonAssocDerivation.derivations ℝ (H3Zorn ℝ))
+    (a : H3Zorn ℝ) :
+    ⁅(D : Module.End ℝ (H3Zorn ℝ)), jordanLmul (R := ℝ) a⁆ =
+      jordanLmul (R := ℝ) ((D : Module.End ℝ (H3Zorn ℝ)) a) := by
+  exact lie_derivation_jordanLmul
+    (D := (D : Module.End ℝ (H3Zorn ℝ))) D.property a
 
 @[simp] theorem h3ZornJordanInnerDerivation_apply
     (a b x : H3Zorn ℝ) :

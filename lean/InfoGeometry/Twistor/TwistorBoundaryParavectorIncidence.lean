@@ -115,9 +115,11 @@ theorem incidentBoundaryParavector_iff
           Matrix.mulVec (paravectorToSolderingMatrix p) Z.2 a := by
   constructor
   · intro h a
-    have hfst := congrArg Prod.fst h
+    have hfst : (boundaryIncidenceLinearMap p Z.2).1 = Z.1 :=
+      congrArg Prod.fst h
     have ha := congrFun hfst a
-    simpa [boundaryIncidenceLinearMap_fst_apply] using ha.symm
+    rw [boundaryIncidenceLinearMap_fst_apply] at ha
+    exact ha.symm
   · intro h
     apply Prod.ext
     · funext a
@@ -138,10 +140,11 @@ theorem exists_nonzero_soldering_kernel_spinor_of_null
     ∃ π : Spinor2, π ≠ 0 ∧
       Matrix.mulVec (paravectorToSolderingMatrix p) π = 0 := by
   let v : Minkowski4 := minkowski13ToMinkowski4 p
+  have hvq : v.q = 0 := by
+    simpa [v, IsNullParavector] using hp
   have hdet : Matrix.det (pauliMatrix v) = 0 := by
-    rw [det_pauliMatrix, minkowski13ToMinkowski4_q]
-    simp [IsNullParavector] at hp
-    simp [hp]
+    rw [det_pauliMatrix, hvq]
+    simp
   obtain ⟨π, hπ, hker⟩ :=
     exists_nonzero_mem_pauliKernel_of_det_zero v hdet
   refine ⟨π, hπ, ?_⟩
@@ -154,8 +157,7 @@ theorem kernel_spinor_incidence_fst_zero
     (hπ : Matrix.mulVec (paravectorToSolderingMatrix p) π = 0) :
     (boundaryIncidenceLinearMap p π).1 = 0 := by
   funext a
-  rw [boundaryIncidenceLinearMap_fst_apply]
-  rw [congrFun hπ a]
+  rw [boundaryIncidenceLinearMap_fst_apply, congrFun hπ a]
   simp
 
 /-- A nonzero kernel spinor therefore gives a nonzero incident twistor. -/
@@ -170,7 +172,7 @@ theorem exists_nonzero_incident_twistor_of_null
   exact ⟨π, hπ, boundaryIncidence_is_incident p π,
     kernel_spinor_incidence_fst_zero p π hker⟩
 
-/-- On the normalized celestial slice, the paravector null equation is exactly
+/-- On the concrete Minkowski slice, the paravector null equation is exactly
 native `Q55` nullness. -/
 theorem null_paravector_iff_Q55_slice_null (p : Minkowski13) :
     IsNullParavector p ↔

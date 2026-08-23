@@ -107,11 +107,4 @@ theorem tl3_chain_synthesis :
   · exact e0_mul_e1_mul_e0
   · exact e1_mul_e0_mul_e1
 
-#check e4_sq
-#check e0_sq
-#check e1_sq
-#check e0_mul_e1_mul_e0
-#check e1_mul_e0_mul_e1
-#check tl3_chain_synthesis
-
 end InfoGeometry.Physics.TLChain

@@ -24,6 +24,18 @@ def spinorFrameAction (A : ComplexSpacetime) (π : Spinor2) : Spinor2 :=
 def twistorFrameAction (A : ComplexSpacetime) (Z : Twistor4) : Twistor4 :=
   (A.mulVec Z.1, A.mulVec Z.2)
 
+theorem frameAction_det (A X : ComplexSpacetime) (hA : IsUnit A.det) :
+    (frameAction A X).det = X.det := by
+  unfold frameAction
+  rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_nonsing_inv]
+  have hne : A.det ≠ 0 := isUnit_iff_ne_zero.mp hA
+  have hcancel : A.det * Ring.inverse (A.det) = 1 := by
+    exact hA.mul_inv_cancel
+  calc
+    A.det * X.det * Ring.inverse (A.det) =
+        X.det * (A.det * Ring.inverse (A.det)) := by ring
+    _ = X.det := by rw [hcancel, mul_one]
+
 theorem frameAction_mulVec_spinorFrameAction
     (A X : ComplexSpacetime) (hA : IsUnit A.det) (π : Spinor2) :
     (frameAction A X).mulVec (spinorFrameAction A π) =

@@ -1,4 +1,4 @@
-/-
+/*
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Authors: Nikolay Goutev, Dimitar Tonev
--/
+*/
 
 import InfoGeometry.Library
 import InfoGeometry.Generated
@@ -36,6 +36,7 @@ import InfoGeometry.Clifford.SplitCompositionCl11Bridge
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.TwoTwistorSpacetimeNode
 import InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency
+import InfoGeometry.Twistor.TwoTwistorConformalBlockCovariance
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling

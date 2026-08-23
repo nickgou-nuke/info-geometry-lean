@@ -13,9 +13,10 @@ only an algebraic commutative ring: no topology, norm completion, analytic
 limit, Hilbert-space structure, or "infinite-volume" interpretation is
 asserted here.
 
-The two theorem surfaces are:
+The theorem surface records three genuinely categorical/algebraic facts:
 
-* carrier identities are transported by the canonical colimit ring homs;
+* the canonical stage maps satisfy filtered-colimit naturality;
+* carrier polynomial identities are transported by those ring homomorphisms;
 * invertible phase data are transported functorially by `Units.map`.
 -/
 
@@ -40,6 +41,20 @@ abbrev stageMap (j : J) : F.obj j →+* ColimitCarrier F :=
 /-- The induced homomorphism on units. -/
 def stageUnitMap (j : J) : (F.obj j)ˣ →* (ColimitCarrier F)ˣ :=
   Units.map (stageMap F j)
+
+/-- Filtered-colimit stage coherence: transport along a diagram arrow and then
+injecting agrees with injecting directly from the source stage. -/
+theorem stageMap_naturality
+    {i j : J} (f : i ⟶ j) (x : F.obj i) :
+    stageMap F j ((F.map f).hom x) = stageMap F i x := by
+  exact ConcreteCategory.congr_hom ((colimit.ι F).naturality f) x
+
+/-- The same stage coherence lifted to invertible elements. -/
+theorem stageUnitMap_naturality
+    {i j : J} (f : i ⟶ j) (q : (F.obj i)ˣ) :
+    stageUnitMap F j (Units.map (F.map f).hom q) = stageUnitMap F i q := by
+  apply Units.ext
+  exact stageMap_naturality F f (q : F.obj i)
 
 @[simp] theorem stageMap_zero (j : J) :
     stageMap F j 0 = 0 := by

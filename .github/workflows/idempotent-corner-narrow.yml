@@ -1,0 +1,57 @@
+name: Idempotent Corner Narrow Check
+
+on:
+  pull_request:
+    paths:
+      - "lean/InfoGeometry/Algebra/IdempotentCornerCommutant.lean"
+      - ".github/workflows/idempotent-corner-narrow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  narrow-kernel-check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Lean toolchain
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build isolated Mathlib check project
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="${RUNNER_TEMP}/idempotent-corner-check"
+          mkdir -p "$work"
+          cd "$work"
+
+          cat > lean-toolchain <<'EOF'
+          leanprover/lean4:v4.28.1
+          EOF
+
+          cat > lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package idempotentCornerCheck
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+          EOF
+
+          cat > CornerCheck.lean <<'EOF'
+          import Mathlib
+          EOF
+
+          sed '/^import /d' \
+            "$GITHUB_WORKSPACE/lean/InfoGeometry/Algebra/IdempotentCornerCommutant.lean" \
+            >> CornerCheck.lean
+
+          lake update
+          lake exe cache get
+          lake env lean CornerCheck.lean

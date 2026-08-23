@@ -95,19 +95,10 @@ theorem coordinateSum_reflect_mod (i : Fin 4) (x : Ambient) :
     unfold coordinateSum reflect
     change (∑ k, (x k - dot x (simpleRoot i) * simpleRoot i k)) = _
     rw [Finset.sum_sub_distrib, ← Finset.mul_sum]
-  rw [hsum]
-  have hroot : coordinateSum (simpleRoot i) ≡ 0 [ZMOD 2] := by
-    apply Int.modEq_zero_iff_dvd.mpr
-    exact Int.dvd_iff_emod_eq_zero.mpr (simpleRoot_mem i)
-  have hmul := hroot.mul_left (dot x (simpleRoot i))
-  have hmod :
-      coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i) ≡
-        coordinateSum x - dot x (simpleRoot i) * 0 [ZMOD 2] :=
-    Int.ModEq.sub (Int.ModEq.refl _) hmul
-  change (coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i)) % 2 =
-    (coordinateSum x - dot x (simpleRoot i) * 0) % 2 at hmod
-  simpa only [mul_zero, sub_zero] using hmod
-
+  rw [hsum, Int.sub_emod]
+  have hroot : coordinateSum (simpleRoot i) % 2 = 0 := simpleRoot_mem i
+  rw [Int.mul_emod, hroot]
+  simp
 theorem reflect_mem (i : Fin 4) (x : Lattice) :
     IsD4 (reflect i x.1) := by
   change coordinateSum (reflect i x.1) % 2 = 0

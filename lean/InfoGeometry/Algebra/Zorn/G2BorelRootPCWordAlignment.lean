@@ -137,11 +137,11 @@ theorem six_borel_roots_mem_pcWord_range :
     rootAut (RootLength.Short, (3 : ZMod 6)) ∈ Set.range pcWord ∧
     rootAut (RootLength.Long,  (3 : ZMod 6)) ∈ Set.range pcWord ∧
     rootAut (RootLength.Long,  (4 : ZMod 6)) ∈ Set.range pcWord := by
-  exact ⟨⟨short1Exp, rootAut_short1_eq_pcWord⟩,
-    ⟨short2Exp, rootAut_short2_eq_pcWord⟩,
-    ⟨long2Exp, rootAut_long2_eq_pcWord⟩,
-    ⟨short3Exp, rootAut_short3_eq_pcWord⟩,
-    ⟨long3Exp, rootAut_long3_eq_pcWord⟩,
-    ⟨long4Exp, rootAut_long4_eq_pcWord⟩⟩
+  exact ⟨⟨short1Exp, rootAut_short1_eq_pcWord.symm⟩,
+    ⟨short2Exp, rootAut_short2_eq_pcWord.symm⟩,
+    ⟨long2Exp, rootAut_long2_eq_pcWord.symm⟩,
+    ⟨short3Exp, rootAut_short3_eq_pcWord.symm⟩,
+    ⟨long3Exp, rootAut_long3_eq_pcWord.symm⟩,
+    ⟨long4Exp, rootAut_long4_eq_pcWord.symm⟩⟩
 
 end InfoGeometry.Algebra.Zorn.G2BorelRootPCWordAlignment

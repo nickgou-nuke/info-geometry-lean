@@ -65,6 +65,7 @@ import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Twistor.PenroseRealDoubledPeirceSoldering
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.TwoTwistorSpacetimeNode
+import InfoGeometry.Twistor.ChiralNullIncidenceConnection
 import InfoGeometry.Twistor.PenroseExterior3PeirceBridge
 import InfoGeometry.Twistor.PenroseExterior3PeirceQuadraticAudit
 import InfoGeometry.Twistor.PenroseCanonicalZornSoldering

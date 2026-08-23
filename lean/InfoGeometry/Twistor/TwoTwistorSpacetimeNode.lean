@@ -64,48 +64,50 @@ theorem two_twistor_spacetime_node_unique
     h₁x h₂x h₁y h₂y hpair π
 
 /- A frame presentation of the node.  The columns of `P` are the two
-   spinor directions and the columns of `W` are their undivided `ω` data. -/
+   spinor directions and the columns of `Ω` are their `ω` data.  Since the
+   incidence convention is `ω = i X π`, the reconstructed node is
+   `X = -i Ω P⁻¹`. -/
 noncomputable def frameSpacetimeNode
-    (P W : Matrix (Fin 2) (Fin 2) ℂ) : ComplexSpacetime :=
-  W * P⁻¹
+    (P Ω : Matrix (Fin 2) (Fin 2) ℂ) : ComplexSpacetime :=
+  (-Complex.I) • (Ω * P⁻¹)
 
 theorem frameSpacetimeNode_incidence
-    (P W : Matrix (Fin 2) (Fin 2) ℂ)
+    (P Ω : Matrix (Fin 2) (Fin 2) ℂ)
     (hP : IsUnit P.det) (π : Spinor2) :
-    incidenceLinearMap (frameSpacetimeNode P W) (P.mulVec π) =
-      (Complex.I • W.mulVec π, P.mulVec π) := by
+    incidenceLinearMap (frameSpacetimeNode P Ω) (P.mulVec π) =
+      (Ω.mulVec π, P.mulVec π) := by
   apply Prod.ext
-  · simp only [incidenceLinearMap, omegaLinearMap_apply,
+  · simp only [incidenceLinearMap_apply, omegaLinearMap_apply,
       frameSpacetimeNode]
-    change Complex.I • (W * P⁻¹).mulVec (P.mulVec π) =
-      Complex.I • W.mulVec π
-    congr 1
-    rw [Matrix.mulVec_mulVec, Matrix.mul_assoc,
-      Matrix.nonsing_inv_mul P hP]
-    simp
+    have hmul : (Ω * P⁻¹).mulVec (P.mulVec π) = Ω.mulVec π := by
+      rw [Matrix.mulVec_mulVec, Matrix.mul_assoc,
+        Matrix.nonsing_inv_mul P hP]
+      simp
+    rw [Matrix.smul_mulVec, hmul]
+    simp [smul_smul]
   · rfl
 
 theorem two_twistor_spacetime_node_exists_unique
-    (P W : Matrix (Fin 2) (Fin 2) ℂ)
+    (P Ω : Matrix (Fin 2) (Fin 2) ℂ)
     (hP : IsUnit P.det)
     (hpair : IndependentSpanningSpinorPair (P.mulVec ![1, 0])
       (P.mulVec ![0, 1])) :
     ∃! x : ComplexSpacetime,
       incidenceLinearMap x (P.mulVec ![1, 0]) =
-          (Complex.I • W.mulVec ![1, 0], P.mulVec ![1, 0]) ∧
+          (Ω.mulVec ![1, 0], P.mulVec ![1, 0]) ∧
       incidenceLinearMap x (P.mulVec ![0, 1]) =
-          (Complex.I • W.mulVec ![0, 1], P.mulVec ![0, 1]) := by
-  refine ⟨frameSpacetimeNode P W, ?_, ?_⟩
-  · exact ⟨frameSpacetimeNode_incidence P W hP ![1, 0],
-      frameSpacetimeNode_incidence P W hP ![0, 1]⟩
+          (Ω.mulVec ![0, 1], P.mulVec ![0, 1]) := by
+  refine ⟨frameSpacetimeNode P Ω, ?_, ?_⟩
+  · exact ⟨frameSpacetimeNode_incidence P Ω hP ![1, 0],
+      frameSpacetimeNode_incidence P Ω hP ![0, 1]⟩
   · intro y hy
     symm
     apply two_twistor_spacetime_node_unique
-      (frameSpacetimeNode P W) y (P.mulVec ![1, 0]) (P.mulVec ![0, 1])
-      (Complex.I • W.mulVec ![1, 0], P.mulVec ![1, 0])
-      (Complex.I • W.mulVec ![0, 1], P.mulVec ![0, 1])
-    · exact frameSpacetimeNode_incidence P W hP ![1, 0]
-    · exact frameSpacetimeNode_incidence P W hP ![0, 1]
+      (frameSpacetimeNode P Ω) y (P.mulVec ![1, 0]) (P.mulVec ![0, 1])
+      (Ω.mulVec ![1, 0], P.mulVec ![1, 0])
+      (Ω.mulVec ![0, 1], P.mulVec ![0, 1])
+    · exact frameSpacetimeNode_incidence P Ω hP ![1, 0]
+    · exact frameSpacetimeNode_incidence P Ω hP ![0, 1]
     · exact hy.1
     · exact hy.2
     · exact hpair

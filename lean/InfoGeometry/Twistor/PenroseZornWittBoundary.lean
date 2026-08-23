@@ -1,4 +1,4 @@
-import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Twistor.ChiralTwistorSheets
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import Mathlib.Tactic.FinCases
 
@@ -27,12 +27,14 @@ noncomputable section
 namespace InfoGeometry.Twistor.PenroseZornWittBoundary
 
 open InfoGeometry.Twistor.PenroseIncidence
+open InfoGeometry.Twistor.PenroseTwistor
+open InfoGeometry.Twistor.ChiralTwistorSheets
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
-abbrev Real8 := Fin 8 → ℝ
-abbrev CZ := InfoGeometry.Lie.SplitOctonionCircularPeirceBasis.CZ
+local notation "Real8" => Fin 8 → ℝ
+local notation "CZ" => InfoGeometry.Lie.SplitOctonionCircularPeirceBasis.CZ
 
 /-- The real `(4,4)` Penrose sheet signature written directly in spinor
 coordinates. -/
@@ -109,6 +111,23 @@ theorem penrose_split_null_iff_zorn_null (Z : Twistor4) :
     penroseRealSplitSignature Z = 0 ↔
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) = 0 := by
   rw [penroseWittZorn_norm_eq_splitSignature]
+
+/- The two Penrose presentations are related by the existing explicit
+   flattening equivalence.  This is a form-compatibility theorem, not a new
+   carrier or a definitional identification. -/
+theorem penroseTwistor4Carrier_quadratic_eq_splitSignature (Z : Twistor4) :
+    twistorRealQuadraticForm (penroseTwistor4CarrierEquiv Z) =
+      penroseRealSplitSignature Z := by
+  rw [twistorRealQuadraticForm_apply]
+  simp [helicity, twistorHermitian_apply, penroseTwistor4CarrierEquiv,
+    penroseRealSplitSignature, Fin.sum_univ_four]
+  ring
+
+theorem penroseTwistor4Carrier_quadratic_eq_wittZorn_norm (Z : Twistor4) :
+    twistorRealQuadraticForm (penroseTwistor4CarrierEquiv Z) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) := by
+  rw [penroseTwistor4Carrier_quadratic_eq_splitSignature,
+    penroseWittZorn_norm_eq_splitSignature]
 
 /-- Real rescaling changes the defect quadratically, hence preserves the null
 locus for nonzero scale. -/

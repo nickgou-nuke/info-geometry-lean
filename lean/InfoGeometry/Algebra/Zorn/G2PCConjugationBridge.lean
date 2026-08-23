@@ -25,9 +25,10 @@ namespace InfoGeometry.Algebra.Zorn.G2PCConjugationBridge
 /-- The proposed conjugation of the two singleton PC words is obstructed by
     the native carrier conventions. -/
 theorem not_c_conj_pcWord_short_one_eq_short_two :
-    ¬ c * G2TwoSylowSubgroup.pcWord shortOnePCExp * c⁻¹ =
+    ¬ c * G2TwoSylowSubgroup.pcWord
+        G2RootAutShortOneMatrix.shortOnePCExp * c⁻¹ =
       G2TwoSylowSubgroup.pcWord shortTwoPCExp := by
-  simpa [shortOnePCExp, shortTwoPCExp] using
+  simpa [G2RootAutShortOneMatrix.shortOnePCExp, shortTwoPCExp] using
     not_c_conj_pcWord_oneAt_two_eq_oneAt_zero
 
 end InfoGeometry.Algebra.Zorn.G2PCConjugationBridge

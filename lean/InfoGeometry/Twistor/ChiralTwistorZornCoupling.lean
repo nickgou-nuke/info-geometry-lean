@@ -1,20 +1,19 @@
-import InfoGeometry.Twistor.ChiralTwistorSheets
+import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 
 /-!
 # Chiral twistor sheets and native Zorn coupling channels
 
-This owner connects concrete real axes in the two Penrose spinor sheets to the
-native circular split-octonion roots.  It then transports the existing Zorn
-multiplication theorems to those twistor-sheet axes.
+This owner connects concrete real axes in the two existing Penrose spinor
+factors to the native circular split-octonion roots. It transports the
+established Zorn multiplication theorems to those sheet axes; no new twistor
+carrier and no new multiplication are introduced.
 
 The three channels are genuine products in the established Zorn carrier:
 
 * `V₊ × V₋ → ℝ u₊` by the Kronecker pairing;
 * `V₊ × V₊ → V₋` by the Levi--Civita cross channel;
 * `V₋ × V₋ → V₊` by the opposite Levi--Civita cross channel.
-
-No new multiplication is introduced on the complex twistor carrier itself.
 -/
 
 noncomputable section
@@ -23,7 +22,7 @@ namespace InfoGeometry.Twistor.ChiralTwistorZornCoupling
 
 open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
-open InfoGeometry.Twistor.ChiralTwistorSheets
+open InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis

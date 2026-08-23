@@ -117,9 +117,14 @@ noncomputable def exterior3SplitOctonionCoordinateEquiv :
 @[simp] theorem exterior3SplitOctonionCoordinateEquiv_basis (j : Fin 8) :
     exterior3SplitOctonionCoordinateEquiv (exterior3PeirceBasis j) =
       Pi.single j 1 := by
-  simp only [exterior3SplitOctonionCoordinateEquiv, Basis.equivFun_apply,
-    Basis.repr_self, Finsupp.single_eq_pi_single,
-    Finsupp.equivFunOnFintype_single]
+  unfold exterior3SplitOctonionCoordinateEquiv
+  rw [exterior3PeirceBasis.equivFun_apply]
+  rw [exterior3PeirceBasis.repr_self]
+  ext k
+  by_cases h : j = k
+  · subst k
+    simp [Finsupp.equivFunOnFinite]
+  · simp [h]
 
 /--
 Basis-preserving linear equivalence from the literal exterior spinor carrier to
@@ -136,9 +141,7 @@ noncomputable def exterior3CircularPeirceEquiv :
   rw [exterior3CircularPeirceEquiv, LinearEquiv.trans_apply,
     exterior3SplitOctonionCoordinateEquiv_basis]
   apply circularPeirceBasis.equivFun.injective
-  simp only [LinearEquiv.apply_symm_apply, Basis.equivFun_apply,
-    Basis.repr_self, Finsupp.single_eq_pi_single,
-    Finsupp.equivFunOnFintype_single]
+  simp
 
 /-! Native creation, annihilation, and CAR on the literal exterior algebra. -/
 

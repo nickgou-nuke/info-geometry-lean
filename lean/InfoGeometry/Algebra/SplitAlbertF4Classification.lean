@@ -3,13 +3,13 @@ import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Tactic
 
 /-!
-# Split-Albert 27D Jordan Algebra and 52D F₄ Derivation Classification
+# Split-Albert 27D Jordan Algebra and 52D 𝔣₄(4) Derivation Classification
 
 This module formalizes:
 1. The 27-dimensional canonical direct sum decomposition of the split-Albert algebra:
      H₃(𝕆_s) ≅ ℝ³ ⊕ (𝕆_s)³
      with dim(H₃(𝕆_s)) = 3 + 3 × 8 = 27.
-2. The 52-dimensional canonical direct sum decomposition of the F₄ derivation algebra:
+2. The 52-dimensional canonical direct sum decomposition of the split-real 𝔣₄(4) derivation algebra:
      𝔣₄ ≅ 𝔰𝔬(8) ⊕ (𝕆_s)³ ≅ 𝔤₂(₂) ⊕ ℝ⁷ ⊕ ℝ⁷ ⊕ (𝕆_s)³
      with dim(𝔣₄) = 28 + 3 × 8 = 14 + 14 + 24 = 52.
 3. The graded projection maps from 𝔣₄ onto the 14D 𝔤₂(₂) subalgebra and the 3 × 8D off-diagonal octonionic sectors.
@@ -79,6 +79,7 @@ def dimG2Derivations : ℕ := 14
 def dimSO8LieAlgebra : ℕ := 28
 
 /-- The total real dimension of the F₄ derivation Lie algebra: 𝔣₄ = Der(H₃(𝕆_s)). -/
+/- The carrier is the split-real 𝔣₄(4) derivation owner. -/
 def dimF4Derivations : ℕ := dimSO8LieAlgebra + numOffDiagonalSectors * dimSplitOctonions
 
 /-- THEOREM 2: The real dimension of the F₄ derivation Lie algebra is exactly 52. -/

@@ -31,6 +31,7 @@ import InfoGeometry.Exceptional.FreudenthalHeisenberg
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.SplitOctonionZorn
+import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin

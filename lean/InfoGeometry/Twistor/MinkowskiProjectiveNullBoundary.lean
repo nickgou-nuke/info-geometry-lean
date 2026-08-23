@@ -89,11 +89,16 @@ theorem boundary_point_kernel_zorn_packet
     IsNull minkowskiQuadraticForm (Projectivization.mk ℝ v hv) ↔
       LinearMap.ker (pauliOperator v) ≠ ⊥ ∧
         IsZornNull (zornBoundaryOfMinkowski4 v) := by
-  rw [projectiveNull_mk_iff_minkowskiNull,
-    isNull_iff_pauliKernel_ne_bot,
-    ← isZornNull_boundary_iff_isNull]
-  constructor <;> intro h
-  · exact ⟨h, h⟩
-  · exact h.1
+  constructor
+  · intro hp
+    have hnull : v.IsNull :=
+      (projectiveNull_mk_iff_minkowskiNull v hv).mp hp
+    exact ⟨
+      (isNull_iff_pauliKernel_ne_bot v).mp hnull,
+      (isZornNull_boundary_iff_isNull v).mpr hnull⟩
+  · intro h
+    have hnull : v.IsNull :=
+      (isNull_iff_pauliKernel_ne_bot v).mpr h.1
+    exact (projectiveNull_mk_iff_minkowskiNull v hv).mpr hnull
 
 end InfoGeometry.Twistor.MinkowskiProjectiveNullBoundary

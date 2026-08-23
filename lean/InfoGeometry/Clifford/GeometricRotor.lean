@@ -33,8 +33,24 @@ abbrev op (B : Bivector E) :
   B.1
 
 abbrev square_neg (B : Bivector E) :
-    B.op.comp B.op = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
+  B.op.comp B.op = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
   B.2
+
+/- A scalar frequency/mass scale on the existing bivector generator.  This is
+   only an operator-level construction; no physical mass interpretation is
+   asserted here. -/
+noncomputable def scaled (B : Bivector E) (ω : ℝ) :
+    InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
+  ω • B.op
+
+theorem scaled_comp_scaled (B : Bivector E) (ω : ℝ) :
+    (B.scaled ω).comp (B.scaled ω) =
+      -(ω ^ 2 • ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hBBu : B.op (B.op u) = -u := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun f => f u) B.square_neg
+  simp [scaled, smul_smul, hBBu, pow_two]
 
 end Bivector
 

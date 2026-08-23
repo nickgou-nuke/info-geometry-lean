@@ -148,11 +148,39 @@ theorem h3Zorn_derivation_lie_jordanLmul
   exact lie_derivation_jordanLmul
     (D := (D : Module.End ℝ (H3Zorn ℝ))) D.property a
 
+/- A Leibniz derivation annihilates the unit of the split-Albert Jordan algebra. -/
+theorem h3Zorn_derivation_apply_one_eq_zero
+    (D : NonAssocDerivation.derivations ℝ (H3Zorn ℝ)) :
+    (D : Module.End ℝ (H3Zorn ℝ)) 1 = 0 := by
+  have h := D.property (1 : H3Zorn ℝ) (1 : H3Zorn ℝ)
+  change (D : Module.End ℝ (H3Zorn ℝ)) (candidateJordanMul 1 1) =
+    candidateJordanMul ((D : Module.End ℝ (H3Zorn ℝ)) 1) 1 +
+      candidateJordanMul 1 ((D : Module.End ℝ (H3Zorn ℝ)) 1) at h
+  simp only [candidateJordanMul_one_right, candidateJordanMul_one_left] at h
+  have h' := congrArg
+    (fun z : H3Zorn ℝ => z - (D : Module.End ℝ (H3Zorn ℝ)) 1) h
+  simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h'
+
 @[simp] theorem h3ZornJordanInnerDerivation_apply
     (a b x : H3Zorn ℝ) :
     (h3ZornJordanInnerDerivation a b : Module.End ℝ (H3Zorn ℝ)) x =
       a * (b * x) - b * (a * x) := by
   rfl
+
+theorem h3Zorn_traceBilin_jordanLmul_assoc (a x y : H3Zorn ℝ) :
+    traceBilin (a * x) y = traceBilin x (a * y) := by
+  rw [← candidateJordanMul_eq_mul, ← candidateJordanMul_eq_mul]
+  rw [candidateJordanMul, candidateJordanMul, T_outer_formula, T_outer_formula]
+  rw [traceBilin_smul_left, traceBilin_smul_right]
+  rw [traceBilin_sub_left, traceBilin_sub_right]
+  rw [traceBilin_add_left, traceBilin_add_left]
+  rw [traceBilin_add_right, traceBilin_add_right]
+  rw [traceBilin_crossProduct_assoc, traceBilin_crossProduct_assoc]
+  have crossProduct_one_left (u : H3Zorn ℝ) :
+      crossProduct 1 u = crossProduct u 1 := crossProduct_symm _ _
+  rw [crossProduct_one_left, crossProduct_one, crossProduct_one]
+  rw [traceBilin_symm x y]
+  ring
 
 /-- The split-Albert inner derivation satisfies the ordinary Leibniz rule. -/
 theorem h3ZornJordanInnerDerivation_leibniz

@@ -42,6 +42,25 @@ theorem traceBilin_smul_right (r : R) (X Y : H3Zorn R) :
     traceBilin X (r • Y) = r * traceBilin X Y := by
   rw [traceBilin_symm, traceBilin_smul_left, traceBilin_symm X Y]
 
+theorem traceBilin_neg_left (X Y : H3Zorn R) :
+    traceBilin (-X) Y = -traceBilin X Y := by
+  rw [show -X = (-1 : R) • X by module, traceBilin_smul_left]
+  simp
+
+theorem traceBilin_neg_right (X Y : H3Zorn R) :
+    traceBilin X (-Y) = -traceBilin X Y := by
+  rw [traceBilin_symm, traceBilin_neg_left, traceBilin_symm X Y]
+
+theorem traceBilin_sub_left (X₁ X₂ Y : H3Zorn R) :
+    traceBilin (X₁ - X₂) Y = traceBilin X₁ Y - traceBilin X₂ Y := by
+  rw [sub_eq_add_neg, traceBilin_add_left, traceBilin_neg_left]
+  ring
+
+theorem traceBilin_sub_right (X Y₁ Y₂ : H3Zorn R) :
+    traceBilin X (Y₁ - Y₂) = traceBilin X Y₁ - traceBilin X Y₂ := by
+  rw [sub_eq_add_neg, traceBilin_add_right, traceBilin_neg_right]
+  ring
+
 theorem crossProduct_symm (X Y : H3Zorn R) :
     crossProduct X Y = crossProduct Y X := by
   simp only [crossProduct, add_comm X Y]

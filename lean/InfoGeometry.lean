@@ -116,6 +116,7 @@ import InfoGeometry.Arithmetic.ConcreteMajorana
 import InfoGeometry.Epistemology.SemanticReflector
 
 import InfoGeometry.Physics.ParabolicClock
+import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Physics.LogCFT
 import InfoGeometry.Categorical.CFTVirasoro
 import InfoGeometry.Categorical.CFTPrimary

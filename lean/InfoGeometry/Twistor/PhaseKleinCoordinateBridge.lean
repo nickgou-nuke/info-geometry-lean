@@ -11,6 +11,8 @@ decomposability, projectivization, or a Grassmannian embedding.
 namespace InfoGeometry.Twistor.PhaseKleinCoordinateBridge
 
 open InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
+open InfoGeometry.Algebra
+open InfoGeometry.Algebra.ZornMatrix
 
 noncomputable section
 
@@ -39,8 +41,7 @@ def phaseKleinCoordinates (x : Phase) : KleinCoordinates where
 theorem kleinForm_phaseKleinCoordinates (x : Phase) :
     kleinForm (phaseKleinCoordinates x) =
       chiralPairing x.1 x.2 := by
-  simp [kleinForm, phaseKleinCoordinates, chiralPairing, Vec3.dot]
-  ring
+  simp [kleinForm, phaseKleinCoordinates, chiralPairing]
 
 theorem phase_null_implies_klein_null
     (x : Phase)

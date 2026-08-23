@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.FreudenthalAction
 
 /-!
 # Concrete Freudenthal quartic invariant for `H3Zorn ℝ`
@@ -11,9 +12,16 @@ split-Albert carrier `H3Zorn ℝ` using the already verified cubic Jordan datum
 `h3zornCubicJordanDatum`.
 
 The construction keeps the cubic Jordan norm and the Freudenthal quartic
-strictly distinct.  In particular, on the canonical electric embedding
+strictly distinct. In particular, on the canonical electric embedding
 `X ↦ (1,0,X,0)`, the quartic restricts to `-4 * normCubic X`.
+
+The final section specializes the repository's theorem-safe invariant-action
+interface. It does not assert an identification with `E₇(7)`; any concrete
+group realization must provide preservation of both the Freudenthal
+symplectic form and quartic invariant.
 -/
+
+set_option autoImplicit false
 
 noncomputable section
 
@@ -33,6 +41,14 @@ def quarticInvariant (Q : Charge) : ℝ :=
 /-- The concrete Freudenthal alternating pairing on split-Albert charges. -/
 def symplecticForm (Q₁ Q₂ : Charge) : ℝ :=
   FreudenthalCharge.symplecticForm h3zornCubicJordanDatum Q₁ Q₂
+
+/-- A split-Albert Freudenthal charge is regular when its quartic is nonzero. -/
+def Regular (Q : Charge) : Prop :=
+  FreudenthalRegular h3zornCubicJordanDatum Q
+
+/-- A split-Albert Freudenthal boundary charge has vanishing quartic and is nonzero. -/
+def Boundary (Q : Charge) : Prop :=
+  FreudenthalBoundary h3zornCubicJordanDatum Q
 
 /-- Expanded native formula for the split-Albert Freudenthal quartic. -/
 theorem quarticInvariant_expanded (Q : Charge) :
@@ -122,13 +138,19 @@ theorem cubicNorm_from_quartic (X : H3Zorn ℝ) :
   rw [quarticInvariant_electricCharge]
   ring
 
-/-- The cubic norm and the Freudenthal quartic are distinct invariants:
-for the diagonal unit, the unit-electric quartic equals `-4` while the cubic
-norm equals `1`. -/
+/-- The unit electric slice has quartic invariant `-4`. -/
 theorem unit_electric_quartic :
     quarticInvariant (electricCharge 1 (1 : H3Zorn ℝ)) = -4 := by
   rw [quarticInvariant_electricCharge]
   simp
+
+/-- The cubic norm and quartic invariant are numerically distinct on the
+canonical unit electric slice. -/
+theorem unit_cubic_ne_unit_electric_quartic :
+    H3Zorn.normCubic (1 : H3Zorn ℝ) ≠
+      quarticInvariant (electricCharge 1 (1 : H3Zorn ℝ)) := by
+  rw [H3Zorn.normCubic_one, unit_electric_quartic]
+  norm_num
 
 /-- The existing global H3Zorn adjoint identity is the cubic input underlying
 this concrete quartic construction. -/
@@ -136,5 +158,42 @@ theorem cubic_adjoint_identity (X : H3Zorn ℝ) :
     H3Zorn.adjointQuad (H3Zorn.adjointQuad X) =
       H3Zorn.normCubic X • X :=
   H3Zorn.adjointQuad_adjointQuad X
+
+/-! ## Invariant group actions -/
+
+/-- A theorem-safe group action on the concrete split-Albert Freudenthal space.
+A future `E₇(7)` realization must construct an inhabitant of this type rather
+than identifying the group by name alone. -/
+abbrev InvariantAction (G : Type*) [Group G] :=
+  FreudenthalInvariantAction G (H3Zorn ℝ) h3zornCubicJordanDatum
+
+namespace InvariantAction
+
+variable {G : Type*} [Group G]
+variable (A : InvariantAction G)
+
+/-- Every admitted invariant action preserves the concrete quartic. -/
+@[simp]
+theorem quarticInvariant_act (g : G) (Q : Charge) :
+    quarticInvariant (A.act g Q) = quarticInvariant Q := by
+  exact A.preserves_quarticInvariant g Q
+
+/-- Every admitted invariant action preserves the concrete symplectic form. -/
+@[simp]
+theorem symplecticForm_act (g : G) (Q₁ Q₂ : Charge) :
+    symplecticForm (A.act g Q₁) (A.act g Q₂) = symplecticForm Q₁ Q₂ := by
+  exact A.preserves_symplecticForm g Q₁ Q₂
+
+/-- Freudenthal regularity is invariant under every admitted action. -/
+theorem regular_iff (g : G) (Q : Charge) :
+    Regular (A.act g Q) ↔ Regular Q := by
+  exact FreudenthalInvariantAction.regular_iff A g Q
+
+/-- The quartic boundary is invariant under every admitted action. -/
+theorem boundary_iff (g : G) (Q : Charge) :
+    Boundary (A.act g Q) ↔ Boundary Q := by
+  exact FreudenthalInvariantAction.boundary_iff A g Q
+
+end InvariantAction
 
 end InfoGeometry.Algebra.H3ZornFreudenthal

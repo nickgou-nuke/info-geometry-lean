@@ -40,29 +40,38 @@ abbrev PeirceMinus4 := ℝ × V3
 def spinor2ToPeirce4 : Spinor2 →ₗ[ℝ] (ℝ × V3) where
   toFun z := ((z 0).re, ![(z 0).im, (z 1).re, (z 1).im])
   map_add' z w := by
-    ext i <;> fin_cases i <;> simp
+    apply Prod.ext
+    · simp
+    · funext i
+      fin_cases i <;> simp
   map_smul' r z := by
-    ext i <;> fin_cases i <;> simp
+    apply Prod.ext
+    · simp
+    · funext i
+      fin_cases i <;> simp
 
 /-- Reconstruct a chiral complex spinor from its four real Peirce coordinates. -/
 def peirce4ToSpinor2 : (ℝ × V3) →ₗ[ℝ] Spinor2 where
   toFun q := ![⟨q.1, q.2 0⟩, ⟨q.2 1, q.2 2⟩]
   map_add' q r := by
-    ext i
+    funext i
     fin_cases i <;> apply Complex.ext <;> simp
   map_smul' c q := by
-    ext i
+    funext i
     fin_cases i <;> apply Complex.ext <;> simp
 
 @[simp] theorem peirce4ToSpinor2_spinor2ToPeirce4 (z : Spinor2) :
     peirce4ToSpinor2 (spinor2ToPeirce4 z) = z := by
-  ext i
+  funext i
   fin_cases i <;> apply Complex.ext <;> simp [spinor2ToPeirce4, peirce4ToSpinor2]
 
 @[simp] theorem spinor2ToPeirce4_peirce4ToSpinor2 (q : ℝ × V3) :
     spinor2ToPeirce4 (peirce4ToSpinor2 q) = q := by
   rcases q with ⟨a, v⟩
-  ext i <;> fin_cases i <;> rfl
+  apply Prod.ext
+  · rfl
+  · funext i
+    fin_cases i <;> rfl
 
 /-- Positive twistor sheet `(S₊)_ℝ ≃ ℝu₊ ⊕ V₊`. -/
 noncomputable def twistorPlusEquivPeircePlus :
@@ -81,14 +90,18 @@ noncomputable def twistorMinusEquivPeirceMinus :
 /-- Inclusion of the positive chiral sheet into the full twistor carrier. -/
 def plusInclusion : TwistorPlus →ₗ[ℝ] Twistor4 where
   toFun ω := (ω, 0)
-  map_add' ω ρ := by ext i <;> simp
-  map_smul' r ω := by ext i <;> simp
+  map_add' ω ρ := by
+    apply Prod.ext <;> simp
+  map_smul' r ω := by
+    apply Prod.ext <;> simp
 
 /-- Inclusion of the negative chiral sheet into the full twistor carrier. -/
 def minusInclusion : TwistorMinus →ₗ[ℝ] Twistor4 where
   toFun π := (0, π)
-  map_add' π ρ := by ext i <;> simp
-  map_smul' r π := by ext i <;> simp
+  map_add' π ρ := by
+    apply Prod.ext <;> simp
+  map_smul' r π := by
+    apply Prod.ext <;> simp
 
 @[simp] theorem plusInclusion_fst (ω : TwistorPlus) : (plusInclusion ω).1 = ω := rfl
 @[simp] theorem plusInclusion_snd (ω : TwistorPlus) : (plusInclusion ω).2 = 0 := rfl
@@ -98,7 +111,7 @@ def minusInclusion : TwistorMinus →ₗ[ℝ] Twistor4 where
 /-- The Penrose carrier is exactly the direct sum of its two chiral sheets. -/
 theorem twistor_sheet_decomposition (Z : Twistor4) :
     plusInclusion Z.1 + minusInclusion Z.2 = Z := by
-  ext i <;> simp [plusInclusion, minusInclusion]
+  apply Prod.ext <;> simp [plusInclusion, minusInclusion]
 
 /-- Positive sheet embedded into the established Zorn carrier. -/
 noncomputable def plusZornMap :

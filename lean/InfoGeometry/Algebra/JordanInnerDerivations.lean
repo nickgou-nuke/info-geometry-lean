@@ -41,6 +41,19 @@ def jordanInnerDerivation (a b : A) : Module.End R A :=
     jordanInnerDerivation (R := R) a b x = a * (b * x) - b * (a * x) := by
   rfl
 
+/-- A Leibniz derivation acts on the left-multiplication sector by the
+adjoint representation: `[D,L_a] = L_{D a}`. -/
+theorem lie_derivation_jordanLmul
+    (D : Module.End R A)
+    (hD : NonAssocDerivation.IsLeibniz R A D)
+    (a : A) :
+    ⁅D, jordanLmul (R := R) a⁆ = jordanLmul (R := R) (D a) := by
+  ext x
+  simp only [Ring.lie_def, Module.End.mul_apply, LinearMap.sub_apply,
+    jordanLmul_apply]
+  rw [hD a x]
+  abel
+
 end Operators
 
 section Jordan
@@ -138,6 +151,15 @@ theorem h3ZornJordanInnerDerivation_leibniz
       (h3ZornJordanInnerDerivation a b : Module.End ℝ (H3Zorn ℝ)) x * y +
         x * (h3ZornJordanInnerDerivation a b : Module.End ℝ (H3Zorn ℝ)) y :=
   (h3ZornJordanInnerDerivation a b).property x y
+
+/-- On the verified split Albert carrier, every native Jordan derivation sends
+left multiplication by `a` to left multiplication by `D a` under the Lie bracket. -/
+theorem h3Zorn_derivation_lie_jordanLmul
+    (D : NonAssocDerivation.derivations ℝ (H3Zorn ℝ))
+    (a : H3Zorn ℝ) :
+    ⁅(D : Module.End ℝ (H3Zorn ℝ)), jordanLmul (R := ℝ) a⁆ =
+      jordanLmul (R := ℝ) (D a) :=
+  lie_derivation_jordanLmul (R := ℝ) D D.property a
 
 end SplitAlbert
 

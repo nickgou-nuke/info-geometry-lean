@@ -131,7 +131,7 @@ theorem lowerZorn_basis (i : Fin 3) :
 @[simp] theorem upperZorn_mul_E11 (q : Vec) :
     upperZorn q * (E11 : Carrier) = 0 := by
   apply ZornMatrix.ext
-  · simp [upperZorn, E11, ZornMatrix.mul, Vec3.dot, ZornMatrix.zero] <;> ring
+  · simp [upperZorn, E11, ZornMatrix.mul, Vec3.dot, ZornMatrix.zero]
   · funext j
     fin_cases j <;> simp [upperZorn, E11, ZornMatrix.mul,
         Vec3.add, Vec3.sub, Vec3.smul, Vec3.cross, ZornMatrix.zero]
@@ -143,7 +143,7 @@ theorem lowerZorn_basis (i : Fin 3) :
 @[simp] theorem E22_mul_lowerZorn (p : Vec) :
     (E22 : Carrier) * lowerZorn p = lowerZorn p := by
   apply ZornMatrix.ext
-  · simp [lowerZorn, E22, ZornMatrix.mul, Vec3.dot] <;> ring
+  · simp [lowerZorn, E22, ZornMatrix.mul, Vec3.dot]
   · funext j
     fin_cases j <;> simp [lowerZorn, E22, ZornMatrix.mul,
         Vec3.add, Vec3.sub, Vec3.smul, Vec3.cross]
@@ -155,7 +155,7 @@ theorem lowerZorn_basis (i : Fin 3) :
 @[simp] theorem lowerZorn_mul_E22 (p : Vec) :
     lowerZorn p * (E22 : Carrier) = 0 := by
   apply ZornMatrix.ext
-  · simp [lowerZorn, E22, ZornMatrix.mul, Vec3.dot, ZornMatrix.zero] <;> ring
+  · simp [lowerZorn, E22, ZornMatrix.mul, Vec3.dot, ZornMatrix.zero]
   · funext j
     fin_cases j <;> simp [lowerZorn, E22, ZornMatrix.mul,
         Vec3.add, Vec3.sub, Vec3.smul, Vec3.cross, ZornMatrix.zero]

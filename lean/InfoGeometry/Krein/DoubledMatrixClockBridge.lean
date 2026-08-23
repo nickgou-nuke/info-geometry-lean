@@ -94,15 +94,18 @@ theorem ρclock_one :
     simp [ρclock, matrixAction]
 
 /-- The representation packaged as an algebra homomorphism. -/
-noncomputable def ρclockAlg : Mat2 →ₐ[ℝ] End₂ E where
-  toLinearMap := ρclock (E := E)
-  map_one' := by
-    change ρclock (E := E) (1 : Mat2) = LinearMap.id
-    exact ρclock_one (E := E)
-  map_mul' A B := by
-    change ρclock (E := E) (A * B) =
-      (ρclock (E := E) A).comp (ρclock (E := E) B)
-    exact ρclock_mul (E := E) A B
+noncomputable def ρclockAlg : Mat2 →ₐ[ℝ] End₂ E :=
+  { toFun := ρclock (E := E)
+    map_one' := ρclock_one (E := E)
+    map_mul' := ρclock_mul (E := E)
+    map_zero' := (ρclock (E := E)).map_zero
+    map_add' := (ρclock (E := E)).map_add
+    commutes' := by
+      intro r
+      apply LinearMap.ext
+      intro u
+      apply DoubledSpace.ext <;>
+        simp [ρclock, matrixAction, Algebra.smul_def] }
 
 /-- Matrix of the modular swap. -/
 def matrixJ : Mat2 :=
@@ -172,7 +175,8 @@ theorem ρclock_matrixClockAxis :
   apply LinearMap.ext
   intro u
   apply DoubledSpace.ext <;>
-    simp [ρclock, matrixAction, matrixClockAxis]
+    simp [ρclock, matrixAction, matrixClockAxis, clockAxis, complex_i,
+      modular_j, spectral_epsilon]
 
 @[simp]
 theorem ρclock_parabolicK_apply (x ξ : E) :

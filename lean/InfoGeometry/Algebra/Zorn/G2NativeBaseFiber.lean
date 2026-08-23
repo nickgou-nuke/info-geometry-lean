@@ -35,6 +35,29 @@ instance : Fintype NativeBaseLine := Subtype.fintype nativeBaseLine
 theorem nativeBaseLine_card : Fintype.card NativeBaseLine = 3 := by
   native_decide
 
+def nativeBaseLineSet : Finset OctImF2 :=
+  Finset.univ.filter nativeBaseLine
+
+def certifiedBaseLineSet : Finset OctImF2 :=
+  Finset.univ.filter (fun y => isG2FlagTransversal basePoint y = true)
+
+theorem nativeBaseLineSet_eq_certifiedBaseLineSet :
+    nativeBaseLineSet = certifiedBaseLineSet := by
+  native_decide
+
+theorem nativeBaseLine_iff_certified (y : OctImF2) :
+    nativeBaseLine y ↔ isG2FlagTransversal basePoint y = true := by
+  have h := congrArg (fun s : Finset OctImF2 => y ∈ s)
+    nativeBaseLineSet_eq_certifiedBaseLineSet
+  simpa [nativeBaseLineSet, certifiedBaseLineSet] using h
+
+noncomputable def nativeBaseLineEquiv :
+    NativeBaseLine ≃ LinesThroughPoint basePoint where
+  toFun y := ⟨y.1, (nativeBaseLine_iff_certified y.1).mp y.2⟩
+  invFun y := ⟨y.1, (nativeBaseLine_iff_certified y.1).mpr y.2⟩
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
+
 theorem embed_octImAction (f : SplitOctF2Aut) (v : OctImF2) :
     embed (octImAction f v) = f⁻¹.1 (embed v) := by
   unfold embed octImAction
@@ -65,5 +88,34 @@ theorem nativeIncident_octImAction_iff
       imaginaryOctImEquiv.right_inv y
     rw [hcoord]
     exact hy
+
+theorem native_multiplication_zero_iff
+    (f : SplitOctF2Aut) (x y : OctImF2) :
+    mul (embed (octImAction f x)) (embed (octImAction f y)) = zero ↔
+      mul (embed x) (embed y) = zero := by
+  rw [embed_octImAction, embed_octImAction]
+  constructor
+  · intro h
+    have h' := congrArg f.1 h
+    rw [f.2.2.2] at h'
+    have hfzero : f.1 zero = zero := by
+      calc
+        f.1 zero = f.1 (add zero zero) := by
+          rw [add_zero]
+        _ = add (f.1 zero) (f.1 zero) := f.2.2.1 zero zero
+        _ = zero := add_self (f.1 zero)
+    change mul (f.1 (f.1.symm (embed x))) (f.1 (f.1.symm (embed y))) = f.1 zero at h'
+    simpa [f.1.apply_symm_apply, hfzero] using h'
+  · intro h
+    have h' := congrArg f⁻¹.1 h
+    rw [f⁻¹.2.2.2] at h'
+    have hinvzero : f⁻¹.1 zero = zero := by
+      calc
+        f⁻¹.1 zero = f⁻¹.1 (add zero zero) := by
+          rw [add_zero]
+        _ = add (f⁻¹.1 zero) (f⁻¹.1 zero) := f⁻¹.2.2.1 zero zero
+        _ = zero := add_self (f⁻¹.1 zero)
+    change mul (f⁻¹.1 (embed x)) (f⁻¹.1 (embed y)) = f⁻¹.1 zero at h'
+    simpa [hinvzero] using h'
 
 end InfoGeometry.Algebra.Zorn.G2NativeBaseFiber

@@ -1,3 +1,6 @@
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Tactic
 
 /-!
 # G2 Spectral Decomposition
@@ -15,10 +18,6 @@ expresses `K` as a linear combination of these projectors:
 All proofs are native Lean4, contain no `sorry`, and rely only on the
 categorical infrastructure already present in the repository.
 -/
-
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Module.Basic
-import Mathlib.Tactic
 
 namespace InfoGeometry.Modular.G2SpectralDecomposition
 
@@ -40,12 +39,7 @@ variable {A : Type*} [Ring A] [Algebra R A]
 /-- Cubic factorisation of a tripotent: `T³ - T = T * (T - 1) * (T + 1)`. -/
  theorem tripotent_factorization (T : A) :
    T * T * T - T = T * (T - 1) * (T + 1) := by
-   calc
-     T * T * T - T = (T * T - T) * (T + 1) := by
-       rw [← mul_add, mul_one, sub_mul]
-       abel_nf
-     _ = T * (T - 1) * (T + 1) := by
-       rw [mul_sub, mul_one]
+   noncomm_ring
 
 /-- Partition of unity for the three Peirce projectors. -/
  theorem peirce_partition_of_unity (inv2 : R) (h2 : (2 : R) * inv2 = 1) (T : A) :

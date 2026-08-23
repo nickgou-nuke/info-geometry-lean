@@ -65,7 +65,7 @@ theorem chiralBasisSpan_eq_top :
     chiralBasisSpan (R := R) = ⊤ := by
   apply top_unique
   intro Z hZ
-  rw [zorn_chiral_peirce_decomposition Z]
+  rw [zorn_peirce_decomposition Z]
   have hPlus : zornPlus (R := R) ∈ chiralBasisSpan (R := R) :=
     Submodule.subset_span (by simp [chiralBasisSet])
   have hMinus : zornMinus (R := R) ∈ chiralBasisSpan (R := R) :=
@@ -84,13 +84,41 @@ theorem chiralBasisSpan_eq_top :
         chiralBasisSpan (R := R) := by
     exact (chiralBasisSpan (R := R)).sum_mem (fun i hi =>
       (chiralBasisSpan (R := R)).smul_mem (Z.y i) (hLower i))
+  have hpp : peirceComponent zornPlus zornPlus Z ∈
+      chiralBasisSpan (R := R) := by
+    rw [peirce_plus_plus_apply]
+    convert (chiralBasisSpan (R := R)).smul_mem Z.a hPlus using 1
+    · apply ZornMatrix.ext
+      · simp [zornPlus]
+      · simp [zornPlus]
+      · funext i
+        change 0 = Z.a • (0 : R)
+        simp
+      · funext i
+        change 0 = Z.a • (0 : R)
+        simp
+  have hmm : peirceComponent zornMinus zornMinus Z ∈
+      chiralBasisSpan (R := R) := by
+    rw [peirce_minus_minus_apply]
+    convert (chiralBasisSpan (R := R)).smul_mem Z.b hMinus using 1
+    · apply ZornMatrix.ext
+      · simp [zornMinus]
+      · simp [zornMinus]
+      · funext i
+        change 0 = Z.b • (0 : R)
+        simp
+      · funext i
+        change 0 = Z.b • (0 : R)
+        simp
+  have hcolor : colorProject Z ∈ chiralBasisSpan (R := R) := by
+    rw [colorProject_eq_chiralUpper_sum]
+    exact hUpperSum
+  have hanticolor : anticolorProject Z ∈ chiralBasisSpan (R := R) := by
+    rw [anticolorProject_eq_chiralLower_sum]
+    exact hLowerSum
   exact (chiralBasisSpan (R := R)).add_mem
     ((chiralBasisSpan (R := R)).add_mem
-      ((chiralBasisSpan (R := R)).add_mem
-        ((chiralBasisSpan (R := R)).smul_mem Z.a hPlus)
-        ((chiralBasisSpan (R := R)).smul_mem Z.b hMinus))
-      hUpperSum)
-    hLowerSum
+      ((chiralBasisSpan (R := R)).add_mem hpp hcolor) hanticolor) hmm
 
 theorem chiralBasisSpan_mem_commutatorClosureSet
     {x y : ZornMatrix R}

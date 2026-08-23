@@ -52,36 +52,49 @@ swapCartan = np.array([
 c = (swapCartan @ cycle012) % 2 # Coxeter element (order 6)
 s = swap01                       # Simple reflection (order 2)
 
-# 3. 6 Positive Root Automorphisms from G2SteinbergPositiveRoots.lean:
-u_short = np.eye(8, dtype=int)
-u_short[2, 3] = 1 # x0 -> x0 + x1
-u_short[6, 5] = 1 # y1 -> y1 + y0
-assert is_automorphism(u_short)
+# 3. Exact Lean PC carrier.  These are the column-action formulas from
+# G2TwoSylowPCGenerators.lean, not an independently guessed Steinberg basis.
+def xor(*xs):
+    value = 0
+    for x in xs:
+        value ^= x
+    return value
 
-u_long = np.eye(8, dtype=int)
-u_long[3, 4] = 1 # x1 -> x1 + x2
-u_long[7, 6] = 1 # y2 -> y2 + y1
-assert is_automorphism(u_long)
+def pc(k, X):
+    a, b, x0, x1, x2, y0, y1, y2 = X
+    return [
+        [xor(a, x1), xor(b, x1), xor(x0, y2), x1,
+         xor(x1, x2, y0), y0, xor(a, b, x1, y1, y2), y2],
+        [xor(a, y2), xor(b, y2), x0, xor(x0, x1),
+         xor(a, b, x1, x2, y2), xor(x0, x1, y0, y1, y2),
+         xor(x0, y1, y2), y2],
+        [xor(a, x0, y2), xor(b, x0, y2), x0, xor(x1, y2),
+         xor(a, b, x1, x2, y1), xor(a, b, x0, x1, y0, y2),
+         xor(x0, y1, y2), y2],
+        [a, b, x0, x1, xor(x1, x2), y0, xor(y1, y2), y2],
+        [xor(a, y2), xor(b, y2), x0, x1,
+         xor(a, b, x1, x2, y2), xor(x1, y0), xor(x0, y1, y2), y2],
+        [a, b, x0, x1, xor(x0, x2), xor(y0, y2), y1, y2],
+    ][k]
 
-u_mid = (u_short @ u_long @ u_short @ u_long) % 2 # [u_short, u_long]
-assert is_automorphism(u_mid)
-
-c1 = cycle012
-c2 = (cycle012 @ cycle012) % 2
-c1_inv = c2
-c2_inv = c1
-
-r0 = u_short
-r1 = u_long
-r2 = u_mid
-r3 = (c1 @ u_long @ c1_inv) % 2
-r4 = (c1 @ u_mid @ c1_inv) % 2
-r5 = (c2 @ u_mid @ c2_inv) % 2
-
-pos_roots = [r0, r1, r2, r3, r4, r5]
-for idx, r in enumerate(pos_roots):
+basis = [tuple(int(i == j) for i in range(8)) for j in range(8)]
+pc_matrices = [np.array([[pc(k, v)[i] for v in basis]
+                         for i in range(8)], dtype=int)
+               for k in range(6)]
+for idx, r in enumerate(pc_matrices):
     assert is_automorphism(r)
-    print(f"Positive root r_{idx}: PASS ✅ (order 2 involution)")
+
+pos_roots = pc_matrices
+identity = np.eye(8, dtype=int)
+for idx, r in enumerate(pos_roots):
+    square = (r @ r) % 2
+    if idx in (0, 3, 4, 5):
+        assert np.array_equal(square, identity)
+        print(f"Lean PC generator pc_{idx}: PASS ✅ (exact aligned involution)")
+    else:
+        assert np.array_equal(square, pos_roots[5])
+        assert np.array_equal((square @ square) % 2, identity)
+        print(f"Lean PC generator pc_{idx}: PASS ✅ (square = pc_5, order four)")
 
 # 4. Borel subgroup B = U+ of order 64:
 B_list = []
@@ -95,7 +108,8 @@ for t0 in range(2):
       u = np.eye(8, dtype=int)
       for idx, t_val in enumerate([t0, t1, t2, t3, t4, t5]):
           if t_val == 1:
-              u = (u @ pos_roots[idx]) % 2
+              # pcWord is a left action: the active generator is prepended.
+              u = (pos_roots[idx] @ u) % 2
       B_list.append(u)
       B_set.add(u.tobytes())
 

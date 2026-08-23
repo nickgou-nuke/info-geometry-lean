@@ -67,6 +67,8 @@ import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling
 import InfoGeometry.Twistor.ConformalProjectiveBoundaryPolarization
+import InfoGeometry.Twistor.PenroseZornWittBoundary
+import InfoGeometry.Twistor.BoundaryTrifactorPeirceBridge
 import InfoGeometry.Twistor.RollingSpinorMobiusBridge
 import InfoGeometry.Twistor.PhaseNativePluckerBridge
 import InfoGeometry.Twistor.QutritPermutationAssociatedTwistorMonodromy

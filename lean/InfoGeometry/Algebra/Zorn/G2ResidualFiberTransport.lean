@@ -12,6 +12,22 @@ noncomputable def transportAutomorphism
     (v : AdmissibleBasis7Carrier) : SplitOctF2Aut :=
   admissibleBasis7Equiv.symm v
 
+@[simp] theorem transportAutomorphism_inv_maps_firstPrefix
+    (v : AdmissibleBasis7Carrier) :
+    (transportAutomorphism v)⁻¹.1
+        (admissibleBasis7_first_prefix_code v).1 = ePlus := by
+  rw [admissibleBasis7_first_prefix_code_value v]
+  rw [← admissibleBasis7Equiv_symm_maps_ePlus v]
+  exact (transportAutomorphism v).1.left_inv ePlus
+
+@[simp] theorem transportAutomorphism_inv_maps_secondPrefix
+    (v : AdmissibleBasis7Carrier) :
+    (transportAutomorphism v)⁻¹.1
+        (admissibleBasis7Second v).1.1 = up0 := by
+  rw [admissibleBasis7_second_prefix_code v]
+  rw [← admissibleBasis7Equiv_symm_maps_up0 v]
+  exact (transportAutomorphism v).1.left_inv up0
+
 noncomputable def occurringResidualFiberEquivCanonical
     (v : AdmissibleBasis7Carrier) :
     ResidualFiber

@@ -28,7 +28,6 @@ open InfoGeometry.Krein
 variable {E : Type*}
 variable [NormedAddCommGroup E]
 variable [InnerProductSpace ℝ E]
-variable [CompleteSpace E]
 
 abbrev H₂ := DoubledSpace E
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ

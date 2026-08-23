@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
 import InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
+import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 
@@ -99,6 +100,29 @@ def exteriorContract3 (φ : Module.Dual ℝ V3) : Exterior3End :=
   exact CliffordAlgebra.contractLeft_contractLeft
     (Q := (0 : QuadraticForm ℝ V3)) φ ψ
 
+theorem exteriorWedge3_add_swap (v u : V3) :
+    exteriorWedge3 v * exteriorWedge3 u +
+        exteriorWedge3 u * exteriorWedge3 v = 0 := by
+  apply LinearMap.ext
+  intro ψ
+  change ExteriorAlgebra.ι ℝ v * (ExteriorAlgebra.ι ℝ u * ψ) +
+      ExteriorAlgebra.ι ℝ u * (ExteriorAlgebra.ι ℝ v * ψ) = 0
+  rw [← mul_assoc, ← mul_assoc, ← add_mul,
+    ExteriorAlgebra.ι_add_mul_swap, zero_mul]
+
+theorem exteriorContract3_add_swap
+    (φ ψ : Module.Dual ℝ V3) :
+    exteriorContract3 φ * exteriorContract3 ψ +
+        exteriorContract3 ψ * exteriorContract3 φ = 0 := by
+  apply LinearMap.ext
+  intro ξ
+  change CliffordAlgebra.contractLeft φ
+      (CliffordAlgebra.contractLeft ψ ξ) +
+      CliffordAlgebra.contractLeft ψ
+        (CliffordAlgebra.contractLeft φ ξ) = 0
+  rw [CliffordAlgebra.contractLeft_comm]
+  simp
+
 theorem exteriorContract3_wedge3_CAR (φ : Module.Dual ℝ V3) (v : V3) :
     exteriorContract3 φ * exteriorWedge3 v + exteriorWedge3 v * exteriorContract3 φ =
       (φ v) • (1 : Exterior3End) := by
@@ -150,6 +174,72 @@ theorem exteriorGrade3_contract (φ : Module.Dual ℝ V3) (ψ : Exterior3) :
 def exteriorHodgeDirac3 (v : V3) (φ : Module.Dual ℝ V3) : Exterior3End :=
   exteriorWedge3 v + exteriorContract3 φ
 
+abbrev exterior3NeutralSpace :=
+  InfoGeometry.Clifford.NeutralPhaseSpaceCore.PhaseSpaceCarrier V3
+
+def exterior3NeutralPairing
+    (w z : exterior3NeutralSpace) : ℝ :=
+  (w.2 z.1 + z.2 w.1) / 2
+
+def exterior3NeutralAction (w : exterior3NeutralSpace) : Exterior3End :=
+  exteriorWedge3 w.1 + exteriorContract3 w.2
+
+noncomputable def exterior3NeutralActionMap :
+    exterior3NeutralSpace →ₗ[ℝ] Exterior3End where
+  toFun := exterior3NeutralAction
+  map_add' w z := by
+    rcases w with ⟨v, φ⟩
+    rcases z with ⟨u, ψ⟩
+    apply LinearMap.ext
+    intro ξ
+    change (ExteriorAlgebra.ι ℝ (v + u) * ξ +
+        exteriorContract3 (φ + ψ) ξ) =
+      (ExteriorAlgebra.ι ℝ v * ξ + exteriorContract3 φ ξ) +
+        (ExteriorAlgebra.ι ℝ u * ξ + exteriorContract3 ψ ξ)
+    rw [map_add, add_mul]
+    simp only [exteriorContract3, map_add, LinearMap.add_apply]
+    abel
+  map_smul' c w := by
+    rcases w with ⟨v, φ⟩
+    apply LinearMap.ext
+    intro ξ
+    change (ExteriorAlgebra.ι ℝ (c • v) * ξ +
+        exteriorContract3 (c • φ) ξ) =
+      c • (ExteriorAlgebra.ι ℝ v * ξ + exteriorContract3 φ ξ)
+    rw [map_smul, smul_mul_assoc]
+    simp only [exteriorContract3, map_smul, smul_add, LinearMap.smul_apply]
+
+theorem exterior3NeutralAction_anticommutator
+    (w z : exterior3NeutralSpace) :
+    exterior3NeutralAction w * exterior3NeutralAction z +
+        exterior3NeutralAction z * exterior3NeutralAction w =
+      (2 * exterior3NeutralPairing w z) • (1 : Exterior3End) := by
+  rcases w with ⟨v, φ⟩
+  rcases z with ⟨u, ψ⟩
+  calc
+    exterior3NeutralAction (v, φ) * exterior3NeutralAction (u, ψ) +
+          exterior3NeutralAction (u, ψ) * exterior3NeutralAction (v, φ) =
+        (exteriorWedge3 v * exteriorWedge3 u +
+          exteriorWedge3 u * exteriorWedge3 v) +
+        (exteriorContract3 φ * exteriorWedge3 u +
+          exteriorWedge3 u * exteriorContract3 φ) +
+        (exteriorContract3 ψ * exteriorWedge3 v +
+          exteriorWedge3 v * exteriorContract3 ψ) +
+        (exteriorContract3 φ * exteriorContract3 ψ +
+          exteriorContract3 ψ * exteriorContract3 φ) := by
+            simp only [exterior3NeutralAction, add_mul, mul_add]
+            abel
+    _ = (2 * exterior3NeutralPairing (v, φ) (u, ψ)) •
+          (1 : Exterior3End) := by
+      rw [exteriorWedge3_add_swap]
+      rw [exteriorContract3_add_swap]
+      rw [exteriorContract3_wedge3_CAR φ u]
+      rw [exteriorContract3_wedge3_CAR ψ v]
+      simp only [exterior3NeutralPairing, zero_add, add_zero]
+      rw [← add_smul]
+      congr 1
+      ring_nf
+
 def exteriorHodgeLaplacian3 (v : V3) (φ : Module.Dual ℝ V3) : Exterior3End :=
   exteriorContract3 φ * exteriorWedge3 v + exteriorWedge3 v * exteriorContract3 φ
 
@@ -162,6 +252,28 @@ theorem exteriorHodgeDirac3_sq (v : V3) (φ : Module.Dual ℝ V3) :
 theorem exteriorHodgeLaplacian3_scalar (v : V3) (φ : Module.Dual ℝ V3) :
     exteriorHodgeLaplacian3 v φ = (φ v) • (1 : Exterior3End) :=
   exteriorContract3_wedge3_CAR φ v
+
+noncomputable def exterior3CliffordRep :
+    CliffordAlgebra
+        (InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled
+          (E := V3)) →ₐ[ℝ] Exterior3End :=
+  CliffordAlgebra.lift _
+    ⟨exterior3NeutralActionMap, by
+      intro w
+      rcases w with ⟨v, φ⟩
+      simpa [exterior3NeutralActionMap, exterior3NeutralAction,
+        InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled_apply]
+        using (exteriorHodgeDirac3_sq v φ).trans
+          (exteriorHodgeLaplacian3_scalar v φ)⟩
+
+@[simp] theorem exterior3CliffordRep_ι
+    (w : exterior3NeutralSpace) :
+    exterior3CliffordRep
+        (CliffordAlgebra.ι
+          (InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled
+            (E := V3)) w) =
+      exterior3NeutralAction w := by
+  exact CliffordAlgebra.lift_ι_apply _ _ w
 
 theorem exteriorHodgeDirac3_odd (v : V3) (φ : Module.Dual ℝ V3) (ψ : Exterior3) :
     exteriorGrade3 (exteriorHodgeDirac3 v φ ψ) =

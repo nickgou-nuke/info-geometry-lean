@@ -178,19 +178,4 @@ theorem normalizedParavectorToQ55Configuration_respects_permute
   exact celestialOrderedConfigurationMap_respects_permute n σ
     (normalizedParavectorToCelestialOrdered n p)
 
-/-- The existing celestial unordered fundamental-group homomorphism is the
-canonical downstream braid map after the normalized-paravector-to-celestial
-equivalence.  This theorem exposes the owner rather than duplicating it. -/
-theorem normalized_paravector_braid_pipeline_uses_celestial_map
-    (n : ℕ) (p : CelestialUnorderedConfiguration n) :
-    Nonempty
-      (@FundamentalGroup
-          (CelestialUnorderedConfiguration n)
-          (celestialUnorderedConfigurationTopology n) p →*
-        @FundamentalGroup
-          (Unordered Q55 n)
-          (unorderedConfigurationTopology Q55 n)
-          (celestialUnorderedConfigurationContinuousMap n p)) := by
-  exact ⟨celestialUnorderedFundamentalGroupMap n p⟩
-
 end InfoGeometry.Twistor.TwistorAnyonBoundaryConfiguration

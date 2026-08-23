@@ -1,7 +1,6 @@
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
-import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 
 /-!
 # Penrose real-doubled/Peirce soldering
@@ -19,12 +18,9 @@ open InfoGeometry.Krein
 open InfoGeometry.Krein.SplitQuadraticSheets
 open InfoGeometry.Twistor.PenroseTwistor
 open InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
-open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
-open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 local notation "Real4" => Fin 4 → ℝ
 local notation "Peirce8" => PeirceCarrier
-local notation "CZ" => CanonicalZorn
 
 noncomputable def twistorRealification :
     TwistorCarrier ≃ₗ[ℝ] (Real4 × Real4) where
@@ -131,31 +127,5 @@ theorem penrosePeirceEquiv_readback (z : TwistorCarrier) :
   apply Complex.ext
   · fin_cases i <;> simp
   · fin_cases i <;> simp
-
-noncomputable def penroseCanonicalZornEquiv :
-    TwistorCarrier ≃ₗ[ℝ] CZ :=
-  penrosePeirceEquiv.trans circularPeirceBasis.equivFun.symm
-
-@[simp] theorem penroseCanonicalZornEquiv_apply (z : TwistorCarrier) :
-    penroseCanonicalZornEquiv z =
-      circularPeirceBasis.equivFun.symm (penrosePeirceEquiv z) := rfl
-
-theorem penroseCanonicalZornEquiv_coordinate_readback (z : TwistorCarrier) :
-    circularPeirceBasis.equivFun (penroseCanonicalZornEquiv z) =
-      penrosePeirceEquiv z := by
-  change circularPeirceBasis.equivFun
-      (circularPeirceBasis.equivFun.symm (penrosePeirceEquiv z)) = _
-  exact circularPeirceBasis.equivFun.apply_symm_apply _
-
-theorem penroseCanonicalZornEquiv_basis_coordinates
-    (z : TwistorCarrier) (i : Fin 8) :
-    circularPeirceBasis.equivFun (penroseCanonicalZornEquiv z) i =
-      penrosePeirceEquiv z i := by
-  exact congrFun (penroseCanonicalZornEquiv_coordinate_readback z) i
-
-theorem penroseCanonicalZornEquiv_readback (z : TwistorCarrier) :
-    circularPeirceBasis.equivFun.symm (penrosePeirceEquiv z) =
-      penroseCanonicalZornEquiv z := by
-  rfl
 
 end InfoGeometry.Twistor.PenroseRealDoubledPeirceSoldering

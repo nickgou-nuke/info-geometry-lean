@@ -63,6 +63,12 @@ noncomputable def penroseCanonicalZornEquiv :
   unfold penroseCanonicalZornEquiv
   simp
 
+theorem penroseCanonicalZornEquiv_circularCoordinates (z : TwistorCarrier) :
+    circularPeirceBasis.equivFun (penroseCanonicalZornEquiv z) =
+      penroseRealPeirceEquiv z := by
+  rw [penroseCanonicalZornEquiv, LinearEquiv.trans_apply,
+    circularPeirceBasis.equivFun.apply_symm_apply]
+
 theorem penroseCanonicalZornEquiv_readback (z : TwistorCarrier) :
     penroseRealPeirceEquiv.symm
         (circularPeirceBasis.equivFun (penroseCanonicalZornEquiv z)) = z := by

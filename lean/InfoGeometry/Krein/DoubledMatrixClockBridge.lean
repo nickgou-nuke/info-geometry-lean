@@ -29,14 +29,15 @@ variable {E : Type*}
 variable [NormedAddCommGroup E]
 variable [InnerProductSpace ℝ E]
 
-abbrev H₂ := DoubledSpace E
+abbrev H₂ (E : Type*) := DoubledSpace E
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
-abbrev End₂ := Module.End ℝ (DoubledSpace E)
+abbrev End₂ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] :=
+  Module.End ℝ (DoubledSpace E)
 
 /--
 The standard action of a real `2 × 2` matrix on the doubled carrier `E ⊕ E`.
 -/
-noncomputable def matrixAction (A : Mat2) : End₂ where
+noncomputable def matrixAction (A : Mat2) : End₂ E where
   toFun u :=
     to_doubled
       (A 0 0 • WithLp.fst u + A 0 1 • WithLp.snd u)
@@ -52,14 +53,14 @@ noncomputable def matrixAction (A : Mat2) : End₂ where
 
 @[simp]
 theorem matrixAction_to_doubled (A : Mat2) (x ξ : E) :
-    matrixAction (E := E) A (to_doubled x ξ : H₂) =
+    matrixAction (E := E) A (to_doubled x ξ : H₂ E) =
       to_doubled
         (A 0 0 • x + A 0 1 • ξ)
         (A 1 0 • x + A 1 1 • ξ) := by
   rfl
 
 /-- The full real-linear `M₂(ℝ)` representation on `DoubledSpace E`. -/
-noncomputable def ρclock : Mat2 →ₗ[ℝ] End₂ where
+noncomputable def ρclock : Mat2 →ₗ[ℝ] End₂ E where
   toFun := matrixAction (E := E)
   map_add' A B := by
     apply LinearMap.ext
@@ -93,7 +94,7 @@ theorem ρclock_one :
     simp [ρclock, matrixAction]
 
 /-- The representation packaged as an algebra homomorphism. -/
-noncomputable def ρclockAlg : Mat2 →ₐ[ℝ] End₂ where
+noncomputable def ρclockAlg : Mat2 →ₐ[ℝ] End₂ E where
   toLinearMap := ρclock (E := E)
   map_one' := by
     change ρclock (E := E) (1 : Mat2) = LinearMap.id
@@ -176,7 +177,7 @@ theorem ρclock_matrixClockAxis :
 @[simp]
 theorem ρclock_parabolicK_apply (x ξ : E) :
     ρclock (E := E) (InfoGeometry.Physics.K (R := ℝ))
-        (to_doubled x ξ : H₂) =
+        (to_doubled x ξ : H₂ E) =
       to_doubled ξ 0 := by
   apply DoubledSpace.ext <;>
     simp [ρclock, matrixAction, InfoGeometry.Physics.K]

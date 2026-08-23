@@ -57,6 +57,4 @@ theorem yang_baxter_relation (q : ℂ) :
     dsimp [C12, C23, C_q, Matrix.mul_apply, Matrix.smul_apply]
     <;> simp [Fin.sum_univ_eight]
 
-#check yang_baxter_relation
-
 end InfoGeometry.Physics.YangBaxterQSwap

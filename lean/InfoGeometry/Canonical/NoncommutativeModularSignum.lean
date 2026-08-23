@@ -14,6 +14,7 @@ This file deliberately avoids finite diagonal models, traces, and matrix
 normalization.  It proves:
 
 * left/right multiplication laws in a noncommutative algebra;
+* the full regular-module commutant characterization of left multiplication;
 * the left/right relative modular operator `L_a R_{b⁻¹}` and its honest
   noncommutative product law;
 * a two-point involution boost sector `K_a = a • S`;

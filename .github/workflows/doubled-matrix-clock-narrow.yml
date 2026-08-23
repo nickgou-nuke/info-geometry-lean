@@ -1,0 +1,138 @@
+name: Doubled Matrix Clock Narrow Check
+
+on:
+  push:
+    branches:
+      - agent/doubled-matrix-clock-bridge
+    paths:
+      - lean/InfoGeometry/Krein/DoubledMatrixClockBridge.lean
+      - .github/workflows/doubled-matrix-clock-narrow.yml
+
+jobs:
+  narrow-kernel-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Lean toolchain
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build isolated Mathlib check project
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="${RUNNER_TEMP}/doubled-matrix-clock-check"
+          mkdir -p "$work"
+          cd "$work"
+
+          cat > lean-toolchain <<'EOF'
+          leanprover/lean4:v4.28.1
+          EOF
+
+          cat > lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package doubledMatrixClockCheck
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+          EOF
+
+          cat > ClockCheck.lean <<'EOF'
+          import Mathlib
+
+          namespace InfoGeometry.Krein
+
+          variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+          abbrev DoubledSpace (E : Type*) : Type _ := WithLp (2 : ENNReal) (E × E)
+
+          @[ext] lemma DoubledSpace.ext {u v : DoubledSpace E}
+              (hfst : WithLp.fst u = WithLp.fst v)
+              (hsnd : WithLp.snd u = WithLp.snd v) : u = v := by
+            apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
+            exact Prod.ext hfst hsnd
+
+          abbrev to_doubled (x ξ : E) : DoubledSpace E :=
+            WithLp.toLp (2 : ENNReal) (x, ξ)
+
+          @[simp] lemma fst_to_doubled (x ξ : E) :
+              WithLp.fst (to_doubled x ξ : DoubledSpace E) = x := rfl
+
+          @[simp] lemma snd_to_doubled (x ξ : E) :
+              WithLp.snd (to_doubled x ξ : DoubledSpace E) = ξ := rfl
+
+          noncomputable def modular_j : DoubledSpace E →L[ℝ] DoubledSpace E where
+            toFun u := WithLp.toLp (2 : ENNReal) (WithLp.snd u, WithLp.fst u)
+            map_add' u v := by
+              simpa [WithLp.add_snd, WithLp.add_fst] using
+                (WithLp.toLp_add (p := (2 : ENNReal))
+                  (x := (WithLp.snd u, WithLp.fst u))
+                  (y := (WithLp.snd v, WithLp.fst v)))
+            map_smul' c u := by
+              simpa [WithLp.smul_snd, WithLp.smul_fst] using
+                (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+                  (x := (WithLp.snd u, WithLp.fst u)))
+            cont := by
+              simpa using
+                (WithLp.prod_continuous_toLp (p := (2 : ENNReal))
+                    (α := E) (β := E)).comp
+                  ((WithLp.continuous_snd (p := (2 : ENNReal))
+                      (α := E) (β := E)).prodMk
+                   (WithLp.continuous_fst (p := (2 : ENNReal))
+                      (α := E) (β := E)))
+
+          noncomputable def spectral_epsilon :
+              DoubledSpace E →L[ℝ] DoubledSpace E where
+            toFun u := WithLp.toLp (2 : ENNReal) (WithLp.fst u, -WithLp.snd u)
+            map_add' u v := by
+              simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
+                (WithLp.toLp_add (p := (2 : ENNReal))
+                  (x := (WithLp.fst u, -WithLp.snd u))
+                  (y := (WithLp.fst v, -WithLp.snd v)))
+            map_smul' c u := by
+              simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
+                (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+                  (x := (WithLp.fst u, -WithLp.snd u)))
+            cont := by
+              simpa using
+                (WithLp.prod_continuous_toLp (p := (2 : ENNReal))
+                    (α := E) (β := E)).comp
+                  ((WithLp.continuous_fst (p := (2 : ENNReal))
+                      (α := E) (β := E)).prodMk
+                   (continuous_neg.comp
+                    (WithLp.continuous_snd (p := (2 : ENNReal))
+                      (α := E) (β := E))))
+
+          noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
+            modular_j.comp spectral_epsilon
+
+          noncomputable def clockAxis : DoubledSpace E →L[ℝ] DoubledSpace E :=
+            complex_i
+
+          end InfoGeometry.Krein
+
+          namespace InfoGeometry.Physics
+
+          variable {R : Type*} [CommRing R]
+
+          def K : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
+
+          theorem K_sq_eq_zero : K * K = (0 : Matrix (Fin 2) (Fin 2) R) := by
+            ext i j
+            fin_cases i <;> fin_cases j <;>
+              simp [K, Matrix.mul_apply, Fin.sum_univ_two]
+
+          end InfoGeometry.Physics
+          EOF
+
+          sed '/^import /d' \
+            "$GITHUB_WORKSPACE/lean/InfoGeometry/Krein/DoubledMatrixClockBridge.lean" \
+            >> ClockCheck.lean
+
+          lake update
+          lake exe cache get
+          lake env lean ClockCheck.lean

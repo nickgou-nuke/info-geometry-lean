@@ -1,12 +1,10 @@
 import InfoGeometry.Algebra.Zorn.G2FixedPrefixResidualConstraints
-import InfoGeometry.Algebra.Zorn.G2ResidualUpperPairClassification
 
 namespace InfoGeometry.Algebra.Zorn.G2ResidualFiberTransport
 
 open _root_.InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2PeirceFibration
 open InfoGeometry.Algebra.Zorn.G2FixedPrefixResidualConstraints
-open InfoGeometry.Algebra.Zorn.G2ResidualUpperPairClassification
 
 noncomputable def transportAutomorphism
     (v : AdmissibleBasis7Carrier) : SplitOctF2Aut :=
@@ -24,7 +22,7 @@ noncomputable def transportAutomorphism
     (v : AdmissibleBasis7Carrier) :
     (transportAutomorphism v)⁻¹.1
         (admissibleBasis7Second v).1.1 = up0 := by
-  rw [admissibleBasis7_second_prefix_code v]
+  change (transportAutomorphism v)⁻¹.1 (basisPrefix2 v) = up0
   rw [← admissibleBasis7Equiv_symm_maps_up0 v]
   exact (transportAutomorphism v).1.left_inv up0
 
@@ -111,7 +109,7 @@ theorem occurringResidualFiber_card_le_64
           (admissibleBasis7_first_prefix_code v)
           (admissibleBasis7Second v)) ≤ 64 := by
   rw [Fintype.card_congr (occurringResidualFiberEquivCanonical v)]
-  exact G2ResidualUpperPairClassification.residualFiber_card_le_64_of_ePlus
+  exact residualFiber_card_le_64_of_ePlus
     (p := canonicalP) (x := canonicalX) canonicalP_value
 
 end InfoGeometry.Algebra.Zorn.G2ResidualFiberTransport

@@ -33,6 +33,7 @@ import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.SplitOctonionZorn
 import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Clifford.SplitCompositionCl11Bridge
+import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin

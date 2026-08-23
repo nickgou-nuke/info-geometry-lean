@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 # Continuous regular representation of the even Clifford algebra
 
 `CliffordAlgebra.even Q` is Mathlib's native bundled associative algebra whose
-underlying submodule is `CliffordAlgebra.evenOdd Q 0`.  On any finite-dimensional
+underlying submodule is `CliffordAlgebra.evenOdd Q 0`. On any finite-dimensional
 normed realization of this algebra, left and right multiplication are therefore
 continuous linear operators.
 
@@ -28,6 +28,42 @@ local notation "EvenQ" => CliffordAlgebra.even Q
 theorem coe_mem_evenOdd_zero (a : EvenQ) :
     (a : CliffordAlgebra Q) ∈ CliffordAlgebra.evenOdd Q 0 := by
   simpa [CliffordAlgebra.even_toSubmodule] using a.2
+
+/--
+The bundled even Clifford algebra and the grade-zero `evenOdd` carrier are the
+same real vector space. This is the native carrier bridge supplied by Mathlib's
+`even_toSubmodule` theorem.
+-/
+noncomputable def evenEquivEvenOddZero :
+    CliffordAlgebra.even Q ≃ₗ[ℝ] CliffordAlgebra.evenOdd Q 0 where
+  toFun := fun a => ⟨a.1, coe_mem_evenOdd_zero Q a⟩
+  invFun := fun x => by
+    refine ⟨x.1, ?_⟩
+    have hx : x.1 ∈ (CliffordAlgebra.even Q).toSubmodule := by
+      rw [CliffordAlgebra.even_toSubmodule]
+      exact x.2
+    exact hx
+  left_inv := by
+    intro a
+    rfl
+  right_inv := by
+    intro x
+    rfl
+  map_add' := by
+    intro a b
+    rfl
+  map_smul' := by
+    intro c a
+    rfl
+
+@[simp] theorem evenEquivEvenOddZero_apply (a : CliffordAlgebra.even Q) :
+    (evenEquivEvenOddZero Q a : CliffordAlgebra Q) = a := by
+  rfl
+
+@[simp] theorem evenEquivEvenOddZero_symm_apply
+    (x : CliffordAlgebra.evenOdd Q 0) :
+    ((evenEquivEvenOddZero Q).symm x : CliffordAlgebra Q) = x := by
+  rfl
 
 /-- Algebraic left regular multiplication on the native even Clifford algebra. -/
 def leftRegularLinearMap (a : EvenQ) : EvenQ →ₗ[ℝ] EvenQ :=

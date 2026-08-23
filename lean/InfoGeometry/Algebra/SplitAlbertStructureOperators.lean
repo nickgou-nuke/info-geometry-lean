@@ -20,6 +20,9 @@ commutator.  The proof uses only the already verified Jordan identities:
 * `[D,L_a] = L_{D a}`;
 * `[L_a,L_b]` is the genuine inner Jordan derivation.
 
+The closed operator sector is then packaged as a native Mathlib
+`LieSubalgebra ℝ (Module.End ℝ J)`.
+
 This is the algebraic substrate of the split-Albert structure algebra.  It is
 not identified here with `𝔢₆(6)`, and no dimension, simplicity, or real-form
 classification theorem is assumed.
@@ -123,12 +126,49 @@ theorem lie_isStructureOperator
   refine ⟨⁅D, E⁆ + h3ZornJordanInnerDerivation a b, D b - E a, ?_⟩
   exact structureOperator_lie_formula D E a b
 
-/-- The actual subtype of represented split-Albert structure operators. -/
-abbrev StructureOperatorCarrier := {T : AlbertEnd // IsStructureOperator T}
+/-- Native Lie-subalgebra package for the concrete represented split-Albert
+structure operators. -/
+def structureOperatorLieSubalgebra : LieSubalgebra ℝ AlbertEnd where
+  carrier := {T | IsStructureOperator T}
+  zero_mem' := zero_isStructureOperator
+  add_mem' := by
+    intro S T hS hT
+    exact add_isStructureOperator hS hT
+  smul_mem' := by
+    intro r T hT
+    exact smul_isStructureOperator r hT
+  lie_mem' := by
+    intro S T hS hT
+    exact lie_isStructureOperator hS hT
+
+@[simp] theorem mem_structureOperatorLieSubalgebra_iff (T : AlbertEnd) :
+    T ∈ structureOperatorLieSubalgebra ↔ IsStructureOperator T :=
+  Iff.rfl
+
+/-- The actual native Lie-algebra carrier of represented split-Albert
+structure operators. -/
+abbrev StructureOperatorCarrier := structureOperatorLieSubalgebra
 
 /-- Readback of the concrete carrier into endomorphisms. -/
 def structureOperatorCarrierVal : StructureOperatorCarrier → AlbertEnd :=
   fun T => T.1
+
+/-- Genuine derivations embed into the represented structure Lie algebra. -/
+def derivationToStructure (D : AlbertDerivation) : StructureOperatorCarrier :=
+  ⟨(D : AlbertEnd), derivation_isStructureOperator D⟩
+
+/-- Left Jordan multiplications embed into the represented structure Lie
+algebra. -/
+def leftMultiplicationToStructure (a : Albert) : StructureOperatorCarrier :=
+  ⟨jordanLmul (R := ℝ) a, leftMultiplication_isStructureOperator a⟩
+
+@[simp] theorem derivationToStructure_val (D : AlbertDerivation) :
+    (derivationToStructure D : AlbertEnd) = (D : AlbertEnd) :=
+  rfl
+
+@[simp] theorem leftMultiplicationToStructure_val (a : Albert) :
+    (leftMultiplicationToStructure a : AlbertEnd) = jordanLmul (R := ℝ) a :=
+  rfl
 
 /-- The closure packet needed before a reduced-structure or TKK identification:
 zero, addition, scalar multiplication, and commutator all remain in the same

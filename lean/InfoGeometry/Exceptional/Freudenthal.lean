@@ -93,6 +93,50 @@ namespace FreudenthalCharge
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 
+instance : AddCommGroup (FreudenthalCharge J) where
+  add P Q := ⟨P.alpha + Q.alpha, P.beta + Q.beta, P.x + Q.x, P.y + Q.y⟩
+  add_assoc P Q S := by ext <;> simp [add_assoc]
+  zero := ⟨0, 0, 0, 0⟩
+  zero_add P := by ext <;> simp
+  add_zero P := by ext <;> simp
+  neg P := ⟨-P.alpha, -P.beta, -P.x, -P.y⟩
+  neg_add_cancel P := by ext <;> simp
+  add_comm P Q := by ext <;> simp [add_comm]
+  nsmul := fun n P => Nat.rec 0 (fun _ acc => acc + P) n
+  nsmul_zero := fun _ => rfl
+  nsmul_succ := fun _ _ => rfl
+  zsmul := fun z P =>
+    match z with
+    | Int.ofNat n => Nat.rec 0 (fun _ acc => acc + P) n
+    | Int.negSucc n => -(Nat.rec 0 (fun _ acc => acc + P) (n + 1))
+  zsmul_zero' := fun _ => rfl
+  zsmul_succ' := fun _ _ => rfl
+  zsmul_neg' := fun _ _ => rfl
+
+instance : Module ℝ (FreudenthalCharge J) where
+  smul r P := ⟨r * P.alpha, r * P.beta, r • P.x, r • P.y⟩
+  one_smul P := by ext <;> simp
+  mul_smul r s P := by ext <;> simp [mul_assoc]
+  smul_add r P Q := by ext <;> simp [mul_add]
+  smul_zero r := by ext <;> simp
+  add_smul r s P := by ext <;> simp [add_mul]
+  zero_smul P := by ext <;> simp
+
+@[simp] theorem zero_alpha : (0 : FreudenthalCharge J).alpha = 0 := rfl
+@[simp] theorem zero_beta : (0 : FreudenthalCharge J).beta = 0 := rfl
+@[simp] theorem zero_x : (0 : FreudenthalCharge J).x = 0 := rfl
+@[simp] theorem zero_y : (0 : FreudenthalCharge J).y = 0 := rfl
+
+@[simp] theorem add_alpha (P Q : FreudenthalCharge J) : (P + Q).alpha = P.alpha + Q.alpha := rfl
+@[simp] theorem add_beta (P Q : FreudenthalCharge J) : (P + Q).beta = P.beta + Q.beta := rfl
+@[simp] theorem add_x (P Q : FreudenthalCharge J) : (P + Q).x = P.x + Q.x := rfl
+@[simp] theorem add_y (P Q : FreudenthalCharge J) : (P + Q).y = P.y + Q.y := rfl
+
+@[simp] theorem smul_alpha (r : ℝ) (P : FreudenthalCharge J) : (r • P).alpha = r * P.alpha := rfl
+@[simp] theorem smul_beta (r : ℝ) (P : FreudenthalCharge J) : (r • P).beta = r * P.beta := rfl
+@[simp] theorem smul_x (r : ℝ) (P : FreudenthalCharge J) : (r • P).x = r • P.x := rfl
+@[simp] theorem smul_y (r : ℝ) (P : FreudenthalCharge J) : (r • P).y = r • P.y := rfl
+
 /--
 The Freudenthal quartic polynomial
 
@@ -111,9 +155,6 @@ def quarticInvariant
 The scalar formula for the canonical Freudenthal symplectic pairing
 
 `ω(Q₁,Q₂) = α₁β₂ - β₁α₂ + ⟨X₁,Y₂⟩ - ⟨Y₁,X₂⟩`.
-
-This file proves alternating and skew-symmetry. A later file can bundle this as
-a bilinear form after adding the vector-space instance on `FreudenthalCharge J`.
 -/
 def symplecticForm
     (D : CubicJordanDatum J)
@@ -121,6 +162,35 @@ def symplecticForm
   Q₁.alpha * Q₂.beta - Q₁.beta * Q₂.alpha
     + D.traceBilin Q₁.x Q₂.y
     - D.traceBilin Q₁.y Q₂.x
+
+/-- The Freudenthal symplectic pairing bundled as a bilinear map. -/
+def symplecticFormLinear
+    (D : CubicJordanDatum J) :
+    FreudenthalCharge J →ₗ[ℝ] FreudenthalCharge J →ₗ[ℝ] ℝ where
+  toFun Q₁ :=
+    { toFun := fun Q₂ => symplecticForm D Q₁ Q₂
+      map_add' := by
+        intro Q₂ Q₃
+        simp [symplecticForm, mul_add, D.traceBilin.map_add]
+        ring
+      map_smul' := by
+        intro r Q₂
+        simp [symplecticForm, mul_assoc, D.traceBilin.map_smul]
+        ring }
+  map_add' := by
+    intro Q₁ Q₂
+    ext Q₃
+    simp [symplecticForm, add_mul, D.traceBilin.map_add]
+    ring
+  map_smul' := by
+    intro r Q₁
+    ext Q₂
+    simp [symplecticForm, mul_assoc, D.traceBilin.map_smul]
+    ring
+
+@[simp] theorem symplecticFormLinear_apply
+    (D : CubicJordanDatum J) (Q₁ Q₂ : FreudenthalCharge J) :
+    symplecticFormLinear D Q₁ Q₂ = symplecticForm D Q₁ Q₂ := rfl
 
 /--
 The Freudenthal symplectic form is alternating.

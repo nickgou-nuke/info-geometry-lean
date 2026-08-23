@@ -1,5 +1,4 @@
 import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.Matrix.Multiplication
 import Mathlib.Tactic
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Physics.ParabolicClock

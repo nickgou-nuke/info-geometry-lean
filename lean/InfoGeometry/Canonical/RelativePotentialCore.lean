@@ -161,6 +161,40 @@ noncomputable def representativeModularPotential
 
 end Representatives
 
+section ScaleShape
+
+variable {α : Type u} [Fintype α] [Nonempty α]
+
+/--
+The logarithm of an unnormalised positive density splits into its total mass
+and its normalised shape.  This is the scalar form of
+
+`K_ρ = -(log Z) + K_(ρ/Z)`.
+
+The two terms remain on the native `PositiveMeasure` carrier; no operator or
+projective identification is introduced here.
+-/
+theorem log_mass_add_log_normalized_density
+    (μ : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    Real.log (μ a) =
+      Real.log (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) +
+        Real.log (InfoGeometry.PositiveMeasure.normalize μ a) := by
+  rw [InfoGeometry.PositiveMeasure.normalize_apply]
+  rw [Real.log_div (μ.pos a).ne'
+    (InfoGeometry.PositiveMeasure.Z_ne_zero μ)]
+  ring
+
+/-- Negative-log version of `log_mass_add_log_normalized_density`. -/
+theorem neg_log_mass_scale_shape_split
+    (μ : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    -Real.log (μ a) =
+      -Real.log (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) -
+        Real.log (InfoGeometry.PositiveMeasure.normalize μ a) := by
+  rw [log_mass_add_log_normalized_density]
+  ring
+
+end ScaleShape
+
 section Rays
 
 variable {α : Type u} [Fintype α] [Nonempty α]
@@ -652,6 +686,8 @@ attribute [rep_depth projective]
   representativeRelativeLogDensity_cocycle
   representativeRelativeDensity_cocycle
   representativeModularPotential_cocycle
+  log_mass_add_log_normalized_density
+  neg_log_mass_scale_shape_split
   relativeDensity
   relativeLogDensity
   relativeModularPotential

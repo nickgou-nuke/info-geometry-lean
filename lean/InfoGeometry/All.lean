@@ -5212,6 +5212,7 @@ import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.DoubledRootLemmas
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledSpaceMatrix
+import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.FiniteDecompositionAudit
 import InfoGeometry.Krein.FundamentalSymmetryProjectors

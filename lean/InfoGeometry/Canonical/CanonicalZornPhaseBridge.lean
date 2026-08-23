@@ -14,11 +14,11 @@ open InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge
 
 noncomputable section
 
-abbrev Derivation := canonicalZornDerivations
-abbrev PaperZorn := InfoGeometry.Algebra.ZornMatrix ℝ
-abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
-abbrev Phase := InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace.Phase
-abbrev PhaseEnd := Module.End ℝ Phase
+local notation "Derivation" => canonicalZornDerivations
+local notation "PaperZorn" => InfoGeometry.Algebra.ZornMatrix ℝ
+local notation "CZ" => InfoGeometry.Canonical.ZornMatrix ℝ
+local notation "Phase" => InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace.Phase
+local notation "PhaseEnd" => Module.End ℝ Phase
 
 def phaseToPaper : Phase →ₗ[ℝ] PaperZorn where
   toFun X := { a := 0, v := X.1, w := X.2, b := 0 }
@@ -288,7 +288,7 @@ def polarizedPhaseDerivations :
     rw [phaseAction_add]
     simp only [LinearMap.add_apply]
     rw [hD X, hE X]
-    ext i <;> simp [paraJ] <;> ring
+    ext i <;> (simp [paraJ] <;> try ring)
   smul_mem' := by
     intro r D hD X
     change (r • phaseAction D.1) (paraJ X) =

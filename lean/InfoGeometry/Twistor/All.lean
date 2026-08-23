@@ -63,3 +63,5 @@ import InfoGeometry.Twistor.ProjectiveNullConfigurationTopology
 import InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Twistor.RollingSpinorMobiusBridge
+import InfoGeometry.Twistor.PhaseNativePluckerBridge
+import InfoGeometry.Twistor.QutritPermutationAssociatedTwistorMonodromy

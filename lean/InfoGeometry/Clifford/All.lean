@@ -24,6 +24,7 @@ import InfoGeometry.Clifford.CliffordTowerFunctor
 import InfoGeometry.Clifford.QuadraticPolarAnticommutator
 import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
 import InfoGeometry.Clifford.TwistedChiralLinking

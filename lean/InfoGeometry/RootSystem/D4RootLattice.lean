@@ -15,6 +15,10 @@ namespace InfoGeometry.RootSystem.D4
 
 def Ambient := Fin 4 → ℤ
 
+instance : AddCommGroup Ambient := inferInstanceAs (AddCommGroup (Fin 4 → ℤ))
+
+instance : SMul ℤ Ambient := inferInstanceAs (SMul ℤ (Fin 4 → ℤ))
+
 def coordinateSum (x : Ambient) : ℤ := ∑ i, x i
 
 def IsD4 (x : Ambient) : Prop := coordinateSum x % 2 = 0
@@ -86,10 +90,23 @@ def reflect (i : Fin 4) (x : Ambient) : Ambient :=
 
 theorem coordinateSum_reflect_mod (i : Fin 4) (x : Ambient) :
     coordinateSum (reflect i x) % 2 = coordinateSum x % 2 := by
-  fin_cases i <;>
-    simp [reflect, coordinateSum, dot, simpleRoot, Fin.sum_univ_four,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three] <;> omega
+  have hsum : coordinateSum (reflect i x) =
+      coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i) := by
+    unfold coordinateSum reflect
+    change (∑ k, (x k - dot x (simpleRoot i) * simpleRoot i k)) = _
+    rw [Finset.sum_sub_distrib, ← Finset.mul_sum]
+  rw [hsum]
+  have hroot : coordinateSum (simpleRoot i) ≡ 0 [ZMOD 2] := by
+    apply Int.modEq_zero_iff_dvd.mpr
+    exact Int.dvd_iff_emod_eq_zero.mpr (simpleRoot_mem i)
+  have hmul := hroot.mul_left (dot x (simpleRoot i))
+  have hmod :
+      coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i) ≡
+        coordinateSum x - dot x (simpleRoot i) * 0 [ZMOD 2] :=
+    Int.ModEq.sub (Int.ModEq.refl _) hmul
+  change (coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i)) % 2 =
+    (coordinateSum x - dot x (simpleRoot i) * 0) % 2 at hmod
+  simpa only [mul_zero, sub_zero] using hmod
 
 theorem reflect_mem (i : Fin 4) (x : Lattice) :
     IsD4 (reflect i x.1) := by
@@ -101,11 +118,11 @@ def reflect_lattice (i : Fin 4) : Lattice → Lattice := fun x =>
   ⟨reflect i x.1, reflect_mem i x⟩
 
 theorem reflect_simpleRoot (i : Fin 4) :
-    reflect i (simpleRoot i) = -simpleRoot i := by
+    reflect i (simpleRoot i) = fun j => -simpleRoot i j := by
+  unfold reflect
+  rw [show dot (simpleRoot i) (simpleRoot i) = 2 by exact simpleRoot_norm i]
   funext j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [reflect, dot, simpleRoot, Fin.sum_univ_four,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three]
+  change simpleRoot i j - 2 * simpleRoot i j = -simpleRoot i j
+  ring
 
 end InfoGeometry.RootSystem.D4

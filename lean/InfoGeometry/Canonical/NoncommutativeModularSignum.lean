@@ -101,6 +101,36 @@ theorem leftMul_comm_rightMul (a b : A) :
   simp [leftMul, rightMul, mul_assoc]
 
 /--
+Every regular-module endomorphism commuting with all left multiplications is
+right multiplication by its value at the unit.
+-/
+@[rep_depth operator]
+theorem eq_rightMul_apply_one_of_commutes_leftMul
+    (T : A →ₗ[R] A)
+    (hT : ∀ a : A,
+      T * leftMul (R := R) a = leftMul (R := R) a * T) :
+    T = rightMul (R := R) (T 1) := by
+  ext x
+  have hx := congrArg (fun F : A →ₗ[R] A => F 1) (hT x)
+  simpa [leftMul, rightMul] using hx
+
+/--
+Full regular commutant theorem: an endomorphism commutes with the entire left
+regular action exactly when it is right multiplication by its value at `1`.
+-/
+@[rep_depth operator]
+theorem commutes_leftMul_iff_eq_rightMul_apply_one
+    (T : A →ₗ[R] A) :
+    (∀ a : A,
+      T * leftMul (R := R) a = leftMul (R := R) a * T) ↔
+      T = rightMul (R := R) (T 1) := by
+  constructor
+  · exact eq_rightMul_apply_one_of_commutes_leftMul (R := R) T
+  · intro hT a
+    rw [hT]
+    exact (leftMul_comm_rightMul (R := R) a (T 1)).symm
+
+/--
 Trace-free left/right relative modular operator:
 `Δ_{a|b} = L_a R_{b⁻¹}`.
 -/

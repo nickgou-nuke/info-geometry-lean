@@ -60,14 +60,14 @@ theorem minus_twistor_pole_idempotent :
   exact op2_idempotent
 
 /-- Positive boundary pole satisfies the cubic/tripotent identity. -/
-theorem plus_twistor_pole_tripoten​​t :
+theorem plus_twistor_pole_tripotent :
     zMul (zMul (plusZornMap sheetScalarSpinor) (plusZornMap sheetScalarSpinor))
         (plusZornMap sheetScalarSpinor) = plusZornMap sheetScalarSpinor := by
   rw [plus_twistor_pole_eq_OP1]
   exact op1_cubic
 
 /-- Negative boundary pole satisfies the cubic/tripotent identity. -/
-theorem minus_twistor_pole_tripoten​​t :
+theorem minus_twistor_pole_tripotent :
     zMul (zMul (minusZornMap sheetScalarSpinor) (minusZornMap sheetScalarSpinor))
         (minusZornMap sheetScalarSpinor) = minusZornMap sheetScalarSpinor := by
   rw [minus_twistor_pole_eq_OP2]

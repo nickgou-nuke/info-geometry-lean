@@ -4007,6 +4007,7 @@ import InfoGeometry.Categorical.ConcreteZornTower
 import InfoGeometry.Categorical.CuntzCliffordFibonacciBraid
 import InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor
 import InfoGeometry.Categorical.FibonacciBraidDirectLimit
+import InfoGeometry.Categorical.FibonacciFilteredColimitHestenesKrein
 import InfoGeometry.Categorical.FibonacciBraidedCategory
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 import InfoGeometry.Categorical.FibonacciBraiding

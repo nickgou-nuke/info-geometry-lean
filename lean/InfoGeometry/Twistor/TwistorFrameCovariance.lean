@@ -30,7 +30,7 @@ theorem frameAction_det (A X : ComplexSpacetime) (hA : IsUnit A.det) :
   rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_nonsing_inv]
   have hne : A.det ≠ 0 := isUnit_iff_ne_zero.mp hA
   have hcancel : A.det * Ring.inverse (A.det) = 1 := by
-    exact hA.mul_inv_cancel
+    simpa only [Ring.inverse_eq_inv] using hA.mul_inv_cancel
   calc
     A.det * X.det * Ring.inverse (A.det) =
         X.det * (A.det * Ring.inverse (A.det)) := by ring

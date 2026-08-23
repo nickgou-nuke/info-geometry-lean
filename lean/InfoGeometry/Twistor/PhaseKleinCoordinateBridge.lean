@@ -39,7 +39,8 @@ def phaseKleinCoordinates (x : Phase) : KleinCoordinates where
 theorem kleinForm_phaseKleinCoordinates (x : Phase) :
     kleinForm (phaseKleinCoordinates x) =
       chiralPairing x.1 x.2 := by
-  rfl
+  simp [kleinForm, phaseKleinCoordinates, chiralPairing, Vec3.dot]
+  ring
 
 theorem phase_null_implies_klein_null
     (x : Phase)

@@ -15,6 +15,7 @@ reindexing by an equivalence `Fin 6 ≃ Fin 6`, between the two packets.
 This is a structural guard theorem.  It prevents the Bruhat residual layer from
 identifying Chevalley root coordinates with the chosen PC generator coordinates
 without first constructing a genuine root-to-PC-word bridge.
+-/
 
 /-!
 # Separation of root-group and PC-generator carriers
@@ -89,29 +90,6 @@ theorem positiveRootPacket_not_pointwise_pcGenerator :
 /-- The correct alignment interface is through complete PC normal-form words,
     not through the six PC generators individually.  This definition is only
     an interface: no alignment theorem is asserted for the current packet. -/
-theorem pcGenerator_one_not_involution :
-    ¬ (pcGenerator 1 * pcGenerator 1 = (1 : SplitOctF2Aut)) := by
-  rw [pcGenerator.eq_def, pc2Aut_sq_eq_pc6Aut]
-  exact pc6Aut_ne_one
-
-theorem pcGenerator_two_not_involution :
-    ¬ (pcGenerator 2 * pcGenerator 2 = (1 : SplitOctF2Aut)) := by
-  rw [pcGenerator.eq_def, pc3Aut_sq_eq_pc6Aut]
-  exact pc6Aut_ne_one
-
-theorem no_positiveRootPacket_pcGenerator_reindex
-    (σ : Fin 6 ≃ Fin 6) :
-    ¬ ∀ i : Fin 6,
-      positiveRootPacket i = pcGenerator (σ i) := by
-  intro h
-  let i : Fin 6 := σ.symm 1
-  have hi : σ i = 1 := by
-    dsimp [i]
-    exact σ.apply_symm_apply 1
-  have hsq := positiveRootPacket_sq i
-  rw [h i, hi] at hsq
-  exact pcGenerator_one_not_involution hsq
-
 def PacketPCWordAligned
     (packet : Fin 6 → SplitOctF2Aut)
     (word : (Fin 6 → Bool) → SplitOctF2Aut) : Prop :=

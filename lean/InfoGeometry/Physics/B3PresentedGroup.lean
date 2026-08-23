@@ -234,13 +234,4 @@ def homOfArtinPair {G : Type*} [Group G]
   rw [homOfArtinPair, PresentedGroup.toGroup.of]
   rfl
 
-#check s0_sq_eq_neg_one
-#check s1_sq_eq_neg_one
-#check s0_unit
-#check s1_unit
-#check braid_square_eq_neg_one
-#check phi
-#check phi_sig0
-#check phi_sig1
-
 end InfoGeometry.Physics.B3PresentedGroup

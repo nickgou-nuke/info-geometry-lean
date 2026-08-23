@@ -65,6 +65,7 @@ import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.TwoTwistorSpacetimeNode
 import InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency
+import InfoGeometry.Twistor.TwoTwistorConformalBlockCovariance
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling

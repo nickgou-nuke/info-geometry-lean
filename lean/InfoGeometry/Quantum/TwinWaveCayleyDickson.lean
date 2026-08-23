@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
+import InfoGeometry.Clifford.EvenRegularRepresentation
 import InfoGeometry.Krein.DoubledSpace
 
 namespace InfoGeometry.Quantum.TwinWave
@@ -8,6 +9,7 @@ open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
 open InfoGeometry.Clifford.SplitOctonionsDualProduct
 open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
+open InfoGeometry.Clifford.EvenRegularRepresentation
 open InfoGeometry.Krein
 open CliffordAlgebra
 
@@ -99,12 +101,42 @@ theorem twinWave_forward_eq_diagonal_subtracted_schurComplement
           (TimeReversal Q v0 Y.backward) 1 X.backward := by
   simp [TwinWaveInterference, associativeSchurComplement, schurCrossTerm]
 
-/-! ## Analytic doubled-space realization -/
+/-! ## Native even-algebra and analytic doubled-space realizations -/
 
-section DoubledSpaceRealization
+section RealRealizations
 
 variable {M : Type*} [AddCommGroup M] [Module ℝ M]
 variable (Q : QuadraticForm ℝ M)
+
+/--
+The two TwinWave components are canonically the two copies of Mathlib's bundled
+associative even Clifford algebra. This removes the algebraic carrier mismatch
+between `evenOdd Q 0` and `CliffordAlgebra.even Q` without introducing a new carrier.
+-/
+noncomputable def TwinWaveEquivEvenPair :
+    TwinWaveState Q ≃ CliffordAlgebra.even Q × CliffordAlgebra.even Q where
+  toFun := fun X =>
+    ((evenEquivEvenOddZero Q).symm X.forward,
+      (evenEquivEvenOddZero Q).symm X.backward)
+  invFun := fun X =>
+    ⟨evenEquivEvenOddZero Q X.1, evenEquivEvenOddZero Q X.2⟩
+  left_inv := by
+    intro X
+    cases X
+    simp
+  right_inv := by
+    intro X
+    rcases X with ⟨Xplus, Xminus⟩
+    simp
+
+@[simp] theorem TwinWaveEquivEvenPair_forward (X : TwinWaveState Q) :
+    (TwinWaveEquivEvenPair Q X).1 = (evenEquivEvenOddZero Q).symm X.forward := by
+  rfl
+
+@[simp] theorem TwinWaveEquivEvenPair_backward (X : TwinWaveState Q) :
+    (TwinWaveEquivEvenPair Q X).2 = (evenEquivEvenOddZero Q).symm X.backward := by
+  rfl
+
 variable [NormedAddCommGroup (evenOdd Q 0)]
 variable [InnerProductSpace ℝ (evenOdd Q 0)]
 variable [CompleteSpace (evenOdd Q 0)]
@@ -134,6 +166,6 @@ theorem TwinWaveEquivDoubledSpace_symm_apply
       ⟨WithLp.fst u, WithLp.snd u⟩ :=
   rfl
 
-end DoubledSpaceRealization
+end RealRealizations
 
 end InfoGeometry.Quantum.TwinWave

@@ -141,6 +141,7 @@ import InfoGeometry.Algebra.FiniteInfiniteModeBridge
 import InfoGeometry.Algebra.ScaleCocycleInvariant
 import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
+import InfoGeometry.Algebra.IdempotentCornerCommutant
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
 import InfoGeometry.Algebra.HessianThermodynamicManifold

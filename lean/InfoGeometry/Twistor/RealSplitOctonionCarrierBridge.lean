@@ -31,6 +31,7 @@ namespace InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 
 open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
+open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 abbrev Real8 := Fin 8 → ℝ
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
@@ -141,6 +142,56 @@ theorem twistorRealEquivZorn_factorization (Z : Twistor4) :
     twistorRealEquivZorn Z =
       exterior3CircularPeirceEquiv (twistorRealEquivExterior3 Z) := by
   rfl
+
+/-- The chosen real twistor coordinate axis `j` is read back as the literal
+Peirce-indexed exterior basis vector `j`.  This fixes the real polarization,
+rather than merely asserting an abstract eight-dimensional equivalence. -/
+@[simp] theorem twistorRealEquivExterior3_coordinateAxis (j : Fin 8) :
+    twistorRealEquivExterior3 (realCoordinatesTwistor (Pi.single j 1)) =
+      exterior3PeirceBasis j := by
+  apply exterior3SplitOctonionCoordinateEquiv.injective
+  simp [twistorRealEquivExterior3, twistorRealEquivReal8]
+
+/-- Exact circular-Peirce readback of the chosen eight real twistor coordinate
+axes.  Indices `0`, `1..3`, `4`, `5..7` are respectively scalar-plus,
+root-plus, scalar-minus, and root-minus in the established repository
+convention. -/
+@[simp] theorem twistorRealEquivZorn_coordinateAxis (j : Fin 8) :
+    twistorRealEquivZorn (realCoordinatesTwistor (Pi.single j 1)) =
+      circularPeirceBasis j := by
+  rw [twistorRealEquivZorn_factorization,
+    twistorRealEquivExterior3_coordinateAxis,
+    exterior3CircularPeirceEquiv_basis]
+
+/-- The selected real twistor polarization sends coordinate `0` to the
+scalar-plus Peirce direction. -/
+theorem twistor_scalarPlus_axis :
+    twistorRealEquivZorn (realCoordinatesTwistor (Pi.single 0 1)) =
+      circularPeirceBasis 0 := by
+  exact twistorRealEquivZorn_coordinateAxis 0
+
+/-- The selected real twistor polarization sends coordinates `1,2,3` to the
+three root-plus Peirce directions. -/
+theorem twistor_rootPlus_axes (i : Fin 3) :
+    twistorRealEquivZorn
+        (realCoordinatesTwistor (Pi.single ⟨i.val + 1, by omega⟩ 1)) =
+      circularPeirceBasis ⟨i.val + 1, by omega⟩ := by
+  exact twistorRealEquivZorn_coordinateAxis ⟨i.val + 1, by omega⟩
+
+/-- The selected real twistor polarization sends coordinate `4` to the
+scalar-minus Peirce direction. -/
+theorem twistor_scalarMinus_axis :
+    twistorRealEquivZorn (realCoordinatesTwistor (Pi.single 4 1)) =
+      circularPeirceBasis 4 := by
+  exact twistorRealEquivZorn_coordinateAxis 4
+
+/-- The selected real twistor polarization sends coordinates `5,6,7` to the
+three root-minus Peirce directions. -/
+theorem twistor_rootMinus_axes (i : Fin 3) :
+    twistorRealEquivZorn
+        (realCoordinatesTwistor (Pi.single ⟨i.val + 5, by omega⟩ 1)) =
+      circularPeirceBasis ⟨i.val + 5, by omega⟩ := by
+  exact twistorRealEquivZorn_coordinateAxis ⟨i.val + 5, by omega⟩
 
 /-- The two canonical eight-real-dimensional readouts coexist: associative
 `2 × 2 ⊕ 2 × 2` blocks and the nonassociative Zorn carrier. -/

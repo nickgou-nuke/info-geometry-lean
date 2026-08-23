@@ -1,6 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathlib.Tactic
 
 namespace InfoGeometry.Geometry
@@ -63,6 +64,14 @@ theorem discriminant_eq_neg_four_det (M : sl2C) :
     M.discriminant = (-4 : ℂ) * M.matrix.det := by
   rw [matrix_det, discriminant_eq_four_mul]
   ring
+
+/-- Vanishing Möbius discriminant is exactly determinantal degeneracy, hence
+there is a nonzero spinor in the matrix kernel. -/
+theorem discriminant_zero_iff_exists_nonzero_kernel (M : sl2C) :
+    M.discriminant = 0 ↔
+      ∃ v : Fin 2 → ℂ, v ≠ 0 ∧ Matrix.mulVec M.matrix v = 0 := by
+  rw [discriminant_eq_neg_four_det]
+  simpa using (Matrix.exists_mulVec_eq_zero_iff (M := M.matrix)).symm
 
 /-- Parabolic sample: repeated root because the discriminant vanishes. -/
 def parabolic : sl2C := ofCoords 1 1 (-1)

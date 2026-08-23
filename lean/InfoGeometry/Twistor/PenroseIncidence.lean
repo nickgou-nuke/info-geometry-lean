@@ -1,5 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.Tactic
 
@@ -27,6 +28,14 @@ def omegaLinearMap (x : ComplexSpacetime) : Spinor2 →ₗ[ℂ] Spinor2 :=
 @[simp] theorem omegaLinearMap_apply (x : ComplexSpacetime) (π : Spinor2) :
     omegaLinearMap x π = Matrix.mulVec x π := by
   rfl
+
+theorem det_zero_iff_exists_nonzero_kernel (x : ComplexSpacetime) :
+    x.det = 0 ↔ ∃ π : Spinor2, π ≠ 0 ∧ Matrix.mulVec x π = 0 := by
+  exact Matrix.exists_mulVec_eq_zero_iff.symm
+
+theorem det_zero_iff_exists_nonzero_incidence_kernel (x : ComplexSpacetime) :
+    x.det = 0 ↔ ∃ π : Spinor2, π ≠ 0 ∧ omegaLinearMap x π = 0 := by
+  simpa only [omegaLinearMap_apply] using det_zero_iff_exists_nonzero_kernel x
 
 def incidenceLinearMap (x : ComplexSpacetime) :
     Spinor2 →ₗ[ℂ] Twistor4 where

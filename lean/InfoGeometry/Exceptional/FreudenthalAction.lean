@@ -82,6 +82,47 @@ variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable {D : CubicJordanDatum J}
 variable (A : FreudenthalInvariantAction G J D)
 
+/-! ### 2a. Invariant actions lift to the Heisenberg carrier -/
+
+/-- The lift of an invariant Freudenthal action to the central Heisenberg carrier. -/
+def actHeisenberg
+    (g : G) (X : HeisenbergElement J) : HeisenbergElement J where
+  charge := A.act g X.charge
+  center := X.center
+
+@[simp] theorem actHeisenberg_charge
+    (g : G) (X : HeisenbergElement J) :
+    (A.actHeisenberg g X).charge = A.act g X.charge := rfl
+
+@[simp] theorem actHeisenberg_center
+    (g : G) (X : HeisenbergElement J) :
+    (A.actHeisenberg g X).center = X.center := rfl
+
+@[simp] theorem actHeisenberg_one
+    (X : HeisenbergElement J) :
+    A.actHeisenberg 1 X = X := by
+  apply HeisenbergElement.ext
+  · simpa [actHeisenberg] using congrFun A.act_one X.charge
+  · rfl
+
+theorem actHeisenberg_mul
+    (g h : G) (X : HeisenbergElement J) :
+    A.actHeisenberg (g * h) X =
+      A.actHeisenberg g (A.actHeisenberg h X) := by
+  apply HeisenbergElement.ext
+  · simpa [actHeisenberg] using congrFun (A.act_mul g h) X.charge
+  · rfl
+
+/-- The lifted action preserves the Freudenthal Heisenberg bracket. -/
+theorem actHeisenberg_bracket
+    (g : G) (X Y : HeisenbergElement J) :
+    HeisenbergElement.bracket D
+        (A.actHeisenberg g X) (A.actHeisenberg g Y) =
+      HeisenbergElement.bracket D X Y := by
+  apply HeisenbergElement.ext
+  · rfl
+  · exact A.preserves_symplecticForm g X.charge Y.charge
+
 /-- Readback: the action preserves the symplectic pairing. -/
 @[simp]
 theorem symplecticForm_act

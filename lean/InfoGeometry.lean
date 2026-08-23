@@ -27,6 +27,7 @@ import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.SplitOctonionZorn

@@ -4,7 +4,6 @@ import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge
 import InfoGeometry.Canonical.SplitOctonionSymplecticLieAlgebra
-import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
 namespace InfoGeometry.Canonical.CanonicalZornPhaseBridge
 
@@ -12,7 +11,6 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 open InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 open InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge
-open InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
 noncomputable section
 

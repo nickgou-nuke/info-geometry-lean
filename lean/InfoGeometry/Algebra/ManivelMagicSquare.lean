@@ -4,7 +4,7 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
 
 /-!
-# Laurent Manivel's Tits-Freudenthal Magic Square Formalization (BRIDGES Lectures, 2025)
+# Laurent Manivel's Tits-Freudenthal Magic-Square Dimension Ledger
 
 This module formalizes the Tits-Freudenthal Magic Square of Lie algebras, the Jordan
 algebras $\mathcal{H}_3(\mathbb{A})$, and the Vinberg-Manivel triality construction from:
@@ -12,8 +12,14 @@ algebras $\mathcal{H}_3(\mathbb{A})$, and the Vinberg-Manivel triality construct
   **Laurent Manivel**, *BRIDGES Lectures: $G_2$ in action, and a mathematical theory of exceptions*,
   HAL Id: hal-05212903, May 2025 (Section 4).
 
+### Scope boundary:
+The `NormedAlg` enum below is an index for dimension bookkeeping. It is not a
+concrete composition-algebra carrier, and this file does not construct Lie
+brackets, Jacobi proofs, root data, or real-form identifications. Split-real
+claims belong to the concrete split-octonion and split-Albert owners.
+
 ### Key Mathematical Structures:
-1. **Division Algebra Dimension Enum**:
+1. **Composition-Algebra Dimension Index**:
    $\mathbb{A} \in \{\mathbb{R}, \mathbb{C}, \mathbb{H}, \mathbb{O}\}$ with dimensions $a \in \{1, 2, 4, 8\}$.
 2. **Hermitian Jordan Algebra $\mathcal{H}_3(\mathbb{A})$**:
    - Total dimension: $\dim \mathcal{H}_3(\mathbb{A}) = 3 + 3 a$.
@@ -23,7 +29,7 @@ algebras $\mathcal{H}_3(\mathbb{A})$, and the Vinberg-Manivel triality construct
    $$\mathfrak{L}(\mathbb{A}, \mathbb{B}) = \operatorname{Der}(\mathbb{A}) \oplus \operatorname{Der}(\mathcal{H}_3(\mathbb{B})) \oplus (\operatorname{Im}(\mathbb{A}) \otimes \mathcal{H}_3(\mathbb{B})_0)$$
    with exact dimension formula:
    $$\dim \mathfrak{L}(\mathbb{A}, \mathbb{B}) = \dim \operatorname{Der}(\mathbb{A}) + \dim \operatorname{Der}(\mathcal{H}_3(\mathbb{B})) + (a - 1)(2 + 3 b).$$
-4. **All 16 Entries of the Magic Square**:
+4. **Dimension table for the 16 classical type entries**:
    - Row 1 ($\mathbb{R}$): $\mathfrak{so}_3 (3)$, $\mathfrak{sl}_3 (8)$, $\mathfrak{sp}_6 (21)$, $\mathfrak{f}_4 (52)$
    - Row 2 ($\mathbb{C}$): $\mathfrak{sl}_3 (8)$, $\mathfrak{sl}_3 \oplus \mathfrak{sl}_3 (16)$, $\mathfrak{sl}_6 (35)$, $\mathfrak{e}_6 (78)$
    - Row 3 ($\mathbb{H}$): $\mathfrak{sp}_6 (21)$, $\mathfrak{sl}_6 (35)$, $\mathfrak{so}_{12} (66)$, $\mathfrak{e}_7 (133)$
@@ -33,6 +39,8 @@ algebras $\mathcal{H}_3(\mathbb{A})$, and the Vinberg-Manivel triality construct
    yielding $\dim \mathfrak{e}_8 = 28 + 28 + 3 \times 64 = 56 + 192 = 248$.
 
 All proofs are 100% native Lean 4 / Mathlib with 0 sorrys and 0 custom axioms.
+The resulting equalities are dimension statements, not Lie-algebra
+isomorphism theorems without additional concrete carriers and brackets.
 -/
 
 namespace InfoGeometry.Algebra.ManivelMagicSquare

@@ -146,6 +146,97 @@ theorem symplectic_form_skew
 
 end FreudenthalCharge
 
+/-! ### 2a. The symplectic Heisenberg sector -/
+
+/-- The central Heisenberg extension of the Freudenthal charge carrier.
+
+The first field is the Freudenthal charge and the second field is the central
+grade-two coordinate.  This is the concrete carrier for the bracket whose
+central component is the Freudenthal symplectic pairing.
+-/
+@[ext]
+structure HeisenbergElement (J : Type*) [AddCommGroup J] [Module ℝ J] where
+  charge : FreudenthalCharge J
+  center : ℝ
+
+namespace HeisenbergElement
+
+variable {J : Type*} [AddCommGroup J] [Module ℝ J]
+
+/-- The zero charge used by the central Heisenberg bracket. -/
+def zeroCharge : FreudenthalCharge J where
+  alpha := 0
+  beta := 0
+  x := 0
+  y := 0
+
+/-- The zero element of the central Heisenberg carrier. -/
+def zero : HeisenbergElement J where
+  charge := zeroCharge
+  center := 0
+
+/-- The Heisenberg bracket determined by the Freudenthal symplectic form. -/
+def bracket
+    (D : CubicJordanDatum J)
+    (X Y : HeisenbergElement J) : HeisenbergElement J where
+  charge := zeroCharge
+  center := FreudenthalCharge.symplecticForm D X.charge Y.charge
+
+@[simp] theorem bracket_charge
+    (D : CubicJordanDatum J) (X Y : HeisenbergElement J) :
+    (bracket D X Y).charge = zeroCharge := rfl
+
+@[simp] theorem bracket_center
+    (D : CubicJordanDatum J) (X Y : HeisenbergElement J) :
+    (bracket D X Y).center = FreudenthalCharge.symplecticForm D X.charge Y.charge := rfl
+
+/-- The Heisenberg bracket is skew-symmetric. -/
+theorem bracket_skew
+    (D : CubicJordanDatum J) (X Y : HeisenbergElement J) :
+    bracket D Y X =
+      { charge := (bracket D X Y).charge
+        center := -(bracket D X Y).center } := by
+  apply HeisenbergElement.ext
+  · rfl
+  · exact FreudenthalCharge.symplectic_form_skew D X.charge Y.charge
+
+/-- The bracket of an element with itself vanishes. -/
+@[simp] theorem bracket_self
+    (D : CubicJordanDatum J) (X : HeisenbergElement J) :
+    bracket D X X = zero := by
+  apply HeisenbergElement.ext
+  · rfl
+  · simpa only [bracket, zero] using
+      (FreudenthalCharge.symplectic_form_alternating D X.charge)
+
+/-- The grade-two coordinate is central for the Heisenberg bracket. -/
+@[simp] theorem bracket_bracket_left
+    (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
+    bracket D (bracket D X Y) Z = zero := by
+  apply HeisenbergElement.ext
+  · rfl
+  · simp [bracket, zero, zeroCharge, FreudenthalCharge.symplecticForm]
+
+ /-- The corresponding right-nested bracket is also zero. -/
+ theorem bracket_bracket_right
+    (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
+    bracket D X (bracket D Y Z) = zero := by
+  apply HeisenbergElement.ext
+  · rfl
+  · simp [bracket, zero, zeroCharge, FreudenthalCharge.symplecticForm]
+
+/-- Each nested bracket vanishes because the grade-two coordinate is central. -/
+theorem bracket_jacobi_terms_vanish
+    (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
+    bracket D X (bracket D Y Z) = zero ∧
+      bracket D Y (bracket D Z X) = zero ∧
+      bracket D Z (bracket D X Y) = zero := by
+  exact ⟨bracket_bracket_right D X Y Z,
+    bracket_bracket_right D Y Z X,
+    bracket_bracket_right D Z X Y⟩
+
+end HeisenbergElement
+
 /-! ### 3. Tits-Kantor-Koecher closure signature -/
 
 /--

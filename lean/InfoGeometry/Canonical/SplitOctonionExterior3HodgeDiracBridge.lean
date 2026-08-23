@@ -1,7 +1,9 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+import Mathlib.Tactic
 import InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
+import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
@@ -10,10 +12,14 @@ import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 # Native three-dimensional exterior Hodge--Dirac bridge
 
 This owner is the literal Mathlib exterior-algebra realization of the
-three-dimensional `1 + 3 + 3 + 1` exterior carrier.  Wedge and contraction are the creation and
-annihilation operators; their sum is the Hodge--Dirac operator on the finite
-exterior carrier.  The split-octonion connection is only linear-carrier
-level here: no multiplicative or algebra isomorphism is asserted.
+three-dimensional `1 + 3 + 3 + 1` exterior carrier. Wedge and contraction are
+creation and annihilation operators; their sum is the Hodge--Dirac operator on
+the finite exterior carrier.
+
+The exterior carrier is identified explicitly, basis-by-basis, with the
+repository's circular Peirce coordinates and canonical Zorn split-octonion
+carrier. The bridge is linear: no multiplicative algebra equivalence or split
+norm intertwining is asserted here.
 -/
 
 noncomputable section
@@ -21,6 +27,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 
 open InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
+open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 open InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 open InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
@@ -29,6 +36,8 @@ abbrev V3 := Fin 3 → ℝ
 abbrev Exterior3 := ExteriorAlgebra ℝ V3
 abbrev Exterior3End := Module.End ℝ Exterior3
 abbrev SplitOctonionCoordinateCarrier := Dim8 → ℝ
+abbrev CanonicalSplitOctonion :=
+  InfoGeometry.Lie.SplitOctonionCircularPeirceBasis.CZ
 
 noncomputable def vBasis3 : Module.Basis (Fin 3) ℝ V3 := Pi.basisFun ℝ (Fin 3)
 
@@ -46,24 +55,89 @@ noncomputable def exterior3BasisFinset :
     Module.Basis (Finset (Fin 3)) ℝ Exterior3 :=
   exterior3BasisSigma.reindex (Equiv.sigmaFiberEquiv Finset.card)
 
+/-!
+The circular Peirce ordering used throughout the split-octonion owners is
+
+* `0` : degree `0` / scalar-plus,
+* `1,2,3` : degree `1` / root-plus,
+* `4` : degree `3` / scalar-minus,
+* `5,6,7` : degree `2` / root-minus.
+
+The degree-two order is the Hodge-dual order `e₁₂, e₀₂, e₀₁` relative to the
+three degree-one coordinate directions.
+-/
+def peirceSubset : Fin 8 → Finset (Fin 3) :=
+  ![∅, {0}, {1}, {2}, {0, 1, 2}, {1, 2}, {0, 2}, {0, 1}]
+
+theorem peirceSubset_bijective : Function.Bijective peirceSubset := by
+  native_decide
+
+noncomputable def peirceSubsetEquiv : Fin 8 ≃ Finset (Fin 3) :=
+  Equiv.ofBijective peirceSubset peirceSubset_bijective
+
+/-- The literal exterior basis reindexed by the established circular Peirce order. -/
+noncomputable def exterior3PeirceBasis : Module.Basis (Fin 8) ℝ Exterior3 :=
+  exterior3BasisFinset.reindex peirceSubsetEquiv.symm
+
+@[simp] theorem peirceSubset_scalarPlus : peirceSubset 0 = ∅ := rfl
+
+@[simp] theorem peirceSubset_rootPlus (i : Fin 3) :
+    peirceSubset ⟨i.val + 1, by omega⟩ = {i} := by
+  fin_cases i <;> rfl
+
+@[simp] theorem peirceSubset_scalarMinus :
+    peirceSubset 4 = (Finset.univ : Finset (Fin 3)) := by
+  native_decide
+
+@[simp] theorem peirceSubset_rootMinus (i : Fin 3) :
+    peirceSubset ⟨i.val + 5, by omega⟩ =
+      (Finset.univ : Finset (Fin 3)).erase i := by
+  fin_cases i <;> native_decide
+
 theorem exterior3_finrank : Module.finrank ℝ Exterior3 = 8 := by
-  rw [Module.finrank_eq_card_basis exterior3BasisFinset]
-  rw [Fintype.card_finset, Fintype.card_fin]
-  norm_num
+  rw [Module.finrank_eq_card_basis exterior3PeirceBasis]
+  exact Fintype.card_fin 8
 
 theorem splitOctonionCoordinate_finrank :
     Module.finrank ℝ SplitOctonionCoordinateCarrier = 8 := by
   simp [SplitOctonionCoordinateCarrier]
 
 instance exterior3_finiteDimensional : FiniteDimensional ℝ Exterior3 := by
-  exact Module.Basis.finiteDimensional_of_finite exterior3BasisFinset
+  exact Module.Basis.finiteDimensional_of_finite exterior3PeirceBasis
 
-/-! This is deliberately only a finite-dimensional carrier equivalence.  The
-current proof does not identify grades, multiplication, or the split norm. -/
+/--
+Explicit coordinate equivalence from the literal exterior algebra to the
+established `Fin 8 → ℝ` circular Peirce coordinate carrier.
+-/
 noncomputable def exterior3SplitOctonionCoordinateEquiv :
     Exterior3 ≃ₗ[ℝ] SplitOctonionCoordinateCarrier :=
-  LinearEquiv.ofFinrankEq Exterior3 SplitOctonionCoordinateCarrier
-    (exterior3_finrank.trans splitOctonionCoordinate_finrank.symm)
+  exterior3PeirceBasis.equivFun
+
+@[simp] theorem exterior3SplitOctonionCoordinateEquiv_basis (j : Fin 8) :
+    exterior3SplitOctonionCoordinateEquiv (exterior3PeirceBasis j) =
+      Pi.single j 1 := by
+  simp only [exterior3SplitOctonionCoordinateEquiv, Basis.equivFun_apply,
+    Basis.repr_self, Finsupp.single_eq_pi_single,
+    Finsupp.equivFunOnFintype_single]
+
+/--
+Basis-preserving linear equivalence from the literal exterior spinor carrier to
+the canonical Zorn split-octonion carrier. This is deliberately not an algebra
+equivalence: the split-octonion product is a separate nonassociative tensor.
+-/
+noncomputable def exterior3CircularPeirceEquiv :
+    Exterior3 ≃ₗ[ℝ] CanonicalSplitOctonion :=
+  exterior3SplitOctonionCoordinateEquiv.trans circularPeirceBasis.equivFun.symm
+
+@[simp] theorem exterior3CircularPeirceEquiv_basis (j : Fin 8) :
+    exterior3CircularPeirceEquiv (exterior3PeirceBasis j) =
+      circularPeirceBasis j := by
+  rw [exterior3CircularPeirceEquiv, LinearEquiv.trans_apply,
+    exterior3SplitOctonionCoordinateEquiv_basis]
+  apply circularPeirceBasis.equivFun.injective
+  simp only [LinearEquiv.apply_symm_apply, Basis.equivFun_apply,
+    Basis.repr_self, Finsupp.single_eq_pi_single,
+    Finsupp.equivFunOnFintype_single]
 
 /-! Native creation, annihilation, and CAR on the literal exterior algebra. -/
 

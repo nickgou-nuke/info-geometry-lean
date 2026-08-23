@@ -73,9 +73,11 @@ def principalLeftIdealSubmodule (e : A) : Submodule R A where
   zero_mem' := by simp
   add_mem' := by
     intro x y hx hy
+    change (x + y) * e = x + y
     rw [add_mul, hx, hy]
   smul_mem' := by
     intro r x hx
+    change (r • x) * e = r • x
     rw [Algebra.smul_mul_assoc, hx]
 
 /-- The native carrier of the principal left ideal `Ae`. -/
@@ -241,7 +243,9 @@ theorem rightCornerAction_injective
     (fun T : Module.End R (PrincipalLeftIdeal (R := R) e) =>
       T (idempotentVector (R := R) e he)) h
   have hVal := congrArg Subtype.val hApply
-  simpa [rightCornerAction, c.2.1, d.2.1] using hVal
+  change e * c.1 = e * d.1 at hVal
+  rw [c.2.1, d.2.1] at hVal
+  exact hVal
 
 /-- Exact range characterization of the commutant on the principal left ideal. -/
 theorem leftIdealCommutant_eq_rightCornerRange

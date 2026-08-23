@@ -1,6 +1,8 @@
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.Algebra.Category.Ring.FilteredColimits
+import Mathlib.Algebra.Category.Ring.Constructions
 import InfoGeometry.Physics.HestenesKreinBilingualCarrier
+import InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
 
 /-!
 # Hestenes--Krein bilingual actions on native filtered colimits
@@ -53,6 +55,42 @@ theorem colimit_ι_bilingual_left_right_commute
   exact InfoGeometry.Physics.bilingual_left_right_commute
     ((colimit.ι F j).hom a) ((colimit.ι F j).hom x)
       (MulOpposite.op ((colimit.ι F j).hom (MulOpposite.unop b)))
+
+end
+end InfoGeometry.Physics.HestenesKreinBilingualColimitBridge
+
+namespace InfoGeometry.Physics.HestenesKreinBilingualColimitBridge
+
+open CategoryTheory CategoryTheory.Limits
+open InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
+
+universe v
+
+variable {K : Type v} [Category.{v} K] [IsFiltered K]
+variable (C : K ⥤ CommRingCat.{v}) [HasColimit C]
+
+noncomputable section
+
+/-- Cyclotomic sixth-potent transport through the native commutative-ring colimit. -/
+theorem commRingColimit_six_potent_of_pow_five_eq_one
+    (k : K) (x : C.obj k) (hDomain : IsDomain (C.obj k))
+    (hx : x ^ 5 = 1) :
+    (colimit.ι C k).hom x ^ 6 =
+      (colimit.ι C k).hom x := by
+  letI := hDomain
+  have hstage : x ^ 6 = x := six_potent_of_pow_five_eq_one hx
+  simpa using congrArg (colimit.ι C k).hom hstage
+
+/-- Cyclotomic inverse/unit transport with the native colimit unit. -/
+theorem commRingColimit_twist_inverse_pair
+    (k : K) (x : C.obj k) (hDomain : IsDomain (C.obj k))
+    (hx : x ^ 5 = 1) :
+    (colimit.ι C k).hom ((x ^ 2) ^ 4) *
+        (colimit.ι C k).hom (x ^ 2) = 1 := by
+  letI := hDomain
+  have hstage : (x ^ 2) ^ 4 * (x ^ 2) = 1 :=
+    twist_fourth_mul_twist_eq_one hx
+  simpa using congrArg (colimit.ι C k).hom hstage
 
 end
 end InfoGeometry.Physics.HestenesKreinBilingualColimitBridge

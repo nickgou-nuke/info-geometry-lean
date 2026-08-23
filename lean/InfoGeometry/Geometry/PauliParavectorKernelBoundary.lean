@@ -67,13 +67,14 @@ theorem pauliKernelWitness_ne_zero (v : Minkowski4) :
     have h0 := congrFun hw (0 : Fin 2)
     simp [pauliKernelWitness, h] at h0
   · intro hw
-    have h0 := congrFun hw (0 : Fin 2)
-    have h1 := congrFun hw (1 : Fin 2)
-    have h01 : pauliMatrix v 0 1 = 0 := by
-      simpa [pauliKernelWitness, h] using neg_eq_zero.mp h0
-    have h00 : pauliMatrix v 0 0 = 0 := by
-      simpa [pauliKernelWitness, h] using h1
-    exact h ⟨h00, h01⟩
+    have h0raw := congrFun hw (0 : Fin 2)
+    have h1raw := congrFun hw (1 : Fin 2)
+    have h0 : -pauliMatrix v 0 1 = 0 := by
+      simpa [pauliKernelWitness, h] using h0raw
+    have h1 : pauliMatrix v 0 0 = 0 := by
+      simpa [pauliKernelWitness, h] using h1raw
+    have h01 : pauliMatrix v 0 1 = 0 := neg_eq_zero.mp h0
+    exact h ⟨h1, h01⟩
 
 /-- Vanishing Pauli determinant gives a concrete nonzero kernel vector. -/
 theorem pauliKernelWitness_mem_kernel_of_det_zero
@@ -139,8 +140,15 @@ theorem det_pauliMatrix_eq_zero_iff_ker_ne_bot (v : Minkowski4) :
 spinor kernel. -/
 theorem isNull_iff_pauliKernel_ne_bot (v : Minkowski4) :
     v.IsNull ↔ LinearMap.ker (pauliOperator v) ≠ ⊥ := by
-  rw [Minkowski4.IsNull, ← det_pauliMatrix_eq_zero_iff_ker_ne_bot,
-    det_pauliMatrix]
-  norm_cast
+  constructor
+  · intro hv
+    apply (det_pauliMatrix_eq_zero_iff_ker_ne_bot v).mp
+    rw [det_pauliMatrix, hv]
+    simp
+  · intro hker
+    have hdet : Matrix.det (pauliMatrix v) = 0 :=
+      (det_pauliMatrix_eq_zero_iff_ker_ne_bot v).mpr hker
+    rw [det_pauliMatrix] at hdet
+    exact_mod_cast hdet
 
 end InfoGeometry.Geometry.PauliParavectorKernelBoundary

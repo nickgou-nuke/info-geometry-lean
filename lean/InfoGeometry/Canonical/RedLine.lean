@@ -125,6 +125,15 @@ theorem log_exponential_duality_cocycle
       Real.exp (-InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q1 a)) := by
   exact InfoGeometry.Canonical.RelativePotentialCore.log_exponential_duality_cocycle q q0 q1 a
 
+/-- Native scalar scale/shape calibration for the RedLine potential. -/
+theorem redline_neg_log_mass_scale_shape
+    {α : Type u} [Fintype α] [Nonempty α]
+    (μ : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    -Real.log (μ a) =
+      -Real.log (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) -
+        Real.log (InfoGeometry.PositiveMeasure.normalize μ a) := by
+  exact InfoGeometry.Canonical.RelativePotentialCore.neg_log_mass_scale_shape_split μ a
+
 /-! The finite de Rham shadow is exported from its dedicated owner.  These
 names are discrete exact-form statements on positive rays; they do not claim
 the existence of a smooth manifold or a full differential-form library. -/

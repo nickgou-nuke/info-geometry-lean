@@ -2489,6 +2489,7 @@ import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
+import InfoGeometry.Canonical.LogPotentialDeterminantCalibration
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Canonical.FiniteBipartiteSurprisal
 import InfoGeometry.Canonical.FiniteBoltzmannMacroentropy

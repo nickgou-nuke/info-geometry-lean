@@ -15,11 +15,11 @@ namespace InfoGeometry.RootSystem.D4
 
 def Ambient := Fin 4 → ℤ
 
+instance : DecidableEq Ambient := inferInstanceAs (DecidableEq (Fin 4 → ℤ))
+
 instance : AddCommGroup Ambient := inferInstanceAs (AddCommGroup (Fin 4 → ℤ))
 
 instance : SMul ℤ Ambient := inferInstanceAs (SMul ℤ (Fin 4 → ℤ))
-
-instance : DecidableEq Ambient := inferInstanceAs (DecidableEq (Fin 4 → ℤ))
 
 def coordinateSum (x : Ambient) : ℤ := ∑ i, x i
 
@@ -116,6 +116,7 @@ theorem coordinateSum_reflect_mod (i : Fin 4) (x : Ambient) :
   have hroot : coordinateSum (simpleRoot i) % 2 = 0 := simpleRoot_mem i
   rw [Int.mul_emod, hroot]
   simp
+
 theorem reflect_mem (i : Fin 4) (x : Lattice) :
     IsD4 (reflect i x.1) := by
   change coordinateSum (reflect i x.1) % 2 = 0

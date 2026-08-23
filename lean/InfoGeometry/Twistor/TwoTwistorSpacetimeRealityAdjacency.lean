@@ -88,4 +88,28 @@ theorem adjacent_reconstructed_nodes_det_difference_zero
     rw [hshared, hωshared]
     exact frameSpacetimeNode_incidence P₂ Ω₂ hP₂ ![1, 0]
 
+theorem reconstructed_nodes_form_complex_null_triangle
+    (P₁₂ Ω₁₂ P₂₃ Ω₂₃ P₃₁ Ω₃₁ : ComplexSpacetime)
+    (hP₁₂ : IsUnit P₁₂.det) (hP₂₃ : IsUnit P₂₃.det)
+    (hP₃₁ : IsUnit P₃₁.det)
+    (hπ₂ : P₁₂.mulVec ![0, 1] ≠ 0)
+    (hπ₃ : P₂₃.mulVec ![0, 1] ≠ 0)
+    (hπ₁ : P₃₁.mulVec ![0, 1] ≠ 0)
+    (h₁₂₂₃ : P₁₂.mulVec ![0, 1] = P₂₃.mulVec ![1, 0])
+    (hω₁₂₂₃ : Ω₁₂.mulVec ![0, 1] = Ω₂₃.mulVec ![1, 0])
+    (h₂₃₃₁ : P₂₃.mulVec ![0, 1] = P₃₁.mulVec ![1, 0])
+    (hω₂₃₃₁ : Ω₂₃.mulVec ![0, 1] = Ω₃₁.mulVec ![1, 0])
+    (h₃₁₁₂ : P₃₁.mulVec ![0, 1] = P₁₂.mulVec ![1, 0])
+    (hω₃₁₁₂ : Ω₃₁.mulVec ![0, 1] = Ω₁₂.mulVec ![1, 0]) :
+    Matrix.det (frameSpacetimeNode P₁₂ Ω₁₂ - frameSpacetimeNode P₂₃ Ω₂₃) = 0 ∧
+    Matrix.det (frameSpacetimeNode P₂₃ Ω₂₃ - frameSpacetimeNode P₃₁ Ω₃₁) = 0 ∧
+    Matrix.det (frameSpacetimeNode P₃₁ Ω₃₁ - frameSpacetimeNode P₁₂ Ω₁₂) = 0 := by
+  exact ⟨
+    adjacent_reconstructed_nodes_det_difference_zero
+      P₁₂ Ω₁₂ P₂₃ Ω₂₃ hP₁₂ hP₂₃ hπ₂ h₁₂₂₃ hω₁₂₂₃,
+    adjacent_reconstructed_nodes_det_difference_zero
+      P₂₃ Ω₂₃ P₃₁ Ω₃₁ hP₂₃ hP₃₁ hπ₃ h₂₃₃₁ hω₂₃₃₁,
+    adjacent_reconstructed_nodes_det_difference_zero
+      P₃₁ Ω₃₁ P₁₂ Ω₁₂ hP₃₁ hP₁₂ hπ₁ h₃₁₁₂ hω₃₁₁₂⟩
+
 end InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency

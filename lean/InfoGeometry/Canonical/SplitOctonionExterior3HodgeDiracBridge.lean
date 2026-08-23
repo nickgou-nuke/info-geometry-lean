@@ -123,7 +123,7 @@ noncomputable def exterior3SplitOctonionCoordinateEquiv :
   ext k
   by_cases h : j = k
   · subst k
-    simp [Finsupp.equivFunOnFinite]
+    simp
   · simp [h]
 
 /--

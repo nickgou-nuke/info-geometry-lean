@@ -145,9 +145,13 @@ theorem spacetimeNode_unique
   have hmat₁ := incidence_pair_implies_matrix_equation Z₁ Z₂ X₁ hX₁₁ hX₁₂
   have hmat₂ := incidence_pair_implies_matrix_equation Z₁ Z₂ X₂ hX₂₁ hX₂₂
   have hi : (Complex.I : ℂ) ≠ 0 := by norm_num
+  have hscaled : Complex.I • (X₁ * Π) = Complex.I • (X₂ * Π) :=
+    hmat₁.trans hmat₂.symm
   have hprod : X₁ * Π = X₂ * Π := by
-    apply (smul_left_cancel₀ hi)
-    exact hmat₁.trans hmat₂.symm
+    ext i j
+    have hij := congrFun (congrFun hscaled i) j
+    change Complex.I * (X₁ * Π) i j = Complex.I * (X₂ * Π) i j at hij
+    exact mul_left_cancel₀ hi hij
   have hright := congrArg (fun A : Mat2C => A * Π⁻¹) hprod
   simpa [Matrix.mul_assoc, Matrix.mul_nonsing_inv Π hunit] using hright
 

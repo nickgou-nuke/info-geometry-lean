@@ -1,6 +1,7 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Isometry
 import InfoGeometry.Twistor.PenroseTwistor
+import InfoGeometry.Twistor.ProjectiveNullIsometryIncidence
 
 /-!
 # Twistor sesquilinear-to-Clifford bridge
@@ -20,10 +21,13 @@ bridge.  It makes the bilinear/Clifford and equivariance surfaces explicit.
 -/
 
 open scoped Classical
+open scoped LinearAlgebra.Projectivization
 
 namespace InfoGeometry.Twistor.CliffordBridge
 
 open PenroseTwistor
+open InfoGeometry.Twistor.ProjectiveNullIsometryIncidence
+open InfoGeometry.Twistor.ProjectiveNullPolarIncidence
 
 abbrev TwistorClifford : Type :=
   CliffordAlgebra PenroseTwistor.twistorRealQuadraticForm
@@ -84,6 +88,16 @@ def toTwistorQuadraticIsometry
   __ := f.toLinearMap
   map_app' := h.preserves
 
+/-- Package the same Penrose quadratic symmetry as an equivalence, reusing the
+native Mathlib `QuadraticMap.IsometryEquiv` interface. -/
+def toTwistorQuadraticIsometryEquiv
+    (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
+    (h : TwistorQuadraticEquivariance f) :
+    PenroseTwistor.twistorRealQuadraticForm.IsometryEquiv
+      PenroseTwistor.twistorRealQuadraticForm where
+  toLinearEquiv := f
+  map_app' := h.preserves
+
 /-- The induced Clifford algebra map from an equivariant twistor isometry. -/
 noncomputable def twistorCliffordMap
     (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
@@ -98,5 +112,37 @@ noncomputable def twistorCliffordMap
       = CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm (f z) := by
   rw [twistorCliffordMap, CliffordAlgebra.map_apply_ι]
   rfl
+
+/--
+The projectivization of a Penrose quadratic isometry preserves the real null
+twistor boundary.  This is the concrete Penrose specialization of the
+generic projective-null isometry theorem; no second projectivization API is
+introduced here.
+-/
+theorem projectiveTwistorIsometryMap_preserves_null
+    (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
+    (h : TwistorQuadraticEquivariance f)
+    (p : ℙ ℝ TwistorCarrier) :
+    IsNull PenroseTwistor.twistorRealQuadraticForm p →
+      IsNull PenroseTwistor.twistorRealQuadraticForm
+        (projectiveIsometryMap (toTwistorQuadraticIsometryEquiv f h) p) := by
+  exact projectiveIsometryMap_preserves_null
+    (toTwistorQuadraticIsometryEquiv f h) p
+
+/--
+The same Penrose specialization preserves polar incidence on the real null
+projective boundary.  The proof is transported entirely through Mathlib's
+quadratic-isometry/projectivization API.
+-/
+theorem projectiveTwistorIsometryEquiv_preserves_incidence
+    (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
+    (h : TwistorQuadraticEquivariance f)
+    (p q : RealNullTwistorSpace) :
+    NullPolarIncident PenroseTwistor.twistorRealQuadraticForm
+        (nullIsometryEquiv (toTwistorQuadraticIsometryEquiv f h) p)
+        (nullIsometryEquiv (toTwistorQuadraticIsometryEquiv f h) q) ↔
+      NullPolarIncident PenroseTwistor.twistorRealQuadraticForm p q := by
+  exact nullIsometryEquiv_preserves_incidence
+    (toTwistorQuadraticIsometryEquiv f h) p q
 
 end InfoGeometry.Twistor.CliffordBridge

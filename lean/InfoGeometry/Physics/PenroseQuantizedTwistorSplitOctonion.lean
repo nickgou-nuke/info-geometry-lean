@@ -148,7 +148,7 @@ theorem twistorI_preserves_reality (A : BiTwistor) (hA : isRealBiTwistor A) :
   apply Complex.ext <;> simp
 
 /-! =========================================================================
-    3. Penrose Split Scalar Product with Signature (4,4) (Penrose Eqs 7.96–7.98)
+    3. Penrose Scalar Product Readout (Penrose Eqs 7.96–7.98)
     ========================================================================= -/
 
 /-- The Penrose scalar inner product between real bi-twistors (Penrose Eq. 7.97 with $\hbar=1$):
@@ -170,10 +170,31 @@ theorem twistorDot_zero_left (B : BiTwistor) :
   dsimp [twistorDot]
   simp
 
-/-- Split-octonion norm-squared (quadratic form of signature (4,4)):
-$$q(A) = \frac{1}{2} (A \cdot A) = \sum_{\alpha=0}^3 |A^\alpha|^2$$ -/
+/-- Concrete positive norm readout of the displayed upper coordinates.
+
+This is not yet the split `(4,4)` quadratic form; that requires a separate
+real bi-twistor pairing using both components.
+-/
 def twistorNormSq (A : BiTwistor) : ℝ :=
   ∑ i : Fin 4, ((A.up i).re^2 + (A.up i).im^2)
+
+@[simp] theorem twistorDot_self_eq_two_twistorNormSq (A : BiTwistor) :
+    twistorDot A A = 2 * twistorNormSq A := by
+  dsimp [twistorDot, twistorNormSq]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring_nf
+
+theorem twistorNormSq_nonneg (A : BiTwistor) :
+    0 ≤ twistorNormSq A := by
+  dsimp [twistorNormSq]
+  exact Finset.sum_nonneg fun i hi => add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+theorem twistorDot_self_nonneg (A : BiTwistor) :
+    0 ≤ twistorDot A A := by
+  rw [twistorDot_self_eq_two_twistorNormSq]
+  exact mul_nonneg (by norm_num) (twistorNormSq_nonneg A)
 
 /-! =========================================================================
     4. Penrose Skew-Symmetric Triple Product (Penrose Eqs 7.89–7.93)

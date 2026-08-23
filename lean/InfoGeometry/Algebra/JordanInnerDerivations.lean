@@ -170,16 +170,43 @@ theorem h3Zorn_derivation_apply_one_eq_zero
 theorem h3Zorn_traceBilin_jordanLmul_assoc (a x y : H3Zorn ℝ) :
     traceBilin (a * x) y = traceBilin x (a * y) := by
   rw [← candidateJordanMul_eq_mul, ← candidateJordanMul_eq_mul]
-  rw [candidateJordanMul, candidateJordanMul, T_outer_formula, T_outer_formula]
-  rw [traceBilin_smul_left, traceBilin_smul_right]
-  rw [traceBilin_sub_left, traceBilin_sub_right]
-  rw [traceBilin_add_left, traceBilin_add_left]
-  rw [traceBilin_add_right, traceBilin_add_right]
-  rw [traceBilin_crossProduct_assoc, traceBilin_crossProduct_assoc]
-  have crossProduct_one_left (u : H3Zorn ℝ) :
-      crossProduct 1 u = crossProduct u 1 := crossProduct_symm _ _
-  rw [crossProduct_one_left, crossProduct_one, crossProduct_one]
-  rw [traceBilin_symm x y]
+  simp only [candidateJordanMul, T_outer_formula, traceBilin_smul_left,
+    traceBilin_smul_right]
+  rw [crossProduct_one, crossProduct_one]
+  simp only [traceBilin_sub_left, traceBilin_sub_right, traceBilin_add_left,
+    traceBilin_add_right, traceBilin_smul_left, traceBilin_smul_right,
+    traceBilin_one, linearTrace_crossProduct]
+  rw [traceBilin_crossProduct_assoc a x y]
+  rw [traceBilin_symm x (crossProduct a y)]
+  rw [traceBilin_crossProduct_assoc a y x]
+  rw [crossProduct_symm y x]
+  rw [traceBilin_symm (1 : H3Zorn ℝ) y, traceBilin_one]
+  rw [traceBilin_symm a x]
+  ring
+
+theorem h3ZornJordanInnerDerivation_linearTrace_zero
+    (a b x : H3Zorn ℝ) :
+    linearTrace
+        ((h3ZornJordanInnerDerivation a b : Module.End ℝ (H3Zorn ℝ)) x) = 0 := by
+  rw [h3ZornJordanInnerDerivation_apply]
+  have hsub (u v : H3Zorn ℝ) :
+      linearTrace (u - v) = linearTrace u - linearTrace v := by
+    rw [sub_eq_add_neg, linearTrace_add]
+    rw [show -v = (-1 : ℝ) • v by module, linearTrace_smul]
+    ring
+  rw [hsub]
+  rw [← traceBilin_one, ← traceBilin_one]
+  rw [h3Zorn_traceBilin_jordanLmul_assoc a (b * x) 1]
+  rw [h3Zorn_traceBilin_jordanLmul_assoc b x (a * 1)]
+  rw [h3Zorn_traceBilin_jordanLmul_assoc b (a * x) 1]
+  rw [h3Zorn_traceBilin_jordanLmul_assoc a x (b * 1)]
+  have ha : a * (1 : H3Zorn ℝ) = a := by
+    change candidateJordanMul a 1 = a
+    exact candidateJordanMul_one_right a
+  have hb : b * (1 : H3Zorn ℝ) = b := by
+    change candidateJordanMul b 1 = b
+    exact candidateJordanMul_one_right b
+  rw [ha, hb, mul_comm b a]
   ring
 
 /-- The split-Albert inner derivation satisfies the ordinary Leibniz rule. -/

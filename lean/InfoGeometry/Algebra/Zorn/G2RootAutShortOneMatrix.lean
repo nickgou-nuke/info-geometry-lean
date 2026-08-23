@@ -16,7 +16,9 @@ This file proves the first concrete matrix identity needed to align the
 Chevalley root realization with the existing polycyclic normal form.
 No CAS result is imported as a theorem: the root-side matrix is reduced
 kernel-side from the concrete automorphism definitions, and the PC side uses
-the existing native matrix certificate `C2`.
+the existing native matrix certificates.  The original `oneAt 2` word is
+retained as an obstruction datum: its matrix is `C2`, whereas the root at
+Coxeter position `1` is the corrected `oneAt 3` word with matrix `C3`.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2RootAutShortOneMatrix
@@ -35,32 +37,11 @@ open InfoGeometry.Algebra.Zorn.G2Unipotent
 /-- The PC exponent `[0,0,1,0,0,0]`. -/
 def shortOnePCExp : PCWordExp := oneAt 2
 
-/-- Native 8×8 matrix of the concrete short root at Coxeter position `1`. -/
-theorem autMatrix_rootAut_short_one_eq_C2 :
-    autMatrix (rootAut (RootLength.Short, (1 : ZMod 6))) = C2 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> rfl
-
 /-- The canonical PC word `[0,0,1,0,0,0]` is the third PC generator. -/
 theorem pcWord_shortOnePCExp_eq_pc3Aut :
     G2TwoSylowSubgroup.pcWord shortOnePCExp = pc3Aut := by
   dsimp [shortOnePCExp]
   simpa [pcGenerator] using pcWord_oneAt_eq_generator (2 : Fin 6)
-
-/-- Matrix form of the first root/PC-word alignment. -/
-theorem autMatrix_rootAut_short_one_eq_pcWord :
-    autMatrix (rootAut (RootLength.Short, (1 : ZMod 6))) =
-      autMatrix (G2TwoSylowSubgroup.pcWord shortOnePCExp) := by
-  rw [autMatrix_rootAut_short_one_eq_C2,
-    pcWord_shortOnePCExp_eq_pc3Aut,
-    autMatrix_pc3Aut_eq_C2]
-
-/-- First native root/PC-word equality. -/
-theorem rootAut_short_one_eq_pcWord :
-    rootAut (RootLength.Short, (1 : ZMod 6)) =
-      G2TwoSylowSubgroup.pcWord shortOnePCExp := by
-  apply autMatrix_injective
-  exact autMatrix_rootAut_short_one_eq_pcWord
 
 def shortOneCorrectedPCExp : Fin 6 → Bool := oneAt 3
 
@@ -129,6 +110,40 @@ theorem rootAut_short_one_eq_correctedPCWord :
       G2TwoSylowSubgroup.pcWord shortOneCorrectedPCExp := by
   apply autMatrix_injective
   exact autMatrix_rootAut_short_one_eq_correctedPCWord
+
+/-! The earlier `oneAt 2` candidate is not the root at Coxeter position `1`.
+The obstruction is recorded explicitly so that the corrected `oneAt 3`
+alignment cannot be confused with the old PC word. -/
+
+private theorem C3_ne_C2 : C3 ≠ C2 := by
+  intro h
+  have hentry := congrArg (fun M => M (0 : Fin 8) (2 : Fin 8)) h
+  simp [C2, C3] at hentry
+
+theorem not_autMatrix_rootAut_short_one_eq_C2 :
+    ¬ autMatrix (rootAut (RootLength.Short, (1 : ZMod 6))) = C2 := by
+  intro h
+  have hroot : autMatrix (rootAut (RootLength.Short, (1 : ZMod 6))) = C3 := by
+    rw [autMatrix_rootAut_short_one_eq_correctedPCWord]
+    dsimp [shortOneCorrectedPCExp]
+    rw [pcWord_oneAt_eq_generator, pcGenerator.eq_def,
+      autMatrix_pc4Aut_eq_C3]
+  exact C3_ne_C2 (hroot.symm.trans h)
+
+theorem not_rootAut_short_one_eq_pcWord :
+    ¬ rootAut (RootLength.Short, (1 : ZMod 6)) =
+      G2TwoSylowSubgroup.pcWord shortOnePCExp := by
+  intro h
+  have hm := congrArg autMatrix h
+  rw [autMatrix_rootAut_short_one_eq_correctedPCWord] at hm
+  rw [pcWord_shortOnePCExp_eq_pc3Aut,
+    autMatrix_pc3Aut_eq_C2] at hm
+  have hleft :
+      autMatrix (G2TwoSylowSubgroup.pcWord shortOneCorrectedPCExp) = C3 := by
+    dsimp [shortOneCorrectedPCExp]
+    rw [pcWord_oneAt_eq_generator, pcGenerator.eq_def,
+      autMatrix_pc4Aut_eq_C3]
+  exact C3_ne_C2 (hleft.symm.trans hm)
 
 theorem rootAut_short_two_eq_c_conjugate :
     rootAut (RootLength.Short, (2 : ZMod 6)) =

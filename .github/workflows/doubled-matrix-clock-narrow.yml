@@ -7,6 +7,12 @@ on:
     paths:
       - lean/InfoGeometry/Krein/DoubledMatrixClockBridge.lean
       - .github/workflows/doubled-matrix-clock-narrow.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - lean/InfoGeometry/Krein/DoubledMatrixClockBridge.lean
+      - .github/workflows/doubled-matrix-clock-narrow.yml
 
 jobs:
   narrow-kernel-check:

@@ -1,4 +1,4 @@
-/-
+/*
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Authors: Nikolay Goutev, Dimitar Tonev
--/
+*/
 
 import InfoGeometry.Library
 import InfoGeometry.Generated
@@ -28,6 +28,7 @@ import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.FreudenthalHeisenberg
+import InfoGeometry.Exceptional.FreudenthalChiralSheets
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.SplitOctonionZorn
@@ -35,6 +36,8 @@ import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Clifford.SplitCompositionCl11Bridge
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
+import InfoGeometry.Twistor.ChiralTwistorSheets
+import InfoGeometry.Twistor.ChiralTwistorZornCoupling
 import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin

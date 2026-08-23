@@ -7301,6 +7301,7 @@ import InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
 import InfoGeometry.Topology.UnbalancedTransportObjectiveTopCat
 import InfoGeometry.Topology.UnitIntervalEuclideanTransportBackend
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.RootSystem.All
 import InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
 import InfoGeometry.Topology.WallpaperAffineMatrix
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation

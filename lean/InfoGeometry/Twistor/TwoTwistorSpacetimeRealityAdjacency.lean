@@ -15,6 +15,7 @@ noncomputable section
 namespace InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency
 
 open InfoGeometry.Twistor.PenroseIncidence
+open InfoGeometry.Twistor.TwoTwistorSpacetimeNode
 open Matrix
 
 def IsHermitianSpacetime (X : ComplexSpacetime) : Prop :=
@@ -69,5 +70,22 @@ theorem det_sub_eq_zero_of_shared_nonzero_twistor
     Matrix.one_mulVec] at hback
   simp at hback
   exact hπ hback
+
+theorem adjacent_reconstructed_nodes_det_difference_zero
+    (P₁ Ω₁ P₂ Ω₂ : ComplexSpacetime)
+    (hP₁ : IsUnit P₁.det) (hP₂ : IsUnit P₂.det)
+    (hπ : P₁.mulVec ![0, 1] ≠ 0)
+    (hshared : P₁.mulVec ![0, 1] = P₂.mulVec ![1, 0])
+    (hωshared : Ω₁.mulVec ![0, 1] = Ω₂.mulVec ![1, 0]) :
+    Matrix.det (frameSpacetimeNode P₁ Ω₁ - frameSpacetimeNode P₂ Ω₂) = 0 := by
+  let Z : Twistor4 := (Ω₁.mulVec ![0, 1], P₁.mulVec ![0, 1])
+  apply det_sub_eq_zero_of_shared_nonzero_twistor Z
+    (frameSpacetimeNode P₁ Ω₁) (frameSpacetimeNode P₂ Ω₂) hπ
+  · exact frameSpacetimeNode_incidence P₁ Ω₁ hP₁ ![0, 1]
+  · change incidenceLinearMap (frameSpacetimeNode P₂ Ω₂)
+      (P₁.mulVec ![0, 1]) =
+        (Ω₁.mulVec ![0, 1], P₁.mulVec ![0, 1])
+    rw [hshared, hωshared]
+    exact frameSpacetimeNode_incidence P₂ Ω₂ hP₂ ![1, 0]
 
 end InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency

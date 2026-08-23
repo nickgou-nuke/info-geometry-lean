@@ -31,7 +31,7 @@ variable [InnerProductSpace ℝ E]
 
 abbrev H₂ := DoubledSpace E
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
-abbrev End₂ := Module.End ℝ H₂
+abbrev End₂ := Module.End ℝ (DoubledSpace E)
 
 /--
 The standard action of a real `2 × 2` matrix on the doubled carrier `E ⊕ E`.

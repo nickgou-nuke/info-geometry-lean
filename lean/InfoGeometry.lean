@@ -38,6 +38,8 @@ import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling
 import InfoGeometry.Twistor.ConformalProjectiveBoundaryPolarization
+import InfoGeometry.Twistor.PenroseZornWittBoundary
+import InfoGeometry.Twistor.BoundaryTrifactorPeirceBridge
 import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin

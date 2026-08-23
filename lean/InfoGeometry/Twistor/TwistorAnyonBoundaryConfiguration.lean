@@ -24,6 +24,7 @@ namespace InfoGeometry.Twistor.TwistorAnyonBoundaryConfiguration
 
 open BigOperators
 open InfoGeometry.Clifford.Clifford55
+open InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameBridge
 open InfoGeometry.Twistor.TwistorBoundaryParavectorIncidence
 open InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
 open InfoGeometry.Twistor.Cl55CelestialOrderedConfigurationEmbedding
@@ -142,7 +143,8 @@ theorem normalizedParavectorToQ55Configuration_injective (n : ℕ) :
   intro p q hpq
   apply (normalizedParavectorOrderedEquivCelestial n).injective
   apply celestialOrderedConfigurationMap_injective n
-  exact hpq
+  simpa [normalizedParavectorToQ55Configuration,
+    normalizedParavectorOrderedEquivCelestial] using hpq
 
 /-- Reindex a normalized-paravector configuration by a finite permutation. -/
 def normalizedParavectorPermute (n : ℕ) (σ : Equiv.Perm (Fin n))

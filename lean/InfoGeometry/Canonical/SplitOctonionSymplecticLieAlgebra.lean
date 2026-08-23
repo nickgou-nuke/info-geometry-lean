@@ -100,6 +100,30 @@ theorem commutator_isOmegaSymplectic
   have h₄ := hB X (A Y)
   linarith [h₁, h₂, h₃, h₄]
 
+/-! The native Lie subalgebra of endomorphisms infinitesimally preserving
+    the phase-space form.  This is the exact target for a future
+    representation theorem; it makes no claim about split-octonion
+    derivations acting on `Phase`. -/
+def omegaSymplecticLieSubalgebra :
+    LieSubalgebra ℝ (Phase →ₗ[ℝ] Phase) where
+  carrier := {A | IsOmegaSymplectic A}
+  zero_mem' := zero_isOmegaSymplectic
+  add_mem' := by
+    intro A B hA hB
+    exact add_isOmegaSymplectic hA hB
+  smul_mem' := by
+    intro c A hA
+    exact smul_isOmegaSymplectic c hA
+  lie_mem' := by
+    intro A B hA hB
+    exact commutator_isOmegaSymplectic hA hB
+
+@[simp]
+theorem mem_omegaSymplecticLieSubalgebra
+    (A : Phase →ₗ[ℝ] Phase) :
+    A ∈ omegaSymplecticLieSubalgebra ↔ IsOmegaSymplectic A :=
+  Iff.rfl
+
 structure PolarizedAction where
   plus : Vec →ₗ[ℝ] Vec
   minus : Vec →ₗ[ℝ] Vec

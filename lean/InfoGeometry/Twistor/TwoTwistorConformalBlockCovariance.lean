@@ -118,7 +118,7 @@ theorem transformTwistor_incident_fractional
     rw [omegaLinearMap_eq_I_smul_mulVec]
     rw [← Matrix.mulVec_mulVec]
     rw [fractionalSpacetimeTransform_mul_denominator G X hden]
-    exact transformTwistor_fst_of_incident G X Z hZ |>.symm
+    exact (transformTwistor_fst_of_incident G X Z hZ).symm
   · rfl
 
 /-- Main covariance theorem: the node reconstructed from the transformed

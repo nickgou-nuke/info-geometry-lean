@@ -19,9 +19,15 @@ instance : AddCommGroup Ambient := inferInstanceAs (AddCommGroup (Fin 4 → ℤ)
 
 instance : SMul ℤ Ambient := inferInstanceAs (SMul ℤ (Fin 4 → ℤ))
 
+instance : DecidableEq Ambient := inferInstanceAs (DecidableEq (Fin 4 → ℤ))
+
 def coordinateSum (x : Ambient) : ℤ := ∑ i, x i
 
 def IsD4 (x : Ambient) : Prop := coordinateSum x % 2 = 0
+
+instance (x : Ambient) : Decidable (IsD4 x) := by
+  unfold IsD4 coordinateSum
+  infer_instance
 
 abbrev Lattice := {x : Ambient // IsD4 x}
 
@@ -51,6 +57,17 @@ theorem simpleRoot_mem (i : Fin 4) : IsD4 (simpleRoot i) := by
 
 def simpleRootLattice (i : Fin 4) : Lattice :=
   ⟨simpleRoot i, simpleRoot_mem i⟩
+
+def ternaryCoordinate (a : Fin 3) : ℤ := a.1 - 1
+
+def ternaryVector (a : Fin 4 → Fin 3) : Ambient :=
+  fun i => ternaryCoordinate (a i)
+
+def rootFinset : Finset Ambient :=
+  (Finset.univ.image ternaryVector).filter (fun x => dot x x = 2 ∧ IsD4 x)
+
+theorem rootFinset_card : rootFinset.card = 24 := by
+  native_decide
 
 theorem simpleRoot_norm (i : Fin 4) : dot (simpleRoot i) (simpleRoot i) = 2 := by
   fin_cases i <;>

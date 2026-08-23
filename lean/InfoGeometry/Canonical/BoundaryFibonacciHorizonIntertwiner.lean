@@ -46,9 +46,30 @@ def boundaryFibonacciIntertwinerOperator :
         (BoundaryBraidState →ₗ[ℂ] HorizonSpace)) where
   toFun := intertwinerDefect
   map_add' Φ Ψ := by
-    ext <;> simp [intertwinerDefect, LinearMap.comp_add] <;> module
+    apply Prod.ext
+    · apply LinearMap.ext
+      intro x
+      simp [intertwinerDefect, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    · apply LinearMap.ext
+      intro x
+      simp [intertwinerDefect, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
   map_smul' c Φ := by
-    ext <;> simp [intertwinerDefect, LinearMap.comp_smul] <;> module
+    change intertwinerDefect (c • Φ) = c • intertwinerDefect Φ
+    apply Prod.ext
+    · apply LinearMap.ext
+      intro v
+      change ((c • Φ).comp boundarySig0 - horizonLinR.comp (c • Φ)) v =
+        c • ((Φ.comp boundarySig0 - horizonLinR.comp Φ) v)
+      simp only [LinearMap.sub_apply, LinearMap.comp_apply,
+        LinearMap.smul_apply, smul_sub]
+      module
+    · apply LinearMap.ext
+      intro v
+      change ((c • Φ).comp boundarySig1 - horizonLinB.comp (c • Φ)) v =
+        c • ((Φ.comp boundarySig1 - horizonLinB.comp Φ) v)
+      simp only [LinearMap.sub_apply, LinearMap.comp_apply,
+        LinearMap.smul_apply, smul_sub]
+      module
 
 /-- The exact finite-dimensional intertwiner space for the two generator actions. -/
 def boundaryFibonacciIntertwinerSpace :

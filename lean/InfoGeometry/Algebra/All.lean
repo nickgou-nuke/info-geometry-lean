@@ -240,6 +240,7 @@ import InfoGeometry.Algebra.Zorn._CheckNames
 import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornJordanProduct
+import InfoGeometry.Algebra.H3ZornFreudenthalQuartic
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
 import InfoGeometry.Algebra.SplitOctonionStandardDerivationThreeBracketBridge

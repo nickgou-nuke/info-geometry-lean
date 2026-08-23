@@ -23,10 +23,9 @@ variable [InnerProductSpace ℝ E]
 variable [CompleteSpace E]
 
 abbrev H₂ (E : Type*) := DoubledSpace E
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
 
 /-- The standard component action of a real `2 × 2` matrix on `E ⊕ E`. -/
-noncomputable def matrixAction (A : Mat2) :
+noncomputable def matrixAction (A : Matrix (Fin 2) (Fin 2) ℝ) :
     DoubledSpace E →L[ℝ] DoubledSpace E where
   toFun u :=
     to_doubled
@@ -50,7 +49,8 @@ noncomputable def matrixAction (A : Mat2) :
 
 omit [CompleteSpace E] in
 @[simp]
-theorem matrixAction_to_doubled (A : Mat2) (x ξ : E) :
+theorem matrixAction_to_doubled
+    (A : Matrix (Fin 2) (Fin 2) ℝ) (x ξ : E) :
     matrixAction A (to_doubled x ξ : H₂ E) =
       to_doubled
         (A 0 0 • x + A 0 1 • ξ)
@@ -59,7 +59,8 @@ theorem matrixAction_to_doubled (A : Mat2) (x ξ : E) :
 
 /-- The induced linear map from matrix coefficients to doubled endomorphisms. -/
 noncomputable def ρclock :
-    Mat2 →ₗ[ℝ] (DoubledSpace E →L[ℝ] DoubledSpace E) where
+    Matrix (Fin 2) (Fin 2) ℝ →ₗ[ℝ]
+      (DoubledSpace E →L[ℝ] DoubledSpace E) where
   toFun := matrixAction
   map_add' A B := by
     apply ContinuousLinearMap.ext
@@ -76,11 +77,12 @@ noncomputable def ρclock :
 
 omit [CompleteSpace E] in
 @[simp]
-theorem ρclock_apply (A : Mat2) (u : H₂ E) :
+theorem ρclock_apply (A : Matrix (Fin 2) (Fin 2) ℝ) (u : H₂ E) :
     ρclock A u = matrixAction A u := rfl
 
 omit [CompleteSpace E] in
-theorem ρclock_mul (A B : Mat2) :
+theorem ρclock_mul
+    (A B : Matrix (Fin 2) (Fin 2) ℝ) :
     ρclock (E := E) (A * B) =
       (ρclock (E := E) A).comp (ρclock (E := E) B) := by
   apply ContinuousLinearMap.ext
@@ -94,28 +96,29 @@ theorem ρclock_mul (A B : Mat2) :
 omit [CompleteSpace E] in
 @[simp]
 theorem ρclock_one :
-    ρclock (E := E) (1 : Mat2) =
+    ρclock (E := E) (1 : Matrix (Fin 2) (Fin 2) ℝ) =
       ContinuousLinearMap.id ℝ (DoubledSpace E) := by
   apply ContinuousLinearMap.ext
   intro u
   apply DoubledSpace.ext <;> simp [ρclock, matrixAction]
 
-def matrixJ : Mat2 := !![0, 1; 1, 0]
+def matrixJ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
-def matrixEpsilon : Mat2 := !![1, 0; 0, -1]
+def matrixEpsilon : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
-def matrixClockAxis : Mat2 := !![0, -1; 1, 0]
+def matrixClockAxis : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 @[simp]
 theorem matrixJ_sq :
-    matrixJ * matrixJ = (1 : Mat2) := by
+    matrixJ * matrixJ = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [matrixJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem matrixEpsilon_sq :
-    matrixEpsilon * matrixEpsilon = (1 : Mat2) := by
+    matrixEpsilon * matrixEpsilon =
+      (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [matrixEpsilon, Matrix.mul_apply, Fin.sum_univ_two]
@@ -129,7 +132,8 @@ theorem matrixJ_mul_epsilon :
 
 @[simp]
 theorem matrixClockAxis_sq :
-    matrixClockAxis * matrixClockAxis = -(1 : Mat2) := by
+    matrixClockAxis * matrixClockAxis =
+      -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [matrixClockAxis, Matrix.mul_apply, Fin.sum_univ_two]
@@ -158,6 +162,57 @@ theorem ρclock_matrixClockAxis :
   intro u
   apply DoubledSpace.ext <;>
     simp [ρclock, matrixAction, matrixClockAxis]
+
+/-! The algebra-valued form of the same representation. -/
+
+noncomputable def ρclockEnd :
+    Matrix (Fin 2) (Fin 2) ℝ →ₗ[ℝ] Module.End ℝ (DoubledSpace E) where
+  toFun A := (ρclock (E := E) A).toLinearMap
+  map_add' A B := by
+    exact congrArg ContinuousLinearMap.toLinearMap
+      (map_add (ρclock (E := E)) A B)
+  map_smul' r A := by
+    exact congrArg ContinuousLinearMap.toLinearMap
+      (map_smul (ρclock (E := E)) r A)
+
+noncomputable def ρclockAlg :
+    Matrix (Fin 2) (Fin 2) ℝ →ₐ[ℝ] Module.End ℝ (DoubledSpace E) :=
+  AlgHom.ofLinearMap (ρclockEnd (E := E)) (by
+    change (ρclock (E := E) (1 : Matrix (Fin 2) (Fin 2) ℝ)).toLinearMap =
+      (ContinuousLinearMap.id ℝ (DoubledSpace E)).toLinearMap
+    exact congrArg ContinuousLinearMap.toLinearMap (ρclock_one (E := E))) (by
+    intro A B
+    change (ρclock (E := E) (A * B)).toLinearMap =
+      ((ρclock (E := E) A).toLinearMap).comp
+        (ρclock (E := E) B).toLinearMap
+    rw [ρclock_mul]
+    rfl)
+
+omit [CompleteSpace E] in
+@[simp]
+theorem ρclockAlg_apply
+    (A : Matrix (Fin 2) (Fin 2) ℝ) :
+    ρclockAlg (E := E) A = (ρclock (E := E) A).toLinearMap := rfl
+
+omit [CompleteSpace E] in
+@[simp]
+theorem ρclockAlg_matrixJ :
+    ρclockAlg (E := E) matrixJ = (modular_j (E := E)).toLinearMap := by
+  rw [ρclockAlg_apply, ρclock_matrixJ]
+
+omit [CompleteSpace E] in
+@[simp]
+theorem ρclockAlg_matrixEpsilon :
+    ρclockAlg (E := E) matrixEpsilon =
+      (spectral_epsilon (E := E)).toLinearMap := by
+  rw [ρclockAlg_apply, ρclock_matrixEpsilon]
+
+omit [CompleteSpace E] in
+@[simp]
+theorem ρclockAlg_matrixClockAxis :
+    ρclockAlg (E := E) matrixClockAxis =
+      (clockAxis (E := E)).toLinearMap := by
+  rw [ρclockAlg_apply, ρclock_matrixClockAxis]
 
 omit [CompleteSpace E] in
 theorem ρclock_parabolicK_apply (x ξ : E) :

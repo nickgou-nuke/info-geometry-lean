@@ -48,11 +48,21 @@ def boundaryFibonacciIntertwinerOperator :
   map_add' Φ Ψ := by
     apply Prod.ext
     · apply LinearMap.ext
-      intro x
-      simp [intertwinerDefect, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+      intro v
+      change ((Φ + Ψ).comp boundarySig0 - horizonLinR.comp (Φ + Ψ)) v =
+        ((Φ.comp boundarySig0 - horizonLinR.comp Φ) +
+          (Ψ.comp boundarySig0 - horizonLinR.comp Ψ)) v
+      simp only [LinearMap.sub_apply, LinearMap.add_apply,
+        LinearMap.comp_apply, map_add]
+      module
     · apply LinearMap.ext
-      intro x
-      simp [intertwinerDefect, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+      intro v
+      change ((Φ + Ψ).comp boundarySig1 - horizonLinB.comp (Φ + Ψ)) v =
+        ((Φ.comp boundarySig1 - horizonLinB.comp Φ) +
+          (Ψ.comp boundarySig1 - horizonLinB.comp Ψ)) v
+      simp only [LinearMap.sub_apply, LinearMap.add_apply,
+        LinearMap.comp_apply, map_add]
+      module
   map_smul' c Φ := by
     change intertwinerDefect (c • Φ) = c • intertwinerDefect Φ
     apply Prod.ext
@@ -61,15 +71,13 @@ def boundaryFibonacciIntertwinerOperator :
       change ((c • Φ).comp boundarySig0 - horizonLinR.comp (c • Φ)) v =
         c • ((Φ.comp boundarySig0 - horizonLinR.comp Φ) v)
       simp only [LinearMap.sub_apply, LinearMap.comp_apply,
-        LinearMap.smul_apply, smul_sub]
-      module
+        LinearMap.smul_apply, map_smul, smul_sub]
     · apply LinearMap.ext
       intro v
       change ((c • Φ).comp boundarySig1 - horizonLinB.comp (c • Φ)) v =
         c • ((Φ.comp boundarySig1 - horizonLinB.comp Φ) v)
       simp only [LinearMap.sub_apply, LinearMap.comp_apply,
-        LinearMap.smul_apply, smul_sub]
-      module
+        LinearMap.smul_apply, map_smul, smul_sub]
 
 /-- The exact finite-dimensional intertwiner space for the two generator actions. -/
 def boundaryFibonacciIntertwinerSpace :

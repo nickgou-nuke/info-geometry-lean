@@ -39,57 +39,69 @@ def sheetScalarSpinor : Spinor2 :=
 def sheetRootSpinor (i : Fin 3) : Spinor2 :=
   peirce4ToSpinor2 (0, Pi.single i 1)
 
+private theorem plus_scalar_representative :
+    plusInclusion sheetScalarSpinor =
+      realCoordinatesTwistor (Pi.single (0 : Fin 8) 1) := by
+  apply Prod.ext <;> funext j <;> fin_cases j <;> apply Complex.ext <;>
+    simp [sheetScalarSpinor, peirce4ToSpinor2, plusInclusion,
+      realCoordinatesTwistor, Pi.single_apply]
+
+private theorem minus_scalar_representative :
+    minusInclusion sheetScalarSpinor =
+      realCoordinatesTwistor (Pi.single (4 : Fin 8) 1) := by
+  apply Prod.ext <;> funext j <;> fin_cases j <;> apply Complex.ext <;>
+    simp [sheetScalarSpinor, peirce4ToSpinor2, minusInclusion,
+      realCoordinatesTwistor, Pi.single_apply]
+
+private theorem plus_root_representative (i : Fin 3) :
+    plusInclusion (sheetRootSpinor i) =
+      realCoordinatesTwistor (Pi.single ⟨i.val + 1, by omega⟩ 1) := by
+  fin_cases i <;>
+    apply Prod.ext <;> funext j <;> fin_cases j <;> apply Complex.ext <;>
+      simp [sheetRootSpinor, peirce4ToSpinor2, plusInclusion,
+        realCoordinatesTwistor, Pi.single_apply]
+
+private theorem minus_root_representative (i : Fin 3) :
+    minusInclusion (sheetRootSpinor i) =
+      realCoordinatesTwistor (Pi.single ⟨i.val + 5, by omega⟩ 1) := by
+  fin_cases i <;>
+    apply Prod.ext <;> funext j <;> fin_cases j <;> apply Complex.ext <;>
+      simp [sheetRootSpinor, peirce4ToSpinor2, minusInclusion,
+        realCoordinatesTwistor, Pi.single_apply]
+
 /-- The positive sheet scalar axis maps to the positive Zorn idempotent. -/
 theorem plus_scalar_axis_zorn :
     plusZornMap sheetScalarSpinor = zornPlus := by
   change twistorRealEquivZorn (plusInclusion sheetScalarSpinor) = zornPlus
-  rw [← cartesianZorn_scalarPlus]
-  rw [← circularPeirceBasis_apply (i := (0 : Fin 8))]
-  rw [← twistor_scalarPlus_axis]
-  congr 1
-  ext i <;> fin_cases i <;> apply Complex.ext <;>
-    simp [sheetScalarSpinor, peirce4ToSpinor2, plusInclusion,
-      realCoordinatesTwistor]
+  rw [plus_scalar_representative, twistor_scalarPlus_axis,
+    circularPeirceBasis_apply]
+  simpa [circularFrame] using cartesianZorn_scalarPlus
 
 /-- The negative sheet scalar axis maps to the negative Zorn idempotent. -/
 theorem minus_scalar_axis_zorn :
     minusZornMap sheetScalarSpinor = zornMinus := by
   change twistorRealEquivZorn (minusInclusion sheetScalarSpinor) = zornMinus
-  rw [← cartesianZorn_scalarMinus]
-  rw [← circularPeirceBasis_apply (i := (4 : Fin 8))]
-  rw [← twistor_scalarMinus_axis]
-  congr 1
-  ext i <;> fin_cases i <;> apply Complex.ext <;>
-    simp [sheetScalarSpinor, peirce4ToSpinor2, minusInclusion,
-      realCoordinatesTwistor]
+  rw [minus_scalar_representative, twistor_scalarMinus_axis,
+    circularPeirceBasis_apply]
+  simpa [circularFrame] using cartesianZorn_scalarMinus
 
 /-- Positive real twistor root axis `i` is exactly the native positive Zorn root. -/
 theorem plus_root_axis_zorn (i : Fin 3) :
     plusZornMap (sheetRootSpinor i) =
       cartesianZornLinearEquiv (rootPlus i) := by
   change twistorRealEquivZorn (plusInclusion (sheetRootSpinor i)) = _
-  rw [← circularPeirceBasis_apply
-    (i := ⟨i.val + 1, by omega⟩)]
-  rw [← twistor_rootPlus_axes i]
-  congr 1
-  fin_cases i <;>
-    ext j <;> fin_cases j <;> apply Complex.ext <;>
-      simp [sheetRootSpinor, peirce4ToSpinor2, plusInclusion,
-        realCoordinatesTwistor, circularFrame]
+  rw [plus_root_representative i, twistor_rootPlus_axes i,
+    circularPeirceBasis_apply]
+  fin_cases i <;> rfl
 
 /-- Negative real twistor root axis `i` is exactly the native negative Zorn root. -/
 theorem minus_root_axis_zorn (i : Fin 3) :
     minusZornMap (sheetRootSpinor i) =
       cartesianZornLinearEquiv (rootMinus i) := by
   change twistorRealEquivZorn (minusInclusion (sheetRootSpinor i)) = _
-  rw [← circularPeirceBasis_apply
-    (i := ⟨i.val + 5, by omega⟩)]
-  rw [← twistor_rootMinus_axes i]
-  congr 1
-  fin_cases i <;>
-    ext j <;> fin_cases j <;> apply Complex.ext <;>
-      simp [sheetRootSpinor, peirce4ToSpinor2, minusInclusion,
-        realCoordinatesTwistor, circularFrame]
+  rw [minus_root_representative i, twistor_rootMinus_axes i,
+    circularPeirceBasis_apply]
+  fin_cases i <;> rfl
 
 /-- Cross-sheet scalar coupling: positive root `i` times negative root `j`
 lands in the positive scalar pole with coefficient `δᵢⱼ`. -/

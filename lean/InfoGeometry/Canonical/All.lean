@@ -1552,6 +1552,8 @@ import InfoGeometry.Canonical.QCCRThermalKMSCertificate
 import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
+import InfoGeometry.Canonical.RealDoubledBlockOperator
+import InfoGeometry.Canonical.UnitSchurTransport
 import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
 import InfoGeometry.Canonical.CasimirWeylDrazinContext

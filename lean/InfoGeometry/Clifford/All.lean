@@ -110,6 +110,7 @@ import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
 import InfoGeometry.Clifford.EvenRegularRepresentation
+import InfoGeometry.Clifford.EvenNormedAlgebraRealization
 import InfoGeometry.Clifford.HestenesSpinRotor
 import InfoGeometry.Clifford.HestenesSpinRotorCartanDieudonne
 import InfoGeometry.Clifford.ConformalTwistorBridge

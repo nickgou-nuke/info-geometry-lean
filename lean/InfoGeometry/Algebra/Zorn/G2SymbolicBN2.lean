@@ -21,8 +21,6 @@ namespace InfoGeometry.Algebra.Zorn.G2SymbolicBN2
 
 open InfoGeometry.Algebra.Zorn.G2BigCell
 
-abbrev PCExp := Fin 6 → ZMod 2
-
 /-! =========================================================================
     1. Bruhat Double-Coset Cell Predicates
     ========================================================================= -/
@@ -47,18 +45,18 @@ for a simple reflection `s` with active simple root index `simpleIdx`:
   - `a_big`: Certified coordinate polynomial vector for the big-cell branch `e_{αᵢ} = 1`
   - `b_right`: Fixed simple-root right factor `basisExp(simpleIdx)`
 -/
-structure ReflectionBN2Certificate (B : Subgroup G) (s : G) (simpleIdx : Fin 6) where
-  toPC        : PCExp → G
-  toPC_mem_B  : ∀ e : PCExp, toPC e ∈ B
-  toPC_surj   : ∀ b ∈ B, ∃ e : PCExp, toPC e = b
-  c_id        : PCExp → PCExp
-  a_big       : PCExp → PCExp
-  b_right     : PCExp
+structure ReflectionBN2Spec (B : Subgroup G) (s : G) (simpleIdx : Fin 6) where
+  toPC        : (Fin 6 → ZMod 2) → G
+  toPC_mem_B  : ∀ e : Fin 6 → ZMod 2, toPC e ∈ B
+  toPC_surj   : ∀ b ∈ B, ∃ e : Fin 6 → ZMod 2, toPC e = b
+  c_id        : (Fin 6 → ZMod 2) → (Fin 6 → ZMod 2)
+  a_big       : (Fin 6 → ZMod 2) → (Fin 6 → ZMod 2)
+  b_right     : Fin 6 → ZMod 2
   -- Branch 1: Identity / Toral branch (e_{αᵢ} = 0) lands in B
-  h_id_branch : ∀ e : PCExp, e simpleIdx = 0 →
+  h_id_branch : ∀ e : Fin 6 → ZMod 2, e simpleIdx = 0 →
     s * toPC e * s = toPC (c_id e)
   -- Branch 2: Big-Cell Bruhat branch (e_{αᵢ} = 1) factors through B * s * B
-  h_big_branch : ∀ e : PCExp, e simpleIdx = 1 →
+  h_big_branch : ∀ e : Fin 6 → ZMod 2, e simpleIdx = 1 →
     s * toPC e * s = toPC (a_big e) * s * toPC b_right
 
 /-! =========================================================================
@@ -76,7 +74,7 @@ For every element `b ∈ B`, the conjugate `s * b * s` lands in `B ∪ B * s * B
 The proof branches purely on the rank-1 simple root bit `e(simpleIdx) ∈ 𝔽₂`.
 -/
 theorem symbolic_bn2_pointwise (B : Subgroup G) (s : G) (simpleIdx : Fin 6)
-    (cert : ReflectionBN2Certificate B s simpleIdx)
+    (cert : ReflectionBN2Spec B s simpleIdx)
     (b : G) (hb : b ∈ B) :
     InBruhatCover B s (s * b * s) := by
   -- 1. Extract PC coordinates for b ∈ B
@@ -99,7 +97,7 @@ MAIN THEOREM (Global Set Inclusion BN2 Axiom):
   `s * B * s ⊆ B ∪ B * s * B`
 -/
 theorem symbolic_bn2_set_inclusion (B : Subgroup G) (s : G) (simpleIdx : Fin 6)
-    (cert : ReflectionBN2Certificate B s simpleIdx) :
+    (cert : ReflectionBN2Spec B s simpleIdx) :
     ∀ x ∈ { y | ∃ b ∈ B, y = s * b * s }, InBruhatCover B s x := by
   rintro x ⟨b, hb, rfl⟩
   exact symbolic_bn2_pointwise B s simpleIdx cert b hb
@@ -109,14 +107,14 @@ theorem symbolic_bn2_set_inclusion (B : Subgroup G) (s : G) (simpleIdx : Fin 6)
     ========================================================================= -/
 
 /-- BN2 Axiom for the short simple reflection s₁ (α₁ = e₀). -/
-theorem s1_bn2_axiom (B : Subgroup G) (s₁ : G)
-    (cert₁ : ReflectionBN2Certificate B s₁ 0) :
+theorem s1_bn2_law (B : Subgroup G) (s₁ : G)
+    (cert₁ : ReflectionBN2Spec B s₁ 0) :
     ∀ b ∈ B, InBruhatCover B s₁ (s₁ * b * s₁) :=
   fun b hb => symbolic_bn2_pointwise B s₁ 0 cert₁ b hb
 
 /-- BN2 Axiom for the long simple reflection s₂ (α₂ = e₁). -/
-theorem s2_bn2_axiom (B : Subgroup G) (s₂ : G)
-    (cert₂ : ReflectionBN2Certificate B s₂ 1) :
+theorem s2_bn2_law (B : Subgroup G) (s₂ : G)
+    (cert₂ : ReflectionBN2Spec B s₂ 1) :
     ∀ b ∈ B, InBruhatCover B s₂ (s₂ * b * s₂) :=
   fun b hb => symbolic_bn2_pointwise B s₂ 1 cert₂ b hb
 

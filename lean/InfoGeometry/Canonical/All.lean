@@ -1759,6 +1759,7 @@ import InfoGeometry.Canonical.DilatedGapEquivariance
 import InfoGeometry.Canonical.DilationKKTBridge
 import InfoGeometry.Canonical.DimensionAgnosticModularKLDivergence
 import InfoGeometry.Canonical.DiracMetricCompatibility
+import InfoGeometry.Canonical.FiniteDiracContinuousAdapter
 import InfoGeometry.Canonical.DiracLaplacianSquareRootBridge
 import InfoGeometry.Canonical.DiracSouriauKKTChiralContext
 import InfoGeometry.Canonical.DiracSouriauOperator
@@ -2816,6 +2817,10 @@ import InfoGeometry.Canonical.CantorCuntzPotential
 import InfoGeometry.Canonical.DeformedIdeleDysonBridge
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
+import InfoGeometry.Canonical.NormalizedISZetaDeterminantBridge
+import InfoGeometry.Canonical.TwinSheetBarrierPeirceBridge
+import InfoGeometry.Canonical.DiagonalSchurTransportBridge
+import InfoGeometry.Canonical.DiracHeatSemigroupBridge
 import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.SplitOctonionRigidity
 import InfoGeometry.Canonical.SplitOctonionAutomorphism

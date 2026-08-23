@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
+import InfoGeometry.Krein.DoubledSpace
 
 namespace InfoGeometry.Quantum.TwinWave
 
@@ -60,5 +61,54 @@ theorem interference_is_star_prod (X Y : TwinWaveState Q) :
     TwinWaveEquivSplitOctonion Q v0 (TwinWaveInterference Q v0 X Y) = 
     star_prod (TwinWaveEquivSplitOctonion Q v0 X) (TwinWaveEquivSplitOctonion Q v0 Y) := by
   rfl
+
+/-!
+## Analytic doubled-space realization
+
+`TwinWaveState` is the algebraic product carrier.  `DoubledSpace` is the
+`WithLp 2` completion of a product carrier, so the identification requires the
+analytic structure needed by that owner.
+-/
+
+noncomputable def TwinWaveEquivDoubledSpace
+    {M : Type*} [AddCommGroup M] [Module ℝ M]
+    (Q : QuadraticForm ℝ M)
+    [NormedAddCommGroup (evenOdd Q 0)]
+    [InnerProductSpace ℝ (evenOdd Q 0)]
+    [CompleteSpace (evenOdd Q 0)] :
+    TwinWaveState Q ≃ InfoGeometry.Krein.DoubledSpace (evenOdd Q 0) where
+  toFun X :=
+    InfoGeometry.Krein.to_doubled X.forward X.backward
+  invFun X :=
+    { forward := WithLp.fst X
+      backward := WithLp.snd X }
+  left_inv X := by
+    rcases X with ⟨forward, backward⟩
+    simp
+  right_inv X := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
+
+/-!
+## Associative Schur cross-term
+
+The Cayley--Dickson cross-term is a product of three entries.  Its honest
+Schur interpretation is the block-elimination term `B * D⁻¹ * C`; the full
+Schur complement additionally contains the diagonal block `A`.
+-/
+
+def schurCrossTerm {A : Type*} [Ring A] (B Dinv C : A) : A :=
+  B * Dinv * C
+
+def associativeSchurComplement {A : Type*} [Ring A]
+    (A₀ B Dinv C : A) : A :=
+  A₀ - schurCrossTerm B Dinv C
+
+theorem twinWave_forward_eq_diagonal_subtracted_schurComplement
+    (X Y : TwinWaveState Q) :
+    X.forward * Y.forward +
+        (TimeReversal Q v0 Y.backward) * X.backward =
+      X.forward * Y.forward +
+        schurCrossTerm (TimeReversal Q v0 Y.backward) 1 X.backward := by
+  simp [schurCrossTerm]
 
 end InfoGeometry.Quantum.TwinWave

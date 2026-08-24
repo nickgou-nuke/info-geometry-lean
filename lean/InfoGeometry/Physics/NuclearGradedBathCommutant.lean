@@ -85,7 +85,9 @@ theorem commutant_element_lie_bath_eq_zero
     (hb : b ∈ bath)
     (hx : x ∈ bathCommutant bath) :
     ⁅x, b⁆ = 0 := by
-  rw [lie_skew x b, bath_element_lie_eq_zero bath hb hx, neg_zero]
+  have hcomm : b * x = x * b :=
+    (mem_bathCommutant_iff bath x).1 hx b hb
+  rw [LieRing.of_associative_ring_bracket, hcomm, sub_self]
 
 /-- Version-compatible bracket law for an integer-indexed family of homogeneous
 submodules. This is the only grading property used by the present owner. -/
@@ -255,7 +257,7 @@ theorem total_eom_grade_support
     (q : QuasiparticleCreation grade M) :
     ⁅M.totalHamiltonian, q.op⁆ ∈
       grade 1 ⊔ (grade 0 ⊔ grade 2) := by
-  rw [quasiparticle_eom grade hgrade M q]
+  rw [quasiparticle_eom grade M q]
   exact Submodule.add_mem_sup
     (free_quasiparticle_grade_one grade hgrade M q)
     ((grade 0 ⊔ grade 2).smul_mem M.coupling

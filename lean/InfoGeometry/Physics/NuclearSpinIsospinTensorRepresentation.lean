@@ -49,6 +49,48 @@ theorem spinChirality_isospinChirality_commute :
   rw [tmul_mul_tmul, tmul_mul_tmul]
   simp
 
+/-! Independent `ℤ₂` twists for the two physical tensor factors. -/
+
+def spinTwist (x : SpinPair) : SpinPair :=
+  spinChirality * x * spinChirality
+
+def isospinTwist (x : SpinPair) : SpinPair :=
+  isospinChirality * x * isospinChirality
+
+theorem spinTwist_involutive (x : SpinPair) :
+    spinTwist (spinTwist x) = x := by
+  unfold spinTwist
+  calc
+    spinChirality * (spinChirality * x * spinChirality) * spinChirality =
+        (spinChirality * spinChirality) * x *
+          (spinChirality * spinChirality) := by noncomm_ring
+    _ = x := by rw [spinChirality_sq]; simp
+
+theorem isospinTwist_involutive (x : SpinPair) :
+    isospinTwist (isospinTwist x) = x := by
+  unfold isospinTwist
+  calc
+    isospinChirality * (isospinChirality * x * isospinChirality) *
+        isospinChirality =
+      (isospinChirality * isospinChirality) * x *
+        (isospinChirality * isospinChirality) := by noncomm_ring
+    _ = x := by rw [isospinChirality_sq]; simp
+
+theorem spinTwist_isospinTwist_commute (x : SpinPair) :
+    spinTwist (isospinTwist x) =
+      isospinTwist (spinTwist x) := by
+  unfold spinTwist isospinTwist
+  have hcomm := spinChirality_isospinChirality_commute
+  calc
+    spinChirality * (isospinChirality * x * isospinChirality) *
+        spinChirality =
+      (spinChirality * isospinChirality) * x *
+        (isospinChirality * spinChirality) := by noncomm_ring
+    _ = (isospinChirality * spinChirality) * x *
+        (spinChirality * isospinChirality) := by rw [hcomm]
+    _ = isospinChirality * (spinChirality * x * spinChirality) *
+        isospinChirality := by noncomm_ring
+
 theorem spin_isospin_actions_commute (A B : M2C) :
     spinAction A * isospinAction B =
       isospinAction B * spinAction A := by

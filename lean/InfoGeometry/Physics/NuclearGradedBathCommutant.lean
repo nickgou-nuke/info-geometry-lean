@@ -111,7 +111,7 @@ theorem mem_gradedBathCommutant_iff
     (x : A) :
     x ∈ gradedBathCommutant grade bath i ↔
       x ∈ grade i ∧ x ∈ bathCommutant bath := by
-  simp [gradedBathCommutant]
+  rfl
 
 /-- The bath commutant inherits the ambient homogeneous Lie-bracket law. -/
 theorem gradedBathCommutant_bracket
@@ -125,9 +125,13 @@ theorem gradedBathCommutant_bracket
     ⁅x, y⁆ ∈ gradedBathCommutant grade bath (i + j) := by
   have hx' := (mem_gradedBathCommutant_iff grade bath i x).1 hx
   have hy' := (mem_gradedBathCommutant_iff grade bath j y).1 hy
+  have hcomm : ⁅x, y⁆ ∈ bathCommutant bath := by
+    change x * y - y * x ∈ bathCommutant bath
+    exact (bathCommutant bath).sub_mem
+      ((bathCommutant bath).mul_mem hx'.2 hy'.2)
+      ((bathCommutant bath).mul_mem hy'.2 hx'.2)
   exact (mem_gradedBathCommutant_iff grade bath (i + j) ⁅x, y⁆).2
-    ⟨hgrade.bracket_mem hx'.1 hy'.1,
-      (bathLieCommutant bath).lie_mem hx'.2 hy'.2⟩
+    ⟨hgrade.bracket_mem hx'.1 hy'.1, hcomm⟩
 
 /-- Algebraic data for a bath-coupled quasiparticle Hamiltonian.
 
@@ -158,6 +162,12 @@ components. -/
 def interactionHamiltonian
     (M : ThermalQuasiparticleModel grade) : A :=
   M.H_int_minus + M.H_int_plus
+
+/-- The interaction Hamiltonian lies in the sum of the two exchange sectors. -/
+theorem interactionHamiltonian_mem
+    (M : ThermalQuasiparticleModel grade) :
+    M.interactionHamiltonian ∈ grade (-1) ⊔ grade 1 :=
+  Submodule.add_mem_sup M.h_int_minus_grade M.h_int_plus_grade
 
 /-- Total Hamiltonian of the algebraic quasiparticle/bath model. -/
 def totalHamiltonian
@@ -190,10 +200,9 @@ theorem mem_gradedBathCommutant
 
 end QuasiparticleCreation
 
-section EquationsOfMotion
+section BathShielding
 
 variable (grade : ℤ → Submodule R A)
-variable (hgrade : LieGrading grade)
 
 /-- The free bath Hamiltonian is shielded from a quasiparticle observable in
 its commutant. -/
@@ -212,8 +221,16 @@ theorem quasiparticle_eom
     ⁅M.totalHamiltonian, q.op⁆ =
       ⁅M.H_qp, q.op⁆ +
         M.coupling • ⁅M.interactionHamiltonian, q.op⁆ := by
-  simp [ThermalQuasiparticleModel.totalHamiltonian,
-    bath_bracket_quasiparticle_eq_zero]
+  rw [ThermalQuasiparticleModel.totalHamiltonian,
+    add_lie, add_lie, smul_lie,
+    bath_bracket_quasiparticle_eq_zero, add_zero]
+
+end BathShielding
+
+section GradedEquationsOfMotion
+
+variable (grade : ℤ → Submodule R A)
+variable (hgrade : LieGrading grade)
 
 /-- The free quasiparticle term remains in degree `+1`. -/
 theorem free_quasiparticle_grade_one
@@ -221,6 +238,17 @@ theorem free_quasiparticle_grade_one
     (q : QuasiparticleCreation grade M) :
     ⁅M.H_qp, q.op⁆ ∈ grade 1 := by
   simpa using hgrade.bracket_mem M.h_qp_grade q.grade_one
+
+/-- The free quasiparticle term remains inside the degree-one bath commutant. -/
+theorem free_quasiparticle_mem_gradedBathCommutant
+    (M : ThermalQuasiparticleModel grade)
+    (q : QuasiparticleCreation grade M) :
+    ⁅M.H_qp, q.op⁆ ∈ gradedBathCommutant grade M.bath 1 := by
+  have hH : M.H_qp ∈ gradedBathCommutant grade M.bath 0 :=
+    (mem_gradedBathCommutant_iff grade M.bath 0 M.H_qp).2
+      ⟨M.h_qp_grade, M.h_qp_mem⟩
+  simpa using gradedBathCommutant_bracket grade hgrade M.bath hH
+    q.mem_gradedBathCommutant
 
 /-- The degree `-1` interaction component bracketed with a degree `+1`
 quasiparticle lies in degree zero. -/
@@ -263,6 +291,6 @@ theorem total_eom_grade_support
     ((grade 0 ⊔ grade 2).smul_mem M.coupling
       (interaction_bracket_grade_zero_sup_two grade hgrade M q))
 
-end EquationsOfMotion
+end GradedEquationsOfMotion
 
 end InfoGeometry.Physics.NuclearGradedBathCommutant

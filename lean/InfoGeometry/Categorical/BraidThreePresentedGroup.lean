@@ -49,8 +49,10 @@ theorem artin_relation :
     sigmaOne * sigmaTwo * sigmaOne =
       sigmaTwo * sigmaOne * sigmaTwo := by
   apply eq_of_mul_inv_eq_one
-  change PresentedGroup.mk relations artinRelator = 1
-  exact PresentedGroup.one_of_mem (by simp [relations])
+  simpa [sigmaOne, sigmaTwo, artinRelator] using
+    (PresentedGroup.one_of_mem
+      (rels := relations) (x := artinRelator)
+      (by simp [relations]))
 
 /-- The standard Garside half-twist word in `B₃`.
 
@@ -63,7 +65,7 @@ def garsideDelta : BraidGroup3 :=
 @[simp]
 theorem garsideDelta_eq_alternate :
     garsideDelta = sigmaTwo * sigmaOne * sigmaTwo := by
-  exact artin_relation
+  simpa [garsideDelta] using artin_relation
 
 /-- Two elements of a group satisfying the three-strand Artin relation. -/
 structure ArtinPair (G : Type*) [Group G] where

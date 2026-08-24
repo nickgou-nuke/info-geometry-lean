@@ -7,6 +7,10 @@ on:
     paths:
       - "lean/InfoGeometry/Algebra/NonAssocDerivationKernel.lean"
       - ".github/workflows/nonassoc-derivation-kernel-narrow.yml"
+  pull_request:
+    paths:
+      - "lean/InfoGeometry/Algebra/NonAssocDerivationKernel.lean"
+      - ".github/workflows/nonassoc-derivation-kernel-narrow.yml"
   workflow_dispatch:
 
 permissions:

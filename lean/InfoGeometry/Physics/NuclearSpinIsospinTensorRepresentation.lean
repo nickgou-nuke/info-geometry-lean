@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Physics.ChiralTensorRecoupling
+import InfoGeometry.External.Auto.WeakIsospinSU2
 
 /-!
 # Tensor-product spin/isospin representation
@@ -14,6 +15,7 @@ namespace InfoGeometry.Physics.NuclearSpinIsospinTensorRepresentation
 open Algebra.TensorProduct
 open ChiralTensorRecoupling
 open InfoGeometry.Physics.ChiralCausalCone
+open WeakIsospinSU2
 
 noncomputable section
 
@@ -26,7 +28,7 @@ theorem spin_isospin_actions_commute (A B : M2C) :
       isospinAction B * spinAction A := by
   unfold spinAction isospinAction
   rw [tmul_mul_tmul, tmul_mul_tmul]
-  simp [mul_comm]
+  simp
 
 theorem spin_action_preserves_commutator (A B : M2C) :
     spinAction A * spinAction B - spinAction B * spinAction A =
@@ -43,6 +45,19 @@ theorem isospin_action_preserves_commutator (A B : M2C) :
   rw [tmul_mul_tmul, tmul_mul_tmul]
   rw [← TensorProduct.tmul_sub]
   simp
+
+theorem pauli_spin_comm_I₁_I₂ :
+    spinAction I₁ * spinAction I₂ - spinAction I₂ * spinAction I₁ =
+      (2 * Complex.I) • spinAction I₃ := by
+  rw [spin_action_preserves_commutator, I₁_comm_I₂]
+  simp [spinAction, TensorProduct.smul_tmul]
+
+theorem pauli_isospin_comm_I₁_I₂ :
+    isospinAction I₁ * isospinAction I₂ -
+        isospinAction I₂ * isospinAction I₁ =
+      (2 * Complex.I) • isospinAction I₃ := by
+  rw [isospin_action_preserves_commutator, I₁_comm_I₂]
+  simp [isospinAction]
 
 end
 

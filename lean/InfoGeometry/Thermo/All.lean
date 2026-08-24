@@ -23,6 +23,7 @@ import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.Thermo.RelationalChiralPolarization
 import InfoGeometry.Thermo.OnsagerOperatorClosure
 import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
+import InfoGeometry.Thermo.GenericMetriplecticFlow
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo
 

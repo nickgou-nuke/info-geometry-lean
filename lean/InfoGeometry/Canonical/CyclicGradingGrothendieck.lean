@@ -211,8 +211,7 @@ cyclic group ℤ/5ℤ.
 The grading map sends
   `0↦gNegTwo,  1↦gNegOne,  2↦gZero,  3↦gPosOne,  4↦gPosTwo`.
 -/
-structure CyclicFiveGrading (L : Type*) [AddCommGroup L] [Module ℝ L]
-    [LieRing L] [LieAlgebra ℝ L] where
+structure CyclicFiveGrading (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
   fiveGrading : FiveGrading L
   /-- A `ZMod 5`-indexed family of grade subspaces. -/
   cyclicGradeMap : ZMod 5 → Submodule ℝ L

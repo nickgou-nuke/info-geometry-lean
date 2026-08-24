@@ -1,5 +1,6 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeLinearEquiv
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import Mathlib.Algebra.Category.ModuleCat.Basic
 
 /-!
 # The finite `R` braiding on the Fibonacci fusion-tree carrier
@@ -59,6 +60,17 @@ theorem rLinearEquiv_apply (q : Units ℂ) (x : FusionTree) :
     rLinearEquiv q x = Matrix.mulVec (fibonacciRMatrix q) x := by
   rfl
 
+theorem rLinearEquiv_inverse (q : Units ℂ) :
+    (rLinearEquiv q).symm = rLinearEquiv q⁻¹ := by
+  ext x
+  simp [rLinearEquiv]
+
+theorem rLinearEquiv_trans_inverse (q : Units ℂ) :
+    (rLinearEquiv q).trans (rLinearEquiv q⁻¹) =
+      LinearEquiv.refl ℂ FusionTree := by
+  rw [← rLinearEquiv_inverse q]
+  exact (rLinearEquiv q).self_trans_symm
+
 theorem bMatrix_mul_inv (q : Units ℂ) (τ s : ℂ)
     (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
     fibonacciBMatrix q τ s * fibonacciBMatrix q⁻¹ τ s = 1 := by
@@ -102,11 +114,14 @@ noncomputable def bLinearEquiv (q : Units ℂ) (τ s : ℂ)
     ext x i
     simp [Matrix.toLin'_apply, Matrix.mulVec, dotProduct]
 
-theorem bLinearEquiv_apply (q : Units ℂ) (τ s : ℂ)
-    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) (x : FusionTree) :
-    bLinearEquiv q τ s hs hτ x =
-      Matrix.mulVec (fibonacciBMatrix q τ s) x := by
-  rfl
+noncomputable def rModuleIso (q : Units ℂ) :
+    ModuleCat.of ℂ FusionTree ≅ ModuleCat.of ℂ FusionTree :=
+  (rLinearEquiv q).toModuleIso
+
+noncomputable def bModuleIso (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    ModuleCat.of ℂ FusionTree ≅ ModuleCat.of ℂ FusionTree :=
+  (bLinearEquiv q τ s hs hτ).toModuleIso
 
 theorem bLinearEquiv_inverse (q : Units ℂ) (τ s : ℂ)
     (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
@@ -114,6 +129,52 @@ theorem bLinearEquiv_inverse (q : Units ℂ) (τ s : ℂ)
       bLinearEquiv q⁻¹ τ s hs hτ := by
   ext x
   simp [bLinearEquiv]
+
+theorem rModuleIso_trans_inverse (q : Units ℂ) :
+    rModuleIso q ≪≫ rModuleIso q⁻¹ =
+      CategoryTheory.Iso.refl (ModuleCat.of ℂ FusionTree) := by
+  apply CategoryTheory.Iso.ext
+  apply ModuleCat.hom_ext
+  simpa [rModuleIso, CategoryTheory.Iso.trans_hom] using
+    congrArg (fun e : FusionTree ≃ₗ[ℂ] FusionTree =>
+      (e : FusionTree →ₗ[ℂ] FusionTree)) (rLinearEquiv_trans_inverse q)
+
+theorem bModuleIso_trans_inverse (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    bModuleIso q τ s hs hτ ≪≫ bModuleIso q⁻¹ τ s hs hτ =
+      CategoryTheory.Iso.refl (ModuleCat.of ℂ FusionTree) := by
+  apply CategoryTheory.Iso.ext
+  apply ModuleCat.hom_ext
+  have h := (bLinearEquiv q τ s hs hτ).self_trans_symm
+  rw [bLinearEquiv_inverse q τ s hs hτ] at h
+  simpa [bModuleIso, CategoryTheory.Iso.trans_hom] using
+    congrArg (fun e : FusionTree ≃ₗ[ℂ] FusionTree =>
+      (e : FusionTree →ₗ[ℂ] FusionTree))
+      h
+
+theorem bLinearEquiv_apply (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) (x : FusionTree) :
+    bLinearEquiv q τ s hs hτ x =
+      Matrix.mulVec (fibonacciBMatrix q τ s) x := by
+  rfl
+
+theorem bLinearEquiv_eq_f_trans_r_trans_f
+    (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    bLinearEquiv q τ s hs hτ =
+      ((fLinearEquiv τ s hs hτ).trans (rLinearEquiv q)).trans
+        (fLinearEquiv τ s hs hτ) := by
+  ext x
+  simp [bLinearEquiv, bLinearMap, fLinearEquiv, fLinearMap,
+    rLinearEquiv, rLinearMap, fibonacciBMatrix,
+    Matrix.toLin'_mul, LinearEquiv.trans_apply]
+
+theorem bLinearEquiv_trans_inverse (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    (bLinearEquiv q τ s hs hτ).trans (bLinearEquiv q⁻¹ τ s hs hτ) =
+      LinearEquiv.refl ℂ FusionTree := by
+  rw [← bLinearEquiv_inverse q τ s hs hτ]
+  exact (bLinearEquiv q τ s hs hτ).self_trans_symm
 
 theorem fusionTree_artin
     (q : Units ℂ) (τ s : ℂ)
@@ -135,5 +196,23 @@ theorem fusionTree_artin
         fibonacciBMatrix q τ s) by
       simp [rLinearMap, bLinearMap, Matrix.toLin'_mul]]
   rw [fibonacci_fourAnyon_artin q τ s hq_inv hq_pow3 hq5 h_poly hτ hs]
+
+theorem fusionTree_artin_equiv
+    (q : Units ℂ) (τ s : ℂ)
+    (hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ))
+    (hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3)
+    (hq5 : (q : ℂ) ^ 5 = -1)
+    (h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 -
+      (q : ℂ) + 1 = 0)
+    (hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3)
+    (hs : s ^ 2 = τ) (hτ0 : τ ^ 2 + τ = 1) :
+    ((rLinearEquiv q).trans (bLinearEquiv q τ s hs hτ0)).trans
+        (rLinearEquiv q) =
+      ((bLinearEquiv q τ s hs hτ0).trans (rLinearEquiv q)).trans
+        (bLinearEquiv q τ s hs hτ0) := by
+  apply LinearEquiv.ext
+  intro x
+  have h := fusionTree_artin q τ s hq_inv hq_pow3 hq5 h_poly hτ hs
+  exact congrArg (fun T => T x) h
 
 end InfoGeometry.Categorical.FibonacciFusionTreeBraiding

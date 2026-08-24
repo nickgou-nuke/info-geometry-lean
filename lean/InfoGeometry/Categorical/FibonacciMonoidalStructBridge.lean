@@ -54,27 +54,6 @@ theorem fibMonoidalCategoryStruct_triangle (X Y : FibCat) :
       fibWhiskerRight (fibRightUnitor X).hom Y := by
   exact fibAssociator_triangle X Y
 
-@[simp] theorem fin_equiv_cast_proof_irrel {n m : Nat} (h₁ h₂ : n = m) :
-    Equiv.cast (congrArg Fin h₁) = Equiv.cast (congrArg Fin h₂) := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem equiv_cast_proof_irrel {α β : Sort u} (h₁ h₂ : α = β) :
-    Equiv.cast h₁ = Equiv.cast h₂ := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem matrix_reindex_cast_proof_irrel
-    {m n p q : Nat} (h₁ h₂ : m = n) (k₁ k₂ : p = q)
-    (A : Matrix (Fin m) (Fin p) ℂ) :
-    Matrix.reindex (Equiv.cast (congrArg Fin h₁))
-        (Equiv.cast (congrArg Fin k₁)) A =
-      Matrix.reindex (Equiv.cast (congrArg Fin h₂))
-        (Equiv.cast (congrArg Fin k₂)) A := by
-  rw [fin_equiv_cast_proof_irrel h₁ h₂, fin_equiv_cast_proof_irrel k₁ k₂]
-
 theorem fibMonoidalCategoryStruct_associator_naturality_id
     (X Y Z : FibCat) :
     FibHom.comp
@@ -86,7 +65,7 @@ theorem fibMonoidalCategoryStruct_associator_naturality_id
         (fibTensorHom (FibHom.id X)
           (fibTensorHom (FibHom.id Y) (FibHom.id Z))) := by
   ext <;>
-    simp [fibTensorHom, FibHom.comp, FibHom.id, Matrix.reindex,
+      simp [fibTensorHom, FibHom.comp, FibHom.id, Matrix.reindex,
       blockDiag2, blockDiag3, kron]
 
 theorem fibMonoidalCategoryStruct_leftUnitor_naturality_id
@@ -106,7 +85,7 @@ theorem fibMonoidalCategoryStruct_rightUnitor_naturality_id
         (fibRightUnitor X).hom =
       FibHom.comp (fibRightUnitor X).hom (FibHom.id X) := by
   ext <;>
-    simp [fibWhiskerRight, fibTensorHom, FibHom.comp, FibHom.id,
+      simp [fibWhiskerRight, fibTensorHom, FibHom.comp, FibHom.id,
       Matrix.reindex, blockDiag2, blockDiag3, kron]
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

@@ -65,6 +65,46 @@ def basisVector (i : Fin 4) : Ambient := fun j => if i = j then 1 else 0
 
 def dot (x y : Ambient) : ℤ := ∑ i, x i * y i
 
+theorem dot_sub_left (x y z : Ambient) :
+    dot (x - y) z = dot x z - dot y z := by
+  unfold dot
+  change (∑ i, (x i - y i) * z i) = _
+  rw [show (fun i => (x i - y i) * z i) =
+      (fun i => x i * z i - y i * z i) by
+    funext i
+    ring]
+  rw [Finset.sum_sub_distrib]
+
+theorem dot_sub_right (x y z : Ambient) :
+    dot x (y - z) = dot x y - dot x z := by
+  unfold dot
+  change (∑ i, x i * (y i - z i)) = _
+  rw [show (fun i => x i * (y i - z i)) =
+      (fun i => x i * y i - x i * z i) by
+    funext i
+    ring]
+  rw [Finset.sum_sub_distrib]
+
+theorem dot_smul_left (a : ℤ) (x y : Ambient) :
+    dot (a • x) y = a * dot x y := by
+  unfold dot
+  change (∑ i, (a * x i) * y i) = _
+  rw [show (fun i => (a * x i) * y i) =
+      (fun i => a * (x i * y i)) by
+    funext i
+    ring]
+  rw [Finset.mul_sum]
+
+theorem dot_smul_right (a : ℤ) (x y : Ambient) :
+    dot x (a • y) = a * dot x y := by
+  unfold dot
+  change (∑ i, x i * (a * y i)) = _
+  rw [show (fun i => x i * (a * y i)) =
+      (fun i => a * (x i * y i)) by
+    funext i
+    ring]
+  rw [Finset.mul_sum]
+
 def simpleRoot (i : Fin 4) : Ambient :=
   match i with
   | 0 => ![1, -1, 0, 0]
@@ -163,5 +203,68 @@ theorem reflect_simpleRoot (i : Fin 4) :
   funext j
   change simpleRoot i j - 2 * simpleRoot i j = -simpleRoot i j
   ring
+
+theorem reflect_square (i : Fin 4) (x : Ambient) :
+    reflect i (reflect i x) = x := by
+  unfold reflect
+  have hi : dot (simpleRoot i) (simpleRoot i) = 2 := simpleRoot_norm i
+  rw [dot_sub_left, dot_smul_left, hi]
+  funext j
+  change x j - (dot x (simpleRoot i) * simpleRoot i j) -
+      ((dot x (simpleRoot i) -
+        dot x (simpleRoot i) * 2) * simpleRoot i j) = x j
+  ring
+
+theorem reflect_commute_of_cartan_zero
+    (i j : Fin 4) (hij : cartanMatrix i j = 0) (x : Ambient) :
+    reflect i (reflect j x) = reflect j (reflect i x) := by
+  have hji : cartanMatrix j i = 0 := by
+    simpa [cartanMatrix, dot, mul_comm] using hij
+  have hij' : dot (simpleRoot i) (simpleRoot j) = 0 := hij
+  have hji' : dot (simpleRoot j) (simpleRoot i) = 0 := hji
+  unfold reflect
+  rw [dot_sub_left, dot_smul_left, dot_sub_left, dot_smul_left,
+    hji', hij']
+  simp only [mul_zero, sub_zero]
+  funext k
+  change x k - dot x (simpleRoot j) * simpleRoot j k -
+      dot x (simpleRoot i) * simpleRoot i k =
+    x k - dot x (simpleRoot i) * simpleRoot i k -
+      dot x (simpleRoot j) * simpleRoot j k
+  ring
+
+theorem reflect_braid_of_cartan_neg_one
+    (i j : Fin 4) (hij : cartanMatrix i j = -1) (x : Ambient) :
+    reflect i (reflect j (reflect i x)) =
+      reflect j (reflect i (reflect j x)) := by
+  have hji : cartanMatrix j i = -1 := by
+    simpa [cartanMatrix, dot, mul_comm] using hij
+  have hii : dot (simpleRoot i) (simpleRoot i) = 2 := simpleRoot_norm i
+  have hjj : dot (simpleRoot j) (simpleRoot j) = 2 := simpleRoot_norm j
+  have hij' : dot (simpleRoot i) (simpleRoot j) = -1 := hij
+  have hji' : dot (simpleRoot j) (simpleRoot i) = -1 := hji
+  unfold reflect
+  repeat rw [dot_sub_left, dot_smul_left]
+  rw [hii, hjj, hij', hji']
+  module
+
+theorem reflect_lattice_square (i : Fin 4) (x : Lattice) :
+    reflect_lattice i (reflect_lattice i x) = x := by
+  apply Subtype.ext
+  exact reflect_square i x.1
+
+theorem reflect_lattice_commute_of_cartan_zero
+    (i j : Fin 4) (hij : cartanMatrix i j = 0) (x : Lattice) :
+    reflect_lattice i (reflect_lattice j x) =
+      reflect_lattice j (reflect_lattice i x) := by
+  apply Subtype.ext
+  exact reflect_commute_of_cartan_zero i j hij x.1
+
+theorem reflect_lattice_braid_of_cartan_neg_one
+    (i j : Fin 4) (hij : cartanMatrix i j = -1) (x : Lattice) :
+    reflect_lattice i (reflect_lattice j (reflect_lattice i x)) =
+      reflect_lattice j (reflect_lattice i (reflect_lattice j x)) := by
+  apply Subtype.ext
+  exact reflect_braid_of_cartan_neg_one i j hij x.1
 
 end InfoGeometry.RootSystem.D4

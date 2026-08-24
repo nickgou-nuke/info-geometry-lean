@@ -128,6 +128,14 @@ noncomputable def FibHom.comp {X Y Z : FibCat} (f : FibHom X Y) (g : FibHom Y Z)
   { unit_comp := f.unit_comp * g.unit_comp,
     tau_comp  := f.tau_comp * g.tau_comp }
 
+theorem FibHom.comp_assoc {W X Y Z : FibCat}
+    (f : FibHom W X) (g : FibHom X Y) (h : FibHom Y Z) :
+    FibHom.comp (FibHom.comp f g) h =
+      FibHom.comp f (FibHom.comp g h) := by
+  apply FibHom.ext
+  · exact Matrix.mul_assoc f.unit_comp g.unit_comp h.unit_comp
+  · exact Matrix.mul_assoc f.tau_comp g.tau_comp h.tau_comp
+
 theorem FibHom.comp_add_left {X Y Z : FibCat}
     (f g : FibHom X Y) (h : FibHom Y Z) :
     FibHom.comp (f + g) h = FibHom.comp f h + FibHom.comp g h := by

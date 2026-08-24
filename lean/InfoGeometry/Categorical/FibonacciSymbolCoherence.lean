@@ -116,6 +116,17 @@ theorem kron_identity_commutes_kron_identity
   rw [← kron_mul, ← kron_mul]
   simp
 
+theorem kron_structural_multiplicity_commute
+    {n m : ℕ}
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (K : Matrix (Fin n) (Fin m) ℂ) :
+    kron (1 : Matrix (Fin 2) (Fin 2) ℂ) K *
+        kron A (1 : Matrix (Fin m) (Fin m) ℂ) =
+      kron A (1 : Matrix (Fin n) (Fin n) ℂ) *
+        kron (1 : Matrix (Fin 2) (Fin 2) ℂ) K := by
+  rw [← kron_mul, ← kron_mul]
+  simp
+
 /-! The actual multiplicity block used by a global τ-output associator. -/
 
 noncomputable def globalTauFusionBlock (n : ℕ) (τ s : ℂ) :

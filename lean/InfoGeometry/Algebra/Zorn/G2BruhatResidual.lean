@@ -21,8 +21,6 @@ open InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 
-abbrev WeylParameter := WeylG2
-
 /-- Conjugation by `a⁻¹` on the left and `a` on the right. -/
 def conjugationHom (a : SplitOctF2Aut) : SplitOctF2Aut →* SplitOctF2Aut where
   toFun x := a⁻¹ * x * a
@@ -31,16 +29,9 @@ def conjugationHom (a : SplitOctF2Aut) : SplitOctF2Aut →* SplitOctF2Aut where
     simp [mul_assoc]
 
 /-- The residual subgroup attached to a Weyl parameter. -/
-def residualSubgroup (p : WeylParameter) : Subgroup SplitOctF2Aut :=
+def residualSubgroup (p : WeylG2) : Subgroup SplitOctF2Aut :=
   unipotentSubgroup ⊓
     unipotentSubgroup.comap (conjugationHom (w0 * weylNF p.1 p.2))
-
-theorem mem_residualSubgroup_iff (p : WeylParameter) (x : SplitOctF2Aut) :
-    x ∈ residualSubgroup p ↔
-      x ∈ unipotentSubgroup ∧
-        (w0 * weylNF p.1 p.2)⁻¹ * x *
-            (w0 * weylNF p.1 p.2) ∈ unipotentSubgroup := by
-  rfl
 
 /-! The longest Weyl parameter is the concrete half-turn `w₀`.  At this
 parameter the conjugating element in the chosen convention is the identity,

@@ -9,9 +9,6 @@ universe u
 
 namespace InfoGeometry.Quantum.SplitCliffordAtom
 
-abbrev RealMajoranaCore := RealMajoranaCategory.RealMajoranaCore
-abbrev RealMajoranaCore.Hom := RealMajoranaCategory.RealMajoranaCore.Hom
-abbrev RealKCategory := RealKCategory.RealKVect
 
 /--
 Equivariant split-Clifford atom: a real carrier with the primitive Majorana core
@@ -19,7 +16,7 @@ action. The distinguished four generators are derived as
 `{Id, ε, J, J∘ε}`.
 -/
 structure Atom where
-  core : RealMajoranaCore
+  core : InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore
 
 instance : CoeSort Atom (Type u) := ⟨fun X => X.core⟩
 
@@ -84,21 +81,21 @@ noncomputable instance : Category Atom where
     ((f ≫ g).homCore.hom) = g.homCore.hom.comp f.homCore.hom := rfl
 
 /-- Forget the atom wrapper and keep the primitive Majorana core. -/
-noncomputable def forgetToCore : Atom ⥤ RealMajoranaCore where
+noncomputable def forgetToCore : Atom ⥤ InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore where
   obj X := X.core
   map {X Y} f := f.homCore
   map_id _ := rfl
   map_comp _ _ := rfl
 
 /-- Wrap every Majorana core as an atom. -/
-noncomputable def fromCore : RealMajoranaCore ⥤ Atom where
+noncomputable def fromCore : InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore ⥤ Atom where
   obj X := ⟨X⟩
   map {X Y} f := ⟨f⟩
   map_id _ := rfl
   map_comp _ _ := rfl
 
 /-- Atom/core equivalence: same data, explicit atomic packaging. -/
-noncomputable def atomEquivCore : Atom ≌ RealMajoranaCore where
+noncomputable def atomEquivCore : Atom ≌ InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore where
   functor := forgetToCore
   inverse := fromCore
   unitIso := NatIso.ofComponents
@@ -127,8 +124,8 @@ noncomputable def atomEquivCore : Atom ≌ RealMajoranaCore where
     rfl
 
 /-- Forget atom structure down to the real `K`-vector layer. -/
-noncomputable def toRealKVect : Atom ⥤ RealKCategory :=
-  forgetToCore ⋙ RealMajoranaCategory.RealMajoranaCore.toRealKVect
+noncomputable def toRealKVect : Atom ⥤ InfoGeometry.Quantum.RealKCategory.RealKVect :=
+  forgetToCore ⋙ InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.toRealKVect
 
 end Atom
 

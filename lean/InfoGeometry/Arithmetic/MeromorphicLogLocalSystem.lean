@@ -87,12 +87,6 @@ theorem logSheetDeckAction_winding
       (logSheetCovering R).winding x + n := by
   exact (logSheetDeckAction R).winding_deck n x
 
-theorem logSheetDeckAction_zeroSheet_iff
-    {R : Type*} [Ring R] (n : ℤ) (x : LogSheet R) :
-    (logSheetDeckAction R).deck n x ∈
-        (logSheetCovering R).zeroSheet ↔ x.2 + n = 0 := by
-  rfl
-
 theorem logSheetDeckAction_nonzeroSheet
     {R : Type*} [Ring R] (n : ℤ) (x : LogSheet R)
     (_hx : x.2 ≠ 0) (hn : x.2 + n ≠ 0) :
@@ -217,14 +211,6 @@ theorem monodromy_is_homomorphism
 def elementaryLoop {ι : Type*} [Fintype ι] [DecidableEq ι]
     (k : ι) : HomologyLoop ι :=
   ⟨fun i => if i = k then 1 else 0⟩
-
-theorem monodromy_elementary_loop
-    {G : Type*} [Group G]
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (r : G) (B : PuncturedBase ι) (k : ι) :
-    monodromyRepresentation r B (elementaryLoop k) =
-      winding r (B.order k) := by
-  simp [monodromyRepresentation, deRhamPairing, elementaryLoop]
 
 /-- The boundary loop winding once around every finite puncture. -/
 def totalBoundaryLoop {ι : Type*} [Fintype ι] [DecidableEq ι] : HomologyLoop ι :=

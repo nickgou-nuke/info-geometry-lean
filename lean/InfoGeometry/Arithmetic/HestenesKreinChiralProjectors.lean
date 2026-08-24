@@ -186,19 +186,19 @@ theorem splitTemperature_chiral_decomposition
 /-- Antiunitary reflection sends `u` to `1-v`. -/
 theorem antiunitaryReflection_leftCone
     (s : SplitSouriauTemperature) :
-    leftCone (antiunitaryReflection s) =
+    leftCone (splitReflection s) =
       1 - rightCone s := by
   cases s
-  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
+  simp [leftCone, rightCone, splitReflection]
   ring_nf
 
 /-- Antiunitary reflection sends `v` to `1-u`. -/
 theorem antiunitaryReflection_rightCone
     (s : SplitSouriauTemperature) :
-    rightCone (antiunitaryReflection s) =
+    rightCone (splitReflection s) =
       1 - leftCone s := by
   cases s
-  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
+  simp [leftCone, rightCone, splitReflection]
   ring_nf
 
 

@@ -89,6 +89,26 @@ theorem causalMatrix_circular_expansion
     <;> simp [Complex.I_sq]
     <;> ring
 
+theorem railMatrix_cayley_hamilton (r : Rail) :
+    railMatrix r * railMatrix r =
+      (2 * r.scalar) • railMatrix r -
+        (railMatrix r).det • (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [railMatrix, sR, sL, Matrix.mul_apply, Matrix.one_apply,
+      Fin.sum_univ_two, Complex.I_sq, sub_eq_add_neg]
+    <;> ring_nf
+    <;> simp [Complex.I_sq]
+    <;> ring
+
+theorem railMatrix_square_eq_zero_of_trace_zero_and_null (r : Rail)
+    (hr : r.scalar ^ 2 - (r.spatial 0) ^ 2 -
+      (r.spatial 1) ^ 2 - (r.spatial 2) ^ 2 = 0)
+    (htrace : r.scalar = 0) :
+    railMatrix r * railMatrix r = 0 := by
+  rw [railMatrix_cayley_hamilton, htrace, railMatrix_det, hr]
+  simp
+
 theorem railMatrix_circular_expansion (r : Rail) :
     railMatrix r =
       (r.scalar + r.spatial 2) • uPlus +
@@ -175,6 +195,23 @@ theorem pauliVector_mul (x y : Vector3) :
     <;> ring_nf
     <;> simp [Complex.I_sq]
     <;> ring
+
+theorem pauliVector_square (x : Vector3) :
+    pauliVector x * pauliVector x =
+      !![orderedDot x x, 0; 0, orderedDot x x] := by
+  rw [pauliVector_mul]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [orderedDot, orderedCross, sub_eq_add_neg, add_comm,
+      add_left_comm, add_assoc, mul_comm, mul_left_comm, mul_assoc]
+    <;> ring
+
+theorem pauliVector_square_eq_zero {x : Vector3}
+    (hx : orderedDot x x = 0) :
+    pauliVector x * pauliVector x = 0 := by
+  rw [pauliVector_square, hx]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp
 
 def scalarReadout (M : Mat2) : ℂ :=
   (M 0 0 + M 1 1) / 2
@@ -294,7 +331,10 @@ theorem zornMul_eq_pauliCorrelationReadout
       orderedDot, orderedCross, pow_two, Complex.I_sq] <;>
     ring_nf <;> try rw [Complex.I_sq] <;> ring
 
-abbrev zornCorrelationReadout := pauliCorrelationReadout
+def zornCorrelationReadout
+    (X Y : InfoGeometry.Algebra.Zorn.Concrete.ZornCell ℂ) :
+    InfoGeometry.Algebra.Zorn.Concrete.ZornCell ℂ :=
+  pauliCorrelationReadout X Y
 
 theorem zornCorrelationReadout_eq_zornMul
     (X Y : InfoGeometry.Algebra.Zorn.Concrete.ZornCell ℂ) :

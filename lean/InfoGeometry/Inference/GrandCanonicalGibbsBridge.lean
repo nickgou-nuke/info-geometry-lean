@@ -26,12 +26,12 @@ open scoped BigOperators
 variable {α : Type*} [Fintype α] [Nonempty α]
 
 noncomputable def finiteGibbsModel
-    (params : GrandCanonicalTwoParam α) (μ : ℝ) :
+    (params : InfoGeometry.GrandCanonical.GrandCanonicalTwoParam α) (μ : ℝ) :
     FiniteGibbs.Model (Data := α) (Theta := Unit) :=
   fun x _ => shiftedEnergy params μ x
 
 theorem partitionGC_eq_finiteGibbs_partition
-    (params : GrandCanonicalTwoParam α) {β μ : ℝ} (hβ : 0 < β) :
+    (params : InfoGeometry.GrandCanonical.GrandCanonicalTwoParam α) {β μ : ℝ} (hβ : 0 < β) :
     partitionGC params β μ =
       partitionFunction (finiteGibbsModel params μ) () (1 / β) := by
   unfold partitionGC partitionFunction finiteGibbsModel
@@ -41,7 +41,7 @@ theorem partitionGC_eq_finiteGibbs_partition
   field_simp [ne_of_gt hβ]
 
 theorem gibbsWeightGC_eq_finiteGibbs_weight
-    (params : GrandCanonicalTwoParam α) {β μ : ℝ} (hβ : 0 < β) (x : α) :
+    (params : InfoGeometry.GrandCanonical.GrandCanonicalTwoParam α) {β μ : ℝ} (hβ : 0 < β) (x : α) :
     gibbsWeightGC params β μ x =
       weight (finiteGibbsModel params μ) () (1 / β) x := by
   unfold gibbsWeightGC weight finiteGibbsModel

@@ -12,13 +12,12 @@ namespace InfoGeometry.Canonical.B3FullTwistCentrality
 
 open InfoGeometry.Physics.B3PresentedGroup
 
-abbrev B3 := InfoGeometry.Physics.B3PresentedGroup.B3
-
-def fullTwistWord : B3 :=
+def fullTwistWord : InfoGeometry.Physics.B3PresentedGroup.B3 :=
   (PresentedGroup.of B3Gen.sig1 * PresentedGroup.of B3Gen.sig0) ^ 3
 
 def centralizerSubgroup {G : Type*} [Group G]
-    (ρ : B3 →* G) (z : G) : Subgroup B3 where
+    (ρ : InfoGeometry.Physics.B3PresentedGroup.B3 →* G) (z : G) :
+    Subgroup InfoGeometry.Physics.B3PresentedGroup.B3 where
   carrier := {x | Commute z (ρ x)}
   one_mem' := by
     simpa using (Commute.one_right z)
@@ -35,12 +34,14 @@ def centralizerSubgroup {G : Type*} [Group G]
     exact hx.inv_right
 
 theorem fullTwist_central_of_generator_commute
-    {G : Type*} [Group G] (ρ : B3 →* G)
+    {G : Type*} [Group G]
+    (ρ : InfoGeometry.Physics.B3PresentedGroup.B3 →* G)
     (h₀ : Commute (ρ (fullTwistWord))
       (ρ (PresentedGroup.of B3Gen.sig0)))
     (h₁ : Commute (ρ (fullTwistWord))
       (ρ (PresentedGroup.of B3Gen.sig1))) :
-    ∀ x : B3, Commute (ρ (fullTwistWord)) (ρ x) := by
+    ∀ x : InfoGeometry.Physics.B3PresentedGroup.B3,
+      Commute (ρ (fullTwistWord)) (ρ x) := by
   intro x
   let C := centralizerSubgroup ρ (ρ (fullTwistWord))
   have hgen : ∀ j : B3Gen, PresentedGroup.of j ∈ C := by

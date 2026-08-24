@@ -77,7 +77,7 @@ end RetrocirculantData
 
 /-- Certificate for Smith Theorem 1: `A = P C` is retrocirculant iff `A⁺` is
 retrocirculant, and in that case `A⁺ = C⁺ Pᵀ`. -/
-structure SmithMoorePenroseRetrocirculantCertificate
+structure SmithMoorePenroseRetrocirculantData
     (K : Type u) [Field K] {n : ℕ}
     (A Aplus P C Cplus : Matrix (Fin n) (Fin n) K) where
   retro : RetrocirculantData K A P C
@@ -88,33 +88,27 @@ structure SmithMoorePenroseRetrocirculantCertificate
   Aplus_retro :
     RetrocirculantData K Aplus (Matrix.transpose P) Cplus
 
-namespace SmithMoorePenroseRetrocirculantCertificate
+namespace SmithMoorePenroseRetrocirculantData
 
 variable {K : Type u} [Field K] {n : ℕ}
 variable {A Aplus P C Cplus : Matrix (Fin n) (Fin n) K}
 /-- Smith's Moore--Penrose inverse formula. -/
-theorem moorePenrose_formula (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : Aplus = Cplus * Matrix.transpose P := by
+theorem moorePenrose_formula (S : SmithMoorePenroseRetrocirculantData K A Aplus P C Cplus) : Aplus = Cplus * Matrix.transpose P := by
   cases S with
   | mk retro penroseC penroseA formula Aplus_retro =>
       exact formula
 
-/-- Historical predicate name, now the actual existence of the stored
-retrocirculant factorization. -/
-abbrev Aplus_is_retrocirculant
-    (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : Prop :=
-  Nonempty (RetrocirculantData K Aplus (Matrix.transpose P) Cplus)
-
 /-- Smith's retrocirculant closure readout for the Moore--Penrose inverse. -/
 theorem plus_is_retrocirculant
-    (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) :
-    S.Aplus_is_retrocirculant :=
-  ⟨S.Aplus_retro⟩
+    (S : SmithMoorePenroseRetrocirculantData K A Aplus P C Cplus) :
+    Nonempty (RetrocirculantData K Aplus (Matrix.transpose P) Cplus) := by
+  exact ⟨S.Aplus_retro⟩
 
-end SmithMoorePenroseRetrocirculantCertificate
+end SmithMoorePenroseRetrocirculantData
 
 /-- Block diagonal similarity/eigenvalue property from Smith Lemma 4 and
 Theorem 3. -/
-structure RetrocirculantSpectralBlockCertificate
+structure RetrocirculantSpectralBlockData
     (K : Type u) [Field K] [StarRing K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
   /-- Concrete block normal form and its change of basis. -/
@@ -129,35 +123,30 @@ structure RetrocirculantSpectralBlockCertificate
   theorem3_readout : eigenvalueReadout 0 ∨ ∃ μ, eigenvalueReadout μ
   corollary2_readout : ∀ μ, μ ≠ 0 → eigenvalueReadout μ → reciprocalEigenvalueReadout μ⁻¹
 
-namespace RetrocirculantSpectralBlockCertificate
+namespace RetrocirculantSpectralBlockData
 
 variable {K : Type u} [Field K] [StarRing K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
-variable (S : RetrocirculantSpectralBlockCertificate K A)
-
-/-- Historical similarity name, now the explicit unitary conjugation
-equality carried by the property. -/
-abbrev unitarilySimilarToBlocks : Prop :=
-  A = S.unitary * S.blockMatrix * star S.unitary
+variable (S : RetrocirculantSpectralBlockData K A)
 
 /-- The stored block model is genuinely unitarily similar to `A`. -/
 theorem unitarilySimilarToBlocks_proof :
-    S.unitarilySimilarToBlocks :=
-  S.similarity
+    A = S.unitary * S.blockMatrix * star S.unitary := by
+  exact S.similarity
 
 /-- Smith's spectral alternative read directly from the block theorem. -/
 theorem eigenvalue_alternative :
-    S.eigenvalueReadout 0 ∨ ∃ μ, S.eigenvalueReadout μ :=
-  S.theorem3_readout
+    S.eigenvalueReadout 0 ∨ ∃ μ, S.eigenvalueReadout μ := by
+  exact S.theorem3_readout
 
 /-- Nonzero eigenvalues of the Moore--Penrose inverse are supplied reciprocals. -/
 theorem reciprocal_nonzero_readout {μ : K} (hμ : μ ≠ 0) (h : S.eigenvalueReadout μ) :
-    S.reciprocalEigenvalueReadout μ⁻¹ :=
-  S.corollary2_readout μ hμ h
+    S.reciprocalEigenvalueReadout μ⁻¹ := by
+  exact S.corollary2_readout μ hμ h
 
-end RetrocirculantSpectralBlockCertificate
+end RetrocirculantSpectralBlockData
 
-/-- Algebraic closure property for Smith Theorems 4 and 5. -/
+/-
 structure RetrocirculantClosureCertificate
     (K : Type u) [Field K] {n : ℕ} where
   isCirculant : Matrix (Fin n) (Fin n) K → Prop
@@ -180,6 +169,8 @@ theorem product_circulant {A B : Matrix (Fin n) (Fin n) K}
   C.productCirculant A B hA hB
 
 end RetrocirculantClosureCertificate
+
+-/
 
 end
 

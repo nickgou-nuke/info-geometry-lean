@@ -29,17 +29,11 @@ noncomputable def diagonalKMSFunctional
       intro a c
       simp [Pi.smul_apply, Finset.mul_sum, mul_assoc] }
 
-theorem diagonalKMSFunctional_apply
-    (primes : Fin n → ℕ) (β : ℂ) (c : Fin n → ℂ) :
-    diagonalKMSFunctional primes β c =
-      ∑ i : Fin n, c i * kmsWeight n primes β i :=
-  rfl
-
 theorem diagonalKMSFunctional_one
     (primes : Fin n → ℕ) (β : ℂ)
     (hZ : primonPartition n primes β ≠ 0) :
     diagonalKMSFunctional primes β (fun _ => 1) = 1 := by
-  rw [diagonalKMSFunctional_apply]
+  change (∑ i : Fin n, (1 : ℂ) * kmsWeight n primes β i) = 1
   simpa using kmsWeight_sum_eq_one n primes β hZ
 
 theorem diagonalKMSFunctional_matrix_unit_readout
@@ -52,11 +46,5 @@ theorem diagonalKMSFunctional_matrix_unit_readout
   · subst hij
     rfl
   · simp [hij]
-
-theorem kmsWeight_eq_native
-    (primes : Fin n → ℕ) (β : ℂ) (i : Fin n) :
-    kmsWeight n primes β i =
-      (primes i : ℂ) ^ (-β) / primonPartition n primes β :=
-  kmsWeight_eq_boltzmann_div_partition n primes β i
 
 end InfoGeometry.Canonical

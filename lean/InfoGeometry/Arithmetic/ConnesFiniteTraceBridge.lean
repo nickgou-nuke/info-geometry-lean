@@ -69,10 +69,6 @@ theorem ideleScaleCharacter_compose
   simp [ideleScaleCharacter, IdeleClassLayer.compose, mul_add]
   rw [← Complex.exp_add]
 
-theorem ideleScaleCharacter_identity (s : ℂ) :
-    ideleScaleCharacter (IdeleClassLayer.identity : IdeleClassLayer G) s = 1 := by
-  simp [ideleScaleCharacter, IdeleClassLayer.identity]
-
 theorem ideleScaleCharacter_inverse
     (A : IdeleClassLayer G) (s : ℂ) :
     ideleScaleCharacter (IdeleClassLayer.inverse A) s =

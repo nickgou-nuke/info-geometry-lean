@@ -47,10 +47,6 @@ def rankOnePerturbation (D : H →ₗ[ℂ] H) (ξ η : H) : H →ₗ[ℂ] H :=
       D f - ⟪η, f⟫_ℂ • ξ := by
   simp [rankOnePerturbation]
 
-theorem rankOnePerturbation_eq_sub_rankOne
-    (D : H →ₗ[ℂ] H) (ξ η : H) :
-    rankOnePerturbation D ξ η = D - rankOneOperator ξ η := rfl
-
 theorem rankOnePerturbation_selfAdjoint
     (D : H →ₗ[ℂ] H)
     (hD : ∀ f g, ⟪f, D g⟫_ℂ = ⟪D f, g⟫_ℂ)

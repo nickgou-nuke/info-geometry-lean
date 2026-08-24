@@ -46,6 +46,16 @@ noncomputable def cornerOne
     (e : A) (he : e * e = e) : corner e he :=
   ⟨e, he, he⟩
 
+noncomputable def cornerZero
+    (e : A) (he : e * e = e) : corner e he :=
+  ⟨0, by simp, by simp⟩
+
+/-- An idempotent is primitive when it has no nonzero proper idempotent
+subelement.  This is only a predicate; no primitivity is assumed globally. -/
+def IsPrimitiveIdempotent (e : A) (he : e * e = e) : Prop :=
+  ∀ f : A, f * f = f → f * e = f → e * f = f →
+    f = 0 ∨ f = e
+
 theorem cornerMul_assoc
     (e : A) (he : e * e = e)
     (a b c : corner e he) :
@@ -185,6 +195,68 @@ theorem cornerEndEquiv_cornerOne
   apply Subtype.ext
   change x.1 * e = x.1
   exact x.2
+
+theorem cornerEndEquiv_cornerZero
+    (e : A) (he : e * e = e) :
+    cornerEndEquiv e he (cornerZero e he) =
+      (0 : Module.End A (principalLeftIdeal e he)) := by
+  apply LinearMap.ext
+  intro x
+  apply Subtype.ext
+  simp [cornerEndEquiv, cornerZero, rightCornerMap_apply]
+
+theorem idempotent_endomorphism_eq_zero_or_id_of_primitive
+    (e : A) (he : e * e = e)
+    (hprimitive : IsPrimitiveIdempotent e he)
+    (T : Module.End A (principalLeftIdeal e he))
+    (hT : T.comp T = T) :
+    T = 0 ∨ T = (LinearMap.id : Module.End A (principalLeftIdeal e he)) := by
+  let c : corner e he := corner_of_idempotent_endomorphism e he T
+  have hc : cornerMul e he c c = c := by
+    apply (cornerEndEquiv e he).injective
+    calc
+      cornerEndEquiv e he (cornerMul e he c c) =
+          (cornerEndEquiv e he c).comp (cornerEndEquiv e he c) := by
+        simpa [cornerEndEquiv] using
+          (rightCornerMap_comp e he c c).symm
+      _ = T.comp T := by
+        rw [show cornerEndEquiv e he c = T by
+          simpa [cornerEndEquiv] using
+            (corner_endomorphism_eq_rightCornerMap e he T).symm]
+      _ = T := hT
+      _ = cornerEndEquiv e he c :=
+        by simpa [cornerEndEquiv] using
+          (corner_endomorphism_eq_rightCornerMap e he T)
+  have hcorner : c = cornerZero e he ∨ c = cornerOne e he := by
+    have hsub_left : c.1 * e = c.1 := c.2.1
+    have hsub_right : e * c.1 = c.1 := c.2.2
+    rcases hprimitive c.1 (by
+      simpa [cornerMul] using congrArg Subtype.val hc) hsub_left hsub_right with h | h
+    · left
+      apply Subtype.ext
+      simpa [cornerZero] using h
+    · right
+      apply Subtype.ext
+      simpa [cornerOne] using h
+  rcases hcorner with h | h
+  · left
+    rw [← cornerEndEquiv_cornerZero e he]
+    simpa [cornerEndEquiv] using
+      (show T = cornerEndEquiv e he (cornerZero e he) by
+        calc
+          T = cornerEndEquiv e he c := by
+            simpa [cornerEndEquiv] using
+              (corner_endomorphism_eq_rightCornerMap e he T)
+          _ = cornerEndEquiv e he (cornerZero e he) := congrArg (cornerEndEquiv e he) h)
+  · right
+    rw [← cornerEndEquiv_cornerOne e he]
+    simpa [cornerEndEquiv] using
+      (show T = cornerEndEquiv e he (cornerOne e he) by
+        calc
+          T = cornerEndEquiv e he c := by
+            simpa [cornerEndEquiv] using
+              (corner_endomorphism_eq_rightCornerMap e he T)
+          _ = cornerEndEquiv e he (cornerOne e he) := congrArg (cornerEndEquiv e he) h)
 
 /-! The endomorphism equivalence is contravariant for corner
 multiplication: composition of right multiplications reverses the corner

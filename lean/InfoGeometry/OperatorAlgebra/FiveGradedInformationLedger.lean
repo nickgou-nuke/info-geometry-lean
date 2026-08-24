@@ -16,6 +16,7 @@ variable
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
 
+omit [LieAlgebra ℝ L] in
 /--
 Projected information accounting identity.
 

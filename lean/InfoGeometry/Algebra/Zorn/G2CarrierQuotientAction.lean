@@ -14,24 +14,23 @@ open InfoGeometry.Algebra.Zorn.G2GAPQuotientBridge
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
-abbrev Carrier := SplitOctF2Aut
-abbrev BorelQuotient := Carrier ⧸ unipotentSubgroup
+abbrev BorelQuotient := SplitOctF2Aut ⧸ unipotentSubgroup
 
-def act (g : Carrier) : BorelQuotient → BorelQuotient :=
+def act (g : SplitOctF2Aut) : BorelQuotient → BorelQuotient :=
   cosetAction unipotentSubgroup g
 
-@[simp] theorem act_mk (g x : Carrier) :
+@[simp] theorem act_mk (g x : SplitOctF2Aut) :
     act g (QuotientGroup.mk x) = QuotientGroup.mk (g * x) := by
   rfl
 
 theorem act_one (c : BorelQuotient) : act 1 c = c := by
   exact cosetAction_one unipotentSubgroup c
 
-theorem act_mul (g h : Carrier) (c : BorelQuotient) :
+theorem act_mul (g h : SplitOctF2Aut) (c : BorelQuotient) :
     act (g * h) c = act g (act h c) := by
   exact cosetAction_mul unipotentSubgroup g h c
 
-theorem base_stabilizer (g : Carrier) :
+theorem base_stabilizer (g : SplitOctF2Aut) :
     act g (QuotientGroup.mk 1 : BorelQuotient) = QuotientGroup.mk 1 ↔
       g ∈ unipotentSubgroup := by
   change QuotientGroup.mk (g * 1) = QuotientGroup.mk 1 ↔

@@ -19,7 +19,7 @@ noncomputable section
 
 theorem fPlus_mem_twoSidedSpan_fPlus :
     fPlus ∈ twoSidedSpan fPlus := by
-  simpa using (generator_mem_twoSidedSpan fPlus (1 : Sheet) (1 : Sheet))
+  simpa using (generator_mem_twoSidedSpan fPlus (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix))
 
 theorem fMinus_mem_twoSidedSpan_fPlus :
     fMinus ∈ twoSidedSpan fPlus := by
@@ -27,7 +27,7 @@ theorem fMinus_mem_twoSidedSpan_fPlus :
   simpa [fPlus, fMinus, cMinus_mul_uPlus, cMinus_mul_cPlus] using h
 
 theorem one_mem_twoSidedSpan_fPlus :
-    (1 : Sheet) ∈ twoSidedSpan fPlus := by
+    (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) ∈ twoSidedSpan fPlus := by
   rw [← fPlus_add_fMinus]
   exact (twoSidedSpan fPlus).add_mem
     fPlus_mem_twoSidedSpan_fPlus fMinus_mem_twoSidedSpan_fPlus
@@ -37,7 +37,7 @@ theorem twoSidedSpan_fPlus_eq_top :
   apply le_antisymm
   · exact le_top
   · intro x _
-    have hplus := generator_mem_twoSidedSpan fPlus x (1 : Sheet)
+    have hplus := generator_mem_twoSidedSpan fPlus x (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix)
     have hminus := generator_mem_twoSidedSpan fPlus (x * cMinus) cPlus
     have hplus' : x * fPlus ∈ twoSidedSpan fPlus := by
       simpa using hplus
@@ -56,19 +56,19 @@ theorem fPlus_mem_twoSidedSpan_fMinus :
   simpa [fPlus, fMinus, cPlus_mul_uMinus, cPlus_mul_cMinus] using h
 
 theorem one_mem_twoSidedSpan_fMinus :
-    (1 : Sheet) ∈ twoSidedSpan fMinus := by
+    (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) ∈ twoSidedSpan fMinus := by
   rw [← fPlus_add_fMinus]
   exact (twoSidedSpan fMinus).add_mem
     fPlus_mem_twoSidedSpan_fMinus
     (by simpa using
-      (generator_mem_twoSidedSpan fMinus (1 : Sheet) (1 : Sheet)))
+      (generator_mem_twoSidedSpan fMinus (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix)))
 
 theorem twoSidedSpan_fMinus_eq_top :
     twoSidedSpan fMinus = ⊤ := by
   apply le_antisymm
   · exact le_top
   · intro x _
-    have hminus := generator_mem_twoSidedSpan fMinus x (1 : Sheet)
+    have hminus := generator_mem_twoSidedSpan fMinus x (1 : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix)
     have hplus := generator_mem_twoSidedSpan fMinus (x * cPlus) cMinus
     have hminus' : x * fMinus ∈ twoSidedSpan fMinus := by
       simpa using hminus
@@ -107,7 +107,7 @@ theorem fMinus_generic_corner_eq_scalar_line
     _ = c.1 := c.2.1
 
 theorem fPlus_endomorphism_eq_scalar_rightCornerMap
-    (T : Module.End Sheet
+    (T : Module.End InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix
       (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal
         fPlus fPlus_idempotent)) :
     ∃ z : ℂ,
@@ -134,7 +134,7 @@ theorem fPlus_endomorphism_eq_scalar_rightCornerMap
     fPlus fPlus_idempotent T
 
 theorem fMinus_endomorphism_eq_scalar_rightCornerMap
-    (T : Module.End Sheet
+    (T : Module.End InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix
       (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal
         fMinus fMinus_idempotent)) :
     ∃ z : ℂ,

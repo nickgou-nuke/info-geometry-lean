@@ -111,6 +111,41 @@ theorem symplecticForm_smul_left
     x_smul, y_smul, map_smul, LinearMap.smul_apply, smul_eq_mul]
   ring
 
+/-! The symplectic form is nondegenerate once the stored trace pairing is.
+
+This is the exact hypothesis available at the present abstract datum level;
+no nondegeneracy of the cubic norm or of the quadratic adjoint is needed. -/
+theorem symplecticForm_nondegenerate_of_traceBilin_nondegenerate
+    (D : CubicJordanDatum J)
+    (htrace : ∀ x : J, (∀ y : J, D.traceBilin x y = 0) → x = 0) :
+    ∀ Q : FreudenthalCharge J,
+      (∀ P : FreudenthalCharge J,
+        FreudenthalCharge.symplecticForm D Q P = 0) → Q = 0 := by
+  intro Q hQ
+  have hβ : Q.beta = 0 := by
+    have h := hQ {alpha := 1, beta := 0, x := 0, y := 0}
+    simpa [FreudenthalCharge.symplecticForm] using h
+  have hα : Q.alpha = 0 := by
+    have h := hQ {alpha := 0, beta := 1, x := 0, y := 0}
+    simpa [FreudenthalCharge.symplecticForm] using h
+  have hx : Q.x = 0 := by
+    apply htrace Q.x
+    intro y
+    have h := hQ {alpha := 0, beta := 0, x := 0, y := y}
+    simpa [FreudenthalCharge.symplecticForm] using h
+  have hy : Q.y = 0 := by
+    apply htrace Q.y
+    intro x
+    have h := hQ {alpha := 0, beta := 0, x := x, y := 0}
+    have h' : D.traceBilin Q.y x = 0 := by
+      simpa [FreudenthalCharge.symplecticForm] using h
+    simpa [D.trace_comm] using h'
+  apply FreudenthalCharge.ext
+  · exact hα
+  · exact hβ
+  · exact hx
+  · exact hy
+
 @[simp] theorem symplecticForm_add_right
     (D : CubicJordanDatum J) (P Q R : FreudenthalCharge J) :
     FreudenthalCharge.symplecticForm D P (Q + R) =

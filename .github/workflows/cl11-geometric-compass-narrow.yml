@@ -1,0 +1,31 @@
+name: Cl11 Geometric Compass Narrow Check
+
+on:
+  pull_request:
+    paths:
+      - "lean/InfoGeometry/Clifford/Cl11GeometricCompass.lean"
+      - ".github/workflows/cl11-geometric-compass-narrow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  narrow-kernel-check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Lean toolchain
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build focused owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+          lake env lean lean/InfoGeometry/Clifford/Cl11GeometricCompass.lean

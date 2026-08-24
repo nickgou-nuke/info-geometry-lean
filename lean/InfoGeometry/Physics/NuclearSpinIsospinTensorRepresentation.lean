@@ -72,6 +72,34 @@ theorem isospin_action_preserves_commutator (A B : M2C) :
   rw [← TensorProduct.tmul_sub]
   simp
 
+theorem spin_action_preserves_square (A : M2C) (hA : A * A = 1) :
+    spinAction A * spinAction A = (1 : SpinPair) := by
+  unfold spinAction
+  rw [tmul_mul_tmul, hA]
+  simp [Algebra.TensorProduct.one_def]
+
+theorem isospin_action_preserves_square (A : M2C) (hA : A * A = 1) :
+    isospinAction A * isospinAction A = (1 : SpinPair) := by
+  unfold isospinAction
+  rw [tmul_mul_tmul, hA]
+  simp [Algebra.TensorProduct.one_def]
+
+theorem pauli_spin_squares :
+    spinAction I₁ * spinAction I₁ = (1 : SpinPair) ∧
+      spinAction I₂ * spinAction I₂ = (1 : SpinPair) ∧
+      spinAction I₃ * spinAction I₃ = (1 : SpinPair) := by
+  exact ⟨spin_action_preserves_square I₁ I₁_sq,
+    spin_action_preserves_square I₂ I₂_sq,
+    spin_action_preserves_square I₃ I₃_sq⟩
+
+theorem pauli_isospin_squares :
+    isospinAction I₁ * isospinAction I₁ = (1 : SpinPair) ∧
+      isospinAction I₂ * isospinAction I₂ = (1 : SpinPair) ∧
+      isospinAction I₃ * isospinAction I₃ = (1 : SpinPair) := by
+  exact ⟨isospin_action_preserves_square I₁ I₁_sq,
+    isospin_action_preserves_square I₂ I₂_sq,
+    isospin_action_preserves_square I₃ I₃_sq⟩
+
 theorem pauli_spin_comm_I₁_I₂ :
     spinAction I₁ * spinAction I₂ - spinAction I₂ * spinAction I₁ =
       (2 * Complex.I) • spinAction I₃ := by

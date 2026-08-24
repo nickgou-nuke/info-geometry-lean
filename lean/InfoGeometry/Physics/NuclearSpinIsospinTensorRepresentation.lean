@@ -59,6 +59,32 @@ theorem pauli_isospin_comm_I₁_I₂ :
   rw [isospin_action_preserves_commutator, I₁_comm_I₂]
   simp [isospinAction]
 
+theorem pauli_spin_comm_I₂_I₃ :
+    spinAction I₂ * spinAction I₃ - spinAction I₃ * spinAction I₂ =
+      (2 * Complex.I) • spinAction I₁ := by
+  rw [spin_action_preserves_commutator, I₂_comm_I₃]
+  simp [spinAction, TensorProduct.smul_tmul]
+
+theorem pauli_spin_comm_I₃_I₁ :
+    spinAction I₃ * spinAction I₁ - spinAction I₁ * spinAction I₃ =
+      (2 * Complex.I) • spinAction I₂ := by
+  rw [spin_action_preserves_commutator, I₃_comm_I₁]
+  simp [spinAction, TensorProduct.smul_tmul]
+
+theorem pauli_isospin_comm_I₂_I₃ :
+    isospinAction I₂ * isospinAction I₃ -
+        isospinAction I₃ * isospinAction I₂ =
+      (2 * Complex.I) • isospinAction I₁ := by
+  rw [isospin_action_preserves_commutator, I₂_comm_I₃]
+  simp [isospinAction]
+
+theorem pauli_isospin_comm_I₃_I₁ :
+    isospinAction I₃ * isospinAction I₁ -
+        isospinAction I₁ * isospinAction I₃ =
+      (2 * Complex.I) • isospinAction I₂ := by
+  rw [isospin_action_preserves_commutator, I₃_comm_I₁]
+  simp [isospinAction]
+
 end
 
 end InfoGeometry.Physics.NuclearSpinIsospinTensorRepresentation

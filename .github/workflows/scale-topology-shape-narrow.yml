@@ -1,0 +1,49 @@
+name: Scale Topology Shape Narrow Check
+
+on:
+  push:
+    branches:
+      - agent/scale-topology-shape-datum
+    paths:
+      - "lean/InfoGeometry/Canonical/ScaleTopologyShapeDatum.lean"
+      - ".github/workflows/scale-topology-shape-narrow.yml"
+  pull_request:
+    paths:
+      - "lean/InfoGeometry/Canonical/ScaleTopologyShapeDatum.lean"
+      - ".github/workflows/scale-topology-shape-narrow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  narrow-scale-topology-shape-check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Lean toolchain
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build focused owner in isolated Mathlib project
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="${RUNNER_TEMP}/scale-topology-shape-check"
+          mkdir -p "$work"
+          cd "$work"
+          cp "$GITHUB_WORKSPACE/lean-toolchain" lean-toolchain
+          cat > lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+          package scaleTopologyShapeCheck
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+          @[default_target]
+          lean_lib InfoGeometry
+          EOF
+          ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
+          lake update
+          lake exe cache get
+          lake build InfoGeometry.Canonical.ScaleTopologyShapeDatum

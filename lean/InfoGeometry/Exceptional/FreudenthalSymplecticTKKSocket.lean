@@ -232,6 +232,10 @@ theorem symplecticTKKClosureDatum_zeroGrade_jacobi
   rw [symplecticTKKClosureDatum_zeroBracket,
     symplecticTKKClosureDatum_zeroBracket,
     symplecticTKKClosureDatum_zeroBracket]
-  exact lie_jacobi T U V
+  have h := congrArg Neg.neg (lie_jacobi T U V)
+  simp only [neg_add, neg_neg] at h
+  simp only [lie_skew] at h ⊢
+  abel_nf at h ⊢
+  exact h
 
 end InfoGeometry.Exceptional.Freudenthal

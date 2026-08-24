@@ -70,6 +70,27 @@ def parametricFSymbol (τ s : ℂ) (a b c d e f : FibSimple) : ℂ :=
   | a, b, .unit, d, e, f => if e = d ∧ f = b ∧ a = e then 1 else 0
   | _, _, _, _, _, _ => 0
 
+/-- Explicit matrix carrier for the two-dimensional nontrivial Fibonacci
+fusion block. -/
+noncomputable def parametricFTauMatrix (τ s : ℂ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  fun i j =>
+    parametricFSymbol τ s FibSimple.tau FibSimple.tau FibSimple.tau
+      FibSimple.tau (if i = 0 then FibSimple.unit else FibSimple.tau)
+      (if j = 0 then FibSimple.unit else FibSimple.tau)
+
+theorem parametricFTauMatrix_eq_fibonacciFusionMatrix (τ s : ℂ) :
+    parametricFTauMatrix τ s = fibonacciFusionMatrix τ s := by
+  funext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [parametricFTauMatrix, parametricFSymbol, fibonacciFusionMatrix]
+
+theorem parametricFTauMatrix_sq
+    (τ s : ℂ) (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    parametricFTauMatrix τ s * parametricFTauMatrix τ s = 1 := by
+  rw [parametricFTauMatrix_eq_fibonacciFusionMatrix]
+  exact fibonacciFusionMatrix_sq hs hτ
+
 theorem parametricFSymbol_tau_block
     (τ s : ℂ) :
     (fun i j : Fin 2 =>

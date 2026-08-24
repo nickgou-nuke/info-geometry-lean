@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FibonacciHexagonEquationBridge
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import InfoGeometry.Categorical.FibonacciBraidedCategory
 import InfoGeometry.Categorical.FibonacciHexagon
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 
@@ -9,6 +10,7 @@ namespace InfoGeometry.Categorical.FibonacciSymbolCoherence
 
 open FibonacciHexagonEquationBridge
 open FibonacciHexagonEquationBridge.Hexagon
+open InfoGeometry.Categorical.FibonacciBraidedCategory
 open InfoGeometry.Categorical.FibonacciHexagon
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
@@ -90,6 +92,17 @@ theorem parametricFTauMatrix_sq
     parametricFTauMatrix τ s * parametricFTauMatrix τ s = 1 := by
   rw [parametricFTauMatrix_eq_fibonacciFusionMatrix]
   exact fibonacciFusionMatrix_sq hs hτ
+
+theorem parametricFTauMatrix_kron_identity_sq
+    (n : ℕ) (τ s : ℂ) (hs : s ^ 2 = τ)
+    (hτ : τ ^ 2 + τ = 1) :
+    kron (parametricFTauMatrix τ s)
+        (1 : Matrix (Fin n) (Fin n) ℂ) *
+      kron (parametricFTauMatrix τ s)
+        (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := by
+  rw [← kron_mul]
+  rw [parametricFTauMatrix_sq τ s hs hτ]
+  simp [kron]
 
 theorem parametricFSymbol_tau_block
     (τ s : ℂ) :

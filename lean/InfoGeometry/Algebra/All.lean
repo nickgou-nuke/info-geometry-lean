@@ -142,6 +142,7 @@ import InfoGeometry.Algebra.ScaleCocycleInvariant
 import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.IdempotentCornerCommutant
+import InfoGeometry.Algebra.IdempotentFiniteFullness
 import InfoGeometry.Algebra.AssociativeRegularCommutant
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
@@ -222,6 +223,7 @@ import InfoGeometry.Algebra.TripotentCuntzSUSYBridge
 import InfoGeometry.Algebra.NaryToeplitzWeightedTripotent
 import InfoGeometry.Algebra.NaryToeplitzMarkovTransfer
 import InfoGeometry.Algebra.FreudenthalKantorTripleSystem
+import InfoGeometry.Algebra.FreudenthalKantorOperator
 import InfoGeometry.Algebra.TripotentPeirceProjectorBridge
 import InfoGeometry.Algebra.ChiralOperatorSageTranslation
 import InfoGeometry.Algebra.ChiralOperatorEnvelope
@@ -243,7 +245,9 @@ import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornJordanProduct
 import InfoGeometry.Algebra.H3ZornFreudenthalQuartic
+import InfoGeometry.Algebra.SplitAlbertInnerTraceSpan
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
 import InfoGeometry.Algebra.SplitOctonionStandardDerivationThreeBracketBridge
 import InfoGeometry.Algebra.F4Derivations

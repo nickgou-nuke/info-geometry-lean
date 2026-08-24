@@ -39,4 +39,11 @@ theorem fLinearEquiv_self_inverse (τ s : ℂ)
   ext x
   simp [fLinearEquiv]
 
+theorem fLinearEquiv_trans_self (τ s : ℂ)
+    (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
+    (fLinearEquiv τ s hs hτ).trans (fLinearEquiv τ s hs hτ) =
+      LinearEquiv.refl ℂ FusionTree := by
+  rw [← fLinearEquiv_self_inverse τ s hs hτ]
+  exact (fLinearEquiv τ s hs hτ).self_trans_symm
+
 end InfoGeometry.Categorical.FibonacciFusionTreeLinearEquiv

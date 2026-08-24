@@ -38,6 +38,21 @@ abbrev StageOperator (F : ℕ ⥤ ModuleCat ℂ) := F ⟶ F
 def colimitOperator (s : StageOperator F) : Module.End ℂ (Carrier F) :=
   (colim.map s).hom
 
+omit [HasColimit F] in
+theorem colimitOperator_comp (s t : StageOperator F) :
+    colimitOperator (s ≫ t) = colimitOperator t * colimitOperator s := by
+  change (colim.map (s ≫ t)).hom = _
+  rw [colim.map_comp]
+  ext x
+  simp [colimitOperator, Module.End.mul_apply]
+
+omit [HasColimit F] in
+theorem colimitOperator_id :
+    colimitOperator (𝟙 F) = LinearMap.id := by
+  change (colim.map (𝟙 F)).hom = _
+  rw [colim.map_id]
+  rfl
+
 @[simp] theorem colimitOperator_on_stage
     (s : StageOperator F) (n : ℕ) (x : F.obj n) :
     colimitOperator s ((colimit.ι F n).hom x) =

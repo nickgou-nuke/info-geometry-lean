@@ -34,6 +34,40 @@ noncomputable def principalLeftIdeal (e : A) (he : e * e = e) : Submodule A A wh
 def corner (e : A) (he : e * e = e) : Type _ :=
   {c : A // c * e = c ∧ e * c = c}
 
+noncomputable def cornerMul
+    (e : A) (he : e * e = e)
+    (c d : corner e he) : corner e he :=
+  ⟨c.1 * d.1, by
+    constructor
+    · rw [mul_assoc, d.2.1]
+    · rw [← mul_assoc, c.2.2]⟩
+
+noncomputable def cornerOne
+    (e : A) (he : e * e = e) : corner e he :=
+  ⟨e, he, he⟩
+
+theorem cornerMul_assoc
+    (e : A) (he : e * e = e)
+    (a b c : corner e he) :
+    cornerMul e he (cornerMul e he a b) c =
+      cornerMul e he a (cornerMul e he b c) := by
+  apply Subtype.ext
+  exact mul_assoc a.1 b.1 c.1
+
+theorem cornerMul_one
+    (e : A) (he : e * e = e)
+    (a : corner e he) :
+    cornerMul e he a (cornerOne e he) = a := by
+  apply Subtype.ext
+  exact a.2.1
+
+theorem cornerOne_mul
+    (e : A) (he : e * e = e)
+    (a : corner e he) :
+    cornerMul e he (cornerOne e he) a = a := by
+  apply Subtype.ext
+  exact a.2.2
+
 noncomputable def rightCornerMap
     (e : A) (he : e * e = e)
     (c : corner e he) :
@@ -57,6 +91,25 @@ theorem rightCornerMap_apply
       change (x.1 * c.1) * e = x.1 * c.1
       rw [mul_assoc, c.2.1]
     ⟩ := rfl
+
+theorem rightCornerMap_comp_apply
+    (e : A) (he : e * e = e)
+    (c d : corner e he)
+    (x : principalLeftIdeal e he) :
+    rightCornerMap e he c (rightCornerMap e he d x) =
+      rightCornerMap e he (cornerMul e he d c) x := by
+  apply Subtype.ext
+  simp only [rightCornerMap_apply]
+  change (x.1 * d.1) * c.1 = x.1 * (d.1 * c.1)
+  rw [mul_assoc]
+
+theorem rightCornerMap_comp
+    (e : A) (he : e * e = e)
+    (c d : corner e he) :
+    (rightCornerMap e he c).comp (rightCornerMap e he d) =
+      rightCornerMap e he (cornerMul e he d c) := by
+  ext x
+  simpa [LinearMap.comp_apply] using rightCornerMap_comp_apply e he c d x
 
 noncomputable def corner_of_idempotent_endomorphism
     (e : A) (he : e * e = e)
@@ -122,5 +175,56 @@ noncomputable def cornerEndEquiv
   right_inv := by
     intro T
     exact (corner_endomorphism_eq_rightCornerMap e he T).symm
+
+theorem cornerEndEquiv_cornerOne
+    (e : A) (he : e * e = e) :
+    cornerEndEquiv e he (cornerOne e he) =
+      (LinearMap.id : Module.End A (principalLeftIdeal e he)) := by
+  apply LinearMap.ext
+  intro x
+  apply Subtype.ext
+  change x.1 * e = x.1
+  exact x.2
+
+/-! The endomorphism equivalence is contravariant for corner
+multiplication: composition of right multiplications reverses the corner
+factors.  This is the concrete opposite-algebra law; no primitivity or
+fullness is involved. -/
+
+theorem cornerEndEquiv_comp
+    (e : A) (he : e * e = e)
+    (c d : corner e he) :
+    cornerEndEquiv e he (cornerMul e he d c) =
+      (cornerEndEquiv e he c).comp (cornerEndEquiv e he d) := by
+  simpa [cornerEndEquiv] using (rightCornerMap_comp e he c d).symm
+
+/-! Evaluation at `e` exposes the opposite multiplication law directly:
+the corner representative of a composite endomorphism is obtained by
+reversing the corner factors.  This is the reusable Morita statement before
+bundling any additional algebra structure on the corner carrier. -/
+theorem corner_of_comp
+    (e : A) (he : e * e = e)
+    (T S : Module.End A (principalLeftIdeal e he)) :
+    corner_of_idempotent_endomorphism e he (T.comp S) =
+      cornerMul e he
+        (corner_of_idempotent_endomorphism e he S)
+        (corner_of_idempotent_endomorphism e he T) := by
+  apply (cornerEndEquiv e he).injective
+  calc
+    cornerEndEquiv e he
+        (corner_of_idempotent_endomorphism e he (T.comp S)) =
+        T.comp S := (cornerEndEquiv e he).right_inv (T.comp S)
+    _ = cornerEndEquiv e he
+        (cornerMul e he
+          (corner_of_idempotent_endomorphism e he S)
+          (corner_of_idempotent_endomorphism e he T)) := by
+      rw [cornerEndEquiv_comp]
+      have hT : cornerEndEquiv e he
+          (corner_of_idempotent_endomorphism e he T) = T := by
+        exact (corner_endomorphism_eq_rightCornerMap e he T).symm
+      have hS : cornerEndEquiv e he
+          (corner_of_idempotent_endomorphism e he S) = S := by
+        exact (corner_endomorphism_eq_rightCornerMap e he S).symm
+      rw [hT, hS]
 
 end InfoGeometry.Algebra.IdempotentCornerCommutant

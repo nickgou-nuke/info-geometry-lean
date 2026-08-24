@@ -49,6 +49,8 @@ import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl44Spinors
 import InfoGeometry.Clifford.Cl44SplitQuaternionSector
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11GeometricCompass
+import InfoGeometry.Clifford.Cl11HyperbolicStabilization
 import InfoGeometry.Clifford.Cl11TensorTowerKroneckerRangeRank
 import InfoGeometry.Clifford.Cl11TensorTowerNormalizedTrace
 import InfoGeometry.Clifford.SplitCliffordNativeTensorFinrank
@@ -63,6 +65,8 @@ import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
 import InfoGeometry.Clifford.Cl11SupergradedTensorBridge
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Clifford.Cl11StageTwoTrifactorGeometry
+import InfoGeometry.Clifford.Cl11LocalTrifactorFlows
 import InfoGeometry.Clifford.RealCantorOpLimit
 import InfoGeometry.Clifford.Cl11TensorTowerSupergraded
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
@@ -139,6 +143,7 @@ import InfoGeometry.Clifford.SplitQ11Sesquilinear
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.SplitQ11CausalCone
+import InfoGeometry.Clifford.Cl11CompassMoritaBridge
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 import InfoGeometry.Clifford.SplitCl44Complexification
@@ -259,6 +264,7 @@ import InfoGeometry.Clifford.SplitQuaternionMatrixModel
 import InfoGeometry.Clifford.SplitQuaternionChiralCone
 import InfoGeometry.Clifford.SplitOctonionChiralMatrixReadout
 import InfoGeometry.Clifford.SplitOctonionChiralMatrixProduct
+import InfoGeometry.Clifford.ChiralActionIdealTransport
 import InfoGeometry.Clifford.SplitOctonionChiralQuadraticComparison
 import InfoGeometry.Clifford.SplitOctonionChiralOperatorMatrix
 import InfoGeometry.Clifford.SplitOctonionChiralHadamard
@@ -289,6 +295,7 @@ import InfoGeometry.Clifford.Cl55SpinGroupChiralLinearEquivRepresentation
 import InfoGeometry.Clifford.SplitClifford55SpinChiralTransportBridge
 import InfoGeometry.Clifford.Cl55PinReflectionMatrixCoherence
 import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge
+import InfoGeometry.Clifford.Cl11GeometricCompass
 
 namespace InfoGeometry
 

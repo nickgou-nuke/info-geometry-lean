@@ -4403,6 +4403,7 @@ import InfoGeometry.Eval.SeedProverSmoke
 import InfoGeometry.Eval.SorryFillerTest
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.FreudenthalCl11Doublet
 import InfoGeometry.Exceptional.ModularFlowCUDA
 import InfoGeometry.Exceptional.RealVectorIdentities
 import InfoGeometry.Exceptional.SpinZornBridge
@@ -4410,6 +4411,18 @@ import InfoGeometry.Exceptional.SplitJordanPotential
 import InfoGeometry.Exceptional.SplitOctonionZorn
 import InfoGeometry.Exceptional.SplitOctonionZornReal
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Exceptional.STUFreudenthalPolarization
+import InfoGeometry.Exceptional.STUJordanTripleSystem
+import InfoGeometry.Exceptional.STUFreudenthalIdentity
+import InfoGeometry.Exceptional.STUFreudenthalKantorSystem
+import InfoGeometry.Exceptional.STUAdjointHomogeneity
+import InfoGeometry.Exceptional.STUFreudenthalQuarticScaling
+import InfoGeometry.Exceptional.STUQuarticPolarization
+import InfoGeometry.Exceptional.FreudenthalSymplecticMixedBracket
+import InfoGeometry.Exceptional.FreudenthalSymplecticTKKSocket
+import InfoGeometry.Exceptional.FreudenthalSymplecticAction
+import InfoGeometry.Exceptional.FreudenthalHeisenbergZeroGradeAction
+import InfoGeometry.Exceptional.FreudenthalHeisenbergLieRepresentation
 import InfoGeometry.Exceptional.TwistorZornEmbedding
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.ZornMatrixGeneric

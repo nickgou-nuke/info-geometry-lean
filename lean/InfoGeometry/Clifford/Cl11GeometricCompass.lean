@@ -481,7 +481,9 @@ theorem tensorWittCreation_sq :
 theorem tensorWittAnnihilation_sq :
     tensorWittAnnihilation * tensorWittAnnihilation = 0 := by
   apply cl11EquivMat.injective
-  simpa using InfoGeometry.Clifford.Cl11TensorTower.wittAnnihilationBase_sq
+  have h := InfoGeometry.Clifford.Cl11TensorTower.realEncodedWittAnnihilationBase_sq
+  rw [InfoGeometry.Clifford.Cl11TensorTower.realEncodedWittAnnihilationBase_eq] at h
+  simpa using h
 
 /-- The tensor-frame Witt atoms satisfy the one-site CAR relation. -/
 theorem tensorWitt_anticommute :

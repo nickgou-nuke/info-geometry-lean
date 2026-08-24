@@ -50,12 +50,14 @@ def volumeElement : Cl11 :=
 @[simp]
 theorem cl11EquivMat_spaceGenerator :
     cl11EquivMat spaceGenerator = Eplus := by
-  simpa [spaceGenerator] using cl11EquivMat_iota_pos
+  change cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) = Eplus
+  exact cl11EquivMat_iota_pos
 
 @[simp]
 theorem cl11EquivMat_timeGenerator :
     cl11EquivMat timeGenerator = Eminus := by
-  simpa [timeGenerator] using cl11EquivMat_iota_neg
+  change cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) = Eminus
+  exact cl11EquivMat_iota_neg
 
 @[simp]
 theorem cl11EquivMat_volumeElement :
@@ -72,7 +74,7 @@ theorem spaceGenerator_sq :
 theorem timeGenerator_sq :
     timeGenerator * timeGenerator = -(1 : Cl11) := by
   apply cl11EquivMat.injective
-  simp [Eminus_sq]
+  simp
 
 /-- The standard space and time generators anticommute. -/
 theorem space_time_anticommute :
@@ -85,7 +87,7 @@ theorem space_time_anticommute :
 theorem volumeElement_sq :
     volumeElement * volumeElement = (1 : Cl11) := by
   apply cl11EquivMat.injective
-  simp [J1_sq]
+  simp
 
 /-- Spatial reflection reverses the oriented volume element. -/
 theorem spaceGenerator_conjugates_volumeElement :
@@ -479,8 +481,7 @@ theorem tensorWittCreation_sq :
 theorem tensorWittAnnihilation_sq :
     tensorWittAnnihilation * tensorWittAnnihilation = 0 := by
   apply cl11EquivMat.injective
-  simpa using
-    InfoGeometry.Clifford.Cl11TensorTower.realEncodedWittAnnihilationBase_sq
+  simpa using InfoGeometry.Clifford.Cl11TensorTower.wittAnnihilationBase_sq
 
 /-- The tensor-frame Witt atoms satisfy the one-site CAR relation. -/
 theorem tensorWitt_anticommute :

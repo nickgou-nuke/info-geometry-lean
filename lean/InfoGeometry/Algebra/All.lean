@@ -344,7 +344,6 @@ import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointPermutation
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 import InfoGeometry.Algebra.Zorn.G2ExportedIncidenceGenerator
-import InfoGeometry.Algebra.Zorn.G2ExportedFlagGeneratorAction
 import InfoGeometry.Algebra.Zorn.G2InvariantIncidenceCandidates
 import InfoGeometry.Algebra.Zorn.G2ZornZeroProductIncidenceComparison
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge

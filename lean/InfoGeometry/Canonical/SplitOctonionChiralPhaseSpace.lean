@@ -255,6 +255,28 @@ theorem omega_paraJ_paraJ (X Y : Phase) :
 /-- The symmetric split metric induced by `omega` and `paraJ`. -/
 def paraMetric (X Y : Phase) : ℝ := omega X (paraJ Y)
 
+/-! ## Scalar readouts of the mixed chiral product
+
+These readouts keep the existing upper/lower Zorn embeddings as the carrier
+map.  No conjugation on the chained action algebra is assumed here.
+-/
+
+def mixedAlternatingScalar (X Y : Phase) : ℝ :=
+  (upperZorn X.1 * lowerZorn Y.2).a -
+    (upperZorn Y.1 * lowerZorn X.2).a
+
+def mixedSymmetricScalar (X Y : Phase) : ℝ :=
+  mixedAlternatingScalar X (paraJ Y)
+
+theorem mixedAlternatingScalar_eq_omega (X Y : Phase) :
+    mixedAlternatingScalar X Y = omega X Y := by
+  exact (omega_eq_zorn_mixed_readout X Y).symm
+
+theorem mixedSymmetricScalar_eq_paraMetric (X Y : Phase) :
+    mixedSymmetricScalar X Y = paraMetric X Y := by
+  rw [mixedSymmetricScalar, mixedAlternatingScalar_eq_omega]
+  rfl
+
 theorem paraMetric_symm (X Y : Phase) :
     paraMetric X Y = paraMetric Y X := by
   rcases X with ⟨q, p⟩

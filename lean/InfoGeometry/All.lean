@@ -1234,7 +1234,6 @@ import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.CayleyDicksonEmbedding
 import InfoGeometry.Canonical.CayleyDicksonIter
-import InfoGeometry.Canonical.CayleyDicksonTower
 import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 import InfoGeometry.Canonical.CayleyMobiusPowerLaws
 import InfoGeometry.Canonical.CCRCompatiblePointColimit
@@ -3009,6 +3008,7 @@ import InfoGeometry.Canonical.RadonNikodymFisherMetricBridge
 import InfoGeometry.Canonical.RationalHodgeSectorIntertwiner
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.MassiveDoubledZitterbewegung
 import InfoGeometry.Canonical.RealBdGNambuGorkovFusion
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.RealBerryRotorBridge

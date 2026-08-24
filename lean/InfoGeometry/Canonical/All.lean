@@ -2465,6 +2465,7 @@ import InfoGeometry.Canonical.QuasilatticeDirac
 import InfoGeometry.Canonical.QuasilatticeWaveMechanicsBridge
 import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.MassiveDoubledZitterbewegung
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.RealBerryRotorBridge

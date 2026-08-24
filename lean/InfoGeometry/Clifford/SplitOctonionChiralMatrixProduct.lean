@@ -192,6 +192,40 @@ def chiralCoordinateConj : (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) where
     funext i
     fin_cases i <;> simp [chiralCayleyConjCoordinates]
 
+@[simp] theorem chiralCoordinateConj_involutive (x : Fin 8 → ℝ) :
+    chiralCoordinateConj (chiralCoordinateConj x) = x := by
+  funext i
+  fin_cases i <;> simp [chiralCoordinateConj, chiralCayleyConjCoordinates]
+
+theorem chiralCoordinateConj_preserves_quadratic (c : Fin 8 → ℝ) :
+    chiralQuadratic (chiralCoordinateConj c) = chiralQuadratic c := by
+  simp [chiralQuadratic_apply, chiralCoordinateConj,
+    chiralCayleyConjCoordinates]
+  ring
+
+theorem chiralCoordinateConj_preserves_polar
+    (x y : Fin 8 → ℝ) :
+    QuadraticMap.polar (⇑chiralQuadratic)
+        (chiralCoordinateConj x) (chiralCoordinateConj y) =
+      QuadraticMap.polar (⇑chiralQuadratic) x y := by
+  change chiralQuadratic (chiralCoordinateConj x + chiralCoordinateConj y) -
+      chiralQuadratic (chiralCoordinateConj x) -
+        chiralQuadratic (chiralCoordinateConj y) =
+    chiralQuadratic (x + y) - chiralQuadratic x - chiralQuadratic y
+  rw [← chiralCoordinateConj.map_add, chiralCoordinateConj_preserves_quadratic,
+    chiralCoordinateConj_preserves_quadratic,
+    chiralCoordinateConj_preserves_quadratic]
+
+theorem chiralCoordinateConj_product (x y : Fin 8 → ℝ) :
+    chiralCoordinateConj (chiralCoordinateProduct x y) =
+      chiralCoordinateProduct (chiralCoordinateConj y)
+        (chiralCoordinateConj x) := by
+  funext i
+  fin_cases i <;>
+    simp [chiralCoordinateConj, chiralCoordinateProduct,
+      chiralCayleyConjCoordinates, chiralZornProductCoordinates] <;>
+    ring
+
 def chiralCoordinateLeft (x : Fin 8 → ℝ) :
     (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) where
   toFun := chiralCoordinateProduct x
@@ -199,6 +233,22 @@ def chiralCoordinateLeft (x : Fin 8 → ℝ) :
     exact chiralCoordinateProduct_add_right x y z
   map_smul' a y := by
     exact chiralCoordinateProduct_smul_right a x y
+
+def chiralCoordinateRight (x : Fin 8 → ℝ) :
+    (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) where
+  toFun := fun y => chiralCoordinateProduct y x
+  map_add' y z := by
+    exact chiralCoordinateProduct_add_left y z x
+  map_smul' a y := by
+    exact chiralCoordinateProduct_smul_left a y x
+
+theorem chiralCoordinateConj_left_right (x y : Fin 8 → ℝ) :
+    chiralCoordinateConj (chiralCoordinateLeft x
+      (chiralCoordinateConj y)) =
+      chiralCoordinateRight (chiralCoordinateConj x) y := by
+  simpa only [chiralCoordinateLeft, chiralCoordinateRight,
+    chiralCoordinateConj_involutive] using
+    chiralCoordinateConj_product x (chiralCoordinateConj y)
 
 def chiralCoordinateGamma :
     (Fin 8 → ℝ) →ₗ[ℝ]
@@ -289,6 +339,16 @@ noncomputable def chiralCliffordRepresentation :
 
 abbrev ChiralCayley := chiralCayleyCarrier
 
+noncomputable def chiralCayleyConj : ChiralCayley →ₗ[ℝ] ChiralCayley :=
+  chiralCoordinatesEquiv.toLinearMap.comp
+    (chiralCoordinateConj.comp chiralCoordinatesEquiv.symm.toLinearMap)
+
+@[simp] theorem chiralCayleyConj_involutive (x : ChiralCayley) :
+    chiralCayleyConj (chiralCayleyConj x) = x := by
+  apply chiralCoordinatesEquiv.symm.injective
+  simpa [chiralCayleyConj] using
+    chiralCoordinateConj_involutive (chiralCoordinatesEquiv.symm x)
+
 noncomputable def chiralCayleyQuadratic :
     QuadraticForm ℝ ChiralCayley :=
   QuadraticMap.comp chiralQuadratic (chiralCoordinatesEquiv.symm).toLinearMap
@@ -297,6 +357,25 @@ noncomputable def chiralCayleyQuadratic :
     (x : ChiralCayley) :
     chiralCayleyQuadratic x = chiralQuadratic (chiralCoordinatesEquiv.symm x) := by
   rfl
+
+theorem chiralCayleyConj_preserves_quadratic (x : ChiralCayley) :
+    chiralCayleyQuadratic (chiralCayleyConj x) =
+      chiralCayleyQuadratic x := by
+  simp only [chiralCayleyQuadratic_apply]
+  simpa [chiralCayleyConj] using
+    chiralCoordinateConj_preserves_quadratic
+      (chiralCoordinatesEquiv.symm x)
+
+noncomputable def chiralCayleyConjIsometry :
+    chiralCayleyQuadratic.IsometryEquiv chiralCayleyQuadratic where
+  toLinearEquiv :=
+    { toFun := chiralCayleyConj
+      invFun := chiralCayleyConj
+      left_inv := chiralCayleyConj_involutive
+      right_inv := chiralCayleyConj_involutive
+      map_add' := chiralCayleyConj.map_add
+      map_smul' := chiralCayleyConj.map_smul }
+  map_app' := chiralCayleyConj_preserves_quadratic
 
 noncomputable def chiralCayleyPairEquiv :
     ((Fin 8 → ℝ) × (Fin 8 → ℝ)) ≃ₗ[ℝ]
@@ -321,6 +400,114 @@ noncomputable def chiralCayleyLeftAction (x : ChiralCayley) :
           (chiralCoordinatesEquiv.symm y)) := by
   rfl
 
+noncomputable def chiralCayleyRightAction (x : ChiralCayley) :
+    ChiralCayley →ₗ[ℝ] ChiralCayley :=
+  chiralCoordinatesEquiv.toLinearMap.comp
+    ((chiralCoordinateRight (chiralCoordinatesEquiv.symm x)).comp
+      chiralCoordinatesEquiv.symm.toLinearMap)
+
+@[simp] theorem chiralCayleyRightAction_apply
+    (x y : ChiralCayley) :
+    chiralCayleyRightAction x y =
+      chiralCoordinatesEquiv
+        (chiralCoordinateProduct (chiralCoordinatesEquiv.symm y)
+          (chiralCoordinatesEquiv.symm x)) := by
+  rfl
+
+def chiralCayleyConjugateAction
+    (T : Module.End ℝ ChiralCayley) : Module.End ℝ ChiralCayley :=
+  chiralCayleyConj.comp (T.comp chiralCayleyConj)
+
+@[simp] theorem chiralCayleyConjugateAction_involutive
+    (T : Module.End ℝ ChiralCayley) :
+    chiralCayleyConjugateAction
+        (chiralCayleyConjugateAction T) = T := by
+  apply LinearMap.ext
+  intro x
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+
+theorem chiralCayleyConjugateAction_comp
+    (S T : Module.End ℝ ChiralCayley) :
+    chiralCayleyConjugateAction (S.comp T) =
+      (chiralCayleyConjugateAction S).comp
+        (chiralCayleyConjugateAction T) := by
+  apply LinearMap.ext
+  intro x
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+
+theorem chiralCayleyConjugateAction_add
+    (C D : Module.End ℝ ChiralCayley) :
+    chiralCayleyConjugateAction (C + D) =
+      chiralCayleyConjugateAction C + chiralCayleyConjugateAction D := by
+  apply LinearMap.ext
+  intro x
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+
+theorem chiralCayleyConjugateAction_algebraMap (r : ℝ) :
+    chiralCayleyConjugateAction
+        (algebraMap ℝ (Module.End ℝ ChiralCayley) r) =
+      algebraMap ℝ (Module.End ℝ ChiralCayley) r := by
+  apply LinearMap.ext
+  intro x
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply,
+    Algebra.smul_def]
+
+noncomputable def chiralCayleyConjugateActionRingEquiv :
+    Module.End ℝ ChiralCayley ≃+* Module.End ℝ ChiralCayley where
+  toFun := chiralCayleyConjugateAction
+  invFun := chiralCayleyConjugateAction
+  left_inv T := chiralCayleyConjugateAction_involutive T
+  right_inv T := chiralCayleyConjugateAction_involutive T
+  map_mul' S T := by
+    change chiralCayleyConjugateAction (S.comp T) =
+      chiralCayleyConjugateAction S * chiralCayleyConjugateAction T
+    rw [chiralCayleyConjugateAction_comp]
+    rfl
+  map_add' S T := chiralCayleyConjugateAction_add S T
+
+noncomputable def chiralCayleyConjugateActionAlgHom :
+    Module.End ℝ ChiralCayley →ₐ[ℝ] Module.End ℝ ChiralCayley :=
+  { toRingHom := chiralCayleyConjugateActionRingEquiv.toRingHom
+    commutes' := fun r => chiralCayleyConjugateAction_algebraMap r }
+
+theorem chiralCayleyConj_left_right (x y : ChiralCayley) :
+    chiralCayleyConj
+        (chiralCayleyLeftAction x (chiralCayleyConj y)) =
+      chiralCayleyRightAction (chiralCayleyConj x) y := by
+  apply chiralCoordinatesEquiv.symm.injective
+  simpa [chiralCayleyConj, chiralCayleyLeftAction,
+    chiralCayleyRightAction] using
+    chiralCoordinateConj_left_right
+      (chiralCoordinatesEquiv.symm x) (chiralCoordinatesEquiv.symm y)
+
+theorem chiralCayleyConjugateAction_left
+    (x : ChiralCayley) :
+    chiralCayleyConjugateAction (chiralCayleyLeftAction x) =
+      chiralCayleyRightAction (chiralCayleyConj x) := by
+  apply LinearMap.ext
+  intro y
+  exact chiralCayleyConj_left_right x y
+
+theorem chiralCayleyConjugateAction_right
+    (x : ChiralCayley) :
+    chiralCayleyConjugateAction (chiralCayleyRightAction x) =
+      chiralCayleyLeftAction (chiralCayleyConj x) := by
+  have h := congrArg chiralCayleyConjugateAction
+    (chiralCayleyConjugateAction_left (chiralCayleyConj x))
+  symm
+  simpa [chiralCayleyConjugateAction_involutive] using h
+
+noncomputable def chiralCayleyChainedRightActionAlgebra :
+    Subalgebra ℝ (Module.End ℝ ChiralCayley) :=
+  Algebra.adjoin ℝ (Set.range chiralCayleyRightAction)
+
+theorem chiralCayleyConjugateAction_left_mem_rightAlgebra
+    (x : ChiralCayley) :
+    chiralCayleyConjugateAction (chiralCayleyLeftAction x) ∈
+      chiralCayleyChainedRightActionAlgebra := by
+  rw [chiralCayleyConjugateAction_left]
+  exact Algebra.subset_adjoin ⟨chiralCayleyConj x, rfl⟩
+
 noncomputable def chiralCayleyChainedLeftActionAlgebra :
     Subalgebra ℝ (Module.End ℝ ChiralCayley) :=
   Algebra.adjoin ℝ (Set.range chiralCayleyLeftAction)
@@ -328,6 +515,115 @@ noncomputable def chiralCayleyChainedLeftActionAlgebra :
 theorem chiralCayleyLeftAction_mem_chainedAlgebra (x : ChiralCayley) :
     chiralCayleyLeftAction x ∈ chiralCayleyChainedLeftActionAlgebra := by
   exact Algebra.subset_adjoin ⟨x, rfl⟩
+
+theorem chiralCayleyConjugateAction_left_mem_rightAlgebra_of_mem
+    {T : Module.End ℝ ChiralCayley}
+    (hT : T ∈ chiralCayleyChainedLeftActionAlgebra) :
+    chiralCayleyConjugateAction T ∈
+      chiralCayleyChainedRightActionAlgebra := by
+  refine Algebra.adjoin_induction
+    (p := fun C _ => chiralCayleyConjugateAction C ∈
+      chiralCayleyChainedRightActionAlgebra)
+    ?_ ?_ ?_ ?_ hT
+  · intro x hx
+    rcases hx with ⟨x, rfl⟩
+    exact chiralCayleyConjugateAction_left_mem_rightAlgebra x
+  · intro r
+    rw [chiralCayleyConjugateAction_algebraMap]
+    exact chiralCayleyChainedRightActionAlgebra.algebraMap_mem r
+  · intro C D hC hD hC' hD'
+    rw [chiralCayleyConjugateAction_add]
+    exact chiralCayleyChainedRightActionAlgebra.add_mem hC' hD'
+  · intro C D hC hD hC' hD'
+    rw [show C * D = C.comp D by rfl,
+      chiralCayleyConjugateAction_comp]
+    exact chiralCayleyChainedRightActionAlgebra.mul_mem hC' hD'
+
+theorem chiralCayleyChainedRightActionAlgebra_eq_map_left :
+    chiralCayleyChainedRightActionAlgebra =
+      chiralCayleyChainedLeftActionAlgebra.map
+        chiralCayleyConjugateActionAlgHom := by
+  apply le_antisymm
+  · change Algebra.adjoin ℝ (Set.range chiralCayleyRightAction) ≤ _
+    refine Algebra.adjoin_le ?_
+    intro T hT
+    rcases hT with ⟨x, rfl⟩
+    refine Subalgebra.mem_map.mpr ⟨chiralCayleyLeftAction (chiralCayleyConj x),
+      chiralCayleyLeftAction_mem_chainedAlgebra _, ?_⟩
+    have hgen : chiralCayleyConjugateActionAlgHom
+          (chiralCayleyLeftAction (chiralCayleyConj x)) =
+        chiralCayleyRightAction x := by
+      change chiralCayleyConjugateAction
+          (chiralCayleyLeftAction (chiralCayleyConj x)) =
+        chiralCayleyRightAction x
+      rw [chiralCayleyConjugateAction_left]
+      simp
+    exact hgen
+  · rw [Subalgebra.map_le]
+    intro T hT
+    exact chiralCayleyConjugateAction_left_mem_rightAlgebra_of_mem hT
+
+theorem chiralCayleyConjugateAction_right_mem_leftAlgebra_of_mem
+    {T : Module.End ℝ ChiralCayley}
+    (hT : T ∈ chiralCayleyChainedRightActionAlgebra) :
+    chiralCayleyConjugateAction T ∈
+      chiralCayleyChainedLeftActionAlgebra := by
+  refine Algebra.adjoin_induction
+    (p := fun C _ => chiralCayleyConjugateAction C ∈
+      chiralCayleyChainedLeftActionAlgebra)
+    ?_ ?_ ?_ ?_ hT
+  · intro x hx
+    rcases hx with ⟨x, rfl⟩
+    rw [chiralCayleyConjugateAction_right]
+    exact chiralCayleyLeftAction_mem_chainedAlgebra (chiralCayleyConj x)
+  · intro r
+    rw [chiralCayleyConjugateAction_algebraMap]
+    exact chiralCayleyChainedLeftActionAlgebra.algebraMap_mem r
+  · intro C D hC hD hC' hD'
+    rw [chiralCayleyConjugateAction_add]
+    exact chiralCayleyChainedLeftActionAlgebra.add_mem hC' hD'
+  · intro C D hC hD hC' hD'
+    rw [show C * D = C.comp D by rfl,
+      chiralCayleyConjugateAction_comp]
+    exact chiralCayleyChainedLeftActionAlgebra.mul_mem hC' hD'
+
+theorem chiralCayleyConjugateAction_mem_right_iff
+    (T : Module.End ℝ ChiralCayley) :
+    chiralCayleyConjugateAction T ∈
+        chiralCayleyChainedRightActionAlgebra ↔
+      T ∈ chiralCayleyChainedLeftActionAlgebra := by
+  constructor
+  · intro hT
+    have h := chiralCayleyConjugateAction_right_mem_leftAlgebra_of_mem hT
+    simpa [chiralCayleyConjugateAction_involutive] using h
+  · exact chiralCayleyConjugateAction_left_mem_rightAlgebra_of_mem
+
+/-- The ambient Cayley-conjugation transport restricts to an algebra
+equivalence between the two chained action subalgebras. -/
+noncomputable def chiralCayleyChainedActionAlgEquiv :
+    chiralCayleyChainedLeftActionAlgebra ≃ₐ[ℝ]
+      chiralCayleyChainedRightActionAlgebra where
+  toFun T :=
+    ⟨chiralCayleyConjugateAction T.1,
+      chiralCayleyConjugateAction_left_mem_rightAlgebra_of_mem T.2⟩
+  invFun T :=
+    ⟨chiralCayleyConjugateAction T.1,
+      chiralCayleyConjugateAction_right_mem_leftAlgebra_of_mem T.2⟩
+  left_inv T := by
+    apply Subtype.ext
+    exact chiralCayleyConjugateAction_involutive T.1
+  right_inv T := by
+    apply Subtype.ext
+    exact chiralCayleyConjugateAction_involutive T.1
+  map_mul' S T := by
+    apply Subtype.ext
+    exact chiralCayleyConjugateAction_comp S.1 T.1
+  map_add' S T := by
+    apply Subtype.ext
+    exact chiralCayleyConjugateAction_add S.1 T.1
+  commutes' r := by
+    apply Subtype.ext
+    exact chiralCayleyConjugateAction_algebraMap r
 
 def chiralCayleyGamma (x : ChiralCayley) :
     (ChiralCayley × ChiralCayley) →ₗ[ℝ]

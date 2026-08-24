@@ -113,7 +113,7 @@ def leftTauFInputTwo (X Y Z : FibObject) (i : Fin (TauTripleMultiplicity X Y Z))
 
 def rightTauFOutputOne (X Y Z : FibObject) (i : Fin (TauTripleMultiplicity X Y Z)) :
     RightTauFusionPathIndex X Y Z :=
-  Sum.inr (Sum.inr (Sum.inr (Sum.inr i)))
+  Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i))))
 
 def rightTauFOutputTwo (X Y Z : FibObject) (i : Fin (TauTripleMultiplicity X Y Z)) :
     RightTauFusionPathIndex X Y Z :=
@@ -130,22 +130,140 @@ def rightTauFOutputTwo (X Y Z : FibObject) (i : Fin (TauTripleMultiplicity X Y Z
     (X Y Z : FibObject) :
     Function.Injective (leftTauFInputTwo X Y Z) := by
   intro i j h
-  repeat' first | apply Sum.inr.inj | apply Sum.inl.inj
-  exact h
+  injection h
 
 @[simp] theorem rightTauFOutputOne_injective
     (X Y Z : FibObject) :
     Function.Injective (rightTauFOutputOne X Y Z) := by
   intro i j h
-  repeat' first | apply Sum.inr.inj | apply Sum.inl.inj
-  exact h
+  injection h
 
 @[simp] theorem rightTauFOutputTwo_injective
     (X Y Z : FibObject) :
     Function.Injective (rightTauFOutputTwo X Y Z) := by
   intro i j h
-  repeat' first | apply Sum.inr.inj | apply Sum.inl.inj
-  exact h
+  injection h
+
+/-! The `F` block before reindexing it into the full channel carrier. -/
+
+noncomputable def tauTripleFMatrix (n : ℕ) (τ s : ℂ) :
+    Matrix (Sum (Fin n) (Fin n)) (Sum (Fin n) (Fin n)) ℂ :=
+  fun i j => match i, j with
+  | Sum.inl i, Sum.inl j => if i = j then τ else 0
+  | Sum.inl i, Sum.inr j => if i = j then s else 0
+  | Sum.inr i, Sum.inl j => if i = j then s else 0
+  | Sum.inr i, Sum.inr j => if i = j then -τ else 0
+
+@[simp] theorem tauTripleFMatrix_inl_inl
+    (n : ℕ) (τ s : ℂ) (i j : Fin n) :
+    tauTripleFMatrix n τ s (Sum.inl i) (Sum.inl j) =
+      if i = j then τ else 0 := by
+  rfl
+
+@[simp] theorem tauTripleFMatrix_inl_inr
+    (n : ℕ) (τ s : ℂ) (i j : Fin n) :
+    tauTripleFMatrix n τ s (Sum.inl i) (Sum.inr j) =
+      if i = j then s else 0 := by
+  rfl
+
+@[simp] theorem tauTripleFMatrix_inr_inl
+    (n : ℕ) (τ s : ℂ) (i j : Fin n) :
+    tauTripleFMatrix n τ s (Sum.inr i) (Sum.inl j) =
+      if i = j then s else 0 := by
+  rfl
+
+@[simp] theorem tauTripleFMatrix_inr_inr
+    (n : ℕ) (τ s : ℂ) (i j : Fin n) :
+    tauTripleFMatrix n τ s (Sum.inr i) (Sum.inr j) =
+      if i = j then -τ else 0 := by
+  rfl
+
+noncomputable def tauTripleFBlockMatrix (n : ℕ) (τ s : ℂ) :
+    Matrix (Fin (n + n)) (Fin (n + n)) ℂ :=
+  Matrix.fromBlocks
+    (τ • (1 : Matrix (Fin n) (Fin n) ℂ))
+    (s • (1 : Matrix (Fin n) (Fin n) ℂ))
+    (s • (1 : Matrix (Fin n) (Fin n) ℂ))
+    ((-τ) • (1 : Matrix (Fin n) (Fin n) ℂ))
+
+theorem tauTripleFMatrix_eq_reindex_block
+    (n : ℕ) (τ s : ℂ) :
+    tauTripleFMatrix n τ s =
+      Matrix.reindex finSumFinEquiv.symm finSumFinEquiv.symm
+        (tauTripleFBlockMatrix n τ s) := by
+  ext i j
+  cases i with
+  | inl i =>
+      cases j with
+      | inl j => simp [tauTripleFMatrix, tauTripleFBlockMatrix, Matrix.reindex]
+      | inr j => simp [tauTripleFMatrix, tauTripleFBlockMatrix, Matrix.reindex]
+  | inr i =>
+      cases j with
+      | inl j => simp [tauTripleFMatrix, tauTripleFBlockMatrix, Matrix.reindex]
+      | inr j => simp [tauTripleFMatrix, tauTripleFBlockMatrix, Matrix.reindex]
+
+theorem tauTripleFMatrix_sq
+    (n : ℕ) (τ s : ℂ) (hs : s ^ 2 = τ)
+    (hτ : τ ^ 2 + τ = 1) :
+    tauTripleFMatrix n τ s * tauTripleFMatrix n τ s = 1 := by
+  rw [tauTripleFMatrix_eq_reindex_block,
+    tauTripleFMatrix_eq_reindex_block]
+  rw [← InfoGeometry.Categorical.FibonacciBraidedCategory.reindex_mul]
+  rw [Matrix.fromBlocks_multiply]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul,
+    Matrix.one_mul, Matrix.mul_one, Matrix.zero_mul, Matrix.mul_zero,
+    add_zero, zero_add]
+  have hτ' : τ * τ + s * s = 1 := by
+    rw [← hs]
+    exact hτ
+  have hcross : τ * s + s * (-τ) = 0 := by ring
+  have hcross' : s * τ + (-τ) * s = 0 := by ring
+  simp [hτ', hcross, hcross', Matrix.fromBlocks_one]
+
+/-! The complementary six paths, which are transported unchanged. -/
+
+abbrev LeftTauOutsidePathIndex (X Y Z : FibObject) : Type :=
+  Sum (Fin (X FibSimple.unit * Y FibSimple.unit * Z FibSimple.tau))
+    (Sum (Fin (X FibSimple.unit * Y FibSimple.tau * Z FibSimple.unit))
+    (Sum (Fin (X FibSimple.tau * Y FibSimple.unit * Z FibSimple.unit))
+    (Sum (Fin (X FibSimple.tau * Y FibSimple.tau * Z FibSimple.unit))
+    (Sum (Fin (X FibSimple.unit * Y FibSimple.tau * Z FibSimple.tau))
+         (Fin (X FibSimple.tau * Y FibSimple.unit * Z FibSimple.tau))))))
+
+abbrev RightTauOutsidePathIndex (X Y Z : FibObject) : Type :=
+  Sum (Fin (X FibSimple.unit * Y FibSimple.unit * Z FibSimple.tau))
+    (Sum (Fin (X FibSimple.unit * Y FibSimple.tau * Z FibSimple.unit))
+    (Sum (Fin (X FibSimple.unit * Y FibSimple.tau * Z FibSimple.tau))
+    (Sum (Fin (X FibSimple.tau * Y FibSimple.unit * Z FibSimple.unit))
+    (Sum (Fin (X FibSimple.tau * Y FibSimple.unit * Z FibSimple.tau))
+         (Fin (X FibSimple.tau * Y FibSimple.tau * Z FibSimple.unit))))))
+
+def leftTauOutsideToRight
+    (X Y Z : FibObject) :
+    LeftTauOutsidePathIndex X Y Z ≃ RightTauOutsidePathIndex X Y Z where
+  toFun := fun i => match i with
+    | Sum.inl i => Sum.inl i
+    | Sum.inr (Sum.inl i) => Sum.inr (Sum.inl i)
+    | Sum.inr (Sum.inr (Sum.inl i)) => Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inl i))) =>
+        Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))) =>
+        Sum.inr (Sum.inr (Sum.inl i))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inr i)))) =>
+        Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i))))
+  invFun := fun i => match i with
+    | Sum.inl i => Sum.inl i
+    | Sum.inr (Sum.inl i) => Sum.inr (Sum.inl i)
+    | Sum.inr (Sum.inr (Sum.inl i)) =>
+        Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i))))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inl i))) =>
+        Sum.inr (Sum.inr (Sum.inl i))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))) =>
+        Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inr i))))
+    | Sum.inr (Sum.inr (Sum.inr (Sum.inr (Sum.inr i)))) =>
+        Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))
+  left_inv := by intro i; cases i <;> rfl
+  right_inv := by intro i; cases i <;> rfl
 
 theorem leftTauChannelIndex_card (X Y Z : FibObject) :
     Fintype.card (LeftTauChannelIndex X Y Z) =

@@ -104,6 +104,30 @@ theorem parametricFTauMatrix_kron_identity_sq
   rw [parametricFTauMatrix_sq τ s hs hτ]
   simp [kron]
 
+/-! The external multiplicity action commutes with the Fibonacci block. -/
+
+theorem kron_identity_commutes_kron_identity
+    (n : ℕ) (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (K : Matrix (Fin n) (Fin n) ℂ) :
+    kron (1 : Matrix (Fin 2) (Fin 2) ℂ) K *
+        kron A (1 : Matrix (Fin n) (Fin n) ℂ) =
+      kron A (1 : Matrix (Fin n) (Fin n) ℂ) *
+        kron (1 : Matrix (Fin 2) (Fin 2) ℂ) K := by
+  rw [← kron_mul, ← kron_mul]
+  simp
+
+/-! The actual multiplicity block used by a global τ-output associator. -/
+
+noncomputable def globalTauFusionBlock (n : ℕ) (τ s : ℂ) :
+    Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ :=
+  kron (parametricFTauMatrix τ s) (1 : Matrix (Fin n) (Fin n) ℂ)
+
+theorem globalTauFusionBlock_sq
+    (n : ℕ) (τ s : ℂ) (hs : s ^ 2 = τ)
+    (hτ : τ ^ 2 + τ = 1) :
+    globalTauFusionBlock n τ s * globalTauFusionBlock n τ s = 1 := by
+  exact parametricFTauMatrix_kron_identity_sq n τ s hs hτ
+
 theorem parametricFSymbol_tau_block
     (τ s : ℂ) :
     (fun i j : Fin 2 =>

@@ -95,7 +95,9 @@ theorem helicity_chiral (ν : NucleusQuantumNumbers) (h : ν.helicity = 1 ∨ ν
 theorem mirrorPair_Tz_opposite (p : NucleusPoint) :
     (NucleusQuantumNumbers.mirrorPair p).1.Tz =
     -(NucleusQuantumNumbers.mirrorPair p).2.Tz := by
-  simp [NucleusQuantumNumbers.mirrorPair, NucleusQuantumNumbers.ofPoint]
+  change (p.1 : ℤ) - (p.2 : ℤ) =
+    -((p.2 : ℤ) - (p.1 : ℤ))
+  omega
 
 /-! ## Mapping to existing nuclear carriers -/
 

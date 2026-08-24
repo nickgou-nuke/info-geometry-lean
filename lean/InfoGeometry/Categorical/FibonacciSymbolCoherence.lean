@@ -56,6 +56,31 @@ def nativeFSymbol (a b c d e f : FibSimple) : ℂ :=
     (anyonToSimple.symm c) (anyonToSimple.symm d)
     (anyonToSimple.symm e) (anyonToSimple.symm f)
 
+/-- Parametric native Fibonacci `F`-symbol convention.  The four nontrivial
+entries are the existing fusion matrix entries; all unit channels retain the
+existing normalized admissibility cases. -/
+def parametricFSymbol (τ s : ℂ) (a b c d e f : FibSimple) : ℂ :=
+  match a, b, c, d, e, f with
+  | .tau, .tau, .tau, .tau, .unit, .unit => τ
+  | .tau, .tau, .tau, .tau, .unit, .tau => s
+  | .tau, .tau, .tau, .tau, .tau, .unit => s
+  | .tau, .tau, .tau, .tau, .tau, .tau => -τ
+  | .unit, b, c, d, e, f => if e = b ∧ f = d ∧ c = d then 1 else 0
+  | a, .unit, c, d, e, f => if e = a ∧ f = c ∧ a = e then 1 else 0
+  | a, b, .unit, d, e, f => if e = d ∧ f = b ∧ a = e then 1 else 0
+  | _, _, _, _, _, _ => 0
+
+theorem parametricFSymbol_tau_block
+    (τ s : ℂ) :
+    (fun i j : Fin 2 =>
+      parametricFSymbol τ s FibSimple.tau FibSimple.tau FibSimple.tau
+        FibSimple.tau (if i = 0 then FibSimple.unit else FibSimple.tau)
+        (if j = 0 then FibSimple.unit else FibSimple.tau)) =
+      fibonacciFusionMatrix τ s := by
+  funext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [parametricFSymbol, fibonacciFusionMatrix]
+
 /-- The multiplicity-free scalar `R`-symbol convention used by the existing
 finite Fibonacci matrix: the two nontrivial `τ ⊗ τ` channels carry the two
 diagonal phases, while the unit channels are normalized to one. -/
@@ -136,6 +161,25 @@ theorem native_pentagon_vacuum_boundary
     cases f <;> cases g <;> cases k <;> cases l <;>
     simp_all [nativePentagonLHS, nativePentagonRHS, nativeFSymbol,
       anyonToSimple, fSymbolC]
+
+theorem parametric_pentagon_vacuum_boundary
+    (τ s : ℂ) (a b c d e f g k l : FibSimple)
+    (ha : a = FibSimple.unit)
+    (hb : b = FibSimple.unit)
+    (hc : c = FibSimple.unit) :
+    (parametricFSymbol τ s f c d e g l *
+        parametricFSymbol τ s a b l e f k) =
+      (parametricFSymbol τ s a b c g f FibSimple.unit *
+          parametricFSymbol τ s a FibSimple.unit d e g k *
+          parametricFSymbol τ s b c d k FibSimple.unit l) +
+        (parametricFSymbol τ s a b c g f FibSimple.tau *
+          parametricFSymbol τ s a FibSimple.tau d e g k *
+          parametricFSymbol τ s b c d k FibSimple.tau l) := by
+  subst a
+  subst b
+  subst c
+  cases d <;> cases e <;> cases f <;> cases g <;> cases k <;> cases l <;>
+    simp [parametricFSymbol]
 
 def pentagonLHS (a b c d e f g k l : FibonacciAnyon) : ℂ :=
   fSymbolC f c d e g l * fSymbolC a b l e f k

@@ -203,8 +203,9 @@ theorem parabolicFlow_neg_mul
 theorem ellipticFlow_transpose
     (J : StageTwo) (hJt : Jᵀ = -J) (t : ℝ) :
     (ellipticFlow J t)ᵀ = ellipticFlow J (-t) := by
-  simp [ellipticFlow, Matrix.transpose_add, hJt,
-    Real.cos_neg, Real.sin_neg]
+  unfold ellipticFlow
+  rw [transpose_add, transpose_smul, transpose_smul, hJt]
+  simp [Real.cos_neg, Real.sin_neg]
 
 /-- A skew-transpose square-minus-one generator produces an orthogonal flow. -/
 theorem ellipticFlow_transpose_mul
@@ -258,17 +259,5 @@ theorem loxodromicFlow_add
             simp [mul_assoc]
     _ = ellipticFlow J (s + t) * hyperbolicFlow H (s + t) := by
             rw [ellipticFlow_add J hJ, hyperbolicFlow_add H hH]
-
-/-- The canonical stage-two axes instantiate all three local flow laws. -/
-theorem canonical_trifactor_group_laws (s t : ℝ) :
-    ellipticFlow ellipticAxis s * ellipticFlow ellipticAxis t =
-        ellipticFlow ellipticAxis (s + t) ∧
-      hyperbolicFlow hyperbolicAxis s * hyperbolicFlow hyperbolicAxis t =
-        hyperbolicFlow hyperbolicAxis (s + t) ∧
-      parabolicFlow parabolicAxis s * parabolicFlow parabolicAxis t =
-        parabolicFlow parabolicAxis (s + t) := by
-  exact ⟨ellipticFlow_add ellipticAxis ellipticAxis_sq s t,
-    hyperbolicFlow_add hyperbolicAxis hyperbolicAxis_sq s t,
-    parabolicFlow_add parabolicAxis parabolicAxis_sq s t⟩
 
 end InfoGeometry.Clifford.Cl11LocalTrifactorFlows

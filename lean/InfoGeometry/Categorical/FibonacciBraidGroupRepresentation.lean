@@ -61,8 +61,9 @@ theorem fibonacciLinearEquiv_artin
     (((rLinearMap q).comp (bLinearMap q τ s)).comp (rLinearMap q)) x =
       (((bLinearMap q τ s).comp (rLinearMap q)).comp
         (bLinearMap q τ s)) x
-  exact LinearMap.congr_fun
-    (fusionTree_artin q τ s hq_inv hq_pow3 hq5 h_poly hτq hs) x
+  exact congrArg
+    (fun f : Module.End ℂ FusionTree => f x)
+    (fusionTree_artin q τ s hq_inv hq_pow3 hq5 h_poly hτq hs)
 
 /-- The Fibonacci generators form an Artin pair in the fusion-tree general
 linear group. -/
@@ -79,11 +80,12 @@ noncomputable def fibonacciArtinPair
   sigmaOne := fibonacciSigmaOne q
   sigmaTwo := fibonacciSigmaTwo q τ s hs hτ
   artin := by
-    simpa [fibonacciSigmaOne, fibonacciSigmaTwo,
-      LinearMap.GeneralLinearGroup.ofLinearEquiv_mul] using
-      congrArg LinearMap.GeneralLinearGroup.ofLinearEquiv
-        (fibonacciLinearEquiv_artin q τ s hs hτ hq_inv hq_pow3
-          hq5 h_poly hτq)
+    apply Units.ext
+    change
+      ((rLinearMap q).comp (bLinearMap q τ s)).comp (rLinearMap q) =
+        ((bLinearMap q τ s).comp (rLinearMap q)).comp
+          (bLinearMap q τ s)
+    exact fusionTree_artin q τ s hq_inv hq_pow3 hq5 h_poly hτq hs
 
 /-- The genuine `B₃` action by invertible Fibonacci fusion-tree operators. -/
 noncomputable def fibonacciBraidGroupHom

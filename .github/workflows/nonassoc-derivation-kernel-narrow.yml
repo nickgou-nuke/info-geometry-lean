@@ -47,6 +47,8 @@ jobs:
           EOF
 
           ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
+          ln -s "$GITHUB_WORKSPACE/lean/DAG" DAG
+          ln -s "$GITHUB_WORKSPACE/lean/DAG.lean" DAG.lean
 
           lake update
           lake exe cache get

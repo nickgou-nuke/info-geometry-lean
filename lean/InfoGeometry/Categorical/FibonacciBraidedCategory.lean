@@ -140,6 +140,15 @@ instance.  The finite tensor bifunctor and the skeletal equality-transport
 coherence laws are already proved below; the nontrivial Fibonacci `F`-matrix
 associator remains a separate representation-level construction.
 -/
+theorem reindex_add
+    {m n m' n' : Type*}
+    (eₘ : m ≃ m') (eₙ : n ≃ n')
+    (A B : Matrix m n ℂ) :
+    Matrix.reindex eₘ eₙ (A + B) =
+      Matrix.reindex eₘ eₙ A + Matrix.reindex eₘ eₙ B := by
+  ext i j
+  rfl
+
 noncomputable def blockDiag2 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) :
   Matrix (Fin (m₁ + m₂)) (Fin (n₁ + n₂)) α :=
   Matrix.reindex finSumFinEquiv finSumFinEquiv (Matrix.fromBlocks A 0 0 B)
@@ -148,6 +157,34 @@ noncomputable def blockDiag3 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ m₃ n�
   (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) (C : Matrix (Fin m₃) (Fin n₃) α) :
   Matrix (Fin (m₁ + m₂ + m₃)) (Fin (n₁ + n₂ + n₃)) α :=
   blockDiag2 (blockDiag2 A B) C
+
+theorem blockDiag2_add
+    {α : Type} [AddCommMonoid α] [Zero α]
+    {m₁ n₁ m₂ n₂ : ℕ}
+    (A A' : Matrix (Fin m₁) (Fin n₁) α)
+    (B B' : Matrix (Fin m₂) (Fin n₂) α) :
+    blockDiag2 (A + A') (B + B') =
+      blockDiag2 A B + blockDiag2 A' B' := by
+  unfold blockDiag2
+  ext i j
+  simp only [Matrix.reindex]
+  generalize hi : finSumFinEquiv.symm i = si
+  generalize hj : finSumFinEquiv.symm j = sj
+  rw [hi, hj]
+  cases si <;> cases sj <;>
+    simp [Matrix.reindex, Matrix.fromBlocks]
+
+theorem blockDiag3_add
+    {α : Type} [AddCommMonoid α] [Zero α]
+    {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
+    (A A' : Matrix (Fin m₁) (Fin n₁) α)
+    (B B' : Matrix (Fin m₂) (Fin n₂) α)
+    (C C' : Matrix (Fin m₃) (Fin n₃) α) :
+    blockDiag3 (A + A') (B + B') (C + C') =
+      blockDiag3 A B C + blockDiag3 A' B' C' := by
+  unfold blockDiag3
+  rw [blockDiag2_add]
+  rw [blockDiag2_add]
 
 noncomputable def kron {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) ℂ) (B : Matrix (Fin m₂) (Fin n₂) ℂ) :
   Matrix (Fin (m₁ * m₂)) (Fin (n₁ * n₂)) ℂ :=

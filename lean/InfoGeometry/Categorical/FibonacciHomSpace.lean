@@ -33,6 +33,90 @@ structure FibHom (X Y : FibCat) where
   unit_comp : Matrix (Fin (X FibSimple.unit)) (Fin (Y FibSimple.unit)) ℂ
   tau_comp  : Matrix (Fin (X FibSimple.tau)) (Fin (Y FibSimple.tau)) ℂ
 
+instance : Zero (FibHom X Y) :=
+  ⟨{ unit_comp := 0, tau_comp := 0 }⟩
+
+instance : Add (FibHom X Y) :=
+  ⟨fun f g => { unit_comp := f.unit_comp + g.unit_comp, tau_comp := f.tau_comp + g.tau_comp }⟩
+
+instance : Neg (FibHom X Y) :=
+  ⟨fun f => { unit_comp := -f.unit_comp, tau_comp := -f.tau_comp }⟩
+
+instance : SMul ℂ (FibHom X Y) :=
+  ⟨fun c f => { unit_comp := c • f.unit_comp, tau_comp := c • f.tau_comp }⟩
+
+instance : AddCommGroup (FibHom X Y) where
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  add_assoc f g h := by
+    apply FibHom.ext
+    · change (f.unit_comp + g.unit_comp) + h.unit_comp = _
+      exact add_assoc _ _ _
+    · change (f.tau_comp + g.tau_comp) + h.tau_comp = _
+      exact add_assoc _ _ _
+  zero_add f := by
+    apply FibHom.ext
+    · change 0 + f.unit_comp = _
+      exact zero_add _
+    · change 0 + f.tau_comp = _
+      exact zero_add _
+  add_zero f := by
+    apply FibHom.ext
+    · change f.unit_comp + 0 = _
+      exact add_zero _
+    · change f.tau_comp + 0 = _
+      exact add_zero _
+  neg_add_cancel f := by
+    apply FibHom.ext
+    · change -f.unit_comp + f.unit_comp = _
+      exact neg_add_cancel _
+    · change -f.tau_comp + f.tau_comp = _
+      exact neg_add_cancel _
+  add_comm f g := by
+    apply FibHom.ext
+    · change f.unit_comp + g.unit_comp = _
+      exact add_comm _ _
+    · change f.tau_comp + g.tau_comp = _
+      exact add_comm _ _
+
+instance : Module ℂ (FibHom X Y) where
+  one_smul f := by
+    apply FibHom.ext
+    · change (1 : ℂ) • f.unit_comp = _
+      exact one_smul ℂ _
+    · change (1 : ℂ) • f.tau_comp = _
+      exact one_smul ℂ _
+  mul_smul c d f := by
+    apply FibHom.ext
+    · change (c * d) • f.unit_comp = c • d • f.unit_comp
+      exact mul_smul c d f.unit_comp
+    · change (c * d) • f.tau_comp = c • d • f.tau_comp
+      exact mul_smul c d f.tau_comp
+  smul_zero c := by
+    apply FibHom.ext
+    · change c • (0 : Matrix (Fin (X FibSimple.unit)) (Fin (Y FibSimple.unit)) ℂ) = _
+      exact smul_zero _
+    · change c • (0 : Matrix (Fin (X FibSimple.tau)) (Fin (Y FibSimple.tau)) ℂ) = _
+      exact smul_zero _
+  smul_add c f g := by
+    apply FibHom.ext
+    · change c • (f.unit_comp + g.unit_comp) = _
+      exact smul_add _ _ _
+    · change c • (f.tau_comp + g.tau_comp) = _
+      exact smul_add _ _ _
+  add_smul c d f := by
+    apply FibHom.ext
+    · change (c + d) • f.unit_comp = _
+      exact add_smul _ _ _
+    · change (c + d) • f.tau_comp = _
+      exact add_smul _ _ _
+  zero_smul f := by
+    apply FibHom.ext
+    · change (0 : ℂ) • f.unit_comp = _
+      exact zero_smul ℂ _
+    · change (0 : ℂ) • f.tau_comp = _
+      exact zero_smul ℂ _
+
 /-- Identity morphism is the pair of identity matrices. -/
 noncomputable def FibHom.id (X : FibCat) : FibHom X X :=
   { unit_comp := 1,

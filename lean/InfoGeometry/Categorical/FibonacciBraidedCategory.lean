@@ -153,6 +153,30 @@ noncomputable def kron {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n
   Matrix (Fin (m₁ * m₂)) (Fin (n₁ * n₂)) ℂ :=
   Matrix.reindex finProdFinEquiv finProdFinEquiv (Matrix.kronecker A B)
 
+theorem kron_add_left
+    {m₁ n₁ m₂ n₂ : ℕ}
+    (A B : Matrix (Fin m₁) (Fin n₁) ℂ)
+    (C : Matrix (Fin m₂) (Fin n₂) ℂ) :
+    kron (A + B) C = kron A C + kron B C := by
+  unfold kron
+  change Matrix.reindex finProdFinEquiv finProdFinEquiv
+      (Matrix.kroneckerMap (fun x y : ℂ => x * y) (A + B) C) = _
+  rw [Matrix.add_kronecker]
+  ext i j
+  rfl
+
+theorem kron_add_right
+    {m₁ n₁ m₂ n₂ : ℕ}
+    (A : Matrix (Fin m₁) (Fin n₁) ℂ)
+    (B C : Matrix (Fin m₂) (Fin n₂) ℂ) :
+    kron A (B + C) = kron A B + kron A C := by
+  unfold kron
+  change Matrix.reindex finProdFinEquiv finProdFinEquiv
+      (Matrix.kroneckerMap (fun x y : ℂ => x * y) A (B + C)) = _
+  rw [Matrix.kronecker_add]
+  ext i j
+  rfl
+
 theorem reindex_mul
     {m n o m' n' o' : Type*} [Fintype n] [Fintype n']
     (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o')

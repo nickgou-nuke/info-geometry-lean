@@ -75,7 +75,9 @@ theorem epsPlusProjector_ne_epsMinusProjector :
   rw [← h, epsPlusProjector_idempotent] at hmul
   have hsum := epsMinusProjector_add_epsPlusProjector
   rw [← h, hmul] at hsum
-  exact zero_ne_one hsum
+  have hzeroOne : (0 : Alg) = 1 := by
+    simpa using hsum
+  exact zero_ne_one hzeroOne
 
 /-- The positive Krein sheet projector is not the positive pseudoscalar
 projector.  The proof uses their different transformation laws under the

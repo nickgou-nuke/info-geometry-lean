@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.CategoryTheory.Preadditive.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
@@ -127,6 +128,56 @@ noncomputable def FibHom.comp {X Y Z : FibCat} (f : FibHom X Y) (g : FibHom Y Z)
   { unit_comp := f.unit_comp * g.unit_comp,
     tau_comp  := f.tau_comp * g.tau_comp }
 
+theorem FibHom.comp_add_left {X Y Z : FibCat}
+    (f g : FibHom X Y) (h : FibHom Y Z) :
+    FibHom.comp (f + g) h = FibHom.comp f h + FibHom.comp g h := by
+  apply FibHom.ext
+  · exact Matrix.add_mul _ _ _
+  · exact Matrix.add_mul _ _ _
+
+theorem FibHom.comp_add_right {X Y Z : FibCat}
+    (f : FibHom X Y) (g h : FibHom Y Z) :
+    FibHom.comp f (g + h) = FibHom.comp f g + FibHom.comp f h := by
+  apply FibHom.ext
+  · exact Matrix.mul_add _ _ _
+  · exact Matrix.mul_add _ _ _
+
+theorem FibHom.comp_zero_left {X Y Z : FibCat}
+    (f : FibHom Y Z) :
+    FibHom.comp (0 : FibHom X Y) f = 0 := by
+  apply FibHom.ext
+  · change (0 : Matrix (Fin (X FibSimple.unit)) (Fin (Y FibSimple.unit)) ℂ) *
+      f.unit_comp = 0
+    exact Matrix.zero_mul _
+  · change (0 : Matrix (Fin (X FibSimple.tau)) (Fin (Y FibSimple.tau)) ℂ) *
+      f.tau_comp = 0
+    exact Matrix.zero_mul _
+
+theorem FibHom.comp_zero_right {X Y Z : FibCat}
+    (f : FibHom X Y) :
+    FibHom.comp f (0 : FibHom Y Z) = 0 := by
+  apply FibHom.ext
+  · change f.unit_comp *
+      (0 : Matrix (Fin (Y FibSimple.unit)) (Fin (Z FibSimple.unit)) ℂ) = 0
+    exact Matrix.mul_zero _
+  · change f.tau_comp *
+      (0 : Matrix (Fin (Y FibSimple.tau)) (Fin (Z FibSimple.tau)) ℂ) = 0
+    exact Matrix.mul_zero _
+
+theorem FibHom.comp_smul_left {X Y Z : FibCat}
+    (c : ℂ) (f : FibHom X Y) (g : FibHom Y Z) :
+    FibHom.comp (c • f) g = c • FibHom.comp f g := by
+  apply FibHom.ext
+  · exact Matrix.smul_mul _ _ _
+  · exact Matrix.smul_mul _ _ _
+
+theorem FibHom.comp_smul_right {X Y Z : FibCat}
+    (c : ℂ) (f : FibHom X Y) (g : FibHom Y Z) :
+    FibHom.comp f (c • g) = c • FibHom.comp f g := by
+  apply FibHom.ext
+  · exact Matrix.mul_smul f.unit_comp c g.unit_comp
+  · exact Matrix.mul_smul f.tau_comp c g.tau_comp
+
 /-- 
 The explicit matrix operations are already packaged as a native `Category`
 instance below, with `Hom(X, Y) = FibHom X Y`.  The remaining boundary is
@@ -152,5 +203,16 @@ noncomputable instance : Category FibCat where
     ext : 1
     · exact Matrix.mul_assoc f.unit_comp g.unit_comp h.unit_comp
     · exact Matrix.mul_assoc f.tau_comp g.tau_comp h.tau_comp
+
+noncomputable instance : Preadditive FibCat where
+  homGroup := fun P Q => by
+    change AddCommGroup (FibHom P Q)
+    infer_instance
+  add_comp := by
+    intro X Y Z f g h
+    exact FibHom.comp_add_left f g h
+  comp_add := by
+    intro X Y Z f g h
+    exact FibHom.comp_add_right f g h
 
 end InfoGeometry.Categorical.FibonacciHomSpace

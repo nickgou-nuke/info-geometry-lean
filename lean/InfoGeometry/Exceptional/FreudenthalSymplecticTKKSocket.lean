@@ -156,6 +156,26 @@ def symplecticTKKClosureDatum :
       mixedSymplecticBracket D X Y := by
   exact mixedSymplecticLinear_apply D X Y
 
+@[simp] theorem symplecticTKKClosureDatum_mixed_val
+    (X Y : FreudenthalCharge J) :
+    ((symplecticTKKClosureDatum D).op_minus1_plus1 X Y :
+        Module.End ℝ (FreudenthalCharge J)) =
+      symplecticRankTwo D X Y := by
+  rw [symplecticTKKClosureDatum_mixed]
+  rfl
+
+@[simp] theorem symplecticTKKClosureDatum_zeroAction_minus1
+    (T : SymplecticTKKZero D) (X : FreudenthalCharge J) :
+    (symplecticTKKClosureDatum D).op_0_minus1 T X =
+      (T : Module.End ℝ (FreudenthalCharge J)) X := by
+  rfl
+
+@[simp] theorem symplecticTKKClosureDatum_zeroAction_plus1
+    (T : SymplecticTKKZero D) (X : FreudenthalCharge J) :
+    (symplecticTKKClosureDatum D).op_0_plus1 T X =
+      (T : Module.End ℝ (FreudenthalCharge J)) X := by
+  rfl
+
 /-! The closure datum exposes the already-proved zero-grade derivation law
 without introducing a new total five-graded bracket. -/
 
@@ -170,10 +190,15 @@ theorem symplecticTKKClosureDatum_zeroGrade_mixed
       ((symplecticTKKClosureDatum D).op_minus1_plus1 X
         ((symplecticTKKClosureDatum D).op_0_plus1 T Y) :
           Module.End ℝ (FreudenthalCharge J)) := by
-  change ⁅(T : Module.End ℝ (FreudenthalCharge J)),
-      symplecticRankTwo D X Y⁆ =
-    symplecticRankTwo D ((T : Module.End ℝ (FreudenthalCharge J)) X) Y +
-      symplecticRankTwo D X ((T : Module.End ℝ (FreudenthalCharge J)) Y)
-  exact zeroGrade_action_mixedSymplecticBracket D T X Y
+  rw [symplecticTKKClosureDatum_mixed_val,
+    symplecticTKKClosureDatum_mixed_val,
+    symplecticTKKClosureDatum_mixed_val,
+    symplecticTKKClosureDatum_zeroAction_minus1,
+    symplecticTKKClosureDatum_zeroAction_plus1]
+  have h := zeroGrade_action_mixedSymplecticBracket D T X Y
+  have h' := congrArg
+    (fun Z : SymplecticTKKZero D =>
+      (Z : Module.End ℝ (FreudenthalCharge J))) h
+  simpa only [mixedSymplecticBracket] using h'
 
 end InfoGeometry.Exceptional.Freudenthal

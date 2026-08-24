@@ -48,7 +48,7 @@ def NucleusQuantumNumbers.ofPoint (p : NucleusPoint) : NucleusQuantumNumbers whe
   N := p.2
   spin := 0
   isospin := 0
-  Tz := 0
+  Tz := (p.1 : ℤ) - (p.2 : ℤ)
   parity := true
   helicity := 1
 
@@ -61,10 +61,10 @@ def NucleusQuantumNumbers.selfConjugate (p : NucleusPoint) (_h : p.1 = p.2) :
 
 /-- Mirror nuclei have opposite `Tz` and opposite parity. -/
 def NucleusQuantumNumbers.mirrorPair
-    (p q : NucleusPoint) :
+    (p : NucleusPoint) :
     NucleusQuantumNumbers × NucleusQuantumNumbers :=
   let np := NucleusQuantumNumbers.ofPoint p
-  let nq := NucleusQuantumNumbers.ofPoint q
+  let nq := NucleusQuantumNumbers.ofPoint (p.2, p.1)
   (np, nq)
 
 /-- A nucleus derived from the Q₈ chiral data. -/
@@ -92,9 +92,9 @@ theorem helicity_chiral (ν : NucleusQuantumNumbers) (h : ν.helicity = 1 ∨ ν
   cases h <;> simp
 
 /-- Mirror nuclei have opposite `Tz` by construction of `mirrorPair`. -/
-theorem mirrorPair_Tz_opposite (p q : NucleusPoint) :
-    (NucleusQuantumNumbers.mirrorPair p q).1.Tz =
-    -(NucleusQuantumNumbers.mirrorPair p q).2.Tz := by
+theorem mirrorPair_Tz_opposite (p : NucleusPoint) :
+    (NucleusQuantumNumbers.mirrorPair p).1.Tz =
+    -(NucleusQuantumNumbers.mirrorPair p).2.Tz := by
   simp [NucleusQuantumNumbers.mirrorPair, NucleusQuantumNumbers.ofPoint]
 
 /-! ## Mapping to existing nuclear carriers -/

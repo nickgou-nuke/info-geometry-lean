@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FibonacciHexagonEquationBridge
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import InfoGeometry.Categorical.FibonacciHexagon
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 
 noncomputable section
@@ -8,6 +9,7 @@ namespace InfoGeometry.Categorical.FibonacciSymbolCoherence
 
 open FibonacciHexagonEquationBridge
 open FibonacciHexagonEquationBridge.Hexagon
+open InfoGeometry.Categorical.FibonacciHexagon
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
 
@@ -74,6 +76,34 @@ theorem nativeRMatrix_eq_fibonacciRMatrix (q : Units ℂ) :
   fin_cases i <;> fin_cases j <;>
     simp [nativeRMatrix, nativeRSymbol, fibonacciRMatrix]
   · rfl
+
+theorem native_symbol_hexagon_forward
+    (q : Units ℂ) (τ s : ℂ)
+    (hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ))
+    (hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3)
+    (hq5 : (q : ℂ) ^ 5 = -1)
+    (h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 -
+      (q : ℂ) + 1 = 0)
+    (hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3)
+    (hs : s ^ 2 = τ) :
+    fibonacciBMatrix q τ s * nativeRMatrix q * fibonacciBMatrix q τ s =
+      nativeRMatrix q * fibonacciBMatrix q τ s * nativeRMatrix q := by
+  rw [nativeRMatrix_eq_fibonacciRMatrix]
+  exact fibonacci_hexagon_coherence q τ s
+    hq_inv hq_pow3 hq5 h_poly hτ hs
+
+theorem native_symbol_hexagon_reverse
+    (q : Units ℂ) (τ s : ℂ)
+    (hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ))
+    (hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3)
+    (hq5 : (q : ℂ) ^ 5 = -1)
+    (h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 -
+      (q : ℂ) + 1 = 0)
+    (hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3)
+    (hs : s ^ 2 = τ) :
+    nativeRMatrix q * fibonacciBMatrix q τ s * nativeRMatrix q =
+      fibonacciBMatrix q τ s * nativeRMatrix q * fibonacciBMatrix q τ s := by
+  exact (native_symbol_hexagon_forward q τ s hq_inv hq_pow3 hq5 h_poly hτ hs).symm
 
 theorem nativeRSymbol_inverse (q : Units ℂ) (a b c : FibSimple) :
     nativeRSymbol q a b c * nativeRSymbol q⁻¹ a b c = 1 := by

@@ -75,7 +75,9 @@ theorem g2_root_system_unification :
    native_simple_root_pairing⟩
 
 /-- 7. Standard derivations generate the ternary Leibniz action. -/
-theorem standard_derivation_ternary_leibniz (x y a b : SplitOctonion) :
+theorem standard_derivation_ternary_leibniz
+    (x y a b :
+      InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) :
     splitThreeBracket x y (a * b) =
       splitThreeBracket x y a * b + a * splitThreeBracket x y b :=
   splitThreeBracket_leibniz x y a b

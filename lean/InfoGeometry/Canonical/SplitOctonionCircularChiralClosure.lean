@@ -30,6 +30,9 @@ def commutator (X Y : Carrier) : Carrier := X * Y - Y * X
 
 def anticommutator (X Y : Carrier) : Carrier := X * Y + Y * X
 
+/- The laws are exposed below as direct theorems.  They are not packaged as
+proof-only packet data: the native Zorn-matrix lemmas are the owners. -/
+/-
 structure CircularChiralPacket where
   unit_decomposition : uPlus + uMinus = I
   orthogonal_plus_minus : uPlus * uMinus = 0
@@ -72,36 +75,38 @@ noncomputable def circularChiralPacket : CircularChiralPacket where
   mixed_anticommutator := by
     intro i j
     exact U_V_anticommutator i j
+-/
 
 @[simp] theorem uPlus_add_uMinus : uPlus + uMinus = (I : Carrier) :=
-  circularChiralPacket.unit_decomposition
+  E11_add_E22
 
 @[simp] theorem uPlus_mul_uMinus : uPlus * uMinus = (0 : Carrier) :=
-  circularChiralPacket.orthogonal_plus_minus
+  E11_mul_E22
 
 @[simp] theorem uMinus_mul_uPlus : uMinus * uPlus = (0 : Carrier) :=
-  circularChiralPacket.orthogonal_minus_plus
+  E22_mul_E11
 
 @[simp] theorem sigmaPlus_mul_sigmaMinus (i j : Fin 3) :
     sigmaPlus i * sigmaMinus j = if i = j then uPlus else 0 :=
-  circularChiralPacket.mixed_plus_minus i j
+  U_mul_V i j
 
 @[simp] theorem sigmaMinus_mul_sigmaPlus (i j : Fin 3) :
     sigmaMinus i * sigmaPlus j = if i = j then uMinus else 0 :=
-  circularChiralPacket.mixed_minus_plus i j
+  V_mul_U i j
 
 theorem sigmaPlus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaPlus i) (sigmaPlus j) = 0 :=
-  circularChiralPacket.upper_anticommutator i j
+  by simpa [anticommutator] using U_anticommute i j
 
 theorem sigmaMinus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaMinus i) (sigmaMinus j) = 0 :=
-  circularChiralPacket.lower_anticommutator i j
+  by simpa [anticommutator] using V_anticommute i j
 
 theorem sigmaPlus_sigmaMinus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaPlus i) (sigmaMinus j) = if i = j then I else 0 :=
-  circularChiralPacket.mixed_anticommutator i j
+  U_V_anticommutator i j
 
+/-
 structure LocalM2Packet (i : Fin 3) where
   plus_sq : sigmaPlus i * sigmaPlus i = 0
   minus_sq : sigmaMinus i * sigmaMinus i = 0
@@ -115,6 +120,16 @@ def localM2Packet (i : Fin 3) : LocalM2Packet i where
   plus_minus := U_mul_V_self i
   minus_plus := V_mul_U_self i
   car := by simpa using U_V_anticommutator i i
+-/
+
+theorem localM2Laws (i : Fin 3) :
+    sigmaPlus i * sigmaPlus i = 0 ∧
+    sigmaMinus i * sigmaMinus i = 0 ∧
+    sigmaPlus i * sigmaMinus i = uPlus ∧
+    sigmaMinus i * sigmaPlus i = uMinus ∧
+    anticommutator (sigmaPlus i) (sigmaMinus i) = (I : Carrier) := by
+  exact ⟨U_mul_self_zero i, V_mul_self_zero i, U_mul_V_self i,
+    V_mul_U_self i, by simpa using U_V_anticommutator i i⟩
 
 theorem commutator_sigmaPlus_sigmaMinus (i j : Fin 3) :
     commutator (sigmaPlus i) (sigmaMinus j) =

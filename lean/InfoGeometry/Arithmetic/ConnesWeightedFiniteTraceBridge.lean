@@ -25,22 +25,12 @@ def weightedPermutationTrace
     (A : IdeleClassLayer G) (σ : Equiv.Perm X) (s : ℂ) : ℂ :=
   ideleScaleCharacter A s * permutationTrace σ
 
-theorem weightedPermutationTrace_eq_character_mul_trace
-    (A : IdeleClassLayer G) (σ : Equiv.Perm X) (s : ℂ) :
-    weightedPermutationTrace A σ s =
-      ideleScaleCharacter A s * permutationTrace σ := rfl
-
 theorem weightedPermutationTrace_eq_character_mul_fixedPointCount
     (A : IdeleClassLayer G) (σ : Equiv.Perm X) (s : ℂ) :
     weightedPermutationTrace A σ s =
       ideleScaleCharacter A s * (fixedPointCount σ : ℂ) := by
-  rw [weightedPermutationTrace_eq_character_mul_trace,
-    permutationTrace_eq_fixedPointCount]
-
-theorem weightedPermutationTrace_zero_parameter
-    (A : IdeleClassLayer G) (σ : Equiv.Perm X) :
-    weightedPermutationTrace A σ 0 = permutationTrace σ := by
-  simp [weightedPermutationTrace, ideleScaleCharacter]
+  unfold weightedPermutationTrace
+  rw [permutationTrace_eq_fixedPointCount]
 
 theorem weightedPermutationTrace_identity
     (σ : Equiv.Perm X) (s : ℂ) :
@@ -57,24 +47,13 @@ def weightedActionTrace
     (A : IdeleClassLayer G) (ρ : M →* Equiv.Perm X) (g : M) (s : ℂ) : ℂ :=
   ideleScaleCharacter A s * actionTrace ρ g
 
-theorem weightedActionTrace_eq_character_mul_trace
-    {M : Type*} [Monoid M]
-    (A : IdeleClassLayer G) (ρ : M →* Equiv.Perm X) (g : M) (s : ℂ) :
-    weightedActionTrace A ρ g s =
-      ideleScaleCharacter A s * actionTrace ρ g := rfl
-
 theorem weightedActionTrace_identity
     {M : Type*} [Monoid M]
     (A : IdeleClassLayer G) (ρ : M →* Equiv.Perm X) (s : ℂ) :
     weightedActionTrace A ρ 1 s =
       ideleScaleCharacter A s * (Fintype.card X : ℂ) := by
-  rw [weightedActionTrace_eq_character_mul_trace, actionTrace_one]
-
-theorem weightedActionTrace_zero_parameter
-    {M : Type*} [Monoid M]
-    (A : IdeleClassLayer G) (ρ : M →* Equiv.Perm X) (g : M) :
-    weightedActionTrace A ρ g 0 = actionTrace ρ g := by
-  simp [weightedActionTrace, ideleScaleCharacter]
+  unfold weightedActionTrace
+  rw [actionTrace_one]
 
 theorem weightedActionTrace_identity_layer
     {M : Type*} [Monoid M]

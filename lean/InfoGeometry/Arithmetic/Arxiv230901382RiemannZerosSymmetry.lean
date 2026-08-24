@@ -44,27 +44,6 @@ def wittenStatus (nBosonZero nFermionZero : ℤ) : SusyStatus :=
   else if nBosonZero = 0 ∧ nFermionZero = 0 then .broken
   else .unbroken
 
-/-- Nonzero Witten index gives the unbroken branch. -/
-theorem wittenStatus_unbroken_of_index_ne_zero
-    {nB nF : ℤ} (h : wittenIndex nB nF ≠ 0) :
-    wittenStatus nB nF = .unbroken := by
-  simp [wittenStatus, h]
-
-/-- If both zero-energy counts vanish, the finite classifier is broken. -/
-theorem wittenStatus_broken_zero_zero :
-    wittenStatus 0 0 = .broken := by
-  rfl
-
-/-- Equal nonzero counts give the third Witten unbroken branch. -/
-theorem wittenStatus_unbroken_equal_nonzero :
-    wittenStatus 1 1 = .unbroken := by
-  rfl
-
-/-- The paper's non-trivial-zero count pattern has vanishing index but unbroken status. -/
-theorem nontrivial_zero_count_pattern :
-    wittenIndex 1 1 = 0 ∧ wittenStatus 1 1 = .unbroken := by
-  exact ⟨rfl, rfl⟩
-
 /-! ## Abstract zeta/PT scalar condition -/
 
 /-- Abstract complex coordinate `s = σ + iω` represented by its two real parts. -/

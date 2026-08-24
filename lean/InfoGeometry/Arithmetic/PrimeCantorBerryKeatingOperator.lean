@@ -40,17 +40,14 @@ open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac
 open InfoGeometry.Geometry.FiniteMatrixResolventKernel
 
-/-- A finite property prime cutoff. -/
-abbrev PrimeCutoff := PrimeCantorZetaDiracOperator.PrimeCutoff
-
 /-- Prime mode inside a finite cutoff. -/
-abbrev PrimeMode (P : PrimeCutoff) := PrimeCantorZetaDiracOperator.PrimeMode P
+abbrev PrimeMode (P : PrimeCantorZetaDiracOperator.PrimeCutoff) := PrimeCantorZetaDiracOperator.PrimeMode P
 
 /-- Vertex of the finite prime Cantor/Fock lattice. -/
-abbrev Vertex (P : PrimeCutoff) := PrimeCantorZetaDiracOperator.Vertex P
+abbrev Vertex (P : PrimeCantorZetaDiracOperator.PrimeCutoff) := PrimeCantorZetaDiracOperator.Vertex P
 
 /-- Complex-valued fields on the finite prime Cantor/Fock lattice. -/
-abbrev CantorField (P : PrimeCutoff) := PrimeCantorZetaDiracOperator.CantorField P
+abbrev CantorField (P : PrimeCantorZetaDiracOperator.PrimeCutoff) := PrimeCantorZetaDiracOperator.CantorField P
 
 /-! ## 1. Finite Berry--Keating logarithmic dilation energy -/
 
@@ -60,31 +57,9 @@ Finite logarithmic dilation energy of a square-free occupation state.
 If `S` corresponds to the square-free integer `n = ∏_{p ∈ S} p`, then this is
 formally `log n`.
 -/
-def bkEnergy {P : PrimeCutoff}
+def bkEnergy {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (S : Vertex P) : ℝ :=
   Finset.sum S (fun p => logPrime p)
-
-@[simp]
-theorem bkEnergy_empty {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) :
-    bkEnergy logPrime (∅ : Vertex P) = 0 := by
-  simp [bkEnergy]
-
-@[simp]
-theorem bkEnergy_insert_of_not_mem {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (p : PrimeMode P) (S : Vertex P)
-    (hp : p ∉ S) :
-    bkEnergy logPrime (insert p S) = logPrime p + bkEnergy logPrime S := by
-  simp [bkEnergy, hp]
-
-/-! ### Native exterior-energy readout -/
-
-/-- The Berry--Keating finite energy is the native square-free energy readout. -/
-theorem bkEnergy_eq_squareFreeEnergy {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (S : Vertex P) :
-    bkEnergy logPrime S =
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.squareFreeEnergy
-        logPrime S := rfl
 
 /-!
 The Berry--Keating diagonal readout is the same finite observable as the
@@ -92,12 +67,16 @@ weighted Hodge-square readout in the prime exterior graph owner.  This is a
 readout square only: it does not identify the finite carrier with a continuous
 `xp` operator or add a spectral claim.
 -/
-theorem bkEnergy_eq_weightedHodgeSquareEnergy {P : PrimeCutoff}
+theorem bkEnergy_eq_weightedHodgeSquareEnergy {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (S : Vertex P) :
     bkEnergy logPrime S =
       InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.weightedHodgeSquareEnergy
         P logPrime S := by
-  rw [bkEnergy_eq_squareFreeEnergy]
+  change
+    InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.squareFreeEnergy
+        logPrime S =
+      InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.weightedHodgeSquareEnergy
+        P logPrime S
   exact
     (InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.weightedHodgeSquareEnergy_eq_weightedNumberEnergy
       P logPrime S).symm
@@ -106,7 +85,7 @@ theorem bkEnergy_eq_weightedHodgeSquareEnergy {P : PrimeCutoff}
 At the arithmetic specialization, the same square-free observable is the
 exterior graph's canonical logarithmic prime-energy readout.
 -/
-theorem bkEnergy_primeEnergy_eq_stateEnergy {P : PrimeCutoff}
+theorem bkEnergy_primeEnergy_eq_stateEnergy {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (S : Vertex P) :
     bkEnergy (fun p : PrimeMode P => Real.log (p : ℝ)) S =
       InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.stateEnergy S := by
@@ -115,7 +94,7 @@ theorem bkEnergy_primeEnergy_eq_stateEnergy {P : PrimeCutoff}
 
 /-- The finite Berry--Keating prime-log readout is the logarithm of the
     represented square-free integer. -/
-theorem bkEnergy_primeEnergy_eq_log_stateNat {P : PrimeCutoff}
+theorem bkEnergy_primeEnergy_eq_log_stateNat {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (S : Vertex P) :
     bkEnergy (fun p : PrimeMode P => Real.log (p : ℝ)) S =
       Real.log (InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge.stateNat S : ℝ) := by
@@ -130,19 +109,14 @@ This is the diagonal logarithmic dilation generator.  It is the finite algebraic
 shadow of `H_BK = (XP + PX)/2`; no continuous-domain self-adjoint extension is
 asserted here.
 -/
-def bkHamiltonian {P : PrimeCutoff}
+def bkHamiltonian {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) :
     CantorField P → CantorField P :=
   fun f S => (bkEnergy logPrime S : ℂ) * f S
 
-@[simp]
-theorem bkHamiltonian_apply {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (f : CantorField P) (S : Vertex P) :
-    bkHamiltonian logPrime f S = (bkEnergy logPrime S : ℂ) * f S := rfl
-
 /-! The finite diagonal logarithmic Hamiltonian is self-adjoint for the
 native finite Cantor pairing because its eigenvalues are real. -/
-theorem bkHamiltonian_isSelfAdjoint {P : PrimeCutoff}
+theorem bkHamiltonian_isSelfAdjoint {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) :
     IsAdjointPair (P := P) (bkHamiltonian logPrime) (bkHamiltonian logPrime) := by
   intro f g
@@ -152,7 +126,7 @@ theorem bkHamiltonian_isSelfAdjoint {P : PrimeCutoff}
   intro S hS
   ring
 
-theorem bkHamiltonian_basisDelta_eigenvector {P : PrimeCutoff}
+theorem bkHamiltonian_basisDelta_eigenvector {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (T : Vertex P) :
     bkHamiltonian logPrime (basisDelta T) =
       (bkEnergy logPrime T : ℂ) • basisDelta T := by
@@ -165,28 +139,23 @@ theorem bkHamiltonian_basisDelta_eigenvector {P : PrimeCutoff}
 /-! ### Finite Jost/determinant realization -/
 
 /-- The diagonal matrix readout of the finite Berry--Keating Hamiltonian. -/
-def bkHamiltonianMatrix {P : PrimeCutoff}
+def bkHamiltonianMatrix {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) : Matrix (Vertex P) (Vertex P) ℂ :=
   Matrix.diagonal (fun S => (bkEnergy logPrime S : ℂ))
 
 /-- The finite Jost determinant `det(z I - H_BK)`. -/
-def bkJostDet {P : PrimeCutoff}
+def bkJostDet {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) : ℂ :=
   (z • (1 : Matrix (Vertex P) (Vertex P) ℂ) -
       bkHamiltonianMatrix logPrime).det
 
-theorem bkHamiltonianMatrix_diag {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (S : Vertex P) :
-    bkHamiltonianMatrix logPrime S S = (bkEnergy logPrime S : ℂ) := by
-  simp [bkHamiltonianMatrix]
-
-theorem bkHamiltonianMatrix_mulVec_eq_bkHamiltonian {P : PrimeCutoff}
+theorem bkHamiltonianMatrix_mulVec_eq_bkHamiltonian {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (f : CantorField P) :
     Matrix.mulVec (bkHamiltonianMatrix logPrime) f = bkHamiltonian logPrime f := by
   funext S
   simp [bkHamiltonianMatrix, bkHamiltonian, Matrix.mulVec]
 
-theorem bkHamiltonianMatrix_isHermitian {P : PrimeCutoff}
+theorem bkHamiltonianMatrix_isHermitian {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) :
     (bkHamiltonianMatrix logPrime).IsHermitian := by
   unfold Matrix.IsHermitian bkHamiltonianMatrix
@@ -196,7 +165,7 @@ theorem bkHamiltonianMatrix_isHermitian {P : PrimeCutoff}
     simp
   · simp [hST, Ne.symm hST]
 
-theorem bkJostDet_eq_prod {P : PrimeCutoff}
+theorem bkJostDet_eq_prod {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) :
     bkJostDet logPrime z =
       ∏ S : Vertex P, (z - (bkEnergy logPrime S : ℂ)) := by
@@ -211,7 +180,7 @@ theorem bkJostDet_eq_prod {P : PrimeCutoff}
     · simp [hST]]
   exact Matrix.det_diagonal
 
-theorem hasDerivAt_bkJostDet {P : PrimeCutoff}
+theorem hasDerivAt_bkJostDet {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) :
     HasDerivAt (bkJostDet logPrime)
       (∑ S : Vertex P,
@@ -237,7 +206,7 @@ theorem hasDerivAt_bkJostDet {P : PrimeCutoff}
 
 This is a purely finite algebraic identity: the nonvanishing hypothesis keeps
 the logarithmic derivative away from the finitely many eigenvalues. -/
-theorem bkJostDet_logDeriv_eq_sum_inv_of_ne_zero {P : PrimeCutoff}
+theorem bkJostDet_logDeriv_eq_sum_inv_of_ne_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ)
     (hz : bkJostDet logPrime z ≠ 0) :
     logDeriv (bkJostDet logPrime) z =
@@ -259,7 +228,7 @@ theorem bkJostDet_logDeriv_eq_sum_inv_of_ne_zero {P : PrimeCutoff}
     simpa using
       (hasDerivAt_id z).sub_const (bkEnergy logPrime S : ℂ)
 
-theorem bkJostDet_eq_zero_iff {P : PrimeCutoff}
+theorem bkJostDet_eq_zero_iff {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) :
     bkJostDet logPrime z = 0 ↔
       ∃ S : Vertex P, z = (bkEnergy logPrime S : ℂ) := by
@@ -271,14 +240,14 @@ theorem bkJostDet_eq_zero_iff {P : PrimeCutoff}
   · rintro ⟨S, hS⟩
     exact ⟨S, Finset.mem_univ S, sub_eq_zero.mpr hS⟩
 
-theorem bkJostDet_zero_im_eq_zero {P : PrimeCutoff}
+theorem bkJostDet_zero_im_eq_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ)
     (hz : bkJostDet logPrime z = 0) :
     z.im = 0 := by
   rcases (bkJostDet_eq_zero_iff logPrime z).mp hz with ⟨S, rfl⟩
   simp
 
-theorem bkJostDet_zero_is_real {P : PrimeCutoff}
+theorem bkJostDet_zero_is_real {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ)
     (hz : bkJostDet logPrime z = 0) :
     ∃ r : ℝ, z = r := by
@@ -287,13 +256,13 @@ theorem bkJostDet_zero_is_real {P : PrimeCutoff}
   · rfl
   · exact bkJostDet_zero_im_eq_zero logPrime z hz
 
-theorem bkEnergy_nonneg_of_nonneg {P : PrimeCutoff}
+theorem bkEnergy_nonneg_of_nonneg {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ)
     (hlog : ∀ p, 0 ≤ logPrime p) (S : Vertex P) :
     0 ≤ bkEnergy logPrime S := by
   exact Finset.sum_nonneg (fun p hp => hlog p)
 
-theorem bkJostDet_zero_nonneg {P : PrimeCutoff}
+theorem bkJostDet_zero_nonneg {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ)
     (hlog : ∀ p, 0 ≤ logPrime p) (z : ℂ)
     (hz : bkJostDet logPrime z = 0) :
@@ -301,12 +270,12 @@ theorem bkJostDet_zero_nonneg {P : PrimeCutoff}
   rcases (bkJostDet_eq_zero_iff logPrime z).mp hz with ⟨S, rfl⟩
   exact_mod_cast bkEnergy_nonneg_of_nonneg logPrime hlog S
 
-theorem bkJostDet_zero_of_basisDelta_eigenvalue {P : PrimeCutoff}
+theorem bkJostDet_zero_of_basisDelta_eigenvalue {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (S : Vertex P) :
     bkJostDet logPrime (bkEnergy logPrime S : ℂ) = 0 := by
   exact (bkJostDet_eq_zero_iff logPrime _).mpr ⟨S, rfl⟩
 
-theorem bkJostDet_eq_zero_iff_eigenstate {P : PrimeCutoff}
+theorem bkJostDet_eq_zero_iff_eigenstate {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) :
     bkJostDet logPrime z = 0 ↔
       ∃ f : CantorField P, f ≠ 0 ∧
@@ -325,7 +294,7 @@ theorem bkJostDet_eq_zero_iff_eigenstate {P : PrimeCutoff}
     have hzero : f = 0 := by
       funext S
       have hpoint := congrFun hEigen S
-      rw [bkHamiltonian_apply] at hpoint
+      change (bkEnergy logPrime S : ℂ) * f S = z * f S at hpoint
       have hscalar : z - (bkEnergy logPrime S : ℂ) ≠ 0 := by
         intro hscalar
         apply hNoEnergy S
@@ -348,7 +317,7 @@ theorem bkJostDet_eq_zero_iff_eigenstate {P : PrimeCutoff}
       exact (mul_eq_zero.mp hmul).resolve_left hscalar'
     exact hf hzero
 
-theorem bkResolventKernel_exists_of_jost_ne_zero {P : PrimeCutoff}
+theorem bkResolventKernel_exists_of_jost_ne_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ)
     (hz : bkJostDet logPrime z ≠ 0) :
     ∃ K : MatrixResolventKernel (Vertex P),
@@ -369,7 +338,7 @@ theorem bkResolventKernel_exists_of_jost_ne_zero {P : PrimeCutoff}
       kernel_mul_diff := Matrix.nonsing_inv_mul R hunitdet }
   exact ⟨K, rfl, rfl⟩
 
-theorem bkResolventKernel_exists_iff_jost_ne_zero {P : PrimeCutoff}
+theorem bkResolventKernel_exists_iff_jost_ne_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (z : ℂ) :
     (∃ K : MatrixResolventKernel (Vertex P),
       K.A = bkHamiltonianMatrix logPrime ∧ K.z = z) ↔
@@ -390,7 +359,7 @@ theorem bkResolventKernel_exists_iff_jost_ne_zero {P : PrimeCutoff}
 The proof uses only the diagonal resolvent equation, so this is a genuine
 finite matrix identity rather than a formal appeal to an infinite trace. -/
 theorem bkJostDet_logDeriv_eq_trace_resolvent
-    {P : PrimeCutoff} (logPrime : PrimeMode P → ℝ) (z : ℂ)
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff} (logPrime : PrimeMode P → ℝ) (z : ℂ)
     (K : MatrixResolventKernel (Vertex P))
     (hA : K.A = bkHamiltonianMatrix logPrime) (hz : K.z = z) :
     logDeriv (bkJostDet logPrime) z = Matrix.trace K.kernel := by
@@ -500,25 +469,26 @@ theorem finite_resolvent_identity
 /-! ## 2. Critical-line Berry--Keating phases -/
 
 /-- Single-prime Berry--Keating critical-line phase `exp(- i t log p)`. -/
-def bkPrimePhase {P : PrimeCutoff}
+def bkPrimePhase {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (p : PrimeMode P) : ℂ :=
   Complex.exp (-(Complex.I * (t : ℂ) * (logPrime p : ℂ)))
 
 /-- Square-free Berry--Keating critical-line phase `exp(- i t E(S))`. -/
-def bkStatePhase {P : PrimeCutoff}
+def bkStatePhase {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) : ℂ :=
   Complex.exp (-(Complex.I * (t : ℂ) * (bkEnergy logPrime S : ℂ)))
 
 /-! The prime phase is the multiplicative one-mode factor of the square-free
 state phase.  This is the finite phase-lift law used by the cutoff bridge. -/
 
-theorem bkStatePhase_insert_of_not_mem {P : PrimeCutoff}
+theorem bkStatePhase_insert_of_not_mem {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ)
     (p : PrimeMode P) (S : Vertex P) (hp : p ∉ S) :
     bkStatePhase logPrime t (insert p S) =
       bkPrimePhase logPrime t p * bkStatePhase logPrime t S := by
   unfold bkStatePhase bkPrimePhase
-  rw [bkEnergy_insert_of_not_mem logPrime p S hp]
+  rw [show bkEnergy logPrime (insert p S) =
+      logPrime p + bkEnergy logPrime S by simp [bkEnergy, hp]]
   rw [show -(Complex.I * (t : ℂ) *
       ((logPrime p + bkEnergy logPrime S : ℝ) : ℂ)) =
       (-(Complex.I * (t : ℂ) * (logPrime p : ℂ))) +
@@ -527,7 +497,7 @@ theorem bkStatePhase_insert_of_not_mem {P : PrimeCutoff}
     ring]
   rw [Complex.exp_add]
 
-theorem hasDerivAt_bkStatePhase {P : PrimeCutoff}
+theorem hasDerivAt_bkStatePhase {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     HasDerivAt (fun u : ℝ => bkStatePhase logPrime u S)
       (-(Complex.I * (bkEnergy logPrime S : ℂ)) *
@@ -544,13 +514,13 @@ theorem hasDerivAt_bkStatePhase {P : PrimeCutoff}
 
 /-! The same finite phase in the native real rotor carrier. -/
 
-def bkStateRotor {P : PrimeCutoff}
+def bkStateRotor {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     InfoGeometry.Geometry.RealChiralPhase :=
   (Real.cos (t * bkEnergy logPrime S),
     -Real.sin (t * bkEnergy logPrime S))
 
-theorem bkStateRotor_normSq {P : PrimeCutoff}
+theorem bkStateRotor_normSq {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     InfoGeometry.Geometry.RealChiralPhase.normSq
       (bkStateRotor logPrime t S) = 1 := by
@@ -558,7 +528,7 @@ theorem bkStateRotor_normSq {P : PrimeCutoff}
       (-Real.sin (t * bkEnergy logPrime S)) ^ 2 = 1
   nlinarith [Real.sin_sq_add_cos_sq (t * bkEnergy logPrime S)]
 
-theorem bkStateRotor_add {P : PrimeCutoff}
+theorem bkStateRotor_add {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (s t : ℝ) (S : Vertex P) :
     bkStateRotor logPrime (s + t) S =
       bkStateRotor logPrime s S * bkStateRotor logPrime t S := by
@@ -575,18 +545,18 @@ theorem bkStateRotor_add {P : PrimeCutoff}
     rw [show (s + t) * e = s * e + t * e by ring, Real.sin_add]
     ring
 
-@[simp] theorem bkStateRotor_zero {P : PrimeCutoff}
+@[simp] theorem bkStateRotor_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (S : Vertex P) :
     bkStateRotor logPrime 0 S = 1 := by
   ext <;> simp [bkStateRotor]
 
-theorem bkStateRotor_mul_neg {P : PrimeCutoff}
+theorem bkStateRotor_mul_neg {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     bkStateRotor logPrime t S * bkStateRotor logPrime (-t) S = 1 := by
   rw [← bkStateRotor_add logPrime t (-t) S, add_neg_cancel,
     bkStateRotor_zero]
 
-theorem bkStateRotor_complexification {P : PrimeCutoff}
+theorem bkStateRotor_complexification {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     InfoGeometry.Compatibility.chiralToComplex
         (InfoGeometry.Compatibility.realChiralPhaseEquiv
@@ -614,7 +584,7 @@ The second argument is its parameter derivative in real chiral coordinates.
 This is an exact finite statement; it does not assert a continuum-domain
 self-adjoint realization. -/
 theorem bkStateRotor_phaseCurrent
-    {P : PrimeCutoff} (hbar mass : ℝ)
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff} (hbar mass : ℝ)
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     InfoGeometry.Geometry.RealChiralPhase.phaseCurrent hbar mass
         (bkStateRotor logPrime t S)
@@ -638,18 +608,12 @@ theorem bkStateRotor_phaseCurrent
   ring
 
 /-- Diagonal critical-line Berry--Keating evolution on the finite carrier. -/
-def bkEvolution {P : PrimeCutoff}
+def bkEvolution {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) :
     CantorField P → CantorField P :=
   fun f S => bkStatePhase logPrime t S * f S
 
-@[simp]
-theorem bkEvolution_apply {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (t : ℝ)
-    (f : CantorField P) (S : Vertex P) :
-    bkEvolution logPrime t f S = bkStatePhase logPrime t S * f S := rfl
-
-theorem hasDerivAt_bkEvolution_apply {P : PrimeCutoff}
+theorem hasDerivAt_bkEvolution_apply {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ)
     (f : CantorField P) (S : Vertex P) :
     HasDerivAt (fun u : ℝ => bkEvolution logPrime u f S)
@@ -659,7 +623,7 @@ theorem hasDerivAt_bkEvolution_apply {P : PrimeCutoff}
     (hasDerivAt_bkStatePhase logPrime t S).mul_const (f S)
 
 theorem hasDerivAt_bkEvolution_apply_eq_matrixHamiltonian
-    {P : PrimeCutoff} (logPrime : PrimeMode P → ℝ) (t : ℝ)
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff} (logPrime : PrimeMode P → ℝ) (t : ℝ)
     (f : CantorField P) (S : Vertex P) :
     HasDerivAt (fun u : ℝ => bkEvolution logPrime u f S)
       (-Complex.I *
@@ -669,36 +633,27 @@ theorem hasDerivAt_bkEvolution_apply_eq_matrixHamiltonian
     (bkHamiltonianMatrix_mulVec_eq_bkHamiltonian logPrime
       (bkEvolution logPrime t f)) S
   rw [hH]
-  simpa [bkHamiltonian_apply, mul_assoc, mul_left_comm, mul_comm] using
+  simpa [bkHamiltonian, mul_assoc, mul_left_comm, mul_comm] using
     hasDerivAt_bkEvolution_apply logPrime t f S
 
 /-- The critical-line holonomy vector induced by the finite BK dilation phases. -/
-def bkCriticalHolonomy {P : PrimeCutoff}
+def bkCriticalHolonomy {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) : PrimeMode P → ℂ :=
   fun p => bkPrimePhase logPrime t p
 
-theorem bkPrimePhase_norm {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (t : ℝ) (p : PrimeMode P) :
-    ‖bkPrimePhase logPrime t p‖ = 1 := by
-  simp [bkPrimePhase, Complex.norm_exp]
-
-theorem bkStatePhase_norm {P : PrimeCutoff}
-    (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
-    ‖bkStatePhase logPrime t S‖ = 1 := by
-  simp [bkStatePhase, Complex.norm_exp]
-
-theorem bkStatePhase_star_mul_self {P : PrimeCutoff}
+theorem bkStatePhase_star_mul_self {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (S : Vertex P) :
     star (bkStatePhase logPrime t S) * bkStatePhase logPrime t S = 1 := by
   simp only [Complex.star_def]
   rw [← Complex.normSq_eq_conj_mul_self]
-  have hn := bkStatePhase_norm logPrime t S
+  have hn : ‖bkStatePhase logPrime t S‖ = 1 := by
+    simp [bkStatePhase, Complex.norm_exp]
   have hnormSq : Complex.normSq (bkStatePhase logPrime t S) = 1 := by
     rw [Complex.normSq_eq_norm_sq, hn]
     norm_num
   exact_mod_cast hnormSq
 
-theorem bkEvolution_pairing_preserved {P : PrimeCutoff}
+theorem bkEvolution_pairing_preserved {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ)
     (f g : CantorField P) :
     pairing (bkEvolution logPrime t f) (bkEvolution logPrime t g) =
@@ -718,7 +673,7 @@ theorem bkEvolution_pairing_preserved {P : PrimeCutoff}
       rw [bkStatePhase_star_mul_self]
       simp
 
-theorem bkStatePhase_add {P : PrimeCutoff}
+theorem bkStatePhase_add {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (s t : ℝ) (S : Vertex P) :
     bkStatePhase logPrime (s + t) S =
       bkStatePhase logPrime s S * bkStatePhase logPrime t S := by
@@ -732,26 +687,26 @@ theorem bkStatePhase_add {P : PrimeCutoff}
   rw [Complex.exp_add]
 
 @[simp]
-theorem bkEvolution_zero {P : PrimeCutoff}
+theorem bkEvolution_zero {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (f : CantorField P) :
     bkEvolution logPrime 0 f = f := by
   funext S
   simp [bkEvolution, bkStatePhase]
 
-theorem bkEvolution_add {P : PrimeCutoff}
+theorem bkEvolution_add {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (s t : ℝ) (f : CantorField P) :
     bkEvolution logPrime (s + t) f =
       bkEvolution logPrime s (bkEvolution logPrime t f) := by
   funext S
-  simp only [bkEvolution_apply, bkStatePhase_add]
+  simp only [bkEvolution, bkStatePhase_add]
   ring
 
-theorem bkEvolution_neg_left {P : PrimeCutoff}
+theorem bkEvolution_neg_left {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (f : CantorField P) :
     bkEvolution logPrime (-t) (bkEvolution logPrime t f) = f := by
   rw [← bkEvolution_add, neg_add_cancel, bkEvolution_zero]
 
-theorem bkEvolution_neg_right {P : PrimeCutoff}
+theorem bkEvolution_neg_right {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeMode P → ℝ) (t : ℝ) (f : CantorField P) :
     bkEvolution logPrime t (bkEvolution logPrime (-t) f) = f := by
   rw [← bkEvolution_add, add_neg_cancel, bkEvolution_zero]
@@ -766,7 +721,7 @@ operator.  `logPrime` records the finite logarithmic periods.  The field
 `critical_holonomy` asserts that on the critical-line parameter supplied by the
 owner, the holonomy restricts to the BK phase `exp(-i t log p)`.
 -/
-structure FiniteBerryKeatingCantorDirac (P : PrimeCutoff) where
+structure FiniteBerryKeatingCantorDirac (P : PrimeCantorZetaDiracOperator.PrimeCutoff) where
   amplitude : PrimeMode P → ℂ
   holonomy : ℂ → PrimeMode P → ℂ
   logPrime : PrimeMode P → ℝ
@@ -777,7 +732,7 @@ structure FiniteBerryKeatingCantorDirac (P : PrimeCutoff) where
 
 namespace FiniteBerryKeatingCantorDirac
 
-variable {P : PrimeCutoff}
+variable {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
 variable (B : FiniteBerryKeatingCantorDirac P)
 
 /-- Forget the BK structure and keep only the finite Cantor--Dirac packet. -/
@@ -797,16 +752,10 @@ theorem U_zero : B.U 0 = id := by
   funext S
   simp [U, bkEvolution, bkStatePhase]
 
-theorem U_apply_add (s t : ℝ) (f : CantorField P) (S : Vertex P) :
-    B.U (s + t) f S =
-      bkStatePhase B.logPrime s S *
-        (bkStatePhase B.logPrime t S * f S) := by
-  simp [U, bkEvolution, bkStatePhase_add, mul_assoc]
-
 /-! The finite Berry--Keating evolution is a genuine additive flow. -/
 theorem U_add (s t : ℝ) : B.U (s + t) = B.U s ∘ B.U t := by
   funext f S
-  simpa [Function.comp_apply] using B.U_apply_add s t f S
+  simp [U, bkEvolution, bkStatePhase_add, Function.comp_apply, mul_assoc]
 
 theorem U_neg_apply (t : ℝ) (f : CantorField P) (S : Vertex P) :
     B.U (-t) (B.U t f) S = f S := by
@@ -841,11 +790,6 @@ def Qsharp (s : ℂ) : CantorField P → CantorField P :=
 def D (s : ℂ) : CantorField P → CantorField P :=
   B.toCantorZetaDirac.op s
 
-theorem D_eq_Q_add_Qsharp
-    (s : ℂ) (f : CantorField P) (S : Vertex P) :
-    B.D s f S = B.Q s f S + B.Qsharp s f S := by
-  rfl
-
 /-- The holonomy along the supplied critical parameter is the BK critical phase. -/
 theorem holonomy_on_critical
     (t : ℝ) (p : PrimeMode P) :
@@ -857,7 +801,7 @@ end FiniteBerryKeatingCantorDirac
 /- Direct finite Berry--Keating boundary statements. -/
 
 theorem period_eq_logPrime
-    {P : PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     {B : FiniteBerryKeatingCantorDirac P}
     (period : PrimeMode P → ℝ)
     (hperiod : ∀ p : PrimeMode P, period p = B.logPrime p)

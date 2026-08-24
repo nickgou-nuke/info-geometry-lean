@@ -101,16 +101,23 @@ theorem stageLogPartition_eq_sum
           0 := by
   induction n with
   | zero =>
-      have hprimes : primesUpto 0 = ∅ := by
+      have hprimes : (primeCutoffRegister 0).primes = ∅ := by
         ext p
         constructor
         · intro hp
-          have hle : p ≤ 0 := (mem_primesUpto_iff.mp hp).1
-          have hpos : 0 < p := (mem_primesUpto_iff.mp hp).2.pos
-          omega
+          change p ∈ primesUpto 0 at hp
+          have hp' := mem_primesUpto_iff.mp hp
+          have hp0 : p = 0 := Nat.eq_zero_of_le_zero hp'.1
+          subst p
+          exact (Nat.not_prime_zero hp'.2).elim
         · intro hp
-          simp at hp
-      simp [finiteEulerProduct, hprimes]
+          exact (by simpa using hp : False).elim
+      have hprod : finiteEulerProduct (primeCutoffRegister 0) energyWeight β μ = 1 := by
+        unfold finiteEulerProduct
+        rw [hprimes]
+        simp
+      rw [hprod]
+      simp
   | succ n ih =>
       rw [stageLogPartition_succ n energyWeight β μ, ih]
       rw [Finset.sum_range_succ]

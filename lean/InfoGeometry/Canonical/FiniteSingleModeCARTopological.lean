@@ -69,7 +69,7 @@ theorem ann_cre_anticommutator_topological_readout (ψ : OneModeVec) :
   exact congrFun ann_cre_anticommutator ψ
 
 theorem ann_cre_anticommutator_topological_readout_at (ψ : OneModeVec)
-    (occ : OneModeState) :
+    (occ : Bool) :
     opAdd (opComp ann cre) (opComp cre ann) ψ occ = idOp ψ occ := by
   exact congrFun (congrFun
     ann_cre_anticommutator ψ) occ

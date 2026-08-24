@@ -31,21 +31,18 @@ abbrev PauliBlock := Matrix (Fin 2) (Fin 2) ℂ
 
 /-! ## 0. Soldering coordinates -/
 
-/-- A Lorentzian spacetime four-vector in the canonical Pauli carrier. -/
-abbrev Spacetime4 := PauliParavector
-
 /-- The soldering map into the Hermitian Pauli block. -/
-def solderingMap (P : Spacetime4) : PauliBlock := P.pauliMatrix
+def solderingMap (P : PauliParavector) : PauliBlock := P.pauliMatrix
 
-@[simp] theorem solderingMap_det (P : Spacetime4) :
+@[simp] theorem solderingMap_det (P : PauliParavector) :
     Matrix.det (solderingMap P) = (P.minkowskiNormSq : ℂ) :=
   PauliParavector.det_pauliMatrix_eq_minkowskiNormSq P
 
-@[simp] theorem solderingMap_trace (P : Spacetime4) :
+@[simp] theorem solderingMap_trace (P : PauliParavector) :
     Matrix.trace (solderingMap P) = ((2 * P.energy : ℝ) : ℂ) :=
   PauliParavector.trace_pauliMatrix_eq_two_energy P
 
-theorem solderingMap_isHermitian (P : Spacetime4) :
+theorem solderingMap_isHermitian (P : PauliParavector) :
     (solderingMap P).IsHermitian := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -114,12 +111,6 @@ def densityMatrix (A : PauliBlock) (hTrace : Matrix.trace (gram A) ≠ 0) : Paul
 def densityMatrixFromNonzero (A : PauliBlock) (hA : A ≠ 0) : PauliBlock :=
   densityMatrix A (gram_trace_ne_zero_of_ne_zero hA)
 
-theorem densityMatrixFromNonzero_eq_densityMatrix
-    (A : PauliBlock) (hA : A ≠ 0) :
-    densityMatrixFromNonzero A hA =
-      densityMatrix A (gram_trace_ne_zero_of_ne_zero hA) :=
-  rfl
-
 theorem densityMatrix_eq_normalizedTomitaQuadratic_conjTranspose
     (A : PauliBlock)
     (hTrace : Matrix.trace (gram A) ≠ 0) :
@@ -173,12 +164,6 @@ theorem rightGram_trace_ne_zero_of_ne_zero
 def densityMatrixOfOpFromNonzero
     (A : PauliBlock) (hA : A ≠ 0) : PauliBlock :=
   densityMatrixOfOp A (rightGram_trace_ne_zero_of_ne_zero hA)
-
-theorem densityMatrixOfOpFromNonzero_eq_densityMatrixOfOp
-    (A : PauliBlock) (hA : A ≠ 0) :
-    densityMatrixOfOpFromNonzero A hA =
-      densityMatrixOfOp A (rightGram_trace_ne_zero_of_ne_zero hA) :=
-  rfl
 
 theorem rightGram_isHermitian (A : PauliBlock) :
     (rightGram A).IsHermitian := by

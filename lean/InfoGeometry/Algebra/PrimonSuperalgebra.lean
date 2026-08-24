@@ -26,8 +26,6 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.OperatorAlgebra.FiniteParitySupertrace
 open Matrix
 
-abbrev Carrier := PrimonUHFAlgebra
-
 /-- The local parity sign of one Boolean occupation bit. -/
 def bitParity (b : Bool) : ℝ :=
   if b then -1 else 1
@@ -160,7 +158,7 @@ theorem finiteParitySupertrace_zero_of_stageParity_neg
   simp_rw [hdiag]
   simp
 
-def stageParityToColimit (n : ℕ) : MatrixStage n →+* Carrier :=
+def stageParityToColimit (n : ℕ) : MatrixStage n →+* PrimonUHFAlgebra :=
   (toColimit n).comp (stageParityHom n)
 
 theorem stageParityToColimit_compatible (n : ℕ) (M : MatrixStage n) :
@@ -172,7 +170,7 @@ theorem stageParityToColimit_compatible (n : ℕ) (M : MatrixStage n) :
   rw [stageParity_bond, toColimit_bond]
 
 /-- The parity endomorphism descended to the algebraic direct limit. -/
-def globalParity : Carrier →+* Carrier :=
+def globalParity : PrimonUHFAlgebra →+* PrimonUHFAlgebra :=
   directLimitLift matrixBond
     (fun n => stageParityToColimit n)
     (by
@@ -189,18 +187,18 @@ def globalParity : Carrier →+* Carrier :=
     n M
 
 theorem globalParity_one :
-    globalParity (1 : Carrier) = 1 := by
+    globalParity (1 : PrimonUHFAlgebra) = 1 := by
   rw [DirectLimit.one_def 0]
   change globalParity (toColimit 0 (1 : MatrixStage 0)) = _
   rw [globalParity_stage]
   change toColimit 0 (stageParityFun 0 (1 : MatrixStage 0)) = _
   exact congrArg (toColimit 0) (stageParity_one 0)
 
-theorem globalParity_mul (X Y : Carrier) :
+theorem globalParity_mul (X Y : PrimonUHFAlgebra) :
     globalParity (X * Y) = globalParity X * globalParity Y := by
   exact (globalParity).map_mul X Y
 
-theorem globalParity_involutive (X : Carrier) :
+theorem globalParity_involutive (X : PrimonUHFAlgebra) :
     globalParity (globalParity X) = X := by
   induction X using DirectLimit.induction with
   | _ n M =>
@@ -225,7 +223,7 @@ theorem normalizedTrace_stageParity (n : ℕ) (M : MatrixStage n) :
   rw [paritySign_sq]
   ring
 
-theorem tauInfinity_globalParity (X : Carrier) :
+theorem tauInfinity_globalParity (X : PrimonUHFAlgebra) :
     tauInfinity (globalParity X) = tauInfinity X := by
   induction X using DirectLimit.induction with
   | _ n M =>
@@ -235,7 +233,7 @@ theorem tauInfinity_globalParity (X : Carrier) :
         normalizedTrace_stageParity]
 
 /-- The descended parity is an actual automorphism of the direct-limit ring. -/
-def globalParityEquiv : Carrier ≃+* Carrier where
+def globalParityEquiv : PrimonUHFAlgebra ≃+* PrimonUHFAlgebra where
   toFun := globalParity
   invFun := globalParity
   left_inv := globalParity_involutive
@@ -243,70 +241,67 @@ def globalParityEquiv : Carrier ≃+* Carrier where
   map_mul' := globalParity.map_mul
   map_add' := globalParity.map_add
 
-@[simp] theorem globalParityEquiv_apply (X : Carrier) :
+@[simp] theorem globalParityEquiv_apply (X : PrimonUHFAlgebra) :
     globalParityEquiv X = globalParity X :=
   rfl
 
-@[simp] theorem globalParityEquiv_symm_apply (X : Carrier) :
+@[simp] theorem globalParityEquiv_symm_apply (X : PrimonUHFAlgebra) :
     globalParityEquiv.symm X = globalParity X :=
   rfl
 
-def isBosonic (X : Carrier) : Prop := globalParity X = X
+def isBosonic (X : PrimonUHFAlgebra) : Prop := globalParity X = X
 
-def isFermionic (X : Carrier) : Prop := globalParity X = -X
+def isFermionic (X : PrimonUHFAlgebra) : Prop := globalParity X = -X
 
-theorem tauInfinity_zero_of_isFermionic {X : Carrier}
+theorem tauInfinity_zero_of_isFermionic {X : PrimonUHFAlgebra}
     (hX : isFermionic X) :
     tauInfinity X = 0 := by
   have htrace := tauInfinity_globalParity X
   rw [hX, map_neg] at htrace
   linarith
 
-theorem isBosonic_zero : isBosonic (0 : Carrier) := by
-  simp [isBosonic]
-
-theorem isBosonic_one : isBosonic (1 : Carrier) := by
+theorem isBosonic_one : isBosonic (1 : PrimonUHFAlgebra) := by
   rw [isBosonic]
   exact globalParity_one
 
-theorem isBosonic_add {X Y : Carrier}
+theorem isBosonic_add {X Y : PrimonUHFAlgebra}
     (hX : isBosonic X) (hY : isBosonic Y) :
     isBosonic (X + Y) := by
   rw [isBosonic, globalParity.map_add, hX, hY]
 
-theorem isBosonic_neg {X : Carrier}
+theorem isBosonic_neg {X : PrimonUHFAlgebra}
     (hX : isBosonic X) : isBosonic (-X) := by
   rw [isBosonic, globalParity.map_neg, hX]
 
-theorem isBosonic_mul {X Y : Carrier}
+theorem isBosonic_mul {X Y : PrimonUHFAlgebra}
     (hX : isBosonic X) (hY : isBosonic Y) :
     isBosonic (X * Y) := by
   rw [isBosonic, globalParity.map_mul, hX, hY]
 
-theorem isFermionic_add {X Y : Carrier}
+theorem isFermionic_add {X Y : PrimonUHFAlgebra}
     (hX : isFermionic X) (hY : isFermionic Y) :
     isFermionic (X + Y) := by
   rw [isFermionic, globalParity.map_add, hX, hY]
   exact (neg_add X Y).symm
 
-theorem isFermionic_neg {X : Carrier}
+theorem isFermionic_neg {X : PrimonUHFAlgebra}
     (hX : isFermionic X) : isFermionic (-X) := by
   rw [isFermionic, globalParity.map_neg, hX]
 
 theorem isFermionic_mul_isFermionic_isBosonic
-    {X Y : Carrier} (hX : isFermionic X) (hY : isFermionic Y) :
+    {X Y : PrimonUHFAlgebra} (hX : isFermionic X) (hY : isFermionic Y) :
     isBosonic (X * Y) := by
   rw [isBosonic, globalParity.map_mul, hX, hY]
   simp
 
 theorem isBosonic_mul_isFermionic_isFermionic
-    {X Y : Carrier} (hX : isBosonic X) (hY : isFermionic Y) :
+    {X Y : PrimonUHFAlgebra} (hX : isBosonic X) (hY : isFermionic Y) :
     isFermionic (X * Y) := by
   rw [isFermionic, globalParity.map_mul, hX, hY]
   simp
 
 theorem isFermionic_mul_isBosonic_isFermionic
-    {X Y : Carrier} (hX : isFermionic X) (hY : isBosonic Y) :
+    {X Y : PrimonUHFAlgebra} (hX : isFermionic X) (hY : isBosonic Y) :
     isFermionic (X * Y) := by
   rw [isFermionic, globalParity.map_mul, hX, hY]
   simp

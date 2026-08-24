@@ -54,12 +54,6 @@ def primeBitCartanParameters (L : PrimeBitLattice) (β : ℝ) :
     FiniteTemperature (PrimeBitSubset L) :=
   fun S => -β * primeBitEnergy L S.1
 
-theorem primeBit_massieuPotential_eq_grandCanonical_potential
-    (L : PrimeBitLattice) (β : ℝ) :
-    massieuPotential (primeBitCartanParameters L β) =
-      GrandCanonical.potential (primeBitGrandCanonicalParams L) β := by
-  rfl
-
 theorem primeBit_relativeEntropy_eq_finiteGibbsRelativeEntropy
     (L : PrimeBitLattice) (β γ : ℝ) :
     relativeEntropy
@@ -153,13 +147,6 @@ theorem primeBitGrandCanonical_partition_eq_fermionic
     L.primes.powerset hpowerset
     (fun S => Real.exp (-β * primeBitEnergy L S))]
 
-theorem primeBitGrandCanonical_weight_eq_fermionic
-    (L : PrimeBitLattice) (β : ℝ) (S : PrimeBitSubset L) :
-    GrandCanonical.gibbsWeight (primeBitGrandCanonicalParams L) β S =
-      Real.exp (-β * primeBitEnergy L S.1) /
-        GrandCanonical.partition (primeBitGrandCanonicalParams L) β := by
-  rfl
-
 /-- The finite grand-canonical mean energy transported to the powerset
     readout. -/
 theorem primeBitGrandCanonical_mean_eq_fermionic_weighted_energy
@@ -174,7 +161,7 @@ theorem primeBitGrandCanonical_mean_eq_fermionic_weighted_energy
       GrandCanonical.gibbsWeight
           (primeBitGrandCanonicalParams L) β S *
         primeBitEnergy L S.1) = _
-  simp_rw [primeBitGrandCanonical_weight_eq_fermionic]
+  simp_rw [InfoGeometry.GrandCanonical.gibbsWeight, primeBitGrandCanonicalParams]
   rw [primeBitGrandCanonical_partition_eq_fermionic]
   symm
   rw [Finset.sum_subtype (F := primeBitSubsetFintype L)
@@ -267,8 +254,7 @@ theorem primeBitTemperatureSusceptibility_eq_weightedVariance
           (primeBitGrandCanonicalParams L) ε⁻¹)
         (fun S : PrimeBitSubset L => primeBitEnergy L S.1) := by
   unfold temperatureSusceptibility
-  exact grandCanonicalVariance_eq_weightedVariance
-    (fun S : PrimeBitSubset L => primeBitEnergy L S.1) ε⁻¹
+  rfl
 
 theorem primeBitTemperatureSusceptibility_nonneg
     (L : PrimeBitLattice) (ε : ℝ) :

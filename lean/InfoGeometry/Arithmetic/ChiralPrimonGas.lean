@@ -66,10 +66,6 @@ def primeCutoffRegister (Λ : ℕ) : PrimeRegister where
     exact (Finset.mem_filter.mp hp).2
 
 @[simp, rep_depth thermo]
-theorem primeCutoffRegister_primes (Λ : ℕ) :
-    (primeCutoffRegister Λ).primes = primesUpto Λ := rfl
-
-@[simp, rep_depth thermo]
 theorem primeCutoffRegister_prime_mem {Λ p : ℕ}
     (hp : p ∈ (primeCutoffRegister Λ).primes) :
     Nat.Prime p := by

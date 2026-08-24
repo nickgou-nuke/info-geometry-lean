@@ -16,14 +16,12 @@ open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
-abbrev CZ := CanonicalZorn
-
 /-- The quaternionic cross channel, written as the antisymmetric product. -/
-def quaternionicCross (X Y : CZ) : CZ :=
+def quaternionicCross (X Y : CanonicalZorn) : CanonicalZorn :=
   (1 / 2 : ℝ) • (zMul X Y - zMul Y X)
 
 /-- A chiral-parity twist of the same quaternionic channel. -/
-def chiralQuaternionicCross (χ : ℝ) (X Y : CZ) : CZ :=
+def chiralQuaternionicCross (χ : ℝ) (X Y : CanonicalZorn) : CanonicalZorn :=
   χ • quaternionicCross X Y
 
 @[simp] theorem quaternionicCross_anticomm (X Y : CZ) :

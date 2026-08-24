@@ -39,16 +39,6 @@ namespace InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 abbrev SouriauTemperature : Type :=
   ℂ
 
-/-- Complex Souriau inverse-temperature datum. -/
-@[rep_depth thermo]
-abbrev ComplexSouriauBeta := SouriauTemperature
-
-namespace ComplexSouriauBeta
-
-abbrev beta (B : ComplexSouriauBeta) : SouriauTemperature := B
-
-end ComplexSouriauBeta
-
 /--
 Positive real-part complex Souriau inverse temperature.
 
@@ -57,7 +47,7 @@ normalizability is not asserted here.
 -/
 @[rep_depth thermo]
 abbrev PositiveComplexSouriauBeta :=
-  {B : ComplexSouriauBeta // 0 < B.re}
+  {B : SouriauTemperature // 0 < B.re}
 
 namespace PositiveComplexSouriauBeta
 
@@ -255,12 +245,6 @@ def complexFreeEnergy (Z : ℂ) : ℂ :=
 @[rep_depth thermo]
 def grandPotential (β Z : ℂ) : ℂ :=
   - β⁻¹ * massieuPlanck Z
-
-/-- Definitional readout of the grand potential in Massieu--Planck form. -/
-theorem grandPotential_eq_neg_inv_beta_mul_massieu
-    (β Z : ℂ) :
-    grandPotential β Z = -β⁻¹ * massieuPlanck Z := by
-  rfl
 
 /-- The Legendre-Massieu potential Φ = S - β(E - μN). -/
 def massieuFromLegendre
@@ -530,13 +514,6 @@ lemma primeGrandModeWeight_ne_zero (β : ℂ) (p : ℕ) :
 def finitePrimeBosonGrandPartition
     (P : PrimeRegister) (β : ℂ) : ℂ :=
   complexBosonGrandPartition P.primes β primeEnergy zeroChemicalPotential
-
-/-- Product form of the finite prime bosonic grand partition. -/
-theorem finitePrimeBosonGrandPartition_eq_prod
-    (P : PrimeRegister) (β : ℂ) :
-    finitePrimeBosonGrandPartition P β =
-      ∏ p ∈ P.primes, (1 - primeGrandModeWeight β p)⁻¹ := by
-  rfl
 
 lemma finitePrimeBosonGrandPartition_ne_zero
     (P : PrimeRegister) (β : ℂ)

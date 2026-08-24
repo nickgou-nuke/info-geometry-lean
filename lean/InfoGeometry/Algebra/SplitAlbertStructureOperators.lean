@@ -17,13 +17,13 @@ open InfoGeometry.Algebra.H3Zorn
 
 abbrev JordanCarrier := H3Zorn ℝ
 abbrev Operator := Module.End ℝ JordanCarrier
-abbrev Derivation := H3ZornF4Derivations
+/- The derivation carrier is exposed directly from its native owner. -/
 
-noncomputable def structureOperator (D : Derivation) (a : JordanCarrier) : Operator :=
+noncomputable def structureOperator (D : H3ZornF4Derivations) (a : JordanCarrier) : Operator :=
   (D : Operator) + jordanLmul (R := ℝ) a
 
 theorem structureOperator_lie_formula
-    (D E : Derivation) (a b : JordanCarrier) :
+    (D E : H3ZornF4Derivations) (a b : JordanCarrier) :
     ⁅structureOperator D a, structureOperator E b⁆ =
       ⁅(D : Operator), (E : Operator)⁆
         + (h3ZornJordanInnerDerivation a b : Operator)
@@ -50,7 +50,7 @@ theorem structureOperator_lie_formula
   abel_nf
 
 def structureOperatorCarrier : Set Operator :=
-  {T | ∃ D : Derivation, ∃ a : JordanCarrier,
+  {T | ∃ D : H3ZornF4Derivations, ∃ a : JordanCarrier,
       T = structureOperator D a}
 
 def structureOperatorLieSubalgebra : LieSubalgebra ℝ Operator where
@@ -90,20 +90,20 @@ def structureOperatorLieSubalgebra : LieSubalgebra ℝ Operator where
   lie_mem' := by
     rintro T U ⟨D, a, rfl⟩ ⟨E, b, rfl⟩
     have hab :
-        (h3ZornJordanInnerDerivation a b : Operator) ∈ Derivation :=
+        (h3ZornJordanInnerDerivation a b : Operator) ∈ H3ZornF4Derivations :=
       h3ZornJordanInnerDerivation_mem_F4 a b
-    let H : Derivation := ⟨h3ZornJordanInnerDerivation a b, hab⟩
+    let H : H3ZornF4Derivations := ⟨h3ZornJordanInnerDerivation a b, hab⟩
     refine ⟨⁅D, E⁆ + H, (D : Operator) b - (E : Operator) a, ?_⟩
     rw [structureOperator_lie_formula]
     rfl
 
 theorem structureOperator_mem
-    (D : Derivation) (a : JordanCarrier) :
+    (D : H3ZornF4Derivations) (a : JordanCarrier) :
     structureOperator D a ∈ structureOperatorLieSubalgebra := by
   exact ⟨D, a, rfl⟩
 
 theorem structureOperator_lie_mem
-    (D E : Derivation) (a b : JordanCarrier) :
+    (D E : H3ZornF4Derivations) (a b : JordanCarrier) :
     ⁅structureOperator D a, structureOperator E b⁆ ∈
       structureOperatorLieSubalgebra := by
   exact structureOperatorLieSubalgebra.lie_mem

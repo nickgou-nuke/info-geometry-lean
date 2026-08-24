@@ -13,22 +13,20 @@ namespace InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 
 open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 
-abbrev Point := HexPoint
-abbrev Line := HexLine
 abbrev Flag := G2HexagonIncidence.Flag parabolicCertificate
 
-def PreservesIncidence (π : Equiv.Perm Point) : Prop :=
+def PreservesIncidence (π : Equiv.Perm HexPoint) : Prop :=
   ∀ p l, p ∈ parabolicCertificate.linePoints l ↔
     π p ∈ parabolicCertificate.linePoints (π l)
 
-def flagMap (π : Equiv.Perm Point) (hπ : PreservesIncidence π) : Flag → Flag
+def flagMap (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) : Flag → Flag
   | ⟨p, ⟨l, h⟩⟩ => ⟨π p, ⟨π l, (hπ p l).mp h⟩⟩
 
-theorem PreservesIncidence.one : PreservesIncidence (1 : Equiv.Perm Point) := by
+theorem PreservesIncidence.one : PreservesIncidence (1 : Equiv.Perm HexPoint) := by
   intro p l
   rfl
 
-theorem PreservesIncidence.mul {π₁ π₂ : Equiv.Perm Point}
+theorem PreservesIncidence.mul {π₁ π₂ : Equiv.Perm HexPoint}
     (hπ₁ : PreservesIncidence π₁) (hπ₂ : PreservesIncidence π₂) :
     PreservesIncidence (π₁ * π₂) := by
   intro p l
@@ -36,16 +34,16 @@ theorem PreservesIncidence.mul {π₁ π₂ : Equiv.Perm Point}
 
 
 
-theorem PreservesIncidence.symm {π : Equiv.Perm Point} (hπ : PreservesIncidence π) :
+theorem PreservesIncidence.symm {π : Equiv.Perm HexPoint} (hπ : PreservesIncidence π) :
     PreservesIncidence π.symm := by
   intro p l
   have h := (hπ (π.symm p) (π.symm l)).symm
   simpa using h
 
-def flagMapInv (π : Equiv.Perm Point) (hπ : PreservesIncidence π) : Flag → Flag :=
+def flagMapInv (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) : Flag → Flag :=
   flagMap π.symm hπ.symm
 
-theorem flagMap_congr {π₁ π₂ : Equiv.Perm Point} (h : π₁ = π₂)
+theorem flagMap_congr {π₁ π₂ : Equiv.Perm HexPoint} (h : π₁ = π₂)
     (hπ₁ : PreservesIncidence π₁) (hπ₂ : PreservesIncidence π₂) :
     flagMap π₁ hπ₁ = flagMap π₂ hπ₂ := by
   subst h
@@ -56,14 +54,14 @@ theorem flagMap_one (f : Flag) :
   cases f
   rfl
 
-theorem flagMap_mul (π₁ π₂ : Equiv.Perm Point)
+theorem flagMap_mul (π₁ π₂ : Equiv.Perm HexPoint)
     (hπ₁ : PreservesIncidence π₁) (hπ₂ : PreservesIncidence π₂) (f : Flag) :
     flagMap (π₁ * π₂) (PreservesIncidence.mul hπ₁ hπ₂) f =
       flagMap π₁ hπ₁ (flagMap π₂ hπ₂ f) := by
   cases f
   rfl
 
-theorem flagMap_left_inv (π : Equiv.Perm Point) (hπ : PreservesIncidence π) :
+theorem flagMap_left_inv (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) :
     Function.LeftInverse (flagMapInv π hπ) (flagMap π hπ) := by
   intro f
   dsimp [flagMapInv]
@@ -74,7 +72,7 @@ theorem flagMap_left_inv (π : Equiv.Perm Point) (hπ : PreservesIncidence π) :
   rw [congrFun h_eq f]
   exact flagMap_one f
 
-theorem flagMap_right_inv (π : Equiv.Perm Point) (hπ : PreservesIncidence π) :
+theorem flagMap_right_inv (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) :
     Function.RightInverse (flagMapInv π hπ) (flagMap π hπ) := by
   intro f
   dsimp [flagMapInv]
@@ -85,14 +83,14 @@ theorem flagMap_right_inv (π : Equiv.Perm Point) (hπ : PreservesIncidence π) 
   rw [congrFun h_eq f]
   exact flagMap_one f
 
-noncomputable def flagPerm (π : Equiv.Perm Point) (hπ : PreservesIncidence π) :
+noncomputable def flagPerm (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) :
     Equiv.Perm Flag where
   toFun := flagMap π hπ
   invFun := flagMapInv π hπ
   left_inv := flagMap_left_inv π hπ
   right_inv := flagMap_right_inv π hπ
 
-theorem flagPerm_apply (π : Equiv.Perm Point) (hπ : PreservesIncidence π)
+theorem flagPerm_apply (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π)
     (f : Flag) : flagPerm π hπ f = flagMap π hπ f := by
   rfl
 

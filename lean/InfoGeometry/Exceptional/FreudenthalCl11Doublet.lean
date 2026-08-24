@@ -84,6 +84,53 @@ theorem zeroGradeDoubletAction_commutes_h
   simp [Ring.lie_def, Module.End.mul_apply,
     zeroGradeDoubletAction, hAction]
 
+/-! The diagonal zero-grade action is a genuine representation on the
+doublet.  This is the componentwise Lie-action statement needed before
+assembling any larger graded bracket. -/
+
+theorem zeroGradeDoubletAction_commutator
+    (T U : Module.End ℝ (FreudenthalCharge J)) :
+    ⁅zeroGradeDoubletAction T, zeroGradeDoubletAction U⁆ =
+      zeroGradeDoubletAction ⁅T, U⁆ := by
+  apply LinearMap.ext
+  intro z
+  rcases z with ⟨a, b⟩
+  apply Prod.ext
+  · rfl
+  · rfl
+
+/-- The componentwise zero-grade action is a genuine Lie representation on
+the Freudenthal doublet. -/
+noncomputable def zeroGradeDoubletActionLieHom :
+    Module.End ℝ (FreudenthalCharge J) →ₗ⁅ℝ⁆
+      Module.End ℝ (Doublet (J := J)) where
+  toFun := zeroGradeDoubletAction
+  map_add' T U := by
+    apply LinearMap.ext
+    intro z
+    rcases z with ⟨a, b⟩
+    rfl
+  map_smul' r T := by
+    apply LinearMap.ext
+    intro z
+    rcases z with ⟨a, b⟩
+    rfl
+  map_lie' := by
+    intro T U
+    exact (zeroGradeDoubletAction_commutator (J := J) T U).symm
+
+theorem zeroGradeDoubletActionLieHom_injective :
+    Function.Injective (zeroGradeDoubletActionLieHom (J := J)) := by
+  intro T U h
+  change zeroGradeDoubletAction T = zeroGradeDoubletAction U at h
+  apply LinearMap.ext
+  intro x
+  have hx := congrArg
+    (fun K : Module.End ℝ (Doublet (J := J)) => K (x, 0)) h
+  change (zeroGradeDoubletAction T) (x, 0) =
+    (zeroGradeDoubletAction U) (x, 0) at hx
+  exact congrArg Prod.fst hx
+
 @[simp] theorem eAction_apply (z : Doublet (J := J)) :
     eAction z = (0, -z.1) := rfl
 

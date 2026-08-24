@@ -179,45 +179,30 @@ theorem markedCard_add_unmarkedCard :
 
 end FinitePrimeOracleRegister
 
-/--
-Historical quantum-counting gate name, now owned by the concrete numerical
-accuracy and Chernoff-bound structure.
--/
-abbrev QuantumCountingGate :=
-  InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy
-
 namespace QuantumCountingGate
 
 /-- A property quantum-counting run uses a positive number of queries. -/
 theorem query_bound_holds
-    (G : QuantumCountingGate) :
+    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
     0 < G.queries :=
   G.queries_pos
 
 /-- The estimate satisfies its explicit absolute-error tolerance. -/
 theorem counting_accuracy_holds
-    (G : QuantumCountingGate) :
+    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
     InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
       G.estimate G.actual G.ε :=
   G.counting_accuracy
 
 /-- The run's failure probability satisfies its explicit Chernoff bound. -/
 theorem chernoff_bound_holds
-    (G : QuantumCountingGate) :
+    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
     2 * Real.exp (-2 * (G.queries : ℝ) * G.ε ^ 2) ≤ G.failure_prob :=
   G.chernoff_bound
 
 end QuantumCountingGate
 
 /-! ## 4. Error-budget certificates for RH-style fluctuation tests -/
-
-/--
-Finite estimate is within absolute error `ε` of the actual readout.
-
-This is an operational numerical predicate; it is not an RH statement.
--/
-abbrev WithinError :=
-  InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
 
 /-- Raw coordinates for a finite fluctuation property. -/
 abbrev QuantumCountingFluctuationCoordinates :=
@@ -226,7 +211,8 @@ abbrev QuantumCountingFluctuationCoordinates :=
 /-- The two property inequalities carried by a fluctuation property. -/
 def QuantumCountingFluctuationPredicate
     (p : QuantumCountingFluctuationCoordinates) : Prop :=
-  WithinError p.1 p.2.1 p.2.2.2.1 ∧
+  InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
+      p.1 p.2.1 p.2.2.2.1 ∧
     |p.1 - p.2.2.1| + p.2.2.2.1 ≤ p.2.2.2.2
 
 /-- Finite quantum-counting fluctuation evidence as a native subtype. -/
@@ -242,7 +228,8 @@ abbrev ε (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.1
 abbrev bound (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.2
 
 lemma counting_error (P : QuantumCountingFluctuationPacket) :
-    WithinError P.estimate P.actual P.ε := P.2.1
+    InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
+      P.estimate P.actual P.ε := P.2.1
 
 lemma error_budget (P : QuantumCountingFluctuationPacket) :
     |P.estimate - P.expected| + P.ε ≤ P.bound := P.2.2

@@ -145,13 +145,6 @@ instance : Group H3ZornJordanAut where
 
 end H3ZornJordanAut
 
-/-- Baez/Chevalley--Schafer-style automorphism carrier for this real split model. -/
-abbrev H3ZornF4Aut := H3ZornJordanAut
-
-/-- The automorphism carrier is inhabited by the identity automorphism. -/
-def H3ZornF4Aut.id : H3ZornF4Aut :=
-  H3ZornJordanAut.id
-
 /-- Leibniz derivation predicate for the installed `H3Zorn ℝ` Jordan product. -/
 def H3ZornJordanDerivation (D : Module.End ℝ (H3Zorn ℝ)) : Prop :=
   ∀ X Y : H3Zorn ℝ, D (X * Y) = D X * Y + X * D Y
@@ -239,11 +232,6 @@ def H3ZornF4Derivations : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) where
     rw [sub_mul_candidate, mul_sub_candidate]
     abel
 
-/-- Membership in the F₄-derivation carrier is exactly the Leibniz rule. -/
-theorem mem_H3ZornF4Derivations_iff (D : Module.End ℝ (H3Zorn ℝ)) :
-    D ∈ H3ZornF4Derivations ↔ H3ZornJordanDerivation D := by
-  rfl
-
 /-- The zero endomorphism is a Jordan derivation. -/
 theorem zero_H3ZornJordanDerivation :
     H3ZornJordanDerivation (0 : Module.End ℝ (H3Zorn ℝ)) := by
@@ -265,13 +253,6 @@ theorem H3ZornJordanDerivation_commutator
     ⁅D, E⁆ (X * Y) = ⁅D, E⁆ X * Y + X * ⁅D, E⁆ Y := by
   exact H3ZornJordanDerivation_lie hD hE X Y
 
-/-- The source-specific derivation carrier agrees exactly with the repository's
-generic native derivation Lie subalgebra. -/
-theorem H3ZornF4Derivations_eq_native :
-    H3ZornF4Derivations =
-      NonAssocDerivation.derivations ℝ (H3Zorn ℝ) := by
-  rfl
-
 /-- Baez's inner-derivation mechanism is realized natively: for every two
 split-Albert elements, the commutator `[L_a,L_b]` belongs to the derivation Lie
 subalgebra. -/
@@ -279,7 +260,6 @@ theorem h3ZornJordanInnerDerivation_mem_F4
     (a b : H3Zorn ℝ) :
     (h3ZornJordanInnerDerivation a b : Module.End ℝ (H3Zorn ℝ)) ∈
       H3ZornF4Derivations := by
-  rw [H3ZornF4Derivations_eq_native]
   exact (h3ZornJordanInnerDerivation a b).property
 
 /-- Helper to construct diagonal element 1 -/

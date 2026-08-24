@@ -15,16 +15,13 @@ universe u
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex (PrimeRegister)
 
-abbrev PrimeCutoff :=
-  InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff
-
-abbrev PrimeMode (P : PrimeCutoff) :=
+abbrev PrimeMode (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeMode P
 
-abbrev CantorField (P : PrimeCutoff) :=
+abbrev CantorField (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.CantorField P
 
-abbrev Vertex (P : PrimeCutoff) :=
+abbrev Vertex (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.Vertex P
 
 structure FiniteMajoranaLattice
@@ -69,14 +66,14 @@ theorem D_commutes_H (M : FiniteMajoranaLattice Op) :
 
 end FiniteMajoranaLattice
 
-structure FiniteZetaDiracLattice (P : PrimeCutoff) where
+structure FiniteZetaDiracLattice (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) where
   packet : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac P
   amplitude_selfAdjoint :
     ∀ p : PrimeMode P, star (packet.amplitude p) = packet.amplitude p
 
 namespace FiniteZetaDiracLattice
 
-variable {P : PrimeCutoff}
+variable {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
 
 def D (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P :=
   Z.packet.op s
@@ -86,11 +83,6 @@ def Q (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P
 
 def Qsharp (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P :=
   Z.packet.Qsharp s
-
-theorem D_eq_Q_add_Qsharp
-    (Z : FiniteZetaDiracLattice P) (s : ℂ) (f : CantorField P) (S : Vertex P) :
-    Z.D s f S = Z.Q s f S + Z.Qsharp s f S := by
-  rfl
 
 theorem D_selfAdjoint_of_unitary
     (Z : FiniteZetaDiracLattice P) (s : ℂ)
@@ -263,7 +255,7 @@ theorem cone_inductionSeries_square_closure_zeroStage
 
 end FiniteSuperchargeInduction
 
-structure FiniteHestenesKreinLattice (P : PrimeCutoff) where
+structure FiniteHestenesKreinLattice (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) where
   packet :
     InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.FiniteBerryKeatingCantorDirac P
   amplitude_selfAdjoint :
@@ -275,17 +267,12 @@ structure FiniteHestenesKreinLattice (P : PrimeCutoff) where
 
 namespace FiniteHestenesKreinLattice
 
-variable {P : PrimeCutoff}
+variable {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
 
 def toZetaDiracLattice (L : FiniteHestenesKreinLattice P) :
     FiniteZetaDiracLattice P :=
   { packet := L.packet.toCantorZetaDirac
     amplitude_selfAdjoint := L.amplitude_selfAdjoint }
-
-theorem D_eq_Q_add_Qsharp
-    (L : FiniteHestenesKreinLattice P) (s : ℂ) (f : CantorField P) (S : Vertex P) :
-    L.packet.D s f S = L.packet.Q s f S + L.packet.Qsharp s f S := by
-  rfl
 
 theorem D_selfAdjoint_of_zetaCriticalLine
     (L : FiniteHestenesKreinLattice P) (hP : P.primes.Nonempty) (s : ℂ)
@@ -317,14 +304,14 @@ namespace HilbertPolyaLemmaSeries
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 def FiniteCriticalLineSelfAdjointLemma
-    {P : PrimeCutoff} (L : FiniteHestenesKreinLattice P) : Prop :=
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff} (L : FiniteHestenesKreinLattice P) : Prop :=
   P.primes.Nonempty →
     ∀ s : ℂ, s.re = 1 / 2 →
       InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac.IsAdjointPair
         (P := P) (L.packet.D s) (L.packet.D s)
 
 theorem finiteCriticalLineSelfAdjoint
-    {P : PrimeCutoff} (L : FiniteHestenesKreinLattice P) :
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff} (L : FiniteHestenesKreinLattice P) :
     FiniteCriticalLineSelfAdjointLemma L := by
   intro hP s hs
   exact L.D_selfAdjoint_of_zetaCriticalLine hP s hs

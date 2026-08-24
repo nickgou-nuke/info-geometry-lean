@@ -92,15 +92,15 @@ theorem cuntz_generator_not_car
 theorem fock_left_regular_cuntz_qccr_zero
     (n : ℕ) (i : Fin n) (x : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg n) :
     qCcrRelation
-        (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
+        (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
           (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzSdag n i))
-        (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
+        (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
           (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzS n i)) 0 x = 0 := by
   have hqccr :
       qCcrRelation
-          (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
+          (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
             (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzSdag n i))
-          (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
+          (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
             (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzS n i)) 0 = 0 := by
     apply (qccr_to_cuntz_limit _ _).2
     ext y

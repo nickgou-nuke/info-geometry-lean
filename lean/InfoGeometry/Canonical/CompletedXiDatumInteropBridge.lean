@@ -19,9 +19,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.CompletedXiDatumInteropBridge
 
-abbrev CanonicalDatum :=
-  InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum
-
 abbrev TopologicalDatum (xi : ℂ → ℂ) :=
   InfoGeometry.Topology.CompletedZetaPotentialAndRealGibbsFisherBridge.CompletedXiDatum xi
 
@@ -30,24 +27,29 @@ open InfoGeometry.Topology.CompletedZetaPotentialAndRealGibbsFisherBridge
 open InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 
 /-- Transport a topological completed-Xi datum to the canonical owner. -/
-def ofTopological {xi : ℂ → ℂ} (D : TopologicalDatum xi) : CanonicalDatum where
+def ofTopological {xi : ℂ → ℂ} (D : TopologicalDatum xi) :
+    InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum where
   xi := xi
   reflection := D.func_eq
   schwarz := D.schwarz
 
 /-- Transport a canonical completed-Xi datum to the topology owner. -/
-def toTopological (D : CanonicalDatum) : TopologicalDatum D.xi where
+def toTopological
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) :
+    TopologicalDatum D.xi where
   func_eq := D.reflection
   schwarz := D.schwarz
 
 @[simp] theorem ofTopological_xi {xi : ℂ → ℂ} (D : TopologicalDatum xi) :
     (ofTopological D).xi = xi := rfl
 
-@[simp] theorem toTopological_func_eq (D : CanonicalDatum) (s : ℂ) :
+@[simp] theorem toTopological_func_eq
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (s : ℂ) :
     D.xi (1 - s) = D.xi s :=
   D.reflection s
 
-@[simp] theorem toTopological_schwarz (D : CanonicalDatum) (s : ℂ) :
+@[simp] theorem toTopological_schwarz
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (s : ℂ) :
     D.xi (star s) = star (D.xi s) :=
   D.schwarz s
 
@@ -62,14 +64,16 @@ theorem canonical_logModulusPotential_v4_of_topological
   logModulusPotential_v4_invariant (ofTopological D) s
 
 theorem topology_xiNormLevelSet_v4_of_canonical
-    (D : CanonicalDatum) (r : ℝ) (s : ℂ) :
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum)
+    (r : ℝ) (s : ℂ) :
     ((1 - s) ∈ xiNormLevelSet D.xi r ↔ s ∈ xiNormLevelSet D.xi r) ∧
     ((star s) ∈ xiNormLevelSet D.xi r ↔ s ∈ xiNormLevelSet D.xi r) ∧
     ((1 - star s) ∈ xiNormLevelSet D.xi r ↔ s ∈ xiNormLevelSet D.xi r) :=
   xiNormLevelSet_v4_invariant D.xi (toTopological D) r s
 
 /-- The concrete Mathlib `riemannXi` datum in the canonical owner. -/
-def actualCanonicalCompletedXiDatum : CanonicalDatum :=
+def actualCanonicalCompletedXiDatum :
+    InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum :=
   { xi := InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi
     reflection := InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi_one_sub
     schwarz := InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge.actualRiemannXi_conj }
@@ -95,18 +99,23 @@ theorem actualCanonicalCompletedXiDatum_toTopological_eq :
   Subsingleton.elim _ _
 
 /-- Center a canonical completed-Xi datum in the affine coordinate `z`. -/
-def centeredData (D : CanonicalDatum) : CompletedXiData where
+def centeredData
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) :
+    CompletedXiData where
   lambda := D.xi
   xi := fun z => D.xi ((1 / 2 : ℂ) + z)
   xi_def := by intro z; rfl
 
-@[simp] theorem centeredData_lambda (D : CanonicalDatum) (s : ℂ) :
+@[simp] theorem centeredData_lambda
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (s : ℂ) :
     (centeredData D).lambda s = D.xi s := rfl
 
-@[simp] theorem centeredData_xi (D : CanonicalDatum) (z : ℂ) :
+@[simp] theorem centeredData_xi
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (z : ℂ) :
     (centeredData D).xi z = D.xi ((1 / 2 : ℂ) + z) := rfl
 
-theorem centeredData_even_of_reflection (D : CanonicalDatum) (z : ℂ) :
+theorem centeredData_even_of_reflection
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (z : ℂ) :
     (centeredData D).xi z = (centeredData D).xi (-z) := by
   rw [centeredData_xi, centeredData_xi]
   have h := D.reflection ((1 / 2 : ℂ) + z)
@@ -114,7 +123,8 @@ theorem centeredData_even_of_reflection (D : CanonicalDatum) (z : ℂ) :
   rw [harg] at h
   exact h.symm
 
-theorem centeredData_conj_of_schwarz (D : CanonicalDatum) (z : ℂ) :
+theorem centeredData_conj_of_schwarz
+    (D : InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum) (z : ℂ) :
     (centeredData D).xi (star z) =
       star ((centeredData D).xi z) := by
   rw [centeredData_xi, centeredData_xi]

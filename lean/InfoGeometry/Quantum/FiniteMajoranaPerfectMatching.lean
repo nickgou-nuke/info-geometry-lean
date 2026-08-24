@@ -20,12 +20,6 @@ abbrev MajoranaLabel (N : ℕ) := Fin N × Fin 2
 def pairSwap (i : Fin 2) : Fin 2 :=
   if i = 0 then 1 else 0
 
-theorem pairSwap_zero : pairSwap (0 : Fin 2) = 1 := by
-  rfl
-
-theorem pairSwap_one : pairSwap (1 : Fin 2) = 0 := by
-  simp [pairSwap]
-
 theorem pairSwap_involutive (i : Fin 2) :
     pairSwap (pairSwap i) = i := by
   fin_cases i <;> simp [pairSwap]
@@ -49,17 +43,9 @@ def canonicalMatching (N : ℕ) : PerfectMatching (MajoranaLabel N) where
     have h₂ : pairSwap p.2 = p.2 := congrArg Prod.snd h
     exact (pairSwap_ne p.2) h₂
 
-theorem canonicalMatching_partner (N : ℕ) (p : MajoranaLabel N) :
-    (canonicalMatching N).partner p = (p.1, pairSwap p.2) := by
-  rfl
-
 /-- The canonical matching has exactly one edge for each block label. -/
 def matchingWeight {N : ℕ} (a : Fin N → ℝ) : ℝ :=
   ∏ k, a k
-
-theorem canonicalMatching_weight_eq_blockPfaffian {N : ℕ} (a : Fin N → ℝ) :
-    matchingWeight a = finitePairingPfaffian a := by
-  rfl
 
 theorem canonicalMatching_weight_squared_eq_blockDeterminant
     {N : ℕ} (a : Fin N → ℝ) :

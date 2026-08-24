@@ -1,3 +1,5 @@
+import InfoGeometry.Physics.NuclearGradedBathCommutant
+import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.ZornBdGSuperconductingExponentialBridge
 import InfoGeometry.Physics.SplitOctonionDerivationSpinRep

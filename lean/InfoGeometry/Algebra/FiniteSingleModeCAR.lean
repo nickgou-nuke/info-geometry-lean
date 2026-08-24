@@ -4,11 +4,8 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.FiniteSingleModeCAR
 
-/-- One fermionic mode has two basis states: unoccupied/occupied. -/
-abbrev OneModeState := Bool
-
 /-- Complex wavefunctions on the one-mode Fock basis. -/
-abbrev OneModeVec := OneModeState → ℂ
+abbrev OneModeVec := Bool → ℂ
 
 /-- One-mode annihilation operator: `c |0⟩ = 0`, `c |1⟩ = |0⟩`. -/
 def ann (ψ : OneModeVec) : OneModeVec :=
@@ -60,7 +57,7 @@ theorem ann_cre_anticommutator : opAdd (opComp ann cre) (opComp cre ann) = idOp 
   cases occ <;> simp [opAdd, opComp, idOp]
 
 /-- Number operator is projection onto the occupied state. -/
-theorem num_apply (ψ : OneModeVec) (occ : OneModeState) :
+theorem num_apply (ψ : OneModeVec) (occ : Bool) :
     num ψ occ = if occ then ψ true else 0 := by
   cases occ <;> simp [num]
 
@@ -85,7 +82,7 @@ theorem occupied_energy (ε : ℂ) :
 
 /-- One-mode finite Gibbs trace. -/
 theorem one_mode_gibbs_trace (ε β : ℝ) :
-    (∑ occ : OneModeState, Real.exp (-β * (if occ then ε else 0))) =
+    (∑ occ : Bool, Real.exp (-β * (if occ then ε else 0))) =
       1 + Real.exp (-β * ε) := by
   simp
   ring

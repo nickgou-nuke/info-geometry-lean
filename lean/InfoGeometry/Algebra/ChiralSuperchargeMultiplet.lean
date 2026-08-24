@@ -52,12 +52,12 @@ def rankOneMomentum (lambda mu : Fin 2 → ℂ) : M2A A :=
 
 /-- The mixed anticommutator of factorized chiral charges is rank one. -/
 theorem factorized_mixed_anticommutator
-    (lambda mu : Fin 2 → ℂ) (q qbar : A)
+    (lambda mu : Fin 2 → ℂ) (q qbar : A) (P : Fin 4 → A)
     (h : anticommutator q qbar = (2 : ℂ) • (1 : A)) :
     (let M : Data (A := A) :=
-      { QL := factorizedLeft lambda q
-        QR := factorizedRight mu qbar
-        P := fun _ => 0 }
+     { QL := factorizedLeft lambda q
+       QR := factorizedRight mu qbar
+       P := P }
      mixedMomentum M) =
       rankOneMomentum (A := A) lambda mu := by
   have h' : q * qbar + qbar * q = (2 : ℂ) • (1 : A) := by
@@ -161,13 +161,5 @@ theorem same_chirality_square_zero
     rw [← add_smul] at h₃
     norm_num at h₃
     exact h₃
-
-theorem same_chirality_zero
-    (M : Data (A := A))
-    (hL : ∀ α β : Fin 2, anticommutator (M.QL α) (M.QL β) = 0)
-    (hR : ∀ α β : Fin 2, anticommutator (M.QR α) (M.QR β) = 0) :
-    (∀ α β : Fin 2, anticommutator (M.QL α) (M.QL β) = 0) ∧
-      (∀ α β : Fin 2, anticommutator (M.QR α) (M.QR β) = 0) :=
-  ⟨hL, hR⟩
 
 end InfoGeometry.Algebra.ChiralSuperchargeMultiplet

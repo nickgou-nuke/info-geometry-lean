@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.SL2SpinorLadder
 
 noncomputable section
@@ -17,6 +18,50 @@ it records the intrinsic commutant predicate and its linear closure.
 /-- Elements whose native Lie bracket with every bath observable vanishes. -/
 def CommutesWithBath (bath : Set Alg) (X : Alg) : Prop :=
   ∀ ⦃B : Alg⦄, B ∈ bath → Alg.br X B = 0
+
+/-! ## Native associative operator realization -/
+
+/-- The adjoint action realizes the native Lie carrier as associative linear
+operators on itself.  This is the carrier on which the repository's KMS/GNS
+owners can later be instantiated. -/
+abbrev AdjointOperator := Module.End ℝ Alg
+
+def adjointOperator (X : Alg) : AdjointOperator :=
+  LieAlgebra.ad ℝ Alg X
+
+@[simp] theorem adjointOperator_apply (X Y : Alg) :
+    adjointOperator X Y = ⁅X, Y⁆ := by
+  rfl
+
+theorem adjointOperator_commutes_of_bracket_zero
+    {X Y : Alg} (hXY : ⁅X, Y⁆ = 0) :
+    adjointOperator X * adjointOperator Y =
+      adjointOperator Y * adjointOperator X := by
+  have h := (LieAlgebra.ad ℝ Alg).map_lie X Y
+  rw [LieRing.of_associative_ring_bracket, hXY] at h
+  have h' :
+      (LieAlgebra.ad ℝ Alg X) * (LieAlgebra.ad ℝ Alg Y) -
+          (LieAlgebra.ad ℝ Alg Y) * (LieAlgebra.ad ℝ Alg X) = 0 := by
+    simpa [LieRing.of_associative_ring_bracket] using h.symm
+  exact sub_eq_zero.mp h'
+
+/-- The associative operator image of a native Lie bath. -/
+def adjointOperatorSet (bath : Set Alg) : Set AdjointOperator :=
+  {T | ∃ B ∈ bath, T = adjointOperator B}
+
+theorem adjointOperator_mem_set
+    {bath : Set Alg} {B : Alg} (hB : B ∈ bath) :
+    adjointOperator B ∈ adjointOperatorSet bath :=
+  ⟨B, hB, rfl⟩
+
+theorem adjointOperator_commutes_with_bath_image
+    {bath : Set Alg} {X : Alg}
+    (hX : CommutesWithBath bath X) :
+    ∀ T ∈ adjointOperatorSet bath,
+      adjointOperator X * T = T * adjointOperator X := by
+  intro T hT
+  rcases hT with ⟨B, hB, rfl⟩
+  exact adjointOperator_commutes_of_bracket_zero (hX hB)
 
 @[simp] theorem commutesWithBath_empty (X : Alg) :
     CommutesWithBath (∅ : Set Alg) X := by
@@ -67,8 +112,8 @@ theorem commutesWithBath_bracket
 /-! A grading is supplied as data together with its bracket law.  This keeps
 the physical grade interpretation separate from the commutant predicate. -/
 
-structure GradedBracketLaw (grade : ℤ → Submodule ℝ Alg) : Prop where
-  bracket_mem : ∀ (i j : ℤ) (X Y : Alg),
+def GradedBracketLaw (grade : ℤ → Submodule ℝ Alg) : Prop :=
+  ∀ (i j : ℤ) (X Y : Alg),
     X ∈ grade i → Y ∈ grade j →
       ⁅X, Y⁆ ∈ grade (i + j)
 
@@ -77,6 +122,44 @@ def GradedCommutesWithBath
     (bath : Set Alg) (i : ℤ) : Set Alg :=
   {X | X ∈ grade i ∧ CommutesWithBath bath X}
 
+/-- The homogeneous bath commutant is a native submodule. -/
+def gradedCommutesWithBathSubmodule
+    (grade : ℤ → Submodule ℝ Alg)
+    (bath : Set Alg) (i : ℤ) : Submodule ℝ Alg where
+  carrier := GradedCommutesWithBath grade bath i
+  zero_mem' := by
+    exact ⟨(grade i).zero_mem, commutesWithBath_zero bath⟩
+  add_mem' := by
+    intro X Y hX hY
+    exact ⟨(grade i).add_mem hX.1 hY.1,
+      commutesWithBath_add bath X Y hX.2 hY.2⟩
+  smul_mem' := by
+    intro c X hX
+    exact ⟨(grade i).smul_mem c hX.1,
+      commutesWithBath_smul bath c X hX.2⟩
+
+@[simp] theorem mem_gradedCommutesWithBathSubmodule_iff
+    (grade : ℤ → Submodule ℝ Alg)
+    (bath : Set Alg) (i : ℤ) (X : Alg) :
+    X ∈ gradedCommutesWithBathSubmodule grade bath i ↔
+      X ∈ GradedCommutesWithBath grade bath i :=
+  Iff.rfl
+
+theorem gradedCommutesWithBath_add
+    (grade : ℤ → Submodule ℝ Alg)
+    (bath : Set Alg) (i : ℤ) {X Y : Alg}
+    (hX : X ∈ GradedCommutesWithBath grade bath i)
+    (hY : Y ∈ GradedCommutesWithBath grade bath i) :
+    X + Y ∈ GradedCommutesWithBath grade bath i :=
+  (gradedCommutesWithBathSubmodule grade bath i).add_mem hX hY
+
+theorem gradedCommutesWithBath_smul
+    (grade : ℤ → Submodule ℝ Alg)
+    (bath : Set Alg) (i : ℤ) (c : ℝ) {X : Alg}
+    (hX : X ∈ GradedCommutesWithBath grade bath i) :
+    c • X ∈ GradedCommutesWithBath grade bath i :=
+  (gradedCommutesWithBathSubmodule grade bath i).smul_mem c hX
+
 theorem gradedCommutesWithBath_bracket
     (grade : ℤ → Submodule ℝ Alg)
     (hgrade : GradedBracketLaw grade)
@@ -84,7 +167,7 @@ theorem gradedCommutesWithBath_bracket
     (hX : X ∈ GradedCommutesWithBath grade bath i)
     (hY : Y ∈ GradedCommutesWithBath grade bath j) :
     ⁅X, Y⁆ ∈ GradedCommutesWithBath grade bath (i + j) := by
-  exact ⟨hgrade.bracket_mem i j X Y hX.1 hY.1,
+  exact ⟨hgrade i j X Y hX.1 hY.1,
     commutesWithBath_bracket bath X Y hX.2 hY.2⟩
 
 end InfoGeometry.Canonical.NuclearBathCommutant

@@ -77,22 +77,19 @@ def spinRelatedFiber : Subgroup (ComplexSpin44 × CartanTrialityGroup) where
       relatedDiracRepresentation g.2⁻¹
     rw [map_inv, map_inv, hg]
 
-/-- The group of compatible spin/related-triple pairs. -/
-abbrev SpinRelatedFiber := spinRelatedFiber
-
 /-- Projection of the compatibility fiber to Mathlib's spin group. -/
-def toSpin : SpinRelatedFiber →* ComplexSpin44 where
+def toSpin : spinRelatedFiber →* ComplexSpin44 where
   toFun g := g.1.1
   map_one' := rfl
   map_mul' _ _ := rfl
 
 /-- Projection of the compatibility fiber to the related-triples group. -/
-def toRelatedTriple : SpinRelatedFiber →* CartanTrialityGroup where
+def toRelatedTriple : spinRelatedFiber →* CartanTrialityGroup where
   toFun g := g.1.2
   map_one' := rfl
   map_mul' _ _ := rfl
 
-theorem fiber_representation_eq (g : SpinRelatedFiber) :
+theorem fiber_representation_eq (g : spinRelatedFiber) :
     complexSpinDiracRepresentation (toSpin g) =
       relatedDiracRepresentation (toRelatedTriple g) :=
   g.2
@@ -100,7 +97,7 @@ theorem fiber_representation_eq (g : SpinRelatedFiber) :
 /-- Operator-level form of compatibility: the Clifford spin action is the
 pair of semispinor actions carried by the related triple. -/
 theorem fiber_dirac_action
-    (g : SpinRelatedFiber) (S : SpinorPlus8) (C : SpinorMinus8) :
+    (g : spinRelatedFiber) (S : SpinorPlus8) (C : SpinorMinus8) :
     ((complexSpinDiracRepresentation (toSpin g) : DiracGL) :
         Module.End ℂ DiracSpinor16) (S, C) =
       (spinorPlusAct (toRelatedTriple g).1.2.1 S,
@@ -110,7 +107,7 @@ theorem fiber_dirac_action
 
 /-- The compatibility fiber is nonempty: both identity transformations form
 the canonical base point. -/
-def spinRelatedIdentity : SpinRelatedFiber := ⟨(1, 1), by
+def spinRelatedIdentity : spinRelatedFiber := ⟨(1, 1), by
   change complexSpinDiracRepresentation 1 = relatedDiracRepresentation 1
   rw [map_one, map_one]⟩
 
@@ -121,7 +118,7 @@ def spinRelatedIdentity : SpinRelatedFiber := ⟨(1, 1), by
 
 /-- The fiber product, its two projections, and agreement of the induced
 Dirac actions form one compiler-visible group-level bridge. -/
-theorem spin_related_triality_group_bridge (g : SpinRelatedFiber)
+theorem spin_related_triality_group_bridge (g : spinRelatedFiber)
     (S : SpinorPlus8) (C : SpinorMinus8) :
     SpinRelatedCompatible ((toSpin g), (toRelatedTriple g)) ∧
     ((complexSpinDiracRepresentation (toSpin g) : DiracGL) :

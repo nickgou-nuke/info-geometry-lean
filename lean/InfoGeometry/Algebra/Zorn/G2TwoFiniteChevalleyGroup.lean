@@ -16,19 +16,17 @@ namespace InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
-local notation "G2Two" => SplitOctF2Aut
+@[simp] theorem finiteChevalleyG2_mul_apply
+    (f g : SplitOctF2Aut) (X : SplitOctF2) :
+    (f * g : SplitOctF2Aut).1 X = g.1 (f.1 X) := rfl
 
-abbrev finiteChevalleyG2 := SplitOctF2Aut
-
-@[simp] theorem finiteChevalleyG2_mul_apply (f g : G2Two) (X : SplitOctF2) :
-    (f * g : G2Two).1 X = g.1 (f.1 X) := rfl
-
-@[simp] theorem finiteChevalleyG2_inv_apply (f : G2Two) (X : SplitOctF2) :
-    (f⁻¹ : G2Two).1 X = f.1.symm X := rfl
+@[simp] theorem finiteChevalleyG2_inv_apply
+    (f : SplitOctF2Aut) (X : SplitOctF2) :
+    (f⁻¹ : SplitOctF2Aut).1 X = f.1.symm X := rfl
 
 theorem finite_chevalley_group_card_packet
-    (h_enum : Fintype.card G2Two = 12096) :
-    Fintype.card G2Two =
+    (h_enum : Fintype.card SplitOctF2Aut = 12096) :
+    Fintype.card SplitOctF2Aut =
       InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger.g2TwoOrder := by
   simpa [InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger.g2TwoOrder]
     using h_enum

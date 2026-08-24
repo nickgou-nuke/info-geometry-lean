@@ -3248,6 +3248,8 @@ import InfoGeometry.Canonical.SL2CZhukovsky
 import InfoGeometry.Canonical.SL2FiveGradingExample
 import InfoGeometry.Canonical.SL2RToG2WiesbrockEmbedding
 import InfoGeometry.Canonical.SL2SpinorLadder
+import InfoGeometry.Canonical.NuclearBathHeisenberg
+import InfoGeometry.Canonical.NuclearBathTomitaBridge
 import InfoGeometry.Canonical.S_left_K_commutation
 import InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose
 import InfoGeometry.Canonical.SmithRetrocirculantMoorePenrose
@@ -4403,7 +4405,10 @@ import InfoGeometry.Eval.SeedProverSmoke
 import InfoGeometry.Eval.SorryFillerTest
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.CubicJordanQuadraticLaws
 import InfoGeometry.Exceptional.FreudenthalCl11Doublet
+import InfoGeometry.Exceptional.SymplecticTripleSystem
+import InfoGeometry.Exceptional.SymplecticTripleSystemLie
 import InfoGeometry.Exceptional.ModularFlowCUDA
 import InfoGeometry.Exceptional.RealVectorIdentities
 import InfoGeometry.Exceptional.SpinZornBridge

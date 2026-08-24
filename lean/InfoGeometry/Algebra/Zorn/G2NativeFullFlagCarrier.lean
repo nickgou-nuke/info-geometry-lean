@@ -15,8 +15,6 @@ open InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 open InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
 open InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
 
-abbrev NativePoint := OctImIsotropicPoint
-
-abbrev NativeFlag := Σ p : NativePoint, LinesThroughPoint p.1
+def NativeFlag := Σ p : OctImIsotropicPoint, LinesThroughPoint p.1
 
 end InfoGeometry.Algebra.Zorn.G2NativeFullFlagCarrier

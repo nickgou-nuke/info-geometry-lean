@@ -107,21 +107,6 @@ def finiteWeightedSupertrace
     (levels : Finset ι) (boson fermion : ι → Nat) (weight : ι → Int) : Int :=
   ∑ i ∈ levels, levelSuperdimension boson fermion i * weight i
 
-/-- Explicit nonzero pairing makes the level superdimension vanish. -/
-theorem nonzero_level_superdimension_zero
-    (boson fermion : ι → Nat) {i : ι}
-    (hpair : boson i = fermion i) :
-    levelSuperdimension boson fermion i = 0 := by
-  simp [levelSuperdimension, hpair]
-
-/-- A zero level with weight `1` contributes its ordinary superdimension. -/
-theorem zero_weighted_level_eq_unweighted
-    (boson fermion : ι → Nat) (weight : ι → Int) {i : ι}
-    (hweight : weight i = 1) :
-    levelSuperdimension boson fermion i * weight i =
-      levelSuperdimension boson fermion i := by
-  simp [hweight]
-
 /--
 Finite Kudinoor/Witten-index collapse.
 

@@ -106,10 +106,6 @@ theorem projectiveRatio_hestenesSwap
   unfold projectiveRatio hestenesSwap
   field_simp [hp, hq]
 
-theorem hestenesK_eq_swap_epsilon (X : HomogeneousCoord) :
-    hestenesK X = hestenesSwap (hestenesEpsilon X) := by
-  rfl
-
 /-! ## Projective reconstruction and generic functional descent -/
 
 def projectiveS (X : HomogeneousCoord) : ℂ :=
@@ -128,10 +124,6 @@ theorem projectiveS_smul
   change (c * p) / (c * p + c * q) = p / (p + q)
   rw [← mul_add]
   field_simp [hc, hsum]
-
-theorem projectiveS_homogeneousCoord (s : ℂ) :
-    projectiveS (homogeneousCoord s) = s := by
-  simp [projectiveS, homogeneousCoord]
 
 def homogeneousFunction (f : ℂ → ℂ) (X : HomogeneousCoord) : ℂ :=
   f (projectiveS X)
@@ -191,12 +183,6 @@ def cartanFlow (t : ℝ) : HomogeneousCoord → HomogeneousCoord :=
   fun X =>
     ((Real.exp t : ℂ) * X.1,
       (Real.exp (-t) : ℂ) * X.2)
-
-theorem cartanFlow_apply (t : ℝ) (p q : ℂ) :
-    cartanFlow t (p, q) =
-      ((Real.exp t : ℂ) * p,
-        (Real.exp (-t) : ℂ) * q) :=
-  rfl
 
 theorem projectiveRatio_cartanFlow
     (t : ℝ) {p q : ℂ} (hq : q ≠ 0) :
@@ -314,10 +300,6 @@ theorem centeredZetaCoord_mem_seam_iff (s : ℂ) :
 /-- The existing wallpaper glide, read in centered zeta coordinates. -/
 def zetaWallpaperGlide (p : CenteredZetaCoord) : CenteredZetaCoord :=
   InfoGeometry.Canonical.HolographicSouriauClosure.glide_reflection p
-
-theorem zetaWallpaperGlide_apply (u v : ℝ) :
-    zetaWallpaperGlide (u, v) = (-u, v + 1 / 2) := by
-  rfl
 
 theorem zetaWallpaperGlide_square (p : CenteredZetaCoord) :
     zetaWallpaperGlide (zetaWallpaperGlide p) = (p.1, p.2 + 1) := by

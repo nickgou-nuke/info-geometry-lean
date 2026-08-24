@@ -14,10 +14,8 @@ namespace InfoGeometry.Quantum.FiniteMajoranaPairingBlocks
 
 open InfoGeometry.Quantum.MajoranaPfaffianBridge
 
-abbrev PairingBlock := M2R
-
 /-- The canonical skew block for one Majorana pair with coupling `a`. -/
-def pairingBlock (a : ℝ) : PairingBlock :=
+def pairingBlock (a : ℝ) : M2R :=
   !![0, a; -a, 0]
 
 theorem pairingBlock_isSkew (a : ℝ) :
@@ -25,10 +23,6 @@ theorem pairingBlock_isSkew (a : ℝ) :
   unfold IsSkew pairingBlock
   ext i j
   fin_cases i <;> fin_cases j <;> norm_num
-
-theorem pairingBlock_pfaffian (a : ℝ) :
-    pfaffian2 (pairingBlock a) = a := by
-  rfl
 
 theorem pairingBlock_det (a : ℝ) :
     (pairingBlock a).det = a ^ 2 := by
@@ -42,10 +36,6 @@ def finitePairingPfaffian {N : ℕ} (a : Fin N → ℝ) : ℝ :=
 /-- Product of the determinants of the canonical pair blocks. -/
 def finitePairingDeterminant {N : ℕ} (a : Fin N → ℝ) : ℝ :=
   ∏ k, (pairingBlock (a k)).det
-
-theorem finitePairingPfaffian_eq_product {N : ℕ} (a : Fin N → ℝ) :
-    finitePairingPfaffian a = ∏ k, a k := by
-  rfl
 
 theorem finitePairingDeterminant_eq_square {N : ℕ} (a : Fin N → ℝ) :
     finitePairingDeterminant a = (finitePairingPfaffian a) ^ 2 := by

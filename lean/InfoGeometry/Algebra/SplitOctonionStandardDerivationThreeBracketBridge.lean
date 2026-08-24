@@ -17,18 +17,12 @@ namespace InfoGeometry.Algebra.SplitOctonionStandardDerivationThreeBracketBridge
 open InfoGeometry.Algebra
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 
-abbrev SplitOctonion := AbstractKingdon
-
 /-- The ternary operation induced by the native split-octonion derivation. -/
-def splitThreeBracket (x y z : SplitOctonion) : SplitOctonion :=
+def splitThreeBracket (x y z : AbstractKingdon) : AbstractKingdon :=
   baezSplitDerivation x y z
 
-@[simp] theorem splitThreeBracket_eq_baez (x y z : SplitOctonion) :
-    splitThreeBracket x y z = baezSplitDerivation x y z :=
-  rfl
-
 @[simp] theorem splitThreeBracket_eq_standard_formula
-    (x y z : SplitOctonion) :
+    (x y z : AbstractKingdon) :
     splitThreeBracket x y z =
       (x * y - y * x) * z - z * (x * y - y * x) -
         (3 : ℕ) • associator x y z := by
@@ -36,16 +30,16 @@ def splitThreeBracket (x y z : SplitOctonion) : SplitOctonion :=
 
 /-- The ternary bracket is a derivation in its third slot. -/
 theorem splitThreeBracket_leibniz
-    (x y a b : SplitOctonion) :
+    (x y a b : AbstractKingdon) :
     splitThreeBracket x y (a * b) =
       splitThreeBracket x y a * b + a * splitThreeBracket x y b := by
   exact NonAssocDerivation.leibniz (baezSplitDerivation x y) a b
 
-@[simp] theorem splitThreeBracket_zero_left (y z : SplitOctonion) :
+@[simp] theorem splitThreeBracket_zero_left (y z : AbstractKingdon) :
     splitThreeBracket 0 y z = 0 := by
   simp [splitThreeBracket, baezSplitDerivation, associator]
 
-@[simp] theorem splitThreeBracket_zero_middle (x z : SplitOctonion) :
+@[simp] theorem splitThreeBracket_zero_middle (x z : AbstractKingdon) :
     splitThreeBracket x 0 z = 0 := by
   simp [splitThreeBracket, baezSplitDerivation, associator]
 

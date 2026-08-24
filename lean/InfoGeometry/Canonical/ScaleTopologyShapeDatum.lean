@@ -15,7 +15,7 @@ product-coordinate equivalence is constructed only when bijectivity of the
 joint readout is supplied explicitly.
 
 A concrete specialization to the existing positive two-lane cone separates
- two distinct motions:
+two distinct motions:
 
 * common positive scaling changes the logarithmic barrier coordinate and leaves
   the logarithmic shape ratio fixed;
@@ -171,18 +171,11 @@ variable {WeylState : Type v}
 variable [Group ArtinState]
 variable [Group WeylState]
 
-/-- The pure Artin subgroup is the kernel of the Weyl projection. -/
+/-- The pure Artin subgroup is the native kernel of the Weyl projection. -/
 def pureSubgroup
     (P : ArtinWeylProjection ArtinState WeylState) :
-    Subgroup ArtinState where
-  carrier := {a | P.toWeyl a = 1}
-  one_mem' := by simp
-  mul_mem' := by
-    intro a b ha hb
-    simp [ha, hb]
-  inv_mem' := by
-    intro a ha
-    simp [ha]
+    Subgroup ArtinState :=
+  P.toWeyl.ker
 
 @[simp]
 theorem mem_pureSubgroup_iff

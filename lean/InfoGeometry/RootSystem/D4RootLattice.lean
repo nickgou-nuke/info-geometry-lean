@@ -29,6 +29,36 @@ instance (x : Ambient) : Decidable (IsD4 x) := by
   unfold IsD4 coordinateSum
   infer_instance
 
+theorem zero_mem_D4 : IsD4 (0 : Ambient) := by
+  native_decide
+
+theorem add_mem_D4 {x y : Ambient} (hx : IsD4 x) (hy : IsD4 y) :
+    IsD4 (x + y) := by
+  change coordinateSum (x + y) % 2 = 0
+  rw [show coordinateSum (x + y) = coordinateSum x + coordinateSum y by
+    simp only [coordinateSum, Fin.sum_univ_four]
+    change (x 0 + y 0) + (x 1 + y 1) + (x 2 + y 2) + (x 3 + y 3) =
+      (x 0 + x 1 + x 2 + x 3) + (y 0 + y 1 + y 2 + y 3)
+    abel]
+  rw [Int.add_emod, hx, hy]
+  norm_num
+
+theorem neg_mem_D4 {x : Ambient} (hx : IsD4 x) : IsD4 (-x) := by
+  change coordinateSum (-x) % 2 = 0
+  rw [show coordinateSum (-x) = -coordinateSum x by
+    simp only [coordinateSum, Fin.sum_univ_four]
+    change (-x 0) + (-x 1) + (-x 2) + (-x 3) =
+      -(x 0 + x 1 + x 2 + x 3)
+    abel]
+  apply Int.emod_eq_zero_of_dvd
+  exact (dvd_neg).2 (Int.dvd_of_emod_eq_zero hx)
+
+def latticeSubgroup : AddSubgroup Ambient where
+  carrier := IsD4
+  zero_mem' := zero_mem_D4
+  add_mem' := add_mem_D4
+  neg_mem' := neg_mem_D4
+
 abbrev Lattice := {x : Ambient // IsD4 x}
 
 def basisVector (i : Fin 4) : Ambient := fun j => if i = j then 1 else 0

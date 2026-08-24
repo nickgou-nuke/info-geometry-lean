@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionChiralMatrixProduct
+import InfoGeometry.Algebra.IdempotentCornerCommutant
 
 /-!
 # Principal left ideals in the chained chiral-action algebra
@@ -30,6 +31,25 @@ theorem mem_principalLeftIdeal_iff (f x : ChiralActionAlgebra) :
 theorem mem_principalRightIdeal_iff (f x : ChiralActionAlgebra) :
     x ∈ principalRightIdeal f ↔ ∃ a : ChiralActionAlgebra, f * a = x := by
   rfl
+
+/-! The range presentation above agrees with the native idempotent-corner
+submodule once the generator is known to be idempotent.  Keeping this bridge
+explicit avoids silently identifying the two APIs before the hypothesis is
+available. -/
+
+theorem principalLeftIdeal_eq_native_idempotentCorner
+    (f : ChiralActionAlgebra) (hf : f * f = f) :
+    principalLeftIdeal f =
+      (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal f hf :
+        Set ChiralActionAlgebra) := by
+  ext x
+  constructor
+  · rintro ⟨a, rfl⟩
+    change (a * f) * f = a * f
+    rw [mul_assoc, hf]
+  · intro hx
+    change x * f = x at hx
+    exact ⟨x, hx⟩
 
 theorem principalLeftIdeal_left_closed
     (f a x : ChiralActionAlgebra)
@@ -144,6 +164,39 @@ theorem principalRightIdeal_mul_principalLeftIdeal_in_corner
   rcases hpsi with ⟨b, rfl⟩
   refine ⟨a * b, ?_⟩
   simp [mul_assoc]
+
+theorem principalRightIdeal_mul_principalLeftIdeal_in_native_corner
+    (f : ChiralActionAlgebra) (hf : f * f = f)
+    {phi psi : ChiralActionAlgebra}
+    (hphi : phi ∈ principalRightIdeal f)
+    (hpsi : psi ∈ principalLeftIdeal f) :
+    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner f hf,
+      c.1 = phi * psi := by
+  rcases principalRightIdeal_mul_principalLeftIdeal_in_corner f hphi hpsi with
+    ⟨c, hc⟩
+  refine ⟨⟨phi * psi, ?_⟩, rfl⟩
+  rw [hc]
+  constructor
+  · simp [mul_assoc, hf]
+  · calc
+      f * (f * (c * f)) = (f * f) * (c * f) := by rw [mul_assoc]
+      _ = f * (c * f) := by rw [hf]
+
+def principalTwoSidedIdeal (f : ChiralActionAlgebra) :
+    Set ChiralActionAlgebra :=
+  Set.range (fun p : ChiralActionAlgebra × ChiralActionAlgebra => p.1 * f * p.2)
+
+theorem principalLeftIdeal_mul_principalRightIdeal_in_twoSided
+    (f : ChiralActionAlgebra) (hf : f * f = f)
+    {psi phi : ChiralActionAlgebra}
+    (hpsi : psi ∈ principalLeftIdeal f)
+    (hphi : phi ∈ principalRightIdeal f) :
+    psi * phi ∈ principalTwoSidedIdeal f := by
+  rcases hpsi with ⟨a, rfl⟩
+  rcases hphi with ⟨b, rfl⟩
+  refine ⟨(a, b), ?_⟩
+  dsimp [principalTwoSidedIdeal, principalLeftIdeal, principalRightIdeal]
+  simpa only [mul_assoc] using (congrArg (fun x => a * x * b) hf).symm
 
 theorem generator_mem_principalLeftIdeal (f : ChiralActionAlgebra) :
     f ∈ principalLeftIdeal f := by

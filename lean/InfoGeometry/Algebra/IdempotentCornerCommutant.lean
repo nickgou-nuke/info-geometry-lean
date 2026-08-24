@@ -89,7 +89,38 @@ theorem corner_endomorphism_eq_rightCornerMap
     _ = x.1 • T ⟨e, he⟩ := by
       rw [map_smul]
     _ = rightCornerMap e he
-        (corner_of_idempotent_endomorphism e he T) x := by
+      (corner_of_idempotent_endomorphism e he T) x := by
       rfl
+
+/-! The evaluation-at-the-idempotent argument also makes the corner action
+injective.  No primitivity or fullness hypothesis is needed. -/
+
+theorem rightCornerMap_injective
+    (e : A) (he : e * e = e) :
+    Function.Injective (rightCornerMap e he) := by
+  intro c d hcd
+  apply Subtype.ext
+  have h := LinearMap.congr_fun hcd (⟨e, he⟩ : principalLeftIdeal e he)
+  have h' := congrArg Subtype.val h
+  simpa [rightCornerMap_apply, c.2.2, d.2.2] using h'
+
+/-- The corner is exactly the endomorphism carrier of the principal left ideal.
+
+This is an equivalence of carriers.  It does not identify the corner with a
+field or assert any Morita fullness property. -/
+noncomputable def cornerEndEquiv
+    (e : A) (he : e * e = e) :
+    corner e he ≃ Module.End A (principalLeftIdeal e he) where
+  toFun := rightCornerMap e he
+  invFun := corner_of_idempotent_endomorphism e he
+  left_inv := by
+    intro c
+    apply Subtype.ext
+    have h := congrArg Subtype.val
+      (rightCornerMap_apply e he c (⟨e, he⟩ : principalLeftIdeal e he))
+    simpa [c.2.2] using h
+  right_inv := by
+    intro T
+    exact (corner_endomorphism_eq_rightCornerMap e he T).symm
 
 end InfoGeometry.Algebra.IdempotentCornerCommutant

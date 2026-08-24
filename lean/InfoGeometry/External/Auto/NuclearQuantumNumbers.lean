@@ -80,16 +80,17 @@ def NucleusQuantumNumbers.ofQ8 (_qI _qJ _qK : M2C) : NucleusQuantumNumbers :=
 @[simp] theorem ofPoint_A (p : NucleusPoint) : (NucleusQuantumNumbers.ofPoint p).A = p.1 + p.2 := rfl
 
 /-- A self-conjugate nucleus has equal proton and neutron numbers. -/
-theorem selfConjugate_Z_eq_N (ν : NucleusQuantumNumbers) (_h : ν.Z = ν.N) : True := by
-  trivial
+theorem selfConjugate_Z_eq_N (ν : NucleusQuantumNumbers) (h : ν.Z = ν.N) :
+    ν.Z + ν.N = 2 * ν.Z := by
+  omega
 
 /-- Parity is a `Bool`. -/
 @[simp] theorem parity_isBool (ν : NucleusQuantumNumbers) : ν.parity = true ∨ ν.parity = false := by
   cases ν.parity <;> simp
 
 /-- Helicity is `±1` for the chiral projectors. -/
-theorem helicity_chiral (ν : NucleusQuantumNumbers) (h : ν.helicity = 1 ∨ ν.helicity = -1) : True := by
-  cases h <;> simp
+theorem helicity_chiral (ν : NucleusQuantumNumbers) (h : ν.helicity = 1 ∨ ν.helicity = -1) :
+    ν.helicity = 1 ∨ ν.helicity = -1 := h
 
 /-- Mirror nuclei have opposite `Tz` by construction of `mirrorPair`. -/
 theorem mirrorPair_Tz_opposite (p : NucleusPoint) :

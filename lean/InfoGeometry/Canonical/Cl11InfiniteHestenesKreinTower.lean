@@ -122,6 +122,82 @@ theorem modularWeight_commutes_all :
   exact HestenesKreinTower.modularWeight_commutes_modularGenerator_all tower
     modularWeight_bond modularGenerator_bond
 
+theorem modularGenerator_square_all :
+    ∀ n : ℕ, modularGenerator n * modularGenerator n = (1 : Stage n) := by
+  intro n
+  induction n with
+  | zero =>
+      change
+        ((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ
+          InfoGeometry.Clifford.Cl11TensorTower.modularSignBase) *
+          ((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ
+            InfoGeometry.Clifford.Cl11TensorTower.modularSignBase) = _
+      rw [← Matrix.mul_kronecker_mul,
+        InfoGeometry.Clifford.Cl11TensorTower.modularSignBase_sq]
+      simp
+  | succ n ih =>
+      change
+        (modularGenerator n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
+          (modularGenerator n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) = _
+      rw [← Matrix.mul_kronecker_mul, ih]
+      simp
+
+def fPlus (n : ℕ) : Stage n :=
+  (1 / 2 : ℝ) • (1 + modularGenerator n)
+
+def fMinus (n : ℕ) : Stage n :=
+  (1 / 2 : ℝ) • (1 - modularGenerator n)
+
+theorem fPlus_idempotent (n : ℕ) : fPlus n * fPlus n = fPlus n := by
+  simp only [fPlus, smul_mul_assoc, mul_smul_comm, smul_smul, one_mul,
+    mul_one, add_mul, mul_add]
+  rw [modularGenerator_square_all n]
+  module
+
+theorem fMinus_idempotent (n : ℕ) : fMinus n * fMinus n = fMinus n := by
+  simp only [fMinus, smul_mul_assoc, mul_smul_comm, smul_smul, one_mul,
+    mul_one, sub_mul, mul_sub]
+  rw [modularGenerator_square_all n]
+  module
+
+theorem fPlus_mul_fMinus (n : ℕ) : fPlus n * fMinus n = 0 := by
+  simp only [fPlus, fMinus, smul_mul_assoc, mul_smul_comm, smul_smul,
+    one_mul, mul_one, add_mul, mul_add, sub_mul, mul_sub]
+  rw [modularGenerator_square_all n]
+  module
+
+theorem fMinus_mul_fPlus (n : ℕ) : fMinus n * fPlus n = 0 := by
+  simp only [fPlus, fMinus, smul_mul_assoc, mul_smul_comm, smul_smul,
+    one_mul, mul_one, add_mul, mul_add, sub_mul, mul_sub]
+  rw [modularGenerator_square_all n]
+  module
+
+theorem fPlus_add_fMinus (n : ℕ) : fPlus n + fMinus n = (1 : Stage n) := by
+  simp [fPlus, fMinus]
+  module
+
+theorem fPlus_bond (n : ℕ) : bond n (fPlus n) = fPlus (n + 1) := by
+  change InfoGeometry.Clifford.Cl11TensorTower.stageEmbed (n + 1)
+      ((1 / 2 : ℝ) • (1 + modularGenerator n)) =
+    (1 / 2 : ℝ) • (1 + modularGenerator (n + 1))
+  simp only [Algebra.smul_def, map_mul, map_add, map_one]
+  have h := modularGenerator_bond n
+  change InfoGeometry.Clifford.Cl11TensorTower.stageEmbed (n + 1)
+      (modularGenerator n) = modularGenerator (n + 1) at h
+  rw [h]
+  simp [Algebra.commutes]
+
+theorem fMinus_bond (n : ℕ) : bond n (fMinus n) = fMinus (n + 1) := by
+  change InfoGeometry.Clifford.Cl11TensorTower.stageEmbed (n + 1)
+      ((1 / 2 : ℝ) • (1 - modularGenerator n)) =
+    (1 / 2 : ℝ) • (1 - modularGenerator (n + 1))
+  simp only [Algebra.smul_def, map_mul, map_sub, map_one]
+  have h := modularGenerator_bond n
+  change InfoGeometry.Clifford.Cl11TensorTower.stageEmbed (n + 1)
+      (modularGenerator n) = modularGenerator (n + 1) at h
+  rw [h]
+  simp [Algebra.commutes]
+
 theorem phaseAxis_square_all :
     ∀ n : ℕ, phaseAxis n * phaseAxis n = -(1 : Stage n) := by
   exact HestenesKreinTower.phaseAxis_square_all tower phaseAxis_bond

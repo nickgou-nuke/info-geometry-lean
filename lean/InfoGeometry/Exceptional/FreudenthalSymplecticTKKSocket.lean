@@ -98,7 +98,7 @@ def symplecticZeroBracket :
               (FreudenthalCharge J)) +
           ⁅(T : Module.End ℝ (FreudenthalCharge J)),
             (V : Module.End ℝ (FreudenthalCharge J))⁆
-        simp only [Ring.lie_def, Module.End.mul_apply, add_mul, mul_add,
+        simp only [Ring.lie_def, add_mul, mul_add,
           sub_eq_add_neg]
         abel
       map_smul' := by
@@ -106,7 +106,7 @@ def symplecticZeroBracket :
         apply Subtype.ext
         change ⁅(T : Module.End ℝ (FreudenthalCharge J)),
             r • (U : Module.End ℝ (FreudenthalCharge J))⁆ = _
-        simp [Ring.lie_def, Module.End.mul_apply, smul_add,
+        simp [Ring.lie_def, smul_add,
           sub_eq_add_neg] }
   map_add' T U := by
     apply LinearMap.ext
@@ -118,7 +118,7 @@ def symplecticZeroBracket :
         (V : Module.End ℝ (FreudenthalCharge J))⁆ +
       ⁅(U : Module.End ℝ (FreudenthalCharge J)),
         (V : Module.End ℝ (FreudenthalCharge J))⁆
-    simp only [Ring.lie_def, Module.End.mul_apply, add_mul, mul_add,
+    simp only [Ring.lie_def, add_mul, mul_add,
       sub_eq_add_neg]
     abel
   map_smul' r T := by
@@ -127,7 +127,7 @@ def symplecticZeroBracket :
     apply Subtype.ext
     change ⁅r • (T : Module.End ℝ (FreudenthalCharge J)),
         (U : Module.End ℝ (FreudenthalCharge J))⁆ = _
-    simp [Ring.lie_def, Module.End.mul_apply, smul_add,
+    simp [Ring.lie_def, smul_add,
       sub_eq_add_neg]
 
 def symplecticZeroAction :
@@ -149,6 +149,29 @@ def symplecticTKKClosureDatum :
   op_0_minus1 := symplecticZeroAction D
   op_0_plus1 := symplecticZeroAction D
   op_minus1_plus1 := mixedSymplecticLinear D
+
+@[simp] theorem symplecticTKKClosureDatum_zeroBracket_val
+    (T U : SymplecticTKKZero D) :
+    ((symplecticTKKClosureDatum D).op_0_0 T U :
+        Module.End ℝ (FreudenthalCharge J)) =
+      ⁅(T : Module.End ℝ (FreudenthalCharge J)),
+        (U : Module.End ℝ (FreudenthalCharge J))⁆ := by
+  rfl
+
+@[simp] theorem symplecticTKKClosureDatum_zeroBracket
+    (T U : SymplecticTKKZero D) :
+    (symplecticTKKClosureDatum D).op_0_0 T U = ⁅T, U⁆ := by
+  rfl
+
+theorem symplecticTKKClosureDatum_zeroAction_commutator
+    (T U : SymplecticTKKZero D) (X : FreudenthalCharge J) :
+    (symplecticTKKClosureDatum D).op_0_minus1
+        ((symplecticTKKClosureDatum D).op_0_0 T U) X =
+      (symplecticTKKClosureDatum D).op_0_minus1 T
+          ((symplecticTKKClosureDatum D).op_0_minus1 U X) -
+        (symplecticTKKClosureDatum D).op_0_minus1 U
+          ((symplecticTKKClosureDatum D).op_0_minus1 T X) := by
+  rfl
 
 @[simp] theorem symplecticTKKClosureDatum_mixed
     (X Y : FreudenthalCharge J) :
@@ -200,5 +223,15 @@ theorem symplecticTKKClosureDatum_zeroGrade_mixed
     (fun Z : SymplecticTKKZero D =>
       (Z : Module.End ℝ (FreudenthalCharge J))) h
   simpa only [mixedSymplecticBracket] using h'
+
+theorem symplecticTKKClosureDatum_zeroGrade_jacobi
+    (T U V : SymplecticTKKZero D) :
+    ⁅(symplecticTKKClosureDatum D).op_0_0 T U, V⁆ +
+        ⁅(symplecticTKKClosureDatum D).op_0_0 U V, T⁆ +
+        ⁅(symplecticTKKClosureDatum D).op_0_0 V T, U⁆ = 0 := by
+  rw [symplecticTKKClosureDatum_zeroBracket,
+    symplecticTKKClosureDatum_zeroBracket,
+    symplecticTKKClosureDatum_zeroBracket]
+  exact lie_jacobi T U V
 
 end InfoGeometry.Exceptional.Freudenthal

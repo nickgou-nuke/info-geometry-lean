@@ -23,6 +23,32 @@ def spinAction (A : M2C) : SpinPair := A ⊗ₜ[ℂ] (1 : M2C)
 
 def isospinAction (B : M2C) : SpinPair := (1 : M2C) ⊗ₜ[ℂ] B
 
+/-! The two physical Cartan/chirality readouts.  They are kept distinct from
+the generic circular involution API: no circular axis is selected here. -/
+
+def spinChirality : SpinPair := spinAction σ3c
+
+def isospinChirality : SpinPair := isospinAction σ3c
+
+theorem spinChirality_sq :
+    spinChirality * spinChirality = (1 : SpinPair) := by
+  unfold spinChirality spinAction
+  rw [tmul_mul_tmul, σ3c_sq]
+  simp [Algebra.TensorProduct.one_def]
+
+theorem isospinChirality_sq :
+    isospinChirality * isospinChirality = (1 : SpinPair) := by
+  unfold isospinChirality isospinAction
+  rw [tmul_mul_tmul, σ3c_sq]
+  simp [Algebra.TensorProduct.one_def]
+
+theorem spinChirality_isospinChirality_commute :
+    spinChirality * isospinChirality =
+      isospinChirality * spinChirality := by
+  unfold spinChirality isospinChirality spinAction isospinAction
+  rw [tmul_mul_tmul, tmul_mul_tmul]
+  simp
+
 theorem spin_isospin_actions_commute (A B : M2C) :
     spinAction A * isospinAction B =
       isospinAction B * spinAction A := by

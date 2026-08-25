@@ -47,4 +47,17 @@ theorem jordan_associator_eq_expanded_double_commutator (x y z : A) :
   simpa [commutator] using
     jordan_associator_eq_double_commutator (x := x) (y := y) (z := z)
 
+/-- If the two outer arguments commute in the ambient associative algebra,
+then the special Jordan associator vanishes for every middle argument. -/
+theorem jordan_associator_eq_zero_of_commute
+    (x y z : A) (h : x * z = z * x) :
+    jordanMul (jordanMul x y) z = jordanMul x (jordanMul y z) := by
+  have hxz : commutator x z = 0 := by
+    simp [commutator, h]
+  have hassoc :=
+    jordan_associator_eq_double_commutator (x := x) (y := y) (z := z)
+  rw [hxz] at hassoc
+  simp [commutator] at hassoc
+  exact sub_eq_zero.mp hassoc
+
 end InfoGeometry.Core.JordanAssociator

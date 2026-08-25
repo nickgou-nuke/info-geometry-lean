@@ -94,6 +94,45 @@ def IsJordanPeirceHalf (f x : A) : Prop :=
 def IsJordanPeirceZero (f x : A) : Prop :=
   jordanMul f x = 0
 
+/-! ## Generic associative-to-Jordan transfer lemmas -/
+
+/-- If `f` acts as the identity on both sides of `x`, then `x` is in the
+Jordan Peirce eigenvalue-`1` sector. -/
+theorem jordan_one_of_assoc
+    {f x : A}
+    (hleft : f * x = x)
+    (hright : x * f = x) :
+    IsJordanPeirceOne f x := by
+  simp only [IsJordanPeirceOne, jordanMul, hleft, hright]
+  module
+
+/-- If `f` acts as the identity on the left and annihilates on the right,
+then `x` is in the Jordan Peirce eigenvalue-`1/2` sector. -/
+theorem jordan_half_of_assoc_left
+    {f x : A}
+    (hleft : f * x = x)
+    (hright : x * f = 0) :
+    IsJordanPeirceHalf f x := by
+  simp [IsJordanPeirceHalf, jordanMul, hleft, hright]
+
+/-- If `f` annihilates on the left and acts as the identity on the right,
+then `x` is in the Jordan Peirce eigenvalue-`1/2` sector. -/
+theorem jordan_half_of_assoc_right
+    {f x : A}
+    (hleft : f * x = 0)
+    (hright : x * f = x) :
+    IsJordanPeirceHalf f x := by
+  simp [IsJordanPeirceHalf, jordanMul, hleft, hright]
+
+/-- If `f` annihilates `x` on both sides, then `x` is in the Jordan Peirce
+eigenvalue-`0` sector. -/
+theorem jordan_zero_of_assoc
+    {f x : A}
+    (hleft : f * x = 0)
+    (hright : x * f = 0) :
+    IsJordanPeirceZero f x := by
+  simp [IsJordanPeirceZero, jordanMul, hleft, hright]
+
 /-! ## Associative block readouts against the idempotent -/
 
 /-- `f` acts as the identity on the left of `A₁₀`. -/
@@ -151,37 +190,36 @@ theorem peirce11_is_jordan_one
     (f : A) (hf : f * f = f)
     {x : A} (hx : x ∈ peirce11 f) :
     IsJordanPeirceOne f x := by
-  have hleft : f * x = x := peirce11_absorb_left f hf hx
-  have hright : x * f = x := peirce11_absorb_right f hf hx
-  simp only [IsJordanPeirceOne, jordanMul, hleft, hright]
-  module
+  exact jordan_one_of_assoc
+    (peirce11_absorb_left f hf hx)
+    (peirce11_absorb_right f hf hx)
 
 /-- `A₁₀ ⊆ J_{1/2}(f)`. -/
 theorem peirce10_is_jordan_half
     (f : A) (hf : f * f = f)
     {x : A} (hx : x ∈ peirce10 f) :
     IsJordanPeirceHalf f x := by
-  have hleft : f * x = x := peirce10_absorb_left f hf hx
-  have hright : x * f = 0 := peirce10_mul_idempotent_eq_zero f hf hx
-  simp [IsJordanPeirceHalf, jordanMul, hleft, hright]
+  exact jordan_half_of_assoc_left
+    (peirce10_absorb_left f hf hx)
+    (peirce10_mul_idempotent_eq_zero f hf hx)
 
 /-- `A₀₁ ⊆ J_{1/2}(f)`. -/
 theorem peirce01_is_jordan_half
     (f : A) (hf : f * f = f)
     {x : A} (hx : x ∈ peirce01 f) :
     IsJordanPeirceHalf f x := by
-  have hleft : f * x = 0 := idempotent_mul_peirce01_eq_zero f hf hx
-  have hright : x * f = x := peirce01_absorb_right f hf hx
-  simp [IsJordanPeirceHalf, jordanMul, hleft, hright]
+  exact jordan_half_of_assoc_right
+    (idempotent_mul_peirce01_eq_zero f hf hx)
+    (peirce01_absorb_right f hf hx)
 
 /-- `A₀₀ ⊆ J₀(f)`. -/
 theorem peirce00_is_jordan_zero
     (f : A) (hf : f * f = f)
     {x : A} (hx : x ∈ peirce00 f) :
     IsJordanPeirceZero f x := by
-  have hleft : f * x = 0 := idempotent_mul_peirce00_eq_zero f hf hx
-  have hright : x * f = 0 := peirce00_mul_idempotent_eq_zero f hf hx
-  simp [IsJordanPeirceZero, jordanMul, hleft, hright]
+  exact jordan_zero_of_assoc
+    (idempotent_mul_peirce00_eq_zero f hf hx)
+    (peirce00_mul_idempotent_eq_zero f hf hx)
 
 /-! ## Canonical three-piece Jordan decomposition -/
 

@@ -1,0 +1,25 @@
+name: G2 Quotient Representative Coverage Narrow Check
+
+on:
+  push:
+    branches:
+      - agent/g2-quotient-representative-coverage
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2QuotientRepresentativeCoverage.lean'
+      - '.github/workflows/g2-quotient-representative-coverage-narrow.yml'
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2QuotientRepresentativeCoverage.lean'
+      - '.github/workflows/g2-quotient-representative-coverage-narrow.yml'
+
+jobs:
+  narrow-g2-quotient-representative-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          build: false
+          test: false
+      - name: Build focused owner
+        run: lake build InfoGeometry.Algebra.Zorn.G2QuotientRepresentativeCoverage

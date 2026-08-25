@@ -1,0 +1,22 @@
+name: Core Peirce Jordan Narrow Check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/JordanPeirceDecomposition.lean'
+      - '.github/workflows/core-peirce-jordan-narrow.yml'
+  workflow_dispatch:
+
+jobs:
+  narrow-core-peirce-jordan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          use-github-cache: true
+      - name: Build associative Peirce owner
+        run: lake build InfoGeometry.Core.PeirceDecomposition
+      - name: Build Jordan Peirce owner
+        run: lake build InfoGeometry.Core.JordanPeirceDecomposition

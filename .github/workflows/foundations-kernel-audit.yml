@@ -1,6 +1,10 @@
 name: Foundations Kernel Audit
 
 on:
+  pull_request:
+    paths:
+      - "lean/InfoGeometry/Core/Foundations.lean"
+      - ".github/workflows/foundations-kernel-audit.yml"
   push:
     branches:
       - agent/foundations-kernel-audit

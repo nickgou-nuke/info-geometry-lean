@@ -16,3 +16,34 @@ jobs:
           SORRIES=$(lake build 2>&1 | grep -c "sorry" || true)
           echo "Sorries: $SORRIES"
           if [ "$SORRIES" -gt 0 ]; then exit 1; fi
+
+  foundations-kernel-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Lean toolchain
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build isolated Mathlib check project
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="${RUNNER_TEMP}/foundations-check"
+          mkdir -p "$work"
+          cd "$work"
+          cat > lean-toolchain <<'EOF'
+          leanprover/lean4:v4.28.1
+          EOF
+          cat > lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+          package foundationsCheck
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+          EOF
+          cp "$GITHUB_WORKSPACE/lean/InfoGeometry/Core/Foundations.lean" Foundations.lean
+          lake update
+          lake exe cache get
+          lake env lean Foundations.lean

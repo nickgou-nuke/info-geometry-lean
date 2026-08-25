@@ -1,0 +1,25 @@
+name: G2 Flag Cell Carrier Alignment Narrow Check
+
+on:
+  push:
+    branches:
+      - agent/g2-flag-cell-carrier-alignment
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2FlagCellCarrierAlignment.lean'
+      - '.github/workflows/g2-flag-cell-carrier-alignment-narrow.yml'
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2FlagCellCarrierAlignment.lean'
+      - '.github/workflows/g2-flag-cell-carrier-alignment-narrow.yml'
+
+jobs:
+  narrow-g2-flag-cell-carrier-alignment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build owner
+        run: lake build InfoGeometry.Algebra.Zorn.G2FlagCellCarrierAlignment

@@ -57,19 +57,4 @@ theorem combined_dirac_sq :
   fin_cases i <;> fin_cases j <;> 
     simp [CombinedDirac_Matrix, BK_Matrix, Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply, Matrix.smul_apply] <;> norm_num
 
-/-- Definitional formula for the sum matrix. -/
-theorem combined_dirac_formula : CombinedDirac_Matrix = BK_Matrix + Rho_Matrix := rfl
-
-/-- Readout of the square identity. -/
-theorem trivial_majorana_dirac_square :
-    CombinedDirac_Matrix * CombinedDirac_Matrix =
-      2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
-  combined_dirac_sq
-
-/-- Compatibility readout of the same square identity. -/
-theorem modeEnergyCoefficient_zero (_ : Unit) :
-    CombinedDirac_Matrix * CombinedDirac_Matrix =
-      2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
-  combined_dirac_sq
-
 end InfoGeometry.Arithmetic.ConcreteMajorana

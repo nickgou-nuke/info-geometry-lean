@@ -110,7 +110,7 @@ noncomputable def spinorFiveGrading : FiveGrading Alg :=
       rcases span_singleton_eq hX with ⟨a, rfl⟩
       rcases span_singleton_eq hY with ⟨b, rfl⟩
       have hzero : br (a • basisV) (b • basisU) = 0 := by
-        simp [br, basisV, basisU, smul_smul]
+        simp [br, basisV, basisU]
       have hzero' : ⁅a • basisV, b • basisU⁆ = 0 := hzero
       rw [hzero']; exact Submodule.zero_mem (p := G₀)
     bracket_negTwo_posTwo := by
@@ -122,7 +122,7 @@ noncomputable def spinorFiveGrading : FiveGrading Alg :=
           br (a • basisF) (b • basisE) = (a * b) • br basisF basisE := by
             rw [br_smul_left, br_smul_right, smul_smul]
           _ = (a * b) • (-basisH) := by norm_num [br, basisF, basisE, basisH]
-          _ = (-(a * b)) • basisH := by simp [smul_smul]
+          _ = (-(a * b)) • basisH := by simp
       have h_eq' : ⁅a • basisF, b • basisE⁆ = (-(a * b)) • basisH := h_eq
       rw [h_eq']
       exact Submodule.smul_mem _ _ (by simp [G₀, basisH])
@@ -131,7 +131,7 @@ noncomputable def spinorFiveGrading : FiveGrading Alg :=
       rcases span_singleton_eq hX with ⟨a, rfl⟩
       rcases span_singleton_eq hY with ⟨b, rfl⟩
       have hzero : br (a • basisU) (b • basisU) = 0 := by
-        simp [br, basisU, smul_smul]
+        simp [br, basisU]
       have hzero' : ⁅a • basisU, b • basisU⁆ = 0 := hzero
       rw [hzero']; exact Submodule.zero_mem (p := G₂')
     negOne_negOne_mem_negTwo := by
@@ -139,7 +139,7 @@ noncomputable def spinorFiveGrading : FiveGrading Alg :=
       rcases span_singleton_eq hX with ⟨a, rfl⟩
       rcases span_singleton_eq hY with ⟨b, rfl⟩
       have hzero : br (a • basisV) (b • basisV) = 0 := by
-        simp [br, basisV, smul_smul]
+        simp [br, basisV]
       have hzero' : ⁅a • basisV, b • basisV⁆ = 0 := hzero
       rw [hzero']; exact Submodule.zero_mem (p := G₂) }
 
@@ -149,7 +149,7 @@ lemma zero_zero_mem_zero (X Y : Alg) (hX : X ∈ G₀) (hY : Y ∈ G₀) : ⁅X,
   rcases span_singleton_eq hX with ⟨a, rfl⟩
   rcases span_singleton_eq hY with ⟨b, rfl⟩
   have hzero : br (a • basisH) (b • basisH) = 0 := by
-    simp [br, basisH, smul_smul]
+    simp [br, basisH]
   rw [show ⁅a • basisH, b • basisH⁆ = 0 from hzero]
   exact Submodule.zero_mem (p := G₀)
 
@@ -196,7 +196,7 @@ lemma zero_negOne_mem_negOne (X Y : Alg) (hX : X ∈ G₀) (hY : Y ∈ G₁) : �
       br (a • basisH) (b • basisV) = (a * b) • br basisH basisV := by
         rw [br_smul_left, br_smul_right, smul_smul]
       _ = (a * b) • (-basisV) := by norm_num [br, basisH, basisV]
-      _ = (-(a * b)) • basisV := by simp [smul_smul]
+      _ = (-(a * b)) • basisV := by simp
   rw [show ⁅a • basisH, b • basisV⁆ = (-(a * b)) • basisV from h_eq]
   exact Submodule.smul_mem _ _ (by simp [G₁, basisV])
 
@@ -237,7 +237,7 @@ lemma posOne_negOne_mem_zero (X Y : Alg) (hX : X ∈ G₁') (hY : Y ∈ G₁) : 
   rcases span_singleton_eq hX with ⟨a, rfl⟩
   rcases span_singleton_eq hY with ⟨b, rfl⟩
   have hzero : br (a • basisU) (b • basisV) = 0 := by
-    simp [br, basisU, basisV, smul_smul]
+    simp [br, basisU, basisV]
   have hzero' : ⁅a • basisU, b • basisV⁆ = 0 := hzero
   rw [hzero']; exact Submodule.zero_mem (p := G₀)
 
@@ -245,14 +245,14 @@ lemma posTwo_posTwo_zero (X Y : Alg) (hX : X ∈ G₂') (hY : Y ∈ G₂') : ⁅
   rcases span_singleton_eq hX with ⟨a, rfl⟩
   rcases span_singleton_eq hY with ⟨b, rfl⟩
   have hzero : br (a • basisE) (b • basisE) = 0 := by
-    simp [br, basisE, smul_smul]
+    simp [br, basisE]
   rw [show ⁅a • basisE, b • basisE⁆ = 0 from hzero]
 
 lemma negTwo_negTwo_zero (X Y : Alg) (hX : X ∈ G₂) (hY : Y ∈ G₂) : ⁅X, Y⁆ = 0 := by
   rcases span_singleton_eq hX with ⟨a, rfl⟩
   rcases span_singleton_eq hY with ⟨b, rfl⟩
   have hzero : br (a • basisF) (b • basisF) = 0 := by
-    simp [br, basisF, smul_smul]
+    simp [br, basisF]
   rw [show ⁅a • basisF, b • basisF⁆ = 0 from hzero]
 
 end Alg

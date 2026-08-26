@@ -419,20 +419,6 @@ abbrev Z16Charge : Type :=
   ZMod 16
 
 /--
-Interface relating local Clifford signs to a global anomaly or stacking
-index.
-
-The fields are proof-carrying on purpose: `Z2^4` gives four independent local
-binary addresses, while `Z16` is a cyclic global stacking law.
--/
-structure LocalToGlobalAnomalyInterface where
-  /-- Local admissible four-bit sectors. -/
-  localCharge : Z2FourCharge → Prop
-
-  /-- Global integer index or winding predicate. -/
-  globalIndex : ℤ → Prop
-
-/--
 A global anomaly/topological class sitting above local Clifford signs.
 
 This is the formal boundary between the `Z2^4` Cartan ledger and a genuine
@@ -453,17 +439,6 @@ structure GlobalAnomalyClass where
   reduction_eq :
     cyclicIndex = (integerLift : ZMod 16)
 
-
-namespace GlobalAnomalyClass
-
-variable (G : GlobalAnomalyClass)
-
-/-- Forget a global anomaly class to the local-to-global compatibility interface. -/
-def toLocalToGlobalAnomalyInterface : LocalToGlobalAnomalyInterface where
-  localCharge := G.localSector
-  globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
-
-end GlobalAnomalyClass
 
 /--
 A DIII index calibration turns a local charge address type into a cyclic

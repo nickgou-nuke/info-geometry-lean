@@ -148,6 +148,58 @@ theorem kreinConjugate_peirceCorner_iff
     rw [kreinConjugate_involutive eta hη x] at hback
     exact hback
 
+section PeirceBlocks
+
+variable {A : Type*} [Ring A]
+
+/- The four Peirce blocks reconstruct an element for complementary sheets. -/
+theorem peirce_four_block_decomposition
+    (fplus fminus x : A)
+    (hpartition : fplus + fminus = 1) :
+    fplus * x * fplus + fplus * x * fminus +
+        fminus * x * fplus + fminus * x * fminus = x := by
+  calc
+    fplus * x * fplus + fplus * x * fminus +
+          fminus * x * fplus + fminus * x * fminus =
+        (fplus + fminus) * x * (fplus + fminus) := by
+          noncomm_ring
+    _ = 1 * x * 1 := by rw [hpartition]
+    _ = x := by simp
+
+theorem peirce_block_mem
+    (fplus fminus x : A)
+    (hplus : fplus * fplus = fplus)
+    (hminus : fminus * fminus = fminus) :
+    fplus * x * fplus ∈ peirceCorner fplus fplus ∧
+    fplus * x * fminus ∈ peirceCorner fplus fminus ∧
+    fminus * x * fplus ∈ peirceCorner fminus fplus ∧
+    fminus * x * fminus ∈ peirceCorner fminus fminus := by
+  constructor
+  · change fplus * (fplus * x * fplus) * fplus = fplus * x * fplus
+    calc
+      fplus * (fplus * x * fplus) * fplus =
+          (fplus * fplus) * x * (fplus * fplus) := by noncomm_ring
+      _ = fplus * x * fplus := by rw [hplus]
+  constructor
+  · change fplus * (fplus * x * fminus) * fminus = fplus * x * fminus
+    calc
+      fplus * (fplus * x * fminus) * fminus =
+          (fplus * fplus) * x * (fminus * fminus) := by noncomm_ring
+      _ = fplus * x * fminus := by rw [hplus, hminus]
+  constructor
+  · change fminus * (fminus * x * fplus) * fplus = fminus * x * fplus
+    calc
+      fminus * (fminus * x * fplus) * fplus =
+          (fminus * fminus) * x * (fplus * fplus) := by noncomm_ring
+      _ = fminus * x * fplus := by rw [hminus, hplus]
+  · change fminus * (fminus * x * fminus) * fminus = fminus * x * fminus
+    calc
+      fminus * (fminus * x * fminus) * fminus =
+          (fminus * fminus) * x * (fminus * fminus) := by noncomm_ring
+      _ = fminus * x * fminus := by rw [hminus]
+
+end PeirceBlocks
+
 end
 
 end InfoGeometry.Krein

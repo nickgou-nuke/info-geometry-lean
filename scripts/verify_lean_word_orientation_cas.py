@@ -75,17 +75,6 @@ assert lhs == rhs_lean
 assert lhs != rhs_gap
 print("PCCONJ_2_1_LEAN_ORIENTATION=PASS")
 
-# Check every exported PCCONJ relation with the same symbolic matrix
-# convention.  The GAP-side right hand side is read from the export rather
-# than copied into this verifier.  A Lean word is the reverse of that list.
-conj_rows = {}
-for line in raw.splitlines():
-    m = re.fullmatch(r"PCCONJ ([1-6]) ([1-6]) ([0-9,]+)", line.strip())
-    if m:
-        conj_rows[(int(m.group(1)), int(m.group(2)))] = [
-            int(x) for x in m.group(3).split(",")]
-assert len(conj_rows) == 15
-
 def product_in_lean_matrix_order(exponents):
     out = [[int(i == j) for j in range(8)] for i in range(8)]
     for k, exponent in enumerate(exponents):
@@ -93,23 +82,40 @@ def product_in_lean_matrix_order(exponents):
             out = mm(out, AA[k])
     return out
 
+def matrix_word(exponents):
+    out = [[int(i == j) for j in range(8)] for i in range(8)]
+    for k in reversed(range(6)):
+        if exponents[k]:
+            out = mm(out, AA[k])
+    return out
+
 inverse_rows = [
     AA[0], mm(AA[1], AA[5]), mm(AA[2], AA[5]),
     AA[3], AA[4], AA[5]
 ]
-for (i, j), exponents in conj_rows.items():
-    # GAP's matrix action is the opposite multiplication convention used by
-    # the Lean `MulEquiv`; conjugation therefore appears as Aᵢ Aⱼ Aᵢ⁻¹.
-    lhs = mm(mm(AA[i - 1], AA[j - 1]), inverse_rows[i - 1])
-    rhs = product_in_lean_matrix_order(exponents)
-    if lhs != rhs:
-        raise AssertionError((i, j, exponents))
-    lean_rhs = [[int(x == y) for y in range(8)] for x in range(8)]
-    for k in reversed(range(6)):
-        if exponents[k]:
-            lean_rhs = mm(AA[k], lean_rhs)
-    # This is the same equality after translating both sides through
-    # autMatrix_mul; the displayed Lean word uses reversed generator order.
-    assert rhs == lean_rhs
-print("PCCONJ_ALL_15_LEAN_ORIENTATIONS=PASS")
+def recover_fixed_word(M):
+    """Recover fixed-Lean PC coordinates using the six peel pivots."""
+    p0 = M[2][7]
+    M1 = mm(M, factor(Ai[0], p0))
+    p1 = M1[3][2]
+    M2 = mm(M1, factor(Ai[1], p1))
+    p2 = M2[3][7]
+    M3 = mm(M2, factor(Ai[2], p2))
+    p4 = M3[6][2]
+    p3 = red(M3[4][3] + p4)
+    M4 = mm(M3, factor(Ai[3], p3))
+    M5 = mm(M4, factor(Ai[4], p4))
+    p5 = M5[4][2]
+    M6 = mm(M5, factor(Ai[5], p5))
+    assert M6 == I
+    return [p0, p1, p2, p3, p4, p5]
+
+# Every relation is computed in the fixed Lean basis itself.  No GAP Pcgs
+# and no basis-change or word enumeration is used.
+for i in range(1, 6):
+    for j in range(i):
+        lhs = mm(mm(AA[i], AA[j]), inverse_rows[i])
+        exponents = recover_fixed_word(lhs)
+        assert matrix_word(exponents) == lhs
+print("PCCONJ_ALL_15_FIXED_LEAN_BASIS=PASS")
 print("NO_ASSIGNMENT_ENUMERATION=PASS")

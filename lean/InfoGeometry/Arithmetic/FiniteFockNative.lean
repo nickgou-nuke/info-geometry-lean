@@ -76,13 +76,6 @@ def grandHamiltonianLinear
     (ε : ι → ℝ) (μ : ℝ) : Vec ι →ₗ[ℂ] Vec ι :=
   hamiltonianLinear ε - (μ : ℂ) • totalNumberLinear
 
-theorem totalNumberLinear_apply
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (ψ : Vec ι) (occ : State ι) :
-    totalNumberLinear ψ occ =
-      ∑ i : ι, (if occ i then (1 : ℂ) else 0) * ψ occ := by
-  simp [totalNumberLinear, numberProjectorLinear]
-
 theorem energy_sub_const
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (ε : ι → ℝ) (μ : ℝ) (occ : State ι) :
@@ -107,14 +100,6 @@ theorem energy_sub_const
                 by_cases h : occ i <;> simp [h]
           _ = μ * ∑ i : ι, if occ i then (1 : ℝ) else 0 := by
             rw [Finset.mul_sum]]
-
-theorem grandGibbsLinear_apply
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (ε : ι → ℝ) (β μ : ℝ) (ψ : Vec ι) (occ : State ι) :
-    grandGibbsLinear ε β μ ψ occ =
-      (Real.exp (-β * (energy ε occ -
-        μ * ∑ i : ι, if occ i then (1 : ℝ) else 0)) : ℂ) * ψ occ := by
-  simp [grandGibbsLinear, gibbsLinear, energy_sub_const]
 
 theorem grandHamiltonianLinear_apply
     {ι : Type*} [Fintype ι] [DecidableEq ι]

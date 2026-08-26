@@ -22,7 +22,8 @@ open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 
 /-- The 189-point G₂(2) flag type, defined as the incident pairs of the parabolic certificate. -/
 @[reducible]
-noncomputable def G2Flag : Type := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicCertificate
+noncomputable def G2Flag : Type :=
+  G2HexagonIncidence.Flag G2HexagonIncidence.parabolicIncidenceData
 
 noncomputable instance : Fintype G2Flag := by
   classical

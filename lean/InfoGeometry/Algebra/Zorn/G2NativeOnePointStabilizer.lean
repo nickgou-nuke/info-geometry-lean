@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 
 /-!
 # Native isotropic common fixed point of the PC unipotent generators
@@ -23,8 +24,9 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+open InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 
-def nativeBasePoint : G2ParabolicLineFiber.OctImF2 := fun i => if i = 2 then 1 else 0
+export InfoGeometry.Algebra.Zorn.G2NativePointFoundation (nativeBasePoint)
 
 theorem nativeBasePoint_isotropic :
     G2ParabolicLineFiber.splitQuad nativeBasePoint = 0 := by

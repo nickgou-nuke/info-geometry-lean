@@ -34,19 +34,17 @@ theorem nativeKMSInner_hermitian
       CuntzGNSRepresentation.kmsInner φ a b :=
   CuntzGNSRepresentation.kmsInner_hermitian φ hφ a b
 
-abbrev leftMultiplication := CuntzGNSRepresentation.leftMultiplication
-
 /-! ### Cuntz q-CCR boundary in the left-regular Fock action -/
 
 theorem leftMultiplication_cuntz_isometry (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
-    leftMultiplication n (cuntzSdag n i)
-        (leftMultiplication n (cuntzS n i) x) = x := by
+    CuntzGNSRepresentation.leftMultiplication n (cuntzSdag n i)
+        (CuntzGNSRepresentation.leftMultiplication n (cuntzS n i) x) = x := by
   rw [leftMultiplication_mul, cuntz_isometry]
   simp [leftMultiplication]
 
 theorem leftMultiplication_cuntz_qccr_zero (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
-    leftMultiplication n (cuntzSdag n i)
-        (leftMultiplication n (cuntzS n i) x) - x = 0 := by
+    CuntzGNSRepresentation.leftMultiplication n (cuntzSdag n i)
+        (CuntzGNSRepresentation.leftMultiplication n (cuntzS n i) x) - x = 0 := by
   rw [leftMultiplication_cuntz_isometry]
   exact sub_self x
 

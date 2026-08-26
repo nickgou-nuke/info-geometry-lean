@@ -97,7 +97,7 @@ def SuperchargeFromChiralZorn.toSuperchargeSquareRoot
     SuperchargeSquareRoot L (ChiralZornMatrix A) G where
   qLeft := S.qLeft
   qRight := S.qRight
-  superAnticommutator := S.superAnticommutator
+  superAnticommutator := (S.superAnticommutator : ChiralZornMatrix A →ₗ[ℝ] ChiralZornMatrix A →ₗ[ℝ] L)
   superAnticommutator_symm := hSymm
   mixed_chirality_mem_translation := by
     intro Q Qbar hQ hQbar
@@ -128,7 +128,7 @@ def SuperchargeFromChiralZorn.toSuperchargeSquareRoot
     (S.toSuperchargeSquareRoot G hSymm).qRight = S.qRight :=
   rfl
 
-@[simp] theorem SuperchargeFromChiralZorn.toSuperchargeSquareRoot_anticommutator
+theorem SuperchargeFromChiralZorn.toSuperchargeSquareRoot_anticommutator
     {X : ChiralZornMatrix A}
     (S : SuperchargeFromChiralZorn X L G)
     (hSymm : ∀ Q R : ChiralZornMatrix A,

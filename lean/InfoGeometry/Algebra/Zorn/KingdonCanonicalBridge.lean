@@ -13,13 +13,16 @@ product, identity, and split norm. No associative algebra structure is imposed.
 
 namespace InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
-abbrev PhysicsZorn := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
+/- The two explicit Zorn carriers below remain distinct owners; only the
+  source-side name is expanded so this bridge does not create a third carrier. -/
 abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
 
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
-noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] CanonicalZorn where
+noncomputable def physicsCanonicalLinearEquiv :
+    InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix ≃ₗ[ℝ]
+      InfoGeometry.Canonical.ZornMatrix ℝ where
   toFun X := { a := X.a, b := X.b, x := X.x, y := X.y }
   invFun X := { a := X.a, b := X.b, x := X.x, y := X.y }
   left_inv X := by cases X; rfl
@@ -27,13 +30,17 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
   map_add' X Y := by ext <;> rfl
   map_smul' r X := by ext <;> rfl
 
-@[simp] theorem physicsCanonicalLinearEquiv_a (X : PhysicsZorn) :
+@[simp] theorem physicsCanonicalLinearEquiv_a
+    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     (physicsCanonicalLinearEquiv X).a = X.a := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_b (X : PhysicsZorn) :
+@[simp] theorem physicsCanonicalLinearEquiv_b
+    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     (physicsCanonicalLinearEquiv X).b = X.b := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_x (X : PhysicsZorn) :
+@[simp] theorem physicsCanonicalLinearEquiv_x
+    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     (physicsCanonicalLinearEquiv X).x = X.x := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_y (X : PhysicsZorn) :
+@[simp] theorem physicsCanonicalLinearEquiv_y
+    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     (physicsCanonicalLinearEquiv X).y = X.y := rfl
 
 @[simp] theorem physicsCanonicalLinearEquiv_symm_a (X : CanonicalZorn) :
@@ -46,10 +53,12 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
     (physicsCanonicalLinearEquiv.symm X).y = X.y := rfl
 
 @[simp] theorem physicsCanonicalLinearEquiv_one :
-    physicsCanonicalLinearEquiv (1 : PhysicsZorn) = (1 : CanonicalZorn) := by
+    physicsCanonicalLinearEquiv (1 : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) =
+      (1 : InfoGeometry.Canonical.ZornMatrix ℝ) := by
   ext <;> rfl
 
-@[simp] theorem physicsCanonicalLinearEquiv_mul (X Y : PhysicsZorn) :
+@[simp] theorem physicsCanonicalLinearEquiv_mul
+    (X Y : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     physicsCanonicalLinearEquiv (X * Y) =
       zMul (physicsCanonicalLinearEquiv X) (physicsCanonicalLinearEquiv Y) := by
   ext i <;> simp [physicsCanonicalLinearEquiv,
@@ -61,7 +70,8 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
     InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
     InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 
-@[simp] theorem physics_norm_eq_canonical_det (X : PhysicsZorn) :
+@[simp] theorem physics_norm_eq_canonical_det
+    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
     InfoGeometry.Physics.ZornMatrixSU3.norm X =
       X.a * X.b - InfoGeometry.Canonical.ZornMatrix.dot X.x X.y := by
   simp [InfoGeometry.Physics.ZornMatrixSU3.norm,

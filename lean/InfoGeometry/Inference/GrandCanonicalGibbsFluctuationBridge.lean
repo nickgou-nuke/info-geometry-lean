@@ -26,20 +26,13 @@ open InfoGeometry.Inference
 
 variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
-/-- Grand-canonical variance is the generic Gibbs weighted variance. -/
-theorem grandCanonicalVariance_eq_weightedVariance
-    (E : Data → ℝ) (β : ℝ) :
-    variance E β =
-      weightedVariance (gibbsWeight E β) E := by
-  rfl
-
 /-- Temperature susceptibility is the same pairwise Gibbs dispersion. -/
 theorem temperatureSusceptibility_eq_weightedVariance
     (E : Data → ℝ) (ε : ℝ) :
     temperatureSusceptibility E ε =
       weightedVariance (gibbsWeight E ε⁻¹) E := by
   unfold temperatureSusceptibility
-  exact grandCanonicalVariance_eq_weightedVariance E ε⁻¹
+  rfl
 
 /-- Zero temperature susceptibility is exactly pairwise energy agreement. -/
 theorem temperatureSusceptibility_eq_zero_iff_pairwise
@@ -56,7 +49,7 @@ The temperature derivative of the finite Gibbs mean is susceptibility divided
 by the inverse-temperature Jacobian `ε²`.
 -/
 theorem deriv_mean_at_temperature_eq_susceptibility_div_sq
-    (params : GrandCanonicalParams Data) {ε : ℝ} (hε : 0 < ε) :
+    (params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data) {ε : ℝ} (hε : 0 < ε) :
     deriv (fun t : ℝ => mean params t⁻¹) ε =
       temperatureSusceptibility params.energy ε / ε ^ (2 : ℕ) := by
   rw [InfoGeometry.GrandCanonical.deriv_mean_at_inverse_temperature params hε]

@@ -37,13 +37,6 @@ structure KitaevCocycle (C : KitaevCell) where
   U : ℝ → C.core.V →ₗ[ℝ] C.core.V
   cocycle : ∀ s t : ℝ, U (s + t) = (U s).comp (U t)
 
-/-- Trivial identity cocycle (useful neutral element in the finite scaffold). -/
-def trivialKitaevCocycle (C : KitaevCell) : KitaevCocycle C where
-  U := fun _ => LinearMap.id
-  cocycle := by
-    intro s t
-    simp
-
 /-- Pfaffian attached to a Kitaev cell. -/
 noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
   let _ : NormedAddCommGroup c.core.V := c.instV
@@ -56,10 +49,6 @@ noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
 /-- Macroscopic volume proxy: product of microscopic cell Pfaffians. -/
 noncomputable def macroscopicVolume (chain : List KitaevCell) : ℝ :=
   (chain.map (fun c : KitaevCell => c.pfaffian)).prod
-
-/-- Definitional form of the tiling identity. -/
-theorem macroscopicVolume_eq_prod_pfaffians (chain : List KitaevCell) :
-    macroscopicVolume chain = (chain.map (fun c : KitaevCell => c.pfaffian)).prod := rfl
 
 /--
 Concatenation law for the finite tiling volume: the macroscopic volume of two
@@ -125,11 +114,6 @@ theorem isCritical_iff_topologicalIndex_eq_zero (chain : List KitaevCell) :
   unfold IsCritical topologicalIndex
   simpa using
     (sign_eq_zero_iff : SignType.sign (macroscopicVolume chain) = 0 ↔ macroscopicVolume chain = 0).symm
-
-/-- A one-cell chain is defective exactly when it is critical. -/
-theorem hasDefect_singleton_iff_isCritical (c : KitaevCell) :
-    HasDefect [c] ↔ IsCritical [c] := by
-  simp [HasDefect, IsDefect, IsCritical, macroscopicVolume_singleton]
 
 /-- A chain has a defect exactly when its macroscopic Pfaffian product vanishes. -/
 theorem hasDefect_iff_isCritical (chain : List KitaevCell) :

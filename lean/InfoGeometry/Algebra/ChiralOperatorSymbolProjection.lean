@@ -80,10 +80,4 @@ theorem projectedOperatorAssociator_eq_defect
   apply congrArg σ
   noncomm_ring
 
-theorem projectedOperatorMul_agrees_on_readout
-    (ι : Z →ₗ[R] E) (σ : E →ₗ[R] Z)
-    (x y : Z) :
-    projectedOperatorMul ι σ x y = σ (ι x * ι y) :=
-  rfl
-
 end InfoGeometry.Algebra

@@ -1161,17 +1161,17 @@ noncomputable def cl55ChiralityOperator : ChiralityOperator cl55Atom :=
 theorem cl55ChiralityOperator_sq :
     cl55ChiralityOperator.rho * cl55ChiralityOperator.rho =
       (1 : SpinorMatrix 5) :=
-  cl55ChiralityOperator.rho_sq_one
+  ChiralityOperator.rho_sq_one cl55Atom cl55ChiralityOperator
 
 theorem cl55ChiralityOperator_anticomm_r0 :
     cl55ChiralityOperator.rho * cl55Atom.r0 =
       -(cl55Atom.r0 * cl55ChiralityOperator.rho) :=
-  cl55ChiralityOperator.anticomm_r0
+  ChiralityOperator.anticomm_r0 cl55Atom cl55ChiralityOperator
 
 theorem cl55ChiralityOperator_anticomm_r5 :
     cl55ChiralityOperator.rho * cl55Atom.r5 =
       -(cl55Atom.r5 * cl55ChiralityOperator.rho) :=
-  cl55ChiralityOperator.anticomm_r5
+  ChiralityOperator.anticomm_r5 cl55Atom cl55ChiralityOperator
 
 noncomputable def cl55ChiralProjectorPlus : SpinorMatrix 5 :=
   chiralProjectorPlus cl55Atom

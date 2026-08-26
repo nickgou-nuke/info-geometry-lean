@@ -55,6 +55,28 @@ def conjugate (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
 @[simp] theorem conjugate_zero : conjugate (zero R) = zero R := by
   ext <;> simp [conjugate, zero]
 
+@[simp] theorem conjugate_one : conjugate (one R) = one R := by
+  ext <;> simp [conjugate, one]
+
+@[simp] theorem conjugate_scalar (r : R) :
+    conjugate (scalar r) = scalar r := by
+  ext <;> simp [conjugate, scalar]
+
+@[simp] theorem conjugate_conjugate (x : ZornSplitOctonion R) :
+    conjugate (conjugate x) = x := by
+  cases x
+  ext <;> simp [conjugate]
+
+/-! Cayley conjugation is the anti-involution underlying the Zorn model. -/
+theorem conjugate_mul (x y : ZornSplitOctonion R) :
+    conjugate (mul x y) = mul (conjugate y) (conjugate x) := by
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases y with
+    | mk c d u0 u1 u2 v0 v1 v2 =>
+      ext <;> simp [conjugate, mul]
+      all_goals ring
+
 theorem scalar_injective : Function.Injective (scalar : R → ZornSplitOctonion R) := by
   intro r s h
   exact congrArg ZornSplitOctonion.a h

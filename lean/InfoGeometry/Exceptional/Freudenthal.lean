@@ -107,6 +107,16 @@ def quarticInvariant
       - D.traceBilin (D.adjointQuad Q.x) (D.adjointQuad Q.y)
   term1 ^ 2 - 4 * term2
 
+/-- The zero charge has vanishing quartic invariant whenever the cubic datum
+  has its expected zero-value laws.  The hypotheses are explicit because
+  `CubicJordanDatum` intentionally stores no normalization axioms. -/
+theorem quarticInvariant_zeroCharge
+    (D : CubicJordanDatum J)
+    (hN : D.normCubic 0 = 0)
+    (hA : D.adjointQuad 0 = 0) :
+    quarticInvariant D ({ alpha := 0, beta := 0, x := 0, y := 0 } : FreudenthalCharge J) = 0 := by
+  simp [quarticInvariant, hN, hA]
+
 /--
 The scalar formula for the canonical Freudenthal symplectic pairing
 

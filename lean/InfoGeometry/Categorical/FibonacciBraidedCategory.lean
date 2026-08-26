@@ -149,6 +149,37 @@ theorem reindex_add
   ext i j
   rfl
 
+theorem reindex_reindex
+    {m n m' n' m'' n'' : Type*}
+    (e₁ : m ≃ m') (e₂ : n ≃ n')
+    (e₁' : m' ≃ m'') (e₂' : n' ≃ n'')
+    (A : Matrix m n ℂ) :
+    Matrix.reindex e₁' e₂' (Matrix.reindex e₁ e₂ A) =
+      Matrix.reindex (e₁.trans e₁') (e₂.trans e₂') A := by
+  exact Matrix.reindexLinearEquiv_comp_apply (R := ℂ) (A := ℂ)
+    e₁ e₂ e₁' e₂' A
+
+@[simp] theorem fin_equiv_cast_proof_irrel {n m : Nat} (h₁ h₂ : n = m) :
+    Equiv.cast (congrArg Fin h₁) = Equiv.cast (congrArg Fin h₂) := by
+  cases h₁
+  cases h₂
+  rfl
+
+@[simp] theorem equiv_cast_proof_irrel {α β : Sort u} (h₁ h₂ : α = β) :
+    Equiv.cast h₁ = Equiv.cast h₂ := by
+  cases h₁
+  cases h₂
+  rfl
+
+@[simp] theorem matrix_reindex_cast_proof_irrel
+    {m n p q : Nat} (h₁ h₂ : m = n) (k₁ k₂ : p = q)
+    (A : Matrix (Fin m) (Fin p) ℂ) :
+    Matrix.reindex (Equiv.cast (congrArg Fin h₁))
+        (Equiv.cast (congrArg Fin k₁)) A =
+      Matrix.reindex (Equiv.cast (congrArg Fin h₂))
+        (Equiv.cast (congrArg Fin k₂)) A := by
+  rw [fin_equiv_cast_proof_irrel h₁ h₂, fin_equiv_cast_proof_irrel k₁ k₂]
+
 noncomputable def blockDiag2 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) :
   Matrix (Fin (m₁ + m₂)) (Fin (n₁ + n₂)) α :=
   Matrix.reindex finSumFinEquiv finSumFinEquiv (Matrix.fromBlocks A 0 0 B)
@@ -159,7 +190,7 @@ noncomputable def blockDiag3 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ m₃ n�
   blockDiag2 (blockDiag2 A B) C
 
 theorem blockDiag2_add
-    {α : Type} [AddCommMonoid α] [Zero α]
+    {α : Type} [AddCommMonoid α]
     {m₁ n₁ m₂ n₂ : ℕ}
     (A A' : Matrix (Fin m₁) (Fin n₁) α)
     (B B' : Matrix (Fin m₂) (Fin n₂) α) :
@@ -168,14 +199,18 @@ theorem blockDiag2_add
   unfold blockDiag2
   ext i j
   simp only [Matrix.reindex]
-  generalize hi : finSumFinEquiv.symm i = si
-  generalize hj : finSumFinEquiv.symm j = sj
-  rw [hi, hj]
-  cases si <;> cases sj <;>
-    simp [Matrix.reindex, Matrix.fromBlocks]
+  cases hi : finSumFinEquiv.symm i with
+  | inl i' =>
+      cases hj : finSumFinEquiv.symm j with
+      | inl j' => simp [hi, hj, Matrix.fromBlocks]
+      | inr j' => simp [hi, hj, Matrix.fromBlocks]
+  | inr i' =>
+      cases hj : finSumFinEquiv.symm j with
+      | inl j' => simp [hi, hj, Matrix.fromBlocks]
+      | inr j' => simp [hi, hj, Matrix.fromBlocks]
 
 theorem blockDiag3_add
-    {α : Type} [AddCommMonoid α] [Zero α]
+    {α : Type} [AddCommMonoid α]
     {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
     (A A' : Matrix (Fin m₁) (Fin n₁) α)
     (B B' : Matrix (Fin m₂) (Fin n₂) α)
@@ -271,6 +306,7 @@ noncomputable def fibTensorHom {X₁ X₂ Y₁ Y₂ : FibCat} (f : FibHom X₁ X
     (Equiv.cast (by simp [fibTensorObj]))
     (blockDiag3 (kron f.unit_comp g.tau_comp) (kron f.tau_comp g.unit_comp) (kron f.tau_comp g.tau_comp))
 
+set_option maxHeartbeats 1000000 in
 @[simp]
 theorem fibTensorHom_id (X Y : FibCat) :
     fibTensorHom (FibHom.id X) (FibHom.id Y) =
@@ -287,6 +323,46 @@ theorem fibTensorHom_comp
       FibHom.comp (fibTensorHom f₁ g₁) (fibTensorHom f₂ g₂) := by
   ext <;>
     simp [fibTensorHom, FibHom.comp]
+
+@[simp]
+theorem fibTensorHom_add_left
+    {X₁ X₂ X₃ Y₁ Y₂ : FibCat}
+    (f g : FibHom X₁ X₂) (h : FibHom Y₁ Y₂) :
+    fibTensorHom (f + g) h =
+      fibTensorHom f h + fibTensorHom g h := by
+  apply FibHom.ext
+  · change Matrix.reindex _ _
+        (blockDiag2 (kron (f.unit_comp + g.unit_comp) h.unit_comp)
+          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
+    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
+    rw [kron_add_left, kron_add_left, blockDiag2_add, reindex_add]
+  · change Matrix.reindex _ _
+        (blockDiag3 (kron (f.unit_comp + g.unit_comp) h.tau_comp)
+          (kron (f.tau_comp + g.tau_comp) h.unit_comp)
+          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
+    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
+    rw [kron_add_left, kron_add_left, kron_add_left,
+      blockDiag3_add, reindex_add]
+
+@[simp]
+theorem fibTensorHom_add_right
+    {X₁ X₂ Y₁ Y₂ Y₃ : FibCat}
+    (f : FibHom X₁ X₂) (g h : FibHom Y₁ Y₂) :
+    fibTensorHom f (g + h) =
+      fibTensorHom f g + fibTensorHom f h := by
+  apply FibHom.ext
+  · change Matrix.reindex _ _
+        (blockDiag2 (kron f.unit_comp (g.unit_comp + h.unit_comp))
+          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
+    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
+    rw [kron_add_right, kron_add_right, blockDiag2_add, reindex_add]
+  · change Matrix.reindex _ _
+        (blockDiag3 (kron f.unit_comp (g.tau_comp + h.tau_comp))
+          (kron f.tau_comp (g.unit_comp + h.unit_comp))
+          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
+    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
+    rw [kron_add_right, kron_add_right, kron_add_right,
+      blockDiag3_add, reindex_add]
 
 /-! ## Skeletal pentagon and triangle coherence -/
 

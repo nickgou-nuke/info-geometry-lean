@@ -45,6 +45,20 @@ theorem parabolicFlow_sub_one_sq_eq_zero (t : R) :
       _ = 0 := by simp [K_sq_eq_zero]
   simpa [parabolicFlow, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hscaled
 
+/-- The square-zero clock has the additive parabolic group law. -/
+theorem parabolicFlow_mul (s t : R) :
+    parabolicFlow s * parabolicFlow t = parabolicFlow (s + t) := by
+  simp only [parabolicFlow, add_mul, mul_add, one_mul, mul_one]
+  have hK : (K (R := R)) * K = 0 := K_sq_eq_zero
+  rw [smul_mul_smul, hK, smul_zero, add_zero]
+  module
+
+/-- The opposite clock parameter gives the inverse flow. -/
+theorem parabolicFlow_mul_neg (t : R) :
+    parabolicFlow t * parabolicFlow (-t) = (1 : Matrix (Fin 2) (Fin 2) R) := by
+  rw [parabolicFlow_mul]
+  simp [parabolicFlow]
+
 /-- The parabolic flow is explicitly classified by determinant `1` and trace `2`. -/
 theorem parabolic_classification (t : R) :
     (parabolicFlow t).det = 1 ∧ Matrix.trace (parabolicFlow t) = 2 := by

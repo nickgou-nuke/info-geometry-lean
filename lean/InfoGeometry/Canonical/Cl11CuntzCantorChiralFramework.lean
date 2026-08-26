@@ -92,6 +92,17 @@ def representation (R : CompatibleCuntzRepresentation (Op := Op)) :
     InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond R.stageMap
     (compatibleCone R) n x
 
+@[simp] theorem representation_stage_bond (n : ℕ)
+    (x : InfoGeometry.Clifford.Cl11InfiniteCarrier.Stage n) :
+    representation R
+        (InfoGeometry.Clifford.Cl11InfiniteCarrier.intoCarrier
+          (n + 1)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond n x)) =
+      representation R
+        (InfoGeometry.Clifford.Cl11InfiniteCarrier.intoCarrier n x) := by
+  rw [representation_stage, representation_stage]
+  exact R.stage_compat n x
+
 theorem representation_finiteAdvance (m k : ℕ)
     (x : InfoGeometry.Clifford.Cl11InfiniteCarrier.Stage m) :
     representation R

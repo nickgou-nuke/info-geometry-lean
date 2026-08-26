@@ -1,5 +1,8 @@
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
+import InfoGeometry.GroupTheory.DoubleCosetOrbit
+import InfoGeometry.Algebra.Zorn.G2ReducedWords
+import InfoGeometry.GroupTheory.G2BruhatInversions
 
 /-!
 # Residual subgroups for the finite `G₂(2)` Bruhat cells
@@ -20,8 +23,12 @@ open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
-
-abbrev WeylParameter := WeylG2
+open InfoGeometry.GroupTheory.DoubleCoset
+open InfoGeometry.Algebra.Zorn.G2ReducedWords
+open InfoGeometry.Algebra.Zorn.G2CanonicalResidualFibers
+open InfoGeometry.Algebra.Zorn.G2CanonicalWeylWords
+open InfoGeometry.Algebra.Zorn.G2Combinatorics
+open InfoGeometry.GroupTheory.G2BruhatInversions
 
 /-- Conjugation by `a⁻¹` on the left and `a` on the right. -/
 def conjugationHom (a : SplitOctF2Aut) : SplitOctF2Aut →* SplitOctF2Aut where
@@ -31,16 +38,39 @@ def conjugationHom (a : SplitOctF2Aut) : SplitOctF2Aut →* SplitOctF2Aut where
     simp [mul_assoc]
 
 /-- The residual subgroup attached to a Weyl parameter. -/
-def residualSubgroup (p : WeylParameter) : Subgroup SplitOctF2Aut :=
+def residualSubgroup (p : WeylG2) : Subgroup SplitOctF2Aut :=
   unipotentSubgroup ⊓
     unipotentSubgroup.comap (conjugationHom (w0 * weylNF p.1 p.2))
 
-theorem mem_residualSubgroup_iff (p : WeylParameter) (x : SplitOctF2Aut) :
-    x ∈ residualSubgroup p ↔
-      x ∈ unipotentSubgroup ∧
-        (w0 * weylNF p.1 p.2)⁻¹ * x *
-            (w0 * weylNF p.1 p.2) ∈ unipotentSubgroup := by
-  rfl
+theorem residualSubgroup_eq_doubleCoset_intersection (p : WeylG2) :
+    residualSubgroup p =
+      intersectionSubgroup unipotentSubgroup
+        (conjugateSubgroup (w0 * weylNF p.1 p.2) unipotentSubgroup) := by
+  ext x
+  constructor
+  · intro hx
+    have hx' := Subgroup.mem_inf.mp hx
+    exact ⟨hx'.1, hx'.2⟩
+  · intro hx
+    apply Subgroup.mem_inf.mpr
+    exact hx
+
+theorem residualSubgroup_card_eq_pow_of_equiv
+    (p : WeylG2)
+    (e : CanonicalResidualExponent (weylElementOfNF p) ≃
+      residualSubgroup p) :
+    Nat.card (residualSubgroup p) =
+      2 ^ weylLength (weylElementOfNF p) := by
+  rw [← Nat.card_congr e]
+  rw [Nat.card_eq_fintype_card, canonicalResidualExponent_card]
+
+theorem residualSubgroup_card_eq_pow_of_bruhat_equiv
+    (p : WeylG2)
+    (e : BruhatResidualExponent p ≃ residualSubgroup p) :
+    Nat.card (residualSubgroup p) =
+      2 ^ dihedralLength p := by
+  rw [← Nat.card_congr e]
+  rw [Nat.card_eq_fintype_card, bruhatResidualExponent_card]
 
 /-! The longest Weyl parameter is the concrete half-turn `w₀`.  At this
 parameter the conjugating element in the chosen convention is the identity,

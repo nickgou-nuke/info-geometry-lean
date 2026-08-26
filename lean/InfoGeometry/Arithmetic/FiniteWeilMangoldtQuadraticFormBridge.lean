@@ -33,12 +33,6 @@ def finiteWeilPrimeQuadraticForm
   -∑ n ∈ Finset.Icc 2 X,
       (ArithmeticFunction.vonMangoldt n : ℂ) * ⟪f, D.T n g⟫_ℂ
 
-theorem finiteWeilPrimeQuadraticForm_def
-    (D : FiniteWeilOperatorDatum H) (X : ℕ) (f g : H) :
-    finiteWeilPrimeQuadraticForm D X f g =
-      -∑ n ∈ Finset.Icc 2 X,
-        (ArithmeticFunction.vonMangoldt n : ℂ) * ⟪f, D.T n g⟫_ℂ := rfl
-
 theorem finiteWeilPrimeQuadraticForm_hermitian
     (D : FiniteWeilOperatorDatum H) (X : ℕ) (f g : H) :
     finiteWeilPrimeQuadraticForm D X g f =

@@ -19,13 +19,15 @@ open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Thermodynamics.UnruhTemperature
 open InfoGeometry.Canonical.RealTomitaCore
 
-abbrev CZ := InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ
-
-def splitOctonionBoost (η : ℝ) : CZ :=
-  Real.cosh η • (1 : CZ) + Real.sinh η • lUnit
+def splitOctonionBoost (η : ℝ) :
+    InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ :=
+  Real.cosh η •
+      (1 : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ) +
+    Real.sinh η • lUnit
 
 @[simp] theorem splitOctonionBoost_zero :
-    splitOctonionBoost 0 = (1 : CZ) := by
+    splitOctonionBoost 0 =
+      (1 : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ) := by
   simp [splitOctonionBoost]
 
 theorem splitOctonionBoost_add (s t : ℝ) :
@@ -50,7 +52,7 @@ theorem splitOctonionBoost_chiral_decomposition (η : ℝ) :
 
 /- The inverse change of basis recovers the unit and the split generator. -/
 theorem one_eq_chiral_sum :
-    (1 : CZ) =
+    (1 : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ) =
       chiralNull ⟨0, by decide⟩ 1 + chiralNull ⟨0, by decide⟩ (-1) := by
   rw [scalar_chiralNull_plus_idempotent,
     scalar_chiralNull_minus_idempotent]
@@ -78,7 +80,8 @@ theorem ellBasis_eq_chiral_difference (a : Fin 4) :
 /- A mirror representation reverses the hyperbolic generator.  This is the
    exact algebraic interface later used by a modular/CPT representation. -/
 theorem linearMirror_chiral_plus_to_minus
-    (J : CZ →ₗ[ℝ] CZ)
+    (J : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ →ₗ[ℝ]
+      InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ)
     (hJ_one : J 1 = 1) (hJ_l : J lUnit = -lUnit) :
     J (chiralNull ⟨0, by decide⟩ 1) =
       chiralNull ⟨0, by decide⟩ (-1) := by
@@ -88,7 +91,8 @@ theorem linearMirror_chiral_plus_to_minus
   module
 
 theorem linearMirror_chiral_minus_to_plus
-    (J : CZ →ₗ[ℝ] CZ)
+    (J : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ →ₗ[ℝ]
+      InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ)
     (hJ_one : J 1 = 1) (hJ_l : J lUnit = -lUnit) :
     J (chiralNull ⟨0, by decide⟩ (-1)) =
       chiralNull ⟨0, by decide⟩ 1 := by
@@ -98,7 +102,8 @@ theorem linearMirror_chiral_minus_to_plus
   module
 
 theorem linearMirror_splitOctonionBoost_neg
-    (J : CZ →ₗ[ℝ] CZ)
+    (J : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ →ₗ[ℝ]
+      InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ)
     (hJ_one : J 1 = 1) (hJ_l : J lUnit = -lUnit) (η : ℝ) :
     J (splitOctonionBoost η) = splitOctonionBoost (-η) := by
   rw [splitOctonionBoost, splitOctonionBoost]
@@ -116,13 +121,9 @@ theorem splitOctonionBoost_chiral_eigenvalue
   module
 
 theorem splitOctonionBoost_neg_mul (η : ℝ) :
-    zMul (splitOctonionBoost η) (splitOctonionBoost (-η)) = (1 : CZ) := by
+    zMul (splitOctonionBoost η) (splitOctonionBoost (-η)) =
+      (1 : InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ) := by
   rw [← splitOctonionBoost_add, add_neg_cancel, splitOctonionBoost_zero]
-
-theorem splitOctonionBoost_rapidity (obs : RindlerObserver) (τ : ℝ) :
-    splitOctonionBoost (rapidity obs τ) =
-      splitOctonionBoost (obs.a * τ) := by
-  rfl
 
 theorem splitOctonionBoost_modular_parameter (obs : RindlerObserver) (τmod : ℝ) :
     splitOctonionBoost (rapidity obs (properTime_of_modularTime obs τmod)) =

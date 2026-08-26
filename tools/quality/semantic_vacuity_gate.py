@@ -29,22 +29,23 @@ TYPE_SURFACE_RE = re.compile(
     r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+"
     r"([A-Za-z_][A-Za-z0-9_'.]*)[^\n]*:\s*Type(?:\s+\d+|\s+_)\s*:?="
 )
-FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.+?)\s*$")
+FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.*?)\s*$")
 DIRECT_ALIAS_ABBREV_RE = re.compile(
-    r"^\s*(?:noncomputable\s+)?abbrev\s+([A-Za-z_][A-Za-z0-9_'.]*)\b[^:=\n]*:=\s*([A-Za-z0-9_'.]+)\b",
+    r"^\s*(?:noncomputable\s+)?abbrev\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
+    r"[^:=\n]*:=\s*([A-Za-z0-9_'.]+)\s*$",
     re.MULTILINE,
 )
 DYNAMIC_LITERAL_DEF_RE = re.compile(
     r"(?ms)^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
-    r"[\s\S]{0,500}?:=\s*(0|1)\b"
+    r"[\s\S]{0,500}?:=\s*(0|1)\s*(?:--[^\n]*)?$"
 )
 CONSTANT_FUNCTION_RE = re.compile(
-    r"^\s*([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+"
+    r"^([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+"
     r"(?:_[^=]*|[A-Za-z0-9_']+(?:\s+[A-Za-z0-9_']+)*)\s*=>\s*(0|1|True|False)\b",
     re.MULTILINE,
 )
 IDENTITY_FUNCTION_RE = re.compile(
-    r"^\s*([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+([A-Za-z0-9_']+)\s*=>\s*\2\b",
+    r"^([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+([A-Za-z0-9_']+)\s*=>\s*\2\b",
     re.MULTILINE,
 )
 IDENTITY_MAP_RE = re.compile(
@@ -213,23 +214,56 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
     proof_type_cfg = categories.get("proof_like_field_type", {})
 
     current_carrier: str | None = None
+    current_carrier_line = 0
+    current_carrier_name_hit = False
+    current_carrier_has_data = False
+    pure_cfg = categories.get("pure_proof_carrier", {})
+
+    def finish_carrier(line_no: int) -> None:
+        nonlocal current_carrier, current_carrier_name_hit, current_carrier_has_data
+        if current_carrier and current_carrier_name_hit and not current_carrier_has_data:
+            findings.append(
+                Finding(
+                    rel,
+                    current_carrier_line,
+                    "pure_proof_carrier",
+                    pure_cfg.get("severity", "error"),
+                    current_carrier,
+                    "carrier has no data-bearing field; inspect as proof/proxy packaging",
+                )
+            )
+        current_carrier = None
+        current_carrier_name_hit = False
+        current_carrier_has_data = False
+
     for i, line in enumerate(lines, 1):
         cm = CARRIER_RE.match(line)
         if cm:
+            finish_carrier(i)
             current_carrier = cm.group(2)
+            current_carrier_line = i
+            current_carrier_name_hit = bool(carrier_name_re.search(current_carrier))
             if carrier_name_re.search(current_carrier):
                 findings.append(
                     Finding(rel, i, "carrier_witness_name", carrier_name_cfg.get("severity", "error"), current_carrier, line.strip())
                 )
             continue
         if current_carrier and END_TOP_RE.match(line) and not line.startswith((" ", "\t")):
-            current_carrier = None
+            finish_carrier(i)
         if current_carrier:
             fm = FIELD_RE.match(line)
             if not fm:
                 continue
             name, typ = fm.group(1), fm.group(2)
             type_core = typ.split(":=", 1)[0].strip()
+            # Lean permits a field type to continue on following lines.  An
+            # empty type suffix is therefore evidence of a data field, not a
+            # proof-only field; the continuation is intentionally left to
+            # Lean as the authority on its complete type.
+            if not type_core:
+                current_carrier_has_data = True
+            if not field_type_re.search(type_core):
+                current_carrier_has_data = True
             name_hit = bool(field_name_re.search(name))
             type_hit = bool(field_type_re.search(type_core))
             if type_hit and proof_type_cfg:
@@ -243,6 +277,7 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
                         f"{name} : {type_core}",
                     )
                 )
+
             if name_hit and type_hit:
                 findings.append(
                     Finding(
@@ -254,6 +289,8 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
                         f"{name} : {type_core}",
                     )
                 )
+
+    finish_carrier(len(lines) + 1)
 
     type_surface_cfg = categories.get("typed_surface_name", {})
     type_surface_re = re.compile(type_surface_cfg.get("name_regex", r"a^"))

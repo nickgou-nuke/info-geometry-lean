@@ -125,10 +125,6 @@ namespace InfoGeometry.Analysis
 
 open InfoGeometry.Analysis.Graph
 
-/-- compatibility alias for the old name.  placed in the parent namespace so it
-    does *not* collapse `InfoGeometry.Analysis.Graph`. -/
-abbrev Graph := SimpleGraph
-
 export InfoGeometry.Analysis.Graph
   (SimpleGraph EdgeKind IndexedGraph arrayReplicate collectConsts collectDeps envToIndexedGraph
    indexedToGraph envToGraph)

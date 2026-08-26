@@ -71,9 +71,9 @@ theorem s1_mem_phi {v : ℤ × ℤ} (hv : v ∈ phi) : s1 v ∈ phi := by
     Finset.mem_insert, Finset.mem_singleton] at hv ⊢
   rcases hv with hv | ⟨u, hu, rfl⟩
   · rcases hv with rfl | rfl | rfl | rfl | rfl | rfl <;>
-      simp [s1, phi, phiMinus]
+      simp [s1]
   · rcases hu with rfl | rfl | rfl | rfl | rfl | rfl <;>
-      simp [s1, phi, phiMinus]
+      simp [s1]
 
 theorem s2_mem_phi {v : ℤ × ℤ} (hv : v ∈ phi) : s2 v ∈ phi := by
   classical
@@ -81,9 +81,9 @@ theorem s2_mem_phi {v : ℤ × ℤ} (hv : v ∈ phi) : s2 v ∈ phi := by
     Finset.mem_insert, Finset.mem_singleton] at hv ⊢
   rcases hv with hv | ⟨u, hu, rfl⟩
   · rcases hv with rfl | rfl | rfl | rfl | rfl | rfl <;>
-      simp [s2, phi, phiMinus]
+      simp [s2]
   · rcases hu with rfl | rfl | rfl | rfl | rfl | rfl <;>
-      simp [s2, phi, phiMinus]
+      simp [s2]
 
 def s1Root : G2CoordinateRoot ≃ G2CoordinateRoot where
   toFun x := ⟨s1 x.1, s1_mem_phi x.2⟩
@@ -117,13 +117,13 @@ theorem s1_rootNeg (v : ℤ × ℤ) :
     s1 (-v.1, -v.2) = (-((s1 v).1), -((s1 v).2)) := by
   rcases v with ⟨a, b⟩
   dsimp [s1]
-  ring
+  ring_nf
 
 theorem s2_rootNeg (v : ℤ × ℤ) :
     s2 (-v.1, -v.2) = (-((s2 v).1), -((s2 v).2)) := by
   rcases v with ⟨a, b⟩
   dsimp [s2]
-  ring
+  ring_nf
 
 def cRoot : G2CoordinateRoot ≃ G2CoordinateRoot := s1Root.trans s2Root
 

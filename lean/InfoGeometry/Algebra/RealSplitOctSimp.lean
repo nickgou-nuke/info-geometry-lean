@@ -66,6 +66,22 @@ namespace InfoGeometry.Algebra.RealSplitOct
 @[simp] lemma mul_y1 (X Y : RealSplitOct) : (X.mul Y).y1 = Y.a * X.y1 + X.b * Y.y1 + (X.x2 * Y.x0 - X.x0 * Y.x2) := rfl
 @[simp] lemma mul_y2 (X Y : RealSplitOct) : (X.mul Y).y2 = Y.a * X.y2 + X.b * Y.y2 + (X.x0 * Y.x1 - X.x1 * Y.x0) := rfl
 
+theorem mul_add_left (X Y Z : RealSplitOct) :
+    (X + Y).mul Z = X.mul Z + Y.mul Z := by
+  ext <;> simp [RealSplitOct.mul] <;> ring
+
+theorem mul_add_right (X Y Z : RealSplitOct) :
+    X.mul (Y + Z) = X.mul Y + X.mul Z := by
+  ext <;> simp [RealSplitOct.mul] <;> ring
+
+theorem mul_smul_left (r : ℝ) (X Y : RealSplitOct) :
+    (r • X).mul Y = r • X.mul Y := by
+  ext <;> simp [RealSplitOct.mul] <;> ring
+
+theorem mul_smul_right (r : ℝ) (X Y : RealSplitOct) :
+    X.mul (r • Y) = r • X.mul Y := by
+  ext <;> simp [RealSplitOct.mul] <;> ring
+
 end InfoGeometry.Algebra.RealSplitOct
 
 @[simp] lemma rsm_a1 (a b c d e f) : (InfoGeometry.Algebra.RealAlbertMatrix.mk a b c d e f).α₁ = a := rfl
@@ -99,5 +115,3 @@ end InfoGeometry.Algebra.RealSplitOct
 @[simp] lemma rsm_mul_z3 (X Y : InfoGeometry.Algebra.RealAlbertMatrix) :
   (InfoGeometry.Algebra.RealAlbertMatrix.mul X Y).z₃ =
     InfoGeometry.Algebra.RealSplitOct.smul (1 / 2) (X.z₃.smul (Y.α₁ + Y.α₂) + Y.z₃.smul (X.α₁ + X.α₂) + X.z₂.conj.mul Y.z₁.conj + Y.z₂.conj.mul X.z₁.conj) := rfl
-
-

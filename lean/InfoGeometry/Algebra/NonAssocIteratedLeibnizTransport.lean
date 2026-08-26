@@ -115,6 +115,36 @@ theorem derivation_kills_unit
     exact h1
   exact (add_left_cancel h2).symm
 
+/-- A derivation kills every scalar multiple of a supplied two-sided unit. -/
+theorem derivation_kills_scalar_unit
+    (D : NonAssocDerivation R A)
+    (one : A)
+    (unit_mul : ∀ a : A, one * a = a)
+    (mul_unit : ∀ a : A, a * one = a)
+    (c : R) :
+    D (c • one) = 0 := by
+  rw [D.map_smul]
+  rw [derivation_kills_unit D one unit_mul mul_unit]
+  simp
+
+/-- Scalar multiples of the supplied unit lie in the derivation kernel. -/
+theorem scalar_unit_mem_derivation_ker
+    (D : NonAssocDerivation R A)
+    (one : A)
+    (unit_mul : ∀ a : A, one * a = a)
+    (mul_unit : ∀ a : A, a * one = a)
+    (c : R) :
+    c • one ∈ D.toLinearMap.ker := by
+  exact derivation_kills_scalar_unit D one unit_mul mul_unit c
+
+/-- Equality after a derivation is equality modulo its linear kernel. -/
+theorem derivation_eq_iff_sub_mem_kernel
+    (D : NonAssocDerivation R A) (x y : A) :
+    D x = D y ↔ x - y ∈ D.toLinearMap.ker := by
+  change D x = D y ↔ D.toLinearMap (x - y) = 0
+  rw [D.toLinearMap.map_sub]
+  exact (sub_eq_zero).symm
+
 /-- Every positive iterate annihilates a vector already annihilated by `D`. -/
 theorem iterD_eq_zero_of_apply_eq_zero
     (D : NonAssocDerivation R A)

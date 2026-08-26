@@ -45,9 +45,9 @@ def hurwitzLatticeModel : HurwitzIntegerModel where
 
 /-- Two-channel index set for the D23 packet. -/
 @[rep_depth operator]
-def d23FilterIndex : DiscreteFilterIndex := Fin 2
+def d23FilterIndex : Type := Fin 2
 
-instance : Fintype d23FilterIndex.Index :=
+instance : Fintype d23FilterIndex :=
   show Fintype (Fin 2) by infer_instance
 
 /--

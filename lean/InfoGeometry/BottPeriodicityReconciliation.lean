@@ -71,17 +71,15 @@ e₁ with e₁² = 1 and e₂ with e₂² = -1. These are represented in M₂(�
 The real Pauli algebra {I₂, σ₁, ε, σ₃} spans all of M₂(ℝ).
 -/
 def I2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 1]
-abbrev sigma1 := sigma1R
 def epsilon : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; -1, 0]
-abbrev sigma3 := sigma3R
 
 /--
 **CL(1,1) generators**: e₁² = I, e₂² = -I, {e₁, e₂} = 0.
 -/
 theorem cl11_generator_relations :
-    sigma1 * sigma1 = I2 ∧
+    sigma1R * sigma1R = I2 ∧
     epsilon * epsilon = -I2 ∧
-    sigma1 * epsilon + epsilon * sigma1 = 0 := by
+    sigma1R * epsilon + epsilon * sigma1R = 0 := by
   refine ⟨?_, ?_, ?_⟩
   · ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [sigma1R, I2, Matrix.mul_apply, Fin.sum_univ_two]
   · ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [epsilon, I2, Matrix.mul_apply, Fin.sum_univ_two]
@@ -96,7 +94,7 @@ CL(1,1) ⊗ CL(n,n) ≅ CL(n+1,n+1).
 -/
 theorem cl11_basis_spans_M2 (A : Matrix (Fin 2) (Fin 2) ℝ) :
     ∃ (a b c d : ℝ),
-      A = a • I2 + b • sigma1 + c • epsilon + d • sigma3 := by
+      A = a • I2 + b • sigma1R + c • epsilon + d • sigma3R := by
   -- We prove this constructively: the change-of-basis matrix from
   -- {I2, σ₁, ε, σ₃} to the standard basis {E₁₁, E₁₂, E₂₁, E₂₂} is invertible.
   -- Equivalently: each standard basis vector is in the span.

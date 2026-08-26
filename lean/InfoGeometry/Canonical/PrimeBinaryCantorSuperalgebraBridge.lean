@@ -66,7 +66,7 @@ theorem primeSectorGrade_fermionic_iff
 /-- Möbius parity readback on represented squarefree prime-bit states. -/
 @[rep_depth operator]
 theorem mobiusParity_readback
-    (P : FermionicPrimeRegister) (ψ : FermionicPrimeState P) :
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (ψ : FermionicPrimeState P) :
     ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
       fermionParity P ψ := by
   simpa using (mobius_eq_fermionParity P ψ)
@@ -74,7 +74,7 @@ theorem mobiusParity_readback
 /-- Finite supertrace readback equals the finite inverse Euler product. -/
 @[rep_depth operator]
 theorem finiteSupertrace_readback
-    (P : FermionicPrimeRegister) (x : ℕ → ℂ) :
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (x : ℕ → ℂ) :
     finiteSupertraceDirichlet P x = finiteInverseEulerProduct P x := by
   simpa using (finiteSupertraceDirichlet_eq_inverseEulerProduct P x)
 

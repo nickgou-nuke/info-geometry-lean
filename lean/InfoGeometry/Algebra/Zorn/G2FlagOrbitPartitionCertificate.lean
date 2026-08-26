@@ -6,6 +6,7 @@ namespace InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 
 open InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+open InfoGeometry.Algebra.Zorn.G2FlagWordEvaluator
 open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
@@ -16,10 +17,13 @@ noncomputable def orbitEnum : Fin 189 →
     SplitOctF2Aut ⧸ unipotentSubgroup :=
   quotientRepresentative
 
-/- The GAP exporter uses `correctedC = c⁻¹`; transport to the repository's
-   `weylNF` convention therefore reverses the ZMod-6 coordinate. -/
+/- The repaired exporter reverses each representative word to compensate for
+   `autMatrix (f * g) = autMatrix g * autMatrix f`.  The `s`-coset carries
+   the corresponding inverse Coxeter coordinate. -/
 def orbitWeyl : Fin 12 → WeylG2 :=
-  fun i => (-((flagWeyl i).1), (flagWeyl i).2)
+  fun i =>
+    if (flagWeyl i).2 then (-((flagWeyl i).1), true)
+    else ((flagWeyl i).1, false)
 
 def orbitCells : Fin 12 → Finset (Fin 189) := flagCells
 

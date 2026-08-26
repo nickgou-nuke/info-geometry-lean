@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 import InfoGeometry.Architecture.SymmetricSpace
+import InfoGeometry.Architecture.CartanLieBracket
 
 /-!
 # Cartan Coset Riemann Curvature Bridge (G/K Nomizu Geometry)
@@ -30,6 +31,8 @@ noncomputable section
 
 namespace InfoGeometry.Lie.CartanCoset
 
+open InfoGeometry.Architecture
+
 /-!
 =============================================================================
 1. General Lie Algebra & Commutator Infrastructure
@@ -37,15 +40,6 @@ namespace InfoGeometry.Lie.CartanCoset
 -/
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-
-/-- A Lie bracket on a real vector space V. -/
-structure IsLieBracket (bracket : V → V → V) : Prop where
-  skew : ∀ x y, bracket x y = - bracket y x
-  add_left : ∀ x y z, bracket (x + y) z = bracket x z + bracket y z
-  add_right : ∀ x y z, bracket x (y + z) = bracket x y + bracket x z
-  smul_left : ∀ (c : ℝ) x y, bracket (c • x) y = c • bracket x y
-  smul_right : ∀ (c : ℝ) x y, bracket x (c • y) = c • bracket x y
-  jacobi : ∀ x y z, bracket x (bracket y z) + bracket y (bracket z x) + bracket z (bracket x y) = 0
 
 /-!
 =============================================================================

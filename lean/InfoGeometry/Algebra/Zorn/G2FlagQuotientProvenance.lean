@@ -46,4 +46,16 @@ theorem quotient_cell_one
     QuotientRowWitness 1 i := by
   exact hcell_one i hi
 
+theorem quotient_anchor (k : Fin 12) :
+    QuotientRowWitness k (orbitCellAnchor k) := by
+  exact hcell_anchor k
+
+theorem quotient_cell_zero
+    (i : Fin 189) (hi : i ∈ orbitCells 0) :
+    QuotientRowWitness 0 i := by
+  have hi0 : i = orbitCellAnchor 0 := by
+    simpa [orbitCells, flagCells, orbitCellAnchor] using hi
+  subst i
+  exact quotient_anchor 0
+
 end InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance

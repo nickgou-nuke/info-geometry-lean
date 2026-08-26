@@ -1,25 +1,15 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
+import InfoGeometry.Architecture.CartanLieBracket
 
 noncomputable section
 
 namespace InfoGeometry.Architecture.CartanSectional
 
+open InfoGeometry.Architecture
+
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-
-structure IsLieBracket (bracket : V → V → V) : Prop where
-  skew : ∀ x y, bracket x y = - bracket y x
-  add_left : ∀ x y z, bracket (x + y) z = bracket x z + bracket y z
-  add_right : ∀ x y z, bracket x (y + z) = bracket x y + bracket x z
-  smul_left : ∀ (c : ℝ) x y, bracket (c • x) y = c • bracket x y
-  smul_right : ∀ (c : ℝ) x y, bracket x (c • y) = c • bracket x y
-  jacobi : ∀ x y z, bracket x (bracket y z) + bracket y (bracket z x) + bracket z (bracket x y) = 0
-
-structure CartanGrading (bracket : V → V → V) (k_space p_space : Submodule ℝ V) : Prop where
-  k_k : ∀ x y, x ∈ k_space → y ∈ k_space → bracket x y ∈ k_space
-  k_p : ∀ x y, x ∈ k_space → y ∈ p_space → bracket x y ∈ p_space
-  p_p : ∀ x y, x ∈ p_space → y ∈ p_space → bracket x y ∈ k_space
 
 /-- The Nomizu Riemann curvature tensor: R(X, Y)Z = -[[X, Y], Z]. -/
 def riemannCurvature (bracket : V → V → V) (X Y Z : V) : V :=

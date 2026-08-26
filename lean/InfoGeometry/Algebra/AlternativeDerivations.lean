@@ -118,6 +118,48 @@ def stanDerMap (a b : A) : A →ₗ[R] A :=
   ((L_map a).comp (R_map b) - (R_map b).comp (L_map a)) +
   ((R_map a).comp (R_map b) - (R_map b).comp (R_map a))
 
+@[simp] theorem stanDerMap_add_left (a₁ a₂ b : A) :
+    stanDerMap (R := R) (a₁ + a₂) b =
+      stanDerMap (R := R) a₁ b + stanDerMap (R := R) a₂ b := by
+  apply LinearMap.ext
+  intro z
+  simp [stanDerMap, L_map, R_map, add_mul, mul_add]
+  abel_nf
+
+@[simp] theorem stanDerMap_smul_left (r : R) (a b : A) :
+    stanDerMap (R := R) (r • a) b =
+      r • stanDerMap (R := R) a b := by
+  apply LinearMap.ext
+  intro z
+  simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
+    smul_add]
+  simp only [smul_sub]
+
+@[simp] theorem stanDerMap_add_right (a b₁ b₂ : A) :
+    stanDerMap (R := R) a (b₁ + b₂) =
+      stanDerMap (R := R) a b₁ + stanDerMap (R := R) a b₂ := by
+  apply LinearMap.ext
+  intro z
+  simp [stanDerMap, L_map, R_map, add_mul, mul_add]
+  abel
+
+@[simp] theorem stanDerMap_smul_right (r : R) (a b : A) :
+    stanDerMap (R := R) a (r • b) =
+      r • stanDerMap (R := R) a b := by
+  apply LinearMap.ext
+  intro z
+  simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
+    smul_add]
+  simp only [smul_sub]
+
+/-- The standard alternative-algebra derivation operator packaged as a
+bilinear map.  Its derivation law is supplied separately by
+`stanDerMap_isLeibniz` under alternativity hypotheses. -/
+noncomputable def stanDerMapBilinear : A →ₗ[R] A →ₗ[R] (A →ₗ[R] A) :=
+  LinearMap.mk₂ R (stanDerMap (R := R))
+    stanDerMap_add_left stanDerMap_smul_left
+    stanDerMap_add_right stanDerMap_smul_right
+
 /-!
 ### Standard derivations in an alternative algebra
 

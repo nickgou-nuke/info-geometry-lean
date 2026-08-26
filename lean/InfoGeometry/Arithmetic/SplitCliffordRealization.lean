@@ -275,11 +275,29 @@ theorem clifford_square_identity_commuting (p q : K)
 
 /-! ## Combined Dirac square with explicit commutation premises -/
 
-structure ChiralityOperator (atom : Cl11Atom K) where
-  rho : K
-  rho_sq_one : rho * rho = 1
-  anticomm_r0 : rho * atom.r0 = -(atom.r0 * rho)
-  anticomm_r5 : rho * atom.r5 = -(atom.r5 * rho)
+def ChiralityOperator (atom : Cl11Atom K) : Type _ :=
+  {rho : K // rho * rho = 1 ∧
+    rho * atom.r0 = -(atom.r0 * rho) ∧
+    rho * atom.r5 = -(atom.r5 * rho)}
+
+namespace ChiralityOperator
+
+omit [Algebra ℝ K] hAtom in
+def rho (chi : ChiralityOperator atom) : K := chi.1
+
+omit [Algebra ℝ K] hAtom in
+theorem rho_sq_one (chi : ChiralityOperator atom) :
+    chi.rho * chi.rho = 1 := chi.2.1
+
+omit [Algebra ℝ K] hAtom in
+theorem anticomm_r0 (chi : ChiralityOperator atom) :
+    chi.rho * atom.r0 = -(atom.r0 * chi.rho) := chi.2.2.1
+
+omit [Algebra ℝ K] hAtom in
+theorem anticomm_r5 (chi : ChiralityOperator atom) :
+    chi.rho * atom.r5 = -(atom.r5 * chi.rho) := chi.2.2.2
+
+end ChiralityOperator
 
 omit [Algebra ℝ K] in
 theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
@@ -287,18 +305,18 @@ theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
     (hq_comm_r0 : q * atom.r0 = atom.r0 * q)
     (hp_comm_r5 : p * atom.r5 = atom.r5 * p)
     (hq_comm_r5 : q * atom.r5 = atom.r5 * q)
-    (hp_comm_rho : p * chi.rho = chi.rho * p)
-    (hq_comm_rho : q * chi.rho = chi.rho * q)
+    (hp_comm_rho : p * chi.1 = chi.1 * p)
+    (hq_comm_rho : q * chi.1 = chi.1 * q)
     (hQ_comm_r0 : Q * atom.r0 = atom.r0 * Q)
     (hQ_comm_r5 : Q * atom.r5 = atom.r5 * Q)
-    (hQ_comm_rho : Q * chi.rho = chi.rho * Q)
+    (hQ_comm_rho : Q * chi.1 = chi.1 * Q)
     (hQ_comm_p : Q * p = p * Q)
     (hQ_comm_q : Q * q = q * Q) :
-    (atom.r0 * p + atom.r5 * q + chi.rho * Q) *
-        (atom.r0 * p + atom.r5 * q + chi.rho * Q) =
+    (atom.r0 * p + atom.r5 * q + chi.1 * Q) *
+        (atom.r0 * p + atom.r5 * q + chi.1 * Q) =
       (p * p - q * q + atom.r0 * atom.r5 * (p * q - q * p)) + Q * Q := by
   set Dcl := atom.r0 * p + atom.r5 * q
-  set Dchi := chi.rho * Q
+  set Dchi := chi.1 * Q
   have h_sq_cl :
       Dcl * Dcl =
         (p * p - q * q) + atom.r0 * atom.r5 * (p * q - q * p) := by
@@ -307,61 +325,61 @@ theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
   have h_sq_chi : Dchi * Dchi = Q * Q := by
     subst Dchi
     calc
-      (chi.rho * Q) * (chi.rho * Q)
-          = chi.rho * (Q * chi.rho) * Q := by noncomm_ring
-      _ = chi.rho * (chi.rho * Q) * Q := by rw [hQ_comm_rho]
-      _ = (chi.rho * chi.rho) * (Q * Q) := by noncomm_ring
-      _ = 1 * (Q * Q) := by rw [chi.rho_sq_one]
+      (chi.1 * Q) * (chi.1 * Q)
+          = chi.1 * (Q * chi.1) * Q := by noncomm_ring
+      _ = chi.1 * (chi.1 * Q) * Q := by rw [hQ_comm_rho]
+      _ = (chi.1 * chi.1) * (Q * Q) := by noncomm_ring
+      _ = 1 * (Q * Q) := by rw [chi.2.1]
       _ = Q * Q := by noncomm_ring
-  have hr0_rev : atom.r0 * chi.rho = -(chi.rho * atom.r0) := by
-    rw [chi.anticomm_r0, neg_neg]
-  have hr5_rev : atom.r5 * chi.rho = -(chi.rho * atom.r5) := by
-    rw [chi.anticomm_r5, neg_neg]
-  have hA : (atom.r0 * p) * (chi.rho * Q) = -(chi.rho * atom.r0 * Q * p) := by
+  have hr0_rev : atom.r0 * chi.1 = -(chi.1 * atom.r0) := by
+    rw [chi.2.2.1, neg_neg]
+  have hr5_rev : atom.r5 * chi.1 = -(chi.1 * atom.r5) := by
+    rw [chi.2.2.2, neg_neg]
+  have hA : (atom.r0 * p) * (chi.1 * Q) = -(chi.1 * atom.r0 * Q * p) := by
     calc
-      (atom.r0 * p) * (chi.rho * Q)
-          = atom.r0 * (p * chi.rho) * Q := by noncomm_ring
-      _ = atom.r0 * (chi.rho * p) * Q := by rw [hp_comm_rho]
-      _ = (atom.r0 * chi.rho) * (p * Q) := by noncomm_ring
-      _ = (-(chi.rho * atom.r0)) * (p * Q) := by rw [hr0_rev]
-      _ = (-(chi.rho * atom.r0)) * (Q * p) := by rw [hQ_comm_p]
-      _ = -(chi.rho * atom.r0 * Q * p) := by noncomm_ring
-  have hB : (atom.r5 * q) * (chi.rho * Q) = -(chi.rho * atom.r5 * Q * q) := by
+      (atom.r0 * p) * (chi.1 * Q)
+          = atom.r0 * (p * chi.1) * Q := by noncomm_ring
+      _ = atom.r0 * (chi.1 * p) * Q := by rw [hp_comm_rho]
+      _ = (atom.r0 * chi.1) * (p * Q) := by noncomm_ring
+      _ = (-(chi.1 * atom.r0)) * (p * Q) := by rw [hr0_rev]
+      _ = (-(chi.1 * atom.r0)) * (Q * p) := by rw [hQ_comm_p]
+      _ = -(chi.1 * atom.r0 * Q * p) := by noncomm_ring
+  have hB : (atom.r5 * q) * (chi.1 * Q) = -(chi.1 * atom.r5 * Q * q) := by
     calc
-      (atom.r5 * q) * (chi.rho * Q)
-          = atom.r5 * (q * chi.rho) * Q := by noncomm_ring
-      _ = atom.r5 * (chi.rho * q) * Q := by rw [hq_comm_rho]
-      _ = (atom.r5 * chi.rho) * (q * Q) := by noncomm_ring
-      _ = (-(chi.rho * atom.r5)) * (q * Q) := by rw [hr5_rev]
-      _ = (-(chi.rho * atom.r5)) * (Q * q) := by rw [hQ_comm_q]
-      _ = -(chi.rho * atom.r5 * Q * q) := by noncomm_ring
-  have hC : (chi.rho * Q) * (atom.r0 * p) = chi.rho * atom.r0 * Q * p := by
+      (atom.r5 * q) * (chi.1 * Q)
+          = atom.r5 * (q * chi.1) * Q := by noncomm_ring
+      _ = atom.r5 * (chi.1 * q) * Q := by rw [hq_comm_rho]
+      _ = (atom.r5 * chi.1) * (q * Q) := by noncomm_ring
+      _ = (-(chi.1 * atom.r5)) * (q * Q) := by rw [hr5_rev]
+      _ = (-(chi.1 * atom.r5)) * (Q * q) := by rw [hQ_comm_q]
+      _ = -(chi.1 * atom.r5 * Q * q) := by noncomm_ring
+  have hC : (chi.1 * Q) * (atom.r0 * p) = chi.1 * atom.r0 * Q * p := by
     calc
-      (chi.rho * Q) * (atom.r0 * p)
-          = chi.rho * (Q * atom.r0) * p := by noncomm_ring
-      _ = chi.rho * (atom.r0 * Q) * p := by rw [hQ_comm_r0]
-      _ = chi.rho * atom.r0 * Q * p := by noncomm_ring
-  have hD : (chi.rho * Q) * (atom.r5 * q) = chi.rho * atom.r5 * Q * q := by
+      (chi.1 * Q) * (atom.r0 * p)
+          = chi.1 * (Q * atom.r0) * p := by noncomm_ring
+      _ = chi.1 * (atom.r0 * Q) * p := by rw [hQ_comm_r0]
+      _ = chi.1 * atom.r0 * Q * p := by noncomm_ring
+  have hD : (chi.1 * Q) * (atom.r5 * q) = chi.1 * atom.r5 * Q * q := by
     calc
-      (chi.rho * Q) * (atom.r5 * q)
-          = chi.rho * (Q * atom.r5) * q := by noncomm_ring
-      _ = chi.rho * (atom.r5 * Q) * q := by rw [hQ_comm_r5]
-      _ = chi.rho * atom.r5 * Q * q := by noncomm_ring
+      (chi.1 * Q) * (atom.r5 * q)
+          = chi.1 * (Q * atom.r5) * q := by noncomm_ring
+      _ = chi.1 * (atom.r5 * Q) * q := by rw [hQ_comm_r5]
+      _ = chi.1 * atom.r5 * Q * q := by noncomm_ring
   have h_cross : Dcl * Dchi + Dchi * Dcl = 0 := by
     subst Dcl
     subst Dchi
     calc
-      (atom.r0 * p + atom.r5 * q) * (chi.rho * Q) +
-          (chi.rho * Q) * (atom.r0 * p + atom.r5 * q)
-          = (atom.r0 * p) * (chi.rho * Q) +
-              (atom.r5 * q) * (chi.rho * Q) +
-              ((chi.rho * Q) * (atom.r0 * p) +
-                (chi.rho * Q) * (atom.r5 * q)) := by
+      (atom.r0 * p + atom.r5 * q) * (chi.1 * Q) +
+          (chi.1 * Q) * (atom.r0 * p + atom.r5 * q)
+          = (atom.r0 * p) * (chi.1 * Q) +
+              (atom.r5 * q) * (chi.1 * Q) +
+              ((chi.1 * Q) * (atom.r0 * p) +
+                (chi.1 * Q) * (atom.r5 * q)) := by
         noncomm_ring
-      _ = -(chi.rho * atom.r0 * Q * p) +
-            -(chi.rho * atom.r5 * Q * q) +
-            (chi.rho * atom.r0 * Q * p +
-              chi.rho * atom.r5 * Q * q) := by
+      _ = -(chi.1 * atom.r0 * Q * p) +
+            -(chi.1 * atom.r5 * Q * q) +
+            (chi.1 * atom.r0 * Q * p +
+              chi.1 * atom.r5 * Q * q) := by
         rw [hA, hB, hC, hD]
       _ = 0 := by noncomm_ring
   calc
@@ -374,54 +392,53 @@ theorem dirac_operator_square (chi : ChiralityOperator atom) (p q Q : K)
       simp [add_assoc]
 
 def eulerAsChirality (atom : Cl11Atom K) (hAtom : Cl11AtomLaws atom) : ChiralityOperator atom where
-  rho := EulerOperator atom
-  rho_sq_one := euler_operator_sq_one atom hAtom
-  anticomm_r0 := euler_anticommutes_r0 atom hAtom
-  anticomm_r5 := euler_anticommutes_r5 atom hAtom
+  val := EulerOperator atom
+  property := ⟨euler_operator_sq_one atom hAtom,
+    euler_anticommutes_r0 atom hAtom,
+    euler_anticommutes_r5 atom hAtom⟩
 
 /-! ## Packet -/
 
-structure SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) where
-  cl11 : Cl11Atom K
-  laws : Cl11AtomLaws cl11
+def RealizationData (K : Type*) [Ring K] [Algebra ℝ K] : Type _ :=
+  {cl11 : Cl11Atom K // Cl11AtomLaws cl11}
 
-namespace SplitCliffordRealizationPacket
+namespace Realization
 
-theorem euler_sq_one (P : SplitCliffordRealizationPacket K n) :
-    EulerOperator P.cl11 * EulerOperator P.cl11 = 1 :=
-  euler_operator_sq_one P.cl11 P.laws
+theorem euler_sq_one (P : RealizationData K) :
+    EulerOperator P.1 * EulerOperator P.1 = 1 :=
+  euler_operator_sq_one P.1 P.2
 
-theorem euler_anticomm_r0 (P : SplitCliffordRealizationPacket K n) :
-    EulerOperator P.cl11 * P.cl11.r0 = -(P.cl11.r0 * EulerOperator P.cl11) :=
-  euler_anticommutes_r0 P.cl11 P.laws
+theorem euler_anticomm_r0 (P : RealizationData K) :
+    EulerOperator P.1 * P.1.r0 = -(P.1.r0 * EulerOperator P.1) :=
+  euler_anticommutes_r0 P.1 P.2
 
-theorem euler_anticomm_r5 (P : SplitCliffordRealizationPacket K n) :
-    EulerOperator P.cl11 * P.cl11.r5 = -(P.cl11.r5 * EulerOperator P.cl11) :=
-  euler_anticommutes_r5 P.cl11 P.laws
+theorem euler_anticomm_r5 (P : RealizationData K) :
+    EulerOperator P.1 * P.1.r5 = -(P.1.r5 * EulerOperator P.1) :=
+  euler_anticommutes_r5 P.1 P.2
 
-theorem chiral_orthogonal (P : SplitCliffordRealizationPacket K n) :
-    chiralProjectorPlus P.cl11 * chiralProjectorMinus P.cl11 = 0 :=
-  chiral_sheets_orthogonal P.cl11 P.laws
+theorem chiral_orthogonal (P : RealizationData K) :
+    chiralProjectorPlus P.1 * chiralProjectorMinus P.1 = 0 :=
+  chiral_sheets_orthogonal P.1 P.2
 
-theorem chiral_partition (P : SplitCliffordRealizationPacket K n) :
-    chiralProjectorPlus P.cl11 + chiralProjectorMinus P.cl11 = 1 :=
-  chiral_sheets_partition_unity P.cl11
+theorem chiral_partition (P : RealizationData K) :
+    chiralProjectorPlus P.1 + chiralProjectorMinus P.1 = 1 :=
+  chiral_sheets_partition_unity P.1
 
-theorem even_odd_orthogonal (P : SplitCliffordRealizationPacket K n) :
-    evenProjector P.cl11 * oddProjector P.cl11 = 0 :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.even_odd_orthogonal P.cl11 P.laws
+theorem even_odd_orthogonal (P : RealizationData K) :
+    evenProjector P.1 * oddProjector P.1 = 0 :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.even_odd_orthogonal P.1 P.2
 
-theorem even_odd_partition (P : SplitCliffordRealizationPacket K n) :
-    evenProjector P.cl11 + oddProjector P.cl11 = 1 :=
-  even_odd_partition_unity P.cl11 P.laws
+theorem even_odd_partition (P : RealizationData K) :
+    evenProjector P.1 + oddProjector P.1 = 1 :=
+  even_odd_partition_unity P.1 P.2
 
-theorem euler_fixes_even (P : SplitCliffordRealizationPacket K n) :
-    EulerOperator P.cl11 * evenProjector P.cl11 = evenProjector P.cl11 :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_fixes_even P.cl11 P.laws
+theorem euler_fixes_even (P : RealizationData K) :
+    EulerOperator P.1 * evenProjector P.1 = evenProjector P.1 :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_fixes_even P.1 P.2
 
-theorem euler_flips_odd (P : SplitCliffordRealizationPacket K n) :
-    EulerOperator P.cl11 * oddProjector P.cl11 = -(oddProjector P.cl11) :=
-  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.cl11 P.laws
+theorem euler_flips_odd (P : RealizationData K) :
+    EulerOperator P.1 * oddProjector P.1 = -(oddProjector P.1) :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.1 P.2
 
 theorem car_nilpotence :
     ∀ i : Fin n, ann n i * ann n i = 0 :=
@@ -436,21 +453,21 @@ theorem car_identity :
       (if i = j then (1 : Clnn n) else 0) :=
   _root_.InfoGeometry.OperatorAlgebra.CliffordCAR.car_identity n
 
-end SplitCliffordRealizationPacket
+end Realization
 
-def mkRealization (cl11 : Cl11Atom K) (n : ℕ) (laws : Cl11AtomLaws cl11) :
-    SplitCliffordRealizationPacket K n :=
+def mkRealization (cl11 : Cl11Atom K) (laws : Cl11AtomLaws cl11) :
+    RealizationData K :=
   ⟨cl11, laws⟩
 
 /-- Owner target for the split Clifford realization lane. -/
-abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] (n : ℕ) :
-    Type uK :=
-  SplitCliffordRealizationPacket K n
+abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] :
+  Type uK :=
+  RealizationData K
 
 /-- The split Clifford realization packet is constructible directly. -/
-def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ)
+def capstone_split_clifford_realization (cl11 : Cl11Atom K)
     (laws : Cl11AtomLaws cl11) :
-    SplitCliffordRealizationTarget K n :=
-  mkRealization cl11 n laws
+    SplitCliffordRealizationTarget K :=
+  mkRealization cl11 laws
 
 end InfoGeometry.Arithmetic.SplitCliffordRealization

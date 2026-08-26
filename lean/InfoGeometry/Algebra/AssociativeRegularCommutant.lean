@@ -32,7 +32,7 @@ def leftRegularCommutant : Set (Module.End R A) :=
 theorem rightRegular_mem_leftRegularCommutant (b : A) :
     rightRegular (R := R) b ∈ leftRegularCommutant (R := R) := by
   intro a x
-  simp [leftRegularCommutant, mul_assoc]
+  simp [mul_assoc]
 
 theorem leftRegularCommutant_eq_rightRegular_range :
     leftRegularCommutant (R := R) (A := A) =

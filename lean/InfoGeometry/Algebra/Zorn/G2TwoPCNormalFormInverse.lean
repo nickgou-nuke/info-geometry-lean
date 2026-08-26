@@ -124,7 +124,7 @@ theorem pcCombine_left_inverse_apply_five (e : PCExponent) :
   ring_nf
   simp [F2_two_eq_zero, F2_mul_four]
   rw [show bitToF2 false = 0 by rfl]
-  ring
+  ring_nf
   change (0 : F2) = 0
   rfl
 

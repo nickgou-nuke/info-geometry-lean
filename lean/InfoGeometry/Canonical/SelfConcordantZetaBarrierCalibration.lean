@@ -7,13 +7,13 @@ import InfoGeometry.Meta.Architecture
 Thin calibration wrapper for the self-concordant zeta barrier.
 
 This file does not prove a new variational theorem.  It packages the existing
-`SelfConcordantZetaBarrier.VariationalRHTarget` with an explicit property for
-the missing bridge `zeros_are_barrier_critical`, and reexports the owner
+`SelfConcordantZetaBarrier.VariationalRHTarget` with an explicit supplied
+calibration property `zeros_are_barrier_critical`, and reexports the owner
 theorem `variationalRH_implies_criticalLine`.
 
 The intent is architectural: keep the self-concordant barrier as the native
 optimization owner, and keep the zeta-period zero-to-barrier-critical bridge as
-the supplied calibration datum.
+an explicit calibration datum rather than an unconditional theorem.
 -/
 
 noncomputable section

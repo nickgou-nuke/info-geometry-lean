@@ -151,6 +151,8 @@ import InfoGeometry.Algebra.GrothendieckRing
 import InfoGeometry.Algebra.H3ZornCubicFormE6Bridge
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
 import InfoGeometry.Algebra.H3ZornCubicOperators
+import InfoGeometry.Algebra.H3ZornFreudenthalQuadraticLaws
+import InfoGeometry.Algebra.H3ZornFreudenthalScaling
 import InfoGeometry.Algebra.H3ZornF4Basis
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornJordanInstance
@@ -4405,6 +4407,7 @@ import InfoGeometry.Eval.SeedProverSmoke
 import InfoGeometry.Eval.SorryFillerTest
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.RealSplitAlbertFreudenthal
 import InfoGeometry.Exceptional.CubicJordanQuadraticLaws
 import InfoGeometry.Exceptional.FreudenthalCl11Doublet
 import InfoGeometry.Exceptional.SymplecticTripleSystem

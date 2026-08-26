@@ -120,10 +120,10 @@ theorem cartanFlow_add (s t : ℝ) (x : PositiveHomogeneousCone) :
     cartanFlow (s + t) x = cartanFlow s (cartanFlow t x) := by
   apply Subtype.ext
   ext
-  · simp only [cartanFlow, Prod.fst, Prod.snd]
+  · simp only [cartanFlow]
     rw [Real.exp_add]
     ring
-  · simp only [cartanFlow, Prod.fst, Prod.snd]
+  · simp only [cartanFlow]
     rw [neg_add, Real.exp_add]
     ring
 
@@ -136,6 +136,25 @@ theorem cartanFlow_neg_right (t : ℝ) (x : PositiveHomogeneousCone) :
     cartanFlow t (cartanFlow (-t) x) = x := by
   rw [← cartanFlow_add]
   simp [cartanFlow_zero]
+
+theorem cartanFlow_comm (s t : ℝ) (x : PositiveHomogeneousCone) :
+    cartanFlow s (cartanFlow t x) = cartanFlow t (cartanFlow s x) := by
+  rw [← cartanFlow_add, ← cartanFlow_add, add_comm]
+
+theorem cartanFlow_injective (t : ℝ) :
+    Function.Injective (cartanFlow t) := by
+  intro x y hxy
+  have h := congrArg (cartanFlow (-t)) hxy
+  simpa only [cartanFlow_neg] using h
+
+theorem cartanFlow_surjective (t : ℝ) :
+    Function.Surjective (cartanFlow t) := by
+  intro y
+  exact ⟨cartanFlow (-t) y, cartanFlow_neg_right t y⟩
+
+theorem cartanFlow_bijective (t : ℝ) :
+    Function.Bijective (cartanFlow t) :=
+  ⟨cartanFlow_injective t, cartanFlow_surjective t⟩
 
 theorem barrier_eq_neg_log_product (x : PositiveHomogeneousCone) :
     barrier x = -Real.log (x.1.1 * x.1.2) := by
@@ -188,7 +207,7 @@ theorem homogeneousSwap_reciprocalScale_conjugacy
       reciprocalScale lambda⁻¹ x (inv_pos.mpr hlambda) := by
   apply Subtype.ext
   ext <;> dsimp [homogeneousSwap, reciprocalScale]
-  · simp [inv_inv, mul_comm]
+  · simp [inv_inv]
 
 theorem homogeneousSwap_cartanFlow_conjugacy (t : ℝ) (x : PositiveHomogeneousCone) :
     homogeneousSwap (cartanFlow t (homogeneousSwap x)) =

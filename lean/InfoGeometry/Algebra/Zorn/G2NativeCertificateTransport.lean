@@ -28,7 +28,8 @@ noncomputable def nativePointEnum : Fin 63 ≃
 
 def nativeIncident
     (p l : InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) : Prop :=
-  nativePointEnum.symm p ∈ parabolicCertificate.linePoints (nativePointEnum.symm l)
+  nativePointEnum.symm p ∈
+    G2HexagonIncidence.parabolicIncidenceData.linePoints (nativePointEnum.symm l)
 
 def NativePreservesIncidence
     (π : Equiv.Perm
@@ -40,13 +41,6 @@ noncomputable def certificatePermOfNative
       InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) :
     Equiv.Perm (Fin 63) :=
   nativePointEnum.trans (π.trans nativePointEnum.symm)
-
-theorem certificatePermOfNative_apply
-    (π : Equiv.Perm
-      InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint)
-    (i : Fin 63) :
-    certificatePermOfNative π i = nativePointEnum.symm (π (nativePointEnum i)) := by
-  rfl
 
 theorem preservesIncidence_iff_native
     (π : Equiv.Perm

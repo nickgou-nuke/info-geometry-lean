@@ -34,19 +34,6 @@ def baseCoset : Coset := 0
   permutation representations.
 -/
 
-structure G2ActionSystem where
-  perm_s1 : Equiv.Perm Coset
-  perm_s2 : Equiv.Perm Coset
-  perm_e  : Fin 6 → Equiv.Perm Coset
-  -- Coxeter relations of W(G_2) = D₁₂
-  s1_inv  : perm_s1 * perm_s1 = 1
-  s2_inv  : perm_s2 * perm_s2 = 1
-  braid   : (perm_s1 * perm_s2) ^ 6 = 1
-  -- Unipotent elementary involutions eᵢ² = 1
-  e_inv   : ∀ i, perm_e i * perm_e i = 1
-  -- Base coset stabilizer property: U₆ ⊆ B fixes the base coset 1 · B
-  borel_stab : ∀ i, perm_e i baseCoset = baseCoset
-
 /-! =========================================================================
     2. Algebraic Commutator Verification in Sym(63)
     ========================================================================= -/
@@ -78,29 +65,31 @@ MAIN THEOREM (Kernel Verification of the PC Commutator Injection):
 Verifies that the action homomorphism preserves the exact polycyclic commutator:
   `ρ([e₀, e₃]) = ρ(e₄)`
 -/
-theorem verify_pc_comm_03 (sys : G2ActionSystem)
-    (h_comm : permComm (sys.perm_e 0) (sys.perm_e 3) = sys.perm_e 4) :
-    (sys.perm_e 0 * sys.perm_e 3) ^ 2 = sys.perm_e 4 := by
-  have h0 := sys.e_inv 0
-  have h3 := sys.e_inv 3
+theorem verify_pc_comm_03
+    (e₀ e₃ e₄ : Equiv.Perm Coset)
+    (h₀ : e₀ * e₀ = 1) (h₃ : e₃ * e₃ = 1)
+    (h_comm : permComm e₀ e₃ = e₄) :
+    (e₀ * e₃) ^ 2 = e₄ := by
   calc
-    (sys.perm_e 0 * sys.perm_e 3) ^ 2 =
-        permComm (sys.perm_e 0) (sys.perm_e 3) := by
+    (e₀ * e₃) ^ 2 = permComm e₀ e₃ := by
       simpa [pow_two, mul_assoc] using
-        (permComm_of_involutions (sys.perm_e 0) (sys.perm_e 3) h0 h3).symm
-    _ = sys.perm_e 4 := h_comm
+        (permComm_of_involutions e₀ e₃ h₀ h₃).symm
+    _ = e₄ := h_comm
 
 /--
 MAIN THEOREM (Action Homomorphism Stabilizer Property):
 For any sequence of unipotent generators in `U₆`, the composite action fixes
 the trivial coset `0 = 1 · B`.
 -/
-theorem unipotent_word_fixes_base (sys : G2ActionSystem) (w : List (Fin 6)) :
-    (w.map sys.perm_e).prod baseCoset = baseCoset := by
+theorem unipotent_word_fixes_base
+    (perm_e : Fin 6 → Equiv.Perm Coset)
+    (borel_stab : ∀ i, perm_e i baseCoset = baseCoset)
+    (w : List (Fin 6)) :
+    (w.map perm_e).prod baseCoset = baseCoset := by
   induction w with
   | nil => rfl
   | cons i is ih =>
     simp only [List.map_cons, List.prod_cons, Equiv.Perm.mul_apply]
-    rw [ih, sys.borel_stab i]
+    rw [ih, borel_stab i]
 
 end InfoGeometry.Algebra.Zorn.G2CosetAction

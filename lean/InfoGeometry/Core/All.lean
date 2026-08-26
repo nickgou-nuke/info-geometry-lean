@@ -15,6 +15,10 @@ import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
+import InfoGeometry.Core.Foundations
+import InfoGeometry.Core.PeirceDecomposition
+import InfoGeometry.Core.JordanPeirceDecomposition
+import InfoGeometry.Core.DoubleCoset
 
 namespace InfoGeometry
 

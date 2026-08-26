@@ -18,9 +18,9 @@ open InfoGeometry.Geometry.Statistical.SplitOctonionDualFlatDerivationBridge
 open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.SplitOctonionStandardDerivation
 
-abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
-abbrev Der := canonicalZornDerivations
-abbrev EndCZ := Module.End ℝ CZ
+@[reducible] def CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
+@[reducible] def Der := canonicalZornDerivations
+@[reducible] def EndCZ := Module.End ℝ CZ
 
 structure StandardSplitOctonionDualFlatDatum extends
     SplitOctonionDualFlatDatum where

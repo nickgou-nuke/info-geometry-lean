@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
+import InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 
 /-!
 # Native split-Zorn base fiber
@@ -16,47 +17,44 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
 open InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 open InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
+open InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 
 def embed (v : OctImF2) : SplitOctF2 := (octImToImaginary v).1
 
-def nativeBaseLine (y : OctImF2) : Prop :=
-  splitQuad y = 0 ∧ y ≠ 0 ∧ y 0 = 0 ∧
-    mul (embed basePoint) (embed y) = zero
+def nativeCandidateAt (x y : OctImF2) : Prop :=
+  y ≠ 0 ∧ y ≠ x ∧ mul (embed x) (embed y) = zero
 
-instance : DecidablePred nativeBaseLine := by
+instance (x : OctImF2) : DecidablePred (nativeCandidateAt x) := by
   intro y
-  unfold nativeBaseLine
+  unfold nativeCandidateAt
   infer_instance
 
-def NativeBaseLine := {y : OctImF2 // nativeBaseLine y}
+def nativeLineSetAt (x y : OctImF2) : Finset OctImF2 :=
+  {x, y, x + y}
 
-instance : Fintype NativeBaseLine := Subtype.fintype nativeBaseLine
+def nativeLinesAt (x : OctImF2) : Finset (Finset OctImF2) :=
+  (Finset.univ.filter (nativeCandidateAt x)).image (nativeLineSetAt x)
 
-theorem nativeBaseLine_card : Fintype.card NativeBaseLine = 3 := by
-  native_decide
+def NativeLinesThroughPoint (x₀ : OctImF2) : Type :=
+  {L : Finset OctImF2 // L ∈ nativeLinesAt x₀}
+
+instance (x₀ : OctImF2) : Fintype (NativeLinesThroughPoint x₀) :=
+  Subtype.fintype _
+
+instance (x₀ : OctImF2) : DecidableEq (NativeLinesThroughPoint x₀) := by
+  dsimp [NativeLinesThroughPoint]
+  infer_instance
+
+abbrev NativeBaseLine := NativeLinesThroughPoint nativeBasePoint
+
+instance : Fintype NativeBaseLine := inferInstance
+
+theorem nativeBaseLine_card : Fintype.card NativeBaseLine =
+    Fintype.card (NativeLinesThroughPoint nativeBasePoint) := by
+  rfl
 
 def nativeBaseLineSet : Finset OctImF2 :=
-  Finset.univ.filter nativeBaseLine
-
-def certifiedBaseLineSet : Finset OctImF2 :=
-  Finset.univ.filter (fun y => isG2FlagTransversal basePoint y = true)
-
-theorem nativeBaseLineSet_eq_certifiedBaseLineSet :
-    nativeBaseLineSet = certifiedBaseLineSet := by
-  native_decide
-
-theorem nativeBaseLine_iff_certified (y : OctImF2) :
-    nativeBaseLine y ↔ isG2FlagTransversal basePoint y = true := by
-  have h := congrArg (fun s : Finset OctImF2 => y ∈ s)
-    nativeBaseLineSet_eq_certifiedBaseLineSet
-  simpa [nativeBaseLineSet, certifiedBaseLineSet] using h
-
-noncomputable def nativeBaseLineEquiv :
-    NativeBaseLine ≃ LinesThroughPoint basePoint where
-  toFun y := ⟨y.1, (nativeBaseLine_iff_certified y.1).mp y.2⟩
-  invFun y := ⟨y.1, (nativeBaseLine_iff_certified y.1).mpr y.2⟩
-  left_inv := fun _ => rfl
-  right_inv := fun _ => rfl
+  Finset.univ.filter (nativeCandidateAt nativeBasePoint)
 
 theorem embed_octImAction (f : SplitOctF2Aut) (v : OctImF2) :
     embed (octImAction f v) = f⁻¹.1 (embed v) := by

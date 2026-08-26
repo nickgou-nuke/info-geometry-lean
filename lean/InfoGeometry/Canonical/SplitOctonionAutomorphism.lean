@@ -104,6 +104,24 @@ def splitOctonionAutSubgroup : Subgroup (SplitOctonionAutCandidate R) where
 abbrev RealSplitOctonionAut : Type :=
   ↥(splitOctonionAutSubgroup (R := ℝ))
 
+/-! A composition automorphism is already a real split-octonion
+automorphism.  The unit-preservation proof is supplied by the native
+composition owner; this definition is the canonical transport used by the
+adjoint layer. -/
+noncomputable def realSplitOctonionAutOfComposition
+    (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut) :
+    RealSplitOctonionAut :=
+  ⟨φ.1, ⟨
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_fix_one φ,
+    fun x y =>
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_mul φ x y⟩⟩
+
+@[simp] theorem realSplitOctonionAutOfComposition_apply
+    (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut)
+    (x : SplitOctonionReal) :
+    (realSplitOctonionAutOfComposition φ : SplitOctonionAutCandidate ℝ) x =
+      (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) x := rfl
+
 instance : Group RealSplitOctonionAut := by
   infer_instance
 

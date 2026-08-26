@@ -1,0 +1,49 @@
+import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+
+/-!
+# Provenance-safe quotient row witnesses
+
+These lemmas expose the already verified quotient witnesses without promoting
+them to exact, uniformly oriented group factorizations.
+-/
+
+namespace InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance
+
+open InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
+open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
+open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
+open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
+open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+
+def QuotientRowWitness (k : Fin 12) (i : Fin 189) : Prop :=
+  ∃ b : SplitOctF2Aut,
+    b ∈ unipotentSubgroup ∧
+      orbitEnum i = b •
+        (QuotientGroup.mk
+          (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient)
+
+theorem quotient_row_1_45 : QuotientRowWitness 1 45 := by
+  exact ⟨collect (leftFactorWord 1 45), collect_mem_unipotentSubgroup _,
+    quotient_witness_cell_one_45⟩
+
+theorem quotient_row_1_73 : QuotientRowWitness 1 73 := by
+  exact ⟨collect (leftFactorWord 1 73), collect_mem_unipotentSubgroup _,
+    quotient_witness_cell_one_73⟩
+
+theorem quotient_row_1_178 : QuotientRowWitness 1 178 := by
+  exact ⟨collect (leftFactorWord 1 178), collect_mem_unipotentSubgroup _,
+    quotient_witness_cell_one_178⟩
+
+theorem quotient_row_4_18 : QuotientRowWitness 4 18 := by
+  exact ⟨collect (rightFactorWord 4 18), collect_mem_unipotentSubgroup _,
+    quotient_witness_cell_four_18⟩
+
+theorem quotient_cell_one
+    (i : Fin 189) (hi : i ∈ orbitCells 1) :
+    QuotientRowWitness 1 i := by
+  exact hcell_one i hi
+
+end InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance

@@ -27,6 +27,7 @@ import InfoGeometry.LLM.Llama4PythonBlockSpec
 import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.SinkhornDefectFlow
+import InfoGeometry.LLM.BogoliubovSinkhornRouting
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit

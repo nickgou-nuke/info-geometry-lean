@@ -80,7 +80,7 @@ def derivationParameters (D : VDer) : Params := fun i =>
   else if i = 12 then (D (V 1)).w 2
   else (D (V 2)).w 2
 
-private theorem derivationParameters_parameterDerivation (p : Params) :
+theorem derivationParameters_parameterDerivation (p : Params) :
     derivationParameters (parameterDerivation p) = p := by
   funext i
   fin_cases i <;>

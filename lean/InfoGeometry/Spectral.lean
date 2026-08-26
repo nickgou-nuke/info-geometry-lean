@@ -1,6 +1,7 @@
 /- Spectral sequences in Lean 4.28.0 / mathlib4 -/
 
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Spectral.Property
 import InfoGeometry.Spectral.Algebra.DerivedPage
 import InfoGeometry.Spectral.Algebra.DerivedCouple
 import InfoGeometry.Spectral.Algebra.GradedExactCouple
@@ -13,6 +14,7 @@ import InfoGeometry.Spectral.Algebra.ExactCoupleFiltration
 import InfoGeometry.Spectral.Algebra.IteratedDerivedCouple
 import InfoGeometry.Spectral.Algebra.IteratedPageStabilization
 import InfoGeometry.Spectral.Algebra.ConvergenceCore
+import InfoGeometry.Spectral.Algebra.Convergence
 import InfoGeometry.Spectral.Algebra.StablePage
 import InfoGeometry.Spectral.Algebra.SpectralStabilizationColimit
 import InfoGeometry.Spectral.Algebra.SpectralAssociatedGradedReconstruction
@@ -58,6 +60,7 @@ import InfoGeometry.Spectral.Cohomology.LongExact
 import InfoGeometry.Spectral.Homology.Basic
 import InfoGeometry.Spectral.Homology.CofiberSequence
 import InfoGeometry.Spectral.Homology.Sphere
+import InfoGeometry.Spectral.RealProjective
 import InfoGeometry.Spectral.Cohomology.Serre
 import InfoGeometry.Spectral.Cohomology.Gysin
 import InfoGeometry.Spectral.Cohomology.ProjectiveSpace

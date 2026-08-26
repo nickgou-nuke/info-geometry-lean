@@ -3,6 +3,7 @@ Imports all homotopy structures: Suspension, LoopSpace, Smash, Wedge, Join, EM.
 -/
 
 import InfoGeometry.Spectral.Homotopy.Suspension
+import InfoGeometry.Spectral.Homotopy.Pointed
 import InfoGeometry.Spectral.Homotopy.Smash
 import InfoGeometry.Spectral.Homotopy.Wedge
 import InfoGeometry.Spectral.Homotopy.Cofiber

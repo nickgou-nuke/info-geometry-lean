@@ -379,12 +379,18 @@ import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCWords
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualConcreteBridge
 import InfoGeometry.Algebra.Zorn.G2ReducedWords
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCEquiv
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthOne
 import InfoGeometry.Algebra.QuotientGlideInvolution
 import InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 import InfoGeometry.Algebra.Zorn.G2RootSubgroup
 import InfoGeometry.Algebra.Zorn.G2RootIndexedResidualCoordinates
 import InfoGeometry.Algebra.Zorn.G2RootAutPC3Conjugation
+import InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthOne
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthTwo
+import InfoGeometry.Algebra.Zorn.G2BruhatResidualCanonicalEquiv
+import InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv
 /-!
 # InfoGeometry.Algebra.All
 

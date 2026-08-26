@@ -5,7 +5,7 @@ import InfoGeometry.Algebra.Zorn.G2TopOrderedRootProduct
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
 
 /-!
-# Canonical top residual equivalence
+# Canonical top product-image equivalence
 
 The top-cell ordered-product equivalence is stated on the Bruhat residual
 fiber.  This file transports it to the canonical residual fiber using the

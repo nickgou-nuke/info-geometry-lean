@@ -56,6 +56,23 @@ theorem signedWord_append_mem_unipotent
     signedWord (l₁ ++ l₂) ∈ unipotentSubgroup := by
   exact signedWord_mem_unipotent _
 
+theorem signedTerm_inv (x : Fin 6 × Bool) :
+    (signedTerm x)⁻¹ = signedTerm (x.1, !x.2) := by
+  rcases x with ⟨i, b⟩
+  cases b <;> simp [signedTerm]
+
+theorem signedWord_reverse_inv
+    (l : List (Fin 6 × Bool)) :
+    signedWord (l.reverse.map (fun x => (x.1, !x.2))) =
+      (signedWord l)⁻¹ := by
+  induction l with
+  | nil => simp [signedWord]
+  | cons x xs ih =>
+      simp only [List.reverse_cons, List.map_append, List.map_cons,
+        List.map_nil, List.append_nil, signedWord_append, signedWord_cons,
+        signedWord_nil, ih, mul_inv_rev, signedTerm_inv]
+      simp
+
 def cell2Left : Fin 189 → List (Fin 6 × Bool)
   | 3 => []
   | 57 => [(1, true), (4, true), (5, true)]

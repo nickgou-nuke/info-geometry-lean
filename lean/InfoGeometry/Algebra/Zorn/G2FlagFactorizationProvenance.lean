@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CellFactorizationCertificate
+import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 
 /-!
 # Provenance boundary for G₂ flag factorization
@@ -16,6 +17,7 @@ open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+open InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 
 /-- The exported factor words, without any soundness field. -/
 structure CellFactorizationData where
@@ -52,5 +54,20 @@ theorem CellFactorizationSound.factorization
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
           collect (D.right k i) :=
   hD k i hi
+
+/-! The first concrete rows are recorded separately from the global data
+interface.  In particular, row `(4,18)` uses the exporter-corrected factor
+orientation and therefore cannot be represented by a uniform raw convention.
+-/
+
+def RowFactorizationSound (left right : FactorWord) (k : Fin 12) (i : Fin 189) : Prop :=
+  flagRepresentative i =
+    collect left *
+      weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+        collect right
+
+theorem row_4_18_factorization_sound :
+    RowFactorizationSound (rightFactorWord 4 18) (leftFactorWord 4 18) 4 18 := by
+  exact row_4_18
 
 end InfoGeometry.Algebra.Zorn.G2FlagFactorizationProvenance

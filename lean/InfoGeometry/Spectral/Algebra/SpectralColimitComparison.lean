@@ -20,6 +20,22 @@ variable {I : Type v}
 open CategoryTheory
 open CategoryTheory.Limits
 
+/-- Explicit comparison data from the stabilized tail to a proposed
+associated-graded carrier.  The equivalence is not part of the data: it is
+recovered from the universal property once the legs are compatible and
+invertible. -/
+structure StabilizedTailAssociatedGradedData
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I) where
+  carrier : ModuleCat R
+  filtration : ℕ → Submodule R carrier
+  pageToGraded : ∀ n, (stabilizedPageFunctor S h p).obj n ⟶ carrier
+  pageToGraded_isIso : ∀ n, IsIso (pageToGraded n)
+  pageToGraded_compatibility :
+    ∀ {m n : ℕ} (f : m ⟶ n),
+      (stabilizedPageFunctor S h p).map f ≫ pageToGraded n = pageToGraded m
+  exhaustive : filtration 0 = ⊤
+  separated : ∀ x : carrier, (∀ n, x ∈ filtration n) → x = 0
+
 noncomputable abbrev stabilizedPageColimitApex
     (S : Stage R I) (h : BoundedPageStabilization S) (p : I) : ModuleCat R :=
   (stabilizedPageCocone S h p).pt
@@ -68,6 +84,34 @@ noncomputable def stabilizedPageColimitApex_isColimit
     (S : Stage R I) (h : BoundedPageStabilization S) (p : I) :
     IsColimit (stabilizedPageCocone S h p) :=
   stabilizedPageCocone_isColimit S h p
+
+/-- The compatible page-to-graded maps form a cocone. -/
+noncomputable def stabilizedTailAssociatedGradedCocone
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I)
+    (d : StabilizedTailAssociatedGradedData S h p) :
+    Cocone (stabilizedPageFunctor S h p) := by
+  letI : ∀ n, IsIso (d.pageToGraded n) := d.pageToGraded_isIso
+  refine Cocone.mk d.carrier {
+    app := fun n => d.pageToGraded n
+    naturality := ?_ }
+  intro m n f
+  simpa using d.pageToGraded_compatibility f
+
+/-- The stabilized-tail colimit is equivalent to the associated-graded carrier
+when the supplied comparison legs satisfy the explicit reconstruction data. -/
+noncomputable def stabilizedTailColimitIsoAssociatedGraded
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I)
+    (d : StabilizedTailAssociatedGradedData S h p)
+    (hcolim : HasColimit (stabilizedPageFunctor S h p)) :
+    colimit (stabilizedPageFunctor S h p) ≅ d.carrier := by
+  letI := hcolim
+  letI : ∀ n, IsIso (d.pageToGraded n) := d.pageToGraded_isIso
+  letI : ∀ n, IsIso ((stabilizedTailAssociatedGradedCocone S h p d).ι.app n) :=
+    d.pageToGraded_isIso
+  exact (Cocones.forget (stabilizedPageFunctor S h p)).mapIso
+    ((colimit.isColimit (stabilizedPageFunctor S h p)).uniqueUpToIso
+      (InfoGeometry.Category.natCoconeIsColimitOfIsoLegs
+        (stabilizedTailAssociatedGradedCocone S h p d)))
 
 end GradedExactCouple
 

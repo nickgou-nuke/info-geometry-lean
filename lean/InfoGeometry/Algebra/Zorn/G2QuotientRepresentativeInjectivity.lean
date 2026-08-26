@@ -2,6 +2,7 @@ import InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
 import InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport
 import InfoGeometry.Algebra.Zorn.G2ConcreteBruhatOrbitCertificate
 import InfoGeometry.Algebra.Zorn.G2QuotientOrbitSeparation
+import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRecursion
 
 /-!
 # Injectivity of the reduced 189-word quotient table
@@ -14,15 +15,20 @@ interface; it is not an enumeration of the full automorphism carrier.
 namespace InfoGeometry.Algebra.Zorn.G2QuotientRepresentativeInjectivity
 
 open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
+open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 open InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
+open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport
 open InfoGeometry.Algebra.Zorn.G2QuotientOrbitSeparation
+open InfoGeometry.Algebra.Zorn.G2FlagFactorizationRecursion
 
 /-! The following theorem is the exact assembly boundary for distinct Weyl
     representatives.  The separation premise is intentionally explicit:
@@ -120,6 +126,11 @@ therefore exposes the remaining separation boundary without duplicating the
 quotient-to-double-coset transport proof. -/
 
 theorem quotient_alignment_of_concrete_cell_separation
+    (hfac : ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i =
+        collect (leftFactorWord k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+          collect (rightFactorWord k i))
     (hdisj : ∀ (k l : Fin 12), k ≠ l →
       Disjoint
         (concreteBruhatCell (weylNF (orbitWeyl k).1 (orbitWeyl k).2))
@@ -134,7 +145,8 @@ theorem quotient_alignment_of_concrete_cell_separation
           i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
             residualWord k i = residualWord k j := by
   apply quotient_alignment_of_cell_separation
-  · exact all_cells_representative_mem
+  · intro k i hi
+    exact all_cells_representative_mem k i hi (hfac k i hi)
   · exact hdisj
   · exact hresidual_align
 
@@ -143,6 +155,11 @@ flag certificate proves disjointness on the quotient, while the existing BN
 transport theorem converts it to disjointness of the concrete cells. -/
 
 theorem quotient_alignment_of_quotientOrbit_separation
+    (hfac : ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i =
+        collect (leftFactorWord k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+          collect (rightFactorWord k i))
     (hsep : ∀ (k l : Fin 12), k ≠ l →
       Disjoint
         (InfoGeometry.Algebra.Zorn.G2BNPair.quotientOrbit
@@ -160,7 +177,7 @@ theorem quotient_alignment_of_quotientOrbit_separation
         ∃ k : Fin 12,
           i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
             residualWord k i = residualWord k j := by
-  apply quotient_alignment_of_concrete_cell_separation
+  apply quotient_alignment_of_concrete_cell_separation hfac
   · intro k l hkl
     exact concreteBruhatCell_disjoint_of_quotientOrbit_separation
       (weylNF (orbitWeyl k).1 (orbitWeyl k).2)
@@ -169,6 +186,11 @@ theorem quotient_alignment_of_quotientOrbit_separation
   · exact hresidual_align
 
 theorem quotient_alignment_of_pc_separation
+    (hfac : ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i =
+        collect (leftFactorWord k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+          collect (rightFactorWord k i))
     (hsep : ∀ {k l : Fin 12}, k ≠ l →
       ∀ a c d : G2TwoSylowSubgroup.PCWordExp,
         G2TwoSylowSubgroup.pcWord c * orbitWeylRepresentative l =
@@ -183,11 +205,50 @@ theorem quotient_alignment_of_pc_separation
         ∃ k : Fin 12,
           i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
             residualWord k i = residualWord k j := by
-  apply quotient_alignment_of_quotientOrbit_separation
-    (quotientOrbit_disjoint_of_pc_separation hsep)
+  apply quotient_alignment_of_quotientOrbit_separation hfac
+    (by
+      intro k l hkl
+      have hdisj := @quotientOrbit_disjoint_of_pc_separation
+        (fun {k} {l} h => hsep h) k l hkl
+      simpa [orbitWeylRepresentative] using
+        hdisj)
   exact hresidual_align
 
+/-! The predecessor-recursion route discharges the factorization premise
+without changing the quotient separation boundary. -/
+
+theorem quotient_alignment_of_predecessor_certificate
+    (hbase : ∀ k i, (∀ j : Fin 189, ¬ j.val < i.val) →
+      flagRepresentative i =
+        collect (leftFactorWord k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+            collect (rightFactorWord k i))
+    (hstep : ∀ k i, (∃ j : Fin 189, j.val < i.val) →
+      FactorizationStep g2FlagFactorizationTarget k i
+        (fun j i => j.val < i.val))
+    (hsep : ∀ {k l : Fin 12}, k ≠ l →
+      ∀ a c d : G2TwoSylowSubgroup.PCWordExp,
+        G2TwoSylowSubgroup.pcWord c * orbitWeylRepresentative l =
+            G2TwoSylowSubgroup.pcWord a * orbitWeylRepresentative k *
+              G2TwoSylowSubgroup.pcWord d → False)
+    (hresidual_align : ∀ (k : Fin 12) (i j : Fin 189),
+      i ∈ orbitCells k → j ∈ orbitCells k →
+      quotientRepresentative i = quotientRepresentative j →
+      residualWord k i = residualWord k j) :
+    ∀ (i j : Fin 189),
+      quotientRepresentative i = quotientRepresentative j →
+        ∃ k : Fin 12,
+          i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
+            residualWord k i = residualWord k j := by
+  have hfac :=
+    flagRepresentative_factorization_of_predecessor_certificate hbase hstep
+  exact quotient_alignment_of_pc_separation (fun k i _ => hfac k i)
+    hsep hresidual_align
+
 theorem quotientRepresentative_injective_of_residual_alignment
+    (hcell : ∀ k : Fin 12, ∀ i j : Fin 189,
+      i ∈ orbitCells k → j ∈ orbitCells k →
+      residualWord k i = residualWord k j → i = j)
     (halign : ∀ (i j : Fin 189),
       quotientRepresentative i = quotientRepresentative j →
         ∃ k : Fin 12,
@@ -196,13 +257,16 @@ theorem quotientRepresentative_injective_of_residual_alignment
     Function.Injective quotientRepresentative := by
   intro i j h
   obtain ⟨k, hik, hjk, hres⟩ := halign i j h
-  exact residualWord_injective_on_cell k i j hik hjk hres
+  exact residualWord_injective_on_cell hcell k i j hik hjk hres
 
 /-- Once the residual alignment and quotient coverage are supplied, the
 189-entry representative table is the required quotient equivalence.  This
 is the canonical assembly point: no enumeration of `SplitOctF2Aut` is used.
 -/
 noncomputable def quotientRepresentativeEquiv
+    (hcell : ∀ k : Fin 12, ∀ i j : Fin 189,
+      i ∈ orbitCells k → j ∈ orbitCells k →
+      residualWord k i = residualWord k j → i = j)
     (halign : ∀ (i j : Fin 189),
       quotientRepresentative i = quotientRepresentative j →
         ∃ k : Fin 12,
@@ -212,7 +276,7 @@ noncomputable def quotientRepresentativeEquiv
     Fin 189 ≃
       InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative.CarrierQuotient :=
   Equiv.ofBijective quotientRepresentative
-    ⟨quotientRepresentative_injective_of_residual_alignment halign, hsurj⟩
+    ⟨quotientRepresentative_injective_of_residual_alignment hcell halign, hsurj⟩
 
 /-! The quotient equivalence is the exact final reduction interface for the
 ambient order.  No enumeration of the full automorphism carrier is performed

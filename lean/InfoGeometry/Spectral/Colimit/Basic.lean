@@ -159,4 +159,14 @@ theorem SplitCliffordInclusion_step (n : ℕ) (x : SplitClNNAlg n) :
             (i := n) (j := n + 1) (hij := Nat.le_succ n)]
     _ = SplitCliffordInclusion n x := by rfl
 
+/-- The full sequential-colimit glue law for an arbitrary pair of stages. -/
+theorem SplitCliffordInclusion_bond
+    {m n : ℕ} (h : m ≤ n) (x : SplitClNNAlg m) :
+    SplitCliffordInclusion n (splitCliffordMap m n h x) =
+      SplitCliffordInclusion m x := by
+  exact DirectLimit.Module.of_f
+    (R := ℝ) (ι := ℕ) (G := SplitClNNAlg)
+    (f := fun i j hij => splitCliffordMap i j hij)
+    (i := m) (j := n) (hij := h) (x := x)
+
 end InfoGeometry.Spectral.Colimit

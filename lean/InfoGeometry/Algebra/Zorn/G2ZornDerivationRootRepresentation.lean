@@ -245,6 +245,23 @@ noncomputable def conjugateNativeDerivationLinear
     (D : ZornVectorMatrix.Derivation (R := ℝ)) :
     conjugateNativeDerivationLinear φ D = conjugateNativeDerivation φ D := rfl
 
+theorem conjugateNativeDerivation_map_lie
+    (φ : RealSplitOctonionAut)
+    (D E : ZornVectorMatrix.Derivation (R := ℝ)) :
+    conjugateNativeDerivation φ ⁅D, E⁆ =
+      ⁅conjugateNativeDerivation φ D, conjugateNativeDerivation φ E⁆ := by
+  apply ZornVectorMatrix.Derivation.ext
+  intro X
+  change nativeAut φ
+      (ZornVectorMatrix.Derivation.bracket D E ((nativeAut φ).symm X)) =
+    ZornVectorMatrix.Derivation.bracket
+      (conjugateNativeDerivation φ D)
+      (conjugateNativeDerivation φ E) X
+  simp only [ZornVectorMatrix.Derivation.bracket_apply,
+    conjugateNativeDerivation]
+  rw [nativeAut_map_sub]
+  simp
+
 theorem conjugateNativeDerivationLinear_comp_inv
     (φ : RealSplitOctonionAut) :
     (conjugateNativeDerivationLinear φ⁻¹).comp
@@ -293,6 +310,114 @@ noncomputable def conjugateNativeDerivationEquiv
       ZornVectorMatrix.Derivation (R := ℝ) :=
   LinearEquiv.ofBijective (conjugateNativeDerivationLinear φ)
     (conjugateNativeDerivationLinear_bijective φ)
+
+noncomputable def conjugateNativeDerivationLieEquiv
+    (φ : RealSplitOctonionAut) :
+    ZornVectorMatrix.Derivation (R := ℝ) ≃ₗ⁅ℝ⁆
+      ZornVectorMatrix.Derivation (R := ℝ) :=
+  { conjugateNativeDerivationEquiv φ with
+    map_lie' := by
+      intro D E
+      exact conjugateNativeDerivation_map_lie φ D E }
+
+noncomputable def conjugateCanonicalDerivation
+    (φ : RealSplitOctonionAut) :
+    InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations ≃ₗ⁅ℝ⁆
+      InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations :=
+  InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv.symm.trans
+    ((conjugateNativeDerivationLieEquiv φ).trans
+      InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv)
+
+@[simp] theorem conjugateCanonicalDerivation_apply
+    (φ : RealSplitOctonionAut)
+    (D : InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations) :
+    conjugateCanonicalDerivation φ D =
+      InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv
+          (conjugateNativeDerivation φ
+          (InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv.symm D)) := rfl
+
+noncomputable def parameterCanonicalLieEquiv :
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.Params ≃ₗ[ℝ]
+      InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations :=
+  InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterLinearEquiv.trans
+    InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv.toLinearEquiv
+
+def canonicalParameterSubmodule
+    (P : Submodule ℝ InfoGeometry.Lie.CanonicalZornDerivationDimension.Params) :
+    Submodule ℝ InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations :=
+  P.map parameterCanonicalLieEquiv.toLinearMap
+
+theorem mem_canonicalParameterSubmodule
+    {P : Submodule ℝ InfoGeometry.Lie.CanonicalZornDerivationDimension.Params}
+    {p : InfoGeometry.Lie.CanonicalZornDerivationDimension.Params}
+    (hp : p ∈ P) :
+    parameterCanonicalLieEquiv p ∈ canonicalParameterSubmodule P := by
+  exact ⟨p, hp, rfl⟩
+
+theorem conjugateCanonicalDerivation_parameterized
+    (φ : RealSplitOctonionAut)
+    (p : InfoGeometry.Lie.CanonicalZornDerivationDimension.Params) :
+    conjugateCanonicalDerivation φ (parameterCanonicalLieEquiv p) =
+      parameterCanonicalLieEquiv
+        (InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters
+          (conjugateNativeDerivation φ
+            (InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation p))) := by
+  unfold conjugateCanonicalDerivation parameterCanonicalLieEquiv
+  simp only [LieEquiv.trans_apply, LinearEquiv.trans_apply]
+  change InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv
+      (conjugateNativeDerivation φ (parameterDerivation p)) =
+    InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv
+      (parameterLinearEquiv
+        (InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters
+          (conjugateNativeDerivation φ (parameterDerivation p))))
+  have h := InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterLinearEquiv.right_inv
+    (conjugateNativeDerivation φ (parameterDerivation p))
+  change parameterDerivation
+      (InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters
+        (conjugateNativeDerivation φ (parameterDerivation p))) = _ at h
+  exact (congrArg InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLieEquiv h).symm
+
+theorem conjugateCanonicalDerivation_mem_canonicalParameterSubmodule
+    (φ : RealSplitOctonionAut)
+    (P : Submodule ℝ InfoGeometry.Lie.CanonicalZornDerivationDimension.Params)
+    (p : InfoGeometry.Lie.CanonicalZornDerivationDimension.Params)
+    (hp : InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters
+        (conjugateNativeDerivation φ
+          (InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation p)) ∈ P) :
+    conjugateCanonicalDerivation φ (parameterCanonicalLieEquiv p) ∈
+      canonicalParameterSubmodule P := by
+  rw [conjugateCanonicalDerivation_parameterized]
+  exact ⟨_, hp, rfl⟩
+
+noncomputable def conjugatedParameterLieEquiv
+    (φ : RealSplitOctonionAut) :
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.Params ≃ₗ[ℝ]
+      InfoGeometry.Lie.CanonicalZornDerivationDimension.Params :=
+  parameterCanonicalLieEquiv.trans
+    ((conjugateCanonicalDerivation φ).toLinearEquiv.trans
+      parameterCanonicalLieEquiv.symm)
+
+@[simp] theorem conjugatedParameterLieEquiv_apply
+    (φ : RealSplitOctonionAut)
+    (p : InfoGeometry.Lie.CanonicalZornDerivationDimension.Params) :
+    conjugatedParameterLieEquiv φ p =
+      InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters
+        (conjugateNativeDerivation φ
+          (InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation p)) := by
+  unfold conjugatedParameterLieEquiv
+  simp only [LinearEquiv.trans_apply]
+  change parameterCanonicalLieEquiv.symm
+      (conjugateCanonicalDerivation φ (parameterCanonicalLieEquiv p)) = _
+  rw [conjugateCanonicalDerivation_parameterized]
+  exact parameterCanonicalLieEquiv.symm_apply_apply _
+
+theorem conjugatedParameterLieEquiv_map_eq_of_map_le
+    (φ : RealSplitOctonionAut)
+    (P : Submodule ℝ Params)
+    (hP : P.map (conjugatedParameterLieEquiv φ).toLinearMap ≤ P) :
+    P.map (conjugatedParameterLieEquiv φ).toLinearMap = P := by
+  apply Submodule.eq_of_le_of_finrank_eq hP
+  exact (conjugatedParameterLieEquiv φ).finrank_map_eq P
 
 
 @[simp] theorem conjugateNativeDerivationEquiv_apply

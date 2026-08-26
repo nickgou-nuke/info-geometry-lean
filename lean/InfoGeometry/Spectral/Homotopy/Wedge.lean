@@ -22,6 +22,69 @@ def WedgeSum (X Y : PointedReadout) : PointedReadout :=
 
 infixr:65 " ⋁ " => WedgeSum
 
+/-- Functoriality of the finite wedge readout. -/
+def WedgeSum.map {X Y Z W : PointedReadout}
+    (f : PointedMap X Y) (g : PointedMap Z W) :
+    PointedMap (X ⋁ Z) (Y ⋁ W) where
+  toFun := Sum.elim (fun x => Sum.inl (f x)) (fun z => Sum.inr (g z))
+  map_base := by
+    exact congrArg Sum.inl f.map_base
+
+@[simp]
+theorem WedgeSum_map_apply {X Y Z W : PointedReadout}
+    (f : PointedMap X Y) (g : PointedMap Z W) (x : (X ⋁ Z).carrier) :
+    WedgeSum.map f g x = Sum.elim (fun a => Sum.inl (f a)) (fun b => Sum.inr (g b)) x :=
+  rfl
+
+@[simp]
+theorem WedgeSum.map_id (X Z : PointedReadout) :
+    WedgeSum.map (PointedMap.id X) (PointedMap.id Z) =
+      PointedMap.id (X ⋁ Z) := by
+  apply PointedMap.ext
+  intro x
+  cases x <;> rfl
+
+theorem WedgeSum.map_comp
+    {X Y Y' Z W W' : PointedReadout}
+    (f : PointedMap X Y) (f' : PointedMap Y Y')
+    (g : PointedMap Z W) (g' : PointedMap W W') :
+    WedgeSum.map (PointedMap.comp f' f) (PointedMap.comp g' g) =
+      PointedMap.comp (WedgeSum.map f' g') (WedgeSum.map f g) := by
+  apply PointedMap.ext
+  intro x
+  cases x <;> rfl
+
+/-- The finite wedge has the expected eliminator for pointed maps. -/
+def WedgeSum.lift {X Y Z : PointedReadout}
+    (f : PointedMap X Z) (g : PointedMap Y Z) :
+    PointedMap (X ⋁ Y) Z where
+  toFun := Sum.elim f g
+  map_base := f.map_base
+
+@[simp]
+theorem WedgeSum.lift_inl {X Y Z : PointedReadout}
+    (f : PointedMap X Z) (g : PointedMap Y Z) (x : X.carrier) :
+    WedgeSum.lift f g (Sum.inl x) = f x :=
+  rfl
+
+@[simp]
+theorem WedgeSum.lift_inr {X Y Z : PointedReadout}
+    (f : PointedMap X Z) (g : PointedMap Y Z) (y : Y.carrier) :
+    WedgeSum.lift f g (Sum.inr y) = g y :=
+  rfl
+
+theorem WedgeSum.lift_unique {X Y Z : PointedReadout}
+    (f : PointedMap X Z) (g : PointedMap Y Z)
+    (h : PointedMap (X ⋁ Y) Z)
+    (hinl : ∀ x, h (Sum.inl x) = f x)
+    (hinr : ∀ y, h (Sum.inr y) = g y) :
+    h = WedgeSum.lift f g := by
+  apply PointedMap.ext
+  intro x
+  cases x with
+  | inl x => exact hinl x
+  | inr y => exact hinr y
+
 /-- Finite pointed join readout, represented here by a product carrier. -/
 def Join (X Y : PointedReadout) : PointedReadout :=
   Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)

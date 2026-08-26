@@ -65,6 +65,24 @@ theorem innerDerivation_operatorial_normal_form (x y z : VZ) :
     stanDerMap_apply_normal_form zorn_left_alternative zorn_right_alternative]
   rfl
 
+theorem innerDerivation_swap (x y : VZ) :
+    innerDerivation y x = -(innerDerivation x y) := by
+  apply ZornVectorMatrix.Derivation.ext
+  intro z
+  change innerDerivation y x z = -innerDerivation x y z
+  rw [innerDerivation_operatorial_normal_form,
+    innerDerivation_operatorial_normal_form]
+  have h := alternative_associator_swap12
+    (A := VZ) zorn_left_alternative x y z
+  have h' : (x * y) * z - x * (y * z) =
+      -((y * x) * z - y * (x * z)) := by
+    simpa [associator_apply] using h
+  rw [h']
+  simp only [sub_eq_add_neg, neg_add, neg_neg, smul_neg, neg_smul,
+    add_mul, mul_add, neg_mul, mul_neg, smul_add, add_smul,
+    smul_mul_assoc, mul_smul_comm]
+  abel
+
 /-! The following facts expose the algebraic image of the native bilinear map.
 They deliberately stop short of a top-span claim: that claim requires an
 independent finite witness calculation for the chosen eight-element basis. -/

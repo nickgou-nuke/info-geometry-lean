@@ -2783,6 +2783,8 @@ import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 import InfoGeometry.Canonical.G2BruhatUHGBridge
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
+import InfoGeometry.Canonical.CantorWordBranchEquivalence
+import InfoGeometry.Canonical.CantorCylinderBranchEquivalence
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
@@ -2925,6 +2927,7 @@ import InfoGeometry.Canonical.UHFBoundaryCylinderFunctionTopCat
 import InfoGeometry.Canonical.UHFBoundaryInverseLimitReadoutTopCat
 import InfoGeometry.Canonical.CantorCylinderClopen
 import InfoGeometry.Canonical.CantorCylinderHomeomorph
+import InfoGeometry.Canonical.CantorWordCylinderHomotopy
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 import InfoGeometry.Canonical.CantorBoundaryReadoutCompact
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibBridge
+import InfoGeometry.Lie.LieEquivEigenvectorTransport
 
 /-!
 # One-dimensional Mathlib root spaces for the canonical Zorn Cartan
@@ -190,5 +191,85 @@ theorem eq_rootCoefficient_smul_of_mem_rootSpace
     simp [rootCoefficient, rootDerivation, parameterUnit]
   rw [hcoeff]
   exact hc
+
+theorem rootCoefficient_ne_zero_of_ne_zero_of_mem_rootSpace
+    (i : nonzeroIndex) (D : Der)
+    (hD : D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i))
+    (hD0 : D ≠ 0) :
+    rootCoefficient i D ≠ 0 := by
+  intro hc
+  have hform := eq_rootCoefficient_smul_of_mem_rootSpace i D hD
+  rw [hc, zero_smul] at hform
+  exact hD0 hform
+
+theorem rootCoefficient_eq_iff_of_mem_rootSpace
+    (i : nonzeroIndex) (D : Der)
+    (hD : D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i)) (c : ℝ) :
+    D = c • rootDerivation i.1 ↔ rootCoefficient i D = c := by
+  constructor
+  · intro h
+    rw [h]
+    simp [rootCoefficient, rootDerivation, parameterUnit]
+  · intro h
+    rw [eq_rootCoefficient_smul_of_mem_rootSpace i D hD, h]
+
+theorem mem_mathlib_rootSpace_of_bracket_eq_smul
+    (i : nonzeroIndex) (D : Der)
+    (hD : ∀ H : axialCartanLieSubalgebra,
+      ⁅(H : Der), D⁆ = nativeRootWeight i H • D) :
+    D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i) := by
+  rw [LieAlgebra.rootSpace, LieModule.mem_genWeightSpace]
+  intro H
+  refine ⟨1, ?_⟩
+  simp only [pow_one]
+  change ⁅(H : Der), D⁆ - nativeRootWeight i H • D = 0
+  rw [hD H]
+  exact sub_self _
+
+theorem LinearEquiv.map_rootSpace_mem_of_cartan_normalizer
+    (i j : nonzeroIndex) (e : Der ≃ₗ[ℝ] Der)
+    (c : axialCartanLieSubalgebra ≃ₗ[ℝ] axialCartanLieSubalgebra)
+    (hbracket : ∀ X Y, e ⁅X, Y⁆ = ⁅e X, e Y⁆)
+    (hcartan : ∀ H : axialCartanLieSubalgebra,
+      e (H : Der) = ((c H : axialCartanLieSubalgebra) : Der))
+    (hweight : ∀ H : axialCartanLieSubalgebra,
+      nativeRootWeight i (c.symm H) = nativeRootWeight j H)
+    (D : Der)
+    (hD : ∀ H : axialCartanLieSubalgebra,
+      ⁅(H : Der), D⁆ = nativeRootWeight i H • D) :
+    e D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight j) := by
+  apply mem_mathlib_rootSpace_of_bracket_eq_smul j (e D)
+  intro H
+  let K : axialCartanLieSubalgebra := c.symm H
+  have hHK : e (K : Der) = (H : Der) := by
+    rw [hcartan]
+    exact congrArg (fun T : axialCartanLieSubalgebra => (T : Der))
+      (c.apply_symm_apply H)
+  have heigen := e.map_bracket_eigenvector hbracket D
+    (H : Der) (K : Der) (nativeRootWeight i K) hHK (hD K)
+  rw [heigen, ← hweight H]
+
+theorem LinearEquiv.map_rootSpace_mem_existsUnique_scalar
+    (i : nonzeroIndex) (e : Der ≃ₗ[ℝ] Der) (D : Der)
+    (hD : e D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i)) :
+    ∃! c : ℝ, e D = c • rootDerivation i.1 := by
+  exact (mem_mathlib_rootSpace_iff_existsUnique_scalar i (e D)).mp hD
+
+theorem LinearEquiv.map_rootSpace_mem_rootCoefficient_ne_zero
+    (i : nonzeroIndex) (e : Der ≃ₗ[ℝ] Der) (D : Der)
+    (hD0 : D ≠ 0)
+    (hD : e D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i)) :
+    rootCoefficient i (e D) ≠ 0 := by
+  apply rootCoefficient_ne_zero_of_ne_zero_of_mem_rootSpace i (e D) hD
+  intro heD
+  apply hD0
+  apply e.injective
+  simpa using heD
 
 end InfoGeometry.Lie.CanonicalZornMathlibRootSpace

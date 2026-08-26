@@ -1342,6 +1342,26 @@ theorem U2V2_parameter_readback_active :
       (canonicalStandardDerivationOfCanonical (canonicalU 2) (canonicalV 2)) = _
   exact standardColumn_U2_V2_readback
 
+/-
+theorem realWeylCycle_cartanPair_zero_readback :
+    conjugateNativeDerivation realWeylCycle
+        (cartanDerivation 0 + cartanDerivation 1) =
+      (-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [← U1V1_innerDerivation_eq_cartanDerivation_combination]
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  rw [realWeylCycle_U0V0_derivation_readback]
+  apply parameterLinearEquiv.symm.injective
+  change
+    InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit 6 (-2) +
+        InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit 13 =
+      derivationParameters
+        (NativeStanDerivationBilinear.innerDerivation
+          (canonicalVectorEquiv (canonicalU 1))
+          (canonicalVectorEquiv (canonicalV 1)))
+  rw [U1V1_parameter_readback]
+
+-/
+
 theorem splitParameterUnit_six_eq_canonical :
     InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit 6 =
       InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6 := by
@@ -1354,6 +1374,162 @@ theorem splitParameterUnit_thirteen_eq_canonical_smul (r : ℝ) :
   fin_cases i <;>
     simp [InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit,
       InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
+
+theorem realWeylCycle_cartanPair_zero_verified :
+    conjugateNativeDerivation realWeylCycle
+        (cartanDerivation 0 + cartanDerivation 1) =
+      (-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  rw [realWeylCycle_U0V0_eq_U1V1]
+  rw [U1V1_innerDerivation_eq_cartanDerivation_combination]
+
+theorem U2V2_innerDerivation_eq_cartanDerivation_combination :
+    NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 2))
+        (canonicalVectorEquiv (canonicalV 2)) =
+      cartanDerivation 0 + (-2 : ℝ) • cartanDerivation 1 := by
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 2))
+        (canonicalVectorEquiv (canonicalV 2))) = _
+  rw [U2V2_parameter_readback_active]
+  simp only [map_add, map_neg, map_smul, parameterLinearEquiv.symm_apply_apply]
+  funext i
+  fin_cases i <;>
+    simp [InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters,
+      InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation,
+      InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterAction,
+      ZornVectorMatrix.E22, ZornVectorMatrix.U, ZornVectorMatrix.V,
+      ZornVec3.basis, cartanDerivation, nativeParameterBasis, parameterLinearEquiv,
+      InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit,
+      InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
+
+theorem realWeylCycle_U1V1_eq_U2V2_active :
+    conjugateNativeDerivation realWeylCycle
+        (NativeStanDerivationBilinear.innerDerivation
+          (canonicalVectorEquiv (canonicalU 1))
+          (canonicalVectorEquiv (canonicalV 1))) =
+      NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 2))
+        (canonicalVectorEquiv (canonicalV 2)) := by
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (conjugateNativeDerivation realWeylCycle
+        (NativeStanDerivationBilinear.innerDerivation
+          (canonicalVectorEquiv (canonicalU 1))
+          (canonicalVectorEquiv (canonicalV 1)))) =
+    derivationParameters
+      (NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 2))
+        (canonicalVectorEquiv (canonicalV 2)))
+  rw [realWeylCycle_U1V1_parameter_readback, U2V2_parameter_readback_active]
+
+theorem realWeylCycle_cartanPair_one_verified :
+    conjugateNativeDerivation realWeylCycle
+        ((-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1) =
+      cartanDerivation 0 + (-2 : ℝ) • cartanDerivation 1 := by
+  rw [← U1V1_innerDerivation_eq_cartanDerivation_combination]
+  rw [realWeylCycle_U1V1_eq_U2V2_active]
+  rw [U2V2_innerDerivation_eq_cartanDerivation_combination]
+
+theorem realWeylReflection_cartanPair_zero_verified :
+    conjugateNativeDerivation realWeylReflection
+        (cartanDerivation 0 + cartanDerivation 1) =
+      -(cartanDerivation 0 + cartanDerivation 1) := by
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  rw [realWeylReflection_U0V0_pair_readback]
+  change
+    NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalV 0))
+        (canonicalVectorEquiv (canonicalU 0)) = _
+  rw [NativeStanDerivationBilinear.innerDerivation_swap]
+
+/-
+theorem V2U2_parameter_readback_active :
+    derivationParameters
+        (NativeStanDerivationBilinear.innerDerivation
+          (canonicalVectorEquiv (canonicalV 2))
+          (canonicalVectorEquiv (canonicalU 2))) =
+      (-2 : ℝ) • InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6 +
+        InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13 := by
+  have hp := realWeylReflection_U1V1_parameter_readback_active
+  rw [realWeylReflection_U1V1_pair_readback] at hp
+  simpa using hp
+
+theorem V2U2_innerDerivation_eq_cartanDerivation_combination :
+    NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalV 2))
+        (canonicalVectorEquiv (canonicalU 2)) =
+      (-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalV 2))
+        (canonicalVectorEquiv (canonicalU 2))) = _
+  rw [V2U2_parameter_readback_active]
+  simp [InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters,
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation,
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterAction,
+    ZornVectorMatrix.E22, ZornVectorMatrix.U, ZornVectorMatrix.V,
+    ZornVec3.basis, cartanDerivation, nativeParameterBasis, parameterLinearEquiv,
+    InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
+
+theorem realWeylReflection_cartanPair_one_verified :
+    conjugateNativeDerivation realWeylReflection
+        ((-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1) =
+      (-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [← U1V1_innerDerivation_eq_cartanDerivation_combination]
+  rw [realWeylReflection_U1V1_pair_readback]
+  change NativeStanDerivationBilinear.innerDerivation
+      (canonicalVectorEquiv (canonicalV 2))
+      (canonicalVectorEquiv (canonicalU 2)) = _
+  rw [V2U2_innerDerivation_eq_cartanDerivation_combination]
+
+-/
+
+/-
+theorem realWeylReflection_cartanPair_zero_readback_verified :
+    conjugateNativeDerivation realWeylReflection
+        (cartanDerivation 0 + cartanDerivation 1) =
+      -(cartanDerivation 0 + cartanDerivation 1) := by
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  conv_rhs =>
+    rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (conjugateNativeDerivation realWeylReflection
+        (NativeStanDerivationBilinear.innerDerivation
+          (canonicalVectorEquiv (canonicalU 0))
+          (canonicalVectorEquiv (canonicalV 0)))) = _
+  rw [realWeylReflection_U0V0_parameter_readback]
+  simp [InfoGeometry.Lie.CanonicalZornDerivationDimension.derivationParameters,
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterDerivation,
+    InfoGeometry.Lie.CanonicalZornDerivationDimension.parameterAction,
+    ZornVectorMatrix.E22, ZornVectorMatrix.U, ZornVectorMatrix.V,
+    ZornVec3.basis, cartanDerivation, nativeParameterBasis, parameterLinearEquiv,
+    InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
+
+-/
+
+/-
+theorem realWeylReflection_cartanPair_zero_verified :
+    conjugateNativeDerivation realWeylReflection
+        (cartanDerivation 0 + cartanDerivation 1) =
+      -(cartanDerivation 0 + cartanDerivation 1) := by
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  rw [realWeylReflection_U0V0_pair_readback]
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add]
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalV 0))
+        (canonicalVectorEquiv (canonicalU 0))) = _
+  rw [realWeylReflection_U0V0_parameter_transport]
+  simp [cartanDerivation, nativeParameterBasis, parameterLinearEquiv,
+    InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
+
+-/
 
 noncomputable def cycleCartanParameterAction_active :
     InfoGeometry.Lie.CanonicalZornDerivationDimension.Params →ₗ[ℝ]
@@ -1430,7 +1606,8 @@ theorem conjugatedParameterLinearMap_active_cycle_pair_zero :
   rw [realWeylCycle_U0V0_parameter_readback]
   funext i
   fin_cases i <;>
-    simp [cycleCartanParameterAction_active,
+    simp [cycleCartanParameterAction_active, parameterDerivation, derivationParameters,
+      parameterAction,
       InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit,
       InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
 
@@ -1458,7 +1635,7 @@ theorem conjugatedParameterLinearMap_active_cycle_eq_on_cartanParameterPlane
     (hp : p ∈ cartanParameterPlane) :
     conjugatedParameterLinearMap_active realWeylCycle p =
       cycleCartanParameterAction_active p := by
-  rw [← cartanPairParameterSpan_eq_cartanParameterPlane] at hp
+  rw [cartanParameterPlane_eq_cartanPairParameterSpan] at hp
   refine Submodule.span_induction
     (p := fun q _ =>
       conjugatedParameterLinearMap_active realWeylCycle q =
@@ -1477,7 +1654,9 @@ theorem conjugatedParameterLinearMap_active_cycle_eq_on_cartanParameterPlane
     simp only [(conjugatedParameterLinearMap_active realWeylCycle).map_smul,
       cycleCartanParameterAction_active.map_smul, hp]
 
- -/
+
+
+
 
 /-
 The declarations below are exploratory Cartan-coordinate work.  They are kept
@@ -1543,6 +1722,20 @@ theorem V2U2_parameter_readback :
       InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit,
       canonicalU, canonicalV, ZornVectorMatrix.E22, ZornVectorMatrix.U,
       ZornVectorMatrix.V, ZornVec3.basis]
+
+theorem realWeylReflection_cartanPair_one_verified :
+    conjugateNativeDerivation realWeylReflection
+        ((-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1) =
+      (-2 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [← U1V1_innerDerivation_eq_cartanDerivation_combination]
+  rw [realWeylReflection_U1V1_pair_readback]
+  apply parameterLinearEquiv.symm.injective
+  change derivationParameters
+      (NativeStanDerivationBilinear.innerDerivation
+        (ZornVectorMatrix.V 2) (ZornVectorMatrix.U 2)) = _
+  rw [V2U2_parameter_readback]
+  simp [cartanDerivation, nativeParameterBasis, parameterLinearEquiv,
+    InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
 
 theorem realWeylReflection_U1V1_parameter_readback_active :
     derivationParameters
@@ -1689,6 +1882,21 @@ theorem conjugatedParameterLinearMap_cycle_eq_cycleCartanParameterAction_on_pair
   · intro r p _ hp
     rw [(conjugatedParameterLinearMap realWeylCycle).map_smul,
       cycleCartanParameterAction.map_smul, hp]
+
+theorem conjugatedParameterLinearMap_cycle_eq_cycleCartanParameterAction_on_cartanParameterPlane
+    (p : Params) (hp : p ∈ cartanParameterPlane) :
+    conjugatedParameterLinearMap realWeylCycle p =
+      cycleCartanParameterAction p := by
+  rw [← cartanParameterPlane_eq_cartanPairParameterSpan] at hp
+  exact conjugatedParameterLinearMap_cycle_eq_cycleCartanParameterAction_on_pair_span p hp
+
+theorem conjugatedParameterLieEquiv_cycle_eq_cycleCartanParameterAction_on_cartanParameterPlane
+    (p : Params) (hp : p ∈ cartanParameterPlane) :
+    conjugatedParameterLieEquiv realWeylCycle p =
+      cycleCartanParameterAction p := by
+  rw [conjugatedParameterLieEquiv_apply]
+  exact conjugatedParameterLinearMap_cycle_eq_cycleCartanParameterAction_on_cartanParameterPlane
+    p hp
 
 noncomputable def reflectionCartanParameterAction : Params →ₗ[ℝ] Params where
   toFun p :=
@@ -1864,6 +2072,73 @@ theorem conjugatedParameterLinearMap_reflection_eq_on_cartanParameterPlane
     simp only [(conjugatedParameterLinearMap realWeylReflection).map_smul,
       reflectionCartanParameterAction.map_smul, hp]
 
+theorem conjugatedParameterLieEquiv_reflection_eq_reflectionCartanParameterAction_on_cartanParameterPlane
+    (p : Params) (hp : p ∈ cartanParameterPlane) :
+    conjugatedParameterLieEquiv realWeylReflection p =
+      reflectionCartanParameterAction p := by
+  rw [conjugatedParameterLieEquiv_apply]
+  exact conjugatedParameterLinearMap_reflection_eq_on_cartanParameterPlane p hp
+
+noncomputable def cartanParameterRestriction
+    (L : Params ≃ₗ[ℝ] Params)
+    (hL : cartanParameterPlane.map L.toLinearMap = cartanParameterPlane) :
+    cartanParameterPlane ≃ₗ[ℝ] cartanParameterPlane := by
+  let f : cartanParameterPlane →ₗ[ℝ] cartanParameterPlane :=
+    { toFun := fun p => ⟨L p, by
+        have : L p ∈ cartanParameterPlane.map L.toLinearMap :=
+          ⟨p, p.property, rfl⟩
+        rw [hL] at this
+        exact this⟩
+      map_add' := by
+        intro p q
+        apply Subtype.ext
+        exact L.map_add p q
+      map_smul' := by
+        intro r p
+        apply Subtype.ext
+        exact L.map_smul r p }
+  apply LinearEquiv.ofBijective f
+  constructor
+  · intro p q hpq
+    apply Subtype.ext
+    apply L.injective
+    exact congrArg Subtype.val hpq
+  · intro q
+    have hq : (q : Params) ∈ cartanParameterPlane.map L.toLinearMap := by
+      rw [hL]
+      exact q.property
+    rcases hq with ⟨p, hp, hpeq⟩
+    refine ⟨⟨p, hp⟩, ?_⟩
+    apply Subtype.ext
+    exact hpeq
+
+theorem conjugatedParameterLieEquiv_map_cartanParameterPlane_eq_of_mem
+    (φ : InfoGeometry.Canonical.RealSplitOctonionAut)
+    (hφ : ∀ p ∈ cartanParameterPlane,
+      conjugatedParameterLinearMap φ p ∈ cartanParameterPlane) :
+    cartanParameterPlane.map
+        (conjugatedParameterLieEquiv φ).toLinearMap = cartanParameterPlane := by
+  apply Submodule.eq_of_le_of_finrank_eq
+  · rintro _ ⟨p, hp, rfl⟩
+    change conjugatedParameterLieEquiv φ p ∈ cartanParameterPlane
+    rw [conjugatedParameterLieEquiv_apply]
+    exact hφ p hp
+  · exact (conjugatedParameterLieEquiv φ).finrank_map_eq cartanParameterPlane
+
+noncomputable def cycleCartanParameterEquiv :
+    cartanParameterPlane ≃ₗ[ℝ] cartanParameterPlane :=
+  cartanParameterRestriction (conjugatedParameterLieEquiv realWeylCycle)
+    (conjugatedParameterLieEquiv_map_cartanParameterPlane_eq_of_mem
+      realWeylCycle
+      (fun p hp => conjugatedParameterLinearMap_cycle_maps_cartanParameterPlane p hp))
+
+noncomputable def reflectionCartanParameterEquiv :
+    cartanParameterPlane ≃ₗ[ℝ] cartanParameterPlane :=
+  cartanParameterRestriction (conjugatedParameterLieEquiv realWeylReflection)
+    (conjugatedParameterLieEquiv_map_cartanParameterPlane_eq_of_mem
+      realWeylReflection
+      (fun p hp => conjugatedParameterLinearMap_reflection_maps_cartanParameterPlane p hp))
+
 theorem conjugateCanonicalDerivation_maps_canonicalCartanParameterPlane
     (φ : InfoGeometry.Canonical.RealSplitOctonionAut)
     (hφ : ∀ p ∈ cartanParameterPlane,
@@ -2033,6 +2308,164 @@ theorem cartanDerivation_one_eq_pair_combination :
     U1V1_innerDerivation_eq_cartanDerivation_combination]
   module
 
+theorem realWeylCycle_cartanBasis_zero_verified :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 0) =
+      (-1 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [cartanDerivation_zero_eq_pair_combination]
+  simp only [map_add, map_smul]
+  rw [realWeylCycle_cartanPair_zero_verified,
+    realWeylCycle_cartanPair_one_verified]
+  module
+
+theorem realWeylCycle_cartanBasis_one_verified :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 1) =
+      (-1 : ℝ) • cartanDerivation 0 := by
+  rw [cartanDerivation_one_eq_pair_combination]
+  simp only [map_add, map_smul]
+  rw [realWeylCycle_cartanPair_zero_verified,
+    realWeylCycle_cartanPair_one_verified]
+  module
+
+theorem realWeylReflection_cartanBasis_zero_verified :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 0) =
+      (1 / 3 : ℝ) • cartanDerivation 0 + (-2 / 3 : ℝ) • cartanDerivation 1 := by
+  rw [cartanDerivation_zero_eq_pair_combination]
+  simp only [map_add, map_smul]
+  rw [realWeylReflection_cartanPair_zero_verified,
+    realWeylReflection_cartanPair_one_verified]
+  module
+
+theorem realWeylReflection_cartanBasis_one_verified :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 1) =
+      (-4 / 3 : ℝ) • cartanDerivation 0 + (-1 / 3 : ℝ) • cartanDerivation 1 := by
+  rw [cartanDerivation_one_eq_pair_combination]
+  simp only [map_add, map_smul]
+  rw [realWeylReflection_cartanPair_zero_verified,
+    realWeylReflection_cartanPair_one_verified]
+  module
+
+/-! Stable production names for the verified native Cartan basis action. -/
+
+theorem realWeylCycle_cartanBasis_zero :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 0) =
+      (-1 : ℝ) • cartanDerivation 0 + cartanDerivation 1 :=
+  realWeylCycle_cartanBasis_zero_verified
+
+theorem realWeylCycle_cartanBasis_one :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 1) =
+      (-1 : ℝ) • cartanDerivation 0 :=
+  realWeylCycle_cartanBasis_one_verified
+
+theorem realWeylReflection_cartanBasis_zero :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 0) =
+      (1 / 3 : ℝ) • cartanDerivation 0 + (-2 / 3 : ℝ) • cartanDerivation 1 :=
+  realWeylReflection_cartanBasis_zero_verified
+
+theorem realWeylReflection_cartanBasis_one :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 1) =
+      (-4 / 3 : ℝ) • cartanDerivation 0 + (-1 / 3 : ℝ) • cartanDerivation 1 :=
+  realWeylReflection_cartanBasis_one_verified
+
+theorem canonicalCartanParameterPlane_le_nativeCartan :
+    canonicalCartanParameterPlane ≤
+      (axialCartanLieSubalgebra : Submodule ℝ canonicalZornDerivations) := by
+  intro D hD
+  rcases hD with ⟨p, hp, rfl⟩
+  change p ∈ cartanParameterPlane at hp
+  change parameterCanonicalLieEquiv p ∈ _
+  rw [nativeCartan_eq_cartanRootSpan]
+  change p ∈ Submodule.span ℝ
+    ({parameterUnit 6, parameterUnit 13} : Set Params) at hp
+  refine Submodule.span_induction (p := fun q _ =>
+    parameterCanonicalLieEquiv q ∈ cartanRootSpan) ?_ ?_ ?_ ?_ hp
+  · intro p hp
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
+    rcases hp with rfl | rfl
+    · change rootDerivation 6 ∈ cartanRootSpan
+      exact Submodule.subset_span (by simp)
+    · change rootDerivation 13 ∈ cartanRootSpan
+      exact Submodule.subset_span (by simp)
+  · simp
+  · intro p q hp hq ihp ihq
+    simpa only [map_add] using Submodule.add_mem cartanRootSpan ihp ihq
+  · intro a p hp ihp
+    simpa only [map_smul] using Submodule.smul_mem cartanRootSpan a ihp
+
+theorem canonicalCartanParameterPlane_le_nativeCartan_public :
+    canonicalCartanParameterPlane ≤
+      (InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra :
+        Submodule ℝ canonicalZornDerivations) := by
+  intro D hD
+  rcases hD with ⟨p, hp, rfl⟩
+  change p ∈ cartanParameterPlane at hp
+  change parameterCanonicalLieEquiv p ∈ _
+  rw [nativeCartan_eq_cartanRootSpan]
+  change p ∈ Submodule.span ℝ
+    ({parameterUnit 6, parameterUnit 13} : Set Params) at hp
+  refine Submodule.span_induction (p := fun q _ =>
+    parameterCanonicalLieEquiv q ∈ cartanRootSpan) ?_ ?_ ?_ ?_ hp
+  · intro q hq
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hq
+    rcases hq with rfl | rfl
+    · change rootDerivation 6 ∈ cartanRootSpan
+      exact Submodule.subset_span (by simp)
+    · change rootDerivation 13 ∈ cartanRootSpan
+      exact Submodule.subset_span (by simp)
+  · simp
+  · intro p q hp hq ihp ihq
+    simpa only [map_add] using Submodule.add_mem cartanRootSpan ihp ihq
+  · intro a p hp ihp
+    simpa only [map_smul] using Submodule.smul_mem cartanRootSpan a ihp
+
+theorem nativeCartan_eq_canonicalCartanParameterPlane :
+    (InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra :
+      Submodule ℝ canonicalZornDerivations) =
+      canonicalCartanParameterPlane := by
+  apply le_antisymm
+  · intro D hD
+    change D ∈ (axialCartanLieSubalgebra : Submodule ℝ canonicalZornDerivations) at hD
+    change D ∈ (axialCartanLieSubalgebra : Submodule ℝ canonicalZornDerivations) at hD
+    have hD' : D ∈ cartanRootSpan := by
+      rw [← nativeCartan_eq_cartanRootSpan]
+      change D ∈ (InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra :
+        Submodule ℝ canonicalZornDerivations) at hD
+      exact hD
+    refine Submodule.span_induction
+      (p := fun q _ => q ∈ canonicalCartanParameterPlane) ?_ ?_ ?_ ?_ hD'
+    · intro q hq
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hq
+      rcases hq with rfl | rfl
+      · exact ⟨InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6,
+          Submodule.subset_span (by simp), by rfl⟩
+      · exact ⟨InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13,
+          Submodule.subset_span (by simp), by rfl⟩
+    · exact canonicalCartanParameterPlane.zero_mem
+    · intro p q hp hq ihp ihq
+      exact canonicalCartanParameterPlane.add_mem ihp ihq
+    · intro a p hp ihp
+      exact canonicalCartanParameterPlane.smul_mem a ihp
+  · intro D hD
+    rcases hD with ⟨p, hp, rfl⟩
+    change p ∈ cartanParameterPlane at hp
+    change parameterCanonicalLieEquiv p ∈ _
+    rw [nativeCartan_eq_cartanRootSpan]
+    change p ∈ Submodule.span ℝ
+      ({parameterUnit 6, parameterUnit 13} : Set Params) at hp
+    refine Submodule.span_induction (p := fun q _ =>
+      parameterCanonicalLieEquiv q ∈ cartanRootSpan) ?_ ?_ ?_ ?_ hp
+    · intro q hq
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hq
+      rcases hq with rfl | rfl
+      · change rootDerivation 6 ∈ cartanRootSpan
+        exact Submodule.subset_span (by simp)
+      · change rootDerivation 13 ∈ cartanRootSpan
+        exact Submodule.subset_span (by simp)
+    · simp
+    · intro p q hp hq ihp ihq
+      simpa only [map_add] using Submodule.add_mem cartanRootSpan ihp ihq
+    · intro a p hp ihp
+      simpa only [map_smul] using Submodule.smul_mem cartanRootSpan a ihp
+
 
 /-
 
@@ -2133,5 +2566,248 @@ theorem realWeylReflection_parameterCartanPlane_map_eq :
     (fun p hp => conjugatedParameterLinearMap_reflection_maps_cartanParameterPlane p hp)
 
 -/
+
+theorem canonicalCartanParameterPlane_le_nativeCartan_qualified :
+    canonicalCartanParameterPlane ≤
+      InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule := by
+  intro D hD
+  rcases hD with ⟨p, hp, rfl⟩
+  change p ∈ cartanParameterPlane at hp
+  change InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation.parameterCanonicalLieEquiv p ∈
+    InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule
+  rw [InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.nativeCartan_eq_cartanRootSpan]
+  change p ∈ Submodule.span ℝ
+    ({InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6,
+      InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13} :
+        Set InfoGeometry.Lie.CanonicalZornDerivationDimension.Params) at hp
+  refine Submodule.span_induction (p := fun q _ =>
+    InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation.parameterCanonicalLieEquiv q ∈
+      InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan) ?_ ?_ ?_ ?_ hp
+  · intro q hq
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hq
+    rcases hq with rfl | rfl
+    · change InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.rootDerivation 6 ∈
+        InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan
+      exact Submodule.subset_span (by simp)
+    · change InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.rootDerivation 13 ∈
+        InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan
+      exact Submodule.subset_span (by simp)
+  · simp
+  · intro p q hp hq ihp ihq
+    simpa only [map_add] using Submodule.add_mem
+      InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan ihp ihq
+  · intro a p hp ihp
+    simpa only [map_smul] using Submodule.smul_mem
+      InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan a ihp
+
+theorem nativeCartan_le_canonicalCartanParameterPlane_qualified :
+    InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule ≤
+      canonicalCartanParameterPlane := by
+  intro D hD
+  have hD' : D ∈ InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.cartanRootSpan := by
+    rw [← InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.nativeCartan_eq_cartanRootSpan]
+    exact hD
+  refine Submodule.span_induction
+    (p := fun q _ => q ∈ canonicalCartanParameterPlane) ?_ ?_ ?_ ?_ hD'
+  · intro q hq
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hq
+    rcases hq with rfl | rfl
+    · exact ⟨InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6,
+        Submodule.subset_span (by simp), by rfl⟩
+    · exact ⟨InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13,
+        Submodule.subset_span (by simp), by rfl⟩
+  · exact canonicalCartanParameterPlane.zero_mem
+  · intro p q hp hq ihp ihq
+    exact canonicalCartanParameterPlane.add_mem ihp ihq
+  · intro a p hp ihp
+    exact canonicalCartanParameterPlane.smul_mem a ihp
+
+theorem nativeCartan_eq_canonicalCartanParameterPlane_qualified :
+    InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule =
+      canonicalCartanParameterPlane := by
+  exact le_antisymm
+    nativeCartan_le_canonicalCartanParameterPlane_qualified
+    canonicalCartanParameterPlane_le_nativeCartan_qualified
+
+noncomputable def nativeCartanParameterPlaneEquiv :
+    InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule
+      ≃ₗ[ℝ] canonicalCartanParameterPlane := by
+  let f : InfoGeometry.Lie.SplitOctonionAxialCartanErlangen.axialCartanLieSubalgebra.toSubmodule
+      →ₗ[ℝ] canonicalCartanParameterPlane :=
+    { toFun := fun H => ⟨H.1, by
+        rw [← nativeCartan_eq_canonicalCartanParameterPlane_qualified]
+        exact H.2⟩
+      map_add' := by
+        intro x y
+        apply Subtype.ext
+        rfl
+      map_smul' := by
+        intro a x
+        apply Subtype.ext
+        rfl }
+  exact LinearEquiv.ofBijective f ⟨
+    (fun x y h => by
+      apply Subtype.ext
+      exact congrArg (fun z : canonicalCartanParameterPlane => z.1) h),
+    (fun y => by
+      refine ⟨⟨y.1, ?_⟩, ?_⟩
+      · rw [nativeCartan_eq_canonicalCartanParameterPlane_qualified]
+        exact y.2
+      · rfl)⟩
+
+noncomputable def restrictCanonicalDerivationEquiv
+    (P : Submodule ℝ canonicalZornDerivations)
+    (L : canonicalZornDerivations ≃ₗ⁅ℝ⁆ canonicalZornDerivations)
+    (hL : ∀ D ∈ P, L D ∈ P)
+    (hLinv : ∀ D ∈ P, L.symm D ∈ P) :
+    P ≃ₗ[ℝ] P := by
+  let f : P →ₗ[ℝ] P :=
+    { toFun := fun D => ⟨L D, hL D.1 D.2⟩
+      map_add' := by
+        intro x y
+        apply Subtype.ext
+        change L (((x + y : P) : canonicalZornDerivations)) =
+          L ((x : P) : canonicalZornDerivations) +
+            L ((y : P) : canonicalZornDerivations)
+        exact map_add L _ _
+      map_smul' := by
+        intro a x
+        apply Subtype.ext
+        change L (((a • x : P) : canonicalZornDerivations)) =
+          (RingHom.id ℝ) a • L ((x : P) : canonicalZornDerivations)
+        simpa only [RingHom.id_apply] using
+          map_smul L a ((x : P) : canonicalZornDerivations) }
+  exact LinearEquiv.ofBijective f ⟨
+    (fun x y h => by
+      apply Subtype.ext
+      apply L.injective
+      exact congrArg (fun z : P => (z : canonicalZornDerivations)) h),
+    (fun y => by
+      refine ⟨⟨L.symm y.1, hLinv y.1 y.2⟩, ?_⟩
+      apply Subtype.ext
+      simp [f])⟩
+
+/-
+theorem conjugateCanonicalDerivation_map_canonicalCartanParameterPlane_eq
+    (φ : InfoGeometry.Canonical.RealSplitOctonionAut)
+    (hφ : ∀ D ∈ canonicalCartanParameterPlane,
+      conjugateCanonicalDerivation φ D ∈ canonicalCartanParameterPlane) :
+    canonicalCartanParameterPlane.map
+        (conjugateCanonicalDerivation φ).toLinearMap =
+      canonicalCartanParameterPlane := by
+  apply Submodule.eq_of_le_of_finrank_eq
+  · rintro _ ⟨D, hD, rfl⟩
+    exact hφ D hD
+  · exact (conjugateCanonicalDerivation φ).toLinearEquiv.finrank_map_eq
+      canonicalCartanParameterPlane
+
+theorem conjugateCanonicalDerivation_symm_mem_canonicalCartanParameterPlane
+    (φ : InfoGeometry.Canonical.RealSplitOctonionAut)
+    (hφ : ∀ D ∈ canonicalCartanParameterPlane,
+      conjugateCanonicalDerivation φ D ∈ canonicalCartanParameterPlane)
+    {D : canonicalZornDerivations} (hD : D ∈ canonicalCartanParameterPlane) :
+    (conjugateCanonicalDerivation φ).symm D ∈ canonicalCartanParameterPlane := by
+  have hm : D ∈ canonicalCartanParameterPlane.map
+      (conjugateCanonicalDerivation φ).toLinearMap := by
+    rw [conjugateCanonicalDerivation_map_canonicalCartanParameterPlane_eq φ hφ]
+    exact hD
+  rcases hm with ⟨E, hE, hED⟩
+  have hEq : conjugateCanonicalDerivation φ E = D := hED
+  rw [← hEq]
+  simpa using hE
+
+noncomputable def realWeylCycle_canonicalCartanEquiv :
+    canonicalCartanParameterPlane ≃ₗ[ℝ] canonicalCartanParameterPlane :=
+  restrictCanonicalDerivationEquiv canonicalCartanParameterPlane
+    (conjugateCanonicalDerivation realWeylCycle)
+    (fun D hD => realWeylCycle_maps_canonicalCartanParameterPlane hD)
+    (fun D hD =>
+      conjugateCanonicalDerivation_symm_mem_canonicalCartanParameterPlane
+        realWeylCycle
+        (fun D hD => realWeylCycle_maps_canonicalCartanParameterPlane hD)
+        hD)
+
+noncomputable def realWeylReflection_canonicalCartanEquiv :
+    canonicalCartanParameterPlane ≃ₗ[ℝ] canonicalCartanParameterPlane :=
+  restrictCanonicalDerivationEquiv canonicalCartanParameterPlane
+    (conjugateCanonicalDerivation realWeylReflection)
+    (fun D hD => realWeylReflection_maps_canonicalCartanParameterPlane hD)
+    (fun D hD =>
+      conjugateCanonicalDerivation_symm_mem_canonicalCartanParameterPlane
+        realWeylReflection
+        (fun D hD => realWeylReflection_maps_canonicalCartanParameterPlane hD)
+        hD)
+
+-/
+
+/-
+theorem cartanDerivation_zero_eq_pair_combination_active :
+    cartanDerivation 0 =
+      (1 / 3 : ℝ) •
+          NativeStanDerivationBilinear.innerDerivation
+            (canonicalVectorEquiv (canonicalU 0))
+            (canonicalVectorEquiv (canonicalV 0)) +
+        (-1 / 3 : ℝ) •
+          NativeStanDerivationBilinear.innerDerivation
+            (canonicalVectorEquiv (canonicalU 1))
+            (canonicalVectorEquiv (canonicalV 1)) := by
+  rw [← U0V0_innerDerivation_eq_cartanDerivation_add,
+    ← U1V1_innerDerivation_eq_cartanDerivation_combination]
+  module
+
+theorem cartanDerivation_one_eq_pair_combination_active :
+    cartanDerivation 1 =
+      (2 / 3 : ℝ) •
+          NativeStanDerivationBilinear.innerDerivation
+            (canonicalVectorEquiv (canonicalU 0))
+            (canonicalVectorEquiv (canonicalV 0)) +
+        (1 / 3 : ℝ) •
+          NativeStanDerivationBilinear.innerDerivation
+            (canonicalVectorEquiv (canonicalU 1))
+            (canonicalVectorEquiv (canonicalV 1)) := by
+  rw [U0V0_innerDerivation_eq_cartanDerivation_add,
+    U1V1_innerDerivation_eq_cartanDerivation_combination]
+  module
+
+theorem realWeylCycle_cartanBasis_zero_active :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 0) =
+      (-1 : ℝ) • cartanDerivation 0 + cartanDerivation 1 := by
+  rw [cartanDerivation_zero_eq_pair_combination_active]
+  change conjugateNativeDerivationLinear realWeylCycle _ = _
+  simp only [map_add, map_smul]
+  rw [realWeylCycle_cartanPair_zero_verified,
+    realWeylCycle_cartanPair_one_verified]
+  module
+
+theorem realWeylCycle_cartanBasis_one_active :
+    conjugateNativeDerivation realWeylCycle (cartanDerivation 1) =
+      (-1 : ℝ) • cartanDerivation 0 := by
+  rw [cartanDerivation_one_eq_pair_combination_active]
+  change conjugateNativeDerivationLinear realWeylCycle _ = _
+  simp only [map_add, map_smul]
+  rw [realWeylCycle_cartanPair_zero_verified,
+    realWeylCycle_cartanPair_one_verified]
+  module
+
+theorem realWeylReflection_cartanBasis_zero_active :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 0) =
+      (1 / 3 : ℝ) • cartanDerivation 0 + (-2 / 3 : ℝ) • cartanDerivation 1 := by
+  rw [cartanDerivation_zero_eq_pair_combination_active]
+  change conjugateNativeDerivationLinear realWeylReflection _ = _
+  simp only [map_add, map_smul]
+  rw [realWeylReflection_cartanPair_zero_verified,
+    realWeylReflection_cartanPair_one_verified]
+  module
+
+theorem realWeylReflection_cartanBasis_one_active :
+    conjugateNativeDerivation realWeylReflection (cartanDerivation 1) =
+      (-4 / 3 : ℝ) • cartanDerivation 0 + (-1 / 3 : ℝ) • cartanDerivation 1 := by
+  rw [cartanDerivation_one_eq_pair_combination_active]
+  change conjugateNativeDerivationLinear realWeylReflection _ = _
+  simp only [map_add, map_smul]
+  rw [realWeylReflection_cartanPair_zero_verified,
+    realWeylReflection_cartanPair_one_verified]
+  module
+ -/
 
 end InfoGeometry.Algebra.Zorn.G2NativeWeylRootSpaceTransport

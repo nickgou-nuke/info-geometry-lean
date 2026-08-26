@@ -1,16 +1,17 @@
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualFibers
 
 /-!
-# The certified `Fin 189` flag index
+# The canonical `Fin 189` flag index
 
 This owner packages the already proved canonical residual-fiber count as a
-typed certificate.  It contains no table enumeration and no quotient
-representative claims.
+typed index interface.  It contains no quotient-orbit membership proof and
+must not be read as a Bruhat coverage certificate.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2Fin189Certificate
 
 open InfoGeometry.Algebra.Zorn.G2CanonicalResidualFibers
+open InfoGeometry.Algebra.Zorn.G2Combinatorics
 
 abbrev FlagFiber := Σ w : G2WeylElement, Fin (weylLength w) → Bool
 

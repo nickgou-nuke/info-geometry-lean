@@ -1,5 +1,7 @@
 import Mathlib
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Spectral.Spectrum.GPreSpectrum
+import InfoGeometry.Spectral.Spectrum.Product
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotient
 import InfoGeometry.Topology.SplitCliffordCanonicalTopology
 

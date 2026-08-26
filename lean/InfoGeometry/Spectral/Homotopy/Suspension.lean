@@ -59,6 +59,35 @@ theorem comp_apply {X Y Z : PointedReadout} (g : PointedMap Y Z) (f : PointedMap
     PointedMap.comp g f x = g (f x) :=
   rfl
 
+theorem ext {X Y : PointedReadout} {f g : PointedMap X Y}
+    (h : ∀ x, f x = g x) : f = g := by
+  cases f with
+  | mk f hf =>
+      cases g with
+      | mk g hg =>
+          congr
+          funext x
+          exact h x
+
+@[simp] theorem comp_id {X Y : PointedReadout} (f : PointedMap X Y) :
+    comp (id Y) f = f := by
+  apply ext
+  intro x
+  rfl
+
+@[simp] theorem id_comp {X Y : PointedReadout} (f : PointedMap X Y) :
+    comp f (id X) = f := by
+  apply ext
+  intro x
+  rfl
+
+theorem comp_assoc {W X Y Z : PointedReadout}
+    (h : PointedMap Z W) (g : PointedMap Y Z) (f : PointedMap X Y) :
+    comp h (comp g f) = comp (comp h g) f := by
+  apply ext
+  intro x
+  rfl
+
 end PointedMap
 
 /-- Basepoint-preserving equivalence between finite pointed readouts. -/
@@ -83,10 +112,51 @@ def symm {X Y : PointedReadout} (e : PointedEquiv X Y) : PointedEquiv Y X where
     apply e.toEquiv.injective
     simp [e.map_base]
 
+/-- Composition of pointed equivalences. -/
+def comp {X Y Z : PointedReadout} (g : PointedEquiv Y Z) (f : PointedEquiv X Y) :
+    PointedEquiv X Z where
+  toEquiv := f.toEquiv.trans g.toEquiv
+  map_base := by
+    simp [f.map_base, g.map_base]
+
 @[simp]
 theorem refl_apply (X : PointedReadout) (x : X.carrier) :
     PointedEquiv.refl X x = x :=
   rfl
+
+theorem ext {X Y : PointedReadout} {f g : PointedEquiv X Y}
+    (h : ∀ x, f x = g x) : f = g := by
+  cases f with
+  | mk f hf =>
+      cases g with
+      | mk g hg =>
+          congr
+          apply Equiv.ext
+          exact h
+
+@[simp] theorem comp_refl {X Y : PointedReadout} (f : PointedEquiv X Y) :
+    comp (refl Y) f = f := by
+  apply ext
+  intro x
+  rfl
+
+@[simp] theorem refl_comp {X Y : PointedReadout} (f : PointedEquiv X Y) :
+    comp f (refl X) = f := by
+  apply ext
+  intro x
+  rfl
+
+@[simp] theorem comp_symm_self {X Y : PointedReadout} (f : PointedEquiv X Y) :
+    comp f.symm f = refl X := by
+  apply ext
+  intro x
+  exact f.toEquiv.left_inv x
+
+@[simp] theorem comp_self_symm {X Y : PointedReadout} (f : PointedEquiv X Y) :
+    comp f f.symm = refl Y := by
+  apply ext
+  intro y
+  exact f.toEquiv.right_inv y
 
 end PointedEquiv
 

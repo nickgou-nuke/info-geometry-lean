@@ -35,6 +35,24 @@ theorem SmashProduct_map_apply {X Y Z W : PointedReadout}
     SmashProduct.map f g x = (f x.1, g x.2) :=
   rfl
 
+@[simp]
+theorem SmashProduct.map_id (X Z : PointedReadout) :
+    SmashProduct.map (PointedMap.id X) (PointedMap.id Z) =
+      PointedMap.id (X ⋀ Z) := by
+  apply PointedMap.ext
+  intro x
+  rfl
+
+theorem SmashProduct.map_comp
+    {X Y Y' Z W W' : PointedReadout}
+    (f : PointedMap X Y) (f' : PointedMap Y Y')
+    (g : PointedMap Z W) (g' : PointedMap W W') :
+    SmashProduct.map (PointedMap.comp f' f) (PointedMap.comp g' g) =
+      PointedMap.comp (SmashProduct.map f' g') (SmashProduct.map f g) := by
+  apply PointedMap.ext
+  intro x
+  rfl
+
 /-- Product associativity as a pointed equivalence. -/
 def SmashProduct.assoc (X Y Z : PointedReadout) :
     PointedEquiv ((X ⋀ Y) ⋀ Z) (X ⋀ (Y ⋀ Z)) where

@@ -162,6 +162,26 @@ def centralSignClassHom : M2Q →* CentralSignQuotient where
   map_one' := rfl
   map_mul' A B := (centralSignMul_mk A B).symm
 
+/-- Every central-sign quotient class has a matrix representative. -/
+theorem centralSignClassHom_surjective :
+    Function.Surjective centralSignClassHom := by
+  intro x
+  induction x using Quotient.inductionOn with
+  | _ A =>
+      exact ⟨A, rfl⟩
+
+/-- Equality after the quotient hom is exactly projective central-sign equality. -/
+theorem centralSignClassHom_eq_iff (A B : M2Q) :
+    centralSignClassHom A = centralSignClassHom B ↔ ProjectivelyEqual A B := by
+  exact centralSignClass_eq_iff A B
+
+/-- The quotient map identifies every matrix with its central negative. -/
+theorem centralSignClass_neg (A : M2Q) :
+    centralSignClass (-A) = centralSignClass A := by
+  apply (centralSignClass_eq_iff (-A) A).2
+  right
+  rfl
+
 /-- Identity matrix in the finite projective chart. -/
 def I2 : M2Q := 1
 

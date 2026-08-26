@@ -176,7 +176,7 @@ theorem primonLogGenerator_phase_exp_sheet_invariant
   simp
 
 theorem primonLogGenerator_phase_exp_eq_bkPrimePhase
-    {P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)
     (hlog : ∀ p : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P,
       logPrime p = Real.log (p.1 : ℝ))
@@ -190,7 +190,7 @@ theorem primonLogGenerator_phase_exp_eq_bkPrimePhase
   simp [bkPrimePhase, hlog p]
 
 theorem bkStatePhase_eq_product_primon_phase
-    {P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (t : ℝ)
     (S : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.Vertex P) :
     bkStatePhase (fun p => Real.log (p.1 : ℝ)) t S =
@@ -209,7 +209,7 @@ theorem bkStatePhase_eq_product_primon_phase
         (fun q => Real.log (q.1 : ℝ)) (fun q => rfl) t p]
 
 theorem bkStateRotor_complexification_eq_product_primon_phase
-    {P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)
     (hlog : ∀ p : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P,
       logPrime p = Real.log (p.1 : ℝ))
@@ -434,7 +434,7 @@ introducing a compatibility wrapper or identifying the carriers by fiat. -/
 theorem chain_siteEnergy_sum_eq_cutoffMode_sum_of_equiv
     {N : ℕ}
     (C : PrimeFerromagneticChain N)
-    {P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (e : Fin N ≃
       InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P)
     (hprime : ∀ i : Fin N, C.prime i = (e i : ℕ)) :
@@ -451,7 +451,7 @@ theorem chainPrimonLogPacket_scalar_sum_eq_cutoffMode_sum_of_equiv
     {N : ℕ}
     (C : PrimeFerromagneticChain N)
     (σ t : ℝ) (sheet : Fin N → ℤ)
-    {P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (e : Fin N ≃
       InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P)
     (hprime : ∀ i : Fin N, C.prime i = (e i : ℕ)) :
@@ -466,7 +466,7 @@ theorem chainPrimonLogPacket_scalar_sum_eq_cutoffMode_sum_of_equiv
 This is a genuine finite model constructor, not an identification of the
 chain and register carriers. -/
 noncomputable def cutoffPrimeFerromagneticChain
-    (P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff) :
+    (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :
     PrimeFerromagneticChain
       (Fintype.card
         (InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P)) :=
@@ -484,7 +484,7 @@ noncomputable def cutoffPrimeFerromagneticChain
     kappa_nonneg := le_rfl }
 
 theorem cutoffPrimeFerromagneticChain_siteEnergy_sum
-    (P : InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeCutoff) :
+    (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :
     (∑ i : Fin (Fintype.card
         (InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P)),
       (cutoffPrimeFerromagneticChain P).siteEnergy i) =

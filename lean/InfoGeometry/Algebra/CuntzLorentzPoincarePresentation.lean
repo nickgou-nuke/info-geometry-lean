@@ -142,10 +142,8 @@ def PoincareTransformGroup : Subgroup (Equiv.Perm FiniteFourVector) where
     simpa using h.symm
 
 /-- Type alias for the finite Poincare group used by Cuntz presentation operators. -/
-abbrev FinitePoincareGroup := PoincareTransformGroup
-
 theorem poincareTransform_preserves_interval
-    (g : FinitePoincareGroup) (x y : FiniteFourVector) :
+    (g : PoincareTransformGroup) (x y : FiniteFourVector) :
     minkowskiInterval4 ((g : Equiv.Perm FiniteFourVector) x)
       ((g : Equiv.Perm FiniteFourVector) y) = minkowskiInterval4 x y :=
   g.property x y
@@ -230,19 +228,19 @@ theorem affineEquiv_preserves_interval
 
 /-- Affine Lorentz-plus-translation data as an element of the finite Poincare group. -/
 def affinePoincareElement
-    (L : LorentzLinearPresentation) (a : FiniteFourVector) : FinitePoincareGroup :=
+    (L : LorentzLinearPresentation) (a : FiniteFourVector) : PoincareTransformGroup :=
   ⟨affineEquiv L a, affineEquiv_preserves_interval L a⟩
 
 theorem affinePoincareElement_preserves_interval
     (L : LorentzLinearPresentation) (a : FiniteFourVector) (x y : FiniteFourVector) :
-    minkowskiInterval4 (((affinePoincareElement L a : FinitePoincareGroup) :
+    minkowskiInterval4 (((affinePoincareElement L a : PoincareTransformGroup) :
       Equiv.Perm FiniteFourVector) x)
-      (((affinePoincareElement L a : FinitePoincareGroup) :
+      (((affinePoincareElement L a : PoincareTransformGroup) :
         Equiv.Perm FiniteFourVector) y) = minkowskiInterval4 x y :=
   (affinePoincareElement L a).property x y
 
 theorem identity_affinePoincareElement_zero :
-    affinePoincareElement identity 0 = (1 : FinitePoincareGroup) := by
+    affinePoincareElement identity 0 = (1 : PoincareTransformGroup) := by
   ext x μ
   simp [affinePoincareElement, affineEquiv, identity]
 

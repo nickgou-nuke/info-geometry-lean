@@ -9,9 +9,7 @@ The topology belongs to the concrete dyadic readout, not to an auxiliary
 inverse-limit family.
 -/
 
-abbrev DyadicRankFamilyValue := DyadicRational
-
-noncomputable def dyadicDirectLimitValue (x : DyadicDirectLimit) : DyadicRankFamilyValue :=
+noncomputable def dyadicDirectLimitValue (x : DyadicDirectLimit) : DyadicRational :=
   dyadicDirectLimitEquiv x
 
 theorem dyadicDirectLimitValue_projectionRank {n : ℕ}

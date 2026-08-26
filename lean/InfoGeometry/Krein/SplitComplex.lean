@@ -25,17 +25,14 @@ open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
 open InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 
-/-- The canonical split-complex carrier used by the Krein-side adapter. -/
-abbrev SC := InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
-
 /-- The split generator `eps`, aliased to the canonical `j`. -/
-abbrev eps : SC := j
+abbrev eps : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex := j
 
 /-- The positive null idempotent `p₊ = (1 + eps)/2`. -/
-abbrev pPlus : SC := ePlus
+abbrev pPlus : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex := ePlus
 
 /-- The negative null idempotent `p₋ = (1 - eps)/2`. -/
-abbrev pMinus : SC := eMinus
+abbrev pMinus : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex := eMinus
 
 @[simp] theorem eps_sq :
     SplitComplex.mul eps eps = SplitComplex.one := by
@@ -43,7 +40,7 @@ abbrev pMinus : SC := eMinus
 
 /-- The split sign gives explicit nonzero zero divisors. -/
 theorem krein_split_sign_has_nonzero_zero_divisors :
-    ∃ u v : SC, u ≠ zero ∧ v ≠ zero ∧ SplitComplex.mul u v = zero := by
+    ∃ u v : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex, u ≠ zero ∧ v ≠ zero ∧ SplitComplex.mul u v = zero := by
   simpa [eps] using split_sign_has_nonzero_zero_divisors
 
 /-- The factors `1 + eps` and `1 - eps` multiply to zero. -/
@@ -82,18 +79,18 @@ theorem one_sub_eps_mul_one_add_eps_zero :
     (InfoGeometry.Arithmetic.HestenesKreinChiralProjectors.eMinus_mul_ePlus)
 
 /-- The split norm is multiplicative. -/
-theorem norm_mul (x y : SC) :
+theorem norm_mul (x y : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) :
     SplitComplex.norm (SplitComplex.mul x y) = SplitComplex.norm x * SplitComplex.norm y := by
   cases x <;> cases y <;> simp [SplitComplex.norm, SplitComplex.leftPart,
     SplitComplex.rightPart, SplitComplex.mul] <;> ring
 
 /-- Left multiplication by a norm-one split-complex unit preserves the split norm. -/
-theorem norm_mul_left_of_norm_one (x y : SC) (hx : SplitComplex.norm x = 1) :
+theorem norm_mul_left_of_norm_one (x y : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) (hx : SplitComplex.norm x = 1) :
     SplitComplex.norm (SplitComplex.mul x y) = SplitComplex.norm y := by
   rw [norm_mul, hx, one_mul]
 
 /-- Right multiplication by a norm-one split-complex unit preserves the split norm. -/
-theorem norm_mul_right_of_norm_one (x y : SC) (hx : SplitComplex.norm x = 1) :
+theorem norm_mul_right_of_norm_one (x y : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) (hx : SplitComplex.norm x = 1) :
     SplitComplex.norm (SplitComplex.mul y x) = SplitComplex.norm y := by
   rw [norm_mul, hx, mul_one]
 

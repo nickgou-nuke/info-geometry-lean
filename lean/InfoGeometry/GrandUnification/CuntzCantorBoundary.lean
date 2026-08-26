@@ -25,13 +25,13 @@ variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable (T : R)
 
 /-- The exact TriFacet projector used by the boundary readout. -/
-abbrev boundaryProjector_plus (T : R) : R := exact_op T
+def boundaryProjector_plus (T : R) : R := exact_op T
 
 /-- The co-exact TriFacet projector used by the boundary readout. -/
-abbrev boundaryProjector_minus (T : R) : R := coexact_op T
+def boundaryProjector_minus (T : R) : R := coexact_op T
 
 /-- The harmonic TriFacet projector used by the boundary readout. -/
-abbrev boundaryProjector_zero (T : R) : R := harmonic_op T
+def boundaryProjector_zero (T : R) : R := harmonic_op T
 
 /-- The three finite boundary projectors partition the unit. -/
 theorem boundaryProjectors_sum_one :

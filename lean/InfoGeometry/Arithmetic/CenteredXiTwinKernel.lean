@@ -34,14 +34,6 @@ def twinMinus (z : ℂ) (u : ℝ) : ℂ := Complex.exp (-z * (u : ℂ))
 /-- The algebraic hyperbolic imbalance of the twin pair. -/
 def twinAffinity (z : ℂ) (u : ℝ) : ℝ := 2 * z.re * u
 
-theorem twinPlus_neg (z : ℂ) (u : ℝ) :
-    twinPlus (-z) u = twinMinus z u := by
-  simp [twinPlus, twinMinus]
-
-theorem twinMinus_neg (z : ℂ) (u : ℝ) :
-    twinMinus (-z) u = twinPlus z u := by
-  simp [twinPlus, twinMinus]
-
 theorem twin_cosh (z : ℂ) (u : ℝ) :
     (twinPlus z u + twinMinus z u) / 2 = Complex.cosh (z * (u : ℂ)) := by
   simp [twinPlus, twinMinus, Complex.cosh]
@@ -326,20 +318,9 @@ The coordinates are the scalar and bivector coefficients in the existing
 def hestenesAncestor (Phi : ℝ → ℝ) (t : ℝ) : RealChiralPhase :=
   (cosineQuadrature Phi t, sineQuadrature Phi t)
 
-@[simp] theorem hestenesAncestor_scalar (Phi : ℝ → ℝ) (t : ℝ) :
-    (hestenesAncestor Phi t).scalar = cosineQuadrature Phi t := rfl
-
-@[simp] theorem hestenesAncestor_bivector (Phi : ℝ → ℝ) (t : ℝ) :
-    (hestenesAncestor Phi t).bivector = sineQuadrature Phi t := rfl
-
 /-! The Madelung-style quadratic amplitude of the oriented real ancestor.
 This is only the native rotor norm readout: it does not assert a wave equation
 or identify the ancestor with a quantum state. -/
-theorem hestenesAncestor_normSq (Phi : ℝ → ℝ) (t : ℝ) :
-    (hestenesAncestor Phi t).normSq =
-      cosineQuadrature Phi t ^ 2 + sineQuadrature Phi t ^ 2 := by
-  rfl
-
 theorem hestenesAncestor_neg (Phi : ℝ → ℝ) (t : ℝ) :
     hestenesAncestor Phi (-t) =
       (cosineQuadrature Phi t, -sineQuadrature Phi t) := by

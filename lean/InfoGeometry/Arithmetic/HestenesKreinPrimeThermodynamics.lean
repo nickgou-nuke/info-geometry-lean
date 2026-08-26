@@ -223,9 +223,6 @@ def rightCone (s : SplitSouriauTemperature) : ℝ :=
 def splitReflection (s : SplitSouriauTemperature) : SplitSouriauTemperature :=
   ⟨1 - s.sigma, s.time⟩
 
-/-- Compatibility alias for the split reflection. -/
-abbrev antiunitaryReflection := splitReflection
-
 /-- Carrier-level split reflection in left/right coordinates. -/
 def splitReflectionComplex (z : SplitComplex) : SplitComplex :=
   reconstruct (1 - rightPart z) (1 - leftPart z)

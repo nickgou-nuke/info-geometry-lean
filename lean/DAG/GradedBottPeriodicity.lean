@@ -127,15 +127,6 @@ theorem bottClockStage_lifts (k : ℕ) :
     ofStage (1 + 8 * k) (bottClockStage k) = nilpotentShield :=
   bottClockNilpotentStage_lifts k
 
-/--
-Parabolic power law in the direct-limit split Clifford algebra.
-
-The theorem statement is owned by `InfoGeometry.Clifford.CliffordBott`.
-This alias avoids duplicating its expensive direct-limit typeclass search here.
--/
-abbrev nilpotentShield_parabolic_pow :=
-  clInfinity_parabolic_pow
-
 end DAG.GradedBottPeriodicity
 
 end

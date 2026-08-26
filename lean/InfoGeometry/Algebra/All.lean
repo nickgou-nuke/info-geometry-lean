@@ -142,6 +142,7 @@ import InfoGeometry.Algebra.ScaleCocycleInvariant
 import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.IdempotentCornerCommutant
+import InfoGeometry.Algebra.IdempotentFiniteFullness
 import InfoGeometry.Algebra.AssociativeRegularCommutant
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
@@ -222,6 +223,7 @@ import InfoGeometry.Algebra.TripotentCuntzSUSYBridge
 import InfoGeometry.Algebra.NaryToeplitzWeightedTripotent
 import InfoGeometry.Algebra.NaryToeplitzMarkovTransfer
 import InfoGeometry.Algebra.FreudenthalKantorTripleSystem
+import InfoGeometry.Algebra.FreudenthalKantorOperator
 import InfoGeometry.Algebra.TripotentPeirceProjectorBridge
 import InfoGeometry.Algebra.ChiralOperatorSageTranslation
 import InfoGeometry.Algebra.ChiralOperatorEnvelope
@@ -243,7 +245,9 @@ import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornJordanProduct
 import InfoGeometry.Algebra.H3ZornFreudenthalQuartic
+import InfoGeometry.Algebra.SplitAlbertInnerTraceSpan
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
 import InfoGeometry.Algebra.SplitOctonionStandardDerivationThreeBracketBridge
 import InfoGeometry.Algebra.F4Derivations
@@ -282,6 +286,12 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge
+import InfoGeometry.Algebra.Zorn.G2RootWeylAdjointCharacter
+import InfoGeometry.Algebra.Zorn.NativeStanDerivationBilinear
+import InfoGeometry.Algebra.Zorn.G2ChiralOperatorNativeBridge
+import InfoGeometry.Algebra.Zorn.NativeStanDerivationCoverage
+import InfoGeometry.Algebra.Zorn.G2RootInnerDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.ZornBdGDerivationBridge
@@ -322,6 +332,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.Zorn.G2BruhatCellDecomposition
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
+import InfoGeometry.Algebra.NonAssocDerivationKernel
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg

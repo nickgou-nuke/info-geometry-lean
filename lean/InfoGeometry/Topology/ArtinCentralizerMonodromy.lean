@@ -139,7 +139,7 @@ def artinParitySign (w : ArtinWord) : CentralSign :=
 
 /-! Backward-compatible name: this is the parity character, not spinorial
 half-twist monodromy. -/
-abbrev artinCentralMonodromy := artinParitySign
+@[reducible] def artinCentralMonodromy := artinParitySign
 
 /-- Central parity is additive under concatenation of words. -/
 theorem centralFromWinding_add (m n : ℕ) :
@@ -166,7 +166,7 @@ def artinParitySignMonoidHom : ArtinWord →* CentralSign where
   map_mul' w₁ w₂ := artinParitySign_append w₁ w₂
 
 /-- Short semantic alias for the parity character homomorphism. -/
-abbrev artinParitySignHom : ArtinWord →* CentralSign :=
+@[reducible] def artinParitySignHom : ArtinWord →* CentralSign :=
   artinParitySignMonoidHom
 
 /-- Adjacent Artin braid relation preserves the parity character. -/
@@ -197,8 +197,8 @@ structure NFoldCentralWinding (n : ℕ) (target : CentralSign) where
 
 /-- Semantic name for the finite datum above.  It witnesses an `n`-fold
 winding and does not assert existence of an algebraic `n`th root. -/
-abbrev NFoldCentralRoot := NFoldCentralWinding
-abbrev NFoldWindingDatum := NFoldCentralWinding
+@[reducible] def NFoldCentralRoot := NFoldCentralWinding
+@[reducible] def NFoldWindingDatum := NFoldCentralWinding
 
 theorem odd_unit_winding_negI {n : ℕ} (h : Odd n) :
     centralFromWinding (n * 1) = negI := by

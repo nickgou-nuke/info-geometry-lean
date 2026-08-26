@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
+import InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction
 import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 
 /-!
@@ -19,6 +20,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.BoundaryFibonacciHorizonIntertwiner
 
 open InfoGeometry.Canonical.BoundaryBraidRepresentation
+open InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction
 open InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 open InfoGeometry.Physics.B3PresentedGroup
 
@@ -121,5 +123,79 @@ theorem boundaryFibonacciIntertwinerSpace_eq_bot_iff :
       have hzero := h Φ ((mem_boundaryFibonacciIntertwinerSpace_iff Φ).mp hΦ)
       simpa [hzero]
     · exact bot_le
+
+/-! The matrix obstruction transports to the native linear-map carrier. -/
+
+theorem boundarySig0_eq_toLin :
+    boundarySig0 = Matrix.toLin'
+      (_root_.InfoGeometry.Physics.JonesBraidB3.s0) := by
+  change Matrix.toLinAlgEquiv'
+      (boundaryBraidRepresentation
+        (PresentedGroup.of B3Gen.sig0 : BoundaryBraidGroup)) =
+    Matrix.toLin'
+      (_root_.InfoGeometry.Physics.JonesBraidB3.s0)
+  rw [boundaryBraidRepresentation_first_generator]
+  apply LinearMap.ext
+  intro x
+  rfl
+
+theorem horizonLinR_eq_toLin :
+    horizonLinR = Matrix.toLin'
+      InfoGeometry.Canonical.YangBaxterProof.R := by
+  rfl
+
+theorem boundaryFibonacciIntertwinerSpace_eq_bot :
+    boundaryFibonacciIntertwinerSpace = ⊥ := by
+  apply le_antisymm
+  · intro Φ hΦ
+    have hgen := (mem_boundaryFibonacciIntertwinerSpace_iff Φ).mp hΦ |>.1
+    let M : Matrix (Fin 2) (Fin 8) ℂ := (Matrix.toLin').symm Φ
+    have hM : Matrix.toLin' M = Φ := by
+      dsimp [M]
+      exact (Matrix.toLin').apply_symm_apply Φ
+    have hmat : M * _root_.InfoGeometry.Physics.JonesBraidB3.s0 =
+        InfoGeometry.Canonical.YangBaxterProof.R * M := by
+      apply (Matrix.toLin').injective
+      rw [Matrix.toLin'_mul, Matrix.toLin'_mul]
+      rw [hM]
+      have hgen' := hgen
+      rw [boundarySig0_eq_toLin, horizonLinR_eq_toLin] at hgen'
+      exact hgen'
+    have hzero : M = 0 :=
+      direct_intertwiner_eq_zero M hmat
+    rw [← hM, hzero]
+    simpa using
+      (Submodule.zero_mem
+        (⊥ : Submodule ℂ (BoundaryBraidState →ₗ[ℂ] HorizonSpace)))
+  · exact bot_le
+
+theorem boundaryFibonacciIntertwinerSpace_finrank_eq_zero :
+    Module.finrank ℂ boundaryFibonacciIntertwinerSpace = 0 := by
+  rw [boundaryFibonacciIntertwinerSpace_eq_bot, finrank_bot]
+
+/-- Genuine negative Hom theorem for the two finite `B₃` representations.
+
+The native linear-map Hom-space is zero: every map intertwining both Artin
+generators is the zero map.  This is the representation-level readout of the
+spectral obstruction, not an identification of the two carriers.
+-/
+theorem boundaryFibonacciIntertwiner_eq_zero
+    (Φ : BoundaryBraidState →ₗ[ℂ] HorizonSpace)
+    (hΦ : Φ ∈ boundaryFibonacciIntertwinerSpace) :
+    Φ = 0 := by
+  have hbot : Φ ∈ (⊥ : Submodule ℂ
+      (BoundaryBraidState →ₗ[ℂ] HorizonSpace)) := by
+    rw [← boundaryFibonacciIntertwinerSpace_eq_bot]
+    exact hΦ
+  simpa using hbot
+
+/-- Every simultaneous generator intertwiner is zero. -/
+theorem boundaryFibonacciIntertwiner_eq_zero_of_generators
+    (Φ : BoundaryBraidState →ₗ[ℂ] HorizonSpace)
+    (h0 : Φ.comp boundarySig0 = horizonLinR.comp Φ)
+    (h1 : Φ.comp boundarySig1 = horizonLinB.comp Φ) :
+    Φ = 0 := by
+  apply boundaryFibonacciIntertwiner_eq_zero Φ
+  exact (mem_boundaryFibonacciIntertwinerSpace_iff Φ).2 ⟨h0, h1⟩
 
 end InfoGeometry.Canonical.BoundaryFibonacciHorizonIntertwiner

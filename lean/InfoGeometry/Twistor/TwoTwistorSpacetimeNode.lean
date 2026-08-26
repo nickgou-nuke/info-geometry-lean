@@ -71,6 +71,39 @@ noncomputable def frameSpacetimeNode
     (P Ω : Matrix (Fin 2) (Fin 2) ℂ) : ComplexSpacetime :=
   (-Complex.I) • (Ω * P⁻¹)
 
+theorem frameSpacetimeNode_mul_frame
+    (P Ω : Matrix (Fin 2) (Fin 2) ℂ)
+    (hP : IsUnit P.det) :
+    Complex.I • frameSpacetimeNode P Ω * P = Ω := by
+  simp [frameSpacetimeNode, Matrix.smul_mul, Matrix.mul_assoc,
+    Matrix.nonsing_inv_mul P hP, Complex.I_mul_I, smul_smul]
+
+theorem frameSpacetimeNode_invariant_under_frame_change
+    (P Ω Q : Matrix (Fin 2) (Fin 2) ℂ)
+    (hP : IsUnit P.det) (hQ : IsUnit Q.det) :
+    frameSpacetimeNode (P * Q) (Ω * Q) =
+      frameSpacetimeNode P Ω := by
+  have hPQ : IsUnit (P * Q).det := by
+    rw [Matrix.det_mul]
+    exact hP.mul hQ
+  have hinv : (P * Q)⁻¹ = Q⁻¹ * P⁻¹ := by
+    have hleft :
+        (Q⁻¹ * P⁻¹) * (P * Q) =
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      rw [Matrix.mul_assoc (Q⁻¹) (P⁻¹) (P * Q),
+        ← Matrix.mul_assoc (P⁻¹) P Q,
+        Matrix.nonsing_inv_mul P hP, Matrix.one_mul,
+        Matrix.nonsing_inv_mul Q hQ]
+    have hright :
+        (P * Q) * (P * Q)⁻¹ =
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+      Matrix.mul_nonsing_inv (P * Q) hPQ
+    exact (left_inv_eq_right_inv hleft hright).symm
+  rw [frameSpacetimeNode, frameSpacetimeNode, hinv]
+  congr 1
+  rw [Matrix.mul_assoc, ← Matrix.mul_assoc Q Q⁻¹ P⁻¹,
+    Matrix.mul_nonsing_inv Q hQ, Matrix.one_mul]
+
 theorem frameSpacetimeNode_incidence
     (P Ω : Matrix (Fin 2) (Fin 2) ℂ)
     (hP : IsUnit P.det) (π : Spinor2) :

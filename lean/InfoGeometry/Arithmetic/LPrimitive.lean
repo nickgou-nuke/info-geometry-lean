@@ -81,11 +81,6 @@ theorem PrimitiveFinset.toLPrimitiveFinset {A : Finset ℕ}
     LPrimitiveFinset A :=
   PrimitiveSet.toLPrimitiveSet hA
 
-/-- Membership in `LMultiplesOfSet` is union membership over generators. -/
-theorem mem_LMultiplesOfSet_iff {A : Set ℕ} {n : ℕ} :
-    n ∈ LMultiplesOfSet A ↔ ∃ a ∈ A, n ∈ LMultiplesOf a := by
-  rfl
-
 /--
 Lichtman trichotomy input.
 
@@ -200,12 +195,6 @@ noncomputable def LPrimitiveLogDensityWitness
 theorem lichtman_local_density_bound (a cutoff : ℕ) :
     0 ≤ LMultipleDensityWitness a cutoff :=
   LMultipleDensityWitness.density_holds a cutoff
-
-/-- The finite aggregate density is the sum of its canonical local densities. -/
-theorem lichtman_lDensity_eq_sum (A : Finset ℕ) (cutoff : ℕ) :
-    LPrimitiveLogDensityWitness A cutoff =
-      ∑ a ∈ A, LMultipleDensityWitness a cutoff :=
-  rfl
 
 /-- A finite aggregate of canonical local densities is nonnegative. -/
 theorem lichtman_lDensity_nonnegative (A : Finset ℕ) (cutoff : ℕ) :

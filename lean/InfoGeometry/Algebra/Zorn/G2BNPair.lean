@@ -37,6 +37,52 @@ theorem mem_doubleCoset_iff_quotient_smul
     refine ⟨b, hb, (b * w)⁻¹ * g, hq, ?_⟩
     simp [mul_assoc]
 
+/-! A quotient-orbit separation theorem transports directly to double-coset
+disjointness.  This is the interface used by concrete finite Bruhat owners:
+the finite separation argument belongs on `G ⧸ B`, while this lemma performs
+only the structural transport back to `G`. -/
+
+def quotientOrbit {G : Type*} [Group G] (B : Subgroup G) (w : G) : Set (G ⧸ B) :=
+  {q | ∃ b : G, b ∈ B ∧
+    b • (QuotientGroup.mk w : G ⧸ B) = q}
+
+theorem disjoint_doubleCoset_of_disjoint_quotientOrbit
+    {G : Type*} [Group G] (B : Subgroup G) (w₁ w₂ : G)
+    (h : Disjoint (quotientOrbit B w₁) (quotientOrbit B w₂)) :
+    Disjoint (doubleCoset B w₁) (doubleCoset B w₂) := by
+  rw [Set.disjoint_left]
+  intro g hg₁ hg₂
+  have hq₁ : QuotientGroup.mk g ∈ quotientOrbit B w₁ := by
+    exact (mem_doubleCoset_iff_quotient_smul B w₁ g).mp hg₁
+  have hq₂ : QuotientGroup.mk g ∈ quotientOrbit B w₂ := by
+    exact (mem_doubleCoset_iff_quotient_smul B w₂ g).mp hg₂
+  exact (Set.disjoint_left.mp h) hq₁ hq₂
+
+/-! The converse transport is useful when a concrete double-coset
+separation certificate is obtained from finite PC coordinates. -/
+
+theorem disjoint_quotientOrbit_of_disjoint_doubleCoset
+    {G : Type*} [Group G] (B : Subgroup G) (w₁ w₂ : G)
+    (h : Disjoint (doubleCoset B w₁) (doubleCoset B w₂)) :
+    Disjoint (quotientOrbit B w₁) (quotientOrbit B w₂) := by
+  rw [Set.disjoint_left]
+  intro q hq₁ hq₂
+  rcases hq₁ with ⟨b₁, hb₁, hq₁⟩
+  rcases hq₂ with ⟨b₂, hb₂, hq₂⟩
+  have hg₁ : b₁ * w₁ ∈ doubleCoset B w₁ := by
+    apply (mem_doubleCoset_iff_quotient_smul B w₁ (b₁ * w₁)).2
+    refine ⟨b₁, hb₁, ?_⟩
+    change (QuotientGroup.mk (b₁ * w₁) : G ⧸ B) =
+      b₁ • (QuotientGroup.mk w₁ : G ⧸ B)
+    rfl
+  have hg₂ : b₁ * w₁ ∈ doubleCoset B w₂ := by
+    apply (mem_doubleCoset_iff_quotient_smul B w₂ (b₁ * w₁)).2
+    refine ⟨b₂, hb₂, ?_⟩
+    change b₂ • (QuotientGroup.mk w₂ : G ⧸ B) =
+      (QuotientGroup.mk (b₁ * w₁) : G ⧸ B)
+    exact hq₂.trans hq₁.symm
+  exact (Set.disjoint_left.mp h) hg₁ hg₂
+
 /-! A double-coset cover is already a generation theorem once the middle
 representatives and the Borel subgroup are included among the generators. -/
 

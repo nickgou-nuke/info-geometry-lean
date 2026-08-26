@@ -244,11 +244,6 @@ theorem finite_weyl_partition_readout
 def primonColimitIdeleSymmetryFormalizationDebt : String :=
   "No Lean owner currently exposes an idèle/profinite-unit group action on the primon colimit; the available kernel-backed symmetry is finite Boolean Weyl data."
 
-theorem finite_boolean_weyl_sign_readout
-    (L : FormalPrimeRootLattice) (w : BooleanWeylGroup L) :
-    weylSign w = (-1 : ℝ) ^ w.support.card :=
-  rfl
-
 /-- A finite conjunction of the four supplied pillar readouts used below. -/
 theorem finite_readout_packet
     {A : Type*} [Monoid A] (vol : A →* ℝˣ)

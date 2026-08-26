@@ -28,14 +28,6 @@ def b3SpinSigma : ArtinGenerator 3 → SpinOperator 3
   | ⟨0, _⟩ => b3SpinSwap0
   | ⟨1, _⟩ => b3SpinSwap1
 
-/-- The first concrete spin braid generator is the first adjacent swap. -/
-theorem b3SpinSigma_zero : b3SpinSigma ⟨0, by decide⟩ = b3SpinSwap0 := by
-  rfl
-
-/-- The second concrete spin braid generator is the second adjacent swap. -/
-theorem b3SpinSigma_one : b3SpinSigma ⟨1, by decide⟩ = b3SpinSwap1 := by
-  rfl
-
 /-- The concrete three-site adjacent swaps satisfy the `B₃` braid relation. -/
 theorem b3SpinSwap_braid_relation :
     b3SpinSwap0 ∘ b3SpinSwap1 ∘ b3SpinSwap0 =

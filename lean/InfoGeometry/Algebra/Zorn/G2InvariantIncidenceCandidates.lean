@@ -183,6 +183,49 @@ def IntrinsicLine (p : OctImIsotropicPoint) :=
       ∀ ⦃u v : OctImIsotropicPoint⦄,
         u ∈ s → v ∈ s → u ≠ v → ZornZeroRelated u v}
 
+theorem intrinsicLine_subset_zornZeroNeighborSet
+    {p : OctImIsotropicPoint} (L : IntrinsicLine p) :
+    L.1.erase p ⊆ zornZeroNeighborSet p := by
+  intro u hu
+  have hu' : u ∈ L.1 := (Finset.mem_erase.mp hu).2
+  have hne : p ≠ u := by
+    intro hpu
+    subst u
+    exact (Finset.mem_erase.mp hu).1 rfl
+  rw [mem_zornZeroNeighborSet_iff]
+  exact L.2.2.2 L.2.1 hu' hne
+
+theorem intrinsicLine_erase_card
+    {p : OctImIsotropicPoint} (L : IntrinsicLine p) :
+    (L.1.erase p).card = 2 := by
+  rw [Finset.card_erase_of_mem L.2.1, L.2.2.1]
+
+theorem intrinsicLine_ext_of_erase_eq
+    {p : OctImIsotropicPoint} {L M : IntrinsicLine p}
+    (h : L.1.erase p = M.1.erase p) : L = M := by
+  apply Subtype.ext
+  ext u
+  by_cases hup : u = p
+  · subst u
+    simp [L.2.1, M.2.1]
+  · have hmem := Finset.ext_iff.mp h u
+    simpa [Finset.mem_erase, hup] using hmem
+
+theorem zornZeroNeighborSet_card_ge_two
+    {p : OctImIsotropicPoint} (L : IntrinsicLine p) :
+    2 ≤ (zornZeroNeighborSet p).card := by
+  rw [← intrinsicLine_erase_card L]
+  exact Finset.card_le_card (intrinsicLine_subset_zornZeroNeighborSet L)
+
+theorem intrinsicLine_erase_pairwise_related
+    {p : OctImIsotropicPoint} (L : IntrinsicLine p)
+    {u v : OctImIsotropicPoint}
+    (hu : u ∈ L.1.erase p) (hv : v ∈ L.1.erase p) ( huv : u ≠ v) :
+    ZornZeroRelated u v := by
+  exact L.2.2.2 (Finset.mem_erase.mp hu).2
+    (Finset.mem_erase.mp hv).2 huv
+
+
 def intrinsicLines (p : OctImIsotropicPoint) :
   Finset (Finset OctImIsotropicPoint) :=
   zornZeroTriples.filter (fun s => p ∈ s)

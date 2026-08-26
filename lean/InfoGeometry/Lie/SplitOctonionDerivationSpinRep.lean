@@ -79,6 +79,64 @@ theorem diagComponent_commutes_Gamma (M : BlockMat) :
   rw [fromBlocks_multiply, fromBlocks_multiply]
   simp only [mul_one, one_mul, mul_zero, zero_mul, add_zero, zero_add, mul_neg, neg_mul, neg_zero]
 
+/-! The converse characterization of the grading-preserving sector. -/
+theorem commutes_Gamma_iff_diagComponent_eq
+    [NoZeroDivisors R] [CharZero R] (M : BlockMat) :
+    Gamma * M = M * Gamma ↔ diagComponent M = M := by
+  constructor
+  · intro h
+    rw [Gamma, ← Matrix.fromBlocks_toBlocks M, Matrix.fromBlocks_multiply,
+      Matrix.fromBlocks_multiply] at h
+    apply Matrix.ext
+    · intro i j
+      rcases i with i | i <;> rcases j with j | j
+      · rfl
+      · have h' := congrArg (fun X : BlockMat => X (Sum.inl i) (Sum.inr j)) h
+        have h'x : M.toBlocks₁₂ i j = -M.toBlocks₁₂ i j := by
+          simpa [Matrix.fromBlocks] using h'
+        have hz : (2 : R) * M.toBlocks₁₂ i j = 0 := by
+          linear_combination h'x
+        have hx : M.toBlocks₁₂ i j = 0 :=
+          (mul_eq_zero.mp hz).resolve_left (by norm_num)
+        simpa [diagComponent, Matrix.fromBlocks, Matrix.toBlocks₁₂] using hx.symm
+      · have h' := congrArg (fun X : BlockMat => X (Sum.inr i) (Sum.inl j)) h
+        have h'x : M.toBlocks₂₁ i j = -M.toBlocks₂₁ i j := by
+          simpa [Matrix.fromBlocks] using h'.symm
+        have hz : (2 : R) * M.toBlocks₂₁ i j = 0 := by
+          linear_combination h'x
+        have hx : M.toBlocks₂₁ i j = 0 :=
+          (mul_eq_zero.mp hz).resolve_left (by norm_num)
+        simpa [diagComponent, Matrix.fromBlocks, Matrix.toBlocks₂₁] using hx.symm
+      · rfl
+  · intro h
+    calc
+      Gamma * M = Gamma * diagComponent M := by rw [h]
+      _ = diagComponent M * Gamma := diagComponent_commutes_Gamma M
+      _ = M * Gamma := by rw [h]
+
+theorem commutes_Gamma_iff_offDiagComponent_eq_zero
+    [NoZeroDivisors R] [CharZero R] (M : BlockMat) :
+    Gamma * M = M * Gamma ↔ offDiagComponent M = 0 := by
+  constructor
+  · intro h
+    have hd : diagComponent M = M :=
+      (commutes_Gamma_iff_diagComponent_eq M).mp h
+    apply Matrix.ext
+    intro i j
+    rcases i with i | i <;> rcases j with j | j
+    · simp [offDiagComponent, Matrix.fromBlocks]
+    · have hd' := congrArg (fun X : BlockMat => X (Sum.inl i) (Sum.inr j)) hd
+      simpa [diagComponent, Matrix.fromBlocks] using hd'.symm
+    · have hd' := congrArg (fun X : BlockMat => X (Sum.inr i) (Sum.inl j)) hd
+      simpa [diagComponent, Matrix.fromBlocks] using hd'.symm
+    · simp [offDiagComponent, Matrix.fromBlocks]
+  · intro h
+    apply (commutes_Gamma_iff_diagComponent_eq M).mpr
+    calc
+      diagComponent M = diagComponent M + 0 := by simp
+      _ = diagComponent M + offDiagComponent M := by rw [h]
+      _ = M := block_reconstruction M
+
 /-- 
   THEOREM 4 (Pairing Anticommutation):
   The block-off-diagonal pairing sector strictly anticommutes with Γ:
@@ -89,6 +147,41 @@ theorem offDiagComponent_anticommutes_Gamma (M : BlockMat) :
   dsimp [Gamma, offDiagComponent]
   rw [fromBlocks_multiply, fromBlocks_multiply]
   simp only [mul_one, one_mul, mul_zero, zero_mul, add_zero, zero_add, mul_neg, neg_mul, neg_zero, neg_neg, fromBlocks_neg]
+
+/-! The converse characterization of the grading-reversing sector. -/
+theorem anticommutes_Gamma_iff_offDiagComponent_eq
+    [NoZeroDivisors R] [CharZero R] (M : BlockMat) :
+    Gamma * M = - (M * Gamma) ↔ offDiagComponent M = M := by
+  constructor
+  · intro h
+    rw [Gamma, ← Matrix.fromBlocks_toBlocks M, Matrix.fromBlocks_multiply,
+      Matrix.fromBlocks_multiply] at h
+    apply Matrix.ext
+    · intro i j
+      rcases i with i | i <;> rcases j with j | j
+      · have h' := congrArg (fun X : BlockMat => X (Sum.inl i) (Sum.inl j)) h
+        have h'x : M.toBlocks₁₁ i j = -M.toBlocks₁₁ i j := by
+          simpa [Matrix.fromBlocks] using h'
+        have hz : (2 : R) * M.toBlocks₁₁ i j = 0 := by
+          linear_combination h'x
+        have hx : M.toBlocks₁₁ i j = 0 :=
+          (mul_eq_zero.mp hz).resolve_left (by norm_num)
+        simpa [offDiagComponent, Matrix.fromBlocks, Matrix.toBlocks₁₁] using hx.symm
+      · rfl
+      · rfl
+      · have h' := congrArg (fun X : BlockMat => X (Sum.inr i) (Sum.inr j)) h
+        have h'x : M.toBlocks₂₂ i j = -M.toBlocks₂₂ i j := by
+          simpa [Matrix.fromBlocks] using h'.symm
+        have hz : (2 : R) * M.toBlocks₂₂ i j = 0 := by
+          linear_combination h'x
+        have hx : M.toBlocks₂₂ i j = 0 :=
+          (mul_eq_zero.mp hz).resolve_left (by norm_num)
+        simpa [offDiagComponent, Matrix.fromBlocks, Matrix.toBlocks₂₂] using hx.symm
+  · intro h
+    calc
+      Gamma * M = Gamma * offDiagComponent M := by rw [h]
+      _ = - (offDiagComponent M * Gamma) := offDiagComponent_anticommutes_Gamma M
+      _ = - (M * Gamma) := by rw [h]
 
 /-!
 =============================================================================

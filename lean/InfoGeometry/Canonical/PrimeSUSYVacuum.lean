@@ -29,13 +29,13 @@ open InfoGeometry.Canonical.PrimeMertensDefectBoundary
 
 /-- Finite fermion parity readout from the arithmetic prime-superalgebra layer. -/
 abbrev finiteFermionParity
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (psi : FermionicPrimeState P) : ℤ :=
   fermionParity P psi
 
 /-- Mobius equals finite fermion parity on represented square-free prime-bit states. -/
 theorem finite_mobius_eq_fermionParity
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (psi : FermionicPrimeState P) :
     ArithmeticFunction.moebius (representedSquarefreeNat P psi) =
       finiteFermionParity P psi := by
@@ -43,40 +43,33 @@ theorem finite_mobius_eq_fermionParity
 
 /-- Finite Witten-index cancellation over a nonempty prime register. -/
 theorem finite_wittenIndex_cancel
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 :=
   finiteBooleanWittenIndex_cancel P hP
 
 /-- Finite Witten-index sum over all fermionic prime subsets. -/
-def finiteWittenIndexSum (P : FermionicPrimeRegister) : ℤ :=
+def finiteWittenIndexSum (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) : ℤ :=
   ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card
-
-/-- Lemma 1: the finite Witten-index sum is exactly the powerset parity sum. -/
-theorem finiteWittenIndexSum_eq_powerset_sum
-    (P : FermionicPrimeRegister) :
-    finiteWittenIndexSum P =
-      ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card := by
-  rfl
 
 /-- Lemma 2: a nonempty finite fermion register has a cancelling parity powerset sum. -/
 theorem powerset_parity_sum_cancel_of_nonempty
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by
   exact finiteBooleanWittenIndex_cancel P hP
 
 /-- Lemma 3: therefore the named finite Witten-index sum vanishes. -/
 theorem finiteWittenIndexSum_cancel_of_nonempty
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (hP : P.primes.Nonempty) :
     finiteWittenIndexSum P = 0 := by
-  rw [finiteWittenIndexSum_eq_powerset_sum]
+  unfold finiteWittenIndexSum
   exact powerset_parity_sum_cancel_of_nonempty P hP
 
 /-- Theorem: finite SUSY vacuum cancellation is a theorem of finite fermion parity. -/
 theorem finiteSUSYVacuum_wittenIndexCancellation
-    (P : FermionicPrimeRegister)
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
     (hP : P.primes.Nonempty) :
     finiteWittenIndexSum P = 0 ∧
       (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by

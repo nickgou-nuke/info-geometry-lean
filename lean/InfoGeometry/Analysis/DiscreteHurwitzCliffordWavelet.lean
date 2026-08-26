@@ -76,30 +76,20 @@ structure CliffordCoefficientModel where
 attribute [instance] CliffordCoefficientModel.instRing
 attribute [instance] CliffordCoefficientModel.instStarRing
 
-/-- Abstract discrete filter index set. -/
-@[rep_depth operator]
-abbrev DiscreteFilterIndex := Type
-
-namespace DiscreteFilterIndex
-
-abbrev Index (I : DiscreteFilterIndex) : Type := I
-
-end DiscreteFilterIndex
-
 /-- Two-channel quaternion / Clifford filter-bank packet. -/
 @[rep_depth operator]
 structure ParaunitaryCliffordFilterBank where
   lattice : HurwitzIntegerModel
   coeffs : CliffordCoefficientModel
-  index : DiscreteFilterIndex
-  lowPass : index.Index → coeffs.Coeff
-  highPass : index.Index → coeffs.Coeff
+  index : Type
+  lowPass : index → coeffs.Coeff
+  highPass : index → coeffs.Coeff
 
 /-- Pointwise low/high branch normalization. -/
 @[rep_depth operator]
 def normalizedBranches (F : ParaunitaryCliffordFilterBank) : Prop :=
-  (∀ i : F.index.Index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
-  (∀ i : F.index.Index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
+  (∀ i : F.index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
+  (∀ i : F.index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
 
 /-- Backward-compatible alias for the historical name. -/
 @[rep_depth operator]
@@ -113,7 +103,7 @@ coefficient norm-squares add to `1`.
 @[rep_depth operator]
 def ParaunitaryCliffordFilterBank.sum_normSq_eq_one
     (F : ParaunitaryCliffordFilterBank) : Prop :=
-  ∀ i : F.index.Index,
+  ∀ i : F.index,
     F.coeffs.normSq (F.lowPass i) + F.coeffs.normSq (F.highPass i) = (1 : ℝ)
 
 /-- Convert branch normalization to the pointwise sum readout. -/

@@ -26,11 +26,79 @@ open InfoGeometry.Physics.B3PresentedGroup
 open InfoGeometry.Canonical.YangBaxterProof
 
 local notation "s₀" => _root_.InfoGeometry.Physics.JonesBraidB3.s0
+local notation "s₁" => _root_.InfoGeometry.Physics.JonesBraidB3.s1
 local notation "R_Fib" => _root_.InfoGeometry.Canonical.YangBaxterProof.R
+local notation "B_Fib" => _root_.InfoGeometry.Canonical.YangBaxterProof.B
 
 /-- Matrix form of intertwining the first Artin generator. -/
 def IntertwinesFirstGenerator (Φ : Matrix (Fin 2) (Fin 8) ℂ) : Prop :=
   Φ * s₀ = R_Fib * Φ
+
+/-- The linear defect whose kernel is the space of first-generator
+intertwiners. -/
+def firstGeneratorDefect :
+    Matrix (Fin 2) (Fin 8) ℂ →ₗ[ℂ] Matrix (Fin 2) (Fin 8) ℂ where
+  toFun Φ := Φ * s₀ - R_Fib * Φ
+  map_add' Φ Ψ := by
+    change (Φ + Ψ) * s₀ - R_Fib * (Φ + Ψ) =
+      (Φ * s₀ - R_Fib * Φ) + (Ψ * s₀ - R_Fib * Ψ)
+    rw [Matrix.add_mul, Matrix.mul_add]
+    abel
+  map_smul' c Φ := by
+    change (c • Φ) * s₀ - R_Fib * (c • Φ) =
+      c • (Φ * s₀ - R_Fib * Φ)
+    rw [smul_sub, Matrix.smul_mul, Matrix.mul_smul]
+
+theorem mem_firstGeneratorDefect_ker_iff (Φ : Matrix (Fin 2) (Fin 8) ℂ) :
+    Φ ∈ LinearMap.ker firstGeneratorDefect ↔
+      IntertwinesFirstGenerator Φ := by
+  change Φ * s₀ - R_Fib * Φ = 0 ↔ _
+  exact sub_eq_zero
+
+/-- The second Artin-generator defect for a direct boundary/Fibonacci map. -/
+def secondGeneratorDefect :
+    Matrix (Fin 2) (Fin 8) ℂ →ₗ[ℂ] Matrix (Fin 2) (Fin 8) ℂ where
+  toFun Φ := Φ * s₁ - B_Fib * Φ
+  map_add' Φ Ψ := by
+    change (Φ + Ψ) * s₁ - B_Fib * (Φ + Ψ) =
+      (Φ * s₁ - B_Fib * Φ) + (Ψ * s₁ - B_Fib * Ψ)
+    rw [Matrix.add_mul, Matrix.mul_add]
+    abel
+  map_smul' c Φ := by
+    change (c • Φ) * s₁ - B_Fib * (c • Φ) =
+      c • (Φ * s₁ - B_Fib * Φ)
+    rw [smul_sub, Matrix.smul_mul, Matrix.mul_smul]
+
+theorem mem_secondGeneratorDefect_ker_iff
+    (Φ : Matrix (Fin 2) (Fin 8) ℂ) :
+    Φ ∈ LinearMap.ker secondGeneratorDefect ↔
+      Φ * s₁ = B_Fib * Φ := by
+  change Φ * s₁ - B_Fib * Φ = 0 ↔ _
+  exact sub_eq_zero
+
+/-- The simultaneous two-generator matrix defect. -/
+def simultaneousGeneratorDefect :
+    Matrix (Fin 2) (Fin 8) ℂ →ₗ[ℂ]
+      (Matrix (Fin 2) (Fin 8) ℂ × Matrix (Fin 2) (Fin 8) ℂ) where
+  toFun Φ := (firstGeneratorDefect Φ, secondGeneratorDefect Φ)
+  map_add' Φ Ψ := by
+    exact Prod.ext (map_add (firstGeneratorDefect) Φ Ψ)
+      (map_add (secondGeneratorDefect) Φ Ψ)
+  map_smul' c Φ := by
+    exact Prod.ext (map_smul (firstGeneratorDefect) c Φ)
+      (map_smul (secondGeneratorDefect) c Φ)
+
+theorem mem_simultaneousGeneratorDefect_ker_iff
+    (Φ : Matrix (Fin 2) (Fin 8) ℂ) :
+    Φ ∈ LinearMap.ker simultaneousGeneratorDefect ↔
+      Φ ∈ LinearMap.ker firstGeneratorDefect ∧
+        Φ ∈ LinearMap.ker secondGeneratorDefect := by
+  change simultaneousGeneratorDefect Φ = 0 ↔ _
+  constructor
+  · intro h
+    exact ⟨congrArg Prod.fst h, congrArg Prod.snd h⟩
+  · rintro ⟨h₀, h₁⟩
+    exact Prod.ext h₀ h₁
 
 /-- Any direct first-generator intertwiner is annihilated by `R² + I`.
 This is the spectral obstruction forced by `s₀² = -I`. -/
@@ -94,5 +162,30 @@ theorem direct_intertwiner_eq_zero
     (R_Fib * R_Fib + (1 : Matrix (Fin 2) (Fin 2) ℂ))⁻¹
   exact Matrix.nonsing_inv_mul _
     (isUnit_iff_ne_zero.mpr obstruction_det_ne_zero)
+
+/-- The first-generator intertwiner kernel is genuinely zero. -/
+theorem firstGeneratorDefect_ker_eq_bot :
+    LinearMap.ker firstGeneratorDefect = ⊥ := by
+  apply le_antisymm
+  · intro Φ hΦ
+    rw [mem_firstGeneratorDefect_ker_iff] at hΦ
+    exact (direct_intertwiner_eq_zero Φ hΦ)
+  · exact bot_le
+
+/-- No nonzero direct map intertwines both concrete Artin generators. -/
+theorem simultaneousGeneratorDefect_ker_eq_bot :
+    LinearMap.ker simultaneousGeneratorDefect = ⊥ := by
+  apply le_antisymm
+  · intro Φ hΦ
+    have h₀ : Φ ∈ LinearMap.ker firstGeneratorDefect :=
+      (mem_simultaneousGeneratorDefect_ker_iff Φ).mp hΦ |>.1
+    exact (firstGeneratorDefect_ker_eq_bot ▸ h₀)
+  · exact bot_le
+
+/-- The simultaneous generator-intertwiner space has no finite-dimensional
+dimension: its kernel is the zero submodule. -/
+theorem simultaneousGeneratorDefect_ker_finrank_eq_zero :
+    Module.finrank ℂ (LinearMap.ker simultaneousGeneratorDefect) = 0 := by
+  rw [simultaneousGeneratorDefect_ker_eq_bot, finrank_bot]
 
 end InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction

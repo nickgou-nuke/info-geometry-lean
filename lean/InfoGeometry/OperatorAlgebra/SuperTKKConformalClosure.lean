@@ -48,7 +48,7 @@ coordinates, and `decomposition_symm_apply` says reconstruction is the sum of
 the five grade components.
 -/
 structure FiveGrading
-    (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] where
+    (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
   gNegTwo : Submodule ℝ L
   gNegOne : Submodule ℝ L
   gZero : Submodule ℝ L
@@ -100,7 +100,7 @@ structure FiveGrading
 
 namespace FiveGrading
 
-variable {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 variable (G : FiveGrading L)
 
 /-- Coordinates of an element in the five-grade decomposition. -/
@@ -141,6 +141,15 @@ theorem neg_one_pos_one_mem_zero
     ⁅X, Y⁆ ∈ G.gZero :=
   G.bracket_neg_one_pos_one X Y hX hY
 
+/-- The reversed mixed bracket lands in grade zero by Lie skew-symmetry. -/
+theorem pos_one_neg_one_mem_zero
+    {X Y : L}
+    (hX : X ∈ G.gPosOne)
+    (hY : Y ∈ G.gNegOne) :
+    ⁅X, Y⁆ ∈ G.gZero := by
+  rw [← lie_skew]
+  exact G.gZero.neg_mem (G.bracket_neg_one_pos_one Y X hY hX)
+
 /-- Re-export: grade zero is closed under the bracket. -/
 theorem zero_zero_mem_zero
     {X Y : L}
@@ -180,6 +189,24 @@ theorem zero_neg_two_mem_neg_two
     (hY : Y ∈ G.gNegTwo) :
     ⁅X, Y⁆ ∈ G.gNegTwo :=
   G.bracket_zero_neg_two X Y hX hY
+
+/-- The reversed positive extremal action follows from Lie skew-symmetry. -/
+theorem pos_two_zero_mem_pos_two
+    {X Y : L}
+    (hX : X ∈ G.gPosTwo)
+    (hY : Y ∈ G.gZero) :
+    ⁅X, Y⁆ ∈ G.gPosTwo := by
+  rw [← lie_skew]
+  exact G.gPosTwo.neg_mem (G.bracket_zero_pos_two Y X hY hX)
+
+/-- The reversed negative extremal action follows from Lie skew-symmetry. -/
+theorem neg_two_zero_mem_neg_two
+    {X Y : L}
+    (hX : X ∈ G.gNegTwo)
+    (hY : Y ∈ G.gZero) :
+    ⁅X, Y⁆ ∈ G.gNegTwo := by
+  rw [← lie_skew]
+  exact G.gNegTwo.neg_mem (G.bracket_zero_neg_two Y X hY hX)
 
 /-- The positive grade-two sector is closed under addition. -/
 theorem pos_two_add_mem
@@ -286,7 +313,7 @@ structure SuperchargeSquareRoot
 namespace SuperchargeSquareRoot
 
 variable
-    {L Odd : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    {L Odd : Type*} [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     {G : FiveGrading L}
 
@@ -380,8 +407,8 @@ This is the local induction step for the translation lane.
 -/
 theorem map_mixed_supercharge_mem_translation
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
-    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [LieRing L₁] [LieAlgebra ℝ L₁]
+    [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -417,8 +444,8 @@ This is the local induction step for the positive central lane.
 -/
 theorem map_left_left_supercharge_mem_pos_two
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
-    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [LieRing L₁] [LieAlgebra ℝ L₁]
+    [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -453,8 +480,8 @@ positive grade-two sector.
 -/
 theorem map_left_left_supercharge_charges_commute
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
-    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [LieRing L₁] [LieAlgebra ℝ L₁]
+    [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -500,7 +527,7 @@ a same-left-chirality supercharge anticommutator.
 -/
 structure SuperTKKDefectAbsorption
     (L Odd State Geometry : Type*)
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -533,7 +560,7 @@ namespace SuperTKKDefectAbsorption
 
 variable
     {L Odd State Geometry : Type*}
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -739,7 +766,7 @@ are supplied.
 -/
 structure BPSDefectBridge
     {L Odd State Geometry : Type*}
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -759,7 +786,7 @@ namespace BPSDefectBridge
 
 variable
     {L Odd State Geometry : Type*}
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]

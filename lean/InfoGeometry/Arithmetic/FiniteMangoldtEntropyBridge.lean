@@ -33,16 +33,6 @@ theorem finiteMangoldtMellin_nonnegative (A : Finset ℕ) (β : ℝ) :
 def finiteMangoldtEntropy (A : Finset ℕ) (β potential : ℝ) : ℝ :=
   β * finiteMangoldtMellin A β + potential
 
-theorem finiteMangoldtEntropy_eq_energy_plus_potential
-    (A : Finset ℕ) (β potential : ℝ) :
-    finiteMangoldtEntropy A β potential =
-      β * finiteMangoldtMellin A β + potential := rfl
-
-theorem finiteMangoldtEntropy_at_zero_potential
-    (A : Finset ℕ) (β : ℝ) :
-    finiteMangoldtEntropy A β 0 = β * finiteMangoldtMellin A β := by
-  simp [finiteMangoldtEntropy]
-
 /-! ## Finite second-law readout -/
 
 /-- With nonnegative inverse temperature and potential, the finite entropy
@@ -64,7 +54,7 @@ theorem finiteMangoldtEntropy_master_packet
       β * finiteMangoldtMellin A β + potential) ∧
     (0 ≤ finiteMangoldtEntropy A β potential) := by
   exact ⟨finiteMangoldtMellin_nonnegative A β,
-    finiteMangoldtEntropy_eq_energy_plus_potential A β potential,
+    rfl,
     finiteMangoldtEntropy_nonnegative A hβ hpotential⟩
 
 end InfoGeometry.Arithmetic.FiniteMangoldtEntropyBridge

@@ -353,19 +353,13 @@ theorem bkHamiltonianColimit_trace (n : ℕ)
   rw [bkHamiltonianColimit, traceFunctional_stage,
     matrixTraceState_apply, bkHamiltonianMatrixStage_trace]
 
-theorem bkHamiltonianMatrix_trace_eq_energy_sum
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
-    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
-    Matrix.trace (bkHamiltonianMatrix logPrime) =
-      ∑ S : Vertex P, (bkEnergy logPrime S : ℂ) := by
-  simp [bkHamiltonianMatrix]
-
 theorem bkHamiltonianColimit_trace_eq_normalized_energy_sum (n : ℕ)
     (logPrime : CutoffMode n → ℝ) :
     traceFunctional (bkHamiltonianColimit n logPrime) =
       (1 / (2 ^ Fintype.card (CutoffMode n) : ℂ)) *
         (∑ S : CutoffVertex n, (bkEnergy logPrime S : ℂ)) := by
-  rw [bkHamiltonianColimit_trace, bkHamiltonianMatrix_trace_eq_energy_sum]
+  rw [bkHamiltonianColimit_trace]
+  simp [bkHamiltonianMatrix]
 
 theorem cutoff_bkEnergy_succ (n : ℕ) (S : CutoffVertex n) :
     bkEnergy
@@ -396,7 +390,7 @@ theorem cutoff_bkEnergy_addNew (n : ℕ) (hp : Nat.Prime (n + 1))
         bkEnergy
           (fun p : CutoffMode (n + 1) => Real.log (p : ℝ))
           (cutoffVertexSucc n S) := by
-      exact bkEnergy_insert_of_not_mem _ _ _ hnot
+      simp [bkEnergy, hnot]
     _ = bkEnergy (fun p : CutoffMode n => Real.log (p : ℝ)) S +
         Real.log (n + 1 : ℝ) := by
       rw [cutoff_bkEnergy_succ]
@@ -484,11 +478,6 @@ theorem cutoff_bkStatePhase_succ (n : ℕ) (t : ℝ) (S : CutoffVertex n) :
   unfold bkStatePhase
   rw [cutoff_bkEnergy_succ]
 
-theorem cutoff_parity_succ (n : ℕ) (S : CutoffVertex n) :
-    SquareFreePrimeState.fermionParitySign (cutoffVertexSucc n S) =
-      SquareFreePrimeState.fermionParitySign S := by
-  simp [SquareFreePrimeState.fermionParitySign, cutoffVertexSucc_card]
-
 /-! ## Finite chiral/projective realization of the BK phase -/
 
 theorem expDiagSL2_projective_multiplier (η : ℂ) :
@@ -500,7 +489,7 @@ theorem expDiagSL2_projective_multiplier (η : ℂ) :
   ring
 
 theorem bkStatePhase_eq_expDiagSL2_projective_multiplier
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)
     (t : ℝ) (S : Vertex P) :
     (spinMatrix (expDiagSL2
@@ -514,7 +503,7 @@ theorem bkStatePhase_eq_expDiagSL2_projective_multiplier
   ring
 
 theorem bkJostDet_zero_at_stateNat_log
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (S : Vertex P) :
     bkJostDet (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ))
         (Real.log (stateNat S : ℝ) : ℂ) = 0 := by
@@ -523,7 +512,7 @@ theorem bkJostDet_zero_at_stateNat_log
     (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ)) S
 
 theorem bkJostDet_zero_at_stateNat_log_iff_eigenstate
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (S : Vertex P) :
     bkJostDet (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ))
         (Real.log (stateNat S : ℝ) : ℂ) = 0 ∧
@@ -541,7 +530,7 @@ theorem bkJostDet_zero_at_stateNat_log_iff_eigenstate
       (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ)) S
 
 theorem stateNat_mobius_eq_prime_register_parity
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (S : Vertex P) :
     ArithmeticFunction.moebius (stateNat S) =
       SquareFreePrimeState.fermionParitySign S :=
@@ -555,7 +544,7 @@ theorem finite_prime_register_kernel_divisor_index
   finite_kernel_index_prime_register_parity_eq_divisorIndex P
 
 theorem bkHamiltonianMatrix_exp_det_eq_exp_trace
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
     Matrix.det (NormedSpace.exp (bkHamiltonianMatrix logPrime)) =
       NormedSpace.exp (Matrix.trace (bkHamiltonianMatrix logPrime)) := by
@@ -563,7 +552,7 @@ theorem bkHamiltonianMatrix_exp_det_eq_exp_trace
 
 /-- The complete finite packet carried by one square-free prime register. -/
 theorem finite_bk_prime_packet
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff} (S : Vertex P) :
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff} (S : Vertex P) :
     bkJostDet (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ))
         (Real.log (stateNat S : ℝ) : ℂ) = 0 ∧
       ArithmeticFunction.moebius (stateNat S) =
@@ -578,7 +567,7 @@ theorem finite_bk_prime_packet
 /-! ## Finite spectral/index synthesis on the common prime register -/
 
 theorem finite_bk_operator_index_packet
-    {P : PrimeCantorBerryKeatingOperator.PrimeCutoff}
+    {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
     IsAdjointPair (P := P) (bkHamiltonian logPrime) (bkHamiltonian logPrime) ∧
       (bkHamiltonianMatrix logPrime).IsHermitian ∧

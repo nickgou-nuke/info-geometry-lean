@@ -179,7 +179,7 @@ instance : Module R (ZornMatrix R) :=
 
 theorem zornNorm_mul (X Y : ZornMatrix R) :
     zornNorm (X * Y) = zornNorm X * zornNorm Y := by
-  simp [zornNorm, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+  simp [zornNorm, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] ;
     ring
 
 @[simp] theorem add_a (X Y : ZornMatrix R) : (X + Y).a = X.a + Y.a := rfl
@@ -443,11 +443,11 @@ theorem U_V_anticommutator (i j : Fin 3) :
   rw [U_mul_V, V_mul_U]
   by_cases h : i = j
   · subst j
-    simp [I, E11, E22, zero, ZornMatrix.add, Vec3.add]
+    simp [I, E11, E22, ZornMatrix.add, Vec3.add]
   · have h' : ¬j = i := by
       intro hji
       exact h hji.symm
-    simp [h, h', I, E11, E22, zero, ZornMatrix.add, Vec3.add]
+    simp [h, h', zero, ZornMatrix.add, Vec3.add]
 
 theorem U_one_mul_U_zero :
     (U 1 : ZornMatrix R) * U 0 = -(V 2) := by
@@ -613,7 +613,7 @@ theorem nonassociative_property [Nontrivial R] :
   have hdiag : (E22 : ZornMatrix R) = E11 := by
     exact hleft.symm.trans (h.trans hright)
   have ha := congrArg ZornMatrix.a hdiag
-  simpa [E11, E22] using ha
+  simp [E11, E22] at ha
 
 lemma dot_cross_self (v : Vec3 R) : Vec3.dot v (Vec3.cross v v) = 0 := by
   dsimp [Vec3.dot, Vec3.cross]

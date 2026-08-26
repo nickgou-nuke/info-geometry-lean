@@ -634,6 +634,13 @@ namespace FlowDatum
 variable {Op : Type*}
 variable (σ : FlowDatum Op)
 
+theorem ext {σ τ : FlowDatum Op}
+    (h : σ.flow = τ.flow) : σ = τ := by
+  cases σ
+  cases τ
+  simp only [FlowDatum.mk.injEq]
+  exact h
+
 @[simp]
 theorem flow_zero_apply
     (x : Op) :
@@ -652,6 +659,13 @@ theorem flow_neg_apply
     σ.flow (-t) (σ.flow t x) = x := by
   rw [← σ.flow_add (-t) t x]
   simp
+
+theorem ext_flow {σ τ : FlowDatum Op}
+    (h : σ.flow = τ.flow) : σ = τ := by
+  cases σ
+  cases τ
+  cases h
+  rfl
 
 end FlowDatum
 
@@ -706,6 +720,91 @@ def toFlowDatum :
   flow := fun t => σ.flow t
   flow_zero := σ.flow_zero
   flow_add := σ.flow_add
+
+@[simp] theorem toFlowDatum_flow
+    (σ : ModularFlow Op) (t : ℝ) :
+    σ.toFlowDatum.flow t = σ.flow t :=
+  rfl
+
+theorem toFlowDatum_injective :
+    Function.Injective (toFlowDatum : ModularFlow Op → FlowDatum Op) := by
+  intro σ τ h
+  have hflow :
+      (fun t => (σ.flow t : Op → Op)) =
+        (fun t => (τ.flow t : Op → Op)) := by
+    funext t A
+    simpa [toFlowDatum] using congrArg (fun x : FlowDatum Op => x.flow t A) h
+  have hring : σ.flow = τ.flow := by
+    funext t
+    apply RingEquiv.ext
+    intro A
+    exact congrFun (congrFun hflow t) A
+  cases σ with
+  | mk σ zeroσ addσ =>
+    cases τ with
+    | mk τ zeroτ addτ =>
+      dsimp at hring
+      cases hring
+      rfl
+
+theorem toFlowDatum_eq_iff
+    (σ τ : ModularFlow Op) :
+    σ.toFlowDatum = τ.toFlowDatum ↔ σ = τ := by
+  constructor
+  · intro h
+    exact (ModularFlow.toFlowDatum_injective (Op := Op)) h
+  · intro h
+    cases h
+    rfl
+
+/-- A plain flow whose time slices admit the ring-automorphism structure
+    carried by a `ModularFlow`.  This is the exact structured image of
+    `toFlowDatum`; no multiplicative information is discarded in this subtype.
+-/
+def IsRingFlowDatum (σ : FlowDatum Op) : Prop :=
+  ∀ t : ℝ, ∃ e : Op ≃+* Op, ∀ A : Op, σ.flow t A = e A
+
+abbrev RingFlowDatum (Op : Type*) [Ring Op] :=
+  {σ : FlowDatum Op // IsRingFlowDatum σ}
+
+def toRingFlowDatum : ModularFlow Op → RingFlowDatum Op := fun σ =>
+  ⟨σ.toFlowDatum, fun t => ⟨σ.flow t, fun _ => rfl⟩⟩
+
+noncomputable def modularFlowEquivRingFlowDatum :
+    ModularFlow Op ≃ RingFlowDatum Op where
+  toFun := toRingFlowDatum
+  invFun ρ :=
+    let e : ℝ → Op ≃+* Op := fun t => Classical.choose (ρ.property t)
+    { flow := e
+      flow_zero := by
+        intro A
+        have he := Classical.choose_spec (ρ.property 0) A
+        exact he.symm.trans (ρ.1.flow_zero A)
+      flow_add := by
+        intro s t A
+        have h := ρ.1.flow_add s t A
+        have he_st := Classical.choose_spec (ρ.property (s + t)) A
+        have he_s := Classical.choose_spec (ρ.property s) (e t A)
+        have he_t := Classical.choose_spec (ρ.property t) A
+        calc
+          e (s + t) A = ρ.1.flow (s + t) A := (he_st.symm)
+          _ = ρ.1.flow s (ρ.1.flow t A) := h
+          _ = ρ.1.flow s (e t A) := by rw [he_t]
+          _ = e s (e t A) := he_s }
+  left_inv σ := by
+    apply ModularFlow.toFlowDatum_injective (Op := Op)
+    apply FlowDatum.ext_flow
+    funext t
+    apply Equiv.ext
+    intro A
+    exact (Classical.choose_spec ((toRingFlowDatum σ).property t) A).symm
+  right_inv ρ := by
+    apply Subtype.ext
+    apply FlowDatum.ext_flow
+    funext t
+    apply Equiv.ext
+    intro A
+    exact (Classical.choose_spec (ρ.property t) A).symm
 
 end ModularFlow
 

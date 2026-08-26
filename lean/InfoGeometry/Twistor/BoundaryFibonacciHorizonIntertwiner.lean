@@ -75,6 +75,38 @@ theorem mem_boundaryFibonacciIntertwinerSpace_iff_generator_equations
   · rintro ⟨h0, h1⟩
     exact ⟨sub_eq_zero.mpr h0, sub_eq_zero.mpr h1⟩
 
+/-! ## Kernel consequences
+
+The following results deliberately expose the exact hypothesis needed for a
+zero-space conclusion.  The simultaneous defect map is the canonical owner;
+injectivity of one component is supplied only by a concrete representation
+proof, never smuggled into the definition of the Hom-space.
+-/
+
+theorem boundaryFibonacciIntertwinerSpace_eq_bot_of_injective_defect0
+    (hInjective : Function.Injective intertwinerDefect0) :
+    boundaryFibonacciIntertwinerSpace = ⊥ := by
+  apply le_antisymm
+  · intro Φ hΦ
+    have hKernel : boundaryFibonacciIntertwinerOperator Φ = 0 := hΦ
+    have hDefect : intertwinerDefect0 Φ = 0 :=
+      congrArg Prod.fst hKernel
+    have hZero : Φ = 0 := by
+      apply hInjective
+      calc
+        intertwinerDefect0 Φ = 0 := hDefect
+        _ = intertwinerDefect0 0 := by
+          simp [intertwinerDefect0]
+          abel
+    simpa [hZero]
+  · exact bot_le
+
+theorem boundaryFibonacciIntertwinerSpace_finrank_zero_of_injective_defect0
+    (hInjective : Function.Injective intertwinerDefect0) :
+    Module.finrank ℂ boundaryFibonacciIntertwinerSpace = 0 := by
+  rw [boundaryFibonacciIntertwinerSpace_eq_bot_of_injective_defect0 hInjective]
+  simp
+
 end
 
 end InfoGeometry.Twistor.BoundaryFibonacciHorizonIntertwiner

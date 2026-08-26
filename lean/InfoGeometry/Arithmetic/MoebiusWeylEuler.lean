@@ -39,9 +39,6 @@ noncomputable def weylSign (n : ℕ+) : ℂ :=
   -- The Weyl sign ε(w_n) is only defined for permutations,
   -- which correspond to squarefree n (no double occupancies).
 
-theorem weylSign_one : weylSign 1 = 1 := by
-  simp [weylSign]
-
 theorem weylSign_mul (m n : ℕ+) :
     weylSign (m * n) = weylSign m * weylSign n := by
   have hmul :

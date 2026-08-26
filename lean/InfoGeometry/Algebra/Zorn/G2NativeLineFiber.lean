@@ -15,6 +15,7 @@ namespace InfoGeometry.Algebra.Zorn.G2NativeLineFiber
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
+open InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 open InfoGeometry.Algebra.Zorn.G2NativeBaseFiber
 open InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
 open InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
@@ -23,8 +24,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 
 def kernelCandidate (y : OctImF2) : Prop :=
-  y ≠ 0 ∧ y ≠ nativeBasePoint ∧
-    mul (embed nativeBasePoint) (embed y) = zero
+  nativeCandidateAt nativeBasePoint y
 
 instance : DecidablePred kernelCandidate := by
   intro y
@@ -35,10 +35,115 @@ def candidates : Finset OctImF2 :=
   Finset.univ.filter kernelCandidate
 
 def lineSet (y : OctImF2) : Finset OctImF2 :=
-  {nativeBasePoint, y, nativeBasePoint + y}
+  nativeLineSetAt nativeBasePoint y
 
 def nativeLines : Finset (Finset OctImF2) :=
-  candidates.image lineSet
+  nativeLinesAt nativeBasePoint
+
+/-! The native line quotient identifies the two non-base generators of a
+line.  This is the additive `𝔽₂` law behind the six-to-three census. -/
+theorem nativeBasePoint_add_self :
+    nativeBasePoint + nativeBasePoint = (0 : OctImF2) := by
+  ext i
+  fin_cases i <;> rfl
+
+theorem lineSet_add_nativeBasePoint (y : OctImF2) :
+    lineSet (nativeBasePoint + y) = lineSet y := by
+  ext z
+  simp only [lineSet, nativeLineSetAt, Finset.mem_insert, Finset.mem_singleton]
+  rw [show nativeBasePoint + (nativeBasePoint + y) = y by
+    calc
+      nativeBasePoint + (nativeBasePoint + y) =
+          (nativeBasePoint + nativeBasePoint) + y :=
+        (_root_.add_assoc nativeBasePoint nativeBasePoint y).symm
+      _ = 0 + y := by rw [nativeBasePoint_add_self]
+      _ = y := _root_.zero_add y]
+  tauto
+
+theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
+    nativeBasePoint + y ∈ candidates := by
+  have hy' : nativeCandidateAt nativeBasePoint y := by
+    simpa [candidates, kernelCandidate] using hy
+  have htranslated : nativeCandidateAt nativeBasePoint (nativeBasePoint + y) := by
+    refine ⟨?_, ?_, ?_⟩
+    · intro h
+      have h' := congrArg (fun t => nativeBasePoint + t) h
+      have hybase : y = nativeBasePoint := by
+        simpa [← _root_.add_assoc, nativeBasePoint_add_self] using h'
+      exact hy'.2.1 hybase
+    · intro h
+      have h' := congrArg (fun t => nativeBasePoint + t) h
+      have hyzero : y = 0 := by
+        simpa [← _root_.add_assoc, nativeBasePoint_add_self] using h'
+      exact hy'.1 hyzero
+    · have hmul := hy'.2.2
+      change mul (embed nativeBasePoint)
+          (embed (nativeBasePoint + y)) = zero
+      have hembed : embed (nativeBasePoint + y) =
+          embed nativeBasePoint + embed y := by
+        have hi : octImToImaginary (nativeBasePoint + y) =
+            InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.imaginaryAdd
+              (octImToImaginary nativeBasePoint) (octImToImaginary y) := by
+          apply imaginaryOctImEquiv.injective
+          change imaginaryToOctIm (octImToImaginary (nativeBasePoint + y)) =
+            imaginaryToOctIm
+              (InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.imaginaryAdd
+                (octImToImaginary nativeBasePoint) (octImToImaginary y))
+          calc
+            imaginaryToOctIm (octImToImaginary (nativeBasePoint + y)) =
+                nativeBasePoint + y := imaginaryOctImEquiv.right_inv _
+            _ = imaginaryToOctIm
+                (InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.imaginaryAdd
+                  (octImToImaginary nativeBasePoint) (octImToImaginary y)) := by
+              rw [InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.imaginaryToOctIm_imaginaryAdd]
+              exact congrArg₂ (· + ·)
+                (imaginaryOctImEquiv.right_inv nativeBasePoint).symm
+                (imaginaryOctImEquiv.right_inv y).symm
+        exact congrArg Subtype.val hi
+      rw [hembed]
+      change mul (embed nativeBasePoint)
+          (embed nativeBasePoint + embed y) = zero
+      calc
+        mul (embed nativeBasePoint) (embed nativeBasePoint + embed y) =
+            add (mul (embed nativeBasePoint) (embed nativeBasePoint))
+              (mul (embed nativeBasePoint) (embed y)) :=
+          InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.mul_add _ _ _
+        _ = zero := by
+          have hsq : mul (embed nativeBasePoint) (embed nativeBasePoint) = zero := by
+            rfl
+          rw [hsq, hmul]
+          rfl
+  simpa [candidates, kernelCandidate] using htranslated
+
+theorem lineSet_eq_lineSet_iff
+    {y z : OctImF2} (hy : y ∈ candidates) (hz : z ∈ candidates) :
+    lineSet y = lineSet z ↔
+      z = y ∨ z = nativeBasePoint + y := by
+  have hz_ne_base : z ≠ nativeBasePoint :=
+    (Finset.mem_filter.mp hz).2.2.1
+  constructor
+  · intro h
+    have hz_mem : z ∈ lineSet y := by
+      rw [h]
+      simp [lineSet, nativeLineSetAt]
+    simp only [lineSet, nativeLineSetAt, Finset.mem_insert,
+      Finset.mem_singleton] at hz_mem
+    rcases hz_mem with hbase | hsame | hsum
+    · exact False.elim (hz_ne_base hbase)
+    · exact Or.inl hsame
+    · exact Or.inr hsum
+  · intro h
+    rcases h with rfl | rfl
+    · rfl
+    · exact (lineSet_add_nativeBasePoint y).symm
+
+/-! The canonical line carrier for the native split-Zorn model.
+
+    This is deliberately a subtype of `nativeLines`: unlike the older
+    `LinesThroughPoint` carrier, it uses the native point and native
+    multiplication/incidence throughout.  Downstream native owners should
+    use this name rather than reconstructing the subtype locally. -/
+abbrev NativeLine := NativeLinesThroughPoint nativeBasePoint
 
 theorem octImAction_add (g : SplitOctF2Aut) (x y : OctImF2) :
     octImAction g (x + y) = octImAction g x + octImAction g y := by
@@ -76,9 +181,7 @@ theorem octImAction_add (g : SplitOctF2Aut) (x y : OctImF2) :
 theorem lineSet_action (g : SplitOctF2Aut) (hg : octImAction g nativeBasePoint = nativeBasePoint)
     (y : OctImF2) :
     lineSet (octImAction g y) = (lineSet y).image (octImAction g) := by
-  simp only [lineSet, Finset.image_insert, Finset.image_singleton]
-  rw [hg, octImAction_add]
-  simp [hg]
+  simp [lineSet, nativeLineSetAt, hg, octImAction_add]
 
 theorem octImAction_zero (g : SplitOctF2Aut) : octImAction g 0 = 0 := by
   unfold octImAction
@@ -199,7 +302,7 @@ def nativeLinesEquivOfFix
       simpa [hwx'] using hw
     · intro hx
       exact Finset.mem_image.mpr ⟨x, hx, by
-        simp [Function.comp_def, ← octImAction_mul, inv_mul_cancel,
+        simp [← octImAction_mul, inv_mul_cancel,
           octImAction_one]⟩
   right_inv L := by
     apply Subtype.ext
@@ -216,7 +319,7 @@ def nativeLinesEquivOfFix
       simpa [hwx'] using hw
     · intro hx
       exact Finset.mem_image.mpr ⟨x, hx, by
-        simp [Function.comp_def, ← octImAction_mul, mul_inv_cancel,
+        simp [← octImAction_mul, mul_inv_cancel,
           octImAction_one]⟩
 
 theorem candidates_card : candidates.card = 6 := by
@@ -224,6 +327,9 @@ theorem candidates_card : candidates.card = 6 := by
 
 theorem nativeLines_card : nativeLines.card = 3 := by
   native_decide
+
+theorem nativeBaseLine_card : Fintype.card NativeLine = 3 := by
+  simpa [NativeLine, NativeLinesThroughPoint, nativeLines] using nativeLines_card
 
 theorem lineSet_card (y : OctImF2) (hy : y ∈ candidates) :
     (lineSet y).card = 3 := by
@@ -235,7 +341,7 @@ theorem lineSet_mem_nativeLines (y : OctImF2) (hy : y ∈ candidates) :
 
 theorem nativeBasePoint_mem_lineSet (y : OctImF2) :
     nativeBasePoint ∈ lineSet y := by
-  simp [lineSet]
+  simp [lineSet, nativeLineSetAt]
 
 /-! The canonical Borel-fixed line is the root line generated by the
 third native coordinate.  It is written explicitly, rather than selected

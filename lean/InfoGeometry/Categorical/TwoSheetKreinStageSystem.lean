@@ -18,12 +18,13 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Canonical.ChiralStokesPauliBasis
 open InfoGeometry.Krein.HestenesKreinFinite
 
-abbrev Carrier := Sheet
-
 abbrev StageFunctor : ℕ ⥤ ModuleCat ℝ :=
-  (Functor.const ℕ).obj (ModuleCat.of ℝ Carrier)
+  (Functor.const ℕ).obj
+    (ModuleCat.of ℝ InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix)
 
-def constantEndNatTrans (T : Carrier →ₗ[ℝ] Carrier) :
+def constantEndNatTrans
+    (T : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix →ₗ[ℝ]
+      InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) :
     StageFunctor ⟶ StageFunctor :=
   NatTrans.ofSequence
     (fun _ => ModuleCat.ofHom T)
@@ -33,14 +34,20 @@ def constantEndNatTrans (T : Carrier →ₗ[ℝ] Carrier) :
       ext x
       rfl)
 
-def kreinAction : Carrier →ₗ[ℝ] Carrier :=
+def kreinAction :
+    InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix →ₗ[ℝ]
+      InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix :=
   (LinearMap.mulLeft ℝ fundamentalSymmetry).comp
     (LinearMap.mulRight ℝ fundamentalSymmetry)
 
-def plusAction : Carrier →ₗ[ℝ] Carrier :=
+def plusAction :
+    InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix →ₗ[ℝ]
+      InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix :=
   LinearMap.mulLeft ℝ fPlus
 
-def minusAction : Carrier →ₗ[ℝ] Carrier :=
+def minusAction :
+    InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix →ₗ[ℝ]
+      InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix :=
   LinearMap.mulLeft ℝ fMinus
 
 def kreinStage : StageFunctor ⟶ StageFunctor :=
@@ -77,16 +84,20 @@ theorem kreinStage_exchanges_plus :
   ext n x
   dsimp [StageFunctor] at x ⊢
   change fundamentalSymmetry *
-      (fPlus * (fundamentalSymmetry * ((x : Carrier) * fundamentalSymmetry)) *
-        fundamentalSymmetry) = fMinus * (x : Carrier)
+      (fPlus * (fundamentalSymmetry *
+        ((x : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) *
+          fundamentalSymmetry)) * fundamentalSymmetry) =
+        fMinus * (x : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix)
   calc
     fundamentalSymmetry *
-          (fPlus * (fundamentalSymmetry * ((x : Carrier) * fundamentalSymmetry)) *
-            fundamentalSymmetry) =
+          (fPlus * (fundamentalSymmetry *
+            ((x : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) *
+              fundamentalSymmetry)) * fundamentalSymmetry) =
         (fundamentalSymmetry * fPlus * fundamentalSymmetry) *
-          (x : Carrier) * (fundamentalSymmetry * fundamentalSymmetry) := by
+          (x : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) *
+            (fundamentalSymmetry * fundamentalSymmetry) := by
             simp only [mul_assoc]
-    _ = fMinus * (x : Carrier) := by
+    _ = fMinus * (x : InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix) := by
       rw [fundamentalSymmetry_fPlus_fundamentalSymmetry,
         fundamentalSymmetry_sq]
       simp

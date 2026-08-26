@@ -115,10 +115,6 @@ theorem finitePoissonBracket_skew (dF dG : R4) :
 def fisherMetric (_q : R4) : Mat4 :=
   1
 
-theorem fisherMetric_symmetric (q : R4) :
-    (fisherMetric q)ᵀ = fisherMetric q := by
-  simp [fisherMetric]
-
 theorem fisherMetric_quadratic_nonneg (q v : R4) :
     0 ≤ dot4 v ((fisherMetric q).mulVec v) := by
   dsimp [fisherMetric, dot4]
@@ -145,13 +141,5 @@ theorem quadraticCasimir2_sigmaX_sigmaYReal :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [quadraticCasimir2, sigmaX, sigmaYReal]
-
-/-! Historical names retained as compatibility aliases for the genuine
-    noncommutative quadratic Casimir owner. -/
-abbrev toyCasimir2 := quadraticCasimir2
-
-theorem toyCasimir2_sigmaX_sigmaYReal :
-    toyCasimir2 sigmaX sigmaYReal = 0 :=
-  quadraticCasimir2_sigmaX_sigmaYReal
 
 end InfoGeometry.Canonical.BiQuaternionKahlerFinite

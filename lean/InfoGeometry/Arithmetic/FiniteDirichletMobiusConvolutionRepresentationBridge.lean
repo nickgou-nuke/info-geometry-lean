@@ -81,11 +81,6 @@ theorem arithmeticShift_zeta_eq_dirichlet (N : ℕ) (f : ℝ → ℂ) :
   have : (((if n = 0 then 0 else 1 : ℕ) : ℂ)) = 1 := by simp [hn_pos.ne']
   rw [this, one_mul]
 
-/-- 🏆 THEOREM 3: Möbius shift is the arithmetic shift for the Möbius function $\mu$. -/
-theorem arithmeticShift_moebius_eq_mobius (N : ℕ) (f : ℝ → ℂ) :
-    arithmeticShift moebius N f = finiteMobiusShift N f := by
-  rfl
-
 -- =========================================================================
 -- 3. Mellin-Character Readout on Exponential Test Family
 -- =========================================================================

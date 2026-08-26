@@ -27,17 +27,6 @@ def primonPartition (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) : ℂ :=
 def kmsWeight (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n) : ℂ :=
   boltzmannFactor (primes i) β / primonPartition n primes β
 
-theorem primonPartition_eq_sum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) :
-    primonPartition n primes β =
-      ∑ i : Fin n, (primes i : ℂ) ^ (-β) := by
-  rfl
-
-theorem kmsWeight_eq_boltzmann_div_partition
-    (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n) :
-    kmsWeight n primes β i =
-      (primes i : ℂ) ^ (-β) / primonPartition n primes β := by
-  rfl
-
 theorem kmsWeight_sum_eq_one
     (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
     (hZ : primonPartition n primes β ≠ 0) :

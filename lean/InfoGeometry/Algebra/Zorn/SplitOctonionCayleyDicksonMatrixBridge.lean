@@ -16,12 +16,12 @@ open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
-abbrev Carrier := InfoGeometry.Algebra.Zorn.SplitQuaternionCore.CZ
-
-abbrev quaternionBasisUnit (a : Fin 4) : Carrier :=
+abbrev quaternionBasisUnit (a : Fin 4) :
+    InfoGeometry.Algebra.Zorn.SplitQuaternionCore.CZ :=
   InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.quaternionBasis a
 
-abbrev ellBasisUnit (a : Fin 4) : Carrier :=
+abbrev ellBasisUnit (a : Fin 4) :
+    InfoGeometry.Algebra.Zorn.SplitQuaternionCore.CZ :=
   InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.ellBasis a
 
 theorem quaternion_basis_square (a : Fin 4) :
@@ -69,7 +69,7 @@ theorem split_octonion_basis_square_packet :
   · exact kQuaternion_sq
 
 theorem split_quaternion_slice_associative
-    (X Y Z : Carrier)
+    (X Y Z : InfoGeometry.Algebra.Zorn.SplitQuaternionCore.CZ)
     (hX : X ∈ coreSubmodule) (hY : Y ∈ coreSubmodule)
     (hZ : Z ∈ coreSubmodule) :
     zMul (zMul X Y) Z = zMul X (zMul Y Z) :=

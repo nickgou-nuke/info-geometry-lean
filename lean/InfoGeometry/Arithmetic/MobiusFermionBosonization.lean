@@ -96,14 +96,6 @@ def exteriorProduct
     (S T : FState PrimeLabel) : Option (FState PrimeLabel) :=
   if Disjoint S T then some (S ∪ T) else none
 
-/-- Disjoint exterior states multiply to their union. -/
-theorem exteriorProduct_eq_some_union_of_disjoint
-    {PrimeLabel : Type*} [DecidableEq PrimeLabel]
-    {S T : FState PrimeLabel}
-    (h : Disjoint S T) :
-    exteriorProduct S T = some (S ∪ T) := by
-  simp [exteriorProduct, h]
-
 /-- Overlapping exterior states multiply to zero/none. -/
 theorem exteriorProduct_eq_none_of_not_disjoint
     {PrimeLabel : Type*} [DecidableEq PrimeLabel]

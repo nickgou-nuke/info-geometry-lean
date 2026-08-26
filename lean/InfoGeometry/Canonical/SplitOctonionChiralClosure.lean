@@ -17,8 +17,9 @@ open SplitOctonionCircularChiralClosure
 open SplitOctonionMalcev
 open SplitOctonionPolarizedJordanMalcev
 
-theorem circular_packet_available :
-    CircularChiralPacket := circularChiralPacket
+theorem circular_chiral_laws_available :
+    uPlus + uMinus =
+      (I : SplitOctonionCircularChiralClosure.Carrier) := uPlus_add_uMinus
 
 theorem raw_commutator_jacobi_defect :
     rawJacobiator

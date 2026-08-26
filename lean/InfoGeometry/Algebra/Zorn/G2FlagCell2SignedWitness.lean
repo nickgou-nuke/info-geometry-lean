@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
+import InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient
 
 namespace InfoGeometry.Algebra.Zorn.G2FlagCell2SignedWitness
 
@@ -10,6 +11,8 @@ open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
+open InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient
+open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -75,6 +78,13 @@ theorem signedWord_reverse_inv
         signedWord_nil, ih, mul_inv_rev, signedTerm_inv]
       simp
 
+theorem signedWord_reverse_inv_mem_unipotent
+    (l : List (Fin 6 × Bool)) :
+    signedWord (l.reverse.map (fun x => (x.1, !x.2))) ∈
+      unipotentSubgroup := by
+  rw [signedWord_reverse_inv]
+  exact unipotentSubgroup.inv_mem (signedWord_mem_unipotent l)
+
 /-! A proof-producing interface for cell `2`.  The matrix residual is the
 only certificate input; the quotient witness and subgroup membership are
 derived internally. -/
@@ -95,10 +105,30 @@ theorem hcell_two_signed_of_certificate
       b ∈ unipotentSubgroup ∧
         orbitEnum i = b •
           (QuotientGroup.mk
-            (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) : CarrierQuotient) := by
+            (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) :
+              G2FlagCellQuotientWitness.CarrierQuotient) := by
   refine ⟨signedWord (C.word i), signedWord_mem_unipotent _, ?_⟩
   apply quotientRepresentative_eq_left_smul_of_pc_matrix
   exact C.residual i hi
+
+theorem exact_factorization_exists_cell_two_of_certificate
+    (C : CellTwoWordCertificate) (i : Fin 189)
+    (hi : i ∈ orbitCells 2) :
+    ∃ b u : SplitOctF2Aut,
+      b ∈ unipotentSubgroup ∧ u ∈ unipotentSubgroup ∧
+        flagRepresentative i =
+          b * weylNF (orbitWeyl 2).1 (orbitWeyl 2).2 * u := by
+  let b := signedWord (C.word i)
+  have hb : b ∈ unipotentSubgroup := signedWord_mem_unipotent _
+  have hq : quotientRepresentative i =
+      b • (QuotientGroup.mk
+        (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) :
+          G2FlagCellQuotientWitness.CarrierQuotient) := by
+    apply quotientRepresentative_eq_left_smul_of_pc_matrix
+    exact C.residual i hi
+  obtain ⟨u, hu, hfac⟩ := factorization_of_quotient_witness i b
+    (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) hq
+  exact ⟨b, u, hb, hu, hfac⟩
 
 def cell2Left : Fin 189 → List (Fin 6 × Bool)
   | 3 => []
@@ -125,7 +155,7 @@ theorem hcell_two_signed (i : Fin 189) (hi : i ∈ orbitCells 2) :
       b ∈ unipotentSubgroup ∧
         orbitEnum i = b •
           (QuotientGroup.mk (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) :
-            CarrierQuotient) := by
+            G2FlagCellQuotientWitness.CarrierQuotient) := by
   have hi' : i = 3 ∨ i = 57 ∨ i = 185 ∨ i = 83 ∨ i = 96 ∨
       i = 173 ∨ i = 12 ∨ i = 122 ∨ i = 170 ∨ i = 175 ∨
       i = 55 ∨ i = 167 ∨ i = 49 ∨ i = 106 ∨ i = 79 ∨ i = 163 := by

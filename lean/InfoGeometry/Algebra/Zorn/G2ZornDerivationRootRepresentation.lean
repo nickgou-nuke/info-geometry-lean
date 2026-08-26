@@ -294,6 +294,7 @@ noncomputable def conjugateNativeDerivationEquiv
   LinearEquiv.ofBijective (conjugateNativeDerivationLinear φ)
     (conjugateNativeDerivationLinear_bijective φ)
 
+
 @[simp] theorem conjugateNativeDerivationEquiv_apply
     (φ : RealSplitOctonionAut)
     (D : ZornVectorMatrix.Derivation (R := ℝ)) :

@@ -162,4 +162,33 @@ theorem mem_mathlib_rootSpace_iff_existsUnique_scalar
   · rintro ⟨c, hc, -⟩
     exact (mem_mathlib_rootSpace_iff_exists_scalar i D).mpr ⟨c, hc⟩
 
+/-- The coefficient of a derivation in the canonical generator of a
+one-dimensional nonzero root space.  The parameter equivalence makes this
+readback independent of a choice of witness scalar. -/
+noncomputable def rootCoefficient (i : nonzeroIndex) (D : Der) : ℝ :=
+  canonicalParameterLinearEquiv.symm D i.1
+
+@[simp]
+theorem rootCoefficient_rootDerivation (i : nonzeroIndex) :
+    rootCoefficient i (rootDerivation i.1) = 1 := by
+  change (canonicalParameterLinearEquiv.symm
+    (canonicalParameterLinearEquiv (parameterUnit i.1))) i.1 = 1
+  rw [LinearEquiv.symm_apply_apply]
+  simp [parameterUnit]
+
+/-- A derivation in a nonzero root space is reconstructed from its canonical
+parameter coefficient. -/
+theorem eq_rootCoefficient_smul_of_mem_rootSpace
+    (i : nonzeroIndex) (D : Der)
+    (hD : D ∈ LieAlgebra.rootSpace axialCartanLieSubalgebra
+      (nativeRootWeight i)) :
+    D = rootCoefficient i D • rootDerivation i.1 := by
+  obtain ⟨c, hc, huniq⟩ :=
+    (mem_mathlib_rootSpace_iff_existsUnique_scalar i D).mp hD
+  have hcoeff : rootCoefficient i D = c := by
+    rw [hc]
+    simp [rootCoefficient, rootDerivation, parameterUnit]
+  rw [hcoeff]
+  exact hc
+
 end InfoGeometry.Lie.CanonicalZornMathlibRootSpace

@@ -33,7 +33,7 @@ theorem g2LongestNF_length :
 theorem g2LongestNF_word_canonical :
     toReducedWord g2LongestNF = canonicalWeylWord G2WeylElement.w0 := by
   simp [g2LongestNF, toReducedWord, reducedRotationWord, canonicalWeylWord,
-    weylElementOfNF, g2LongestNF_val]
+    g2LongestNF_val]
 
 theorem g2LongestNF_weyl_length :
     weylLength (weylElementOfNF g2LongestNF) = 6 := by

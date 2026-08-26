@@ -15,8 +15,8 @@ open InfoGeometry.Canonical.ThreeColorPolynomialYangBaxterBridge
 
 noncomputable section
 
-abbrev TopologicalColorTensor2 := ColorTensor2
-abbrev TopologicalColorTensor3 := ColorTensor3
+@[reducible] def TopologicalColorTensor2 := ColorTensor2
+@[reducible] def TopologicalColorTensor3 := ColorTensor3
 
 def topologicalRSwap (T : TopologicalColorTensor2) :
     TopologicalColorTensor2 :=

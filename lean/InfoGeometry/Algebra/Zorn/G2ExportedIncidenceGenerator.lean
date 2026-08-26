@@ -23,23 +23,21 @@ theorem casPointPerm_zero_not_preserves_incidence :
   intro h
   have hh := h 0 1
   have hc :
-      ¬ (1 ∈ incidence 0 ↔
-        casPointPermRaw 0 1 ∈ incidence (casPointPermRaw 0 0)) := by
+      ¬ (0 ∈ parabolicIncidenceData.linePoints 1 ↔
+        0 ∈ parabolicIncidenceData.linePoints 3) := by
     native_decide
   apply hc
-  simpa [parabolicCertificate, parabolicLinePoints, casPointPerm,
-    casPointPermRaw] using hh
+  simpa [casPointPerm, casPointPermRaw] using hh
 
 theorem correctedTPointPerm_not_preserves_incidence :
     ¬ PreservesIncidence correctedTPointPerm := by
   intro h
   have hh := h 0 1
   have hc :
-      ¬ (1 ∈ incidence 0 ↔
-        correctedTPointPermRaw 1 ∈ incidence (correctedTPointPermRaw 0)) := by
+      ¬ (0 ∈ parabolicIncidenceData.linePoints 1 ↔
+        28 ∈ parabolicIncidenceData.linePoints 7) := by
     native_decide
   apply hc
-  simpa [parabolicCertificate, parabolicLinePoints, correctedTPointPerm,
-    correctedTPointPermRaw] using hh
+  simpa [correctedTPointPerm, correctedTPointPermRaw] using hh
 
 end InfoGeometry.Algebra.Zorn.G2ExportedIncidenceGenerator

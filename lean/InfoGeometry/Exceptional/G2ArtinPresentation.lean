@@ -41,6 +41,20 @@ def relations : Set (FreeGroup Generator) := {relation}
 
 abbrev ArtinG2 := PresentedGroup relations
 
+def sigmaZero : ArtinG2 := PresentedGroup.of 0
+
+def sigmaOne : ArtinG2 := PresentedGroup.of 1
+
+theorem artin_relation :
+    sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne =
+      sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero := by
+  apply PresentedGroup.mk_eq_mk_of_mul_inv_mem
+  simp [relations, relation]
+
+theorem artin_relation_pow_three :
+    (sigmaZero * sigmaOne) ^ 3 = (sigmaOne * sigmaZero) ^ 3 := by
+  simpa [pow_succ, pow_two, mul_assoc] using artin_relation
+
 def simpleReflections : Generator → Equiv.Perm G2CoordinateRoot
   | 0 => s1Root
   | 1 => s2Root
@@ -84,6 +98,30 @@ noncomputable def coordinateAction : ArtinG2 →* Equiv.Perm G2CoordinateRoot :=
     rw [hr']
     exact simpleReflections_relation)
 
+@[simp] theorem coordinateAction_of (i : Generator) :
+    coordinateAction (PresentedGroup.of i) = simpleReflections i := by
+  exact PresentedGroup.toGroup.of (fun r hr => by
+    have hr' : r = relation := by
+      simpa [relations] using hr
+    rw [hr']
+    exact simpleReflections_relation)
+
+@[simp] theorem coordinateAction_sigma_zero :
+    coordinateAction (PresentedGroup.of (0 : Generator)) = s1Root := by
+  simp [simpleReflections]
+
+@[simp] theorem coordinateAction_sigma_one :
+    coordinateAction (PresentedGroup.of (1 : Generator)) = s2Root := by
+  simp [simpleReflections]
+
+@[simp] theorem coordinateAction_sigmaZero :
+    coordinateAction sigmaZero = s1Root := by
+  simp [sigmaZero, simpleReflections]
+
+@[simp] theorem coordinateAction_sigmaOne :
+    coordinateAction sigmaOne = s2Root := by
+  simp [sigmaOne, simpleReflections]
+
 def garsideWord : FreeGroup Generator :=
   FreeGroup.of 0 * FreeGroup.of 1 * FreeGroup.of 0 *
     FreeGroup.of 1 * FreeGroup.of 0 * FreeGroup.of 1
@@ -91,6 +129,12 @@ def garsideWord : FreeGroup Generator :=
 def garside : ArtinG2 :=
   PresentedGroup.of 0 * PresentedGroup.of 1 * PresentedGroup.of 0 *
     PresentedGroup.of 1 * PresentedGroup.of 0 * PresentedGroup.of 1
+
+theorem garside_eq_reverse :
+    garside =
+      PresentedGroup.of 1 * PresentedGroup.of 0 * PresentedGroup.of 1 *
+        PresentedGroup.of 0 * PresentedGroup.of 1 * PresentedGroup.of 0 := by
+  simpa [garside, sigmaZero, sigmaOne] using artin_relation
 
 theorem garsideWord_readback :
     FreeGroup.lift simpleReflections garsideWord =

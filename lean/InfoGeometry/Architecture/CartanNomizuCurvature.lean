@@ -1,37 +1,15 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
+import InfoGeometry.Architecture.CartanLieBracket
 
 noncomputable section
 
 namespace InfoGeometry.Architecture.CartanNomizu
 
+open InfoGeometry.Architecture
+
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-
-structure IsLieBracket (bracket : V → V → V) : Prop where
-  skew : ∀ x y, bracket x y = - bracket y x
-  add_left : ∀ x y z, bracket (x + y) z = bracket x z + bracket y z
-  add_right : ∀ x y z, bracket x (y + z) = bracket x y + bracket x z
-  smul_left : ∀ (c : ℝ) x y, bracket (c • x) y = c • bracket x y
-  smul_right : ∀ (c : ℝ) x y, bracket x (c • y) = c • bracket x y
-  jacobi : ∀ x y z, bracket x (bracket y z) + bracket y (bracket z x) + bracket z (bracket x y) = 0
-
-lemma bracket_zero_left (bracket : V → V → V) (h_lie : IsLieBracket bracket) (y : V) :
-    bracket 0 y = 0 := by
-  have h := h_lie.smul_left 0 0 y
-  rw [zero_smul, zero_smul] at h
-  exact h
-
-lemma bracket_zero_right (bracket : V → V → V) (h_lie : IsLieBracket bracket) (x : V) :
-    bracket x 0 = 0 := by
-  have h := h_lie.smul_right 0 x 0
-  rw [zero_smul, zero_smul] at h
-  exact h
-
-structure CartanGrading (bracket : V → V → V) (k_space p_space : Submodule ℝ V) : Prop where
-  k_k : ∀ x y, x ∈ k_space → y ∈ k_space → bracket x y ∈ k_space
-  k_p : ∀ x y, x ∈ k_space → y ∈ p_space → bracket x y ∈ p_space
-  p_p : ∀ x y, x ∈ p_space → y ∈ p_space → bracket x y ∈ k_space
 
 /-- The canonical Cartan-Nomizu Levi-Civita connection on p: ∇_X Y = (1/2) * proj_p([X, Y]). -/
 def nomizuConnection (bracket : V → V → V) (proj_p : V → V) (X Y : V) : V :=

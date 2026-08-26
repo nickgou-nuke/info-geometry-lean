@@ -62,6 +62,36 @@ theorem peirceFibrationEmbedding_injective :
   intro v1 v2 h
   exact congrArg (fun z => z.2.2.1) h
 
+/-! The dependent-sum target is not merely an upper-bound code.  Its
+    residual-fiber witness contains the original admissible basis, so the
+    fibration map is an actual equivalence. -/
+
+noncomputable def peirceFibrationEquiv :
+    AdmissibleBasis7Carrier ≃
+      Σ (p : NontrivialIdempotent),
+        Σ (x : PeircePlusFiber p), ResidualFiber p x := by
+  apply Equiv.ofBijective peirceFibrationEmbedding
+  constructor
+  · exact peirceFibrationEmbedding_injective
+  · intro z
+    rcases z with ⟨p, x, v⟩
+    rcases v with ⟨v, hv⟩
+    rcases hv with ⟨hp, hx⟩
+    refine ⟨v, ?_⟩
+    dsimp [peirceFibrationEmbedding]
+    have hp' : admissibleBasis7_first_prefix_code v = p := hp
+    apply Sigma.ext
+    · exact hp'
+    · cases hp'
+      have hx' : admissibleBasis7Second v = x := by
+        apply Subtype.ext
+        exact hx
+      apply heq_of_eq
+      apply Sigma.ext
+      · exact hx'
+      · cases hx'
+        rfl
+
 def residualCoordinates (v : AdmissibleBasis7Carrier) :
     SplitOctF2 × SplitOctF2 × SplitOctF2 × SplitOctF2 × SplitOctF2 :=
   (basisPrefix3 v, basisPrefix4 v, basisPrefix5 v, basisPrefix6 v, basisPrefix7 v)

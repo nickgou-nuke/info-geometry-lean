@@ -24,12 +24,18 @@ private theorem correctedT_eq_word :
     correctedT = swapCartanAut * (swap01Aut * (cycle012Aut * cycle012Aut)) := by
   rfl
 
+theorem correctedT_eq_word_public :
+    correctedT = swapCartanAut * (swap01Aut * (cycle012Aut * cycle012Aut)) :=
+  correctedT_eq_word
+
 private theorem correctedT_inv : correctedT⁻¹ = correctedT := by
   rw [correctedT_eq_word]
   apply inv_eq_iff_mul_eq_one.mpr
   apply automorphism_ext_of_basis
   intro i
   fin_cases i <;> rfl
+
+theorem correctedT_inv_public : correctedT⁻¹ = correctedT := correctedT_inv
 
 theorem correctedT_conj_pc1 :
     correctedT⁻¹ * pcGenerator 1 * correctedT =

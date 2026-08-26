@@ -74,6 +74,70 @@ theorem lowerChiralBasis_mul_upperChiralBasis (i j : Fin 3) :
       zornMk 0 (dot3 (Vec3.basis i) (Vec3.basis j)) 0 0 := by
   exact lowerVectorZorn_mul_upperVectorZorn _ _
 
+/-! The mixed upper-to-lower products are the first diagonal matrix-unit
+    channel, with the Kronecker delta as their complete Zorn readback. -/
+theorem upperChiralBasis_mul_lowerChiralBasis_delta (i j : Fin 3) :
+    zornMul (upperChiralBasis i) (lowerChiralBasis j) =
+      if i = j then zornMk 1 0 0 0 else zornMk 0 0 0 0 := by
+  fin_cases i <;> fin_cases j <;>
+    simp [upperChiralBasis_mul_lowerChiralBasis, dot3,
+      Vec3.basis, zornMk]
+
+/-! The reverse mixed products are the second diagonal matrix-unit channel. -/
+theorem lowerChiralBasis_mul_upperChiralBasis_delta (i j : Fin 3) :
+    zornMul (lowerChiralBasis i) (upperChiralBasis j) =
+      if i = j then zornMk 0 1 0 0 else zornMk 0 0 0 0 := by
+  fin_cases i <;> fin_cases j <;>
+    simp [lowerChiralBasis_mul_upperChiralBasis, dot3,
+      Vec3.basis, zornMk]
+
+/-! The diagonal mixed products act as the corresponding matrix units. -/
+theorem upperChiralBasis_mixed_action (i : Fin 3) :
+    zornMul
+        (zornMul (upperChiralBasis i) (lowerChiralBasis i))
+        (upperChiralBasis i) = upperChiralBasis i := by
+  fin_cases i <;>
+    simp [upperChiralBasis, lowerChiralBasis, upperVectorZorn,
+      lowerVectorZorn, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      dot3, cross3, Vec3.basis,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two] <;>
+    funext j <;> fin_cases j <;> rfl
+
+theorem lowerChiralBasis_mixed_action (i : Fin 3) :
+    zornMul
+        (zornMul (lowerChiralBasis i) (upperChiralBasis i))
+        (lowerChiralBasis i) = lowerChiralBasis i := by
+  fin_cases i <;>
+    simp [upperChiralBasis, lowerChiralBasis, upperVectorZorn,
+      lowerVectorZorn, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      dot3, cross3, Vec3.basis,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two] <;>
+    funext j <;> fin_cases j <;> rfl
+
+theorem upperChiralBasis_mixed_idempotent (i : Fin 3) :
+    zornMul
+        (zornMul (upperChiralBasis i) (lowerChiralBasis i))
+        (zornMul (upperChiralBasis i) (lowerChiralBasis i)) =
+      zornMul (upperChiralBasis i) (lowerChiralBasis i) := by
+  fin_cases i <;>
+    simp [upperChiralBasis, lowerChiralBasis, upperVectorZorn,
+      lowerVectorZorn, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      dot3, cross3, Vec3.basis, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val_two] <;>
+    funext j <;> fin_cases j <;> rfl
+
+theorem lowerChiralBasis_mixed_idempotent (i : Fin 3) :
+    zornMul
+        (zornMul (lowerChiralBasis i) (upperChiralBasis i))
+        (zornMul (lowerChiralBasis i) (upperChiralBasis i)) =
+      zornMul (lowerChiralBasis i) (upperChiralBasis i) := by
+  fin_cases i <;>
+    simp [upperChiralBasis, lowerChiralBasis, upperVectorZorn,
+      lowerVectorZorn, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      dot3, cross3, Vec3.basis, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val_two] <;>
+    funext j <;> fin_cases j <;> rfl
+
 theorem upperChiralBasis_mul_upperChiralBasis_antisymm (i j : Fin 3) :
     zornMul (upperChiralBasis i) (upperChiralBasis j) =
       -zornMul (upperChiralBasis j) (upperChiralBasis i) := by
@@ -111,6 +175,26 @@ theorem lowerChiralBasis_triple_left (i j k : Fin 3) :
       (lowerVectorZorn (Vec3.basis k)) = _
   exact upperVectorZorn_mul_lowerVectorZorn
     (-(cross3 (Vec3.basis i) (Vec3.basis j))) (Vec3.basis k)
+
+/-! The positively oriented three-plane contraction. -/
+theorem upperChiralBasis_triple_012 :
+    zornMul (zornMul (upperChiralBasis 0) (upperChiralBasis 1))
+        (upperChiralBasis 2) = zornMk 0 1 0 0 := by
+  rw [upperChiralBasis_triple_left]
+  norm_num [dot3, cross3, Vec3.basis, Fin.sum_univ_succ,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, zornMk,
+    show (0 : Fin 3) ≠ 2 by decide, show (1 : Fin 3) ≠ 2 by decide,
+    show (2 : Fin 3) ≠ 0 by decide, show (2 : Fin 3) ≠ 1 by decide]
+
+/-! The reverse-sheet contraction carries the opposite orientation sign. -/
+theorem lowerChiralBasis_triple_012 :
+    zornMul (zornMul (lowerChiralBasis 0) (lowerChiralBasis 1))
+        (lowerChiralBasis 2) = zornMk (-1) 0 0 0 := by
+  rw [lowerChiralBasis_triple_left]
+  norm_num [dot3, cross3, Vec3.basis, Fin.sum_univ_succ,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, zornMk,
+    show (0 : Fin 3) ≠ 2 by decide, show (1 : Fin 3) ≠ 2 by decide,
+    show (2 : Fin 3) ≠ 0 by decide, show (2 : Fin 3) ≠ 1 by decide]
 
 theorem upperChiralBasis_fourfold_left (i j k l : Fin 3) :
     zornMul

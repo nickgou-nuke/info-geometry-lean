@@ -207,12 +207,12 @@ theorem detZ_oneZ :
 theorem mulZ_one (X : ZornCell R) :
     mulZ X oneZ = X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
-  congr <;> simp [mulZ, oneZ]
+  simp [mulZ, oneZ]
 
 theorem one_mulZ (X : ZornCell R) :
     mulZ oneZ X = X := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
-  congr <;> simp [mulZ, oneZ]
+  simp [mulZ, oneZ]
 
 /-- Coordinate composition identity for `mulZ`. -/
 theorem detZ_mulZ (X Y : ZornCell R) :

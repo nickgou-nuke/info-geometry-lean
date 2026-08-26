@@ -27,6 +27,17 @@ def QuotientRowWitness (k : Fin 12) (i : Fin 189) : Prop :=
         (QuotientGroup.mk
           (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient)
 
+theorem exact_factorization_exists_of_quotient_row
+    (k : Fin 12) (i : Fin 189) (h : QuotientRowWitness k i) :
+    ∃ b u : SplitOctF2Aut,
+      b ∈ unipotentSubgroup ∧ u ∈ unipotentSubgroup ∧
+        flagRepresentative i =
+          b * weylNF (orbitWeyl k).1 (orbitWeyl k).2 * u := by
+  obtain ⟨b, hb, hq⟩ := h
+  obtain ⟨u, hu, hfac⟩ := factorization_of_quotient_witness i b
+    (weylNF (orbitWeyl k).1 (orbitWeyl k).2) hq
+  exact ⟨b, u, hb, hu, hfac⟩
+
 theorem quotient_row_1_45 : QuotientRowWitness 1 45 := by
   exact ⟨collect (leftFactorWord 1 45), collect_mem_unipotentSubgroup _,
     quotient_witness_cell_one_45⟩

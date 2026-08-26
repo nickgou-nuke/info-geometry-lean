@@ -34,6 +34,28 @@ theorem signedWord_mem_unipotent (l : List (Fin 6 × Bool)) :
       simp only [signedWord, List.map_cons, List.prod_cons]
       exact Subgroup.mul_mem _ (signedTerm_mem_unipotent x) ih
 
+@[simp] theorem signedWord_nil :
+    signedWord [] = 1 := by
+  rfl
+
+@[simp] theorem signedWord_cons
+    (x : Fin 6 × Bool) (l : List (Fin 6 × Bool)) :
+    signedWord (x :: l) = signedTerm x * signedWord l := by
+  rfl
+
+theorem signedWord_append
+    (l₁ l₂ : List (Fin 6 × Bool)) :
+    signedWord (l₁ ++ l₂) = signedWord l₁ * signedWord l₂ := by
+  induction l₁ with
+  | nil => simp [signedWord]
+  | cons x xs ih =>
+      simp only [List.cons_append, signedWord_cons, ih, mul_assoc]
+
+theorem signedWord_append_mem_unipotent
+    (l₁ l₂ : List (Fin 6 × Bool)) :
+    signedWord (l₁ ++ l₂) ∈ unipotentSubgroup := by
+  exact signedWord_mem_unipotent _
+
 def cell2Left : Fin 189 → List (Fin 6 × Bool)
   | 3 => []
   | 57 => [(1, true), (4, true), (5, true)]

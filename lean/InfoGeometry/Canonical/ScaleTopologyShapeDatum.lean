@@ -320,4 +320,3 @@ theorem positiveCone_jointReadout_cartanFlow
   rw [barrier_cartanFlow_invariant, logShape_cartanFlow]
 
 end InfoGeometry.Canonical.ScaleTopologyShapeDatum
-

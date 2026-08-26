@@ -117,7 +117,11 @@ noncomputable def G2OrbitFactorizationStep.toGeneric
 
 /-- Concrete G₂ consequence of a supplied predecessor certificate.  The
 certificate contains the genuine carrier-alignment work; this theorem only
-performs the induction and never enumerates the flag table. -/
+performs the induction and never enumerates the flag table.
+
+This legacy interface uses `Fin.val` as its well-founded measure.  Concrete
+certificates should prefer `G2CellPredecessorCertificate` below unless the
+export order itself has been proved to be predecessor-monotone. -/
 theorem flagRepresentative_factorization_of_predecessor_certificate
     (hbase : ∀ k i, (∀ j : Fin 189, ¬ j.val < i.val) →
       flagRepresentative i =
@@ -139,5 +143,77 @@ theorem flagRepresentative_factorization_of_predecessor_certificate
     simpa [g2FlagFactorizationTarget] using hbase k i hi
   · intro k i hi
     exact hstep k i hi
+
+/-! ## Cell-scoped, serialization-independent recursion
+
+The generated flag index is not assumed to be a traversal order.  A concrete
+certificate therefore owns its own natural-valued depth and proves that every
+non-anchor predecessor strictly lowers that depth while staying in the same
+orbit cell.  This is the preferred interface for CAS-backed factorization
+certificates.
+-/
+
+/-- Structural predecessor data for one Bruhat orbit cell.  The certificate
+contains no claim that `Fin.val` is related to the predecessor graph. -/
+structure G2CellPredecessorCertificate (k : Fin 12) where
+  depth : Fin 189 → ℕ
+  predecessor :
+    ∀ i : Fin 189, i ∈ orbitCells k → i ≠ orbitCellAnchor k → Fin 189
+  generator :
+    ∀ i : Fin 189, (hi : i ∈ orbitCells k) →
+      (hne : i ≠ orbitCellAnchor k) → Fin 8
+  predecessor_mem :
+    ∀ (i : Fin 189) (hi : i ∈ orbitCells k)
+      (hne : i ≠ orbitCellAnchor k),
+      predecessor i hi hne ∈ orbitCells k
+  predecessor_depth_lt :
+    ∀ (i : Fin 189) (hi : i ∈ orbitCells k)
+      (hne : i ≠ orbitCellAnchor k),
+      depth (predecessor i hi hne) < depth i
+  depth_zero_iff_anchor :
+    ∀ (i : Fin 189), i ∈ orbitCells k →
+      depth i = 0 ↔ i = orbitCellAnchor k
+  representative_step :
+    ∀ (i : Fin 189) (hi : i ∈ orbitCells k)
+      (hne : i ≠ orbitCellAnchor k),
+      flagRepresentative i =
+        flagGeneratorValue (generator i hi hne) *
+          flagRepresentative (predecessor i hi hne)
+  factorized_step :
+    ∀ (i : Fin 189) (hi : i ∈ orbitCells k)
+      (hne : i ≠ orbitCellAnchor k),
+      g2FlagFactorizationTarget.factorized k i =
+        flagGeneratorValue (generator i hi hne) *
+          g2FlagFactorizationTarget.factorized k (predecessor i hi hne)
+
+/-- A depth certificate turns the twelve anchor equalities into factorization
+for every representative in its certified orbit cell.  The proof is a strong
+induction on the certificate depth and is independent of the serialized flag
+index. -/
+theorem flagRepresentative_factorization_of_cell_certificate
+    (cert : ∀ k : Fin 12, G2CellPredecessorCertificate k)
+    (hbase : ∀ k : Fin 12,
+      flagRepresentative (orbitCellAnchor k) =
+        g2FlagFactorizationTarget.factorized k (orbitCellAnchor k)) :
+    ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i = g2FlagFactorizationTarget.factorized k i := by
+  intro k i hi
+  let C := cert k
+  induction hdepth : C.depth i using Nat.strong_induction_on generalizing i with
+  | h n ih =>
+      by_cases hanchor : i = orbitCellAnchor k
+      · subst i
+        exact hbase k
+      · let j : Fin 189 := C.predecessor i hi hanchor
+        have hjmem : j ∈ orbitCells k := C.predecessor_mem i hi hanchor
+        have hjlt : C.depth j < C.depth i :=
+          C.predecessor_depth_lt i hi hanchor
+        have hjlt' : C.depth j < n := by simpa [hdepth] using hjlt
+        have hj :
+            flagRepresentative j =
+              g2FlagFactorizationTarget.factorized k j :=
+          ih (C.depth j) hjlt' j hjmem rfl
+        rw [C.representative_step i hi hanchor,
+          C.factorized_step i hi hanchor, hj]
 
 end InfoGeometry.Algebra.Zorn.G2FlagFactorizationRecursion

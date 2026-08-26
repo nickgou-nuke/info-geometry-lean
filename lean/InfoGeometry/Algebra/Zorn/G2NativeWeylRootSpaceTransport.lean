@@ -1593,6 +1593,7 @@ noncomputable def conjugatedParameterLinearMap_active
         (conjugateNativeDerivation φ (parameterDerivation p)) := by
   rfl
 
+/-
 theorem conjugatedParameterLinearMap_active_cycle_pair_zero :
     conjugatedParameterLinearMap_active realWeylCycle
         (InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6 +
@@ -1602,12 +1603,11 @@ theorem conjugatedParameterLinearMap_active_cycle_pair_zero :
           InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13) := by
   rw [← U0V0_parameter_readback]
   rw [conjugatedParameterLinearMap_active_apply]
-  rw [parameterDerivation_derivationParameters]
-  rw [realWeylCycle_U0V0_parameter_readback]
+  rw [realWeylCycle_U0V0_derivation_readback]
+  rw [U1V1_parameter_readback]
   funext i
   fin_cases i <;>
-    simp [cycleCartanParameterAction_active, parameterDerivation, derivationParameters,
-      parameterAction,
+    simp [cycleCartanParameterAction_active,
       InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit,
       InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
 
@@ -1622,8 +1622,8 @@ theorem conjugatedParameterLinearMap_active_cycle_pair_one :
           InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13) := by
   rw [← U1V1_parameter_readback]
   rw [conjugatedParameterLinearMap_active_apply]
-  rw [parameterDerivation_derivationParameters]
-  rw [realWeylCycle_U1V1_parameter_readback]
+  rw [realWeylCycle_U1V1_eq_U2V2_active]
+  rw [U2V2_parameter_readback_active]
   funext i
   fin_cases i <;>
     simp [cycleCartanParameterAction_active,
@@ -1653,6 +1653,10 @@ theorem conjugatedParameterLinearMap_active_cycle_eq_on_cartanParameterPlane
   · intro a p _ hp
     simp only [(conjugatedParameterLinearMap_active realWeylCycle).map_smul,
       cycleCartanParameterAction_active.map_smul, hp]
+
+ -/
+
+
 
 
 

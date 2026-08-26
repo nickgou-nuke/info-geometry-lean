@@ -1,2 +1,3 @@
-import InfoGeometry.Spectral.Spectrum.Basic
-import InfoGeometry.Spectral.Spectrum.HomotopyBridge
+import InfoGeometry.Spectral
+
+/-! Aggregate import for the complete Lean spectral port. -/

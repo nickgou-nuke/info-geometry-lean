@@ -379,18 +379,27 @@ import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCWords
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualConcreteBridge
 import InfoGeometry.Algebra.Zorn.G2ReducedWords
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCEquiv
-import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthOne
 import InfoGeometry.Algebra.QuotientGlideInvolution
 import InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 import InfoGeometry.Algebra.Zorn.G2RootSubgroup
+import InfoGeometry.Algebra.Zorn.G2RootSubgroupBaseEquiv
 import InfoGeometry.Algebra.Zorn.G2RootIndexedResidualCoordinates
 import InfoGeometry.Algebra.Zorn.G2RootAutPC3Conjugation
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthOne
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthTwo
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthThree
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthFour
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthFive
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthSix
+import InfoGeometry.Algebra.Zorn.G2UnipotentWord6Cardinality
+import InfoGeometry.Algebra.Zorn.G2OrderedRootProduct
+import InfoGeometry.Algebra.Zorn.G2TopOrderedRootProduct
+import InfoGeometry.Algebra.Zorn.G2CanonicalResidualTopEquiv
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualCanonicalEquiv
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv
+import InfoGeometry.Algebra.Zorn.G2BruhatResidualTopEquiv
 /-!
 # InfoGeometry.Algebra.All
 

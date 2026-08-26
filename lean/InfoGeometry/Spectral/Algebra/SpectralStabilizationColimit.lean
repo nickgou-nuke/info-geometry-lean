@@ -123,6 +123,18 @@ theorem stabilizedPageFunctor_step
           (Nat.le_add_right n 1)) := by
   simp [stabilizedPageFunctor]
 
+/-- The successive maps of the transported tail are isomorphisms.  This is
+not an additional stabilization hypothesis: the tail was defined by the
+canonical transport through the stable page. -/
+theorem stabilizedPageFunctor_step_isIso
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I) (n : ℕ) :
+    IsIso ((stabilizedPageFunctor S h p).map
+      (CategoryTheory.homOfLE (Nat.le_add_right n 1))) := by
+  rw [stabilizedPageFunctor_step]
+  rw [← stabilizedPageTailTransportIso_hom S h p n (n + 1)
+    (Nat.le_add_right n 1)]
+  infer_instance
+
 /-- The stable page receives the canonical legs from the transported tail. -/
 noncomputable def stabilizedPageCocone
     (S : Stage R I) (h : BoundedPageStabilization S) (p : I) :

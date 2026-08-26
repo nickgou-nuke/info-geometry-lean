@@ -19,4 +19,18 @@ theorem canonicalResidualLengthTwo_card :
   rw [canonicalResidualExponent_card]
   decide
 
+noncomputable def canonicalResidualLengthTwoOppositeEquiv :
+    CanonicalResidualExponent .s2s1 ≃ (Fin 2 → Bool) := by
+  have hcard : Fintype.card (CanonicalResidualExponent .s2s1) =
+      Fintype.card (Fin 2 → Bool) := by
+    rw [canonicalResidualExponent_card]
+    decide
+  exact (Fintype.equivFin _).trans
+    ((finCongr hcard).trans (Fintype.equivFin _).symm)
+
+theorem canonicalResidualLengthTwoOpposite_card :
+    Fintype.card (CanonicalResidualExponent .s2s1) = 4 := by
+  rw [canonicalResidualExponent_card]
+  decide
+
 end InfoGeometry.Algebra.Zorn.G2CanonicalResidualLengthTwo

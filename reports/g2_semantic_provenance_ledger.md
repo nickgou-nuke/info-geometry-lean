@@ -24,6 +24,7 @@ promoted beyond its displayed hypotheses.
 | YELLOW | `G2FlagCellQuotientWitness.hcell_anchor` | every cell anchor has a quotient witness | anchor-only coverage | non-anchor rows remain separate obligations |
 | YELLOW | `G2IntrinsicFlagCardinality` fiber/cardinality results | cardinality follows from explicit fiber assumptions | conditional counting framework | do not infer transitivity or quotient equivalence |
 | ORANGE | `G2Fin189Certificate` | `FlagFiber ≃ Fin 189` and cardinality facts | index/cardinality carrier | does not prove quotient orbit membership |
+| GREEN | `G2FlagFactorizationProvenance.CellFactorizationSound.factorization` | derives a row factorization from an explicitly supplied soundness proposition | exact native consequence of a certificate contract | does not construct the contract or claim 189-row soundness |
 | ORANGE | `G2Fin189OrbitMembership` | orbit membership follows from a `CellFactorizationCertificate` input | proof contract / conditional bridge | certificate soundness must be constructed independently |
 | RED | `G2SchubertCalculus.structureConstants_wdvv` and related quantum claims | several theorem bodies still contain `sorry` | open proof holes, not certified quantum cohomology | exclude from certified Schubert/QH results until independently proved |
 | DEAD | any all-row owner whose leaves are closed by `revert ...; decide` | finite proposition is discharged by global enumeration | unacceptable surrogate for structural certificate | replace with native alignment theorem or explicit proof-producing data |

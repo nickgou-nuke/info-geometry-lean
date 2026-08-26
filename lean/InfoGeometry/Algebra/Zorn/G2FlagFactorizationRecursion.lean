@@ -7,12 +7,12 @@ import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Fin.Basic
 
 /-!
-# Structural recursion for flag factorizations
+# Structural recursion for selected-row factorizations
 
-This owner contains the non-enumerative induction principle needed to turn a
-predecessor certificate into a flag factorization theorem.  It deliberately
-does not assert a predecessor map for the concrete `G₂` tables: that map and
-its carrier-alignment equations are separate mathematical data.
+This owner contains the non-enumerative induction principle needed to turn an
+explicit predecessor interface into a selected-row factorization theorem. It
+deliberately does not assert a predecessor map for the concrete `G₂` tables:
+that map and its carrier-alignment equations are separate mathematical data.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2FlagFactorizationRecursion
@@ -70,6 +70,47 @@ theorem factorization_of_predecessor
           exact hmin)
         rw [hr, hf, ih j hji]
 
+/-! The following API uses an explicit natural-valued depth rather than the
+serialization order of a finite index.  It is intentionally additive: the
+legacy `Fin.val` API below remains available for existing consumers, while
+new concrete certificates can migrate to this soundness boundary. -/
+
+structure DepthFactorizationStep
+    {G K ι : Type*} [Group G] (T : FactorizationTarget G K ι)
+    (depth : ι → ℕ) (k : K) (n : ι) where
+  predecessor : ι
+  generator : G
+  predecessor_depth_lt : depth predecessor < depth n
+  representative_step :
+    T.representative k n =
+      generator * T.representative k predecessor
+  factorized_step :
+    T.factorized k n =
+      generator * T.factorized k predecessor
+
+theorem factorization_of_depth
+    {G K ι : Type*} [Group G]
+    (T : FactorizationTarget G K ι)
+    (depth : ι → ℕ)
+    (hbase : ∀ k i, depth i = 0 →
+      T.representative k i = T.factorized k i)
+    (hstep : ∀ k i, depth i ≠ 0 →
+      DepthFactorizationStep T depth k i) :
+    ∀ k i, T.representative k i = T.factorized k i := by
+  intro k i
+  induction h : depth i using Nat.strong_induction_on generalizing i with
+  | h n ih =>
+      by_cases hzero : n = 0
+      · exact hbase k i (h.trans hzero)
+      · obtain ⟨j, g, hlt, hrep, hfac⟩ := hstep k i (by
+          intro hi
+          exact hzero (h.symm.trans hi))
+        have hlt' : depth j < n := by
+          simpa [h] using hlt
+        have hpred : T.representative k j = T.factorized k j :=
+          ih (depth j) hlt' j rfl
+        rw [hrep, hfac, hpred]
+
 open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
@@ -86,6 +127,57 @@ noncomputable def g2FlagFactorizationTarget :
     collect (leftFactorWord k i) *
       weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
         collect (rightFactorWord k i)
+
+structure G2CellPredecessorCertificate (k : Fin 12) where
+  depth : Fin 189 → ℕ
+  predecessor : ∀ i, i ∈ orbitCells k → i ≠ orbitCellAnchor k → Fin 189
+  predecessor_mem : ∀ i (hi : i ∈ orbitCells k) (hne : i ≠ orbitCellAnchor k),
+    predecessor i hi hne ∈ orbitCells k
+  predecessor_depth_lt : ∀ i (hi : i ∈ orbitCells k)
+    (hne : i ≠ orbitCellAnchor k),
+    depth (predecessor i hi hne) < depth i
+  depth_zero_iff_anchor : ∀ i, i ∈ orbitCells k →
+    (depth i = 0 ↔ i = orbitCellAnchor k)
+  base_sound :
+    flagRepresentative (orbitCellAnchor k) =
+      g2FlagFactorizationTarget.factorized k (orbitCellAnchor k)
+  generator : ∀ i, i ∈ orbitCells k → i ≠ orbitCellAnchor k → Fin 8
+  representative_step : ∀ i (hi : i ∈ orbitCells k)
+    (hne : i ≠ orbitCellAnchor k),
+    flagRepresentative i =
+      flagGeneratorValue (generator i hi hne) *
+        flagRepresentative (predecessor i hi hne)
+  factorized_step : ∀ i (hi : i ∈ orbitCells k)
+    (hne : i ≠ orbitCellAnchor k),
+    g2FlagFactorizationTarget.factorized k i =
+      flagGeneratorValue (generator i hi hne) *
+        g2FlagFactorizationTarget.factorized k (predecessor i hi hne)
+
+theorem flagRepresentative_factorization_of_cell_certificate
+    (C : G2CellPredecessorCertificate k) :
+    ∀ i, i ∈ orbitCells k →
+      flagRepresentative i = g2FlagFactorizationTarget.factorized k i := by
+  intro i hi
+  induction h : C.depth i using Nat.strong_induction_on generalizing i with
+  | h n ih =>
+      by_cases hzero : n = 0
+      · have hanchor : i = orbitCellAnchor k :=
+          (C.depth_zero_iff_anchor i hi).mp (h.trans hzero)
+        simpa [hanchor] using C.base_sound
+      · have hne : i ≠ orbitCellAnchor k := by
+          intro hanchor
+          have : C.depth i = 0 := by simpa [hanchor] using
+            (C.depth_zero_iff_anchor i hi).mpr hanchor
+          exact hzero (h.symm.trans this)
+        let j := C.predecessor i hi hne
+        have hj : j ∈ orbitCells k := C.predecessor_mem i hi hne
+        have hlt : C.depth j < n := by
+          simpa [h] using C.predecessor_depth_lt i hi hne
+        have hpred : flagRepresentative j =
+            g2FlagFactorizationTarget.factorized k j :=
+          ih (C.depth j) hlt j hj rfl
+        rw [C.representative_step i hi hne,
+          C.factorized_step i hi hne, hpred]
 
 /-/ The concrete certificate required to connect an orbit cell to the
 generic recursion.  Producing an inhabitant is the CAS-backed mathematical

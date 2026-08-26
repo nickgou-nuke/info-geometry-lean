@@ -2,11 +2,11 @@ import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
 
 /-!
-# Native concrete Bruhat-orbit certificate
+# Native conditional orbit-membership assembly
 
-This owner packages the exact finite certificate needed to turn the 189-word
-quotient enumeration into a concrete twelve-cell cover.  The orbit-membership
-field is intentionally explicit: the word table and its partition do not by
+This owner packages the explicit hypotheses needed to turn the 189-word
+quotient enumeration into a concrete twelve-cell cover. The orbit-membership
+premise is intentionally explicit: the word table and its partition do not by
 themselves prove that every word lies in the claimed quotient orbit.
 -/
 

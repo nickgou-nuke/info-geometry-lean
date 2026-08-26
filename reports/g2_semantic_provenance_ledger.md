@@ -25,6 +25,8 @@ promoted beyond its displayed hypotheses.
 | GREEN | `G2FlagQuotientProvenance.exact_factorization_exists_of_quotient_row` | quotient witness implies existential exact `U·W·U` factorization | native algebraic consequence | right factor is existential, not exported raw data |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_one` | all four indices in cell `1` have quotient witnesses | cell-local coverage | does not cover cells `2`–`11` |
 | DEAD/REMOVED | `G2FlagCell2SignedWitness.hcell_two_signed` | former cell `2` coverage theorem used 16 index cases and per-leaf `decide` | brute-force table proof removed from the owner | replace only with a native signed-word certificate or proved recursive/coordinate theorem |
+| YELLOW | `G2FlagCell2SignedWitness.CellTwoWordCertificate` | stores signed words and explicit matrix residual witnesses for cell `2` | proof-producing certificate interface | certificate data and residual equalities still require independent construction |
+| GREEN | `G2FlagCell2SignedWitness.hcell_two_signed_of_certificate` | derives quotient cell witness from `CellTwoWordCertificate` | native consequence of explicit matrix hypotheses | does not prove the certificate itself |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_anchor` | every cell anchor has a quotient witness | anchor-only coverage | non-anchor rows remain separate obligations |
 | YELLOW | `G2IntrinsicFlagCardinality` fiber/cardinality results | cardinality follows from explicit fiber assumptions | conditional counting framework | do not infer transitivity or quotient equivalence |
 | ORANGE | `G2Fin189Certificate` | `FlagFiber ≃ Fin 189` and cardinality facts | index/cardinality carrier | does not prove quotient orbit membership |

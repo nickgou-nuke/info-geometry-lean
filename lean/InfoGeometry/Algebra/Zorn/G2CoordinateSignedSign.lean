@@ -25,6 +25,6 @@ theorem isPositive_signedRootCoordinate_iff
   rcases r with ⟨b, α⟩
   cases b <;> cases α <;>
     simp [isPositive, signedRootCoordinate, positiveRootInFullCarrier,
-      phiMinus, G2Roots.phiPlus, rootCoordinates]
+      G2Roots.phiPlus, rootCoordinates]
 
 end InfoGeometry.Algebra.Zorn.G2CoordinateSignedSign

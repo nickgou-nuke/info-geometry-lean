@@ -290,7 +290,7 @@ theorem upperVectorZorn_mul_upperVectorZorn (x y : Vec3) :
       lowerVectorZorn (cross3 x y) := by
   ext i <;>
     simp [upperVectorZorn, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
+      zornX, zornY, dot3, cross3] ;
     try fin_cases i <;>
     simp
 
@@ -299,7 +299,7 @@ theorem lowerVectorZorn_mul_lowerVectorZorn (x y : Vec3) :
       upperVectorZorn (-(cross3 x y)) := by
   ext i <;>
     simp [upperVectorZorn, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
+      zornX, zornY, dot3, cross3] ;
     try fin_cases i <;>
     simp
 
@@ -309,7 +309,7 @@ theorem upperVectorZorn_add_mul_reverse_zero (x y : Vec3) :
   rw [upperVectorZorn_mul_upperVectorZorn,
     upperVectorZorn_mul_upperVectorZorn]
   ext i <;>
-    simp [lowerVectorZorn, zornMk] <;>
+    simp [lowerVectorZorn, zornMk] ;
     try fin_cases i <;>
     simp [cross3] <;>
     ring
@@ -321,7 +321,7 @@ theorem upperVectorZorn_sub_mul_reverse_eq_cross (x y : Vec3) :
   rw [upperVectorZorn_mul_upperVectorZorn,
     upperVectorZorn_mul_upperVectorZorn]
   ext i <;>
-    simp [lowerVectorZorn, zornMk, sub_eq_add_neg] <;>
+    simp [lowerVectorZorn, zornMk, sub_eq_add_neg] ;
     try fin_cases i <;>
     simp [cross3] <;>
     ring
@@ -332,7 +332,7 @@ theorem lowerVectorZorn_add_mul_reverse_zero (x y : Vec3) :
   rw [lowerVectorZorn_mul_lowerVectorZorn,
     lowerVectorZorn_mul_lowerVectorZorn]
   ext i <;>
-    simp [upperVectorZorn, zornMk] <;>
+    simp [upperVectorZorn, zornMk] ;
     try fin_cases i <;>
     simp [cross3] <;>
     ring
@@ -344,7 +344,7 @@ theorem lowerVectorZorn_sub_mul_reverse_eq_cross (x y : Vec3) :
   rw [lowerVectorZorn_mul_lowerVectorZorn,
     lowerVectorZorn_mul_lowerVectorZorn]
   ext i <;>
-    simp [upperVectorZorn, zornMk, sub_eq_add_neg] <;>
+    simp [upperVectorZorn, zornMk, sub_eq_add_neg] ;
     try fin_cases i <;>
     simp [cross3] <;>
     ring
@@ -483,20 +483,20 @@ end InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 namespace ZornVectorMatrixExplicit
 
-abbrev Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
-abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
-abbrev dot3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3
-abbrev cross3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3
-abbrev zornMk := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMk
-abbrev zornOne := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornOne
-abbrev zornTrace := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornTrace
-abbrev zornNorm := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
-abbrev zornConj := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj
-abbrev zornMul := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
-abbrev scalarZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.scalarZorn
-abbrev paravectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.paravectorZorn
-abbrev upperVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.upperVectorZorn
-abbrev lowerVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.lowerVectorZorn
+@[reducible] def Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
+@[reducible] def ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
+@[reducible] def dot3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3
+@[reducible] def cross3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3
+@[reducible] def zornMk := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMk
+@[reducible] def zornOne := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornOne
+@[reducible] def zornTrace := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornTrace
+@[reducible] def zornNorm := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
+@[reducible] def zornConj := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj
+@[reducible] def zornMul := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
+@[reducible] def scalarZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.scalarZorn
+@[reducible] def paravectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.paravectorZorn
+@[reducible] def upperVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.upperVectorZorn
+@[reducible] def lowerVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.lowerVectorZorn
 
 @[simp] theorem dot3_comm (u v : Vec3) :
     dot3 u v = dot3 v u :=

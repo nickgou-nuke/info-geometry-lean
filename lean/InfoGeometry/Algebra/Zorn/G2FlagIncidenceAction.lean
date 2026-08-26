@@ -13,11 +13,11 @@ namespace InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 
 open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 
-abbrev Flag := G2HexagonIncidence.Flag parabolicCertificate
+abbrev Flag := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicIncidenceData
 
 def PreservesIncidence (π : Equiv.Perm HexPoint) : Prop :=
-  ∀ p l, p ∈ parabolicCertificate.linePoints l ↔
-    π p ∈ parabolicCertificate.linePoints (π l)
+  ∀ p l, p ∈ G2HexagonIncidence.parabolicIncidenceData.linePoints l ↔
+    π p ∈ G2HexagonIncidence.parabolicIncidenceData.linePoints (π l)
 
 def flagMap (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) : Flag → Flag
   | ⟨p, ⟨l, h⟩⟩ => ⟨π p, ⟨π l, (hπ p l).mp h⟩⟩

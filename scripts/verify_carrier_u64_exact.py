@@ -231,11 +231,19 @@ def gap_pc_row_formulas():
         ["gap", "-q", "scripts/export_carrier_pc_rows.g"], text=True)
     rows = {}
     for line in output.splitlines():
-        match = re.fullmatch(r"PC_ROW_(\d)_(\d)=\s*(\[.*\])", line.strip())
+        # `export_carrier_pc_rows.g` is the canonical Lean-aligned exporter:
+        # one line contains all eight row supports as `PCROW i r1;...;r8`.
+        match = re.fullmatch(r"PCROW ([1-6]) ([0-9,;]*)", line.strip())
         if match:
-            generator, row = (int(match.group(1)), int(match.group(2)))
-            rows.setdefault(generator, {})[row] = tuple(
-                column - 1 for column in ast.literal_eval(match.group(3)))
+            generator = int(match.group(1))
+            row_supports = []
+            for support in match.group(2).split(";"):
+                row_supports.append(tuple(
+                    int(column) - 1 for column in support.split(",") if column))
+            if len(row_supports) != 8:
+                raise RuntimeError("malformed GAP PC row export")
+            rows[generator] = {
+                row: row_supports[row - 1] for row in range(1, 9)}
     if set(rows) != set(range(1, 7)) or any(set(r) != set(range(1, 9)) for r in rows.values()):
         raise RuntimeError("incomplete GAP PC row export")
     return {f"p{i}": tuple(rows[i][row] for row in range(1, 9))
@@ -279,23 +287,19 @@ def pc_word(exponents):
     result = I8.copy()
     for i, exponent in enumerate(exponents, 1):
         for _ in range(exponent):
+            # These exponent vectors are emitted by GAP in GAP word order.
+            # The separate Lean transport verifier reverses this product when
+            # applying `autMatrix`; do not conflate the two conventions here.
             result = (result @ pc[f"p{i}"]) % 2
     return result
 
-pc_conjugation_relations = {
-    (2,1): (1,0,1,1,0,1), (3,1): (1,0,0,0,0,1),
-    (3,2): (0,1,0,0,0,0), (4,1): (1,0,0,0,0,0),
-    (4,2): (0,1,0,0,0,1), (4,3): (0,0,1,0,0,0),
-    (5,1): (1,0,0,1,0,0), (5,2): (0,1,0,0,0,1),
-    (5,3): (0,0,1,0,0,1), (5,4): (0,0,0,1,0,0),
-    (6,1): (1,0,0,0,0,0), (6,2): (0,1,0,0,0,0),
-    (6,3): (0,0,1,0,0,0), (6,4): (0,0,0,1,0,0),
-    (6,5): (0,0,0,0,1,0),
-}
-for (i, j), exponents in pc_conjugation_relations.items():
-    lhs = (inv_mod2(pc[f"p{i}"]) @ pc[f"p{j}"] @ pc[f"p{i}"]) % 2
-    assert np.array_equal(lhs, pc_word(exponents))
-print("PC conjugation relations: PASS")
+orientation = subprocess.run(
+    ["python3", "scripts/verify_lean_word_orientation_cas.py"],
+    check=True, capture_output=True, text=True,
+)
+if "PCCONJ_ALL_15_FIXED_LEAN_BASIS=PASS" not in orientation.stdout:
+    raise AssertionError("fixed-Lean-basis conjugation transport failed")
+print("PC conjugation relations: FIXED_LEAN_BASIS_PASS")
 
 print("The symbolic identities above are the CAS certificate.")
 print("No finite-carrier word enumeration is used by this verifier.")

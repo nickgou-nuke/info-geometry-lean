@@ -1,11 +1,11 @@
 import InfoGeometry.Algebra.Zorn.G2CASFactorizationProbe
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 
 namespace InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport
 
 open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
 open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
-open InfoGeometry.Algebra.Zorn.G2ConcreteBruhatOrbitCertificate
 open InfoGeometry.Algebra.Zorn.G2BNPair
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
@@ -37,7 +37,8 @@ theorem cell_one_quotient_witness
       b ∈ unipotentSubgroup ∧
         quotientRepresentative i =
           b • (QuotientGroup.mk
-            (weylNF (orbitWeyl 1).1 (orbitWeyl 1).2) : CarrierQuotient) := by
+            (weylNF (orbitWeyl 1).1 (orbitWeyl 1).2) :
+              G2FlagCellQuotientWitness.CarrierQuotient) := by
   obtain ⟨e, he⟩ := cell_one_left_quotient_matrix i hi
   let b := collect (leftFactorWord 1 i)
   refine ⟨b, collect_mem_unipotentSubgroup _, ?_⟩
@@ -63,7 +64,8 @@ theorem all_cells_quotient_witness
       b ∈ unipotentSubgroup ∧
         quotientRepresentative i =
           b • (QuotientGroup.mk
-            (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient) := by
+            (weylNF (orbitWeyl k).1 (orbitWeyl k).2) :
+              G2FlagCellQuotientWitness.CarrierQuotient) := by
   obtain ⟨e, he⟩ := all_cells_left_quotient_matrix k i hi
   let b := collect (leftFactorWord k i)
   refine ⟨b, collect_mem_unipotentSubgroup _, ?_⟩
@@ -76,7 +78,8 @@ theorem all_cells_orbitEnum_hcell
       b ∈ unipotentSubgroup ∧
         orbitEnum i = b •
           (QuotientGroup.mk
-            (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient) := by
+            (weylNF (orbitWeyl k).1 (orbitWeyl k).2) :
+              G2FlagCellQuotientWitness.CarrierQuotient) := by
   exact all_cells_quotient_witness k i hi
 
 theorem all_cells_representative_mem

@@ -14,6 +14,7 @@ open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+open InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

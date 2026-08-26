@@ -23,8 +23,8 @@ noncomputable section
 
 namespace InfoGeometry.Topology.ArtinMonodromyPin55
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev ArtinWord := List ℕ
+@[reducible] def M2C := Matrix (Fin 2) (Fin 2) ℂ
+@[reducible] def ArtinWord := List ℕ
 
 instance : Monoid ArtinWord where
   mul := List.append
@@ -38,8 +38,8 @@ inductive CentralizerAtom where
   | minusI
   deriving DecidableEq, Repr
 
-abbrev CentralSign := CentralizerAtom
-abbrev CentralSignAtom := CentralizerAtom
+@[reducible] def CentralSign := CentralizerAtom
+@[reducible] def CentralSignAtom := CentralizerAtom
 
 def cmul : CentralizerAtom → CentralizerAtom → CentralizerAtom
   | .plusI, b => b
@@ -80,7 +80,7 @@ def centralizerValue : CentralizerAtom → M2C
   | .plusI => 1
   | .minusI => -1
 
-abbrev centralSignValue := centralizerValue
+@[reducible] def centralSignValue := centralizerValue
 
 @[simp] theorem centralizerValue_plusI : centralizerValue .plusI = (1 : M2C) := rfl
 @[simp] theorem centralizerValue_minusI : centralizerValue .minusI = -(1 : M2C) := rfl
@@ -107,7 +107,7 @@ theorem centralSign_atom_sq (z : CentralSignAtom) :
 def IsNfoldRootOfCentralSign (n : ℕ) (A : M2C) : Prop :=
   A ^ n = (1 : M2C) ∨ A ^ n = -(1 : M2C)
 
-abbrev IsNfoldRootOfCentralizer := IsNfoldRootOfCentralSign
+@[reducible] def IsNfoldRootOfCentralizer := IsNfoldRootOfCentralSign
 
 theorem isNfoldRootOfCentralizer_iff_exists_atom (n : ℕ) (A : M2C) :
     IsNfoldRootOfCentralizer n A ↔
@@ -166,7 +166,7 @@ theorem centralFromWinding_add (m n : ℕ) :
 def artinParitySign (w : ArtinWord) : CentralizerAtom :=
   centralFromWinding w.length
 
-abbrev artinCentralMonodromy := artinParitySign
+@[reducible] def artinCentralMonodromy := artinParitySign
 
 @[simp] theorem artinParitySign_append (u v : ArtinWord) :
     artinParitySign (u ++ v) = artinParitySign u * artinParitySign v := by
@@ -180,14 +180,13 @@ def artinParitySignHom : ArtinWord →* CentralizerAtom where
     rfl
   map_mul' := artinParitySign_append
 
-abbrev artinParitySignMonoidHom := artinParitySignHom
+@[reducible] def artinParitySignMonoidHom := artinParitySignHom
 
-structure NFoldCentralWinding (n : ℕ) (target : CentralizerAtom) where
-  winding : ℕ
-  hits_target : centralFromWinding (n * winding) = target
+def NFoldCentralWinding (n : ℕ) (target : CentralizerAtom) : Prop :=
+  ∃ winding : ℕ, centralFromWinding (n * winding) = target
 
-abbrev NFoldCentralRoot := NFoldCentralWinding
-abbrev NFoldWindingDatum := NFoldCentralWinding
+@[reducible] def NFoldCentralRoot := NFoldCentralWinding
+@[reducible] def NFoldWindingDatum := NFoldCentralWinding
 
 def centralizerPinValue (c : CentralizerAtom) :
     InfoGeometry.Clifford.Clifford55.Pin55 :=

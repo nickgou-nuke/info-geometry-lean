@@ -62,6 +62,11 @@ theorem symplecticForm_skew
   exact FreudenthalCharge.symplectic_form_skew
     h3zornCubicJordanDatum Q₁ Q₂
 
+@[simp] theorem quarticInvariant_zeroCharge :
+    quarticInvariant (zeroCharge (H3Zorn ℝ)) = 0 := by
+  exact FreudenthalCharge.quarticInvariant_zeroCharge
+    h3zornCubicJordanDatum H3Zorn.normCubic_zero adjointQuad_zero
+
 def scalarCharge (α β : ℝ) : FreudenthalCharge (H3Zorn ℝ) where
   alpha := α
   beta := β
@@ -93,6 +98,34 @@ theorem quarticInvariant_scalarCharge (α β : ℝ) :
     H3Zorn.traceBilin_zero_left]
   ring_nf
 
+/- A scalar charge is Freudenthal-regular exactly when both scalar
+   coordinates are nonzero. -/
+theorem regular_scalarCharge_iff (α β : ℝ) :
+    Regular (scalarCharge α β) ↔ α ≠ 0 ∧ β ≠ 0 := by
+  unfold Regular FreudenthalRegular
+  change quarticInvariant (scalarCharge α β) ≠ 0 ↔ α ≠ 0 ∧ β ≠ 0
+  rw [quarticInvariant_scalarCharge]
+  constructor
+  · intro h
+    have hprod : α * β ≠ 0 := by
+      intro hz
+      apply h
+      simp [hz]
+    exact mul_ne_zero_iff.mp hprod
+  · rintro ⟨hα, hβ⟩
+    exact pow_ne_zero 2 (mul_ne_zero hα hβ)
+
+theorem boundary_scalarCharge_iff (α β : ℝ) :
+    Boundary (scalarCharge α β) ↔
+      (α = 0 ∨ β = 0) ∧ (α ≠ 0 ∨ β ≠ 0) := by
+  unfold Boundary FreudenthalBoundary
+  change
+    quarticInvariant (scalarCharge α β) = 0 ∧
+      scalarCharge α β ≠ zeroCharge (H3Zorn ℝ) ↔ _
+  rw [quarticInvariant_scalarCharge]
+  by_cases hα : α = 0 <;> by_cases hβ : β = 0 <;>
+    simp [hα, hβ, scalarCharge, zeroCharge]
+
 theorem quarticInvariant_electricCharge (α : ℝ) (X : H3Zorn ℝ) :
     quarticInvariant (electricCharge α X) =
       -4 * (α * H3Zorn.normCubic X) := by
@@ -105,6 +138,24 @@ theorem quarticInvariant_electricCharge (α : ℝ) (X : H3Zorn ℝ) :
     H3Zorn.traceBilin_zero_right, H3Zorn.traceBilin_zero_right]
   ring
 
+theorem regular_electricCharge_iff (α : ℝ) (X : H3Zorn ℝ) :
+    Regular (electricCharge α X) ↔
+      α ≠ 0 ∧ H3Zorn.normCubic X ≠ 0 := by
+  unfold Regular FreudenthalRegular
+  change quarticInvariant (electricCharge α X) ≠ 0 ↔ _
+  rw [quarticInvariant_electricCharge]
+  constructor
+  · intro h
+    constructor
+    · intro hα
+      apply h
+      simp [hα]
+    · intro hN
+      apply h
+      simp [hN]
+  · rintro ⟨hα, hN⟩
+    exact mul_ne_zero (by norm_num : (-4 : ℝ) ≠ 0) (mul_ne_zero hα hN)
+
 theorem quarticInvariant_magneticCharge (β : ℝ) (Y : H3Zorn ℝ) :
     quarticInvariant (magneticCharge β Y) =
       -4 * (β * H3Zorn.normCubic Y) := by
@@ -116,6 +167,24 @@ theorem quarticInvariant_magneticCharge (β : ℝ) (Y : H3Zorn ℝ) :
   rw [H3Zorn.normCubic_zero, adjointQuad_zero,
     H3Zorn.traceBilin_zero_left, H3Zorn.traceBilin_zero_left]
   ring_nf
+
+theorem regular_magneticCharge_iff (β : ℝ) (Y : H3Zorn ℝ) :
+    Regular (magneticCharge β Y) ↔
+      β ≠ 0 ∧ H3Zorn.normCubic Y ≠ 0 := by
+  unfold Regular FreudenthalRegular
+  change quarticInvariant (magneticCharge β Y) ≠ 0 ↔ _
+  rw [quarticInvariant_magneticCharge]
+  constructor
+  · intro h
+    constructor
+    · intro hβ
+      apply h
+      simp [hβ]
+    · intro hN
+      apply h
+      simp [hN]
+  · rintro ⟨hβ, hN⟩
+    exact mul_ne_zero (by norm_num : (-4 : ℝ) ≠ 0) (mul_ne_zero hβ hN)
 
 theorem cubicNorm_from_quartic (X : H3Zorn ℝ) :
     H3Zorn.normCubic X =

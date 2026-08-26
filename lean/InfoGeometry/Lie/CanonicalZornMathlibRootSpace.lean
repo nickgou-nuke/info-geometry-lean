@@ -19,7 +19,7 @@ open InfoGeometry.Lie.CanonicalZornCartanAdjointAction
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 
-abbrev Der := CanonicalZornCartanRootSystem.Der
+@[reducible] def Der := CanonicalZornCartanRootSystem.Der
 
 theorem mathlib_rootSpace_eq_span_rootDerivation (i : nonzeroIndex) :
     LieAlgebra.rootSpace axialCartanLieSubalgebra (nativeRootWeight i) =

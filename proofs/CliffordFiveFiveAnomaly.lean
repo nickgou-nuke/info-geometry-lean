@@ -74,11 +74,12 @@ theorem osp_spatial_supersymmetry
 /-- Concrete active atom: the external `osp` idea has a checked `2×2` model. -/
 theorem concrete_osp_atom
     {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (S : Clifford55AnomalyOSP.OSpSurface (V := V)) :
+    (S : Clifford55AnomalyOSP.OSpSurface (V := V))
+    (hS : InfoGeometry.Algebra.OSp12.OperatorSurfaceLaws S) :
     S.G1 * S.G1 = S.Ep ∧
       S.G1 * S.G1 + S.G1 * S.G1 = (2 : ℝ) • S.Ep := by
-  exact ⟨Clifford55AnomalyOSP.osp_G1_square S,
-    Clifford55AnomalyOSP.osp_G1_anticommutator S⟩
+  exact ⟨Clifford55AnomalyOSP.osp_G1_square S hS,
+    Clifford55AnomalyOSP.osp_G1_anticommutator S hS⟩
 
 /-- Consolidated finite `Cl(5,5)` anomaly arithmetic. -/
 theorem clifford_five_five_anomaly_arithmetic :

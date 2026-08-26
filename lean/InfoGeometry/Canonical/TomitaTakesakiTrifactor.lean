@@ -163,15 +163,15 @@ open TrifactorDecomposition
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
 /-- Tomita `+` sector: modular-flow/orientation-preserving readout. -/
-abbrev modularFlowSector (T : R) : R :=
+def modularFlowSector (T : R) : R :=
   P_plus T
 
 /-- Tomita `-` sector: mirror/conjugation readout. -/
-abbrev modularMirrorSector (T : R) : R :=
+def modularMirrorSector (T : R) : R :=
   P_minus T
 
 /-- Tomita `0` sector: centralizer/boundary-degenerate readout. -/
-abbrev modularBoundarySector (T : R) : R :=
+def modularBoundarySector (T : R) : R :=
   P_zero T
 
 /--

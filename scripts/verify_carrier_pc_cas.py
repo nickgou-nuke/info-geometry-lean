@@ -133,7 +133,10 @@ def pc_word(exponents):
     result = identity.copy()
     for matrix, exponent in zip(pc, exponents):
         for _ in range(exponent):
-            result = (result @ matrix) % 2
+            # Lean's `autMatrix` is an anti-homomorphism.  Its image of
+            # `pcWord` is therefore the left-action/prepend order
+            # C5 * ... * C0, matching Lean's `matrixWord` definition.
+            result = (matrix @ result) % 2
     return result
 
 def matrix_inverse_from_order(matrix):

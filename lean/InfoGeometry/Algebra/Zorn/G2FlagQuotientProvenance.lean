@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient
 
 /-!
 # Provenance-safe quotient row witnesses
@@ -17,6 +18,7 @@ open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
 open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+open InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient
 
 def QuotientRowWitness (k : Fin 12) (i : Fin 189) : Prop :=
   ∃ b : SplitOctF2Aut,
@@ -57,5 +59,13 @@ theorem quotient_cell_zero
     simpa [orbitCells, flagCells, orbitCellAnchor] using hi
   subst i
   exact quotient_anchor 0
+
+theorem exact_factorization_exists_cell_one
+    (i : Fin 189) (hi : i ∈ orbitCells 1) :
+    ∃ b u : SplitOctF2Aut,
+      b ∈ unipotentSubgroup ∧ u ∈ unipotentSubgroup ∧
+        flagRepresentative i =
+          b * weylNF (orbitWeyl 1).1 (orbitWeyl 1).2 * u := by
+  exact cell_one_factorization_exists i hi
 
 end InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance

@@ -35,6 +35,30 @@ open InfoGeometry.Algebra.Zorn.G2CanonicalWeylWords
 
 abbrev ZeroBitPCExponent := {e : PCExponent // e 0 = false}
 
+noncomputable def zeroBitPCExponentEquiv :
+    ZeroBitPCExponent ≃ (Fin 5 → Bool) where
+  toFun e i := e.1 i.succ
+  invFun f := ⟨fun i => Fin.cases false (fun j => f j) i, by rfl⟩
+  left_inv e := by
+    apply Subtype.ext
+    funext i
+    exact Fin.cases (by simp [e.2]) (fun j => rfl) i
+  right_inv f := by
+    funext i
+    rfl
+
+@[simp] theorem zeroBitPCExponentEquiv_apply
+    (e : ZeroBitPCExponent) (i : Fin 5) :
+    zeroBitPCExponentEquiv e i = e.1 i.succ := rfl
+
+@[simp] theorem zeroBitPCExponentEquiv_symm_apply
+    (f : Fin 5 → Bool) (i : Fin 6) :
+    (zeroBitPCExponentEquiv.symm f).1 i = Fin.cases false (fun j => f j) i := rfl
+
+theorem zeroBitPCExponentEquiv_symm_apply_succ
+    (f : Fin 5 → Bool) (i : Fin 5) :
+    (zeroBitPCExponentEquiv.symm f).1 i.succ = f i := rfl
+
 /-- Concrete parametrization of the corrected simple residual subgroup.
 This is intentionally a five-free-bit PC parametrization, not an inversion-root
 parametrization: the latter has cardinality eight for this Weyl parameter. -/
@@ -59,6 +83,28 @@ noncomputable def correctedSimpleResidualEquiv :
     refine ⟨⟨e, he⟩, ?_⟩
     apply Subtype.ext
     exact hxe
+
+/-- Coordinate form of the corrected simple residual equivalence. -/
+noncomputable def correctedSimpleResidualCoordinateEquiv :
+    (Fin 5 → Bool) ≃ residualSubgroup (2, true) :=
+  zeroBitPCExponentEquiv.symm.trans correctedSimpleResidualEquiv
+
+theorem correctedSimpleResidualCoordinateEquiv_apply
+    (f : Fin 5 → Bool) :
+    (correctedSimpleResidualCoordinateEquiv f).1 =
+      G2TwoSylowSubgroup.pcWord (zeroBitPCExponentEquiv.symm f).1 := rfl
+
+theorem correctedSimpleResidualCoordinateEquiv_coordinate_readback
+    (f : Fin 5 → Bool) (i : Fin 5) :
+    (zeroBitPCExponentEquiv
+      (correctedSimpleResidualEquiv.symm
+        (correctedSimpleResidualCoordinateEquiv f))) i = f i := by
+  simpa [correctedSimpleResidualCoordinateEquiv] using
+    congrFun (zeroBitPCExponentEquiv.apply_symm_apply f) i
+
+theorem correctedSimpleResidualCoordinateEquiv_card :
+    Fintype.card (Fin 5 → Bool) = 32 := by
+  simp
 
 theorem correctedSimpleResidual_card_eq_pow_five :
     Nat.card (residualSubgroup (2, true)) = 2 ^ 5 := by

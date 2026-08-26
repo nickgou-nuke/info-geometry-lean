@@ -2927,7 +2927,6 @@ import InfoGeometry.Canonical.UHFBoundaryCylinderFunctionTopCat
 import InfoGeometry.Canonical.UHFBoundaryInverseLimitReadoutTopCat
 import InfoGeometry.Canonical.CantorCylinderClopen
 import InfoGeometry.Canonical.CantorCylinderHomeomorph
-import InfoGeometry.Canonical.CantorWordCylinderHomotopy
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 import InfoGeometry.Canonical.CantorBoundaryReadoutCompact
 

@@ -45,4 +45,9 @@ theorem flagCells_total_card :
     (∑ k : Fin 12, (flagCells k).card) = 189 := by
   native_decide
 
+set_option maxRecDepth 100000 in
+theorem flagCells_pairwise_disjoint :
+    ∀ ⦃i j : Fin 12⦄, i ≠ j → Disjoint (flagCells i) (flagCells j) := by
+  native_decide
+
 end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate

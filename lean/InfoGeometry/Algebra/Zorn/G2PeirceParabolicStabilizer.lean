@@ -5,6 +5,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Algebra.Zorn.G2HexagonIncidence
+import InfoGeometry.Algebra.Zorn.G2ParabolicLineFiber
 
 /-!
 # Stabilizer of the Peirce Frame in SplitOctF2Aut and Maximal Parabolic P (Order 192)
@@ -270,16 +271,17 @@ open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
   has exactly 3 incident lines (fibers).
 -/
 theorem point_incident_lines_card (p : HexPoint) :
-    (Finset.univ.filter (fun l : HexLine => p ∈ parabolicCertificate.linePoints l)).card = 3 :=
-  parabolicCertificate.pointDegree p
+    (Finset.univ.filter (fun l : HexLine =>
+      p ∈ G2HexagonIncidence.parabolicIncidenceData.linePoints l)).card = 3 :=
+  G2HexagonIncidence.parabolicPointDegree p
 
 /--
   🏆 MAIN THEOREM (Total Incident Flags = 189):
   The total number of point-line incident flags in the G₂(2) parabolic geometry is exactly 189 = 63 × 3.
 -/
 theorem total_flags_card :
-    Fintype.card (Flag parabolicCertificate) = 189 :=
-  parabolic_flag_card
+    Fintype.card (Flag G2HexagonIncidence.parabolicIncidenceData) = 189 :=
+  G2HexagonIncidence.parabolic_flag_card
 
 end InfoGeometry.Algebra.Zorn.HexagonIncidenceFiber
 
@@ -291,56 +293,6 @@ open InfoGeometry.Algebra.Zorn.ParabolicFiberP1
 /-! =========================================================================
     5. 7D Imaginary Split-Octonion Geometry & Flag Fiber Definition
     ========================================================================= -/
-
-/-- The 7-dimensional imaginary (trace-zero) split-octonion carrier over 𝔽₂. -/
-abbrev OctImF2 := Fin 7 → ZMod 2
-
-/-- Split quadratic form on Im(𝕆) in standard Zorn basis:
-    `x₀ x₃ + x₁ x₄ + x₂ x₅ + x₆²` over 𝔽₂. -/
-def splitQuad (x : OctImF2) : ZMod 2 :=
-  x 0 * x 3 + x 1 * x 4 + x 2 * x 5 + (x 6)^2
-
-/-- Fano-plane / Zorn cross product on Im(𝕆). -/
-def octCross (x y : OctImF2) : OctImF2 :=
-  fun k => match k with
-  | 0 => x 6 * y 0 + y 6 * x 0 + x 4 * y 5 + x 5 * y 4
-  | 1 => x 6 * y 1 + y 6 * x 1 + x 5 * y 3 + x 3 * y 5
-  | 2 => x 6 * y 2 + y 6 * x 2 + x 3 * y 4 + x 4 * y 3
-  | 3 => x 6 * y 3 + y 6 * x 3 + x 1 * y 2 + x 2 * y 1
-  | 4 => x 6 * y 4 + y 6 * x 4 + x 2 * y 0 + x 0 * y 2
-  | 5 => x 6 * y 5 + y 6 * x 5 + x 0 * y 1 + x 1 * y 0
-  | 6 => (x 0 * y 3 + x 1 * y 4 + x 2 * y 5) + (y 0 * x 3 + y 1 * x 4 + y 2 * x 5)
-
-/-- Standard base isotropic point x₀ = e₀ (first basis vector). -/
-def basePoint : OctImF2 :=
-  fun k => if k = 0 then 1 else 0
-
-/-- Flag transversal predicate: y is non-zero, isotropic, orthogonal/collinear to x₀ (x₀ × y = 0),
-    and transversal to x₀ (y 0 = 0) selecting the unique line generator in the 2D plane {0, x₀, y, x₀ + y}. -/
-def isG2FlagTransversal (x₀ y : OctImF2) : Bool :=
-  (y ≠ 0) && (y 0 == 0) &&
-  (splitQuad x₀ == 0) &&
-  (splitQuad y == 0) &&
-  (octCross x₀ y == 0)
-
-/-- The fiber of all isotropic flag lines y completing x₀ into a flag (x₀, y). -/
-def LinesThroughPoint (x₀ : OctImF2) : Type :=
-  { y : OctImF2 // isG2FlagTransversal x₀ y = true }
-
-instance (x₀ : OctImF2) : Fintype (LinesThroughPoint x₀) := by
-  dsimp [LinesThroughPoint]
-  infer_instance
-
-instance (x₀ : OctImF2) : DecidableEq (LinesThroughPoint x₀) := by
-  dsimp [LinesThroughPoint]
-  infer_instance
-
-/--
-  🏆 MAIN GEOMETRIC THEOREM (Kernel Certified via decide):
-  The number of totally isotropic lines passing through the base point x₀ is exactly 3.
--/
-theorem base_point_lines_card : Fintype.card (LinesThroughPoint basePoint) = 3 := by
-  decide
 
 /-- Line 0 : Spanned by e₄ = [0, 0, 0, 0, 1, 0, 0] corresponding to [1 : 0]. -/
 def line_zero : LinesThroughPoint basePoint :=

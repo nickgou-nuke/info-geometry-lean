@@ -61,9 +61,35 @@ def read_artifact(path: Path) -> tuple[list[list[int]], list[list[int]]]:
 
 
 def lean_word(extrep: list[int]) -> str:
-    # GAP numbers generators from 1; the Lean evaluator will use Fin 8 indices.
-    pairs = [f"(({extrep[i] - 1} : Fin 8), {extrep[i + 1]})" for i in range(0, len(extrep), 2)]
+    # GAP ExtRep is a matrix-product word.  Lean's automorphism carrier is
+    # contravariant under matrix multiplication:
+    #   autMatrix (f * g) = autMatrix g * autMatrix f.
+    # Therefore the exact GAP word must be reversed when transported to the
+    # Lean evaluator.  Generator numbering is GAP 1..8 versus Lean Fin 8.
+    if len(extrep) % 2:
+        raise ValueError("ExtRep must contain generator/exponent pairs")
+    pairs = [
+        f"(({extrep[i] - 1} : Fin 8), {extrep[i + 1]})"
+        for i in range(len(extrep) - 2, -1, -2)
+    ]
     return "[" + ", ".join(pairs) + "]"
+
+
+def assert_transport_regression() -> None:
+    """Check the non-commutative transport convention on the failing cell.
+
+    This is deliberately a structural exporter check: GAP's word
+    ``x₂⁻¹ x₈ x₇ x₈ x₇`` must become the reversed Lean list.  It does not
+    claim the resulting word is a valid quotient representative; that claim
+    belongs to a kernel-checked Lean owner theorem.
+    """
+    extrep_4_18 = [2, -1, 8, 1, 7, 1, 8, 1, 7, 1]
+    expected = (
+        "[((6 : Fin 8), 1), ((7 : Fin 8), 1), "
+        "((6 : Fin 8), 1), ((7 : Fin 8), 1), ((1 : Fin 8), -1)]"
+    )
+    if lean_word(extrep_4_18) != expected:
+        raise AssertionError("exact GAP→Lean anti-hom transport regression")
 
 
 def main() -> None:
@@ -71,12 +97,15 @@ def main() -> None:
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
+    assert_transport_regression()
     words, orbits = read_artifact(args.input)
     lines = [
         "/- Generated from the GAP ExtRep audit; propositions are intentionally not asserted here. -/",
         "import Mathlib.Data.Fin.Basic",
         "import Mathlib.Data.Matrix.Basic",
         "import Mathlib.Data.Finset.Basic",
+        "import Mathlib.Data.ZMod.Basic",
+        "import Mathlib.Tactic",
         "",
         "namespace InfoGeometry.Algebra.Zorn.G2FlagWordCertificate",
         "",
@@ -88,7 +117,24 @@ def main() -> None:
         "  {" + ", ".join(str(i - 1) for i in orbit) + "}" + ("," if k < 11 else "")
         for k, orbit in enumerate(orbits)
     ]
-    lines += ["]", "", "end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate", ""]
+    lines += [
+        "]",
+        "",
+        "/- GAP orbit order: 1,c,...,c^5,s,s*c,...,s*c^5. -/",
+        "def flagWeyl : Fin 12 → (ZMod 6 × Bool) := ![",
+        "  (0, false), (1, false), (2, false), (3, false), (4, false), (5, false),",
+        "  (0, true), (1, true), (2, true), (3, true), (4, true), (5, true)",
+        "]",
+        "",
+        "theorem flagWeyl_card : Fintype.card (Set.range flagWeyl) = 12 := by",
+        "  have hinj : Function.Injective flagWeyl := by",
+        "    decide",
+        "  have hcard := Fintype.card_congr (Equiv.ofInjective flagWeyl hinj)",
+        "  simpa using hcard.symm",
+        "",
+        "end InfoGeometry.Algebra.Zorn.G2FlagWordCertificate",
+        "",
+    ]
     args.output.write_text("\n".join(lines))
 
 

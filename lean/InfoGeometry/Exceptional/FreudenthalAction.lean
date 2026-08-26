@@ -33,6 +33,20 @@ def zeroCharge (J : Type*) [AddCommGroup J] [Module ℝ J] : FreudenthalCharge J
   x := 0
   y := 0
 
+theorem zeroCharge_eq_iff
+    {J : Type*} [AddCommGroup J] [Module ℝ J]
+    (Q : FreudenthalCharge J) :
+    Q = zeroCharge J ↔ Q.alpha = 0 ∧ Q.beta = 0 ∧ Q.x = 0 ∧ Q.y = 0 := by
+  constructor
+  · intro h
+    subst h
+    exact ⟨rfl, rfl, rfl, rfl⟩
+  · rintro ⟨hα, hβ, hx, hy⟩
+    cases Q with
+    | mk alpha beta x y =>
+        simp only at hα hβ hx hy
+        simp [zeroCharge, hα, hβ, hx, hy]
+
 /-- Freudenthal regularity: nonzero quartic invariant. -/
 def FreudenthalRegular
     {J : Type*} [AddCommGroup J] [Module ℝ J]

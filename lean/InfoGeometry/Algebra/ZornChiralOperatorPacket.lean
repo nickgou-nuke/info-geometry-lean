@@ -15,13 +15,13 @@ open InfoGeometry.Algebra
 
 variable {A : Type*}
 
-structure Packet where
+structure ChiralOperatorData where
   uPlusOp : A
   uMinusOp : A
   sigmaPlus : Fin 3 → A
   sigmaMinus : Fin 3 → A
 
-def coordinate (Q : Packet (A := A)) : Fin 8 → A
+def coordinate (Q : ChiralOperatorData (A := A)) : Fin 8 → A
   | 0 => Q.uPlusOp
   | 1 => Q.uMinusOp
   | 2 => Q.sigmaPlus 0
@@ -31,10 +31,10 @@ def coordinate (Q : Packet (A := A)) : Fin 8 → A
   | 6 => Q.sigmaMinus 1
   | 7 => Q.sigmaMinus 2
 
-@[simp] theorem coordinate_zero (Q : Packet (A := A)) :
+@[simp] theorem coordinate_zero (Q : ChiralOperatorData (A := A)) :
     coordinate Q 0 = Q.uPlusOp := rfl
 
-@[simp] theorem coordinate_one (Q : Packet (A := A)) :
+@[simp] theorem coordinate_one (Q : ChiralOperatorData (A := A)) :
     coordinate Q 1 = Q.uMinusOp := rfl
 
 theorem coordinate_injective :
@@ -58,22 +58,22 @@ theorem coordinate_injective :
         · exact congrFun h 6
         · exact congrFun h 7
 
-def toZornMatrix [CommRing A] (Q : Packet (A := A)) : ZornMatrix A where
+def toZornMatrix [CommRing A] (Q : ChiralOperatorData (A := A)) : ZornMatrix A where
   a := Q.uPlusOp
   v := Q.sigmaPlus
   w := Q.sigmaMinus
   b := Q.uMinusOp
 
-@[simp] theorem toZornMatrix_a [CommRing A] (Q : Packet (A := A)) :
+@[simp] theorem toZornMatrix_a [CommRing A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).a = Q.uPlusOp := rfl
 
-@[simp] theorem toZornMatrix_b [CommRing A] (Q : Packet (A := A)) :
+@[simp] theorem toZornMatrix_b [CommRing A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).b = Q.uMinusOp := rfl
 
-@[simp] theorem toZornMatrix_v [CommRing A] (Q : Packet (A := A)) :
+@[simp] theorem toZornMatrix_v [CommRing A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).v = Q.sigmaPlus := rfl
 
-@[simp] theorem toZornMatrix_w [CommRing A] (Q : Packet (A := A)) :
+@[simp] theorem toZornMatrix_w [CommRing A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).w = Q.sigmaMinus := rfl
 
 end InfoGeometry.Algebra.ZornChiralOperatorPacket

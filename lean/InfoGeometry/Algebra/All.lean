@@ -286,6 +286,12 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge
+import InfoGeometry.Algebra.Zorn.G2RootWeylAdjointCharacter
+import InfoGeometry.Algebra.Zorn.NativeStanDerivationBilinear
+import InfoGeometry.Algebra.Zorn.G2ChiralOperatorNativeBridge
+import InfoGeometry.Algebra.Zorn.NativeStanDerivationCoverage
+import InfoGeometry.Algebra.Zorn.G2RootInnerDerivationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
 import InfoGeometry.Algebra.ZornBdGDerivationBridge

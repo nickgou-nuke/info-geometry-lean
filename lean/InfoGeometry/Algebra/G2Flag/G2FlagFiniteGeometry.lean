@@ -22,7 +22,7 @@ open InfoGeometry.Algebra.Zorn.G2HexagonIncidence
 
 /-- The 189-point G₂(2) flag type, defined by the certified incidence
     certificate rather than by the affine octonion carrier. -/
-abbrev G2Flag := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicCertificate
+abbrev G2Flag := G2HexagonIncidence.Flag G2HexagonIncidence.parabolicIncidenceData
 
 /- The 189 points of the full `G₂(2)` flag variety.
     This cardinality is proved structurally via the BN-pair quotient `G/B ≃ G2Flag`

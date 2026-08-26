@@ -222,6 +222,22 @@ theorem H3ZornJordanQuadraticReconstruction (X Y : H3Zorn ℝ) :
 theorem H3ZornJordanProductLaw_holds : H3ZornJordanProductLaw :=
   H3ZornJordanProductLaw_iff_TJordanCommutation.mpr TJordanCommutation_holds
 
+/-- Coordinate-free normal form for the installed cubic Jordan product.
+This exposes the single cubic `T` evaluation through the existing trace and
+cross-product owners, and is the reduction interface for transports from
+explicit Albert coordinates. -/
+theorem candidateJordanMul_trace_formula (X Y : H3Zorn ℝ) :
+    candidateJordanMul X Y =
+      (1 / 2 : ℝ) •
+        (H3Zorn.linearTrace X • Y + H3Zorn.linearTrace Y • X -
+          H3Zorn.linearTrace (H3Zorn.crossProduct X Y) • (1 : H3Zorn ℝ) +
+          H3Zorn.crossProduct X Y) := by
+  rw [candidateJordanMul, H3Zorn.T_outer_formula]
+  rw [H3Zorn.traceBilin_one, H3Zorn.traceBilin_one]
+  rw [H3Zorn.crossProduct_one]
+  congr 1
+  module
+
 /--
 A theorem that the cubic norm axioms of a `CubicJordanDatum` imply that the
 induced multiplication satisfies the commutative Jordan ring axioms (`IsCommJordan`).

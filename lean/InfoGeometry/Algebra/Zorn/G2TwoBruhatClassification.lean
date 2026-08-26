@@ -122,6 +122,64 @@ theorem concreteBruhatCell_eq_exact_unipotentCell (w : SplitOctF2Aut) :
   · rintro ⟨b₁, hb₁, b₂, hb₂, rfl⟩
     exact ⟨b₁, b₂, hb₁, hb₂, rfl⟩
 
+/-! A concrete disjointness interface for the indexed Bruhat cells.  The
+    hypothesis is stated at the actual double-coset witness level: this is
+    the separation statement that a future concrete BN-pair certificate must
+    provide.  In particular, it does not incorrectly infer disjointness from
+    inequality of arbitrary middle elements. -/
+
+theorem concreteBruhatCell_disjoint_of_witness_separation
+    (w₁ w₂ : SplitOctF2Aut)
+    (hsep : ∀ (b₁ b₂ c₁ c₂ : SplitOctF2Aut),
+      b₁ ∈ sylowTwoSubgroup → b₂ ∈ sylowTwoSubgroup →
+      c₁ ∈ sylowTwoSubgroup → c₂ ∈ sylowTwoSubgroup →
+      b₁ * w₁ * b₂ ≠ c₁ * w₂ * c₂) :
+    Disjoint (concreteBruhatCell w₁) (concreteBruhatCell w₂) := by
+  apply Set.disjoint_left.mpr
+  intro g hg₁ hg₂
+  rcases hg₁ with ⟨b₁, b₂, hb₁, hb₂, rfl⟩
+  rcases hg₂ with ⟨c₁, c₂, hc₁, hc₂, hEq⟩
+  exact hsep b₁ b₂ c₁ c₂ hb₁ hb₂ hc₁ hc₂ hEq
+
+theorem concreteBruhatCell_inter_eq_empty_of_witness_separation
+    (w₁ w₂ : SplitOctF2Aut)
+    (hsep : ∀ (b₁ b₂ c₁ c₂ : SplitOctF2Aut),
+      b₁ ∈ sylowTwoSubgroup → b₂ ∈ sylowTwoSubgroup →
+      c₁ ∈ sylowTwoSubgroup → c₂ ∈ sylowTwoSubgroup →
+      b₁ * w₁ * b₂ ≠ c₁ * w₂ * c₂) :
+    concreteBruhatCell w₁ ∩ concreteBruhatCell w₂ = (∅ : Set SplitOctF2Aut) := by
+  exact Set.disjoint_iff_inter_eq_empty.mp
+    (concreteBruhatCell_disjoint_of_witness_separation w₁ w₂ hsep)
+
+/-! The quotient-level separation route is the canonical finite-geometry
+    interface.  A certificate that the two B-orbits in G/B are disjoint is
+    transported to disjointness of the corresponding concrete double cosets. -/
+
+theorem concreteBruhatCell_disjoint_of_quotientOrbit_separation
+    (w₁ w₂ : SplitOctF2Aut)
+    (hsep : Disjoint
+      (InfoGeometry.Algebra.Zorn.G2BNPair.quotientOrbit
+        InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w₁)
+      (InfoGeometry.Algebra.Zorn.G2BNPair.quotientOrbit
+        InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w₂)) :
+    Disjoint (concreteBruhatCell w₁) (concreteBruhatCell w₂) := by
+  rw [concreteBruhatCell_eq_exact_unipotentCell,
+    concreteBruhatCell_eq_exact_unipotentCell]
+  exact InfoGeometry.Algebra.Zorn.G2BNPair.disjoint_doubleCoset_of_disjoint_quotientOrbit
+    InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w₁ w₂ hsep
+
+theorem concreteBruhatCell_inter_eq_empty_of_quotientOrbit_separation
+    (w₁ w₂ : SplitOctF2Aut)
+    (hsep : Disjoint
+      (InfoGeometry.Algebra.Zorn.G2BNPair.quotientOrbit
+        InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w₁)
+      (InfoGeometry.Algebra.Zorn.G2BNPair.quotientOrbit
+        InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup w₂)) :
+    concreteBruhatCell w₁ ∩ concreteBruhatCell w₂ =
+      (∅ : Set SplitOctF2Aut) := by
+  exact Set.disjoint_iff_inter_eq_empty.mp
+    (concreteBruhatCell_disjoint_of_quotientOrbit_separation w₁ w₂ hsep)
+
 /-- 🏆 THEOREM: Every Weyl element $w$ lies in its own Bruhat cell $C(w)$. -/
 theorem weyl_mem_concreteBruhatCell (w : SplitOctF2Aut) :
     w ∈ concreteBruhatCell w := by
@@ -282,6 +340,54 @@ theorem concreteBruhatCovering_eq_univ_of_fin189_orbit_partition
   apply concreteBruhatCoverObligation_iff_covering_eq_univ.mp
   exact concreteBruhatCoverObligation_of_fin189_orbit_partition
     enum p cells hcell hpartition
+
+/-! The residual formulation is equivalent to the ambient twelve-cell cover.
+    This is a substantive transport theorem: it uses the existing PC recovery
+    factorization and the concrete cell invariance, without assuming the cover.
+    The conditional convenience theorem is intentionally not exported here. -/
+
+theorem fullPeel_bruhat_cover_iff :
+    (∀ f : SplitOctF2Aut, ∃ w : WeylG2,
+      fullPeel f ∈ concreteBruhatCell (weylNF w.1 w.2)) ↔
+      concreteBruhatCovering = Set.univ := by
+  constructor
+  · intro h
+    apply concreteBruhatCoverObligation_iff_covering_eq_univ.mp
+    intro f
+    obtain ⟨w, hw⟩ := h f
+    let q : SplitOctF2Aut :=
+      G2TwoSylowSubgroup.pcWord (extractAllBits f)
+    have hq : q ∈ sylowTwoSubgroup := by
+      exact G2TwoSylowSubgroup.pcWord_mem_sylow _
+    have hfactor : q * fullPeel f = f := by
+      simpa [q] using fullPeel_pcWord_factorization f
+    refine ⟨w, ?_⟩
+    rw [← hfactor]
+    exact concreteBruhatCell_left_mul _ _ _ hq hw
+  · intro h f
+    have hf : f ∈ concreteBruhatCovering := by
+      rw [h]
+      exact Set.mem_univ f
+    have hcell : ∃ w : WeylG2,
+        f ∈ concreteBruhatCell (weylNF w.1 w.2) := by
+      simpa [concreteBruhatCovering] using hf
+    obtain ⟨w, hw⟩ := hcell
+    let q : SplitOctF2Aut :=
+      G2TwoSylowSubgroup.pcWord (extractAllBits f)
+    have hq : q ∈ sylowTwoSubgroup := by
+      exact G2TwoSylowSubgroup.pcWord_mem_sylow _
+    have hfactor : q * fullPeel f = f := by
+      simpa [q] using fullPeel_pcWord_factorization f
+    refine ⟨w, ?_⟩
+    have hres : fullPeel f = q⁻¹ * f := by
+      calc
+        fullPeel f = 1 * fullPeel f := by simp
+        _ = (q⁻¹ * q) * fullPeel f := by rw [inv_mul_cancel]
+        _ = q⁻¹ * (q * fullPeel f) := by simp
+        _ = q⁻¹ * f := by rw [hfactor]
+    rw [hres]
+    exact concreteBruhatCell_left_mul _ _ _
+      (sylowTwoSubgroup.inv_mem hq) hw
 
 /-- The exact generation consequence of a concrete 12-cell cover.  The
 covering hypothesis is kept explicit: this theorem does not manufacture the

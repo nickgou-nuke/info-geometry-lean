@@ -295,6 +295,7 @@ theorem toH3_mul_α₁ (X Y : RealAlbertMatrix) :
   change (RealAlbertMatrix.mul X Y).α₁ = _
   rw [rsm_mul_a1]
   rw [candidateJordanMul_trace_formula]
+  rw [H3Zorn.linearTrace_crossProduct]
   rw [H3Zorn.smul_readback, H3Zorn.sub_readback, H3Zorn.add_readback]
   dsimp
   rw [H3ZornCoordinateReadback.crossProduct_α₁,
@@ -305,8 +306,20 @@ theorem toH3_mul_α₁ (X Y : RealAlbertMatrix) :
     H3ZornCoordinateReadback.traceBilin_coordinate,
     H3ZornCoordinateReadback.crossProduct_α₁,
     H3ZornCoordinateReadback.adjointQuad_α₁,
-    H3Zorn.add_readback, H3Zorn.smul_readback]
-  ring
+    H3ZornCoordinateReadback.add_α₁,
+    H3ZornCoordinateReadback.add_α₂,
+    H3ZornCoordinateReadback.add_α₃,
+    H3ZornCoordinateReadback.smul_α₁,
+    H3ZornCoordinateReadback.smul_α₂,
+    H3ZornCoordinateReadback.smul_α₃,
+    H3Zorn.add_readback, H3Zorn.smul_readback, H3Zorn.one_readback]
+  simp [toH3, RealSplitOctZornAlignment.toZorn,
+    ZornVectorMatrix.norm, ZornVectorMatrix.trace,
+    ZornVectorMatrix.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.add, ZornVectorMatrix.smul,
+    ZornVectorMatrix.zero, ZornVectorMatrix.neg, ZornVec3.dot,
+    Fin.sum_univ_three]
+  ring_nf
 
 theorem normCubic_smul (r : ℝ) (X : RealAlbertMatrix) :
     normCubic (RealAlbertMatrix.smul r X) = r ^ 3 * normCubic X := by
@@ -314,46 +327,66 @@ theorem normCubic_smul (r : ℝ) (X : RealAlbertMatrix) :
     r ^ 3 * H3Zorn.normCubic (toH3 X)
   rw [toH3_smul, H3Zorn.normCubic_smul]
 
-set_option maxHeartbeats 5000000 in
 theorem toH3_mul_α₂ (X Y : RealAlbertMatrix) :
     (toH3 (RealAlbertMatrix.mul X Y)).α₂ =
       (candidateJordanMul (toH3 X) (toH3 Y)).α₂ := by
   change (RealAlbertMatrix.mul X Y).α₂ = _
   rw [rsm_mul_a2, candidateJordanMul_trace_formula]
+  rw [H3Zorn.linearTrace_crossProduct]
   rw [H3Zorn.smul_readback, H3Zorn.sub_readback, H3Zorn.add_readback]
   dsimp
   rw [H3ZornCoordinateReadback.crossProduct_α₂,
     H3ZornCoordinateReadback.adjointQuad_α₂,
     H3ZornCoordinateReadback.adjointQuad_α₂,
     H3ZornCoordinateReadback.adjointQuad_α₂]
-  simp [toH3, RealSplitOctZornAlignment.toZorn_norm,
-    RealSplitOctZornAlignment.toZorn, H3Zorn.traceBilin,
-    H3Zorn.linearTrace, H3Zorn.crossProduct, H3Zorn.adjointQuad,
-    H3Zorn.smul_readback, H3Zorn.add_readback,
-    ZornVectorMatrix.norm, ZornVectorMatrix.add,
-    ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-    ZornVectorMatrix.conj, ZornVec3.dot, Fin.sum_univ_three]
+  simp only [H3ZornCoordinateReadback.linearTrace_coordinate,
+    H3ZornCoordinateReadback.traceBilin_coordinate,
+    H3ZornCoordinateReadback.crossProduct_α₂,
+    H3ZornCoordinateReadback.adjointQuad_α₂,
+    H3ZornCoordinateReadback.add_α₁,
+    H3ZornCoordinateReadback.add_α₂,
+    H3ZornCoordinateReadback.add_α₃,
+    H3ZornCoordinateReadback.smul_α₁,
+    H3ZornCoordinateReadback.smul_α₂,
+    H3ZornCoordinateReadback.smul_α₃,
+    H3Zorn.add_readback, H3Zorn.smul_readback, H3Zorn.one_readback]
+  simp [toH3, RealSplitOctZornAlignment.toZorn,
+    ZornVectorMatrix.norm, ZornVectorMatrix.trace,
+    ZornVectorMatrix.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.add, ZornVectorMatrix.smul,
+    ZornVectorMatrix.zero, ZornVectorMatrix.neg, ZornVec3.dot,
+    Fin.sum_univ_three]
   ring
 
-set_option maxHeartbeats 5000000 in
 theorem toH3_mul_α₃ (X Y : RealAlbertMatrix) :
     (toH3 (RealAlbertMatrix.mul X Y)).α₃ =
       (candidateJordanMul (toH3 X) (toH3 Y)).α₃ := by
   change (RealAlbertMatrix.mul X Y).α₃ = _
   rw [rsm_mul_a3, candidateJordanMul_trace_formula]
+  rw [H3Zorn.linearTrace_crossProduct]
   rw [H3Zorn.smul_readback, H3Zorn.sub_readback, H3Zorn.add_readback]
   dsimp
   rw [H3ZornCoordinateReadback.crossProduct_α₃,
     H3ZornCoordinateReadback.adjointQuad_α₃,
     H3ZornCoordinateReadback.adjointQuad_α₃,
     H3ZornCoordinateReadback.adjointQuad_α₃]
-  simp [toH3, RealSplitOctZornAlignment.toZorn_norm,
-    RealSplitOctZornAlignment.toZorn, H3Zorn.traceBilin,
-    H3Zorn.linearTrace, H3Zorn.crossProduct, H3Zorn.adjointQuad,
-    H3Zorn.smul_readback, H3Zorn.add_readback,
-    ZornVectorMatrix.norm, ZornVectorMatrix.add,
-    ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-    ZornVectorMatrix.conj, ZornVec3.dot, Fin.sum_univ_three]
+  simp only [H3ZornCoordinateReadback.linearTrace_coordinate,
+    H3ZornCoordinateReadback.traceBilin_coordinate,
+    H3ZornCoordinateReadback.crossProduct_α₃,
+    H3ZornCoordinateReadback.adjointQuad_α₃,
+    H3ZornCoordinateReadback.add_α₁,
+    H3ZornCoordinateReadback.add_α₂,
+    H3ZornCoordinateReadback.add_α₃,
+    H3ZornCoordinateReadback.smul_α₁,
+    H3ZornCoordinateReadback.smul_α₂,
+    H3ZornCoordinateReadback.smul_α₃,
+    H3Zorn.add_readback, H3Zorn.smul_readback, H3Zorn.one_readback]
+  simp [toH3, RealSplitOctZornAlignment.toZorn,
+    ZornVectorMatrix.norm, ZornVectorMatrix.trace,
+    ZornVectorMatrix.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.add, ZornVectorMatrix.smul,
+    ZornVectorMatrix.zero, ZornVectorMatrix.neg, ZornVec3.dot,
+    Fin.sum_univ_three]
   ring
 
 theorem toH3_mul (X Y : RealAlbertMatrix) :

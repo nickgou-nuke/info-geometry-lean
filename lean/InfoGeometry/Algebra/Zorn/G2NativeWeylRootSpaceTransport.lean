@@ -1167,6 +1167,26 @@ theorem parameterDerivation_derivationParameters
   change parameterLinearEquiv (parameterLinearEquiv.symm D) = D
   exact parameterLinearEquiv.apply_symm_apply D
 
+theorem parameterDerivation_U0V0_readback :
+    parameterDerivation
+        (InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6 +
+          InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13) =
+      NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 0))
+        (canonicalVectorEquiv (canonicalV 0)) := by
+  rw [← U0V0_parameter_readback]
+  exact parameterDerivation_derivationParameters _
+
+theorem parameterDerivation_U1V1_readback :
+    parameterDerivation
+        ((-2 : ℝ) • InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 6 +
+          InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit 13) =
+      NativeStanDerivationBilinear.innerDerivation
+        (canonicalVectorEquiv (canonicalU 1))
+        (canonicalVectorEquiv (canonicalV 1)) := by
+  rw [← U1V1_parameter_readback]
+  exact parameterDerivation_derivationParameters _
+
 theorem realWeylCycle_canonicalCartan_U0V0_mem :
     conjugateCanonicalDerivation realWeylCycle
         (parameterCanonicalLieEquiv

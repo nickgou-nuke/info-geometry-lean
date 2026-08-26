@@ -1,5 +1,6 @@
 import InfoGeometry.Spectral.Algebra.IteratedPageStabilization
 import InfoGeometry.Spectral.Algebra.ExactCoupleFiltration
+import InfoGeometry.Spectral.Algebra.ConvergenceCore
 import Mathlib.Algebra.Module.Submodule.Basic
 
 /-! ## Short exact sequences -/
@@ -121,6 +122,21 @@ theorem IsBounded.Dlb_iterate {C : GradedExactCouple R I D E iDeg jDeg kDeg}
     {hB : C.IsBounded} {p : I} {s : ℕ} (h : hB.B' p ≤ s) :
     Function.Surjective (C.incomingIIterate (n := s + 1) p) :=
   hB.Dlb h
+
+/-- The historical boundedness record supplies the page-level vanishing
+contract used by the current convergence core. -/
+noncomputable def IsBounded.toBoundedPageStabilization
+    {C : GradedExactCouple R I D E iDeg jDeg kDeg}
+    (hB : C.IsBounded) :
+    BoundedPageStabilization C.toStage :=
+  { bound := hB.bound
+    eventual := fun p =>
+      { incoming_zero := fun n hn x =>
+          hB.pageIncoming (p := p) (s := n)
+            (le_trans (IsBounded.B''_le_bound hB p) hn) x
+        outgoing_zero := fun n hn x =>
+          hB.pageOutgoing (p := p) (s := n)
+            (le_trans (IsBounded.B_le_bound hB p) hn) x } }
 
 /-! ### Stabilization -/
 

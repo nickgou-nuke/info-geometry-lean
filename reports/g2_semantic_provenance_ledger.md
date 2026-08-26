@@ -20,6 +20,9 @@ promoted beyond its displayed hypotheses.
 | GREEN | `G2FlagCellQuotientWitness.quotient_witness_cell_one_73` | quotient equality for row `(1,73)` | concrete quotient witness | same guard |
 | GREEN | `G2FlagCellQuotientWitness.quotient_witness_cell_one_178` | quotient equality for row `(1,178)` | concrete quotient witness | same guard |
 | GREEN | `G2FlagCellQuotientWitness.quotient_witness_cell_four_18` | quotient equality for row `(4,18)` using reversed orientation | concrete quotient witness | orientation is certificate data |
+| GREEN | `G2FlagQuotientProvenance.quotient_anchor` | every anchor has a quotient witness | structural anchor transport | does not cover non-anchor rows |
+| GREEN | `G2FlagQuotientProvenance.quotient_cell_zero` | quotient witness for every row in singleton cell `0` | structural singleton-cell coverage | does not cover other cells |
+| GREEN | `G2FlagQuotientProvenance.exact_factorization_exists_of_quotient_row` | quotient witness implies existential exact `U·W·U` factorization | native algebraic consequence | right factor is existential, not exported raw data |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_one` | all four indices in cell `1` have quotient witnesses | cell-local coverage | does not cover cells `2`–`11` |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_anchor` | every cell anchor has a quotient witness | anchor-only coverage | non-anchor rows remain separate obligations |
 | YELLOW | `G2IntrinsicFlagCardinality` fiber/cardinality results | cardinality follows from explicit fiber assumptions | conditional counting framework | do not infer transitivity or quotient equivalence |

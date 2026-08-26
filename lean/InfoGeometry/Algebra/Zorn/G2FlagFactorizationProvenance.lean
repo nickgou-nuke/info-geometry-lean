@@ -70,4 +70,20 @@ theorem row_4_18_factorization_sound :
     RowFactorizationSound (rightFactorWord 4 18) (leftFactorWord 4 18) 4 18 := by
   exact row_4_18
 
+theorem row_0_0_factorization_sound :
+    RowFactorizationSound (leftFactorWord 0 0) (rightFactorWord 0 0) 0 0 := by
+  exact row_0_0
+
+theorem row_1_24_factorization_sound :
+    RowFactorizationSound (leftFactorWord 1 24) (rightFactorWord 1 24) 1 24 := by
+  exact row_1_24
+
+theorem row_4_6_factorization_sound :
+    RowFactorizationSound (leftFactorWord 4 6) (rightFactorWord 4 6) 4 6 := by
+  exact row_4_6
+
+theorem row_1_45_factorization_sound :
+    RowFactorizationSound (leftFactorWord 1 45) (rightFactorWord 1 45) 1 45 := by
+  exact row_1_45
+
 end InfoGeometry.Algebra.Zorn.G2FlagFactorizationProvenance

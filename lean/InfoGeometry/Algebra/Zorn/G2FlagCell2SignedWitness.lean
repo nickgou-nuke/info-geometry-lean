@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
+import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 
 namespace InfoGeometry.Algebra.Zorn.G2FlagCell2SignedWitness
 
@@ -8,6 +9,7 @@ open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
+open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -72,6 +74,31 @@ theorem signedWord_reverse_inv
         List.map_nil, signedWord_append, signedWord_cons,
         signedWord_nil, ih, mul_inv_rev, signedTerm_inv]
       simp
+
+/-! A proof-producing interface for cell `2`.  The matrix residual is the
+only certificate input; the quotient witness and subgroup membership are
+derived internally. -/
+
+structure CellTwoWordCertificate where
+  word : Fin 189 → List (Fin 6 × Bool)
+  residual : ∀ (i : Fin 189), i ∈ orbitCells 2 →
+    ∃ e : PCWordExp,
+      autMatrix ((flagRepresentative i)⁻¹ *
+        (signedWord (word i) *
+          weylNF (orbitWeyl 2).1 (orbitWeyl 2).2)) =
+        autMatrix (G2TwoSylowSubgroup.pcWord e)
+
+theorem hcell_two_signed_of_certificate
+    (C : CellTwoWordCertificate) (i : Fin 189)
+    (hi : i ∈ orbitCells 2) :
+    ∃ b : SplitOctF2Aut,
+      b ∈ unipotentSubgroup ∧
+        orbitEnum i = b •
+          (QuotientGroup.mk
+            (weylNF (orbitWeyl 2).1 (orbitWeyl 2).2) : CarrierQuotient) := by
+  refine ⟨signedWord (C.word i), signedWord_mem_unipotent _, ?_⟩
+  apply quotientRepresentative_eq_left_smul_of_pc_matrix
+  exact C.residual i hi
 
 def cell2Left : Fin 189 → List (Fin 6 × Bool)
   | 3 => []

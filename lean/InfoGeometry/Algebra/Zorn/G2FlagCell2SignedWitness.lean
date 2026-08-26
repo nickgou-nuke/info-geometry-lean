@@ -31,7 +31,7 @@ theorem signedWord_mem_unipotent (l : List (Fin 6 × Bool)) :
   induction l with
   | nil => simp [signedWord, unipotentSubgroup]
   | cons x xs ih =>
-      simp only [signedWord, List.map_cons, List.prod_cons]
+      simp only [signedWord]
       exact Subgroup.mul_mem _ (signedTerm_mem_unipotent x) ih
 
 @[simp] theorem signedWord_nil :
@@ -69,7 +69,7 @@ theorem signedWord_reverse_inv
   | nil => simp [signedWord]
   | cons x xs ih =>
       simp only [List.reverse_cons, List.map_append, List.map_cons,
-        List.map_nil, List.append_nil, signedWord_append, signedWord_cons,
+        List.map_nil, signedWord_append, signedWord_cons,
         signedWord_nil, ih, mul_inv_rev, signedTerm_inv]
       simp
 

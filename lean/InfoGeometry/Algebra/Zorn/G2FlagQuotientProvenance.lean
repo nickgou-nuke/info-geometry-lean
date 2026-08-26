@@ -68,4 +68,19 @@ theorem exact_factorization_exists_cell_one
           b * weylNF (orbitWeyl 1).1 (orbitWeyl 1).2 * u := by
   exact cell_one_factorization_exists i hi
 
+theorem exact_factorization_exists_cell_zero
+    (i : Fin 189) (hi : i ∈ orbitCells 0) :
+    ∃ b u : SplitOctF2Aut,
+      b ∈ unipotentSubgroup ∧ u ∈ unipotentSubgroup ∧
+        flagRepresentative i =
+          b * weylNF (orbitWeyl 0).1 (orbitWeyl 0).2 * u := by
+  have hi0 : i = orbitCellAnchor 0 := by
+    simpa [orbitCells, flagCells, orbitCellAnchor] using hi
+  subst i
+  obtain ⟨b, hb, hq⟩ := quotient_anchor 0
+  obtain ⟨u, hu, hfac⟩ := factorization_of_quotient_witness
+    (orbitCellAnchor 0) b
+    (weylNF (orbitWeyl 0).1 (orbitWeyl 0).2) hq
+  exact ⟨b, u, hb, hu, hfac⟩
+
 end InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance

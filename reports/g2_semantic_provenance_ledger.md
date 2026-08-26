@@ -24,13 +24,13 @@ promoted beyond its displayed hypotheses.
 | GREEN | `G2FlagQuotientProvenance.quotient_cell_zero` | quotient witness for every row in singleton cell `0` | structural singleton-cell coverage | does not cover other cells |
 | GREEN | `G2FlagQuotientProvenance.exact_factorization_exists_of_quotient_row` | quotient witness implies existential exact `U·W·U` factorization | native algebraic consequence | right factor is existential, not exported raw data |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_one` | all four indices in cell `1` have quotient witnesses | cell-local coverage | does not cover cells `2`–`11` |
-| DEAD | `G2FlagCell2SignedWitness.hcell_two_signed` | cell `2` coverage is discharged by 16 index cases and per-leaf `decide` | brute-force table proof, excluded from the structural certificate pipeline | replace with a native signed-word certificate or a proved recursive/coordinate theorem |
+| DEAD/REMOVED | `G2FlagCell2SignedWitness.hcell_two_signed` | former cell `2` coverage theorem used 16 index cases and per-leaf `decide` | brute-force table proof removed from the owner | replace only with a native signed-word certificate or proved recursive/coordinate theorem |
 | YELLOW | `G2FlagCellQuotientWitness.hcell_anchor` | every cell anchor has a quotient witness | anchor-only coverage | non-anchor rows remain separate obligations |
 | YELLOW | `G2IntrinsicFlagCardinality` fiber/cardinality results | cardinality follows from explicit fiber assumptions | conditional counting framework | do not infer transitivity or quotient equivalence |
 | ORANGE | `G2Fin189Certificate` | `FlagFiber ≃ Fin 189` and cardinality facts | index/cardinality carrier | does not prove quotient orbit membership |
 | GREEN | `G2FlagFactorizationProvenance.CellFactorizationSound.factorization` | derives a row factorization from an explicitly supplied soundness proposition | exact native consequence of a certificate contract | does not construct the contract or claim 189-row soundness |
 | ORANGE | `G2Fin189OrbitMembership` | orbit membership follows from a `CellFactorizationCertificate` input | proof contract / conditional bridge | certificate soundness must be constructed independently |
-| RED | `G2SchubertCalculus.structureConstants_wdvv` and related quantum claims | several theorem bodies still contain `sorry` | open proof holes, not certified quantum cohomology | exclude from certified Schubert/QH results until independently proved |
+| YELLOW | `G2SchubertCalculus.structureConstants_wdvv` and related quantum claims | current owner compiles without `sorry`; scope is finite/conditional structure-constant infrastructure | kernel-checked local statements, not a completed construction of `QH^*(G_2/B)` or GW theory | do not promote to full quantum cohomology until the ring laws, grading, and geometric identifications are proved |
 | DEAD | any all-row owner whose leaves are closed by `revert ...; decide` | finite proposition is discharged by global enumeration | unacceptable surrogate for structural certificate | replace with native alignment theorem or explicit proof-producing data |
 
 ## Current concrete frontier

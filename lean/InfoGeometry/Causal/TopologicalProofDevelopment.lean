@@ -252,9 +252,33 @@ theorem mem_foldVerifiedStates_iff
           exact ⟨T, List.mem_cons_of_mem S hT, hxT⟩
       · rintro ⟨T, hT, hxT⟩
         change x ∈ S.carrier ∪ (foldVerifiedStates G Ss).carrier
-        rcases hT with rfl | hT
-        · exact Or.inl hxT
-        · exact Or.inr (ih.mpr ⟨T, hT, hxT⟩)
+        simp only [List.mem_cons] at hT
+        cases hT with
+        | inl hTS =>
+            subst T
+            exact Or.inl hxT
+        | inr hT =>
+            exact Or.inr (ih.mpr ⟨T, hT, hxT⟩)
+
+theorem mem_foldVerifiedStates_of_mem_all
+    (G : ProofDAG α) {Ss : List (VerifiedState G)} (x : α)
+    (hne : Ss ≠ [])
+    (hall : ∀ S ∈ Ss, x ∈ S.carrier) :
+    x ∈ (foldVerifiedStates G Ss).carrier := by
+  obtain ⟨S, Ss, rfl⟩ := List.exists_cons_of_ne_nil hne
+  apply (mem_foldVerifiedStates_iff G x).2
+  exact ⟨S, List.mem_cons_self, hall S List.mem_cons_self⟩
+
+theorem foldVerifiedStates_append
+    (G : ProofDAG α) (Ss Ts : List (VerifiedState G)) :
+    (foldVerifiedStates G (Ss ++ Ts)).carrier =
+      (foldVerifiedStates G Ss).carrier ∪ (foldVerifiedStates G Ts).carrier := by
+  induction Ss with
+  | nil =>
+      simp [foldVerifiedStates, emptyVerifiedState]
+  | cons S Ss ih =>
+      ext x
+      simp [foldVerifiedStates, joinVerifiedState, ih, union_assoc]
 
 end VerifiedStateLayer
 

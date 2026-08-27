@@ -1987,6 +1987,15 @@ theorem fullPeel_basis8_two_x1_eq_basis8_six_y0
   have hy0 := congrArg SplitOctF2.y0 hform
   exact hy0.symm
 
+/-! The last residual bit is exactly the sixth-basis `y₀` coordinate.  This
+    equivalence isolates the remaining readback obligation without silently
+    strengthening the stabilizer hypotheses. -/
+theorem fullPeel_basis8_two_x1_false_iff_basis8_six_y0_false
+    {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) :
+    ((fullPeel g).1 (basis8 2)).x1 = false ↔
+      ((fullPeel g).1 (basis8 6)).y0 = false := by
+  rw [fullPeel_basis8_two_x1_eq_basis8_six_y0 hg]
+
 theorem fullPeel_unipotent_eq_one
     {u : SplitOctF2Aut} (hu : u ∈ unipotentSubgroup) :
     fullPeel u = 1 := by

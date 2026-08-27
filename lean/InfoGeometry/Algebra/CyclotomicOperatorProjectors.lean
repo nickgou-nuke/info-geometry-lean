@@ -48,6 +48,30 @@ def npotentNonzeroProjector (x : R) (n : ℕ) : R :=
 def npotentZeroProjector (x : R) (n : ℕ) : R :=
   1 - x ^ (n - 1)
 
+/-- The defining polynomial of an `n`-potent element factors through `x`. -/
+theorem npotent_factorization {x : R} {n : ℕ} (hn : 2 ≤ n)
+    (hx : IsNPotent x n) :
+    x * (x ^ (n - 1) - 1) = 0 := by
+  dsimp [IsNPotent] at hx
+  have hs : n - 1 + 1 = n := by omega
+  calc
+    x * (x ^ (n - 1) - 1) = x * x ^ (n - 1) - x := by rw [mul_sub, mul_one]
+    _ = x ^ (n - 1 + 1) - x := by rw [← pow_succ' x (n - 1)]
+    _ = x ^ n - x := by rw [hs]
+    _ = 0 := by rw [hx, sub_self]
+
+/-- The same defining factorization holds with the factor on the right. -/
+theorem npotent_factorization_right {x : R} {n : ℕ} (hn : 2 ≤ n)
+    (hx : IsNPotent x n) :
+    (x ^ (n - 1) - 1) * x = 0 := by
+  dsimp [IsNPotent] at hx
+  have hs : n - 1 + 1 = n := by omega
+  calc
+    (x ^ (n - 1) - 1) * x = x ^ (n - 1) * x - x := by rw [sub_mul, one_mul]
+    _ = x ^ (n - 1 + 1) - x := by rw [pow_succ]
+    _ = x ^ n - x := by rw [hs]
+    _ = 0 := by rw [hx, sub_self]
+
 /-- The nonzero projector of an $n$-potent element is an idempotent. -/
 theorem npotent_nonzero_isIdempotent {x : R} {n : ℕ} (hn : 2 ≤ n) (hx : IsNPotent x n) :
     IsIdempotent (npotentNonzeroProjector x n) := by
@@ -252,6 +276,53 @@ theorem unipotent_geom_sum_mul_eq_one_charTwo
   exact hinv
 
 end NilpotentUnipotent
+
+/-! ### 4. Finite-order geometric annihilation -/
+
+section CyclotomicGeometricSum
+
+variable {R : Type*} [Ring R]
+
+/-- The geometric sum is annihilated by `1 - u` for a finite-order element. -/
+theorem root_of_unity_geometric_sum_annihilates {u : R} {n : ℕ}
+    (hu : u ^ n = 1) :
+    (1 - u) * (∑ i ∈ range n, u ^ i) = 0 := by
+  simpa [hu] using (mul_neg_geom_sum u n)
+
+/-- The same finite-order annihilation holds on the right. -/
+theorem root_of_unity_geometric_sum_annihilates_right {u : R} {n : ℕ}
+    (hu : u ^ n = 1) :
+    (∑ i ∈ range n, u ^ i) * (1 - u) = 0 := by
+  simpa [hu] using (geom_sum_mul_neg u n)
+
+/-- If `1 - u` is invertible, the finite-order geometric sum vanishes. -/
+theorem root_of_unity_geometric_sum_eq_zero {u : R} {n : ℕ}
+    (hu : u ^ n = 1) (hunit : IsUnit (1 - u)) :
+    (∑ i ∈ range n, u ^ i) = 0 := by
+  apply hunit.mul_left_cancel
+  simpa using root_of_unity_geometric_sum_annihilates hu
+
+/-- The zero conclusion can equivalently be obtained by right cancellation. -/
+theorem root_of_unity_geometric_sum_eq_zero_right {u : R} {n : ℕ}
+    (hu : u ^ n = 1) (hunit : IsUnit (1 - u)) :
+    (∑ i ∈ range n, u ^ i) = 0 := by
+  apply hunit.mul_right_cancel
+  simpa using root_of_unity_geometric_sum_annihilates_right hu
+
+end CyclotomicGeometricSum
+
+section CyclotomicFieldSpecialization
+
+variable {K : Type*} [Field K]
+
+/-- In a field, every nontrivial finite-order element has zero geometric sum. -/
+theorem root_of_unity_geometric_sum_eq_zero_of_ne_one {u : K} {n : ℕ}
+    (hu : u ^ n = 1) (hune : u ≠ 1) :
+    (∑ i ∈ range n, u ^ i) = 0 := by
+  apply root_of_unity_geometric_sum_eq_zero hu
+  exact isUnit_iff_ne_zero.mpr (sub_ne_zero.mpr (Ne.symm hune))
+
+end CyclotomicFieldSpecialization
 
 /-! ### 4. Cyclotomic Involutions and Spectral Projectors -/
 

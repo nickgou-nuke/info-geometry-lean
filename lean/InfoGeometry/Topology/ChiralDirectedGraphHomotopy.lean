@@ -190,11 +190,6 @@ theorem directedChiralHomotopyEquiv_append_congr
     (directedChiralHomotopyEquiv_append_right hright q hpp')
     (directedChiralHomotopyEquiv_append_left hleft p' hqq')
 
-theorem DirectedChiralHomotopy.same_endpoints {G : ChiralDigraph}
-    {u v : G.Vertex} {p q : DirectedPath G u v}
-    (_h : DirectedChiralHomotopy p q) : True := by
-  trivial
-
 theorem DirectedChiralHomotopy.length_eq {G : ChiralDigraph}
     {u v : G.Vertex} {p q : DirectedPath G u v}
     (h : DirectedChiralHomotopy p q)

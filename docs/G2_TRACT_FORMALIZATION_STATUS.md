@@ -23,8 +23,14 @@ repository.  Lean source and its kernel checks are authoritative.
   projector identities.
 - `IwasawaOperatorTwinLoxodromic.lean` proves its explicitly parameterized
   rotor, Weyl-conjugation, loxodromic, twin-projector, and nonassociative
-  derivation lemmas.  These are abstract ring/operator statements, not a
-  construction of a KAN decomposition of the finite G₂ carrier.
+  derivation lemmas.  The derivation result is closure of derivations under
+  commutator; it is not an identification `Der(A) ≃ 𝔤₂(𝔽₂)`.  These are
+  abstract ring/operator statements, not a construction of a KAN
+  decomposition of the finite G₂ carrier.
+
+`loxodromic` here means the explicitly parameterized model law proved by the
+owner, with its stated commutation hypotheses.  It is not a law for arbitrary
+products `A(s) * K(θ)`, nor an existence or uniqueness theorem for `G = KAN`.
 
 ## Statements deliberately not promoted
 
@@ -41,10 +47,25 @@ has no native definitions and proof data for them:
   carrier.
 - An unconditional claim that the local staged source is present on remote
   `main`; remote provenance must be checked independently.
+- A claim that the Bruhat quotient cardinality follows from `P(2) = 189`
+  alone.  The arithmetic Weyl-polynomial branch and the native disjoint-cover
+  branch must meet at an explicit quotient-cardinality bridge.
 
 These are open specification edges, not assumptions.  In particular,
 `P(2) = 189` is an arithmetic Weyl-polynomial result and does not itself
 prove a quotient cardinality or a Bruhat partition.
+
+The intended cardinality convergence is therefore:
+
+```text
+cell sizes + disjointness + coverage  -> quotient card = Σ 2^length
+Weyl polynomial arithmetic            -> Σ 2^length = 189
+explicit bridge                        -> quotient card = 189
+```
+
+The remaining native G₂ frontier is `fullPeel_eq_one_of_nativeFlagStabilizer`
+and the quotient separation/injectivity bridge; neither is supplied by the
+abstract polynomial or KAN owners.
 
 ## Development rule
 

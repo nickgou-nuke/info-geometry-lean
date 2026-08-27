@@ -389,6 +389,7 @@ import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.PeelingOffJordanFreudenthalVinberg
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
+import InfoGeometry.Algebra.PenroseCircularCarrierBridge
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
 import InfoGeometry.Algebra.Zorn.G2PeirceCarrierAudit
 import InfoGeometry.Algebra.Zorn.G2CrossProductCarrierAudit

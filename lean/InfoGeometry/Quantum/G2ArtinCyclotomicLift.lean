@@ -29,16 +29,16 @@ theorem coxeter_pow_three (a : K) (ha : a * a = 3) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [Coxeter, BShort, BLong, Matrix.mul_apply, Fin.sum_univ_two,
-      pow_succ, pow_two, ha] <;> try simp [pow_two, ha] <;> ring
+      pow_succ, pow_two, ha] <;> ring_nf at * <;> simp [ha] <;> norm_num
 
 theorem coxeter_pow_six (a : K) (ha : a * a = 3) :
     Coxeter a ^ 6 = 1 := by
   rw [show (6 : ℕ) = 3 * 2 by norm_num, pow_mul, coxeter_pow_three a ha]
-  simp [pow_two]
+  simp
 
 theorem coxeter_twelfth_power (a : K) (ha : a * a = 3) :
     Coxeter a ^ 12 = 1 := by
   rw [show (12 : ℕ) = 6 * 2 by norm_num, pow_mul, coxeter_pow_six a ha]
-  simp [pow_two]
+  simp
 
 end InfoGeometry.QuantumAlgebra.G2ArtinLift

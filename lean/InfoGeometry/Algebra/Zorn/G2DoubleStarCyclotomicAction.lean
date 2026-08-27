@@ -40,4 +40,17 @@ theorem simple_reflection_two_preserves_short_and_long (r : Root) :
   rw [← h]
   simpa [sector] using simple_reflection_two_preserves_sector r
 
+theorem cyclotomic_artin_I2_six_relation :
+    cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm *
+        cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm =
+      cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm *
+        cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm := by
+  apply Equiv.ext
+  intro r
+  rcases r with ⟨b, k⟩
+  cases b <;>
+    simp [cyclotomicS1Perm, cyclotomicS2Perm, cyclotomicS1Fun,
+      cyclotomicS2Fun, Equiv.Perm.mul_def,
+      show (3 : ZMod 6) = -3 by decide]
+
 end InfoGeometry.Algebra.Zorn.G2DoubleStarCyclotomicAction

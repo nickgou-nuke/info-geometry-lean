@@ -117,6 +117,14 @@ structure NativeProductComparison where
   product : TwistorCarrier → TwistorCarrier → TwistorCarrier
   product_eq_transport : ∀ x y, product x y = transportedMultiplication x y
 
+/-- Contract for a native Penrose binary product on the current twistor carrier.
+    The compatibility field is deliberately explicit: this structure does not
+    manufacture an independent Penrose multiplication. -/
+structure NativePenroseProduct where
+  product : TwistorCarrier → TwistorCarrier → TwistorCarrier
+  product_eq_transport :
+    ∀ x y, product x y = transportedMultiplication x y
+
 theorem transportedStanDerivation_intertwines
     (a b : VZ) (z : TwistorCarrier) :
     twistorToVector (transportedStanDerivation a b z) =

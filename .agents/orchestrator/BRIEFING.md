@@ -1,5 +1,8 @@
 # BRIEFING — 2026-08-01T01:34:38Z
 
+## Shared Formal-Development Invariant
+All proof-oriented agents must follow `.agents/TOPOLOGICAL_PROGRESS_PRINCIPLE.md`: missing dependencies are refined into the nearest provable theorem; they are never bridged by assumptions or treated as terminal blockers while a reachable predecessor can still be formalized.
+
 ## Mission
 Formalize the remaining components of the AlbertAlgebraGenerationsBridge in Lean 4 (F4 Derivation Action, S3 Permutations, CKM/PMNS Matrices, Freudenthal identity instantiation, and GAP structure constants script).
 
@@ -59,7 +62,7 @@ Formalize the remaining components of the AlbertAlgebraGenerationsBridge in Lean
 | challenger_2_m1 | teamwork_preview_challenger | Challenge F4Action.lean | completed (FAIL) | 66015dfe-e41a-4097-8562-31d03be56d2a |
 | auditor_m1 | teamwork_preview_auditor | Integrity audit F4Action.lean | completed (VETO) | f47b7e37-d1b3-4f5e-896b-4e0b5fca9aee |
 | explorer_m1_rem | teamwork_preview_explorer | Remediation fix strategy for F4Action.lean | completed | 31601d6b-6643-421b-8064-1c2e64a6a726 |
-| worker_m1_v2 | teamwork_preview_worker | Implement authentic F4Action.lean | in-progress | b8c103a4-46fc-4188-95e9-31e0a28723a3 |
+| worker_m1_v2 | teamwork_preview_worker | Implement lean/InfoGeometry/Albert/F4Action.lean | in-progress | b8c103a4-46fc-4188-95e9-31e0a28723a3 |
 
 ## Succession Status
 - Succession required: no
@@ -75,6 +78,7 @@ Formalize the remaining components of the AlbertAlgebraGenerationsBridge in Lean
 ## Artifact Index
 - ORIGINAL_REQUEST.md — Original user request
 - PROJECT.md — Global architecture, feature inventory, milestones
+- .agents/TOPOLOGICAL_PROGRESS_PRINCIPLE.md — Shared proof-development invariant
 - .agents/orchestrator/DISPATCH.md — Dispatch log
 - .agents/orchestrator/BRIEFING.md — Persistent briefing
 - .agents/orchestrator/plan.md — Project plan

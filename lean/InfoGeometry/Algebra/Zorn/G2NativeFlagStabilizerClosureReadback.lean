@@ -978,18 +978,6 @@ theorem fullPeel_basis8_seven_x0_false
   rw [fullPeel_basis8_five_readback hg] at hx0
   exact hx0
 
-theorem fullPeel_basis8_fifth_fixed
-    {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) :
-    (fullPeel g).1 (basis8 5) = basis8 5 := by
-  rcases fullPeel_basis8_fifth_readback hg with h5 | h5
-  · exact h5
-  · have hx0 := fullPeel_basis8_seven_x0_false hg
-    have hrel := nativeFlagStabilizer_basis8_seven_x0_eq_basis8_fifth_x2
-      (fullPeel_mem_nativeFlagStabilizer_of_mem hg)
-    rw [hx0] at hrel
-    rw [h5] at hrel
-    simpa [basis8, add, add2] using hrel
-
 theorem fullPeel_basis8_seven_square_zero
     {g : SplitOctF2Aut} :
     mul ((fullPeel g).1 (basis8 7)) ((fullPeel g).1 (basis8 7)) = zero := by

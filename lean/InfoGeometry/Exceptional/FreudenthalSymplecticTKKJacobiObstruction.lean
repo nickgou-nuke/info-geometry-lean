@@ -84,4 +84,18 @@ theorem tkk_mixed_jacobi_minus1_obstruction_explicit
   rw [tkk_mixed_jacobi_plus1_component]
   simp only [mixedSymplecticBracket_val, symplecticRankTwo_apply]
 
+theorem tkk_mixed_jacobi_minus1_eq_zero_iff
+    (x z : FreudenthalCharge J) (y : FreudenthalCharge J) :
+    ((tkkTotalBracket D (injMinus1 D x)
+      (tkkTotalBracket D (injPlus1 D y) (injMinus1 D z))).minus1 +
+      (tkkTotalBracket D (injPlus1 D y)
+        (tkkTotalBracket D (injMinus1 D z) (injMinus1 D x))).minus1 +
+      (tkkTotalBracket D (injMinus1 D z)
+        (tkkTotalBracket D (injMinus1 D x) (injPlus1 D y))).minus1 = 0) ↔
+      (FreudenthalCharge.symplecticForm D y x • z +
+        FreudenthalCharge.symplecticForm D z x • y -
+        (FreudenthalCharge.symplecticForm D y z • x +
+          FreudenthalCharge.symplecticForm D x z • y) = 0) := by
+  rw [tkk_mixed_jacobi_minus1_obstruction_explicit]
+
 end InfoGeometry.Exceptional.Freudenthal

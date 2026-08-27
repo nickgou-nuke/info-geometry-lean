@@ -28,10 +28,13 @@ theorem plus_add_minus {u : M →ₗ[R] M} {half : R}
     plus u half + minus u half = LinearMap.id := by
   ext x
   change half • (x + u x) + half • (x - u x) = x
-  rw [← add_smul]
   have hscalar : half * 2 = 1 := by simpa [mul_comm] using hhalf
-  rw [show (x + u x) + (x - u x) = 2 • x by module]
-  rw [smul_smul, hscalar, one_smul]
+  calc
+    half • (x + u x) + half • (x - u x) =
+        half • ((x + u x) + (x - u x)) := by
+          simp only [smul_add, smul_sub]
+    _ = half • ((2 : R) • x) := by congr 1; module
+    _ = x := by rw [smul_smul, hscalar, one_smul]
 
 /-- Their difference reconstructs the involution. -/
 theorem plus_sub_minus {u : M →ₗ[R] M} {half : R}
@@ -39,10 +42,13 @@ theorem plus_sub_minus {u : M →ₗ[R] M} {half : R}
     plus u half - minus u half = u := by
   ext x
   change half • (x + u x) - half • (x - u x) = u x
-  rw [← sub_smul]
   have hscalar : half * 2 = 1 := by simpa [mul_comm] using hhalf
-  rw [show (x + u x) - (x - u x) = 2 • u x by module]
-  rw [smul_smul, hscalar, one_smul]
+  calc
+    half • (x + u x) - half • (x - u x) =
+        half • ((x + u x) - (x - u x)) := by
+          simp only [smul_add, smul_sub]
+    _ = half • ((2 : R) • u x) := by congr 1; module
+    _ = u x := by rw [smul_smul, hscalar, one_smul]
 
 /-- The involution acts by `+1` on the positive projector. -/
 theorem involution_mul_plus {u : M →ₗ[R] M} {half : R}
@@ -63,5 +69,57 @@ theorem involution_mul_minus {u : M →ₗ[R] M} {half : R}
     simpa [LinearMap.comp_apply] using LinearMap.congr_fun hu x
   simp [minus, LinearMap.comp_apply, hux]
   module
+
+/-- The positive linear projector is idempotent. -/
+theorem plus_comp_plus {u : M →ₗ[R] M} {half : R}
+    (hhalf : 2 * half = 1) (hu : u.comp u = LinearMap.id) :
+    (plus u half).comp (plus u half) = plus u half := by
+  ext x
+  have he : u ((plus u half) x) = (plus u half) x := by
+    simpa [LinearMap.comp_apply] using
+      LinearMap.congr_fun (involution_mul_plus (u := u) (half := half) hu) x
+  change half • ((plus u half) x + u ((plus u half) x)) = (plus u half) x
+  rw [he]
+  have hscalar : half * 2 = 1 := by simpa [mul_comm] using hhalf
+  rw [show (plus u half) x + (plus u half) x = (2 : R) • (plus u half) x by module]
+  rw [smul_smul, hscalar, one_smul]
+
+/-- The negative linear projector is idempotent. -/
+theorem minus_comp_minus {u : M →ₗ[R] M} {half : R}
+    (hhalf : 2 * half = 1) (hu : u.comp u = LinearMap.id) :
+    (minus u half).comp (minus u half) = minus u half := by
+  ext x
+  have he : u ((minus u half) x) = -(minus u half) x := by
+    simpa [LinearMap.comp_apply] using
+      LinearMap.congr_fun (involution_mul_minus (u := u) (half := half) hu) x
+  change half • ((minus u half) x - u ((minus u half) x)) = (minus u half) x
+  rw [he]
+  have hscalar : half * 2 = 1 := by simpa [mul_comm] using hhalf
+  rw [show (minus u half) x - -(minus u half) x = (2 : R) • (minus u half) x by module]
+  rw [smul_smul, hscalar, one_smul]
+
+/-- The two linear projectors are orthogonal in the `plus`-then-`minus` order. -/
+theorem plus_comp_minus {u : M →ₗ[R] M} {half : R}
+    (hu : u.comp u = LinearMap.id) :
+    (plus u half).comp (minus u half) = 0 := by
+  ext x
+  have he : u ((minus u half) x) = -(minus u half) x := by
+    simpa [LinearMap.comp_apply] using
+      LinearMap.congr_fun (involution_mul_minus (u := u) (half := half) hu) x
+  change half • ((minus u half) x + u ((minus u half) x)) = 0
+  rw [he]
+  simp
+
+/-- The two linear projectors are orthogonal in the reverse order. -/
+theorem minus_comp_plus {u : M →ₗ[R] M} {half : R}
+    (hu : u.comp u = LinearMap.id) :
+    (minus u half).comp (plus u half) = 0 := by
+  ext x
+  have he : u ((plus u half) x) = (plus u half) x := by
+    simpa [LinearMap.comp_apply] using
+      LinearMap.congr_fun (involution_mul_plus (u := u) (half := half) hu) x
+  change half • ((plus u half) x - u ((plus u half) x)) = 0
+  rw [he]
+  simp
 
 end InfoGeometry.Algebra.LinearInvolutionProjectors

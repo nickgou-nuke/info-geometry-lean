@@ -70,6 +70,7 @@ theorem autMatrix_normalized_weyl_separation_0_1
   rw [autMatrix_mul, autMatrix_mul] at h
   rw [autMatrix_pcWord, autMatrix_weylNF_zero_false_readback,
     autMatrix_pcWord, autMatrix_weylNF_one_false_readback] at h
-  exact (autMatrix_weyl_entry_separation_0_1 a d) h.symm
+  obtain ⟨i, j, hsep⟩ := autMatrix_weyl_entry_separation_0_1 a d
+  exact hsep (congrFun (congrFun h.symm i) j)
 
 end InfoGeometry.Algebra.Zorn.G2MatrixWeylPair_0_1

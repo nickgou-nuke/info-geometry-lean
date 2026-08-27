@@ -34,6 +34,7 @@ import InfoGeometry.Lie.CanonicalZornG2AppendixDGenerators
 import InfoGeometry.Lie.CanonicalZornG2AppendixDSourceBridge
 import InfoGeometry.Lie.SplitOctonionGogberashviliCellDerivationBridge
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
+import InfoGeometry.Lie.FirstQuantizedSplitOctonions
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import InfoGeometry.Lie.SplitAlgebraSolderingForm
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable

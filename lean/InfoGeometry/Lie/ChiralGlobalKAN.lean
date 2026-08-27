@@ -34,6 +34,13 @@ structure KANCertificate (R ι : Type*) [CommRing R] [Fintype ι]
   n_condition : isParabolicNilpotent (R := R) (ι := ι) n
   factorization : g = k * a * n
 
+structure UniqueKANCertificate (R ι : Type*) [CommRing R] [Fintype ι]
+    [DecidableEq ι] (g : Carrier R ι) extends KANCertificate R ι g where
+  unique : ∀ k' a' n' : Carrier R ι,
+    isSpinAlgebra k' → isWeylDilation a' →
+      isParabolicNilpotent n' → g = k' * a' * n' →
+      k' = k ∧ a' = a ∧ n' = n
+
 theorem factorization_of_certificate {g : Carrier R ι}
     (c : KANCertificate R ι g) :
     ∃ k a n : Carrier R ι,
@@ -46,5 +53,18 @@ theorem certificate_factorization {g : Carrier R ι}
     (c : KANCertificate R ι g) :
     g = c.k * c.a * c.n :=
   c.factorization
+
+theorem unique_certificate_factorization {g : Carrier R ι}
+    (c : UniqueKANCertificate R ι g) :
+    ∃! t : Carrier R ι × Carrier R ι × Carrier R ι,
+      isSpinAlgebra t.1 ∧ isWeylDilation t.2.1 ∧
+        isParabolicNilpotent t.2.2 ∧ g = t.1 * t.2.1 * t.2.2 := by
+  refine ⟨(c.k, c.a, c.n), ?_, ?_⟩
+  · exact ⟨c.k_condition, c.a_condition, c.n_condition, c.factorization⟩
+  · intro t ht
+    rcases t with ⟨k', a', n'⟩
+    rcases ht with ⟨hk', ha', hn', hfactor⟩
+    rcases c.unique k' a' n' hk' ha' hn' hfactor with ⟨rfl, rfl, rfl⟩
+    rfl
 
 end InfoGeometry.Lie.GlobalDecomposition

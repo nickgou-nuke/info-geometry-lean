@@ -62,6 +62,16 @@ def BlCartan (r3 : K) : Matrix (Fin 2) (Fin 2) K :=
 def CoxeterCartan (r3 : K) : Matrix (Fin 2) (Fin 2) K :=
   BsCartan r3 * BlCartan r3
 
+/-! A concrete scalar phase lift of the two Artin generators.  The phase is
+placed on one generator; the two sides of the six-term relation contain the
+same number of occurrences of that generator. -/
+
+def BsSpin (zeta r3 : K) : Matrix (Fin 2) (Fin 2) K :=
+  zeta • BsCartan r3
+
+def BlSpin (r3 : K) : Matrix (Fin 2) (Fin 2) K :=
+  BlCartan r3
+
 theorem Bs_mul_Bl (r3 : K) (hr3 : r3 ^ 2 = 3) :
     BsCartan r3 * BlCartan r3 = ![![2, -r3], ![r3, -1]] := by
   ext i j
@@ -243,5 +253,36 @@ theorem spin_coxeter_cartan_pow_twelve
   have h_neg_sq : (-1 : Matrix (Fin 2) (Fin 2) K) ^ 2 = 1 := by
     rw [sq, neg_mul_neg, mul_one]
   exact h_neg_sq
+
+/-- The scalar-twisted generators satisfy the same Artin relation. -/
+theorem g2_artin_braid_relation_spin
+    (r3 zeta : K) (hr3 : r3 ^ 2 = 3) :
+    BsSpin zeta r3 * BlSpin r3 * BsSpin zeta r3 * BlSpin r3 *
+        BsSpin zeta r3 * BlSpin r3 =
+      BlSpin r3 * BsSpin zeta r3 * BlSpin r3 * BsSpin zeta r3 *
+        BlSpin r3 * BsSpin zeta r3 := by
+  simp only [BsSpin, BlSpin, Matrix.smul_mul, Matrix.mul_smul]
+  rw [g2_artin_braid_relation_cartan r3 hr3]
+
+/-- The product of the phase-compatible generators is the phase-twisted
+    Cartan Coxeter operator used by the spin readback. -/
+theorem spin_generators_product
+    (r3 zeta : K) :
+    BsSpin zeta r3 * BlSpin r3 = zeta • CoxeterCartan r3 := by
+  simp [BsSpin, BlSpin, CoxeterCartan]
+
+/-- Concrete Coxeter defect for the phase-compatible Artin generators. -/
+theorem spin_generators_coxeter_pow_six
+    (r3 zeta : K) (hr3 : r3 ^ 2 = 3) (h_zeta6 : zeta ^ 6 = -1) :
+    (BsSpin zeta r3 * BlSpin r3) ^ 6 = -1 := by
+  rw [spin_generators_product]
+  exact spin_coxeter_cartan_pow_six r3 zeta hr3 h_zeta6
+
+/-- Twelvefold closure for the same concrete phase-compatible lift. -/
+theorem spin_generators_coxeter_pow_twelve
+    (r3 zeta : K) (hr3 : r3 ^ 2 = 3) (h_zeta6 : zeta ^ 6 = -1) :
+    (BsSpin zeta r3 * BlSpin r3) ^ 12 = 1 := by
+  rw [spin_generators_product]
+  exact spin_coxeter_cartan_pow_twelve r3 zeta hr3 h_zeta6
 
 end InfoGeometry.QuantumAlgebra.G2ArtinLift

@@ -86,30 +86,36 @@ structure G2SpinOperatorLift extends G2ArtinOperatorLift where
 /-- An Artin lift whose Coxeter operator is explicitly identified with a
 Hestenes cyclotomic phase.  The identification is data, not a consequence of
 the Artin relation. -/
-structure PhaseCompatibleArtinLift extends G2ArtinOperatorLift where
-  bivector : Module.End ℂ H
-  inv2 sqrt3 : ℂ
-  h2 : (2 : ℂ) * inv2 = 1
-  h3 : sqrt3 ^ 2 = 3
+structure PhaseCompatibleArtinLift where
+  lift : G2ArtinOperatorLift
+  bivector : Module.End ℂ lift.H
+  invTwo : ℂ
+  sqrtThree : ℂ
+  hTwo : (2 : ℂ) * invTwo = 1
+  hThree : sqrtThree ^ 2 = 3
   bivector_sq : bivector ^ 2 = -1
-  phase_eq : Bs * Bl =
-    InfoGeometry.Algebra.Clifford.cyclotomicPhase bivector inv2 sqrt3
+  phase_eq : lift.Bs * lift.Bl =
+    InfoGeometry.Algebra.Clifford.cyclotomicPhase bivector invTwo sqrtThree
 
 namespace PhaseCompatibleArtinLift
 
 variable (ρ : PhaseCompatibleArtinLift)
 
 theorem coxeter_pow_six_eq_neg_one :
-    (ρ.Bs * ρ.Bl) ^ 6 = -1 := by
+    (ρ.lift.Bs * ρ.lift.Bl) ^ 6 = -1 := by
   rw [ρ.phase_eq]
   exact InfoGeometry.Algebra.Clifford.cyclotomic_phase_pow_six
-    ρ.bivector ρ.inv2 ρ.sqrt3 ρ.h2 ρ.h3 ρ.bivector_sq
+    ρ.bivector ρ.invTwo ρ.sqrtThree ρ.hTwo ρ.hThree ρ.bivector_sq
 
 theorem coxeter_pow_twelve_eq_one :
-    (ρ.Bs * ρ.Bl) ^ 12 = 1 := by
+    (ρ.lift.Bs * ρ.lift.Bl) ^ 12 = 1 := by
   rw [ρ.phase_eq]
   exact InfoGeometry.Algebra.Clifford.cyclotomic_phase_pow_twelve
-    ρ.bivector ρ.inv2 ρ.sqrt3 ρ.h2 ρ.h3 ρ.bivector_sq
+    ρ.bivector ρ.invTwo ρ.sqrtThree ρ.hTwo ρ.hThree ρ.bivector_sq
+
+def toSpinOperatorLift : G2SpinOperatorLift where
+  toG2ArtinOperatorLift := ρ.lift
+  coxeter_pow_six_eq_neg_one := ρ.coxeter_pow_six_eq_neg_one
 
 end PhaseCompatibleArtinLift
 

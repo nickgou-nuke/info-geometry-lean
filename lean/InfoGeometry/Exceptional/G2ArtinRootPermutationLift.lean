@@ -112,6 +112,16 @@ def BsPermMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
 def BlPermMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
   permMatrix s2Root
 
+/-! A concrete phase-compatible lift on the same 12-dimensional root carrier.
+The scalar phase is placed on the short generator.  This is deliberately a
+global phase, rather than an unproved diagonal phase table. -/
+
+def BsPhaseMatrix (zeta : ℂ) : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  zeta • BsPermMatrix
+
+def BlPhaseMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  BlPermMatrix
+
 /-- 🏆 THEOREM 3: Exact 6-term Artin braid relation on permutation matrices:
     $B_s B_\\ell B_s B_\\ell B_s B_\\ell = B_\\ell B_s B_\\ell B_s B_\\ell B_s$. -/
 theorem perm_artin_six_matrix :
@@ -120,6 +130,18 @@ theorem perm_artin_six_matrix :
   dsimp [BsPermMatrix, BlPermMatrix]
   simp only [← permMatrix_mul]
   rw [s1_s2_artin_six_perm]
+
+theorem phase_artin_six_matrix (zeta : ℂ) :
+    BsPhaseMatrix zeta * BlPhaseMatrix * BsPhaseMatrix zeta * BlPhaseMatrix *
+        BsPhaseMatrix zeta * BlPhaseMatrix =
+      BlPhaseMatrix * BsPhaseMatrix zeta * BlPhaseMatrix * BsPhaseMatrix zeta *
+        BlPhaseMatrix * BsPhaseMatrix zeta := by
+  simp only [BsPhaseMatrix, BlPhaseMatrix, Matrix.smul_mul, Matrix.mul_smul]
+  rw [perm_artin_six_matrix]
+
+theorem phase_generator_product (zeta : ℂ) :
+    BsPhaseMatrix zeta * BlPhaseMatrix = zeta • permMatrix (s1Root * s2Root) := by
+  simp [BsPhaseMatrix, BlPhaseMatrix, BsPermMatrix, BlPermMatrix]
 
 theorem generator_product_eq_cRoot_inv :
     s1Root * s2Root = cRoot⁻¹ := by
@@ -160,11 +182,38 @@ theorem coxeterPermMatrix_pow_twelve_of_neg_defect
     coxeterPermMatrix ^ 12 = 1 :=
   twelfth_power_of_neg_sixth_power coxeterPermMatrix hC
 
+theorem phase_generator_product_pow_six (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
+    (BsPhaseMatrix zeta * BlPhaseMatrix) ^ 6 =
+      (-1 : ℂ) • (1 : Matrix G2CoordinateRoot G2CoordinateRoot ℂ) := by
+  rw [phase_generator_product, smul_pow, hζ]
+  have hroot : (s1Root * s2Root) ^ 6 = 1 := by
+    rw [generator_product_eq_cRoot_inv, inv_pow, cRoot_pow_six]
+    simp
+  have hmatrix : (permMatrix (s1Root * s2Root)) ^ 6 = 1 := by
+    have hp : ∀ n : ℕ, permMatrix ((s1Root * s2Root) ^ n) =
+        (permMatrix (s1Root * s2Root)) ^ n := by
+      intro n
+      induction n with
+      | zero => simp [permMatrix_one]
+      | succ n ih =>
+          rw [pow_succ, pow_succ, permMatrix_mul, ih]
+    rw [← hp 6, hroot, permMatrix_one]
+  rw [hmatrix]
+
+theorem phase_generator_product_pow_twelve (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
+    (BsPhaseMatrix zeta * BlPhaseMatrix) ^ 12 = 1 :=
+  twelfth_power_of_neg_sixth_power _ (phase_generator_product_pow_six zeta hζ)
+
 /-- 🏆 THEOREM 4: Packaging the permutation shadow into `ArtinHeckeLift`. -/
 def permutationArtinHeckeLift : ArtinHeckeLift G2CoordinateRoot where
   Bs := BsPermMatrix
   Bl := BlPermMatrix
   artin := perm_artin_six_matrix
+
+def phaseArtinHeckeLift (zeta : ℂ) : ArtinHeckeLift G2CoordinateRoot where
+  Bs := BsPhaseMatrix zeta
+  Bl := BlPhaseMatrix
+  artin := phase_artin_six_matrix zeta
 
 end
 

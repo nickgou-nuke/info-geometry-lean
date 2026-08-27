@@ -121,6 +121,25 @@ theorem perm_artin_six_matrix :
   simp only [← permMatrix_mul]
   rw [s1_s2_artin_six_perm]
 
+theorem generator_product_eq_cRoot_inv :
+    s1Root * s2Root = cRoot⁻¹ := by
+  have hs1 : s1Root⁻¹ = s1Root := by
+    apply Equiv.ext
+    intro r
+    apply s1Root.injective
+    simp [s1Root_involutive]
+  have hs2 : s2Root⁻¹ = s2Root := by
+    apply Equiv.ext
+    intro r
+    apply s2Root.injective
+    simp [s2Root_involutive]
+  have hc : cRoot = s2Root * s1Root := by
+    apply Equiv.ext
+    intro r
+    apply Subtype.ext
+    rfl
+  rw [hc, mul_inv_rev, hs1, hs2]
+
 /-- Classical Coxeter matrix $C_{\\text{perm}} = B_s B_\\ell$. -/
 noncomputable def coxeterPermMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
   permMatrix cRoot
@@ -134,6 +153,12 @@ theorem coxeterPermMatrix_pow_six : coxeterPermMatrix ^ 6 = 1 := by
     | succ n ih =>
         rw [pow_succ, pow_succ, permMatrix_mul, ih]
   rw [← hp 6, cRoot_pow_six, permMatrix_one]
+
+theorem coxeterPermMatrix_pow_twelve_of_neg_defect
+    (hC : coxeterPermMatrix ^ 6 =
+      (-1 : ℂ) • (1 : Matrix G2CoordinateRoot G2CoordinateRoot ℂ)) :
+    coxeterPermMatrix ^ 12 = 1 :=
+  twelfth_power_of_neg_sixth_power coxeterPermMatrix hC
 
 /-- 🏆 THEOREM 4: Packaging the permutation shadow into `ArtinHeckeLift`. -/
 def permutationArtinHeckeLift : ArtinHeckeLift G2CoordinateRoot where

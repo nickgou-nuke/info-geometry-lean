@@ -23,6 +23,7 @@ import InfoGeometry.Algebra.FiniteFieldFrobenius
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.PrimePotentHierarchy
 import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
+import InfoGeometry.QuantumAlgebra.G2ArtinCyclotomicLift
 import InfoGeometry.Algebra.Zorn.ConformalNPotentRoots
 import InfoGeometry.Algebra.Zorn.FirstQuantizedLeftRegular
 import InfoGeometry.Lie.G2DoubleStarRootDecomposition

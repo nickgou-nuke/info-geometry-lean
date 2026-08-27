@@ -190,6 +190,28 @@ theorem directedChiralHomotopyEquiv_append_congr
     (directedChiralHomotopyEquiv_append_right hright q hpp')
     (directedChiralHomotopyEquiv_append_left hleft p' hqq')
 
+/-! Composition of quotient classes is available once elementary rewrites are
+compatible with appending on both sides. -/
+
+def DirectedPathClass.comp
+    {G : ChiralDigraph} (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G)
+    {u v w : G.Vertex} :
+    DirectedPathClass G u v → DirectedPathClass G v w →
+      DirectedPathClass G u w := by
+  intro p
+  refine Quot.lift
+    (fun p' => Quot.lift
+      (fun q' => DirectedPathClass.mk (DirectedPath.append p' q'))
+      (fun q₁ q₂ hq => Quot.sound
+        (directedChiralHomotopyEquiv_append_left hleft p' hq)))
+    ?_ p
+  intro p₁ p₂ hp
+  funext q
+  refine Quot.inductionOn q ?_
+  intro q'
+  exact Quot.sound (directedChiralHomotopyEquiv_append_right hright q' hp)
+
 theorem DirectedChiralHomotopy.length_eq {G : ChiralDigraph}
     {u v : G.Vertex} {p q : DirectedPath G u v}
     (h : DirectedChiralHomotopy p q)

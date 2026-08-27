@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.CyclotomicOperatorProjectors
 
 namespace InfoGeometry.Algebra.Zorn.ConformalNPotent
 
@@ -97,6 +98,12 @@ theorem root_of_unity_succ_potent (x : ℂ) (m : ℕ) (h : x ^ m = 1) :
 theorem root_of_unity_succ_potent_iff (x : ℂ) {m : ℕ} (hm : 1 ≤ m) :
     IsNPotent x (m + 1) ↔ x = 0 ∨ x ^ m = 1 := by
   simpa using (complex_npotent_iff x (n := m + 1) (by omega))
+
+/-- A nontrivial finite-order complex phase has vanishing geometric sum. -/
+theorem complex_root_of_unity_geometric_sum_eq_zero
+    {u : ℂ} {n : ℕ} (hu : u ^ n = 1) (hune : u ≠ 1) :
+    (∑ i ∈ Finset.range n, u ^ i) = 0 := by
+  exact InfoGeometry.Algebra.CyclotomicOperatorProjectors.root_of_unity_geometric_sum_eq_zero_of_ne_one hu hune
 
 /-- The low-degree member of the same pattern for the cubic equation. -/
 theorem roots_of_2_are_3_potent (x : ℂ) (h : x ^ 2 = 1) :

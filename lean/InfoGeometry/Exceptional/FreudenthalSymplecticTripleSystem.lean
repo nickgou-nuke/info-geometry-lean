@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
+import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Exceptional.SymplecticTripleSystem
 
 noncomputable section
@@ -101,5 +102,53 @@ def freudenthalTriple (D : CubicJordanDatum J) :
 @[simp] theorem freudenthalTriple_apply
     (D : CubicJordanDatum J) (X Y Z : FreudenthalCharge J) :
     freudenthalTriple D X Y Z = symplecticRankTwo D X Y Z := rfl
+
+noncomputable def freudenthalSymplecticTripleSystem (D : CubicJordanDatum J) :
+    SymplecticTripleSystemDatum (FreudenthalCharge J) where
+  omega := freudenthalOmega D
+  omega_alt := by
+    intro x
+    exact FreudenthalCharge.symplectic_form_alternating D x
+  triple := freudenthalTriple D
+  triple_symm₁₂ := by
+    intro x y z
+    exact congrArg (fun T : Module.End ℝ (FreudenthalCharge J) => T z)
+      (symplecticRankTwo_swap D x y)
+  triple_swap₂₃ := by
+    intro x y z
+    simpa only [freudenthalTriple_apply, freudenthalOmega_apply] using
+      symplecticRankTwo_swap23 D x y z
+  triple_derivation := by
+    intro x y u v w
+    have h := symplectic_rankTwo_commutator_rankTwo D x y u v
+    have hw := congrArg (fun T : Module.End ℝ (FreudenthalCharge J) => T w) h
+    change symplecticRankTwo D x y (symplecticRankTwo D u v w) -
+        symplecticRankTwo D u v (symplecticRankTwo D x y w) = _ at hw
+    simp only [LinearMap.add_apply] at hw
+    change symplecticRankTwo D x y (symplecticRankTwo D u v w) = _
+    calc
+      symplecticRankTwo D x y (symplecticRankTwo D u v w) =
+          (symplecticRankTwo D x y (symplecticRankTwo D u v w) -
+            symplecticRankTwo D u v (symplecticRankTwo D x y w)) +
+            symplecticRankTwo D u v (symplecticRankTwo D x y w) := by module
+      _ = (symplecticRankTwo D ((symplecticRankTwo D x y) u) v) w +
+          (symplecticRankTwo D u ((symplecticRankTwo D x y) v)) w +
+          symplecticRankTwo D u v (symplecticRankTwo D x y w) := by
+            rw [hw]
+  omega_invariant := by
+    intro x y u v
+    simpa only [freudenthalOmega_apply, freudenthalTriple_apply] using
+      symplecticRankTwo_preserves D x y u v
+
+@[simp] theorem freudenthal_innerDerivation_eq_rankTwo
+    (D : CubicJordanDatum J) (x y : FreudenthalCharge J) :
+    innerDerivation (freudenthalSymplecticTripleSystem D) x y =
+      symplecticRankTwo D x y := rfl
+
+@[simp] theorem freudenthal_innerDerivation_eq_mixedBracket
+    (D : CubicJordanDatum J) (x y : FreudenthalCharge J) :
+    innerDerivation (freudenthalSymplecticTripleSystem D) x y =
+      (mixedSymplecticBracket D x y : Module.End ℝ (FreudenthalCharge J)) := by
+  rfl
 
 end InfoGeometry.Exceptional.Freudenthal

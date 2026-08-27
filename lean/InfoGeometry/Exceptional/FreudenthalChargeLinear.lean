@@ -288,6 +288,18 @@ theorem symplecticRankTwo_swap23
   rw [FreudenthalCharge.symplectic_form_skew D z y]
   module
 
+theorem symplecticRankTwo_jacobi_pattern
+    (D : CubicJordanDatum J) (x y z : FreudenthalCharge J) :
+    -(symplecticRankTwo D y z x) + symplecticRankTwo D x z y =
+      FreudenthalCharge.symplecticForm D x z • y -
+        FreudenthalCharge.symplecticForm D y z • x +
+          (2 * FreudenthalCharge.symplecticForm D x y) • z := by
+  simp only [symplecticRankTwo_apply]
+  rw [FreudenthalCharge.symplectic_form_skew D z x,
+    FreudenthalCharge.symplectic_form_skew D y x,
+    FreudenthalCharge.symplectic_form_skew D z y]
+  module
+
 theorem symplecticRankTwo_preserves
     (D : CubicJordanDatum J) (X Y Z W : FreudenthalCharge J) :
     FreudenthalCharge.symplecticForm D (symplecticRankTwo D X Y Z) W

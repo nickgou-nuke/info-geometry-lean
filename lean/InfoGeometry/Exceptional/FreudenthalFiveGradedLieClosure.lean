@@ -113,6 +113,19 @@ instance : SMul ℝ (FiveGradedCarrier D) where
 @[simp] theorem zero_plus1 : (0 : FiveGradedCarrier D).plus1 = 0 := rfl
 @[simp] theorem zero_plus2 : (0 : FiveGradedCarrier D).plus2 = 0 := rfl
 
+@[simp] theorem add_minus2 (u v : FiveGradedCarrier D) :
+    (u + v).minus2 = u.minus2 + v.minus2 := rfl
+@[simp] theorem add_minus1 (u v : FiveGradedCarrier D) :
+    (u + v).minus1 = u.minus1 + v.minus1 := rfl
+@[simp] theorem add_zero_symp (u v : FiveGradedCarrier D) :
+    (u + v).zero_symp = u.zero_symp + v.zero_symp := rfl
+@[simp] theorem add_zero_scale (u v : FiveGradedCarrier D) :
+    (u + v).zero_scale = u.zero_scale + v.zero_scale := rfl
+@[simp] theorem add_plus1 (u v : FiveGradedCarrier D) :
+    (u + v).plus1 = u.plus1 + v.plus1 := rfl
+@[simp] theorem add_plus2 (u v : FiveGradedCarrier D) :
+    (u + v).plus2 = u.plus2 + v.plus2 := rfl
+
 @[ext]
 theorem ext (u v : FiveGradedCarrier D)
     (h_m2 : u.minus2 = v.minus2)
@@ -153,13 +166,15 @@ def fiveGradedBracket (u v : FiveGradedCarrier D) : FiveGradedCarrier D where
     -- [H, E_-] = -2 E_- action
     (-2 * u.zero_scale * v.minus2 + 2 * v.zero_scale * u.minus2) +
     -- Heisenberg charge bracket [g_-1, g_-1] -> g_-2
-    FreudenthalCharge.symplecticForm D u.minus1 v.minus1
+    (2 * FreudenthalCharge.symplecticForm D u.minus1 v.minus1)
 
   minus1 :=
     -- [H, X_-1] = -1 X_-1 action + symplectic g_0 action on g_-1
     (-u.zero_scale • v.minus1 + v.zero_scale • u.minus1) +
     ((u.zero_symp : Module.End ℝ (FreudenthalCharge J)) v.minus1 -
-     (v.zero_symp : Module.End ℝ (FreudenthalCharge J)) u.minus1)
+     (v.zero_symp : Module.End ℝ (FreudenthalCharge J)) u.minus1) +
+    -- [g_-2, g_+1] -> g_-1 extreme action
+    (u.minus2 • v.plus1 - v.minus2 • u.plus1)
 
   zero_symp :=
     -- [g_0, g_0] bracket + mixed [g_-1, g_+1] -> g_0
@@ -169,19 +184,24 @@ def fiveGradedBracket (u v : FiveGradedCarrier D) : FiveGradedCarrier D where
 
   zero_scale :=
     -- Extreme bracket [E_+, E_-] = H scale: u_+2 * v_-2 - v_+2 * u_-2
-    (u.plus2 * v.minus2 - v.plus2 * u.minus2)
+    (u.plus2 * v.minus2 - v.plus2 * u.minus2) +
+    -- Mixed [g_-1, g_+1] -> R H scale projection
+    (FreudenthalCharge.symplecticForm D u.minus1 v.plus1 -
+     FreudenthalCharge.symplecticForm D v.minus1 u.plus1)
 
   plus1 :=
     -- [H, X_+1] = +1 X_+1 action + symplectic g_0 action on g_+1
     (u.zero_scale • v.plus1 - v.zero_scale • u.plus1) +
     ((u.zero_symp : Module.End ℝ (FreudenthalCharge J)) v.plus1 -
-     (v.zero_symp : Module.End ℝ (FreudenthalCharge J)) u.plus1)
+     (v.zero_symp : Module.End ℝ (FreudenthalCharge J)) u.plus1) +
+    -- [g_+2, g_-1] -> g_+1 Chevalley-dual action
+    (-u.plus2 • v.minus1 + v.plus2 • u.minus1)
 
   plus2 :=
     -- [H, E_+] = +2 E_+ action
     (2 * u.zero_scale * v.plus2 - 2 * v.zero_scale * u.plus2) +
     -- Heisenberg charge bracket [g_+1, g_+1] -> g_+2
-    FreudenthalCharge.symplecticForm D u.plus1 v.plus1
+    (2 * FreudenthalCharge.symplecticForm D u.plus1 v.plus1)
 
 /-! ## 5. Fundamental Symmetry & Skew Laws -/
 
@@ -200,7 +220,9 @@ theorem fiveGradedBracket_skew (u v : FiveGradedCarrier D) :
     rw [hskew]
     abel
   · simp only [fiveGradedBracket, FiveGradedCarrier.neg_zero_scale]
-    ring
+    have hsymp1 := FreudenthalCharge.symplectic_form_skew D u.minus1 v.plus1
+    have hsymp2 := FreudenthalCharge.symplectic_form_skew D v.minus1 u.plus1
+    linarith
   · simp only [fiveGradedBracket, FiveGradedCarrier.neg_plus1]
     module
   · simp only [fiveGradedBracket, FiveGradedCarrier.neg_plus2]
@@ -234,6 +256,34 @@ theorem scale_action_gradePlus2 :
     dsimp [fiveGradedBracket, genHscale, genEplus] <;>
     simp
 
+/-- 🏆 THEOREM: Scale action on the grade $+1$ charge generator $[H, y_+] = +1 y_+$. -/
+theorem scale_action_gradePlus1 (y : FreudenthalCharge J) :
+    fiveGradedBracket D (genHscale D 1) (injChargePlus D y) = injChargePlus D y := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, injChargePlus] <;>
+    simp
+
+/-- 🏆 THEOREM: Scale action on the grade $0$ symplectic subalgebra $[H, T_0] = 0$. -/
+theorem scale_action_gradeZeroSymp (T : SymplecticTKKZero D) :
+    fiveGradedBracket D (genHscale D 1) (injSympZero D T) = 0 := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, injSympZero] <;>
+    simp
+
+/-- 🏆 THEOREM: Scale action on the grade $0$ scale generator $[H, H] = 0$. -/
+theorem scale_action_gradeZeroScale :
+    fiveGradedBracket D (genHscale D 1) (genHscale D 1) = 0 := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale] <;>
+    simp
+
+/-- 🏆 THEOREM: Scale action on the grade $-1$ charge generator $[H, x_-] = -1 x_-$. -/
+theorem scale_action_gradeMinus1 (x : FreudenthalCharge J) :
+    fiveGradedBracket D (genHscale D 1) (injChargeMinus D x) = injChargeMinus D (-x) := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, injChargeMinus] <;>
+    simp
+
 /-- 🏆 THEOREM: Scale action on the grade $-2$ generator $[H, E_-] = -2 E_-$. -/
 theorem scale_action_gradeMinus2 :
     fiveGradedBracket D (genHscale D 1) (genEminus D 1) = genEminus D (-2) := by
@@ -243,28 +293,180 @@ theorem scale_action_gradeMinus2 :
 
 /-! ## 7. Heisenberg and Transversal Sector Brackets -/
 
-/-- Heisenberg nilpotency on $\mathfrak{g}_{-1}$: $[\mathfrak{g}_{-1}, \mathfrak{g}_{-1}] = \omega(x, y) E_-$. -/
+@[simp] theorem fiveGradedBracket_chargeMinus_chargeMinus (x y : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargeMinus D x) (injChargeMinus D y) =
+      ⟨2 * FreudenthalCharge.symplecticForm D x y, 0, 0, 0, 0, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus] <;>
+    simp
+
+@[simp] theorem fiveGradedBracket_chargePlus_chargePlus (x y : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargePlus D x) (injChargePlus D y) =
+      ⟨0, 0, 0, 0, 0, 2 * FreudenthalCharge.symplecticForm D x y⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargePlus] <;>
+    simp
+
+@[simp] theorem fiveGradedBracket_chargeMinus_chargePlus (x y : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargeMinus D x) (injChargePlus D y) =
+      ⟨0, 0, mixedSymplecticBracket D x y,
+       FreudenthalCharge.symplecticForm D x y, 0, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus, injChargePlus] <;>
+    simp
+
+@[simp] theorem fiveGradedBracket_chargePlus_chargeMinus (y x : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargePlus D y) (injChargeMinus D x) =
+      ⟨0, 0, -mixedSymplecticBracket D x y,
+       -FreudenthalCharge.symplecticForm D x y, 0, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus, injChargePlus] <;>
+    simp
+
+@[simp] theorem fiveGradedBracket_chargeMinus_zeroBlock
+    (x : FreudenthalCharge J) (T : SymplecticTKKZero D) (h : ℝ) :
+    fiveGradedBracket D (injChargeMinus D x) ⟨0, 0, T, h, 0, 0⟩ =
+      ⟨0, h • x - (T : Module.End ℝ (FreudenthalCharge J)) x, 0, 0, 0, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus] <;>
+    simp [sub_eq_add_neg]
+
+@[simp] theorem fiveGradedBracket_chargePlus_zeroBlock
+    (x : FreudenthalCharge J) (T : SymplecticTKKZero D) (h : ℝ) :
+    fiveGradedBracket D (injChargePlus D x) ⟨0, 0, T, h, 0, 0⟩ =
+      ⟨0, 0, 0, 0, -h • x - (T : Module.End ℝ (FreudenthalCharge J)) x, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargePlus] <;>
+    simp [sub_eq_add_neg]
+
+@[simp] theorem fiveGradedBracket_chargePlus_genEminus
+    (z : FreudenthalCharge J) (c : ℝ) :
+    fiveGradedBracket D (injChargePlus D z) ⟨c, 0, 0, 0, 0, 0⟩ =
+      ⟨0, -c • z, 0, 0, 0, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargePlus] <;>
+    simp
+
+@[simp] theorem fiveGradedBracket_chargeMinus_genEplus
+    (z : FreudenthalCharge J) (c : ℝ) :
+    fiveGradedBracket D (injChargeMinus D z) ⟨0, 0, 0, 0, 0, c⟩ =
+      ⟨0, 0, 0, 0, c • z, 0⟩ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus] <;>
+    simp
+
+/-- Heisenberg nilpotency on $\mathfrak{g}_{-1}$: $[\mathfrak{g}_{-1}, \mathfrak{g}_{-1}] = 2\omega(x, y) E_-$. -/
 theorem bracket_minus1_minus1 (x y : FreudenthalCharge J) :
     fiveGradedBracket D (injChargeMinus D x) (injChargeMinus D y) =
-      genEminus D (FreudenthalCharge.symplecticForm D x y) := by
-  apply FiveGradedCarrier.ext <;>
-    dsimp [fiveGradedBracket, injChargeMinus, genEminus] <;>
-    simp
+      genEminus D (2 * FreudenthalCharge.symplecticForm D x y) :=
+  fiveGradedBracket_chargeMinus_chargeMinus D x y
 
-/-- Heisenberg nilpotency on $\mathfrak{g}_{+1}$: $[\mathfrak{g}_{+1}, \mathfrak{g}_{+1}] = \omega(x, y) E_+$. -/
+/-- Heisenberg nilpotency on $\mathfrak{g}_{+1}$: $[\mathfrak{g}_{+1}, \mathfrak{g}_{+1}] = 2\omega(x, y) E_+$. -/
 theorem bracket_plus1_plus1 (x y : FreudenthalCharge J) :
     fiveGradedBracket D (injChargePlus D x) (injChargePlus D y) =
-      genEplus D (FreudenthalCharge.symplecticForm D x y) := by
-  apply FiveGradedCarrier.ext <;>
-    dsimp [fiveGradedBracket, injChargePlus, genEplus] <;>
-    simp
+      genEplus D (2 * FreudenthalCharge.symplecticForm D x y) :=
+  fiveGradedBracket_chargePlus_chargePlus D x y
 
-/-- Transversal TKK mixed bracket: $[\mathfrak{g}_{-1}, \mathfrak{g}_{+1}] = \text{mixedSymplecticBracket}(x, y)$. -/
+/-- Transversal mixed bracket: $[\mathfrak{g}_{-1}, \mathfrak{g}_{+1}]$ yields mixed symplectic derivation plus scale $H$. -/
 theorem bracket_minus1_plus1 (x y : FreudenthalCharge J) :
     fiveGradedBracket D (injChargeMinus D x) (injChargePlus D y) =
-      injSympZero D (mixedSymplecticBracket D x y) := by
+      ⟨0, 0, mixedSymplecticBracket D x y,
+       FreudenthalCharge.symplecticForm D x y, 0, 0⟩ :=
+  fiveGradedBracket_chargeMinus_chargePlus D x y
+
+/-- Extreme action of $E_-$ on $\mathfrak{g}_{+1}$: $[E_-, z_+] = z_-$. -/
+theorem extreme_minus2_action_plus1 (z : FreudenthalCharge J) :
+    fiveGradedBracket D (genEminus D 1) (injChargePlus D z) = injChargeMinus D z := by
   apply FiveGradedCarrier.ext <;>
-    dsimp [fiveGradedBracket, injChargeMinus, injChargePlus, injSympZero] <;>
+    dsimp [fiveGradedBracket, genEminus, injChargePlus, injChargeMinus] <;>
     simp
+
+/-- Extreme action of $E_+$ on $\mathfrak{g}_{-1}$: $[E_+, x_-] = -x_+$. -/
+theorem extreme_plus2_action_minus1 (x : FreudenthalCharge J) :
+    fiveGradedBracket D (genEplus D 1) (injChargeMinus D x) = injChargePlus D (-x) := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, injChargeMinus, injChargePlus] <;>
+    simp
+
+/-- 🏆 THEOREM: Exact cancellation of the $(-1,-1,+1)$ Jacobi obstruction in the 5-graded bracket. -/
+theorem fiveGraded_minus_minus_plus_jacobi (x y z : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargeMinus D x)
+      (fiveGradedBracket D (injChargeMinus D y) (injChargePlus D z)) +
+    fiveGradedBracket D (injChargeMinus D y)
+      (fiveGradedBracket D (injChargePlus D z) (injChargeMinus D x)) +
+    fiveGradedBracket D (injChargePlus D z)
+      (fiveGradedBracket D (injChargeMinus D x) (injChargeMinus D y)) = 0 := by
+  rw [fiveGradedBracket_chargeMinus_chargePlus,
+      fiveGradedBracket_chargePlus_chargeMinus,
+      fiveGradedBracket_chargeMinus_chargeMinus]
+  rw [fiveGradedBracket_chargeMinus_zeroBlock,
+      fiveGradedBracket_chargeMinus_zeroBlock,
+      fiveGradedBracket_chargePlus_genEminus]
+  apply FiveGradedCarrier.ext
+  · dsimp [FiveGradedCarrier.instAdd]; ring
+  · dsimp [FiveGradedCarrier.instAdd]
+    have hjac := symplecticRankTwo_jacobi_pattern D x y z
+    calc
+      (FreudenthalCharge.symplecticForm D y z • x - symplecticRankTwo D y z x) +
+        (-FreudenthalCharge.symplecticForm D x z • y - -symplecticRankTwo D x z y) +
+        -(2 * FreudenthalCharge.symplecticForm D x y) • z
+        = (- symplecticRankTwo D y z x + symplecticRankTwo D x z y) -
+          (FreudenthalCharge.symplecticForm D x z • y -
+           FreudenthalCharge.symplecticForm D y z • x +
+           (2 * FreudenthalCharge.symplecticForm D x y) • z) := by module
+      _ = (FreudenthalCharge.symplecticForm D x z • y -
+           FreudenthalCharge.symplecticForm D y z • x +
+           (2 * FreudenthalCharge.symplecticForm D x y) • z) -
+          (FreudenthalCharge.symplecticForm D x z • y -
+           FreudenthalCharge.symplecticForm D y z • x +
+           (2 * FreudenthalCharge.symplecticForm D x y) • z) := by rw [hjac]
+      _ = 0 := by module
+  · dsimp [FiveGradedCarrier.instAdd]; abel
+  · dsimp [FiveGradedCarrier.instAdd]; ring
+  · dsimp [FiveGradedCarrier.instAdd]; module
+  · dsimp [FiveGradedCarrier.instAdd]; ring
+
+/-- 🏆 THEOREM: Exact cancellation of the (+1,+1,-1) dual Jacobi obstruction in the 5-graded bracket. -/
+theorem fiveGraded_plus_plus_minus_jacobi (x y z : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargePlus D x)
+      (fiveGradedBracket D (injChargePlus D y) (injChargeMinus D z)) +
+    fiveGradedBracket D (injChargePlus D y)
+      (fiveGradedBracket D (injChargeMinus D z) (injChargePlus D x)) +
+    fiveGradedBracket D (injChargeMinus D z)
+      (fiveGradedBracket D (injChargePlus D x) (injChargePlus D y)) = 0 := by
+  rw [fiveGradedBracket_chargePlus_chargeMinus,
+      fiveGradedBracket_chargeMinus_chargePlus,
+      fiveGradedBracket_chargePlus_chargePlus]
+  rw [fiveGradedBracket_chargePlus_zeroBlock,
+      fiveGradedBracket_chargePlus_zeroBlock,
+      fiveGradedBracket_chargeMinus_genEplus]
+  apply FiveGradedCarrier.ext
+  · dsimp [FiveGradedCarrier.instAdd]; ring
+  · dsimp [FiveGradedCarrier.instAdd]; module
+  · dsimp [FiveGradedCarrier.instAdd]; abel
+  · dsimp [FiveGradedCarrier.instAdd]; ring
+  · dsimp [FiveGradedCarrier.instAdd]
+    have hswap := symplecticRankTwo_swap23 D z y x
+    have hskew_zx := FreudenthalCharge.symplectic_form_skew D z x
+    have hskew_zy := FreudenthalCharge.symplectic_form_skew D z y
+    have hskew_yx := FreudenthalCharge.symplectic_form_skew D y x
+    calc
+      (- -FreudenthalCharge.symplecticForm D z y • x - -(symplecticRankTwo D z y) x) +
+        (-FreudenthalCharge.symplecticForm D z x • y - symplecticRankTwo D z x y) +
+        (2 * FreudenthalCharge.symplecticForm D x y) • z
+        = (symplecticRankTwo D z y x - symplecticRankTwo D z x y) -
+          (FreudenthalCharge.symplecticForm D z x • y -
+           FreudenthalCharge.symplecticForm D z y • x +
+           (2 * FreudenthalCharge.symplecticForm D y x) • z) := by
+             rw [hskew_yx]
+             module
+      _ = (FreudenthalCharge.symplecticForm D z x • y -
+           FreudenthalCharge.symplecticForm D z y • x +
+           (2 * FreudenthalCharge.symplecticForm D y x) • z) -
+          (FreudenthalCharge.symplecticForm D z x • y -
+           FreudenthalCharge.symplecticForm D z y • x +
+           (2 * FreudenthalCharge.symplecticForm D y x) • z) := by rw [hswap]
+      _ = 0 := by module
+  · dsimp [FiveGradedCarrier.instAdd]; ring
 
 end InfoGeometry.Exceptional.Freudenthal

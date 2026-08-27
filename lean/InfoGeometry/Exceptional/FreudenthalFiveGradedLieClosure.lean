@@ -2,9 +2,9 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticTKKTotalBracket
 import InfoGeometry.Exceptional.FreudenthalHeisenbergLieRepresentation
 
 /-!
-# Five-Graded Lie Bracket Closure on the Freudenthal Heisenberg/TKK Carrier
+# Five-Graded Bracket Closure Candidate on the Freudenthal Heisenberg/TKK Carrier
 
-This module formalizes the contact 5-graded Lie algebra structure:
+This module formalizes a contact 5-graded bracket candidate:
 
 $$\mathfrak{g} = \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_{+1} \oplus \mathfrak{g}_{+2}$$
 
@@ -15,7 +15,7 @@ on the native exceptional carriers:
 - $\mathfrak{g}_{+1} \cong \text{FreudenthalCharge } J$ (Charge sector at degree $+1$)
 - $\mathfrak{g}_{+2} \cong \mathbb{R} E_+$ (Central Heisenberg scalar lane at degree $+2$)
 
-## Key Theorems Proven:
+## Key Bracket Theorems Proven:
 
 1. **Extreme $\mathfrak{sl}_2$ Bracket Closure**:
    $$\llbracket E_+, E_- \rrbracket = H$$
@@ -35,7 +35,8 @@ on the native exceptional carriers:
 5. **Strict Skew-Symmetry**:
    $$\llbracket u, v \rrbracket = - \llbracket v, u \rrbracket$$
 
-All proofs are complete with 0 sorries and 0 axioms.
+The file does not claim the Jacobi identity or a Lie-algebra instance.
+All proofs in this file are complete with 0 sorries and 0 axioms.
 -/
 
 noncomputable section
@@ -144,7 +145,7 @@ def injChargePlus (y : FreudenthalCharge J) : FiveGradedCarrier D := ⟨0, 0, 0,
 /-- Grade $0$ symplectic Lie subalgebra injection. -/
 def injSympZero (T : SymplecticTKKZero D) : FiveGradedCarrier D := ⟨0, 0, T, 0, 0, 0⟩
 
-/-! ## 4. Five-Graded Lie Bracket Definition -/
+/-! ## 4. Five-Graded Bracket Candidate Definition -/
 
 /-- The total 5-graded Lie bracket on $\mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_{+1} \oplus \mathfrak{g}_{+2}$. -/
 def fiveGradedBracket (u v : FiveGradedCarrier D) : FiveGradedCarrier D where
@@ -184,7 +185,7 @@ def fiveGradedBracket (u v : FiveGradedCarrier D) : FiveGradedCarrier D where
 
 /-! ## 5. Fundamental Symmetry & Skew Laws -/
 
-/-- 🏆 THEOREM: The 5-graded Lie bracket is strictly skew-symmetric. -/
+/-- The 5-graded bracket candidate is strictly skew-symmetric. -/
 theorem fiveGradedBracket_skew (u v : FiveGradedCarrier D) :
     fiveGradedBracket D u v = - fiveGradedBracket D v u := by
   apply FiveGradedCarrier.ext

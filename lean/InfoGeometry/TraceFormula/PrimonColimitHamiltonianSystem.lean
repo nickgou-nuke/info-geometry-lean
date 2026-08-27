@@ -66,6 +66,41 @@ theorem stageFisherHessian_bond_compatible
   rw [matrixBond_inv n P hP]
   rw [← map_mul, ← map_mul]
 
+theorem isUnit_det_matrixBond
+    (n : ℕ) (Q : MatrixStage n) (hQ : IsUnit Q.det) :
+    IsUnit (matrixBond n Q).det := by
+  rw [determinant_bond_block]
+  exact IsUnit.pow 2 hQ
+
+theorem isUnit_det_bondMap
+    (m n : ℕ) (h : m ≤ n) (Q : MatrixStage m) (hQ : IsUnit Q.det) :
+    IsUnit (bondMap matrixBond m n h Q).det := by
+  refine Nat.le_induction
+    (m := m)
+    (P := fun t _ => ∀ ht : m ≤ t, IsUnit (bondMap matrixBond m t ht Q).det)
+    ?base ?succ n h
+    h
+  · intro ht
+    have hproof : ht = le_rfl := Subsingleton.elim ht le_rfl
+    subst hproof
+    rw [bondMap_refl]
+    exact hQ
+  · intro t hmt iht ht
+    have hproof : ht = Nat.le_trans hmt (Nat.le_succ t) :=
+      Subsingleton.elim ht (Nat.le_trans hmt (Nat.le_succ t))
+    subst hproof
+    rw [bondMap_succ matrixBond m t hmt]
+    dsimp
+    exact isUnit_det_matrixBond t (bondMap matrixBond m t hmt Q) (iht hmt)
+
+theorem bondMap_apply_succ
+    (m n : ℕ) (h : m ≤ n) (x : MatrixStage m) :
+    bondMap matrixBond m (n + 1) (Nat.le_trans h (Nat.le_succ n)) x =
+      matrixBond n (bondMap matrixBond m n h x) := by
+  have h_eq := bondMap_succ matrixBond m n h
+  rw [h_eq]
+  rfl
+
 theorem stageFisherHessian_bondMap_compatible
     (m n : ℕ) (h : m ≤ n) (P X : MatrixStage m) (hP : IsUnit P.det) :
     stageFisherHessian n (bondMap matrixBond m n h P)
@@ -73,21 +108,28 @@ theorem stageFisherHessian_bondMap_compatible
       bondMap matrixBond m n h (stageFisherHessian m P X) := by
   refine Nat.le_induction
     (m := m)
-    (P := fun k hk =>
-      stageFisherHessian k (bondMap matrixBond m k hk P)
-          (bondMap matrixBond m k hk X) =
-        bondMap matrixBond m k hk (stageFisherHessian m P X))
+    (P := fun t _ => ∀ ht : m ≤ t,
+      stageFisherHessian t (bondMap matrixBond m t ht P)
+          (bondMap matrixBond m t ht X) =
+        bondMap matrixBond m t ht (stageFisherHessian m P X))
     ?base ?succ n h
-  · simp [bondMap_refl]
-  · intro k hmk ih
-    change stageFisherHessian (k + 1)
-        (matrixBond k (bondMap matrixBond m k hmk P))
-        (matrixBond k (bondMap matrixBond m k hmk X)) =
-      matrixBond k (bondMap matrixBond m k hmk
-        (stageFisherHessian m P X))
-    rw [stageFisherHessian_bond_compatible]
-    rw [ih]
-    exact congrArg (matrixBond k) ih
+    h
+  · intro ht
+    have hproof : ht = le_rfl := Subsingleton.elim ht le_rfl
+    subst hproof
+    rw [bondMap_refl]
+    rfl
+  · intro t hmt iht ht
+    have hproof : ht = Nat.le_trans hmt (Nat.le_succ t) :=
+      Subsingleton.elim ht (Nat.le_trans hmt (Nat.le_succ t))
+    subst hproof
+    have hBondDet : IsUnit (bondMap matrixBond m t hmt P).det :=
+      isUnit_det_bondMap m t hmt P hP
+    rw [bondMap_apply_succ m t hmt P,
+        bondMap_apply_succ m t hmt X,
+        bondMap_apply_succ m t hmt (stageFisherHessian m P X)]
+    rw [stageFisherHessian_bond_compatible t (bondMap matrixBond m t hmt P) (bondMap matrixBond m t hmt X) hBondDet]
+    rw [iht hmt]
 
 theorem stageFisherHessian_normalizedTrace_selfAdjoint
     (n : ℕ) (P X Y : MatrixStage n) :

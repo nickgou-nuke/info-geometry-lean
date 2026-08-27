@@ -58,21 +58,23 @@ theorem appendZeroColumn₂_nonnegative
   · let sOld : Fin 2 → Fin n := fun j =>
       (s j).castPred (by
         fin_cases j
-        · apply Fin.lt_last_iff_ne_last.mpr
-          intro h0
-          have h01 : s 0 < s 1 := hs (by decide)
-          rw [h0] at h01
-          exact (Fin.not_lt_of_ge (Fin.le_last _)) h01
+        · have hs0ne : s 0 ≠ Fin.last n := by
+            intro h0
+            have h01 : s 0 < s 1 := hs (by decide)
+            rw [h0] at h01
+            exact (not_lt_of_ge (Fin.le_last _)) h01
+          simpa using hs0ne
         · exact hlast)
     have hsOld : StrictMono sOld := by
       intro i j hij
       exact Fin.castPred_lt_castPred (hs hij) (by
         fin_cases j
-        · apply Fin.lt_last_iff_ne_last.mpr
-          intro h0
-          have h01 : s 0 < s 1 := hs (by decide)
-          rw [h0] at h01
-          exact (Fin.not_lt_of_ge (Fin.le_last _)) h01
+        · have hs0ne : s 0 ≠ Fin.last n := by
+            intro h0
+            have h01 : s 0 < s 1 := hs (by decide)
+            rw [h0] at h01
+            exact (not_lt_of_ge (Fin.le_last _)) h01
+          simpa using hs0ne
         · exact hlast)
     have hminor :
         maximalMinor (appendZeroColumn₂ C) s = maximalMinor C sOld := by
@@ -80,10 +82,33 @@ theorem appendZeroColumn₂_nonnegative
       rw [Matrix.det_fin_two, Matrix.det_fin_two]
       have hs1lt : (s 1).val < n := Fin.val_lt_last hlast
       have hs0lt : (s 0).val < n := by
-        exact Nat.lt_trans (hs (by decide)).val hs1lt
-      simp [sOld, hs0lt, hs1lt]
+        have h01 : s 0 < s 1 := hs (by decide)
+        exact Nat.lt_trans h01 hs1lt
+      have h0 : sOld 0 = ⟨(s 0).val, hs0lt⟩ := by
+        apply Fin.ext
+        rfl
+      have h1 : sOld 1 = ⟨(s 1).val, hs1lt⟩ := by
+        apply Fin.ext
+        rfl
+      simp [hs0lt, hs1lt, h0, h1]
     rw [hminor]
     exact hC sOld hsOld
+
+/-! ### The finite 4-row to 2-row chart interface -/
+
+def firstTwoRows (C : Matrix (Fin 4) (Fin n) ℝ) :
+    Matrix (Fin 2) (Fin n) ℝ :=
+  Matrix.of (fun i j => C ⟨i.val, Nat.lt_trans i.isLt (by decide)⟩ j)
+
+theorem firstTwoRows_appendZeroColumn₂
+    (C : Matrix (Fin 4) (Fin n) ℝ) :
+    firstTwoRows (n := n + 1)
+        (Matrix.of (fun i j => if hj : j.val < n then C i ⟨j.val, hj⟩ else 0)) =
+      appendZeroColumn₂ (firstTwoRows C) := by
+  ext i j
+  by_cases hj : j.val < n
+  · simp [firstTwoRows, appendZeroColumn₂, hj]
+  · simp [firstTwoRows, appendZeroColumn₂, hj]
 
 theorem mem_positiveGrassmannianChart_iff
     (C : Matrix (Fin k) (Fin n) ℝ) :

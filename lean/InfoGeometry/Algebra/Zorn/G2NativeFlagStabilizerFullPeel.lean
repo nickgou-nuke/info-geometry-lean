@@ -74,4 +74,13 @@ theorem quotient_card_eq_189_of_fullPeel_basis_readback
   simpa only [Nat.card_eq_fintype_card] using
     G2IntrinsicFlagCardinality.intrinsicFlag_card
 
+theorem ambient_card_eq_12096_of_fullPeel_basis_readback
+    (hreadback : ∀ g : SplitOctF2Aut,
+      g ∈ nativeFlagStabilizer →
+      ∀ j : Fin 8, (fullPeel g).1 (basis8 j) = basis8 j) :
+    Nat.card SplitOctF2Aut = 12096 := by
+  rw [Subgroup.card_eq_card_quotient_mul_card_subgroup,
+    quotient_card_eq_189_of_fullPeel_basis_readback hreadback,
+    G2TwoPCSubgroupClosure.unipotentSubgroup_card]
+
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel

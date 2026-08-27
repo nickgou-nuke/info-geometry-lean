@@ -44,4 +44,18 @@ theorem quotient_equality_iff_pc_matrix_factor
   · rintro ⟨e, he⟩
     exact quotientRepresentative_eq_of_pc_matrix_factor i j e he
 
+/-! A constant-size separator interface for future CAS/readback witnesses.
+    The witness is a single matrix entry, while the PC exponent remains
+    universally quantified; no enumeration of the finite PC carrier is
+    performed here. -/
+theorem quotientRepresentative_ne_of_matrix_entry_separator
+    (i j : Fin 189) (r c : Fin 8)
+    (hentry : ∀ e : PCWordExp,
+      autMatrix ((flagRepresentative i)⁻¹ * flagRepresentative j) r c ≠
+        autMatrix (pcWord e) r c) :
+    quotientRepresentative i ≠ quotientRepresentative j := by
+  intro hquot
+  obtain ⟨e, he⟩ := quotient_equality_has_pc_factor i j hquot
+  exact hentry e (congrArg (fun M => M r c) he)
+
 end InfoGeometry.Algebra.Zorn.G2QuotientEnumInjectivityProbe

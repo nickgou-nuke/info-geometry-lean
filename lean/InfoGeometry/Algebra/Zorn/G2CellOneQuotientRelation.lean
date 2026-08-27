@@ -23,6 +23,8 @@ open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
+open InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
+open InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
 open InfoGeometry.Algebra.Zorn.G2ResidualPairCoordinateCellOne
 open InfoGeometry.Algebra.Zorn.G2GapResidualPairAssembly
 open InfoGeometry.Algebra.Zorn.G2GapResidualPairCellAssembly
@@ -88,22 +90,38 @@ theorem cell_one_quotient_collision :
   ⟨quotientRepresentative_24_eq_45, gapResidualPair_24_ne_45⟩
 
 set_option maxRecDepth 100000 in
+/-- A constant-size matrix separator for the `24/73` cross-pair at `(3, 3)`. -/
+theorem matrix_entry_24_73_separates_pc_words :
+    ∀ e : PCWordExp,
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 73) 3 3 ≠
+        autMatrix (G2TwoSylowSubgroup.pcWord e) 3 3 := by
+  decide
+
+set_option maxRecDepth 100000 in
+/-- A constant-size matrix separator for the `24/178` cross-pair at `(6, 5)`. -/
+theorem matrix_entry_24_178_separates_pc_words :
+    ∀ e : PCWordExp,
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 ≠
+        autMatrix (G2TwoSylowSubgroup.pcWord e) 6 5 := by
+  decide
+
+set_option maxRecDepth 100000 in
 /-- Representatives 24 and 73 are strictly distinct in `G ⧸ U₆`. -/
 theorem quotientRepresentative_24_ne_73 :
     quotientRepresentative (24 : Fin 189) ≠ quotientRepresentative (73 : Fin 189) := by
-  intro h
-  have hpc := (quotient_equality_iff_pc_matrix_factor 24 73).mp h
-  rcases hpc with ⟨e, he⟩
-  fin_cases e <;> revert he <;> decide
+  intro hquot
+  obtain ⟨e, he⟩ := quotient_equality_has_pc_factor 24 73 hquot
+  exact matrix_entry_24_73_separates_pc_words e
+    (congrArg (fun M => M 3 3) he)
 
 set_option maxRecDepth 100000 in
 /-- Representatives 24 and 178 are strictly distinct in `G ⧸ U₆`. -/
 theorem quotientRepresentative_24_ne_178 :
     quotientRepresentative (24 : Fin 189) ≠ quotientRepresentative (178 : Fin 189) := by
-  intro h
-  have hpc := (quotient_equality_iff_pc_matrix_factor 24 178).mp h
-  rcases hpc with ⟨e, he⟩
-  fin_cases e <;> revert he <;> decide
+  intro hquot
+  obtain ⟨e, he⟩ := quotient_equality_has_pc_factor 24 178 hquot
+  exact matrix_entry_24_178_separates_pc_words e
+    (congrArg (fun M => M 6 5) he)
 
 /-- Representatives 45 and 73 are strictly distinct in `G ⧸ U₆`. -/
 theorem quotientRepresentative_45_ne_73 :

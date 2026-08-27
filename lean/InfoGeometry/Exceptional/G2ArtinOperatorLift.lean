@@ -2,6 +2,7 @@
 
 import Mathlib
 import InfoGeometry.Exceptional.G2ArtinPresentation
+import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
 
 namespace InfoGeometry.Exceptional.ArtinOperators
 
@@ -81,6 +82,36 @@ end G2ArtinOperatorLift
 /-- Spin/projective lift where the 6th power of the Coxeter operator is $-I$. -/
 structure G2SpinOperatorLift extends G2ArtinOperatorLift where
   coxeter_pow_six_eq_neg_one : (Bs * Bl) ^ 6 = -1
+
+/-- An Artin lift whose Coxeter operator is explicitly identified with a
+Hestenes cyclotomic phase.  The identification is data, not a consequence of
+the Artin relation. -/
+structure PhaseCompatibleArtinLift extends G2ArtinOperatorLift where
+  bivector : Module.End ℂ H
+  inv2 sqrt3 : ℂ
+  h2 : (2 : ℂ) * inv2 = 1
+  h3 : sqrt3 ^ 2 = 3
+  bivector_sq : bivector ^ 2 = -1
+  phase_eq : Bs * Bl =
+    InfoGeometry.Algebra.Clifford.cyclotomicPhase bivector inv2 sqrt3
+
+namespace PhaseCompatibleArtinLift
+
+variable (ρ : PhaseCompatibleArtinLift)
+
+theorem coxeter_pow_six_eq_neg_one :
+    (ρ.Bs * ρ.Bl) ^ 6 = -1 := by
+  rw [ρ.phase_eq]
+  exact InfoGeometry.Algebra.Clifford.cyclotomic_phase_pow_six
+    ρ.bivector ρ.inv2 ρ.sqrt3 ρ.h2 ρ.h3 ρ.bivector_sq
+
+theorem coxeter_pow_twelve_eq_one :
+    (ρ.Bs * ρ.Bl) ^ 12 = 1 := by
+  rw [ρ.phase_eq]
+  exact InfoGeometry.Algebra.Clifford.cyclotomic_phase_pow_twelve
+    ρ.bivector ρ.inv2 ρ.sqrt3 ρ.h2 ρ.h3 ρ.bivector_sq
+
+end PhaseCompatibleArtinLift
 
 namespace G2SpinOperatorLift
 

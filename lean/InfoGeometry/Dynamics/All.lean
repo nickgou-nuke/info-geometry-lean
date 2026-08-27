@@ -2,6 +2,7 @@ import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Dynamics.HyperbolicComponent
 import InfoGeometry.Dynamics.JkoWeylGromov
 import InfoGeometry.Dynamics.KanDecomposition
+import InfoGeometry.Dynamics.HypercomplexOneParameterFlows
 import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Dynamics.RapiditySpace

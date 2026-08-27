@@ -18,6 +18,7 @@ open InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerGenerators
+open InfoGeometry.Algebra.Zorn.G2NativeFlagLineCoordinateConstraints
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
 open InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFlag
 open InfoGeometry.Algebra.Zorn.G2IntrinsicFlagAction
@@ -102,5 +103,44 @@ theorem ambient_card_eq_12096_of_fullPeel_basis_readback
   rw [Subgroup.card_eq_card_quotient_mul_card_subgroup,
     quotient_card_eq_189_of_fullPeel_basis_readback hreadback,
     G2TwoPCSubgroupClosure.unipotentSubgroup_card]
+
+theorem fullPeel_basis8_six_y0_false_of_stabilizer
+    {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) :
+    ((fullPeel g).1 (basis8 6)).y0 = false := by
+  rw [← fullPeel_basis8_two_x1_eq_basis8_six_y0 hg]
+  exact fullPeel_basis8_two_x1_false_of_stabilizer hg
+
+theorem basis8_seven_a_false_of_left_product
+    {X : SplitOctF2}
+    (htrace : X.a = X.b)
+    (h4X : (mul (basis8 4) X).x2 = false) :
+    X.a = false := by
+  have hb : X.b = false := by
+    have hcoords := congrArg SplitOctF2.x2 (mul_basis8_four_apply_coordinates X)
+    rw [h4X] at hcoords
+    exact hcoords.symm
+  rw [htrace, hb]
+
+theorem basis8_seven_eq_of_coordinate_relations
+    {X : SplitOctF2}
+    (hx0 : X.x0 = false)
+    (hx1 : X.x1 = false)
+    (hy1 : X.y1 = false)
+    (hy2 : X.y2 = true)
+    (htrace : X.a = X.b)
+    (h4X : (mul (basis8 4) X).x2 = false)
+    (h2X : (mul (basis8 2) X).a = false)
+    (hx2_rel : X.x2 = Bool.xor X.a (X.x1 && X.y1)) :
+    X = basis8 7 := by
+  have ha : X.a = false := basis8_seven_a_false_of_left_product htrace h4X
+  have hx2 : X.x2 = false := by
+    rw [hx2_rel, ha, hx1, hy1]
+    rfl
+  have hy0 : X.y0 = false := by
+    rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+    simpa [mul, dot3, cross0, cross1, cross2, basis8, ePlus, eMinus,
+      up0, up1, up2, down0, down1, down2, add2, mul2] using h2X
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  simp_all [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
 
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel

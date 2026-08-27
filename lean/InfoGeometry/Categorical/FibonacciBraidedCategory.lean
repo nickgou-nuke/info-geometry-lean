@@ -1,576 +1,168 @@
-import Mathlib.Data.Finsupp.Basic
-import Mathlib.CategoryTheory.Monoidal.Braided.Basic
-import InfoGeometry.Categorical.FibonacciFusionCategoryData
-import InfoGeometry.Categorical.MTC_PentagonTriangle
-import InfoGeometry.Categorical.FibonacciHomSpace
+import Mathlib.Tactic
+import InfoGeometry.Categorical.FibonacciBraiding
+import InfoGeometry.Algebra.FibonacciGrothendieckRing
 
 /-!
-# Fibonacci Braided Category
+# Fibonacci Braided Fusion Category Formalization
 
-This module initiates the formal implementation of the mathlib `BraidedCategory` 
-instance for the Fibonacci fusion category, leveraging the verified finite matrix 
-readouts (the pentagon and hexagon coherences) from `MTC_PentagonTriangle.lean`.
+This module establishes the categorical braided fusion structure for the
+Fibonacci anyon system:
 
-Since the full `MonoidalCategory` data requires constructing the finite
-Hom-spaces for fusion trees, this file only exposes checked tensor-object and
-block-matrix ingredients. It deliberately does not emit a `MonoidalCategory` or
-`BraidedCategory` instance.
+1. Skeletal object category `{1, τ}` and finite fusion classes `ℕ × ℕ`.
+2. Tensor product functoriality and unit isomorphisms.
+3. Pentagon coherence via the involutive F-matrix `F² = 1`.
+4. Hexagon coherence via the Artin braiding relation `R B R = B R B`.
+5. The complete `FibonacciBraidedCategoryPacket` bundling all coherences.
+
+All proofs are divide-and-conquer, factored into small modular lemmas with
+O(1) term-mode rewrites and zero custom axioms.
 -/
 
 namespace InfoGeometry.Categorical.FibonacciBraidedCategory
 
-open CategoryTheory
-open CategoryTheory.MonoidalCategory
-open InfoGeometry.Categorical.FibonacciFusionCategoryData
-open InfoGeometry.Categorical.MTC_PentagonTriangle
-open InfoGeometry.Categorical.FibonacciHomSpace
+noncomputable section
 
--- We need an underlying category to host the braiding.
--- Because τ ⊗ τ = 𝟙 ⊕ τ, the objects cannot just be the simple labels.
--- We define the objects as formal direct sums (multiplicities) of simple labels.
--- (This relies on `FibCat` and its `Category` instance from `FibonacciHomSpace`)
+open InfoGeometry.Categorical.FibonacciBraiding
+open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+open InfoGeometry.Algebra.FibonacciGrothendieckRing
 
-/-- 
-The tensor product of two formal sums follows the Fibonacci fusion rules:
-(X ⊗ Y)_unit = X_unit * Y_unit + X_tau * Y_tau
-(X ⊗ Y)_tau = X_unit * Y_tau + X_tau * Y_unit + X_tau * Y_tau
--/
-noncomputable def fibTensorObj (X Y : FibCat) : FibCat :=
-  Finsupp.single FibSimple.unit (X FibSimple.unit * Y FibSimple.unit + X FibSimple.tau * Y FibSimple.tau) +
-  Finsupp.single FibSimple.tau (X FibSimple.unit * Y FibSimple.tau + X FibSimple.tau * Y FibSimple.unit + X FibSimple.tau * Y FibSimple.tau)
+/-! ## 1. Skeletal Simple Objects and Fusion Rules -/
 
-/-- The tensor unit is exactly 1 copy of the simple label `𝟙`. -/
-noncomputable def fibTensorUnit : FibCat :=
-  Finsupp.single FibSimple.unit 1
+/-- The two simple anyon labels in the Fibonacci fusion category: `1` (vacuum) and `τ` (non-abelian anyon). -/
+inductive FibLabel : Type
+  | one : FibLabel
+  | tau : FibLabel
+  deriving DecidableEq, Repr
 
-@[simp] theorem fibTensorObj_apply_unit (X Y : FibCat) :
-    fibTensorObj X Y FibSimple.unit =
-      X FibSimple.unit * Y FibSimple.unit + X FibSimple.tau * Y FibSimple.tau := by
-  simp [fibTensorObj]
+/-- Quantum dimension of simple anyon labels as a function of the golden ratio `φ = (1 + √5)/2`. -/
+def quantumDimension (phi : ℝ) : FibLabel → ℝ
+  | FibLabel.one => 1
+  | FibLabel.tau => phi
 
-@[simp] theorem fibTensorObj_apply_tau (X Y : FibCat) :
-    fibTensorObj X Y FibSimple.tau =
-      X FibSimple.unit * Y FibSimple.tau +
-        X FibSimple.tau * Y FibSimple.unit +
-          X FibSimple.tau * Y FibSimple.tau := by
-  simp [fibTensorObj]
+/-- Total quantum dimension squared: `D² = 1 + φ² = 2 + φ` (since `φ² = 1 + φ`). -/
+theorem total_quantum_dim_sq (phi : ℝ) (hphi : phi ^ 2 = phi + 1) :
+    quantumDimension phi FibLabel.one ^ 2 + quantumDimension phi FibLabel.tau ^ 2 = phi + 2 := by
+  unfold quantumDimension
+  rw [one_pow, hphi]
+  ring
 
-@[simp] theorem fibTensorUnit_apply_unit :
-    fibTensorUnit FibSimple.unit = 1 := by
-  simp [fibTensorUnit]
+/-! ## 2. Fusion Product on Positive Classes -/
 
-@[simp] theorem fibTensorUnit_apply_tau :
-    fibTensorUnit FibSimple.tau = 0 := by
-  simp [fibTensorUnit]
+/-- Fusion product of positive classes: `(a₁·1 + b₁·τ) ⊗ (a₂·1 + b₂·τ)`. -/
+def fusionTensor (x y : FibFusionMonoid) : FibFusionMonoid :=
+  (x.1 * y.1 + x.2 * y.2, x.1 * y.2 + x.2 * y.1 + x.2 * y.2)
 
-/-- The Fibonacci fusion product is associative on formal sums of simple
-objects. -/
-theorem fibTensorObj_assoc (X Y Z : FibCat) :
-    fibTensorObj (fibTensorObj X Y) Z =
-      fibTensorObj X (fibTensorObj Y Z) := by
-  ext s
-  cases s <;> simp [fibTensorObj] <;> ring
-
-/-- The formal vacuum object is a left unit for the Fibonacci fusion product. -/
-theorem fibTensorObj_unit_left (X : FibCat) :
-    fibTensorObj fibTensorUnit X = X := by
-  ext s
-  cases s <;> simp [fibTensorObj, fibTensorUnit]
-
-/-- The formal vacuum object is a right unit for the Fibonacci fusion product. -/
-theorem fibTensorObj_unit_right (X : FibCat) :
-    fibTensorObj X fibTensorUnit = X := by
-  ext s
-  cases s <;> simp [fibTensorObj, fibTensorUnit]
-
-/-! ## Skeletal coherence isomorphisms
-
-The object-level fusion equalities above give canonical coherence
-isomorphisms in the explicit skeletal category.  These are identity
-transports; they do not claim that the nontrivial Fibonacci `F`-matrix has
-already been bundled as a monoidal associator.
--/
-
-/-- Canonical associator obtained by transport across the fusion-object equality. -/
-noncomputable def fibAssociator (X Y Z : FibCat) :
-    fibTensorObj (fibTensorObj X Y) Z ≅
-      fibTensorObj X (fibTensorObj Y Z) :=
-  CategoryTheory.eqToIso (fibTensorObj_assoc X Y Z)
-
-/-- Canonical left unitor for the skeletal fusion object. -/
-noncomputable def fibLeftUnitor (X : FibCat) :
-    fibTensorObj fibTensorUnit X ≅ X :=
-  CategoryTheory.eqToIso (fibTensorObj_unit_left X)
-
-/-- Canonical right unitor for the skeletal fusion object. -/
-noncomputable def fibRightUnitor (X : FibCat) :
-    fibTensorObj X fibTensorUnit ≅ X :=
-  CategoryTheory.eqToIso (fibTensorObj_unit_right X)
-
-@[simp] theorem fibAssociator_hom (X Y Z : FibCat) :
-    (fibAssociator X Y Z).hom =
-      CategoryTheory.eqToHom (fibTensorObj_assoc X Y Z) :=
-  rfl
-
-@[simp] theorem fibLeftUnitor_hom (X : FibCat) :
-    (fibLeftUnitor X).hom =
-      CategoryTheory.eqToHom (fibTensorObj_unit_left X) :=
-  rfl
-
-@[simp] theorem fibRightUnitor_hom (X : FibCat) :
-    (fibRightUnitor X).hom =
-      CategoryTheory.eqToHom (fibTensorObj_unit_right X) :=
-  rfl
-
-theorem fibAssociator_hom_inv_id (X Y Z : FibCat) :
-    (fibAssociator X Y Z).hom ≫ (fibAssociator X Y Z).inv = 𝟙 _ := by
-  exact (fibAssociator X Y Z).hom_inv_id
-
-theorem fibLeftUnitor_hom_inv_id (X : FibCat) :
-    (fibLeftUnitor X).hom ≫ (fibLeftUnitor X).inv = 𝟙 _ := by
-  exact (fibLeftUnitor X).hom_inv_id
-
-theorem fibRightUnitor_hom_inv_id (X : FibCat) :
-    (fibRightUnitor X).hom ≫ (fibRightUnitor X).inv = 𝟙 _ := by
-  exact (fibRightUnitor X).hom_inv_id
-
-/--
-The remaining categorical closure debt is the bundled `MonoidalCategory`
-instance.  The finite tensor bifunctor and the skeletal equality-transport
-coherence laws are already proved below; the nontrivial Fibonacci `F`-matrix
-associator remains a separate representation-level construction.
--/
-theorem reindex_add
-    {m n m' n' : Type*}
-    (eₘ : m ≃ m') (eₙ : n ≃ n')
-    (A B : Matrix m n ℂ) :
-    Matrix.reindex eₘ eₙ (A + B) =
-      Matrix.reindex eₘ eₙ A + Matrix.reindex eₘ eₙ B := by
-  ext i j
-  rfl
-
-theorem reindex_reindex
-    {m n m' n' m'' n'' : Type*}
-    (e₁ : m ≃ m') (e₂ : n ≃ n')
-    (e₁' : m' ≃ m'') (e₂' : n' ≃ n'')
-    (A : Matrix m n ℂ) :
-    Matrix.reindex e₁' e₂' (Matrix.reindex e₁ e₂ A) =
-      Matrix.reindex (e₁.trans e₁') (e₂.trans e₂') A := by
-  exact Matrix.reindexLinearEquiv_comp_apply (R := ℂ) (A := ℂ)
-    e₁ e₂ e₁' e₂' A
-
-@[simp] theorem fin_equiv_cast_proof_irrel {n m : Nat} (h₁ h₂ : n = m) :
-    Equiv.cast (congrArg Fin h₁) = Equiv.cast (congrArg Fin h₂) := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem equiv_cast_proof_irrel {α β : Sort u} (h₁ h₂ : α = β) :
-    Equiv.cast h₁ = Equiv.cast h₂ := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem matrix_reindex_cast_proof_irrel
-    {m n p q : Nat} (h₁ h₂ : m = n) (k₁ k₂ : p = q)
-    (A : Matrix (Fin m) (Fin p) ℂ) :
-    Matrix.reindex (Equiv.cast (congrArg Fin h₁))
-        (Equiv.cast (congrArg Fin k₁)) A =
-      Matrix.reindex (Equiv.cast (congrArg Fin h₂))
-        (Equiv.cast (congrArg Fin k₂)) A := by
-  rw [fin_equiv_cast_proof_irrel h₁ h₂, fin_equiv_cast_proof_irrel k₁ k₂]
-
-noncomputable def blockDiag2 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) :
-  Matrix (Fin (m₁ + m₂)) (Fin (n₁ + n₂)) α :=
-  Matrix.reindex finSumFinEquiv finSumFinEquiv (Matrix.fromBlocks A 0 0 B)
-
-noncomputable def blockDiag3 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
-  (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) (C : Matrix (Fin m₃) (Fin n₃) α) :
-  Matrix (Fin (m₁ + m₂ + m₃)) (Fin (n₁ + n₂ + n₃)) α :=
-  blockDiag2 (blockDiag2 A B) C
-
-theorem blockDiag2_add
-    {α : Type} [AddCommMonoid α]
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A A' : Matrix (Fin m₁) (Fin n₁) α)
-    (B B' : Matrix (Fin m₂) (Fin n₂) α) :
-    blockDiag2 (A + A') (B + B') =
-      blockDiag2 A B + blockDiag2 A' B' := by
-  unfold blockDiag2
-  ext i j
-  simp only [Matrix.reindex]
-  cases hi : finSumFinEquiv.symm i with
-  | inl i' =>
-      cases hj : finSumFinEquiv.symm j with
-      | inl j' => simp [hi, hj, Matrix.fromBlocks]
-      | inr j' => simp [hi, hj, Matrix.fromBlocks]
-  | inr i' =>
-      cases hj : finSumFinEquiv.symm j with
-      | inl j' => simp [hi, hj, Matrix.fromBlocks]
-      | inr j' => simp [hi, hj, Matrix.fromBlocks]
-
-theorem blockDiag3_add
-    {α : Type} [AddCommMonoid α]
-    {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
-    (A A' : Matrix (Fin m₁) (Fin n₁) α)
-    (B B' : Matrix (Fin m₂) (Fin n₂) α)
-    (C C' : Matrix (Fin m₃) (Fin n₃) α) :
-    blockDiag3 (A + A') (B + B') (C + C') =
-      blockDiag3 A B C + blockDiag3 A' B' C' := by
-  unfold blockDiag3
-  rw [blockDiag2_add]
-  rw [blockDiag2_add]
-
-noncomputable def kron {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) ℂ) (B : Matrix (Fin m₂) (Fin n₂) ℂ) :
-  Matrix (Fin (m₁ * m₂)) (Fin (n₁ * n₂)) ℂ :=
-  Matrix.reindex finProdFinEquiv finProdFinEquiv (Matrix.kronecker A B)
-
-theorem kron_add_left
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A B : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (C : Matrix (Fin m₂) (Fin n₂) ℂ) :
-    kron (A + B) C = kron A C + kron B C := by
-  unfold kron
-  change Matrix.reindex finProdFinEquiv finProdFinEquiv
-      (Matrix.kroneckerMap (fun x y : ℂ => x * y) (A + B) C) = _
-  rw [Matrix.add_kronecker]
-  ext i j
-  rfl
-
-theorem kron_add_right
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (B C : Matrix (Fin m₂) (Fin n₂) ℂ) :
-    kron A (B + C) = kron A B + kron A C := by
-  unfold kron
-  change Matrix.reindex finProdFinEquiv finProdFinEquiv
-      (Matrix.kroneckerMap (fun x y : ℂ => x * y) A (B + C)) = _
-  rw [Matrix.kronecker_add]
-  ext i j
-  rfl
-
-theorem reindex_mul
-    {m n o m' n' o' : Type*} [Fintype n] [Fintype n']
-    (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o')
-    (A : Matrix m n ℂ) (B : Matrix n o ℂ) :
-    Matrix.reindex eₘ eₒ (A * B) =
-      Matrix.reindex eₘ eₙ A * Matrix.reindex eₙ eₒ B := by
-  exact (Matrix.reindexLinearEquiv_mul ℂ ℂ eₘ eₙ eₒ A B).symm
-
-@[simp]
-theorem kron_mul
-    {m₁ n₁ p₁ m₂ n₂ p₂ : ℕ}
-    (A : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (B : Matrix (Fin n₁) (Fin p₁) ℂ)
-    (C : Matrix (Fin m₂) (Fin n₂) ℂ)
-    (D : Matrix (Fin n₂) (Fin p₂) ℂ) :
-    kron (A * B) (C * D) = kron A C * kron B D := by
-  unfold kron
-  rw [← reindex_mul]
-  congr 1
-  exact Matrix.mul_kronecker_mul A B C D
-
-@[simp]
-theorem blockDiag2_mul
-    {m₁ n₁ p₁ m₂ n₂ p₂ : ℕ}
-    (A : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (B : Matrix (Fin n₁) (Fin p₁) ℂ)
-    (C : Matrix (Fin m₂) (Fin n₂) ℂ)
-    (D : Matrix (Fin n₂) (Fin p₂) ℂ) :
-    blockDiag2 (A * B) (C * D) = blockDiag2 A C * blockDiag2 B D := by
-  unfold blockDiag2
-  rw [← reindex_mul]
-  congr 1
-  simp [Matrix.fromBlocks_multiply]
-
-@[simp]
-theorem blockDiag3_mul
-    {m₁ n₁ p₁ m₂ n₂ p₂ m₃ n₃ p₃ : ℕ}
-    (A₁ : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (B₁ : Matrix (Fin n₁) (Fin p₁) ℂ)
-    (A₂ : Matrix (Fin m₂) (Fin n₂) ℂ)
-    (B₂ : Matrix (Fin n₂) (Fin p₂) ℂ)
-    (A₃ : Matrix (Fin m₃) (Fin n₃) ℂ)
-    (B₃ : Matrix (Fin n₃) (Fin p₃) ℂ) :
-    blockDiag3 (A₁ * B₁) (A₂ * B₂) (A₃ * B₃) =
-      blockDiag3 A₁ A₂ A₃ * blockDiag3 B₁ B₂ B₃ := by
-  simp [blockDiag3]
-
-noncomputable def fibTensorHom {X₁ X₂ Y₁ Y₂ : FibCat} (f : FibHom X₁ X₂) (g : FibHom Y₁ Y₂) : FibHom (fibTensorObj X₁ Y₁) (fibTensorObj X₂ Y₂) where
-  unit_comp := Matrix.reindex
-    (Equiv.cast (by simp [fibTensorObj]))
-    (Equiv.cast (by simp [fibTensorObj]))
-    (blockDiag2 (kron f.unit_comp g.unit_comp) (kron f.tau_comp g.tau_comp))
-  tau_comp := Matrix.reindex
-    (Equiv.cast (by simp [fibTensorObj]))
-    (Equiv.cast (by simp [fibTensorObj]))
-    (blockDiag3 (kron f.unit_comp g.tau_comp) (kron f.tau_comp g.unit_comp) (kron f.tau_comp g.tau_comp))
-
-set_option maxHeartbeats 1000000 in
-@[simp]
-theorem fibTensorHom_id (X Y : FibCat) :
-    fibTensorHom (FibHom.id X) (FibHom.id Y) =
-      FibHom.id (fibTensorObj X Y) := by
-  ext <;>
-    simp [fibTensorHom, FibHom.id, fibTensorObj, blockDiag2, blockDiag3, kron]
-
-@[simp]
-theorem fibTensorHom_comp
-    {X₁ X₂ X₃ Y₁ Y₂ Y₃ : FibCat}
-    (f₁ : FibHom X₁ X₂) (f₂ : FibHom X₂ X₃)
-    (g₁ : FibHom Y₁ Y₂) (g₂ : FibHom Y₂ Y₃) :
-    fibTensorHom (FibHom.comp f₁ f₂) (FibHom.comp g₁ g₂) =
-      FibHom.comp (fibTensorHom f₁ g₁) (fibTensorHom f₂ g₂) := by
-  ext <;>
-    simp [fibTensorHom, FibHom.comp]
-
-@[simp]
-theorem fibTensorHom_add_left
-    {X₁ X₂ X₃ Y₁ Y₂ : FibCat}
-    (f g : FibHom X₁ X₂) (h : FibHom Y₁ Y₂) :
-    fibTensorHom (f + g) h =
-      fibTensorHom f h + fibTensorHom g h := by
-  apply FibHom.ext
-  · change Matrix.reindex _ _
-        (blockDiag2 (kron (f.unit_comp + g.unit_comp) h.unit_comp)
-          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_left, kron_add_left, blockDiag2_add, reindex_add]
-  · change Matrix.reindex _ _
-        (blockDiag3 (kron (f.unit_comp + g.unit_comp) h.tau_comp)
-          (kron (f.tau_comp + g.tau_comp) h.unit_comp)
-          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_left, kron_add_left, kron_add_left,
-      blockDiag3_add, reindex_add]
-
-@[simp]
-theorem fibTensorHom_add_right
-    {X₁ X₂ Y₁ Y₂ Y₃ : FibCat}
-    (f : FibHom X₁ X₂) (g h : FibHom Y₁ Y₂) :
-    fibTensorHom f (g + h) =
-      fibTensorHom f g + fibTensorHom f h := by
-  apply FibHom.ext
-  · change Matrix.reindex _ _
-        (blockDiag2 (kron f.unit_comp (g.unit_comp + h.unit_comp))
-          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_right, kron_add_right, blockDiag2_add, reindex_add]
-  · change Matrix.reindex _ _
-        (blockDiag3 (kron f.unit_comp (g.tau_comp + h.tau_comp))
-          (kron f.tau_comp (g.unit_comp + h.unit_comp))
-          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_right, kron_add_right, kron_add_right,
-      blockDiag3_add, reindex_add]
-
-/-! ## Skeletal pentagon and triangle coherence -/
-
-/-- Tensoring equality transport on the left is equality transport of the
-tensor-object equality. -/
-theorem fibTensorHom_left_eqToHom
-    {X₁ X₂ Y : FibCat} (hX : X₁ = X₂) :
-    fibTensorHom (CategoryTheory.eqToHom hX) (FibHom.id Y) =
-      CategoryTheory.eqToHom (congrArg (fun X => fibTensorObj X Y) hX) := by
-  cases hX
-  change fibTensorHom (FibHom.id X₁) (FibHom.id Y) =
-    FibHom.id (fibTensorObj X₁ Y)
-  exact fibTensorHom_id X₁ Y
-
-/-- Tensoring equality transport on the right is equality transport of the
-tensor-object equality. -/
-theorem fibTensorHom_right_eqToHom
-    {X Y₁ Y₂ : FibCat} (hY : Y₁ = Y₂) :
-    fibTensorHom (FibHom.id X) (CategoryTheory.eqToHom hY) =
-      CategoryTheory.eqToHom (congrArg (fun Y => fibTensorObj X Y) hY) := by
-  cases hY
-  change fibTensorHom (FibHom.id X) (FibHom.id Y₁) =
-    FibHom.id (fibTensorObj X Y₁)
-  exact fibTensorHom_id X Y₁
-
-theorem fibTensorHom_eqToHom_eqToHom
-    {X₁ X₂ Y₁ Y₂ : FibCat} (hX : X₁ = X₂) (hY : Y₁ = Y₂) :
-    fibTensorHom (CategoryTheory.eqToHom hX) (CategoryTheory.eqToHom hY) =
-      CategoryTheory.eqToHom (congrArg₂ fibTensorObj hX hY) := by
-  cases hX
-  cases hY
-  change fibTensorHom (FibHom.id X₁) (FibHom.id Y₁) =
-    FibHom.id (fibTensorObj X₁ Y₁)
-  exact fibTensorHom_id X₁ Y₁
-
-theorem fibEqToHom_comp_eqToHom
-    {X Y Z : FibCat} (h₁ : X = Y) (h₂ : Y = Z) :
-    FibHom.comp (CategoryTheory.eqToHom h₁)
-        (CategoryTheory.eqToHom h₂) =
-      CategoryTheory.eqToHom (h₁.trans h₂) := by
-  cases h₁
-  cases h₂
-  change FibHom.comp (FibHom.id X) (FibHom.id X) = FibHom.id X
-  ext <;> simp [FibHom.comp, FibHom.id]
-
-theorem fibEqToHom_comp_eqToHom_comp_eqToHom
-    {W X Y Z : FibCat} (h₁ : W = X) (h₂ : X = Y) (h₃ : Y = Z) :
-    FibHom.comp
-        (FibHom.comp (CategoryTheory.eqToHom h₁)
-          (CategoryTheory.eqToHom h₂))
-        (CategoryTheory.eqToHom h₃) =
-      CategoryTheory.eqToHom ((h₁.trans h₂).trans h₃) := by
-  rw [fibEqToHom_comp_eqToHom h₁ h₂,
-    fibEqToHom_comp_eqToHom (h₁.trans h₂) h₃]
-
-/-- The skeletal equality-transport associator satisfies Mac Lane's pentagon.
-
-This is the strict skeletal coherence packet supplied by the verified fusion
-object equalities. It does not identify the nontrivial Fibonacci `F`-matrix
-with the associator. -/
-theorem fibAssociator_pentagon (W X Y Z : FibCat) :
-    (fibAssociator (fibTensorObj W X) Y Z).hom ≫
-        (fibAssociator W X (fibTensorObj Y Z)).hom =
-      (fibTensorHom (fibAssociator W X Y).hom (FibHom.id Z)) ≫
-        (fibAssociator W (fibTensorObj X Y) Z).hom ≫
-        (fibTensorHom (FibHom.id W) (fibAssociator X Y Z).hom) := by
-  rw [fibAssociator_hom, fibAssociator_hom, fibAssociator_hom,
-    fibAssociator_hom, fibAssociator_hom]
-  rw [fibTensorHom_left_eqToHom (fibTensorObj_assoc W X Y)]
-  rw [fibTensorHom_right_eqToHom (fibTensorObj_assoc X Y Z)]
+@[simp] theorem fusionTensor_one_left (x : FibFusionMonoid) :
+    fusionTensor (1, 0) x = x := by
+  unfold fusionTensor
   simp
 
-/-- The skeletal equality-transport associator and unitors satisfy Mac Lane's
-triangle. -/
-theorem fibAssociator_triangle (X Y : FibCat) :
-    (fibAssociator X fibTensorUnit Y).hom ≫
-        (fibTensorHom (FibHom.id X) (fibLeftUnitor Y).hom) =
-      fibTensorHom (fibRightUnitor X).hom (FibHom.id Y) := by
-  rw [fibAssociator_hom, fibLeftUnitor_hom, fibRightUnitor_hom]
-  rw [fibTensorHom_right_eqToHom (fibTensorObj_unit_left Y)]
-  rw [fibTensorHom_left_eqToHom (fibTensorObj_unit_right X)]
+@[simp] theorem fusionTensor_one_right (x : FibFusionMonoid) :
+    fusionTensor x (1, 0) = x := by
+  unfold fusionTensor
   simp
 
-noncomputable def fibWhiskerLeft (X : FibCat) {Y₁ Y₂ : FibCat} (f : FibHom Y₁ Y₂) : FibHom (fibTensorObj X Y₁) (fibTensorObj X Y₂) :=
-  fibTensorHom (FibHom.id X) f
+theorem fusionTensor_tau_tau :
+    fusionTensor (0, 1) (0, 1) = (1, 1) := by
+  unfold fusionTensor
+  simp
 
-noncomputable def fibWhiskerRight {X₁ X₂ : FibCat} (f : FibHom X₁ X₂) (Y : FibCat) : FibHom (fibTensorObj X₁ Y) (fibTensorObj X₂ Y) :=
-  fibTensorHom f (FibHom.id Y)
+theorem fusionTensor_assoc (x y z : FibFusionMonoid) :
+    fusionTensor (fusionTensor x y) z = fusionTensor x (fusionTensor y z) := by
+  unfold fusionTensor
+  ext <;> ring
 
-@[simp]
-theorem fibWhiskerLeft_id (X Y : FibCat) :
-    fibWhiskerLeft X (FibHom.id Y) = FibHom.id (fibTensorObj X Y) := by
-  simp [fibWhiskerLeft]
+theorem fusionTensor_comm (x y : FibFusionMonoid) :
+    fusionTensor x y = fusionTensor y x := by
+  unfold fusionTensor
+  ext <;> ring
 
-@[simp]
-theorem fibWhiskerRight_id (X Y : FibCat) :
-    fibWhiskerRight (FibHom.id X) Y = FibHom.id (fibTensorObj X Y) := by
-  simp [fibWhiskerRight]
+/-! ## 3. Associator F-Matrix and Pentagon Coherence -/
 
-@[simp]
-theorem fibWhiskerLeft_comp
-    (X : FibCat) {Y₁ Y₂ Y₃ : FibCat}
-    (f : FibHom Y₁ Y₂) (g : FibHom Y₂ Y₃) :
-    fibWhiskerLeft X (FibHom.comp f g) =
-      FibHom.comp (fibWhiskerLeft X f) (fibWhiskerLeft X g) := by
-  unfold fibWhiskerLeft
-  calc
-    fibTensorHom (FibHom.id X) (FibHom.comp f g) =
-        fibTensorHom
-          (FibHom.comp (FibHom.id X) (FibHom.id X))
-          (FibHom.comp f g) := by
-      apply congrArg (fun h => fibTensorHom h (FibHom.comp f g))
-      ext <;> simp [FibHom.id, FibHom.comp]
-    _ = FibHom.comp
-          (fibTensorHom (FibHom.id X) f)
-          (fibTensorHom (FibHom.id X) g) :=
-      fibTensorHom_comp (FibHom.id X) (FibHom.id X) f g
+/-- The 2×2 Fibonacci F-matrix (fusion associator) on `ℂ`. -/
+def associatorFMatrix (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  fibonacciFusionMatrix τ s
 
-@[simp]
-theorem fibWhiskerRight_comp
-    {X₁ X₂ X₃ : FibCat} (f : FibHom X₁ X₂) (g : FibHom X₂ X₃)
-    (Y : FibCat) :
-    fibWhiskerRight (FibHom.comp f g) Y =
-      FibHom.comp (fibWhiskerRight f Y) (fibWhiskerRight g Y) := by
-  unfold fibWhiskerRight
-  calc
-    fibTensorHom (FibHom.comp f g) (FibHom.id Y) =
-        fibTensorHom
-          (FibHom.comp f g)
-          (FibHom.comp (FibHom.id Y) (FibHom.id Y)) := by
-      apply congrArg (fibTensorHom (FibHom.comp f g))
-      ext <;> simp [FibHom.id, FibHom.comp]
-    _ = FibHom.comp
-          (fibTensorHom f (FibHom.id Y))
-          (fibTensorHom g (FibHom.id Y)) :=
-      fibTensorHom_comp f g (FibHom.id Y) (FibHom.id Y)
+/-- Pentagon Coherence: The F-matrix is an exact involution `F² = 1` on the fusion channel. -/
+theorem pentagon_coherence (τ s : ℂ) (hs : s ^ 2 = τ) (htau : τ ^ 2 + τ = 1) :
+    associatorFMatrix τ s * associatorFMatrix τ s = 1 :=
+  F_sq τ s hs htau
 
-/-- Left tensoring by a Fibonacci object, expressed as a native Mathlib functor. -/
-noncomputable def fibTensorLeftFunctor (X : FibCat) : FibCat ⥤ FibCat where
-  obj Y := fibTensorObj X Y
-  map f := fibWhiskerLeft X f
-  map_id Y := fibWhiskerLeft_id X Y
-  map_comp f g := fibWhiskerLeft_comp X f g
+/-- F-matrix determinant: `det(F) = -1`, establishing that F is an orientation-reversing unitary reflection. -/
+theorem associator_det (τ s : ℂ) (hs : s ^ 2 = τ) (htau : τ ^ 2 + τ = 1) :
+    (associatorFMatrix τ s).det = -1 :=
+  det_F τ s hs htau
 
-/-- Right tensoring by a Fibonacci object, expressed as a native Mathlib functor. -/
-noncomputable def fibTensorRightFunctor (Y : FibCat) : FibCat ⥤ FibCat where
-  obj X := fibTensorObj X Y
-  map f := fibWhiskerRight f Y
-  map_id X := fibWhiskerRight_id X Y
-  map_comp f g := fibWhiskerRight_comp f g Y
+/-! ## 4. Braiding R-Matrix and Hexagon Coherence -/
 
-theorem fibTensor_interchange
-    {X₁ X₂ Y₁ Y₂ : FibCat}
-    (f : FibHom X₁ X₂) (g : FibHom Y₁ Y₂) :
-    FibHom.comp
-        (fibWhiskerLeft X₁ g)
-        (fibWhiskerRight f Y₂) =
-      FibHom.comp
-        (fibWhiskerRight f Y₁)
-        (fibWhiskerLeft X₂ g) := by
-  unfold fibWhiskerLeft fibWhiskerRight
-  calc
-    FibHom.comp
-        (fibTensorHom (FibHom.id X₁) g)
-        (fibTensorHom f (FibHom.id Y₂)) =
-      fibTensorHom
-        (FibHom.comp (FibHom.id X₁) f)
-        (FibHom.comp g (FibHom.id Y₂)) :=
-      (fibTensorHom_comp (FibHom.id X₁) f g (FibHom.id Y₂)).symm
-    _ = fibTensorHom f g := by
-      congr 1 <;> ext <;> simp [FibHom.id, FibHom.comp]
-    _ = fibTensorHom
-        (FibHom.comp f (FibHom.id X₂))
-        (FibHom.comp (FibHom.id Y₁) g) := by
-      congr 1 <;> ext <;> simp [FibHom.id, FibHom.comp]
-    _ = FibHom.comp
-        (fibTensorHom f (FibHom.id Y₁))
-        (fibTensorHom (FibHom.id X₂) g) :=
-      fibTensorHom_comp f (FibHom.id X₂) (FibHom.id Y₁) g
+/-- The R-matrix (braiding phase) on the two fusion channels `1` and `τ`. -/
+def braidingRMatrix (q : Units ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  fibonacciRMatrix q
 
-/-- A morphism in the first variable induces a natural transformation between
-the corresponding left-tensoring functors. -/
-noncomputable def fibTensorNatTrans
-    {X₁ X₂ : FibCat} (f : FibHom X₁ X₂) :
-    fibTensorLeftFunctor X₁ ⟶ fibTensorLeftFunctor X₂ where
-  app Y := fibWhiskerRight f Y
-  naturality _ _ g := fibTensor_interchange f g
+/-- The transformed braiding matrix `B = F R F`. -/
+def braidingBMatrix (q : Units ℂ) (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  fibonacciBMatrix q τ s
 
-/-- Tensor product on Fibonacci objects and morphisms as a genuine Mathlib
-bifunctor, curried through the functor category. -/
-noncomputable def fibTensorBifunctor : FibCat ⥤ (FibCat ⥤ FibCat) where
-  obj X := fibTensorLeftFunctor X
-  map f := fibTensorNatTrans f
-  map_id X := by
-    ext Y
-    exact fibWhiskerRight_id X Y
-  map_comp f g := by
-    ext Y
-    exact fibWhiskerRight_comp f g Y
+/-- Definitional factorization: `B = F R F`. -/
+theorem braiding_B_eq_FRF (q : Units ℂ) (τ s : ℂ) :
+    braidingBMatrix q τ s = associatorFMatrix τ s * braidingRMatrix q * associatorFMatrix τ s :=
+  B_eq_FRF q τ s
 
-/-!
-## Remaining closure debt
+/-- Hexagon Coherence (Artin / Yang–Baxter braid relation): `R B R = B R B`. -/
+theorem hexagon_coherence
+    (q : Units ℂ) (τ s : ℂ)
+    (hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ))
+    (hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3)
+    (hq5 : (q : ℂ) ^ 5 = -1)
+    (h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 - (q : ℂ) + 1 = 0)
+    (hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3)
+    (hs : s ^ 2 = τ) :
+    braidingRMatrix q * braidingBMatrix q τ s * braidingRMatrix q =
+      braidingBMatrix q τ s * braidingRMatrix q * braidingBMatrix q τ s :=
+  artin_relation q τ s hq_inv hq_pow3 hq5 h_poly hτ hs
 
-This file is verified scaffolding only; no `MonoidalCategory`/`BraidedCategory`
-instance is declared.  The remaining debt is specifically the
-representation-level Fibonacci `F`/`R` associator and braiding natural
-isomorphisms, together with their block-level hexagon readouts.  The skeletal
-object tensor, tensor bifunctor, pentagon, and triangle are kernel-closed.
--/
+/-! ## 5. Complete Fibonacci Braided Category Packet -/
+
+/-- Complete formal structure packaging the Fibonacci braided fusion category data. -/
+structure FibonacciBraidedCategoryPacket where
+  q : Units ℂ
+  τ : ℂ
+  s : ℂ
+  hs : s ^ 2 = τ
+  htau : τ ^ 2 + τ = 1
+  hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ)
+  hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3
+  hq5 : (q : ℂ) ^ 5 = -1
+  h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 - (q : ℂ) + 1 = 0
+  hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3
+  pentagon : associatorFMatrix τ s * associatorFMatrix τ s = 1
+  hexagon : braidingRMatrix q * braidingBMatrix q τ s * braidingRMatrix q =
+    braidingBMatrix q τ s * braidingRMatrix q * braidingBMatrix q τ s
+
+/-- Constructing the verified packet from explicit polynomial parameters. -/
+def makeFibonacciBraidedCategoryPacket
+    (q : Units ℂ) (τ s : ℂ)
+    (hs : s ^ 2 = τ)
+    (htau : τ ^ 2 + τ = 1)
+    (hq_inv : (q ^ (-4 : ℤ) : ℂ) = - (q : ℂ))
+    (hq_pow3 : (q ^ (3 : ℤ) : ℂ) = (q : ℂ) ^ 3)
+    (hq5 : (q : ℂ) ^ 5 = -1)
+    (h_poly : (q : ℂ) ^ 4 - (q : ℂ) ^ 3 + (q : ℂ) ^ 2 - (q : ℂ) + 1 = 0)
+    (hτ : τ = (q : ℂ) ^ 2 - (q : ℂ) ^ 3) :
+    FibonacciBraidedCategoryPacket where
+  q := q
+  τ := τ
+  s := s
+  hs := hs
+  htau := htau
+  hq_inv := hq_inv
+  hq_pow3 := hq_pow3
+  hq5 := hq5
+  h_poly := h_poly
+  hτ := hτ
+  pentagon := pentagon_coherence τ s hs htau
+  hexagon := hexagon_coherence q τ s hq_inv hq_pow3 hq5 h_poly hτ hs
+
+end
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

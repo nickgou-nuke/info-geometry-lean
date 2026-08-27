@@ -456,6 +456,14 @@ theorem fullPeel_mem_unipotent_of_basis_readback
   intro j
   simpa [pcWord_zero_eq_one] using hreadback j
 
+theorem nativeFlagStabilizer_le_unipotent_of_fullPeel_basis_readback
+    (hreadback : ∀ g : SplitOctF2Aut, g ∈ nativeFlagStabilizer →
+      ∀ j : Fin 8, (fullPeel g).1 (basis8 j) = basis8 j) :
+    nativeFlagStabilizer ≤ unipotentSubgroup := by
+  intro g hg
+  exact (mem_unipotent_iff_fullPeel_mem_unipotent).mpr
+    (fullPeel_mem_unipotent_of_basis_readback (hreadback g hg))
+
 theorem nativeFlagStabilizer_mem_directGeneratorClosure_of_basis_readback
     {g : SplitOctF2Aut}
     (hg : g ∈ nativeFlagStabilizer)

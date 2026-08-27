@@ -66,6 +66,14 @@ theorem permMatrix_involution (π : Equiv.Perm G2CoordinateRoot) (hπ : π * π 
     permMatrix π * permMatrix π = 1 := by
   rw [← permMatrix_mul, hπ, permMatrix_one]
 
+theorem permMatrix_mul_inverse (π : Equiv.Perm G2CoordinateRoot) :
+    permMatrix π * permMatrix π⁻¹ = 1 := by
+  rw [← permMatrix_mul, mul_inv_cancel, permMatrix_one]
+
+theorem permMatrix_inverse_mul (π : Equiv.Perm G2CoordinateRoot) :
+    permMatrix π⁻¹ * permMatrix π = 1 := by
+  rw [← permMatrix_mul, inv_mul_cancel, permMatrix_one]
+
 /-- 🏆 THEOREM 2: Quadratic Hecke relation from involution compatibility:
     $(P \\Lambda)^2 = q I$ whenever $(P \\Lambda P \\Lambda) = q I$. -/
 theorem sq_eq_of_involution_compat

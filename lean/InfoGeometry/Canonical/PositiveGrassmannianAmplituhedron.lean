@@ -94,6 +94,22 @@ theorem appendZeroColumn₂_nonnegative
     rw [hminor]
     exact hC sOld hsOld
 
+theorem appendZeroColumn₂_not_mem_positiveGrassmannianInterior
+    (n : ℕ) (hn : 0 < n) (C : Matrix (Fin 2) (Fin n) ℝ) :
+    appendZeroColumn₂ C ∉
+      positiveGrassmannianInterior (k := 2) (n := n + 1) := by
+  intro hC
+  change HasPositiveMaximalMinors (appendZeroColumn₂ C) at hC
+  let s : Fin 2 → Fin (n + 1) := ![0, Fin.last n]
+  have hs : StrictMono s := by
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> simp [s] at hij ⊢
+    exact hn
+  have hminor := hC s hs
+  unfold maximalMinor appendZeroColumn₂ at hminor
+  rw [Matrix.det_fin_two] at hminor
+  simp [s] at hminor
+
 /-! ### The finite 4-row to 2-row chart interface -/
 
 def firstTwoRows (C : Matrix (Fin 4) (Fin n) ℝ) :

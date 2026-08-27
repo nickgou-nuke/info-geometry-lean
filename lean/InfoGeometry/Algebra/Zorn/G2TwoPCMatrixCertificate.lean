@@ -156,6 +156,70 @@ def matrixWord (e : PCExponent) : Matrix (Fin 8) (Fin 8) F2 :=
   (matrixFactor (e 1) C1 *
   matrixFactor (e 0) C0))))
 
+/-! The fifth column is a rigid coordinate channel for every PC generator.
+    This is the small CAS-derived invariant used by the recovery proofs below. -/
+def columnFiveDelta (M : Matrix (Fin 8) (Fin 8) F2) : Prop :=
+  ∀ i, M i 5 = if i = 5 then 1 else 0
+
+lemma columnFiveDelta_mul (A B : Matrix (Fin 8) (Fin 8) F2)
+    (hA : columnFiveDelta A) (hB : columnFiveDelta B) :
+    columnFiveDelta (A * B) := by
+  intro i
+  rw [Matrix.mul_apply]
+  simp only [Fin.sum_univ_succ]
+  fin_cases i <;>
+    simp [hB 0, hB 1, hB 2, hB 3, hB 4, hB 5, hB 6, hB 7]
+
+lemma matrixFactor_columnFiveDelta (b : Bool) (M : Matrix (Fin 8) (Fin 8) F2)
+    (hM : columnFiveDelta M) : columnFiveDelta (matrixFactor b M) := by
+  cases b
+  · intro i
+    fin_cases i <;> simp [matrixFactor, Matrix.one_apply]
+  · simpa [matrixFactor] using hM
+
+lemma C0_columnFiveDelta : columnFiveDelta C0 := by
+  intro i
+  fin_cases i <;> decide
+
+lemma C1_columnFiveDelta : columnFiveDelta C1 := by
+  intro i
+  fin_cases i <;> decide
+
+lemma C2_columnFiveDelta : columnFiveDelta C2 := by
+  intro i
+  fin_cases i <;> decide
+
+lemma C3_columnFiveDelta : columnFiveDelta C3 := by
+  intro i
+  fin_cases i <;> decide
+
+lemma C4_columnFiveDelta : columnFiveDelta C4 := by
+  intro i
+  fin_cases i <;> decide
+
+lemma C5_columnFiveDelta : columnFiveDelta C5 := by
+  intro i
+  fin_cases i <;> decide
+
+theorem matrixWord_columnFiveDelta (e : PCExponent) :
+    columnFiveDelta (matrixWord e) := by
+  apply columnFiveDelta_mul
+  · exact matrixFactor_columnFiveDelta _ _ C5_columnFiveDelta
+  apply columnFiveDelta_mul
+  · exact matrixFactor_columnFiveDelta _ _ C4_columnFiveDelta
+  apply columnFiveDelta_mul
+  · exact matrixFactor_columnFiveDelta _ _ C3_columnFiveDelta
+  apply columnFiveDelta_mul
+  · exact matrixFactor_columnFiveDelta _ _ C2_columnFiveDelta
+  apply columnFiveDelta_mul
+  · exact matrixFactor_columnFiveDelta _ _ C1_columnFiveDelta
+  exact matrixFactor_columnFiveDelta _ _ C0_columnFiveDelta
+
+theorem matrixWord_entry_six_five (e : PCExponent) :
+    matrixWord e 6 5 = 0 := by
+  have h := matrixWord_columnFiveDelta e 6
+  simpa using h
+
 lemma matrix_mul_entry_two_two_of_support
     (A B : Matrix (Fin 8) (Fin 8) F2)
     (a : F2)

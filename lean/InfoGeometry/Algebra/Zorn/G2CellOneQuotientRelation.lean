@@ -97,7 +97,7 @@ theorem matrix_entry_24_73_separates_pc_words :
         autMatrix (G2TwoSylowSubgroup.pcWord e) 3 3 := by
   intro e
   have htarget :
-      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 73) 3 3 = 1 := by
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 73) 3 3 = 0 := by
     decide
   rw [htarget, autMatrix_pcWord, matrixWord_entry_three_three]
   decide

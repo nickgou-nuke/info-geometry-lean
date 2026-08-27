@@ -19,6 +19,7 @@ import InfoGeometry.Algebra.SplitCayleyF2DeltaNativeRelations
 import InfoGeometry.Algebra.SplitCayleyF2LiteratureGenerators
 import InfoGeometry.Algebra.CyclotomicOperatorProjectors
 import InfoGeometry.Algebra.LinearInvolutionProjectors
+import InfoGeometry.Algebra.Zorn.ConformalNPotentRoots
 import InfoGeometry.Algebra.CircularChiralCausalConeBasis
 import InfoGeometry.Algebra.ChiralGaugeRootSpanBridge
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics

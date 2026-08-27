@@ -5,6 +5,7 @@ import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Projective.ExteriorKleinNullTwistor
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
+import InfoGeometry.Projective.ExteriorKleinNullTwistorIncidence
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 /-!
 # Twistor / Amplituhedron Bridge
@@ -56,6 +57,8 @@ open InfoGeometry.Projective.ExteriorKleinFrameSurjection
 open InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
 open InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 open InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
+open InfoGeometry.Projective.ExteriorKleinNullTwistorIncidence
+open InfoGeometry.Twistor.ProjectiveNullPolarIncidence
 open InfoGeometry.Topology.RohozhkinDelaunayBraiding
 open InfoGeometry.Topology.Delaunay
 
@@ -92,6 +95,20 @@ theorem exteriorKlein_nullTwistor_frame_readout
   change kleinLocusEquivTwistorSpace
       (realTwoPlaneEquivKleinLocus (frameSpan uv)) = _
   rw [realTwoPlaneEquivKleinLocus_frameSpan]
+
+/-- Polar incidence of the transported exterior null-twistors is exactly the
+vanishing of the top exterior product of the two frame representatives. -/
+theorem exteriorKlein_nullTwistor_incidence_readout
+    (uv st : NondegenerateExteriorFrame) :
+    NullPolarIncident exteriorKleinQuadraticForm
+        (kleinLocusEquivTwistorSpace (frameToKleinLocus uv))
+        (kleinLocusEquivTwistorSpace (frameToKleinLocus st)) ↔
+      exteriorPower.ιMulti ℝ 4 (combinedFrame uv st) = 0 := by
+  change PolarIncident exteriorKleinQuadraticForm
+      (Projectivization.mk ℝ (exteriorPower.ιMulti ℝ 2 uv.1) uv.2)
+      (Projectivization.mk ℝ (exteriorPower.ιMulti ℝ 2 st.1) st.2) ↔ _
+  rw [polarIncident_frame_iff_kleinIncident,
+    kleinIncident_frameToKleinLocus_iff_wedge_eq_zero]
 
 /--
 Readout of the existing candidate `Conf₃` spin-tiled rank arithmetic.

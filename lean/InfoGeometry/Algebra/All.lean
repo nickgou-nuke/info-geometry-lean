@@ -23,6 +23,7 @@ import InfoGeometry.Algebra.FiniteFieldFrobenius
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinOrder
 import InfoGeometry.Algebra.RankTwoCyclotomicArtinBridge
+import InfoGeometry.Algebra.RankTwoCyclotomicCPTBridge
 import InfoGeometry.Algebra.PrimePotentHierarchy
 import InfoGeometry.Algebra.TwelveFoldPrimitiveRootArithmetic
 import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
@@ -31,6 +32,8 @@ import InfoGeometry.QuantumAlgebra.G2DrinfeldAssociatorBridge
 import InfoGeometry.Algebra.Zorn.ChiralPhaseMatrix
 import InfoGeometry.Exceptional.G2ChiralBivectorCarriers
 import InfoGeometry.Exceptional.G2ArtinRepresentation
+import InfoGeometry.Exceptional.G2PhaseCocycleContract
+import InfoGeometry.Exceptional.G2ComplementMixingReadback
 import InfoGeometry.Physics.CPTGaloisBridge
 import InfoGeometry.QuantumAlgebra.FibonacciNativeComplete
 import InfoGeometry.QuantumAlgebra.RankTwoCyclotomicArtinBridge

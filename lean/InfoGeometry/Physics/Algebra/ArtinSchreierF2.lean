@@ -13,6 +13,13 @@ namespace InfoGeometry.Physics.Algebra.ArtinSchreierF2
 
 def artinSchreier (x : ZMod 2) : ZMod 2 := x ^ 2 - x
 
+/-! In characteristic two the Artin--Schreier polynomial has the usual
+`x^2 + x` presentation.  This is the concrete bridge used by the finite
+peeling interpretation; no field-extension claim is made here. -/
+theorem artinSchreier_eq_add (x : ZMod 2) :
+    artinSchreier x = x ^ 2 + x := by
+  fin_cases x <;> decide
+
 def artinSchreierHom : ZMod 2 →+ ZMod 2 where
   toFun := artinSchreier
   map_zero' := by simp [artinSchreier]

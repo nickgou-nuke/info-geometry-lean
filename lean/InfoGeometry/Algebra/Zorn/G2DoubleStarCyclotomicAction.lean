@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
+import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Simultaneous action on the two cyclotomic root hexagons
@@ -40,17 +41,20 @@ theorem simple_reflection_two_preserves_short_and_long (r : Root) :
   rw [← h]
   simpa [sector] using simple_reflection_two_preserves_sector r
 
-theorem cyclotomic_artin_I2_six_relation :
-    cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm *
-        cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm =
-      cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm *
-        cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm := by
-  apply Equiv.ext
-  intro r
-  rcases r with ⟨b, k⟩
-  cases b <;>
-    simp [cyclotomicS1Perm, cyclotomicS2Perm, cyclotomicS1Fun,
-      cyclotomicS2Fun, Equiv.Perm.mul_def,
-      show (3 : ZMod 6) = -3 by decide]
+theorem cyclotomicS1_permMatrix_sq :
+    (cyclotomicS1Perm.permMatrix ℂ) ^ 2 = 1 := by
+  rw [pow_two, ← Matrix.permMatrix_mul, ← pow_two, cyclotomicS1Perm_sq,
+    Matrix.permMatrix_one]
+
+theorem cyclotomicS2_permMatrix_sq :
+    (cyclotomicS2Perm.permMatrix ℂ) ^ 2 = 1 := by
+  rw [pow_two, ← Matrix.permMatrix_mul, ← pow_two, cyclotomicS2Perm_sq,
+    Matrix.permMatrix_one]
+
+theorem sq_eq_of_involution_compat
+    (P Λ : Matrix Root Root ℂ) (q : ℂ)
+    (hcompat : P * Λ * P * Λ = q • (1 : Matrix Root Root ℂ)) :
+    (P * Λ) ^ 2 = q • (1 : Matrix Root Root ℂ) := by
+  simpa [pow_two, Matrix.mul_assoc] using hcompat
 
 end InfoGeometry.Algebra.Zorn.G2DoubleStarCyclotomicAction

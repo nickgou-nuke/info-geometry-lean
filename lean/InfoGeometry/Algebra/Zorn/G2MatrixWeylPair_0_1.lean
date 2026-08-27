@@ -61,4 +61,15 @@ theorem autMatrix_weyl_entry_separation_0_1 (e d : PCExponent) :
     autMatrix_pcWord, autMatrix_weylNF_one_false_readback]
   exact h
 
+theorem autMatrix_normalized_weyl_separation_0_1
+    (a d : PCExponent) :
+    autMatrix (weylNF 1 false) ≠
+      autMatrix (G2TwoSylowSubgroup.pcWord a *
+        weylNF 0 false * G2TwoSylowSubgroup.pcWord d) := by
+  intro h
+  rw [autMatrix_mul, autMatrix_mul] at h
+  rw [autMatrix_pcWord, autMatrix_weylNF_zero_false_readback,
+    autMatrix_pcWord, autMatrix_weylNF_one_false_readback] at h
+  exact (autMatrix_weyl_entry_separation_0_1 a d) h.symm
+
 end InfoGeometry.Algebra.Zorn.G2MatrixWeylPair_0_1

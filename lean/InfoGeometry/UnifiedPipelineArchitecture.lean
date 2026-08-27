@@ -93,10 +93,16 @@ theorem directed_causal_path_additivity
     (p.append q).length = p.length + q.length :=
   DirectedPath.length_append p q
 
-/-- The homotopy proposition is endpoint-indexed in the current carrier. -/
-theorem directed_homotopy_endpoints_sound
-    {G : ChiralDigraph} {u v : G.Vertex} {p q : DirectedPath G u v}
-    (h : DirectedChiralHomotopy p q) : True :=
-  DirectedChiralHomotopy.same_endpoints h
+/-- 🏆 THEOREM 7: Independent local 2-cell rewrites compose to a global path rewrite. -/
+theorem unified_homotopy_append_congr
+    {G : ChiralDigraph}
+    (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G)
+    {u v w : G.Vertex}
+    {p p' : DirectedPath G u v} {q q' : DirectedPath G v w}
+    (hpp' : DirectedChiralHomotopyEquiv p p')
+    (hqq' : DirectedChiralHomotopyEquiv q q') :
+    DirectedChiralHomotopyEquiv (p.append q) (p'.append q') :=
+  directedChiralHomotopyEquiv_append_congr hright hleft hpp' hqq'
 
 end InfoGeometry.UnifiedPipelineArchitecture

@@ -2,6 +2,8 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixProductBridge
+import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.GroupTheory.DoubleCoset
 
 namespace InfoGeometry.Algebra.Zorn.G2MatrixWeylPair_0_1
 
@@ -11,6 +13,8 @@ open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoPCMatrixProductBridge
+open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+open InfoGeometry.GroupTheory.DoubleCoset
 
 def cMatrix : Matrix (Fin 8) (Fin 8) F2 :=
   cycle012Matrix * swapCartanMatrix
@@ -121,5 +125,27 @@ theorem autMatrix_normalized_weyl_separation_0_1
           autMatrix (G2TwoSylowSubgroup.pcWord a)) i j := by
     rw [h_all]
   exact h_entry.symm
+
+/-- 🏆 THEOREM: The Weyl generator $c$ is strictly outside the unipotent Sylow subgroup $U$.
+    This is an $O(1)$ invariant proof using the isotropic flag entry $M_{2,2} = 1 \ne 0 = c_{2,2}$. -/
+theorem c_not_mem_unipotentSubgroup : c ∉ unipotentSubgroup := by
+  intro hc
+  obtain ⟨e, he⟩ := pcWordMulEquiv.surjective ⟨c, hc⟩
+  have he' : G2TwoSylowSubgroup.pcWord e = c := congrArg Subtype.val he
+  have haut : autMatrix (G2TwoSylowSubgroup.pcWord e) 2 2 = autMatrix c 2 2 := by
+    rw [he']
+  rw [autMatrix_pcWord, matrixWord_entry_two_two e] at haut
+  rw [InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment.autMatrix_c] at haut
+  revert haut
+  decide
+
+/-- 🏆 THEOREM (Full Divide-and-Conquer Double Coset Disjointness):
+    $U \cdot 1 \cdot U \cap U \cdot c \cdot U = \emptyset$.
+    The geometric matrix theory is localized strictly to $c \notin U$, while the double-coset
+    separation is discharged by the generic abstract subgroup theorem `disjoint_doubleCoset_one_of_not_mem`. -/
+theorem doubleCoset_one_c_disjoint :
+    Disjoint (doubleCoset unipotentSubgroup 1 unipotentSubgroup)
+             (doubleCoset unipotentSubgroup c unipotentSubgroup) :=
+  disjoint_doubleCoset_one_of_not_mem unipotentSubgroup c c_not_mem_unipotentSubgroup
 
 end InfoGeometry.Algebra.Zorn.G2MatrixWeylPair_0_1

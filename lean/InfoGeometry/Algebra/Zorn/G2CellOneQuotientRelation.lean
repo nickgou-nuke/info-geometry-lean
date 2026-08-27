@@ -97,12 +97,16 @@ theorem matrix_entry_24_73_separates_pc_words :
         autMatrix (G2TwoSylowSubgroup.pcWord e) 3 3 := by
   decide
 
-set_option maxRecDepth 100000 in
 /-- A constant-size matrix separator for the `24/178` cross-pair at `(6, 5)`. -/
 theorem matrix_entry_24_178_separates_pc_words :
     ∀ e : PCWordExp,
       autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 ≠
         autMatrix (G2TwoSylowSubgroup.pcWord e) 6 5 := by
+  intro e
+  have htarget :
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 = 1 := by
+    decide
+  rw [htarget, autMatrix_pcWord, matrixWord_entry_six_five]
   decide
 
 set_option maxRecDepth 100000 in
@@ -114,7 +118,6 @@ theorem quotientRepresentative_24_ne_73 :
   exact matrix_entry_24_73_separates_pc_words e
     (congrArg (fun M => M 3 3) he)
 
-set_option maxRecDepth 100000 in
 /-- Representatives 24 and 178 are strictly distinct in `G ⧸ U₆`. -/
 theorem quotientRepresentative_24_ne_178 :
     quotientRepresentative (24 : Fin 189) ≠ quotientRepresentative (178 : Fin 189) := by

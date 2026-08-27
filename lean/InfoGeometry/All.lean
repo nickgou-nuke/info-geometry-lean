@@ -7572,3 +7572,6 @@ import InfoGeometry.Modular.GeodesicFlow
 import InfoGeometry.Modular.AmariChentsovDualConnections
 import InfoGeometry.Modular.DualFlatnessPythagorean
 import InfoGeometry.Twistor.TwistorZornDerivationTransport
+import InfoGeometry.Geometry.ProjectiveExponentialAffineBridge
+import InfoGeometry.Geometry.PluckerDualFlatBridge
+import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge

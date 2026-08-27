@@ -95,6 +95,26 @@ theorem doubleCoset_eq_or_disjoint
       (doubleCosetRel_symm H K (show DoubleCosetRel H K z x from hzx))
       (show DoubleCosetRel H K z y from hzy)
 
+/-! Separation from the identity double coset needs only subgroup algebra.
+The representative-level fact `c ∉ H` is supplied by the concrete owner. -/
+theorem disjoint_doubleCoset_one_of_not_mem
+    (H : Subgroup G) (c : G) (hc : c ∉ H) :
+    Disjoint (doubleCoset H 1 H) (doubleCoset H c H) := by
+  rw [Set.disjoint_left]
+  intro x hx₁ hxc
+  rcases hx₁ with ⟨h₁, hh₁, k₁, hk₁, hx₁⟩
+  rcases hxc with ⟨h₂, hh₂, k₂, hk₂, hx₂⟩
+  apply hc
+  have heq : h₁ * 1 * k₁ = h₂ * c * k₂ := by
+    rw [← hx₁, hx₂]
+  have hc_eq : c = (h₂ : G)⁻¹ * (h₁ : G) * (k₁ : G) * (k₂ : G)⁻¹ := by
+    calc
+      c = (h₂ : G)⁻¹ * (h₂ * c * k₂) * (k₂ : G)⁻¹ := by group
+      _ = (h₂ : G)⁻¹ * (h₁ * 1 * k₁) * (k₂ : G)⁻¹ := by rw [heq]
+      _ = (h₂ : G)⁻¹ * (h₁ : G) * (k₁ : G) * (k₂ : G)⁻¹ := by group
+  rw [hc_eq]
+  exact H.mul_mem (H.mul_mem (H.mul_mem (H.inv_mem hh₂) hh₁) hk₁) (H.inv_mem hk₂)
+
 theorem iUnion_doubleCoset_eq_univ
     (H K : Subgroup G) :
     (⋃ g : G, doubleCoset H g K) = Set.univ := by

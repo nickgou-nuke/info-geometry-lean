@@ -16,6 +16,25 @@ theorem flagRepresentative_mem (i : Fin 189) :
     flagRepresentative i ∈ flagGeneratedSubgroup := by
   exact evaluateWord_mem_flagGeneratedSubgroup (flagRepWords i)
 
+/-! A native decomposition lemma for later predecessor certificates.  The
+    index relation is intentionally left explicit: this theorem proves the
+    algebraic word step, while a separate certificate must identify the
+    suffix with a valid predecessor in the same cell. -/
+theorem flagRepresentative_eq_token_mul_of_word_eq_cons
+    (i : Fin 189) (g : FlagGenerator × Int) (w : FlagWord)
+    (h : flagRepWords i = g :: w) :
+    flagRepresentative i = evaluateToken g * evaluateWord w := by
+  unfold flagRepresentative
+  rw [h, evaluateWord_cons]
+
+theorem flagRepresentative_eq_generator_mul_of_predecessor_word
+    (i j : Fin 189) (g : FlagGenerator)
+    (h : flagRepWords i = (g, 1) :: flagRepWords j) :
+    flagRepresentative i = flagGeneratorValue g * flagRepresentative j := by
+  unfold flagRepresentative
+  rw [h, evaluateWord_cons]
+  simp [evaluateToken]
+
 set_option maxRecDepth 100000 in
 theorem flagCells_partition :
     Finset.univ.biUnion flagCells = Finset.univ := by

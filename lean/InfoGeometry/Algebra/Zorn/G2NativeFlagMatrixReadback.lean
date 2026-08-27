@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
+import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 import InfoGeometry.Algebra.Zorn.G2PCRecoveryFactorization
@@ -17,6 +18,7 @@ namespace InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
+open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 open InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 open InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 open InfoGeometry.Algebra.Zorn.G2PCRecoveryFactorization
@@ -82,6 +84,27 @@ theorem fullPeel_mem_nativeFlagStabilizer_of_mem
       _ = fullPeel g := by group
   simpa [heq] using hres
 
+/-! A stabilizer element therefore has a canonical recovered-PC factor and a
+residual factor which is still constrained by the same flag.  This is the
+precise decomposition needed by the reverse-inclusion proof; no claim that
+the residual factor is already trivial is made here. -/
+theorem nativeFlagStabilizer_pcWord_residual_decomposition
+    {g : SplitOctF2Aut}
+    (hg : g ∈ nativeFlagStabilizer) :
+    ∃ e : PCExponent,
+      g = G2TwoSylowSubgroup.pcWord e * fullPeel g ∧
+        fullPeel g ∈ nativeFlagStabilizer := by
+  refine ⟨extractAllBits g, ?_, ?_⟩
+  · exact (fullPeel_pcWord_factorization g).symm
+  · exact fullPeel_mem_nativeFlagStabilizer_of_mem hg
+
+theorem fullPeel_mem_nativePointStabilizer_of_nativeFlagStabilizer
+    {g : SplitOctF2Aut}
+    (hg : g ∈ nativeFlagStabilizer) :
+    fullPeel g ∈ G2NativeOnePointStabilizer.nativePointStabilizer := by
+  exact nativeFlagStabilizer_le_nativePointStabilizer
+    (fullPeel_mem_nativeFlagStabilizer_of_mem hg)
+
 theorem mem_unipotent_iff_fullPeel_mem_unipotent
     {g : SplitOctF2Aut} :
     g ∈ unipotentSubgroup ↔ fullPeel g ∈ unipotentSubgroup := by
@@ -130,5 +153,13 @@ theorem nativeFlagStabilizer_le_unipotent_of_matrix_readback
   intro g hg
   obtain ⟨e, hmat⟩ := hreadback g hg
   exact mem_unipotentSubgroup_of_matrix_readback hmat
+
+theorem nativeFlagStabilizer_eq_unipotent_of_matrix_readback
+    (hreadback : ∀ g : SplitOctF2Aut, g ∈ nativeFlagStabilizer →
+      ∃ e : PCExponent, autMatrix g = pcMatrix e) :
+    nativeFlagStabilizer = unipotentSubgroup := by
+  apply le_antisymm
+  · exact nativeFlagStabilizer_le_unipotent_of_matrix_readback hreadback
+  · exact unipotentSubgroup_le_nativeFlagStabilizer
 
 end InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback

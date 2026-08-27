@@ -79,6 +79,14 @@ theorem toZornCell_mul (X Y : SplitOctF2) :
   ring_nf
   simp
 
+theorem zModToBool_add (a b : ZMod 2) :
+    zModToBool (a + b) = (zModToBool a ^^ zModToBool b) := by
+  fin_cases a <;> fin_cases b <;> rfl
+
+theorem zModToBool_mul (a b : ZMod 2) :
+    zModToBool (a * b) = (zModToBool a && zModToBool b) := by
+  fin_cases a <;> fin_cases b <;> rfl
+
 theorem detZ_toZornCell (X : SplitOctF2) :
     ZornCell.detZ (toZornCell X) = boolToZMod (zornNorm X) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩

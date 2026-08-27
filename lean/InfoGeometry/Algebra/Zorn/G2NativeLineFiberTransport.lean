@@ -28,6 +28,14 @@ private theorem nativeCandidateAt_map
     exact heq
   · exact (native_multiplication_zero_iff g x y).mpr hmul
 
+theorem nativeCandidateAt_map_of_fix
+    (g : SplitOctF2Aut)
+    (hg : octImAction g nativeBasePoint = nativeBasePoint)
+    (y : OctImF2)
+    (hy : nativeCandidateAt nativeBasePoint y) :
+    nativeCandidateAt nativeBasePoint (octImAction g y) := by
+  simpa [hg] using nativeCandidateAt_map g nativeBasePoint y hy
+
 private theorem nativeLineSetAt_map
     (g : SplitOctF2Aut) (x y : OctImF2) :
     nativeLineSetAt (octImAction g x) (octImAction g y) =

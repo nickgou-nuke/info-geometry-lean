@@ -23,6 +23,18 @@ def factorWordExponent : FactorWord → PCExponent
   | t :: w => G2TwoPCNormalForm.pcCombine (factorTokenExponent t)
       (factorWordExponent w)
 
+@[simp] theorem factorWordExponent_nil :
+    factorWordExponent [] = G2TwoPCNormalForm.zeroPC := rfl
+
+@[simp] theorem factorWordExponent_cons (t : FactorToken) (w : FactorWord) :
+    factorWordExponent (t :: w) =
+      G2TwoPCNormalForm.pcCombine (factorTokenExponent t)
+        (factorWordExponent w) := rfl
+
+@[simp] theorem factorTokenExponent_apply (t : FactorToken) (j : Fin 6) :
+    factorTokenExponent t j = if t.1 = j then t.2 else 0 := by
+  simp [factorTokenExponent]
+
 def residualWord (k : Fin 12) (i : Fin 189) : PCExponent :=
   factorWordExponent (leftFactorWord k i)
 

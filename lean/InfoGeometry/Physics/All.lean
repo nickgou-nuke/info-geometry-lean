@@ -185,6 +185,10 @@ import InfoGeometry.Physics.Algebra.TripotentHorizonInvariantPacket
 import InfoGeometry.Physics.Algebra.NPotentCyclotomicSpinHullBridge
 import InfoGeometry.Physics.Algebra.NPotentOperatorSpectralHull
 import InfoGeometry.Physics.Algebra.TwelveFoldNPotentCyclotomicBridge
+import InfoGeometry.Physics.Algebra.NPotentTwoIdempotentBridge
+import InfoGeometry.Physics.Algebra.CyclotomicOperatorGeometricSum
+import InfoGeometry.Physics.Algebra.ArtinSchreierF2
+import InfoGeometry.Physics.Algebra.NPotentIdempotentDecomposition
 import InfoGeometry.Physics.TripotentFractalHorizonBridge
 import InfoGeometry.Physics.Algebra.TripotentTopologicalFiveGrading
 import InfoGeometry.Physics.CuntzMatrixUnitFiveGradingBridge

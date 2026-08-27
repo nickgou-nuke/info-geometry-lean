@@ -1,3 +1,4 @@
+import InfoGeometry.Topology.ChiralDirectedGraphHomotopy
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Topology.AmplituhedronTensorTowerColimit
 import InfoGeometry.Topology.SpinorSpectrumTopCatColimit

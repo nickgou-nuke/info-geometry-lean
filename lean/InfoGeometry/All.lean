@@ -4407,6 +4407,7 @@ import InfoGeometry.Eval.SeedProverSmoke
 import InfoGeometry.Eval.SorryFillerTest
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.G2ArtinOperatorLift
+import InfoGeometry.Exceptional.G2ArtinRootPermutationLift
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.RealSplitAlbertFreudenthal
 import InfoGeometry.Exceptional.CubicJordanQuadraticLaws

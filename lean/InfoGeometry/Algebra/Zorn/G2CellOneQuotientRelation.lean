@@ -95,13 +95,24 @@ theorem matrix_entry_24_73_separates_pc_words :
     ∀ e : PCWordExp,
       autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 73) 3 3 ≠
         autMatrix (G2TwoSylowSubgroup.pcWord e) 3 3 := by
+  intro e
+  have htarget :
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 73) 3 3 = 1 := by
+    decide
+  rw [htarget, autMatrix_pcWord, matrixWord_entry_three_three]
   decide
 
+set_option maxRecDepth 100000 in
 /-- A constant-size matrix separator for the `24/178` cross-pair at `(6, 5)`. -/
 theorem matrix_entry_24_178_separates_pc_words :
     ∀ e : PCWordExp,
       autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 ≠
         autMatrix (G2TwoSylowSubgroup.pcWord e) 6 5 := by
+  intro e
+  have htarget :
+      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 = 1 := by
+    decide
+  rw [htarget, autMatrix_pcWord, matrixWord_entry_six_five]
   decide
 
 set_option maxRecDepth 100000 in

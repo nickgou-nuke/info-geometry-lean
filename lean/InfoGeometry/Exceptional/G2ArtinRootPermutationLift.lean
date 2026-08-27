@@ -91,7 +91,6 @@ theorem twelfth_power_of_neg_sixth_power
   calc
     C ^ 12 = (C ^ 6) ^ 2 := by
       rw [← pow_mul]
-      norm_num
     _ = ((-1 : ℂ) • (1 : Matrix n n ℂ)) ^ 2 := by rw [hC]
     _ = 1 := by
       rw [smul_pow]
@@ -124,7 +123,17 @@ theorem perm_artin_six_matrix :
 
 /-- Classical Coxeter matrix $C_{\\text{perm}} = B_s B_\\ell$. -/
 noncomputable def coxeterPermMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
-  BsPermMatrix * BlPermMatrix
+  permMatrix cRoot
+
+theorem coxeterPermMatrix_pow_six : coxeterPermMatrix ^ 6 = 1 := by
+  dsimp [coxeterPermMatrix]
+  have hp : ∀ n : ℕ, permMatrix (cRoot ^ n) = (permMatrix cRoot) ^ n := by
+    intro n
+    induction n with
+    | zero => simp [permMatrix_one]
+    | succ n ih =>
+        rw [pow_succ, pow_succ, permMatrix_mul, ih]
+  rw [← hp 6, cRoot_pow_six, permMatrix_one]
 
 /-- 🏆 THEOREM 4: Packaging the permutation shadow into `ArtinHeckeLift`. -/
 def permutationArtinHeckeLift : ArtinHeckeLift G2CoordinateRoot where

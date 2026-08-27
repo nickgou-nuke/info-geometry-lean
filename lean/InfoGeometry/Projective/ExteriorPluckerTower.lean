@@ -20,8 +20,14 @@ abbrev ExteriorForm (n : ℕ) := AlternatingMap R V R (Fin n)
 
 abbrev Frame (n : ℕ) := Fin n → V
 
+def appendFrame {m n : ℕ} (u : Frame V m) (v : Frame V n) : Frame V (m + n) :=
+  Fin.addCases u v
+
 def pluckerEmbedding (n : ℕ) : Frame V n → Multivector R V n :=
   exteriorPower.ιMulti R n
+
+def wedgeFrame {m n : ℕ} (u : Frame V m) (v : Frame V n) : Multivector R V (m + n) :=
+  pluckerEmbedding R V (m + n) (appendFrame V u v)
 
 /-! A finite-stage tower datum.  The transition is deliberately supplied as
 data: exterior powers of different degree do not carry a canonical map. -/
@@ -48,6 +54,17 @@ theorem pluckerEmbedding_image_is_decomposable {n : ℕ} (v : Frame V n) :
 
 theorem pluckerEmbedding_eq_ιMulti (n : ℕ) (v : Frame V n) :
     pluckerEmbedding R V n v = exteriorPower.ιMulti R n v := rfl
+
+theorem wedgeFrame_eq_ιMulti {m n : ℕ} (u : Frame V m) (v : Frame V n) :
+    wedgeFrame R V u v = exteriorPower.ιMulti R (m + n) (appendFrame V u v) := rfl
+
+theorem wedgeFrame_eq_zero_of_linearDependent {m n : ℕ}
+    (u : Frame V m) (v : Frame V n)
+    [IsDomain R] [Module.IsTorsionFree R (Multivector R V (m + n))]
+    (h : ¬ LinearIndependent R (appendFrame V u v)) :
+    wedgeFrame R V u v = 0 := by
+  rw [wedgeFrame_eq_ιMulti]
+  exact (exteriorPower.ιMulti R (m + n)).map_linearDependent _ h
 
 theorem transition_compatible_on_plucker
     (T : TowerDatum R V) (n : ℕ) (v : Frame V n) :

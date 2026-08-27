@@ -2,7 +2,7 @@
 
 import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
 
-namespace InfoGeometry.Exceptional.G2SpinPhaseData
+namespace InfoGeometry.Exceptional.G2SpinPhase
 
 open InfoGeometry.Algebra.Clifford
 
@@ -29,4 +29,4 @@ theorem phase_pow_twelve (d : G2SpinPhaseData) : d.phase ^ 12 = 1 := by
   rw [d.phase_eq]
   exact cyclotomic_phase_pow_twelve d.B d.inv2 d.sqrt3 d.h2 d.h3 d.B_sq
 
-end InfoGeometry.Exceptional.G2SpinPhaseData
+end InfoGeometry.Exceptional.G2SpinPhase

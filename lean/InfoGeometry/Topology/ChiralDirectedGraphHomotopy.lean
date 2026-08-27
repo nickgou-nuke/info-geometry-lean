@@ -212,6 +212,70 @@ def DirectedPathClass.comp
   intro q'
   exact Quot.sound (directedChiralHomotopyEquiv_append_right hright q' hp)
 
+@[simp] theorem DirectedPathClass.comp_mk_refl
+    {G : ChiralDigraph} (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G)
+    {u v : G.Vertex} (p : DirectedPathClass G u v) :
+    DirectedPathClass.comp hright hleft (DirectedPathClass.mk (.refl u)) p = p := by
+  refine Quot.inductionOn p ?_
+  intro q
+  rfl
+
+@[simp] theorem DirectedPathClass.mk_refl_comp
+    {G : ChiralDigraph} (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G)
+    {u v : G.Vertex} (p : DirectedPathClass G u v) :
+    DirectedPathClass.comp hright hleft p (DirectedPathClass.mk (.refl v)) = p := by
+  refine Quot.inductionOn p ?_
+  intro q
+  change DirectedPathClass.mk (q.append (.refl v)) = DirectedPathClass.mk q
+  rw [DirectedPath.append_refl]
+
+theorem DirectedPathClass.comp_assoc
+    {G : ChiralDigraph} (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G)
+    {u v w z : G.Vertex}
+    (p : DirectedPathClass G u v) (q : DirectedPathClass G v w)
+    (r : DirectedPathClass G w z) :
+    DirectedPathClass.comp hright hleft
+        (DirectedPathClass.comp hright hleft p q) r =
+      DirectedPathClass.comp hright hleft p
+        (DirectedPathClass.comp hright hleft q r) := by
+  refine Quot.inductionOn p ?_
+  intro p'
+  refine Quot.inductionOn q ?_
+  intro q'
+  refine Quot.inductionOn r ?_
+  intro r'
+  change DirectedPathClass.mk ((p'.append q').append r') =
+    DirectedPathClass.mk (p'.append (q'.append r'))
+  rw [DirectedPath.append_assoc]
+
+/-! The quotient paths form a category once append compatibility is supplied. -/
+
+def ChiralPathQuotientCategory (G : ChiralDigraph) : Type := G.Vertex
+
+namespace ChiralPathQuotientCategory
+
+instance (G : ChiralDigraph)
+    (hright : HomotopyAppendCompatible G)
+    (hleft : HomotopyAppendLeftCompatible G) :
+    Category (ChiralPathQuotientCategory G) where
+  Hom u v := DirectedPathClass G u v
+  id u := DirectedPathClass.mk (.refl u)
+  comp p q := DirectedPathClass.comp hright hleft p q
+  id_comp := by
+    intro X Y f
+    exact DirectedPathClass.comp_mk_refl hright hleft f
+  comp_id := by
+    intro X Y f
+    exact DirectedPathClass.mk_refl_comp hright hleft f
+  assoc := by
+    intro W X Y Z f g h
+    exact DirectedPathClass.comp_assoc hright hleft f g h
+
+end ChiralPathQuotientCategory
+
 theorem DirectedChiralHomotopy.length_eq {G : ChiralDigraph}
     {u v : G.Vertex} {p q : DirectedPath G u v}
     (h : DirectedChiralHomotopy p q)

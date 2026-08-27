@@ -36,6 +36,55 @@ def positiveGrassmannianChart : Set (Matrix (Fin k) (Fin n) ℝ) :=
 def positiveGrassmannianInterior : Set (Matrix (Fin k) (Fin n) ℝ) :=
   {C | HasPositiveMaximalMinors C}
 
+/-! ### Boundary extension by a zero column
+
+The finite chart is preserved by appending a zero column.  We state the
+first useful instance explicitly for 2-planes; this is the chart dimension
+used by the finite Grassmannian boundary tower. -/
+
+def appendZeroColumn₂ (C : Matrix (Fin 2) (Fin n) ℝ) :
+    Matrix (Fin 2) (Fin (n + 1)) ℝ :=
+  Matrix.of (fun i j => if hj : j.val < n then C i ⟨j.val, hj⟩ else 0)
+
+theorem appendZeroColumn₂_nonnegative
+    (C : Matrix (Fin 2) (Fin n) ℝ)
+    (hC : HasNonnegativeMaximalMinors C) :
+    HasNonnegativeMaximalMinors (appendZeroColumn₂ C) := by
+  intro s hs
+  by_cases hlast : s 1 = Fin.last n
+  · unfold maximalMinor appendZeroColumn₂
+    rw [Matrix.det_fin_two]
+    simp [hlast]
+  · let sOld : Fin 2 → Fin n := fun j =>
+      (s j).castPred (by
+        fin_cases j
+        · apply Fin.lt_last_iff_ne_last.mpr
+          intro h0
+          have h01 : s 0 < s 1 := hs (by decide)
+          rw [h0] at h01
+          exact (Fin.not_lt_of_ge (Fin.le_last _)) h01
+        · exact hlast)
+    have hsOld : StrictMono sOld := by
+      intro i j hij
+      exact Fin.castPred_lt_castPred (hs hij) (by
+        fin_cases j
+        · apply Fin.lt_last_iff_ne_last.mpr
+          intro h0
+          have h01 : s 0 < s 1 := hs (by decide)
+          rw [h0] at h01
+          exact (Fin.not_lt_of_ge (Fin.le_last _)) h01
+        · exact hlast)
+    have hminor :
+        maximalMinor (appendZeroColumn₂ C) s = maximalMinor C sOld := by
+      unfold maximalMinor appendZeroColumn₂
+      rw [Matrix.det_fin_two, Matrix.det_fin_two]
+      have hs1lt : (s 1).val < n := Fin.val_lt_last hlast
+      have hs0lt : (s 0).val < n := by
+        exact Nat.lt_trans (hs (by decide)).val hs1lt
+      simp [sOld, hs0lt, hs1lt]
+    rw [hminor]
+    exact hC sOld hsOld
+
 theorem mem_positiveGrassmannianChart_iff
     (C : Matrix (Fin k) (Fin n) ℝ) :
     C ∈ positiveGrassmannianChart (k := k) (n := n) ↔

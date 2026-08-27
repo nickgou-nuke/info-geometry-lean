@@ -68,6 +68,7 @@ theorem amplituhedronInclusion_new_column (n : ℕ)
         ⟨n, Nat.lt_succ_self n⟩ = 0 := by
   simp [amplituhedronInclusion]
 
+
 /-- The image of the finite-stage inclusion is the coordinate boundary face
     cut out by the newly appended zero column. -/
 def zeroLastColumnFace (n : ℕ) :

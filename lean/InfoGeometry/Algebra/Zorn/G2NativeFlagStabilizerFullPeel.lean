@@ -1,6 +1,8 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
+import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 import InfoGeometry.Algebra.Zorn.G2NativeFlagIntrinsicEquiv
+import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagCardinality
 
 /-!
 # Full-peel closure of the native flag stabilizer
@@ -12,6 +14,7 @@ interfaces.  The full-peel certificate remains an explicit hypothesis.
 namespace InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel
 
 open InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
+open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
 open InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFlag
@@ -48,5 +51,27 @@ noncomputable def quotientIntrinsicFlagEquiv_of_fullPeel_mem
   · exact nativeFlagStabilizer_eq_unipotent_of_fullPeel_mem hpeel
   · simpa only [smul_eq_mul] using
       InfoGeometry.Algebra.Zorn.G2NativeFlagIntrinsicEquiv.intrinsicFlag_orbit_surjective
+
+/-! The basis-readback contract is the direct input expected by the native
+    quotient bridge.  This wrapper keeps the missing universal readback
+    explicit while eliminating a repeated conversion through membership of
+    `unipotentSubgroup`. -/
+noncomputable def quotientIntrinsicFlagEquiv_of_fullPeel_basis_readback
+    (hreadback : ∀ g : SplitOctF2Aut,
+      g ∈ nativeFlagStabilizer →
+      ∀ j : Fin 8, (fullPeel g).1 (basis8 j) = basis8 j) :
+    (SplitOctF2Aut ⧸ unipotentSubgroup) ≃ IntrinsicFlag :=
+  quotientIntrinsicFlagEquiv_of_fullPeel_mem (fun g hg =>
+    (fullPeel_mem_unipotent_of_basis_readback (hreadback g hg)))
+
+theorem quotient_card_eq_189_of_fullPeel_basis_readback
+    (hreadback : ∀ g : SplitOctF2Aut,
+      g ∈ nativeFlagStabilizer →
+      ∀ j : Fin 8, (fullPeel g).1 (basis8 j) = basis8 j) :
+    Nat.card (SplitOctF2Aut ⧸ unipotentSubgroup) = 189 := by
+  let e := quotientIntrinsicFlagEquiv_of_fullPeel_basis_readback hreadback
+  rw [Nat.card_congr e]
+  simpa only [Nat.card_eq_fintype_card] using
+    G2IntrinsicFlagCardinality.intrinsicFlag_card
 
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel

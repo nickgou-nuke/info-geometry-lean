@@ -711,6 +711,11 @@ def canonicalX : PeircePlusFiber canonicalP :=
 @[simp] theorem canonicalX_value : canonicalX.1.1 = up0 :=
   rfl
 
+theorem canonicalResidualFiber_card_le_64 :
+    Fintype.card (ResidualFiber canonicalP canonicalX) ≤ 64 := by
+  apply residualFiber_card_le_64_of_ePlus
+  rfl
+
 theorem basisRestriction7_mul_apply
     (f g : SplitOctF2Aut) (i : Fin 7) :
     basisRestriction7 (f * g) i = g.1 (basisRestriction7 f i) := by

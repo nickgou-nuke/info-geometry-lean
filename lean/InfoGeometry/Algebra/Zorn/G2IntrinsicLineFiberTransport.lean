@@ -18,7 +18,7 @@ open InfoGeometry.Algebra.Zorn.G2NativePointTransitivity
 open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
-noncomputable instance intrinsicLineFintype (p : OctImIsotropicPoint) :
+noncomputable instance (priority := 2000) intrinsicLineFintype (p : OctImIsotropicPoint) :
     Fintype (IntrinsicLine p) := by
   apply Fintype.subtype (intrinsicLines p)
   intro s

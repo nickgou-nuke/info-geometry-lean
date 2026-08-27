@@ -57,6 +57,17 @@ lemma pc6pc2_basis8_7_x1 :
   simp [basis8, ePlus, eMinus, add, add2,
     up0, up1, up2, down0, down1, down2]
 
+lemma peel1_basis8_7_readback (f : SplitOctF2Aut) :
+    (peel1 f).1 (basis8 7) =
+      if (f.1 (basis8 2)).x1 then
+        f.1 (add ePlus (add eMinus (add (basis8 4)
+          (add (basis8 6) (basis8 7)))))
+      else f.1 (basis8 7) := by
+  dsimp [peel1]
+  split
+  · rw [automorphism_mul_apply_local, pc6pc2_basis8_7]
+  · rfl
+
 lemma pc6pc2_apply_x1 (X : SplitOctF2) :
     ((G2TwoSylowPCAutomorphisms.pc6Aut *
       G2TwoSylowPCAutomorphisms.pc2Aut).1 X).x1 = (X.x0 ^^ X.x1) := by
@@ -69,6 +80,12 @@ lemma pc6pc2_apply_y1 (X : SplitOctF2) :
       (X.x0 ^^ X.y1 ^^ X.y2) := by
   change (pc2Fun (pc6Fun X)).y1 = (X.x0 ^^ X.y1 ^^ X.y2)
   rfl
+
+lemma pc6pc2_apply_y1_of_y2_false (X : SplitOctF2) (hy2 : X.y2 = false) :
+    ((G2TwoSylowPCAutomorphisms.pc6Aut *
+      G2TwoSylowPCAutomorphisms.pc2Aut).1 X).y1 = (X.x0 ^^ X.y1) := by
+  rw [pc6pc2_apply_y1, hy2]
+  simp
 
 lemma pc6pc2_basis8_2 :
     (G2TwoSylowPCAutomorphisms.pc6Aut *
@@ -141,6 +158,22 @@ lemma peel1_basis8 (f : SplitOctF2Aut) (k : Fin 8) :
   split
   · rw [automorphism_mul_apply_local]
   · simp
+
+lemma peel1_basis8_4 (f : SplitOctF2Aut) :
+    (peel1 f).1 (basis8 4) =
+      if (f.1 (basis8 2)).x1 then f.1 (basis8 4)
+      else f.1 (basis8 4) := by
+  rw [peel1_basis8, pc6pc2_basis8_4]
+
+lemma peel1_basis8_4_fixed (f : SplitOctF2Aut) :
+    (peel1 f).1 (basis8 4) = f.1 (basis8 4) := by
+  rw [peel1_basis8_4]
+  split <;> rfl
+
+lemma peel1_basis8_5 (f : SplitOctF2Aut) :
+    (peel1 f).1 (basis8 5) = f.1 (basis8 5) := by
+  rw [peel1_basis8, pc6pc2_basis8_5]
+  split <;> rfl
 
 lemma peel1_sum_basis_y1 (f : SplitOctF2Aut) :
     ((peel1 f).1

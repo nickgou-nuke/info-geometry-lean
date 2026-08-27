@@ -1,4 +1,6 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.Zorn.G2FlagCellFactorizationBridge
+import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 import InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient
 
 /-!
@@ -11,6 +13,8 @@ them to exact, uniformly oriented group factorizations.
 namespace InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance
 
 open InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+open InfoGeometry.Algebra.Zorn.G2FlagCellFactorizationBridge
+open InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
@@ -25,7 +29,19 @@ def QuotientRowWitness (k : Fin 12) (i : Fin 189) : Prop :=
     b ∈ unipotentSubgroup ∧
       orbitEnum i = b •
         (QuotientGroup.mk
-          (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient)
+        (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient)
+
+theorem quotient_row_of_exact_factorization
+    (k : Fin 12) (i : Fin 189)
+    (b u : SplitOctF2Aut)
+    (hb : b ∈ unipotentSubgroup)
+    (hu : u ∈ unipotentSubgroup)
+    (hfac : flagRepresentative i =
+      b * weylNF (orbitWeyl k).1 (orbitWeyl k).2 * u) :
+    QuotientRowWitness k i := by
+  refine ⟨b, hb, ?_⟩
+  exact quotientRepresentative_eq_left_smul_of_factorization i b u
+    (weylNF (orbitWeyl k).1 (orbitWeyl k).2) hu hfac
 
 theorem exact_factorization_exists_of_quotient_row
     (k : Fin 12) (i : Fin 189) (h : QuotientRowWitness k i) :
@@ -53,6 +69,26 @@ theorem quotient_row_1_178 : QuotientRowWitness 1 178 := by
 theorem quotient_row_4_18 : QuotientRowWitness 4 18 := by
   exact ⟨collect (rightFactorWord 4 18), collect_mem_unipotentSubgroup _,
     quotient_witness_cell_four_18⟩
+
+theorem quotient_row_0_0 : QuotientRowWitness 0 0 := by
+  refine ⟨collect (leftFactorWord 0 0),
+    collect_mem_unipotentSubgroup _, ?_⟩
+  exact quotientRepresentative_eq_left_smul_of_factorization 0
+    (collect (leftFactorWord 0 0))
+    (collect (rightFactorWord 0 0))
+    (weylNF (orbitWeyl 0).1 (orbitWeyl 0).2)
+    (rightFactorWord_mem_unipotentSubgroup 0 0)
+    row_0_0
+
+theorem quotient_row_4_6 : QuotientRowWitness 4 6 := by
+  refine ⟨collect (leftFactorWord 4 6),
+    collect_mem_unipotentSubgroup _, ?_⟩
+  exact quotientRepresentative_eq_left_smul_of_factorization 6
+    (collect (leftFactorWord 4 6))
+    (collect (rightFactorWord 4 6))
+    (weylNF (orbitWeyl 4).1 (orbitWeyl 4).2)
+    (rightFactorWord_mem_unipotentSubgroup 4 6)
+    row_4_6
 
 theorem quotient_cell_one
     (i : Fin 189) (hi : i ∈ orbitCells 1) :

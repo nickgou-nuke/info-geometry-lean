@@ -102,11 +102,6 @@ theorem matrix_entry_24_178_separates_pc_words :
     ∀ e : PCWordExp,
       autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 ≠
         autMatrix (G2TwoSylowSubgroup.pcWord e) 6 5 := by
-  intro e
-  have htarget :
-      autMatrix ((flagRepresentative 24)⁻¹ * flagRepresentative 178) 6 5 = 1 := by
-    decide
-  rw [htarget, autMatrix_pcWord, matrixWord_entry_six_five]
   decide
 
 set_option maxRecDepth 100000 in

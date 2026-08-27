@@ -100,6 +100,7 @@ import InfoGeometry.Projective.PenroseSpinTilingConfig
 import InfoGeometry.Projective.KleinQuadricPlucker
 import InfoGeometry.Projective.KleinQuadricCarrierEquiv
 import InfoGeometry.Projective.ExteriorPowerPluckerBridge
+import InfoGeometry.Projective.ExteriorPluckerTower
 import InfoGeometry.Projective.MatrixPluckerPositiveBridge
 import InfoGeometry.Projective.ExteriorKleinProjective
 import InfoGeometry.Projective.ExteriorKleinFrameSurjection

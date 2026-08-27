@@ -792,7 +792,6 @@ import InfoGeometry.Automath.Generated.omega_fib_succ_pos
 import InfoGeometry.Automath.Generated.omega_fib_succ_succ
 import InfoGeometry.Automath.Generated.onsager_entropy_production_zero
 import InfoGeometry.Automath.Generated.su3_gellmann_lie_algebra
-import InfoGeometry.Automath.Generated.test_hyp
 import InfoGeometry.Automath.Generated.zorn_supergraded_closure
 import InfoGeometry.Automath
 import InfoGeometry.Automorphic.AutomorphicKreinBridge
@@ -7280,7 +7279,6 @@ import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeJointConti
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeOrbitClosureCompHausNaturality
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeOrbitClosureInvariance
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeOrbitClosureNaturality
-import InfoGeometry.Topology.test_linarith
 import InfoGeometry.Topology.ThermodynamicGauge
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 import InfoGeometry.Topology.ThreeColorCyclotomicChargeTopological
@@ -7573,3 +7571,4 @@ import InfoGeometry.Modular.TransversalCurvatureK0
 import InfoGeometry.Modular.GeodesicFlow
 import InfoGeometry.Modular.AmariChentsovDualConnections
 import InfoGeometry.Modular.DualFlatnessPythagorean
+import InfoGeometry.Twistor.TwistorZornDerivationTransport

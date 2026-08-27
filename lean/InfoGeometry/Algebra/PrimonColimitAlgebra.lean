@@ -306,6 +306,20 @@ def toColimitLinear (n : ℕ) : MatrixStage n →ₗ[ℝ] PrimonUHFAlgebra where
     toColimit (n + 1) (matrixBond n M) = toColimit n M :=
   directLimitOf_bond matrixBond n M
 
+/-- The full matrix-stage cone is compatible with the successor bonding map
+    at the linear-map level. -/
+def matrixBondLinear (n : ℕ) : MatrixStage n →ₗ[ℝ] MatrixStage (n + 1) where
+  toFun := matrixBond n
+  map_add' := (matrixBond n).map_add
+  map_smul' := matrixBond_smul n
+
+theorem toColimitLinear_comp_matrixBond (n : ℕ) :
+    (toColimitLinear (n + 1)).comp (matrixBondLinear n) =
+      toColimitLinear n := by
+  apply LinearMap.ext
+  intro M
+  exact toColimit_bond n M
+
 theorem toColimit_injective (n : ℕ) :
     Function.Injective (toColimit n) :=
   directLimitOf_injective matrixBond matrixBond_injective n

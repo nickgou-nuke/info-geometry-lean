@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Canonical.TensorTowerColimit
 
 /-!
 # UHF Inductive Colimit Boundary
@@ -59,6 +60,15 @@ theorem diagEmbedSucc_zero (n : ℕ) :
   ext w
   rfl
 
+/-- The diagonal successor embedding as a linear map over `ℂ`. -/
+def diagEmbedSuccLinear (n : ℕ) : DiagAlg n →ₗ[ℂ] DiagAlg (n + 1) :=
+  { toFun := diagEmbedSucc n
+    map_add' := diagEmbedSucc_add n
+    map_smul' := by
+      intro c f
+      ext w
+      rfl }
+
 /-- Extend a word by one bit. -/
 def extendSucc (n : ℕ) (w : BitWord n) (b : Bool) : BitWord (n + 1) :=
   fun i => if h : i.1 < n then w ⟨i.1, h⟩ else b
@@ -67,6 +77,16 @@ theorem prefixSucc_extendSucc (n : ℕ) (w : BitWord n) (b : Bool) :
     prefixSucc n (extendSucc n w b) = w := by
   ext i
   simp [prefixSucc, extendSucc, i.2]
+
+/-- Prefix extension is injective in both its finite word and its new bit. -/
+theorem extendSucc_injective {n : ℕ} :
+    Function.Injective (fun p : BitWord n × Bool => extendSucc n p.1 p.2) := by
+  rintro ⟨u, b⟩ ⟨v, c⟩ h
+  apply Prod.ext
+  · exact (prefixSucc_extendSucc n u b).symm.trans
+      ((congrArg (prefixSucc n) h).trans (prefixSucc_extendSucc n v c))
+  · have hl := congrFun h ⟨n, Nat.lt_succ_self n⟩
+    simpa [extendSucc] using hl
 
 /-- The diagonal successor embedding is injective. -/
 theorem diagEmbedSucc_injective (n : ℕ) :
@@ -109,6 +129,17 @@ theorem boundaryPrefix_succ_eq_prefixSucc (n : ℕ) (b : (ℕ → Bool)) :
   ext i
   rfl
 
+/-- A successor boundary prefix is the old prefix together with its next bit. -/
+theorem boundaryPrefix_succ_eq_extendSucc (n : ℕ) (b : (ℕ → Bool)) :
+    boundaryPrefix (n + 1) b = extendSucc n (boundaryPrefix n b) (b n) := by
+  ext i
+  by_cases hi : i.1 < n
+  · simp [boundaryPrefix, extendSucc, hi]
+  · have hi' : i.1 = n := by omega
+    have hi_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext hi'
+    subst i
+    simp [boundaryPrefix, extendSucc]
+
 /-- Cylinder maps are compatible with the diagonal successor embeddings. -/
 theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) :
     cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f := by
@@ -124,6 +155,33 @@ theorem cylinder_mul (n : ℕ) (f g : DiagAlg n) :
     cylinder n (f * g) = cylinder n f * cylinder n g := by
   ext b
   rfl
+
+/-- The finite-stage cylinder realization as a linear map over `ℂ`. -/
+def cylinderLinear (n : ℕ) : DiagAlg n →ₗ[ℂ] ((ℕ → Bool) → ℂ) :=
+  { toFun := cylinder n
+    map_add' := cylinder_add n
+    map_smul' := by
+      intro c f
+      ext b
+      rfl }
+
+/-- Concrete compatibility of the finite diagonal tower with its boundary cone. -/
+theorem cylinderLinear_compatible_succ (n : ℕ) :
+    (cylinderLinear (n + 1)).comp (diagEmbedSuccLinear n) = cylinderLinear n := by
+  apply LinearMap.ext
+  intro f
+  funext b
+  exact congrFun (cylinder_compatible_succ n f) b
+
+/-- Every finite diagonal observable has the same boundary realization at every
+finite stage obtained by iterating the successor embedding. -/
+theorem cylinderLinear_comp_iota_seq (n m : ℕ) :
+    (cylinderLinear (n + m)).comp
+        (_root_.iota_seq DiagAlg diagEmbedSuccLinear n m) =
+      cylinderLinear n := by
+  exact _root_.psi_comp_iota_seq
+    DiagAlg diagEmbedSuccLinear ((ℕ → Bool) → ℂ) cylinderLinear
+    cylinderLinear_compatible_succ n m
 
 theorem cylinder_one (n : ℕ) :
     cylinder n 1 = (1 : (ℕ → Bool) → ℂ) := by

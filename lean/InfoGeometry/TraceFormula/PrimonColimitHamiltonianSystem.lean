@@ -2,6 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 import InfoGeometry.Algebra.PrimonColimitAlgebra
 import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
+import InfoGeometry.Canonical.NormalizedISZetaDeterminantBridge
 import InfoGeometry.TraceFormula.DeRhamHolonomyStokes
 import InfoGeometry.TraceFormula.FiniteISColimitInverseLimitSearch
 import InfoGeometry.KMSGNS
@@ -26,6 +27,8 @@ open InfoGeometry.Algebra.PrimonColimitAlgebra
 open InfoGeometry.TraceFormula.ColimitTrace
 open InfoGeometry.TraceFormula.ItakuraSaito
 open InfoGeometry.TraceFormula.DeRhamHolonomy
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.NormalizedISZetaDeterminantBridge
 
 /-! ## Finite stage -/
 
@@ -62,6 +65,29 @@ theorem stageFisherHessian_bond_compatible
   unfold stageFisherHessian
   rw [matrixBond_inv n P hP]
   rw [← map_mul, ← map_mul]
+
+theorem stageFisherHessian_bondMap_compatible
+    (m n : ℕ) (h : m ≤ n) (P X : MatrixStage m) (hP : IsUnit P.det) :
+    stageFisherHessian n (bondMap matrixBond m n h P)
+        (bondMap matrixBond m n h X) =
+      bondMap matrixBond m n h (stageFisherHessian m P X) := by
+  refine Nat.le_induction
+    (m := m)
+    (P := fun k hk =>
+      stageFisherHessian k (bondMap matrixBond m k hk P)
+          (bondMap matrixBond m k hk X) =
+        bondMap matrixBond m k hk (stageFisherHessian m P X))
+    ?base ?succ n h
+  · simp [bondMap_refl]
+  · intro k hmk ih
+    change stageFisherHessian (k + 1)
+        (matrixBond k (bondMap matrixBond m k hmk P))
+        (matrixBond k (bondMap matrixBond m k hmk X)) =
+      matrixBond k (bondMap matrixBond m k hmk
+        (stageFisherHessian m P X))
+    rw [stageFisherHessian_bond_compatible]
+    rw [ih]
+    exact congrArg (matrixBond k) ih
 
 theorem stageFisherHessian_normalizedTrace_selfAdjoint
     (n : ℕ) (P X Y : MatrixStage n) :
@@ -124,6 +150,48 @@ def colimitHamiltonianObservable (n : ℕ) (H : MatrixStage n) :
     PrimonUHFAlgebra :=
   toColimit n H
 
+/-- The nonlinear normalized Itakura--Saito energy descended to the
+algebraic matrix colimit.  Its well-definedness uses the arbitrary-jump
+compatibility theorem, not linearity of the energy. -/
+noncomputable def colimitEffectiveHamiltonian : PrimonUHFAlgebra → ℝ :=
+  DirectLimit.lift
+    (fun _ _ hij => bondMap matrixBond _ _ hij)
+    (fun n P => (1 / (2 ^ n : ℝ)) * stageEffectiveHamiltonian n P)
+    (by
+      intro m n h P
+      exact (normalized_stageEffectiveHamiltonian_bondMap_compatible m n h P).symm)
+
+@[simp] theorem colimitEffectiveHamiltonian_stage
+    (n : ℕ) (P : MatrixStage n) :
+    colimitEffectiveHamiltonian (toColimit n P) =
+      (1 / (2 ^ n : ℝ)) * stageEffectiveHamiltonian n P := by
+  rfl
+
+theorem colimitEffectiveHamiltonian_diagonal_zeta_readout
+    (n : ℕ) (lam : BitWord n → ℝ) (hpos : ∀ i, 0 < lam i) :
+    colimitEffectiveHamiltonian
+        (toColimit n (Matrix.diagonal lam)) =
+      normalizedTrace n (Matrix.diagonal lam) +
+        normalizedSpectralZetaDerivativeAtZero lam - 1 := by
+  rw [colimitEffectiveHamiltonian_stage]
+  exact normalizedDiagonalItakuraSaito_eq_trace_plus_zetaDerivative_sub_one n lam hpos
+
+@[simp] theorem colimitEffectiveHamiltonian_bond
+    (n : ℕ) (P : MatrixStage n) :
+    colimitEffectiveHamiltonian
+        (toColimit (n + 1) (matrixBond n P)) =
+      colimitEffectiveHamiltonian (toColimit n P) := by
+  rw [colimitEffectiveHamiltonian_stage, colimitEffectiveHamiltonian_stage]
+  exact normalized_stageEffectiveHamiltonian_bond_compatible n P
+
+theorem colimitEffectiveHamiltonian_bondMap
+    (m n : ℕ) (h : m ≤ n) (P : MatrixStage m) :
+    colimitEffectiveHamiltonian
+        (toColimit n (bondMap matrixBond m n h P)) =
+      colimitEffectiveHamiltonian (toColimit m P) := by
+  rw [colimitEffectiveHamiltonian_stage, colimitEffectiveHamiltonian_stage]
+  exact normalized_stageEffectiveHamiltonian_bondMap_compatible m n h P
+
 @[simp] theorem colimitHamiltonian_bond (n : ℕ) (H : MatrixStage n) :
     colimitHamiltonianObservable (n + 1) (matrixBond n H) =
       colimitHamiltonianObservable n H := by
@@ -134,6 +202,60 @@ def colimitHamiltonianObservable (n : ℕ) (H : MatrixStage n) :
 /-- The normalized state at each finite stage. -/
 abbrev projectiveTracialSequence (n : ℕ) : MatrixStage n →ₗ[ℝ] ℝ :=
   normalizedTraceLin n
+
+/-! The nonlinear energy has its own compatible inverse-side family.  It is
+kept as a function family rather than incorrectly packaged as a linear map. -/
+def projectiveEffectiveHamiltonian (n : ℕ) : MatrixStage n → ℝ :=
+  fun P => (1 / (2 ^ n : ℝ)) * stageEffectiveHamiltonian n P
+
+theorem projectiveEffectiveHamiltonian_compatible
+    (m n : ℕ) (h : m ≤ n) (P : MatrixStage m) :
+    projectiveEffectiveHamiltonian n (bondMap matrixBond m n h P) =
+      projectiveEffectiveHamiltonian m P := by
+  exact normalized_stageEffectiveHamiltonian_bondMap_compatible m n h P
+
+theorem projectiveEffectiveHamiltonian_stage
+    (n : ℕ) (P : MatrixStage n) :
+    projectiveEffectiveHamiltonian n P =
+      colimitEffectiveHamiltonian (toColimit n P) := by
+  rfl
+
+/-- The nonlinear Itakura--Saito readout as an explicit coherent inverse-side
+family. -/
+def projectiveEffectiveHamiltonianFamily :
+    {ρ : ∀ n : ℕ, MatrixStage n → ℝ //
+      ∀ (m n : ℕ) (h : m ≤ n) (P : MatrixStage m),
+        ρ n (bondMap matrixBond m n h P) = ρ m P} :=
+  ⟨projectiveEffectiveHamiltonian, projectiveEffectiveHamiltonian_compatible⟩
+
+@[simp] theorem projectiveEffectiveHamiltonianFamily_apply
+    (n : ℕ) (P : MatrixStage n) :
+    projectiveEffectiveHamiltonianFamily.1 n P =
+      projectiveEffectiveHamiltonian n P :=
+  rfl
+
+theorem projectiveEffectiveHamiltonianFamily_compatible
+    (m n : ℕ) (h : m ≤ n) (P : MatrixStage m) :
+    projectiveEffectiveHamiltonianFamily.1 n
+        (bondMap matrixBond m n h P) =
+      projectiveEffectiveHamiltonianFamily.1 m P := by
+  exact projectiveEffectiveHamiltonianFamily.2 m n h P
+
+/-! The descended functional is characterized uniquely by its finite-stage
+readbacks. -/
+
+theorem colimitEffectiveHamiltonian_unique
+    (F : PrimonUHFAlgebra → ℝ)
+    (hF : ∀ (n : ℕ) (P : MatrixStage n),
+      F (toColimit n P) =
+        (1 / (2 ^ n : ℝ)) * stageEffectiveHamiltonian n P) :
+    F = colimitEffectiveHamiltonian := by
+  funext x
+  induction x using DirectLimit.induction with
+  | _ n P =>
+      change F (toColimit n P) = colimitEffectiveHamiltonian (toColimit n P)
+      rw [hF n P]
+      rfl
 
 theorem projective_trace_step (n : ℕ) (M : MatrixStage n) :
     projectiveTracialSequence (n + 1) (matrixBond n M) =

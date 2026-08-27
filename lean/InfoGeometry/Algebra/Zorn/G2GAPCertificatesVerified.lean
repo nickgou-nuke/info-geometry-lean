@@ -307,15 +307,7 @@ theorem gap_cert_peel5_basis8_7_x1
 theorem gap_cert_fullPeel_basis8_seven_x1_false
     {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) :
     ((fullPeel g).1 (basis8 7)).x1 = false := by
-  have h0 := peel0_mem_nativeFlagStabilizer hg
-  have h1 := peel1_mem_nativeFlagStabilizer h0
-  have h2 := peel2_mem_nativeFlagStabilizer h1
-  have h34 := peel34_mem_nativeFlagStabilizer h2
-  have h2_x1 : ((peel2 (peel1 (peel0 g))).1 (basis8 7)).x1 = false :=
-    gap_cert_peel2_basis8_seven_x1_false h1
-  have h34_x1 : ((peel34 (peel2 (peel1 (peel0 g)))).1 (basis8 7)).x1 = false := by
-    rw [gap_cert_peel34_basis8_seven_x1_eq h2, h2_x1]
-  exact gap_cert_peel5_basis8_7_x1 h34 h34_x1
+  exact nativeFlagStabilizer_fullPeel_basis8_seven_x1_false_core hg
 
 /-! Certificate 7: the GAP-generated direct flag closure has trivial full peel.
     This is the native Lean readback of the finite GAP census; it is stated

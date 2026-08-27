@@ -49,6 +49,15 @@ noncomputable def logDetZeta
     (Z : ZetaRegularizable SpecOp) : ℂ :=
   -Z.zetaDerivAtZero
 
+/-- The logarithmic zeta determinant is the exponent appearing in the
+Ray--Singer determinant.  This is an algebraic identity for the supplied
+zeta datum; it does not assert a branch-dependent identity involving
+`Complex.log`. -/
+theorem ZetaRegularizable.detZeta_eq_exp_logDetZeta
+    {SpecOp : Type*} (Z : ZetaRegularizable SpecOp) :
+    Z.detZeta = Complex.exp (logDetZeta Z) := by
+  rfl
+
 /--
 Construct the boundary zeta datum from an explicitly supplied analytic
 continuation of a spectral zeta series.

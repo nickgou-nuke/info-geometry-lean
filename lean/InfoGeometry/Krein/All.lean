@@ -75,6 +75,7 @@ import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
+import InfoGeometry.Krein.DoubledSpaceRealKANBridge
 import InfoGeometry.Krein.DoubledSpaceQutritMobiusBridge
 import InfoGeometry.Krein.FiniteCoincidencePurification
 import InfoGeometry.Krein.DilationProjection
@@ -83,6 +84,8 @@ import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
 import InfoGeometry.Krein.TomitaMatrixAtom
+import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
+import InfoGeometry.Krein.DoubledSpaceRealKANBridge
 import InfoGeometry.Krein.README
 
 namespace InfoGeometry

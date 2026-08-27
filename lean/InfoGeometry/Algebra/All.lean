@@ -24,7 +24,10 @@ import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.PrimePotentHierarchy
 import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
 import InfoGeometry.QuantumAlgebra.G2ArtinCyclotomicLift
+import InfoGeometry.QuantumAlgebra.G2DrinfeldAssociatorBridge
 import InfoGeometry.Algebra.Zorn.ChiralPhaseMatrix
+import InfoGeometry.Exceptional.G2ChiralBivectorCarriers
+import InfoGeometry.Exceptional.G2ArtinRepresentation
 import InfoGeometry.Algebra.Zorn.ConformalNPotentRoots
 import InfoGeometry.Algebra.Zorn.FirstQuantizedLeftRegular
 import InfoGeometry.Lie.G2DoubleStarRootDecomposition

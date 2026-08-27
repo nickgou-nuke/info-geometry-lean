@@ -53,7 +53,6 @@ theorem chiralPathColimitReadout_stage
 
 theorem chiralPathColimitReadout_unique
     (D : J ⥤ Type _)
-    (c : ChiralPathClassCocone (G := G) (u := u) (v := v) D)
     [HasColimit D]
     {f g : colimit D ⟶ DirectedPathClass G u v}
     (h : ∀ j, colimit.ι D j ≫ f = colimit.ι D j ≫ g) :

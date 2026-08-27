@@ -20,7 +20,10 @@ import InfoGeometry.Algebra.SplitCayleyF2LiteratureGenerators
 import InfoGeometry.Algebra.CyclotomicOperatorProjectors
 import InfoGeometry.Algebra.LinearInvolutionProjectors
 import InfoGeometry.Algebra.FiniteFieldFrobenius
+import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.Zorn.ConformalNPotentRoots
+import InfoGeometry.Algebra.Zorn.FirstQuantizedLeftRegular
+import InfoGeometry.Lie.G2DoubleStarRootDecomposition
 import InfoGeometry.Algebra.CircularChiralCausalConeBasis
 import InfoGeometry.Algebra.ChiralGaugeRootSpanBridge
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics

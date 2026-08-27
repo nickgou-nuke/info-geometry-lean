@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
+import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerCardinality
 import InfoGeometry.Algebra.Zorn.G2NativeFlagIntrinsicEquiv
 import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagCardinality
 
@@ -16,6 +17,7 @@ namespace InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel
 open InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
+open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerGenerators
 open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
 open InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFlag
 open InfoGeometry.Algebra.Zorn.G2IntrinsicFlagAction
@@ -39,6 +41,24 @@ theorem nativeFlagStabilizer_eq_unipotent_of_fullPeel_mem
   apply le_antisymm
   · exact nativeFlagStabilizer_le_unipotent_of_fullPeel_mem hpeel
   · exact unipotentSubgroup_le_nativeFlagStabilizer
+
+/-! The ambient-order route supplies the universal readback under its
+explicit census premise.  This remains conditional and does not promote an
+external or structural order claim to an unconditional native theorem. -/
+theorem fullPeel_basis_readback_of_ambient_card
+    (h_enum : Fintype.card SplitOctF2Aut = 12096)
+    {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) (j : Fin 8) :
+    (fullPeel g).1 (basis8 j) = basis8 j := by
+  have hstab :=
+    G2NativeFlagStabilizerCardinality.nativeFlagStabilizer_eq_unipotentSubgroup_of_ambient_card
+      h_enum
+  have hU : g ∈ unipotentSubgroup := by
+    rw [← hstab]
+    exact hg
+  exact fullPeel_basis8_readback_of_mem_directGeneratorClosure
+    (by
+      rw [directFlagPCGenerators_closure_eq_unipotentSubgroup]
+      exact hU) j
 
 /-! The quotient bridge uses the verified full-peel readback and intrinsic
 orbit coverage; it does not use an ambient cardinality hypothesis. -/

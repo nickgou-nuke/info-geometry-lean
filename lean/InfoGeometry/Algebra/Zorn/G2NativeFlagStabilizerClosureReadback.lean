@@ -33,10 +33,130 @@ open InfoGeometry.Algebra.Zorn.G2NativeFlagLineCoordinateConstraints
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 open InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
+open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
 open InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+
+/-! A finite coordinate uniqueness lemma for the last circular basis vector.
+It is deliberately stated over the native split-octonion carrier; no group
+or external certificate is involved. -/
+theorem basis8_seven_determined_by_relations (X : SplitOctF2)
+    (hsq : mul X X = zero)
+    (h4X : mul (basis8 4) X = basis8 0)
+    (hX4 : mul X (basis8 4) = basis8 1)
+    (h2X : mul (basis8 2) X = zero)
+    (h3X : mul (basis8 3) X = zero)
+    (hy2 : X.y2 = true) :
+    X = basis8 7 := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  dsimp [basis8, up0, up1, up2, down0, down1, down2, ePlus, eMinus] at *
+  revert a b x0 x1 x2 y0 y1 y2
+  decide
+
+theorem mul_X_Y_x1 (X Y : SplitOctF2)
+    (hXy2 : X.y2 = true)
+    (hY : Y = basis8 5 ∨ Y = add (basis8 4) (basis8 5))
+    (hXx0 : X.x0 = Y.x2) :
+    (mul X Y).x1 = true := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  rcases hY with rfl | rfl
+  · dsimp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+      at hXx0 ⊢
+    revert a b x0 x1 x2 y0 y1 y2 hXy2 hXx0
+    decide
+  · dsimp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2,
+      add, add2] at hXx0 ⊢
+    revert a b x0 x1 x2 y0 y1 y2 hXy2 hXx0
+    decide
+
+theorem nativeFlagStabilizer_basis8_three_x1
+    {f : SplitOctF2Aut} (hf : f ∈ nativeFlagStabilizer) :
+    (f.1 (basis8 3)).x1 = true := by
+  have hmul := nativeFlagStabilizer_basis8_seven_mul_fifth f
+  have h7y2 := nativeFlagStabilizer_basis8_seven_y2 hf
+  have h5_cases := nativeFlagStabilizer_basis8_fifth_cases hf
+  have h7x0 := nativeFlagStabilizer_basis8_seven_x0_eq_basis8_fifth_x2 hf
+  have hx1 : (mul (f.1 (basis8 7)) (f.1 (basis8 5))).x1 = true :=
+    mul_X_Y_x1 (f.1 (basis8 7)) (f.1 (basis8 5)) h7y2 h5_cases h7x0
+  rw [← hmul]
+  exact hx1
+
+theorem peel1_basis8_2_x1_false
+    {f : SplitOctF2Aut} (hf : f ∈ nativeFlagStabilizer) :
+    ((peel1 f).1 (basis8 2)).x1 = false := by
+  have h4 := nativeFlagStabilizer_basis8_four hf
+  have h5_cases := nativeFlagStabilizer_basis8_fifth_cases hf
+  have h3x1 : (f.1 (basis8 3)).x1 = true :=
+    nativeFlagStabilizer_basis8_three_x1 hf
+  have h4x1 : (f.1 (basis8 4)).x1 = false := by rw [h4]; rfl
+  have h5x1 : (f.1 (basis8 5)).x1 = false := by
+    rcases h5_cases with h5 | h5 <;> rw [h5] <;> rfl
+  have h6 := nativeFlagStabilizer_basis8_six_coordinate_form hf
+  have h6x1 : (f.1 (basis8 6)).x1 = false := congrArg SplitOctF2.x1 h6
+  rw [peel1_basis8_2]
+  split
+  · next h2x1 =>
+    rw [pc6pc2_basis8_2]
+    rw [automorphism_map_add, automorphism_map_add,
+        automorphism_map_add, automorphism_map_add]
+    dsimp [add, add2]
+    rw [h2x1, h3x1, h4x1, h5x1, h6x1]
+    decide
+  · next h2x1 =>
+    cases h : (f.1 (basis8 2)).x1
+    · rfl
+    · contradiction
+
+theorem pc6pc3_apply_basis8_2_x1
+    (f : SplitOctF2Aut) (hf : f ∈ nativeFlagStabilizer) :
+    (f.1 ((G2TwoSylowPCAutomorphisms.pc6Aut *
+      G2TwoSylowPCAutomorphisms.pc3Aut).1 (basis8 2))).x1 =
+      (f.1 (basis8 2)).x1 := by
+  have heq : (G2TwoSylowPCAutomorphisms.pc6Aut *
+      G2TwoSylowPCAutomorphisms.pc3Aut).1 (basis8 2) =
+      add one (add (basis8 2) (add (basis8 4)
+        (add (basis8 5) (basis8 6)))) := by
+    change G2TwoSylowPCGenerators.pc3Fun
+      (G2TwoSylowPCGenerators.pc6Fun (basis8 2)) = _
+    ext <;> dsimp [basis8, up0, up1, up2, down0, down1, down2,
+      ePlus, eMinus, G2TwoSylowPCGenerators.pc3Fun,
+      G2TwoSylowPCGenerators.pc6Fun, add, add2, one] <;> decide
+  rw [heq]
+  rw [automorphism_map_add, automorphism_map_add, automorphism_map_add,
+      automorphism_map_add, f.2.1]
+  have h4 := nativeFlagStabilizer_basis8_four hf
+  have h5_cases := nativeFlagStabilizer_basis8_fifth_cases hf
+  have h6 := nativeFlagStabilizer_basis8_six_coordinate_form hf
+  have h4x1 : (f.1 (basis8 4)).x1 = false := by rw [h4]; rfl
+  have h5x1 : (f.1 (basis8 5)).x1 = false := by
+    rcases h5_cases with h5 | h5 <;> rw [h5] <;> rfl
+  have h6x1 : (f.1 (basis8 6)).x1 = false := congrArg SplitOctF2.x1 h6
+  dsimp [add, add2, one]
+  rw [h4x1, h5x1, h6x1]
+  simp
+
+theorem peel2_basis8_2_x1_eq
+    {f : SplitOctF2Aut} (hf : f ∈ nativeFlagStabilizer) :
+    ((peel2 f).1 (basis8 2)).x1 = (f.1 (basis8 2)).x1 := by
+  dsimp [peel2]
+  split
+  · rw [mul_apply, pc6pc3_apply_basis8_2_x1 f hf]
+  · rfl
+
+theorem peel34_basis8_2_x1_eq
+    {f : SplitOctF2Aut} (hf : f ∈ nativeFlagStabilizer) :
+    ((peel34 f).1 (basis8 2)).x1 = (f.1 (basis8 2)).x1 := by
+  rw [peel34_basis8_2]
+  split
+  · rw [automorphism_map_add]
+    have h6 := nativeFlagStabilizer_basis8_six_coordinate_form hf
+    have h6x1 := congrArg SplitOctF2.x1 h6
+    dsimp [add, add2]
+    rw [h6x1]
+    simp
+  · rfl
 
 /-!  The following projection keeps the multiplicative readback explicit.
 It deliberately does not simplify the resulting coordinate: the available
@@ -445,6 +565,17 @@ theorem fullPeel_basis8_readback_of_mem_directGeneratorClosure
     (fullPeel g).1 (basis8 j) = basis8 j := by
   rw [fullPeel_eq_one_of_mem_directGeneratorClosure hg]
   rfl
+
+/-! A basis-readback certificate determines the residual automorphism.  This
+    is the final assembly step once the eight local readbacks are supplied. -/
+theorem fullPeel_eq_one_of_basis_readback
+    {g : SplitOctF2Aut}
+    (hreadback : ∀ j : Fin 8,
+      (fullPeel g).1 (basis8 j) = basis8 j) :
+    fullPeel g = 1 := by
+  apply automorphism_ext_of_basis
+  intro j
+  simpa using hreadback j
 
 theorem fullPeel_mem_unipotent_of_basis_readback
     {g : SplitOctF2Aut}
@@ -2066,5 +2197,81 @@ theorem fullPeel_basis8_seven_readback_of_mem_directGeneratorClosure
   apply fullPeel_basis8_seven_readback_of_mem_unipotent
   rw [← directFlagPCGenerators_closure_eq_unipotentSubgroup]
   exact hu
+
+theorem fullPeel_basis8_two_x1_false_of_stabilizer
+    {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer) :
+    ((fullPeel g).1 (basis8 2)).x1 = false := by
+  have h0 : peel0 g ∈ nativeFlagStabilizer :=
+    peel0_mem_nativeFlagStabilizer hg
+  have h1 : peel1 (peel0 g) ∈ nativeFlagStabilizer :=
+    peel1_mem_nativeFlagStabilizer h0
+  have h2 : peel2 (peel1 (peel0 g)) ∈ nativeFlagStabilizer :=
+    peel2_mem_nativeFlagStabilizer h1
+  have h34 : peel34 (peel2 (peel1 (peel0 g))) ∈ nativeFlagStabilizer :=
+    peel34_mem_nativeFlagStabilizer h2
+  have h1_x1 : ((peel1 (peel0 g)).1 (basis8 2)).x1 = false :=
+    peel1_basis8_2_x1_false h0
+  have h2_x1 : ((peel2 (peel1 (peel0 g))).1 (basis8 2)).x1 = false := by
+    rw [peel2_basis8_2_x1_eq h1, h1_x1]
+  have h34_x1 :
+      ((peel34 (peel2 (peel1 (peel0 g)))).1 (basis8 2)).x1 = false := by
+    rw [peel34_basis8_2_x1_eq h2, h2_x1]
+  rw [fullPeel_basis8_two_x1_readback]
+  split
+  · next _ =>
+    rw [automorphism_map_add]
+    have h4 := nativeFlagStabilizer_basis8_four h34
+    have h4x1 :
+        ((peel34 (peel2 (peel1 (peel0 g)))).1 (basis8 4)).x1 = false := by
+      rw [h4]
+      rfl
+    dsimp [add, add2]
+    rw [h34_x1, h4x1]
+    rfl
+  · next _ => exact h34_x1
+
+theorem fullPeel_basis8_seven_fixed_of_relations
+    {g : SplitOctF2Aut}
+    (hg : g ∈ nativeFlagStabilizer)
+    (h0 : (fullPeel g).1 (basis8 0) = basis8 0)
+    (h1 : (fullPeel g).1 (basis8 1) = basis8 1)
+    (h2X : mul (basis8 2) ((fullPeel g).1 (basis8 7)) = zero)
+    (h3X : mul (basis8 3) ((fullPeel g).1 (basis8 7)) = zero) :
+    (fullPeel g).1 (basis8 7) = basis8 7 := by
+  let f := fullPeel g
+  have hf : f ∈ nativeFlagStabilizer :=
+    fullPeel_mem_nativeFlagStabilizer_of_mem hg
+  have h4 : f.1 (basis8 4) = basis8 4 :=
+    fullPeel_basis8_four_readback hg
+  have h4X : mul (basis8 4) (f.1 (basis8 7)) = basis8 0 := by
+    have he : basis8 0 = mul (basis8 4) (basis8 7) := rfl
+    calc
+      mul (basis8 4) (f.1 (basis8 7)) =
+          mul (f.1 (basis8 4)) (f.1 (basis8 7)) := by rw [h4]
+      _ = f.1 (mul (basis8 4) (basis8 7)) :=
+        (f.2.2.2 (basis8 4) (basis8 7)).symm
+      _ = f.1 (basis8 0) := by rw [he]
+      _ = basis8 0 := h0
+  have hX4 : mul (f.1 (basis8 7)) (basis8 4) = basis8 1 := by
+    have he : basis8 1 = mul (basis8 7) (basis8 4) := rfl
+    calc
+      mul (f.1 (basis8 7)) (basis8 4) =
+          mul (f.1 (basis8 7)) (f.1 (basis8 4)) := by rw [h4]
+      _ = f.1 (mul (basis8 7) (basis8 4)) :=
+        (f.2.2.2 (basis8 7) (basis8 4)).symm
+      _ = f.1 (basis8 1) := by rw [he]
+      _ = basis8 1 := h1
+  have hsq : mul (f.1 (basis8 7)) (f.1 (basis8 7)) = zero := by
+    calc
+      mul (f.1 (basis8 7)) (f.1 (basis8 7)) =
+          f.1 (mul (basis8 7) (basis8 7)) :=
+        (f.2.2.2 (basis8 7) (basis8 7)).symm
+      _ = f.1 zero := by rfl
+      _ = zero :=
+        InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.automorphism_map_zero f
+  have hy2 : (f.1 (basis8 7)).y2 = true :=
+    fullPeel_basis8_seven_y2_of_stabilizer hg
+  exact basis8_seven_determined_by_relations (f.1 (basis8 7))
+    hsq h4X hX4 h2X h3X hy2
 
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerClosureReadback

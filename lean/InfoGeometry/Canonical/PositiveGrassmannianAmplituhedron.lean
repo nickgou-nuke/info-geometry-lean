@@ -46,6 +46,22 @@ def appendZeroColumn₂ (C : Matrix (Fin 2) (Fin n) ℝ) :
     Matrix (Fin 2) (Fin (n + 1)) ℝ :=
   Matrix.of (fun i j => if hj : j.val < n then C i ⟨j.val, hj⟩ else 0)
 
+/-- The linear boundary-extension map obtained by appending a zero column. -/
+def appendZeroColumn₂Linear (n : ℕ) :
+    Matrix (Fin 2) (Fin n) ℝ →ₗ[ℝ]
+      Matrix (Fin 2) (Fin (n + 1)) ℝ where
+  toFun := appendZeroColumn₂
+  map_add' C D := by
+    ext i j
+    by_cases hj : j.val < n <;> simp [appendZeroColumn₂, hj]
+  map_smul' a C := by
+    ext i j
+    by_cases hj : j.val < n <;> simp [appendZeroColumn₂, hj]
+
+@[simp] theorem appendZeroColumn₂Linear_apply
+    (n : ℕ) (C : Matrix (Fin 2) (Fin n) ℝ) :
+    appendZeroColumn₂Linear n C = appendZeroColumn₂ C := rfl
+
 theorem appendZeroColumn₂_nonnegative
     (C : Matrix (Fin 2) (Fin n) ℝ)
     (hC : HasNonnegativeMaximalMinors C) :
@@ -109,6 +125,63 @@ theorem appendZeroColumn₂_not_mem_positiveGrassmannianInterior
   unfold maximalMinor appendZeroColumn₂ at hminor
   rw [Matrix.det_fin_two] at hminor
   simp [s] at hminor
+
+theorem appendZeroColumn₂_boundary_classification
+    (n : ℕ) (hn : 0 < n) (C : Matrix (Fin 2) (Fin n) ℝ)
+    (hC : HasNonnegativeMaximalMinors C) :
+    appendZeroColumn₂ C ∈
+        positiveGrassmannianChart (k := 2) (n := n + 1) ∧
+      appendZeroColumn₂ C ∉
+        positiveGrassmannianInterior (k := 2) (n := n + 1) := by
+  constructor
+  · exact appendZeroColumn₂_nonnegative C hC
+  · exact appendZeroColumn₂_not_mem_positiveGrassmannianInterior n hn C
+
+/-- The coordinate face cut out by the appended zero column. -/
+def zeroLastColumnFace₂ (n : ℕ) :
+    Submodule ℝ (Matrix (Fin 2) (Fin (n + 1)) ℝ) where
+  carrier := {M | ∀ i : Fin 2, M i ⟨n, Nat.lt_succ_self n⟩ = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro M N hM hN i
+    simp [hM i, hN i]
+  smul_mem' := by
+    intro c M hM i
+    simp [hM i]
+
+theorem appendZeroColumn₂Linear_mem_zeroLastColumnFace₂
+    (n : ℕ) (C : Matrix (Fin 2) (Fin n) ℝ) :
+    appendZeroColumn₂Linear n C ∈ zeroLastColumnFace₂ n := by
+  intro i
+  simp [appendZeroColumn₂Linear, appendZeroColumn₂]
+
+def truncateLastColumn₂ (n : ℕ) :
+    Matrix (Fin 2) (Fin (n + 1)) ℝ →ₗ[ℝ] Matrix (Fin 2) (Fin n) ℝ where
+  toFun M := Matrix.of (fun i j => M i ⟨j.val, Nat.lt_trans j.isLt (Nat.lt_succ_self n)⟩)
+  map_add' M N := by
+    ext i j
+    simp
+  map_smul' c M := by
+    ext i j
+    simp
+
+theorem appendZeroColumn₂Linear_range_eq_zeroLastColumnFace₂ (n : ℕ) :
+    LinearMap.range (appendZeroColumn₂Linear n) = zeroLastColumnFace₂ n := by
+  apply le_antisymm
+  · rintro _ ⟨C, rfl⟩
+    exact appendZeroColumn₂Linear_mem_zeroLastColumnFace₂ n C
+  · intro M hM
+    refine ⟨truncateLastColumn₂ n M, ?_⟩
+    ext i j
+    by_cases hj : j.val < n
+    · simp [appendZeroColumn₂Linear, appendZeroColumn₂, truncateLastColumn₂, hj]
+    · have hj_eq : j = ⟨n, Nat.lt_succ_self n⟩ := by
+        apply Fin.ext
+        have hj_le : j.val ≤ n := Nat.le_of_lt_succ j.isLt
+        have hj_ge : n ≤ j.val := Nat.le_of_not_lt hj
+        exact Nat.le_antisymm hj_le hj_ge
+      subst hj_eq
+      simp [appendZeroColumn₂Linear, appendZeroColumn₂, truncateLastColumn₂, hM i]
 
 /-! ### The finite 4-row to 2-row chart interface -/
 

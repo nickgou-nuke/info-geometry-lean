@@ -84,33 +84,35 @@ theorem bivector_shift_matrix_cube (B_op : ChiralBivector R) (s : R) (hs : s ^ 2
           _ = (8 : R) • B_op.B := by ring_nf
       rw [zero_add, h8]
 
+/-- 🏆 THEOREM: The cube of the phase matrix is the bivector itself: $U^3 = B$. -/
+theorem phaseMatrix_pow_three
+    (B_op : ChiralBivector R) (s half : R)
+    (hhalf : (2 : R) * half = 1)
+    (hs : s ^ 2 = 3) :
+    phaseMatrix B_op s half ^ 3 = B_op.B := by
+  dsimp [phaseMatrix]
+  have h3 : (half • (s • (1 : RootOperator R) + B_op.B)) ^ 3 =
+      (half ^ 3) • ((s • 1 + B_op.B) ^ 3) := by
+    rw [smul_pow]
+  rw [h3, bivector_shift_matrix_cube B_op s hs, smul_smul]
+  have h_coeff : half ^ 3 * (8 : R) = 1 := by
+    calc
+      half ^ 3 * (8 : R) = (half * 2) ^ 3 := by ring
+      _ = (2 * half) ^ 3 := by rw [mul_comm]
+      _ = 1 ^ 3 := by rw [hhalf]
+      _ = 1 := by ring
+  rw [h_coeff, one_smul]
+
 /-- 🏆 THEOREM 1: The polynomial matrix defect $U^6 = -I$. -/
 theorem phaseMatrix_pow_six
     (B_op : ChiralBivector R) (s half : R)
     (hhalf : (2 : R) * half = 1)
     (hs : s ^ 2 = 3) :
     phaseMatrix B_op s half ^ 6 = -(1 : RootOperator R) := by
-  dsimp [phaseMatrix]
-  have h6 : (half • (s • (1 : RootOperator R) + B_op.B)) ^ 6 =
-      (half ^ 6) • ((s • 1 + B_op.B) ^ 6) := by
-    rw [smul_pow]
-  have hT6 : (s • (1 : RootOperator R) + B_op.B) ^ 6 = -(64 : R) • (1 : RootOperator R) := by
-    have h_pow6 : (s • (1 : RootOperator R) + B_op.B) ^ 6 =
-        ((s • 1 + B_op.B) ^ 3) ^ 2 := by
-      have h_mul : (3 : ℕ) * 2 = 6 := rfl
-      rw [← pow_mul, h_mul]
-    rw [h_pow6, bivector_shift_matrix_cube B_op s hs, sq, smul_mul_smul, B_op.B_sq]
-    calc
-      (8 * 8 : R) • -(1 : RootOperator R) = (64 : R) • -(1 : RootOperator R) := by ring_nf
-      _ = -(64 : R) • 1 := by rw [smul_neg, neg_smul]
-  rw [h6, hT6, smul_smul, mul_neg, neg_smul]
-  have h_coeff : half ^ 6 * (64 : R) = 1 := by
-    calc
-      half ^ 6 * (64 : R) = (half * 2) ^ 6 := by ring
-      _ = (2 * half) ^ 6 := by rw [mul_comm]
-      _ = 1 ^ 6 := by rw [hhalf]
-      _ = 1 := by ring
-  rw [h_coeff, one_smul]
+  have h6 : phaseMatrix B_op s half ^ 6 = (phaseMatrix B_op s half ^ 3) ^ 2 := by
+    have h_mul : (3 : ℕ) * 2 = 6 := rfl
+    rw [← pow_mul, h_mul]
+  rw [h6, phaseMatrix_pow_three B_op s half hhalf hs, sq, B_op.B_sq]
 
 /-- 🏆 THEOREM 2: The cyclotomic closure $U^{12} = I$. -/
 theorem phaseMatrix_pow_twelve {U : RootOperator R}

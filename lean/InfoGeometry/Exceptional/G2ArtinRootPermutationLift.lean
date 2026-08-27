@@ -122,6 +122,39 @@ def BsPhaseMatrix (zeta : ℂ) : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
 def BlPhaseMatrix : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
   BlPermMatrix
 
+/-! The fully parameterized scalar-phase lift. -/
+def BsScalarPhaseMatrix (qₛ : ℂ) : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  qₛ • BsPermMatrix
+
+def BlScalarPhaseMatrix (qₗ : ℂ) : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  qₗ • BlPermMatrix
+
+/-- Diagonal phase tables on the root carrier. -/
+def phaseDiagonal (phase : G2CoordinateRoot → ℂ) :
+    Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  Matrix.diagonal phase
+
+/-- The certified baseline table: one common phase on every root. -/
+def BsDiagonalPhase (zeta : ℂ) : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  BsPermMatrix * phaseDiagonal (fun _ => zeta)
+
+def BlDiagonalPhase : Matrix G2CoordinateRoot G2CoordinateRoot ℂ :=
+  BlPermMatrix * phaseDiagonal (fun _ => 1)
+
+theorem BsDiagonalPhase_eq_scalar (zeta : ℂ) :
+    BsDiagonalPhase zeta = BsPhaseMatrix zeta := by
+  ext i j
+  simp [BsDiagonalPhase, BsPhaseMatrix, phaseDiagonal, BsPermMatrix,
+    permMatrix_apply, Matrix.mul_apply, Matrix.diagonal_apply]
+
+theorem BlDiagonalPhase_eq_permutation :
+    BlDiagonalPhase = BlPhaseMatrix := by
+  have h : phaseDiagonal (fun _ : G2CoordinateRoot => (1 : ℂ)) = 1 := by
+    ext i j
+    simp [phaseDiagonal]
+  rw [BlDiagonalPhase, h, mul_one]
+  rfl
+
 /-- 🏆 THEOREM 3: Exact 6-term Artin braid relation on permutation matrices:
     $B_s B_\\ell B_s B_\\ell B_s B_\\ell = B_\\ell B_s B_\\ell B_s B_\\ell B_s$. -/
 theorem perm_artin_six_matrix :
@@ -138,6 +171,29 @@ theorem phase_artin_six_matrix (zeta : ℂ) :
         BlPhaseMatrix * BsPhaseMatrix zeta := by
   simp only [BsPhaseMatrix, BlPhaseMatrix, Matrix.smul_mul, Matrix.mul_smul]
   rw [perm_artin_six_matrix]
+
+theorem scalar_phase_artin_six_matrix (qₛ qₗ : ℂ) :
+    BsScalarPhaseMatrix qₛ * BlScalarPhaseMatrix qₗ *
+        BsScalarPhaseMatrix qₛ * BlScalarPhaseMatrix qₗ *
+        BsScalarPhaseMatrix qₛ * BlScalarPhaseMatrix qₗ =
+      BlScalarPhaseMatrix qₗ * BsScalarPhaseMatrix qₛ *
+        BlScalarPhaseMatrix qₗ * BsScalarPhaseMatrix qₛ *
+        BlScalarPhaseMatrix qₗ * BsScalarPhaseMatrix qₛ := by
+  simp only [BsScalarPhaseMatrix, BlScalarPhaseMatrix,
+    Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  have h := congrArg
+    (fun M : Matrix G2CoordinateRoot G2CoordinateRoot ℂ =>
+      (qₛ ^ 3 * qₗ ^ 3) • M) perm_artin_six_matrix
+  simpa [pow_three, smul_smul, mul_comm, mul_left_comm, mul_assoc] using h
+
+
+theorem diagonal_phase_artin_six_matrix (zeta : ℂ) :
+    BsDiagonalPhase zeta * BlDiagonalPhase * BsDiagonalPhase zeta * BlDiagonalPhase *
+        BsDiagonalPhase zeta * BlDiagonalPhase =
+      BlDiagonalPhase * BsDiagonalPhase zeta * BlDiagonalPhase * BsDiagonalPhase zeta *
+        BlDiagonalPhase * BsDiagonalPhase zeta := by
+  rw [BsDiagonalPhase_eq_scalar, BlDiagonalPhase_eq_permutation]
+  exact phase_artin_six_matrix zeta
 
 theorem phase_generator_product (zeta : ℂ) :
     BsPhaseMatrix zeta * BlPhaseMatrix = zeta • permMatrix (s1Root * s2Root) := by
@@ -203,6 +259,17 @@ theorem phase_generator_product_pow_six (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
 theorem phase_generator_product_pow_twelve (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
     (BsPhaseMatrix zeta * BlPhaseMatrix) ^ 12 = 1 :=
   twelfth_power_of_neg_sixth_power _ (phase_generator_product_pow_six zeta hζ)
+
+theorem diagonal_phase_coxeter_pow_six (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
+    (BsDiagonalPhase zeta * BlDiagonalPhase) ^ 6 =
+      (-1 : ℂ) • (1 : Matrix G2CoordinateRoot G2CoordinateRoot ℂ) := by
+  rw [BsDiagonalPhase_eq_scalar, BlDiagonalPhase_eq_permutation]
+  exact phase_generator_product_pow_six zeta hζ
+
+theorem diagonal_phase_coxeter_pow_twelve (zeta : ℂ) (hζ : zeta ^ 6 = -1) :
+    (BsDiagonalPhase zeta * BlDiagonalPhase) ^ 12 = 1 := by
+  rw [BsDiagonalPhase_eq_scalar, BlDiagonalPhase_eq_permutation]
+  exact phase_generator_product_pow_twelve zeta hζ
 
 /-- 🏆 THEOREM 4: Packaging the permutation shadow into `ArtinHeckeLift`. -/
 def permutationArtinHeckeLift : ArtinHeckeLift G2CoordinateRoot where

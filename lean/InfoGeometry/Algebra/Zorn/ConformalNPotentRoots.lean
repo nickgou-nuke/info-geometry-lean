@@ -9,6 +9,37 @@ open Complex
 def IsNPotent {R : Type*} [CommRing R] (x : R) (n : ℕ) : Prop :=
   x ^ n = x
 
+/-- Over ℂ, an `n`-potent element is either zero or a root of unity.
+
+The field hypothesis is used through `mul_eq_zero`; this statement is not
+claimed for arbitrary rings with zero divisors. -/
+theorem complex_npotent_iff (x : ℂ) {n : ℕ} (hn : 2 ≤ n) :
+    IsNPotent x n ↔ x = 0 ∨ x ^ (n - 1) = 1 := by
+  constructor
+  · intro hx
+    have hfactor : x * (x ^ (n - 1) - 1) = 0 := by
+      dsimp [IsNPotent] at hx
+      have hs : n - 1 + 1 = n := by omega
+      calc
+        x * (x ^ (n - 1) - 1) = x ^ (n - 1 + 1) - x := by
+          rw [mul_sub, mul_one, pow_succ']
+        _ = x ^ n - x := by rw [hs]
+        _ = 0 := by rw [hx, sub_self]
+    rcases mul_eq_zero.mp hfactor with hx0 | hroot
+    · exact Or.inl hx0
+    · right
+      exact sub_eq_zero.mp hroot
+  · rintro (rfl | hroot)
+    · have hn0 : n ≠ 0 := by omega
+      simp [IsNPotent, hn0]
+    · dsimp [IsNPotent]
+      have hs : n - 1 + 1 = n := by omega
+      calc
+        x ^ n = x ^ (n - 1 + 1) := by rw [hs]
+        _ = x ^ (n - 1) * x := by rw [pow_succ']; ring
+        _ = 1 * x := by rw [hroot]
+        _ = x := one_mul x
+
 /-- Polynomial factorization of $X^5 - X$ over ℂ. -/
 theorem factor_poly_X5_minus_X (x : ℂ) :
     x ^ 5 - x = x * (x - 1) * (x + 1) * (x - I) * (x + I) := by
@@ -40,35 +71,57 @@ theorem five_potent_iff (x : ℂ) :
     IsNPotent x 5 ↔ x = 0 ∨ x = 1 ∨ x = -1 ∨ x = I ∨ x = -I := by
   constructor
   · exact roots_of_five_potent x
-  · rintro (rfl | rfl | rfl | rfl | rfl) <;>
-      norm_num [IsNPotent, I_sq]
+  · rintro (rfl | rfl | rfl | rfl | rfl)
+    · norm_num [IsNPotent]
+    · norm_num [IsNPotent]
+    · norm_num [IsNPotent]
+    · change I ^ 5 = I
+      rw [show I ^ 5 = I ^ 4 * I by ring]
+      rw [show I ^ 4 = 1 by norm_num [I_sq]]
+      simp
+    · change (-I) ^ 5 = -I
+      rw [show (-I) ^ 5 = (-I) ^ 4 * (-I) by ring]
+      rw [show (-I) ^ 4 = 1 by norm_num [I_sq]]
+      simp
+
+/-- A root of unity of order dividing `m` is `(m+1)`-potent. -/
+theorem root_of_unity_succ_potent (x : ℂ) (m : ℕ) (h : x ^ m = 1) :
+    IsNPotent x (m + 1) := by
+  dsimp [IsNPotent]
+  calc
+    x ^ (m + 1) = x ^ m * x := by rw [pow_succ]
+    _ = 1 * x := by rw [h]
+    _ = x := one_mul x
+
+/-- Exact zero/nonzero split for the successor-potent equation over ℂ. -/
+theorem root_of_unity_succ_potent_iff (x : ℂ) {m : ℕ} (hm : 1 ≤ m) :
+    IsNPotent x (m + 1) ↔ x = 0 ∨ x ^ m = 1 := by
+  simpa using (complex_npotent_iff x (n := m + 1) (by omega))
+
+/-- The low-degree member of the same pattern for the cubic equation. -/
+theorem roots_of_2_are_3_potent (x : ℂ) (h : x ^ 2 = 1) :
+    IsNPotent x 3 := by
+  simpa using root_of_unity_succ_potent x 2 h
+
+/-- The fourth-root case yields the 5-potent equation. -/
+theorem roots_of_4_are_5_potent (x : ℂ) (h : x ^ 4 = 1) :
+    IsNPotent x 5 := by
+  simpa using root_of_unity_succ_potent x 4 h
 
 /-- Roots of $X^{12} = 1$ are naturally 13-potent. -/
 theorem roots_of_12_are_13_potent (x : ℂ) (h : x ^ 12 = 1) :
     IsNPotent x 13 := by
-  dsimp [IsNPotent]
-  calc
-    x ^ 13 = x ^ 12 * x := by ring
-    _ = 1 * x := by rw [h]
-    _ = x := one_mul x
+  simpa using root_of_unity_succ_potent x 12 h
 
 /-- Sixth roots of unity are naturally 7-potent. -/
 theorem roots_of_6_are_7_potent (x : ℂ) (h : x ^ 6 = 1) :
     IsNPotent x 7 := by
-  dsimp [IsNPotent]
-  calc
-    x ^ 7 = x ^ 6 * x := by ring
-    _ = 1 * x := by rw [h]
-    _ = x := one_mul x
+  simpa using root_of_unity_succ_potent x 6 h
 
 /-- Tenth roots of unity are naturally 11-potent. -/
 theorem roots_of_10_are_11_potent (x : ℂ) (h : x ^ 10 = 1) :
     IsNPotent x 11 := by
-  dsimp [IsNPotent]
-  calc
-    x ^ 11 = x ^ 10 * x := by ring
-    _ = 1 * x := by rw [h]
-    _ = x := one_mul x
+  simpa using root_of_unity_succ_potent x 10 h
 
 /-- The 12th cyclotomic polynomial $\Phi_{12}(x) = x^4 - x^2 + 1$ is a direct factor of $x^{12} - 1$. -/
 theorem phi12_divides_X12_minus_one (x : ℂ) :

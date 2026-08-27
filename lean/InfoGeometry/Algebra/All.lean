@@ -477,6 +477,7 @@ import InfoGeometry.Algebra.Zorn.G2AdmissibleBasisCardinalityBridge
 import InfoGeometry.Algebra.Zorn.G2NativeFlagOrbitClosure
 import InfoGeometry.Algebra.Zorn.G2NativeLineSetIsotropicBridge
 import InfoGeometry.Algebra.Zorn.G2NativeLineIntrinsicStructuralBridge
+import InfoGeometry.Algebra.Zorn.G2GAPCertificatesVerified
 /-!
 # InfoGeometry.Algebra.All
 

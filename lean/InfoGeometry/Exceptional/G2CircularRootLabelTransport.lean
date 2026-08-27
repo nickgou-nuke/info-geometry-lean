@@ -170,7 +170,7 @@ theorem transportOperator_bivector_on_image
   have hTf : T (T f) = -(1 : Module.End R (CircularLabel → R)) f := by
     exact congrArg (fun S => S f) hT
   rw [hTf]
-  simpa using (extendFromCircular t).map_neg f
+  exact (extendFromCircular t).map_neg f
 
 theorem label_ne_of_ne
     (t : RootLabelTransport) {i j : CircularLabel} (h : i ≠ j) :

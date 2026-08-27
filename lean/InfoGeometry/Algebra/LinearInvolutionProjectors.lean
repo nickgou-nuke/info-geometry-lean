@@ -36,6 +36,13 @@ theorem plus_add_minus {u : M →ₗ[R] M} {half : R}
     _ = half • ((2 : R) • x) := by congr 1; module
     _ = x := by rw [smul_smul, hscalar, one_smul]
 
+/-- Every vector decomposes into its two involution projector components. -/
+theorem decomposition {u : M →ₗ[R] M} {half : R}
+    (hhalf : 2 * half = 1) (x : M) :
+    x = plus u half x + minus u half x := by
+  have h := LinearMap.congr_fun (plus_add_minus (u := u) hhalf) x
+  exact h.symm
+
 /-- Their difference reconstructs the involution. -/
 theorem plus_sub_minus {u : M →ₗ[R] M} {half : R}
     (hhalf : 2 * half = 1) :

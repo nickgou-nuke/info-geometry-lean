@@ -24,6 +24,7 @@ import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.Zorn.ConformalNPotentRoots
 import InfoGeometry.Algebra.Zorn.FirstQuantizedLeftRegular
 import InfoGeometry.Lie.G2DoubleStarRootDecomposition
+import InfoGeometry.Algebra.Zorn.G2DoubleStarCyclotomicAction
 import InfoGeometry.Algebra.CircularChiralCausalConeBasis
 import InfoGeometry.Algebra.ChiralGaugeRootSpanBridge
 import InfoGeometry.Algebra.Zorn.G2ChevalleyPoincareCombinatorics

@@ -54,6 +54,20 @@ theorem s2_transport_beta :
       circularRootTransport.label 7 := by
   exact s2Root_alpha2_readback
 
+theorem circularRootTransport_not_s1_stable :
+    ¬ (∀ i : CircularLabel, ∃ j : CircularLabel,
+      s1Root (circularRootTransport.label i) = circularRootTransport.label j) := by
+  native_decide
+
+theorem no_circular_root_equivalence :
+    ¬ Nonempty (CircularLabel ≃ RootLabel) := by
+  rintro ⟨e⟩
+  have hcard := Fintype.card_congr e
+  have hroot : Fintype.card RootLabel = 12 := by
+    native_decide
+  rw [hroot] at hcard
+  norm_num at hcard
+
 def restrictToCircular
     {R : Type*} [Semiring R]
     (t : RootLabelTransport) : (RootLabel → R) →ₗ[R] (CircularLabel → R) where
@@ -107,6 +121,14 @@ theorem restrict_extend
   · intro hi
     exact (hi (Finset.mem_univ i)).elim
 
+theorem extendFromCircular_injective
+    {R : Type*} [Semiring R]
+    (t : RootLabelTransport) :
+    Function.Injective (extendFromCircular (R := R) t) := by
+  intro f g h
+  have h' := congrArg (restrictToCircular (R := R) t) h
+  simpa [restrict_extend] using h'
+
 noncomputable def transportOperator
     {R : Type*} [Semiring R]
     (t : RootLabelTransport)
@@ -122,6 +144,33 @@ theorem transportOperator_intertwines
     transportOperator t T (extendFromCircular t f) =
       extendFromCircular t (T f) := by
   simp [transportOperator, restrict_extend]
+
+theorem transportOperator_square_zero_on_image
+    {R : Type*} [Ring R]
+    (t : RootLabelTransport)
+    (T : Module.End R (CircularLabel → R))
+    (hT : T * T = 0)
+    (f : CircularLabel → R) :
+    transportOperator t T (transportOperator t T (extendFromCircular t f)) = 0 := by
+  rw [transportOperator_intertwines, transportOperator_intertwines]
+  have hTf : T (T f) = 0 := by
+    exact congrArg (fun S => S f) hT
+  rw [hTf]
+  simp
+
+theorem transportOperator_bivector_on_image
+    {R : Type*} [Ring R]
+    (t : RootLabelTransport)
+    (T : Module.End R (CircularLabel → R))
+    (hT : T * T = -(1 : Module.End R (CircularLabel → R)))
+    (f : CircularLabel → R) :
+    transportOperator t T (transportOperator t T (extendFromCircular t f)) =
+      -extendFromCircular t f := by
+  rw [transportOperator_intertwines, transportOperator_intertwines]
+  have hTf : T (T f) = -(1 : Module.End R (CircularLabel → R)) f := by
+    exact congrArg (fun S => S f) hT
+  rw [hTf]
+  simpa using (extendFromCircular t).map_neg f
 
 theorem label_ne_of_ne
     (t : RootLabelTransport) {i j : CircularLabel} (h : i ≠ j) :

@@ -3,6 +3,8 @@ import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
+import InfoGeometry.Projective.ExteriorKleinNullTwistor
+import InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 /-!
 # Twistor / Amplituhedron Bridge
@@ -49,6 +51,11 @@ open InfoGeometry.Twistor.Incidence
 open InfoGeometry.Projective.Twistor
 open InfoGeometry.Projective.ArnoldRelations
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
+open InfoGeometry.Projective.ExteriorKleinNullTwistor
+open InfoGeometry.Projective.ExteriorKleinFrameSurjection
+open InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
+open InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
+open InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
 open InfoGeometry.Topology.RohozhkinDelaunayBraiding
 open InfoGeometry.Topology.Delaunay
 
@@ -73,6 +80,18 @@ noncomputable abbrev penrose_projective_null_twistor_point :
 theorem penrose_projective_null_twistor_readout :
     Nonempty PenroseProjectiveNullTwistor :=
   ⟨penrose_projective_null_twistor_point⟩
+
+/-- The exterior Plücker/Klein construction factors through the native
+projective null-twistor carrier on every nondegenerate frame.  This is a real
+exterior-square readout; it does not identify that carrier with complex
+Penrose twistors. -/
+theorem exteriorKlein_nullTwistor_frame_readout
+    (uv : NondegenerateExteriorFrame) :
+    realTwoPlaneEquivTwistorSpace (frameSpan uv) =
+      kleinLocusEquivTwistorSpace (frameToKleinLocus uv) := by
+  change kleinLocusEquivTwistorSpace
+      (realTwoPlaneEquivKleinLocus (frameSpan uv)) = _
+  rw [realTwoPlaneEquivKleinLocus_frameSpan]
 
 /--
 Readout of the existing candidate `Conf₃` spin-tiled rank arithmetic.

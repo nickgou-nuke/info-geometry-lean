@@ -57,4 +57,13 @@ theorem sq_eq_of_involution_compat
     (P * Λ) ^ 2 = q • (1 : Matrix Root Root ℂ) := by
   simpa [pow_two, Matrix.mul_assoc] using hcompat
 
+theorem pow_twelve_eq_one_of_pow_six_eq_neg_one
+    (C : Matrix Root Root ℂ)
+    (hC : C ^ 6 = -(1 : Matrix Root Root ℂ)) :
+    C ^ 12 = 1 := by
+  calc
+    C ^ 12 = C ^ 6 * C ^ 6 := by rw [← pow_add]
+    _ = (-(1 : Matrix Root Root ℂ)) * (-(1 : Matrix Root Root ℂ)) := by rw [hC]
+    _ = 1 := by simp
+
 end InfoGeometry.Algebra.Zorn.G2DoubleStarCyclotomicAction

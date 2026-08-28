@@ -3,6 +3,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
+import InfoGeometry.Analysis.L2CantorCommutation
 
 /-!
 # Jaynes Relative States and the Derivation of Cuntz KMS Laws
@@ -67,6 +68,60 @@ theorem jaynes_maxent_derivation
       _ = 1 * (1 / 2 : ℂ) := by rw [h_two_p]
       _ = 1 / 2 := by ring
   exact h_div
+
+/- The two weighted branch coefficients sum to one before imposing
+    left-right symmetry.  This is the algebraic conservation law underlying
+    the symmetric value proved below. -/
+theorem kms_weight_sum
+    (S_L S_R : O2)
+    (h_unity_cuntz : S_L * star S_L + S_R * star S_R = 1)
+    (φ : State O2) (p_L p_R : ℂ)
+    (h_kms : IsKMSWeightedState S_L S_R φ p_L p_R) :
+    p_L + p_R = 1 := by
+  have h_unity : φ (S_L * star S_L + S_R * star S_R) = φ 1 := by
+    rw [h_unity_cuntz]
+  have h_add : φ (S_L * star S_L + S_R * star S_R) =
+      φ (S_L * star S_L) + φ (S_R * star S_R) := by
+    exact φ.val.map_add (S_L * star S_L) (S_R * star S_R)
+  have h_L_one : S_L * star S_L = S_L * 1 * star S_L := by rw [mul_one]
+  have h_R_one : S_R * star S_R = S_R * 1 * star S_R := by rw [mul_one]
+  have h_L_scale : φ (S_L * star S_L) = p_L * φ 1 := by
+    rw [h_L_one]
+    exact h_kms.kms_L 1
+  have h_R_scale : φ (S_R * star S_R) = p_R * φ 1 := by
+    rw [h_R_one]
+    exact h_kms.kms_R 1
+  rw [h_add, h_L_scale, h_R_scale, φ.map_one] at h_unity
+  simp only [mul_one] at h_unity
+  exact h_unity
+
+/- The concrete two-branch readout on the existing Cantor function carrier. -/
+theorem branch_weight_one_half_on_cuntz_projections
+    (φ : (InfoGeometry.Analysis.L2CantorCommutation.H →
+      InfoGeometry.Analysis.L2CantorCommutation.H) →+ ℝ)
+    (h_one : φ id = 1)
+    (h_symm :
+      φ (InfoGeometry.Analysis.L2CantorCommutation.S_left ∘
+        InfoGeometry.Analysis.L2CantorCommutation.star_S_left) =
+      φ (InfoGeometry.Analysis.L2CantorCommutation.S_right ∘
+        InfoGeometry.Analysis.L2CantorCommutation.star_S_right)) :
+    φ (InfoGeometry.Analysis.L2CantorCommutation.S_left ∘
+        InfoGeometry.Analysis.L2CantorCommutation.star_S_left) = 1 / 2 ∧
+      φ (InfoGeometry.Analysis.L2CantorCommutation.S_right ∘
+        InfoGeometry.Analysis.L2CantorCommutation.star_S_right) = 1 / 2 := by
+  let Sₗ := InfoGeometry.Analysis.L2CantorCommutation.S_left
+  let Sᵣ := InfoGeometry.Analysis.L2CantorCommutation.S_right
+  let Tₗ := InfoGeometry.Analysis.L2CantorCommutation.star_S_left
+  let Tᵣ := InfoGeometry.Analysis.L2CantorCommutation.star_S_right
+  have hpart : (Sₗ ∘ Tₗ) + (Sᵣ ∘ Tᵣ) = id := by
+    simpa [Sₗ, Sᵣ, Tₗ, Tᵣ] using
+      InfoGeometry.Analysis.L2CantorCommutation.S_left_star_S_left_add_S_right_star_S_right
+  have htotal : φ (Sₗ ∘ Tₗ) + φ (Sᵣ ∘ Tᵣ) = 1 := by
+    rw [← φ.map_add, hpart, h_one]
+  have hleft : φ (Sₗ ∘ Tₗ) = 1 / 2 := by
+    rw [h_symm] at htotal
+    linarith
+  exact ⟨hleft, by rw [← h_symm]; exact hleft⟩
 
 /-- A bundled Cuntz $\mathcal{O}_2$ algebra carrying shift generators and the partition of unity. -/
 structure CuntzAlgebra (O2 : Type*) [Ring O2] [StarRing O2] where

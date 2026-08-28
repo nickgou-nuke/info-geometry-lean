@@ -109,7 +109,17 @@ theorem primeCutoff_eq_primeSubtypesBelow_primeAt (N : ℕ) :
         (primeAt N) := by
   ext p
   rw [mem_primeCutoff_iff]
-  simp [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow]
+  constructor
+  · intro hp
+    have hp' : (p : ℕ) ∈ Nat.primesBelow (primeAt N) := by
+      exact Nat.mem_primesBelow.mpr ⟨hp, p.property⟩
+    simp [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow,
+      hp']
+  · intro hp
+    have hp' : (p : ℕ) ∈ Nat.primesBelow (primeAt N) := by
+      simpa [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow]
+        using hp
+    exact (Nat.mem_primesBelow.mp hp').1
 
 theorem fredholm_det_inv_eq_product_inv
     (factor : ℕ → ℂ) (N : ℕ) :

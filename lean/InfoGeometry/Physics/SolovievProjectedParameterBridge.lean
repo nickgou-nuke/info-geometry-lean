@@ -30,6 +30,30 @@ theorem projected_parameter_reconstruction
   · simpa [isSymmetric] using hSymm.symm
   · rfl
 
+/-- The three projected parameters are uniquely determined by the block matrix. -/
+theorem projected_parameters_unique
+    (H : Hamiltonian) (eQ eP v : ℝ)
+    (h_repr : blockHamiltonian eQ eP v = H) :
+    qpEnergy H = eQ ∧ phononEnergy H = eP ∧ coupling H = v := by
+  have h00 := congrArg (fun M : Hamiltonian => M 0 0) h_repr
+  have h11 := congrArg (fun M : Hamiltonian => M 1 1) h_repr
+  have h01 := congrArg (fun M : Hamiltonian => M 0 1) h_repr
+  simp [qpEnergy, phononEnergy, coupling, blockHamiltonian] at h00 h11 h01
+  exact ⟨h00.symm, h11.symm, h01.symm⟩
+
+/-- A secular root of a symmetric projected matrix lifts to an eigenpair of that matrix. -/
+theorem projected_root_has_eigenpair_of_coupling_ne_zero
+    (H : Hamiltonian) (hSymm : isSymmetric H) (E : ℝ)
+    (hroot : secularPolynomial (qpEnergy H) (phononEnergy H) (coupling H) E = 0)
+    (hv : coupling H ≠ 0) :
+    ∃ c : Carrier, c ≠ 0 ∧ isEigenpair H c E := by
+  obtain ⟨c, hc, heig⟩ :=
+    secular_root_has_eigenpair_of_coupling_ne_zero
+      (qpEnergy H) (phononEnergy H) (coupling H) E hv hroot
+  refine ⟨c, hc, ?_⟩
+  rw [← projected_parameter_reconstruction H hSymm]
+  exact heig
+
 theorem projected_secular_determinant
     (H : Hamiltonian) (hSymm : isSymmetric H) (E : ℝ) :
     (H - E • (1 : Hamiltonian)).det =

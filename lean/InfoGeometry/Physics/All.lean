@@ -246,6 +246,7 @@ import InfoGeometry.Physics.NuclearPhononRPAAlgebra
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 import InfoGeometry.Physics.SolovievProjectedParameterBridge
 import InfoGeometry.Physics.SolovievTransitionStrength
+import InfoGeometry.Physics.NuclearFiniteCARProjection
 import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 
 /-!

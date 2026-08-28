@@ -41,17 +41,47 @@ open InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 noncomputable def expProductStage (weights : ℕ → ℂ) (N : ℕ) : ℂ :=
   ∏ i ∈ Finset.range N, weights i
 
+@[simp] theorem expProductStage_zero (weights : ℕ → ℂ) :
+    expProductStage weights 0 = 1 := by
+  simp [expProductStage]
+
 /-- 🏆 THEOREM 1: Step recurrence for the exponential weight product. -/
 theorem expProductStage_succ (weights : ℕ → ℂ) (N : ℕ) :
     expProductStage weights (N + 1) = expProductStage weights N * weights N := by
   unfold expProductStage
   rw [Finset.prod_range_succ]
 
+/-
+The finite product of recursively generated exponential weights is the
+exponential of the corresponding finite sum.  This is the exact finite
+recursive exponent transport used by the filtered stages; no infinite
+convergence claim is involved.
+-/
+theorem expProductStage_eq_exp_sum
+    (exponents : ℕ → ℂ) (N : ℕ) :
+    expProductStage (fun i => Complex.exp (exponents i)) N =
+      Complex.exp (∑ i ∈ Finset.range N, exponents i) := by
+  induction N with
+  | zero => simp [expProductStage]
+  | succ N ih =>
+      rw [expProductStage_succ, ih, Finset.sum_range_succ]
+      rw [Complex.exp_add]
+
 /-- 🏆 THEOREM 2: Step recurrence for the Fredholm determinant factor. -/
 theorem fredholm_det_succ (s : ℂ) (N : ℕ) :
     primeRegularizedDetStage s (N + 1) =
       primeRegularizedDetStage s N * primeCutoffFactor s N :=
   primeRegularizedDetStage_succ s N
+
+theorem fredholm_det_succ_explicit (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N *
+        (1 - Complex.exp (-s * (Real.log (primeAt N : ℝ) : ℂ))) := by
+  rw [fredholm_det_succ, primeCutoffFactor_eq_exp_log]
+
+@[simp] theorem fredholm_det_zero (s : ℂ) :
+    primeRegularizedDetStage s 0 = 1 := by
+  simp [primeRegularizedDetStage, regularizedDetStage]
 
 /-- 🏆 THEOREM 3: Diagonal trace-determinant exponential identity: det(exp(A)) = exp(Tr(A)). -/
 theorem diagonal_det_exp_trace {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :

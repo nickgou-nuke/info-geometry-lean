@@ -383,8 +383,8 @@ theorem contactGradeFlipCarrier_extreme_bracket
     contactGradeFlipCarrier D
         (fiveGradedBracket D (genEminus D a) (genEminus D b)) =
       fiveGradedBracket D (genEplus D a) (genEplus D b) := by
-  apply FiveGradedCarrier.ext <;>
-    simp [contactGradeFlipCarrier, fiveGradedBracket, genHscale, genEminus, genEplus]
+  apply FiveGradedCarrier.ext
+  all_goals simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus]
 
 theorem contactGradeFlipCarrier_extreme_bracket_dual
     (a b : ℝ) :
@@ -392,23 +392,16 @@ theorem contactGradeFlipCarrier_extreme_bracket_dual
         (fiveGradedBracket D (genEplus D a) (genEplus D b)) =
       fiveGradedBracket D (genEminus D a) (genEminus D b) := by
   apply FiveGradedCarrier.ext <;>
-    simp [contactGradeFlipCarrier, fiveGradedBracket, genHscale, genEminus, genEplus]
-
-theorem contactGradeFlipCarrier_scale_extremeMinus
-    (a : ℝ) :
-    contactGradeFlipCarrier D
-        (fiveGradedBracket D (genHscale D 1) (genEminus D a)) =
-      -(fiveGradedBracket D (genHscale D 1) (genEplus D a)) := by
-  apply FiveGradedCarrier.ext <;>
     simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus]
 
-theorem contactGradeFlipCarrier_scale_extremePlus
-    (a : ℝ) :
+theorem contactGradeFlipCarrier_extreme_mixed_bracket
+    (a b : ℝ) :
     contactGradeFlipCarrier D
-        (fiveGradedBracket D (genHscale D 1) (genEplus D a)) =
-      -(fiveGradedBracket D (genHscale D 1) (genEminus D a)) := by
+        (fiveGradedBracket D (genEminus D a) (genEplus D b)) =
+      -(fiveGradedBracket D (genEplus D a) (genEminus D b)) := by
   apply FiveGradedCarrier.ext <;>
     simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus]
+  all_goals ring
 
 theorem contactGradeFlipCarrier_genHscale (c : ℝ) :
     contactGradeFlipCarrier D (genHscale D c) = genHscale D c := by

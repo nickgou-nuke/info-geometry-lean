@@ -538,6 +538,16 @@ theorem epsilonBoost_add (s t : ℝ) :
           rw [NormedSpace.exp_add_of_commute hComm]
     _ = epsilonBoost (E := E) s * epsilonBoost (E := E) t := rfl
 
+theorem JBoost_mul_neg (t : ℝ) :
+    JBoost (E := E) t * JBoost (E := E) (-t) = (1 : EndH) := by
+  rw [← JBoost_add (E := E) t (-t)]
+  simp
+
+theorem epsilonBoost_mul_neg (t : ℝ) :
+    epsilonBoost (E := E) t * epsilonBoost (E := E) (-t) = (1 : EndH) := by
+  rw [← epsilonBoost_add (E := E) t (-t)]
+  simp
+
 theorem KRotation_add (s t : ℝ) :
     KRotation (E := E) (s + t) = KRotation (E := E) s * KRotation (E := E) t := by
   have hComm : Commute (s • InfoGeometry.Krein.clockAxis (E := E)) (t • InfoGeometry.Krein.clockAxis (E := E)) := by

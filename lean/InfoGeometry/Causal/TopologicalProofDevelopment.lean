@@ -187,6 +187,56 @@ def joinVerifiedState (G : ProofDAG α) (S₁ S₂ : VerifiedState G) : Verified
     (joinVerifiedState G S₁ S₂).carrier = S₁.carrier ∪ S₂.carrier :=
   rfl
 
+/-- Target-directed knowledge distributes over a verified-state join. -/
+theorem verifiedToward_joinVerifiedState
+    (G : ProofDAG α) (S₁ S₂ : VerifiedState G) (T : α) :
+    verifiedToward G (joinVerifiedState G S₁ S₂) T =
+      verifiedToward G S₁ T ∪ verifiedToward G S₂ T := by
+  ext x
+  change ((x ∈ S₁.carrier ∨ x ∈ S₂.carrier) ∧ x ∈ backwardCone G T) ↔ _
+  constructor
+  · rintro ⟨hx, hT⟩
+    rcases hx with hx | hx
+    · exact Or.inl ⟨hx, hT⟩
+    · exact Or.inr ⟨hx, hT⟩
+  · rintro (⟨hx, hT⟩ | ⟨hx, hT⟩)
+    · exact ⟨Or.inl hx, hT⟩
+    · exact ⟨Or.inr hx, hT⟩
+
+/-- The target-directed join frontier has the corresponding least-subset
+    property after restriction to a target. -/
+theorem verifiedToward_joinVerifiedState_subset_iff
+    (G : ProofDAG α) (S₁ S₂ : VerifiedState G) (T : α) (U : Set α) :
+    verifiedToward G (joinVerifiedState G S₁ S₂) T ⊆ U ↔
+      verifiedToward G S₁ T ⊆ U ∧ verifiedToward G S₂ T ⊆ U := by
+  rw [verifiedToward_joinVerifiedState]
+  exact union_subset_iff
+
+/-- The verified-state merge is commutative at the carrier level. -/
+theorem joinVerifiedState_carrier_comm
+    (G : ProofDAG α) (S₁ S₂ : VerifiedState G) :
+    (joinVerifiedState G S₁ S₂).carrier =
+      (joinVerifiedState G S₂ S₁).carrier := by
+  simp only [joinVerifiedState_carrier]
+  ext x
+  simp [or_comm]
+
+/-- The verified-state merge is associative at the carrier level. -/
+theorem joinVerifiedState_carrier_assoc
+    (G : ProofDAG α) (S₁ S₂ S₃ : VerifiedState G) :
+    (joinVerifiedState G (joinVerifiedState G S₁ S₂) S₃).carrier =
+      (joinVerifiedState G S₁ (joinVerifiedState G S₂ S₃)).carrier := by
+  simp only [joinVerifiedState_carrier]
+  ext x
+  simp [or_assoc]
+
+/-- Merging a verified state with itself does not enlarge its carrier. -/
+theorem joinVerifiedState_carrier_idem
+    (G : ProofDAG α) (S : VerifiedState G) :
+    (joinVerifiedState G S S).carrier = S.carrier := by
+  simp only [joinVerifiedState_carrier]
+  exact union_self S.carrier
+
 /-- Left inclusion into the join state. -/
 theorem le_joinVerifiedState_left (G : ProofDAG α) (S₁ S₂ : VerifiedState G) :
     S₁.carrier ⊆ (joinVerifiedState G S₁ S₂).carrier :=
@@ -206,6 +256,18 @@ theorem joinVerifiedState_least
   rintro x (hx₁ | hx₂)
   · exact h₁ hx₁
   · exact h₂ hx₂
+
+/-- Exact subset criterion for the universal property of a verified-state join. -/
+theorem joinVerifiedState_least_iff
+    (G : ProofDAG α) (S₁ S₂ S : VerifiedState G) :
+    (joinVerifiedState G S₁ S₂).carrier ⊆ S.carrier ↔
+      S₁.carrier ⊆ S.carrier ∧ S₂.carrier ⊆ S.carrier := by
+  constructor
+  · intro h
+    exact ⟨(le_joinVerifiedState_left G S₁ S₂).trans h,
+      (le_joinVerifiedState_right G S₁ S₂).trans h⟩
+  · rintro ⟨h₁, h₂⟩
+    exact joinVerifiedState_least G S₁ S₂ S h₁ h₂
 
 /-! ### Divide-and-conquer assembly of finitely many verified branches
 
@@ -292,6 +354,24 @@ theorem foldVerifiedStates_append
   | cons S Ss ih =>
       ext x
       simp [foldVerifiedStates, joinVerifiedState, ih, union_assoc]
+
+/-- Target-directed knowledge distributes over finite branch append assembly. -/
+theorem verifiedToward_foldVerifiedStates_append
+    (G : ProofDAG α) (Ss Ts : List (VerifiedState G)) (T : α) :
+    verifiedToward G (foldVerifiedStates G (Ss ++ Ts)) T =
+      verifiedToward G (foldVerifiedStates G Ss) T ∪
+        verifiedToward G (foldVerifiedStates G Ts) T := by
+  unfold verifiedToward
+  rw [foldVerifiedStates_append]
+  ext x
+  constructor
+  · rintro ⟨hx, hT⟩
+    rcases hx with hx | hx
+    · exact Or.inl ⟨hx, hT⟩
+    · exact Or.inr ⟨hx, hT⟩
+  · rintro (⟨hx, hT⟩ | ⟨hx, hT⟩)
+    · exact ⟨Or.inl hx, hT⟩
+    · exact ⟨Or.inr hx, hT⟩
 
 end VerifiedStateLayer
 

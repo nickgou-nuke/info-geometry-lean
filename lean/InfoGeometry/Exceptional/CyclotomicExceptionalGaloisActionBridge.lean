@@ -16,10 +16,10 @@ and graded automorphisms of the 5-graded Lie carrier `FiveGradedCarrier D`.
 ## Mathematical Structure:
 1. `CyclotomicSymplecticRepresentation N D`: a group homomorphism
    `ρ : (ZMod N)ˣ →* (𝔉(J) ≃ₗ[ℝ] 𝔉(J))` preserving the symplectic form `ω_D`.
-2. `actFiveGraded`: lifting of `ρ(g)` to a linear automorphism of `FiveGradedCarrier D`:
+2. `actFiveGraded`: the charge-sector lift of `ρ(g)` to `FiveGradedCarrier D`:
    - Grade -2: $E_- \mapsto E_-$
    - Grade -1: $x_- \mapsto (\rho(g) x)_-$
-   - Grade  0: $(T_0 \oplus h H) \mapsto (\rho(g) T_0 \rho(g)^{-1} \oplus h H)$
+   - Grade  0: the current contract leaves the zero-grade components unchanged
    - Grade +1: $y_+ \mapsto (\rho(g) y)_+$
    - Grade +2: $E_+ \mapsto E_+$
 3. `towerRestrictionAction`: compatibility of the representation with the primorial conductor
@@ -53,7 +53,14 @@ structure CyclotomicSymplecticRepresentation (N : ℕ) (D : CubicJordanDatum J) 
   /-- Invariance of the Freudenthal symplectic pairing under the Galois action. -/
   symplectic_invariant : ∀ (g : (ZMod N)ˣ) (x y : FreudenthalCharge J),
       FreudenthalCharge.symplecticForm D (act g x) (act g y) =
-        FreudenthalCharge.symplecticForm D x y
+      FreudenthalCharge.symplecticForm D x y
+
+structure RestrictionCompatibleRepresentation
+    {N M : ℕ} (hNM : N ∣ M) (D : CubicJordanDatum J) where
+  lower : CyclotomicSymplecticRepresentation N D
+  upper : CyclotomicSymplecticRepresentation M D
+  compatible : ∀ g : (ZMod M)ˣ,
+    lower.act (ZMod.unitsMap hNM g) = upper.act g
 
 structure CyclotomicInvariantRepresentation
     (N : ℕ) (D : CubicJordanDatum J)
@@ -83,15 +90,66 @@ def CyclotomicInvariantRepresentation.toFreudenthalInvariantAction
     intro g
     exact (rep.toCyclotomicSymplecticRepresentation.act g).map_zero
 
+theorem CyclotomicInvariantRepresentation.boundary_iff
+    {N : ℕ} (rep : CyclotomicInvariantRepresentation N D)
+    (g : (ZMod N)ˣ) (Q : FreudenthalCharge J) :
+    FreudenthalBoundary D
+        (rep.toCyclotomicSymplecticRepresentation.act g Q) ↔
+      FreudenthalBoundary D Q := by
+  exact FreudenthalInvariantAction.boundary_iff
+    (rep.toFreudenthalInvariantAction) g Q
+
+theorem CyclotomicInvariantRepresentation.regular_iff
+    {N : ℕ} (rep : CyclotomicInvariantRepresentation N D)
+    (g : (ZMod N)ˣ) (Q : FreudenthalCharge J) :
+    FreudenthalRegular D
+        (rep.toCyclotomicSymplecticRepresentation.act g Q) ↔
+      FreudenthalRegular D Q := by
+  exact FreudenthalInvariantAction.regular_iff
+    (rep.toFreudenthalInvariantAction) g Q
+
+theorem CyclotomicInvariantRepresentation.act_eq_zero_iff
+    {N : ℕ} (rep : CyclotomicInvariantRepresentation N D)
+    (g : (ZMod N)ˣ) (Q : FreudenthalCharge J) :
+    rep.toCyclotomicSymplecticRepresentation.act g Q = 0 ↔ Q = 0 := by
+  exact FreudenthalInvariantAction.act_eq_zero_iff
+    (rep.toFreudenthalInvariantAction) g Q
+
+theorem CyclotomicInvariantRepresentation.act_ne_zero_iff
+    {N : ℕ} (rep : CyclotomicInvariantRepresentation N D)
+    (g : (ZMod N)ˣ) (Q : FreudenthalCharge J) :
+    rep.toCyclotomicSymplecticRepresentation.act g Q ≠ 0 ↔ Q ≠ 0 := by
+  exact FreudenthalInvariantAction.act_ne_zero_iff
+    (rep.toFreudenthalInvariantAction) g Q
+
 /-- Evidence that two stage actions form the restriction square for `N ∣ M`.
 
 This records compatibility as data; it does not manufacture a representation. -/
-structure RestrictionCompatibleRepresentation
-    {N M : ℕ} (hNM : N ∣ M) (D : CubicJordanDatum J) where
-  lower : CyclotomicSymplecticRepresentation N D
-  upper : CyclotomicSymplecticRepresentation M D
-  compatible : ∀ g : (ZMod M)ˣ,
-    lower.act (ZMod.unitsMap hNM g) = upper.act g
+/- The honest baseline witness: every cyclotomic unit acts trivially. -/
+def trivialCyclotomicSymplecticRepresentation (N : ℕ) :
+    CyclotomicSymplecticRepresentation N D where
+  act := fun _ => LinearEquiv.refl ℝ (FreudenthalCharge J)
+  act_one := rfl
+  act_mul := by intro g h; rfl
+  symplectic_invariant := by intro g x y; rfl
+
+def trivialRestrictionCompatibleRepresentation
+    {N M : ℕ} (hNM : N ∣ M) :
+    RestrictionCompatibleRepresentation hNM D where
+  lower := trivialCyclotomicSymplecticRepresentation D N
+  upper := trivialCyclotomicSymplecticRepresentation D M
+  compatible := by intro g; rfl
+
+def trivialCyclotomicInvariantRepresentation (N : ℕ) :
+    CyclotomicInvariantRepresentation N D where
+  toCyclotomicSymplecticRepresentation :=
+    trivialCyclotomicSymplecticRepresentation D N
+  quartic_invariant := by intro g x; rfl
+
+@[simp] theorem trivialCyclotomicInvariantRepresentation_act
+    (N : ℕ) (g : (ZMod N)ˣ) (x : FreudenthalCharge J) :
+    (trivialCyclotomicInvariantRepresentation D N).toFreudenthalInvariantAction.act g x = x := by
+  rfl
 
 namespace CyclotomicSymplecticRepresentation
 
@@ -107,7 +165,7 @@ theorem rankTwo_intertwine (g : (ZMod N)ˣ) (x y z : FreudenthalCharge J) :
 
 @[simp] theorem act_zeroCharge (g : (ZMod N)ˣ) :
     rep.act g (0 : FreudenthalCharge J) = 0 := by
-  simpa only [map_zero] using (rep.act g).map_zero
+  exact (rep.act g).map_zero
 
 def actHeisenberg (g : (ZMod N)ˣ) (X : HeisenbergElement J) : HeisenbergElement J where
   charge := rep.act g X.charge
@@ -186,15 +244,8 @@ theorem restriction_heisenbergBracket_intertwine
         (actHeisenberg D data.upper g X)
         (actHeisenberg D data.upper g Y) := by
   apply HeisenbergElement.ext
-  · simpa [actHeisenberg] using
-      congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f X.charge)
-        (data.compatible g).symm
+  · simp [actHeisenberg, data.compatible]
   · simp only [HeisenbergElement.bracket_center, actHeisenberg]
-    change FreudenthalCharge.symplecticForm D
-        (data.lower.act (ZMod.unitsMap hNM g) X.charge)
-        (data.lower.act (ZMod.unitsMap hNM g) Y.charge) =
-      FreudenthalCharge.symplecticForm D
-        (data.upper.act g X.charge) (data.upper.act g Y.charge)
     rw [data.lower.symplectic_invariant, data.upper.symplectic_invariant]
 
 theorem restriction_symplectic_intertwine
@@ -256,6 +307,28 @@ theorem actFiveGraded_heisenberg_plus (g : (ZMod N)ˣ) (x y : FreudenthalCharge 
       FreudenthalCharge.symplecticForm D x y :=
   rep.symplectic_invariant g x y
 
+theorem actFiveGraded_bracket_chargeMinus_chargeMinus
+    (g : (ZMod N)ˣ) (x y : FreudenthalCharge J) :
+    actFiveGraded D rep g
+        (fiveGradedBracket D (injChargeMinus D x) (injChargeMinus D y)) =
+      fiveGradedBracket D
+        (actFiveGraded D rep g (injChargeMinus D x))
+        (actFiveGraded D rep g (injChargeMinus D y)) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [actFiveGraded, fiveGradedBracket, injChargeMinus,
+      rep.symplectic_invariant]
+
+theorem actFiveGraded_bracket_chargePlus_chargePlus
+    (g : (ZMod N)ˣ) (x y : FreudenthalCharge J) :
+    actFiveGraded D rep g
+        (fiveGradedBracket D (injChargePlus D x) (injChargePlus D y)) =
+      fiveGradedBracket D
+        (actFiveGraded D rep g (injChargePlus D x))
+        (actFiveGraded D rep g (injChargePlus D y)) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [actFiveGraded, fiveGradedBracket, injChargePlus,
+      rep.symplectic_invariant]
+
 end CyclotomicSymplecticRepresentation
 
 /-- Explicit compatibility datum for two cyclotomic stages.  This records the
@@ -266,6 +339,13 @@ structure TowerCompatibility
     (repM : CyclotomicSymplecticRepresentation M D) where
   restricted_action : ∀ g : (ZMod M)ˣ,
     repM.act g = repN.act (ZMod.unitsMap hNM g)
+
+def trivialTowerCompatibility
+    {N M : ℕ} (hNM : N ∣ M) :
+    TowerCompatibility D hNM
+      (trivialCyclotomicSymplecticRepresentation D N)
+      (trivialCyclotomicSymplecticRepresentation D M) where
+  restricted_action := by intro g; rfl
 
 @[simp] theorem TowerCompatibility.restricted_action_apply
     {N M : ℕ} (hNM : N ∣ M)
@@ -323,5 +403,39 @@ theorem TowerCompatibility.restricted_fiveGraded_action
   · exact congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.plus1)
       (C.restricted_action g)
   · rfl
+
+theorem TowerCompatibility.restricted_fiveGraded_bracket_chargeMinus_chargeMinus
+    {N M : ℕ} (hNM : N ∣ M)
+    (repN : CyclotomicSymplecticRepresentation N D)
+    (repM : CyclotomicSymplecticRepresentation M D)
+    (C : TowerCompatibility D hNM repN repM)
+    (g : (ZMod M)ˣ) (x y : FreudenthalCharge J) :
+    CyclotomicSymplecticRepresentation.actFiveGraded D repM g
+        (fiveGradedBracket D (injChargeMinus D x) (injChargeMinus D y)) =
+      fiveGradedBracket D
+        (CyclotomicSymplecticRepresentation.actFiveGraded D repN
+          (ZMod.unitsMap hNM g) (injChargeMinus D x))
+        (CyclotomicSymplecticRepresentation.actFiveGraded D repN
+          (ZMod.unitsMap hNM g) (injChargeMinus D y)) := by
+  rw [C.restricted_fiveGraded_action]
+  exact CyclotomicSymplecticRepresentation.actFiveGraded_bracket_chargeMinus_chargeMinus
+    D (rep := repN) (ZMod.unitsMap hNM g) x y
+
+theorem TowerCompatibility.restricted_fiveGraded_bracket_chargePlus_chargePlus
+    {N M : ℕ} (hNM : N ∣ M)
+    (repN : CyclotomicSymplecticRepresentation N D)
+    (repM : CyclotomicSymplecticRepresentation M D)
+    (C : TowerCompatibility D hNM repN repM)
+    (g : (ZMod M)ˣ) (x y : FreudenthalCharge J) :
+    CyclotomicSymplecticRepresentation.actFiveGraded D repM g
+        (fiveGradedBracket D (injChargePlus D x) (injChargePlus D y)) =
+      fiveGradedBracket D
+        (CyclotomicSymplecticRepresentation.actFiveGraded D repN
+          (ZMod.unitsMap hNM g) (injChargePlus D x))
+        (CyclotomicSymplecticRepresentation.actFiveGraded D repN
+          (ZMod.unitsMap hNM g) (injChargePlus D y)) := by
+  rw [C.restricted_fiveGraded_action]
+  exact CyclotomicSymplecticRepresentation.actFiveGraded_bracket_chargePlus_chargePlus
+    D (rep := repN) (ZMod.unitsMap hNM g) x y
 
 end InfoGeometry.Exceptional.Galois

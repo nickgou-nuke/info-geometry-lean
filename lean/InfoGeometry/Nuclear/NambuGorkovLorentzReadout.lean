@@ -40,6 +40,18 @@ theorem spacetimeRepresentative_det (N : NambuGorkovCarrier ℝ) :
   rw [bogoliubovEnergy, Real.sq_sqrt hsum]
   ring
 
+theorem spacetimeRepresentative_null_iff (N : NambuGorkovCarrier ℝ) :
+    (spacetimeRepresentative N).det = 0 ↔
+      zornNorm (toZorn N) = 0 := by
+  rw [spacetimeRepresentative_det, bogoliubovEnergy_sq]
+  constructor <;> intro h <;> linarith
+
+theorem spacetimeRepresentative_null_iff_coordinates (N : NambuGorkovCarrier ℝ) :
+    (spacetimeRepresentative N).det = 0 ↔
+      (N.xi = 0 ∧ N.delta 0 = 0 ∧ N.delta 1 = 0 ∧ N.delta 2 = 0) := by
+  rw [spacetimeRepresentative_null_iff]
+  exact nambuGorkov_null_iff N
+
 /-- The Nambu--Gorkov quadratic readout is invariant under every unit
 split-quaternion sandwich acting on its representative. -/
 theorem bogoliubovEnergy_sq_lorentz_invariant
@@ -53,5 +65,26 @@ theorem bogoliubovEnergy_sq_lorentz_invariant
     (spacetimeRepresentative N) hq]
   rw [spacetimeRepresentative_det]
   ring
+
+theorem bogoliubovEnergy_sq_lorentzBoostZ_invariant
+    (ϕ : ℝ) (N : NambuGorkovCarrier ℝ) :
+    -(InfoGeometry.Spacetime.lorentzTransform
+        (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
+        (spacetimeRepresentative N)).det =
+      (bogoliubovEnergy N) ^ 2 := by
+  exact bogoliubovEnergy_sq_lorentz_invariant
+    (InfoGeometry.Spacetime.lorentzBoostZ ϕ) N
+    (InfoGeometry.Spacetime.det_lorentzBoostZ ϕ)
+
+theorem lorentzBoostZ_preserves_nambu_nullity
+    (ϕ : ℝ) (N : NambuGorkovCarrier ℝ) :
+    (spacetimeRepresentative N).det = 0 ↔
+      (InfoGeometry.Spacetime.lorentzTransform
+        (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
+        (spacetimeRepresentative N)).det = 0 := by
+  rw [InfoGeometry.Spacetime.lorentz_isometry
+    (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
+    (spacetimeRepresentative N)
+    (InfoGeometry.Spacetime.det_lorentzBoostZ ϕ)]
 
 end InfoGeometry.Nuclear.NambuGorkovLorentz

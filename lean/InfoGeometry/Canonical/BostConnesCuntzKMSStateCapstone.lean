@@ -96,6 +96,22 @@ theorem kmsStateWordValue_offdiag (β : ℝ) (n m : ℕ+) (hnm : n ≠ m) (Z_β 
     kmsStateWordValue β n m Z_β = 0 := by
   simp [kmsStateWordValue, hnm]
 
+/-! The following two laws are the finite normalization interface.  They make
+the denominator explicit and do not assert the existence of an infinite trace.
+-/
+theorem kmsStateWordValue_diag_mul_partition
+    (β : ℝ) (n : ℕ+) (Z_β : ℝ) (hZ : Z_β ≠ 0) :
+    kmsStateWordValue β n n Z_β * Z_β = kmsWeight β n := by
+  unfold kmsStateWordValue
+  rw [if_pos rfl]
+  exact div_mul_cancel₀ _ hZ
+
+theorem kmsStateWordValue_offdiag_mul_partition
+    (β : ℝ) (n m : ℕ+) (Z_β : ℝ) (hnm : n ≠ m) :
+    kmsStateWordValue β n m Z_β * Z_β = 0 := by
+  rw [kmsStateWordValue_offdiag β n m hnm Z_β]
+  simp
+
 /-- 🏆 THEOREM 8: Formal KMS boundary relation on diagonal projection:
     $\phi_\beta(S_n S_n^*) = n^{-\beta} \phi_\beta(S_n^* S_n)$. -/
 theorem kms_projection_scaling_relation (β : ℝ) (n : ℕ+) (Z_β : ℝ) :

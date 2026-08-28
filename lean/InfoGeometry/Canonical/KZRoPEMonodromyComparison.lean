@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 import InfoGeometry.Canonical.KZLogarithmicConnection
+import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 
 noncomputable section
@@ -9,6 +10,8 @@ namespace InfoGeometry.Canonical.KZRoPEMonodromyComparison
 
 open scoped BigOperators
 open InfoGeometry.Canonical.KZLogarithmicConnection
+open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+open InfoGeometry.Projective.Conf3ConcreteDLog
 open InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 
 /-!
@@ -84,15 +87,18 @@ theorem intertwine_iter (k : ℕ) :
     D.T ∘ₗ (D.M_gamma ^ k) = D.R_rope (k * D.n_gamma) ∘ₗ D.T := by
   induction k with
   | zero =>
-    simp only [Nat.zero_eq, pow_zero, CharP.cast_eq_zero, zero_mul, LinearMap.one_eq_id]
-    rw [D.R_rope_zero, LinearMap.id_comp, LinearMap.comp_id]
+    simp only [pow_zero, CharP.cast_eq_zero, zero_mul]
+    rw [D.R_rope_zero]
+    rfl
   | succ k ih =>
-    rw [pow_succ', LinearMap.mul_eq_comp, LinearMap.comp_assoc, D.intertwine]
-    rw [← LinearMap.comp_assoc, ih, LinearMap.comp_assoc]
-    have h_add : ((k + 1 : ℕ) : ℤ) * D.n_gamma = (k : ℤ) * D.n_gamma + D.n_gamma := by
+    rw [pow_succ']
+    have h_comp : D.T ∘ₗ (D.M_gamma * D.M_gamma ^ k) = (D.T ∘ₗ D.M_gamma) ∘ₗ (D.M_gamma ^ k) := rfl
+    rw [h_comp, D.intertwine]
+    rw [LinearMap.comp_assoc, ih, ← LinearMap.comp_assoc]
+    have h_add : ((k + 1 : ℕ) : ℤ) * D.n_gamma = D.n_gamma + (k : ℤ) * D.n_gamma := by
       push_cast
       ring
-    rw [h_add, D.R_rope_add, LinearMap.comp_assoc]
+    rw [h_add, D.R_rope_add]
 
 end KZRoPEComparisonDatum
 
@@ -102,29 +108,32 @@ end KZRoPEComparisonDatum
 🏆 **GRAND SYNTHESIS THEOREM: KZ Moduli Monodromy & RoPE Intertwining**
 
 Unifies:
-1. Knizhnik-Zamolodchikov zero-curvature flatness $F_\theta = \theta \wedge \theta = 0$
-   from the Classical Yang-Baxter Equation and Arnold 3-term relations on $\mathcal{M}_{0,4}$.
+1. Knizhnik-Zamolodchikov zero-curvature flatness via CYBE exchange data on $\mathcal{M}_{0,4}$.
 2. Elliptic RoPE additive group laws and relative position identity $R(-m) R(n) = R(n - m)$.
 3. Exact intertwining equation $T \circ M_\gamma = R(n_\gamma) \circ T$ relating KZ puncture
    monodromy with RoPE positional rotors without conflating local flatness with trivial global holonomy.
 -/
 theorem grand_kz_rope_monodromy_synthesis
-    {ι : Type*} [DecidableEq ι]
-    (C : CasimirExchange ι A)
-    (hCYBE : cybe3 C)
-    (T_ell : EllipticBivectorTorus 1 A)
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (alg : ExteriorFormAlgebra (R := ℝ) A)
+    (dz : Fin 3 → A) (z : Fin 3 → ℝ)
+    (h01 : z 0 ≠ z 1) (h12 : z 1 ≠ z 2) (h20 : z 2 ≠ z 0)
+    (C : CYBEExchangeData (K := ℝ) A)
     (D : KZRoPEComparisonDatum V S)
     (theta : ℝ) (m n : ℝ) (k_iter : ℕ) :
-    -- (1) KZ Connection Flatness
-    (kzConnection3 C = 0) ∧
+    -- (1) KZ Connection Curvature Flatness from CYBE
+    (alg.wedge (conf3ConcreteForm dz z 0 1) (conf3ConcreteForm dz z 1 2) * bracket C.t01 C.t12 +
+     alg.wedge (conf3ConcreteForm dz z 1 2) (conf3ConcreteForm dz z 2 0) * bracket C.t12 C.t20 +
+     alg.wedge (conf3ConcreteForm dz z 2 0) (conf3ConcreteForm dz z 0 1) * bracket C.t20 C.t01 = 0) ∧
     -- (2) Elliptic RoPE Relative Position Law
-    (T_ell.R_plane 0 theta (-m) * T_ell.R_plane 0 theta n = T_ell.R_plane 0 theta (n - m)) ∧
+    (Matrix.transpose (ellipticRotor theta m) * ellipticRotor theta n =
+      ellipticRotor theta (n - m)) ∧
     -- (3) Monodromy Intertwining Readout & Iteration
     (D.T ∘ₗ D.M_gamma = D.R_rope D.n_gamma ∘ₗ D.T ∧
      D.T ∘ₗ (D.M_gamma ^ k_iter) = D.R_rope (k_iter * D.n_gamma) ∘ₗ D.T ∧
      D.R_rope (-D.n_gamma) ∘ₗ D.R_rope D.n_gamma = D.R_rope 0) := by
-  refine ⟨kz_connection_flatness C hCYBE,
-          T_ell.R_plane_relative 0 theta m n,
+  refine ⟨kz_curvature_vanishes_of_cybe alg dz z h01 h12 h20 C,
+          ellipticRotor_relative theta m n,
           ⟨D.intertwine, D.intertwine_iter k_iter, ?_⟩⟩
   · have h := D.R_rope_relative D.n_gamma D.n_gamma
     rw [sub_self] at h

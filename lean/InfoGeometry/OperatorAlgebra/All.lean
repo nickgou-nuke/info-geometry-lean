@@ -76,6 +76,8 @@ import InfoGeometry.OperatorAlgebra.CliffordCARProjectors
 import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
+import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
+import InfoGeometry.OperatorAlgebra.SplitTorusLogRouting
 
 namespace InfoGeometry.OperatorAlgebra
 

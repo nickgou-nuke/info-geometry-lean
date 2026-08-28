@@ -3411,6 +3411,7 @@ import InfoGeometry.Canonical.ScalarLogBarrier
 import InfoGeometry.Canonical.FiniteInformationGeometryArchitecture
 import InfoGeometry.Canonical.TripotentLeftRightPeirceProjectors
 import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
+import InfoGeometry.Canonical.KZRoPEMonodromyComparison
 
 namespace InfoGeometry
 

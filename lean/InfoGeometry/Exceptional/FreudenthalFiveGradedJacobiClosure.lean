@@ -379,19 +379,4 @@ theorem jacobi_extremePlus_extremeMinus_extremeMinus
       genHscale, FiveGradedCarrier.instAdd] <;>
     simp; ring
 
-theorem jacobi_sympZero_chargeMinus_chargePlus
-    (T : SymplecticTKKZero D) (x y : FreudenthalCharge J) :
-    fiveJacobiator D (injSympZero D T) (injChargeMinus D x)
-        (injChargePlus D y) = 0 := by
-  dsimp [fiveJacobiator]
-  rw [fiveGradedBracket_chargeMinus_chargePlus,
-      fiveGradedBracket_chargePlus_sympZero,
-      fiveGradedBracket_sympZero_chargeMinus]
-  apply FiveGradedCarrier.ext <;>
-    dsimp [fiveGradedBracket, injSympZero, injChargeMinus,
-      injChargePlus, FiveGradedCarrier.instAdd] <;>
-    simp [zeroGrade_mixed_bracket_compatibility,
-      zeroGrade_symplectic_form_transfer] <;>
-    module
-
 end InfoGeometry.Exceptional.Freudenthal

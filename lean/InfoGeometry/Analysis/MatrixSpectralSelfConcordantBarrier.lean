@@ -194,8 +194,6 @@ theorem matrix_self_concordance_barrier_bound
   have h_spec := spectral_sum_cube_le_sum_sq_three_halves C.eigenvalues
   nlinarith
 
-end InfoGeometry.Analysis.MatrixSpectral
-
 /-! ## 6. Explicit Constructors: Diagonal and Concrete Spectral Carriers -/
 
 /-- Explicit construction of a spectral carrier for any diagonal matrix. -/
@@ -228,4 +226,6 @@ theorem diagonal_matrix_self_concordance_barrier_bound
   let C := diagonalCarrier (fun i => a_inv_sqrt i * h i * a_inv_sqrt i)
   have h_carrier : V.B = C.B := rfl
   exact matrix_self_concordance_barrier_bound V C h_carrier
+
+end InfoGeometry.Analysis.MatrixSpectral
 

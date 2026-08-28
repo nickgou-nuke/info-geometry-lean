@@ -39,8 +39,7 @@ theorem trace_mul_eq_zero_of_anticomm_invariance
   have h_assoc2 : S * (T * S * rho) = (S * T * S) * rho := by
     simp only [Matrix.mul_assoc]
   have h_st : S * T = - (T * S) := by
-    rw [h_anticomm]
-    exact neg_neg (S * T)
+    rw [h_anticomm, neg_neg]
   have h_sts : (S * T) * S = - T := by
     rw [h_st]
     have h_neg : - (T * S) * S = - (T * (S * S)) := by
@@ -58,12 +57,7 @@ theorem trace_mul_eq_zero_of_anticomm_invariance
       _ = Matrix.trace ((S * T * S) * rho) := by rw [h_assoc2]
       _ = Matrix.trace (- (T * rho)) := h_neg_trace
       _ = - Matrix.trace (T * rho) := Matrix.trace_neg (T * rho)
-  have h_two : 2 * Matrix.trace (T * rho) = 0 := by
-    calc
-      2 * Matrix.trace (T * rho) = Matrix.trace (T * rho) + Matrix.trace (T * rho) := by ring
-      _ = - Matrix.trace (T * rho) + Matrix.trace (T * rho) := by rw [h_final]
-      _ = 0 := by ring
-  exact mul_right_cancel₀ (by norm_num : (2 : ℂ) ≠ 0) h_two
+  linear_combination (1 / 2 : ℂ) * h_final
 
 /-! ## 2. Concrete Realization on 2×2 Matrices (Pauli Z & X) -/
 
@@ -79,19 +73,19 @@ def switch2 : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem tilt2_sq : tilt2 * tilt2 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [tilt2]; simp [Matrix.mul_apply]; ring }
+  { dsimp [tilt2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
 
 /-- 🏆 THEOREM: Switch squared is identity: $S^2 = I$. -/
 theorem switch2_sq : switch2 * switch2 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [switch2]; simp [Matrix.mul_apply]; ring }
+  { dsimp [switch2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
 
 /-- 🏆 THEOREM: Tilt and Switch strictly anticommute: $TS = -ST$. -/
 theorem tilt2_switch2_anticomm : tilt2 * switch2 = - (switch2 * tilt2) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [tilt2, switch2]; simp [Matrix.mul_apply]; ring }
+  { dsimp [tilt2, switch2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
 
 /-- A boundary state on the 2×2 carrier. -/
 structure BoundaryState2 where

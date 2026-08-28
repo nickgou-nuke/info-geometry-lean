@@ -7,6 +7,8 @@ namespace InfoGeometry.Canonical.BitWordComplexStageReindex
 
 open InfoGeometry.Canonical.GenuineMatrixStageMorphism
 open InfoGeometry.Canonical.CuntzMatrixTraceTower
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Clifford
 open InfoGeometry.Algebra.CliffordBitWordEquivalence
 
 def equiv (n : ℕ) :

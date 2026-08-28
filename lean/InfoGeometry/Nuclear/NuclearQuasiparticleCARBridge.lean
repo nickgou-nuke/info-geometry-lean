@@ -4,8 +4,8 @@ import Mathlib
 # Explicit finite quasiparticle CAR bridge
 
 This owner gives a concrete one-mode fermionic realization on `2 × 2` real
-matrices.  It is intentionally finite and exact: creation and annihilation are
-nilpotent and satisfy the canonical anticommutation relation.  No phonon or RPA
+matrices. It is intentionally finite and exact: creation and annihilation are
+nilpotent and satisfy the canonical anticommutation relation. No phonon or RPA
 claim is made here.
 -/
 
@@ -45,17 +45,25 @@ theorem annihilation_creation_anticommutator :
 @[simp] theorem numberProjector_idempotent :
     numberProjector * numberProjector = numberProjector := by
   unfold numberProjector
-  rw [Matrix.mul_assoc]
   have hcar := annihilation_creation_anticommutator
   have hrewrite : annihilation * creation = 1 - creation * annihilation := by
-    linarith [hcar]
-  rw [hrewrite]
-  simp [creation_sq]
+    calc
+      annihilation * creation =
+          (annihilation * creation + creation * annihilation) -
+            creation * annihilation := by noncomm_ring
+      _ = 1 - creation * annihilation := by rw [hcar]
+  calc
+    (creation * annihilation) * (creation * annihilation) =
+        creation * (annihilation * creation) * annihilation := by
+          simp only [Matrix.mul_assoc]
+    _ = creation * (1 - creation * annihilation) * annihilation := by rw [hrewrite]
+    _ = creation * annihilation := by
+      simp [mul_sub, sub_mul, creation_sq, annihilation_sq]
 
 /-- The occupied projector is complementary to `a a†`. -/
 theorem complementary_projectors :
     annihilation * creation + numberProjector = 1 := by
-  simpa [numberProjector, add_comm] using annihilation_creation_anticommutator
+  simpa [numberProjector] using annihilation_creation_anticommutator
 
 end InfoGeometry.Nuclear.NuclearQuasiparticleCARBridge
 

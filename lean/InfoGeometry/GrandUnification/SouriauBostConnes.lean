@@ -106,10 +106,12 @@ theorem J_flips_tilt :
   rw [h_comp_sub]
   have h1 : ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ ((CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj) ∘ₗ CuntzDiracBoundary.J) x =
       (S_R H ∘ₗ S_R_adj H) x := by
-    rw [← S_R_mul_S_R_adj H]
+    simpa only [LinearMap.comp_apply] using
+      congrArg (fun T : H →ₗ[ℂ] H => T x) (S_R_mul_S_R_adj H).symm
   have h2 : ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ (S_R H ∘ₗ S_R_adj H) ∘ₗ CuntzDiracBoundary.J) x =
       (CuntzDiracBoundary.S_L ∘ₗ CuntzDiracBoundary.S_L_adj) x := by
-    rw [J_S_R_proj_J H]
+    simpa only [LinearMap.comp_apply] using
+      congrArg (fun T : H →ₗ[ℂ] H => T x) (J_S_R_proj_J H)
   rw [h1, h2]
   simp only [LinearMap.sub_apply, LinearMap.neg_apply]
   abel

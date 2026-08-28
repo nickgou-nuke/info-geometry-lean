@@ -59,13 +59,34 @@ theorem towerEmbed_0_2_comp :
 def towerEmbed_2_3 : CyclotomicField 30 ℚ →ₐ[ℚ] CyclotomicField 210 ℚ :=
   cyclotomicFieldEmbedding (by decide) (by decide) primorialConductor_dvd_2_3
 
+theorem towerEmbed_1_3_comp :
+    towerEmbed_2_3.comp towerEmbed_1_2 =
+      cyclotomicFieldEmbedding (by decide) (by decide) (by decide) := by
+  apply cyclotomicFieldEmbedding_comp (by decide) (by decide) (by decide)
+    primorialConductor_dvd_1_2 primorialConductor_dvd_2_3 (by decide)
+  norm_num [primorialConductor]
+
 /-- Step 3 -> 4: $\mathbb{Q}(\zeta_{210}) \hookrightarrow \mathbb{Q}(\zeta_{2310})$ -/
 def towerEmbed_3_4 : CyclotomicField 210 ℚ →ₐ[ℚ] CyclotomicField 2310 ℚ :=
   cyclotomicFieldEmbedding (by decide) (by decide) primorialConductor_dvd_3_4
 
+theorem towerEmbed_2_4_comp :
+    towerEmbed_3_4.comp towerEmbed_2_3 =
+      cyclotomicFieldEmbedding (by decide) (by decide) (by decide) := by
+  apply cyclotomicFieldEmbedding_comp (by decide) (by decide) (by decide)
+    primorialConductor_dvd_2_3 primorialConductor_dvd_3_4 (by decide)
+  norm_num [primorialConductor]
+
 /-- Step 4 -> 5: $\mathbb{Q}(\zeta_{2310}) \hookrightarrow \mathbb{Q}(\zeta_{30030})$ -/
 def towerEmbed_4_5 : CyclotomicField 2310 ℚ →ₐ[ℚ] CyclotomicField 30030 ℚ :=
   cyclotomicFieldEmbedding (by decide) (by decide) primorialConductor_dvd_4_5
+
+theorem towerEmbed_3_5_comp :
+    towerEmbed_4_5.comp towerEmbed_3_4 =
+      cyclotomicFieldEmbedding (by decide) (by decide) (by decide) := by
+  apply cyclotomicFieldEmbedding_comp (by decide) (by decide) (by decide)
+    primorialConductor_dvd_3_4 primorialConductor_dvd_4_5 (by decide)
+  norm_num [primorialConductor]
 
 /-! ## 3. Primitive Root Actions -/
 

@@ -11,23 +11,24 @@ import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Quantum.BostConnesPrimonCantorSpinChainCapstone
 
 /-!
-# Bost-Connes Lee-Yang Synthesis: Prime Ferromagnet, Hodge-Dirac Laplacian, and Super-KMS Phase Transition
+# Bost-Connes/Lee-Yang Algebraic Synthesis
 
-This capstone module formalizes the grand synthesis uniting:
+This module composes the following finite and property-gated algebraic facts:
 1. **The Prime $Cl(1,1)$ Modular Atom and Möbius Supertrace**:
    - The prime fermionic atom $(c, d)$ with Möbius parity $\gamma = c \cdot d$ squaring to $1$.
 2. **The Hodge-Dirac-Laplacian Commutation**:
    - The Dirac operator $Q$ anticommutes with the Hodge phase axis $\{Q, \star\} = 0$,
      forcing the Laplacian $\Delta = Q^2$ to strictly commute with the Hodge star $[\Delta, \star] = 0$.
-3. **Cayley Compactification onto the Lee-Yang Circle**:
-   - The Cayley transform $W(x) = \frac{x - i}{x + i}$ maps the real Laplacian spectrum
-     onto the compact unitary circle $\mathbb{T} = \{z \in \mathbb{C} \mid |z| = 1\}$.
-4. **Zero-Temperature Freezing and Cuntz $\mathcal{O}_2$ Boundary Holography**:
-   - The Cuntz partition of unity $S_L S_L^* + S_R S_R^* = 1$.
-   - The Yang-Baxter Fibonacci braiding $F \cdot B \cdot F = R$.
-   - Jaynes-KMS equilibrium ($p = 1/2$) guaranteeing chiral anomaly cancellation ($\Delta Q = 0$).
+3. **Cayley unit-circle readout**:
+   - The supplied Cayley map sends each real input to a complex number of norm
+     one. This is not a Lee--Yang zero theorem or a spectral theorem.
+4. **Conditional finite boundary readout**:
+   - The imported finite Yang--Baxter identity and the supplied KMS-like
+     relation yield the stated algebraic charge cancellation.
 
-All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+The resulting theorem is conditional on its explicit atom, carrier, and KMS
+data. It does not prove the Riemann hypothesis, an analytic Bost--Connes
+partition function, a zero-temperature limit, or a physical Cuntz boundary.
 -/
 
 namespace InfoGeometry.Quantum.BostConnesLeeYang
@@ -39,7 +40,7 @@ open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Analysis.JaynesRelativeStates
 open InfoGeometry.Quantum.BostConnesPrimon
 
-/-! ## 1. Hodge-Dirac Laplacian Commutation for the Prime Atom -/
+/-! ## 1. Hodge-Dirac Laplacian commutation -/
 
 variable {Op : Type*} [Ring Op]
 
@@ -51,7 +52,7 @@ theorem laplacian_commutes_hodge_star
     laplacian C * hodgeStar C = hodgeStar C * laplacian C :=
   laplacian_commutes_hodge_of_dirac_closure C hChiral hDelta
 
-/-! ## 2. Prime $Cl(1,1)$ Atom and Möbius Parity -/
+/-! ## 2. Prime `Cl(1,1)`-style atom and parity -/
 
 /-- 🏆 THEOREM: The Möbius parity $\gamma = c \cdot d$ of a prime $Cl(1,1)$ modular atom
     satisfies the involutive grading condition $\gamma^2 = 1$. -/
@@ -60,25 +61,26 @@ theorem prime_mobius_parity_involutive
     atom.mobiusParity * atom.mobiusParity = 1 :=
   atom.mobiusParity_sq_eq_one
 
-/-! ## 3. Cayley Transform and Lee-Yang Unitary Circle -/
+/-! ## 3. Cayley unit-circle readout -/
 
-/-- 🏆 THEOREM: The Cayley Transform maps every real eigenvalue of the Prime Laplacian
-    strictly onto the Lee-Yang unit circle $\|W(x)\|^2 = 1$. -/
+/-- The supplied Cayley map has unit norm on every real input.
+    This is a scalar identity, not a statement about Laplacian eigenvalues or
+    Lee--Yang zeros. -/
 theorem lee_yang_circle_unitary (x : ℝ) :
     Complex.normSq (cayleyTransform x) = 1 :=
   cayley_transform_is_unitary x
 
-/-! ## 4. The Grand Bost-Connes Lee-Yang Synthesis -/
+/-! ## 4. Conditional algebraic synthesis -/
 
 /--
-🏆 **GRAND SYNTHESIS THEOREM: Bost-Connes Lee-Yang Phase Transition on the Cantor Boundary**
+**Conditional algebraic synthesis theorem.**
 
 Unifies:
-1. **Möbius Supertrace Involutivity**: $\gamma^2 = 1$ for the prime $Cl(1,1)$ modular atom.
+1. **Parity involutivity**: $\gamma^2 = 1$ for the supplied prime `Cl(1,1)`-style atom.
 2. **Hodge-Dirac Laplacian Commutation**: $[\Delta, \star] = 0$.
-3. **Lee-Yang Circle Compactification**: $\|W(x)\|^2 = 1$.
-4. **Yang-Baxter Topological Braiding**: $F \cdot B \cdot F = R$.
-5. **Thermodynamic Anomaly Cancellation**: $\phi_{\text{KMS}}(S_L S_L^*) - \phi_{\text{KMS}}(S_R S_R^*) = 0$.
+3. **Cayley unit-circle readout**: $\|W(x)\|^2 = 1$.
+4. **Finite Yang--Baxter identity**: $F \cdot B \cdot F = R$.
+5. **KMS-like algebraic charge cancellation** under the supplied relation.
 -/
 theorem grand_bost_connes_lee_yang_synthesis
     (atom : Cl11Atom Op)

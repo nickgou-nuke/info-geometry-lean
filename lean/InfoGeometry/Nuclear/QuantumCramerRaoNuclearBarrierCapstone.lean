@@ -9,6 +9,7 @@ import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Analysis.LogDetSelfConcordantBarrier
 import InfoGeometry.Analysis.MatrixSpectralSelfConcordantBarrier
 import InfoGeometry.Physics.NuclearSelfConcordantBarrierBridge
+import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
 
 /-!
 # Quantum Cramér-Rao Bound as the Topological Nuclear Barrier Capstone
@@ -23,7 +24,13 @@ This module formalizes the grand physical-mathematical dictionary unifying:
    - Dikin Ellipsoid interior confinement: $W_1(\theta) = \{ \theta' \mid (\theta' - \theta)^T g^{\text{BKM}}(\theta) (\theta' - \theta) < 1 \} \subset \Omega$.
    - Infinite Fisher-Rao boundary distance: $\operatorname{Dist}_{\text{Fisher}}(\theta, \partial\Omega) \to +\infty$.
 
-3. **Nuclear Physics Phenomenology**:
+3. **Split-Octonion Witt Planes & Nambu-Gorkov Micro-Generators**:
+   - Zorn reduced norm as Bogoliubov quasiparticle dispersion:
+     $$\det_Z(X_{\text{NG}}) = - (\xi^2 + |\vec{\Delta}|^2) = - E_{\text{quasiparticle}}^2$$
+   - Pauli exclusion from Witt ladder nilpotency: $(u_a^+)^2 = 0$, $(u_a^-)^2 = 0$.
+   - Koszul-Vinberg barrier $\Phi(X_{\text{NG}}) = -\log(E_{\text{quasiparticle}}^2) \to +\infty$ as $E \to 0$.
+
+4. **Nuclear Physics Phenomenology**:
    - Nuclear incompressibility modulus $K_0 \propto g_{\rho\rho}^{\text{BKM}}$.
    - Equilibrium saturation density $\rho_0 \approx 0.16\text{ fm}^{-3}$.
    - Hard-core repulsion ($r_c \approx 0.4\text{ fm}$): as $\rho \to \rho_{\text{collapse}}$,
@@ -41,6 +48,7 @@ open InfoGeometry.Analysis.SelfConcordant
 open InfoGeometry.Analysis.MatrixSpectral
 open InfoGeometry.Physics.NuclearBarrier
 open InfoGeometry.Quantum.QuantumCramerRaoBound
+open InfoGeometry.Nuclear.NambuGorkov
 
 namespace InfoGeometry.Nuclear.QuantumCramerRaoCapstone
 
@@ -125,7 +133,7 @@ theorem nesterov_nemirovski_fisher_sq_bound (V : CanonicalSpectralMatrixVariatio
     (dFisherInfo V) ^ 2 ≤ 4 * (quantumFisherInfo V) ^ 3 :=
   V.matrix_self_concordance_sq_bound
 
-/-! ## 4. Dikin Ellipsoid and Topological Boundary Confinement -/
+/-! ## 4. Dikin Ellipsoid and Hard-Core Fluctuation Extinction -/
 
 /-- Dikin Ellipsoid metric radius condition: $(\theta' - \theta)^T \mathcal{I}_F (\theta' - \theta) < 1$. -/
 def inDikinEllipsoid (V : CanonicalSpectralMatrixVariation n) (displacement_sq : ℝ) : Prop :=
@@ -151,7 +159,30 @@ theorem hard_core_fluctuation_extinction
       exact mul_lt_mul_of_pos_right h_dikin h_inv_pos
     _ = (quantumFisherInfo V)⁻¹ := by rw [one_mul]
 
-/-! ## 5. Grand Quantum Cramér-Rao Nuclear Barrier Synthesis -/
+/-! ## 5. Nambu-Gorkov Micro-Generator & Koszul-Vinberg Potential -/
+
+/-- The Koszul-Vinberg logarithmic barrier on the Nambu-Gorkov state:
+$\Phi(X_{\text{NG}}) = -\log(E_{\text{quasiparticle}}^2) = -\log(\xi^2 + |\vec{\Delta}|^2)$. -/
+def koszulVinbergBarrier (N : NambuGorkovCarrier) : ℝ :=
+  - Real.log ((bogoliubovEnergy N) ^ 2)
+
+/-- 🏆 THEOREM: The Koszul-Vinberg barrier equals $-\log(\xi^2 + |\vec{\Delta}|^2)$. -/
+theorem koszulVinbergBarrier_eq (N : NambuGorkovCarrier) :
+    koszulVinbergBarrier N = - Real.log (N.xi ^ 2 + ∑ i : Fin 3, (N.delta i) ^ 2) := by
+  dsimp [koszulVinbergBarrier, bogoliubovEnergy]
+  have h_nonneg : 0 ≤ N.xi ^ 2 + ∑ i : Fin 3, (N.delta i) ^ 2 := by
+    apply add_nonneg (sq_nonneg N.xi)
+    apply Finset.sum_nonneg
+    intro i _
+    exact sq_nonneg (N.delta i)
+  rw [Real.sq_sqrt h_nonneg]
+
+/-- 🏆 THEOREM: Pauli exclusion via Witt nilpotent ladder idempotency. -/
+theorem pauli_exclusion_nilpotency (i : Fin 3) :
+    ua_plus i * ua_plus i = 0 ∧ ua_minus i * ua_minus i = 0 :=
+  ⟨ladder_plus_nilpotent i, ladder_minus_nilpotent i⟩
+
+/-! ## 6. Grand Quantum Cramér-Rao Nuclear Barrier Synthesis -/
 
 /--
 🏆 **GRAND SYNTHESIS: Quantum Cramér-Rao Bound, Self-Concordance, and Nuclear Confinement**
@@ -163,11 +194,14 @@ Unifies:
 4. **Algebraic Squared Barrier Inequality**: $(D\mathcal{I}_F)^2 \le 4 \mathcal{I}_F^3$.
 5. **Dikin Ellipsoid Confinement**: $\Delta \rho^2 < \mathcal{I}_F^{-1}$.
 6. **Bregman Hard-Core Saturation**: $e^{-x} - 1 + x \ge 0$ with unique minimum at equilibrium.
-7. **Relativistic Speed Bounds**: $c_s < c$ and $v_F < c$ (Causal containment).
+7. **Nambu-Gorkov Bogoliubov Mass-Shell**: $\det_Z(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$.
+8. **Relativistic Speed Bounds**: $c_s < c$ and $v_F < c$ (Causal containment).
 -/
 theorem grand_quantum_cramer_rao_nuclear_barrier_synthesis
     (V : CanonicalSpectralMatrixVariation n)
     (nb : NuclearSpeedBounds)
+    (N : NambuGorkovCarrier)
+    (h_nontriv : N.xi ≠ 0 ∨ ∃ i : Fin 3, N.delta i ≠ 0)
     (x : ℝ)
     (var_O : ℝ)
     (h_qcrb : 1 ≤ var_O * (quantumFisherInfo V))
@@ -179,6 +213,8 @@ theorem grand_quantum_cramer_rao_nuclear_barrier_synthesis
     ((dFisherInfo V) ^ 2 ≤ 4 * (quantumFisherInfo V) ^ 3) ∧
     (0 ≤ bregmanDivergence x) ∧
     (bregmanDivergence 0 = 0) ∧
+    ((bogoliubovEnergy N) ^ 2 = - (toZorn N).detZ) ∧
+    (0 < bogoliubovEnergy N) ∧
     (nb.c_s < nb.c ∧ nb.v_F < nb.c) := by
   refine ⟨quantumFisherInfo_eq_sum_eigenvalues_sq V,
           cramer_rao_variance_bound V var_O h_qcrb h_fisher_pos,
@@ -187,6 +223,8 @@ theorem grand_quantum_cramer_rao_nuclear_barrier_synthesis
           nesterov_nemirovski_fisher_sq_bound V,
           bregman_nonneg x,
           bregman_zero,
+          bogoliubovEnergy_sq N,
+          bogoliubovEnergy_pos N h_nontriv,
           nuclear_causal_propagation nb⟩
 
 end InfoGeometry.Nuclear.QuantumCramerRaoCapstone

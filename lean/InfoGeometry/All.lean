@@ -5,6 +5,7 @@ import InfoGeometry.Algebra.AiStudioNativeMathlibFindings
 import InfoGeometry.Algebra.AlbertCD
 import InfoGeometry.Algebra.All
 import InfoGeometry.Algebra.CliffordIdealSpinor
+import InfoGeometry.Algebra.Clifford55DyadicMatrixClosure
 import InfoGeometry.Clifford.CliffordIdealReadback
 import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.AnyonBraidGA
@@ -4147,6 +4148,7 @@ import InfoGeometry.Clifford.Cl55SpinorChirality
 import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 import InfoGeometry.Clifford.Cl55SpinorRepresentationGeneration
 import InfoGeometry.Clifford.Cl55SpinorZornReadout
+import InfoGeometry.Clifford.Cl55MoritaDyadicClosure
 import InfoGeometry.Clifford.Cl55WittCarrierFaithfulness
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneFull
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneReduction

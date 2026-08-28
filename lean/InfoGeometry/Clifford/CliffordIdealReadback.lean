@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.IdempotentCornerCommutant
 
 /-!
 # Generic Clifford-style ideal readbacks
@@ -13,6 +14,33 @@ variable {Cl : Type*} [Ring Cl]
 
 def LeftIdeal (P : Cl) := {x : Cl | x * P = x}
 def RightIdeal (P : Cl) := {y : Cl | P * y = y}
+
+theorem idempotent_mem_leftIdeal (P : Cl) (hP : P * P = P) :
+    P ∈ LeftIdeal P := hP
+
+theorem idempotent_mem_rightIdeal (P : Cl) (hP : P * P = P) :
+    P ∈ RightIdeal P := hP
+
+def leftIdealEquiv
+    (P : Cl) (hP : P * P = P) :
+    LeftIdeal P ≃
+      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P hP :=
+  { toFun := fun x => ⟨x.1, x.2⟩
+    invFun := fun x => ⟨x.1, x.2⟩
+    left_inv := by intro x; rfl
+    right_inv := by intro x; rfl }
+
+@[simp] theorem leftIdealEquiv_coe
+    (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
+    (leftIdealEquiv P hP x : Cl) = x.1 :=
+  rfl
+
+@[simp] theorem leftIdealEquiv_mem
+    (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
+    (leftIdealEquiv P hP x :
+      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P hP) =
+      ⟨x.1, x.2⟩ :=
+  rfl
 
 theorem left_mul_mem (P : Cl) (g : Cl) (x : LeftIdeal P) :
     g * x.1 ∈ LeftIdeal P := by
@@ -30,5 +58,14 @@ theorem corner_pairing (P : Cl) (x : LeftIdeal P) (y : RightIdeal P) :
     P * (y.1 * x.1) * P = (P * y.1) * (x.1 * P) := by
       simp only [mul_assoc]
     _ = y.1 * x.1 := by rw [y.2, x.2]
+
+theorem corner_pairing_mem
+    (P : Cl) (hP : P * P = P)
+    (x : LeftIdeal P) (y : RightIdeal P) :
+    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner P hP,
+      c.1 = y.1 * x.1 := by
+  refine ⟨⟨y.1 * x.1, ?_, ?_⟩, rfl⟩
+  · rw [mul_assoc, x.2]
+  · rw [← mul_assoc, y.2]
 
 end InfoGeometry.Clifford

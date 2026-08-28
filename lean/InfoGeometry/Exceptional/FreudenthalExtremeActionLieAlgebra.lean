@@ -95,6 +95,33 @@ theorem extremeBracket_self (u : FiveGradedCarrier D) :
   · simp [extremeBracket]
   · simp [extremeBracket, FreudenthalCharge.symplectic_form_alternating]
 
+theorem extremeBracket_chargeMinus_chargeMinus
+    (x y : FreudenthalCharge J) :
+    extremeBracket D E (injChargeMinus D x) (injChargeMinus D y) =
+      genEminus D (2 * FreudenthalCharge.symplecticForm D x y) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, injChargeMinus, genEminus]
+
+theorem extremeBracket_chargePlus_chargePlus
+    (x y : FreudenthalCharge J) :
+    extremeBracket D E (injChargePlus D x) (injChargePlus D y) =
+      genEplus D (2 * FreudenthalCharge.symplecticForm D x y) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, injChargePlus, genEplus]
+
+theorem extremeBracket_genEplus_genEminus :
+    extremeBracket D E (genEplus D 1) (genEminus D 1) =
+      genHscale D E.scaleNormalization := by
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, genEplus, genEminus, genHscale]
+
+theorem extremeBracket_genEminus_genEplus :
+    extremeBracket D E (genEminus D 1) (genEplus D 1) =
+      genHscale D (-E.scaleNormalization) := by
+  rw [extremeBracket_skew]
+  simp [extremeBracket_genEplus_genEminus, FiveGradedCarrier.instNeg,
+    genHscale]
+
 /-! ## 2. Parameterized Jacobiator Definition -/
 
 def extremeJacobiator (u v w : FiveGradedCarrier D) : FiveGradedCarrier D :=

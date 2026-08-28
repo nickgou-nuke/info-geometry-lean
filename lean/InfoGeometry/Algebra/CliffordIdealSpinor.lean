@@ -39,6 +39,16 @@ def mulLeft (g : Cl) (x : LeftIdeal P) : LeftIdeal P :=
 @[simp] theorem mulLeft_val (g : Cl) (x : LeftIdeal P) :
     (mulLeft g x).val = g * x.val := rfl
 
+theorem mulLeft_one (x : LeftIdeal P) :
+    mulLeft (1 : Cl) x = x := by
+  apply Subtype.ext
+  simp
+
+theorem mulLeft_mul (g h : Cl) (x : LeftIdeal P) :
+    mulLeft (g * h) x = mulLeft g (mulLeft h x) := by
+  apply Subtype.ext
+  simp [mul_assoc]
+
 end LeftIdeal
 
 namespace RightIdeal
@@ -56,6 +66,16 @@ def mulRight (y : RightIdeal P) (g : Cl) : RightIdeal P :=
 
 @[simp] theorem mulRight_val (y : RightIdeal P) (g : Cl) :
     (mulRight y g).val = y.val * g := rfl
+
+theorem mulRight_one (y : RightIdeal P) :
+    mulRight y (1 : Cl) = y := by
+  apply Subtype.ext
+  simp
+
+theorem mulRight_mul (g h : Cl) (y : RightIdeal P) :
+    mulRight (mulRight y g) h = mulRight y (g * h) := by
+  apply Subtype.ext
+  simp [mul_assoc]
 
 end RightIdeal
 
@@ -76,6 +96,30 @@ def idempotentToLeft (hP : IsIdempotentElem P) : LeftIdeal P :=
 
 def idempotentToRight (hP : IsIdempotentElem P) : RightIdeal P :=
   ⟨P, hP.eq⟩
+
+def dyadicProduct (x : LeftIdeal P) (y : RightIdeal P) : Cl :=
+  x.1 * y.1
+
+@[simp] theorem dyadicProduct_left_action
+    (g : Cl) (x : LeftIdeal P) (y : RightIdeal P) :
+    dyadicProduct (LeftIdeal.mulLeft g x) y =
+      g * dyadicProduct x y := by
+  simp only [dyadicProduct, LeftIdeal.mulLeft_val, mul_assoc]
+
+@[simp] theorem dyadicProduct_right_action
+    (g : Cl) (x : LeftIdeal P) (y : RightIdeal P) :
+    dyadicProduct x (RightIdeal.mulRight y g) =
+  dyadicProduct x y * g := by
+  simp only [dyadicProduct, RightIdeal.mulRight_val]
+  exact (mul_assoc _ _ _).symm
+
+theorem dyadic_gauge_commutator
+    (g : Cl) (x : LeftIdeal P) (y : RightIdeal P) :
+    g * dyadicProduct x y - dyadicProduct x y * g =
+      dyadicProduct (LeftIdeal.mulLeft g x) y -
+        dyadicProduct x (RightIdeal.mulRight y g) := by
+  simp only [dyadicProduct, LeftIdeal.mulLeft_val, RightIdeal.mulRight_val]
+  rw [mul_assoc, mul_assoc]
 
 end Pairing
 

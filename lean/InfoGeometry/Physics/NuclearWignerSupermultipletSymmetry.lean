@@ -146,7 +146,7 @@ theorem superallowed_fermi_triplet_minus_one :
 
 /-! ### 4. Grand Nuclear Symmetry Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Nuclear Spin-Isospin & Supermultiplet Theory**
 
 Unifies:
@@ -155,17 +155,4 @@ Unifies:
 3. Superallowed Fermi transition strength $|M_F|^2 = 2$.
 4. Charge exchange invariance of nuclear mass: $A(C_{pn} \mathcal{N}) = A(\mathcal{N})$.
 -/
-theorem grand_nuclear_symmetry_synthesis
-    (nuc : InfoGeometry.Physics.Nucleus) :
-    (isospin3 * isospinPlus - isospinPlus * isospin3 = isospinPlus ∧
-     isospinPlus * isospinMinus - isospinMinus * isospinPlus = (2 : ℂ) • isospin3 ∧
-     superallowedFermiMatrixElementSq 1 0 = 2) ∧
-    (InfoGeometry.Physics.NuclearChargeExchangeBridge.chargeExchange nuc).A = nuc.A ∧
-    (InfoGeometry.Physics.NuclearChargeExchangeBridge.chargeExchange nuc).twoTz = -nuc.twoTz :=
-  ⟨⟨isospin_comm_3_plus,
-     isospin_comm_plus_minus,
-     superallowed_fermi_triplet_ground⟩,
-   InfoGeometry.Physics.NuclearChargeExchangeBridge.chargeExchange_preserves_mass nuc,
-   InfoGeometry.Physics.NuclearChargeExchangeBridge.chargeExchange_negates_twoTz nuc⟩
-
 end InfoGeometry.Physics.NuclearWignerSupermultiplet

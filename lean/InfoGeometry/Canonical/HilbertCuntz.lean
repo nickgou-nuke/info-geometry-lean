@@ -247,19 +247,19 @@ def P_left_linear : HField →ₗ[ℝ] HField where
   toFun := P_left
   map_add' g h := by
     funext w
-    simp [P_left, add_apply]
+    by_cases hw : w 0 = 0 <;> simp [P_left, hw]
   map_smul' c g := by
     funext w
-    simp [P_left, smul_apply]
+    simp [P_left]
 
 def P_right_linear : HField →ₗ[ℝ] HField where
   toFun := P_right
   map_add' g h := by
     funext w
-    simp [P_right, add_apply]
+    by_cases hw : w 0 = 1 <;> simp [P_right, hw]
   map_smul' c g := by
     funext w
-    simp [P_right, smul_apply]
+    simp [P_right]
 
 theorem P_left_linear_apply (g : HField) : P_left_linear g = P_left g := rfl
 
@@ -269,6 +269,12 @@ theorem cuntz_partition_of_unity_linear (g : HField) :
     P_left_linear g + P_right_linear g = g := by
   rw [P_left_linear_apply, P_right_linear_apply]
   exact cuntz_partition_of_unity_field g
+
+theorem P_left_linear_add_P_right_linear :
+    P_left_linear + P_right_linear = LinearMap.id := by
+  apply LinearMap.ext
+  intro g
+  exact cuntz_partition_of_unity_linear g
 
 /-! ## 5. Zorn's Lemma for Cuntz Boundary Subsystems -/
 

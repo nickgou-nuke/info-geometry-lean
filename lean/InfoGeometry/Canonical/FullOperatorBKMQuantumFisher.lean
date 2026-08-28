@@ -14,7 +14,7 @@ noncomputable section
 
 open Matrix Complex
 
-namespace FullOperatorBKM
+namespace FullOperatorSLDQuantumFisher
 
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
@@ -68,17 +68,9 @@ theorem modular_operator_mul (X Y : Matrix (Fin n) (Fin n) ℂ) :
 def sldSymmetrizedSuperOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   (1 / 2 : ℂ) • (rho D * X + X * rho D)
 
-/-- Legacy Alias for Symmetrized Super-Operator. -/
-def bkmSymmetrizedSuperOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
-  sldSymmetrizedSuperOperator D X
-
 /-- Full Non-Commutative SLD Quantum Fisher Candidate Inner Product <A, B>_SLD = Tr(Aᴴ * J_ρ(B)). -/
 def fullSLDInnerProduct (A B : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
   trace (A.conjTranspose * D.sldSymmetrizedSuperOperator B)
-
-/-- Legacy Alias for Quantum Fisher Candidate Inner Product. -/
-def fullBKMInnerProduct (A B : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
-  fullSLDInnerProduct D A B
 
 /-- **Theorem**: Vanishing Modular Commutator Trace: Tr([ρ, X]) = 0 for any non-commutative operator X. -/
 theorem modular_commutator_trace_zero (X : Matrix (Fin n) (Fin n) ℂ) :
@@ -89,4 +81,4 @@ theorem modular_commutator_trace_zero (X : Matrix (Fin n) (Fin n) ℂ) :
 
 end NonCommutativeDensityOperator
 
-end FullOperatorBKM
+end FullOperatorSLDQuantumFisher

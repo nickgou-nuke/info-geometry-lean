@@ -339,6 +339,7 @@ import InfoGeometry.Clifford.Cl55PeirceMoERouting
 import InfoGeometry.Clifford.Cl55SplitRoutingWeights
 import InfoGeometry.Clifford.SplitFlowOperatorLimit
 import InfoGeometry.Clifford.Cl55MatrixSplitFlowLimit
+import InfoGeometry.Clifford.FoundationalInvolutionsBridge
 
 namespace InfoGeometry
 

@@ -4237,6 +4237,7 @@ import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.GeometricInverse
 import InfoGeometry.Clifford.GeometricRotor
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Clifford.FoundationalInvolutionsBridge
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 import InfoGeometry.Clifford.Hestenes1975
@@ -5954,6 +5955,7 @@ import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.ChiralityPseudoscalarCuntz
 import InfoGeometry.Physics.ChiralParityGibbsDeformation
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Physics.ChiralProjectorTransport
 import InfoGeometry.Physics.ChiralSpinorFierzBridge
 import InfoGeometry.Physics.ChiralTensorMatrixBridge
 import InfoGeometry.Physics.ChiralTensorRecoupling
@@ -7661,3 +7663,4 @@ import InfoGeometry.Geometry.ProjectiveExponentialAffineBridge
 import InfoGeometry.Geometry.PluckerDualFlatBridge
 import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
+import InfoGeometry.Nuclear.All

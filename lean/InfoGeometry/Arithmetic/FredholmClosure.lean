@@ -287,6 +287,16 @@ theorem primeRegularizedDetStage_inv_tendsto_riemannZeta
   have hsub := hcut.comp hcofinal
   simpa only [primeRegularizedDetStage_inv_eq_primeBosonicCutoff] using hsub
 
+/- The fermionic determinant stages therefore converge to the reciprocal
+zeta readout on the absolutely convergent half-plane. -/
+theorem primeRegularizedDetStage_tendsto_inv_riemannZeta
+    {s : ℂ} (hs : 1 < s.re) :
+    Tendsto (fun N : ℕ => primeRegularizedDetStage s N) atTop
+      (𝓝 (riemannZeta s)⁻¹) := by
+  have h := primeRegularizedDetStage_inv_tendsto_riemannZeta hs
+  exact (h.inv₀ (riemannZeta_ne_zero_of_one_lt_re hs)).congr'
+    (Filter.Eventually.of_forall (fun N => inv_inv (primeRegularizedDetStage s N)))
+
 theorem primeRegularizedDetStage_mul_finiteComplexBosonPartition_eq_one
     (s : ℂ) (N : ℕ)
     (hdenom : ∀ p ∈ primeCutoff N,

@@ -23,15 +23,15 @@ abbrev Carrier (N : ℕ) := Matrix (Fin N) (Fin N) ℝ
 
 def partition (w : Fin N → ℝ) : ℝ := ∑ i, w i
 
-def gibbsDensity (w : Fin N → ℝ) (hZ : partition w ≠ 0) : Carrier N :=
+def gibbsDensity (w : Fin N → ℝ) : Carrier N :=
   Matrix.diagonal (fun i => (partition w)⁻¹ * w i)
 
-def gibbsFunctional (w : Fin N → ℝ) (hZ : partition w ≠ 0)
+def gibbsFunctional (w : Fin N → ℝ)
     (A : Carrier N) : ℝ :=
-  Matrix.trace (gibbsDensity w hZ * A)
+  Matrix.trace (gibbsDensity w * A)
 
 theorem gibbsFunctional_one (w : Fin N → ℝ) (hZ : partition w ≠ 0) :
-    gibbsFunctional w hZ (1 : Carrier N) = 1 := by
+    gibbsFunctional w (1 : Carrier N) = 1 := by
   unfold gibbsFunctional gibbsDensity
   rw [mul_one, Matrix.trace_diagonal]
   dsimp [partition]
@@ -57,7 +57,7 @@ theorem phaseBoundary_or_lowTemperature (β : ℝ) (hβ : 0 < β) :
 
 theorem normalized_gibbs_stage (β : ℝ) (hβ : 1 < β)
     (w : Fin N → ℝ) (hZ : partition w ≠ 0) :
-    gibbsFunctional w hZ (1 : Carrier N) = 1 ∧
+    gibbsFunctional w (1 : Carrier N) = 1 ∧
       ¬ phaseBoundary β := by
   exact ⟨gibbsFunctional_one w hZ, lowTemperature_implies_not_phaseBoundary β hβ⟩
 

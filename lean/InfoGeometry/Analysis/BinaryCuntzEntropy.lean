@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
-import InfoGeometry.Analysis.JaynesRelativeStates
+import InfoGeometry.Analysis.AxiomFreeGNS
 
 namespace InfoGeometry.Analysis
 
@@ -19,8 +19,10 @@ theorem cuntz_symmetric_branch_entropy_eq_log_two
     (h_symm : φ (S_left ∘ star_S_left) = φ (S_right ∘ star_S_right)) :
     binaryEntropy (φ (S_left ∘ star_S_left)) = Real.log 2 := by
   obtain ⟨hleft, _⟩ :=
-    InfoGeometry.Analysis.JaynesRelativeStates.branch_weight_one_half_on_cuntz_projections
-      φ h_one h_symm
+    branch_weight_one_half φ
+      (S_left ∘ star_S_left) (S_right ∘ star_S_right) id
+      (by simpa using S_left_star_S_left_add_S_right_star_S_right)
+      h_one h_symm
   rw [hleft]
   exact binaryEntropy_half
 

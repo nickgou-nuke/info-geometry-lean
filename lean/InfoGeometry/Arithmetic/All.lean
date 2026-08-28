@@ -3,6 +3,9 @@ import InfoGeometry.Arithmetic.ZetaZ2ParitySpectralDecomposition
 import InfoGeometry.Arithmetic.InvolutionParityProjectors
 import InfoGeometry.Arithmetic.ZetaBetaCayleyKleinBridge
 import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEvidence
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisDirectedClosure
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisFieldTower
 
 namespace InfoGeometry.Arithmetic.All
 

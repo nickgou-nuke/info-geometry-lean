@@ -5,7 +5,6 @@ import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeHurwitzLimit
-import InfoGeometry.Canonical.PrimePartitionPolynomials
 
 open Complex
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -14,8 +13,6 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticCha
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangConcreteN2
@@ -40,8 +37,6 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticCha
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
 The concrete N=2 prime chain with explicit primes {2, 3}
@@ -66,27 +61,9 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
       fin_cases i <;> norm_num [FinitePrimeChainData.ell_eq_log],
     ell_pos := by
       intro i
-      fin_cases i <;>
-      (try norm_num) <;>
-      (try
-        {
-          have h : (0 : ℝ) < Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ) := by
-            simp [FinitePrimeChainData.ell_eq_log]
-            <;> norm_num [Real.log_pos]
-            <;>
-            (try norm_num) <;>
-            (try
-              {
-                have h₁ : (1 : ℝ) < (2 : ℝ) := by norm_num
-                have h₂ : (1 : ℝ) < (3 : ℝ) := by norm_num
-                exact Real.log_pos (by norm_num)
-              })
-          exact h
-        })
-      <;>
-      (try norm_num) <;>
-      (try linarith [Real.log_pos (by norm_num : (1 : ℝ) < (2 : ℝ))]) <;>
-      (try linarith [Real.log_pos (by norm_num : (1 : ℝ) < (3 : ℝ))])
+      fin_cases i
+      · exact Real.log_pos (by norm_num)
+      · exact Real.log_pos (by norm_num)
     }
 
 /-- The concrete N=2 prime chain converted from finite prime chain data -/

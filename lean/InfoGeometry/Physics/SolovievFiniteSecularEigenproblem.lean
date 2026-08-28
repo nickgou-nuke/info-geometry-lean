@@ -100,4 +100,35 @@ theorem secular_root_has_eigenpair_of_coupling_ne_zero
       simp
       nlinarith
 
+/-! The uncoupled case is still an exact finite spectral statement. -/
+
+/-- Every secular root yields a nonzero eigenpair for the two-channel block. -/
+theorem secular_root_has_nonzero_eigenpair
+    (eQ eP v E : ℝ) (hroot : secularPolynomial eQ eP v E = 0) :
+    ∃ c : Carrier, c ≠ 0 ∧ isEigenpair (blockHamiltonian eQ eP v) c E := by
+  by_cases hv : v = 0
+  · subst v
+    have hprod : (eQ - E) * (eP - E) = 0 := by
+      dsimp [secularPolynomial] at hroot
+      simpa using hroot
+    by_cases hQ : eQ - E = 0
+    · refine ⟨![1, 0], ?_, ?_⟩
+      · intro h
+        have := congrFun h 0
+        simp at this
+      · apply (block_eigenpair_iff eQ eP 0 E ![1, 0]).mpr
+        have h_eQ : eQ = E := sub_eq_zero.mp hQ
+        subst h_eQ
+        simp
+    · have hP : eP - E = 0 := (mul_eq_zero.mp hprod).resolve_left hQ
+      refine ⟨![0, 1], ?_, ?_⟩
+      · intro h
+        have := congrFun h 1
+        simp at this
+      · apply (block_eigenpair_iff eQ eP 0 E ![0, 1]).mpr
+        have h_eP : eP = E := sub_eq_zero.mp hP
+        subst h_eP
+        simp
+  · exact secular_root_has_eigenpair_of_coupling_ne_zero eQ eP v E hv hroot
+
 end InfoGeometry.Physics.SolovievFiniteSecularEigenproblem

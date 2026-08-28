@@ -80,6 +80,10 @@ import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 import InfoGeometry.OperatorAlgebra.SplitTorusLogRouting
 import InfoGeometry.OperatorAlgebra.HyperbolicMoEProjector
 import InfoGeometry.OperatorAlgebra.IwasawaKANTransform
+import InfoGeometry.OperatorAlgebra.Cl55SplitCartanMultiFlow
+import InfoGeometry.OperatorAlgebra.Cl55SplitCartanCharacters
+import InfoGeometry.OperatorAlgebra.KANCharacterFactorization
+import InfoGeometry.OperatorAlgebra.GradedKANWaveletTransform
 
 namespace InfoGeometry.OperatorAlgebra
 

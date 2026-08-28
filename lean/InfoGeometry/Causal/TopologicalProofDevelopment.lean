@@ -161,6 +161,19 @@ theorem strict_target_progress
     have hQold : Q ∈ verifiedToward G S T := by rw [hEq]; exact hQnew
     exact hQ_unverified hQold.1
 
+/-- The newly verified prerequisite is an explicit point of the strict target
+    frontier difference. -/
+theorem target_progress_witness
+    (G : ProofDAG α) (S : VerifiedState G) (T Q : α)
+    (hQ_prereq : G.le Q T)
+    (hQ_unverified : Q ∉ S.carrier)
+    (S' : VerifiedState G)
+    (hQ_in_S' : Q ∈ S'.carrier) :
+    Q ∈ verifiedToward G S' T \ verifiedToward G S T := by
+  refine ⟨⟨hQ_in_S', hQ_prereq⟩, ?_⟩
+  intro hQ_old
+  exact hQ_unverified hQ_old.1
+
 /-- Merging two verified states (e.g. from independent subagents or CAS pipelines)
     produces a combined verified state (the join of order ideals). -/
 def joinVerifiedState (G : ProofDAG α) (S₁ S₂ : VerifiedState G) : VerifiedState G where

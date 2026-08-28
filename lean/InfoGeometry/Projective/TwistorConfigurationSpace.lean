@@ -35,6 +35,15 @@ does not identify it with a projective split-signature or conformal form.
 -/
 def quadForm (x : C4) : ℂ := ∑ i : Fin 4, x i ^ 2
 
+theorem quadForm_smul (c : ℂ) (x : C4) :
+    quadForm (c • x) = c ^ 2 * quadForm x := by
+  unfold quadForm
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
+
 theorem quadForm_neg (x : C4) :
     quadForm (-x) = quadForm x := by
   unfold quadForm
@@ -47,6 +56,11 @@ theorem quadForm_zero : quadForm (0 : C4) = 0 := by
 
 /-- Quadratic separation of two points: `Q(x_i - x_j)`. -/
 def quadSeparation (x y : C4) : ℂ := quadForm (x - y)
+
+theorem quadSeparation_smul (c : ℂ) (x y : C4) :
+    quadSeparation (c • x) (c • y) = c ^ 2 * quadSeparation x y := by
+  unfold quadSeparation
+  rw [← smul_sub, quadForm_smul]
 
 theorem quadSeparation_self (x : C4) :
     quadSeparation x x = 0 := by

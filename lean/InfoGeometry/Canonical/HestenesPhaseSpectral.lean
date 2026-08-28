@@ -191,11 +191,8 @@ theorem cayleyPhaseSmul_isPhaseLinear
 
 @[simp] theorem cayleyPhaseSmul_one (A : EndH) :
     cayleyPhaseSmul (E := E) 1 A = A := by
-  change (1 : ℂ).re • A + (1 : ℂ).im •
-      ((InfoGeometry.Krein.clockAxis (E := E)).comp A) = A
-  rw [show (1 : ℂ).re = 1 by norm_num,
-    show (1 : ℂ).im = 0 by norm_num, one_smul]
-  exact zero_smul ℝ ((InfoGeometry.Krein.clockAxis (E := E)).comp A)
+  dsimp [cayleyPhaseSmul]
+  rw [one_smul, zero_smul, add_zero]
 
 /--
 Projector compatibility interface: any projector commuting with `K = clockAxis` is Hestenes-linear.

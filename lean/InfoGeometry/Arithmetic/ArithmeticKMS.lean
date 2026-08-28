@@ -156,6 +156,25 @@ theorem cold_phase_of_projective_Ioo
     PhaseAtProjectiveTemperature u ArithmeticKMSPhase.cold :=
   one_lt_beta_of_projective_cold hu
 
+/-! An explicit subtype for the normalizable finite-temperature branch.  The
+phase labels above remain available for routing; this subtype is used when a
+theorem genuinely needs the strict inequality `1 < β`. -/
+abbrev ColdInverseTemperature : Type := {β : ℝ // 1 < β}
+
+namespace ColdInverseTemperature
+
+abbrev value (β : ColdInverseTemperature) : ℝ := β.1
+
+theorem one_lt (β : ColdInverseTemperature) : 1 < β.value := β.2
+
+theorem phase (β : ColdInverseTemperature) :
+    PhaseAtBeta β.value ArithmeticKMSPhase.cold := β.2
+
+end ColdInverseTemperature
+
+theorem cold_inverse_temperature_mk (β : ℝ) (hβ : 1 < β) :
+    ColdInverseTemperature := ⟨β, hβ⟩
+
 /-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS interface -/
 
 /--

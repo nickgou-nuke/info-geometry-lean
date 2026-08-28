@@ -242,6 +242,14 @@ theorem stageToHilbertDirectLimit_transition
     (directLimitToCompletion E sys)
     (stageToDirectLimitLinearMap_transition E sys hij x)
 
+theorem stageToHilbertDirectLimit_inner
+    (i : I) (x y : E i) :
+    inner ℂ
+        (stageToHilbertDirectLimit E sys i x)
+        (stageToHilbertDirectLimit E sys i y) =
+      inner ℂ x y := by
+  exact (stageToHilbertDirectLimit E sys i).inner_map_map x y
+
 /-- The union of the stage images is dense in the completed filtered Hilbert
 colimit.  Thus the completion introduces no extra finite-stage generators. -/
 theorem dense_iUnion_range_stageToHilbertDirectLimit :

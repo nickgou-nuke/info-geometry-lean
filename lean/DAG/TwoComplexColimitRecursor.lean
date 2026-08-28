@@ -140,6 +140,17 @@ def pushDigon {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) (d : Nat �
     TwoComplex α :=
   { tc with digons := tc.digons.push d }
 
+/-! The finite induction engine used by the filtration is exposed separately
+from any invariant-specific statement. -/
+theorem foldl_preserves
+    {β γ : Type} (xs : Array γ) (step : β → γ → β) (P : β → Prop)
+    (hstep : ∀ b x, P b → P (step b x)) (b : β) (hb : P b) :
+    P (xs.foldl step b) := by
+  induction xs using Array.foldl_induct generalizing b with
+  | nil => simpa using hb
+  | @push x xs ih =>
+      simpa [Array.foldl_push] using ih (step b x) (hstep b x hb)
+
 /- ##Wiring to CocycleBridge -/
 
 /-- Lift `to_Target` to produce `HodgeCocycleData` by folding. -/

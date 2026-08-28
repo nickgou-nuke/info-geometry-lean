@@ -151,4 +151,15 @@ theorem commonStageInner_map_right
     (le_trans hjk hkm)]
   rw [map_comp_apply E sys hjk hkm y]
 
+theorem commonStageInner_conj_symm
+    (i j : I) (x : E i) (y : E j) :
+    star (commonStageInner E sys j i y x) =
+      commonStageInner E sys i j x y := by
+  let k := commonUpper i j
+  rw [commonStageInner_eq_at E sys j i k
+    (le_commonUpper_right i j) (le_commonUpper_left i j)]
+  rw [commonStageInner_eq_at E sys i j k
+    (le_commonUpper_left i j) (le_commonUpper_right i j)]
+  exact inner_conj_symm (𝕜 := ℂ) _ _
+
 end InfoGeometry.Canonical.FilteredIsometricInnerProductColimit

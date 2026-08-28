@@ -23,6 +23,7 @@ structure FiniteBalancedTransportPlan (rowMass : Row → ℝ) (colMass : Col →
   col_marginal : ∀ j, transportColMass coupling j = colMass j
 
 /-! The two marginal specifications necessarily have the same total mass. -/
+omit [Nonempty Row] [Nonempty Col] in
 theorem FiniteBalancedTransportPlan.total_mass_eq
     {rowMass : Row → ℝ} {colMass : Col → ℝ}
     (T : FiniteBalancedTransportPlan rowMass colMass) :
@@ -40,8 +41,8 @@ theorem FiniteBalancedTransportPlan.total_mass_eq
       intro j hj
       exact T.col_marginal j
 
-/-- The finite transport cost is nonnegative for a pointwise nonnegative cost. -/
 omit [Nonempty Row] [Nonempty Col] in
+/-- The finite transport cost is nonnegative for a pointwise nonnegative cost. -/
 theorem FiniteBalancedTransportPlan.transport_cost_nonneg
     {rowMass : Row → ℝ} {colMass : Col → ℝ}
     (T : FiniteBalancedTransportPlan rowMass colMass)

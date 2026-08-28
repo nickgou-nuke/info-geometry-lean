@@ -241,6 +241,10 @@ import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 import InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
+import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
+import InfoGeometry.Physics.NuclearPhononRPAAlgebra
+import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
+import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 
 /-!
 # Physics Umbrella

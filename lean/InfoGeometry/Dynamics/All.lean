@@ -20,6 +20,7 @@ import InfoGeometry.Dynamics.ActualZetaRealFisherMetriplecticBridge
 import InfoGeometry.Dynamics.ActualZetaFisherCurvatureCoherenceBridge
 import InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge
 import InfoGeometry.Dynamics.ParaKahlerJKORicciFlowBridge
+import InfoGeometry.Dynamics.ParaKahlerJKOCompositionBridge
 
 namespace InfoGeometry.Dynamics
 

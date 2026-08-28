@@ -132,7 +132,6 @@ import InfoGeometry.Algebra.FiniteSuperTensorKoszul
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
-import InfoGeometry.Algebra.FiveGradedChiralClosure
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Algebra.FiveGradedLieAntisymmetry
 import InfoGeometry.Algebra.FiveGradedLieJacobi
@@ -4474,6 +4473,7 @@ import InfoGeometry.Exceptional.FreudenthalHeisenbergZeroGradeAction
 import InfoGeometry.Exceptional.FreudenthalHeisenbergLieRepresentation
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
+import InfoGeometry.Exceptional.FreudenthalTwoLevelGapBridge
 import InfoGeometry.Exceptional.FreudenthalExtremeActionData
 import InfoGeometry.Exceptional.FreudenthalExtremeActionLieAlgebra
 import InfoGeometry.Exceptional.GenericGradedJacobiClosure
@@ -7666,4 +7666,7 @@ import InfoGeometry.Geometry.ProjectiveExponentialAffineBridge
 import InfoGeometry.Geometry.PluckerDualFlatBridge
 import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
+import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
 import InfoGeometry.Nuclear.All
+import InfoGeometry.Physics.TwoSectorSpectralOscillation
+import InfoGeometry.Physics.DiracRestChiralTwoSectorBridge

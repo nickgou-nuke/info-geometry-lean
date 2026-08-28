@@ -197,6 +197,24 @@ theorem difference_vacuum_imbalance
     rw [h_LR, h_RR]
     ring
 
+/-- Branch reduction for the affine mixture, before imposing symmetry. -/
+theorem jaynes_state_branch_reduction
+    (S_L S_R : O2)
+    (φ_L φ_R : State O2)
+    (hL : IsLeftVacuum S_L S_R φ_L) (hR : IsRightVacuum S_L S_R φ_R)
+    (p : ℂ) (A : O2) :
+    jaynes_state φ_L φ_R p (S_L * A * star S_L) = p * φ_L A ∧
+      jaynes_state φ_L φ_R p (S_R * A * star S_R) = (1 - p) * φ_R A := by
+  constructor
+  · change p * φ_L (S_L * A * star S_L) +
+      (1 - p) * φ_R (S_L * A * star S_L) = p * φ_L A
+    rw [hL.prop_L A, hR.prop_L A]
+    ring
+  · change p * φ_L (S_R * A * star S_R) +
+      (1 - p) * φ_R (S_R * A * star S_R) = (1 - p) * φ_R A
+    rw [hL.prop_R A, hR.prop_R A]
+    ring
+
 /-- 🏆 THEOREM: The Derivation of the Cuntz KMS Scaling laws.
     If we require a state $\phi$ to be a weighted combination of the left and right relative states:
       $\phi = p \cdot \phi_L + (1 - p) \cdot \phi_R$
@@ -210,15 +228,13 @@ theorem jaynes_KMS_scaling_derivation
     ∀ A, jaynes_state φ_L φ_R (1 / 2) (S_L * A * star S_L) = (1 / 2) * φ_L A ∧
          jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) = (1 / 2) * φ_R A := by
   intro A
-  have h_L_eval : jaynes_state φ_L φ_R (1 / 2) (S_L * A * star S_L) =
-      (1 / 2 : ℂ) * φ_L (S_L * A * star S_L) + (1 - (1 / 2 : ℂ)) * φ_R (S_L * A * star S_L) := rfl
-  have h_R_eval : jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) =
-      (1 / 2 : ℂ) * φ_L (S_R * A * star S_R) + (1 - (1 / 2 : ℂ)) * φ_R (S_R * A * star S_R) := rfl
+  have h := jaynes_state_branch_reduction S_L S_R φ_L φ_R hL hR (1 / 2) A
   constructor
-  · rw [h_L_eval, hL.prop_L A, hR.prop_L A]
-    ring
-  · rw [h_R_eval, hL.prop_R A, hR.prop_R A]
-    ring
+  · exact h.1
+  · calc
+      jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) =
+          (1 - (1 / 2 : ℂ)) * φ_R A := h.2
+      _ = (1 / 2 : ℂ) * φ_R A := by ring
 
 /-- 🏆 THEOREM 1: The Symmetric KMS State has Chiral Charge 0.
     In the unbiased thermodynamic vacuum, the positive (left) and negative (right) 

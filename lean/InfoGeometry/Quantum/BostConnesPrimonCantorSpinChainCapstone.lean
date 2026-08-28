@@ -17,7 +17,7 @@ This capstone module formalizes the grand synthesis uniting:
    - The low-temperature / zero-temperature cooling limit ($\beta \to \infty$) where the KMS state
      collapses to the vacuum sector.
 2. **Cayley Transform & Torus Compactification**:
-   - The Cayley transform $W(x) = (x - I) / (x + I)$ mapping the self-adjoint real axis
+   - The Cayley transform $W(x) = \frac{x - i}{x + i}$ mapping the self-adjoint real axis
      into the compact unitary circle $\mathbb{T} = U(1)$ and the torus $\mathbb{T}^\infty$.
 3. **Cantor Boundary, Binary Words & Cuntz Spin Chain**:
    - The binary qubit Cantor space $\{0, 1\}^\mathbb{N}$.
@@ -52,9 +52,9 @@ theorem cayley_transform_is_unitary (x : ℝ) :
   unfold cayleyTransform
   rw [map_div₀]
   have hnum : Complex.normSq ((x : ℂ) - Complex.I) = x ^ 2 + 1 := by
-    simp [Complex.normSq, Complex.sub_re, Complex.sub_im]
+    simp [Complex.normSq]; ring
   have hden : Complex.normSq ((x : ℂ) + Complex.I) = x ^ 2 + 1 := by
-    simp [Complex.normSq, Complex.add_re, Complex.add_im]
+    simp [Complex.normSq]; ring
   rw [hnum, hden]
   have hpos : x ^ 2 + 1 ≠ 0 := by positivity
   exact div_self hpos
@@ -104,17 +104,13 @@ theorem dirac_sea_grading_sq_eq_one
     (h_proj_R : (S_R * star S_R) * (S_R * star S_R) = S_R * star S_R) :
     diracSeaGrading S_L S_R * diracSeaGrading S_L S_R = 1 := by
   unfold diracSeaGrading
-  calc
-    (S_L * star S_L - S_R * star S_R) * (S_L * star S_L - S_R * star S_R)
-      = (S_L * star S_L) * (S_L * star S_L) - (S_L * star S_L) * (S_R * star S_R)
-        - (S_R * star S_R) * (S_L * star S_L) + (S_R * star S_R) * (S_R * star S_R) := by
-          simp only [mul_sub, sub_mul]
-          ring
-    _ = (S_L * star S_L) - 0 - 0 + (S_R * star S_R) := by
-          rw [h_proj_L, h_orth, h_orth', h_proj_R]
-    _ = S_L * star S_L + S_R * star S_R := by
-          ring
-    _ = 1 := h_cuntz
+  have h_exp : (S_L * star S_L - S_R * star S_R) * (S_L * star S_L - S_R * star S_R) =
+      (S_L * star S_L) * (S_L * star S_L) - (S_L * star S_L) * (S_R * star S_R)
+      - (S_R * star S_R) * (S_L * star S_L) + (S_R * star S_R) * (S_R * star S_R) := by
+    noncomm_ring
+  rw [h_exp, h_proj_L, h_orth, h_orth', h_proj_R]
+  simp only [sub_zero]
+  exact h_cuntz
 
 /-! ## 4. The Grand Bost-Connes / Cantor / Yang-Baxter / Souriau Synthesis -/
 

@@ -131,14 +131,14 @@ def annihilationOperator (n : ℕ) (k : Fin n) : Operator :=
     creationOperator (n + 1) k.castSucc = creationOperator n k := by
   unfold creationOperator
   rw [show jwCreation (n + 1) k.castSucc = stageEmbed n (jwCreation n k) by
-    simpa using (matStageEmbed_jwCreation n k)]
+    exact matStageEmbed_jwCreation n k]
   rw [stageRepresentation_bond]
 
 @[simp] theorem annihilationOperator_castSucc (n : ℕ) (k : Fin n) :
     annihilationOperator (n + 1) k.castSucc = annihilationOperator n k := by
   unfold annihilationOperator
   rw [show jwAnnihilation (n + 1) k.castSucc = stageEmbed n (jwAnnihilation n k) by
-    simpa using (matStageEmbed_jwAnnihilation n k)]
+    exact matStageEmbed_jwAnnihilation n k]
   rw [stageRepresentation_bond]
 
 theorem creationOperator_apply (n : ℕ) (k : Fin n) (x : Carrier) :
@@ -315,5 +315,124 @@ theorem limitRepresentation_limit_v_u_anticomm (k : ℕ) :
       (1 : Operator) := by
   rw [limitRepresentation_limit_v, limitRepresentation_limit_u]
   exact modeAnnihilationOperator_creationOperator_anticomm k
+
+/-! ## Finite Algebraic Number Operator & Projections -/
+
+/-- The mode number operator $N_k = u_k v_k$ on the algebraic carrier. -/
+def modeNumberOperator (k : ℕ) : Operator :=
+  modeCreationOperator k * modeAnnihilationOperator k
+
+/-- The mode hole / complement operator $H_k = v_k u_k$ on the algebraic carrier. -/
+def modeHoleOperator (k : ℕ) : Operator :=
+  modeAnnihilationOperator k * modeCreationOperator k
+
+/-- Orthogonal decomposition of identity: $N_k + H_k = 1$. -/
+theorem modeNumber_add_hole (k : ℕ) :
+    modeNumberOperator k + modeHoleOperator k = 1 := by
+  unfold modeNumberOperator modeHoleOperator
+  rw [add_comm]
+  exact modeAnnihilationOperator_creationOperator_anticomm k
+
+/-- Idempotency of the mode number projection: $N_k^2 = N_k$. -/
+theorem modeNumber_idempotent (k : ℕ) :
+    modeNumberOperator k * modeNumberOperator k = modeNumberOperator k := by
+  unfold modeNumberOperator
+  have h_anticomm : modeAnnihilationOperator k * modeCreationOperator k =
+      1 - modeCreationOperator k * modeAnnihilationOperator k := by
+    have h := modeAnnihilationOperator_creationOperator_anticomm k
+    have h_add : modeCreationOperator k * modeAnnihilationOperator k +
+        modeAnnihilationOperator k * modeCreationOperator k = 1 := by
+      rw [add_comm, h]
+    exact eq_sub_of_add_eq' h_add
+  have h1 : (modeCreationOperator k * modeAnnihilationOperator k) *
+      (modeCreationOperator k * modeAnnihilationOperator k) =
+    modeCreationOperator k *
+      (modeAnnihilationOperator k * modeCreationOperator k) *
+      modeAnnihilationOperator k := by simp only [mul_assoc]
+  have h2 : modeCreationOperator k *
+      (1 - modeCreationOperator k * modeAnnihilationOperator k) *
+      modeAnnihilationOperator k =
+    (modeCreationOperator k * 1 -
+      modeCreationOperator k * (modeCreationOperator k * modeAnnihilationOperator k)) *
+      modeAnnihilationOperator k := by rw [mul_sub]
+  have h3 : (modeCreationOperator k * 1 -
+      modeCreationOperator k * (modeCreationOperator k * modeAnnihilationOperator k)) =
+    modeCreationOperator k := by
+    rw [mul_one, ← mul_assoc (modeCreationOperator k), modeCreationOperator_sq_zero, zero_mul, sub_zero]
+  rw [h1, h_anticomm, h2, h3]
+
+/-- Action on creation operator: $N_k u_k = u_k$. -/
+theorem modeNumber_creation (k : ℕ) :
+    modeNumberOperator k * modeCreationOperator k = modeCreationOperator k := by
+  unfold modeNumberOperator
+  have h_anticomm : modeAnnihilationOperator k * modeCreationOperator k =
+      1 - modeCreationOperator k * modeAnnihilationOperator k := by
+    have h := modeAnnihilationOperator_creationOperator_anticomm k
+    have h_add : modeCreationOperator k * modeAnnihilationOperator k +
+        modeAnnihilationOperator k * modeCreationOperator k = 1 := by
+      rw [add_comm, h]
+    exact eq_sub_of_add_eq' h_add
+  calc
+    modeCreationOperator k * modeAnnihilationOperator k * modeCreationOperator k =
+      modeCreationOperator k * (modeAnnihilationOperator k * modeCreationOperator k) := by rw [mul_assoc]
+    _ = modeCreationOperator k * (1 - modeCreationOperator k * modeAnnihilationOperator k) := by rw [h_anticomm]
+    _ = modeCreationOperator k * 1 - modeCreationOperator k * (modeCreationOperator k * modeAnnihilationOperator k) := by rw [mul_sub]
+    _ = modeCreationOperator k - (modeCreationOperator k * modeCreationOperator k) * modeAnnihilationOperator k := by simp only [mul_one, mul_assoc]
+    _ = modeCreationOperator k - 0 * modeAnnihilationOperator k := by rw [modeCreationOperator_sq_zero]
+    _ = modeCreationOperator k := by rw [zero_mul, sub_zero]
+
+/-- Exclusion principle: $u_k N_k = 0$. -/
+theorem creation_modeNumber (k : ℕ) :
+    modeCreationOperator k * modeNumberOperator k = 0 := by
+  unfold modeNumberOperator
+  calc
+    modeCreationOperator k * (modeCreationOperator k * modeAnnihilationOperator k) =
+      (modeCreationOperator k * modeCreationOperator k) * modeAnnihilationOperator k := by rw [mul_assoc]
+    _ = 0 * modeAnnihilationOperator k := by rw [modeCreationOperator_sq_zero]
+    _ = 0 := by rw [zero_mul]
+
+/-- Action on annihilation operator: $N_k v_k = 0$. -/
+theorem modeNumber_annihilation (k : ℕ) :
+    modeNumberOperator k * modeAnnihilationOperator k = 0 := by
+  unfold modeNumberOperator
+  calc
+    modeCreationOperator k * modeAnnihilationOperator k * modeAnnihilationOperator k =
+      modeCreationOperator k * (modeAnnihilationOperator k * modeAnnihilationOperator k) := by rw [mul_assoc]
+    _ = modeCreationOperator k * 0 := by rw [modeAnnihilationOperator_sq_zero]
+    _ = 0 := by rw [mul_zero]
+
+/-- Annihilation action: $v_k N_k = v_k$. -/
+theorem annihilation_modeNumber (k : ℕ) :
+    modeAnnihilationOperator k * modeNumberOperator k = modeAnnihilationOperator k := by
+  unfold modeNumberOperator
+  have h_anticomm : modeAnnihilationOperator k * modeCreationOperator k =
+      1 - modeCreationOperator k * modeAnnihilationOperator k := by
+    have h := modeAnnihilationOperator_creationOperator_anticomm k
+    have h_add : modeCreationOperator k * modeAnnihilationOperator k +
+        modeAnnihilationOperator k * modeCreationOperator k = 1 := by
+      rw [add_comm, h]
+    exact eq_sub_of_add_eq' h_add
+  calc
+    modeAnnihilationOperator k * (modeCreationOperator k * modeAnnihilationOperator k) =
+      (modeAnnihilationOperator k * modeCreationOperator k) * modeAnnihilationOperator k := by rw [mul_assoc]
+    _ = (1 - modeCreationOperator k * modeAnnihilationOperator k) * modeAnnihilationOperator k := by rw [h_anticomm]
+    _ = 1 * modeAnnihilationOperator k - (modeCreationOperator k * modeAnnihilationOperator k) * modeAnnihilationOperator k := by rw [sub_mul]
+    _ = modeAnnihilationOperator k - modeCreationOperator k * (modeAnnihilationOperator k * modeAnnihilationOperator k) := by simp only [one_mul, mul_assoc]
+    _ = modeAnnihilationOperator k - modeCreationOperator k * 0 := by rw [modeAnnihilationOperator_sq_zero]
+    _ = modeAnnihilationOperator k := by rw [mul_zero, sub_zero]
+
+/-- Commutator $[N_k, u_k] = u_k$. -/
+theorem modeNumber_commutator_creation (k : ℕ) :
+    modeNumberOperator k * modeCreationOperator k -
+        modeCreationOperator k * modeNumberOperator k =
+      modeCreationOperator k := by
+  rw [modeNumber_creation, creation_modeNumber, sub_zero]
+
+/-- Commutator $[N_k, v_k] = -v_k$. -/
+theorem modeNumber_commutator_annihilation (k : ℕ) :
+    modeNumberOperator k * modeAnnihilationOperator k -
+        modeAnnihilationOperator k * modeNumberOperator k =
+      - modeAnnihilationOperator k := by
+  rw [modeNumber_annihilation, annihilation_modeNumber, zero_sub]
 
 end InfoGeometry.Canonical.Cl11CommonFockCarrier

@@ -17,6 +17,8 @@ open InfoGeometry.Canonical.FixedIndexCuntzStarTower
 open FilteredColimit.Native
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+set_option linter.unusedSectionVars false
+
 variable (Stage : ℕ → Type)
 variable [∀ n, CStarAlgebra (Stage n)]
 variable [∀ n, PartialOrder (Stage n)]

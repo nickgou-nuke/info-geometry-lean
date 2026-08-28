@@ -107,8 +107,8 @@ theorem hasDerivAt_informationPartitionMoment
   have hReadout := (hasDerivAt_const (x := τ) (c := ω)).clm_apply hMul
   have hpow : K * K ^ n = K ^ n * K :=
     (Commute.refl K).pow_right n |>.eq
-  convert hReadout using 1 <;>
-    simp [hpow, pow_succ, Nat.cast_add, mul_assoc]
+  convert hReadout using 1
+  simp [hpow, pow_succ, mul_assoc]
 
 /- Scalar readout of the preceding derivative, retained as a direct theorem
 for iterated moment calculations. -/
@@ -205,7 +205,7 @@ theorem hasDerivAt_logSecondVariation
   have hSub := hA.sub hSq
   convert hSub using 1
   · funext t
-    simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+    simp [pow_two, mul_left_comm, mul_comm]
   · simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
     ring
 
@@ -486,10 +486,11 @@ theorem deriv2_logInformationPartitionFunction_zero_of_nonzero
     rfl
   rw [hfun]
   have hderiv := hProd.deriv
-  convert hderiv using 1 <;>
-    simp [Z, informationPartitionFunction, sub_eq_add_neg, mul_assoc,
-      mul_left_comm, mul_comm] <;>
-    field_simp [hne 0] <;> ring
+  convert hderiv using 1
+  · simp [Z, informationPartitionFunction, sub_eq_add_neg,
+      mul_left_comm, mul_comm]
+    field_simp [hne 0]
+    ring
 
 /- The normalized second log-partition derivative is the centered second
 moment, i.e. the covariance readout of the single operator direction. -/

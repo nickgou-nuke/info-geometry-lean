@@ -246,9 +246,9 @@ theorem madelungQuadrature_hasDerivAt
   have hsin := (hphase.sin)
   constructor
   · convert hR.mul hcos using 1 <;>
-      simp [hℏ, mul_assoc, mul_comm, mul_left_comm] <;> ring
+      simp [mul_assoc, mul_comm, mul_left_comm] <;> ring
   · convert hR.mul hsin using 1 <;>
-      simp [hℏ, mul_assoc, mul_comm, mul_left_comm] <;> ring
+      simp [mul_assoc, mul_comm, mul_left_comm] <;> ring
 
 /-- The squared norm of the two Madelung quadratures is the amplitude square. -/
 theorem madelungQuadrature_normSq

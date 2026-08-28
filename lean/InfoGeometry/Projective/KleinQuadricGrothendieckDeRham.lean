@@ -208,7 +208,7 @@ theorem grothendieckWindingClass_eq_circleIntegral
 /-- This is the monodromy class used by Wilson-type holonomy. -/
 theorem grothendieckWinding_of_sheet (n : ℤ) :
     Complex.exp (grothendieckWindingClass n) = (1 : ℂ) := by
-  simpa [grothendieckWindingClass] using (Complex.exp_int_mul_two_pi_mul_I n)
+  simp [grothendieckWindingClass, Complex.exp_int_mul_two_pi_mul_I n]
 
 /-- Universal-cover log monodromy is exactly one sheet jump of `2πi`. -/
 theorem tomita_sheet_transport (z : ℂ) (n : ℤ) :

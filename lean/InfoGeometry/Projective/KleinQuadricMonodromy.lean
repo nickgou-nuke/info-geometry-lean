@@ -96,7 +96,7 @@ theorem deRhamClass_of_winding_add (R : ℝ) (hR : 0 < R) (m n : ℤ) :
 theorem wilsonPhase_of_winding (R : ℝ) (hR : 0 < R) (n : ℤ) :
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z)) = (1 : ℂ) := by
   rw [deRhamClass_of_winding (R := R) hR n]
-  simpa [logarithmicPhase] using (Complex.exp_int_mul_two_pi_mul_I n)
+  simp [logarithmicPhase, Complex.exp_int_mul_two_pi_mul_I n]
 
 /-- Determinant/quadric classification: null (zero) determinant is equivalent to
     self-orthogonality for the Klein polar form over `ℂ`.
@@ -122,7 +122,7 @@ theorem chiralNullConductor_eq_selfOrthogonal (P : Plucker6 ℂ) :
     exact Plucker6.polar_self P
   constructor
   · intro hQ
-    simpa [hpolar, hQ]
+    simp [hpolar, hQ]
   · intro hPP
     have hmul : (2 : ℂ) * kleinPotential P = 0 := by
       simpa [hpolar] using hPP

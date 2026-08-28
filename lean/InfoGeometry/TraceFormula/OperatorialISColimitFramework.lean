@@ -241,7 +241,7 @@ theorem realMatrixOperator_mul_comp
     (fun M : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ => M i j)
     ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).map_mul A B)
   have hmulC := congrArg Complex.ofReal hmul
-  simpa [Matrix.mul_apply] using hmulC
+  simp [Matrix.mul_apply, hmulC]
 
 /- The BKM functional therefore reads a finite Onsager product as the
    normalized real UHF trace of the corresponding matrix product. -/

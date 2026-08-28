@@ -21,7 +21,7 @@ Cantor boundary, bounded by ^{-s}$.
 
 open Complex Real
 
-namespace InfoGeometry.Arithmetic.SpectralDistance
+namespace InfoGeometry.Analysis.SpectralDistance
 
 /-- 🏆 THEOREM: For excited modes n ≥ 2 and s > 0, the exponential decay is bounded by 2^{-s}. -/
 theorem primon_mode_decay_bound (n : ℕ) (hn : 2 ≤ n) (s : ℝ) (hs : 0 < s) :
@@ -75,4 +75,4 @@ theorem primon_gas_strict_contraction (s : ℝ) (h_s : 0 < s) (v : H_space)
   rw [h_exp] at h_bound
   exact h_bound
 
-end InfoGeometry.Arithmetic.SpectralDistance
+end InfoGeometry.Analysis.SpectralDistance

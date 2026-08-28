@@ -99,18 +99,14 @@ theorem fredholm_prime_det_inv_succ
   exact fredholm_det_inv_succ
     (fun k => primeCutoffFactor s k) N
 
-theorem fredholm_inverse_colimit_stage_synthesis
-    (s : ℂ) (N : ℕ)
-    (hN : primeRegularizedDetStage s N ≠ 0)
-    (hfactor : primeCutoffFactor s N ≠ 0)
-    (n : ℕ) (a : DirichletStage n) :
-    ((primeRegularizedDetStage s (N + 1))⁻¹ =
-      (primeCutoffFactor s N)⁻¹ * (primeRegularizedDetStage s N)⁻¹) ∧
-    (colimitReadoutMorphism ((colimit.ι dirichletStageFunctor n).hom a) =
-      (colimit.ι dirichletReadoutTargetFunctor n).hom
-        (finiteDirichletStageReadout n a)) :=
-  ⟨fredholm_prime_det_inv_succ s N hN hfactor,
-   dirichletReadoutColimit_on_stage n a⟩
+theorem fredholm_det_inv_eq_product_inv
+    (factor : ℕ → ℂ) (N : ℕ) :
+    (regularizedDetStage factor N)⁻¹ =
+      ∏ i ∈ Finset.range N, (factor i)⁻¹ := by
+  induction N with
+  | zero => simp [regularizedDetStage]
+  | succ N ih =>
+      rw [regularizedDetStage_succ, mul_inv_rev, mul_comm, ih, Finset.prod_range_succ]
 
 /-- 🏆 THEOREM 3: Diagonal trace-determinant exponential identity: det(exp(A)) = exp(Tr(A)). -/
 theorem diagonal_det_exp_trace {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
@@ -159,6 +155,16 @@ theorem colimitReadoutMorphism_stage_compatibility
       (colimit.ι dirichletReadoutTargetFunctor n).hom
         (finiteDirichletStageReadout n a) := by
   exact dirichletReadoutColimit_on_stage n a
+
+theorem fredholm_inverse_colimit_stage_synthesis
+    (s : ℂ) (N : ℕ) (n : ℕ) (a : DirichletStage n) :
+    ((primeRegularizedDetStage s (N + 1))⁻¹ =
+      (primeCutoffFactor s N)⁻¹ * (primeRegularizedDetStage s N)⁻¹) ∧
+    (colimitReadoutMorphism ((colimit.ι dirichletStageFunctor n).hom a) =
+      (colimit.ι dirichletReadoutTargetFunctor n).hom
+        (finiteDirichletStageReadout n a)) :=
+  ⟨fredholm_prime_det_inv_succ s N,
+   dirichletReadoutColimit_on_stage n a⟩
 
 /-! ## 3. Grand Synthesis Theorem -/
 

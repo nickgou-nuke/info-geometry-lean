@@ -86,20 +86,18 @@ theorem fredholm_det_succ_explicit (s : ℂ) (N : ℕ) :
   simp [primeRegularizedDetStage, regularizedDetStage]
 
 theorem fredholm_det_inv_succ
-    (factor : ℕ → ℂ) (N : ℕ)
-    (hN : regularizedDetStage factor N ≠ 0) (hfactor : factor N ≠ 0) :
+    (factor : ℕ → ℂ) (N : ℕ) :
     (regularizedDetStage factor (N + 1))⁻¹ =
       (factor N)⁻¹ * (regularizedDetStage factor N)⁻¹ := by
-  rw [regularizedDetStage_succ, mul_inv₀]
+  rw [regularizedDetStage_succ, mul_inv_rev, mul_comm]
 
 theorem fredholm_prime_det_inv_succ
     (s : ℂ) (N : ℕ)
-    (hN : primeRegularizedDetStage s N ≠ 0)
-    (hfactor : primeCutoffFactor s N ≠ 0) :
+    :
     (primeRegularizedDetStage s (N + 1))⁻¹ =
       (primeCutoffFactor s N)⁻¹ * (primeRegularizedDetStage s N)⁻¹ := by
   exact fredholm_det_inv_succ
-    (fun k => primeCutoffFactor s k) N hN hfactor
+    (fun k => primeCutoffFactor s k) N
 
 theorem fredholm_inverse_colimit_stage_synthesis
     (s : ℂ) (N : ℕ)

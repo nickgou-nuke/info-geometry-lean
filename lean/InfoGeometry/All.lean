@@ -5512,6 +5512,7 @@ import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 import InfoGeometry.OperatorAlgebra.AlbertCubicTripotent
 import InfoGeometry.OperatorAlgebra.AlgebraicPositiveNormalCone
+import InfoGeometry.OperatorAlgebra.AlgebraCommutantDuality
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 import InfoGeometry.OperatorAlgebra.AndreevHorizonBridge
@@ -5961,6 +5962,7 @@ import InfoGeometry.Physics.ChiralTensorMatrixBridge
 import InfoGeometry.Physics.ChiralTensorRecoupling
 import InfoGeometry.Physics.ChiralTLDescent
 import InfoGeometry.Physics.ChiralUncertaintyCaliber
+import InfoGeometry.Physics.ChiralZitterbewegungBridge
 import InfoGeometry.Physics.Cl11ChiralCARBridge
 import InfoGeometry.Physics.Cl55FiniteShadowPacket
 import InfoGeometry.Physics.Cl55MoebiusCCC

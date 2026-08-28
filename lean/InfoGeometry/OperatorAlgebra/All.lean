@@ -85,6 +85,7 @@ import InfoGeometry.OperatorAlgebra.Cl55SplitCartanMultiFlow
 import InfoGeometry.OperatorAlgebra.Cl55SplitCartanCharacters
 import InfoGeometry.OperatorAlgebra.KANCharacterFactorization
 import InfoGeometry.OperatorAlgebra.GradedKANWaveletTransform
+import InfoGeometry.OperatorAlgebra.AlgebraCommutantDuality
 
 namespace InfoGeometry.OperatorAlgebra
 

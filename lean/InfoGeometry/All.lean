@@ -184,6 +184,10 @@ import InfoGeometry.Algebraic.CartanSouriauAffineCocycle
 import InfoGeometry.Algebraic.CartanSouriauCocycleGibbsCharacter
 import InfoGeometry.Algebraic.CartanSouriauMassieu
 import InfoGeometry.Algebraic.CartanSouriauMassieuDirectionalCalculus
+import InfoGeometry.Algebraic.CartanSouriauMeanPairing
+import InfoGeometry.Algebraic.CartanSouriauMeanDirectionalDerivative
+import InfoGeometry.Algebraic.CartanSouriauDirectionalFisher
+import InfoGeometry.Algebraic.CartanSouriauDirectionalCovariance
 import InfoGeometry.Algebraic.ChiralOperatorAlgebra
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.CliffordSymmetryLift
@@ -4149,7 +4153,11 @@ import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 import InfoGeometry.Clifford.Cl55SpinorRepresentationGeneration
 import InfoGeometry.Clifford.Cl55SpinorZornReadout
 import InfoGeometry.Clifford.Cl55MoritaDyadicClosure
-import InfoGeometry.Clifford.EmergentSpacetimeBilinear
+import InfoGeometry.Physics.EmergentSpacetimeBilinear
+import InfoGeometry.Physics.RegularizedSurprisalKernel
+import InfoGeometry.Physics.SpectralFluctuationIdeal
+import InfoGeometry.Physics.SpectralFluctuationDerivative
+import InfoGeometry.Physics.StateFamilyBKMBridge
 import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
 import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl55ChiralSectorFlipContract
@@ -4159,6 +4167,8 @@ import InfoGeometry.Clifford.Cl55SpinorVolumeOddTransport
 import InfoGeometry.Clifford.Cl55ChiralCoordinateBridge
 import InfoGeometry.Clifford.Cl55ExteriorToMatrixSpinorLinearBridge
 import InfoGeometry.Clifford.NilpotentBinomial
+import InfoGeometry.Clifford.RegularizedSurprisalKernel
+import InfoGeometry.Clifford.Cl55NilpotentInsertion
 import InfoGeometry.Clifford.Cl55WittCarrierFaithfulness
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneFull
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneReduction
@@ -5070,6 +5080,7 @@ import InfoGeometry.Geometry.MobiusInfinitesimal
 import InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
 import InfoGeometry.Geometry.MoebiusConjugacyClassification
 import InfoGeometry.Geometry.ParabolicChiralMoebiusFlow
+import InfoGeometry.Geometry.ParabolicNilpotentClock
 import InfoGeometry.Clifford.LoxodromicRotorWeylDecomposition
 import InfoGeometry.Projective.KleinHadjiivanovPeriodMonodromyBridge
 import InfoGeometry.Geometry.OperatorBregmanDivergence

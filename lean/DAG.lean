@@ -34,6 +34,7 @@ import DAG.TwoComplexFunctor
 import DAG.TwoComplexKasparov
 import DAG.Util
 import DAG.WittenIndexCommand
+import DAG.AlexandrovKuratowskiHodgeClosureCapstone
 
 /-!
 # DAG

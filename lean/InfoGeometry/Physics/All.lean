@@ -262,6 +262,7 @@ import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
 import InfoGeometry.Physics.KleinBottleModularSewing
 import InfoGeometry.Physics.KleinBottleSewingExact
 import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
+import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
 
 /-!
 # Physics Umbrella

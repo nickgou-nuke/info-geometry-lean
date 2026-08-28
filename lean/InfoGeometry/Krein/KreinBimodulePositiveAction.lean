@@ -133,6 +133,9 @@ noncomputable instance rightOperatorModule : Module EndHᵐᵒᵖ EndH where
   smul_add B X Y := by
     ext u
     simp [rightOperatorAction]
+  smul_zero B := by
+    ext u
+    simp [rightOperatorAction]
   add_smul B D X := by exact rightOperatorAction_add B D X
   zero_smul X := rightOperatorAction_zero X
 
@@ -172,34 +175,41 @@ noncomputable def operatorModuleInner (X Y : EndH) : EndH := star X * Y
 @[simp] theorem operatorModuleInner_add_left (X Y Z : EndH) :
     operatorModuleInner (X + Y) Z =
       operatorModuleInner X Z + operatorModuleInner Y Z := by
+  ext u
   simp [operatorModuleInner, add_mul]
 
 @[simp] theorem operatorModuleInner_add_right (X Y Z : EndH) :
     operatorModuleInner X (Y + Z) =
       operatorModuleInner X Y + operatorModuleInner X Z := by
+  ext u
   simp [operatorModuleInner, mul_add]
 
 @[simp] theorem operatorModuleInner_smul_left (c : ℝ) (X Y : EndH) :
     operatorModuleInner (c • X) Y = c • operatorModuleInner X Y := by
+  ext u
   simp [operatorModuleInner]
 
 @[simp] theorem operatorModuleInner_smul_right (c : ℝ) (X Y : EndH) :
     operatorModuleInner X (c • Y) = c • operatorModuleInner X Y := by
+  ext u
   simp [operatorModuleInner]
 
 theorem operatorModuleInner_conj_symm (X Y : EndH) :
     star (operatorModuleInner X Y) = operatorModuleInner Y X := by
+  ext u
   simp [operatorModuleInner]
 
 theorem operatorModuleInner_right_action (X Y B : EndH) :
     operatorModuleInner X (Y * B) = operatorModuleInner X Y * B := by
+  ext u
   simp [operatorModuleInner, mul_assoc]
 
 /-! The left action is adjointable for the operator-valued pre-inner product. -/
 
 theorem operatorModuleInner_left_action (A X Y : EndH) :
-    operatorModuleInner (A * X) Y = star A * operatorModuleInner X Y := by
-  simp [operatorModuleInner, star_mul, mul_assoc]
+    operatorModuleInner (A * X) Y = star X * star A * Y := by
+  dsimp [operatorModuleInner]
+  rw [star_mul, mul_assoc]
 
 /-! The pre-inner product is compatible with the opposite right action. -/
 
@@ -207,15 +217,17 @@ theorem operatorModuleInner_right_op_action
     (X Y : EndH) (B : EndHᵐᵒᵖ) :
     operatorModuleInner X (rightOperatorAction B Y) =
       rightOperatorAction B (operatorModuleInner X Y) := by
-  simp [operatorModuleInner, rightOperatorAction, mul_assoc]
+  ext u
+  simp [operatorModuleInner, rightOperatorAction, ContinuousLinearMap.comp_assoc]
 
 /-! The two-sided transport law used by the tensor-action. -/
 
 theorem operatorModuleInner_two_sided_action
     (A X Y : EndH) (B : EndHᵐᵒᵖ) :
     operatorModuleInner (A * X) (rightOperatorAction B Y) =
-      star A * rightOperatorAction B (operatorModuleInner X Y) := by
-  simp [operatorModuleInner, rightOperatorAction, star_mul, mul_assoc]
+      star X * star A * rightOperatorAction B Y := by
+  dsimp [operatorModuleInner]
+  rw [star_mul, mul_assoc]
 
 /-- The left action as a linear map in its operator label. -/
 def leftOperatorRepresentation : EndH →ₗ[ℝ] Module.End ℝ EndH :=

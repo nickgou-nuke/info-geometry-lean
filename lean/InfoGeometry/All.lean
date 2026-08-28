@@ -132,6 +132,7 @@ import InfoGeometry.Algebra.FiniteSuperTensorKoszul
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
+import InfoGeometry.Algebra.FiveGradedChiralClosure
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Algebra.FiveGradedLieAntisymmetry
 import InfoGeometry.Algebra.FiveGradedLieJacobi

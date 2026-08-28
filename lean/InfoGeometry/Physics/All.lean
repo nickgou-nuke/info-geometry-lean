@@ -204,6 +204,7 @@ import InfoGeometry.Physics.Algebra.TopologicalKreinMonodromyBridge
 import InfoGeometry.Physics.Thermodynamics.TopologicalMonodromyKMSBridge
 import InfoGeometry.Physics.Thermodynamics.LogCFTKMSModularTriple
 import InfoGeometry.Physics.LogCFTFiniteJordanBridge
+import InfoGeometry.Physics.LogCFTJordanShear
 import InfoGeometry.Physics.Algebra.LogCFTDiracCommutator
 import InfoGeometry.Physics.Algebra.CuntzToeplitzBraidRepresentation
 import InfoGeometry.Physics.Algebra.CuntzKGroupStructure
@@ -229,6 +230,11 @@ import InfoGeometry.Physics.Algebra.FibonacciNPotentInvariantPacketBridge
 import InfoGeometry.Physics.Algebra.NPotentZeroModeProjectorBridge
 import InfoGeometry.Physics.Algebra.NPotentHorizonInvariantPacket
 import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
+import InfoGeometry.Physics.EmergentSpacetimeBilinear
+import InfoGeometry.Physics.RegularizedSurprisalKernel
+import InfoGeometry.Physics.SpectralFluctuationIdeal
+import InfoGeometry.Physics.SpectralFluctuationDerivative
+import InfoGeometry.Physics.StateFamilyBKMBridge
 
 /-!
 # Physics Umbrella

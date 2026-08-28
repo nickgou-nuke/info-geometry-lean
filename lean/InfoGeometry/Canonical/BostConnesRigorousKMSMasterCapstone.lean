@@ -12,6 +12,7 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Arithmetic.UroborosMasterIdentityTwoTierCapstone
 import InfoGeometry.Arithmetic.InfinitePartitionStateClosure
+import InfoGeometry.Canonical.AnalyticLimit
 import InfoGeometry.Canonical.BostConnesCuntzKMSStateCapstone
 import InfoGeometry.Canonical.YangBaxterProof
 
@@ -48,6 +49,7 @@ open Real Complex ArithmeticFunction
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Arithmetic.UroborosTwoTier
 open InfoGeometry.Arithmetic.InfinitePartitionStateClosure
+open InfoGeometry.Canonical.AnalyticLimit
 open InfoGeometry.Canonical.BostConnesCuntzKMS
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -119,6 +121,7 @@ theorem grand_rigorous_bost_connes_kms_master_synthesis
     (finiteFredholmDet P w * finiteZetaStage P w = 1) ∧
     (Summable (fun (n : ℕ) => (n : ℝ) ^ (-β))) ∧
     ((∑' (n : ℕ), ((n : ℝ) ^ (-β) / ∑' (k : ℕ), (k : ℝ) ^ (-β))) = 1) ∧
+    (infiniteInverseZeta β = (riemannZeta (β : ℂ))⁻¹) ∧
     (Summable (fun (n : ℕ) => (n : ℝ) ^ (-s.re))) ∧
     (CuntzMultiplicativeIndexing.generator C 1 = 1) ∧
     (F * F = 1) ∧
@@ -126,6 +129,7 @@ theorem grand_rigorous_bost_connes_kms_master_synthesis
   ⟨finite_fredholm_zeta_duality P w hw,
    summable_bosonic_primon_partition β hβ,
    thermal_state_normalized β hβ,
+   infiniteInverseZeta_eq_inverse_riemannZeta hβ,
    summable_fermionic_mobius_norm s hs,
    CuntzMultiplicativeIndexing.generator_one C,
    F_sq,

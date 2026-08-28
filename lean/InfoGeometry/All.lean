@@ -7702,4 +7702,5 @@ import InfoGeometry.Algebra.CyclotomicTripotentPeirceLiftingCapstone
 import InfoGeometry.Physics.OperatorCyclotomicDoubleDavidStarBridge
 import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
 import InfoGeometry.Physics.KleinBottleModularSewing
+import InfoGeometry.Physics.KleinBottleSewingExact
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube

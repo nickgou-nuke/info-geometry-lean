@@ -217,13 +217,13 @@ theorem fiveGradedBracket_sympZero_mixedBlock
 
 theorem fiveGradedBracket_neg_left
     (u v : FiveGradedCarrier D) :
-    fiveGradedBracket D (-u) v = -fiveGradedBracket D u v := by
-  simpa using (fiveGradedBracket_left D v).map_neg u
+    fiveGradedBracket D (-u) v = -fiveGradedBracket D u v :=
+  (fiveGradedBracket_left D v).map_neg u
 
 theorem fiveGradedBracket_neg_right
     (u v : FiveGradedCarrier D) :
-    fiveGradedBracket D u (-v) = -fiveGradedBracket D u v := by
-  simpa using (fiveGradedBracket_right D u).map_neg v
+    fiveGradedBracket D u (-v) = -fiveGradedBracket D u v :=
+  (fiveGradedBracket_right D u).map_neg v
 
 theorem fiveGradedBracket_chargeMinus_sympZero
     (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
@@ -260,5 +260,83 @@ theorem jacobi_extremePlus_chargePlus_chargePlus
     dsimp [fiveGradedBracket, genEplus, injChargePlus,
       FiveGradedCarrier.instAdd] <;>
     simp
+
+theorem jacobi_scale_extremeMinus_chargePlus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genHscale D a) (genEminus D b)
+        (injChargePlus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, genEminus, injChargePlus,
+      injChargeMinus, FiveGradedCarrier.instAdd] <;>
+    simp; module
+
+theorem jacobi_scale_extremePlus_chargeMinus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genHscale D a) (genEplus D b)
+        (injChargeMinus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, genEplus, injChargeMinus,
+      injChargePlus, FiveGradedCarrier.instAdd] <;>
+    simp; module
+
+theorem jacobi_extremeMinus_extremeMinus_chargePlus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genEminus D a) (genEminus D b)
+        (injChargePlus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, injChargePlus,
+      injChargeMinus, FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremePlus_extremePlus_chargeMinus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genEplus D a) (genEplus D b)
+        (injChargeMinus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, injChargeMinus,
+      injChargePlus, FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremeMinus_extremeMinus_extremeMinus
+    (a b c : ℝ) :
+    fiveJacobiator D (genEminus D a) (genEminus D b)
+        (genEminus D c) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremePlus_extremePlus_extremePlus
+    (a b c : ℝ) :
+    fiveJacobiator D (genEplus D a) (genEplus D b)
+        (genEplus D c) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremeMinus_extremeMinus_extremePlus
+    (a b c : ℝ) :
+    fiveJacobiator D (genEminus D a) (genEminus D b)
+        (genEplus D c) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, genEplus,
+      FiveGradedCarrier.instAdd] <;>
+    simp <;> ring
+
+theorem jacobi_extremePlus_extremePlus_extremeMinus
+    (a b c : ℝ) :
+    fiveJacobiator D (genEplus D a) (genEplus D b)
+        (genEminus D c) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, genEminus,
+      FiveGradedCarrier.instAdd] <;>
+    simp <;> ring
 
 end InfoGeometry.Exceptional.Freudenthal

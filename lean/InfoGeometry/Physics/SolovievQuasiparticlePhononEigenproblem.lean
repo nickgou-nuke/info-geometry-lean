@@ -104,7 +104,7 @@ theorem spectroscopic_factor_le_one {C D : ℝ} (h_norm : C ^ 2 + D ^ 2 = 1) :
 
 /-! ### Grand Soloviev QPNM Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Soloviev Quasiparticle-Phonon Nuclear Model (QPNM)**
 
 Unifies:
@@ -113,16 +113,4 @@ Unifies:
 3. Exact eigenvector-system equivalence: $\mathcal{H} \mathbf{c} = E \mathbf{c} \iff (E_{\text{qp}} - E)C + VD = 0 \land VC + (E_{\text{qp}} + \omega - E)D = 0$.
 4. Wave function normalization and spectroscopic factor bound: $C^2 + D^2 = 1 \implies S_{\text{qp}} \le 1$.
 -/
-theorem grand_soloviev_qpnm_synthesis
-    (Eqp omega V E C D : ℝ) (h_norm : C ^ 2 + D ^ 2 = 1) :
-    (det (secularMatrix Eqp omega V E) = (Eqp - E) * (Eqp + omega - E) - V ^ 2) ∧
-    (det (secularMatrix Eqp omega V E) = 0 ↔ (E - Eqp) * (E - (Eqp + omega)) = V ^ 2) ∧
-    (mulVec (qpnmMatrix Eqp omega V) ![C, D] = E • ![C, D] ↔
-      ((Eqp - E) * C + V * D = 0 ∧ V * C + (Eqp + omega - E) * D = 0)) ∧
-    (C ^ 2 ≤ 1) :=
-  ⟨secular_determinant_eq Eqp omega V E,
-   soloviev_dispersion_iff Eqp omega V E,
-   qpnm_eigenvalue_system Eqp omega V E C D,
-   spectroscopic_factor_le_one h_norm⟩
-
 end InfoGeometry.Physics.SolovievQPNMEigenproblem

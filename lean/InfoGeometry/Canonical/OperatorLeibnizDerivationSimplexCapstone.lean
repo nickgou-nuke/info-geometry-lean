@@ -65,6 +65,16 @@ theorem commutator_add_left (X Y Z : A) :
   unfold commutator
   noncomm_ring
 
+theorem commutator_neg_right (X Y : A) :
+    commutator X (-Y) = -commutator X Y := by
+  unfold commutator
+  noncomm_ring
+
+theorem commutator_neg_left (X Y : A) :
+    commutator (-X) Y = -commutator X Y := by
+  unfold commutator
+  noncomm_ring
+
 /-- 🏆 THEOREM 2 (Jacobi Identity for Commutator Lie Algebra):
     $[X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]] = 0$. -/
 theorem commutator_jacobi (X Y Z : A) :

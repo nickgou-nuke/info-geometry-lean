@@ -336,6 +336,9 @@ import InfoGeometry.Clifford.SouriauGibbsSoftmax
 import InfoGeometry.Clifford.SouriauGibbsSimplexBridge
 import InfoGeometry.Clifford.Cl55NativeNilpotentInterference
 import InfoGeometry.Clifford.Cl55PeirceMoERouting
+import InfoGeometry.Clifford.Cl55SplitRoutingWeights
+import InfoGeometry.Clifford.SplitFlowOperatorLimit
+import InfoGeometry.Clifford.Cl55MatrixSplitFlowLimit
 
 namespace InfoGeometry
 

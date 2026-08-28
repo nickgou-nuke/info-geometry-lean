@@ -6636,6 +6636,8 @@ import InfoGeometry.Thermodynamics.PrimonGasPhaseTransition
 import InfoGeometry.Thermodynamics.PrimonLogDeRham
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SoftmaxPartitionBridge
+import InfoGeometry.Thermodynamics.SoftmaxGibbsVariationalPrinciple
+import InfoGeometry.Thermodynamics.SinkhornBirkhoffGibbsBridge
 import InfoGeometry.Clifford.SouriauGibbsSoftmax
 import InfoGeometry.Clifford.SouriauGibbsSimplexBridge
 import InfoGeometry.Thermodynamics.SouriauFoliation

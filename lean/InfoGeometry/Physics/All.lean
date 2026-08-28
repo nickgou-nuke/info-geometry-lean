@@ -240,6 +240,7 @@ import InfoGeometry.Physics.WheelerItFromBit
 import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 import InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis
 import InfoGeometry.Physics.Cl55SpinorCartanFock
+import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 
 /-!
 # Physics Umbrella

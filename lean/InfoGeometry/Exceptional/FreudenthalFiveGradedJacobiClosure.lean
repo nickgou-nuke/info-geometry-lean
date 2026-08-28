@@ -369,14 +369,50 @@ theorem jacobi_extremeMinus_extremePlus_extremePlus
       genHscale, FiveGradedCarrier.instAdd] <;>
     simp; ring
 
-theorem jacobi_extremePlus_extremeMinus_extremeMinus
-    (a b c : ℝ) :
-    fiveJacobiator D (genEplus D a) (genEminus D b)
-        (genEminus D c) = 0 := by
+theorem jacobi_scale_sympZero_chargeMinus
+    (a : ℝ) (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genHscale D a) (injSympZero D T)
+        (injChargeMinus D x) = 0 := by
   dsimp [fiveJacobiator]
   apply FiveGradedCarrier.ext <;>
-    dsimp [fiveGradedBracket, genEplus, genEminus,
-      genHscale, FiveGradedCarrier.instAdd] <;>
-    simp; ring
+    dsimp [fiveGradedBracket, genHscale, injSympZero, injChargeMinus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_scale_sympZero_chargePlus
+    (a : ℝ) (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genHscale D a) (injSympZero D T)
+        (injChargePlus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genHscale, injSympZero, injChargePlus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremeMinus_extremeMinus_chargeMinus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genEminus D a) (genEminus D b)
+        (injChargeMinus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, injChargeMinus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_chargeMinus_chargeMinus_sympZero
+    (x y : FreudenthalCharge J) (T : SymplecticTKKZero D) :
+    fiveJacobiator D (injChargeMinus D x) (injChargeMinus D y)
+        (injSympZero D T) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus, injSympZero,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+  have h := T.property x y
+  have hs := FreudenthalCharge.symplectic_form_skew D
+    ((T : Module.End ℝ (FreudenthalCharge J)) x) y
+  have hn := symplecticForm_neg_right D x
+    ((T : Module.End ℝ (FreudenthalCharge J)) y)
+  linarith
 
 end InfoGeometry.Exceptional.Freudenthal

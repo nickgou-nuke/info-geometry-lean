@@ -33,4 +33,11 @@ noncomputable instance : Fintype JacobiLane :=
 @[simp] theorem laneFinEquiv_symm_apply (l : JacobiLane) :
     laneFinEquiv.symm l = finOfLane l := rfl
 
+theorem jacobiLane_card : Fintype.card JacobiLane = 6 := by
+  exact Fintype.card_congr laneFinEquiv
+
+theorem jacobiLane_triple_card :
+    Fintype.card (JacobiLane × JacobiLane × JacobiLane) = 216 := by
+  rw [Fintype.card_prod, Fintype.card_prod, jacobiLane_card]
+
 end InfoGeometry.Exceptional.Freudenthal

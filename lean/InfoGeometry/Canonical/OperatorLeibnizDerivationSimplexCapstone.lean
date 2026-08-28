@@ -84,6 +84,23 @@ theorem expNilpotentSimplex_sq_zero (N : A) (hN : N * N = 0) (s : ℂ) :
       _ = 1 - (s • N) * (s • N) := by rw [add_sub_cancel_right]
   rw [h_expand, h_prod, hN, smul_zero, sub_zero]
 
+theorem expNilpotentSimplex_left_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
+    (1 - s • N) * (1 + s • N) = 1 := by
+  have h_prod : (s • N) * (s • N) = (s * s) • (N * N) := by
+    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  calc
+    (1 - s • N) * (1 + s • N) =
+        1 + s • N - s • N - (s • N) * (s • N) := by
+          noncomm_ring
+    _ = 1 - (s • N) * (s • N) := by rw [add_sub_cancel_right]
+    _ = 1 := by rw [h_prod, hN, smul_zero, sub_zero]
+
+theorem expNilpotentSimplex_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
+    (1 + s • N) * expNilpotentSimplex N s = 1 ∧
+    expNilpotentSimplex N s * (1 + s • N) = 1 := by
+  exact ⟨expNilpotentSimplex_sq_zero N hN s,
+    expNilpotentSimplex_left_inverse N hN s⟩
+
 /--
 🏆 **MASTER SYNTHESIS: Leibniz Derivation and Operator Simplex**
 

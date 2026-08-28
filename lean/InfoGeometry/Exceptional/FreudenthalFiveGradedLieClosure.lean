@@ -56,6 +56,15 @@ variable (D : CubicJordanDatum J)
     FreudenthalCharge.symplecticForm D 0 P = 0 := by
   rw [FreudenthalCharge.symplectic_form_skew, symplecticForm_zero_right, neg_zero]
 
+@[simp] theorem symplecticForm_neg_right (P Q : FreudenthalCharge J) :
+    FreudenthalCharge.symplecticForm D P (-Q) = -FreudenthalCharge.symplecticForm D P Q := by
+  exact (symplecticFormLinear D P).map_neg Q
+
+@[simp] theorem symplecticForm_neg_left (P Q : FreudenthalCharge J) :
+    FreudenthalCharge.symplecticForm D (-P) Q = -FreudenthalCharge.symplecticForm D P Q := by
+  rw [FreudenthalCharge.symplectic_form_skew, symplecticForm_neg_right,
+      FreudenthalCharge.symplectic_form_skew, neg_neg]
+
 /-! ## 2. The 5-Graded Carrier Structure -/
 
 /-- Total 5-graded carrier $\mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus (\mathfrak{g}_0^{\text{symp}} \oplus \mathbb{R} H) \oplus \mathfrak{g}_{+1} \oplus \mathfrak{g}_{+2}$. -/

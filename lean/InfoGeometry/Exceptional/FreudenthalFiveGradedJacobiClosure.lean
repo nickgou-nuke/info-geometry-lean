@@ -1,4 +1,8 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
+import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierAddGroup
+import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierModule
+import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketScalarBilinearity
+import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketLinearMaps
 
 /-!
 # Five-Graded Freudenthal-TKK Lie Homogeneous Jacobi Closure
@@ -173,5 +177,88 @@ theorem zeroGrade_symplectic_form_skew
         FreudenthalCharge.symplecticForm D X
           ((T : Module.End ℝ (FreudenthalCharge J)) Y) = 0 := by
   exact T.property X Y
+
+theorem zeroGrade_symplectic_form_transfer
+    (T : SymplecticTKKZero D) (X Y : FreudenthalCharge J) :
+    FreudenthalCharge.symplecticForm D
+          ((T : Module.End ℝ (FreudenthalCharge J)) X) Y =
+      -FreudenthalCharge.symplecticForm D X
+          ((T : Module.End ℝ (FreudenthalCharge J)) Y) := by
+  linarith [zeroGrade_symplectic_form_skew D T X Y]
+
+theorem fiveGradedBracket_sympZero_chargeMinus
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveGradedBracket D (injSympZero D T) (injChargeMinus D x) =
+      injChargeMinus D ((T : Module.End ℝ (FreudenthalCharge J)) x) := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injSympZero, injChargeMinus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem fiveGradedBracket_sympZero_chargePlus
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveGradedBracket D (injSympZero D T) (injChargePlus D x) =
+      injChargePlus D ((T : Module.End ℝ (FreudenthalCharge J)) x) := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injSympZero, injChargePlus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem fiveGradedBracket_sympZero_mixedBlock
+    (T : SymplecticTKKZero D) (X Y : FreudenthalCharge J) :
+    fiveGradedBracket D (injSympZero D T)
+        ⟨0, 0, mixedSymplecticBracket D X Y,
+          FreudenthalCharge.symplecticForm D X Y, 0, 0⟩ =
+      injSympZero D ⁅T, mixedSymplecticBracket D X Y⁆ := by
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injSympZero,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem fiveGradedBracket_neg_left
+    (u v : FiveGradedCarrier D) :
+    fiveGradedBracket D (-u) v = -fiveGradedBracket D u v := by
+  simpa using (fiveGradedBracket_left D v).map_neg u
+
+theorem fiveGradedBracket_neg_right
+    (u v : FiveGradedCarrier D) :
+    fiveGradedBracket D u (-v) = -fiveGradedBracket D u v := by
+  simpa using (fiveGradedBracket_right D u).map_neg v
+
+theorem fiveGradedBracket_chargeMinus_sympZero
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargeMinus D x) (injSympZero D T) =
+      injChargeMinus D (-((T : Module.End ℝ (FreudenthalCharge J)) x)) := by
+  rw [fiveGradedBracket_skew, fiveGradedBracket_sympZero_chargeMinus]
+  apply FiveGradedCarrier.ext <;>
+    simp [injChargeMinus, FiveGradedCarrier.neg_minus1]
+
+theorem fiveGradedBracket_chargePlus_sympZero
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    fiveGradedBracket D (injChargePlus D x) (injSympZero D T) =
+      injChargePlus D (-((T : Module.End ℝ (FreudenthalCharge J)) x)) := by
+  rw [fiveGradedBracket_skew, fiveGradedBracket_sympZero_chargePlus]
+  apply FiveGradedCarrier.ext <;>
+    simp [injChargePlus, FiveGradedCarrier.neg_plus1]
+
+theorem jacobi_extremeMinus_chargeMinus_chargeMinus
+    (a : ℝ) (x y : FreudenthalCharge J) :
+    fiveJacobiator D (genEminus D a) (injChargeMinus D x)
+        (injChargeMinus D y) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, injChargeMinus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
+
+theorem jacobi_extremePlus_chargePlus_chargePlus
+    (a : ℝ) (x y : FreudenthalCharge J) :
+    fiveJacobiator D (genEplus D a) (injChargePlus D x)
+        (injChargePlus D y) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, injChargePlus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
 
 end InfoGeometry.Exceptional.Freudenthal

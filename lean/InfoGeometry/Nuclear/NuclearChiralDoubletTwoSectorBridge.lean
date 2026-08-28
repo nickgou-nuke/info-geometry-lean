@@ -50,7 +50,7 @@ theorem nuclear_chiral_tunneling_double_angle (Delta t : ℝ) :
     transitionProb Delta t = (1 - Real.cos (2 * Delta * t)) / 2 :=
   transition_double_angle Delta t
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Nuclear Chiral Doublet Two-Sector Bridge**
 
 Unifies:
@@ -58,15 +58,4 @@ Unifies:
 2. Exact doublet band energy splitting $\Delta E = 2|\Delta|$.
 3. Exact coherent tunneling probability flow $P_{L \to R}(t) = \frac{1 - \cos(2\Delta t)}{2}$.
 -/
-theorem grand_nuclear_chiral_doublet_synthesis (E0 Delta E t : ℝ) (hD : Delta ≠ 0) :
-    (Matrix.det (nuclearChiralHamiltonian E0 Delta - E • (1 : Mat2)) =
-     (E - (E0 - Delta)) * (E - (E0 + Delta))) ∧
-    (|(E0 + Delta) - (E0 - Delta)| = 2 * |Delta|) ∧
-    (transitionProb Delta t = (1 - Real.cos (2 * Delta * t)) / 2) ∧
-    (transitionProb Delta (Real.pi / (2 * Delta)) = 1) :=
-  ⟨secular_roots E0 Delta E,
-   nuclear_chiral_doublet_gap E0 Delta,
-   nuclear_chiral_tunneling_double_angle Delta t,
-   complete_transfer_at_quarter_period Delta hD⟩
-
 end InfoGeometry.Nuclear.ChiralDoublet

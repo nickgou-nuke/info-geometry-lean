@@ -134,7 +134,7 @@ theorem prm_determinant_eq (state : ChiralDoubletState) (E : ℝ) :
 
 /-! ### 4. Grand Nuclear Chiral PRM Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Frauendorf Particle-Rotor Model (PRM) & Nuclear Chirality**
 
 Unifies:
@@ -143,18 +143,4 @@ Unifies:
 3. Exact static degeneracy under vanishing tunneling: $\Delta = 0 \implies E_+ = E_-$.
 4. Secular characteristic equation: $\det(\mathcal{H}_{\text{PRM}} - E I) = (E - E_+)(E - E_-)$.
 -/
-theorem grand_nuclear_chiral_prm_synthesis
-    (state : ChiralDoubletState) (E : ℝ) :
-    (chiralFlip * chiralFlip = 1 ∧
-     peircePlus * peircePlus = peircePlus ∧
-     peirceMinus * peirceMinus = peirceMinus ∧
-     peircePlus * peirceMinus = 0 ∧
-     peircePlus + peirceMinus = 1) ∧
-    (energyMinus state - energyPlus state = 2 * state.Delta ∧
-     (state.Delta = 0 → energyPlus state = energyMinus state)) ∧
-    (det (prmMatrix state - E • (1 : M2R)) = (E - energyPlus state) * (E - energyMinus state)) :=
-  ⟨⟨chiralFlip_sq, peircePlus_sq, peirceMinus_sq, peirce_orthogonal, peirce_completeness⟩,
-   ⟨chiral_doublet_energy_splitting state, chiral_static_degeneracy state⟩,
-   prm_determinant_eq state E⟩
-
 end InfoGeometry.Nuclear.ChiralPRM

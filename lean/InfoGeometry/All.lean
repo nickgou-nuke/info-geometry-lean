@@ -566,7 +566,9 @@ import InfoGeometry.Arithmetic.MobiusFiniteAbelSummation
 import InfoGeometry.Arithmetic.MobiusPrimonParity
 import InfoGeometry.Arithmetic.MobiusWittenWeylDenominator
 import InfoGeometry.Arithmetic.MoebiusSignature
-import InfoGeometry.Arithmetic.MoebiusWeylEuler
+import InfoGeometry.Arithmetic.PrimeGaloisTower
+import InfoGeometry.Arithmetic.PrimeGaloisDirectedHomotopy
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisTower
 import InfoGeometry.Arithmetic.PadicLFunctionTrivialZero
 import InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
 import InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge

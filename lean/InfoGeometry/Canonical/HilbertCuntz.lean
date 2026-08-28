@@ -4,6 +4,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Order.Zorn
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge
 
 /-!
 # Hilbert Space Cuntz O₂ Representation and Zorn Boundary Maximal Subsystem
@@ -55,6 +56,26 @@ namespace InfoGeometry.Canonical.HilbertCuntz
 def BinaryWord : Type :=
   ℕ → Fin 2
 
+def binaryWordBoolEquiv : BinaryWord ≃ (ℕ → Bool) where
+  toFun w := fun n =>
+    InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool (w n)
+  invFun w := fun n =>
+    (InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool).symm (w n)
+  left_inv w := by
+    funext n
+    exact (InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool).left_inv (w n)
+  right_inv w := by
+    funext n
+    exact (InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool).right_inv (w n)
+
+theorem binaryWordBoolEquiv_apply (w : BinaryWord) (n : ℕ) :
+    binaryWordBoolEquiv w n =
+      InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool (w n) := rfl
+
+theorem binaryWordBoolEquiv_symm_apply (w : ℕ → Bool) (n : ℕ) :
+    binaryWordBoolEquiv.symm w n =
+      (InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.finTwoEquivBool).symm (w n) := rfl
+
 /-- Prefix a bit to a binary word (the Cuntz shift base action). -/
 def prefix_word (b : Fin 2) (w : BinaryWord) : BinaryWord
   | 0 => b
@@ -63,6 +84,19 @@ def prefix_word (b : Fin 2) (w : BinaryWord) : BinaryWord
 /-- The Fiber: $\mathbb{R}^2$. -/
 abbrev Fiber : Type :=
   Fin 2 → ℝ
+
+def fiberComplexify : Fiber → (Fin 2 → ℂ) :=
+  fun v i => v i
+
+theorem fiberComplexify_injective :
+    Function.Injective fiberComplexify := by
+  intro v u h
+  funext i
+  have hi := congrFun h i
+  exact Complex.ofReal_injective hi
+
+theorem fiberComplexify_apply (v : Fiber) (i : Fin 2) :
+    fiberComplexify v i = (v i : ℂ) := rfl
 
 /-- Canonical phase axis complex structure $J_0 = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$ on $\mathbb{R}^2$. -/
 def J0 (v : Fiber) : Fiber :=
@@ -123,6 +157,47 @@ theorem S_right_K_elem_commute :
 /-- Wavefunction space: $\mathcal{H}_{\text{field}} = \text{BinaryWord} \to \text{Fiber}$. -/
 abbrev HField : Type :=
   BinaryWord → Fiber
+
+def fieldComplexify : HField → (ℕ → Bool) → (Fin 2 → ℂ) :=
+  fun f w => fiberComplexify (f (binaryWordBoolEquiv.symm w))
+
+theorem fieldComplexify_injective :
+    Function.Injective fieldComplexify := by
+  intro f g h
+  funext w
+  apply fiberComplexify_injective
+  have hw := congrFun h (binaryWordBoolEquiv w)
+  simpa [fieldComplexify] using hw
+
+theorem fieldComplexify_apply (f : HField) (w : ℕ → Bool) (i : Fin 2) :
+    fieldComplexify f w i =
+      (f (binaryWordBoolEquiv.symm w) i : ℂ) := rfl
+
+def SamePrefix (n : ℕ) (w v : BinaryWord) : Prop :=
+  ∀ k < n, w k = v k
+
+def IsCylinderConstant (f : HField) (n : ℕ) : Prop :=
+  ∀ w v, SamePrefix n w v → f w = f v
+
+def zeroTailExtension (n : ℕ) (p : Fin n → Fin 2) : BinaryWord :=
+  fun k => if hk : k < n then p ⟨k, hk⟩ else 0
+
+def finitePrefixReadout (f : HField) (n : ℕ) (p : Fin n → Fin 2) : Fiber :=
+  f (zeroTailExtension n p)
+
+theorem zeroTailExtension_prefix (n : ℕ) (w : BinaryWord) :
+    SamePrefix n w (zeroTailExtension n (fun i => w i)) := by
+  intro k hk
+  simp [zeroTailExtension, hk]
+
+theorem finitePrefixReadout_eq (f : HField) (n : ℕ)
+    (hf : IsCylinderConstant f n) (w : BinaryWord) :
+    finitePrefixReadout f n (fun i => w i) = f w := by
+  have hprefix : SamePrefix n (zeroTailExtension n (fun i => w i)) w := by
+    intro k hk
+    exact (zeroTailExtension_prefix n w k hk).symm
+  change f (zeroTailExtension n (fun i => w i)) = f w
+  exact hf (zeroTailExtension n (fun i => w i)) w hprefix
 
 /-- Pointwise phase axis operator on fields: $(K f)(w) = J_0(f(w))$. -/
 def K_field (f : HField) : HField :=
@@ -218,6 +293,22 @@ theorem S_right_K_field_commute (f : HField) :
     S_right_field (K_field f) = K_field (S_right_field f) := by
   funext w
   dsimp [S_right_field, K_field]
+  by_cases h1 : w 0 = 1
+  · simp [h1]
+  · simp [h1, J0_zero]
+
+theorem P_left_K_field_commute (f : HField) :
+    P_left (K_field f) = K_field (P_left f) := by
+  funext w
+  dsimp [P_left, K_field]
+  by_cases h0 : w 0 = 0
+  · simp [h0]
+  · simp [h0, J0_zero]
+
+theorem P_right_K_field_commute (f : HField) :
+    P_right (K_field f) = K_field (P_right f) := by
+  funext w
+  dsimp [P_right, K_field]
   by_cases h1 : w 0 = 1
   · simp [h1]
   · simp [h1, J0_zero]

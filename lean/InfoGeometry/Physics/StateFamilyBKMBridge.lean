@@ -281,6 +281,28 @@ theorem surprisalKernel_expectation_eq_weighted_square
 def secondOrderEntropyHessian (ρ : DiagonalQuantumState n) (delta : n → ℝ) : ℝ :=
   (1 / 2 : ℝ) * bkmMetric ρ (Matrix.diagonal delta) (Matrix.diagonal delta)
 
+def betaScaledSecondOrderEntropyHessian
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) (beta : ℝ) : ℝ :=
+  beta^2 * secondOrderEntropyHessian ρ delta
+
+@[simp] theorem betaScaledSecondOrderEntropyHessian_one
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) :
+    betaScaledSecondOrderEntropyHessian ρ delta 1 =
+      secondOrderEntropyHessian ρ delta := by
+  simp [betaScaledSecondOrderEntropyHessian]
+
+theorem betaScaledSecondOrderEntropyHessian_neg
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) (beta : ℝ) :
+    betaScaledSecondOrderEntropyHessian ρ delta (-beta) =
+      betaScaledSecondOrderEntropyHessian ρ delta beta := by
+  unfold betaScaledSecondOrderEntropyHessian
+  rw [neg_sq]
+
+@[simp] theorem betaScaledSecondOrderEntropyHessian_zero
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) :
+    betaScaledSecondOrderEntropyHessian ρ delta 0 = 0 := by
+  simp [betaScaledSecondOrderEntropyHessian]
+
 theorem secondOrderEntropyHessian_eq_weighted_sum
     (ρ : DiagonalQuantumState n) (delta : n → ℝ) :
     secondOrderEntropyHessian ρ delta =
@@ -290,6 +312,16 @@ theorem secondOrderEntropyHessian_eq_weighted_sum
   congr 1
   apply Finset.sum_congr rfl
   intro i _hi
+  ring
+
+theorem betaScaledSecondOrderEntropyHessian_eq_surprisalKernel
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) (beta : ℝ) :
+    betaScaledSecondOrderEntropyHessian ρ delta beta =
+      quantumExpectation ρ
+        (((1 / 2 : ℝ) * beta^2) •
+          (Matrix.diagonal delta * Matrix.diagonal delta)) := by
+  rw [surprisalKernel_expectation_eq_bkm]
+  unfold betaScaledSecondOrderEntropyHessian secondOrderEntropyHessian
   ring
 
 /--
@@ -303,12 +335,25 @@ theorem secondOrderEntropyHessian_nonneg (ρ : DiagonalQuantumState n) (delta : 
     bkmMetric_diagonal_nonneg ρ delta
   exact mul_nonneg hpos hmet
 
+theorem betaScaledSecondOrderEntropyHessian_nonneg
+    (ρ : DiagonalQuantumState n) (delta : n → ℝ) (beta : ℝ) :
+    0 ≤ betaScaledSecondOrderEntropyHessian ρ delta beta := by
+  unfold betaScaledSecondOrderEntropyHessian
+  exact mul_nonneg (sq_nonneg beta) (secondOrderEntropyHessian_nonneg ρ delta)
+
 /--
   THEOREM: When fluctuation `delta = 0`, the entropy Hessian vanishes identically.
 -/
 @[simp] theorem secondOrderEntropyHessian_zero (ρ : DiagonalQuantumState n) :
     secondOrderEntropyHessian ρ 0 = 0 := by
   dsimp [secondOrderEntropyHessian, bkmMetric, densityMatrix]
+  simp
+
+@[simp] theorem betaScaledSecondOrderEntropyHessian_delta_zero
+    (ρ : DiagonalQuantumState n) (beta : ℝ) :
+    betaScaledSecondOrderEntropyHessian ρ 0 beta = 0 := by
+  unfold betaScaledSecondOrderEntropyHessian
+  rw [secondOrderEntropyHessian_zero]
   simp
 
 end InfoGeometry.Physics.StateFamilyBKM

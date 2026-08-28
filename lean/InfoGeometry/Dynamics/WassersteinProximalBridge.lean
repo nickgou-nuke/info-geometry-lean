@@ -1,5 +1,6 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
 import InfoGeometry.Clifford.MonodromyFlowAdapter
+import InfoGeometry.Physics.LogCFTJordanShear
 import Mathlib.Analysis.Complex.Basic
 
 noncomputable section
@@ -34,6 +35,32 @@ plays the role of the discrete time step / learning rate.
 -/
 def jkoEntropyStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   errorFlowStep η
+
+theorem jkoEntropyStep_eq_logCFTJordanShear (η : ℂ) :
+    jkoEntropyStep η =
+      InfoGeometry.Physics.LogCFTJordanShear.unipotentShear η := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [jkoEntropyStep, errorFlowStep, lcftParabolicFlowStep,
+      infinitesimalNullGenerator,
+      InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
+      InfoGeometry.Physics.LogCFTJordanShear.unipotentShear,
+      InfoGeometry.Physics.LogCFTJordanShear.nilpotentN,
+      InfoGeometry.Clifford.LogCftMonodromy.epsilon,
+      Matrix.add_apply]
+
+theorem jkoEntropyStep_eq_exp (η : ℂ) :
+    jkoEntropyStep η =
+      NormedSpace.exp (η • infinitesimalNullGenerator) := by
+  have hN : infinitesimalNullGenerator =
+      InfoGeometry.Physics.LogCFTJordanShear.nilpotentN := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [infinitesimalNullGenerator,
+        InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
+        InfoGeometry.Physics.LogCFTJordanShear.nilpotentN]
+  rw [hN, InfoGeometry.Physics.LogCFTJordanShear.exp_scaledNilpotent]
+  exact jkoEntropyStep_eq_logCFTJordanShear η
 
 /-- A covariance-envelope step uses the heat-flow convention `variance += 2t`. -/
 def gaussianHeatEnvelopeStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=

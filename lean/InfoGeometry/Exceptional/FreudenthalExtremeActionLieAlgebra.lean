@@ -122,6 +122,28 @@ theorem extremeBracket_genEminus_genEplus :
   simp [extremeBracket_genEplus_genEminus, FiveGradedCarrier.instNeg,
     genHscale]
 
+theorem extremeBracket_genEplus_genEminus_of_scaleNormalization
+    (hE : E.scaleNormalization = 1) :
+    extremeBracket D E (genEplus D 1) (genEminus D 1) =
+      genHscale D 1 := by
+  rw [extremeBracket_genEplus_genEminus, hE]
+
+theorem extremeBracket_genHscale_genEplus :
+    extremeBracket D E (genHscale D 1) (genEplus D 1) =
+      genEplus D E.scaleWeightPlus2 := by
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, genHscale, genEplus]
+
+theorem extremeBracket_genHscale_genEminus :
+    extremeBracket D E (genHscale D 1) (genEminus D 1) =
+      genEminus D E.scaleWeightMinus2 := by
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, genHscale, genEminus]
+
+@[simp] theorem extremeBracket_genHscale_self :
+    extremeBracket D E (genHscale D 1) (genHscale D 1) = 0 := by
+  exact extremeBracket_self D E (genHscale D 1)
+
 /-! ## 2. Parameterized Jacobiator Definition -/
 
 def extremeJacobiator (u v w : FiveGradedCarrier D) : FiveGradedCarrier D :=

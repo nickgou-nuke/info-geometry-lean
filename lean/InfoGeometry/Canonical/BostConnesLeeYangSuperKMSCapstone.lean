@@ -150,6 +150,17 @@ theorem critical_strip_zero_cayley_transport
       riemannXiCayley (cayleyToFugacity s) = 0 :=
   riemannXiCayley_zero_iff_riemannZeta_zero_of_strip hRe hRe'
 
+/-- A zero already known to lie on the critical line has both native
+    geometric readbacks: unit-circle membership and Cayley-Xi vanishing. -/
+theorem critical_line_zero_cayley_packet
+    {s : ℂ} (hline : OnCriticalLine s)
+    (hRe : 0 < s.re) (hRe' : s.re < 1)
+    (hzero : riemannZeta s = 0) :
+    OnLeeYangCircle (cayleyToFugacity s) ∧
+      riemannXiCayley (cayleyToFugacity s) = 0 := by
+  refine ⟨(criticalLine_iff_cayley_unitCircle s).mp hline, ?_⟩
+  exact (critical_strip_zero_cayley_transport hRe hRe').mp hzero
+
 /-! ## 4. Grand Master Capstone Synthesis -/
 
 /--

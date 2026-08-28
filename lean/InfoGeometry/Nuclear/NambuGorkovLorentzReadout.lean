@@ -79,12 +79,21 @@ theorem bogoliubovEnergy_sq_lorentzBoostZ_invariant
 theorem lorentzBoostZ_preserves_nambu_nullity
     (ϕ : ℝ) (N : NambuGorkovCarrier ℝ) :
     (spacetimeRepresentative N).det = 0 ↔
-      (InfoGeometry.Spacetime.lorentzTransform
+    (InfoGeometry.Spacetime.lorentzTransform
         (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
         (spacetimeRepresentative N)).det = 0 := by
   rw [InfoGeometry.Spacetime.lorentz_isometry
     (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
     (spacetimeRepresentative N)
     (InfoGeometry.Spacetime.det_lorentzBoostZ ϕ)]
+
+theorem lorentzBoostZ_preserves_nambu_zorn_nullity
+    (ϕ : ℝ) (N : NambuGorkovCarrier ℝ) :
+    zornNorm (toZorn N) = 0 ↔
+      (InfoGeometry.Spacetime.lorentzTransform
+        (InfoGeometry.Spacetime.lorentzBoostZ ϕ)
+        (spacetimeRepresentative N)).det = 0 := by
+  rw [← spacetimeRepresentative_null_iff N]
+  exact lorentzBoostZ_preserves_nambu_nullity ϕ N
 
 end InfoGeometry.Nuclear.NambuGorkovLorentz

@@ -1,4 +1,4 @@
-import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketAdditivity
+import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketBilinear
 
 noncomputable section
 

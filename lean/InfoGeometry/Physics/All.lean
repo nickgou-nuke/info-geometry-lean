@@ -264,6 +264,7 @@ import InfoGeometry.Physics.KleinBottleSewingExact
 import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
 import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
 import InfoGeometry.Physics.TensorProductCommutationBregmanEntropyCapstone
+import InfoGeometry.Physics.SelfConcordantFenchelBregmanDikinCapstone
 
 /-!
 # Physics Umbrella

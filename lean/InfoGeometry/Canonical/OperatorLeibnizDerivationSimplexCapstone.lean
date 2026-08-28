@@ -116,14 +116,17 @@ theorem expNilpotentSimplex_sq_zero (N : A) (hN : N * N = 0) (s : ℂ) :
 
 theorem expNilpotentSimplex_left_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
     (1 - s • N) * (1 + s • N) = 1 := by
+  let a : A := s • N
+  have ha : a * a = 0 := by
+    dsimp [a]
+    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, hN,
+      smul_zero]
   have h_prod : (s • N) * (s • N) = (s * s) • (N * N) := by
     rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  change (1 - a) * (1 + a) = 1
   calc
-    (1 - s • N) * (1 + s • N) =
-        1 + s • N - s • N - (s • N) * (s • N) := by
-          noncomm_ring
-    _ = 1 - (s • N) * (s • N) := by rw [add_sub_cancel_right]
-    _ = 1 := by rw [h_prod, hN, smul_zero, sub_zero]
+    (1 - a) * (1 + a) = 1 - a * a := by noncomm_ring
+    _ = 1 := by rw [ha, sub_zero]
 
 theorem expNilpotentSimplex_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
     (1 + s • N) * expNilpotentSimplex N s = 1 ∧
@@ -133,14 +136,22 @@ theorem expNilpotentSimplex_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
 
 theorem expNilpotentSimplex_add (N : A) (hN : N * N = 0) (s t : ℂ) :
     (1 - s • N) * (1 - t • N) = expNilpotentSimplex N (s + t) := by
+  let a : A := s • N
+  let b : A := t • N
+  have hab : a * b = 0 := by
+    dsimp [a, b]
+    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, hN,
+      smul_zero]
   have h_prod : (s • N) * (t • N) = (s * t) • (N * N) := by
     rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
   unfold expNilpotentSimplex
+  change (1 - a) * (1 - b) = 1 - (s + t) • N
   calc
-    (1 - s • N) * (1 - t • N) =
-        1 - (s + t) • N + (s • N) * (t • N) := by
-          noncomm_ring
-    _ = 1 - (s + t) • N := by rw [h_prod, hN, smul_zero, add_zero]
+    (1 - a) * (1 - b) = 1 - a - b + a * b := by noncomm_ring
+    _ = 1 - (s + t) • N := by
+      rw [hab, add_zero]
+      dsimp [a, b]
+      rw [add_smul]
 
 /--
 🏆 **MASTER SYNTHESIS: Leibniz Derivation and Operator Simplex**

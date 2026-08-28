@@ -153,6 +153,12 @@ import InfoGeometry.Modular.DualExponentialCommutatorBridge
 import InfoGeometry.Modular.DerivationShortExactSequence
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.MasterRegistry
+import InfoGeometry.Arithmetic.UnifiedCapstone
+import InfoGeometry.GrandUnification.BostConnesLeeYangGrandSynthesis
+import InfoGeometry.Arithmetic.HilbertPolyaThreeOperatorsOneObjectCapstone
+import InfoGeometry.Canonical.BostConnesPhaseTransitionGaloisSSBCapstone
+import InfoGeometry.Critical.LogCFTCritical
+import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
 
 namespace InfoGeometry
 

@@ -27,9 +27,13 @@ theorem softmaxGibbs_kineticAction_nonneg
     0 ≤ SouriauWasserstein.benamouBrenierKineticAction
       (fun i => softmaxGibbs state energy i) velocity := by
   apply SouriauWasserstein.kineticAction_nonneg
-  intro i
-  exact le_of_lt (by
-    unfold softmaxGibbs
-    exact div_pos (Real.exp_pos _) (partitionFunction_pos state energy))
+  exact fun i => softmaxGibbs_nonneg state energy i
+
+theorem softmaxGibbs_kineticDissipation_nonpos
+    (state : ThermalState) (energy velocity : Fin n → ℝ) :
+    -SouriauWasserstein.benamouBrenierKineticAction
+      (fun i => softmaxGibbs state energy i) velocity ≤ 0 := by
+  apply SouriauWasserstein.wasserstein_dissipation_nonneg
+  exact softmaxGibbs_kineticAction_nonneg state energy velocity
 
 end InfoGeometry.Clifford.SouriauThermodynamics

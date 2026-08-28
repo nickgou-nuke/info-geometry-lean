@@ -74,10 +74,15 @@ theorem cybe_sum_eq_three :
 
 end CYBEExchangeData
 
-/-! ## 2. Concrete KZ Connection Curvature Vanishing -/
+/-! ## 2. Arnold coefficient cancellation (not yet curvature)
+
+The theorem below records the form-level Arnold cancellation only.  It does
+not by itself establish curvature vanishing, since the exchange elements do
+not occur in its conclusion.  The curvature-level statement is provided by
+`kz_curvature_vanishes_of_cybe` below. -/
 
 /-- 
-🏆 **THEOREM: Exact KZ Zero-Curvature (Flatness) from Arnold-Cohen & CYBE**
+**Form-level Arnold cancellation used by the KZ curvature calculation**
 
 Proves that for any configuration `z ∈ Conf_3(K)` and any classical $r$-matrix exchange
 data satisfying CYBE, the wedge-commutator of the KZ connection vanishes identically:
@@ -97,6 +102,31 @@ theorem kz_connection_flatness
     alg.wedge w01 w12 + alg.wedge w12 w20 + alg.wedge w20 w01 = 0 := by
   intro w01 w12 w20
   exact conf3_concrete_arnold_relation alg dz z h01 h12 h20
+
+/- A curvature-level formulation in the common coefficient algebra.  Here the
+   exchange elements are multiplied on the right of the exterior coefficients;
+   unlike the historical theorem above, the CYBE hypotheses are used. -/
+theorem kz_curvature_vanishes_of_cybe
+    {A : Type*} [Ring A] [Algebra K A]
+    (alg : ExteriorFormAlgebra (R := K) A)
+    (dz : Fin 3 → A) (z : Fin 3 → K)
+    (h01 : z 0 ≠ z 1) (h12 : z 1 ≠ z 2) (h20 : z 2 ≠ z 0)
+    (C : CYBEExchangeData (K := K) A) :
+    let w01 := conf3ConcreteForm dz z 0 1
+    let w12 := conf3ConcreteForm dz z 1 2
+    let w20 := conf3ConcreteForm dz z 2 0
+    alg.wedge w01 w12 * bracket C.t01 C.t12 +
+      alg.wedge w12 w20 * bracket C.t12 C.t20 +
+      alg.wedge w20 w01 * bracket C.t20 C.t01 = 0 := by
+  intro w01 w12 w20
+  have hArnold : alg.wedge w01 w12 + alg.wedge w12 w20 +
+      alg.wedge w20 w01 = 0 := by
+    exact conf3_concrete_arnold_relation alg dz z h01 h12 h20
+  have h12_20 : bracket C.t12 C.t20 = bracket C.t01 C.t12 :=
+    C.cybe_01_12.symm
+  have h20_01 : bracket C.t20 C.t01 = bracket C.t01 C.t12 :=
+    C.cybe_01_12.trans C.cybe_12_20 |>.symm
+  rw [h12_20, h20_01, ← add_mul, ← add_mul, hArnold, zero_mul]
 
 /-! ## 3. 4-Point Moduli Space Cross-Ratio Logarithmic Form -/
 

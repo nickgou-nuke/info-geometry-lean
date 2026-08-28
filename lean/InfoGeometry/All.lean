@@ -6446,6 +6446,15 @@ import InfoGeometry.Renyi
 import InfoGeometry.Riemannian.CartanMetric
 import InfoGeometry.Riemannian.ConeAction
 import InfoGeometry.Routing.BirkhoffVonNeumann
+import InfoGeometry.Routing.PermutationPerfectMatching
+import InfoGeometry.Routing.FiniteMatrixMixture
+import InfoGeometry.Routing.Cl55SoftConjugation
+import InfoGeometry.Routing.TypedProofRealization
+import InfoGeometry.Routing.FiniteSoftmax
+import InfoGeometry.Routing.FiniteRoutingSymmetry
+import InfoGeometry.Routing.PlanarRotation
+import InfoGeometry.Moduli.SimplexArnoldRational
+import InfoGeometry.Moduli.PositiveSimplexChamber
 import InfoGeometry.Sandbox.ChernIsomorphismSandbox
 import InfoGeometry.Sandbox.CliffordFunctorSandbox.Functor
 import InfoGeometry.Sandbox.CliffordFunctorSandbox

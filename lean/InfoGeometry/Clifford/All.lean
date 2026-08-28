@@ -234,6 +234,7 @@ import InfoGeometry.Clifford.Cl55OperatorConnectionLift
 import InfoGeometry.Clifford.Cl55WittCircularAxes
 import InfoGeometry.Clifford.Cl55WittProjectors
 import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Clifford.Cl55ChiralityProjectors
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
 import InfoGeometry.Clifford.Cl55ChiralSuperCARBridge

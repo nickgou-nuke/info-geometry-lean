@@ -80,13 +80,13 @@ theorem J0_sq (v : Fiber) :
 theorem J0_zero :
     J0 (0 : Fiber) = 0 := by
   ext i
-  fin_cases i <;> rfl
+  fin_cases i <;> { dsimp [J0]; try ring }
 
 /-- 🏆 THEOREM: $J_0$ commutes with scalar multiplication. -/
 theorem J0_smul (c : ℝ) (v : Fiber) :
     J0 (c • v) = c • J0 v := by
   ext i
-  fin_cases i <;> rfl
+  fin_cases i <;> { dsimp [J0]; try ring }
 
 /-! ## 2. Elementary Tensor Space Representation -/
 

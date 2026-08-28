@@ -3421,6 +3421,7 @@ import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
 import InfoGeometry.Canonical.KZRoPEMonodromyComparison
 import InfoGeometry.Canonical.CuntzKTowerCommutation
 import InfoGeometry.Canonical.ConcreteCuntzKCommutationZornCapstone
+import InfoGeometry.Canonical.InductiveLimitTraceKMSStateCapstone
 
 namespace InfoGeometry
 

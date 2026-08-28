@@ -142,6 +142,18 @@ def jaynes_state (φ_L φ_R : State O2) (p : ℂ) : O2 →+ ℂ where
     rw [φ_L.val.map_add x y, φ_R.val.map_add x y]
     ring
 
+/-! The affine mixture is normalized independently of any KMS hypothesis. -/
+
+/-- The Jaynes mixture preserves the unit when its coefficients sum to one. -/
+omit [StarRing O2] in
+theorem jaynes_state_map_one
+    (φ_L φ_R : State O2) (p : ℂ) :
+    jaynes_state φ_L φ_R p 1 = 1 := by
+  change p * φ_L 1 + (1 - p) * φ_R 1 = 1
+  rw [φ_L.map_one, φ_R.map_one]
+  rw [sub_mul, mul_one]
+  ring
+
 /-- The Chiral Difference State: $\phi_{\text{diff}} = \phi_L - \phi_R$. -/
 def chiral_diff_state (φ_L φ_R : State O2) : O2 →+ ℂ where
   toFun := fun A => φ_L A - φ_R A

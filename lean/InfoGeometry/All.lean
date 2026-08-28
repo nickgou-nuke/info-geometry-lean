@@ -7703,4 +7703,5 @@ import InfoGeometry.Physics.OperatorCyclotomicDoubleDavidStarBridge
 import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
 import InfoGeometry.Physics.KleinBottleModularSewing
 import InfoGeometry.Physics.KleinBottleSewingExact
+import InfoGeometry.Causal.ProofDAGTopologicalClosureCapstone
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube

@@ -5,6 +5,9 @@ import InfoGeometry.Causal.ProofDAGRepresentation
 import InfoGeometry.Causal.ProofTopology
 import InfoGeometry.Causal.Sensing
 import InfoGeometry.Causal.ProofGraphExteriorCalculus
+import InfoGeometry.Causal.TopologicalProofDevelopment
+import InfoGeometry.Causal.ProofCohomology
+import InfoGeometry.Causal.ProofDAGTopologicalClosureCapstone
 
 namespace InfoGeometry
 

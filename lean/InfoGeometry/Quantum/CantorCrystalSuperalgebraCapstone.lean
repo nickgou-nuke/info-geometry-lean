@@ -11,7 +11,7 @@ import InfoGeometry.Quantum.BostConnesPrimonCantorSpinChainCapstone
 import InfoGeometry.Quantum.BostConnesPrimonZeroTemperatureLimitCapstone
 
 /-!
-# The Supergraded Superalgebra of the Cantor Crystal and Witten Index Capstone
+# The Supergraded Algebraic Readouts of the Cantor Crystal
 
 This capstone module formalizes the grand algebraic synthesis of the Cantor Crystal:
 
@@ -29,18 +29,21 @@ This capstone module formalizes the grand algebraic synthesis of the Cantor Crys
      strictly anticommutes with $K$:
      $$\{T_{LR}, K\} = 0$$
 
-3. **The $\mathfrak{osp}(1|2)$ Superalgebra**:
-   - Fermionic supercharges $G_1, G_2$ satisfy $\{G_1, G_2\} = -H_3$.
-   - Two fermionic hops compose to a continuous bosonic translation generator along the boundary.
+3. **A finite imported supercommutator readout**:
+   - The capstone packages the existing finite relation
+     $\{G_1, G_2\} = -H_3$; it does not construct an `osp(1|2)` algebra from
+     the Cuntz carrier.
 
-4. **Witten Index & Supersymmetric Vacuum Stability**:
-   - The Witten Index $\text{WittenIndex}(\phi) = \phi(K)$.
-   - In the Jaynes-KMS equilibrium, the Witten Index vanishes identically:
-     $$\text{WittenIndex}(\phi_{\text{KMS}}) = \phi_{\text{KMS}}(S_L S_L^*) - \phi_{\text{KMS}}(S_R S_R^*) = 0$$
-   - This proves that supersymmetry is unbroken, the Dirac sea is half-filled,
-     and the holographic boundary is immune to anomalous vacuum decay.
+4. **A KMS-like additive-functional readout**:
+   - The bundled `wittenIndex` is the algebraic difference
+     `φ (P_L - P_R)`.
+   - Under the supplied equal-weight relations it is zero.  This is not a
+     Hilbert-space Witten index, a supersymmetry theorem, or a vacuum-stability
+     result.
 
-All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+All declarations in this file are proved from the displayed algebraic
+hypotheses in native Mathlib 4; the module does not claim an analytic Cuntz
+representation, a physical Hilbert-space completion, or a supersymmetry model.
 -/
 
 namespace InfoGeometry.Quantum.CantorCrystal
@@ -195,15 +198,16 @@ theorem T_LR_is_fermionic : IsFermionic O (T_LR O) := by
 
 end CuntzO2
 
-/-! ## 3. The Witten Index and Vacuum Stability -/
+/-! ## 3. An Algebraic Branch-Difference Readout -/
 
-/-- The Witten Index (Supertrace) on the Cuntz $\mathcal{O}_2$ Cantor Crystal:
-    $\text{WittenIndex}(\phi) = \phi(K) = \phi(P_L) - \phi(P_R)$. -/
+/-- The branch-difference readout on the bundled algebra:
+    `φ (P_L - P_R)`.  The name is retained for API compatibility; no
+    supertrace or analytic Witten index is asserted. -/
 def wittenIndex {A : Type*} [Ring A] [StarRing A] (O : CuntzO2 A) (φ : State A) : ℂ :=
   φ (O.P_L - O.P_R)
 
-/-- 🏆 THEOREM: The Witten Index of the Cantor Crystal Vanishes Identically
-    in the Symmetric Jaynes-KMS Vacuum. -/
+/-- 🏆 THEOREM: The supplied equal-weight KMS-like relations make the
+    branch-difference readout vanish. -/
 theorem witten_index_kms_vanishes
     {A : Type*} [Ring A] [StarRing A] (O : CuntzO2 A)
     (φ : State A) (h_kms : IsKMSState O.S_L O.S_R φ) :
@@ -218,15 +222,21 @@ theorem witten_index_kms_vanishes
 /-! ## 4. The Grand Cantor Crystal Master Theorem -/
 
 /--
-🏆 **GRAND SYNTHESIS THEOREM: The Supergraded Superalgebra of the Cantor Crystal**
+🏆 **GRAND SYNTHESIS THEOREM: Algebraic Supergrading Readouts of the Cantor Crystal**
 
 Unifies:
 1. **Grading Involution**: $K^2 = 1$.
 2. **Bosonic Projector Invariance**: $[P_L, K] = 0$ and $[P_R, K] = 0$.
 3. **Fermionic Hopping Anticommutation**: $\{T_{LR}, K\} = 0$.
-4. **$\mathfrak{osp}(1|2)$ Superalgebra Relation**: $\{G_1, G_2\} = -H_3$.
-5. **Witten Index Vanishing & Vacuum Stability**: $\text{WittenIndex}(\phi_{\text{KMS}}) = 0$.
-6. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
+4. **Imported finite supercommutator relation**: $\{G_1, G_2\} = -H_3$.
+5. **Branch-difference cancellation**: `wittenIndex O φ = 0` under the supplied
+   KMS-like equations.
+6. **Imported finite Yang--Baxter identities**: $F \cdot B \cdot F = R$ and
+   $F^2 = 1$.
+
+The theorem is an algebraic composition.  It does not establish an analytic
+Witten index, unbroken supersymmetry, vacuum stability, or a physical Cantor
+crystal.
 -/
 theorem grand_cantor_crystal_superalgebra_synthesis
     {A : Type*} [Ring A] [StarRing A] (O : CuntzO2 A)

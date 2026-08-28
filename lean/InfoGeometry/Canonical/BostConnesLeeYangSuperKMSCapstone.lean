@@ -73,6 +73,38 @@ theorem dirac_laplacian_commutes_with_mobius_parity
     (Q * Q) * (atom.mobiusParity) = (atom.mobiusParity) * (Q * Q) :=
   dirac_sq_commutes_hodge (atom.mobiusParity) Q h_chiral
 
+/-! ## Typed transport into the Hodge--Dirac carrier -/
+
+/-- The prime atom's Dirac data, with its Laplacian fixed to `Q²`. -/
+def primeHodgeCarrier (atom : Cl11Atom A) (Q : A) :
+    HodgeDiracLaplacianCarrier A :=
+  (atom.mobiusParity, Q, (Q * Q, 0))
+
+/-- Chiral anticommutation of `Q` is exactly the Hodge predicate on the carrier. -/
+theorem primeHodgeCarrier_isDiracHodgeChiral
+    (atom : Cl11Atom A) (Q : A)
+    (h_chiral : Q * atom.mobiusParity = -(atom.mobiusParity * Q)) :
+    IsDiracHodgeChiral (primeHodgeCarrier atom Q) :=
+  h_chiral
+
+/-- The supplied prime Laplacian is definitionally the square of its Dirac operator. -/
+theorem primeHodgeCarrier_isLaplacianFromDirac
+    (atom : Cl11Atom A) (Q : A) :
+    IsLaplacianFromDirac (primeHodgeCarrier atom Q) := by
+  rfl
+
+/-- The Hodge bridge transports the prime chiral law to Laplacian commutation. -/
+theorem primeHodgeCarrier_laplacian_commutes
+    (atom : Cl11Atom A) (Q : A)
+    (h_chiral : Q * atom.mobiusParity =
+      -(atom.mobiusParity * Q)) :
+    laplacian (primeHodgeCarrier atom Q) * hodgeStar (primeHodgeCarrier atom Q) =
+      hodgeStar (primeHodgeCarrier atom Q) * laplacian (primeHodgeCarrier atom Q) := by
+  exact laplacian_commutes_hodge_of_dirac_closure
+    (primeHodgeCarrier atom Q)
+    (primeHodgeCarrier_isDiracHodgeChiral atom Q h_chiral)
+    (primeHodgeCarrier_isLaplacianFromDirac atom Q)
+
 /-! ## 2. Möbius Readback & Fermionic Supertrace -/
 
 /-- 🏆 THEOREM: The fermionic supertrace STr(q) evaluates to the inverse Euler product ∏ (1 - q_p). -/

@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.PrimeCyclotomicAmbientTower
 
 For each stage of the six-prime conductor tower, the element
 `stageRoot i = ζ₃₀₀₃₀ ^ rootExponent i` is a primitive
-`conductor i`-th root of unity.  Hence the literal intermediate field
+`conductor i`-th root of unity. Hence the literal intermediate field
 `fieldStage i = ℚ⟮stageRoot i⟯` is itself a `{conductor i}`-cyclotomic extension.
 
 Mathlib's uniqueness theorem for cyclotomic extensions then gives a genuine
@@ -66,18 +66,6 @@ instance fieldStage_isGalois (i : Fin 7) : IsGalois ℚ (fieldStage i) :=
 theorem fieldStage_isAbelianGalois (i : Fin 7) :
     IsAbelianGalois ℚ (fieldStage i) :=
   IsCyclotomicExtension.isAbelianGalois {conductor i} ℚ (fieldStage i)
-
-/-- The finite degree of each literal ambient stage agrees with Euler's
-`totient` of its cumulative conductor. -/
-theorem fieldStage_finrank_eq_totient (i : Fin 7) :
-    Module.finrank ℚ (fieldStage i) = Nat.totient (conductor i) := by
-  exact IsCyclotomicExtension.finrank (fieldStage i)
-    (Polynomial.cyclotomic.irreducible_rat (conductor_ne_zero i))
-
-/-- The carrier identification preserves the native finite dimension. -/
-theorem stageAlgEquiv_finrank (i : Fin 7) :
-    Module.finrank ℚ (StageField i) = Module.finrank ℚ (fieldStage i) := by
-  exact LinearEquiv.finrank_eq (stageAlgEquiv i).toLinearEquiv
 
 /-- Constant-size terminal consumer: the literal terminal intermediate field
 is Galois over `ℚ`. -/

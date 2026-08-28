@@ -161,6 +161,8 @@ import InfoGeometry.Critical.LogCFTCritical
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
 import InfoGeometry.Canonical.RecursiveExponentFilteredColimitCapstone
 import InfoGeometry.Arithmetic.BosonFermionMobiusTwistedHamiltonianBridge
+import InfoGeometry.Canonical.BostConnesCuntzKMSFunctionalCapstone
+import InfoGeometry.Canonical.BostConnesCuntzKMSStateCapstone
 
 namespace InfoGeometry
 

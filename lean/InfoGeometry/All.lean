@@ -7705,4 +7705,5 @@ import InfoGeometry.Physics.KleinBottleModularSewing
 import InfoGeometry.Physics.KleinBottleSewingExact
 import InfoGeometry.Causal.ProofDAGTopologicalClosureCapstone
 import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
+import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube

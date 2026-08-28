@@ -36,7 +36,7 @@ theorem gibbsFunctional_one (w : Fin N → ℝ) (hZ : partition w ≠ 0) :
   rw [mul_one, Matrix.trace_diagonal]
   dsimp [partition]
   rw [← Finset.mul_sum]
-  exact (div_self hZ)
+  exact inv_mul_cancel₀ hZ
 
 def lowTemperature (β : ℝ) : Prop := 1 < β
 
@@ -60,5 +60,7 @@ theorem normalized_gibbs_stage (β : ℝ) (hβ : 1 < β)
     gibbsFunctional w hZ (1 : Carrier N) = 1 ∧
       ¬ phaseBoundary β := by
   exact ⟨gibbsFunctional_one w hZ, lowTemperature_implies_not_phaseBoundary β hβ⟩
+
+end
 
 end InfoGeometry.Canonical.BostConnesFiniteMatrixKMS

@@ -7660,3 +7660,4 @@ import InfoGeometry.Twistor.TwistorZornDerivationTransport
 import InfoGeometry.Geometry.ProjectiveExponentialAffineBridge
 import InfoGeometry.Geometry.PluckerDualFlatBridge
 import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge
+import InfoGeometry.Nuclear.NuclearChiralPRMBridge

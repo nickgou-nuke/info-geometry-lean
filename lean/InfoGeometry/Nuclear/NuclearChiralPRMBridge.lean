@@ -108,6 +108,14 @@ theorem peirce_orthogonal : peircePlus * peirceMinus = 0 := by
 theorem peirce_completeness : peircePlus + peirceMinus = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;> (simp [peircePlus, peirceMinus]; ring)
 
+/-- The chiral doublet Hamiltonian has the Peirce spectral normal form. -/
+theorem prmMatrix_peirce_spectral_decomposition (state : ChiralDoubletState) :
+    prmMatrix state = energyPlus state • peircePlus + energyMinus state • peirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [prmMatrix, energyPlus, energyMinus, peircePlus, peirceMinus]
+  <;> ring
+
 /-- **Theorem**: Characteristic determinant of the chiral doublet matrix:
     $\det(\mathcal{H}_{\text{PRM}} - E I_2) = (E - E_+)(E - E_-)$. -/
 theorem prm_determinant_eq (state : ChiralDoubletState) (E : ℝ) :

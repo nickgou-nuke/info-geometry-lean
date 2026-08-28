@@ -249,7 +249,6 @@ import InfoGeometry.Physics.SolovievTransitionStrength
 import InfoGeometry.Physics.NuclearFiniteCARProjection
 import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 import InfoGeometry.Physics.SolovievInteractionParameterBridge
-import InfoGeometry.Physics.NuclearChiralPRMBridge
 
 /-!
 # Physics Umbrella

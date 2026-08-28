@@ -474,6 +474,8 @@ def collect_findings(
                 )
             )
     for path in files:
+        if not path.is_file():
+            continue
         findings.extend(audit_constructivity.scan_file(path, include_review=include_review))
     findings.sort(key=lambda item: (item.path, item.line, item.category))
     return findings

@@ -153,6 +153,12 @@ theorem jaynes_state_map_one
   rw [sub_mul, mul_one]
   ring
 
+/-- The normalized additive state carried by the affine Jaynes mixture. -/
+def jaynes_state_as_state
+    (φ_L φ_R : State O2) (p : ℂ) : State O2 where
+  val := jaynes_state φ_L φ_R p
+  map_one := jaynes_state_map_one φ_L φ_R p
+
 /-- The Chiral Difference State: $\phi_{\text{diff}} = \phi_L - \phi_R$. -/
 def chiral_diff_state (φ_L φ_R : State O2) : O2 →+ ℂ where
   toFun := fun A => φ_L A - φ_R A

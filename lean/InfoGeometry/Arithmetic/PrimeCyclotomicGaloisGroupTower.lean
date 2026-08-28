@@ -78,24 +78,24 @@ def gal30030To2310 : (K30030 ≃ₐ[ℚ] K30030) →* (K2310 ≃ₐ[ℚ] K2310) 
 after applying the cyclotomic Galois identifications. -/
 theorem gal6To2_unit_readback (σ : K6 ≃ₐ[ℚ] K6) :
     gal2EquivUnits (gal6To2 σ) = units6To2 (gal6EquivUnits σ) := by
-  rfl
+  simp [gal6To2]
 
 theorem gal30To6_unit_readback (σ : K30 ≃ₐ[ℚ] K30) :
     gal6EquivUnits (gal30To6 σ) = units30To6 (gal30EquivUnits σ) := by
-  rfl
+  simp [gal30To6]
 
 theorem gal210To30_unit_readback (σ : K210 ≃ₐ[ℚ] K210) :
     gal30EquivUnits (gal210To30 σ) = units210To30 (gal210EquivUnits σ) := by
-  rfl
+  simp [gal210To30]
 
 theorem gal2310To210_unit_readback (σ : K2310 ≃ₐ[ℚ] K2310) :
     gal210EquivUnits (gal2310To210 σ) = units2310To210 (gal2310EquivUnits σ) := by
-  rfl
+  simp [gal2310To210]
 
 theorem gal30030To2310_unit_readback (σ : K30030 ≃ₐ[ℚ] K30030) :
     gal2310EquivUnits (gal30030To2310 σ) =
       units30030To2310 (gal30030EquivUnits σ) := by
-  rfl
+  simp [gal30030To2310]
 
 /-- The complete inverse Galois tower as five explicit group homomorphisms. -/
 structure PrimeCyclotomicGaloisInverseTower where

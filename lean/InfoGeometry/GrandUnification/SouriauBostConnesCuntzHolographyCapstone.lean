@@ -117,13 +117,10 @@ theorem grand_souriau_bost_connes_dirac_hodge_synthesis
     (B.J.comp ((tilt_axis B).comp B.J) = -tilt_axis B) ∧
     (trace (tilt_axis B) = 0) ∧
     (F * F = 1) ∧
-    (F * B_matrix * F = R_matrix) :=
+    (F * InfoGeometry.Canonical.YangBaxterProof.B * F = R) :=
   ⟨J_flips_tilt B,
    anomaly_cancellation B trace h_trace_J_inv,
    F_sq,
    F_B_F_eq_R⟩
-where
-  B_matrix := F * R * F
-  R_matrix := R
 
 end InfoGeometry.GrandUnification.SouriauBostConnes

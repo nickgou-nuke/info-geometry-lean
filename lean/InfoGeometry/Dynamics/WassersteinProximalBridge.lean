@@ -92,6 +92,23 @@ theorem jkoEntropyStep_composition (η₁ η₂ : ℂ) :
     jkoEntropyStep η₁ * jkoEntropyStep η₂ = jkoEntropyStep (η₁ + η₂) := by
   exact errorFlow_composition η₁ η₂
 
+theorem jkoEntropyStep_zero :
+    jkoEntropyStep 0 = 1 := by
+  simp [jkoEntropyStep, errorFlowStep, lcftParabolicFlowStep,
+    infinitesimalNullGenerator,
+    InfoGeometry.Clifford.LogCftMonodromy.epsilon,
+    InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent]
+
+theorem jkoEntropyStep_mul_neg (η : ℂ) :
+    jkoEntropyStep η * jkoEntropyStep (-η) = 1 := by
+  unfold jkoEntropyStep
+  exact lcftParabolicFlow_mul_neg η
+
+theorem jkoEntropyStep_neg_mul (η : ℂ) :
+    jkoEntropyStep (-η) * jkoEntropyStep η = 1 := by
+  unfold jkoEntropyStep
+  exact lcftParabolicFlow_neg_mul η
+
 /--
 Executing `n` constant JKO-style steps with parameter `η` is the same as one
 parabolic update with accumulated time `(n : ℂ) * η`.
@@ -126,7 +143,8 @@ theorem gaussianHeatEnvelope_pow (η : ℂ) (n : ℕ) :
     jkoEntropyStep_eq_logCFTJordanShear]
   convert
     (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_pow_eq
-      (2 * η) n) using 1 <;> ring
+      (2 * η) n) using 1
+  ring_nf
 
 theorem gaussianHeatEnvelopeStep_mul_neg (η : ℂ) :
     gaussianHeatEnvelopeStep η * gaussianHeatEnvelopeStep (-η) = 1 := by

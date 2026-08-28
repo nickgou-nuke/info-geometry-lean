@@ -157,6 +157,64 @@ theorem deriv2_informationPartitionFunction_zero
 -/
 
 /--
+  Second derivative of the logarithmic partition readout at the origin.
+
+  The nonvanishing hypothesis is intentional: without it, the logarithm is
+  not differentiable along the required parameter path.  The result is the
+  exact operatorial quotient-rule formula, and does not identify this scalar
+  with a BKM form without an additional model-specific identification.
+-/
+theorem deriv2_logInformationPartitionFunction_zero
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E)
+    (hω1 : ω (1 : EndH E) = 1)
+    (hZ : ∀ t : ℝ, informationPartitionFunction ω K t ≠ 0) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) 0 =
+        ω (K * K) - (ω K) ^ 2 := by
+  let Z : ℝ → ℝ := fun t => informationPartitionFunction ω K t
+  have hZderiv : ∀ t : ℝ, HasDerivAt Z
+      (ω (NormedSpace.exp (t • K) * K)) t := by
+    intro t
+    simpa [Z] using
+      (hasDerivAt_informationPartitionFunction (ω := ω) (K := K) t)
+  have hlogderiv : ∀ t : ℝ, HasDerivAt (fun s : ℝ => Real.log (Z s))
+      ((Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K)) t := by
+    intro t
+    exact (Real.hasDerivAt_log (hZ t)).comp t (hZderiv t)
+  have hderiv_eq : (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) =
+      (fun t : ℝ => (Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K)) := by
+    funext t
+    exact (hlogderiv t).deriv
+  rw [hderiv_eq]
+  have hZ0 : Z 0 = 1 := by
+    simp [Z, informationPartitionFunction, hω1]
+  have hpart := (hZderiv 0)
+  have hnum : HasDerivAt (fun t : ℝ =>
+      ω (NormedSpace.exp (t • K) * K)) (ω (K * K)) 0 := by
+    have hExp := hasDerivAt_exp_smul_const K (0 : ℝ)
+    have hMul : HasDerivAt
+        (fun t : ℝ => NormedSpace.exp (t • K) * K) (K * K) 0 := by
+      simpa using hExp.mul (hasDerivAt_const (x := (0 : ℝ)) (c := K))
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul
+  have hinv : HasDerivAt (Z⁻¹)
+      (-((Z 0)⁻¹ ^ 2) * ω (NormedSpace.exp (0 • K) * K)) 0 := by
+    simpa [hZ0, div_eq_mul_inv, pow_two] using (hpart.inv (hZ 0))
+  have hprod := hinv.mul hnum
+  have hvalue : (Z 0)⁻¹ * ω K = ω K := by simp [hZ0]
+  have hformula := hprod.deriv
+  have hcomm : (fun t : ℝ => (Z t)⁻¹ *
+      ω (NormedSpace.exp (t • K) * K)) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K)) * Z⁻¹ := by
+    funext t
+    simp [mul_comm]
+  rw [hcomm]
+  simpa [logInformationPartitionFunction, informationPartitionFunction,
+    Z, hZ0, hω1, hvalue, sub_eq_add_neg, mul_assoc, mul_left_comm,
+    mul_comm, pow_two, Function.comp_def, add_comm, add_left_comm,
+    add_assoc] using hformula
+
+/--
 Log-partition derivative at `τ = 0` under the nondegeneracy property
 `ω(1) ≠ 0`.
 -/

@@ -56,7 +56,107 @@ theorem gns_state_expectation_recovery
   simpa [gnsVacuum, preGNSVacuum,
     InfoGeometry.OperatorAlgebra.GNSMathlibBridge.cyclicVector] using
     (InfoGeometry.OperatorAlgebra.GNSMathlibBridge.cyclicVector_inner_gnsStarAlgHom
-      (f := φ) (a := a))
+    (f := φ) (a := a))
+
+/--
+  The normalized GNS variance inequality for an arbitrary observable.
+
+  This is the exact complex-valued state statement.  It is deliberately
+  expressed with `‖φ a‖²`; a real-valued variance requires a separate real
+  state/readout and is not silently identified here.
+-/
+theorem gns_variance_nonneg
+    (φ : A →ₚ[ℂ] ℂ) (hφ : φ 1 = 1)
+    (a : A) :
+    0 ≤ (φ (star a * a)).re - ‖φ a‖ ^ 2 := by
+  let x : φ.GNS := gnsVacuum φ
+  let y : φ.GNS := (φ.gnsStarAlgHom a) x
+  have hcs := inner_mul_inner_self_le (𝕜 := ℂ) x y
+  have hxx : RCLike.re ⟪x, x⟫_ℂ = 1 := by
+    rw [show ⟪x, x⟫_ℂ = φ 1 by
+      simpa [x] using gnsVacuum_inner_self φ, hφ]
+    norm_num
+  have hyy : RCLike.re ⟪y, y⟫_ℂ = (φ (star a * a)).re := by
+    simpa [x, y] using congrArg RCLike.re
+      (InfoGeometry.OperatorAlgebra.GNSMathlibBridge.gnsStarAlgHom_matrix_coefficient φ a a)
+  have hxy : ⟪x, y⟫_ℂ = φ a := by
+    simpa [x, y] using gns_state_expectation_recovery φ a
+  have hyx_norm : ‖⟪y, x⟫_ℂ‖ = ‖φ a‖ := by
+    calc
+      ‖⟪y, x⟫_ℂ‖ = ‖⟪x, y⟫_ℂ‖ :=
+        (norm_inner_symm x y).symm
+      _ = ‖φ a‖ := by rw [hxy]
+  rw [hxy, hyx_norm, hxx, hyy] at hcs
+  nlinarith
+
+/-- A positive square has nonnegative real state readout, as witnessed by
+the norm of its GNS orbit vector. -/
+theorem gns_positive_square_re_nonneg
+    (φ : A →ₚ[ℂ] ℂ) (a : A) :
+    0 ≤ (φ (star a * a)).re := by
+  have hcoeff :=
+    InfoGeometry.OperatorAlgebra.GNSMathlibBridge.gnsStarAlgHom_matrix_coefficient
+      φ a a
+  change ⟪(φ.gnsStarAlgHom a) (gnsVacuum φ),
+      (φ.gnsStarAlgHom a) (gnsVacuum φ)⟫_ℂ = φ (star a * a) at hcoeff
+  have hnonneg :
+      0 ≤ RCLike.re ⟪(φ.gnsStarAlgHom a) (gnsVacuum φ),
+        (φ.gnsStarAlgHom a) (gnsVacuum φ)⟫_ℂ :=
+    @inner_self_nonneg ℂ φ.GNS _ _ _ _
+  rw [hcoeff] at hnonneg
+  exact hnonneg
+
+/-- A positive square has zero imaginary state readout, because its GNS
+coefficient is a self-inner product. -/
+theorem gns_positive_square_im_zero
+    (φ : A →ₚ[ℂ] ℂ) (a : A) :
+    (φ (star a * a)).im = 0 := by
+  have hcoeff :=
+    InfoGeometry.OperatorAlgebra.GNSMathlibBridge.gnsStarAlgHom_matrix_coefficient
+      φ a a
+  change ⟪(φ.gnsStarAlgHom a) (gnsVacuum φ),
+      (φ.gnsStarAlgHom a) (gnsVacuum φ)⟫_ℂ = φ (star a * a) at hcoeff
+  have him : RCLike.im ⟪(φ.gnsStarAlgHom a) (gnsVacuum φ),
+      (φ.gnsStarAlgHom a) (gnsVacuum φ)⟫_ℂ = 0 :=
+    inner_self_im _
+  rw [hcoeff] at him
+  exact him
+
+/-- The state readout of a positive square is exactly the complex embedding of
+its nonnegative real part. -/
+theorem gns_positive_square_eq_ofReal_re
+    (φ : A →ₚ[ℂ] ℂ) (a : A) :
+    φ (star a * a) = (φ (star a * a)).re := by
+  apply Complex.ext
+  · simp
+  · exact gns_positive_square_im_zero φ a
+
+/-- The normalized GNS variance gap is the squared norm of the centered
+observable orbit. -/
+theorem gns_variance_gap_eq_centered_norm_sq
+    (φ : A →ₚ[ℂ] ℂ) (hφ : φ 1 = 1) (a : A) :
+    (φ (star a * a)).re - ‖φ a‖ ^ 2 =
+      ‖(φ.gnsStarAlgHom a) (gnsVacuum φ) -
+        (φ a) • gnsVacuum φ‖ ^ 2 := by
+  let x : φ.GNS := gnsVacuum φ
+  let y : φ.GNS := (φ.gnsStarAlgHom a) x
+  have hxx : ⟪x, x⟫_ℂ = 1 := by
+    rw [show ⟪x, x⟫_ℂ = φ 1 by
+      simpa [x] using gnsVacuum_inner_self φ, hφ]
+  have hyy : ⟪y, y⟫_ℂ = φ (star a * a) := by
+    simpa [x, y] using
+      (InfoGeometry.OperatorAlgebra.GNSMathlibBridge.gnsStarAlgHom_matrix_coefficient
+        φ a a)
+  have hxy : ⟪x, y⟫_ℂ = φ a := by
+    simpa [x, y] using gns_state_expectation_recovery φ a
+  have hyx : ⟪y, x⟫_ℂ = starRingEnd ℂ (φ a) := by
+    rw [← inner_conj_symm, hxy]
+  have hnormy : (‖y‖ : ℂ) ^ 2 = ⟪y, y⟫_ℂ := by
+    exact (inner_self_eq_norm_sq_to_K y).symm
+  rw [norm_sub_sq, hnormy, hyy, hxy, hyx]
+  simp only [norm_smul, norm_one, mul_one]
+  simp [Complex.normSq, starRingEnd_apply, ← Complex.sq_norm,
+    sub_eq_add_neg, mul_add, add_mul]
 
 /-- The orbit map of the GNS cyclic vector, represented by the completion embedding. -/
 noncomputable def gnsOrbitMap (φ : A →ₚ[ℂ] ℂ) : A →ₗ[ℂ] φ.GNS where

@@ -14,6 +14,8 @@ classification.
 
 namespace InfoGeometry.Canonical.BostConnesFiniteMatrixKMS
 
+noncomputable section
+
 open Matrix
 open InfoGeometry.Algebra.BostConnesKMSPhaseTransition
 
@@ -34,15 +36,7 @@ theorem gibbsFunctional_one (w : Fin N → ℝ) (hZ : partition w ≠ 0) :
   rw [mul_one, Matrix.trace_diagonal]
   dsimp [partition]
   rw [← Finset.mul_sum]
-  field_simp
-
-theorem gibbsFunctional_diagonal (w : Fin N → ℝ) (hZ : partition w ≠ 0)
-    (i : Fin N) :
-    gibbsFunctional w hZ (Matrix.diagonal (fun j => if j = i then 1 else 0)) =
-      (partition w)⁻¹ * w i := by
-  unfold gibbsFunctional gibbsDensity
-  rw [Matrix.mul_diagonal, Matrix.trace_diagonal]
-  simp [partition]
+  exact (div_self hZ)
 
 def lowTemperature (β : ℝ) : Prop := 1 < β
 

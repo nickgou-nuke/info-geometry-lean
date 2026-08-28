@@ -9,16 +9,18 @@ import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Analysis.JaynesRelativeStates
 
 /-!
-# Souriau-Bost-Connes Cuntz Holographic Boundary Capstone
+# Souriau-Bost-Connes Algebraic Dirac-Hodge Capstone
 
-This capstone module formalizes the exact algebraic identification of the Dirac operator ($D$)
-and the Hodge dual ($\star$) on the Cantor boundary:
+This capstone module formalizes a finite algebraic interface for a Dirac-like
+sum and a conjugation-defined grading.  The names are suggestive interfaces;
+the file does not construct a Cantor boundary, a spectral triple, or a
+physical Bost--Connes representation:
 
 1. **The Souriau-Bost-Connes Cuntz Boundary**:
-   - The geometric shift down the left branch $S_L$ is the exterior derivative $d$.
-   - The geometric shift down the right branch $S_R = J S_L J$ is the codifferential $\delta$ (Hodge dual).
-   - The modular conjugation $J$ executes the Hodge duality (Fenchel/Legendre transform): $J^2 = I$.
-   - The Cuntz partition of unity: $(S_L S_L^*) + (S_R S_R^*) = I$.
+   - A supplied linear map $S_L$ and its separately supplied companion $S_L_adj$.
+   - The derived map $S_R = J S_L J$.
+   - The supplied involution law $J^2 = I$.
+   - A supplied partition identity for these linear maps.
 
 2. **The Graph Dirac Operator & Chiral Tilt Axis**:
    - Graph Dirac operator: $D = S_L + S_R$.
@@ -28,12 +30,16 @@ and the Hodge dual ($\star$) on the Cantor boundary:
    - $J K J = -K$.
    - Proves that modular conjugation $J$ flips the sign of the chiral phase axis.
 
-4. **🏆 THEOREM 2 (Half-Filled Dirac Sea Anomaly Cancellation)**:
-   - For any $J$-invariant trace / KMS state, $\operatorname{Tr}(K) = 0$.
-   - The net chiral anomaly vanishes identically on the half-filled Cantor Dirac sea.
+4. **THEOREM 2 (Conditional trace cancellation)**:
+   - For any additive functional invariant under the explicitly specified
+     conjugation by $J$, $\operatorname{Tr}(K) = 0$.
+   - This does not construct a KMS state, an analytic trace, or a Hilbert-space
+     completion.
 
-5. **🏆 THEOREM 3 (Yang-Baxter Scattering Protection)**:
-   - The scattering matrix $R$ and fusion matrix $F$ satisfy the braid relation: $F \cdot (F R F) \cdot F = R$.
+5. **THEOREM 3 (Finite Yang-Baxter identity)**:
+   - An imported finite algebraic identity is packaged in the final theorem;
+     this file does not identify it with a physical scattering matrix or prove
+     integrability of a quantum chain.
 -/
 
 noncomputable section
@@ -58,7 +64,9 @@ variable {H : Type*} [AddCommGroup H] [Module ℂ H] (B : CuntzDiracBoundary H)
 /-- The Right Shift is identically the Hodge Dual of the Left Shift via Modular Conjugation $J$. -/
 def S_R : H →ₗ[ℂ] H := B.J.comp (B.S_L.comp B.J)
 
-/-- The Adjoint Right Shift. -/
+/-- The companion right-shift linear map.
+    The carrier supplies `S_L_adj` as algebraic data; it does not assert an
+    analytic adjoint relation. -/
 def S_R_adj : H →ₗ[ℂ] H := B.J.comp (B.S_L_adj.comp B.J)
 
 /-- The Graph Dirac Operator on the Cantor Boundary: $D = S_L + S_R$. -/

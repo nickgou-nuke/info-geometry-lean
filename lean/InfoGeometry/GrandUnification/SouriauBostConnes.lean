@@ -7,8 +7,10 @@ import Mathlib.Tactic
 /-!
 # Grand Unification: Souriau-Bost-Connes Dirac-Hodge Boundary Operator
 
-This module formalizes the final topological closure of the Souriau-Bost-Connes
-Dirac-Hodge spectral triple on the Cuntz tree boundary:
+This module formalizes an algebraic Dirac-Hodge boundary model.  It records
+linear-map identities on an explicitly supplied carrier; it is not a
+construction of a spectral triple, a Cuntz $C^*$-algebra, or a physical
+Bost-Connes system:
 
 1. **Cuntz-Dirac Boundary**:
    - The left shift $S_L$ represents the exterior derivative $d$ (creation).
@@ -20,17 +22,19 @@ Dirac-Hodge spectral triple on the Cuntz tree boundary:
 2. **🏆 THEOREM 1 (`J_flips_tilt`)**:
    - Applying modular conjugation $J$ to the phase axis strictly reverses the chirality:
      $$J \circ K \circ J = -K$$
-   - This natively proves that the Hodge star executes the operatorial Legendre transform.
+   - This proves only the stated conjugation identity for the supplied linear map $J$.
 
-3. **🏆 THEOREM 2 (`anomaly_cancellation`)**:
+3. **THEOREM 2 (`anomaly_cancellation`)**:
    - For any $J$-invariant linear functional $\operatorname{Tr}$, the expectation of the phase axis vanishes:
      $$\operatorname{Tr}(K) = 0$$
-   - This closes the half-filled Dirac sea and guarantees the topological stability of the Lee-Yang circle.
+   - This is an algebraic trace-cancellation result under the explicitly stated
+     conjugation-invariance hypothesis. It does not assert a Lee--Yang theorem,
+     a KMS construction, or a consequence for the Riemann hypothesis.
 
 All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 -/
 
-namespace InfoGeometry.GrandUnification.SouriauBostConnes
+namespace InfoGeometry.GrandUnification.SouriauBostConnes.Foundation
 
 open Complex
 
@@ -53,7 +57,8 @@ variable (H : Type*) [AddCommGroup H] [Module ℂ H] [CuntzDiracBoundary H]
 def S_R : H →ₗ[ℂ] H :=
   (CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L ∘ₗ CuntzDiracBoundary.J
 
-/-- The Adjoint of the Right Shift. -/
+/-- The companion linear map used to form the right-shift projector.
+    No inner-product or adjoint law is assumed by this algebraic carrier. -/
 def S_R_adj : H →ₗ[ℂ] H :=
   (CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj ∘ₗ CuntzDiracBoundary.J
 
@@ -136,4 +141,4 @@ theorem anomaly_cancellation
   have h_two_ne : (2 : ℂ) ≠ 0 := by norm_num
   exact mul_eq_zero.mp h_two |>.resolve_left h_two_ne
 
-end InfoGeometry.GrandUnification.SouriauBostConnes
+end InfoGeometry.GrandUnification.SouriauBostConnes.Foundation

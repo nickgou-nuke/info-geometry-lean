@@ -76,6 +76,7 @@ import InfoGeometry.Quantum.JaynesCuntzKMSDerivationCapstone
 import InfoGeometry.Quantum.BostConnesPrimonCantorSpinChainCapstone
 import InfoGeometry.Quantum.BostConnesLeeYangSynthesis
 import InfoGeometry.Quantum.BostConnesPrimonZeroTemperatureLimitCapstone
+import InfoGeometry.Quantum.CantorCrystalSuperalgebraCapstone
 
 namespace InfoGeometry
 

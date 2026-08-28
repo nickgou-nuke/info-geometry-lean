@@ -6,6 +6,7 @@ noncomputable section
 namespace SouriauOnsagerBKM
 
 open Matrix
+open Complex
 open scoped Interval
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
@@ -227,6 +228,16 @@ theorem kuboMoriPairing_eq_integral
           (D.rpow s * star A * D.rpow (1 - s) * B) := by
   rfl
 
+/-- The normalized identity has unit Kubo--Mori pairing.  This is the
+  finite-stage normalization used by the categorical transport layer. -/
+@[simp] theorem kuboMoriPairing_one_one
+    (D : FaithfulDensityOperator n) :
+    D.kuboMoriPairing (1 : FiniteOperatorAlgebra n)
+        (1 : FiniteOperatorAlgebra n) = 1 := by
+  unfold kuboMoriPairing
+  simp only [D.kuboMoriIntegrand_one_one]
+  norm_num
+
 /-- Pointwise Hermitian symmetry of the genuine Kubo--Mori integrand on the
 full noncommutative operator algebra. -/
 theorem kuboMoriIntegrand_conj_symm
@@ -280,6 +291,20 @@ theorem kuboMoriPairing_conj_symm
           apply intervalIntegral.integral_congr
           intro s hs
           exact D.kuboMoriIntegrand_conj_symm A B s
+
+/- The diagonal of the finite BKM pairing is real whenever its diagonal
+  integrand is interval-integrable. -/
+theorem kuboMoriPairing_self_real
+    (D : FaithfulDensityOperator n)
+    (A : FiniteOperatorAlgebra n)
+    (h_integrable :
+      IntervalIntegrable
+        (D.kuboMoriIntegrand A A) MeasureTheory.volume 0 1) :
+    (D.kuboMoriPairing A A).im = 0 := by
+  have h := D.kuboMoriPairing_conj_symm A A h_integrable
+  have h_im := congrArg Complex.im h
+  simp only [star_def, conj_im] at h_im
+  linarith
 
 end FaithfulDensityOperator
 

@@ -421,6 +421,41 @@ theorem contactGradeFlipCarrier_extreme_charge_intertwining_dual
     simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus,
       injChargeMinus, injChargePlus]
 
+theorem contactGradeFlipCarrier_zeroSymp_charge
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (injSympZero D T) (injChargeMinus D x)) =
+      fiveGradedBracket D (injSympZero D T) (injChargePlus D x) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, injSympZero,
+      injChargeMinus, injChargePlus]
+
+theorem contactGradeFlipCarrier_zeroSymp_bracket
+    (T U : SymplecticTKKZero D) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (injSympZero D T) (injSympZero D U)) =
+      fiveGradedBracket D (injSympZero D T) (injSympZero D U) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, injSympZero]
+
+theorem contactGradeFlipCarrier_scale_zeroSymp_bracket
+    (c : ℝ) (T : SymplecticTKKZero D) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (genHscale D c) (injSympZero D T)) =
+      fiveGradedBracket D (genHscale D c) (injSympZero D T) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, genHscale,
+      injSympZero]
+
+theorem contactGradeFlipCarrier_charge_zeroSymp_bracket
+    (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (injChargeMinus D x) (injSympZero D T)) =
+      fiveGradedBracket D (injChargePlus D x) (injSympZero D T) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, injSympZero,
+      injChargeMinus, injChargePlus]
+
 theorem contactGradeFlipCarrier_genHscale (c : ℝ) :
     contactGradeFlipCarrier D (genHscale D c) = genHscale D c := by
   apply FiveGradedCarrier.ext <;> rfl

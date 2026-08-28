@@ -3422,6 +3422,7 @@ import InfoGeometry.Canonical.KZRoPEMonodromyComparison
 import InfoGeometry.Canonical.CuntzKTowerCommutation
 import InfoGeometry.Canonical.ConcreteCuntzKCommutationZornCapstone
 import InfoGeometry.Canonical.InductiveLimitTraceKMSStateCapstone
+import InfoGeometry.Canonical.HadjiivanovCFTFibonacciHolographyCapstone
 
 namespace InfoGeometry
 

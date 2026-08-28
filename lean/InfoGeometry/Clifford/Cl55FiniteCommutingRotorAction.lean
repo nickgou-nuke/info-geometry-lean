@@ -76,4 +76,13 @@ theorem rankTwoRotor_inverse
           rw [← rotor_add B hB, ← rotor_add C hC]
           simp [rotor_zero]
 
+theorem rankTwoRotor_relative
+    (B C : A) (hB : B * B = -(1 : A)) (hC : C * C = -(1 : A))
+    (hBC : B * C = C * B) (s t u v : ℝ) :
+    rankTwoRotor B C (-s) (-t) * rankTwoRotor B C u v =
+      rankTwoRotor B C (u - s) (v - t) := by
+  have h := rankTwoRotor_add B C hB hC hBC (-s) u (-t) v
+  rw [add_comm (-s) u, add_comm (-t) v] at h
+  exact h.symm
+
 end InfoGeometry.Clifford.FiniteCommutingRotorAction

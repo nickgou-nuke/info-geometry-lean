@@ -91,12 +91,6 @@ theorem primeHodgeCarrier_isDiracHodgeChiral
     IsDiracHodgeChiral (primeHodgeCarrier atom Q) :=
   h_chiral
 
-/-- The supplied prime Laplacian is definitionally the square of its Dirac operator. -/
-theorem primeHodgeCarrier_isLaplacianFromDirac
-    (atom : Cl11Atom A) (Q : A) :
-    IsLaplacianFromDirac (primeHodgeCarrier atom Q) := by
-  rfl
-
 /-- The Hodge bridge transports the prime chiral law to Laplacian commutation. -/
 theorem primeHodgeCarrier_laplacian_commutes
     (atom : Cl11Atom A) (Q : A)
@@ -107,7 +101,7 @@ theorem primeHodgeCarrier_laplacian_commutes
   exact laplacian_commutes_hodge_of_dirac_closure
     (primeHodgeCarrier atom Q)
     (primeHodgeCarrier_isDiracHodgeChiral atom Q h_chiral)
-    (primeHodgeCarrier_isLaplacianFromDirac atom Q)
+    rfl
 
 /-! ## 2. Möbius Readback & Fermionic Supertrace -/
 

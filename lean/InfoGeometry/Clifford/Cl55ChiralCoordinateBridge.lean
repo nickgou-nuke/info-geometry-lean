@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
+import InfoGeometry.Clifford.Cl55ChiralSectorFlipContract
 
 noncomputable section
 
@@ -47,5 +48,19 @@ noncomputable def chiralCoordinateEquiv
       chiralSectors_isCompl).symm.trans
     (LinearEquiv.prodCongr (chiralPlusCoordinateEquiv hPlus)
       (chiralMinusCoordinateEquiv hMinus))
+
+noncomputable def chiralCoordinateEquiv_of_bijective_flip
+    (flip : chiralPlusSector →ₗ[ℝ] chiralMinusSector)
+    (hflip : Function.Bijective flip) :
+    SpinorSpace 5 ≃ₗ[ℝ] (Fin 16 → ℝ) × (Fin 16 → ℝ) := by
+  have hdim := chiralSector_finrank_each_eq_16_of_bijective flip hflip
+  exact chiralCoordinateEquiv hdim.1 hdim.2
+
+theorem chiralCoordinateEquiv_of_bijective_flip_finrank
+    (flip : chiralPlusSector →ₗ[ℝ] chiralMinusSector)
+    (hflip : Function.Bijective flip) :
+    Module.finrank ℝ (SpinorSpace 5) =
+      Module.finrank ℝ ((Fin 16 → ℝ) × (Fin 16 → ℝ)) := by
+  exact (chiralCoordinateEquiv_of_bijective_flip flip hflip).finrank_eq
 
 end InfoGeometry.Clifford.Cl55ChiralCoordinateBridge

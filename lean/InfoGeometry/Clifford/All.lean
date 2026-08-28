@@ -49,9 +49,13 @@ import InfoGeometry.Clifford.EmergentSpacetimeBilinear
 import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
 import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl55ChiralSectorFlipContract
+import InfoGeometry.Clifford.Cl55ChiralSectorPredicateBridge
+import InfoGeometry.Clifford.NilpotentBinomial
+import InfoGeometry.Clifford.Cl55ChiralBlockAction
 import InfoGeometry.Clifford.Cl55SpinorVolumeOddTransport
 import InfoGeometry.Clifford.Cl55ChiralCoordinateBridge
 import InfoGeometry.Clifford.Cl55ExteriorToMatrixSpinorLinearBridge
+import InfoGeometry.Clifford.NilpotentBinomial
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl44Spinors
@@ -298,6 +302,7 @@ import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 import InfoGeometry.Clifford.Cl55SpinGroupChiralityBridge
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
+import InfoGeometry.Clifford.Cl55ChiralBlockAction
 import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl55SpinGroupRestrictedChiralRepresentation
 import InfoGeometry.Clifford.Cl55SpinGroupChiralLinearEquivRepresentation

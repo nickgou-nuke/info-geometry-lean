@@ -75,6 +75,19 @@ theorem reynolds_mul_left {G : Type*} {n : ℕ} [Fintype G] [Group G]
   unfold reynoldsOperator
   rw [mul_smul_comm, sum_mul_rep_left]
 
+theorem reynolds_idempotent {G : Type*} {n : ℕ} [Fintype G] [Group G]
+    (rep : FiniteMatrixGroupRepresentation G n) :
+    reynoldsOperator rep * reynoldsOperator rep = reynoldsOperator rep := by
+  rw [show reynoldsOperator rep * reynoldsOperator rep =
+      reynoldsOperator rep * ((Fintype.card G : ℝ)⁻¹ • ∑ g, rep.value g) from rfl]
+  rw [Matrix.mul_smul, Finset.mul_sum]
+  simp_rw [reynolds_mul_right]
+  rw [Finset.sum_const, Finset.card_univ]
+  have hcard : (Fintype.card G : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
+  ext i j
+  simp only [Matrix.smul_apply]
+  rw [nsmul_eq_mul, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hcard, one_mul]
+
 structure Weights (G : Type*) [Fintype G] where
   value : G → ℝ
   nonneg : ∀ g, 0 ≤ value g

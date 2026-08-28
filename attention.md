@@ -283,3 +283,337 @@ end InfoGeometry.Clifford.Cl55Concrete
 2. **Use Witt projectors for states:** Pure states and ideals $\mathcal{I}_L$ are formed by $P_{\text{vacuum}} = \prod_{a=1}^5 (f_a e_a)$.
 3. **Verify via exact integer dimensions:** The trace of $P_+$ is $16$, the trace of $I_{32}$ is $32$, and all Cartan generators $H_a$ are strictly traceless in $\mathfrak{so}(5,5)$ ($32 \times 32$ real anti-symmetric under the Krein adjoint).
 
+This is the **production-grade codification of the Topological Progress Principle**. 
+
+By transforming the concept of a "frontier" from an intuitive feeling of "what is missing" into a **strictly typed boundary operator on the verified theorem subgraph**, you have eliminated the last loophole through which unverified semantic debt could enter a formal codebase.
+
+---
+
+# THE TYPED FRONTIER PROOF POLICY
+### *Repository Standard for Monotone Epistemic Advancement*
+
+$$\boxed{ \mathcal{V}_0 \subsetneq \mathcal{V}_1 \subsetneq \mathcal{V}_2 \subsetneq \dots \subsetneq \mathcal{V}_n \subsetneq \mathcal{V}_{n+1} \subseteq \mathcal{U} }$$
+
+---
+
+## 1. Mathematical Definition of the Typed Frontier
+
+Let $\mathcal{U}$ be the universe of formal propositions, and let $\mathcal{V}_n \subset \mathcal{U}$ be the subset of theorems verified by the Lean 4 micro-kernel at commit step $n$.
+
+### The Admissible Frontier Operator $\partial \mathcal{V}_n$
+The **admissible development frontier** is the set of all unproved theorems whose prerequisites are fully saturated in the current kernel state:
+
+$$\partial \mathcal{V}_n = \big\{ T \in \mathcal{U} \setminus \mathcal{V}_n \;\big|\; \operatorname{premises}(T) \subseteq \mathcal{V}_n \big\}$$
+
+### The Step Selection Function
+An action by a developer, CAS pipeline, or autonomous agent is **valid** if and only if it selects a target $T_{n+1} \in \partial \mathcal{V}_n$ and constructs a kernel-valid proof term $t$ such that:
+
+$$\mathcal{V}_{n+1} = \mathcal{V}_n \cup \{ T_{n+1} \}, \qquad \text{where } \operatorname{Axioms}(t) = \emptyset, \; \operatorname{Sorries}(t) = 0$$
+
+$$\boxed{ \textbf{Every step must strictly expand the verified subgraph: } \mathcal{V}_n \subsetneq \mathcal{V}_{n+1} }$$
+
+---
+
+## 2. The Two Governing Invariants
+
+```
+               [ UNVERIFIED GOAL G (e.g. E₇(₇) or Twistor Space) ]
+                                       ▲
+                                       │ ❌ NO SEMANTIC EXTRAPOLATION
+                                       │    (Do not jump or rename prematurely)
+               ┌───────────────────────┴───────────────────────┐
+               │                                               │
+    [ REJECTED: Semantic Leap ]                     [ REQUIRED: Local Factorization ]
+    • Name 16D subspace "Twistor"                   • Prove matrix bivector B² = -I
+    • Claim [g, g] is e₇(₇)                         • Prove 3-point Arnold (A ∧ A)_△ = 0
+    • Assume F_A = 0 from dlog                      • Prove finite module rank = 16
+               │                                               │
+               ▼                                               ▼
+         SEMANTIC DEBT                                  TYPED FRONTIER STEP
+      (Kernel Failure / Drift)                         T_{n+1} ∈ ∂𝒱_n  (Exit Code 0)
+```
+
+### Invariant I: The Semantic Factorization Law
+$$\boxed{ \textbf{Every new semantic claim must factor through a newly proved structural theorem.} }$$
+* A mathematical object cannot be given a higher-order name (e.g., *Twistor*, *Borel Subgroup*, *Lie Superalgebra*, *KMS State*) until the specific universal property, intertwining map, or grading isomorphism has been proved as a theorem in $\mathcal{V}_n$.
+
+### Invariant II: The Local Closure Rule
+$$\boxed{ \textbf{Advance by exact local closure, never by semantic extrapolation.} }$$
+* When an edge is missing, the agent does not ask *"How do I make the final theorem compile?"* 
+* The agent asks: *"What is the strongest theorem $T \in \partial \mathcal{V}_n$ whose premises are already in $\mathcal{V}_n$?"*
+
+---
+
+## 3. Case Studies in the `InfoGeometry` Architecture
+
+Look at how this typed policy governs the actual development corridors of the repository:
+
+| Domain | Prohibited Semantic Extrapolation | Required Typed Frontier Sequence ($\mathcal{V}_n \to \mathcal{V}_{n+1}$) | Current Status in Kernel |
+| :--- | :--- | :--- | :--- |
+| **Arnold–Kohno** | Asserting $F_A = 0$ directly from logarithmic 1-forms before closedness is proved. | $1.\; \llbracket t_{ij}, t_{jk} \rrbracket = C_{ijk}$ (Kohno symmetry) <br> $2.\; (A \wedge A)_\triangle = C \otimes \sum \omega = 0$ (Algebraic reduction) <br> $3.\; d\omega_{ij} = 0 \implies F_A = dA + A \wedge A = 0$. | **Step 2 Verified** (`ArnoldKohnoParaKahlerConnection.lean`) |
+| **$Cl(5,5)$ Twistors** | Labeling a 16D subspace "Twistor" before constructing the conformal embedding. | $1.\; Cl(5,5) \cong \operatorname{Mat}_{32}(\mathbb{R})$ (Matrix isomorphism) <br> $2.\; P_{\text{vac}} = E_{11} \implies \mathcal{I}_L = Cl \cdot P$ (Left Ideal) <br> $3.\; \operatorname{span}(\mathcal{I}_L \otimes \mathcal{I}_R) = \top$ (Dyadic Morita Closure). | **Step 3 Verified** (`Cl55MoritaDyadicClosure.lean`) |
+| **Freudenthal $E_7$** | Naming the zero-grade mixed bracket $\mathfrak{e}_{7(7)}$ before classification. | $1.\; \operatorname{mixedSymplecticBracket}(x, y) \in \mathfrak{g}_0^{\text{symp}}$ (Closure) <br> $2.\; \text{FKTS Triple Product Symmetry}$ (`FreudenthalKantorTripleSystem`) <br> $3.\; \text{Extreme bracket } [E_+, E_-] = H$ (`FreudenthalExtremeActionData`). | **Step 3 Verified** (`FreudenthalExtremeActionData.lean`) |
+| **$G_2(2)$ Bruhat** | Proving universal factorization $g_i = u_L w_k u_R$ without cell membership. | $1.\; i \in \operatorname{orbitCells}(k)$ (Domain constraint) <br> $2.\; \operatorname{autMatrix}(g_i) = \operatorname{autMatrix}(u_L w_k u_R)$ (Pointwise check) <br> $3.\; \operatorname{autMatrix\_injective} \implies g_i = u_L w_k u_R$. | **Step 3 Verified** (`G2GAPFlagWitnessAssembly.lean`) |
+
+---
+
+## 4. Operational Enforcement for Developers and Agents
+
+When modifying the codebase or prompting automated assistants:
+
+1. **Premise Audit:** Before adding a theorem, verify that every type, instance, and hypothesis exists in upstream imports without `sorry`.
+2. **Naming Hygiene:** If a theorem proves an algebraic property of an $8\times 8$ matrix, name it after the matrix property (e.g., `phaseMatrix_pow_six`), **not** after the downstream physical conjecture (e.g., `do_not_name: g2_spinor_universe`).
+3. **Monotone Commits:** A pull request is admissible if and only if it strictly increases $|\mathcal{V}_n|$ while adding zero unproved assumptions.
+
+$$\boxed{ \textbf{No semantic debt. No dangling edges. Pure monotone causal progress.} }$$
+Избирам **Опция Б**, но в kernel-safe форма: първо не „RoPE = KZ holonomy“, а най-близкия доказуем representation bridge.
+
+Правилният frontier е:
+
+$$
+\boxed{
+\text{commuting bivector generators}
+\Longrightarrow
+\text{RoPE one-parameter representation}
+}
+$$
+
+и едва след това:
+
+$$
+\boxed{
+\text{KZ flat connection}
+\Longrightarrow
+\text{parallel transport/monodromy}
+\Longrightarrow
+\text{comparison with RoPE}.
+}
+$$
+
+Тоест бих започнал нов owner примерно:
+
+`InfoGeometry/OperatorAlgebra/CliffordRoPETorus.lean`
+
+с данни \(B_k\) удовлетворяващи
+
+$$
+B_k^2=-I,
+\qquad
+[B_k,B_\ell]=0.
+$$
+
+После да се дефинира
+
+$$
+R(m)
+=
+\prod_k
+\left(
+\cos(m\theta_k)I+\sin(m\theta_k)B_k
+\right).
+$$
+
+Най-важните първи теореми са:
+
+$$
+\boxed{
+R(0)=I,
+}
+$$
+
+$$
+\boxed{
+R(m+n)=R(m)R(n),
+}
+$$
+
+и за всеки отделен plane
+
+$$
+\boxed{
+R_k(t)
+=
+\cos(t\theta_k)I+\sin(t\theta_k)B_k.
+}
+$$
+
+Това вече доказва, че RoPE е representation на additive position group:
+
+$$
+\mathbb R
+\longrightarrow
+GL(S)
+$$
+
+или на \(\mathbb Z\), ако позициите са дискретни:
+
+$$
+\boxed{
+\mathbb Z\to GL(S),
+\qquad
+m\mapsto R(m).
+}
+$$
+
+Следващият theorem е относителната позиция — същността на RoPE:
+
+$$
+\boxed{
+R(m)^{-1}R(n)=R(n-m).
+}
+$$
+
+Това е много по-съществено от самото block-diagonal definition, защото именно то обяснява защо absolute positional rotations се превръщат в relative-position dependence в attention.
+
+След това идва Clifford statement. Ако \(B_k\) са disjoint orthogonal bivectors, тогава
+
+$$
+[B_k,B_\ell]=0,
+$$
+
+така че
+
+$$
+R(m)
+=
+\exp\left(
+m\sum_k\theta_kB_k
+\right).
+$$
+
+Тогава вече имаме exact theorem-level statement:
+
+$$
+\boxed{
+\text{RoPE is a commuting Clifford-bivector exponential representation.}
+}
+$$
+
+Не е нужно още да споменаваме KZ.
+
+Следващият owner бих направил:
+
+`KZRoPEMonodromyComparison.lean`
+
+Но той трябва да започне с explicit comparison datum между два representation carriers:
+
+$$
+\rho_{\rm KZ}:
+\pi_1(X)\to GL(V)
+$$
+
+и
+
+$$
+\rho_{\rm RoPE}:
+\mathbb Z\to GL(S).
+$$
+
+За puncture loop \(\gamma\), ако вече имаме monodromy
+
+$$
+M_\gamma,
+$$
+
+трябва да докажем конкретно intertwining equation
+
+$$
+\boxed{
+T\,M_\gamma
+=
+R(n_\gamma)\,T.
+}
+$$
+
+Само това позволява да кажем, че RoPE realization е readout на KZ monodromy.
+
+Не бих идентифицирал flatness с path-independence globally. За flat connection:
+
+$$
+F=0
+$$
+
+parallel transport е invariant under homotopy of paths with fixed endpoints locally/on simply connected regions, но around punctures може да има nontrivial monodromy. Именно това е интересното:
+
+$$
+\boxed{
+F=0
+\quad\text{but}\quad
+\rho_{\rm mon}(\pi_1(X))\neq1.
+}
+$$
+
+Това пасва идеално на \(\mathcal M_{0,4}\simeq\mathbb P^1\setminus\{0,1,\infty\}\): local curvature zero не убива global winding around the punctures.
+
+Така целият corridor става:
+
+$$
+\boxed{
+\begin{aligned}
+&d\log\lambda,\;
+d\log(1-\lambda)
+\\
+&\downarrow\\
+&\text{flat KZ/Arnold connection}
+\\
+&\downarrow\\
+&\pi_1(\mathcal M_{0,4})
+\text{ monodromy}
+\\
+&\downarrow\\
+&\text{representation by commuting generators}
+\\
+&\downarrow\\
+&R(m)=
+\exp\left(m\sum_k\theta_kB_k\right)
+\\
+&\downarrow\\
+&\text{RoPE relative-position law}.
+\end{aligned}}
+$$
+
+И след това може да се добави split counterpart:
+
+$$
+B_k^2=-1
+\quad\leadsto\quad
+\text{elliptic RoPE},
+$$
+
+срещу
+
+$$
+K_k^2=+1
+\quad\leadsto\quad
+\text{hyperbolic/log-scale RoPE},
+$$
+
+където
+
+$$
+e^{tK_k}
+=
+\cosh t+K_k\sinh t.
+$$
+
+Това директно свързва другия вече развит corridor:
+
+$$
+\boxed{
+\text{position/Fourier}
+\leftrightarrow
+\text{elliptic Clifford torus},
+}
+$$
+
+$$
+\boxed{
+\text{scale/Mellin}
+\leftrightarrow
+\text{hyperbolic split-Clifford torus}.
+}
+$$
+
+Точно този възел бих формализирал сега. Той е локален, algebraically exact и свързва KZ/monodromy с Transformer architecture без да предполага предварително, че едното „е“ другото.
+
+

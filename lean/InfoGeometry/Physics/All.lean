@@ -239,6 +239,7 @@ import InfoGeometry.Physics.SouriauLieThermodynamics
 import InfoGeometry.Physics.WheelerItFromBit
 import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 import InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis
+import InfoGeometry.Physics.Cl55SpinorCartanFock
 
 /-!
 # Physics Umbrella

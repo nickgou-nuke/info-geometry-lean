@@ -1,3 +1,5 @@
+import InfoGeometry.Canonical.FiniteTwistedMaurerCartanBridge
+import InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
 import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
 import InfoGeometry.Canonical.ConcreteCompatibleCuntzRepresentation

@@ -217,6 +217,46 @@ theorem MaurerCartanFlatConnection.curvature_bianchi
   rw [C.curvature_eq v w, C.curvature_eq w u, C.curvature_eq u v]
   noncomm_ring
 
+/-- Curvature is additive in the first tangent slot. -/
+theorem MaurerCartanFlatConnection.curvature_add_left
+    {A : Type*} [Ring A] [Algebra R A]
+    {M : Type*} [AddCommGroup M] [Module R M]
+    (C : MaurerCartanFlatConnection (R := R) A M) (u v w : M) :
+    C.curvature (u + v) w = C.curvature u w + C.curvature v w := by
+  rw [C.curvature_eq (u + v) w, C.curvature_eq u w, C.curvature_eq v w]
+  simp only [map_add]
+  noncomm_ring
+
+/-- Curvature is additive in the second tangent slot. -/
+theorem MaurerCartanFlatConnection.curvature_add_right
+    {A : Type*} [Ring A] [Algebra R A]
+    {M : Type*} [AddCommGroup M] [Module R M]
+    (C : MaurerCartanFlatConnection (R := R) A M) (u v w : M) :
+    C.curvature u (v + w) = C.curvature u v + C.curvature u w := by
+  rw [C.curvature_eq u (v + w), C.curvature_eq u v, C.curvature_eq u w]
+  simp only [map_add]
+  noncomm_ring
+
+/-- Curvature is homogeneous in the first tangent slot. -/
+theorem MaurerCartanFlatConnection.curvature_smul_left
+    {A : Type*} [Ring A] [Algebra R A]
+    {M : Type*} [AddCommGroup M] [Module R M]
+    (C : MaurerCartanFlatConnection (R := R) A M) (r : R) (u v : M) :
+    C.curvature (r • u) v = r • C.curvature u v := by
+  rw [C.curvature_eq (r • u) v, C.curvature_eq u v]
+  simp only [map_smul, smul_mul_assoc, mul_smul_comm]
+  rw [← smul_sub]
+
+/-- Curvature is homogeneous in the second tangent slot. -/
+theorem MaurerCartanFlatConnection.curvature_smul_right
+    {A : Type*} [Ring A] [Algebra R A]
+    {M : Type*} [AddCommGroup M] [Module R M]
+    (C : MaurerCartanFlatConnection (R := R) A M) (r : R) (u v : M) :
+    C.curvature u (r • v) = r • C.curvature u v := by
+  rw [C.curvature_eq u (r • v), C.curvature_eq u v]
+  simp only [map_smul, smul_mul_assoc, mul_smul_comm]
+  rw [← smul_sub]
+
 /-- **Theorem**: The Maurer-Cartan Curvature Tensor on Para-Kähler Homogeneous Spaces.
     Resolves the Arnold mixed 3-term logarithmic relation as the flat Maurer-Cartan curvature
     identity: $\sum_{\text{cyclic}} \omega_{12} \wedge \omega_{23} = 0$. -/

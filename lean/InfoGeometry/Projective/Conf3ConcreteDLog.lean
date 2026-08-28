@@ -71,6 +71,28 @@ def exponentialScalingChart (t : ℝ) : FQ3 :=
       · exact pow_ne_zero 2 (Complex.exp_ne_zero (t : ℂ))
       · exact standardPoints_pairwise_non_isotropic i j hij⟩
 
+def scaleConfiguration (c : ℂ) (X : FQ3) (hc : c ≠ 0) : FQ3 :=
+  ⟨fun i => c • X.points i,
+    by
+      intro i j hij
+      rw [quadSeparation_smul]
+      exact mul_ne_zero (pow_ne_zero 2 hc)
+        (X.pairwise_non_isotropic i j hij)⟩
+
+theorem scaleConfiguration_separation
+    (c : ℂ) (X : FQ3) (hc : c ≠ 0) (i j : Fin 3) :
+    (scaleConfiguration c X hc).separation i j =
+      c ^ 2 * X.separation i j := by
+  exact quadSeparation_smul c (X.points i) (X.points j)
+
+theorem dlogCoefficient_scaleConfiguration
+    (c : ℂ) (X : FQ3) (hc : c ≠ 0) (i j : Fin 3) :
+    dlogCoefficient (scaleConfiguration c X hc) i j =
+      c⁻¹ ^ 2 * dlogCoefficient X i j := by
+  unfold dlogCoefficient
+  rw [scaleConfiguration_separation]
+  field_simp
+
 theorem exponentialScalingChart_separation
     (t : ℝ) (i j : Fin 3) :
     (exponentialScalingChart t).separation i j =
@@ -83,10 +105,10 @@ theorem exponentialScalingChart_separation_norm
     ‖(exponentialScalingChart t).separation i j‖ =
       Real.exp (2 * t) * ‖standardConfiguration.separation i j‖ := by
   rw [exponentialScalingChart_separation]
-  rw [norm_mul, norm_pow, Complex.norm_exp]
-  norm_num
-  rw [Real.exp_mul]
-  ring
+  rw [norm_mul, norm_pow, Complex.norm_exp, Complex.ofReal_re]
+  rw [pow_two, ← Real.exp_add]
+  have h2 : t + t = 2 * t := by ring
+  rw [h2]
 
 /-- The real-valued logarithmic potential on the non-isotropic complement. -/
 noncomputable def logPotential (X : FQ3) (i j : Fin 3) : ℝ :=
@@ -95,6 +117,54 @@ noncomputable def logPotential (X : FQ3) (i j : Fin 3) : ℝ :=
 /-- Pullback of the projective logarithmic potential along a real chart. -/
 def chartLogPotential (γ : ℝ → FQ3) (i j : Fin 3) : InfoGeometry.LogPotential ℝ :=
   fun t => logPotential (γ t) i j
+
+theorem exponentialScalingChart_logPotential
+    (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
+    logPotential (exponentialScalingChart t) i j =
+      2 * t + logPotential standardConfiguration i j := by
+  unfold logPotential
+  rw [exponentialScalingChart_separation_norm]
+  have hsep : ‖standardConfiguration.separation i j‖ ≠ 0 :=
+    norm_ne_zero_iff.mpr (standardConfiguration.pairwise_non_isotropic i j hij)
+  rw [Real.log_mul (by positivity) hsep, Real.log_exp]
+
+theorem exponentialScalingChart_chartLogPotential_eq_affine
+    (i j : Fin 3) (hij : i ≠ j) :
+    chartLogPotential exponentialScalingChart i j =
+      fun t => 2 * t + logPotential standardConfiguration i j := by
+  funext t
+  exact exponentialScalingChart_logPotential t i j hij
+
+theorem hasDerivAt_exponentialScalingChart_logPotential
+    (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
+    HasDerivAt (fun s => logPotential (exponentialScalingChart s) i j) 2 t := by
+  have h := (hasDerivAt_id t).const_mul 2 |>.add_const
+    (logPotential standardConfiguration i j)
+  convert h using 1 <;> norm_num
+  funext s
+  exact exponentialScalingChart_logPotential s i j hij
+
+theorem hasDerivAt_exponentialScalingChart_chartLogPotential
+    (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
+    HasDerivAt (chartLogPotential exponentialScalingChart i j) 2 t := by
+  simpa [chartLogPotential] using
+    hasDerivAt_exponentialScalingChart_logPotential t i j hij
+
+theorem deriv_exponentialScalingChart_chartLogPotential
+    (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
+    deriv (chartLogPotential exponentialScalingChart i j) t = 2 := by
+  exact (hasDerivAt_exponentialScalingChart_chartLogPotential t i j hij).deriv
+
+theorem secondDeriv_exponentialScalingChart_chartLogPotential
+    (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
+    deriv (fun s => deriv (chartLogPotential exponentialScalingChart i j) s) t = 0 := by
+  have hconst : HasDerivAt (fun _ : ℝ => (2 : ℝ)) 0 t := hasDerivAt_const t 2
+  have heq : (fun s => deriv (chartLogPotential exponentialScalingChart i j) s) =
+      (fun _ : ℝ => (2 : ℝ)) := by
+    funext s
+    exact deriv_exponentialScalingChart_chartLogPotential s i j hij
+  rw [heq]
+  exact hconst.deriv
 
 theorem exp_logPotential (X : FQ3) (i j : Fin 3) (hij : i ≠ j) :
     Real.exp (logPotential X i j) = ‖X.separation i j‖ := by
@@ -228,6 +298,51 @@ theorem dlogCoefficient_ne_zero (X : FQ3) (i j : Fin 3) (hij : i ≠ j) :
     dlogCoefficient X i j ≠ 0 := by
   unfold dlogCoefficient
   simp [one_div, X.pairwise_non_isotropic i j hij]
+
+/-- The cyclic coefficient sum used by the linear Arnold identity. -/
+def dlogCoefficientArnoldSum (X : FQ3) : ℂ :=
+  dlogCoefficient X 0 1 * dlogCoefficient X 1 2 +
+    dlogCoefficient X 1 2 * dlogCoefficient X 2 0 +
+    dlogCoefficient X 2 0 * dlogCoefficient X 0 1
+
+theorem dlogCoefficientArnoldSum_scaleConfiguration
+    (c : ℂ) (X : FQ3) (hc : c ≠ 0) :
+    dlogCoefficientArnoldSum (scaleConfiguration c X hc) =
+      c⁻¹ ^ 4 * dlogCoefficientArnoldSum X := by
+  unfold dlogCoefficientArnoldSum
+  simp only [dlogCoefficient_scaleConfiguration]
+  ring
+
+/-- The present quadratic-separation scaffold does not satisfy the linear
+    Arnold partial-fraction identity, even on the standard configuration. -/
+theorem standardConfiguration_dlogCoefficient_arnold_sum :
+    dlogCoefficient standardConfiguration 0 1 *
+        dlogCoefficient standardConfiguration 1 2 +
+      dlogCoefficient standardConfiguration 1 2 *
+        dlogCoefficient standardConfiguration 2 0 +
+      dlogCoefficient standardConfiguration 2 0 *
+        dlogCoefficient standardConfiguration 0 1 = (3 / 2 : ℂ) := by
+  unfold dlogCoefficient FQ3.separation standardConfiguration standardPoints
+    quadSeparation quadForm
+  norm_num [Fin.sum_univ_succ]
+
+theorem standardConfiguration_dlogCoefficient_arnold_sum_ne_zero :
+    dlogCoefficientArnoldSum standardConfiguration ≠ 0 := by
+  unfold dlogCoefficientArnoldSum
+  rw [standardConfiguration_dlogCoefficient_arnold_sum]
+  norm_num
+
+theorem standardConfiguration_not_arnold_coefficient_relation :
+    ¬ dlogCoefficientArnoldSum standardConfiguration = 0 :=
+  standardConfiguration_dlogCoefficient_arnold_sum_ne_zero
+
+theorem dlogCoefficientArnoldSum_scale_standard_ne_zero
+    (c : ℂ) (hc : c ≠ 0) :
+    dlogCoefficientArnoldSum (scaleConfiguration c standardConfiguration hc) ≠ 0 := by
+  rw [dlogCoefficientArnoldSum_scaleConfiguration]
+  unfold dlogCoefficientArnoldSum
+  rw [standardConfiguration_dlogCoefficient_arnold_sum]
+  exact mul_ne_zero (pow_ne_zero 4 (inv_ne_zero hc)) (by norm_num)
 
 end
 end InfoGeometry.Projective.Conf3ConcreteDLog

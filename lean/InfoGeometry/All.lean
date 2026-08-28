@@ -6637,6 +6637,7 @@ import InfoGeometry.Thermodynamics.PrimonLogDeRham
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SoftmaxPartitionBridge
 import InfoGeometry.Clifford.SouriauGibbsSoftmax
+import InfoGeometry.Clifford.SouriauGibbsSimplexBridge
 import InfoGeometry.Thermodynamics.SouriauFoliation
 import InfoGeometry.Thermodynamics.SouriauKillingFlow
 import InfoGeometry.Thermodynamics.SouriauModularS

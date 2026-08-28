@@ -316,6 +316,7 @@ import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl11GeometricCompass
 import InfoGeometry.Clifford.Cl55WittSpinorLaboratory
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Clifford.Cl55NativeNilpotentInterference
 import InfoGeometry.Clifford.Cl55CayleyRoPEBridge
 import InfoGeometry.Clifford.Cl55IntertwinerFrontier
 import InfoGeometry.Clifford.Cl55SplitRotorPeirce

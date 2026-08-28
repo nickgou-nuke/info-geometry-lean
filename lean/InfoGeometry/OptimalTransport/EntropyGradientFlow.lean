@@ -238,6 +238,40 @@ theorem affineJKOProximalPoint_composition
   unfold affineJKOProximalPoint
   ring
 
+def vectorAffineJKOFunctional (a x₀ x : Fin 2 → ℝ) (tau : ℝ) : ℝ :=
+  ∑ i, affineJKOFunctional (a i) tau (x₀ i) (x i)
+
+def vectorAffineJKOProximalPoint (a x₀ : Fin 2 → ℝ) (tau : ℝ) : Fin 2 → ℝ :=
+  fun i => affineJKOProximalPoint (a i) tau (x₀ i)
+
+theorem vectorAffineJKOProximalPoint_minimizer
+    (a x₀ x : Fin 2 → ℝ) (tau : ℝ) (htau : 0 < tau) :
+    vectorAffineJKOFunctional a x₀ (vectorAffineJKOProximalPoint a x₀ tau) tau ≤
+      vectorAffineJKOFunctional a x₀ x tau := by
+  unfold vectorAffineJKOFunctional vectorAffineJKOProximalPoint
+  apply Finset.sum_le_sum
+  intro i hi
+  exact affineJKOProximalPoint_minimizer (a i) tau (x₀ i) (x i) htau
+
+theorem vectorAffineJKOProximalPoint_composition
+    (a : Fin 2 → ℝ) (tau₁ tau₂ : ℝ) (x₀ : Fin 2 → ℝ) :
+    vectorAffineJKOProximalPoint a
+        (vectorAffineJKOProximalPoint a x₀ tau₁) tau₂ =
+      vectorAffineJKOProximalPoint a x₀ (tau₁ + tau₂) := by
+  funext i
+  exact affineJKOProximalPoint_composition (a i) tau₁ tau₂ (x₀ i)
+
+def vectorAffineJKOArgmin (a x₀ : Fin 2 → ℝ) (tau : ℝ) : Set (Fin 2 → ℝ) :=
+  {x | ∀ y, vectorAffineJKOFunctional a x₀ x tau ≤
+    vectorAffineJKOFunctional a x₀ y tau}
+
+theorem vectorAffineJKOArgmin_proximalPoint_mem
+    (a x₀ : Fin 2 → ℝ) (tau : ℝ) (htau : 0 < tau) :
+    vectorAffineJKOProximalPoint a x₀ tau ∈
+      vectorAffineJKOArgmin a x₀ tau := by
+  intro y
+  exact vectorAffineJKOProximalPoint_minimizer a x₀ y tau htau
+
 /-! ## Parabolic natural-parameter proximal steps -/
 
 /--

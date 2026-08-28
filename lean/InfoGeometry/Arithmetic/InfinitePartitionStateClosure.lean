@@ -44,6 +44,25 @@ theorem summable_bosonic_primon_partition (β : ℝ) (hβ : 1 < β) :
   have h : -β < -1 := by linarith
   exact Real.summable_nat_rpow.mpr h
 
+/-- The same convergent partition weight on the positive natural subtype.
+    This is the carrier used by the Fock-space readout. -/
+theorem summable_positive_bosonic_primon_partition (β : ℝ) (hβ : 1 < β) :
+    Summable (fun (n : ℕ+) => (n.1 : ℝ) ^ (-β)) := by
+  have h := summable_bosonic_primon_partition β hβ
+  exact h.comp_injective Subtype.val_injective
+
+/-- The positive-index partition has a strictly positive total mass. -/
+theorem positive_bosonic_primon_partition_pos (β : ℝ) (hβ : 1 < β) :
+    0 < ∑' (n : ℕ+), (n.1 : ℝ) ^ (-β) := by
+  have hsum := summable_positive_bosonic_primon_partition β hβ
+  have hnonneg : ∀ n : ℕ+, 0 ≤ (n.1 : ℝ) ^ (-β) := fun n =>
+    Real.rpow_nonneg (Nat.cast_nonneg n.1) (-β)
+  have hle : ((1 : ℕ+).1 : ℝ) ^ (-β) ≤ ∑' (n : ℕ+), (n.1 : ℝ) ^ (-β) :=
+    le_hasSum hsum.hasSum 1 hnonneg
+  have h1 : ((1 : ℕ+).1 : ℝ) ^ (-β) = 1 := by simp
+  rw [h1] at hle
+  exact lt_of_lt_of_le zero_lt_one hle
+
 /-- 2. Strict positivity of the partition sum $Z(\beta) > 0$ for $\beta > 1$. -/
 theorem bosonic_partition_sum_pos (β : ℝ) (hβ : 1 < β) :
     0 < ∑' (n : ℕ), (n : ℝ) ^ (-β) := by

@@ -87,25 +87,25 @@ noncomputable def chiCLM : DoubledPeirce →L[ℝ] DoubledPeirce :=
 
 theorem thetaCLM_sq : thetaCLM.comp thetaCLM =
   -(ContinuousLinearMap.id ℝ DoubledPeirce) := by
-  apply ContinuousLinearMap.ext
-  rintro ⟨x, y⟩
-  change theta (theta (x, y)) = -(x, y)
-  exact theta_sq_apply (x, y)
+  apply DFunLike.ext _ _
+  intro p
+  change theta (theta p) = -p
+  exact theta_sq_apply p
 
 theorem xiCLM_sq : xiCLM.comp xiCLM =
   ContinuousLinearMap.id ℝ DoubledPeirce := by
-  apply ContinuousLinearMap.ext
-  rintro ⟨x, y⟩
-  change xi (xi (x, y)) = (x, y)
-  have h := congrArg (fun T : DoubledPeirce →ₗ[ℝ] DoubledPeirce => T (x, y)) xi_sq
+  apply DFunLike.ext _ _
+  intro p
+  change xi (xi p) = p
+  have h := congrArg (fun T : DoubledPeirce →ₗ[ℝ] DoubledPeirce => T p) xi_sq
   simpa [LinearMap.comp_apply] using h
 
 theorem chiCLM_sq : chiCLM.comp chiCLM =
   ContinuousLinearMap.id ℝ DoubledPeirce := by
-  apply ContinuousLinearMap.ext
-  rintro ⟨x, y⟩
-  change chi (chi (x, y)) = (x, y)
-  have h := congrArg (fun T : DoubledPeirce →ₗ[ℝ] DoubledPeirce => T (x, y)) chi_sq
+  apply DFunLike.ext _ _
+  intro p
+  change chi (chi p) = p
+  have h := congrArg (fun T : DoubledPeirce →ₗ[ℝ] DoubledPeirce => T p) chi_sq
   simpa [LinearMap.comp_apply] using h
 
 end InfoGeometry.Lie.PeirceDoubledComplexStructure

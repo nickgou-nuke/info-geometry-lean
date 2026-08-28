@@ -10,6 +10,28 @@ variable {I : Type*} [Fintype I]
 noncomputable def finiteKL (p q : I → ℝ) : ℝ :=
   ∑ i : I, p i * Real.log (p i / q i)
 
+theorem scalarKLDivergence_pos_of_ne
+    {x y : ℝ} (hx : 0 < x) (hy : 0 < y) (hxy : x ≠ y) :
+    0 < InfoGeometry.Prequantum.JaynesKLPotential.scalarKLDivergence x y := by
+  have hratio : y / x ≠ 1 := by
+    intro h
+    apply hxy
+    exact ((div_eq_one_iff_eq (ne_of_gt hx)).mp h).symm
+  have hlog := Real.log_lt_sub_one_of_pos (div_pos hy hx) hratio
+  have hmul := mul_lt_mul_of_pos_left hlog hx
+  have hrewrite : x * (y / x - 1) = y - x := by
+    calc
+      x * (y / x - 1) = x * (y / x) - x := by ring
+      _ = y - x := by rw [mul_div_cancel₀ y (ne_of_gt hx)]
+  rw [hrewrite] at hmul
+  unfold InfoGeometry.Prequantum.JaynesKLPotential.scalarKLDivergence
+  have hlog_div : Real.log (y / x) = -Real.log (x / y) := by
+    rw [Real.log_div (ne_of_gt hy) (ne_of_gt hx),
+      Real.log_div (ne_of_gt hx) (ne_of_gt hy)]
+    ring
+  rw [hlog_div] at hmul
+  linarith
+
 theorem finiteKL_nonneg
     (p q : I → ℝ)
     (hp_sum : ∑ i : I, p i = 1)

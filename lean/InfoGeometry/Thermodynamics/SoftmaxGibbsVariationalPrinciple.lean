@@ -4,6 +4,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.Thermodynamics.FiniteKLNonnegativity
 
 noncomputable section
 
@@ -164,6 +165,32 @@ theorem freeEnergy_gibbsState (T : InverseTemperature) (H : I → ℝ) :
   rw [h_kl_self, mul_zero] at h_diff
   linarith
 
+/--
+  **VARIATIONAL MINIMALITY THEOREM**:
+  The Gibbs state $p^\ast$ minimizes the free energy functional on the interior of the simplex:
+  $$\forall p \in \Delta_{>0}^{N-1}, \quad \mathcal{F}_\beta(p^\ast) \le \mathcal{F}_\beta(p).$$
+-/
+theorem freeEnergy_ge_equilibrium
+    (T : InverseTemperature) (H : I → ℝ) (p : I → ℝ)
+    (hp_sum : ∑ i : I, p i = 1)
+    (hp_pos : ∀ i : I, 0 < p i) :
+    freeEnergy T H (gibbsState T H) ≤ freeEnergy T H p := by
+  have h_diff : freeEnergy T H p - freeEnergy T H (gibbsState T H) =
+      (1 / T.beta) * klDivergence p (gibbsState T H) := by
+    have h_fe_gibbs := freeEnergy_gibbsState T H
+    have h_kl := freeEnergy_sub_equilibrium_eq_kl T H p hp_sum hp_pos
+    rw [← h_fe_gibbs] at h_kl
+    exact h_kl
+  have h_kl_eq : klDivergence p (gibbsState T H) =
+      FiniteKLNonnegativity.finiteKL p (gibbsState T H) := rfl
+  have h_kl_nonneg : 0 ≤ klDivergence p (gibbsState T H) := by
+    rw [h_kl_eq]
+    exact FiniteKLNonnegativity.finiteKL_nonneg p (gibbsState T H) hp_sum
+      (gibbsState_sum_one T H) hp_pos (gibbsState_pos T H)
+  have h_scaled_nonneg : 0 ≤ (1 / T.beta) * klDivergence p (gibbsState T H) :=
+    mul_nonneg (one_div_pos.mpr T.beta_pos).le h_kl_nonneg
+  linarith
+
 /-! ### 4. Grand Variational Synthesis -/
 
 /--
@@ -173,6 +200,7 @@ Unifies:
 1. Positivity and normalization of the Gibbs state: $\sum p_i^\ast = 1, p_i^\ast > 0$.
 2. Equilibrium free energy: $\mathcal{F}_\beta(p^\ast) = -\frac{1}{\beta}\log Z$.
 3. Exact Free Energy - KL Identity: $\mathcal{F}_\beta(p) - \mathcal{F}_\beta(p^\ast) = \frac{1}{\beta} D_{\mathrm{KL}}(p \parallel p^\ast)$.
+4. Global Variational Minimality: $\mathcal{F}_\beta(p^\ast) \le \mathcal{F}_\beta(p)$.
 -/
 theorem grand_softmax_variational_synthesis
     (T : InverseTemperature) (H : I → ℝ) (p : I → ℝ)
@@ -181,10 +209,12 @@ theorem grand_softmax_variational_synthesis
     (∑ i : I, gibbsState T H i = 1 ∧
      freeEnergy T H (gibbsState T H) = -(1 / T.beta) * Real.log (partitionSum T H)) ∧
     (freeEnergy T H p - freeEnergy T H (gibbsState T H) =
-      (1 / T.beta) * klDivergence p (gibbsState T H)) := by
+      (1 / T.beta) * klDivergence p (gibbsState T H)) ∧
+    (freeEnergy T H (gibbsState T H) ≤ freeEnergy T H p) := by
   have h_fe_gibbs := freeEnergy_gibbsState T H
   have h_kl := freeEnergy_sub_equilibrium_eq_kl T H p hp_sum hp_pos
   rw [← h_fe_gibbs] at h_kl
-  exact ⟨⟨gibbsState_sum_one T H, h_fe_gibbs⟩, h_kl⟩
+  have h_min := freeEnergy_ge_equilibrium T H p hp_sum hp_pos
+  exact ⟨⟨gibbsState_sum_one T H, h_fe_gibbs⟩, h_kl, h_min⟩
 
 end InfoGeometry.Thermodynamics.SoftmaxGibbsVariational

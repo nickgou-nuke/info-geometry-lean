@@ -28,7 +28,7 @@ $$
 All proofs are complete in native Lean 4 with 0 `sorry`s.
 -/
 
-variable {M N : Type*} [Fintype M] [Fintype N] [Nonempty M] [Nonempty N]
+variable {M N : Type*}
 
 /-! ### 1. Entropic Regularization & Gibbs Kernel -/
 
@@ -54,7 +54,7 @@ theorem gibbsKernel_ne_zero (E : RegularizationParam) (C : M → N → ℝ) (m :
 /-! ### 2. Dual Scaling Potentials & Transport Coupling -/
 
 /-- Positive scaling dual vectors: $u \in \mathbb{R}_{>0}^M, v \in \mathbb{R}_{>0}^N$. -/
-structure ScalingPotentials (M N : Type*) [Fintype M] [Fintype N] where
+structure ScalingPotentials (M N : Type*) where
   u : M → ℝ
   v : N → ℝ
   u_pos : ∀ m : M, 0 < u m
@@ -76,16 +76,16 @@ theorem sinkhornCoupling_nonneg (E : RegularizationParam) (C : M → N → ℝ) 
 /-! ### 3. Marginal Projection Operators -/
 
 /-- Row marginal projection: $\sum_{n \in N} P_{mn}$. -/
-def rowMarginal (P : M → N → ℝ) (m : M) : ℝ :=
+def rowMarginal [Fintype N] (P : M → N → ℝ) (m : M) : ℝ :=
   ∑ n : N, P m n
 
 /-- Column marginal projection: $\sum_{m \in M} P_{mn}$. -/
-def colMarginal (P : M → N → ℝ) (n : N) : ℝ :=
+def colMarginal [Fintype M] (P : M → N → ℝ) (n : N) : ℝ :=
   ∑ m : M, P m n
 
 /-- **THE SINKHORN ROW FACTORIZATION THEOREM**:
     $\sum_n P_{mn}(u, v) = u_m \sum_n K_{mn} v_n$. -/
-theorem sinkhorn_row_marginal (E : RegularizationParam) (C : M → N → ℝ) (S : ScalingPotentials M N) (m : M) :
+theorem sinkhorn_row_marginal [Fintype N] (E : RegularizationParam) (C : M → N → ℝ) (S : ScalingPotentials M N) (m : M) :
     rowMarginal (sinkhornCoupling E C S) m = S.u m * ∑ n : N, gibbsKernel E C m n * S.v n := by
   dsimp [rowMarginal, sinkhornCoupling]
   calc (∑ n : N, S.u m * gibbsKernel E C m n * S.v n)
@@ -98,7 +98,7 @@ theorem sinkhorn_row_marginal (E : RegularizationParam) (C : M → N → ℝ) (S
 
 /-- **THE SINKHORN COLUMN FACTORIZATION THEOREM**:
     $\sum_m P_{mn}(u, v) = v_n \sum_m u_m K_{mn}$. -/
-theorem sinkhorn_col_marginal (E : RegularizationParam) (C : M → N → ℝ) (S : ScalingPotentials M N) (n : N) :
+theorem sinkhorn_col_marginal [Fintype M] (E : RegularizationParam) (C : M → N → ℝ) (S : ScalingPotentials M N) (n : N) :
     colMarginal (sinkhornCoupling E C S) n = S.v n * ∑ m : M, S.u m * gibbsKernel E C m n := by
   dsimp [colMarginal, sinkhornCoupling]
   calc (∑ m : M, S.u m * gibbsKernel E C m n * S.v n)
@@ -114,7 +114,7 @@ theorem sinkhorn_col_marginal (E : RegularizationParam) (C : M → N → ℝ) (S
 /-! ### 4. The Birkhoff Polytope & Doubly-Stochastic Property -/
 
 /-- Doubly-stochastic property on $N \times N$: non-negative entries, row sums 1, column sums 1. -/
-def IsDoublyStochastic (P : N → N → ℝ) : Prop :=
+def IsDoublyStochastic [Fintype N] (P : N → N → ℝ) : Prop :=
   (∀ i j : N, 0 ≤ P i j) ∧ (∀ i : N, rowMarginal P i = 1) ∧ (∀ j : N, colMarginal P j = 1)
 
 /--
@@ -123,7 +123,7 @@ def IsDoublyStochastic (P : N → N → ℝ) : Prop :=
   it satisfies the coupled nonlinear diagonal equations:
   $$u_i = \frac{1}{\sum_j K_{ij} v_j}, \qquad v_j = \frac{1}{\sum_i u_i K_{ij}}.$$
 -/
-theorem sinkhorn_doublyStochastic_of_coupled_scaling
+theorem sinkhorn_doublyStochastic_of_coupled_scaling [Fintype N]
     (E : RegularizationParam) (C : N → N → ℝ) (S : ScalingPotentials N N)
     (hu : ∀ i : N, S.u i * (∑ j : N, gibbsKernel E C i j * S.v j) = 1)
     (hv : ∀ j : N, S.v j * (∑ i : N, S.u i * gibbsKernel E C i j) = 1) :
@@ -139,23 +139,23 @@ theorem sinkhorn_doublyStochastic_of_coupled_scaling
 /-! ### 5. Softmax Attention as 1-Sided Scaling -/
 
 /-- Softmax attention matrix: 1-sided scaling where $v = \mathbf{1}$ and $u_i = 1 / Z_i$. -/
-def softmaxAttentionMatrix (E : RegularizationParam) (C : M → N → ℝ) (m : M) (n : N) : ℝ :=
+def softmaxAttentionMatrix [Fintype N] (E : RegularizationParam) (C : M → N → ℝ) (m : M) (n : N) : ℝ :=
   gibbsKernel E C m n / ∑ j : N, gibbsKernel E C m j
 
 /-- Positivity of row partition function for each query token. -/
-theorem row_partitionSum_pos (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
+theorem row_partitionSum_pos [Fintype N] [Nonempty N] (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
     0 < ∑ j : N, gibbsKernel E C m j := by
   apply Finset.sum_pos
   · intro j _
     exact gibbsKernel_pos E C m j
   · exact Finset.univ_nonempty
 
-theorem row_partitionSum_ne_zero (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
+theorem row_partitionSum_ne_zero [Fintype N] [Nonempty N] (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
     (∑ j : N, gibbsKernel E C m j) ≠ 0 :=
   ne_of_gt (row_partitionSum_pos E C m)
 
 /-- Softmax attention satisfies row stochasticity: $\sum_n A_{mn} = 1$. -/
-theorem softmaxAttention_row_stochastic (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
+theorem softmaxAttention_row_stochastic [Fintype N] [Nonempty N] (E : RegularizationParam) (C : M → N → ℝ) (m : M) :
     rowMarginal (softmaxAttentionMatrix E C) m = 1 := by
   dsimp [rowMarginal, softmaxAttentionMatrix]
   rw [← Finset.sum_div]
@@ -172,7 +172,7 @@ Unifies:
 3. Doubly-stochastic Birkhoff closure under dual diagonal scaling.
 4. 1-sided row normalization of Softmax attention: $\sum_n A_{mn} = 1$.
 -/
-theorem grand_sinkhorn_birkhoff_synthesis
+theorem grand_sinkhorn_birkhoff_synthesis [Fintype N] [Nonempty N]
     (E : RegularizationParam) (C : N → N → ℝ) (S : ScalingPotentials N N)
     (hu : ∀ i : N, S.u i * (∑ j : N, gibbsKernel E C i j * S.v j) = 1)
     (hv : ∀ j : N, S.v j * (∑ i : N, S.u i * gibbsKernel E C i j) = 1) :

@@ -50,7 +50,8 @@ theorem phaseToPlucker6_add (X Y : Phase) :
         (phaseToPlucker6 X) (phaseToPlucker6 Y) =
       phaseToPlucker6 (X + Y) := by
   ext <;> simp [phaseToPlucker6,
-    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add] <;> try ring
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add]
+  all_goals ring
 
 theorem phaseToPlucker6_scale (r : ℝ) (X : Phase) :
     InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r
@@ -58,6 +59,43 @@ theorem phaseToPlucker6_scale (r : ℝ) (X : Phase) :
       phaseToPlucker6 (r • X) := by
   ext <;> simp [phaseToPlucker6,
     InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale]
+
+theorem plucker6_add_comm (P Q :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add P Q =
+      InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add Q P := by
+  ext <;> simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add] <;> ring
+
+theorem plucker6_add_assoc (P Q R :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add P Q) R =
+      InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add P
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add Q R) := by
+  ext <;> simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add] <;> ring
+
+theorem plucker6_scale_add (r : ℝ)
+    (P Q : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add P Q) =
+      InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r P)
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r Q) := by
+  ext <;> simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add,
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale] <;> ring
+
+theorem plucker6_scale_scale (r s : ℝ)
+    (P : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r
+        (InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale s P) =
+      InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale (r * s) P := by
+  ext <;> simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale]
+    <;> ring
+
+theorem plucker6_scale_one
+    (P : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale 1 P = P := by
+  ext <;> simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale]
 
 theorem phaseNull_iff_phasePluckerEquiv_kleinNull (X : Phase) :
     chiralPairing X.1 X.2 = 0 ↔

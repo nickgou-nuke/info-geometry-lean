@@ -92,3 +92,4 @@ import InfoGeometry.Twistor.RollingSpinorMobiusBridge
 import InfoGeometry.Twistor.PhaseNativePluckerBridge
 import InfoGeometry.Twistor.QutritPermutationAssociatedTwistorMonodromy
 import InfoGeometry.Twistor.TwistorZornDerivationTransport
+import InfoGeometry.Twistor.PenroseWittPluckerKleinBridge

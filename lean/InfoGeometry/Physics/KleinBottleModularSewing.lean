@@ -57,7 +57,7 @@ def chargeSwitch (w : Bitword) : Bitword :=
 /-- 🏆 THEOREM: The charge switch operator is strictly involutive: $\operatorname{switch}^2 = \operatorname{id}$. -/
 theorem chargeSwitch_involutive (w : Bitword) :
     chargeSwitch (chargeSwitch w) = w := by
-  ext i
+  funext i
   dsimp [chargeSwitch]
   have hw : w i = 0 ∨ w i = 1 := by
     rcases w i with ⟨val, hval⟩
@@ -65,11 +65,10 @@ theorem chargeSwitch_involutive (w : Bitword) :
     · left; rfl
     · right; rfl
   rcases hw with h0 | h1
-  · rw [if_pos h0]
-    have h1_ne : (1 : Fin 2) ≠ 0 := by decide
-    rw [if_neg h1_ne, h0]
-  · rw [if_neg (by rw [h1]; decide)]
-    rw [if_pos rfl, h1]
+  · rw [h0]
+    rfl
+  · rw [h1]
+    rfl
 
 /-! ## 2. The $V_4$ Klein Symmetry & Modular Action -/
 
@@ -79,7 +78,7 @@ inductive KleinFourOp where
   | tilt : KleinFourOp
   | switch : KleinFourOp
   | tiltSwitch : KleinFourOp
-deriving DecidableEq, Fintype
+  deriving DecidableEq, Fintype
 
 /-- Group multiplication on $V_4$. -/
 def mulKlein : KleinFourOp → KleinFourOp → KleinFourOp

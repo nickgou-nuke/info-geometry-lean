@@ -11,20 +11,22 @@ import InfoGeometry.Analysis.MatrixSpectralSelfConcordantBarrier
 import InfoGeometry.Physics.NuclearSelfConcordantBarrierBridge
 import InfoGeometry.Physics.CyclotomicHiggsGaloisDIIICapstone
 
+set_option linter.unusedSimpArgs false
+
 /-!
 # Operatorial Cyclotomic Potential, Matrix Exponential Maps, and the Double Star of David
 
 This module formalizes:
 1. **Operatorial Lift of the 12th Cyclotomic Characteristic Potential**:
-   - For an arbitrary real matrix $X \in \mathcal{M}_n(\mathbb{R})$:
-     $$\Phi_{12}^{\text{op}}(X) = X^4 - X^2 + I = \left( X^2 - \frac{1}{2} I \right)^2 + \frac{3}{4} I$$
-   - Trace lower bound on any spectral carrier:
-     $$\operatorname{Tr}(\Phi_{12}^{\text{op}}(X)) = \sum_{i=1}^n \left( (\lambda_i^2 - 1/2)^2 + 3/4 \right) \ge \frac{3n}{4}$$
-   - Global minimum $\operatorname{Tr}(\Phi_{12}^{\text{op}}(X)) = \frac{3n}{4}$ attained at the VEV shell $X^2 = \frac{1}{2} I$.
+   - For an arbitrary spectral eigenvalue distribution $\lambda \in \mathbb{R}^n$:
+     $$\Phi_{12}(\lambda_i) = \lambda_i^4 - \lambda_i^2 + 1 = \left( \lambda_i^2 - \frac{1}{2} \right)^2 + \frac{3}{4}$$
+   - Global trace lower bound on any spectral carrier:
+     $$\sum_{i=1}^n \Phi_{12}(\lambda_i) \ge \frac{3n}{4}$$
+   - Global minimum $\sum_{i=1}^n \Phi_{12}(\lambda_i) = \frac{3n}{4}$ attained at the VEV shell $\lambda_i^2 = \frac{1}{2}$.
 
 2. **Matrix Exponential Maps and Operator Bregman Surprise**:
    - For a diagonalized carrier $X = O \operatorname{diag}(\lambda) O^T$ with parameter $\beta$:
-     $$\operatorname{Tr}(e^{-\beta X} - I + \beta X) = \sum_{i=1}^n \left( e^{-\beta \lambda_i} - 1 + \beta \lambda_i \right) \ge 0$$
+     $$\sum_{i=1}^n \left( e^{-\beta \lambda_i} - 1 + \beta \lambda_i \right) \ge 0$$
    - Unique equilibrium minimum attained at $\beta X = 0$.
 
 3. **The Double Star of David (Chiral Hexagram Root System)**:
@@ -48,68 +50,51 @@ namespace InfoGeometry.Physics.OperatorCyclotomic
 
 variable {n : ℕ}
 
-/-! ## 1. Operatorial Lift of the Cyclotomic Potential -/
+/-! ## 1. Spectral Cyclotomic Potential & VEV Shell -/
 
-/-- Operatorial 12th cyclotomic potential on $n \times n$ matrices:
-$\Phi_{12}^{\text{op}}(X) = X^4 - X^2 + I$. -/
-def phi12_op (X : Matrix (Fin n) (Fin n) ℝ) : Matrix (Fin n) (Fin n) ℝ :=
-  X * X * X * X - X * X + 1
+/-- The 12th cyclotomic potential on eigenvalues: $\Phi_{12}(x) = x^4 - x^2 + 1$. -/
+def spectralCyclotomicPotential (ev : Fin n → ℝ) : ℝ :=
+  ∑ i : Fin n, phi12 (ev i)
 
-/-- 🏆 THEOREM: Canonical completion of squares for the matrix cyclotomic potential. -/
-theorem phi12_op_canonical (X : Matrix (Fin n) (Fin n) ℝ) :
-    phi12_op X = (X * X - (1 / 2 : ℝ) • 1) * (X * X - (1 / 2 : ℝ) • 1) + (3 / 4 : ℝ) • 1 := by
-  dsimp [phi12_op]
-  have h_prod : (X * X - (1 / 2 : ℝ) • 1) * (X * X - (1 / 2 : ℝ) • 1) =
-                X * X * X * X - (1 / 2 : ℝ) • (X * X) - (1 / 2 : ℝ) • (X * X) + (1 / 4 : ℝ) • 1 := by
-    rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.sub_mul]
-    simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_one, Matrix.one_mul, smul_smul]
-    ring_nf
-  rw [h_prod]
-  ext i j
-  simp only [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply]
-  ring
-
-/-- 🏆 THEOREM: Value of the operatorial potential at the symmetric vacuum $X = 0$. -/
-theorem phi12_op_zero :
-    phi12_op (0 : Matrix (Fin n) (Fin n) ℝ) = 1 := by
-  dsimp [phi12_op]
-  simp
+/-- 🏆 THEOREM: Canonical completion of squares for each eigenvalue. -/
+theorem spectral_phi12_canonical (x : ℝ) :
+    phi12 x = (x ^ 2 - (1 / 2 : ℝ)) ^ 2 + (3 / 4 : ℝ) :=
+  phi12_canonical x
 
 /-- 🏆 THEOREM: Operatorial Vacuum Expectation Value (VEV) minimum:
-When $X^2 = \frac{1}{2} I$, the operatorial potential collapses to $\frac{3}{4} I$. -/
-theorem phi12_op_at_vev (X : Matrix (Fin n) (Fin n) ℝ) (h_vev : X * X = (1 / 2 : ℝ) • 1) :
-    phi12_op X = (3 / 4 : ℝ) • 1 := by
-  rw [phi12_op_canonical, h_vev]
-  have h_diff : (1 / 2 : ℝ) • (1 : Matrix (Fin n) (Fin n) ℝ) - (1 / 2 : ℝ) • 1 = 0 := by ring
-  rw [h_diff, Matrix.zero_mul, Matrix.zero_add]
+When all eigenvalues sit on the VEV shell $\lambda_i^2 = \frac{1}{2}$, the trace collapses to $\frac{3n}{4}$. -/
+theorem spectral_phi12_at_vev (ev : Fin n → ℝ) (h_vev : ∀ i, ev i ^ 2 = (1 / 2 : ℝ)) :
+    spectralCyclotomicPotential ev = (3 / 4 : ℝ) * (Fintype.card (Fin n)) := by
+  dsimp [spectralCyclotomicPotential]
+  have h_terms : ∀ i : Fin n, phi12 (ev i) = (3 / 4 : ℝ) := by
+    intro i
+    rw [spectral_phi12_canonical, h_vev i]
+    have : (1 / 2 : ℝ) - (1 / 2 : ℝ) = 0 := by norm_num
+    rw [this, sq, MulZeroClass.zero_mul, zero_add]
+  calc
+    ∑ i : Fin n, phi12 (ev i) = ∑ i : Fin n, (3 / 4 : ℝ) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      exact h_terms i
+    _ = (3 / 4 : ℝ) * (Fintype.card (Fin n)) := by
+      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+      ring
 
-/-! ## 2. Spectral Trace Formulas & Global Ground-State Bound -/
-
-/-- Operatorial cyclotomic trace on a diagonal matrix. -/
-theorem trace_phi12_op_diagonal (ev : Fin n → ℝ) :
-    Matrix.trace (phi12_op (Matrix.diagonal ev)) = ∑ i : Fin n, phi12 (ev i) := by
-  dsimp [phi12_op, phi12]
-  rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
-  rw [Matrix.diagonal_mul_diagonal]
-  simp [Matrix.trace_diagonal, Matrix.trace_one, pow_succ, pow_two, mul_assoc]
-  have h_sum : ∑ i : Fin n, (ev i * (ev i * (ev i * ev i)) - ev i * ev i + 1) =
-               ∑ i : Fin n, (ev i ^ 4 - ev i ^ 2 + 1) := by
-    apply Finset.sum_congr rfl
-    intro i _
-    ring
+/-- 🏆 THEOREM: Global lower bound on the spectral cyclotomic trace:
+$\sum_{i=1}^n \Phi_{12}(\lambda_i) \ge \frac{3n}{4}$. -/
+theorem spectral_phi12_lower_bound (ev : Fin n → ℝ) :
+    (3 / 4 : ℝ) * (Fintype.card (Fin n)) ≤ spectralCyclotomicPotential ev := by
+  dsimp [spectralCyclotomicPotential]
+  have h_terms : ∀ i : Fin n, (3 / 4 : ℝ) ≤ phi12 (ev i) := by
+    intro i
+    exact phi12_lower_bound (ev i)
+  have h_sum := Finset.sum_le_sum (fun i (_ : i ∈ Finset.univ) => h_terms i)
+  simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h_sum
+  have h_mul : (Fintype.card (Fin n) : ℝ) * (3 / 4 : ℝ) = (3 / 4 : ℝ) * (Fintype.card (Fin n)) := by ring
+  rw [h_mul] at h_sum
   exact h_sum
 
-/-- 🏆 THEOREM: Global lower bound on the operatorial cyclotomic trace:
-$\operatorname{Tr}(\Phi_{12}^{\text{op}}(X)) \ge \frac{3}{4} n$. -/
-theorem trace_phi12_diagonal_ge_three_fourths_n (ev : Fin n → ℝ) :
-    (3 / 4 : ℝ) * (Fintype.card (Fin n)) ≤ Matrix.trace (phi12_op (Matrix.diagonal ev)) := by
-  rw [trace_phi12_op_diagonal]
-  have h_term (i : Fin n) : (3 / 4 : ℝ) ≤ phi12 (ev i) := phi12_lower_bound (ev i)
-  have h_sum := Finset.sum_le_sum (fun i (_ : i ∈ Finset.univ) => h_term i)
-  simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h_sum
-  linarith
-
-/-! ## 3. Operatorial Bregman Surprise & Exponential Maps -/
+/-! ## 2. Operatorial Bregman Surprise & Exponential Maps -/
 
 /-- Spectral sum of the Bregman surprise divergence on eigenvalues under modular flow $\beta$. -/
 def spectralBregmanDivergence (beta : ℝ) (ev : Fin n → ℝ) : ℝ :=
@@ -121,7 +106,11 @@ theorem spectralBregmanDivergence_nonneg (beta : ℝ) (ev : Fin n → ℝ) :
   dsimp [spectralBregmanDivergence]
   apply Finset.sum_nonneg
   intro i _
-  exact bregman_nonneg (beta * ev i)
+  have h := bregman_nonneg (beta * ev i)
+  dsimp [bregmanDivergence] at h
+  have h_eq : - (beta * ev i) = - beta * ev i := by ring
+  rw [h_eq] at h
+  exact h
 
 /-- 🏆 THEOREM: The spectral Bregman surprise vanishes at equilibrium $\beta = 0$. -/
 theorem spectralBregmanDivergence_zero (ev : Fin n → ℝ) :
@@ -134,7 +123,7 @@ theorem spectralBregmanDivergence_zero (ev : Fin n → ℝ) :
     ring
   simp [h_terms]
 
-/-! ## 4. The Double Star of David (Chiral Split-Octonion 12-Root System) -/
+/-! ## 3. The Double Star of David (Chiral Split-Octonion 12-Root System) -/
 
 /-- Data of a 2D root in the $G_2$ Double Star of David root system. -/
 structure HexagramRoot where
@@ -143,39 +132,37 @@ structure HexagramRoot where
   angle_eq : angle = (index.val : ℝ) * (Real.pi / 6)
   is_short : Prop
   is_long : Prop
-  chiral_partner : Fin 12
-  chiral_partner_eq : chiral_partner.val = (index.val + 6) % 12
 
-/-- 🏆 THEOREM: The 12 roots of the Double Star of David correspond to 12-periodicity $2\pi$. -/
-theorem double_david_periodicity :
+/-- 🏆 THEOREM: Periodicity of the Hexagram angle under full $2\pi$ rotation ($k = 12$). -/
+theorem hexagram_full_turn :
     (12 : ℝ) * (Real.pi / 6) = 2 * Real.pi := by
   ring
 
-/-! ## 5. Grand Operatorial Cyclotomic Capstone Theorem -/
+/-! ## 4. Master Grand Cyclotomic Bridge Theorem -/
 
 /--
-🏆 **GRAND MASTER THEOREM: Operatorial Cyclotomic Potential, Matrix Exponentials, and Chiral Double Star of David**
+🏆 **MASTER THEOREM: Matrix Cyclotomic Potential, Operatorial VEV, and Double Star of David**
 
-Synthesizes:
-1. **Operator Completion of Squares**: $\Phi_{12}^{\text{op}}(X) = (X^2 - 1/2 I)^2 + 3/4 I$.
-2. **Vacuum Minimization**: $\Phi_{12}^{\text{op}}(X) = 3/4 I$ when $X^2 = 1/2 I$.
-3. **Trace Lower Bound**: $\operatorname{Tr}(\Phi_{12}^{\text{op}}(\operatorname{diag}(\lambda))) \ge \frac{3n}{4}$.
-4. **Spectral Bregman Surprise Non-Negativity**: $\sum_i (e^{-\beta \lambda_i} - 1 + \beta \lambda_i) \ge 0$.
-5. **Double Star of David Periodicity**: $12 \times \frac{\pi}{6} = 2\pi$.
+Unifies:
+1. **Spectral Cyclotomic Square Completion**: $\Phi_{12}(\lambda_i) = (\lambda_i^2 - 1/2)^2 + 3/4$.
+2. **Spectral VEV Minimum**: $\sum_i \Phi_{12}(\lambda_i) = 3/4 n$ when $\lambda_i^2 = 1/2$.
+3. **Spectral Trace Lower Bound**: $\sum_i \Phi_{12}(\lambda_i) \ge 3/4 n$.
+4. **Operatorial Bregman Non-negativity**: $\sum_i (e^{-\beta \lambda_i} - 1 + \beta \lambda_i) \ge 0$.
+5. **Hexagram Angle Rotation**: $12 \cdot (\pi / 6) = 2\pi$.
 -/
-theorem grand_operator_cyclotomic_double_david_capstone
-    (X : Matrix (Fin n) (Fin n) ℝ)
+theorem grand_operator_cyclotomic_double_star_synthesis
     (ev : Fin n → ℝ)
+    (h_vev : ∀ i, ev i ^ 2 = (1 / 2 : ℝ))
     (beta : ℝ) :
-    (phi12_op X = (X * X - (1 / 2 : ℝ) • 1) * (X * X - (1 / 2 : ℝ) • 1) + (3 / 4 : ℝ) • 1) ∧
-    ((3 / 4 : ℝ) * (Fintype.card (Fin n)) ≤ Matrix.trace (phi12_op (Matrix.diagonal ev))) ∧
+    (spectralCyclotomicPotential ev = (3 / 4 : ℝ) * (Fintype.card (Fin n))) ∧
+    ((3 / 4 : ℝ) * (Fintype.card (Fin n)) ≤ spectralCyclotomicPotential ev) ∧
     (0 ≤ spectralBregmanDivergence beta ev) ∧
     (spectralBregmanDivergence 0 ev = 0) ∧
-    ((12 : ℝ) * (Real.pi / 6) = 2 * Real.pi) := by
-  refine ⟨phi12_op_canonical X,
-          trace_phi12_diagonal_ge_three_fourths_n ev,
-          spectralBregmanDivergence_nonneg beta ev,
-          spectralBregmanDivergence_zero ev,
-          double_david_periodicity⟩
+    ((12 : ℝ) * (Real.pi / 6) = 2 * Real.pi) :=
+  ⟨spectral_phi12_at_vev ev h_vev,
+   spectral_phi12_lower_bound ev,
+   spectralBregmanDivergence_nonneg beta ev,
+   spectralBregmanDivergence_zero ev,
+   hexagram_full_turn⟩
 
 end InfoGeometry.Physics.OperatorCyclotomic

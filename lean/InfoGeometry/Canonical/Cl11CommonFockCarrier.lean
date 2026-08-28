@@ -131,14 +131,14 @@ def annihilationOperator (n : ℕ) (k : Fin n) : Operator :=
     creationOperator (n + 1) k.castSucc = creationOperator n k := by
   unfold creationOperator
   rw [show jwCreation (n + 1) k.castSucc = stageEmbed n (jwCreation n k) by
-    exact matStageEmbed_jwCreation n k]
+    exact (matStageEmbed_jwCreation k).symm]
   rw [stageRepresentation_bond]
 
 @[simp] theorem annihilationOperator_castSucc (n : ℕ) (k : Fin n) :
     annihilationOperator (n + 1) k.castSucc = annihilationOperator n k := by
   unfold annihilationOperator
   rw [show jwAnnihilation (n + 1) k.castSucc = stageEmbed n (jwAnnihilation n k) by
-    exact matStageEmbed_jwAnnihilation n k]
+    exact (matStageEmbed_jwAnnihilation k).symm]
   rw [stageRepresentation_bond]
 
 theorem creationOperator_apply (n : ℕ) (k : Fin n) (x : Carrier) :

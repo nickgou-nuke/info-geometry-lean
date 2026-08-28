@@ -37,6 +37,47 @@ namespace InfoGeometry.Arithmetic.PrimeCayleyCircle
 def primeSquashing (p : ℝ) : ℝ :=
   (p - 1) / (p + 1)
 
+/- The rapidity is kept as a separate definition so that the hyperbolic
+identity is proved rather than being built into the squashing parameter. -/
+def primeRapidity (p : ℝ) : ℝ :=
+  Real.log p / 2
+
+theorem primeRapidity_mul {p q : ℝ} (hp : 0 < p) (hq : 0 < q) :
+    primeRapidity (p * q) = primeRapidity p + primeRapidity q := by
+  unfold primeRapidity
+  rw [Real.log_mul hp.ne' hq.ne']
+  ring
+
+theorem tanh_primeRapidity {p : ℝ} (hp : 0 < p) :
+    Real.tanh (primeRapidity p) = primeSquashing p := by
+  let u := Real.exp (Real.log p / 2)
+  have hu_pos : 0 < u := Real.exp_pos _
+  have hu_ne : u ≠ 0 := hu_pos.ne'
+  have hu_sq : u ^ 2 = p := by
+    dsimp [u]
+    rw [sq, ← Real.exp_add]
+    have h2 : Real.log p / 2 + Real.log p / 2 = Real.log p := by ring
+    rw [h2, Real.exp_log hp]
+  rw [primeRapidity, Real.tanh_eq_sinh_div_cosh, Real.sinh_eq, Real.cosh_eq]
+  have h_u_neg : Real.exp (-(Real.log p / 2)) = u⁻¹ := by
+    dsimp [u]
+    rw [Real.exp_neg]
+  rw [h_u_neg]
+  have h_cancel_two : ((u - u⁻¹) / 2) / ((u + u⁻¹) / 2) =
+      (u - u⁻¹) / (u + u⁻¹) := by
+    rw [div_div_div_comm, div_self (by norm_num : (2 : ℝ) ≠ 0), div_one]
+  rw [h_cancel_two]
+  have h_mult : (u - u⁻¹) / (u + u⁻¹) =
+      (u ^ 2 - 1) / (u ^ 2 + 1) := by
+    calc
+      (u - u⁻¹) / (u + u⁻¹) =
+          ((u - u⁻¹) * u) / ((u + u⁻¹) * u) := by
+            rw [mul_div_mul_right _ _ hu_ne]
+      _ = (u ^ 2 - 1) / (u ^ 2 + 1) := by
+        field_simp [hu_ne]
+  rw [h_mult, hu_sq]
+  rfl
+
 /-- 🏆 THEOREM 1 (Hyperbolic Squashing Parameter for p = 2):
     $v_2 = \frac{2 - 1}{2 + 1} = 1/3$. -/
 theorem primeSquashing_two :

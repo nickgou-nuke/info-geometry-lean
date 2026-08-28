@@ -1,7 +1,6 @@
 import InfoGeometry.Physics.NuclearGradedBathCommutant
 import InfoGeometry.Physics.EmergentSpacetimeBilinear
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
-import InfoGeometry.Physics.ChiralProjectorTransport
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.ZornBdGSuperconductingExponentialBridge
 import InfoGeometry.Physics.SplitOctonionDerivationSpinRep
@@ -251,6 +250,7 @@ import InfoGeometry.Physics.NuclearFiniteCARProjection
 import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 import InfoGeometry.Physics.SolovievInteractionParameterBridge
 import InfoGeometry.Physics.ChiralProjectorTransport
+import InfoGeometry.Physics.ChiralZitterbewegungBridge
 
 /-!
 # Physics Umbrella

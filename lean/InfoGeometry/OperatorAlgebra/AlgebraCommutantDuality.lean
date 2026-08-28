@@ -13,21 +13,23 @@ abbrev Dim32 := Fin 32
 abbrev Mat32 := Matrix Dim32 Dim32 ℝ
 
 /-!
-# Von Neumann Algebra, Commutant Duality & Tomita-Takesaki Modular Reflection
+# Finite Matrix Commutant and Modular-Reflection Calculus
 
-This module formalizes the exact operator-algebraic foundation of quantum causality and horizons:
+This module formalizes a finite matrix-level algebraic fragment:
 1. **The Commutant $\mathcal{M}'$**:
-   $\mathcal{M}' = \{ B' \in B(\mathcal{H}) \mid [A, B'] = 0, \; \forall A \in \mathcal{M} \}$.
-2. **Microcausality / Einstein Locality**:
-   $[A, B'] = A B' - B' A = 0$ identically for $A \in \mathcal{M}, B' \in \mathcal{M}'$.
-3. **Tomita-Takesaki Modular Conjugation $J$**:
-   $J = \operatorname{diag}(I_{16}, -I_{16})$ with $J^2 = 1$.
-4. **Tomita Modular Reflection**:
-   $\pi_J(A) = J A J$, satisfying $(\pi_J \circ \pi_J)(A) = A$.
-5. **Entanglement State Bilinear Pairing**:
-   $\langle A, B' \rangle_\rho = \operatorname{Tr}(\rho A B')$, satisfying $\operatorname{Tr}(\rho A B') = \operatorname{Tr}(\rho B' A)$ when $[A, B'] = 0$.
+    $\mathcal{M}' = \{ B' \in B(\mathcal{H}) \mid [A, B'] = 0, \; \forall A \in \mathcal{M} \}$.
+2. **A conditional commutator identity**:
+    $[A, B'] = A B' - B' A = 0$ identically for $A \in \mathcal{M}, B' \in \mathcal{M}'$.
+3. **A concrete matrix involution $J$**:
+    $J = \operatorname{diag}(I_{16}, -I_{16})$ with $J^2 = 1$.
+4. **Conjugation by this involution**:
+    $\pi_J(A) = J A J$, satisfying $(\pi_J \circ \pi_J)(A) = A$.
+5. **A trace pairing identity**:
+    $\langle A, B' \rangle_\rho = \operatorname{Tr}(\rho A B')$, satisfying $\operatorname{Tr}(\rho A B') = \operatorname{Tr}(\rho B' A)$ when $[A, B'] = 0$.
 
-All proofs are complete in native Lean 4 with 0 `sorry`s.
+This file does not establish von Neumann closure, the double-commutant theorem,
+standard-form Tomita--Takesaki theory, or an identification
+$J\mathcal{M}J=\mathcal{M}'$.
 -/
 
 /-! ### 1. The Von Neumann Commutant Predicate & Microcausality -/
@@ -85,7 +87,8 @@ def modularBilinearPairing (rho A B' : Mat32) : ℝ :=
 theorem pairing_commutes (rho A B' : Mat32) (h_comm : A * B' = B' * A) :
     modularBilinearPairing rho A B' = Matrix.trace (rho * B' * A) := by
   dsimp [modularBilinearPairing]
-  rw [← Matrix.mul_assoc rho A B', h_comm, Matrix.mul_assoc rho B' A]
+  have h := congrArg (fun X : Mat32 => Matrix.trace (rho * X)) h_comm
+  simpa only [Matrix.mul_assoc] using h
 
 /-! ### 4. Grand Commutant Duality Synthesis -/
 

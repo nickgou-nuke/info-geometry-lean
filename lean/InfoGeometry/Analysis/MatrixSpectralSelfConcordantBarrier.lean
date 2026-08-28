@@ -195,3 +195,37 @@ theorem matrix_self_concordance_barrier_bound
   nlinarith
 
 end InfoGeometry.Analysis.MatrixSpectral
+
+/-! ## 6. Explicit Constructors: Diagonal and Concrete Spectral Carriers -/
+
+/-- Explicit construction of a spectral carrier for any diagonal matrix. -/
+def diagonalCarrier (d : Fin n → ℝ) : SymmetricSpectralCarrier n where
+  B := Matrix.diagonal d
+  eigenvalues := d
+  ortho := 1
+  ortho_inv := by simp
+  diagonalized := by simp
+
+/-- 🏆 UNCONDITIONAL THEOREM: Self-concordance barrier inequality on any diagonal SPD matrix variation,
+with explicitly constructed spectral carrier. -/
+theorem diagonal_matrix_self_concordance_barrier_bound
+    (a_inv_sqrt h : Fin n → ℝ) :
+    let a_inv := fun i => (a_inv_sqrt i) ^ 2
+    let V : MatrixVariationConjugation n := {
+      A_inv_sqrt := Matrix.diagonal a_inv_sqrt
+      H := Matrix.diagonal h
+      A_inv := Matrix.diagonal a_inv
+      inv_sqrt_sq := by
+        rw [Matrix.diagonal_mul_diagonal]
+        dsimp [a_inv]
+        simp [pow_two]
+      B := Matrix.diagonal (fun i => a_inv_sqrt i * h i * a_inv_sqrt i)
+      B_def := by
+        rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+    }
+    |thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ) := by
+  intro a_inv V
+  let C := diagonalCarrier (fun i => a_inv_sqrt i * h i * a_inv_sqrt i)
+  have h_carrier : V.B = C.B := rfl
+  exact matrix_self_concordance_barrier_bound V C h_carrier
+

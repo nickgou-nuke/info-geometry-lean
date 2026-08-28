@@ -2,6 +2,7 @@ import InfoGeometry.Nuclear.GradedBathCommutant
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
 import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
 import InfoGeometry.Nuclear.NuclearFiveGradedOperatorReexpression
+import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
 
 namespace InfoGeometry.Nuclear
 

@@ -7685,6 +7685,7 @@ import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
 import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
 import InfoGeometry.Nuclear.NuclearFiveGradedOperatorReexpression
+import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
 import InfoGeometry.Nuclear.All
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
 import InfoGeometry.Physics.DiracRestChiralTwoSectorBridge

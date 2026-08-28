@@ -100,6 +100,33 @@ theorem intertwine_iter (k : ℕ) :
       ring
     rw [h_add, D.R_rope_add]
 
+/-- Functoriality of context / Monodromy loop composition:
+    $T \circ (M_1 \circ M_2) = R(n_1 + n_2) \circ T$. -/
+theorem intertwine_comp
+    (D1 D2 : KZRoPEComparisonDatum V S)
+    (hT : D1.T = D2.T)
+    (hR : D1.R_rope = D2.R_rope) :
+    D1.T ∘ₗ (D1.M_gamma ∘ₗ D2.M_gamma) = D1.R_rope (D1.n_gamma + D2.n_gamma) ∘ₗ D1.T := by
+  rw [← LinearMap.comp_assoc, D1.intertwine]
+  rw [LinearMap.comp_assoc, hT, D2.intertwine]
+  rw [← LinearMap.comp_assoc, D1.R_rope_add, hR]
+
+/-- Trivial loop condition (Flat connection contractible loop invariance):
+    if $n_\gamma = 0$ and $T$ has a left inverse $T_{\mathrm{inv}}$, then $M_\gamma = \mathrm{id}$. -/
+theorem trivial_loop_identity
+    (D : KZRoPEComparisonDatum V S)
+    (h_zero : D.n_gamma = 0)
+    (T_inv : S →ₗ[ℝ] V)
+    (h_inv : T_inv ∘ₗ D.T = LinearMap.id) :
+    D.M_gamma = LinearMap.id := by
+  have h_int := D.intertwine
+  rw [h_zero, D.R_rope_zero] at h_int
+  have h_comp : T_inv ∘ₗ (D.T ∘ₗ D.M_gamma) = T_inv ∘ₗ (LinearMap.id ∘ₗ D.T) := by
+    congr 1
+  rw [← LinearMap.comp_assoc, h_inv, LinearMap.id_comp] at h_comp
+  rw [LinearMap.id_comp, h_inv] at h_comp
+  exact h_comp
+
 end KZRoPEComparisonDatum
 
 /-! ## 2. Grand Synthesis: KZ Flatness, Monodromy, and RoPE Readout -/

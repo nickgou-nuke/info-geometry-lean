@@ -112,4 +112,42 @@ theorem disjointBivector55_commute_of_pairwise_distinct
     _ = (hyperbolicAxis55 k * hyperbolicAxis55 l) *
           (hyperbolicAxis55 i * hyperbolicAxis55 j) := by noncomm_ring
 
+theorem disjointBivector55_01_23_sq :
+    disjointBivector55 0 1 * disjointBivector55 0 1 = -(1 : Cl55) := by
+  unfold disjointBivector55
+  have h01 := hyperbolicAxis55_anticommute_distinct
+    (i := (0 : Fin 5)) (j := (1 : Fin 5)) (by decide)
+  have h01' : hyperbolicAxis55 1 * hyperbolicAxis55 0 =
+      -(hyperbolicAxis55 0 * hyperbolicAxis55 1) :=
+    eq_neg_of_add_eq_zero_right h01
+  calc
+    (hyperbolicAxis55 0 * hyperbolicAxis55 1) *
+        (hyperbolicAxis55 0 * hyperbolicAxis55 1) =
+        hyperbolicAxis55 0 * (-(hyperbolicAxis55 0 *
+          hyperbolicAxis55 1)) * hyperbolicAxis55 1 := by
+            rw [← h01']
+            simp [mul_assoc]
+    _ = -(hyperbolicAxis55 0 * hyperbolicAxis55 0) *
+          (hyperbolicAxis55 1 * hyperbolicAxis55 1) := by noncomm_ring
+    _ = -(1 : Cl55) := by rw [hyperbolicAxis55_sq 0, hyperbolicAxis55_sq 1]; simp
+
+theorem disjointBivector55_23_sq :
+    disjointBivector55 2 3 * disjointBivector55 2 3 = -(1 : Cl55) := by
+  unfold disjointBivector55
+  have h23 := hyperbolicAxis55_anticommute_distinct
+    (i := (2 : Fin 5)) (j := (3 : Fin 5)) (by decide)
+  have h23' : hyperbolicAxis55 3 * hyperbolicAxis55 2 =
+      -(hyperbolicAxis55 2 * hyperbolicAxis55 3) :=
+    eq_neg_of_add_eq_zero_right h23
+  calc
+    (hyperbolicAxis55 2 * hyperbolicAxis55 3) *
+        (hyperbolicAxis55 2 * hyperbolicAxis55 3) =
+        hyperbolicAxis55 2 * (-(hyperbolicAxis55 2 *
+          hyperbolicAxis55 3)) * hyperbolicAxis55 3 := by
+            rw [← h23']
+            simp [mul_assoc]
+    _ = -(hyperbolicAxis55 2 * hyperbolicAxis55 2) *
+          (hyperbolicAxis55 3 * hyperbolicAxis55 3) := by noncomm_ring
+    _ = -(1 : Cl55) := by rw [hyperbolicAxis55_sq 2, hyperbolicAxis55_sq 3]; simp
+
 end InfoGeometry.Clifford.Clifford55

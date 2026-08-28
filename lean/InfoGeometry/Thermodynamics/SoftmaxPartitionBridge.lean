@@ -22,6 +22,23 @@ noncomputable def TransformerSoftmax (x : n → ℝ) (d : ℝ) (i : n) : ℝ :=
 noncomputable def BoltzmannDistribution (E : n → ℝ) (β : ℝ) (i : n) : ℝ :=
   exp (-β * E i) / ∑ j, exp (-β * E j)
 
+/-- The finite Boltzmann readout is normalized when the index type is nonempty. -/
+theorem boltzmannDistribution_sum_eq_one [Nonempty n]
+    (E : n → ℝ) (β : ℝ) :
+    ∑ i, BoltzmannDistribution E β i = 1 := by
+  unfold BoltzmannDistribution
+  rw [show (∑ i, exp (-β * E i) / ∑ j, exp (-β * E j)) =
+      (∑ i, exp (-β * E i)) * (∑ j, exp (-β * E j))⁻¹ by
+        simp only [div_eq_mul_inv, ← Finset.sum_mul]]
+  exact mul_inv_cancel₀ (by positivity)
+
+/- Every coordinate of the finite Boltzmann readout is strictly positive. -/
+theorem boltzmannDistribution_pos [Nonempty n]
+    (E : n → ℝ) (β : ℝ) (i : n) :
+    0 < BoltzmannDistribution E β i := by
+  unfold BoltzmannDistribution
+  exact div_pos (Real.exp_pos _) (by positivity)
+
 /-- The two readouts coincide under the displayed parameter substitution. -/
 theorem AttentionIsThermodynamics (x : n → ℝ) (d : ℝ) (i : n) :
   TransformerSoftmax x d i = BoltzmannDistribution (fun j => -x j) (1 / sqrt d) i := by

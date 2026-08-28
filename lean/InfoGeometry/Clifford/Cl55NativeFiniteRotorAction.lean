@@ -29,11 +29,11 @@ def nativeRankTwoRotorUnit (s t : ℝ) : Cl55ˣ where
       (ropeBivector55_sq 2 3 (by decide))
       disjoint_bivector_commute_01_23 s t
   inv_val := by
-    exact rankTwoRotor_inverse
+    simpa only [neg_neg] using (rankTwoRotor_inverse
       (ropeBivector55 0 1) (ropeBivector55 2 3)
       (ropeBivector55_sq 0 1 (by decide))
       (ropeBivector55_sq 2 3 (by decide))
-      disjoint_bivector_commute_01_23 (-s) (-t)
+      disjoint_bivector_commute_01_23 (-s) (-t))
 
 def nativeBivectorRotorUnits (theta0 : ℝ) : Multiplicative ℤ →* Cl55ˣ :=
   discreteRotorUnitsHom (ropeBivector55 0 1)
@@ -60,6 +60,12 @@ theorem nativeRankTwoRotor_add (s₁ s₂ t₁ t₂ : ℝ) :
       (ropeBivector55_sq 2 3 (by decide))
       disjoint_bivector_commute_01_23 s₁ s₂ t₁ t₂)
 
+theorem nativeRankTwoRotorUnit_add (s₁ s₂ t₁ t₂ : ℝ) :
+    nativeRankTwoRotorUnit (s₁ + s₂) (t₁ + t₂) =
+      nativeRankTwoRotorUnit s₁ t₁ * nativeRankTwoRotorUnit s₂ t₂ := by
+  apply Units.ext
+  exact nativeRankTwoRotor_add s₁ s₂ t₁ t₂
+
 theorem nativeRankTwoRotor_relative (s t u v : ℝ) :
     nativeRankTwoRotor (-s) (-t) * nativeRankTwoRotor u v =
       nativeRankTwoRotor (u - s) (v - t) := by
@@ -70,5 +76,11 @@ theorem nativeRankTwoRotor_relative (s t u v : ℝ) :
       (ropeBivector55_sq 0 1 (by decide))
       (ropeBivector55_sq 2 3 (by decide))
       disjoint_bivector_commute_01_23 s t u v)
+
+theorem nativeRankTwoRotorUnit_relative (s t u v : ℝ) :
+    nativeRankTwoRotorUnit (-s) (-t) * nativeRankTwoRotorUnit u v =
+      nativeRankTwoRotorUnit (u - s) (v - t) := by
+  apply Units.ext
+  exact nativeRankTwoRotor_relative s t u v
 
 end InfoGeometry.Clifford.Cl55NativeFiniteRotorAction

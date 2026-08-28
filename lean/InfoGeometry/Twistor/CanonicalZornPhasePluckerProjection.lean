@@ -24,6 +24,48 @@ abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
 
 def offDiagonalPhase (X : CanonicalZorn) : Phase := (X.x, X.y)
 
+def plucker6ToPhase
+    (P : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) : Phase :=
+  (![P.p01, P.p02, P.p03], ![P.p23, -P.p13, P.p12])
+
+noncomputable def phasePluckerEquiv :
+    Phase ≃ InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ where
+  toFun := phaseToPlucker6
+  invFun := plucker6ToPhase
+  left_inv X := by
+    rcases X with ⟨x, y⟩
+    ext i <;> fin_cases i <;> simp [phaseToPlucker6, plucker6ToPhase]
+  right_inv P := by
+    ext <;> simp [phaseToPlucker6, plucker6ToPhase]
+
+@[simp] theorem phasePluckerEquiv_apply (X : Phase) :
+    phasePluckerEquiv X = phaseToPlucker6 X := rfl
+
+@[simp] theorem phasePluckerEquiv_symm_apply
+    (P : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) :
+    phasePluckerEquiv.symm P = plucker6ToPhase P := rfl
+
+theorem phaseToPlucker6_add (X Y : Phase) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add
+        (phaseToPlucker6 X) (phaseToPlucker6 Y) =
+      phaseToPlucker6 (X + Y) := by
+  ext <;> simp [phaseToPlucker6,
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.add] <;> try ring
+
+theorem phaseToPlucker6_scale (r : ℝ) (X : Phase) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale r
+        (phaseToPlucker6 X) =
+      phaseToPlucker6 (r • X) := by
+  ext <;> simp [phaseToPlucker6,
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.scale]
+
+theorem phaseNull_iff_phasePluckerEquiv_kleinNull (X : Phase) :
+    chiralPairing X.1 X.2 = 0 ↔
+      InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
+        (phasePluckerEquiv X) = 0 := by
+  simpa only [phasePluckerEquiv_apply] using
+    (phaseNull_iff_kleinNull X)
+
 theorem offDiagonalPhase_circular_coordinates (X : CanonicalZorn) (i : Fin 3) :
     X.x i =
       circularCoordinate (cartesianZornLinearEquiv.symm X)
@@ -72,6 +114,29 @@ theorem phaseToPlucker6_offDiagonalPhase_circular (X : CanonicalZorn) :
     simp [offDiagonalPhase, phaseToPlucker6,
       cartesianZornLinearEquiv_symm_apply, circularCoordinate] <;>
     ring
+
+theorem kleinQ_offDiagonalPhase_circular (X : CanonicalZorn) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
+        (phaseToPlucker6 (offDiagonalPhase X)) =
+      circularCoordinate (cartesianZornLinearEquiv.symm X) 1 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 5 +
+        circularCoordinate (cartesianZornLinearEquiv.symm X) 2 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 6 +
+        circularCoordinate (cartesianZornLinearEquiv.symm X) 3 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 7 := by
+  rw [phaseToPlucker6_offDiagonalPhase_circular]
+  simp [InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ]
+
+theorem kleinNull_offDiagonalPhase_circular_iff (X : CanonicalZorn) :
+    InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
+        (phaseToPlucker6 (offDiagonalPhase X)) = 0 ↔
+      circularCoordinate (cartesianZornLinearEquiv.symm X) 1 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 5 +
+        circularCoordinate (cartesianZornLinearEquiv.symm X) 2 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 6 +
+        circularCoordinate (cartesianZornLinearEquiv.symm X) 3 *
+          circularCoordinate (cartesianZornLinearEquiv.symm X) 7 = 0 := by
+  rw [kleinQ_offDiagonalPhase_circular]
 
 theorem offDiagonalPhase_pluckerLine_of_null
     (X : CanonicalZorn)

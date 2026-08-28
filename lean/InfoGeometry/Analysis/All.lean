@@ -41,3 +41,5 @@ import InfoGeometry.Analysis.RankOneTrace
 import InfoGeometry.Analysis.MobiusRadialTime
 import InfoGeometry.Analysis.LogarithmicDerivativeBridge
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge
+import InfoGeometry.Analysis.LogDetSelfConcordantBarrier
+import InfoGeometry.Analysis.MatrixSpectralSelfConcordantBarrier

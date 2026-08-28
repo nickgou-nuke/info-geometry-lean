@@ -50,4 +50,27 @@ theorem mixedSymplecticBracket_lie_mem
   exact (symplecticOperatorLieSubalgebra D).lie_mem T.property
     (mixedSymplecticBracket D X Y).property
 
+theorem symplecticRankTwo_add_left (X X' Y : FreudenthalCharge J) :
+    symplecticRankTwo D (X + X') Y = symplecticRankTwo D X Y + symplecticRankTwo D X' Y := by
+  apply LinearMap.ext
+  intro Z
+  rw [LinearMap.add_apply, symplecticRankTwo_apply, symplecticRankTwo_apply, symplecticRankTwo_apply]
+  rw [smul_add, symplecticForm_add_left, add_smul]
+  abel
+
+theorem symplecticRankTwo_add_right (X Y Y' : FreudenthalCharge J) :
+    symplecticRankTwo D X (Y + Y') = symplecticRankTwo D X Y + symplecticRankTwo D X Y' := by
+  rw [symplecticRankTwo_swap D X (Y + Y'), symplecticRankTwo_add_left,
+      symplecticRankTwo_swap D Y X, symplecticRankTwo_swap D Y' X]
+
+@[simp] theorem mixedSymplecticBracket_add_left (X X' Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D (X + X') Y = mixedSymplecticBracket D X Y + mixedSymplecticBracket D X' Y := by
+  apply Subtype.ext
+  exact symplecticRankTwo_add_left D X X' Y
+
+@[simp] theorem mixedSymplecticBracket_add_right (X Y Y' : FreudenthalCharge J) :
+    mixedSymplecticBracket D X (Y + Y') = mixedSymplecticBracket D X Y + mixedSymplecticBracket D X Y' := by
+  apply Subtype.ext
+  exact symplecticRankTwo_add_right D X Y Y'
+
 end InfoGeometry.Exceptional.Freudenthal

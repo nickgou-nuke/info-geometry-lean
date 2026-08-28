@@ -237,6 +237,156 @@ theorem contactDegree_minusOne (a) : contactDegree (.minusOne a) = (-1 : ℤ) :=
 theorem contactDegree_plusOne (a) : contactDegree (.plusOne a) = (1 : ℤ) := rfl
 theorem contactDegree_ePlus : contactDegree .ePlus = (2 : ℤ) := rfl
 
+def circularFlip : CircularChargeAtom → CircularChargeAtom
+  | .plusPole => .minusPole
+  | .minusPole => .plusPole
+  | .plusRoot i => .minusRoot i
+  | .minusRoot i => .plusRoot i
+
+def contactFlip : ContactAtom → ContactAtom
+  | .eMinus => .ePlus
+  | .minusOne a => .plusOne a
+  | .plusOne a => .minusOne a
+  | .ePlus => .eMinus
+
+def circularFlipContact : ContactAtom → ContactAtom
+  | .eMinus => .eMinus
+  | .minusOne a => .minusOne (circularFlip a)
+  | .plusOne a => .plusOne (circularFlip a)
+  | .ePlus => .ePlus
+
+def peirceFlip : ContactAtom → ContactAtom := circularFlipContact
+
+theorem circularFlip_involutive (a : CircularChargeAtom) :
+    circularFlip (circularFlip a) = a := by
+  cases a <;> rfl
+
+theorem contactFlip_involutive (a : ContactAtom) :
+    contactFlip (contactFlip a) = a := by
+  cases a <;> rfl
+
+theorem circularFlipContact_involutive (a : ContactAtom) :
+    circularFlipContact (circularFlipContact a) = a := by
+  cases a <;> simp [circularFlipContact, circularFlip_involutive]
+
+theorem peirceFlip_involutive (a : ContactAtom) :
+    peirceFlip (peirceFlip a) = a := by
+  exact circularFlipContact_involutive a
+
+theorem contactFlip_circularFlipContact_commute (a : ContactAtom) :
+    contactFlip (circularFlipContact a) =
+      circularFlipContact (contactFlip a) := by
+  cases a <;> rfl
+
+theorem contactFlip_peirceFlip_commute (a : ContactAtom) :
+    contactFlip (peirceFlip a) = peirceFlip (contactFlip a) := by
+  exact contactFlip_circularFlipContact_commute a
+
+theorem contactFlip_comp_peirceFlip_eq_peirceFlip_comp_contactFlip :
+    contactFlip ∘ peirceFlip = peirceFlip ∘ contactFlip := by
+  funext a
+  exact contactFlip_peirceFlip_commute a
+
+def simultaneousFlip (a : ContactAtom) : ContactAtom :=
+  contactFlip (circularFlipContact a)
+
+theorem simultaneousFlip_eq_peirceFlip_contactFlip (a : ContactAtom) :
+    simultaneousFlip a = peirceFlip (contactFlip a) := by
+  exact contactFlip_peirceFlip_commute a
+
+theorem simultaneousFlip_involutive (a : ContactAtom) :
+    simultaneousFlip (simultaneousFlip a) = a := by
+  rw [simultaneousFlip, simultaneousFlip,
+    contactFlip_circularFlipContact_commute]
+  simp [circularFlipContact_involutive, contactFlip_involutive]
+
+theorem contactDegree_contactFlip (a : ContactAtom) :
+    contactDegree (contactFlip a) = -contactDegree a := by
+  cases a <;> rfl
+
+theorem contactDegree_circularFlipContact (a : ContactAtom) :
+    contactDegree (circularFlipContact a) = contactDegree a := by
+  cases a <;> rfl
+
+theorem contactDegree_simultaneousFlip (a : ContactAtom) :
+    contactDegree (simultaneousFlip a) = -contactDegree a := by
+  unfold simultaneousFlip
+  rw [contactDegree_contactFlip, contactDegree_circularFlipContact]
+
+def contactGradeFlipCarrier (u : FiveGradedCarrier D) : FiveGradedCarrier D :=
+  ⟨u.plus2, u.plus1, u.zero_symp, u.zero_scale, u.minus1, u.minus2⟩
+
+theorem contactGradeFlipCarrier_add
+    (u v : FiveGradedCarrier D) :
+    contactGradeFlipCarrier D (u + v) =
+      contactGradeFlipCarrier D u + contactGradeFlipCarrier D v := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_neg (u : FiveGradedCarrier D) :
+    contactGradeFlipCarrier D (-u) =
+      -contactGradeFlipCarrier D u := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_involutive (u : FiveGradedCarrier D) :
+    contactGradeFlipCarrier D (contactGradeFlipCarrier D u) = u := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+def contactGradeFlipCarrierAddEquiv :
+    FiveGradedCarrier D ≃+ FiveGradedCarrier D where
+  toFun := contactGradeFlipCarrier D
+  invFun := contactGradeFlipCarrier D
+  left_inv := contactGradeFlipCarrier_involutive D
+  right_inv := contactGradeFlipCarrier_involutive D
+  map_add' := contactGradeFlipCarrier_add D
+
+@[simp] theorem contactGradeFlipCarrierAddEquiv_apply
+    (u : FiveGradedCarrier D) :
+    contactGradeFlipCarrierAddEquiv D u = contactGradeFlipCarrier D u := rfl
+
+@[simp] theorem contactGradeFlipCarrierAddEquiv_symm_apply
+    (u : FiveGradedCarrier D) :
+    (contactGradeFlipCarrierAddEquiv D).symm u =
+      contactGradeFlipCarrier D u := rfl
+
+theorem contactGradeFlipCarrier_toMinusOne
+    (rootMapPlus rootMapMinus : Fin 3 → J)
+    (a : CircularChargeAtom) :
+    contactGradeFlipCarrier D
+        (toMinusOne D rootMapPlus rootMapMinus a) =
+      toPlusOne D rootMapPlus rootMapMinus a := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_toPlusOne
+    (rootMapPlus rootMapMinus : Fin 3 → J)
+    (a : CircularChargeAtom) :
+    contactGradeFlipCarrier D
+        (toPlusOne D rootMapPlus rootMapMinus a) =
+      toMinusOne D rootMapPlus rootMapMinus a := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_zero_symp (u : FiveGradedCarrier D) :
+    (contactGradeFlipCarrier D u).zero_symp = u.zero_symp := rfl
+
+theorem contactGradeFlipCarrier_zero_scale (u : FiveGradedCarrier D) :
+    (contactGradeFlipCarrier D u).zero_scale = u.zero_scale := rfl
+
+theorem contactGradeFlipCarrier_genEminus (c : ℝ) :
+    contactGradeFlipCarrier D (genEminus D c) = genEplus D c := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_genEplus (c : ℝ) :
+    contactGradeFlipCarrier D (genEplus D c) = genEminus D c := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_genHscale (c : ℝ) :
+    contactGradeFlipCarrier D (genHscale D c) = genHscale D c := by
+  apply FiveGradedCarrier.ext <;> rfl
+
+theorem contactGradeFlipCarrier_injSympZero
+    (T : SymplecticTKKZero D) :
+    contactGradeFlipCarrier D (injSympZero D T) = injSympZero D T := by
+  apply FiveGradedCarrier.ext <;> rfl
+
 theorem circular_chirality_not_contact_grading
     (a : CircularChargeAtom) :
     contactDegree (.minusOne a) = (-1 : ℤ) ∧

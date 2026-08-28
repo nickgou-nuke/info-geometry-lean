@@ -45,6 +45,11 @@ theorem commutator_leibniz (X Y Z : A) :
   unfold commutator
   noncomm_ring
 
+theorem commutator_mul_left (X Y Z : A) :
+    commutator (X * Y) Z = X * commutator Y Z + commutator X Z * Y := by
+  unfold commutator
+  noncomm_ring
+
 @[simp] theorem commutator_self (X : A) :
     commutator X X = 0 := by
   unfold commutator
@@ -55,6 +60,26 @@ theorem commutator_leibniz (X Y Z : A) :
   unfold commutator
   simp
 
+@[simp] theorem commutator_zero_left (Y : A) :
+    commutator 0 Y = 0 := by
+  unfold commutator
+  simp
+
+@[simp] theorem commutator_one (X : A) :
+    commutator X 1 = 0 := by
+  unfold commutator
+  simp
+
+@[simp] theorem commutator_one_left (Y : A) :
+    commutator 1 Y = 0 := by
+  unfold commutator
+  simp
+
+theorem commutator_skew (X Y : A) :
+    commutator X Y = -commutator Y X := by
+  unfold commutator
+  noncomm_ring
+
 theorem commutator_add_right (X Y Z : A) :
     commutator X (Y + Z) = commutator X Y + commutator X Z := by
   unfold commutator
@@ -62,6 +87,16 @@ theorem commutator_add_right (X Y Z : A) :
 
 theorem commutator_add_left (X Y Z : A) :
     commutator (X + Y) Z = commutator X Z + commutator Y Z := by
+  unfold commutator
+  noncomm_ring
+
+theorem commutator_sub_right (X Y Z : A) :
+    commutator X (Y - Z) = commutator X Y - commutator X Z := by
+  unfold commutator
+  noncomm_ring
+
+theorem commutator_sub_left (X Y Z : A) :
+    commutator (X - Y) Z = commutator X Z - commutator Y Z := by
   unfold commutator
   noncomm_ring
 
@@ -74,6 +109,14 @@ theorem commutator_neg_left (X Y : A) :
     commutator (-X) Y = -commutator X Y := by
   unfold commutator
   noncomm_ring
+
+theorem commutator_smul_right (c : ℂ) (X Y : A) :
+    commutator X (c • Y) = c • commutator X Y := by
+  simp [commutator, smul_mul_assoc, mul_smul, smul_sub]
+
+theorem commutator_smul_left (c : ℂ) (X Y : A) :
+    commutator (c • X) Y = c • commutator X Y := by
+  simp [commutator, smul_mul_assoc, mul_smul, smul_sub]
 
 /-- 🏆 THEOREM 2 (Jacobi Identity for Commutator Lie Algebra):
     $[X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]] = 0$. -/
@@ -121,8 +164,6 @@ theorem expNilpotentSimplex_left_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
     dsimp [a]
     rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, hN,
       smul_zero]
-  have h_prod : (s • N) * (s • N) = (s * s) • (N * N) := by
-    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
   change (1 - a) * (1 + a) = 1
   calc
     (1 - a) * (1 + a) = 1 - a * a := by noncomm_ring
@@ -142,8 +183,6 @@ theorem expNilpotentSimplex_add (N : A) (hN : N * N = 0) (s t : ℂ) :
     dsimp [a, b]
     rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, hN,
       smul_zero]
-  have h_prod : (s • N) * (t • N) = (s * t) • (N * N) := by
-    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
   unfold expNilpotentSimplex
   change (1 - a) * (1 - b) = 1 - (s + t) • N
   calc
@@ -152,6 +191,7 @@ theorem expNilpotentSimplex_add (N : A) (hN : N * N = 0) (s t : ℂ) :
       rw [hab, add_zero]
       dsimp [a, b]
       rw [add_smul]
+      abel
 
 /--
 🏆 **MASTER SYNTHESIS: Leibniz Derivation and Operator Simplex**

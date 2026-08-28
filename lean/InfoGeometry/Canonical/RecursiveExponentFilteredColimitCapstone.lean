@@ -129,6 +129,70 @@ theorem primeCutoff_eq_primeSubtypesBelow_primeAt (N : ℕ) :
       simpa [this] using q.property
     exact (Nat.mem_primesBelow.mp hp').1
 
+/-! The Fredholm stage is the fermionic factor, while the canonical prime
+cutoff is its bosonic reciprocal.  Their cancellation is the finite-stage
+Uroboros identity; the denominator condition is kept explicit. -/
+theorem primeRegularizedDetStage_mul_primeBosonicCutoff_eq_one
+    (s : ℂ) (N : ℕ)
+    (hdenom : ∀ p ∈
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow
+        (primeAt N),
+      (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p) ≠ 0) :
+    primeRegularizedDetStage s N *
+        InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+          (primeAt N) s = 1 := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  rw [primeCutoff_eq_primeSubtypesBelow_primeAt]
+  rw [← InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_eq_eulerProduct]
+  let S :=
+    InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow
+      (primeAt N)
+  have hbos :
+      InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition S s =
+        InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+          (primeAt N) s := by
+    unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+    have hprod :=
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.prod_primeSubtypesBelow_eq
+        (primeAt N) s
+    have hinv := congrArg Inv.inv hprod
+    simpa [S, InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor] using hinv
+  rw [← hbos]
+  exact
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_mul_finiteComplexBosonPartition_eq_one
+      _ _ hdenom
+
+theorem primeRegularizedDetStage_mul_primeBosonicCutoff_eq_one_of_one_lt
+    (β : ℝ) (hβ : 1 < β) (N : ℕ) :
+    primeRegularizedDetStage (β : ℂ) N *
+        InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+          (primeAt N) (β : ℂ) = 1 := by
+  apply primeRegularizedDetStage_mul_primeBosonicCutoff_eq_one
+  intro p hp
+  have hs : 1 < ((β : ℂ).re) := by
+    simpa using hβ
+  have hfactor :=
+    InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor_ne_zero
+      p p.property hs
+  have hinv :
+      ((1 - (p : ℂ) ^ (-((β : ℂ))))⁻¹) ≠ 0 := by
+    simpa [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor] using hfactor
+  intro hzero
+  apply hinv
+  have hz : 1 - (p : ℂ) ^ (-((β : ℂ))) = 0 := by
+    simpa [InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight] using hzero
+  rw [hz, inv_zero]
+
+theorem primeRegularizedDetStage_ne_zero_of_one_lt
+    (β : ℝ) (hβ : 1 < β) (N : ℕ) :
+    primeRegularizedDetStage (β : ℂ) N ≠ 0 := by
+  have hrec :=
+    primeRegularizedDetStage_mul_primeBosonicCutoff_eq_one_of_one_lt β hβ N
+  intro hzero
+  rw [hzero, zero_mul] at hrec
+  exact zero_ne_one hrec
+
 theorem fredholm_det_inv_eq_product_inv
     (factor : ℕ → ℂ) (N : ℕ) :
     (regularizedDetStage factor N)⁻¹ =

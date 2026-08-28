@@ -262,8 +262,6 @@ ladder relations without introducing a second matrix or operator carrier.
     epsGen * nullMinus =
         (1 / 2 : ℝ) • (epsGen * jGen + epsGen * kGen) := by
       rw [nullMinus_eq_half_jGen_add_kGen]
-      change epsGen * ((1 / 2 : ℝ) • (jGen + kGen)) =
-        (1 / 2 : ℝ) • (epsGen * jGen + epsGen * kGen)
       simp only [Algebra.mul_smul_comm, mul_add, smul_add]
     _ = (1 / 2 : ℝ) • (-kGen + (-jGen)) := by
       rw [epsGen_mul_jGen, epsGen_mul_kGen]
@@ -277,8 +275,6 @@ ladder relations without introducing a second matrix or operator carrier.
     nullMinus * epsGen =
         (1 / 2 : ℝ) • (jGen * epsGen + kGen * epsGen) := by
       rw [nullMinus_eq_half_jGen_add_kGen]
-      change ((1 / 2 : ℝ) • (jGen + kGen)) * epsGen =
-        (1 / 2 : ℝ) • (jGen * epsGen + kGen * epsGen)
       simp only [smul_mul_assoc, add_mul, smul_add]
     _ = (1 / 2 : ℝ) • (kGen + jGen) := by
       rw [jGen_mul_epsGen, kGen_mul_epsGen]
@@ -299,8 +295,7 @@ ladder relations without introducing a second matrix or operator carrier.
 @[rep_depth krein, simp] theorem nullPlus_mul_nullMinus_sub_nullMinus_mul_nullPlus :
     nullPlus * nullMinus - nullMinus * nullPlus = epsGen := by
   rw [nullPlus_eq_half_jGen_sub_kGen, nullMinus_eq_half_jGen_add_kGen]
-  simp [epsGen, sub_eq_add_neg, add_mul, mul_add,
-    smul_mul_assoc, mul_smul_comm]
+  simp [epsGen, sub_eq_add_neg, add_mul, mul_add]
   module
 
 @[rep_depth krein, simp] theorem nullPlus_add_nullMinus_eq_jGen :

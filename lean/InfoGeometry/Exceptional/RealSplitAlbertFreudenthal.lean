@@ -192,22 +192,16 @@ theorem toH3_mul_b (X Y : RealAlbertMatrix) :
       simp [ZornVectorMatrix.smul, ZornVectorMatrix.zero,
         ZornVectorMatrix.conj, ZornVectorMatrix.add,
         ZornVectorMatrix.neg, ZornVectorMatrix.mul, ZornVec3.dot,
-        ZornVec3.cross, Fin.sum_univ_three,
-        H3Zorn.add_readback, H3Zorn.smul_readback] <;>
-      ring_nf <;>
-      simp only [Finset.sum_add_distrib (s := Finset.univ),
-        Finset.sum_neg_distrib] <;> ring
+        ZornVec3.cross, Fin.sum_univ_three, Finset.sum_add_distrib,
+        H3Zorn.add_readback, H3Zorn.smul_readback] <;> ring
   · funext i
     fin_cases i <;>
       dsimp [ZornVectorMatrix.neg] <;>
       simp [ZornVectorMatrix.smul, ZornVectorMatrix.zero,
         ZornVectorMatrix.conj, ZornVectorMatrix.add,
         ZornVectorMatrix.neg, ZornVectorMatrix.mul, ZornVec3.dot,
-        ZornVec3.cross, Fin.sum_univ_three,
-        H3Zorn.add_readback, H3Zorn.smul_readback] <;>
-      ring_nf <;>
-      simp only [Finset.sum_add_distrib (s := Finset.univ),
-        Finset.sum_neg_distrib] <;> ring
+        ZornVec3.cross, Fin.sum_univ_three, Finset.sum_add_distrib,
+        H3Zorn.add_readback, H3Zorn.smul_readback] <;> ring
   · dsimp [ZornVectorMatrix.neg]
     simp [ZornVectorMatrix.smul, ZornVectorMatrix.zero,
       ZornVectorMatrix.conj, ZornVectorMatrix.add,
@@ -374,18 +368,11 @@ theorem toH3_mul_α₃ (X Y : RealAlbertMatrix) :
     H3ZornCoordinateReadback.traceBilin_coordinate,
     H3ZornCoordinateReadback.crossProduct_α₃,
     H3ZornCoordinateReadback.adjointQuad_α₃,
-    H3ZornCoordinateReadback.add_α₁,
-    H3ZornCoordinateReadback.add_α₂,
-    H3ZornCoordinateReadback.add_α₃,
-    H3ZornCoordinateReadback.smul_α₁,
-    H3ZornCoordinateReadback.smul_α₂,
-    H3ZornCoordinateReadback.smul_α₃,
     H3Zorn.add_readback, H3Zorn.smul_readback, H3Zorn.one_readback]
   simp [toH3, RealSplitOctZornAlignment.toZorn,
     ZornVectorMatrix.norm, ZornVectorMatrix.trace,
     ZornVectorMatrix.mul, ZornVectorMatrix.conj,
-    ZornVectorMatrix.add, ZornVectorMatrix.smul,
-    ZornVectorMatrix.zero, ZornVectorMatrix.neg, ZornVec3.dot,
+    ZornVectorMatrix.add, ZornVec3.dot,
     Fin.sum_univ_three]
   ring
 

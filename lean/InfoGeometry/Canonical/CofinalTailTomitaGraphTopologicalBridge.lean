@@ -24,6 +24,8 @@ open FilteredColimit.Native.Topological
 
 universe u
 
+set_option linter.unusedSectionVars false
+
 variable {I : Type u} [Preorder I] [Nonempty I] [IsDirectedOrder I]
 variable [DecidableEq I]
 variable (Stage : I → Type u)

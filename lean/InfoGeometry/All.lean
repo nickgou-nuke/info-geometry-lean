@@ -7738,3 +7738,4 @@ import InfoGeometry.GrandUnification.BostConnesLeeYangGrandSynthesis
 import InfoGeometry.Canonical.SouriauBostConnesTransitionTheoremCapstone
 import InfoGeometry.GrandUnification.SouriauBostConnesTransitionTheorem
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
+import InfoGeometry.Analysis.SpectralDistance

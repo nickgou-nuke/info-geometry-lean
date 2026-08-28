@@ -177,6 +177,7 @@ import InfoGeometry.Arithmetic.GaloisIdeleTatePrimonSuperalgebraCapstone
 import InfoGeometry.Canonical.BostConnesFullKMSMasterArchitectureCapstone
 import InfoGeometry.Canonical.FiniteMatrixGibbsKMSPhaseBoundaryCapstone
 import InfoGeometry.Canonical.SouriauDiracHodgeStandaloneCapstone
+import InfoGeometry.Canonical.ZeckendorfCuntz
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 
 namespace InfoGeometry

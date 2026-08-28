@@ -30,6 +30,7 @@ trace-class owner file constructs them from first principles.
 -/
 
 open Complex
+open Filter Topology
 open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.FredholmClosure
@@ -152,6 +153,28 @@ theorem primeRegularizedDetStage_succ (s : ℂ) (N : ℕ) :
       primeRegularizedDetStage s N * primeCutoffFactor s N := by
   simp [primeRegularizedDetStage, regularizedDetStage,
     Finset.prod_range_succ]
+
+theorem primeRegularizedDetStage_succ_exp (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N *
+        (1 - Complex.exp (-s * (Real.log (primeAt N : ℝ) : ℂ))) := by
+  rw [primeRegularizedDetStage_succ, primeCutoffFactor_eq_exp_log]
+
+theorem primeRegularizedDetStage_eq_exp_prod (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      ∏ i ∈ Finset.range N,
+        (1 - Complex.exp (-s * (Real.log (primeAt i : ℝ) : ℂ))) := by
+  induction N with
+  | zero => simp [primeRegularizedDetStage, regularizedDetStage]
+  | succ N ih =>
+      rw [primeRegularizedDetStage_succ_exp, ih, Finset.prod_range_succ]
+
+theorem primeRegularizedDetStage_tendsto_tprod
+    (s : ℂ) (L : ℂ)
+    (hprod : HasProd (primeCutoffFactor s) L) :
+    Tendsto (fun N : ℕ => primeRegularizedDetStage s N) atTop (𝓝 L) := by
+  simpa [primeRegularizedDetStage, regularizedDetStage] using
+    hprod.tendsto_prod_nat
 
 /-- The prime-indexed cutoff determinant is nonzero whenever each included
 local factor is nonzero.  This exposes the generic finite-stage theorem at

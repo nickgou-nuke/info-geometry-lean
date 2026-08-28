@@ -265,6 +265,7 @@ import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
 import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
 import InfoGeometry.Physics.TensorProductCommutationBregmanEntropyCapstone
 import InfoGeometry.Physics.SelfConcordantFenchelBregmanDikinCapstone
+import InfoGeometry.Physics.MatrixMirrorDescentKMSCentralPathCapstone
 
 /-!
 # Physics Umbrella

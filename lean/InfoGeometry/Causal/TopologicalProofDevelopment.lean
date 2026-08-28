@@ -318,6 +318,14 @@ theorem foldVerifiedStates_mem
       | inr hS =>
           exact (ih hS).trans (foldVerifiedStates_tail_subset G T Ts)
 
+/-- A branch's target-directed knowledge is preserved by finite fold assembly. -/
+theorem verifiedToward_foldVerifiedStates_mem
+    (G : ProofDAG α) {Ss : List (VerifiedState G)}
+    (S : VerifiedState G) (hS : S ∈ Ss) (T : α) :
+    verifiedToward G S T ⊆
+      verifiedToward G (foldVerifiedStates G Ss) T :=
+  verifiedToward_mono G T (foldVerifiedStates_mem G S hS)
+
 theorem mem_foldVerifiedStates_iff
     (G : ProofDAG α) {Ss : List (VerifiedState G)} (x : α) :
     x ∈ (foldVerifiedStates G Ss).carrier ↔
@@ -341,6 +349,18 @@ theorem mem_foldVerifiedStates_iff
             exact Or.inl hxT
         | inr hT =>
             exact Or.inr (ih.mpr ⟨T, hT, hxT⟩)
+
+/-- Exact branch characterization of membership in a folded target frontier. -/
+theorem mem_verifiedToward_foldVerifiedStates_iff
+    (G : ProofDAG α) {Ss : List (VerifiedState G)} (x : α) (T : α) :
+    x ∈ verifiedToward G (foldVerifiedStates G Ss) T ↔
+      ∃ S ∈ Ss, x ∈ verifiedToward G S T := by
+  constructor
+  · rintro ⟨hx, hxT⟩
+    obtain ⟨S, hS, hxS⟩ := (mem_foldVerifiedStates_iff G x).mp hx
+    exact ⟨S, hS, hxS, hxT⟩
+  · rintro ⟨S, hS, hxS, hxT⟩
+    exact ⟨(mem_foldVerifiedStates_iff G x).mpr ⟨S, hS, hxS⟩, hxT⟩
 
 theorem mem_foldVerifiedStates_of_mem_all
     (G : ProofDAG α) {Ss : List (VerifiedState G)} (x : α)

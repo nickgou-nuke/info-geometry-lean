@@ -325,9 +325,12 @@ import InfoGeometry.Clifford.Cl55AbelianMonodromy
 import InfoGeometry.Clifford.Cl55SplitPeirceSpectralBridge
 import InfoGeometry.Clifford.Cl55WindingMonodromyRepresentation
 import InfoGeometry.Clifford.Cl55RotorUnitsRepresentation
+import InfoGeometry.Clifford.Cl55FiniteCommutingRotorAction
+import InfoGeometry.Clifford.Cl55NativeFiniteRotorAction
 import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
 import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 import InfoGeometry.Clifford.Cl55MaximalTorus
+import InfoGeometry.Clifford.Cl55LCFTPhaseProjection
 
 namespace InfoGeometry
 

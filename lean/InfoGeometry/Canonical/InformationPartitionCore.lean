@@ -168,6 +168,47 @@ theorem deriv4_informationPartitionMoment
   simpa [Nat.add_assoc] using
     (deriv_informationPartitionMoment (ω := ω) (K := K) (n + 3) τ)
 
+/- Fifth raw moment step; the finite tower remains entirely algebraic. -/
+theorem deriv5_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ =>
+            deriv (fun w : ℝ => ω (NormedSpace.exp (w • K) * K ^ n)) v) u) s) t) τ =
+        ω (NormedSpace.exp (τ • K) * K ^ (n + 5)) := by
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ =>
+            deriv (fun w : ℝ => ω (NormedSpace.exp (w • K) * K ^ n)) v) u) s) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K ^ (n + 4))) by
+        funext t
+        exact deriv4_informationPartitionMoment (ω := ω) (K := K) n t]
+  simpa [Nat.add_assoc] using
+    (deriv_informationPartitionMoment (ω := ω) (K := K) (n + 4) τ)
+
+/- Product/inverse calculus core for the third logarithmic variation. -/
+theorem hasDerivAt_logSecondVariation
+    {Z M₁ M₂ : ℝ → ℝ} {z₁ m₂ m₃ : ℝ} {τ : ℝ}
+    (hZ : HasDerivAt Z z₁ τ) (hM₁ : HasDerivAt M₁ m₂ τ)
+    (hM₂ : HasDerivAt M₂ m₃ τ) (hz : Z τ ≠ 0) :
+    HasDerivAt (fun t : ℝ =>
+      (Z t)⁻¹ * M₂ t - ((Z t)⁻¹ * M₁ t) ^ 2)
+      (-(z₁ / Z τ ^ 2) * M₂ τ + (Z τ)⁻¹ * m₃ -
+        2 * ((Z τ)⁻¹ * M₁ τ) *
+          (-(z₁ / Z τ ^ 2) * M₁ τ + (Z τ)⁻¹ * m₂)) τ := by
+  have hInv := hZ.inv hz
+  have hA := hInv.mul hM₂
+  have hB := hInv.mul hM₁
+  have hSq := hB.mul hB
+  have hSub := hA.sub hSq
+  convert hSub using 1
+  · funext t
+    simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+  · simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
+    ring
+
 /-- The second derivative of the partition readout at the origin. -/
 theorem deriv2_informationPartitionFunction_zero
     (ω : EndH E →L[ℝ] ℝ) (K : EndH E) :

@@ -72,6 +72,22 @@ theorem N_apply_D : J.N J.D = J.C := by
   unfold N
   simp [LinearMap.sub_apply, LinearMap.smul_apply, J.jordan_D]
 
+/-- A nonzero logarithmic partner cannot be an ordinary `h`-eigenvector. -/
+theorem jordan_D_not_h_eigen (hC : J.C ≠ 0) :
+    J.L_0 J.D ≠ J.h • J.D := by
+  intro hD
+  apply hC
+  rw [J.jordan_D] at hD
+  have hD' : J.h • J.D + J.C = J.h • J.D + 0 := by simpa using hD
+  exact add_left_cancel hD'
+
+/-- Under the nonzero-primary condition, the shifted Jordan generator is nonzero. -/
+theorem N_ne_zero (hC : J.C ≠ 0) : J.N ≠ 0 := by
+  intro hN
+  apply hC
+  have h := congrArg (fun T : V →ₗ[ℂ] V => T J.D) hN
+  simpa [N_apply_D (J := J)] using h
+
 /-- 🏆 THEOREM 3: $N^2$ annihilates the logarithmic partner $D$ (nilpotency of index 2). -/
 theorem N_sq_apply_D : (J.N.comp J.N) J.D = 0 := by
   simp [LinearMap.comp_apply, N_apply_D, N_apply_C]

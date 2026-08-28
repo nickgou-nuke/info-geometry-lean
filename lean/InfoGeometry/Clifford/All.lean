@@ -331,6 +331,7 @@ import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
 import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 import InfoGeometry.Clifford.Cl55MaximalTorus
 import InfoGeometry.Clifford.Cl55LCFTPhaseProjection
+import InfoGeometry.Clifford.SouriauGibbsSoftmax
 
 namespace InfoGeometry
 

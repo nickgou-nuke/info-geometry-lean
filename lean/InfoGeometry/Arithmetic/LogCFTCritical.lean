@@ -42,6 +42,23 @@ theorem nilpotent_jordan_square_zero :
     (jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0 :=
   jordanNilpotent_sq
 
+/-- The logarithmic shear is genuinely nonzero, so the cell is not diagonal. -/
+theorem nilpotent_jordan_nonzero :
+    (jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 := by
+  intro h
+  have h01 := congr_fun (congr_fun h 0) 1
+  simp [jordanNilpotent] at h01
+
+/-- The nearest concrete critical bridge: harmonic divergence and a nontrivial
+square-zero Jordan shear hold simultaneously. -/
+theorem critical_divergence_and_jordan_shear :
+    (¬ Summable (fun n : ℕ =>
+      if n = 0 then 0 else (1 : ℝ) / (n : ℝ))) ∧
+    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0) ∧
+    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0) := by
+  exact ⟨harmonic_series_diverges,
+    nilpotent_jordan_square_zero, nilpotent_jordan_nonzero⟩
+
 /--
 Explicit entry-level description of the critical Jordan cell.
 

@@ -192,7 +192,7 @@ theorem cayleyPhaseSmul_isPhaseLinear
 @[simp] theorem cayleyPhaseSmul_one (A : EndH) :
     cayleyPhaseSmul (E := E) 1 A = A := by
   dsimp [cayleyPhaseSmul]
-  rw [one_smul, zero_smul, add_zero]
+  rw [one_smul, ContinuousLinearMap.zero_smul, add_zero]
 
 /--
 Projector compatibility interface: any projector commuting with `K = clockAxis` is Hestenes-linear.

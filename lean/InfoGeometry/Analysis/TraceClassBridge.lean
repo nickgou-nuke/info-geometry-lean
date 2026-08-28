@@ -25,8 +25,9 @@ instantiate a Mathlib trace-class or Fredholm-determinant object.
 
 ## The Gap
 
-    - e^{-sH} is a strict contraction on ℓ²({n ≥ 2}) for Re(s) > 1/2
-      (proved: SpectralDistance.lean, eigenvalue_norm_lt_one)
+    - the scalar excited-mode weights are strictly below one for Re(s) > 0
+      (proved by primon_mode_strict_contraction in
+      InfoGeometry.Arithmetic.SpectralDistance)
 
     - For Re(s) > 1: the eigenvalues satisfy Σ |n^{-s}| < ∞
       → e^{-sH} is trace-class (requires mathlib: `summable_of_absolutely_summable`)

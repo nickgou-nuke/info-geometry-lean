@@ -266,5 +266,60 @@ theorem bogoliubovEnergy_pos (N : NambuGorkovCarrier ℝ)
       linarith
   exact Real.sqrt_pos.mpr h_sum_pos
 
+/-! ## 6. Koszul-Vinberg Log-Barrier & Klein Quadric Gap Protection -/
+
+/-- Koszul-Vinberg logarithmic potential on the Nambu-Gorkov state:
+$\Phi_{\text{NG}}(N) = - \log(-\operatorname{zornNorm}(X_{\text{NG}}))$. -/
+def nambuGorkovLogBarrier (N : NambuGorkovCarrier ℝ) : ℝ :=
+  - Real.log (- zornNorm (toZorn N))
+
+/-- 🏆 THEOREM: The Nambu-Gorkov logarithmic barrier equals $- \log(E^2)$. -/
+theorem nambuGorkovLogBarrier_eq_neg_log_energy_sq (N : NambuGorkovCarrier ℝ) :
+    nambuGorkovLogBarrier N = - Real.log ((bogoliubovEnergy N) ^ 2) := by
+  dsimp [nambuGorkovLogBarrier]
+  rw [bogoliubovEnergy_sq]
+
+/-- 🏆 THEOREM: The squared Bogoliubov energy is strictly positive for any nontrivial state. -/
+theorem bogoliubovEnergy_sq_pos (N : NambuGorkovCarrier ℝ)
+    (h_nontriv : N.xi ≠ 0 ∨ N.delta 0 ≠ 0 ∨ N.delta 1 ≠ 0 ∨ N.delta 2 ≠ 0) :
+    0 < (bogoliubovEnergy N) ^ 2 := by
+  have hpos := bogoliubovEnergy_pos N h_nontriv
+  exact sq_pos_of_ne_zero (ne_of_gt hpos)
+
+/-- 🏆 THEOREM (Klein Quadric Mass-Shell Characterization):
+A Nambu-Gorkov state lies on the Klein quadric boundary $\det_Z(X_{\text{NG}}) = 0$ if and only if
+both the single-particle energy vanishes ($\xi = 0$) and the pairing gap vanishes ($\vec{\Delta} = 0$). -/
+theorem nambuGorkov_null_iff (N : NambuGorkovCarrier ℝ) :
+    zornNorm (toZorn N) = 0 ↔ (N.xi = 0 ∧ N.delta 0 = 0 ∧ N.delta 1 = 0 ∧ N.delta 2 = 0) := by
+  rw [nambu_gorkov_zornNorm]
+  constructor
+  · intro h
+    have hneg : N.xi ^ 2 + Vec3.dot N.delta N.delta = 0 := by linarith
+    have hxi_nonneg : 0 ≤ N.xi ^ 2 := sq_nonneg N.xi
+    dsimp [Vec3.dot] at hneg
+    have hd0_nonneg : 0 ≤ N.delta 0 * N.delta 0 := by nlinarith
+    have hd1_nonneg : 0 ≤ N.delta 1 * N.delta 1 := by nlinarith
+    have hd2_nonneg : 0 ≤ N.delta 2 * N.delta 2 := by nlinarith
+    have hxi_zero : N.xi = 0 := by
+      have : N.xi ^ 2 = 0 := by linarith
+      exact sq_eq_zero_iff.mp this
+    have hd0_zero : N.delta 0 = 0 := by
+      have : N.delta 0 * N.delta 0 = 0 := by linarith
+      have hsq : (N.delta 0) ^ 2 = 0 := by linarith
+      exact sq_eq_zero_iff.mp hsq
+    have hd1_zero : N.delta 1 = 0 := by
+      have : N.delta 1 * N.delta 1 = 0 := by linarith
+      have hsq : (N.delta 1) ^ 2 = 0 := by linarith
+      exact sq_eq_zero_iff.mp hsq
+    have hd2_zero : N.delta 2 = 0 := by
+      have : N.delta 2 * N.delta 2 = 0 := by linarith
+      have hsq : (N.delta 2) ^ 2 = 0 := by linarith
+      exact sq_eq_zero_iff.mp hsq
+    exact ⟨hxi_zero, hd0_zero, hd1_zero, hd2_zero⟩
+  · rintro ⟨hxi, hd0, hd1, hd2⟩
+    dsimp [Vec3.dot]
+    rw [hxi, hd0, hd1, hd2]
+    ring
+
 end InfoGeometry.Nuclear.NambuGorkov
 

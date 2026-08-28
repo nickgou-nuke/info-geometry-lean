@@ -83,6 +83,10 @@ noncomputable def primeAt (i : ℕ) : Nat.Primes :=
 theorem primeAt_val_strictMono : StrictMono (fun i : ℕ => (primeAt i : ℕ)) := by
   exact Nat.nth_strictMono Nat.infinite_setOf_prime
 
+theorem primeAt_val_tendsto_atTop :
+    Tendsto (fun i : ℕ => (primeAt i : ℕ)) atTop atTop := by
+  exact primeAt_val_strictMono.tendsto_atTop
+
 theorem primeAt_injective : Function.Injective primeAt := by
   intro i j h
   exact primeAt_val_strictMono.injective (Subtype.ext_iff.mp h)
@@ -270,6 +274,18 @@ theorem primeRegularizedDetStage_inv_eq_primeBosonicCutoff
   unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
   rw [primeCutoff_prod_eq_primesBelow_prod]
   rfl
+
+/- The existing Euler-product convergence remains valid after reindexing by
+the cofinal enumeration of primes used by the determinant stages. -/
+theorem primeRegularizedDetStage_inv_tendsto_riemannZeta
+    {s : ℂ} (hs : 1 < s.re) :
+    Tendsto (fun N : ℕ => (primeRegularizedDetStage s N)⁻¹) atTop
+      (𝓝 (riemannZeta s)) := by
+  have hcut :=
+    InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff_tendsto_riemannZeta hs
+  have hcofinal := primeAt_val_tendsto_atTop
+  have hsub := hcut.comp hcofinal
+  simpa only [primeRegularizedDetStage_inv_eq_primeBosonicCutoff] using hsub
 
 theorem primeRegularizedDetStage_mul_finiteComplexBosonPartition_eq_one
     (s : ℂ) (N : ℕ)

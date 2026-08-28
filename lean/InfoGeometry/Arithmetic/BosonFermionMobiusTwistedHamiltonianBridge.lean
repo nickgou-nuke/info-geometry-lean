@@ -5,26 +5,32 @@ import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
 import InfoGeometry.Arithmetic.FiniteMobiusOperatorInversionBridge
+import InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 
 /-!
 # Boson-Fermion Möbius Twisted Hamiltonian Bridge
 
-This module formalizes the exact Boson-Fermion role swap:
+This module formalizes the finite Boson-Fermion role swap:
 1. **Bosonic Sector**: The Hamiltonian $H = \operatorname{diag}(\ln n)$ generates the
    heat kernel partition function $\operatorname{Tr}_{\mathrm{Sym}}(e^{-sH}) = \sum n^{-s} = \zeta(s)$,
-   which has its divergence pole at $s = 1$.
+   as a finite Dirichlet stage.
 2. **Fermionic Sector**: The Möbius parity $\Gamma = \operatorname{diag}(\mu(n))$ twists
    the Hamiltonian to $\Gamma H$, generating the fermionic partition function
    $\operatorname{Tr}_{\wedge}(\Gamma e^{-sH}) = \sum \mu(n) n^{-s} = 1/\zeta(s)$,
-   whose poles are precisely the non-trivial zeros of $\zeta(s) = 0$.
+   as a finite Möbius-weighted stage.
 3. **Möbius Convolution Reciprocity**: $\zeta * \mu = \delta_1$, certifying exact algebraic
-   inversion between the bosonic and fermionic sectors.
+   inversion between the coefficient systems.
+
+The file does not assert an infinite trace, analytic continuation, a spectrum
+of zeta zeros, or the Riemann hypothesis. Those claims require separate
+mathematical data and are not consequences of a finite stage.
 -/
 
 open Complex
 open ArithmeticFunction
 open InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
 open InfoGeometry.Arithmetic.FiniteMobiusOperatorInversionBridge
+open InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 
 namespace InfoGeometry.Arithmetic.BosonFermionMobiusTwistedHamiltonianBridge
 
@@ -56,6 +62,13 @@ theorem fermionic_operator_eigenvalue (N : ℕ) (s : ℂ) :
   unfold fermionicPartitionStage fermionicWeight
   exact mobiusDirichletOperator_expTestFun N s
 
+/-! The role swap is an exact finite product identity. -/
+theorem finite_fermionic_role_swap
+    {ι R : Type*} [DecidableEq ι] [CommRing R]
+    (modes : Finset ι) (q : ι → R) :
+    finiteFermionSupertrace modes q = ∏ p ∈ modes, (1 - q p) := by
+  exact finiteFermionSupertrace_eq_eulerProduct modes q
+
 /-- 🏆 THEOREM 3: Exact algebraic reciprocity: $(\zeta * \mu) = \delta_1$ (Dirac delta at 1). -/
 theorem dirichlet_convolution_inversion :
     ((ArithmeticFunction.zeta : ArithmeticFunction ℂ) *
@@ -64,8 +77,8 @@ theorem dirichlet_convolution_inversion :
 
 /--
 🏆 GRAND BOSON-FERMION MÖBIUS SWAP SYNTHESIS:
-1. Bosonic sector $\operatorname{Tr}(e^{-sH}) = \sum n^{-s}$ (pole at $s = 1$).
-2. Fermionic sector $\operatorname{Tr}(\Gamma e^{-sH}) = \sum \mu(n) n^{-s}$ (zeros of $\zeta(s)$ are poles of $1/\zeta(s)$).
+1. Bosonic and fermionic finite operator stages.
+2. Finite Möbius subset expansion and Euler-product factorization.
 3. Convolution reciprocity $\zeta * \mu = 1$.
 -/
 theorem grand_boson_fermion_mobius_swap_synthesis (N : ℕ) (s : ℂ) :

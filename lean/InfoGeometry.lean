@@ -160,6 +160,7 @@ import InfoGeometry.Canonical.BostConnesPhaseTransitionGaloisSSBCapstone
 import InfoGeometry.Critical.LogCFTCritical
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
 import InfoGeometry.Canonical.RecursiveExponentFilteredColimitCapstone
+import InfoGeometry.Arithmetic.BosonFermionMobiusTwistedHamiltonianBridge
 
 namespace InfoGeometry
 

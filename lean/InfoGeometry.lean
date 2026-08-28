@@ -171,6 +171,7 @@ import InfoGeometry.NCG.CategoricalColimitKMSStateLiftCapstone
 import InfoGeometry.Canonical.OperatorLeibnizDerivationSimplexCapstone
 import InfoGeometry.Canonical.CarrierMasterAlgebraicLemmasCapstone
 import InfoGeometry.Arithmetic.PrimonAmariSurprisalBregmanCapstone
+import InfoGeometry.Arithmetic.LogLatticeExactPrimonCapstone
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 
 namespace InfoGeometry

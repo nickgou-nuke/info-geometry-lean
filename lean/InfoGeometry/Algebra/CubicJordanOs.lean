@@ -178,7 +178,7 @@ lemma adjointQuad_zeroZ (α₁ α₂ α₃ : ℝ) :
     { α₁ := α₂ * α₃, α₂ := α₁ * α₃, α₃ := α₁ * α₂,
       z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } := by
   dsimp [adjointQuad]
-  simp [detZ_zeroZ_cast, conjZ_zeroZ, mulZ_zero, smul_zeroZ, subZ_zeroZ]
+  simp [detZ_zeroZ_cast, conjZ_zeroZ, smul_zeroZ, subZ_zeroZ]
 
 lemma normCubic_zeroZ (α₁ α₂ α₃ : ℝ) :
     normCubic { α₁ := α₁, α₂ := α₂, α₃ := α₃,

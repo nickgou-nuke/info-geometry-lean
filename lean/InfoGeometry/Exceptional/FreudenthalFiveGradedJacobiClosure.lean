@@ -427,10 +427,12 @@ theorem jacobi_chargeMinus_chargeMinus_scale
       (symplecticFormLinear D x).map_smul h y
     have h2 : FreudenthalCharge.symplecticForm D y (-h • x) = h * FreudenthalCharge.symplecticForm D x y := by
       have hs : FreudenthalCharge.symplecticForm D y (-h • x) = -h * FreudenthalCharge.symplecticForm D y x :=
-        symplecticForm_smul_right D (-h) y x
-      have hsk := FreudenthalCharge.symplectic_form_skew D x y
+        (symplecticFormLinear D y).map_smul (-h) x
+      have hsk : FreudenthalCharge.symplecticForm D y x = -FreudenthalCharge.symplecticForm D x y :=
+        FreudenthalCharge.symplectic_form_skew D x y
       calc
-        FreudenthalCharge.symplecticForm D y (-h • x) = -h * FreudenthalCharge.symplecticForm D y x := hs
+        FreudenthalCharge.symplecticForm D y (-h • x) =
+            -h * FreudenthalCharge.symplecticForm D y x := hs
         _ = -h * (-FreudenthalCharge.symplecticForm D x y) := by rw [hsk]
         _ = h * FreudenthalCharge.symplecticForm D x y := by ring
     simp only [zero_smul, smul_zero, add_zero, zero_add, sub_self, mul_zero,
@@ -442,5 +444,32 @@ theorem jacobi_chargeMinus_chargeMinus_scale
   · simp
   · simp
   · simp
+
+@[simp] theorem symplecticRankTwo_zero_left (x : FreudenthalCharge J) :
+    symplecticRankTwo D 0 x = 0 := by
+  apply LinearMap.ext
+  intro z
+  simp [symplecticRankTwo_apply]
+
+@[simp] theorem symplecticRankTwo_zero_right (x : FreudenthalCharge J) :
+    symplecticRankTwo D x 0 = 0 := by
+  apply LinearMap.ext
+  intro z
+  simp [symplecticRankTwo_apply]
+
+theorem jacobi_chargePlus_chargePlus_scale
+    (x y : FreudenthalCharge J) (h : ℝ) :
+    fiveJacobiator D (injChargePlus D x) (injChargePlus D y)
+        (genHscale D h) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargePlus, genHscale,
+      FiveGradedCarrier.instAdd] <;>
+    simp [symplecticRankTwo_apply, symplecticForm_smul_left,
+      symplecticForm_smul_right] <;>
+    try ring
+  · rw [symplecticForm_neg_right, symplecticForm_smul_right,
+      FreudenthalCharge.symplectic_form_skew D x y]
+    ring
 
 end InfoGeometry.Exceptional.Freudenthal

@@ -92,6 +92,13 @@ theorem paraBerryTwoForm_self_add_self (u : V) :
   have hskew := D.paraBerryTwoForm_skew u u
   exact eq_neg_iff_add_eq_zero.mp hskew
 
+theorem paraBerryTwoForm_self_zero
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (D : ParaKahlerDatum ℝ V) (u : V) :
+    D.paraBerryTwoForm u u = 0 := by
+  have h := D.paraBerryTwoForm_self_add_self u
+  linarith
+
 /-- **Theorem**: Chiral/Isotropic Sector Vanishing.
     Vectors on the $+1$ eigenspace of $K$ (chiral boundary modes $K u = u$) are null/isotropic:
     $g(u, u) = 0$. -/

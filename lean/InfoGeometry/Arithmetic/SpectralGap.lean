@@ -35,15 +35,6 @@ open Real
 namespace InfoGeometry.Arithmetic.SpectralGap
 
 /--
-The spectral gap of the primon gas: log 2 > 0.
-
-On the excited subspace ℓ²({n ≥ 2}):
-    |n^{-s}| = n^{-Re(s)} ≤ 2^{-Re(s)} < 1   for Re(s) > 0
--/
-theorem primon_gap_pos : 0 < Real.log 2 := by
-  exact Real.log_pos (by norm_num : 1 < (2 : ℝ))
-
-/--
 For n ≥ 2 and Re(s) > 0: n^{-Re(s)} ≤ 2^{-Re(s)} < 1.
 
 The contraction factor is 2^{-Re(s)} — exponential decay at rate log 2.

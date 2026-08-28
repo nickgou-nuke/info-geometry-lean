@@ -14,7 +14,7 @@ import InfoGeometry.Arithmetic.RiemannZetaPrimonSouriauCayleyCapstone
 import InfoGeometry.Quantum.CantorCrystalSupergradedSuperalgebraCapstone
 
 /-!
-# Grand Unification: Bost-Connes Lee-Yang & Cantor Crystal Superalgebra
+# Algebraic Bost-Connes/Cantor-Crystal Readout Synthesis
 
 This capstone module formalizes the ultimate non-commutative unification:
 
@@ -27,16 +27,22 @@ This capstone module formalizes the ultimate non-commutative unification:
      STr(q) = ∏_{p ∈ P} (1 - q_p).
    - The fermion parity of prime squarefree products is the Möbius function μ(n).
 
-3. **Cayley Compactification & The Lee-Yang Unit Circle**:
-   - The critical line Re(s) = 1/2 maps into the unitary circle:
-     |C_crit(s)|² = 1 for all s with s.re = 1/2.
+3. **Cayley critical-line readout**:
+   - The repository's explicit chart maps the critical-line predicate to its
+     unit-circle predicate.  This is a transport identity, not a theorem on
+     zeta zeros or a Lee--Yang partition function.
 
-4. **Supergraded Superalgebra of the Cantor Crystal & Anomaly Cancellation**:
+4. **Supergraded algebra of the Cantor Crystal & branch cancellation**:
    - Branch projectors are bosonic: K (S_L S_L*) K = S_L S_L*.
    - Hopping operators are fermionic: K (S_L S_R*) K = -(S_L S_R*).
    - The Witten index vanishes at KMS equilibrium: STr(ρ) = 0.
-   - Anomaly cancellation protects the half-filled Dirac sea and locks the zeros
-     onto the Lee-Yang circle.
+   - The supplied KMS-like additive-functional relation makes the branch
+     difference zero.  No physical anomaly, Dirac sea, or zero-location claim
+     follows from this algebraic statement.
+
+The file composes finite and property-gated results only.  It does not prove
+the Riemann hypothesis, an analytic Bost--Connes phase transition, an infinite
+Cuntz representation, or physical Yang--Baxter integrability.
 -/
 
 noncomputable section
@@ -86,7 +92,7 @@ theorem mobius_parity_equals_fermion_sign
     ArithmeticFunction.moebius (∏ p ∈ S, p) = finiteArithmeticParity S :=
   mobius_subsetProduct_eq_finiteArithmeticParity S hprime
 
-/-! ## 3. Cayley Compactification to the Lee-Yang Circle -/
+/-! ## 3. Critical-Line Cayley Transport -/
 
 /-- Cayley transform centered at the critical line Re(s) = 1/2. -/
 def cayley_critical (s : ℂ) : ℂ :=
@@ -135,17 +141,21 @@ theorem cayley_unitarity_of_critical_line (s : ℂ) (h_crit : s.re = 1 / 2) :
 /-! ## 4. Grand Master Unification Synthesis -/
 
 /--
-🏆 **PRISTINE MASTER SYNTHESIS: Bost-Connes Lee-Yang Circle Theorem ↔ Cantor Crystal Superalgebra**
+🏆 **MASTER SYNTHESIS: Algebraic Bost-Connes/Cayley and Cantor-Crystal Readouts**
 
 Unifies:
 1. **Prime Cl(1,1) Möbius Parity**: γ² = 1.
 2. **Dirac-Laplacian Möbius Commutation**: [Q², γ] = 0.
 3. **Möbius Supertrace Inversion**: STr(q) = ∏ (1 - q_p).
-4. **Lee-Yang Critical Circle Unitarity**: |C_crit(s)|² = 1.
+4. **Critical-line Cayley transport**: `|C_crit(s)|² = 1` under the displayed
+   critical-line hypothesis.
 5. **Cantor Crystal Bosonic Projectors**: K (S_L S_L*) K = S_L S_L*.
 6. **Cantor Crystal Fermionic Hopping**: K (S_L S_R*) K = -(S_L S_R*).
-7. **Witten Index Anomaly Cancellation**: STr(ρ) = 0.
-8. **Fibonacci Anyon Yang-Baxter Invariance**: F · B · F = R and F² = 1.
+7. **KMS-like branch cancellation**: the supplied branch difference is zero.
+8. **Imported finite Yang--Baxter identities**: F · B · F = R and F² = 1.
+
+These are conditional algebraic readouts; they do not imply a Lee--Yang zero
+theorem, anomaly cancellation in an analytic model, or the Riemann hypothesis.
 -/
 theorem grand_bost_connes_lee_yang_superalgebra_unification
     (atom : Cl11Atom A)

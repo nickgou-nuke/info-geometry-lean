@@ -3425,6 +3425,7 @@ import InfoGeometry.Canonical.InductiveLimitTraceKMSStateCapstone
 import InfoGeometry.Canonical.HadjiivanovCFTFibonacciHolographyCapstone
 import InfoGeometry.Canonical.BostConnesLeeYangHodgeModularCapstone
 import InfoGeometry.Canonical.SouriauDiracHodgePrimonZeroTemperatureCapstone
+import InfoGeometry.Canonical.BostConnesLeeYangSuperKMSCapstone
 
 namespace InfoGeometry
 

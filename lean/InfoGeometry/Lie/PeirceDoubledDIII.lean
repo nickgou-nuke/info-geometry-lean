@@ -11,7 +11,7 @@ silently assumed.
 
 namespace InfoGeometry.Lie.PeirceDoubledDIII
 
-open InfoGeometry.CondensedMatter
+open InfoGeometry.CondensedMatter.DIIISuperfluid
 open InfoGeometry.Lie.PeirceDoubledComplexStructure
 
 abbrev Op := Module.End ℝ DoubledPeirce

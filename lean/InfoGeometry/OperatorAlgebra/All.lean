@@ -77,6 +77,7 @@ import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
+import InfoGeometry.OperatorAlgebra.CliffordNilpotentInterference
 import InfoGeometry.OperatorAlgebra.SplitTorusLogRouting
 import InfoGeometry.OperatorAlgebra.HyperbolicMoEProjector
 import InfoGeometry.OperatorAlgebra.IwasawaKANTransform

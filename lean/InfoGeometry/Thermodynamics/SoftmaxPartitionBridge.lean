@@ -18,6 +18,23 @@ variable {n : Type*} [Fintype n]
 noncomputable def TransformerSoftmax (x : n → ℝ) (d : ℝ) (i : n) : ℝ :=
   exp (x i / sqrt d) / ∑ j, exp (x j / sqrt d)
 
+/-- The finite softmax readout is normalized on a nonempty index type. -/
+theorem transformerSoftmax_sum_eq_one [Nonempty n]
+    (x : n → ℝ) (d : ℝ) :
+    ∑ i, TransformerSoftmax x d i = 1 := by
+  unfold TransformerSoftmax
+  rw [show (∑ i, exp (x i / sqrt d) / ∑ j, exp (x j / sqrt d)) =
+      (∑ i, exp (x i / sqrt d)) * (∑ j, exp (x j / sqrt d))⁻¹ by
+        simp only [div_eq_mul_inv, ← Finset.sum_mul]]
+  exact mul_inv_cancel₀ (by positivity)
+
+/-- Every finite softmax weight is strictly positive on a nonempty index type. -/
+theorem transformerSoftmax_pos [Nonempty n]
+    (x : n → ℝ) (d : ℝ) (i : n) :
+    0 < TransformerSoftmax x d i := by
+  unfold TransformerSoftmax
+  exact div_pos (Real.exp_pos _) (by positivity)
+
 /-- A finite Boltzmann-style normalized exponential readout. -/
 noncomputable def BoltzmannDistribution (E : n → ℝ) (β : ℝ) (i : n) : ℝ :=
   exp (-β * E i) / ∑ j, exp (-β * E j)
@@ -38,6 +55,27 @@ theorem boltzmannDistribution_pos [Nonempty n]
     0 < BoltzmannDistribution E β i := by
   unfold BoltzmannDistribution
   exact div_pos (Real.exp_pos _) (by positivity)
+
+/- A normalized Boltzmann readout preserves constant value contractions. -/
+theorem boltzmannDistribution_constant_expectation [Nonempty n]
+    (E : n → ℝ) (β c : ℝ) :
+    (∑ i, BoltzmannDistribution E β i * c) = c := by
+  rw [← Finset.sum_mul, boltzmannDistribution_sum_eq_one]
+  simp
+
+/- Reindexing the finite state space transports the normalized readout. -/
+theorem boltzmannDistribution_equivariance
+    (E : n → ℝ) (β : ℝ) (sigma : n ≃ n) (i : n) :
+    BoltzmannDistribution (E ∘ sigma) β i =
+      BoltzmannDistribution E β (sigma i) := by
+  unfold BoltzmannDistribution
+  have hsum :
+      (∑ j, Real.exp (-β * (E ∘ sigma) j)) =
+        ∑ j, Real.exp (-β * E j) := by
+    simpa [Function.comp_apply] using
+      (Equiv.sum_comp sigma (fun j => Real.exp (-β * E j)))
+  rw [hsum]
+  rfl
 
 /-- The two readouts coincide under the displayed parameter substitution. -/
 theorem AttentionIsThermodynamics (x : n → ℝ) (d : ℝ) (i : n) :

@@ -4,6 +4,8 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+
 /-!
 # Jaynes Relative States, Duality, and the Difference Vacuum on the Cantor Boundary
 

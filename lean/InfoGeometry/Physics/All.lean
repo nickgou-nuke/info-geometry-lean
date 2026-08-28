@@ -238,6 +238,7 @@ import InfoGeometry.Physics.StateFamilyBKMBridge
 import InfoGeometry.Physics.SouriauLieThermodynamics
 import InfoGeometry.Physics.WheelerItFromBit
 import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
+import InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis
 
 /-!
 # Physics Umbrella

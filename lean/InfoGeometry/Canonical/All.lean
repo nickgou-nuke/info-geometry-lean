@@ -22,6 +22,8 @@ import InfoGeometry.Canonical.RealSplitOctFiveGradeProjectiveBridge
 import InfoGeometry.Canonical.ThreeModeCARHodgeLaplacianBridge
 import InfoGeometry.Canonical.CantorBernoulliKMSBridge
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
+import InfoGeometry.Canonical.KZLogarithmicConnection
 import InfoGeometry.Canonical.BostConnesUHFColimitBridge
 import InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 import InfoGeometry.Canonical.KleinBottleTwistedCommutantBridge
@@ -3381,6 +3383,7 @@ import InfoGeometry.Canonical.DeRhamRelativeModularPotential
 import InfoGeometry.Canonical.DeRhamModularPotentialBridge
 import InfoGeometry.Canonical.SuperHolographicEffectiveActionBridge
 import InfoGeometry.Canonical.MaurerCartanFactorization
+import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.RedlineGrandSynthesis
 import InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
 import InfoGeometry.Canonical.DeRhamThermodynamicPotential

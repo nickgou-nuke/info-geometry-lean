@@ -102,8 +102,8 @@ theorem M_mul_eigenvector :
   ext i
   fin_cases i
   · simp [M, mulVec, dotProduct, Fin.sum_univ_two]
-    rw [phi_sq_eq_phi_add_one]
-    ring
+    have h_sq : phi * phi = phi ^ 2 := by ring
+    rw [h_sq, phi_sq_eq_phi_add_one]
   · simp [M, mulVec, dotProduct, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM 4 (Transfer Matrix Determinant):

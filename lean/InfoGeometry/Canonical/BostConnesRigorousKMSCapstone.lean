@@ -97,6 +97,27 @@ theorem phi_beta_add (β : ℝ) (Z_β : ℂ) (w1 w2 : CuntzWordSpace) :
   unfold phi_beta
   exact Finsupp.sum_add_index' (fun _ => by simp) (fun ⟨n, m⟩ a b => by dsimp; split_ifs with h <;> ring)
 
+/-! The readout is an actual additive functional on the finite word space.
+    This does not assert boundedness, positivity, or extension to a completed
+    C*-algebra; those are separate analytic obligations. -/
+def phi_betaHom (β : ℝ) (Z_β : ℂ) : CuntzWordSpace →+ ℂ where
+  toFun := phi_beta β Z_β
+  map_zero' := by
+    unfold phi_beta
+    simp
+  map_add' := by
+    intro w1 w2
+    exact phi_beta_add β Z_β w1 w2
+
+theorem phi_betaHom_apply (β : ℝ) (Z_β : ℂ) (w : CuntzWordSpace) :
+    phi_betaHom β Z_β w = phi_beta β Z_β w :=
+  rfl
+
+theorem phi_betaHom_singleWord (β : ℝ) (Z_β : ℂ) (n m : ℕ+) :
+    phi_betaHom β Z_β (singleWord n m) =
+      (if n = m then ((n.val : ℂ) ^ (- (β : ℂ))) / Z_β else 0) := by
+  exact phi_beta_singleWord β Z_β n m
+
 /-- 🏆 THEOREM 6: Exact KMS Commutation on Generators:
     $\phi_\beta(S_n S_n^*) = n^{-\beta} \cdot \phi_\beta(S_n^* S_n) = n^{-\beta} \phi_\beta(1)$. -/
 theorem phi_beta_kms_commutation (β : ℝ) (Z_β : ℂ) (n : ℕ+) :

@@ -7751,3 +7751,4 @@ import InfoGeometry.Canonical.BostConnesCuntzKMSFunctionalCapstone
 import InfoGeometry.Canonical.BostConnesCuntzKMSStateCapstone
 import InfoGeometry.Arithmetic.InfinitePartitionStateClosure
 import InfoGeometry.Canonical.BostConnesRigorousKMSCapstone
+import InfoGeometry.Canonical.BostConnesFockSpaceKMSDerivationCapstone

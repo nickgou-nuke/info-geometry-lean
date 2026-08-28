@@ -244,6 +244,7 @@ import InfoGeometry.Clifford.Cl55ChiralGrandCanonical
 import InfoGeometry.Clifford.Cl55ModularGrandCanonical
 import InfoGeometry.Clifford.Cl55HyperbolicWeights
 import InfoGeometry.Clifford.Cl55EllipticRotors
+import InfoGeometry.Clifford.Cl55DisjointBivectorCommute
 import InfoGeometry.Clifford.Cl55SpinOperatorConnection
 import InfoGeometry.Clifford.Cl55GrandCanonicalSouriauBridge
 import InfoGeometry.Clifford.Cl55WittQuadraticReflectionPin
@@ -314,6 +315,7 @@ import InfoGeometry.Clifford.Cl55PinReflectionMatrixCoherence
 import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl11GeometricCompass
 import InfoGeometry.Clifford.Cl55WittSpinorLaboratory
+import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
 
 namespace InfoGeometry
 

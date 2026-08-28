@@ -5872,6 +5872,7 @@ import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 import InfoGeometry.OperatorAlgebra.WittenMöbiusBraidBridge
 import InfoGeometry.OperatorAlgebra.ZornBaseConservation
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
+import InfoGeometry.OperatorAlgebra.RindlerCharacterBridge
 import InfoGeometry.Optics.All
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesBrewsterCollapse

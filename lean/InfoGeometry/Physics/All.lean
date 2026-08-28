@@ -263,6 +263,7 @@ import InfoGeometry.Physics.KleinBottleModularSewing
 import InfoGeometry.Physics.KleinBottleSewingExact
 import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
 import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
+import InfoGeometry.Physics.TensorProductCommutationBregmanEntropyCapstone
 
 /-!
 # Physics Umbrella

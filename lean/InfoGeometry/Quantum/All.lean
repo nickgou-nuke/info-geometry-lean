@@ -70,6 +70,7 @@ import InfoGeometry.Quantum.ZeroPointEnergy
 import InfoGeometry.Quantum.ThermofieldDouble
 import InfoGeometry.Quantum.TwinWaveCayleyDickson
 import InfoGeometry.Quantum.QuantumCramerRaoBound
+import InfoGeometry.Quantum.ArakiBregmanKMSFlatBoundaryCapstone
 
 namespace InfoGeometry
 

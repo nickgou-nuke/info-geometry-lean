@@ -133,7 +133,7 @@ theorem ambientStage_le_of_directedPath {i j : Fin 7}
     | exact ((ambientStage_step_le 0).trans (ambientStage_step_le 1)).trans
         (ambientStage_step_le 2)
     | exact ((ambientStage_step_le 1).trans (ambientStage_step_le 2)).trans
-        (ambientStage_step_step_le 3)
+        (ambientStage_step_le 3)
     | exact ((ambientStage_step_le 2).trans (ambientStage_step_le 3)).trans
         (ambientStage_step_le 4)
     | exact ((ambientStage_step_le 3).trans (ambientStage_step_le 4)).trans

@@ -202,6 +202,30 @@ Unifies:
 3. **Operator 1-Simplex Invertibility**: $(I + s N)(I - s N) = I$.
 4. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
+theorem matrix_trace_commutator_zero {n : ℕ} (X Y : Matrix (Fin n) (Fin n) ℂ) :
+    Matrix.trace (commutator X Y) = 0 := by
+  unfold commutator
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm]
+  simp
+
+theorem matrix_expNilpotentSimplex_inverse {n : ℕ}
+    (N : Matrix (Fin n) (Fin n) ℂ) (hN : N * N = 0) (s : ℂ) :
+    (1 + s • N) * expNilpotentSimplex N s = 1 ∧
+    expNilpotentSimplex N s * (1 + s • N) = 1 := by
+  exact expNilpotentSimplex_inverse N hN s
+
+theorem matrix_finite_operator_capstone {n : ℕ}
+    (X Y Z N : Matrix (Fin n) (Fin n) ℂ) (hN : N * N = 0) (s : ℂ) :
+    (commutator X (Y * Z) =
+        commutator X Y * Z + Y * commutator X Z) ∧
+      (Matrix.trace (commutator X Y) = 0) ∧
+      ((1 + s • N) * (1 - s • N) = 1) ∧
+      ((1 - s • N) * (1 + s • N) = 1) :=
+  ⟨commutator_leibniz X Y Z,
+   matrix_trace_commutator_zero X Y,
+   expNilpotentSimplex_sq_zero N hN s,
+   expNilpotentSimplex_left_inverse N hN s⟩
+
 theorem grand_operator_leibniz_simplex_synthesis
     (X Y Z : A) (N : A) (hN : N * N = 0) (s : ℂ) (n m : ℕ+) :
     (commutator X (Y * Z) = commutator X Y * Z + Y * commutator X Z) ∧

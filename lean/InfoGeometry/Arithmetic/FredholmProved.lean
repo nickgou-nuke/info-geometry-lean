@@ -47,6 +47,25 @@ theorem regularized_det_sop_recurrence (factor : ℕ → ℂ) (N : ℕ) :
     FredholmClosure.regularizedDetStage factor N * factor N :=
   FredholmClosure.regularizedDetStage_succ factor N
 
+/-!
+## Finite-stage determinant/trace capstone
+
+The following packet keeps the determinant calculation at a finite matrix
+stage.  It records the two independent readouts used by the later transport:
+the diagonal determinant/trace identity and the one-step product recurrence.
+No statement about a completed determinant is needed here.
+-/
+
+theorem finite_stage_det_trace_and_recurrence
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (v : ι → ℂ) (factor : ℕ → ℂ) (N : ℕ) :
+    Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
+        NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) ∧
+      FredholmClosure.regularizedDetStage factor (N + 1) =
+        FredholmClosure.regularizedDetStage factor N * factor N :=
+  ⟨finite_det_exp_trace v,
+    regularized_det_sop_recurrence factor N⟩
+
 /--
 **Theorem 3 (PROVED — HestenesKreinModularGeometry.lean).**
 First-order Fredholm formula: det(1+T) = 1 + Tr(T).

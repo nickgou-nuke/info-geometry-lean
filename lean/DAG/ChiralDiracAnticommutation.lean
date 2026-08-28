@@ -166,4 +166,17 @@ theorem dirac_anticommutes_gamma {n0 n1 n2 : ℕ}
   -- And we verify that for all (i,j), this is 0.
   cases i <;> cases j <;> simp [cellParity]
 
+/-! Complete finite readout for the graded Dirac carrier. -/
+
+theorem finite_chiral_dirac_capstone {n0 n1 n2 : ℕ}
+    (B1 : Matrix (Fin n0) (Fin n1) ℝ)
+    (B2 : Matrix (Fin n1) (Fin n2) ℝ) :
+    chiralGamma (n0 := n0) (n1 := n1) (n2 := n2) *
+          chiralGamma (n0 := n0) (n1 := n1) (n2 := n2) = 1 ∧
+      chiralGamma * diracOp B1 B2 + diracOp B1 B2 * chiralGamma = 0 ∧
+      Matrix.trace (chiralGamma * diracOp B1 B2) = 0 :=
+  ⟨chiralGamma_sq,
+    dirac_anticommutes_gamma B1 B2,
+    chiralGamma_trace_mul_dirac_zero B1 B2⟩
+
 end DAG.ChiralDiracAnticommutation

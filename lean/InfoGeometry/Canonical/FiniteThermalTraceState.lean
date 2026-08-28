@@ -97,4 +97,24 @@ theorem finiteState_unruh_temperature
   unfold inverseTemperature unruhBeta unruhTemperature
   field_simp [hacc, Real.pi_ne_zero]
 
+/-! Finite-stage readout packet.  These facts all live on the same matrix
+carrier and are therefore suitable for transport along the existing stage
+maps. -/
+
+theorem finiteState_capstone
+    (n : ℕ) (A B : MatrixState n) :
+    (finiteState n).eval 1 = 1 ∧
+      0 ≤ (finiteState n).eval (star A * A) ∧
+      (finiteState n).eval (star A) = (finiteState n).eval A ∧
+      (finiteState n).eval (A * B) = (finiteState n).eval (B * A) ∧
+      (finiteState n).eval (A * B - B * A) = 0 ∧
+      (finiteState (n + 1)).eval (concreteStep n A) =
+        (finiteState n).eval A :=
+  ⟨finiteState_one n,
+    finiteState_positive n A,
+    finiteState_star n A,
+    finiteState_cyclic n A B,
+    finiteState_commutator_zero n A B,
+    finiteState_stage_compatibility n A⟩
+
 end InfoGeometry.Canonical.FiniteThermalTraceState

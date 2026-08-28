@@ -313,6 +313,7 @@ import InfoGeometry.Clifford.SplitClifford55SpinChiralTransportBridge
 import InfoGeometry.Clifford.Cl55PinReflectionMatrixCoherence
 import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl11GeometricCompass
+import InfoGeometry.Clifford.Cl55WittSpinorLaboratory
 
 namespace InfoGeometry
 

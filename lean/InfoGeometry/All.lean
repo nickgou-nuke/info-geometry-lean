@@ -5871,6 +5871,7 @@ import InfoGeometry.OperatorAlgebra.WallpaperKTheory
 import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 import InfoGeometry.OperatorAlgebra.WittenMöbiusBraidBridge
 import InfoGeometry.OperatorAlgebra.ZornBaseConservation
+import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 import InfoGeometry.Optics.All
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesBrewsterCollapse
@@ -6445,6 +6446,7 @@ import InfoGeometry.RegularizedKL
 import InfoGeometry.Renyi
 import InfoGeometry.Riemannian.CartanMetric
 import InfoGeometry.Riemannian.ConeAction
+import InfoGeometry.Routing.All
 import InfoGeometry.Routing.BirkhoffVonNeumann
 import InfoGeometry.Routing.PermutationPerfectMatching
 import InfoGeometry.Routing.FiniteMatrixMixture
@@ -6453,6 +6455,10 @@ import InfoGeometry.Routing.TypedProofRealization
 import InfoGeometry.Routing.FiniteSoftmax
 import InfoGeometry.Routing.FiniteRoutingSymmetry
 import InfoGeometry.Routing.PlanarRotation
+import InfoGeometry.Routing.DiscreteRoPERepresentation
+import InfoGeometry.Routing.CliffordRoPETorus
+import InfoGeometry.Routing.DiscreteRoPERepresentation
+import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 import InfoGeometry.Moduli.SimplexArnoldRational
 import InfoGeometry.Moduli.PositiveSimplexChamber
 import InfoGeometry.Sandbox.ChernIsomorphismSandbox

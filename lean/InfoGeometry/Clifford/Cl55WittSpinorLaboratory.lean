@@ -71,11 +71,13 @@ theorem bracket_add_right (X Y₁ Y₂ : A) :
   unfold bracket
   noncomm_ring
 
+omit [Invertible (2 : R)] in
 theorem bracket_smul_left (r : R) (X Y : A) :
     bracket (r • X) Y = r • bracket X Y := by
   unfold bracket
   simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
 
+omit [Invertible (2 : R)] in
 theorem bracket_smul_right (r : R) (X Y : A) :
     bracket X (r • Y) = r • bracket X Y := by
   unfold bracket
@@ -249,15 +251,18 @@ theorem bracket_H_H (a b : Fin 5) :
         _ = W.e a * (W.f a * W.e b) * W.f b := by simp only [mul_assoc]
         _ = W.e a * (- (W.e b * W.f a)) * W.f b := by rw [h_fb_ea]
         _ = - (W.e a * W.e b * W.f a * W.f b) := by simp only [mul_neg, neg_mul, mul_assoc]
-        _ = - (- (W.e b * W.e a)) * (- (W.f b * W.f a)) := by rw [h_eb_ea, h_fb_fa]
-        _ = (W.e b * W.e a) * (- (W.f b * W.f a)) := by rw [neg_neg]
-        _ = - (W.e b * W.e a * (W.f b * W.f a)) := by simp only [mul_neg]
+        _ = - (W.e a * W.e b * (W.f a * W.f b)) := by simp only [mul_assoc]
+        _ = - (- (W.e b * W.e a) * (- (W.f b * W.f a))) := by rw [h_eb_ea, h_fb_fa]
+        _ = - (W.e b * W.e a * (W.f b * W.f a)) := by
+          have h_neg_neg : - (W.e b * W.e a) * (- (W.f b * W.f a)) = (W.e b * W.e a) * (W.f b * W.f a) := by
+            rw [neg_mul_neg]
+          rw [h_neg_neg]
         _ = - (W.e b * (W.e a * W.f b * W.f a)) := by simp only [mul_assoc]
         _ = - (W.e b * (- (W.f b * W.e a) * W.f a)) := by rw [h_ea_fb]
         _ = (W.e b * W.f b) * (W.e a * W.f a) := by
-          have h_assoc2 : W.e b * (- (W.f b * W.e a) * W.f a) = - (W.e b * (W.f b * (W.e a * W.f a))) := by
+          have h_mid2 : W.e b * (- (W.f b * W.e a) * W.f a) = - (W.e b * (W.f b * (W.e a * W.f a))) := by
             simp only [neg_mul, mul_neg, mul_assoc]
-          rw [h_assoc2, neg_neg, mul_assoc]
+          rw [h_mid2, neg_neg, mul_assoc]
     rw [h1, h2, hef_comm]
     abel
 
@@ -351,6 +356,7 @@ def linearPPlus (gamma_star : S →ₗ[R] S) : S →ₗ[R] S :=
 def linearPMinus (gamma_star : S →ₗ[R] S) : S →ₗ[R] S :=
   ⅟(2 : R) • (LinearMap.id - gamma_star)
 
+omit [Invertible (2 : R)] in
 lemma B_smul_smul (c d : R) (x y : S) :
     BF.B (c • x) (d • y) = (c * d) • BF.B x y := by
   rw [LinearMap.map_smul, LinearMap.map_smul, LinearMap.smul_apply, smul_smul, mul_comm]

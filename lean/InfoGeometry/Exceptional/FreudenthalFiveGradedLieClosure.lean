@@ -91,13 +91,26 @@ instance : Sub (FiveGradedCarrier D) where
 instance : Zero (FiveGradedCarrier D) where
   zero := ⟨0, 0, 0, 0, 0, 0⟩
 
-instance : SMul ℝ (FiveGradedCarrier D) where
+instance carrierSMul : SMul ℝ (FiveGradedCarrier D) where
   smul r u := ⟨r * u.minus2,
                 r • u.minus1,
                 r • u.zero_symp,
                 r * u.zero_scale,
                 r • u.plus1,
                 r * u.plus2⟩
+
+@[simp] theorem smul_minus2 (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).minus2 = r * u.minus2 := rfl
+@[simp] theorem smul_minus1 (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).minus1 = r • u.minus1 := rfl
+@[simp] theorem smul_zero_symp (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).zero_symp = r • u.zero_symp := rfl
+@[simp] theorem smul_zero_scale (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).zero_scale = r * u.zero_scale := rfl
+@[simp] theorem smul_plus1 (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).plus1 = r • u.plus1 := rfl
+@[simp] theorem smul_plus2 (r : ℝ) (u : FiveGradedCarrier D) :
+    (r • u).plus2 = r * u.plus2 := rfl
 
 @[simp] theorem neg_minus2 (u : FiveGradedCarrier D) : (-u).minus2 = -u.minus2 := rfl
 @[simp] theorem neg_minus1 (u : FiveGradedCarrier D) : (-u).minus1 = -u.minus1 := rfl

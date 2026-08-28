@@ -69,6 +69,16 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     · exact h_beta rfl
     · rwa [contact_iff_collapsed_trace_zero L θ η K hContact]
 
+/-- If the collapsed base velocity has zero trace, the Madelung fluid state is
+divergence-free for every inverse temperature. -/
+theorem madelung_divergence_free_of_trace_zero (β : ℝ) (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hTrace : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
+    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
+  rw [madelung_divergence_free_iff β K vac ω hSmooth]
+  exact Or.inr hTrace
+
 /-- A point on the Fenchel-Legendre variety where the gap vanishes. -/
 structure FLVarietyPoint (L : LegendreModel) where
   θ : ℝ
@@ -91,6 +101,25 @@ instance : Preorder (DivergenceFreeFluidState E) where
   le x y := x.state.ρ ≤ y.state.ρ
   le_refl x := le_refl _
   le_trans x y z h1 h2 := le_trans h1 h2
+
+/-- Construct a divergence-free fluid state from a Madelung fluid state
+when its velocity field is divergence-free. -/
+def madelungFluidState_to_divergence_free (β : ℝ) (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hDiv : IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u) :
+    DivergenceFreeFluidState E where
+  state := madelungFluidState β K vac ω hSmooth
+  h_div := hDiv
+
+/-- Construct a divergence-free fluid state from a smoothed Madelung fluid state
+when its velocity field is divergence-free. -/
+def smoothedMadelungFluidState_to_divergence_free
+    (S : SmoothedMadelungFluidState E)
+    (hDiv : IsDivergenceFree S.state.u) :
+    DivergenceFreeFluidState E where
+  state := S.state
+  h_div := hDiv
 
 /-- The Kaluza-Klein lift functor mapping the Fenchel-Legendre equilibrium variety
     to the space of divergence-free (conserved) information density fluid states. -/

@@ -134,6 +134,25 @@ theorem chainApply_one_preserved
   | succ k ih =>
       simp [chainApply, ih]
 
+/-! ## Inner derivations along a finite stage chain -/
+
+/-- A compatible generator family transports its commutator action through
+    every finite composite of the bonding ring homomorphisms. -/
+theorem chainApply_commutator_preserved
+    {A : Type*} [Ring A]
+    (φ : Nat → A →+* A) (K : Nat → A)
+    (hK : ∀ n, φ n (K n) = K (n + 1))
+    (n k : Nat) (X : A) :
+    chainApply (fun i a => φ i a) n k (K n * X - X * K n) =
+      K (n + k) * chainApply (fun i a => φ i a) n k X -
+        chainApply (fun i a => φ i a) n k X * K (n + k) := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp only [chainApply]
+      rw [ih, map_sub, map_mul, map_mul, hK (n + k)]
+      simp only [Nat.add_assoc]
+
 /--
 Square-zero/nilpotent identity is preserved along a finite chain of ring
 homomorphisms.

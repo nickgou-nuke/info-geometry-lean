@@ -801,6 +801,26 @@ theorem madelung_divergence_free_iff (β : ℝ) (K : AlgebraEnd E)
   rw [trace_madelung_velocity_eq]
   exact mul_eq_zero
 
+/-- If the collapsed base velocity has zero trace, the Madelung fluid state is
+divergence-free for every inverse temperature. -/
+theorem madelung_divergence_free_of_trace_zero (β : ℝ) (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K) (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hTrace : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
+    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
+  rw [madelung_divergence_free_iff β K vac ω hSmooth]
+  exact Or.inr hTrace
+
+/-- If the inverse temperature is zero, the Madelung fluid state is
+divergence-free. -/
+theorem madelung_divergence_free_of_zero_beta (β : ℝ) (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K) (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (h_beta : β = 0) :
+    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
+  rw [madelung_divergence_free_iff β K vac ω hSmooth]
+  exact Or.inl h_beta
+
 /-- The zero-parameter Madelung state has divergence-free velocity. -/
 theorem madelungFluidState_isDivergenceFree_of_zero_beta
     (K : AlgebraEnd E)
@@ -1008,5 +1028,7 @@ attribute [rep_depth krein]
   IsDivergenceFree
   trace_adjoint
   vorticity_isDivergenceFree
+  madelung_divergence_free_of_trace_zero
+  madelung_divergence_free_of_zero_beta
 
 end InfoGeometry.Canonical

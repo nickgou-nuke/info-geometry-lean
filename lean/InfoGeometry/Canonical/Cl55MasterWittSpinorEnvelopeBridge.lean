@@ -62,6 +62,69 @@ theorem masterCAR_same_site (i : Fin 5) :
     masterCreation i * masterAnnihilation i + masterAnnihilation i * masterCreation i = 1 :=
   creation_annihilation_same_site i
 
+theorem masterCreation_not_central (i : Fin 5) :
+    ¬ ∀ z : Mat32, masterCreation i * z = z * masterCreation i := by
+  intro hcentral
+  have hcomm := hcentral (masterAnnihilation i)
+  have hzero : masterCreation i = 0 := by
+    calc
+      masterCreation i = masterCreation i * 1 := by simp
+      _ = masterCreation i *
+          (masterCreation i * masterAnnihilation i +
+            masterAnnihilation i * masterCreation i) := by
+          rw [masterCAR_same_site]
+      _ = 0 := by
+        rw [← hcomm]
+        calc
+          masterCreation i *
+              (masterCreation i * masterAnnihilation i +
+                masterCreation i * masterAnnihilation i) =
+              masterCreation i *
+                  (masterCreation i * masterAnnihilation i) +
+                masterCreation i *
+                  (masterCreation i * masterAnnihilation i) := by
+            rw [mul_add]
+          _ =
+              (masterCreation i * masterCreation i) *
+                  masterAnnihilation i +
+                (masterCreation i * masterCreation i) *
+                  masterAnnihilation i := by
+            simp only [mul_assoc]
+          _ = 0 := by simp [masterCreation_sq]
+  have hone : (1 : Mat32) = 0 := by
+    rw [← masterCAR_same_site i, hzero]
+    simp
+  exact one_ne_zero hone
+
+theorem masterAnnihilation_not_central (i : Fin 5) :
+    ¬ ∀ z : Mat32, masterAnnihilation i * z = z * masterAnnihilation i := by
+  intro hcentral
+  have hcomm := hcentral (masterCreation i)
+  have hzero : masterAnnihilation i = 0 := by
+    calc
+      masterAnnihilation i = 1 * masterAnnihilation i := by simp
+      _ = (masterCreation i * masterAnnihilation i +
+          masterAnnihilation i * masterCreation i) *
+            masterAnnihilation i := by
+          rw [masterCAR_same_site]
+      _ = 0 := by
+        rw [hcomm]
+        calc
+          (masterCreation i * masterAnnihilation i +
+              masterCreation i * masterAnnihilation i) *
+                masterAnnihilation i =
+              masterCreation i *
+                  (masterAnnihilation i * masterAnnihilation i) +
+                masterCreation i *
+                  (masterAnnihilation i * masterAnnihilation i) := by
+            rw [add_mul]
+            simp only [mul_assoc]
+          _ = 0 := by simp [masterAnnihilation_sq]
+  have hone : (1 : Mat32) = 0 := by
+    rw [← masterCAR_same_site i, hzero]
+    simp
+  exact one_ne_zero hone
+
 /-- 🏆 THEOREM 1D: Master Cross-Site Anticommutations ($i \neq j$). -/
 theorem masterCAR_cross_site {i j : Fin 5} (hij : i ≠ j) :
     masterCreation i * masterCreation j + masterCreation j * masterCreation i = 0 ∧

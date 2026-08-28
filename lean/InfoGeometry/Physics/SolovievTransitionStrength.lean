@@ -34,4 +34,8 @@ theorem amplitude_entries (O : Observable) (initial final : Carrier) :
       final 1 * (O 1 0 * initial 0 + O 1 1 * initial 1) := by
   simp [amplitude, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
+theorem basis_transition_amplitude (O : Observable) :
+    amplitude O ![1, 0] ![0, 1] = O 1 0 := by
+  simp [amplitude, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+
 end InfoGeometry.Physics.SolovievTransitionStrength

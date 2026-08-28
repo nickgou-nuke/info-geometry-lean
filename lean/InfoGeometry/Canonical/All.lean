@@ -3426,6 +3426,7 @@ import InfoGeometry.Canonical.HadjiivanovCFTFibonacciHolographyCapstone
 import InfoGeometry.Canonical.BostConnesLeeYangHodgeModularCapstone
 import InfoGeometry.Canonical.SouriauDiracHodgePrimonZeroTemperatureCapstone
 import InfoGeometry.Canonical.BostConnesLeeYangSuperKMSCapstone
+import InfoGeometry.Canonical.SouriauBostConnesTransitionTheoremCapstone
 
 namespace InfoGeometry
 

@@ -62,6 +62,23 @@ def logRadonNikodymGeneratorStep (g : NaturalGenerator) :
     Matrix (Fin 2) (Fin 2) ℂ :=
   bregmanProxStep g
 
+theorem bregman_prox_zero :
+    bregmanProxStep 0 = 1 := by
+  simp [bregmanProxStep, errorFlowStep, lcftParabolicFlowStep,
+    infinitesimalNullGenerator,
+    InfoGeometry.Clifford.LogCftMonodromy.epsilon,
+    InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent]
+
+theorem bregman_prox_mul_neg (δ : ℂ) :
+    bregmanProxStep δ * bregmanProxStep (-δ) = 1 := by
+  unfold bregmanProxStep
+  exact lcftParabolicFlow_mul_neg δ
+
+theorem bregman_prox_neg_mul (δ : ℂ) :
+    bregmanProxStep (-δ) * bregmanProxStep δ = 1 := by
+  unfold bregmanProxStep
+  exact lcftParabolicFlow_neg_mul δ
+
 /-- Bregman proximal steps compose by adding their generator increments. -/
 theorem bregman_prox_composition (δ₁ δ₂ : ℂ) :
     bregmanProxStep δ₁ * bregmanProxStep δ₂ =
@@ -75,6 +92,10 @@ one step with generator `(n : ℂ) * δ`.
 theorem bregman_prox_induction (δ : ℂ) (n : ℕ) :
     bregmanProxStep δ ^ n = errorFlowStep ((n : ℂ) * δ) := by
   exact error_threshold_linear_induction δ n
+
+theorem bregman_prox_pow (δ : ℂ) (n : ℕ) :
+    bregmanProxStep δ ^ n = bregmanProxStep ((n : ℂ) * δ) := by
+  exact bregman_prox_induction δ n
 
 /-- The off-diagonal entry is the accumulated natural generator. -/
 theorem bregman_accumulated_generator (δ : ℂ) (n : ℕ) :

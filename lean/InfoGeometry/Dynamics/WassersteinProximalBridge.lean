@@ -1,6 +1,7 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
 import InfoGeometry.Clifford.MonodromyFlowAdapter
 import InfoGeometry.Physics.LogCFTJordanShear
+import InfoGeometry.Canonical.RealParabolicProximal
 import Mathlib.Analysis.Complex.Basic
 
 noncomputable section
@@ -35,6 +36,18 @@ plays the role of the discrete time step / learning rate.
 -/
 def jkoEntropyStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   errorFlowStep η
+
+def realStepAsComplex (η : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  fun i j => (InfoGeometry.Canonical.RealParabolicProximal.step η i j : ℂ)
+
+theorem realStepAsComplex_eq_jkoEntropyStep (η : ℝ) :
+    realStepAsComplex η = jkoEntropyStep (η : ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realStepAsComplex, jkoEntropyStep, errorFlowStep,
+      lcftParabolicFlowStep, infinitesimalNullGenerator,
+      InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
+      InfoGeometry.Canonical.RealParabolicProximal.step]
 
 theorem jkoEntropyStep_eq_logCFTJordanShear (η : ℂ) :
     jkoEntropyStep η =
@@ -92,6 +105,31 @@ theorem jkoEntropyStep_composition (η₁ η₂ : ℂ) :
     jkoEntropyStep η₁ * jkoEntropyStep η₂ = jkoEntropyStep (η₁ + η₂) := by
   exact errorFlow_composition η₁ η₂
 
+theorem realStepAsComplex_composition (η₁ η₂ : ℝ) :
+    realStepAsComplex η₁ * realStepAsComplex η₂ =
+      realStepAsComplex (η₁ + η₂) := by
+  rw [realStepAsComplex_eq_jkoEntropyStep,
+    realStepAsComplex_eq_jkoEntropyStep,
+    jkoEntropyStep_composition,
+    realStepAsComplex_eq_jkoEntropyStep]
+  norm_num
+
+theorem realStepAsComplex_mul_neg (η : ℝ) :
+    realStepAsComplex η * realStepAsComplex (-η) = 1 := by
+  rw [realStepAsComplex_composition]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realStepAsComplex,
+      InfoGeometry.Canonical.RealParabolicProximal.step]
+
+theorem realStepAsComplex_neg_mul (η : ℝ) :
+    realStepAsComplex (-η) * realStepAsComplex η = 1 := by
+  rw [realStepAsComplex_composition]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realStepAsComplex,
+      InfoGeometry.Canonical.RealParabolicProximal.step]
+
 theorem jkoEntropyStep_zero :
     jkoEntropyStep 0 = 1 := by
   simp [jkoEntropyStep, errorFlowStep, lcftParabolicFlowStep,
@@ -116,6 +154,18 @@ parabolic update with accumulated time `(n : ℂ) * η`.
 theorem jko_flow_stability_induction (η : ℂ) (n : ℕ) :
     jkoEntropyStep η ^ n = errorFlowStep ((n : ℂ) * η) := by
   exact error_threshold_linear_induction η n
+
+theorem jkoEntropyStep_pow (η : ℂ) (n : ℕ) :
+    jkoEntropyStep η ^ n = jkoEntropyStep ((n : ℂ) * η) := by
+  exact jko_flow_stability_induction η n
+
+theorem realStepAsComplex_pow (η : ℝ) (n : ℕ) :
+    realStepAsComplex η ^ n =
+      realStepAsComplex ((n : ℝ) * η) := by
+  rw [realStepAsComplex_eq_jkoEntropyStep,
+    jkoEntropyStep_pow,
+    realStepAsComplex_eq_jkoEntropyStep]
+  norm_num
 
 /-- The off-diagonal update entry records total discrete optimization time. -/
 theorem jko_accumulated_step (η : ℂ) (n : ℕ) :
@@ -177,6 +227,16 @@ theorem optimizer_threshold_bound (η : ℂ) (n : ℕ) (Λ : ℝ)
     (h_budget : (n : ℝ) * ‖η‖ ≤ Λ) :
     ‖(((jkoEntropyStep η) ^ n) 0 1)‖ ≤ Λ := by
   exact threshold_condition η n Λ h_budget
+
+theorem gaussianHeatEnvelope_threshold_bound (η : ℂ) (n : ℕ) (Λ : ℝ)
+    (h_budget : (n : ℝ) * ‖2 * η‖ ≤ Λ) :
+    ‖(((gaussianHeatEnvelopeStep η) ^ n) 0 1)‖ ≤ Λ := by
+  exact threshold_condition (2 * η) n Λ h_budget
+
+theorem gaussianHeatEnvelope_real_drift_is_linear (η : ℂ) (n : ℕ) :
+    (((gaussianHeatEnvelopeStep η) ^ n) 0 1).re =
+      (n : ℝ) * (2 * η).re := by
+  exact dephasing_drift_is_linear (2 * η) n
 
 /-- Real drift in the optimization envelope is linear in the iteration count. -/
 theorem optimizer_real_drift_is_linear (η : ℂ) (n : ℕ) :

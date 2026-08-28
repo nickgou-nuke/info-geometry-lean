@@ -50,6 +50,12 @@ theorem logCFTMonodromy_det (δ : ℂ) :
     ring
   exact hexp
 
+/-- Finite monodromy composition raises the conformal determinant factor to `n`. -/
+theorem logCFTMonodromy_power_det (δ : ℂ) (n : ℕ) :
+    Matrix.det (logCFTMonodromy δ ^ n) =
+      (Complex.exp (4 * Real.pi * Complex.I * δ)) ^ n := by
+  rw [Matrix.det_pow, logCFTMonodromy_det]
+
 /--
 The Lott-Sturm-Villani / Bakry-Émery Ricci curvature lower bound $K \in \mathbb{R}$.
 A curve $\gamma : [0, 1] \to \mathcal{S}$ is $K$-displacement convex if the entropy functional
@@ -68,6 +74,32 @@ theorem k_displacement_convexity_zero (E : ℝ → ℝ) (W_sq : ℝ) :
   unfold KDisplacementConvexity
   simp
 
+/-- A nonnegative curvature correction strengthens the ordinary convexity bound. -/
+theorem k_displacement_convexity_implies_linear
+    (E : ℝ → ℝ) (K W_sq : ℝ)
+    (hK : 0 ≤ K) (hW : 0 ≤ W_sq)
+    (hconv : KDisplacementConvexity E K W_sq) :
+    ∀ t : ℝ, 0 ≤ t → t ≤ 1 →
+      E t ≤ (1 - t) * E 0 + t * E 1 := by
+  intro t ht0 ht1
+  have h := hconv t ht0 ht1
+  have ht1' : 0 ≤ 1 - t := sub_nonneg.mpr ht1
+  have hcorr : 0 ≤ (K / 2) * t * (1 - t) * W_sq := by
+    exact mul_nonneg (mul_nonneg (mul_nonneg (div_nonneg hK (by norm_num)) ht0) ht1') hW
+  linarith
+
+/-- Strict curvature and transport produce a strict interior convexity gap. -/
+theorem k_displacement_convexity_strict_gap
+    (E : ℝ → ℝ) (K W_sq t : ℝ)
+    (hK : 0 < K) (hW : 0 < W_sq) (ht0 : 0 < t) (ht1 : t < 1)
+    (hconv : KDisplacementConvexity E K W_sq) :
+    E t < (1 - t) * E 0 + t * E 1 := by
+  have h := hconv t (le_of_lt ht0) (le_of_lt ht1)
+  have hcorr : 0 < (K / 2) * t * (1 - t) * W_sq := by
+    exact mul_pos (mul_pos (mul_pos (div_pos hK (by norm_num)) ht0)
+      (sub_pos.mpr ht1)) hW
+  linarith
+
 /--
 THEOREM 4: The discrete JKO proximal step preserves phase-space volume identically.
 -/
@@ -75,5 +107,20 @@ theorem jko_unipotent_is_volume_preserving (η : ℂ) :
     Matrix.det (jkoEntropyStep η) = 1 := by
   rw [jkoEntropyStep_eq_logCFTJordanShear]
   exact unipotentShear_det_one η
+
+/-- Every finite composition of the JKO-style unipotent step preserves volume. -/
+theorem jko_unipotent_power_is_volume_preserving (η : ℂ) (n : ℕ) :
+    Matrix.det (jkoEntropyStep η ^ n) = 1 := by
+  rw [Matrix.det_pow, jko_unipotent_is_volume_preserving, one_pow]
+
+theorem gaussianHeatEnvelope_is_volume_preserving (η : ℂ) :
+    Matrix.det (gaussianHeatEnvelopeStep η) = 1 := by
+  unfold gaussianHeatEnvelopeStep
+  exact jko_unipotent_is_volume_preserving (2 * η)
+
+theorem gaussianHeatEnvelope_pow_det_one (η : ℂ) (n : ℕ) :
+    Matrix.det (gaussianHeatEnvelopeStep η ^ n) = 1 := by
+  rw [Matrix.det_pow, gaussianHeatEnvelope_is_volume_preserving]
+  simp
 
 end InfoGeometry.Physics.WassersteinBakryEmeryLogCFT

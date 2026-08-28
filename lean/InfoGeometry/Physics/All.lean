@@ -257,6 +257,8 @@ import InfoGeometry.Physics.HiddenChiralSectorEMDecoupling
 import InfoGeometry.Physics.SolovievCircularChiralProjectionBridge
 import InfoGeometry.Physics.ParaKahlerHessianHamiltonianBridge
 import InfoGeometry.Physics.CyclotomicHiggsGaloisDIIICapstone
+import InfoGeometry.Physics.OperatorCyclotomicDoubleDavidStarBridge
+import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
 
 /-!
 # Physics Umbrella

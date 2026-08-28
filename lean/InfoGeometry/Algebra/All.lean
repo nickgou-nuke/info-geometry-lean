@@ -483,6 +483,7 @@ import InfoGeometry.Algebra.Zorn.G2NativeLineSetIsotropicBridge
 import InfoGeometry.Algebra.Zorn.G2NativeLineIntrinsicStructuralBridge
 import InfoGeometry.Algebra.Zorn.G2GAPCertificatesVerified
 import InfoGeometry.Algebra.Zorn.G2BruhatClassificationMaster
+import InfoGeometry.Algebra.CyclotomicTripotentPeirceLiftingCapstone
 /-!
 # InfoGeometry.Algebra.All
 

@@ -11,6 +11,7 @@ import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 import InfoGeometry.Arithmetic.RiemannZetaPrimonSouriauCayleyCapstone
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!
 # Bost-Connes Lee-Yang Circle Theorem & Super-KMS Phase Transition Capstone
@@ -51,6 +52,7 @@ open InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 open InfoGeometry.Canonical.PrimeCl11ModularAtom
 open InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 open InfoGeometry.Arithmetic.PrimonSouriauCayley
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 variable {A : Type*} [Ring A]
 
@@ -92,6 +94,18 @@ theorem lee_yang_cayley_compactification_is_unitary (x : ℝ) :
     Complex.normSq (cayleyTransform x) = 1 :=
   cayley_transform_is_unitary x
 
+/-!
+The preceding unitary statement is the real-spectrum Cayley carrier.  The
+complex critical-line statement is kept separate: it uses the repository's
+`s ↦ s / (1 - s)` chart and its explicit pole handling.  This prevents the
+finite real Cayley coordinate from being silently identified with a different
+complex transform.
+-/
+
+theorem critical_line_cayley_transport (s : ℂ) :
+    OnCriticalLine s ↔ OnLeeYangCircle (cayleyToFugacity s) :=
+  criticalLine_iff_cayley_unitCircle s
+
 /-! ## 4. Grand Master Capstone Synthesis -/
 
 /--
@@ -103,6 +117,10 @@ Unifies:
 3. **Fermionic Supertrace Möbius Inversion**: STr(q) = ∏ (1 - q_p).
 4. **Lee-Yang Unitary Circle Compactification**: |C(x)|² = 1.
 5. **Fibonacci Anyon Braid-Fusion Invariance**: F · B · F = R and F² = 1.
+
+This is a composition of finite algebraic and conformal transport theorems.
+It does not assert the Riemann hypothesis, a zeta zero classification, an
+infinite operator trace, or a physical anomaly-to-RH implication.
 -/
 theorem grand_bost_connes_lee_yang_super_kms_synthesis
     (atom : Cl11Atom A)

@@ -45,6 +45,9 @@ import InfoGeometry.Clifford.Cl55SpinReflectionWordDeterminant
 import InfoGeometry.Clifford.DiracLorentzQuadraticAction
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl55MoritaDyadicClosure
+import InfoGeometry.Clifford.EmergentSpacetimeBilinear
+import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
+import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl44Spinors
@@ -291,6 +294,7 @@ import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
 import InfoGeometry.Clifford.Cl55SpinGroupChiralityBridge
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
+import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl55SpinGroupRestrictedChiralRepresentation
 import InfoGeometry.Clifford.Cl55SpinGroupChiralLinearEquivRepresentation
 import InfoGeometry.Clifford.SplitClifford55SpinChiralTransportBridge

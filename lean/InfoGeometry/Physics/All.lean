@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearGradedBathCommutant
+import InfoGeometry.Physics.EmergentSpacetimeBilinear
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge
 import InfoGeometry.Physics.ZornBdGSuperconductingExponentialBridge

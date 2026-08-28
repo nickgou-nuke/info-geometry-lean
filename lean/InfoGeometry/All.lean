@@ -4149,6 +4149,9 @@ import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 import InfoGeometry.Clifford.Cl55SpinorRepresentationGeneration
 import InfoGeometry.Clifford.Cl55SpinorZornReadout
 import InfoGeometry.Clifford.Cl55MoritaDyadicClosure
+import InfoGeometry.Clifford.EmergentSpacetimeBilinear
+import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
+import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
 import InfoGeometry.Clifford.Cl55WittCarrierFaithfulness
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneFull
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneReduction

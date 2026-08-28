@@ -256,6 +256,7 @@ import InfoGeometry.Physics.DiracRestChiralTwoSectorBridge
 import InfoGeometry.Physics.HiddenChiralSectorEMDecoupling
 import InfoGeometry.Physics.SolovievCircularChiralProjectionBridge
 import InfoGeometry.Physics.ParaKahlerHessianHamiltonianBridge
+import InfoGeometry.Physics.CyclotomicHiggsGaloisDIIICapstone
 
 /-!
 # Physics Umbrella

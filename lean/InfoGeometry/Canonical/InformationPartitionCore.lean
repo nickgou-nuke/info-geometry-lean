@@ -92,6 +92,82 @@ theorem hasDerivAt_informationPartitionFunction
   simpa [informationPartitionFunction] using
     (hasDerivAt_const (x := τ) (c := ω)).clm_apply hExp
 
+/- The derivative of every operatorial raw moment.  The rightmost factor is
+retained, so this statement does not impose commutativity on `EndH E`. -/
+theorem hasDerivAt_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    HasDerivAt
+      (fun s : ℝ => ω (NormedSpace.exp (s • K) * K ^ n))
+      (ω (NormedSpace.exp (τ • K) * K ^ (n + 1))) τ := by
+  have hExp := hasDerivAt_exp_smul_const K τ
+  have hMul : HasDerivAt
+      (fun s : ℝ => NormedSpace.exp (s • K) * K ^ n)
+      (NormedSpace.exp (τ • K) * K * K ^ n) τ := by
+    simpa using hExp.mul (hasDerivAt_const (x := τ) (c := K ^ n))
+  have hReadout := (hasDerivAt_const (x := τ) (c := ω)).clm_apply hMul
+  have hpow : K * K ^ n = K ^ n * K :=
+    (Commute.refl K).pow_right n |>.eq
+  convert hReadout using 1 <;>
+    simp [hpow, pow_succ, Nat.cast_add, mul_assoc]
+
+/- Scalar readout of the preceding derivative, retained as a direct theorem
+for iterated moment calculations. -/
+theorem deriv_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    deriv (fun s : ℝ => ω (NormedSpace.exp (s • K) * K ^ n)) τ =
+      ω (NormedSpace.exp (τ • K) * K ^ (n + 1)) :=
+  (hasDerivAt_informationPartitionMoment (ω := ω) (K := K) n τ).deriv
+
+/- The next induction step for raw moments, stated with nested `deriv` so it
+can be consumed directly by higher-order cumulant calculations. -/
+theorem deriv2_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => ω (NormedSpace.exp (s • K) * K ^ n)) t) τ =
+        ω (NormedSpace.exp (τ • K) * K ^ (n + 2)) := by
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ => ω (NormedSpace.exp (s • K) * K ^ n)) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K ^ (n + 1))) by
+        funext t
+        exact deriv_informationPartitionMoment (ω := ω) (K := K) n t]
+  simpa [Nat.add_assoc] using
+    (deriv_informationPartitionMoment (ω := ω) (K := K) (n + 1) τ)
+
+/- Third raw moment step, obtained by one further native derivative of the
+moment tower. -/
+theorem deriv3_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ => ω (NormedSpace.exp (u • K) * K ^ n)) s) t) τ =
+        ω (NormedSpace.exp (τ • K) * K ^ (n + 3)) := by
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ => ω (NormedSpace.exp (u • K) * K ^ n)) s) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K ^ (n + 2))) by
+        funext t
+        exact deriv2_informationPartitionMoment (ω := ω) (K := K) n t]
+  simpa [Nat.add_assoc] using
+    (deriv_informationPartitionMoment (ω := ω) (K := K) (n + 2) τ)
+
+/- Fourth raw moment step in the same finite operator tower. -/
+theorem deriv4_informationPartitionMoment
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (n : ℕ) (τ : ℝ) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => ω (NormedSpace.exp (v • K) * K ^ n)) u) s) t) τ =
+        ω (NormedSpace.exp (τ • K) * K ^ (n + 4)) := by
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => ω (NormedSpace.exp (v • K) * K ^ n)) u) s) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K ^ (n + 3))) by
+        funext t
+        exact deriv3_informationPartitionMoment (ω := ω) (K := K) n t]
+  simpa [Nat.add_assoc] using
+    (deriv_informationPartitionMoment (ω := ω) (K := K) (n + 3) τ)
+
 /-- The second derivative of the partition readout at the origin. -/
 theorem deriv2_informationPartitionFunction_zero
     (ω : EndH E →L[ℝ] ℝ) (K : EndH E) :
@@ -316,6 +392,76 @@ theorem hasDerivAt_logInformationPartitionFunction_zero_of_normalized
   simpa [hω1] using
     (hasDerivAt_logInformationPartitionFunction_zero
       (ω := ω) (K := K) hω1ne)
+
+/-
+Second log-partition derivative at the origin.  The explicit nonvanishing
+hypothesis is required because the real logarithm is differentiated through
+the whole parameterized partition function.
+-/
+theorem deriv2_logInformationPartitionFunction_zero_of_nonzero
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E)
+    (hne : ∀ t : ℝ, informationPartitionFunction ω K t ≠ 0) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) 0 =
+        (informationPartitionFunction ω K 0)⁻¹ * ω (K * K) -
+          (informationPartitionFunction ω K 0)⁻¹ * ω K *
+            ((informationPartitionFunction ω K 0)⁻¹ * ω K) := by
+  let Z : ℝ → ℝ := fun t => informationPartitionFunction ω K t
+  have hZ : ∀ t : ℝ,
+      HasDerivAt Z (ω (NormedSpace.exp (t • K) * K)) t := by
+    intro t
+    simpa [Z] using
+      (hasDerivAt_informationPartitionFunction (ω := ω) (K := K) t)
+  have hlog : ∀ t : ℝ,
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t =
+        (Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K) := by
+    intro t
+    have h := (hZ t).log (hne t)
+    simpa [Z, logInformationPartitionFunction, div_eq_mul_inv,
+      mul_comm] using h.deriv
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) =
+      (fun t : ℝ => (Z t)⁻¹ *
+        ω (NormedSpace.exp (t • K) * K)) by
+        funext t; exact hlog t]
+  have hZ0 : HasDerivAt Z (ω K) 0 := by
+    simpa [Z] using
+      (hasDerivAt_informationPartitionFunction_zero (ω := ω) (K := K))
+  have hM : HasDerivAt
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K))
+      (ω (K * K)) 0 := by
+    have hExp := hasDerivAt_exp_smul_const K (0 : ℝ)
+    have hMul : HasDerivAt
+        (fun t : ℝ => NormedSpace.exp (t • K) * K) (K * K) 0 := by
+      simpa using hExp.mul (hasDerivAt_const (x := (0 : ℝ)) (c := K))
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul
+  have hInv := hZ0.inv (hne 0)
+  have hProd := hInv.mul hM
+  have hfun :
+      (fun t : ℝ => (Z t)⁻¹ *
+        ω (NormedSpace.exp (t • K) * K)) =
+        Z⁻¹ * (fun t : ℝ => ω (NormedSpace.exp (t • K) * K)) := by
+    funext t
+    rfl
+  rw [hfun]
+  have hderiv := hProd.deriv
+  convert hderiv using 1 <;>
+    simp [Z, informationPartitionFunction, sub_eq_add_neg, mul_assoc,
+      mul_left_comm, mul_comm] <;>
+    field_simp [hne 0] <;> ring
+
+/- The normalized second log-partition derivative is the centered second
+moment, i.e. the covariance readout of the single operator direction. -/
+theorem deriv2_logInformationPartitionFunction_zero_of_normalized
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E)
+    (hω1 : ω (1 : EndH E) = 1)
+    (hne : ∀ t : ℝ, informationPartitionFunction ω K t ≠ 0) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) 0 =
+        ω (K * K) - (ω K) ^ 2 := by
+  have h := deriv2_logInformationPartitionFunction_zero_of_nonzero
+    (ω := ω) (K := K) hne
+  simpa [informationPartitionFunction, hω1, pow_two] using h
 
 /--
 Continuum modular specialization:

@@ -20,14 +20,6 @@ At `Re(s) = 0`, the scalar factor `|2^{-it}|` has modulus `1`, so the
 positive-real-part contraction estimate no longer applies.  This elementary
 bound is separate from any Lee--Yang or Riemann-property statement.
 
-## The Spectral Gap Typeclass
-
-    HasSpectralGap H_op gap where
-      gap_pos : 0 < gap
-      strict_contraction : ∀ s > 0, ‖exp(-s·H)‖ ≤ exp(-s·gap)
-
-For the primon gas: gap = log 2.
-
 ## Physical Meaning
 
 - Mass gap log 2 = first excitation energy above the vacuum

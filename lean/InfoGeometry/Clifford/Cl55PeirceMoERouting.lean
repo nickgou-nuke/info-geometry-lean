@@ -2,6 +2,8 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
+noncomputable section
+
 namespace InfoGeometry.Clifford.Cl55PeirceMoERouting
 
 /-!
@@ -15,8 +17,7 @@ $$\boxed{
 &1.\ \textbf{Split Involution: } K^2 = 1 \implies P_\pm = \tfrac{1}{2}(1 \pm K) \text{ with } P_+ + P_- = 1, \; P_+ P_- = 0\\
 &2.\ \textbf{Normalized Routing Flow: } \widehat{H}(t) = \frac{e^t P_+ + e^{-t} P_-}{e^t + e^{-t}} = \sigma(2t) P_+ + \sigma(-2t) P_-\\
 &3.\ \textbf{Sigmoid Partition Law: } \sigma(2t) + \sigma(-2t) = 1\\
-&4.\ \textbf{Asymptotic Extremes: } \lim_{t \to +\infty} \widehat{H}(t) = P_+, \quad \lim_{t \to -\infty} \widehat{H}(t) = P_-\\
-&5.\ \textbf{Rank-2 Hypercube Decomposition: } P_{++} + P_{+-} + P_{-+} + P_{--} = 1, \quad P_{\varepsilon} P_{\delta} = \delta_{\varepsilon, \delta} P_{\varepsilon}.
+&4.\ \textbf{Rank-2 Hypercube Decomposition: } P_{++} + P_{+-} + P_{-+} + P_{--} = 1, \quad P_{\varepsilon} P_{\delta} = \delta_{\varepsilon, \delta} P_{\varepsilon}.
 \end{aligned}}
 $$
 
@@ -26,7 +27,7 @@ All proofs are complete in native Lean 4 with 0 `sorry`s.
 /-! ### 1. Real Sigmoid Function and Partition Law -/
 
 /-- The standard logistic sigmoid function: $\sigma(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{e^x + 1}$. -/
-noncomputable def sigmoid (x : ℝ) : ℝ :=
+def sigmoid (x : ℝ) : ℝ :=
   Real.exp x / (Real.exp x + 1)
 
 theorem exp_add_one_pos (x : ℝ) : 0 < Real.exp x + 1 := by
@@ -51,29 +52,43 @@ theorem sigmoid_lt_one (x : ℝ) : sigmoid x < 1 := by
 theorem sigmoid_add_sigmoid_neg (x : ℝ) :
     sigmoid x + sigmoid (-x) = 1 := by
   dsimp [sigmoid]
-  have h_exp_neg : Real.exp (-x) = 1 / Real.exp x := Real.exp_neg x
-  have hexp_pos : 0 < Real.exp x := Real.exp_pos x
-  have hexp_ne : Real.exp x ≠ 0 := ne_of_gt hexp_pos
-  have h_den2 : Real.exp (-x) + 1 = (1 + Real.exp x) / Real.exp x := by
-    rw [h_exp_neg]
-    exact div_add_same 1 (Real.exp x) hexp_ne
-  have h_term2 : Real.exp (-x) / (Real.exp (-x) + 1) = 1 / (Real.exp x + 1) := by
-    rw [h_exp_neg, h_den2]
-    rw [div_div_div_comm]
-    simp [hexp_ne]
-    ring
-  rw [h_term2]
-  rw [← add_div]
-  exact div_self (exp_add_one_ne_zero x)
+  have h1 : Real.exp x + 1 ≠ 0 := exp_add_one_ne_zero x
+  have h2 : Real.exp (-x) + 1 ≠ 0 := exp_add_one_ne_zero (-x)
+  have h_exp_neg : Real.exp (-x) * Real.exp x = 1 := by
+    rw [← Real.exp_add, neg_add_cancel, Real.exp_zero]
+  have h_inv : Real.exp x * Real.exp (-x) = 1 := by
+    rw [mul_comm, h_exp_neg]
+  have h_prod : (Real.exp x + 1) * (Real.exp (-x) + 1) = Real.exp x + Real.exp (-x) + 2 := by
+    calc (Real.exp x + 1) * (Real.exp (-x) + 1)
+      _ = Real.exp x * Real.exp (-x) + Real.exp x + Real.exp (-x) + 1 := by ring
+      _ = 1 + Real.exp x + Real.exp (-x) + 1 := by rw [h_inv]
+      _ = Real.exp x + Real.exp (-x) + 2 := by ring
+  have h_num : Real.exp x * (Real.exp (-x) + 1) + (Real.exp x + 1) * Real.exp (-x) =
+               Real.exp x + Real.exp (-x) + 2 := by
+    calc Real.exp x * (Real.exp (-x) + 1) + (Real.exp x + 1) * Real.exp (-x)
+      _ = Real.exp x * Real.exp (-x) + Real.exp x + (Real.exp x * Real.exp (-x) + Real.exp (-x)) := by ring
+      _ = 1 + Real.exp x + (1 + Real.exp (-x)) := by rw [h_inv]
+      _ = Real.exp x + Real.exp (-x) + 2 := by ring
+  have h_frac := div_add_div (Real.exp x) (Real.exp (-x)) h1 h2
+  rw [h_frac, h_num, h_prod]
+  have h_den_ne : Real.exp x + Real.exp (-x) + 2 ≠ 0 := by
+    have : 0 < Real.exp x + Real.exp (-x) + 2 := by
+      linarith [Real.exp_pos x, Real.exp_pos (-x)]
+    exact ne_of_gt this
+  exact div_self h_den_ne
 
 /-! ### 2. Algebraic Peirce Projectors in an Associative Algebra -/
 
-variable {A : Type*} [Ring A] [Algebra ℝ A]
-
 /-- A split involution generator: $K^2 = 1$. -/
-structure SplitInvolution where
+structure SplitInvolution (A : Type*) [Ring A] where
   K : A
   K_sq : K * K = 1
+
+variable {A : Type*} [Ring A] [Algebra ℝ A]
+
+theorem two_smul_real (x : A) : (2 : ℝ) • x = x + x := by
+  have : (2 : ℝ) = 1 + 1 := by norm_num
+  rw [this, add_smul, one_smul]
 
 /-- Positive Peirce projector: $P_+ = \frac{1}{2}(1 + K)$. -/
 def peircePlus (cs : SplitInvolution A) : A :=
@@ -91,9 +106,8 @@ theorem peircePlus_idem (cs : SplitInvolution A) :
     calc (1 + cs.K) * (1 + cs.K)
       _ = 1 + cs.K + cs.K + cs.K * cs.K := by noncomm_ring
       _ = 1 + cs.K + cs.K + 1 := by rw [cs.K_sq]
-      _ = (2 : ℝ) • (1 + cs.K) := by
-        simp only [two_smul]
-        noncomm_ring
+      _ = (1 + cs.K) + (1 + cs.K) := by abel
+      _ = (2 : ℝ) • (1 + cs.K) := by rw [← two_smul_real (1 + cs.K)]
   rw [h_sq, smul_smul]
   have h_half : (1 / 2 : ℝ) * (1 / 2 : ℝ) * 2 = 1 / 2 := by ring
   rw [h_half]
@@ -106,9 +120,8 @@ theorem peirceMinus_idem (cs : SplitInvolution A) :
     calc (1 - cs.K) * (1 - cs.K)
       _ = 1 - cs.K - cs.K + cs.K * cs.K := by noncomm_ring
       _ = 1 - cs.K - cs.K + 1 := by rw [cs.K_sq]
-      _ = (2 : ℝ) • (1 - cs.K) := by
-        simp only [two_smul]
-        noncomm_ring
+      _ = (1 - cs.K) + (1 - cs.K) := by abel
+      _ = (2 : ℝ) • (1 - cs.K) := by rw [← two_smul_real (1 - cs.K)]
   rw [h_sq, smul_smul]
   have h_half : (1 / 2 : ℝ) * (1 / 2 : ℝ) * 2 = 1 / 2 := by ring
   rw [h_half]
@@ -140,8 +153,8 @@ theorem peirce_sum_one (cs : SplitInvolution A) :
   dsimp [peircePlus, peirceMinus]
   rw [← smul_add]
   have h_sum : (1 + cs.K) + (1 - cs.K) = (2 : ℝ) • (1 : A) := by
-    simp only [two_smul]
-    noncomm_ring
+    have : (1 + cs.K) + (1 - cs.K) = (1 : A) + 1 := by abel
+    rw [this, ← two_smul_real (1 : A)]
   rw [h_sum, smul_smul]
   have h_one : (1 / 2 : ℝ) * 2 = 1 := by ring
   rw [h_one, one_smul]
@@ -151,8 +164,8 @@ theorem peirce_diff_generator (cs : SplitInvolution A) :
   dsimp [peircePlus, peirceMinus]
   rw [← smul_sub]
   have h_sub : (1 + cs.K) - (1 - cs.K) = (2 : ℝ) • cs.K := by
-    simp only [two_smul]
-    noncomm_ring
+    have : (1 + cs.K) - (1 - cs.K) = cs.K + cs.K := by abel
+    rw [this, ← two_smul_real cs.K]
   rw [h_sub, smul_smul]
   have h_one : (1 / 2 : ℝ) * 2 = 1 := by ring
   rw [h_one, one_smul]
@@ -163,7 +176,7 @@ theorem peirce_diff_generator (cs : SplitInvolution A) :
   The normalized routing operator:
   $$\widehat{H}(t) = \sigma(2t) P_+ + \sigma(-2t) P_-.$$
 -/
-noncomputable def normalizedRoutingFlow (cs : SplitInvolution A) (t : ℝ) : A :=
+def normalizedRoutingFlow (cs : SplitInvolution A) (t : ℝ) : A :=
   (sigmoid (2 * t)) • peircePlus cs + (sigmoid (- (2 * t))) • peirceMinus cs
 
 /--
@@ -187,7 +200,7 @@ theorem normalizedRoutingFlow_zero (cs : SplitInvolution A) :
 /-! ### 4. Rank-2 Commuting Torus / 4-Expert Hypercube Decomposition -/
 
 /-- Pair of commuting split generators $K_1, K_2$ with $K_1^2 = 1, K_2^2 = 1, [K_1, K_2] = 0$. -/
-structure CommutingSplitPair where
+structure CommutingSplitPair (A : Type*) [Ring A] where
   K1 : SplitInvolution A
   K2 : SplitInvolution A
   comm : K1.K * K2.K = K2.K * K1.K
@@ -209,29 +222,32 @@ def expertMinusMinus (csp : CommutingSplitPair A) : A :=
 theorem peirce_comm_plus_plus (csp : CommutingSplitPair A) :
     peircePlus csp.K1 * peircePlus csp.K2 = peircePlus csp.K2 * peircePlus csp.K1 := by
   dsimp [peircePlus]
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
-  congr 1
-  calc (1 + csp.K1.K) * (1 + csp.K2.K)
-    _ = 1 + csp.K1.K + csp.K2.K + csp.K1.K * csp.K2.K := by noncomm_ring
-    _ = 1 + csp.K2.K + csp.K1.K + csp.K2.K * csp.K1.K := by rw [csp.comm]; noncomm_ring
-    _ = (1 + csp.K2.K) * (1 + csp.K1.K) := by noncomm_ring
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, smul_smul]
+  have h_prod : (1 + csp.K1.K) * (1 + csp.K2.K) = (1 + csp.K2.K) * (1 + csp.K1.K) := by
+    calc (1 + csp.K1.K) * (1 + csp.K2.K)
+      _ = 1 + csp.K1.K + csp.K2.K + csp.K1.K * csp.K2.K := by noncomm_ring
+      _ = 1 + csp.K2.K + csp.K1.K + csp.K2.K * csp.K1.K := by rw [csp.comm]; abel
+      _ = (1 + csp.K2.K) * (1 + csp.K1.K) := by noncomm_ring
+  rw [h_prod]
 
 /-- **THE MASTER 4-EXPERT COMPLETENESS THEOREM**:
     The four Peirce expert projectors sum to the identity:
     $$P_{++} + P_{+-} + P_{-+} + P_{--} = 1.$$ -/
 theorem hypercube_expert_sum_one (csp : CommutingSplitPair A) :
     expertPlusPlus csp + expertPlusMinus csp + expertMinusPlus csp + expertMinusMinus csp = 1 := by
-  dsimp [expertPlusPlus, expertPlusMinus, expertMinusPlus, expertMinusMinus]
+  have h1 : peircePlus csp.K1 * peircePlus csp.K2 + peircePlus csp.K1 * peirceMinus csp.K2 =
+            peircePlus csp.K1 := by
+    rw [← mul_add, peirce_sum_one csp.K2, mul_one]
+  have h2 : peirceMinus csp.K1 * peircePlus csp.K2 + peirceMinus csp.K1 * peirceMinus csp.K2 =
+            peirceMinus csp.K1 := by
+    rw [← mul_add, peirce_sum_one csp.K2, mul_one]
   calc
-    peircePlus csp.K1 * peircePlus csp.K2 + peircePlus csp.K1 * peirceMinus csp.K2 +
-    (peirceMinus csp.K1 * peircePlus csp.K2 + peirceMinus csp.K1 * peirceMinus csp.K2)
-      = peircePlus csp.K1 * (peircePlus csp.K2 + peirceMinus csp.K2) +
-        peirceMinus csp.K1 * (peircePlus csp.K2 + peirceMinus csp.K2) := by
-          simp only [mul_add]
-      _ = peircePlus csp.K1 * 1 + peirceMinus csp.K1 * 1 := by
-          rw [peirce_sum_one csp.K2]
-      _ = peircePlus csp.K1 + peirceMinus csp.K1 := by
-          simp only [mul_one]
+    expertPlusPlus csp + expertPlusMinus csp + expertMinusPlus csp + expertMinusMinus csp
+      = (peircePlus csp.K1 * peircePlus csp.K2 + peircePlus csp.K1 * peirceMinus csp.K2) +
+        (peirceMinus csp.K1 * peircePlus csp.K2 + peirceMinus csp.K1 * peirceMinus csp.K2) := by
+          dsimp [expertPlusPlus, expertPlusMinus, expertMinusPlus, expertMinusMinus]
+          abel
+      _ = peircePlus csp.K1 + peirceMinus csp.K1 := by rw [h1, h2]
       _ = 1 := peirce_sum_one csp.K1
 
 /-- **THE MASTER 4-EXPERT ORTHOGONALITY THEOREM**:

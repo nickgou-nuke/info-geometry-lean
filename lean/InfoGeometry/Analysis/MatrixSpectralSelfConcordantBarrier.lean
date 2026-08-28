@@ -106,6 +106,29 @@ theorem spectral_trace_cube (C : SymmetricSpectralCarrier n) :
   rw [h_cyc]
   exact trace_diagonal_cube C.eigenvalues
 
+/-- Exact squared sum-of-cubes inequality: `(∑ ev_i³)² ≤ (∑ ev_i²)³`. -/
+theorem spectral_sum_cube_sq_le_sum_sq_cube (n : ℕ) (ev : Fin n → ℝ) :
+    (∑ i : Fin n, (ev i) ^ 3) ^ 2 ≤ (∑ i : Fin n, (ev i) ^ 2) ^ 3 := by
+  have h_abs := spectral_sum_cube_le_sum_sq_three_halves ev
+  have h_sq_nonneg : 0 ≤ ∑ i : Fin n, (ev i) ^ 2 :=
+    Finset.sum_nonneg (fun i _ => sq_nonneg (ev i))
+  have h_rpow : ((∑ i : Fin n, (ev i) ^ 2) ^ (3 / 2 : ℝ)) ^ 2 = (∑ i : Fin n, (ev i) ^ 2) ^ 3 := by
+    rw [rpow_three_halves_eq_mul_sqrt _ h_sq_nonneg]
+    calc
+      ((∑ i : Fin n, (ev i) ^ 2) * Real.sqrt (∑ i : Fin n, (ev i) ^ 2)) ^ 2
+        = (∑ i : Fin n, (ev i) ^ 2) ^ 2 * (Real.sqrt (∑ i : Fin n, (ev i) ^ 2)) ^ 2 := mul_pow _ _ 2
+      _ = (∑ i : Fin n, (ev i) ^ 2) ^ 2 * (∑ i : Fin n, (ev i) ^ 2) := by
+        rw [Real.sq_sqrt h_sq_nonneg]
+      _ = (∑ i : Fin n, (ev i) ^ 2) ^ 3 := by ring
+  have h_sq_le : (|∑ i : Fin n, (ev i) ^ 3|) ^ 2 ≤ (((∑ i : Fin n, (ev i) ^ 2) ^ (3 / 2 : ℝ))) ^ 2 := by
+    have h_lhs_nonneg : 0 ≤ |∑ i : Fin n, (ev i) ^ 3| := abs_nonneg _
+    have h_rhs_nonneg : 0 ≤ (∑ i : Fin n, (ev i) ^ 2) ^ (3 / 2 : ℝ) := by
+      rw [rpow_three_halves_eq_mul_sqrt _ h_sq_nonneg]
+      exact mul_nonneg h_sq_nonneg (Real.sqrt_nonneg _)
+    exact sq_le_sq.mpr (by rw [abs_of_nonneg h_lhs_nonneg, abs_of_nonneg h_rhs_nonneg]; exact h_abs)
+  rw [sq_abs, h_rpow] at h_sq_le
+  exact h_sq_le
+
 /-! ## 3. Conjugated Variation Structure -/
 
 /-- Data of a matrix variation $H$ conjugated by $A^{-1/2}$. -/
@@ -194,7 +217,76 @@ theorem matrix_self_concordance_barrier_bound
   have h_spec := spectral_sum_cube_le_sum_sq_three_halves C.eigenvalues
   nlinarith
 
-/-! ## 6. Explicit Constructors: Diagonal and Concrete Spectral Carriers -/
+/-! ## 6. Canonical Spectral Matrix Variation Structure (Hypothesis-Free) -/
+
+/-- A canonical spectral matrix variation: bundles the matrix variation data and its orthogonal
+spectral decomposition together, guaranteeing $B = A^{-1/2} H A^{-1/2} = O \operatorname{diag}(\lambda) O^T$
+identically without requiring external alignment hypotheses. -/
+structure CanonicalSpectralMatrixVariation (n : ℕ) where
+  A_inv_sqrt : Matrix (Fin n) (Fin n) ℝ
+  H : Matrix (Fin n) (Fin n) ℝ
+  A_inv : Matrix (Fin n) (Fin n) ℝ
+  inv_sqrt_sq : A_inv_sqrt * A_inv_sqrt = A_inv
+  eigenvalues : Fin n → ℝ
+  ortho : Matrix (Fin n) (Fin n) ℝ
+  ortho_inv : orthoᵀ * ortho = 1
+  diagonalized : A_inv_sqrt * H * A_inv_sqrt = ortho * Matrix.diagonal eigenvalues * orthoᵀ
+
+namespace CanonicalSpectralMatrixVariation
+
+variable {n : ℕ}
+
+/-- Projection to `MatrixVariationConjugation`. -/
+def toConjugation (V : CanonicalSpectralMatrixVariation n) : MatrixVariationConjugation n where
+  A_inv_sqrt := V.A_inv_sqrt
+  H := V.H
+  A_inv := V.A_inv
+  inv_sqrt_sq := V.inv_sqrt_sq
+  B := V.A_inv_sqrt * V.H * V.A_inv_sqrt
+  B_def := rfl
+
+/-- Projection to `SymmetricSpectralCarrier`. -/
+def toCarrier (V : CanonicalSpectralMatrixVariation n) : SymmetricSpectralCarrier n where
+  B := V.A_inv_sqrt * V.H * V.A_inv_sqrt
+  eigenvalues := V.eigenvalues
+  ortho := V.ortho
+  ortho_inv := V.ortho_inv
+  diagonalized := V.diagonalized
+
+/-- Definitional match of the conjugated matrix and spectral carrier matrix. -/
+@[simp] theorem carrier_match (V : CanonicalSpectralMatrixVariation n) :
+    V.toConjugation.B = V.toCarrier.B := rfl
+
+/-- 🏆 THEOREM: Unconditional Hessian quadratic form eigenvalue equality. -/
+theorem hessianQuad_eq (V : CanonicalSpectralMatrixVariation n) :
+    hessianQuad V.A_inv V.H = ∑ i : Fin n, (V.eigenvalues i) ^ 2 :=
+  hessianQuad_eq_sum_eigenvalues_sq V.toConjugation V.toCarrier V.carrier_match
+
+/-- 🏆 THEOREM: Unconditional 3rd directional derivative eigenvalue equality. -/
+theorem thirdDerivPhi_eq (V : CanonicalSpectralMatrixVariation n) :
+    thirdDerivPhi V.A_inv V.H = - 2 * ∑ i : Fin n, (V.eigenvalues i) ^ 3 :=
+  thirdDerivPhi_eq_neg_two_sum_eigenvalues_cube V.toConjugation V.toCarrier V.carrier_match
+
+/-- 🏆 THEOREM: Unconditional absolute 3rd derivative eigenvalue equality. -/
+theorem thirdDerivPhi_abs_eq (V : CanonicalSpectralMatrixVariation n) :
+    |thirdDerivPhi V.A_inv V.H| = 2 * |∑ i : Fin n, (V.eigenvalues i) ^ 3| :=
+  thirdDerivPhi_abs_eq_two_mul_abs_sum_eigenvalues_cube V.toConjugation V.toCarrier V.carrier_match
+
+/-- 🏆 THEOREM: Unconditional Nesterov-Nemirovski barrier bound on matrix variations. -/
+theorem matrix_self_concordance_barrier_bound (V : CanonicalSpectralMatrixVariation n) :
+    |thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ) :=
+  InfoGeometry.Analysis.MatrixSpectral.matrix_self_concordance_barrier_bound V.toConjugation V.toCarrier V.carrier_match
+
+/-- 🏆 THEOREM: Unconditional algebraic squared self-concordance bound on matrix variations. -/
+theorem matrix_self_concordance_sq_bound (V : CanonicalSpectralMatrixVariation n) :
+    (thirdDerivPhi V.A_inv V.H) ^ 2 ≤ 4 * (hessianQuad V.A_inv V.H) ^ 3 := by
+  rw [V.thirdDerivPhi_eq, V.hessianQuad_eq]
+  have h_cube_sq := spectral_sum_cube_sq_le_sum_sq_cube n V.eigenvalues
+  calc
+    (- 2 * ∑ i : Fin n, (V.eigenvalues i) ^ 3) ^ 2 = 4 * (∑ i : Fin n, (V.eigenvalues i) ^ 3) ^ 2 := by ring
+    _ ≤ 4 * (∑ i : Fin n, (V.eigenvalues i) ^ 2) ^ 3 := by linarith
+
+/-! ### Automatic Canonical Constructors -/
 
 /-- Explicit construction of a spectral carrier for any diagonal matrix. -/
 def diagonalCarrier (d : Fin n → ℝ) : SymmetricSpectralCarrier n where
@@ -204,28 +296,48 @@ def diagonalCarrier (d : Fin n → ℝ) : SymmetricSpectralCarrier n where
   ortho_inv := by simp
   diagonalized := by simp
 
+/-- Canonical constructor for any diagonal SPD matrix and variation:
+constructs the spectral carrier automatically with $\lambda_i = a_i^{-1} h_i$. -/
+def fromDiagonal (a_inv_sqrt h : Fin n → ℝ) : CanonicalSpectralMatrixVariation n where
+  A_inv_sqrt := Matrix.diagonal a_inv_sqrt
+  H := Matrix.diagonal h
+  A_inv := Matrix.diagonal (fun i => (a_inv_sqrt i) ^ 2)
+  inv_sqrt_sq := by
+    rw [Matrix.diagonal_mul_diagonal]
+    simp [pow_two]
+  eigenvalues := fun i => a_inv_sqrt i * h i * a_inv_sqrt i
+  ortho := 1
+  ortho_inv := by simp
+  diagonalized := by
+    rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+    simp
+
+/-- Canonical constructor from any aligned conjugation and spectral carrier pair. -/
+def ofConjugationAndCarrier (V : MatrixVariationConjugation n) (C : SymmetricSpectralCarrier n)
+    (h_carrier : V.B = C.B) : CanonicalSpectralMatrixVariation n where
+  A_inv_sqrt := V.A_inv_sqrt
+  H := V.H
+  A_inv := V.A_inv
+  inv_sqrt_sq := V.inv_sqrt_sq
+  eigenvalues := C.eigenvalues
+  ortho := C.ortho
+  ortho_inv := C.ortho_inv
+  diagonalized := by
+    have hV := V.B_def
+    have hC := C.diagonalized
+    rw [← hV, h_carrier, hC]
+
+/-- Canonical constructor for scalar variations ($n$ identical scalar modes). -/
+def fromScalar (n : ℕ) (a_inv_sqrt h : ℝ) : CanonicalSpectralMatrixVariation n :=
+  fromDiagonal (fun _ => a_inv_sqrt) (fun _ => h)
+
 /-- 🏆 UNCONDITIONAL THEOREM: Self-concordance barrier inequality on any diagonal SPD matrix variation,
 with explicitly constructed spectral carrier. -/
 theorem diagonal_matrix_self_concordance_barrier_bound
     (a_inv_sqrt h : Fin n → ℝ) :
-    let a_inv := fun i => (a_inv_sqrt i) ^ 2
-    let V : MatrixVariationConjugation n := {
-      A_inv_sqrt := Matrix.diagonal a_inv_sqrt
-      H := Matrix.diagonal h
-      A_inv := Matrix.diagonal a_inv
-      inv_sqrt_sq := by
-        rw [Matrix.diagonal_mul_diagonal]
-        dsimp [a_inv]
-        simp [pow_two]
-      B := Matrix.diagonal (fun i => a_inv_sqrt i * h i * a_inv_sqrt i)
-      B_def := by
-        rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
-    }
+    let V := fromDiagonal a_inv_sqrt h
     |thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ) := by
-  intro a_inv V
-  let C := diagonalCarrier (fun i => a_inv_sqrt i * h i * a_inv_sqrt i)
-  have h_carrier : V.B = C.B := rfl
-  exact matrix_self_concordance_barrier_bound V C h_carrier
+  intro V
+  exact V.matrix_self_concordance_barrier_bound
 
-end InfoGeometry.Analysis.MatrixSpectral
-
+end CanonicalSpectralMatrixVariation

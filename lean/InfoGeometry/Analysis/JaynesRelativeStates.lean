@@ -14,11 +14,12 @@ and the Asymmetric (Chiral Difference) state.
 We define:
 1. The Cuntz Partition of Unity and generic Ring State.
 2. The Left and Right relative vacua (completely polarized states).
-3. The Symmetric KMS state ($p_L = p_R = 1/2$).
-4. The Chiral Difference State: $\phi_{\text{diff}} = \phi_L - \phi_R$, which represents the maximum 
-   imbalance (the "difference vacuum").
-5. 🏆 THEOREM: The Symmetric KMS state has chiral charge 0 (the anomaly vanishes).
-6. 🏆 THEOREM: The Difference Vacuum state has chiral charge 2 (maximum chirality / polarization).
+3. The Jaynes parameterized state $\phi_p = p \cdot \phi_L + (1-p) \cdot \phi_R$.
+4. The Difference Vacuum: $\phi_{\text{diff}} = \phi_L - \phi_R$.
+5. 🏆 THEOREM: The Difference Vacuum imbalance: eigenvalues $1$ on $S_L S_L^*$ and $-1$ on $S_R S_R^*$.
+6. 🏆 THEOREM: The Derivation of the Cuntz KMS Scaling laws ($1/2$) at $p = 1/2$.
+7. 🏆 THEOREM: The Symmetric KMS state has chiral charge 0 (the anomaly vanishes).
+8. 🏆 THEOREM: The Difference Vacuum state has chiral charge 2 (maximum chirality / polarization).
 
 All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 -/
@@ -127,6 +128,20 @@ structure IsRightVacuum (S_L S_R : O2) (φ : State O2) : Prop where
 def IsKMSState (S_L S_R : O2) (φ : State O2) : Prop :=
   IsKMSWeightedState S_L S_R φ (1 / 2 : ℂ) (1 / 2 : ℂ)
 
+/-- The Jaynes parameterized state: $\phi_p = p \cdot \phi_L + (1-p) \cdot \phi_R$. -/
+def jaynes_state (φ_L φ_R : State O2) (p : ℂ) : O2 →+ ℂ where
+  toFun := fun A => p * φ_L A + (1 - p) * φ_R A
+  map_zero' := by
+    show p * φ_L.val 0 + (1 - p) * φ_R.val 0 = 0
+    rw [φ_L.val.map_zero, φ_R.val.map_zero]
+    ring
+  map_add' := by
+    intro x y
+    show p * φ_L.val (x + y) + (1 - p) * φ_R.val (x + y) =
+         (p * φ_L.val x + (1 - p) * φ_R.val x) + (p * φ_L.val y + (1 - p) * φ_R.val y)
+    rw [φ_L.val.map_add x y, φ_R.val.map_add x y]
+    ring
+
 /-- The Chiral Difference State: $\phi_{\text{diff}} = \phi_L - \phi_R$. -/
 def chiral_diff_state (φ_L φ_R : State O2) : O2 →+ ℂ where
   toFun := fun A => φ_L A - φ_R A
@@ -137,6 +152,61 @@ def chiral_diff_state (φ_L φ_R : State O2) : O2 →+ ℂ where
     intro x y
     show φ_L.val (x + y) - φ_R.val (x + y) = (φ_L.val x - φ_R.val x) + (φ_L.val y - φ_R.val y)
     rw [φ_L.val.map_add x y, φ_R.val.map_add x y]
+    ring
+
+/-- The Difference Vacuum is an alias for the Chiral Difference State. -/
+def difference_vacuum (φ_L φ_R : State O2) : O2 →+ ℂ :=
+  chiral_diff_state φ_L φ_R
+
+/-- 🏆 THEOREM: The Left-Right Vacuum difference under the partition of unity.
+    Evaluating the difference vacuum on the Cuntz stabilizers $S_L S_L^*$ and $S_R S_R^*$
+    yields the exact eigenvalues ($1$ and $-1$), disclosing the underlying geometric 
+    imbalance of the polarized states. -/
+theorem difference_vacuum_imbalance
+    (S_L S_R : O2)
+    (φ_L φ_R : State O2)
+    (hL : IsLeftVacuum S_L S_R φ_L) (hR : IsRightVacuum S_L S_R φ_R) :
+    difference_vacuum φ_L φ_R (S_L * star S_L) = 1 ∧
+    difference_vacuum φ_L φ_R (S_R * star S_R) = -1 := by
+  have h_L_one : S_L * star S_L = S_L * 1 * star S_L := by rw [mul_one]
+  have h_R_one : S_R * star S_R = S_R * 1 * star S_R := by rw [mul_one]
+  have h_LL : φ_L (S_L * star S_L) = 1 := by
+    rw [h_L_one, hL.prop_L 1, φ_L.map_one]
+  have h_RL : φ_R (S_L * star S_L) = 0 := by
+    rw [h_L_one, hR.prop_L 1]
+  have h_LR : φ_L (S_R * star S_R) = 0 := by
+    rw [h_R_one, hL.prop_R 1]
+  have h_RR : φ_R (S_R * star S_R) = 1 := by
+    rw [h_R_one, hR.prop_R 1, φ_R.map_one]
+  constructor
+  · change φ_L (S_L * star S_L) - φ_R (S_L * star S_L) = 1
+    rw [h_LL, h_RL]
+    ring
+  · change φ_L (S_R * star S_R) - φ_R (S_R * star S_R) = -1
+    rw [h_LR, h_RR]
+    ring
+
+/-- 🏆 THEOREM: The Derivation of the Cuntz KMS Scaling laws.
+    If we require a state $\phi$ to be a weighted combination of the left and right relative states:
+      $\phi = p \cdot \phi_L + (1 - p) \cdot \phi_R$
+    And we apply Jaynes' Maximum Entropy Principle (which dictates left-right exchange 
+    symmetry, i.e., $p = 1 - p = 1/2$), then we recover exactly the ($1/2$) scaling 
+    coefficient of the Cuntz KMS state. -/
+theorem jaynes_KMS_scaling_derivation
+    (S_L S_R : O2)
+    (φ_L φ_R : State O2)
+    (hL : IsLeftVacuum S_L S_R φ_L) (hR : IsRightVacuum S_L S_R φ_R) :
+    ∀ A, jaynes_state φ_L φ_R (1 / 2) (S_L * A * star S_L) = (1 / 2) * φ_L A ∧
+         jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) = (1 / 2) * φ_R A := by
+  intro A
+  have h_L_eval : jaynes_state φ_L φ_R (1 / 2) (S_L * A * star S_L) =
+      (1 / 2 : ℂ) * φ_L (S_L * A * star S_L) + (1 - (1 / 2 : ℂ)) * φ_R (S_L * A * star S_L) := rfl
+  have h_R_eval : jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) =
+      (1 / 2 : ℂ) * φ_L (S_R * A * star S_R) + (1 - (1 / 2 : ℂ)) * φ_R (S_R * A * star S_R) := rfl
+  constructor
+  · rw [h_L_eval, hL.prop_L A, hR.prop_L A]
+    ring
+  · rw [h_R_eval, hL.prop_R A, hR.prop_R A]
     ring
 
 /-- 🏆 THEOREM 1: The Symmetric KMS State has Chiral Charge 0.
@@ -185,8 +255,10 @@ theorem difference_vacuum_maximal_chiral_charge
 
 Unifies:
 1. **Conservation of Total Branch Probability**: $p_L + p_R = 1$.
-2. **Symmetric KMS Vacuum Anomaly Cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
-3. **Asymmetric Difference Vacuum Maximal Chirality**: $\phi_{\text{diff}}(S_L S_L^*) - \phi_{\text{diff}}(S_R S_R^*) = 2$.
+2. **Eigenvalue Imbalance**: $\phi_{\text{diff}}(S_L S_L^*) = 1$ and $\phi_{\text{diff}}(S_R S_R^*) = -1$.
+3. **Jaynes KMS Scaling Derivation**: $\phi_{1/2}(S_L A S_L^*) = \frac{1}{2} \phi_L(A)$ and $\phi_{1/2}(S_R A S_R^*) = \frac{1}{2} \phi_R(A)$.
+4. **Symmetric KMS Vacuum Anomaly Cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
+5. **Asymmetric Difference Vacuum Maximal Chirality**: $\phi_{\text{diff}}(S_L S_L^*) - \phi_{\text{diff}}(S_R S_R^*) = 2$.
 -/
 theorem grand_jaynes_cuntz_duality_synthesis
     (S_L S_R : O2)
@@ -198,9 +270,14 @@ theorem grand_jaynes_cuntz_duality_synthesis
     (h_L : IsLeftVacuum S_L S_R φ_L)
     (h_R : IsRightVacuum S_L S_R φ_R) :
     (p_L + p_R = 1) ∧
+    (difference_vacuum φ_L φ_R (S_L * star S_L) = 1 ∧ difference_vacuum φ_L φ_R (S_R * star S_R) = -1) ∧
+    (∀ A, jaynes_state φ_L φ_R (1 / 2) (S_L * A * star S_L) = (1 / 2) * φ_L A ∧
+          jaynes_state φ_L φ_R (1 / 2) (S_R * A * star S_R) = (1 / 2) * φ_R A) ∧
     (φ_kms (S_L * star S_L) - φ_kms (S_R * star S_R) = 0) ∧
     (chiral_diff_state φ_L φ_R (S_L * star S_L) - chiral_diff_state φ_L φ_R (S_R * star S_R) = 2) :=
   ⟨kms_weight_sum S_L S_R h_unity φ_kms p_L p_R h_weighted,
+   difference_vacuum_imbalance S_L S_R φ_L φ_R h_L h_R,
+   jaynes_KMS_scaling_derivation S_L S_R φ_L φ_R h_L h_R,
    kms_chiral_charge_vanishes S_L S_R φ_kms h_kms,
    difference_vacuum_maximal_chiral_charge S_L S_R φ_L φ_R h_L h_R⟩
 

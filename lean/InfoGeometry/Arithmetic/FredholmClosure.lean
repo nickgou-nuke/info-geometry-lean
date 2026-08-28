@@ -84,12 +84,12 @@ theorem primeAt_injective : Function.Injective primeAt := by
   exact primeAt_val_strictMono.injective (Subtype.ext_iff.mp h)
 
 /-- The finite carrier consisting of the first `N` primes. -/
-def primeCutoff (N : ℕ) : Finset Nat.Primes :=
+noncomputable def primeCutoff (N : ℕ) : Finset Nat.Primes :=
   (Finset.range N).image primeAt
 
 theorem card_primeCutoff (N : ℕ) : (primeCutoff N).card = N := by
   unfold primeCutoff
-  rw [Finset.card_image_iff.mpr primeAt_injective]
+  rw [Finset.card_image_of_injective _ primeAt_injective]
   simp
 
 /-- The local fermionic determinant factor at the `i`-th prime. -/

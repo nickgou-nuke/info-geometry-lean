@@ -251,6 +251,8 @@ import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 import InfoGeometry.Physics.SolovievInteractionParameterBridge
 import InfoGeometry.Physics.ChiralProjectorTransport
 import InfoGeometry.Physics.ChiralZitterbewegungBridge
+import InfoGeometry.Physics.TwoSectorSpectralOscillation
+import InfoGeometry.Physics.DiracRestChiralTwoSectorBridge
 
 /-!
 # Physics Umbrella

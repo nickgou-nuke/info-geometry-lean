@@ -1,5 +1,6 @@
 import InfoGeometry.Nuclear.GradedBathCommutant
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
+import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
 
 namespace InfoGeometry.Nuclear
 

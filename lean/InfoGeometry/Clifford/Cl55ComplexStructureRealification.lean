@@ -36,7 +36,8 @@ All proofs are complete in native Mathlib 4 with zero `sorry`s.
 
 variable {A : Type*} [Ring A] [Algebra ℝ A]
 
-/-- The realification map embedding $\mathbb{C}$ into $A$ via an elliptic generator $B$. -/
+/-- The realification map $\mathbb{C} \to A$ via an elliptic generator $B$.
+It is not asserted here that this map is injective or packaged as a ring hom. -/
 def complexRealification (B : A) (z : ℂ) : A :=
   (z.re) • (1 : A) + (z.im) • B
 
@@ -89,7 +90,7 @@ theorem complexRealification_phase (B : A) (theta : ℝ) :
 /-! ## Master Synthesis -/
 
 /--
-🏆 **GRAND SYNTHESIS THEOREM: Complex Realification & Phase-Rotor Isomorphism**
+🏆 **GRAND SYNTHESIS THEOREM: Complex Realification & Phase-Rotor Correspondence**
 
 Unifies:
 1. Preservation of unit: $\iota_B(1) = 1$.

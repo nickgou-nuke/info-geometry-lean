@@ -322,9 +322,10 @@ import InfoGeometry.Clifford.Cl55SplitRotorPeirce
 import InfoGeometry.Clifford.Cl55DiscreteRoPERepresentation
 import InfoGeometry.Clifford.Cl55ComplexStructureRealification
 import InfoGeometry.Clifford.Cl55AbelianMonodromy
-import InfoGeometry.Clifford.Cl55AbelianMonodromy
+import InfoGeometry.Clifford.Cl55SplitPeirceSpectralBridge
 import InfoGeometry.Clifford.Cl55WindingMonodromyRepresentation
 import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
+import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 
 namespace InfoGeometry
 

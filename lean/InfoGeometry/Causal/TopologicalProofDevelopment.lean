@@ -282,6 +282,13 @@ def emptyVerifiedState (G : ProofDAG α) : VerifiedState G where
     intro a b _ hb
     simp at hb
 
+/-- The empty verified state has no target-directed knowledge. -/
+@[simp] theorem verifiedToward_emptyVerifiedState
+    (G : ProofDAG α) (T : α) :
+    verifiedToward G (emptyVerifiedState G) T = ∅ := by
+  ext x
+  simp [verifiedToward, emptyVerifiedState]
+
 def foldVerifiedStates (G : ProofDAG α) : List (VerifiedState G) → VerifiedState G
   | [] => emptyVerifiedState G
   | S :: Ss => joinVerifiedState G S (foldVerifiedStates G Ss)

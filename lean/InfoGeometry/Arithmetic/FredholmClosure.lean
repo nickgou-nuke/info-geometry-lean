@@ -243,6 +243,34 @@ theorem primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition
   unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
   rw [Finset.prod_inv_distrib]
 
+/-
+The canonical determinant stage is the fermionic Möbius readout, while its
+inverse is the bosonic partition readout.  This is a finite-stage transport
+between the determinant API and the prime-superalgebra API; it makes the role
+exchange explicit without asserting an infinite trace or determinant.
+-/
+theorem primeRegularizedDetStage_eq_finiteComplexFermionSupertrace
+    (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace
+        (primeCutoff N) s := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  exact
+    (InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_eq_eulerProduct
+      (primeCutoff N) s).symm
+
+/- The inverse determinant stage is the natural-number cutoff used by the
+convergence owner, with the cutoff index given by the `N`-th prime. -/
+theorem primeRegularizedDetStage_inv_eq_primeBosonicCutoff
+    (s : ℂ) (N : ℕ) :
+    (primeRegularizedDetStage s N)⁻¹ =
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+        (primeAt N : ℕ) s := by
+  rw [primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition]
+  unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+  rw [primeCutoff_prod_eq_primesBelow_prod]
+  rfl
+
 theorem primeRegularizedDetStage_mul_finiteComplexBosonPartition_eq_one
     (s : ℂ) (N : ℕ)
     (hdenom : ∀ p ∈ primeCutoff N,

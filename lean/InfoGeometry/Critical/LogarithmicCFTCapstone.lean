@@ -92,6 +92,18 @@ theorem N_ne_zero (hC : J.C ≠ 0) : J.N ≠ 0 := by
 theorem N_sq_apply_D : (J.N.comp J.N) J.D = 0 := by
   simp [LinearMap.comp_apply, N_apply_D, N_apply_C]
 
+/--
+The finite Jordan cell is genuinely non-semisimple on the displayed pair:
+`N` is a nonzero square-zero map, and the partner is not an `h`-eigenvector.
+This is the precise finite statement available here; it makes no claim about
+an infinite-dimensional Virasoro representation or a thermodynamic limit.
+-/
+theorem nontrivial_jordan_cell (hC : J.C ≠ 0) :
+    J.N ≠ 0 ∧
+    (J.N.comp J.N) J.D = 0 ∧
+    J.L_0 J.D ≠ J.h • J.D := by
+  exact ⟨J.N_ne_zero hC, J.N_sq_apply_D, J.jordan_D_not_h_eigen hC⟩
+
 /-- 🏆 THEOREM 4: $N^2$ annihilates the primary field $C$. -/
 theorem N_sq_apply_C : (J.N.comp J.N) J.C = 0 := by
   simp [LinearMap.comp_apply, N_apply_C, LinearMap.map_zero]

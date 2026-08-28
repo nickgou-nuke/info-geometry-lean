@@ -99,6 +99,29 @@ theorem primon_euler_factor_pos (p : ℕ) (hp : 2 ≤ p) (β : ℝ) (hβ : 0 < �
   have h_diff_pos : 0 < 1 - (p : ℝ) ^ (-β) := by linarith
   exact inv_pos.mpr h_diff_pos
 
+/-- A finite prime Euler denominator is nonzero at positive inverse
+temperature.  This is the finite obstruction to importing poles of the
+analytically continued zeta function into a cutoff product. -/
+theorem finite_primon_euler_denominator_ne_zero
+    (P : Finset ℕ) (β : ℝ) (hβ : 0 < β)
+    (hP : ∀ p ∈ P, 2 ≤ p) :
+    (∏ p ∈ P, (1 - (p : ℝ) ^ (-β))) ≠ 0 := by
+  refine Finset.prod_ne_zero ?_
+  intro p hp
+  exact ne_of_gt (by
+    have hpos : 0 < (p : ℝ) ^ (-β) := primon_boltzmann_weight_pos p
+      (by
+        have := hP p hp
+        omega) β
+    have hlt : (p : ℝ) ^ (-β) < 1 := by
+      rw [Real.rpow_neg (by positivity)]
+      have hpone : 1 < (p : ℝ) := by
+        have := hP p hp
+        exact_mod_cast (show 1 < p by omega)
+      have : 1 < (p : ℝ) ^ β := Real.one_lt_rpow hpone hβ
+      exact inv_lt_one_of_one_lt₀ this
+    linarith)
+
 /-! ## 3. Cantor Binary Qubit Cylinders & Cuntz Spin Chain -/
 
 /-- The canonical dyadic measure of a cylinder set of length $n$: $\mu(\text{Cyl}_n) = 2^{-n}$. -/

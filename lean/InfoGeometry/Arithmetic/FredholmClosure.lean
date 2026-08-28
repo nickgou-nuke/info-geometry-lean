@@ -1,6 +1,8 @@
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.NumberTheory.PrimeCounting
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 /-!
 # Fredholm Closure Ledger
@@ -68,6 +70,36 @@ enumeration.
 noncomputable def regularizedDetStage (factor : ℕ → ℂ) (N : ℕ) : ℂ :=
   (Finset.range N).prod factor
 
+/-! ## Prime-indexed cutoff stages -/
+
+/-- The `i`-th prime, packaged in the canonical `Nat.Primes` carrier. -/
+noncomputable def primeAt (i : ℕ) : Nat.Primes :=
+  ⟨Nat.nth Nat.Prime i, Nat.prime_nth_prime i⟩
+
+theorem primeAt_val_strictMono : StrictMono (fun i : ℕ => (primeAt i : ℕ)) := by
+  exact Nat.nth_strictMono Nat.infinite_setOf_prime
+
+theorem primeAt_injective : Function.Injective primeAt := by
+  intro i j h
+  exact primeAt_val_strictMono.injective (Subtype.ext_iff.mp h)
+
+/-- The finite carrier consisting of the first `N` primes. -/
+def primeCutoff (N : ℕ) : Finset Nat.Primes :=
+  (Finset.range N).image primeAt
+
+theorem card_primeCutoff (N : ℕ) : (primeCutoff N).card = N := by
+  unfold primeCutoff
+  rw [Finset.card_image_iff.mpr primeAt_injective]
+  simp
+
+/-- The local fermionic determinant factor at the `i`-th prime. -/
+noncomputable def primeCutoffFactor (s : ℂ) (i : ℕ) : ℂ :=
+  1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s (primeAt i)
+
+/-- Finite determinant stage indexed by the first `N` primes. -/
+noncomputable def primeRegularizedDetStage (s : ℂ) (N : ℕ) : ℂ :=
+  regularizedDetStage (primeCutoffFactor s) N
+
 /--
 Adding one more finite mode multiplies the cutoff determinant by the new local
 factor.  This is the finite algebraic recurrence; it is not an infinite
@@ -77,6 +109,11 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
     regularizedDetStage factor (N + 1) =
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
+
+theorem primeRegularizedDetStage_succ (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N * primeCutoffFactor s N := by
+  exact regularizedDetStage_succ (primeCutoffFactor s) N
 
 /-- A finite cutoff determinant is nonzero when every included local factor is
 nonzero.  This is the exact finite counterpart of the nonvanishing condition

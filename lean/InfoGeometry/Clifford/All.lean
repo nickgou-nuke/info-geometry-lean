@@ -319,6 +319,12 @@ import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
 import InfoGeometry.Clifford.Cl55CayleyRoPEBridge
 import InfoGeometry.Clifford.Cl55IntertwinerFrontier
 import InfoGeometry.Clifford.Cl55SplitRotorPeirce
+import InfoGeometry.Clifford.Cl55DiscreteRoPERepresentation
+import InfoGeometry.Clifford.Cl55ComplexStructureRealification
+import InfoGeometry.Clifford.Cl55AbelianMonodromy
+import InfoGeometry.Clifford.Cl55AbelianMonodromy
+import InfoGeometry.Clifford.Cl55WindingMonodromyRepresentation
+import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
 
 namespace InfoGeometry
 

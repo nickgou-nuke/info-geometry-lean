@@ -466,8 +466,8 @@ theorem jacobi_chargePlus_chargePlus_scale
     dsimp [fiveGradedBracket, injChargePlus, genHscale,
       FiveGradedCarrier.instAdd]
   all_goals
-    simp [symplecticRankTwo_apply, symplecticForm_smul_left,
-      symplecticForm_smul_right]
+    simp
+  all_goals
     try ring
     try rw [symplecticForm_neg_right, symplecticForm_smul_right,
       FreudenthalCharge.symplectic_form_skew D x y]

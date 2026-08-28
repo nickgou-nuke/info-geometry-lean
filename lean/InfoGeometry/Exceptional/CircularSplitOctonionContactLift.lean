@@ -403,6 +403,24 @@ theorem contactGradeFlipCarrier_extreme_mixed_bracket
     simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus]
   all_goals ring
 
+theorem contactGradeFlipCarrier_extreme_charge_intertwining
+    (a : ℝ) (x : FreudenthalCharge J) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (genEminus D a) (injChargePlus D x)) =
+      -(fiveGradedBracket D (genEplus D a) (injChargeMinus D x)) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus,
+      injChargeMinus, injChargePlus]
+
+theorem contactGradeFlipCarrier_extreme_charge_intertwining_dual
+    (a : ℝ) (x : FreudenthalCharge J) :
+    contactGradeFlipCarrier D
+        (fiveGradedBracket D (genEplus D a) (injChargeMinus D x)) =
+      -(fiveGradedBracket D (genEminus D a) (injChargePlus D x)) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [contactGradeFlipCarrier, fiveGradedBracket, genEminus, genEplus,
+      injChargeMinus, injChargePlus]
+
 theorem contactGradeFlipCarrier_genHscale (c : ℝ) :
     contactGradeFlipCarrier D (genHscale D c) = genHscale D c := by
   apply FiveGradedCarrier.ext <;> rfl

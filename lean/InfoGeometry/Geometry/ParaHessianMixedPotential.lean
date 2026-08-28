@@ -151,6 +151,26 @@ theorem symplectic_nondegenerate (U : Doubled E)
     rw [hgraded, map_zero]
   simpa [grading_sq] using hU'
 
+theorem symplectic_left_ext {U W : Doubled E}
+    (h : ∀ V : Doubled E, symplectic U V = symplectic W V) : U = W := by
+  apply sub_eq_zero.mp
+  apply symplectic_nondegenerate (U - W)
+  intro V
+  have hV := h V
+  rw [symplectic_apply, symplectic_apply] at hV
+  rw [symplectic_apply]
+  simp only [Prod.fst_sub, Prod.snd_sub, inner_sub_left]
+  linear_combination hV
+
+theorem symplectic_right_ext {U W : Doubled E}
+    (h : ∀ V : Doubled E, symplectic V U = symplectic V W) : U = W := by
+  apply symplectic_left_ext
+  intro V
+  calc
+    symplectic U V = -symplectic V U := symplectic_skew U V
+    _ = -symplectic V W := by rw [h V]
+    _ = symplectic W V := by rw [symplectic_skew W V]
+
 theorem symplectic_exchange (U V : Doubled E) :
     symplectic (exchange U) (exchange V) = -symplectic U V := by
   simp [symplectic_apply, real_inner_comm]
@@ -216,6 +236,17 @@ theorem fderiv_potential_apply_eq_metric (X V : Doubled E) :
 theorem symplectic_grading_eq_fderiv_potential (X V : Doubled E) :
     symplectic (grading X) V = fderiv ℝ potential X V := by
   rw [symplectic_grading_left, ← fderiv_potential_apply_eq_metric]
+
+theorem grading_unique_for_potential_derivative {X Y : Doubled E}
+    (h : ∀ V : Doubled E,
+      symplectic X V = fderiv ℝ potential Y V) :
+    X = grading Y := by
+  apply symplectic_left_ext
+  intro V
+  calc
+    symplectic X V = fderiv ℝ potential Y V := h V
+    _ = symplectic (grading Y) V :=
+      (symplectic_grading_eq_fderiv_potential Y V).symm
 
 theorem fderiv_potential_apply_grading_eq_zero (X : Doubled E) :
     fderiv ℝ potential X (grading X) = 0 := by

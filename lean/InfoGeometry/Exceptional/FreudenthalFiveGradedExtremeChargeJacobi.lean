@@ -18,7 +18,11 @@ theorem extremeMinus_extremeMinus_chargeMinus_eq_zero
 /-- The `(+2,+2,+1)` orbit is zero by the positive grade bounds. -/
 theorem extremePlus_extremePlus_chargePlus_eq_zero
     (a b : ℝ) (z : FreudenthalCharge J) :
-    fiveJacobiator D (genEplus D a) (genEplus D b) (injChargePlus D z) = 0 :=
-  jacobi_extremePlus_extremePlus_chargePlus D a b z
+    fiveJacobiator D (genEplus D a) (genEplus D b) (injChargePlus D z) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEplus, injChargePlus,
+      FiveGradedCarrier.instAdd] <;>
+    simp
 
 end InfoGeometry.Exceptional.Freudenthal

@@ -144,17 +144,6 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
 
-/-- Recursive exponential formula for a finite cutoff product.  This is the
-native finite-stage form used before transporting the readout through a
-compatible filtered colimit. -/
-theorem regularizedDetStage_exp_sum (energy : ℕ → ℂ) (N : ℕ) :
-    regularizedDetStage (fun n => Complex.exp (energy n)) N =
-      Complex.exp (∑ n in Finset.range N, energy n) := by
-  induction N with
-  | zero => simp [regularizedDetStage]
-  | succ N ih =>
-      rw [regularizedDetStage_succ, ih, Finset.sum_range_succ, Complex.exp_add]
-
 theorem primeRegularizedDetStage_succ (s : ℂ) (N : ℕ) :
     primeRegularizedDetStage s (N + 1) =
       primeRegularizedDetStage s N * primeCutoffFactor s N := by

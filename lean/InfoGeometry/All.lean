@@ -380,6 +380,7 @@ import InfoGeometry.Algebra.Zorn.SplitOctonionGlobalWittNorm
 import InfoGeometry.Algebra.Zorn.ThreeColorNativeBracketTable
 import InfoGeometry.Algebra.ZornVectorMatrixCrossProductBridge
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.SymplecticRankTwoJacobiator
 import InfoGeometry.Analysis.All
 import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoMobiusPole
@@ -4436,6 +4437,8 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticTripleSystem
 import InfoGeometry.Exceptional.FreudenthalHeisenbergZeroGradeAction
 import InfoGeometry.Exceptional.FreudenthalHeisenbergLieRepresentation
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
+import InfoGeometry.Exceptional.FreudenthalExtremeActionData
+import InfoGeometry.Exceptional.CrossExtremeActionData
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiBridge
 import InfoGeometry.Exceptional.TwistorZornEmbedding

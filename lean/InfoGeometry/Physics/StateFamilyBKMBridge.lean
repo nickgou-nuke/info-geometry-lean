@@ -4,6 +4,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Finset.Basic
 import InfoGeometry.Physics.SpectralFluctuationIdeal
 import InfoGeometry.Physics.RegularizedSurprisalKernel
+import InfoGeometry.Topology.FiniteGibbsFisherBridge
 
 /-!
 # Quantum State Families, BKM Information Metric, and 2nd-Order Hessian Bridge
@@ -114,6 +115,57 @@ def diagonalCovariance
   ∑ i : n, ρ.prob i * (a i - diagonalMean ρ a) *
     (b i - diagonalMean ρ b)
 
+theorem diagonalCovariance_self_eq_finiteGibbsVariance
+    (ρ : DiagonalQuantumState n) (a : n → ℝ) :
+    diagonalCovariance ρ a a =
+      InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance
+        ρ.prob a := by
+  unfold diagonalCovariance
+  unfold diagonalMean
+  unfold InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance
+  unfold InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsMean
+  apply Finset.sum_congr rfl
+  intro i _hi
+  ring_nf
+
+theorem diagonalCovariance_self_eq_zero_iff
+    (ρ : DiagonalQuantumState n) (a : n → ℝ)
+    (hpos : ∀ i, 0 < ρ.prob i) :
+    diagonalCovariance ρ a a = 0 ↔
+      ∀ i, a i = diagonalMean ρ a := by
+  rw [diagonalCovariance_self_eq_finiteGibbsVariance]
+  simpa [diagonalMean] using
+    (InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance_eq_zero_iff
+      ρ.prob a ρ.prob_nonneg hpos)
+
+theorem diagonalCovariance_self_eq_raw_moment
+    (ρ : DiagonalQuantumState n) (a : n → ℝ) :
+    diagonalCovariance ρ a a =
+      (∑ i : n, ρ.prob i * (a i)^2) - (diagonalMean ρ a)^2 := by
+  rw [diagonalCovariance_self_eq_finiteGibbsVariance]
+  simpa [diagonalMean] using
+    (InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance_eq_usual
+      ρ.prob a ρ.prob_sum_one)
+
+theorem diagonalCovariance_self_raw_moment_nonneg
+    (ρ : DiagonalQuantumState n) (a : n → ℝ) :
+    0 ≤ (∑ i : n, ρ.prob i * (a i)^2) - (diagonalMean ρ a)^2 := by
+  rw [← diagonalCovariance_self_eq_raw_moment]
+  unfold diagonalCovariance
+  apply Finset.sum_nonneg
+  intro i _hi
+  rw [mul_assoc]
+  exact mul_nonneg (ρ.prob_nonneg i)
+    (mul_self_nonneg (a i - diagonalMean ρ a))
+
+theorem diagonalCovariance_raw_moment_eq_zero_iff
+    (ρ : DiagonalQuantumState n) (a : n → ℝ)
+    (hpos : ∀ i, 0 < ρ.prob i) :
+    ((∑ i : n, ρ.prob i * (a i)^2) - (diagonalMean ρ a)^2 = 0) ↔
+      ∀ i, a i = diagonalMean ρ a := by
+  rw [← diagonalCovariance_self_eq_raw_moment]
+  exact diagonalCovariance_self_eq_zero_iff ρ a hpos
+
 theorem diagonalCovariance_swap
     (ρ : DiagonalQuantumState n) (a b : n → ℝ) :
     diagonalCovariance ρ a b = diagonalCovariance ρ b a := by
@@ -142,10 +194,20 @@ theorem diagonalCovariance_const_left
   rw [hmean]
   simp
 
+@[simp] theorem diagonalCovariance_zero_left
+    (ρ : DiagonalQuantumState n) (b : n → ℝ) :
+    diagonalCovariance ρ (fun _ => 0) b = 0 := by
+  simpa using diagonalCovariance_const_left ρ 0 b
+
 theorem diagonalCovariance_const_right
     (ρ : DiagonalQuantumState n) (a : n → ℝ) (c : ℝ) :
     diagonalCovariance ρ a (fun _ => c) = 0 := by
   rw [diagonalCovariance_swap, diagonalCovariance_const_left]
+
+@[simp] theorem diagonalCovariance_zero_right
+    (ρ : DiagonalQuantumState n) (a : n → ℝ) :
+    diagonalCovariance ρ a (fun _ => 0) = 0 := by
+  simpa using diagonalCovariance_const_right ρ a 0
 
 theorem diagonalCovariance_eq_bkm_centered
     (ρ : DiagonalQuantumState n) (a b : n → ℝ) :

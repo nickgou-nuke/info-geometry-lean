@@ -145,7 +145,6 @@ def jaynes_state (φ_L φ_R : State O2) (p : ℂ) : O2 →+ ℂ where
 /-! The affine mixture is normalized independently of any KMS hypothesis. -/
 
 /-- The Jaynes mixture preserves the unit when its coefficients sum to one. -/
-omit [StarRing O2] in
 theorem jaynes_state_map_one
     (φ_L φ_R : State O2) (p : ℂ) :
     jaynes_state φ_L φ_R p 1 = 1 := by

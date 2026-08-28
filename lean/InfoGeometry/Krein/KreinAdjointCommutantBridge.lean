@@ -1,5 +1,6 @@
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.DoubledSpace
+import Mathlib.LinearAlgebra.Trace
 
 noncomputable section
 
@@ -42,6 +43,33 @@ noncomputable def finiteDoubledFundamentalSymmetry (n : ℕ) :
         (finiteDoubledFundamentalSymmetry n) =
       ContinuousLinearMap.id ℝ (FiniteDoubledCarrier n) := by
   exact spectral_epsilon_involution (EuclideanSpace ℝ (Fin n))
+
+/-! The involutive continuous map is also a genuine linear equivalence. -/
+noncomputable def finiteDoubledFundamentalSymmetryEquiv (n : ℕ) :
+    FiniteDoubledCarrier n ≃ₗ[ℝ] FiniteDoubledCarrier n := by
+  apply LinearEquiv.ofInvolutive
+    (finiteDoubledFundamentalSymmetry n).toLinearMap
+  intro x
+  have h := congrArg
+    (fun T : FiniteDoubledCarrier n →L[ℝ] FiniteDoubledCarrier n => T x)
+    (finiteDoubledFundamentalSymmetry_involution n)
+  change finiteDoubledFundamentalSymmetry n
+      (finiteDoubledFundamentalSymmetry n x) = x at h
+  exact h
+
+@[simp] theorem finiteDoubledFundamentalSymmetryEquiv_apply (n : ℕ)
+    (x : FiniteDoubledCarrier n) :
+    finiteDoubledFundamentalSymmetryEquiv n x =
+      finiteDoubledFundamentalSymmetry n x := by
+  rfl
+
+theorem finiteDoubled_trace_conjugation_invariant (n : ℕ)
+    (A : FiniteDoubledCarrier n →L[ℝ] FiniteDoubledCarrier n) :
+    LinearMap.trace ℝ (FiniteDoubledCarrier n)
+        ((finiteDoubledFundamentalSymmetryEquiv n).conj A.toLinearMap) =
+      LinearMap.trace ℝ (FiniteDoubledCarrier n) A.toLinearMap := by
+  exact LinearMap.trace_conj' A.toLinearMap
+    (finiteDoubledFundamentalSymmetryEquiv n)
 
 /-- Determinant readout on the canonical finite doubled carrier. -/
 noncomputable def finiteDoubledDet (n : ℕ)

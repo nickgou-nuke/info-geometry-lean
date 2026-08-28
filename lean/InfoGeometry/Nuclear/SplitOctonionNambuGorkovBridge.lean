@@ -167,6 +167,52 @@ def toZorn (N : NambuGorkovCarrier R) : ZornMatrix R where
   w := N.delta
   b := - N.xi
 
+/-- The Nambu--Gorkov lift is an embedding, not an identification with the
+full eight-dimensional Zorn carrier. -/
+theorem toZorn_injective :
+    Function.Injective (toZorn : NambuGorkovCarrier R → ZornMatrix R) := by
+  intro X Y h
+  cases X with
+  | mk xiX deltaX =>
+    cases Y with
+    | mk xiY deltaY =>
+      simp only [toZorn] at h
+      have hxi : xiX = xiY := congrArg ZornMatrix.a h
+      have hdelta : deltaX = deltaY := by
+        apply funext
+        intro i
+        exact congrArg (fun Z : ZornMatrix R => Z.v i) h
+      cases hxi
+      cases hdelta
+      rfl
+
+/-- Exact image criterion for the Nambu--Gorkov lift. -/
+theorem mem_range_toZorn_iff (Z : ZornMatrix R) :
+    (∃ N : NambuGorkovCarrier R, toZorn N = Z) ↔
+      Z.v = Z.w ∧ Z.b = -Z.a := by
+  constructor
+  · rintro ⟨N, hN⟩
+    constructor
+    · have hv := congrArg ZornMatrix.v hN
+      have hw := congrArg ZornMatrix.w hN
+      simpa [toZorn] using hv.symm.trans hw
+    · have ha := congrArg ZornMatrix.a hN
+      have hb := congrArg ZornMatrix.b hN
+      have hneg := congrArg Neg.neg ha
+      simpa [toZorn] using hb.symm.trans hneg
+  · rintro ⟨hvw, hb⟩
+    refine ⟨{ xi := Z.a, delta := Z.v }, ?_⟩
+    apply ZornMatrix.ext
+    · rfl
+    · rfl
+    · exact hvw
+    · exact hb.symm
+
+/-- Coordinate readback of the Nambu--Gorkov image in the native Zorn chart. -/
+theorem toZorn_coordEquiv (N : NambuGorkovCarrier R) :
+    ZornMatrix.coordEquiv (toZorn N) = (N.xi, N.delta, N.delta, -N.xi) := by
+  rfl
+
 /-- 🏆 THEOREM: The Nambu-Gorkov matrix is strictly traceless: $\operatorname{Tr}_Z(X_{\text{NG}}) = 0$. -/
 @[simp] theorem nambu_gorkov_traceless (N : NambuGorkovCarrier R) :
     zornTrace (toZorn N) = 0 := by
@@ -322,4 +368,3 @@ theorem nambuGorkov_null_iff (N : NambuGorkovCarrier ℝ) :
     ring
 
 end InfoGeometry.Nuclear.NambuGorkov
-

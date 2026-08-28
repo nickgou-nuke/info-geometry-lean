@@ -74,6 +74,38 @@ theorem peirceCharacterProduct_sq_native :
     _ = 1 := by
       rw [peirceSheetParity_sq_native, exteriorDegreeParity_sq, one_mul]
 
+theorem peirceSheetParity_commutes_characterProduct :
+    peirceSheetParity * peirceCharacterProduct =
+      peirceCharacterProduct * peirceSheetParity := by
+  unfold peirceCharacterProduct
+  calc
+    peirceSheetParity * (peirceSheetParity * exteriorDegreeParity) =
+        (peirceSheetParity * peirceSheetParity) * exteriorDegreeParity := by
+          rw [mul_assoc]
+    _ = exteriorDegreeParity := by
+          rw [peirceSheetParity_sq_native, one_mul]
+    _ = (peirceSheetParity * exteriorDegreeParity) * peirceSheetParity := by
+          calc
+            exteriorDegreeParity = 1 * exteriorDegreeParity := by simp
+            _ = (peirceSheetParity * peirceSheetParity) *
+                exteriorDegreeParity := by
+                  rw [peirceSheetParity_sq_native]
+            _ = peirceSheetParity *
+                (peirceSheetParity * exteriorDegreeParity) := by
+                  rw [mul_assoc]
+            _ = peirceSheetParity *
+                (exteriorDegreeParity * peirceSheetParity) := by
+                  rw [peirceParities_commute]
+            _ = (peirceSheetParity * exteriorDegreeParity) *
+                peirceSheetParity := by
+                  rw [← mul_assoc]
+
+theorem exteriorDegreeParity_commutes_characterProduct :
+    exteriorDegreeParity * peirceCharacterProduct =
+      peirceCharacterProduct * exteriorDegreeParity := by
+  unfold peirceCharacterProduct
+  rw [← mul_assoc, peirceParities_commute]
+
 theorem coordinateTrace_identity : coordinateTrace (1 : CarrierEnd) = 8 := by
   simp [coordinateTrace]
 

@@ -57,6 +57,7 @@ import InfoGeometry.Canonical.EmergentSpacetimeSolderingBridge
 import InfoGeometry.Canonical.RiemannHypothesisBostConnesTriadBridge
 import InfoGeometry.Canonical.UnifiedGrandHolographicCapstoneBridge
 import InfoGeometry.Canonical.GrandUnificationQuantumGeometryBridge
+import InfoGeometry.Canonical.HilbertCuntz
 import InfoGeometry.Canonical.LogarithmicDeRhamPolyaBridge
 import InfoGeometry.Canonical.LogarithmicDeRhamMellinPolyaCapstoneBridge
 import InfoGeometry.Canonical.GrandHolographicCathedralMasterBridge
@@ -3419,6 +3420,7 @@ import InfoGeometry.Canonical.TripotentLeftRightPeirceProjectors
 import InfoGeometry.Canonical.TripotentFiveGradingDecomposition
 import InfoGeometry.Canonical.KZRoPEMonodromyComparison
 import InfoGeometry.Canonical.CuntzKTowerCommutation
+import InfoGeometry.Canonical.ConcreteCuntzKCommutationZornCapstone
 
 namespace InfoGeometry
 

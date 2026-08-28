@@ -3,6 +3,7 @@ import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Cartan.Involution
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Normed.Lp.ProdLp
 
 /-!
@@ -99,6 +100,16 @@ noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
 /-- Canonical split rotation axis `K = J ∘ ε` on the doubled real carrier. -/
 noncomputable def clockAxis : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complex_i
+
+theorem complex_i_adjoint_eq_neg :
+    ContinuousLinearMap.adjoint (complex_i (E := E)) = -(complex_i (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply ext_inner_right ℝ
+  intro v
+  rw [ContinuousLinearMap.adjoint_inner_left]
+  simp [complex_i, modular_j, spectral_epsilon, WithLp.prod_inner_apply,
+    real_inner_comm]
 
 omit [CompleteSpace E] in
 @[simp] lemma clockAxis_eq_complex_i :
@@ -494,6 +505,55 @@ lemma spectral_epsilon_is_cartan (E : Type*) [NormedAddCommGroup E] [InnerProduc
   exact congrArg ContinuousLinearMap.toLinearMap h
 
 end Compatibility
+
+/-! ### Cayley fiber identification -/
+
+open Complex
+
+/-- The real Cayley identification of the doubled scalar fiber with `ℂ`.
+
+This is a fiber-level statement only.  It does not identify an `Lp` space with
+an unweighted `lp` space, nor does it make a claim about a GNS representation.
+-/
+noncomputable def cayleyDoubledRealFiber : DoubledSpace ℝ ≃ₗᵢ[ℝ] ℂ where
+  toLinearEquiv :=
+    (WithLp.linearEquiv (2 : ENNReal) ℝ (ℝ × ℝ)).trans
+      Complex.equivRealProdCLM.symm.toLinearEquiv
+  norm_map' u := by
+    change ‖Complex.equivRealProdCLM.symm (WithLp.ofLp u)‖ = ‖u‖
+    have hsq :
+        ‖Complex.equivRealProdCLM.symm (WithLp.ofLp u)‖ ^ 2 = ‖u‖ ^ 2 := by
+      rw [Complex.equivRealProdCLM_symm_apply, Complex.sq_norm,
+        Complex.normSq_add_mul_I, WithLp.prod_norm_sq_eq_of_L2]
+      simp [Real.norm_eq_abs, sq_abs]
+    nlinarith [norm_nonneg (Complex.equivRealProdCLM.symm (WithLp.ofLp u)),
+      norm_nonneg u]
+
+@[simp] theorem cayleyDoubledRealFiber_apply (u : DoubledSpace ℝ) :
+    cayleyDoubledRealFiber u =
+      (WithLp.ofLp u).1 + (WithLp.ofLp u).2 * Complex.I := by
+  change Complex.equivRealProdCLM.symm (WithLp.ofLp u) = _
+  rw [Complex.equivRealProdCLM_symm_apply]
+
+theorem cayleyDoubledRealFiber_complex_i (u : DoubledSpace ℝ) :
+    cayleyDoubledRealFiber (complex_i u) =
+      Complex.I * cayleyDoubledRealFiber u := by
+  rw [cayleyDoubledRealFiber_apply, complex_i_apply,
+    cayleyDoubledRealFiber_apply]
+  have hcoord :
+      WithLp.ofLp
+          (WithLp.toLp (2 : ENNReal)
+            (-WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
+              WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u)) =
+        (-WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
+          WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u) := rfl
+  rw [hcoord]
+  have hu :
+      WithLp.ofLp u =
+        (WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
+          WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u) := rfl
+  rw [hu]
+  apply Complex.ext <;> simp [Complex.mul_re, Complex.mul_im]
 
 section KreinAnalytic
 

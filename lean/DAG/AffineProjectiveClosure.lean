@@ -57,8 +57,47 @@ energy level: μ(n) = +1 for even fermion number, -1 for odd.
 -/
 noncomputable def chiralParity {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] :
-    DoubledSpace E →L[ℝ] DoubledSpace E :=
+  DoubledSpace E →L[ℝ] DoubledSpace E :=
   spectral_epsilon
+
+/-! The interface definitions retain the involutions of their native owners. -/
+@[simp] theorem particleHoleC_comp_self {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (particleHoleC (E := E)).comp particleHoleC =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  exact InfoGeometry.Krein.modular_j_involution E
+
+@[simp] theorem chiralParity_comp_self {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (chiralParity (E := E)).comp chiralParity =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  exact InfoGeometry.Krein.spectral_epsilon_involution E
+
+theorem particleHole_conjugation_neg {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E]
+    (D : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hD : D.comp particleHoleC = -(particleHoleC.comp D)) :
+    ((particleHoleC (E := E)).comp D).comp particleHoleC = -D := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hD_x := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T x) hD
+  have hC := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T (D x))
+    (particleHoleC_comp_self (E := E))
+  have hC_apply : particleHoleC (particleHoleC (D x)) = D x := by
+    change particleHoleC (particleHoleC (D x)) = D x at hC
+    exact hC
+  change particleHoleC (D (particleHoleC x)) = -D x
+  calc
+    particleHoleC (D (particleHoleC x)) = particleHoleC (-(particleHoleC (D x))) :=
+      congrArg particleHoleC hD_x
+    _ = -particleHoleC (particleHoleC (D x)) := by simp
+    _ = -D x := by rw [hC_apply]
+
+theorem particleHoleC_chiralParity_anticommute {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (particleHoleC (E := E)).comp chiralParity =
+      -(chiralParity.comp particleHoleC) := by
+  exact InfoGeometry.Krein.modular_j_spectral_epsilon_anticommute E
 
 /--
 Closure debt: affine projective anomaly cancellation.

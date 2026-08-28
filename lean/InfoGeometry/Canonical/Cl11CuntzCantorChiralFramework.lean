@@ -413,7 +413,6 @@ namespace FiniteCuntzTiltFockReadout
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
-open InfoGeometry.Canonical.CuntzKTowerCommutation
 
 theorem toeplitz_orthogonality (n : ℕ) (i j : Fin n) :
     toeplitzSdag n i * toeplitzS n j = if i = j then 1 else 0 := by
@@ -442,35 +441,6 @@ theorem finite_tilted_fock_atom
         (splitDOp (P := P) (R := R) p hp) = negOp idOp := by
   exact ⟨switchOp_sq p hp, tiltOp_sq p,
     tilt_switch_anticomm p hp, splitDOp_sq p hp⟩
-
-structure CompatibleShiftPhase where
-  shift : ∀ n : ℕ, TowerStage n
-  phase : ∀ n : ℕ, TowerStage n
-  shift_compat : ∀ n,
-    InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n (shift n) = shift (n + 1)
-  phase_compat : ∀ n,
-    InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n (phase n) = phase (n + 1)
-  commute : ∀ n, shift n * phase n = phase n * shift n
-
-namespace CompatibleShiftPhase
-
-variable (C : CompatibleShiftPhase)
-
-theorem colimit_commutes :
-    limitElement C.shift * limitK C.phase =
-      limitK C.phase * limitElement C.shift := by
-  exact S_left_commutes_K_limit C.shift C.phase
-    C.shift_compat C.phase_compat C.commute 0
-
-theorem stage_readout (n : ℕ) :
-    ofStage n (C.shift n) * ofStage n (C.phase n) =
-      ofStage n (C.phase n) * ofStage n (C.shift n) :=
-  by
-    simpa only [map_mul] using
-      congrArg (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n)
-        (C.commute n)
-
-end CompatibleShiftPhase
 
 end FiniteCuntzTiltFockReadout
 

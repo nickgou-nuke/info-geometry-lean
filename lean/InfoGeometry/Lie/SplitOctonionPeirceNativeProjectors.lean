@@ -26,7 +26,8 @@ def projectorMM : CarrierEnd :=
   fin_cases i <;> simp [projectorPP, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,
     exteriorDegreeParity,
-    Module.End.mul_apply] <;> ring
+    Module.End.mul_apply]
+  all_goals ring
 
 @[simp] theorem projectorPM_apply (x : Carrier) :
     projectorPM x = ![0, x 1, x 2, x 3, 0, 0, 0, 0] := by
@@ -34,7 +35,8 @@ def projectorMM : CarrierEnd :=
   fin_cases i <;> simp [projectorPM, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,
     exteriorDegreeParity,
-    Module.End.mul_apply] <;> ring
+    Module.End.mul_apply]
+  all_goals ring
 
 @[simp] theorem projectorMP_apply (x : Carrier) :
     projectorMP x = ![0, 0, 0, 0, x 4, x 5, x 6, 0] := by
@@ -42,7 +44,8 @@ def projectorMM : CarrierEnd :=
   fin_cases i <;> simp [projectorMP, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,
     exteriorDegreeParity,
-    Module.End.mul_apply] <;> ring
+    Module.End.mul_apply]
+  all_goals ring
 
 @[simp] theorem projectorMM_apply (x : Carrier) :
     projectorMM x = ![0, 0, 0, 0, 0, 0, 0, x 7] := by
@@ -50,7 +53,8 @@ def projectorMM : CarrierEnd :=
   fin_cases i <;> simp [projectorMM, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,
     exteriorDegreeParity,
-    Module.End.mul_apply] <;> ring
+    Module.End.mul_apply]
+  all_goals ring
 
 theorem projectorPP_idempotent : projectorPP * projectorPP = projectorPP := by
   ext x i
@@ -70,7 +74,7 @@ theorem projectors_pairwise_orthogonal :
     projectorPP * projectorMM = 0 ∧ projectorPM * projectorMP = 0 ∧
     projectorPM * projectorMM = 0 ∧ projectorMP * projectorMM = 0 := by
   repeat' constructor
-  all_goals ext x i <;> fin_cases i <;> simp [Module.End.mul_apply]
+  all_goals ext x i; fin_cases i <;> simp [Module.End.mul_apply]
 
 theorem projectors_complete :
     projectorPP + projectorPM + projectorMP + projectorMM = (1 : CarrierEnd) := by

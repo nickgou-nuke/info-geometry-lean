@@ -44,6 +44,7 @@ import InfoGeometry.Clifford.Cl55WittReflectionWordDeterminant
 import InfoGeometry.Clifford.Cl55SpinReflectionWordDeterminant
 import InfoGeometry.Clifford.DiracLorentzQuadraticAction
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
+import InfoGeometry.Clifford.Cl55MoritaDyadicClosure
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl44Spinors

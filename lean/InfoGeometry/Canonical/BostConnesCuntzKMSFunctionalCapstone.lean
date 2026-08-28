@@ -49,6 +49,13 @@ theorem admissible_inverse_temperature_zeta_ne_zero
 noncomputable def timeEvolutionPhase (t : ℝ) (n : ℕ+) : ℂ :=
   Complex.exp (I * (t : ℂ) * (Real.log (n : ℝ) : ℂ))
 
+theorem time_evolution_phase_mul (t : ℝ) (n m : ℕ+) :
+    timeEvolutionPhase t (n * m) =
+      timeEvolutionPhase t n * timeEvolutionPhase t m := by
+  dsimp [timeEvolutionPhase]
+  push_cast
+  rw [Real.log_mul (by positivity) (by positivity), Complex.ofReal_add, mul_add, Complex.exp_add]
+
 /-- 2. Multiplicative adjoint time evolution phase: $\sigma_t(S_n^*) = n^{-it} S_n^*$. -/
 noncomputable def timeEvolutionPhaseInv (t : ℝ) (n : ℕ+) : ℂ :=
   Complex.exp (-(I * (t : ℂ) * (Real.log (n : ℝ) : ℂ)))

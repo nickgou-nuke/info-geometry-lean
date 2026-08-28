@@ -28,9 +28,10 @@ This capstone module formalizes the ultimate non-commutative number-theoretic br
    - The Dirac supercharge Q anticommutes with Möbius parity: {Q, γ} = 0.
    - The Laplacian Δ = Q² commutes with Möbius parity: [Δ, γ] = 0.
 
-3. **Möbius Supertrace & Dirichlet Inverse Zeta Product**:
-   - The finite fermionic supertrace STr(q) yields the Euler product for 1/ζ(s):
-     STr(q) = ∏_{p ∈ P} (1 - q_p).
+3. **Möbius Supertrace & Euler Readout**:
+   - The finite fermionic supertrace yields the finite Euler denominator
+     `∏_{p ∈ P} (1 - q_p)`; the separate infinite inverse-zeta readout is
+     available only on the proved half-plane `Re(s) > 1`.
    - The fermion parity of prime subsets is identically the Möbius function μ(n):
      μ(∏_{p ∈ S} p) = (-1)^|S|.
 

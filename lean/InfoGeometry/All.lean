@@ -7693,4 +7693,5 @@ import InfoGeometry.Physics.HiddenChiralSectorEMDecoupling
 import InfoGeometry.Physics.SolovievCircularChiralProjectionBridge
 import InfoGeometry.Physics.ParaKahlerHessianHamiltonianBridge
 import InfoGeometry.Physics.NuclearSelfConcordantBarrierBridge
+import InfoGeometry.Nuclear.QuantumCramerRaoNuclearBarrierCapstone
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube

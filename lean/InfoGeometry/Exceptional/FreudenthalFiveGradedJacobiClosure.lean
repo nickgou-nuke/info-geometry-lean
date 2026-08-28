@@ -339,4 +339,14 @@ theorem jacobi_extremePlus_extremePlus_extremeMinus
       FiveGradedCarrier.instAdd] <;>
     simp <;> ring
 
+theorem jacobi_extremeMinus_extremePlus_chargePlus
+    (a b : ℝ) (x : FreudenthalCharge J) :
+    fiveJacobiator D (genEminus D a) (genEplus D b)
+        (injChargePlus D x) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, genEminus, genEplus, injChargePlus,
+      injChargeMinus, genHscale, FiveGradedCarrier.instAdd] <;>
+    simp <;> module <;> ring
+
 end InfoGeometry.Exceptional.Freudenthal

@@ -47,20 +47,22 @@ def makeHyperbolicProjectors (K : A) (hK : K * K = 1) :
   ⟨⟨(1 / 2 : ℝ) • (1 : A) + (1 / 2 : ℝ) • K, by
       rw [add_mul, mul_add, mul_add]
       simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_smul, hK]
+      have h_mul : (1 / 2 : ℝ) * (1 / 2 : ℝ) = (1 / 4 : ℝ) := by norm_num
       have h1 : (1 / 4 : ℝ) • (1 : A) + (1 / 4 : ℝ) • (1 : A) = (1 / 2 : ℝ) • (1 : A) := by rw [← add_smul]; norm_num
       have h2 : (1 / 4 : ℝ) • K + (1 / 4 : ℝ) • K = (1 / 2 : ℝ) • K := by rw [← add_smul]; norm_num
       have h_sum : (1 / 2 : ℝ) • (1 : A) + (1 / 2 : ℝ) • K =
           ((1 / 4 : ℝ) • (1 : A) + (1 / 4 : ℝ) • (1 : A)) + ((1 / 4 : ℝ) • K + (1 / 4 : ℝ) • K) := by rw [h1, h2]
-      rw [h_sum]
+      rw [h_mul, h_sum]
       abel⟩,
    ⟨(1 / 2 : ℝ) • (1 : A) - (1 / 2 : ℝ) • K, by
       rw [sub_mul, mul_sub, mul_sub]
       simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_smul, hK]
+      have h_mul : (1 / 2 : ℝ) * (1 / 2 : ℝ) = (1 / 4 : ℝ) := by norm_num
       have h1 : (1 / 4 : ℝ) • (1 : A) + (1 / 4 : ℝ) • (1 : A) = (1 / 2 : ℝ) • (1 : A) := by rw [← add_smul]; norm_num
       have h2 : (1 / 4 : ℝ) • K + (1 / 4 : ℝ) • K = (1 / 2 : ℝ) • K := by rw [← add_smul]; norm_num
       have h_sum : (1 / 2 : ℝ) • (1 : A) - (1 / 2 : ℝ) • K =
           ((1 / 4 : ℝ) • (1 : A) + (1 / 4 : ℝ) • (1 : A)) - ((1 / 4 : ℝ) • K + (1 / 4 : ℝ) • K) := by rw [h1, h2]
-      rw [h_sum]
+      rw [h_mul, h_sum]
       abel⟩⟩
 
 /-- Partition of unity: $P_+ + P_- = 1$. -/

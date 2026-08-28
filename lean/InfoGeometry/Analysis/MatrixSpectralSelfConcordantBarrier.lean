@@ -152,7 +152,36 @@ theorem trace_inv_H_cube_eq_trace_B_cube (V : MatrixVariationConjugation n) :
     rw [Matrix.trace_mul_comm V.A_inv_sqrt, h_assoc]
   rw [h_cyc, ← V.B_def]
 
-/-! ## 4. Master Matrix-to-Spectrum Self-Concordance Barrier Theorem -/
+/-! ## 4. Explicit Matrix-to-Spectrum Equality Theorems -/
+
+/-- 🏆 THEOREM: The Hessian quadratic form $\nabla^2 \Phi(A)[H, H]$ equals the sum of squared eigenvalues $\sum_i \lambda_i^2$. -/
+theorem hessianQuad_eq_sum_eigenvalues_sq
+    (V : MatrixVariationConjugation n)
+    (C : SymmetricSpectralCarrier n)
+    (h_carrier : V.B = C.B) :
+    hessianQuad V.A_inv V.H = ∑ i : Fin n, (C.eigenvalues i) ^ 2 := by
+  dsimp [hessianQuad]
+  rw [trace_inv_H_sq_eq_trace_B_sq V, h_carrier, spectral_trace_sq C]
+
+/-- 🏆 THEOREM: The 3rd directional derivative $\nabla^3 \Phi(A)[H, H, H]$ equals $-2 \sum_i \lambda_i^3$. -/
+theorem thirdDerivPhi_eq_neg_two_sum_eigenvalues_cube
+    (V : MatrixVariationConjugation n)
+    (C : SymmetricSpectralCarrier n)
+    (h_carrier : V.B = C.B) :
+    thirdDerivPhi V.A_inv V.H = - 2 * ∑ i : Fin n, (C.eigenvalues i) ^ 3 := by
+  dsimp [thirdDerivPhi]
+  rw [trace_inv_H_cube_eq_trace_B_cube V, h_carrier, spectral_trace_cube C]
+
+/-- 🏆 THEOREM: The absolute 3rd derivative $|\nabla^3 \Phi(A)[H, H, H]|$ equals $2 |\sum_i \lambda_i^3|$. -/
+theorem thirdDerivPhi_abs_eq_two_mul_abs_sum_eigenvalues_cube
+    (V : MatrixVariationConjugation n)
+    (C : SymmetricSpectralCarrier n)
+    (h_carrier : V.B = C.B) :
+    |thirdDerivPhi V.A_inv V.H| = 2 * |∑ i : Fin n, (C.eigenvalues i) ^ 3| := by
+  rw [thirdDerivPhi_eq_neg_two_sum_eigenvalues_cube V C h_carrier]
+  rw [abs_mul, abs_neg, abs_two]
+
+/-! ## 5. Master Matrix-to-Spectrum Self-Concordance Barrier Theorem -/
 
 /-- 🏆 MASTER THEOREM: Full matrix-to-spectrum transport of the Nesterov–Nemirovski self-concordance inequality. -/
 theorem matrix_self_concordance_barrier_bound
@@ -160,10 +189,9 @@ theorem matrix_self_concordance_barrier_bound
     (C : SymmetricSpectralCarrier n)
     (h_carrier : V.B = C.B) :
     |thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ) := by
-  dsimp [thirdDerivPhi, hessianQuad]
-  rw [trace_inv_H_sq_eq_trace_B_sq V, trace_inv_H_cube_eq_trace_B_cube V]
-  rw [h_carrier]
-  rw [spectral_trace_sq C, spectral_trace_cube C]
-  exact nesterov_nemirovski_barrier_inequality C.eigenvalues
+  rw [thirdDerivPhi_abs_eq_two_mul_abs_sum_eigenvalues_cube V C h_carrier,
+      hessianQuad_eq_sum_eigenvalues_sq V C h_carrier]
+  have h_spec := spectral_sum_cube_le_sum_sq_three_halves C.eigenvalues
+  nlinarith
 
 end InfoGeometry.Analysis.MatrixSpectral

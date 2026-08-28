@@ -238,6 +238,38 @@ theorem cuntz_partition_of_unity (g : HField) (w : BinaryWord) :
       | inr heq => exact heq
     simp [h1]
 
+theorem cuntz_partition_of_unity_field (g : HField) :
+    P_left g + P_right g = g := by
+  funext w
+  exact cuntz_partition_of_unity g w
+
+def P_left_linear : HField →ₗ[ℝ] HField where
+  toFun := P_left
+  map_add' g h := by
+    funext w
+    simp [P_left, add_apply]
+  map_smul' c g := by
+    funext w
+    simp [P_left, smul_apply]
+
+def P_right_linear : HField →ₗ[ℝ] HField where
+  toFun := P_right
+  map_add' g h := by
+    funext w
+    simp [P_right, add_apply]
+  map_smul' c g := by
+    funext w
+    simp [P_right, smul_apply]
+
+theorem P_left_linear_apply (g : HField) : P_left_linear g = P_left g := rfl
+
+theorem P_right_linear_apply (g : HField) : P_right_linear g = P_right g := rfl
+
+theorem cuntz_partition_of_unity_linear (g : HField) :
+    P_left_linear g + P_right_linear g = g := by
+  rw [P_left_linear_apply, P_right_linear_apply]
+  exact cuntz_partition_of_unity_field g
+
 /-! ## 5. Zorn's Lemma for Cuntz Boundary Subsystems -/
 
 /-- 🏆 THEOREM (Zorn's Lemma for Cuntz Boundary States):

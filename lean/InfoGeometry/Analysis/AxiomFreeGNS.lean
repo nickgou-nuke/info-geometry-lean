@@ -153,6 +153,52 @@ readout condition, not a C*-algebra positivity assertion.
 def QuadraticPositive (φ : (H → H) → ℝ) : Prop :=
   ∀ A : H → H, 0 ≤ φ (A ∘ A)
 
+/--
+Derivation of KMS scaling on the operator algebra from Cuntz partition of unity and Jaynes symmetry.
+-/
+theorem left_right_kms_scaling_of_cuntz_jaynes
+    (φ : (H → H) → ℝ)
+    (h_add : ∀ A B, φ (A + B) = φ A + φ B)
+    (h_partition : ∀ A, (S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right) = A)
+    (h_symm : ∀ A, φ (S_left ∘ A ∘ star_S_left) = φ (S_right ∘ A ∘ star_S_right)) :
+    LeftKMSScaling φ ∧ RightKMSScaling φ := by
+  constructor
+  · intro A
+    have h_tot : φ A = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := by
+      calc
+        φ A = φ ((S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right)) := by rw [h_partition A]
+        _ = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := h_add _ _
+    have h_double : φ A = 2 * φ (S_left ∘ A ∘ star_S_left) := by
+      rw [h_tot, h_symm A]
+      ring
+    linarith
+  · intro A
+    have h_tot : φ A = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := by
+      calc
+        φ A = φ ((S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right)) := by rw [h_partition A]
+        _ = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := h_add _ _
+    have h_double : φ A = 2 * φ (S_right ∘ A ∘ star_S_right) := by
+      rw [h_tot, ← h_symm A]
+      ring
+    linarith
+
+/--
+Derivation of cross-branch KMS vanishing from algebraic orthogonality.
+-/
+theorem cross_kms_zero_of_orthogonal
+    (φ : (H → H) → ℝ)
+    (h_zero : φ 0 = 0)
+    (h_ortho_LR : ∀ A, (S_left ∘ A ∘ star_S_right) = 0)
+    (h_ortho_RL : ∀ A, (S_right ∘ A ∘ star_S_left) = 0) :
+    CrossKMSLeftRightZero φ ∧ CrossKMSRightLeftZero φ := by
+  constructor
+  · intro A
+    rw [h_ortho_LR A]
+    exact h_zero
+  · intro A
+    rw [h_ortho_RL A]
+    exact h_zero
+
 namespace CuntzKMSState
 
 /-! ## 2. The composition pairing -/

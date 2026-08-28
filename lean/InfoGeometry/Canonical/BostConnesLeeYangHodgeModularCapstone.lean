@@ -13,9 +13,9 @@ import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Arithmetic.RiemannZetaPrimonSouriauCayleyCapstone
 
 /-!
-# Bost-Connes Lee-Yang Circle Theorem, Hodge-Dirac Laplacian, and Prime $\text{Cl}(1,1)$ Modular Capstone
+# Bost-Connes/Cayley Algebraic Readouts and Prime $\text{Cl}(1,1)$ Capstone
 
-This capstone module formalizes the grand non-commutative synthesis connecting:
+This capstone module composes existing, property-gated algebraic results connecting:
 
 1. **Prime $\text{Cl}(1,1)$ Modular Atoms & Möbius Parity**:
    - For every prime mode $p$, the local Clifford atom $(c, d)$ generates the Möbius parity $\gamma = c d$.
@@ -26,14 +26,16 @@ This capstone module formalizes the grand non-commutative synthesis connecting:
      the Laplacian $\Delta = Q^2$ strictly commutes with the parity: $[\Delta, \gamma] = 0$.
    - 🏆 THEOREM: $Q^2 \gamma = \gamma Q^2$.
 
-3. **Lee-Yang Circle Theorem & Cayley Compactification**:
+3. **Scalar Cayley unit-norm readout**:
    - The Cayley transform $\mathcal{C}(x) = \frac{x - i}{x + i}$ maps the real spectrum of $\Delta$
      identically onto the compact Lee-Yang unit circle $\mathbb{T} = \{z \in \mathbb{C} \mid |z| = 1\}$.
-   - 🏆 THEOREM: $|\mathcal{C}(x)|^2 = 1$ for all real eigenvalues.
+   - 🏆 THEOREM: $|\mathcal{C}(x)|^2 = 1$ for every real $x$.
+   - This is not a Lee--Yang zero theorem, a spectral theorem for $\Delta$, or a
+     statement about the Riemann zeta function.
 
-4. **Zero-Temperature Cuntz $\mathcal{O}_2$ Boundary Anomaly Cancellation & Yang-Baxter Invariance**:
-   - Jaynes Maximum Entropy state: $p_L = p_R = 1/2$.
-   - Chiral anomaly cancellation on the Dirac sea: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
+4. **Algebraic KMS-like cancellation & Yang-Baxter readouts**:
+   - The supplied weighted-state law uses equal branch weights.
+   - Its additive-functional charge difference is zero.
    - Yang-Baxter braid-fusion invariance: $F \cdot B \cdot F = R$ and $F^2 = I_2$.
 -/
 
@@ -68,11 +70,11 @@ theorem dirac_laplacian_commutes_with_mobius_parity
     (Q * Q) * gamma = gamma * (Q * Q) :=
   dirac_sq_commutes_hodge gamma Q h_anti
 
-/-! ## 3. Lee-Yang Circle Theorem & Cayley Compactification -/
+/-! ## 3. Scalar Cayley Unit-Norm Readout -/
 
-/-- 🏆 THEOREM: The Cayley transform maps the real Dirac-Laplacian spectrum strictly
-    onto the Lee-Yang unitary circle:
-    $$|\mathcal{C}(x)|^2 = 1 \qquad \forall x \in \mathbb{R}$$ -/
+/-- 🏆 THEOREM: The supplied Cayley expression has unit norm square on real inputs.
+    This is not a statement about Laplacian eigenvalues, Lee--Yang zeros,
+    or zeta zeros. -/
 theorem lee_yang_circle_compactification_is_unitary (x : ℝ) :
     Complex.normSq (cayleyTransform x) = 1 :=
   cayley_transform_is_unitary x
@@ -80,14 +82,18 @@ theorem lee_yang_circle_compactification_is_unitary (x : ℝ) :
 /-! ## 4. Grand Master Capstone Synthesis -/
 
 /--
-🏆 **PRISTINE MASTER SYNTHESIS: Bost-Connes Lee-Yang Circle $\leftrightarrow$ Hodge-Dirac Laplacian $\leftrightarrow$ Cuntz Holography**
+🏆 **MASTER SYNTHESIS: Prime $\mathrm{Cl}(1,1)$ parity, Hodge-Dirac algebra,
+scalar Cayley readout, Yang-Baxter data, and KMS-like cancellation**
 
 Unifies:
 1. **Prime Möbius Parity Involutivity**: $\gamma^2 = 1$.
 2. **Hodge-Dirac Laplacian Commutation**: $[\Delta, \gamma] = 0$.
-3. **Lee-Yang Unitary Circle Compactification**: $|\mathcal{C}(x)|^2 = 1$.
+3. **Scalar Cayley unit-norm identity**: $|\mathcal{C}(x)|^2 = 1$.
 4. **Yang-Baxter Braid-Fusion Invariance**: $F B F = R$ and $F^2 = I_2$.
-5. **Jaynes-KMS Chiral Anomaly Cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
+5. **KMS-like additive-functional cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
+
+The conclusion is conditional on the displayed algebraic hypotheses and does
+not imply a physical anomaly theorem, Lee--Yang theorem, or Riemann hypothesis.
 -/
 theorem grand_bost_connes_lee_yang_hodge_modular_synthesis
     (atom : Cl11Atom A)

@@ -12,6 +12,8 @@ import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 import InfoGeometry.Arithmetic.RiemannZetaPrimonSouriauCayleyCapstone
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeGasPartitions
+import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
 
 /-!
 # Bost-Connes Lee-Yang Circle Theorem & Super-KMS Phase Transition Capstone
@@ -54,6 +56,7 @@ open InfoGeometry.Canonical.PrimeCl11ModularAtom
 open InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 open InfoGeometry.Arithmetic.PrimonSouriauCayley
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
 
 variable {A : Type*} [Ring A]
 
@@ -139,6 +142,14 @@ theorem critical_line_cayley_transport (s : ℂ) :
     OnCriticalLine s ↔ OnLeeYangCircle (cayleyToFugacity s) :=
   criticalLine_iff_cayley_unitCircle s
 
+/-- In the open critical strip, zeta zeros transport to the completed-Xi
+    Cayley zero locus through the existing arithmetic owner. -/
+theorem critical_strip_zero_cayley_transport
+    {s : ℂ} (hRe : 0 < s.re) (hRe' : s.re < 1) :
+    riemannZeta s = 0 ↔
+      riemannXiCayley (cayleyToFugacity s) = 0 :=
+  riemannXiCayley_zero_iff_riemannZeta_zero_of_strip hRe hRe'
+
 /-! ## 4. Grand Master Capstone Synthesis -/
 
 /--
@@ -160,17 +171,24 @@ theorem grand_bost_connes_lee_yang_super_kms_synthesis
     (Q : A)
     (h_chiral : Q * (atom.mobiusParity) = -(atom.mobiusParity * Q))
     (x : ℝ)
+    {s : ℂ} (hs : 1 < s.re)
     {ι M : Type*} [DecidableEq ι] [CommRing M]
     (modes : Finset ι) (q : ι → M) :
     (atom.mobiusParity * atom.mobiusParity = 1) ∧
     ((Q * Q) * atom.mobiusParity = atom.mobiusParity * (Q * Q)) ∧
+    (laplacian (primeHodgeCarrier atom Q) * hodgeStar (primeHodgeCarrier atom Q) =
+      hodgeStar (primeHodgeCarrier atom Q) * laplacian (primeHodgeCarrier atom Q)) ∧
     (finiteFermionSupertrace modes q = ∏ p ∈ modes, (1 - q p)) ∧
+    (InfoGeometry.Canonical.PrimeGasPartitions.infiniteParityTrace s =
+      (riemannZeta s)⁻¹) ∧
     (Complex.normSq (cayleyTransform x) = 1) ∧
     (F * F = 1) ∧
     (F * B * F = R) :=
   ⟨prime_mobius_parity_sq_eq_one atom,
    dirac_laplacian_commutes_with_mobius_parity atom Q h_chiral,
+   primeHodgeCarrier_laplacian_commutes atom Q h_chiral,
    fermion_supertrace_is_inverse_euler_product modes q,
+   InfoGeometry.Canonical.PrimeGasPartitions.infiniteParityTrace_eq_inverse_riemannZeta hs,
    lee_yang_cayley_compactification_is_unitary x,
    F_sq,
    F_B_F_eq_R⟩

@@ -335,6 +335,7 @@ import InfoGeometry.Clifford.Cl55LCFTPhaseProjection
 import InfoGeometry.Clifford.SouriauGibbsSoftmax
 import InfoGeometry.Clifford.SouriauGibbsSimplexBridge
 import InfoGeometry.Clifford.Cl55NativeNilpotentInterference
+import InfoGeometry.Clifford.Cl55PeirceMoERouting
 
 namespace InfoGeometry
 

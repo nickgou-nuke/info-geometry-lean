@@ -11,7 +11,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Clifford.SouriauThermodynamics
 
-variable {I : Type*} [Fintype I] [Nonempty I]
+variable {I : Type*} [Fintype I]
 
 /-!
 # Finite Gibbs Softmax & Translation Invariance
@@ -46,7 +46,7 @@ noncomputable def partitionFunction (state : ThermalState) (energy : I → ℝ) 
   ∑ i : I, Real.exp (state.beta * energy i)
 
 /-- Positivity of the partition function (since $\exp(x) > 0$ for all $x$). -/
-theorem partitionFunction_pos (state : ThermalState) (energy : I → ℝ) :
+theorem partitionFunction_pos [Nonempty I] (state : ThermalState) (energy : I → ℝ) :
     0 < partitionFunction state energy := by
   dsimp [partitionFunction]
   apply Finset.sum_pos
@@ -55,29 +55,9 @@ theorem partitionFunction_pos (state : ThermalState) (energy : I → ℝ) :
   · exact Finset.univ_nonempty
 
 /-- Non-zero partition function, strictly required for safe Softmax division. -/
-theorem partitionFunction_ne_zero (state : ThermalState) (energy : I → ℝ) :
+theorem partitionFunction_ne_zero [Nonempty I] (state : ThermalState) (energy : I → ℝ) :
     partitionFunction state energy ≠ 0 :=
   ne_of_gt (partitionFunction_pos state energy)
-
-/-! ### Analytic frontier: derivative of the finite log-partition function -/
-
-/--
-The derivative of the finite log-partition function is the Gibbs-weighted
-first moment.  This is a specialization of the analytic `logSumExp` owner;
-it does not assert a variational, Wasserstein, or Ricci-flow interpretation.
--/
-theorem partition_log_deriv_eq_weighted_mean
-    (energy : I → ℝ) (beta : ℝ) :
-    deriv (fun b : ℝ => Real.log (∑ i : I, Real.exp (b * energy i))) beta =
-      (∑ i : I, energy i * Real.exp (beta * energy i)) /
-        (∑ i : I, Real.exp (beta * energy i)) := by
-  have h := InfoGeometry.Analytic.logSumExp_deriv_eq_ratio
-    (w := fun _ : I => (1 : ℝ)) (a := energy)
-    (hw := fun _ => by norm_num) beta
-  simpa [partitionFunction, InfoGeometry.Analytic.logSumExp,
-    InfoGeometry.Analytic.logSumExpPartition,
-    InfoGeometry.Analytic.logSumExpMoment1,
-    mul_comm, mul_left_comm, mul_assoc] using h
 
 /-! ### 2. The Souriau-Gibbs Softmax Operator -/
 
@@ -92,13 +72,56 @@ noncomputable def softmaxGibbs (state : ThermalState) (energy : I → ℝ) (j : 
   Strictly proves that the Softmax distribution sums to exactly 1 over the context window:
   $$\sum_{i \in I} \operatorname{softmax}_i(E) = 1.$$
 -/
-theorem softmaxGibbs_sum_eq_one (state : ThermalState) (energy : I → ℝ) :
+theorem softmaxGibbs_sum_eq_one [Nonempty I] (state : ThermalState) (energy : I → ℝ) :
     ∑ i : I, softmaxGibbs state energy i = 1 := by
   dsimp [softmaxGibbs]
   rw [← Finset.sum_div]
   exact div_self (partitionFunction_ne_zero state energy)
 
-/-! ### 3. Gauge Shift Invariance & Equivariance -/
+/-! ### 3. Analytic frontier: derivative of the finite log-partition function -/
+
+/--
+The derivative of the finite log-partition function is the Gibbs-weighted
+first moment.  This is a specialization of the analytic `logSumExp` owner;
+it does not assert a variational, Wasserstein, or Ricci-flow interpretation.
+-/
+theorem partition_log_deriv_eq_weighted_mean [Nonempty I]
+    (energy : I → ℝ) (beta : ℝ) :
+    deriv (fun b : ℝ => Real.log (∑ i : I, Real.exp (b * energy i))) beta =
+      (∑ i : I, energy i * Real.exp (beta * energy i)) /
+        (∑ i : I, Real.exp (beta * energy i)) := by
+  have heq : (fun b : ℝ => Real.log (∑ i : I, Real.exp (b * energy i))) =
+      InfoGeometry.Analytic.logSumExp (fun _ : I => (1 : ℝ)) energy := by
+    ext b
+    simp [InfoGeometry.Analytic.logSumExp, InfoGeometry.Analytic.logSumExpPartition]
+  rw [heq]
+  have h := InfoGeometry.Analytic.logSumExp_deriv_eq_ratio
+    (w := fun _ : I => (1 : ℝ)) (a := energy)
+    (hw := fun _ => by norm_num) beta
+  rw [h]
+  simp only [InfoGeometry.Analytic.logSumExpMoment1,
+    InfoGeometry.Analytic.logSumExpPartition, one_mul]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i _
+  ring
+
+/--
+The log-partition derivative is the finite Gibbs-weighted energy mean at the
+state's inverse temperature.  This is only a finite readout identity; it
+does not assert a Wasserstein or Ricci-flow interpretation.
+-/
+theorem partition_log_deriv_eq_softmax_mean [Nonempty I]
+    (state : ThermalState) (energy : I → ℝ) :
+    deriv (fun b : ℝ => Real.log (∑ i : I, Real.exp (b * energy i))) state.beta =
+      ∑ i : I, energy i * softmaxGibbs state energy i := by
+  rw [partition_log_deriv_eq_weighted_mean energy state.beta]
+  unfold softmaxGibbs partitionFunction
+  simp only [div_eq_mul_inv]
+  simp_rw [← mul_assoc]
+  rw [← Finset.sum_mul]
+
+/-! ### 4. Gauge Shift Invariance & Equivariance -/
 
 /--
   **THEOREM 2 (Shift Invariance of the Partition Function)**:
@@ -121,9 +144,9 @@ theorem softmaxGibbs_shift_equivariance (state : ThermalState) (energy : I → �
   dsimp [softmaxGibbs]
   rw [partitionFunction_shift_invariant state energy sigma]
 
-/-! ### 4. RoPE Topological Coupling -/
+/-! ### 5. RoPE Topological Coupling -/
 
-variable {T : Type*} [AddCommGroup T] [Fintype T] [Nonempty T]
+variable {T : Type*} [AddCommGroup T] [Fintype T]
 
 /-- Translation equivalence on an abelian index group: $x \mapsto x + c$. -/
 def shiftEquiv (c : T) : T ≃ T :=
@@ -131,12 +154,12 @@ def shiftEquiv (c : T) : T ≃ T :=
 
 /--
   **MASTER THEOREM (Thermodynamic RoPE Invariance Law)**:
-  If the Attention energy strictly evaluates the relative distance $f(n - m)$,
-  shifting the absolute positions of both Query ($m$) and Key ($n$) by constant ($c$)
+  If the Attention energy strictly evaluates the relative distance f(n - m),
+  shifting the absolute positions of both Query (m) and Key (n) by constant (c)
   yields exactly identical Gibbs probabilities:
   $$p_{m+c}(n+c) = p_m(n).$$
 -/
-theorem rope_softmax_invariance
+theorem rope_softmax_invariance [Nonempty T]
     (state : ThermalState)
     (f : T → ℝ)
     (m n c : T) :
@@ -153,18 +176,18 @@ theorem rope_softmax_invariance
     (softmaxGibbs_shift_equivariance state (fun y => f (y - m))
       (shiftEquiv (-c)) (n + c))
 
-/-! ### 5. Grand Thermodynamic Synthesis -/
+/-! ### 6. Grand Thermodynamic Synthesis -/
 
 /--
 **Finite Gibbs/softmax synthesis**
 
 Collects:
-1. Positivity of statistical sum $Z > 0$.
-2. Conservation of probability $\sum p_i = 1$.
-3. Partition function shift invariance $Z(E \circ \sigma) = Z(E)$.
-4. Exact relative-position RoPE invariance $p_{m+c}(n+c) = p_m(n)$.
+1. Positivity of statistical sum Z > 0.
+2. Conservation of probability ∑ p_i = 1.
+3. Partition function shift invariance Z(E ∘ σ) = Z(E).
+4. Exact relative-position RoPE invariance p_{m+c}(n+c) = p_m(n).
 -/
-theorem grand_souriau_softmax_synthesis
+theorem grand_souriau_softmax_synthesis [Nonempty I] [Nonempty T]
     (state : ThermalState) (energy : I → ℝ) (sigma : I ≃ I)
     (f : T → ℝ) (m n c : T) :
     (0 < partitionFunction state energy ∧

@@ -1,6 +1,7 @@
 import DAG.TwoComplex
 import DAG.CocycleBridge
 import DAG.HodgeTheorems
+import Batteries.Data.Array.Lemmas
 
 /-!
 # DAG.TwoComplexColimitRecursor
@@ -145,11 +146,8 @@ from any invariant-specific statement. -/
 theorem foldl_preserves
     {β γ : Type} (xs : Array γ) (step : β → γ → β) (P : β → Prop)
     (hstep : ∀ b x, P b → P (step b x)) (b : β) (hb : P b) :
-    P (xs.foldl step b) := by
-  induction xs using Array.foldl_induct generalizing b with
-  | nil => simpa using hb
-  | @push x xs ih =>
-      simpa [Array.foldl_push] using ih (step b x) (hstep b x hb)
+    P (xs.foldl step b) :=
+  Array.foldl_induction (fun _ v => P v) hb (fun _ v hv => hstep v _ hv)
 
 /- ##Wiring to CocycleBridge -/
 

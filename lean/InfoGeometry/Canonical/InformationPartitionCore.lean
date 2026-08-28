@@ -162,6 +162,82 @@ theorem deriv3_informationPartitionFunction_zero
         (hasDerivAt_const (x := (0 : ℝ)) (c := K))
   simpa using ((hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul).deriv
 
+/-- Fourth derivative of the operatorial partition readout at the origin. -/
+theorem deriv4_informationPartitionFunction_zero
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => informationPartitionFunction ω K v) u) s) t) 0 =
+      ω (K * K * K * K) := by
+  have hfirst : ∀ t : ℝ,
+      deriv (fun s : ℝ => informationPartitionFunction ω K s) t =
+        ω (NormedSpace.exp (t • K) * K) := by
+    intro t
+    exact (hasDerivAt_informationPartitionFunction (ω := ω) (K := K) t).deriv
+  have hsecond : ∀ t : ℝ,
+      HasDerivAt (fun s : ℝ => ω (NormedSpace.exp (s • K) * K))
+        (ω (NormedSpace.exp (t • K) * K * K)) t := by
+    intro t
+    have hExp := hasDerivAt_exp_smul_const K t
+    have hMul : HasDerivAt
+        (fun s : ℝ => NormedSpace.exp (s • K) * K)
+        (NormedSpace.exp (t • K) * K * K) t := by
+      simpa using hExp.mul (hasDerivAt_const (x := t) (c := K))
+    simpa using (hasDerivAt_const (x := t) (c := ω)).clm_apply hMul
+  have hsecond_eq : ∀ t : ℝ,
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ => informationPartitionFunction ω K u) s) t =
+        ω (NormedSpace.exp (t • K) * K * K) := by
+    intro t
+    rw [show (fun s : ℝ =>
+        deriv (fun u : ℝ => informationPartitionFunction ω K u) s) =
+        (fun s : ℝ => ω (NormedSpace.exp (s • K) * K)) by
+          funext s
+          exact hfirst s]
+    exact (hsecond t).deriv
+  have hthird : ∀ t : ℝ,
+      HasDerivAt (fun s : ℝ => ω (NormedSpace.exp (s • K) * K * K))
+        (ω (NormedSpace.exp (t • K) * K * K * K)) t := by
+    intro t
+    have hExp := hasDerivAt_exp_smul_const K t
+    have hMul : HasDerivAt
+        (fun s : ℝ => NormedSpace.exp (s • K) * K * K)
+        (NormedSpace.exp (t • K) * K * K * K) t := by
+      simpa [mul_assoc] using
+        (hExp.mul (hasDerivAt_const (x := t) (c := K))).mul
+          (hasDerivAt_const (x := t) (c := K))
+    simpa using (hasDerivAt_const (x := t) (c := ω)).clm_apply hMul
+  have hthird_eq : ∀ t : ℝ,
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => informationPartitionFunction ω K v) u) s) t =
+        ω (NormedSpace.exp (t • K) * K * K * K) := by
+    intro t
+    rw [show (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => informationPartitionFunction ω K v) u) s) =
+        (fun s : ℝ => ω (NormedSpace.exp (s • K) * K * K)) by
+          funext s
+          exact hsecond_eq s]
+    exact (hthird t).deriv
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ =>
+        deriv (fun u : ℝ =>
+          deriv (fun v : ℝ => informationPartitionFunction ω K v) u) s) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K * K * K)) by
+        funext t
+        exact hthird_eq t]
+  have hExp := hasDerivAt_exp_smul_const K (0 : ℝ)
+  have hMul : HasDerivAt
+      (fun t : ℝ => NormedSpace.exp (t • K) * K * K * K)
+      (K * K * K * K) 0 := by
+    simpa [mul_assoc] using
+      ((hExp.mul (hasDerivAt_const (x := (0 : ℝ)) (c := K))).mul
+        (hasDerivAt_const (x := (0 : ℝ)) (c := K))).mul
+          (hasDerivAt_const (x := (0 : ℝ)) (c := K))
+  simpa using ((hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul).deriv
+
 /-
   let Z : ℝ → ℝ := fun t => informationPartitionFunction ω K t
   have hZ : ∀ t : ℝ, HasDerivAt Z (ω (NormedSpace.exp (t • K) * K)) t := by

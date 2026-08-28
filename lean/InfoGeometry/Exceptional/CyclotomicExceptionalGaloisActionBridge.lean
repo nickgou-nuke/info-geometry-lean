@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
@@ -51,8 +52,36 @@ structure CyclotomicSymplecticRepresentation (N : ℕ) (D : CubicJordanDatum J) 
 
   /-- Invariance of the Freudenthal symplectic pairing under the Galois action. -/
   symplectic_invariant : ∀ (g : (ZMod N)ˣ) (x y : FreudenthalCharge J),
-    FreudenthalCharge.symplecticForm D (act g x) (act g y) =
-      FreudenthalCharge.symplecticForm D x y
+      FreudenthalCharge.symplecticForm D (act g x) (act g y) =
+        FreudenthalCharge.symplecticForm D x y
+
+structure CyclotomicInvariantRepresentation
+    (N : ℕ) (D : CubicJordanDatum J)
+    extends CyclotomicSymplecticRepresentation N D where
+  quartic_invariant : ∀ (g : (ZMod N)ˣ) (x : FreudenthalCharge J),
+    FreudenthalCharge.quarticInvariant D (toCyclotomicSymplecticRepresentation.act g x) =
+      FreudenthalCharge.quarticInvariant D x
+
+def CyclotomicInvariantRepresentation.toFreudenthalInvariantAction
+    {N : ℕ} (rep : CyclotomicInvariantRepresentation N D) :
+    FreudenthalInvariantAction (ZMod N)ˣ J D where
+  act := fun g => rep.toCyclotomicSymplecticRepresentation.act g
+  act_one := by
+    funext x
+    simpa using congrArg
+      (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f x)
+      rep.toCyclotomicSymplecticRepresentation.act_one
+  act_mul := by
+    intro g h
+    funext x
+    simpa using congrArg
+      (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f x)
+      (rep.toCyclotomicSymplecticRepresentation.act_mul g h)
+  preserves_symplecticForm := rep.toCyclotomicSymplecticRepresentation.symplectic_invariant
+  preserves_quarticInvariant := rep.quartic_invariant
+  preserves_zeroCharge := by
+    intro g
+    exact (rep.toCyclotomicSymplecticRepresentation.act g).map_zero
 
 /-- Evidence that two stage actions form the restriction square for `N ∣ M`.
 
@@ -76,9 +105,21 @@ theorem rankTwo_intertwine (g : (ZMod N)ˣ) (x y z : FreudenthalCharge J) :
   simp only [map_add, map_smul]
   rw [rep.symplectic_invariant g y z, rep.symplectic_invariant g x z]
 
+@[simp] theorem act_zeroCharge (g : (ZMod N)ˣ) :
+    rep.act g (0 : FreudenthalCharge J) = 0 := by
+  simpa only [map_zero] using (rep.act g).map_zero
+
 def actHeisenberg (g : (ZMod N)ˣ) (X : HeisenbergElement J) : HeisenbergElement J where
   charge := rep.act g X.charge
   center := X.center
+
+@[simp] theorem actHeisenberg_charge
+    (g : (ZMod N)ˣ) (X : HeisenbergElement J) :
+    (actHeisenberg D rep g X).charge = rep.act g X.charge := rfl
+
+@[simp] theorem actHeisenberg_center
+    (g : (ZMod N)ˣ) (X : HeisenbergElement J) :
+    (actHeisenberg D rep g X).center = X.center := rfl
 
 theorem actHeisenberg_bracket (g : (ZMod N)ˣ) (X Y : HeisenbergElement J) :
     HeisenbergElement.bracket D (actHeisenberg D rep g X)
@@ -144,7 +185,17 @@ theorem restriction_heisenbergBracket_intertwine
       HeisenbergElement.bracket D
         (actHeisenberg D data.upper g X)
         (actHeisenberg D data.upper g Y) := by
-  rw [data.compatible g]
+  apply HeisenbergElement.ext
+  · simpa [actHeisenberg] using
+      congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f X.charge)
+        (data.compatible g).symm
+  · simp only [HeisenbergElement.bracket_center, actHeisenberg]
+    change FreudenthalCharge.symplecticForm D
+        (data.lower.act (ZMod.unitsMap hNM g) X.charge)
+        (data.lower.act (ZMod.unitsMap hNM g) Y.charge) =
+      FreudenthalCharge.symplecticForm D
+        (data.upper.act g X.charge) (data.upper.act g Y.charge)
+    rw [data.lower.symplectic_invariant, data.upper.symplectic_invariant]
 
 theorem restriction_symplectic_intertwine
     {M : ℕ} {hNM : N ∣ M}
@@ -225,6 +276,21 @@ structure TowerCompatibility
     repM.act g x = repN.act (ZMod.unitsMap hNM g) x := by
   rw [C.restricted_action]
 
+theorem TowerCompatibility.restricted_heisenberg_action
+    {N M : ℕ} (hNM : N ∣ M)
+    (repN : CyclotomicSymplecticRepresentation N D)
+    (repM : CyclotomicSymplecticRepresentation M D)
+    (C : TowerCompatibility D hNM repN repM)
+    (g : (ZMod M)ˣ) (X : HeisenbergElement J) :
+    CyclotomicSymplecticRepresentation.actHeisenberg D repM g X =
+      CyclotomicSymplecticRepresentation.actHeisenberg D repN
+        (ZMod.unitsMap hNM g) X := by
+  apply HeisenbergElement.ext
+  · simpa [CyclotomicSymplecticRepresentation.actHeisenberg] using
+      congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f X.charge)
+        (C.restricted_action g)
+  · rfl
+
 theorem TowerCompatibility.restricted_rankTwo
     {N M : ℕ} (hNM : N ∣ M)
     (repN : CyclotomicSymplecticRepresentation N D)
@@ -238,5 +304,24 @@ theorem TowerCompatibility.restricted_rankTwo
   rw [C.restricted_action]
   exact CyclotomicSymplecticRepresentation.rankTwo_intertwine
     D (rep := repN) (ZMod.unitsMap hNM g) x y z
+
+theorem TowerCompatibility.restricted_fiveGraded_action
+    {N M : ℕ} (hNM : N ∣ M)
+    (repN : CyclotomicSymplecticRepresentation N D)
+    (repM : CyclotomicSymplecticRepresentation M D)
+    (C : TowerCompatibility D hNM repN repM)
+    (g : (ZMod M)ˣ) (u : FiveGradedCarrier D) :
+    CyclotomicSymplecticRepresentation.actFiveGraded D repM g u =
+      CyclotomicSymplecticRepresentation.actFiveGraded D repN
+        (ZMod.unitsMap hNM g) u := by
+  apply FiveGradedCarrier.ext
+  · rfl
+  · exact congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.minus1)
+      (C.restricted_action g)
+  · rfl
+  · rfl
+  · exact congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.plus1)
+      (C.restricted_action g)
+  · rfl
 
 end InfoGeometry.Exceptional.Galois

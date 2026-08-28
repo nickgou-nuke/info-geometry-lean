@@ -108,6 +108,31 @@ noncomputable def colimitReadoutMorphism :
     DirichletCoefficientColimit ⟶ DirichletReadoutColimit :=
   dirichletReadoutColimitMap
 
+/-! The colimit readout is a genuine `ModuleCat` morphism.  Consequently its
+algebraic laws are inherited directly from the native morphism, while its
+stage action is fixed by the existing natural-transformation compatibility. -/
+theorem colimitReadoutMorphism_zero :
+    colimitReadoutMorphism (0 : DirichletCoefficientColimit) =
+      (0 : DirichletReadoutColimit) := by
+  exact map_zero (colimitReadoutMorphism.hom)
+
+theorem colimitReadoutMorphism_add (x y : DirichletCoefficientColimit) :
+    colimitReadoutMorphism (x + y) =
+      colimitReadoutMorphism x + colimitReadoutMorphism y := by
+  exact map_add (colimitReadoutMorphism.hom) x y
+
+theorem colimitReadoutMorphism_smul (c : ℂ) (x : DirichletCoefficientColimit) :
+    colimitReadoutMorphism (c • x) =
+      c • colimitReadoutMorphism x := by
+  exact map_smul (colimitReadoutMorphism.hom) c x
+
+theorem colimitReadoutMorphism_stage_compatibility
+    (n : ℕ) (a : DirichletStage n) :
+    colimitReadoutMorphism ((colimit.ι dirichletStageFunctor n).hom a) =
+      (colimit.ι dirichletReadoutTargetFunctor n).hom
+        (finiteDirichletStageReadout n a) := by
+  exact dirichletReadoutColimit_on_stage n a
+
 /-! ## 3. Grand Synthesis Theorem -/
 
 /--

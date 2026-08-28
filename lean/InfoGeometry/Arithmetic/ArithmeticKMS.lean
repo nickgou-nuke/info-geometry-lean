@@ -172,7 +172,7 @@ theorem phase (β : ColdInverseTemperature) :
 
 end ColdInverseTemperature
 
-theorem cold_inverse_temperature_mk (β : ℝ) (hβ : 1 < β) :
+def cold_inverse_temperature_mk (β : ℝ) (hβ : 1 < β) :
     ColdInverseTemperature := ⟨β, hβ⟩
 
 /-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS interface -/

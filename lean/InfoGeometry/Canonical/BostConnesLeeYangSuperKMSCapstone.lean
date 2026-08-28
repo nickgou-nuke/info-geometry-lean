@@ -33,12 +33,13 @@ This capstone module formalizes the ultimate non-commutative number-theoretic br
      μ(∏_{p ∈ S} p) = (-1)^|S|.
 
 4. **Cayley Compactification to the Lee-Yang Circle**:
-   - Maps the critical line Re(s) = 1/2 and Hamiltonian spectrum into the unitary circle:
-     |C(x)|² = 1 for all x ∈ ℝ.
+   - The real spectrum has a unitary Cayley carrier, and the repository's
+     complex chart proves `Re(s) = 1/2 ↔ |s/(1-s)| = 1`.
 
-5. **Zero-Temperature Limit & Yang-Baxter Invariance**:
-   - At β → ∞, thermal excitations freeze out (e^(-β E_1) = 1), collapsing the bulk onto
-     the Cuntz O₂ Cantor boundary with Fibonacci anyon integrability F · B · F = R.
+5. **Finite Yang-Baxter invariance**:
+   - The capstone packages the existing finite braid identities. It does not
+     assert an analytic zero-temperature limit or an infinite Cuntz
+     representation.
 -/
 
 noncomputable section

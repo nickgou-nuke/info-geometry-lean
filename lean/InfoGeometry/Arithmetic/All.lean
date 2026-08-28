@@ -6,6 +6,7 @@ import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEvidence
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisDirectedClosure
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisFieldTower
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisGroupTower
 
 namespace InfoGeometry.Arithmetic.All
 

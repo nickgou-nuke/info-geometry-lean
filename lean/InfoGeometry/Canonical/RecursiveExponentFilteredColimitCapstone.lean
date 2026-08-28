@@ -101,6 +101,19 @@ theorem fredholm_prime_det_inv_succ
   exact fredholm_det_inv_succ
     (fun k => primeCutoffFactor s k) N hN hfactor
 
+theorem fredholm_inverse_colimit_stage_synthesis
+    (s : ℂ) (N : ℕ)
+    (hN : primeRegularizedDetStage s N ≠ 0)
+    (hfactor : primeCutoffFactor s N ≠ 0)
+    (n : ℕ) (a : DirichletStage n) :
+    ((primeRegularizedDetStage s (N + 1))⁻¹ =
+      (primeCutoffFactor s N)⁻¹ * (primeRegularizedDetStage s N)⁻¹) ∧
+    (colimitReadoutMorphism ((colimit.ι dirichletStageFunctor n).hom a) =
+      (colimit.ι dirichletReadoutTargetFunctor n).hom
+        (finiteDirichletStageReadout n a)) :=
+  ⟨fredholm_prime_det_inv_succ s N hN hfactor,
+   dirichletReadoutColimit_on_stage n a⟩
+
 /-- 🏆 THEOREM 3: Diagonal trace-determinant exponential identity: det(exp(A)) = exp(Tr(A)). -/
 theorem diagonal_det_exp_trace {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =

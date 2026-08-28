@@ -61,12 +61,22 @@ Lean:
    - Virasoro generator $L_0 = h \cdot I + N$ developing a rank-2 Jordan cell with nilpotent square zero $N^2 = 0$.
    - $\mathfrak{osp}(1|2)$ superparity protection of the Jordan cell against smooth deformations.
 
-7. **The Hilbert-Pólya Trinity** (`InfoGeometry.Arithmetic.HilbertPolyaThreeOperatorsOneObjectCapstone`):
+7. **The Hilbert-Pólya Trinity & Boson-Fermion Role-Swap** (`InfoGeometry.Arithmetic.HilbertPolyaThreeOperatorsOneObjectCapstone`, `InfoGeometry.Arithmetic.BosonFermionMobiusDualityCapstone`):
    - Unification of the three operators: Bost-Connes Hamiltonian $H$, Hodge Laplacian $\Delta = D^2$, and chiral Dirac $D = \partial + \partial^*$.
-   - $K = \log H$ acting on the fermionic Fock space on the critical line $s = 1/2 + it$.
-   - Fredholm determinant $\det(1 - e^{-\beta H}) = \chi_{\text{alt}}(e^{-\beta H}) = 1/\zeta(\beta) = 0$.
+   - Boson-Fermion duality via Möbius inversion $\mu * \zeta = 1$:
+     - Bosonic sector: $\operatorname{Tr}_{\text{Sym}}(e^{-s H}) = \zeta(s)$ (pole at $s = 1$).
+     - Fermionic sector: $\operatorname{Tr}_{\wedge}(\Gamma e^{-s H}) = \sum \mu(n) n^{-s} = 1/\zeta(s)$ (poles at $\zeta(s) = 0$).
+   - Möbius-twisted Hamiltonian $H_F = \Gamma \cdot H = \operatorname{diag}(\mu(n) \ln n)$.
 
-8. **Thermodynamic LLM Theory Lane** (`InfoGeometry.LLM/`, 26 modules):
+8. **Fock Space Trace Derivation of KMS State & Universal Colimit Lift** (`InfoGeometry.Canonical.BostConnesFockSpaceKMSDerivationCapstone`, `InfoGeometry.NCG.CategoricalColimitKMSStateLiftCapstone`):
+   - Direct derivation of KMS state $\phi_\beta(S_n S_m^*) = \delta_{n,m} \frac{n^{-\beta}}{Z(\beta)}$ from Fock trace $\operatorname{Tr}(A e^{-\beta H})$.
+   - Universal categorical lift across inductive filtered colimit cocones $\varinjlim A_i = A_\infty$.
+
+9. **Two-Tier Uroboros Master Identity** (`InfoGeometry.Arithmetic.UroborosMasterIdentityTwoTierCapstone`):
+   - Tier 1: Finite-stage algebraic duality $\det(I - T_P) \cdot \det(I - T_P)^{-1} = 1$ for any finite prime set $P$.
+   - Tier 2: Analytic Euler product limit $\det(1 - e^{-\beta H})^{-1} = \zeta(\beta)$ and projective closure $\zeta(\beta) \cdot \zeta(\beta)^{-1} = 1$ for $\operatorname{Re}(\beta) > 1, \zeta(\beta) \neq 0$.
+
+10. **Thermodynamic LLM Theory Lane** (`InfoGeometry.LLM/`, 26 modules):
    - Query-Key attention as interaction energy in split-signature $Cl(1,1)$ Krein space.
    - Softmax attention weight as exact KMS/Gibbs thermal equilibrium.
    - MoE router as maximum-entropy Gibbs distribution under Bregman divergence.

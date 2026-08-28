@@ -182,6 +182,15 @@ theorem primeRegularizedDetStage_inv_tendsto_inv_tprod
     Tendsto (fun N : ℕ => (primeRegularizedDetStage s N)⁻¹) atTop (𝓝 L⁻¹) := by
   exact (primeRegularizedDetStage_tendsto_tprod s L hprod).inv₀ hL
 
+theorem primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition
+    (s : ℂ) (N : ℕ) :
+    (primeRegularizedDetStage s N)⁻¹ =
+      InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+        (primeCutoff N) s := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+  rw [Finset.prod_inv_distrib]
+
 /-- The prime-indexed cutoff determinant is nonzero whenever each included
 local factor is nonzero.  This exposes the generic finite-stage theorem at
 the canonical prime cutoff without making an infinite Fredholm claim. -/

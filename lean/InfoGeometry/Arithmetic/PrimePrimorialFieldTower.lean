@@ -48,6 +48,13 @@ def towerEmbed_0_1 : CyclotomicField 2 ℚ →ₐ[ℚ] CyclotomicField 6 ℚ :=
 def towerEmbed_1_2 : CyclotomicField 6 ℚ →ₐ[ℚ] CyclotomicField 30 ℚ :=
   cyclotomicFieldEmbedding (by decide) (by decide) primorialConductor_dvd_1_2
 
+theorem towerEmbed_0_2_comp :
+    towerEmbed_1_2.comp towerEmbed_0_1 =
+      cyclotomicFieldEmbedding (by decide) (by decide) (by decide) := by
+  apply cyclotomicFieldEmbedding_comp (by decide) (by decide) (by decide)
+    primorialConductor_dvd_0_1 primorialConductor_dvd_1_2 (by decide)
+  norm_num [primorialConductor]
+
 /-- Step 2 -> 3: $\mathbb{Q}(\zeta_{30}) \hookrightarrow \mathbb{Q}(\zeta_{210})$ -/
 def towerEmbed_2_3 : CyclotomicField 30 ℚ →ₐ[ℚ] CyclotomicField 210 ℚ :=
   cyclotomicFieldEmbedding (by decide) (by decide) primorialConductor_dvd_2_3

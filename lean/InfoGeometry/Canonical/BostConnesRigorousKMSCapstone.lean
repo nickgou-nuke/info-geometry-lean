@@ -152,7 +152,7 @@ Unifies:
 6. **Yang-Baxter Topological Shield**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
 theorem grand_rigorous_kms_synthesis
-    (β : ℝ) (hβ : 1 < β) (hβ_crit : (1 : ℝ) ≤ 1) (Z_β : ℂ) (n : ℕ+) :
+    (β : ℝ) (hβ : 1 < β) (Z_β : ℂ) (n : ℕ+) :
     (Summable (fun n : ℕ => ((n : ℝ) ^ β)⁻¹)) ∧
     (¬ Summable (fun n : ℕ => ((n : ℝ) ^ (1 : ℝ))⁻¹)) ∧
     (phi_beta β Z_β wordOne = 1 / Z_β) ∧
@@ -162,7 +162,7 @@ theorem grand_rigorous_kms_synthesis
     (F * F = 1) ∧
     (F * B * F = R) :=
   ⟨partitionZ_summable β hβ,
-   partitionZ_diverges 1 hβ_crit,
+   partitionZ_diverges 1 le_rfl,
    phi_beta_one β Z_β,
    phi_beta_kms_commutation β Z_β n,
    moebius_dirichlet_inverse,

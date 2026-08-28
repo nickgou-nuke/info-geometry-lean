@@ -113,12 +113,20 @@ theorem primeCutoff_eq_primeSubtypesBelow_primeAt (N : ℕ) :
   · intro hp
     have hp' : (p : ℕ) ∈ Nat.primesBelow (primeAt N) := by
       exact Nat.mem_primesBelow.mpr ⟨hp, p.property⟩
-    simp [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow,
-      hp']
+    change p ∈
+      (Nat.primesBelow (primeAt N)).attach.map
+        (⟨fun q => ⟨q.1, (Nat.mem_primesBelow.mp q.2).2⟩, _⟩)
+    refine Finset.mem_map.mpr ?_
+    refine ⟨⟨p, hp'⟩, by simp, ?_⟩
+    exact Subtype.ext rfl
   · intro hp
     have hp' : (p : ℕ) ∈ Nat.primesBelow (primeAt N) := by
-      simpa [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow]
-        using hp
+      change p ∈
+        (Nat.primesBelow (primeAt N)).attach.map
+          (⟨fun q => ⟨q.1, (Nat.mem_primesBelow.mp q.2).2⟩, _⟩) at hp
+      rcases Finset.mem_map.mp hp with ⟨q, hq, hqp⟩
+      have : (q : ℕ) = (p : ℕ) := congrArg Subtype.val hqp
+      simpa [this] using q.property
     exact (Nat.mem_primesBelow.mp hp').1
 
 theorem fredholm_det_inv_eq_product_inv

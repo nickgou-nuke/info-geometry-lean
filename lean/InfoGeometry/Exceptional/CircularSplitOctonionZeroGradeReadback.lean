@@ -22,6 +22,30 @@ theorem circularZeroInject_injective :
   · exact congrArg FiveGradedCarrier.zero_symp h
   · exact congrArg FiveGradedCarrier.zero_scale h
 
+theorem circularZeroInject_eq_iff
+    (z w : CircularZeroGrade D) :
+    circularZeroInject D z = circularZeroInject D w ↔ z = w := by
+  constructor
+  · intro h
+    exact circularZeroInject_injective D h
+  · intro h
+    rw [h]
+
+theorem circularZeroInject_zero :
+    circularZeroInject D 0 = 0 := by
+  rfl
+
+theorem circularZeroInject_add
+    (z w : CircularZeroGrade D) :
+    circularZeroInject D (z + w) =
+      circularZeroInject D z + circularZeroInject D w := by
+  apply FiveGradedCarrier.ext <;> simp [circularZeroInject]
+
+theorem circularZeroInject_neg
+    (z : CircularZeroGrade D) :
+    circularZeroInject D (-z) = -circularZeroInject D z := by
+  apply FiveGradedCarrier.ext <;> simp [circularZeroInject]
+
 def circularZeroReadback
     (rootMapPlus rootMapMinus : Fin 3 → J)
     (a b : CircularChargeAtom) : CircularZeroGrade D :=
@@ -52,6 +76,18 @@ theorem circularZeroReadback_swap
       (circularCharge rootMapPlus rootMapMinus a)
       (circularCharge rootMapPlus rootMapMinus b)]
 
+theorem circularZeroReadback_scale_self
+    (rootMapPlus rootMapMinus : Fin 3 → J)
+    (a : CircularChargeAtom) :
+    (circularZeroReadback D rootMapPlus rootMapMinus a a).2 = 0 := by
+  have h := FreudenthalCharge.symplectic_form_skew D
+    (circularCharge rootMapPlus rootMapMinus a)
+    (circularCharge rootMapPlus rootMapMinus a)
+  change FreudenthalCharge.symplecticForm D
+      (circularCharge rootMapPlus rootMapMinus a)
+      (circularCharge rootMapPlus rootMapMinus a) = 0
+  linarith
+
 theorem circular_mixed_bracket_eq_zeroGrade
     (rootMapPlus rootMapMinus : Fin 3 → J)
     (a b : CircularChargeAtom) :
@@ -62,6 +98,21 @@ theorem circular_mixed_bracket_eq_zeroGrade
   rw [circular_mixed_bracket_readback]
   apply FiveGradedCarrier.ext <;>
     simp [circularZeroInject, circularZeroReadback]
+
+theorem circular_mixed_bracket_eq_iff_readback_eq
+    (rootMapPlus rootMapMinus : Fin 3 → J)
+    (a b c e : CircularChargeAtom) :
+    fiveGradedBracket D
+        (toMinusOne D rootMapPlus rootMapMinus a)
+        (toPlusOne D rootMapPlus rootMapMinus b) =
+      fiveGradedBracket D
+        (toMinusOne D rootMapPlus rootMapMinus c)
+        (toPlusOne D rootMapPlus rootMapMinus e) ↔
+    circularZeroReadback D rootMapPlus rootMapMinus a b =
+      circularZeroReadback D rootMapPlus rootMapMinus c e := by
+  rw [circular_mixed_bracket_eq_zeroGrade D rootMapPlus rootMapMinus a b,
+    circular_mixed_bracket_eq_zeroGrade D rootMapPlus rootMapMinus c e]
+  exact circularZeroInject_eq_iff D _ _
 
 theorem circular_zeroGrade_scale_poles
     (rootMapPlus rootMapMinus : Fin 3 → J) :

@@ -99,7 +99,7 @@ theorem primeCutoff_mono {N M : ℕ} (hNM : N ≤ M) :
   unfold primeCutoff
   intro p hp
   rcases Finset.mem_image.mp hp with ⟨i, hi, rfl⟩
-    exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr (lt_of_lt_of_le
+  exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr (lt_of_lt_of_le
     (Finset.mem_range.mp hi) hNM), rfl⟩
 
 noncomputable def primeCutoffValueTower :
@@ -118,9 +118,12 @@ noncomputable def primeCutoffFactor (s : ℂ) (i : ℕ) : ℂ :=
 theorem primeCutoffFactor_eq_exp_log (s : ℂ) (i : ℕ) :
     primeCutoffFactor s i =
       1 - Complex.exp (-s * (Real.log (primeAt i : ℝ) : ℂ)) := by
-  unfold primeCutoffFactor InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight
-  rw [InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge.complexPow_nat_eq_exp_neg_log
-    (primeAt i : ℕ) (primeAt i).property.pos s]
+  have h :=
+    InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge.complexPow_nat_eq_exp_neg_log
+      (primeAt i : ℕ) (primeAt i).property.pos s
+  simpa [primeCutoffFactor,
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight] using
+    congrArg (fun z : ℂ => 1 - z) h
 
 /-- Finite determinant stage indexed by the first `N` primes. -/
 noncomputable def primeRegularizedDetStage (s : ℂ) (N : ℕ) : ℂ :=

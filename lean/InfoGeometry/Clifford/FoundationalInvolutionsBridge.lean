@@ -118,6 +118,11 @@ theorem kreinAdjoint_pairing (A : Mat32) (psi phi : Spinor32) :
 /-- Modular CPT conjugation operator $J = \eta$. -/
 def modularJ : Mat32 := kreinEta
 
+/-- The concrete modular reflection is an involution. -/
+theorem modularJ_involution : modularJ * modularJ = 1 := by
+  dsimp [modularJ]
+  exact kreinEta_sq
+
 /-- **Theorem**: Modular $J$ is self-adjoint with respect to the Krein adjoint: $J^\sharp = J$. -/
 theorem modularJ_krein_selfadjoint :
     kreinAdjoint modularJ = modularJ := by

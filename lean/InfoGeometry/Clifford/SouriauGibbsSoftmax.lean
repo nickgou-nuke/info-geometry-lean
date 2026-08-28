@@ -3,6 +3,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.Logic.Equiv.Basic
+import InfoGeometry.Analytic.LogSumExp
 import Mathlib.Tactic
 
 open Finset
@@ -57,6 +58,26 @@ theorem partitionFunction_pos (state : ThermalState) (energy : I → ℝ) :
 theorem partitionFunction_ne_zero (state : ThermalState) (energy : I → ℝ) :
     partitionFunction state energy ≠ 0 :=
   ne_of_gt (partitionFunction_pos state energy)
+
+/-! ### Analytic frontier: derivative of the finite log-partition function -/
+
+/--
+The derivative of the finite log-partition function is the Gibbs-weighted
+first moment.  This is a specialization of the analytic `logSumExp` owner;
+it does not assert a variational, Wasserstein, or Ricci-flow interpretation.
+-/
+theorem partition_log_deriv_eq_weighted_mean
+    (energy : I → ℝ) (beta : ℝ) :
+    deriv (fun b : ℝ => Real.log (∑ i : I, Real.exp (b * energy i))) beta =
+      (∑ i : I, energy i * Real.exp (beta * energy i)) /
+        (∑ i : I, Real.exp (beta * energy i)) := by
+  have h := InfoGeometry.Analytic.logSumExp_deriv_eq_ratio
+    (w := fun _ : I => (1 : ℝ)) (a := energy)
+    (hw := fun _ => by norm_num) beta
+  simpa [partitionFunction, InfoGeometry.Analytic.logSumExp,
+    InfoGeometry.Analytic.logSumExpPartition,
+    InfoGeometry.Analytic.logSumExpMoment1,
+    mul_comm, mul_left_comm, mul_assoc] using h
 
 /-! ### 2. The Souriau-Gibbs Softmax Operator -/
 

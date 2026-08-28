@@ -333,6 +333,8 @@ import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 import InfoGeometry.Clifford.Cl55MaximalTorus
 import InfoGeometry.Clifford.Cl55LCFTPhaseProjection
 import InfoGeometry.Clifford.SouriauGibbsSoftmax
+import InfoGeometry.Clifford.SouriauGibbsSimplexBridge
+import InfoGeometry.Clifford.Cl55NativeNilpotentInterference
 
 namespace InfoGeometry
 

@@ -6,6 +6,7 @@ import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.Filtered
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.FredholmClosure
+import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
 import InfoGeometry.Canonical.FiniteDirichletFilteredColimitBridge
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
@@ -32,6 +33,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.RecursiveExponentFilteredColimitCapstone
 
 open InfoGeometry.Arithmetic.FredholmClosure
+open InfoGeometry.Arithmetic.ArithmeticKMS
 open InfoGeometry.Canonical.FiniteDirichletFilteredColimitBridge
 open InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 
@@ -134,6 +136,24 @@ theorem grand_recursive_exponent_filtered_colimit_synthesis
    fredholm_det_succ s N,
    diagonal_det_exp_trace v,
    primeRegularizedDetStage_eq_primeCutoff_prod s N,
+   dirichletReadoutColimit_on_stage n a⟩
+
+/-! The cold inverse-temperature guard is transported alongside the finite
+stage data.  No analytic limit is inferred: the final clause is precisely the
+existing colimit injection/readout compatibility theorem. -/
+theorem cold_recursive_exponent_filtered_colimit_synthesis
+    (β : ColdInverseTemperature) (weights : ℕ → ℂ) (s : ℂ) (N : ℕ)
+    (n : ℕ) (a : DirichletStage n) :
+    (1 < β.value) ∧
+    (expProductStage weights (N + 1) = expProductStage weights N * weights N) ∧
+    (primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N * primeCutoffFactor s N) ∧
+    (colimitReadoutMorphism ((colimit.ι dirichletStageFunctor n).hom a) =
+      (colimit.ι dirichletReadoutTargetFunctor n).hom
+        (finiteDirichletStageReadout n a)) :=
+  ⟨β.one_lt,
+   expProductStage_succ weights N,
+   fredholm_det_succ s N,
    dirichletReadoutColimit_on_stage n a⟩
 
 end InfoGeometry.Canonical.RecursiveExponentFilteredColimitCapstone

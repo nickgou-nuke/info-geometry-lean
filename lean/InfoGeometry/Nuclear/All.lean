@@ -4,6 +4,7 @@ import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
 import InfoGeometry.Nuclear.NuclearFiveGradedOperatorReexpression
 import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
 import InfoGeometry.Nuclear.QuantumCramerRaoNuclearBarrierCapstone
+import InfoGeometry.Nuclear.BdGSplitOctonionUnifiedCapstone
 
 namespace InfoGeometry.Nuclear
 

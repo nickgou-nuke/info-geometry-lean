@@ -70,6 +70,8 @@ import InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.Conf3ArnoldDifferentialForms
+import InfoGeometry.Projective.Conf3ConcreteDLog
+import InfoGeometry.Projective.Conf3LogSouriauBridge
 import InfoGeometry.Feynman.FeynmanTwistedDeRhamComplex
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
@@ -161,6 +163,7 @@ import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 import InfoGeometry.Projective.BuresMetricStabilization
 import InfoGeometry.Projective.MacaulayTrackBIngestion
+import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 
 namespace InfoGeometry

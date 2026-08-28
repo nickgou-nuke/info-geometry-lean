@@ -3,6 +3,8 @@ import Mathlib.NumberTheory.PrimeCounting
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
+import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
+import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
 
 /-!
 # Fredholm Closure Ledger
@@ -92,13 +94,45 @@ theorem card_primeCutoff (N : ℕ) : (primeCutoff N).card = N := by
   rw [Finset.card_image_of_injective _ primeAt_injective]
   simp
 
+theorem primeCutoff_mono {N M : ℕ} (hNM : N ≤ M) :
+    primeCutoff N ⊆ primeCutoff M := by
+  unfold primeCutoff
+  intro p hp
+  rcases Finset.mem_image.mp hp with ⟨i, hi, rfl⟩
+    exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr (lt_of_lt_of_le
+    (Finset.mem_range.mp hi) hNM), rfl⟩
+
+noncomputable def primeCutoffValueTower :
+    InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge.FilteredPrimeTower where
+  stage N := (primeCutoff N).image (fun p : Nat.Primes => (p : ℕ))
+  monotone N := by
+    exact Finset.image_subset_image (primeCutoff_mono (Nat.le_succ N))
+  all_prime N p hp := by
+    rcases Finset.mem_image.mp hp with ⟨q, hq, rfl⟩
+    exact q.property
+
 /-- The local fermionic determinant factor at the `i`-th prime. -/
 noncomputable def primeCutoffFactor (s : ℂ) (i : ℕ) : ℂ :=
   1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s (primeAt i)
 
+theorem primeCutoffFactor_eq_exp_log (s : ℂ) (i : ℕ) :
+    primeCutoffFactor s i =
+      1 - Complex.exp (-s * (Real.log (primeAt i : ℝ) : ℂ)) := by
+  unfold primeCutoffFactor InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight
+  rw [InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge.complexPow_nat_eq_exp_neg_log
+    (primeAt i : ℕ) (primeAt i).property.pos s]
+
 /-- Finite determinant stage indexed by the first `N` primes. -/
 noncomputable def primeRegularizedDetStage (s : ℂ) (N : ℕ) : ℂ :=
   regularizedDetStage (primeCutoffFactor s) N
+
+theorem primeRegularizedDetStage_eq_primeCutoff_prod (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      ∏ p ∈ primeCutoff N,
+        (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p) := by
+  unfold primeRegularizedDetStage primeCutoff primeCutoffFactor regularizedDetStage
+  rw [Finset.prod_image]
+  exact primeAt_injective.injOn
 
 /--
 Adding one more finite mode multiplies the cutoff determinant by the new local
@@ -110,10 +144,38 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
 
+/-- Recursive exponential formula for a finite cutoff product.  This is the
+native finite-stage form used before transporting the readout through a
+compatible filtered colimit. -/
+theorem regularizedDetStage_exp_sum (energy : ℕ → ℂ) (N : ℕ) :
+    regularizedDetStage (fun n => Complex.exp (energy n)) N =
+      Complex.exp (∑ n in Finset.range N, energy n) := by
+  induction N with
+  | zero => simp [regularizedDetStage]
+  | succ N ih =>
+      rw [regularizedDetStage_succ, ih, Finset.sum_range_succ, Complex.exp_add]
+
 theorem primeRegularizedDetStage_succ (s : ℂ) (N : ℕ) :
     primeRegularizedDetStage s (N + 1) =
       primeRegularizedDetStage s N * primeCutoffFactor s N := by
-  exact regularizedDetStage_succ (primeCutoffFactor s) N
+  simp [primeRegularizedDetStage, regularizedDetStage,
+    Finset.prod_range_succ]
+
+/-- The prime-indexed cutoff determinant is nonzero whenever each included
+local factor is nonzero.  This exposes the generic finite-stage theorem at
+the canonical prime cutoff without making an infinite Fredholm claim. -/
+theorem primeRegularizedDetStage_ne_zero
+    (s : ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, primeCutoffFactor s n ≠ 0) :
+    primeRegularizedDetStage s N ≠ 0 := by
+  classical
+  induction N with
+  | zero => simp [primeRegularizedDetStage, regularizedDetStage]
+  | succ N ih =>
+      rw [primeRegularizedDetStage_succ]
+      exact mul_ne_zero
+        (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
+        (hfactor N (Nat.lt_succ_self N))
 
 /-- A finite cutoff determinant is nonzero when every included local factor is
 nonzero.  This is the exact finite counterpart of the nonvanishing condition

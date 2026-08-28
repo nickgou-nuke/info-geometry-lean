@@ -4,6 +4,8 @@ import InfoGeometry.Albert.Generations
 import InfoGeometry.Algebra.AiStudioNativeMathlibFindings
 import InfoGeometry.Algebra.AlbertCD
 import InfoGeometry.Algebra.All
+import InfoGeometry.Algebra.CliffordIdealSpinor
+import InfoGeometry.Clifford.CliffordIdealReadback
 import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.AnyonBraidGA
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonArtinBraidOperators
@@ -43,6 +45,7 @@ import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
 import InfoGeometry.Algebra.CliffordCl8SpinorTriality
 import InfoGeometry.Algebra.CliffordGA
+import InfoGeometry.Algebra.CliffordIdealSpinor
 import InfoGeometry.Algebra.Coalgebra.Comodule
 import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
 import InfoGeometry.Algebra.Coalgebra.HopfConvolution

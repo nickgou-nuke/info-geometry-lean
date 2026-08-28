@@ -73,6 +73,9 @@ import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Quantum.ArakiBregmanKMSFlatBoundaryCapstone
 import InfoGeometry.Quantum.ConcreteCuntzHilbertSpaceZornCapstone
 import InfoGeometry.Quantum.JaynesCuntzKMSDerivationCapstone
+import InfoGeometry.Quantum.BostConnesPrimonCantorSpinChainCapstone
+import InfoGeometry.Quantum.BostConnesLeeYangSynthesis
+import InfoGeometry.Quantum.BostConnesPrimonZeroTemperatureLimitCapstone
 
 namespace InfoGeometry
 

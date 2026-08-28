@@ -298,4 +298,26 @@ theorem gibbsFunctional_kms {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
       (fun z : ℂ => (Matrix.trace (gibbsDensity H hH β))⁻¹ * z)
       hKMS
 
+/-! A single finite-stage packet for downstream transport.  Every component is
+proved on the same matrix carrier, so the packet does not introduce a second
+state or operator representation. -/
+
+theorem finite_gibbs_functional_capstone
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ)
+    (X Y : Matrix n n ℂ) :
+    gibbsFunctional H hH β 1 = 1 ∧
+      0 ≤ (gibbsFunctional H hH β (star X * X)).re ∧
+      gibbsFunctional H hH β (star X) =
+        star (gibbsFunctional H hH β X) ∧
+      gibbsFunctional H hH β (H * X - X * H) = 0 ∧
+      gibbsFunctional H hH β (X * Y) =
+        gibbsFunctional H hH β
+          (Y * gibbsImaginaryTimeAlgEquiv H hH β X) :=
+  ⟨gibbsFunctional_one H hH β,
+    gibbsFunctional_positive H hH β X,
+    gibbsFunctional_star H hH β X,
+    gibbsFunctional_commutator_zero H hH β X,
+    gibbsFunctional_kms H hH β X Y⟩
+
 end InfoGeometry.Canonical.FiniteMatrixGibbsFunctional

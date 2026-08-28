@@ -5,6 +5,7 @@ import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
 import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
+import InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge
 
 /-!
 # Fredholm Closure Ledger
@@ -103,6 +104,57 @@ theorem primeCutoff_mono {N M : ℕ} (hNM : N ≤ M) :
   exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr (lt_of_lt_of_le
     (Finset.mem_range.mp hi) hNM), rfl⟩
 
+theorem mem_primeCutoff_iff {N : ℕ} (p : Nat.Primes) :
+    p ∈ primeCutoff N ↔ (p : ℕ) < (primeAt N : ℕ) := by
+  constructor
+  · intro hp
+    have hp' : ∃ i, i ∈ Finset.range N ∧ primeAt i = p := by
+      simpa [primeCutoff] using (show p ∈ primeCutoff N from ‹p ∈ primeCutoff N›)
+    rcases hp' with ⟨i, hi, hEq⟩
+    have hval : (primeAt i : ℕ) = (p : ℕ) := congrArg Subtype.val hEq
+    rw [← hval]
+    exact primeAt_val_strictMono (Finset.mem_range.mp hi)
+  · intro hp
+    rcases Nat.exists_lt_card_nth_eq p.property with ⟨i, _hcard, hi⟩
+    have hiN : i < N := by
+      apply (primeAt_val_strictMono.lt_iff_lt).mp
+      simpa [primeAt] using (show Nat.nth Nat.Prime i < Nat.nth Nat.Prime N by
+        rw [hi]
+        exact hp)
+    exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr hiN, by
+      apply Subtype.ext
+      simpa [primeAt] using hi⟩
+
+theorem primeCutoff_values_eq_primesBelow (N : ℕ) :
+    (primeCutoff N).image (fun p : Nat.Primes => (p : ℕ)) =
+      Nat.primesBelow (primeAt N : ℕ) := by
+  ext x
+  constructor
+  · intro hx
+    rcases Finset.mem_image.mp hx with ⟨p, hp, rfl⟩
+    exact Nat.mem_primesBelow.mpr ⟨
+      mem_primeCutoff_iff p |>.mp hp,
+      p.property⟩
+  · intro hx
+    have hx' := Nat.mem_primesBelow.mp hx
+    let p : Nat.Primes := ⟨x, hx'.2⟩
+    have hp : p ∈ primeCutoff N :=
+      mem_primeCutoff_iff p |>.mpr hx'.1
+    exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
+
+theorem primeCutoff_prod_eq_primesBelow_prod (s : ℂ) (N : ℕ) :
+    (∏ p ∈ primeCutoff N,
+      (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p)⁻¹) =
+      ∏ q ∈ Nat.primesBelow (primeAt N : ℕ),
+        (1 - ((q : ℕ) : ℂ) ^ (-s))⁻¹ := by
+  rw [← primeCutoff_values_eq_primesBelow N]
+  have hinj : Set.InjOn (fun p : Nat.Primes => (p : ℕ)) (primeCutoff N) :=
+    Subtype.val_injective.injOn
+  rw [Finset.prod_image hinj]
+  apply Finset.prod_congr rfl
+  intro p hp
+  rfl
+
 noncomputable def primeCutoffValueTower :
     InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge.FilteredPrimeTower where
   stage N := (primeCutoff N).image (fun p : Nat.Primes => (p : ℕ))
@@ -191,6 +243,18 @@ theorem primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition
   unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
   rw [Finset.prod_inv_distrib]
 
+theorem primeRegularizedDetStage_mul_finiteComplexBosonPartition_eq_one
+    (s : ℂ) (N : ℕ)
+    (hdenom : ∀ p ∈ primeCutoff N,
+      (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p) ≠ 0) :
+    primeRegularizedDetStage s N *
+        InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+          (primeCutoff N) s = 1 := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  rw [← InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_eq_eulerProduct]
+  exact InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_mul_finiteComplexBosonPartition_eq_one
+    (primeCutoff N) s hdenom
+
 /-- The prime-indexed cutoff determinant is nonzero whenever each included
 local factor is nonzero.  This exposes the generic finite-stage theorem at
 the canonical prime cutoff without making an infinite Fredholm claim. -/
@@ -206,6 +270,15 @@ theorem primeRegularizedDetStage_ne_zero
       exact mul_ne_zero
         (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
         (hfactor N (Nat.lt_succ_self N))
+
+/-- Exact inverse identity for a nonzero finite determinant stage.  The
+Fredholm name is only the retained interface label; this result is finite
+matrix algebra and is suitable for stagewise colimit transport. -/
+theorem primeRegularizedDetStage_mul_inv_eq_one
+    (s : ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, primeCutoffFactor s n ≠ 0) :
+    primeRegularizedDetStage s N * (primeRegularizedDetStage s N)⁻¹ = 1 := by
+  exact mul_inv_cancel₀ (primeRegularizedDetStage_ne_zero s N hfactor)
 
 /-- A finite cutoff determinant is nonzero when every included local factor is
 nonzero.  This is the exact finite counterpart of the nonvanishing condition

@@ -91,13 +91,13 @@ theorem secular_root_has_eigenpair_of_coupling_ne_zero
     have h0 := congrFun hc 0
     simpa using hv h0
   · apply (block_eigenpair_iff eQ eP v E ![v, E - eQ]).mpr
-  constructor
-  · simp
-    ring
-  · have hroot' : (eQ - E) * (eP - E) = v ^ 2 := by
-      dsimp [secularPolynomial] at hroot
-      linarith
-    simp
-    nlinarith
+    constructor
+    · simp
+      ring
+    · have hroot' : (eQ - E) * (eP - E) = v ^ 2 := by
+        dsimp [secularPolynomial] at hroot
+        linarith
+      simp
+      nlinarith
 
 end InfoGeometry.Physics.SolovievFiniteSecularEigenproblem

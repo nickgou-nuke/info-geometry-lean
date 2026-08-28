@@ -4423,6 +4423,7 @@ import InfoGeometry.Dynamics.UnruhRindlerTjurinaNumber
 import InfoGeometry.Dynamics.VertexOperatorAlgebra
 import InfoGeometry.Dynamics.WassersteinProximalBridge
 import InfoGeometry.Dynamics.ParaKahlerJKORicciFlowBridge
+import InfoGeometry.Dynamics.ParaKahlerJKOCompositionBridge
 import InfoGeometry.EntropicInference
 import InfoGeometry.Epistemology.SemanticReflector
 import InfoGeometry.ErlangenCoordinateless
@@ -6062,6 +6063,11 @@ import InfoGeometry.Physics.MTheoryZornDirac
 import InfoGeometry.Physics.NCG.BdGAlgebraicCayleyIdentities
 import InfoGeometry.Physics.NCG.NoncommutativeChiralZornAlgebra
 import InfoGeometry.Physics.NeedhamFineStructureConstant
+import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
+import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
+import InfoGeometry.Physics.NuclearPhononRPAAlgebra
+import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
+import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 import InfoGeometry.Physics.Noncommutative.ConnesWassersteinSpectralDistance
 import InfoGeometry.Physics.NoncommutativeGaugeFluctuations
 import InfoGeometry.Physics.Octonion.ChiralZornAlgebra

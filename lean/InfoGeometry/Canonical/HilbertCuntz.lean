@@ -276,6 +276,34 @@ theorem P_left_linear_add_P_right_linear :
   intro g
   exact cuntz_partition_of_unity_linear g
 
+theorem P_left_linear_idempotent :
+    P_left_linear.comp P_left_linear = P_left_linear := by
+  apply LinearMap.ext
+  intro g
+  funext w
+  by_cases hw : w 0 = 0 <;> simp [P_left_linear, P_left, hw]
+
+theorem P_right_linear_idempotent :
+    P_right_linear.comp P_right_linear = P_right_linear := by
+  apply LinearMap.ext
+  intro g
+  funext w
+  by_cases hw : w 0 = 1 <;> simp [P_right_linear, P_right, hw]
+
+theorem P_left_linear_comp_P_right_linear :
+    P_left_linear.comp P_right_linear = 0 := by
+  apply LinearMap.ext
+  intro g
+  funext w
+  by_cases hw : w 0 = 0 <;> simp [P_left_linear, P_right_linear, P_left, P_right, hw]
+
+theorem P_right_linear_comp_P_left_linear :
+    P_right_linear.comp P_left_linear = 0 := by
+  apply LinearMap.ext
+  intro g
+  funext w
+  by_cases hw : w 0 = 1 <;> simp [P_left_linear, P_right_linear, P_left, P_right, hw]
+
 /-! ## 5. Zorn's Lemma for Cuntz Boundary Subsystems -/
 
 /-- 🏆 THEOREM (Zorn's Lemma for Cuntz Boundary States):

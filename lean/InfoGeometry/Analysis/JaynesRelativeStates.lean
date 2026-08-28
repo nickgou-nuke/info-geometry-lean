@@ -68,4 +68,19 @@ theorem jaynes_maxent_derivation
       _ = 1 / 2 := by ring
   exact h_div
 
+/-- A bundled Cuntz $\mathcal{O}_2$ algebra carrying shift generators and the partition of unity. -/
+structure CuntzAlgebra (O2 : Type*) [Ring O2] [StarRing O2] where
+  S_L : O2
+  S_R : O2
+  partition_of_unity : S_L * star S_L + S_R * star S_R = 1
+
+/-- 🏆 THEOREM: Jaynes-Cuntz Derivation on a Bundled Cuntz Algebra.
+    For any state $\phi$ on a Cuntz algebra satisfying the Jaynes left-right symmetry $p_L = p_R = p$,
+    the KMS scaling factor is strictly forced to be $1/2$. -/
+theorem jaynes_maxent_derivation_bundled
+    (O : CuntzAlgebra O2)
+    (φ : State O2) (p : ℂ)
+    (h_kms : IsKMSWeightedState O.S_L O.S_R φ p p) : p = 1 / 2 :=
+  jaynes_maxent_derivation O.S_L O.S_R O.partition_of_unity φ p h_kms
+
 end InfoGeometry.Analysis.JaynesRelativeStates

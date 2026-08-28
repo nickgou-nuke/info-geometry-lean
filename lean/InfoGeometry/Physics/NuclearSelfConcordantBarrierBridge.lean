@@ -233,6 +233,33 @@ theorem nuclear_matrix_self_concordance_sq_bound
     (- 2 * ∑ i : Fin n, (C.eigenvalues i) ^ 3) ^ 2 = 4 * (∑ i : Fin n, (C.eigenvalues i) ^ 3) ^ 2 := by ring
     _ ≤ 4 * (∑ i : Fin n, (C.eigenvalues i) ^ 2) ^ 3 := by linarith
 
+/-! ### 2b. Canonical (Hypothesis-Free) Matrix-to-Spectrum Theorems -/
+
+/-- 🏆 **UNCONDITIONAL THEOREM**: Matrix-to-spectrum Hessian quadratic form on canonical variations. -/
+theorem nuclear_canonical_hessianQuad_eq (V : CanonicalSpectralMatrixVariation n) :
+    hessianQuad V.A_inv V.H = ∑ i : Fin n, (V.eigenvalues i) ^ 2 :=
+  V.hessianQuad_eq
+
+/-- 🏆 **UNCONDITIONAL THEOREM**: Matrix-to-spectrum 3rd directional derivative on canonical variations. -/
+theorem nuclear_canonical_thirdDerivPhi_eq (V : CanonicalSpectralMatrixVariation n) :
+    thirdDerivPhi V.A_inv V.H = - 2 * ∑ i : Fin n, (V.eigenvalues i) ^ 3 :=
+  V.thirdDerivPhi_eq
+
+/-- 🏆 **UNCONDITIONAL THEOREM**: Matrix-to-spectrum absolute 3rd derivative on canonical variations. -/
+theorem nuclear_canonical_thirdDerivPhi_abs_eq (V : CanonicalSpectralMatrixVariation n) :
+    |thirdDerivPhi V.A_inv V.H| = 2 * |∑ i : Fin n, (V.eigenvalues i) ^ 3| :=
+  V.thirdDerivPhi_abs_eq
+
+/-- 🏆 **UNCONDITIONAL THEOREM**: Matrix-level Nesterov-Nemirovski barrier inequality on canonical variations. -/
+theorem nuclear_canonical_matrix_self_concordance_barrier_bound (V : CanonicalSpectralMatrixVariation n) :
+    |thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ) :=
+  V.matrix_self_concordance_barrier_bound
+
+/-- 🏆 **UNCONDITIONAL THEOREM**: Algebraic squared self-concordance bound on canonical variations. -/
+theorem nuclear_canonical_matrix_self_concordance_sq_bound (V : CanonicalSpectralMatrixVariation n) :
+    (thirdDerivPhi V.A_inv V.H) ^ 2 ≤ 4 * (hessianQuad V.A_inv V.H) ^ 3 :=
+  V.matrix_self_concordance_sq_bound
+
 /-! ### 3. Bregman Divergence Hard-Core Repulsion -/
 
 /-- Scalar Bregman divergence / relative entropy: `D_Bregman(x) = exp(-x) - 1 + x`. -/
@@ -311,5 +338,42 @@ theorem grand_nuclear_self_concordant_confinement_synthesis
    bregman_nonneg x,
    bregman_zero,
    nuclear_causal_propagation nb⟩
+
+/--
+🏆 **CANONICAL GRAND SYNTHESIS (HYPOTHESIS-FREE)**:
+Directly executed on a bundled `CanonicalSpectralMatrixVariation n` with ZERO external alignment hypotheses.
+-/
+theorem canonical_grand_nuclear_self_concordant_confinement_synthesis
+    (V : CanonicalSpectralMatrixVariation n)
+    (nb : NuclearSpeedBounds)
+    (x : ℝ) :
+    (hessianQuad V.A_inv V.H = ∑ i : Fin n, (V.eigenvalues i) ^ 2) ∧
+    (|thirdDerivPhi V.A_inv V.H| = 2 * |∑ i : Fin n, (V.eigenvalues i) ^ 3|) ∧
+    ((thirdDerivPhi V.A_inv V.H) ^ 2 ≤ 4 * (hessianQuad V.A_inv V.H) ^ 3) ∧
+    (|thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ)) ∧
+    (0 ≤ bregmanDivergence x) ∧
+    (bregmanDivergence 0 = 0) ∧
+    (nb.c_s < nb.c ∧ nb.v_F < nb.c) :=
+  grand_nuclear_self_concordant_confinement_synthesis V.toConjugation V.toCarrier V.carrier_match nb x
+
+/--
+🏆 **AUTOMATIC DIAGONAL GRAND SYNTHESIS**:
+Directly constructed from any diagonal SPD background $A^{-1/2} = \operatorname{diag}(a_{\text{inv\_sqrt}})$
+and arbitrary diagonal variation $H = \operatorname{diag}(h)$ with NO hypotheses.
+-/
+theorem diagonal_grand_nuclear_self_concordant_confinement_synthesis
+    (a_inv_sqrt h : Fin n → ℝ)
+    (nb : NuclearSpeedBounds)
+    (x : ℝ) :
+    let V := CanonicalSpectralMatrixVariation.fromDiagonal a_inv_sqrt h
+    (hessianQuad V.A_inv V.H = ∑ i : Fin n, (V.eigenvalues i) ^ 2) ∧
+    (|thirdDerivPhi V.A_inv V.H| = 2 * |∑ i : Fin n, (V.eigenvalues i) ^ 3|) ∧
+    ((thirdDerivPhi V.A_inv V.H) ^ 2 ≤ 4 * (hessianQuad V.A_inv V.H) ^ 3) ∧
+    (|thirdDerivPhi V.A_inv V.H| ≤ 2 * (hessianQuad V.A_inv V.H) ^ (3 / 2 : ℝ)) ∧
+    (0 ≤ bregmanDivergence x) ∧
+    (bregmanDivergence 0 = 0) ∧
+    (nb.c_s < nb.c ∧ nb.v_F < nb.c) := by
+  intro V
+  exact canonical_grand_nuclear_self_concordant_confinement_synthesis V nb x
 
 end InfoGeometry.Physics.NuclearBarrier

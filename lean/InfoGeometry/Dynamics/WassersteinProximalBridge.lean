@@ -66,6 +66,27 @@ theorem jkoEntropyStep_eq_exp (η : ℂ) :
 def gaussianHeatEnvelopeStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   jkoEntropyStep (2 * η)
 
+theorem gaussianHeatEnvelopeStep_zero :
+    gaussianHeatEnvelopeStep 0 = 1 := by
+  unfold gaussianHeatEnvelopeStep
+  rw [jkoEntropyStep_eq_logCFTJordanShear]
+  simp [InfoGeometry.Physics.LogCFTJordanShear.unipotentShear]
+
+theorem gaussianHeatEnvelopeStep_eq_exp (η : ℂ) :
+    gaussianHeatEnvelopeStep η =
+      NormedSpace.exp ((2 * η) • infinitesimalNullGenerator) := by
+  unfold gaussianHeatEnvelopeStep
+  exact jkoEntropyStep_eq_exp (2 * η)
+
+theorem gaussianHeatEnvelopeStep_composition (η₁ η₂ : ℂ) :
+    gaussianHeatEnvelopeStep η₁ * gaussianHeatEnvelopeStep η₂ =
+      gaussianHeatEnvelopeStep (η₁ + η₂) := by
+  change errorFlowStep (2 * η₁) * errorFlowStep (2 * η₂) =
+    errorFlowStep (2 * (η₁ + η₂))
+  rw [errorFlow_composition]
+  congr 1
+  ring
+
 /-- The JKO-style proximal steps compose additively in their time parameters. -/
 theorem jkoEntropyStep_composition (η₁ η₂ : ℂ) :
     jkoEntropyStep η₁ * jkoEntropyStep η₂ = jkoEntropyStep (η₁ + η₂) := by
@@ -91,6 +112,37 @@ For the Gaussian heat-envelope convention, variance time accumulates as
 theorem gaussianHeatEnvelope_accumulated_variance_step (η : ℂ) (n : ℕ) :
     ((gaussianHeatEnvelopeStep η) ^ n) 0 1 = (n : ℂ) * (2 * η) := by
   exact jko_accumulated_step (2 * η) n
+
+theorem gaussianHeatEnvelope_flow_stability (η : ℂ) (n : ℕ) :
+    gaussianHeatEnvelopeStep η ^ n =
+      errorFlowStep ((n : ℂ) * (2 * η)) := by
+  exact jko_flow_stability_induction (2 * η) n
+
+theorem gaussianHeatEnvelope_pow (η : ℂ) (n : ℕ) :
+    gaussianHeatEnvelopeStep η ^ n =
+      gaussianHeatEnvelopeStep ((n : ℂ) * η) := by
+  unfold gaussianHeatEnvelopeStep
+  rw [jkoEntropyStep_eq_logCFTJordanShear,
+    jkoEntropyStep_eq_logCFTJordanShear]
+  convert
+    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_pow_eq
+      (2 * η) n) using 1 <;> ring
+
+theorem gaussianHeatEnvelopeStep_mul_neg (η : ℂ) :
+    gaussianHeatEnvelopeStep η * gaussianHeatEnvelopeStep (-η) = 1 := by
+  unfold gaussianHeatEnvelopeStep
+  rw [jkoEntropyStep_eq_logCFTJordanShear,
+    jkoEntropyStep_eq_logCFTJordanShear]
+  simpa using
+    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_mul_neg (2 * η))
+
+theorem gaussianHeatEnvelopeStep_neg_mul (η : ℂ) :
+    gaussianHeatEnvelopeStep (-η) * gaussianHeatEnvelopeStep η = 1 := by
+  unfold gaussianHeatEnvelopeStep
+  rw [jkoEntropyStep_eq_logCFTJordanShear,
+    jkoEntropyStep_eq_logCFTJordanShear]
+  simpa using
+    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_neg_mul (2 * η))
 
 /--
 LCFT monodromy is the same parabolic optimizer envelope at the imaginary step

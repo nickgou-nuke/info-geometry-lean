@@ -235,6 +235,9 @@ import InfoGeometry.Physics.RegularizedSurprisalKernel
 import InfoGeometry.Physics.SpectralFluctuationIdeal
 import InfoGeometry.Physics.SpectralFluctuationDerivative
 import InfoGeometry.Physics.StateFamilyBKMBridge
+import InfoGeometry.Physics.SouriauLieThermodynamics
+import InfoGeometry.Physics.WheelerItFromBit
+import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 
 /-!
 # Physics Umbrella

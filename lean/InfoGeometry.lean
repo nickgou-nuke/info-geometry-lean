@@ -168,6 +168,7 @@ import InfoGeometry.Canonical.BostConnesRigorousKMSCapstone
 import InfoGeometry.Canonical.BostConnesFockSpaceKMSDerivationCapstone
 import InfoGeometry.Arithmetic.UroborosMasterIdentityTwoTierCapstone
 import InfoGeometry.NCG.CategoricalColimitKMSStateLiftCapstone
+import InfoGeometry.Canonical.OperatorLeibnizDerivationSimplexCapstone
 
 namespace InfoGeometry
 

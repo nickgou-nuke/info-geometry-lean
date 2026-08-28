@@ -7742,3 +7742,4 @@ import InfoGeometry.Canonical.BostConnesPhaseTransitionGaloisSSBCapstone
 import InfoGeometry.Arithmetic.JordanWignerMobiusZetaMasterBridge
 import InfoGeometry.Critical.LogarithmicCFTCapstone
 import InfoGeometry.Critical.LogCFTCritical
+import InfoGeometry.Arithmetic.HilbertPolyaThreeOperatorsOneObjectCapstone

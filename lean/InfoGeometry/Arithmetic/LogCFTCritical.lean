@@ -26,9 +26,9 @@ open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Canonical.SplitCliffordJordanWigner
 
 /--
-At the critical point `β = 1`, the Virasoro `L₀` on the logarithmic pair is the
-rank-two Jordan cell `h·I + N`.  The proof factors through the already-checked
-`l0_cell_decomposition` in `LogCftMonodromy`.
+The finite Virasoro `L₀` logarithmic pair is the rank-two Jordan cell `h·I + N`.
+The proof factors through the already-checked `l0_cell_decomposition` in
+`LogCftMonodromy`; no thermodynamic identification is assumed here.
 -/
 theorem virasoro_jordan_block_at_critical (h : ℂ) :
     let L0 := virasoroL0Cell h
@@ -58,6 +58,18 @@ theorem critical_divergence_and_jordan_shear :
     ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0) := by
   exact ⟨harmonic_series_diverges,
     nilpotent_jordan_square_zero, nilpotent_jordan_nonzero⟩
+
+/-- The critical arithmetic obstruction and the finite logarithmic cell are
+independent components of one explicit boundary datum. -/
+theorem critical_operator_and_jordan_cell (h : ℂ) :
+    (¬ Summable (bc_eigenvalues 1)) ∧
+    (virasoroL0Cell h = h • (1 : Matrix (Fin 2) (Fin 2) ℂ) + jordanNilpotent) ∧
+    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0) ∧
+    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0) := by
+  exact ⟨operator_not_trace_class_at_critical,
+    virasoro_jordan_block_at_critical h,
+    nilpotent_jordan_square_zero,
+    nilpotent_jordan_nonzero⟩
 
 /--
 Explicit entry-level description of the critical Jordan cell.

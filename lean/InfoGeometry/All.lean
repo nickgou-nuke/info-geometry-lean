@@ -7696,5 +7696,6 @@ import InfoGeometry.Physics.NuclearSelfConcordantBarrierBridge
 import InfoGeometry.Nuclear.QuantumCramerRaoNuclearBarrierCapstone
 import InfoGeometry.Nuclear.BdGSplitOctonionUnifiedCapstone
 import InfoGeometry.Nuclear.DIIITopologicalCompletenessCapstone
+import InfoGeometry.Topology.CyclicCocycleCantor
 import InfoGeometry.Physics.CyclotomicHiggsGaloisDIIICapstone
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube

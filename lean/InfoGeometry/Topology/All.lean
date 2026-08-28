@@ -694,6 +694,7 @@ import InfoGeometry.Topology.ZetaCenteredCoordinateBridge
 import InfoGeometry.Topology.ZetaFlowKleinSemidirectBridge
 import InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge
 import InfoGeometry.Topology.MobiusLogJacobianSurprisalBridge
+import InfoGeometry.Topology.CyclicCocycleCantor
 
 /-!
 # Closed finite-trace closure ledger (topology layer)

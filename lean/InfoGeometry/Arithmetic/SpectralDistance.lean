@@ -45,30 +45,34 @@ theorem primon_spectral_gap_pos : 0 < Real.log 2 := by
   have h1 : (1 : ℝ) < 2 := by norm_num
   exact Real.log_pos h1
 
-/-- The property of a Hamiltonian having a strictly positive spectral gap on an excited subspace. -/
-class HasSpectralGap {H_space : Type*} [NormedAddCommGroup H_space] [NormedSpace ℂ H_space] 
-    (flow : ℝ → (H_space →L[ℂ] H_space)) (gap : ℝ) : Prop where
-  gap_pos : 0 < gap
-  strict_contraction : ∀ (s : ℝ), 0 < s → 
-    ‖flow s‖ ≤ Real.exp (-s * gap)
+/-- The first excited decay factor is strictly smaller than one. -/
+theorem primon_gap_decay_factor_lt_one (s : ℝ) (hs : 0 < s) :
+    (2 : ℝ) ^ (-s) < 1 := by
+  exact Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith)
+
+/-- The exponential and real-power descriptions of the gap factor agree. -/
+theorem primon_gap_decay_factor_eq_exp (s : ℝ) :
+    (2 : ℝ) ^ (-s) = Real.exp (-s * Real.log 2) := by
+  rw [Real.rpow_def_of_pos (by norm_num : (0 : ℝ) < 2)]
+  congr 1
+  ring
 
 variable {H_space : Type*} [NormedAddCommGroup H_space] [NormedSpace ℂ H_space]
 variable (flow : ℝ → (H_space →L[ℂ] H_space))
 
 /-- 🏆 THEOREM: Strict Contraction implies Exponential Distance Decay of Excited States. -/
-theorem strict_contraction_of_spectral_flow (gap : ℝ) (h_gap : HasSpectralGap flow gap)
-    (s : ℝ) (h_s : 0 < s) (v : H_space) :
+theorem vector_bound_of_flow_norm_bound (gap : ℝ) (s : ℝ) (v : H_space)
+    (h_norm : ‖flow s‖ ≤ Real.exp (-s * gap)) :
     ‖flow s v‖ ≤ Real.exp (-s * gap) * ‖v‖ := by
-  have h_norm := h_gap.strict_contraction s h_s
   have h_op : ‖flow s v‖ ≤ ‖flow s‖ * ‖v‖ := ContinuousLinearMap.le_opNorm (flow s) v
   have h_nonneg : 0 ≤ ‖v‖ := norm_nonneg v
   nlinarith
 
 /-- 🏆 THEOREM: Primon Gas Spectral Gap: log 2 gap yields 2^{-s} contraction. -/
-theorem primon_gas_strict_contraction (s : ℝ) (h_s : 0 < s) (v : H_space)
-    (h_gap : HasSpectralGap flow (Real.log 2)) :
+theorem primon_gas_strict_contraction (s : ℝ) (v : H_space)
+    (h_norm : ‖flow s‖ ≤ Real.exp (-s * Real.log 2)) :
     ‖flow s v‖ ≤ (2 : ℝ) ^ (-s) * ‖v‖ := by
-  have h_bound := strict_contraction_of_spectral_flow flow (Real.log 2) h_gap s h_s v
+  have h_bound := vector_bound_of_flow_norm_bound flow (Real.log 2) s v h_norm
   have h2pos : (0 : ℝ) < 2 := by norm_num
   have h_exp : Real.exp (-s * Real.log 2) = (2 : ℝ) ^ (-s) := by
     rw [mul_comm, ← Real.rpow_def_of_pos h2pos]

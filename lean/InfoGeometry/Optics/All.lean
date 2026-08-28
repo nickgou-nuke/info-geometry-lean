@@ -4,6 +4,7 @@ import InfoGeometry.Optics.OperatorValuedCliffordJones
 import InfoGeometry.Optics.OperatorCl11JonesRepresentation
 import InfoGeometry.Optics.SheetWittCircularBasis
 import InfoGeometry.Optics.ChiralCircularTransport
+import InfoGeometry.Optics.ChiralCircularSectorReadout
 import InfoGeometry.Optics.OperatorLoxodromicFiniteReadout
 import InfoGeometry.Optics.Cl55PolarizationBridge
 import InfoGeometry.Optics.OperatorValuedConnection

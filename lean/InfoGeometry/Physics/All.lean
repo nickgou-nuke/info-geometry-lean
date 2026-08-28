@@ -259,6 +259,7 @@ import InfoGeometry.Physics.ParaKahlerHessianHamiltonianBridge
 import InfoGeometry.Physics.CyclotomicHiggsGaloisDIIICapstone
 import InfoGeometry.Physics.OperatorCyclotomicDoubleDavidStarBridge
 import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
+import InfoGeometry.Physics.KleinBottleModularSewing
 
 /-!
 # Physics Umbrella

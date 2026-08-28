@@ -85,6 +85,22 @@ theorem fredholm_det_succ_explicit (s : ℂ) (N : ℕ) :
     primeRegularizedDetStage s 0 = 1 := by
   simp [primeRegularizedDetStage, regularizedDetStage]
 
+theorem fredholm_det_inv_succ
+    (factor : ℕ → ℂ) (N : ℕ)
+    (hN : regularizedDetStage factor N ≠ 0) (hfactor : factor N ≠ 0) :
+    (regularizedDetStage factor (N + 1))⁻¹ =
+      (factor N)⁻¹ * (regularizedDetStage factor N)⁻¹ := by
+  rw [regularizedDetStage_succ, mul_inv₀]
+
+theorem fredholm_prime_det_inv_succ
+    (s : ℂ) (N : ℕ)
+    (hN : primeRegularizedDetStage s N ≠ 0)
+    (hfactor : primeCutoffFactor s N ≠ 0) :
+    (primeRegularizedDetStage s (N + 1))⁻¹ =
+      (primeCutoffFactor s N)⁻¹ * (primeRegularizedDetStage s N)⁻¹ := by
+  exact fredholm_det_inv_succ
+    (fun k => primeCutoffFactor s k) N hN hfactor
+
 /-- 🏆 THEOREM 3: Diagonal trace-determinant exponential identity: det(exp(A)) = exp(Tr(A)). -/
 theorem diagonal_det_exp_trace {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =

@@ -167,6 +167,7 @@ import InfoGeometry.Arithmetic.InfinitePartitionStateClosure
 import InfoGeometry.Canonical.BostConnesRigorousKMSCapstone
 import InfoGeometry.Canonical.BostConnesFockSpaceKMSDerivationCapstone
 import InfoGeometry.Arithmetic.UroborosMasterIdentityTwoTierCapstone
+import InfoGeometry.NCG.CategoricalColimitKMSStateLiftCapstone
 
 namespace InfoGeometry
 

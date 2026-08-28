@@ -58,7 +58,7 @@ theorem positive_bosonic_primon_partition_pos (β : ℝ) (hβ : 1 < β) :
   have hnonneg : ∀ n : ℕ+, 0 ≤ (n.1 : ℝ) ^ (-β) := fun n =>
     Real.rpow_nonneg (Nat.cast_nonneg n.1) (-β)
   have hle : ((1 : ℕ+).1 : ℝ) ^ (-β) ≤ ∑' (n : ℕ+), (n.1 : ℝ) ^ (-β) :=
-    le_hasSum hsum.hasSum 1 hnonneg
+    le_hasSum hsum.hasSum 1 (fun n _ => hnonneg n)
   have h1 : ((1 : ℕ+).1 : ℝ) ^ (-β) = 1 := by simp
   rw [h1] at hle
   exact lt_of_lt_of_le zero_lt_one hle

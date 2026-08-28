@@ -6,6 +6,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Arithmetic.InfinitePartitionStateClosure
 
 /-!
 # Bost-Connes Fock Space Trace Derivation & KMS State Normalization Capstone
@@ -43,6 +44,13 @@ namespace InfoGeometry.Canonical.FockTraceKMS
 /-- The partition function of the Primon gas: $Z(\beta) = \sum_{n=1}^\infty n^{-\beta}$. -/
 def primonPartition (β : ℝ) : ℝ :=
   ∑' n : ℕ+, (n.val : ℝ) ^ (-β)
+
+/-! The positive-index partition is nonzero in the convergent region. -/
+theorem primonPartition_ne_zero_of_one_lt (β : ℝ) (hβ : 1 < β) :
+    primonPartition β ≠ 0 := by
+  exact ne_of_gt
+    (InfoGeometry.Arithmetic.InfinitePartitionStateClosure.positive_bosonic_primon_partition_pos
+      β hβ)
 
 /-- Matrix element of monomial $S_n S_m^*$ in the standard Fock basis:
     $\langle k, S_n S_m^* k \rangle = 1$ if $n = m$ and $n \mid k$, else 0. -/
@@ -131,7 +139,7 @@ Unifies:
 6. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
 theorem grand_fock_trace_kms_synthesis
-    (β : ℝ) (n m : ℕ+) (hnm : n ≠ m) (hZ : primonPartition β ≠ 0) :
+    (β : ℝ) (n m : ℕ+) (hnm : n ≠ m) (hβ : 1 < β) :
     (unnormalizedMonomialTrace β n m = 0) ∧
     (unnormalizedMonomialTrace β 1 1 = primonPartition β) ∧
     (kmsNormalizedState β 1 1 = 1) ∧
@@ -140,6 +148,7 @@ theorem grand_fock_trace_kms_synthesis
     (kmsNormalizedState β n n = (n.val : ℝ) ^ (-β) * kmsNormalizedState β 1 1) ∧
     (F * F = 1) ∧
     (F * B * F = R) :=
+  have hZ : primonPartition β ≠ 0 := primonPartition_ne_zero_of_one_lt β hβ
   ⟨unnormalizedMonomialTrace_offdiag β n m hnm,
    unnormalizedTrace_one_eq_partition β,
    kmsNormalizedState_one β hZ,

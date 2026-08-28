@@ -415,4 +415,32 @@ theorem jacobi_chargeMinus_chargeMinus_sympZero
     ((T : Module.End ℝ (FreudenthalCharge J)) y)
   linarith
 
+theorem jacobi_chargeMinus_chargeMinus_scale
+    (x y : FreudenthalCharge J) (h : ℝ) :
+    fiveJacobiator D (injChargeMinus D x) (injChargeMinus D y)
+        (genHscale D h) = 0 := by
+  dsimp [fiveJacobiator]
+  apply FiveGradedCarrier.ext <;>
+    dsimp [fiveGradedBracket, injChargeMinus, genHscale,
+      FiveGradedCarrier.instAdd]
+  · have h1 : FreudenthalCharge.symplecticForm D x (h • y) = h * FreudenthalCharge.symplecticForm D x y :=
+      (symplecticFormLinear D x).map_smul h y
+    have h2 : FreudenthalCharge.symplecticForm D y (-h • x) = h * FreudenthalCharge.symplecticForm D x y := by
+      have hs : FreudenthalCharge.symplecticForm D y (-h • x) = -h * FreudenthalCharge.symplecticForm D y x :=
+        symplecticForm_smul_right D (-h) y x
+      have hsk := FreudenthalCharge.symplectic_form_skew D x y
+      calc
+        FreudenthalCharge.symplecticForm D y (-h • x) = -h * FreudenthalCharge.symplecticForm D y x := hs
+        _ = -h * (-FreudenthalCharge.symplecticForm D x y) := by rw [hsk]
+        _ = h * FreudenthalCharge.symplecticForm D x y := by ring
+    simp only [zero_smul, smul_zero, add_zero, zero_add, sub_self, mul_zero,
+      neg_zero, symplecticForm_zero_left, symplecticForm_zero_right]
+    rw [h1, h2]
+    ring
+  · simp
+  · simp
+  · simp
+  · simp
+  · simp
+
 end InfoGeometry.Exceptional.Freudenthal

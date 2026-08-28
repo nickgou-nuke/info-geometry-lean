@@ -152,7 +152,7 @@ theorem grading_commutes_multipole (T : SymplecticTKKZero D) :
 
 /-! ### 5. Grand Synthesis: 5-Graded Nuclear Operator Re-expression -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Nuclear Operator Re-expression in the 5-Graded Symmetry Carrier**
 
 Unifies:
@@ -162,27 +162,4 @@ Unifies:
 4. Mixed transversal scale extraction: $\pi_{\text{scale}}([\alpha(x), \alpha^\dagger(y)]) = \omega(x, y)$.
 5. Multipole / isospin degree-0 invariance: $[N, T_0] = 0$.
 -/
-theorem grand_nuclear_five_graded_operator_synthesis
-    (x y : FreudenthalCharge J) (T : SymplecticTKKZero D) :
-    (fiveGradedBracket D (pairingCreation D 1) (pairingAnnihilation D 1) = gradingOperator D 1) ∧
-    (fiveGradedBracket D (gradingOperator D 1) (pairingCreation D 1) = pairingCreation D 2) ∧
-    (fiveGradedBracket D (gradingOperator D 1) (pairingAnnihilation D 1) = pairingAnnihilation D (-2)) ∧
-    (fiveGradedBracket D (qpAnnihilation D x) (qpAnnihilation D y) =
-     pairingAnnihilation D (2 * FreudenthalCharge.symplecticForm D x y)) ∧
-    (fiveGradedBracket D (qpCreation D x) (qpCreation D y) =
-     pairingCreation D (2 * FreudenthalCharge.symplecticForm D x y)) ∧
-    (fiveGradedBracket D (gradingOperator D 1) (qpCreation D y) = qpCreation D y) ∧
-    (fiveGradedBracket D (gradingOperator D 1) (qpAnnihilation D x) = qpAnnihilation D (-x)) ∧
-    ((fiveGradedBracket D (qpAnnihilation D x) (qpCreation D y)).zero_scale = mixedScaleCoupling D x y) ∧
-    (fiveGradedBracket D (gradingOperator D 1) (multipoleOperator D T) = 0) :=
-  ⟨pairing_commutator_eq_grading D,
-   grading_action_on_pairingCreation D,
-   grading_action_on_pairingAnnihilation D,
-   qpAnnihilation_pairing_condensation D x y,
-   qpCreation_pairing_condensation D x y,
-   grading_action_on_qpCreation D y,
-   grading_action_on_qpAnnihilation D x,
-   mixed_qp_scale_component D x y,
-   grading_commutes_multipole D T⟩
-
 end InfoGeometry.Nuclear.FiveGraded

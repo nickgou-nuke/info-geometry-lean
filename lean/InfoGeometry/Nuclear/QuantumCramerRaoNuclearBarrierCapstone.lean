@@ -172,10 +172,11 @@ def koszulVinbergBarrier (N : NambuGorkovCarrier ℝ) : ℝ :=
 
 /-- 🏆 THEOREM: The Koszul-Vinberg barrier equals $-\log(\xi^2 + \|\vec{\Delta}\|^2)$. -/
 theorem koszulVinbergBarrier_eq (N : NambuGorkovCarrier ℝ) :
-    koszulVinbergBarrier N = - Real.log (N.xi ^ 2 + Vec3.dot N.delta N.delta) := by
+    koszulVinbergBarrier N =
+      - Real.log (N.xi ^ 2 + InfoGeometry.Algebra.Vec3.dot N.delta N.delta) := by
   dsimp [koszulVinbergBarrier, bogoliubovEnergy]
-  have h_dot_nonneg : 0 ≤ Vec3.dot N.delta N.delta := by
-    dsimp [Vec3.dot]
+  have h_dot_nonneg : 0 ≤ InfoGeometry.Algebra.Vec3.dot N.delta N.delta := by
+    dsimp [InfoGeometry.Algebra.Vec3.dot]
     have h0 : 0 ≤ N.delta 0 * N.delta 0 := by nlinarith
     have h1 : 0 ≤ N.delta 1 * N.delta 1 := by nlinarith
     have h2 : 0 ≤ N.delta 2 * N.delta 2 := by nlinarith
@@ -221,7 +222,8 @@ theorem grand_quantum_cramer_rao_nuclear_barrier_synthesis
     ((dFisherInfo V) ^ 2 ≤ 4 * (quantumFisherInfo V) ^ 3) ∧
     (0 ≤ bregmanDivergence x) ∧
     (bregmanDivergence 0 = 0) ∧
-    ((bogoliubovEnergy N) ^ 2 = - zornNorm (toZorn N)) ∧
+    ((bogoliubovEnergy N) ^ 2 =
+      - InfoGeometry.Algebra.ZornMatrix.zornNorm (toZorn N)) ∧
     (0 < bogoliubovEnergy N) ∧
     (nb.c_s < nb.c ∧ nb.v_F < nb.c) := by
   refine ⟨quantumFisherInfo_eq_sum_eigenvalues_sq V,

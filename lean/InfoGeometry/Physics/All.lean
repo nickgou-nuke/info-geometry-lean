@@ -261,6 +261,7 @@ import InfoGeometry.Physics.OperatorCyclotomicDoubleDavidStarBridge
 import InfoGeometry.Physics.DoubleFieldTheoryO55NarainCapstone
 import InfoGeometry.Physics.KleinBottleModularSewing
 import InfoGeometry.Physics.KleinBottleSewingExact
+import InfoGeometry.Physics.MasterUnifiedTheoryOfQuantumMatterCapstone
 
 /-!
 # Physics Umbrella

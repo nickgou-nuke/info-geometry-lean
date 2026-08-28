@@ -55,6 +55,22 @@ theorem bkm_weight_pos_diag (i : n) : 0 < rho.bkmWeight i i := by
   rw [if_pos rfl]
   exact rho.p_pos i
 
+theorem bkm_weight_pos (i j : n) : 0 < rho.bkmWeight i j := by
+  dsimp [bkmWeight]
+  by_cases h_eq : rho.eigenvalues i = rho.eigenvalues j
+  · rw [if_pos h_eq]
+    exact rho.p_pos i
+  · rw [if_neg h_eq]
+    rcases lt_or_gt_of_ne h_eq with hlt | hgt
+    · have hlog : Real.log (rho.eigenvalues i) <
+          Real.log (rho.eigenvalues j) :=
+        Real.strictMonoOn_log (rho.p_pos i) (rho.p_pos j) hlt
+      exact div_pos_of_neg_of_neg (sub_neg.mpr hlt) (sub_neg.mpr hlog)
+    · have hlog : Real.log (rho.eigenvalues j) <
+          Real.log (rho.eigenvalues i) :=
+        Real.strictMonoOn_log (rho.p_pos j) (rho.p_pos i) hgt
+      exact div_pos (sub_pos.mpr hgt) (sub_pos.mpr hlog)
+
 /-- Genuine Kubo-Mori-Bogoliubov (BKM) Inner Product on Matrix Operators:
     <A, B>_{BKM, ρ} = ∑_{i, j} A_ji * B_ji * c(p_i, p_j). -/
 def bkmInnerProduct (A B : Matrix n n ℝ) : ℝ :=
@@ -85,6 +101,35 @@ theorem bkm_metric_pos_semidef_diag (A : Matrix n n ℝ)
   have h_prod : A j i * A j i * rho.bkmWeight i j = (A j i) ^ 2 * rho.bkmWeight i j := by ring
   rw [h_prod]
   exact mul_nonneg h_sq (h_pos_weight i j)
+
+/-- Strict positivity of the diagonal spectral BKM form.  The hypothesis on
+  every logarithmic-mean weight is explicit; this theorem does not promote
+  the diagonal spectral model to the general noncommutative pairing. -/
+theorem bkm_metric_pos_definite_diag (A : Matrix n n ℝ)
+    (h_pos_weight : ∀ i j, 0 < rho.bkmWeight i j)
+    (hA : A ≠ 0) :
+    0 < rho.bkmInnerProduct A A := by
+  have h_entry : ∃ i, ∃ j, A j i ≠ 0 := by
+    by_contra h
+    apply hA
+    ext j i
+    by_contra hij
+    exact h ⟨i, ⟨j, hij⟩⟩
+  obtain ⟨i₀, j₀, hA₀⟩ := h_entry
+  dsimp [bkmInnerProduct]
+  have h_inner :
+      0 < ∑ j : n, A j i₀ * A j i₀ * rho.bkmWeight i₀ j := by
+    refine Finset.sum_pos' ?_ ⟨j₀, Finset.mem_univ _, ?_⟩
+    · intro j hj
+      exact mul_nonneg (mul_self_nonneg (A j i₀))
+        (le_of_lt (h_pos_weight i₀ j))
+    · exact mul_pos (mul_self_pos.mpr hA₀) (h_pos_weight i₀ j₀)
+  refine Finset.sum_pos' ?_ ⟨i₀, Finset.mem_univ _, h_inner⟩
+  intro i hi
+  apply Finset.sum_nonneg
+  intro j hj
+  exact mul_nonneg (mul_self_nonneg (A j i))
+    (le_of_lt (h_pos_weight i j))
 
 end FaithfulDensityState
 

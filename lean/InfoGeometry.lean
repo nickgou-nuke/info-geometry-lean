@@ -163,6 +163,8 @@ import InfoGeometry.Canonical.RecursiveExponentFilteredColimitCapstone
 import InfoGeometry.Arithmetic.BosonFermionMobiusTwistedHamiltonianBridge
 import InfoGeometry.Canonical.BostConnesCuntzKMSFunctionalCapstone
 import InfoGeometry.Canonical.BostConnesCuntzKMSStateCapstone
+import InfoGeometry.Arithmetic.InfinitePartitionStateClosure
+import InfoGeometry.Canonical.BostConnesRigorousKMSCapstone
 
 namespace InfoGeometry
 

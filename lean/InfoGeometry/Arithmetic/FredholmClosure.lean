@@ -325,6 +325,19 @@ theorem primeRegularizedDetStage_ne_zero
         (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
         (hfactor N (Nat.lt_succ_self N))
 
+/- The finite determinant is nonzero throughout the absolute-convergence
+half-plane.  This is the denominator fact needed by the finite bosonic
+normalization, not a statement about an infinite Fredholm determinant. -/
+theorem primeRegularizedDetStage_ne_zero_of_one_lt_re
+    {s : ℂ} (hs : 1 < s.re) (N : ℕ) :
+    primeRegularizedDetStage s N ≠ 0 := by
+  apply primeRegularizedDetStage_ne_zero s N
+  intro n hn
+  simpa [primeCutoffFactor,
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight] using
+    (InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor_ne_zero
+      (primeAt n : ℕ) (primeAt n).property hs)
+
 /-- Exact inverse identity for a nonzero finite determinant stage.  The
 Fredholm name is only the retained interface label; this result is finite
 matrix algebra and is suitable for stagewise colimit transport. -/

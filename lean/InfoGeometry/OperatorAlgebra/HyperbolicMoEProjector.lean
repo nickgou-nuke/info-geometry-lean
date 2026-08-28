@@ -95,6 +95,24 @@ theorem hyperbolic_projectors_diff (K : A) (hK : K * K = 1) :
     abel
   rw [h_sub, h12, one_smul]
 
+/-! The projectors are the two algebraic eigenspaces of the involution. -/
+
+theorem hyperbolic_projector_plus_mul_generator (K : A) (hK : K * K = 1) :
+    (makeHyperbolicProjectors K hK).1.P * K =
+      (makeHyperbolicProjectors K hK).1.P := by
+  dsimp [makeHyperbolicProjectors]
+  rw [add_mul]
+  simp only [Algebra.smul_mul_assoc, one_mul, smul_smul, hK]
+  module
+
+theorem hyperbolic_projector_minus_mul_generator (K : A) (hK : K * K = 1) :
+    (makeHyperbolicProjectors K hK).2.P * K =
+      -((makeHyperbolicProjectors K hK).2.P) := by
+  dsimp [makeHyperbolicProjectors]
+  rw [sub_mul]
+  simp only [Algebra.smul_mul_assoc, one_mul, smul_smul, hK]
+  module
+
 /-! ## 2. Continuous MoE Routing Flow Identity -/
 
 /--

@@ -159,31 +159,6 @@ theorem partitionPolyN2_root_coordinates
       nlinarith [hre, hzre]
     exact ⟨hzre, himsq⟩
 
-/-- The concrete partition polynomial coefficients -/
-def partitionPolyN2_coeffs : (ℕ → ℂ) :=
-  fun n => Polynomial.coeff partitionPolyN2 n
-
-/-- The first few coefficients of the partition polynomial -/
-theorem partitionPolyN2_coeff_0 :
-    Polynomial.coeff partitionPolyN2 0 = 1 := by
-  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
-
-theorem partitionPolyN2_coeff_1 :
-    Polynomial.coeff partitionPolyN2 1 = (-1 : ℂ) := by
-  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
-
-theorem partitionPolyN2_coeff_2 :
-    Polynomial.coeff partitionPolyN2 2 = (1 : ℂ) := by
-  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
-
-theorem partitionPolyN2_coeff_3 :
-    Polynomial.coeff partitionPolyN2 3 = 0 := by
-  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
-
-theorem partitionPolyN2_coeff_4 :
-    Polynomial.coeff partitionPolyN2 4 = 0 := by
-  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
-
 /-- The concrete Lee-Yang stability theorem for N=2 -/
 theorem leeYangStabilityN2 :
     (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) := by

@@ -9,10 +9,10 @@ import InfoGeometry.Arithmetic.BostConnesCriticality
 import InfoGeometry.Canonical.BostConnesPhaseTransitionGaloisSSBCapstone
 
 /-!
-# Logarithmic Conformal Field Theory (logCFT) Capstone at Criticality $\beta = 1$
+# Finite logarithmic Jordan-cell algebra
 
-This capstone module formalizes the exact algebraic structure of Logarithmic CFT
-at the critical temperature pole $\beta = 1$:
+This module formalizes the finite algebraic structure of a rank-two logarithmic
+Jordan cell. It does not identify a thermodynamic critical limit:
 
 1. **Rank-2 Virasoro Jordan Cell**:
    - The Virasoro zero-mode generator $L_0$ is non-diagonalizable on the logarithmic multiplet $(C, D)$.
@@ -27,9 +27,8 @@ at the critical temperature pole $\beta = 1$:
    - $L_0^2 C = h^2 C$.
    - $L_0^2 D = h^2 D + 2h C$.
 
-4. **Connection to $\mathfrak{osp}(1|2)$ and $\beta = 1$ Divergence**:
-   - The harmonic divergence at $\beta = 1$ ($\zeta(1) \to \infty$) collides the degenerate states
-     into indecomposable representations of the $\mathfrak{osp}(1|2)$ superalgebra.
+4. The thermodynamic, zeta, and superalgebraic interpretations require
+   additional concrete definitions and are not asserted by this file.
 
 All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 -/
@@ -125,13 +124,9 @@ theorem grand_log_cft_critical_synthesis
     (J : LogJordanPair V) (β : ℝ) (h_low : isLowTemperaturePhase β) :
     ((J.N.comp J.N) J.D = 0) ∧
     ((J.L_0.comp J.L_0) J.D = (J.h ^ 2) • J.D + (2 * J.h) • J.C) ∧
-    (scomm G1 G2 1 1 = -H3) ∧
-    (F * B * F = R) ∧
     (1 < β) :=
   ⟨J.N_sq_apply_D,
    J.L0_sq_apply_D,
-   G1_G2_anticomm,
-   F_B_F_eq_R,
    critical_temperature_boundary β h_low⟩
 
 end InfoGeometry.Critical.LogCFT

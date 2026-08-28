@@ -7723,3 +7723,4 @@ import InfoGeometry.Quantum.ConcreteCuntzHilbertSpaceZornCapstone
 import InfoGeometry.Quantum.JaynesCuntzKMSDerivationCapstone
 import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Analysis.CuntzKMSStateGNSClosureBridge
+import InfoGeometry.Canonical.InductiveLimitTraceKMSStateCapstone

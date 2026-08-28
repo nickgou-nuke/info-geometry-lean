@@ -339,7 +339,7 @@ theorem prependBit_measure_map_eq_two_restrict_branch (b : Bool) :
     · rintro ⟨y, rfl⟩ i hi
       by_cases hi0 : i = 0
       · subst i; simp [prependBit]
-      · simp [prependBit, hi0, Set.mem_univ]
+      · simp [prependBit, hi0]
     · intro hx
       refine ⟨tail x, ?_⟩
       apply prependBit_tail_of_head

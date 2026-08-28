@@ -123,6 +123,19 @@ structure VerifiedState (G : ProofDAG α) where
   carrier : Set α
   dependency_closed : ∀ {a b : α}, G.le a b → b ∈ carrier → a ∈ carrier
 
+/-! The order on verified states is the order of verified knowledge inclusion. -/
+instance (G : ProofDAG α) : PartialOrder (VerifiedState G) where
+  le S T := S.carrier ⊆ T.carrier
+  le_refl S := subset_rfl
+  le_trans S T U hST hTU := hST.trans hTU
+  le_antisymm S T hST hTS := by
+    cases S with
+    | mk s hs =>
+      cases T with
+      | mk t ht =>
+        congr
+        exact Set.Subset.antisymm hST hTS
+
 /-- Target closure criterion: target `T` is verified in state `S` if `T ∈ S.carrier`. -/
 def IsClosed (G : ProofDAG α) (S : VerifiedState G) (T : α) : Prop :=
   T ∈ S.carrier
@@ -361,6 +374,19 @@ theorem mem_verifiedToward_foldVerifiedStates_iff
     exact ⟨S, hS, hxS, hxT⟩
   · rintro ⟨S, hS, hxS, hxT⟩
     exact ⟨(mem_foldVerifiedStates_iff G x).mpr ⟨S, hS, hxS⟩, hxT⟩
+
+/- Exact subset characterization of a folded target frontier. -/
+theorem verifiedToward_foldVerifiedStates_subset_iff
+    (G : ProofDAG α) {Ss : List (VerifiedState G)} (T : α) (U : Set α) :
+    verifiedToward G (foldVerifiedStates G Ss) T ⊆ U ↔
+      ∀ S ∈ Ss, verifiedToward G S T ⊆ U := by
+  constructor
+  · intro h S hS x hx
+    exact h ((mem_verifiedToward_foldVerifiedStates_iff G x T).mpr ⟨S, hS, hx⟩)
+  · intro h x hx
+    obtain ⟨S, hS, hxS⟩ :=
+      (mem_verifiedToward_foldVerifiedStates_iff G x T).mp hx
+    exact h S hS hxS
 
 theorem mem_foldVerifiedStates_of_mem_all
     (G : ProofDAG α) {Ss : List (VerifiedState G)} (x : α)

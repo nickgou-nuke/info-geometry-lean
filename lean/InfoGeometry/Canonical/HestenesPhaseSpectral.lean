@@ -2,6 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Spectrum
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Krein.DoubledSpace
 
 open scoped InnerProductSpace
 
@@ -140,6 +141,61 @@ theorem isPhaseLinear_comp
     _ = ((InfoGeometry.Krein.clockAxis (E := E)).comp A).comp B := by rw [hA]
     _ = (InfoGeometry.Krein.clockAxis (E := E)).comp (A.comp B) := by
           simp [ContinuousLinearMap.comp_assoc]
+
+/-! The phase-linear carrier is also stable under Hilbert adjunction. -/
+
+theorem isPhaseLinear_adjoint
+    (A : EndH)
+    (hA : IsPhaseLinear (E := E) A) :
+    IsPhaseLinear (E := E) (ContinuousLinearMap.adjoint A) := by
+  unfold IsPhaseLinear at *
+  have h := congrArg ContinuousLinearMap.adjoint hA
+  simpa [ContinuousLinearMap.adjoint_comp,
+    InfoGeometry.Krein.complex_i_adjoint_eq_neg,
+    InfoGeometry.Krein.clockAxis_eq_complex_i] using h.symm
+
+/-! Real scalar multiples remain in the phase-linear carrier. -/
+
+theorem isPhaseLinear_smul
+    (c : ℝ) (A : EndH)
+    (hA : IsPhaseLinear (E := E) A) :
+    IsPhaseLinear (E := E) (c • A) := by
+  unfold IsPhaseLinear at *
+  rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, hA]
+
+/-! The Cayley complex scalar action on the phase-linear carrier. -/
+
+noncomputable def cayleyPhaseSmul (z : ℂ) (A : EndH) : EndH :=
+  z.re • A + z.im • ((InfoGeometry.Krein.clockAxis (E := E)).comp A)
+
+private theorem isPhaseLinear_add_local
+    (A B : EndH)
+    (hA : IsPhaseLinear (E := E) A)
+    (hB : IsPhaseLinear (E := E) B) :
+    IsPhaseLinear (E := E) (A + B) := by
+  unfold IsPhaseLinear at *
+  rw [ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add, hA, hB]
+
+theorem cayleyPhaseSmul_isPhaseLinear
+    (z : ℂ) (A : EndH)
+    (hA : IsPhaseLinear (E := E) A) :
+    IsPhaseLinear (E := E) (cayleyPhaseSmul (E := E) z A) := by
+  unfold cayleyPhaseSmul
+  apply isPhaseLinear_add_local
+  · exact isPhaseLinear_smul (E := E) z.re A hA
+  · apply isPhaseLinear_smul (E := E) z.im
+    apply isPhaseLinear_comp (E := E) Kop A
+    · unfold IsPhaseLinear
+      rfl
+    · exact hA
+
+@[simp] theorem cayleyPhaseSmul_one (A : EndH) :
+    cayleyPhaseSmul (E := E) 1 A = A := by
+  change (1 : ℂ).re • A + (1 : ℂ).im •
+      ((InfoGeometry.Krein.clockAxis (E := E)).comp A) = A
+  rw [show (1 : ℂ).re = 1 by norm_num,
+    show (1 : ℂ).im = 0 by norm_num, one_smul]
+  exact zero_smul ℝ ((InfoGeometry.Krein.clockAxis (E := E)).comp A)
 
 /--
 Projector compatibility interface: any projector commuting with `K = clockAxis` is Hestenes-linear.

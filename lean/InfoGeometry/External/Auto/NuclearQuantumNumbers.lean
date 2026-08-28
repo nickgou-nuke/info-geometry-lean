@@ -186,7 +186,7 @@ noncomputable def nucleusFiveGrading :
           InfoGeometry.Canonical.SL2SpinorLadder.Alg.br (a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisF) (b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisE) = (a * b) • InfoGeometry.Canonical.SL2SpinorLadder.Alg.br InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisF InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisE := by
             rw [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br_smul_left, InfoGeometry.Canonical.SL2SpinorLadder.Alg.br_smul_right, smul_smul]
           _ = (a * b) • (-InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisH) := by norm_num [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisF, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisE, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisH]
-          _ = (-(a * b)) • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisH := by simp [smul_smul]
+          _ = (-(a * b)) • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisH := by simp
       have h_eq' : ⁅a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisF, b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisE⁆ = (-(a * b)) • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisH := h_eq
       rw [h_eq']
       apply Submodule.smul_mem
@@ -196,7 +196,7 @@ noncomputable def nucleusFiveGrading :
       rcases span_singleton_eq_nucleus hX with ⟨a, rfl⟩
       rcases span_singleton_eq_nucleus hY with ⟨b, rfl⟩
       have hzero : InfoGeometry.Canonical.SL2SpinorLadder.Alg.br (a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU) (b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU) = 0 := by
-        simp [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU, smul_smul]
+        simp [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU]
       have hzero' : ⁅a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU, b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisU⁆ = 0 := hzero
       rw [hzero']; exact Submodule.zero_mem (p := nucleusGPosTwo)
     negOne_negOne_mem_negTwo := by
@@ -204,7 +204,7 @@ noncomputable def nucleusFiveGrading :
       rcases span_singleton_eq_nucleus hX with ⟨a, rfl⟩
       rcases span_singleton_eq_nucleus hY with ⟨b, rfl⟩
       have hzero : InfoGeometry.Canonical.SL2SpinorLadder.Alg.br (a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV) (b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV) = 0 := by
-        simp [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV, smul_smul]
+        simp [InfoGeometry.Canonical.SL2SpinorLadder.Alg.br, InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV]
       have hzero' : ⁅a • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV, b • InfoGeometry.Canonical.SL2SpinorLadder.Alg.basisV⁆ = 0 := hzero
       rw [hzero']; exact Submodule.zero_mem (p := nucleusGNegTwo) }
 

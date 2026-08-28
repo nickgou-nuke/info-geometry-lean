@@ -77,6 +77,86 @@ theorem deriv_informationPartitionFunction_zero
   (hasDerivAt_informationPartitionFunction_zero (ω := ω) (K := K)).deriv
 
 /--
+Derivative of the partition function at an arbitrary parameter.  This is the
+native Banach-algebra exponential derivative, followed by the continuous
+linear readout; the factor order is retained.
+-/
+theorem hasDerivAt_informationPartitionFunction
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (τ : ℝ) :
+    HasDerivAt (fun s : ℝ => informationPartitionFunction ω K s)
+      (ω (NormedSpace.exp (τ • K) * K)) τ := by
+  have hExp :
+      HasDerivAt (fun s : ℝ => NormedSpace.exp (s • K))
+        (NormedSpace.exp (τ • K) * K) τ :=
+    hasDerivAt_exp_smul_const K τ
+  simpa [informationPartitionFunction] using
+    (hasDerivAt_const (x := τ) (c := ω)).clm_apply hExp
+
+/-- The second derivative of the partition readout at the origin. -/
+theorem deriv2_informationPartitionFunction_zero
+    (ω : EndH E →L[ℝ] ℝ) (K : EndH E) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => informationPartitionFunction ω K s) t) 0 =
+        ω (K * K) := by
+  have hfirst : ∀ t : ℝ,
+      deriv (fun s : ℝ => informationPartitionFunction ω K s) t =
+        ω (NormedSpace.exp (t • K) * K) := by
+    intro t
+    exact (hasDerivAt_informationPartitionFunction (ω := ω) (K := K) t).deriv
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ => informationPartitionFunction ω K s) t) =
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K)) by
+        funext t; exact hfirst t]
+  have hExp := hasDerivAt_exp_smul_const K (0 : ℝ)
+  have hMul :
+      HasDerivAt (fun t : ℝ => NormedSpace.exp (t • K) * K) (K * K) 0 := by
+    simpa using hExp.mul (hasDerivAt_const (x := (0 : ℝ)) (c := K))
+  have hReadout := (hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul
+  simpa using hReadout.deriv
+
+/-
+  let Z : ℝ → ℝ := fun t => informationPartitionFunction ω K t
+  have hZ : ∀ t : ℝ, HasDerivAt Z (ω (NormedSpace.exp (t • K) * K)) t := by
+    intro t
+    simpa [Z] using
+      (hasDerivAt_informationPartitionFunction (ω := ω) (K := K) t)
+  have hlogderiv : ∀ t : ℝ,
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t =
+        (Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K) := by
+    intro t
+    have h := (hZ t).log (hne t)
+    simpa [Z, logInformationPartitionFunction, informationPartitionFunction,
+      div_eq_mul_inv, mul_comm] using h.deriv
+  have hZprime : HasDerivAt
+      (fun t : ℝ => ω (NormedSpace.exp (t • K) * K)) (ω (K * K)) 0 := by
+    have hExp := hasDerivAt_exp_smul_const K (0 : ℝ)
+    have hMul :
+        HasDerivAt (fun t : ℝ => NormedSpace.exp (t • K) * K) (K * K) 0 := by
+      simpa using hExp.mul (hasDerivAt_const (x := (0 : ℝ)) (c := K))
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := ω)).clm_apply hMul
+  have hZ0 : HasDerivAt Z (ω K) 0 := by
+    simpa [Z, hω1] using (hZ 0)
+  have hinv := hZ0.inv (by simpa [Z, hω1] using hne 0)
+  have hprod := hinv.mul hZprime
+  rw [show (fun t : ℝ =>
+      deriv (fun s : ℝ => logInformationPartitionFunction ω K s) t) =
+      (fun t : ℝ => (Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K)) by
+        funext t; exact hlogderiv t]
+  have hderiv := hprod.deriv
+  have hZzero : Z 0 = 1 := by
+    simp [Z, hω1]
+  have hfun :
+      (Z⁻¹ * (fun t : ℝ => ω (NormedSpace.exp (t • K) * K))) =
+        (fun t : ℝ => (Z t)⁻¹ * ω (NormedSpace.exp (t • K) * K)) := by
+    funext t
+    rfl
+  rw [← hfun]
+  rw [hZzero] at hderiv
+  simpa [informationPartitionFunction, pow_two,
+    sub_eq_add_neg, mul_assoc, mul_left_comm, mul_comm] using hderiv
+-/
+
+/--
 Log-partition derivative at `τ = 0` under the nondegeneracy property
 `ω(1) ≠ 0`.
 -/

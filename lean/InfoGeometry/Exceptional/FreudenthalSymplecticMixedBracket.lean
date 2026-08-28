@@ -73,4 +73,30 @@ theorem symplecticRankTwo_add_right (X Y Y' : FreudenthalCharge J) :
   apply Subtype.ext
   exact symplecticRankTwo_add_right D X Y Y'
 
+theorem mixedSymplecticBracket_smul_left (r : ℝ)
+    (X Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D (r • X) Y =
+      r • mixedSymplecticBracket D X Y := by
+  apply Subtype.ext
+  apply LinearMap.ext
+  intro Z
+  simp [mixedSymplecticBracket, symplecticRankTwo]
+  have h : symplecticFormLinear D (r • X) Z =
+      r * symplecticFormLinear D X Z := by
+    change FreudenthalCharge.symplecticForm D (r • X) Z =
+      r * FreudenthalCharge.symplecticForm D X Z
+    rw [FreudenthalCharge.symplectic_form_skew,
+      symplecticForm_smul_right,
+      FreudenthalCharge.symplectic_form_skew]
+    ring
+  rw [h]
+  module
+
+theorem mixedSymplecticBracket_smul_right (r : ℝ)
+    (X Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D X (r • Y) =
+      r • mixedSymplecticBracket D X Y := by
+  rw [mixedSymplecticBracket_swap, mixedSymplecticBracket_smul_left,
+    mixedSymplecticBracket_swap]
+
 end InfoGeometry.Exceptional.Freudenthal

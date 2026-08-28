@@ -60,9 +60,17 @@ def energyMinus (state : ChiralDoubletState) : ℝ :=
 /-- **THE CHIRAL DOUBLET ENERGY SPLITTING THEOREM**:
     $\Delta E(I) = E_-(I) - E_+(I) = 2\Delta$. -/
 theorem chiral_doublet_energy_splitting (state : ChiralDoubletState) :
-    energyMinus state - energyPlus state = 2 * state.Delta := by
+  energyMinus state - energyPlus state = 2 * state.Delta := by
   dsimp [energyMinus, energyPlus]
   ring
+
+/-- The physical (nonnegative) gap is independent of the sign convention for
+the off-diagonal tunnelling matrix element. -/
+theorem chiral_doublet_absolute_gap (state : ChiralDoubletState) :
+    |energyMinus state - energyPlus state| = 2 * |state.Delta| := by
+  rw [chiral_doublet_energy_splitting]
+  rw [abs_mul]
+  norm_num
 
 /-- **THE CHIRAL STATIC DEGENERACY THEOREM**:
     In the rigid limit with zero tunneling ($\Delta = 0$), the doublet bands are strictly degenerate:

@@ -3,6 +3,8 @@ import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Volume.CocycleFlowEquiv
 import InfoGeometry.Volume.ConnesInfinitesimal
 import InfoGeometry.Volume.ModularSurprisalDerivationBridge
+import InfoGeometry.Volume.ModularSurprisalKillingReadback
+import InfoGeometry.Volume.ModularSurprisalDerivationEquivariance
 import InfoGeometry.Volume.ConnesTomitaKreinBridge
 import InfoGeometry.Volume.DeterminantBundle
 import InfoGeometry.Volume.FunctorialCocycleCalculus

@@ -1,11 +1,15 @@
 import Mathlib
 import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
+import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
+import InfoGeometry.Physics.SolovievTransitionStrength
 
 noncomputable section
 
 namespace InfoGeometry.Physics.SolovievProjectedParameterBridge
 
 open InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
+open InfoGeometry.Physics.SolovievQPNMEigenproblem
+open InfoGeometry.Physics.SolovievTransitionStrength
 
 abbrev Hamiltonian := Matrix (Fin 2) (Fin 2) ℝ
 
@@ -67,6 +71,19 @@ theorem projected_secular_determinant
   rw [← projected_parameter_reconstruction H hSymm]
   exact block_secular_determinant _ _ _ _
 
+/-! The QPNM convention stores the phonon increment rather than the full
+diagonal phonon energy.  This theorem is the exact adapter from the
+projection interface to that convention. -/
+theorem projected_qpnm_matrix_identification
+    (H : Hamiltonian) (hSymm : isSymmetric H) :
+    qpnmMatrix (qpEnergy H) (phononEnergy H - qpEnergy H) (coupling H) = H := by
+  rw [show qpnmMatrix (qpEnergy H) (phononEnergy H - qpEnergy H) (coupling H) =
+      blockHamiltonian (qpEnergy H) (phononEnergy H) (coupling H) by
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [qpnmMatrix, blockHamiltonian]]
+  exact projected_parameter_reconstruction H hSymm
+
 theorem projected_eigenpair_iff
     (H : Hamiltonian) (hSymm : isSymmetric H) (c : Carrier) (E : ℝ) :
     isEigenpair H c E ↔
@@ -83,5 +100,21 @@ theorem diagonal_plus_interaction (H : Hamiltonian) :
 theorem coupling_is_off_diagonal_matrix_element (H : Hamiltonian) :
     interactionPart H 0 1 = coupling H := by
   rfl
+
+/-! The projected interaction parameter is also the transition amplitude
+between the two coordinate basis states.  This is an algebraic readout only;
+no physical operator interpretation is assumed. -/
+theorem coupling_is_basis_transition_amplitude
+    (H : Hamiltonian) (hSymm : isSymmetric H) :
+    amplitude H ![1, 0] ![0, 1] = coupling H := by
+  rw [basis_transition_amplitude]
+  simpa [coupling] using hSymm
+
+theorem coupling_squared_is_basis_transition_strength
+    (H : Hamiltonian) (hSymm : isSymmetric H) :
+    strength H ![1, 0] ![0, 1] = (coupling H) ^ 2 := by
+  rw [show strength H ![1, 0] ![0, 1] =
+      amplitude H ![1, 0] ![0, 1] ^ 2 by rfl]
+  rw [coupling_is_basis_transition_amplitude H hSymm]
 
 end InfoGeometry.Physics.SolovievProjectedParameterBridge

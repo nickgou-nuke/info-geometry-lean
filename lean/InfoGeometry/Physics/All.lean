@@ -253,6 +253,7 @@ import InfoGeometry.Physics.ChiralProjectorTransport
 import InfoGeometry.Physics.ChiralZitterbewegungBridge
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
 import InfoGeometry.Physics.DiracRestChiralTwoSectorBridge
+import InfoGeometry.Physics.HiddenChiralSectorEMDecoupling
 
 /-!
 # Physics Umbrella

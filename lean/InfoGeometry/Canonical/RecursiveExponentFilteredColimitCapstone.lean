@@ -99,6 +99,18 @@ theorem fredholm_prime_det_inv_succ
   exact fredholm_det_inv_succ
     (fun k => primeCutoffFactor s k) N
 
+/-! The two native descriptions of the first `N` prime stages agree: the
+`primeAt` image and the prime subtype cutoff below the next prime are the same
+finite carrier.  This is the concrete set-theoretic wire needed before any
+cutoff readout can be transported between the two owners. -/
+theorem primeCutoff_eq_primeSubtypesBelow_primeAt (N : ℕ) :
+    primeCutoff N =
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow
+        (primeAt N) := by
+  ext p
+  rw [mem_primeCutoff_iff]
+  simp [InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeSubtypesBelow]
+
 theorem fredholm_det_inv_eq_product_inv
     (factor : ℕ → ℂ) (N : ℕ) :
     (regularizedDetStage factor N)⁻¹ =

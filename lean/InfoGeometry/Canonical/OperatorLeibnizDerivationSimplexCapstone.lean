@@ -45,6 +45,26 @@ theorem commutator_leibniz (X Y Z : A) :
   unfold commutator
   noncomm_ring
 
+@[simp] theorem commutator_self (X : A) :
+    commutator X X = 0 := by
+  unfold commutator
+  simp
+
+@[simp] theorem commutator_zero (X : A) :
+    commutator X 0 = 0 := by
+  unfold commutator
+  simp
+
+theorem commutator_add_right (X Y Z : A) :
+    commutator X (Y + Z) = commutator X Y + commutator X Z := by
+  unfold commutator
+  noncomm_ring
+
+theorem commutator_add_left (X Y Z : A) :
+    commutator (X + Y) Z = commutator X Z + commutator Y Z := by
+  unfold commutator
+  noncomm_ring
+
 /-- 🏆 THEOREM 2 (Jacobi Identity for Commutator Lie Algebra):
     $[X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]] = 0$. -/
 theorem commutator_jacobi (X Y Z : A) :
@@ -100,6 +120,17 @@ theorem expNilpotentSimplex_inverse (N : A) (hN : N * N = 0) (s : ℂ) :
     expNilpotentSimplex N s * (1 + s • N) = 1 := by
   exact ⟨expNilpotentSimplex_sq_zero N hN s,
     expNilpotentSimplex_left_inverse N hN s⟩
+
+theorem expNilpotentSimplex_add (N : A) (hN : N * N = 0) (s t : ℂ) :
+    (1 - s • N) * (1 - t • N) = expNilpotentSimplex N (s + t) := by
+  have h_prod : (s • N) * (t • N) = (s * t) • (N * N) := by
+    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  unfold expNilpotentSimplex
+  calc
+    (1 - s • N) * (1 - t • N) =
+        1 - (s + t) • N + (s • N) * (t • N) := by
+          noncomm_ring
+    _ = 1 - (s + t) • N := by rw [h_prod, hN, smul_zero, add_zero]
 
 /--
 🏆 **MASTER SYNTHESIS: Leibniz Derivation and Operator Simplex**

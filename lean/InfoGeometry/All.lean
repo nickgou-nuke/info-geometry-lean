@@ -7505,6 +7505,8 @@ import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 import InfoGeometry.Canonical.DAGCellDoubledExterior3Bridge
 import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 import InfoGeometry.Lie.PeirceDoubledComplexStructure
+import InfoGeometry.Lie.PeirceDoubledDIII
+import InfoGeometry.Lie.PeirceDoubledDIII
 import InfoGeometry.Canonical.ChiralHodgeDiracBlockBridge
 import InfoGeometry.Canonical.DoubledChiralHodgeBlocksBridge
 import InfoGeometry.Canonical.CuntzMatrixRingModuleComparisonBridge
@@ -7718,3 +7720,4 @@ import InfoGeometry.Physics.MatrixMirrorDescentKMSCentralPathCapstone
 import InfoGeometry.Canonical.HilbertCuntz
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube
 import InfoGeometry.Quantum.ConcreteCuntzHilbertSpaceZornCapstone
+import InfoGeometry.Quantum.JaynesCuntzKMSDerivationCapstone

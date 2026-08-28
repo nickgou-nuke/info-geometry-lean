@@ -72,6 +72,7 @@ import InfoGeometry.Quantum.TwinWaveCayleyDickson
 import InfoGeometry.Quantum.QuantumCramerRaoBound
 import InfoGeometry.Quantum.ArakiBregmanKMSFlatBoundaryCapstone
 import InfoGeometry.Quantum.ConcreteCuntzHilbertSpaceZornCapstone
+import InfoGeometry.Quantum.JaynesCuntzKMSDerivationCapstone
 
 namespace InfoGeometry
 

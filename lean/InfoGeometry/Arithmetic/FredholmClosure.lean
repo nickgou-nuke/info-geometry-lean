@@ -176,6 +176,12 @@ theorem primeRegularizedDetStage_tendsto_tprod
   simpa [primeRegularizedDetStage, regularizedDetStage] using
     hprod.tendsto_prod_nat
 
+theorem primeRegularizedDetStage_inv_tendsto_inv_tprod
+    (s : ℂ) (L : ℂ) (hL : L ≠ 0)
+    (hprod : HasProd (primeCutoffFactor s) L) :
+    Tendsto (fun N : ℕ => (primeRegularizedDetStage s N)⁻¹) atTop (𝓝 L⁻¹) := by
+  exact (primeRegularizedDetStage_tendsto_tprod s L hprod).inv₀ hL
+
 /-- The prime-indexed cutoff determinant is nonzero whenever each included
 local factor is nonzero.  This exposes the generic finite-stage theorem at
 the canonical prime cutoff without making an infinite Fredholm claim. -/

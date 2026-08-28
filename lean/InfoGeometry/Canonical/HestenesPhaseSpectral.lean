@@ -194,7 +194,8 @@ theorem cayleyPhaseSmul_isPhaseLinear
   dsimp [cayleyPhaseSmul]
   have hzero : (0 : ℝ) • complex_i.comp A = 0 := by
     ext x
-    simp only [ContinuousLinearMap.smul_apply, zero_smul, ContinuousLinearMap.zero_apply]
+    · simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.zero_apply, zero_smul]
+    · simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.zero_apply, zero_smul]
   rw [one_smul, hzero, add_zero]
 
 /--

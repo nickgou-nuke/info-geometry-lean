@@ -1,3 +1,4 @@
+import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
 import InfoGeometry.Analysis.L2CantorCommutation
 
@@ -80,6 +81,24 @@ theorem branch_weight_one_half
       _ = 1 * (1 / 2 : R) := by rw [h_double]
       _ = (1 / 2 : R) := by ring
   exact ⟨h_left, by rw [← h_symm, h_left]⟩
+
+/-- Specialization of the axiom-free branch-weight theorem to a ring with `I = 1` and `R = ℂ`. -/
+theorem branch_weight_one_half_complex {A : Type*} [Ring A] (φ : A →+ ℂ)
+    (P_L P_R : A)
+    (h_partition : P_L + P_R = 1)
+    (h_norm : φ 1 = 1)
+    (h_symm : φ P_L = φ P_R) :
+    φ P_L = 1 / 2 ∧ φ P_R = 1 / 2 :=
+  branch_weight_one_half φ P_L P_R 1 h_partition h_norm h_symm
+
+/-- Specialization of the axiom-free branch-weight theorem to a real ring with `I = 1` and `R = ℝ`. -/
+theorem branch_weight_one_half_real {A : Type*} [Ring A] (φ : A →+ ℝ)
+    (P_L P_R : A)
+    (h_partition : P_L + P_R = 1)
+    (h_norm : φ 1 = 1)
+    (h_symm : φ P_L = φ P_R) :
+    φ P_L = 1 / 2 ∧ φ P_R = 1 / 2 :=
+  branch_weight_one_half φ P_L P_R 1 h_partition h_norm h_symm
 
 /-! ## 1. The cyclic vector and state readout -/
 

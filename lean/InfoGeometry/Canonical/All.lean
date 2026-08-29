@@ -3493,6 +3493,7 @@ import InfoGeometry.Canonical.AlgorithmicThermodynamicColimitDualityCapstone
 import InfoGeometry.Canonical.IBFreeEnergyMinimization
 import InfoGeometry.Canonical.IBFreeEnergyMinimizationCapstone
 import InfoGeometry.Canonical.RicciLogDetBekensteinGeometryCapstone
+import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 
 namespace InfoGeometry
 

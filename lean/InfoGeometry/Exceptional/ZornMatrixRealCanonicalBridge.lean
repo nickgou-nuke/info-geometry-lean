@@ -58,6 +58,10 @@ def canonicalEquiv : ZornMatrixReal ≃ ZornVectorMatrix ℝ where
 @[simp] theorem canonicalEquiv_symm_apply (X : ZornVectorMatrix ℝ) :
     canonicalEquiv.symm X = fromCanonical X := rfl
 
+@[simp] theorem canonicalEquiv_fromCanonical (X : ZornVectorMatrix ℝ) :
+    canonicalEquiv (fromCanonical X) = X := by
+  exact canonicalEquiv.apply_symm_apply X
+
 theorem toCanonical_add (X Y : ZornMatrixReal) :
     toCanonical (X + Y) =
       InfoGeometry.Algebra.ZornVectorMatrix.add (toCanonical X) (toCanonical Y) := by
@@ -78,9 +82,10 @@ theorem fromCanonical_add (X Y : ZornVectorMatrix ℝ) :
     fromCanonical (ZornVectorMatrix.add X Y) =
       fromCanonical X + fromCanonical Y := by
   apply canonicalEquiv.injective
-  rw [canonicalEquiv_symm_apply, canonicalEquiv_symm_apply,
-    ← canonicalEquiv_symm_apply]
-  exact ZornVectorMatrix.add_readback X Y
+  change canonicalEquiv (canonicalEquiv.symm (ZornVectorMatrix.add X Y)) =
+    canonicalEquiv (fromCanonical X + fromCanonical Y)
+  rw [canonicalEquiv.apply_symm_apply, canonicalEquiv_add]
+  simp [canonicalEquiv, toCanonical, fromCanonical, vecToCanonical_from]
 
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =

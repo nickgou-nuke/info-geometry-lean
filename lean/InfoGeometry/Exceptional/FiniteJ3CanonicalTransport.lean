@@ -8,6 +8,7 @@ namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
 open InfoGeometry.Exceptional.RealZorn
 open InfoGeometry.Algebra
+open InfoGeometry.Algebra.RealSplitOctZornAlignment
 
 def hermitianToH3 (X : HermitianJ3) : H3Zorn ℝ :=
   { α₁ := (X.1 0 0).a
@@ -473,9 +474,19 @@ theorem fromZorn_jordanProduct_entry (X Y : J3) (i k : Fin 3) :
           (canonicalEquiv (X j k)))) = _
   rw [fromZorn_smul, fromZorn_add, fromZorn_sum_fin3, fromZorn_sum_fin3]
   simp_rw [InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_mul]
-  rw [InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_add,
-    InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_add]
-  rw [Fin.sum_univ_three]
+
+theorem fromZorn_jordanProduct_entry_a (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).a =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (X i j)))
+            (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (Y i j)))
+            (fromZorn (canonicalEquiv (X j k))))).a := by
+  exact congrArg RealSplitOct.a (fromZorn_jordanProduct_entry X Y i k)
 
 theorem canonicalEquiv_v_fst (A : ZornMatrixReal) :
     (canonicalEquiv A).v 0 = A.u.1 := by

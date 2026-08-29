@@ -186,6 +186,7 @@ import InfoGeometry.Canonical.UHFMatrixColimitCapstone
 import InfoGeometry.Canonical.AlbertJordanThreeGenerationsCapstone
 import InfoGeometry.Canonical.DrinfeldJimboFibonacciAnyonsCapstone
 import InfoGeometry.Canonical.JonesPolynomialTemperleyLiebKauffmanCapstone
+import InfoGeometry.Canonical.BerryKeatingSpectralDilationsCapstone
 import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 

@@ -430,9 +430,9 @@ theorem oneSite_partitionPolynomial_root_on_leeYangCircle
   rw [hzneg]
   simp [OnUnitCircle, Complex.normSq]
 
-/-! The one-site polynomial supplies a concrete finite Lee--Yang witness.
-This closes only the `N = 1` case; the general Asano/Grace contraction remains
-represented by `LeeYangPolynomialWitness` below. -/
+/-! The one-site polynomial supplies a concrete finite Lee--Yang theorem.
+This closes only the `N = 1` case; broader finite-stage Lee--Yang closure
+remains open owner debt. -/
 theorem oneSite_leeYang_polynomial_witness
     (D : FinitePrimeChainData 1)
     {lam : ℝ}
@@ -457,85 +457,6 @@ theorem partitionFunction_eq_eval
     (lam : ℝ)
     (z : ℂ) :
     partitionFunction D lam z = (partitionPolynomial D lam).eval z := rfl
-
-/--
-Witness for the finite Lee--Yang theorem applied to the prime-chain partition
-polynomial.
-
-The ordinary polynomial Lee--Yang theorem is not proved here. A later
-Asano/Grace-style formalization can replace this property.
--/
-@[rep_depth thermo]
-def LeeYangPolynomialWitness : Prop :=
-  ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-    0 ≤ lam →
-      ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z →
-        OnUnitCircle z
-
-/--
-Finite-volume prime-chain family feeding the Hurwitz layer.
-
-This is the coarse polynomial projection lane.  The generalized arithmetic
-fugacity lane is represented by `multiPartition` and `RiemannFieldPullback`.
--/
-@[rep_depth thermo]
-structure PrimePartitionPolynomialFamily where
-  D :
-    (N : ℕ) → FinitePrimeChainData N
-  lam :
-    ℕ → ℝ
-  lam_nonneg :
-    ∀ N : ℕ, 0 ≤ lam N
-  R :
-    ℕ → ℂ → ℂ
-  R_nonzero :
-    ∀ N : ℕ, ∀ z : ℂ, R N z ≠ 0
-
-namespace PrimePartitionPolynomialFamily
-
-/-- Polynomial at finite volume `N`. -/
-@[rep_depth thermo]
-def Zpoly
-    (F : PrimePartitionPolynomialFamily)
-    (N : ℕ) : Polynomial ℂ :=
-  partitionPolynomial (F.D N) (F.lam N)
-
-/-- Function readout at finite volume `N`. -/
-@[rep_depth thermo]
-def Z
-    (F : PrimePartitionPolynomialFamily)
-    (N : ℕ)
-    (z : ℂ) : ℂ :=
-  (F.Zpoly N).eval z
-
-/-- Root of the function readout is root of the polynomial readout. -/
-@[rep_depth thermo]
-theorem isRoot_of_Z_eq_zero
-    (F : PrimePartitionPolynomialFamily)
-    (N : ℕ)
-    (z : ℂ)
-    (hz : F.Z N z = 0) :
-    (F.Zpoly N).IsRoot z := by
-  exact hz
-
-/--
-Construct the Hurwitz approximant family from finite prime partition
-polynomials and a Lee--Yang property.
--/
-@[rep_depth thermo]
-def toLeeYangApproximants
-    (F : PrimePartitionPolynomialFamily)
-    (LY : LeeYangPolynomialWitness) :
-    LeeYangApproximants where
-  Z := F.Z
-  R := F.R
-  lee_yang := by
-    intro N z hz
-    exact LY (F.D N) (F.lam_nonneg N) z (F.isRoot_of_Z_eq_zero N z hz)
-  renorm_nonzero :=
-    F.R_nonzero
-
-end PrimePartitionPolynomialFamily
 
 /--
 Witness for matching a global fugacity polynomial to a more refined local

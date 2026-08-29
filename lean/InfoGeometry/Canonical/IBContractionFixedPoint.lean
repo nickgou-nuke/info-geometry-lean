@@ -71,4 +71,39 @@ theorem ib_trajectory_tendsto_information_equilibrium
   rw [h_iter]
   exact ContractingWith.tendsto_iterate_fixedPoint (f := ibBlahutArimotoStep prob) (hf := hContr) p0
 
+/-- 🏆 THEOREM: The IB trajectory forms a Cauchy sequence in the parameter space under contraction. -/
+theorem ib_trajectory_is_cauchy
+    [m : MetricSpace (X → FinProb T)]
+    [CompleteSpace (X → FinProb T)]
+    [Nonempty (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    (p0 : X → FinProb T)
+    {Kc : ℝ≥0}
+    (hContr : ContractingWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)) :
+    CauchySeq (ibTrajectory prob p0) := by
+  have htend := ContractingWith.tendsto_iterate_fixedPoint (f := ibBlahutArimotoStep prob) (hf := hContr) p0
+  have h_iter : ibTrajectory prob p0 = fun n => (ibBlahutArimotoStep prob)^[n] p0 := by
+    funext n
+    exact ibTrajectory_eq_iterate prob p0 n
+  rw [h_iter]
+  exact htend.cauchySeq
+
+/-- 🏆 THEOREM: Exponential reduction of error in parameter space to the thermodynamic equilibrium state. -/
+theorem ib_parameter_error_bound
+    [m : MetricSpace (X → FinProb T)]
+    [CompleteSpace (X → FinProb T)]
+    [Nonempty (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    (p0 : X → FinProb T)
+    {Kc : ℝ≥0}
+    (hContr : ContractingWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob))
+    (n : ℕ) :
+    dist (ibTrajectory prob p0 n)
+         (ContractingWith.fixedPoint (f := ibBlahutArimotoStep prob) (hf := hContr)) ≤
+      dist p0 (ibBlahutArimotoStep prob p0) * (Kc : ℝ) ^ n / (1 - (Kc : ℝ)) := by
+  have h_iter : ibTrajectory prob p0 n = (ibBlahutArimotoStep prob)^[n] p0 :=
+    ibTrajectory_eq_iterate prob p0 n
+  rw [h_iter]
+  exact ContractingWith.apriori_dist_iterate_fixedPoint_le (f := ibBlahutArimotoStep prob) (hf := hContr) p0 n
+
 end InfoGeometry.Canonical.IB

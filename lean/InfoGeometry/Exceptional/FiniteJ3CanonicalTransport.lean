@@ -345,4 +345,25 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
 @[simp] theorem hermitianRealAlbertEquiv_alpha₃ (X : HermitianJ3) :
     (hermitianRealAlbertEquiv X).α₃ = (X.1 2 2).a := rfl
 
+@[simp] theorem hermitianRealAlbertEquiv_z₁ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₁ =
+      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 1 2)) := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_z₂ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₂ =
+      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 2 0)) := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_z₃ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₃ =
+      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 0 1)) := rfl
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₁ =
+      (j3RawMul X.1 Y.1 0 0).a / 2 +
+        (j3RawMul Y.1 X.1 0 0).a / 2 := by
+  rw [hermitianRealAlbertEquiv_alpha₁]
+  change (jordanProduct X.1 Y.1 0 0).a = _
+  exact jordanProduct_a X.1 Y.1 0 0
+
 end InfoGeometry.Exceptional.FiniteJ3Zorn

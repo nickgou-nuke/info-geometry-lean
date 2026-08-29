@@ -122,3 +122,11 @@ theorem grand_fermionic_moebius_fock_synthesis
 end
 
 end InfoGeometry.Quantum.FermionFockMoebius
+
+namespace InfoGeometry.Quantum
+namespace FermionFockMöbius
+export FermionFockMoebius (primeFermionicFactor singlePrimeFermionParity
+  moebius_pauli_exclusion moebius_prime_is_fermionic moebius_vacuum_parity
+  moebius_coprime_multiplicative single_mode_graded_sum grand_fermionic_moebius_fock_synthesis)
+end FermionFockMöbius
+end InfoGeometry.Quantum

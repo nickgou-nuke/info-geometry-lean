@@ -3501,6 +3501,9 @@ import InfoGeometry.Canonical.ApolloniusLieBracketCapstone
 import InfoGeometry.Canonical.SpectralTripleApolloniusCapstone
 import InfoGeometry.Canonical.ConnesMetricCapstone
 
+import InfoGeometry.Canonical.DikinBlahutOrbitsCapstone
+import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
+
 namespace InfoGeometry
 
 /-!

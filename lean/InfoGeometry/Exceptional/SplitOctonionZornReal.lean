@@ -42,6 +42,91 @@ def sub (u v : Vec3Real) : Vec3Real :=
 def smul (c : ℝ) (u : Vec3Real) : Vec3Real :=
   (c * u.1, c * u.2.1, c * u.2.2)
 
+theorem dot_cross_left (u v w : Vec3Real) :
+    dot u (cross v w) = dot v (cross w u) := by
+  dsimp [dot, cross]
+  ring
+
+theorem dot_cross_right (u v w : Vec3Real) :
+    dot (cross u v) w = dot u (cross v w) := by
+  dsimp [dot, cross]
+  ring
+
+theorem cross_cross (u v w : Vec3Real) :
+    cross (cross u v) w = sub (smul (dot u w) v) (smul (dot v w) u) := by
+  apply Prod.ext
+  · dsimp [cross, sub, smul, dot]
+    ring
+  · apply Prod.ext
+    · dsimp [cross, sub, smul, dot]
+      ring
+    · dsimp [cross, sub, smul, dot]
+      ring
+
+theorem add_dot_left (u v w : Vec3Real) :
+    dot (add u v) w = dot u w + dot v w := by
+  dsimp [add, dot]
+  ring
+
+theorem add_dot_right (u v w : Vec3Real) :
+    dot u (add v w) = dot u v + dot u w := by
+  dsimp [add, dot]
+  ring
+
+theorem smul_dot_left (c : ℝ) (u v : Vec3Real) :
+    dot (smul c u) v = c * dot u v := by
+  dsimp [smul, dot]
+  ring
+
+theorem smul_dot_right (c : ℝ) (u v : Vec3Real) :
+    dot u (smul c v) = c * dot u v := by
+  dsimp [smul, dot]
+  ring
+
+theorem cross_add_left (u v w : Vec3Real) :
+    cross (add u v) w = add (cross u w) (cross v w) := by
+  apply Prod.ext
+  · dsimp [cross, add]
+    ring
+  · apply Prod.ext
+    · dsimp [cross, add]
+      ring
+    · dsimp [cross, add]
+      ring
+
+theorem cross_add_right (u v w : Vec3Real) :
+    cross u (add v w) = add (cross u v) (cross u w) := by
+  apply Prod.ext
+  · dsimp [cross, add]
+    ring
+  · apply Prod.ext
+    · dsimp [cross, add]
+      ring
+    · dsimp [cross, add]
+      ring
+
+theorem cross_smul_left (c : ℝ) (u v : Vec3Real) :
+    cross (smul c u) v = smul c (cross u v) := by
+  apply Prod.ext
+  · dsimp [cross, smul]
+    ring
+  · apply Prod.ext
+    · dsimp [cross, smul]
+      ring
+    · dsimp [cross, smul]
+      ring
+
+theorem cross_smul_right (c : ℝ) (u v : Vec3Real) :
+    cross u (smul c v) = smul c (cross u v) := by
+  apply Prod.ext
+  · dsimp [cross, smul]
+    ring
+  · apply Prod.ext
+    · dsimp [cross, smul]
+      ring
+    · dsimp [cross, smul]
+      ring
+
 /-- 
 A Zorn matrix representing an element of the split octonions.
 `a` and `b` are scalars.
@@ -71,6 +156,89 @@ def ZornMatrixReal.mul (A B : ZornMatrixReal) : ZornMatrixReal :=
     v := add (add (smul B.a A.v) (smul A.b B.v)) (cross A.u B.u) }
 
 instance : Mul ZornMatrixReal := ⟨ZornMatrixReal.mul⟩
+
+lemma ZornMatrixReal.ext_pre (A B : ZornMatrixReal)
+    (ha : A.a = B.a) (hb : A.b = B.b)
+    (hu : A.u = B.u) (hv : A.v = B.v) : A = B := by
+  cases A
+  cases B
+  congr
+
+theorem zorn_mul_self_left (A B : ZornMatrixReal) :
+    (A * A) * B = A * (A * B) := by
+  change ZornMatrixReal.mul (ZornMatrixReal.mul A A) B =
+    ZornMatrixReal.mul A (ZornMatrixReal.mul A B)
+  apply ZornMatrixReal.ext_pre
+  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · apply Prod.ext
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+  · apply Prod.ext
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+
+theorem zorn_mul_self_right (A B : ZornMatrixReal) :
+    (A * B) * B = A * (B * B) := by
+  change ZornMatrixReal.mul (ZornMatrixReal.mul A B) B =
+    ZornMatrixReal.mul A (ZornMatrixReal.mul B B)
+  apply ZornMatrixReal.ext_pre
+  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · apply Prod.ext
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+  · apply Prod.ext
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+
+theorem zorn_mul_add_left (A B C : ZornMatrixReal) :
+    A * (B + C) = A * B + A * C := by
+  change ZornMatrixReal.mul A (ZornMatrixReal.add_mat B C) =
+    ZornMatrixReal.add_mat (ZornMatrixReal.mul A B) (ZornMatrixReal.mul A C)
+  apply ZornMatrixReal.ext_pre
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
+    ring
+  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+
+theorem zorn_add_mul_right (A B C : ZornMatrixReal) :
+    (A + B) * C = A * C + B * C := by
+  change ZornMatrixReal.mul (ZornMatrixReal.add_mat A B) C =
+    ZornMatrixReal.add_mat (ZornMatrixReal.mul A C) (ZornMatrixReal.mul B C)
+  apply ZornMatrixReal.ext_pre
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
+    ring
+  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
 
 def ZornMatrixReal.neg (A : ZornMatrixReal) : ZornMatrixReal :=
   { a := -A.a, b := -A.b, u := smul (-1) A.u, v := smul (-1) A.v }

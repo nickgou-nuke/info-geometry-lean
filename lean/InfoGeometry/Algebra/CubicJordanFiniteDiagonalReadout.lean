@@ -55,6 +55,11 @@ theorem jordan_identity (x y : DiagonalJ3) :
   simp [jordanProduct]
   ring
 
+theorem scalar_diagonal_jordan_identity (x y : DiagonalJ3) :
+    jordanProduct (jordanProduct x x) (jordanProduct y x) =
+      jordanProduct x (jordanProduct (jordanProduct x y) x) := by
+  exact jordan_identity x y
+
 theorem e₁_idempotent : jordanProduct e₁ e₁ = e₁ := by
   funext i
   fin_cases i <;> simp [e₁, jordanProduct]
@@ -67,9 +72,36 @@ theorem e₃_idempotent : jordanProduct e₃ e₃ = e₃ := by
   funext i
   fin_cases i <;> simp [e₃, jordanProduct]
 
+theorem scalar_diagonal_e₁_idempotent :
+    jordanProduct e₁ e₁ = e₁ := e₁_idempotent
+
+theorem scalar_diagonal_e₂_idempotent :
+    jordanProduct e₂ e₂ = e₂ := e₂_idempotent
+
+theorem scalar_diagonal_e₃_idempotent :
+    jordanProduct e₃ e₃ = e₃ := e₃_idempotent
+
+theorem scalar_diagonal_e₁_e₂_orthogonal :
+    jordanProduct e₁ e₂ = fun _ => 0 := by
+  funext i
+  fin_cases i <;> simp [e₁, e₂, jordanProduct]
+
+theorem scalar_diagonal_e₁_e₃_orthogonal :
+    jordanProduct e₁ e₃ = fun _ => 0 := by
+  funext i
+  fin_cases i <;> simp [e₁, e₃, jordanProduct]
+
+theorem scalar_diagonal_e₂_e₃_orthogonal :
+    jordanProduct e₂ e₃ = fun _ => 0 := by
+  funext i
+  fin_cases i <;> simp [e₂, e₃, jordanProduct]
+
 theorem diagonal_completeness : e₁ + e₂ + e₃ = unit := by
   funext i
   fin_cases i <;> simp [e₁, e₂, e₃, unit]
+
+theorem scalar_diagonal_partition : e₁ + e₂ + e₃ = unit :=
+  diagonal_completeness
 
 theorem diagonal_spectral_readout (x : DiagonalJ3) :
     x = x 0 • e₁ + x 1 • e₂ + x 2 • e₃ := by

@@ -745,6 +745,7 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₀_explicit
   rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₀_sum_readback]
   simp [RealSplitOct.smul, RealSplitOct.add, RealSplitOct.mul,
     Fin.sum_univ_three]
+  ring
 
 theorem fromZorn_jordanProduct_entry_x1 (X Y : J3) (i k : Fin 3) :
     (fromZorn (canonicalEquiv (jordanProduct X Y i k))).x1 =

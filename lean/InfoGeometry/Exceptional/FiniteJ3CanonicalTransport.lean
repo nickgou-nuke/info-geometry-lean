@@ -15,14 +15,14 @@ def canonicalEntry (X : J3) : Fin 3 → Fin 3 → ZornVectorMatrix ℝ :=
 theorem canonicalEntry_zornConj (X : J3) (i j : Fin 3) :
     canonicalEquiv (zornConj (X i j)) =
       ZornVectorMatrix.conj (canonicalEntry X i j) := by
-  have h : zornConj (X i j) = RealZorn.realConj (X i j) := by
-    apply RealZorn.ZornMatrixReal.ext
+  have h : zornConj (X i j) = InfoGeometry.Exceptional.RealZorn.realConj (X i j) := by
+    apply InfoGeometry.Exceptional.RealZorn.ZornMatrixReal.ext
     · rfl
     · rfl
     · rfl
     · rfl
   rw [h]
-  exact RealZorn.canonicalEquiv_conj (X i j)
+  exact InfoGeometry.Exceptional.RealZorn.canonicalEquiv_conj (X i j)
 
 theorem canonicalEntry_add (X Y : J3) (i j : Fin 3) :
     canonicalEntry (X + Y) i j =

@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 
+set_option linter.unusedSectionVars false
+
 namespace ConnesChern
 
 open InfoGeometry.Canonical.ConnesKMSIndexPairing

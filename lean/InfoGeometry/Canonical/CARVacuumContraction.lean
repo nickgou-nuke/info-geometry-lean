@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
 /-!
@@ -66,5 +67,50 @@ theorem car_vacuum_contraction_sum
             car_vacuum_contraction (A i) (C i) (c i) (h_car i hi) v (h_vac i hi)
     _ = (Finset.sum S c) • v := by
           simpa using (Finset.sum_smul (s := S) (f := c) (x := v)).symm
+
+/-! ### Constructive 2×2 Matrix CAR Fermion Fock Model -/
+
+open Matrix
+
+/-- Fermionic annihilation operator: $a = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$. -/
+def carAnnihilate (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+  !![0, 1;
+     0, 0]
+
+/-- Fermionic creation operator: $a^\dagger = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$. -/
+def carCreate (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+  !![0, 0;
+     1, 0]
+
+/-- Vacuum state vector: $v_0 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$. -/
+def carVacuumState (R : Type*) [CommRing R] : Fin 2 → R :=
+  ![1, 0]
+
+set_option linter.unusedSimpArgs false
+
+/-- 🏆 THEOREM 1 (Constructive Vacuum Annihilation):
+    $a \cdot v_0 = 0$. -/
+theorem car_vacuum_annihilate_exact (R : Type*) [CommRing R] :
+    Matrix.mulVec (carAnnihilate R) (carVacuumState R) = 0 := by
+  dsimp [carAnnihilate, carVacuumState, Matrix.mulVec]
+  ext i
+  fin_cases i <;> rfl
+
+/-- 🏆 THEOREM 2 (Constructive Canonical Anticommutation Relation):
+    $\{a, a^\dagger\} = a a^\dagger + a^\dagger a = I_2$. -/
+theorem car_anticommutation_exact (R : Type*) [CommRing R] :
+    carAnnihilate R * carCreate R + carCreate R * carAnnihilate R = 1 := by
+  dsimp [carAnnihilate, carCreate]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- 🏆 THEOREM 3 (Constructive Single-Mode Fock Contraction):
+    $a (a^\dagger v_0) = v_0$. -/
+theorem car_vacuum_contraction_matrix_exact (R : Type*) [CommRing R] :
+    Matrix.mulVec (carAnnihilate R) (Matrix.mulVec (carCreate R) (carVacuumState R)) =
+      carVacuumState R := by
+  dsimp [carAnnihilate, carCreate, carVacuumState, Matrix.mulVec]
+  ext i
+  fin_cases i <;> rfl
 
 end InfoGeometry.Canonical.CARVacuumContraction

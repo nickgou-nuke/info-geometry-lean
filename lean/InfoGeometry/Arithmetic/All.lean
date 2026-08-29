@@ -3,6 +3,7 @@ import InfoGeometry.Arithmetic.ZetaZ2ParitySpectralDecomposition
 import InfoGeometry.Arithmetic.InvolutionParityProjectors
 import InfoGeometry.Arithmetic.ZetaBetaCayleyKleinBridge
 import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge
+import InfoGeometry.Arithmetic.ProfiniteCyclotomicUnitLimit
 
 namespace InfoGeometry.Arithmetic.All
 

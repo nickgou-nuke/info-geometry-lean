@@ -36,6 +36,54 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
 
+/-! ## Finite normalized counting functional -/
+
+/-- Normalized counting on a finite carrier.  This is the finite algebraic
+shadow of Haar averaging; no measure structure is used. -/
+def normalizedHaar (G : Type*) [Fintype G] (f : G → ℂ) : ℂ :=
+  (Fintype.card G : ℂ)⁻¹ * ∑ g, f g
+
+@[simp] theorem normalizedHaar_zero (G : Type*) [Fintype G] :
+    normalizedHaar G (fun _ => (0 : ℂ)) = 0 := by
+  simp [normalizedHaar]
+
+theorem normalizedHaar_add (G : Type*) [Fintype G]
+    (f g : G → ℂ) :
+    normalizedHaar G (fun x => f x + g x) =
+      normalizedHaar G f + normalizedHaar G g := by
+  dsimp [normalizedHaar]
+  rw [Finset.sum_add_distrib, mul_add]
+
+theorem normalizedHaar_smul (G : Type*) [Fintype G]
+    (c : ℂ) (f : G → ℂ) :
+    normalizedHaar G (fun x => c * f x) =
+      c * normalizedHaar G f := by
+  dsimp [normalizedHaar]
+  rw [← Finset.mul_sum]
+  ring
+
+theorem normalizedHaar_one (G : Type*) [Fintype G] [Nonempty G] :
+    normalizedHaar G (fun _ => (1 : ℂ)) = 1 := by
+  simp [normalizedHaar, Fintype.card_ne_zero]
+
+theorem normalizedHaar_left_translate
+    (G : Type*) [Fintype G] [Group G]
+    (f : G → ℂ) (a : G) :
+    normalizedHaar G (fun g => f (a * g)) =
+      normalizedHaar G f := by
+  dsimp [normalizedHaar]
+  congr 1
+  exact Fintype.sum_equiv (Equiv.mulLeft a) (fun g => f (a * g)) f (fun _ => rfl)
+
+theorem normalizedHaar_right_translate
+    (G : Type*) [Fintype G] [Group G]
+    (f : G → ℂ) (a : G) :
+    normalizedHaar G (fun g => f (g * a)) =
+      normalizedHaar G f := by
+  dsimp [normalizedHaar]
+  congr 1
+  exact Fintype.sum_equiv (Equiv.mulRight a) (fun g => f (g * a)) f (fun _ => rfl)
+
 /-! ## Positive scale layer -/
 
 /-- Positive real scale, the multiplicative `ℝ^*_+` layer. -/

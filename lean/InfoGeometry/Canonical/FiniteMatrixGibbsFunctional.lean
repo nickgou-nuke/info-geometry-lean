@@ -347,4 +347,24 @@ theorem finite_gibbs_functional_of_admissible_beta
     gibbsFunctional_positive H hH β X,
     gibbsFunctional_kms H hH β X Y⟩
 
+/-! The finite phase split is a logical decomposition of the real parameter.
+It records exactly where the normalized matrix functional is used, while the
+boundary branch carries no unsupported state-classification claim. -/
+
+theorem finite_gibbs_phase_split
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ)
+    (X Y : Matrix n n ℂ) :
+    phaseBoundary β ∨
+      (admissibleBeta β ∧
+        gibbsFunctional H hH β 1 = 1 ∧
+        0 ≤ (gibbsFunctional H hH β (star X * X)).re ∧
+        gibbsFunctional H hH β (X * Y) =
+          gibbsFunctional H hH β
+            (Y * gibbsImaginaryTimeAlgEquiv H hH β X)) := by
+  rcases admissibleBeta_or_phaseBoundary β with hβ | hβ
+  · right
+    exact ⟨hβ, finite_gibbs_functional_of_admissible_beta H hH β hβ X Y⟩
+  · exact Or.inl hβ
+
 end InfoGeometry.Canonical.FiniteMatrixGibbsFunctional

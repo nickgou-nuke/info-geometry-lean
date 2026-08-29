@@ -3534,6 +3534,7 @@ import InfoGeometry.Canonical.RapidityAngleApolloniusCapstone
 import InfoGeometry.Canonical.BostConnesPrimonGasCapstone
 import InfoGeometry.Canonical.ApolloniusCylinderLightConeCapstone
 import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
+import InfoGeometry.Canonical.MertensPartialTraceCapstone
 
 namespace InfoGeometry
 

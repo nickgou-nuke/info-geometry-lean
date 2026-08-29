@@ -317,6 +317,8 @@ import InfoGeometry.LightCone.ApolloniusCylinder
 import InfoGeometry.Canonical.ApolloniusCylinderLightConeCapstone
 import InfoGeometry.LightCone.ChiralPrimeDecomposition
 import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
+import InfoGeometry.Quantum.MertensPartialTrace
+import InfoGeometry.Canonical.MertensPartialTraceCapstone
 
 namespace InfoGeometry
 

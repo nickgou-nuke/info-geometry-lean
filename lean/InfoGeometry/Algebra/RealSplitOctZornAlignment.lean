@@ -107,6 +107,11 @@ theorem fromZorn_smul_add (r : ℝ) (X Y : ZornVectorMatrix ℝ) :
       r • (fromZorn X + fromZorn Y) := by
   rw [fromZorn_smul, fromZorn_add]
 
+theorem fromZorn_half_add (X Y : ZornVectorMatrix ℝ) :
+    fromZorn ((2 : ℝ)⁻¹ • (X + Y)) =
+      (2 : ℝ)⁻¹ • (fromZorn X + fromZorn Y) := by
+  exact fromZorn_smul_add (2 : ℝ)⁻¹ X Y
+
 theorem toZorn_smul_def (r : ℝ) (X : RealSplitOct) :
     toZorn (RealSplitOct.smul r X) = ZornVectorMatrix.smul r (toZorn X) := by
   cases X

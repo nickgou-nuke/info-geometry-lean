@@ -5,6 +5,7 @@ import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!
 # Rindler Logarithmic de Rham and Hilbert-Pólya Bridge
@@ -34,6 +35,7 @@ analytic Hilbert--Pólya and de Rham interpretations require explicit data.
 namespace InfoGeometry.Canonical.RindlerLogDeRhamPolya
 
 open ArithmeticFunction Complex
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 variable {R : Type*} [CommRing R]
 
@@ -102,6 +104,20 @@ theorem real_energy_iff_critical_line (E : ℂ) :
     linarith
   · intro h
     linarith
+
+/-- Every real spectral height lies on the critical vertical line in the chart
+`s(E) = 1/2 + iE`. -/
+theorem scaleExponentOfRealEnergy_onCriticalLine (E : ℝ) :
+    OnCriticalLine (scaleExponentOfEnergy (E : ℂ)) := by
+  unfold OnCriticalLine
+  exact (real_energy_iff_critical_line (E : ℂ)).mp (by simp)
+
+/-- The Cayley fugacity of every real spectral height lies on the Lee--Yang
+unit circle. -/
+theorem scaleExponentOfRealEnergy_onLeeYangCircle (E : ℝ) :
+    OnLeeYangCircle (cayleyToFugacity (scaleExponentOfEnergy (E : ℂ))) := by
+  exact cayleyToFugacity_mem_unitCircle_of_criticalLine _
+    (scaleExponentOfRealEnergy_onCriticalLine E)
 
 /-! ### 5. Euler-Möbius Inversion (Primon Gas Vacuum Duality) -/
 

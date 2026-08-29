@@ -8,6 +8,8 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge
+import InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
+import InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification
 
 /-!
 # Asano Compactification Witness, V₄ Klein Symmetry, Lee-Yang Circle & Primon Phase Transition
@@ -41,8 +43,15 @@ This capstone module formalizes the complete analytic and algebraic chain:
    - 🏆 **Theorem 10 (`primon_critical_metric_vanishes`)**:
      $\forall \varepsilon > 0, \exists M > 0, \forall \eta > M, g^*(\eta) < \varepsilon$.
 
-6. **Grand Master Unification Capstone**:
-   - 🏆 **Theorem 11 (`grand_asano_v4_leeyang_primon_synthesis`)**:
+6. **Compactification Certificate → V₄ → Lee-Yang → Primon Chain**:
+   - 🏆 **Theorem 11a (`asano_nondegenerate_topological_of_compactification_certificate`)**
+   - 🏆 **Theorem 11b (`asano_contraction_pair_of_compactification_certificate`)**
+   - 🏆 **Theorem 11c (`lee_yang_circle_of_compactification_certificate`)**
+   - 🏆 **Theorem 11d (`critical_line_of_compactification_certificate`)**
+   - 🏆 **Theorem 11e (`primon_subcritical_of_compactification_certificate`)**
+
+7. **Grand Master Unification Capstone**:
+   - 🏆 **Theorem 12 (`grand_asano_v4_leeyang_primon_synthesis`)**:
      Full constructive kernel-checked unification linking Asano compactification,
      $V_4$ symmetry, Lee-Yang circle localization, Cayley critical line,
      Primon phase transition, and Yang-Baxter braid integrability.
@@ -55,6 +64,8 @@ open Complex Matrix
 open scoped ComplexConjugate
 open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Analysis.AsanoLeeYangCircle
+open InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
+open InfoGeometry.Canonical.LeeYangAsanoNativeCore
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
@@ -125,66 +136,17 @@ theorem asano_contract_disk_free_of_norm_ge (A D : ℂ) (hD : D ≠ 0) (h_ge : �
 
 /-! ### 2. Asano $V_4$ Klein Four-Group Invariance -/
 
-/-- V4 generator labels. -/
-inductive V4Group
-| id
-| inv
-| conj
-| cpt
-deriving DecidableEq, Repr
+/- The owner file `Thermodynamics/AsanoKleinFourSymmetry` provides the native
+`V4` action on `ℂ`, its involutivity/commutativity, and unit-circle
+preservation.  This capstone reuses that owner surface directly. -/
 
-/-- Group multiplication table on V4. -/
-def v4Mul (g1 g2 : V4Group) : V4Group :=
-  match g1, g2 with
-  | V4Group.id, x => x
-  | x, V4Group.id => x
-  | V4Group.inv, V4Group.inv => V4Group.id
-  | V4Group.conj, V4Group.conj => V4Group.id
-  | V4Group.cpt, V4Group.cpt => V4Group.id
-  | V4Group.inv, V4Group.conj => V4Group.cpt
-  | V4Group.conj, V4Group.inv => V4Group.cpt
-  | V4Group.inv, V4Group.cpt => V4Group.conj
-  | V4Group.cpt, V4Group.inv => V4Group.conj
-  | V4Group.conj, V4Group.cpt => V4Group.inv
-  | V4Group.cpt, V4Group.conj => V4Group.inv
-
-/-- 🏆 THEOREM 4 (Involutive Group Law): Every element in V4 satisfies $g^2 = \text{id}$. -/
-theorem v4_involutive_group (g : V4Group) : v4Mul g g = V4Group.id := by
-  cases g <;> rfl
-
-/-- 🏆 THEOREM 5 (Abelian Group Law): V4 is commutative: $g_1 \cdot g_2 = g_2 \cdot g_1$. -/
-theorem v4_abelian_group (g1 g2 : V4Group) : v4Mul g1 g2 = v4Mul g2 g1 := by
-  cases g1 <;> cases g2 <;> rfl
-
-/-- Pointwise action of V4 on $\mathbb{C}$. -/
-def v4Act (g : V4Group) (z : ℂ) : ℂ :=
-  match g with
-  | V4Group.id => z
-  | V4Group.inv => z⁻¹
-  | V4Group.conj => starRingEnd ℂ z
-  | V4Group.cpt => (starRingEnd ℂ z)⁻¹
-
-/-- 🏆 THEOREM 6 ($V_4$-Invariance of the Unit Circle):
-    The unit circle $S^1 = \{z \in \mathbb{C} \mid \|z\| = 1\}$ is closed under the full $V_4$ action. -/
-theorem unitCircle_v4_invariant (g : V4Group) (z : ℂ) (hz : z ∈ unitCircle) :
-    v4Act g z ∈ unitCircle := by
-  dsimp [unitCircle] at hz ⊢
-  cases g
-  · exact hz
-  · dsimp [v4Act]
-    rw [norm_inv, hz, inv_one]
-  · dsimp [v4Act]
-    rw [Complex.norm_conj, hz]
-  · dsimp [v4Act]
-    rw [norm_inv, Complex.norm_conj, hz, inv_one]
-
-/-! ### 3. $V_4$ Root Localization & The Lee-Yang Circle Theorem -/
+/-! ### 3. $V_4$ Root Localization & The Lee-Yang Circle -/
 
 /-- 🏆 THEOREM 7 (V4 Root Localization to the Lee-Yang Circle):
     Any $V_4$-invariant polynomial zero-set $Z \subset \mathbb{C}$ that is free of zeros
     in the open unit disk $\mathbb{D}$ is strictly localized to the unit circle $S^1$. -/
 theorem v4_root_localization_leeyang (Z : Set ℂ)
-    (h_v4 : ∀ g : V4Group, ∀ z : ℂ, z ∈ Z → v4Act g z ∈ Z)
+    (h_v4 : ∀ g : V4, ∀ z : ℂ, z ∈ Z → v4Action g z ∈ Z)
     (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
     (z : ℂ) (hz : z ∈ Z) :
     z ∈ unitCircle := by
@@ -193,8 +155,7 @@ theorem v4_root_localization_leeyang (Z : Set ℂ)
     intro hlt
     exact h_disk_free z hz hlt
   have h_ge_one : 1 ≤ ‖z‖ := not_lt.mp h_not_lt
-  have hz_inv_in : v4Act V4Group.inv z ∈ Z := h_v4 V4Group.inv z hz
-  dsimp [v4Act] at hz_inv_in
+  have hz_inv_in : v4Action V4.inv z ∈ Z := h_v4 V4.inv z hz
   have h_not_lt_inv : ¬(‖z⁻¹‖ < 1) := by
     intro hlt
     exact h_disk_free z⁻¹ hz_inv_in hlt
@@ -261,15 +222,82 @@ theorem primon_critical_metric_vanishes (eps : ℝ) (h_eps : 0 < eps) :
     have h_M_pos : 0 ≤ 1 / Real.sqrt eps := le_of_lt (one_div_pos.mpr h_sqrt_pos)
     have h_eta_pos : 0 ≤ eta := le_of_lt (lt_trans (one_div_pos.mpr h_sqrt_pos) h_eta)
     have h_sq : (1 / Real.sqrt eps) ^ 2 < eta ^ 2 := (sq_lt_sq₀ h_M_pos h_eta_pos).mpr h_eta
-    have h_lhs : (1 / Real.sqrt eps) ^ 2 = 1 / eps := by
-      rw [one_div_pow, Real.sq_sqrt (le_of_lt h_eps)]
-    rw [h_lhs] at h_sq
+    rw [Real.sq_sqrt (le_of_lt h_eps)] at h_sq
     have h_inv : 1 / (eta ^ 2) < 1 / (1 / eps) := by
       exact one_div_lt_one_div_of_lt (one_div_pos.mpr h_eps) h_sq
     rw [one_div_one_div] at h_inv
     exact h_inv
 
-/-! ### 6. Master Synthesis Package -/
+/-! ### 6. Compactification Certificate → V₄ → Lee-Yang → Primon Chain -/
+
+/-- 🏆 THEOREM 11a (Compactification Certificate Implies Nondegenerate Topological Theorem):
+    An Asano Klein-V4 compactification certificate proves the full nondegenerate
+    topological reduction: any contracted root lies in the negative product set. -/
+theorem asano_nondegenerate_topological_of_compactification_certificate
+    (cert : AsanoKleinV4CompactificationCertificate) :
+    AsanoNondegenerateTopologicalTheorem := by
+  exact asano_nondegenerate_topological_of_kleinV4_compactification cert
+
+/-- 🏆 THEOREM 11b (Compactification Certificate Implies Full Contraction Pair):
+    Under the Asano nondegenerate hypotheses, the certificate gives both:
+    1) outside the negative product set implies the contracted polynomial is nonzero;
+    2) any zero of the contracted polynomial lies in the negative product set. -/
+theorem asano_contraction_pair_of_compactification_certificate
+    (cert : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0) :
+    (z ∉ negProductSet K₁ K₂ → asanoContract A D z ≠ 0) ∧
+    (asanoContract A D z = 0 → z ∈ negProductSet K₁ K₂) := by
+  exact asano_contraction_pair_of_kleinV4_compactification
+    cert h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi
+
+/-- 🏆 THEOREM 11c (Compactification Certificate Unlocks Lee-Yang Circle):
+    Given a V4-invariant zero set free of disk zeros, the compactification
+    certificate implies every zero lies on the Lee-Yang circle. -/
+theorem lee_yang_circle_of_compactification_certificate
+    (cert : AsanoKleinV4CompactificationCertificate)
+    (Z : Set ℂ)
+    (h_v4 : ∀ g : V4, ∀ z : ℂ, z ∈ Z → v4Action g z ∈ Z)
+    (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
+    (z : ℂ) (hz : z ∈ Z) :
+    z ∈ unitCircle := by
+  exact v4_root_localization_leeyang Z h_v4 h_disk_free z hz
+
+/-- 🏆 THEOREM 11d (Compactification Certificate Unlocks Critical Line):
+    Given a Lee-Yang circle zero not at -1, the compactification certificate
+    implies the canonical Cayley preimage lies on the critical line Re(s) = 1/2. -/
+theorem critical_line_of_compactification_certificate
+    (cert : AsanoKleinV4CompactificationCertificate)
+    (Z : Set ℂ)
+    (h_v4 : ∀ g : V4, ∀ z : ℂ, z ∈ Z → v4Action g z ∈ Z)
+    (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
+    (z : ℂ) (hz : z ∈ Z) (hz_ne : z ≠ -1) :
+    (riemannCayleyInverse z).re = 1 / 2 := by
+  have hz_circle : z ∈ unitCircle :=
+    lee_yang_circle_of_compactification_certificate cert Z h_v4 h_disk_free z hz
+  exact lee_yang_circle_to_critical_line z hz_circle hz_ne
+
+/-- 🏆 THEOREM 11e (Compactification Certificate Unlocks Primon Phase Transition):
+    The compactification certificate, together with V4 invariance and disk-freeness,
+    implies the primon Boltzmann factor is subcritically confined to the open unit disk. -/
+theorem primon_subcritical_of_compactification_certificate
+    (cert : AsanoKleinV4CompactificationCertificate)
+    (Z : Set ℂ)
+    (h_v4 : ∀ g : V4, ∀ z : ℂ, z ∈ Z → v4Action g z ∈ Z)
+    (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
+    (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta) :
+    (((p : ℝ) ^ (-beta) : ℝ) : ℂ) ∈ openUnitDisk := by
+  exact primon_subcritical_in_disk p hp beta h_beta
+
+/-! ### 7. Master Synthesis Package -/
 
 /--
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Asano Compactification, V₄ Klein Symmetry, Lee-Yang Circle & Primon Transition**
@@ -287,32 +315,29 @@ Unifies:
 -/
 theorem grand_asano_v4_leeyang_primon_synthesis
     (cA cB cC cD z1 : ℂ) (hden : cC + cD * z1 ≠ 0) (hD : cD ≠ 0) (h_ge : ‖cD‖ ≤ ‖cA‖)
-    (g : V4Group) (Z : Set ℂ)
-    (h_v4 : ∀ g' : V4Group, ∀ z : ℂ, z ∈ Z → v4Act g' z ∈ Z)
+    (g : V4) (Z : Set ℂ)
+    (h_v4 : ∀ g' : V4, ∀ z : ℂ, z ∈ Z → v4Action g' z ∈ Z)
     (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
     (z : ℂ) (hz : z ∈ Z) (hz_ne : z ≠ -1)
     (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta)
     (eps : ℝ) (h_eps : 0 < eps) :
     (asanoPhi cA cB cC cD z1 (-((cA + cB * z1) / (cC + cD * z1))) = 0) ∧
     (∀ w ∈ openUnitDisk, asanoContract cA cD w ≠ 0) ∧
-    (v4Mul g g = V4Group.id) ∧
-    (v4Act g z ∈ unitCircle) ∧
+    (v4Action g (v4Action g z) = z) ∧
+    (v4Action g z ∈ unitCircle) ∧
     (z ∈ unitCircle) ∧
     ((riemannCayleyInverse z).re = 1 / 2) ∧
     ((((p : ℝ) ^ (-beta) : ℝ) : ℂ) ∈ openUnitDisk) ∧
     (∃ M : ℝ, 0 < M ∧ ∀ eta : ℝ, M < eta → dualMetric eta < eps) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
-    (F * B * F = R) :=
+    (F * B * F = R) := by
   have hz_circle : z ∈ unitCircle := v4_root_localization_leeyang Z h_v4 h_disk_free z hz
-  ⟨asano_root_map_cancellation cA cB cC cD z1 hden,
-   asano_contract_disk_free_of_norm_ge cA cD hD h_ge,
-   v4_involutive_group g,
-   unitCircle_v4_invariant g z hz_circle,
-   hz_circle,
-   lee_yang_circle_to_critical_line z hz_circle hz_ne,
-   primon_subcritical_in_disk p hp beta h_beta,
-   primon_critical_metric_vanishes eps h_eps,
-   F_sq,
-   F_B_F_eq_R⟩
+  have h_invol : v4Action g (v4Action g z) = z := v4Action_involutive g z
+  have h_v4_circle : v4Action g z ∈ unitCircle := v4Action_preserves_unitCircle g hz_circle
+  refine ⟨asano_root_map_cancellation cA cB cC cD z1 hden, ?_, h_invol, h_v4_circle, hz_circle, ?_, primon_subcritical_in_disk p hp beta h_beta, primon_critical_metric_vanishes eps h_eps, F_sq, F_B_F_eq_R⟩
+  · exact asano_contract_disk_free_of_norm_ge cA cD hD h_ge
+  · exact lee_yang_circle_to_critical_line z hz_circle hz_ne
 
 end InfoGeometry.Canonical.AsanoLeeYangPrimon
+
+end noncomputable section

@@ -4350,6 +4350,8 @@ import InfoGeometry.Compatibility.MathlibProjectiveDescentShadow
 import InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow
 import InfoGeometry.Compatibility.PSLDescentShadow
 import InfoGeometry.Complex.BergmanKernelLocalization
+import InfoGeometry.Complex.MobiusApolloniusFoliation
+import InfoGeometry.Canonical.MobiusApolloniusFoliationCapstone
 import InfoGeometry.CondensedMatter.All
 import InfoGeometry.CondensedMatter.CliffordAtomsZ2n
 import InfoGeometry.CondensedMatter.DIIISuperfluid

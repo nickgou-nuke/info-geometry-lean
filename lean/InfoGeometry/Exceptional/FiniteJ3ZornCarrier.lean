@@ -98,13 +98,13 @@ theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
     ring
   · funext i
     fin_cases i <;>
-      simp [InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
+      simp [zornHalf, InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
         InfoGeometry.Exceptional.RealZorn.toCanonical,
         InfoGeometry.Exceptional.RealZorn.vecToCanonical,
         InfoGeometry.Algebra.ZornVectorMatrix.smul, smul]
   · funext i
     fin_cases i <;>
-      simp [InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
+      simp [zornHalf, InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
         InfoGeometry.Exceptional.RealZorn.toCanonical,
         InfoGeometry.Exceptional.RealZorn.vecToCanonical,
         InfoGeometry.Algebra.ZornVectorMatrix.smul, smul]

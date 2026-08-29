@@ -15,12 +15,12 @@ This capstone module formalizes the rigorous operator-theoretic and conformal ge
 1. **Möbius Midpoint & Apollonius Conformal Foliation**:
    - For zero $z_0 = 3/2$ and pole $p_0 = -1/2$, the Apollonian norm quotient is
      $R_\lambda(s) = \frac{(\sigma - 3/2)^2 + t^2}{(\sigma + 1/2)^2 + t^2}$.
-   - 🏆 **Theorem 1 (`mobius_apollonius_difference`)**:
+   - 🏆 **Theorem 1 (`apollonius_difference`)**:
      $$\mathcal{N}(\sigma, t) - \mathcal{D}(\sigma, t) = -4\sigma + 2$$
-   - 🏆 **Theorem 2 (`mobius_unitary_level_set_iff`)**:
+   - 🏆 **Theorem 2 (`apollonius_unitary_level_set_iff`)**:
      $$\mathcal{N}(\sigma, t) = \mathcal{D}(\sigma, t) \iff \sigma = 1/2$$
      (Apollonius perpendicular bisector = critical line $\operatorname{Re}(s) = 1/2$).
-   - 🏆 **Theorem 3 (`mobius_disk_foliation_iff`)**:
+   - 🏆 **Theorem 3 (`apollonius_lt_iff_right_of_critical`)**:
      $$\mathcal{N}(\sigma, t) < \mathcal{D}(\sigma, t) \iff \sigma > 1/2$$
      (Subharmonic foliation mapping the right half-plane strictly into the open unit disk $\mathbb{D}$).
 
@@ -168,16 +168,16 @@ theorem berry_keating_dilation_p (x p : A) (h_ccr : commutator x p = Complex.I �
 theorem grand_berry_keating_mobius_apollonius_ccr_synthesis
     (σ t : ℝ) (h_half : σ = 1/2) (σ_disk : ℝ) (h_gt : 1/2 < σ_disk)
     (x p : A) (h_ccr : commutator x p = Complex.I • (1 : A)) :
-    (mobiusNumerator σ t = mobiusDenominator σ t) ∧
-    (mobiusNumerator σ_disk t < mobiusDenominator σ_disk t) ∧
+    (apolloniusNumerator σ t = apolloniusDenominator σ t) ∧
+    (apolloniusNumerator σ_disk t < apolloniusDenominator σ_disk t) ∧
     (berryKeatingH x p = x * p - (Complex.I / 2 : ℂ) • (1 : A)) ∧
     (berryKeatingH x p = p * x + (Complex.I / 2 : ℂ) • (1 : A)) ∧
     (commutator (berryKeatingH x p) x = - (Complex.I : ℂ) • x) ∧
     (commutator (berryKeatingH x p) p = Complex.I • p) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
     (F * B * F = R) :=
-  ⟨(mobius_unitary_level_set_iff σ t).mpr h_half,
-   (mobius_disk_foliation_iff σ_disk t).mpr h_gt,
+  ⟨(apollonius_unitary_level_set_iff σ t).mpr h_half,
+   (apollonius_lt_iff_right_of_critical σ_disk t).mpr h_gt,
    berry_keating_normal_ordered x p h_ccr,
    berry_keating_anti_normal_ordered x p h_ccr,
    berry_keating_dilation_x x p h_ccr,

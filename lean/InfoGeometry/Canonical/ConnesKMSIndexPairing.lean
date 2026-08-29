@@ -3,6 +3,7 @@ import Mathlib.Tactic.Ring
 import InfoGeometry.Algebra.CyclicTraceStokes
 
 set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.Canonical.ConnesKMSIndexPairing
 
@@ -75,5 +76,58 @@ theorem nilpotent_boundary_mode_isolation
     (ST : ConnesGradedSpectralTriple n R) (Pf : Matrix n n R) :
     connesIndexPairing ST Pf = Matrix.trace ((ST.gamma : Matrix n n R) * Pf) := by
   rfl
+
+/-! ### Constructive 2×2 Pauli Spectral Triple Model -/
+
+/-- Pauli $\sigma_z$ grading matrix: $\gamma = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$. -/
+def pauliZMat (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+  !![1, 0;
+     0, -1]
+
+/-- Pauli $\sigma_x$ Dirac matrix: $D = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$. -/
+def pauliXMat (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+  !![0, 1;
+     1, 0]
+
+/-- $\sigma_z^2 = 1$. -/
+theorem pauliZ_sq (R : Type*) [CommRing R] :
+    pauliZMat R * pauliZMat R = 1 := by
+  dsimp [pauliZMat]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Pauli $\sigma_z$ as an invertible matrix unit. -/
+def pauliZUnit (R : Type*) [CommRing R] : (Matrix (Fin 2) (Fin 2) R)ˣ where
+  val := pauliZMat R
+  inv := pauliZMat R
+  val_inv := pauliZ_sq R
+  inv_val := pauliZ_sq R
+
+/-- Graded anticommutator $\{\sigma_z, \sigma_x\} = 0$. -/
+theorem pauliZ_pauliX_anticomm (R : Type*) [CommRing R] :
+    pauliZMat R * pauliXMat R + pauliXMat R * pauliZMat R = 0 := by
+  dsimp [pauliZMat, pauliXMat]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Concrete 2×2 Connes graded spectral triple. -/
+def standardPauliSpectralTriple (R : Type*) [CommRing R] : ConnesGradedSpectralTriple (Fin 2) R where
+  D := pauliXMat R
+  gamma := pauliZUnit R
+  gamma_sq := pauliZ_sq R
+  anti_comm := pauliZ_pauliX_anticomm R
+
+/-- Projector to the top eigenspace $P_0 = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. -/
+def projTop (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
+  !![1, 0;
+     0, 0]
+
+/-- 🏆 THEOREM (Constructive Connes Index Pairing Evaluation):
+    The index pairing on the positive chiral projector $P_0$ is identically 1:
+    $\operatorname{Tr}(\gamma P_0) = 1$. -/
+theorem standard_pauli_index_pairing_val (R : Type*) [CommRing R] :
+    connesIndexPairing (standardPauliSpectralTriple R) (projTop R) = 1 := by
+  dsimp [connesIndexPairing, standardPauliSpectralTriple, pauliZUnit, pauliZMat, projTop, Matrix.trace]
+  simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.ConnesKMSIndexPairing

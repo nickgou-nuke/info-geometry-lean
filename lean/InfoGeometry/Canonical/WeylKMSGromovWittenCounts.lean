@@ -188,4 +188,51 @@ def coords {Γ : Type*} [Fintype Γ]
 
 end ProjectiveCountFierzKleinData
 
+/-! ### Constructive Fierz-Klein Model on 2-Orbit Space -/
+
+/-- Standard symmetric Weyl gauge weight on 2-orbit space. -/
+def standardTwoOrbitWeylGauge : WeylGaugeWeight (Fin 2) :=
+  ⟨fun _ => 1, fun _ => by norm_num⟩
+
+/-- Standard KMS state with equal expectation values on 2-orbit space. -/
+def standardTwoOrbitKMS : KMSOrbitState (Fin 2) :=
+  ⟨fun _ => 1, fun _ => by norm_num⟩
+
+/-- Standard super-orbit grading. -/
+def standardTwoOrbitSuperSpace : SuperOrbitSpace (Fin 2) :=
+  fun i => i == 1
+
+/-- Standard Fierz readout mapping projective coordinates $(p_0, p_1)$ to Fierz multivectors. -/
+def standardFierzReadout : FierzFromProjectiveCounts (Fin 2) :=
+  fun ch p =>
+    match ch with
+    | FierzChannel.scalar => p 0 + p 1
+    | FierzChannel.rotor => p 0 - p 1
+    | FierzChannel.vector => 2 * (p 0 * p 1)
+    | FierzChannel.axial => 0
+    | FierzChannel.area => 0
+
+/-- Fierz-Klein quadratic residual: $\text{scalar}^2 - \text{rotor}^2 - 4 p_0 p_1 = 0$. -/
+def standardKleinResidual : FierzKleinResidual :=
+  fun c => (c FierzChannel.scalar) ^ 2 - (c FierzChannel.rotor) ^ 2 - 2 * (c FierzChannel.vector)
+
+/-- Concrete 2-orbit Projective Count Fierz-Klein data package. -/
+def standardProjectiveFierzData : ProjectiveCountFierzKleinData (Fin 2) where
+  S := standardTwoOrbitSuperSpace
+  Ω := standardTwoOrbitWeylGauge
+  φ := standardTwoOrbitKMS
+  readout := standardFierzReadout
+  residual := standardKleinResidual
+
+/-- 🏆 THEOREM (Constructive Fierz-Klein Quadric Identity):
+    The projective Fierz-Klein residual vanishes identically on the constructive 2-orbit model:
+    $R(\text{coords}) = 0$. -/
+theorem standard_fierz_klein_quadric_exact :
+    standardProjectiveFierzData.residual standardProjectiveFierzData.coords = 0 := by
+  dsimp [standardProjectiveFierzData, ProjectiveCountFierzKleinData.coords,
+         standardKleinResidual, standardFierzReadout, projectiveOrbitCoordinate,
+         orbitPartitionFunction, standardTwoOrbitWeylGauge, standardTwoOrbitKMS]
+  simp [Fin.sum_univ_two]
+  ring
+
 end InfoGeometry.Canonical.WeylKMSGromovWittenCounts

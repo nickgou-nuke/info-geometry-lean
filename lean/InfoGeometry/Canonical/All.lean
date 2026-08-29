@@ -3495,7 +3495,7 @@ import InfoGeometry.Canonical.IBFreeEnergyMinimizationCapstone
 import InfoGeometry.Canonical.RicciLogDetBekensteinGeometryCapstone
 import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 import InfoGeometry.Quantum.BerryKeatingCCRCapstone
-import InfoGeometry.Canonical.MobiusApolloniusFoliationCapstone
+import InfoGeometry.Canonical.SouriauApolloniusEntropyFoliationCapstone
 
 namespace InfoGeometry
 

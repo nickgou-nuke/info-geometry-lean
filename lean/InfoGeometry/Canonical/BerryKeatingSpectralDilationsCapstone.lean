@@ -5,6 +5,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Canonical.RindlerLogDeRhamPolyaBridge
 import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
@@ -34,6 +35,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open Complex Real
 open scoped BigOperators
+open InfoGeometry.Canonical.RindlerLogDeRhamPolya
 open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
@@ -71,6 +73,36 @@ theorem dilationFlow_log (t x : ℝ) (hx : 0 < x) :
   rw [Real.log_mul (ne_of_gt hexp_pos) (ne_of_gt hx)]
   rw [Real.log_exp]
   ring
+
+/-- In logarithmic spectral height, the dilation flow is additive transport. -/
+theorem dilationFlow_log_exp_energy_transport (E t : ℝ) :
+    Real.log (dilationFlow t (Real.exp E)) = E + t := by
+  rw [dilationFlow_log t (Real.exp E) (Real.exp_pos E), Real.log_exp]
+
+/-- The Rindler/Hilbert--Pólya scale exponent of the dilated positive mode is
+the vertical translate of the original scale exponent. -/
+theorem dilationFlow_scaleExponent_transport (E t : ℝ) :
+    scaleExponentOfEnergy ((Real.log (dilationFlow t (Real.exp E)) : ℝ) : ℂ) =
+      scaleExponentOfEnergy (E : ℂ) + Complex.I * (t : ℂ) := by
+  rw [dilationFlow_log_exp_energy_transport]
+  exact scaleExponentOfRealEnergy_add E t
+
+/-- The dilation flow preserves the critical-line locus after passage to the
+existing logarithmic spectral-height chart. -/
+theorem dilationFlow_preserves_criticalLine_via_scaleExponent (E t : ℝ) :
+    InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnCriticalLine
+      (scaleExponentOfEnergy ((Real.log (dilationFlow t (Real.exp E)) : ℝ) : ℂ)) := by
+  rw [dilationFlow_log_exp_energy_transport]
+  exact scaleExponentOfRealEnergy_onCriticalLine (E + t)
+
+/-- The dilation flow preserves the Lee--Yang unit-circle image after passage
+to the existing logarithmic spectral-height chart. -/
+theorem dilationFlow_preserves_leeYangCircle_via_scaleExponent (E t : ℝ) :
+    InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnLeeYangCircle
+      (InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.cayleyToFugacity
+        (scaleExponentOfEnergy ((Real.log (dilationFlow t (Real.exp E)) : ℝ) : ℂ))) := by
+  rw [dilationFlow_log_exp_energy_transport]
+  exact scaleExponentOfRealEnergy_onLeeYangCircle (E + t)
 
 /-! ### 2. Quantum Heisenberg Commutators -/
 

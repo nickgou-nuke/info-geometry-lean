@@ -7894,3 +7894,9 @@ import InfoGeometry.LightCone.ChiralPrimeDecomposition
 import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
 import InfoGeometry.Quantum.MertensPartialTrace
 import InfoGeometry.Canonical.MertensPartialTraceCapstone
+import InfoGeometry.Quantum.HeckeFermionCommutation
+import InfoGeometry.Canonical.HeckeFermionCommutationCapstone
+import InfoGeometry.Quantum.BosonFockReciprocity
+import InfoGeometry.Canonical.BosonFockReciprocityCapstone
+import InfoGeometry.Spectral.RiemannWeilTrace
+import InfoGeometry.Canonical.RiemannWeilTraceCapstone

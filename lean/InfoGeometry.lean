@@ -287,6 +287,13 @@ import InfoGeometry.Canonical.SchwarzianApolloniusCapstone
 import InfoGeometry.Quantum.DikinApolloniusTrap
 import InfoGeometry.Canonical.DikinApolloniusTrapCapstone
 
+import InfoGeometry.ParaKahler.ApolloniusCylinder
+import InfoGeometry.Canonical.ApolloniusCylinderCapstone
+import InfoGeometry.ParaKahler.UnifiedPotential
+import InfoGeometry.Canonical.UnifiedPotentialCapstone
+import InfoGeometry.Quantum.ModularSurprisalDeficit
+import InfoGeometry.Canonical.ModularSurprisalDeficitCapstone
+
 namespace InfoGeometry
 
 /-- 

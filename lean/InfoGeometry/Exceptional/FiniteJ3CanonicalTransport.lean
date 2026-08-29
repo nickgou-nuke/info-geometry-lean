@@ -273,19 +273,41 @@ theorem canonicalEntry_jordanProduct_a_00 (X Y : J3) :
               (canonicalEquiv (X j 0))))).a := by
   exact canonicalEntry_jordanProduct_a X Y 0 0
 
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_readback
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂ =
-      RealSplitOctZornAlignment.fromZorn
-        (canonicalEquiv (jordanProduct X.1 Y.1 2 0)) := by
-  rfl
+theorem canonicalEntry_jordanProduct_b (X Y : J3) (i k : Fin 3) :
+    (canonicalEquiv (jordanProduct X Y i k)).b =
+      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
+        (ZornVectorMatrix.add
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (X i j))
+              (canonicalEquiv (Y j k)))
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
+              (canonicalEquiv (X j k))))).b := by
+  exact congrArg ZornVectorMatrix.b (canonicalEntry_jordanProduct X Y i k)
 
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃_readback
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃ =
-      RealSplitOctZornAlignment.fromZorn
-        (canonicalEquiv (jordanProduct X.1 Y.1 0 1)) := by
-  rfl
+theorem canonicalEntry_jordanProduct_v (X Y : J3) (i k : Fin 3) :
+    (canonicalEquiv (jordanProduct X Y i k)).v =
+      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
+        (ZornVectorMatrix.add
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (X i j))
+              (canonicalEquiv (Y j k)))
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
+              (canonicalEquiv (X j k))))).v := by
+  exact congrArg ZornVectorMatrix.v (canonicalEntry_jordanProduct X Y i k)
+
+theorem canonicalEntry_jordanProduct_w (X Y : J3) (i k : Fin 3) :
+    (canonicalEquiv (jordanProduct X Y i k)).w =
+      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
+        (ZornVectorMatrix.add
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (X i j))
+              (canonicalEquiv (Y j k)))
+          (∑ j : Fin 3,
+            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
+              (canonicalEquiv (X j k))))).w := by
+  exact congrArg ZornVectorMatrix.w (canonicalEntry_jordanProduct X Y i k)
 
 theorem hermitian_diagonal_eq_scalarZorn (X : HermitianJ3) (i : Fin 3) :
     X.1 i i = scalarZorn (X.1 i i).a := by

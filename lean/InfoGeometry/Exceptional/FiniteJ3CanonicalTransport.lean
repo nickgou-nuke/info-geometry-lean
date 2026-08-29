@@ -1,10 +1,37 @@
 import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
+import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 
 namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
 open InfoGeometry.Exceptional.RealZorn
 open InfoGeometry.Algebra
+
+def hermitianToH3 (X : HermitianJ3) : H3Zorn ℝ :=
+  { α₁ := (X.1 0 0).a
+    α₂ := (X.1 1 1).a
+    α₃ := (X.1 2 2).a
+    a := canonicalEquiv (X.1 0 1)
+    b := canonicalEquiv (X.1 1 2)
+    c := canonicalEquiv (X.1 2 0) }
+
+@[simp] theorem hermitianToH3_alpha₁ (X : HermitianJ3) :
+    (hermitianToH3 X).α₁ = (X.1 0 0).a := rfl
+
+@[simp] theorem hermitianToH3_alpha₂ (X : HermitianJ3) :
+    (hermitianToH3 X).α₂ = (X.1 1 1).a := rfl
+
+@[simp] theorem hermitianToH3_alpha₃ (X : HermitianJ3) :
+    (hermitianToH3 X).α₃ = (X.1 2 2).a := rfl
+
+@[simp] theorem hermitianToH3_a (X : HermitianJ3) :
+    (hermitianToH3 X).a = canonicalEquiv (X.1 0 1) := rfl
+
+@[simp] theorem hermitianToH3_b (X : HermitianJ3) :
+    (hermitianToH3 X).b = canonicalEquiv (X.1 1 2) := rfl
+
+@[simp] theorem hermitianToH3_c (X : HermitianJ3) :
+    (hermitianToH3 X).c = canonicalEquiv (X.1 2 0) := rfl
 
 theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
     canonicalEquiv (zornHalf X) =
@@ -76,7 +103,6 @@ theorem canonicalEntry_j3RawMul (X Y : J3) (i k : Fin 3) :
   rw [canonicalEquiv_add, canonicalEquiv_add]
   rw [canonicalEquiv_mul, canonicalEquiv_mul, canonicalEquiv_mul]
   simp [Fin.sum_univ_three, ZornVectorMatrix.add_assoc]
-  exact (ZornVectorMatrix.add_assoc _ _ _).symm
 
 theorem canonicalEntry_jordanProduct (X Y : J3) (i k : Fin 3) :
     canonicalEquiv (jordanProduct X Y i k) =

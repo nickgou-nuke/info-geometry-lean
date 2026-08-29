@@ -3480,6 +3480,7 @@ import InfoGeometry.Canonical.BostConnesLegendreFenchelCuspCapstone
 import InfoGeometry.Canonical.BostConnesAsymptoticLegendreDualityCapstone
 import InfoGeometry.Canonical.PrimeSubsystemInductiveFiltrationCapstone
 import InfoGeometry.Canonical.PrimonColimitFiltrationCapstone
+import InfoGeometry.Canonical.PrimonColimitEulerZetaConvergenceCapstone
 
 namespace InfoGeometry
 

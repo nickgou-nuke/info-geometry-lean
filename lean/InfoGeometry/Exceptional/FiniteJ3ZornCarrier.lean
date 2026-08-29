@@ -17,21 +17,27 @@ open InfoGeometry.Exceptional.RealZorn
 
 theorem zorn_add_assoc (A B C : ZornMatrixReal) :
     (A + B) + C = A + (B + C) := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [ZornMatrixReal.add_mat, add]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.add_mat, add]; ring
+  · dsimp [ZornMatrixReal.add_mat, add]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, add]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, add]; ring)
 
 theorem zorn_add_comm (A B : ZornMatrixReal) :
     A + B = B + A := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [ZornMatrixReal.add_mat, add]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.add_mat, add]; ring
+  · dsimp [ZornMatrixReal.add_mat, add]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, add]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, add]; ring)
 
 theorem zorn_add_zero (A : ZornMatrixReal) :
     A + 0 = A := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.zero, add, zero]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.zero, add, zero]; ring
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.zero, add, zero]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.zero, add, zero]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.zero, add, zero]; ring)
 
 theorem zorn_zero_add (A : ZornMatrixReal) :
     0 + A = A := by
@@ -39,10 +45,11 @@ theorem zorn_zero_add (A : ZornMatrixReal) :
 
 theorem zorn_add_neg (A : ZornMatrixReal) :
     A + (-A) = 0 := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg_mat,
-      ZornMatrixReal.zero, add, smul]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring)
 
 inductive CausalType
   | timelike
@@ -69,6 +76,13 @@ theorem causalType_eq_spacelike {q : ℝ} (hq : 0 < q) :
 
 abbrev J3 := Fin 3 → Fin 3 → ZornMatrixReal
 
+/-- Halving a Zorn matrix by scalar multiplication 1/2. -/
+noncomputable def zornHalf (A : ZornMatrixReal) : ZornMatrixReal :=
+  { a := A.a / 2
+    b := A.b / 2
+    u := smul (1 / 2) A.u
+    v := smul (1 / 2) A.v }
+
 /-! The standard Zorn conjugation swaps the diagonal entries and negates both
 off-diagonal vectors. -/
 def zornConj (A : ZornMatrixReal) : ZornMatrixReal :=
@@ -82,10 +96,8 @@ theorem zornConj_involutive (A : ZornMatrixReal) :
   apply ZornMatrixReal.ext
   · rfl
   · rfl
-  · dsimp [zornConj, smul]
-    congr 1 <;> ring
-  · dsimp [zornConj, smul]
-    congr 1 <;> ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul]; ring)
 
 theorem zornConj_norm (A : ZornMatrixReal) :
     (zornConj A).norm = A.norm := by
@@ -98,22 +110,27 @@ theorem zornConj_causalType (A : ZornMatrixReal) :
 
 theorem zornConj_add (A B : ZornMatrixReal) :
     zornConj (A + B) = zornConj A + zornConj B := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [zornConj, ZornMatrixReal.add_mat, add, smul]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · rfl
+  · rfl
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.add_mat, add, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.add_mat, add, smul]; ring)
 
 theorem zornConj_half (A : ZornMatrixReal) :
     zornConj (zornHalf A) = zornHalf (zornConj A) := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [zornConj, zornHalf, smul]
-    <;> ring
+  apply ZornMatrixReal.ext
+  · rfl
+  · rfl
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, zornHalf, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, zornHalf, smul]; ring)
 
 theorem zornConj_mul_reverse (A B : ZornMatrixReal) :
     zornConj (A * B) = zornConj B * zornConj A := by
-  apply ZornMatrixReal.ext <;>
-    dsimp [zornConj, ZornMatrixReal.mul, dot, cross, add, sub, smul]
-    <;> ring
-
+  apply ZornMatrixReal.ext
+  · dsimp [zornConj, ZornMatrixReal.mul, dot, smul]; ring
+  · dsimp [zornConj, ZornMatrixReal.mul, dot, smul]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.mul, dot, cross, add, sub, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.mul, dot, cross, add, sub, smul]; ring)
 
 def hermitian (X : J3) : Prop :=
   ∀ i j, X i j = X j i
@@ -126,31 +143,20 @@ theorem zero_hermitian : hermitian zero := by
   intro i j
   rfl
 
-/-! Correct hermitian symmetry for the Zorn involution.  The earlier
-`hermitian` predicate is retained as the raw transpose readout; this predicate
-is the one appropriate for a conjugated finite Jordan carrier. -/
+/-! Correct hermitian symmetry for the Zorn involution. -/
 def hermitianStar (X : J3) : Prop :=
   ∀ i j, X i j = zornConj (X j i)
 
 def HermitianJ3 := {X : J3 // hermitianStar X}
 
 @[ext] theorem HermitianJ3_ext {X Y : HermitianJ3}
-    (h : (X : J3) = (Y : J3)) : X = Y := by
+    (h : X.1 = Y.1) : X = Y := by
   exact Subtype.ext h
-
-/-! Explicit finite 3×3 multiplication.  The three summands are written out
-because the current Zorn carrier does not yet provide an additive-group
-instance required by the generic matrix API. -/
-def zornHalf (A : ZornMatrixReal) : ZornMatrixReal :=
-  { a := A.a / 2
-    b := A.b / 2
-    u := smul (1 / 2) A.u
-    v := smul (1 / 2) A.v }
 
 def j3RawMul (X Y : J3) (i k : Fin 3) : ZornMatrixReal :=
   X i 0 * Y 0 k + X i 1 * Y 1 k + X i 2 * Y 2 k
 
-def jordanProduct (X Y : J3) : J3 := fun i k =>
+noncomputable def jordanProduct (X Y : J3) : J3 := fun i k =>
   zornHalf (j3RawMul X Y i k + j3RawMul Y X i k)
 
 @[simp] theorem jordanProduct_apply (X Y : J3) (i k : Fin 3) :
@@ -160,17 +166,13 @@ def jordanProduct (X Y : J3) : J3 := fun i k =>
 theorem jordanProduct_comm (X Y : J3) :
     jordanProduct X Y = jordanProduct Y X := by
   funext i k
-  apply ZornMatrixReal.ext
-  all_goals
-    dsimp [jordanProduct, j3RawMul, zornHalf, ZornMatrixReal.add_mat,
-      ZornMatrixReal.mul, dot, cross, add, sub, smul]
-    ring
-
+  dsimp [jordanProduct]
+  rw [zorn_add_comm (j3RawMul X Y i k) (j3RawMul Y X i k)]
 
 theorem hermitianStar_reflect (X : J3) (hX : hermitianStar X) :
     ∀ i j, X j i = zornConj (X i j) := by
   intro i j
-  rw [hX j i, zornConj_involutive]
+  rw [hX i j, zornConj_involutive]
 
 @[ext] theorem J3_ext {X Y : J3} (h : ∀ i j, X i j = Y i j) : X = Y := by
   funext i j
@@ -181,10 +183,8 @@ theorem zero_hermitianStar : hermitianStar zero := by
   apply ZornMatrixReal.ext
   · rfl
   · rfl
-  · dsimp [zero, zornConj, smul]
-    congr 1 <;> ring
-  · dsimp [zero, zornConj, smul]
-    congr 1 <;> ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zero, zornConj, smul, ZornMatrixReal.zero]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zero, zornConj, smul, ZornMatrixReal.zero]; ring)
 
 def hermitianZero : HermitianJ3 := ⟨zero, zero_hermitianStar⟩
 
@@ -195,11 +195,16 @@ def identity : J3 := fun i j => if i = j then 1 else 0
 
 theorem identity_hermitian : hermitian identity := by
   intro i j
-  by_cases h : i = j <;> simp [identity, h, Ne.symm h]
+  dsimp [identity]
+  split_ifs with h1 h2
+  · rfl
+  · exact False.elim (h2 h1.symm)
+  · exact False.elim (h1 h2.symm)
+  · rfl
 
 theorem hermitian_transpose (X : J3) (hX : hermitian X) :
     ∀ i j, X j i = X i j := by
   intro i j
-  exact (hX j i).symm
+  exact hX i j
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

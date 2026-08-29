@@ -7842,3 +7842,10 @@ import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
 import InfoGeometry.Quantum.ApolloniusFisherInformation
 import InfoGeometry.Canonical.ApolloniusFisherInformationCapstone
 
+import InfoGeometry.Topological.FibonacciAnyons
+import InfoGeometry.Canonical.FibonacciAnyonsCapstone
+import InfoGeometry.Topological.ApolloniusBraiding
+import InfoGeometry.Canonical.ApolloniusBraidingCapstone
+import InfoGeometry.Topological.NonAbelianBerry
+import InfoGeometry.Canonical.NonAbelianBerryCapstone
+

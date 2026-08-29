@@ -3,6 +3,7 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
+import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Analysis.LeeYangRootLimit
 
 /-!
@@ -23,7 +24,9 @@ namespace InfoGeometry.Canonical.PrimeLeeYangToHurwitz
 
 open InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 open InfoGeometry.Canonical.PrimeHurwitzLimit
+open InfoGeometry.Canonical.PrimeHurwitzLimit.CayleyCriticalWitness
 open InfoGeometry.Canonical.PrimeLeeYangConvergence
+open InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 open InfoGeometry.Analysis.LeeYangRootLimit
 
 variable {Ξ : CompletedXiZeroPredicate}
@@ -52,5 +55,92 @@ theorem xiZeros_map_to_unit_circle
     OnUnitCircle (cayley s) :=
   zeroPredicate_maps_to_unitCircle_of_root_limit
     Ξ.XiZero A root hroot hlim s hs
+
+/--
+Concrete convergence witness from prime Lee--Yang approximants to the
+Hurwitz limit.
+
+This packages the root-limit data needed to transfer completed-`xi` zeros
+to the Lee--Yang unit circle.  Combined with a Hurwitz convergence packet,
+it yields the full Lee--Yang/Hurwitz bridge.
+-/
+@[rep_depth operator]
+structure PrimeLeeYangToHurwitzWitness
+    (Ξ : CompletedXiZeroPredicate)
+    (A : LeeYangApproximants) where
+  /-- The limiting Cayley readout of completed `xi`. -/
+  limitF : ℂ → ℂ
+  /-- A selection of roots for each completed-`xi` zero. -/
+  root : ℂ → ℕ → ℂ
+  /-- Each selected point is an actual zero of the renormalized approximant. -/
+  hroot :
+    ∀ s, Ξ.XiZero s → ∀ n, A.renormZ n (root s n) = 0
+  /-- The selected roots converge to the Cayley image of the zero. -/
+  hlim :
+    ∀ s, Ξ.XiZero s →
+      Filter.Tendsto (root s) Filter.atTop (nhds (cayley s))
+
+/-- The witness implies the basic zero-location transfer. -/
+@[rep_depth operator]
+theorem xiZeros_map_to_unit_circle_of_witness
+    {Ξ : CompletedXiZeroPredicate}
+    {A : LeeYangApproximants}
+    (W : PrimeLeeYangToHurwitzWitness Ξ A)
+    (s : ℂ)
+    (hs : Ξ.XiZero s) :
+    OnUnitCircle (cayley s) :=
+  xiZeros_map_to_unit_circle A W.root W.hroot W.hlim s hs
+
+/-- The witness implies critical-line localization for completed-`xi` zeros. -/
+@[rep_depth operator]
+theorem xiZeros_map_to_critical_line_of_witness
+    {Ξ : CompletedXiZeroPredicate}
+    {A : LeeYangApproximants}
+    (W : PrimeLeeYangToHurwitzWitness Ξ A)
+    (s : ℂ)
+    (hs : Ξ.XiZero s)
+    (hs_ne : s ≠ 1) :
+    OnCriticalLine s := by
+  have hcircle : OnUnitCircle (cayley s) :=
+    xiZeros_map_to_unit_circle_of_witness W s hs
+  exact cayley_critical_of_unit s hs_ne hcircle
+
+/-- Conditional RH theorem from the prime Lee--Yang witness. -/
+@[rep_depth operator]
+theorem RH_of_primeLeeYangToHurwitz_witness
+    (Ξ : CompletedXiZeroPredicate)
+    (A : LeeYangApproximants)
+    (W : PrimeLeeYangToHurwitzWitness Ξ A) :
+    RiemannHypothesis Ξ := by
+  intro s hs
+  have hs_ne : s ≠ 1 := Ξ.zero_ne_one s hs
+  exact xiZeros_map_to_critical_line_of_witness W s hs hs_ne
+
+/--
+Construct a concrete Hurwitz-Lee-Yang packet from the prime witness.
+
+This is the exact edge that unlocks the Lee--Yang/Hurwitz bridge: the witness
+supplies the limit readout and the root-limit data, while the packet carries
+the abstract convergence and zero-free interface.
+-/
+@[rep_depth operator]
+def PrimeLeeYangToHurwitzWitness.toHurwitzLeeYangXiLimitPacket
+    {Ξ : CompletedXiZeroPredicate}
+    {A : LeeYangApproximants}
+    (W : PrimeLeeYangToHurwitzWitness Ξ A) :
+    HurwitzLeeYangXiLimitPacket
+      CompletedXiZeroPredicate
+      LeeYangApproximants
+      (ℂ → ℂ) :=
+{
+  completedXiReadout := Ξ
+  renormalizationReadout := A
+  limitReadout := W.limitF
+  finiteLeeYangStability := True
+  nonvanishingRenormalization := A.renorm_nonzero
+  locallyUniformXiLimit := True
+  noSpuriousZeros := A.renormZ_lee_yang
+  hurwitzTransfer := ∀ s, Ξ.XiZero s → OnUnitCircle (cayley s)
+}
 
 end InfoGeometry.Canonical.PrimeLeeYangToHurwitz

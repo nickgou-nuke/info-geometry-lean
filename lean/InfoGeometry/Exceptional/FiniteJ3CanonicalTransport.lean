@@ -2,6 +2,7 @@ import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
+import InfoGeometry.Algebra.RealSplitOctSimp
 
 namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
@@ -396,11 +397,86 @@ theorem hermitianToH3_finiteJordanProduct_α₁_sum
       hermitianToH3_finiteJordanProduct_α₁_canonical X Y
     _ = _ := canonicalEntry_jordanProduct_a X.1 Y.1 0 0
 
+theorem realConj_eq_zornConj (A : ZornMatrixReal) :
+    realConj A = zornConj A := by
+  rfl
+
+theorem canonicalEquiv_zornConj (A : ZornMatrixReal) :
+    canonicalEquiv (zornConj A) =
+      ZornVectorMatrix.conj (canonicalEquiv A) := by
+  rw [← realConj_eq_zornConj A]
+  exact canonicalEquiv_conj A
+
+theorem canonicalEquiv_mul_a (A B : ZornMatrixReal) :
+    (canonicalEquiv (A * B)).a =
+      (canonicalEquiv A).a * (canonicalEquiv B).a +
+        ZornVec3.dot (canonicalEquiv A).v (canonicalEquiv B).w := by
+  rw [canonicalEquiv_mul]
+  rfl
+
+theorem canonicalMul_a (A B : ZornVectorMatrix ℝ) :
+    (ZornVectorMatrix.mul A B).a = A.a * B.a + ZornVec3.dot A.v B.w := by
+  rfl
+
+theorem canonicalEquiv_mul_v (A B : ZornMatrixReal) (i : Fin 3) :
+    (canonicalEquiv (A * B)).v i =
+      (canonicalEquiv A).a * (canonicalEquiv B).v i +
+        (canonicalEquiv B).b * (canonicalEquiv A).v i -
+          ZornVec3.cross (canonicalEquiv A).w (canonicalEquiv B).w i := by
+  rw [canonicalEquiv_mul]
+  rfl
+
+theorem canonicalEquiv_mul_w (A B : ZornMatrixReal) (i : Fin 3) :
+    (canonicalEquiv (A * B)).w i =
+      (canonicalEquiv B).a * (canonicalEquiv A).w i +
+        (canonicalEquiv A).b * (canonicalEquiv B).w i +
+          ZornVec3.cross (canonicalEquiv A).v (canonicalEquiv B).v i := by
+  rw [canonicalEquiv_mul]
+  rfl
+
+theorem canonicalEquiv_mul_b (A B : ZornMatrixReal) :
+    (canonicalEquiv (A * B)).b =
+      ZornVec3.dot (canonicalEquiv A).w (canonicalEquiv B).v +
+        (canonicalEquiv A).b * (canonicalEquiv B).b := by
+  rw [canonicalEquiv_mul]
+  rfl
+
+theorem hermitian_entry_a_eq_b (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).a = (X.1 j i).b := by
+  have h := congrArg ZornMatrixReal.a (X.property i j)
+  simpa [zornConj] using h
+
+theorem hermitian_entry_b_eq_a (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).b = (X.1 j i).a := by
+  have h := congrArg ZornMatrixReal.b (X.property i j)
+  simpa [zornConj] using h
+
+theorem hermitian_entry_u_eq_neg_u (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).u = smul (-1) (X.1 j i).u := by
+  have h := congrArg ZornMatrixReal.u (X.property i j)
+  simpa [zornConj] using h
+
+theorem hermitian_entry_v_eq_neg_v (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).v = smul (-1) (X.1 j i).v := by
+  have h := congrArg ZornMatrixReal.v (X.property i j)
+  simpa [zornConj] using h
+
+theorem hermitian_entry_u_fst (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).u.1 = - (X.1 j i).u.1 := by
+  have h := hermitian_entry_u_eq_neg_u X i j
+  simpa [smul] using congrArg Prod.fst h
+
+theorem hermitian_entry_u_snd_fst (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).u.2.1 = - (X.1 j i).u.2.1 := by
+  have h := hermitian_entry_u_eq_neg_u X i j
+  simpa [smul] using congrArg (fun q => q.2.1) h
+
 theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
     canonicalEquiv (X.1 j i) =
       ZornVectorMatrix.conj (canonicalEquiv (X.1 i j)) := by
   rw [← canonicalEquiv_conj (X.1 i j)]
   congr 1
-  exact (X.property i j).symm
+  rw [realConj_eq_zornConj]
+  exact X.property j i
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

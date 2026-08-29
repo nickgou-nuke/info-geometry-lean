@@ -49,12 +49,12 @@ theorem zorn_zero_add (A : ZornMatrixReal) :
 
 theorem zorn_add_neg (A : ZornMatrixReal) :
     A + (-A) = 0 := by
-  change ZornMatrixReal.add_mat A (ZornMatrixReal.neg_mat A) = ZornMatrixReal.zero
+  change ZornMatrixReal.add_mat A (ZornMatrixReal.neg A) = ZornMatrixReal.zero
   apply ZornMatrixReal.ext
-  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg_mat, ZornMatrixReal.zero, add, smul]; ring
-  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg_mat, ZornMatrixReal.zero, add, smul]; ring
-  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg_mat, ZornMatrixReal.zero, add, smul]; ring)
-  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg_mat, ZornMatrixReal.zero, add, smul]; ring)
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring
+  · dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.add_mat, ZornMatrixReal.neg, ZornMatrixReal.zero, add, smul]; ring)
 
 inductive CausalType
   | timelike

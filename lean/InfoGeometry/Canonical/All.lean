@@ -3482,6 +3482,7 @@ import InfoGeometry.Canonical.PrimeSubsystemInductiveFiltrationCapstone
 import InfoGeometry.Canonical.PrimonColimitFiltrationCapstone
 import InfoGeometry.Canonical.PrimonColimitEulerZetaConvergenceCapstone
 import InfoGeometry.Canonical.PrimonMercatorFockColimitCapstone
+import InfoGeometry.Canonical.PrimonVonMangoldtDirichletCapstone
 
 namespace InfoGeometry
 

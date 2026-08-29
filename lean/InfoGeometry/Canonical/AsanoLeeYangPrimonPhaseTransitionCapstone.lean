@@ -222,7 +222,9 @@ theorem primon_critical_metric_vanishes (eps : ℝ) (h_eps : 0 < eps) :
     have h_M_pos : 0 ≤ 1 / Real.sqrt eps := le_of_lt (one_div_pos.mpr h_sqrt_pos)
     have h_eta_pos : 0 ≤ eta := le_of_lt (lt_trans (one_div_pos.mpr h_sqrt_pos) h_eta)
     have h_sq : (1 / Real.sqrt eps) ^ 2 < eta ^ 2 := (sq_lt_sq₀ h_M_pos h_eta_pos).mpr h_eta
-    rw [Real.sq_sqrt (le_of_lt h_eps)] at h_sq
+    have h_lhs : (1 / Real.sqrt eps) ^ 2 = 1 / eps := by
+      rw [_root_.one_div_pow, Real.sq_sqrt (le_of_lt h_eps)]
+    rw [h_lhs] at h_sq
     have h_inv : 1 / (eta ^ 2) < 1 / (1 / eps) := by
       exact one_div_lt_one_div_of_lt (one_div_pos.mpr h_eps) h_sq
     rw [one_div_one_div] at h_inv

@@ -69,6 +69,7 @@ import InfoGeometry.Algebra.BdGSchurBerezinianCompatibility
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AkivisLeftRegularBridge
 import InfoGeometry.Algebra.RealAlbertJordanOperator
+import InfoGeometry.Algebra.CubicJordanFiniteDiagonalReadout
 import InfoGeometry.Algebra.PrimeA1RootSystem
 import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix

@@ -3530,6 +3530,7 @@ import InfoGeometry.Canonical.ChebyshevBoundaryCapstone
 import InfoGeometry.Canonical.HilbertPolyaCapstone
 import InfoGeometry.Canonical.DeficiencyIndicesCapstone
 import InfoGeometry.Canonical.FermionFockMoebiusCapstone
+import InfoGeometry.Canonical.RapidityAngleApolloniusCapstone
 
 namespace InfoGeometry
 

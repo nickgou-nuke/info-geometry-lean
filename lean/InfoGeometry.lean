@@ -309,6 +309,8 @@ import InfoGeometry.Quantum.DeficiencyIndices
 import InfoGeometry.Canonical.DeficiencyIndicesCapstone
 import InfoGeometry.Quantum.FermionFockMoebius
 import InfoGeometry.Canonical.FermionFockMoebiusCapstone
+import InfoGeometry.ParaKahler.RapidityAngleApollonius
+import InfoGeometry.Canonical.RapidityAngleApolloniusCapstone
 
 namespace InfoGeometry
 

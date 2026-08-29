@@ -3535,6 +3535,9 @@ import InfoGeometry.Canonical.BostConnesPrimonGasCapstone
 import InfoGeometry.Canonical.ApolloniusCylinderLightConeCapstone
 import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
 import InfoGeometry.Canonical.MertensPartialTraceCapstone
+import InfoGeometry.Canonical.HeckeFermionCommutationCapstone
+import InfoGeometry.Canonical.BosonFockReciprocityCapstone
+import InfoGeometry.Canonical.RiemannWeilTraceCapstone
 
 namespace InfoGeometry
 

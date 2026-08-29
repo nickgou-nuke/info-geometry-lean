@@ -24,12 +24,18 @@ theorem grand_canonical_primon_colimit_synthesis
     (subsystemPotential S₁ beta ≤ subsystemPotential S₂ beta) ∧
     (subsystemPotential S₁ beta < subsystemPotential (insert p_new S₁) beta) ∧
     (0 ≤ subsystemPotential S₁ beta) ∧
+    (subsystemPotential S₁ beta = Real.log (∏ p ∈ S₁, primeEulerFactor p beta)) ∧
+    (1 ≤ ∏ p ∈ S₁, primeEulerFactor p beta) ∧
+    ((p_new : ℝ) ^ (-beta) ≤ primeSurprisalPotential p_new beta) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
     (F * B * F = R) :=
   ⟨prime_surprisal_pos p_new hp_new beta h_beta,
    subsystem_potential_monotone S₁ S₂ h_sub h_prime beta h_beta,
    subsystem_potential_strict_step S₁ p_new h_nin hp_new beta h_beta,
    subsystem_potential_nonneg S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   subsystem_potential_eq_log_prod S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   finite_euler_prod_ge_one S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   prime_surprisal_ge_linear p_new hp_new beta h_beta,
    F_sq,
    F_B_F_eq_R⟩
 

@@ -126,6 +126,49 @@ theorem subsystem_potential_strict_step (S : Finset ℕ) (p_new : ℕ) (h_nin : 
   have h_single_pos := prime_surprisal_pos p_new hp beta h_beta
   linarith
 
+/-! ## Log-Product Morphism & Taylor Lower Bound -/
+
+/-- 🏆 THEOREM 8 (Log-Product Morphism):
+    The composite potential ψ_S(β) equals the log of the finite Euler product:
+    ψ_S(β) = ln( ∏_{p ∈ S} (1 - p^(-β))⁻¹ ). -/
+theorem subsystem_potential_eq_log_prod (S : Finset ℕ) (h_prime : ∀ p ∈ S, 2 ≤ p)
+    (beta : ℝ) (h_beta : 0 < beta) :
+    subsystemPotential S beta = Real.log (∏ p ∈ S, primeEulerFactor p beta) := by
+  unfold subsystemPotential primeSurprisalPotential
+  rw [Real.log_prod]
+  intro p hp
+  have h_gt := prime_euler_factor_gt_one p (h_prime p hp) beta h_beta
+  linarith
+
+/-- 🏆 THEOREM 9 (Finite Euler Product Lower Bound):
+    ∏_{p ∈ S} (1 - p^(-β))⁻¹ ≥ 1 for any prime subset S. -/
+theorem finite_euler_prod_ge_one (S : Finset ℕ) (h_prime : ∀ p ∈ S, 2 ≤ p)
+    (beta : ℝ) (h_beta : 0 < beta) :
+    1 ≤ ∏ p ∈ S, primeEulerFactor p beta := by
+  have h_log_nonneg : 0 ≤ Real.log (∏ p ∈ S, primeEulerFactor p beta) := by
+    rw [← subsystem_potential_eq_log_prod S h_prime beta h_beta]
+    exact subsystem_potential_nonneg S h_prime beta h_beta
+  have h_pos : 0 < ∏ p ∈ S, primeEulerFactor p beta := by
+    apply Finset.prod_pos
+    intro p hp
+    have h_gt := prime_euler_factor_gt_one p (h_prime p hp) beta h_beta
+    linarith
+  rw [← Real.log_one] at h_log_nonneg
+  exact (Real.log_le_log_iff (by positivity) h_pos).mp h_log_nonneg
+
+/-- 🏆 THEOREM 10 (First-Order Taylor Lower Bound):
+    p^(-β) ≤ ψ^{(p)}(β) for all p ≥ 2 and β > 0. -/
+theorem prime_surprisal_ge_linear (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta) :
+    (p : ℝ) ^ (-beta) ≤ primeSurprisalPotential p beta := by
+  rcases prime_boltzmann_factor_bounds p hp beta h_beta with ⟨h_pos, h_lt_one⟩
+  unfold primeSurprisalPotential primeEulerFactor
+  have h_denom : 0 < 1 - (p : ℝ) ^ (-beta) := by linarith
+  rw [Real.log_inv]
+  have h_log_le : Real.log (1 - (p : ℝ) ^ (-beta)) ≤ - ((p : ℝ) ^ (-beta)) := by
+    have h_le := Real.log_le_sub_one_of_pos h_denom
+    linarith
+  linarith
+
 /-! ## Master Capstone Synthesis -/
 
 /-- 🏆 GRAND CAPSTONE: Complete Inductive Filtration and Monotone Convergence -/

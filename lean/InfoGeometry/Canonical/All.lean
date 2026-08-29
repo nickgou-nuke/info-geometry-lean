@@ -3526,6 +3526,11 @@ import InfoGeometry.Canonical.DikinMetriplecticCapstone
 import InfoGeometry.Canonical.HomogeneousNumbersCapstone
 import InfoGeometry.Canonical.NaturalEmbeddingCapstone
 
+import InfoGeometry.Canonical.ChebyshevBoundaryCapstone
+import InfoGeometry.Canonical.HilbertPolyaCapstone
+import InfoGeometry.Canonical.DeficiencyIndicesCapstone
+import InfoGeometry.Canonical.FermionFockMoebiusCapstone
+
 namespace InfoGeometry
 
 /-!

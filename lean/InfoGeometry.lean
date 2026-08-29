@@ -301,6 +301,15 @@ import InfoGeometry.Canonical.HomogeneousNumbersCapstone
 import InfoGeometry.Projective.NaturalEmbedding
 import InfoGeometry.Canonical.NaturalEmbeddingCapstone
 
+import InfoGeometry.Spectral.ChebyshevBoundary
+import InfoGeometry.Canonical.ChebyshevBoundaryCapstone
+import InfoGeometry.Quantum.HilbertPolya
+import InfoGeometry.Canonical.HilbertPolyaCapstone
+import InfoGeometry.Quantum.DeficiencyIndices
+import InfoGeometry.Canonical.DeficiencyIndicesCapstone
+import InfoGeometry.Quantum.FermionFockMoebius
+import InfoGeometry.Canonical.FermionFockMoebiusCapstone
+
 namespace InfoGeometry
 
 /-- 

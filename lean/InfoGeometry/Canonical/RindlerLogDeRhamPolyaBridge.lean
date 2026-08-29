@@ -125,6 +125,7 @@ theorem scaleExponentOfRealEnergy_add (E t : ℝ) :
     scaleExponentOfEnergy ((E + t : ℝ) : ℂ) =
       scaleExponentOfEnergy (E : ℂ) + Complex.I * (t : ℂ) := by
   dsimp [scaleExponentOfEnergy]
+  rw [show ((E + t : ℝ) : ℂ) = (E : ℂ) + (t : ℂ) by simp]
   ring
 
 /-- Translating the real spectral height preserves the critical-line locus. -/

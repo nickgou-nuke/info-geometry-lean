@@ -68,6 +68,11 @@ theorem toCanonical_add (X Y : ZornMatrixReal) :
     fin_cases i <;> rfl
   · rfl
 
+theorem canonicalEquiv_add (X Y : ZornMatrixReal) :
+    canonicalEquiv (X + Y) =
+      ZornVectorMatrix.add (canonicalEquiv X) (canonicalEquiv Y) := by
+  exact toCanonical_add X Y
+
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by

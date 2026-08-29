@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Exceptional.SplitOctonionZornReal
+import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 
 /-!
 # Finite `J₃` carrier over the existing real Zorn model
@@ -87,6 +88,28 @@ noncomputable def zornHalf (A : ZornMatrixReal) : ZornMatrixReal :=
     b := A.b / 2
     u := smul (1 / 2) A.u
     v := smul (1 / 2) A.v }
+
+theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
+    InfoGeometry.Exceptional.RealZorn.canonicalEquiv (zornHalf X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.smul (2 : ℝ)⁻¹
+        (InfoGeometry.Exceptional.RealZorn.canonicalEquiv X) := by
+  apply InfoGeometry.Algebra.ZornVectorMatrix.ext
+  · change X.a / 2 = (2 : ℝ)⁻¹ * X.a
+    ring
+  · funext i
+    fin_cases i <;>
+      simp [InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
+        InfoGeometry.Exceptional.RealZorn.toCanonical,
+        InfoGeometry.Exceptional.RealZorn.vecToCanonical,
+        InfoGeometry.Algebra.ZornVectorMatrix.smul, smul]
+  · funext i
+    fin_cases i <;>
+      simp [InfoGeometry.Exceptional.RealZorn.canonicalEquiv,
+        InfoGeometry.Exceptional.RealZorn.toCanonical,
+        InfoGeometry.Exceptional.RealZorn.vecToCanonical,
+        InfoGeometry.Algebra.ZornVectorMatrix.smul, smul]
+  · change X.b / 2 = (2 : ℝ)⁻¹ * X.b
+    ring
 
 /-! The standard Zorn conjugation swaps the diagonal entries and negates both
 off-diagonal vectors. -/

@@ -4,6 +4,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
@@ -45,6 +46,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open scoped BigOperators Real Complex Matrix
 open Complex Matrix
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
@@ -55,52 +57,6 @@ noncomputable section
 namespace InfoGeometry.Quantum.BerryKeatingCCR
 
 /-! ### 1. Möbius Midpoint & Apollonius Foliation -/
-
-/-- Numerator squared distance to zero $z_0 = 3/2$: $(\sigma - 3/2)^2 + t^2$. -/
-def mobiusNumerator (σ t : ℝ) : ℝ :=
-  (σ - 3/2) ^ 2 + t ^ 2
-
-/-- Denominator squared distance to pole $p_0 = -1/2$: $(\sigma + 1/2)^2 + t^2$. -/
-def mobiusDenominator (σ t : ℝ) : ℝ :=
-  (σ + 1/2) ^ 2 + t ^ 2
-
-/-- 🏆 THEOREM 1: The difference of Apollonian squared distances is strictly affine:
-    $\mathcal{N}(\sigma, t) - \mathcal{D}(\sigma, t) = -4\sigma + 2$. -/
-theorem mobius_apollonius_difference (σ t : ℝ) :
-    mobiusNumerator σ t - mobiusDenominator σ t = -4 * σ + 2 := by
-  dsimp [mobiusNumerator, mobiusDenominator]
-  ring
-
-/-- 🏆 THEOREM 2: The unitary level set $\mathcal{N}(\sigma, t) = \mathcal{D}(\sigma, t)$ is identically the critical line $\sigma = 1/2$. -/
-theorem mobius_unitary_level_set_iff (σ t : ℝ) :
-    mobiusNumerator σ t = mobiusDenominator σ t ↔ σ = 1/2 := by
-  have h_diff := mobius_apollonius_difference σ t
-  constructor
-  · intro h_eq
-    have : mobiusNumerator σ t - mobiusDenominator σ t = 0 := sub_eq_zero.mpr h_eq
-    rw [h_diff] at this
-    linarith
-  · intro h_half
-    have h_zero : mobiusNumerator σ t - mobiusDenominator σ t = 0 := by
-      rw [h_diff, h_half]
-      ring
-    exact sub_eq_zero.mp h_zero
-
-/-- 🏆 THEOREM 3: Subharmonic foliation mapping to the unit disk:
-    $\mathcal{N}(\sigma, t) < \mathcal{D}(\sigma, t) \iff \sigma > 1/2$. -/
-theorem mobius_disk_foliation_iff (σ t : ℝ) :
-    mobiusNumerator σ t < mobiusDenominator σ t ↔ 1/2 < σ := by
-  have h_diff := mobius_apollonius_difference σ t
-  constructor
-  · intro h_lt
-    have : mobiusNumerator σ t - mobiusDenominator σ t < 0 := sub_neg.mpr h_lt
-    rw [h_diff] at this
-    linarith
-  · intro h_gt
-    have : mobiusNumerator σ t - mobiusDenominator σ t < 0 := by
-      rw [h_diff]
-      linarith
-    exact sub_neg.mp this
 
 /-! ### 2. Berry-Keating Hamiltonian & Heisenberg CCR -/
 

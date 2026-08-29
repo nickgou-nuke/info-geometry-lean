@@ -296,7 +296,7 @@ theorem grand_unified_omnicapstone_master_synthesis
     (n_cc m_cc : ℕ) (x_cc : ℝ) (gamma_cc : ℝ) (p_cc : ℕ) (lambda_cc : ℝ) (h_lambda_cc : lambda_cc ≠ 0)
     -- Gopakumar-Vafa
     (d_gv beta_gv : ℕ) (hd_gv : 1 ≤ d_gv) (hbeta_gv : 1 ≤ beta_gv) (t_gv : ℝ) (ht_gv : 0 < t_gv)
-    (gs_gv : ℝ) (h_sin_gv : Real.sin ((d_gv : ℝ) * gs_gv / 2) ≠ 0) (N_gv : ℕ) (inv_gv : Canonical.GopakumarVafa.GVBPSInvariant)
+    (gs_gv : ℝ) (h_sin_gv : Real.sin ((d_gv : ℝ) * gs_gv / 2) ≠ 0) (N_gv : ℕ) (_inv_gv : Canonical.GopakumarVafa.GVBPSInvariant)
     -- Rieffel Torus
     (theta_rt : ℝ) (h0_rt : 0 ≤ theta_rt) (h1_rt : theta_rt ≤ 1) (h_irrat_rt : Irrational theta_rt)
     (m_rt n_rt : ℤ) (h_zero_rt : Canonical.RieffelTorusKTheory.k0TraceMap m_rt n_rt theta_rt = 0)
@@ -369,7 +369,9 @@ theorem grand_unified_omnicapstone_master_synthesis
   have h_vir := Canonical.VirasoroCasimir.grand_virasoro_casimir_synthesis m_vir n_vir
   have h_sel := Arithmetic.SelbergTrace.grand_selberg_trace_primon_synthesis p_sel hp_sel s_sel hs_sel k_sel
   have h_cc := Arithmetic.ConnesConsaniMotives.grand_connes_consani_motives_synthesis n_cc m_cc x_cc gamma_cc p_cc lambda_cc h_lambda_cc
-  have h_gv := Canonical.GopakumarVafa.grand_gopakumar_vafa_synthesis d_gv beta_gv hd_gv hbeta_gv t_gv ht_gv gs_gv h_sin_gv N_gv inv_gv
+  have h_gv_bounds := Canonical.GopakumarVafa.instantonWeight_bounds d_gv beta_gv hd_gv hbeta_gv t_gv ht_gv
+  have h_gv_pos := Canonical.GopakumarVafa.gvSinFactorGenus0_pos d_gv gs_gv h_sin_gv
+  have h_gv_trans := Canonical.GopakumarVafa.conifold_transition_identification N_gv gs_gv
   have h_rt := Canonical.RieffelTorusKTheory.grand_rieffel_torus_ktheory_synthesis theta_rt h0_rt h1_rt h_irrat_rt m_rt n_rt h_zero_rt
   have h_ac := Arithmetic.AmariChentsov.grand_amari_chentsov_alpha_geometry_synthesis grad_a grad_minus_a grad_0 R1 alpha g_fisher
   refine ⟨h_univ.1,
@@ -389,7 +391,7 @@ theorem grand_unified_omnicapstone_master_synthesis
            Arithmetic.AmariDuallyFlatPrimon.kullbackLeibler_nonneg p_amari q_amari hp_pos hq_pos hp_sum hq_sum⟩,
           ⟨h_sel.1, h_sel.2.1, h_sel.2.2.1, h_sel.2.2.2.1⟩,
           ⟨h_cc.1, h_cc.2.1, h_cc.2.2.1⟩,
-          ⟨h_gv.1.1, h_gv.1.2, h_gv.2.1, h_gv.2.2.1⟩,
+          ⟨h_gv_bounds.1, h_gv_bounds.2, h_gv_pos, h_gv_trans⟩,
           ⟨h_rt.1, h_rt.2.1, h_rt.2.2.1, h_rt.2.2.2.1⟩,
           ⟨h_ac.1, h_ac.2.1, h_ac.2.2.1, h_ac.2.2.2.1, h_ac.2.2.2.2.1, h_ac.2.2.2.2.2.1, h_ac.2.2.2.2.2.2.1⟩,
           ⟨Canonical.YangBaxterProof.F_sq, Canonical.YangBaxterProof.F_B_F_eq_R⟩⟩

@@ -1,10 +1,45 @@
 import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
+import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 
 namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
 open InfoGeometry.Exceptional.RealZorn
 open InfoGeometry.Algebra
+
+def hermitianToH3 (X : HermitianJ3) : H3Zorn ℝ :=
+  { α₁ := (X.1 0 0).a
+    α₂ := (X.1 1 1).a
+    α₃ := (X.1 2 2).a
+    a := canonicalEquiv (X.1 0 1)
+    b := canonicalEquiv (X.1 1 2)
+    c := canonicalEquiv (X.1 2 0) }
+
+def scalarZorn (r : ℝ) : ZornMatrixReal :=
+  { a := r, b := r, u := (0, 0, 0), v := (0, 0, 0) }
+
+def h3ToHermitian (Z : H3Zorn ℝ) : J3 := fun i j =>
+  if i = 0 ∧ j = 0 then scalarZorn Z.α₁
+  else if i = 1 ∧ j = 1 then scalarZorn Z.α₂
+  else if i = 2 ∧ j = 2 then scalarZorn Z.α₃
+  else if i = 0 ∧ j = 1 then canonicalEquiv.symm Z.a
+  else if i = 1 ∧ j = 0 then zornConj (canonicalEquiv.symm Z.a)
+  else if i = 1 ∧ j = 2 then canonicalEquiv.symm Z.b
+  else if i = 2 ∧ j = 1 then zornConj (canonicalEquiv.symm Z.b)
+  else if i = 2 ∧ j = 0 then canonicalEquiv.symm Z.c
+  else zornConj (canonicalEquiv.symm Z.c)
+
+theorem scalarZorn_conj (r : ℝ) :
+    zornConj (scalarZorn r) = scalarZorn r := by
+  apply ZornMatrixReal.ext <;> simp [scalarZorn, zornConj, smul]
+
+theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
+    hermitianStar (h3ToHermitian Z) := by
+  intro i j
+  fin_cases i <;> fin_cases j <;>
+    simp [h3ToHermitian, scalarZorn, zornConj,
+      zornConj_involutive, scalarZorn_conj]
 
 def canonicalEntry (X : J3) : Fin 3 → Fin 3 → ZornVectorMatrix ℝ :=
   fun i j => canonicalEquiv (X i j)

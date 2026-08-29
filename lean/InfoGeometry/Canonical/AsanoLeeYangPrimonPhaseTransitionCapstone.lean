@@ -8,6 +8,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge
+import InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
 
 /-!
 # Asano Compactification Witness, V₄ Klein Symmetry, Lee-Yang Circle & Primon Phase Transition
@@ -55,6 +56,7 @@ open Complex Matrix
 open scoped ComplexConjugate
 open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Analysis.AsanoLeeYangCircle
+open InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
@@ -125,58 +127,9 @@ theorem asano_contract_disk_free_of_norm_ge (A D : ℂ) (hD : D ≠ 0) (h_ge : �
 
 /-! ### 2. Asano $V_4$ Klein Four-Group Invariance -/
 
-/-- V4 generator labels. -/
-inductive V4Group
-| id
-| inv
-| conj
-| cpt
-deriving DecidableEq, Repr
-
-/-- Group multiplication table on V4. -/
-def v4Mul (g1 g2 : V4Group) : V4Group :=
-  match g1, g2 with
-  | V4Group.id, x => x
-  | x, V4Group.id => x
-  | V4Group.inv, V4Group.inv => V4Group.id
-  | V4Group.conj, V4Group.conj => V4Group.id
-  | V4Group.cpt, V4Group.cpt => V4Group.id
-  | V4Group.inv, V4Group.conj => V4Group.cpt
-  | V4Group.conj, V4Group.inv => V4Group.cpt
-  | V4Group.inv, V4Group.cpt => V4Group.conj
-  | V4Group.cpt, V4Group.inv => V4Group.conj
-  | V4Group.conj, V4Group.cpt => V4Group.inv
-  | V4Group.cpt, V4Group.conj => V4Group.inv
-
-/-- 🏆 THEOREM 4 (Involutive Group Law): Every element in V4 satisfies $g^2 = \text{id}$. -/
-theorem v4_involutive_group (g : V4Group) : v4Mul g g = V4Group.id := by
-  cases g <;> rfl
-
-/-- 🏆 THEOREM 5 (Abelian Group Law): V4 is commutative: $g_1 \cdot g_2 = g_2 \cdot g_1$. -/
-theorem v4_abelian_group (g1 g2 : V4Group) : v4Mul g1 g2 = v4Mul g2 g1 := by
-  cases g1 <;> cases g2 <;> rfl
-
-/-- Pointwise action of V4 on $\mathbb{C}$. -/
-def v4Act (g : V4Group) (z : ℂ) : ℂ :=
-  match g with
-  | V4Group.id => z
-  | V4Group.inv => z⁻¹
-  | V4Group.conj => starRingEnd ℂ z
-  | V4Group.cpt => (starRingEnd ℂ z)⁻¹
-
-/-- 🏆 THEOREM 6 ($V_4$-Invariance of the Unit Circle):
-    The unit circle $S^1 = \{z \in \mathbb{C} \mid \|z\| = 1\}$ is closed under the full $V_4$ action. -/
-theorem unitCircle_v4_invariant (g : V4Group) (z : ℂ) (hz : z ∈ unitCircle) :
-    v4Act g z ∈ unitCircle := by
-  dsimp [unitCircle] at hz ⊢
-  cases g
-  · exact hz
-  · dsimp [v4Act]
-    rw [norm_inv, hz, inv_one]
-  · dsimp [v4Act]
-    rw [Complex.norm_conj, hz]
-  · dsimp [v4Act]
-    rw [norm_inv, Complex.norm_conj, hz, inv_one]
+/- The owner file `Thermodynamics/AsanoKleinFourSymmetry` provides the native
+`V4` action on `ℂ`, its involutivity/commutativity, and unit-circle
+preservation.  This capstone now reuses that owner surface directly. -/
 
 /-! ### 3. $V_4$ Root Localization & The Lee-Yang Circle Theorem -/
 
@@ -184,7 +137,7 @@ theorem unitCircle_v4_invariant (g : V4Group) (z : ℂ) (hz : z ∈ unitCircle) 
     Any $V_4$-invariant polynomial zero-set $Z \subset \mathbb{C}$ that is free of zeros
     in the open unit disk $\mathbb{D}$ is strictly localized to the unit circle $S^1$. -/
 theorem v4_root_localization_leeyang (Z : Set ℂ)
-    (h_v4 : ∀ g : V4Group, ∀ z : ℂ, z ∈ Z → v4Act g z ∈ Z)
+    (h_v4 : ∀ g : V4, ∀ z : ℂ, z ∈ Z → v4Action g z ∈ Z)
     (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
     (z : ℂ) (hz : z ∈ Z) :
     z ∈ unitCircle := by
@@ -193,8 +146,7 @@ theorem v4_root_localization_leeyang (Z : Set ℂ)
     intro hlt
     exact h_disk_free z hz hlt
   have h_ge_one : 1 ≤ ‖z‖ := not_lt.mp h_not_lt
-  have hz_inv_in : v4Act V4Group.inv z ∈ Z := h_v4 V4Group.inv z hz
-  dsimp [v4Act] at hz_inv_in
+  have hz_inv_in : v4Action V4.inv z ∈ Z := h_v4 V4.inv z hz
   have h_not_lt_inv : ¬(‖z⁻¹‖ < 1) := by
     intro hlt
     exact h_disk_free z⁻¹ hz_inv_in hlt
@@ -287,16 +239,16 @@ Unifies:
 -/
 theorem grand_asano_v4_leeyang_primon_synthesis
     (cA cB cC cD z1 : ℂ) (hden : cC + cD * z1 ≠ 0) (hD : cD ≠ 0) (h_ge : ‖cD‖ ≤ ‖cA‖)
-    (g : V4Group) (Z : Set ℂ)
-    (h_v4 : ∀ g' : V4Group, ∀ z : ℂ, z ∈ Z → v4Act g' z ∈ Z)
+    (g : V4) (Z : Set ℂ)
+    (h_v4 : ∀ g' : V4, ∀ z : ℂ, z ∈ Z → v4Action g' z ∈ Z)
     (h_disk_free : ∀ z ∈ Z, ¬(z ∈ openUnitDisk))
     (z : ℂ) (hz : z ∈ Z) (hz_ne : z ≠ -1)
     (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta)
     (eps : ℝ) (h_eps : 0 < eps) :
     (asanoPhi cA cB cC cD z1 (-((cA + cB * z1) / (cC + cD * z1))) = 0) ∧
     (∀ w ∈ openUnitDisk, asanoContract cA cD w ≠ 0) ∧
-    (v4Mul g g = V4Group.id) ∧
-    (v4Act g z ∈ unitCircle) ∧
+    (v4Action g (v4Action g z) = z) ∧
+    (v4Action g z ∈ unitCircle) ∧
     (z ∈ unitCircle) ∧
     ((riemannCayleyInverse z).re = 1 / 2) ∧
     ((((p : ℝ) ^ (-beta) : ℝ) : ℂ) ∈ openUnitDisk) ∧
@@ -306,8 +258,8 @@ theorem grand_asano_v4_leeyang_primon_synthesis
   have hz_circle : z ∈ unitCircle := v4_root_localization_leeyang Z h_v4 h_disk_free z hz
   ⟨asano_root_map_cancellation cA cB cC cD z1 hden,
    asano_contract_disk_free_of_norm_ge cA cD hD h_ge,
-   v4_involutive_group g,
-   unitCircle_v4_invariant g z hz_circle,
+   v4Action_involutive g z,
+   by simpa [unitCircle] using v4Action_preserves_unitCircle g hz_circle,
    hz_circle,
    lee_yang_circle_to_critical_line z hz_circle hz_ne,
    primon_subcritical_in_disk p hp beta h_beta,

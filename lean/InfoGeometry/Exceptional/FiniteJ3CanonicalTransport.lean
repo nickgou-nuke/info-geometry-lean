@@ -252,6 +252,7 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₃
   change (jordanProduct X.1 Y.1 2 2).a = _
   exact jordanProduct_a X.1 Y.1 2 2
 
+
 theorem hermitianRealAlbertEquiv_finiteJordanProduct_h3_b
     (X Y : HermitianJ3) :
     (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv
@@ -364,5 +365,31 @@ theorem canonicalEntry_jordanProduct_w (X Y : J3) (i k : Fin 3) :
             ZornVectorMatrix.mul (canonicalEquiv (Y i j))
               (canonicalEquiv (X j k))))).w := by
   exact congrArg ZornVectorMatrix.w (canonicalEntry_jordanProduct X Y i k)
+
+theorem hermitianToH3_finiteJordanProduct_α₁
+    (X Y : HermitianJ3) :
+    (hermitianToH3 (finiteJordanProduct X Y)).α₁ =
+      (candidateJordanMul (hermitianToH3 X) (hermitianToH3 Y)).α₁ := by
+  change (jordanProduct X.1 Y.1 0 0).a = _
+  rw [jordanProduct_a, candidateJordanMul_trace_formula]
+  rw [H3Zorn.linearTrace_crossProduct]
+  rw [H3Zorn.smul_readback, H3Zorn.sub_readback, H3Zorn.add_readback]
+  simp only [H3ZornCoordinateReadback.crossProduct_α₁,
+    H3ZornCoordinateReadback.adjointQuad_α₁,
+    H3ZornCoordinateReadback.linearTrace_coordinate,
+    H3ZornCoordinateReadback.traceBilin_coordinate,
+    H3ZornCoordinateReadback.add_α₁,
+    H3ZornCoordinateReadback.add_α₂,
+    H3ZornCoordinateReadback.add_α₃,
+    H3ZornCoordinateReadback.smul_α₁,
+    H3ZornCoordinateReadback.smul_α₂,
+    H3ZornCoordinateReadback.smul_α₃,
+    H3Zorn.add_readback, H3Zorn.smul_readback, H3Zorn.one_readback]
+  simp [hermitianToH3, H3Zorn.linearTrace, H3Zorn.crossProduct,
+    H3Zorn.adjointQuad, ZornVectorMatrix.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.add, ZornVectorMatrix.smul, ZornVectorMatrix.sub,
+    ZornVectorMatrix.neg, ZornVec3.dot, ZornVec3.cross,
+    Fin.sum_univ_three]
+  ring
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

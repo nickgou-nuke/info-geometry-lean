@@ -263,6 +263,9 @@ import InfoGeometry.Quantum.ConnesAdeleTrace
 import InfoGeometry.Canonical.DikinBlahutOrbitsCapstone
 import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
 
+import InfoGeometry.Quantum.ApolloniusFisherInformation
+import InfoGeometry.Canonical.ApolloniusFisherInformationCapstone
+
 namespace InfoGeometry
 
 /-- 

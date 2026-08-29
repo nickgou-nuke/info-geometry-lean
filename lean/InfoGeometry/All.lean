@@ -7771,5 +7771,6 @@ import InfoGeometry.Canonical.BostConnesFiniteMatrixKMS
 import InfoGeometry.Canonical.BostConnesGaloisCrossedProductRosettaCapstone
 import InfoGeometry.Canonical.UHFMatrixColimitCapstone
 import InfoGeometry.Canonical.AlbertJordanThreeGenerationsCapstone
+import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 

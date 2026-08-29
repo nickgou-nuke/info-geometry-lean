@@ -510,6 +510,21 @@ theorem vecToCanonical_dot (u v : Vec3Real) :
     ZornVec3.dot (vecToCanonical u) (vecToCanonical v) = dot u v := by
   simp [ZornVec3.dot, dot, vecToCanonical, Fin.sum_univ_three]
 
+theorem vecToCanonical_smul (r : ℝ) (u : Vec3Real) :
+    vecToCanonical (smul r u) = (fun i => r * vecToCanonical u i) := by
+  funext i
+  fin_cases i <;> rfl
+
+theorem vecToCanonical_neg (u : Vec3Real) :
+    vecToCanonical (smul (-1) u) = (fun i => - vecToCanonical u i) := by
+  simpa using vecToCanonical_smul (-1 : ℝ) u
+
+theorem vecToCanonical_add (u v : Vec3Real) :
+    vecToCanonical (add u v) =
+      (fun i => vecToCanonical u i + vecToCanonical v i) := by
+  funext i
+  fin_cases i <;> rfl
+
 theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
     canonicalEquiv (X.1 j i) =
       ZornVectorMatrix.conj (canonicalEquiv (X.1 i j)) := by
@@ -517,5 +532,20 @@ theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
   congr 1
   rw [realConj_eq_zornConj]
   exact X.property j i
+
+theorem canonicalHermitianEntry_a (X : HermitianJ3) (i j : Fin 3) :
+    (canonicalEquiv (X.1 j i)).a =
+      (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).a := by
+  exact congrArg ZornVectorMatrix.a (canonicalHermitianEntry X i j)
+
+theorem canonicalHermitianEntry_b (X : HermitianJ3) (i j : Fin 3) :
+    (canonicalEquiv (X.1 j i)).b =
+      (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).b := by
+  exact congrArg ZornVectorMatrix.b (canonicalHermitianEntry X i j)
+
+theorem canonicalHermitianEntry_v (X : HermitianJ3) (i j : Fin 3) :
+    (canonicalEquiv (X.1 j i)).v =
+      (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).v := by
+  exact congrArg ZornVectorMatrix.v (canonicalHermitianEntry X i j)
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

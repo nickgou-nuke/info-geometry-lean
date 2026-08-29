@@ -273,6 +273,15 @@ import InfoGeometry.Canonical.ApolloniusBraidingCapstone
 import InfoGeometry.Topological.NonAbelianBerry
 import InfoGeometry.Canonical.NonAbelianBerryCapstone
 
+import InfoGeometry.Quantum.CelestialMellin
+import InfoGeometry.Canonical.CelestialMellinCapstone
+import InfoGeometry.Projective.ApolloniusNatural
+import InfoGeometry.Canonical.ApolloniusNaturalCapstone
+import InfoGeometry.Projective.CrossRatioPGL2
+import InfoGeometry.Canonical.CrossRatioPGL2Capstone
+import InfoGeometry.Projective.SouriauSignatureBridge
+import InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
+
 namespace InfoGeometry
 
 /-- 

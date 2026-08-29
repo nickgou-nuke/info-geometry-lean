@@ -3510,6 +3510,11 @@ import InfoGeometry.Canonical.FibonacciAnyonsCapstone
 import InfoGeometry.Canonical.ApolloniusBraidingCapstone
 import InfoGeometry.Canonical.NonAbelianBerryCapstone
 
+import InfoGeometry.Canonical.CelestialMellinCapstone
+import InfoGeometry.Canonical.ApolloniusNaturalCapstone
+import InfoGeometry.Canonical.CrossRatioPGL2Capstone
+import InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
+
 namespace InfoGeometry
 
 /-!

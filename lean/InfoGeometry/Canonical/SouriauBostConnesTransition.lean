@@ -39,7 +39,6 @@ namespace InfoGeometry.Canonical.SouriauBostConnesTransition
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Canonical.DiracSea
 open FibonacciFusion
@@ -171,17 +170,6 @@ theorem cayley_reflection_eq_fugacity_inversion
     (s : ℂ) :
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ :=
   riemannReflection_eq_fugacityInversion s
-
-/-- The RH route remains conditional on the supplied prime Lee--Yang hypotheses. -/
-@[rep_depth thermo, capstone]
-theorem conditional_RH_from_supplied_primeLeeYang
-    (partitionPolynomial : Polynomial ℂ)
-    (hLeeYang : ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
-    {z : ℂ}
-    (hz : partitionPolynomial.IsRoot z)
-    (hpole : z.re ≠ -1) :
-    OnCriticalLine (cayleyToTemperature z) :=
-  by exact cayleyToTemperature_mem_criticalLine_of_unitCircle z (hLeeYang z hz) hpole
 
 /-- A finite boundary readout exists for every finite bulk state. -/
 @[rep_depth thermo, capstone]

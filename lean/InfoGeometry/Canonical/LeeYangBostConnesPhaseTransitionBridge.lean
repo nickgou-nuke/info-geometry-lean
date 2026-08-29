@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 import InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
@@ -29,7 +28,6 @@ namespace InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 open InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 open InfoGeometry.Canonical.ColimitRigidityProofChainBridge

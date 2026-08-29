@@ -264,12 +264,56 @@ def HermitianJ3 := {X : J3 // hermitianStar X}
 def j3RawMul (X Y : J3) (i k : Fin 3) : ZornMatrixReal :=
   X i 0 * Y 0 k + X i 1 * Y 1 k + X i 2 * Y 2 k
 
+@[simp] theorem j3RawMul_a (X Y : J3) (i k : Fin 3) :
+    (j3RawMul X Y i k).a =
+      (X i 0 * Y 0 k).a + (X i 1 * Y 1 k).a + (X i 2 * Y 2 k).a := by
+  simp [j3RawMul]
+
+@[simp] theorem j3RawMul_b (X Y : J3) (i k : Fin 3) :
+    (j3RawMul X Y i k).b =
+      (X i 0 * Y 0 k).b + (X i 1 * Y 1 k).b + (X i 2 * Y 2 k).b := by
+  simp [j3RawMul]
+
+@[simp] theorem j3RawMul_u (X Y : J3) (i k : Fin 3) :
+    (j3RawMul X Y i k).u =
+      add (add (X i 0 * Y 0 k).u (X i 1 * Y 1 k).u)
+        (X i 2 * Y 2 k).u := by
+  simp [j3RawMul]
+
+@[simp] theorem j3RawMul_v (X Y : J3) (i k : Fin 3) :
+    (j3RawMul X Y i k).v =
+      add (add (X i 0 * Y 0 k).v (X i 1 * Y 1 k).v)
+        (X i 2 * Y 2 k).v := by
+  simp [j3RawMul]
+
 noncomputable def jordanProduct (X Y : J3) : J3 := fun i k =>
   zornHalf (j3RawMul X Y i k + j3RawMul Y X i k)
 
 @[simp] theorem jordanProduct_apply (X Y : J3) (i k : Fin 3) :
     jordanProduct X Y i k =
       zornHalf (j3RawMul X Y i k + j3RawMul Y X i k) := rfl
+
+theorem jordanProduct_a (X Y : J3) (i k : Fin 3) :
+    (jordanProduct X Y i k).a =
+      (j3RawMul X Y i k).a / 2 + (j3RawMul Y X i k).a / 2 := by
+  simp [jordanProduct, zornHalf]
+  ring
+
+theorem jordanProduct_b (X Y : J3) (i k : Fin 3) :
+    (jordanProduct X Y i k).b =
+      (j3RawMul X Y i k).b / 2 + (j3RawMul Y X i k).b / 2 := by
+  simp [jordanProduct, zornHalf]
+  ring
+
+theorem jordanProduct_u (X Y : J3) (i k : Fin 3) :
+    (jordanProduct X Y i k).u =
+      smul (1 / 2) (add (j3RawMul X Y i k).u (j3RawMul Y X i k).u) := by
+  rfl
+
+theorem jordanProduct_v (X Y : J3) (i k : Fin 3) :
+    (jordanProduct X Y i k).v =
+      smul (1 / 2) (add (j3RawMul X Y i k).v (j3RawMul Y X i k).v) := by
+  rfl
 
 theorem jordanProduct_comm (X Y : J3) :
     jordanProduct X Y = jordanProduct Y X := by

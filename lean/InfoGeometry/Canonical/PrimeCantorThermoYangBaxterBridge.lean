@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeGasSuperKMSBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -31,7 +30,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeGasSuperKMS
 open InfoGeometry.Canonical.AlgebraicKMSStateColimit
@@ -54,16 +52,6 @@ theorem riemannReflection_eq_fugacityInversion
     (s : ℂ) :
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ :=
   cayleyToFugacity_one_sub_eq_inv s
-
-/-- Conditional RH readout remains routed through the property-gated Lee--Yang bridge. -/
-theorem conditional_RH_from_primeLeeYang
-    (partitionPolynomial : Polynomial ℂ)
-    (hLeeYang : ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
-    {z : ℂ}
-    (hz : partitionPolynomial.IsRoot z)
-    (hpole : z.re ≠ -1) :
-    OnCriticalLine (cayleyToTemperature z) :=
-  by exact cayleyToTemperature_mem_criticalLine_of_unitCircle z (hLeeYang z hz) hpole
 
 /-! ## Prime chain and noncommutative KMS readout -/
 

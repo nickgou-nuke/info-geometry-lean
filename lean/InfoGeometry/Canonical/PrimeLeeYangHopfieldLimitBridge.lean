@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib.Tactic.Ring
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 

@@ -194,6 +194,7 @@ import InfoGeometry.Canonical.ModularVerlindeTensorCategoryCapstone
 import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone
 import InfoGeometry.Arithmetic.SelbergTraceAdelicGeodesicCapstone
+import InfoGeometry.Canonical.GrandMasterTheoryOfEverythingSynthesisCapstone
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 
 namespace InfoGeometry

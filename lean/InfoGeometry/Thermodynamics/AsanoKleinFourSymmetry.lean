@@ -55,12 +55,12 @@ def IsV4Symmetric (S : Set ℂ) : Prop :=
 @[simp] theorem v4Action_involutive
     (g : V4) (z : ℂ) :
     v4Action g (v4Action g z) = z := by
-  cases g <;> simp [v4Action, conj_inv]
+  cases g <;> simp [v4Action]
 
 @[simp] theorem v4Action_comm
     (g h : V4) (z : ℂ) :
     v4Action g (v4Action h z) = v4Action h (v4Action g z) := by
-  cases g <;> cases h <;> simp [v4Action, conj_inv]
+  cases g <;> cases h <;> simp [v4Action]
 
 /-- The `V₄` action preserves the unit circle. -/
 theorem v4Action_preserves_unitCircle
@@ -72,8 +72,13 @@ theorem v4Action_preserves_unitCircle
     norm_num at hz
   cases g
   · simpa [v4Action] using hz
-  · simp [v4Action, hz, hz0]
-  · simpa [v4Action] using congrArg id (Complex.norm_conj z) ▸ hz
-  · simp [v4Action, Complex.norm_conj, hz, hz0]
+  · simp [v4Action, hz]
+  · calc
+      ‖v4Action V4.conj z‖ = ‖z‖ := by simp [v4Action]
+      _ = 1 := hz
+  · calc
+      ‖v4Action V4.cpt z‖ = ‖conj z‖⁻¹ := by simp [v4Action]
+      _ = ‖z‖⁻¹ := by rw [Complex.norm_conj]
+      _ = 1 := by simp [hz]
 
 end InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry

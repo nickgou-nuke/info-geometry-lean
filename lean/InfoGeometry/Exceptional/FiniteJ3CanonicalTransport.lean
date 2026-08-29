@@ -336,7 +336,6 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
       hermitianH3Equiv.symm
         (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
 
-/-
 theorem hermitianRealAlbertEquiv_jordanProduct_α₁
     (X Y : HermitianJ3) :
     (hermitianRealAlbertEquiv
@@ -350,22 +349,21 @@ theorem hermitianRealAlbertEquiv_jordanProduct_α₁
     hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
     InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
     InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3]
-  have hm₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+  have h₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_conj_right
     (X.1 0 1) (Y.1 0 1)
-  have hm₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+  have h₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_conj_right
     (Y.1 0 1) (X.1 0 1)
-  have hm₃ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+  have h₃ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_mul_left
     (X.1 2 0) (Y.1 2 0)
-  have hm₄ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+  have h₄ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_mul_left
     (Y.1 2 0) (X.1 2 0)
-  have hc₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_a
-    (Y.1 0 1)
-  have hc₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_a
-    (X.1 0 1)
-  simp only [InfoGeometry.Exceptional.RealZorn.canonicalEquiv_apply] at hm₁ hm₂ hm₃ hm₄ hc₁ hc₂
-  rw [hm₁, hm₂, hm₃, hm₄, hc₁, hc₂]
+  simp only [InfoGeometry.Exceptional.RealZorn.canonicalEquiv_apply] at h₁ h₂ h₃ h₄
+  rw [h₁, h₂, h₃, h₄]
   rw [hermitian_readback_10 X, hermitian_readback_02 X,
     hermitian_readback_10 Y, hermitian_readback_02 Y]
+  rw [InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
+    InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
+    InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
+    InfoGeometry.Exceptional.RealZorn.fromCanonical_a]
   simp [zornHalf, smul, zornConj_involutive]
--/
 end InfoGeometry.Exceptional.FiniteJ3Zorn

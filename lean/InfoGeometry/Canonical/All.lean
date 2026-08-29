@@ -3464,6 +3464,7 @@ import InfoGeometry.Canonical.GeometricLanglandsHitchinIntegrableCapstone
 import InfoGeometry.Canonical.AdSCFTMaldacenaRyuTakayanagiCapstone
 import InfoGeometry.Canonical.SYKQuantumChaosMSSBoundCapstone
 import InfoGeometry.Canonical.JonesWenzlTemperleyLiebProjectorCapstone
+import InfoGeometry.Canonical.KontsevichDeformationQuantizationStarProductCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

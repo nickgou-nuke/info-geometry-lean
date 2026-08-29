@@ -142,8 +142,8 @@ theorem directedChiralHomotopyEquiv_trans {G : ChiralDigraph}
 def HomotopyAppendCompatible (G : ChiralDigraph) : Prop :=
   ∀ {u v w : G.Vertex} {p q : DirectedPath G u v}
     (r : DirectedPath G v w),
-    DirectedChiralHomotopy p q →
-      DirectedChiralHomotopyEquiv (p.append r) (q.append r)
+      DirectedChiralHomotopy p q →
+        DirectedChiralHomotopyEquiv (p.append r) (q.append r)
 
 theorem directedChiralHomotopyEquiv_append_right
     {G : ChiralDigraph} (hcompat : HomotopyAppendCompatible G)

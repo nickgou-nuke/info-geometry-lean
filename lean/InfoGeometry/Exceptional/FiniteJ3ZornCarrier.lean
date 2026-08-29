@@ -278,15 +278,6 @@ theorem jordanAssociator_apply (X Y : HermitianJ3) (i k : Fin 3) :
         (jordanProduct (jordanProduct X.1 Y.1) X.1) i k := by
   rfl
 
-theorem jordanAssociator_coord_00_expansion (X Y : HermitianJ3) :
-    jordanAssociator X Y 0 0 =
-      jordanProduct
-        (jordanProduct X.1 X.1)
-        (jordanProduct Y.1 X.1) 0 0 -
-      jordanProduct X.1
-        (jordanProduct (jordanProduct X.1 Y.1) X.1) 0 0 := by
-  exact jordanAssociator_apply X Y 0 0
-
 noncomputable def jordanSquare (X : HermitianJ3) : J3 :=
   jordanProduct X.1 X.1
 

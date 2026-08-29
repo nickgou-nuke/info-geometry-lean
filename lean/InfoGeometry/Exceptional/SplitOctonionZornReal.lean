@@ -184,7 +184,7 @@ def ZornMatrixReal.sub_mat (A B : ZornMatrixReal) : ZornMatrixReal :=
 
 instance : Sub ZornMatrixReal := ⟨ZornMatrixReal.sub_mat⟩
 
-lemma zorn_ext (A B : ZornMatrixReal)
+lemma ZornMatrixReal.ext (A B : ZornMatrixReal)
     (ha : A.a = B.a) (hb : A.b = B.b)
     (hu : A.u = B.u) (hv : A.v = B.v) : A = B := by
   cases A
@@ -195,7 +195,7 @@ theorem zorn_sub_eq_zero_iff (A B : ZornMatrixReal) :
     A - B = 0 ↔ A = B := by
   constructor
   · intro h
-    apply zorn_ext
+    apply ZornMatrixReal.ext
     · have ha := congrArg ZornMatrixReal.a h
       exact sub_eq_zero.mp ha
     · have hb := congrArg ZornMatrixReal.b h
@@ -213,7 +213,7 @@ theorem zorn_sub_eq_zero_iff (A B : ZornMatrixReal) :
         · exact sub_eq_zero.mp (congrArg (fun x => x.2.1) hv)
         · exact sub_eq_zero.mp (congrArg (fun x => x.2.2) hv)
   · rintro rfl
-    apply zorn_ext
+    apply ZornMatrixReal.ext
     · exact sub_self A.a
     · exact sub_self A.b
     · apply Prod.ext
@@ -239,18 +239,11 @@ theorem zorn_sub_eq_zero_iff (A B : ZornMatrixReal) :
 @[simp] theorem mul_v (A B : ZornMatrixReal) :
     (A * B).v = add (add (smul B.a A.v) (smul A.b B.v)) (cross A.u B.u) := rfl
 
-lemma ZornMatrixReal.ext_pre (A B : ZornMatrixReal)
-    (ha : A.a = B.a) (hb : A.b = B.b)
-    (hu : A.u = B.u) (hv : A.v = B.v) : A = B := by
-  cases A
-  cases B
-  congr
-
 theorem zorn_mul_self_left (A B : ZornMatrixReal) :
     (A * A) * B = A * (A * B) := by
   change ZornMatrixReal.mul (ZornMatrixReal.mul A A) B =
     ZornMatrixReal.mul A (ZornMatrixReal.mul A B)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
@@ -276,7 +269,7 @@ theorem zorn_mul_self_right (A B : ZornMatrixReal) :
     (A * B) * B = A * (B * B) := by
   change ZornMatrixReal.mul (ZornMatrixReal.mul A B) B =
     ZornMatrixReal.mul A (ZornMatrixReal.mul B B)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
     ring
   · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
@@ -302,7 +295,7 @@ theorem zorn_mul_flexible (A B : ZornMatrixReal) :
     (A * B) * A = A * (B * A) := by
   change ZornMatrixReal.mul (ZornMatrixReal.mul A B) A =
     ZornMatrixReal.mul A (ZornMatrixReal.mul B A)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
     ring
   · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
@@ -322,7 +315,7 @@ theorem zorn_mul_add_left (A B C : ZornMatrixReal) :
     A * (B + C) = A * B + A * C := by
   change ZornMatrixReal.mul A (ZornMatrixReal.add_mat B C) =
     ZornMatrixReal.add_mat (ZornMatrixReal.mul A B) (ZornMatrixReal.mul A C)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
@@ -334,7 +327,7 @@ theorem zorn_add_mul_right (A B C : ZornMatrixReal) :
     (A + B) * C = A * C + B * C := by
   change ZornMatrixReal.mul (ZornMatrixReal.add_mat A B) C =
     ZornMatrixReal.add_mat (ZornMatrixReal.mul A C) (ZornMatrixReal.mul B C)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
@@ -346,7 +339,7 @@ theorem zorn_neg_mul (A B : ZornMatrixReal) :
     (-A) * B = -(A * B) := by
   change ZornMatrixReal.mul (ZornMatrixReal.neg A) B =
     ZornMatrixReal.neg (ZornMatrixReal.mul A B)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
@@ -358,7 +351,7 @@ theorem zorn_mul_neg (A B : ZornMatrixReal) :
     A * (-B) = -(A * B) := by
   change ZornMatrixReal.mul A (ZornMatrixReal.neg B) =
     ZornMatrixReal.neg (ZornMatrixReal.mul A B)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
@@ -370,7 +363,7 @@ theorem zorn_sub_mul (A B C : ZornMatrixReal) :
     (A - B) * C = A * C - B * C := by
   change ZornMatrixReal.mul (ZornMatrixReal.sub_mat A B) C =
     ZornMatrixReal.sub_mat (ZornMatrixReal.mul A C) (ZornMatrixReal.mul B C)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]
@@ -382,7 +375,7 @@ theorem zorn_mul_sub (A B C : ZornMatrixReal) :
     A * (B - C) = A * B - A * C := by
   change ZornMatrixReal.mul A (ZornMatrixReal.sub_mat B C) =
     ZornMatrixReal.sub_mat (ZornMatrixReal.mul A B) (ZornMatrixReal.mul A C)
-  apply ZornMatrixReal.ext_pre
+  apply ZornMatrixReal.ext
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]

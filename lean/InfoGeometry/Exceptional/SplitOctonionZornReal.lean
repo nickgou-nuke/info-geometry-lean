@@ -52,6 +52,19 @@ def sub (u v : Vec3Real) : Vec3Real :=
 def smul (c : ℝ) (u : Vec3Real) : Vec3Real :=
   (c * u.1, c * u.2.1, c * u.2.2)
 
+theorem neg_one_smul_eq_self_iff (x : ℝ) :
+    (-1 : ℝ) * x = x ↔ x = 0 := by
+  constructor
+  · intro h
+    have hzero : (2 : ℝ) * x = 0 := by
+      calc
+        (2 : ℝ) * x = x - (-x) := by ring
+        _ = x - ((-1 : ℝ) * x) := by ring
+        _ = 0 := by rw [h]; ring
+    exact (mul_eq_zero.mp hzero).resolve_left (by norm_num)
+  · rintro rfl
+    norm_num
+
 theorem dot_cross_left (u v w : Vec3Real) :
     dot u (cross v w) = dot v (cross w u) := by
   dsimp [dot, cross]

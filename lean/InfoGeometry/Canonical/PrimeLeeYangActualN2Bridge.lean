@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Analysis.HurwitzAsanoColimitLimitBridge
 
 /-!
 # Actual N=2 prime-partition Lee--Yang bridge
@@ -20,6 +21,8 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimePartitionPolynomials
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Analysis.AsanoLeeYangCircle
+open InfoGeometry.Analysis.HurwitzAsano
 
 def configEquiv : (Fin 2 → Bool) ≃ (Bool × Bool) where
   toFun := fun σ => (σ 0, σ 1)
@@ -206,6 +209,87 @@ theorem root_re_ne_neg_one
   rw [hpos_re, hneg_re] at hreal
   nlinarith [hlt]
 
+theorem partitionFunction_zero_root_on_unit_circle
+    (D : FinitePrimeChainData 2) {lam : ℝ} (hLam : 0 < lam)
+    {z : ℂ} (hz : partitionFunction D lam z = 0) :
+    OnUnitCircle z := by
+  exact root_on_unit_circle D (le_of_lt hLam) (by
+    simpa [partitionFunction_eq_eval, Polynomial.IsRoot] using hz)
+
+theorem partitionFunction_zero_root_re_ne_neg_one
+    (D : FinitePrimeChainData 2) {lam : ℝ} (hLam : 0 < lam)
+    {z : ℂ} (hz : partitionFunction D lam z = 0) :
+    z.re ≠ -1 := by
+  exact root_re_ne_neg_one D hLam (by
+    simpa [partitionFunction_eq_eval, Polynomial.IsRoot] using hz)
+
+private theorem partitionFunction_formula_eval
+    (D : FinitePrimeChainData 2) (lam : ℝ) (z : ℂ) :
+    partitionFunction D lam z =
+      (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) +
+      (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z +
+      (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * z ^ 2 := by
+  rw [partitionFunction_eq_eval, partitionPolynomial_formula]
+  simp [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_pow]
+
+theorem partitionFunction_zeroFreeInUnitDisk
+    (D : FinitePrimeChainData 2) {lam : ℝ} (hLam : 0 ≤ lam) :
+    ZeroFreeInUnitDisk (partitionFunction D lam) := by
+  intro z hz_disk hz_zero
+  have hcircle : OnUnitCircle z :=
+    root_on_unit_circle D hLam (by
+      simpa [partitionFunction_eq_eval, Polynomial.IsRoot] using hz_zero)
+  rw [OnUnitCircle, Complex.normSq_eq_norm_sq] at hcircle
+  nlinarith [norm_nonneg z, hz_disk]
+
+theorem partitionFunction_reciprocalZeroSymmetric
+    (D : FinitePrimeChainData 2) (lam : ℝ) :
+    ReciprocalZeroSymmetric (partitionFunction D lam) := by
+  intro z hz0
+  constructor
+  · intro hz
+    rw [partitionFunction_formula_eval D lam z] at hz
+    rw [partitionFunction_formula_eval D lam z⁻¹]
+    have hscaled :
+        z ^ 2 *
+            ((Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) +
+              (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z⁻¹ +
+              (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * (z⁻¹) ^ 2) =
+          (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * z ^ 2 +
+            (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z +
+            (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) := by
+      field_simp [hz0]
+      ring
+    have hzero :
+        z ^ 2 *
+            ((Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) +
+              (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z⁻¹ +
+              (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * (z⁻¹) ^ 2) = 0 := by
+      rw [hscaled]
+      simpa [add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm, mul_assoc] using hz
+    exact (mul_eq_zero.mp hzero).resolve_left (sq_ne_zero hz0)
+  · intro hz
+    rw [partitionFunction_formula_eval D lam z] 
+    rw [partitionFunction_formula_eval D lam z⁻¹] at hz
+    have hscaled :
+        z ^ 2 *
+            ((Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) +
+              (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z⁻¹ +
+              (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * (z⁻¹) ^ 2) =
+          (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * z ^ 2 +
+            (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z +
+            (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) := by
+      field_simp [hz0]
+      ring
+    have hzero :
+        z ^ 2 *
+            ((Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) +
+              (2 * Real.exp (-(lam * D.ell 0 * D.ell 1)) : ℂ) * z⁻¹ +
+              (Real.exp (lam * D.ell 0 * D.ell 1) : ℂ) * (z⁻¹) ^ 2) = 0 := by
+      rw [hz, mul_zero]
+    rw [hscaled] at hzero
+    simpa [add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm, mul_assoc] using hzero
+
 theorem root_maps_to_critical_line
     (D : FinitePrimeChainData 2) {lam : ℝ} (hlam : 0 < lam)
     {z : ℂ} (hz : (partitionPolynomial D lam).IsRoot z) :
@@ -214,5 +298,28 @@ theorem root_maps_to_critical_line
   exact cayleyToTemperature_mem_criticalLine_of_unitCircle z
     (root_on_unit_circle D (le_of_lt hlam) hz)
     (root_re_ne_neg_one D hlam hz)
+
+theorem partitionFunction_zero_maps_to_critical_line
+    (D : FinitePrimeChainData 2) {lam : ℝ} (hLam : 0 < lam)
+    {z : ℂ} (hz : partitionFunction D lam z = 0) :
+    InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnCriticalLine
+      (cayleyToTemperature z) := by
+  exact cayleyToTemperature_mem_criticalLine_of_unitCircle z
+    (partitionFunction_zero_root_on_unit_circle D hLam hz)
+    (partitionFunction_zero_root_re_ne_neg_one D hLam hz)
+
+theorem partitionFunction_zero_to_riemannCayleyInverse_critical_line
+    (D : FinitePrimeChainData 2) {lam : ℝ} (hLam : 0 < lam)
+    {z : ℂ} (hz : partitionFunction D lam z = 0) :
+    (riemannCayleyInverse z).re = 1 / 2 := by
+  have h_disk_free : ZeroFreeInUnitDisk (partitionFunction D lam) :=
+    partitionFunction_zeroFreeInUnitDisk D (le_of_lt hLam)
+  have h_symm : ReciprocalZeroSymmetric (partitionFunction D lam) :=
+    partitionFunction_reciprocalZeroSymmetric D lam
+  have hz_ne : z ≠ -1 := by
+    intro hz_neg
+    apply partitionFunction_zero_root_re_ne_neg_one D hLam hz
+    simpa [hz_neg]
+  exact reciprocal_root_to_critical_line h_disk_free h_symm hz hz_ne
 
 end InfoGeometry.Canonical.PrimeLeeYangActualN2

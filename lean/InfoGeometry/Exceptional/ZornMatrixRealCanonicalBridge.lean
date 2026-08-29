@@ -87,6 +87,11 @@ theorem fromCanonical_add (X Y : ZornVectorMatrix ℝ) :
   rw [canonicalEquiv.apply_symm_apply, canonicalEquiv_add]
   simp [canonicalEquiv, toCanonical, fromCanonical, vecToCanonical_from]
 
+theorem fromCanonical_half_add (X Y : ZornVectorMatrix ℝ) :
+    fromCanonical (ZornVectorMatrix.smul (2 : ℝ)⁻¹ (X + Y)) =
+      (2 : ℝ)⁻¹ • (fromCanonical X + fromCanonical Y) := by
+  exact RealSplitOctZornAlignment.fromZorn_half_add X Y
+
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by

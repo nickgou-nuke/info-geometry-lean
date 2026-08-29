@@ -320,7 +320,7 @@ def ScalarDiagonalJ3 := Fin 3 → ℝ
 def scalarDiagonalMul (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
   fun i => x i * y i
 
-def scalarDiagonalJordan (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
+noncomputable def scalarDiagonalJordan (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
   fun i => (scalarDiagonalMul x y i + scalarDiagonalMul y x i) / 2
 
 theorem scalar_diagonal_jordan_comm (x y : ScalarDiagonalJ3) :

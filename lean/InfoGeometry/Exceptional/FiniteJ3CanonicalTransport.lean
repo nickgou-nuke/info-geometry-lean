@@ -57,7 +57,8 @@ theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
     hermitianStar (h3ToHermitian Z) := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [h3ToHermitian, scalarZorn, zornConj, smul]
+    simp [h3ToHermitian, scalarZorn, zornConj, smul,
+      zornConj_involutive, scalarZorn_conj]
 
 def h3ToHermitianSubtype (Z : H3Zorn ℝ) : HermitianJ3 :=
   ⟨h3ToHermitian Z, h3ToHermitian_hermitian Z⟩
@@ -345,25 +346,13 @@ theorem hermitianRealAlbertEquiv_jordanProduct_α₁
         (hermitianRealAlbertEquiv X)
         (hermitianRealAlbertEquiv Y)).α₁ := by
   change (jordanProduct X.1 Y.1 0 0).a = _
-  dsimp [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
+  simp only [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
     hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
     InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
-    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3]
-  have h₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_conj_right
-    (X.1 0 1) (Y.1 0 1)
-  have h₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_conj_right
-    (Y.1 0 1) (X.1 0 1)
-  have h₃ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_mul_left
-    (X.1 2 0) (Y.1 2 0)
-  have h₄ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_mul_left
-    (Y.1 2 0) (X.1 2 0)
-  simp only [InfoGeometry.Exceptional.RealZorn.canonicalEquiv_apply] at h₁ h₂ h₃ h₄
-  rw [h₁, h₂, h₃, h₄]
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3,
+    fromCanonical_mul_a, fromCanonical_conj_a]
   rw [hermitian_readback_10 X, hermitian_readback_02 X,
     hermitian_readback_10 Y, hermitian_readback_02 Y]
-  rw [InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
-    InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
-    InfoGeometry.Exceptional.RealZorn.fromCanonical_a,
-    InfoGeometry.Exceptional.RealZorn.fromCanonical_a]
-  simp [zornHalf, smul, zornConj_involutive]
+  simp [zornConj_involutive]
+
 end InfoGeometry.Exceptional.FiniteJ3Zorn

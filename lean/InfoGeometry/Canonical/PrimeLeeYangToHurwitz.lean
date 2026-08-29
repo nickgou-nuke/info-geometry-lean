@@ -128,7 +128,7 @@ def PrimeLeeYangToHurwitzWitness.toHurwitzLeeYangXiLimitPacket
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
     (W : PrimeLeeYangToHurwitzWitness Ξ A) :
-    HurwitzLeeYangXiLimitPacket
+    InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge.HurwitzLeeYangXiLimitPacket
       CompletedXiZeroPredicate
       LeeYangApproximants
       (ℂ → ℂ) :=

@@ -471,6 +471,31 @@ theorem hermitian_entry_u_snd_fst (X : HermitianJ3) (i j : Fin 3) :
   have h := hermitian_entry_u_eq_neg_u X i j
   simpa [smul] using congrArg (fun q => q.2.1) h
 
+theorem hermitian_entry_u_snd_snd (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).u.2.2 = - (X.1 j i).u.2.2 := by
+  have h := hermitian_entry_u_eq_neg_u X i j
+  simpa [smul] using congrArg (fun q => q.2.2) h
+
+theorem hermitian_entry_v_fst (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).v.1 = - (X.1 j i).v.1 := by
+  have h := hermitian_entry_v_eq_neg_v X i j
+  simpa [smul] using congrArg Prod.fst h
+
+theorem hermitian_entry_v_snd_fst (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).v.2.1 = - (X.1 j i).v.2.1 := by
+  have h := hermitian_entry_v_eq_neg_v X i j
+  simpa [smul] using congrArg (fun q => q.2.1) h
+
+theorem hermitian_entry_v_snd_snd (X : HermitianJ3) (i j : Fin 3) :
+    (X.1 i j).v.2.2 = - (X.1 j i).v.2.2 := by
+  have h := hermitian_entry_v_eq_neg_v X i j
+  simpa [smul] using congrArg (fun q => q.2.2) h
+
+theorem realZorn_dot_smul_neg_left (u v : Vec3Real) :
+    dot (smul (-1) u) v = - dot u v := by
+  dsimp [dot, smul]
+  ring
+
 theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
     canonicalEquiv (X.1 j i) =
       ZornVectorMatrix.conj (canonicalEquiv (X.1 i j)) := by

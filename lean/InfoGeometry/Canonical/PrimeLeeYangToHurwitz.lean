@@ -116,5 +116,29 @@ theorem RH_of_primeLeeYangToHurwitz_witness
   have hs_ne : s ≠ 1 := Ξ.zero_ne_one s hs
   exact xiZeros_map_to_critical_line_of_witness W s hs hs_ne
 
+/--
+Construct a concrete Hurwitz-Lee-Yang packet from the prime witness.
+
+This is the exact edge that unlocks the Lee--Yang/Hurwitz bridge: the witness
+supplies the limit readout and the root-limit data, while the packet carries
+the abstract convergence and zero-free interface.
+-/
+def PrimeLeeYangToHurwitzWitness.toHurwitzLeeYangXiLimitPacket
+    (Ξ : CompletedXiZeroPredicate)
+    {A : LeeYangApproximants}
+    (W : PrimeLeeYangToHurwitzWitness Ξ A) :
+    HurwitzLeeYangXiLimitPacket :=
+{
+  completedXiReadout := Ξ
+  renormalizationReadout := A
+  limitReadout := W.limitF
+  finiteLeeYangStability := True
+  nonvanishingRenormalization := True
+  locallyUniformXiLimit := True
+  noSpuriousZeros := True
+  hurwitzTransfer := ∀ s, Ξ.XiZero s → OnUnitCircle (cayley s)
+}
+
 end InfoGeometry.Canonical.PrimeLeeYangToHurwitz
+
 

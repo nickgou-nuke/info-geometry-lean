@@ -3473,6 +3473,7 @@ import InfoGeometry.Canonical.CalabiYauPicardFuchsMirrorSymmetryCapstone
 import InfoGeometry.Canonical.ChernSimonsJonesWittenVerlindeCapstone
 import InfoGeometry.Canonical.KapustinWitten4DTopologicalTwistCapstone
 import InfoGeometry.Canonical.AtiyahSingerDiracSupertraceCapstone
+import InfoGeometry.Canonical.AmariDualTemperatureColimitPhaseTransitionCapstone
 
 namespace InfoGeometry
 

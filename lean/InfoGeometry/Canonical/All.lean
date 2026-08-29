@@ -3497,6 +3497,10 @@ import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 import InfoGeometry.Quantum.BerryKeatingCCRCapstone
 import InfoGeometry.Canonical.SouriauApolloniusEntropyFoliationCapstone
 
+import InfoGeometry.Canonical.ApolloniusLieBracketCapstone
+import InfoGeometry.Canonical.SpectralTripleApolloniusCapstone
+import InfoGeometry.Canonical.ConnesMetricCapstone
+
 namespace InfoGeometry
 
 /-!

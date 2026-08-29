@@ -251,6 +251,13 @@ import InfoGeometry.Canonical.SouriauApolloniusEntropyFoliationCapstone
 import InfoGeometry.Canonical.GrandMasterTheoryOfEverythingSynthesisCapstone
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 
+import InfoGeometry.Quantum.ApolloniusLieBracket
+import InfoGeometry.Quantum.SpectralTripleApollonius
+import InfoGeometry.Noncommutative.ConnesMetric
+import InfoGeometry.Canonical.ApolloniusLieBracketCapstone
+import InfoGeometry.Canonical.SpectralTripleApolloniusCapstone
+import InfoGeometry.Canonical.ConnesMetricCapstone
+
 namespace InfoGeometry
 
 /-- 

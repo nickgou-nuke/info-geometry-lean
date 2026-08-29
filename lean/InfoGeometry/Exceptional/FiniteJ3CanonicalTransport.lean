@@ -1,6 +1,8 @@
 import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.H3ZornJordanIdentity
+import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 
 namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
@@ -32,6 +34,135 @@ def hermitianToH3 (X : HermitianJ3) : H3Zorn ℝ :=
 
 @[simp] theorem hermitianToH3_c (X : HermitianJ3) :
     (hermitianToH3 X).c = canonicalEquiv (X.1 2 0) := rfl
+
+def scalarZorn (r : ℝ) : ZornMatrixReal :=
+  { a := r, b := r, u := (0, 0, 0), v := (0, 0, 0) }
+
+def h3ToHermitian (Z : H3Zorn ℝ) : J3 := fun i j =>
+  if i = 0 ∧ j = 0 then scalarZorn Z.α₁
+  else if i = 1 ∧ j = 1 then scalarZorn Z.α₂
+  else if i = 2 ∧ j = 2 then scalarZorn Z.α₃
+  else if i = 0 ∧ j = 1 then canonicalEquiv.symm Z.a
+  else if i = 1 ∧ j = 0 then zornConj (canonicalEquiv.symm Z.a)
+  else if i = 1 ∧ j = 2 then canonicalEquiv.symm Z.b
+  else if i = 2 ∧ j = 1 then zornConj (canonicalEquiv.symm Z.b)
+  else if i = 2 ∧ j = 0 then canonicalEquiv.symm Z.c
+  else zornConj (canonicalEquiv.symm Z.c)
+
+theorem scalarZorn_conj (r : ℝ) : zornConj (scalarZorn r) = scalarZorn r := by
+  apply ZornMatrixReal.ext <;>
+    simp [scalarZorn, zornConj, smul]
+
+theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
+    hermitianStar (h3ToHermitian Z) := by
+  intro i j
+  fin_cases i <;> fin_cases j <;>
+    simp [h3ToHermitian, scalarZorn, zornConj, smul,
+      zornConj_involutive, scalarZorn_conj]
+
+def h3ToHermitianSubtype (Z : H3Zorn ℝ) : HermitianJ3 :=
+  ⟨h3ToHermitian Z, h3ToHermitian_hermitian Z⟩
+
+theorem hermitianToH3_h3ToHermitian (Z : H3Zorn ℝ) :
+    hermitianToH3 (h3ToHermitianSubtype Z) = Z := by
+  apply H3Zorn.ext_h3
+  · rfl
+  · rfl
+  · rfl
+  · exact canonicalEquiv.apply_symm_apply Z.a
+  · exact canonicalEquiv.apply_symm_apply Z.b
+  · exact canonicalEquiv.apply_symm_apply Z.c
+
+theorem h3ToHermitian_hermitianToH3_01 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 0 1 = X.1 0 1 := by
+  change canonicalEquiv.symm (canonicalEquiv (X.1 0 1)) = X.1 0 1
+  exact canonicalEquiv.symm_apply_apply (X.1 0 1)
+
+theorem h3ToHermitian_hermitianToH3_12 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 1 2 = X.1 1 2 := by
+  change canonicalEquiv.symm (canonicalEquiv (X.1 1 2)) = X.1 1 2
+  exact canonicalEquiv.symm_apply_apply (X.1 1 2)
+
+theorem h3ToHermitian_hermitianToH3_20 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 2 0 = X.1 2 0 := by
+  change canonicalEquiv.symm (canonicalEquiv (X.1 2 0)) = X.1 2 0
+  exact canonicalEquiv.symm_apply_apply (X.1 2 0)
+
+theorem h3ToHermitian_hermitianToH3_10 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 1 0 = X.1 1 0 := by
+  have h := congrArg zornConj (X.property 0 1)
+  rw [zornConj_involutive] at h
+  change zornConj (canonicalEquiv.symm (canonicalEquiv (X.1 0 1))) = X.1 1 0
+  rw [canonicalEquiv.symm_apply_apply, h]
+
+theorem h3ToHermitian_hermitianToH3_21 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 2 1 = X.1 2 1 := by
+  have h := congrArg zornConj (X.property 1 2)
+  rw [zornConj_involutive] at h
+  change zornConj (canonicalEquiv.symm (canonicalEquiv (X.1 1 2))) = X.1 2 1
+  rw [canonicalEquiv.symm_apply_apply, h]
+
+theorem h3ToHermitian_hermitianToH3_02 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 0 2 = X.1 0 2 := by
+  have h := congrArg zornConj (X.property 2 0)
+  rw [zornConj_involutive] at h
+  change zornConj (canonicalEquiv.symm (canonicalEquiv (X.1 2 0))) = X.1 0 2
+  rw [canonicalEquiv.symm_apply_apply, h]
+
+theorem h3ToHermitian_hermitianToH3_00 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 0 0 = X.1 0 0 := by
+  change scalarZorn (X.1 0 0).a = X.1 0 0
+  have h := hermitian_diagonal_scalar X 0
+  apply ZornMatrixReal.ext
+  · rfl
+  · exact h.1
+  · exact h.2.1.symm
+  · exact h.2.2.symm
+
+theorem h3ToHermitian_hermitianToH3_11 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 1 1 = X.1 1 1 := by
+  change scalarZorn (X.1 1 1).a = X.1 1 1
+  have h := hermitian_diagonal_scalar X 1
+  apply ZornMatrixReal.ext
+  · rfl
+  · exact h.1
+  · exact h.2.1.symm
+  · exact h.2.2.symm
+
+theorem h3ToHermitian_hermitianToH3_22 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) 2 2 = X.1 2 2 := by
+  change scalarZorn (X.1 2 2).a = X.1 2 2
+  have h := hermitian_diagonal_scalar X 2
+  apply ZornMatrixReal.ext
+  · rfl
+  · exact h.1
+  · exact h.2.1.symm
+  · exact h.2.2.symm
+
+theorem h3ToHermitian_hermitianToH3 (X : HermitianJ3) :
+    h3ToHermitian (hermitianToH3 X) = X.1 := by
+  funext i j
+  fin_cases i <;> fin_cases j
+  · exact h3ToHermitian_hermitianToH3_00 X
+  · exact h3ToHermitian_hermitianToH3_01 X
+  · exact h3ToHermitian_hermitianToH3_02 X
+  · exact h3ToHermitian_hermitianToH3_10 X
+  · exact h3ToHermitian_hermitianToH3_11 X
+  · exact h3ToHermitian_hermitianToH3_12 X
+  · exact h3ToHermitian_hermitianToH3_20 X
+  · exact h3ToHermitian_hermitianToH3_21 X
+  · exact h3ToHermitian_hermitianToH3_22 X
+
+def hermitianH3Equiv : HermitianJ3 ≃ H3Zorn ℝ where
+  toFun := hermitianToH3
+  invFun := h3ToHermitianSubtype
+  left_inv := by
+    intro X
+    apply Subtype.ext
+    exact h3ToHermitian_hermitianToH3 X
+  right_inv := by
+    intro Z
+    exact hermitianToH3_h3ToHermitian Z
 
 theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
     canonicalEquiv (zornHalf X) =
@@ -118,5 +249,95 @@ theorem canonicalEntry_jordanProduct (X Y : J3) (i k : Fin 3) :
   rw [canonicalEquiv_zornHalf, canonicalEquiv_add,
     canonicalEntry_j3RawMul,
     canonicalEntry_j3RawMul]
+
+theorem hermitian_diagonal_eq_scalarZorn (X : HermitianJ3) (i : Fin 3) :
+    X.1 i i = scalarZorn (X.1 i i).a := by
+  have h := X.property i i
+  apply ZornMatrixReal.ext
+  · rfl
+  · simpa [zornConj] using congrArg ZornMatrixReal.b h
+  · have hu := congrArg ZornMatrixReal.u h
+    apply Prod.ext
+    · have h₀ := congrArg Prod.fst hu
+      exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₀.symm)
+    · apply Prod.ext
+      · have h₁ := congrArg (fun v => v.2.1) hu
+        exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₁.symm)
+      · have h₂ := congrArg (fun v => v.2.2) hu
+        exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₂.symm)
+  · have hv := congrArg ZornMatrixReal.v h
+    apply Prod.ext
+    · have h₀ := congrArg Prod.fst hv
+      exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₀.symm)
+    · apply Prod.ext
+      · have h₁ := congrArg (fun v => v.2.1) hv
+        exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₁.symm)
+      · have h₂ := congrArg (fun v => v.2.2) hv
+        exact (InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _).mp (by simpa [zornConj, smul] using h₂.symm)
+
+theorem h3ToHermitianSubtype_hermitianToH3 (X : HermitianJ3) :
+    h3ToHermitianSubtype (hermitianToH3 X) = X := by
+  apply HermitianJ3_ext
+  funext i j
+  fin_cases i <;> fin_cases j
+  · exact (hermitian_diagonal_eq_scalarZorn X 0).symm
+  · exact (h3ToHermitian_hermitianToH3_01 X).symm
+  · exact h3ToHermitian_hermitianToH3_02 X
+  · exact h3ToHermitian_hermitianToH3_10 X
+  · exact (hermitian_diagonal_eq_scalarZorn X 1).symm
+  · exact (h3ToHermitian_hermitianToH3_12 X).symm
+  · exact (h3ToHermitian_hermitianToH3_20 X).symm
+  · exact h3ToHermitian_hermitianToH3_21 X
+  · exact (hermitian_diagonal_eq_scalarZorn X 2).symm
+
+@[simp] theorem hermitianH3Equiv_apply (X : HermitianJ3) :
+    hermitianH3Equiv X = hermitianToH3 X := rfl
+
+@[simp] theorem hermitianH3Equiv_symm_apply (Z : H3Zorn ℝ) :
+    hermitianH3Equiv.symm Z = h3ToHermitianSubtype Z := rfl
+
+noncomputable def inducedH3JordanMul (U V : H3Zorn ℝ) : H3Zorn ℝ :=
+  hermitianH3Equiv
+    (finiteJordanProduct (hermitianH3Equiv.symm U) (hermitianH3Equiv.symm V))
+
+theorem inducedH3JordanMul_comm (U V : H3Zorn ℝ) :
+    inducedH3JordanMul U V = inducedH3JordanMul V U := by
+  unfold inducedH3JordanMul
+  rw [finiteJordanProduct_comm]
+
+def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
+  hermitianH3Equiv.trans
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv.symm
+
+@[simp] theorem hermitianRealAlbertEquiv_apply (X : HermitianJ3) :
+    hermitianRealAlbertEquiv X =
+      InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv.symm
+        (hermitianH3Equiv X) := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_symm_apply (X : RealAlbertMatrix) :
+    hermitianRealAlbertEquiv.symm X =
+      hermitianH3Equiv.symm
+        (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
+
+theorem hermitianRealAlbertEquiv_jordanProduct_α₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv
+      ⟨jordanProduct X.1 Y.1,
+        jordanProduct_hermitian_closed X Y⟩).α₁ =
+      (RealAlbertMatrix.mul
+        (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).α₁ := by
+  have hmul (A B : ZornMatrixReal) :
+      (RealSplitOct.mul (toRealSplitOct A) (toRealSplitOct B)).a = (A * B).a := by
+    exact congrArg RealSplitOct.a (toRealSplitOct_mul A B).symm
+  have hconj (A : ZornMatrixReal) :
+      (RealSplitOct.conj (toRealSplitOct A)).a = (realConj A).a := by
+    exact congrArg RealSplitOct.a (toRealSplitOct_conj A).symm
+  change (jordanProduct X.1 Y.1 0 0).a = _
+  simp [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
+    hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3,
+    scalarZorn, hmul, hconj]
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

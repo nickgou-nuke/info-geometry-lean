@@ -3483,6 +3483,8 @@ import InfoGeometry.Canonical.PrimonColimitFiltrationCapstone
 import InfoGeometry.Canonical.PrimonColimitEulerZetaConvergenceCapstone
 import InfoGeometry.Canonical.PrimonMercatorFockColimitCapstone
 import InfoGeometry.Canonical.PrimonVonMangoldtDirichletCapstone
+import InfoGeometry.Canonical.PrimonThermodynamicEnergyDerivCapstone
+import InfoGeometry.Canonical.PrimonThermodynamicObservablesCapstone
 
 namespace InfoGeometry
 

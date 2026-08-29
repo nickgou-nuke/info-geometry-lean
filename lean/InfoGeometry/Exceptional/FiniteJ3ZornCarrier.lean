@@ -122,6 +122,44 @@ theorem zornConj_involutive (A : ZornMatrixReal) :
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul]; ring)
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul]; ring)
 
+theorem zornConj_fixed_iff (A : ZornMatrixReal) :
+    zornConj A = A ↔
+      A.a = A.b ∧ A.u = (0, 0, 0) ∧ A.v = (0, 0, 0) := by
+  constructor
+  · intro h
+    have ha : A.b = A.a := congrArg ZornMatrixReal.a h
+    have hu : smul (-1) A.u = A.u := by
+      exact congrArg ZornMatrixReal.u h
+    have hv : smul (-1) A.v = A.v := by
+      exact congrArg ZornMatrixReal.v h
+    have hu₁ : (-1 : ℝ) * A.u.1 = A.u.1 := by simpa [smul] using congrArg Prod.fst hu
+    have hu₂ : (-1 : ℝ) * A.u.2.1 = A.u.2.1 := by
+      simpa [smul] using congrArg (fun w : Vec3Real => w.2.1) hu
+    have hu₃ : (-1 : ℝ) * A.u.2.2 = A.u.2.2 := by
+      simpa [smul] using congrArg (fun w : Vec3Real => w.2.2) hu
+    have hv₁ : (-1 : ℝ) * A.v.1 = A.v.1 := by simpa [smul] using congrArg Prod.fst hv
+    have hv₂ : (-1 : ℝ) * A.v.2.1 = A.v.2.1 := by
+      simpa [smul] using congrArg (fun w : Vec3Real => w.2.1) hv
+    have hv₃ : (-1 : ℝ) * A.v.2.2 = A.v.2.2 := by
+      simpa [smul] using congrArg (fun w : Vec3Real => w.2.2) hv
+    refine ⟨ha.symm, ?_, ?_⟩
+    · apply Prod.ext
+      · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hu₁
+      · apply Prod.ext
+        · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hu₂
+        · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hu₃
+    · apply Prod.ext
+      · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hv₁
+      · apply Prod.ext
+        · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hv₂
+        · exact InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp hv₃
+  · rintro ⟨hab, hu, hv⟩
+    apply ZornMatrixReal.ext
+    · exact hab.symm
+    · exact hab
+    · simp [zornConj, smul, hu]
+    · simp [zornConj, smul, hv]
+
 theorem zornConj_norm (A : ZornMatrixReal) :
     (zornConj A).norm = A.norm := by
   dsimp [zornConj, ZornMatrixReal.norm, dot, smul]
@@ -146,6 +184,7 @@ theorem zornConj_half (A : ZornMatrixReal) :
   · rfl
   · rfl
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, zornHalf, smul]; ring)
+
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, zornHalf, smul]; ring)
 
 theorem zornConj_mul_reverse (A B : ZornMatrixReal) :
@@ -262,6 +301,17 @@ theorem jordanProduct_hermitian_closed
     zornConj_j3RawMul_transpose Y X]
   rw [zorn_add_comm]
 
+noncomputable def finiteJordanProduct (X Y : HermitianJ3) : HermitianJ3 :=
+  ⟨jordanProduct X.1 Y.1, jordanProduct_hermitian_closed X Y⟩
+
+@[simp] theorem finiteJordanProduct_val (X Y : HermitianJ3) :
+    (finiteJordanProduct X Y).1 = jordanProduct X.1 Y.1 := rfl
+
+theorem finiteJordanProduct_comm (X Y : HermitianJ3) :
+    finiteJordanProduct X Y = finiteJordanProduct Y X := by
+  apply Subtype.ext
+  exact jordanProduct_comm X.1 Y.1
+
 noncomputable def jordanAssociator (X Y : HermitianJ3) : J3 :=
   jordanProduct
       (jordanProduct X.1 X.1)
@@ -291,6 +341,15 @@ theorem hermitianStar_reflect (X : J3) (hX : hermitianStar X) :
   have h_conj := congr_arg zornConj h
   rw [zornConj_involutive] at h_conj
   exact h_conj.symm
+
+theorem hermitian_diagonal_fixed (X : HermitianJ3) (i : Fin 3) :
+    zornConj (X.1 i i) = X.1 i i := by
+  exact (X.property i i).symm
+
+theorem hermitian_diagonal_scalar (X : HermitianJ3) (i : Fin 3) :
+    (X.1 i i).a = (X.1 i i).b ∧
+      (X.1 i i).u = (0, 0, 0) ∧ (X.1 i i).v = (0, 0, 0) := by
+  exact (zornConj_fixed_iff (X.1 i i)).mp (hermitian_diagonal_fixed X i)
 
 @[ext] theorem J3_ext {X Y : J3} (h : ∀ i j, X i j = Y i j) : X = Y := by
   funext i j

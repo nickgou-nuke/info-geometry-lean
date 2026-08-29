@@ -1,5 +1,6 @@
 import InfoGeometry.Exceptional.SplitOctonionZornReal
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.RealSplitOctZornAlignment
 
 namespace InfoGeometry.Exceptional.RealZorn
 
@@ -113,5 +114,54 @@ theorem canonicalEquiv_conj (X : ZornMatrixReal) :
     fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
       realConj, smul, ZornVectorMatrix.conj]
   · rfl
+
+def toRealSplitOct (X : ZornMatrixReal) : RealSplitOct :=
+  RealSplitOctZornAlignment.fromZorn (canonicalEquiv X)
+
+@[simp] theorem toRealSplitOct_a (X : ZornMatrixReal) :
+    (toRealSplitOct X).a = X.a := rfl
+
+@[simp] theorem toRealSplitOct_b (X : ZornMatrixReal) :
+    (toRealSplitOct X).b = X.b := rfl
+
+@[simp] theorem toRealSplitOct_x0 (X : ZornMatrixReal) :
+    (toRealSplitOct X).x0 = X.u.1 := rfl
+
+@[simp] theorem toRealSplitOct_x1 (X : ZornMatrixReal) :
+    (toRealSplitOct X).x1 = X.u.2.1 := rfl
+
+@[simp] theorem toRealSplitOct_x2 (X : ZornMatrixReal) :
+    (toRealSplitOct X).x2 = X.u.2.2 := rfl
+
+@[simp] theorem toRealSplitOct_y0 (X : ZornMatrixReal) :
+    (toRealSplitOct X).y0 = X.v.1 := rfl
+
+@[simp] theorem toRealSplitOct_y1 (X : ZornMatrixReal) :
+    (toRealSplitOct X).y1 = X.v.2.1 := rfl
+
+@[simp] theorem toRealSplitOct_y2 (X : ZornMatrixReal) :
+    (toRealSplitOct X).y2 = X.v.2.2 := rfl
+
+theorem toRealSplitOct_mul (X Y : ZornMatrixReal) :
+    toRealSplitOct (X * Y) =
+      RealSplitOct.mul (toRealSplitOct X) (toRealSplitOct Y) := by
+  apply RealSplitOctZornAlignment.equiv.injective
+  simp only [toRealSplitOct, RealSplitOctZornAlignment.equiv_apply,
+    RealSplitOctZornAlignment.equiv_symm_apply,
+    RealSplitOctZornAlignment.toZorn_fromZorn]
+  rw [RealSplitOctZornAlignment.toZorn_mul]
+  simp only [RealSplitOctZornAlignment.toZorn_fromZorn]
+  exact canonicalEquiv_mul X Y
+
+theorem toRealSplitOct_conj (X : ZornMatrixReal) :
+    toRealSplitOct (realConj X) =
+      RealSplitOct.conj (toRealSplitOct X) := by
+  apply RealSplitOctZornAlignment.equiv.injective
+  simp only [toRealSplitOct, RealSplitOctZornAlignment.equiv_apply,
+    RealSplitOctZornAlignment.equiv_symm_apply,
+    RealSplitOctZornAlignment.toZorn_fromZorn]
+  rw [RealSplitOctZornAlignment.toZorn_conj]
+  simp only [RealSplitOctZornAlignment.toZorn_fromZorn]
+  exact canonicalEquiv_conj X
 
 end InfoGeometry.Exceptional.RealZorn

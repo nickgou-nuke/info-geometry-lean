@@ -46,6 +46,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open Real
+open Matrix
 open scoped BigOperators
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -225,8 +226,8 @@ theorem grand_gopakumar_vafa_synthesis
     (0 < aspinwallMorrisonWeight k) ∧
     (constantMapFreeEnergyPrefactor (-chi) = - constantMapFreeEnergyPrefactor chi) ∧
     (tHooftCoupling N gs = (N : ℝ) * gs) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨bps_count_is_integer inv,
    instantonWeight_bounds d beta hd hbeta t ht,
    gvSinFactorGenus0_pos d gs h_sin,

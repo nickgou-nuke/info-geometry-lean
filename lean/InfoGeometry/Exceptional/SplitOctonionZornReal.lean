@@ -206,44 +206,44 @@ theorem zorn_mul_self_left (A B : ZornMatrixReal) :
     · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
       ring
     · apply Prod.ext
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
   · apply Prod.ext
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-      ring_nf
+    · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
     · apply Prod.ext
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
 
 theorem zorn_mul_self_right (A B : ZornMatrixReal) :
     (A * B) * B = A * (B * B) := by
   change ZornMatrixReal.mul (ZornMatrixReal.mul A B) B =
     ZornMatrixReal.mul A (ZornMatrixReal.mul B B)
   apply ZornMatrixReal.ext_pre
-  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-    ring_nf
-  · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-    ring_nf
+  · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
   · apply Prod.ext
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-      ring_nf
+    · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
     · apply Prod.ext
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
   · apply Prod.ext
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-      ring_nf
+    · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
     · apply Prod.ext
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
-      · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
-        ring_nf
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
 
 theorem zorn_mul_add_left (A B C : ZornMatrixReal) :
     A * (B + C) = A * B + A * C := by

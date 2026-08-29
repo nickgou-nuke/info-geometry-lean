@@ -3448,6 +3448,8 @@ import InfoGeometry.Canonical.GrandMasterTheoryOfEverythingSynthesisCapstone
 import InfoGeometry.Canonical.TKNNTopologicalHallChernCapstone
 import InfoGeometry.Canonical.KnizhnikZamolodchikovWZWCapstone
 import InfoGeometry.Canonical.AtiyahSingerMcKeanPrimonCapstone
+import InfoGeometry.Canonical.ChernSimonsWRT3ManifoldCapstone
+import InfoGeometry.Canonical.JTGravitySchwarzianPrimonCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

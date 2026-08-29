@@ -104,6 +104,14 @@ theorem zornConj_zero : zornConj 0 = 0 := by
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.zero]; ring)
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.zero]; ring)
 
+theorem zornConj_one : zornConj (1 : ZornMatrixReal) = 1 := by
+  change zornConj ZornMatrixReal.one = ZornMatrixReal.one
+  apply ZornMatrixReal.ext
+  · rfl
+  · rfl
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.one]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.one]; ring)
+
 theorem zornConj_involutive (A : ZornMatrixReal) :
     zornConj (zornConj A) = A := by
   apply ZornMatrixReal.ext
@@ -146,6 +154,24 @@ theorem zornConj_mul_reverse (A B : ZornMatrixReal) :
   · dsimp [zornConj, ZornMatrixReal.mul, dot, smul]; ring
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.mul, dot, cross, add, sub, smul]; ring)
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, ZornMatrixReal.mul, dot, cross, add, sub, smul]; ring)
+
+theorem zorn_mul_one (A : ZornMatrixReal) :
+    A * 1 = A := by
+  change ZornMatrixReal.mul A ZornMatrixReal.one = A
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
+
+theorem zorn_one_mul (A : ZornMatrixReal) :
+    1 * A = A := by
+  change ZornMatrixReal.mul ZornMatrixReal.one A = A
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
 
 def hermitian (X : J3) : Prop :=
   ∀ i j, X i j = X j i
@@ -245,6 +271,19 @@ theorem identity_hermitian : hermitian identity := by
   · subst h; rfl
   · have hne : j ≠ i := Ne.symm h
     simp [h, hne]
+
+def diagonalIdempotent (k : Fin 3) : J3 :=
+  fun i j => if i = k ∧ j = k then 1 else 0
+
+theorem diagonalIdempotent_hermitianStar (k : Fin 3) :
+    hermitianStar (diagonalIdempotent k) := by
+  intro i j
+  by_cases hik : i = k <;> by_cases hjk : j = k <;>
+    simp [diagonalIdempotent, hik, hjk, zornConj_one, zornConj_zero]
+
+def e₀ : J3 := diagonalIdempotent 0
+def e₁ : J3 := diagonalIdempotent 1
+def e₂ : J3 := diagonalIdempotent 2
 
 theorem hermitian_transpose (X : J3) (hX : hermitian X) :
     ∀ i j, X j i = X i j := by

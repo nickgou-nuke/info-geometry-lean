@@ -193,6 +193,13 @@ theorem fromCanonical_mul_conj_right (X Y : ZornMatrixReal) :
       RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X * realConj Y)) := by
   rw [fromCanonical_conj Y, fromCanonical_mul]
 
+theorem fromCanonical_mul_conj_right_a (X Y : ZornMatrixReal) :
+    (RealSplitOct.mul (RealSplitOctZornAlignment.fromZorn (canonicalEquiv X))
+        (RealSplitOct.conj
+          (RealSplitOctZornAlignment.fromZorn (canonicalEquiv Y)))).a =
+      (X * realConj Y).a := by
+  exact congrArg RealSplitOct.a (fromCanonical_mul_conj_right X Y)
+
 theorem fromCanonical_conj_mul_left (X Y : ZornMatrixReal) :
     RealSplitOct.mul
         (RealSplitOct.conj
@@ -200,6 +207,14 @@ theorem fromCanonical_conj_mul_left (X Y : ZornMatrixReal) :
         (RealSplitOctZornAlignment.fromZorn (canonicalEquiv Y)) =
       RealSplitOctZornAlignment.fromZorn (canonicalEquiv (realConj X * Y)) := by
   rw [fromCanonical_conj X, fromCanonical_mul]
+
+theorem fromCanonical_conj_mul_left_a (X Y : ZornMatrixReal) :
+    (RealSplitOct.mul
+        (RealSplitOct.conj
+          (RealSplitOctZornAlignment.fromZorn (canonicalEquiv X)))
+        (RealSplitOctZornAlignment.fromZorn (canonicalEquiv Y))).a =
+      (realConj X * Y).a := by
+  exact congrArg RealSplitOct.a (fromCanonical_conj_mul_left X Y)
 
 @[simp] theorem fromCanonical_a (X : ZornMatrixReal) :
     (RealSplitOctZornAlignment.fromZorn (toCanonical X)).a = X.a := rfl

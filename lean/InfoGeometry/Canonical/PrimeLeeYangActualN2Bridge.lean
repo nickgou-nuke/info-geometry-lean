@@ -6,10 +6,10 @@ import InfoGeometry.Analysis.HurwitzAsanoColimitLimitBridge
 /-!
 # Actual N=2 prime-partition Lee--Yang bridge
 
-This is a finite, concrete witness for the polynomial defined by
+This is a finite, concrete theorem for the polynomial defined by
 `PrimePartitionPolynomials.partitionPolynomial`.  It is deliberately not a
-universal `LeeYangPolynomialWitness`: the arbitrary-`N` stability theorem is a
-separate open input to the colimit/RH corridor.
+universal arbitrary-`N` Lee--Yang closure result: the broader finite-stage
+stability theorem remains separate open owner debt.
 -/
 
 noncomputable section

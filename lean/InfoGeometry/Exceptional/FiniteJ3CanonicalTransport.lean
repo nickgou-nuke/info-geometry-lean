@@ -496,6 +496,20 @@ theorem realZorn_dot_smul_neg_left (u v : Vec3Real) :
   dsimp [dot, smul]
   ring
 
+theorem realZorn_dot_smul_neg_right (u v : Vec3Real) :
+    dot u (smul (-1) v) = - dot u v := by
+  dsimp [dot, smul]
+  ring
+
+theorem realZorn_dot_smul_neg_both (u v : Vec3Real) :
+    dot (smul (-1) u) (smul (-1) v) = dot u v := by
+  dsimp [dot, smul]
+  ring
+
+theorem vecToCanonical_dot (u v : Vec3Real) :
+    ZornVec3.dot (vecToCanonical u) (vecToCanonical v) = dot u v := by
+  simp [ZornVec3.dot, dot, vecToCanonical, Fin.sum_univ_three]
+
 theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
     canonicalEquiv (X.1 j i) =
       ZornVectorMatrix.conj (canonicalEquiv (X.1 i j)) := by

@@ -255,6 +255,18 @@ theorem zorn_mul_self_right (A B : ZornMatrixReal) :
       · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
         ring
 
+/-! The following are the two finite associator laws actually needed here.
+They express alternativity on repeated adjacent factors, not associativity of
+the full Zorn product. -/
+
+theorem zorn_associator_left_repeat (A B : ZornMatrixReal) :
+    (A * A) * B = A * (A * B) :=
+  zorn_mul_self_left A B
+
+theorem zorn_associator_right_repeat (A B : ZornMatrixReal) :
+    (A * B) * B = A * (B * B) :=
+  zorn_mul_self_right A B
+
 theorem zorn_mul_add_left (A B C : ZornMatrixReal) :
     A * (B + C) = A * B + A * C := by
   change ZornMatrixReal.mul A (ZornMatrixReal.add_mat B C) =

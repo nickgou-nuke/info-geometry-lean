@@ -1,15 +1,17 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.ParaKahler.UnifiedPotential
 
 open Matrix Real
+
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 noncomputable section
 

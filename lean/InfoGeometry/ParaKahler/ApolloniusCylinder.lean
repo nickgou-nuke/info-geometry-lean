@@ -1,14 +1,17 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.ParaKahler.ApolloniusCylinder
 
 open Matrix Real
+
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 noncomputable section
 
@@ -109,26 +112,28 @@ theorem symplectic_antisymmetric :
 
 /-- Оценяване на симплектичната форма върху два вектора: Ω(u, v) = uᵀ · Ω · v. -/
 def evalSymplectic (u v : Fin 2 → ℝ) : ℝ :=
-  dotProduct u (Matrix.mulVec symplecticForm v)
+  (symplecticForm *ᵥ v) ⬝ᵥ u
 
 /-- Оценяване на псевдо-метриката: g(u, v) = uᵀ · g · v. -/
 def evalMetric (u v : Fin 2 → ℝ) : ℝ :=
-  dotProduct u (Matrix.mulVec paraMetric v)
+  (paraMetric *ᵥ v) ⬝ᵥ u
 
 /-- 🏆 ТЕОРЕМА 5 (Симплектична Нормализация на Базиса dξ ∧ dθ):
     Ω(X_Φ, X_H) = -1 и Ω(X_H, X_Φ) = 1. -/
 theorem symplectic_flow_pairing :
     evalSymplectic entropyGradientVector phaseFlowVector = -1 ∧
     evalSymplectic phaseFlowVector entropyGradientVector = 1 := by
+  unfold evalSymplectic entropyGradientVector phaseFlowVector symplecticForm
   constructor
-  · simp [evalSymplectic, entropyGradientVector, phaseFlowVector, symplecticForm, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
-  · simp [evalSymplectic, entropyGradientVector, phaseFlowVector, symplecticForm, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  · simp [mulVec, dotProduct, Fin.sum_univ_two]
+  · simp [mulVec, dotProduct, Fin.sum_univ_two]
 
 /-- 🏆 ТЕОРЕМА 6 (Ортогоналност на Ентропийния и Фазовия Поток спрямо g):
     g(X_Φ, X_H) = 0 — градиентът на ентропията и унитарният фазов поток са g-ортогонални. -/
 theorem metric_flow_orthogonality :
     evalMetric entropyGradientVector phaseFlowVector = 0 := by
-  simp [evalMetric, entropyGradientVector, phaseFlowVector, paraMetric, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  unfold evalMetric entropyGradientVector phaseFlowVector paraMetric
+  simp [mulVec, dotProduct, Fin.sum_univ_two]
 
 /-- 🏆 ТЕОРЕМА 7 (Изотропни Собствени Лъчи на Паракомплексната Структура):
     X_Φ + X_H и X_Φ - X_H са собствени вектори на J с ±1 собствени стойности:
@@ -136,15 +141,16 @@ theorem metric_flow_orthogonality :
 theorem paracomplex_eigen_rays :
     let v_plus : Fin 2 → ℝ := entropyGradientVector + phaseFlowVector
     let v_minus : Fin 2 → ℝ := entropyGradientVector - phaseFlowVector
-    Matrix.mulVec paraComplexStructure v_plus = v_minus ∧
-    Matrix.mulVec paraComplexStructure v_minus = v_plus := by
+    paraComplexStructure *ᵥ v_plus = v_minus ∧
+    paraComplexStructure *ᵥ v_minus = v_plus := by
   intro v_plus v_minus
-  dsimp [v_plus, v_minus]
   constructor
   · ext i
-    fin_cases i <;> simp [paraComplexStructure, entropyGradientVector, phaseFlowVector, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+    fin_cases i <;>
+      simp [v_plus, v_minus, paraComplexStructure, entropyGradientVector, phaseFlowVector, mulVec, Fin.sum_univ_two]
   · ext i
-    fin_cases i <;> simp [paraComplexStructure, entropyGradientVector, phaseFlowVector, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+    fin_cases i <;>
+      simp [v_plus, v_minus, paraComplexStructure, entropyGradientVector, phaseFlowVector, mulVec, Fin.sum_univ_two]
 
 /-!
 ### 3. Гранд Капстоун: Пара-Келеров Синтез върху Аполониевия Цилиндър

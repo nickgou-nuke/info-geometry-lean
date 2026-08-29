@@ -303,6 +303,14 @@ theorem diagonalIdempotent_jordan_orthogonal
     diagonalIdempotent, zornHalf, ZornMatrixReal.mul, dot, cross, add, sub,
     smul, ZornMatrixReal.zero, ZornMatrixReal.one]
 
+theorem diagonalIdempotent_partition :
+    e₀ + e₁ + e₂ = identity := by
+  funext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [e₀, e₁, e₂, diagonalIdempotent, identity,
+      ZornMatrixReal.add_mat, ZornMatrixReal.zero, ZornMatrixReal.one,
+      add, smul]
+
 theorem hermitian_transpose (X : J3) (hX : hermitian X) :
     ∀ i j, X j i = X i j := by
   intro i j

@@ -138,10 +138,10 @@ structure HurwitzLeeYangXiLimitPacket
   completedXiReadout : CompletedXiReadout
   renormalizationReadout : RenormalizationReadout
   limitReadout : LimitReadout
-  finiteLeeYangStability : Prop
-  nonvanishingRenormalization : Prop
-  locallyUniformXiLimit : Prop
-  noSpuriousZeros : Prop
-  hurwitzTransfer : Prop
+  finiteLeeYangStability : Sort
+  nonvanishingRenormalization : Sort
+  locallyUniformXiLimit : Sort
+  noSpuriousZeros : Sort
+  hurwitzTransfer : Sort
 
 end InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

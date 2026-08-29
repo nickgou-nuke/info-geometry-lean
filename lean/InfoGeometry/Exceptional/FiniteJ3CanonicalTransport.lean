@@ -677,6 +677,115 @@ theorem hermitianEntry_conj_reverse (X : HermitianJ3) (i j : Fin 3) :
     zornConj (X.1 i j) = X.1 j i := by
   exact (X.property j i).symm
 
+theorem hermitian_diagonal_u_zero (X : HermitianJ3) (i : Fin 3) :
+    (X.1 i i).u = (0, 0, 0) := by
+  have h := hermitian_entry_u_eq_neg_u X i i
+  apply Prod.ext
+  · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+    simpa [smul] using (congrArg Prod.fst h).symm
+  · apply Prod.ext
+    · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+      simpa [smul] using (congrArg (fun q : Vec3Real => q.2.1) h).symm
+    · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+      simpa [smul] using (congrArg (fun q : Vec3Real => q.2.2) h).symm
+
+theorem hermitian_diagonal_v_zero (X : HermitianJ3) (i : Fin 3) :
+    (X.1 i i).v = (0, 0, 0) := by
+  have h := hermitian_entry_v_eq_neg_v X i i
+  apply Prod.ext
+  · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+    simpa [smul] using (congrArg Prod.fst h).symm
+  · apply Prod.ext
+    · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+      simpa [smul] using (congrArg (fun q : Vec3Real => q.2.1) h).symm
+    · apply InfoGeometry.Exceptional.RealZorn.neg_one_smul_eq_self_iff _ |>.mp
+      simpa [smul] using (congrArg (fun q : Vec3Real => q.2.2) h).symm
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₁ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).α₁ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_alpha₁]
+  have hY10 : Y.1 1 0 = zornConj (Y.1 0 1) := Y.property 1 0
+  have hX20 : X.1 2 0 = zornConj (X.1 0 2) := X.property 2 0
+  have hX10 : X.1 1 0 = zornConj (X.1 0 1) := X.property 1 0
+  have hY20 : Y.1 2 0 = zornConj (Y.1 0 2) := Y.property 2 0
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY22 := hermitian_diagonal_scalar Y 2
+  simp [j3RawMul, hY10, hX20, hX00, hY00, hX11, hY11, hX22, hY22,
+    RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+    hermitianH3Equiv, RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, hermitianToH3,
+    canonicalEquiv, toCanonical, fromCanonical,
+    RealSplitOctZornAlignment.fromZorn, RealSplitOctZornAlignment.toZorn,
+    RealSplitOct.conj, RealSplitOct.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.mul, ZornVec3.dot, Fin.sum_univ_three]
+  simp only [hY10, hX20, hX10, hY20]
+  simp [zornConj, smul, vecToCanonical, dot]
+  ring
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₂
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₂ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).α₂ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_alpha₂]
+  have hX01 : X.1 0 1 = zornConj (X.1 1 0) := X.property 0 1
+  have hY01 : Y.1 0 1 = zornConj (Y.1 1 0) := Y.property 0 1
+  have hX21 : X.1 2 1 = zornConj (X.1 1 2) := X.property 2 1
+  have hY21 : Y.1 2 1 = zornConj (Y.1 1 2) := Y.property 2 1
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY22 := hermitian_diagonal_scalar Y 2
+  simp [j3RawMul, hX01, hY01, hX21, hY21, hX00, hY00, hX11, hY11,
+    hX22, hY22, RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+    hermitianH3Equiv, RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, hermitianToH3,
+    canonicalEquiv, toCanonical, fromCanonical,
+    RealSplitOctZornAlignment.fromZorn, RealSplitOctZornAlignment.toZorn,
+    RealSplitOct.conj, RealSplitOct.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.mul, ZornVec3.dot, Fin.sum_univ_three]
+  try simp only [hX01, hY01, hX21, hY21]
+  simp [zornConj, smul, vecToCanonical, dot] <;> ring
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₃
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₃ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).α₃ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_alpha₃]
+  have hX02 : X.1 0 2 = zornConj (X.1 2 0) := X.property 0 2
+  have hY02 : Y.1 0 2 = zornConj (Y.1 2 0) := Y.property 0 2
+  have hX12 : X.1 1 2 = zornConj (X.1 2 1) := X.property 1 2
+  have hY12 : Y.1 1 2 = zornConj (Y.1 2 1) := Y.property 1 2
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY22 := hermitian_diagonal_scalar Y 2
+  simp [j3RawMul, hX02, hY02, hX12, hY12, hX00, hY00, hX11, hY11,
+    hX22, hY22, RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+    hermitianH3Equiv, RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, hermitianToH3,
+    canonicalEquiv, toCanonical, fromCanonical,
+    RealSplitOctZornAlignment.fromZorn, RealSplitOctZornAlignment.toZorn,
+    RealSplitOct.conj, RealSplitOct.mul, ZornVectorMatrix.conj,
+    ZornVectorMatrix.mul, ZornVec3.dot, Fin.sum_univ_three]
+  try simp only [hX02, hY02, hX12, hY12]
+  simp [zornConj, smul, vecToCanonical, dot] <;> ring
+
 theorem canonicalHermitianEntry_a (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).a =
       (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).a := by

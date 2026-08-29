@@ -294,6 +294,13 @@ import InfoGeometry.Canonical.UnifiedPotentialCapstone
 import InfoGeometry.Quantum.ModularSurprisalDeficit
 import InfoGeometry.Canonical.ModularSurprisalDeficitCapstone
 
+import InfoGeometry.SymmetricDomains.DikinMetriplectic
+import InfoGeometry.Canonical.DikinMetriplecticCapstone
+import InfoGeometry.Projective.HomogeneousNumbers
+import InfoGeometry.Canonical.HomogeneousNumbersCapstone
+import InfoGeometry.Projective.NaturalEmbedding
+import InfoGeometry.Canonical.NaturalEmbeddingCapstone
+
 namespace InfoGeometry
 
 /-- 

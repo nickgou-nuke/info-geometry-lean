@@ -3437,6 +3437,7 @@ import InfoGeometry.Canonical.AlbertJordanThreeGenerationsCapstone
 import InfoGeometry.Canonical.DrinfeldJimboFibonacciAnyonsCapstone
 import InfoGeometry.Canonical.VirasoroConformalCasimirCapstone
 import InfoGeometry.Canonical.CalogeroMoserSutherlandPrimonIntegrabilityCapstone
+import InfoGeometry.Canonical.ModularVerlindeTensorCategoryCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

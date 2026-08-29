@@ -313,30 +313,6 @@ def e₀ : J3 := diagonalIdempotent 0
 def e₁ : J3 := diagonalIdempotent 1
 def e₂ : J3 := diagonalIdempotent 2
 
-theorem diagonalIdempotent_jordan_self (k : Fin 3) :
-    jordanProduct (diagonalIdempotent k) (diagonalIdempotent k) =
-      diagonalIdempotent k := by
-  funext i j
-  fin_cases k <;> fin_cases i <;> fin_cases j <;>
-    simp [jordanProduct, j3RawMul, diagonalIdempotent, zornHalf,
-      ZornMatrixReal.mul, dot, cross, add, sub, smul,
-      ZornMatrixReal.zero, ZornMatrixReal.one]
-
-theorem diagonalIdempotent_jordan_orthogonal
-    {i j : Fin 3} (hij : i ≠ j) :
-    jordanProduct (diagonalIdempotent i) (diagonalIdempotent j) = zero := by
-  fin_cases i <;> fin_cases j <;> simp_all [jordanProduct, j3RawMul,
-    diagonalIdempotent, zornHalf, ZornMatrixReal.mul, dot, cross, add, sub,
-    smul, ZornMatrixReal.zero, ZornMatrixReal.one]
-
-theorem diagonalIdempotent_partition :
-    e₀ + e₁ + e₂ = identity := by
-  funext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [e₀, e₁, e₂, diagonalIdempotent, identity,
-      ZornMatrixReal.add_mat, ZornMatrixReal.zero, ZornMatrixReal.one,
-      add]
-
 def diagonalPart (X : J3) : J3 :=
   fun i j => if i = j then X i j else 0
 

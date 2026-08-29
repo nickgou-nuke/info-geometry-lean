@@ -3,6 +3,7 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Finset.Sort
@@ -28,7 +29,8 @@ We prove:
 1. Strict positivity: 0 < ψ^{(p)}(β) for all p ≥ 2, β > 0.
 2. Inductive monotonicity: ℙ_K ⊆ ℙ_{K+1} ⟹ ψ_K(β) ≤ ψ_{K+1}(β).
 3. Scale additivity across disjoint prime filters.
-4. Boundedness and convergence towards the full Bost-Connes potential ln ζ(β).
+4. Log-Product morphism and first-order Taylor lower bound.
+5. Exact Mercator harmonic series expansion ψ^{(p)}(β) = ∑_{k=0}^∞ (p^(-β))^(k+1)/(k+1).
 -/
 
 /-- Single-mode inverse Euler factor for a prime p: (1 - p^(-β))⁻¹. -/
@@ -169,6 +171,27 @@ theorem prime_surprisal_ge_linear (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta 
     linarith
   linarith
 
+/-! ## Mercator Series Expansion of Single-Mode Potentials -/
+
+/-- 🏆 THEOREM 11 (Mercator Series Representation of Single-Mode Potential):
+    ψ^{(p)}(β) = ∑_{k=0}^∞ (p^(-β))^(k+1) / (k+1) = ∑_{k=1}^∞ (p^(-β))^k / k. -/
+theorem hasSum_prime_surprisal_series (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta) :
+    HasSum (fun k : ℕ => ((p : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1)) (primeSurprisalPotential p beta) := by
+  rcases prime_boltzmann_factor_bounds p hp beta h_beta with ⟨h_pos, h_lt_one⟩
+  have h_abs : |(p : ℝ) ^ (-beta)| < 1 := by
+    rw [abs_of_pos h_pos]
+    exact h_lt_one
+  have h_sum := hasSum_pow_div_log_of_abs_lt_one h_abs
+  unfold primeSurprisalPotential primeEulerFactor
+  rw [Real.log_inv]
+  exact h_sum
+
+/-- 🏆 THEOREM 12 (Summability of the Primon Excitation Series):
+    The excitation series is summable for every prime p ≥ 2 and β > 0. -/
+theorem summable_prime_surprisal_series (p : ℕ) (hp : 2 ≤ p) (beta : ℝ) (h_beta : 0 < beta) :
+    Summable (fun k : ℕ => ((p : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1)) :=
+  (hasSum_prime_surprisal_series p hp beta h_beta).summable
+
 /-! ## Master Capstone Synthesis -/
 
 /-- 🏆 GRAND CAPSTONE: Complete Inductive Filtration and Monotone Convergence -/
@@ -179,10 +202,20 @@ theorem grand_prime_filtration_monotone_synthesis
     (0 < primeSurprisalPotential p_new beta) ∧
     (subsystemPotential S₁ beta ≤ subsystemPotential S₂ beta) ∧
     (subsystemPotential S₁ beta < subsystemPotential (insert p_new S₁) beta) ∧
-    (0 ≤ subsystemPotential S₁ beta) :=
+    (0 ≤ subsystemPotential S₁ beta) ∧
+    (subsystemPotential S₁ beta = Real.log (∏ p ∈ S₁, primeEulerFactor p beta)) ∧
+    (1 ≤ ∏ p ∈ S₁, primeEulerFactor p beta) ∧
+    ((p_new : ℝ) ^ (-beta) ≤ primeSurprisalPotential p_new beta) ∧
+    (HasSum (fun k : ℕ => ((p_new : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1)) (primeSurprisalPotential p_new beta)) ∧
+    (Summable (fun k : ℕ => ((p_new : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1))) :=
   ⟨prime_surprisal_pos p_new hp_new beta h_beta,
    subsystem_potential_monotone S₁ S₂ h_sub h_prime beta h_beta,
    subsystem_potential_strict_step S₁ p_new h_nin hp_new beta h_beta,
-   subsystem_potential_nonneg S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta⟩
+   subsystem_potential_nonneg S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   subsystem_potential_eq_log_prod S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   finite_euler_prod_ge_one S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
+   prime_surprisal_ge_linear p_new hp_new beta h_beta,
+   hasSum_prime_surprisal_series p_new hp_new beta h_beta,
+   summable_prime_surprisal_series p_new hp_new beta h_beta⟩
 
 end InfoGeometry.Quantum.PrimonColimit

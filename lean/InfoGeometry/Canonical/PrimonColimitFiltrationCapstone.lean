@@ -7,7 +7,8 @@ import InfoGeometry.Canonical.YangBaxterProof
 /-!
 # Primon Colimit Filtration Capstone (Canonical Export)
 
-Canonical umbrella export of the inductive filtration of prime subsystems and monotone convergence of surprisal potentials.
+Canonical umbrella export of the inductive filtration of prime subsystems, monotone convergence,
+and microscopic harmonic Bose-Einstein Mercator expansion.
 -/
 
 namespace InfoGeometry.Canonical.PrimonColimit
@@ -27,6 +28,8 @@ theorem grand_canonical_primon_colimit_synthesis
     (subsystemPotential S₁ beta = Real.log (∏ p ∈ S₁, primeEulerFactor p beta)) ∧
     (1 ≤ ∏ p ∈ S₁, primeEulerFactor p beta) ∧
     ((p_new : ℝ) ^ (-beta) ≤ primeSurprisalPotential p_new beta) ∧
+    (HasSum (fun k : ℕ => ((p_new : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1)) (primeSurprisalPotential p_new beta)) ∧
+    (Summable (fun k : ℕ => ((p_new : ℝ) ^ (-beta)) ^ (k + 1) / ((k : ℝ) + 1))) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
     (F * B * F = R) :=
   ⟨prime_surprisal_pos p_new hp_new beta h_beta,
@@ -36,6 +39,8 @@ theorem grand_canonical_primon_colimit_synthesis
    subsystem_potential_eq_log_prod S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
    finite_euler_prod_ge_one S₁ (fun p hp => h_prime p (h_sub hp)) beta h_beta,
    prime_surprisal_ge_linear p_new hp_new beta h_beta,
+   hasSum_prime_surprisal_series p_new hp_new beta h_beta,
+   summable_prime_surprisal_series p_new hp_new beta h_beta,
    F_sq,
    F_B_F_eq_R⟩
 

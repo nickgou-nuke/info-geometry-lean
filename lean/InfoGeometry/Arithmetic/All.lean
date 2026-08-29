@@ -5,6 +5,7 @@ import InfoGeometry.Arithmetic.ZetaBetaCayleyKleinBridge
 import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge
 import InfoGeometry.Arithmetic.ProfiniteCyclotomicUnitLimit
 import InfoGeometry.Arithmetic.FinitePrimonAmari
+import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone
 
 namespace InfoGeometry.Arithmetic.All
 

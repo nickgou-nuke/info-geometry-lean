@@ -188,10 +188,31 @@ theorem zornConj_j3RawMul_transpose
     (X Y : HermitianJ3) (i k : Fin 3) :
     zornConj (j3RawMul X.1 Y.1 i k) =
       j3RawMul Y.1 X.1 k i := by
-  fin_cases i <;> fin_cases k
-  all_goals
-    simp [j3RawMul, zornConj_add, zornConj_mul_reverse,
-      ← X.property, ← Y.property]
+  dsimp [j3RawMul]
+  rw [zornConj_add, zornConj_add, zornConj_mul_reverse, zornConj_mul_reverse, zornConj_mul_reverse]
+  have hY0 : zornConj (Y.1 0 k) = Y.1 k 0 := (Y.property k 0).symm
+  have hY1 : zornConj (Y.1 1 k) = Y.1 k 1 := (Y.property k 1).symm
+  have hY2 : zornConj (Y.1 2 k) = Y.1 k 2 := (Y.property k 2).symm
+  have hX0 : zornConj (X.1 i 0) = X.1 0 i := (X.property 0 i).symm
+  have hX1 : zornConj (X.1 i 1) = X.1 1 i := (X.property 1 i).symm
+  have hX2 : zornConj (X.1 i 2) = X.1 2 i := (X.property 2 i).symm
+  rw [hY0, hY1, hY2, hX0, hX1, hX2]
+
+theorem jordanProduct_hermitian_closed
+    (X Y : HermitianJ3) :
+    hermitianStar (jordanProduct X.1 Y.1) := by
+  intro i k
+  rw [jordanProduct_apply, jordanProduct_apply,
+    zornConj_half, zornConj_add,
+    zornConj_j3RawMul_transpose X Y,
+    zornConj_j3RawMul_transpose Y X]
+  rw [zorn_add_comm]
+
+noncomputable def jordanSquare (X : HermitianJ3) : J3 :=
+  jordanProduct X.1 X.1
+
+@[simp] theorem jordanSquare_apply (X : HermitianJ3) (i k : Fin 3) :
+    jordanSquare X i k = jordanProduct X.1 X.1 i k := rfl
 
 theorem hermitianStar_reflect (X : J3) (hX : hermitianStar X) :
     ∀ i j, X j i = zornConj (X i j) := by

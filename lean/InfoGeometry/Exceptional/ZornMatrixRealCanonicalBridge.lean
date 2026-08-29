@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.SplitOctonionZornReal
+import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 namespace InfoGeometry.Exceptional.RealZorn
@@ -108,5 +109,33 @@ theorem canonicalEquiv_conj (X : ZornMatrixReal) :
     fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
       realConj, smul, ZornVectorMatrix.conj]
   · rfl
+
+theorem canonicalEquiv_smul (c : ℝ) (X : ZornMatrixReal) :
+    canonicalEquiv (smul c X) =
+      ZornVectorMatrix.smul c (canonicalEquiv X) := by
+  apply ZornVectorMatrix.ext
+  · rfl
+  · funext i
+    fin_cases i <;> rfl
+  · funext i
+    fin_cases i <;> rfl
+  · rfl
+
+theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
+    canonicalEquiv (FiniteJ3Zorn.zornHalf X) =
+      ZornVectorMatrix.smul (2 : ℝ)⁻¹ (canonicalEquiv X) := by
+  apply ZornVectorMatrix.ext
+  · simp [canonicalEquiv, toCanonical, vecToCanonical,
+      FiniteJ3Zorn.zornHalf, ZornVectorMatrix.smul, smul]
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
+        FiniteJ3Zorn.zornHalf, ZornVectorMatrix.smul, smul]
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
+        FiniteJ3Zorn.zornHalf, ZornVectorMatrix.smul, smul]
+  · simp [canonicalEquiv, toCanonical, vecToCanonical,
+      FiniteJ3Zorn.zornHalf, ZornVectorMatrix.smul, smul]
 
 end InfoGeometry.Exceptional.RealZorn

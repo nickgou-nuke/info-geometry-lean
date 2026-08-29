@@ -221,12 +221,6 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_h3_b
   rw [realAlbertEquiv_hermitianRealAlbertEquiv]
   rfl
 
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_readback
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁ =
-      (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv.symm
-        (hermitianToH3 (finiteJordanProduct X Y))).z₁ := rfl
-
 def canonicalEntry (X : J3) : Fin 3 → Fin 3 → ZornVectorMatrix ℝ :=
   fun i j => canonicalEquiv (X i j)
 

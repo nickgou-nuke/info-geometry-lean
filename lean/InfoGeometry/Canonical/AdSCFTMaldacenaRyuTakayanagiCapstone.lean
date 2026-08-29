@@ -43,6 +43,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators Real
+open Matrix
 open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
@@ -149,8 +150,8 @@ theorem grand_adscft_maldacena_ryu_takayanagi_synthesis
     (ryuTakayanagiEntropy area_cup G_N + ryuTakayanagiEntropy area_cap G_N ≤
       ryuTakayanagiEntropy area_A G_N + ryuTakayanagiEntropy area_B G_N) ∧
     (ryuTakayanagiEntropy area_cup G_N ≤ ryuTakayanagiEntropy area_A G_N + ryuTakayanagiEntropy area_B G_N) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨maldacena_coupling_identity g_YM_sq g_s N h_gauge,
    ryu_takayanagi_area_scaling area_A G_N hG,
    ryu_takayanagi_pure_complementarity area_A area_Ac G_N h_area_comp,

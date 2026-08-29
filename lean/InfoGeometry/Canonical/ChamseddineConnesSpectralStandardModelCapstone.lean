@@ -36,6 +36,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators
+open Matrix
 open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
@@ -139,8 +140,8 @@ theorem grand_chamseddine_connes_standard_model_synthesis
     (spectralHiggsPotential lambda v v = 0) ∧
     (shiftedHiggsPotential lambda v phi = 4 * lambda * v ^ 2 * phi ^ 2 + 4 * lambda * v * phi ^ 3 + lambda * phi ^ 4) ∧
     (0 < gutWeakAngleSinSq ∧ gutWeakAngleSinSq < 1) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨dim_finite_algebra_af,
    spectralHiggsPotential_nonneg lambda v h h_lambda,
    spectralHiggsPotential_vacuum lambda v,

@@ -49,6 +49,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators Real
+open Matrix
 open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
@@ -150,8 +151,8 @@ theorem grand_donaldson_witten_seiberg_witten_synthesis
     (psi_sq = 0) ∧
     (swModuliDimension c1_sq chi_X sigma_X = 0) ∧
     (SW_g1 = SW_g0) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨sigma_endomorphism_traceless psi_sq,
    weitzenbock_potential_factor s psi_sq,
    positive_scalar_curvature_vanishing s psi_sq hs h_nonneg h_pot,

@@ -39,6 +39,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open Real
+open Matrix
 open scoped BigOperators
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -171,8 +172,8 @@ theorem grand_cluster_frieze_synthesis
     ((1 + x1) / clusterX5 x1 x2 = x2) ∧
     (x_n * x_s - x_c * x_w = 1) ∧
     (0 < clusterX3 x1 x2 ∧ 0 < clusterX4 x1 x2 ∧ 0 < clusterX5 x1 x2) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) := by
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) := by
   have hx1_ne : x1 ≠ 0 := by linarith
   have hx2_ne : x2 ≠ 0 := by linarith
   have hx1_p1 : x1 + 1 ≠ 0 := by linarith

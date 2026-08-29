@@ -72,6 +72,23 @@ theorem superalgebra_partition_duality (D : PrimonSuperalgebraData) :
     D.boson_partition * D.fermion_partition = 1 :=
   D.inv_duality
 
+/-! ### Finite local-to-global Tate reciprocity
+
+This is the finite Euler-window statement.  It does not assert an adelic
+Haar integral or an analytic continuation of the Euler product.
+-/
+
+theorem finite_local_global_tate_reciprocity
+    (P : Finset ℕ+) (s : ℂ)
+    (hP : ∀ p ∈ P, 1 - (p.val : ℂ) ^ (-s) ≠ 0) :
+    (∏ p ∈ P, localTateFactor p s) *
+      (∏ p ∈ P, fermionicLocalFactor p s) = 1 := by
+  classical
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_eq_one
+  intro p hp
+  exact local_tate_boson_fermion_duality p s (hP p hp)
+
 /-! ## 4. Master Synthesis Theorem -/
 
 /--

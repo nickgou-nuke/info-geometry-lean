@@ -1,4 +1,4 @@
-import Mathlib.Tactic.Ring
+import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
@@ -124,7 +124,7 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
     C.centeredOccupationCoupling i j =
       C.kappa * twoPrimeLogConvolutionCoeff C i j := by
   unfold PrimeFerromagneticChain.centeredOccupationCoupling twoPrimeLogConvolutionCoeff
-   ring
+  ring
 
 /--!
 Hurwitz-Lee-Yang Xi limit packet.

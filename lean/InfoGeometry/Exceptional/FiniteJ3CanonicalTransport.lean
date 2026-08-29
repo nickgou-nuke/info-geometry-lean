@@ -441,6 +441,18 @@ theorem canonicalEquiv_mul_b (A B : ZornMatrixReal) :
   rw [canonicalEquiv_mul]
   rfl
 
+theorem canonicalEquiv_v_fst (A : ZornMatrixReal) :
+    (canonicalEquiv A).v 0 = A.u.1 := by
+  rfl
+
+theorem canonicalEquiv_v_snd_fst (A : ZornMatrixReal) :
+    (canonicalEquiv A).v 1 = A.u.2.1 := by
+  rfl
+
+theorem canonicalEquiv_v_snd_snd (A : ZornMatrixReal) :
+    (canonicalEquiv A).v 2 = A.u.2.2 := by
+  rfl
+
 theorem hermitian_entry_a_eq_b (X : HermitianJ3) (i j : Fin 3) :
     (X.1 i j).a = (X.1 j i).b := by
   have h := congrArg ZornMatrixReal.a (X.property i j)
@@ -547,5 +559,10 @@ theorem canonicalHermitianEntry_v (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).v =
       (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).v := by
   exact congrArg ZornVectorMatrix.v (canonicalHermitianEntry X i j)
+
+theorem canonicalHermitianEntry_w (X : HermitianJ3) (i j : Fin 3) :
+    (canonicalEquiv (X.1 j i)).w =
+      (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).w := by
+  exact congrArg ZornVectorMatrix.w (canonicalHermitianEntry X i j)
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

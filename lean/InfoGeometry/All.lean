@@ -6438,6 +6438,7 @@ import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 import InfoGeometry.Quantum.QuantumGeometricUncertaintyPrinciple
+import InfoGeometry.Quantum.BerryKeatingCCRCapstone
 import InfoGeometry.QuantumGeometry.DensityOperatorDLogHomomorphism
 import InfoGeometry.QuantumGeometry.DualExponentialArchitectureCertificate
 import InfoGeometry.QuantumGeometry.KreinToHilbertCartanBridge

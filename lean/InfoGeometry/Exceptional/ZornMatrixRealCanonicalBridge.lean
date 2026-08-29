@@ -74,6 +74,14 @@ theorem canonicalEquiv_add (X Y : ZornMatrixReal) :
       ZornVectorMatrix.add (canonicalEquiv X) (canonicalEquiv Y) := by
   exact toCanonical_add X Y
 
+theorem fromCanonical_add (X Y : ZornVectorMatrix ℝ) :
+    fromCanonical (ZornVectorMatrix.add X Y) =
+      fromCanonical X + fromCanonical Y := by
+  apply canonicalEquiv.injective
+  rw [canonicalEquiv_symm_apply, canonicalEquiv_symm_apply,
+    ← canonicalEquiv_symm_apply]
+  exact ZornVectorMatrix.add_readback X Y
+
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by

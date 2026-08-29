@@ -33,6 +33,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators
+open Matrix
 open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
@@ -145,8 +146,8 @@ theorem grand_higher_categories_lurie_synthesis
     (∃ s : Simplex2 C, s.comp.src = horn.X0 ∧ s.comp.tgt = horn.X2) ∧
     (d.comp_left.src = d.comp_right.src ∧ d.comp_left.tgt = d.comp_right.tgt) ∧
     (inv_f.inv.src = f.tgt ∧ inv_f.inv.tgt = f.src) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨inner_2_horn_filling C horn,
    quasi_category_homotopy_associativity C d,
    infinity_groupoid_kan_condition C f inv_f,

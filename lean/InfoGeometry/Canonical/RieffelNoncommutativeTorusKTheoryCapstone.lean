@@ -39,6 +39,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open Real Complex
+open Matrix
 open scoped BigOperators
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -154,8 +155,8 @@ theorem grand_rieffel_torus_ktheory_synthesis
     (weylPhase 0 = 1) ∧
     (0 ≤ rieffelTrace theta ∧ rieffelTrace theta ≤ 1) ∧
     (m = 0 ∧ n = 0) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨weylPhase_norm theta,
    weylPhase_zero,
    rieffelTrace_bounds theta h0 h1,

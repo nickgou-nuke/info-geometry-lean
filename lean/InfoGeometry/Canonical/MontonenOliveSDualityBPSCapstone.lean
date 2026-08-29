@@ -49,6 +49,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators Real
+open Matrix
 open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
@@ -161,8 +162,8 @@ theorem grand_montonen_olive_s_duality_synthesis
     (bpsMassSquared 1 0 tau1 tau2 = 1) ∧
     (bpsMassSquared 0 1 0 tau2 = tau2 ^ 2) ∧
     (bpsMassSquared qe qm tau1 tau2 = qe ^ 2 + 2 * qe * qm * tau1 + qm ^ 2 * (tau1 ^ 2 + tau2 ^ 2)) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨dilaton_pos g hg,
    montonen_olive_duality_involution g,
    dsz_symplectic_pure_charges qe qm,

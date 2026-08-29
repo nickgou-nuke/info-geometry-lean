@@ -313,6 +313,28 @@ def e₀ : J3 := diagonalIdempotent 0
 def e₁ : J3 := diagonalIdempotent 1
 def e₂ : J3 := diagonalIdempotent 2
 
+/-! A fully explicit commutative finite diagonal subcarrier. -/
+
+def ScalarDiagonalJ3 := Fin 3 → ℝ
+
+def scalarDiagonalMul (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
+  fun i => x i * y i
+
+def scalarDiagonalJordan (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
+  fun i => (scalarDiagonalMul x y i + scalarDiagonalMul y x i) / 2
+
+theorem scalar_diagonal_jordan_comm (x y : ScalarDiagonalJ3) :
+    scalarDiagonalJordan x y = scalarDiagonalJordan y x := by
+  funext i
+  simp [scalarDiagonalJordan, scalarDiagonalMul, mul_comm]
+
+theorem scalar_diagonal_jordan_identity (x y : ScalarDiagonalJ3) :
+    scalarDiagonalJordan (scalarDiagonalJordan x x) y =
+      scalarDiagonalJordan x (scalarDiagonalJordan x y) := by
+  funext i
+  simp [scalarDiagonalJordan, scalarDiagonalMul]
+  ring
+
 def diagonalPart (X : J3) : J3 :=
   fun i j => if i = j then X i j else 0
 

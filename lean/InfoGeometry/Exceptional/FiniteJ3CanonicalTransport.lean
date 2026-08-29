@@ -57,7 +57,8 @@ theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
     hermitianStar (h3ToHermitian Z) := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [h3ToHermitian, scalarZorn, zornConj, smul]
+    simp [h3ToHermitian, scalarZorn, zornConj, smul,
+      zornConj_involutive, scalarZorn_conj]
 
 def h3ToHermitianSubtype (Z : H3Zorn ℝ) : HermitianJ3 :=
   ⟨h3ToHermitian Z, h3ToHermitian_hermitian Z⟩
@@ -249,66 +250,6 @@ theorem canonicalEntry_jordanProduct (X Y : J3) (i k : Fin 3) :
     canonicalEntry_j3RawMul,
     canonicalEntry_j3RawMul]
 
-theorem canonicalEntry_jordanProduct_a (X Y : J3) (i k : Fin 3) :
-    (canonicalEquiv (jordanProduct X Y i k)).a =
-      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
-        (ZornVectorMatrix.add
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (X i j))
-              (canonicalEquiv (Y j k)))
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
-              (canonicalEquiv (X j k))))).a := by
-  exact congrArg ZornVectorMatrix.a (canonicalEntry_jordanProduct X Y i k)
-
-theorem canonicalEntry_jordanProduct_a_00 (X Y : J3) :
-    (canonicalEquiv (jordanProduct X Y 0 0)).a =
-      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
-        (ZornVectorMatrix.add
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (X 0 j))
-              (canonicalEquiv (Y j 0)))
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (Y 0 j))
-              (canonicalEquiv (X j 0))))).a := by
-  exact canonicalEntry_jordanProduct_a X Y 0 0
-
-theorem canonicalEntry_jordanProduct_b (X Y : J3) (i k : Fin 3) :
-    (canonicalEquiv (jordanProduct X Y i k)).b =
-      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
-        (ZornVectorMatrix.add
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (X i j))
-              (canonicalEquiv (Y j k)))
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
-              (canonicalEquiv (X j k))))).b := by
-  exact congrArg ZornVectorMatrix.b (canonicalEntry_jordanProduct X Y i k)
-
-theorem canonicalEntry_jordanProduct_v (X Y : J3) (i k : Fin 3) :
-    (canonicalEquiv (jordanProduct X Y i k)).v =
-      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
-        (ZornVectorMatrix.add
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (X i j))
-              (canonicalEquiv (Y j k)))
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
-              (canonicalEquiv (X j k))))).v := by
-  exact congrArg ZornVectorMatrix.v (canonicalEntry_jordanProduct X Y i k)
-
-theorem canonicalEntry_jordanProduct_w (X Y : J3) (i k : Fin 3) :
-    (canonicalEquiv (jordanProduct X Y i k)).w =
-      (ZornVectorMatrix.smul (2 : ℝ)⁻¹
-        (ZornVectorMatrix.add
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (X i j))
-              (canonicalEquiv (Y j k)))
-          (∑ j : Fin 3,
-            ZornVectorMatrix.mul (canonicalEquiv (Y i j))
-              (canonicalEquiv (X j k))))).w := by
-  exact congrArg ZornVectorMatrix.w (canonicalEntry_jordanProduct X Y i k)
-
 theorem hermitian_diagonal_eq_scalarZorn (X : HermitianJ3) (i : Fin 3) :
     X.1 i i = scalarZorn (X.1 i i).a := by
   have h := X.property i i
@@ -396,73 +337,22 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
       hermitianH3Equiv.symm
         (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
 
-@[simp] theorem hermitianRealAlbertEquiv_alpha₁ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).α₁ = (X.1 0 0).a := rfl
-
-@[simp] theorem hermitianRealAlbertEquiv_alpha₂ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).α₂ = (X.1 1 1).a := rfl
-
-@[simp] theorem hermitianRealAlbertEquiv_alpha₃ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).α₃ = (X.1 2 2).a := rfl
-
-@[simp] theorem hermitianRealAlbertEquiv_z₁ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).z₁ =
-      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 1 2)) := rfl
-
-@[simp] theorem hermitianRealAlbertEquiv_z₂ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).z₂ =
-      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 2 0)) := rfl
-
-@[simp] theorem hermitianRealAlbertEquiv_z₃ (X : HermitianJ3) :
-    (hermitianRealAlbertEquiv X).z₃ =
-      RealSplitOctZornAlignment.fromZorn (canonicalEquiv (X.1 0 1)) := rfl
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₁
+theorem hermitianRealAlbertEquiv_jordanProduct_α₁
     (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₁ =
-      (j3RawMul X.1 Y.1 0 0).a / 2 +
-        (j3RawMul Y.1 X.1 0 0).a / 2 := by
-  rw [hermitianRealAlbertEquiv_alpha₁]
+    (hermitianRealAlbertEquiv
+      ⟨jordanProduct X.1 Y.1,
+        jordanProduct_hermitian_closed X Y⟩).α₁ =
+      (RealAlbertMatrix.mul
+        (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).α₁ := by
   change (jordanProduct X.1 Y.1 0 0).a = _
-  exact jordanProduct_a X.1 Y.1 0 0
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₂
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₂ =
-      (j3RawMul X.1 Y.1 1 1).a / 2 +
-        (j3RawMul Y.1 X.1 1 1).a / 2 := by
-  rw [hermitianRealAlbertEquiv_alpha₂]
-  change (jordanProduct X.1 Y.1 1 1).a = _
-  exact jordanProduct_a X.1 Y.1 1 1
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₃
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₃ =
-      (j3RawMul X.1 Y.1 2 2).a / 2 +
-        (j3RawMul Y.1 X.1 2 2).a / 2 := by
-  rw [hermitianRealAlbertEquiv_alpha₃]
-  change (jordanProduct X.1 Y.1 2 2).a = _
-  exact jordanProduct_a X.1 Y.1 2 2
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁ =
-      RealSplitOctZornAlignment.fromZorn
-        (canonicalEquiv (jordanProduct X.1 Y.1 1 2)) := by
-  rfl
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂ =
-      RealSplitOctZornAlignment.fromZorn
-        (canonicalEquiv (jordanProduct X.1 Y.1 2 0)) := by
-  rfl
-
-theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃ =
-      RealSplitOctZornAlignment.fromZorn
-        (canonicalEquiv (jordanProduct X.1 Y.1 0 1)) := by
-  rfl
+  simp only [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
+    hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3,
+    fromCanonical_mul_a, fromCanonical_conj_a]
+  rw [hermitian_readback_10 X, hermitian_readback_02 X,
+    hermitian_readback_10 Y, hermitian_readback_02 Y]
+  simp [zornConj_involutive]
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

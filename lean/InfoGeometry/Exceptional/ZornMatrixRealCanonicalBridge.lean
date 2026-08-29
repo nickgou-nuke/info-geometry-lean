@@ -87,11 +87,6 @@ theorem fromCanonical_add (X Y : ZornVectorMatrix ℝ) :
   rw [canonicalEquiv.apply_symm_apply, canonicalEquiv_add]
   simp [canonicalEquiv, toCanonical, fromCanonical, vecToCanonical_from]
 
-theorem fromCanonical_half_add (X Y : ZornVectorMatrix ℝ) :
-    fromCanonical (ZornVectorMatrix.smul (2 : ℝ)⁻¹ (X + Y)) =
-      (2 : ℝ)⁻¹ • (fromCanonical X + fromCanonical Y) := by
-  exact RealSplitOctZornAlignment.fromZorn_half_add X Y
-
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by
@@ -129,9 +124,28 @@ theorem canonicalEquiv_conj (X : ZornMatrixReal) :
     fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
       realConj, smul, ZornVectorMatrix.conj]
   · funext i
-    fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
+      fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
       realConj, smul, ZornVectorMatrix.conj]
   · rfl
+
+theorem canonicalEquiv_zornHalf (X : ZornMatrixReal) :
+    canonicalEquiv (zornHalf X) =
+      ZornVectorMatrix.smul (2 : ℝ)⁻¹ (canonicalEquiv X) := by
+  apply ZornVectorMatrix.ext
+  · simp [canonicalEquiv, toCanonical, vecToCanonical, zornHalf,
+      ZornVectorMatrix.smul]
+    ring
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical, zornHalf,
+        smul, ZornVectorMatrix.smul]
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical, zornHalf,
+        smul, ZornVectorMatrix.smul]
+  · simp [canonicalEquiv, toCanonical, vecToCanonical, zornHalf,
+      ZornVectorMatrix.smul]
+    ring
 
 def toRealSplitOct (X : ZornMatrixReal) : RealSplitOct :=
   RealSplitOctZornAlignment.fromZorn (canonicalEquiv X)
@@ -159,6 +173,20 @@ def toRealSplitOct (X : ZornMatrixReal) : RealSplitOct :=
 
 @[simp] theorem toRealSplitOct_y2 (X : ZornMatrixReal) :
     (toRealSplitOct X).y2 = X.v.2.2 := rfl
+
+theorem toRealSplitOct_add (X Y : ZornMatrixReal) :
+    toRealSplitOct (X + Y) =
+      RealSplitOct.add (toRealSplitOct X) (toRealSplitOct Y) := by
+  change RealSplitOctZornAlignment.fromZorn
+      (ZornVectorMatrix.add (canonicalEquiv X) (canonicalEquiv Y)) =
+    RealSplitOctZornAlignment.fromZorn (canonicalEquiv X) +
+      RealSplitOctZornAlignment.fromZorn (canonicalEquiv Y)
+  exact RealSplitOctZornAlignment.fromZorn_add _ _
+
+theorem toRealSplitOct_smul (r : ℝ) (X : ZornVectorMatrix ℝ) :
+    RealSplitOctZornAlignment.fromZorn (ZornVectorMatrix.smul r X) =
+      RealSplitOct.smul r (RealSplitOctZornAlignment.fromZorn X) := by
+  exact RealSplitOctZornAlignment.fromZorn_smul r X
 
 theorem toRealSplitOct_mul (X Y : ZornMatrixReal) :
     toRealSplitOct (X * Y) =

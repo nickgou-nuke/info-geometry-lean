@@ -75,6 +75,10 @@ theorem fromZorn_add (X Y : ZornVectorMatrix ℝ) :
     fromZorn (X + Y) = fromZorn X + fromZorn Y := by
   apply RealSplitOct.ext <;> rfl
 
+theorem fromZorn_add₃ (X Y Z : ZornVectorMatrix ℝ) :
+    fromZorn (X + Y + Z) = fromZorn X + fromZorn Y + fromZorn Z := by
+  rw [fromZorn_add, fromZorn_add]
+
 theorem toZorn_add_def (X Y : RealSplitOct) :
     toZorn (RealSplitOct.add X Y) = ZornVectorMatrix.add (toZorn X) (toZorn Y) := by
   cases X; cases Y

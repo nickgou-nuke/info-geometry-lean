@@ -3456,6 +3456,7 @@ import InfoGeometry.Canonical.ClusterAlgebraConwayCoxeterFriezeCapstone
 import InfoGeometry.Canonical.MontonenOliveSDualityBPSCapstone
 import InfoGeometry.Canonical.DonaldsonWittenSeibergWitten4ManifoldCapstone
 import InfoGeometry.Canonical.RieffelNoncommutativeTorusKTheoryCapstone
+import InfoGeometry.Canonical.LurieQuasiCategoryHigherCategoryCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

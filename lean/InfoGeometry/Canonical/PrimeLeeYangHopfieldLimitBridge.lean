@@ -1,3 +1,4 @@
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
@@ -123,6 +124,24 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
     C.centeredOccupationCoupling i j =
       C.kappa * twoPrimeLogConvolutionCoeff C i j := by
   unfold PrimeFerromagneticChain.centeredOccupationCoupling twoPrimeLogConvolutionCoeff
-  ring
+   ring
+
+/--!
+Hurwitz-Lee-Yang Xi limit packet.
+
+This is the abstract convergence carrier that, when combined with a concrete
+`PrimeLeeYangToHurwitzWitness`, yields the Lee--Yang/Hurwitz bridge.
+-/
+@[rep_depth operator]
+structure HurwitzLeeYangXiLimitPacket
+    (CompletedXiReadout RenormalizationReadout LimitReadout : Type) where
+  completedXiReadout : CompletedXiReadout
+  renormalizationReadout : RenormalizationReadout
+  limitReadout : LimitReadout
+  finiteLeeYangStability : Prop
+  nonvanishingRenormalization : Prop
+  locallyUniformXiLimit : Prop
+  noSpuriousZeros : Prop
+  hurwitzTransfer : Prop
 
 end InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

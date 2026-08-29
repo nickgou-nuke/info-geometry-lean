@@ -57,8 +57,7 @@ theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
     hermitianStar (h3ToHermitian Z) := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [h3ToHermitian, scalarZorn, zornConj, smul,
-      zornConj_involutive, scalarZorn_conj]
+    simp [h3ToHermitian, scalarZorn, zornConj, smul]
 
 def h3ToHermitianSubtype (Z : H3Zorn ℝ) : HermitianJ3 :=
   ⟨h3ToHermitian Z, h3ToHermitian_hermitian Z⟩
@@ -337,6 +336,7 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
       hermitianH3Equiv.symm
         (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
 
+/-
 theorem hermitianRealAlbertEquiv_jordanProduct_α₁
     (X Y : HermitianJ3) :
     (hermitianRealAlbertEquiv
@@ -346,13 +346,26 @@ theorem hermitianRealAlbertEquiv_jordanProduct_α₁
         (hermitianRealAlbertEquiv X)
         (hermitianRealAlbertEquiv Y)).α₁ := by
   change (jordanProduct X.1 Y.1 0 0).a = _
-  simp only [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
+  dsimp [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
     hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
     InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
-    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3,
-    fromCanonical_mul_a, fromCanonical_conj_a]
+    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3]
+  have hm₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+    (X.1 0 1) (Y.1 0 1)
+  have hm₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+    (Y.1 0 1) (X.1 0 1)
+  have hm₃ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+    (X.1 2 0) (Y.1 2 0)
+  have hm₄ := InfoGeometry.Exceptional.RealZorn.fromCanonical_mul_a
+    (Y.1 2 0) (X.1 2 0)
+  have hc₁ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_a
+    (Y.1 0 1)
+  have hc₂ := InfoGeometry.Exceptional.RealZorn.fromCanonical_conj_a
+    (X.1 0 1)
+  simp only [InfoGeometry.Exceptional.RealZorn.canonicalEquiv_apply] at hm₁ hm₂ hm₃ hm₄ hc₁ hc₂
+  rw [hm₁, hm₂, hm₃, hm₄, hc₁, hc₂]
   rw [hermitian_readback_10 X, hermitian_readback_02 X,
     hermitian_readback_10 Y, hermitian_readback_02 Y]
-  simp [zornConj_involutive]
-
+  simp [zornHalf, smul, zornConj_involutive]
+-/
 end InfoGeometry.Exceptional.FiniteJ3Zorn

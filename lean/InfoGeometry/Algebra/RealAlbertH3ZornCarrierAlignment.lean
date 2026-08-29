@@ -57,15 +57,6 @@ def equiv : RealAlbertMatrix ≃ H3Zorn ℝ where
 @[simp] theorem equiv_symm_apply (X : H3Zorn ℝ) :
     equiv.symm X = fromH3 X := rfl
 
-@[simp] theorem fromH3_z₁ (X : H3Zorn ℝ) :
-    (fromH3 X).z₁ = equiv.symm X.b := rfl
-
-@[simp] theorem fromH3_z₂ (X : H3Zorn ℝ) :
-    (fromH3 X).z₂ = equiv.symm X.c := rfl
-
-@[simp] theorem fromH3_z₃ (X : H3Zorn ℝ) :
-    (fromH3 X).z₃ = equiv.symm X.a := rfl
-
 theorem toH3_add (X Y : RealAlbertMatrix) :
     toH3 (RealAlbertMatrix.add X Y) = toH3 X + toH3 Y := by
   rw [H3Zorn.add_readback]

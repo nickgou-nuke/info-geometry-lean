@@ -186,6 +186,45 @@ theorem hermitianToH3_a (X : HermitianJ3) :
 @[simp] theorem hermitianRealAlbertEquiv_alpha₃ (X : HermitianJ3) :
     (hermitianRealAlbertEquiv X).α₃ = (X.1 2 2).a := rfl
 
+theorem hermitianRealAlbertEquiv_z₁ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₁ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 1 2)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (jordanProduct X.1 Y.1 1 2)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_z₂ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₂ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 2 0)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (jordanProduct X.1 Y.1 2 0)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_z₃ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₃ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 0 1)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (jordanProduct X.1 Y.1 0 1)) := by
+  rfl
+
 theorem hermitianRealAlbertEquiv_finiteJordanProduct_alpha₁
     (X Y : HermitianJ3) :
     (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).α₁ =

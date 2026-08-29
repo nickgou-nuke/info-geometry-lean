@@ -119,6 +119,26 @@ theorem scaleExponentOfRealEnergy_onLeeYangCircle (E : ℝ) :
   exact cayleyToFugacity_mem_unitCircle_of_criticalLine _
     (scaleExponentOfRealEnergy_onCriticalLine E)
 
+/-- Real-energy translation changes the scale exponent only in the imaginary
+direction. -/
+theorem scaleExponentOfRealEnergy_add (E t : ℝ) :
+    scaleExponentOfEnergy ((E + t : ℝ) : ℂ) =
+      scaleExponentOfEnergy (E : ℂ) + Complex.I * (t : ℂ) := by
+  dsimp [scaleExponentOfEnergy]
+  ring
+
+/-- Translating the real spectral height preserves the critical-line locus. -/
+theorem scaleExponentOfRealEnergy_add_onCriticalLine (E t : ℝ) :
+    OnCriticalLine (scaleExponentOfEnergy ((E + t : ℝ) : ℂ)) := by
+  exact scaleExponentOfRealEnergy_onCriticalLine (E + t)
+
+/-- Translating the real spectral height preserves the Lee--Yang unit-circle
+image under the Cayley coordinate. -/
+theorem scaleExponentOfRealEnergy_add_onLeeYangCircle (E t : ℝ) :
+    OnLeeYangCircle
+      (cayleyToFugacity (scaleExponentOfEnergy ((E + t : ℝ) : ℂ))) := by
+  exact scaleExponentOfRealEnergy_onLeeYangCircle (E + t)
+
 /-! ### 5. Euler-Möbius Inversion (Primon Gas Vacuum Duality) -/
 
 /-- 🏆 THEOREM 5: (ζ * μ : ArithmeticFunction ℤ) = 1 -/

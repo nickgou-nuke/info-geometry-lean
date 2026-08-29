@@ -7835,4 +7835,8 @@ import InfoGeometry.Noncommutative.ConnesMetric
 import InfoGeometry.Canonical.ApolloniusLieBracketCapstone
 import InfoGeometry.Canonical.SpectralTripleApolloniusCapstone
 import InfoGeometry.Canonical.ConnesMetricCapstone
+import InfoGeometry.Quantum.DikinBlahutOrbits
+import InfoGeometry.Quantum.ConnesAdeleTrace
+import InfoGeometry.Canonical.DikinBlahutOrbitsCapstone
+import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
 

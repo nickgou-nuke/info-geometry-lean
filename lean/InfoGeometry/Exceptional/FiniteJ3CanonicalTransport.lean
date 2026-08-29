@@ -786,6 +786,40 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₃
   try simp only [hX02, hY02, hX12, hY12]
   simp [zornConj, smul, vecToCanonical, dot] <;> ring
 
+set_option maxHeartbeats 2000000 in
+set_option maxRecDepth 100000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul_z₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₁ := by
+  apply RealSplitOct.ext
+  all_goals
+    have hX01 := X.property 0 1
+    have hY01 := Y.property 0 1
+    have hX02 := X.property 0 2
+    have hY02 := Y.property 0 2
+    have hX12 := X.property 1 2
+    have hY12 := Y.property 1 2
+    have hX10 := X.property 1 0
+    have hY10 := Y.property 1 0
+    have hX20 := X.property 2 0
+    have hY20 := Y.property 2 0
+    have hX21 := X.property 2 1
+    have hY21 := Y.property 2 1
+    simp [hermitianRealAlbertEquiv_finiteJordanProduct_z₁, zornHalf,
+      j3RawMul, RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+      hermitianH3Equiv, RealAlbertH3ZornCarrierAlignment.equiv,
+      RealAlbertH3ZornCarrierAlignment.fromH3,
+      RealAlbertH3ZornCarrierAlignment.toH3, hermitianToH3,
+      canonicalEquiv, toCanonical, fromCanonical,
+      RealSplitOctZornAlignment.fromZorn, RealSplitOctZornAlignment.toZorn,
+      RealSplitOct.conj, RealSplitOct.mul, ZornVectorMatrix.conj,
+      ZornVectorMatrix.mul, ZornVec3.dot, Fin.sum_univ_three,
+      zornConj, smul, vecToCanonical, dot, hX01, hY01, hX02, hY02,
+      hX12, hY12, hX10, hY10, hX20, hY20, hX21, hY21,
+      hermitian_diagonal_u_zero, hermitian_diagonal_v_zero] <;> ring_nf
+
 theorem canonicalHermitianEntry_a (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).a =
       (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).a := by

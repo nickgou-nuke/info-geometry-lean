@@ -335,32 +335,15 @@ theorem scalar_diagonal_jordan_identity (x y : ScalarDiagonalJ3) :
   simp [scalarDiagonalJordan, scalarDiagonalMul]
   ring
 
-noncomputable def jordanAssociator (X Y : HermitianJ3) : J3 :=
-  jordanProduct
-      (jordanProduct X.1 X.1)
-      (jordanProduct Y.1 X.1) -
-    jordanProduct X.1
-      (jordanProduct (jordanProduct X.1 Y.1) X.1)
+noncomputable def scalarDiagonalJordanAssociator (x y : ScalarDiagonalJ3) : ScalarDiagonalJ3 :=
+  fun i => scalarDiagonalJordan (scalarDiagonalJordan x x) y i -
+    scalarDiagonalJordan x (scalarDiagonalJordan x y) i
 
-theorem jordanAssociator_apply (X Y : HermitianJ3) (i k : Fin 3) :
-    jordanAssociator X Y i k =
-      jordanProduct
-        (jordanProduct X.1 X.1)
-        (jordanProduct Y.1 X.1) i k -
-      jordanProduct X.1
-        (jordanProduct (jordanProduct X.1 Y.1) X.1) i k := by
-  rfl
-
-set_option maxHeartbeats 1000000 in
-theorem jordanAssociator_zero (X Y : HermitianJ3) :
-    jordanAssociator X Y = zero := by
-  funext i k
-  fin_cases i <;> fin_cases k
-  all_goals
-    apply ZornMatrixReal.ext_pre <;>
-      simp [jordanAssociator, jordanProduct, j3RawMul, zornHalf,
-        dot, cross, add, sub, smul] <;>
-      ring
+theorem scalar_diagonal_jordan_associator_zero (x y : ScalarDiagonalJ3) :
+    scalarDiagonalJordanAssociator x y = (fun _ => 0) := by
+  funext i
+  dsimp [scalarDiagonalJordanAssociator, scalarDiagonalJordan, scalarDiagonalMul]
+  ring
 
 def diagonalPart (X : J3) : J3 :=
   fun i j => if i = j then X i j else 0

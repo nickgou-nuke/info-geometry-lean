@@ -3436,6 +3436,7 @@ import InfoGeometry.Canonical.UHFMatrixColimitCapstone
 import InfoGeometry.Canonical.AlbertJordanThreeGenerationsCapstone
 import InfoGeometry.Canonical.DrinfeldJimboFibonacciAnyonsCapstone
 import InfoGeometry.Canonical.VirasoroConformalCasimirCapstone
+import InfoGeometry.Canonical.CalogeroMoserSutherlandPrimonIntegrabilityCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

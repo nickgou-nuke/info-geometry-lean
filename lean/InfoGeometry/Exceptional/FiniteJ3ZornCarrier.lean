@@ -175,6 +175,32 @@ theorem zorn_one_mul (A : ZornMatrixReal) :
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
   · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [ZornMatrixReal.mul, ZornMatrixReal.one, dot, cross, add, sub, smul]; ring)
 
+theorem zorn_mul_zero (A : ZornMatrixReal) :
+    A * 0 = 0 := by
+  change ZornMatrixReal.mul A ZornMatrixReal.zero = ZornMatrixReal.zero
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]
+    ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;>
+      (dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;>
+      (dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]; ring)
+
+theorem zorn_zero_mul (A : ZornMatrixReal) :
+    0 * A = 0 := by
+  change ZornMatrixReal.mul ZornMatrixReal.zero A = ZornMatrixReal.zero
+  apply ZornMatrixReal.ext
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]
+    ring
+  · dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]
+    ring
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;>
+      (dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]; ring)
+  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;>
+      (dsimp [ZornMatrixReal.mul, ZornMatrixReal.zero, dot, cross, add, sub, smul]; ring)
+
 def hermitian (X : J3) : Prop :=
   ∀ i j, X i j = X j i
 
@@ -286,6 +312,21 @@ theorem diagonalIdempotent_hermitianStar (k : Fin 3) :
 def e₀ : J3 := diagonalIdempotent 0
 def e₁ : J3 := diagonalIdempotent 1
 def e₂ : J3 := diagonalIdempotent 2
+
+def diagonalPart (X : J3) : J3 :=
+  fun i j => if i = j then X i j else 0
+
+def offDiagonalPart (X : J3) : J3 :=
+  fun i j => if i = j then 0 else X i j
+
+theorem peirce_coordinate_decomposition (X : J3) :
+    diagonalPart X + offDiagonalPart X = X := by
+  funext i j
+  by_cases h : i = j
+  · subst j
+    simp [diagonalPart, offDiagonalPart, zorn_add_zero]
+  · simp [diagonalPart, offDiagonalPart, h]
+    exact zorn_zero_add (X i j)
 
 
 theorem hermitian_transpose (X : J3) (hX : hermitian X) :

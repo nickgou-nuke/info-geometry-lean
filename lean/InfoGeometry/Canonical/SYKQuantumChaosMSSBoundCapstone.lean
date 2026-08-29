@@ -36,6 +36,7 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open Real
+open Matrix
 open scoped BigOperators
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -141,8 +142,8 @@ theorem grand_syk_quantum_chaos_synthesis
     (0 < mssMaxLyapunov beta) ∧
     (otocGrowth N (mssMaxLyapunov beta) (scramblingTime beta N) = 1) ∧
     (residualZeroTempEntropy (N + N) s0 = 2 * residualZeroTempEntropy N s0) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
+    (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
   ⟨syk_saturates_mss_bound beta h_beta,
    mssMaxLyapunov_pos beta h_beta,
    otoc_reaches_unity_at_scrambling_time beta h_beta N hN,

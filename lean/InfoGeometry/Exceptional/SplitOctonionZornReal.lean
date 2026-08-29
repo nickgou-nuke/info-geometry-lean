@@ -383,14 +383,6 @@ theorem zorn_mul_sub (A B C : ZornMatrixReal) :
   · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
   · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
 
-/-- Extensionality lemma for Zorn matrices. -/
-lemma ZornMatrixReal.ext (A B : ZornMatrixReal)
-    (ha : A.a = B.a) (hb : A.b = B.b)
-    (hu : A.u = B.u) (hv : A.v = B.v) : A = B := by
-  cases A
-  cases B
-  congr
-
 /-- The split norm of a Zorn matrix: N(A) = a * b - u · v -/
 def ZornMatrixReal.norm (A : ZornMatrixReal) : ℝ :=
   A.a * A.b - dot A.u A.v

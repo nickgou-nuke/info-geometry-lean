@@ -164,4 +164,17 @@ theorem toRealSplitOct_conj (X : ZornMatrixReal) :
   simp only [RealSplitOctZornAlignment.toZorn_fromZorn]
   exact canonicalEquiv_conj X
 
+theorem fromCanonical_mul_a (X Y : ZornMatrixReal) :
+    ((RealSplitOctZornAlignment.fromZorn (canonicalEquiv X)).mul
+        (RealSplitOctZornAlignment.fromZorn (canonicalEquiv Y))).a =
+      (X * Y).a := by
+  simpa only [toRealSplitOct] using congrArg RealSplitOct.a
+    (toRealSplitOct_mul X Y).symm
+
+theorem fromCanonical_conj_a (X : ZornMatrixReal) :
+    (RealSplitOctZornAlignment.fromZorn (canonicalEquiv X)).conj.a =
+      (realConj X).a := by
+  simpa only [toRealSplitOct] using congrArg RealSplitOct.a
+    (toRealSplitOct_conj X).symm
+
 end InfoGeometry.Exceptional.RealZorn

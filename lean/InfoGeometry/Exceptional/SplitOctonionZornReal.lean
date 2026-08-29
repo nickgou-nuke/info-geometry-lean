@@ -26,6 +26,16 @@ def cross (u v : Vec3Real) : Vec3Real :=
    u.2.2 * v.1 - u.1 * v.2.2,
    u.1 * v.2.1 - u.2.1 * v.1)
 
+theorem cross_self (u : Vec3Real) : cross u u = (0, 0, 0) := by
+  apply Prod.ext
+  · dsimp [cross]
+    ring
+  · apply Prod.ext
+    · dsimp [cross]
+      ring
+    · dsimp [cross]
+      ring
+
 /-- The dot product of two 3D vectors. -/
 def dot (u v : Vec3Real) : ℝ :=
   u.1 * v.1 + u.2.1 * v.2.1 + u.2.2 * v.2.2

@@ -255,6 +255,33 @@ theorem zorn_mul_self_right (A B : ZornMatrixReal) :
       · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
         ring
 
+theorem zorn_mul_flexible (A B : ZornMatrixReal) :
+    (A * B) * A = A * (B * A) := by
+  change ZornMatrixReal.mul (ZornMatrixReal.mul A B) A =
+    ZornMatrixReal.mul A (ZornMatrixReal.mul B A)
+  apply ZornMatrixReal.ext_pre
+  all_goals simp only [cross_cross]
+  · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+    ring
+  · apply Prod.ext
+    · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+  · apply Prod.ext
+    · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+      ring
+    · apply Prod.ext
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+      · simp [ZornMatrixReal.mul, dot, cross, add, sub, smul]
+        ring
+
 /-! The following are the two finite associator laws actually needed here.
 They express alternativity on repeated adjacent factors, not associativity of
 the full Zorn product. -/

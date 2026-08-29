@@ -72,21 +72,41 @@ theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by
   apply ZornVectorMatrix.ext
-  · simp [canonicalEquiv, toCanonical, vecToCanonical, ZornMatrixReal.mul,
+  · simp [canonicalEquiv, toCanonical, vecToCanonical,
       ZornVectorMatrix.mul, dot, cross, ZornVec3.dot, ZornVec3.cross,
       Fin.sum_univ_three]
   · funext i
     fin_cases i <;>
-      simp [canonicalEquiv, toCanonical, vecToCanonical, ZornMatrixReal.mul,
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
         ZornVectorMatrix.mul, add, sub, smul, dot, cross,
-        ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
+        ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
   · funext i
     fin_cases i <;>
-      simp [canonicalEquiv, toCanonical, vecToCanonical, ZornMatrixReal.mul,
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
         ZornVectorMatrix.mul, add, sub, smul, dot, cross,
-        ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
-  · simp [canonicalEquiv, toCanonical, vecToCanonical, ZornMatrixReal.mul,
+        ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  · simp [canonicalEquiv, toCanonical, vecToCanonical,
       ZornVectorMatrix.mul, dot, cross, ZornVec3.dot, ZornVec3.cross,
-      Fin.sum_univ_three] <;> ring
+      Fin.sum_univ_three]
+    ring
+
+def realConj (X : ZornMatrixReal) : ZornMatrixReal :=
+  { a := X.b
+    b := X.a
+    u := smul (-1) X.u
+    v := smul (-1) X.v }
+
+theorem canonicalEquiv_conj (X : ZornMatrixReal) :
+    canonicalEquiv (realConj X) =
+      ZornVectorMatrix.conj (canonicalEquiv X) := by
+  apply ZornVectorMatrix.ext
+  · rfl
+  · funext i
+    fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
+      realConj, smul, ZornVectorMatrix.conj]
+  · funext i
+    fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
+      realConj, smul, ZornVectorMatrix.conj]
+  · rfl
 
 end InfoGeometry.Exceptional.RealZorn

@@ -337,22 +337,4 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
       hermitianH3Equiv.symm
         (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
 
-theorem hermitianRealAlbertEquiv_jordanProduct_α₁
-    (X Y : HermitianJ3) :
-    (hermitianRealAlbertEquiv
-      ⟨jordanProduct X.1 Y.1,
-        jordanProduct_hermitian_closed X Y⟩).α₁ =
-      (RealAlbertMatrix.mul
-        (hermitianRealAlbertEquiv X)
-        (hermitianRealAlbertEquiv Y)).α₁ := by
-  change (jordanProduct X.1 Y.1 0 0).a = _
-  simp only [RealAlbertMatrix.mul, jordanProduct, j3RawMul,
-    hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
-    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv,
-    InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.fromH3,
-    fromCanonical_mul_a, fromCanonical_conj_a]
-  rw [hermitian_readback_10 X, hermitian_readback_02 X,
-    hermitian_readback_10 Y, hermitian_readback_02 Y]
-  simp [zornConj_involutive]
-
 end InfoGeometry.Exceptional.FiniteJ3Zorn

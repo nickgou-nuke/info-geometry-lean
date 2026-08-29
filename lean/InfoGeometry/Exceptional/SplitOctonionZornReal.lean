@@ -184,6 +184,49 @@ def ZornMatrixReal.sub_mat (A B : ZornMatrixReal) : ZornMatrixReal :=
 
 instance : Sub ZornMatrixReal := ⟨ZornMatrixReal.sub_mat⟩
 
+lemma zorn_ext (A B : ZornMatrixReal)
+    (ha : A.a = B.a) (hb : A.b = B.b)
+    (hu : A.u = B.u) (hv : A.v = B.v) : A = B := by
+  cases A
+  cases B
+  congr
+
+theorem zorn_sub_eq_zero_iff (A B : ZornMatrixReal) :
+    A - B = 0 ↔ A = B := by
+  constructor
+  · intro h
+    apply zorn_ext
+    · have ha := congrArg ZornMatrixReal.a h
+      exact sub_eq_zero.mp ha
+    · have hb := congrArg ZornMatrixReal.b h
+      exact sub_eq_zero.mp hb
+    · have hu := congrArg ZornMatrixReal.u h
+      apply Prod.ext
+      · exact sub_eq_zero.mp (congrArg Prod.fst hu)
+      · apply Prod.ext
+        · exact sub_eq_zero.mp (congrArg (fun x => x.2.1) hu)
+        · exact sub_eq_zero.mp (congrArg (fun x => x.2.2) hu)
+    · have hv := congrArg ZornMatrixReal.v h
+      apply Prod.ext
+      · exact sub_eq_zero.mp (congrArg Prod.fst hv)
+      · apply Prod.ext
+        · exact sub_eq_zero.mp (congrArg (fun x => x.2.1) hv)
+        · exact sub_eq_zero.mp (congrArg (fun x => x.2.2) hv)
+  · rintro rfl
+    apply zorn_ext
+    · exact sub_self A.a
+    · exact sub_self A.b
+    · apply Prod.ext
+      · exact sub_self A.u.1
+      · apply Prod.ext
+        · exact sub_self A.u.2.1
+        · exact sub_self A.u.2.2
+    · apply Prod.ext
+      · exact sub_self A.v.1
+      · apply Prod.ext
+        · exact sub_self A.v.2.1
+        · exact sub_self A.v.2.2
+
 @[simp] theorem mul_a (A B : ZornMatrixReal) :
     (A * B).a = A.a * B.a + dot A.u B.v := rfl
 

@@ -3506,6 +3506,10 @@ import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
 
 import InfoGeometry.Canonical.ApolloniusFisherInformationCapstone
 
+import InfoGeometry.Canonical.FibonacciAnyonsCapstone
+import InfoGeometry.Canonical.ApolloniusBraidingCapstone
+import InfoGeometry.Canonical.NonAbelianBerryCapstone
+
 namespace InfoGeometry
 
 /-!

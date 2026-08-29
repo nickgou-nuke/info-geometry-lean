@@ -191,6 +191,18 @@ def ZornMatrixReal.add_mat (A B : ZornMatrixReal) : ZornMatrixReal :=
 
 instance : Add ZornMatrixReal := ⟨ZornMatrixReal.add_mat⟩
 
+@[simp] theorem add_a (A B : ZornMatrixReal) :
+    (A + B).a = A.a + B.a := rfl
+
+@[simp] theorem add_b (A B : ZornMatrixReal) :
+    (A + B).b = A.b + B.b := rfl
+
+@[simp] theorem add_u (A B : ZornMatrixReal) :
+    (A + B).u = add A.u B.u := rfl
+
+@[simp] theorem add_v (A B : ZornMatrixReal) :
+    (A + B).v = add A.v B.v := rfl
+
 def ZornMatrixReal.sub_mat (A B : ZornMatrixReal) : ZornMatrixReal :=
   { a := A.a - B.a, b := A.b - B.b,
     u := sub A.u B.u, v := sub A.v B.v }

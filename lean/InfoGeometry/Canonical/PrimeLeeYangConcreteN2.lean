@@ -2,7 +2,6 @@ import Mathlib
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 
@@ -11,7 +10,6 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
 
 /-!
@@ -35,7 +33,6 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
 
 /-!

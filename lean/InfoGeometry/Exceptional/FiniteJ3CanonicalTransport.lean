@@ -57,8 +57,7 @@ theorem h3ToHermitian_hermitian (Z : H3Zorn ℝ) :
     hermitianStar (h3ToHermitian Z) := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [h3ToHermitian, scalarZorn, zornConj, smul,
-      zornConj_involutive, scalarZorn_conj]
+    simp [h3ToHermitian, scalarZorn, zornConj, smul]
 
 def h3ToHermitianSubtype (Z : H3Zorn ℝ) : HermitianJ3 :=
   ⟨h3ToHermitian Z, h3ToHermitian_hermitian Z⟩
@@ -336,5 +335,14 @@ def hermitianRealAlbertEquiv : HermitianJ3 ≃ RealAlbertMatrix :=
     hermitianRealAlbertEquiv.symm X =
       hermitianH3Equiv.symm
         (InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv X) := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_alpha₁ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).α₁ = (X.1 0 0).a := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_alpha₂ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).α₂ = (X.1 1 1).a := rfl
+
+@[simp] theorem hermitianRealAlbertEquiv_alpha₃ (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).α₃ = (X.1 2 2).a := rfl
 
 end InfoGeometry.Exceptional.FiniteJ3Zorn

@@ -1869,7 +1869,6 @@ import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
 import InfoGeometry.Canonical.PrimeCl11MellinHurwitzBridge
-import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeCliffordWaveletActualXiBridge
@@ -3490,6 +3489,7 @@ import InfoGeometry.Canonical.AsanoLeeYangPrimonPhaseTransitionCapstone
 import InfoGeometry.Canonical.PrimeLeeYangHurwitzLimitClusterCapstone
 import InfoGeometry.Canonical.IBContractionFixedPoint
 import InfoGeometry.Canonical.IBContractionInformationEquilibriumCapstone
+import InfoGeometry.Canonical.RicciLogDetBekensteinGeometryCapstone
 
 namespace InfoGeometry
 

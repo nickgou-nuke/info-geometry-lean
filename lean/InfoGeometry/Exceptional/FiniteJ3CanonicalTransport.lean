@@ -488,6 +488,87 @@ theorem fromZorn_jordanProduct_entry_a (X Y : J3) (i k : Fin 3) :
             (fromZorn (canonicalEquiv (X j k))))).a := by
   exact congrArg RealSplitOct.a (fromZorn_jordanProduct_entry X Y i k)
 
+theorem fromZorn_jordanProduct_entry_b (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).b =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (X i j)))
+            (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (Y i j)))
+            (fromZorn (canonicalEquiv (X j k))))).b := by
+  exact congrArg RealSplitOct.b (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_x0 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).x0 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (X i j)))
+            (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (fromZorn (canonicalEquiv (Y i j)))
+            (fromZorn (canonicalEquiv (X j k))))).x0 := by
+  exact congrArg RealSplitOct.x0 (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_x1 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).x1 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (X i j)))
+          (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (Y i j)))
+          (fromZorn (canonicalEquiv (X j k))))).x1 := by
+  exact congrArg RealSplitOct.x1 (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_x2 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).x2 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (X i j)))
+          (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (Y i j)))
+          (fromZorn (canonicalEquiv (X j k))))).x2 := by
+  exact congrArg RealSplitOct.x2 (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_y0 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).y0 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (X i j)))
+          (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (Y i j)))
+          (fromZorn (canonicalEquiv (X j k))))).y0 := by
+  exact congrArg RealSplitOct.y0 (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_y1 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).y1 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (X i j)))
+          (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (Y i j)))
+          (fromZorn (canonicalEquiv (X j k))))).y1 := by
+  exact congrArg RealSplitOct.y1 (fromZorn_jordanProduct_entry X Y i k)
+
+theorem fromZorn_jordanProduct_entry_y2 (X Y : J3) (i k : Fin 3) :
+    (fromZorn (canonicalEquiv (jordanProduct X Y i k))).y2 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (X i j)))
+          (fromZorn (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, RealSplitOct.mul
+          (fromZorn (canonicalEquiv (Y i j)))
+          (fromZorn (canonicalEquiv (X j k))))).y2 := by
+  exact congrArg RealSplitOct.y2 (fromZorn_jordanProduct_entry X Y i k)
+
 theorem canonicalEquiv_v_fst (A : ZornMatrixReal) :
     (canonicalEquiv A).v 0 = A.u.1 := by
   rfl
@@ -591,6 +672,10 @@ theorem canonicalHermitianEntry (X : HermitianJ3) (i j : Fin 3) :
   congr 1
   rw [realConj_eq_zornConj]
   exact X.property j i
+
+theorem hermitianEntry_conj_reverse (X : HermitianJ3) (i j : Fin 3) :
+    zornConj (X.1 i j) = X.1 j i := by
+  exact (X.property j i).symm
 
 theorem canonicalHermitianEntry_a (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).a =

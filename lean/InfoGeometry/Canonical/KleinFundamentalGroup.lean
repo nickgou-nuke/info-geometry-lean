@@ -6,6 +6,8 @@ namespace InfoGeometry.Canonical.KleinFundamentalGroup
 
 open Matrix
 
+set_option linter.unusedVariables false
+
 /-!
 # Fundamental Group of the Klein Bottle acting on E₇₍₇₎ Tensors
 
@@ -119,5 +121,18 @@ theorem explicit_b_symp : trans_bᵀ * omega2 * trans_b = omega2 := by
   ext i j
   fin_cases i <;> fin_cases j <;> 
     simp [trans_b, omega2, Matrix.transpose_apply, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- 🏆 THEOREM (Constructive Klein Bottle Symplectic Invariance):
+    The conjugated loop $(a b a^{-1})$ preserves the symplectic form $\Omega$:
+    $(a b a^{-1})^\top \Omega (a b a^{-1}) = \Omega$. -/
+theorem explicit_klein_loop_preserves_symplectic_omega_exact :
+    (glide_a * trans_b * glide_a)ᵀ * omega2 * (glide_a * trans_b * glide_a) = omega2 := by
+  have h_anti : omega2ᵀ = -omega2 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [omega2, Matrix.transpose_apply, Matrix.neg_apply]
+  exact klein_loop_preserves_symplectic_omega
+    glide_a glide_a trans_b omega2
+    glide_a_involution glide_a_involution h_anti
+    explicit_a_antisymp explicit_b_symp
 
 end InfoGeometry.Canonical.KleinFundamentalGroup

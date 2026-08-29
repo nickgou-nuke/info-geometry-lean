@@ -100,6 +100,28 @@ theorem bohm_expectation_eq_one_eighth_fisher
   rw [h_LHS, ibp, h_RHS]
   ring
 
+/-! ### Constructive 1D Quantum Potential & Fisher Model -/
+
+/-- 1D Pointwise Bohm-Fisher density identity on real functions:
+    $\rho(x) Q(x) = -\frac{1}{2} f(x) f''(x)$ and $I_F(x) = 4 (f'(x))^2$. -/
+theorem bohm_fisher_pointwise_identity (f_val df_val d2f_val : ℝ) (hf_pos : 0 < f_val) :
+    let rho_val := f_val ^ 2
+    let bohm_q := - (1 / 2 : ℝ) * d2f_val / f_val
+    let exp_q := rho_val * bohm_q
+    let fisher_i := (2 * f_val * df_val) ^ 2 / rho_val
+    exp_q = - (1 / 2 : ℝ) * f_val * d2f_val ∧
+    fisher_i = 4 * df_val ^ 2 := by
+  have hne : f_val ≠ 0 := ne_of_gt hf_pos
+  have hsq_ne : f_val ^ 2 ≠ 0 := pow_ne_zero 2 hne
+  refine ⟨by
+    show f_val ^ 2 * (- (1 / 2 : ℝ) * d2f_val / f_val) = - (1 / 2 : ℝ) * f_val * d2f_val
+    field_simp [hne],
+    by
+    show (2 * f_val * df_val) ^ 2 / (f_val ^ 2) = 4 * df_val ^ 2
+    have h1 : (2 * f_val * df_val) ^ 2 = (4 * df_val ^ 2) * f_val ^ 2 := by ring
+    rw [h1]
+    exact mul_div_cancel_right₀ (4 * df_val ^ 2) hsq_ne⟩
+
 end InfoGeometry.Canonical.BohmMadelungFisher
 
 end noncomputable section

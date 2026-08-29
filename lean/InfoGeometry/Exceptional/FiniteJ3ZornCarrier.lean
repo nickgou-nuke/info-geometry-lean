@@ -351,6 +351,7 @@ theorem jordanAssociator_apply (X Y : HermitianJ3) (i k : Fin 3) :
         (jordanProduct (jordanProduct X.1 Y.1) X.1) i k := by
   rfl
 
+set_option maxHeartbeats 1000000 in
 theorem jordanAssociator_zero (X Y : HermitianJ3) :
     jordanAssociator X Y = zero := by
   funext i k
@@ -358,8 +359,7 @@ theorem jordanAssociator_zero (X Y : HermitianJ3) :
   all_goals
     apply ZornMatrixReal.ext_pre <;>
       simp [jordanAssociator, jordanProduct, j3RawMul, zornHalf,
-        ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul,
-        cross_cross, dot_cross_left, dot_cross_right] <;>
+        dot, cross, add, sub, smul] <;>
       ring
 
 def diagonalPart (X : J3) : J3 :=

@@ -43,6 +43,83 @@ def criticalLineSet : Set ℂ :=
 def unitCircleSet : Set ℂ :=
   {z | OnLeeYangCircle z}
 
+/-! ## Midpoint Apollonius geometry for the critical line -/
+
+/-- Squared distance from `σ + i t` to the zero `3 / 2` on the real axis. -/
+def apolloniusNumerator (σ t : ℝ) : ℝ :=
+  (σ - 3 / 2) ^ 2 + t ^ 2
+
+/-- Squared distance from `σ + i t` to the pole `-1 / 2` on the real axis. -/
+def apolloniusDenominator (σ t : ℝ) : ℝ :=
+  (σ + 1 / 2) ^ 2 + t ^ 2
+
+/--
+For the midpoint pair `(-1/2, 3/2)`, the Apollonius numerator-minus-denominator
+difference is affine in the real coordinate and independent of the imaginary
+height.
+-/
+theorem apollonius_difference (σ t : ℝ) :
+    apolloniusNumerator σ t - apolloniusDenominator σ t = -4 * σ + 2 := by
+  dsimp [apolloniusNumerator, apolloniusDenominator]
+  ring
+
+/--
+The unit Apollonius level set for the midpoint pair `(-1/2, 3/2)` is exactly
+the critical vertical line `σ = 1/2`.
+-/
+theorem apollonius_unitary_level_set_iff (σ t : ℝ) :
+    apolloniusNumerator σ t = apolloniusDenominator σ t ↔ σ = 1 / 2 := by
+  have hdiff := apollonius_difference σ t
+  constructor
+  · intro h
+    have hzero : apolloniusNumerator σ t - apolloniusDenominator σ t = 0 :=
+      sub_eq_zero.mpr h
+    rw [hdiff] at hzero
+    linarith
+  · intro h
+    have hzero : apolloniusNumerator σ t - apolloniusDenominator σ t = 0 := by
+      rw [hdiff, h]
+      ring
+    exact sub_eq_zero.mp hzero
+
+/--
+The strict interior Apollonius inequality for the midpoint pair `(-1/2, 3/2)`
+is exactly the right half-plane `σ > 1/2`.
+-/
+theorem apollonius_lt_iff_right_of_critical (σ t : ℝ) :
+    apolloniusNumerator σ t < apolloniusDenominator σ t ↔ 1 / 2 < σ := by
+  have hdiff := apollonius_difference σ t
+  constructor
+  · intro h
+    have hneg : apolloniusNumerator σ t - apolloniusDenominator σ t < 0 :=
+      sub_neg.mpr h
+    rw [hdiff] at hneg
+    linarith
+  · intro h
+    have hneg : apolloniusNumerator σ t - apolloniusDenominator σ t < 0 := by
+      rw [hdiff]
+      linarith
+    exact sub_neg.mp hneg
+
+/--
+The strict exterior Apollonius inequality for the midpoint pair `(-1/2, 3/2)`
+is exactly the left half-plane `σ < 1/2`.
+-/
+theorem apollonius_gt_iff_left_of_critical (σ t : ℝ) :
+    apolloniusNumerator σ t > apolloniusDenominator σ t ↔ σ < 1 / 2 := by
+  have hdiff := apollonius_difference σ t
+  constructor
+  · intro h
+    have hpos : 0 < apolloniusNumerator σ t - apolloniusDenominator σ t :=
+      sub_pos.mpr h
+    rw [hdiff] at hpos
+    linarith
+  · intro h
+    have hpos : 0 < apolloniusNumerator σ t - apolloniusDenominator σ t := by
+      rw [hdiff]
+      linarith
+    exact sub_pos.mp hpos
+
 /--
 The Cayley maps are inverse away from the pole `s = 1`.
 

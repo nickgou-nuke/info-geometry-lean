@@ -3452,6 +3452,7 @@ import InfoGeometry.Canonical.ChernSimonsWRT3ManifoldCapstone
 import InfoGeometry.Canonical.JTGravitySchwarzianPrimonCapstone
 import InfoGeometry.Canonical.QuantumEntanglementPageCurveCapstone
 import InfoGeometry.Canonical.RamanujanDedekindHardyCapstone
+import InfoGeometry.Canonical.ClusterAlgebraConwayCoxeterFriezeCapstone
 import InfoGeometry.Canonical.ZeckendorfCuntz
 
 namespace InfoGeometry

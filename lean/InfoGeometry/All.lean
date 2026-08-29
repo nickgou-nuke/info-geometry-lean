@@ -7886,4 +7886,9 @@ import InfoGeometry.Quantum.FermionFockMoebius
 import InfoGeometry.Canonical.FermionFockMoebiusCapstone
 import InfoGeometry.ParaKahler.RapidityAngleApollonius
 import InfoGeometry.Canonical.RapidityAngleApolloniusCapstone
-
+import InfoGeometry.Quantum.BostConnesPrimonGas
+import InfoGeometry.Canonical.BostConnesPrimonGasCapstone
+import InfoGeometry.LightCone.ApolloniusCylinder
+import InfoGeometry.Canonical.ApolloniusCylinderLightConeCapstone
+import InfoGeometry.LightCone.ChiralPrimeDecomposition
+import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone

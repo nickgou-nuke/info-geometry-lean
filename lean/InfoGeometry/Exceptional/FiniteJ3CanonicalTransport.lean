@@ -646,6 +646,105 @@ theorem realSplitOct_sum_mul_x0 (f g : Fin 3 → RealSplitOct) :
         ((f j).a * (g j).x0 + (g j).b * (f j).x0 -
           ((f j).y1 * (g j).y2 - (f j).y2 * (g j).y1)) := by
   simp [RealSplitOct.mul, Fin.sum_univ_three]
+  ring
+
+theorem realSplitOct_sum_mul_x1 (f g : Fin 3 → RealSplitOct) :
+    (∑ j : Fin 3, RealSplitOct.mul (f j) (g j)).x1 =
+      ∑ j : Fin 3,
+        ((f j).a * (g j).x1 + (g j).b * (f j).x1 -
+          ((f j).y2 * (g j).y0 - (f j).y0 * (g j).y2)) := by
+  simp [RealSplitOct.mul, Fin.sum_univ_three]
+  ring
+
+theorem realSplitOct_sum_mul_x2 (f g : Fin 3 → RealSplitOct) :
+    (∑ j : Fin 3, RealSplitOct.mul (f j) (g j)).x2 =
+      ∑ j : Fin 3,
+        ((f j).a * (g j).x2 + (g j).b * (f j).x2 -
+          ((f j).y0 * (g j).y1 - (f j).y1 * (g j).y0)) := by
+  simp [RealSplitOct.mul, Fin.sum_univ_three]
+  ring
+
+theorem realSplitOct_sum_mul_y0 (f g : Fin 3 → RealSplitOct) :
+    (∑ j : Fin 3, RealSplitOct.mul (f j) (g j)).y0 =
+      ∑ j : Fin 3,
+        ((g j).a * (f j).y0 + (f j).b * (g j).y0 +
+          ((f j).x1 * (g j).x2 - (f j).x2 * (g j).x1)) := by
+  simp [RealSplitOct.mul, Fin.sum_univ_three]
+
+theorem realSplitOct_sum_mul_y1 (f g : Fin 3 → RealSplitOct) :
+    (∑ j : Fin 3, RealSplitOct.mul (f j) (g j)).y1 =
+      ∑ j : Fin 3,
+        ((g j).a * (f j).y1 + (f j).b * (g j).y1 +
+          ((f j).x2 * (g j).x0 - (f j).x0 * (g j).x2)) := by
+  simp [RealSplitOct.mul, Fin.sum_univ_three]
+
+theorem realSplitOct_sum_mul_y2 (f g : Fin 3 → RealSplitOct) :
+    (∑ j : Fin 3, RealSplitOct.mul (f j) (g j)).y2 =
+      ∑ j : Fin 3,
+        ((g j).a * (f j).y2 + (f j).b * (g j).y2 +
+          ((f j).x0 * (g j).x1 - (f j).x1 * (g j).x0)) := by
+  simp [RealSplitOct.mul, Fin.sum_univ_three]
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₀_sum_readback
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁.x0 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 1 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 2))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 1 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 2))))).x0 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₁]
+  rw [fromZorn_jordanProduct_entry_x0]
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₀_explicit
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁.x0 =
+      (2 : ℝ)⁻¹ *
+        (∑ j : Fin 3,
+          ((InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 1 j))).a *
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (Y.1 j 2))).x0 +
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 2))).b *
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (X.1 1 j))).x0 -
+            ((InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (X.1 1 j))).y1 *
+                (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                  (canonicalEquiv (Y.1 j 2))).y2 -
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (X.1 1 j))).y2 *
+                (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                  (canonicalEquiv (Y.1 j 2))).y1)) +
+        ∑ j : Fin 3,
+          ((InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 1 j))).a *
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (X.1 j 2))).x0 +
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 2))).b *
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (Y.1 1 j))).x0 -
+            ((InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (Y.1 1 j))).y1 *
+                (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                  (canonicalEquiv (X.1 j 2))).y2 -
+              (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                (canonicalEquiv (Y.1 1 j))).y2 *
+                (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+                  (canonicalEquiv (X.1 j 2))).y1))) := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₀_sum_readback]
+  simp [RealSplitOct.smul, RealSplitOct.add, RealSplitOct.mul,
+    Fin.sum_univ_three]
 
 theorem fromZorn_jordanProduct_entry_x1 (X Y : J3) (i k : Fin 3) :
     (fromZorn (canonicalEquiv (jordanProduct X Y i k))).x1 =

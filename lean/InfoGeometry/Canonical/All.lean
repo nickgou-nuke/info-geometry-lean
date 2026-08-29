@@ -3531,6 +3531,9 @@ import InfoGeometry.Canonical.HilbertPolyaCapstone
 import InfoGeometry.Canonical.DeficiencyIndicesCapstone
 import InfoGeometry.Canonical.FermionFockMoebiusCapstone
 import InfoGeometry.Canonical.RapidityAngleApolloniusCapstone
+import InfoGeometry.Canonical.BostConnesPrimonGasCapstone
+import InfoGeometry.Canonical.ApolloniusCylinderLightConeCapstone
+import InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
 
 namespace InfoGeometry
 

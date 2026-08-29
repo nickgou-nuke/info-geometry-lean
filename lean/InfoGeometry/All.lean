@@ -7858,3 +7858,8 @@ import InfoGeometry.Canonical.CrossRatioPGL2Capstone
 import InfoGeometry.Projective.SouriauSignatureBridge
 import InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
 
+import InfoGeometry.Conformal.SchwarzianApollonius
+import InfoGeometry.Canonical.SchwarzianApolloniusCapstone
+import InfoGeometry.Quantum.DikinApolloniusTrap
+import InfoGeometry.Canonical.DikinApolloniusTrapCapstone
+

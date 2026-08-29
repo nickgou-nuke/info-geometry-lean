@@ -3515,6 +3515,9 @@ import InfoGeometry.Canonical.ApolloniusNaturalCapstone
 import InfoGeometry.Canonical.CrossRatioPGL2Capstone
 import InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
 
+import InfoGeometry.Canonical.SchwarzianApolloniusCapstone
+import InfoGeometry.Canonical.DikinApolloniusTrapCapstone
+
 namespace InfoGeometry
 
 /-!

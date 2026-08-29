@@ -441,6 +441,42 @@ theorem canonicalEquiv_mul_b (A B : ZornMatrixReal) :
   rw [canonicalEquiv_mul]
   rfl
 
+/-! Finite matrix multiplication uses a three-term sum. -/
+theorem fromZorn_sum_fin3 (f : Fin 3 → ZornVectorMatrix ℝ) :
+    InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn (∑ i, f i) =
+      ∑ i, InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn (f i) := by
+  rw [Fin.sum_univ_three]
+  rw [fromZorn_add, fromZorn_add]
+  rw [Fin.sum_univ_three]
+
+theorem fromZorn_jordanProduct_entry (X Y : J3) (i k : Fin 3) :
+    InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (jordanProduct X Y i k)) =
+      (2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X i j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y i j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X j k)))) := by
+  rw [canonicalEntry_jordanProduct]
+  change fromZorn ((2 : ℝ)⁻¹ •
+      ((∑ j : Fin 3, ZornVectorMatrix.mul (canonicalEquiv (X i j))
+          (canonicalEquiv (Y j k))) +
+        ∑ j : Fin 3, ZornVectorMatrix.mul (canonicalEquiv (Y i j))
+          (canonicalEquiv (X j k)))) = _
+  rw [fromZorn_smul, fromZorn_add, fromZorn_sum_fin3, fromZorn_sum_fin3]
+  simp_rw [InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_mul]
+  rw [InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_add,
+    InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn_add]
+  rw [Fin.sum_univ_three]
+
 theorem canonicalEquiv_v_fst (A : ZornMatrixReal) :
     (canonicalEquiv A).v 0 = A.u.1 := by
   rfl

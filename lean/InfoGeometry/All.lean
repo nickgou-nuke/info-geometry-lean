@@ -4397,6 +4397,8 @@ import InfoGeometry.DAGMajorana
 import InfoGeometry.DeterminantTrifactor
 import InfoGeometry.Differential.CurveHolonomy
 import InfoGeometry.Differential.RealAbelianCurvature
+import InfoGeometry.Differential.PoincareFisherRao
+import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 import InfoGeometry.Dynamics.All
 import InfoGeometry.Dynamics.DuallyFlatOperatorFamily
 import InfoGeometry.Dynamics.ConnesLottHiggs
@@ -7818,6 +7820,8 @@ import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone
 import InfoGeometry.Arithmetic.SelbergTraceAdelicGeodesicCapstone
 import InfoGeometry.Arithmetic.AdelicHeckeSatakeLFunctionCapstone
 import InfoGeometry.Arithmetic.ConnesConsaniAdelicMotivesCapstone
+import InfoGeometry.Differential.PoincareFisherRao
+import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 import InfoGeometry.Canonical.GrandMasterTheoryOfEverythingSynthesisCapstone
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
 

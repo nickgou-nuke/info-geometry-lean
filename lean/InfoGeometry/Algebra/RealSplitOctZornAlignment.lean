@@ -71,6 +71,10 @@ theorem toZorn_add (X Y : RealSplitOct) :
     fin_cases i <;> rfl
   · rfl
 
+theorem fromZorn_add (X Y : ZornVectorMatrix ℝ) :
+    fromZorn (X + Y) = fromZorn X + fromZorn Y := by
+  apply RealSplitOct.ext <;> rfl
+
 theorem toZorn_add_def (X Y : RealSplitOct) :
     toZorn (RealSplitOct.add X Y) = ZornVectorMatrix.add (toZorn X) (toZorn Y) := by
   cases X; cases Y
@@ -93,6 +97,15 @@ theorem toZorn_smul (r : ℝ) (X : RealSplitOct) :
   · funext i
     fin_cases i <;> rfl
   · rfl
+
+theorem fromZorn_smul (r : ℝ) (X : ZornVectorMatrix ℝ) :
+    fromZorn (r • X) = r • fromZorn X := by
+  apply RealSplitOct.ext <;> rfl
+
+theorem fromZorn_smul_add (r : ℝ) (X Y : ZornVectorMatrix ℝ) :
+    fromZorn (r • (X + Y)) =
+      r • (fromZorn X + fromZorn Y) := by
+  rw [fromZorn_smul, fromZorn_add]
 
 theorem toZorn_smul_def (r : ℝ) (X : RealSplitOct) :
     toZorn (RealSplitOct.smul r X) = ZornVectorMatrix.smul r (toZorn X) := by
@@ -133,6 +146,13 @@ theorem toZorn_conj (X : RealSplitOct) :
     fin_cases i <;> rfl
   · rfl
 
+theorem fromZorn_conj (X : ZornVectorMatrix ℝ) :
+    fromZorn (ZornVectorMatrix.conj X) =
+      RealSplitOct.conj (fromZorn X) := by
+  have h := toZorn_conj (fromZorn X)
+  have h' := congrArg fromZorn h.symm
+  simpa only [fromZorn_toZorn] using h'
+
 theorem toZorn_conj_def (X : RealSplitOct) :
     toZorn (RealSplitOct.conj X) = ZornVectorMatrix.conj (toZorn X) := by
   apply ZornVectorMatrix.ext
@@ -148,5 +168,12 @@ theorem toZorn_norm (X : RealSplitOct) :
       (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2) := by
   simp [toZorn, ZornVectorMatrix.norm, ZornVec3.dot, Fin.sum_univ_succ]
   ring
+
+theorem fromZorn_mul (X Y : ZornVectorMatrix ℝ) :
+    fromZorn (ZornVectorMatrix.mul X Y) =
+      RealSplitOct.mul (fromZorn X) (fromZorn Y) := by
+  have h := toZorn_mul (fromZorn X) (fromZorn Y)
+  have h' := congrArg fromZorn h.symm
+  simpa only [fromZorn_toZorn] using h'
 
 end InfoGeometry.Algebra.RealSplitOctZornAlignment

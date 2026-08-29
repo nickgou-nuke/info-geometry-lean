@@ -101,8 +101,10 @@ theorem zornConj_zero : zornConj 0 = 0 := by
   apply ZornMatrixReal.ext
   · rfl
   · rfl
-  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.zero]; ring)
-  · refine Prod.ext ?_ (Prod.ext ?_ ?_) <;> (dsimp [zornConj, smul, ZornMatrixReal.zero]; ring)
+  · dsimp [zornConj, smul, ZornMatrixReal.zero]
+    congr 1 <;> ring
+  · dsimp [zornConj, smul, ZornMatrixReal.zero]
+    congr 1 <;> ring
 
 theorem zornConj_one : zornConj (1 : ZornMatrixReal) = 1 := by
   change zornConj ZornMatrixReal.one = ZornMatrixReal.one
@@ -284,6 +286,22 @@ theorem diagonalIdempotent_hermitianStar (k : Fin 3) :
 def e₀ : J3 := diagonalIdempotent 0
 def e₁ : J3 := diagonalIdempotent 1
 def e₂ : J3 := diagonalIdempotent 2
+
+theorem diagonalIdempotent_jordan_self (k : Fin 3) :
+    jordanProduct (diagonalIdempotent k) (diagonalIdempotent k) =
+      diagonalIdempotent k := by
+  funext i j
+  fin_cases k <;> fin_cases i <;> fin_cases j <;>
+    simp [jordanProduct, j3RawMul, diagonalIdempotent, zornHalf,
+      ZornMatrixReal.mul, dot, cross, add, sub, smul,
+      ZornMatrixReal.zero, ZornMatrixReal.one]
+
+theorem diagonalIdempotent_jordan_orthogonal
+    {i j : Fin 3} (hij : i ≠ j) :
+    jordanProduct (diagonalIdempotent i) (diagonalIdempotent j) = zero := by
+  fin_cases i <;> fin_cases j <;> simp_all [jordanProduct, j3RawMul,
+    diagonalIdempotent, zornHalf, ZornMatrixReal.mul, dot, cross, add, sub,
+    smul, ZornMatrixReal.zero, ZornMatrixReal.one]
 
 theorem hermitian_transpose (X : J3) (hX : hermitian X) :
     ∀ i j, X j i = X i j := by

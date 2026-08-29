@@ -9,6 +9,7 @@ import Mathlib.Tactic.NoncommRing
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
 set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 noncomputable section
 
@@ -120,5 +121,75 @@ theorem parity_conservation (mu : ℝ) :
   rw [h_c, sub_self]
 
 end MajoranaPair
+
+/-! ### Constructive 2×2 Pauli Majorana Model -/
+
+/-- Pauli $\sigma_x$ as first Majorana mode: $\gamma_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$. -/
+def pauliGamma1 : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![0, 1;
+     1, 0]
+
+/-- Pauli $\sigma_y$ as second Majorana mode: $\gamma_2 = \begin{pmatrix} 0 & -I \\ I & 0 \end{pmatrix}$. -/
+def pauliGamma2 : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![0, -I;
+     I, 0]
+
+/-- $\gamma_1$ is self-adjoint. -/
+theorem pauliGamma1_self_adjoint : pauliGamma1.conjTranspose = pauliGamma1 := by
+  dsimp [pauliGamma1]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp
+
+/-- $\gamma_2$ is self-adjoint. -/
+theorem pauliGamma2_self_adjoint : pauliGamma2.conjTranspose = pauliGamma2 := by
+  dsimp [pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [conj_I]
+
+/-- $\gamma_1^2 = 1$. -/
+theorem pauliGamma1_sq : pauliGamma1 * pauliGamma1 = 1 := by
+  dsimp [pauliGamma1]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- $\gamma_2^2 = 1$. -/
+theorem pauliGamma2_sq : pauliGamma2 * pauliGamma2 = 1 := by
+  dsimp [pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two, I_mul_I]
+
+/-- Anticommutation relation $\{\gamma_1, \gamma_2\} = 0$. -/
+theorem pauliGamma_anticomm : pauliGamma1 * pauliGamma2 + pauliGamma2 * pauliGamma1 = 0 := by
+  dsimp [pauliGamma1, pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Parity operator for the Pauli pair: $P = i \gamma_1 \gamma_2 = -\sigma_z = \begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}$. -/
+def standardMajoranaParity : Matrix (Fin 2) (Fin 2) ℂ :=
+  I • (pauliGamma1 * pauliGamma2)
+
+/-- 🏆 THEOREM 1 (Constructive Parity Involution P² = 1):
+    $P^2 = 1$ with 0 hypotheses. -/
+theorem standard_parity_involution_exact :
+    standardMajoranaParity * standardMajoranaParity = 1 := by
+  dsimp [standardMajoranaParity, pauliGamma1, pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two, I_mul_I]
+
+/-- 🏆 THEOREM 2 (Constructive Parity Hermiticity P† = P):
+    $P^\dagger = P$ with 0 hypotheses. -/
+theorem standard_parity_self_adjoint_exact :
+    standardMajoranaParity.conjTranspose = standardMajoranaParity := by
+  dsimp [standardMajoranaParity, pauliGamma1, pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two, conj_I, I_mul_I]
+
+/-- 🏆 THEOREM 3 (Majorana Mode Fermion Parity Flip {P, γ₁} = 0):
+    Majorana modes flip the fermion parity sign: $P \gamma_1 + \gamma_1 P = 0$. -/
+theorem standard_parity_gamma1_anticomm_exact :
+    standardMajoranaParity * pauliGamma1 + pauliGamma1 * standardMajoranaParity = 0 := by
+  dsimp [standardMajoranaParity, pauliGamma1, pauliGamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two, I_mul_I]
 
 end MajoranaParity

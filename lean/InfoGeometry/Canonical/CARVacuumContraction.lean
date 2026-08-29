@@ -18,6 +18,8 @@ namespace InfoGeometry.Canonical.CARVacuumContraction
 
 open scoped BigOperators
 
+set_option linter.unusedSimpArgs false
+
 variable {𝕜 V ι : Type*}
 variable [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
@@ -82,19 +84,18 @@ def carCreate (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 0;
      1, 0]
 
-/-- Vacuum state vector: $v_0 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$. -/
-def carVacuumState (R : Type*) [CommRing R] : Fin 2 → R :=
-  ![1, 0]
-
-set_option linter.unusedSimpArgs false
+/-- Vacuum state column vector: $v_0 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$. -/
+def carVacuumCol (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 1) R :=
+  !![1;
+     0]
 
 /-- 🏆 THEOREM 1 (Constructive Vacuum Annihilation):
     $a \cdot v_0 = 0$. -/
 theorem car_vacuum_annihilate_exact (R : Type*) [CommRing R] :
-    Matrix.mulVec (carAnnihilate R) (carVacuumState R) = 0 := by
-  dsimp [carAnnihilate, carVacuumState, Matrix.mulVec]
-  ext i
-  fin_cases i <;> rfl
+    carAnnihilate R * carVacuumCol R = 0 := by
+  dsimp [carAnnihilate, carVacuumCol]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM 2 (Constructive Canonical Anticommutation Relation):
     $\{a, a^\dagger\} = a a^\dagger + a^\dagger a = I_2$. -/
@@ -107,10 +108,9 @@ theorem car_anticommutation_exact (R : Type*) [CommRing R] :
 /-- 🏆 THEOREM 3 (Constructive Single-Mode Fock Contraction):
     $a (a^\dagger v_0) = v_0$. -/
 theorem car_vacuum_contraction_matrix_exact (R : Type*) [CommRing R] :
-    Matrix.mulVec (carAnnihilate R) (Matrix.mulVec (carCreate R) (carVacuumState R)) =
-      carVacuumState R := by
-  dsimp [carAnnihilate, carCreate, carVacuumState, Matrix.mulVec]
-  ext i
-  fin_cases i <;> rfl
+    carAnnihilate R * (carCreate R * carVacuumCol R) = carVacuumCol R := by
+  dsimp [carAnnihilate, carCreate, carVacuumCol]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.CARVacuumContraction

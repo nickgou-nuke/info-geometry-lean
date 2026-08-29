@@ -3485,6 +3485,8 @@ import InfoGeometry.Canonical.PrimonMercatorFockColimitCapstone
 import InfoGeometry.Canonical.PrimonVonMangoldtDirichletCapstone
 import InfoGeometry.Canonical.PrimonThermodynamicEnergyDerivCapstone
 import InfoGeometry.Canonical.PrimonThermodynamicObservablesCapstone
+import InfoGeometry.Canonical.PrimeSUSYVacuumMajoranaSocketCapstone
+import InfoGeometry.Canonical.AsanoLeeYangPrimonPhaseTransitionCapstone
 
 namespace InfoGeometry
 

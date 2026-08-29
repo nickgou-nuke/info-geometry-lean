@@ -7811,6 +7811,7 @@ import InfoGeometry.Quantum.BostConnesAsymptoticLegendreDuality
 import InfoGeometry.Quantum.PrimonColimitFiltration
 import InfoGeometry.Quantum.PrimonSeriesVonMangoldt
 import InfoGeometry.Quantum.PrimonThermodynamics
+import InfoGeometry.Quantum.PrimeSUSYVacuumMajoranaSocket
 import InfoGeometry.Arithmetic.AmariChentsovAlphaGeometryCapstone
 import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone

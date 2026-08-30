@@ -51,17 +51,21 @@ def gibbsSurprisal (K : ι → ℝ) (i : ι) : ℝ :=
 theorem gibbsSurprisal_eq (K : ι → ℝ) (i : ι) :
     gibbsSurprisal K i = K i + Real.log (gibbsPartition K) := by
   unfold gibbsSurprisal gibbsProbability
-  rw [Real.log_div, Real.log_exp]
-  · ring
-  · exact ne_of_gt (gibbsPartition_pos K)
+  rw [Real.log_div (ne_of_gt (Real.exp_pos _))
+    (gibbsPartition_ne_zero K), Real.log_exp]
+  ring
 
 theorem gibbsProbability_eq_exp_neg_surprisal (K : ι → ℝ) (i : ι) :
     gibbsProbability K i = Real.exp (-gibbsSurprisal K i) := by
   rw [gibbsSurprisal_eq]
+  rw [neg_add, Real.exp_add, Real.exp_neg]
+  have hZ : Real.exp (-Real.log (gibbsPartition K)) =
+      (gibbsPartition K)⁻¹ := by
+    rw [Real.exp_neg, Real.exp_log (gibbsPartition_pos K)]
+  rw [hZ]
   unfold gibbsProbability
-  rw [neg_add, Real.exp_add, Real.exp_neg,
-    Real.exp_log (gibbsPartition_pos K)]
-  field_simp [gibbsPartition_ne_zero K]
+  rw [Real.exp_neg]
+  ring
 
 def gibbsExpectation (K : ι → ℝ) : ℝ :=
   finiteGibbsMean (gibbsProbability K) K

@@ -23,6 +23,14 @@ theorem algebraMap_nonneg_cstar
   rw [hx'] at hx
   simpa using hx ▸ ht
 
+theorem complex_algebraMap_realCast
+    (t : ℝ) :
+    algebraMap ℂ (FiniteOperatorAlgebra n) (t : ℂ) =
+      algebraMap ℝ (FiniteOperatorAlgebra n) t := by
+  change algebraMap ℂ (FiniteOperatorAlgebra n)
+      (algebraMap ℝ ℂ t) = _
+  rw [IsScalarTower.algebraMap_apply ℝ ℂ (FiniteOperatorAlgebra n) t]
+
 theorem strictlyPositive_add_nonneg_scalar
     [NeZero n] (X : FiniteOperatorAlgebra n) (t : ℝ)
     (hX : IsStrictlyPositive X) (ht : 0 ≤ t) :

@@ -111,7 +111,14 @@ theorem normSq_projectiveRatio_angleFlow
     Complex.normSq (projectiveRatio (angleFlow φ X)) =
       Complex.normSq (projectiveRatio X) := by
   rw [projectiveRatio_angleFlow φ hq]
-  simp [Complex.normSq_mul, angularPhase]
+  rw [Complex.normSq_mul]
+  have hunit : Complex.normSq (Complex.exp (Complex.I * (φ : ℂ))) = 1 := by
+    rw [Complex.normSq_eq_norm_sq]
+    have hnorm : ‖Complex.exp (Complex.I * (φ : ℂ))‖ = 1 := by
+      have hcomm : Complex.I * (φ : ℂ) = (φ : ℂ) * Complex.I := by ring
+      rw [hcomm, Complex.norm_exp_ofReal_mul_I]
+    rw [hnorm, one_pow]
+  rw [hunit, one_mul]
 
 @[simp] theorem angleFlow_neg_left (φ : ℝ) (X : HomogeneousCoord) :
     angleFlow (-φ) (angleFlow φ X) = X := by
@@ -141,7 +148,11 @@ theorem normSq_projectiveRatio_cylinderFlow_angle_invariant
       Complex.normSq (projectiveRatio (cartanFlow t X)) := by
   unfold cylinderFlow
   exact normSq_projectiveRatio_angleFlow φ
-    (cartanFlow_second_ne_zero t hq)
+    (by
+      rcases X with ⟨p, q⟩
+      change q ≠ 0 at hq
+      change (Real.exp (-t) : ℂ) * q ≠ 0
+      exact mul_ne_zero (Complex.ofReal_ne_zero.mpr (Real.exp_ne_zero _)) hq)
 
 theorem hasDerivAt_radial_readout
     (X : HomogeneousCoord) :
@@ -166,7 +177,7 @@ theorem hasDerivAt_projectiveRatio_cartanFlow_zero
     intro t
     exact projectiveRatio_cartanFlow t hq
   exact (hasDerivAt_radial_readout X).congr_of_eventuallyEq
-    (Filter.Eventually.of_forall fun t => (hfinite t).symm)
+    (Filter.Eventually.of_forall fun t => by simpa using hfinite t)
 
 theorem deriv_projectiveRatio_cartanFlow_zero
     (X : HomogeneousCoord) (hq : X.2 ≠ 0) :
@@ -179,22 +190,19 @@ theorem hasDerivAt_projectiveRatio_angleFlow_zero
     HasDerivAt
       (fun φ : ℝ => projectiveRatio (angleFlow φ X))
       (Complex.I * projectiveRatio X) 0 := by
-  have hlin : HasDerivAt
-      (fun φ : ℝ => Complex.I * (φ : ℂ)) Complex.I 0 := by
-    simpa using
-      ((hasDerivAt_id (𝕜 := ℝ) (x := (0 : ℝ))).ofReal_comp.const_mul
-        Complex.I)
   have hphase : HasDerivAt
       (fun φ : ℝ => Complex.exp (Complex.I * (φ : ℂ)))
       Complex.I 0 := by
-    simpa using (Complex.hasDerivAt_exp 0).comp 0 hlin
+    have h :=
+      ((Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).mul_const Complex.I).cexp
+    simpa [Complex.ofRealCLM_apply, mul_comm] using h
   have hfinite : ∀ φ : ℝ,
       projectiveRatio (angleFlow φ X) =
         Complex.exp (Complex.I * (φ : ℂ)) * projectiveRatio X := by
     intro φ
     exact projectiveRatio_angleFlow φ hq
   exact (hphase.mul_const (projectiveRatio X)).congr_of_eventuallyEq
-    (Filter.Eventually.of_forall fun φ => (hfinite φ).symm)
+    (Filter.Eventually.of_forall fun φ => by simpa using hfinite φ)
 
 theorem deriv_projectiveRatio_angleFlow_zero
     (X : HomogeneousCoord) (hq : X.2 ≠ 0) :

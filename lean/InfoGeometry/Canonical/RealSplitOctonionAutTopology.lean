@@ -181,6 +181,32 @@ theorem continuous_zMul_b :
       (continuous_canonicalZorn_b.comp continuous_snd) |>.add
     continuous_canonicalZorn_dot'
 
+theorem continuous_zMul_x :
+    Continuous (fun p : CZ × CZ => (zMul p.1 p.2).x) := by
+  have h₁ : Continuous (fun p : CZ × CZ => p.1.a • p.2.x) :=
+    (continuous_canonicalZorn_a.comp continuous_fst).smul
+      (continuous_canonicalZorn_x.comp continuous_snd)
+  have h₂ : Continuous (fun p : CZ × CZ => p.2.b • p.1.x) :=
+    (continuous_canonicalZorn_b.comp continuous_snd).smul
+      (continuous_canonicalZorn_x.comp continuous_fst)
+  change Continuous (fun p : CZ × CZ =>
+    p.1.a • p.2.x + p.2.b • p.1.x -
+      InfoGeometry.Canonical.ZornMatrix.cross p.1.y p.2.y)
+  exact (h₁.add h₂).sub continuous_canonicalZorn_cross
+
+theorem continuous_zMul_y :
+    Continuous (fun p : CZ × CZ => (zMul p.1 p.2).y) := by
+  have h₁ : Continuous (fun p : CZ × CZ => p.1.b • p.2.y) :=
+    (continuous_canonicalZorn_b.comp continuous_fst).smul
+      (continuous_canonicalZorn_y.comp continuous_snd)
+  have h₂ : Continuous (fun p : CZ × CZ => p.2.a • p.1.y) :=
+    (continuous_canonicalZorn_a.comp continuous_snd).smul
+      (continuous_canonicalZorn_y.comp continuous_fst)
+  change Continuous (fun p : CZ × CZ =>
+    p.1.b • p.2.y + p.2.a • p.1.y +
+      InfoGeometry.Canonical.ZornMatrix.cross p.1.x p.2.x)
+  exact (h₁.add h₂).add continuous_canonicalZorn_cross'
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :

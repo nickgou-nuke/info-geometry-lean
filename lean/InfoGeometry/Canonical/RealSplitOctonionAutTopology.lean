@@ -340,6 +340,46 @@ instance : ContinuousAdd CZ := ⟨continuous_canonicalZorn_add⟩
 
 instance : IsTopologicalAddGroup CZ := IsTopologicalAddGroup.mk
 
+theorem continuous_canonicalZorn_smul :
+    Continuous (fun p : ℝ × CZ => p.1 • p.2) := by
+  apply continuous_induced_rng.mpr
+  have ha : Continuous (fun p : ℝ × CZ => p.1 * p.2.a) :=
+    continuous_fst.mul (continuous_canonicalZorn_a.comp continuous_snd)
+  have hb : Continuous (fun p : ℝ × CZ => p.1 * p.2.b) :=
+    continuous_fst.mul (continuous_canonicalZorn_b.comp continuous_snd)
+  have hx : Continuous (fun p : ℝ × CZ => fun i => p.1 * p.2.x i) := by
+    apply continuous_pi
+    intro i
+    exact continuous_fst.mul ((continuous_apply i).comp
+      (continuous_canonicalZorn_x.comp continuous_snd))
+  have hy : Continuous (fun p : ℝ × CZ => fun i => p.1 * p.2.y i) := by
+    apply continuous_pi
+    intro i
+    exact continuous_fst.mul ((continuous_apply i).comp
+      (continuous_canonicalZorn_y.comp continuous_snd))
+  have hq₀ : Continuous (fun p : ℝ × CZ =>
+      (p.1 * p.2.a + p.1 * p.2.b) / (2 : ℝ)) := (ha.add hb).div_const 2
+  have hr₀ : Continuous (fun p : ℝ × CZ =>
+      (p.1 * p.2.a - p.1 * p.2.b) / (2 : ℝ)) := (ha.sub hb).div_const 2
+  have hq : Continuous (fun p : ℝ × CZ =>
+      fun i => (p.1 * p.2.x i - p.1 * p.2.y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.sub hy)).div_const (2 : ℝ)
+  have hr : Continuous (fun p : ℝ × CZ =>
+      fun i => (p.1 * p.2.x i + p.1 * p.2.y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.add hy)).div_const (2 : ℝ)
+  change Continuous (fun p : ℝ × CZ =>
+    ((((p.1 * p.2.a + p.1 * p.2.b) / (2 : ℝ),
+        fun i => (p.1 * p.2.x i - p.1 * p.2.y i) / (2 : ℝ)),
+      ((p.1 * p.2.a - p.1 * p.2.b) / (2 : ℝ),
+        fun i => (p.1 * p.2.x i + p.1 * p.2.y i) / (2 : ℝ)))))
+  exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
+
+instance : ContinuousSMul ℝ CZ := ⟨continuous_canonicalZorn_smul⟩
+
 theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   let E := cartesianZornLinearEquiv.symm
   have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩

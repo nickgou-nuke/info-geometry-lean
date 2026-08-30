@@ -241,6 +241,44 @@ theorem continuous_zMul :
         fun i => ((zMul p.1 p.2).x i + (zMul p.1 p.2).y i) / (2 : ℝ))))
   exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
 
+theorem continuous_canonicalZorn_neg :
+    Continuous (fun X : CZ => -X) := by
+  apply continuous_induced_rng.mpr
+  have ha : Continuous (fun X : CZ => -X.a) :=
+    continuous_neg.comp continuous_canonicalZorn_a
+  have hb : Continuous (fun X : CZ => -X.b) :=
+    continuous_neg.comp continuous_canonicalZorn_b
+  have hx : Continuous (fun X : CZ => fun i => -X.x i) := by
+    apply continuous_pi
+    intro i
+    exact continuous_neg.comp ((continuous_apply i).comp continuous_canonicalZorn_x)
+  have hy : Continuous (fun X : CZ => fun i => -X.y i) := by
+    apply continuous_pi
+    intro i
+    exact continuous_neg.comp ((continuous_apply i).comp continuous_canonicalZorn_y)
+  have hq₀ : Continuous (fun X : CZ =>
+      (-X.a + -X.b) / (2 : ℝ)) := (ha.add hb).div_const 2
+  have hr₀ : Continuous (fun X : CZ =>
+      (-X.a - -X.b) / (2 : ℝ)) := (ha.sub hb).div_const 2
+  have hq : Continuous (fun X : CZ =>
+      fun i => (-X.x i - -X.y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.sub hy)).div_const (2 : ℝ)
+  have hr : Continuous (fun X : CZ =>
+      fun i => (-X.x i + -X.y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.add hy)).div_const (2 : ℝ)
+  change Continuous (fun X : CZ =>
+    ((((-X.a + -X.b) / (2 : ℝ),
+        fun i => (-X.x i - -X.y i) / (2 : ℝ)),
+      ((-X.a - -X.b) / (2 : ℝ),
+        fun i => (-X.x i + -X.y i) / (2 : ℝ)))))
+  exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
+
+instance : ContinuousNeg CZ := ⟨continuous_canonicalZorn_neg⟩
+
 theorem continuous_canonicalZorn_sub :
     Continuous (fun p : CZ × CZ => p.1 - p.2) := by
   apply continuous_induced_rng.mpr

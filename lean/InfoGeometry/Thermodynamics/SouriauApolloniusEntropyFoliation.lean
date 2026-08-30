@@ -12,6 +12,7 @@ import InfoGeometry.Thermodynamics.SouriauFoliation
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Differential.PoincareFisherRao
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Complex.MobiusApolloniusFoliation
 
 namespace InfoGeometry.Thermodynamics.SouriauApolloniusFoliation
 
@@ -55,6 +56,20 @@ def dipolePole : ℂ := ⟨-1 / 2, 0⟩
 /-- Apollonius ratio: R(s) = |s - 3/2|² / |s + 1/2|². -/
 def apolloniusRatio (s : ℂ) : ℝ :=
   normSq (s - dipoleZero) / normSq (s - dipolePole)
+
+/-- The Souriau ratio is the squared modulus of the foundational Möbius map. -/
+theorem apolloniusRatio_eq_normSq_mobiusMap (s : ℂ) :
+    apolloniusRatio s =
+      Complex.normSq
+        (InfoGeometry.Complex.MobiusApollonius.mobiusMap s) := by
+  have hs : s = (s.re : ℂ) + Complex.I * (s.im : ℂ) := by
+    apply Complex.ext <;> simp <;> ring
+  rw [hs]
+  unfold apolloniusRatio dipoleZero dipolePole
+  simpa [InfoGeometry.Complex.MobiusApollonius.mobiusMap,
+    InfoGeometry.Complex.MobiusApollonius.mobiusNumerator,
+    InfoGeometry.Complex.MobiusApollonius.mobiusDenominator] using
+    (InfoGeometry.Complex.MobiusApollonius.normSq_mobiusMap s.re s.im).symm
 
 /-- Souriau generalized thermodynamic entropy potential:
     Φ(s) = - (1/2) * ln(R(s)). -/

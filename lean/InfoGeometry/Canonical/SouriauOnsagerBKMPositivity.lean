@@ -60,28 +60,40 @@ theorem FaithfulDensityOperator.kuboMoriIntegrand_self_eq_trace_star_mul_self
     rw [← D.rpow_add]
     congr 1
     ring
-  rw [show
-    star (D.rpow ((1 - s) / 2) * A * D.rpow (s / 2)) =
-      D.rpow (s / 2) * star A * D.rpow ((1 - s) / 2) by
-        simp [mul_assoc]]
   calc
     D.kuboMoriIntegrand A A s =
         finiteOperatorTrace
-          (D.rpow s * (star A * D.rpow (1 - s) * A)) := by
+          (D.rpow s * star A * D.rpow (1 - s) * A) := by
             rfl
     _ = finiteOperatorTrace
-          ((star A * D.rpow (1 - s) * A) * D.rpow s) :=
+          ((D.rpow (s / 2) * D.rpow (s / 2)) *
+            star A * D.rpow (1 - s) * A) := by
+          rw [hright]
+    _ = finiteOperatorTrace
+          (D.rpow (s / 2) *
+            (D.rpow (s / 2) * star A * D.rpow (1 - s) * A)) := by
+          congr 1
+          noncomm_ring
+    _ = finiteOperatorTrace
+          ((D.rpow (s / 2) * star A * D.rpow (1 - s) * A) *
+            D.rpow (s / 2)) :=
           finiteOperatorTrace_mul_comm _ _
     _ = finiteOperatorTrace
-          ((star A * D.rpow (1 - s) * A) *
-            (D.rpow (s / 2) * D.rpow (s / 2))) := by
-          rw [hright]
+          ((D.rpow (s / 2) * star A *
+              (D.rpow ((1 - s) / 2) * D.rpow ((1 - s) / 2)) * A) *
+            D.rpow (s / 2)) := by
+          rw [hleft]
     _ = finiteOperatorTrace
           ((D.rpow (s / 2) * star A * D.rpow ((1 - s) / 2)) *
             (D.rpow ((1 - s) / 2) * A * D.rpow (s / 2))) := by
-          rw [← hleft]
           congr 1
           noncomm_ring
+    _ = finiteOperatorTrace
+          (star
+              (D.rpow ((1 - s) / 2) * A * D.rpow (s / 2)) *
+            (D.rpow ((1 - s) / 2) * A * D.rpow (s / 2))) := by
+          congr 1
+          simp [mul_assoc]
 
 /-- Pointwise positivity of the full noncommutative Kubo--Mori self-integrand.
 

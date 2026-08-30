@@ -59,4 +59,13 @@ theorem FaithfulDensityOperator.kuboMoriPairing_self_re_eq_zero_iff
     unfold FaithfulDensityOperator.kuboMoriPairing
     simp [FaithfulDensityOperator.kuboMoriIntegrand]
 
+/-- Canonical strict-definiteness surface theorem for the integrated BKM
+pairing.  The scalar being tested is its real quadratic form. -/
+theorem FaithfulDensityOperator.kuboMoriPairing_self_eq_zero_iff
+    (D : FaithfulDensityOperator n)
+    (A : FiniteOperatorAlgebra n)
+    (h_rpow : Continuous D.rpow) :
+    (D.kuboMoriPairing A A).re = 0 ↔ A = 0 :=
+  D.kuboMoriPairing_self_re_eq_zero_iff A h_rpow
+
 end SouriauOnsagerBKM

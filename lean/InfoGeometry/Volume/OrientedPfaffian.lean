@@ -18,7 +18,7 @@ Pfaffian sign.
 
 The hard identities `Pf(A)^2 = det(A)`, congruence covariance, and block-skew
 compatibility are not postulated here. They are subsequent theorems to be
-proved from this owner.
+proved from this owner by matching/permutation decomposition.
 -/
 
 noncomputable section

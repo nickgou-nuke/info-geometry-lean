@@ -4,7 +4,6 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!
 # Möbius Invariant Metric & Midpoint Apollonius Conformal Foliation
@@ -45,13 +44,13 @@ noncomputable section
 
 namespace InfoGeometry.Complex.MobiusApollonius
 
-open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-
 /-- Numerator squared distance to zero $z_0 = 3/2$: $(\sigma - 3/2)^2 + t^2$. -/
-abbrev mobiusNumerator := apolloniusNumerator
+def mobiusNumerator (σ t : ℝ) : ℝ :=
+  (σ - 3/2) ^ 2 + t ^ 2
 
 /-- Denominator squared distance to pole $p_0 = -1/2$: $(\sigma + 1/2)^2 + t^2$. -/
-abbrev mobiusDenominator := apolloniusDenominator
+def mobiusDenominator (σ t : ℝ) : ℝ :=
+  (σ + 1/2) ^ 2 + t ^ 2
 
 /-- Center of the Circle of Apollonius for ratio parameter $\lambda \neq 1$: $\sigma_c(\lambda) = \frac{3 + \lambda}{2(1 - \lambda)}$. -/
 def apolloniusCenter (lam : ℝ) : ℝ :=
@@ -65,14 +64,29 @@ def apolloniusRadiusSq (lam : ℝ) : ℝ :=
 def mobiusMap (s : ℂ) : ℂ :=
   (s - 3/2) / (s + 1/2)
 
+/-- The classical Apollonius ratio is the squared modulus of the Möbius map
+    in the real-imaginary coordinates used by this owner. -/
+theorem normSq_mobiusMap (σ t : ℝ) :
+    Complex.normSq (mobiusMap ((σ : ℂ) + Complex.I * (t : ℂ))) =
+      mobiusNumerator σ t / mobiusDenominator σ t := by
+  unfold mobiusMap
+  rw [Complex.normSq_div]
+  have hn : (σ : ℂ) + Complex.I * (t : ℂ) - 3 / 2 =
+      ((σ - 3 / 2 : ℝ) : ℂ) + Complex.I * (t : ℂ) := by
+    apply Complex.ext <;> norm_num <;> ring
+  have hd : (σ : ℂ) + Complex.I * (t : ℂ) + 1 / 2 =
+      ((σ + 1 / 2 : ℝ) : ℂ) + Complex.I * (t : ℂ) := by
+    apply Complex.ext <;> norm_num <;> ring
+  rw [hn, hd, Complex.normSq_add_mul_I, Complex.normSq_add_mul_I]
+  rfl
+
 /-! ### 1. Exact Linearization and Imaginary Component Cancellation -/
 
 /-- 🏆 THEOREM 1: The difference of squared norms is purely affine in $\sigma$:
     $\mathcal{N}(\sigma, t) - \mathcal{D}(\sigma, t) = -4\sigma + 2$. -/
 theorem mobius_norm_diff (σ t : ℝ) :
     mobiusNumerator σ t - mobiusDenominator σ t = -4 * σ + 2 := by
-  dsimp [mobiusNumerator, mobiusDenominator, apolloniusNumerator,
-    apolloniusDenominator]
+  dsimp [mobiusNumerator, mobiusDenominator]
   ring
 
 /-- 🏆 THEOREM 2: The difference is strictly independent of the imaginary energy parameter $t$. -/
@@ -101,8 +115,7 @@ theorem mobius_unitary_iff (σ t : ℝ) :
     For all heights $t \in \mathbb{R}$, $\mathcal{N}(1/2, t) = \mathcal{D}(1/2, t) = 1 + t^2$. -/
 theorem mobius_critical_line_vertical_flow (t : ℝ) :
     mobiusNumerator (1/2) t = 1 + t ^ 2 ∧ mobiusDenominator (1/2) t = 1 + t ^ 2 := by
-  dsimp [mobiusNumerator, mobiusDenominator, apolloniusNumerator,
-    apolloniusDenominator]
+  dsimp [mobiusNumerator, mobiusDenominator]
   constructor <;> ring
 
 /-! ### 3. Subharmonic Disk and Exterior Foliation ($\lambda \neq 1$) -/
@@ -146,8 +159,7 @@ theorem mobius_exterior_foliation_iff (σ t : ℝ) :
 theorem apollonius_circle_identity (σ t lam : ℝ) (h_lam : lam ≠ 1) :
     mobiusNumerator σ t - lam * mobiusDenominator σ t =
       (1 - lam) * ((σ - apolloniusCenter lam) ^ 2 + t ^ 2 - apolloniusRadiusSq lam) := by
-  dsimp [mobiusNumerator, mobiusDenominator, apolloniusNumerator,
-    apolloniusDenominator, apolloniusCenter, apolloniusRadiusSq]
+  dsimp [mobiusNumerator, mobiusDenominator, apolloniusCenter, apolloniusRadiusSq]
   have h_sub : 1 - lam ≠ 0 := sub_ne_zero.mpr (Ne.symm h_lam)
   field_simp
   ring

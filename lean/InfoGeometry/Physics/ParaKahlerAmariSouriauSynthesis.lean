@@ -63,7 +63,10 @@ structure ParaKahlerMetriplecticSystem (R g : Type*)
   souriauState : SouriauState (R := R) (g := g)
   fisherMetric : SouriauFisherMetric R g
   paraDatum : ParaKahlerDatum R g
-  metric_compat : ∀ X Y : g, paraDatum.metric X Y = fisherMetric.cov X Y
+  fundamentalSymmetry : g →ₗ[R] g
+  fundamentalSymmetry_sq : fundamentalSymmetry.comp fundamentalSymmetry = LinearMap.id
+  metric_compat : ∀ X Y : g,
+    paraDatum.metric X Y = fisherMetric.cov X (fundamentalSymmetry Y)
 
 namespace ParaKahlerMetriplecticSystem
 
@@ -88,9 +91,25 @@ theorem metriplectic_diagonal_eq_fisher (dH : g) :
 
 /-- **Theorem**: Para-QGT Metric Resolution.
     The real part of the Para-QGT equals the dissipative Fisher component of the Metriplectic bracket. -/
-theorem paraQGT_re_eq_fisher (X Y : g) :
+theorem paraQGT_re_eq_fisher_fundamentalSymmetry (X Y : g) :
+    (paraQGT sys.paraDatum X Y).re =
+      sys.fisherMetric.cov X (sys.fundamentalSymmetry Y) := by
+  rw [paraQGT_re]
+  exact sys.metric_compat X Y
+
+theorem fundamentalSymmetry_involutive (X : g) :
+    sys.fundamentalSymmetry (sys.fundamentalSymmetry X) = X := by
+  exact LinearMap.congr_fun sys.fundamentalSymmetry_sq X
+
+theorem paraMetric_eq_fisher_of_fundamentalSymmetry_fixed
+    (X Y : g) (hY : sys.fundamentalSymmetry Y = Y) :
+    sys.paraDatum.metric X Y = sys.fisherMetric.cov X Y := by
+  rw [sys.metric_compat X Y, hY]
+
+theorem paraQGT_re_eq_fisher_of_fundamentalSymmetry_fixed
+    (X Y : g) (hY : sys.fundamentalSymmetry Y = Y) :
     (paraQGT sys.paraDatum X Y).re = sys.fisherMetric.cov X Y := by
-  rw [paraQGT_re, sys.metric_compat]
+  rw [sys.paraQGT_re_eq_fisher_fundamentalSymmetry X Y, hY]
 
 /-- **Theorem**: Para-Berry Curvature Skew-Symmetry.
     The geometric phase / conservative Berry curvature is strictly skew-symmetric. -/
@@ -102,9 +121,11 @@ theorem paraBerry_skew (X Y : g) :
     On the chiral lightcone $+1$ eigenspace of $K$ ($K X = X$), the Fisher metric
     is null / isotropic: $g_S(X, X) + g_S(X, X) = 0$. -/
 theorem chiral_horizon_isotropic (X : g) (hX : sys.paraDatum.para.K X = X) :
-    sys.fisherMetric.cov X X + sys.fisherMetric.cov X X = 0 := by
+    sys.fisherMetric.cov X (sys.fundamentalSymmetry X) +
+      sys.fisherMetric.cov X (sys.fundamentalSymmetry X) = 0 := by
   have h_iso := sys.paraDatum.chiral_mode_isotropic X hX
-  have h_eq : sys.paraDatum.metric X X = sys.fisherMetric.cov X X := sys.metric_compat X X
+  have h_eq : sys.paraDatum.metric X X =
+      sys.fisherMetric.cov X (sys.fundamentalSymmetry X) := sys.metric_compat X X
   rw [h_eq] at h_iso
   exact h_iso
 
@@ -186,8 +207,10 @@ theorem grand_amari_souriau_para_kahler_qgt_synthesis
      metri.metriplectic dH dH = metri.fisherMetric.cov dH dH) ∧
     -- (3) Para-Kähler QGT Real-Berry Splitting & Chiral Horizon
     (metri.paraDatum.paraBerryTwoForm Y X = - metri.paraDatum.paraBerryTwoForm X Y ∧
-     (paraQGT metri.paraDatum X Y).re = metri.fisherMetric.cov X Y ∧
-     metri.fisherMetric.cov X X + metri.fisherMetric.cov X X = 0) ∧
+     (paraQGT metri.paraDatum X Y).re =
+       metri.fisherMetric.cov X (metri.fundamentalSymmetry Y) ∧
+     metri.fisherMetric.cov X (metri.fundamentalSymmetry X) +
+       metri.fisherMetric.cov X (metri.fundamentalSymmetry X) = 0) ∧
     -- (4) Maurer-Cartan Arnold-Cohen Resolution & BCFW Factorization
     (alg.wedge (data.form dz 0 1) (data.form dz 1 2) +
      alg.wedge (data.form dz 1 2) (data.form dz 2 0) +
@@ -201,7 +224,7 @@ theorem grand_amari_souriau_para_kahler_qgt_synthesis
   · exact metri.first_law_reversible_null dH
   · exact metri.metriplectic_diagonal_eq_fisher dH
   · exact metri.paraBerry_skew X Y
-  · exact metri.paraQGT_re_eq_fisher X Y
+  · exact metri.paraQGT_re_eq_fisher_fundamentalSymmetry X Y
   · exact metri.chiral_horizon_isotropic X hX_chiral
   · exact maurer_cartan_arnold_resolution alg dz data 0 1 2
   · exact maurer_cartan_bcfw_factorization alg dz data 0 1 2

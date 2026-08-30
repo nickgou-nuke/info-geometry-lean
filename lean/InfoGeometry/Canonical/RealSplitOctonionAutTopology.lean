@@ -287,6 +287,15 @@ theorem continuous_canonicalZorn_sub :
         fun i => ((p.1.x i - p.2.x i) + (p.1.y i - p.2.y i)) / (2 : ℝ))))
   exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
 
+theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
+  let E := cartesianZornLinearEquiv.symm
+  have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩
+  apply (hE.isClosed_iff).2
+  refine ⟨{E 0}, isClosed_singleton, ?_⟩
+  ext X
+  change E X = E 0 ↔ X = 0
+  exact E.injective.eq_iff
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :
@@ -370,6 +379,15 @@ theorem continuous_splitOctonion_multiplicativity_constraint
     continuous_zMul.comp hxy
   exact (continuous_canonicalZorn_sub.comp
     (Continuous.prodMk (continuous_realSplitOctonionAut_apply (zMul X Y)) hz))
+
+theorem isClosed_splitOctonion_multiplicativity_constraint
+    (X Y : CZ) :
+    IsClosed {g : RealSplitOctonionAut |
+      (g : SplitOctonionAutCandidate ℝ) (zMul X Y) -
+        zMul ((g : SplitOctonionAutCandidate ℝ) X)
+          ((g : SplitOctonionAutCandidate ℝ) Y) = 0} := by
+  exact isClosed_canonicalZorn_zero.preimage
+    (continuous_splitOctonion_multiplicativity_constraint X Y)
 
 end
 end InfoGeometry.Canonical

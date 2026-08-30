@@ -325,6 +325,19 @@ theorem continuous_canonicalZorn_sub :
         fun i => ((p.1.x i - p.2.x i) + (p.1.y i - p.2.y i)) / (2 : ℝ))))
   exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
 
+theorem continuous_canonicalZorn_add :
+    Continuous (fun p : CZ × CZ => p.1 + p.2) := by
+  have hneg : Continuous (fun p : CZ × CZ => -p.2) :=
+    continuous_canonicalZorn_neg.comp continuous_snd
+  have hpair : Continuous (fun p : CZ × CZ => (p.1, -p.2)) :=
+    Continuous.prodMk continuous_fst hneg
+  have h := continuous_canonicalZorn_sub.comp hpair
+  convert h using 1
+  funext p
+  ext <;> simp [Function.comp_apply, sub_neg_eq_add]
+
+instance : ContinuousAdd CZ := ⟨continuous_canonicalZorn_add⟩
+
 theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   let E := cartesianZornLinearEquiv.symm
   have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩

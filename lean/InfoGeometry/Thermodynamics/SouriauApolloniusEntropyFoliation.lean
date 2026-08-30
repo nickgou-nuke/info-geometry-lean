@@ -22,6 +22,8 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Differential.PoincareFisherRao
 open InfoGeometry.Canonical.YangBaxterProof
 
+local notation "normSq" => Complex.normSq
+
 noncomputable section
 
 /-!
@@ -55,7 +57,7 @@ def dipolePole : ℂ := ⟨-1 / 2, 0⟩
 
 /-- Apollonius ratio: R(s) = |s - 3/2|² / |s + 1/2|². -/
 def apolloniusRatio (s : ℂ) : ℝ :=
-  normSq (s - dipoleZero) / normSq (s - dipolePole)
+  Complex.normSq (s - dipoleZero) / Complex.normSq (s - dipolePole)
 
 /-- The Souriau ratio is the squared modulus of the foundational Möbius map. -/
 theorem apolloniusRatio_eq_normSq_mobiusMap (s : ℂ) :
@@ -66,10 +68,13 @@ theorem apolloniusRatio_eq_normSq_mobiusMap (s : ℂ) :
     apply Complex.ext <;> simp <;> ring
   rw [hs]
   unfold apolloniusRatio dipoleZero dipolePole
-  simpa [InfoGeometry.Complex.MobiusApollonius.mobiusMap,
-    InfoGeometry.Complex.MobiusApollonius.mobiusNumerator,
-    InfoGeometry.Complex.MobiusApollonius.mobiusDenominator] using
-    (InfoGeometry.Complex.MobiusApollonius.normSq_mobiusMap s.re s.im).symm
+  convert (InfoGeometry.Complex.MobiusApollonius.normSq_mobiusMap s.re s.im).symm
+      using 1 <;>
+    simp [InfoGeometry.Complex.MobiusApollonius.mobiusMap,
+      InfoGeometry.Complex.MobiusApollonius.mobiusNumerator,
+      InfoGeometry.Complex.MobiusApollonius.mobiusDenominator,
+      Complex.normSq_apply] <;>
+    ring
 
 /-- Souriau generalized thermodynamic entropy potential:
     Φ(s) = - (1/2) * ln(R(s)). -/
@@ -96,24 +101,24 @@ def apolloniusLeafCarrier (lambda_ratio : ℝ) : Set (ℝ × ℝ) :=
 
 /-- Numerator squared distance: |s - 3/2|² = (σ - 3/2)² + t². -/
 theorem apollonius_num_normSq (s : ℂ) :
-    normSq (s - dipoleZero) = (s.re - 3 / 2) ^ 2 + s.im ^ 2 := by
+    Complex.normSq (s - dipoleZero) = (s.re - 3 / 2) ^ 2 + s.im ^ 2 := by
   have h_re : (s - dipoleZero).re = s.re - 3 / 2 := rfl
   have h_im : (s - dipoleZero).im = s.im := by dsimp [dipoleZero]; ring
-  rw [normSq_apply, h_re, h_im]
+  rw [Complex.normSq_apply, h_re, h_im]
   ring
 
 /-- Denominator squared distance: |s + 1/2|² = (σ + 1/2)² + t². -/
 theorem apollonius_den_normSq (s : ℂ) :
-    normSq (s - dipolePole) = (s.re + 1 / 2) ^ 2 + s.im ^ 2 := by
+    Complex.normSq (s - dipolePole) = (s.re + 1 / 2) ^ 2 + s.im ^ 2 := by
   have h_re : (s - dipolePole).re = s.re + 1 / 2 := by dsimp [dipolePole]; ring
   have h_im : (s - dipolePole).im = s.im := by dsimp [dipolePole]; ring
-  rw [normSq_apply, h_re, h_im]
+  rw [Complex.normSq_apply, h_re, h_im]
   ring
 
 /-- Strict positivity of the denominator for s ≠ -1/2. -/
 theorem apollonius_den_pos (s : ℂ) (hs : s ≠ dipolePole) :
-    0 < normSq (s - dipolePole) :=
-  normSq_pos.mpr (sub_ne_zero.mpr hs)
+    0 < Complex.normSq (s - dipolePole) :=
+  Complex.normSq_pos.mpr (sub_ne_zero.mpr hs)
 
 /-!
 ### 2. Souriau Unitary Ground State Leaf (λ = 1 ↔ Re(s) = 1/2)
@@ -181,7 +186,7 @@ theorem souriau_entropy_positive_of_re_gt_half (s : ℂ) (hs_zero : s ≠ dipole
   have h_ratio_lt_one : normSq (s - dipoleZero) / normSq (s - dipolePole) < 1 :=
     (div_lt_one h_den_pos).mpr h_diff
   have h_num_pos : 0 < normSq (s - dipoleZero) :=
-    normSq_pos.mpr (sub_ne_zero.mpr hs_zero)
+    Complex.normSq_pos.mpr (sub_ne_zero.mpr hs_zero)
   have h_ratio_pos : 0 < normSq (s - dipoleZero) / normSq (s - dipolePole) :=
     div_pos h_num_pos h_den_pos
   have h_log_neg : Real.log (normSq (s - dipoleZero) / normSq (s - dipolePole)) < 0 :=
@@ -272,16 +277,18 @@ theorem souriau_hamiltonian_conformal_conjugation (s : ℂ) (hs1 : s ≠ dipoleZ
   refine ⟨hw_ne, ?_⟩
   unfold Complex.log
   have h_norm_w : ‖w‖ = Real.sqrt (normSq (s - dipoleZero) / normSq (s - dipolePole)) := by
-    rw [norm_def, normSq_div]
+    rw [Complex.norm_def, Complex.normSq_div]
   have h_pos : 0 < normSq (s - dipoleZero) / normSq (s - dipolePole) :=
-    div_pos (normSq_pos.mpr (sub_ne_zero.mpr hs1)) (normSq_pos.mpr (sub_ne_zero.mpr hs2))
+    div_pos (Complex.normSq_pos.mpr (sub_ne_zero.mpr hs1))
+      (Complex.normSq_pos.mpr (sub_ne_zero.mpr hs2))
   have h_log_norm : Real.log ‖w‖ = - souriauEntropyPotential s := by
     unfold souriauEntropyPotential apolloniusRatio
     rw [h_norm_w, Real.log_sqrt (le_of_lt h_pos)]
     ring
   have h_re : (Real.log ‖w‖ : ℂ) = - (souriauEntropyPotential s : ℂ) := by
     exact_mod_cast congrArg Complex.ofReal h_log_norm
-  have h_im : (arg w : ℂ) * I = (hamiltonianPhase s : ℂ) * I := rfl
+  have h_im : (Complex.arg w : ℂ) * Complex.I =
+      (hamiltonianPhase s : ℂ) * Complex.I := rfl
   rw [h_re, h_im]
 
 /-!

@@ -25,17 +25,15 @@ theorem hodgeStar_involutive : Function.Involutive hodgeStar := by
 
 /-- Hence the coordinate Hodge star is bijective. -/
 theorem hodgeStar_bijective : Function.Bijective hodgeStar :=
-  hodgeStar_involutive.bijective
+  ⟨hodgeStar_involutive.injective, hodgeStar_involutive.surjective⟩
 
 /-- The existing coordinate Hodge star as Mathlib's native real linear
 equivalence.  Its inverse is definitionally the same Hodge star. -/
-noncomputable def hodgeStarLinearEquiv : Coord ≃ₗ[ℝ] Coord where
-  toFun := hodgeStar
-  invFun := hodgeStar
-  left_inv := hodgeStar_involutive
-  right_inv := hodgeStar_involutive
-  map_add' := hodgeStar.map_add
-  map_smul' := hodgeStar.map_smul
+noncomputable def hodgeStarLinearEquiv : Coord ≃ₗ[ℝ] Coord :=
+  { hodgeStar with
+    invFun := hodgeStar
+    left_inv := hodgeStar_involutive
+    right_inv := hodgeStar_involutive }
 
 @[simp] theorem hodgeStarLinearEquiv_apply (x : Coord) :
     hodgeStarLinearEquiv x = hodgeStar x :=

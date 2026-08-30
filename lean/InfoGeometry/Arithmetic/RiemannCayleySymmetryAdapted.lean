@@ -29,28 +29,6 @@ theorem centeredComplexCoordinate_add_half (s : ℂ) :
   unfold centeredComplexCoordinate
   ring
 
-theorem cayleyToFugacity_eq_centered_fraction
-    (s : ℂ) (hs : 1 - s ≠ 0) :
-    cayleyToFugacity s =
-      (1 + 2 * centeredComplexCoordinate s) /
-        (1 - 2 * centeredComplexCoordinate s) := by
-  have hden : 1 - 2 * centeredComplexCoordinate s ≠ 0 := by
-    intro h
-    apply hs
-    unfold centeredComplexCoordinate at h
-    linear_combination (1 / 2 : ℂ) * h
-  unfold cayleyToFugacity centeredComplexCoordinate
-  field_simp [hs, hden]
-  ring_nf
-  field_simp [hs]
-
-theorem centered_fraction_neg_eq_inv
-    (u : ℂ) (hplus : 1 + 2 * u ≠ 0) :
-    (1 + 2 * (-u)) / (1 - 2 * (-u)) =
-      ((1 + 2 * u) / (1 - 2 * u))⁻¹ := by
-  field_simp [hplus]
-  ring
-
 theorem cayley_conjugates_functionalReflection_to_inv
     (s : ℂ) :
     cayleyToFugacity (functionalReflection s) =

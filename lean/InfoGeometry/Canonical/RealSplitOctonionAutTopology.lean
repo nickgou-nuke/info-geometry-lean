@@ -29,6 +29,64 @@ theorem continuous_canonicalZorn_coordinates :
     Continuous (cartesianZornLinearEquiv.symm : CZ → CartesianCoordinates) :=
   continuous_induced_dom
 
+theorem continuous_canonicalZorn_a : Continuous (fun X : CZ => X.a) := by
+  have hq₀ : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).1.1) :=
+    continuous_fst.comp (continuous_fst.comp continuous_canonicalZorn_coordinates)
+  have hr₀ : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).2.1) :=
+    continuous_fst.comp (continuous_snd.comp continuous_canonicalZorn_coordinates)
+  rw [show (fun X : CZ => X.a) =
+      (fun X => (cartesianZornLinearEquiv.symm X).1.1 +
+        (cartesianZornLinearEquiv.symm X).2.1) by
+    funext X
+    simp [cartesianZornLinearEquiv_symm_apply]
+    ring]
+  exact hq₀.add hr₀
+
+theorem continuous_canonicalZorn_b : Continuous (fun X : CZ => X.b) := by
+  have hq₀ : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).1.1) :=
+    continuous_fst.comp (continuous_fst.comp continuous_canonicalZorn_coordinates)
+  have hr₀ : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).2.1) :=
+    continuous_fst.comp (continuous_snd.comp continuous_canonicalZorn_coordinates)
+  rw [show (fun X : CZ => X.b) =
+      (fun X => (cartesianZornLinearEquiv.symm X).1.1 -
+        (cartesianZornLinearEquiv.symm X).2.1) by
+    funext X
+    simp [cartesianZornLinearEquiv_symm_apply]
+    ring]
+  exact hq₀.sub hr₀
+
+theorem continuous_canonicalZorn_x :
+    Continuous (fun X : CZ => X.x) := by
+  have hq : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).1.2) :=
+    continuous_snd.comp (continuous_fst.comp continuous_canonicalZorn_coordinates)
+  have hr : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).2.2) :=
+    continuous_snd.comp (continuous_snd.comp continuous_canonicalZorn_coordinates)
+  rw [show (fun X : CZ => X.x) =
+      (fun X => (cartesianZornLinearEquiv.symm X).1.2 +
+        (cartesianZornLinearEquiv.symm X).2.2) by
+    funext X
+    simp only [cartesianZornLinearEquiv_symm_apply]
+    ext i
+    change X.x i = (X.x i - X.y i) / 2 + (X.x i + X.y i) / 2
+    ring]
+  exact continuous_pi fun i => (continuous_apply i).comp (hq.add hr)
+
+theorem continuous_canonicalZorn_y :
+    Continuous (fun X : CZ => X.y) := by
+  have hq : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).1.2) :=
+    continuous_snd.comp (continuous_fst.comp continuous_canonicalZorn_coordinates)
+  have hr : Continuous (fun X : CZ => (cartesianZornLinearEquiv.symm X).2.2) :=
+    continuous_snd.comp (continuous_snd.comp continuous_canonicalZorn_coordinates)
+  rw [show (fun X : CZ => X.y) =
+      (fun X => (cartesianZornLinearEquiv.symm X).2.2 -
+        (cartesianZornLinearEquiv.symm X).1.2) by
+    funext X
+    simp only [cartesianZornLinearEquiv_symm_apply]
+    ext i
+    change X.y i = (X.x i + X.y i) / 2 - (X.x i - X.y i) / 2
+    ring]
+  exact continuous_pi fun i => (continuous_apply i).comp (hr.sub hq)
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :

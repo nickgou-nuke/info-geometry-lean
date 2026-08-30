@@ -207,6 +207,40 @@ theorem continuous_zMul_y :
       InfoGeometry.Canonical.ZornMatrix.cross p.1.x p.2.x)
   exact (h₁.add h₂).add continuous_canonicalZorn_cross'
 
+theorem continuous_zMul :
+    Continuous (fun p : CZ × CZ => zMul p.1 p.2) := by
+  apply continuous_induced_rng.mpr
+  have ha : Continuous (fun p : CZ × CZ => (zMul p.1 p.2).a) :=
+    continuous_zMul_a
+  have hb : Continuous (fun p : CZ × CZ => (zMul p.1 p.2).b) :=
+    continuous_zMul_b
+  have hx : Continuous (fun p : CZ × CZ => (zMul p.1 p.2).x) :=
+    continuous_zMul_x
+  have hy : Continuous (fun p : CZ × CZ => (zMul p.1 p.2).y) :=
+    continuous_zMul_y
+  have hq₀ : Continuous (fun p : CZ × CZ =>
+      ((zMul p.1 p.2).a + (zMul p.1 p.2).b) / (2 : ℝ)) :=
+    (ha.add hb).div_const 2
+  have hr₀ : Continuous (fun p : CZ × CZ =>
+      ((zMul p.1 p.2).a - (zMul p.1 p.2).b) / (2 : ℝ)) :=
+    (ha.sub hb).div_const 2
+  have hq : Continuous (fun p : CZ × CZ =>
+      fun i => ((zMul p.1 p.2).x i - (zMul p.1 p.2).y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.sub hy)).div_const (2 : ℝ)
+  have hr : Continuous (fun p : CZ × CZ =>
+      fun i => ((zMul p.1 p.2).x i + (zMul p.1 p.2).y i) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.add hy)).div_const (2 : ℝ)
+  change Continuous (fun p : CZ × CZ =>
+    ((((zMul p.1 p.2).a + (zMul p.1 p.2).b) / (2 : ℝ),
+        fun i => ((zMul p.1 p.2).x i - (zMul p.1 p.2).y i) / (2 : ℝ)),
+      (((zMul p.1 p.2).a - (zMul p.1 p.2).b) / (2 : ℝ),
+        fun i => ((zMul p.1 p.2).x i + (zMul p.1 p.2).y i) / (2 : ℝ))))
+  exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :

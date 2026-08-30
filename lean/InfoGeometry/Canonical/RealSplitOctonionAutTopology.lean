@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealSplitOctonionAutAmbient
+import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import Mathlib.Topology.Algebra.Group.ClosedSubgroup
 
 /-!
@@ -17,6 +18,7 @@ namespace InfoGeometry.Canonical
 noncomputable section
 
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
+open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
@@ -86,6 +88,96 @@ theorem continuous_canonicalZorn_y :
     change X.y i = (X.x i + X.y i) / 2 - (X.x i - X.y i) / 2
     ring]
   exact continuous_pi fun i => (continuous_apply i).comp (hr.sub hq)
+
+private theorem continuous_canonicalZorn_dot :
+    Continuous (fun p : CZ × CZ =>
+      InfoGeometry.Canonical.ZornMatrix.dot p.1.x p.2.y) := by
+  have hx : Continuous (fun p : CZ × CZ => p.1.x) :=
+    continuous_canonicalZorn_x.comp continuous_fst
+  have hy : Continuous (fun p : CZ × CZ => p.2.y) :=
+    continuous_canonicalZorn_y.comp continuous_snd
+  change Continuous (fun p : CZ × CZ =>
+    p.1.x 0 * p.2.y 0 + p.1.x 1 * p.2.y 1 + p.1.x 2 * p.2.y 2)
+  exact (((continuous_apply 0).comp hx).mul ((continuous_apply 0).comp hy)).add
+    ((((continuous_apply 1).comp hx).mul ((continuous_apply 1).comp hy)).add
+      (((continuous_apply 2).comp hx).mul ((continuous_apply 2).comp hy)))
+
+private theorem continuous_canonicalZorn_dot' :
+    Continuous (fun p : CZ × CZ =>
+      InfoGeometry.Canonical.ZornMatrix.dot p.1.y p.2.x) := by
+  have hy : Continuous (fun p : CZ × CZ => p.1.y) :=
+    continuous_canonicalZorn_y.comp continuous_fst
+  have hx : Continuous (fun p : CZ × CZ => p.2.x) :=
+    continuous_canonicalZorn_x.comp continuous_snd
+  change Continuous (fun p : CZ × CZ =>
+    p.1.y 0 * p.2.x 0 + p.1.y 1 * p.2.x 1 + p.1.y 2 * p.2.x 2)
+  exact (((continuous_apply 0).comp hy).mul ((continuous_apply 0).comp hx)).add
+    ((((continuous_apply 1).comp hy).mul ((continuous_apply 1).comp hx)).add
+      (((continuous_apply 2).comp hy).mul ((continuous_apply 2).comp hx)))
+
+private theorem continuous_canonicalZorn_cross :
+    Continuous (fun p : CZ × CZ =>
+      InfoGeometry.Canonical.ZornMatrix.cross p.1.y p.2.y) := by
+  apply continuous_pi
+  intro i
+  have hy : Continuous (fun p : CZ × CZ => p.1.y) :=
+    continuous_canonicalZorn_y.comp continuous_fst
+  have hz : Continuous (fun p : CZ × CZ => p.2.y) :=
+    continuous_canonicalZorn_y.comp continuous_snd
+  fin_cases i
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.y 1 * p.2.y 2 - p.1.y 2 * p.2.y 1)
+    exact ((continuous_apply 1).comp hy).mul ((continuous_apply 2).comp hz) |>.sub
+      (((continuous_apply 2).comp hy).mul ((continuous_apply 1).comp hz))
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.y 2 * p.2.y 0 - p.1.y 0 * p.2.y 2)
+    exact ((continuous_apply 2).comp hy).mul ((continuous_apply 0).comp hz) |>.sub
+      (((continuous_apply 0).comp hy).mul ((continuous_apply 2).comp hz))
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.y 0 * p.2.y 1 - p.1.y 1 * p.2.y 0)
+    exact ((continuous_apply 0).comp hy).mul ((continuous_apply 1).comp hz) |>.sub
+      (((continuous_apply 1).comp hy).mul ((continuous_apply 0).comp hz))
+
+private theorem continuous_canonicalZorn_cross' :
+    Continuous (fun p : CZ × CZ =>
+      InfoGeometry.Canonical.ZornMatrix.cross p.1.x p.2.x) := by
+  apply continuous_pi
+  intro i
+  have hx : Continuous (fun p : CZ × CZ => p.1.x) :=
+    continuous_canonicalZorn_x.comp continuous_fst
+  have hz : Continuous (fun p : CZ × CZ => p.2.x) :=
+    continuous_canonicalZorn_x.comp continuous_snd
+  fin_cases i
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.x 1 * p.2.x 2 - p.1.x 2 * p.2.x 1)
+    exact ((continuous_apply 1).comp hx).mul ((continuous_apply 2).comp hz) |>.sub
+      (((continuous_apply 2).comp hx).mul ((continuous_apply 1).comp hz))
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.x 2 * p.2.x 0 - p.1.x 0 * p.2.x 2)
+    exact ((continuous_apply 2).comp hx).mul ((continuous_apply 0).comp hz) |>.sub
+      (((continuous_apply 0).comp hx).mul ((continuous_apply 2).comp hz))
+  · change Continuous (fun p : CZ × CZ =>
+      p.1.x 0 * p.2.x 1 - p.1.x 1 * p.2.x 0)
+    exact ((continuous_apply 0).comp hx).mul ((continuous_apply 1).comp hz) |>.sub
+      (((continuous_apply 1).comp hx).mul ((continuous_apply 0).comp hz))
+
+theorem continuous_zMul_a :
+    Continuous (fun p : CZ × CZ => (zMul p.1 p.2).a) := by
+  change Continuous (fun p : CZ × CZ =>
+    p.1.a * p.2.a +
+      InfoGeometry.Canonical.ZornMatrix.dot p.1.x p.2.y)
+  exact (continuous_canonicalZorn_a.comp continuous_fst).mul
+      (continuous_canonicalZorn_a.comp continuous_snd) |>.add
+    continuous_canonicalZorn_dot
+
+theorem continuous_zMul_b :
+    Continuous (fun p : CZ × CZ => (zMul p.1 p.2).b) := by
+  change Continuous (fun p : CZ × CZ =>
+    p.1.b * p.2.b +
+      InfoGeometry.Canonical.ZornMatrix.dot p.1.y p.2.x)
+  exact (continuous_canonicalZorn_b.comp continuous_fst).mul
+      (continuous_canonicalZorn_b.comp continuous_snd) |>.add
+    continuous_canonicalZorn_dot'
 
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/

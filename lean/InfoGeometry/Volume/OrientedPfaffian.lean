@@ -101,8 +101,7 @@ def matchingSign (M : PerfectMatching m) : ℝ :=
 
 @[simp] theorem matchingSign_sq (M : PerfectMatching m) :
     M.matchingSign ^ 2 = 1 := by
-  rw [pow_two, ← pow_add]
-  simp [matchingSign, ← two_mul, pow_mul]
+  simp [matchingSign, pow_two]
 
 end PerfectMatching
 

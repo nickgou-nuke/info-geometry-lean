@@ -9,11 +9,12 @@ This file introduces the first data-free signed Pfaffian surface used by the
 Hestenes--Krein Gauss--Bonnet corridor.
 
 Unlike `PfaffianMatchingExpansionPacket`, no Pfaffian amplitude or matching
-expansion is supplied as structure data.  The oriented Pfaffian is defined by
+expansion is supplied as structure data. The oriented Pfaffian is defined by
 the standard normalized signed permutation sum.
 
-The hard identities `Pf(A)^2 = det(A)` and congruence covariance are not
-postulated here; they are subsequent theorems to be proved from this owner.
+The hard identities `Pf(A)^2 = det(A)`, congruence covariance, and block-skew
+compatibility are not postulated here; they are subsequent theorems to be
+proved from this owner.
 -/
 
 noncomputable section
@@ -27,7 +28,7 @@ abbrev PairSlot (n : ℕ) := Fin 2 × Fin n
 
 /-- A perfect matching is a fixed-point-free involutive permutation.
 
-This is a genuine finite combinatorial carrier.  No matching amplitude or sign
+This is a genuine finite combinatorial carrier. No matching amplitude or sign
 is stored as external data. -/
 def PerfectMatching (n : ℕ) :=
   {σ : Equiv.Perm (PairSlot n) //
@@ -49,7 +50,7 @@ noncomputable instance perfectMatchingFintype (n : ℕ) : Fintype (PerfectMatchi
 /-- Canonical product attached to a perfect matching.
 
 The lexicographic linear order on `Fin 2 × Fin n` chooses each unordered pair
-exactly once by retaining the smaller endpoint.  This is only the product
+exactly once by retaining the smaller endpoint. This is only the product
 weight; the crossing/orientation sign is deliberately not encoded as data. -/
 def matchingProductWeight
     {n : ℕ}
@@ -70,18 +71,11 @@ def permutationSign
     (σ : Equiv.Perm (PairSlot n)) : ℝ :=
   ((Equiv.Perm.sign σ : ℤ) : ℝ)
 
-@[simp] theorem permutationSign_sq
-    {n : ℕ}
-    (σ : Equiv.Perm (PairSlot n)) :
-    permutationSign σ ^ 2 = 1 := by
-  unfold permutationSign
-  norm_num [sq_eq_one_iff]
-
 /-- The canonical signed oriented Pfaffian on a real `2n × 2n` matrix.
 
 `Pf(A) = 1 / (2^n n!) * Σ_σ sign(σ) ∏_k A_{σ(0,k),σ(1,k)}`.
 
-For skew matrices this is the usual oriented Pfaffian.  The definition is made
+For skew matrices this is the usual oriented Pfaffian. The definition is made
 on all matrices so that skewness remains an explicit theorem hypothesis. -/
 def orientedPfaffian
     (n : ℕ)
@@ -115,11 +109,5 @@ theorem IsSkew.diagonal_zero
     A i i = 0 := by
   have h := hA i i
   linarith
-
-/-- The oriented Pfaffian in dimension zero is the empty-product value `1`. -/
-@[simp] theorem orientedPfaffian_zero_dim :
-    orientedPfaffian 0
-      (0 : Matrix (PairSlot 0) (PairSlot 0) ℝ) = 1 := by
-  simp [orientedPfaffian, permutationSign, permutationPairWeight]
 
 end InfoGeometry.Volume.OrientedPfaffian

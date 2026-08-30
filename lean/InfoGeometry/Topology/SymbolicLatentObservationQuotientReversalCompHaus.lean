@@ -95,5 +95,3 @@ theorem SymbolicLatentObservableModularReversal.toQuotientCompHausHom_flow_rever
     R h_flow h_cont t q
 
 end InfoGeometry.Topology
-
-end

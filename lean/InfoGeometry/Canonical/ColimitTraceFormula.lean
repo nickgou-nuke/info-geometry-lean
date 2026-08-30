@@ -74,5 +74,3 @@ theorem spectralAction_eq_zero_of_agreement
   exact Eq.trans (hagreement s) (by assumption)
 
 end InfoGeometry.Canonical.ColimitTraceFormula
-
-end

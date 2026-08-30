@@ -214,4 +214,6 @@ theorem virasoroProject_cocycle_class_nonzero
     (VirasoroProject.WittAlgebra.virasoroCocycle 𝕜).cohomologyClass ≠ 0 := by
   exact VirasoroProject.WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero 𝕜
 
-end InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
+end SuperVirasoroExtension
+
+end InfoGeometry.OperatorAlgebra

@@ -116,6 +116,5 @@ theorem kms_upper_stage_colimit_transport
 
 end RealBoundaryReadout
 
-end InfoGeometry.Canonical.HestenesKreinColimitRealBoundary
 
-end
+end InfoGeometry.Canonical.HestenesKreinColimitRealBoundary

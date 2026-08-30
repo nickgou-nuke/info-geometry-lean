@@ -166,4 +166,5 @@ theorem wittPairing_nondegenerate_right (v : VMinus) (h : ∀ u : VPlus, wittPai
     simp at h3
     exact h3
 
+
 end InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge

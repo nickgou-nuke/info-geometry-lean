@@ -46,5 +46,3 @@ theorem pellis_normal_form {φ : ℝ} (hφ : φ^2 = φ + 1) :
     nlinarith [h5]
   rw [hdiv2, hdiv3, h31]
   ring_nf
-
-end

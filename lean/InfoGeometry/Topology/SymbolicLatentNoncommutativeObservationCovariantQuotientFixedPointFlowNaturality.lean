@@ -35,5 +35,3 @@ theorem operatorObservationQuotientCovariantFixedPointFlow_naturality
   rfl
 
 end InfoGeometry.Topology
-
-end

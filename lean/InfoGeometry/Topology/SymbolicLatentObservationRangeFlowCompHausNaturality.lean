@@ -50,5 +50,3 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
   rfl
 
 end InfoGeometry.Topology
-
-end

@@ -81,5 +81,3 @@ theorem normalizedTrace_colimit_readout_add
   simp only [Category.assoc]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutColimitDynamicsBridge
-
-end

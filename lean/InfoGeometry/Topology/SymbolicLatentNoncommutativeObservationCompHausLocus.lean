@@ -51,5 +51,3 @@ theorem operatorCommutingLocusCompHausInclusion_apply
   rfl
 
 end InfoGeometry.Topology
-
-end

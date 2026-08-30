@@ -71,5 +71,3 @@ theorem quadraticCliffordGenerator_smul_right (a : ℝ) (v w : V55) :
   simp [quadraticCliffordGenerator]
 
 end InfoGeometry.Canonical.GATLClifford55Bridge
-
-end

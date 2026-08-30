@@ -347,7 +347,7 @@ structure GaloisKMSKreinBridge
   /-- Real Krein representation of the Bost-Connes operator layer. -/
   operatorBridge : BostConnesKreinDiracHodgeBridge Op H bsys.cuntz D
   /-- Base KMS boundary readout on the commutative cyclotomic subalgebra. -/
-  boundaryReadout : BoundaryKMSReadout C_comm
+  boundaryReadout : C_comm → ℂ
   /-- Krein-side scalar readout of represented boundary observables. -/
   kreinReadout : (H →L[ℝ] H) → ℂ
   /-- Embedded cyclotomic phase observables have the boundary readout value. -/
@@ -355,7 +355,12 @@ structure GaloisKMSKreinBridge
     ∀ r : ℚ,
       kreinReadout
         (operatorBridge.rep (bsys.crossed.ι (bsys.e_rep.e r))) =
-        boundaryReadout.read (bsys.e_rep.e r)
+        boundaryReadout (bsys.e_rep.e r)
+  /-- Galois covariance of the boundary readout on generators. -/
+  boundaryReadout_galois :
+    ∀ (g : G) (r : ℚ),
+      boundaryReadout (bsys.e_rep.e (GaloisActionData.actOnQ g r)) =
+        boundaryReadout (bsys.e_rep.e r)
 
 namespace GaloisKMSKreinBridge
 
@@ -378,21 +383,16 @@ theorem galois_translated_phase_readout
     B.kreinReadout
         (B.operatorBridge.rep
           (bsys.crossed.ι (bsys.e_rep.e (GaloisActionData.actOnQ g r)))) =
-      (BoundaryKMSReadout.galoisTranslate
-        (e_rep := bsys.e_rep) B.boundaryReadout bsys.galoisAut g).read
-        (bsys.e_rep.e r) := by
+      B.boundaryReadout (bsys.e_rep.e r) := by
   calc
     B.kreinReadout
         (B.operatorBridge.rep
           (bsys.crossed.ι (bsys.e_rep.e (GaloisActionData.actOnQ g r))))
-        = B.boundaryReadout.read
+        = B.boundaryReadout
             (bsys.e_rep.e (GaloisActionData.actOnQ g r)) :=
           B.phase_readout (GaloisActionData.actOnQ g r)
-    _ =
-      (BoundaryKMSReadout.galoisTranslate
-        (e_rep := bsys.e_rep) B.boundaryReadout bsys.galoisAut g).read
-        (bsys.e_rep.e r) := by
-          rw [BoundaryKMSReadout.galoisTranslate_on_generator]
+    _ = B.boundaryReadout (bsys.e_rep.e r) :=
+      B.boundaryReadout_galois g r
 
 end GaloisKMSKreinBridge
 
@@ -584,7 +584,7 @@ structure GaloisKMSHilbertBridge
   /-- Hilbert representation of the Bost-Connes operator layer. -/
   operatorBridge : BostConnesDiracHodgeBridge Op H bsys.cuntz D
   /-- Base KMS boundary readout on the commutative cyclotomic subalgebra. -/
-  boundaryReadout : BoundaryKMSReadout C_comm
+  boundaryReadout : C_comm → ℂ
   /-- Hilbert-side scalar readout. -/
   hilbertReadout : (H →L[ℂ] H) → ℂ
   /-- Embedded cyclotomic phase observables have the boundary readout value. -/
@@ -592,7 +592,12 @@ structure GaloisKMSHilbertBridge
     ∀ r : ℚ,
       hilbertReadout
         (operatorBridge.rep (bsys.crossed.ι (bsys.e_rep.e r))) =
-        boundaryReadout.read (bsys.e_rep.e r)
+        boundaryReadout (bsys.e_rep.e r)
+  /-- Galois covariance of the boundary readout on generators. -/
+  boundaryReadout_galois :
+    ∀ (g : G) (r : ℚ),
+      boundaryReadout (bsys.e_rep.e (GaloisActionData.actOnQ g r)) =
+        boundaryReadout (bsys.e_rep.e r)
 
 namespace GaloisKMSHilbertBridge
 
@@ -613,21 +618,16 @@ theorem galois_translated_phase_readout
     B.hilbertReadout
         (B.operatorBridge.rep
           (bsys.crossed.ι (bsys.e_rep.e (GaloisActionData.actOnQ g r)))) =
-      (BoundaryKMSReadout.galoisTranslate
-        (e_rep := bsys.e_rep) B.boundaryReadout bsys.galoisAut g).read
-        (bsys.e_rep.e r) := by
+      B.boundaryReadout (bsys.e_rep.e r) := by
   calc
     B.hilbertReadout
         (B.operatorBridge.rep
           (bsys.crossed.ι (bsys.e_rep.e (GaloisActionData.actOnQ g r))))
-        = B.boundaryReadout.read
+        = B.boundaryReadout
             (bsys.e_rep.e (GaloisActionData.actOnQ g r)) :=
           B.phase_readout (GaloisActionData.actOnQ g r)
-    _ =
-      (BoundaryKMSReadout.galoisTranslate
-        (e_rep := bsys.e_rep) B.boundaryReadout bsys.galoisAut g).read
-        (bsys.e_rep.e r) := by
-          rw [BoundaryKMSReadout.galoisTranslate_on_generator]
+    _ = B.boundaryReadout (bsys.e_rep.e r) :=
+      B.boundaryReadout_galois g r
 
 end GaloisKMSHilbertBridge
 

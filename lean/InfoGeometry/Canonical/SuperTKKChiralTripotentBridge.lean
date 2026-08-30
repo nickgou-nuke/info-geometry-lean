@@ -94,5 +94,3 @@ theorem zero_not_defect : ¬ IsDefect zero := by
 end ClosureRole
 
 end InfoGeometry.Canonical.SuperTKKChiralTripotentBridge
-
-end

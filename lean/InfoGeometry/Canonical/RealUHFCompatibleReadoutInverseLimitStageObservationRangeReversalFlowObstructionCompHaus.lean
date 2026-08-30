@@ -129,6 +129,5 @@ theorem no_reversal_flow_square_on_nontrivial_range
     (stageObservationRange_zero_of_reversal_flow_square
       R hreadout ρ n X t ht hsquare z)
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFlowObstructionCompHaus
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFlowObstructionCompHaus

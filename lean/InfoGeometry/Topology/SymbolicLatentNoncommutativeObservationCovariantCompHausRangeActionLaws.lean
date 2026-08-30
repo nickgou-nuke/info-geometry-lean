@@ -85,5 +85,3 @@ theorem operatorObservationRangeCompHausCovariantFlowHom_isIso
         exact Φ.operatorAction_zero _
 
 end InfoGeometry.Topology
-
-end

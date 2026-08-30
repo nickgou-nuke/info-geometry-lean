@@ -394,4 +394,4 @@ theorem spinHamiltonian_ising_decomposition (lam w : ℝ) (σ : Fin N → ℝ) (
 
 end FinitePrimeChainData
 
-end InfoGeometry.Canonical.PrimeLeeYangFerromagnet
+end PrimeLeeYangFerromagnet

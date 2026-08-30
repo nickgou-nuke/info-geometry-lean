@@ -212,4 +212,6 @@ theorem spin_half_prequantization
 
 end FiniteSpinParticleCertificate
 
-end InfoGeometry.Physics.MDPASJMSouriau
+end MDPASJMSouriau
+end Physics
+end InfoGeometry

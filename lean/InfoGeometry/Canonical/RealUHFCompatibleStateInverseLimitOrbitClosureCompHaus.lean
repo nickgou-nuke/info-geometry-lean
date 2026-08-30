@@ -48,6 +48,5 @@ theorem initial_mem_orbitClosure (ρ : carrier) :
     ρ ∈ orbitClosure ρ :=
   flow.initial_mem_orbitClosure ρ
 
-end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitOrbitClosureCompHaus
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitOrbitClosureCompHaus

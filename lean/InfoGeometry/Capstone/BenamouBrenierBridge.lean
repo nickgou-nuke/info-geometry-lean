@@ -163,8 +163,6 @@ theorem jkoFunctor_zero_colimit_apply
 
 end JKO
 
-end InfoGeometry.Capstone.BenamouBrenier
-
 namespace InfoGeometry.Capstone.BenamouBrenierBridge
 
 open TrivSqZeroExt Finset InfoGeometry.Canonical.SouriauOperatorialLogPotential
@@ -244,7 +242,7 @@ end Bridge
 
 end InfoGeometry.Capstone.BenamouBrenierBridge
 
-namespace InfoGeometry.Capstone.UHFHookup
+namespace UHFHookup
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Capstone.BenamouBrenierBridge
 open TrivSqZeroExt Finset
@@ -297,4 +295,5 @@ theorem uhf_duhamel_naturality (n : ℕ) (A B : DiagAlg n) (k : ℕ) :
   rw [map_mul, map_mul, uhfTrivSqZeroExtEmbed_inl, uhfTrivSqZeroExtEmbed_inr, uhfTrivSqZeroExtEmbed_inl]
   rw [diagEmbedSucc_pow, diagEmbedSucc_pow]
 
-end InfoGeometry.Capstone.UHFHookup
+end UHFHookup
+end InfoGeometry.Capstone.BenamouBrenier

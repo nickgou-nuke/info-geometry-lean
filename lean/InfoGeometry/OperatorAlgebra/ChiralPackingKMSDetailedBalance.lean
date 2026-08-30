@@ -154,5 +154,3 @@ theorem cayley_conversion_detailed_balance (β g κ : ℝ) (hκ : κ ≠ 0) :
           (κ * (Real.exp (-2 * β * g) * sheetWeightMinus β g)) := by ring
 
 end InfoGeometry.OperatorAlgebra.ChiralPackingKMSDetailedBalance
-
-end

@@ -117,6 +117,20 @@ theorem thermodynamics_freeEnergy_eq_neg_log_partition
       - Real.log W.thermodynamics.partitionFunction :=
   W.freeEnergy_eq_neg_log_partition
 
+/--
+Canonical vacuum/trivial equilibrium packet where all Ward variations vanish identically.
+-/
+def ofTrivialEquilibrium
+    (V : VirasoroDatum Alg)
+    (T : OperatorFirstThermodynamicsPacket Unit Op) :
+    VirasoroWardEquilibriumPacket Alg Op where
+  virasoro := V
+  thermodynamics := T
+  wardAction := fun _ _ => 0
+  wardConstraint := fun _ => True
+  wardConstraint_eq_zero := fun _ => by simp
+  globalWardConstraint := fun _ _ => trivial
+
 end VirasoroWardEquilibriumPacket
 
 end InfoGeometry.Canonical.VirasoroWardEquilibrium

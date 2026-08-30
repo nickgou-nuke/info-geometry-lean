@@ -426,4 +426,4 @@ theorem freudenthal_identity_full (X : RealAlbertMatrix) :
   rw [hto, hto]
   exact H3Zorn.adjointQuad_adjointQuad (toH3 X)
 
-end InfoGeometry.Algebra.RealAlbertMatrix
+end RealAlbertMatrix

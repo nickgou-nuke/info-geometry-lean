@@ -843,12 +843,16 @@ input_file dagPathingFile where
 
 require InfoGeometryCore from "lib" / "InfoGeometryCore"
 
-require Qq from ".lake/packages/Qq"
-require plausible from ".lake/packages/plausible"
+require Qq from git
+  "https://github.com/leanprover-community/quote4.git"
+  @ "b8f98e9087e02c8553945a2c5abf07cec8e798c3"
+require plausible from git
+  "https://github.com/leanprover-community/plausible.git"
+  @ "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3"
 
--- Enforce a single local mathlib source for this repository.
--- Do not let Lake re-resolve mathlib from the upstream git URL.
-require mathlib from ".lake/packages/mathlib"
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4.git"
+  @ "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
 require Paperproof from git "https://github.com/Paper-Proof/paperproof.git"
   @ "c85fb0b45ce9ebaaa4715c7d043aadda80306c46" / "lean"
 require paranoia from git "https://github.com/oOo0oOo/LeanParanoia.git"
@@ -857,7 +861,7 @@ require LeanArchitect from git "https://github.com/hanwenzhu/LeanArchitect.git"
   @ "54d3fb249685db8e5a564e0b3f331cff77991607"
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
-  @ "v4.28.1"
+  @ "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff"
 
 require «GIFT» from
   "external_refs/gift-framework-core"

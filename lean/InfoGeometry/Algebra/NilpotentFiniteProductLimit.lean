@@ -168,5 +168,3 @@ theorem finite_to_universal_readout (T : ℝ) (N : A) (hN : N * N = 0) :
   exact finite_to_infinite_limit T N hN
 
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
-
-end

@@ -62,5 +62,4 @@ theorem reversal_reverses_flow
   hM t ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMirror
-
 end

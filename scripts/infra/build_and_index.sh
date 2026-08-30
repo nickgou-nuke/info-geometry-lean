@@ -19,18 +19,18 @@ echo "=========================================="
 
 cd "$REPO"
 
-# 1. Set toolchain to v4.28.0
-echo "leanprover/lean4:v4.28.0" > lean-toolchain
+# 1. Set toolchain to v4.28.1
+echo "leanprover/lean4:v4.28.1" > lean-toolchain
 
-# 2. Change mathlib pin to v4.28.0 in lakefile (handle all formats)
+# 2. Change mathlib pin to v4.28.1 in lakefile (handle all formats)
 if [ -f lakefile.lean ]; then
     # Format: require mathlib from git "URL" @ "v4.X.Y.Z"
-    sed -i 's|@ "v4\.[0-9]*\.[0-9]*\(-rc[0-9]*\)\?"|@ "v4.28.0"|g' lakefile.lean
+    sed -i 's|@ "v4\.[0-9]*\.[0-9]*\(-rc[0-9]*\)\?"|@ "v4.28.1"|g' lakefile.lean
     # Format: require "mathlib" from git "URL" @ "commithash"
-    sed -i 's|require "mathlib" from git "[^"]*" @ "[^"]*"|require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.0"|' lakefile.lean
+    sed -i 's|require "mathlib" from git "[^"]*" @ "[^"]*"|require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"|' lakefile.lean
 fi
 
-# 3. Update manifest to reflect v4.28.0 mathlib
+# 3. Update manifest to reflect v4.28.1 mathlib
 if [ -f lake-manifest.json ]; then
     python3 -c "
 import json
@@ -39,7 +39,7 @@ with open('lake-manifest.json') as f:
 changed = False
 for pkg in data.get('packages', []):
     if pkg.get('name') in ('mathlib', 'mathlib4'):
-        pkg['rev'] = 'v4.28.0'
+        pkg['rev'] = 'v4.28.1'
         changed = True
 if changed:
     with open('lake-manifest.json', 'w') as f:

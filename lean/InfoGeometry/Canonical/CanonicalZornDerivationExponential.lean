@@ -41,7 +41,7 @@ noncomputable def zornFlowRealAut
       rw [InfoGeometry.Lie.CanonicalZornDerivationExponential.coordLE_zornFlowLinearEquiv]
       have hcoord : coordEnd D.1
           (InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.coordLE (1 : CZ)) = 0 := by
-        rw [coordEnd_coordLE, derivation_apply_one]
+        rw [coordEnd_apply_coordLE, derivation_apply_one]
         simp
       exact InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv_fixed_of_derivation_eq_zero
         (coordEnd D.1)

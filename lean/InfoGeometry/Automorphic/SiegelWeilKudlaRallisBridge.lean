@@ -391,4 +391,94 @@ theorem projectedL_shift_eq_pairing_div_inner_bad
 
 end RankinSelbergProjectedLBridge
 
+namespace RankinSelbergThetaIntegralWitness
+
+/-- Canonical trivial instance of RankinSelbergThetaIntegralWitness. -/
+def ofTrivial (Cusp : Type*) : RankinSelbergThetaIntegralWitness Cusp where
+  rankinSelbergPairing := fun _ _ _ => 1
+  innerProductH := fun _ _ => 1
+  standardL := fun _ => 1
+  badFactor := fun _ => 1
+  rankinSelberg_identity := by
+    intro f₁ f₂ s
+    simp
+
+end RankinSelbergThetaIntegralWitness
+
+namespace SiegelWeilKudlaRallisFormulaWitness
+
+/-- Canonical trivial instance of SiegelWeilKudlaRallisFormulaWitness. -/
+def ofTrivial (GState Value : Type*) (s₀ : ℂ) (val : Value) :
+    SiegelWeilKudlaRallisFormulaWitness GState Value where
+  criticalPoint := s₀
+  eisenstein := fun _ _ => val
+  thetaTrivial := fun _ => val
+  siegel_weil_formula := by intro g; rfl
+
+end SiegelWeilKudlaRallisFormulaWitness
+
+namespace PullbackDecompositionFormulaWitness
+
+/-- Canonical single-cusp instance of PullbackDecompositionFormulaWitness. -/
+def ofSingleton (Cusp GState : Type*) (f₀ : Cusp) :
+    PullbackDecompositionFormulaWitness Cusp GState where
+  basis := {f₀}
+  pullbackEisenstein := fun _ _ => 1
+  evalLeft := fun _ _ => 1
+  evalRight := fun _ _ => 1
+  normalizedCoefficient := fun _ => 1
+  decomposition_law := by
+    intro g₁ g₂
+    simp
+
+end PullbackDecompositionFormulaWitness
+
+namespace RationalFiniteFourierWitness
+
+/-- Canonical instance of RationalFiniteFourierWitness from any rational-valued function. -/
+def ofRational (Cusp CoeffIndex : Type*) (q : Cusp → CoeffIndex → ℚ) :
+    RationalFiniteFourierWitness Cusp CoeffIndex where
+  finiteFourierPart := fun f a => (q f a : ℂ)
+  finiteFourierPart_rational := by
+    intro f a
+    exact ⟨q f a, rfl⟩
+
+end RationalFiniteFourierWitness
+
+namespace NormalizedSpecialValueRationalityWitness
+
+/-- Canonical instance of NormalizedSpecialValueRationalityWitness from rational special values. -/
+def ofRational (Cusp : Type*) (q : Cusp → ℚ) :
+    NormalizedSpecialValueRationalityWitness Cusp where
+  lambda := fun f => (q f : ℂ)
+  selfInner := fun _ => 1
+  normalizedSpecialValue := fun f => (q f : ℂ)
+  normalizedSpecialValue_eq := by
+    intro f
+    simp
+  normalizedSpecialValue_rational f := ⟨q f, rfl⟩
+/-- Canonical constructor from a rational scalar factor and non-vanishing Petersson norm. -/
+def ofRationalFactor
+    (Cusp : Type*)
+    (c : ℚ)
+    (inner : Cusp → ℂ)
+    (h_inner : ∀ f : Cusp, inner f ≠ 0) :
+    NormalizedSpecialValueRationalityWitness Cusp where
+  lambda f := (c : ℂ) * inner f
+  selfInner := inner
+  normalizedSpecialValue _ := (c : ℂ)
+  normalizedSpecialValue_eq f := by
+    simp [mul_div_cancel_right₀ (c : ℂ) (h_inner f)]
+  normalizedSpecialValue_rational _ := ⟨c, rfl⟩
+
+/-- Rationality of the normalized special value quotient λ(f) / ⟨f,f⟩ ∈ ℚ. -/
+theorem lambda_div_selfInner_is_rational
+    (R : NormalizedSpecialValueRationalityWitness Cusp)
+    (f : Cusp) :
+    ∃ q : ℚ, R.lambda f / R.selfInner f = (q : ℂ) :=
+  R.lambda_div_inner_is_rational f
+
+end NormalizedSpecialValueRationalityWitness
+
 end InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
+

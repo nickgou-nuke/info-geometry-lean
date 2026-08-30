@@ -113,6 +113,5 @@ theorem relation_package (z w : ℝ) :
   exact ⟨s_sq, sX_eq_Xinv_s z, sY_eq_neg_Ys w, XY_eq_YX z w,
     sXs_eq_Xinv z, sYs_eq_Yneg w⟩
 
-end AubertPlymen
 
-end
+end AubertPlymen

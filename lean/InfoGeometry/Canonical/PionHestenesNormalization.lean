@@ -166,5 +166,3 @@ theorem pionPhaseRotor_closed_form (θ : ℝ) :
   exact KRotation_eq_cos_add_sin_K (E := E) (θ / 2)
 
 end InfoGeometry.Canonical.PionHestenesNormalization
-
-end

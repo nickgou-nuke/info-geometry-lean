@@ -569,5 +569,3 @@ theorem MoebiusParameter.toUnitHom_injective :
   exact MoebiusParameter.toUnit_injective heq
 
 end InfoGeometry.Krein.HestenesMoebiusClosureBridge
-
-end

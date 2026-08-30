@@ -40,5 +40,3 @@ theorem circularPeirceQuadratic_diagonal_eq_canonical_pauliDet
   exact (det_pauliMatrix v).symm ▸ rfl
 
 end InfoGeometry.Lie.SplitOctonionCircularQuadraticCoherence
-
-end

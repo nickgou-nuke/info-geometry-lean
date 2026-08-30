@@ -43,5 +43,4 @@ theorem normalizedTraceInverseLimitPoint_projection
   simpa [TopCat.comp_app, readoutInverseCone, coordinateTopCatHom] using h
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPoint
-
 end

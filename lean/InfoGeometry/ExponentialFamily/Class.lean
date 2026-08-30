@@ -122,5 +122,3 @@ noncomputable instance
   density := multinomialDensity
   density_eq := multinomial_density_eq
   normalization := multinomial_normalization
-
-end

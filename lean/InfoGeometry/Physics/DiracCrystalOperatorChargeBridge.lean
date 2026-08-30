@@ -67,5 +67,3 @@ theorem oddQuarterTurn_preserves_centrality (Z : M2C)
   simpa only [neg_mul, mul_neg] using congrArg Neg.neg (hZ X)
 
 end InfoGeometry.Physics.DiracCrystalOperatorChargeBridge
-
-end

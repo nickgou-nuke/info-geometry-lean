@@ -30,6 +30,22 @@ def toCanonical (X : ZornMatrixReal) : ZornVectorMatrix ℝ :=
     w := vecToCanonical X.v
     b := X.b }
 
+/-! Factor-level coordinate readbacks used by the finite Jordan transport.
+The canonical carrier stores the first vector factor as `v 1`; this is the
+native counterpart of the source-side `u.2.1` coordinate. -/
+
+@[simp] theorem toCanonical_x1 (X : ZornMatrixReal) :
+    (toCanonical X).v 1 = X.u.2.1 := by
+  rfl
+
+@[simp] theorem toCanonical_x2 (X : ZornMatrixReal) :
+    (toCanonical X).v 2 = X.u.2.2 := by
+  rfl
+
+@[simp] theorem toCanonical_y2 (X : ZornMatrixReal) :
+    (toCanonical X).w 2 = X.v.2.2 := by
+  rfl
+
 def fromCanonical (X : ZornVectorMatrix ℝ) : ZornMatrixReal :=
   { a := X.a
     b := X.b
@@ -73,6 +89,33 @@ theorem canonicalEquiv_add (X Y : ZornMatrixReal) :
       ZornVectorMatrix.add (canonicalEquiv X) (canonicalEquiv Y) := by
   exact toCanonical_add X Y
 
+theorem canonicalEquiv_symm_add (X Y : ZornVectorMatrix ℝ) :
+    canonicalEquiv.symm (ZornVectorMatrix.add X Y) =
+      canonicalEquiv.symm X + canonicalEquiv.symm Y := by
+  apply canonicalEquiv.injective
+  simp only [canonicalEquiv_add, Equiv.apply_symm_apply]
+
+theorem canonicalEquiv_neg (X : ZornMatrixReal) :
+    canonicalEquiv (ZornMatrixReal.neg X) =
+      ZornVectorMatrix.neg (canonicalEquiv X) := by
+  apply ZornVectorMatrix.ext
+  · rfl
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
+        ZornMatrixReal.neg, ZornVectorMatrix.neg, smul]
+  · funext i
+    fin_cases i <;>
+      simp [canonicalEquiv, toCanonical, vecToCanonical,
+        ZornMatrixReal.neg, ZornVectorMatrix.neg, smul]
+  · rfl
+
+theorem canonicalEquiv_symm_neg (X : ZornVectorMatrix ℝ) :
+    canonicalEquiv.symm (ZornVectorMatrix.neg X) =
+      ZornMatrixReal.neg (canonicalEquiv.symm X) := by
+  apply canonicalEquiv.injective
+  simp only [canonicalEquiv_neg, Equiv.apply_symm_apply]
+
 theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
     canonicalEquiv (X * Y) =
       ZornVectorMatrix.mul (canonicalEquiv X) (canonicalEquiv Y) := by
@@ -95,6 +138,12 @@ theorem canonicalEquiv_mul (X Y : ZornMatrixReal) :
       Fin.sum_univ_three]
     ring
 
+theorem canonicalEquiv_symm_mul (X Y : ZornVectorMatrix ℝ) :
+    canonicalEquiv.symm (ZornVectorMatrix.mul X Y) =
+      canonicalEquiv.symm X * canonicalEquiv.symm Y := by
+  apply canonicalEquiv.injective
+  simp only [canonicalEquiv_mul, Equiv.apply_symm_apply]
+
 def realConj (X : ZornMatrixReal) : ZornMatrixReal :=
   { a := X.b
     b := X.a
@@ -113,5 +162,11 @@ theorem canonicalEquiv_conj (X : ZornMatrixReal) :
     fin_cases i <;> simp [canonicalEquiv, toCanonical, vecToCanonical,
       realConj, smul, ZornVectorMatrix.conj]
   · rfl
+
+theorem canonicalEquiv_symm_conj (X : ZornVectorMatrix ℝ) :
+    canonicalEquiv.symm (ZornVectorMatrix.conj X) =
+      realConj (canonicalEquiv.symm X) := by
+  apply canonicalEquiv.injective
+  simp only [canonicalEquiv_conj, Equiv.apply_symm_apply]
 
 end InfoGeometry.Exceptional.RealZorn

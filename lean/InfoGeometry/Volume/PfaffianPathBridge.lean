@@ -213,6 +213,55 @@ theorem PfaffianMatchingExpansionPacket.determinantEvenVolume_eq_zero_iff
   rw [← P.pfaffian_sq_eq_determinantEvenVolume]
   exact sq_eq_zero_iff
 
+/--
+Canonical vacuum constructor for the 0 × 0 empty boundary.
+The Pfaffian amplitude is 1, matching the empty product / empty determinant `det(∅) = 1`.
+-/
+noncomputable def PfaffianMatchingExpansionPacket.ofEmpty : PfaffianMatchingExpansionPacket where
+  skewPairing :=
+    { Boundary := Empty
+      boundaryFinite := inferInstance
+      boundaryDecidableEq := inferInstance
+      W := fun i _ => nomatch i
+      skew := fun i _ => nomatch i }
+  PerfectPairing := Unit
+  pairingFinite := inferInstance
+  pairingSign _ := 1
+  pairingSign_sq _ := by norm_num
+  pairingProductWeight _ := 1
+  matchingExpansion := 1
+  pfaffianAmplitude := 1
+  determinantEvenVolume := 1
+  matchingExpansion_sumWitness := by simp
+  pfaffian_eq_matchingExpansion := rfl
+  pfaffian_sq_eq_determinantEvenVolume := by norm_num
+
+/--
+Canonical constructor for a 2 × 2 skew matrix with entry `a`.
+The boundary has 2 defects {0, 1}, with unique pairing (0, 1) of weight `a`.
+The Pfaffian amplitude is `a` and the determinant shadow is `a²`, satisfying `Pf(W)² = det(W) = a²`.
+-/
+noncomputable def PfaffianMatchingExpansionPacket.ofTwoByTwo (a : ℝ) : PfaffianMatchingExpansionPacket where
+  skewPairing :=
+    { Boundary := Fin 2
+      boundaryFinite := inferInstance
+      boundaryDecidableEq := inferInstance
+      W := fun i j => if i = 0 ∧ j = 1 then a else if i = 1 ∧ j = 0 then -a else 0
+      skew := by
+        intro i j
+        fin_cases i <;> fin_cases j <;> simp }
+  PerfectPairing := Unit
+  pairingFinite := inferInstance
+  pairingSign _ := 1
+  pairingSign_sq _ := by norm_num
+  pairingProductWeight _ := a
+  matchingExpansion := a
+  pfaffianAmplitude := a
+  determinantEvenVolume := a ^ 2
+  matchingExpansion_sumWitness := by simp
+  pfaffian_eq_matchingExpansion := rfl
+  pfaffian_sq_eq_determinantEvenVolume := rfl
+
 /-! ## 3. Compatibility with positive-branch Pfaffian -/
 
 /--

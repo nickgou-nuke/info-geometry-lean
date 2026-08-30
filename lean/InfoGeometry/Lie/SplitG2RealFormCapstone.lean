@@ -71,5 +71,3 @@ theorem split_g2_real_form_capstone :
     ⟨nativeRootIndex_injective, nativeRootIndex_surjective⟩⟩
 
 end InfoGeometry.Lie.SplitG2RealFormCapstone
-
-end

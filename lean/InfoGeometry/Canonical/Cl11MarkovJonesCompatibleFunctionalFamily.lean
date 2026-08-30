@@ -46,5 +46,3 @@ theorem cl11TopCatReadout_matches_functionalFamily
   exact cl11_normalizedTrace_one_step n A
 
 end InfoGeometry.Canonical.Cl11MarkovJonesCompatibleFunctionalFamily
-
-end

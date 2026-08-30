@@ -54,5 +54,3 @@ theorem scalarRescaling_exp_add
   rw [Real.exp_add, smul_smul]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutScalarDynamicsBridge
-
-end

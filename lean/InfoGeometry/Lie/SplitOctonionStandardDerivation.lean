@@ -67,12 +67,12 @@ theorem canonical_derivation_finrank :
 
 private def canonicalL (x : CanonicalZorn) : CanonicalZorn →ₗ[ℝ] CanonicalZorn where
   toFun z := x * z
-  map_add' := mul_add x
+  map_add' := _root_.mul_add x
   map_smul' r z := mul_smul r x z
 
 private def canonicalR (x : CanonicalZorn) : CanonicalZorn →ₗ[ℝ] CanonicalZorn where
   toFun z := z * x
-  map_add' z w := add_mul z w x
+  map_add' z w := _root_.add_mul z w x
   map_smul' r z := smul_mul r z x
 
 /-- The standard endomorphism written directly in canonical Zorn coordinates. -/

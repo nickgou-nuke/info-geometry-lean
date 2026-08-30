@@ -186,5 +186,3 @@ theorem grand_berry_keating_mobius_apollonius_ccr_synthesis
    F_B_F_eq_R⟩
 
 end InfoGeometry.Quantum.BerryKeatingCCR
-
-end

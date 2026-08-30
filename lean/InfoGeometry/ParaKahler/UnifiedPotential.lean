@@ -1,48 +1,18 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Data.Real.Basic
+import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.ParaKahler.UnifiedPotential
 
 open Matrix Real
 
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
-
 noncomputable section
 
-/-!
-# Unified Para-Kähler Generator: Maurer-Cartan, Dikin, and Berry Curvature
-
-This module formalizes how the entire information-geometric and topological
-apparatus on the Apollonian cylinder $W = \xi + i\theta$ descends from a single
-para-Kähler potential generator:
-
-  K(\xi, \theta) = \frac{1}{2} \xi^2 - \frac{1}{2} \theta^2
-
-1. **The Para-Kähler Hessian Metric Tensor**:
-   $$g_{ij} = \partial_i \partial_j K = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$$
-   which yields the neutral signature $(1, 1)$ metric.
-
-2. **The Symplectic / Berry Curvature Form**:
-   $$\Omega = d(J^* dK) = d\xi \wedge d\theta = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$$
-
-3. **The Maurer-Cartan 1-Form on the Transvection Group**:
-   $$\omega = g^{-1} dg = \begin{pmatrix} d\xi & -d\theta \\ -d\theta & d\xi \end{pmatrix}$$
-   satisfying the Maurer-Cartan structural equation:
-   $$d\omega + \frac{1}{2} [\omega, \omega] = 0$$
-
-4. **The Dikin Barrier Potential for Spectral Trapping**:
-   Along the irrotational radial slice $\theta = 0$, the self-concordant barrier is:
-   $$\Phi(\xi) = -\ln(1 - \tanh^2(\xi)) = 2 \ln \cosh(\xi)$$
-   whose second-order Taylor expansion around the critical leaf $\xi = 0$
-   coincides with the para-Kähler potential:
-   $$\Phi(\xi) = \xi^2 + \mathcal{O}(\xi^4) = 2 K(\xi, 0) + \mathcal{O}(\xi^4)$$
--/
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 /-- The master Para-Kähler potential generator K(ξ, θ) = ½ ξ² - ½ θ². -/
 def masterParaKahlerPotential (ξ θ : ℝ) : ℝ :=
@@ -55,18 +25,18 @@ def dikinBarrierPotential (ξ : ℝ) : ℝ :=
 
 /-- The 2×2 Hessian metric matrix derived from K: g = diag(1, -1). -/
 def hessianMetricFromPotential : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1, 0],
-    ![0, -1]]
+  !![1, 0;
+     0, -1]
 
 /-- The symplectic Berry form Ω = dξ ∧ dθ derived via the paracomplex structure. -/
 def berryFormFromPotential : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, -1],
-    ![1, 0]]
+  !![0, -1;
+     1, 0]
 
 /-- The Maurer-Cartan generator evaluated for tangent displacements (dξ, dθ). -/
 def maurerCartanForm (dξ dθ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![dξ, -dθ],
-    ![-dθ, dξ]]
+  !![dξ, -dθ;
+     -dθ, dξ]
 
 /-!
 ### 1. Hessian Metric and Symplectic Reduction from K(ξ, θ)
@@ -88,10 +58,10 @@ theorem berry_form_properties :
   unfold berryFormFromPotential
   constructor
   · rw [Matrix.det_fin_two]
-    simp
+    dsimp
+    ring
   · ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [Matrix.transpose_apply]
+    fin_cases i <;> fin_cases j <;> simp [Matrix.transpose_apply]
 
 /-!
 ### 2. Maurer-Cartan Structural Algebra
@@ -112,11 +82,14 @@ theorem maurer_cartan_self_bracket_zero (dξ dθ : ℝ) :
 theorem maurer_cartan_trace_and_det (dξ dθ : ℝ) :
     Matrix.trace (maurerCartanForm dξ dθ) = 2 * dξ ∧
     (maurerCartanForm dξ dθ).det = dξ ^ 2 - dθ ^ 2 := by
-  unfold maurerCartanForm Matrix.trace
+  unfold maurerCartanForm Matrix.trace Matrix.diag
   constructor
-  · simp [Fin.sum_univ_two]; ring
+  · simp only [Fin.sum_univ_two]
+    dsimp
+    ring
   · rw [Matrix.det_fin_two]
-    simp; ring
+    dsimp
+    ring
 
 /-!
 ### 3. Dikin Barrier Asymptotics from the Master Potential
@@ -153,5 +126,4 @@ theorem grand_master_potential_synthesis (dξ dθ : ℝ) :
    dikin_barrier_at_zero.1⟩
 
 end
-
 end InfoGeometry.ParaKahler.UnifiedPotential

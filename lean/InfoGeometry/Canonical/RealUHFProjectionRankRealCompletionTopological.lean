@@ -76,5 +76,3 @@ theorem compatibleToRealInterval_normalized
       dyadicToRealInterval (S.normalizedReadoutInterval 0) := rfl
 
 end InfoGeometry.Canonical.RealUHFProjectionRankRealCompletionTopological
-
-end

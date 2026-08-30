@@ -320,5 +320,3 @@ end Bridge
 end Core
 
 end InfoGeometry.Krein.HestenesCPTONNDualityBridge
-
-end

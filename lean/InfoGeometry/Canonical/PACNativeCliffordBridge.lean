@@ -213,6 +213,6 @@ theorem pacProjectiveNonzeroNull55_to_nativeBoundary_independent
       pac55ToV55 X
   rw [← pac55ToV55_smul, hscale]
 
-end InfoGeometry.Canonical.PACNativeCliffordBridge
+end PACNativeCliffordBridge
 
-end
+end Canonical

@@ -52,5 +52,3 @@ theorem dim_quotient_two : Module.finrank ℚ (R ⧸ I) = 2 := by
   calc
     Module.finrank ℚ (R ⧸ I) = Module.finrank ℚ (ℚ[X][Y] ⧸ J) := hmv
     _ = 2 := hbiv
-
-end

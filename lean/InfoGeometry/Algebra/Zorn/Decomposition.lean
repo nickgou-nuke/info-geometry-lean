@@ -123,7 +123,6 @@ theorem cell_sector_decomposition (X : ZornCell R) :
   · simp [diagSector, offDiagSector, addZ]
 
 end ZornCell
+
+
 end InfoGeometry.Algebra.Zorn.ConcreteComposition
-
-
-end

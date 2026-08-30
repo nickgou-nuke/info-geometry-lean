@@ -199,6 +199,5 @@ theorem sedenion_spinor_finite_digest_packet :
     SteeringSector.sum_tripletCardinality_eq_fifteen,
     natSub_nonassociative_property⟩
 
-end InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 
-end
+end InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge

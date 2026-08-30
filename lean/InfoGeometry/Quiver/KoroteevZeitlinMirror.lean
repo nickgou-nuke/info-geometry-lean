@@ -565,5 +565,3 @@ theorem X_kl_vw_swap (k l : ℕ)
   · intro j; rfl
 
 end KoroteevZeitlin
-
-end

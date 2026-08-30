@@ -952,4 +952,4 @@ end ZeroSetSymmetry
 
 end ZetaAffineChart
 
-end InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+end ZetaCoordinateSymmetry

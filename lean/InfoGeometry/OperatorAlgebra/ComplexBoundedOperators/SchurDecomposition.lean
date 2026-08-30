@@ -338,7 +338,59 @@ namespace SchurDecompositionPacket
 
 variable {K : Type*} [Field K] {n : ℕ}
 
+/-- Canonical Schur decomposition of the 0-by-0 empty matrix. -/
+def ofZero (K : Type*) [Field K] : SchurDecompositionPacket K 0 where
+  A := 0
+  eigenvalues := []
+  B := 0
+  P := 1
+  Q := 1
+  factorization := by ext i; exact i.elim0
+  P_mul_Q := by ext i; exact i.elim0
+  Q_mul_P := by ext i; exact i.elim0
+  upper_triangular := by intro i; exact i.elim0
+  diag_eq := rfl
+
+/-- Canonical Schur decomposition of a 1-by-1 matrix. -/
+def ofOne (K : Type*) [Field K] (c : K) : SchurDecompositionPacket K 1 where
+  A := fun _ _ => c
+  eigenvalues := [c]
+  B := fun _ _ => c
+  P := 1
+  Q := 1
+  factorization := by
+    ext i j
+    fin_cases i; fin_cases j
+    simp
+  P_mul_Q := by simp
+  Q_mul_P := by simp
+  upper_triangular := by
+    intro i j hij
+    have hi : i = 0 := Subsingleton.elim i 0
+    have hj : j = 0 := Subsingleton.elim j 0
+    rw [hi, hj] at hij
+    exact (lt_irrefl (0 : Fin 1) hij).elim
+  diag_eq := by
+    unfold diagList
+    simp
+
+/-- Canonical Schur decomposition of an upper-triangular matrix (similarity via identity). -/
+def ofUpperTriangular (K : Type*) [Field K] {n : ℕ}
+    (B : Matrix (Fin n) (Fin n) K) (hB : UpperTriangular B) :
+    SchurDecompositionPacket K n where
+  A := B
+  eigenvalues := diagList B
+  B := B
+  P := 1
+  Q := 1
+  factorization := by simp
+  P_mul_Q := by simp
+  Q_mul_P := by simp
+  upper_triangular := hB
+  diag_eq := rfl
+
 /-- Similarity property carried by a Schur packet. -/
+
 def similarWitness (S : SchurDecompositionPacket K n) :
     SimilarMatrixWitness S.A S.B where
   P := S.P
@@ -682,4 +734,5 @@ theorem char_poly_0_block' (P : CharpolyLowerBlockPacket K n m) :
 
 end CharpolyLowerBlockPacket
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition
+end SchurDecomposition
+

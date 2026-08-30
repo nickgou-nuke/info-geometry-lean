@@ -25,6 +25,31 @@ def fromZorn (X : ZornVectorMatrix ℝ) : RealSplitOct :=
     y1 := X.w 1
     y2 := X.w 2 }
 
+/-! Coordinate readbacks for factor-level transport.  These are kept as
+explicit lemmas so downstream Jordan/Freudenthal proofs can rewrite a single
+component without unfolding the whole carrier equivalence. -/
+
+@[simp] theorem fromZorn_x1 (X : ZornVectorMatrix ℝ) :
+    (fromZorn X).x1 = X.v 1 := rfl
+
+@[simp] theorem fromZorn_x2 (X : ZornVectorMatrix ℝ) :
+    (fromZorn X).x2 = X.v 2 := rfl
+
+@[simp] theorem fromZorn_y2 (X : ZornVectorMatrix ℝ) :
+    (fromZorn X).y2 = X.w 2 := rfl
+
+@[simp] theorem toZorn_x1 (X : RealSplitOct) :
+    (toZorn X).v 1 = X.x1 := by
+  rfl
+
+@[simp] theorem toZorn_x2 (X : RealSplitOct) :
+    (toZorn X).v 2 = X.x2 := by
+  rfl
+
+@[simp] theorem toZorn_y2 (X : RealSplitOct) :
+    (toZorn X).w 2 = X.y2 := by
+  rfl
+
 def equiv : RealSplitOct ≃ ZornVectorMatrix ℝ where
   toFun := toZorn
   invFun := fromZorn

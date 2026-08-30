@@ -65,5 +65,3 @@ theorem continuousOn_grothendieckLog :
   simpa [grothendieckLog] using
     (continuousOn_id.clog (fun z hz => hz) :
       ContinuousOn (fun z : ℂ => Complex.log z) Complex.slitPlane)
-
-end

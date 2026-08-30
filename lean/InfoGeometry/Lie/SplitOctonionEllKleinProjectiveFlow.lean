@@ -37,7 +37,8 @@ private theorem ellFlowActive_ne_zero (t : ℝ) (X : ActiveSector)
   intro h
   apply hX
   apply (ellFlowActive t).injective
-  simpa using h
+  rw [(ellFlowActive t).map_zero]
+  exact h
 
 @[simp] theorem ellFlowActiveProjectiveMap_mk (t : ℝ)
     (X : ActiveSector) (hX : X ≠ 0) :

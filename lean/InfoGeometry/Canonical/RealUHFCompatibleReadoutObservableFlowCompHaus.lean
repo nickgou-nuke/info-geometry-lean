@@ -72,5 +72,4 @@ theorem mirror_flow_square (D : ReversalData) (t : ℝ) :
   exact D.reverses_flow t ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutObservableFlowCompHaus
-
 end

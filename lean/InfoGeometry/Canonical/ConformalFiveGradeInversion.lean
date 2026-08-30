@@ -249,6 +249,22 @@ theorem mem_center_iff_mem_center (x : L) :
       simpa using this
     simpa using hθθ
 
+/-- Standard five-grade inversion on ConformalGrade. -/
+def standardInversion : FiveGradedConformalInversion ConformalGrade where
+  theta := ConformalGrade.swap
+  grade := id
+  theta_involutive := ConformalGrade.swap_swap
+  grade_swap := fun _ => rfl
+
+/-- Trivial zero-grade inversion on Unit. -/
+def unitInversion : FiveGradedConformalInversion Unit where
+  theta := id
+  grade := fun _ => ConformalGrade.zero
+  theta_involutive := fun _ => rfl
+  grade_swap := fun _ => rfl
+
 end FiveGradedConformalInversion
 
-end InfoGeometry.Canonical.ConformalFiveGradeInversion
+end ConformalFiveGradeInversion
+
+

@@ -59,5 +59,3 @@ noncomputable def boundaryReadoutCompHausIso
   rfl
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHaus
-
-end

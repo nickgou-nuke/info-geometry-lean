@@ -76,5 +76,4 @@ theorem stageObservationRangeFlowCompHausIso_trans_apply
   exact stageObservationRangeFlowHomeomorph_trans_apply ρ n X s t z
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeFlowCompHaus
-
 end

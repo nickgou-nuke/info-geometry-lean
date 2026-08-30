@@ -95,6 +95,6 @@ theorem identityProjectionSystem_realReadout (n : ℕ) :
     RealUHFProjectionRankSystem.normalizedReadoutInterval,
     identityProjectionSystem_readout]
 
-end InfoGeometry.Canonical.RealUHFProjectionRankCanonicalEndpoints
+end RealUHFProjectionRankCanonicalEndpoints
 
-end
+end Canonical

@@ -197,7 +197,7 @@ Do not hand-curate those surfaces as if they were source of truth.
 
 ## What Changed In This Audit
 
-On 2026-07-09, `InfoGeometry.All` successfully compiled 21,661 jobs. The Markdown corpus was reclassified so old notes and generated reports stop presenting themselves as current repository truth. Duplicate namespaces were completely removed to stabilize the Lean build structure.
+On 2026-07-09, `InfoGeometry.All` successfully compiled. The Markdown corpus was reclassified so old notes and generated reports stop presenting themselves as current repository truth. Duplicate namespaces were completely removed to stabilize the Lean build structure.
 
 ## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding
 

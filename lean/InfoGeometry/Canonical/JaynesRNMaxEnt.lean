@@ -11,4 +11,4 @@ bridge files extend this namespace with additional theorems.
 
 namespace InfoGeometry.Canonical.JaynesRNMaxEnt
 
-end InfoGeometry.Canonical.JaynesRNMaxEnt
+end JaynesRNMaxEnt

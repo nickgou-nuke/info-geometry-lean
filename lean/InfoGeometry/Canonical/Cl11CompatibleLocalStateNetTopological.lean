@@ -46,6 +46,5 @@ theorem normalizedTraceTopCatHom_restrict
     normalizedTrace (n + 1) X
   exact normalizedTrace_stageRestrict n X
 
-end InfoGeometry.Canonical.Cl11CompatibleLocalStateNetTopological
 
-end
+end InfoGeometry.Canonical.Cl11CompatibleLocalStateNetTopological

@@ -119,5 +119,3 @@ noncomputable def operatorObservationRangeCovariantFlowCompHausIso
   rw [operatorObservationRangeCovariantFlowHomeomorph_apply]
 
 end InfoGeometry.Topology
-
-end

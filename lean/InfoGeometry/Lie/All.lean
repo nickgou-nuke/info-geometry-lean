@@ -114,6 +114,7 @@ import InfoGeometry.Lie.CanonicalZornStandardDerivationActions
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
+import InfoGeometry.Lie.CanonicalZornDerivationFlowDerivative
 import InfoGeometry.Lie.CanonicalZornDerivationCentralKernel
 import InfoGeometry.Lie.CanonicalZornDerivationFlow
 import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
@@ -217,6 +218,7 @@ import InfoGeometry.Lie.Witt44IntoWitt55Bridge
 import InfoGeometry.Lie.SplitOctonionLeftRightAssociatorCommutantBridge
 import InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
+import InfoGeometry.Lie.CanonicalZornDerivationLane
 import InfoGeometry.Lie.SplitOctonionWittPairingTransportBridge
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 import InfoGeometry.Lie.CanonicalZornRootWittBlockBridge

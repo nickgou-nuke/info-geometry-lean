@@ -136,6 +136,5 @@ theorem biquaternion_split_biquaternion_sign_packet :
   exact ⟨complexScalarTimesQuatK_sq, hL_sq,
     hyperbolicTensorSplitK_sq, hyperbolicTensorCompactK_sq⟩
 
-end InfoGeometry.Algebra.BiquaternionSplitBiquaternionSignatures
 
-end
+end InfoGeometry.Algebra.BiquaternionSplitBiquaternionSignatures

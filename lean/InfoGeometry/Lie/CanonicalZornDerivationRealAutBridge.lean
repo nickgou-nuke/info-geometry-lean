@@ -256,7 +256,7 @@ theorem zornDerivationExpRealAut_preserves_detZ
     (X : CZ) :
     ZornMatrix.detZ (((zornDerivationExpRealAut D : RealSplitOctonionAut) : SplitOctonionAutCandidate ℝ) X) =
       ZornMatrix.detZ X := by
-  simp [zornFlow_preserves_detZ D 1 X]
+  simp
 
 /-- Complete theorem-safe finite automorphism packet for a canonical derivation. -/
 theorem canonical_derivation_realAut_packet

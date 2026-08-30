@@ -131,5 +131,3 @@ theorem split_quaternion_anticommutator_packet :
 end Split
 
 end InfoGeometry.Algebra.PauliQuaternionSplitComparison
-
-end

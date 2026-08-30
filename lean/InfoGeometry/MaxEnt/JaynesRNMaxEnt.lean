@@ -217,4 +217,4 @@ end JaynesRNMaxEnt
 
 namespace InfoGeometry.MaxEnt.JaynesRNMaxEnt
 
-end InfoGeometry.MaxEnt.JaynesRNMaxEnt
+end JaynesRNMaxEnt

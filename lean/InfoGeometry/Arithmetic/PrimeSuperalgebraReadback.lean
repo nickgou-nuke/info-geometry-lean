@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 
@@ -8,7 +8,7 @@ import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 Finite supergraded readback for prime-bit arithmetic.
 
 This file does not prove an infinite zeta theorem, analytic continuation, the
-Riemann property, or a full DG-superalgebra of primes.
+Riemann hypothesis, or a full DG-superalgebra of primes.
 
 It exposes the existing finite Möbius/Witten arithmetic layer using
 superalgebra terminology:
@@ -31,37 +31,41 @@ namespace InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-open PrimeBitWittenIndex
-open MobiusDirichletInverseBridge
+open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 
 /-! ## 1. Fermionic prime-bit supersector -/
 
+/-- A finite fermionic prime-sector register. -/
+abbrev FermionicPrimeRegister :=
+  PrimeRegister
+
 /-- A finite fermionic prime-bit state. -/
 abbrev FermionicPrimeState
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) :=
+    (P : FermionicPrimeRegister) :=
   PrimeBitState P
 
 /-- The square-free natural number represented by a fermionic prime-bit state. -/
 def representedSquarefreeNat
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (ψ : FermionicPrimeState P) : ℕ :=
   representedNatOfState P ψ
 
 /-- Fermion number of a finite prime-bit state. -/
 def fermionDegree
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (ψ : FermionicPrimeState P) : ℕ :=
   fermionNumberOfState P ψ
 
 /-- Fermion parity `(-1)^F` of a finite prime-bit state. -/
 def fermionParity
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (ψ : FermionicPrimeState P) : ℤ :=
   fermionParityOfState P ψ
 
 /-- Möbius equals fermion parity on represented square-free prime-bit states. -/
 theorem mobius_eq_fermionParity
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (ψ : FermionicPrimeState P) :
     ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
       fermionParity P ψ := by
@@ -88,19 +92,19 @@ For `x p = p^{-β}`, this is the finite cutoff of the supersymmetric fermionic
 inverse-zeta Dirichlet series.
 -/
 def finiteSupertraceDirichlet
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (x : ℕ → ℂ) : ℂ :=
   finiteMobiusDirichletPolynomial P x
 
 /-- Finite fermionic Euler product. -/
 def finiteInverseEulerProduct
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (x : ℕ → ℂ) : ℂ :=
   finiteFermionicEulerProduct P x
 
 /-- Finite supertrace equals the finite fermionic Euler product. -/
 theorem finiteSupertraceDirichlet_eq_inverseEulerProduct
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (x : ℕ → ℂ) :
     finiteSupertraceDirichlet P x =
       finiteInverseEulerProduct P x := by
@@ -108,14 +112,14 @@ theorem finiteSupertraceDirichlet_eq_inverseEulerProduct
 
 /-- Finite Boolean Witten-index cancellation over a nonempty prime register. -/
 theorem finiteBooleanWittenIndex_cancel
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 :=
   finite_witten_index_cancel P hP
 
 /-- Finite divisor Möbius cancellation over a nonempty prime register. -/
 theorem finiteDivisorMobius_cancel
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset,
       ArithmeticFunction.moebius (∏ p ∈ S, p)) = 0 :=
@@ -133,26 +137,21 @@ def thermalPrimeFactor
     (p : ℕ) : ℂ :=
   (Real.exp (-β * Real.log (p : ℝ)) : ℂ)
 
-lemma thermalPrimeFactor_ne_zero (β : ℝ) (p : ℕ) :
-    thermalPrimeFactor β p ≠ 0 := by
-  unfold thermalPrimeFactor
-  exact_mod_cast (Real.exp_ne_zero _)
-
 /-- Finite thermal supertrace over a prime register. -/
 def finiteThermalSupertrace
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (β : ℝ) : ℂ :=
   finiteSupertraceDirichlet P (thermalPrimeFactor β)
 
 /-- Finite thermal inverse Euler product over a prime register. -/
 def finiteThermalInverseEulerProduct
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (β : ℝ) : ℂ :=
   finiteInverseEulerProduct P (thermalPrimeFactor β)
 
 /-- Finite thermal supertrace equals the finite thermal inverse Euler product. -/
 theorem finiteThermalSupertrace_eq_inverseEulerProduct
-    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister)
+    (P : FermionicPrimeRegister)
     (β : ℝ) :
     finiteThermalSupertrace P β =
       finiteThermalInverseEulerProduct P β := by
@@ -164,4 +163,4 @@ theorem finiteThermalSupertrace_eq_inverseEulerProduct
 -- Finite supertrace equals finite inverse Euler product.
 -- Thermal finite cutoffs.
 
-end InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
+end PrimeSuperalgebraReadback

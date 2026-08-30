@@ -1,23 +1,5 @@
-/-
-Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
-Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
-Bulgarian Academy of Sciences.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Authors: Nikolay Goutev, Dimitar Tonev
--/
-
+import InfoGeometry.Canonical.VonNeumannEntropyCapstone
+import InfoGeometry.Thermal.VonNeumannEntropy
 import InfoGeometry.Library
 import InfoGeometry.Generated
 import InfoGeometry.Singular
@@ -115,7 +97,6 @@ import InfoGeometry.Geometry.DiscreteModularSubgroup
 import InfoGeometry.Section12Formalized
 import InfoGeometry.Arithmetic.ConcreteMajorana
 import InfoGeometry.Epistemology.SemanticReflector
-
 import InfoGeometry.Physics.ParabolicClock
 import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Physics.LogCFT
@@ -134,8 +115,6 @@ import InfoGeometry.Categorical.CFTSigma
 import InfoGeometry.Complex.BergmanKernelLocalization
 import InfoGeometry.Information.BergmanBregman
 import InfoGeometry.Information.DeRhamScore
-
-
 import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
 import InfoGeometry.OperatorAlgebra.AffineOperatorExpFamily
 import InfoGeometry.OperatorAlgebra.SheetConnection
@@ -230,7 +209,6 @@ import InfoGeometry.Canonical.JonesWenzlTemperleyLiebProjectorCapstone
 import InfoGeometry.Canonical.ChamseddineConnesSpectralStandardModelCapstone
 import InfoGeometry.Canonical.CraneYetter4DTQFTHolographicCapstone
 import InfoGeometry.Canonical.BatalinVilkoviskyConstructiveQMESynthesisCapstone
-import InfoGeometry.Canonical.AmariDualTemperatureColimitPhaseTransitionCapstone
 import InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone
 import InfoGeometry.Canonical.BostConnesLegendreDualPhaseTransitionCapstone
 import InfoGeometry.Quantum.BostConnesAsymptoticLegendreDuality
@@ -244,35 +222,28 @@ import InfoGeometry.Quantum.AlgorithmicThermodynamicColimitDuality
 import InfoGeometry.Canonical.AlgorithmicThermodynamicColimitDualityCapstone
 import InfoGeometry.Canonical.IBFreeEnergyMinimization
 import InfoGeometry.Canonical.IBFreeEnergyMinimizationCapstone
-import InfoGeometry.Differential.PoincareFisherRao
-import InfoGeometry.Canonical.PoincareFisherRaoCapstone
 import InfoGeometry.Thermodynamics.SouriauApolloniusEntropyFoliation
 import InfoGeometry.Canonical.SouriauApolloniusEntropyFoliationCapstone
 import InfoGeometry.Canonical.GrandMasterTheoryOfEverythingSynthesisCapstone
 import InfoGeometry.Canonical.BostConnesRigorousKMSMasterCapstone
-
 import InfoGeometry.Quantum.ApolloniusLieBracket
 import InfoGeometry.Quantum.SpectralTripleApollonius
 import InfoGeometry.Noncommutative.ConnesMetric
 import InfoGeometry.Canonical.ApolloniusLieBracketCapstone
 import InfoGeometry.Canonical.SpectralTripleApolloniusCapstone
 import InfoGeometry.Canonical.ConnesMetricCapstone
-
 import InfoGeometry.Quantum.DikinBlahutOrbits
 import InfoGeometry.Quantum.ConnesAdeleTrace
 import InfoGeometry.Canonical.DikinBlahutOrbitsCapstone
 import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
-
 import InfoGeometry.Quantum.ApolloniusFisherInformation
 import InfoGeometry.Canonical.ApolloniusFisherInformationCapstone
-
 import InfoGeometry.Topological.FibonacciAnyons
 import InfoGeometry.Canonical.FibonacciAnyonsCapstone
 import InfoGeometry.Topological.ApolloniusBraiding
 import InfoGeometry.Canonical.ApolloniusBraidingCapstone
 import InfoGeometry.Topological.NonAbelianBerry
 import InfoGeometry.Canonical.NonAbelianBerryCapstone
-
 import InfoGeometry.Quantum.CelestialMellin
 import InfoGeometry.Canonical.CelestialMellinCapstone
 import InfoGeometry.Projective.ApolloniusNatural
@@ -281,26 +252,22 @@ import InfoGeometry.Projective.CrossRatioPGL2
 import InfoGeometry.Canonical.CrossRatioPGL2Capstone
 import InfoGeometry.Projective.SouriauSignatureBridge
 import InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
-
 import InfoGeometry.Conformal.SchwarzianApollonius
 import InfoGeometry.Canonical.SchwarzianApolloniusCapstone
 import InfoGeometry.Quantum.DikinApolloniusTrap
 import InfoGeometry.Canonical.DikinApolloniusTrapCapstone
-
 import InfoGeometry.ParaKahler.ApolloniusCylinder
 import InfoGeometry.Canonical.ApolloniusCylinderCapstone
 import InfoGeometry.ParaKahler.UnifiedPotential
 import InfoGeometry.Canonical.UnifiedPotentialCapstone
 import InfoGeometry.Quantum.ModularSurprisalDeficit
 import InfoGeometry.Canonical.ModularSurprisalDeficitCapstone
-
 import InfoGeometry.SymmetricDomains.DikinMetriplectic
 import InfoGeometry.Canonical.DikinMetriplecticCapstone
 import InfoGeometry.Projective.HomogeneousNumbers
 import InfoGeometry.Canonical.HomogeneousNumbersCapstone
 import InfoGeometry.Projective.NaturalEmbedding
 import InfoGeometry.Canonical.NaturalEmbeddingCapstone
-
 import InfoGeometry.Spectral.ChebyshevBoundary
 import InfoGeometry.Canonical.ChebyshevBoundaryCapstone
 import InfoGeometry.Quantum.HilbertPolya
@@ -325,6 +292,97 @@ import InfoGeometry.Quantum.BosonFockReciprocity
 import InfoGeometry.Canonical.BosonFockReciprocityCapstone
 import InfoGeometry.Spectral.RiemannWeilTrace
 import InfoGeometry.Canonical.RiemannWeilTraceCapstone
+import InfoGeometry.Spectral.MontgomeryPairCorrelation
+import InfoGeometry.Canonical.MontgomeryPairCorrelationCapstone
+import InfoGeometry.Spectral.SpectralFormFactor
+import InfoGeometry.Canonical.SpectralFormFactorCapstone
+import InfoGeometry.Spectral.HeisenbergTime
+import InfoGeometry.Canonical.HeisenbergTimeCapstone
+import InfoGeometry.Spectral.RiemannVonMangoldtStaircase
+import InfoGeometry.Canonical.RiemannVonMangoldtStaircaseCapstone
+import InfoGeometry.Spectral.QuantumFluctuations
+import InfoGeometry.Canonical.QuantumFluctuationsCapstone
+import InfoGeometry.CFT.VirasoroAlgebra
+import InfoGeometry.Canonical.VirasoroAlgebraCapstone
+import InfoGeometry.CFT.StressTensorCentralCharge
+import InfoGeometry.Canonical.StressTensorCentralChargeCapstone
+import InfoGeometry.CFT.ModularInvariance
+import InfoGeometry.Canonical.ModularInvarianceCapstone
+import InfoGeometry.CFT.NarainTDuality
+import InfoGeometry.Canonical.NarainTDualityCapstone
+import InfoGeometry.Adelic.NarainTamagawa
+import InfoGeometry.Canonical.NarainTamagawaCapstone
+import InfoGeometry.Topological.ChernSimonsCochain
+import InfoGeometry.Canonical.ChernSimonsCochainCapstone
+import InfoGeometry.Gauge.NonAbelianSL2Extension
+import InfoGeometry.Canonical.NonAbelianSL2ExtensionCapstone
+import InfoGeometry.Holography.ChernSimonsToLiouville
+import InfoGeometry.Canonical.ChernSimonsToLiouvilleCapstone
+import InfoGeometry.CFT.KZBConformalBlocks
+import InfoGeometry.Canonical.KZBConformalBlocksCapstone
+import InfoGeometry.Quantum.EllipticYangBaxter
+import InfoGeometry.Canonical.EllipticYangBaxterCapstone
+import InfoGeometry.Quantum.TransferMatrixIntegrability
+import InfoGeometry.Canonical.TransferMatrixIntegrabilityCapstone
+import InfoGeometry.Quantum.BetheAnsatz
+import InfoGeometry.Canonical.BetheAnsatzCapstone
+import InfoGeometry.Thermal.ThermodynamicBetheAnsatz
+import InfoGeometry.Canonical.ThermodynamicBetheAnsatzCapstone
+import InfoGeometry.Quantum.YSystemIntegrability
+import InfoGeometry.Canonical.YSystemIntegrabilityCapstone
+import InfoGeometry.Quantum.BaxterTQRelation
+import InfoGeometry.Canonical.BaxterTQRelationCapstone
+import InfoGeometry.Quantum.BaxterQQWronskian
+import InfoGeometry.Canonical.BaxterQQWronskianCapstone
+import InfoGeometry.Quantum.SklyaninSoV
+import InfoGeometry.Canonical.SklyaninSoVCapstone
+import InfoGeometry.Quantum.FredholmDeterminantXi
+import InfoGeometry.Canonical.FredholmDeterminantXiCapstone
+import InfoGeometry.Quantum.WittenIndexVacuum
+import InfoGeometry.Canonical.WittenIndexVacuumCapstone
+import InfoGeometry.IndexTheory.AtiyahSingerDirac
+import InfoGeometry.Canonical.AtiyahSingerDiracCapstone
+import InfoGeometry.Spectral.SelbergRiemannTrace
+import InfoGeometry.Canonical.SelbergRiemannTraceCapstone
+import InfoGeometry.MasterCapstone.GrandUnification
+import InfoGeometry.Canonical.GrandUnificationCapstone
+import InfoGeometry.Quantum.TraceFormula
+import InfoGeometry.Canonical.TraceFormulaCapstone
+import InfoGeometry.Quantum.CramerRaoUncertainty
+import InfoGeometry.Canonical.CramerRaoUncertaintyCapstone
+
+/-
+Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
+Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
+Bulgarian Academy of Sciences.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Authors: Nikolay Goutev, Dimitar Tonev
+-/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 namespace InfoGeometry
 

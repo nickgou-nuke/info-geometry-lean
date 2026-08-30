@@ -185,11 +185,27 @@ def imaginaryCrossSeven (u v : ImaginarySeven) : ImaginarySeven :=
     imaginaryCrossSeven v u = -imaginaryCrossSeven u v := by
   unfold imaginaryCrossSeven
   rw [imaginaryCross_swap]
-  rw [map_neg imaginaryCoordLinearEquiv, map_neg imaginaryCoords_seven]
+  let z : Imaginary := imaginaryCross
+    (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm u))
+    (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm v))
+  have hz : imaginaryCoordLinearEquiv (-z) =
+      -imaginaryCoordLinearEquiv z := imaginaryCoordLinearEquiv.map_neg z
+  rw [hz]
+  calc
+    imaginaryCoords_seven (-imaginaryCoordLinearEquiv z) =
+        -imaginaryCoords_seven (imaginaryCoordLinearEquiv z) :=
+      imaginaryCoords_seven.map_neg _
+    _ = -imaginaryCoords_seven
+        (imaginaryCoordLinearEquiv
+          (imaginaryCross
+            (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm u))
+            (imaginaryCoordLinearEquiv.symm (imaginaryCoords_seven.symm v)))) := by
+      rfl
 
 @[simp] theorem imaginaryCrossSeven_self (u : ImaginarySeven) :
     imaginaryCrossSeven u u = 0 := by
-  simp only [imaginaryCrossSeven, imaginaryCross_self, map_zero]
+  simp only [imaginaryCrossSeven, imaginaryCross_self,
+    imaginaryCoordLinearEquiv.map_zero, imaginaryCoords_seven.map_zero]
 
 theorem imaginaryCrossSeven_add_left (u v w : ImaginarySeven) :
     imaginaryCrossSeven (u + v) w =

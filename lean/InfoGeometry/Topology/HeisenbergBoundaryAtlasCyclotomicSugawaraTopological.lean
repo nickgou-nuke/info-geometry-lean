@@ -132,5 +132,3 @@ theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply
   simpa [boundaryAtlasCyclotomicSugawaraReadout] using
     (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
       (𝕜 := 𝕜) p.1 n)
-
-end

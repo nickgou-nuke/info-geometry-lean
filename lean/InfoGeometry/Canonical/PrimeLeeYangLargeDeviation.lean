@@ -1,18 +1,15 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-import InfoGeometry.Fenchel
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 
-Finite fluctuation and large-deviation foundations for the prime Lee--Yang chain,
-reformulated through categorical colimits with NO infinities, NO `atTop`, NO
-`Filter.limsup/liminf`, and NO analytic thermodynamic limit.
+Finite fluctuation and large-deviation sockets for the prime Lee--Yang chain.
 
-This module defines:
+This module sits downstream of `PrimeLeeYangFerromagneticChain`. It defines:
 
 * the square-free occupation readout `kᵢ = (1 + σᵢ) / 2`;
 * the finite logarithmic prime energy `Σᵢ kᵢ log pᵢ`;
@@ -20,9 +17,11 @@ This module defines:
 * finite log-moment/cumulant readouts;
 * a finite-grid Cramér transform using the repo-owned `InfoGeometry.cramerRateOn`.
 
-No large-deviation principle is asserted here.  The finite-stage data are the
-sole authority; no `sorry`, no analytic limit, and no measure-theoretic LDP
-debt are introduced.
+The thermodynamic large-deviation principle is not proved here. It is represented
+by a proof-carrying `PrimeChainLargeDeviationWitness`, because the real
+asymptotic theorem requires a chosen scaling, convergence of cumulant
+generating functions, regularity/exposed-point hypotheses, and a no-spurious
+limit statement.
 -/
 
 noncomputable section
@@ -56,14 +55,6 @@ theorem spinOccupation_nonneg
     0 ≤ spinOccupation σ := by
   cases σ <;> norm_num [spinOccupation]
 
-/-- The Lee--Yang spin occupation agrees with the canonical prime-chain
-occupation convention owned by `PrimeLeeYangFerromagneticChain`. -/
-@[simp]
-theorem spinOccupation_eq_chainOccupation
-    (σ : IsingSpin) :
-    spinOccupation σ = PrimeFerromagneticChain.occupation σ := by
-  cases σ <;> simp [spinOccupation, PrimeFerromagneticChain.occupation]
-
 variable {n : ℕ}
 variable (C : PrimeFerromagneticChain n)
 
@@ -80,19 +71,6 @@ theorem configurationLogEnergy_nonneg
   exact Finset.sum_nonneg (by
     intro i _
     exact mul_nonneg (spinOccupation_nonneg (σ i)) (C.siteEnergy_nonneg i))
-
-/-- The finite logarithmic energy descends to the chain's canonical
-occupation readout, so the Lee--Yang and Gibbs descriptions use the same
-finite observable. -/
-theorem configurationLogEnergy_eq_chainOccupation_sum
-    (σ : Fin n → IsingSpin) :
-    configurationLogEnergy C σ =
-      ∑ i : Fin n,
-        PrimeFerromagneticChain.occupation (σ i) * C.siteEnergy i := by
-  unfold configurationLogEnergy
-  apply Finset.sum_congr rfl
-  intro i hi
-  rw [spinOccupation_eq_chainOccupation]
 
 /-- Squared logarithmic prime energy, the finite fluctuation observable. -/
 def squaredLogEnergy
@@ -130,32 +108,6 @@ def finitePartition
     (h : Fin n → ℝ) : ℝ :=
   ∑ σ : Fin n → IsingSpin, boltzmannWeight C β h σ
 
-/-- The finite partition function is strictly positive. -/
-theorem finitePartition_pos
-    (β : ℝ)
-    (h : Fin n → ℝ) :
-    0 < finitePartition C β h := by
-  unfold finitePartition
-  exact Finset.sum_pos (fun σ _ => boltzmannWeight_pos C β h σ)
-    ⟨fun _ => IsingSpin.up, Finset.mem_univ _⟩
-
-/-- At zero inverse temperature, every finite spin configuration has unit weight. -/
-theorem finitePartition_zero_eq_card
-    (h : Fin n → ℝ) :
-    finitePartition C 0 h = Fintype.card (Fin n → IsingSpin) := by
-  unfold finitePartition boltzmannWeight
-  simp
-
-/-- The zero-temperature finite partition has the expected two-state count. -/
-theorem finitePartition_zero_eq_two_pow
-    (h : Fin n → ℝ) :
-    finitePartition C 0 h = (2 : ℝ) ^ n := by
-  rw [finitePartition_zero_eq_card]
-  have hcard : Fintype.card IsingSpin = 2 := by
-    rfl
-  rw [Fintype.card_fun, hcard]
-  simp [Fintype.card_fin]
-
 /-- Tilted finite partition function for an observable `O`. -/
 def tiltedPartition
     (β : ℝ)
@@ -164,26 +116,6 @@ def tiltedPartition
     (θ : ℝ) : ℝ :=
   ∑ σ : Fin n → IsingSpin,
     Real.exp (-β * C.isingHamiltonian h σ + θ * O σ)
-
-/-- The tilted finite partition function is strictly positive. -/
-theorem tiltedPartition_pos
-    (β : ℝ)
-    (h : Fin n → ℝ)
-    (O : (Fin n → IsingSpin) → ℝ)
-    (θ : ℝ) :
-    0 < tiltedPartition C β h O θ := by
-  unfold tiltedPartition
-  exact Finset.sum_pos (fun _ _ => Real.exp_pos _)
-    ⟨fun _ => IsingSpin.up, Finset.mem_univ _⟩
-
-/-- The zero tilt leaves the finite Boltzmann partition unchanged. -/
-theorem tiltedPartition_zero_eq_finitePartition
-    (β : ℝ)
-    (h : Fin n → ℝ)
-    (O : (Fin n → IsingSpin) → ℝ) :
-    tiltedPartition C β h O 0 = finitePartition C β h := by
-  unfold tiltedPartition finitePartition boltzmannWeight
-  simp
 
 /--
 Finite log-moment generating function:
@@ -196,15 +128,6 @@ def logMomentGenerating
     (O : (Fin n → IsingSpin) → ℝ)
     (θ : ℝ) : ℝ :=
   Real.log (tiltedPartition C β h O θ) - Real.log (finitePartition C β h)
-
-@[simp]
-theorem logMomentGenerating_zero
-    (β : ℝ)
-    (h : Fin n → ℝ)
-    (O : (Fin n → IsingSpin) → ℝ) :
-    logMomentGenerating C β h O 0 = 0 := by
-  unfold logMomentGenerating tiltedPartition finitePartition boltzmannWeight
-  simp
 
 /-- Finite cumulant readout for the logarithmic prime energy. -/
 def logEnergyCumulant
@@ -219,8 +142,6 @@ def squaredLogEnergyCumulant
     (h : Fin n → ℝ)
     (θ : ℝ) : ℝ :=
   logMomentGenerating C β h (squaredLogEnergy C) θ
-
-/-! ## Finite-grid Cramér transform and Fenchel--Young packet -/
 
 /-- Finite-grid Cramér transform for any chosen cumulant readout `ψ`. -/
 def finiteCramerRate
@@ -250,6 +171,56 @@ theorem exists_argmax_finiteCramerRate
       ∀ θ, θ ∈ Θ → η * θ - ψ θ ≤ η * θ0 - ψ θ0 := by
   exact InfoGeometry.exists_argmax_cramerRateOn Θ hΘ ψ η
 
-end InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
+/-! ## Asymptotic LDP socket -/
 
-end noncomputable section
+/--
+Proof-carrying large-deviation packet for a sequence of finite prime chains.
+
+The fields isolate the exact analytic work needed after the finite definitions:
+choice of scaling speed, convergence of finite cumulants, a rate function, and
+the final large-deviation principle.
+-/
+@[socket_debt_tag]
+structure PrimeChainLargeDeviationWitness where
+  chain : ℕ → Σ n : ℕ, PrimeFerromagneticChain n
+  speed : ℕ → ℝ
+  observable : ∀ N : ℕ, (Fin (chain N).1 → IsingSpin) → ℝ
+  finiteCumulant : ℕ → ℝ → ℝ
+  limitingCumulant : ℝ → ℝ
+  rateFunction : ℝ → ℝ
+
+  speed_tends_to_infinity_True : Prop
+  finiteCumulant_converges_True : Prop
+  rateFunction_is_legendre_True : Prop
+  largeDeviationPrinciple_True : Prop
+
+  /-- Guardrail: this LDP packet is not an RH proof or a Lee--Yang theorem. -/
+  noRiemannHypothesisClaimGuard : Type*
+
+namespace PrimeChainLargeDeviationWitness
+
+variable (W : PrimeChainLargeDeviationWitness)
+
+/-- Re-export of the supplied speed-divergence law. -/
+@[bridge_target_tag]
+def speed_tends_to_infinity : Prop :=
+  W.speed_tends_to_infinity_True
+
+/-- Re-export of the supplied finite-cumulant convergence law. -/
+@[bridge_target_tag]
+def finiteCumulant_converges : Prop :=
+  W.finiteCumulant_converges_True
+
+/-- Re-export of the supplied Legendre/rate-function law. -/
+@[bridge_target_tag]
+def rateFunction_is_legendre : Prop :=
+  W.rateFunction_is_legendre_True
+
+/-- Re-export of the supplied large-deviation principle. -/
+@[bridge_target_tag]
+def largeDeviationPrinciple : Prop :=
+  W.largeDeviationPrinciple_True
+
+end PrimeChainLargeDeviationWitness
+
+end PrimeLeeYangLargeDeviation

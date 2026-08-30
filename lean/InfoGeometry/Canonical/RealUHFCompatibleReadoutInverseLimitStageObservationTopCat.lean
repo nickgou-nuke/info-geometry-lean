@@ -70,5 +70,4 @@ theorem orbitClosureStageObservation_scalar_covariance
     (inverseLimitStageEvaluation_action_scalar y.1 n t X)
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationTopCat
-
 end

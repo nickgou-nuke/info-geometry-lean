@@ -64,5 +64,4 @@ theorem stageObservationRangeCompHausHom_surjective
   exact stageObservationRangeMapTopCatHom_surjective ρ n X z
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeCompHaus
-
 end

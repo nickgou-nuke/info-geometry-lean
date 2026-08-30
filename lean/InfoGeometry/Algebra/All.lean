@@ -485,6 +485,16 @@ import InfoGeometry.Algebra.Zorn.G2NativeLineIntrinsicStructuralBridge
 import InfoGeometry.Algebra.Zorn.G2GAPCertificatesVerified
 import InfoGeometry.Algebra.Zorn.G2BruhatClassificationMaster
 import InfoGeometry.Algebra.CyclotomicTripotentPeirceLiftingCapstone
+import InfoGeometry.Algebra.H3ZornCarrierBasis
+import InfoGeometry.Algebra.SplitMetricSpace
+import InfoGeometry.Algebra.SplitMetricLieAlgebra
+import InfoGeometry.Algebra.FiveGradedTKKSpec
+import InfoGeometry.Algebra.EquivariantTKKRealization
+import InfoGeometry.Algebra.DerivationLieLane
+import InfoGeometry.Algebra.EquivariantProjectorRepresentation
+import InfoGeometry.Algebra.SplitMetricOperatorRepresentation
+import InfoGeometry.Algebra.CliffordGA
+import InfoGeometry.Algebra.CliffordIdealSpinor
 /-!
 # InfoGeometry.Algebra.All
 

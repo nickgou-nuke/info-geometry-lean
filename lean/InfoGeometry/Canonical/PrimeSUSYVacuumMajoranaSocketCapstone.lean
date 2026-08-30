@@ -38,4 +38,4 @@ theorem grand_canonical_prime_susy_vacuum_majorana_synthesis
    F_sq,
    F_B_F_eq_R⟩
 
-end InfoGeometry.Canonical.PrimeSUSYVacuumMajoranaSocket
+end PrimeSUSYVacuumMajoranaSocket

@@ -3,6 +3,7 @@ import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 import InfoGeometry.Algebra.RealSplitOctSimp
+import InfoGeometry.Exceptional.RealSplitAlbertFreudenthal
 
 namespace InfoGeometry.Exceptional.FiniteJ3Zorn
 
@@ -298,6 +299,65 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_y₂_readback
         (canonicalEquiv (jordanProduct X.1 Y.1 2 0))).y2 := by
   rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂]
 
+/-
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_y₀_sum_readback
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂.y0 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 0))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 0))))).y0 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂]
+  exact congrArg RealSplitOct.y0 (fromZorn_jordanProduct_entry X.1 Y.1 2 0)
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_y₁_sum_readback
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂.y1 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 0))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 0))))).y1 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂]
+  exact congrArg RealSplitOct.y1 (fromZorn_jordanProduct_entry X.1 Y.1 2 0)
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_y₂_sum_readback
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂.y2 =
+      ((2 : ℝ)⁻¹ •
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 0))) +
+        ∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 0))))).y2 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂]
+  exact congrArg RealSplitOct.y2 (fromZorn_jordanProduct_entry X.1 Y.1 2 0)
+
+-/
 theorem hermitianRealAlbertEquiv_z₃ (X : HermitianJ3) :
     (hermitianRealAlbertEquiv X).z₃ =
       InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
@@ -947,6 +1007,26 @@ theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₂_sum_readback
   rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₁]
   rw [fromZorn_jordanProduct_entry_x2]
 
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_x₂_scalar_readback
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂.x2 =
+      (2 : ℝ)⁻¹ *
+        ((∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 j 0)))).x2 +
+        (∑ j : Fin 3,
+          RealSplitOct.mul
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (Y.1 2 j)))
+            (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+              (canonicalEquiv (X.1 j 0)))).x2) := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂_x₂_sum_readback]
+  simp [RealSplitOct.smul, RealSplitOct.add]
+  ring
+
 theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_x₂_scalar_readback
     (X Y : HermitianJ3) :
     (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁.x2 =
@@ -1303,6 +1383,359 @@ theorem canonicalHermitianEntry_v (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).v =
       (ZornVectorMatrix.conj (canonicalEquiv (X.1 i j))).v := by
   exact congrArg ZornVectorMatrix.v (canonicalHermitianEntry X i j)
+
+theorem canonicalHermitianEntry_w₂ (X : HermitianJ3) (i j : Fin 3) :
+    (canonicalEquiv (X.1 j i)).w 2 =
+      - (canonicalEquiv (X.1 i j)).w 2 := by
+  have h := congrArg (fun q : ZornVectorMatrix ℝ => q.w 2)
+    (canonicalHermitianEntry X i j)
+  simpa [ZornVectorMatrix.conj, vecToCanonical, zornConj, smul] using h
+
+theorem hermitianRealAlbertEquiv_z₃_fromZorn (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₃ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 0 1)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_z₁_fromZorn (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₁ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 1 2)) := by
+  rfl
+
+theorem hermitianRealAlbertEquiv_z₂_fromZorn (X : HermitianJ3) :
+    (hermitianRealAlbertEquiv X).z₂ =
+      InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn
+        (canonicalEquiv (X.1 2 0)) := by
+  rfl
+
+theorem realSplitOct_fromZorn_x1 (A : ZornVectorMatrix ℝ) :
+    (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn A).x1 = A.v 1 := by
+  rfl
+
+theorem realSplitOct_fromZorn_y2 (A : ZornVectorMatrix ℝ) :
+    (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn A).y2 = A.w 2 := by
+  rfl
+
+theorem canonicalEquiv_w_snd_snd (A : ZornMatrixReal) :
+    (canonicalEquiv A).w 2 = A.v.2.2 := by
+  rfl
+
+theorem realSplitOct_fromZorn_x2 (A : ZornVectorMatrix ℝ) :
+    (InfoGeometry.Algebra.RealSplitOctZornAlignment.fromZorn A).x2 = A.v 2 := by
+  rfl
+
+theorem realAlbertMatrix_mul_z₃_x₁_readback (A B : RealAlbertMatrix) :
+    (RealAlbertMatrix.mul A B).z₃.x1 =
+      ((1 / 2 : ℝ) •
+        (A.z₃.smul (B.α₁ + B.α₂) + B.z₃.smul (A.α₁ + A.α₂) +
+          A.z₂.conj.mul B.z₁.conj + B.z₂.conj.mul A.z₁.conj)).x1 := by
+  rfl
+
+theorem realAlbertMatrix_mul_z₃_x₂_readback (A B : RealAlbertMatrix) :
+    (RealAlbertMatrix.mul A B).z₃.x2 =
+      ((1 / 2 : ℝ) •
+        (A.z₃.smul (B.α₁ + B.α₂) + B.z₃.smul (A.α₁ + A.α₂) +
+          A.z₂.conj.mul B.z₁.conj + B.z₂.conj.mul A.z₁.conj)).x2 := by
+  rfl
+
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃_mul_x₀
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃.x0 =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₃.x0 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₃_x₀_readback]
+  rw [fromZorn_jordanProduct_entry_x0]
+  dsimp [RealAlbertMatrix.mul]
+  have hX20 : X.1 2 0 = zornConj (X.1 0 2) := X.property 2 0
+  have hY12 : Y.1 1 2 = zornConj (Y.1 2 1) := Y.property 1 2
+  have hY20 : Y.1 2 0 = zornConj (Y.1 0 2) := Y.property 2 0
+  have hX12 : X.1 1 2 = zornConj (X.1 2 1) := X.property 1 2
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hY22 := hermitian_diagonal_scalar Y 2
+  simp [hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+    RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+    fromCanonical, RealSplitOctZornAlignment.fromZorn,
+    RealSplitOctZornAlignment.toZorn, RealSplitOctZornAlignment.fromZorn_mul,
+    RealSplitOctZornAlignment.fromZorn_conj, RealSplitOct.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+    Fin.sum_univ_three, zornConj, smul, dot, vecToCanonical,
+    hX20, hY12, hY20, hX12, hX00, hX11, hX22, hY00, hY11, hY22]
+  ring
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃_mul_x₁
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃.x1 =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₃.x1 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₃_x₁_readback]
+  rw [fromZorn_jordanProduct_entry_x1]
+  rw [rsm_mul_z3]
+  rw [hermitianRealAlbertEquiv_z₃_fromZorn X,
+    hermitianRealAlbertEquiv_z₃_fromZorn Y,
+    hermitianRealAlbertEquiv_z₂_fromZorn X,
+    hermitianRealAlbertEquiv_z₂_fromZorn Y,
+    hermitianRealAlbertEquiv_z₁_fromZorn X,
+    hermitianRealAlbertEquiv_z₁_fromZorn Y]
+  dsimp [RealAlbertMatrix.mul]
+  have hX02 : X.1 0 2 = zornConj (X.1 2 0) := X.property 0 2
+  have hY02 : Y.1 0 2 = zornConj (Y.1 2 0) := Y.property 0 2
+  have hX21 : X.1 2 1 = zornConj (X.1 1 2) := X.property 2 1
+  have hY21 : Y.1 2 1 = zornConj (Y.1 1 2) := Y.property 2 1
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  simp only [hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+    RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+    fromCanonical, RealSplitOctZornAlignment.fromZorn,
+    RealSplitOctZornAlignment.toZorn, RealSplitOct.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+    Fin.sum_univ_three, realSplitOct_sum_mul_x1,
+    RealSplitOctZornAlignment.fromZorn_mul,
+    RealSplitOctZornAlignment.fromZorn_conj, hermitianRealAlbertEquiv_z₃_fromZorn,
+    hermitianRealAlbertEquiv_z₁_fromZorn, hermitianRealAlbertEquiv_z₂_fromZorn,
+    canonicalHermitianEntry,
+    RealSplitOct.smul_x1,
+    RealSplitOct.add_x1, RealSplitOct.mul_x1, zornConj, smul, dot,
+    vecToCanonical, realSplitOct_fromZorn_x1, toCanonical_x1,
+    canonicalEquiv_v_snd_fst, hX02, hY02, hX21, hY21, hX00, hX11, hY00,
+    hY11]
+  ring_nf
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃_mul_x₂
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃.x2 =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₃.x2 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₃_x₂_readback]
+  rw [fromZorn_jordanProduct_entry_x2]
+  rw [rsm_mul_z3]
+  dsimp [RealAlbertMatrix.mul]
+  rw [hermitianRealAlbertEquiv_z₃_fromZorn X,
+    hermitianRealAlbertEquiv_z₃_fromZorn Y,
+    hermitianRealAlbertEquiv_z₂_fromZorn X,
+    hermitianRealAlbertEquiv_z₂_fromZorn Y,
+    hermitianRealAlbertEquiv_z₁_fromZorn X,
+    hermitianRealAlbertEquiv_z₁_fromZorn Y]
+  have hX02 : X.1 0 2 = zornConj (X.1 2 0) := X.property 0 2
+  have hY02 : Y.1 0 2 = zornConj (Y.1 2 0) := Y.property 0 2
+  have hX21 : X.1 2 1 = zornConj (X.1 1 2) := X.property 2 1
+  have hY21 : Y.1 2 1 = zornConj (Y.1 1 2) := Y.property 2 1
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  simp only [hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+    RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+    fromCanonical, RealSplitOctZornAlignment.fromZorn,
+    RealSplitOctZornAlignment.toZorn, RealSplitOct.mul,
+    ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+    Fin.sum_univ_three, realSplitOct_sum_mul_x2,
+    RealSplitOctZornAlignment.fromZorn_mul,
+    RealSplitOctZornAlignment.fromZorn_conj, hermitianRealAlbertEquiv_z₃_fromZorn,
+    hermitianRealAlbertEquiv_z₁_fromZorn, hermitianRealAlbertEquiv_z₂_fromZorn,
+    canonicalHermitianEntry,
+    RealSplitOct.smul_x2,
+    RealSplitOct.add_x2, RealSplitOct.mul_x2, zornConj, smul, dot,
+    vecToCanonical, realSplitOct_fromZorn_x2, toCanonical_x2,
+    canonicalEquiv_v_snd_snd, hX02, hY02, hX21, hY21, hX00, hX11, hY00,
+    hY11]
+  ring_nf
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_mul_y₂
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂.y2 =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₂.y2 := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂_y₂_readback]
+  rw [fromZorn_jordanProduct_entry_y2]
+  dsimp [RealAlbertMatrix.mul]
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hY22 := hermitian_diagonal_scalar Y 2
+  simp only [RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+    hermitianH3Equiv, hermitianToH3,
+    RealAlbertH3ZornCarrierAlignment.equiv,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+    fromCanonical, RealSplitOctZornAlignment.fromZorn,
+    RealSplitOctZornAlignment.toZorn, RealSplitOct.conj,
+    RealSplitOct.mul, RealSplitOct.smul, RealSplitOct.add,
+    ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+    ZornVec3.cross, Fin.sum_univ_three, zornConj, smul, dot, cross,
+    vecToCanonical, realSplitOct_fromZorn_y2, toCanonical_y2,
+    canonicalEquiv_w_snd_snd, RealSplitOct.smul_y2,
+    RealSplitOct.add_y2, RealSplitOct.mul_y2, canonicalHermitianEntry_w₂,
+    hX00, hX11, hX22, hY00, hY11, hY22]
+  simp only [hermitian_entry_a_eq_b X 0 1,
+    hermitian_entry_a_eq_b X 1 0, hermitian_entry_a_eq_b X 1 2,
+    hermitian_entry_a_eq_b X 2 1, hermitian_entry_a_eq_b Y 0 1,
+    hermitian_entry_a_eq_b Y 1 0, hermitian_entry_a_eq_b Y 1 2,
+    hermitian_entry_a_eq_b Y 2 1,
+    hermitian_entry_u_fst X 0 1, hermitian_entry_u_snd_fst X 0 1,
+    hermitian_entry_u_snd_snd X 0 1, hermitian_entry_u_fst X 1 0,
+    hermitian_entry_u_snd_fst X 1 0, hermitian_entry_u_snd_snd X 1 0,
+    hermitian_entry_u_fst X 1 2, hermitian_entry_u_snd_fst X 1 2,
+    hermitian_entry_u_snd_snd X 1 2, hermitian_entry_u_fst X 2 1,
+    hermitian_entry_u_snd_fst X 2 1, hermitian_entry_u_snd_snd X 2 1,
+    hermitian_entry_u_fst Y 0 1, hermitian_entry_u_snd_fst Y 0 1,
+    hermitian_entry_u_snd_snd Y 0 1, hermitian_entry_u_fst Y 1 0,
+    hermitian_entry_u_snd_fst Y 1 0, hermitian_entry_u_snd_snd Y 1 0,
+    hermitian_entry_u_fst Y 1 2, hermitian_entry_u_snd_fst Y 1 2,
+    hermitian_entry_u_snd_snd Y 1 2, hermitian_entry_u_fst Y 2 1,
+    hermitian_entry_u_snd_fst Y 2 1, hermitian_entry_u_snd_snd Y 2 1]
+  ring
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₂_mul
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₂ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₂ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₂]
+  apply RealSplitOct.ext <;>
+    simp [RealAlbertMatrix.mul, hermitianRealAlbertEquiv,
+      hermitianH3Equiv, hermitianToH3,
+      RealAlbertH3ZornCarrierAlignment.equiv,
+      RealAlbertH3ZornCarrierAlignment.fromH3,
+      RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+      fromCanonical, RealSplitOctZornAlignment.fromZorn,
+      RealSplitOctZornAlignment.toZorn, RealSplitOct.conj,
+      RealSplitOct.mul, RealSplitOct.smul, RealSplitOct.add,
+      ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+      ZornVec3.cross, Fin.sum_univ_three, zornConj, smul, dot, cross,
+      vecToCanonical, canonicalHermitianEntry_w₂]
+    <;> ring
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₁_mul
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₁ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₁ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₁]
+  dsimp [RealAlbertMatrix.mul]
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hY22 := hermitian_diagonal_scalar Y 2
+  apply RealSplitOct.ext <;>
+    simp [hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+      RealAlbertH3ZornCarrierAlignment.equiv,
+      RealAlbertH3ZornCarrierAlignment.fromH3,
+      RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+      fromCanonical, RealSplitOctZornAlignment.fromZorn,
+      RealSplitOctZornAlignment.toZorn, RealSplitOct.conj,
+      RealSplitOct.mul, RealSplitOct.smul, RealSplitOct.add,
+      ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+      ZornVec3.cross, Fin.sum_univ_three, zornConj, smul, dot, cross,
+      vecToCanonical, canonicalHermitianEntry_w₂,
+      hX00, hX11, hX22, hY00, hY11, hY22]
+    <;> ring
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_z₃_mul
+    (X Y : HermitianJ3) :
+    (hermitianRealAlbertEquiv (finiteJordanProduct X Y)).z₃ =
+      (RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y)).z₃ := by
+  rw [hermitianRealAlbertEquiv_finiteJordanProduct_z₃]
+  dsimp [RealAlbertMatrix.mul]
+  have hX00 := hermitian_diagonal_scalar X 0
+  have hX11 := hermitian_diagonal_scalar X 1
+  have hX22 := hermitian_diagonal_scalar X 2
+  have hY00 := hermitian_diagonal_scalar Y 0
+  have hY11 := hermitian_diagonal_scalar Y 1
+  have hY22 := hermitian_diagonal_scalar Y 2
+  apply RealSplitOct.ext <;>
+    simp only [hermitianRealAlbertEquiv, hermitianH3Equiv, hermitianToH3,
+      RealAlbertH3ZornCarrierAlignment.equiv,
+      RealAlbertH3ZornCarrierAlignment.fromH3,
+      RealAlbertH3ZornCarrierAlignment.toH3, canonicalEquiv, toCanonical,
+      fromCanonical, RealSplitOctZornAlignment.fromZorn,
+      RealSplitOctZornAlignment.toZorn, RealSplitOct.conj,
+      RealSplitOct.mul, RealSplitOct.smul, RealSplitOct.add,
+      ZornVectorMatrix.conj, ZornVectorMatrix.mul, ZornVec3.dot,
+      ZornVec3.cross, Fin.sum_univ_three, zornConj, smul, dot, cross,
+      vecToCanonical, canonicalHermitianEntry_w₂,
+      hX00, hX11, hX22, hY00, hY11, hY22]
+    <;> ring
+
+theorem hermitianRealAlbertEquiv_finiteJordanProduct_mul
+    (X Y : HermitianJ3) :
+    hermitianRealAlbertEquiv (finiteJordanProduct X Y) =
+      RealAlbertMatrix.mul (hermitianRealAlbertEquiv X)
+        (hermitianRealAlbertEquiv Y) := by
+  apply RealAlbertMatrix.ext
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₁ X Y
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₂ X Y
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_mul_α₃ X Y
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_z₁_mul X Y
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_z₂_mul X Y
+  · exact hermitianRealAlbertEquiv_finiteJordanProduct_z₃_mul X Y
+
+theorem hermitianToH3_finiteJordanProduct_mul
+    (X Y : HermitianJ3) :
+    hermitianToH3 (finiteJordanProduct X Y) =
+      candidateJordanMul (hermitianToH3 X) (hermitianToH3 Y) := by
+  have h := InfoGeometry.Algebra.RealAlbertMatrix.toH3_mul
+    (hermitianRealAlbertEquiv X) (hermitianRealAlbertEquiv Y)
+  rw [← hermitianRealAlbertEquiv_finiteJordanProduct_mul X Y] at h
+  rw [← InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv_apply,
+    ← InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv_apply,
+    ← InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment.equiv_apply] at h
+  rw [realAlbertEquiv_hermitianRealAlbertEquiv,
+    realAlbertEquiv_hermitianRealAlbertEquiv,
+    realAlbertEquiv_hermitianRealAlbertEquiv] at h
+  exact h
+
+theorem finiteJordanProduct_jordan_identity (X Y : HermitianJ3) :
+    finiteJordanProduct (finiteJordanProduct X Y)
+        (finiteJordanProduct X X) =
+      finiteJordanProduct X
+        (finiteJordanProduct Y (finiteJordanProduct X X)) := by
+  apply hermitianH3Equiv.injective
+  change hermitianToH3 (finiteJordanProduct (finiteJordanProduct X Y)
+      (finiteJordanProduct X X)) =
+    hermitianToH3 (finiteJordanProduct X
+      (finiteJordanProduct Y (finiteJordanProduct X X)))
+  rw [hermitianToH3_finiteJordanProduct_mul
+      (finiteJordanProduct X Y) (finiteJordanProduct X X),
+    hermitianToH3_finiteJordanProduct_mul X
+      (finiteJordanProduct Y (finiteJordanProduct X X)),
+    hermitianToH3_finiteJordanProduct_mul Y (finiteJordanProduct X X),
+    hermitianToH3_finiteJordanProduct_mul X Y,
+    hermitianToH3_finiteJordanProduct_mul X X]
+  exact InfoGeometry.Algebra.H3ZornJordanProductLaw_holds
+    (hermitianToH3 X) (hermitianToH3 Y)
 
 theorem canonicalHermitianEntry_w (X : HermitianJ3) (i j : Fin 3) :
     (canonicalEquiv (X.1 j i)).w =

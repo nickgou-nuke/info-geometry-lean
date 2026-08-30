@@ -268,5 +268,3 @@ theorem krein_spectral_concentration_topological_completion
   kreinSpectralConcentration_of_zornMaximalSubsystem P.zornSubsystem
 
 end InfoGeometry.Capstone.KreinRH
-
-end

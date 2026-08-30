@@ -40,5 +40,4 @@ noncomputable def orbitClosureHom
     (involution M) hM ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMirrorTopCat
-
 end

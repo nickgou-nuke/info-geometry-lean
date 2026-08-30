@@ -98,9 +98,10 @@ private theorem continuous_canonicalZorn_dot :
     continuous_canonicalZorn_y.comp continuous_snd
   change Continuous (fun p : CZ × CZ =>
     p.1.x 0 * p.2.y 0 + p.1.x 1 * p.2.y 1 + p.1.x 2 * p.2.y 2)
-  exact (((continuous_apply 0).comp hx).mul ((continuous_apply 0).comp hy)).add
-    ((((continuous_apply 1).comp hx).mul ((continuous_apply 1).comp hy)).add
-      (((continuous_apply 2).comp hx).mul ((continuous_apply 2).comp hy)))
+  simpa [Function.comp_apply, Pi.add_apply, Pi.mul_apply] using
+    ((((continuous_apply 0).comp hx).mul ((continuous_apply 0).comp hy)).add
+      (((continuous_apply 1).comp hx).mul ((continuous_apply 1).comp hy))).add
+      (((continuous_apply 2).comp hx).mul ((continuous_apply 2).comp hy))
 
 private theorem continuous_canonicalZorn_dot' :
     Continuous (fun p : CZ × CZ =>
@@ -111,9 +112,10 @@ private theorem continuous_canonicalZorn_dot' :
     continuous_canonicalZorn_x.comp continuous_snd
   change Continuous (fun p : CZ × CZ =>
     p.1.y 0 * p.2.x 0 + p.1.y 1 * p.2.x 1 + p.1.y 2 * p.2.x 2)
-  exact (((continuous_apply 0).comp hy).mul ((continuous_apply 0).comp hx)).add
-    ((((continuous_apply 1).comp hy).mul ((continuous_apply 1).comp hx)).add
-      (((continuous_apply 2).comp hy).mul ((continuous_apply 2).comp hx)))
+  simpa [Function.comp_apply, Pi.add_apply, Pi.mul_apply] using
+    ((((continuous_apply 0).comp hy).mul ((continuous_apply 0).comp hx)).add
+      (((continuous_apply 1).comp hy).mul ((continuous_apply 1).comp hx))).add
+      (((continuous_apply 2).comp hy).mul ((continuous_apply 2).comp hx))
 
 private theorem continuous_canonicalZorn_cross :
     Continuous (fun p : CZ × CZ =>

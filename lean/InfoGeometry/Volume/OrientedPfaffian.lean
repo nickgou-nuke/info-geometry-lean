@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Data.Finset.Card
+import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.Tactic
 
 /-!
@@ -125,6 +126,125 @@ theorem leftEndpoints_card (M : PerfectMatching m) :
   have hsum := M.leftEndpoints_card_add_rightEndpoints_card
   have heq := M.leftEndpoints_card_eq_rightEndpoints_card
   omega
+
+end PerfectMatching
+
+/-! ## Canonical permutation-to-matching bridge -/
+
+/-- Canonical identification of `m` labelled two-slots with `Fin (2*m)`. -/
+def pairIndexEquiv (m : ℕ) : Fin 2 × Fin m ≃ Fin (2 * m) :=
+  Equiv.finProdFinEquiv
+
+/-- The involution exchanging the two slots inside a labelled pair. -/
+def flipFinTwo : Equiv.Perm (Fin 2) :=
+  Equiv.swap 0 1
+
+@[simp] theorem flipFinTwo_zero : flipFinTwo (0 : Fin 2) = 1 := by
+  simp [flipFinTwo]
+
+@[simp] theorem flipFinTwo_one : flipFinTwo (1 : Fin 2) = 0 := by
+  simp [flipFinTwo]
+
+@[simp] theorem flipFinTwo_involutive (i : Fin 2) :
+    flipFinTwo (flipFinTwo i) = i := by
+  exact Equiv.swap_apply_self_apply 0 1 i
+
+/-- Canonical adjacent-pair partner map on `Fin (2*m)`. -/
+def standardPartner (m : ℕ) (i : Fin (2 * m)) : Fin (2 * m) :=
+  let p := (pairIndexEquiv m).symm i
+  pairIndexEquiv m (flipFinTwo p.1, p.2)
+
+@[simp] theorem standardPartner_pair_zero (m : ℕ) (k : Fin m) :
+    standardPartner m (pairIndexEquiv m (0, k)) =
+      pairIndexEquiv m (1, k) := by
+  simp [standardPartner]
+
+@[simp] theorem standardPartner_pair_one (m : ℕ) (k : Fin m) :
+    standardPartner m (pairIndexEquiv m (1, k)) =
+      pairIndexEquiv m (0, k) := by
+  simp [standardPartner]
+
+@[simp] theorem standardPartner_involutive (m : ℕ) (i : Fin (2 * m)) :
+    standardPartner m (standardPartner m i) = i := by
+  let p := (pairIndexEquiv m).symm i
+  have hp : pairIndexEquiv m p = i := (pairIndexEquiv m).apply_symm_apply i
+  rw [← hp]
+  rcases p with ⟨b, k⟩
+  fin_cases b <;> simp
+
+@[simp] theorem standardPartner_ne_self (m : ℕ) (i : Fin (2 * m)) :
+    standardPartner m i ≠ i := by
+  intro h
+  let p := (pairIndexEquiv m).symm i
+  have hp : pairIndexEquiv m p = i := (pairIndexEquiv m).apply_symm_apply i
+  rw [← hp] at h
+  have h' := (pairIndexEquiv m).injective h
+  rcases p with ⟨b, k⟩
+  fin_cases b <;> simp [standardPartner] at h'
+
+/-- The canonical matching pairing the two slots carrying the same `Fin m` label. -/
+def standardMatching (m : ℕ) : PerfectMatching m where
+  partner := standardPartner m
+  involutive := standardPartner_involutive m
+  fixed_free := standardPartner_ne_self m
+
+@[simp] theorem standardMatching_partner (m : ℕ) (i : Fin (2 * m)) :
+    (standardMatching m).partner i = standardPartner m i :=
+  rfl
+
+/-- A permutation transports the standard adjacent matching by conjugation. -/
+def matchingOfPerm {m : ℕ} (σ : Equiv.Perm (Fin (2 * m))) : PerfectMatching m where
+  partner := fun i => σ ((standardMatching m).partner (σ.symm i))
+  involutive := by
+    intro i
+    simp
+  fixed_free := by
+    intro i h
+    have h' := congrArg σ.symm h
+    simp only [Equiv.symm_apply_apply, Equiv.apply_symm_apply] at h'
+    exact (standardMatching m).partner_ne_self (σ.symm i) h'
+
+@[simp] theorem matchingOfPerm_partner
+    {m : ℕ} (σ : Equiv.Perm (Fin (2 * m))) (i : Fin (2 * m)) :
+    (matchingOfPerm σ).partner i =
+      σ ((standardMatching m).partner (σ.symm i)) :=
+  rfl
+
+/-- The transported matching pairs the two images of each standard labelled pair. -/
+@[simp] theorem matchingOfPerm_partner_pair_zero
+    {m : ℕ} (σ : Equiv.Perm (Fin (2 * m))) (k : Fin m) :
+    (matchingOfPerm σ).partner (σ (pairIndexEquiv m (0, k))) =
+      σ (pairIndexEquiv m (1, k)) := by
+  simp [matchingOfPerm]
+
+@[simp] theorem matchingOfPerm_partner_pair_one
+    {m : ℕ} (σ : Equiv.Perm (Fin (2 * m))) (k : Fin m) :
+    (matchingOfPerm σ).partner (σ (pairIndexEquiv m (1, k))) =
+      σ (pairIndexEquiv m (0, k)) := by
+  simp [matchingOfPerm]
+
+/-- Signed pair-product attached directly to a permutation representative. -/
+def permutationPairWeight
+    {m : ℕ}
+    (A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ)
+    (σ : Equiv.Perm (Fin (2 * m))) : ℝ :=
+  ∏ k : Fin m,
+    A (σ (pairIndexEquiv m (0, k)))
+      (σ (pairIndexEquiv m (1, k)))
+
+/-- Real-valued permutation sign used by the Leibniz/Pfaffian comparison. -/
+def permutationSign
+    {m : ℕ}
+    (σ : Equiv.Perm (Fin (2 * m))) : ℝ :=
+  ((Equiv.Perm.sign σ : ℤ) : ℝ)
+
+@[simp] theorem permutationSign_one {m : ℕ} :
+    permutationSign (1 : Equiv.Perm (Fin (2 * m))) = 1 := by
+  simp [permutationSign]
+
+namespace PerfectMatching
+
+variable {m : ℕ}
 
 /-- Canonical product of matrix entries along the matched pairs. -/
 def matchingWeight

@@ -96,9 +96,6 @@ theorem FaithfulDensityOperator.kuboMoriIntegrand_self_eq_trace_star_mul_self
           simp [mul_assoc]
 
 /-- Pointwise positivity of the full noncommutative Kubo--Mori self-integrand.
-
-This is the algebraic positivity statement needed before integrating over the
-modular parameter and deriving the BKM Cauchy--Schwarz/Cramér--Rao lane.
 -/
 theorem FaithfulDensityOperator.kuboMoriIntegrand_self_re_nonneg
     (D : FaithfulDensityOperator n)
@@ -107,5 +104,32 @@ theorem FaithfulDensityOperator.kuboMoriIntegrand_self_re_nonneg
     0 ≤ (D.kuboMoriIntegrand A A s).re := by
   rw [D.kuboMoriIntegrand_self_eq_trace_star_mul_self A s]
   exact finiteOperatorTrace_star_mul_self_re_nonneg _
+
+/-- The real part of the integrated full noncommutative Kubo--Mori self-pairing
+is nonnegative.
+
+The only analytic input is the continuity hypothesis on the existing CFC
+real-power path, already used by the BKM integrability owner.
+-/
+theorem FaithfulDensityOperator.kuboMoriPairing_self_re_nonneg
+    (D : FaithfulDensityOperator n)
+    (A : FiniteOperatorAlgebra n)
+    (h_rpow : Continuous D.rpow) :
+    0 ≤ (D.kuboMoriPairing A A).re := by
+  have h_integrable :
+      IntervalIntegrable
+        (D.kuboMoriIntegrand A A) MeasureTheory.volume 0 1 :=
+    (D.continuous_kuboMoriIntegrand_of_continuous_rpow A A h_rpow).intervalIntegrable 0 1
+  have hre :
+      (D.kuboMoriPairing A A).re =
+        ∫ s in (0 : ℝ)..1, (D.kuboMoriIntegrand A A s).re := by
+    unfold FaithfulDensityOperator.kuboMoriPairing
+    symm
+    exact
+      ContinuousLinearMap.intervalIntegral_comp_comm
+        (RCLike.reCLM : ℂ →L[ℝ] ℝ) h_integrable
+  rw [hre]
+  exact intervalIntegral.integral_nonneg_of_forall (by norm_num) fun s =>
+    D.kuboMoriIntegrand_self_re_nonneg A s
 
 end SouriauOnsagerBKM

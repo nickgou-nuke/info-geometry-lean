@@ -17,8 +17,8 @@ Hessian as a continuous linear map
 
 `E →L[ℝ] (E →L[ℝ] ℝ)`.
 
-The scalar primal-dual pairing is ordinary evaluation.  No separate
-"Legendre product" operation is introduced.
+The scalar primal-dual pairing is Mathlib's canonical `topDualPairing`.  No
+separate "Legendre product" operation is introduced.
 -/
 
 noncomputable section
@@ -33,13 +33,21 @@ Legendre coordinate map. -/
 abbrev ContinuousCovector (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
   E →L[ℝ] ℝ
 
-/-- The canonical primal-dual scalar pairing. -/
+/-- The canonical primal-dual scalar pairing, implemented by Mathlib's
+`topDualPairing`. -/
 def legendrePairing (η : ContinuousCovector E) (x : E) : ℝ :=
-  η x
+  topDualPairing ℝ E η x
 
 @[simp] theorem legendrePairing_apply
     (η : ContinuousCovector E) (x : E) :
-    legendrePairing η x = η x :=
+    legendrePairing η x = η x := by
+  exact topDualPairing_apply η x
+
+/-- The repository's Legendre pairing is literally Mathlib's canonical
+continuous-dual pairing. -/
+theorem legendrePairing_eq_topDualPairing
+    (η : ContinuousCovector E) (x : E) :
+    legendrePairing η x = topDualPairing ℝ E η x :=
   rfl
 
 /-- The nonlinear smooth Legendre coordinate map associated with a scalar
@@ -100,11 +108,11 @@ noncomputable def algebraicLegendreMap (ψ : E → ℝ) : E → Module.Dual ℝ 
     algebraicLegendreMap ψ x u = fderiv ℝ ψ x u :=
   rfl
 
-/-- Evaluation in the algebraic-dual presentation agrees with evaluation in
-the continuous-dual presentation. -/
+/-- Evaluation in the algebraic-dual presentation agrees with Mathlib's
+continuous-dual pairing. -/
 theorem algebraicLegendreMap_pairing
     (ψ : E → ℝ) (x u : E) :
-    algebraicLegendreMap ψ x u = legendrePairing (legendreMap ψ x) u :=
-  rfl
+    algebraicLegendreMap ψ x u = legendrePairing (legendreMap ψ x) u := by
+  simp [legendrePairing]
 
 end InfoGeometry.Geometry.LegendreDifferential

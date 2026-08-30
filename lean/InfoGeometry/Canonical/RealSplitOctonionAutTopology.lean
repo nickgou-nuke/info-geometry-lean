@@ -385,6 +385,11 @@ noncomputable instance : FiniteDimensional ℝ CZ :=
     cartesianZornLinearEquiv.symm.toLinearMap
     cartesianZornLinearEquiv.symm.injective
 
+instance : T2Space CZ :=
+  T2Space.of_injective_continuous
+    cartesianZornLinearEquiv.symm.injective
+    continuous_canonicalZorn_coordinates
+
 theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   let E := cartesianZornLinearEquiv.symm
   have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩

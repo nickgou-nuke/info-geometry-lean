@@ -341,5 +341,4 @@ theorem continuous_inverseLimitStageEvaluation_time
   exact hρ'
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitContinuousAction
-
 end

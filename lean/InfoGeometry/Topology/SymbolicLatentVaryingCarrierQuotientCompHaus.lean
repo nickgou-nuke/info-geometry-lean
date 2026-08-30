@@ -150,5 +150,3 @@ noncomputable def compactSymbolicLatentObservationQuotientRangeCompHausNaturalIs
   rfl
 
 end InfoGeometry.Topology
-
-end

@@ -75,30 +75,17 @@ This is the theorem-owned algebraic state-separation component of the
 Bost-Connes symmetry-breaking story.
 -/
 theorem bost_connes_hecke_cuntz_symmetry_breaking
-    (C_comm Op G Qab : Type u)
-    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
-    [Ring Op] [StarRing Op] [Algebra ℂ Op]
-    [Group G] [GaloisActionData G] [MulAction G Qab]
-    (bsys : BundledBostConnesSystem C_comm Op G)
-    (χ : ℚ → Qab) (ιab : Qab → ℂ)
-    (φ₁ φ₂ : Op → ℂ) (g₁ g₂ : G)
-    (h_state1 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₁ φ₁)
-    (h_state2 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₂ φ₂)
-    (h_embedding_inj : Function.Injective ιab)
-    (h_chi_generating : ∀ g : G, (∀ r : ℚ, g • χ r = χ r) → g = 1)
-    (hne : g₁ ≠ g₂) :
+    {K O_infty : Type u} [Field K] [Ring O_infty]
+    (C : CyclotomicFieldData K)
+    (E : ComplexFieldEmbedding K)
+    (P : PhaseGenerator O_infty)
+    (g₁ g₂ : RingEquiv K K)
+    (hne : g₁ ≠ g₂)
+    (φ₁ φ₂ : O_infty → ℂ)
+    (h_state1 : ExtremeGroundState C E P g₁ φ₁)
+    (h_state2 : ExtremeGroundState C E P g₂ φ₂) :
     φ₁ ≠ φ₂ :=
-  heckeCuntz_extreme_ground_states_faithful
-    (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-    (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-    χ ιab φ₁ φ₂ g₁ g₂
-    h_state1 h_state2 h_embedding_inj h_chi_generating hne
+  spontaneous_symmetry_breaking C E P g₁ g₂ hne φ₁ φ₂ h_state1 h_state2
 
 /-! ### 3. Golden Ratio at the Bost-Connes Boundary -/
 

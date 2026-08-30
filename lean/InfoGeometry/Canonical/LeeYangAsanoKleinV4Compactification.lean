@@ -118,6 +118,56 @@ structure AsanoKleinV4CompactificationCertificate where
         (endpoint h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
         (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D)
 
+namespace AsanoKleinV4CompactificationCertificate
+
+/-- Canonical constructor for AsanoKleinV4CompactificationCertificate from a supplied endpoint oracle. -/
+def ofEndpointOracle
+    (f_symm : ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+      (0 : ℂ) ∉ K₁ → (0 : ℂ) ∉ K₂ → IsClosed K₁ → IsClosed K₂ → D ≠ 0 → A * D - B * C ≠ 0 →
+      (∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0) → A + D * z = 0 → KleinV4AsanoSymmetry)
+    (f_end : ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+      (0 : ℂ) ∉ K₁ → (0 : ℂ) ∉ K₂ → IsClosed K₁ → IsClosed K₂ → D ≠ 0 → A * D - B * C ≠ 0 →
+      (∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0) → A + D * z = 0 → AsanoEndpointAlternative)
+    (h_holds : ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+      (h0K₁ : (0 : ℂ) ∉ K₁) (h0K₂ : (0 : ℂ) ∉ K₂) (hClosed₁ : IsClosed K₁) (hClosed₂ : IsClosed K₂)
+      (hD : D ≠ 0) (hDet : A * D - B * C ≠ 0)
+      (hPhi : ∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0)
+      (hroot : A + D * z = 0),
+      endpointAlternativeHolds (f_end h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot) (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D)) :
+    AsanoKleinV4CompactificationCertificate where
+  symmetry := f_symm
+  endpoint := f_end
+  endpoint_holds := h_holds
+
+/-- Canonical concrete certificate for left-pole Asano models where C ≠ 0 and -(C/D) ∈ K₁. -/
+def ofLeftPoleModel
+    (hPole : ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+      (0 : ℂ) ∉ K₁ → (0 : ℂ) ∉ K₂ → IsClosed K₁ → IsClosed K₂ → D ≠ 0 → A * D - B * C ≠ 0 →
+      (∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0) → A + D * z = 0 →
+      C ≠ 0 ∧ -(C / D) ∈ K₁) :
+    AsanoKleinV4CompactificationCertificate where
+  symmetry := fun _ _ _ _ _ _ _ _ => KleinV4AsanoSymmetry.id
+  endpoint := fun _ _ _ _ _ _ _ _ => AsanoEndpointAlternative.poleInK₁
+  endpoint_holds := by
+    intro K₁ K₂ A B C D z h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
+    exact hPole h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
+
+/-- Canonical concrete certificate for right-infinity Asano models where B ≠ 0 and -(B/D) ∈ K₂. -/
+def ofRightInfinityModel
+    (hInf : ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+      (0 : ℂ) ∉ K₁ → (0 : ℂ) ∉ K₂ → IsClosed K₁ → IsClosed K₂ → D ≠ 0 → A * D - B * C ≠ 0 →
+      (∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0) → A + D * z = 0 →
+      B ≠ 0 ∧ -(B / D) ∈ K₂) :
+    AsanoKleinV4CompactificationCertificate where
+  symmetry := fun _ _ _ _ _ _ _ _ => KleinV4AsanoSymmetry.id
+  endpoint := fun _ _ _ _ _ _ _ _ => AsanoEndpointAlternative.infinityValueInK₂
+  endpoint_holds := by
+    intro K₁ K₂ A B C D z h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
+    exact hInf h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
+
+end AsanoKleinV4CompactificationCertificate
+
+
 /--
 Certificate-to-endpoint bridge: under the nondegenerate root hypotheses, a
 Klein-V4 compactification property yields the concrete endpoint disjunction
@@ -368,4 +418,5 @@ theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification_direct_end
     asano_contraction_full_of_kleinV4_compactification_direct_endpoint
       V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
-end InfoGeometry.Canonical.LeeYangAsanoNativeCore
+end LeeYangAsanoNativeCore
+

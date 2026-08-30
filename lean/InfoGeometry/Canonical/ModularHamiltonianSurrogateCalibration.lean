@@ -166,6 +166,6 @@ end Calibration
 
 end Calibration
 
-end InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
+end ModularHamiltonianSurrogateCalibration
 
-end
+end Canonical

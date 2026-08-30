@@ -1,4 +1,6 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import Mathlib.LinearAlgebra.Basis.Defs
+import Mathlib.LinearAlgebra.Basis.Basic
 
 /-!
 # Seven-coordinate split-imaginary carrier
@@ -49,8 +51,8 @@ theorem splitFanoBasis_injective : Function.Injective splitFanoBasis := by
 theorem splitFanoBasis_expansion (X : Imaginary) :
     X = ∑ i : Fin 7,
       (imaginaryToSplitFano X i) • splitFanoBasis i := by
-  apply imaginaryToSplitFano.injective
-  funext j
-  simp [splitFanoBasis, Finset.sum_apply, Pi.single_apply]
+  symm
+  simpa [splitFanoBasis] using
+    ((Module.Basis.ofEquivFun imaginaryToSplitFano).sum_repr X)
 
 end InfoGeometry.Canonical.SplitOctonionImaginaryFanoBridge

@@ -90,6 +90,20 @@ theorem center_stable
     x ∈ P.centerSet ↔ P.inversion.theta x ∈ P.centerSet := by
   simpa [centerSet] using (mem_center_iff_mem_center (G := P.inversion) x)
 
+/-- Standard boundary current packet on ConformalGrade. -/
+def standardPacket (ι R : Type*) [Fintype ι] [DecidableEq ι] [Ring R] :
+    FiveGradeBoundaryCurrentPacket ConformalGrade ι R where
+  inversion := FiveGradedConformalInversion.standardInversion
+  occ := fun _ => 0
+
+/-- Standard boundary current packet on Unit. -/
+def unitPacket (ι R : Type*) [Fintype ι] [DecidableEq ι] [Ring R] :
+    FiveGradeBoundaryCurrentPacket Unit ι R where
+  inversion := FiveGradedConformalInversion.unitInversion
+  occ := fun _ => 0
+
 end FiveGradeBoundaryCurrentPacket
 
-end InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
+end ConformalFiveGradeCurrentPacket
+
+

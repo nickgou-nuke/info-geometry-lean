@@ -564,4 +564,65 @@ theorem dualHolonomyRecovery
   intro GState GdualState GLoop GdualLoop Scalar Memory W T D R γ hγ s
   exact R.recovered_dualHolonomy_eq_hiddenMemory γ hγ s
 
-end InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
+/-! ## 6. Canonical concrete constructors and instances -/
+
+namespace KWPhysicalDualityWitness
+
+/-- Trivial self-duality constructor where Wilson and 't Hooft readouts coincide on the same space. -/
+def ofSelf
+    (State Loop Scalar : Type*)
+    (W : WilsonReadoutDatum State Loop Scalar) :
+    KWPhysicalDualityWitness State State Loop Loop Scalar W ⟨W.wilson⟩ ⟨id, id⟩ where
+  wilson_eq_thooft_dual _ _ := rfl
+
+/-- Canonical S-duality constructor induced by state and loop equivalences. -/
+def ofEquiv
+    {GState GdualState GLoop GdualLoop Scalar : Type*}
+    (sEquiv : GState ≃ GdualState)
+    (lEquiv : GLoop ≃ GdualLoop)
+    (T : THooftReadoutDatum GdualState GdualLoop Scalar) :
+    KWPhysicalDualityWitness
+      GState GdualState GLoop GdualLoop Scalar
+      ⟨fun γ s => T.thooft (lEquiv γ) (sEquiv s)⟩
+      T
+      ⟨sEquiv, lEquiv⟩ where
+  wilson_eq_thooft_dual _ _ := rfl
+
+/-- Abelian group character pairing duality constructor. -/
+def ofAbelianPairing
+    (Group DualGroup Scalar : Type*)
+    (toDual : Group → DualGroup)
+    (fromDual : DualGroup → Group)
+    (pairing : Group → DualGroup → Scalar)
+    (h_symm : ∀ (γ : Group) (s : DualGroup), pairing γ s = pairing (fromDual s) (toDual γ)) :
+    KWPhysicalDualityWitness
+      DualGroup Group Group DualGroup Scalar
+      ⟨fun γ s => pairing γ s⟩
+      ⟨fun γDual sDual => pairing sDual γDual⟩
+      ⟨fromDual, toDual⟩ where
+  wilson_eq_thooft_dual γ s := h_symm γ s
+
+end KWPhysicalDualityWitness
+
+namespace DualHolonomyRecoveryWitness
+
+/-- Canonical concrete dual holonomy recovery witness from an invertible readout. -/
+def ofInvertibleRecovery
+    {State Loop Scalar Memory : Type*}
+    (W : WilsonReadoutDatum State Loop Scalar)
+    (hidden : State → Memory)
+    (recover : Scalar → Memory)
+    (h_rec : ∀ (γ : Loop) (s : State), recover (W.wilson γ s) = hidden s) :
+    DualHolonomyRecoveryWitness State State Loop Loop Scalar Memory W ⟨W.wilson⟩ ⟨id, id⟩ where
+  recoverFromDualHolonomy := recover
+  hiddenMemory := hidden
+  recoveringLoop := fun _ => True
+  recovery_holds := by
+    intro γ s _
+    exact h_rec γ s
+
+end DualHolonomyRecoveryWitness
+
+end PhysicalLanglandsHolonomy
+
+

@@ -73,5 +73,3 @@ theorem isLocallyConstant_conf3ArnoldNormalizationPacket :
   exact IsLocallyConstant.of_discrete
     (f := conf3ArnoldNormalizationPacket (R := R))
 
-end
-

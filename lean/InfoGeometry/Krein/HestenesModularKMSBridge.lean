@@ -147,8 +147,38 @@ theorem hestenesExpectation_kms_boundary
       P.hestenesExpectation Ω (B * A) :=
   hKMS A B
 
+/--
+Canonical concrete construction of a Hestenes-Krein KMS packet from any
+phase axis `K` (`K² = -1`) and static/trivial modular dynamics.
+-/
+@[rep_depth krein]
+def ofStaticFlow
+    (K : EndH)
+    (hK_sq : K * K = -(1 : EndH)) :
+    HestenesKreinKMSPacket (E := E) where
+  phaseAxis := K
+  phase_sq := hK_sq
+  modularFlow := {
+    flow := fun _ => MulEquiv.refl EndH
+    flow_zero := by intros; rfl
+    flow_add := by intros; rfl
+  }
+  rotor := fun _ => 1
+  rotorInv := fun _ => 1
+  modularFlow_eq_rotor_conjugation := by
+    intro t A
+    simp
+  rotor_preserves_kreinInner := by
+    intro t ξ η
+    simp
+  flow_is_hestenes_analytic := by
+    intro t A
+    rfl
+
 end HestenesKreinKMSPacket
 
 end Core
 
-end InfoGeometry.Krein.HestenesModularKMSBridge
+end HestenesModularKMSBridge
+
+

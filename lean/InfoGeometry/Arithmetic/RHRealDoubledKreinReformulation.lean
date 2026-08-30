@@ -521,5 +521,3 @@ abbrev RealDoubledKreinSpectralChart
   KreinSpectralChart (RealDoubledConformalKreinCarrier E)
 
 end InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
-
-end

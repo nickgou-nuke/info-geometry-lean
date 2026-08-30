@@ -55,5 +55,3 @@ theorem symbolicObservationRangeCompHausHomOfCanonicalFlowMorphism_eq_flow
   exact symbolicLatentObservableModularFlow_flowMorphism_quotientMap_eq Φ t
 
 end InfoGeometry.Topology
-
-end

@@ -210,4 +210,4 @@ theorem IsMaxEntSolution.hasExponentialRNForm_of_finiteSupportDuality
   rcases strongDualityAtOpt hP with ⟨Λ, hEq⟩
   exact ⟨Λ, equalityImpliesExponential hP.1 hEq⟩
 
-end InfoGeometry.MaxEnt
+end MaxEnt

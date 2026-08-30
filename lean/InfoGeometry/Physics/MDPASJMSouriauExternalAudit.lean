@@ -159,4 +159,6 @@ theorem finite_global_story_packet
   · simpa using spin_half_integral_prequantization (1 : ℚ)
   · exact (mdpas_direct_limit_theorem T).1
 
-end InfoGeometry.Physics.MDPASJMSouriauExternalAudit
+end MDPASJMSouriauExternalAudit
+end Physics
+end InfoGeometry

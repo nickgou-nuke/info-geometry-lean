@@ -367,5 +367,4 @@ structure LeeYangPrimeApproximation
   /-- The completed `xi` readout in Cayley fugacity coordinates. -/
   completedXiCayley : CompletedXiReadout
 
-
-end InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+end CayleyCriticalLineCircleBridge

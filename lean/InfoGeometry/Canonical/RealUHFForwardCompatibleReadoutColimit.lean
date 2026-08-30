@@ -138,6 +138,5 @@ theorem normalizedTraceReadoutFamily_colimitMap_eq
     normalizedTraceReadoutFamily.1
     normalizedTraceReadoutFamily_forwardCompatible n X
 
-end InfoGeometry.Canonical.RealUHFForwardCompatibleReadoutColimit
 
-end
+end InfoGeometry.Canonical.RealUHFForwardCompatibleReadoutColimit

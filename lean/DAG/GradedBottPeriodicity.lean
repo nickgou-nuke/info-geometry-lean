@@ -128,5 +128,3 @@ theorem bottClockStage_lifts (k : ℕ) :
   bottClockNilpotentStage_lifts k
 
 end DAG.GradedBottPeriodicity
-
-end

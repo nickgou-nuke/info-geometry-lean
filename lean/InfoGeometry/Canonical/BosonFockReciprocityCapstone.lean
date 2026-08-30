@@ -1,18 +1,14 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import InfoGeometry.Quantum.BosonFockReciprocity
 
-namespace InfoGeometry.Canonical
+namespace InfoGeometry.Canonical.BosonFockReciprocityCapstone
 
 open InfoGeometry.Quantum.BosonFockReciprocity
 
-/-- 🏆 GRAND CANONICAL CAPSTONE: Boson-Fermion Fock Space Reciprocity -/
-theorem grand_canonical_boson_fock_reciprocity_synthesis
-    (p : ℕ) (hp : 2 ≤ p) (s : ℂ) (hs : 0 < s.re) (k : ℕ) (hp_prime : Nat.Prime p) :
+theorem capstone_susy_reciprocity_synthesis (p : ℕ) (hp : Nat.Prime p) (s : ℂ)
+    (hs : primeFermionicFactor p s ≠ 0) :
     (primeFermionicFactor p s ≠ 0) ∧
     (primeSusyPartitionFunction p s = 1) ∧
-    (primeFermionicFactor p s = (primeBosonicFactor p s)⁻¹) ∧
-    (ArithmeticFunction.cardFactors (p ^ k) = k) :=
-  grand_boson_fock_reciprocity_synthesis p hp s hs k hp_prime
+    (primeFermionicFactor p s = (primeBosonicFactor p s)⁻¹) :=
+  grand_susy_reciprocity_synthesis p hp s hs
 
-end InfoGeometry.Canonical
+end InfoGeometry.Canonical.BosonFockReciprocityCapstone

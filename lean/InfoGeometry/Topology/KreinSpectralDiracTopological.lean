@@ -52,5 +52,3 @@ theorem continuous_spectralDiracCommutatorMap
     spectralDiracCommutatorMap M D =
       M.lambda • (D.comp M.N - M.N.comp D) :=
   rfl
-
-end

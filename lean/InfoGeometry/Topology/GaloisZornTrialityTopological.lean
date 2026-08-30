@@ -61,5 +61,3 @@ theorem galoisTrialityReadout_det (p : ZornCore.Zorn × ZMod 3) :
     ZornCore.det (galoisTrialityReadout p).1 = ZornCore.det p.1 := by
   simpa [galoisTrialityReadout] using
     (galoisActionOnTriality_preserves_det p.1 p.2)
-
-end

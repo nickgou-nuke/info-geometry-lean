@@ -64,5 +64,3 @@ theorem cl11_limit_functional_recovers_normalized_trace
   rfl
 
 end InfoGeometry.Canonical.Cl11TensorInductiveLimit
-
-end

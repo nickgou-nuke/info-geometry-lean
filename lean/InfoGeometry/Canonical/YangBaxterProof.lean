@@ -432,4 +432,4 @@ theorem braid_relation : R * B * R = B * R * B := by
   rw [hR, hB]
   exact diagonal_artin_relation_complex τ s (-q) (q ^ 3) hF hA
 
-end InfoGeometry.Canonical.YangBaxterProof
+end YangBaxterProof

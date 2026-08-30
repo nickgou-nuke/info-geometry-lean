@@ -98,7 +98,6 @@ def tiles {α : Type} (patch : PenrosePatch α) : α → Type := patch.1
 
 def n {α : Type} (patch : PenrosePatch α) : ℕ := patch.2
 
-end PenrosePatch
 
 /-- Finite-stage data for a Penrose inflation system.
     Each stage is a type (the patch at level n), and the embedding maps
@@ -182,4 +181,4 @@ structure SymmetryTransition where
   classical_forbids_pentagon : (5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ)
   quantum_has_pentagon_root : ybe_bridge.pentagon_root ^ 5 = 1
 
-end
+end PenrosePatch

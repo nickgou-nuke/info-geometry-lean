@@ -563,4 +563,4 @@ theorem root_lies_on_leeYang_circle
 
 end PrimeFerromagneticChain
 
-end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+end PrimeLeeYangFerromagneticChain

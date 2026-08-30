@@ -245,5 +245,3 @@ theorem twin_orders_stabilize : TwinOrderStability where
   representative := every_element_has_window_rep
 
 end InfoGeometry.Capstone.ZornOrderCapstone
-
-end

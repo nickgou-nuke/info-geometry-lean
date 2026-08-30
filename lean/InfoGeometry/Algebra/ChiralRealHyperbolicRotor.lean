@@ -76,5 +76,3 @@ theorem hyperbolicRotor_conjugate_mul
   rfl
 
 end InfoGeometry.OperatorAlgebra
-
-end

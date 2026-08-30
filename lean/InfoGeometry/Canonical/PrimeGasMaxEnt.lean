@@ -194,4 +194,4 @@ def PrimeGasJaynesConjecture : Prop :=
 
 end PrimeGasJaynesData
 
-end InfoGeometry.Canonical.PrimeGasMaxEnt
+end PrimeGasMaxEnt

@@ -47,5 +47,3 @@ theorem scalarDilation_pullback_add_action
   exact pullback_add scalarDilationStageFlow s t ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopological
-
-end

@@ -65,5 +65,4 @@ theorem orbitObservable_mirror_square
   exact mirror_preserves D y.1
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutObservableOrbitClosureCompHaus
-
 end

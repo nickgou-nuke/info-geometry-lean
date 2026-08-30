@@ -106,6 +106,5 @@ theorem wilsonHolonomy_moebius_invariant
 
 end MoebiusClosureBridge
 
-end InfoGeometry.Canonical.MoebiusClosure
 
-end
+end InfoGeometry.Canonical.MoebiusClosure

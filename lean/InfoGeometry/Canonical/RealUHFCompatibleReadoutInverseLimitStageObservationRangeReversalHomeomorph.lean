@@ -135,5 +135,4 @@ noncomputable def stageObservationRangeReversalHomeomorph
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalHomeomorph
-
 end

@@ -43,4 +43,3 @@ theorem conjTranspose_one {n : Type*} [Fintype n] [DecidableEq n] :
     simp [h, h2]
 
 end LegacyCayleyHilbertPolyaBraid
-end

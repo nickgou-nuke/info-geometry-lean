@@ -51,5 +51,3 @@ theorem colimitBoundaryCylinder_preimage_stage
     (congrArg (fun y => y ∈ prefixCylinder (A := A) length w) hx)
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderNeighborhood
-
-end

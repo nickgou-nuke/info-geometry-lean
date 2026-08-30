@@ -126,6 +126,5 @@ theorem normalizedTraceReadoutAction_injection_transition
     congrArg (fun z : topologicalColimit =>
       normalizedTraceReadoutAction (t, z)) h
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutContinuousColimitAction
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutContinuousColimitAction

@@ -181,14 +181,35 @@ structure MertensLDPBoundary (D : MobiusMertensData) where
 
 namespace MertensLDPBoundary
 
+variable {D : MobiusMertensData}
+
+/--
+Entropy dominance excludes macroscopic defects for the supplied Mertens/LDP
+boundary.
+ -/
+theorem noMacroscopicDefect_of_entropyDominance
+    (B : MertensLDPBoundary D) :
+    Filter.Tendsto
+      (normalizedDefectRatio B.speed B.defectObservable)
+      Filter.atTop (nhds 0) :=
+  B.ldp_to_noMacroscopicDefect B.entropyDominatesDefect
+
 /-- Extract the RH-scale Mertens boundary from an LDP property. -/
 theorem RHScaleBoundary_of_entropyDominance
-    {D : MobiusMertensData}
     (B : MertensLDPBoundary D)
     (h : B.readout.defectCost ≤ B.readout.entropyBarrier) :
     RHScaleBoundary D :=
   B.noMacroscopicDefect_to_RHScale
     (B.ldp_to_noMacroscopicDefect h)
+
+/--
+The supplied Mertens/LDP boundary already closes the macroscopic defect lane,
+and therefore yields the RH-scale boundary.
+ -/
+theorem RHScaleBoundary
+    (B : MertensLDPBoundary D) :
+    RHScaleBoundary D :=
+  RHScaleBoundary_of_entropyDominance B B.entropyDominatesDefect
 
 end MertensLDPBoundary
 
@@ -207,6 +228,4 @@ structure MertensToDefectFreeBridge
   largeDeviation :
     PrimeChainLargeDeviationWitness
 
-
-
-end InfoGeometry.Canonical.PrimeMertensDefectBoundary
+end PrimeMertensDefectBoundary

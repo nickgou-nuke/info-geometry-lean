@@ -112,5 +112,3 @@ theorem SymbolicLatentChartEquivalence.latentFeatureRegionCompHausIso_hom_forget
   rfl
 
 end InfoGeometry.Topology
-
-end

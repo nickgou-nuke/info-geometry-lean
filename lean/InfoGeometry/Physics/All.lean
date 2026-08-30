@@ -1,4 +1,6 @@
 import InfoGeometry.Physics.NuclearGradedBathCommutant
+import InfoGeometry.Physics.ThoriumIsomericChiralRotor
+import InfoGeometry.Physics.ThoriumHyperfineQEDSpacetimeBridge
 import InfoGeometry.Physics.EmergentSpacetimeBilinear
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
 import InfoGeometry.Physics.OperatorCoefficientZornBdGBridge

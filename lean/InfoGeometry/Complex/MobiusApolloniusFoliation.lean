@@ -161,5 +161,3 @@ theorem mobius_functional_equation_dual (s : ℂ) :
   rw [inv_div]
 
 end InfoGeometry.Complex.MobiusApollonius
-
-end

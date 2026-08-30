@@ -67,6 +67,5 @@ theorem reversalRangeIso_eq_fixedPointIso_after_transport
       (congrArg (fun w => stageObservationRangeCompHaus w n X) hρ.symm)) z).1
   exact (observationRangeEqToHom_val n X hρ.symm z).symm
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPointComparison
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPointComparison

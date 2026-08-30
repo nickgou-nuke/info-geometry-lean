@@ -173,4 +173,16 @@ theorem mul_sub (X Y Z : CZ) : X * (Y - Z) = X * Y - X * Z := by
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_one]
   exact InfoGeometry.Algebra.ZornVectorMatrix.one_mul _
 
+noncomputable instance : NonUnitalNonAssocRing CZ where
+  zero_mul := zero_mul
+  mul_zero := mul_zero
+  left_distrib := mul_add
+  right_distrib := add_mul
+
+noncomputable instance : IsScalarTower ℝ CZ CZ where
+  smul_assoc r X Y := smul_mul r X Y
+
+noncomputable instance : SMulCommClass ℝ CZ CZ where
+  smul_comm r X Y := (mul_smul r X Y).symm
+
 end InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

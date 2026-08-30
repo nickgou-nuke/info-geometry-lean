@@ -217,5 +217,3 @@ end Bridge
 end Core
 
 end InfoGeometry.Krein.HestenesAffineO55ClosureBridge
-
-end

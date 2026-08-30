@@ -265,4 +265,4 @@ theorem varlamov_v4_trifactor_triality_packet :
     TripotentState.trifactor_projector_idempotent, NontrivialV4.trialityCycle_cube,
     A1xA1Root.v4Action_involutive, A1xA1Root.v4Action_mul⟩
 
-end InfoGeometry.Topology.V4RootSystem
+end V4RootSystem

@@ -94,6 +94,5 @@ theorem finiteDirichlet_hestenes_intertwining
   intro x _
   rw [ContinuousLinearMap.smul_apply]
 
-end InfoGeometry.Canonical.FiniteDirichletHestenesIntertwinerBridge
 
-end
+end InfoGeometry.Canonical.FiniteDirichletHestenesIntertwinerBridge

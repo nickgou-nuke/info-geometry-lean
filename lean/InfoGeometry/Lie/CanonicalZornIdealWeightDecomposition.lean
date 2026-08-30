@@ -62,5 +62,3 @@ theorem lieIdeal_eq_inf_cartan_sup_biSup_inf_rootSpace
   · exact le_sup_of_le_right (le_iSup₂_of_le α hα le_rfl)
 
 end InfoGeometry.Lie.CanonicalZornIdealWeightDecomposition
-
-end

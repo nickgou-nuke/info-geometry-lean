@@ -6,6 +6,8 @@ import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 noncomputable section
 
+set_option maxHeartbeats 800000
+
 namespace InfoGeometry.Canonical.InductiveClosurePacket
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents

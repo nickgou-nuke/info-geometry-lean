@@ -23,4 +23,4 @@ end Base
 
 namespace InfoGeometry.Volume.Base
 
-end InfoGeometry.Volume.Base
+end Base

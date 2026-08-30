@@ -1222,4 +1222,4 @@ theorem kernel_phaseLinear_of_phaseLinear
 
 end SuppliedOperatorResolventKernel
 
-end InfoGeometry.Geometry.BilingualAnalyticity
+end BilingualAnalyticity

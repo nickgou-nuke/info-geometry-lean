@@ -140,5 +140,3 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_natural
       f hxy)
 
 end InfoGeometry.Topology
-
-end

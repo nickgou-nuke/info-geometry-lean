@@ -43,4 +43,4 @@ theorem paper_pom_Lk_arcsine_law (f : ℝ → ℝ) (hf : Continuous f) :
     (tendsto_const_nhds :
       Tendsto (fun _ : ℕ => arcsineAverage f) atTop (𝓝 (arcsineAverage f)))
 
-end
+end Omega.POM

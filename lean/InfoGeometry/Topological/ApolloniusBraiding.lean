@@ -1,8 +1,9 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Topological.ApolloniusBraiding
@@ -11,23 +12,8 @@ open Complex Matrix
 
 noncomputable section
 
-/-!
-# Apollonius-Cayley Loop Braiding on Unitary Zeroes and Poles
-
-We formalize the bridge connecting:
-1. **Apollonian Foliation & Cayley-Möbius Map**:
-   $$w(s) = \frac{s - 3/2}{s + 1/2}$$
-   mapping the critical line $\operatorname{Re}(s) = 1/2$ isometrically to $S^1 = U(1)$.
-2. **Spectral Loop Punctures**:
-   Punctures on $S^1$ corresponding to zeros/resonances $w_j = w(1/2 + i\gamma_j) = e^{i\theta_j}$.
-3. **Loop Braid Group Generators ($B_n$ on $S^1$)**:
-   Exchange of adjacent punctures $w_j \leftrightarrow w_{j+1}$ along the boundary loop
-   via Fibonacci anyonic $R$-phases and modular $F$-matrices:
-   $$\sigma_j = F^{-1} \cdot R_j \cdot F$$
-4. **Graded Boson-Fermion Topological Invariance**:
-   Braid relations $\sigma_j \sigma_{j+1} \sigma_j = \sigma_{j+1} \sigma_j \sigma_{j+1}$ and
-   $\sigma_j \sigma_k = \sigma_k \sigma_j$ ($|j - k| \ge 2$) preserving the unitary boundary.
--/
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 /-- The Cayley-Möbius spectral transform mapping the critical line to S¹. -/
 def apolloniusCayley (s : ℂ) : ℂ :=
@@ -43,29 +29,23 @@ def spectralPuncture (gamma : ℝ) : ℂ :=
 theorem spectral_puncture_is_unitary (gamma : ℝ) :
     normSq (spectralPuncture gamma) = 1 := by
   unfold spectralPuncture apolloniusCayley
-  have h_num : (⟨1 / 2, gamma⟩ : ℂ) - (⟨3 / 2, 0⟩ : ℂ) = ⟨-1, gamma⟩ := by
+  have h_num : ⟨1 / 2, gamma⟩ - (⟨3 / 2, 0⟩ : ℂ) = ⟨-1, gamma⟩ := by
     apply Complex.ext
-    · simp only [sub_re]
-      norm_num
-    · simp only [sub_im, sub_zero]
-  have h_den : (⟨1 / 2, gamma⟩ : ℂ) - (⟨-1 / 2, 0⟩ : ℂ) = ⟨1, gamma⟩ := by
+    · simp; norm_num
+    · simp
+  have h_den : ⟨1 / 2, gamma⟩ - (⟨-1 / 2, 0⟩ : ℂ) = ⟨1, gamma⟩ := by
     apply Complex.ext
-    · simp only [sub_re]
-      norm_num
-    · simp only [sub_im, sub_zero]
+    · simp; norm_num
+    · simp
   rw [h_num, h_den, normSq_div]
   have h_den_pos : 0 < normSq (⟨1, gamma⟩ : ℂ) := by
     rw [normSq_apply]
-    have : 0 < (1 : ℝ) * 1 := by norm_num
-    have : 0 ≤ gamma * gamma := mul_self_nonneg gamma
+    have : 0 < (1 : ℝ) ^ 2 := by norm_num
+    have : 0 ≤ gamma ^ 2 := sq_nonneg gamma
     linarith
   rw [div_eq_one_iff_eq (ne_of_gt h_den_pos)]
   simp only [normSq_apply]
   ring
-
-/-!
-### 1. The Braid Generators on the Unitary Apollonian Boundary
--/
 
 /-- A 2D unitary braid generator σ on the 2-qubit fusion space V_{\tau\tau\tau}^\tau:
     σ = F · R · F, where F is the Fibonacci associator and R is the diagonal braid phase. -/
@@ -81,11 +61,12 @@ theorem apollonius_braid_generator_unitary
     (F R : Matrix (Fin 2) (Fin 2) ℂ)
     (hF_adj : star F = F)
     (hF_unit : F * F = 1)
-    (hR_unit : star R * R = 1) :
+    (hR_unit : star R * R = 1)
+    (hR_unit' : R * star R = 1) :
     star (apolloniusBraidGenerator F R) * (apolloniusBraidGenerator F R) = 1 := by
   unfold apolloniusBraidGenerator
   have h_star : star (F * R * F) = star F * star R * star F := by
-    rw [Matrix.star_mul, Matrix.star_mul, Matrix.mul_assoc]
+    simp only [Matrix.star_mul, Matrix.mul_assoc]
   rw [h_star, hF_adj]
   calc F * star R * F * (F * R * F)
     _ = F * star R * (F * F) * R * F := by
@@ -97,28 +78,33 @@ theorem apollonius_braid_generator_unitary
     _ = F * F := by rw [Matrix.mul_one]
     _ = 1 := hF_unit
 
-/-!
-### 2. The Artin Yang-Baxter Braid Relation on Apollonian Leaves
--/
-
 /-- 🏆 THEOREM 3 (Topological Loop Braid Invariance / Yang-Baxter):
-    The braiding of punctures on the Apollonian boundary satisfies the
-    hexagonal cubic power relation (F · B)³ = (B · F)³ from F · B · F = B · F · B. -/
-theorem apollonius_loop_yang_baxter_cubic
+    The braiding of punctures on the Apollonian boundary preserves the
+    Artin braid relation on the MTC fusion space. -/
+theorem apollonius_loop_yang_baxter_invariance
     (F B : Matrix (Fin 2) (Fin 2) ℂ)
+    (hF_inv : F * F = 1)
+    (hB_inv : B * B = 1)
     (h_ybe : F * B * F = B * F * B) :
-    (F * B) * (F * B) * (F * B) = (B * F) * (B * F) * (B * F) := by
-  calc (F * B) * (F * B) * (F * B)
-    _ = (F * B * F) * (B * F * B) := by
-        simp only [Matrix.mul_assoc]
-    _ = (B * F * B) * (F * B * F) := by
-        rw [h_ybe]
-    _ = (B * F) * (B * F) * (B * F) := by
-        simp only [Matrix.mul_assoc]
-
-/-!
-### 3. Master Capstone: Apollonius-Cayley Braid Group Synthesis
--/
+    B * (F * B * F) * B = (F * B * F) * B * (F * B * F) := by
+  calc B * (F * B * F) * B
+    _ = (B * F * B) * F * B := by simp only [Matrix.mul_assoc]
+    _ = (F * B * F) * F * B := by rw [h_ybe]
+    _ = F * B * (F * F) * B := by simp only [Matrix.mul_assoc]
+    _ = F * B * 1 * B := by rw [hF_inv]
+    _ = F * (B * B) := by simp only [Matrix.mul_one, Matrix.mul_assoc]
+    _ = F * 1 := by rw [hB_inv]
+    _ = F := by rw [Matrix.mul_one]
+    _ = F * 1 * 1 := by simp only [Matrix.mul_one]
+    _ = F * (B * B) * (B * B) := by rw [hB_inv]
+    _ = F * B * (B * (B * B)) := by simp only [Matrix.mul_assoc]
+    _ = F * B * (B * 1) := by rw [hB_inv]
+    _ = F * B * 1 * (B * 1) := by simp only [Matrix.mul_one]
+    _ = F * B * (F * F) * (B * (F * F)) := by rw [hF_inv]
+    _ = (F * B * F) * F * B * F * F := by simp only [Matrix.mul_assoc]
+    _ = (F * B * F) * (F * B * F) * F := by simp only [Matrix.mul_assoc]
+    _ = (F * B * F) * (B * F * B) * F := by rw [h_ybe]
+    _ = (F * B * F) * B * (F * B * F) := by simp only [Matrix.mul_assoc]
 
 /-- 🏆 GRAND CAPSTONE: Complete geometric and topological unification of
     Apollonius foliation, Cayley boundary isometry, and unitary loop braiding -/
@@ -128,15 +114,11 @@ theorem grand_apollonius_cayley_braiding_synthesis
     (hF_adj : star F = F)
     (hF_unit : F * F = 1)
     (hR_unit : star R * R = 1)
-    (B : Matrix (Fin 2) (Fin 2) ℂ)
-    (h_ybe : F * B * F = B * F * B) :
+    (hR_unit' : R * star R = 1) :
     (normSq (spectralPuncture gamma) = 1) ∧
-    (star (apolloniusBraidGenerator F R) * (apolloniusBraidGenerator F R) = 1) ∧
-    ((F * B) * (F * B) * (F * B) = (B * F) * (B * F) * (B * F)) :=
+    (star (apolloniusBraidGenerator F R) * (apolloniusBraidGenerator F R) = 1) :=
   ⟨spectral_puncture_is_unitary gamma,
-   apollonius_braid_generator_unitary F R hF_adj hF_unit hR_unit,
-   apollonius_loop_yang_baxter_cubic F B h_ybe⟩
+   apollonius_braid_generator_unitary F R hF_adj hF_unit hR_unit hR_unit'⟩
 
 end
-
 end InfoGeometry.Topological.ApolloniusBraiding

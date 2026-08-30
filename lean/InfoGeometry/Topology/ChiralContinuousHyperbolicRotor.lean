@@ -72,6 +72,5 @@ theorem continuousReverseHyperbolicRotor_comp
       abel_nf
     _ = v := by rw [hcs]; simp
 
-end InfoGeometry.Topology
 
-end
+end InfoGeometry.Topology

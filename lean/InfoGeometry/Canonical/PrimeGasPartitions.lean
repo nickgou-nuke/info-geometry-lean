@@ -149,8 +149,8 @@ product with the exterior-prime-algebra supertrace.  Both owners retain their
 own semantic types; only their common finite prime register is identified.
 -/
 def primeCutoffOfRootLattice (L : FormalPrimeRootLattice) : PrimeCutoff where
-  val := L.primes
-  property := L.prime_mem
+  primes := L.primes
+  prime_mem := L.prime_mem
 
 /--
 The finite parity product is the genuine exterior-prime-algebra supertrace.

@@ -20,7 +20,8 @@ This capstone module formalizes the exact bridge between:
 
 1. **The Local Quantum State (Fermionic Modes)**:
    - Single-mode Jordan-Wigner supertrace and  	imes 2$ determinant:
-     3490865\operatorname{Tr}(\Gamma \cdot ho) = \det(1 - B) = 1 - p^{-eta}3490865
+     3490865\operatorname{Tr}(\Gamma \cdot 
+ho) = \det(1 - B) = 1 - p^{-eta}3490865
 
 2. **Global Number Theory (Mathlib Integration)**:
    - The Möbius-Zeta Dirichlet convolution:
@@ -44,7 +45,8 @@ open InfoGeometry.Canonical.YangBaxterProof
 /-- Fermionic grading matrix $\Gamma = \operatorname{diag}(1, -1)$. -/
 def Gamma2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
-/-- Local thermal density matrix $ho(q) = \operatorname{diag}(1, q)$ with  = p^{-eta}$. -/
+/-- Local thermal density matrix $
+ho(q) = \operatorname{diag}(1, q)$ with  = p^{-eta}$. -/
 def localThermalDensity (q : ℝ) : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, q]
 
 /-- Local fermionic occupation matrix (q) = \operatorname{diag}(0, q)$. -/
@@ -90,7 +92,8 @@ theorem zeta_moebius_dirichlet_convolution {S : Type*} [Ring S] :
 🏆 **PRISTINE MASTER SYNTHESIS: Jordan-Wigner Local Fermions ↔ Global Möbius-Zeta Number Theory**
 
 Unifies:
-1. **Local Jordan-Wigner Supertrace**: $\operatorname{Tr}(\Gamma \cdot ho) = \det(1 - B) = 1 - q$.
+1. **Local Jordan-Wigner Supertrace**: $\operatorname{Tr}(\Gamma \cdot 
+ho) = \det(1 - B) = 1 - q$.
 2. **Global Möbius-Zeta Convolution**: $\mu * \zeta = 1$.
 3. **Finite Fermion Supertrace**: $\operatorname{STr}(q) = \prod (1 - q_p)$.
 4. **Unitary Cayley Compactification**: $|\mathcal{C}(x)|^2 = 1$.

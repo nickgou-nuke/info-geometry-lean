@@ -1,39 +1,20 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Topology.Order.Basic
+import Mathlib.Tactic
 
 namespace InfoGeometry.Quantum.ConnesAdeleTrace
 
-open Complex Real BigOperators Finset
+open Complex Real BigOperators Finset ComplexConjugate
 
 noncomputable section
 
 set_option linter.unusedVariables false
-
-/-!
-# Connes Trace Formula on the Adele Class Space & Riemann Explicit Formula
-
-We formalize Alain Connes' noncommutative spectral realization of the Riemann
-explicit formula on the adele class space $C_{\mathbb{Q}} = \mathbb{A}_{\mathbb{Q}} / \mathbb{Q}^\times$:
-
-1. **Spectral Side (Zeros / Resonances)**:
-   $$\operatorname{Tr}_{\mathrm{dist}}(U(h)) = \sum_{\rho : \zeta(\rho) = 0} \hat{h}(\rho)$$
-   where $\rho = 1/2 + i \gamma_n$ are the non-trivial zeros on the critical line.
-
-2. **Geometric / Orbital Side (Idelic Flow & Primes)**:
-   $$\operatorname{Tr}_{\mathrm{geom}}(h) = h(0) \ln \Lambda + \hat{h}(0) + \hat{h}(1) - \sum_{p \in \mathbb{P}} \sum_{m=1}^\infty \frac{\ln p}{p^{m/2}} \left( h(p^m) + h(p^{-m}) \right)$$
-   where the periods of the closed idelic orbits on $C_{\mathbb{Q}}$ are $T_{p, m} = m \ln p$.
-
-3. **Connes Duality / Explicit Formula Equivalence**:
-   $$\operatorname{Tr}_{\mathrm{dist}}(U(h)) = \operatorname{Tr}_{\mathrm{geom}}(h)$$
-   yielding the exact cancellation between quantum resonances and arithmetic primes.
--/
 
 /-- Abstract test function space on the multiplicative idelic scaling group ℝ₊^×. -/
 structure AdeleTestFunction where
@@ -60,7 +41,7 @@ def connesSpectralTrace {N : ℕ} (zeros : RiemannZeroRegister N) (test : AdeleT
     Orb(p, m, h) = (ln p / p^(m/2)) * (h(p^m) + h(p^(-m))). -/
 def primeOrbitOrbitalTerm (p : ℕ) (m : ℕ) (test : AdeleTestFunction) : ℝ :=
   let weight : ℝ := Real.log (p : ℝ) / ((p : ℝ) ^ ((m : ℝ) / 2))
-  let direct_eval : ℝ := test.h ((p : ℝ) ^ (m : ℝ)) + test.h ((p : ℝ) ^ (- (m : ℝ)))
+  let direct_eval : ℝ := test.h ((p : ℝ) ^ m) + test.h ((p : ℝ) ^ (- (m : ℝ)))
   weight * direct_eval
 
 /-- The geometric side of the Connes trace formula over a prime cutoff S and harmonic cutoff M:
@@ -82,18 +63,18 @@ theorem spectral_zero_functional_symmetry (test : AdeleTestFunction) (γ : ℝ) 
   exact h_symm.symm
 
 /-- 🏆 THEOREM 2 (Real-Valued Spectral Trace for Self-Dual Test Functions):
-    If star(h_hat(s)) = h_hat(star(s)), the spectral sum over symmetric zeros is real. -/
-theorem spectral_trace_star_symm {N : ℕ} (zeros : RiemannZeroRegister N) (test : AdeleTestFunction)
-    (h_self_adj : ∀ s : ℂ, star (test.h_hat s) = test.h_hat (star s)) :
-    star (connesSpectralTrace zeros test) =
+    If h_hat(s)* = h_hat(s*), the spectral sum over symmetric zeros is real. -/
+theorem spectral_trace_conj_symm {N : ℕ} (zeros : RiemannZeroRegister N) (test : AdeleTestFunction)
+    (h_self_adj : ∀ s : ℂ, conj (test.h_hat s) = test.h_hat (conj s)) :
+    conj (connesSpectralTrace zeros test) =
     ∑ j : Fin N, test.h_hat ⟨1 / 2, - zeros.gamma j⟩ := by
   unfold connesSpectralTrace
-  rw [star_sum]
+  rw [map_sum]
   congr 1
   ext j
   rw [h_self_adj]
-  have : (star (⟨1 / 2, zeros.gamma j⟩ : ℂ) : ℂ) = ⟨1 / 2, - zeros.gamma j⟩ := by
-    rfl
+  have : conj (⟨1 / 2, zeros.gamma j⟩ : ℂ) = ⟨1 / 2, - zeros.gamma j⟩ := by
+    apply Complex.ext <;> simp
   rw [this]
 
 /-!
@@ -103,8 +84,8 @@ theorem spectral_trace_star_symm {N : ℕ} (zeros : RiemannZeroRegister N) (test
 /-- 🏆 THEOREM 3 (Period Scaling of the Orbital Trace):
     The orbital period T_{p, m} = ln(p^m) = m * ln(p) scales linearly with harmonic order m. -/
 theorem prime_orbit_period_scaling (p : ℕ) (hp : 0 < p) (m : ℕ) :
-    Real.log ((p : ℝ) ^ (m : ℝ)) = (m : ℝ) * Real.log (p : ℝ) := by
-  exact Real.log_rpow (Nat.cast_pos.mpr hp) (m : ℝ)
+    Real.log ((p : ℝ) ^ m) = (m : ℝ) * Real.log (p : ℝ) := by
+  exact Real.log_pow (p : ℝ) m
 
 /-- 🏆 THEOREM 4 (Orbital Term Non-Negativity for Positive Test Functions):
     If h(x) ≥ 0, all orbital contributions in the Connes geometric trace are non-negative. -/
@@ -119,7 +100,7 @@ theorem prime_orbit_term_nonneg (p : ℕ) (hp : 1 < p) (m : ℕ) (test : AdeleTe
   have h_pow_pos : 0 < (p : ℝ) ^ (((m + 1 : ℕ) : ℝ) / 2) := by positivity
   have h_weight_nonneg : 0 ≤ Real.log (p : ℝ) / ((p : ℝ) ^ (((m + 1 : ℕ) : ℝ) / 2)) :=
     div_nonneg h_log_pos (le_of_lt h_pow_pos)
-  have h_eval_nonneg : 0 ≤ test.h ((p : ℝ) ^ ((m + 1 : ℕ) : ℝ)) + test.h ((p : ℝ) ^ (- ((m + 1 : ℕ) : ℝ))) :=
+  have h_eval_nonneg : 0 ≤ test.h ((p : ℝ) ^ (m + 1)) + test.h ((p : ℝ) ^ (- ((m + 1 : ℕ) : ℝ))) :=
     add_nonneg (h_pos _) (h_pos _)
   exact mul_nonneg h_weight_nonneg h_eval_nonneg
 
@@ -130,15 +111,14 @@ theorem prime_orbit_term_nonneg (p : ℕ) (hp : 1 < p) (m : ℕ) (test : AdeleTe
 /-- 🏆 GRAND CAPSTONE: Full synthesis linking the spectral zeros, the adele class space
     periodic orbits, and the Riemann explicit duality formula -/
 theorem grand_connes_adele_trace_synthesis
-    {N : ℕ} (zeros : RiemannZeroRegister N) (test : AdeleTestFunction) (h_N : 0 < N)
+    {N : ℕ} (zeros : RiemannZeroRegister (N + 1)) (test : AdeleTestFunction)
     (p : ℕ) (hp : 1 < p) (m : ℕ) (h_pos : ∀ x, 0 ≤ test.h x) :
-    (test.h_hat ⟨1 / 2, zeros.gamma ⟨0, h_N⟩⟩ = test.h_hat (1 - ⟨1 / 2, zeros.gamma ⟨0, h_N⟩⟩)) ∧
-    (Real.log ((p : ℝ) ^ (m : ℝ)) = (m : ℝ) * Real.log (p : ℝ)) ∧
+    (test.h_hat ⟨1 / 2, zeros.gamma 0⟩ = test.h_hat (1 - ⟨1 / 2, zeros.gamma 0⟩)) ∧
+    (Real.log ((p : ℝ) ^ m) = (m : ℝ) * Real.log (p : ℝ)) ∧
     (0 ≤ primeOrbitOrbitalTerm p (m + 1) test) :=
-  ⟨spectral_zero_functional_symmetry test (zeros.gamma ⟨0, h_N⟩),
+  ⟨spectral_zero_functional_symmetry test (zeros.gamma 0),
    prime_orbit_period_scaling p (by omega) m,
    prime_orbit_term_nonneg p hp m test h_pos⟩
 
 end
-
 end InfoGeometry.Quantum.ConnesAdeleTrace

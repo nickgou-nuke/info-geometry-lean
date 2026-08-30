@@ -5,8 +5,7 @@ with mathlib support.
 
 Currently, the `verify_lean_proof` tool uses:
 - **Plain mode**: `lean <file>` directly (for code without `import Mathlib`)
-- **Mathlib mode**: the existing `info-geometry-lean` project at
-  `/home/goutev/info-geometry-lean/` which has mathlib v4.28.0 pre-built
+- **Mathlib mode**: the existing `info-geometry-lean` project which has mathlib pre-built
 
 To set up this directory as a standalone sandbox in the future:
 ```bash

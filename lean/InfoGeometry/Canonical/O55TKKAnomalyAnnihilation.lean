@@ -162,5 +162,3 @@ end Core
 end HestenesFinite
 
 end InfoGeometry.Canonical.O55TKKAnomalyAnnihilation
-
-end

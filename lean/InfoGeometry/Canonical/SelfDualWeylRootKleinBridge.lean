@@ -336,5 +336,4 @@ theorem weyl_klein_torus_noncommute (θ1 θ2 : ℝ) :
 end KleinBottleFinite
 
 end InfoGeometry.Canonical.SelfDualWeylRootKleinBridge
-
 end

@@ -360,5 +360,3 @@ theorem hestenesPionMinus_isGNegOne :
 end RealHestenesKrein
 
 end InfoGeometry.Canonical.PionChiralGoldstoneNative
-
-end

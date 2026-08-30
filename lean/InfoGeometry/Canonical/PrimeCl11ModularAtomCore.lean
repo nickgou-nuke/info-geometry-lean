@@ -356,4 +356,4 @@ theorem shiftedRiemannField_zero_iff_critical
   · intro h
     linarith
 
-end InfoGeometry.Canonical.PrimeCl11ModularAtomCore
+end PrimeCl11ModularAtomCore

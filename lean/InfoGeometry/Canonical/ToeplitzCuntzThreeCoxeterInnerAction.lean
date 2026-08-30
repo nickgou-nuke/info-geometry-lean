@@ -89,6 +89,5 @@ def coxeterInnerRingEquiv : A ≃+* A where
 @[simp] theorem coxeterInnerRingEquiv_apply (a : A) :
     coxeterInnerRingEquiv g a = coxeterInnerAction g a := rfl
 
-end InfoGeometry.Canonical.ToeplitzCuntzThreeCoxeterInnerAction
 
-end
+end InfoGeometry.Canonical.ToeplitzCuntzThreeCoxeterInnerAction

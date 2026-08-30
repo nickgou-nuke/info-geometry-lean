@@ -83,5 +83,3 @@ theorem boundaryReadout_isIso_of_bijective
     exact e.right_inv x
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientTopCat
-
-end

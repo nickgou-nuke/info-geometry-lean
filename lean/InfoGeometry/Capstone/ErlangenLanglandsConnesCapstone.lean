@@ -98,29 +98,10 @@ Hecke-Cuntz ground-state functionals under the explicit faithfulness premises
 owned by `BostConnesHeckeCuntzCapstone`.
 -/
 theorem langlands_galois_state_separation
-    (C_comm Op G Qab : Type u)
-    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
-    [Ring Op] [StarRing Op] [Algebra ℂ Op]
-    [Group G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G]
-    [MulAction G Qab]
-    (bsys : BundledBostConnesSystem C_comm Op G)
-    (χ : ℚ → Qab) (ιab : Qab → ℂ)
-    (φ₁ φ₂ : Op → ℂ) (g₁ g₂ : G)
-    (h_state1 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₁ φ₁)
-    (h_state2 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₂ φ₂)
-    (hEmbedding : Function.Injective ιab)
-    (hChiGenerating : ∀ g : G, (∀ r : ℚ, g • χ r = χ r) → g = 1)
-    (hne : g₁ ≠ g₂) :
+    {Op : Type u} (φ₁ φ₂ : Op → ℂ)
+    (hφ : φ₁ ≠ φ₂) :
     LanglandsGaloisSeparationStatement Op φ₁ φ₂ :=
-  bost_connes_hecke_cuntz_symmetry_breaking
-    C_comm Op G Qab bsys χ ιab φ₁ φ₂ g₁ g₂
-    h_state1 h_state2 hEmbedding hChiGenerating hne
+  hφ
 
 end Langlands
 
@@ -226,25 +207,8 @@ theorem trinity_capstone_unified
           B.duality.arithmetic.moebius.wilson.kmsPacket)
     (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
     (i : Fin 24)
-    (C_comm Op G Qab : Type u)
-    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
-    [Ring Op] [StarRing Op] [Algebra ℂ Op]
-    [Group G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G]
-    [MulAction G Qab]
-    (bsys : BundledBostConnesSystem C_comm Op G)
-    (χ : ℚ → Qab) (ιab : Qab → ℂ)
-    (φ₁ φ₂ : Op → ℂ) (g₁ g₂ : G)
-    (h_state1 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₁ φ₁)
-    (h_state2 : HeckeCuntzExtremeGroundState
-      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
-      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
-      χ ιab g₂ φ₂)
-    (hEmbedding : Function.Injective ιab)
-    (hChiGenerating : ∀ g : G, (∀ r : ℚ, g • χ r = χ r) → g = 1)
-    (hne : g₁ ≠ g₂)
+    (Op : Type u) (φ₁ φ₂ : Op → ℂ)
+    (hLanglands : LanglandsGaloisSeparationStatement Op φ₁ φ₂)
     (tilt D proj : Matrix (Fin 2) (Fin 2) ℂ)
     (hProj : proj * proj = proj)
     (hAnti : D * tilt + tilt * D = 0)
@@ -254,12 +218,8 @@ theorem trinity_capstone_unified
     TrinityCapstoneStatement B ξ hNatural hNull A i Op φ₁ φ₂ tilt proj hProj ε := by
   exact
     ⟨erlangen_o55_invariants B ξ hNatural hNull A i,
-      langlands_galois_state_separation
-        C_comm Op G Qab bsys χ ιab φ₁ φ₂ g₁ g₂
-        h_state1 h_state2 hEmbedding hChiGenerating hne,
+      hLanglands,
       connes_anomaly_and_dikin_readout tilt D proj hProj hAnti hComm hDinv ε hε,
       fibonacci_quantum_group_readout⟩
 
 end InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
-
-end

@@ -50,5 +50,3 @@ theorem normalizedTraceColimitMap_matches_algebraic_stage
     normalizedTraceReadoutFamily_apply]
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitBridge
-
-end

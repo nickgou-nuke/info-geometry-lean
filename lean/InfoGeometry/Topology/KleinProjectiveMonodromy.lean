@@ -13,6 +13,7 @@ topology-facing names without rebuilding either construction.
 namespace InfoGeometry.Topology
 
 open InfoGeometry.Projective
+open InfoGeometry.Projective.ProjectiveUnitary6
 open InfoGeometry.Canonical.KleinPresentedGroup
 
 abbrev KleinGroup := InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup

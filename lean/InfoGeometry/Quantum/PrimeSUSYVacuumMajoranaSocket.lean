@@ -160,4 +160,4 @@ theorem grand_prime_susy_vacuum_majorana_synthesis
    susy_dirac_sq omega,
    subsystem_witten_index_zero_of_nonempty S p hp_in hp_prime⟩
 
-end InfoGeometry.Quantum.PrimeSUSYVacuum
+end PrimeSUSYVacuum

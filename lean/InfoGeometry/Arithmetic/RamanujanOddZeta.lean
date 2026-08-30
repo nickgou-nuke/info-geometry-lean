@@ -154,4 +154,4 @@ theorem ramanujanOddZetaRHS_eq (n : ℕ) (α β : ℝ) :
   rfl
 
 
-end InfoGeometry.Arithmetic.RamanujanOddZeta
+end RamanujanOddZeta

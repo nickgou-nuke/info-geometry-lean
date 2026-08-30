@@ -175,5 +175,4 @@ def kaluzaKleinLift (L : LegendreModel) (β : ℝ) (K : EndH)
   map {x y} f := homOfLE (le_refl _)
 
 end InfoGeometry.Capstone.NavierStokesLegendre
-
 end

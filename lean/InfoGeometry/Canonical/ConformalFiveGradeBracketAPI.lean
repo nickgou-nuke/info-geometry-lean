@@ -223,6 +223,47 @@ def ofClosurePacket
   bracket := bracket
   bracket_additive := bracket_additive
 
+/-- Canonical trivial five-graded inversion on `Unit`. -/
+def unitConformalInversion : FiveGradedConformalInversion Unit where
+  theta _ := ()
+  theta_involutive _ := rfl
+  grade _ := ConformalGrade.zero
+  grade_swap _ := rfl
+
+
+/-- Canonical boundary current packet on `Unit` with standard unit index `Unit`. -/
+def unitCurrentPacket (R : Type*) [Ring R] :
+    FiveGradeBoundaryCurrentPacket Unit Unit R where
+  inversion := unitConformalInversion
+  occ _ := 0
+
+/-- Canonical 5-grade carrier on `Unit`. -/
+def unitGradeCarrier : WeylGradedCarrier Unit where
+  gradeOf _ := FiveGrade.zero
+
+/-- Canonical zero-grade Lie bracket on `Unit`. -/
+def unitBracket : Unit → Unit → Unit := fun _ _ => ()
+
+/-- The unit bracket trivially preserves zero weight. -/
+theorem unitBracket_isAdditive :
+    IsAdditiveWeightForBracket unitGradeCarrier unitGradeCarrier unitBracket := by
+  intro x y
+  rfl
+
+/-- Canonical FiveGradeBracketPacket instance on `Unit`. -/
+def canonicalUnitFiveGradeBracketPacket (R : Type*) [Ring R] :
+    FiveGradeBracketPacket Unit Unit R where
+  closure := unitCurrentPacket R
+  gradeCarrier := unitGradeCarrier
+  gradeCompat _ := rfl
+  bracket := unitBracket
+  bracket_additive := unitBracket_isAdditive
+
+/-- Canonical WeylGradedCarrier on ConformalGrade. -/
+def standardCarrier : WeylGradedCarrier ConformalGrade where
+  gradeOf := toWeylGrade
+
 end FiveGradeBracketPacket
 
-end InfoGeometry.Canonical.ConformalFiveGradeBracketAPI
+end ConformalFiveGradeBracketAPI
+

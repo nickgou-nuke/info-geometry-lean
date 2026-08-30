@@ -284,7 +284,6 @@ def classicalStageExists : Prop :=
 noncomputable instance instFiniteLayer1 : Finite data.layer1 :=
   _root_.Finite.of_equiv (Fin data.rootCardinality) data.rootStageEquiv.symm
 
-end QDeformedThreeLayerArchitecture
 
 theorem q_deformed_three_layer_architecture
     (data : QDeformedThreeLayerArchitecture) :
@@ -294,4 +293,4 @@ theorem q_deformed_three_layer_architecture
       exact inferInstance,
     ⟨data.colimitStage⟩, ⟨data.classicalStage⟩⟩
 
-end
+end QDeformedThreeLayerArchitecture

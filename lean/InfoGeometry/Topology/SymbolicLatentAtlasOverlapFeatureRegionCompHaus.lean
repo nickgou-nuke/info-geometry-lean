@@ -103,5 +103,3 @@ theorem SymbolicLatentAtlas.overlapFeatureRegionCompHausIso_hom_forget
   rfl
 
 end InfoGeometry.Topology
-
-end

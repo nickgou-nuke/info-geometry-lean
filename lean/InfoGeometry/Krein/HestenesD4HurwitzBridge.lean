@@ -448,5 +448,3 @@ end D4HurwitzArithmeticBridge
 end Core
 
 end InfoGeometry.Krein.HestenesD4HurwitzBridge
-
-end

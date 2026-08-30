@@ -93,5 +93,3 @@ theorem operatorCommutingLocusCompHausFlowIso_hom_eq_flowHom
   rfl
 
 end InfoGeometry.Topology
-
-end

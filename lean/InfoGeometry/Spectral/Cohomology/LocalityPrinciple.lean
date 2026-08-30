@@ -73,7 +73,7 @@ def filtered_owner
     FilteredInductiveHKAnalytic f :=
   P.filtered
 
-end InfoGeometry.Spectral.Cohomology.Locality
+end Locality
 
 namespace InfoGeometry.Spectral.Cohomology
 

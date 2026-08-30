@@ -65,13 +65,13 @@ noncomputable def imaginaryLeftMul :
     Imaginary →ₗ[ℝ] Module.End ℝ CanonicalZorn where
   toFun X :=
     { toFun := fun Z => X.1 * Z
-      map_add' := fun Y Z => mul_add X.1 Y Z
+      map_add' := fun Y Z => _root_.mul_add X.1 Y Z
       map_smul' := fun r Z => mul_smul r X.1 Z }
   map_add' X Y := by
     apply LinearMap.ext
     intro Z
     change (X.1 + Y.1) * Z = X.1 * Z + Y.1 * Z
-    exact add_mul X.1 Y.1 Z
+    exact _root_.add_mul X.1 Y.1 Z
   map_smul' r X := by
     apply LinearMap.ext
     intro Z

@@ -38,5 +38,3 @@ theorem continuous_braidProjectionMap_diag
     (O2 : CuntzTwoAlgebra A) (q₁ q₂ : ℝ) :
     braidProjectionMap O2 (q₁, q₂) =
       cuntzBraidProjectionOperator O2 q₁ q₂ := rfl
-
-end

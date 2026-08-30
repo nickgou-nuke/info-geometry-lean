@@ -71,6 +71,5 @@ theorem fixedPointRangeMirrorCompHausIso_forget
       𝟙 (TopCat.of (stageObservationRange ρ n X)) := by
   rfl
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPointCompHaus
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPointCompHaus

@@ -1,41 +1,17 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Projective.SouriauSignatureBridge
 
 open Real Complex
 
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
-
 noncomputable section
 
-/-!
-# Мост между Проективната Сигнатура Q = tanh(ξ), Отношението на Аполоний R(s) и Суриу Температурата β(σ)
-
-Този модул формализира точната алгебрична и термодинамична еквивалентност между три фундаментални структури:
-1. **Естествен Аполониев мащаб**:
-   $$\xi = \frac{1}{2} \ln R(s) = -\Phi_{\mathrm{Souriau}}(s)$$
-2. **Проективна Фубини-Щуди сигнатура на $\mathbb{CP}^1$**:
-   $$Q = \tanh(\xi) = \frac{R(s) - 1}{R(s) + 1}$$
-3. **Афинна температурна форма на Суриу**:
-   $$\beta_{\mathrm{Souriau}}(\sigma) = -4\sigma + 2 = \mathcal{N}(\sigma, t) - \mathcal{D}(\sigma, t)$$
-   откъдето при $R(s) = \mathcal{N} / \mathcal{D}$:
-   $$Q(\sigma, t) = \frac{\beta_{\mathrm{Souriau}}(\sigma)}{\mathcal{N}(\sigma, t) + \mathcal{D}(\sigma, t)}$$
-
-Основни доказани свойства:
-- $Q \equiv \tanh(\frac{1}{2} \ln R) = \frac{R - 1}{R + 1}$ за всяко $R > 0$.
-- $Q(\sigma, t) = \frac{-4\sigma + 2}{\mathcal{N}(\sigma, t) + \mathcal{D}(\sigma, t)}$.
-- Зануляване и термодинамично равновесие:
-  $$Q = 0 \iff \xi = 0 \iff R = 1 \iff \beta_{\mathrm{Souriau}}(\sigma) = 0 \iff \sigma = 1/2$$
-- Съответствие на фазовите области:
-  - Субхармоничен диск $\mathbb{D}$ ($\sigma > 1/2$): $\beta < 0 \iff R < 1 \iff \xi < 0 \iff Q < 0$.
-  - Екстериор $\mathbb{C} \setminus \overline{\mathbb{D}}$ ($\sigma < 1/2$): $\beta > 0 \iff R > 1 \iff \xi > 0 \iff Q > 0$.
--/
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 /-- Квадрат на разстоянието до нулата z₀ = 3/2: 𝒩(σ, t) = (σ - 3/2)² + t². -/
 def apolloniusNum (σ t : ℝ) : ℝ :=
@@ -70,32 +46,25 @@ def projectiveSignature (σ t : ℝ) : ℝ :=
     на половината от логаритъма се редуцира до рационалното частно (R - 1) / (R + 1). -/
 theorem tanh_half_log_eq_ratio_sub_div_add (R : ℝ) (hR : 0 < R) :
     Real.tanh ((1 / 2) * Real.log R) = (R - 1) / (R + 1) := by
-  have h_sqrt_pos : 0 < Real.sqrt R := Real.sqrt_pos.mpr hR
-  have h_sqrt_sq : (Real.sqrt R) ^ 2 = R := Real.sq_sqrt (le_of_lt hR)
-  have h_log_sqrt : (1 / 2) * Real.log R = Real.log (Real.sqrt R) := by
-    rw [Real.log_sqrt (le_of_lt hR)]
-    ring
-  rw [h_log_sqrt, Real.tanh_eq]
-  have h_exp_log : Real.exp (Real.log (Real.sqrt R)) = Real.sqrt R :=
-    Real.exp_log h_sqrt_pos
-  have h_exp_neg_log : Real.exp (- Real.log (Real.sqrt R)) = (Real.sqrt R)⁻¹ := by
-    rw [Real.exp_neg, h_exp_log]
-  rw [h_exp_log, h_exp_neg_log]
-  have h_sqrt_ne : Real.sqrt R ≠ 0 := ne_of_gt h_sqrt_pos
-  have h_num : Real.sqrt R - (Real.sqrt R)⁻¹ = (R - 1) / Real.sqrt R := by
-    calc Real.sqrt R - (Real.sqrt R)⁻¹
-      _ = (Real.sqrt R * Real.sqrt R - 1) / Real.sqrt R := by
-          rw [sub_div, mul_div_cancel_right₀ _ h_sqrt_ne, inv_eq_one_div]
-      _ = ((Real.sqrt R) ^ 2 - 1) / Real.sqrt R := by ring
-      _ = (R - 1) / Real.sqrt R := by rw [h_sqrt_sq]
-  have h_den : Real.sqrt R + (Real.sqrt R)⁻¹ = (R + 1) / Real.sqrt R := by
-    calc Real.sqrt R + (Real.sqrt R)⁻¹
-      _ = (Real.sqrt R * Real.sqrt R + 1) / Real.sqrt R := by
-          rw [add_div, mul_div_cancel_right₀ _ h_sqrt_ne, inv_eq_one_div]
-      _ = ((Real.sqrt R) ^ 2 + 1) / Real.sqrt R := by ring
-      _ = (R + 1) / Real.sqrt R := by rw [h_sqrt_sq]
-  rw [h_num, h_den]
-  field_simp
+  rw [Real.tanh_eq]
+  have hE_sq : (Real.exp ((1 / 2) * Real.log R)) ^ 2 = R := by
+    rw [← Real.exp_nat_mul]
+    have : (2 : ℝ) * ((1 / 2) * Real.log R) = Real.log R := by ring
+    push_cast
+    rw [this, Real.exp_log hR]
+  have h_exp_neg : Real.exp (- ((1 / 2) * Real.log R)) = (Real.exp ((1 / 2) * Real.log R))⁻¹ :=
+    Real.exp_neg _
+  rw [h_exp_neg]
+  have hE_pos : 0 < Real.exp ((1 / 2) * Real.log R) := Real.exp_pos _
+  have hE_ne : Real.exp ((1 / 2) * Real.log R) ≠ 0 := ne_of_gt hE_pos
+  have h_num : Real.exp ((1 / 2) * Real.log R) - (Real.exp ((1 / 2) * Real.log R))⁻¹ =
+               ((Real.exp ((1 / 2) * Real.log R)) ^ 2 - 1) / Real.exp ((1 / 2) * Real.log R) := by
+    field_simp
+  have h_den : Real.exp ((1 / 2) * Real.log R) + (Real.exp ((1 / 2) * Real.log R))⁻¹ =
+               ((Real.exp ((1 / 2) * Real.log R)) ^ 2 + 1) / Real.exp ((1 / 2) * Real.log R) := by
+    field_simp
+  rw [h_num, h_den, hE_sq]
+  field_simp [hE_ne]
 
 /-!
 ### 2. Връзка между Проективната Сигнатура Q и Температурата на Суриу β(σ)
@@ -125,11 +94,12 @@ theorem projective_signature_eq_souriau_beta_div_sum
   have h_num_add : apolloniusNum σ t / apolloniusDen σ t + 1 =
                    (apolloniusNum σ t + apolloniusDen σ t) / apolloniusDen σ t := by
     field_simp
+  rw [h_num_sub, h_num_add]
   have h_cancel : ((apolloniusNum σ t - apolloniusDen σ t) / apolloniusDen σ t) /
                   ((apolloniusNum σ t + apolloniusDen σ t) / apolloniusDen σ t) =
                   (apolloniusNum σ t - apolloniusDen σ t) / (apolloniusNum σ t + apolloniusDen σ t) := by
-    field_simp
-  rw [h_num_sub, h_num_add, h_cancel, apollonius_num_sub_den_eq_souriau_beta σ t]
+    field_simp [h_den_ne]
+  rw [h_cancel, apollonius_num_sub_den_eq_souriau_beta σ t]
 
 /-!
 ### 3. Равновесна Еквивалентност на Критичната Линия
@@ -161,22 +131,21 @@ theorem projective_souriau_equilibrium_iff
     rw [h_diff, apollonius_num_sub_den_eq_souriau_beta, h_beta_zero]
   have h_scale_zero : naturalScale σ t = 0 ↔ σ = 1 / 2 := by
     unfold naturalScale
-    have h_half_ne : (1 / 2 : ℝ) ≠ 0 := by norm_num
+    have : (1 / 2 : ℝ) ≠ 0 := by norm_num
     have h_ratio_pos : 0 < apolloniusRatio σ t := div_pos h_num h_den
     constructor
     · intro h
       have h_log_zero : Real.log (apolloniusRatio σ t) = 0 := by
-        have : (1 / 2 : ℝ) * Real.log (apolloniusRatio σ t) * 2 = 0 * 2 := by rw [h]
-        ring_nf at this
+        cases mul_eq_zero.mp h with
+        | inl h1 => exact False.elim (this h1)
+        | inr h2 => exact h2
+      have : apolloniusRatio σ t = 1 := by
+        have := congr_arg Real.exp h_log_zero
+        rw [Real.exp_log h_ratio_pos, Real.exp_zero] at this
         exact this
-      have h_r1 : apolloniusRatio σ t = 1 := by
-        have := Real.exp_log h_ratio_pos
-        rw [h_log_zero, Real.exp_zero] at this
-        exact this.symm
-      exact h_ratio_one.mp h_r1
-    · intro h_sig
-      have h_r1 : apolloniusRatio σ t = 1 := h_ratio_one.mpr h_sig
-      rw [h_r1, Real.log_one, mul_zero]
+      exact h_ratio_one.mp this
+    · intro h
+      rw [h_ratio_one.mpr h, Real.log_one, mul_zero]
   have h_proj_zero : projectiveSignature σ t = 0 ↔ σ = 1 / 2 := by
     rw [projective_signature_eq_souriau_beta_div_sum σ t h_den h_num]
     rw [div_eq_zero_iff, or_iff_left h_sum_ne]
@@ -199,5 +168,4 @@ theorem grand_projective_souriau_bridge_synthesis
   exact ⟨h_bridge, h_eq.1, h_eq.2.2.2⟩
 
 end
-
 end InfoGeometry.Projective.SouriauSignatureBridge

@@ -180,6 +180,5 @@ theorem contragredientGeneralLinearRepresentation_pairing_invariant
   ext x
   simp [contragredient]
 
-end InfoGeometry.Canonical.SouriauContragredientPairing
 
-end
+end InfoGeometry.Canonical.SouriauContragredientPairing

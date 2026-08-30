@@ -172,5 +172,3 @@ theorem cuntz6_quotient_hodgeDirac_majorana_sum :
   exact quotient_hodgeDirac_eq_sum_majorana 6
 
 end InfoGeometry.Canonical.CuntzSuperBraidMoEBridge
-
-end

@@ -93,5 +93,3 @@ theorem weylW2_commutator_packet :
   exact quaternion_commutator_packet
 
 end InfoGeometry.Algebra.ZornWeylBasisFrame
-
-end

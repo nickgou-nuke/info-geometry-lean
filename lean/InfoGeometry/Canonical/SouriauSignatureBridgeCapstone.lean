@@ -1,22 +1,16 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Tactic
 import InfoGeometry.Projective.SouriauSignatureBridge
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
 
-open Real Complex Matrix
+open Matrix Complex Real
 open InfoGeometry.Projective.SouriauSignatureBridge
 open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 
-/-- 🏆 GRAND CAPSTONE: Complete Projective Signature, Souriau Thermodynamics & Quantum Yang-Baxter Synthesis -/
-theorem grand_projective_souriau_bridge_capstone
+/-- 🏆 GRAND CAPSTONE: Souriau Signature Projective Bridge & Quantum Yang-Baxter Synthesis -/
+theorem grand_canonical_projective_souriau_bridge_synthesis
     (σ t : ℝ) (h_den : 0 < apolloniusDen σ t) (h_num : 0 < apolloniusNum σ t) :
     (projectiveSignature σ t = souriauBeta σ / (apolloniusNum σ t + apolloniusDen σ t)) ∧
     (projectiveSignature σ t = 0 ↔ σ = 1 / 2) ∧
@@ -32,3 +26,5 @@ theorem grand_projective_souriau_bridge_capstone
 end
 
 end InfoGeometry.Canonical.SouriauSignatureBridgeCapstone
+
+

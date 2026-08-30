@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # index_all_repos.sh
-# Systematically converts all external_refs repos to v4.28.0, builds them,
+# Systematically converts all external_refs repos to v4.28.1, builds them,
 # and indexes them with loogle.
 set -euo pipefail
 
@@ -20,9 +20,9 @@ mkdir -p "$ROOT/scripts/infra"
 
 echo '[]' > "$SUMMARY"
 
-# Ensure loogle is built for v4.28.0
-echo ">>> Ensuring loogle is built for v4.28.0..."
-echo "leanprover/lean4:v4.28.0" > "$LOOGLE_TC"
+# Ensure loogle is built for v4.28.1
+echo ">>> Ensuring loogle is built for v4.28.1..."
+echo "leanprover/lean4:v4.28.1" > "$LOOGLE_TC"
 cd "$LOOGLE"
 lake build 2>&1 | tail -5
 
@@ -66,8 +66,8 @@ process_repo() {
     echo ">>> Processing $name..."
     echo "=========================================="
 
-    # 1. Set toolchain to v4.28.0
-    echo "leanprover/lean4:v4.28.0" > "$tc"
+    # 1. Set toolchain to v4.28.1
+    echo "leanprover/lean4:v4.28.1" > "$tc"
 
     # 2. Replace git dependencies with local paths in lakefile
     if grep -q "require mathlib from git" "$lf" 2>/dev/null; then

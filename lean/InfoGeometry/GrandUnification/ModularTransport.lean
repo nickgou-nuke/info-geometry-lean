@@ -39,5 +39,3 @@ theorem tomitaGromovBridge :
   · exact algebraicSouriauTomita_properties
 
 end InfoGeometry.GrandUnification
-
-end

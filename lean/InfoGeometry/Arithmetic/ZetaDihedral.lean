@@ -96,4 +96,4 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
     simpa [tau, sigma, Complex.sub_re] using h_re
   · simp [tau, sigma, functionalReflection, conjugationReflection]
 
-end InfoGeometry.Arithmetic.ZetaDihedral
+end ZetaDihedral

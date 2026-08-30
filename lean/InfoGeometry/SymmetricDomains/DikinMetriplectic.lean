@@ -1,44 +1,19 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.SymmetricDomains.DikinMetriplectic
 
 open Matrix Real
 
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
-
 noncomputable section
 
-/-!
-# Dikin Ellipsoids, Self-Concordant Tube Barriers, and Metriplectic Flow
-
-This module formalizes the universal synthesis uniting:
-1. **Tube Domains & Symmetric Cones**:
-   Domain $T_\Omega = \mathbb{R}^n + i \Omega$ over a self-dual homogeneous cone $\Omega$.
-   Universal log-barrier generator:
-     $\Phi(Y) = -\ln \det(Y) = -\ln \Delta(Y)$ (Vinberg / Koecher characteristic polynomial).
-
-2. **Self-Concordance & Dikin Hessian Metric**:
-   $$g(Y) = \nabla^2 \Phi(Y) = Y^{-1} \otimes Y^{-1}$$
-   Dikin Ellipsoid:
-     $\mathcal{E}(Y, r) = \{ Z \mid \operatorname{Tr}((Y^{-1}(Z - Y))^2) \le r^2 < 1 \} \subset \Omega$.
-
-3. **Metriplectic Dissipative-Unitary Split**:
-   Dynamical system combining Poisson brackets $\{\cdot, \cdot\}$ and metric dissipative brackets $(\cdot, \cdot)$:
-     $\dot{X} = \{X, H\} + (X, S)$
-   - $H$: Conserved Hamiltonian on the Souriau foliation ($(\cdot, H) = 0$, $\{H, S\} = 0$).
-   - $S = -\Phi(Y)$: Entropy generator driving monotonic relaxation to the critical leaf.
-
-4. **Modular Surprisal Convexity & Dikin Confinement**:
-   The operator deficit $f(K) = e^{-K} - I + K \ge \frac{1}{2} K^2$ bounds the relative entropy
-   and imprisons the metriplectic flow within the nested Dikin ellipsoid sequence.
--/
+set_option linter.unusedVariables false
+set_option linter.unusedSimpArgs false
 
 /-- The 2D Siegel/Tube domain coordinate Y = diag(y_1, y_2) with y_1, y_2 > 0. -/
 structure TubeCoordinate where
@@ -57,8 +32,8 @@ def universalLogBarrier (Y : TubeCoordinate) : ℝ :=
 
 /-- Hessian metric tensor g_ij = ∂²Φ / ∂y_i ∂y_j = diag(1/y₁², 1/y₂²). -/
 def coneHessianMetric (Y : TubeCoordinate) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1 / Y.y1 ^ 2, 0],
-    ![0, 1 / Y.y2 ^ 2]]
+  !![1 / Y.y1 ^ 2, 0;
+     0, 1 / Y.y2 ^ 2]
 
 /-- The Dikin quadratic form Q_Y(v) = v₁²/y₁² + v₂²/y₂². -/
 def dikinQuadraticForm (Y : TubeCoordinate) (v1 v2 : ℝ) : ℝ :=
@@ -88,8 +63,7 @@ theorem cone_hessian_det (Y : TubeCoordinate) :
     (coneHessianMetric Y).det = 1 / (coneCharacteristicPoly Y) ^ 2 := by
   unfold coneHessianMetric coneCharacteristicPoly
   rw [Matrix.det_fin_two]
-  simp only [cons_val_zero, cons_val_one, head_cons]
-  rw [mul_pow, one_div_mul_one_div]
+  dsimp
   ring
 
 /-!
@@ -97,8 +71,8 @@ theorem cone_hessian_det (Y : TubeCoordinate) :
 -/
 
 /-- 🏆 THEOREM 4 (Strict Interior Confinement of the Dikin Ellipsoid):
-    If a displacement v satisfies Q_Y(v) ≤ r² < 1 for radius 0 ≤ r < 1,
-    the point Y + v remains strictly inside the open symmetric cone Ω (y₁ + v₁ > 0 and y₂ + v₂ > 0). -/
+    If a displacement v satisfies Q_Y(v) ≤ r² < 1 with radius 0 ≤ r < 1, the point Y + v remains
+    strictly inside the open symmetric cone Ω (y₁ + v₁ > 0 and y₂ + v₂ > 0). -/
 theorem dikin_ellipsoid_cone_confinement (Y : TubeCoordinate) (v1 v2 r : ℝ)
     (hr_nonneg : 0 ≤ r) (hr_lt : r < 1) (h_in : dikinQuadraticForm Y v1 v2 ≤ r ^ 2) :
     0 < Y.y1 + v1 ∧ 0 < Y.y2 + v2 := by
@@ -172,5 +146,4 @@ theorem grand_dikin_metriplectic_tube_synthesis
    metriplectic_second_law st⟩
 
 end
-
 end InfoGeometry.SymmetricDomains.DikinMetriplectic

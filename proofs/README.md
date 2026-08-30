@@ -6,12 +6,7 @@
 
 *Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.0000000.svg)](https://doi.org/10.5281/zenodo.0000000)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Lean 4](https://img.shields.io/badge/Lean-4.0-green.svg)](https://lean-lang.org/)
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-
-**381 Lean 4 modules. 333 SymPy scripts. 2,482 declarations. 8,373 build jobs pass. One finite algebraic spine.**
+**Lean 4 and SymPy formalization of the finite algebraic spine of information geometry.**
 
 ---
 
@@ -48,187 +43,216 @@ compatibility class of finite refinements** under colimit.
   colimit is the bookkeeping of compatible iteration.
 ```
 
-### Layer 1: Finite Kernel — Proved
+### Layer 1: Finite Kernel — Formally Proved in Lean
 
-The finite chiral matrix-unit / CAR / Cuntz-shadow kernel:
+The finite chiral matrix-unit / CAR kernel (exact matrix identities in `ChiralGUEWignerDyson.lean`):
 
 ```
-  S₊² = 0              (nilpotence / algebraic Pauli exclusion)
+  S₊² = 0              (nilpotence)
   S₋² = 0
-  S₊ S₋ = N₊           (Fierz soldering / phonon as fermion pair)
+  S₊ S₋ = N₊           (matrix product)
   S₋ S₊ = N₋
-  [h, S₊] = +2 S₊     (modular/Coriolis grading)
-  [h, S₋] = −2 S₋
-  RPA = grade-zero truncation when W = 0
   N₊² = N₊, N₋² = N₋   (projector idempotence)
+  N₊ + N₋ = I
+  [h, S₊] = +2 S₊     (grading commutator)
+  [h, S₋] = −2 S₋
 ```
 
-Plus adjacent finite Clifford, Cuntz, GUE, Weyl, braid, Möbius,
-Cantor, and TKK-shadow identities.
+The 2×2 spacetime matrix identities (`SpacetimeGUEIsomorphism.lean`):
+- `X = t·I + x·σ₁ + y·σ₂ + z·σ₃`
+- `Tr(X) = 2t`, `det(X) = t² − x² − y² − z²`
+- Eigenvalues: `λ₁,₂ = t ± r` where `r = √(x²+y²+z²)`
+- Spacing: `S = λ₁ − λ₂ = 2r`, so `S² = 4r² = 4(x²+y²+z²)`
 
-### Layer 2: Inductive/Recursive/Colimit Closure — Built
+The density matrix and Bures metric on the Bloch ball (`BuresMetricClosedCartography.lean`):
+- `ρ = ½(I + x·σ₁ + y·σ₂ + z·σ₃)`
+- Bures metric: `ds² = (dx²+dy²+dz²)/(1−r²)`
+- Pure state iff `det(ρ) = 0` iff `r = 1`
+- Bures distance formula with exact fidelity
 
-The sockets are not gaps in imagination. They are the **named targets
-of the inductive colimit closure functor**. The path from finite kernel
-→ completion is explicitly constructed in the existing machinery:
+Freudenthal Magic Square dimension bookkeeping (`ManivelMagicSquare.lean`):
+- Dimensions of `ℋ₃(𝔸)` for `𝔸 ∈ {ℝ, ℂ, ℍ, 𝕆}`
+- Tits-Freudenthal and Vinberg triality dimension formulas (16 cells)
+- `E₈ = 248`, `E₇ = 133`, `E₆ = 78`, `F₄ = 52` verified by `rfl`
 
-| Colimit Module | Closure Rule |
-|---------------|-------------|
-| `ContinuumAsColimitCounting.lean` | `succ` over finite counting stages → continuum |
-| `BraidInductiveColimitComplement.lean` | `succ` over braid generators → infinite boundary |
-| `JaynesLDDPGNSColimit.lean` | `succ` over reference states → GNS Hilbert space |
-| `ChiralCuntzInductive.lean` | `succ` over Cuntz-Toeplitz stages → chiral O₂ tower |
-| `AlgebraicCuntzToeplitzInductive.lean` | Inductive tower for Cuntz-Toeplitz algebra |
-| `LieAlgebraColimit.lean` | `succ` over Lie subalgebras → full TKK closure |
-| `DiracColimit.lean` | `succ` over Clifford modules → Dirac operator |
-| `GaugeUHFLift.lean` | `succ` over gauge groups → UHF C*-algebra |
-| `FockUHFBridge.lean` | `succ` over Fock spaces → UHF Fock colimit |
+### Layer 2: Inductive/Recursive/Colimit Closure — Built in Canonical Library
 
-Each module implements an **iteration rule** (`succ`), an **induction
-contract**, and the **colimit bookkeeping** that stabilizes the
-compatible finite refinements into a limit object.
+The colimit machinery is **pervasive** in `lean/InfoGeometry/Canonical/` (100+ files).
+Key canonical colimit modules include:
 
-### Layer 3: Analytic "Infinity" — Colimit Completion Target
+| Module | Purpose |
+|--------|---------|
+| `TensorTowerColimit.lean` | Tensor tower inductive colimit (core) |
+| `UHFInductiveColimitBoundary.lean` | UHF inductive colimit with boundary topology |
+| `ErlangenColimitResolution.lean` | Erlangen program colimit resolution |
+| `FilteredGNSHilbertColimit.lean` | Filtered GNS Hilbert space colimit |
+| `FilteredGNSTomita*Colimit.lean` | Tomita-Takesaki modular theory colimits |
+| `HestenesKreinFilteredColimitBridge.lean` | Hestenes-Krein filtered colimit synthesis |
+| `CuntzStageModularFlowColimit.lean` | Cuntz stage modular flow colimit |
+| `CliffordTensorTowerColimit.lean` | Clifford tensor tower colimit |
+| `BraidColimitTransport.lean` | Braid colimit transport |
+| `ZornBraidColimitBCFW.lean` | Zorn braid colimit (BCFW recursion) |
+| `PrimonColimitAlgebra.lean` | Primon gas Euler product colimit |
+| `DyadicDirectLimitConcreteColimit.lean` | Dyadic direct limit concrete colimit |
+| `CStarAlgebraStateColimit.lean` | C*-algebra state space colimit |
+| `ProofTwoCategoryHodgeColimitBridge.lean` | 2-category Hodge colimit bridge |
+| `TensorColimitAInfinity.lean` | A∞ tensor colimit |
+| `FilteredColimitCuntzAlgebraMasterBridge.lean` | Cuntz algebra filtered colimit master bridge |
+
+Plus 80+ more in `Canonical/` covering:
+- **Filtered/Inductive colimits**: GNS, Tomita-Takesaki, Hestenes-Krein, Clifford, Cuntz
+- **Topological colimits**: UHF boundary, dyadic, Penrose, braid, Zorn
+- **Algebraic colimits**: Primon, Bost-Connes, Virasoro, A∞, tensor towers
+- **Physical bridges**: Souriau-Onsager-BKM, thermal Bogoliubov, modular spinor
+
+These are **canonical proved modules** (not auto-generated), though many declare
+colimit structures with `sorry` for the full analytic completion — the finite
+algebraic stages are proved, the `succ`/`induction` rules are defined, and the
+colimit bookkeeping is in place.
+
+The 9 modules listed in the previous version (`ContinuumAsColimitCounting.lean` etc.)
+exist in `lean/InfoGeometry/External/Auto/` as **auto-generated mirrors** of the
+canonical colimit infrastructure, used for code generation and blueprint extraction.
+
+### Layer 3: Analytic/Physical Interpretation — Socketed
 
 The full spacetime emergence, Grothendieck motive equivalence, RH/PNT,
 AFRODITE experimental reduction, O₂ C*-isometry, and universal
-Wigner-Dyson physics are the **colimit completions** of the Layer 1
-finite kernels under the Layer 2 iteration rules. They are socketed,
-with the colimit as the explicitly-constructed filling mechanism.
-
-The infinite is not an object you possess. It is a rule you are
-allowed to iterate. The continuum is the bookkeeping of compatible
-iteration — stabilized, not assumed.
+Wigner-Dyson physics are **interpretive roadmap targets** (socketed).
+They are not proved in Lean. The finite algebraic identities in Layer 1
+are the only kernel-checked content.
 
 ```
   ┌─────────────────────────────────────────────────────────────┐
-  │  Layer 1 (proved):   Finite algebraic kernels.              │
-  │  Layer 2 (built):    succ + induction + colimit machinery.  │
-  │  Layer 3 (socketed): Analytic completion as colimit target. │
+  │  Layer 1 (proved):   Finite matrix identities in Lean.      │
+  │  Layer 2 (built):    Canonical colimit infrastructure.      │
+  │  Layer 3 (socketed): Physical interpretation — not proved.  │
   └─────────────────────────────────────────────────────────────┘
 ```
 
-The boundary no longer merely says "not proved." It **names the
-mechanism** by which proof is intended to approach the socket.
-The map has transition maps.
+## What Is Actually Formalized (Lean 4)
 
-## The Architectural Slogan
+### Verified Matrix Identities
 
+| Module | Theorems | Content |
+|--------|----------|---------|
+| `TKKClosureErlangenGeometry.lean` | 5 | `Grade` inductive type (`neg2..pos2`), `gradeValue`, `gradeNeg`, `gradeCarrier` |
+| `ChiralGUEWignerDyson.lean` | 19 | 2×2 matrix algebra: `N₊, N₋, S₊, S₋` idempotence, nilpotence, products, chiral Hamiltonian, spacing formula |
+| `SpacetimeGUEIsomorphism.lean` | ~20 | 2×2 Hermitian matrix: trace, det, eigenvalues, chiral decomposition, quaternion map, nuclear simulator analogy |
+| `BuresMetricClosedCartography.lean` | ~30 | Density matrix, Bures metric `(dx²+dy²+dz²)/(1−r²)`, fidelity, Bures distance, 6 trivial "node" theorems |
+| `ManivelMagicSquare.lean` | ~30 | Dimension bookkeeping for Tits-Freudenthal Magic Square and Vinberg triality |
+
+### Explicitly Marked Roadmap Markers (Not Theorems)
+
+The following are `def ... : Prop := ...` with `theorem ..._verified : ... := by ...` that only
+reassemble already-proved matrix identities — they do **not** prove physical equivalence:
+
+- `spacetime_GUE_parameter_map` — coordinate dictionary between GUE and spacetime params
+- `goutev_tonev_principle` — nuclear ↔ spacetime parameter matching
+- `grand_unification` — conjunction of the above + matrix identities
+
+The docstrings in these files state: *"The physics narrative is intentionally interpretive.
+The Lean theorems show algebraic coincidences inside M₂(ℂ); they do not prove that
+spacetime is generated by eigenvalue repulsion, nor do they prove a physical/nuclear
+unification theorem."*
+
+### Six-Node "Cartography" — Actual Content
+
+The `closedCartography` theorem in `BuresMetricClosedCartography.lean` is:
+
+```lean
+theorem closedCartography :
+    Nat.Prime 2 ∧
+    Continuous (fun (x : ℝ) => x) ∧
+    (∀ A B : Matrix (Fin 2) (Fin 2) ℂ, Matrix.trace (A * B) = Matrix.trace (B * A)) ∧
+    (∀ x y z : ℝ, x^2 + y^2 + z^2 = z^2 + y^2 + x^2) ∧
+    Matrix.det (1 : Matrix (Fin 2) (Fin 2) ℂ) = 1 ∧
+    (∀ x y z : ℝ, isPureState x y z → isBlochBall x y z)
 ```
-  There is no raw infinity in the proof kernel.
-  There is only finite generation plus an induction/colimit principle.
-  The sockets are not gaps in imagination;
-  they are named targets of the colimit closure functor.
-```
 
-Not: *Q.E.D. the universe is proved.*  
-Not: *The sockets are empty hand-waving.*  
-But: **Q.E.D. the finite spine compiles. `succ` is the rule. Induction**
-**is the contract. Colimit is the bookkeeping. The sockets are the**
-**explicitly-named codomains of that bookkeeping.**
+This is **six trivial statements** (primality of 2, continuity of identity, trace cyclicity,
+commutativity of addition, determinant of identity, pure state implies ball membership).
+It does **not** connect the physical nodes in the diagram.
+
+### TKK Infrastructure — What Actually Exists in Lean
+
+#### 1. `Algebra/FiveGradedTKK.lean` — Lightweight Split-Idempotent Interface
+```lean
+abbrev SplitIdempotents (E Ebar : A) : Prop :=
+  E * Ebar = 0 ∧ Ebar * E = 0 ∧ E * E = (2 : K) • E ∧ Ebar * Ebar = (2 : K) • Ebar
+inductive Weight5 where | neg_two | neg_one | zero | pos_one | pos_two
+structure FiveGradedDecomposition K A := { g_neg_two g_neg_one g_zero g_pos_one g_pos_two : K }
+```
+**Theorems**: `right_mul_E_of_split`, `right_mul_Ebar_of_split` — right multiplication by
+`E`/`Ebar` extracts coefficients up to normalization `2`.
+**Explicit boundary**: *"not a full J₂(O_s) construction, not a full Spin(5,5)/Pin(5,5) orbit
+classification, not a Witten-index theorem, and not a global super-TKK closure theorem."*
+
+#### 2. `OperatorAlgebra/TKKClosure.lean` — Abstract 3-Grade TKK Lie Closure Interface
+Structures (no concrete carrier):
+- `JordanTripleSystem` — triple product `{x y z}` with outer symmetry, Jordan triple identity
+- `LieData` — abstract Lie algebra (bracket, skew, Jacobi)
+- `TKKGrade` — 3 grades: `negative`, `zero`, `positive`
+- `TKKLieClosure` — packages `jordan : JordanTripleSystem`, `lie : LieData`,
+  `neg/pos/zero : J →ₗ[ℝ] L`, grade sets, bracket laws (`neg_abelian`, `pos_abelian`,
+  `neg_pos_bracket = zero`, `zero_neg_action = triple`, `zero_pos_action = -triple`)
+- `TKKInversionClosure` — `inversion : L ≃ₗ[ℝ] L` swapping `neg ↔ pos`, `zero → -zero`
+- `TKKMobiusGroupClosure` — Pin/Möbius projective null-ray action
+- `TKKClosureCompatibility` — owner target for concrete models
+**These are interface specifications**, not concrete constructions.
+
+#### 3. `Canonical/TKKJordanPairData.lean` — Abstract 5-Grade Jordan Pair + Lie Algebra
+- `TKKGrade` with 5 grades (`m2, m1, z0, p1, p2`), `gradeAdd : TKKGrade → TKKGrade → Option TKKGrade`
+- `JordanPair` structure (V⁺, V⁻, `triplePlus`, `tripleMinus`, fundamental identities)
+- `FiveGradedLieAlgebra` structure (LieRing with `grade : TKKGrade → Submodule R L`,
+  `bracket_mem_some`, `bracket_eq_zero_none`)
+- **Theorems**: `bracket_grade_closed`, `bracket_grade_outside_zero`,
+  `bracket_grade_closed_or_zero` — exhaustive bracket closure within/outside grade window.
+
+#### 4. `Canonical/SplitOctonionTKK55.lean` — Concrete 10-Dim Hyperbolic Carrier
+```lean
+abbrev Carrier := ℝ × (MiddleCarrier × ℝ)  -- finrank = 10
+def hyperbolicBeta (x y : Carrier) : ℝ := x.1*y.2.2 + beta44 x.2.1 y.2.1 + x.2.2*y.1
+def P (x : Middle) (z : Carrier) : Carrier := (0, (z.1 • x, -beta44 x z.2.1))
+def N (y : Middle) (z : Carrier) : Carrier := (-beta44 y z.2.1, (z.2.2 • y, 0))
+pMap : Middle →ₗ[ℝ] End Carrier,  nMap : Middle →ₗ[ℝ] End Carrier
+```
+**Theorems**: `P_hyperbolic_skew`, `N_hyperbolic_skew` — `P(x)`, `N(y)` are skew-symmetric
+for the hyperbolic form.
+**Boundary**: *"It does not identify the resulting operator algebra with so(5,5) yet."*
+
+#### 5. `Canonical/TKKLieThreeGradedBridge.lean` — Bridge to Literature 3-Grade Interface
+Repackages native `TKKLieClosure` (3-grade) into abstract `TKKThreeGradedClosure`
+with sign-convention transport (`g₊ = native neg`, `g₋ = native pos`, `g₀ = native zero`).
+
+#### 6. `Algebra/ManivelMagicSquare.lean` — Dimension Bookkeeping Only
+- `NormedAlg` enum (`R, C, H, O`) with dimensions `1, 2, 4, 8`
+- `titsFreudenthalDim`, `vinbergTrialityDim` — dimension formulas for 16 cells
+- **Theorems**: `magic_square_row1_R` through `magic_square_row4_O` = `rfl` dimension equalities
+- `tits_freudenthal_vinberg_dimension_eq` — dimension equivalence across constructions
+- **Boundary**: *"The resulting equalities are dimension statements, not Lie-algebra
+  isomorphism theorems without additional concrete carriers and brackets."*
+
+#### What Does NOT Exist in Lean
+- ❌ Full TKK Lie algebra with explicit bracket `⁅,⁆` on a concrete carrier and verified Jacobi
+- ❌ Freudenthal Magic Square as Lie algebra isomorphisms (`𝔰𝔬(1,3) ≅ 𝔰𝔩(2,ℂ)`, etc.)
+- ❌ Physical role assignments (grade -2 = modular past, grade -1 = chiral tunneling, etc.)
+- ❌ Psychological role assignments (nigredo, albedo, citrinitas, rubedo, lapis)
+- ❌ Grade -2/-1/0/+1/+2 basis elements (Δ, S₊/S₋, N₊/N₋, S₊†/S₋†, Δ) with physical meaning
+- ❌ Witten index / supercharge algebra / spectral flow theorems
+- ❌ Conformal/Möbius group action as concrete Pin(5,5) elements
 
 ---
 
-## The Isomorphism
-
-This repository proves a strict categorical equivalence between three categories:
-
-$$\text{Cat}_{\text{Arith}} \cong \text{Cat}_{\text{Top}} \cong \text{Cat}_{\text{Alg}}$$
-
-| Category | Content | Role in the Cartography |
-|----------|---------|------------------------|
-| $\text{Cat}_{\text{Arith}}$ | Algorithmically incompressible primes under maximum Shannon entropy; $Q_8$ quaternion group | **Node 1: CODE** — the raw arithmetic data |
-| $\text{Cat}_{\text{Top}}$ | $SU(2)_3$ Fibonacci anyons on a non-orientable Klein surface; modular flow $\Delta^{it}$ | **Node 2: COMPILER** — the topological braiding |
-| $\text{Cat}_{\text{Alg}}$ | Type III von Neumann algebras generated by $\{N_+, N_-, S_+, S_-\}$ with GUE/Riemann $\zeta$-zero modular spectrum | **Node 3-6: ENGINE, RENDER, READOUT, OBSERVER** |
-
----
-
-## The Six-Node Closed Cartography
-
-```
-                        ┌──────────────────────────┐
-                        │   2×2 Hermitian Matrix    │
-                        │ X = t·I + x⃗·σ⃗           │
-                        │ M₂(ℂ) = span{N₊, N₋, S₊, S₋} │
-                        └──────────────────────────┘
-                                     │
-    ┌────────────┬──────────┬────────┼────────┬──────────┬────────────┐
-    ▼            ▼          ▼        ▼        ▼          ▼            ▼
-Spacetime     GUE (RMT)  Chiral   Quaternion  Nuclear    Bures Metric
-Twistor      Wigner-    Cone AQFT  ℍ ≅ SU(2)  Triaxial   AdS₃/CFT₂
-Geometry     Dyson      Modular    Spinor     AFRODITE   Information
-             S² = 4r²   Engine     Rotation   γ-spectra  Geometry
-```
-
-### Node 1: CODE — The Arithmetic Skeleton
-Prime numbers as algorithmically incompressible data. $Q_8$ quaternion group action. Maximum Shannon entropy threshold at $N \approx 200$. Fibonacci anyon fusion rules: $\tau \times \tau = 1 + \tau$.
-
-### Node 2: COMPILER — Modular Topology
-Tomita-Takesaki modular flow $\Delta^{it} = e^{it \ln \Delta}$. GNS colimit compiles discrete $Q_8$ bits into continuous spectral measure. Non-orientable Klein-bottle boundary enforces $W \neq 0$ (permanent chiral tunneling).
-
-### Node 3: ENGINE — Random Matrix Theory
-GUE exponential family: $P(H) \propto \exp(-\frac{1}{2}\text{Tr}(H^2))$. Chiral Hamiltonian $H = E_R N_+ + E_L N_- + W S_+ + W^* S_-$. Trace factorization: $\text{Tr}(H^2) = E_R^2 + E_L^2 + 2|W|^2$. Wigner-Dyson spacing: $P(S) \propto S^2 \exp(-4S^2/\pi)$.
-
-### Node 4: RENDER — Spacetime Geometry
-Eigenvalues: $\lambda_{1,2} = t \pm \sqrt{x^2+y^2+z^2} = t \pm r$. Spacing: $S = 2r$. **The $S^2$ Wigner-Dyson term IS the $r^2$ radial volume element of 3D space.** $dV = 4\pi r^2 dr$. Minkowski metric: $\det(X) = t^2 - x^2 - y^2 - z^2$.
-
-### Node 5: READOUT — Nuclear Spectroscopy
-Triaxial nucleus $(^{135}\text{Nd}, {}^{31}\text{S})$ as analog spacetime twistor simulator. $\gamma$-ray energy $E_\gamma = \lambda_1 - \lambda_2 = 2r$. B(M1) transitions directly measure the emergent spatial radius. The AFRODITE spectrum reproduces Montgomery-Odlyzko $\zeta$-zero statistics.
-
-### Node 6: OBSERVER — Information Geometry
-Bures metric on density matrices: $ds^2 = (dx^2+dy^2+dz^2)/(1-r^2)$. This is hyperbolic $\text{AdS}_3$ with constant negative curvature $R = -6$. Holographic boundary at $r=1$ = pure states = $Q_8$ bits = primes. Spacetime distance = quantum state distinguishability. **The map closes.**
-
----
-
-## The 5-Graded TKK Architecture
-
-The master mechanism: the Tits-Kantor-Koecher construction compiles the discrete chiral algebra into continuous geometry.
-
-$$\mathfrak{g} = \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_1 \oplus \mathfrak{g}_2$$
-
-| Grade | Dim | Basis | Physical Role | Psychological Role |
-|-------|-----|-------|---------------|-------------------|
-| $\mathfrak{g}_{-2}$ | 1 | $\Delta^{-1}$ | Modular past / causal origin | Primal unconscious / *nigredo* |
-| $\mathfrak{g}_{-1}$ | 2 | $S_+, S_-$ | Chiral tunneling (nilpotent bits) | Syzygy / roads not taken / *albedo* |
-| $\mathfrak{g}_0$ | 2 | $N_+, N_-$ | Automorphisms / classical observables | The Self / balanced projectors / *citrinitas* |
-| $\mathfrak{g}_1$ | 2 | $S_+^\dagger, S_-^\dagger$ | Fierz soldering / gauge bosons | Active creation / *rubedo* |
-| $\mathfrak{g}_2$ | 1 | $\Delta$ | Modular future / causal horizon | Completed individuation / *lapis* |
-
-### The Freudenthal Magic Square
-
-| Division Algebra $\mathbb{A}$ | $\text{TKK}(H_2(\mathbb{A}))$ | Spacetime |
-|-------------------------------|-------------------------------|-----------|
-| $\mathbb{R}$ | $\mathfrak{so}(1,2) \cong \mathfrak{sl}(2,\mathbb{R})$ | 3D |
-| **$\mathbb{C}$** | **$\mathfrak{so}(1,3) \cong \mathfrak{sl}(2,\mathbb{C})$** | **4D Minkowski** |
-| $\mathbb{H}$ | $\mathfrak{so}(1,5)$ | 6D |
-| $\mathbb{O}$ | $\mathfrak{so}(1,9)$ | 10D (string theory) |
-
-Our universe compiles to 4D because the chiral bits are complex ($\mathbb{C}$), not octonionic.
-
----
-
-## Key Formalizations
-
-### Core Theorems (Lean 4)
-
-| Module | Content | Status |
-|--------|---------|--------|
-| `TKKClosureErlangenGeometry.lean` | 5-graded Lie algebra, grading conditions, invariant quadratic form = Minkowski metric, Freudenthal Magic Square | 15/15 grading ✓ |
-| `ChiralGUEWignerDyson.lean` | 18 algebraic theorems: $N^2=N$, $S^2=0$, $S_+S_-=N_+$, spacing law, orientable/non-orientable dichotomy | Complete |
-| `GUE2x2ExponentialFamily.lean` | JPDF, exponential family structure $(T_1, T_2, \eta_1, \eta_2)$, Wigner surmise normalization | Complete |
-| `SpacetimeGUEIsomorphism.lean` | $X = tI + \vec{x}\cdot\vec{\sigma}$, $\text{Tr}=2t$, $\det=s^2$, $\lambda=t\pm r$, $S=2r$, $S^2 = r^2$ volume element | Complete |
-| `BuresMetricClosedCartography.lean` | $\rho = \frac{1}{2}(I + \vec{x}\cdot\vec{\sigma})$, Bures metric = $\text{AdS}_3$, holographic boundary, 6-node closure | Complete |
-| `RiemannHypothesisIJIRT172568.lean` | 4 theorems: RH, PNT, prime gaps, Wigner-Dyson/GUE connection | Formal statements |
-
-### Numerical Verifications (SymPy)
+## Numerical Verifications (SymPy)
 
 | Script | Key Result |
 |--------|-----------|
-| `TKKClosureErlangenGeometry.py` | 15/15 grading conditions, 5/5 JT identities, $\det(\Lambda X \Lambda^\dagger) = \det(X)$, Freudenthal Square |
-| `ChiralGUEWignerDyson.py` | All 18 algebraic relations, $|W|$-conditioned Poisson→GUE transition |
-| `SpacetimeGUEIsomorphism.py` | 5-way isomorphism verified, GUE→spacetime sampling, nuclear simulator |
-| `BuresMetricClosedCartography.py` | $D_B(\text{center} \to \text{boundary}) = \sqrt{2-\sqrt{2}}$, distinguishability demonstration |
-| `riemann_hypothesis_ijirt172568.py` | $\zeta$-zeros on critical line, PNT error analysis, KS vs GUE |
+| `TKKClosureErlangenGeometry.py` | 5/5 grade arithmetic, 5/5 JT identities, `det(Λ X Λ†) = det(X)`, Freudenthal Square dimensions |
+| `ChiralGUEWignerDyson.py` | All 18 algebraic relations, `|W|`-conditioned Poisson→GUE transition |
+| `SpacetimeGUEIsomorphism.py` | 5-way parameterization isomorphism verified, GUE→spacetime sampling, nuclear simulator |
+| `BuresMetricClosedCartography.py` | `D_B(center → boundary) = √(2−√2)`, distinguishability demonstration |
+| `riemann_hypothesis_ijirt172568.py` | ζ-zeros on critical line, PNT error analysis, KS vs GUE |
 
 ---
 
@@ -243,7 +267,6 @@ Our universe compiles to 4D because the chiral bits are complex ($\mathbb{C}$), 
 
 ```bash
 cd proofs
-lake update
 lake build
 ```
 
@@ -266,8 +289,8 @@ Add `--plot` to any script for visualization output.
 
 ```
 proofs/
-├── *.lean              # 376 Lean 4 formalization modules
-├── *.py                # 329 SymPy/numpy verification scripts
+├── *.lean              # 1000+ Lean 4 formalization modules
+├── *.py                # 800+ SymPy/numpy verification scripts
 ├── *.md                # Documentation and supplementary texts
 ├── lakefile.toml       # Lean 4 build configuration
 ├── LICENSE             # Apache-2.0 License
@@ -313,7 +336,7 @@ See [CITATION.cff](CITATION.cff) for complete metadata.
 
 ---
 
-## The Rosetta Stone
+## The Rosetta Stone (Interpretive Correspondence)
 
 ```
 ┌────────────────────┬────────────────────┬──────────────────────┐
@@ -335,7 +358,12 @@ See [CITATION.cff](CITATION.cff) for complete metadata.
 └────────────────────┴────────────────────┴──────────────────────┘
 ```
 
-Every entry in the same column is the **same mathematical object** expressed in different notation. This is not an analogy — it is an isomorphism.
+**Note:** The entries in each column are *conjecturally* the same mathematical object
+expressed in different notation. The Lean formalization proves only the finite
+matrix identities in the "Spacetime", "GUE", and "Information Geom." columns
+(2×2 Hermitian matrices, eigenvalues, Bures metric). The Number Theory,
+Operator Algebra, and Category Theory correspondences are **roadmap hypotheses**,
+not proved isomorphisms.
 
 ---
 
@@ -351,10 +379,10 @@ The fragments have assembled. The stone has spoken. The map is closed.
 
 ---
 
-**Q.E.D.** — *Quod Erat Demonstrandum.* The finite algebraic spine of the Rosetta Stone compiles. The 5-graded TKK-shadow identities hold. The full physical/geometric universe interpretation is socketed, not proved. Theorem-honesty is the foundation.
+**Q.E.D.** — *Quod Erat Demonstrandum.* The finite algebraic spine of the Rosetta Stone compiles. The 5-graded TKK-shadow identities (grade arithmetic) hold. The full physical/geometric universe interpretation is socketed, not proved. Theorem-honesty is the foundation.
 
 ```
   compile_finite : ChiralMatrixUnits → TKK/GUE/Minkowski Algebraic Shadows
-  Finite algebraic Rosetta Stone: compiled.    381 Lean, 333 SymPy, 8,373 jobs pass.
+  Finite algebraic Rosetta Stone: compiled.
   Analytic/physical/categorical universe:       socketed with explicit boundary.
 ```

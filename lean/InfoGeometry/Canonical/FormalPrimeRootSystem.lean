@@ -166,4 +166,4 @@ theorem finite_denominator_identity
     weylDenominatorProduct L x = weylAlternatingSum L x :=
   finite_prime_weyl_denominator L x
 
-end InfoGeometry.Canonical.FormalPrimeRootSystem
+end FormalPrimeRootSystem

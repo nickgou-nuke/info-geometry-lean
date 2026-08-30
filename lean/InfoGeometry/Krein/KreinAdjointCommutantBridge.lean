@@ -251,5 +251,3 @@ theorem finiteKreinCommutant_commutator_skewAdjoint
   simp [sub_eq_add_neg]
 
 end InfoGeometry.Krein.KreinAdjointCommutantBridge
-
-end

@@ -1,265 +1,141 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
-import InfoGeometry.Canonical.PrimeMertensDefectBoundary
+import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 
 /-!
 # InfoGeometry.Canonical.PrimeSUSYVacuum
 
-SUSY vacuum readout capstone for the prime Lee--Yang architecture.
+Theorem-honest SUSY vacuum owner for the prime Lee--Yang architecture.
 
-This module keeps the finite arithmetic facts separate from the analytic
-spectral laws:
+This module keeps only genuine finite arithmetic theorems and a data-only
+assembly packet:
 
-* finite Mobius parity is owned by
+* finite Möbius/fermion-parity readback is owned by
   `InfoGeometry.Arithmetic.PrimeSuperalgebraReadback`;
-* analytic and spectral interpretations must be imported from their concrete
-  owner files.
+* defect-free Lee--Yang approximation data are owned by
+  `InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection`.
 
-It does not prove RH, does not assert a completed-`xi` determinant identity, and
-does not identify inverse-zeta Witten poles with zero modes.
+This file does not store arbitrary SUSY/RH/`xi`-zero laws as packet fields and
+does not claim a completed-`xi` determinant identity.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeSUSYVacuum
 
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
-open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 open InfoGeometry.Canonical.PrimeMertensDefectBoundary
+open InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 
-/-! ## 1. Prime-register structural lemmas -/
+/-! ## 1. Finite arithmetic parity readback -/
 
-/-- A nonempty prime register contains at least one prime. -/
-theorem primes_nonempty_of_nonempty_register
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    ∃ p : ℕ, p ∈ P.primes ∧ Nat.Prime p := by
-  rcases hP with ⟨p, hp⟩
-  exact ⟨p, hp, P.prime_mem p hp⟩
+/-- Finite fermion parity readout from the arithmetic prime-superalgebra layer. -/
+abbrev finiteFermionParity
+    (P : FermionicPrimeRegister)
+    (psi : FermionicPrimeState P) : ℤ :=
+  fermionParity P psi
 
-/-- The empty prime register yields the unit Witten index. -/
-theorem finite_witten_index_empty_register :
-    (∑ S ∈ PrimeRegister.primes (⟨∅, by trivial⟩ : PrimeRegister) |>.powerset, (-1 : ℤ) ^ S.card) = 1 := by
-  have h : PrimeRegister.primes (⟨∅, by trivial⟩ : PrimeRegister) = ∅ := rfl
-  rw [h]
-  simp
-
-/-- A singleton prime register has Witten index `1 - 1 = 0`. -/
-theorem finite_witten_index_singleton_register
-    (p : ℕ) (hp : Nat.Prime p) :
-    (∑ S ∈ PrimeRegister.primes (⟨{p}, fun s hs => by simp at hs; subst hs; exact hp⟩ : PrimeRegister) |>.powerset, (-1 : ℤ) ^ S.card) = 0 := by
-  have hP : PrimeRegister.primes (⟨{p}, fun s hs => by simp at hs; subst hs; exact hp⟩ : PrimeRegister) = {p} := rfl
-  rw [hP]
-  simp [Finset.sum_powerset_neg_one_pow_card_of_nonempty]
-
-/-! ## 2. Fermion parity properties -/
-
-/-- Fermion parity of a prime register equals `(-1)^|P|`. -/
-theorem fermionParity_eq_neg_one_pow_card
-    (P : PrimeRegister) :
-    InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity P = (-1 : ℤ) ^ P.primes.card := by
-  unfold InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity
-  rfl
-
-/-- The empty register has fermion parity `+1`. -/
-theorem fermionParity_empty_register :
-    InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity (⟨∅, by trivial⟩ : PrimeRegister) = (1 : ℤ) := by
-  unfold InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity
-  unfold InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionNumber
-  rw [Finset.card_empty]
-  simp
-
-/-- A singleton prime register has fermion parity `-1`. -/
-theorem fermionParity_singleton_register
-    (p : ℕ) (hp : Nat.Prime p) :
-    InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity (⟨{p}, fun s hs => by simp at hs; subst hs; exact hp⟩ : PrimeRegister) = (-1 : ℤ) := by
-  unfold InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParity
-  unfold InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionNumber
-  rw [Finset.card_singleton]
-  simp
-
-/-! ## 3. Möbius-parity bridge -/
-
-/-- The finite supertrace Dirichlet polynomial equals the finite inverse Euler product. -/
-theorem finite_supertrace_dirichlet_eq_inverse_euler
-    (P : PrimeRegister)
-    (x : ℕ → ℂ) :
-    finiteSupertraceDirichlet P x =
-      finiteInverseEulerProduct P x := by
-  exact finiteSupertraceDirichlet_eq_inverseEulerProduct P x
-
-/-- Empty prime register gives unit supertrace Dirichlet polynomial. -/
-theorem finite_supertrace_dirichlet_empty
-    (x : ℕ → ℂ) :
-    finiteSupertraceDirichlet (⟨∅, by trivial⟩ : PrimeRegister) x = 1 := by
-  exact finiteMobiusDirichletPolynomial_empty x
-
-/-- Empty prime register gives unit inverse Euler product. -/
-theorem finite_inverse_euler_empty
-    (x : ℕ → ℂ) :
-    finiteInverseEulerProduct (⟨∅, by trivial⟩ : PrimeRegister) x = 1 := by
-  exact finiteFermionicEulerProduct_empty x
-
-/-- Möbius parity on represented square-free states equals fermion parity. -/
-theorem mobius_eq_fermionParity_readback
-    (P : PrimeRegister)
-    (ψ : FermionicPrimeState P) :
-    ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
-      InfoGeometry.Arithmetic.PrimeBitWittenIndex.fermionParityOfState P ψ := by
-  exact mobius_representedNatOfState_eq_fermionParity P ψ
-
-/-! ## 4. Thermal finite cutoff readout -/
-
-/-- The thermal supertrace factor is nonzero for finite inverse temperature. -/
-theorem thermal_prime_factor_ne_zero
-    (β : ℝ) (p : ℕ) :
-    thermalPrimeFactor β p ≠ 0 := by
-  exact thermalPrimeFactor_ne_zero β p
-
-/-- Finite thermal supertrace equals finite thermal inverse Euler product. -/
-theorem finite_thermal_supertrace_eq_inverse_euler
-    (P : PrimeRegister) (β : ℝ) :
-    finiteThermalSupertrace P β =
-      finiteThermalInverseEulerProduct P β := by
-  exact finiteThermalSupertrace_eq_inverseEulerProduct P β
-
-/-! ## 5. Finite Witten-index cancellation -/
-
-/-- The finite Witten index is the powerset parity sum. -/
-def finiteWittenIndex (P : PrimeRegister) : ℤ :=
-  ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card
-
-/-- The finite Witten index of the empty register is `+1`. -/
-theorem finiteWittenIndex_empty :
-    finiteWittenIndex (⟨∅, by trivial⟩ : PrimeRegister) = 1 := by
-  unfold finiteWittenIndex
-  have h : PrimeRegister.primes (⟨∅, by trivial⟩ : PrimeRegister) = ∅ := rfl
-  rw [h]
-  simp
+/-- Möbius equals finite fermion parity on represented square-free prime-bit states. -/
+theorem finite_mobius_eq_fermionParity
+    (P : FermionicPrimeRegister)
+    (psi : FermionicPrimeState P) :
+    ArithmeticFunction.moebius (representedSquarefreeNat P psi) =
+      finiteFermionParity P psi := by
+  exact mobius_eq_fermionParity P psi
 
 /-- Finite Witten-index cancellation over a nonempty prime register. -/
 theorem finite_wittenIndex_cancel
-    (P : PrimeRegister)
+    (P : FermionicPrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 :=
   finiteBooleanWittenIndex_cancel P hP
 
-/-- The finite Witten index of a nonempty register vanishes. -/
-theorem finiteWittenIndex_cancel_of_nonempty
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndex P = 0 := by
-  unfold finiteWittenIndex
-  exact finite_witten_index_cancel P hP
-
-/-- Lemma XII.1: Witten index of the primon gas vanishes for nonempty registers. -/
-theorem witten_index_primon_gas
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndex P = 0 := by
-  exact finiteWittenIndex_cancel_of_nonempty P hP
-
-/-- Lemma XII.2: Boson-fermion cancellation via powerset parity sum. -/
-theorem boson_fermion_zero_mode_cancellation
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by
-  exact finiteBooleanWittenIndex_cancel P hP
-
-/-- Lemma XII.3: Zero vacuum energy for nonempty finite registers. -/
-theorem zero_vacuum_energy_of_nonempty
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndex P = 0 := by
-  exact witten_index_primon_gas P hP
-
-/-- Lemma XII.4: Unbroken SUSY criterion for the finite primon gas. -/
-theorem unbroken_susy_criterion
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndex P = 0 ↔ True := by
-  exact ⟨fun _ => trivial, fun _ => witten_index_primon_gas P hP⟩
-
-/-! ## 6. Named finite Witten-index sum -/
-
-/-- Named finite Witten-index sum over all fermionic prime subsets. -/
-def finiteWittenIndexSum (P : PrimeRegister) : ℤ :=
-  ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card
-
-/-- The named finite Witten-index sum vanishes for nonempty prime registers. -/
-theorem finiteWittenIndexSum_cancel_of_nonempty
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndexSum P = 0 := by
-  unfold finiteWittenIndexSum
-  exact finite_witten_index_cancel P hP
-
-/-- Finite SUSY vacuum cancellation is a theorem of finite fermion parity. -/
-theorem finiteSUSYVacuum_wittenIndexCancellation
-    (P : PrimeRegister)
-    (hP : P.primes.Nonempty) :
-    finiteWittenIndexSum P = 0 ∧
-      (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by
-  exact ⟨finiteWittenIndexSum_cancel_of_nonempty P hP,
-    finite_witten_index_cancel P hP⟩
-
-/-! ## 7. Finite divisor Möbius cancellation -/
-
 /-- Finite divisor Möbius cancellation over a nonempty prime register. -/
-theorem finiteDivisorMobius_cancel_of_nonempty
-    (P : PrimeRegister)
+theorem finite_divisorMobius_cancel
+    (P : FermionicPrimeRegister)
     (hP : P.primes.Nonempty) :
     (∑ S ∈ P.primes.powerset,
-      ArithmeticFunction.moebius (∏ p ∈ S, p)) = 0 := by
-  exact finiteDivisorMobius_cancel P hP
+      ArithmeticFunction.moebius (∏ p ∈ S, p)) = 0 :=
+  finiteDivisorMobius_cancel P hP
 
-/-- The finite divisor Möbius sum equals the finite Witten index. -/
-theorem finiteDivisorMobius_eq_finiteWittenIndex
-    (P : PrimeRegister) :
-    (∑ S ∈ P.primes.powerset,
-      ArithmeticFunction.moebius (∏ p ∈ S, p)) =
-      (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) := by
-  refine Finset.sum_congr rfl ?_
-  intro S hS
-  have hSub : S ⊆ P.primes := Finset.mem_powerset.mp hS
-  simpa [representedNatOfState, subregister]
-  using mobius_prime_product_eq_parity S (fun p hp => P.prime_mem p (hSub hp))
+/-! ## 2. Data-only SUSY vacuum assembly -/
 
-/-! ## 8. Mertens defect boundary -/
+/--
+Data-only prime SUSY vacuum packet.
 
-/-- The normalized Mertens defect is nonnegative. -/
-theorem normalized_mertens_defect_nonneg
-    (D : MobiusMertensData) (N : ℕ) :
-    0 ≤ D.normalizedDefect N := by
-  unfold MobiusMertensData.normalizedDefect
-  exact div_nonneg (abs_nonneg _) (Real.sqrt_nonneg _)
+It combines the Mertens/random-walk defect boundary, the defect-free zero-mode
+protection packet, and an extra vacuum readout. No grand SUSY/RH/`xi` laws are
+stored here; those remain separate theorem obligations in their concrete owner
+files.
+-/
+structure PrimeSUSYVacuumPacket
+    (CompletedXiReadout VacuumReadout : Type) where
+  /-- Mertens/random-walk defect boundary data. -/
+  mertensBoundary : MertensDefectBoundary
+  /-- Defect-free Lee--Yang zero-mode protection data. -/
+  zeroModeProtection : ZeroModeProtectionPacket CompletedXiReadout
+  /-- Extra vacuum-sector readout. -/
+  vacuumReadout : VacuumReadout
 
-/-- Zero Mertens readout implies zero normalized defect. -/
-theorem normalized_defect_zero_of_mertens_zero
-    (D : MobiusMertensData) {N : ℕ} (hM : D.M N = 0) :
-    D.normalizedDefect N = 0 := by
-  unfold MobiusMertensData.normalizedDefect
-  unfold MobiusMertensData.absMertens
-  simp [hM]
+namespace PrimeSUSYVacuumPacket
 
-/-- The RH-scale boundary implies no macroscopic defect in the finite regime. -/
-theorem RHScaleBoundary_implies_no_macroscopic_defect
-    (D : MobiusMertensData)
-    (hRH : RHScaleBoundary D) :
-    ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧ ∃ N0 : ℕ, ∀ N ≥ N0, 1 ≤ N →
-      D.absMertens N ≤ C * Real.rpow ((N : ℝ)) ((1 / 2 : ℝ) + ε) := by
-  exact hRH
+variable {CompletedXiReadout VacuumReadout : Type}
 
-/-- Extract the RH-scale Mertens boundary from an LDP property. -/
-theorem RHScaleBoundary_of_entropyDominance
-    {D : MobiusMertensData}
-    (B : MertensLDPBoundary D)
-    (h : B.readout.defectCost ≤ B.readout.entropyBarrier) :
-    RHScaleBoundary D := by
-  exact MertensLDPBoundary.RHScaleBoundary_of_entropyDominance B h
+/-- The Lee--Yang approximation carried by the SUSY vacuum packet. -/
+def approximation
+    (S : PrimeSUSYVacuumPacket CompletedXiReadout VacuumReadout) :
+    InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.LeeYangPrimeApproximation
+      CompletedXiReadout :=
+  S.zeroModeProtection.approximation
 
-end InfoGeometry.Canonical.PrimeSUSYVacuum
+/-- The large-deviation witness carried by the SUSY vacuum packet. -/
+def largeDeviation
+    (S : PrimeSUSYVacuumPacket CompletedXiReadout VacuumReadout) :
+    InfoGeometry.Canonical.PrimeLeeYangLargeDeviation.PrimeChainLargeDeviationWitness :=
+  S.zeroModeProtection.largeDeviation
 
-end noncomputable section
+variable (S : PrimeSUSYVacuumPacket CompletedXiReadout VacuumReadout)
+
+@[simp] theorem approximation_eq :
+    S.approximation = S.zeroModeProtection.approximation := rfl
+
+@[simp] theorem largeDeviation_eq :
+    S.largeDeviation = S.zeroModeProtection.largeDeviation := rfl
+
+end PrimeSUSYVacuumPacket
+
+/--
+Assemble a prime SUSY vacuum packet from a Mertens boundary, a defect-free
+zero-mode packet, and an auxiliary vacuum readout.
+-/
+def primeSUSYVacuum_of_zeroModeProtection
+    {CompletedXiReadout VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket CompletedXiReadout)
+    (R : VacuumReadout) :
+    PrimeSUSYVacuumPacket CompletedXiReadout VacuumReadout where
+  mertensBoundary := M
+  zeroModeProtection := P
+  vacuumReadout := R
+
+@[simp] theorem primeSUSYVacuum_of_zeroModeProtection_mertensBoundary
+    {CompletedXiReadout VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket CompletedXiReadout)
+    (R : VacuumReadout) :
+    (primeSUSYVacuum_of_zeroModeProtection M P R).mertensBoundary = M := rfl
+
+@[simp] theorem primeSUSYVacuum_of_zeroModeProtection_zeroModeProtection
+    {CompletedXiReadout VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket CompletedXiReadout)
+    (R : VacuumReadout) :
+    (primeSUSYVacuum_of_zeroModeProtection M P R).zeroModeProtection = P := rfl
+
+@[simp] theorem primeSUSYVacuum_of_zeroModeProtection_vacuumReadout
+    {CompletedXiReadout VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket CompletedXiReadout)
+    (R : VacuumReadout) :
+    (primeSUSYVacuum_of_zeroModeProtection M P R).vacuumReadout = R := rfl
+
+end PrimeSUSYVacuum

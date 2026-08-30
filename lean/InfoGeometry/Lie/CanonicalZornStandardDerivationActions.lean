@@ -333,7 +333,7 @@ theorem direct_cross_1_5_v1 :
       InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul,
       u_one_mul_u_two]
     simp
-  rw [hprod]
+  simp only [neg_neg, u_one_mul_u_two]
   module
 
 theorem direct_cross_1_5_C_u1 :
@@ -663,7 +663,7 @@ theorem direct_cross_7_12_v2 :
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_zero,
     zero_sub, sub_zero, add_zero, zero_add, smul_zero,
     smul_sub, neg_smul, mul_neg, neg_mul]
-  rw [hprod]
+  simp only [neg_neg, u_two_mul_u_zero]
   module
 
 theorem direct_cross_7_12_S_u2 :
@@ -908,5 +908,3 @@ theorem opposite_standard_double_cross_1_5 :
     InfoGeometry.Algebra.ZornVectorMatrix.smul,
     InfoGeometry.Algebra.ZornVec3.basis,
     InfoGeometry.Canonical.ZornMatrix.coordEquiv, canonicalVectorEquiv] at hc
-
-end

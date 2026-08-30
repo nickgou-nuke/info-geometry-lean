@@ -564,4 +564,4 @@ noncomputable def conjKreinEquiv {H K : Type*}
   ContinuousLinearEquiv.conjContinuousAlgEquiv U.toContinuousLinearEquiv
 
 
-end InfoGeometry.Krein
+end Krein

@@ -367,5 +367,3 @@ theorem minusPhaseTransportLift_realizes_fixed_by_tomita_plusProjector :
           (PolarizedRecompositionData.minusPhaseTransportLift recompositionData dualRealEquiv.symm 0) := by
   exact PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
     (R := recompositionData) (ρ := dualRealEquiv.symm) (b := 0)
-
-end

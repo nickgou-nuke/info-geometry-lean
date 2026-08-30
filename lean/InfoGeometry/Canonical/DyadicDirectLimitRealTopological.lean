@@ -235,5 +235,3 @@ theorem closure_range_dyadicDirectLimitRealReadout :
     denseRange_dyadicDirectLimitRealReadout
 
 end InfoGeometry.Canonical.DyadicDirectLimitRealTopological
-
-end

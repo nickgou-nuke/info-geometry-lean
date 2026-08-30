@@ -339,7 +339,6 @@ def wignerDysonFormula (_paper : RiemannHypothesisPaper) : ℝ → ℝ :=
 @[simp] theorem wignerDysonFormula_eq (paper : RiemannHypothesisPaper) :
     paper.wignerDysonFormula = wignerDysonPDF := rfl
 
-end RiemannHypothesisPaper
 
 /-- The paper's central insight: prime distribution, ζ-zeros, and
     random matrix spectra are manifestations of a single underlying
@@ -400,4 +399,4 @@ def wignerDysonPeakStatement : Prop :=
 def wignerDysonSmallSpacingApproxStatement : Prop :=
   Filter.Tendsto (fun Δ : ℝ => wignerDysonPDF Δ / Δ) (nhdsWithin 0 (Set.Ioi 0)) (nhds (π / 2))
 
-end
+end RiemannHypothesisPaper

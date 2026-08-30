@@ -85,4 +85,4 @@ theorem paper_pom_microcanonical_query_distortion_failure_exponent
         pom_microcanonical_query_distortion_failure_exponent_residualRate] using hzero
     linarith [D.hSupercritical]
 
-end
+end Omega.POM

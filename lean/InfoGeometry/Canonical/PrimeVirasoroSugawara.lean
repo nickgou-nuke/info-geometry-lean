@@ -165,6 +165,16 @@ variable
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
+/--
+Construct a `PrimeSugawaraVirasoroPacket` directly from a prime current packet and a Sugawara mode construction datum.
+-/
+def ofCurrentAndSugawara
+    (primeCurrent : PrimeCurrentOPEPacket PrimeLabel Field Coeff)
+    (sugawara : SugawaraModeConstructionDatum Finite Alg) :
+    PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg where
+  primeCurrent := primeCurrent
+  sugawara := sugawara
+
 variable (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
 
 /-- The affine/Virasoro bridge definitionally owned by the Sugawara datum. -/

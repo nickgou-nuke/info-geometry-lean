@@ -74,5 +74,3 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
       Φ.observationQuotientRangeFlowCompHausHom_zero S h_cont
 
 end InfoGeometry.Topology
-
-end

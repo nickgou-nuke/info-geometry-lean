@@ -33,4 +33,4 @@ theorem paper_pom_lk_mellin_transform_rigidity (s : Complex) :
   · rfl
   · simp [pomLkMellinRho, pomLkMellinRhoClosed, pomLkMellinNu]
 
-end
+end Omega.POM

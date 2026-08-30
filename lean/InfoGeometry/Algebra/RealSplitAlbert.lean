@@ -185,3 +185,5 @@ theorem mul_upper_unit_self :
 end RealAlbertMatrix
 
 end
+
+end InfoGeometry.Algebra

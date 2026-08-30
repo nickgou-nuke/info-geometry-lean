@@ -48,6 +48,29 @@ theorem apollonius_ray_z0_normSq (ξ θ : ℝ) :
     rw [normSq_eq_norm_sq, h_unit, one_pow]
   rw [h_norm1, h_norm2, mul_one]
 
+/-- The natural radial coordinate is recovered from the squared Apollonius
+    modulus.  This is the inverse readback of `apollonius_ray_z0_normSq`. -/
+theorem apollonius_ray_xi_recovery (ξ θ : ℝ) :
+    (1 / 2 : ℝ) * Real.log (normSq (apolloniusRay ξ θ).1) = ξ := by
+  rw [apollonius_ray_z0_normSq, Real.log_exp]
+  ring
+
+/-- The angular coordinate is recovered globally as the phase of the natural
+    ray, without choosing a branch of `Complex.arg`. -/
+theorem apollonius_ray_phase_recovery (ξ θ : ℝ) :
+    Complex.exp (-(ξ : ℂ)) * (apolloniusRay ξ θ).1 =
+      Complex.exp (Complex.I * (θ : ℂ)) := by
+  unfold apolloniusRay
+  rw [Complex.exp_add]
+  rw [Complex.exp_neg]
+  calc
+    (Complex.exp (ξ : ℂ))⁻¹ *
+        (Complex.exp (ξ : ℂ) * Complex.exp (Complex.I * (θ : ℂ))) =
+        ((Complex.exp (ξ : ℂ))⁻¹ * Complex.exp (ξ : ℂ)) *
+          Complex.exp (Complex.I * (θ : ℂ)) := by ring
+    _ = Complex.exp (Complex.I * (θ : ℂ)) := by
+      rw [inv_mul_cancel₀ (Complex.exp_ne_zero (ξ : ℂ)), one_mul]
+
 /-- 🏆 THEOREM 2 (Signature Quotient as Hyperbolic Tangent):
     In natural coordinates, the projective invariant $\mathcal{Q}$ is strictly $\tanh(\xi)$. -/
 theorem projective_signature_eq_tanh (ξ θ : ℝ) :

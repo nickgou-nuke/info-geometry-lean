@@ -380,6 +380,11 @@ theorem continuous_canonicalZorn_smul :
 
 instance : ContinuousSMul ℝ CZ := ⟨continuous_canonicalZorn_smul⟩
 
+noncomputable instance : FiniteDimensional ℝ CZ :=
+  FiniteDimensional.of_injective
+    cartesianZornLinearEquiv.symm.toLinearMap
+    cartesianZornLinearEquiv.symm.injective
+
 theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   let E := cartesianZornLinearEquiv.symm
   have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩

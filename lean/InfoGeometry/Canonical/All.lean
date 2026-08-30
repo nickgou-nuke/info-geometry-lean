@@ -2832,6 +2832,7 @@ import InfoGeometry.Canonical.DiracHeatSemigroupBridge
 import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.SplitOctonionRigidity
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
+import InfoGeometry.Canonical.RealSplitOctonionAutTopology
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Canonical.ComplexCliffordHierarchy

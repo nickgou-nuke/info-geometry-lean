@@ -121,16 +121,6 @@ theorem eventually_reduced_zero_iff_ambient_zero
   filter_upwards [eventually_ambient_zero_iff_reduced_zero P hP] with A hA
   exact hA.symm
 
-/-- If the derivative of the chosen reduced readout is surjective, then the
-reduced nonlinear constraint has a surjective strict derivative at the
-identity.  This is the exact analytic input needed by a regular-level-set
-argument once local completeness has separately been proved. -/
-theorem reducedConstraintDerivative_surjective
-    (P : TangentConstraintValues →L[ℝ] W)
-    (hP : Function.Surjective (P.comp tangentConstraintReadoutContinuous)) :
-    Function.Surjective (P.comp tangentConstraintReadoutContinuous) :=
-  hP
-
 end
 
 end InfoGeometry.Canonical

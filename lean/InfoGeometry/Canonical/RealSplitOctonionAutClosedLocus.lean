@@ -18,8 +18,16 @@ noncomputable section
 theorem isClosed_splitOctonionAutSet :
     IsClosed (SplitOctonionAutSet (R := ℝ)) := by
   have hunit : IsClosed {f : Candidate | f (1 : CZ) = 1} := by
-    simpa only [Set.mem_preimage, Set.mem_singleton_iff] using
-      (isClosed_singleton.preimage (continuous_candidate_apply (1 : CZ)))
+    rw [show {f : Candidate | f (1 : CZ) = 1} =
+        {f : Candidate | f (1 : CZ) - (1 : CZ) = 0} by
+      ext f
+      constructor
+      · intro h
+        exact sub_eq_zero.mpr h
+      · intro h
+        exact sub_eq_zero.mp h
+      ]
+    exact isClosed_candidate_unit_constraint
   have hmul : IsClosed {f : Candidate |
       ∀ X Y : CZ, f (zMul X Y) - zMul (f X) (f Y) = 0} := by
     rw [show {f : Candidate |

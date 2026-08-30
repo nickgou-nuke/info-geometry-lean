@@ -35,5 +35,15 @@ theorem isClosed_candidate_multiplicativity_constraint
   exact isClosed_canonicalZorn_zero.preimage
     (continuous_candidate_multiplicativity_constraint X Y)
 
+theorem continuous_candidate_unit_constraint :
+    Continuous (fun f : Candidate => f (1 : CZ) - (1 : CZ)) := by
+  exact continuous_canonicalZorn_sub.comp
+    (Continuous.prodMk (continuous_candidate_apply (1 : CZ)) continuous_const)
+
+theorem isClosed_candidate_unit_constraint :
+    IsClosed {f : Candidate | f (1 : CZ) - (1 : CZ) = 0} := by
+  exact isClosed_canonicalZorn_zero.preimage
+    continuous_candidate_unit_constraint
+
 end
 end InfoGeometry.Canonical

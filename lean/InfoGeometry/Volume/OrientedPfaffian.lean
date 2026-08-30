@@ -1,19 +1,23 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.GroupTheory.Perm.Fin
 import Mathlib.Tactic
 
 /-!
 # Canonical oriented Pfaffian owner
 
-This file introduces the first data-free signed Pfaffian surface used by the
+This file introduces the data-free signed perfect-matching surface used by the
 Hestenes--Krein Gauss--Bonnet corridor.
 
-Unlike `PfaffianMatchingExpansionPacket`, no Pfaffian amplitude or matching
-expansion is supplied as structure data. The oriented Pfaffian is defined by
-the standard normalized signed permutation sum.
+Unlike `PfaffianMatchingExpansionPacket`, no matching family, sign, Pfaffian
+amplitude, or determinant identity is supplied as structure data. A perfect
+matching is an involutive fixed-point-free partner map on `Fin (2 * m)`.
+
+The Pfaffian sign is the parity of geometric crossings of the canonically
+ordered pairs. This is essential: the permutation sign of the partner
+involution itself is always `(-1)^m` and therefore cannot encode the oriented
+Pfaffian sign.
 
 The hard identities `Pf(A)^2 = det(A)`, congruence covariance, and block-skew
-compatibility are not postulated here; they are subsequent theorems to be
+compatibility are not postulated here. They are subsequent theorems to be
 proved from this owner.
 -/
 
@@ -23,89 +27,114 @@ namespace InfoGeometry.Volume.OrientedPfaffian
 
 open scoped BigOperators
 
-/-- Canonical `2n`-element index used by the oriented Pfaffian owner. -/
-abbrev PairSlot (n : ℕ) := Fin 2 × Fin n
+/-- A perfect matching of `2 * m` ordered endpoints.
 
-/-- A perfect matching is a fixed-point-free involutive permutation.
+`partner` is required only to be an involution without fixed points. Its
+bijection property is a theorem, not additional structure data. -/
+structure PerfectMatching (m : ℕ) where
+  partner : Fin (2 * m) → Fin (2 * m)
+  involutive : Function.Involutive partner
+  fixed_free : ∀ i, partner i ≠ i
 
-This is a genuine finite combinatorial carrier. No matching amplitude or sign
-is stored as external data. -/
-def PerfectMatching (n : ℕ) :=
-  {σ : Equiv.Perm (PairSlot n) //
-    Function.Involutive σ ∧ ∀ i : PairSlot n, σ i ≠ i}
-
-noncomputable instance perfectMatchingFintype (n : ℕ) : Fintype (PerfectMatching n) :=
+noncomputable instance perfectMatchingFintype (m : ℕ) : Fintype (PerfectMatching m) :=
   Fintype.ofFinite _
 
-@[simp] theorem PerfectMatching.involutive
-    {n : ℕ} (m : PerfectMatching n) (i : PairSlot n) :
-    m.1 (m.1 i) = i :=
-  m.2.1 i
+namespace PerfectMatching
 
-@[simp] theorem PerfectMatching.ne_self
-    {n : ℕ} (m : PerfectMatching n) (i : PairSlot n) :
-    m.1 i ≠ i :=
-  m.2.2 i
+variable {m : ℕ}
 
-/-- Canonical product attached to a perfect matching.
+@[simp] theorem partner_partner (M : PerfectMatching m) (i : Fin (2 * m)) :
+    M.partner (M.partner i) = i :=
+  M.involutive i
 
-The lexicographic linear order on `Fin 2 × Fin n` chooses each unordered pair
-exactly once by retaining the smaller endpoint. This is only the product
-weight; the crossing/orientation sign is deliberately not encoded as data. -/
-def matchingProductWeight
-    {n : ℕ}
-    (A : Matrix (PairSlot n) (PairSlot n) ℝ)
-    (m : PerfectMatching n) : ℝ :=
-  ∏ i : PairSlot n with i < m.1 i, A i (m.1 i)
+@[simp] theorem partner_ne_self (M : PerfectMatching m) (i : Fin (2 * m)) :
+    M.partner i ≠ i :=
+  M.fixed_free i
 
-/-- Product of the canonical ordered pairs determined by a permutation. -/
-def permutationPairWeight
-    {n : ℕ}
-    (A : Matrix (PairSlot n) (PairSlot n) ℝ)
-    (σ : Equiv.Perm (PairSlot n)) : ℝ :=
-  ∏ k : Fin n, A (σ (0, k)) (σ (1, k))
+/-- The partner map of a perfect matching is injective. -/
+theorem partner_injective (M : PerfectMatching m) : Function.Injective M.partner :=
+  M.involutive.injective
 
-/-- Real sign of a permutation. -/
-def permutationSign
-    {n : ℕ}
-    (σ : Equiv.Perm (PairSlot n)) : ℝ :=
-  ((Equiv.Perm.sign σ : ℤ) : ℝ)
+/-- The partner map of a perfect matching is surjective. -/
+theorem partner_surjective (M : PerfectMatching m) : Function.Surjective M.partner :=
+  M.involutive.surjective
 
-/-- The canonical signed oriented Pfaffian on a real `2n × 2n` matrix.
+/-- The partner map bundled as the permutation it canonically determines. -/
+def partnerPerm (M : PerfectMatching m) : Equiv.Perm (Fin (2 * m)) :=
+  Equiv.ofBijective M.partner ⟨M.partner_injective, M.partner_surjective⟩
 
-`Pf(A) = 1 / (2^n n!) * Σ_σ sign(σ) ∏_k A_{σ(0,k),σ(1,k)}`.
+@[simp] theorem partnerPerm_apply (M : PerfectMatching m) (i : Fin (2 * m)) :
+    M.partnerPerm i = M.partner i :=
+  rfl
 
-For skew matrices this is the usual oriented Pfaffian. The definition is made
-on all matrices so that skewness remains an explicit theorem hypothesis. -/
+/-- Canonical set of left endpoints: exactly the smaller endpoint of each
+matched pair is retained. -/
+def leftEndpoints (M : PerfectMatching m) : Finset (Fin (2 * m)) :=
+  Finset.univ.filter fun i => i < M.partner i
+
+@[simp] theorem mem_leftEndpoints (M : PerfectMatching m) (i : Fin (2 * m)) :
+    i ∈ M.leftEndpoints ↔ i < M.partner i := by
+  simp [leftEndpoints]
+
+/-- Canonical product of matrix entries along the matched pairs. -/
+def matchingWeight
+    (A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ)
+    (M : PerfectMatching m) : ℝ :=
+  ∏ i ∈ M.leftEndpoints, A i (M.partner i)
+
+/-- Two canonical matched pairs cross in the natural linear order if their
+endpoints occur as `i < j < partner i < partner j`. -/
+def crossingPairs (M : PerfectMatching m) : Finset (Fin (2 * m) × Fin (2 * m)) :=
+  (M.leftEndpoints.product M.leftEndpoints).filter fun p =>
+    p.1 < p.2 ∧ p.2 < M.partner p.1 ∧ M.partner p.1 < M.partner p.2
+
+/-- Number of crossings in the canonical chord diagram of a perfect matching. -/
+def crossingNumber (M : PerfectMatching m) : ℕ :=
+  M.crossingPairs.card
+
+/-- Canonical oriented Pfaffian sign of a perfect matching.
+
+This is the crossing parity `(-1)^(crossingNumber M)`, not the sign of the
+fixed-point-free involution `partnerPerm`. -/
+def matchingSign (M : PerfectMatching m) : ℝ :=
+  (-1 : ℝ) ^ M.crossingNumber
+
+@[simp] theorem matchingSign_sq (M : PerfectMatching m) :
+    M.matchingSign ^ 2 = 1 := by
+  simp [matchingSign, pow_mul]
+
+end PerfectMatching
+
+/-- The canonical signed oriented Pfaffian on a real `2m × 2m` matrix.
+
+The definition is the signed perfect-matching expansion. For skew matrices it
+is the usual oriented Pfaffian. It is defined on all matrices so skewness
+remains an explicit theorem hypothesis rather than hidden structure data. -/
 def orientedPfaffian
-    (n : ℕ)
-    (A : Matrix (PairSlot n) (PairSlot n) ℝ) : ℝ :=
-  ((2 ^ n * n.factorial : ℕ) : ℝ)⁻¹ *
-    ∑ σ : Equiv.Perm (PairSlot n),
-      permutationSign σ * permutationPairWeight A σ
+    (m : ℕ)
+    (A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ) : ℝ :=
+  ∑ M : PerfectMatching m, M.matchingSign * M.matchingWeight A
 
-/-- Exact signed-permutation expansion of the canonical oriented Pfaffian. -/
-theorem orientedPfaffian_eq_signedPermutationSum
-    (n : ℕ)
-    (A : Matrix (PairSlot n) (PairSlot n) ℝ) :
-    orientedPfaffian n A =
-      ((2 ^ n * n.factorial : ℕ) : ℝ)⁻¹ *
-        ∑ σ : Equiv.Perm (PairSlot n),
-          permutationSign σ * permutationPairWeight A σ :=
+/-- Exact canonical perfect-matching expansion of the oriented Pfaffian. -/
+theorem orientedPfaffian_eq_matchingSum
+    (m : ℕ)
+    (A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ) :
+    orientedPfaffian m A =
+      ∑ M : PerfectMatching m, M.matchingSign * M.matchingWeight A :=
   rfl
 
 /-- Skewness predicate used by the characteristic-form corridor. -/
 def IsSkew
-    {n : ℕ}
-    (A : Matrix (PairSlot n) (PairSlot n) ℝ) : Prop :=
+    {m : ℕ}
+    (A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ) : Prop :=
   ∀ i j, A i j = -A j i
 
 /-- Skew matrices have zero diagonal. -/
 theorem IsSkew.diagonal_zero
-    {n : ℕ}
-    {A : Matrix (PairSlot n) (PairSlot n) ℝ}
+    {m : ℕ}
+    {A : Matrix (Fin (2 * m)) (Fin (2 * m)) ℝ}
     (hA : IsSkew A)
-    (i : PairSlot n) :
+    (i : Fin (2 * m)) :
     A i i = 0 := by
   have h := hA i i
   linarith

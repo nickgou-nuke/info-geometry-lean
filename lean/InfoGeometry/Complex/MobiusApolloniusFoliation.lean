@@ -77,7 +77,9 @@ theorem normSq_mobiusMap (σ t : ℝ) :
   have hd : (σ : ℂ) + Complex.I * (t : ℂ) + 1 / 2 =
       ((σ + 1 / 2 : ℝ) : ℂ) + Complex.I * (t : ℂ) := by
     apply Complex.ext <;> norm_num <;> ring
-  rw [hn, hd, Complex.normSq_add_mul_I, Complex.normSq_add_mul_I]
+  rw [hn, hd]
+  have hI : Complex.I * (t : ℂ) = (t : ℂ) * Complex.I := by ring
+  rw [hI, Complex.normSq_add_mul_I, Complex.normSq_add_mul_I]
   rfl
 
 /-! ### 1. Exact Linearization and Imaginary Component Cancellation -/

@@ -35,5 +35,13 @@ theorem zMulBilinear_isLinearRight (Y : CZ) :
     IsLinearMap ℝ (fun X => zMul X Y) := by
   exact (zMulBilinear.flip Y).isLinear
 
+theorem continuous_zMul_left (X : CZ) :
+    Continuous (fun Y : CZ => zMul X Y) := by
+  exact (zMulBilinear X).continuous_of_finiteDimensional
+
+theorem continuous_zMul_right (Y : CZ) :
+    Continuous (fun X : CZ => zMul X Y) := by
+  exact (zMulBilinear.flip Y).continuous_of_finiteDimensional
+
 end
 end InfoGeometry.Canonical

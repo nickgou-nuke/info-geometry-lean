@@ -338,6 +338,8 @@ theorem continuous_canonicalZorn_add :
 
 instance : ContinuousAdd CZ := ⟨continuous_canonicalZorn_add⟩
 
+instance : IsTopologicalAddGroup CZ := IsTopologicalAddGroup.mk
+
 theorem isClosed_canonicalZorn_zero : IsClosed ({0} : Set CZ) := by
   let E := cartesianZornLinearEquiv.symm
   have hE : Topology.IsInducing (E : CZ → CartesianCoordinates) := ⟨rfl⟩

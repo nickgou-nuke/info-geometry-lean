@@ -63,14 +63,4 @@ theorem cayleyApolloniusTransition_second_denominator_ne_zero
   rw [cayleyApolloniusTransition_second_denominator z hz]
   exact div_ne_zero (by norm_num) hz
 
-theorem cayleyApolloniusTransition_involutive
-    (z : ℂ) (hz : 3 * z + 1 ≠ 0) :
-    cayleyApolloniusTransition
-        (cayleyApolloniusTransition z) = z := by
-  have hden_ne := cayleyApolloniusTransition_second_denominator_ne_zero z hz
-  unfold cayleyApolloniusTransition at hden_ne ⊢
-  apply (div_eq_iff hden_ne).2
-  field_simp [hz]
-  ring
-
 end InfoGeometry.Canonical.CayleyApolloniusConjugacy

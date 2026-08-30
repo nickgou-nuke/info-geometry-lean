@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Matrix.Order
-import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
+import Mathlib.LinearAlgebra.BilinearForm.Properties
+import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
 
 noncomputable section
 
@@ -131,5 +132,17 @@ theorem FaithfulDensityOperator.kuboMoriPairing_self_re_nonneg
   rw [hre]
   exact intervalIntegral.integral_nonneg_of_forall (by norm_num) fun s =>
     D.kuboMoriIntegrand_self_re_nonneg A s
+
+/-- The existing real BKM response form is a genuine positive-semidefinite
+symmetric bilinear form on the full finite noncommutative operator algebra.
+-/
+theorem FaithfulDensityOperator.bkmRealBilinForm_isPosSemidef
+    (D : FaithfulDensityOperator n)
+    (h_rpow : Continuous D.rpow) :
+    (D.bkmRealBilinForm h_rpow).IsPosSemidef where
+  isSymm := D.bkmRealBilinForm_symm h_rpow
+  isNonneg := ⟨fun A => by
+    simpa only [D.bkmRealBilinForm_apply h_rpow A A] using
+      D.kuboMoriPairing_self_re_nonneg A h_rpow⟩
 
 end SouriauOnsagerBKM

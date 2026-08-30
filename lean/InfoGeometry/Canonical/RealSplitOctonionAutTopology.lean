@@ -241,6 +241,52 @@ theorem continuous_zMul :
         fun i => ((zMul p.1 p.2).x i + (zMul p.1 p.2).y i) / (2 : ℝ))))
   exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
 
+theorem continuous_canonicalZorn_sub :
+    Continuous (fun p : CZ × CZ => p.1 - p.2) := by
+  apply continuous_induced_rng.mpr
+  have ha : Continuous (fun p : CZ × CZ => p.1.a - p.2.a) :=
+    (continuous_canonicalZorn_a.comp continuous_fst).sub
+      (continuous_canonicalZorn_a.comp continuous_snd)
+  have hb : Continuous (fun p : CZ × CZ => p.1.b - p.2.b) :=
+    (continuous_canonicalZorn_b.comp continuous_fst).sub
+      (continuous_canonicalZorn_b.comp continuous_snd)
+  have hx : Continuous (fun p : CZ × CZ => p.1.x - p.2.x) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp
+      (continuous_canonicalZorn_x.comp continuous_fst)).sub
+      ((continuous_apply i).comp
+        (continuous_canonicalZorn_x.comp continuous_snd))
+  have hy : Continuous (fun p : CZ × CZ => p.1.y - p.2.y) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp
+      (continuous_canonicalZorn_y.comp continuous_fst)).sub
+      ((continuous_apply i).comp
+        (continuous_canonicalZorn_y.comp continuous_snd))
+  have hq₀ : Continuous (fun p : CZ × CZ =>
+      ((p.1.a - p.2.a) + (p.1.b - p.2.b)) / (2 : ℝ)) :=
+    (ha.add hb).div_const 2
+  have hr₀ : Continuous (fun p : CZ × CZ =>
+      ((p.1.a - p.2.a) - (p.1.b - p.2.b)) / (2 : ℝ)) :=
+    (ha.sub hb).div_const 2
+  have hq : Continuous (fun p : CZ × CZ =>
+      fun i => ((p.1.x i - p.2.x i) - (p.1.y i - p.2.y i)) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.sub hy)).div_const (2 : ℝ)
+  have hr : Continuous (fun p : CZ × CZ =>
+      fun i => ((p.1.x i - p.2.x i) + (p.1.y i - p.2.y i)) / (2 : ℝ)) := by
+    apply continuous_pi
+    intro i
+    exact ((continuous_apply i).comp (hx.add hy)).div_const (2 : ℝ)
+  change Continuous (fun p : CZ × CZ =>
+    ((((p.1.a - p.2.a) + (p.1.b - p.2.b)) / (2 : ℝ),
+        fun i => ((p.1.x i - p.2.x i) - (p.1.y i - p.2.y i)) / (2 : ℝ)),
+      (((p.1.a - p.2.a) - (p.1.b - p.2.b)) / (2 : ℝ),
+        fun i => ((p.1.x i - p.2.x i) + (p.1.y i - p.2.y i)) / (2 : ℝ))))
+  exact (hq₀.prodMk hq).prodMk (hr₀.prodMk hr)
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
 units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :
@@ -306,6 +352,24 @@ theorem continuous_realSplitOctonionAut_apply (X : CZ) :
     LinearEquiv.apply_symm_apply] using
     continuous_realSplitOctonionAut_apply_cartesian
       (cartesianZornLinearEquiv.symm X)
+
+theorem continuous_splitOctonion_multiplicativity_constraint
+    (X Y : CZ) :
+    Continuous (fun g : RealSplitOctonionAut =>
+      (g : SplitOctonionAutCandidate ℝ) (zMul X Y) -
+        zMul ((g : SplitOctonionAutCandidate ℝ) X)
+          ((g : SplitOctonionAutCandidate ℝ) Y)) := by
+  have hxy : Continuous (fun g : RealSplitOctonionAut =>
+      ((g : SplitOctonionAutCandidate ℝ) X,
+       (g : SplitOctonionAutCandidate ℝ) Y)) :=
+    Continuous.prodMk (continuous_realSplitOctonionAut_apply X)
+      (continuous_realSplitOctonionAut_apply Y)
+  have hz : Continuous (fun g : RealSplitOctonionAut =>
+      zMul ((g : SplitOctonionAutCandidate ℝ) X)
+        ((g : SplitOctonionAutCandidate ℝ) Y)) :=
+    continuous_zMul.comp hxy
+  exact (continuous_canonicalZorn_sub.comp
+    (Continuous.prodMk (continuous_realSplitOctonionAut_apply (zMul X Y)) hz))
 
 end
 end InfoGeometry.Canonical

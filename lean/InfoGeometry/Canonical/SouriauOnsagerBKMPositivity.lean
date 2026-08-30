@@ -35,8 +35,7 @@ theorem finiteOperatorTrace_star_mul_self_re_nonneg
     0 ≤ (finiteOperatorTrace (star X * X)).re := by
   unfold finiteOperatorTrace
   rw [matrixOfOp_comp, matrixOfOp_adjoint]
-  have hpos :
-      (matrixOfOp X)ᴴ * matrixOfOp X |>.PosSemidef :=
+  have hpos : ((matrixOfOp X)ᴴ * matrixOfOp X).PosSemidef :=
     Matrix.posSemidef_conjTranspose_mul_self (matrixOfOp X)
   exact (RCLike.nonneg_iff.mp hpos.trace_nonneg).1
 

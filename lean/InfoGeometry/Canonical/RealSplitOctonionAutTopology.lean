@@ -5,9 +5,9 @@ import Mathlib.Topology.Algebra.Group.ClosedSubgroup
 # Induced topology for the canonical real split-octonion automorphism carrier
 
 The algebraic automorphism subtype is given the topology induced by its
-faithful continuous Cartesian action.  The ambient continuous linear
+faithful continuous Cartesian action. The ambient continuous linear
 equivalence carrier is itself given the topology transported from the units
-of its continuous-linear endomorphism algebra.  This file records the
+of its continuous-linear endomorphism algebra. This file records the
 resulting topological group structure without asserting a manifold or Lie
 group structure.
 -/
@@ -18,8 +18,19 @@ noncomputable section
 
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
+abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
+
+/- The analytic carrier is induced from the existing Cartesian equivalence;
+   the native algebraic operations on CZ are left unchanged. -/
+noncomputable instance instTopologicalSpaceCanonicalZorn : TopologicalSpace CZ :=
+  TopologicalSpace.induced cartesianZornLinearEquiv.symm.toFun inferInstance
+
+theorem continuous_canonicalZorn_coordinates :
+    Continuous (cartesianZornLinearEquiv.symm : CZ → CartesianCoordinates) :=
+  continuous_induced_dom
+
 /-- The native monoid hom from continuous linear equivalences to endomorphism
-units.  It supplies the ambient topology and topological-group structure. -/
+units. It supplies the ambient topology and topological-group structure. -/
 noncomputable def continuousLinearEquivToUnitHom :
     (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) →*
       (CartesianCoordinates →L[ℝ] CartesianCoordinates)ˣ :=
@@ -48,7 +59,7 @@ theorem continuous_realSplitOctonionAutCartesianContinuous :
   exact continuous_induced_dom
 
 theorem inducing_realSplitOctonionAutCartesianContinuous :
-    @Inducing RealSplitOctonionAut
+    @Topology.IsInducing RealSplitOctonionAut
       (CartesianCoordinates ≃L[ℝ] CartesianCoordinates)
       instTopologicalSpaceRealSplitOctonionAut
       instTopologicalSpaceCartesianCoordinatesContinuousLinearEquiv

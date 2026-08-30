@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
+import InfoGeometry.Canonical.SouriauOnsagerBKMPositivity
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 
 noncomputable section
@@ -105,25 +105,21 @@ theorem FaithfulDensityOperator.bkmRealBilinForm_symm
   simpa [FaithfulDensityOperator.bkmRealBilinForm] using
     congrArg Complex.re hs
 
-/-- Install the real BKM response as the repository's positive Onsager form
-once the remaining diagonal-positivity theorem is available for the model. -/
+/-- The real BKM response as the repository's positive Onsager form.  Diagonal
+nonnegativity is supplied by the native BKM positivity theorem. -/
 noncomputable def FaithfulDensityOperator.bkmOnsagerForm
-    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
-    (h_nonneg : ∀ A : FiniteOperatorAlgebra n,
-      0 ≤ (D.kuboMoriPairing A A).re) :
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow) :
     OnsagerTwoOperatorForm (FiniteOperatorAlgebra n) where
   form := D.bkmRealBilinForm h
   symmetric := fun A B => (D.bkmRealBilinForm_symm h).eq A B
   diagonal_nonnegative := by
     intro A
-    simpa using h_nonneg A
+    simpa using D.kuboMoriPairing_self_nonneg A h
 
 @[simp] theorem FaithfulDensityOperator.bkmOnsagerForm_apply
     (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
-    (h_nonneg : ∀ A : FiniteOperatorAlgebra n,
-      0 ≤ (D.kuboMoriPairing A A).re)
     (A B : FiniteOperatorAlgebra n) :
-    (D.bkmOnsagerForm h h_nonneg).form A B =
+    (D.bkmOnsagerForm h).form A B =
       (D.kuboMoriPairing A B).re :=
   rfl
 

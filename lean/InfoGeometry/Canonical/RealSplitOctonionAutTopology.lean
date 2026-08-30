@@ -278,5 +278,34 @@ theorem inducing_realSplitOctonionAutCartesianContinuous :
       realSplitOctonionAutCartesianContinuous := by
   exact ⟨rfl⟩
 
+theorem continuous_realSplitOctonionAut_apply_cartesian
+    (X : CartesianCoordinates) :
+    Continuous (fun g : RealSplitOctonionAut =>
+      realSplitOctonionAutCartesianContinuous g X) := by
+  have hg : Continuous (realSplitOctonionAutCartesianContinuous :
+      RealSplitOctonionAut → CartesianCoordinates ≃L[ℝ] CartesianCoordinates) :=
+    continuous_induced_dom
+  have hu : Continuous (fun g : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
+      continuousLinearEquivToUnitHom g) :=
+    continuous_induced_dom
+  have hc : Continuous (fun g : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
+      (continuousLinearEquivToUnitHom g :
+        CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
+    Units.continuous_val.comp hu
+  exact (ContinuousLinearMap.apply ℝ CartesianCoordinates X).continuous.comp
+    (hc.comp hg)
+
+theorem continuous_realSplitOctonionAut_apply (X : CZ) :
+    Continuous (fun g : RealSplitOctonionAut =>
+      (g : SplitOctonionAutCandidate ℝ) X) := by
+  apply continuous_induced_rng.mpr
+  change Continuous (fun g : RealSplitOctonionAut =>
+    cartesianZornLinearEquiv.symm ((g : SplitOctonionAutCandidate ℝ) X))
+  simpa only [realSplitOctonionAutCartesianContinuous_apply,
+    realSplitOctonionAutCartesian_apply,
+    LinearEquiv.apply_symm_apply] using
+    continuous_realSplitOctonionAut_apply_cartesian
+      (cartesianZornLinearEquiv.symm X)
+
 end
 end InfoGeometry.Canonical

@@ -29,6 +29,7 @@ noncomputable section
 
 namespace InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry
 
+open scoped LinearAlgebra.Projectivization
 open SouriauKKS
 open InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 open InfoGeometry.Clifford.SplitClifford55ProjectivePureSpinor

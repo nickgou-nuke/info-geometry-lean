@@ -15,13 +15,14 @@ carrier:
 * a symmetric response `metric`;
 * a skew response `symplectic`.
 
-Transport invariance is expressed separately as a predicate on a
-bracket-preserving linear equivalence.  Concrete KKS and Souriau--Fisher/BKM
-owners enter only through realization predicates; they are not definitionally
-identified with the abstract response.
+Transport invariance is expressed separately as a predicate on a linear
+equivalence.  Concrete KKS and Souriau--Fisher/BKM owners enter only through
+realization predicates; they are not definitionally identified with the
+abstract response.
 
-No spacetime, Berry, Yang--Mills, gravitational, pure-spinor, or von Neumann
-interpretation is asserted here.  Those belong to Level-3 realization owners.
+No spacetime, Berry, Yang--Mills, gravitational, pure-spinor, Pin/Spin, or von
+Neumann interpretation is asserted here.  Those belong to Level-3 realization
+owners.
 -/
 
 noncomputable section
@@ -51,8 +52,7 @@ namespace OperatorOrbitResponse
 
 variable (D : OperatorOrbitResponse (R := R) (L := L))
 
-/-- The symmetric response vanishes on no diagonal by formal parity alone;
-this theorem only records the tautological symmetry on a diagonal pair. -/
+/-- Re-export of symmetry for the symmetric response. -/
 @[simp] theorem metric_swap (X Y : L) :
     D.metric X Y = D.metric Y X :=
   D.metric_symm X Y
@@ -71,7 +71,8 @@ theorem symplectic_self_zero
   linarith
 
 /--
-Transport invariance of both response tensors under a symmetry equivalence.
+Transport invariance of both response tensors under a linear symmetry
+equivalence.
 
 Bracket preservation is intentionally not built into this predicate: metric
 and symplectic invariance are tensorial statements.  A KKS realization adds
@@ -126,23 +127,25 @@ def SymplecticRealizesKKS
     (μ : Module.Dual R L) : Prop :=
   ∀ X Y : L, D.symplectic X Y = kksForm μ X Y
 
-/-- A Fisher realization is automatically compatible with the abstract metric
-symmetry already carried by `D`. -/
+/-- A Fisher realization transports the abstract metric symmetry to the
+concrete covariance tensor. -/
 theorem fisher_realization_symmetry
     (F : SouriauState.SouriauFisherMetric R L)
     (hF : D.MetricRealizesFisher F)
     (X Y : L) :
     F.cov X Y = F.cov Y X := by
-  exact F.symm X Y
+  rw [← hF X Y, ← hF Y X]
+  exact D.metric_symm X Y
 
-/-- A KKS realization is automatically compatible with the abstract skew
-parity already carried by `D`. -/
+/-- A KKS realization transports the repository KKS skew law to the abstract
+skew response. -/
 theorem kks_realization_skew
     (μ : Module.Dual R L)
     (hKKS : D.SymplecticRealizesKKS μ)
     (X Y : L) :
     D.symplectic X Y = -D.symplectic Y X := by
-  exact D.symplectic_skew X Y
+  rw [hKKS X Y, hKKS Y X]
+  exact kksForm_skew μ X Y
 
 /--
 If the symmetric realization is itself invariant under `e`, the abstract
@@ -155,7 +158,7 @@ theorem metric_invariant_of_fisher_realization
     (hInv : ∀ X Y : L, F.cov (e X) (e Y) = F.cov X Y) :
     ∀ X Y : L, D.metric (e X) (e Y) = D.metric X Y := by
   intro X Y
-  rw [hF, hF]
+  rw [hF (e X) (e Y), hF X Y]
   exact hInv X Y
 
 /--
@@ -175,7 +178,7 @@ theorem symplectic_invariant_of_kks_contragredient_realization
       (InfoGeometry.Canonical.SouriauContragredientPairing.contragredient e μ)) :
     ∀ X Y : L, D.symplectic (e X) (e Y) = D.symplectic X Y := by
   intro X Y
-  rw [hTransported, hSource]
+  rw [hTransported (e X) (e Y), hSource X Y]
   exact kksForm_contragredient_invariant e hLie μ X Y
 
 /--

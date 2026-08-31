@@ -93,3 +93,4 @@ import InfoGeometry.Twistor.PhaseNativePluckerBridge
 import InfoGeometry.Twistor.QutritPermutationAssociatedTwistorMonodromy
 import InfoGeometry.Twistor.TwistorZornDerivationTransport
 import InfoGeometry.Twistor.PenroseWittPluckerKleinBridge
+import InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry

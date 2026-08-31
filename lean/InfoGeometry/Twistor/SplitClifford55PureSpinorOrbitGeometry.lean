@@ -291,8 +291,8 @@ theorem responsePair_swap
     (μ : Module.Dual ℝ L)
     (p q : ProjectivePureSpinorPoint) :
     (D.responsePair μ p q).1 = - (D.responsePair μ q p).1 ∧
-    ((D.responsePair q p μ).2).re = ((D.responsePair p q μ).2).re ∧
-    ((D.responsePair q p μ).2).ep = - ((D.responsePair p q μ).2).ep := by
+    ((D.responsePair μ q p).2).re = ((D.responsePair μ p q).2).re ∧
+    ((D.responsePair μ q p).2).ep = - ((D.responsePair μ p q).2).ep := by
   constructor
   · exact D.operator.kksResponse_skew μ p q
   · exact D.paraKahler.qgtResponse_swap p q

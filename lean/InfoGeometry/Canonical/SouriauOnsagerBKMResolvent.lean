@@ -66,6 +66,18 @@ theorem cfcResolvent_isUnit
   have hY := strictlyPositive_add_nonneg_scalar X t hX ht
   exact hY.isUnit.cfcRpow (-1 : ℝ) hY.nonneg
 
+theorem cfcResolvent_isSelfAdjoint
+    [NeZero n]
+    (X : FiniteOperatorAlgebra n) (t : ℝ)
+    (hX : IsStrictlyPositive X) (ht : 0 ≤ t) :
+    IsSelfAdjoint (cfcResolvent X t) := by
+  have hY := strictlyPositive_add_nonneg_scalar X t hX ht
+  rw [cfcResolvent]
+  change IsSelfAdjoint
+    ((X + algebraMap ℝ (FiniteOperatorAlgebra n) t) ^ (-1 : ℝ))
+  rw [CFC.rpow_eq_cfc_real hY.nonneg]
+  exact IsSelfAdjoint.cfc
+
 theorem cfcResolvent_mul_shifted
     [NeZero n]
     (X : FiniteOperatorAlgebra n) (t : ℝ)
@@ -90,5 +102,60 @@ theorem shifted_mul_cfcResolvent
     (CFC.rpow_mul_rpow_neg 1 hY.isUnit hY.nonneg :
       CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (1 : ℝ) *
         CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (-1 : ℝ) = 1)
+
+/-! ### The noncommutative resolvent difference identity -/
+
+theorem cfcResolvent_diff_mul_shift_diff_mul_cfcResolvent
+    [NeZero n]
+    (X Y : FiniteOperatorAlgebra n) (t : ℝ)
+    (hX : IsStrictlyPositive X) (hY : IsStrictlyPositive Y)
+    (ht : 0 ≤ t) :
+    cfcResolvent X t *
+        ((Y + algebraMap ℝ (FiniteOperatorAlgebra n) t) -
+          (X + algebraMap ℝ (FiniteOperatorAlgebra n) t)) *
+        cfcResolvent Y t =
+      cfcResolvent X t - cfcResolvent Y t := by
+  calc
+    cfcResolvent X t *
+          ((Y + algebraMap ℝ (FiniteOperatorAlgebra n) t) -
+            (X + algebraMap ℝ (FiniteOperatorAlgebra n) t)) *
+          cfcResolvent Y t =
+        cfcResolvent X t *
+            (Y + algebraMap ℝ (FiniteOperatorAlgebra n) t) *
+            cfcResolvent Y t -
+          cfcResolvent X t *
+            (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) *
+            cfcResolvent Y t := by
+      rw [mul_sub, sub_mul]
+    _ = cfcResolvent X t - cfcResolvent Y t := by
+      simp only [mul_assoc, shifted_mul_cfcResolvent Y t hY ht,
+        cfcResolvent_mul_shifted X t hX ht, mul_one, one_mul]
+
+theorem cfcResolvent_diff_mul_sub_mul_cfcResolvent
+    [NeZero n]
+    (X Y : FiniteOperatorAlgebra n) (t : ℝ)
+    (hX : IsStrictlyPositive X) (hY : IsStrictlyPositive Y)
+    (ht : 0 ≤ t) :
+    cfcResolvent X t * (Y - X) * cfcResolvent Y t =
+      cfcResolvent X t - cfcResolvent Y t := by
+  have hshift :
+      (Y + algebraMap ℝ (FiniteOperatorAlgebra n) t) -
+          (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) = Y - X := by
+    abel
+  rw [← hshift]
+  exact cfcResolvent_diff_mul_shift_diff_mul_cfcResolvent X Y t hX hY ht
+
+theorem cfcResolvent_diff_sub_left_linearization
+    [NeZero n]
+    (X Y : FiniteOperatorAlgebra n) (t : ℝ)
+    (hX : IsStrictlyPositive X) (hY : IsStrictlyPositive Y)
+    (ht : 0 ≤ t) :
+    (cfcResolvent X t - cfcResolvent Y t) -
+        cfcResolvent X t * (Y - X) * cfcResolvent X t =
+      cfcResolvent X t * (Y - X) *
+        (cfcResolvent Y t - cfcResolvent X t) := by
+  rw [cfcResolvent_diff_mul_sub_mul_cfcResolvent X Y t hX hY ht]
+  rw [mul_sub]
+  ring
 
 end SouriauOnsagerBKM

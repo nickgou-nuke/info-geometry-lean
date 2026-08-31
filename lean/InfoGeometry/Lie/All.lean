@@ -79,6 +79,7 @@ import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 import InfoGeometry.Lie.CanonicalZornCartanAdjointAction
 import InfoGeometry.Lie.CanonicalZornCartanAdjointSpectrum
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
 import InfoGeometry.Lie.CanonicalZornG2SimpleRootSL2Bridge
 import InfoGeometry.Lie.SplitOctonionG2WeightGradingBridge
 import InfoGeometry.Lie.SplitOctonionG2GradingTransportBridge
@@ -166,6 +167,7 @@ import InfoGeometry.Lie.CanonicalZornG2CartanWeylDiagonalAction
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylLeftAction
 import InfoGeometry.Lie.CanonicalZornG2CartanConcreteReflectionEquiv
 import InfoGeometry.Lie.CanonicalZornG2WeylGroupAction
+import InfoGeometry.Lie.CanonicalZornG2CartanKillingMetric
 import InfoGeometry.Lie.CanonicalZornG2NativeWeylMellinBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanReflectionEnsembleConsumer
 import InfoGeometry.Lie.ConcreteSplitCartan
@@ -232,3 +234,10 @@ import InfoGeometry.Lie.CanonicalZornG2RootStarAction
 import InfoGeometry.Lie.G2PositiveRootIndex
 import InfoGeometry.Lie.G2TwoNativeRootCoordinateEquivalence
 import InfoGeometry.Lie.CanonicalZornComplexifiedG2
+import InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
+import InfoGeometry.Lie.CanonicalZornG2BasisAlignment
+import InfoGeometry.Lie.CanonicalZornG2CASReplay
+import InfoGeometry.Lie.CanonicalZornG2RationalCircularCoordinates
+import InfoGeometry.Lie.CanonicalZornG2ToMatrixBridge
+import InfoGeometry.Lie.CanonicalZornG2CoxeterRelations
+import InfoGeometry.Lie.G2DoubleStarRootDecomposition

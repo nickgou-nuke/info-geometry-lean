@@ -236,8 +236,14 @@ def main() -> None:
         "constraint_rank": int(rank),
         "derivation_dimension": int(nullity),
         "basis_count": len(derivs),
+        "basis_matrices": [
+            [[str(sp.simplify(D[r, c])) for c in range(D.cols)]
+             for r in range(D.rows)]
+            for D in derivs
+        ],
         "bracket_closed": True,
         "structure_constants_basis": "computed_nullspace_basis",
+        "structure_constants": structure_constants,
         "structure_constants_max_denominator": int(max_denominator),
         "killing_rank": int(killing_rank),
         "killing_inertia_pos_neg_zero": list(map(int, inertia)),

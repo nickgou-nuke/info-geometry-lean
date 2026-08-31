@@ -31,6 +31,50 @@ variable (ω : Op2Form R V A)
 instance : CoeFun (Op2Form R V A) (fun _ => V → V → A) where
   coe ω u v := ω.toBilin u v
 
+instance : Add (Op2Form R V A) where
+  add ω₁ ω₂ := {
+    toBilin := ω₁.toBilin + ω₂.toBilin
+    alt' := by
+      intro v
+      change ω₁.toBilin v v + ω₂.toBilin v v = 0
+      rw [ω₁.alt' v, ω₂.alt' v, add_zero]
+  }
+
+instance : Zero (Op2Form R V A) where
+  zero := {
+    toBilin := 0
+    alt' := by
+      intro v
+      simp
+  }
+
+instance : Neg (Op2Form R V A) where
+  neg ω := {
+    toBilin := -ω.toBilin
+    alt' := by
+      intro v
+      change -(ω.toBilin v v) = 0
+      rw [ω.alt' v, neg_zero]
+  }
+
+instance : Sub (Op2Form R V A) where
+  sub ω₁ ω₂ := {
+    toBilin := ω₁.toBilin - ω₂.toBilin
+    alt' := by
+      intro v
+      change ω₁.toBilin v v - ω₂.toBilin v v = 0
+      rw [ω₁.alt' v, ω₂.alt' v, sub_zero]
+  }
+
+instance : SMul R (Op2Form R V A) where
+  smul c ω := {
+    toBilin := c • ω.toBilin
+    alt' := by
+      intro v
+      change c • (ω.toBilin v v) = 0
+      rw [ω.alt' v, smul_zero]
+  }
+
 @[simp]
 theorem map_zero_left
     (v : V) :
@@ -174,6 +218,88 @@ PART 3: Pullback of Operator Forms
 -/
 
 variable {W : Type*} [AddCommGroup W] [Module R W]
+
+section ValueTransport
+
+variable {B : Type*} [Ring B] [Algebra R B]
+
+/-- Transport an operator-valued one-form through an algebra homomorphism. -/
+def map1 (f : A →ₐ[R] B) (α : Op1Form R V A) : Op1Form R V B where
+  toFun v := f (α v)
+  map_add' u v := by
+    rw [α.map_add]
+    exact f.map_add _ _
+  map_smul' c v := by
+    rw [α.map_smul]
+    simpa using map_smulₛₗ f c (α v)
+
+@[simp] theorem map1_apply (f : A →ₐ[R] B) (α : Op1Form R V A) (v : V) :
+    map1 f α v = f (α v) := rfl
+
+/-- Transport an alternating operator-valued two-form through an algebra homomorphism. -/
+def map2 (f : A →ₐ[R] B) (ω : Op2Form R V A) : Op2Form R V B where
+  toBilin := {
+    toFun := fun u => {
+      toFun := fun v => f (ω u v)
+      map_add' := by
+        intro v w
+        rw [ω.map_add_right]
+        exact f.map_add _ _
+      map_smul' := by
+        intro c v
+        rw [ω.map_smul_right]
+        simpa using map_smulₛₗ f c (ω u v)
+    }
+    map_add' := by
+      intro u v
+      ext w
+      change f (ω (u + v) w) = f (ω u w) + f (ω v w)
+      rw [ω.map_add_left]
+      exact f.map_add _ _
+    map_smul' := by
+      intro c u
+      ext v
+      change f (ω (c • u) v) = (RingHom.id R) c • f (ω u v)
+      rw [ω.map_smul_left]
+      simpa using map_smulₛₗ f c (ω u v)
+  }
+  alt' := by
+    intro v
+    change f (ω v v) = 0
+    rw [ω.alt]
+    exact f.map_zero
+
+@[simp] theorem map2_apply (f : A →ₐ[R] B) (ω : Op2Form R V A) (u v : V) :
+    map2 f ω u v = f (ω u v) := rfl
+
+  theorem map2_wedge (f : A →ₐ[R] B)
+    (α β : Op1Form R V A) :
+    map2 f (wedge α β) = wedge (map1 f α) (map1 f β) := by
+  ext u v
+  change f (α u * β v - α v * β u) =
+    f (α u) * f (β v) - f (α v) * f (β u)
+  simp
+
+  /-- Value transport of one-forms is functorial under composition. -/
+  theorem map1_comp
+      {C : Type*} [Ring C] [Algebra R C]
+      (f : A →ₐ[R] B) (g : B →ₐ[R] C)
+      (α : Op1Form R V A) :
+      map1 (g.comp f) α = map1 g (map1 f α) := by
+    ext v
+    rfl
+
+  /-- Value transport of two-forms is functorial under composition. -/
+  theorem map2_comp
+      {C : Type*} [Ring C] [Algebra R C]
+      (f : A →ₐ[R] B) (g : B →ₐ[R] C)
+      (ω : Op2Form R V A) :
+      map2 (g.comp f) ω = map2 g (map2 f ω) := by
+    apply Op2Form.ext
+    intro u v
+    rfl
+
+end ValueTransport
 
 /-- Pullback of an operator 1-form along a linear map ϕ : W → V. -/
 def pullback1 (ϕ : W →ₗ[R] V) (α : Op1Form R V A) : Op1Form R W A :=

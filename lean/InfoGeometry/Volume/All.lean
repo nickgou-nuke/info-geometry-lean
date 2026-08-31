@@ -12,6 +12,7 @@ import InfoGeometry.Volume.LogarithmicOrderParameterConnesBridge
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian
 import InfoGeometry.Volume.PfaffianGeneral
+import InfoGeometry.Volume.OrientedPfaffian
 import InfoGeometry.Volume.PfaffianPathBridge
 import InfoGeometry.Volume.RadonNikodym
 import InfoGeometry.Volume.ZeroJacobianWeylBoundary

@@ -3,25 +3,27 @@ import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 import InfoGeometry.Canonical.Pin55NativeCover
 
 /-!
-# Pin(5,5) pure-spinor annihilator equivariance
+# Pin(5,5) pure-spinor annihilator equivariance interface
 
-This owner isolates the exact algebraic contract needed to transport the
+This owner isolates the exact sign-free algebraic contract for transporting the
 split `(5,5)` exterior-spinor annihilator under an invertible Clifford-module
 symmetry.
 
-The repository already provides the full real split `Pin(5,5)` carrier
-`RealPin55` and its native orthogonal action on `V55`.  What is not yet owned
-for the exterior-algebra spinor carrier is a native `RealPin55` action together
-with the Clifford intertwining law.  Therefore this file does not invent such
-an action.  Instead it:
+It proves the reusable theorem
 
-* proves annihilator equivariance for any invertible vector/spinor transport
-  satisfying the exact Clifford intertwining identity;
-* transports the repository-native `RealPin55` orthogonal action from `V55`
-  to the exterior-spinor neutral carrier;
-* packages the remaining spinor-action/intertwining datum as a minimal
-  `RealPin55ExteriorSpinorLift` interface;
-* derives the `RealPin55` annihilator-equivariance theorem from that interface.
+`Ann(T_spinor ψ) = T_vector(Ann ψ)`
+
+whenever the vector and spinor transports intertwine Clifford multiplication
+exactly.  It also transports the repository-native full real split `Pin(5,5)`
+orthogonal action from `V55` to the exterior-spinor neutral carrier.
+
+For the full Pin group the native vector action is the twisted adjoint, so odd
+Pin elements introduce the grade-involution sign.  The concrete owner
+`Pin55ExteriorSpinorNativeAction` handles that parity directly and proves the
+unconditional `RealPin55` annihilator-equivariance theorem.  The
+`RealPin55ExteriorSpinorLift` structure retained here is therefore a stronger,
+sign-free adapter useful for realizations where exact intertwining is available;
+it is not a claim that such an adapter is required for annihilator equivariance.
 
 No identification of the two connected components of the maximal-neutral
 Grassmannian, chirality sectors, matter/antimatter, or CPT is asserted here.
@@ -37,7 +39,7 @@ open InfoGeometry.Clifford.Clifford55
 
 /--
 An invertible transport of the neutral vector carrier and the exterior-spinor
-carrier that intertwines Clifford multiplication.
+carrier that intertwines Clifford multiplication exactly.
 -/
 structure CliffordSpinorTransport where
   vector : NeutralSpace ≃ₗ[ℝ] NeutralSpace
@@ -118,11 +120,11 @@ noncomputable def realPin55NeutralTransport (g : RealPin55) :
   rfl
 
 /--
-Minimal missing exterior-spinor realization of the full real split Pin action.
+Optional exact-intertwining realization of the full real split Pin action.
 
-A concrete owner must provide an invertible spinor action and prove that it
-intertwines the already constructed `RealPin55` vector transport with the
-native exterior Clifford action.
+The concrete native Pin action only intertwines the twisted-adjoint vector
+action up to the parity sign on odd Pin elements.  Consequently this structure
+is intentionally stronger than what is needed for annihilator equivariance.
 -/
 structure RealPin55ExteriorSpinorLift where
   spinor : RealPin55 → Spinor ≃ₗ[ℝ] Spinor
@@ -134,19 +136,14 @@ namespace RealPin55ExteriorSpinorLift
 
 variable (S : RealPin55ExteriorSpinorLift)
 
-/-- The pointwise Clifford transport induced by a full split-Pin exterior
+/-- The pointwise exact Clifford transport induced by a sign-free split-Pin
 spinor lift. -/
 noncomputable def transport (g : RealPin55) : CliffordSpinorTransport where
   vector := realPin55NeutralTransport g
   spinor := S.spinor g
   intertwines := S.intertwines g
 
-/--
-Full split `Pin(5,5)` annihilator equivariance, conditional only on the missing
-native exterior-spinor lift/intertwiner:
-
-`Ann(g · ψ) = ρ(g)(Ann ψ)`.
--/
+/-- Exact-lift specialization of annihilator equivariance. -/
 theorem annihilator_equivariant
     (g : RealPin55) (ψ : Spinor) :
     neutralAnnihilator (S.spinor g ψ) =
@@ -154,7 +151,7 @@ theorem annihilator_equivariant
         (neutralAnnihilator ψ) := by
   exact (S.transport g).annihilator_equivariant ψ
 
-/-- Pointwise annihilator membership version of the same equivariance law. -/
+/-- Pointwise annihilator membership version of the same exact-lift law. -/
 theorem mem_annihilator_transport_iff
     (g : RealPin55) (ψ : Spinor) (w : NeutralSpace) :
     realPin55NeutralTransport g w ∈ neutralAnnihilator (S.spinor g ψ) ↔

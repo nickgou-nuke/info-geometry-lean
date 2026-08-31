@@ -1,6 +1,7 @@
 import Mathlib
 
 import InfoGeometry.Canonical.SouriauOnsagerBKMSelfAdjoint
+import InfoGeometry.Canonical.SouriauOnsagerBKMResolvent
 
 noncomputable section
 
@@ -32,6 +33,19 @@ theorem FaithfulDensityOperator.rho_mem_faithfulStrictPositiveSelfAdjointLocus
     (D : FaithfulDensityOperator n) :
     D.rhoSelfAdjoint ∈ faithfulStrictPositiveSelfAdjointLocus := by
   exact D.strictlyPositive
+
+/-- The CFC logarithm as a map on the canonical self-adjoint carrier. -/
+noncomputable def cfcLogSelfAdjoint :
+    SelfAdjointOperator n → SelfAdjointOperator n :=
+  fun ρ =>
+    ⟨CFC.log (ρ : FiniteOperatorAlgebra n), by
+      exact CFC.IsSelfAdjoint.log⟩
+
+@[simp] theorem cfcLogSelfAdjoint_apply
+    (ρ : SelfAdjointOperator n) :
+    (cfcLogSelfAdjoint ρ : FiniteOperatorAlgebra n) =
+      CFC.log (ρ : FiniteOperatorAlgebra n) :=
+  rfl
 
 theorem exists_pos_scalar_le_of_strictlyPositive
     (A : SelfAdjointOperator n)
@@ -87,5 +101,30 @@ theorem faithfulStrictPositiveSelfAdjointLocus_isOpen
   intro B hB
   apply strictlyPositive_of_norm_sub_lt A B hgap
   simpa [Metric.mem_ball, dist_eq_norm] using hB
+
+theorem continuousOn_cfcLog_selfAdjoint
+    [NeZero n] :
+    ContinuousOn
+      (fun ρ : SelfAdjointOperator n =>
+        (cfcLogSelfAdjoint ρ : FiniteOperatorAlgebra n))
+      faithfulStrictPositiveSelfAdjointLocus := by
+  have hlog :
+      ContinuousOn (CFC.log : FiniteOperatorAlgebra n → FiniteOperatorAlgebra n)
+        {A | IsSelfAdjoint A ∧ IsUnit A} :=
+    CFC.continuousOn_log
+  simpa only [cfcLogSelfAdjoint_apply] using
+    (hlog.comp continuous_subtype_val.continuousOn (fun ρ hρ =>
+      ⟨ρ.property, hρ.isUnit⟩))
+
+theorem continuousOn_cfcResolvent_selfAdjoint
+    [NeZero n] (t : ℝ) (ht : 0 ≤ t) :
+    ContinuousOn
+      (fun ρ : SelfAdjointOperator n =>
+        cfcResolvent (ρ : FiniteOperatorAlgebra n) t)
+      faithfulStrictPositiveSelfAdjointLocus := by
+  apply (continuousOn_cfcResolvent (n := n) t ht).comp
+    continuous_subtype_val.continuousOn
+  intro ρ hρ
+  exact hρ
 
 end SouriauOnsagerBKM

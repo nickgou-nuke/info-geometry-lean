@@ -7660,6 +7660,8 @@ import InfoGeometry.Modular.ColimitKMSInfinitesimal
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 import InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport
 import InfoGeometry.Modular.ColimitGNS
+import InfoGeometry.Modular.ColimitGNSOperatorForms
+import InfoGeometry.Modular.PositiveStatePullback
 import InfoGeometry.Modular.TomitaChiralJ
 import InfoGeometry.Modular.TomitaCommutantDuality
 import InfoGeometry.Modular.KuboMoriMetric

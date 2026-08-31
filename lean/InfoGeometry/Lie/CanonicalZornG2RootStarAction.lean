@@ -62,6 +62,20 @@ theorem canonicalRootStar_reflection_invariant (α : RootIndex) :
   classical
   rw [canonicalRootStar_roots, rootStarReflection_univ]
 
+theorem rootStarReflection_long_on_short :
+    rootStarReflection (nativeRootIndex nativeLongSimpleIndex)
+        {nativeRootIndex nativeShortSimpleIndex} =
+      {nativeRootIndex ⟨9, by decide, by decide⟩} := by
+  classical
+  simp [rootStarReflection, native_long_reflection_short]
+
+theorem rootStarReflection_short_on_long :
+    rootStarReflection (nativeRootIndex nativeShortSimpleIndex)
+        {nativeRootIndex nativeLongSimpleIndex} =
+      {nativeRootIndex ⟨11, by decide, by decide⟩} := by
+  classical
+  simp [rootStarReflection, native_short_reflection_long]
+
 /-- A root reflection transported to the typed exhaustive root-star carrier. -/
 noncomputable def reflectRootStar (α : RootIndex) (S : G2DoubleRootStar) :
     G2DoubleRootStar :=

@@ -1,3 +1,6 @@
+import InfoGeometry.Canonical.BitWordSimplexFaceCancellation
+import InfoGeometry.Canonical.BitWordSimplexSignCancellation
+import InfoGeometry.Canonical.BitWordSimplexCochainModule
 import InfoGeometry.Canonical.FiniteTwistedMaurerCartanBridge
 import InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
 import InfoGeometry.Canonical.MeanValueInvariant
@@ -206,6 +209,7 @@ import InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCircularNormBridge
 import InfoGeometry.Canonical.SplitOctonionPolarTransport
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge
+import InfoGeometry.Canonical.ZornCellScalarExtensionBridge
 import InfoGeometry.Canonical.SplitOctonionAppendixECircularBridge
 import InfoGeometry.Canonical.SplitOctonionDoubledLoxodromicSpectral
 import InfoGeometry.Canonical.SplitOctonionSkew28
@@ -555,6 +559,7 @@ import InfoGeometry.Canonical.Cl11PrimonSupergradedChiralConeBridge
 import InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 import InfoGeometry.Canonical.APSMcKeanSingerBoundaryBridge
 import InfoGeometry.Canonical.DikinDrazinBridge
+import InfoGeometry.Canonical.DikinFiniteOrbitColimit
 import InfoGeometry.Canonical.DiracKahlerDrazinPropagatorBridge
 import InfoGeometry.Canonical.DrazinPropagatorBridge
 import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
@@ -929,6 +934,7 @@ import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
 import InfoGeometry.Canonical.SouriauOnsagerBKMFilteredColimit
 import InfoGeometry.Canonical.SouriauOnsagerBKMHestenesAnalyticColimit
+import InfoGeometry.Canonical.SouriauOnsagerBKMHestenesPhase
 import InfoGeometry.Canonical.SouriauBregmanLegendreBridge
 import InfoGeometry.Canonical.SouriauContragredientPairing
 import InfoGeometry.Canonical.PauliTomitaDensityBridge

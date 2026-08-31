@@ -333,10 +333,20 @@ compatibility backend. -/
 noncomputable def bilingualAnalyticAtEquiv
     (Fmap : H₂E → H₂F) (Fgeo : Point → Value) (x : H₂E) :
     BilingualAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I Fmap Fgeo x ≃
-      CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ×
-      CauchyHestenesCompatibility (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I where
-  toFun A := ⟨A.cauchy, A.compatibility⟩
-  invFun s := { cauchy := s.1, compatibility := s.2 }
+      { data :
+          CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ×
+            (CauchyHestenesCompatibility (clockPhaseStructure (E := E))
+              (clockPhaseStructure (E := F)) I ×
+              HestenesFormCalibration Point Tangent Value) //
+          data.2.2.formOf Fgeo =
+            data.2.1.cauchyFormOf data.1.deriv } where
+  toFun A :=
+    ⟨(A.cauchy, (A.compatibility, A.calibration)), A.calibration_eq⟩
+  invFun s :=
+    { cauchy := s.1.1
+      compatibility := s.1.2.1
+      calibration := s.1.2.2
+      calibration_eq := s.2 }
   left_inv A := by
     cases A
     rfl

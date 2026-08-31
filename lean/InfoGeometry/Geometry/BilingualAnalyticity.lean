@@ -1,8 +1,13 @@
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.Complex.Conformal
 import Mathlib.Tactic
 
 noncomputable section
 
 namespace InfoGeometry.Geometry.BilingualAnalyticity
+
+open Filter Topology
+open scoped _root_.Topology
 
 /-! ## 1. Phase structures -/
 
@@ -691,6 +696,14 @@ structure BilingualAnalyticAt
   compatibility :
     CauchyHestenesCompatibility Kdom Ktar I
 
+  /-- Calibration tying the geometric readout to the Cauchy-derived form. -/
+  calibration :
+    HestenesFormCalibration Point Tangent Value
+
+  /-- The Hestenes form is genuinely the calibrated form of `Fgeo`. -/
+  calibration_eq :
+    calibration.formOf Fgeo = compatibility.cauchyFormOf cauchy.deriv
+
 namespace BilingualAnalyticAt
 
 variable
@@ -720,8 +733,11 @@ theorem cauchyRiemann_apply
 The associated Hestenes analytic datum is constructed from the Cauchy side.
 -/
 def hestenes :
-    HestenesAnalyticOn I Fgeo :=
-  A.compatibility.hestenesAnalyticOfCauchy A.cauchy
+    HestenesAnalyticOn I Fgeo := by
+  apply HestenesAnalyticOn.ofCalibration
+    (I := I) (F := Fgeo) A.calibration
+  rw [A.calibration_eq]
+  exact A.compatibility.closed_form_of_cauchyAnalyticAt A.cauchy
 
 /-- The Hestenes form is closed by construction from the Cauchy derivative. -/
 theorem closed_form_from_cauchy :
@@ -1221,5 +1237,143 @@ theorem kernel_phaseLinear_of_phaseLinear
       (R.right_inverse ζ Z h)
 
 end SuppliedOperatorResolventKernel
+
+/-! ## 12. Unified bilingual readback for the five cases
+
+The names below must not be conflated.  `AnalyticAt` and `AnalyticOn` are
+Mathlib power-series predicates.  In the complex scalar language, the usual
+word *holomorphic* is represented by `DifferentiableAt ℂ` or
+`DifferentiableOn ℂ`; it is not a separate repository carrier.  The native
+replacement is the real phase derivative `CauchyAnalyticAt`, and
+`BilingualAnalyticAt` adds the Hestenes geometric compatibility data.
+
+The comparison is one-way at a single point from `AnalyticAt` to the native
+phase package.  The converse at one point is only complex differentiability;
+power-series analyticity requires the corresponding neighborhood statement.
+On an open set, Mathlib identifies `AnalyticOn` with `DifferentiableOn`, so the
+native phase readback is equivalent there.
+-/
+
+/-- Pointwise native phase readout over a set. -/
+def CauchyPhaseOn
+    {X Y : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    (Kdom : PhaseStructure X)
+    (Ktar : PhaseStructure Y)
+    (F : X → Y)
+    (s : Set X) : Prop :=
+  ∀ x ∈ s, Nonempty (CauchyAnalyticAt Kdom Ktar F x)
+
+/-- Pointwise bilingual phase/Hestenes readout over a set. -/
+def BilingualAnalyticOn
+    {X Y Region Point Tangent Value : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [AddCommGroup Value] [Module ℝ Value]
+    (Kdom : PhaseStructure X)
+    (Ktar : PhaseStructure Y)
+    (I : GeometricIntegralBackend Region Point Tangent Value)
+    (F : X → Y)
+    (Fgeo : Point → Value)
+    (s : Set X) : Prop :=
+  ∀ x ∈ s, Nonempty (BilingualAnalyticAt Kdom Ktar I F Fgeo x)
+
+namespace UnifiedBilingualReadout
+
+/-- Complex differentiability supplies the native real phase package. -/
+noncomputable def differentiableAt_complex_to_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : DifferentiableAt ℂ f z) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z := by
+  let dC : ℂ →L[ℂ] ℂ := fderiv ℂ f z
+  exact
+    { deriv := dC.restrictScalars ℝ
+      has_fderiv_at := hf.hasFDerivAt.restrictScalars ℝ
+      phase_linear_deriv := complexLinearMap_phaseLinear dC }
+
+/-- A native phase package recovers complex differentiability at one point. -/
+theorem cauchyAnalyticAt_complex_to_differentiableAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :
+    DifferentiableAt ℂ f z := by
+  have hreal : DifferentiableAt ℝ f z :=
+    hf.has_fderiv_at.differentiableAt
+  have hderiv : fderiv ℝ f z = hf.deriv :=
+    hf.has_fderiv_at.fderiv
+  have hphase :
+      hf.deriv Complex.I = Complex.I • hf.deriv 1 := by
+    simpa [complexPhaseStructure, complexIMap] using
+      hf.cauchyRiemann_apply (1 : ℂ)
+  exact (differentiableAt_complex_iff_differentiableAt_real).2
+    ⟨hreal, by simpa [hderiv] using hphase⟩
+
+/-- At one point, the native phase readout is exactly complex differentiability. -/
+theorem cauchyAnalyticAt_complex_iff_differentiableAt
+    {f : ℂ → ℂ} {z : ℂ} :
+    Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) ↔
+      DifferentiableAt ℂ f z := by
+  constructor
+  · rintro ⟨hf⟩
+    exact cauchyAnalyticAt_complex_to_differentiableAt hf
+  · intro hf
+    exact ⟨differentiableAt_complex_to_cauchyAnalyticAt hf⟩
+
+/-- Mathlib `AnalyticAt` is read back as a neighborhood of native phase data. -/
+theorem analyticAt_iff_eventually_cauchyPhaseAt
+    {f : ℂ → ℂ} {z : ℂ} :
+    AnalyticAt ℂ f z ↔
+      ∀ᶠ w in 𝓝 z,
+        Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f w) := by
+  rw [Complex.analyticAt_iff_eventually_differentiableAt]
+  apply eventually_congr
+  filter_upwards with w
+  exact cauchyAnalyticAt_complex_iff_differentiableAt.symm
+
+/-- Native phase readout over an open set recovers complex differentiability on it. -/
+theorem cauchyPhaseOn_to_differentiableOn
+    {f : ℂ → ℂ} {s : Set ℂ}
+    (hf : CauchyPhaseOn complexPhaseStructure complexPhaseStructure f s) :
+    DifferentiableOn ℂ f s := by
+  intro z hz
+  rcases hf z hz with ⟨h⟩
+  exact (cauchyAnalyticAt_complex_to_differentiableAt h).differentiableWithinAt
+
+/-- On an open set, Mathlib `AnalyticOn` has an exact native phase readout. -/
+theorem analyticOn_open_iff_cauchyPhaseOn
+    {f : ℂ → ℂ} {s : Set ℂ}
+    (hs : IsOpen s) :
+    AnalyticOn ℂ f s ↔
+      CauchyPhaseOn complexPhaseStructure complexPhaseStructure f s := by
+  constructor
+  · intro hf z hz
+    have hdiff : DifferentiableOn ℂ f s :=
+      (Complex.analyticOn_iff_differentiableOn hs).1 hf
+    have hznhd : s ∈ 𝓝 z := hs.mem_nhds hz
+    exact ⟨differentiableAt_complex_to_cauchyAnalyticAt
+      (hdiff.differentiableAt hznhd)⟩
+  · intro hf
+    exact (Complex.analyticOn_iff_differentiableOn hs).2
+      (cauchyPhaseOn_to_differentiableOn hf)
+
+/-- Bilingual pointwise data forgets to its native phase readout. -/
+theorem bilingualAnalyticOn_to_cauchyPhaseOn
+    {X Y Region Point Tangent Value : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [AddCommGroup Value] [Module ℝ Value]
+    {Kdom : PhaseStructure X}
+    {Ktar : PhaseStructure Y}
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {F : X → Y}
+    {Fgeo : Point → Value}
+    {s : Set X}
+    (h : BilingualAnalyticOn Kdom Ktar I F Fgeo s) :
+    CauchyPhaseOn Kdom Ktar F s := by
+  intro x hx
+  rcases h x hx with ⟨A⟩
+  exact ⟨A.cauchy⟩
+
+end UnifiedBilingualReadout
 
 end BilingualAnalyticity

@@ -67,7 +67,8 @@ theorem canonicalColorGenerator_mem_fureyConjugateGeneration (i : Fin 3) :
     canonicalZornToCl55 (canonicalColorGenerator i) ∈
       fureyConjugateGeneration := by
   rw [canonicalZornToCl55_colorGenerator]
-  exact Submodule.smul_mem _ _ (carAnn_mem_fureyConjugateGeneration i)
+  exact fureyConjugateGeneration.smul_mem (2 : ℝ)
+    (carAnn_mem_fureyConjugateGeneration i)
 
 /-- The three Zorn color generators remain linearly distinguishable after the
 Clifford embedding. -/

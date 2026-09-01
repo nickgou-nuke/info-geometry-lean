@@ -12,6 +12,28 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 sandbox_dir="${repo_root}/tools/infra/sandbox-bin"
 ci_mode="${1:-}"
 
+# The root Lake package records Atlas as a local external reference for local
+# research workflows.  Clean CI checkouts do not carry nested git checkouts, so
+# hydrate the exact audited upstream revision before Lake reads the package.
+if [[ "${ci_mode}" == "--ci" && ! -d "${repo_root}/external_refs/atlas-lean/.git" ]]; then
+  echo "[sandbox-bootstrap] hydrating pinned Atlas external dependency"
+  mkdir -p "${repo_root}/external_refs"
+  git clone --no-checkout https://github.com/facebookresearch/atlas-lean.git \
+    "${repo_root}/external_refs/atlas-lean"
+  git -C "${repo_root}/external_refs/atlas-lean" checkout \
+    34ffed396f376454c1a9b297f3fd74c5c801fb50
+fi
+
+# GitHub's hosted image does not necessarily ship bubblewrap.  The CI policy
+# prefers the sandbox when it is available and already permits direct fallback
+# when the host kernel disallows it, so install the userspace binary when
+# possible rather than treating its absence as a policy violation.
+if [[ "${ci_mode}" == "--ci" ]] && ! command -v bwrap >/dev/null 2>&1; then
+  echo "[sandbox-bootstrap] installing bubblewrap for CI preflight"
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq bubblewrap
+fi
+
 resolve_command() {
   local cmd="$1"
   local original_path="${PATH:-}"

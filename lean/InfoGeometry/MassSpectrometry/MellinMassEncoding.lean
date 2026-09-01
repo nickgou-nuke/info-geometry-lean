@@ -1,5 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib
 import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.MassSpectrometry.PeakSpectrum
 
@@ -7,7 +6,7 @@ import InfoGeometry.MassSpectrometry.PeakSpectrum
 # Mellin/log-mass encoding
 
 Mass enters through the multiplicative positive-real scale group, while
-`Real.log` supplies its additive coordinate.  The final positional-encoding
+`Real.log` supplies its additive coordinate. The final positional-encoding
 adapter reuses the repository's generic `InfoGeometry.LLM.PositionalEncoding`
 interface without identifying that interface with a physical instrument.
 -/
@@ -49,7 +48,7 @@ def mellinMassPhase (ω m m₀ : ℝ) : ℂ :=
 theorem mellinMassPhase_common_scale
     {ω λ m m₀ : ℝ} (hλ : λ ≠ 0) (hm₀ : m₀ ≠ 0) :
     mellinMassPhase ω (λ * m) (λ * m₀) = mellinMassPhase ω m m₀ := by
-  simp [mellinMassPhase, logMass_common_scale hλ hm₀]
+  rw [mellinMassPhase, mellinMassPhase, logMass_common_scale hλ hm₀]
 
 /-- Log-mass translation as the repository's generic positional-encoding type. -/
 def logMassTranslation (c : ℝ) : InfoGeometry.LLM.PositionalEncoding ℝ :=

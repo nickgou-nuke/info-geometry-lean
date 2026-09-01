@@ -15,6 +15,8 @@ The ingredients are all repository-native:
 * `realPin55_annihilator_equivariant` transports annihilator submodules;
 * `LinearEquiv.finrank_map_eq` preserves their dimension;
 * `ProjectivePureSpinor` is already well-defined under nonzero scaling;
+* `ProjectiveFoundation.ProjectiveRepresentation` supplies the genuine
+  projective action associated to a linear representation;
 * `projectivePureSpinorGrassmannianPoint` is the canonical maximal-neutral
   Grassmannian readout.
 
@@ -75,31 +77,37 @@ theorem realPin55_isPureSpinor
     rw [(realPin55NeutralTransport g).finrank_map_eq]
     exact hψ.2
 
-/-- Purity is preserved and reflected by the full Pin action. -/
-theorem realPin55_isPureSpinor_iff
-    (g : RealPin55) (ψ : Spinor) :
-    IsPureSpinor (realPin55ExteriorSpinorLinearEquiv g ψ) ↔ IsPureSpinor ψ := by
-  constructor
-  · intro h
-    have h' := realPin55_isPureSpinor g⁻¹ h
-    simpa using h'
-  · exact realPin55_isPureSpinor g
+/-- The ordinary linear representation, viewed through the repository's
+projective-representation interface with trivial multiplier. -/
+noncomputable def realPin55ProjectiveRepresentation :
+    ProjectiveRepresentation ℝ RealPin55 Spinor :=
+  ProjectiveRepresentation.ofLinearHom realPin55ExteriorSpinorRepresentation
 
 /-- The induced full Pin action on real projective spinor space. -/
 noncomputable def realPin55ProjectiveSpinorMap
     (g : RealPin55) : ℙ ℝ Spinor → ℙ ℝ Spinor :=
-  Projectivization.map
-    (K := ℝ) (V := Spinor) (L := ℝ) (W := Spinor)
-    (σ := RingHom.id ℝ)
-    (realPin55ExteriorSpinorLinearEquiv g).toLinearMap
-    (realPin55ExteriorSpinorLinearEquiv g).injective
+  realPin55ProjectiveRepresentation.projectivizationMap g
 
 @[simp] theorem realPin55ProjectiveSpinorMap_mk
     (g : RealPin55) (ψ : Spinor) (hψ : ψ ≠ 0) :
     realPin55ProjectiveSpinorMap g (Projectivization.mk ℝ ψ hψ) =
       Projectivization.mk ℝ (realPin55ExteriorSpinorLinearEquiv g ψ)
         ((realPin55ExteriorSpinorLinearEquiv g).map_ne_zero_iff.mpr hψ) := by
-  rfl
+  exact ProjectiveRepresentation.projectivizationMap_mk
+    realPin55ProjectiveRepresentation g ψ hψ
+
+/-- Projective transport composes according to the full Pin group law. -/
+theorem realPin55ProjectiveSpinorMap_mul
+    (g h : RealPin55) :
+    realPin55ProjectiveSpinorMap (g * h) =
+      realPin55ProjectiveSpinorMap g ∘ realPin55ProjectiveSpinorMap h := by
+  exact ProjectiveRepresentation.projectivizationMap_mul
+    realPin55ProjectiveRepresentation g h
+
+@[simp] theorem realPin55ProjectiveSpinorMap_one :
+    realPin55ProjectiveSpinorMap (1 : RealPin55) = id := by
+  exact ProjectiveRepresentation.projectivizationMap_one
+    realPin55ProjectiveRepresentation
 
 /-- The projective pure-spinor locus is stable under the full real split Pin
 action. -/
@@ -122,21 +130,6 @@ noncomputable def realPin55ProjectivePureSpinorMap
   ⟨realPin55ProjectiveSpinorMap g p.1,
     realPin55_projectivePureSpinor g p.2⟩
 
-/-- The projective action is multiplicative. -/
-theorem realPin55ProjectiveSpinorMap_mul
-    (g h : RealPin55) :
-    realPin55ProjectiveSpinorMap (g * h) =
-      realPin55ProjectiveSpinorMap g ∘ realPin55ProjectiveSpinorMap h := by
-  ext p
-  induction p using Projectivization.ind with
-  | h ψ hψ =>
-      rw [realPin55ProjectiveSpinorMap_mk]
-      rw [realPin55ProjectiveSpinorMap_mk]
-      rw [realPin55ProjectiveSpinorMap_mk]
-      apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
-      refine ⟨1, ?_⟩
-      simp [realPin55ExteriorSpinorRepresentation, one_smul]
-
 /-- The projective pure-spinor transport is a genuine `RealPin55` action. -/
 noncomputable def realPin55ProjectivePureSpinorAction :
     RealPin55 →* Function.End
@@ -145,16 +138,16 @@ noncomputable def realPin55ProjectivePureSpinorAction :
   map_one' := by
     ext p
     apply Subtype.ext
-    induction p.1 using Projectivization.ind with
-    | h ψ hψ =>
-        rw [realPin55ProjectiveSpinorMap_mk]
-        apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
-        refine ⟨1, ?_⟩
-        simp
+    change realPin55ProjectiveSpinorMap (1 : RealPin55) p.1 = p.1
+    rw [realPin55ProjectiveSpinorMap_one]
+    rfl
   map_mul' g h := by
     ext p
     apply Subtype.ext
-    exact congrFun (realPin55ProjectiveSpinorMap_mul g h) p.1
+    change realPin55ProjectiveSpinorMap (g * h) p.1 =
+      realPin55ProjectiveSpinorMap g (realPin55ProjectiveSpinorMap h p.1)
+    rw [realPin55ProjectiveSpinorMap_mul]
+    rfl
 
 /-- Projective annihilator readout is exactly equivariant under the native full
 Pin action. -/
@@ -165,7 +158,12 @@ theorem projectivePureSpinorAnnihilator_equivariant
         (realPin55ProjectivePureSpinorMap g p).1 =
       Submodule.map (realPin55NeutralTransport g).toLinearMap
         (projectivePureSpinorAnnihilator p.1) := by
-  induction p.1 using Projectivization.ind with
+  rcases p with ⟨p, hp⟩
+  change projectivePureSpinorAnnihilator
+      (realPin55ProjectiveSpinorMap g p) =
+    Submodule.map (realPin55NeutralTransport g).toLinearMap
+      (projectivePureSpinorAnnihilator p)
+  induction p using Projectivization.ind with
   | h ψ hψ =>
       rw [realPin55ProjectiveSpinorMap_mk]
       rw [projectivePureSpinorAnnihilator_mk]

@@ -8,11 +8,11 @@ import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG
 
 This module supplies the directed matrix source missing from an auto-Gramian.
 For two feature slices `Z₁` and `Z₂`, the cross-Gramian `Z₁ Z₂ᵀ` need not be
-symmetric.  Causality is imposed separately by rank, mass, or log-mass masks.
+symmetric. Causality is imposed separately by rank, mass, or log-mass masks.
 
 The finite KAN-style kernel below is only a parameterization interface: it is a
 finite superposition of univariate inner/outer functions on log-mass
-coordinates.  No Kolmogorov-Arnold representation theorem or spline
+coordinates. No Kolmogorov-Arnold representation theorem or spline
 approximation theorem is asserted here.
 -/
 
@@ -70,13 +70,12 @@ exceed the parent in log mass. -/
 def InForwardLogMassCone (τParent τChild : ℝ) : Prop :=
   τChild ≤ τParent
 
-/-- Multiplicative positive masses inherit the same order in logarithmic
-coordinates. -/
+/-- Positive masses preserve their order under the logarithm. -/
 theorem inForwardLogMassCone_of_mass_le
-    {mParent mChild : ℝ} (hp : 0 < mParent) (hc : 0 < mChild)
+    {mParent mChild : ℝ} (hc : 0 < mChild)
     (h : mChild ≤ mParent) :
     InForwardLogMassCone (Real.log mParent) (Real.log mChild) := by
-  exact Real.log_le_iff hp hc |>.2 h
+  exact Real.log_le_log hc h
 
 /-- Hard causal mask on a rectangular transfer matrix. -/
 def logMassConeMask {n₁ n₂ : ℕ}
@@ -99,7 +98,7 @@ theorem logMassConeMask_support
 /-! ## Finite KAN-style causal parameterization -/
 
 /-- Finite superposition of univariate inner/outer maps on log-mass
-coordinates.  This is an executable parameterization type, not a universal
+coordinates. This is an executable parameterization type, not a universal
 representation theorem. -/
 structure FiniteKANCausalKernel (q : ℕ) where
   parentInner : Fin q → ℝ → ℝ

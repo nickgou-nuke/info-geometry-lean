@@ -22,23 +22,11 @@ namespace InfoGeometry.MassSpectrometry
 
 open Matrix
 
-namespace CanonicalMP
-
-abbrev IsMoorePenroseInverse {R : Type*} [Ring R] [StarRing R] :=
-  InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse (R := R)
-
-abbrev leftProjector {R : Type*} [Ring R] [StarRing R] :=
-  InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector (R := R)
-
-abbrev rightProjector {R : Type*} [Ring R] [StarRing R] :=
-  InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector (R := R)
-
-end CanonicalMP
-
 /-- A directed matrix together with a certified Moore-Penrose inverse. -/
 structure CausalRetraction {n : ℕ} (K : AssignmentMatrix n) where
   pinv : AssignmentMatrix n
-  penrose : CanonicalMP.IsMoorePenroseInverse K pinv
+  penrose :
+    InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse K pinv
 
 namespace CausalRetraction
 
@@ -54,12 +42,16 @@ def fragmentProjector : AssignmentMatrix n :=
 
 /-- The parent projector is exactly the repository-owned Moore-Penrose left projector. -/
 theorem parentProjector_eq_owner :
-    R.parentProjector = CanonicalMP.leftProjector K R.pinv := by
+    R.parentProjector =
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector
+        K R.pinv := by
   rfl
 
 /-- The fragment projector is exactly the repository-owned Moore-Penrose right projector. -/
 theorem fragmentProjector_eq_owner :
-    R.fragmentProjector = CanonicalMP.rightProjector K R.pinv := by
+    R.fragmentProjector =
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector
+        K R.pinv := by
   rfl
 
 /-- `K† K` is idempotent. -/

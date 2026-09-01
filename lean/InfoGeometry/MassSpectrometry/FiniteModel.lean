@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.Core
+import InfoGeometry.MassSpectrometry.FragmentationPath
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 
 /-!
@@ -10,8 +11,6 @@ by a spectrum. Those are downstream inference problems.
 -/
 
 namespace InfoGeometry.MassSpectrometry
-
-open scoped BigOperators
 
 /-- Finite spectrum + latent fragmentation DAG + soft peak/fragment assignment
 + energy-conditioned fragmentation grammar. -/
@@ -49,6 +48,24 @@ theorem grammarAt_rank_decreases
     (h : (M.grammarAt cond).weight u v ≠ 0) :
     M.dag.rank v < M.dag.rank u := by
   exact (M.grammarAt cond).rank_decreases_of_weight_ne_zero h
+
+/-- Probability of a proof-carrying fragmentation path under one experimental condition. -/
+def pathProbabilityAt (cond : CollisionCondition) {u v : Fin n}
+    (p : M.dag.ValidPath u v) : ℝ :=
+  (M.grammarAt cond).validPathProbability p
+
+/-- Surprisal of a proof-carrying fragmentation path under one experimental condition. -/
+def pathSurprisalAt (cond : CollisionCondition) {u v : Fin n}
+    (p : M.dag.ValidPath u v) : ℝ :=
+  (M.grammarAt cond).validPathSurprisal p
+
+/-- Energy-conditioned path surprisal is additive under valid path concatenation. -/
+theorem pathSurprisalAt_concat
+    (cond : CollisionCondition) {u v w : Fin n}
+    (p : M.dag.ValidPath u v) (q : M.dag.ValidPath v w) :
+    M.pathSurprisalAt cond (FragmentationDAG.ValidPath.concat p q) =
+      M.pathSurprisalAt cond p + M.pathSurprisalAt cond q := by
+  exact (M.grammarAt cond).validPathSurprisal_concat p q
 
 end FiniteFragmentationModel
 

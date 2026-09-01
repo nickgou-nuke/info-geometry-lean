@@ -6,8 +6,10 @@ import InfoGeometry.Physics.ColorCARStandardModel
 import InfoGeometry.Physics.FureyCharges
 import InfoGeometry.Physics.QCDExteriorFureyBridge
 import InfoGeometry.Physics.QCDSU3ColorSpinorBridge
+import InfoGeometry.Physics.QCDRepresentationClosureInterfaces
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
 import InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge
+import InfoGeometry.Physics.QCDArchitectureSynthesis
 import InfoGeometry.Physics.QCDStructuralLogosMap
 import InfoGeometry.Physics.QCDTwelveFoldStructuralLogosMap
 
@@ -23,6 +25,8 @@ structural lane:
 * native Gell-Mann `su(3)` commutator data and the anti-Hermitian basis bridge;
 * a genuine infinitesimal `SU(3)` matrix representation on a complex
   triplet-plus-singlet color-spinor carrier;
+* a proof-carrying generic representation-intertwiner interface, with transport
+  of the already-proved commutator action to any supplied target carrier;
 * split-octonion Gell-Mann Cartan weights on three circular root channels;
 * native three-colour `Cl(5,5)` CAR and matching circular Zorn CAR;
 * conjugate eight-generator Furey-style CAR spans for the two chiral
@@ -43,18 +47,20 @@ structural lane:
   order-three projections;
 * the zero-light-block Schur identity `S(0,V,W) = -(V * Binv * W)` and its
   simultaneous sign-reflection invariance;
+* theorem-level architecture capstones joining the representation/Fock and
+  Schur/Artin/twelvefold/anyon halves without identifying their carriers;
 * audited Logos maps separating these algebraic owners from physical QCD,
   angular-monodromy, and neutrino interpretations.
 
 The umbrella does not assert that the complex color-spinor representation is
-already intertwined with the real `Cl(5,5)` Furey span, that either Furey span
-is a minimal left ideal, that the two chiral spans are physically conjugate,
-that `fureyOccupationCharge` is physical electric charge or topological spin,
-that an algebraic monodromy step is a physical `2π` rotation, that `12π` is a
-minimal physical period, that the algebraic colour carriers are physical QCD
-quark fields, or that the repository proves confinement, NJL dynamics, a QCD
-theta-vacuum theorem, PMNS/neutrino dynamics, CKM phenomenology, or a
-three-generation identification.
+already intertwined with a complexified `Cl(5,5)` Furey span, that either
+Furey span is a minimal left ideal, that the two chiral spans are physically
+conjugate, that `fureyOccupationCharge` is physical electric charge or
+topological spin, that an algebraic monodromy step is a physical `2π` rotation,
+that `12π` is a minimal physical period, that the algebraic colour carriers are
+physical QCD quark fields, or that the repository proves confinement, NJL
+dynamics, a QCD theta-vacuum theorem, PMNS/neutrino dynamics, CKM
+phenomenology, or a three-generation identification.
 -/
 
 namespace InfoGeometry.Physics.QCDStructuralAll

@@ -3,6 +3,8 @@ import InfoGeometry.Canonical.SpineAttributes
 import InfoGeometry.Physics.QCDFureyZornProjectorBridge
 import InfoGeometry.Physics.QCDZornChargeConjugationBridge
 import InfoGeometry.Physics.QCDNativeZornColorRepresentation
+import InfoGeometry.Physics.QCDCanonicalComplexZornBridge
+import InfoGeometry.Physics.QCDZornCl55FureyBridge
 
 /-!
 # Audited recovered-Zorn structural ledger
@@ -10,9 +12,13 @@ import InfoGeometry.Physics.QCDNativeZornColorRepresentation
 This ledger records finite Zorn theorems recovered from the downstream proof
 workspace and re-established on native main-library carriers.
 
-The canonical `G2TrifactorSU3` carrier and the complex
-`SplitOctonionBraidSU3.Zorn` carrier remain distinct. No equivalence between
-them is asserted by this ledger.
+The canonical and complex Zorn carriers are now connected by an explicit
+coordinate equivalence that preserves the Zorn product.  Separately, the real
+canonical Zorn carrier injects into `Cl(5,5)` through the literal three-mode
+exterior algebra, with the three color generators landing in the conjugate
+Furey span.
+
+These are carrier/representation statements, not physical QCD identifications.
 -/
 
 open Lean Elab Command
@@ -71,22 +77,24 @@ def entry : Concept → Entry
         "faithful gl3 representation on the native complex Zorn upper color lane",
         .theorem,
         some ``InfoGeometry.Physics.QCDNativeZornColorRepresentation.native_zorn_color_representation_packet,
-        "The defining matrix action on `Fin 3 -> C` is faithful, preserves multiplication and commutators, and embeds injectively as the pure upper Zorn lane."⟩
+        "The defining matrix action on `Fin 3 -> C` is faithful, preserves multiplication and commutators, and is realized injectively as the pure upper Zorn lane using explicit Zorn scalar operations."⟩
   | .canonicalComplexZornEquivalence =>
       ⟨.canonicalComplexZornEquivalence,
-        "equivalence between canonical and complex Zorn carriers",
-        .openDebt, none,
-        "Both finite carriers are theorem-owned, but no native equivalence intertwining their products/projectors is supplied here."⟩
+        "product-preserving equivalence between canonical and complex Zorn carriers",
+        .theorem,
+        some ``InfoGeometry.Physics.QCDCanonicalComplexZornBridge.canonical_complex_zorn_packet,
+        "The coordinate rename `(a,b,x,y) <-> (a,u,v,b)` is bijective, preserves the native Zorn product and scalar operation, maps the two projectors, and transports the involutive complex conjugation."⟩
   | .zornCliffordFureyIntertwiner =>
       ⟨.zornCliffordFureyIntertwiner,
-        "Zorn color lanes intertwined with the Cl(5,5) Furey spans",
-        .openDebt, none,
-        "The repository owns parallel Zorn and Clifford/Furey lanes; an explicit carrier intertwiner remains to be constructed."⟩
+        "injective canonical-Zorn to Cl(5,5) Furey carrier bridge",
+        .structuralBridge,
+        some ``InfoGeometry.Physics.QCDZornCl55FureyBridge.zorn_cl55_furey_packet,
+        "The real canonical Zorn carrier injects into Cl(5,5) through the literal three-mode exterior algebra; canonical color generators map to `2 * chiralPlus55 i` and lie in the conjugate Furey span. No multiplicative algebra equivalence is asserted."⟩
   | .nativeDiracSpinorColorRepresentation =>
       ⟨.nativeDiracSpinorColorRepresentation,
         "richer faithful gl3 action on a native Zorn Dirac-spinor carrier",
         .openDebt, none,
-        "The downstream `ZornColorLieRepresentation` proves a stronger faithful action on `DiracSpinor16`; migrating its Peirce/chiral spinor carrier remains separate debt."⟩
+        "The downstream `ZornColorLieRepresentation` proves a stronger faithful action on `DiracSpinor16`; migrating its Peirce/chiral spinor carrier remains separate debt and is no longer required for native color faithfulness."⟩
 
 
 def auditRecoveredZornLogos : CoreM Unit := do

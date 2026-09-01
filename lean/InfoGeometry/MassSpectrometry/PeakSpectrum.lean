@@ -1,6 +1,4 @@
-import Mathlib.Algebra.FreeMonoid.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.List.Pairwise
+import Mathlib
 
 /-!
 # Finite peak spectra

@@ -2,17 +2,17 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.Zorn.RegularActionAssociator
 import InfoGeometry.Algebra.KingdonSplitOctonion
 import InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
-import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 
 /-!
 # Native right-regular circular CAR bridge
 
 The literal exterior creation operator raises the established Peirce/exterior
-order `0 → 1 → 2 → 3`.  On the split-octonion carrier that endpoint pattern is
-carried by right regular multiplication, not by left regular multiplication.
+order `0 → 1 → 2 → 3`.  On the genuine `uPlus/uMinus` circular split-octonion
+carrier that endpoint pattern is carried by right regular multiplication, not
+by left regular multiplication.
 
-This owner proves the exact operator CAR relations for the right-regular
+This owner proves the exact per-mode CAR relations for the right-regular
 circular roots.  The proof is intrinsic: right alternativity makes the two
 associator corrections in the symmetrized regular product cancel.
 
@@ -30,7 +30,6 @@ open InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
 open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Lie.SplitOctonionEllCrossChannel
-open InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 open InfoGeometry.Physics
 
 abbrev CZ := CanonicalZorn
@@ -82,48 +81,19 @@ theorem rightRegular_sq_zero_of_sq_zero
     rightRegular (rootMinus i) * rightRegular (rootMinus i) = 0 :=
   rightRegular_sq_zero_of_sq_zero (rootMinus i) (rootMinus_sq i)
 
-/-- Full mixed three-mode CAR packet. -/
-theorem rightRegular_root_mixed_CAR (i j : Fin 3) :
-    rightRegular (rootMinus i) * rightRegular (rootPlus j) +
-        rightRegular (rootPlus j) * rightRegular (rootMinus i) =
-      (if i = j then (1 : ℝ) else 0) • (1 : EndCZ) := by
+/-- The genuine circular element CAR lifts exactly to right-regular operators. -/
+theorem rightRegular_root_CAR (i : Fin 3) :
+    rightRegular (rootMinus i) * rightRegular (rootPlus i) +
+        rightRegular (rootPlus i) * rightRegular (rootMinus i) =
+      (1 : EndCZ) := by
   rw [rightRegular_anticommutator]
-  have hanti :
-      rootMinus i * rootPlus j + rootPlus j * rootMinus i =
-        (if i = j then (1 : ℝ) else 0) • (1 : CZ) := by
-    simpa [add_comm] using
-      (cartesianZorn_rootPlus_rootMinus_anticommutator_delta j i)
+  have hanti : rootMinus i * rootPlus i + rootPlus i * rootMinus i = (1 : CZ) := by
+    simpa [add_comm] using root_anticommutator i
   rw [hanti]
-  by_cases hij : i = j
-  · subst j
-    simp
-    apply LinearMap.ext
-    intro y
-    change y * (1 : CZ) = y
-    exact zMul_one y
-  · simp [hij, rightRegular]
-
-/-- Positive-positive right-regular anticommutators vanish for all modes. -/
-theorem rightRegular_rootPlus_same_CAR (i j : Fin 3) :
-    rightRegular (rootPlus i) * rightRegular (rootPlus j) +
-        rightRegular (rootPlus j) * rightRegular (rootPlus i) = 0 := by
-  rw [rightRegular_anticommutator]
-  have h := cartesianZorn_rootPlus_same_channel_anticommutator i j
-  rw [h]
   apply LinearMap.ext
   intro y
-  rfl
-
-/-- Negative-negative right-regular anticommutators vanish for all modes. -/
-theorem rightRegular_rootMinus_same_CAR (i j : Fin 3) :
-    rightRegular (rootMinus i) * rightRegular (rootMinus j) +
-        rightRegular (rootMinus j) * rightRegular (rootMinus i) = 0 := by
-  rw [rightRegular_anticommutator]
-  have h := cartesianZorn_rootMinus_same_channel_anticommutator i j
-  rw [h]
-  apply LinearMap.ext
-  intro y
-  rfl
+  change y * (1 : CZ) = y
+  exact zMul_one y
 
 /-- Per-mode CAR pair for the right-regular circular representation. -/
 def rightRegularCARPair (i : Fin 3) : SplitClifford.CARPair EndCZ where
@@ -131,16 +101,14 @@ def rightRegularCARPair (i : Fin 3) : SplitClifford.CARPair EndCZ where
   cre := rightRegular (rootPlus i)
   ann_sq := rightRegular_rootMinus_sq i
   cre_sq := rightRegular_rootPlus_sq i
-  anti := by
-    simpa using rightRegular_root_mixed_CAR i i
+  anti := rightRegular_root_CAR i
 
 /-! Endpoint laws fixing the exterior-degree orientation. -/
 
 @[simp] theorem rightRegular_rootPlus_uPlus (i : Fin 3) :
     rightRegular (rootPlus i) uPlus = rootPlus i := by
-  exact rootPlus_mul_uMinus i |> fun _ => by
-    change uPlus * rootPlus i = rootPlus i
-    exact uPlus_mul_rootPlus i
+  change uPlus * rootPlus i = rootPlus i
+  exact uPlus_mul_rootPlus i
 
 @[simp] theorem rightRegular_rootPlus_uMinus (i : Fin 3) :
     rightRegular (rootPlus i) uMinus = 0 := by

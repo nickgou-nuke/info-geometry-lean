@@ -232,3 +232,4 @@ import InfoGeometry.Lie.CanonicalZornG2RootStarAction
 import InfoGeometry.Lie.G2PositiveRootIndex
 import InfoGeometry.Lie.G2TwoNativeRootCoordinateEquivalence
 import InfoGeometry.Lie.CanonicalZornComplexifiedG2
+import InfoGeometry.Lie.SplitOctonionChiralCircularSpectralBridge

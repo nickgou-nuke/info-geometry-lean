@@ -23,6 +23,7 @@ namespace InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge
 open Matrix
 open InfoGeometry.Physics.NuclearQuasiparticleCAR
 open InfoGeometry.Physics.NuclearCartanProjectorParityBridge
+open InfoGeometry.Physics.NuclearCartanProjectorParityBridge.QuasiparticleCAR
 open InfoGeometry.Physics.NuclearFiniteCARProjection
 
 /-- The concrete Soloviev two-state CAR carrier realizes the abstract nuclear
@@ -63,7 +64,7 @@ def finiteVacancyProjector : M2R :=
 /-- The finite Cartan generator has weights `-1,+1`. -/
 theorem finiteCartan_eq_diagonal :
     finiteCartan = !![-1, 0; 0, 1] := by
-  rw [finiteCartan, QuasiparticleCAR.centeredOccupationCartan,
+  rw [finiteCartan, centeredOccupationCartan,
     finiteCAR_numberOp_eq_number, number_eq_diagonal]
   ext i j
   fin_cases i <;> fin_cases j <;> simp
@@ -71,7 +72,7 @@ theorem finiteCartan_eq_diagonal :
 /-- The finite fermion parity has eigenvalues `+1,-1`. -/
 theorem finiteParity_eq_diagonal :
     finiteParity = !![1, 0; 0, -1] := by
-  rw [finiteParity, QuasiparticleCAR.fermionParity,
+  rw [finiteParity, fermionParity,
     finiteCAR_numberOp_eq_number, number_eq_diagonal]
   ext i j
   fin_cases i <;> fin_cases j <;> simp
@@ -79,7 +80,7 @@ theorem finiteParity_eq_diagonal :
 /-- Vacancy is the complementary rank-one diagonal projector. -/
 theorem finiteVacancyProjector_eq_diagonal :
     finiteVacancyProjector = !![1, 0; 0, 0] := by
-  rw [finiteVacancyProjector, QuasiparticleCAR.vacancyProjector,
+  rw [finiteVacancyProjector, vacancyProjector,
     finiteCAR_numberOp_eq_number, number_eq_diagonal]
   ext i j
   fin_cases i <;> fin_cases j <;> simp

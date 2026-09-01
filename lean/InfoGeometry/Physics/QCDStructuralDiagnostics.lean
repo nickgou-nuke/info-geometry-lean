@@ -12,6 +12,8 @@ structural ownership audits.
 
 #check InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #check InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#check InfoGeometry.Physics.QCDFureyZornProjectorBridge.furey_zorn_projector_packet
+#check InfoGeometry.Physics.QCDZornChargeConjugationBridge.zorn_charge_conjugation_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #check InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #check InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
@@ -39,6 +41,8 @@ structural ownership audits.
 
 #print axioms InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #print axioms InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#print axioms InfoGeometry.Physics.QCDFureyZornProjectorBridge.furey_zorn_projector_packet
+#print axioms InfoGeometry.Physics.QCDZornChargeConjugationBridge.zorn_charge_conjugation_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #print axioms InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #print axioms InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
@@ -66,6 +70,8 @@ structural ownership audits.
 
 #lint_vacuity_decl InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDFureyZornProjectorBridge.furey_zorn_projector_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDZornChargeConjugationBridge.zorn_charge_conjugation_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
@@ -94,3 +100,4 @@ structural ownership audits.
 #audit_qcd_structural_logos
 #audit_twelvefold_structural_logos
 #audit_qcd_representation_closure
+#audit_recovered_zorn_logos

@@ -234,3 +234,4 @@ import InfoGeometry.Lie.G2TwoNativeRootCoordinateEquivalence
 import InfoGeometry.Lie.CanonicalZornComplexifiedG2
 import InfoGeometry.Lie.SplitOctonionChiralCircularSpectralBridge
 import InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading
+import InfoGeometry.Lie.SplitOctonion1331OperatorGradingBridge

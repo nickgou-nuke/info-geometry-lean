@@ -16,4 +16,5 @@ import InfoGeometry.MassSpectrometry.ChemicalGraph
 import InfoGeometry.MassSpectrometry.FragmentationPushout
 import InfoGeometry.MassSpectrometry.FragmentationPosetCategory
 import InfoGeometry.MassSpectrometry.FragmentationColimit
+import InfoGeometry.MassSpectrometry.MolecularFragmentColimit
 import InfoGeometry.MassSpectrometry.LinearBSplineKAN

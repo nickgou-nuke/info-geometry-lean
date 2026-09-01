@@ -81,8 +81,7 @@ theorem odd_comm_even
     (hx : P.IsOdd x) (hy : P.IsEven y) :
     P.IsOdd (InternalParity.comm x y) := by
   unfold InternalParity.comm InternalParity.IsOdd
-  rw [P.act_add]
-  simp only [sub_eq_add_neg, P.act_neg, P.act_mul, hx, hy]
+  simp only [sub_eq_add_neg, P.act_add, P.act_neg, P.act_mul, hx, hy]
   noncomm_ring
 
 /-- The superbracket: odd/odd uses the anticommutator; all other degree pairs

@@ -154,8 +154,14 @@ theorem cfcResolvent_diff_sub_left_linearization
         cfcResolvent X t * (Y - X) * cfcResolvent X t =
       cfcResolvent X t * (Y - X) *
         (cfcResolvent Y t - cfcResolvent X t) := by
-  rw [cfcResolvent_diff_mul_sub_mul_cfcResolvent X Y t hX hY ht]
-  rw [mul_sub]
-  ring
+  calc
+    (cfcResolvent X t - cfcResolvent Y t) -
+        cfcResolvent X t * (Y - X) * cfcResolvent X t =
+      cfcResolvent X t * (Y - X) * cfcResolvent Y t -
+        cfcResolvent X t * (Y - X) * cfcResolvent X t := by
+          rw [cfcResolvent_diff_mul_sub_mul_cfcResolvent X Y t hX hY ht]
+    _ = cfcResolvent X t * (Y - X) *
+        (cfcResolvent Y t - cfcResolvent X t) := by
+          simp only [sub_mul, mul_sub]
 
 end SouriauOnsagerBKM

@@ -15,8 +15,10 @@ The repository has two theorem-bearing complex Zorn coordinate carriers:
   lanes.
 
 They carry the same Zorn product with only a coordinate-name permutation:
-`(a,b,x,y) ↔ (a,u,v,b)`.  This module makes that relation explicit as a
-complex-linear equivalence and proves exact product preservation.
+`(a,b,x,y) ↔ (a,u,v,b)`.  The braid-side carrier intentionally uses explicit
+`zornAdd`/`zornSmul` operations rather than native module instances, so this
+module records an ordinary coordinate equivalence together with explicit
+additive, scalar and product preservation theorems.
 
 This is a carrier equivalence, not a physical particle identification.
 -/
@@ -35,32 +37,17 @@ abbrev ComplexZorn := InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 /-- Coordinate transport from the canonical Zorn matrix to the complex braid
 carrier. -/
-def canonicalToComplex : CanonicalZorn →ₗ[ℂ] ComplexZorn where
-  toFun X := { a := X.a, u := X.x, v := X.y, b := X.b }
-  map_add' X Y := by
-    apply zorn_ext
-    · rfl
-    · rfl
-    · rfl
-    · rfl
-  map_smul' c X := by
-    apply zorn_ext
-    · rfl
-    · rfl
-    · rfl
-    · rfl
+def canonicalToComplex (X : CanonicalZorn) : ComplexZorn :=
+  { a := X.a, u := X.x, v := X.y, b := X.b }
 
 /-- Coordinate transport back to the canonical carrier. -/
-def complexToCanonical : ComplexZorn →ₗ[ℂ] CanonicalZorn where
-  toFun X := { a := X.a, b := X.b, x := X.u, y := X.v }
-  map_add' X Y := by
-    ext i <;> rfl
-  map_smul' c X := by
-    ext i <;> rfl
+def complexToCanonical (X : ComplexZorn) : CanonicalZorn :=
+  { a := X.a, b := X.b, x := X.u, y := X.v }
 
-/-- The two complex Zorn coordinate carriers are linearly equivalent. -/
-def canonicalComplexEquiv : CanonicalZorn ≃ₗ[ℂ] ComplexZorn where
-  toLinearMap := canonicalToComplex
+/-- The two complex Zorn coordinate carriers are equivalent as coordinate
+spaces. Algebraic compatibility is proved separately below. -/
+def canonicalComplexEquiv : CanonicalZorn ≃ ComplexZorn where
+  toFun := canonicalToComplex
   invFun := complexToCanonical
   left_inv X := by
     ext i <;> rfl
@@ -72,6 +59,26 @@ def canonicalComplexEquiv : CanonicalZorn ≃ₗ[ℂ] ComplexZorn where
 
 @[simp] theorem canonicalComplexEquiv_symm_apply (X : ComplexZorn) :
     canonicalComplexEquiv.symm X = { a := X.a, b := X.b, x := X.u, y := X.v } := rfl
+
+/-- Additive compatibility with the explicit braid-side Zorn addition. -/
+theorem canonicalComplexEquiv_add (X Y : CanonicalZorn) :
+    canonicalComplexEquiv (X + Y) =
+      zornAdd (canonicalComplexEquiv X) (canonicalComplexEquiv Y) := by
+  apply zorn_ext
+  · rfl
+  · funext i; rfl
+  · funext i; rfl
+  · rfl
+
+/-- Scalar compatibility with the explicit braid-side Zorn scalar operation. -/
+theorem canonicalComplexEquiv_smul (c : ℂ) (X : CanonicalZorn) :
+    canonicalComplexEquiv (c • X) =
+      zornSmul c (canonicalComplexEquiv X) := by
+  apply zorn_ext
+  · rfl
+  · funext i; rfl
+  · funext i; rfl
+  · rfl
 
 /-- The canonical and complex dot products agree under the coordinate rename. -/
 theorem canonical_dot_eq_dot3 (u v : Fin 3 → ℂ) :
@@ -107,7 +114,7 @@ theorem canonicalComplexEquiv_symm_mul (X Y : ComplexZorn) :
     canonicalComplexEquiv.symm (zornMul X Y) =
       zMul (canonicalComplexEquiv.symm X) (canonicalComplexEquiv.symm Y) := by
   apply canonicalComplexEquiv.injective
-  simp only [LinearEquiv.apply_symm_apply, canonicalComplexEquiv_mul]
+  simp only [Equiv.apply_symm_apply, canonicalComplexEquiv_mul]
 
 /-- The canonical upper projector maps to the complex upper diagonal slot. -/
 @[simp] theorem canonicalComplexEquiv_OP1 :
@@ -131,8 +138,7 @@ theorem canonicalComplexEquiv_symm_mul (X Y : ComplexZorn) :
       ({ a := 0, u := 0, v := v, b := 0 } : ComplexZorn) := by
   apply zorn_ext <;> rfl
 
-/-- Transporting the native complex conjugation back to the canonical carrier
-exchanges the two canonical diagonal projectors. -/
+/-- Transporting the native complex conjugation back to the canonical carrier. -/
 def canonicalParticleConj (X : CanonicalZorn) : CanonicalZorn :=
   canonicalComplexEquiv.symm (particleConjZorn (canonicalComplexEquiv X))
 
@@ -157,12 +163,15 @@ theorem canonical_complex_zorn_packet :
     (∀ X Y : CanonicalZorn,
       canonicalComplexEquiv (zMul X Y) =
         zornMul (canonicalComplexEquiv X) (canonicalComplexEquiv Y)) ∧
+    (∀ c : ℂ, ∀ X : CanonicalZorn,
+      canonicalComplexEquiv (c • X) =
+        zornSmul c (canonicalComplexEquiv X)) ∧
     canonicalComplexEquiv (OP1 : CanonicalZorn) = diagPlus ∧
     canonicalComplexEquiv (OP2 : CanonicalZorn) = diagMinus ∧
     (∀ X : CanonicalZorn, canonicalParticleConj (canonicalParticleConj X) = X) :=
   ⟨canonicalComplexEquiv.bijective, canonicalComplexEquiv_mul,
-    canonicalComplexEquiv_OP1, canonicalComplexEquiv_OP2,
-    canonicalParticleConj_sq⟩
+    canonicalComplexEquiv_smul, canonicalComplexEquiv_OP1,
+    canonicalComplexEquiv_OP2, canonicalParticleConj_sq⟩
 
 end InfoGeometry.Physics.QCDCanonicalComplexZornBridge
 

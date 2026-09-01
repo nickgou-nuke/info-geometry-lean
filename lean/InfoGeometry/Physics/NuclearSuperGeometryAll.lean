@@ -4,6 +4,7 @@ import InfoGeometry.Physics.NuclearSuperSolovievPeirceBridge
 import InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge
 import InfoGeometry.Physics.NuclearFiniteNilpotentSoul
 import InfoGeometry.Physics.NuclearExteriorGrassmannSoul
+import InfoGeometry.Physics.NuclearOperatorSchurComplement
 import InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge
 
 /-!
@@ -20,6 +21,8 @@ operator/superalgebraic nuclear layer:
 * exact finite nilpotent-soul polynomial truncation and unipotent inversion;
 * a genuine Mathlib exterior/Grassmann one-form realization with `θ² = 0`,
   generator anticommutation, and exact inverse `1-θ` for `1+θ`;
+* noncommutative Schur/effective operators with proof-carrying resolvents and
+  exact invariance under simultaneous off-diagonal sign reflection;
 * genuine split-octonion nonassociativity represented as the exact defect of
   left-regular operator composition.
 

@@ -9,6 +9,10 @@ import InfoGeometry.Physics.QCDSU3ColorSpinorBridge
 import InfoGeometry.Physics.QCDRepresentationClosureInterfaces
 import InfoGeometry.Physics.QCDFureyZornProjectorBridge
 import InfoGeometry.Physics.QCDZornChargeConjugationBridge
+import InfoGeometry.Physics.QCDNativeZornColorRepresentation
+import InfoGeometry.Physics.QCDCanonicalComplexZornBridge
+import InfoGeometry.Physics.QCDZornCl55FureyBridge
+import InfoGeometry.Physics.QCDRecoveredZornSynthesis
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
 import InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge
 import InfoGeometry.Physics.QCDArchitectureSynthesis
@@ -28,8 +32,16 @@ structural lane:
   OP-stabilizer preservation;
 * native canonical-Zorn projector routing: complementary projectors select
   square-zero upper/lower three-vector lanes and annihilate the opposite lane;
-* a separate complex-Zorn conjugate-linear involution exchanging scalar slots
-  and upper/lower color lanes;
+* a complex-Zorn conjugate-linear involution exchanging scalar slots and
+  upper/lower color lanes;
+* a faithful native `gl₃(ℂ)` representation on the three-component color lane,
+  injectively realized as the pure upper complex-Zorn sector;
+* an explicit product-preserving equivalence between the canonical complex
+  Zorn carrier and the braid/conjugation complex-Zorn carrier, including
+  projector and conjugation transport;
+* an injective real canonical-Zorn to `Cl(5,5)` carrier map through the literal
+  three-mode exterior algebra; the three canonical color generators map to
+  `2 • chiralPlus55 i` and lie in the conjugate Furey span;
 * native Gell-Mann `su(3)` commutator data and the anti-Hermitian basis bridge;
 * a genuine infinitesimal `SU(3)` matrix representation on a complex
   triplet-plus-singlet color-spinor carrier;
@@ -39,8 +51,6 @@ structural lane:
 * native three-colour `Cl(5,5)` CAR and matching circular Zorn CAR;
 * conjugate eight-generator Furey-style CAR spans for the two chiral
   conventions;
-* an injective three-mode exterior restriction whose basis generators land in
-  the conjugate Furey span;
 * the finite one-third occupation spectrum `{0, 1/3, 2/3, 1}`;
 * finite `A₂/S₃` colour-Weyl and parafermion-style Artin braid relations;
 * Zorn Majorana-shaped `Q_k` generators with explicit braid inverses;
@@ -55,20 +65,20 @@ structural lane:
   order-three projections;
 * the zero-light-block Schur identity `S(0,V,W) = -(V * Binv * W)` and its
   simultaneous sign-reflection invariance;
-* theorem-level architecture capstones joining the representation/Fock and
-  Schur/Artin/twelvefold/anyon halves without identifying their carriers;
+* theorem-level architecture capstones joining the representation/Fock,
+  recovered-Zorn, and Schur/Artin/twelvefold/anyon layers while keeping scalar
+  fields and carrier semantics explicit;
 * audited Logos maps separating these algebraic owners from physical QCD,
-  representation-intertwiner, Zorn-carrier-equivalence, angular-monodromy, and
-  neutrino interpretations.
+  angular-monodromy, and neutrino interpretations.
 
-The umbrella does not assert an equivalence between the canonical and complex
-Zorn carriers, a Zorn↔Cl(5,5) Furey intertwiner, that the complex color-spinor
+The umbrella does not assert that the real Zorn-to-`Cl(5,5)` injection is a
+multiplicative algebra homomorphism, that the complex color-spinor
 representation is already intertwined with a complexified Furey span, that
-either Furey span is a minimal left ideal, that the two chiral spans are
-physically conjugate, that `fureyOccupationCharge` is physical electric charge
-or topological spin, that an algebraic monodromy step is a physical `2π`
-rotation, that `12π` is a minimal physical period, that the algebraic colour
-carriers are physical QCD quark fields, or that the repository proves
+either Furey span is a minimal left ideal, that the two Clifford chiral spans
+are physically conjugate, that `fureyOccupationCharge` is physical electric
+charge or topological spin, that an algebraic monodromy step is a physical
+`2π` rotation, that `12π` is a minimal physical period, that the algebraic
+colour carriers are physical QCD quark fields, or that the repository proves
 confinement, NJL dynamics, a QCD theta-vacuum theorem, PMNS/neutrino dynamics,
 CKM phenomenology, or a three-generation identification.
 -/

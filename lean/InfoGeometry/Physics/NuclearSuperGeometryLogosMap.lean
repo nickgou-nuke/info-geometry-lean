@@ -13,8 +13,8 @@ import InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge
 /-!
 # Audited theorem DAG for the nuclear supergeometry lane
 
-This file is metadata over existing theorem owners.  It does not add a new
-physical interpretation.  Each formal node names an exact Lean declaration;
+This file is metadata over existing theorem owners. It does not add a new
+physical interpretation. Each formal node names an exact Lean declaration;
 open debt deliberately has no owner.
 -/
 
@@ -108,15 +108,15 @@ def entry : Concept → Entry
         "An involutive grading element in an associative ring."⟩
   | .internalReflection =>
       ⟨.internalReflection, "internal Soloviev reflection", .theorem,
-        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.internalParity_reflection,
+        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.internalParity_reflection_of_even_diagonal_odd_offDiagonal,
         "diag(Gamma,Gamma) reflects internally odd off-diagonal channels."⟩
   | .externalReflection =>
       ⟨.externalReflection, "external Fock reflection", .theorem,
-        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.externalParity_reflection,
+        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.externalFockParity_reflection,
         "diag(1,-1) reflects both off-diagonal channels without internal hypotheses."⟩
   | .totalSuperInvariance =>
       ⟨.totalSuperInvariance, "total super-Hamiltonian invariance", .theorem,
-        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.totalParity_invariant_of_internal_odd,
+        some ``InfoGeometry.Physics.NuclearInternalExternalParityFactorization.totalParity_invariance_from_double_reflection,
         "For internally odd transitions the internal and external signs cancel."⟩
   | .z2Superalgebra =>
       ⟨.z2Superalgebra, "typed Z2 superalgebra", .structuralBridge,

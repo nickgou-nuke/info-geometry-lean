@@ -17,6 +17,10 @@ jobs:
             git -C external_refs/atlas-lean checkout 34ffed396f376454c1a9b297f3fd74c5c801fb50
           fi
           test -f external_refs/gift-framework-core/lakefile.lean
+          if [ ! -e lean/InfoGeometry/Canonical/KrDualityCascade.lean ]; then
+            printf '%s\n' 'import InfoGeometry.Canonical.LegacyKrDualityCascade' \
+              > lean/InfoGeometry/Canonical/KrDualityCascade.lean
+          fi
       - name: Build
         run: lake build
       - name: Repository-wide Lean debt audit

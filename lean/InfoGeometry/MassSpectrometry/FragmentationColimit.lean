@@ -106,7 +106,7 @@ theorem descend_ι (V : FragmentVertexDiagram D)
             intro i j f
             simpa using hk (leOfHom f) } }
   simpa [FragmentVertexDiagram.ι, FragmentVertexDiagram.descend, t] using
-    (colimit.ι_desc V.toFunctor t u)
+    (colimit.ι_desc t u)
 
 end FragmentVertexDiagram
 

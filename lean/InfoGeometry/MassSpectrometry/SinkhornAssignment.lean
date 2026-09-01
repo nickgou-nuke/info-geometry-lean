@@ -5,7 +5,7 @@ import InfoGeometry.MassSpectrometry.BirkhoffAssignment
 # Sinkhorn assignment bridge
 
 The numerical normalization primitives are owned by
-`InfoGeometry.Canonical.MoE` in `SinkhornFoundation`.  This module only gives
+`InfoGeometry.Canonical.MoE` in `SinkhornFoundation`. This module only gives
 those constructions peak-fragment assignment names and re-exports their exact
 normalization identities.
 -/
@@ -13,6 +13,8 @@ normalization identities.
 noncomputable section
 
 namespace InfoGeometry.MassSpectrometry
+
+open scoped BigOperators
 
 namespace SinkhornAssignment
 

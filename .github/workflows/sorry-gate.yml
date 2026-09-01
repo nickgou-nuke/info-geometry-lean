@@ -9,6 +9,13 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Hydrate pinned external Lake dependencies
+        run: |
+          if [ ! -d external_refs/atlas-lean/.git ]; then
+            mkdir -p external_refs
+            git clone --no-checkout https://github.com/facebookresearch/atlas-lean.git external_refs/atlas-lean
+            git -C external_refs/atlas-lean checkout 34ffed396f376454c1a9b297f3fd74c5c801fb50
+          fi
       - name: Build
         run: lake build
       - name: Repository-wide Lean debt audit

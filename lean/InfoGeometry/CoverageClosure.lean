@@ -198,7 +198,7 @@ import InfoGeometry.Canonical.KleinBottleOrientifoldBoundaryBridge
 import InfoGeometry.Canonical.KleinBottleSewing
 import InfoGeometry.Canonical.KleinBoundaryStates
 import InfoGeometry.Canonical.KleinFundamentalGroup
-import InfoGeometry.Canonical.KrDualityCascade
+import InfoGeometry.Canonical.LegacyKrDualityCascade
 import InfoGeometry.Canonical.KreinDrazinWeylSplit
 import InfoGeometry.Canonical.KreinMajoranaZeroModeBlock
 import InfoGeometry.Canonical.LieFenchelQuadratic

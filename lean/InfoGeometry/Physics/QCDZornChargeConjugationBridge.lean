@@ -81,11 +81,19 @@ theorem particleConjZorn_smul (c : ℂ) (X : Zorn) :
 /-- The two complex diagonal projector slots are exchanged. -/
 @[simp] theorem particleConjZorn_diagPlus :
     particleConjZorn diagPlus = diagMinus := by
-  apply zorn_ext <;> simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  apply zorn_ext
+  · simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · funext i; simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · funext i; simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
 
 @[simp] theorem particleConjZorn_diagMinus :
     particleConjZorn diagMinus = diagPlus := by
-  apply zorn_ext <;> simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  apply zorn_ext
+  · simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · funext i; simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · funext i; simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+  · simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
 
 /-- A pure upper lane is sent to the conjugated lower lane. -/
 theorem particleConjZorn_upper

@@ -1,0 +1,40 @@
+import Mathlib
+import InfoGeometry.Lint.Vacuity
+import InfoGeometry.Physics.QCDStructuralAll
+
+/-!
+# Focused diagnostics for the QCD-facing structural lane
+
+This module forces elaboration of the capstone declarations, prints their axiom
+dependencies, runs the repository vacuity linter, and executes the QCD Logos
+ownership audit.
+-/
+
+#check InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
+#check InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_grading_involution_packet
+#check InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#check InfoGeometry.Physics.QCDZornColorSlotBridge.op_stabilizer_preserves_three_vector_slots
+#check InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
+#check InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_zorn_slot_packet
+#check InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#check InfoGeometry.Physics.QCDTrialityStructuralBridge.triality_seed_transport_closes
+
+#print axioms InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
+#print axioms InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_grading_involution_packet
+#print axioms InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#print axioms InfoGeometry.Physics.QCDZornColorSlotBridge.op_stabilizer_preserves_three_vector_slots
+#print axioms InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
+#print axioms InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_zorn_slot_packet
+#print axioms InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#print axioms InfoGeometry.Physics.QCDTrialityStructuralBridge.triality_seed_transport_closes
+
+#lint_vacuity_decl InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_grading_involution_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDZornColorSlotBridge.op_stabilizer_preserves_three_vector_slots
+#lint_vacuity_decl InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_zorn_slot_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTrialityStructuralBridge.triality_seed_transport_closes
+
+#audit_qcd_structural_logos

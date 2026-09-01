@@ -6,10 +6,12 @@ import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 
 This structure packages the formally justified layers without asserting that a
 molecular graph, SMILES string, or learned latent state is uniquely determined
-by a spectrum.  Those are downstream inference problems.
+by a spectrum. Those are downstream inference problems.
 -/
 
 namespace InfoGeometry.MassSpectrometry
+
+open scoped BigOperators
 
 /-- Finite spectrum + latent fragmentation DAG + soft peak/fragment assignment
 + energy-conditioned fragmentation grammar. -/

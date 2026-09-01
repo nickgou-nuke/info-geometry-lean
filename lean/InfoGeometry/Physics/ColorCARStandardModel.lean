@@ -4,14 +4,16 @@ import InfoGeometry.Clifford.Cl55ThreeColorChiralSums
 # Native colour CAR readout
 
 The colour lanes live in the repository-owned noncommutative `Cl(5,5)`
-carrier.  This module exposes the finite three-colour CAR/grade readout and the
-canonical eight-generator Furey-style generation submodule already used by the
-`proofs` package.
+carrier. This module exposes the finite three-colour CAR/grade readout and two
+conjugate eight-generator Furey-style submodule spans.
 
-The generation object below is only a `Submodule.span` of the vacuum together
-with the one-, two-, and three-creation sectors.  This file does not prove that
-it is a minimal left ideal, identify it with a physical Standard Model
-fermion generation, or assign particle names/electric charges to its elements.
+`fureyGeneration` uses the repository convention `carCre = chiralMinus55`.
+`fureyConjugateGeneration` uses `carAnn = chiralPlus55`.  Keeping both spans
+explicit avoids silently identifying the two chiral conventions.
+
+These objects are linear spans only.  This file does not prove that either span
+is a minimal left ideal, identify it with a physical Standard Model fermion
+generation, or assign particle names/electric charges to its elements.
 -/
 
 noncomputable section
@@ -33,16 +35,24 @@ def carCre2 : CAR3 := chiralMinus55 2
 def vacuum : CAR3 := 1
 
 /-- The finite eight-generator Furey-style CAR generation carried by the
-native `Cl(5,5)` three-colour creation operators.
-
-This is deliberately a linear span, not a theorem that the span is a minimal
-left ideal. -/
+native `Cl(5,5)` three-colour creation convention. -/
 def fureyGeneration : Submodule ℝ CAR3 :=
   Submodule.span ℝ {
     vacuum,
     carCre0, carCre1, carCre2,
     carCre0 * carCre1, carCre1 * carCre2, carCre0 * carCre2,
     carCre0 * carCre1 * carCre2
+  }
+
+/-- Conjugate eight-generator CAR span built from the opposite chiral channels.
+This is the natural landing span for the existing positive-Witt exterior
+restriction bridge. -/
+def fureyConjugateGeneration : Submodule ℝ CAR3 :=
+  Submodule.span ℝ {
+    vacuum,
+    carAnn0, carAnn1, carAnn2,
+    carAnn0 * carAnn1, carAnn1 * carAnn2, carAnn0 * carAnn2,
+    carAnn0 * carAnn1 * carAnn2
   }
 
 /-- The vacuum belongs to the finite Furey-style generation span. -/
@@ -58,6 +68,28 @@ theorem carCre1_mem_fureyGeneration : carCre1 ∈ fureyGeneration := by
 
 theorem carCre2_mem_fureyGeneration : carCre2 ∈ fureyGeneration := by
   exact Submodule.subset_span (by simp [fureyGeneration])
+
+/-- The vacuum and each one-annihilation channel belong to the conjugate span. -/
+theorem vacuum_mem_fureyConjugateGeneration : vacuum ∈ fureyConjugateGeneration := by
+  exact Submodule.subset_span (by simp [fureyConjugateGeneration])
+
+theorem carAnn0_mem_fureyConjugateGeneration : carAnn0 ∈ fureyConjugateGeneration := by
+  exact Submodule.subset_span (by simp [fureyConjugateGeneration])
+
+theorem carAnn1_mem_fureyConjugateGeneration : carAnn1 ∈ fureyConjugateGeneration := by
+  exact Submodule.subset_span (by simp [fureyConjugateGeneration])
+
+theorem carAnn2_mem_fureyConjugateGeneration : carAnn2 ∈ fureyConjugateGeneration := by
+  exact Submodule.subset_span (by simp [fureyConjugateGeneration])
+
+/-- Uniform membership of the three positive-chiral channels in the conjugate
+Furey span. -/
+theorem carAnn_mem_fureyConjugateGeneration (i : Fin 3) :
+    chiralPlus55 i ∈ fureyConjugateGeneration := by
+  fin_cases i
+  · simpa [carAnn0] using carAnn0_mem_fureyConjugateGeneration
+  · simpa [carAnn1] using carAnn1_mem_fureyConjugateGeneration
+  · simpa [carAnn2] using carAnn2_mem_fureyConjugateGeneration
 
 def numberOp0 : CAR3 := carAnn0 * carCre0
 def numberOp1 : CAR3 := carAnn1 * carCre1

@@ -54,8 +54,7 @@ theorem linearBSpline_eq_zero_of_width_le_abs
   simp [linearBSpline, max_eq_left hnonpos]
 
 /-- The real triangular B-spline is continuous for every fixed center and
-nonzero width.  (The formula is also continuous at width zero as a function of
-`x`, but the KAN basis uses positive widths.) -/
+width. -/
 theorem continuous_linearBSpline (center width : ℝ) :
     Continuous (linearBSpline center width) := by
   have habs : Continuous (fun x : ℝ => |x - center|) :=
@@ -108,6 +107,22 @@ theorem continuous_childInner {q : ℕ} (D : LinearBSplineKANData q)
     (k : Fin q) : Continuous (D.childInner k) := by
   exact continuous_const.mul
     (continuous_linearBSpline (D.childCenter k) (D.childWidth k))
+
+/-- If every outer univariate channel is continuous, then the unmasked finite
+B-spline KAN potential is jointly continuous in parent/child log mass. -/
+theorem continuous_raw
+    {q : ℕ} (D : LinearBSplineKANData q)
+    (houter : ∀ k, Continuous (D.outer k)) :
+    Continuous (fun p : ℝ × ℝ =>
+      D.toFiniteKANCausalKernel.raw p.1 p.2) := by
+  unfold FiniteKANCausalKernel.raw
+  apply continuous_finset_sum
+  intro k hk
+  have hp : Continuous (fun p : ℝ × ℝ => D.parentInner k p.1) :=
+    (D.continuous_parentInner k).comp continuous_fst
+  have hc : Continuous (fun p : ℝ × ℝ => D.childInner k p.2) :=
+    (D.continuous_childInner k).comp continuous_snd
+  exact (houter k).comp (hp.add hc)
 
 /-- Parent channel support is compact in the elementary sense that the channel
 vanishes once the center-distance is at least its positive width. -/

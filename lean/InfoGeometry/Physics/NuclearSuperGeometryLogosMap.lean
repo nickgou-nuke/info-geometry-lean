@@ -15,7 +15,8 @@ import InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge
 
 This file is metadata over existing theorem owners. It does not add a new
 physical interpretation. Each formal node names an exact Lean declaration;
-open debt deliberately has no owner.
+open debt deliberately has no owner. Dependency edges are likewise restricted
+to formalized nodes.
 -/
 
 open Lean Elab Command
@@ -57,7 +58,6 @@ structure Entry where
   boundary : String
   deriving Repr, Inhabited
 
-/-- Directed dependency edges of the formal supergeometry corridor. -/
 inductive Edge where
   | parity_to_reflection
   | parity_to_superinvariance
@@ -69,7 +69,6 @@ inductive Edge where
   | zorn_to_associatorDefect
   deriving DecidableEq, Repr, Inhabited
 
-/-- Source and target of each theorem-DAG edge. -/
 def edgeEndpoints : Edge → Concept × Concept
   | .parity_to_reflection => (.internalParity, .internalReflection)
   | .parity_to_superinvariance => (.internalParity, .totalSuperInvariance)
@@ -80,7 +79,18 @@ def edgeEndpoints : Edge → Concept × Concept
   | .nilpotent_to_schur => (.finiteNilpotentSoul, .noncommutativeSchurElimination)
   | .zorn_to_associatorDefect => (.operatorZornRealization, .zornAssociatorOperatorDefect)
 
-/-- All concepts covered by the audit. -/
+/-- All declared theorem-DAG edges. -/
+def allEdges : List Edge :=
+  [ .parity_to_reflection
+  , .parity_to_superinvariance
+  , .parity_to_superalgebra
+  , .superalgebra_to_peirce
+  , .superalgebra_to_operatorZorn
+  , .nilpotent_to_grassmann
+  , .nilpotent_to_schur
+  , .zorn_to_associatorDefect
+  ]
+
 def allConcepts : List Concept :=
   [ .internalParity
   , .internalReflection
@@ -100,7 +110,6 @@ def allConcepts : List Concept :=
   , .spectralGapTermination
   ]
 
-/-- Exact owner ledger. -/
 def entry : Concept → Entry
   | .internalParity =>
       ⟨.internalParity, "internal Z2 parity", .definition,
@@ -163,14 +172,13 @@ def entry : Concept → Entry
       ⟨.spectralGapTermination, "spectral-gap Grassmann termination", .openDebt, none,
         "Requires a formal spectral functional calculus and hypotheses not yet owned."⟩
 
-/-- Formal nodes are those with a non-debt owner. -/
 def Concept.isFormalized (c : Concept) : Bool :=
   match (entry c).status, (entry c).owner with
   | .openDebt, _ => false
   | _, some _ => true
   | _, none => false
 
-/-- Audit exact declaration ownership and enforce ownerless open debt. -/
+/-- Audit owner declarations, ownerless debt, and edge endpoints. -/
 def auditNuclearSuperGeometryLogos : CoreM Unit := do
   let env ← getEnv
   let mut failures : Array String := #[]
@@ -185,8 +193,14 @@ def auditNuclearSuperGeometryLogos : CoreM Unit := do
     | _, some n =>
         if env.contains n then pure ()
         else failures := failures.push s!"missing owner declaration: {n} ({repr c})"
+  for edge in allEdges do
+    let endpoints := edgeEndpoints edge
+    if !endpoints.1.isFormalized then
+      failures := failures.push s!"edge source is not formalized: {repr edge} -> {repr endpoints.1}"
+    if !endpoints.2.isFormalized then
+      failures := failures.push s!"edge target is not formalized: {repr edge} -> {repr endpoints.2}"
   if failures.isEmpty then
-    logInfo m!"NuclearSuperGeometry Logos audit PASS: {allConcepts.length} concepts."
+    logInfo m!"NuclearSuperGeometry Logos audit PASS: {allConcepts.length} concepts, {allEdges.length} formal edges."
   else
     for failure in failures do
       logError m!"NUCLEAR SUPERGEOMETRY LOGOS FAILURE: {failure}"

@@ -12,6 +12,7 @@ import InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge
 import InfoGeometry.Physics.QCDArchitectureSynthesis
 import InfoGeometry.Physics.QCDStructuralLogosMap
 import InfoGeometry.Physics.QCDTwelveFoldStructuralLogosMap
+import InfoGeometry.Physics.QCDRepresentationClosureLogosMap
 
 /-!
 # QCD-facing structural umbrella
@@ -50,7 +51,7 @@ structural lane:
 * theorem-level architecture capstones joining the representation/Fock and
   Schur/Artin/twelvefold/anyon halves without identifying their carriers;
 * audited Logos maps separating these algebraic owners from physical QCD,
-  angular-monodromy, and neutrino interpretations.
+  representation-intertwiner, angular-monodromy, and neutrino interpretations.
 
 The umbrella does not assert that the complex color-spinor representation is
 already intertwined with a complexified `Cl(5,5)` Furey span, that either

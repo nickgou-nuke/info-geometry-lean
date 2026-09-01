@@ -1,6 +1,5 @@
 import Mathlib
 import InfoGeometry.Physics.SplitOctonionBraidSU3
-import InfoGeometry.Physics.QCDFureyZornProjectorBridge
 
 /-!
 # Native conjugate-linear exchange of Zorn color sectors
@@ -9,8 +8,12 @@ This module promotes the finite carrier-level content of the downstream
 `ZornColorChargeConjugation` owner to the main `InfoGeometry` surface.
 
 The map conjugates complex coefficients and exchanges the two scalar slots and
-the upper/lower color lanes. It is an involution and exchanges the native
-Furey-style Zorn projector/lane conventions.
+the upper/lower color lanes. It is an involution and exchanges the two native
+complex diagonal projector slots.
+
+This carrier is the complex `SplitOctonionBraidSU3.Zorn` model and is kept
+separate from the canonical `G2TrifactorSU3` Zorn carrier used by
+`QCDFureyZornProjectorBridge`.
 
 No physical charge-conjugation, CPT, or particle identification theorem is
 asserted.
@@ -21,10 +24,23 @@ noncomputable section
 namespace InfoGeometry.Physics.QCDZornChargeConjugationBridge
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Physics.QCDFureyZornProjectorBridge
 
 abbrev Zorn := InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 abbrev complexConjHom : ℂ →+* ℂ := Complex.conjAe.toRingEquiv.toRingHom
+
+/-- Upper complex diagonal projector slot. -/
+def diagPlus : Zorn where
+  a := 1
+  u := 0
+  v := 0
+  b := 0
+
+/-- Lower complex diagonal projector slot. -/
+def diagMinus : Zorn where
+  a := 0
+  u := 0
+  v := 0
+  b := 1
 
 /-- Conjugate coefficients and exchange scalar/color sectors. -/
 def particleConjZorn (X : Zorn) : Zorn where
@@ -62,10 +78,14 @@ theorem particleConjZorn_smul (c : ℂ) (X : Zorn) :
   · funext i; simp [particleConjZorn, complexConjHom]
   · simp [particleConjZorn, complexConjHom]
 
-/-- The two canonical diagonal Zorn projectors are exchanged. -/
-theorem particleConjZorn_Eplus :
-    particleConjZorn I_zorn = I_zorn := by
-  apply zorn_ext <;> simp [particleConjZorn, I_zorn, complexConjHom]
+/-- The two complex diagonal projector slots are exchanged. -/
+@[simp] theorem particleConjZorn_diagPlus :
+    particleConjZorn diagPlus = diagMinus := by
+  apply zorn_ext <;> simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
+
+@[simp] theorem particleConjZorn_diagMinus :
+    particleConjZorn diagMinus = diagPlus := by
+  apply zorn_ext <;> simp [particleConjZorn, diagPlus, diagMinus, complexConjHom]
 
 /-- A pure upper lane is sent to the conjugated lower lane. -/
 theorem particleConjZorn_upper
@@ -94,9 +114,14 @@ theorem particleConjZorn_lower
 /-- Consolidated native Zorn conjugation packet. -/
 theorem zorn_charge_conjugation_packet (X : Zorn) :
     particleConjZorn (particleConjZorn X) = X ∧
+    particleConjZorn diagPlus = diagMinus ∧
+    particleConjZorn diagMinus = diagPlus ∧
     (∀ c : ℂ, particleConjZorn (zornSmul c X) =
       zornSmul (complexConjHom c) (particleConjZorn X)) :=
-  ⟨particleConjZorn_sq X, fun c => particleConjZorn_smul c X⟩
+  ⟨particleConjZorn_sq X,
+    particleConjZorn_diagPlus,
+    particleConjZorn_diagMinus,
+    fun c => particleConjZorn_smul c X⟩
 
 end InfoGeometry.Physics.QCDZornChargeConjugationBridge
 

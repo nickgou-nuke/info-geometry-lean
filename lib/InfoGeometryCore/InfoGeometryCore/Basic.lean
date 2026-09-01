@@ -51,6 +51,16 @@ def toInt : TripotentState → ℤ
   | zero => 0
   | pos => 1
 
+/-- Canonical cyclic permutation of the three tripotent branches. -/
+def trialityCycle : TripotentState → TripotentState
+  | neg => zero
+  | zero => pos
+  | pos => neg
+
+@[simp] theorem trialityCycle_three (s : TripotentState) :
+    trialityCycle (trialityCycle (trialityCycle s)) = s := by
+  cases s <;> rfl
+
 /-- Indicator of the negative branch. -/
 def pNeg : TripotentState → ℤ
   | neg => 1

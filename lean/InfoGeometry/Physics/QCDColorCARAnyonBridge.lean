@@ -4,6 +4,7 @@ import InfoGeometry.Algebra.GellMannBridge
 import InfoGeometry.Lie.SplitOctonionGellMannCartan
 import InfoGeometry.Lie.SplitOctonionEllCircularCAR
 import InfoGeometry.Physics.ColorCARStandardModel
+import InfoGeometry.Physics.FureyCharges
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 import InfoGeometry.Canonical.ZornOctonionAnyonGellMannBridge
 import InfoGeometry.Canonical.FractionalAnyonTopologicalSpin
@@ -13,8 +14,8 @@ import InfoGeometry.Topology.ParafermionBraiding
 # Native SU(3) / colour-CAR / anyon structural bridge for the QCD lane
 
 This module exposes theorem owners that already existed in the main
-`InfoGeometry` library and were stronger than the initial conservative QCD
-ledger suggested.
+`InfoGeometry` library and promotes the theorem-safe Furey generation/charge
+readout formerly available only in the downstream `proofs` package.
 
 Closed here:
 
@@ -22,15 +23,18 @@ Closed here:
   anti-Hermitian `su (Fin 3)` basis;
 * exact Gell-Mann Cartan weights on the split-octonion circular root channels;
 * native three-colour `Cl(5,5)` CAR closure and the matching circular Zorn CAR;
+* the finite eight-generator Furey-style generation span;
+* the finite one-third occupation spectrum `{0, 1/3, 2/3, 1}`;
 * the finite `A₂/S₃` colour Weyl braid relation;
 * the finite parafermion-style Artin braid relation;
 * Zorn null-boundary colour-pairing trace identities and gauge-conjugation
   trace invariance;
 * generic unitary anyon double-braid monodromy.
 
-These are algebraic/representation-theoretic statements.  They do not identify
-these carriers with physical QCD quark fields, prove confinement, or derive
-Standard Model phenomenology.
+These are algebraic/representation-theoretic statements. They do not identify
+these carriers with physical QCD quark fields, prove confinement, prove that
+`fureyGeneration` is a minimal left ideal, or identify `fureyOccupationCharge`
+with physical electric charge.
 -/
 
 noncomputable section
@@ -43,6 +47,7 @@ open InfoGeometry.Algebra.Bridge
 open InfoGeometry.Lie.SplitOctonionGellMannCartan
 open InfoGeometry.Lie.SplitOctonionEllCircularCAR
 open InfoGeometry.Physics.ColorCARStandardModel
+open InfoGeometry.Physics.FureyCharges
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 open InfoGeometry.Topology.Parafermion
 
@@ -95,6 +100,30 @@ theorem circular_and_cl55_color_car_packet (a b : Fin 3) :
   refine ⟨rootPlus_sq_zero a, rootMinus_sq_zero a,
     rootPlus_mul_rootMinus_anticommutator a b, ?_⟩
   exact ⟨color_car_native_closure.1, color_car_native_closure.2.1⟩
+
+/-- The promoted finite Furey-style generation contains the vacuum and all
+three one-creation colour states. This is a span-membership packet, not a
+minimal-left-ideal theorem. -/
+theorem furey_generation_packet :
+    vacuum ∈ fureyGeneration ∧
+      carCre0 ∈ fureyGeneration ∧
+      carCre1 ∈ fureyGeneration ∧
+      carCre2 ∈ fureyGeneration :=
+  ⟨vacuum_mem_fureyGeneration,
+    carCre0_mem_fureyGeneration,
+    carCre1_mem_fureyGeneration,
+    carCre2_mem_fureyGeneration⟩
+
+/-- The finite Furey occupation readout has projector number operators and the
+exact scalar spectrum `{0, 1/3, 2/3, 1}`. -/
+theorem furey_charge_packet :
+    (∀ i : Fin 3, fureyNumber i * fureyNumber i = fureyNumber i) ∧
+    (∀ w : Occupation3,
+      fureyOccupationCharge w = 0 ∨
+      fureyOccupationCharge w = (1 / 3 : ℚ) ∨
+      fureyOccupationCharge w = (2 / 3 : ℚ) ∨
+      fureyOccupationCharge w = 1) :=
+  furey_charge_algebraic_spine
 
 /-- The finite colour Weyl model and the explicit parafermion-style matrices
 both satisfy an Artin braid relation. -/

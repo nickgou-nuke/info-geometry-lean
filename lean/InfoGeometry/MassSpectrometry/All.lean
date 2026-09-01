@@ -5,3 +5,4 @@ import InfoGeometry.MassSpectrometry.StochasticGrammar
 import InfoGeometry.MassSpectrometry.OperatorGeometry
 import InfoGeometry.MassSpectrometry.FiniteFragmentationModel
 import InfoGeometry.MassSpectrometry.VerifiedInferenceArchitecture
+import InfoGeometry.MassSpectrometry.GPUExecutionContracts

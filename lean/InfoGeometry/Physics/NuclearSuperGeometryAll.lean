@@ -7,11 +7,12 @@ import InfoGeometry.Physics.NuclearFiniteNilpotentSoul
 import InfoGeometry.Physics.NuclearExteriorGrassmannSoul
 import InfoGeometry.Physics.NuclearOperatorSchurComplement
 import InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge
+import InfoGeometry.Physics.NuclearSuperGeometryLogosMap
 
 /-!
 # Nuclear supergeometry umbrella
 
-This declaration-free import surface exposes the first theorem-bearing
+This declaration-free import surface exposes the theorem-bearing
 operator/superalgebraic nuclear layer:
 
 * associative operator-valued Soloviev blocks with internal `ℤ₂` parity;
@@ -28,7 +29,9 @@ operator/superalgebraic nuclear layer:
 * noncommutative Schur/effective operators with proof-carrying resolvents and
   exact invariance under simultaneous off-diagonal sign reflection;
 * genuine split-octonion nonassociativity represented as the exact defect of
-  left-regular operator composition.
+  left-regular operator composition;
+* an audited owner/dependency DAG whose open-debt nodes deliberately have no
+  theorem owners.
 
 Not included as proved facts at this stage:
 

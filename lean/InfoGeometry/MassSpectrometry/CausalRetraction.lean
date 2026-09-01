@@ -1,12 +1,13 @@
 import Mathlib
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.MassSpectrometry.PeakFragmentMatching
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 
 /-!
 # Moore-Penrose causal retraction
 
-This module does not redefine the Penrose equations.  Matrix-level retractions
+This module does not redefine the Penrose equations. Matrix-level retractions
 reuse `InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse`; the actual
 closed-range Hilbert-space construction is re-exported from
 `InfoGeometry.Singular.MoorePenrose`.
@@ -105,7 +106,7 @@ theorem doubledPinv_anticommutes_grading :
     grading_anticommute_doubledOperator (n := n) R.pinv.transpose
 
 /-- The causal projectivity tensor is grading-even:
-`Γ P = P Γ`.  This uses only the two oddness laws; no extra physical
+`Γ P = P Γ`. This uses only the two oddness laws; no extra physical
 interpretation is assumed. -/
 theorem projectivity_commutes_with_grading :
     gradingMatrix n * R.causalProjectivityTensor =

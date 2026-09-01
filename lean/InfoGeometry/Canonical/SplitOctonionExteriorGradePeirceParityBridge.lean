@@ -58,12 +58,10 @@ theorem exteriorGrade3_mathlibBasis (s : Finset (Fin 3)) :
     exteriorGrade3 (vBasis3.ExteriorAlgebra s) =
       ((-1 : ℝ) ^ s.card) • vBasis3.ExteriorAlgebra s := by
   rw [ExteriorAlgebra.basis_apply]
-  exact exteriorGrade3_ιMulti s.card
-    (Set.powersetCard.ιMulti_family ℝ s.card vBasis3
-      (Set.powersetCard.prodEquiv.symm s).2 |>.let fun _ =>
-        fun i => vBasis3
-          (Set.powersetCard.ofFinEmbEquiv.symm
-            (Set.powersetCard.prodEquiv.symm s).2 i))
+  simpa [exteriorPower.ιMulti_family] using
+    (exteriorGrade3_ιMulti s.card
+      (vBasis3 ∘ Set.powersetCard.ofFinEmbEquiv.symm
+        (Set.powersetCard.prodEquiv.symm s).2))
 
 /-- The repository's collected exterior basis is Mathlib's canonical exterior
 basis on the same `Finset (Fin 3)` index. -/
@@ -121,8 +119,8 @@ theorem exteriorGrade3_coordinate_intertwines (ψ : Exterior3) :
   have hLR : L = R := by
     apply exterior3PeirceBasis.ext
     intro i
-    exact exteriorGrade3_coordinate_intertwines_basis i
-  exact LinearMap.congr_fun hLR ψ
+    simpa [L, R] using exteriorGrade3_coordinate_intertwines_basis i
+  simpa [L, R] using congrArg (fun T : Exterior3 →ₗ[ℝ] CoordinateCarrier => T ψ) hLR
 
 /-- Conjugating the literal exterior grade through the established coordinate
 equivalence gives exactly the existing Peirce degree-parity operator. -/

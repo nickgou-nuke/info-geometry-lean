@@ -6,7 +6,7 @@ import InfoGeometry.Physics.QCDStructuralAll
 # Focused diagnostics for the QCD-facing structural lane
 
 This module forces elaboration of the capstone declarations, prints their axiom
-dependencies, runs the repository vacuity linter, and executes both QCD
+dependencies, runs the repository vacuity linter, and executes all QCD
 structural ownership audits.
 -/
 
@@ -15,6 +15,7 @@ structural ownership audits.
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #check InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #check InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
+#check InfoGeometry.Physics.QCDRepresentationClosureInterfaces.ColorRepresentationIntertwiner.map_commutator
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
@@ -32,12 +33,16 @@ structural ownership audits.
 #check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
 #check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
 #check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
+#check InfoGeometry.Physics.QCDArchitectureSynthesis.representation_fock_packet
+#check InfoGeometry.Physics.QCDArchitectureSynthesis.monodromy_schur_packet
+#check InfoGeometry.Physics.QCDArchitectureSynthesis.theorem_safe_architecture_packet
 
 #print axioms InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #print axioms InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #print axioms InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #print axioms InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
+#print axioms InfoGeometry.Physics.QCDRepresentationClosureInterfaces.ColorRepresentationIntertwiner.map_commutator
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
@@ -55,12 +60,16 @@ structural ownership audits.
 #print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
 #print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
 #print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
+#print axioms InfoGeometry.Physics.QCDArchitectureSynthesis.representation_fock_packet
+#print axioms InfoGeometry.Physics.QCDArchitectureSynthesis.monodromy_schur_packet
+#print axioms InfoGeometry.Physics.QCDArchitectureSynthesis.theorem_safe_architecture_packet
 
 #lint_vacuity_decl InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDSU3ColorSpinorBridge.color_spinor_representation_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDSU3ColorSpinorBridge.gellMann_color_spinor_commutator
+#lint_vacuity_decl InfoGeometry.Physics.QCDRepresentationClosureInterfaces.ColorRepresentationIntertwiner.map_commutator
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
@@ -78,6 +87,10 @@ structural ownership audits.
 #lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDArchitectureSynthesis.representation_fock_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDArchitectureSynthesis.monodromy_schur_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDArchitectureSynthesis.theorem_safe_architecture_packet
 
 #audit_qcd_structural_logos
 #audit_twelvefold_structural_logos
+#audit_qcd_representation_closure

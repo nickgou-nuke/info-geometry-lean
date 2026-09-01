@@ -76,6 +76,7 @@ inductive LogosConcept where
   | smilesEquivalence
   | universalKANApproximation
   | empiricalIdentificationAccuracy
+  | operatorBerezinianTermination
   deriving DecidableEq, Repr, Inhabited
 
 /-- One Rosetta entry connecting prose vocabulary to the theorem DAG. -/
@@ -111,6 +112,7 @@ def allLogosConcepts : List LogosConcept :=
   , .smilesEquivalence
   , .universalKANApproximation
   , .empiricalIdentificationAccuracy
+  , .operatorBerezinianTermination
   ]
 
 /-- Exact semantic ledger. `none` is intentional closure debt, not a missing
@@ -204,6 +206,12 @@ def logosEntry : LogosConcept → LogosEntry
       ⟨.empiricalIdentificationAccuracy, "empirical molecular-identification accuracy", .openDebt,
         none,
         "Dataset performance is empirical evidence, not a theorem of the formal architecture."⟩
+  | .operatorBerezinianTermination =>
+      ⟨.operatorBerezinianTermination,
+        "operator Berezinian / Taylor-Grassmann termination",
+        .openDebt,
+        none,
+        "Finite nilpotent-soul polynomial truncation and noncommutative Schur elimination are formalized, but no Berezinian owner or generic analytic Taylor theorem exists yet."⟩
 
 /-- A concept is formally owned exactly when its Rosetta entry carries an owner
 name and is not marked as open debt. -/

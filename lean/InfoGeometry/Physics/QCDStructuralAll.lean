@@ -5,6 +5,7 @@ import InfoGeometry.Physics.QCDExceptionalArtinBridge
 import InfoGeometry.Physics.ColorCARStandardModel
 import InfoGeometry.Physics.FureyCharges
 import InfoGeometry.Physics.QCDExteriorFureyBridge
+import InfoGeometry.Physics.QCDSU3ColorSpinorBridge
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
 import InfoGeometry.Physics.QCDStructuralLogosMap
 
@@ -18,6 +19,8 @@ structural lane:
 * exact Zorn upper/lower three-vector slot extraction and OP-stabilizer
   preservation;
 * native Gell-Mann `su(3)` commutator data and the anti-Hermitian basis bridge;
+* a genuine infinitesimal `SU(3)` matrix representation on a complex
+  triplet-plus-singlet color-spinor carrier;
 * split-octonion Gell-Mann Cartan weights on three circular root channels;
 * native three-colour `Cl(5,5)` CAR and matching circular Zorn CAR;
 * conjugate eight-generator Furey-style CAR spans for the two chiral
@@ -35,10 +38,11 @@ structural lane:
 * an audited Logos map separating these algebraic owners from physical QCD
   representation and dynamics claims.
 
-The umbrella does not assert that either Furey span is a minimal left ideal,
-that the two chiral spans are physically conjugate, that
-`fureyOccupationCharge` is physical electric charge, that the algebraic colour
-carriers are physical QCD quark fields, or that the repository proves
+The umbrella does not assert that the complex color-spinor representation is
+already intertwined with the real `Cl(5,5)` Furey span, that either Furey span
+is a minimal left ideal, that the two chiral spans are physically conjugate,
+that `fureyOccupationCharge` is physical electric charge, that the algebraic
+colour carriers are physical QCD quark fields, or that the repository proves
 confinement, NJL dynamics, a QCD theta-vacuum theorem, CKM phenomenology, or a
 three-generation identification.
 -/

@@ -1,9 +1,9 @@
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 
 /-!
-# Mass-spectrometry operator geometry re-export
+# Operator-geometry compatibility surface
 
-Compatibility surface for the original prototype module.  The implementation
-now lives in `DirectedOperatorDoubling`, aligned with the repository's
-correlation and spectral-token ownership boundaries.
+The concrete symmetric/antisymmetric split, Gram symmetry, grading matrix,
+full graded anticommutator, and neutral primal/dual bridge are owned by
+`DirectedOperatorDoubling`. This file remains only as a stable import path.
 -/

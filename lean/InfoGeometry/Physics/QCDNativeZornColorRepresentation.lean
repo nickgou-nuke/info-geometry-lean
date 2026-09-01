@@ -6,15 +6,15 @@ import InfoGeometry.Physics.SplitOctonionBraidSU3
 # Native faithful color representation on the complex Zorn upper lane
 
 The downstream proof workspace contains a faithful `gl₃(ℂ)` action on a larger
-Dirac-spinor carrier.  Its faithfulness witness is already concentrated on the
-positive `u : Fin 3 → ℂ` Zorn coordinate.  This module reconstructs that
-minimal theorem-bearing core directly on the native
-`SplitOctonionBraidSU3.Zorn` carrier.
+Dirac-spinor carrier.  Its faithfulness witness is concentrated on the positive
+`u : Fin 3 → ℂ` Zorn coordinate.  This module reconstructs that minimal
+representation natively, without importing the downstream spinor stack.
 
-For a matrix `A`, `upperColorAction A` acts by the defining matrix action on the
-upper three-vector and leaves the other Zorn coordinates unchanged.  This gives
-a genuine faithful associative representation, hence a faithful commutator/Lie
-representation, on the native complex Zorn carrier.
+The actual representation carrier is the upper color lane `Fin 3 → ℂ`.  It is
+embedded linearly and injectively into the native complex Zorn carrier as the
+pure upper off-diagonal sector.  Keeping the representation on the lane itself
+avoids an affine spectator term on the scalar/lower Zorn coordinates and makes
+the `gl₃(ℂ)` representation law exact.
 
 No claim is made that this is the full split-octonion automorphism action or the
 physical QCD gauge representation.
@@ -29,121 +29,133 @@ open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 abbrev Zorn := InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev ColorLane := Fin 3 → ℂ
 
-/-- Defining `gl₃(ℂ)` action on the upper Zorn color coordinate.  The scalar
-and lower coordinates are spectators. -/
-def upperColorAction (A : M3C) : Zorn →ₗ[ℂ] Zorn where
-  toFun X :=
-    { a := X.a
-      u := fun i => ∑ j : Fin 3, A i j * X.u j
-      v := X.v
-      b := X.b }
-  map_add' X Y := by
-    apply zorn_ext
-    · rfl
-    · funext i
-      simp [Finset.mul_sum, Finset.sum_add_distrib, mul_add]
-    · rfl
-    · rfl
-  map_smul' c X := by
-    apply zorn_ext
-    · rfl
-    · funext i
-      simp [Finset.mul_sum, mul_assoc]
-    · rfl
-    · rfl
+/-- The defining matrix action on the three-component color lane. -/
+def colorAction (A : M3C) : ColorLane →ₗ[ℂ] ColorLane where
+  toFun u := fun i => ∑ j : Fin 3, A i j * u j
+  map_add' u v := by
+    funext i
+    simp [mul_add, Finset.sum_add_distrib]
+  map_smul' c u := by
+    funext i
+    simp [mul_assoc, mul_comm, mul_left_comm]
 
-@[simp] theorem upperColorAction_a (A : M3C) (X : Zorn) :
-    (upperColorAction A X).a = X.a := rfl
-
-@[simp] theorem upperColorAction_u (A : M3C) (X : Zorn) (i : Fin 3) :
-    (upperColorAction A X).u i = ∑ j : Fin 3, A i j * X.u j := rfl
-
-@[simp] theorem upperColorAction_v (A : M3C) (X : Zorn) :
-    (upperColorAction A X).v = X.v := rfl
-
-@[simp] theorem upperColorAction_b (A : M3C) (X : Zorn) :
-    (upperColorAction A X).b = X.b := rfl
+@[simp] theorem colorAction_apply (A : M3C) (u : ColorLane) (i : Fin 3) :
+    colorAction A u i = ∑ j : Fin 3, A i j * u j := rfl
 
 /-- Matrix multiplication is represented by composition. -/
-theorem upperColorAction_mul (A B : M3C) :
-    upperColorAction (A * B) = upperColorAction A * upperColorAction B := by
+theorem colorAction_mul (A B : M3C) :
+    colorAction (A * B) = colorAction A * colorAction B := by
   apply LinearMap.ext
-  intro X
-  apply zorn_ext
-  · rfl
-  · funext i
-    simp [upperColorAction, Matrix.mul_apply, Finset.mul_sum]
-    rw [Finset.sum_comm]
-    simp [mul_assoc]
-  · rfl
-  · rfl
+  intro u
+  funext i
+  simp [colorAction, Matrix.mul_apply]
+  rw [Finset.sum_comm]
+  simp [mul_assoc]
 
-/-- The zero matrix acts trivially on the color lane and leaves the spectator
-coordinates unchanged. -/
-theorem upperColorAction_zero (X : Zorn) :
-    upperColorAction (0 : M3C) X =
-      { a := X.a, u := 0, v := X.v, b := X.b } := by
-  apply zorn_ext <;> simp [upperColorAction]
+/-- The action is additive in the matrix argument. -/
+theorem colorAction_add (A B : M3C) :
+    colorAction (A + B) = colorAction A + colorAction B := by
+  apply LinearMap.ext
+  intro u
+  funext i
+  simp [colorAction, Matrix.add_apply, add_mul, Finset.sum_add_distrib]
 
-/-- Subtraction of matrices is represented pointwise. -/
-theorem upperColorAction_sub (A B : M3C) (X : Zorn) :
-    upperColorAction (A - B) X =
-      upperColorAction A X - upperColorAction B X +
-        { a := X.a, u := 0, v := X.v, b := X.b } := by
-  apply zorn_ext
-  · simp [upperColorAction, zornSub, zornAdd]
-  · funext i
-    simp [upperColorAction, Matrix.sub_apply, Finset.sum_sub_distrib]
-  · simp [upperColorAction, zornSub, zornAdd]
-  · simp [upperColorAction, zornSub, zornAdd]
+/-- The action respects subtraction in the matrix argument. -/
+theorem colorAction_sub (A B : M3C) :
+    colorAction (A - B) = colorAction A - colorAction B := by
+  apply LinearMap.ext
+  intro u
+  funext i
+  simp [colorAction, Matrix.sub_apply, sub_mul, Finset.sum_sub_distrib]
 
-/-- Pure upper-color probe carrying the `s`th standard basis vector. -/
-def upperProbe (s : Fin 3) : Zorn :=
-  { a := 0, u := Pi.single s 1, v := 0, b := 0 }
+/-- The action is homogeneous in the matrix argument. -/
+theorem colorAction_smul (c : ℂ) (A : M3C) :
+    colorAction (c • A) = c • colorAction A := by
+  apply LinearMap.ext
+  intro u
+  funext i
+  simp [colorAction, Matrix.smul_apply, mul_assoc]
 
-/-- Evaluation on the upper probes recovers every matrix coefficient. -/
-theorem upperColorAction_probe (A : M3C) (r s : Fin 3) :
-    (upperColorAction A (upperProbe s)).u r = A r s := by
-  simp [upperColorAction, upperProbe]
+/-- The defining action preserves associative commutators. -/
+theorem colorAction_commutator (A B : M3C) :
+    colorAction (A * B - B * A) =
+      colorAction A * colorAction B -
+        colorAction B * colorAction A := by
+  rw [colorAction_sub, colorAction_mul, colorAction_mul]
 
-/-- The native upper-lane representation is faithful. -/
-theorem upperColorAction_injective : Function.Injective upperColorAction := by
+/-- Pure upper-lane embedding into the native complex Zorn carrier. -/
+def upperLaneEmbedding : ColorLane →ₗ[ℂ] Zorn where
+  toFun u := { a := 0, u := u, v := 0, b := 0 }
+  map_add' u v := by
+    apply zorn_ext
+    · rfl
+    · rfl
+    · rfl
+    · rfl
+  map_smul' c u := by
+    apply zorn_ext
+    · rfl
+    · rfl
+    · rfl
+    · rfl
+
+@[simp] theorem upperLaneEmbedding_a (u : ColorLane) :
+    (upperLaneEmbedding u).a = 0 := rfl
+
+@[simp] theorem upperLaneEmbedding_u (u : ColorLane) :
+    (upperLaneEmbedding u).u = u := rfl
+
+@[simp] theorem upperLaneEmbedding_v (u : ColorLane) :
+    (upperLaneEmbedding u).v = 0 := rfl
+
+@[simp] theorem upperLaneEmbedding_b (u : ColorLane) :
+    (upperLaneEmbedding u).b = 0 := rfl
+
+/-- The upper-lane embedding loses no color information. -/
+theorem upperLaneEmbedding_injective : Function.Injective upperLaneEmbedding := by
+  intro u v huv
+  have hu := congrArg (fun X : Zorn => X.u) huv
+  simpa using hu
+
+/-- Standard color basis vector. -/
+def colorBasis (s : Fin 3) : ColorLane := Pi.single s 1
+
+/-- Evaluation on basis vectors recovers every matrix coefficient. -/
+theorem colorAction_basis (A : M3C) (r s : Fin 3) :
+    colorAction A (colorBasis s) r = A r s := by
+  simp [colorAction, colorBasis]
+
+/-- The defining color representation is faithful. -/
+theorem colorAction_injective : Function.Injective colorAction := by
   intro A B hAB
   apply Matrix.ext
   intro r s
-  have h := LinearMap.congr_fun hAB (upperProbe s)
-  have hu := congrArg (fun X : Zorn => X.u r) h
-  simpa [upperColorAction_probe] using hu
+  have h := LinearMap.congr_fun hAB (colorBasis s)
+  have hr := congrFun h r
+  simpa [colorAction_basis] using hr
 
-/-- Faithful commutator representation, stated on the native Zorn carrier. -/
-theorem upperColorAction_commutator (A B : M3C) :
-    upperColorAction (A * B - B * A) =
-      upperColorAction A * upperColorAction B -
-        upperColorAction B * upperColorAction A := by
-  apply LinearMap.ext
-  intro X
-  apply zorn_ext
-  · simp [upperColorAction]
-  · funext i
-    simp [upperColorAction, Matrix.mul_apply, Matrix.sub_apply,
-      Finset.sum_sub_distrib, Finset.mul_sum]
-    rw [Finset.sum_comm]
-    ring
-  · simp [upperColorAction]
-  · simp [upperColorAction]
+/-- The native Zorn embedding realizes the faithful action on its upper lane. -/
+theorem upperLaneEmbedding_action (A : M3C) (u : ColorLane) :
+    upperLaneEmbedding (colorAction A u) =
+      { a := 0
+        u := fun i => ∑ j : Fin 3, A i j * u j
+        v := 0
+        b := 0 } := rfl
 
-/-- Consolidated native faithful `gl₃(ℂ)` color-representation packet. -/
+/-- Consolidated native faithful `gl₃(ℂ)` representation and Zorn realization. -/
 theorem native_zorn_color_representation_packet :
-    Function.Injective upperColorAction ∧
+    Function.Injective colorAction ∧
+    Function.Injective upperLaneEmbedding ∧
     (∀ A B : M3C,
-      upperColorAction (A * B) = upperColorAction A * upperColorAction B) ∧
+      colorAction (A * B) = colorAction A * colorAction B) ∧
     (∀ A B : M3C,
-      upperColorAction (A * B - B * A) =
-        upperColorAction A * upperColorAction B -
-          upperColorAction B * upperColorAction A) :=
-  ⟨upperColorAction_injective, upperColorAction_mul,
-    upperColorAction_commutator⟩
+      colorAction (A * B - B * A) =
+        colorAction A * colorAction B -
+          colorAction B * colorAction A) :=
+  ⟨colorAction_injective, upperLaneEmbedding_injective,
+    colorAction_mul, colorAction_commutator⟩
 
 end InfoGeometry.Physics.QCDNativeZornColorRepresentation
 

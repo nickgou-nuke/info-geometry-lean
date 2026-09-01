@@ -1,5 +1,6 @@
 import Mathlib
 import DAG.MatrixRepresentation
+import InfoGeometry.MassSpectrometry.PeakFragmentMatching
 import InfoGeometry.MassSpectrometry.CausalCrossGramian
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.Quantum.MajoranaPfaffianBridge
@@ -13,11 +14,11 @@ import InfoGeometry.Canonical.KitaevChainMajoranaZeroModes
 
 The repository's DAG owner uses the algebraic pattern `A = ΓD`: a chiral-even
 Dirac carrier `D` anticommutes with `Γ`, so `ΓD` is skew and supports Pfaffian
-readouts.  This module applies the same construction to the mass-spectrometry
+readouts. This module applies the same construction to the mass-spectrometry
 doubled directed operator.
 
-The bridge is structural.  It does not identify molecular fragments with
-physical Majorana particles.  In the single-channel case, however, the matrix
+The bridge is structural. It does not identify molecular fragments with
+physical Majorana particles. In the single-channel case, however, the matrix
 entries reduce exactly to the canonical `2 × 2` Majorana pairing block already
 owned by `FiniteMajoranaPairingBlocks`.
 -/
@@ -38,7 +39,7 @@ theorem directedMajoranaOperator_eq_gradeLeft {n : ℕ} (K : AssignmentMatrix n)
     directedMajoranaOperator K = gradeLeft (doubledOperator K) := by
   exact gradingMatrix_mul_eq_gradeLeft (doubledOperator K)
 
-/-- `ΓD_K` is skew-symmetric.  This is the same algebraic mechanism as the
+/-- `ΓD_K` is skew-symmetric. This is the same algebraic mechanism as the
 finite graph Majorana owner. -/
 theorem directedMajoranaOperator_transpose_eq_neg
     {n : ℕ} (K : AssignmentMatrix n) :

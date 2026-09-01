@@ -1,5 +1,4 @@
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Tactic.Ring
+import Mathlib
 import InfoGeometry.LLM.SpectralToken
 
 /-!
@@ -56,6 +55,7 @@ theorem gramOperator_transpose
     (gramOperator Z).transpose = gramOperator Z := by
   simp [gramOperator, Matrix.transpose_mul]
 
+/-- A genuine real Gram operator has no oriented/antisymmetric component. -/
 theorem antisymmetricPart_gramOperator_eq_zero
     (Z : Matrix (Fin n) (Fin d) ℝ) :
     antisymmetricPart (gramOperator Z) = 0 := by
@@ -84,13 +84,50 @@ def doubledSign : DoubledIndex n → ℝ
   | Sum.inl _ => 1
   | Sum.inr _ => -1
 
+@[simp] theorem doubledSign_sq (i : DoubledIndex n) :
+    doubledSign i * doubledSign i = 1 := by
+  cases i <;> simp [doubledSign]
+
+/-- Full matrix grading `Γ = diag(+I,-I)`. -/
+def gradingMatrix (n : ℕ) : Matrix (DoubledIndex n) (DoubledIndex n) ℝ :=
+  Matrix.diagonal doubledSign
+
+/-- The grading is an involution. -/
+theorem gradingMatrix_sq (n : ℕ) :
+    gradingMatrix n * gradingMatrix n = 1 := by
+  classical
+  rw [gradingMatrix, Matrix.diagonal_mul_diagonal]
+  ext i j
+  by_cases h : i = j
+  · subst j
+    simp [doubledSign_sq]
+  · simp [h]
+
+/-- Entrywise left action by the grading. -/
 def gradeLeft (A : Matrix (DoubledIndex n) (DoubledIndex n) ℝ) :
     Matrix (DoubledIndex n) (DoubledIndex n) ℝ :=
   fun i j => doubledSign i * A i j
 
+/-- Entrywise right action by the grading. -/
 def gradeRight (A : Matrix (DoubledIndex n) (DoubledIndex n) ℝ) :
     Matrix (DoubledIndex n) (DoubledIndex n) ℝ :=
   fun i j => A i j * doubledSign j
+
+/-- Matrix multiplication by `Γ` agrees with the left grading action. -/
+theorem gradingMatrix_mul_eq_gradeLeft
+    (A : Matrix (DoubledIndex n) (DoubledIndex n) ℝ) :
+    gradingMatrix n * A = gradeLeft A := by
+  ext i j
+  rw [gradingMatrix, Matrix.diagonal_mul]
+  rfl
+
+/-- Matrix multiplication by `Γ` agrees with the right grading action. -/
+theorem mul_gradingMatrix_eq_gradeRight
+    (A : Matrix (DoubledIndex n) (DoubledIndex n) ℝ) :
+    A * gradingMatrix n = gradeRight A := by
+  ext i j
+  rw [gradingMatrix, Matrix.mul_diagonal]
+  rfl
 
 /-- The off-diagonal doubling reverses the two-lane grading. -/
 theorem doubledOperator_grade_reversing
@@ -99,6 +136,28 @@ theorem doubledOperator_grade_reversing
   ext i j
   cases i <;> cases j <;>
     simp [gradeLeft, gradeRight, doubledSign, doubledOperator]
+
+/-- Full matrix graded anticommutator `{Γ,D_K}=0`. -/
+theorem grading_anticommute_doubledOperator
+    (K : Matrix (Fin n) (Fin n) ℝ) :
+    gradingMatrix n * doubledOperator K +
+      doubledOperator K * gradingMatrix n = 0 := by
+  rw [gradingMatrix_mul_eq_gradeLeft, mul_gradingMatrix_eq_gradeRight,
+    doubledOperator_grade_reversing]
+  simp
+
+/-- Equivalently, conjugation by the grading flips the doubled operator. -/
+theorem grading_conjugates_doubledOperator_to_neg
+    (K : Matrix (Fin n) (Fin n) ℝ) :
+    gradingMatrix n * doubledOperator K * gradingMatrix n =
+      -doubledOperator K := by
+  have hanti := grading_anticommute_doubledOperator (n := n) K
+  have hleft :
+      gradingMatrix n * doubledOperator K =
+        -(doubledOperator K * gradingMatrix n) := by
+    exact eq_neg_of_add_eq_zero_left hanti
+  rw [hleft]
+  simp only [neg_mul, Matrix.mul_assoc, gradingMatrix_sq, Matrix.mul_one]
 
 /-- Neutral bridge into the repository's existing primal/dual spectral token. -/
 def forwardReverseToken {V : Type*} (forward reverse : V) :

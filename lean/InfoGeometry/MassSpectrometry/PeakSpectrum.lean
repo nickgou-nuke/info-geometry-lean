@@ -69,6 +69,32 @@ structure CanonicalSpectrum where
   peaks : List Peak
   sorted : IsMassSorted peaks
 
+/-- List representation of all indexed peaks before imposing an order. -/
+def Spectrum.toPeakList {n : ℕ} (S : Spectrum n) : List Peak :=
+  List.ofFn S
+
+/-- Deterministic nondecreasing-mass serialization of an indexed spectrum. -/
+def Spectrum.canonicalize {n : ℕ} (S : Spectrum n) : CanonicalSpectrum where
+  peaks := (S.toPeakList).mergeSort (fun p q => p.mass ≤ q.mass)
+  sorted := by
+    simpa [IsMassSorted, Spectrum.toPeakList] using
+      (List.pairwise_mergeSort'
+        (r := fun p q : Peak => p.mass ≤ q.mass)
+        (List.ofFn S))
+
+/-- Canonicalization only reorders peaks; it does not create or delete them. -/
+theorem Spectrum.canonicalize_perm {n : ℕ} (S : Spectrum n) :
+    List.Perm S.canonicalize.peaks S.toPeakList := by
+  exact List.mergeSort_perm _ _
+
+/-- Canonicalization preserves the number of indexed peaks. -/
+theorem Spectrum.canonicalize_length {n : ℕ} (S : Spectrum n) :
+    S.canonicalize.peaks.length = n := by
+  calc
+    S.canonicalize.peaks.length = S.toPeakList.length :=
+      (S.canonicalize_perm).length_eq
+    _ = n := by simp [Spectrum.toPeakList, List.length_ofFn]
+
 /-- A canonical spectrum maps to the same native free-monoid carrier. -/
 def CanonicalSpectrum.toSentence (S : CanonicalSpectrum) : SpectralSentence :=
   peakWord S.peaks
@@ -76,5 +102,14 @@ def CanonicalSpectrum.toSentence (S : CanonicalSpectrum) : SpectralSentence :=
 @[simp] theorem CanonicalSpectrum.toSentence_toList (S : CanonicalSpectrum) :
     FreeMonoid.toList S.toSentence = S.peaks := by
   simp [CanonicalSpectrum.toSentence]
+
+/-- Indexed spectra therefore admit a certified mass-sorted free-monoid serialization. -/
+def Spectrum.toSentence {n : ℕ} (S : Spectrum n) : SpectralSentence :=
+  S.canonicalize.toSentence
+
+@[simp] theorem Spectrum.toSentence_length {n : ℕ} (S : Spectrum n) :
+    (FreeMonoid.toList S.toSentence).length = n := by
+  rw [Spectrum.toSentence, CanonicalSpectrum.toSentence_toList,
+    Spectrum.canonicalize_length]
 
 end InfoGeometry.MassSpectrometry

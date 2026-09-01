@@ -6,8 +6,8 @@ import InfoGeometry.Physics.QCDStructuralAll
 # Focused diagnostics for the QCD-facing structural lane
 
 This module forces elaboration of the capstone declarations, prints their axiom
-dependencies, runs the repository vacuity linter, and executes the QCD Logos
-ownership audit.
+dependencies, runs the repository vacuity linter, and executes both QCD
+structural ownership audits.
 -/
 
 #check InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
@@ -26,6 +26,12 @@ ownership audit.
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.anyon_double_braid_packet
 #check InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
 #check InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.commuting_z2_z3_product_pow_six
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.native_twelvefold_order_packet
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.artin_native_twelvefold_packet
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
+#check InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
 
 #print axioms InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #print axioms InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
@@ -43,6 +49,12 @@ ownership audit.
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.anyon_double_braid_packet
 #print axioms InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
 #print axioms InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.commuting_z2_z3_product_pow_six
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.native_twelvefold_order_packet
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.artin_native_twelvefold_packet
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
+#print axioms InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
 
 #lint_vacuity_decl InfoGeometry.Physics.QCDChiralStructuralBridge.nuclear_massspec_chiral_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDZornColorSlotBridge.zorn_three_vector_slot_packet
@@ -60,5 +72,12 @@ ownership audit.
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.anyon_double_braid_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDExceptionalArtinBridge.artin_chiral_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDTrialityStructuralBridge.finite_triality_cycle_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.commuting_z2_z3_product_pow_six
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.native_twelvefold_order_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.artin_native_twelvefold_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.zero_block_schur_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.furey_triality_twelvefold_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge.schur_artin_twelvefold_packet
 
 #audit_qcd_structural_logos
+#audit_twelvefold_structural_logos

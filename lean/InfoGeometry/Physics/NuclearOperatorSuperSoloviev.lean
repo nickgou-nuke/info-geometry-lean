@@ -5,7 +5,7 @@ import InfoGeometry.Physics.NuclearParityGradedHamiltonian
 # Operator-valued super Soloviev parity theory
 
 This module lifts the finite scalar Soloviev parity law to `2 × 2` block
-Hamiltonians over an arbitrary associative real operator algebra.
+Hamiltonians over an arbitrary associative operator ring.
 
 There are two independent `ℤ₂` signs:
 
@@ -29,13 +29,12 @@ noncomputable section
 namespace InfoGeometry.Physics.NuclearOperatorSuperSoloviev
 
 open Matrix
-open InfoGeometry.Physics.NuclearParityGradedHamiltonian
 
-variable {A : Type*} [Ring A] [Algebra ℝ A]
+variable {A : Type*} [Ring A]
 
 abbrev Block2 (A : Type*) [Ring A] := Matrix (Fin 2) (Fin 2) A
 
-/-- Internal parity datum carried by the operator algebra. -/
+/-- Internal parity datum carried by the operator ring. -/
 structure InternalParity (A : Type*) [Ring A] where
   gamma : A
   gamma_sq : gamma * gamma = 1

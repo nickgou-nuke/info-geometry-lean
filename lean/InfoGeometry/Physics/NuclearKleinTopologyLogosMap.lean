@@ -4,14 +4,16 @@ import InfoGeometry.Canonical.D6HexTiledKleinBottleQuotient
 import InfoGeometry.Physics.NuclearKleinParameterBundle
 import InfoGeometry.Physics.NuclearKleinSpectralDescentBridge
 import InfoGeometry.Physics.NuclearKleinPinWallpaperBridge
+import InfoGeometry.Physics.NuclearKleinPresentationOperatorBridge
 
 /-!
 # Audited Logos/DAG map for the nuclear Klein topology lane
 
 This metadata layer records only theorem-supported global-topology statements.
 The finite Klein quotient, equivariant nuclear Hamiltonian, quotient descent of
-effective observables, common spectral quotient, and Pin/wallpaper structural
-packet are formal nodes. Stronger physical/global claims remain explicit open debt.
+effective observables, common spectral quotient, Pin/wallpaper structural
+packet, and cross-domain reflection/presentation packet are formal nodes.
+Stronger physical/global claims remain explicit open debt.
 -/
 
 open Lean Elab Command
@@ -30,6 +32,7 @@ inductive Concept where
   | schurObservableDescent
   | commonKleinSpectralDescent
   | pinWallpaperKleinCompatibility
+  | crossDomainReflectionPresentation
   | globalKleinClassifyingSpace
   | nuclearPinStructure
   | mobiusEigenbranchExchange
@@ -53,6 +56,7 @@ inductive Edge where
   | equivariantField_to_schurDescent
   | schurDescent_to_commonSpectrum
   | quotient_to_pinWallpaper
+  | holonomy_to_crossDomainPresentation
   deriving DecidableEq, Repr, Inhabited
 
 def edgeEndpoints : Edge → Concept × Concept
@@ -61,11 +65,13 @@ def edgeEndpoints : Edge → Concept × Concept
   | .equivariantField_to_schurDescent => (.kleinEquivariantHamiltonian, .schurObservableDescent)
   | .schurDescent_to_commonSpectrum => (.schurObservableDescent, .commonKleinSpectralDescent)
   | .quotient_to_pinWallpaper => (.finiteKleinOrbitQuotient, .pinWallpaperKleinCompatibility)
+  | .holonomy_to_crossDomainPresentation => (.internalParityHolonomy, .crossDomainReflectionPresentation)
 
 def allConcepts : List Concept :=
   [ .finiteKleinOrbitQuotient, .kleinEquivariantHamiltonian,
     .internalParityHolonomy, .schurObservableDescent,
     .commonKleinSpectralDescent, .pinWallpaperKleinCompatibility,
+    .crossDomainReflectionPresentation,
     .globalKleinClassifyingSpace, .nuclearPinStructure,
     .mobiusEigenbranchExchange, .berryPhasePi,
     .massSpectrometryKleinEnvelope, .orbitrapKleinTopology,
@@ -74,7 +80,7 @@ def allConcepts : List Concept :=
 def allEdges : List Edge :=
   [ .quotient_to_equivariantField, .equivariantField_to_holonomy,
     .equivariantField_to_schurDescent, .schurDescent_to_commonSpectrum,
-    .quotient_to_pinWallpaper ]
+    .quotient_to_pinWallpaper, .holonomy_to_crossDomainPresentation ]
 
 def entry : Concept → Entry
   | .finiteKleinOrbitQuotient =>
@@ -101,6 +107,11 @@ def entry : Concept → Entry
       ⟨.pinWallpaperKleinCompatibility, "nuclear Klein and Pin/wallpaper structural compatibility", .structuralBridge,
         some ``InfoGeometry.Physics.NuclearKleinPinWallpaperBridge.nuclear_wallpaper_klein_relation_packet,
         "Finite Klein-compatible packets coexist; conjugators and physical Pin structures are not identified."⟩
+  | .crossDomainReflectionPresentation =>
+      ⟨.crossDomainReflectionPresentation,
+        "nuclear holonomy / spectroscopy grading / Klein-presentation packet", .structuralBridge,
+        some ``InfoGeometry.Physics.NuclearKleinPresentationOperatorBridge.nuclear_spectroscopy_klein_presentation_packet,
+        "Three proved reflection relations are packaged on distinct carriers; no global Klein topology for the spectroscopy carrier is inferred."⟩
   | .globalKleinClassifyingSpace =>
       ⟨.globalKleinClassifyingSpace, "Klein bottle is exact global classifying space", .openDebt, none,
         "No theorem identifies the full physical parameter space with a Klein bottle or proves a universal classifying property."⟩
@@ -115,7 +126,7 @@ def entry : Concept → Entry
         "No Berry connection, loop integral, or holonomy phase theorem is owned by this lane."⟩
   | .massSpectrometryKleinEnvelope =>
       ⟨.massSpectrometryKleinEnvelope, "mass-spectrometry doubled operator has Klein global envelope", .openDebt, none,
-        "The doubled operator has a Z2 grading identity, but no theorem constructs its global parameter quotient as Klein."⟩
+        "The doubled operator has a Z2 grading identity and now appears in a cross-domain Klein-presentation packet, but no theorem constructs its global parameter quotient as Klein."⟩
   | .orbitrapKleinTopology =>
       ⟨.orbitrapKleinTopology, "Orbitrap/C-trap recycling has Klein topology", .openDebt, none,
         "No instrument trajectory or phase-space quotient theorem establishes this physical topology."⟩

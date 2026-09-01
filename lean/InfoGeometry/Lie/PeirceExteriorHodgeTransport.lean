@@ -82,46 +82,52 @@ theorem peirceHodgeStar_coordinate (x : PeirceCarrier) :
   ext i
   fin_cases i <;> simp [hodgeStar, peirceExterior3Equiv, toPeirce, fromPeirce]
 
-theorem peirceHodgeStar_projectorPP_projectorMP :
+/-- Hodge duality exchanges the degree-zero `(+, +)` character line with the
+degree-three `(-, -)` character line. -/
+theorem peirceHodgeStar_projectorPP_projectorMM :
     peirceHodgeStar * projectorPP =
-      projectorMP * peirceHodgeStar * projectorPP := by
+      projectorMM * peirceHodgeStar * projectorPP := by
   apply LinearMap.ext
   intro x
   change peirceHodgeStar (projectorPP x) =
-    projectorMP (peirceHodgeStar (projectorPP x))
-  rw [projectorPP_apply, projectorMP_apply,
+    projectorMM (peirceHodgeStar (projectorPP x))
+  rw [projectorPP_apply, projectorMM_apply,
     peirceHodgeStar_coordinate]
   simp
 
-theorem peirceHodgeStar_projectorPM_projectorMP_add_projectorMM :
+/-- Hodge duality maps the degree-one `(+, -)` triplet to the degree-two
+`(-, +)` triplet. -/
+theorem peirceHodgeStar_projectorPM_projectorMP :
     peirceHodgeStar * projectorPM =
-      (projectorMP + projectorMM) * peirceHodgeStar * projectorPM := by
+      projectorMP * peirceHodgeStar * projectorPM := by
   apply LinearMap.ext
   intro x
   change peirceHodgeStar (projectorPM x) =
-    (projectorMP + projectorMM) (peirceHodgeStar (projectorPM x))
-  rw [projectorPM_apply, peirceHodgeStar_coordinate]
-  simp [projectorMP_apply, projectorMM_apply]
+    projectorMP (peirceHodgeStar (projectorPM x))
+  rw [projectorPM_apply, projectorMP_apply, peirceHodgeStar_coordinate]
+  simp
 
-theorem peirceHodgeStar_projectorMP_projectorPP_add_projectorPM :
+/-- Reverse degree-two to degree-one Hodge transport. -/
+theorem peirceHodgeStar_projectorMP_projectorPM :
     peirceHodgeStar * projectorMP =
-      (projectorPP + projectorPM) * peirceHodgeStar * projectorMP := by
+      projectorPM * peirceHodgeStar * projectorMP := by
   apply LinearMap.ext
   intro x
   change peirceHodgeStar (projectorMP x) =
-    (projectorPP + projectorPM) (peirceHodgeStar (projectorMP x))
-  rw [projectorMP_apply, peirceHodgeStar_coordinate]
-  simp [projectorPP_apply, projectorPM_apply]
+    projectorPM (peirceHodgeStar (projectorMP x))
+  rw [projectorMP_apply, projectorPM_apply, peirceHodgeStar_coordinate]
+  simp
 
-theorem peirceHodgeStar_projectorMM_projectorPM :
+/-- Reverse degree-three to degree-zero Hodge transport. -/
+theorem peirceHodgeStar_projectorMM_projectorPP :
     peirceHodgeStar * projectorMM =
-      projectorPM * peirceHodgeStar * projectorMM := by
+      projectorPP * peirceHodgeStar * projectorMM := by
   apply LinearMap.ext
   intro x
   change peirceHodgeStar (projectorMM x) =
-    projectorPM (peirceHodgeStar (projectorMM x))
-  rw [projectorMM_apply, peirceHodgeStar_coordinate,
-    projectorPM_apply]
+    projectorPP (peirceHodgeStar (projectorMM x))
+  rw [projectorMM_apply, projectorPP_apply,
+    peirceHodgeStar_coordinate]
   simp
 
 end InfoGeometry.Lie.PeirceExteriorHodgeTransport

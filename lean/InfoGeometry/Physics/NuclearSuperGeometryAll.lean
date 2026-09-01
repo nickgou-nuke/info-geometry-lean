@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearOperatorSuperSoloviev
+import InfoGeometry.Physics.NuclearInternalExternalParityFactorization
 import InfoGeometry.Physics.NuclearZ2Superalgebra
 import InfoGeometry.Physics.NuclearSuperSolovievPeirceBridge
 import InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge
@@ -14,8 +15,11 @@ This declaration-free import surface exposes the first theorem-bearing
 operator/superalgebraic nuclear layer:
 
 * associative operator-valued Soloviev blocks with internal `ℤ₂` parity;
+* exact factorization of the grading into pure internal `diag(Γ,Γ)`, pure
+  external/Fock `diag(1,-1)`, and total `diag(Γ,-Γ)` involutions;
+* internal and external Soloviev reflection theorems together with total
+  super-invariance for internally odd transition channels;
 * a typed even/odd degree calculus and superbracket closure theorem;
-* exact distinction between Soloviev reflection and total super-invariance;
 * proof-carrying Peirce/five-grade channel assignment;
 * associative operator-Zorn/Nambu--Gorkov realization;
 * exact finite nilpotent-soul polynomial truncation and unipotent inversion;

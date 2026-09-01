@@ -50,7 +50,7 @@ theorem leftOp_mul_apply_eq_of_associator_zero
   have h := leftOp_composition_defect_apply X Y Z
   rw [hAssoc] at h
   change (leftOp X * leftOp Y) Z - leftOp (mulZ X Y) Z = 0 at h
-  simpa using (sub_eq_zero.mp h)
+  exact sub_eq_zero.mp h
 
 /-- Conversely, exact multiplicativity of the left-regular action on a vector
 forces the corresponding associator to vanish. -/
@@ -65,8 +65,10 @@ theorem associator_zero_of_leftOp_mul_apply_eq
     exact sub_eq_zero.mpr hMul
   rw [hzero] at h
   have hneg : negZ (associator X Y Z) = 0 := h.symm
-  apply neg_eq_zero.mp
-  simpa [negZ] using hneg
+  have hneg' : -(associator X Y Z) = 0 := by
+    change negZ (associator X Y Z) = 0
+    exact hneg
+  exact neg_eq_zero.mp hneg'
 
 /-- The nonassociative and operator formulations agree exactly on whether the
 local composition defect vanishes. -/

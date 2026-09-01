@@ -1,5 +1,4 @@
-import Mathlib.Tactic
-import Mathlib.Logic.Relation
+import Mathlib
 
 /-!
 # Ranked fragmentation DAG

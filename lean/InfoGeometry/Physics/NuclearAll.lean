@@ -14,6 +14,8 @@ import InfoGeometry.Physics.NuclearFiniteCARProjection
 import InfoGeometry.Physics.GammasphereZornMap
 import InfoGeometry.Physics.NuclearCartanProjectorParityBridge
 import InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge
+import InfoGeometry.Physics.NuclearParityGradedHamiltonian
+import InfoGeometry.Physics.NuclearSolovievParitySymmetry
 import InfoGeometry.Physics.NuclearQuantumNumberPacket
 import InfoGeometry.Physics.NuclearRPAQuantumNumberSeparation
 import InfoGeometry.Physics.NuclearCl55CartanParityDictionary
@@ -31,6 +33,10 @@ This declaration-free umbrella exposes the current finite nuclear lane:
 * finite CAR projection and spectral readouts;
 * Cartan generators in both `±2` and balanced `±1` normalizations;
 * occupation/isospin projectors and quasiparticle fermion parity;
+* generic parity-graded Hamiltonians with the theorem
+  `P (H₀ + λV) P = H₀ - λV` for even `H₀` and odd `V`;
+* the finite Soloviev coupling-sign symmetry as a specialization of that
+  generic theorem;
 * finite quantum-number packets (`2J`, occupation, `2T₃`);
 * CAR/RPA commuting quantum-number separation;
 * Cartan/parity dictionaries to the `SL2SpinorLadder` and `Cl(5,5)`

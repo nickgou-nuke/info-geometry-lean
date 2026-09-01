@@ -1,1 +1,2 @@
 import InfoGeometry.MassSpectrometry.Core
+import InfoGeometry.MassSpectrometry.OperatorGeometry

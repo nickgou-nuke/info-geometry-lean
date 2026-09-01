@@ -13,6 +13,11 @@ There are two independent `ℤ₂` signs:
   `diag(Γ,-Γ)`;
 * the internal parity of each operator coefficient under `x ↦ Γ*x*Γ`.
 
+The internal parity is proved to be a multiplicative involution.  Its even and
+odd eigenspaces therefore satisfy the exact superalgebra multiplication table
+
+`A₀ A₀ ⊆ A₀`, `A₀ A₁ ⊆ A₁`, `A₁ A₀ ⊆ A₁`, `A₁ A₁ ⊆ A₀`.
+
 Consequently an internally **even** off-diagonal channel acquires the usual
 Soloviev sign reflection, while an internally **odd** off-diagonal channel has
 its internal sign cancelled by the outer Fock sign and the total block is
@@ -63,6 +68,109 @@ theorem act_involutive (x : A) : P.act (P.act x) = x := by
         (P.gamma * P.gamma) * x * (P.gamma * P.gamma) := by
       noncomm_ring
     _ = x := by rw [P.gamma_sq]; simp
+
+/-- Internal parity preserves addition. -/
+theorem act_add (x y : A) : P.act (x + y) = P.act x + P.act y := by
+  unfold act
+  noncomm_ring
+
+/-- Internal parity preserves negation. -/
+theorem act_neg (x : A) : P.act (-x) = -P.act x := by
+  unfold act
+  noncomm_ring
+
+/-- Internal parity is multiplicative. -/
+theorem act_mul (x y : A) : P.act (x * y) = P.act x * P.act y := by
+  unfold act
+  calc
+    P.gamma * (x * y) * P.gamma =
+        P.gamma * x * 1 * y * P.gamma := by simp [mul_assoc]
+    _ = P.gamma * x * (P.gamma * P.gamma) * y * P.gamma := by
+      rw [P.gamma_sq]
+    _ = (P.gamma * x * P.gamma) * (P.gamma * y * P.gamma) := by
+      noncomm_ring
+
+/-- Even coefficients are closed under addition. -/
+theorem even_add {x y : A} (hx : P.IsEven x) (hy : P.IsEven y) :
+    P.IsEven (x + y) := by
+  unfold IsEven at *
+  rw [P.act_add, hx, hy]
+
+/-- Odd coefficients are closed under addition. -/
+theorem odd_add {x y : A} (hx : P.IsOdd x) (hy : P.IsOdd y) :
+    P.IsOdd (x + y) := by
+  unfold IsOdd at *
+  rw [P.act_add, hx, hy]
+  simp
+
+/-- Even times even is even. -/
+theorem even_mul_even {x y : A} (hx : P.IsEven x) (hy : P.IsEven y) :
+    P.IsEven (x * y) := by
+  unfold IsEven at *
+  rw [P.act_mul, hx, hy]
+
+/-- Even times odd is odd. -/
+theorem even_mul_odd {x y : A} (hx : P.IsEven x) (hy : P.IsOdd y) :
+    P.IsOdd (x * y) := by
+  unfold IsEven IsOdd at *
+  rw [P.act_mul, hx, hy]
+  simp
+
+/-- Odd times even is odd. -/
+theorem odd_mul_even {x y : A} (hx : P.IsOdd x) (hy : P.IsEven y) :
+    P.IsOdd (x * y) := by
+  unfold IsEven IsOdd at *
+  rw [P.act_mul, hx, hy]
+  simp
+
+/-- Odd times odd is even. -/
+theorem odd_mul_odd {x y : A} (hx : P.IsOdd x) (hy : P.IsOdd y) :
+    P.IsEven (x * y) := by
+  unfold IsEven IsOdd at *
+  rw [P.act_mul, hx, hy]
+  simp
+
+/-- Ordinary associative commutator. -/
+def comm (x y : A) : A := x * y - y * x
+
+/-- Associative anticommutator. -/
+def anticomm (x y : A) : A := x * y + y * x
+
+/-- Even-even commutators remain even. -/
+theorem even_comm_even {x y : A} (hx : P.IsEven x) (hy : P.IsEven y) :
+    P.IsEven (comm x y) := by
+  unfold comm IsEven
+  rw [P.act_add]
+  simp only [sub_eq_add_neg, P.act_neg, P.act_mul, hx, hy]
+
+/-- Even-odd commutators remain odd. -/
+theorem even_comm_odd {x y : A} (hx : P.IsEven x) (hy : P.IsOdd y) :
+    P.IsOdd (comm x y) := by
+  unfold comm IsOdd
+  rw [P.act_add]
+  simp only [sub_eq_add_neg, P.act_neg, P.act_mul, hx, hy]
+  noncomm_ring
+
+/-- Odd-odd superbrackets (anticommutators) are even. -/
+theorem odd_anticomm_odd {x y : A} (hx : P.IsOdd x) (hy : P.IsOdd y) :
+    P.IsEven (anticomm x y) := by
+  unfold anticomm IsEven
+  rw [P.act_add, P.act_mul, P.act_mul, hx, hy]
+  simp
+
+/-- Consolidated `ℤ₂` multiplication table. -/
+theorem superalgebra_multiplication_packet
+    {e0 e1 o0 o1 : A}
+    (he0 : P.IsEven e0) (he1 : P.IsEven e1)
+    (ho0 : P.IsOdd o0) (ho1 : P.IsOdd o1) :
+    P.IsEven (e0 * e1) ∧
+      P.IsOdd (e0 * o0) ∧
+      P.IsOdd (o0 * e0) ∧
+      P.IsEven (o0 * o1) :=
+  ⟨P.even_mul_even he0 he1,
+    P.even_mul_odd he0 ho0,
+    P.odd_mul_even ho0 he0,
+    P.odd_mul_odd ho0 ho1⟩
 
 end InternalParity
 

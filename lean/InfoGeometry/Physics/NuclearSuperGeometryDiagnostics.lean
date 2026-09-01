@@ -5,9 +5,9 @@ import InfoGeometry.Physics.NuclearSuperGeometryAll
 /-!
 # Focused diagnostics for the nuclear supergeometry lane
 
-This module is intentionally diagnostic.  It forces elaboration of the
-capstone declarations, prints their axiom dependencies, and runs the
-repository's vacuity linter on the main theorem surfaces.
+This module is intentionally diagnostic. It forces elaboration of the
+capstone declarations, prints their axiom dependencies, runs the repository's
+vacuity linter, and executes the audited owner/dependency DAG.
 -/
 
 #check InfoGeometry.Physics.NuclearOperatorSuperSoloviev.totalParity_conjugation_formula
@@ -51,3 +51,5 @@ repository's vacuity linter on the main theorem surfaces.
 #lint_vacuity_decl InfoGeometry.Physics.NuclearExteriorGrassmannSoul.grassmann_one_form_packet
 #lint_vacuity_decl InfoGeometry.Physics.NuclearOperatorSchurComplement.soul_schur_packet
 #lint_vacuity_decl InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge.leftOp_multiplicative_at_iff_associator_zero
+
+#audit_nuclear_supergeometry_logos

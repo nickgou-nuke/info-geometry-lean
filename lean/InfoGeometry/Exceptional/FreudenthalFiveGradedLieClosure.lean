@@ -149,6 +149,16 @@ theorem ext (u v : FiveGradedCarrier D)
     (h_p2 : u.plus2 = v.plus2) : u = v := by
   cases u; cases v; congr
 
+theorem add_assoc (u v w : FiveGradedCarrier D) :
+    (u + v) + w = u + (v + w) := by
+  apply ext
+  · simp [_root_.add_assoc]
+  · simp [_root_.add_assoc]
+  · simp [_root_.add_assoc]
+  · simp [_root_.add_assoc]
+  · simp [_root_.add_assoc]
+  · simp [_root_.add_assoc]
+
 end FiveGradedCarrier
 
 /-! ## 3. Canonical Sector Injections and Generators -/

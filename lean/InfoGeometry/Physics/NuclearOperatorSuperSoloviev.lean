@@ -140,15 +140,13 @@ def anticomm (x y : A) : A := x * y + y * x
 theorem even_comm_even {x y : A} (hx : P.IsEven x) (hy : P.IsEven y) :
     P.IsEven (comm x y) := by
   unfold comm IsEven
-  rw [P.act_add]
-  simp only [sub_eq_add_neg, P.act_neg, P.act_mul, hx, hy]
+  simp only [sub_eq_add_neg, P.act_add, P.act_neg, P.act_mul, hx, hy]
 
 /-- Even-odd commutators remain odd. -/
 theorem even_comm_odd {x y : A} (hx : P.IsEven x) (hy : P.IsOdd y) :
     P.IsOdd (comm x y) := by
   unfold comm IsOdd
-  rw [P.act_add]
-  simp only [sub_eq_add_neg, P.act_neg, P.act_mul, hx, hy]
+  simp only [sub_eq_add_neg, P.act_add, P.act_neg, P.act_mul, hx, hy]
   noncomm_ring
 
 /-- Odd-odd superbrackets (anticommutators) are even. -/

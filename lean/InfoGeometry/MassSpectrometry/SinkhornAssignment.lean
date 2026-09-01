@@ -6,14 +6,16 @@ import InfoGeometry.MassSpectrometry.BirkhoffAssignment
 
 The numerical normalization primitives are owned by
 `InfoGeometry.Canonical.MoE` in `SinkhornFoundation`. This module only gives
-those constructions peak-fragment assignment names and re-exports their exact
-normalization identities.
+those constructions peak-fragment assignment names, re-exports their exact
+normalization identities, and provides a proof-carrying handoff from diagonal
+balancing to Mathlib's Birkhoff polytope.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.MassSpectrometry
 
+open Matrix
 open scoped BigOperators
 
 namespace SinkhornAssignment
@@ -49,6 +51,40 @@ theorem colNormalize_col_sum_one {n : ℕ}
     (M : SinkhornMatrix n) (h : HasPositiveColSums n M) (j : Fin n) :
     ∑ i, colNormalize M h i j = 1 := by
   exact InfoGeometry.Canonical.MoE.colSum_colNormalize (n := n) M h j
+
+/--
+Certificate that positive left/right diagonal scaling has produced a genuine
+soft assignment.  No convergence statement is hidden in this structure.
+-/
+structure BalanceCertificate {n : ℕ} (M : SinkhornMatrix n) where
+  leftScale : Fin n → ℝ
+  rightScale : Fin n → ℝ
+  leftScale_pos : ∀ i, 0 < leftScale i
+  rightScale_pos : ∀ j, 0 < rightScale j
+  balanced_soft :
+    IsSoftAssignment
+      (Matrix.diagonal leftScale * M * Matrix.diagonal rightScale)
+
+/-- Matrix certified by a two-sided diagonal balance. -/
+def balancedMatrix {n : ℕ} {M : SinkhornMatrix n}
+    (cert : BalanceCertificate M) : AssignmentMatrix n :=
+  Matrix.diagonal cert.leftScale * M * Matrix.diagonal cert.rightScale
+
+/-- A certified balanced matrix lies in Mathlib's Birkhoff polytope. -/
+theorem balancedMatrix_isSoftAssignment {n : ℕ} {M : SinkhornMatrix n}
+    (cert : BalanceCertificate M) :
+    IsSoftAssignment cert.balancedMatrix := by
+  exact cert.balanced_soft
+
+/-- A certified Sinkhorn balance therefore admits a Birkhoff-von Neumann decomposition. -/
+theorem balancedMatrix_birkhoff_decomposition {n : ℕ} {M : SinkhornMatrix n}
+    (cert : BalanceCertificate M) :
+    ∃ w : Equiv.Perm (Fin n) → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • hardAssignment σ = cert.balancedMatrix := by
+  exact softAssignment_birkhoff_decomposition
+    cert.balancedMatrix cert.balancedMatrix_isSoftAssignment
 
 end SinkhornAssignment
 

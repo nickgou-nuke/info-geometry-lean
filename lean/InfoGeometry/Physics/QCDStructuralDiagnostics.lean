@@ -15,6 +15,8 @@ ownership audit.
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
+#check InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
+#check InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_charge_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.color_weyl_and_parafermion_braid_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_majorana_braid_packet
 #check InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_null_color_gauge_packet
@@ -27,6 +29,8 @@ ownership audit.
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
+#print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
+#print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_charge_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.color_weyl_and_parafermion_braid_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_majorana_braid_packet
 #print axioms InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_null_color_gauge_packet
@@ -39,6 +43,8 @@ ownership audit.
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.gellMann_su3_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.split_octonion_gellMann_weight_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet
+#lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_charge_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.color_weyl_and_parafermion_braid_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_majorana_braid_packet
 #lint_vacuity_decl InfoGeometry.Physics.QCDColorCARAnyonBridge.zorn_null_color_gauge_packet

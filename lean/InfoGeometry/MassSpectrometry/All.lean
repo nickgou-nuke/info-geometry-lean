@@ -10,3 +10,5 @@ import InfoGeometry.MassSpectrometry.CausalCrossGramian
 import InfoGeometry.MassSpectrometry.CausalRetraction
 import InfoGeometry.MassSpectrometry.ChiralDiscreteMajoranaBridge
 import InfoGeometry.MassSpectrometry.CausalTransferArchitecture
+import InfoGeometry.MassSpectrometry.SpectralLatentInjection
+import InfoGeometry.MassSpectrometry.MellinTransformerBridge

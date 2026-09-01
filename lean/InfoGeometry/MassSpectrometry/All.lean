@@ -12,3 +12,7 @@ import InfoGeometry.MassSpectrometry.ChiralDiscreteMajoranaBridge
 import InfoGeometry.MassSpectrometry.CausalTransferArchitecture
 import InfoGeometry.MassSpectrometry.SpectralLatentInjection
 import InfoGeometry.MassSpectrometry.MellinTransformerBridge
+import InfoGeometry.MassSpectrometry.ChemicalGraph
+import InfoGeometry.MassSpectrometry.FragmentationPushout
+import InfoGeometry.MassSpectrometry.FragmentationPosetCategory
+import InfoGeometry.MassSpectrometry.LinearBSplineKAN

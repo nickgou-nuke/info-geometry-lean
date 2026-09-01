@@ -19,7 +19,7 @@ import InfoGeometry.MassSpectrometry.VerifiedInferenceArchitecture
 /-!
 # Language-to-Logos map for the mass-spectrometry corridor
 
-This module is deliberately metadata, not a new physical theory.  It gives the
+This module is deliberately metadata, not a new physical theory. It gives the
 repository a machine-readable Rosetta surface from informal cross-domain
 vocabulary to exact Lean declarations.
 
@@ -34,11 +34,12 @@ The status field distinguishes four cases:
   verified claim.
 
 `#audit_mass_spectrometry_logos` verifies that every entry advertised as
-formalized names a declaration in the current Lean environment.  This makes the
+formalized names a declaration in the current Lean environment. This makes the
 map usable by declaration-DAG tooling without relying on fuzzy name matching.
 -/
 
 open Lean Elab Command
+open InfoGeometry.Canonical
 
 namespace InfoGeometry.MassSpectrometry
 
@@ -112,7 +113,7 @@ def allLogosConcepts : List LogosConcept :=
   , .empiricalIdentificationAccuracy
   ]
 
-/-- Exact semantic ledger.  `none` is intentional closure debt, not a missing
+/-- Exact semantic ledger. `none` is intentional closure debt, not a missing
 name guessed by the mapper. -/
 def logosEntry : LogosConcept → LogosEntry
   | .peakSpectrum =>
@@ -241,7 +242,7 @@ def auditMassSpectrometryLogos : CoreM Unit := do
 elab "#audit_mass_spectrometry_logos" : command => do
   Command.liftCoreM auditMassSpectrometryLogos
 
-attribute [InfoGeometry.Canonical.spine_object]
+attribute [spine_object]
   LogosConcept LogosEntry Peak FragmentationDAG ValuedFragmentationDAG
   StochasticGrammar CausalRetraction MolecularGraph FragmentVertexDiagram
   MolecularFragmentDiagram LinearBSplineKANData

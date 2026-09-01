@@ -11,10 +11,15 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Hydrate pinned external Lake dependencies
         run: |
+          mkdir -p external_refs
           if [ ! -d external_refs/atlas-lean/.git ]; then
-            mkdir -p external_refs
             git clone --no-checkout https://github.com/facebookresearch/atlas-lean.git external_refs/atlas-lean
             git -C external_refs/atlas-lean checkout 34ffed396f376454c1a9b297f3fd74c5c801fb50
+          fi
+          if [ ! -d external_refs/gift-framework-core/.git ]; then
+            rm -rf external_refs/gift-framework-core
+            git clone --no-checkout https://github.com/gift-framework/core.git external_refs/gift-framework-core
+            git -C external_refs/gift-framework-core checkout e6f3c3ac2140c2324fb2ae029c32233e73aa5e92
           fi
       - name: Build
         run: lake build

@@ -18,3 +18,4 @@ import InfoGeometry.MassSpectrometry.FragmentationPosetCategory
 import InfoGeometry.MassSpectrometry.FragmentationColimit
 import InfoGeometry.MassSpectrometry.MolecularFragmentColimit
 import InfoGeometry.MassSpectrometry.LinearBSplineKAN
+import InfoGeometry.MassSpectrometry.LogosMap

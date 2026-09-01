@@ -12,10 +12,11 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 sandbox_dir="${repo_root}/tools/infra/sandbox-bin"
 ci_mode="${1:-}"
 
-# The root Lake package records Atlas and GIFT as local external references for
-# local research workflows. Clean CI checkouts do not recursively checkout these
-# gitlinks/local checkouts, so hydrate the exact repository-recorded revisions
-# before Lake reads the package configuration.
+# The root Lake package records Atlas as a local external reference for local
+# research workflows. Clean CI checkouts do not carry that checkout, so hydrate
+# its audited revision before Lake reads the package configuration. GIFT is now
+# a small vendored compatibility package in the repository itself; only hydrate
+# a historical external checkout when that local package is absent.
 if [[ "${ci_mode}" == "--ci" ]]; then
   mkdir -p "${repo_root}/external_refs"
 
@@ -27,11 +28,13 @@ if [[ "${ci_mode}" == "--ci" ]]; then
       34ffed396f376454c1a9b297f3fd74c5c801fb50
   fi
 
-  if [[ ! -d "${repo_root}/external_refs/gift-framework-core/.git" ]]; then
-    echo "[sandbox-bootstrap] hydrating pinned GIFT external dependency"
+  if [[ ! -f "${repo_root}/external_refs/gift-framework-core/lakefile.lean" ]]; then
+    echo "[sandbox-bootstrap] vendored GIFT package missing; attempting historical hydration"
     rm -rf "${repo_root}/external_refs/gift-framework-core"
     git clone --no-checkout https://github.com/gift-framework/core.git \
       "${repo_root}/external_refs/gift-framework-core"
+    git -C "${repo_root}/external_refs/gift-framework-core" fetch origin \
+      e6f3c3ac2140c2324fb2ae029c32233e73aa5e92 || true
     git -C "${repo_root}/external_refs/gift-framework-core" checkout \
       e6f3c3ac2140c2324fb2ae029c32233e73aa5e92
   fi

@@ -6,7 +6,7 @@ import InfoGeometry.Routing.PermutationPerfectMatching
 
 This module gives a Mathlib-native finite carrier for mass-spectrometry data
 and for the combinatorial structures used to compare spectra with latent
-fragment states.  It deliberately separates proved algebraic facts from
+fragment states. It deliberately separates proved algebraic facts from
 instrument- or chemistry-specific modelling assumptions.
 
 The formal layer contains:
@@ -15,7 +15,7 @@ The formal layer contains:
 * free-monoid words of peak tokens;
 * rank-certified fragmentation DAGs;
 * hard peak/fragment assignments by permutation matrices;
-* soft assignments as doubly stochastic matrices;
+* soft assignments using Mathlib's native Birkhoff polytope;
 * logarithmic mass coordinates and their scale invariance;
 * finite stochastic fragmentation grammars;
 * multiplicative path weights and additive negative-log surprisal.
@@ -25,11 +25,12 @@ noncomputable section
 
 namespace InfoGeometry.MassSpectrometry
 
+open Matrix
 open scoped BigOperators
 
 /-! ## Peak spectra -/
 
-/-- A centroided spectral peak.  Positivity/nonnegativity are part of the
+/-- A centroided spectral peak. Positivity/nonnegativity are part of the
 carrier rather than external conventions. -/
 structure Peak where
   mass : ℝ
@@ -60,7 +61,7 @@ theorem firstMassMoment_nonneg {n : ℕ} (S : Spectrum n) :
     mul_nonneg (S i).intensity_nonneg (le_of_lt (S i).mass_pos)
 
 /-- A spectrum can be represented as a word in the free monoid on peak
-symbols.  No physical significance is attached to an arbitrary input order. -/
+symbols. No physical significance is attached to an arbitrary input order. -/
 def peakWord (xs : List Peak) : FreeMonoid Peak :=
   FreeMonoid.ofList xs
 
@@ -81,7 +82,7 @@ def IsMassSorted (xs : List Peak) : Prop :=
 /-! ## Fragmentation DAGs -/
 
 /-- A finite directed fragmentation system certified acyclic by a strictly
-rank-decreasing edge map.  `rank` may encode fragmentation depth, molecular
+rank-decreasing edge map. `rank` may encode fragmentation depth, molecular
 size, or any other well-founded finite grading supplied by an application. -/
 structure FragmentationDAG (n : ℕ) where
   edge : Fin n → Fin n → Prop
@@ -129,25 +130,26 @@ theorem hardAssignment_support_isPerfectMatching {n : ℕ}
   simpa [hardAssignment] using
     (InfoGeometry.Routing.PermutationPerfectMatching.permMatrix_support_isPerfectMatching σ)
 
-/-- A finite Birkhoff-type assignment: nonnegative entries with unit row and
-column sums. -/
-structure IsDoublyStochastic {n : ℕ} (A : AssignmentMatrix n) : Prop where
-  nonneg : ∀ i j, 0 ≤ A i j
-  row_sum : ∀ i, ∑ j, A i j = 1
-  col_sum : ∀ j, ∑ i, A i j = 1
+/-- Soft peak/fragment assignments are exactly points of Mathlib's Birkhoff
+polytope of doubly stochastic matrices. -/
+def IsSoftAssignment {n : ℕ} (A : AssignmentMatrix n) : Prop :=
+  A ∈ doublyStochastic ℝ (Fin n)
 
-/-- The identity assignment is doubly stochastic. -/
-theorem identity_isDoublyStochastic (n : ℕ) :
-    IsDoublyStochastic (1 : AssignmentMatrix n) := by
-  refine ⟨?_, ?_, ?_⟩
-  · intro i j
-    by_cases h : i = j
-    · simp [h]
-    · simp [h]
-  · intro i
-    simp
-  · intro j
-    simp
+/-- Every hard permutation assignment is a soft assignment. -/
+theorem hardAssignment_isSoftAssignment {n : ℕ}
+    (σ : Equiv.Perm (Fin n)) : IsSoftAssignment (hardAssignment σ) := by
+  exact permMatrix_mem_doublyStochastic (R := ℝ) (n := Fin n) (σ := σ)
+
+/-- Every soft assignment is a convex combination of hard permutation
+assignments. This is the native Mathlib Birkhoff-von Neumann theorem. -/
+theorem softAssignment_birkhoff_decomposition {n : ℕ}
+    (A : AssignmentMatrix n) (hA : IsSoftAssignment A) :
+    ∃ w : Equiv.Perm (Fin n) → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • hardAssignment σ = A := by
+  simpa [IsSoftAssignment, hardAssignment] using
+    (exists_eq_sum_perm_of_mem_doublyStochastic (M := A) hA)
 
 /-! ## Logarithmic mass coordinates -/
 

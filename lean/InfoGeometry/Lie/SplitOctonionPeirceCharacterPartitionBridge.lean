@@ -7,7 +7,8 @@ import InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
 This owner packages the finite `1 + 3 + 3 + 1` coordinate carrier as a
 character calculation. `peirceGrading` is the existing sheet involution;
 `exteriorDegreeParity` is a separate diagonal operator with signs determined
-by degrees `0, 1, 2, 3` in `toPeirce`.
+by the literal exterior degrees `0, 1, 1, 1, 3, 2, 2, 2` in the established
+Peirce ordering.
 -/
 
 noncomputable section
@@ -20,12 +21,13 @@ open InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
 abbrev Carrier := PeirceCarrier
 abbrev CarrierEnd := Module.End ℝ Carrier
 
+/-- Exterior-degree parity `(-1)^k` in the established Peirce coordinate order
+`0,1,1,1,3,2,2,2`.  Thus the signs are `+,-,-,-,-,+,+,+`. -/
 def exteriorDegreeParity : CarrierEnd where
   toFun x i :=
     if i.val = 0 then x i
-    else if i.val < 4 then -x i
-    else if i.val < 7 then x i
-    else -x i
+    else if i.val ≤ 4 then -x i
+    else x i
   map_add' x y := by
     ext i
     dsimp
@@ -100,8 +102,7 @@ theorem exteriorDegreeParityTrace_eq :
   classical
   have hdiag : ∀ i : Fin 8,
       (exteriorDegreeParity (coordinateBasisVector i)) i =
-        if i.val = 0 then 1 else if i.val < 4 then -1
-          else if i.val < 7 then 1 else -1 := by
+        if i.val = 0 then 1 else if i.val ≤ 4 then -1 else 1 := by
     intro i
     fin_cases i <;> simp [coordinateBasisVector, exteriorDegreeParity]
   simp only [exteriorDegreeParityTrace, peirceCoordinateTrace, hdiag]
@@ -113,7 +114,7 @@ theorem peirceCharacterProductTrace_eq :
   have hdiag : ∀ i : Fin 8,
       (peirceCharacterProduct (coordinateBasisVector i)) i =
         if i.val = 0 then 1 else if i.val < 4 then -1
-          else if i.val < 7 then -1 else 1 := by
+          else if i.val = 4 then 1 else -1 := by
     intro i
     fin_cases i <;> simp [coordinateBasisVector, peirceCharacterProduct,
       peirceSheetParity, peirceGrading, exteriorDegreeParity,

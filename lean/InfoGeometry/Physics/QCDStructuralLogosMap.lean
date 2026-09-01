@@ -11,12 +11,15 @@ import InfoGeometry.Physics.QCDColorCARAnyonBridge
 
 This metadata layer records theorem-supported algebraic structures already
 present in the native `InfoGeometry` library.  In particular, the repository
-already owns a concrete Gell-Mann `su(3)` corridor, split-octonion Cartan
-weights, three-colour `Cl(5,5)` CAR data, finite colour/parafermion braid
-relations, Zorn null-boundary colour pairings, and generic anyon monodromy.
+owns a concrete Gell-Mann `su(3)` corridor, split-octonion Cartan weights,
+three-colour `Cl(5,5)` CAR data, a finite Furey-style generation span and
+one-third occupation spectrum, finite colour/parafermion braid relations,
+Zorn null-boundary colour pairings, and generic anyon monodromy.
 
-Those facts are distinct from the stronger physical claim that these carriers
-are the QCD colour gauge representation or that they prove confinement.
+Those facts are distinct from the stronger physical claims that these carriers
+are the QCD colour gauge representation, that the Furey span is a minimal left
+ideal, that the occupation readout is physical electric charge, or that the
+algebra proves confinement.
 -/
 
 open Lean Elab Command
@@ -37,6 +40,8 @@ inductive Concept where
   | gellMannSU3Algebra
   | splitOctonionGellMannWeights
   | threeColorCAR
+  | fureyGenerationSpan
+  | fureyChargeSpectrum
   | colorParafermionBraid
   | zornMajoranaBraid
   | zornNullColorGaugeInvariant
@@ -47,6 +52,8 @@ inductive Concept where
   | physicalSU3ColorIdentification
   | fullG2SplitOctonionAutomorphismGroup
   | physicalQuarkAntiquarkSlotIdentification
+  | fureyMinimalLeftIdealIdentification
+  | physicalElectricChargeIdentification
   | qcdConfinement
   | njlChiralCondensateDynamics
   | qcdThetaVacuumKleinTopology
@@ -67,6 +74,8 @@ inductive Edge where
   | zornSlots_to_slotPreservation
   | zornSlots_to_threeColorCAR
   | gellMann_to_splitOctonionWeights
+  | threeColorCAR_to_fureyGeneration
+  | fureyGeneration_to_chargeSpectrum
   | threeColorCAR_to_colorBraid
   | zornSlots_to_zornMajoranaBraid
   | zornSlots_to_nullGaugeInvariant
@@ -79,6 +88,8 @@ def edgeEndpoints : Edge → Concept × Concept
   | .zornSlots_to_slotPreservation => (.zornThreeVectorSlots, .zornSlotPreservation)
   | .zornSlots_to_threeColorCAR => (.zornThreeVectorSlots, .threeColorCAR)
   | .gellMann_to_splitOctonionWeights => (.gellMannSU3Algebra, .splitOctonionGellMannWeights)
+  | .threeColorCAR_to_fureyGeneration => (.threeColorCAR, .fureyGenerationSpan)
+  | .fureyGeneration_to_chargeSpectrum => (.fureyGenerationSpan, .fureyChargeSpectrum)
   | .threeColorCAR_to_colorBraid => (.threeColorCAR, .colorParafermionBraid)
   | .zornSlots_to_zornMajoranaBraid => (.zornThreeVectorSlots, .zornMajoranaBraid)
   | .zornSlots_to_nullGaugeInvariant => (.zornThreeVectorSlots, .zornNullColorGaugeInvariant)
@@ -93,6 +104,8 @@ def allConcepts : List Concept :=
   , .gellMannSU3Algebra
   , .splitOctonionGellMannWeights
   , .threeColorCAR
+  , .fureyGenerationSpan
+  , .fureyChargeSpectrum
   , .colorParafermionBraid
   , .zornMajoranaBraid
   , .zornNullColorGaugeInvariant
@@ -103,6 +116,8 @@ def allConcepts : List Concept :=
   , .physicalSU3ColorIdentification
   , .fullG2SplitOctonionAutomorphismGroup
   , .physicalQuarkAntiquarkSlotIdentification
+  , .fureyMinimalLeftIdealIdentification
+  , .physicalElectricChargeIdentification
   , .qcdConfinement
   , .njlChiralCondensateDynamics
   , .qcdThetaVacuumKleinTopology
@@ -116,6 +131,8 @@ def allEdges : List Edge :=
   , .zornSlots_to_slotPreservation
   , .zornSlots_to_threeColorCAR
   , .gellMann_to_splitOctonionWeights
+  , .threeColorCAR_to_fureyGeneration
+  , .fureyGeneration_to_chargeSpectrum
   , .threeColorCAR_to_colorBraid
   , .zornSlots_to_zornMajoranaBraid
   , .zornSlots_to_nullGaugeInvariant
@@ -149,6 +166,14 @@ def entry : Concept → Entry
       ⟨.threeColorCAR, "native three-colour Clifford/Zorn CAR packet", .structuralBridge,
         some ``InfoGeometry.Physics.QCDColorCARAnyonBridge.circular_and_cl55_color_car_packet,
         "The main library owns three colour-indexed Cl(5,5) CAR channels and matching circular Zorn CAR relations."⟩
+  | .fureyGenerationSpan =>
+      ⟨.fureyGenerationSpan, "finite Furey-style eight-generator CAR span", .structuralBridge,
+        some ``InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_generation_packet,
+        "The native Cl(5,5) colour CAR owner contains the vacuum and one-creation sectors in an eight-generator span; minimal-left-ideal status is not asserted."⟩
+  | .fureyChargeSpectrum =>
+      ⟨.fureyChargeSpectrum, "finite one-third Furey occupation spectrum", .theorem,
+        some ``InfoGeometry.Physics.QCDColorCARAnyonBridge.furey_charge_packet,
+        "The three number operators are projectors and the scalar readout lies in {0,1/3,2/3,1}; no physical electric-charge identification is asserted."⟩
   | .colorParafermionBraid =>
       ⟨.colorParafermionBraid, "finite A2 colour and parafermion Artin braiding", .structuralBridge,
         some ``InfoGeometry.Physics.QCDColorCARAnyonBridge.color_weyl_and_parafermion_braid_packet,
@@ -185,6 +210,12 @@ def entry : Concept → Entry
   | .physicalQuarkAntiquarkSlotIdentification =>
       ⟨.physicalQuarkAntiquarkSlotIdentification, "Zorn three-vector slots are physical quark and antiquark color representations", .openDebt, none,
         "The algebraic three-vector and three-colour carriers are exact; their physical field interpretation is not yet theorem-owned."⟩
+  | .fureyMinimalLeftIdealIdentification =>
+      ⟨.fureyMinimalLeftIdealIdentification, "Furey generation span is a minimal left ideal", .openDebt, none,
+        "The native owner now defines the finite eight-generator span, but no left-ideal closure or minimality theorem has been proved on this carrier."⟩
+  | .physicalElectricChargeIdentification =>
+      ⟨.physicalElectricChargeIdentification, "Furey occupation readout is physical electric charge", .openDebt, none,
+        "The finite spectrum {0,1/3,2/3,1} is proved; particle labels, conjugate ideals and the physical electric-charge convention are separate unproved layers."⟩
   | .qcdConfinement =>
       ⟨.qcdConfinement, "Zorn nonassociativity proves QCD confinement", .openDebt, none,
         "The associator defect is formalized algebraically; no Yang-Mills mass-gap or confinement theorem follows from it."⟩

@@ -2,6 +2,8 @@ import InfoGeometry.Physics.QCDChiralStructuralBridge
 import InfoGeometry.Physics.QCDZornColorSlotBridge
 import InfoGeometry.Physics.QCDTrialityStructuralBridge
 import InfoGeometry.Physics.QCDExceptionalArtinBridge
+import InfoGeometry.Physics.ColorCARStandardModel
+import InfoGeometry.Physics.FureyCharges
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
 import InfoGeometry.Physics.QCDStructuralLogosMap
 
@@ -17,6 +19,8 @@ structural lane:
 * native Gell-Mann `su(3)` commutator data and the anti-Hermitian basis bridge;
 * split-octonion Gell-Mann Cartan weights on three circular root channels;
 * native three-colour `Cl(5,5)` CAR and matching circular Zorn CAR;
+* the finite eight-generator Furey-style CAR span and one-third occupation
+  spectrum `{0, 1/3, 2/3, 1}`;
 * finite `A₂/S₃` colour-Weyl and parafermion-style Artin braid relations;
 * Zorn Majorana-shaped `Q_k` generators with explicit braid inverses;
 * null-boundary colour-pairing trace identities and matrix-gauge conjugation
@@ -27,9 +31,11 @@ structural lane:
 * an audited Logos map separating these algebraic owners from physical QCD
   representation and dynamics claims.
 
-The umbrella does not assert that the algebraic colour carriers are physical
-QCD quark fields, nor confinement, NJL dynamics, a QCD theta-vacuum theorem,
-CKM phenomenology, or a three-generation identification.
+The umbrella does not assert that `fureyGeneration` is a minimal left ideal,
+that `fureyOccupationCharge` is physical electric charge, that the algebraic
+colour carriers are physical QCD quark fields, or that the repository proves
+confinement, NJL dynamics, a QCD theta-vacuum theorem, CKM phenomenology, or a
+three-generation identification.
 -/
 
 namespace InfoGeometry.Physics.QCDStructuralAll

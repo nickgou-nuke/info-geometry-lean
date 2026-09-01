@@ -104,8 +104,8 @@ end FiniteFragmentationModel
 
 /--
 Physical specialization of the finite capstone with an explicit positive mass
-valuation.  The stochastic grammar is still indexed by the underlying
-rank-certified DAG, while `valuedDag` separately certifies physical mass loss.
+valuation. The stochastic grammar is indexed by the underlying rank-certified
+DAG, while `valuedDag` separately certifies physical mass loss.
 -/
 structure FiniteValuedFragmentationModel (n : ℕ) where
   spectrum : Spectrum n
@@ -132,6 +132,25 @@ theorem mass_decreases_along_path {u v : Fin n}
     (p : Relation.TransGen M.valuedDag.edge u v) :
     M.valuedDag.massOf v < M.valuedDag.massOf u :=
   M.valuedDag.transGen_mass_lt p
+
+/-- Energy-conditioned grammar readout for the underlying certified DAG. -/
+def grammarAt (cond : CollisionCondition) : StochasticGrammar M.valuedDag.toDAG :=
+  M.grammar.kernel cond
+
+/-- Every nonzero physical grammar transition has strictly positive neutral loss. -/
+theorem grammarAt_mass_decreases
+    (cond : CollisionCondition) {u v : Fin n}
+    (h : (M.grammarAt cond).weight u v ≠ 0) :
+    M.valuedDag.massOf v < M.valuedDag.massOf u := by
+  have hedge : M.valuedDag.edge u v := (M.grammarAt cond).support h
+  exact M.valuedDag.mass_decreases hedge
+
+/-- Every nonzero physical grammar transition has positive endpoint mass loss. -/
+theorem grammarAt_deltaMass_pos
+    (cond : CollisionCondition) {u v : Fin n}
+    (h : (M.grammarAt cond).weight u v ≠ 0) :
+    0 < M.valuedDag.deltaMass u v := by
+  exact sub_pos.mpr (M.grammarAt_mass_decreases cond h)
 
 /-- The soft assignment of a mass-valued model still admits the native Birkhoff decomposition. -/
 theorem assignment_decomposes :

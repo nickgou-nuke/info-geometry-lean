@@ -1,3 +1,5 @@
 import InfoGeometry.MassSpectrometry.Core
+import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG
+import InfoGeometry.MassSpectrometry.FragmentationPath
 import InfoGeometry.MassSpectrometry.OperatorGeometry
 import InfoGeometry.MassSpectrometry.FiniteModel

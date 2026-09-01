@@ -7,7 +7,9 @@ import InfoGeometry.Physics.FureyCharges
 import InfoGeometry.Physics.QCDExteriorFureyBridge
 import InfoGeometry.Physics.QCDSU3ColorSpinorBridge
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
+import InfoGeometry.Physics.QCDTwelveFoldSchurTrialityBridge
 import InfoGeometry.Physics.QCDStructuralLogosMap
+import InfoGeometry.Physics.QCDTwelveFoldStructuralLogosMap
 
 /-!
 # QCD-facing structural umbrella
@@ -33,17 +35,25 @@ structural lane:
 * null-boundary colour-pairing trace identities and matrix-gauge conjugation
   invariance;
 * generic unitary anyon double-braid monodromy;
-* exact G₂/Artin spin closure and preservation of square-zero chiral shape;
+* exact `G₂/I₂(6)` Artin spin closure and preservation of square-zero chiral
+  shape;
 * finite order-three triality cycles;
-* an audited Logos map separating these algebraic owners from physical QCD
-  representation and dynamics claims.
+* a generic commuting order-two/order-three sixth-power closure theorem;
+* the native exact order-twelve `masterTwelve` packet with order-two and
+  order-three projections;
+* the zero-light-block Schur identity `S(0,V,W) = -(V * Binv * W)` and its
+  simultaneous sign-reflection invariance;
+* audited Logos maps separating these algebraic owners from physical QCD,
+  angular-monodromy, and neutrino interpretations.
 
 The umbrella does not assert that the complex color-spinor representation is
 already intertwined with the real `Cl(5,5)` Furey span, that either Furey span
 is a minimal left ideal, that the two chiral spans are physically conjugate,
-that `fureyOccupationCharge` is physical electric charge, that the algebraic
-colour carriers are physical QCD quark fields, or that the repository proves
-confinement, NJL dynamics, a QCD theta-vacuum theorem, CKM phenomenology, or a
+that `fureyOccupationCharge` is physical electric charge or topological spin,
+that an algebraic monodromy step is a physical `2π` rotation, that `12π` is a
+minimal physical period, that the algebraic colour carriers are physical QCD
+quark fields, or that the repository proves confinement, NJL dynamics, a QCD
+theta-vacuum theorem, PMNS/neutrino dynamics, CKM phenomenology, or a
 three-generation identification.
 -/
 

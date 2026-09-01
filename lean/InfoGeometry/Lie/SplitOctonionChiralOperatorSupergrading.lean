@@ -35,6 +35,7 @@ open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
 open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ

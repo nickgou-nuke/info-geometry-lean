@@ -15,4 +15,5 @@ import InfoGeometry.MassSpectrometry.MellinTransformerBridge
 import InfoGeometry.MassSpectrometry.ChemicalGraph
 import InfoGeometry.MassSpectrometry.FragmentationPushout
 import InfoGeometry.MassSpectrometry.FragmentationPosetCategory
+import InfoGeometry.MassSpectrometry.FragmentationColimit
 import InfoGeometry.MassSpectrometry.LinearBSplineKAN

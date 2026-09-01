@@ -2,6 +2,7 @@ import Lean
 import InfoGeometry.Canonical.SpineAttributes
 import InfoGeometry.Physics.QCDFureyZornProjectorBridge
 import InfoGeometry.Physics.QCDZornChargeConjugationBridge
+import InfoGeometry.Physics.QCDNativeZornColorRepresentation
 
 /-!
 # Audited recovered-Zorn structural ledger
@@ -28,9 +29,10 @@ inductive Status where
 inductive Concept where
   | canonicalZornProjectorRouting
   | complexZornConjugateExchange
+  | nativeFaithfulZornColorRepresentation
   | canonicalComplexZornEquivalence
   | zornCliffordFureyIntertwiner
-  | nativeFaithfulZornColorRepresentation
+  | nativeDiracSpinorColorRepresentation
   deriving DecidableEq, Repr, Inhabited
 
 structure Entry where
@@ -44,9 +46,10 @@ structure Entry where
 def allConcepts : List Concept :=
   [ .canonicalZornProjectorRouting
   , .complexZornConjugateExchange
+  , .nativeFaithfulZornColorRepresentation
   , .canonicalComplexZornEquivalence
   , .zornCliffordFureyIntertwiner
-  , .nativeFaithfulZornColorRepresentation
+  , .nativeDiracSpinorColorRepresentation
   ]
 
 
@@ -63,6 +66,12 @@ def entry : Concept → Entry
         .theorem,
         some ``InfoGeometry.Physics.QCDZornChargeConjugationBridge.zorn_charge_conjugation_packet,
         "Coefficient conjugation exchanges scalar and upper/lower color slots and is involutive."⟩
+  | .nativeFaithfulZornColorRepresentation =>
+      ⟨.nativeFaithfulZornColorRepresentation,
+        "faithful gl3 representation on the native complex Zorn upper color lane",
+        .theorem,
+        some ``InfoGeometry.Physics.QCDNativeZornColorRepresentation.native_zorn_color_representation_packet,
+        "The defining matrix action on `Fin 3 -> C` is faithful, preserves multiplication and commutators, and embeds injectively as the pure upper Zorn lane."⟩
   | .canonicalComplexZornEquivalence =>
       ⟨.canonicalComplexZornEquivalence,
         "equivalence between canonical and complex Zorn carriers",
@@ -73,11 +82,11 @@ def entry : Concept → Entry
         "Zorn color lanes intertwined with the Cl(5,5) Furey spans",
         .openDebt, none,
         "The repository owns parallel Zorn and Clifford/Furey lanes; an explicit carrier intertwiner remains to be constructed."⟩
-  | .nativeFaithfulZornColorRepresentation =>
-      ⟨.nativeFaithfulZornColorRepresentation,
-        "faithful gl3 color representation on a native Zorn-spinor carrier",
+  | .nativeDiracSpinorColorRepresentation =>
+      ⟨.nativeDiracSpinorColorRepresentation,
+        "richer faithful gl3 action on a native Zorn Dirac-spinor carrier",
         .openDebt, none,
-        "A faithful theorem exists downstream in proofs/ZornColorLieRepresentation.lean but still depends on proof-workspace carriers and has not been migrated to the main library."⟩
+        "The downstream `ZornColorLieRepresentation` proves a stronger faithful action on `DiracSpinor16`; migrating its Peirce/chiral spinor carrier remains separate debt."⟩
 
 
 def auditRecoveredZornLogos : CoreM Unit := do

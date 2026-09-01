@@ -18,6 +18,7 @@ repository's vacuity linter on the main theorem surfaces.
 #check InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge.diracSuperHamiltonian_invariant
 #check InfoGeometry.Physics.NuclearFiniteNilpotentSoul.FiniteSoul.finite_soul_packet
 #check InfoGeometry.Physics.NuclearExteriorGrassmannSoul.grassmann_one_form_packet
+#check InfoGeometry.Physics.NuclearOperatorSchurComplement.soul_schur_packet
 #check InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge.leftOp_multiplicative_at_iff_associator_zero
 
 #print axioms InfoGeometry.Physics.NuclearOperatorSuperSoloviev.totalParity_conjugation_formula
@@ -28,6 +29,7 @@ repository's vacuity linter on the main theorem surfaces.
 #print axioms InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge.diracSuperHamiltonian_invariant
 #print axioms InfoGeometry.Physics.NuclearFiniteNilpotentSoul.FiniteSoul.finite_soul_packet
 #print axioms InfoGeometry.Physics.NuclearExteriorGrassmannSoul.grassmann_one_form_packet
+#print axioms InfoGeometry.Physics.NuclearOperatorSchurComplement.soul_schur_packet
 #print axioms InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge.leftOp_multiplicative_at_iff_associator_zero
 
 #lint_vacuity_decl InfoGeometry.Physics.NuclearOperatorSuperSoloviev.totalParity_conjugation_formula
@@ -38,4 +40,5 @@ repository's vacuity linter on the main theorem surfaces.
 #lint_vacuity_decl InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge.diracSuperHamiltonian_invariant
 #lint_vacuity_decl InfoGeometry.Physics.NuclearFiniteNilpotentSoul.FiniteSoul.finite_soul_packet
 #lint_vacuity_decl InfoGeometry.Physics.NuclearExteriorGrassmannSoul.grassmann_one_form_packet
+#lint_vacuity_decl InfoGeometry.Physics.NuclearOperatorSchurComplement.soul_schur_packet
 #lint_vacuity_decl InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge.leftOp_multiplicative_at_iff_associator_zero

@@ -5,8 +5,8 @@ import InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge
 /-!
 # Stochastic fragmentation grammars
 
-The chemistry-specific layer is kept as explicit data.  Substochastic kernels
-allow terminal fragments.  When a kernel is normalized, it is bridged into the
+The chemistry-specific layer is kept as explicit data. Substochastic kernels
+allow terminal fragments. When a kernel is normalized, it is bridged into the
 repository's existing `StochasticTransitionMatrix` owner, so amplitude and
 Bhattacharyya results are reused rather than duplicated.
 -/
@@ -40,6 +40,15 @@ structure EnergyConditionedGrammar {n : ℕ} (D : FragmentationDAG n) where
 namespace StochasticGrammar
 
 variable {n : ℕ} {D : FragmentationDAG n} (G : StochasticGrammar D)
+
+/-- Probability mass not assigned to another fragment from source state `u`. -/
+def terminalWeight (u : Fin n) : ℝ :=
+  1 - ∑ v, G.weight u v
+
+/-- Substochasticity makes terminal/absorption weight nonnegative. -/
+theorem terminalWeight_nonneg (u : Fin n) :
+    0 ≤ G.terminalWeight u := by
+  exact sub_nonneg.mpr (G.row_sum_le_one u)
 
 /-- Multiplicative weight of a finite transition list. -/
 def pathProbability : List (FragmentEdge n) → ℝ
@@ -113,6 +122,21 @@ namespace NormalizedGrammar
 
 variable {n : ℕ} {D : FragmentationDAG n} (G : NormalizedGrammar D)
 
+/-- Forget exact normalization and view a normalized grammar as substochastic. -/
+def toStochasticGrammar : StochasticGrammar D where
+  weight := G.weight
+  weight_nonneg := G.weight_nonneg
+  support := G.support
+  row_sum_le_one := fun u => (G.row_sum u).le
+
+@[simp] theorem toStochasticGrammar_weight (u v : Fin n) :
+    G.toStochasticGrammar.weight u v = G.weight u v := rfl
+
+/-- A normalized grammar has zero terminal probability deficit. -/
+theorem terminalWeight_eq_zero (u : Fin n) :
+    G.toStochasticGrammar.terminalWeight u = 0 := by
+  simp [StochasticGrammar.terminalWeight, G.row_sum u]
+
 /-- Forget support and expose the repository's existing row-stochastic carrier. -/
 def toTransitionMatrix :
     InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge.StochasticTransitionMatrix n where
@@ -125,6 +149,19 @@ unit L2 norm, by the pre-existing stochastic-language theorem. -/
 theorem amplitude_row_l2_normalization (i : Fin n) :
     ∑ j, (G.toTransitionMatrix.amplitudeMatrix i j) ^ 2 = 1 := by
   exact G.toTransitionMatrix.amplitude_row_l2_normalization i
+
+/-- Bhattacharyya overlap between normalized grammars is exactly the inner
+product of their repository-owned square-root amplitude rows. -/
+theorem bhattacharyya_eq_amplitude_inner_product
+    (H : NormalizedGrammar D) (i : Fin n) :
+    InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge.bhattacharyyaLanguageFidelity
+      G.toTransitionMatrix H.toTransitionMatrix i =
+      ∑ j,
+        G.toTransitionMatrix.amplitudeMatrix i j *
+          H.toTransitionMatrix.amplitudeMatrix i j := by
+  exact
+    InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge.bhattacharyya_language_fidelity_eq_inner_product
+      G.toTransitionMatrix H.toTransitionMatrix i
 
 end NormalizedGrammar
 

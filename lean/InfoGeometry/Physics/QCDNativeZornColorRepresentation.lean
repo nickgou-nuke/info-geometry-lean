@@ -10,11 +10,11 @@ Dirac-spinor carrier.  Its faithfulness witness is concentrated on the positive
 `u : Fin 3 → ℂ` Zorn coordinate.  This module reconstructs that minimal
 representation natively, without importing the downstream spinor stack.
 
-The actual representation carrier is the upper color lane `Fin 3 → ℂ`.  It is
-embedded linearly and injectively into the native complex Zorn carrier as the
-pure upper off-diagonal sector.  Keeping the representation on the lane itself
-avoids an affine spectator term on the scalar/lower Zorn coordinates and makes
-the `gl₃(ℂ)` representation law exact.
+The actual representation carrier is the upper color lane `Fin 3 → ℂ`.  The
+lane embeds injectively into the native complex Zorn carrier as the pure upper
+off-diagonal sector.  Since that Zorn owner intentionally uses explicit
+`zornAdd`/`zornSmul` operations instead of installing a global module instance,
+linearity of the embedding is recorded by explicit preservation theorems.
 
 No claim is made that this is the full split-octonion automorphism action or the
 physical QCD gauge representation.
@@ -86,20 +86,8 @@ theorem colorAction_commutator (A B : M3C) :
   rw [colorAction_sub, colorAction_mul, colorAction_mul]
 
 /-- Pure upper-lane embedding into the native complex Zorn carrier. -/
-def upperLaneEmbedding : ColorLane →ₗ[ℂ] Zorn where
-  toFun u := { a := 0, u := u, v := 0, b := 0 }
-  map_add' u v := by
-    apply zorn_ext
-    · rfl
-    · rfl
-    · rfl
-    · rfl
-  map_smul' c u := by
-    apply zorn_ext
-    · rfl
-    · rfl
-    · rfl
-    · rfl
+def upperLaneEmbedding (u : ColorLane) : Zorn :=
+  { a := 0, u := u, v := 0, b := 0 }
 
 @[simp] theorem upperLaneEmbedding_a (u : ColorLane) :
     (upperLaneEmbedding u).a = 0 := rfl
@@ -112,6 +100,28 @@ def upperLaneEmbedding : ColorLane →ₗ[ℂ] Zorn where
 
 @[simp] theorem upperLaneEmbedding_b (u : ColorLane) :
     (upperLaneEmbedding u).b = 0 := rfl
+
+/-- The coordinate embedding preserves lane addition using the explicit Zorn
+addition operation. -/
+theorem upperLaneEmbedding_add (u v : ColorLane) :
+    upperLaneEmbedding (u + v) =
+      zornAdd (upperLaneEmbedding u) (upperLaneEmbedding v) := by
+  apply zorn_ext
+  · rfl
+  · funext i; rfl
+  · funext i; rfl
+  · rfl
+
+/-- The coordinate embedding preserves scalar multiplication using the explicit
+Zorn scalar operation. -/
+theorem upperLaneEmbedding_smul (c : ℂ) (u : ColorLane) :
+    upperLaneEmbedding (c • u) =
+      zornSmul c (upperLaneEmbedding u) := by
+  apply zorn_ext
+  · simp [upperLaneEmbedding, zornSmul]
+  · funext i; rfl
+  · funext i; simp [upperLaneEmbedding, zornSmul]
+  · simp [upperLaneEmbedding, zornSmul]
 
 /-- The upper-lane embedding loses no color information. -/
 theorem upperLaneEmbedding_injective : Function.Injective upperLaneEmbedding := by
@@ -153,9 +163,12 @@ theorem native_zorn_color_representation_packet :
     (∀ A B : M3C,
       colorAction (A * B - B * A) =
         colorAction A * colorAction B -
-          colorAction B * colorAction A) :=
+          colorAction B * colorAction A) ∧
+    (∀ c : ℂ, ∀ u : ColorLane,
+      upperLaneEmbedding (c • u) =
+        zornSmul c (upperLaneEmbedding u)) :=
   ⟨colorAction_injective, upperLaneEmbedding_injective,
-    colorAction_mul, colorAction_commutator⟩
+    colorAction_mul, colorAction_commutator, upperLaneEmbedding_smul⟩
 
 end InfoGeometry.Physics.QCDNativeZornColorRepresentation
 

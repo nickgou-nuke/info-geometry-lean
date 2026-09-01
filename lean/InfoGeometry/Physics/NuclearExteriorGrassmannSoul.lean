@@ -63,13 +63,19 @@ def thetaFiniteSoul (v : V) : FiniteSoul (GrassmannAlgebra (R := R) (V := V)) wh
 theorem one_add_theta_mul_one_sub_theta (v : V) :
     (1 + theta (R := R) v) * (1 - theta (R := R) v) = 1 := by
   have hsq := theta_sq (R := R) v
-  noncomm_ring [hsq]
+  calc
+    (1 + theta (R := R) v) * (1 - theta (R := R) v) =
+        1 - theta (R := R) v * theta (R := R) v := by noncomm_ring
+    _ = 1 := by rw [hsq]; simp
 
 /-- The inverse also works from the right. -/
 theorem one_sub_theta_mul_one_add_theta (v : V) :
     (1 - theta (R := R) v) * (1 + theta (R := R) v) = 1 := by
   have hsq := theta_sq (R := R) v
-  noncomm_ring [hsq]
+  calc
+    (1 - theta (R := R) v) * (1 + theta (R := R) v) =
+        1 - theta (R := R) v * theta (R := R) v := by noncomm_ring
+    _ = 1 := by rw [hsq]; simp
 
 /-- The abstract finite-soul inverse polynomial agrees with the explicit
 `1-θ` formula at nilpotence order two. -/
@@ -77,7 +83,7 @@ theorem theta_inversePolynomial_eq (v : V) :
     (thetaFiniteSoul (R := R) v).inversePolynomial =
       1 - theta (R := R) v := by
   simp [FiniteSoul.inversePolynomial, thetaFiniteSoul,
-    unipotentInvPoly, Finset.sum_range_succ, pow_two]
+    unipotentInvPoly, sub_eq_add_neg]
 
 /-- Consolidated genuine Grassmann one-form packet. -/
 theorem grassmann_one_form_packet (v w : V) :

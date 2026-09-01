@@ -38,6 +38,16 @@ if [[ "${ci_mode}" == "--ci" ]]; then
     git -C "${repo_root}/external_refs/gift-framework-core" checkout \
       e6f3c3ac2140c2324fb2ae029c32233e73aa5e92
   fi
+
+  # Historical Lake job computation still asks for the old lowercase module
+  # path even though the tracked source DAG has been rewired to the uniquely
+  # named legacy owner. Keep the repository case-clean and materialize only an
+  # untracked import-only compatibility shim for CI builds.
+  kr_compat="${repo_root}/lean/InfoGeometry/Canonical/KrDualityCascade.lean"
+  if [[ ! -e "${kr_compat}" ]]; then
+    printf '%s\n' 'import InfoGeometry.Canonical.LegacyKrDualityCascade' > "${kr_compat}"
+    echo "[sandbox-bootstrap] materialized untracked legacy KR module shim"
+  fi
 fi
 
 # GitHub's hosted image does not necessarily ship bubblewrap. The CI policy

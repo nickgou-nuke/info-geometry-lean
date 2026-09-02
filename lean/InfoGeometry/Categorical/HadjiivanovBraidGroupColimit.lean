@@ -247,15 +247,15 @@ by the Hadjiivanov representation layer. -/
 abbrev BraidColimit (B : BraidGroupDiagram.{u}) : Grp.{u} :=
   BraidGroupColimit B
 
-/-- Universal stage inclusion under the braid-specific API name. -/
-abbrev stageInclusion (B : BraidGroupDiagram.{u}) (n : ℕ) :
-    B.obj n ⟶ BraidColimit B :=
-  stageInjection B n
-
 /-- The canonical inclusion of the nth braid-group stage into the colimit. -/
 abbrev stageInjection (B : BraidGroupDiagram.{u}) (n : ℕ) :
     B.obj n ⟶ BraidGroupColimit B :=
   colimit.ι B n
+
+/-- Universal stage inclusion under the braid-specific API name. -/
+abbrev stageInclusion (B : BraidGroupDiagram.{u}) (n : ℕ) :
+    B.obj n ⟶ BraidColimit B :=
+  stageInjection B n
 
 /-- A compatible pair of Artin generator endomorphisms on a filtered
 braid-group diagram. -/

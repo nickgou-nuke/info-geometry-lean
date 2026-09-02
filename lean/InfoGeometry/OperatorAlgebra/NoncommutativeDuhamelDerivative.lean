@@ -1,6 +1,8 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
+import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The noncommutative Duhamel derivative operator
@@ -204,5 +206,149 @@ theorem exponentialDerivative_apply_eq_duhamelDerivative_of_commute
       duhamelDerivative a h := by
   rw [exponentialDerivative_apply_of_commute a h hComm]
   rw [duhamelDerivative_apply_of_commute a h hComm]
+
+/--
+The finite-difference Duhamel integral.  At z = 0 it is the derivative
+integral; away from zero it is the exact divided difference furnished by the
+path t ↦ exp ((1 - t) • a) * exp (t • (a + z • h)).
+-/
+noncomputable def perturbedDuhamelIntegral
+    (a h : A) (z : ℝ) : A :=
+  ∫ t in (0 : ℝ)..1,
+    NormedSpace.exp ((1 - t) • a) *
+      h *
+        NormedSpace.exp (t • (a + z • h))
+
+/-- The finite-difference Duhamel integral depends continuously on z. -/
+theorem continuous_perturbedDuhamelIntegral (a h : A) :
+    Continuous (perturbedDuhamelIntegral a h) := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  apply
+    intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+      (a₀ := (0 : ℝ)) (b₀ := 1)
+  fun_prop
+
+/--
+Exact finite-difference Duhamel formula.  No commutativity assumption is made:
+the second exponential is evaluated at the perturbed endpoint a + z • h.
+-/
+theorem exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral
+    (a h : A) (z : ℝ) :
+    NormedSpace.exp (a + z • h) - NormedSpace.exp a =
+      z • perturbedDuhamelIntegral a h z := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  let F : ℝ → A := fun t =>
+    NormedSpace.exp ((1 - t) • a) *
+      NormedSpace.exp (t • (a + z • h))
+  let F' : ℝ → A := fun t =>
+    NormedSpace.exp ((1 - t) • a) *
+      (z • h) *
+        NormedSpace.exp (t • (a + z • h))
+  have hF' (t : ℝ) : HasDerivAt F (F' t) t := by
+    have hOneSub :
+        HasDerivAt (fun u : ℝ => 1 - u) (-1) t := by
+      convert
+        (hasDerivAt_const (x := t) (1 : ℝ)).sub
+          (hasDerivAt_id (x := t)) using 1 <;> simp
+    have hLeft :
+        HasDerivAt
+          (fun u : ℝ => NormedSpace.exp ((1 - u) • a))
+          (-(NormedSpace.exp ((1 - t) • a) * a)) t := by
+      convert
+        (hasDerivAt_exp_smul_const a (1 - t)).comp t hOneSub
+          using 1 <;> simp
+    have hRight :
+        HasDerivAt
+          (fun u : ℝ => NormedSpace.exp (u • (a + z • h)))
+          ((a + z • h) *
+            NormedSpace.exp (t • (a + z • h))) t :=
+      hasDerivAt_exp_smul_const' (a + z • h) t
+    dsimp [F, F']
+    convert hLeft.mul hRight using 1
+    noncomm_ring
+  have hF'cont : Continuous F' := by
+    dsimp [F']
+    fun_prop
+  have hFTC :
+      (∫ t in (0 : ℝ)..1, F' t) = F 1 - F 0 :=
+    intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (fun t _ => hF' t) (hF'cont.intervalIntegrable 0 1)
+  calc
+    NormedSpace.exp (a + z • h) - NormedSpace.exp a =
+        ∫ t in (0 : ℝ)..1,
+          NormedSpace.exp ((1 - t) • a) *
+            (z • h) *
+              NormedSpace.exp (t • (a + z • h)) := by
+      simpa [F, F'] using hFTC.symm
+    _ = ∫ t in (0 : ℝ)..1,
+          z •
+            (NormedSpace.exp ((1 - t) • a) *
+              h *
+                NormedSpace.exp (t • (a + z • h))) := by
+      apply intervalIntegral.integral_congr
+      intro t _
+      simp only [mul_smul_comm, smul_mul_assoc]
+    _ = z • perturbedDuhamelIntegral a h z := by
+      rw [intervalIntegral.integral_smul]
+      rfl
+
+/--
+The exponential along the real affine line a + z • h has the Duhamel
+directional derivative at zero.  The proof uses the exact finite-difference
+formula and continuity of its parameter-dependent Bochner integral.
+-/
+theorem hasDerivAt_exp_affine_duhamel (a h : A) :
+    HasDerivAt
+      (fun z : ℝ => NormedSpace.exp (a + z • h))
+      (duhamelDerivative a h) 0 := by
+  rw [hasDerivAt_iff_tendsto_slope_zero]
+  have hAtZero :
+      perturbedDuhamelIntegral a h 0 =
+        duhamelDerivative a h := by
+    rw [duhamelDerivative_apply_integral]
+    simp [perturbedDuhamelIntegral]
+  rw [← hAtZero]
+  refine
+    (continuous_perturbedDuhamelIntegral a h).continuousAt.mono_left
+      inf_le_left |>.congr' ?_
+  filter_upwards [self_mem_nhdsWithin] with z hz
+  have hz0 : z ≠ 0 := by
+    simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hz
+  simp only [zero_add, zero_smul, add_zero]
+  rw [exp_add_smul_sub_exp_eq_smul_perturbedDuhamelIntegral]
+  simp [smul_smul, hz0]
+
+/--
+The changed-origin real Fréchet derivative of the Banach-algebra exponential
+is the Duhamel operator in every direction.  This is the full
+noncommutative operator identity; no centralizer hypothesis remains.
+-/
+theorem exponentialDerivative_apply_eq_duhamelDerivative
+    (a h : A) :
+    exponentialDerivative (𝕜 := ℝ) a h =
+      duhamelDerivative a h := by
+  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have hLine :
+      HasDerivAt (fun t : ℝ => a + t • h) h 0 := by
+    convert
+      (hasDerivAt_const (x := (0 : ℝ)) a).add
+        ((hasDerivAt_id (x := (0 : ℝ))).smul_const h) using 1 <;>
+      simp
+  have hFromFrechet :
+      HasDerivAt
+        (fun t : ℝ => NormedSpace.exp (a + t • h))
+        (exponentialDerivative (𝕜 := ℝ) a h) 0 := by
+    convert
+      (hasFDerivAt_exp_noncommutative (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
+        (x := (0 : ℝ)) (y := a) hLine (by simp) using 1 <;>
+      simp [Function.comp_def]
+  exact hFromFrechet.unique (hasDerivAt_exp_affine_duhamel a h)
+
+/-- Bundled operator form of the noncommutative Duhamel identity. -/
+theorem exponentialDerivative_eq_duhamelDerivative (a : A) :
+    exponentialDerivative (𝕜 := ℝ) a =
+      duhamelDerivative a := by
+  ext h
+  exact exponentialDerivative_apply_eq_duhamelDerivative a h
 
 end InfoGeometry.OperatorAlgebra

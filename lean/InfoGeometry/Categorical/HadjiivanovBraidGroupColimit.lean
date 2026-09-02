@@ -8,8 +8,8 @@ import Mathlib.CategoryTheory.Limits.Shapes.Types
 The repository already contains finite presented braid groups, finite-generator
 and word colimits, and colimits of carriers carrying braid actions. This file
 supplies the missing group-level categorical object: a filtered diagram in
-Grp, its universal colimit, and the descent of compatible Artin generator
-endomorphisms.
+Grp, its universal colimit, descent of compatible Artin generator
+endomorphisms, and descent of compatible stage representations.
 
 No claim is made that the finite-stage diagram is canonical until an explicit
 functor B : ℕ ⥤ Grp is supplied. This keeps the transition homomorphisms
@@ -139,6 +139,46 @@ theorem colimit_relation_of_stagewise
       simpa only [Category.assoc] using
         congrArg (fun k => k ≫ descendedEndomorphism B η)
           (stageInjection_descended B ξ n).symm
+
+/-- A compatible family of stage representations into a fixed group is a
+cocone over the braid-group diagram. -/
+abbrev RepresentationCocone
+    (B : BraidGroupDiagram.{u}) (G : Grp.{u}) :=
+  B ⟶ Functor.const ℕ G
+
+/-- The corresponding categorical cocone. -/
+abbrev representationCocone
+    (B : BraidGroupDiagram.{u}) (G : Grp.{u})
+    (ρ : RepresentationCocone B G) : Cocone B :=
+  Cocone.mk G ρ
+
+/-- The unique group homomorphism from the braid-group colimit induced by a
+compatible family of stage representations. -/
+abbrev descendedRepresentation
+    (B : BraidGroupDiagram.{u}) (G : Grp.{u})
+    (ρ : RepresentationCocone B G) :
+    BraidGroupColimit B ⟶ G :=
+  colimit.desc B (representationCocone B G ρ)
+
+/-- The representation induced on each finite stage by the universal
+colimit representation. -/
+theorem stageInjection_descendedRepresentation
+    (B : BraidGroupDiagram.{u}) (G : Grp.{u})
+    (ρ : RepresentationCocone B G) (n : ℕ) :
+    stageInjection B n ≫ descendedRepresentation B G ρ =
+      ρ.app n := by
+  exact colimit.ι_desc (representationCocone B G ρ) n
+
+/-- The universal property makes the descended representation unique. -/
+theorem descendedRepresentation_unique
+    (B : BraidGroupDiagram.{u}) (G : Grp.{u})
+    (ρ : RepresentationCocone B G)
+    (f : BraidGroupColimit B ⟶ G)
+    (h : ∀ n : ℕ, stageInjection B n ≫ f = ρ.app n) :
+    f = descendedRepresentation B G ρ := by
+  apply colimit.hom_ext
+  intro n
+  rw [h n, stageInjection_descendedRepresentation]
 
 /-- The complete group-level braid-colimit packet. -/
 theorem braid_group_colimit_artin_packet

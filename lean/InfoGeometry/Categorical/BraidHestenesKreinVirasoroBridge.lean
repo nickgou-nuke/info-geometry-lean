@@ -21,6 +21,7 @@ namespace InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 open InfoGeometry.Canonical.PrimeVirasoroSugawara
+open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 universe u
 

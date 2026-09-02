@@ -2,6 +2,7 @@ import InfoGeometry.Categorical.Holonomy
 import InfoGeometry.Categorical.FilteredColimitExactness
 import InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 import InfoGeometry.Categorical.LambdaBraidHestenesKreinBridge
+import InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge
 import InfoGeometry.Categorical.TensorColimit
 import InfoGeometry.Categorical.CuntzCantorKMSColimitBridge
 import InfoGeometry.Categorical.FiniteWordPathWeights

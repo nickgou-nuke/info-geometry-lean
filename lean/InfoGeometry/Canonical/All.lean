@@ -51,6 +51,7 @@ import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.KZLogarithmicConnection
 import InfoGeometry.Canonical.ArnoldKZFlatnessBridge
+import InfoGeometry.Canonical.IndexedArnoldKZComplex
 import InfoGeometry.Canonical.BostConnesUHFColimitBridge
 import InfoGeometry.Canonical.AmplituhedronMetriplecticBridge
 import InfoGeometry.Canonical.KleinBottleTwistedCommutantBridge

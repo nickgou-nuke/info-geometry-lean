@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.Cl55ChiralOccupationFiveGradeBridge
 import InfoGeometry.Canonical.Cl11WittOccupationParityFactorization
 import InfoGeometry.Canonical.Cl55ChiralParityNormalOrderingBridge
 import InfoGeometry.Canonical.Cl55FiveGradeSuperParityBridge
-import InfoGeometry.Canonical.FullNoncommutativeGibbsExpectationBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsExpectationCyclicDerivative
 
 /-!
 # Exterior–CAR–Virasoro–chiral operator geometry capstone

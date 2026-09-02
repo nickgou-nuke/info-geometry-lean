@@ -1313,6 +1313,7 @@ import InfoGeometry.Canonical.TomitaModularAutomorphismFlow
 import InfoGeometry.Canonical.SplitQuaternionOperatorPoset
 import InfoGeometry.Canonical.KitaevBdGPfaffianBridge
 import InfoGeometry.Canonical.KitaevChainMajoranaZeroModes
+import InfoGeometry.Canonical.ChiralBraidBundleKitaevBridge
 import InfoGeometry.Canonical.ConcreteKitaevBdGMatrix
 import InfoGeometry.Canonical.CliffordInfiniteCARColimit
 import InfoGeometry.Canonical.CliffordCARTopologicalColimit

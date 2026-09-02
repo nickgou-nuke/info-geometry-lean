@@ -101,8 +101,7 @@ theorem divergence_curl_eq_bracketContraction
       K.operatorAction ⁅frame 0, frame 1⁆ (v 2) +
         K.operatorAction ⁅frame 1, frame 2⁆ (v 0) +
           K.operatorAction ⁅frame 2, frame 0⁆ (v 1) := by
-  unfold divergence curl
-  simp only [Fin.sum_univ_three, map_sub]
+  simp [divergence, curl, Fin.sum_univ_three]
   rw [K.operatorAction_commutator_apply (frame 0) (frame 1) (v 2),
     K.operatorAction_commutator_apply (frame 1) (frame 2) (v 0),
     K.operatorAction_commutator_apply (frame 2) (frame 0) (v 1)]

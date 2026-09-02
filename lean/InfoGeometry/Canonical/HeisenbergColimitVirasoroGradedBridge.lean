@@ -15,12 +15,12 @@ The repository already contains two genuine structures:
 This owner joins them without introducing a second "Virasoro colimit".
 Each abstract current mode `J_m` is represented by its canonical singleton
 finite stage, mapped into the Heisenberg colimit, recovered in the full
-Heisenberg algebra, and then represented on charged Fock space.  The Sugawara
+Heisenberg algebra, and then represented on charged Fock space. The Sugawara
 mode-shift theorem therefore acts on modes obtained from the categorical
 colimit itself.
 
 The final packet places this next to the native exterior graded-ladder law
-`P_(k+1) ε_v = ε_v P_k`.  No identification of exterior degree with Virasoro
+`P_(k+1) ε_v = ε_v P_k`. No identification of exterior degree with Virasoro
 conformal weight is asserted; both are proved instances of graded shift
 operators on their respective carriers.
 -/
@@ -75,8 +75,10 @@ section ChargedFock
 
 variable (α : 𝕜)
 
-abbrev Fock := VirasoroProject.ChargedFockSpace 𝕜 α
-abbrev FockEnd := Fock (𝕜 := 𝕜) α →ₗ[𝕜] Fock (𝕜 := 𝕜) α
+abbrev Fock : Type* := VirasoroProject.ChargedFockSpace 𝕜 α
+abbrev FockEnd : Type* :=
+  VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+    VirasoroProject.ChargedFockSpace 𝕜 α
 
 /-- Charged-Fock representation of the full abstract Heisenberg algebra. -/
 noncomputable def chargedFockHeisenbergRepresentation :
@@ -86,12 +88,15 @@ noncomputable def chargedFockHeisenbergRepresentation :
     (V := Fock (𝕜 := 𝕜) α)
 
 /-- Read an element of the filtered Heisenberg colimit as an operator on the
-charged Fock space. -/
+charged Fock space. This is explicitly the colimit equivalence followed by the
+native Heisenberg representation. -/
 noncomputable def chargedFockColimitReadout :
     (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜]
-      FockEnd (𝕜 := 𝕜) α :=
-  (chargedFockHeisenbergRepresentation (𝕜 := 𝕜) α).comp
-    (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)).toLinearMap
+      FockEnd (𝕜 := 𝕜) α where
+  toFun x := chargedFockHeisenbergRepresentation (𝕜 := 𝕜) α
+    (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜) x)
+  map_add' x y := by simp
+  map_smul' c x := by simp
 
 /-- The categorical colimit representative of mode `k` reads exactly as the
 repository-owned charged-Fock Heisenberg current operator. -/
@@ -105,7 +110,7 @@ repository-owned charged-Fock Heisenberg current operator. -/
   rw [heisenbergFiniteModeColimitEquiv_mode]
   rfl
 
-/-- The colimit-derived mode family.  It is definitionally the charged-Fock
+/-- The colimit-derived mode family. It is definitionally the charged-Fock
 readout of canonical singleton-stage colimit representatives. -/
 noncomputable def colimitCurrentMode (k : ℤ) : FockEnd (𝕜 := 𝕜) α :=
   chargedFockColimitReadout (𝕜 := 𝕜) α
@@ -131,7 +136,7 @@ Fock vector, so the Sugawara sums are well-defined. -/
 theorem colimitCurrentMode_eventually_eq_zero (v : Fock (𝕜 := 𝕜) α) :
     atTop.Eventually (fun k : ℤ =>
       colimitCurrentMode (𝕜 := 𝕜) α k v = 0) := by
-  simpa [colimitCurrentMode_eq_chargedFock] using
+  simpa only [colimitCurrentMode_eq_chargedFock] using
     chargedFockHeisenbergMode_eventually_eq_zero (𝕜 := 𝕜) α v
 
 /-- Sugawara/Virasoro acts on the categorical-colimit current modes by the
@@ -168,13 +173,11 @@ theorem virasoro_shift_target_is_colimit_mode (n m : ℤ) :
 end ChargedFock
 
 /-- Exterior creation and Virasoro/Sugawara current action are two native
-instances of a graded shift law on different carriers.  This theorem packages
+instances of a graded shift law on different carriers. This theorem packages
 their exact statements without identifying the two gradings. -/
 theorem exterior_and_virasoro_graded_shift_packet
-    {V3 : Type*} [AddCommGroup V3] [Module ℝ V3]
     (v : InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge.V3)
-    (k : ℕ)
-    (α : 𝕜) (n m : ℤ) :
+    (k : ℕ) (α : 𝕜) (n m : ℤ) :
     (nativeExteriorProjector (k + 1)).comp (exteriorWedge3 v) =
         (exteriorWedge3 v).comp (nativeExteriorProjector k) ∧
     (sugawaraGen

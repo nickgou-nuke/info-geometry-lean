@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Matrix.PosDef
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 
 /-!

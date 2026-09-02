@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanRootReflections
+import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import Mathlib.GroupTheory.Coxeter.Matrix
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 
@@ -258,5 +259,480 @@ theorem g2CoxeterToCartanHom_surjective :
       exact ⟨a⁻¹, by simp [ha]⟩)
     x.1 x.2 with ⟨a, ha⟩
   exact ⟨a, Subtype.ext ha⟩
+
+/- The canonical quotient map to the rank-two dihedral presentation.  The
+   images of the two simple generators are the two reflections `sr 0` and
+   `sr 1`; their product is the rotation `r 1`. -/
+noncomputable def g2CoxeterToDihedralHom :
+    g2CoxeterMatrix.Group →* DihedralGroup 6 := by
+  let f : Fin 2 → DihedralGroup 6
+    | 0 => .sr 0
+    | 1 => .sr 1
+  refine PresentedGroup.toGroup (f := f) ?_
+  intro rel hrel
+  rcases hrel with ⟨⟨i, j⟩, rfl⟩
+  fin_cases i <;> fin_cases j
+  · simp [CoxeterMatrix.relation, f]
+  · simp [CoxeterMatrix.relation, f]
+    convert (DihedralGroup.r_one_pow_n (n := 6)) using 1
+  · simp [CoxeterMatrix.relation, f]
+    convert (DihedralGroup.r_one_pow_n (n := 6)) using 1
+  · simp [CoxeterMatrix.relation, f]
+
+@[simp] theorem g2CoxeterToDihedralHom_apply_simple (i : Fin 2) :
+    g2CoxeterToDihedralHom (g2CoxeterMatrix.simple i) =
+      match i with
+      | 0 => .sr 0
+      | 1 => .sr 1 := by
+  fin_cases i
+  · simp only [CoxeterMatrix.simple, g2CoxeterToDihedralHom,
+      PresentedGroup.toGroup]
+    rfl
+  · simp only [CoxeterMatrix.simple, g2CoxeterToDihedralHom,
+      PresentedGroup.toGroup]
+    rfl
+
+theorem g2CoxeterToDihedralHom_surjective :
+    Function.Surjective g2CoxeterToDihedralHom := by
+  intro x
+  cases x with
+  | r k =>
+      refine ⟨(g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val, ?_⟩
+      rw [map_pow]
+      simp [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow]
+  | sr k =>
+      refine ⟨g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val, ?_⟩
+      rw [map_mul, map_pow]
+      simp [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow]
+
+theorem g2Coxeter_generated_by_simple :
+    Subgroup.closure (Set.range (g2CoxeterMatrix.simple : Fin 2 →
+      g2CoxeterMatrix.Group)) = ⊤ := by
+  exact PresentedGroup.closure_range_of g2CoxeterMatrix.relationsSet
+
+theorem g2Coxeter_simple_product_order_six :
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ 6 = 1 := by
+  simpa [g2CoxeterMatrix] using
+    (CoxeterSystem.simple_mul_simple_pow
+      g2CoxeterMatrix.toCoxeterSystem 0 1)
+
+theorem g2Coxeter_simple_product_power_add (i j : ZMod 6) :
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (i + j).val =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ i.val *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ j.val := by
+  have hmod : (i + j).val ≡ i.val + j.val [MOD 6] := by
+    simp [Nat.ModEq, ZMod.val_add, Nat.add_mod]
+  simpa [pow_add] using
+    (pow_eq_pow_of_modEq hmod g2Coxeter_simple_product_order_six)
+
+theorem g2Coxeter_simple_product_power_neg (k : ZMod 6) :
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val =
+      ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)⁻¹ := by
+  apply eq_inv_of_mul_eq_one_right
+  have hmod : (-k).val + k.val ≡ 0 [MOD 6] := by
+    have h := congrArg ZMod.val (neg_add_cancel k)
+    change ((-k).val + k.val) % 6 = 0
+    exact h
+  have hpow := pow_eq_pow_of_modEq hmod
+    g2Coxeter_simple_product_order_six
+  rw [pow_add] at hpow
+  calc
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val :=
+          by
+            have hcomm : Commute
+                ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)
+                ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val) :=
+              (Commute.refl
+                (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)).pow_pow
+                k.val (-k).val
+            exact hcomm.eq
+    _ = 1 := hpow
+
+theorem g2Coxeter_simple_zero_conj_rotation :
+    g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+          g2CoxeterMatrix.simple 0 =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ := by
+  have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+  have ht := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 1
+  have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+    simpa [pow_two] using hs
+  have ht' : g2CoxeterMatrix.simple 1 * g2CoxeterMatrix.simple 1 = 1 := by
+    simpa [pow_two] using ht
+  have hi0 : (g2CoxeterMatrix.simple 0)⁻¹ = g2CoxeterMatrix.simple 0 := by
+    exact CoxeterSystem.inv_simple g2CoxeterMatrix.toCoxeterSystem 0
+  have hi1 : (g2CoxeterMatrix.simple 1)⁻¹ = g2CoxeterMatrix.simple 1 := by
+    exact CoxeterSystem.inv_simple g2CoxeterMatrix.toCoxeterSystem 1
+  calc
+    g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+          g2CoxeterMatrix.simple 0 =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0) *
+        g2CoxeterMatrix.simple 1 * g2CoxeterMatrix.simple 0 := by
+          simp [mul_assoc]
+    _ = g2CoxeterMatrix.simple 1 * g2CoxeterMatrix.simple 0 := by
+      rw [hs']
+      simp
+    _ = (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ := by
+      simp [mul_inv_rev, hi0, hi1]
+
+theorem g2Coxeter_simple_zero_mul_rotation :
+    g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ *
+        g2CoxeterMatrix.simple 0 := by
+  have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+  have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+    simpa [pow_two] using hs
+  have h := g2Coxeter_simple_zero_conj_rotation
+  calc
+    g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) =
+      (g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+          g2CoxeterMatrix.simple 0) *
+            g2CoxeterMatrix.simple 0 := by
+          simp [mul_assoc, hs']
+    _ = (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ *
+          g2CoxeterMatrix.simple 0 := by
+            rw [h]
+
+theorem g2Coxeter_rotation_pow_mul_simple_zero (n : ℕ) :
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ n *
+        g2CoxeterMatrix.simple 0 =
+      g2CoxeterMatrix.simple 0 *
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹) ^ n := by
+  have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+  have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+    simpa [pow_two] using hs
+  have hstep :
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+          g2CoxeterMatrix.simple 0 =
+        g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ := by
+    calc
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+          g2CoxeterMatrix.simple 0 =
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0) *
+          ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+            g2CoxeterMatrix.simple 0) := by simp [mul_assoc, hs']
+      _ = g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 *
+            (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) *
+              g2CoxeterMatrix.simple 0) := by simp [mul_assoc]
+      _ = g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹ := by
+            rw [g2Coxeter_simple_zero_conj_rotation]
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ, mul_assoc, hstep, ← mul_assoc, ih]
+      simp [pow_succ, mul_assoc]
+
+theorem g2Coxeter_rotation_pow_mul_simple_one (n : ℕ) :
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ n *
+        g2CoxeterMatrix.simple 1 =
+      g2CoxeterMatrix.simple 0 *
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹) ^ n *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
+  have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+  have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+    simpa [pow_two] using hs
+  have hsc : g2CoxeterMatrix.simple 0 *
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) =
+      g2CoxeterMatrix.simple 1 := by
+    rw [← mul_assoc, hs', one_mul]
+  calc
+    (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ n *
+        g2CoxeterMatrix.simple 1 =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ n *
+        (g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)) := by
+            rw [hsc]
+    _ = ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ n *
+        g2CoxeterMatrix.simple 0) *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
+            simp [mul_assoc]
+    _ = (g2CoxeterMatrix.simple 0 *
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹) ^ n) *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
+            rw [g2Coxeter_rotation_pow_mul_simple_zero]
+    _ = g2CoxeterMatrix.simple 0 *
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)⁻¹) ^ n *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
+            simp [mul_assoc]
+
+theorem g2Coxeter_rotation_power_mul_simple_zero_normal_form (k : ZMod 6) :
+    ∃ j : ZMod 6,
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val *
+          g2CoxeterMatrix.simple 0 =
+        g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ j.val := by
+  refine ⟨-k, ?_⟩
+  rw [g2Coxeter_rotation_pow_mul_simple_zero, inv_pow]
+  rw [← g2Coxeter_simple_product_power_neg k]
+
+theorem g2Coxeter_rotation_power_mul_simple_one_normal_form (k : ZMod 6) :
+    ∃ j : ZMod 6,
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val *
+          g2CoxeterMatrix.simple 1 =
+        g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ j.val := by
+  refine ⟨1 - k, ?_⟩
+  rw [g2Coxeter_rotation_pow_mul_simple_one, inv_pow]
+  rw [← g2Coxeter_simple_product_power_neg k]
+  have h := g2Coxeter_simple_product_power_add (-k) 1
+  have h' :
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^
+          (-k + 1).val =
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
+    simpa [pow_one] using h
+  calc
+    g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) =
+      g2CoxeterMatrix.simple 0 *
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1)) := by
+            simp [mul_assoc]
+    _ = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k + 1).val := by
+          rw [h']
+    _ = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (1 - k).val := by
+          have hk : 1 - k = -k + 1 := by abel
+          rw [hk]
+
+theorem g2Coxeter_normal_form_mul_simple_zero
+    {x : g2CoxeterMatrix.Group}
+    (hx : (∃ k : ZMod 6, x =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) ∨
+      (∃ k : ZMod 6, x = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)) :
+    (∃ k : ZMod 6, x * g2CoxeterMatrix.simple 0 =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) ∨
+      (∃ k : ZMod 6, x * g2CoxeterMatrix.simple 0 = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) := by
+  rcases hx with hx | hx
+  · obtain ⟨k, rfl⟩ := hx
+    right
+    exact g2Coxeter_rotation_power_mul_simple_zero_normal_form k
+  · obtain ⟨k, rfl⟩ := hx
+    left
+    obtain ⟨j, hj⟩ := g2Coxeter_rotation_power_mul_simple_zero_normal_form k
+    refine ⟨j, ?_⟩
+    rw [mul_assoc, hj]
+    have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+    have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+      simpa [pow_two] using hs
+    rw [← mul_assoc, hs', one_mul]
+
+theorem g2Coxeter_normal_form_mul_simple_one
+    {x : g2CoxeterMatrix.Group}
+    (hx : (∃ k : ZMod 6, x =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) ∨
+      (∃ k : ZMod 6, x = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)) :
+    (∃ k : ZMod 6, x * g2CoxeterMatrix.simple 1 =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) ∨
+      (∃ k : ZMod 6, x * g2CoxeterMatrix.simple 1 = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) := by
+  rcases hx with hx | hx
+  · obtain ⟨k, rfl⟩ := hx
+    right
+    exact g2Coxeter_rotation_power_mul_simple_one_normal_form k
+  · obtain ⟨k, rfl⟩ := hx
+    obtain ⟨j, hj⟩ := g2Coxeter_rotation_power_mul_simple_one_normal_form k
+    left
+    refine ⟨j, ?_⟩
+    rw [mul_assoc, hj]
+    have hs := CoxeterSystem.simple_sq g2CoxeterMatrix.toCoxeterSystem 0
+    have hs' : g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 0 = 1 := by
+      simpa [pow_two] using hs
+    rw [← mul_assoc, hs', one_mul]
+
+theorem g2Coxeter_normal_form (w : g2CoxeterMatrix.Group) :
+    (∃ k : ZMod 6, w =
+      (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) ∨
+      (∃ k : ZMod 6, w = g2CoxeterMatrix.simple 0 *
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val) := by
+  apply g2CoxeterMatrix.toCoxeterSystem.simple_induction_right w
+  · exact Or.inl ⟨0, by simp⟩
+  · intro x i hx
+    fin_cases i
+    · exact g2Coxeter_normal_form_mul_simple_zero hx
+    · exact g2Coxeter_normal_form_mul_simple_one hx
+
+theorem cartanWeylSubgroup_normal_form
+    (x : cartanWeylSubgroup) :
+    (∃ k : ZMod 6, x = coxeterRotationPower k) ∨
+      (∃ k : ZMod 6, x = reflectionNormalForm k) := by
+  rcases g2CoxeterToCartanHom_surjective x with ⟨a, ha⟩
+  rcases g2Coxeter_normal_form a with h | h
+  · rcases h with ⟨k, hk⟩
+    left
+    refine ⟨k, ?_⟩
+    apply Subtype.ext
+    rw [← ha, hk]
+    simp [coxeterRotationPower, coxeterRotation, g2ReflectionGenerators]
+  · rcases h with ⟨k, hk⟩
+    right
+    refine ⟨k, ?_⟩
+    apply Subtype.ext
+    rw [← ha, hk]
+    simp [reflectionNormalForm, coxeterRotation, g2ReflectionGenerators]
+
+theorem dihedralNormalForm_surjective :
+    Function.Surjective dihedralNormalForm := by
+  intro x
+  rcases cartanWeylSubgroup_normal_form x with h | h
+  · rcases h with ⟨k, hk⟩
+    refine ⟨.r k, ?_⟩
+    simpa using hk.symm
+  · rcases h with ⟨k, hk⟩
+    refine ⟨.sr k, ?_⟩
+    simpa using hk.symm
+
+theorem g2CoxeterToDihedralHom_injective :
+    Function.Injective g2CoxeterToDihedralHom := by
+  intro x y hxy
+  rcases g2Coxeter_normal_form x with hx | hx <;>
+    rcases g2Coxeter_normal_form y with hy | hy
+  · obtain ⟨k, rfl⟩ := hx
+    obtain ⟨l, rfl⟩ := hy
+    have hkl : k = l := by
+      apply ZMod.val_injective 6
+      have hmap' : DihedralGroup.r k = DihedralGroup.r l := by
+        rw [map_pow, map_pow, map_mul,
+          g2CoxeterToDihedralHom_apply_simple 0,
+          g2CoxeterToDihedralHom_apply_simple 1] at hxy
+        simpa [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow] using hxy
+      simpa using congrArg ZMod.val (DihedralGroup.r.inj hmap')
+    simp [hkl]
+  · obtain ⟨k, rfl⟩ := hx
+    obtain ⟨l, rfl⟩ := hy
+    have hfalse := congrArg (fun z => match z with
+      | DihedralGroup.r _ => True
+      | DihedralGroup.sr _ => False) hxy
+    simp at hfalse
+  · obtain ⟨k, rfl⟩ := hx
+    obtain ⟨l, rfl⟩ := hy
+    have hfalse := congrArg (fun z => match z with
+      | DihedralGroup.r _ => False
+      | DihedralGroup.sr _ => True) hxy
+    simp at hfalse
+  · obtain ⟨k, rfl⟩ := hx
+    obtain ⟨l, rfl⟩ := hy
+    have hkl : k = l := by
+      apply ZMod.val_injective 6
+      have hmap' : DihedralGroup.sr k = DihedralGroup.sr l := by
+        rw [map_mul, map_pow, map_mul,
+          g2CoxeterToDihedralHom_apply_simple 0,
+          g2CoxeterToDihedralHom_apply_simple 1] at hxy
+        simpa [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow] using hxy
+      simpa using congrArg ZMod.val (DihedralGroup.sr.inj hmap')
+    simp [hkl]
+
+noncomputable def g2CoxeterToDihedralEquiv :
+    g2CoxeterMatrix.Group ≃* DihedralGroup 6 :=
+  MulEquiv.ofBijective g2CoxeterToDihedralHom
+    ⟨g2CoxeterToDihedralHom_injective, g2CoxeterToDihedralHom_surjective⟩
+
+noncomputable def dihedralToCartanHom :
+    DihedralGroup 6 →* cartanWeylSubgroup :=
+  g2CoxeterToCartanHom.comp g2CoxeterToDihedralEquiv.symm.toMonoidHom
+
+theorem g2CoxeterToCartanHom_factorization (w : g2CoxeterMatrix.Group) :
+    g2CoxeterToCartanHom w =
+      dihedralToCartanHom (g2CoxeterToDihedralEquiv w) := by
+  simp [dihedralToCartanHom]
+
+theorem dihedralNormalForm_eq_dihedralToCartanHom (d : DihedralGroup 6) :
+    dihedralNormalForm d = dihedralToCartanHom d := by
+  cases d with
+  | r k =>
+    have hk : g2CoxeterToDihedralEquiv.symm (.r k) =
+        (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val := by
+      apply g2CoxeterToDihedralEquiv.injective
+      rw [g2CoxeterToDihedralEquiv.apply_symm_apply]
+      change .r k = g2CoxeterToDihedralHom
+        ((g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)
+      rw [map_pow, map_mul, g2CoxeterToDihedralHom_apply_simple]
+      simp [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow]
+    simp [dihedralNormalForm, coxeterRotationPower, coxeterRotation,
+      dihedralToCartanHom, hk, g2CoxeterToCartanHom_apply_simple,
+      g2ReflectionGenerators]
+  | sr k =>
+    have hk : g2CoxeterToDihedralEquiv.symm (.sr k) =
+        g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val := by
+      apply g2CoxeterToDihedralEquiv.injective
+      rw [g2CoxeterToDihedralEquiv.apply_symm_apply]
+      change .sr k = g2CoxeterToDihedralHom
+        (g2CoxeterMatrix.simple 0 *
+          (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val)
+      rw [map_mul, map_pow, map_mul,
+        g2CoxeterToDihedralHom_apply_simple]
+      simp [DihedralGroup.sr_mul_sr, DihedralGroup.r_pow]
+    simp [dihedralNormalForm, reflectionNormalForm, coxeterRotation,
+      dihedralToCartanHom, hk, g2CoxeterToCartanHom_apply_simple,
+      g2ReflectionGenerators]
+
+@[simp] theorem dihedralToCartanHom_sr_zero :
+    dihedralToCartanHom (.sr 0) =
+      ⟨shortReflectionEquiv, shortReflectionEquiv_mem_cartanWeylSubgroup⟩ := by
+  rw [← dihedralNormalForm_eq_dihedralToCartanHom]
+  exact dihedralNormalForm_sr_zero
+
+@[simp] theorem dihedralToCartanHom_sr_one :
+    dihedralToCartanHom (.sr 1) =
+      ⟨shortReflectionEquiv * coxeterRotation,
+        Subgroup.mul_mem cartanWeylSubgroup
+          shortReflectionEquiv_mem_cartanWeylSubgroup
+          (Subgroup.mul_mem cartanWeylSubgroup
+            shortReflectionEquiv_mem_cartanWeylSubgroup
+            longReflectionEquiv_mem_cartanWeylSubgroup)⟩ := by
+  rw [← dihedralNormalForm_eq_dihedralToCartanHom]
+  rfl
+
+theorem dihedralToCartanHom_surjective :
+    Function.Surjective dihedralToCartanHom := by
+  intro x
+  rcases dihedralNormalForm_surjective x with ⟨d, hd⟩
+  refine ⟨d, ?_⟩
+  rw [← dihedralNormalForm_eq_dihedralToCartanHom]
+  exact hd
+
+noncomputable def g2CoxeterToWeylSubgroupHom :
+    g2CoxeterMatrix.Group →*
+      InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.weylG2Subgroup :=
+  InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.dihedralWeylMulEquiv.toMonoidHom.comp
+    g2CoxeterToDihedralHom
+
+@[simp] theorem g2CoxeterToWeylSubgroupHom_apply_simple (i : Fin 2) :
+    g2CoxeterToWeylSubgroupHom (g2CoxeterMatrix.simple i) =
+      InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.dihedralWeylMulEquiv
+      (match i with
+        | 0 => DihedralGroup.sr 0
+        | 1 => DihedralGroup.sr 1) := by
+  fin_cases i <;>
+    simp [g2CoxeterToWeylSubgroupHom,
+      g2CoxeterToDihedralHom_apply_simple]
+
+theorem g2CoxeterToWeylSubgroupHom_surjective :
+    Function.Surjective g2CoxeterToWeylSubgroupHom := by
+  intro w
+  obtain ⟨d, hd⟩ :=
+    InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.dihedralWeylMulEquiv.surjective w
+  obtain ⟨c, hc⟩ := g2CoxeterToDihedralHom_surjective d
+  refine ⟨c, ?_⟩
+  change InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.dihedralWeylMulEquiv
+      (g2CoxeterToDihedralHom c) = w
+  rw [hc, hd]
 
 end InfoGeometry.Lie.CanonicalZornG2CoxeterRelations

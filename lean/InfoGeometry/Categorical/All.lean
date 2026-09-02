@@ -17,6 +17,7 @@ import InfoGeometry.Categorical.FibonacciFusionTreeAssociator
 import InfoGeometry.Categorical.FibonacciFusionTreeCategoricalBraiding
 import InfoGeometry.Categorical.FibonacciFusionTreeLinearEquiv
 import InfoGeometry.Categorical.FibonacciFusionTreeBraiding
+import InfoGeometry.Categorical.FibonacciBraidGroup3Representation
 import InfoGeometry.Categorical.FibonacciSimpleHomLemmas
 import InfoGeometry.Categorical.FibonacciFourAnyonCarrier
 import InfoGeometry.Categorical.FibonacciFourAnyonLocalAssociators
@@ -34,6 +35,7 @@ import InfoGeometry.Categorical.FibonacciOrdinaryChannelBasis
 import InfoGeometry.Categorical.FibonacciGlobalAssociator
 import InfoGeometry.Categorical.FibonacciPentagonVertexAssociator
 import InfoGeometry.Categorical.FibonacciPentagonGoldenNormalization
+import InfoGeometry.Categorical.GrothendieckCompletionFunctor
 import InfoGeometry.Categorical.FibonacciPentagonPathComposition
 import InfoGeometry.Categorical.FibonacciPentagonBasisTransport
 import InfoGeometry.Categorical.FibonacciSixAnyonMatrixArtin
@@ -47,3 +49,4 @@ import InfoGeometry.Categorical.QuantumG2FusionCoherenceRealizationBridge
 import InfoGeometry.Categorical.ChiralBraidDouble
 import InfoGeometry.Categorical.PolarizedBraidMirror
 import InfoGeometry.Categorical.FibonacciFinitePentagonHom
+import InfoGeometry.Categorical.FibonacciTwoSidedBraid

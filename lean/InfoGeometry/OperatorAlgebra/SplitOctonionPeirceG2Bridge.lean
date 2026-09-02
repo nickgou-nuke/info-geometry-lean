@@ -1,5 +1,7 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.OperatorAlgebra.SplitOctonions.IntegerOrder
+import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 
 /-!
 # Peirce-Witt atoms to the finite `G₂(2)` coordinate lane
@@ -65,6 +67,141 @@ def parityBit (z : ℤ) : F2Bit := decide (z % 2 != 0)
 def reduceZToF2 (X : IntSplitOct) : F2SplitOct :=
   ⟨parityBit X.a, parityBit X.b, parityBit X.x0, parityBit X.x1, parityBit X.x2,
     parityBit X.y0, parityBit X.y1, parityBit X.y2⟩
+
+/-! The coordinate reduction is parity, so its Boolean operations are the
+    characteristic-two shadows of the integer operations.  These local
+    lemmas are the reusable arithmetic edge for the later Zorn-product
+    compatibility theorem. -/
+
+theorem parityBit_add (m n : ℤ) :
+    parityBit (m + n) = Bool.xor (parityBit m) (parityBit n) := by
+  rcases Int.emod_two_eq_zero_or_one m with hm | hm <;>
+    rcases Int.emod_two_eq_zero_or_one n with hn | hn <;>
+    simp [parityBit, hm, hn, Int.add_emod]
+
+theorem int_mul_emod_two (m n : ℤ) :
+    (m * n) % 2 = ((m % 2) * (n % 2)) % 2 := by
+  exact Int.mul_emod m n 2
+
+theorem parityBit_mul (m n : ℤ) :
+    parityBit (m * n) = (parityBit m && parityBit n) := by
+  rcases Int.emod_two_eq_zero_or_one m with hm | hm <;>
+    rcases Int.emod_two_eq_zero_or_one n with hn | hn
+  all_goals
+    unfold parityBit
+    rw [int_mul_emod_two, hm, hn]
+    decide
+
+/-! The canonical ring-valued reduction.  The Boolean readout above is useful
+    for the existing finite tables, while this map is the correct carrier for
+    transporting the full integer Zorn multiplication. -/
+
+def modTwo (m : ℤ) : ZMod 2 := Int.castRingHom (ZMod 2) m
+
+@[simp] theorem modTwo_add (m n : ℤ) :
+    modTwo (m + n) = modTwo m + modTwo n := by
+  exact (Int.castRingHom (ZMod 2)).map_add m n
+
+@[simp] theorem modTwo_mul (m n : ℤ) :
+    modTwo (m * n) = modTwo m * modTwo n := by
+  exact (Int.castRingHom (ZMod 2)).map_mul m n
+
+@[simp] theorem modTwo_neg (m : ℤ) :
+    modTwo (-m) = -modTwo m := by
+  exact (Int.castRingHom (ZMod 2)).map_neg m
+
+@[simp] theorem modTwo_sub (m n : ℤ) :
+    modTwo (m - n) = modTwo m - modTwo n := by
+  exact (Int.castRingHom (ZMod 2)).map_sub m n
+
+theorem boolToZMod_parityBit (m : ℤ) :
+    InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.boolToZMod
+        (parityBit m) = modTwo m := by
+  change InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.boolToZMod
+      (parityBit m) = (m : ZMod 2)
+  rw [← ZMod.intCast_mod m 2]
+  rcases Int.emod_two_eq_zero_or_one m with hm | hm
+  · simp [parityBit,
+      InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.boolToZMod, hm]
+  · simp [parityBit,
+      InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.boolToZMod, hm]
+
+open InfoGeometry.Algebra.Zorn.Concrete
+
+def intToZornCell (X : IntSplitOct) : ZornCell (ZMod 2) where
+  r := modTwo X.a
+  s := modTwo X.b
+  x1 := modTwo X.x0
+  x2 := modTwo X.x1
+  x3 := modTwo X.x2
+  y1 := modTwo X.y0
+  y2 := modTwo X.y1
+  y3 := modTwo X.y2
+
+theorem intToZornCell_reduceZToF2 (X : IntSplitOct) :
+    intToZornCell X =
+      InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell
+        (reduceZToF2 X) := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  simp [intToZornCell, reduceZToF2,
+    InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell,
+    boolToZMod_parityBit]
+
+theorem intToZornCell_zero :
+    intToZornCell (0 : IntSplitOct) =
+      (⟨0, 0, 0, 0, 0, 0, 0, 0⟩ : ZornCell (ZMod 2)) := by
+  rfl
+
+theorem intToZornCell_add (X Y : IntSplitOct) :
+    intToZornCell (X + Y) =
+      ZornCell.addZ (intToZornCell X) (intToZornCell Y) := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  rcases Y with ⟨c, d, u0, u1, u2, v0, v1, v2⟩
+  simp [intToZornCell, ZornCell.addZ,
+    modTwo_add]
+
+theorem intToZornCell_mul (X Y : IntSplitOct) :
+    intToZornCell (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y) =
+      ZornCell.mulZ (intToZornCell X) (intToZornCell Y) := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  rcases Y with ⟨c, d, u0, u1, u2, v0, v1, v2⟩
+  simp [InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ,
+    intToZornCell, ZornCell.mulZ, modTwo_add, modTwo_mul, modTwo_sub]
+  ring_nf
+  simp
+
+theorem reduceZToF2_mul (X Y : IntSplitOct) :
+    reduceZToF2 (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y) =
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.mul
+        (reduceZToF2 X) (reduceZToF2 Y) := by
+  apply (InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.splitOctF2ZornCellEquiv).injective
+  change InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell
+      (reduceZToF2
+        (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y)) =
+    InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell
+      (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.mul
+        (reduceZToF2 X) (reduceZToF2 Y))
+  rw [InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell_mul]
+  rw [← intToZornCell_reduceZToF2 X,
+    ← intToZornCell_reduceZToF2 Y,
+    ← intToZornCell_reduceZToF2 (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y)]
+  exact intToZornCell_mul X Y
+
+theorem reduceZToF2_add (X Y : IntSplitOct) :
+    reduceZToF2 (X + Y) =
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add
+        (reduceZToF2 X) (reduceZToF2 Y) := by
+  apply (InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.splitOctF2ZornCellEquiv).injective
+  change InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell
+      (reduceZToF2 (X + Y)) =
+    InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell
+      (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add
+        (reduceZToF2 X) (reduceZToF2 Y))
+  rw [InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge.toZornCell_add]
+  rw [← intToZornCell_reduceZToF2 X,
+    ← intToZornCell_reduceZToF2 Y,
+    ← intToZornCell_reduceZToF2 (X + Y)]
+  exact intToZornCell_add X Y
 
 theorem reduce_oneZ : reduceZToF2 intOneZ = f2One := by
   decide

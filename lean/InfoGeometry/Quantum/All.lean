@@ -9,6 +9,12 @@ import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Quantum.GeneralizedPauli
 import InfoGeometry.Quantum.GeneralizedPauliPowers
+import InfoGeometry.Quantum.QutritDensityMatrix
+import InfoGeometry.Quantum.QutritMeasurement
+import InfoGeometry.Quantum.QutritMobiusFiniteFlowClassification
+import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
+import InfoGeometry.Quantum.QutritProjectiveColorBridge
+import InfoGeometry.Quantum.QutritProjectiveGeometryOwnerBridge
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Quantum.ComplexPureStateQGT

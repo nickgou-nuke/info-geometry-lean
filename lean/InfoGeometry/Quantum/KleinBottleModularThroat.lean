@@ -143,8 +143,8 @@ theorem riemann_zeros_are_klein_throat_resonances
   have h₁ : (σ - 1/2 : ℝ) = 0 := h_bps.rapidity_zero
   linarith
 
-/-- The Riemann Hypothesis as a topological necessity: zeros cannot leave the throat. -/
-theorem riemann_hypothesis_topological_necessity
+/-- A zero-rapidity BPS state is centered at the throat equator. -/
+theorem bps_zero_rapidity_center
     (σ : ℝ) (h_bps : BPSState 0 (σ - 1/2)) :
     σ = 1 / 2 :=
   riemann_zeros_are_klein_throat_resonances σ h_bps

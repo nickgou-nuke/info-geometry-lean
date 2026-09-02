@@ -51,7 +51,7 @@ def operatorKKS (D : FaithfulDensityOperator n)
 
 @[simp] theorem operatorKKS_self (D : FaithfulDensityOperator n)
     (X : FiniteOperatorAlgebra n) : operatorKKS D X X = 0 := by
-  simp [operatorKKS]
+  simp [operatorKKS, finiteOperatorTrace]
 
 theorem operatorKKS_skew (D : FaithfulDensityOperator n)
     (X Y : FiniteOperatorAlgebra n) :
@@ -60,23 +60,43 @@ theorem operatorKKS_skew (D : FaithfulDensityOperator n)
   have h : Y * X - X * Y = -(X * Y - Y * X) := by
     noncomm_ring
   rw [h]
-  simp
+  have ht := map_neg (finiteOperatorTraceLinear n)
+    (D.rho * (X * Y - Y * X))
+  have hr := congrArg Complex.re ht
+  have hmul : D.rho * -(X * Y - Y * X) =
+      -(D.rho * (X * Y - Y * X)) := by
+    ext v
+    simp
+  rw [hmul]
+  simpa only [finiteOperatorTraceLinear_apply] using hr
 
 theorem operatorKKS_add_left (D : FaithfulDensityOperator n)
     (X₁ X₂ Y : FiniteOperatorAlgebra n) :
     operatorKKS D (X₁ + X₂) Y =
       operatorKKS D X₁ Y + operatorKKS D X₂ Y := by
   unfold operatorKKS
-  simp [add_mul, mul_add]
-  ring
+  have harg : D.rho * ((X₁ + X₂) * Y - Y * (X₁ + X₂)) =
+      D.rho * (X₁ * Y - Y * X₁) + D.rho * (X₂ * Y - Y * X₂) := by
+    simp [sub_eq_add_neg, add_mul, mul_add, mul_neg, neg_mul,
+      add_assoc, add_left_comm, add_comm]
+  rw [harg]
+  have ht := map_add (finiteOperatorTraceLinear n)
+    (D.rho * (X₁ * Y - Y * X₁)) (D.rho * (X₂ * Y - Y * X₂))
+  exact congrArg Complex.re ht
 
 theorem operatorKKS_add_right (D : FaithfulDensityOperator n)
     (X Y₁ Y₂ : FiniteOperatorAlgebra n) :
     operatorKKS D X (Y₁ + Y₂) =
       operatorKKS D X Y₁ + operatorKKS D X Y₂ := by
   unfold operatorKKS
-  simp [add_mul, mul_add]
-  ring
+  have harg : D.rho * (X * (Y₁ + Y₂) - (Y₁ + Y₂) * X) =
+      D.rho * (X * Y₁ - Y₁ * X) + D.rho * (X * Y₂ - Y₂ * X) := by
+    simp [sub_eq_add_neg, add_mul, mul_add, mul_neg, neg_mul,
+      add_assoc, add_left_comm, add_comm]
+  rw [harg]
+  have ht := map_add (finiteOperatorTraceLinear n)
+    (D.rho * (X * Y₁ - Y₁ * X)) (D.rho * (X * Y₂ - Y₂ * X))
+  exact congrArg Complex.re ht
 
 theorem operatorKKS_ne_zero_of_detected_commutator
     (D : FaithfulDensityOperator n) (X Y : FiniteOperatorAlgebra n)

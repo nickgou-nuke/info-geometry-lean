@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 
 /-!
@@ -27,14 +28,144 @@ structure ZornSplitOctonion (R : Type*) [CommRing R] where
   y1 : R
   y2 : R
 
+def toCanonical (x : ZornSplitOctonion R) : InfoGeometry.Canonical.ZornMatrix R :=
+  { a := x.a
+    b := x.b
+    x := ![x.x0, x.x1, x.x2]
+    y := ![x.y0, x.y1, x.y2] }
+
+def fromCanonical (x : InfoGeometry.Canonical.ZornMatrix R) : ZornSplitOctonion R :=
+  { a := x.a
+    b := x.b
+    x0 := x.x 0
+    x1 := x.x 1
+    x2 := x.x 2
+    y0 := x.y 0
+    y1 := x.y 1
+    y2 := x.y 2 }
+
+def canonicalEquiv : ZornSplitOctonion R ≃ InfoGeometry.Canonical.ZornMatrix R where
+  toFun := toCanonical
+  invFun := fromCanonical
+  left_inv x := by
+    cases x
+    rfl
+  right_inv x := by
+    apply InfoGeometry.Canonical.ZornMatrix.ext
+    · rfl
+    · rfl
+    · funext i
+      fin_cases i <;> rfl
+    · funext i
+      fin_cases i <;> rfl
+
 def zero (R : Type*) [CommRing R] : ZornSplitOctonion R :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0⟩
+
+instance : Zero (ZornSplitOctonion R) := ⟨zero R⟩
+
+def add (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  ⟨x.a + y.a, x.b + y.b, x.x0 + y.x0, x.x1 + y.x1, x.x2 + y.x2,
+    x.y0 + y.y0, x.y1 + y.y1, x.y2 + y.y2⟩
+
+instance : Add (ZornSplitOctonion R) := ⟨add⟩
+
+def neg (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  ⟨-x.a, -x.b, -x.x0, -x.x1, -x.x2, -x.y0, -x.y1, -x.y2⟩
+
+instance : Neg (ZornSplitOctonion R) := ⟨neg⟩
+
+theorem add_zero (x : ZornSplitOctonion R) : x + 0 = x := by
+  cases x
+  change add _ (zero R) = _
+  congr <;> simp [add, zero]
+
+theorem zero_add (x : ZornSplitOctonion R) : 0 + x = x := by
+  cases x
+  change add (zero R) _ = _
+  congr <;> simp [add, zero]
+
+theorem add_comm (x y : ZornSplitOctonion R) : x + y = y + x := by
+  cases x
+  cases y
+  change add _ _ = add _ _
+  apply ZornSplitOctonion.ext <;>
+    simp [add, _root_.add_comm]
+
+theorem add_assoc (x y z : ZornSplitOctonion R) :
+    (x + y) + z = x + (y + z) := by
+  cases x
+  cases y
+  cases z
+  change add (add _ _) _ = add _ (add _ _)
+  apply ZornSplitOctonion.ext <;>
+    simp [add, _root_.add_assoc]
+
+theorem add_left_neg (x : ZornSplitOctonion R) : -x + x = 0 := by
+  cases x
+  change add (neg _) _ = zero R
+  apply ZornSplitOctonion.ext <;>
+    simp [add, neg, zero]
+
+theorem add_neg_cancel_right (x : ZornSplitOctonion R) : x + -x = 0 := by
+  cases x
+  change add _ (neg _) = zero R
+  apply ZornSplitOctonion.ext <;>
+    simp [add, neg, zero]
 
 def one (R : Type*) [CommRing R] : ZornSplitOctonion R :=
   ⟨1, 1, 0, 0, 0, 0, 0, 0⟩
 
+theorem toCanonical_zero :
+    toCanonical (zero R) = (0 : InfoGeometry.Canonical.ZornMatrix R) := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; fin_cases i <;> rfl
+  · funext i; fin_cases i <;> rfl
+
+theorem toCanonical_add (x y : ZornSplitOctonion R) :
+    toCanonical (x + y) = toCanonical x + toCanonical y := by
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases y with
+    | mk c d u0 u1 u2 v0 v1 v2 =>
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · rfl
+      · rfl
+      · funext i; fin_cases i <;> rfl
+      · funext i; fin_cases i <;> rfl
+
+theorem toCanonical_neg (x : ZornSplitOctonion R) :
+    toCanonical (-x) = -toCanonical x := by
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · rfl
+      · rfl
+      · funext i; fin_cases i <;> rfl
+      · funext i; fin_cases i <;> rfl
+
+theorem toCanonical_one :
+    toCanonical (one R) = (1 : InfoGeometry.Canonical.ZornMatrix R) := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; fin_cases i <;> rfl
+  · funext i; fin_cases i <;> rfl
+
 def scalar (r : R) : ZornSplitOctonion R :=
   ⟨r, r, 0, 0, 0, 0, 0, 0⟩
+
+theorem toCanonical_scalar (r : R) :
+    toCanonical (scalar r) =
+      ({ a := r, b := r, x := ![0, 0, 0], y := ![0, 0, 0] } :
+        InfoGeometry.Canonical.ZornMatrix R) := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; fin_cases i <;> rfl
+  · funext i; fin_cases i <;> rfl
 
 def mul (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨ x.a * y.a + (x.x0 * y.y0 + x.x1 * y.y1 + x.x2 * y.y2),
@@ -45,6 +176,44 @@ def mul (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
     x.b * y.y0 + y.a * x.y0 + (x.x1 * y.x2 - x.x2 * y.x1),
     x.b * y.y1 + y.a * x.y1 + (x.x2 * y.x0 - x.x0 * y.x2),
     x.b * y.y2 + y.a * x.y2 + (x.x0 * y.x1 - x.x1 * y.x0) ⟩
+
+theorem mul_add (x y z : ZornSplitOctonion R) :
+    mul x (y + z) = mul x y + mul x z := by
+  cases x
+  cases y
+  cases z
+  change mul _ (add _ _) = add (mul _ _) (mul _ _)
+  apply ZornSplitOctonion.ext <;>
+    simp [mul, add] <;> ring
+
+theorem add_mul (x y z : ZornSplitOctonion R) :
+    mul (x + y) z = mul x z + mul y z := by
+  cases x
+  cases y
+  cases z
+  change mul (add _ _) _ = add (mul _ _) (mul _ _)
+  apply ZornSplitOctonion.ext <;>
+    simp [mul, add] <;> ring
+
+theorem toCanonical_mul (x y : ZornSplitOctonion R) :
+    toCanonical (mul x y) = toCanonical x * toCanonical y := by
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases y with
+    | mk c d u0 u1 u2 v0 v1 v2 =>
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · simp [toCanonical, mul, InfoGeometry.Canonical.ZornMatrix.mul,
+          InfoGeometry.Canonical.ZornMatrix.dot]
+      · simp [toCanonical, mul, InfoGeometry.Canonical.ZornMatrix.mul,
+          InfoGeometry.Canonical.ZornMatrix.dot]
+      · funext i
+        fin_cases i <;>
+          simp [toCanonical, mul, InfoGeometry.Canonical.ZornMatrix.mul,
+            InfoGeometry.Canonical.ZornMatrix.cross, Matrix.vecHead, Matrix.vecTail]
+      · funext i
+        fin_cases i <;>
+          simp [toCanonical, mul, InfoGeometry.Canonical.ZornMatrix.mul,
+            InfoGeometry.Canonical.ZornMatrix.cross, Matrix.vecHead, Matrix.vecTail]
 
 def norm (x : ZornSplitOctonion R) : R :=
   x.a * x.b - (x.x0 * x.y0 + x.x1 * x.y1 + x.x2 * x.y2)
@@ -66,6 +235,17 @@ def conjugate (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
     conjugate (conjugate x) = x := by
   cases x
   ext <;> simp [conjugate]
+
+theorem toCanonical_conjugate (x : ZornSplitOctonion R) :
+    toCanonical (conjugate x) =
+      InfoGeometry.Canonical.ZornMatrix.conjugate (toCanonical x) := by
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · rfl
+      · rfl
+      · funext i; fin_cases i <;> rfl
+      · funext i; fin_cases i <;> rfl
 
 /-! Cayley conjugation is the anti-involution underlying the Zorn model. -/
 theorem conjugate_mul (x y : ZornSplitOctonion R) :
@@ -124,6 +304,16 @@ theorem norm_scalar (r : R) : norm (scalar r) = r * r := by
 
 def integralEmbedding (x : SplitOct) : ZornSplitOctonion ℚ :=
   ⟨x.a, x.b, x.x0, x.x1, x.x2, x.y0, x.y1, x.y2⟩
+
+theorem integralEmbedding_injective :
+    Function.Injective integralEmbedding := by
+  intro x y h
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases y with
+    | mk c d u0 u1 u2 v0 v1 v2 =>
+      cases h
+      rfl
 
 def integralLattice : Set (ZornSplitOctonion ℚ) :=
   Set.range integralEmbedding

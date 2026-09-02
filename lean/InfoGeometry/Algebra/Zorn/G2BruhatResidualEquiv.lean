@@ -213,9 +213,9 @@ theorem canonicalResidualImage_card :
 noncomputable def orderedInversionRoots (p : WeylG2) :
     Fin (dihedralLength p) ≃
       { α : G2PositiveRoot // α ∈ bruhatInversionRoots p } :=
-  (Finite.equivFinOfCardEq
+      (Finite.equivFinOfCardEq
       (by
-        simp [Nat.card_eq_fintype_card, bruhatInversionRoots_card p])).symm
+        simp [Nat.card_eq_fintype_card, bruhatInversionRoots_card_eq_length p])).symm
 
 @[simp]
 theorem orderedInversionRoots_apply (p : WeylG2)

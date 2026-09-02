@@ -287,6 +287,11 @@ noncomputable instance dihedralRootFaithfulSMul :
 def dihedralRootPermutationRep : DihedralGroup 6 →* Equiv.Perm Root :=
   MulAction.toPermHom (DihedralGroup 6) Root
 
+@[simp] theorem dihedralRootPermutationRep_apply
+    (g : DihedralGroup 6) (r : Root) :
+    dihedralRootPermutationRep g r = g • r :=
+  rfl
+
 theorem dihedralRootPermutationRep_injective :
     Function.Injective dihedralRootPermutationRep := by
   exact @MulAction.toPerm_injective (DihedralGroup 6) Root _ _ dihedralRootFaithfulSMul

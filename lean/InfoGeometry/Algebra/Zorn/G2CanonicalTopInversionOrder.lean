@@ -14,7 +14,6 @@ noncomputable def topOrderedInversionRoots :
       rootPCAlignment.symm i ∈ bruhatInversionRoots (3, false) := by
     intro i
     rw [bruhatInversionRoots_longest]
-    rw [canonicalSignedInversionRoots_w0]
     simp
   exact
     { toFun := fun i => ⟨rootPCAlignment.symm i, hmem i⟩

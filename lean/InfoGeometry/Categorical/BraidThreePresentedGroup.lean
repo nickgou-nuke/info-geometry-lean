@@ -1,147 +1,98 @@
 import Mathlib.GroupTheory.PresentedGroup
-import Mathlib.Tactic
 
-/-!
-# The three-strand braid group as a presented group
-
-This file defines `B₃` from two generators and the single Artin relation
-
-`σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂`.
-
-It also exposes the universal mapping property needed by concrete braid
-representations.  No positive-monoid localization, Garside normal form,
-configuration-space fibration, or Weyl-group quotient is asserted here.
--/
+/-! The three-strand Artin group, exposed through Mathlib's presented-group
+universal property.  This owner contains only the braid presentation and its
+universal evaluation map. -/
 
 namespace InfoGeometry.Categorical.BraidThreePresentedGroup
 
-/-- The two standard generators of the three-strand braid group. -/
 inductive Generator where
   | sigmaOne
   | sigmaTwo
   deriving DecidableEq
 
-/-- The relator `σ₁ σ₂ σ₁ (σ₂ σ₁ σ₂)⁻¹`. -/
 def artinRelator : FreeGroup Generator :=
-  FreeGroup.of .sigmaOne *
-    FreeGroup.of .sigmaTwo *
-      FreeGroup.of .sigmaOne *
-        (FreeGroup.of .sigmaTwo *
-          FreeGroup.of .sigmaOne *
-            FreeGroup.of .sigmaTwo)⁻¹
+  FreeGroup.of .sigmaOne * FreeGroup.of .sigmaTwo * FreeGroup.of .sigmaOne *
+    (FreeGroup.of .sigmaTwo * FreeGroup.of .sigmaOne * FreeGroup.of .sigmaTwo)⁻¹
 
-/-- The singleton set containing the three-strand Artin relator. -/
-def relations : Set (FreeGroup Generator) :=
-  {artinRelator}
+def relations : Set (FreeGroup Generator) := {artinRelator}
 
-/-- The three-strand braid group `B₃` as a native Mathlib presented group. -/
 abbrev BraidGroup3 := PresentedGroup relations
 
-/-- The first standard generator of `B₃`. -/
-def sigmaOne : BraidGroup3 :=
-  PresentedGroup.of Generator.sigmaOne
+def sigmaOne : BraidGroup3 := PresentedGroup.of Generator.sigmaOne
+def sigmaTwo : BraidGroup3 := PresentedGroup.of Generator.sigmaTwo
 
-/-- The second standard generator of `B₃`. -/
-def sigmaTwo : BraidGroup3 :=
-  PresentedGroup.of Generator.sigmaTwo
-
-/-- The defining Artin relation in the presented group. -/
 theorem artin_relation :
-    sigmaOne * sigmaTwo * sigmaOne =
-      sigmaTwo * sigmaOne * sigmaTwo := by
+    sigmaOne * sigmaTwo * sigmaOne = sigmaTwo * sigmaOne * sigmaTwo := by
   apply eq_of_mul_inv_eq_one
   simpa [sigmaOne, sigmaTwo, artinRelator] using
-    (PresentedGroup.one_of_mem
-      (rels := relations) (x := artinRelator)
+    (PresentedGroup.one_of_mem (rels := relations) (x := artinRelator)
       (by simp [relations]))
 
-/-- The standard Garside half-twist word in `B₃`.
+def garsideDelta : BraidGroup3 := sigmaOne * sigmaTwo * sigmaOne
 
-Only the group element is defined here.  No claim about a Weyl-group image or
-sheet involution is made without a separate quotient/intertwining theorem.
--/
-def garsideDelta : BraidGroup3 :=
-  sigmaOne * sigmaTwo * sigmaOne
-
-@[simp]
-theorem garsideDelta_eq_alternate :
+@[simp] theorem garsideDelta_eq_alternate :
     garsideDelta = sigmaTwo * sigmaOne * sigmaTwo := by
   simpa [garsideDelta] using artin_relation
 
-/-- Two elements of a group satisfying the three-strand Artin relation. -/
 structure ArtinPair (G : Type*) [Group G] where
   sigmaOne : G
   sigmaTwo : G
-  artin : sigmaOne * sigmaTwo * sigmaOne =
-    sigmaTwo * sigmaOne * sigmaTwo
+  artin : sigmaOne * sigmaTwo * sigmaOne = sigmaTwo * sigmaOne * sigmaTwo
 
 namespace ArtinPair
 
 variable {G : Type*} [Group G]
 
-/-- The map from abstract braid generators to a concrete Artin pair. -/
 def generatorMap (P : ArtinPair G) : Generator → G
   | .sigmaOne => P.sigmaOne
   | .sigmaTwo => P.sigmaTwo
 
-/-- The unique relator evaluates to the identity for an Artin pair. -/
 theorem relator_eq_one (P : ArtinPair G) :
-    ∀ r ∈ relations,
-      FreeGroup.lift P.generatorMap r = 1 := by
+    ∀ r ∈ relations, FreeGroup.lift P.generatorMap r = 1 := by
   intro r hr
-  have hr' : r = artinRelator := by
-    simpa [relations] using hr
+  have hr' : r = artinRelator := by simpa [relations] using hr
   subst r
-  simp [artinRelator, generatorMap]
   calc
-    _ = (P.sigmaOne * P.sigmaTwo * P.sigmaOne) *
-        (P.sigmaTwo * P.sigmaOne * P.sigmaTwo)⁻¹ := by
-      congr 1 <;> group
-    _ = (P.sigmaTwo * P.sigmaOne * P.sigmaTwo) *
-        (P.sigmaTwo * P.sigmaOne * P.sigmaTwo)⁻¹ := by rw [P.artin]
-    _ = 1 := by group
+    (FreeGroup.lift P.generatorMap) artinRelator =
+        (P.sigmaOne * P.sigmaTwo * P.sigmaOne) *
+          (P.sigmaTwo * P.sigmaOne * P.sigmaTwo)⁻¹ := by
+      simp [artinRelator, generatorMap, mul_assoc]
+    _ = 1 := by rw [← P.artin]; simp [mul_assoc]
 
-/-- The universal group homomorphism from `B₃` determined by an Artin pair. -/
-def toBraidGroupHom (P : ArtinPair G) :
-    BraidGroup3 →* G :=
+def toBraidGroupHom (P : ArtinPair G) : BraidGroup3 →* G :=
   PresentedGroup.toGroup P.relator_eq_one
 
-@[simp]
-theorem toBraidGroupHom_sigmaOne (P : ArtinPair G) :
-    P.toBraidGroupHom BraidThreePresentedGroup.sigmaOne = P.sigmaOne := by
-  exact PresentedGroup.toGroup.of P.relator_eq_one
+@[simp] theorem toBraidGroupHom_sigmaOne (P : ArtinPair G) :
+    P.toBraidGroupHom
+        InfoGeometry.Categorical.BraidThreePresentedGroup.sigmaOne = P.sigmaOne :=
+  PresentedGroup.toGroup.of P.relator_eq_one
 
-@[simp]
-theorem toBraidGroupHom_sigmaTwo (P : ArtinPair G) :
-    P.toBraidGroupHom BraidThreePresentedGroup.sigmaTwo = P.sigmaTwo := by
-  exact PresentedGroup.toGroup.of P.relator_eq_one
+@[simp] theorem toBraidGroupHom_sigmaTwo (P : ArtinPair G) :
+    P.toBraidGroupHom
+        InfoGeometry.Categorical.BraidThreePresentedGroup.sigmaTwo = P.sigmaTwo :=
+  PresentedGroup.toGroup.of P.relator_eq_one
 
-/-- The universal map is the unique group homomorphism with the prescribed
-generator values. -/
-theorem toBraidGroupHom_unique
-    (P : ArtinPair G)
-    (f : BraidGroup3 →* G)
-    (hOne : f BraidThreePresentedGroup.sigmaOne = P.sigmaOne)
-    (hTwo : f BraidThreePresentedGroup.sigmaTwo = P.sigmaTwo) :
+theorem toBraidGroupHom_unique (P : ArtinPair G) (f : BraidGroup3 →* G)
+    (hOne : f InfoGeometry.Categorical.BraidThreePresentedGroup.sigmaOne = P.sigmaOne)
+    (hTwo : f InfoGeometry.Categorical.BraidThreePresentedGroup.sigmaTwo = P.sigmaTwo) :
     f = P.toBraidGroupHom := by
   apply PresentedGroup.ext
   intro g
   cases g
   · change f BraidThreePresentedGroup.sigmaOne =
       P.toBraidGroupHom BraidThreePresentedGroup.sigmaOne
-    rw [toBraidGroupHom_sigmaOne]
+    rw [toBraidGroupHom_sigmaOne P]
     exact hOne
   · change f BraidThreePresentedGroup.sigmaTwo =
       P.toBraidGroupHom BraidThreePresentedGroup.sigmaTwo
-    rw [toBraidGroupHom_sigmaTwo]
+    rw [toBraidGroupHom_sigmaTwo P]
     exact hTwo
 
-/-- Inverse generators satisfy the inverse Artin relation automatically. -/
 theorem inverse_artin (P : ArtinPair G) :
     P.sigmaOne⁻¹ * P.sigmaTwo⁻¹ * P.sigmaOne⁻¹ =
       P.sigmaTwo⁻¹ * P.sigmaOne⁻¹ * P.sigmaTwo⁻¹ := by
   simpa [mul_assoc] using congrArg Inv.inv P.artin
 
 end ArtinPair
-
 end InfoGeometry.Categorical.BraidThreePresentedGroup

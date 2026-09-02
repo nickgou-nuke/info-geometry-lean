@@ -104,6 +104,24 @@ def rootPlaneCoordinates (j : Fin 14) : Fin 2 → ℝ := fun i =>
 def rootPlanarReadout (j : Fin 14) : ℝ × ℝ :=
   (rootPlaneCoordinates j 0, rootPlaneCoordinates j 1)
 
+theorem rootPlaneCoordinates_add_of_weight_eq
+    (i j k : Fin 14)
+    (hweight : rootWeight k = rootWeight i + rootWeight j) :
+    rootPlaneCoordinates k =
+      rootPlaneCoordinates i + rootPlaneCoordinates j := by
+  unfold rootPlaneCoordinates
+  rw [hweight]
+  funext l
+  fin_cases l <;> simp [Pi.add_apply]
+
+theorem rootPlanarReadout_add_of_weight_eq
+    (i j k : Fin 14)
+    (hweight : rootWeight k = rootWeight i + rootWeight j) :
+    rootPlanarReadout k = rootPlanarReadout i + rootPlanarReadout j := by
+  apply Prod.ext
+  · exact congrFun (rootPlaneCoordinates_add_of_weight_eq i j k hweight) 0
+  · exact congrFun (rootPlaneCoordinates_add_of_weight_eq i j k hweight) 1
+
 theorem rootPlaneCoordinates_simple_roots :
     rootPlaneCoordinates 10 0 = 2 ∧
       rootPlaneCoordinates 10 1 = -1 ∧

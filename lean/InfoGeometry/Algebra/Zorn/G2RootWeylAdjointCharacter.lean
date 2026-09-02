@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 import InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm
+import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation
@@ -367,6 +368,15 @@ def finitePhaseWeylAction (p : WeylG2) : Root → Root :=
   else
     finiteCoxeterPhasePowNat p.1.val
 
+theorem finitePhaseWeylAction_mul_semidirect (p q : WeylG2) :
+    finitePhaseWeylAction (weylMul p q) =
+      finitePhaseWeylAction p ∘ finitePhaseWeylAction q := by
+  rw [weylMul_eq_weylSemidirectMul]
+  rcases p with ⟨kp, bp⟩
+  rcases q with ⟨kq, bq⟩
+  fin_cases kp <;> fin_cases kq <;> cases bp <;> cases bq <;>
+    native_decide
+
 theorem finitePhaseWeylAction_bijective (p : WeylG2) :
     Function.Bijective (finitePhaseWeylAction p) := by
   rcases p with ⟨k, b⟩
@@ -426,6 +436,18 @@ theorem finiteRootCyclotomicEquiv_weylRootAction
       finitePhaseWeylAction]
     rw [cActionPow]
     exact finiteRootCyclotomicEquiv_cActionPowNat k.val r
+
+theorem weylRootAction_mul_semidirect (p q : WeylG2) :
+    weylRootAction (weylMul p q) =
+      weylRootAction p ∘ weylRootAction q := by
+  funext r
+  apply finiteRootCyclotomicEquiv.injective
+  simp only [Function.comp_apply]
+  rw [finiteRootCyclotomicEquiv_weylRootAction,
+    finiteRootCyclotomicEquiv_weylRootAction,
+    finiteRootCyclotomicEquiv_weylRootAction]
+  rw [finitePhaseWeylAction_mul_semidirect]
+  rfl
 
 def finitePhaseFixed (p : WeylG2) (q : Root) : Prop :=
   finitePhaseWeylAction p q = q

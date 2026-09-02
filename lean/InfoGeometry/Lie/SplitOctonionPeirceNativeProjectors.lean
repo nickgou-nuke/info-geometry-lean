@@ -39,7 +39,7 @@ def projectorMM : CarrierEnd :=
   all_goals ring
 
 @[simp] theorem projectorMP_apply (x : Carrier) :
-    projectorMP x = ![0, 0, 0, 0, x 4, x 5, x 6, 0] := by
+    projectorMP x = ![0, 0, 0, 0, 0, x 5, x 6, x 7] := by
   ext i
   fin_cases i <;> simp [projectorMP, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,
@@ -48,7 +48,7 @@ def projectorMM : CarrierEnd :=
   all_goals ring
 
 @[simp] theorem projectorMM_apply (x : Carrier) :
-    projectorMM x = ![0, 0, 0, 0, 0, 0, 0, x 7] := by
+    projectorMM x = ![0, 0, 0, 0, x 4, 0, 0, 0] := by
   ext i
   fin_cases i <;> simp [projectorMM, peirceCharacterProduct,
     InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter.peirceSheetParity_apply,

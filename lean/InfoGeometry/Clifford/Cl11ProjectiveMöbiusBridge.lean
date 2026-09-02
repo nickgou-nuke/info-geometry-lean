@@ -2,14 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
-/-!
-# The finite split-Clifford/projective matrix bridge
-
-This owner records the concrete real matrix atom behind the Witt basis.  It
-proves the nilpotent CAR relations, the complementary coordinate projectors,
-the split Cartan action, and its induced dilation on the affine projective
-coordinate.  It does not identify a quotient with `ℝP¹` or `ℂP¹`.
--/
+/-! Finite split-Clifford/projective matrix bridge. -/
 
 noncomputable section
 
@@ -20,17 +13,11 @@ open Matrix
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 
 def e0 : M2R := !![0, 1; 1, 0]
-
 def e1 : M2R := !![0, 1; -1, 0]
-
 def b : M2R := (1 / 2 : ℝ) • (e0 + e1)
-
 def bdag : M2R := (1 / 2 : ℝ) • (e0 - e1)
-
 def cartan : M2R := e0 * e1
-
 def Pminus : M2R := b * bdag
-
 def Pplus : M2R := bdag * b
 
 theorem e0_sq : e0 * e0 = 1 := by
@@ -90,14 +77,12 @@ theorem Pplus_eq_second_coordinate_projector :
 theorem Pminus_sq : Pminus * Pminus = Pminus := by
   rw [Pminus_eq_first_coordinate_projector]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem Pplus_sq : Pplus * Pplus = Pplus := by
   rw [Pplus_eq_second_coordinate_projector]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem Pminus_add_Pplus : Pminus + Pplus = 1 := by
   rw [Pminus_eq_first_coordinate_projector, Pplus_eq_second_coordinate_projector]

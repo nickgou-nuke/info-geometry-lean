@@ -20,9 +20,8 @@ abbrev CarrierEnd := Module.End ℝ Carrier
 @[simp] theorem exteriorDegreeParity_apply (x : Carrier) (i : Fin 8) :
     exteriorDegreeParity x i =
       if i.val = 0 then x i
-      else if i.val < 4 then -x i
-      else if i.val < 7 then x i
-      else -x i :=
+      else if i.val < 5 then -x i
+      else x i :=
   rfl
 
 @[simp] theorem peirceCharacterProduct_apply (x : Carrier) (i : Fin 8) :

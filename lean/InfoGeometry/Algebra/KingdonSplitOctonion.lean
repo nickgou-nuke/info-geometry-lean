@@ -853,7 +853,7 @@ theorem lowerRawProductForward {i j k : Fin 3}
   abel
 
 theorem lowerRawProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
+    (hij : i ≠ j) :
     (basisGenerator j + basisGenerator k * basisGenerator i) *
       (basisGenerator i + basisGenerator j * basisGenerator k) =
       (basisGenerator k - basisGenerator i * basisGenerator j) +
@@ -885,7 +885,7 @@ theorem lowerBasisProductForward {i j k : Fin 3}
   abel
 
 theorem lowerBasisProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
+    (hij : i ≠ j)
     (hai : anti (basisVec i) = basisGenerator j * basisGenerator k)
     (haj : anti (basisVec j) = basisGenerator k * basisGenerator i)
     (hak : anti (basisVec k) = basisGenerator i * basisGenerator j) :
@@ -896,7 +896,7 @@ theorem lowerBasisProductReverse {i j k : Fin 3}
       ((basisGenerator j + basisGenerator k * basisGenerator i) *
        (basisGenerator i + basisGenerator j * basisGenerator k)) =
     scale 2⁻¹ (basisGenerator k - basisGenerator i * basisGenerator j)
-  rw [lowerRawProductReverse hij hjk hik]
+  rw [lowerRawProductReverse hij]
   rw [scale_eq_smul, scale_eq_smul]
   rw [smul_add, ← add_smul]
   norm_num
@@ -935,7 +935,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_one_mul_zero :
     lower (basisVec 1) * lower (basisVec 0) = upper (basisVec 2) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_zero anti_basisVec_one anti_basisVec_two
 
 @[simp] theorem lower_basisVec_one_mul_two :
@@ -945,7 +945,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_two_mul_one :
     lower (basisVec 2) * lower (basisVec 1) = upper (basisVec 0) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_one anti_basisVec_two anti_basisVec_zero
 
 @[simp] theorem lower_basisVec_two_mul_zero :
@@ -955,7 +955,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem lower_basisVec_zero_mul_two :
     lower (basisVec 0) * lower (basisVec 2) = upper (basisVec 1) := by
-  exact lowerBasisProductReverse (by decide) (by decide) (by decide)
+  exact lowerBasisProductReverse (by decide)
     anti_basisVec_two anti_basisVec_zero anti_basisVec_one
 
 @[simp] theorem upper_basisVec_zero_mul_diagonalUpper :

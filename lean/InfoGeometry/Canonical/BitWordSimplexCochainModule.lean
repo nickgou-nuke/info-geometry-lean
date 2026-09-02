@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.BitWordGraphDifferential
 import InfoGeometry.OperatorAlgebra.CantorBernoulliBitWordStarInductiveSystemBridge
 import InfoGeometry.Canonical.BitWordSimplexFaceCancellation
+import InfoGeometry.Canonical.BitWordSimplexSignCancellation
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
@@ -74,22 +75,22 @@ theorem coefficientSimplexAlternatingOpForm_basis
     coefficientSimplexAlternatingOpForm f
         (fun i => Finsupp.single (p i) (1 : ℂ)) =
       ∑ σ : Equiv.Perm (Fin (k + 1)),
-        (Equiv.Perm.sign σ : ℂ) * f (p ∘ σ) := by
+        Equiv.Perm.sign σ • f (p ∘ σ) := by
   simp [coefficientSimplexAlternatingOpForm,
     coefficientSimplexMultilinearExtension,
     MultilinearMap.alternatization_apply]
   apply Finset.sum_congr rfl
   intro σ hσ
-  rfl
+  simp [Function.comp_def]
 
 theorem coefficientSimplexAlternatingOpForm_map_perm
     {n k : ℕ} (f : SimplexVertexTuple n k → BitWordMatrixStage n)
     (v : Fin (k + 1) → bitWordVertexFreeModule n)
     (σ : Equiv.Perm (Fin (k + 1))) :
     coefficientSimplexAlternatingOpForm f (v ∘ σ) =
-      (Equiv.Perm.sign σ : ℂ) *
+      Equiv.Perm.sign σ •
         coefficientSimplexAlternatingOpForm f v := by
-  simpa [coefficientSimplexAlternatingOpForm, smul_eq_mul] using
+  simpa [coefficientSimplexAlternatingOpForm, Int.cast_smul_eq_zsmul] using
     (coefficientSimplexAlternatingOpForm f).map_perm v σ
 
 theorem coefficientSimplexAlternatingOpForm_eq_factorial_smul
@@ -743,6 +744,42 @@ theorem simplexCoboundary_sign_shift (p j : ℕ) :
     (-1 : ℂ) ^ (p + j) = (-1 : ℂ) ^ p * (-1 : ℂ) ^ j := by
   exact pow_add (-1 : ℂ) p j
 
+theorem simplexCoboundary_sign_shift_succ (p j : ℕ) :
+    (-1 : ℂ) ^ (p + 1 + j) =
+      (-1 : ℂ) ^ p * (-1 : ℂ) ^ (j + 1) := by
+  rw [show p + 1 + j = p + (j + 1) by omega, pow_add, pow_add]
+
+/- The finite face sum used by the Alexander--Whitney differential splits
+  canonically at the cup-product cut.  Naming this reindexing separately is
+  important: later Leibniz proofs can rewrite the two blocks without
+  expanding a sum or enumerating its indices. -/
+theorem simplexCoboundary_face_sum_split
+    {α : Type*} [AddCommMonoid α] (p q : ℕ)
+    (f : Fin ((p + 1) + (q + 1)) → α) :
+    (∑ i : Fin ((p + 1) + (q + 1)), f i) =
+      (∑ i : Fin (p + 1), f (Fin.castAdd (q + 1) i)) +
+        ∑ j : Fin (q + 1), f (Fin.natAdd (p + 1) j) := by
+  exact Fin.sum_univ_add (f := f) (a := p + 1) (b := q + 1)
+
+theorem simplexCoboundary_signed_face_sum_split
+    {α : Type*} [AddCommGroup α] (p q : ℕ)
+    (f : Fin ((p + 1) + (q + 1)) → α) :
+    (∑ i : Fin ((p + 1) + (q + 1)),
+        (-1 : ℤ) ^ i.1 • f i) =
+      (∑ i : Fin (p + 1),
+        (-1 : ℤ) ^ i.1 • f (Fin.castAdd (q + 1) i)) +
+        (-1 : ℤ) ^ (p + 1) •
+          (∑ j : Fin (q + 1),
+            (-1 : ℤ) ^ j.1 • f (Fin.natAdd (p + 1) j)) := by
+  rw [Fin.sum_univ_add]
+  rw [Finset.smul_sum]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [show (Fin.natAdd (p + 1) j).val = p + 1 + j.val by rfl,
+    pow_add]
+  simp [smul_smul, mul_assoc]
+
 /-- Cochains whose simplex arguments transform with the permutation sign.
 
 The vertices themselves are not a module, so Mathlib's `AlternatingMap` is
@@ -1128,6 +1165,120 @@ theorem simplexCoboundary_cup_zero_four_leibniz {n : ℕ}
   simp [simplexCoboundary, simplexCup, simplexCochainOf0,
     simplexCochainOf1, simplexCochainOf4, d0, d4,
     Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_one_zero_leibniz {n : ℕ}
+    (a : Cochain1 n) (f : Cochain0 n) (σ : Fin 3 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf1 a) (simplexCochainOf0 f)) σ =
+      simplexCup (simplexCoboundary (simplexCochainOf1 a))
+          (simplexCochainOf0 f) σ -
+        simplexCup (simplexCochainOf1 a)
+          (simplexCoboundary (simplexCochainOf0 f)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf0,
+    simplexCochainOf1, simplexCochainOf2, Fin.sum_univ_succ,
+    sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_one_one_leibniz {n : ℕ}
+    (a b : Cochain1 n) (σ : Fin 4 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf1 a) (simplexCochainOf1 b)) σ =
+      simplexCup (simplexCochainOf2 (d1 a))
+          (simplexCochainOf1 b) σ -
+        simplexCup (simplexCochainOf1 a)
+          (simplexCochainOf2 (d1 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf1,
+    simplexCochainOf2, d1, Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_two_zero_leibniz {n : ℕ}
+    (a : Cochain2 n) (f : Cochain0 n) (σ : Fin 4 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf2 a) (simplexCochainOf0 f)) σ =
+      simplexCup (simplexCochainOf3 (d2 a))
+          (simplexCochainOf0 f) σ +
+        simplexCup (simplexCochainOf2 a)
+          (simplexCoboundary (simplexCochainOf0 f)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf0,
+    simplexCochainOf2, simplexCochainOf3, d2,
+    Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_two_one_leibniz {n : ℕ}
+    (a : Cochain2 n) (b : Cochain1 n) (σ : Fin 5 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf2 a) (simplexCochainOf1 b)) σ =
+      simplexCup (simplexCochainOf3 (d2 a))
+          (simplexCochainOf1 b) σ +
+        simplexCup (simplexCochainOf2 a)
+          (simplexCochainOf2 (d1 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf1,
+    simplexCochainOf2, simplexCochainOf3, d1, d2,
+    Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_two_two_leibniz {n : ℕ}
+    (a b : Cochain2 n) (σ : Fin 6 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf2 a) (simplexCochainOf2 b)) σ =
+      simplexCup (simplexCochainOf3 (d2 a))
+          (simplexCochainOf2 b) σ +
+        simplexCup (simplexCochainOf2 a)
+          (simplexCochainOf3 (d2 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf2,
+    simplexCochainOf3, d2, Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_three_zero_leibniz {n : ℕ}
+    (a : Cochain3 n) (f : Cochain0 n) (σ : Fin 5 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf3 a) (simplexCochainOf0 f)) σ =
+      simplexCup (simplexCochainOf4 (d3 a))
+          (simplexCochainOf0 f) σ -
+        simplexCup (simplexCochainOf3 a)
+          (simplexCoboundary (simplexCochainOf0 f)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf0,
+    simplexCochainOf3, simplexCochainOf4, d3,
+    Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_three_one_leibniz {n : ℕ}
+    (a : Cochain3 n) (b : Cochain1 n) (σ : Fin 6 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf3 a) (simplexCochainOf1 b)) σ =
+      simplexCup (simplexCochainOf4 (d3 a))
+          (simplexCochainOf1 b) σ -
+        simplexCup (simplexCochainOf3 a)
+          (simplexCochainOf2 (d1 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf1,
+    simplexCochainOf2, simplexCochainOf3, simplexCochainOf4,
+    d1, d3, Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_three_two_leibniz {n : ℕ}
+    (a : Cochain3 n) (b : Cochain2 n) (σ : Fin 7 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf3 a) (simplexCochainOf2 b)) σ =
+      simplexCup (simplexCochainOf4 (d3 a))
+          (simplexCochainOf2 b) σ -
+        simplexCup (simplexCochainOf3 a)
+          (simplexCochainOf3 (d2 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf2,
+    simplexCochainOf3, simplexCochainOf4, d2, d3,
+    Fin.sum_univ_succ, sub_eq_add_neg]
+  noncomm_ring
+
+theorem simplexCoboundary_cup_three_three_leibniz {n : ℕ}
+    (a b : Cochain3 n) (σ : Fin 8 → Vertex n) :
+    simplexCoboundary
+        (simplexCup (simplexCochainOf3 a) (simplexCochainOf3 b)) σ =
+      simplexCup (simplexCochainOf4 (d3 a))
+          (simplexCochainOf3 b) σ -
+        simplexCup (simplexCochainOf3 a)
+          (simplexCochainOf4 (d3 b)) σ := by
+  simp [simplexCoboundary, simplexCup, simplexCochainOf3,
+    simplexCochainOf4, d3, Fin.sum_univ_succ, sub_eq_add_neg]
   noncomm_ring
 
 theorem simplexCoboundary_of0 {n : ℕ} (f : Cochain0 n)

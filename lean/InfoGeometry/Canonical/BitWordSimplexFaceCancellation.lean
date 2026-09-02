@@ -31,6 +31,42 @@ theorem nested_succAbove_swap_comp {n : ℕ} {α : Type*}
   funext x
   exact nested_succAbove_swap i j x
 
+theorem face_index_split (p q : ℕ) (i : Fin (p + q + 2)) :
+    (∃ j : Fin (p + 1), i.val = j.val) ∨
+      (∃ j : Fin (q + 1), i.val = p + 1 + j.val) := by
+  by_cases h : i.val ≤ p
+  · left
+    exact ⟨⟨i.val, by omega⟩, rfl⟩
+  · right
+    let j : Fin (q + 1) := ⟨i.val - (p + 1), by omega⟩
+    refine ⟨j, ?_⟩
+    dsimp [j]
+    omega
+
+theorem face_index_front_iff (p q : ℕ) (i : Fin (p + q + 2)) :
+    (∃ j : Fin (p + 1), i.val = j.val) ↔ i.val ≤ p := by
+  constructor
+  · rintro ⟨j, h⟩
+    omega
+  · intro h
+    exact ⟨⟨i.val, by omega⟩, rfl⟩
+
+theorem face_index_back_iff (p q : ℕ) (i : Fin (p + q + 2)) :
+    (∃ j : Fin (q + 1), i.val = p + 1 + j.val) ↔ p < i.val := by
+  constructor
+  · rintro ⟨j, h⟩
+    omega
+  · intro h
+    let j : Fin (q + 1) := ⟨i.val - (p + 1), by omega⟩
+    exact ⟨j, by dsimp [j]; omega⟩
+
+theorem face_index_split_disjoint (p q : ℕ) (i : Fin (p + q + 2)) :
+    ¬ ((∃ j : Fin (p + 1), i.val = j.val) ∧
+      (∃ j : Fin (q + 1), i.val = p + 1 + j.val)) := by
+  rintro ⟨⟨j, hj⟩, ⟨k, hk⟩⟩
+  have hlt : j.val < p + 1 + k.val := by omega
+  omega
+
 theorem delete_zero_one :
     (Fin.succAbove (0 : Fin 3) ∘ Fin.succAbove (0 : Fin 2)) =
       (Fin.succAbove (1 : Fin 3) ∘ Fin.succAbove (0 : Fin 2)) := by

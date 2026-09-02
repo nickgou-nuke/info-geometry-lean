@@ -6,6 +6,12 @@ import InfoGeometry.Arithmetic.LagariasMontagueParityLadderBridge
 import InfoGeometry.Arithmetic.ProfiniteCyclotomicUnitLimit
 import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone
+import InfoGeometry.Arithmetic.PrimeCyclotomicDirectedTower
+import InfoGeometry.Arithmetic.PrimeCyclotomicAmbientTower
+import InfoGeometry.Arithmetic.PrimeCyclotomicFieldDirectedSystem
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisDirectedClosure
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisFieldTower
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisGroupTower
 
 namespace InfoGeometry.Arithmetic.All
 

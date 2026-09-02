@@ -21,6 +21,7 @@ noncomputable section
 namespace InfoGeometry.Categorical.ChargedFockBraidVirasoroBridge
 
 open InfoGeometry.Categorical.BraidColimitVirasoroAction
+open InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
 

@@ -13,7 +13,9 @@ This owner separates and then relates four native notions:
 * projected chiral occupations `N_± = P_± N_F P_±`.
 
 The scalar shift between `N_F` and `N_C` is invisible to commutator grading but
-is essential for the particle-number interpretation.
+is essential for the particle-number interpretation.  The final section shows
+that `N_±` and one CAR creation/annihilation pair reconstruct an exact real
+four-component causal potential.
 -/
 
 noncomputable section
@@ -28,6 +30,7 @@ open InfoGeometry.Canonical.Cl55WittLieRouting
 open InfoGeometry.Physics.Cl55SpinorCartanFock
 
 abbrev FockOp := InfoGeometry.Clifford.Cl11TensorTower.MatStage 5
+abbrev RealFockFourPotential := Fin 4 → FockOp
 
 /-- Raw five-mode occupation operator `N_F = Σᵢ eᵢ fᵢ`. -/
 def rawFockNumber : FockOp :=
@@ -152,8 +155,41 @@ theorem annihilation_flips_minus_to_plus (i : Fin 5) :
   have hf := gammaChiral_f_anticomm i
   noncomm_ring [gammaChiral_sq, hf]
 
+/-! ## Chiral occupation as a real four-component operator potential -/
+
+/-- For one selected CAR mode, package total/signed chiral occupation and the
+symmetric/antisymmetric CAR combinations into causal four coordinates. -/
+def chiralOccupationFourPotential (i : Fin 5) : RealFockFourPotential :=
+  ![(1 / 2 : ℝ) • (chiralNumberPlus + chiralNumberMinus),
+    (1 / 2 : ℝ) • (annihilation i + creation i),
+    (1 / 2 : ℝ) • (creation i - annihilation i),
+    (1 / 2 : ℝ) • (chiralNumberPlus - chiralNumberMinus)]
+
+@[simp] theorem chiralOccupationFourPotential_scalar (i : Fin 5) :
+    chiralOccupationFourPotential i 0 = (1 / 2 : ℝ) • rawFockNumber := by
+  simp [chiralOccupationFourPotential, chiralNumber_sum]
+
+@[simp] theorem chiralOccupationFourPotential_chiral (i : Fin 5) :
+    chiralOccupationFourPotential i 3 =
+      (1 / 2 : ℝ) • (gammaChiral * rawFockNumber) := by
+  simp [chiralOccupationFourPotential, chiralNumber_difference]
+
+/-- Exact real causal/Nambu readout of the chiral occupation potential. -/
+theorem chiralOccupationFourPotential_matrix (i : Fin 5) :
+    !![chiralOccupationFourPotential i 0 + chiralOccupationFourPotential i 3,
+       chiralOccupationFourPotential i 1 - chiralOccupationFourPotential i 2;
+       chiralOccupationFourPotential i 1 + chiralOccupationFourPotential i 2,
+       chiralOccupationFourPotential i 0 - chiralOccupationFourPotential i 3] =
+      !![chiralNumberPlus, annihilation i;
+         creation i, chiralNumberMinus] := by
+  ext a b
+  fin_cases a <;> fin_cases b <;>
+    simp [chiralOccupationFourPotential] <;>
+    module
+
 /-- Compact closure packet: raw occupation, centered five-grade generator,
-chiral sum/difference coordinates, and odd sheet-changing action. -/
+chiral sum/difference coordinates, odd sheet-changing action, and the exact
+four-component matrix readout. -/
 theorem cl55_chiral_occupation_five_grade_packet (i : Fin 5) :
     rawFockNumber = numberOperator + (5 / 2 : ℝ) • (1 : FockOp) ∧
     bracket rawFockNumber (creation i) = creation i ∧
@@ -161,13 +197,20 @@ theorem cl55_chiral_occupation_five_grade_packet (i : Fin 5) :
     chiralNumberPlus + chiralNumberMinus = rawFockNumber ∧
     chiralNumberPlus - chiralNumberMinus = gammaChiral * rawFockNumber ∧
     PMinus * creation i * PPlus = creation i * PPlus ∧
-    PMinus * annihilation i * PPlus = annihilation i * PPlus := by
+    PMinus * annihilation i * PPlus = annihilation i * PPlus ∧
+    (!![chiralOccupationFourPotential i 0 + chiralOccupationFourPotential i 3,
+        chiralOccupationFourPotential i 1 - chiralOccupationFourPotential i 2;
+        chiralOccupationFourPotential i 1 + chiralOccupationFourPotential i 2,
+        chiralOccupationFourPotential i 0 - chiralOccupationFourPotential i 3] =
+      !![chiralNumberPlus, annihilation i;
+         creation i, chiralNumberMinus]) := by
   exact ⟨rawFockNumber_eq_numberOperator_add_five_halves,
     rawFockNumber_creation i,
     rawFockNumber_annihilation i,
     chiralNumber_sum,
     chiralNumber_difference,
     creation_flips_plus_to_minus i,
-    annihilation_flips_plus_to_minus i⟩
+    annihilation_flips_plus_to_minus i,
+    chiralOccupationFourPotential_matrix i⟩
 
 end InfoGeometry.Canonical.Cl55ChiralOccupationFiveGradeBridge

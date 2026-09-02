@@ -3477,6 +3477,7 @@ import InfoGeometry.Canonical.ApolloniusCylinderCapstone
 import InfoGeometry.Canonical.UnifiedPotentialCapstone
 import InfoGeometry.Canonical.ModularSurprisalDeficitCapstone
 import InfoGeometry.Canonical.DikinMetriplecticCapstone
+import InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 import InfoGeometry.Canonical.HomogeneousNumbersCapstone
 import InfoGeometry.Canonical.NaturalEmbeddingCapstone
 import InfoGeometry.Canonical.ChebyshevBoundaryCapstone

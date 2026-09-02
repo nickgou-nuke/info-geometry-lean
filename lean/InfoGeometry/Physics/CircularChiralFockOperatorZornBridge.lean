@@ -4,28 +4,24 @@ import InfoGeometry.Clifford.Cl55ZornCARComparison
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 import InfoGeometry.Physics.OperatorZornSoldering
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Projective.FiveGradedCentralizer
 
 /-!
-# Circular chiral rails in the native Fock / operator-Zorn carrier
+# Circular chiral frame in the native Fock / operator-Zorn carrier
 
-This owner closes the relation-level second-quantized bridge for the six
-circular null rails.  It does not identify the full non-associative Zorn
+This owner gives a relation-level second-quantized readout of the full eight-slot
+circular chiral frame.  It does not identify the full non-associative Zorn
 algebra with an associative operator algebra.
 
-The source frame is the repository-owned circular chiral operator frame
+The six null rails are represented by the established three-mode Jordan-Wigner
+CAR operators.  The two scalar circular poles are represented by the native
+complementary Fock chirality projectors `PPlus` and `PMinus`.  The pole
+orientation is stated explicitly: projective pole coordinate `1` is the `+2`
+endpoint and maps to `PPlus`, while coordinate `0` is the `-2` endpoint and
+maps to `PMinus`.
 
-`U 0, U 1, U 2, V 0, V 1, V 2`,
-
-read through `CircularChiralOperatorEightBridge.operatorFrame`.  The target is
-the native Jordan--Wigner Fock representation in `MatStage 5 = M_32(R)`, where
-
-the three `U` / positive-root channels are represented by annihilation
-operators and the three `V` / negative-root channels by creation operators.
-This convention is exactly the one already used by `Cl55NambuZornPeirceBridge`:
-`rootPlus` is the annihilation rail and `rootMinus` is the creation rail.
-
-For each colour `c : Fin 3`, the selected pair is then soldered into the
-existing associative `OperatorZornMatrix (MatStage 5)` Nambu--Gorkov shell.
+The resulting selected-colour packet is an honest element of the existing
+associative `OperatorZornMatrix (MatStage 5)` Nambu--Gorkov shell.
 -/
 
 noncomputable section
@@ -37,6 +33,8 @@ open InfoGeometry.Algebra.ZornVectorMatrix
 open InfoGeometry.Clifford.SplitClifford55ZornCARComparison
 open InfoGeometry.Physics.Cl55SpinorCartanFock
 open InfoGeometry.Physics.OperatorZornMatrix
+open InfoGeometry.Projective.Closure
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 abbrev FockOp := InfoGeometry.Clifford.Cl11TensorTower.MatStage 5
 
@@ -48,51 +46,42 @@ def positiveFrameIndex (i : Fin 3) : Fin 8 :=
 def negativeFrameIndex (i : Fin 3) : Fin 8 :=
   ⟨i.1 + 5, by omega⟩
 
-/-- The positive circular rails in the named operator frame are exactly `U_i`. -/
 @[simp] theorem operatorFrame_positiveRail (i : Fin 3) :
     operatorFrame (positiveFrameIndex i) = U i := by
   fin_cases i <;> rfl
 
-/-- The negative circular rails in the named operator frame are exactly `V_i`. -/
 @[simp] theorem operatorFrame_negativeRail (i : Fin 3) :
     operatorFrame (negativeFrameIndex i) = V i := by
   fin_cases i <;> rfl
 
 /-- Native second-quantized readout of a positive circular/root-plus channel.
-With the established Zorn/Fock CAR convention, positive roots are annihilation
-operators. -/
+The repository convention identifies positive roots with annihilation. -/
 def positiveRailFock (i : Fin 3) : FockOp :=
   f (firstThreeIndex i)
 
 /-- Native second-quantized readout of a negative circular/root-minus channel.
-With the established Zorn/Fock CAR convention, negative roots are creation
-operators. -/
+The repository convention identifies negative roots with creation. -/
 def negativeRailFock (i : Fin 3) : FockOp :=
   e (firstThreeIndex i)
 
-/-- Positive Fock rails are nilpotent. -/
 @[simp] theorem positiveRailFock_sq (i : Fin 3) :
     positiveRailFock i * positiveRailFock i = 0 := by
   exact f_sq (firstThreeIndex i)
 
-/-- Negative Fock rails are nilpotent. -/
 @[simp] theorem negativeRailFock_sq (i : Fin 3) :
     negativeRailFock i * negativeRailFock i = 0 := by
   exact e_sq (firstThreeIndex i)
 
-/-- Same-polarity positive rails anticommute. -/
 theorem positiveRailFock_anticomm (i j : Fin 3) :
     positiveRailFock i * positiveRailFock j +
       positiveRailFock j * positiveRailFock i = 0 := by
   exact f_anticomm (firstThreeIndex i) (firstThreeIndex j)
 
-/-- Same-polarity negative rails anticommute. -/
 theorem negativeRailFock_anticomm (i j : Fin 3) :
     negativeRailFock i * negativeRailFock j +
       negativeRailFock j * negativeRailFock i = 0 := by
   exact e_anticomm (firstThreeIndex i) (firstThreeIndex j)
 
-/-- Mixed positive/negative rails satisfy the three-mode CAR delta law. -/
 theorem positive_negativeRailFock_CAR (i j : Fin 3) :
     positiveRailFock i * negativeRailFock j +
       negativeRailFock j * positiveRailFock i =
@@ -107,30 +96,146 @@ theorem positive_negativeRailFock_CAR (i j : Fin 3) :
       exact hij (firstThreeIndex_injective hji.symm)
     simpa [positiveRailFock, negativeRailFock, hij, hidx] using h
 
-/-- The second-quantized six-rail packet, with the two scalar pole slots left
-zero because no canonical Fock representation of `E11/E22` is asserted by the
-existing relation-level bridge. -/
+/-! ## Scalar circular poles -/
+
+/-- Second-quantized readout of the positive circular scalar pole `E11 = u+`. -/
+def circularFockScalarPlus : FockOp := PPlus
+
+/-- Second-quantized readout of the negative circular scalar pole `E22 = u-`. -/
+def circularFockScalarMinus : FockOp := PMinus
+
+@[simp] theorem circularFockScalarPlus_sq :
+    circularFockScalarPlus * circularFockScalarPlus = circularFockScalarPlus := by
+  exact PPlus_sq
+
+@[simp] theorem circularFockScalarMinus_sq :
+    circularFockScalarMinus * circularFockScalarMinus = circularFockScalarMinus := by
+  exact PMinus_sq
+
+@[simp] theorem circularFockScalarPlus_mul_minus :
+    circularFockScalarPlus * circularFockScalarMinus = 0 := by
+  exact PPlus_mul_PMinus
+
+@[simp] theorem circularFockScalarPlus_add_minus :
+    circularFockScalarPlus + circularFockScalarMinus = 1 := by
+  exact P_sum
+
+/-- The source scalar poles are exactly the two endpoints of the named circular
+operator frame. -/
+theorem circular_scalar_source_readout :
+    operatorFrame 0 = E11 ∧ operatorFrame 4 = E22 := by
+  constructor <;> simp [operatorFrame]
+
+/-- Projective pole labels are oriented explicitly: coordinate `1` is the `+2`
+endpoint and coordinate `0` is the `-2` endpoint. -/
+def fockPoleProjector (i : Fin 2) : FockOp :=
+  if i = 0 then circularFockScalarMinus else circularFockScalarPlus
+
+@[simp] theorem fockPoleProjector_zero :
+    fockPoleProjector 0 = circularFockScalarMinus := by
+  simp [fockPoleProjector]
+
+@[simp] theorem fockPoleProjector_one :
+    fockPoleProjector 1 = circularFockScalarPlus := by
+  simp [fockPoleProjector]
+
+/-- Möbius/five-grade inversion swaps the two Fock pole projectors. -/
+theorem fockPoleProjector_conformalSwap (i : Fin 2) :
+    fockPoleProjector (conformalPoleSwap2 i) =
+      if i = 0 then circularFockScalarPlus else circularFockScalarMinus := by
+  fin_cases i <;> simp [fockPoleProjector, conformalPoleSwap2]
+
+/-- The positive Fock scalar pole carries the projective `+2` endpoint label. -/
+theorem circularFockScalarPlus_grade :
+    conformalPoleGrade2 (1 : Fin 2) = ConformalGrade.posTwo := by
+  exact conformalPoleGrade2_one
+
+/-- The negative Fock scalar pole carries the projective `-2` endpoint label. -/
+theorem circularFockScalarMinus_grade :
+    conformalPoleGrade2 (0 : Fin 2) = ConformalGrade.negTwo := by
+  exact conformalPoleGrade2_zero
+
+/-- The projective inversion reverses the extremal five-grade label while the
+Fock readout swaps the complementary scalar projectors. -/
+theorem fockPole_fiveGrade_inversion_packet (i : Fin 2) :
+    conformalPoleGrade2 (conformalPoleSwap2 i) =
+        ConformalGrade.swap (conformalPoleGrade2 i) ∧
+    fockPoleProjector (conformalPoleSwap2 i) =
+        (if i = 0 then circularFockScalarPlus else circularFockScalarMinus) := by
+  exact ⟨conformalPoleGrade2_swap i, fockPoleProjector_conformalSwap i⟩
+
+/-! ## Finite log-scale / chiral grading readout -/
+
+/-- Difference of the complementary pole projectors.  In the native Fock
+representation it is exactly the spinor chirality operator. -/
+def poleLogScaleGenerator : FockOp :=
+  circularFockScalarPlus - circularFockScalarMinus
+
+@[simp] theorem poleLogScaleGenerator_eq_gammaChiral :
+    poleLogScaleGenerator = gammaChiral := by
+  simp [poleLogScaleGenerator, circularFockScalarPlus,
+    circularFockScalarMinus, PPlus, PMinus]
+  module
+
+/-- The positive pole is the `+1` eigensector of the finite log-scale grading. -/
+theorem poleLogScaleGenerator_mul_plus :
+    poleLogScaleGenerator * circularFockScalarPlus = circularFockScalarPlus := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  simp [circularFockScalarPlus, PPlus]
+  rw [gammaChiral_sq]
+  module
+
+/-- The negative pole is the `-1` eigensector of the finite log-scale grading. -/
+theorem poleLogScaleGenerator_mul_minus :
+    poleLogScaleGenerator * circularFockScalarMinus = -circularFockScalarMinus := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  simp [circularFockScalarMinus, PMinus]
+  rw [gammaChiral_sq]
+  module
+
+/-- The pole projectors commute with the finite log-scale grading. -/
+theorem poleLogScaleGenerator_commutes_poles :
+    poleLogScaleGenerator * circularFockScalarPlus =
+        circularFockScalarPlus * poleLogScaleGenerator ∧
+      poleLogScaleGenerator * circularFockScalarMinus =
+        circularFockScalarMinus * poleLogScaleGenerator := by
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+  constructor
+  · simp [circularFockScalarPlus, PPlus]
+    rw [gammaChiral_sq]
+    module
+  · simp [circularFockScalarMinus, PMinus]
+    rw [gammaChiral_sq]
+    module
+
+/-! ## Full second-quantized circular packet -/
+
+/-- Full eight-channel second-quantized packet: complementary scalar projectors
+and the three annihilation/creation rails. -/
 def circularFockPacket : ChiralSigmaOperatorPacket FockOp where
-  uPlus := 0
-  uMinus := 0
+  uPlus := circularFockScalarPlus
+  uMinus := circularFockScalarMinus
   sigmaPlus := positiveRailFock
   sigmaMinus := negativeRailFock
 
-/-- Colour selection is a concrete soldering map from the three circular rails
-to one Nambu--Gorkov off-diagonal operator entry. -/
+/-- Colour selection of the three circular rails. -/
 def colourSoldering (c : Fin 3) : ChiralSigmaSoldering FockOp FockOp where
   plus rail := rail c
   minus rail := rail c
 
-/-- The selected circular colour pair in the associative operator-Zorn shell. -/
-def circularColourOperatorZorn (c : Fin 3) : OperatorZornMatrix FockOp :=
-  (colourSoldering c).toOperatorZornMatrix circularFockPacket
+/-- Full selected-colour operator-Zorn/Nambu--Gorkov packet.  Unlike the generic
+rail-only soldering helper, the diagonal scalar pole entries are retained. -/
+def circularColourOperatorZorn (c : Fin 3) : OperatorZornMatrix FockOp where
+  n_plus_op := circularFockPacket.uPlus
+  n_minus_op := circularFockPacket.uMinus
+  sigma_plus_op := (colourSoldering c).plus circularFockPacket.sigmaPlus
+  sigma_minus_op := (colourSoldering c).minus circularFockPacket.sigmaMinus
 
 @[simp] theorem circularColourOperatorZorn_n_plus (c : Fin 3) :
-    (circularColourOperatorZorn c).n_plus_op = 0 := rfl
+    (circularColourOperatorZorn c).n_plus_op = circularFockScalarPlus := rfl
 
 @[simp] theorem circularColourOperatorZorn_n_minus (c : Fin 3) :
-    (circularColourOperatorZorn c).n_minus_op = 0 := rfl
+    (circularColourOperatorZorn c).n_minus_op = circularFockScalarMinus := rfl
 
 @[simp] theorem circularColourOperatorZorn_sigma_plus (c : Fin 3) :
     (circularColourOperatorZorn c).sigma_plus_op = positiveRailFock c := rfl
@@ -138,37 +243,23 @@ def circularColourOperatorZorn (c : Fin 3) : OperatorZornMatrix FockOp :=
 @[simp] theorem circularColourOperatorZorn_sigma_minus (c : Fin 3) :
     (circularColourOperatorZorn c).sigma_minus_op = negativeRailFock c := rfl
 
-/-- Matrix readback of the selected second-quantized circular pair. -/
+/-- Matrix readback of the full selected second-quantized circular packet. -/
 theorem circularColourOperatorZorn_toMatrix (c : Fin 3) :
     OperatorZornMatrix.toMatrix (circularColourOperatorZorn c) =
-      !![0, positiveRailFock c; negativeRailFock c, 0] := by
+      !![circularFockScalarPlus, positiveRailFock c;
+         negativeRailFock c, circularFockScalarMinus] := by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
-/-- Squaring the selected odd Nambu--Gorkov packet is purely even. -/
-theorem circularColourOperatorZorn_square (c : Fin 3) :
-    circularColourOperatorZorn c * circularColourOperatorZorn c =
-      (⟨positiveRailFock c * negativeRailFock c,
-        negativeRailFock c * positiveRailFock c, 0, 0⟩ :
-        OperatorZornMatrix FockOp) := by
-  apply (OperatorZornMatrix.equivMatrix (A := FockOp)).injective
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [circularColourOperatorZorn, colourSoldering, circularFockPacket,
-      OperatorZornMatrix.toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- The two even diagonal blocks of the square resolve the CAR identity. -/
-theorem circularColourOperatorZorn_square_CAR (c : Fin 3) :
-    (circularColourOperatorZorn c * circularColourOperatorZorn c).n_plus_op +
-      (circularColourOperatorZorn c * circularColourOperatorZorn c).n_minus_op =
-        (1 : FockOp) := by
-  rw [circularColourOperatorZorn_square]
-  exact positive_negativeRailFock_CAR c c
-
-/-- Compact bridge statement: the named circular `U/V` rails and the selected
-Fock operators have the same three-mode CAR routing, and the resulting pair is
-an honest associative operator-Zorn/Nambu--Gorkov element. -/
+/-- Compact full-frame packet: scalar poles reproduce the complementary Fock
+projector algebra and the six rails reproduce the three-mode CAR routing. -/
 theorem circular_chiral_fock_operatorZorn_packet (c : Fin 3) :
+    operatorFrame 0 = E11 ∧
+    operatorFrame 4 = E22 ∧
+    circularFockScalarPlus * circularFockScalarPlus = circularFockScalarPlus ∧
+    circularFockScalarMinus * circularFockScalarMinus = circularFockScalarMinus ∧
+    circularFockScalarPlus * circularFockScalarMinus = 0 ∧
+    circularFockScalarPlus + circularFockScalarMinus = 1 ∧
     operatorFrame (positiveFrameIndex c) = U c ∧
     operatorFrame (negativeFrameIndex c) = V c ∧
     positiveRailFock c * positiveRailFock c = 0 ∧
@@ -176,8 +267,15 @@ theorem circular_chiral_fock_operatorZorn_packet (c : Fin 3) :
     positiveRailFock c * negativeRailFock c +
       negativeRailFock c * positiveRailFock c = (1 : FockOp) ∧
     OperatorZornMatrix.toMatrix (circularColourOperatorZorn c) =
-      !![0, positiveRailFock c; negativeRailFock c, 0] := by
-  exact ⟨operatorFrame_positiveRail c,
+      !![circularFockScalarPlus, positiveRailFock c;
+         negativeRailFock c, circularFockScalarMinus] := by
+  exact ⟨(circular_scalar_source_readout).1,
+    (circular_scalar_source_readout).2,
+    circularFockScalarPlus_sq,
+    circularFockScalarMinus_sq,
+    circularFockScalarPlus_mul_minus,
+    circularFockScalarPlus_add_minus,
+    operatorFrame_positiveRail c,
     operatorFrame_negativeRail c,
     positiveRailFock_sq c,
     negativeRailFock_sq c,

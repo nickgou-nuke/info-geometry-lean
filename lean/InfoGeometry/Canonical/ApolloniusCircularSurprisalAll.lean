@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.ApolloniusSurprisalCriticalLineBridge
 import InfoGeometry.OperatorAlgebra.CanonicalZornSurprisalCurrent
 import InfoGeometry.OperatorAlgebra.CanonicalZornCircularCARProjectors
 import InfoGeometry.Canonical.ApolloniusScalarOperatorSurprisalNoGo
+import InfoGeometry.Canonical.ApolloniusWindingFluxBridge
 import InfoGeometry.Lie.CanonicalZornCircularHodgeTransport
 
 /-!
@@ -14,6 +15,8 @@ This barrel collects the theorem-safe part of the scalar/operator synthesis:
 * circular right-regular CAR rails generate projectors and roots of `±1`;
 * a scalar multiple-of-identity lift is central and has zero commutator
   current, so nontrivial flow requires a noncentral operator lift;
+* integer winding of the logarithmic pole form gives the genuine `2πi n`
+  flux quantization theorem, independently of finite canonical commutators;
 * Hodge duality and graded chirality are transported through the actual
   circular Peirce basis to endomorphisms of the native Zorn carrier.
 

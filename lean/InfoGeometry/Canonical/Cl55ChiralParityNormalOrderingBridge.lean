@@ -13,7 +13,7 @@ This owner completes the finite algebraic bridge between:
 * global spinor chirality as the ordered product of the five local factors;
 * chiral projectors and the odd CAR sheet-changing operators.
 
-The scalar `5/2` is recorded only as the exact finite centering constant.  No
+The scalar `5/2` is recorded only as the exact finite centering constant. No
 claim is made here that it is, by itself, a physical Hamiltonian vacuum energy.
 Likewise, the global product is the native ordered noncommutative tensor-stage
 product, not an unordered `Finset.prod`.
@@ -51,7 +51,8 @@ def cl55ModeChiralityFactor (i : Fin 5) : FockOp :=
 /-- Occupation and vacancy resolve the identity. -/
 theorem cl55ModeOccupation_add_vacancy (i : Fin 5) :
     cl55ModeOccupation i + cl55ModeVacancy i = 1 := by
-  exact creation_annihilation_same_site i
+  simpa [cl55ModeOccupation, cl55ModeVacancy] using
+    creation_annihilation_same_site i
 
 /-- One-mode occupation is an idempotent. -/
 theorem cl55ModeOccupation_idempotent (i : Fin 5) :
@@ -82,15 +83,20 @@ theorem cl55ModeChiralityFactor_eq_vacancy_sub_occupation (i : Fin 5) :
     cl55ModeChiralityFactor i =
       cl55ModeVacancy i - cl55ModeOccupation i := by
   have hcar := cl55ModeOccupation_add_vacancy i
+  rw [show (1 : FockOp) =
+      cl55ModeOccupation i + cl55ModeVacancy i by exact hcar.symm]
   unfold cl55ModeChiralityFactor
-  module at hcar ⊢
+  module
 
 /-- The local chirality factor is the `-2` normalization of the centered Cartan
 mode `H_i = e_i f_i - 1/2`. -/
 theorem cl55ModeChiralityFactor_eq_neg_two_smul_H (i : Fin 5) :
     cl55ModeChiralityFactor i = (-2 : ℝ) • H i := by
-  unfold cl55ModeChiralityFactor cl55ModeOccupation
-  simp [H, E]
+  change
+    (1 : FockOp) - (2 : ℝ) • (creation i * annihilation i) =
+      (-2 : ℝ) •
+        (creation i * annihilation i -
+          (1 / 2 : ℝ) • (1 : FockOp))
   module
 
 /-- Every local chirality factor is an involution. -/
@@ -102,8 +108,7 @@ theorem cl55ModeChiralityFactor_sq (i : Fin 5) :
 
 /-- The fixed-stage factor is definitionally the general tensor-tower factor. -/
 theorem cl55ModeChiralityFactor_eq_towerFactor (i : Fin 5) :
-    cl55ModeChiralityFactor i =
-      modeChiralityFactor 5 i := by
+    cl55ModeChiralityFactor i = modeChiralityFactor 5 i := by
   rfl
 
 /-- The canonical five-mode ordered product. -/
@@ -120,12 +125,13 @@ theorem gammaChiral_eq_cl55OrderedModeChiralityProduct :
 /-- The ordered local-parity product is an involution. -/
 theorem cl55OrderedModeChiralityProduct_sq :
     cl55OrderedModeChiralityProduct * cl55OrderedModeChiralityProduct = 1 := by
-  exact orderedModeChiralityProduct_sq 5
+  simpa [cl55OrderedModeChiralityProduct] using
+    orderedModeChiralityProduct_sq 5
 
 /-! ## Finite centering / normal-ordering readout -/
 
 /-- Finite centered occupation, obtained by subtracting the exact scalar
-`5/2` shift.  This is the finite Cartan centering readout. -/
+`5/2` shift. This is the finite Cartan centering readout. -/
 def centeredFockNumber : FockOp :=
   rawFockNumber - (5 / 2 : ℝ) • (1 : FockOp)
 

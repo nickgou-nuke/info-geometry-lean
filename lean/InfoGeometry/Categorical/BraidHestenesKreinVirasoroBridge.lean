@@ -26,6 +26,7 @@ open InfoGeometry.Canonical.PrimeVirasoroSugawara
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 open InfoGeometry.Canonical.CliffordToVirasoro
 open InfoGeometry.Canonical.CurrentSugawaraBridge
+open VirasoroProject
 
 universe u
 

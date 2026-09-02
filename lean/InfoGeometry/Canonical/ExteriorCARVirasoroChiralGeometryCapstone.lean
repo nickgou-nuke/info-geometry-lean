@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.Cl55ChiralOccupationFiveGradeBridge
 import InfoGeometry.Canonical.Cl11WittOccupationParityFactorization
 import InfoGeometry.Canonical.Cl55ChiralParityNormalOrderingBridge
 import InfoGeometry.Canonical.Cl55FiveGradeSuperParityBridge
-import InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsExpectationCyclicDerivative
 
 /-!
 # Exterior–CAR–Virasoro–chiral operator geometry capstone
@@ -25,8 +25,9 @@ constructed by the imported owners:
   factorization, and the reduction of the five-grading modulo two;
 * the four-coordinate Soloviev, split-octonion derivation, BKM/Berry,
   para-Kähler, and metriplectic readouts;
-* the unconditional Duhamel trace collapse and the genuine commuting-family
-  log-partition/expectation derivative.
+* the unconditional noncommutative Duhamel trace collapse;
+* the arbitrary-direction Fréchet derivative of the traced exponential and
+  the full noncommutative log-partition/expectation theorem.
 
 The imported modules intentionally retain their distinct carriers. This
 capstone does not assert any unproved definitional identification between:
@@ -40,8 +41,12 @@ capstone does not assert any unproved definitional identification between:
   expectation;
 * the existing `c = 1` charged-Fock Virasoro representation and a hypothetical
   five-flavour `c = 5` representation;
-* the changed-origin exponential Fréchet derivative and the Duhamel operator
-  on arbitrary noncommuting tangent directions.
+* the operator-valued changed-origin exponential Fréchet derivative and the
+  real Bochner--Duhamel operator before application of the finite trace.
+
+At trace level the two exponential derivatives are now proved equal in every
+operator direction.  This is exactly the strength needed for the Gibbs
+expectation identity; no stronger operator equality is silently asserted.
 
 Its purpose is compositional: downstream developments can import one module
 while continuing to use the native theorem owners for every individual edge.

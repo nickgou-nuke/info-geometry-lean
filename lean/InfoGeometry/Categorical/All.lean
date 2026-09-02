@@ -4,6 +4,7 @@ import InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 import InfoGeometry.Categorical.LambdaBraidHestenesKreinBridge
 import InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge
 import InfoGeometry.Categorical.BraidVirasoroIntertwiner
+import InfoGeometry.Categorical.BraidColimitVirasoroAction
 import InfoGeometry.Categorical.TensorColimit
 import InfoGeometry.Categorical.CuntzCantorKMSColimitBridge
 import InfoGeometry.Categorical.FiniteWordPathWeights

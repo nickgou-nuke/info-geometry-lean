@@ -110,6 +110,55 @@ theorem covariantDerivative_commutator_of_maurerCartan
   DerivationDifferentialForms.covariantDerivative_commutator_of_maurerCartan
     Lane Γ hΓ D E T
 
+/-! ## Canonical Maurer--Cartan connection -/
+
+/-- The left Maurer--Cartan sign convention on the adjoint operator module.
+It sends a derivation `D` to the operator `-D`. -/
+def canonicalMaurerCartanForm : OperatorOneForm where
+  toFun D := -D.1
+  map_add' D E := by
+    change -(D.1 + E.1) = -D.1 + -E.1
+    exact neg_add D.1 E.1
+  map_smul' r D := by
+    change -(r • D.1) = r • (-D.1)
+    module
+
+@[simp] theorem canonicalMaurerCartanForm_apply (D : ZornDer) :
+    canonicalMaurerCartanForm D = -D.1 :=
+  rfl
+
+/-- The canonical Maurer--Cartan form is flat:
+`dΓ + Γ ∧ Γ = 0`. -/
+theorem canonicalMaurerCartanForm_curvature :
+    DerivationDifferentialForms.connectionCurvature
+      Lane canonicalMaurerCartanForm = 0 := by
+  apply Subtype.ext
+  ext D E
+  rw [connectionCurvature_apply]
+  simp only [canonicalMaurerCartanForm_apply]
+  change
+    (D.1 * (-E.1) - (-E.1) * D.1) -
+          (E.1 * (-D.1) - (-D.1) * E.1) -
+        (-(D.1 * E.1 - E.1 * D.1)) +
+      ((-D.1) * (-E.1) - (-E.1) * (-D.1)) = 0
+  noncomm_ring
+
+/-- The canonical form satisfies the named Maurer--Cartan predicate. -/
+theorem canonicalMaurerCartanForm_satisfies :
+    DerivationDifferentialForms.SatisfiesMaurerCartan
+      Lane canonicalMaurerCartanForm :=
+  canonicalMaurerCartanForm_curvature
+
+/-- In the Maurer--Cartan-trivialized frame, the adjoint derivation and the
+connection commutator cancel exactly. -/
+@[simp] theorem canonicalMaurerCartan_covariantDerivative
+    (D : ZornDer) (T : EndCZ) :
+    DerivationDifferentialForms.covariantDerivative
+      Lane canonicalMaurerCartanForm D T = 0 := by
+  change
+    (D.1 * T - T * D.1) + (-D.1) * T - T * (-D.1) = 0
+  noncomm_ring
+
 /-- Three canonical split-octonion derivations form the operator differential
 frame used by the bracket-corrected vector-calculus readout. -/
 abbrev OperatorDerivationFrame3 := DerivationFrame3 Lane

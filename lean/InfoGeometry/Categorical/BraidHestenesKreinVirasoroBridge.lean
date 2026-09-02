@@ -13,6 +13,8 @@ packet, with any future representation/intertwining map left explicit.
 
 import InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
+import InfoGeometry.Canonical.CliffordToVirasoro
+import InfoGeometry.Canonical.VirasoroSugawaraCentralChargeBridge
 
 noncomputable section
 
@@ -22,6 +24,8 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 open InfoGeometry.Canonical.PrimeVirasoroSugawara
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+open InfoGeometry.Canonical.CliffordToVirasoro
+open InfoGeometry.Canonical.CurrentSugawaraBridge
 
 universe u
 
@@ -95,6 +99,33 @@ theorem sl2_low_modes
   P.sugawara.virasoro_bracket_sl2_low_modes hvir
 
 /-- The finite-cutoff central charge remains the existing Sugawara readout. -/
+/-- The existing Clifford-to-Virasoro owner can be carried together with
+the categorical braid/Hestenes--Krein closure.  The two readouts retain their
+native carriers; this theorem does not identify the Heisenberg carrier with the
+categorical colimit carrier. -/
+theorem closure_with_current_sugawara
+    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (H : CurrentHeisenbergRep 𝕜 V) :
+    CertifiedReadout P.closure ∧
+    (CurrentSugawaraMorphism.ofHeisenberg H).virasoro
+        (VirasoroAlgebra.cgen 𝕜) =
+      (1 : V →ₗ[𝕜] V) ∧
+    (∀ n : Int,
+      (CurrentSugawaraMorphism.ofHeisenberg H).virasoro
+          (VirasoroAlgebra.lgen 𝕜 n) =
+        H.sugawaraStressMode n) := by
+  exact ⟨P.closure,
+    (clifford_current_to_virasoro_sugawara_readout H).1,
+    (clifford_current_to_virasoro_sugawara_readout H).2⟩
+
+/-- The existing abelian Sugawara owner supplies the cardinality-style
+central-charge specialization used by the Virasoro lane. -/
+theorem abelian_central_charge_eq_dimension
+    (k d : ℝ) (hk : k ≠ 0) :
+    VirasoroSugawaraCentralChargeBridge.sugawaraCentralCharge k d 0 = d :=
+  VirasoroSugawaraCentralChargeBridge.sugawara_central_charge_abelian k d hk
+
 theorem central_charge_eq_card
     (S : Finset PrimeLabel)
     (hlevel : P.sugawara.affineVirasoro.level = 1)

@@ -1,35 +1,33 @@
 import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Analysis.SpecificLimits.Normed
 import InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
 import InfoGeometry.Optics.OperatorQGTFrechetChernCharacter
 
 /-!
-# Cyclic derivative of the noncommutative Gibbs partition function
+# Full cyclic derivative of the noncommutative Gibbs partition function
 
-The preceding Gibbs expectation owner proves two complementary facts:
+The base Gibbs owner proves the unconditional trace collapse of the genuine
+Bochner--Duhamel insertion and constructs the changed-origin Frechet
+derivative of the finite traced exponential.  This owner closes the remaining
+trace-level edge for arbitrary, possibly noncommuting, operator directions.
 
-* the trace of the Bochner--Duhamel insertion is
-  `Tr (exp H * T)` for arbitrary, possibly noncommuting, `H` and `T`;
-* the actual changed-origin Fréchet derivative of the traced exponential has
-  that value on commuting directions.
+The proof reuses the repository theorem
+`finiteOperatorTrace_powerDerivative`, which cyclically collapses every
+insertion in the derivative of `A ^ k`.  Mathlib's local termwise
+series-differentiation theorem, together with a factorial majorant on a bounded
+complex line, then gives
 
-This file closes the remaining trace-level edge for arbitrary directions.  It
-reuses the repository theorem
+`D (H ↦ Tr (exp H))_H[T] = Tr (exp H * T)`.
 
-`finiteOperatorTrace_powerDerivative`
+Consequently the principal-branch finite log-partition has a genuine Frechet
+derivative whose evaluation in every tangent direction is the normalized
+operator expectation.  No commutativity assumption, diagonalization, axiom,
+`sorry`, or supplied derivative is introduced.
 
-which cyclically collapses every insertion in the noncommutative derivative of
-`A ^ k`.  Termwise differentiation of the scalar exponential series then gives
-
-`D (H ↦ Tr (exp H))_H[T] = Tr (exp H * T)`
-
-without identifying the operator-valued changed-origin derivative with the
-Duhamel operator.  The two derivatives are proved equal only after applying the
-finite trace, which is exactly the strength required by the Gibbs expectation
-theorem.
-
-No commutativity hypothesis, diagonalization, axiom, or supplied derivative is
-used.
+The changed-origin exponential derivative and the real Bochner--Duhamel
+operator are identified only after application of the finite trace.  The
+stronger operator equality is neither needed nor asserted.
 -/
 
 noncomputable section
@@ -42,34 +40,44 @@ open InfoGeometry.OperatorAlgebra
 open InfoGeometry.Optics.OperatorQGTFrechetChernCharacter
 open SouriauOnsagerBKM
 
-/-! ## 1. Scalar exponential-series terms and their exact derivatives -/
+/-! ## 1. Scalar exponential-series terms and exact derivatives -/
 
-/-- The `k`th scalar term in the traced exponential along the affine operator
-line `H + z T`. -/
+/-- The `k`th scalar term in the traced exponential along `H + z T`. -/
 noncomputable def tracedExponentialSeriesTerm
     {n : ℕ} (H T : Operator n) (k : ℕ) (z : ℂ) : ℂ :=
-  ((Nat.factorial k : ℂ)⁻¹) *
+  ((k.factorial : ℂ)⁻¹) *
     finiteOperatorTrace ((H + z • T) ^ k)
 
-/-- The cyclically reduced derivative of the `k`th traced exponential term.
-The zeroth term has zero derivative; the successor term is the preceding
-factorial coefficient times `Tr (T (H + zT)^k)`. -/
+/-- The cyclically reduced derivative of the `k`th traced exponential term. -/
 noncomputable def tracedExponentialSeriesTermDerivative
-    {n : ℕ} (H T : Operator n) : ℕ → ℂ → ℂ
-  | 0, _ => 0
-  | k + 1, z =>
-      ((Nat.factorial k : ℂ)⁻¹) *
-        finiteOperatorTrace (T * (H + z • T) ^ k)
+    {n : ℕ} (H T : Operator n) (k : ℕ) (z : ℂ) : ℂ :=
+  ((k.factorial : ℂ)⁻¹) *
+    ((k : ℂ) *
+      finiteOperatorTrace
+        (T * (H + z • T) ^ k.pred))
 
-private theorem inv_factorial_succ_mul_succ_natCast (k : ℕ) :
-    ((Nat.factorial (k + 1) : ℂ)⁻¹) * ((k + 1 : ℕ) : ℂ) =
-      (Nat.factorial k : ℂ)⁻¹ := by
+private theorem inverse_factorial_succ_mul_cast_succ (k : ℕ) :
+    (((k + 1).factorial : ℂ)⁻¹) * (k + 1 : ℂ) =
+      ((k.factorial : ℂ)⁻¹) := by
   rw [Nat.factorial_succ, Nat.cast_mul]
-  have hk : (((k + 1 : ℕ) : ℂ)) ≠ 0 := by
+  have hk : ((k + 1 : ℕ) : ℂ) ≠ 0 := by
     exact_mod_cast Nat.succ_ne_zero k
-  have hf : ((Nat.factorial k : ℂ)) ≠ 0 := by
+  have hkfac : ((k.factorial : ℕ) : ℂ) ≠ 0 := by
     exact_mod_cast Nat.factorial_ne_zero k
-  field_simp [hk, hf]
+  field_simp [hk, hkfac]
+
+@[simp] theorem tracedExponentialSeriesTermDerivative_zero
+    {n : ℕ} (H T : Operator n) (z : ℂ) :
+    tracedExponentialSeriesTermDerivative H T 0 z = 0 := by
+  simp [tracedExponentialSeriesTermDerivative]
+
+@[simp] theorem tracedExponentialSeriesTermDerivative_succ
+    {n : ℕ} (H T : Operator n) (k : ℕ) (z : ℂ) :
+    tracedExponentialSeriesTermDerivative H T (k + 1) z =
+      ((k.factorial : ℂ)⁻¹) *
+        finiteOperatorTrace (T * (H + z • T) ^ k) := by
+  simp only [tracedExponentialSeriesTermDerivative, Nat.pred_succ]
+  rw [← mul_assoc, inverse_factorial_succ_mul_cast_succ]
 
 /-- Every scalar term has the derivative obtained by cyclically reducing the
 repository-owned noncommutative power derivative. -/
@@ -78,67 +86,143 @@ theorem hasDerivAt_tracedExponentialSeriesTerm
     HasDerivAt
       (tracedExponentialSeriesTerm H T k)
       (tracedExponentialSeriesTermDerivative H T k z) z := by
-  cases k with
-  | zero =>
-      simpa [tracedExponentialSeriesTerm,
-        tracedExponentialSeriesTermDerivative] using
-        (hasDerivAt_const (x := z)
-          (c := finiteOperatorTrace (1 : Operator n)))
-  | succ k =>
-      have hLine :
-          HasDerivAt (fun w : ℂ => H + w • T) T z := by
-        convert
-          (hasDerivAt_const (x := z) H).add
-            ((hasDerivAt_id (x := z)).smul_const T) using 1 <;>
-          simp
-      have hPowerRaw :
-          HasDerivAt
-            (fun w : ℂ => finiteOperatorTrace ((H + w • T) ^ (k + 1)))
-            (frechetChernCharacterDerivative n (k + 1)
-              (H + z • T) T) z := by
-        simpa [frechetChernCharacter, Function.comp_def] using
-          (hasFDerivAt_frechetChernCharacter n (k + 1)
-            (H + z • T)).comp_hasDerivAt_of_eq z hLine (by simp)
-      have hPower :
-          HasDerivAt
-            (fun w : ℂ => finiteOperatorTrace ((H + w • T) ^ (k + 1)))
-            (((k + 1 : ℕ) : ℂ) *
-              finiteOperatorTrace (T * (H + z • T) ^ k)) z := by
-        rw [frechetChernCharacterDerivative_eq] at hPowerRaw
-        simpa using hPowerRaw
-      change HasDerivAt
+  have hLine :
+      HasDerivAt (fun w : ℂ => H + w • T) T z := by
+    convert
+      (hasDerivAt_const (x := z) H).add
+        ((hasDerivAt_id (x := z)).smul_const T) using 1 <;>
+      simp
+  have hPower :
+      HasDerivAt
         (fun w : ℂ =>
-          ((Nat.factorial (k + 1) : ℂ)⁻¹) *
-            finiteOperatorTrace ((H + w • T) ^ (k + 1)))
-        (((Nat.factorial k : ℂ)⁻¹) *
-          finiteOperatorTrace (T * (H + z • T) ^ k)) z
-      have hScaled :=
-        hPower.const_mul ((Nat.factorial (k + 1) : ℂ)⁻¹)
-      rw [← mul_assoc, inv_factorial_succ_mul_succ_natCast] at hScaled
-      exact hScaled
+          frechetChernCharacter n k (H + w • T))
+        (frechetChernCharacterDerivative n k
+          (H + z • T) T) z := by
+    simpa [Function.comp_def] using
+      (hasFDerivAt_frechetChernCharacter n k
+        (H + z • T)).comp_hasDerivAt_of_eq
+          z hLine (by simp)
+  rw [frechetChernCharacterDerivative_eq] at hPower
+  simpa [tracedExponentialSeriesTerm,
+    tracedExponentialSeriesTermDerivative,
+    frechetChernCharacter, Function.comp_def] using
+      hPower.const_mul ((k.factorial : ℂ)⁻¹)
 
-/-! ## 2. A uniform summable derivative majorant on the unit disk -/
+/-! ## 2. Local factorial majorant -/
 
-/-- A scalar majorant for all term derivatives on `‖z‖ < 1`. -/
+/-- Uniform norm radius for `H + zT` on the unit disk. -/
+noncomputable def tracedExponentialLineRadius
+    {n : ℕ} (H T : Operator n) : ℝ :=
+  ‖H‖ + ‖T‖
+
+/-- A factor covering the zeroth power without requiring a `NormOneClass`
+instance on the operator ring. -/
+noncomputable def tracedExponentialPowerNormConstant (n : ℕ) : ℝ :=
+  max 1 ‖(1 : Operator n)‖
+
+/-- Constant part of the derivative majorant. -/
+noncomputable def tracedExponentialDerivativeConstant
+    (n : ℕ) (T : Operator n) : ℝ :=
+  ‖finiteOperatorTraceCLM n‖ * ‖T‖ *
+    tracedExponentialPowerNormConstant n
+
+/-- Factorial majorant for the derivative series. -/
 noncomputable def tracedExponentialDerivativeMajorant
     {n : ℕ} (H T : Operator n) : ℕ → ℝ
   | 0 => 0
   | k + 1 =>
-      (‖finiteOperatorTraceCLM n‖ * ‖T‖) *
-        ((‖H‖ + ‖T‖) ^ k / (Nat.factorial k : ℝ))
+      tracedExponentialDerivativeConstant n T *
+        (tracedExponentialLineRadius H T) ^ k /
+          (k.factorial : ℝ)
 
-/-- The derivative majorant is summable, by the ordinary scalar exponential
-series. -/
+/-- The derivative majorant is summable. -/
 theorem summable_tracedExponentialDerivativeMajorant
     {n : ℕ} (H T : Operator n) :
     Summable (tracedExponentialDerivativeMajorant H T) := by
-  apply (summable_nat_add_iff 1).mp
+  refine (summable_nat_add_iff 1).mp ?_
   simpa [tracedExponentialDerivativeMajorant] using
-    (Real.summable_pow_div_factorial (‖H‖ + ‖T‖)).mul_left
-      (‖finiteOperatorTraceCLM n‖ * ‖T‖)
+    (Real.summable_pow_div_factorial
+      (tracedExponentialLineRadius H T)).mul_left
+        (tracedExponentialDerivativeConstant n T)
 
-/-- Uniform norm bound for the scalar term derivatives on the complex unit
-disk. -/
+private theorem norm_affine_operator_le_lineRadius
+    {n : ℕ} (H T : Operator n) (z : ℂ)
+    (hz : z ∈ Metric.ball (0 : ℂ) 1) :
+    ‖H + z • T‖ ≤ tracedExponentialLineRadius H T := by
+  have hzNorm : ‖z‖ ≤ 1 := by
+    have hzlt : ‖z‖ < 1 := by
+      simpa [dist_eq] using (Metric.mem_ball.mp hz)
+    exact hzlt.le
+  calc
+    ‖H + z • T‖ ≤ ‖H‖ + ‖z • T‖ := norm_add_le _ _
+    _ = ‖H‖ + ‖z‖ * ‖T‖ := by rw [norm_smul]
+    _ ≤ ‖H‖ + 1 * ‖T‖ := by
+      exact add_le_add_left
+        (mul_le_mul_of_nonneg_right hzNorm (norm_nonneg T)) _
+    _ = tracedExponentialLineRadius H T := by
+      simp [tracedExponentialLineRadius]
+
+private theorem norm_affine_operator_pow_le
+    {n : ℕ} (H T : Operator n) (z : ℂ)
+    (hz : z ∈ Metric.ball (0 : ℂ) 1) (k : ℕ) :
+    ‖(H + z • T) ^ k‖ ≤
+      tracedExponentialPowerNormConstant n *
+        (tracedExponentialLineRadius H T) ^ k := by
+  cases k with
+  | zero =>
+      simpa [tracedExponentialPowerNormConstant] using
+        (le_max_right (1 : ℝ) ‖(1 : Operator n)‖)
+  | succ k =>
+      calc
+        ‖(H + z • T) ^ (k + 1)‖ ≤
+            ‖H + z • T‖ ^ (k + 1) :=
+          norm_pow_le' _ (Nat.succ_pos k)
+        _ ≤ (tracedExponentialLineRadius H T) ^ (k + 1) := by
+          exact pow_le_pow_left₀
+            (norm_nonneg (H + z • T))
+            (norm_affine_operator_le_lineRadius H T z hz) _
+        _ = 1 * (tracedExponentialLineRadius H T) ^ (k + 1) := by
+          rw [one_mul]
+        _ ≤ tracedExponentialPowerNormConstant n *
+            (tracedExponentialLineRadius H T) ^ (k + 1) := by
+          exact mul_le_mul_of_nonneg_right
+            (le_max_left (1 : ℝ) ‖(1 : Operator n)‖)
+            (pow_nonneg
+              (add_nonneg (norm_nonneg H) (norm_nonneg T)) _)
+
+private theorem norm_trace_mul_affine_pow_le
+    {n : ℕ} (H T : Operator n) (z : ℂ)
+    (hz : z ∈ Metric.ball (0 : ℂ) 1) (k : ℕ) :
+    ‖finiteOperatorTrace (T * (H + z • T) ^ k)‖ ≤
+      tracedExponentialDerivativeConstant n T *
+        (tracedExponentialLineRadius H T) ^ k := by
+  calc
+    ‖finiteOperatorTrace (T * (H + z • T) ^ k)‖ ≤
+        ‖finiteOperatorTraceCLM n‖ *
+          ‖T * (H + z • T) ^ k‖ := by
+      change ‖finiteOperatorTraceCLM n
+        (T * (H + z • T) ^ k)‖ ≤ _
+      exact (finiteOperatorTraceCLM n).le_opNorm _
+    _ ≤ ‖finiteOperatorTraceCLM n‖ *
+        (‖T‖ * ‖(H + z • T) ^ k‖) := by
+      exact mul_le_mul_of_nonneg_left
+        (norm_mul_le T ((H + z • T) ^ k))
+        (norm_nonneg (finiteOperatorTraceCLM n))
+    _ ≤ ‖finiteOperatorTraceCLM n‖ *
+        (‖T‖ *
+          (tracedExponentialPowerNormConstant n *
+            (tracedExponentialLineRadius H T) ^ k)) := by
+      exact mul_le_mul_of_nonneg_left
+        (mul_le_mul_of_nonneg_left
+          (norm_affine_operator_pow_le H T z hz k)
+          (norm_nonneg T))
+        (norm_nonneg (finiteOperatorTraceCLM n))
+    _ = tracedExponentialDerivativeConstant n T *
+        (tracedExponentialLineRadius H T) ^ k := by
+      simp [tracedExponentialDerivativeConstant]
+      ring
+
+/-- Uniform derivative bound on the unit complex disk. -/
 theorem norm_tracedExponentialSeriesTermDerivative_le
     {n : ℕ} (H T : Operator n) (k : ℕ) (z : ℂ)
     (hz : z ∈ Metric.ball (0 : ℂ) 1) :
@@ -149,77 +233,42 @@ theorem norm_tracedExponentialSeriesTermDerivative_le
       simp [tracedExponentialSeriesTermDerivative,
         tracedExponentialDerivativeMajorant]
   | succ k =>
-      have hzNorm : ‖z‖ ≤ 1 := by
-        have hzlt : ‖z‖ < 1 := by
-          simpa [Metric.mem_ball] using hz
-        exact hzlt.le
-      have hBase :
-          ‖H + z • T‖ ≤ ‖H‖ + ‖T‖ := by
-        calc
-          ‖H + z • T‖ ≤ ‖H‖ + ‖z • T‖ := norm_add_le _ _
-          _ = ‖H‖ + ‖z‖ * ‖T‖ := by rw [norm_smul]
-          _ ≤ ‖H‖ + 1 * ‖T‖ := by gcongr
-          _ = ‖H‖ + ‖T‖ := by rw [one_mul]
-      have hPower :
-          ‖(H + z • T) ^ k‖ ≤ (‖H‖ + ‖T‖) ^ k := by
-        calc
-          ‖(H + z • T) ^ k‖ ≤ ‖H + z • T‖ ^ k := norm_pow_le _ _
-          _ ≤ (‖H‖ + ‖T‖) ^ k := by gcongr
-      have hMul :
-          ‖T * (H + z • T) ^ k‖ ≤
-            ‖T‖ * (‖H‖ + ‖T‖) ^ k := by
-        calc
-          ‖T * (H + z • T) ^ k‖ ≤
-              ‖T‖ * ‖(H + z • T) ^ k‖ := norm_mul_le _ _
-          _ ≤ ‖T‖ * (‖H‖ + ‖T‖) ^ k := by gcongr
-      have hTrace :
-          ‖finiteOperatorTrace (T * (H + z • T) ^ k)‖ ≤
-            ‖finiteOperatorTraceCLM n‖ *
-              (‖T‖ * (‖H‖ + ‖T‖) ^ k) := by
-        calc
-          ‖finiteOperatorTrace (T * (H + z • T) ^ k)‖ =
-              ‖finiteOperatorTraceCLM n
-                (T * (H + z • T) ^ k)‖ := rfl
-          _ ≤ ‖finiteOperatorTraceCLM n‖ *
-              ‖T * (H + z • T) ^ k‖ :=
-                (finiteOperatorTraceCLM n).le_opNorm _
-          _ ≤ ‖finiteOperatorTraceCLM n‖ *
-              (‖T‖ * (‖H‖ + ‖T‖) ^ k) := by
-                gcongr
+      rw [tracedExponentialSeriesTermDerivative_succ]
       change
-        ‖((Nat.factorial k : ℂ)⁻¹) *
+        ‖((k.factorial : ℂ)⁻¹) *
           finiteOperatorTrace (T * (H + z • T) ^ k)‖ ≤
-        (‖finiteOperatorTraceCLM n‖ * ‖T‖) *
-          ((‖H‖ + ‖T‖) ^ k / (Nat.factorial k : ℝ))
+        tracedExponentialDerivativeConstant n T *
+          (tracedExponentialLineRadius H T) ^ k /
+            (k.factorial : ℝ)
       rw [norm_mul, norm_inv, RCLike.norm_natCast]
       calc
-        (Nat.factorial k : ℝ)⁻¹ *
+        ((k.factorial : ℝ)⁻¹) *
             ‖finiteOperatorTrace (T * (H + z • T) ^ k)‖ ≤
-          (Nat.factorial k : ℝ)⁻¹ *
-            (‖finiteOperatorTraceCLM n‖ *
-              (‖T‖ * (‖H‖ + ‖T‖) ^ k)) := by
-                gcongr
-        _ = (‖finiteOperatorTraceCLM n‖ * ‖T‖) *
-            ((‖H‖ + ‖T‖) ^ k / (Nat.factorial k : ℝ)) := by
-              ring
+          ((k.factorial : ℝ)⁻¹) *
+            (tracedExponentialDerivativeConstant n T *
+              (tracedExponentialLineRadius H T) ^ k) := by
+            exact mul_le_mul_of_nonneg_left
+              (norm_trace_mul_affine_pow_le H T z hz k)
+              (by positivity)
+        _ = tracedExponentialDerivativeConstant n T *
+            (tracedExponentialLineRadius H T) ^ k /
+              (k.factorial : ℝ) := by
+            rw [div_eq_mul_inv]
+            ring
 
-/-! ## 3. The traced exponential is the sum of these scalar terms -/
+/-! ## 3. Summation and cyclic coefficient collapse -/
 
-/-- Summability of the scalar traced-exponential series at the base point of
-the affine line. -/
+/-- The traced terms are summable at the center of the affine line. -/
 theorem summable_tracedExponentialSeriesTerm_zero
     {n : ℕ} (H T : Operator n) :
     Summable (fun k : ℕ => tracedExponentialSeriesTerm H T k 0) := by
-  let f : ℕ → Operator n := fun k =>
-    ((Nat.factorial k : ℂ)⁻¹) • H ^ k
-  have hf : Summable f := by
-    simpa [f] using
-      (NormedSpace.expSeries_summable' (𝕂 := ℂ) H)
-  have hTrace :
-      Summable (fun k : ℕ => finiteOperatorTraceCLM n (f k)) :=
-    (finiteOperatorTraceCLM n).summable hf
-  simpa [tracedExponentialSeriesTerm, f,
-    finiteOperatorTrace_complex_smul] using hTrace
+  have hExp :
+      Summable (fun k : ℕ =>
+        ((k.factorial : ℂ)⁻¹) • H ^ k) :=
+    NormedSpace.expSeries_summable' (𝕂 := ℂ) H
+  have hTrace := (finiteOperatorTraceCLM n).summable hExp
+  simpa [tracedExponentialSeriesTerm,
+    finiteOperatorTrace_complex_smul, smul_eq_mul] using hTrace
 
 /-- The partition line is exactly the scalar sum of the traced exponential
 series. -/
@@ -228,94 +277,117 @@ theorem partitionLine_eq_tsum_tracedExponentialSeriesTerm
     partitionLine H T z =
       ∑' k : ℕ, tracedExponentialSeriesTerm H T k z := by
   let A : Operator n := H + z • T
-  have hs :
+  have hExp :
       Summable (fun k : ℕ =>
-        ((Nat.factorial k : ℂ)⁻¹) • A ^ k) := by
-    simpa using (NormedSpace.expSeries_summable' (𝕂 := ℂ) A)
+        ((k.factorial : ℂ)⁻¹) • A ^ k) :=
+    NormedSpace.expSeries_summable' (𝕂 := ℂ) A
   unfold partitionLine tracedExponential
   rw [NormedSpace.exp_eq_tsum ℂ]
   change finiteOperatorTraceCLM n
-      (∑' k : ℕ, ((Nat.factorial k : ℂ)⁻¹) • A ^ k) =
+      (∑' k : ℕ, ((k.factorial : ℂ)⁻¹) • A ^ k) =
     ∑' k : ℕ,
-      ((Nat.factorial k : ℂ)⁻¹) * finiteOperatorTrace (A ^ k)
-  rw [(finiteOperatorTraceCLM n).map_tsum hs]
+      ((k.factorial : ℂ)⁻¹) * finiteOperatorTrace (A ^ k)
+  rw [(finiteOperatorTraceCLM n).map_tsum hExp]
   apply tsum_congr
   intro k
   simpa using
     finiteOperatorTrace_complex_smul
-      ((Nat.factorial k : ℂ)⁻¹) (A ^ k)
+      ((k.factorial : ℂ)⁻¹) (A ^ k)
 
-/-! ## 4. Cyclic summation of the derivative series -/
+/-- The derivative series is summable at the center. -/
+theorem summable_tracedExponentialSeriesTermDerivative_zero
+    {n : ℕ} (H T : Operator n) :
+    Summable
+      (fun k : ℕ =>
+        tracedExponentialSeriesTermDerivative H T k 0) := by
+  apply Summable.of_norm_bounded
+    (f := fun k : ℕ =>
+      tracedExponentialSeriesTermDerivative H T k 0)
+    (g := tracedExponentialDerivativeMajorant H T)
+  · exact summable_tracedExponentialDerivativeMajorant H T
+  · intro k
+    exact norm_tracedExponentialSeriesTermDerivative_le
+      H T k 0 (Metric.mem_ball_self (by norm_num))
 
 /-- The derivative series sums to the ordinary first-moment numerator. -/
 theorem tsum_tracedExponentialSeriesTermDerivative_zero
     {n : ℕ} (H T : Operator n) :
-    (∑' k : ℕ, tracedExponentialSeriesTermDerivative H T k 0) =
-      finiteOperatorTrace (NormedSpace.exp H * T) := by
-  have hzero : (0 : ℂ) ∈ Metric.ball (0 : ℂ) 1 := by simp
-  have hMajorant :=
-    summable_tracedExponentialDerivativeMajorant H T
-  have hDerivative :
-      Summable
-        (fun k : ℕ =>
-          tracedExponentialSeriesTermDerivative H T k 0) :=
-    Summable.of_norm_bounded hMajorant
-      (fun k =>
-        norm_tracedExponentialSeriesTermDerivative_le H T k 0 hzero)
+    (∑' k : ℕ,
+      tracedExponentialSeriesTermDerivative H T k 0) =
+        finiteOperatorTrace (NormedSpace.exp H * T) := by
+  have hDerivativeSummable :=
+    summable_tracedExponentialSeriesTermDerivative_zero H T
   have hExp :
       HasSum
-        (fun k : ℕ => ((Nat.factorial k : ℂ)⁻¹) • H ^ k)
-        (NormedSpace.exp H) := by
-    simpa [NormedSpace.expSeries_apply_eq] using
-      (NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) H)
-  have hTrace :
+        (fun k : ℕ => ((k.factorial : ℂ)⁻¹) • H ^ k)
+        (NormedSpace.exp H) :=
+    NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) H
+  have hLeft :
       HasSum
         (fun k : ℕ =>
-          ((Nat.factorial k : ℂ)⁻¹) *
+          T * (((k.factorial : ℂ)⁻¹) • H ^ k))
+        (T * NormedSpace.exp H) :=
+    hExp.mul_left T
+  have hTrace := hLeft.mapL (finiteOperatorTraceCLM n)
+  have hTraceSeries :
+      HasSum
+        (fun k : ℕ =>
+          ((k.factorial : ℂ)⁻¹) *
             finiteOperatorTrace (T * H ^ k))
         (finiteOperatorTrace (T * NormedSpace.exp H)) := by
-    simpa [mul_smul_comm, finiteOperatorTrace_complex_smul] using
-      ((hExp.mul_left T).mapL (finiteOperatorTraceCLM n))
+    simpa [finiteOperatorTrace_complex_smul,
+      smul_eq_mul, mul_smul_comm] using hTrace
   calc
-    (∑' k : ℕ, tracedExponentialSeriesTermDerivative H T k 0) =
+    (∑' k : ℕ,
+      tracedExponentialSeriesTermDerivative H T k 0) =
         tracedExponentialSeriesTermDerivative H T 0 0 +
           ∑' k : ℕ,
             tracedExponentialSeriesTermDerivative H T (k + 1) 0 :=
-      hDerivative.tsum_eq_zero_add
+      tsum_eq_zero_add' hDerivativeSummable
     _ = ∑' k : ℕ,
-        ((Nat.factorial k : ℂ)⁻¹) *
+        ((k.factorial : ℂ)⁻¹) *
           finiteOperatorTrace (T * H ^ k) := by
-            simp [tracedExponentialSeriesTermDerivative]
-    _ = finiteOperatorTrace (T * NormedSpace.exp H) := hTrace.tsum_eq
+      rw [tracedExponentialSeriesTermDerivative_zero, zero_add]
+      apply tsum_congr
+      intro k
+      simp
+    _ = finiteOperatorTrace (T * NormedSpace.exp H) :=
+      hTraceSeries.tsum_eq
     _ = finiteOperatorTrace (NormedSpace.exp H * T) :=
       finiteOperatorTrace_mul_comm _ _
 
-/-! ## 5. Full arbitrary-direction derivative and Gibbs expectation -/
+/-! ## 4. Full arbitrary-direction derivative -/
 
-/-- The partition line has the expected derivative for every operator
-direction, without a commutation hypothesis. -/
+/-- Termwise differentiation of the scalar traced exponential series. -/
+theorem hasDerivAt_tsum_tracedExponentialSeriesTerm
+    {n : ℕ} (H T : Operator n) :
+    HasDerivAt
+      (fun z : ℂ =>
+        ∑' k : ℕ, tracedExponentialSeriesTerm H T k z)
+      (∑' k : ℕ,
+        tracedExponentialSeriesTermDerivative H T k 0) 0 := by
+  exact hasDerivAt_tsum_of_isPreconnected
+    (u := tracedExponentialDerivativeMajorant H T)
+    (t := Metric.ball (0 : ℂ) 1)
+    (y₀ := (0 : ℂ))
+    (y := (0 : ℂ))
+    (summable_tracedExponentialDerivativeMajorant H T)
+    Metric.isOpen_ball
+    Metric.isPreconnected_ball
+    (fun k z _hz => hasDerivAt_tracedExponentialSeriesTerm H T k z)
+    (fun k z hz =>
+      norm_tracedExponentialSeriesTermDerivative_le H T k z hz)
+    (Metric.mem_ball_self (by norm_num))
+    (summable_tracedExponentialSeriesTerm_zero H T)
+    (Metric.mem_ball_self (by norm_num))
+
+/-- The partition line has the expected derivative in every operator
+direction. -/
 theorem hasDerivAt_partitionLine
     {n : ℕ} (H T : Operator n) :
     HasDerivAt (partitionLine H T)
       (finiteOperatorTrace (NormedSpace.exp H * T)) 0 := by
-  have hSeries :
-      HasDerivAt
-        (fun z : ℂ =>
-          ∑' k : ℕ, tracedExponentialSeriesTerm H T k z)
-        (∑' k : ℕ,
-          tracedExponentialSeriesTermDerivative H T k 0) 0 := by
-    exact hasDerivAt_tsum_of_isPreconnected
-      (u := tracedExponentialDerivativeMajorant H T)
-      (t := Metric.ball (0 : ℂ) 1)
-      (summable_tracedExponentialDerivativeMajorant H T)
-      Metric.isOpen_ball Metric.isPreconnected_ball
-      (fun k z _hz =>
-        hasDerivAt_tracedExponentialSeriesTerm H T k z)
-      (fun k z hz =>
-        norm_tracedExponentialSeriesTermDerivative_le H T k z hz)
-      (by simp)
-      (summable_tracedExponentialSeriesTerm_zero H T)
-      (by simp)
+  have hSeries := hasDerivAt_tsum_tracedExponentialSeriesTerm H T
   rw [tsum_tracedExponentialSeriesTermDerivative_zero H T] at hSeries
   have hFunction :
       partitionLine H T =
@@ -326,7 +398,7 @@ theorem hasDerivAt_partitionLine
   rw [hFunction]
   exact hSeries
 
-/-- The repository's changed-origin Fréchet derivative has the cyclic
+/-- The repository's changed-origin Frechet derivative has the cyclic
 first-moment trace in every direction. -/
 theorem tracedExponentialDerivative_apply
     {n : ℕ} (H T : Operator n) :
@@ -347,8 +419,7 @@ theorem tracedExponentialDerivative_apply
   exact hFromFrechet.unique (hasDerivAt_partitionLine H T)
 
 /-- The changed-origin exponential derivative and the Duhamel derivative have
-the same finite trace in every noncommuting direction.  No operator-level
-equality is claimed. -/
+the same finite trace in every noncommuting direction. -/
 theorem finiteOperatorTrace_exponentialDerivative_eq_duhamelDerivative
     {n : ℕ} (H T : Operator n) :
     finiteOperatorTrace
@@ -359,11 +430,53 @@ theorem finiteOperatorTrace_exponentialDerivative_eq_duhamelDerivative
   rw [tracedExponentialDerivative_apply,
     finiteOperatorTrace_duhamelDerivative]
 
-/-- Full noncommutative operator expectation theorem:
+/-! ## 5. Full Frechet log-partition and Gibbs expectation -/
 
-`d/dz log Tr(exp(H + zT)) |_{z=0} = Tr(ρ_H T)`.
+/-- Principal-branch finite log-partition potential on the whole operator
+algebra. -/
+noncomputable def logTracedExponential
+    {n : ℕ} (H : Operator n) : ℂ :=
+  Complex.log (tracedExponential H)
 
-Only the principal-log branch condition is required. -/
+/-- Native Frechet derivative of the finite log-partition potential. -/
+noncomputable def logTracedExponentialDerivative
+    {n : ℕ} (H : Operator n) : Operator n →L[ℂ] ℂ :=
+  (tracedExponential H)⁻¹ • tracedExponentialDerivative H
+
+/-- Genuine Frechet differentiability of the full finite noncommutative
+log-partition function on the principal logarithm branch. -/
+theorem hasFDerivAt_logTracedExponential
+    {n : ℕ} (H : Operator n)
+    (hSlit : tracedExponential H ∈ Complex.slitPlane) :
+    HasFDerivAt logTracedExponential
+      (logTracedExponentialDerivative H) H := by
+  simpa [logTracedExponential,
+    logTracedExponentialDerivative] using
+      (hasFDerivAt_tracedExponential H).clog hSlit
+
+/-- Every tangent evaluation of the log-partition Frechet derivative is the
+normalized Gibbs expectation. -/
+theorem logTracedExponentialDerivative_apply_eq_expectation
+    {n : ℕ} (H T : Operator n) :
+    logTracedExponentialDerivative H T =
+      operatorExpectation H T := by
+  simp only [logTracedExponentialDerivative,
+    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  rw [tracedExponentialDerivative_apply,
+    operatorExpectation_eq_trace_div]
+  simp [div_eq_mul_inv, mul_comm]
+
+/-- The native `fderiv` of the finite log-partition is the expectation
+functional. -/
+theorem fderiv_logTracedExponential
+    {n : ℕ} (H : Operator n)
+    (hSlit : tracedExponential H ∈ Complex.slitPlane) :
+    fderiv ℂ logTracedExponential H =
+      logTracedExponentialDerivative H :=
+  (hasFDerivAt_logTracedExponential H hSlit).fderiv
+
+/-- Full noncommutative operator expectation theorem on an arbitrary tangent
+line.  Only the principal-log branch condition is required. -/
 theorem hasDerivAt_logPartitionLine_eq_expectation
     {n : ℕ} (H T : Operator n)
     (hSlit : tracedExponential H ∈ Complex.slitPlane) :
@@ -375,8 +488,8 @@ theorem hasDerivAt_logPartitionLine_eq_expectation
   rw [operatorExpectation_eq_trace_div]
   simpa [logPartitionLine, partitionLine] using hLog
 
-/-- Four-channel noncommutative expectation theorem.  Pairwise commutativity
-of the sufficient statistics is no longer required. -/
+/-- Four-channel noncommutative expectation theorem. Pairwise commutativity of
+the sufficient statistics is not required. -/
 theorem hasDerivAt_fourOperatorLogPartitionCoordinate_eq_expectation_noncommutative
     {n : ℕ} (T : Fin 4 → Operator n)
     (theta : FourComplexParameters) (mu : Fin 4)

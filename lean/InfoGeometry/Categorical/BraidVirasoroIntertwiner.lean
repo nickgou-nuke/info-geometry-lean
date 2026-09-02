@@ -101,7 +101,6 @@ end BraidVirasoroIntertwiner
 carrier-level intertwiner input. -/
 structure CertifiedBraidVirasoroClosure
     (Bridge Carrier : Type*)
-    [CommRing Carrier]
     (𝕜 : Type*) [CommRing 𝕜]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     (B : Type*) [Group B]
@@ -113,7 +112,6 @@ structure CertifiedBraidVirasoroClosure
 is supplied.  No intertwiner is constructed here. -/
 def attach
     {Bridge Carrier : Type*}
-    [CommRing Carrier]
     {𝕜 : Type*} [CommRing 𝕜]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {B : Type*} [Group B]

@@ -140,15 +140,13 @@ theorem canonicalStraightStrand_far
     (n : ℕ) (i j : Fin n) (hij : i ≤ j) :
     FreeGroup.lift (straightStrandGenerator (n + 2))
         (Braid.comm_rel i.castSucc.castSucc j.succ.succ) = 1 := by
-  have hleft : i.castSucc.castSucc.castSucc =
-      i.castSucc.castSucc.castSucc := rfl
   have hright :
       j.castSucc.succ.succ = j.succ.succ.castSucc := by
     apply Fin.ext
     rfl
   have hrel := Braid.braid_group.comm
     (n := n + 1) (i := i.castSucc) (j := j.castSucc)
-    (by exact Fin.cast_le.mpr hij)
+    (by exact hij)
   have hrel' :
       straightStrandGenerator (n + 2) i.castSucc.castSucc *
           straightStrandGenerator (n + 2) j.succ.succ =

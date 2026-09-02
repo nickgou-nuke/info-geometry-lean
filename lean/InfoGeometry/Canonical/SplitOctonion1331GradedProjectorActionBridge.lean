@@ -17,8 +17,8 @@ multiplication laws:
 4. the four-plane Artin/cyclotomic operator lift.
 
 The Artin lift is block diagonal in the four planes
-`{u+,u-}`, `{U_i,V_i}`.  Consequently it preserves Hodge-dual *pairs* of
-exterior degrees, rather than preserving each exterior degree separately.
+`{u+,u-}`, `{U_i,V_i}`. Consequently it preserves Hodge-dual *pairs* of
+exterior degrees rather than preserving each exterior degree separately.
 
 The finite-`F₂` Galois-connection owner is kept separate: it supplies fixed-set
 facts for `0` and `1`, not a cyclotomic field-Galois action on character labels.
@@ -37,6 +37,7 @@ open InfoGeometry.Lie.SplitOctonionPeirceNativeProjectors
 open InfoGeometry.Lie.PeirceExteriorHodgeTransport
 open InfoGeometry.Exceptional.G2ChiralBivectorCarriers
 open InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence
+open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 abbrev Exterior3 :=
   InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3
@@ -128,7 +129,8 @@ theorem hodge_anticommutes_graded_chirality :
 theorem degreeZero_projector_fixes_vacuum :
     exteriorDegreeProjector1331 0 (1 : Exterior3) = 1 := by
   rw [← peirceVacuum_eq_exteriorVacuum]
-  simp [exteriorDegreeProjector1331_basis, exteriorDegree1331]
+  rw [exteriorDegreeProjector1331_basis]
+  simp [exteriorDegree1331]
 
 /-- The degree-one projector fixes each one-particle state created from the
 vacuum by a native exterior creation operator. -/
@@ -141,7 +143,7 @@ theorem degreeOne_projector_fixes_created_vacuum (i : Fin 3) :
   fin_cases i <;> simp [exteriorDegree1331]
 
 /-- The dual first-three Clifford channels annihilate the same pure-spinor
-vacuum.  Together with the preceding theorem this is the native
+vacuum. Together with the preceding theorem this is the native
 creation/projector/annihilator generator packet. -/
 theorem creation_projector_annihilator_packet (i : Fin 3) :
     exteriorDegreeProjector1331 0 (1 : Exterior3) = 1 ∧
@@ -172,7 +174,7 @@ def fourPlanePeirceIndex (p : Fin 4 × Fin 2) : Fin 8 :=
   simp [fourPlanePeirceIndex]
 
 /-- The two entries in every Artin four-plane carry complementary exterior
-degrees.  Plane `0` is `0↔3`; the three rail planes are `1↔2`. -/
+degrees. Plane `0` is `0↔3`; the three rail planes are `1↔2`. -/
 theorem fourPlane_exteriorDegree_complement (k : Fin 4) :
     exteriorDegree1331 (fourPlanePeirceIndex (k, 0)) +
       exteriorDegree1331 (fourPlanePeirceIndex (k, 1)) = 3 := by
@@ -193,7 +195,9 @@ theorem cyclotomic_fourPlaneLift_off_plane_zero
     (zeta : R) (B : Matrix (Fin 2) (Fin 2) R)
     (k l : Fin 4) (c d : Fin 2) (hkl : k ≠ l) :
     (zeta • fourPlaneLift B) (k, c) (l, d) = 0 := by
-  simp [Matrix.smul_apply, fourPlaneLift_off_plane_zero B k l c d hkl]
+  change zeta * fourPlaneLift B (k, c) (l, d) = 0
+  rw [fourPlaneLift_off_plane_zero B k l c d hkl]
+  simp
 
 /-- Exact Artin/cyclotomic packet on the same four Hodge-paired planes. -/
 theorem artin_cyclotomic_hodgePlane_packet
@@ -215,18 +219,13 @@ theorem artin_cyclotomic_hodgePlane_packet
 /-! ## 5. The native finite Galois connection remains a separate symmetry lane -/
 
 /-- `0` and `1` are fixed by every subgroup in the native finite Galois
-connection.  This is the exact theorem-level intersection available in the
+connection. This is the exact theorem-level intersection available in the
 current `F₂` owner; no cyclotomic field-Galois identification is asserted. -/
-theorem finiteGalois_zero_one_fixed
-    (H : Subgroup
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut) :
-    InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.zero ∈
-        galoisFixedSet H ∧
-    InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.one ∈
-        galoisFixedSet H := by
+theorem finiteGalois_zero_one_fixed (H : Subgroup SplitOctF2Aut) :
+    zero ∈ galoisFixedSet H ∧ one ∈ galoisFixedSet H := by
   exact ⟨zero_mem_galoisFixedSet H, one_mem_galoisFixedSet H⟩
 
-/-- Consolidated theorem-level corridor.  The exterior projector decomposition
+/-- Consolidated theorem-level corridor. The exterior projector decomposition
 is exactly the Peirce character decomposition; Hodge exchanges complementary
 sectors; native creation reaches the degree-one sector from the vacuum; and
 Artin/cyclotomic lifts remain inside the four Hodge-paired planes. -/

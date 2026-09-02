@@ -39,7 +39,7 @@ noncomputable def cfcLogSelfAdjoint :
     SelfAdjointOperator n → SelfAdjointOperator n :=
   fun ρ =>
     ⟨CFC.log (ρ : FiniteOperatorAlgebra n), by
-      exact CFC.IsSelfAdjoint.log⟩
+      exact IsSelfAdjoint.cfc⟩
 
 @[simp] theorem cfcLogSelfAdjoint_apply
     (ρ : SelfAdjointOperator n) :

@@ -24,7 +24,7 @@ fixedPCExtRep := function(M)
     if candidate = M then
       out := [];
       for i in [1..6] do
-        if bits[i] then Add(out, [i, 1]); fi;
+        if bits[i] then Add(out, [i - 1, 1]); fi;
       od;
       return Concatenation(out);
     fi;

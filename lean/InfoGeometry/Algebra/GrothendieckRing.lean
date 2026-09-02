@@ -148,4 +148,134 @@ theorem grothendieckMap_mul (x y : M) :
   dsimp [grothendieckMap, grothendieckMul]
   simp
 
+/-- The canonical map into the multiplicative Grothendieck completion. -/
+def grothendieckRingHom : M →+* Grothendieck M where
+  toFun := grothendieckMap M
+  map_one' := grothendieckMap_one
+  map_mul' := grothendieckMap_mul
+  map_zero' := (grothendieckMap M).map_zero
+  map_add' := (grothendieckMap M).map_add
+
+theorem grothendieckFunctor_map_mul
+    {N : Type u} [CommSemiring N] (f : M →+* N)
+    (x y : Grothendieck M) :
+    grothendieckFunctor f.toAddMonoidHom (x * y) =
+      grothendieckFunctor f.toAddMonoidHom x *
+        grothendieckFunctor f.toAddMonoidHom y := by
+  refine Quotient.inductionOn₂ (s₁ := grothendieckSetoid M)
+    (s₂ := grothendieckSetoid M) x y ?_
+  intro a b
+  dsimp [grothendieckMul, grothendieckFunctor, grothendieckLift,
+    grothendieckMap]
+  apply Quotient.sound
+  use 0
+  simp [map_add, map_mul]
+  ring
+
+def grothendieckRingMap
+    {N : Type u} [CommSemiring N] (f : M →+* N) :
+    Grothendieck M →+* Grothendieck N where
+  toFun := grothendieckFunctor f.toAddMonoidHom
+  map_one' := by
+    rw [← grothendieckMap_one (M := M)]
+    rw [grothendieckFunctor_map]
+    change grothendieckMap N (f 1) = 1
+    rw [f.map_one, grothendieckMap_one]
+  map_mul' := grothendieckFunctor_map_mul f
+  map_zero' := (grothendieckFunctor f.toAddMonoidHom).map_zero
+  map_add' := (grothendieckFunctor f.toAddMonoidHom).map_add
+
+@[simp]
+theorem grothendieckRingMap_apply_canonical
+    {N : Type u} [CommSemiring N] (f : M →+* N) (m : M) :
+    grothendieckRingMap f (grothendieckMap M m) =
+      grothendieckMap N (f m) := by
+  exact grothendieckFunctor_map f.toAddMonoidHom m
+
+theorem ringHom_ext_of_grothendieckMap
+    {A : Type*} [CommRing A]
+    {F G : Grothendieck M →+* A}
+    (h : ∀ m, F (grothendieckMap M m) = G (grothendieckMap M m)) : F = G := by
+  apply RingHom.ext
+  intro x
+  rcases grothendieck_eq_sub x with ⟨a, b, rfl⟩
+  rw [map_sub, map_sub, h a, h b]
+
+@[simp]
+theorem grothendieckRingMap_id (M : Type u) [CommSemiring M] :
+    grothendieckRingMap (RingHom.id M) = RingHom.id (Grothendieck M) := by
+  apply ringHom_ext_of_grothendieckMap
+  intro m
+  rw [grothendieckRingMap_apply_canonical]
+  rfl
+
+@[simp]
+theorem grothendieckRingMap_comp
+    {N P : Type u} [CommSemiring N] [CommSemiring P]
+    (f : M →+* N) (g : N →+* P) :
+    grothendieckRingMap (g.comp f) =
+      (grothendieckRingMap g).comp (grothendieckRingMap f) := by
+  apply ringHom_ext_of_grothendieckMap
+  intro m
+  simp [RingHom.comp_apply, grothendieckRingMap_apply_canonical]
+
+noncomputable def grothendieckRingLift
+    {A : Type*} [CommRing A] (f : M →+* A) :
+    Grothendieck M →+* A where
+  toFun := grothendieckLift f.toAddMonoidHom
+  map_one' := by
+    rw [← grothendieckMap_one (M := M)]
+    change grothendieckLift f.toAddMonoidHom (grothendieckMap M 1) = 1
+    rw [grothendieckLift_comp]
+    change f 1 = 1
+    rw [f.map_one]
+  map_mul' := by
+    intro x y
+    refine Quotient.inductionOn₂ (s₁ := grothendieckSetoid M)
+      (s₂ := grothendieckSetoid M) x y ?_
+    intro a b
+    dsimp [grothendieckMul, grothendieckLift, grothendieckMap]
+    change (f (a.1 * b.1 + a.2 * b.2) -
+        f (a.1 * b.2 + a.2 * b.1)) = _
+    simp only [map_add, map_mul]
+    ring
+  map_zero' := (grothendieckLift f.toAddMonoidHom).map_zero
+  map_add' := (grothendieckLift f.toAddMonoidHom).map_add
+
+@[simp]
+theorem grothendieckRingLift_apply
+    {A : Type*} [CommRing A] (f : M →+* A) (m : M) :
+    grothendieckRingLift f (grothendieckMap M m) = f m := by
+  exact grothendieckLift_comp f.toAddMonoidHom m
+
+theorem grothendieckRingHom_lift_exists
+    {A : Type*} [CommRing A] (f : M →+* A) :
+    ∃ F : Grothendieck M →+* A,
+      ∀ m, F (grothendieckMap M m) = f m := by
+  exact ⟨grothendieckRingLift f, grothendieckRingLift_apply f⟩
+
+theorem grothendieckRingLift_unique
+    {A : Type*} [CommRing A] (f : M →+* A)
+    (F : Grothendieck M →+* A)
+    (hF : ∀ m, F (grothendieckMap M m) = f m) :
+    F = grothendieckRingLift f := by
+  apply ringHom_ext_of_grothendieckMap
+  intro m
+  rw [hF, grothendieckRingLift_apply]
+
+theorem grothendieckRingHom_lift_unique
+    {A : Type*} [CommRing A] (f : M →+* A)
+    (F G : Grothendieck M →+* A)
+    (hF : ∀ m, F (grothendieckMap M m) = f m)
+    (hG : ∀ m, G (grothendieckMap M m) = f m) : F = G := by
+  rw [grothendieckRingLift_unique f F hF,
+    grothendieckRingLift_unique f G hG]
+
+theorem grothendieckRingHom_injective_of_cancellation
+    (h_cancel : IsCancellationMonoid M) :
+    Function.Injective (grothendieckRingHom : M →+* Grothendieck M) := by
+  intro x y hxy
+  apply grothendieckMap_injective_of_cancellation h_cancel
+  exact hxy
+
 end InfoGeometry.Algebra.GrothendieckRing

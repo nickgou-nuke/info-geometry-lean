@@ -1,4 +1,15 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Clifford.BottFromCl44
+import InfoGeometry.Clifford.Cl55SpinorChirality
+import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Clifford.Clifford55AnomalyOSP
+import InfoGeometry.Clifford.D4Cl11Tripotent
+import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Clifford.Sandbox.QuaternionPauliCommutators
+import InfoGeometry.Clifford.Sandbox.SplitQuaternionPauliCommutators
+import InfoGeometry.Clifford.SplitBiquaternion
+import InfoGeometry.Clifford.SplitBiquaternionExponential
 import InfoGeometry.Clifford.SplitClifford55ExteriorFiniteSupport
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.OctonionParavectorBridge
@@ -316,6 +327,7 @@ import InfoGeometry.Clifford.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl11GeometricCompass
 import InfoGeometry.Clifford.Cl55WittSpinorLaboratory
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Clifford.Cl55AttentionRelativePositionBridge
 import InfoGeometry.Clifford.Cl55NativeNilpotentInterference
 import InfoGeometry.Clifford.Cl55CayleyRoPEBridge
 import InfoGeometry.Clifford.Cl55IntertwinerFrontier

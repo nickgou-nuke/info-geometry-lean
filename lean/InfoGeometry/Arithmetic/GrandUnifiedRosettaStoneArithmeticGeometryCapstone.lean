@@ -142,7 +142,7 @@ structure CyclotomicGenerators (C : Type*) [CommRing C] [StarRing C] [Algebra �
   e_star : ∀ r : ℚ, star (e r) = e (-r)
   e_periodic : ∀ r : ℚ, e (r + 1) = e r
 
-structure CrossedProductCarrier (C Op : Type*)
+structure CrossedProductAlgebra (C Op : Type*)
     [CommRing C] [StarRing C] [Algebra ℂ C]
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     (gen : CyclotomicGenerators C) where
@@ -341,7 +341,7 @@ theorem grand_unified_rosetta_stone_synthesis
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     [Group G]
     (gen : CyclotomicGenerators C)
-    (bc : CrossedProductCarrier C Op gen)
+    (bc : CrossedProductAlgebra C Op gen)
     (gal : GaloisGroupAction G)
     (kms : PureKMSState G gal)
     (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]

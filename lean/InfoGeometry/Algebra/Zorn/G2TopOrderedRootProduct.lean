@@ -22,7 +22,7 @@ noncomputable def topRootAt (i : Fin 6) :
   ⟨rootPCAlignment.symm i, by
     have htop : bruhatInversionRoots (3, false) = Finset.univ := by
       apply Finset.eq_univ_of_card
-      rw [bruhatInversionRoots_card]
+      rw [bruhatInversionRoots_card_eq_length]
       decide
     simp [htop]⟩
 

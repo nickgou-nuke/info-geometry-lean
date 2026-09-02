@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.LocalZornProjectiveAction
+import InfoGeometry.Canonical.LocalZornProjectiveContinuity
 
 namespace InfoGeometry.Canonical
 

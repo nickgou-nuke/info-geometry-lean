@@ -55,4 +55,3 @@ theorem jordan_associator_eq_zero_of_commute
   exact sub_eq_zero.mp hassoc
 
 end InfoGeometry.Core.JordanAssociator
-

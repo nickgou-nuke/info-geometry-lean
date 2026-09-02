@@ -30,12 +30,35 @@ open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+theorem autMatrix_collect_reverse_product (w : FactorWord) :
+    autMatrix (collect w) =
+      (w.reverse.map (fun t => autMatrix (tokenAutomorphism t))).prod := by
+  induction w with
+  | nil => rw [collect, autMatrix_one]; rfl
+  | cons t w ih =>
+      simp only [collect, autMatrix_mul, List.reverse_cons, List.map_append,
+        List.prod_append, List.map_cons, List.prod_cons]
+      rw [ih]
+      simp
+
 def gapWitnessMatrixSound (k : Fin 12) (i : Fin 189) : Prop :=
   autMatrix (flagRepresentative i) =
     autMatrix
       (collect (gapLeftWitness k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
         collect (gapRightWitness k i))
+
+/- The first nontrivial GAP row is checked independently at the native matrix
+  boundary.  This is a seed for the structural readback cone; it is not
+  promoted to a global all-row certificate. -/
+theorem gapWitnessMatrixSound_1_45 :
+    gapWitnessMatrixSound 1 45 := by
+  change autMatrix (flagRepresentative 45) =
+    autMatrix
+      (collect (gapLeftWitness 1 45) *
+        weylNF (orbitWeyl 1).1 (orbitWeyl 1).2 *
+        collect (gapRightWitness 1 45))
+  decide
 
 theorem gapWitness_group_factorization
     (k : Fin 12) (i : Fin 189)

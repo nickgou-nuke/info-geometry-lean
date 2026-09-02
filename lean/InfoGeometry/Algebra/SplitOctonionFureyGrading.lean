@@ -63,4 +63,75 @@ theorem parityGrade_sectorExchange (b : ChiralBasis) :
     parityGrade (chiralBasisSectorExchange b) = parityGrade b := by
   cases b <;> rfl
 
+/-! The circular Peirce ordering is transported to the existing chiral basis;
+this is an index equivalence, not a new algebraic carrier. -/
+
+def circularPeirceToChiral : Fin 8 ≃ ChiralBasis where
+  toFun
+    | 0 => ChiralBasis.uPlus
+    | 1 => ChiralBasis.up 0
+    | 2 => ChiralBasis.up 1
+    | 3 => ChiralBasis.up 2
+    | 4 => ChiralBasis.uMinus
+    | 5 => ChiralBasis.down 0
+    | 6 => ChiralBasis.down 1
+    | 7 => ChiralBasis.down 2
+    | _ => ChiralBasis.uPlus
+  invFun
+    | ChiralBasis.uPlus => 0
+    | ChiralBasis.up i => ⟨i.val + 1, by omega⟩
+    | ChiralBasis.uMinus => 4
+    | ChiralBasis.down i => ⟨i.val + 5, by omega⟩
+  left_inv := by
+    intro i
+    fin_cases i <;> rfl
+  right_inv := by
+    intro b
+    cases b with
+    | uPlus => rfl
+    | uMinus => rfl
+    | up i => fin_cases i <;> rfl
+    | down i => fin_cases i <;> rfl
+
+def circularParityGrade (i : Fin 8) : FureyGrade :=
+  parityGrade (circularPeirceToChiral i)
+
+@[simp] theorem circularParityGrade_zero :
+    circularParityGrade 0 = parityGrade ChiralBasis.uPlus := rfl
+
+@[simp] theorem circularParityGrade_four :
+    circularParityGrade 4 = parityGrade ChiralBasis.uMinus := rfl
+
+theorem circularParityGrade_sector (i : Fin 8) :
+    circularParityGrade i 0 =
+      if i = 0 ∨ i = 4 then 0 else 1 := by
+  fin_cases i <;> simp [circularParityGrade, circularPeirceToChiral,
+    parityGrade, chiralParity]
+
+def circularSectorExchangeIndex : Fin 8 → Fin 8
+  | 0 => 4
+  | 1 => 5
+  | 2 => 6
+  | 3 => 7
+  | 4 => 0
+  | 5 => 1
+  | 6 => 2
+  | 7 => 3
+  | _ => 0
+
+@[simp] theorem circularSectorExchangeIndex_involutive (i : Fin 8) :
+    circularSectorExchangeIndex (circularSectorExchangeIndex i) = i := by
+  fin_cases i <;> rfl
+
+theorem circularPeirceToChiral_sectorExchange (i : Fin 8) :
+    circularPeirceToChiral (circularSectorExchangeIndex i) =
+      chiralBasisSectorExchange (circularPeirceToChiral i) := by
+  fin_cases i <;> rfl
+
+theorem circularParityGrade_sectorExchange_index (i : Fin 8) :
+    circularParityGrade (circularSectorExchangeIndex i) =
+      circularParityGrade i := by
+  rw [circularParityGrade, circularParityGrade,
+    circularPeirceToChiral_sectorExchange, parityGrade_sectorExchange]
+
 end InfoGeometry.Algebra.SplitOctonionFureyGrading

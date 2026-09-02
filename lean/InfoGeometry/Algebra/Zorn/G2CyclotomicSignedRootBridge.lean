@@ -136,6 +136,67 @@ theorem cyclotomicS2Perm_sq : cyclotomicS2Perm ^ 2 = 1 := by
   rcases r with ⟨b, k⟩
   cases b <;> simp [cyclotomicS2Fun]
 
+theorem cyclotomicS1Perm_ne_cyclotomicS2Perm :
+    cyclotomicS1Perm ≠ cyclotomicS2Perm := by
+  intro h
+  have hx := congrArg (fun p : Equiv.Perm Root => p (false, (0 : ZMod 6))) h
+  change (false, (3 : ZMod 6)) = (false, (2 : ZMod 6)) at hx
+  exact (by decide : ¬ ((3 : ZMod 6) = 2)) (congrArg Prod.snd hx)
+
+theorem cyclotomicS1Perm_ne_one : cyclotomicS1Perm ≠ 1 := by
+  intro h
+  have hx := congrArg (fun p : Equiv.Perm Root => p (false, (0 : ZMod 6))) h
+  change (false, (3 : ZMod 6)) = (false, (0 : ZMod 6)) at hx
+  exact (by decide : ¬ ((3 : ZMod 6) = 0)) (congrArg Prod.snd hx)
+
+theorem cyclotomicS2Perm_ne_one : cyclotomicS2Perm ≠ 1 := by
+  intro h
+  have hx := congrArg (fun p : Equiv.Perm Root => p (false, (0 : ZMod 6))) h
+  change (false, (2 : ZMod 6)) = (false, (0 : ZMod 6)) at hx
+  exact (by decide : ¬ ((2 : ZMod 6) = 0)) (congrArg Prod.snd hx)
+
+theorem cyclotomicS1Perm_mul_S2Perm_pow_six :
+    (cyclotomicS1Perm * cyclotomicS2Perm) ^ 6 = 1 := by
+  apply Equiv.ext
+  intro r
+  rcases r with ⟨b, k⟩
+  cases b <;>
+    simp [cyclotomicS1Perm, cyclotomicS2Perm, cyclotomicS1Fun,
+      cyclotomicS2Fun, Equiv.Perm.mul_apply, pow_succ] <;>
+    ring_nf <;>
+      rw [show (6 : ZMod 6) = 0 by decide] <;>
+      simp
+
+theorem cyclotomicS2Perm_mul_S1Perm_pow_six :
+    (cyclotomicS2Perm * cyclotomicS1Perm) ^ 6 = 1 := by
+  apply Equiv.ext
+  intro r
+  rcases r with ⟨b, k⟩
+  cases b <;>
+    simp [cyclotomicS1Perm, cyclotomicS2Perm, cyclotomicS1Fun,
+      cyclotomicS2Fun, Equiv.Perm.mul_apply, pow_succ] <;>
+    ring_nf <;>
+      rw [show (6 : ZMod 6) = 0 by decide] <;>
+      simp
+
+theorem cyclotomicS1Perm_mul_S2Perm_mul_S1Perm_mul_S2Perm_mul_S1Perm_mul_S2Perm_eq_reverse :
+    cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm *
+        cyclotomicS1Perm * cyclotomicS2Perm =
+      cyclotomicS2Perm * cyclotomicS1Perm * cyclotomicS2Perm * cyclotomicS1Perm *
+        cyclotomicS2Perm * cyclotomicS1Perm := by
+  apply Equiv.ext
+  intro r
+  rcases r with ⟨b, k⟩
+  cases b <;>
+    simp [cyclotomicS1Perm, cyclotomicS2Perm, cyclotomicS1Fun,
+      cyclotomicS2Fun, Equiv.Perm.mul_apply] <;>
+    ring_nf
+  all_goals
+    have hz : (3 : ZMod 6) = -3 := by decide
+    first
+    | simpa using congrArg (fun z : ZMod 6 => z + k) hz
+    | simpa using congrArg (fun z : ZMod 6 => z + k) hz.symm
+
 def cyclotomicCoxeterFun : Root → Root
   | (false, k) => (false, k - 1)
   | (true, k) => (true, k + 1)

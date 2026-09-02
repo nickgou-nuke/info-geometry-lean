@@ -358,6 +358,7 @@ import InfoGeometry.Algebra.Zorn.DiscreteColorBridge
 import InfoGeometry.Algebra.ZornDualLattice
 import InfoGeometry.Algebra.Zorn.G2BNPair
 import InfoGeometry.Algebra.Zorn.G2ClassificationBoundaryClosure
+import InfoGeometry.Algebra.Zorn.G2RootAutShortTwoStructural
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
@@ -830,6 +831,7 @@ import InfoGeometry.Bridge.FormLiftBridge
 import InfoGeometry.Bridge.ModularVirasoro
 import InfoGeometry.Bridge.RealModularBerryBridge
 import InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
+import InfoGeometry.Bridge.AmariZornRegularActionBridge
 import InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
 import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.AdSCFTEntanglementWedgeBridge
@@ -1795,6 +1797,7 @@ import InfoGeometry.Canonical.DyadicStageTopCatColimit
 import InfoGeometry.Canonical.DyadicStageUniversalTopCatBridge
 import InfoGeometry.Canonical.DysonCoulombGas
 import InfoGeometry.Canonical.E77GeneratorsFinite
+import InfoGeometry.Canonical.ExceptionalPoint
 import InfoGeometry.Canonical.E8ExceptionalLieAlgebraTriality
 import InfoGeometry.Canonical.E8JordanTripleSystem
 import InfoGeometry.Canonical.E8LeechBridge
@@ -4000,6 +4003,7 @@ import InfoGeometry.Carrier.TripleAlgebra
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Cartan
 import InfoGeometry.Categorical.All
+import InfoGeometry.QuantumAlgebra.PolarizedBraidFibration
 import InfoGeometry.Categorical.CartanSpacetime
 import InfoGeometry.Categorical.CategoricalZetaMobiusInversion
 import InfoGeometry.Categorical.CategoricalZetaMobius
@@ -4093,6 +4097,7 @@ import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ChevalleySpinorBlueprint
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
+import InfoGeometry.Clifford.Cl11ProjectiveMöbiusBridge
 import InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
@@ -4446,6 +4451,10 @@ import InfoGeometry.Eval.SorryFillerTest
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.G2ArtinOperatorLift
 import InfoGeometry.Exceptional.G2ArtinRootPermutationLift
+import InfoGeometry.Exceptional.G2ArtinKleinBridge
+import InfoGeometry.Exceptional.G2ArtinLongestBridge
+import InfoGeometry.Exceptional.G2CyclotomicCoordinateActionBridge
+import InfoGeometry.Exceptional.G2WeylKleinBridge
 import InfoGeometry.Exceptional.G2DiagonalPhaseTable
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.RealSplitAlbertFreudenthal
@@ -4506,6 +4515,9 @@ import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketBilinearMap
 import InfoGeometry.Exceptional.V4ContactBigrading
 import InfoGeometry.Exceptional.CircularContactV4
 import InfoGeometry.Exceptional.CyclotomicExceptionalGaloisActionBridge
+import InfoGeometry.Exceptional.G2CoordinateRootIndexBridge
+import InfoGeometry.Exceptional.G2ArtinRootStarPipeline
+import InfoGeometry.Exceptional.G2KleinRootIndexTransport
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiBridge
 import InfoGeometry.Exceptional.TwistorZornEmbedding
@@ -4617,6 +4629,7 @@ import InfoGeometry.External.Auto.Crystallographic
 import InfoGeometry.External.Auto.CubicJordanPeirceDecomposition
 import InfoGeometry.External.Auto.CuntzAlgebra
 import InfoGeometry.External.Auto.CuntzBraidCantor
+import InfoGeometry.External.Auto.CuntzEndomorphism
 import InfoGeometry.External.Auto.CuntzInverseLimit
 import InfoGeometry.External.Auto.CuntzK0TorsionRelation
 import InfoGeometry.External.Auto.CuntzKriegerFibonacciK
@@ -5084,6 +5097,7 @@ import InfoGeometry.Geometry.ErlangerPhaseGeometry
 import InfoGeometry.Geometry.FiniteDefectStokesModel
 import InfoGeometry.Geometry.FiniteHestenesCR
 import InfoGeometry.Geometry.FiniteMatrixResolventKernel
+import InfoGeometry.Geometry.TrifactorReadouts
 import InfoGeometry.Geometry.GromovHyperbolicity
 import InfoGeometry.Geometry.HelicalCovering
 import InfoGeometry.Geometry.IndividuatedUHP
@@ -5168,6 +5182,7 @@ import InfoGeometry.GromovWittenErlangen.ProjectiveCountDrazinFrobeniusBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountProbabilityDrazinBridge
 import InfoGeometry.GromovWittenProjectiveLane
 import InfoGeometry.GroupTheory.AutomorphismTower
+import InfoGeometry.GroupTheory.G2BruhatInversions
 import InfoGeometry.GW.All
 import InfoGeometry.GW.VirasoroWardEquilibrium
 import InfoGeometry.Hardware.Benchmark
@@ -5714,6 +5729,7 @@ import InfoGeometry.OperatorAlgebra.G22CartanFiniteLaws
 import InfoGeometry.OperatorAlgebra.G2GaugeSymmetryBridge
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.OperatorAlgebra.SplitOctonionF2SectorExchange
 import InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence
 import InfoGeometry.OperatorAlgebra.GeneralizedNilpotentTripotent
 import InfoGeometry.OperatorAlgebra.GenericZorn
@@ -7630,6 +7646,7 @@ import InfoGeometry.Algebra.Zorn.G2DicksonCubicInvariant
 import InfoGeometry.Algebra.Zorn.G2QuadraticCompatibility
 import InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry
 import InfoGeometry.Algebra.Zorn.G2HexagonIncidence
+import InfoGeometry.Algebra.Zorn.G2BruhatPCInvariance
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
 import InfoGeometry.Algebra.Zorn.G2LeanCarrierMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2CarrierQuotientAction
@@ -7805,6 +7822,7 @@ import InfoGeometry.Quantum.AlgorithmicThermodynamicColimitDuality
 import InfoGeometry.Arithmetic.AmariChentsovAlphaGeometryCapstone
 import InfoGeometry.Arithmetic.FinitePrimonAmari
 import InfoGeometry.Arithmetic.AmariDuallyFlatPrimonCapstone
+import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEvidence
 import InfoGeometry.Arithmetic.SelbergTraceAdelicGeodesicCapstone
 import InfoGeometry.Arithmetic.AdelicHeckeSatakeLFunctionCapstone
 import InfoGeometry.Arithmetic.ConnesConsaniAdelicMotivesCapstone
@@ -8038,3 +8056,4 @@ import InfoGeometry.Canonical.HestenesKreinChiralMonogenicBridge
 import InfoGeometry.Canonical.HestenesKreinChiralMonogenicCapstone
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateCapstone
+import InfoGeometry.Canonical.SplitOctF2SectorExchangeAction

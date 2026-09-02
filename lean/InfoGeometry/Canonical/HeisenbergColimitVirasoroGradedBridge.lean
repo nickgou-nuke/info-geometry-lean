@@ -17,12 +17,12 @@ The repository already contains three genuine structures:
 This owner joins them without introducing a second "Virasoro colimit".
 Each current mode `J_m` is represented by its canonical singleton finite stage,
 mapped into the Heisenberg colimit, recovered in the full Heisenberg algebra,
-and represented on charged Fock space.  Those colimit-derived modes form a
+and represented on charged Fock space. Those colimit-derived modes form a
 native `CurrentHeisenbergRep`, hence generate the repository-owned Virasoro
 representation.
 
 The final packet places the exact Virasoro mode shift next to the native
-exterior graded-ladder law `P_(k+1) ε_v = ε_v P_k`.  No identification of
+exterior graded-ladder law `P_(k+1) ε_v = ε_v P_k`. No identification of
 exterior degree with Virasoro conformal weight is asserted.
 -/
 
@@ -40,8 +40,6 @@ open InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- Canonical colimit representative of the Heisenberg current mode `J_k`,
-coming from the singleton finite stage `{some k}`. -/
 noncomputable def heisenbergColimitMode (k : ℤ) :
     (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) :=
   let s : Finset (Option ℤ) := {some k}
@@ -50,8 +48,6 @@ noncomputable def heisenbergColimitMode (k : ℤ) :
       simpa [s] using heisenberg_mode_stage_contains_jgen (𝕜 := 𝕜) k⟩
   (colimit.ι (heisenbergFiniteModeDiagram (𝕜 := 𝕜)) s).hom x
 
-/-- The filtered-colimit comparison map recovers the original abstract
-Heisenberg generator from its canonical singleton-stage representative. -/
 theorem heisenbergFiniteModeColimitMap_mode (k : ℤ) :
     (heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom
         (heisenbergColimitMode (𝕜 := 𝕜) k) =
@@ -66,7 +62,6 @@ theorem heisenbergFiniteModeColimitMap_mode (k : ℤ) :
   have hstage' := congrArg (fun f => f.hom x) hstage
   simpa [heisenbergFiniteModeCocone, x] using hstage'
 
-/-- The colimit equivalence sends the canonical mode representative to `J_k`. -/
 @[simp] theorem heisenbergFiniteModeColimitEquiv_mode (k : ℤ) :
     heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
         (heisenbergColimitMode (𝕜 := 𝕜) k) =
@@ -82,15 +77,12 @@ abbrev FockEnd : Type* :=
   VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
     VirasoroProject.ChargedFockSpace 𝕜 α
 
-/-- Charged-Fock representation of the full abstract Heisenberg algebra. -/
 noncomputable def chargedFockHeisenbergRepresentation :
     LieAlgebra.Representation 𝕜 𝕜 (HeisenbergAlgebra 𝕜) (Fock (𝕜 := 𝕜) α) :=
   UniversalEnvelopingAlgebra.representation
     (𝕜 := 𝕜) (𝓰 := HeisenbergAlgebra 𝕜)
     (V := Fock (𝕜 := 𝕜) α)
 
-/-- Read an element of the filtered Heisenberg colimit as an operator on the
-charged Fock space. -/
 noncomputable def chargedFockColimitReadout :
     (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜]
       FockEnd (𝕜 := 𝕜) α where
@@ -99,8 +91,6 @@ noncomputable def chargedFockColimitReadout :
   map_add' x y := by simp
   map_smul' c x := by simp
 
-/-- The categorical colimit representative of mode `k` reads exactly as the
-repository-owned charged-Fock Heisenberg current operator. -/
 @[simp] theorem chargedFockColimitReadout_mode (k : ℤ) :
     chargedFockColimitReadout (𝕜 := 𝕜) α
         (heisenbergColimitMode (𝕜 := 𝕜) k) =
@@ -111,7 +101,6 @@ repository-owned charged-Fock Heisenberg current operator. -/
   rw [heisenbergFiniteModeColimitEquiv_mode]
   rfl
 
-/-- The colimit-derived current mode family. -/
 noncomputable def colimitCurrentMode (k : ℤ) : FockEnd (𝕜 := 𝕜) α :=
   chargedFockColimitReadout (𝕜 := 𝕜) α
     (heisenbergColimitMode (𝕜 := 𝕜) k)
@@ -121,8 +110,6 @@ noncomputable def colimitCurrentMode (k : ℤ) : FockEnd (𝕜 := 𝕜) α :=
       chargedFockHeisenbergMode (𝕜 := 𝕜) α k := by
   exact chargedFockColimitReadout_mode (𝕜 := 𝕜) α k
 
-/-- The colimit-derived current modes satisfy the exact Heisenberg central
-commutator. -/
 theorem colimitCurrentMode_commutator (k l : ℤ) :
     (colimitCurrentMode (𝕜 := 𝕜) α k).commutator
         (colimitCurrentMode (𝕜 := 𝕜) α l) =
@@ -131,24 +118,18 @@ theorem colimitCurrentMode_commutator (k l : ℤ) :
     colimitCurrentMode_eq_chargedFock]
   exact chargedFockHeisenbergMode_commutator (𝕜 := 𝕜) α k l
 
-/-- The colimit-derived current family is locally truncated on every charged
-Fock vector. -/
 theorem colimitCurrentMode_eventually_eq_zero (v : Fock (𝕜 := 𝕜) α) :
     atTop.Eventually (fun k : ℤ =>
       colimitCurrentMode (𝕜 := 𝕜) α k v = 0) := by
   simpa only [colimitCurrentMode_eq_chargedFock] using
     chargedFockHeisenbergMode_eventually_eq_zero (𝕜 := 𝕜) α v
 
-/-- The categorical-colimit currents form the exact native current interface
-required by the Sugawara construction. -/
 noncomputable def colimitCurrentHeisenbergRep :
     CurrentHeisenbergRep 𝕜 (Fock (𝕜 := 𝕜) α) where
   J := colimitCurrentMode (𝕜 := 𝕜) α
   trunc := colimitCurrentMode_eventually_eq_zero (𝕜 := 𝕜) α
   comm := colimitCurrentMode_commutator (𝕜 := 𝕜) α
 
-/-- Sugawara acts on the categorical-colimit modes by the exact shift law
-`[L_n,J_m] = -m J_(n+m)`. -/
 theorem sugawara_colimit_mode_shift (n m : ℤ) :
     ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n).commutator
       ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
@@ -158,25 +139,19 @@ theorem sugawara_colimit_mode_shift (n m : ℤ) :
     (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).trunc
     (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).comm n m
 
-/-- The zero Sugawara mode grades every colimit current mode with eigenvalue
-`-m`: `[L_0,J_m] = -m J_m`. -/
 theorem sugawara_lzero_colimit_weight (m : ℤ) :
     ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode 0).commutator
       ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m) =
         -m • (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J m := by
   simpa using sugawara_colimit_mode_shift (𝕜 := 𝕜) α 0 m
 
-/-- The actual represented Virasoro generator `lgen n` is the same stress mode
-used in the colimit shift theorem. -/
 theorem virasoro_lgen_colimit_readout (n : ℤ) :
     (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroAlgebra.lgen 𝕜 n) =
       (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n := by
-  exact (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).
-    currentSugawaraRepresentation_lgen_apply n
+  exact CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply
+    (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α) n
 
-/-- Direct Virasoro statement on categorical-colimit modes:
-the represented `L_n` shifts the colimit current `J_m` to `J_(n+m)`. -/
 theorem virasoro_lgen_colimit_mode_shift (n m : ℤ) :
     ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroAlgebra.lgen 𝕜 n)).commutator
@@ -185,8 +160,6 @@ theorem virasoro_lgen_colimit_mode_shift (n m : ℤ) :
   rw [virasoro_lgen_colimit_readout (𝕜 := 𝕜) α n]
   exact sugawara_colimit_mode_shift (𝕜 := 𝕜) α n m
 
-/-- The colimit-derived stress modes satisfy the full Virasoro bracket with
-central charge one. -/
 theorem colimit_stressMode_virasoroBracket (m n : ℤ) :
     ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode m).commutator
         ((colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n) =
@@ -195,11 +168,9 @@ theorem colimit_stressMode_virasoroBracket (m n : ℤ) :
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : FockEnd (𝕜 := 𝕜) α))
           else 0 := by
-  exact (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).
-    sugawaraStressMode_virasoroBracket m n
+  exact CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket
+    (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α) m n
 
-/-- A Virasoro shift target is again read from a canonical finite-stage
-representative in the same filtered Heisenberg colimit. -/
 theorem virasoro_shift_target_is_colimit_mode (n m : ℤ) :
     (colimitCurrentHeisenbergRep (𝕜 := 𝕜) α).J (n + m) =
       chargedFockColimitReadout (𝕜 := 𝕜) α
@@ -208,8 +179,6 @@ theorem virasoro_shift_target_is_colimit_mode (n m : ℤ) :
 
 end ChargedFock
 
-/-- Exterior creation and Virasoro action are two native instances of a graded
-shift law on different carriers. -/
 theorem exterior_and_virasoro_graded_shift_packet
     (v : InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge.V3)
     (k : ℕ) (α : 𝕜) (n m : ℤ) :

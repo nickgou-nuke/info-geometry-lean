@@ -20,6 +20,7 @@ open CategoryTheory
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
 open InfoGeometry.Canonical.FilteredHestenesKreinColimit
+open InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 open InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
 open InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 

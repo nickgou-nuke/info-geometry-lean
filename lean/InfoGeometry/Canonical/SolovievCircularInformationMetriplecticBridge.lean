@@ -119,12 +119,9 @@ theorem circularSolovievHamiltonian_eq_causal_reconstruction
          solovievCausalParameters eQ eP V0 1,
          solovievCausalParameters eQ eP V0 0 -
             solovievCausalParameters eQ eP V0 3] := by
-  rw [circular_resonant_two_sector_identification D rootMapPlus rootMapMinus
-    h_ortho eQ V0 i]
-  ext a b
-  fin_cases a <;> fin_cases b <;>
-    simp [InfoGeometry.Physics.TwoSector.twoSectorHamiltonian,
-      solovievCausalParameters] <;> ring
+  unfold circularSolovievHamiltonian
+  rw [circular_coupling_diagonal D rootMapPlus rootMapMinus h_ortho V0 i]
+  exact (solovievCausalParameters_matrix_reconstruction eQ eP V0).symm
 
 /-! ## 2. Four natural parameters as a slice of the native G₂ derivation algebra -/
 

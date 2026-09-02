@@ -103,6 +103,16 @@ theorem peirceHodgeStar_projectorPM_projectorMP :
   rw [projectorPM_apply, peirceHodgeStar_coordinate]
   simp [projectorMP_apply]
 
+theorem peirceHodgeStar_projectorPM_projectorMP_add_projectorMM :
+    peirceHodgeStar * projectorPM =
+      (projectorMP + projectorMM) * peirceHodgeStar * projectorPM := by
+  apply LinearMap.ext
+  intro x
+  change peirceHodgeStar (projectorPM x) =
+    (projectorMP + projectorMM) (peirceHodgeStar (projectorPM x))
+  rw [projectorPM_apply, peirceHodgeStar_coordinate]
+  simp [projectorMP_apply, projectorMM_apply]
+
 theorem peirceHodgeStar_projectorMP_projectorPM :
     peirceHodgeStar * projectorMP =
       projectorPM * peirceHodgeStar * projectorMP := by
@@ -112,6 +122,16 @@ theorem peirceHodgeStar_projectorMP_projectorPM :
     projectorPM (peirceHodgeStar (projectorMP x))
   rw [projectorMP_apply, peirceHodgeStar_coordinate]
   simp [projectorPM_apply]
+
+theorem peirceHodgeStar_projectorMP_projectorPP_add_projectorPM :
+    peirceHodgeStar * projectorMP =
+      (projectorPP + projectorPM) * peirceHodgeStar * projectorMP := by
+  apply LinearMap.ext
+  intro x
+  change peirceHodgeStar (projectorMP x) =
+    (projectorPP + projectorPM) (peirceHodgeStar (projectorMP x))
+  rw [projectorMP_apply, peirceHodgeStar_coordinate]
+  simp [projectorPP_apply, projectorPM_apply]
 
 theorem peirceHodgeStar_projectorMM_projectorPP :
     peirceHodgeStar * projectorMM =

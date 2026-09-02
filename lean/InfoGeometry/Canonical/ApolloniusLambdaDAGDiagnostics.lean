@@ -1,0 +1,38 @@
+import InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
+import InfoGeometry.Canonical.ApolloniusLambdaDAGQuery
+
+open InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
+
+#check Edge
+#check Reachable
+#check reachable_trans
+#check edge_rank_lt
+#check lambda_centered_reflection
+#check lambda_ratio_inversion
+#check lambda_scale_riccati
+#check lambda_vector_fields_orthogonal
+#check lambda_phase_tangent
+#check lambda_scale_normal
+#check lambda_unit_circle_chart
+#check lambda_fisher_positive
+#check lambda_information_potential_nonnegative
+#check lambda_dilation_group
+#check lambda_transfer_unit
+#check affine_reaches_sl2Generator
+#check affine_reaches_informationPotential
+#check affine_reaches_metriplecticScalarFlow
+#check affine_reaches_transferOperator
+#check current_topological_closure
+
+#print axioms edge_rank_lt
+#print axioms lambda_scale_riccati
+#print axioms lambda_vector_fields_orthogonal
+#print axioms lambda_fisher_positive
+#print axioms affine_reaches_sl2Generator
+#print axioms affine_reaches_metriplecticScalarFlow
+#print axioms affine_reaches_transferOperator
+#print axioms current_topological_closure
+
+#apollonius_lambda_dag
+#audit_apollonius_lambda_dag
+

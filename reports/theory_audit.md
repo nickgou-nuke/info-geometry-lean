@@ -1,6 +1,6 @@
 # Theory Audit Report
 
-Generated: 2026-09-01 20:15:02Z
+Generated: 2026-09-02 04:02:29Z
 
 ## Build toolchain status
 - lake: available (/home/goutev/.elan/bin/lake)
@@ -12,505 +12,505 @@ Lake version 5.0.0-src+978f81d (Lean version 4.28.1)
 
 ```text
 lean/InfoGeometry/LogarithmicBridge.lean:35:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/sandbox/GoldenMeanShift.lean:22:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
+lean/InfoGeometry/Combinatorics/BinaryPCGolayBridge.lean:37:All proofs are complete native Mathlib 4 with zero `sorry`s, zero placeholders, and zero custom axioms.
 lean/InfoGeometry/Thermodynamics/SinkhornBirkhoffGibbsBridge.lean:28:All proofs are complete in native Lean 4 with 0 `sorry`s.
 lean/InfoGeometry/Continuous/DeRhamUnifiedCorridor.lean:36:All theorems are 100% kernel-checked in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Combinatorics/BinaryPCGolayBridge.lean:37:All proofs are complete native Mathlib 4 with zero `sorry`s, zero placeholders, and zero custom axioms.
 lean/InfoGeometry/Continuous/PositiveOrthant.lean:30:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/sandbox/GoldenMeanShift.lean:22:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
 lean/InfoGeometry/Continuous/Exactness.lean:26:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/MassSpectrometry/PeakSpectrum.lean:110:/-- Indexed spectra therefore admit a certified mass-sorted free-monoid serialization. -/
 lean/InfoGeometry/Thermodynamics/SoftmaxGibbsVariationalPrinciple.lean:33:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Automorphic/HeckePurification.lean:82:  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
-lean/InfoGeometry/Automorphic/LanglandsFunctorialityNuclearBridge.lean:24:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Automorphic/GlobalNonAbelianLanglandsBridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive ax!om audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
 lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
-lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
 lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
 lean/InfoGeometry/Lint/Pauli.lean:100:                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
-lean/InfoGeometry/Synthesis/OnsagerOperatorDifferentialCalculus.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Complex/MobiusApolloniusFoliation.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Analysis/LogDetSelfConcordantBarrier.lean:21:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Tooling/VacuityCritic.lean:24:    field.value != "sorry" && field.value != "sorry"
-lean/InfoGeometry/Clifford/Cl55RoPESplitTorusBridge.lean:38:All proofs are native Lean 4 without `sorry`s.
-lean/InfoGeometry/Routing/CliffordRoPETorus.lean:32:All theorems are exact in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Exceptional/Freudenthal5gradedTKKlikeMorphism.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Automorphic/HeckePurification.lean:82:  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
+lean/InfoGeometry/MassSpectrometry/PeakSpectrum.lean:110:/-- Indexed spectra therefore admit a certified mass-sorted free-monoid serialization. -/
+lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
+lean/InfoGeometry/Automorphic/LanglandsFunctorialityNuclearBridge.lean:24:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Automorphic/GlobalNonAbelianLanglandsBridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
+lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
 lean/InfoGeometry/NCG/DualExponentialTrifoldBridge.lean:34:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean:16:No `sorry`.
 lean/InfoGeometry/NCG/NoncommutativeCyclicCocycle.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/NCG/CategoricalColimitKMSStateLiftCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/NCG/CategoricalInductiveColimitKMSBridge.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/NCG/NoncommutativeDifferentialCalculus.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Quantum/JaynesCuntzKMSDerivationCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/NCG/NoncommutativeNoetherPoisson.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Exceptional/Freudenthal5gradedTKKlikeMorphism.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/NCG/NoncommutativeOperatorMonotoneMetric.lean:22:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/NCG/CategoricalColimitStateDescent.lean:23:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Analysis/LaplaceUniqueness.lean:302:If two Laplace data agree on the same Bromwich contour and both sorry the
-lean/InfoGeometry/GrandUnification/SouriauBostConnesTransitionTheorem.lean:29:All theorems are 100% kernel-checked with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Analysis/LogDetSelfConcordantBarrier.lean:21:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Lie/SO55MatrixLieSubalgebra.lean:23:are mechanically verified in Lean 4 with ZERO `sorry`s and ZERO custom axioms.
-lean/InfoGeometry/GrandUnification/SouriauBostConnes.lean:34:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Analysis/MatrixSpectralSelfConcordantBarrier.lean:20:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Lie/SplitOctonionDerivationSpinRep.lean:16:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Clifford/Cl55HypercubePeirceCube.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Quantum/BostConnesPrimonCantorSpinChainCapstone.lean:32:All theorems are 100% kernel-verified in native Lean 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Analysis/JaynesRelativeStates.lean:26:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Clifford/Cl55WittSpinorLaboratory.lean:39:All theorems are exact in native Mathlib 4 with zero `sorry`s.
 lean/InfoGeometry/Lie/CartanKreinNeutralSignatureBridge.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Exceptional/FreudenthalTwoLevelGapBridge.lean:35:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
 lean/InfoGeometry/Lie/G2CartanSymmetricSpaceIdentification.lean:23:and previously verified lemmas. No `sorry`, no wrappers.
 lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean:28:All proofs are native Mathlib 4 derivations checked by the kernel with zero `sorry`s.
+lean/InfoGeometry/Exceptional/FreudenthalTwoLevelGapBridge.lean:35:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
 lean/InfoGeometry/QuantumGeometry/KahlerSouriauInformationBridge.lean:22:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Lie/G2TwoRealSplitClassification.lean:38:no `sorry`, no external enumeration is invoked inside this file itself.
+lean/InfoGeometry/Synthesis/OnsagerOperatorDifferentialCalculus.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Lie/SplitG2SL3ModuleDecomposition.lean:23:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/QuantumGeometry/Unification.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Quantum/BostConnesPrimonZeroTemperatureLimitCapstone.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Complex/MobiusApolloniusFoliation.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/QuantumGeometry/TangentCotangentSymplecticBridge.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean:16:No `sorry`.
 lean/InfoGeometry/QuantumGeometry/BerryKeatingDilationBridge.lean:34:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/QuantumGeometry/TensorBridge.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Lie/SouriauBregmanDualityBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Architecture/CartanCosetManifold.lean:19:All proofs are complete in native Lean 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Clifford/Cl55RoPESplitTorusBridge.lean:38:All proofs are native Lean 4 without `sorry`s.
+lean/InfoGeometry/Quantum/JaynesCuntzKMSDerivationCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/GrandUnification/SouriauBostConnesTransitionTheorem.lean:29:All theorems are 100% kernel-checked with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/GrandUnification/SouriauBostConnes.lean:34:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Tooling/VacuityCritic.lean:24:    field.value != "sorry" && field.value != "sorry"
 lean/InfoGeometry/Probability/ExpLogRNDerivation.lean:45:All proofs are 100% native Mathlib with zero `sorry`s, zero placeholders, and zero custom axioms.
-lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean:19:   proven natively with zero `sorry`s using the cyclic property of the matrix trace.
-lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Architecture/CartanGeodesicSymmetry.lean:28:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Probability/HomologicalProbability.lean:838:Type III von Neumann factors sorry no finite normal tracial state.
-lean/InfoGeometry/Critical/LogCFTCritical.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Critical/LogCFTColimitRecursiveExponentCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Critical/LogarithmicCFTCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Lie/CartanCosetRiemannCurvatureBridge.lean:27:All proofs are native Lean 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Lie/PeirceDoubledComplexStructure.lean:67:/-! The doubled carrier is finite-dimensional, so the same operators admit
+lean/InfoGeometry/Routing/CliffordRoPETorus.lean:32:All theorems are exact in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Quantum/BostConnesPrimonCantorSpinChainCapstone.lean:32:All theorems are 100% kernel-verified in native Lean 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/InformationGeometry/ItakuraSaitoBregmanBridge.lean:16:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/InformationGeometry/BKMBipartiteTensor.lean:26:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/InformationGeometry/BKMMetricModularBridge.lean:21:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Analysis/LaplaceUniqueness.lean:302:If two Laplace data agree on the same Bromwich contour and both sorry the
+lean/InfoGeometry/Critical/LogCFTCritical.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/InformationGeometry/KMSThermodynamicIdentity.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Critical/LogCFTColimitRecursiveExponentCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/InformationGeometry/ArakiDonaldVariational.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Critical/LogarithmicCFTCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/InformationGeometry/BurgSteinSelfConcordance.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Lie/PeirceDoubledComplexStructure.lean:67:/-! The doubled carrier is finite-dimensional, so the same operators admit
+lean/InfoGeometry/Lie/CartanCosetRiemannCurvatureBridge.lean:27:All proofs are native Lean 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Analysis/MatrixSpectralSelfConcordantBarrier.lean:20:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Quantum/BostConnesPrimonZeroTemperatureLimitCapstone.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/LLM/AttentionEntropyProductionFlow.lean:27:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Quantum/BerryKeatingCCRCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Modular/KMSState.lean:31:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/TrifactorTripotentUnification.lean:27:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Modular/CARChiralDerivation.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Clifford/Cl55RoPEAttentionPairing.lean:27:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Modular/SemidirectExteriorAlgebra.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Clifford/FoundationalInvolutionsBridge.lean:29:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Modular/SchrodingerGKSL.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/TransversalCurvatureK0.lean:26:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/GKSLDissipatorAlgebraic.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/G2SpectralDecomposition.lean:18:All proofs are native Lean4, contain no `sorry`, and rely only on the
-lean/InfoGeometry/Modular/TrifoldDecomposition.lean:17:All proofs are complete in native Mathlib with zero `sorry`s.
-lean/InfoGeometry/Modular/TomitaChiralJ.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/TrifoldSuperKMS.lean:24:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/KMSColimitExtension.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/CommutantSemidirectProduct.lean:16:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/InnerDerivationLieIdeal.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/TrifoldClassification.lean:12:characterization with zero `sorry`s in native Mathlib.
-lean/InfoGeometry/Modular/G2FlagCurvature.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/ZetaRegularizedDeterminantBridge.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ColimitFlowDerivation.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/TomitaCommutantDuality.lean:26:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/WeylPfaffianDeterminantTriple.lean:19:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ArakiHessianKuboMori.lean:32:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/GeodesicFlow.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
-lean/InfoGeometry/Modular/ModularTimeSemigroupBridge.lean:19:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/DualExponentialCommutatorBridge.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ColimitGNS.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/ModularCocycleKMSBridge.lean:49:All proofs are complete in native Mathlib 4 with zero `sorry`s, zero wrappers, and zero custom axioms.
-lean/InfoGeometry/Modular/CARModularFlow.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/ChiralFiberCurvature.lean:33:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/OperatorKMSThermodynamicIdentity.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ColimitKMSInfinitesimal.lean:31:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Clifford/Cl55WindingMonodromyRepresentation.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Modular/AmariChentsovDualConnections.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/ConcreteOperatorModularBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/DualExponentialBerezinianAutomorphismBridge.lean:21:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/CARColimitFlow.lean:31:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Analysis/JaynesRelativeStates.lean:26:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Clifford/Cl55HypercubePeirceCube.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 axioms.
 lean/InfoGeometry/Physics/OperatorCoefficientZornBdGBridge.lean:43:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Clifford/Cl55WittSpinorLaboratory.lean:39:All theorems are exact in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Lie/SouriauBregmanDualityBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Causal/ProofDAGTopologicalClosureCapstone.lean:39:All proofs are 100% native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/QuantumRelativeEntropyMonotonicity.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ModularColimitDerivation.lean:28:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Physics/MasterUnifiedTheoryOfQuantumMatterCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/DiracRestChiralTwoSectorBridge.lean:32:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/Lie/G2TwoRealSplitClassification.lean:38:no `sorry`, no external enumeration is invoked inside this file itself.
+lean/InfoGeometry/Quantum/BerryKeatingCCRCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:19:All proofs are complete in native Lean 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean:19:   proven natively with zero `sorry`s using the cyclic property of the matrix trace.
+lean/InfoGeometry/Architecture/MatrixSymmetricConeFisherRao.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Architecture/CartanGeodesicSymmetry.lean:28:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/Cl55SpinorCartanFock.lean:45:All proofs are native Lean 4 without `sorry`s.
+lean/InfoGeometry/Algebra/Zorn/G2TwoConcreteWeylGroup.lean:22:All proofs are native Mathlib with 0 `sorry`s.
+lean/InfoGeometry/Physics/OperatorCyclotomicDoubleDavidStarBridge.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/TrifactorTripotentUnification.lean:27:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Algebra/Zorn/G2BruhatCellDecomposition.lean:15:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/ThoriumHyperfineQEDSpacetimeBridge.lean:31:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/SemidirectExteriorAlgebra.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:10:the scalar entropy algebra below is proved without axioms or `sorry`.
+lean/InfoGeometry/Modular/TransversalCurvatureK0.lean:26:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Lie/SplitOctonionDerivationSpinRep.lean:16:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/SplitG2SL3ModuleDecomposition.lean:27:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/G2SpectralDecomposition.lean:18:All proofs are native Lean4, contain no `sorry`, and rely only on the
+lean/Omega/POM/OracleCapacityKolmogorovSpectrum.lean:12:points in the fiber over `x` admit a description of length at most `B`, while `fiberContainment`
+lean/InfoGeometry/Modular/CommutantSemidirectProduct.lean:16:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/ZornBdGSuperconductingExponentialBridge.lean:30:All theorems are proved natively in Lean 4 with Mathlib, with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/ColimitFlowDerivation.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/DualExponentialCommutatorBridge.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/ChiralFiberCurvature.lean:33:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/ChiralZitterbewegungBridge.lean:33:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Modular/ColimitKMSInfinitesimal.lean:31:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/SolovievQuasiparticlePhononEigenproblem.lean:38:All proofs are complete in native Lean 4 with 0 `sorry`s.
 lean/InfoGeometry/Modular/EntropyMonotonicity.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/KuboMoriMetric.lean:33:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
-lean/InfoGeometry/Modular/Noncommutative.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/ConnesDifferentialEquation.lean:23:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Modular/ModularColimitFlow.lean:26:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Modular/SuperKMS.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/Omega/POM/FractranPermutationEmbeddingLength.lean:52:/-- Finite permutations admit a prime-encoded FRACTRAN realization, and any program carrying a
 lean/InfoGeometry/Modular/DualFlatnessPythagorean.lean:20:  3. Complete, `sorry`-free proof of `generalized_pythagorean_theorem`:
 lean/InfoGeometry/Modular/DualFlatnessPythagorean.lean:24:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Modular/QuantumDataProcessingInequality.lean:27:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/SelfConcordantBarrierTriple.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/RadonNikodymDerivation.lean:20:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Clifford/Cl55MaximalTorus.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
 lean/InfoGeometry/Modular/TrifoldSurprisalIntertwiningBridge.lean:35:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/QuantumDataProcessingInequality.lean:27:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/CyclotomicHiggsGaloisDIIICapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/SelfConcordantBarrierTriple.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Modular/SemidirectAutomorphismGroup.lean:26:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/LocalHamiltonianDerivation.lean:23:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Physics/MasterUnifiedTheoryOfQuantumMatterCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Clifford/Cl55PeirceMoERouting.lean:24:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Clifford/Cl55ComplexStructureRealification.lean:34:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Canonical/CuntzCanonicalEndomorphismBridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Physics/DiracRestChiralTwoSectorBridge.lean:32:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Canonical/HestenesG2HolomorphicHarmonicTriadBridge.lean:34:All theorems proven as native Mathlib lemmas with 0 `sorry`s, 0 warnings, and 0 custom axioms.
-lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
-lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
-lean/InfoGeometry/Modular/NonAssociativeRiemannian.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Information/SouriauLieGroupThermodynamics.lean:35:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Modular/TrifoldRadonNikodymBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s.
-lean/InfoGeometry/Information/ModularCocycleKMSBridge.lean:37:All proofs are 100% native Mathlib with zero `sorry`s, zero placeholders, and zero custom axioms.
-lean/InfoGeometry/Information/MasterArchetypeConvexDuality.lean:42:All theorems are fully proved with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Information/ModularSurprisalDerivationBridge.lean:21:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:10:the scalar entropy algebra below is proved without axioms or `sorry`.
-lean/InfoGeometry/Information/UniversalDualityQuadrangle.lean:29:All theorems are fully proved in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/Omega/POM/OracleCapacityKolmogorovSpectrum.lean:12:points in the fiber over `x` admit a description of length at most `B`, while `fiberContainment`
-lean/InfoGeometry/Canonical/LurieQuasiCategoryHigherCategoryCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Physics/Cl55SpinorCartanFock.lean:45:All proofs are native Lean 4 without `sorry`s.
-lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot sorry such a
-lean/Omega/POM/FractranPermutationEmbeddingLength.lean:52:/-- Finite permutations admit a prime-encoded FRACTRAN realization, and any program carrying a
-lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean:219:/-! ## Wedge Actions (sorry-free) -/
-lean/InfoGeometry/Physics/OperatorCyclotomicDoubleDavidStarBridge.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Arithmetic/UnifiedCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
-lean/InfoGeometry/Algebra/GogberashviliNilpotentCARBridge.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/AmplituhedronGrassmannianBCFWCapstone.lean:40:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean:25:No `sorry`.
-lean/InfoGeometry/Canonical/AmplituhedronDifferentialResidue.lean:26:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Arithmetic/AdelicHeckeSatakeLFunctionCapstone.lean:37:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Modular/ConcreteOperatorModularBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/QuantumRelativeEntropyMonotonicity.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/ConnesDifferentialEquation.lean:23:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/OperatorAlgebra/SplitTorusLogRouting.lean:34:All theorems are exact in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Physics/ParaKahlerAmariSouriauSynthesis.lean:37:All proofs are native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/SuperKMS.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Clifford/Cl55RoPEAttentionPairing.lean:27:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/RadonNikodymDerivation.lean:20:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Clifford/FoundationalInvolutionsBridge.lean:29:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Modular/Noncommutative.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/OperatorAlgebra/KANCharacterFactorization.lean:29:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Physics/SolovievCircularChiralProjectionBridge.lean:50:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/Modular/ModularCocycleKMSBridge.lean:49:All proofs are complete in native Mathlib 4 with zero `sorry`s, zero wrappers, and zero custom axioms.
+lean/InfoGeometry/Physics/TensorProductCommutationBregmanEntropyCapstone.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/OperatorAlgebra/GradedKANWaveletTransform.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/AmariChentsovDualConnections.lean:30:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/HiddenChiralSectorEMDecoupling.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/Modular/CARColimitFlow.lean:31:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/OperatorAlgebra/OperatorThermodynamics.lean:760:/-- A plain flow whose time slices admit the ring-automorphism structure
+lean/InfoGeometry/Modular/ModularColimitDerivation.lean:28:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Physics/MatrixMirrorDescentKMSCentralPathCapstone.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Modular/ModularColimitFlow.lean:26:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 lean/InfoGeometry/OperatorAlgebra/IwasawaKANTransform.lean:35:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Physics/SplitG2SL3ModuleDecomposition.lean:27:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Algebra/NonAssocPeirceFrame.lean:26:All proofs are 100% native Mathlib with zero `sorry`s, zero custom axioms, and zero admits.
-lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:19:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
-lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean:9:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/BisognanoWichmannSouriauUnification.lean:34:All proofs are 100% native Lean 4 Mathlib proofs with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Arithmetic/LagariasMontagueParityLadderBridge.lean:16:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/SouriauCoadjointOrbitBridge.lean:24:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Physics/ZornBdGSuperconductingExponentialBridge.lean:30:All theorems are proved natively in Lean 4 with Mathlib, with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Algebra/CyclotomicTripotentPeirceLiftingCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Physics/ChiralZitterbewegungBridge.lean:33:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Physics/SolovievQuasiparticlePhononEigenproblem.lean:38:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Meta/OwnerTarget.lean:43:  A `sorry` in an owner-target proof is machine-visible closure debt.
-lean/InfoGeometry/Algebra/ZornBdGDerivationBridge.lean:18:All lemmas and theorems are proven natively in Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/ContinuousDeRhamPotentialBridge.lean:28:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/OperatorModularBridge.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
+lean/InfoGeometry/Modular/ModularTimeSemigroupBridge.lean:19:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Modular/CARModularFlow.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean:19:All relations are verified with native Mathlib proofs and zero `sorry`s.
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:19:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Modular/DualExponentialBerezinianAutomorphismBridge.lean:21:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/OperatorAlgebra/HyperbolicMoEProjector.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/KuboMoriMetric.lean:33:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Algebra/Zorn/G2CyclotomicPoincareFactorization.lean:18:All proofs are native Mathlib polynomial identities with zero `sorry`s.
+lean/InfoGeometry/Clifford/Cl55WindingMonodromyRepresentation.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/NonAssociativeRiemannian.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/KleinBottleModularSewing.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/TrifoldRadonNikodymBridge.lean:17:All proofs are complete in native Mathlib with zero `sorry`s.
 lean/InfoGeometry/OperatorAlgebra/Cl55SplitCartanCharacters.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Arithmetic/ConnesConsaniAdelicMotivesCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Algebra/Zorn/G2SteinbergPositiveRoots.lean:17:with 0 `sorry`s.
+lean/InfoGeometry/Modular/KMSState.lean:31:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/NuclearPhononRPAAlgebra.lean:26:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Meta/OwnerTarget.lean:43:  A `sorry` in an owner-target proof is machine-visible closure debt.
+lean/InfoGeometry/Modular/CARChiralDerivation.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/SchrodingerGKSL.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/TwoSectorSpectralOscillation.lean:33:All proofs are complete in native Lean 4 with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/OperatorAlgebra/OperatorExteriorAlgebraGeneral.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Algebra/Zorn/G2BNBruhatFramework.lean:31:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/GKSLDissipatorAlgebraic.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean:37:  fitness : ℝ          -- between 0 and 1 (1 = compiles, 0 = sorry)
-lean/InfoGeometry/Arithmetic/GaloisIdeleTatePrimonSuperalgebraCapstone.lean:24:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Arithmetic/CyclotomicGaloisRootsOfUnityGaussSumCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Modular/TrifoldDecomposition.lean:17:All proofs are complete in native Mathlib with zero `sorry`s.
+lean/InfoGeometry/Physics/DoubleFieldTheoryO55NarainCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
 lean/InfoGeometry/Meta/HonestyPolicy.lean:14:- if it does not exist yet, expose the gap explicitly as `sorry` or an
 lean/InfoGeometry/Meta/HonestyPolicy.lean:41:  /-- Explicit `sorry` is acceptable only as visible debt. -/
 lean/InfoGeometry/Meta/HonestyPolicy.lean:45:  /-- Banner text must not claim property readback when `sorry` remains. -/
 lean/InfoGeometry/Meta/HonestyPolicy.lean:65:      "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners." }
+lean/InfoGeometry/Modular/LocalHamiltonianDerivation.lean:23:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/OperatorAlgebra/SplitOctonionPseudoReal.lean:18:No `sorry`/`ax!om`/`sorry`/property scaffolding is used.
+lean/InfoGeometry/Modular/GeodesicFlow.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/OperatorAlgebra/ChiralCliffordSplit.lean:17:All proofs are native, formal Lean 4 derivations checked by the kernel with zero sorry debt.
 lean/InfoGeometry/Meta/ClosureAttribute.lean:11:anchored to the DAG, and free of `sorry` or `sorry`.
-lean/InfoGeometry/Physics/CyclotomicHiggsGaloisDIIICapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/ColimitGNS.lean:28:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/OperatorAlgebra/TripotentMatrix2x2.lean:15:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Clifford/Cl55MaximalTorus.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/WeylPfaffianDeterminantTriple.lean:19:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Meta/SocketTarget.lean:12:normal `sorry` detection because the law itself is a parameter.
 lean/InfoGeometry/Meta/SocketTarget.lean:29:   closure debt — the architectural equivalent of a typed `sorry`.
 lean/InfoGeometry/Meta/SocketTarget.lean:49:not check for `sorry` — sockets are *expected* to carry opaque laws.
+lean/InfoGeometry/Modular/TrifoldSuperKMS.lean:24:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/TrifoldClassification.lean:12:characterization with zero `sorry`s in native Mathlib.
 lean/InfoGeometry/Meta/Admission.lean:141:      mkAdmissionReason syntheticDecl "trust.sorry" "error"
-lean/InfoGeometry/Arithmetic/AmariChentsovAlphaGeometryCapstone.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Arithmetic/SelbergTraceAdelicGeodesicCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Modular/OperatorKMSThermodynamicIdentity.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Clifford/Cl55PeirceMoERouting.lean:24:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Modular/KMSColimitExtension.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Clifford/Cl55ComplexStructureRealification.lean:34:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Modular/G2FlagCurvature.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean:18:No `sorry`.
 lean/InfoGeometry/Meta/StrictDef.lean:18:  , ``Lean.Parser.Term.«sorry»
 lean/InfoGeometry/Meta/StrictDef.lean:31:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its type."
 lean/InfoGeometry/Meta/StrictDef.lean:34:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its value."
 lean/InfoGeometry/Meta/StrictDef.lean:291:It accepts only ordinary `def` syntax and rejects tactic blocks, `sorry`, and
-lean/InfoGeometry/Physics/ParaKahlerAmariSouriauSynthesis.lean:37:All proofs are native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Canonical/BostConnesLegendreFenchelCuspCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Arithmetic/LogLatticeExactPrimonCapstone.lean:27:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Physics/SolovievCircularChiralProjectionBridge.lean:50:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Physics/TensorProductCommutationBregmanEntropyCapstone.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No deferred interfaces. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Physics/HiddenChiralSectorEMDecoupling.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Arithmetic/ChebyshevPrimeEnergyBound.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/DAGCategoryWheelerUnificationBridge.lean:24:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No deferred interfaces. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/Physics/MatrixMirrorDescentKMSCentralPathCapstone.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Arithmetic/PrimonAmariSurprisalBregmanCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
-lean/InfoGeometry/Arithmetic/UroborosMasterIdentityTwoTierCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/CuntzKriegerAdjacencyBridge.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/KapustinWitten4DTopologicalTwistCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/KreinCuntzKriegerPZeroBridge.lean:13:a positive-definite Hilbert metric on the P₀ physical sector without any `sorry`.
-lean/InfoGeometry/Canonical/RationalHestenesKreinDiscreteBridge.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Algebra/SplitAlbertF4Classification.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy property in
-lean/InfoGeometry/Canonical/KZLogarithmicConnection.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Arithmetic/AmariDuallyFlatPrimonCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/DihedralArtinI2SixSpinLift.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/OperatorAlgebra/WittenMöbiusBraidBridge.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Canonical/ModularTensorInduction.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/BaezG2DerivationExponentialBridge.lean:34:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
-lean/InfoGeometry/Algebra/Zorn/G2TwoConcreteWeylGroup.lean:22:All proofs are native Mathlib with 0 `sorry`s.
-lean/InfoGeometry/Physics/KleinBottleModularSewing.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Arithmetic/PrimeHyperbolicRapidityCayleyCircleCapstone.lean:26:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Physics/NuclearPhononRPAAlgebra.lean:26:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Algebra/Zorn/G2BruhatCellDecomposition.lean:15:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
-lean/InfoGeometry/Physics/TwoSectorSpectralOscillation.lean:33:All proofs are complete in native Lean 4 with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Physics/DoubleFieldTheoryO55NarainCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/ArakiHessianKuboMori.lean:32:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/TomitaChiralJ.lean:29:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/InnerDerivationLieIdeal.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Modular/TomitaCommutantDuality.lean:26:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Modular/ZetaRegularizedDeterminantBridge.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Algebra/Zorn/G2ChevalleyPoincareCombinatorics.lean:21:All theorems here are kernel-checked algebraic/combinatorial identities with 0 `sorry`s.
-lean/InfoGeometry/Arithmetic/GrandUnifiedRosettaStoneArithmeticGeometryCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/OperatorAlgebra/SplitOctonionPseudoReal.lean:18:No `sorry`/`ax!om`/`sorry`/property scaffolding is used.
-lean/InfoGeometry/Canonical/SO55MatrixCliffordBivectorRealization.lean:43:/-- 🏆 MASTER UNIFIED CAPSTONE SYNTHESIS: Native verification package with 0 sorry and 0 datum. -/
-lean/InfoGeometry/OperatorAlgebra/ChiralCliffordSplit.lean:17:All proofs are native, formal Lean 4 derivations checked by the kernel with zero sorry debt.
-lean/InfoGeometry/Algebra/Zorn/Concrete.lean:9:No wrappers. No abstract datum. No `sorry`.
-lean/InfoGeometry/Canonical/SouriauDiracHodgeStandaloneCapstone.lean:23:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/OperatorAlgebra/TripotentMatrix2x2.lean:15:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Canonical/AsanoLeeYangPrimonPhaseTransitionCapstone.lean:59:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/PrimonColimitEulerZetaConvergenceCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/OperatorAlgebra/OperatorExteriorAlgebraGeneral.lean:18:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean:18:No `sorry`.
-lean/InfoGeometry/Arithmetic/BosonFermionMobiusDualityCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/AtiyahSingerDiracSupertraceCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/Zorn/G2SteinbergPositiveRoots.lean:17:with 0 `sorry`s.
-lean/InfoGeometry/Canonical/RieffelNoncommutativeTorusKTheoryCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/Zorn/G2BNBruhatFramework.lean:31:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Nuclear/BdGSplitOctonionUnifiedCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Nuclear/SplitOctonionNambuGorkovBridge.lean:36:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Physics/NuclearWignerSupermultipletSymmetry.lean:27:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/Nuclear/NuclearFiveGradedOperatorReexpression.lean:51:All proofs in this module are complete in native Lean 4 with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Canonical/AmariDualTemperatureColimitPhaseTransitionCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Nuclear/NuclearChiralDoubletTwoSectorBridge.lean:34:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
-lean/InfoGeometry/Nuclear/QuantumCramerRaoNuclearBarrierCapstone.lean:41:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Nuclear/NuclearGammaSpectroscopy.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Nuclear/DIIITopologicalCompletenessCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Nuclear/NuclearChiralPRMBridge.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s.
+lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy property in
+lean/InfoGeometry/Algebra/Zorn/Concrete.lean:9:No wrappers. No abstract datum. No `sorry`.
 lean/InfoGeometry/Physics/ZornBdGDerivationBridge.lean:12:All lemmas and theorems are proven natively in Mathlib with zero `sorry`s.
+lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot sorry such a
+lean/InfoGeometry/Canonical/CuntzCanonicalEndomorphismBridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/KleinBottleSewingExact.lean:10:This module provides the native Mathlib 4 proof of the Sewing Theorem with **0 `sorry`s and 0 axioms**:
+lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
+lean/InfoGeometry/Arithmetic/UnifiedCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Physics/SelfConcordantFenchelBregmanDikinCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/HestenesG2HolomorphicHarmonicTriadBridge.lean:34:All theorems proven as native Mathlib lemmas with 0 `sorry`s, 0 warnings, and 0 custom axioms.
+lean/InfoGeometry/Arithmetic/AdelicHeckeSatakeLFunctionCapstone.lean:37:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/BisognanoWichmannSouriauUnification.lean:34:All proofs are 100% native Lean 4 Mathlib proofs with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Algebra/GogberashviliNilpotentCARBridge.lean:20:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/ParaKahlerHessianHamiltonianBridge.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:19:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
+lean/InfoGeometry/Canonical/LurieQuasiCategoryHigherCategoryCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Physics/NuclearSelfConcordantBarrierBridge.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/AmplituhedronDifferentialResidue.lean:26:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Arithmetic/LagariasMontagueParityLadderBridge.lean:16:All proofs are native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Physics/SplitOctonionDerivationSpinRep.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean:219:/-! ## Wedge Actions (sorry-free) -/
+lean/InfoGeometry/Algebra/SplitAlbertF4Classification.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Physics/ThoriumIsomericChiralRotor.lean:35:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/BostConnesLegendreFenchelCuspCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Algebra/DihedralArtinI2SixSpinLift.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Physics/NuclearQuasiparticleCARBridge.lean:26:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Algebra/BaezG2DerivationExponentialBridge.lean:34:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Canonical/DAGCategoryWheelerUnificationBridge.lean:24:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Algebra/CyclotomicTripotentPeirceLiftingCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/KZLogarithmicConnection.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Arithmetic/ConnesConsaniAdelicMotivesCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
+lean/InfoGeometry/Arithmetic/GaloisIdeleTatePrimonSuperalgebraCapstone.lean:24:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Algebra/NonAssocPeirceFrame.lean:26:All proofs are 100% native Mathlib with zero `sorry`s, zero custom axioms, and zero admits.
+lean/InfoGeometry/Arithmetic/CyclotomicGaloisRootsOfUnityGaussSumCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/ModularTensorInduction.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/CuntzKriegerAdjacencyBridge.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AtiyahSingerDiracSupertraceCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/SO55MatrixCliffordBivectorRealization.lean:43:/-- 🏆 MASTER UNIFIED CAPSTONE SYNTHESIS: Native verification package with 0 sorry and 0 datum. -/
+lean/InfoGeometry/Topology/SymbolicLatentObservedPathImageCompHausEvaluation.lean:10:inclusion maps sorry a genuine `CompHaus` source/target packaging.  The
+lean/InfoGeometry/Arithmetic/AmariChentsovAlphaGeometryCapstone.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AsanoLeeYangPrimonPhaseTransitionCapstone.lean:59:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Arithmetic/SelbergTraceAdelicGeodesicCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/PrimonColimitEulerZetaConvergenceCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/RieffelNoncommutativeTorusKTheoryCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/CognitiveShadow.lean:89:      triggerTerms := #["sorry", "proof debt", "hole"]
+lean/InfoGeometry/Algebra/ZornBdGDerivationBridge.lean:18:All lemmas and theorems are proven natively in Mathlib with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Canonical/RHNeighbourhoodCrystallographicCapstone.lean:20:is sorry-free and builds on native Mathlib 4:
 lean/InfoGeometry/Canonical/RHNeighbourhoodCrystallographicCapstone.lean:49:No `OPEN` edges, no `sorry`, no analytical claims.
 lean/InfoGeometry/Canonical/RHNeighbourhoodCrystallographicCapstone.lean:169:Every edge is a proved theorem. No sorry, no scaffolding.
-lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:19:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
-lean/InfoGeometry/Canonical/DrinfeldJimboFibonacciAnyonsCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/AtiyahSingerMcKeanPrimonCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Algebra/Zorn/G2CyclotomicPoincareFactorization.lean:18:All proofs are native Mathlib polynomial identities with zero `sorry`s.
-lean/InfoGeometry/Canonical/MontonenOliveSDualityBPSCapstone.lean:48:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
-lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean:23:No `sorry`.
 lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean:9:No wrappers. No `sorry`.
-lean/InfoGeometry/OperatorAlgebra/HyperbolicMoEProjector.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Canonical/CognitiveShadow.lean:89:      triggerTerms := #["sorry", "proof debt", "hole"]
-lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadricPlucker.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Physics/KleinBottleSewingExact.lean:10:This module provides the native Mathlib 4 proof of the Sewing Theorem with **0 `sorry`s and 0 axioms**:
-lean/InfoGeometry/Projective/SplitOctonions.lean:16:No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
-lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean:21:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Physics/SelfConcordantFenchelBregmanDikinCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean:21:No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/QuantumInformationGeometryColimitDualityCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean:22:No `sorry`.
-lean/InfoGeometry/OperatorAlgebra/ChiralRailPlane.lean:19:All relations are verified with native Mathlib proofs and zero `sorry`s.
-lean/InfoGeometry/Canonical/CalabiYauPicardFuchsMirrorSymmetryCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sorry`.
+lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+lean/InfoGeometry/Arithmetic/LogLatticeExactPrimonCapstone.lean:27:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AmplituhedronGrassmannianBCFWCapstone.lean:40:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Arithmetic/BosonFermionMobiusDualityCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Nuclear/BdGSplitOctonionUnifiedCapstone.lean:44:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean:25:No `sorry`.
+lean/InfoGeometry/Nuclear/SplitOctonionNambuGorkovBridge.lean:36:All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Nuclear/NuclearFiveGradedOperatorReexpression.lean:51:All proofs in this module are complete in native Lean 4 with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No deferred interfaces. No certificates. No axioms. No `sorry`.
+lean/InfoGeometry/Nuclear/NuclearChiralDoubletTwoSectorBridge.lean:34:All proofs in this module are complete with 0 `sorry`s and 0 axioms.
+lean/InfoGeometry/Information/SouriauLieGroupThermodynamics.lean:35:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Nuclear/QuantumCramerRaoNuclearBarrierCapstone.lean:41:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Arithmetic/ChebyshevPrimeEnergyBound.lean:25:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Information/ModularCocycleKMSBridge.lean:37:All proofs are 100% native Mathlib with zero `sorry`s, zero placeholders, and zero custom axioms.
+lean/InfoGeometry/Nuclear/NuclearGammaSpectroscopy.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Nuclear/DIIITopologicalCompletenessCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Information/MasterArchetypeConvexDuality.lean:42:All theorems are fully proved with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No deferred interfaces. No certificates. No axioms. No `sorry`.
+lean/InfoGeometry/Nuclear/NuclearChiralPRMBridge.lean:30:All proofs are complete in native Mathlib 4 with 0 `sorry`s.
+lean/InfoGeometry/Information/ModularSurprisalDerivationBridge.lean:21:All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
+lean/InfoGeometry/Information/UniversalDualityQuadrangle.lean:29:All theorems are fully proved in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Arithmetic/PrimonAmariSurprisalBregmanCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/DeRhamThermodynamicPotential.lean:27:All proofs are complete in native Mathlib with zero `sorry`s.
-lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Canonical/KnillLaflammeQEC.lean:10:Full native proofs with zero `sorry`s.
+lean/InfoGeometry/Arithmetic/UroborosMasterIdentityTwoTierCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Topology/CompletedZetaV4CharacterBridge.lean:28:All proofs are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean:9:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/CalabiYauPicardFuchsMirrorSymmetryCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/SouriauCoadjointOrbitBridge.lean:24:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
 lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean:18:It does not depend on the sorry-equivalent modular spinor layer.
-lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean:15:No placeholders. No `sorry`.
-lean/InfoGeometry/Physics/ParaKahlerHessianHamiltonianBridge.lean:31:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean:11:No placeholders. No `sorry`.
-lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:896:`Analysis.AsanoContractionNative` (no `sorry`).
-lean/Agent/CompilerBridgeCore.lean:705:    s!"Declaration '{declName}' contains `sorry`."
-lean/InfoGeometry/Physics/NuclearSelfConcordantBarrierBridge.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/Omega/EA/RewriteCore.lean:119:/-- Any two one-step reducts admit a common normal-form descendant. -/
-lean/Omega/EA/RewriteCore.lean:126:/-- Any two reducts admit a common normal-form descendant. -/
-lean/InfoGeometry/Canonical/ChernSimonsWRT3ManifoldCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Physics/SplitOctonionDerivationSpinRep.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/BostConnesFullKMSMasterArchitectureCapstone.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/Omega/EA/PrimeRegisterOrbitFiberCoincidence.lean:9:/-- Two prime-register states lie in the same local Fibonacci orbit when they admit a common
-lean/Omega/EA/Sync10ResetDepthSpectrum.lean:166:other eight target states already admit depth-`5` reset words.
+lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Arithmetic/AmariDuallyFlatPrimonCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/ErlangenLanglandsQuantumBundle.lean:28:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/CarrierMasterAlgebraicLemmasCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Physics/ThoriumIsomericChiralRotor.lean:35:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/BostConnesRigorousKMSCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/DualExponentialArchitectureMaster.lean:42:All proofs are complete in native Mathlib 4 with ZERO `sorry`s and ZERO custom axioms.
-lean/InfoGeometry/OperatorAlgebra/GradedKANWaveletTransform.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean:17:No `sorry`.
-lean/InfoGeometry/Physics/NuclearQuasiparticleCARBridge.lean:26:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/InfoGeometry/OperatorAlgebra/OperatorThermodynamics.lean:760:/-- A plain flow whose time slices admit the ring-automorphism structure
-lean/Omega/SyncKernelWeighted/GmModqRecursionClosure.lean:14:/-- The mod-`q` residue counts admit a finite matrix-coefficient presentation.
+lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean:23:No `sorry`.
+lean/InfoGeometry/Canonical/KnillLaflammeQEC.lean:10:Full native proofs with zero `sorry`s.
+lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean:15:No placeholders. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions.lean:16:No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
+lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Arithmetic/GrandUnifiedRosettaStoneArithmeticGeometryCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/BostConnesFullKMSMasterArchitectureCapstone.lean:39:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/UHFMatrixColimitCapstone.lean:24:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/OperatorAlgebra/SplitTorusLogRouting.lean:34:All theorems are exact in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Physics/ThoriumHyperfineQEDSpacetimeBridge.lean:31:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/BostConnesRigorousKMSCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Arithmetic/PrimeHyperbolicRapidityCayleyCircleCapstone.lean:26:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/DualExponentialArchitectureMaster.lean:42:All proofs are complete in native Mathlib 4 with ZERO `sorry`s and ZERO custom axioms.
+lean/Omega/POM/DeltaqMeanSquareRhCriterion.lean:24:/-- Supercritical regime: the weighted partial sums admit explicit exponential lower and upper
+lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean:17:No `sorry`.
+lean/InfoGeometry/Projective/KleinQuadricPlucker.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean:21:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean:22:No `sorry`.
+lean/InfoGeometry/Canonical/ContinuousDeRhamPotentialBridge.lean:28:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sorry`.
+lean/InfoGeometry/Canonical/OperatorModularBridge.lean:15:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean:21:No `sorry`.
 lean/InfoGeometry/Canonical/TriFactorCodexLaws.lean:27:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/Omega/POM/DerivedFoldGoldenRationalPowerUnitObstruction.lean:29:/-- Lucas numbers admit the expected `φ^n + ψ^n` closed form. -/
+lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean:21:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/ThermodynamicsFirstLaw.lean:29:All proofs are complete in native Mathlib with zero `sorry`s.
+lean/InfoGeometry/Topology/CyclicCocycleCantor.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean:17:No wrappers. No `sorry`.
+lean/Omega/POM/KinkPrincipleQSelection.lean:31:admit an optimal point on the finite kink set. -/
+lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean:20:No wrappers. No `sorry`.
+lean/InfoGeometry/Dynamics/ParaKahlerJKORicciFlowBridge.lean:35:All proofs are complete in native Lean 4 with 0 `sorry`s.
+lean/InfoGeometry/Canonical/QuantumDeformationRootBridge.lean:15:No infinite-dimensional representation theory, no analytic continuation, no sorry.
+lean/InfoGeometry/Canonical/OperatorLeibnizDerivationSimplexCapstone.lean:25:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean:18:No wrappers. No `sorry`.
+lean/Omega/POM/NormalformVsTuringBudgetUndecidable.lean:34:/-- Finite rewrite slices admit a minimal audit representative, but unrestricted semantic classes
+lean/Omega/POM/NormalformVsTuringBudgetUndecidable.lean:35:do not admit a global implementation-independent canonical representative. -/
+lean/Agent/CompilerBridgeCore.lean:705:    s!"Declaration '{declName}' contains `sorry`."
+lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:29:## Verified theorems (no sorry)
+lean/InfoGeometry/Topology/SymbolicLatentVaryingCarrierQuotientCompHausLimit.lean:8:and observation-range diagrams sorry genuine `CompHaus` limits.  This owner
+lean/InfoGeometry/Canonical/BatalinVilkoviskyConstructiveQMESynthesisCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Twistor/PenroseWittPluckerKleinBridge.lean:37:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
+lean/DAG/FunctionalGaussJordan.lean:17:All proofs are standard linear algebra — no axioms, no sorry debt.
+lean/DAG/AlexandrovKuratowskiHodgeClosureCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/EA/Sync10ResetDepthSpectrum.lean:166:other eight target states already admit depth-`5` reset words.
+lean/DAG/InfoTreeExtract.lean:216:          isSorrySourceScan := refs.contains "sorryAx" || refs.contains "sorry"
+lean/DAG/EckmannHodge.lean:12:All `sorry` debt is closed. Every theorem is a genuine algebraic proof.
 lean/DAG/DisconnectedAudit.lean:25:--   3. sorry_incomplete   : proof uses sorry (debt, not fake root)
 lean/DAG/DisconnectedAudit.lean:95:/-- Check if a declaration's proof uses sorry. -/
 lean/DAG/DisconnectedAudit.lean:104:      all.any (fun r => r.toString == "sorryAx" || r.toString == "sorry")
 lean/DAG/DisconnectedAudit.lean:107:/-- Collect axiom/sorry names from a declaration. -/
 lean/DAG/DisconnectedAudit.lean:119:          axioms := axioms.push s!"sorry:{n.toString}"
 lean/DAG/DisconnectedAudit.lean:415:    lines := lines.push "These capstones use `sorry` in their proofs. The statements might be true"
-lean/InfoGeometry/OperatorAlgebra/KANCharacterFactorization.lean:29:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean:21:No wrappers. No `sorry`.
-lean/DAG/EckmannHodge.lean:12:All `sorry` debt is closed. Every theorem is a genuine algebraic proof.
-lean/InfoGeometry/Canonical/ThermodynamicsFirstLaw.lean:29:All proofs are complete in native Mathlib with zero `sorry`s.
-lean/DAG/FunctionalGaussJordan.lean:17:All proofs are standard linear algebra — no axioms, no sorry debt.
-lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean:17:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/MonoidalRibbonPentagonHexagonCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/DAG/InfoTreeExtract.lean:216:          isSorrySourceScan := refs.contains "sorryAx" || refs.contains "sorry"
-lean/InfoGeometry/Canonical/QuantumDeformationRootBridge.lean:15:No infinite-dimensional representation theory, no analytic continuation, no sorry.
-lean/DAG/AlexandrovKuratowskiHodgeClosureCapstone.lean:28:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/OperatorLeibnizDerivationSimplexCapstone.lean:25:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean:20:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/BatalinVilkoviskyConstructiveQMESynthesisCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
-lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean:18:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/GrandMasterTheoryOfEverythingSynthesisCapstone.lean:50:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/ZetaSouriauMetriplecticFlowMasterBridge.lean:49:statements use native Mathlib 4 and do not introduce `sorry` or custom axioms.
-lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
+lean/Omega/EA/RewriteCore.lean:119:/-- Any two one-step reducts admit a common normal-form descendant. -/
+lean/Omega/EA/RewriteCore.lean:126:/-- Any two reducts admit a common normal-form descendant. -/
 lean/InfoGeometry/Canonical/ZornDerivationExponentialAutomorphism.lean:24:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Canonical/GrandMasterTheoryOfEverythingSynthesisCapstone.lean:50:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/RedlineGrandSynthesis.lean:27:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Canonical/ZetaSouriauMetriplecticFlowMasterBridge.lean:49:statements use native Mathlib 4 and do not introduce `sorry` or custom axioms.
 lean/InfoGeometry/Canonical/AlgebraicDerivations.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/JTGravitySchwarzianPrimonCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/CrystallographicRootCyclotomicBridge.lean:18:Every theorem is proved natively using Mathlib lemmas. No `sorry`, no
-lean/InfoGeometry/Canonical/KZRoPEMonodromyComparison.lean:39:All theorems are exact in native Mathlib 4 with zero `sorry`s.
 lean/InfoGeometry/Canonical/GrothendieckErlangenProjectiveBridge.lean:21:All proofs are complete in native Mathlib with zero `sorry`s.
-lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/PrimeLeeYangHurwitzLimitClusterCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/JTGravitySchwarzianPrimonCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/EA/PrimeRegisterOrbitFiberCoincidence.lean:9:/-- Two prime-register states lie in the same local Fibonacci orbit when they admit a common
+lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/KZRoPEMonodromyComparison.lean:39:All theorems are exact in native Mathlib 4 with zero `sorry`s.
+lean/Omega/SyncKernelWeighted/GmModqRecursionClosure.lean:14:/-- The mod-`q` residue counts admit a finite matrix-coefficient presentation.
 lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean:21:No `sorry`.
-lean/InfoGeometry/Canonical/Thorium229NuclearIsomerSpinorBridge.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/FibonacciHadjiivanovCFTBoundaryCapstone.lean:27:All theorems are 100% kernel-verified in native Lean 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/PrimeLeeYangHurwitzLimitClusterCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/DrazinAnomalousProjector.lean:16:No wrappers. No `sorry`.
-lean/Omega/SPG/ErrorThreshold.lean:157:    exponent ratios `r` and `p^2 r` admit overlapping admissible observation intervals, and
-lean/InfoGeometry/Canonical/CalogeroMoserSutherlandPrimonIntegrabilityCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/FibonacciHadjiivanovCFTBoundaryCapstone.lean:27:All theorems are 100% kernel-verified in native Lean 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean:18:No wrappers. No `sorry`.
-lean/Omega/POM/DeltaqMeanSquareRhCriterion.lean:24:/-- Supercritical regime: the weighted partial sums admit explicit exponential lower and upper
-lean/Omega/UnitCirclePhaseArithmetic/AppHorizonEulerPatch.lean:29:`|w| ≤ r < 1/3` the Euler terms admit a uniform geometric majorant. -/
-lean/InfoGeometry/Canonical/ProofTwoCategoryHodgeColimitBridge.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/BostConnesGaloisCrossedProductRosettaCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/UHFModularColimit.lean:28:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
-lean/Omega/POM/DerivedFoldGoldenRationalPowerUnitObstruction.lean:29:/-- Lucas numbers admit the expected `φ^n + ψ^n` closed form. -/
-lean/InfoGeometry/Canonical/BerryKeatingSpectralDilationsCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/PrimonVonMangoldtDirichletCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/Omega/POM/KinkPrincipleQSelection.lean:31:admit an optimal point on the finite kink set. -/
-lean/Omega/Folding/FiberIdentifiableSigmaAlgebraMaximal.lean:8:admit an explicit inverse kernel whose translated pattern counts are read off from the subset
-lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean:10:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/AlbertJordanThreeGenerationsCapstone.lean:34:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/Omega/POM/NormalformVsTuringBudgetUndecidable.lean:34:/-- Finite rewrite slices admit a minimal audit representative, but unrestricted semantic classes
-lean/Omega/POM/NormalformVsTuringBudgetUndecidable.lean:35:do not admit a global implementation-independent canonical representative. -/
-lean/Omega/GU/Window6Affine2FlatRootSliceSelection.lean:38:The three affine-`2`-flat cyclic words admit an explicit lookup against three `B₃` roots in the
-lean/Omega/GU/JoukowskyAreaPreservingCayley.lean:22:/-- The normalized semiaxes are reciprocal and admit the usual hyperbolic parametrization. -/
-lean/InfoGeometry/Canonical/SouriauKaehlerKleinBottleBridge.lean:25:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/Omega/GU/TerminalWindow6FiniteCompletenessTemplate.lean:27:force unique labeling, and finite audit triples admit a direct equality decision procedure.
 lean/InfoGeometry/Canonical/KnizhnikZamolodchikovWZWCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/RamanujanDedekindHardyCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Topology/SymbolicLatentObservedPathImageCompHausEvaluation.lean:10:inclusion maps sorry a genuine `CompHaus` source/target packaging.  The
-lean/InfoGeometry/Canonical/BostConnesCrossedProductCyclotomicKMSCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/PeirceProjectorGrothendieckClass.lean:18:All proofs are natively verified in Lean 4 with zero `sorry`s.
 lean/InfoGeometry/Canonical/SYKQuantumChaosMSSBoundCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/LeeYangAsanoScaleBoundedEscapeBridge.lean:56:/-! ## Bounded sets admit a positive scale escape witness -/
-lean/InfoGeometry/Canonical/ConnesSpectralTripleDistanceCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/BostConnesCuntzKMSStateCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean:7:remaining fully constructive (no `sorry`).
-lean/InfoGeometry/Canonical/ModularVerlindeTensorCategoryCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Topology/CompletedZetaV4CharacterBridge.lean:28:All proofs are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/InfoGeometry/Canonical/BostConnesCuntzKMSStateCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/KapustinWitten4DTopologicalTwistCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/KreinCuntzKriegerPZeroBridge.lean:13:a positive-definite Hilbert metric on the P₀ physical sector without any `sorry`.
+lean/InfoGeometry/Canonical/ConnesSpectralTripleDistanceCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/RationalHestenesKreinDiscreteBridge.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Canonical/SuperKahlerModularSpinors.lean:16:laws.  The former declarations in this file were unsupported `sorry`-based
-lean/InfoGeometry/Canonical/PenroseSpinNetworkTwistorBridge.lean:21:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Canonical/QuantumEntanglementPageCurveCapstone.lean:37:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/SplitCliffordJordanWignerTwoModeCurrent.lean:13:No `sorry`.
+lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:23:## Verified theorems (no sorry)
 lean/InfoGeometry/Canonical/ChiralKKTIsolation.lean:11:No wrappers. No `sorry`.
-lean/Omega/Folding/BlockFoldsatNpComplete.lean:48:/-- SAT instances that admit a concrete satisfying assignment. -/
-lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean:16:No placeholders. No `sorry`.
-lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean:17:No `sorry`.
+lean/Omega/SPG/ErrorThreshold.lean:157:    exponent ratios `r` and `p^2 r` admit overlapping admissible observation intervals, and
+lean/InfoGeometry/Canonical/ModularVerlindeTensorCategoryCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/POM/ProjectionBudget.lean:18:because values and congruence classes admit multiple representatives before choosing a section. -/
+lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/FiniteMatrixGibbsKMSPhaseBoundaryCapstone.lean:34:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/EmergentSpacetimeArchitecture.lean:38:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/TKNNTopologicalHallChernCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Topology/CyclicCocycleCantor.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Topology/WeierstrassHadamardDivisorBridge.lean:30:All proofs are 100% native in Lean 4 with 0 `sorry` and 0 custom axioms.
 lean/InfoGeometry/Canonical/FenchelExpLogCore.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/RicciLogDetBekensteinGeometryCapstone.lean:51:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean:16:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/JonesPolynomialTemperleyLiebKauffmanCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Topology/XiHardyZNormalizationBridge.lean:28:All proofs are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/Omega/Folding/FiberIdentifiableSigmaAlgebraMaximal.lean:8:admit an explicit inverse kernel whose translated pattern counts are read off from the subset
 lean/InfoGeometry/Canonical/DepthLogScaleInvariant.lean:21:No `sorry`.
-lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:29:## Verified theorems (no sorry)
-lean/InfoGeometry/Canonical/JonesWenzlTemperleyLiebProjectorCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Topology/SymbolicLatentVaryingCarrierQuotientCompHausLimit.lean:8:and observation-range diagrams sorry genuine `CompHaus` limits.  This owner
-lean/InfoGeometry/Canonical/PrimeSubsystemInductiveFiltrationCapstone.lean:48:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/Omega/POM/ProjectionBudget.lean:18:because values and congruence classes admit multiple representatives before choosing a section. -/
-lean/InfoGeometry/Canonical/ChamseddineConnesSpectralStandardModelCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/Omega/Frontier/Conjectures.lean:9:/-- The defect process should admit a uniform spectral gap. -/
 lean/InfoGeometry/Canonical/AffineProjectiveAnomalyCancellationBridge.lean:24:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/ErlangenTwistorGromovGrothendieckBridge.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/GaugeGroups.lean:14:Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
-lean/InfoGeometry/Canonical/GaugeGroups.lean:15:with zero external consumers. See `reports/dag/sorry-equivalence.md`.
-lean/Omega/GroupUnification/FoldbinEquitableLumpabilitySpectralRigidity.lean:8:eigenvalues are the ones that admit a lift through the intertwining matrix, and the random-walk
+lean/InfoGeometry/Canonical/JonesWenzlTemperleyLiebProjectorCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/PrimeSubsystemInductiveFiltrationCapstone.lean:48:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/BostConnesFockSpaceKMSDerivationCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/SuperHolographicEffectiveActionBridge.lean:24:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/PrimonMercatorFockColimitCapstone.lean:41:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/TriFactorHolographicMasterCapstone.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/GaugeGroups.lean:14:Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
+lean/InfoGeometry/Canonical/GaugeGroups.lean:15:with zero external consumers. See `reports/dag/sorry-equivalence.md`.
 lean/InfoGeometry/Canonical/SO3RotationFenchel.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/HypothesisToTheoremPipeline.lean:29:All proofs are complete in native Mathlib 4 with ZERO `sorry`s and ZERO custom axioms.
-lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/PrimonMercatorFockColimitCapstone.lean:41:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/SouriauDiracHodgeStandaloneCapstone.lean:23:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/GeneralizedOperatorChiral.lean:9:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/HestenesKreinChiralMonogenicBridge.lean:50:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/AdSCFTMaldacenaRyuTakayanagiCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:23:## Verified theorems (no sorry)
+lean/InfoGeometry/Canonical/HypothesisToTheoremPipeline.lean:29:All proofs are complete in native Mathlib 4 with ZERO `sorry`s and ZERO custom axioms.
 lean/InfoGeometry/Canonical/BostConnesLegendreDualPhaseTransitionCapstone.lean:40:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/ChernSimonsJonesWittenVerlindeCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/ClusterAlgebraConwayCoxeterFriezeCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean:58:proved natively without a single `sorry`.
-lean/InfoGeometry/Canonical/BraidKMSG2Bridge.lean:18:former declarations in this file used `sorry` for precisely those missing
-lean/InfoGeometry/Topology/WeierstrassHadamardDivisorBridge.lean:30:All proofs are 100% native in Lean 4 with 0 `sorry` and 0 custom axioms.
-lean/InfoGeometry/Canonical/MaurerCartanFactorization.lean:24:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/CanonicalDerivationSpinBivector55.lean:89:/-- 🏆 MASTER SYNTHESIS: Fully verified native theorem package with 0 sorry and 0 external datum. -/
-lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/EmergentSouriauQGTBridge.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s.
-lean/InfoGeometry/Topology/XiHardyZNormalizationBridge.lean:28:All proofs are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AdSCFTMaldacenaRyuTakayanagiCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/HestenesKreinGeometricAlgebraBridge.lean:23:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/InfoGeometry/Canonical/MontgomeryDysonG2Bridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/Omega/Conclusion/ComovingDefectFixedRadialWindowNonhiding.lean:43:exact `L¹` and `L∞` formulas both admit explicit positive lower bounds controlled only by the
-lean/InfoGeometry/Canonical/GopakumarVafaTopologicalStringCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
-lean/InfoGeometry/Canonical/BostConnesSymmetryBreaking.lean:18:Proved with zero `sorry`s, zero custom axioms (`[propext, Classical.choice, Quot.sound]`).
-lean/Omega/Conclusion/GoldenLucasLinearCyclotomicGate.lean:12:admit no midpoint index. -/
-lean/Omega/Zeta/XiOffcriticalDichotomyAcceptableOrNull.lean:14:/-- Off-critical claims either admit the explicit acceptable radial extension with the sharp
-lean/InfoGeometry/Canonical/ErlangenObservableBundle.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/VirasoroConformalCasimirEnergyCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Topology/NativeMathlibZetaMetriplecticFlowBridge.lean:16:- ZERO `sorry`
+lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/BraidKMSG2Bridge.lean:18:former declarations in this file used `sorry` for precisely those missing
+lean/InfoGeometry/Canonical/MaurerCartanFactorization.lean:24:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Canonical/EmergentSpacetimeQuantumGeometryBridge.lean:30:All theorems are proved in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Canonical/GopakumarVafaTopologicalStringCapstone.lean:45:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/ErlangenObservableBundle.lean:32:All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
 lean/InfoGeometry/Canonical/GrandMathematicalUnification.lean:33:All theorems are fully proved in native Mathlib 4 with zero `sorry`s and zero custom axioms.
-lean/InfoGeometry/Canonical/VirasoroConformalCasimirCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AmariDualTemperatureColimitPhaseTransitionCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/VirasoroConformalCasimirEnergyCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/ModularLorentzBoost.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/WeylCharacterThetaBridge.lean:16:No `sorry`, no analytic continuation, no infinite series. Every theorem
-lean/InfoGeometry/Canonical/WheelerBoundaryHomologyBridge.lean:20:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Canonical/SouriauInfinitesimalInvariance.lean:8:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/HilbertCuntz.lean:48:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/ZeckendorfCuntz.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/DrinfeldJimboFibonacciAnyonsCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AtiyahSingerMcKeanPrimonCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Canonical/SpacetimeGeometricAlgebraDiracMaxwell.lean:36:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
-lean/Omega/Conclusion/FiniteVerificationClosureComplexityTrilemma.lean:20:undecidable equivalence relation cannot admit a finite-valued computable complete invariant.
-lean/Omega/Zeta/RealInput40GeodesicRamanujanMargin.lean:41:gap exponent is `log (λ_nb² / ρ_nb)`, and both the primitive-orbit and prime-orbit counts admit
-lean/InfoGeometry/Topology/NativeMathlibZetaMetriplecticFlowBridge.lean:16:- ZERO `sorry`
-lean/Omega/Conclusion/LeyangRho45AffineCoordinateSystemOnS5Simplex.lean:7:`ρ₅/ρ₄` coordinates admit the explicit inverse formulas already recorded in the audited
-lean/Omega/Zeta/XiPrimeRegisterHistoryInverseLimit.lean:118:/-- Finite-history register prefixes admit injective recursive encodings, and the compatible tower
-lean/Omega/Conclusion/ModpSingularityForcesGreenBadPrime.lean:17:cannot admit an integral inverse scalar. -/
-lean/Omega/Zeta/XiToeplitzDetVerblunsky.lean:119:/-- Paper label: `thm:xi-toeplitz-det-verblunsky`. The Toeplitz determinants admit the exact
-lean/Omega/Conclusion/EssentialPrimeAxisMinimality.lean:26:/-- Paper label: `thm:conclusion-essential-prime-axis-minimality`. Good primes admit a finite
-lean/Omega/Conclusion/EssentialPrimeAxisMinimality.lean:27:singleton stable label on the unramified fiber, bad primes admit none, and therefore a prime can
-lean/Omega/Conclusion/FixedscalePowerSumSharpThresholdMaxfiber.lean:50:two moments still admit a distinct competitor. Thus the sharp threshold agrees with the max fiber
-lean/InfoGeometry/Dynamics/ParaKahlerJKORicciFlowBridge.lean:35:All proofs are complete in native Lean 4 with 0 `sorry`s.
-lean/Omega/CircleDimension/FiniteLocalizationSolenoidQuotientEmbeddingRigidity.lean:25:/-- Finite-localization solenoids always admit the torus quotient coming from the compact exact
-lean/InfoGeometry/Topology/RiemannZetaMathlibVicinityBridge.lean:33:All proofs are native, verified, with 0 `sorry` and 0 custom axioms.
 lean/InfoGeometry/Topology/FredholmRegularizedDeterminantBridge.lean:33:All proofs are 100% native in Lean 4 with 0 `sorry` and 0 custom axioms.
-lean/Omega/Conclusion/ScreenArithmeticShadowAdditiveLinearizationObstruction.lean:5:/-- Idempotent meet semilattices admit no nontrivial additive shadow in `(ℕ^k, +)`.
-lean/Omega/Conclusion/ScreenExactizationIndependentKernel.lean:43:/-- The partial screen `S0` and its independent kernel `I0` admit the same feasible completions. -/
-lean/InfoGeometry/Twistor/PenroseWittPluckerKleinBridge.lean:37:All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 custom axioms.
-lean/Omega/Zeta/DerivedZGHardcoreFactorization.lean:59:Euler factors admit the `ζ(σ) / ζ(2σ)` local rewrite, the finite-support sequence stabilizes, and
+lean/InfoGeometry/Canonical/MontonenOliveSDualityBPSCapstone.lean:48:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/Folding/BlockFoldsatNpComplete.lean:48:/-- SAT instances that admit a concrete satisfying assignment. -/
+lean/InfoGeometry/Canonical/WheelerBoundaryHomologyBridge.lean:20:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/VirasoroConformalCasimirCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Topology/CompletedZetaPotentialAndRealGibbsFisherBridge.lean:29:All proofs are 100% native in Lean 4 with 0 `sorry`, 0 custom axioms, and no conjectural overreach.
-lean/InfoGeometry/Topology/CompletedZetaV4CharacterDecompositionBridge.lean:34:All proofs are 100% native in Lean 4 with 0 `sorry`, 0 custom axioms, and no conjectural overreach.
+lean/InfoGeometry/Canonical/BostConnesSymmetryBreaking.lean:18:Proved with zero `sorry`s, zero custom axioms (`[propext, Classical.choice, Quot.sound]`).
+lean/InfoGeometry/Canonical/MontgomeryDysonG2Bridge.lean:22:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/EmergentSouriauQGTBridge.lean:31:All proofs are complete in native Mathlib 4 with zero `sorry`s.
+lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean:58:proved natively without a single `sorry`.
+lean/InfoGeometry/Canonical/ClusterAlgebraConwayCoxeterFriezeCapstone.lean:38:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/CanonicalDerivationSpinBivector55.lean:89:/-- 🏆 MASTER SYNTHESIS: Fully verified native theorem package with 0 sorry and 0 external datum. -/
+lean/InfoGeometry/Canonical/HestenesKreinChiralMonogenicBridge.lean:50:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/TriFactorHolographicMasterCapstone.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
 lean/InfoGeometry/Topology/RiemannHypothesisHilbertPolyaBridge.lean:29:All theorems are 100% native Lean 4 with 0 `sorry` and 0 custom axioms.
-lean/InfoGeometry/Topology/ZeroMultiplicityResidueBridge.lean:30:All theorems are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/ErlangenTwistorGromovGrothendieckBridge.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/ChamseddineConnesSpectralStandardModelCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/RicciLogDetBekensteinGeometryCapstone.lean:51:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
 lean/InfoGeometry/Topology/MontgomeryPairCorrelationBridge.lean:30:All proofs are 100% native in Lean 4 with 0 `sorry` and 0 custom axioms.
-lean/Omega/Conclusion/SublinearExcitationFilterInsufficient.lean:10:/-- Concrete data for the conclusion-level contradiction: the excitation counts `k b` admit an
+lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean:17:No `sorry`.
+lean/InfoGeometry/Canonical/TKNNTopologicalHallChernCapstone.lean:49:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Topology/ZeroMultiplicityResidueBridge.lean:30:All theorems are 100% genuine Lean 4 proofs with 0 `sorry` and 0 custom axioms.
+lean/InfoGeometry/Canonical/PenroseSpinNetworkTwistorBridge.lean:21:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Topology/CompletedZetaV4CharacterDecompositionBridge.lean:34:All proofs are 100% native in Lean 4 with 0 `sorry`, 0 custom axioms, and no conjectural overreach.
+lean/InfoGeometry/Canonical/LeeYangAsanoScaleBoundedEscapeBridge.lean:56:/-! ## Bounded sets admit a positive scale escape witness -/
+lean/InfoGeometry/Canonical/QuantumInformationGeometryColimitDualityCapstone.lean:43:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/BostConnesCrossedProductCyclotomicKMSCapstone.lean:32:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/PeirceProjectorGrothendieckClass.lean:18:All proofs are natively verified in Lean 4 with zero `sorry`s.
+lean/Omega/Zeta/RealInput40GeodesicRamanujanMargin.lean:41:gap exponent is `log (λ_nb² / ρ_nb)`, and both the primitive-orbit and prime-orbit counts admit
+lean/InfoGeometry/Canonical/RamanujanDedekindHardyCapstone.lean:46:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/Conclusion/ComovingDefectFixedRadialWindowNonhiding.lean:43:exact `L¹` and `L∞` formulas both admit explicit positive lower bounds controlled only by the
+lean/Omega/Zeta/XiToeplitzDetVerblunsky.lean:119:/-- Paper label: `thm:xi-toeplitz-det-verblunsky`. The Toeplitz determinants admit the exact
+lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean:11:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/SouriauKaehlerKleinBottleBridge.lean:25:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:896:`Analysis.AsanoContractionNative` (no `sorry`).
+lean/Omega/Zeta/XiOffcriticalDichotomyAcceptableOrNull.lean:14:/-- Off-critical claims either admit the explicit acceptable radial extension with the sharp
+lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean:10:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/ChernSimonsWRT3ManifoldCapstone.lean:42:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/AlbertJordanThreeGenerationsCapstone.lean:34:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/BerryKeatingSpectralDilationsCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Topology/RiemannZetaMathlibVicinityBridge.lean:33:All proofs are native, verified, with 0 `sorry` and 0 custom axioms.
+lean/Omega/GU/TerminalWindow6FiniteCompletenessTemplate.lean:27:force unique labeling, and finite audit triples admit a direct equality decision procedure.
+lean/InfoGeometry/Canonical/PrimonVonMangoldtDirichletCapstone.lean:35:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/Conclusion/FiniteVerificationClosureComplexityTrilemma.lean:20:undecidable equivalence relation cannot admit a finite-valued computable complete invariant.
+lean/InfoGeometry/Canonical/BostConnesGaloisCrossedProductRosettaCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/CarrierMasterAlgebraicLemmasCapstone.lean:29:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/UHFModularColimit.lean:28:All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+lean/InfoGeometry/Canonical/ProofTwoCategoryHodgeColimitBridge.lean:26:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/InfoGeometry/Canonical/CalogeroMoserSutherlandPrimonIntegrabilityCapstone.lean:33:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/InfoGeometry/Canonical/Thorium229NuclearIsomerSpinorBridge.lean:29:All theorems kernel-checked in Lean 4 with 0 `sorry`s and 0 custom axioms.
+lean/Omega/Zeta/XiPrimeRegisterHistoryInverseLimit.lean:118:/-- Finite-history register prefixes admit injective recursive encodings, and the compatible tower
+lean/Omega/GU/Window6Affine2FlatRootSliceSelection.lean:38:The three affine-`2`-flat cyclic words admit an explicit lookup against three `B₃` roots in the
+lean/Omega/GU/JoukowskyAreaPreservingCayley.lean:22:/-- The normalized semiaxes are reciprocal and admit the usual hyperbolic parametrization. -/
+lean/InfoGeometry/Canonical/MonoidalRibbonPentagonHexagonCapstone.lean:36:All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+lean/Omega/Conclusion/LeyangRho45AffineCoordinateSystemOnS5Simplex.lean:7:`ρ₅/ρ₄` coordinates admit the explicit inverse formulas already recorded in the audited
+lean/Omega/Zeta/DerivedZGHardcoreFactorization.lean:59:Euler factors admit the `ζ(σ) / ζ(2σ)` local rewrite, the finite-support sequence stabilizes, and
+lean/Omega/Frontier/Conjectures.lean:9:/-- The defect process should admit a uniform spectral gap. -/
+lean/Omega/GroupUnification/FoldbinEquitableLumpabilitySpectralRigidity.lean:8:eigenvalues are the ones that admit a lift through the intertwining matrix, and the random-walk
+lean/Omega/UnitCirclePhaseArithmetic/AppHorizonEulerPatch.lean:29:`|w| ≤ r < 1/3` the Euler terms admit a uniform geometric majorant. -/
+lean/Omega/Conclusion/ModpSingularityForcesGreenBadPrime.lean:17:cannot admit an integral inverse scalar. -/
+lean/Omega/Conclusion/GoldenLucasLinearCyclotomicGate.lean:12:admit no midpoint index. -/
+lean/Omega/Conclusion/FixedscalePowerSumSharpThresholdMaxfiber.lean:50:two moments still admit a distinct competitor. Thus the sharp threshold agrees with the max fiber
+lean/Omega/Conclusion/ScreenExactizationIndependentKernel.lean:43:/-- The partial screen `S0` and its independent kernel `I0` admit the same feasible completions. -/
+lean/Omega/Conclusion/ScreenArithmeticShadowAdditiveLinearizationObstruction.lean:5:/-- Idempotent meet semilattices admit no nontrivial additive shadow in `(ℕ^k, +)`.
+lean/Omega/Zeta/XiGoldenW1TrueTwoPhaseLimit.lean:9:Fibonacci subsequential constants on the even/odd phases, and therefore cannot admit a single
+lean/Omega/CircleDimension/FiniteLocalizationSolenoidQuotientEmbeddingRigidity.lean:25:/-- Finite-localization solenoids always admit the torus quotient coming from the compact exact
 lean/Omega/Zeta/XiWindow6MinrepZeckendorfSignatureInjection.lean:47:The `21` minimal reachable representatives admit explicit Zeckendorf signatures; each evaluates to
 lean/Omega/Zeta/ConclusionLocalizedSingleAxisAnomalyVanishing.lean:31:`ℤ[S⁻¹]` admit a common supported denominator, so they lie in the same rank-`1` subgroup
+lean/Omega/Conclusion/SublinearExcitationFilterInsufficient.lean:10:/-- Concrete data for the conclusion-level contradiction: the excitation counts `k b` admit an
+lean/Omega/Conclusion/EssentialPrimeAxisMinimality.lean:26:/-- Paper label: `thm:conclusion-essential-prime-axis-minimality`. Good primes admit a finite
+lean/Omega/Conclusion/EssentialPrimeAxisMinimality.lean:27:singleton stable label on the unramified fiber, bad primes admit none, and therefore a prime can
 lean/Omega/Zeta/FiniteDefectCompleteReconstruction.lean:148:`2κ - 1` admit a concrete nonuniqueness witness. -/
 lean/Omega/Zeta/XiHorizonZkFiberpathStokesDiscriminant.lean:47:/-- Concrete fiber-path package: square-closed transcripts admit a potential reconstruction, and
 lean/Omega/Zeta/AppOffcriticalRadiusCompression.lean:40:disk, and both `|w_ρ|²` and `1 - |w_ρ|²` admit the stated closed forms.
-lean/Omega/Zeta/XiGoldenW1TrueTwoPhaseLimit.lean:9:Fibonacci subsequential constants on the even/odd phases, and therefore cannot admit a single
 ```
 
 - Total placeholder occurrences in tracked Lean tree: 500
@@ -518,9 +518,8 @@ lean/Omega/Zeta/XiGoldenW1TrueTwoPhaseLimit.lean:9:Fibonacci subsequential const
 ## Axiom declarations
 
 ```text
-lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependencies, runs the repository vacuity linter, and executes the
 ```
-- Total explicit axiom declarations: 1
+- Total explicit axiom declarations: 0
 
 ## Namespace audit
 
@@ -528,8 +527,8 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 [audit] Project namespace: InfoGeometry
 [audit] Scanning root:       ./lean/InfoGeometry
 
-[audit] Files with namespace InfoGeometry*: 9772
-[audit] Files missing namespace InfoGeometry*: 1388
+[audit] Files with namespace InfoGeometry*: 9833
+[audit] Files missing namespace InfoGeometry*: 1402
 
 === Missing namespace InfoGeometry ===
 ./lean/InfoGeometry/Albert/AlbertCubicDatum.lean
@@ -548,7 +547,9 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Algebra/Det2.lean
 ./lean/InfoGeometry/Algebra/FibonacciGradedOffDiagonalBridge.lean
 ./lean/InfoGeometry/Algebra/FibonacciParafermion.lean
+./lean/InfoGeometry/Algebra/GaussJordan.lean
 ./lean/InfoGeometry/Algebra/Grothendieck.lean
+./lean/InfoGeometry/Algebra/GrothendieckMathlibNatIsoDiagnostics.lean
 ./lean/InfoGeometry/Algebra/H3ZornJordanProduct.lean
 ./lean/InfoGeometry/Algebra/HodgeDiracDelta.lean
 ./lean/InfoGeometry/Algebra/HodgeKreinTriFacet.lean
@@ -557,6 +558,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Algebra/IdempotentProjector.lean
 ./lean/InfoGeometry/Algebra/K0FibonacciRing.lean
 ./lean/InfoGeometry/Algebra/KawamuraCuntzCAR.lean
+./lean/InfoGeometry/Algebra/KleinSpinorOrbitCertifiedPacket.lean
 ./lean/InfoGeometry/Algebra/KreinPosNegDecomposition.lean
 ./lean/InfoGeometry/Algebra/QCCRSupergradingBridge.lean
 ./lean/InfoGeometry/Algebra/ReducedStructureSpinCertifiedPacket.lean
@@ -595,6 +597,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Arithmetic/PrimeSpinorWittenIndex.lean
 ./lean/InfoGeometry/Arithmetic/ProjectiveRelativeEntropy.lean
 ./lean/InfoGeometry/Arithmetic/RHStructural.lean
+./lean/InfoGeometry/Arithmetic/RiemannApolloniusCorrectedDiagnostics.lean
 ./lean/InfoGeometry/Arithmetic/SandboxPrimeParafermionRecurrenceTest.lean
 ./lean/InfoGeometry/Arithmetic/SandboxPrimeThermodynamicStageTest.lean
 ./lean/InfoGeometry/Arithmetic/ZetaPotentialSign.lean
@@ -647,6 +650,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/AnyonCondensationDomainWallBridge.lean
 ./lean/InfoGeometry/Canonical/AnyonYangBaxterBraiding.lean
 ./lean/InfoGeometry/Canonical/AnyonicStabilizerCodeDistance.lean
+./lean/InfoGeometry/Canonical/ApolloniusLambdaDAGDiagnostics.lean
 ./lean/InfoGeometry/Canonical/AreaLawEntropyViolationBridge.lean
 ./lean/InfoGeometry/Canonical/ArtinBraidDeduplicatedMasterBridge.lean
 ./lean/InfoGeometry/Canonical/AtiyahSingerChiralIndex.lean
@@ -715,6 +719,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/ChiralAnomalyCantor.lean
 ./lean/InfoGeometry/Canonical/ChiralCuntzSuperchargeBridge.lean
 ./lean/InfoGeometry/Canonical/ChiralParitySuperalgebra.lean
+./lean/InfoGeometry/Canonical/ChiralZornCARAndSchurBridge.lean
 ./lean/InfoGeometry/Canonical/Cl11DiracOperatorConnection.lean
 ./lean/InfoGeometry/Canonical/Cl11SheetDiracMatrices.lean
 ./lean/InfoGeometry/Canonical/Cl11TrifactorSeed.lean
@@ -761,6 +766,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/DiscreteFreeEnergyDissipationBridge.lean
 ./lean/InfoGeometry/Canonical/DiscreteGaussBonnetKleinBridge.lean
 ./lean/InfoGeometry/Canonical/DoubledFibonacciCondensationBridge.lean
+./lean/InfoGeometry/Canonical/DrazinAdjoint.lean
 ./lean/InfoGeometry/Canonical/DrazinCARColimitBridge_proposal.lean
 ./lean/InfoGeometry/Canonical/DrinfeldCenterFibonacciBridge.lean
 ./lean/InfoGeometry/Canonical/E8ExceptionalLieAlgebraTriality.lean
@@ -870,6 +876,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/Geometry.lean
 ./lean/InfoGeometry/Canonical/GlobalBostConnesFactorizationBridge.lean
 ./lean/InfoGeometry/Canonical/GottesmanKnillStabilizerCodeBridge.lean
+./lean/InfoGeometry/Canonical/GrandCanonicalCore.lean
 ./lean/InfoGeometry/Canonical/GrandSynthesis.lean
 ./lean/InfoGeometry/Canonical/GromovWittenPrepotential.lean
 ./lean/InfoGeometry/Canonical/GrothendieckGroup.lean
@@ -932,6 +939,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/KreinCarrierInstances/Datum.lean
 ./lean/InfoGeometry/Canonical/KreinCarrierInstances/RelativeFredholm.lean
 ./lean/InfoGeometry/Canonical/KreinCarrierInstances/RotorFlow.lean
+./lean/InfoGeometry/Canonical/KreinNaturalFlow.lean
 ./lean/InfoGeometry/Canonical/KuboMoriBogoliubovMetric.lean
 ./lean/InfoGeometry/Canonical/KuzminFockSpaceAnyon.lean
 ./lean/InfoGeometry/Canonical/LaughlinStateQuantumHallBridge.lean
@@ -969,6 +977,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean
 ./lean/InfoGeometry/Canonical/Monotonicity.lean
 ./lean/InfoGeometry/Canonical/MontonenOliveSDualityDiracQuantization.lean
+./lean/InfoGeometry/Canonical/MoorePenroseAdjoint.lean
 ./lean/InfoGeometry/Canonical/MooreReadPfaffianFractionalHall.lean
 ./lean/InfoGeometry/Canonical/MultiChainUHFEmbedding.lean
 ./lean/InfoGeometry/Canonical/NambuGorkovParticleHoleBridge.lean
@@ -1182,6 +1191,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Categorical/ZornBraidColimitBCFW.lean
 ./lean/InfoGeometry/Categorical/ZornBraidColimitKMS.lean
 ./lean/InfoGeometry/Causal/Algebra.lean
+./lean/InfoGeometry/Clifford/Cl11.lean
 ./lean/InfoGeometry/Clifford/CliffordInjectivity.lean
 ./lean/InfoGeometry/Clifford/Hestenes1975.lean
 ./lean/InfoGeometry/Clifford/QuadraticPolarBridge.lean
@@ -1264,6 +1274,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/External/Auto/CliffordInductiveTripotent.lean
 ./lean/InfoGeometry/External/Auto/CofactorExpansion.lean
 ./lean/InfoGeometry/External/Auto/CognitiveAccretionDiskSelfReferential.lean
+./lean/InfoGeometry/External/Auto/CognitiveVacuum.lean
 ./lean/InfoGeometry/External/Auto/CoherentOrbitalPrecession.lean
 ./lean/InfoGeometry/External/Auto/CompleteHolographicDictionary.lean
 ./lean/InfoGeometry/External/Auto/ComplexTemperatureRH.lean
@@ -1745,6 +1756,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/OperatorAlgebra/ConcreteWeylAnomaly.lean
 ./lean/InfoGeometry/OperatorAlgebra/D4StarCrossedProductAlgebraicSurface.lean
 ./lean/InfoGeometry/OperatorAlgebra/DoubledHestenesKreinMirror.lean
+./lean/InfoGeometry/OperatorAlgebra/O55ConformalEvidenceBridge.lean
 ./lean/InfoGeometry/OperatorAlgebra/OperatorialJonesCalculus.lean
 ./lean/InfoGeometry/OperatorAlgebra/QCCRCarBridge.lean
 ./lean/InfoGeometry/OperatorAlgebra/QCCRZeroCuntzBridge.lean
@@ -1789,6 +1801,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Physics/TopologicalMTheoryGromovWitten.lean
 ./lean/InfoGeometry/Physics/WeylSU3ColorSymmetry.lean
 ./lean/InfoGeometry/Physics/ZornMatrixSU3.lean
+./lean/InfoGeometry/Prequantum.lean
 ./lean/InfoGeometry/Probability/GromovConcentration.lean
 ./lean/InfoGeometry/Probability/GromovFiniteCounting.lean
 ./lean/InfoGeometry/Probability/GromovJaynesProbability.lean
@@ -2030,6 +2043,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/Canonical/ChernSimonsKnotInvariant.lean :: 16:namespace ChernSimonsKnot
 ./lean/InfoGeometry/Canonical/ChiralCuntzSuperchargeBridge.lean :: 3:namespace ChiralCuntzSuperchargeBridge
 ./lean/InfoGeometry/Canonical/ChiralParitySuperalgebra.lean :: 19:namespace NoncommutativeGeometry
+./lean/InfoGeometry/Canonical/ChiralZornCARAndSchurBridge.lean :: 27:namespace GogberashviliNilpotentCARBridge
 ./lean/InfoGeometry/Canonical/Cl11DiracOperatorConnection.lean :: 6:namespace SplitOctonion
 ./lean/InfoGeometry/Canonical/Cl11SheetDiracMatrices.lean :: 5:namespace SplitOctonion
 ./lean/InfoGeometry/Canonical/Cl11WittBasis.lean :: 4:namespace SplitOctonion
@@ -2383,6 +2397,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/External/Auto/ChiralCuntzInductive.lean :: 20:namespace ChiralCuntzInductive
 ./lean/InfoGeometry/External/Auto/ChiralTwistedFibration.lean :: 306:namespace Transport
 ./lean/InfoGeometry/External/Auto/CliffordInductiveTripotent.lean :: 13:namespace CliffordInductiveTripotent
+./lean/InfoGeometry/External/Auto/CognitiveVacuum.lean :: 4:namespace AgentBrain
 ./lean/InfoGeometry/External/Auto/CoherentOrbitalPrecession.lean :: 26:namespace CoherentOrbitalPrecession
 ./lean/InfoGeometry/External/Auto/CompleteHolographicDictionary.lean :: 18:namespace CompleteHolographicDictionary
 ./lean/InfoGeometry/External/Auto/ConnesMarcolliShimura.lean :: 36:namespace ConcreteShimuraModel
@@ -2776,7 +2791,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 ./lean/InfoGeometry/UnifiedMatrixBasis.lean :: 14:namespace UnifiedMatrixBasis
 
 === Namespace prefix histogram (first namespace line per file) ===
-   9821 InfoGeometry
+   9882 InfoGeometry
      76 CStarStateColimit
      30 Bridge
      24 SplitOctonion
@@ -2820,6 +2835,7 @@ lean/InfoGeometry/Physics/NuclearKleinTopologyDiagnostics.lean:9:axiom dependenc
 
 ```text
 Forbidden quarantined import: InfoGeometry.Canonical.RedLine in lean/InfoGeometry.lean:26
+Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/Prequantum.lean:2
 Quarantine import boundary check failed.
 ```
 
@@ -2840,7 +2856,7 @@ wrote /tmp/proof_gap_report.review.tex
 ## Mathless Proposition Audit
 
 ```text
-Found 7449 candidate(s):
+Found 7497 candidate(s):
 
 lean/DAG/AnalyticBridge.lean:45: theorem flow_commutes_with_splitCliffordMap [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
@@ -3047,6 +3063,39 @@ lean/Experimental/WeylDenominatorPrimeCutoff.lean:34: lemma primeEnergy_eq_energ
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/Experimental/WeylDenominatorPrimeCutoff.lean:142: lemma zetaPrimeGas_eulerProduct [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionEuler.lean:37: theorem eval_eulerOp [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionOnline.lean:40: theorem OnlineState.update_admissionRate [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionOnline.lean:68: theorem OnlineState.update_effectiveMass_nonneg [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionOnline.lean:96: theorem OnlineState.lockout_step [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionPolynomial.lean:24: lemma canonical_zero_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionPolynomial.lean:29: lemma canonical_succ_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionRational.lean:28: theorem expectedOccupancy_mul_partition [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionRational.lean:35: theorem secondRawOccupancy_mul_partition [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionRobustPoisson.lean:18: theorem poissonDeviance_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionRobustPoisson.lean:22: theorem poissonDeviance_self [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/GrandPartitionRobustPoisson.lean:89: theorem reducedRobustLoss_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Albert/Generations.lean:48: theorem single_gen_fermions_count [skeletal_proof]
@@ -3353,6 +3402,12 @@ lean/InfoGeometry/Algebra/FormalSeriesCalculus.lean:27: theorem coeff_formalGeom
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/FractalScaleTransport.lean:45: theorem iter_succ [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Algebra/GaussJordan/Elementary.lean:41: theorem scaleRow_apply_of_ne [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Algebra/GaussJordan/Elementary.lean:112: theorem clearNilpotent_sq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/Generations.lean:55: theorem single_gen_fermions_count [skeletal_proof]
@@ -3683,6 +3738,9 @@ lean/InfoGeometry/Algebra/NilpotentNonAssocDerivationExp.lean:70: theorem nilpot
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/NonAssocDerivation.lean:60: theorem lie_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Algebra/NonAssocDerivationExponential.lean:220: theorem continuousEndOfLinear_apply [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/NonAssocDerivationKernel.lean:117: theorem solutionFiberEquivKer_symm_apply_val [skeletal_proof]
@@ -5134,6 +5192,54 @@ lean/InfoGeometry/Arithmetic/MobiusFermionBosonization.lean:100: theorem exterio
 lean/InfoGeometry/Arithmetic/PrimeBitFiniteKernelIndexBridge.lean:103: theorem prime_register_parity_divisorIndex_eq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicAmbientTower.lean:146: theorem terminal_stage_eq_adjoin_zeta [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicAmbientTower.lean:157: theorem terminal_fieldStage_eq_adjoin_zeta [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:66: theorem conductor_step_01 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:67: theorem conductor_step_12 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:68: theorem conductor_step_23 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:69: theorem conductor_step_34 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:70: theorem conductor_step_45 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:73: theorem conductor_dvd_01 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:74: theorem conductor_dvd_12 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:75: theorem conductor_dvd_23 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:76: theorem conductor_dvd_34 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisDirectedClosure.lean:77: theorem conductor_dvd_45 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisGroupTower.lean:79: theorem gal6To2_unit_readback [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisGroupTower.lean:83: theorem gal30To6_unit_readback [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisGroupTower.lean:87: theorem gal210To30_unit_readback [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisGroupTower.lean:91: theorem gal2310To210_unit_readback [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Arithmetic/PrimeCyclotomicGaloisTower.lean:77: theorem primorialConductor_step_0 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -5525,6 +5631,18 @@ lean/InfoGeometry/Arithmetic/RamanujanOddZeta.lean:131: theorem reflectedModular
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Arithmetic/RamanujanOddZeta.lean:141: theorem ramanujanOddZetaLHS_eq [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/RiemannApolloniusRiccatiBridge.lean:141: theorem centeredScale_eq_riccatiField [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/RiemannApolloniusRiccatiBridge.lean:150: theorem apolloniusRiccatiGenerator_det [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/RiemannApolloniusVectorFields.lean:99: theorem rotationalField_criticalLine_transverse_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Arithmetic/RiemannApolloniusVectorFields.lean:110: theorem dilationCoordinateField_criticalLine_longitudinal_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Arithmetic/RiemannCayleySymmetryAdapted.lean:32: theorem cayley_conjugates_functionalReflection_to_inv [skeletal_proof]
@@ -9211,6 +9329,18 @@ lean/InfoGeometry/Canonical/PrimeCocycleCoefficients.lean:48: theorem cocycleCoe
 lean/InfoGeometry/Canonical/PrimeCocycleCoefficients.lean:55: theorem cocycleCoefficient_singleton [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/PrimeCyclotomicGaloisTowerCertificates.lean:112: theorem terminal_conductor [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/PrimeCyclotomicGaloisTowerCertificates.lean:115: theorem terminal_galoisDegree [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/PrimeCyclotomicGaloisTowerCertificates.lean:118: theorem stagePrime_values [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/PrimeCyclotomicGaloisTowerCertificates.lean:124: theorem conductor_values [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/PrimeEulerProductConvergenceBridge.lean:233: theorem primeEulerProduct_tprod_eq_riemannZeta [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -11242,6 +11372,9 @@ lean/InfoGeometry/Clifford/AlbertBottConformalBridge.lean:57: theorem cl11_tenso
 lean/InfoGeometry/Clifford/AlbertBottConformalBridge.lean:112: theorem cl44_complexification_equiv_eq_owner [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Clifford/BottFromCl44.lean:37: theorem cl55_from_cl44_splitBottStep_eq_owner [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Clifford/BudinichCliqueSpinor.lean:45: theorem graphCliqueGram_adj_eq_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -11624,9 +11757,6 @@ lean/InfoGeometry/Clifford/GogberashviliSplitOctonionBasis.lean:84: lemma addZ_v
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/GogberashviliSplitOctonionBasis.lean:85: lemma smulZ_val [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Clifford/Grading.lean:52: lemma jordanProd_comm [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/HestenesDirac.lean:118: theorem current_eq_density_smul_velocityFrame [skeletal_proof]
@@ -12151,6 +12281,9 @@ lean/InfoGeometry/Dynamics/KanDecomposition.lean:162: theorem kan_product_10 [sk
 lean/InfoGeometry/Dynamics/KanDecomposition.lean:173: theorem kan_product_11 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Dynamics/KmsBoundary.lean:63: theorem modularHamiltonian_exp_isSelfAdjoint [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Dynamics/ParaKahlerJKORicciFlowBridge.lean:77: theorem nilpotentN_trace [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -12226,94 +12359,121 @@ lean/InfoGeometry/Exceptional/CircularSplitOctonionFreudenthalLinearExtension.le
 lean/InfoGeometry/Exceptional/CircularSplitOctonionZeroGradeReadback.lean:34: theorem circularZeroInject_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:158: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:163: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:163: theorem hermitianToH3_b [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:168: theorem hermitianToH3_b [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:166: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:171: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:171: theorem hermitianToH3_c [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:176: theorem hermitianToH3_c [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:174: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:179: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:191: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:196: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:197: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:202: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:246: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:251: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:252: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:257: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:360: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:365: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:366: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:371: theorem hermitianRealAlbertEquiv_finiteJordanProduct_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:563: theorem hermitianToH3_finiteJordanProduct_ [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:582: theorem hermitianToH3_finiteJordanProduct_ [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:586: theorem realConj_eq_zornConj [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:605: theorem realConj_eq_zornConj [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:603: theorem canonicalMul_a [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:622: theorem canonicalMul_a [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:765: theorem realSplitOct_sum_mul_y0 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:784: theorem realSplitOct_sum_mul_y0 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:772: theorem realSplitOct_sum_mul_y1 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:791: theorem realSplitOct_sum_mul_y1 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:779: theorem realSplitOct_sum_mul_y2 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:798: theorem realSplitOct_sum_mul_y2 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1145: theorem canonicalEquiv_v_fst [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1164: theorem canonicalEquiv_v_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1149: theorem canonicalEquiv_v_snd_fst [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1168: theorem canonicalEquiv_v_snd_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1153: theorem canonicalEquiv_v_snd_snd [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1172: theorem canonicalEquiv_v_snd_snd [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1222: theorem vecToCanonical_dot [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1176: theorem canonicalEquiv_conj_v_snd_snd [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1231: theorem vecToCanonical_neg [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1180: theorem canonicalEquiv_conj_v_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1393: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1184: theorem canonicalEquiv_conj_v_snd_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1399: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1188: theorem canonicalEquiv_conj_w_snd_snd [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1405: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1192: theorem canonicalEquiv_conj_w_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1411: theorem realSplitOct_fromZorn_x1 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1196: theorem canonicalEquiv_conj_w_snd_fst [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1415: theorem realSplitOct_fromZorn_y2 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1265: theorem vecToCanonical_dot [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1419: theorem canonicalEquiv_w_snd_snd [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1274: theorem vecToCanonical_neg [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1423: theorem realSplitOct_fromZorn_x2 [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1446: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1427: theorem realAlbertMatrix_mul_z [skeletal_proof]
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1452: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1458: theorem hermitianRealAlbertEquiv_z [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1464: theorem realSplitOct_fromZorn_x1 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1468: theorem realSplitOct_fromZorn_y2 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1472: theorem canonicalEquiv_w_snd_snd [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1476: theorem canonicalEquiv_w_fst [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1480: theorem canonicalEquiv_w_snd_fst [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1484: theorem realSplitOct_fromZorn_x2 [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1488: theorem realAlbertMatrix_mul_z [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Exceptional/FiniteJ3CanonicalTransport.lean:1495: theorem realAlbertMatrix_mul_z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Exceptional/FiniteJ3ZornCarrier.lean:71: theorem causalType_eq_timelike [skeletal_proof]

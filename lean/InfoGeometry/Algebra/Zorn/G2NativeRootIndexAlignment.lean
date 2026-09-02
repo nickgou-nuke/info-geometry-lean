@@ -44,6 +44,13 @@ def rootIndexOf (r : G2Root) : NativeRootIndex :=
 theorem rootIndexOf_val (r : G2Root) :
     (rootIndexOf r).1 = G2ZornDerivationRootRepresentation.rootCoordinate r := rfl
 
+theorem rootIndexOf_derivation_readback (r : G2Root) :
+    InfoGeometry.Lie.CanonicalZornDerivation.vectorCanonicalLinearEquiv
+        (G2ZornDerivationRootRepresentation.zornDerivationRootRepresentation r) =
+      rootDerivation (rootIndexOf r).1 := by
+  simpa [rootIndexOf_val] using
+    (finiteRoot_derivation_canonical_transport r)
+
 set_option maxHeartbeats 1000000 in
 theorem rootIndexOf_injective : Function.Injective rootIndexOf := by
   native_decide

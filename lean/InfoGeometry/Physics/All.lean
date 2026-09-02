@@ -248,7 +248,13 @@ import InfoGeometry.Physics.SouriauLieThermodynamics
 import InfoGeometry.Physics.WheelerItFromBit
 import InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 import InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis
+import InfoGeometry.Physics.CartanSouriauNativeAmariBridge
 import InfoGeometry.Physics.Cl55SpinorCartanFock
+import InfoGeometry.Physics.CircularChiralFockOperatorZornBridge
+import InfoGeometry.Physics.OperatorFourVectorZornReadout
+import InfoGeometry.Physics.CircularOperatorPotential
+import InfoGeometry.Physics.CircularCompressedFourPotential
+import InfoGeometry.Physics.CircularChiralFockScalarPoleBridge
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
 import InfoGeometry.Physics.NuclearPhononRPAAlgebra
@@ -275,6 +281,7 @@ import InfoGeometry.Physics.CuntzTomitaCARPristineCapstone
 import InfoGeometry.Physics.TensorProductCommutationBregmanEntropyCapstone
 import InfoGeometry.Physics.SelfConcordantFenchelBregmanDikinCapstone
 import InfoGeometry.Physics.MatrixMirrorDescentKMSCentralPathCapstone
+import InfoGeometry.Physics.CircularParaKahlerSuperpotentialBridge
 
 /-!
 # Physics Umbrella

@@ -87,6 +87,33 @@ theorem numberOp1_idem : numberOp1 * numberOp1 = numberOp1 :=
 theorem numberOp2_idem : numberOp2 * numberOp2 = numberOp2 :=
   chiralNumber55_idem 2
 
+def N_plus : Cl55 := chiralPlus55 0 * chiralMinus55 0
+def N_minus : Cl55 := chiralMinus55 0 * chiralPlus55 0
+
+theorem N_plus_add_N_minus : N_plus + N_minus = (1 : Cl55) := by
+  simpa [N_plus, N_minus] using
+    (chiralPlus55_minus55_anticommutator (0 : Fin 3) 0)
+
+theorem N_plus_mul_N_minus : N_plus * N_minus = 0 := by
+  change (chiralPlus55 0 * chiralMinus55 0) *
+      (chiralMinus55 0 * chiralPlus55 0) = 0
+  rw [show (chiralPlus55 0 * chiralMinus55 0) *
+      (chiralMinus55 0 * chiralPlus55 0) =
+      chiralPlus55 0 * (chiralMinus55 0 * chiralMinus55 0) *
+        chiralPlus55 0 by noncomm_ring]
+  rw [chiralMinus55_sq]
+  simp
+
+theorem N_minus_mul_N_plus : N_minus * N_plus = 0 := by
+  change (chiralMinus55 0 * chiralPlus55 0) *
+      (chiralPlus55 0 * chiralMinus55 0) = 0
+  rw [show (chiralMinus55 0 * chiralPlus55 0) *
+      (chiralPlus55 0 * chiralMinus55 0) =
+      chiralMinus55 0 * (chiralPlus55 0 * chiralPlus55 0) *
+        chiralMinus55 0 by noncomm_ring]
+  rw [chiralPlus55_sq]
+  simp
+
 theorem color_car_native_closure :
     chiralPlusSum * chiralPlusSum = 0 ∧
     chiralMinusSum * chiralMinusSum = 0 ∧

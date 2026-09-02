@@ -421,6 +421,7 @@ import InfoGeometry.Algebra.Zorn.G2NativeLineFiberDistinctness
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberIdentity
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberThirdWitness
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberOrbitAssembly
+import InfoGeometry.Algebra.Zorn.G2Basis8NativeLineAlignment
 import InfoGeometry.Algebra.Zorn.G2NativeFullFlagAction
 import InfoGeometry.Algebra.Zorn.G2IntrinsicPointStabilizerFiber
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineTransportComposition

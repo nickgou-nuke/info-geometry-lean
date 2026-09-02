@@ -46,6 +46,8 @@ structure ClosureData
 
 /-- The certified readouts supplied by ClosureData. -/
 structure CertifiedReadout
+    {Weight Tangent State : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
     (D : ClosureData Weight Tangent State) where
   dag : (lambdaToCausalNet D.compiled.term).IsDAG
   negativeGrammar :
@@ -136,11 +138,15 @@ end CertifiedReadout
 
 /-- The audited cross-lane closure readout. -/
 def certifiedReadout
+    {Weight Tangent State : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
     (D : ClosureData Weight Tangent State) : CertifiedReadout D :=
   CertifiedReadout.of D
 
 /-- The principal conjunction of the audited closure laws. -/
 theorem certified_closure
+    {Weight Tangent State : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
     (D : ClosureData Weight Tangent State) :
     (lambdaToCausalNet D.compiled.term).IsDAG ∧
     causalNetToPolarity D.compiled.net = Polarity.negative ∧

@@ -39,7 +39,8 @@ structure CategoricalHadjiivanovData
     (sys : DirectInductiveSystem ℂ I Stage)
     (Ainf : Type u) [AddCommGroup Ainf] [Module ℂ Ainf]
     (cocone : InductiveCocone ℂ sys Ainf)
-    [NormedAddCommGroup Ainf] [NormedSpace ℂ Ainf] where
+    [NormedAddCommGroup Ainf] [NormedSpace ℂ Ainf]
+    [InnerProductSpace ℝ Ainf] [CompleteSpace Ainf] where
   stageMonodromy : ∀ i, Stage i →ₗ[ℂ] Stage i
   ambientMonodromy : Ainf →L[ℂ] Ainf
   stageDescent :
@@ -57,6 +58,7 @@ variable {sys : DirectInductiveSystem ℂ I Stage}
 variable {Ainf : Type u} [AddCommGroup Ainf] [Module ℂ Ainf]
 variable {cocone : InductiveCocone ℂ sys Ainf}
 variable [NormedAddCommGroup Ainf] [NormedSpace ℂ Ainf]
+variable [InnerProductSpace ℝ Ainf] [CompleteSpace Ainf]
 variable (D : CategoricalHadjiivanovData sys Ainf cocone)
 
 /-- The ambient monodromy is Hestenes--Krein analytic after restriction of

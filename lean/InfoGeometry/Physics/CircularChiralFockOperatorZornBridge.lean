@@ -251,6 +251,87 @@ theorem circularColourOperatorZorn_toMatrix (c : Fin 3) :
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
+/-! ## Real split four-potential compression -/
+
+/-- A real operator-valued four-potential on the finite Fock algebra.  This is
+the bilingual real/split counterpart of the complex `OperatorFourVector`: the
+four entries are operator coefficients rather than scalar spacetime numbers. -/
+abbrev RealOperatorFourPotential := Fin 4 → FockOp
+
+/-- Compression of one selected colour of the full `1+3+3+1` circular packet
+into four real operator coordinates.
+
+`v₀,v₃` are the half-sum/half-difference of the two scalar sheets, while
+`v₁,v₂` are the symmetric/antisymmetric combinations of annihilation and
+creation.  Thus the complex notation `v₁ ∓ i v₂` is replaced by the real split
+pair `v₁ ∓ v₂`. -/
+def circularCompressedFourPotential (c : Fin 3) : RealOperatorFourPotential
+  | 0 => (1 / 2 : ℝ) • (circularFockScalarPlus + circularFockScalarMinus)
+  | 1 => (1 / 2 : ℝ) • (positiveRailFock c + negativeRailFock c)
+  | 2 => (1 / 2 : ℝ) • (negativeRailFock c - positiveRailFock c)
+  | 3 => (1 / 2 : ℝ) • (circularFockScalarPlus - circularFockScalarMinus)
+
+/-- Real split soldering of four operator coordinates into a `2×2` matrix.
+It is the no-external-`i` counterpart of Pauli/Dirac soldering. -/
+def realSplitFourSoldering (v : RealOperatorFourPotential) :
+    Matrix (Fin 2) (Fin 2) FockOp :=
+  !![v 0 + v 3, v 1 - v 2;
+     v 1 + v 2, v 0 - v 3]
+
+@[simp] theorem circularCompressedFourPotential_scalar (c : Fin 3) :
+    circularCompressedFourPotential c 0 = (1 / 2 : ℝ) • (1 : FockOp) := by
+  simp [circularCompressedFourPotential, circularFockScalarPlus_add_minus]
+
+@[simp] theorem circularCompressedFourPotential_chiral (c : Fin 3) :
+    circularCompressedFourPotential c 3 = (1 / 2 : ℝ) • gammaChiral := by
+  rw [show circularCompressedFourPotential c 3 =
+      (1 / 2 : ℝ) • poleLogScaleGenerator by rfl]
+  rw [poleLogScaleGenerator_eq_gammaChiral]
+
+/-- The two diagonal sheet coordinates reconstruct exactly the two circular
+Fock projectors. -/
+theorem circularCompressedFourPotential_diagonal_reconstruction (c : Fin 3) :
+    circularCompressedFourPotential c 0 + circularCompressedFourPotential c 3 =
+        circularFockScalarPlus ∧
+      circularCompressedFourPotential c 0 - circularCompressedFourPotential c 3 =
+        circularFockScalarMinus := by
+  constructor <;>
+    simp [circularCompressedFourPotential] <;> module
+
+/-- The symmetric/antisymmetric rail coordinates reconstruct exactly the
+annihilation and creation channels. -/
+theorem circularCompressedFourPotential_offDiagonal_reconstruction (c : Fin 3) :
+    circularCompressedFourPotential c 1 - circularCompressedFourPotential c 2 =
+        positiveRailFock c ∧
+      circularCompressedFourPotential c 1 + circularCompressedFourPotential c 2 =
+        negativeRailFock c := by
+  constructor <;>
+    simp [circularCompressedFourPotential] <;> module
+
+/-- Main compression theorem: the real split four-potential is exactly the
+`2×2` associative shell of the selected full `1+3+3+1` second-quantized
+circular packet. -/
+theorem realSplitFourSoldering_eq_circularOperatorZorn (c : Fin 3) :
+    realSplitFourSoldering (circularCompressedFourPotential c) =
+      OperatorZornMatrix.toMatrix (circularColourOperatorZorn c) := by
+  rw [circularColourOperatorZorn_toMatrix]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realSplitFourSoldering, circularCompressedFourPotential] <;> module
+
+/-- Compact statement that the full circular packet is an eight-channel
+`1+3+3+1` object whose selected-colour associative shell is faithfully
+reconstructed from four real operator coordinates. -/
+theorem circular_1331_compressed_four_potential_packet (c : Fin 3) :
+    circularFockPacket.uPlus = circularFockScalarPlus ∧
+    circularFockPacket.uMinus = circularFockScalarMinus ∧
+    (∀ i : Fin 3, circularFockPacket.sigmaPlus i = positiveRailFock i) ∧
+    (∀ i : Fin 3, circularFockPacket.sigmaMinus i = negativeRailFock i) ∧
+    realSplitFourSoldering (circularCompressedFourPotential c) =
+      OperatorZornMatrix.toMatrix (circularColourOperatorZorn c) := by
+  exact ⟨rfl, rfl, fun _ => rfl, fun _ => rfl,
+    realSplitFourSoldering_eq_circularOperatorZorn c⟩
+
 /-- Compact full-frame packet: scalar poles reproduce the complementary Fock
 projector algebra and the six rails reproduce the three-mode CAR routing. -/
 theorem circular_chiral_fock_operatorZorn_packet (c : Fin 3) :

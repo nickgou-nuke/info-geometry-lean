@@ -78,10 +78,15 @@ theorem no_exact_nonzero_scalar_commutator
   letI : Module.Free ℝ CZ := Module.Free.of_basis circularPeirceBasis
   letI : Module.Finite ℝ CZ := Module.Finite.of_basis circularPeirceBasis
   intro h
-  have htrace : (0 : ℝ) = c * 8 := by
-    simpa [scalarOperator, LinearMap.trace_mul_comm,
-      canonicalZorn_finrank_eight] using
-      congrArg (LinearMap.trace ℝ CZ) h
+  have hcomm :
+      LinearMap.trace ℝ CZ (A * B - B * A) = 0 := by
+    simpa [Ring.lie_def] using
+      (LinearMap.trace_lie A B)
+  have hscalar :
+      LinearMap.trace ℝ CZ (scalarOperator c) = c * 8 := by
+    simp [scalarOperator, canonicalZorn_finrank_eight]
+  have htrace := congrArg (LinearMap.trace ℝ CZ) h
+  rw [hcomm, hscalar] at htrace
   apply hc
   linarith
 

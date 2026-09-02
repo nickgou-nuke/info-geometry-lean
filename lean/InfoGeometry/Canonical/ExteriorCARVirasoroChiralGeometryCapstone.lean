@@ -9,6 +9,7 @@ import InfoGeometry.Canonical.Cl55ChiralOccupationFiveGradeBridge
 import InfoGeometry.Canonical.Cl11WittOccupationParityFactorization
 import InfoGeometry.Canonical.Cl55ChiralParityNormalOrderingBridge
 import InfoGeometry.Canonical.Cl55FiveGradeSuperParityBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
 
 /-!
 # Exterior–CAR–Virasoro–chiral operator geometry capstone
@@ -23,7 +24,9 @@ constructed by the imported owners:
 * raw and centered `Cl(5,5)` occupation, chiral projectors, ordered parity
   factorization, and the reduction of the five-grading modulo two;
 * the four-coordinate Soloviev, split-octonion derivation, BKM/Berry,
-  para-Kähler, and metriplectic readouts.
+  para-Kähler, and metriplectic readouts;
+* the unconditional Duhamel trace collapse and the genuine commuting-family
+  log-partition/expectation derivative.
 
 The imported modules intentionally retain their distinct carriers. This
 capstone does not assert any unproved definitional identification between:
@@ -36,7 +39,9 @@ capstone does not assert any unproved definitional identification between:
 * the finite centering constant `5/2` and a specified Hamiltonian vacuum
   expectation;
 * the existing `c = 1` charged-Fock Virasoro representation and a hypothetical
-  five-flavour `c = 5` representation.
+  five-flavour `c = 5` representation;
+* the changed-origin exponential Fréchet derivative and the Duhamel operator
+  on arbitrary noncommuting tangent directions.
 
 Its purpose is compositional: downstream developments can import one module
 while continuing to use the native theorem owners for every individual edge.

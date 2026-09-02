@@ -53,8 +53,9 @@ def rightMulCLM (a : A) : EndA :=
 /-- Left and right multiplication commute for arbitrary multipliers. -/
 theorem leftMul_rightMul_commute (a b : A) :
     Commute (leftMulCLM a) (rightMulCLM b) := by
-  apply ContinuousLinearMap.ext
-  intro x
+  show leftMulCLM a * rightMulCLM b =
+    rightMulCLM b * leftMulCLM a
+  ext x
   simp [ContinuousLinearMap.mul_apply, mul_assoc]
 
 /-- Inner adjoint derivation `ad_a = L_a - R_a`. -/
@@ -111,8 +112,8 @@ theorem adCLM_flow_is_multiplicative
     InfoGeometry.Lie.ContinuousDerivationExponential.flow (adCLM a) t (x * y) =
       InfoGeometry.Lie.ContinuousDerivationExponential.flow (adCLM a) t x *
         InfoGeometry.Lie.ContinuousDerivationExponential.flow (adCLM a) t y := by
-  exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_mul
+  exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
     (ContinuousLinearMap.mul ℝ A) (adCLM a)
-    (adCLM_isDerivation a) x y t
+    (adCLM_isDerivation a) t x y
 
 end InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge

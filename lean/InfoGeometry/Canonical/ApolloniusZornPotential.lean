@@ -44,6 +44,67 @@ def dilationReflection (Z : ZornMatrix ℝ) : ZornMatrix ℝ where
   w := ![Z.w 0, -Z.w 1, Z.w 2]
   b := -Z.b
 
+/-- The dilation reflection is a genuine real-linear endomorphism of the
+native Zorn carrier. -/
+def dilationReflectionLinear : ZornMatrix ℝ →ₗ[ℝ] ZornMatrix ℝ where
+  toFun := dilationReflection
+  map_add' X Y := by
+    apply InfoGeometry.Algebra.ZornMatrix.ext
+    · simp [dilationReflection]
+    · funext i
+      fin_cases i <;> simp [dilationReflection, Vec3.add]
+    · funext i
+      fin_cases i <;> simp [dilationReflection, Vec3.add]
+    · simp [dilationReflection]
+  map_smul' r X := by
+    apply InfoGeometry.Algebra.ZornMatrix.ext
+    · simp [dilationReflection]
+    · funext i
+      fin_cases i <;> simp [dilationReflection, Vec3.smul]
+    · funext i
+      fin_cases i <;> simp [dilationReflection, Vec3.smul]
+    · simp [dilationReflection]
+
+@[simp] theorem dilationReflectionLinear_apply (Z : ZornMatrix ℝ) :
+    dilationReflectionLinear Z = dilationReflection Z := rfl
+
+/-- The linear dilation reflection is self-inverse. -/
+theorem dilationReflectionLinear_involutive :
+    Function.Involutive dilationReflectionLinear := by
+  intro Z
+  apply InfoGeometry.Algebra.ZornMatrix.ext
+  · simp [dilationReflectionLinear, dilationReflection]
+  · funext i
+    fin_cases i <;> simp [dilationReflectionLinear, dilationReflection]
+  · funext i
+    fin_cases i <;> simp [dilationReflectionLinear, dilationReflection]
+  · simp [dilationReflectionLinear, dilationReflection]
+
+/-- The dilation reflection bundled as a genuine real linear equivalence. -/
+def dilationReflectionEquiv : ZornMatrix ℝ ≃ₗ[ℝ] ZornMatrix ℝ :=
+  LinearEquiv.ofInvolutive dilationReflectionLinear
+    dilationReflectionLinear_involutive
+
+@[simp] theorem dilationReflectionEquiv_apply (Z : ZornMatrix ℝ) :
+    dilationReflectionEquiv Z = dilationReflection Z := rfl
+
+/-- The dilation reflection reverses the native Zorn trace. -/
+theorem zornTrace_dilationReflection (Z : ZornMatrix ℝ) :
+    zornTrace (dilationReflection Z) = -zornTrace Z := by
+  simp [zornTrace, dilationReflection]
+
+/-- The native split-octonion quadratic norm is invariant under the dilation
+reflection. -/
+theorem zornNorm_dilationReflection (Z : ZornMatrix ℝ) :
+    zornNorm (dilationReflection Z) = zornNorm Z := by
+  simp [zornNorm, dilationReflection, Vec3.dot]
+  ring
+
+/-- The bundled linear equivalence preserves the native Zorn norm. -/
+theorem zornNorm_dilationReflectionEquiv (Z : ZornMatrix ℝ) :
+    zornNorm (dilationReflectionEquiv Z) = zornNorm Z := by
+  rw [dilationReflectionEquiv_apply, zornNorm_dilationReflection]
+
 /-- The Apollonius Zorn potential is identically traceless. -/
 @[simp] theorem apolloniusPotentialZorn_trace (ξ θ χ : ℝ) :
     zornTrace (apolloniusPotentialZorn ξ θ χ) = 0 := by
@@ -68,6 +129,21 @@ theorem apolloniusPotentialZorn_reflection (ξ θ χ : ℝ) :
   · funext i
     fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
   · simp [apolloniusPotentialZorn, dilationReflection]
+
+/-- The reflection law in the bundled linear-equivalence carrier. -/
+theorem apolloniusPotentialZorn_reflection_equiv (ξ θ χ : ℝ) :
+    apolloniusPotentialZorn (-ξ) θ χ =
+      dilationReflectionEquiv (apolloniusPotentialZorn ξ θ χ) := by
+  rw [dilationReflectionEquiv_apply]
+  exact apolloniusPotentialZorn_reflection ξ θ χ
+
+/-- Reflection preserves the exact quadratic norm readout of the Apollonius
+potential. -/
+theorem apolloniusPotentialZorn_reflection_norm (ξ θ χ : ℝ) :
+    zornNorm (apolloniusPotentialZorn (-ξ) θ χ) =
+      zornNorm (apolloniusPotentialZorn ξ θ χ) := by
+  rw [apolloniusPotentialZorn_reflection]
+  exact zornNorm_dilationReflection _
 
 /-- The scalar diagonal coordinate vanishes exactly on the zero-scale leaf. -/
 @[simp] theorem apolloniusPotentialZorn_scalar_zero_iff

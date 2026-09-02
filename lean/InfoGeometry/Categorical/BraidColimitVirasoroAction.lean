@@ -37,6 +37,7 @@ structure CompatibleStageAction
     (𝕜 V : Type u) [CommRing 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (B : BraidGroupDiagram.{u}) where
+  L : ℤ → Module.End 𝕜 V
   stages :
     RepresentationCocone B (Grp.of (LinearAut 𝕜 V))
   stage_intertwines :
@@ -44,7 +45,6 @@ structure CompatibleStageAction
       Commute
         ((stages.app n b : LinearAut 𝕜 V) : V →ₗ[𝕜] V)
         (L m)
-  L : ℤ → Module.End 𝕜 V
 
 /-- The categorical action of the braid colimit on the carrier. -/
 abbrev descendedAction
@@ -104,8 +104,7 @@ theorem action_unique
   apply descendedRepresentation_unique B
     (Grp.of (LinearAut 𝕜 V)) A.stages f
   intro n
-  apply CategoryTheory.types_comp_apply
-  funext b
+  ext b
   exact h n b
 
 end CompatibleStageAction

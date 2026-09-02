@@ -61,8 +61,13 @@ theorem apolloniusPotentialZorn_norm (ξ θ χ : ℝ) :
 theorem apolloniusPotentialZorn_reflection (ξ θ χ : ℝ) :
     apolloniusPotentialZorn (-ξ) θ χ =
       dilationReflection (apolloniusPotentialZorn ξ θ χ) := by
-  ext i <;> fin_cases i <;>
-    simp [apolloniusPotentialZorn, dilationReflection]
+  apply InfoGeometry.Algebra.ZornMatrix.ext
+  · simp [apolloniusPotentialZorn, dilationReflection]
+  · funext i
+    fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
+  · funext i
+    fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
+  · simp [apolloniusPotentialZorn, dilationReflection]
 
 /-- The scalar diagonal coordinate vanishes exactly on the zero-scale leaf. -/
 @[simp] theorem apolloniusPotentialZorn_scalar_zero_iff

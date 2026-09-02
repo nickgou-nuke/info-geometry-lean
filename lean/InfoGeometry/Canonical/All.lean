@@ -3583,6 +3583,10 @@ import InfoGeometry.Canonical.HestenesKreinChiralMonogenicCapstone
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateCapstone
 
+import InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsNormalizedBKMTwoPointBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsCenteredFrechetBKMBridge
+
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),

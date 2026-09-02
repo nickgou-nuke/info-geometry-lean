@@ -151,6 +151,22 @@ theorem matrixGaloisMap_mul (σ : R →+* R) (M1 M2 : Matrix (Fin 2) (Fin 2) R) 
   dsimp [matrixGaloisMap]
   simp [Matrix.mul_apply, map_mul]
 
+theorem matrixGaloisMap_commutator
+    (σ : R →+* R) (M1 M2 : Matrix (Fin 2) (Fin 2) R) :
+    matrixGaloisMap σ (M1 * M2 - M2 * M1) =
+      matrixGaloisMap σ M1 * matrixGaloisMap σ M2 -
+        matrixGaloisMap σ M2 * matrixGaloisMap σ M1 := by
+  ext i j
+  simp [matrixGaloisMap, Matrix.mul_apply, map_sub, map_mul]
+
+theorem matrixGaloisMap_anticommutator
+    (σ : R →+* R) (M1 M2 : Matrix (Fin 2) (Fin 2) R) :
+    matrixGaloisMap σ (M1 * M2 + M2 * M1) =
+      matrixGaloisMap σ M1 * matrixGaloisMap σ M2 +
+        matrixGaloisMap σ M2 * matrixGaloisMap σ M1 := by
+  ext i j
+  simp [matrixGaloisMap, Matrix.mul_apply, map_add, map_mul]
+
 /-- 🏆 THEOREM 7 (Identity Preservation):
     $$\sigma(I) = I$$ -/
 theorem matrixGaloisMap_one (σ : R →+* R) :

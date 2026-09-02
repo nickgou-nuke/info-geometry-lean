@@ -14,7 +14,9 @@ open VirasoroProject
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 open InfoGeometry.Canonical.CurrentSugawaraBridge
+open InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
+open InfoGeometry.OperatorAlgebra
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
@@ -102,5 +104,83 @@ theorem completedModeRepresentation_packet (α : 𝕜) (m n : ℤ) :
       if m + n = 0 then (m : 𝕜) • (1 : _) else 0 := by
   exact ⟨completedModeRepresentation_eq_current α m,
     completedModeRepresentation_bracket α m n⟩
+
+noncomputable def colimitHeisenbergToChargedFock
+    (α : 𝕜) :
+    (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜]
+      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  (UniversalEnvelopingAlgebra.representation
+      (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+      (V := VirasoroProject.ChargedFockSpace 𝕜 α)).toLinearMap.comp
+    (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)).toLinearMap
+
+theorem colimitHeisenbergToChargedFock_mode (α : 𝕜) (m : ℤ) :
+    colimitHeisenbergToChargedFock (𝕜 := 𝕜) α
+        (heisenbergColimitMode (𝕜 := 𝕜) m) =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m := by
+  change
+    (UniversalEnvelopingAlgebra.representation
+        (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+        (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+        (heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
+          (heisenbergColimitMode (𝕜 := 𝕜) m)) =
+      (UniversalEnvelopingAlgebra.representation
+        (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+        (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+        (HeisenbergAlgebra.jgen 𝕜 m)
+  rw [heisenbergFiniteModeColimitEquiv_mode]
+
+/-! The source-Wick and canonical charged-Fock current packets have the same
+current family and therefore are one representation, not two parallel lanes. -/
+theorem externalInfiniteJ_eq_chargedFockSpaceHeisenbergMode
+    (α : 𝕜) :
+    externalInfiniteJ (𝕜 := 𝕜) α =
+      chargedFockSpaceHeisenbergMode 𝕜 α := by
+  rfl
+
+theorem externalInfiniteJ_currentHeisenbergRep_eq_chargedFock
+    (α : 𝕜) :
+    externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α =
+      chargedFockSpaceCurrentHeisenbergRep 𝕜 α := by
+  simp [externalInfiniteJ_currentHeisenbergRep, externalInfiniteJ,
+    representedChargedFockJ, chargedFockSpaceCurrentHeisenbergRep]
+
+theorem externalInfiniteJ_sugawara_shift_as_chargedFock
+    (α : 𝕜) (r m : ℤ) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 r)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J m) =
+        -m • (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (r + m) := by
+  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+  rw [CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
+  exact sugawara_current_mode_shift
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm r m
+
+theorem externalInfiniteJ_currentSugawaraRepresentation_eq_chargedFock
+    (α : 𝕜) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation := by
+  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+
+theorem externalInfiniteJ_sugawaraStressMode_eq_chargedFock
+    (α : 𝕜) (n : ℤ) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).sugawaraStressMode n := by
+  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+
+theorem externalInfiniteJ_hasModeShift
+    (α : 𝕜) :
+    HasModeShift
+      (fun n X =>
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator X)
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J
+      (fun n m => n + m)
+      (fun _ m => (-m : 𝕜)) := by
+  simpa [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+    using chargedFock_hasModeShift (𝕜 := 𝕜) α
 
 end InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge

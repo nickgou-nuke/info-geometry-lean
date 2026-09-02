@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixProductBridge
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv
 import InfoGeometry.GroupTheory.DoubleCoset
 
 namespace InfoGeometry.Algebra.Zorn.G2MatrixWeylPair_0_1
@@ -130,7 +131,11 @@ theorem autMatrix_normalized_weyl_separation_0_1
     This is an $O(1)$ invariant proof using the isotropic flag entry $M_{2,2} = 1 \ne 0 = c_{2,2}$. -/
 theorem c_not_mem_unipotentSubgroup : c ∉ unipotentSubgroup := by
   intro hc
-  obtain ⟨e, he⟩ := pcWordMulEquiv.surjective ⟨c, hc⟩
+  let z : unipotentSubgroup := ⟨c, hc⟩
+  let e :=
+    InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordEquivUnipotent.symm z
+  have he : InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordSubtype e = z := by
+    exact InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordEquivUnipotent.apply_symm_apply z
   have he' : G2TwoSylowSubgroup.pcWord e = c := congrArg Subtype.val he
   have haut : autMatrix (G2TwoSylowSubgroup.pcWord e) 2 2 = autMatrix c 2 2 := by
     rw [he']

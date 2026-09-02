@@ -127,6 +127,7 @@ theorem rotationalField_centered_complex (delta t : ℝ) :
   dsimp
   rw [rotationalField_complex, logarithmicScale_centered]
   simp [centered, centeredScale]
+  ring
 
 /-- Master finite coordinate packet. -/
 theorem apollonius_vector_field_packet (sigma t : ℝ) :

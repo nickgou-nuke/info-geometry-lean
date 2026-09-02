@@ -33,6 +33,18 @@ namespace InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
 
 open Complex
 open scoped LSeries.notation
+open InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge
+open InfoGeometry.Arithmetic.RiemannHypothesisKreinColimitSpectral
+open InfoGeometry.Topology.ProjectiveCayleyZetaBridge
+open InfoGeometry.Projective.ApolloniusNatural
+open InfoGeometry.Quantum.ApolloniusFisherInformation
+open InfoGeometry.SymmetricDomains.DikinMetriplectic
+open InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge
+open InfoGeometry.Canonical.BerryKeatingDilations
+open InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator
+open InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
 
 /-! ## Arithmetic semigroup and logarithmic derivative -/
 
@@ -50,68 +62,65 @@ abbrev ArithmeticSemigroup := ℕ
 theorem vonMangoldt_eq_actualZetaLogDerivative
     {s : ℂ} (hs : 1 < s.re) :
     L ↗ArithmeticFunction.vonMangoldt s =
-      InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge.actualRiemannZetaLogDerivative s := by
-  exact InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge.
-    vonMangoldt_LSeries_eq_actualRiemannZetaLogDerivative hs
+      actualRiemannZetaLogDerivative s := by
+  exact vonMangoldt_LSeries_eq_actualRiemannZetaLogDerivative hs
 
 /-- Möbius is the Dirichlet-convolution inverse of zeta. -/
 theorem moebius_zeta_convolution_inverse :
     (ArithmeticFunction.moebius * ArithmeticFunction.zeta :
       ArithmeticFunction ℤ) = 1 := by
-  exact InfoGeometry.Arithmetic.RiemannHypothesisKreinColimitSpectral.
-    moebius_mul_zeta_eq_one
+  exact moebius_mul_zeta_eq_one
 
 /-! ## Projective/Cayley geometry of the critical line -/
 
 /-- The centered functional-equation reflection becomes multiplicative
  inversion under the Cayley transform. -/
 theorem cayley_reflection_to_inversion (w : ℂ) :
-    InfoGeometry.Topology.ProjectiveCayleyZetaBridge.cayley (-w) =
-      (InfoGeometry.Topology.ProjectiveCayleyZetaBridge.cayley w)⁻¹ := by
-  exact InfoGeometry.Topology.ProjectiveCayleyZetaBridge.cayley_neg w
+    cayley (-w) = (cayley w)⁻¹ := by
+  exact cayley_neg w
 
 /-- The critical-line imaginary axis maps to the unit circle. -/
 theorem cayley_critical_line_to_unit_circle (t : ℝ) :
     Complex.normSq
-      (InfoGeometry.Topology.ProjectiveCayleyZetaBridge.cayley
-        (Complex.I * (t : ℂ))) = 1 := by
-  exact InfoGeometry.Topology.ProjectiveCayleyZetaBridge.
-    cayley_critical_line_norm_sq t
+      (cayley (Complex.I * (t : ℂ))) = 1 := by
+  exact cayley_critical_line_norm_sq t
 
 /-- In the native Apollonius homogeneous chart, the projective ratio lies on
  the unit circle exactly on the zero-rapidity leaf `xi=0`. -/
 theorem apollonius_unit_circle_iff_zero_leaf (xi theta : ℝ) :
-    InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnLeeYangCircle
-      (InfoGeometry.Projective.ApolloniusNatural.projectiveRatio
-        (InfoGeometry.Projective.ApolloniusNatural.apolloniusRay xi theta)) ↔
+    OnLeeYangCircle (projectiveRatio (apolloniusRay xi theta)) ↔
       xi = 0 := by
-  exact InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates.
-    projectiveRatio_apolloniusRay_unitCircle_iff_xi_zero xi theta
+  exact projectiveRatio_apolloniusRay_unitCircle_iff_xi_zero xi theta
 
 /-! ## Fisher / information-geometric potential -/
 
 /-- The Apollonius Fisher quadratic form is strictly positive away from the
  singular point. -/
 theorem apollonius_fisher_positive
-    (st : InfoGeometry.Quantum.ApolloniusFisherInformation.ApolloniusState)
+    (st : ApolloniusState)
     (v : Fin 2 → ℝ) (hv : v ≠ 0) :
-    0 < InfoGeometry.Quantum.ApolloniusFisherInformation.
-      apolloniusFisherQuadraticForm st v := by
-  exact InfoGeometry.Quantum.ApolloniusFisherInformation.
-    apollonius_fisher_pos_def st v hv
+    0 < apolloniusFisherQuadraticForm st v := by
+  exact apollonius_fisher_pos_def st v hv
 
 /-- On the critical leaf the native Apollonius Fisher metric reduces to
  `1/t^2` on each diagonal direction. -/
-theorem apollonius_fisher_critical_leaf (t : ℝ) (ht : t ≠ 0) :=
-  InfoGeometry.Quantum.ApolloniusFisherInformation.
-    apollonius_fisher_critical_line_reduction t ht
+theorem apollonius_fisher_critical_leaf (t : ℝ) (ht : t ≠ 0) :
+    let st : ApolloniusState :=
+      ⟨1 / 2, t, by
+        have h : (1 / 2 - 1 / 2 : ℝ) ^ 2 + t ^ 2 = t ^ 2 := by ring
+        rw [h]
+        exact sq_pos_of_ne_zero ht⟩
+    apolloniusFisherMatrix st 0 0 =
+        1 / t ^ 2 ∧
+      apolloniusFisherMatrix st 1 1 =
+        1 / t ^ 2 := by
+  exact apollonius_fisher_critical_line_reduction t ht
 
 /-- Native nonnegative relative-entropy/Bregman potential used by the
  metriplectic information-geometric lane. -/
 theorem information_geometric_potential_nonnegative (x : ℝ) :
     0 ≤ Real.exp (-x) - 1 + x := by
-  exact InfoGeometry.SymmetricDomains.DikinMetriplectic.
-    modular_surprisal_deficit_nonneg x
+  exact modular_surprisal_deficit_nonneg x
 
 /-! ## Actual zeta gradient/metriplectic flow -/
 
@@ -119,28 +128,23 @@ theorem information_geometric_potential_nonnegative (x : ℝ) :
  exactly the negative von-Mangoldt L-series real part. -/
 theorem actual_zeta_entropy_gradient_eq_vonMangoldt
     {beta : ℝ} (hbeta : 1 < beta) :
-    InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge.actualZetaEntropyGradient beta =
+    actualZetaEntropyGradient beta =
       -(L ↗ArithmeticFunction.vonMangoldt (beta : ℂ)).re := by
-  exact InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge.
-    actualZetaEntropyGradient_eq_neg_vonMangoldt hbeta
+  exact actualZetaEntropyGradient_eq_neg_vonMangoldt hbeta
 
 /-- The actual zeta scalar metriplectic flow field is nonnegative for
  nonnegative mobility on `beta>1`. -/
 theorem actual_zeta_metriplectic_flow_nonnegative
     {kappa beta : ℝ} (hkappa : 0 ≤ kappa) (hbeta : 1 < beta) :
-    0 ≤ InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge.
-      actualZetaMetriplecticFlowField kappa beta := by
-  exact InfoGeometry.Dynamics.ActualZetaSouriauFlowBridge.
-    actualZetaMetriplecticFlowField_nonnegative hkappa hbeta
+    0 ≤ actualZetaMetriplecticFlowField kappa beta := by
+  exact actualZetaMetriplecticFlowField_nonnegative hkappa hbeta
 
 /-! ## Dilation and unit-circle transport -/
 
 /-- Berry--Keating dilation is a genuine one-parameter multiplicative flow. -/
 theorem dilation_group_law (t1 t2 x : ℝ) :
-    InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow t1
-        (InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow t2 x) =
-      InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow (t1 + t2) x := by
-  exact InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow_add t1 t2 x
+    dilationFlow t1 (dilationFlow t2 x) = dilationFlow (t1 + t2) x := by
+  exact dilationFlow_add t1 t2 x
 
 /-- Under the repository's scale-exponent chart, dilation preserves the
  critical-line locus. -/
@@ -148,10 +152,8 @@ theorem dilation_preserves_critical_line (E t : ℝ) :
     InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnCriticalLine
       (InfoGeometry.Canonical.RindlerLogDeRhamPolya.scaleExponentOfEnergy
         ((Real.log
-          (InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow t
-            (Real.exp E)) : ℝ) : ℂ)) := by
-  exact InfoGeometry.Canonical.BerryKeatingDilations.
-    dilationFlow_preserves_criticalLine_via_scaleExponent E t
+          (dilationFlow t (Real.exp E)) : ℝ) : ℂ)) := by
+  exact dilationFlow_preserves_criticalLine_via_scaleExponent E t
 
 /-- The same dilation chart transports to the unit-circle image. -/
 theorem dilation_preserves_unit_circle (E t : ℝ) :
@@ -159,10 +161,8 @@ theorem dilation_preserves_unit_circle (E t : ℝ) :
       (InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.cayleyToFugacity
         (InfoGeometry.Canonical.RindlerLogDeRhamPolya.scaleExponentOfEnergy
           ((Real.log
-            (InfoGeometry.Canonical.BerryKeatingDilations.dilationFlow t
-              (Real.exp E)) : ℝ) : ℂ))) := by
-  exact InfoGeometry.Canonical.BerryKeatingDilations.
-    dilationFlow_preserves_leeYangCircle_via_scaleExponent E t
+            (dilationFlow t (Real.exp E)) : ℝ) : ℂ))) := by
+  exact dilationFlow_preserves_leeYangCircle_via_scaleExponent E t
 
 /-! ## Transfer-operator structural surface -/
 
@@ -170,12 +170,10 @@ theorem dilation_preserves_unit_circle (E t : ℝ) :
  one function for the uniform potential.  This is a structural transfer-
 operator theorem, not a zeta spectral identification. -/
 theorem uniform_transfer_preserves_one {n : ℕ}
-    (w : InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator.BitWord n) :
-    InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator.transferOperator
-      InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator.uniformPotential
+    (w : BitWord n) :
+    transferOperator uniformPotential
       (fun _ => 1) w = 1 := by
-  exact InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator.
-    transfer_uniform_constant w
+  exact transfer_uniform_constant w
 
 /-- Compact packet of the genuinely connected geometric/dynamical theorems.
 It intentionally does not package a Hilbert--Polya implication. -/
@@ -186,9 +184,7 @@ theorem geometric_dynamical_packet
     Complex.normSq
         (InfoGeometry.Topology.ProjectiveCayleyZetaBridge.cayley
           (Complex.I * (t : ℂ))) = 1 ∧
-    (InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.OnLeeYangCircle
-        (InfoGeometry.Projective.ApolloniusNatural.projectiveRatio
-          (InfoGeometry.Projective.ApolloniusNatural.apolloniusRay xi theta)) ↔
+    (OnLeeYangCircle (projectiveRatio (apolloniusRay xi theta)) ↔
       xi = 0) ∧
     0 ≤ Real.exp (-t) - 1 + t := by
   exact ⟨cayley_reflection_to_inversion w,
@@ -199,4 +195,3 @@ theorem geometric_dynamical_packet
 end InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
 
 end noncomputable section
-

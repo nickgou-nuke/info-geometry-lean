@@ -48,9 +48,9 @@ theorem riccati_fixed_points_uncentered (s : ℂ) :
       linear_combination h
   · rintro (rfl | rfl)
     · left
-      simp [centered]
+      norm_num [centered]
     · right
-      simp [centered]
+      norm_num [centered]
 
 /-- Equivalently, the original logarithmic scale vanishes exactly at `0` or
 `1`. -/
@@ -62,7 +62,7 @@ theorem logarithmicScale_eq_zero_iff (s : ℂ) :
     rcases mul_eq_zero.mp h with hs0 | hs1
     · exact Or.inl hs0
     · right
-      linear_combination hs1
+      exact (sub_eq_zero.mp hs1).symm
   · rintro (rfl | rfl) <;> simp [logarithmicScale]
 
 /-- The phase field is tangent to the critical line while the `u` coordinate

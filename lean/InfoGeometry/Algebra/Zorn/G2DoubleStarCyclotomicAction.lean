@@ -13,6 +13,7 @@ namespace InfoGeometry.Algebra.Zorn.G2DoubleStarCyclotomicAction
 
 open InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 open InfoGeometry.Algebra.Zorn.G2CyclotomicWeyl
+open InfoGeometry.OperatorAlgebra
 
 theorem simple_reflection_one_preserves_sector (r : Root) :
     sector (cyclotomicS1Perm r) = sector r := by
@@ -28,6 +29,41 @@ theorem coxeter_preserves_sector (r : Root) :
     sector (cyclotomicCoxeterPerm r) = sector r := by
   rcases r with ⟨b, k⟩
   cases b <;> rfl
+
+/-! The concrete cyclotomic permutations now expose the same carrier-
+independent grade-action interface as the abstract dihedral action.  The
+sector label is the grade; the cyclic root coordinate is deliberately left
+inside the concrete permutation owner. -/
+
+theorem simple_reflection_one_mapsTo_sector_family :
+    MapsToGrade
+      (fun b : Bool => {r : Root | sector r = b})
+      (fun _ : Unit => fun r => cyclotomicS1Perm r)
+      (fun _ b => b) := by
+  intro _ b r hr
+  change sector (cyclotomicS1Perm r) = b
+  rw [simple_reflection_one_preserves_sector r]
+  exact hr
+
+theorem simple_reflection_two_mapsTo_sector_family :
+    MapsToGrade
+      (fun b : Bool => {r : Root | sector r = b})
+      (fun _ : Unit => fun r => cyclotomicS2Perm r)
+      (fun _ b => b) := by
+  intro _ b r hr
+  change sector (cyclotomicS2Perm r) = b
+  rw [simple_reflection_two_preserves_sector r]
+  exact hr
+
+theorem coxeter_mapsTo_sector_family :
+    MapsToGrade
+      (fun b : Bool => {r : Root | sector r = b})
+      (fun _ : Unit => fun r => cyclotomicCoxeterPerm r)
+      (fun _ b => b) := by
+  intro _ b r hr
+  change sector (cyclotomicCoxeterPerm r) = b
+  rw [coxeter_preserves_sector r]
+  exact hr
 
 theorem simple_reflection_one_preserves_short_and_long (r : Root) :
     r.1 = false → (cyclotomicS1Perm r).1 = false := by

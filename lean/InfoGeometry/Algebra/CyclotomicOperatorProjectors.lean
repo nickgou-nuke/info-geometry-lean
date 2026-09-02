@@ -48,6 +48,18 @@ def npotentNonzeroProjector (x : R) (n : ℕ) : R :=
 def npotentZeroProjector (x : R) (n : ℕ) : R :=
   1 - x ^ (n - 1)
 
+theorem map_npotentNonzeroProjector
+    {S : Type*} [Ring S] (f : R →+* S) (x : R) (n : ℕ) :
+    f (npotentNonzeroProjector x n) =
+      npotentNonzeroProjector (f x) n := by
+  simp [npotentNonzeroProjector]
+
+theorem map_npotentZeroProjector
+    {S : Type*} [Ring S] (f : R →+* S) (x : R) (n : ℕ) :
+    f (npotentZeroProjector x n) =
+      npotentZeroProjector (f x) n := by
+  simp [npotentZeroProjector]
+
 /-- The defining polynomial of an `n`-potent element factors through `x`. -/
 theorem npotent_factorization {x : R} {n : ℕ} (hn : 2 ≤ n)
     (hx : IsNPotent x n) :

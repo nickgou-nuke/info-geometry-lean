@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-!
 # Real doubled Krein mirror
@@ -107,6 +108,40 @@ theorem mirror_reverses_operator_grade
           abel
     _ = -((k : ℝ) • mirrorConjugate K T) := by rw [htransport]
     _ = ((-k : ℤ) : ℝ) • mirrorConjugate K T := by simp
+
+/-! Expose the same reversal law through the repository-wide grade-action
+interface.  This keeps the Krein mirror composable with the other symmetry
+lanes without identifying its operator grade with a different grading. -/
+theorem mirrorConjugate_mapsToGrade :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun k : ℤ => {T : Operator V | HasGrade K.clock k T})
+      (fun _ : Unit => mirrorConjugate K)
+      (fun _ k => -k) := by
+  intro _ k T hT
+  exact mirror_reverses_operator_grade K hT
+
+theorem mirrorConjugate_involutive (T : Operator V) :
+    mirrorConjugate K (mirrorConjugate K T) = T := by
+  have hsq (v : V) : K.mirror (K.mirror v) = v := by
+    have h := congrArg (fun f : Operator V => f v) K.mirror_sq
+    simpa [LinearMap.comp_apply] using h
+  have hsymm (v : V) : K.mirror.symm v = K.mirror v := by
+    apply K.mirror.injective
+    calc
+      K.mirror (K.mirror.symm v) = v := K.mirror.apply_symm_apply v
+      _ = K.mirror (K.mirror v) := (hsq v).symm
+  ext v
+  simp [mirrorConjugate, LinearMap.comp_apply, hsymm, hsq]
+
+theorem mirrorConjugate_twice_preservesGrade :
+    InfoGeometry.OperatorAlgebra.PreservesGrade
+      (fun k : ℤ => {T : Operator V | HasGrade K.clock k T})
+      (fun _ : Unit => fun T => mirrorConjugate K (mirrorConjugate K T)) := by
+  intro _ k T hT
+  change HasGrade K.clock k
+    (mirrorConjugate K (mirrorConjugate K T))
+  rw [mirrorConjugate_involutive]
+  exact hT
 
 theorem mirror_sq_apply (v : V) :
     K.mirror (K.mirror v) = v := by

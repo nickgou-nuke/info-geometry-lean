@@ -125,6 +125,7 @@ import InfoGeometry.Algebra.CuntzToeplitzPhaseTransition
 import InfoGeometry.Algebra.CuntzContractionLemmas
 import InfoGeometry.Algebra.CuntzMatrixUnits
 import InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge
+import InfoGeometry.Algebra.CuntzFiveGradeWeightBridge
 import InfoGeometry.Algebra.CuntzSl2EndpointBridge
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 import InfoGeometry.Algebra.CuntzQuotientDiracBridge

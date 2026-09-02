@@ -7,6 +7,9 @@ import InfoGeometry.Nuclear.QuantumCramerRaoNuclearBarrierCapstone
 import InfoGeometry.Nuclear.NambuGorkovLorentzReadout
 import InfoGeometry.Nuclear.BdGSplitOctonionUnifiedCapstone
 import InfoGeometry.Nuclear.DIIITopologicalCompletenessCapstone
+import InfoGeometry.Nuclear.SolovievQuasiparticlePhononEigenproblem
+import InfoGeometry.Nuclear.NuclearPhononRPAAlgebra
+import InfoGeometry.Nuclear.TwoLevelChiralOscillationBridge
 
 namespace InfoGeometry.Nuclear
 

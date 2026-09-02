@@ -1,6 +1,7 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanConcreteReflectionEquiv
 import InfoGeometry.Lie.CanonicalZornG2CartanParameterCoordinates
 import InfoGeometry.Lie.CanonicalZornCartanRootReflections
+import InfoGeometry.Lie.CanonicalZornG2CoxeterRelations
 
 /-!
 # The concrete finite G₂ Weyl action on the Cartan and parameter carriers
@@ -28,6 +29,15 @@ open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 abbrev Cartan := CanonicalZornG2CartanConcreteReflectionEquiv.Cartan
 abbrev Parameter := CanonicalZornG2CartanConcreteReflectionEquiv.Parameter
 abbrev Generator := (Cartan ≃ₗ[ℝ] Cartan) × (Parameter ≃ₗ[ℝ] Parameter)
+
+/-! The parameter reflection API is exposed at the linear-map level.  These
+    are the same native dual reflections used to build the paired generators;
+    no second parameter carrier is introduced. -/
+abbrev shortParameterReflection : Parameter →ₗ[ℝ] Parameter :=
+  canonicalShortParameterDualLinear
+
+abbrev longParameterReflection : Parameter →ₗ[ℝ] Parameter :=
+  canonicalLongParameterDualLinear
 
 def cartanCoordinates : Cartan ≃ₗ[ℝ] Parameter :=
   (cartanToTraceless.trans tracelessWeightEquiv.symm).trans change
@@ -94,6 +104,12 @@ theorem cartanParameterTransport_long :
 def WeylGroup : Subgroup Generator :=
   Subgroup.closure ({shortGenerator, longGenerator} : Set Generator)
 
+theorem shortGenerator_mem : shortGenerator ∈ WeylGroup :=
+  Subgroup.subset_closure (by simp [shortGenerator])
+
+theorem longGenerator_mem : longGenerator ∈ WeylGroup :=
+  Subgroup.subset_closure (by simp [longGenerator])
+
 theorem pairedGenerator_dual_compatibility (w : WeylGroup) :
     w.1.2 = cartanParameterTransport w.1.1 := by
   refine Subgroup.closure_induction ?_ ?_ ?_ ?_ w.2
@@ -134,6 +150,175 @@ theorem cartanAction_injective : Function.Injective cartanAction := by
 def cartanActionRange : Subgroup (Cartan ≃ₗ[ℝ] Cartan) :=
   MonoidHom.range cartanAction
 
+/-! Transport of a canonical-Cartan equivalence to the existing traceless
+Cartan carrier.  This is the explicit carrier bridge; it does not identify
+the two subtype types definitionally. -/
+def cartanEquivToTracelessEquiv (E : Cartan ≃ₗ[ℝ] Cartan) :
+    TracelessWeight ≃ₗ[ℝ] TracelessWeight :=
+  cartanToTraceless.symm.trans (E.trans cartanToTraceless)
+
+def cartanToTracelessHom :
+    (Cartan ≃ₗ[ℝ] Cartan) →* (TracelessWeight ≃ₗ[ℝ] TracelessWeight) where
+  toFun := cartanEquivToTracelessEquiv
+  map_one' := by
+    apply LinearEquiv.ext
+    intro x
+    simp [cartanEquivToTracelessEquiv]
+  map_mul' := by
+    intro E F
+    apply LinearEquiv.ext
+    intro x
+    simp [cartanEquivToTracelessEquiv, LinearEquiv.trans_apply]
+
+theorem cartanEquivToTracelessEquiv_short_apply (x : TracelessWeight) :
+    cartanEquivToTracelessEquiv canonicalShortReflectionEquiv x =
+      shortReflectionOnCartan x := by
+  change cartanToTraceless
+      (canonicalShortReflectionEquiv (cartanToTraceless.symm x)) = _
+  rw [canonicalShortReflectionEquiv_apply]
+  simp [canonicalShortReflection, LinearMap.comp_apply]
+
+theorem cartanEquivToTracelessEquiv_long_apply (x : TracelessWeight) :
+    cartanEquivToTracelessEquiv canonicalLongReflectionEquiv x =
+      longReflectionOnCartan x := by
+  change cartanToTraceless
+      (canonicalLongReflectionEquiv (cartanToTraceless.symm x)) = _
+  rw [canonicalLongReflectionEquiv_apply]
+  simp [canonicalLongReflection, LinearMap.comp_apply]
+
+theorem cartanToTracelessHom_short :
+    cartanToTracelessHom canonicalShortReflectionEquiv =
+      CanonicalZornG2CoxeterRelations.shortReflectionEquiv := by
+  apply LinearEquiv.ext
+  intro x
+  exact cartanEquivToTracelessEquiv_short_apply x
+
+theorem cartanToTracelessHom_long :
+    cartanToTracelessHom canonicalLongReflectionEquiv =
+      CanonicalZornG2CoxeterRelations.longReflectionEquiv := by
+  apply LinearEquiv.ext
+  intro x
+  exact cartanEquivToTracelessEquiv_long_apply x
+
+/-! The image subgroup is the canonical way to compare the two carriers:
+`Subgroup.map` records both the transported element and its provenance. -/
+def transportedCartanActionRange :
+    Subgroup (TracelessWeight ≃ₗ[ℝ] TracelessWeight) :=
+  Subgroup.map cartanToTracelessHom cartanActionRange
+
+theorem cartanToTracelessHom_cartanAction_short :
+    cartanToTracelessHom
+        (cartanAction ⟨shortGenerator, shortGenerator_mem⟩) =
+      CanonicalZornG2CoxeterRelations.shortReflectionEquiv := by
+  change cartanToTracelessHom canonicalShortReflectionEquiv = _
+  exact cartanToTracelessHom_short
+
+theorem cartanToTracelessHom_cartanAction_long :
+    cartanToTracelessHom
+        (cartanAction ⟨longGenerator, longGenerator_mem⟩) =
+      CanonicalZornG2CoxeterRelations.longReflectionEquiv := by
+  change cartanToTracelessHom canonicalLongReflectionEquiv = _
+  exact cartanToTracelessHom_long
+
+theorem transportedCartanActionRange_le_canonicalCartanWeylSubgroup :
+    transportedCartanActionRange ≤
+      CanonicalZornG2CoxeterRelations.cartanWeylSubgroup := by
+  change Subgroup.map cartanToTracelessHom cartanActionRange ≤
+    CanonicalZornG2CoxeterRelations.cartanWeylSubgroup
+  rw [Subgroup.map_le_iff_le_comap]
+  intro x hx
+  rcases hx with ⟨w, rfl⟩
+  refine Subgroup.closure_induction (p := fun u _ =>
+      cartanToTracelessHom u.1 ∈
+        CanonicalZornG2CoxeterRelations.cartanWeylSubgroup) ?_ ?_ ?_ ?_ w.2
+  · intro u hu
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hu
+    rcases hu with rfl | rfl
+    · simpa [shortGenerator] using
+        (show cartanToTracelessHom
+            (cartanAction ⟨shortGenerator,
+              by exact Subgroup.subset_closure (by simp [shortGenerator])⟩) ∈
+            CanonicalZornG2CoxeterRelations.cartanWeylSubgroup from by
+          rw [cartanToTracelessHom_cartanAction_short]
+          exact Subgroup.subset_closure (by simp))
+    · simpa [longGenerator] using
+        (show cartanToTracelessHom
+            (cartanAction ⟨longGenerator,
+              by exact Subgroup.subset_closure (by simp [longGenerator])⟩) ∈
+            CanonicalZornG2CoxeterRelations.cartanWeylSubgroup from by
+          rw [cartanToTracelessHom_cartanAction_long]
+          exact Subgroup.subset_closure (by simp))
+  · simp
+  · intro u v _ _ hu hv
+    change cartanToTracelessHom (u.1 * v.1) ∈ _
+    rw [map_mul]
+    exact Subgroup.mul_mem _ hu hv
+  · intro u _ hu
+    change cartanToTracelessHom u.1⁻¹ ∈ _
+    rw [map_inv]
+    exact Subgroup.inv_mem _ hu
+
+theorem canonicalCartanWeylSubgroup_le_transportedCartanActionRange :
+    CanonicalZornG2CoxeterRelations.cartanWeylSubgroup ≤
+      transportedCartanActionRange := by
+  rw [CanonicalZornG2CoxeterRelations.cartanWeylSubgroup,
+    Subgroup.closure_le]
+  intro g hg
+  rcases hg with rfl | rfl
+  · refine ⟨cartanAction ⟨shortGenerator, shortGenerator_mem⟩,
+      ⟨⟨shortGenerator, shortGenerator_mem⟩, rfl⟩, ?_⟩
+    exact cartanToTracelessHom_cartanAction_short
+  · refine ⟨cartanAction ⟨longGenerator, longGenerator_mem⟩,
+      ⟨⟨longGenerator, longGenerator_mem⟩, rfl⟩, ?_⟩
+    exact cartanToTracelessHom_cartanAction_long
+
+theorem transportedCartanActionRange_eq_canonicalCartanWeylSubgroup :
+    transportedCartanActionRange =
+      CanonicalZornG2CoxeterRelations.cartanWeylSubgroup := by
+  apply le_antisymm
+  · exact transportedCartanActionRange_le_canonicalCartanWeylSubgroup
+  · exact canonicalCartanWeylSubgroup_le_transportedCartanActionRange
+
+def canonicalCartanActionHom :
+    WeylGroup →* CanonicalZornG2CoxeterRelations.cartanWeylSubgroup :=
+  (cartanToTracelessHom.comp cartanAction).codRestrict _ (by
+    intro w
+    rw [← transportedCartanActionRange_eq_canonicalCartanWeylSubgroup]
+    exact ⟨cartanAction w, ⟨w, rfl⟩, rfl⟩)
+
+theorem canonicalCartanActionHom_injective :
+    Function.Injective canonicalCartanActionHom := by
+  intro w v h
+  apply cartanAction_injective
+  have ht : cartanEquivToTracelessEquiv (cartanAction w) =
+      cartanEquivToTracelessEquiv (cartanAction v) := by
+    simpa [canonicalCartanActionHom, cartanEquivToTracelessEquiv] using
+      congrArg Subtype.val h
+  apply LinearEquiv.ext
+  intro x
+  have hx := congrArg
+    (fun f : TracelessWeight ≃ₗ[ℝ] TracelessWeight =>
+      cartanToTraceless.symm (f (cartanToTraceless x))) ht
+  simpa [cartanEquivToTracelessEquiv] using hx
+
+theorem canonicalCartanActionHom_surjective :
+    Function.Surjective canonicalCartanActionHom := by
+  intro x
+  have hx : x.1 ∈ transportedCartanActionRange := by
+    rw [transportedCartanActionRange_eq_canonicalCartanWeylSubgroup]
+    exact x.property
+  rcases hx with ⟨a, ⟨w, hwprov⟩, hw⟩
+  refine ⟨w, ?_⟩
+  apply Subtype.ext
+  change cartanToTracelessHom (cartanAction w) = x.1
+  rw [hwprov]
+  exact hw
+
+noncomputable def canonicalCartanActionMulEquiv :
+    WeylGroup ≃* CanonicalZornG2CoxeterRelations.cartanWeylSubgroup :=
+  MulEquiv.ofBijective canonicalCartanActionHom
+    ⟨canonicalCartanActionHom_injective, canonicalCartanActionHom_surjective⟩
+
 def cartanActionRangeHom : WeylGroup →* cartanActionRange :=
   cartanAction.codRestrict cartanActionRange (fun w => ⟨w, rfl⟩)
 
@@ -161,12 +346,6 @@ noncomputable def cartanActionRangeMulEquiv :
 
 @[simp] theorem parameterTransport_apply (w : WeylGroup) :
     parameterTransport w = w.1.2 := rfl
-
-theorem shortGenerator_mem : shortGenerator ∈ WeylGroup := by
-  exact Subgroup.subset_closure (by simp [shortGenerator])
-
-theorem longGenerator_mem : longGenerator ∈ WeylGroup := by
-  exact Subgroup.subset_closure (by simp [longGenerator])
 
 theorem shortGenerator_sq :
     (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) ^ 2 = 1 := by
@@ -204,20 +383,36 @@ theorem longGenerator_sq :
     parameterTransport ⟨longGenerator, longGenerator_mem⟩ =
       canonicalLongParameterDualEquiv := rfl
 
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 100000 in
 theorem cartanAction_simpleProduct_order_six :
     (cartanAction
       (⟨shortGenerator, shortGenerator_mem⟩ *
         ⟨longGenerator, longGenerator_mem⟩)) ^ 6 = 1 := by
   rw [map_mul]
+  rw [cartanAction_shortGenerator, cartanAction_longGenerator]
   apply LinearEquiv.ext
   intro x
-  apply LinearEquiv.injective cartanToTraceless
-  have h := congrArg (fun f : (TracelessWeight →ₗ[ℝ] TracelessWeight) =>
-      f (cartanToTraceless x)) nativeCartanReflectionsOnCartan_order_six
-  simpa [canonicalShortReflectionEquiv, canonicalLongReflectionEquiv,
-    canonicalShortReflection, canonicalLongReflection,
-    shortGenerator, longGenerator,
-    LinearEquiv.mul_apply, LinearMap.comp_apply, pow_succ] using h
+  have htransport : ∀ (n : ℕ) (y : Cartan),
+      ((canonicalShortReflectionEquiv * canonicalLongReflectionEquiv) ^ n) y =
+        cartanToTraceless.symm
+          (((CanonicalZornCartanRootReflections.shortReflectionOnCartan.comp
+            CanonicalZornCartanRootReflections.longReflectionOnCartan) ^ n)
+            (cartanToTraceless y)) := by
+    intro n
+    induction n with
+    | zero => intro y; simp
+    | succ n ih =>
+        intro y
+        rw [pow_succ, LinearEquiv.mul_apply, ih]
+        simp [canonicalShortReflectionEquiv, canonicalLongReflectionEquiv,
+          canonicalShortReflection, canonicalLongReflection,
+          LinearMap.comp_apply]
+        rw [pow_succ]
+        rfl
+  rw [htransport 6 x]
+  rw [CanonicalZornCartanRootReflections.nativeCartanReflectionsOnCartan_order_six]
+  simp
 
 theorem parameterTransport_simpleProduct_order_six :
     (parameterTransport
@@ -225,6 +420,11 @@ theorem parameterTransport_simpleProduct_order_six :
         ⟨longGenerator, longGenerator_mem⟩)) ^ 6 = 1 := by
   rw [map_mul]
   exact canonicalParameterDualEquiv_order_six
+
+theorem nativeParameterReflections_order_six :
+    (shortParameterReflection.comp longParameterReflection) ^ 6 =
+      LinearMap.id := by
+  exact canonicalParameterDual_order_six
 
 theorem simpleProduct_order_six :
     ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
@@ -245,6 +445,7 @@ def simpleProductPower (i : ZMod 6) : WeylGroup :=
   ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
     ⟨longGenerator, longGenerator_mem⟩) ^ i.val
 
+set_option maxHeartbeats 1000000 in
 theorem simpleProductPower_add (i j : ZMod 6) :
     simpleProductPower (i + j) = simpleProductPower i * simpleProductPower j := by
   have hmod : (i + j).val ≡ i.val + j.val [MOD 6] := by
@@ -252,6 +453,17 @@ theorem simpleProductPower_add (i j : ZMod 6) :
   simpa [simpleProductPower, pow_add] using
     (pow_eq_pow_of_modEq hmod simpleProduct_order_six)
 
+@[simp] theorem simpleProductPower_zero :
+    simpleProductPower 0 = 1 := by
+  simp [simpleProductPower]
+
+theorem simpleProductPower_neg (i : ZMod 6) :
+    simpleProductPower (-i) = (simpleProductPower i)⁻¹ := by
+  apply eq_inv_of_mul_eq_one_right
+  rw [← simpleProductPower_add]
+  simp
+
+set_option maxHeartbeats 1000000 in
 theorem shortGenerator_conjugates_simpleProduct :
     (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
         ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
@@ -259,73 +471,44 @@ theorem shortGenerator_conjugates_simpleProduct :
         ⟨shortGenerator, shortGenerator_mem⟩ =
       ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
         ⟨longGenerator, longGenerator_mem⟩)⁻¹ := by
-  calc
+  have hs : (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) ^ 2 = 1 :=
+    shortGenerator_sq
+  have hl : (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) ^ 2 = 1 :=
+    longGenerator_sq
+  have hs_inv : (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup)⁻¹ =
+      ⟨shortGenerator, shortGenerator_mem⟩ :=
+    inv_eq_of_mul_eq_one_right (by simpa [pow_two] using hs)
+  have hl_inv : (⟨longGenerator, longGenerator_mem⟩ : WeylGroup)⁻¹ =
+      ⟨longGenerator, longGenerator_mem⟩ :=
+    inv_eq_of_mul_eq_one_right (by simpa [pow_two] using hl)
+  rw [mul_inv_rev, hl_inv, hs_inv]
+  rw [← mul_assoc]
+  rw [show (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
+      ⟨shortGenerator, shortGenerator_mem⟩ = 1 by
+        simpa [pow_two] using hs]
+  simp
+
+theorem shortGenerator_conjugates_simpleProductPower (k : ZMod 6) :
     (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-        ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-          ⟨longGenerator, longGenerator_mem⟩) *
+        simpleProductPower k *
         ⟨shortGenerator, shortGenerator_mem⟩ =
-      (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-        ⟨shortGenerator, shortGenerator_mem⟩ *
-        (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-        ⟨shortGenerator, shortGenerator_mem⟩ := by simp only [mul_assoc]
-    _ = (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-        ⟨shortGenerator, shortGenerator_mem⟩ := by
-      calc
-        (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-            ⟨shortGenerator, shortGenerator_mem⟩ *
-            (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-            ⟨shortGenerator, shortGenerator_mem⟩ =
-          ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-            ⟨shortGenerator, shortGenerator_mem⟩) *
-            ((⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-              ⟨shortGenerator, shortGenerator_mem⟩) := by
-                simp only [mul_assoc]
-        _ = (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-            ⟨shortGenerator, shortGenerator_mem⟩ := by
-              calc
-                (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-                    ⟨shortGenerator, shortGenerator_mem⟩ *
-                    (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-                    ⟨shortGenerator, shortGenerator_mem⟩ =
-                  ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-                    ⟨shortGenerator, shortGenerator_mem⟩) *
-                    ((⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-                      ⟨shortGenerator, shortGenerator_mem⟩) := by
-                        simp only [mul_assoc]
-                _ = _ := by
-                  rw [show (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-                      ⟨shortGenerator, shortGenerator_mem⟩ = 1 by
-                        simpa [pow_two] using shortGenerator_sq]
-                  simp
-    _ = ((⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-        ⟨longGenerator, longGenerator_mem⟩)⁻¹ := by
-      apply (eq_inv_iff_mul_eq_one).2
-      calc
-        ((⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-          ⟨shortGenerator, shortGenerator_mem⟩) *
-            (⟨shortGenerator, shortGenerator_mem⟩ *
-              ⟨longGenerator, longGenerator_mem⟩) =
-          (⟨longGenerator, longGenerator_mem⟩ *
-            ⟨shortGenerator, shortGenerator_mem⟩ *
-              ⟨shortGenerator, shortGenerator_mem⟩) *
-            ⟨longGenerator, longGenerator_mem⟩ := by simp only [mul_assoc]
-        _ = 1 := by
-          calc
-            (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-                ⟨shortGenerator, shortGenerator_mem⟩ *
-                ⟨shortGenerator, shortGenerator_mem⟩ *
-                ⟨longGenerator, longGenerator_mem⟩ =
-              (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
-                (⟨shortGenerator, shortGenerator_mem⟩ *
-                  ⟨shortGenerator, shortGenerator_mem⟩) *
-                ⟨longGenerator, longGenerator_mem⟩ := by
-                  simp only [mul_assoc]
-            _ = 1 := by
-              rw [show (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
-                  ⟨shortGenerator, shortGenerator_mem⟩ = 1 by
-                    simpa [pow_two] using shortGenerator_sq]
-              simpa only [pow_two, mul_one, one_mul] using
-                congrArg Subtype.val longGenerator_sq
+      simpleProductPower (-k) := by
+  let s : WeylGroup := ⟨shortGenerator, shortGenerator_mem⟩
+  let r : WeylGroup :=
+    ⟨shortGenerator, shortGenerator_mem⟩ * ⟨longGenerator, longGenerator_mem⟩
+  have hs : s * s = 1 := by
+    simpa [s, pow_two] using shortGenerator_sq
+  have hbase : s * r * s = r⁻¹ := by
+    simpa [s, r] using shortGenerator_conjugates_simpleProduct
+  have hpow : ∀ n : ℕ, s * r ^ n * s = (r ^ n)⁻¹ := by
+    intro n
+    have hs_inv : s⁻¹ = s := inv_eq_of_mul_eq_one_right hs
+    have h := conj_pow (a := s) (b := r) (i := n)
+    rw [hs_inv, hbase] at h
+    simpa [inv_pow] using h.symm
+  change s * r ^ k.val * s = r ^ (-k).val
+  rw [hpow k.val]
+  simpa [simpleProductPower, r] using (simpleProductPower_neg k).symm
 
 theorem longGenerator_conjugates_simpleProduct :
     (⟨longGenerator, longGenerator_mem⟩ : WeylGroup) *
@@ -387,7 +570,31 @@ theorem longGenerator_conjugates_simpleProduct :
               rw [show (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
                   ⟨shortGenerator, shortGenerator_mem⟩ = 1 by
                     simpa [pow_two] using shortGenerator_sq]
-              simpa only [pow_two, mul_one, one_mul] using
-                congrArg Subtype.val longGenerator_sq
+              simpa only [pow_two, mul_one, one_mul] using longGenerator_sq
+
+theorem simpleProductPower_mul_shortGenerator (k : ZMod 6) :
+    simpleProductPower k *
+        (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) =
+      (⟨shortGenerator, shortGenerator_mem⟩ : WeylGroup) *
+        simpleProductPower (-k) := by
+  let s : WeylGroup := ⟨shortGenerator, shortGenerator_mem⟩
+  let r : WeylGroup :=
+    ⟨shortGenerator, shortGenerator_mem⟩ * ⟨longGenerator, longGenerator_mem⟩
+  have hs : s * s = 1 := by
+    simpa [s, pow_two] using shortGenerator_sq
+  have hconj : s * r ^ k.val * s = (r ^ k.val)⁻¹ := by
+    change s * simpleProductPower k * s = (simpleProductPower k)⁻¹
+    rw [← simpleProductPower_neg k]
+    exact shortGenerator_conjugates_simpleProductPower k
+  change r ^ k.val * s = s * r ^ (-k).val
+  calc
+    r ^ k.val * s = s * (s * r ^ k.val * s) := by
+      calc
+        r ^ k.val * s = 1 * (r ^ k.val * s) := by simp
+        _ = (s * s) * (r ^ k.val * s) := by rw [hs]
+        _ = s * (s * r ^ k.val * s) := by simp only [mul_assoc]
+    _ = s * (r ^ k.val)⁻¹ := by rw [hconj]
+    _ = s * r ^ (-k).val := by
+      simpa [simpleProductPower, r] using (simpleProductPower_neg k).symm
 
 end InfoGeometry.Lie.CanonicalZornG2WeylGroupAction

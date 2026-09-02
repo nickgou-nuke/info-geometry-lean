@@ -70,6 +70,48 @@ theorem factorization_of_predecessor
           exact hmin)
         rw [hr, hf, ih j hji]
 
+/-- Right-oriented analogue of `FactorizationStep`.  This is needed when a
+    word table grows by appending a suffix rather than by prepending a
+    generator. -/
+structure RightFactorizationStep
+    {G K ι : Type*} [Group G] (T : FactorizationTarget G K ι)
+    (k : K) (n : ι) (r : ι → ι → Prop) where
+  predecessor : ι
+  generator : G
+  predecessor_lt : r predecessor n
+  representative_step :
+    T.representative k n = T.representative k predecessor * generator
+  factorized_step :
+    T.factorized k n = T.factorized k predecessor * generator
+
+theorem RightFactorizationStep.factorization_of_predecessor
+    {G K ι : Type*} [Group G]
+    {T : FactorizationTarget G K ι}
+    {k : K} {n : ι} {r : ι → ι → Prop}
+    (step : RightFactorizationStep T k n r)
+    (hpred : T.representative k step.predecessor =
+      T.factorized k step.predecessor) :
+    T.representative k n = T.factorized k n := by
+  rw [step.representative_step, step.factorized_step, hpred]
+
+theorem factorization_of_right_predecessor
+    {G K ι : Type*} [Group G]
+    (T : FactorizationTarget G K ι)
+    (r : ι → ι → Prop) (hwell : WellFounded r)
+    (hbase : ∀ k i, (∀ j, ¬ r j i) →
+      T.representative k i = T.factorized k i)
+    (hstep : ∀ k i, (∃ j, r j i) → RightFactorizationStep T k i r) :
+    ∀ k i, T.representative k i = T.factorized k i := by
+  intro k i
+  induction i using hwell.induction with
+  | h i ih =>
+      by_cases hmin : ∀ j, ¬ r j i
+      · exact hbase k i hmin
+      · obtain ⟨j, g, hji, hr, hf⟩ := hstep k i (by
+          push_neg at hmin
+          exact hmin)
+        rw [hr, hf, ih j hji]
+
 /-! The following API uses an explicit natural-valued depth rather than the
 serialization order of a finite index.  It is intentionally additive: the
 legacy `Fin.val` API below remains available for existing consumers, while
@@ -119,6 +161,7 @@ open InfoGeometry.Algebra.Zorn.G2FlagWordEvaluator
 open InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 open InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 
 noncomputable def g2FlagFactorizationTarget :
     FactorizationTarget SplitOctF2Aut (Fin 12) (Fin 189) where
@@ -126,7 +169,31 @@ noncomputable def g2FlagFactorizationTarget :
   factorized := fun k i =>
     collect (leftFactorWord k i) *
       weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
-        collect (rightFactorWord k i)
+      collect (rightFactorWord k i)
+
+/-! The same cell seam has the opposite orientation on the factorized target:
+    the canonical left factor is the accumulated suffix after the matrix
+    anti-homomorphism is accounted for. -/
+theorem factorized_cell6_2_left_step :
+    g2FlagFactorizationTarget.factorized 6 2 =
+      collect [((1 : Fin 6), 1), ((4 : Fin 6), 1)] *
+        g2FlagFactorizationTarget.factorized 6 1 := by
+  change
+    (collect [((1 : Fin 6), 1), ((4 : Fin 6), 1)] *
+      weylNF (orbitWeyl 6).1 (orbitWeyl 6).2 * collect []) =
+      collect [((1 : Fin 6), 1), ((4 : Fin 6), 1)] *
+        (collect [] * weylNF (orbitWeyl 6).1 (orbitWeyl 6).2 * collect [])
+  simp [collect]
+
+theorem legacy_cell6_2_factorization_false :
+    ¬ (flagRepresentative (2 : Fin 189) =
+      collect (leftFactorWord 6 2) *
+        weylNF (orbitWeyl 6).1 (orbitWeyl 6).2 *
+          collect (rightFactorWord 6 2)) := by
+  intro h
+  have hm := congrArg autMatrix h
+  revert hm
+  decide
 
 structure G2CellPredecessorCertificate (k : Fin 12) where
   depth : Fin 189 → ℕ
@@ -209,7 +276,11 @@ noncomputable def G2OrbitFactorizationStep.toGeneric
 
 /-- Concrete G₂ consequence of a supplied predecessor certificate.  The
 certificate contains the genuine carrier-alignment work; this theorem only
-performs the induction and never enumerates the flag table. -/
+performs the induction and never enumerates the flag table.
+
+This legacy interface uses `Fin.val` as its well-founded measure.  Concrete
+certificates should prefer `G2CellPredecessorCertificate` below unless the
+export order itself has been proved to be predecessor-monotone. -/
 theorem flagRepresentative_factorization_of_predecessor_certificate
     (hbase : ∀ k i, (∀ j : Fin 189, ¬ j.val < i.val) →
       flagRepresentative i =

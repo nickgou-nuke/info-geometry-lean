@@ -235,6 +235,23 @@ def rootBracketCoefficient (i j k : Fin 14) : ℝ :=
   (canonicalParameterLinearEquiv.symm
     ⁅rootDerivation i, rootDerivation j⁆) k
 
+theorem rootBracketCoefficient_swap (i j k : Fin 14) :
+    rootBracketCoefficient j i k = -rootBracketCoefficient i j k := by
+  change (canonicalParameterLinearEquiv.symm ⁅rootDerivation j, rootDerivation i⁆) k =
+    -(canonicalParameterLinearEquiv.symm ⁅rootDerivation i, rootDerivation j⁆) k
+  have h : ⁅rootDerivation j, rootDerivation i⁆ =
+      -⁅rootDerivation i, rootDerivation j⁆ := by
+    simpa only [neg_neg] using
+      congrArg Neg.neg (lie_skew (rootDerivation i) (rootDerivation j))
+  rw [h]
+  exact congrFun
+    (canonicalParameterLinearEquiv.symm.map_neg
+      ⁅rootDerivation i, rootDerivation j⁆) k
+
+@[simp] theorem rootBracketCoefficient_self (i k : Fin 14) :
+    rootBracketCoefficient i i k = 0 := by
+  simp [rootBracketCoefficient]
+
 theorem rootBracketCoefficient_eq_basis_repr (i j k : Fin 14) :
     rootBracketCoefficient i j k =
       (rootDerivationBasis.repr ⁅rootDerivation i, rootDerivation j⁆) k := by

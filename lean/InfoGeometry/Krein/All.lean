@@ -75,6 +75,7 @@ import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
+import InfoGeometry.Krein.DoubledMatrixClockBridge
 import InfoGeometry.Krein.DoubledSpaceRealKANBridge
 import InfoGeometry.Krein.DoubledSpaceQutritMobiusBridge
 import InfoGeometry.Krein.FiniteCoincidencePurification

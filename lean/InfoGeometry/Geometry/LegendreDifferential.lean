@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.Normed.Module.Dual
 
 noncomputable section
 
@@ -10,7 +11,7 @@ abbrev ContinuousCovector (E : Type*) [NormedAddCommGroup E]
     [NormedSpace ℝ E] := E →L[ℝ] ℝ
 
 def legendrePairing (η : ContinuousCovector E) (x : E) : ℝ :=
-  η x
+  topDualPairing ℝ E η x
 
 @[simp] theorem legendrePairing_apply (η : ContinuousCovector E) (x : E) :
     legendrePairing η x = η x := by
@@ -18,6 +19,11 @@ def legendrePairing (η : ContinuousCovector E) (x : E) : ℝ :=
 
 theorem legendrePairing_eq_evaluation (η : ContinuousCovector E) (x : E) :
     legendrePairing η x = η x := rfl
+
+theorem legendrePairing_eq_topDualPairing
+    (η : ContinuousCovector E) (x : E) :
+    legendrePairing η x = topDualPairing ℝ E η x :=
+  rfl
 
 noncomputable def legendreMap (ψ : E → ℝ) : E → ContinuousCovector E :=
   fun x => fderiv ℝ ψ x

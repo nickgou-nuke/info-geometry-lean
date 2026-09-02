@@ -46,6 +46,37 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
     rcases c with ⟨a, b, x, y⟩
     rfl
 
+/-! A flat eight-coordinate presentation of the same canonical carrier. -/
+abbrev FinCoord (R : Type*) [CommRing R] := Fin 8 → R
+
+def toFinCoord (z : ZornMatrix R) : FinCoord R :=
+  ![z.a, z.b, z.x 0, z.x 1, z.x 2, z.y 0, z.y 1, z.y 2]
+
+def fromFinCoord (c : FinCoord R) : ZornMatrix R :=
+  { a := c 0
+    b := c 1
+    x := ![c 2, c 3, c 4]
+    y := ![c 5, c 6, c 7] }
+
+@[simp] theorem fromFinCoord_toFinCoord (z : ZornMatrix R) :
+    fromFinCoord (toFinCoord z) = z := by
+  apply ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; fin_cases i <;> rfl
+  · funext i; fin_cases i <;> rfl
+
+@[simp] theorem toFinCoord_fromFinCoord (c : FinCoord R) :
+    toFinCoord (fromFinCoord c) = c := by
+  funext i
+  fin_cases i <;> rfl
+
+def finCoordEquiv : ZornMatrix R ≃ FinCoord R where
+  toFun := toFinCoord
+  invFun := fromFinCoord
+  left_inv := fromFinCoord_toFinCoord
+  right_inv := toFinCoord_fromFinCoord
+
 /-- Zorn matrices inherit their additive commutative group structure from coordinates. -/
 instance : AddCommGroup (ZornMatrix R) :=
   Equiv.addCommGroup coordEquiv
@@ -53,6 +84,18 @@ instance : AddCommGroup (ZornMatrix R) :=
 /-- Zorn matrices inherit their module structure from coordinates. -/
 instance : Module R (ZornMatrix R) :=
   Equiv.module R coordEquiv
+
+def finCoordLinearEquiv : ZornMatrix R ≃ₗ[R] FinCoord R where
+  toFun := toFinCoord
+  invFun := fromFinCoord
+  left_inv := fromFinCoord_toFinCoord
+  right_inv := toFinCoord_fromFinCoord
+  map_add' z₁ z₂ := by
+    funext i
+    fin_cases i <;> rfl
+  map_smul' r z := by
+    funext i
+    fin_cases i <;> rfl
 
 /-- Standard dot product for 3-vectors. -/
 def dot (v1 v2 : Fin 3 → R) : R :=
@@ -88,6 +131,42 @@ instance : Mul (ZornMatrix R) where
 
 @[simp] theorem neg_def (z : ZornMatrix R) :
   -z = { a := -z.a, b := -z.b, x := -z.x, y := -z.y } := rfl
+
+/-! Cayley conjugation on the canonical Zorn carrier. -/
+def conjugate (z : ZornMatrix R) : ZornMatrix R :=
+  { a := z.b, b := z.a, x := -z.x, y := -z.y }
+
+theorem conjugate_add (z₁ z₂ : ZornMatrix R) :
+    conjugate (z₁ + z₂) = conjugate z₁ + conjugate z₂ := by
+  apply ZornMatrix.ext <;> simp [conjugate, add_comm]
+
+theorem conjugate_conjugate (z : ZornMatrix R) :
+    conjugate (conjugate z) = z := by
+  apply ZornMatrix.ext
+  · rfl
+  · rfl
+  · funext i; simp [conjugate]
+  · funext i; simp [conjugate]
+
+theorem conjugate_mul (z₁ z₂ : ZornMatrix R) :
+    conjugate (mul z₁ z₂) = mul (conjugate z₂) (conjugate z₁) := by
+  cases z₁ with
+  | mk a b x y =>
+    cases z₂ with
+    | mk c d u v =>
+      apply ZornMatrix.ext
+      · simp [conjugate, mul, dot]
+        ring
+      · simp [conjugate, mul, dot]
+        ring
+      · funext i
+        fin_cases i <;>
+          simp [conjugate, mul, dot, cross, Matrix.vecHead, Matrix.vecTail]
+        all_goals ring
+      · funext i
+        fin_cases i <;>
+          simp [conjugate, mul, dot, cross, Matrix.vecHead, Matrix.vecTail]
+        all_goals ring
 
 @[simp] theorem smul_a (r : R) (z : ZornMatrix R) : (r • z).a = r * z.a := rfl
 

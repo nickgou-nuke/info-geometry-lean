@@ -115,6 +115,82 @@ theorem straightStrandRelatorsChecked_eq
     straightStrandRelatorsChecked n = straightStrandRelators n := by
   rfl
 
+/-- The adjacent finite relator is preserved by adding a straight strand. -/
+theorem canonicalStraightStrand_adjacent
+    (n : ℕ) (i : Fin (n + 1)) :
+    FreeGroup.lift (straightStrandGenerator (n + 2))
+        (Braid.braid_rel i.castSucc i.succ) = 1 := by
+  have hindex : i.castSucc.succ = i.succ.castSucc := by
+    apply Fin.ext
+    rfl
+  have hrel := Braid.braid_group.braid (n := n + 1) i.castSucc
+  have hrel' :
+      straightStrandGenerator (n + 2) i.castSucc *
+          straightStrandGenerator (n + 2) i.succ *
+          straightStrandGenerator (n + 2) i.castSucc =
+        straightStrandGenerator (n + 2) i.succ *
+          straightStrandGenerator (n + 2) i.castSucc *
+          straightStrandGenerator (n + 2) i.succ := by
+    simpa [straightStrandGenerator, Braid.σ, Braid.σ', hindex] using hrel
+  exact freeGroup_lift_braid_relator
+    (straightStrandGenerator (n + 2)) i.castSucc i.succ hrel'
+
+/-- The far finite relator is preserved by adding a straight strand. -/
+theorem canonicalStraightStrand_far
+    (n : ℕ) (i j : Fin n) (hij : i ≤ j) :
+    FreeGroup.lift (straightStrandGenerator (n + 2))
+        (Braid.comm_rel i.castSucc.castSucc j.succ.succ) = 1 := by
+  have hleft : i.castSucc.castSucc.castSucc =
+      i.castSucc.castSucc.castSucc := rfl
+  have hright :
+      j.castSucc.succ.succ = j.succ.succ.castSucc := by
+    apply Fin.ext
+    rfl
+  have hrel := Braid.braid_group.comm
+    (n := n + 1) (i := i.castSucc) (j := j.castSucc)
+    (by exact Fin.cast_le.mpr hij)
+  have hrel' :
+      straightStrandGenerator (n + 2) i.castSucc.castSucc *
+          straightStrandGenerator (n + 2) j.succ.succ =
+        straightStrandGenerator (n + 2) j.succ.succ *
+          straightStrandGenerator (n + 2) i.castSucc.castSucc := by
+    simpa [straightStrandGenerator, Braid.σ, Braid.σ', hleft, hright] using hrel
+  exact freeGroup_lift_comm_relator
+    (straightStrandGenerator (n + 2))
+    i.castSucc.castSucc j.succ.succ hrel'
+
+/-- The complete canonical relator-preservation theorem for the finite
+presented braid tower. -/
+theorem canonicalStraightStrandRelators (n : ℕ) :
+    straightStrandRelators n := by
+  cases n with
+  | zero =>
+      intro r hr
+      exact (Set.not_mem_empty r hr).elim
+  | succ n =>
+      cases n with
+      | zero =>
+          intro r hr
+          exact (Set.not_mem_empty r hr).elim
+      | succ n =>
+          intro r hr
+          change r ∈
+            ({ r | ∃ i : Fin (n + 1),
+                r = Braid.braid_rel i.castSucc i.succ } ∪
+              { r | ∃ i j : Fin n, i ≤ j ∧
+                r = Braid.comm_rel i.castSucc.castSucc j.succ.succ }) at hr
+          rcases hr with hr | hr
+          · rcases hr with ⟨i, rfl⟩
+            exact canonicalStraightStrand_adjacent n i
+          · rcases hr with ⟨i, j, hij, rfl⟩
+            exact canonicalStraightStrand_far n i j hij
+
+/-- The finite presented braid tower with its canonical straight-strand
+relator witnesses. -/
+def canonicalFinitePresentedBraidTowerInput :
+    FinitePresentedBraidTowerInput where
+  relators := canonicalStraightStrandRelators
+
 /-- The finite presented braid tower input: all existing Artin relators are
 preserved by the straight-strand generator assignment. -/
 structure FinitePresentedBraidTowerInput where

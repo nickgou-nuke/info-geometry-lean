@@ -82,10 +82,10 @@ theorem cl55ModeOccupation_idempotent (i : Fin 5) :
 theorem cl55ModeChiralityFactor_eq_vacancy_sub_occupation (i : Fin 5) :
     cl55ModeChiralityFactor i =
       cl55ModeVacancy i - cl55ModeOccupation i := by
-  have hcar := cl55ModeOccupation_add_vacancy i
-  rw [show (1 : FockOp) =
-      cl55ModeOccupation i + cl55ModeVacancy i by exact hcar.symm]
   unfold cl55ModeChiralityFactor
+  rw [show (1 : FockOp) =
+      cl55ModeOccupation i + cl55ModeVacancy i by
+        exact (cl55ModeOccupation_add_vacancy i).symm]
   module
 
 /-- The local chirality factor is the `-2` normalization of the centered Cartan

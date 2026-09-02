@@ -1,16 +1,24 @@
+import Mathlib.LinearAlgebra.Trace
 import InfoGeometry.Canonical.ApolloniusSurprisalCriticalLineBridge
 import InfoGeometry.OperatorAlgebra.CanonicalZornSurprisalCurrent
+import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 /-!
-# Central scalar surprisal lift: a no-go theorem
+# Central scalar surprisal lift: no-go theorems
 
 The scalar Apollonius negative-log potential can be embedded in the canonical
 operator algebra as a scalar multiple of the identity.  That embedding is
 central, so its derivation/commutator current vanishes identically.
 
+Moreover, the native circular Zorn carrier is finite-dimensional.  Hence no
+pair of its endomorphisms has a commutator equal to a nonzero scalar multiple
+of the identity: the commutator has trace zero, while the proposed right-hand
+side has trace `8c`.
+
 Consequently, a nonzero operator surprisal current requires a genuinely
-noncentral operator-valued lift.  Coordinate quantization or scalar
-multiplication by the identity alone does not establish flux quantization.
+noncentral operator-valued lift, and an exact canonical commutation relation
+requires an infinite-dimensional or otherwise non-finite trace setting.
+Coordinate quantization alone does not establish flux quantization.
 -/
 
 noncomputable section
@@ -19,6 +27,7 @@ namespace InfoGeometry.Canonical.ApolloniusScalarOperatorSurprisalNoGo
 
 open InfoGeometry.Canonical.NegativeLogReadoutBridge
 open InfoGeometry.OperatorAlgebra.CanonicalZornSurprisalCurrent
+open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 abbrev EndCZ := Module.End ℝ CZ
@@ -53,6 +62,37 @@ theorem scalarOperator_surprisalCurrent_eq_zero
   simpa using
     surprisalCurrent_eq_zero_of_commutes
       (scalarOperator c) D (scalarOperator_commutes c D)
+
+/-- The canonical real Zorn carrier has dimension eight, read directly from
+its circular Peirce basis. -/
+theorem canonicalZorn_finrank_eight :
+    Module.finrank ℝ CZ = 8 := by
+  rw [Module.finrank_eq_card_basis circularPeirceBasis]
+  exact Fintype.card_fin 8
+
+/-- No finite-dimensional canonical Zorn operators satisfy an exact
+commutator relation with a nonzero scalar identity on the right. -/
+theorem no_exact_nonzero_scalar_commutator
+    (A B : EndCZ) (c : ℝ) (hc : c ≠ 0) :
+    A * B - B * A ≠ scalarOperator c := by
+  letI : Module.Free ℝ CZ := Module.Free.of_basis circularPeirceBasis
+  letI : Module.Finite ℝ CZ := Module.Finite.of_basis circularPeirceBasis
+  intro h
+  have htrace : (0 : ℝ) = c * 8 := by
+    simpa [scalarOperator, LinearMap.trace_mul_comm,
+      canonicalZorn_finrank_eight] using
+      congrArg (LinearMap.trace ℝ CZ) h
+  apply hc
+  linarith
+
+/-- In particular, an exact real canonical commutation relation
+`[A,B] = c I` forces `c = 0` on the native eight-dimensional carrier. -/
+theorem scalar_commutator_coefficient_eq_zero
+    (A B : EndCZ) (c : ℝ)
+    (h : A * B - B * A = scalarOperator c) :
+    c = 0 := by
+  by_contra hc
+  exact no_exact_nonzero_scalar_commutator A B c hc h
 
 /-- Central operator lift of the scalar Apollonius negative-log readout. -/
 def apolloniusScalarSurprisalOperator (ξ θ : ℝ) : EndCZ :=

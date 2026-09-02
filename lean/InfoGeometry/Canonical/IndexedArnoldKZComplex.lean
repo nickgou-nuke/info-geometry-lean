@@ -77,11 +77,7 @@ theorem finite_arnold_relation
     (dz : Fin n → M)
     {i j k : Fin n}
     (hpartial :
-      c i j * c j k + c j k * c k i + c k i * c i j = 0)
-    (hform :
-      ∀ a b : Fin n,
-        c a b • (dz a - dz b) =
-          c a b • (dz a - dz b)) :
+      c i j * c j k + c j k * c k i + c k i * c i j = 0) :
     alg.wedge (c i j • (dz i - dz j))
         (c j k • (dz j - dz k)) +
       alg.wedge (c j k • (dz j - dz k))
@@ -146,8 +142,6 @@ theorem dlog_arnold_relation
   apply finite_arnold_relation alg
     (fun a b => dlogCoefficient z a b) dz
       (dlog_partial_fraction z hij hjk hik)
-  intro a b
-  rfl
 
 /-- Indexed infinitesimal braid residue data. -/
 structure InfinitesimalBraidResidues

@@ -1139,6 +1139,7 @@ import InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
 import InfoGeometry.Canonical.CuntzMatrixStarColimitState
 import InfoGeometry.Canonical.FiniteGibbsState
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
+import InfoGeometry.Canonical.FiniteCFCNormedExpGibbsBridge
 import InfoGeometry.Canonical.BostConnesFiniteMatrixKMS
 import InfoGeometry.Canonical.FiniteMatrixGibbsKMSPhaseBoundaryCapstone
 import InfoGeometry.Canonical.CuntzMatrixZeroHamiltonianGibbs

@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.Algebra.Category.Grp.FilteredColimits
 import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.Shapes.Types

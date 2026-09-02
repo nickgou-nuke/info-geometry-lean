@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.SplitOctonion1331GradedProjectorActionBridge
 # Native graded ladder identity on the three-mode exterior carrier
 
 This owner uses Mathlib's native graded-algebra decomposition of
-`ExteriorAlgebra ℝ (Fin 3 → ℝ)`.  It proves the exact creation/projector
+`ExteriorAlgebra ℝ (Fin 3 → ℝ)`. It proves the exact creation/projector
 intertwiner
 
 `P_(k+1) ∘ ε_v = ε_v ∘ P_k`
@@ -60,11 +60,13 @@ theorem nativeExteriorProjector_wedge_shift_apply
     (v : V3) (k : ℕ) (x : Exterior3) :
     nativeExteriorProjector (k + 1) (exteriorWedge3 v x) =
       exteriorWedge3 v (nativeExteriorProjector k x) := by
-  exact LinearMap.congr_fun (nativeExteriorProjector_wedge_shift v k) x
+  exact congrArg (fun T : Exterior3End => T x)
+    (nativeExteriorProjector_wedge_shift v k)
 
-/-- For the three-mode carrier the native creation operator reaches no degree
-above `3`; the degree-four projection of every created state is zero. -/
-theorem nativeExteriorProjector_degreeFour_wedge_zero
+/-- The top-degree instance of the same shift identity.  No separate vanishing
+claim is made here; vanishing above degree three belongs to the exterior-power
+subsingleton API. -/
+theorem nativeExteriorProjector_wedge_shift_from_top
     (v : V3) (x : Exterior3) :
     nativeExteriorProjector 4 (exteriorWedge3 v x) =
       exteriorWedge3 v (nativeExteriorProjector 3 x) := by

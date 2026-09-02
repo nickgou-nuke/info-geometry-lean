@@ -30,6 +30,18 @@ universe u
 /-- A filtered diagram of finite braid-group stages. -/
 abbrev BraidGroupDiagram := ℕ ⥤ Grp.{u}
 
+/-- Explicit finite-stage braid-group tower data.  The bonding maps are
+part of the datum so the combinatorial straight-strand proof can be supplied
+by the presentation owner without changing the categorical API. -/
+structure BraidGroupTower where
+  stage : ℕ → Grp.{u}
+  bond : ∀ n : ℕ, stage n ⟶ stage (n + 1)
+
+/-- The sequential category-theoretic diagram associated with a braid-group
+ tower. -/
+def BraidGroupTower.diagram (T : BraidGroupTower.{u}) : BraidGroupDiagram.{u} :=
+  Functor.ofSequence T.bond
+
 /-- The genuine categorical colimit of a supplied braid-group diagram. -/
 abbrev BraidGroupColimit (B : BraidGroupDiagram.{u}) : Grp.{u} :=
   colimit B

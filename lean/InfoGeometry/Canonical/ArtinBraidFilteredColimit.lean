@@ -82,8 +82,8 @@ def generatorCast {n m : ℕ} (h : n ≤ m) : ArtinGen n → ArtinGen m :=
 /-- Every defining relation at a finite stage remains a defining relation after
 stabilizing the generator labels. -/
 theorem artinRelations_mapsTo {n m : ℕ} (h : n ≤ m) :
-    (artinRelations n).MapsTo (FreeGroup.map (generatorCast h))
-      (artinRelations m) := by
+    Set.MapsTo (FreeGroup.map (generatorCast h))
+      (artinRelations n) (artinRelations m) := by
   intro w hw
   rcases hw with hw | hw
   · rcases hw with ⟨i, j, hij, rfl⟩
@@ -220,21 +220,27 @@ theorem sigmaInfinity_commute {i j : ℕ} (h : i + 1 < j) :
   rw [hi, hj]
   simpa using congrArg (toBInfinity n) hstage
 
+/-- The cocone determined by a compatible family of finite-stage group maps. -/
+def bInfinityCocone {G : Type*} [Group G]
+    (f : ∀ n, ArtinBraid n →* G)
+    (hcompat : ∀ {n m : ℕ} (h : n ≤ m),
+      (f m).comp (artinStageMap h) = f n) :
+    Cocone artinBraidDiagram where
+  pt := GrpCat.of G
+  ι :=
+    { app := fun n => GrpCat.ofHom (f n)
+      naturality := by
+        intro n m h
+        apply GrpCat.hom_ext
+        exact hcompat (leOfHom h) }
+
 /-- Universal descent from `B∞`: every compatible family of finite-stage group
 homomorphisms factors through the categorical colimit. -/
 def bInfinityDesc {G : Type*} [Group G]
     (f : ∀ n, ArtinBraid n →* G)
     (hcompat : ∀ {n m : ℕ} (h : n ≤ m),
-      (f m).comp (artinStageMap h) = f n) : BInfinity →* G := by
-  let c : Cocone artinBraidDiagram :=
-    { pt := GrpCat.of G
-      ι :=
-        { app := fun n => GrpCat.ofHom (f n)
-          naturality := by
-            intro n m h
-            apply GrpCat.hom_ext
-            exact hcompat (leOfHom h) } }
-  exact (colimit.desc artinBraidDiagram c).hom
+      (f m).comp (artinStageMap h) = f n) : BInfinity →* G :=
+  (colimit.desc artinBraidDiagram (bInfinityCocone f hcompat)).hom
 
 /-- The universal descent has the prescribed value on every finite stage. -/
 theorem bInfinityDesc_stage {G : Type*} [Group G]
@@ -243,15 +249,7 @@ theorem bInfinityDesc_stage {G : Type*} [Group G]
       (f m).comp (artinStageMap h) = f n)
     (n : ℕ) (g : ArtinBraid n) :
     bInfinityDesc f hcompat (toBInfinity n g) = f n g := by
-  let c : Cocone artinBraidDiagram :=
-    { pt := GrpCat.of G
-      ι :=
-        { app := fun n => GrpCat.ofHom (f n)
-          naturality := by
-            intro a b h
-            apply GrpCat.hom_ext
-            exact hcompat (leOfHom h) } }
-  have hdesc := colimit.ι_desc c n
+  have hdesc := colimit.ι_desc (bInfinityCocone f hcompat) n
   exact congrArg (fun q => q.hom g) hdesc
 
 end InfoGeometry.Canonical.ArtinBraidFilteredColimit

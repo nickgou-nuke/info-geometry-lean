@@ -353,6 +353,7 @@ import InfoGeometry.Clifford.SplitFlowOperatorLimit
 import InfoGeometry.Clifford.Cl55MatrixSplitFlowLimit
 import InfoGeometry.Clifford.FoundationalInvolutionsBridge
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube
+import InfoGeometry.Clifford.Cl55VirasoroWeightShiftBridge
 
 namespace InfoGeometry
 

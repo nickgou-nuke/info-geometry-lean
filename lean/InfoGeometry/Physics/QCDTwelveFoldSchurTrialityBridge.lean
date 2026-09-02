@@ -61,6 +61,19 @@ theorem commuting_z2_z3_product_pow_six
 theorem z2_z3_lcm_eq_six : Nat.lcm 2 3 = 6 := by
   norm_num
 
+theorem native_twelvefold_order_packet :
+    orderOf masterTwelve = 12 ∧
+      orderOf (InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixParity) = 2 ∧
+      orderOf (InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixShift) = 3 ∧
+      orderOf (InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixTriality) = 6 ∧
+      InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixTriality ^ 3 =
+        InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixParity :=
+  ⟨masterTwelve_order_exact,
+    sixParity_order,
+    sixShift_order,
+    sixTriality_order,
+    sixTriality_cube_eq_sixParity⟩
+
 /-- Parallel exact twelvefold closure: the concrete repository operator has
 order twelve, while the independent `G₂/I₂(6)` spin lift closes projectively at
 six and linearly at twelve.  The carriers are not identified. -/
@@ -71,6 +84,19 @@ theorem artin_native_twelvefold_packet (rho : G2SpinOperatorLift) :
   ⟨masterTwelve_order_exact,
     rho.coxeter_pow_six_eq_neg_one,
     rho.spin_coxeter_pow_twelve⟩
+
+theorem furey_triality_twelvefold_packet :
+    (∀ w : InfoGeometry.Physics.FureyCharges.Occupation3,
+      InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = 0 ∨
+      InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = (1 / 3 : ℚ) ∨
+      InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = (2 / 3 : ℚ) ∨
+      InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = 1) ∧
+    ((InfoGeometry.Canonical.TrialitySpin8Permutations.trialityCycle ^ 3) =
+      (1 : Equiv.Perm InfoGeometry.Canonical.TrialitySpin8Permutations.TrialitySector)) ∧
+    orderOf masterTwelve = 12 := by
+  refine ⟨InfoGeometry.Physics.FureyCharges.fureyOccupationCharge_spectrum,
+    ?_, masterTwelve_order_exact⟩
+  exact InfoGeometry.Canonical.TrialitySpin8Permutations.trialityCycle_pow_three
 
 /-- Zero-light-block Schur elimination has the exact seesaw-shaped algebraic
 form `-V * Binv * W` (with the stated parenthesization) and is even under the

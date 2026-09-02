@@ -36,6 +36,15 @@ def circularGradedChirality : EndCZ :=
   circularPeirceBasis.equivFun.symm.toLinearMap.comp
     (peirceGradedChirality.comp circularPeirceBasis.equivFun.toLinearMap)
 
+/-- Index involution implementing `Λᵏ ↔ Λ³⁻ᵏ` in the established circular
+Peirce order. -/
+def circularHodgeIndex : Fin 8 → Fin 8 :=
+  ![4, 5, 6, 7, 0, 1, 2, 3]
+
+@[simp] theorem circularHodgeIndex_involutive (i : Fin 8) :
+    circularHodgeIndex (circularHodgeIndex i) = i := by
+  fin_cases i <;> rfl
+
 @[simp] theorem circularHodgeStar_apply (x : CZ) :
     circularHodgeStar x =
       circularPeirceBasis.equivFun.symm
@@ -62,6 +71,17 @@ theorem circularHodgeStar_coordinate (x : CZ) :
   rw [circularHodgeStar_apply,
     LinearEquiv.apply_symm_apply,
     peirceHodgeStar_coordinate]
+
+/-- The native Hodge operator sends each circular Peirce basis vector to its
+complementary exterior degree. -/
+theorem circularHodgeStar_basis (i : Fin 8) :
+    circularHodgeStar (circularPeirceBasis i) =
+      circularPeirceBasis (circularHodgeIndex i) := by
+  apply circularPeirceBasis.equivFun.injective
+  rw [circularHodgeStar_coordinate]
+  funext j
+  fin_cases i <;> fin_cases j <;>
+    simp [circularHodgeIndex, Basis.equivFun_self]
 
 /-- The transported three-dimensional Hodge star is an involution. -/
 theorem circularHodgeStar_sq :

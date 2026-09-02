@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsTwoPointFrechetBridge
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFrechetBridge
+import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
 
 /-!
 # Traced two-point consequence of the noncommutative Duhamel identity
@@ -71,5 +72,54 @@ theorem trace_exponentialDerivative_mul_eq_duhamelTwoPoint
                 B) := by
   rw [exponentialDerivative_apply_eq_duhamelDerivative]
   exact trace_duhamelDerivative_mul_eq_duhamelTwoPoint H A B
+
+/--
+The complex changed-origin exponential derivative restricts to the real
+changed-origin derivative.  This is derivative uniqueness for the same
+Banach-algebra exponential, not an additional analytic hypothesis.
+-/
+theorem exponentialDerivative_complex_restrictScalars_eq_real
+    {n : ℕ} (H : Operator n) :
+    (exponentialDerivative (𝕜 := ℂ) H).restrictScalars ℝ =
+      exponentialDerivative (𝕜 := ℝ) H := by
+  have hComplexReal :
+      HasFDerivAt NormedSpace.exp
+        ((exponentialDerivative (𝕜 := ℂ) H).restrictScalars ℝ) H :=
+    (hasFDerivAt_exp_noncommutative
+      (𝕜 := ℂ) (A := Operator n) H).restrictScalars ℝ
+  have hReal :
+      HasFDerivAt NormedSpace.exp
+        (exponentialDerivative (𝕜 := ℝ) H) H :=
+    hasFDerivAt_exp_noncommutative
+      (𝕜 := ℝ) (A := Operator n) H
+  exact hComplexReal.unique hReal
+
+/-- Pointwise complex/real compatibility in every operator direction. -/
+theorem exponentialDerivative_complex_apply_eq_real
+    {n : ℕ} (H A : Operator n) :
+    exponentialDerivative (𝕜 := ℂ) H A =
+      exponentialDerivative (𝕜 := ℝ) H A := by
+  have h := congrArg
+    (fun L : Operator n →L[ℝ] Operator n => L A)
+    (exponentialDerivative_complex_restrictScalars_eq_real H)
+  exact h
+
+/--
+Complex Fréchet version of the two-insertion Wilcox--Duhamel trace identity.
+This now matches the derivative used by the existing holomorphic two-point
+numerator owner.
+-/
+theorem trace_complexExponentialDerivative_mul_eq_duhamelTwoPoint
+    {n : ℕ} (H A B : Operator n) :
+    finiteOperatorTrace
+        (exponentialDerivative (𝕜 := ℂ) H A * B) =
+      ∫ s in (0 : ℝ)..1,
+        finiteOperatorTrace
+          (NormedSpace.exp ((1 - s) • H) *
+            A *
+              NormedSpace.exp (s • H) *
+                B) := by
+  rw [exponentialDerivative_complex_apply_eq_real]
+  exact trace_exponentialDerivative_mul_eq_duhamelTwoPoint H A B
 
 end InfoGeometry.Canonical.NoncommutativeGibbsDuhamelTwoPointBridge

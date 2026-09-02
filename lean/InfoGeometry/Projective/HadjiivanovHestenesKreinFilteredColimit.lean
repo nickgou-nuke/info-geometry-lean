@@ -9,11 +9,11 @@ This file is the categorical completion of the finite Hadjiivanov logarithmic
 connection lane. The filtered system is represented by the native
 FilteredColimit.InductiveCocone, not by a merely sequential cone.
 
-The theorem is intentionally conditional at the analytic boundary: a
+The theorem is intentionally conditional at the geometric boundary: a
 continuous complex-linear ambient monodromy is supplied explicitly. Its
 restriction to scalars and canonical doubling give the Hestenes--Krein
-differential; no unproved analytic continuation or holonomy theorem is hidden
-in the definitions.
+phase-compatible differential; no classical analyticity, analytic continuation,
+or holonomy theorem is hidden in the definitions.
 -/
 
 noncomputable section
@@ -61,8 +61,8 @@ variable [NormedAddCommGroup Ainf] [NormedSpace ℂ Ainf]
 variable [InnerProductSpace ℝ Ainf] [CompleteSpace Ainf]
 variable (D : CategoricalHadjiivanovData sys Ainf cocone)
 
-/-- The ambient monodromy is Hestenes--Krein analytic after restriction of
-scalars and canonical doubling. -/
+/-- The ambient monodromy is Hestenes--Krein phase-compatible after restriction
+of scalars and canonical doubling. -/
 def doubledMonodromy :
     DoubledSpace Ainf →L[ℝ] DoubledSpace Ainf :=
   doubledContinuousLinearMap (D.ambientMonodromy.restrictScalars ℝ)
@@ -83,14 +83,13 @@ theorem doubledMonodromy_clockAxis
     (doubledMonodromy_isHestenes D)
 
 /-- A stage representative has the same ambient monodromy readout after any
-single filtered transition. -/
+filtered transition. -/
 theorem ambientMonodromy_stage_independent
     {i j : I} (hij : i ≤ j) (x : Stage i) :
     D.ambientMonodromy
         (cocone.psi j (sys.f hij x)) =
       cocone.psi i (D.stageMonodromy i x) := by
-  rw [cocone.colimit_functional_trace_comm
-    D.ambientMonodromy.toLinearMap hij x]
+  rw [cocone.cocone_eval_comm hij x]
   exact LinearMap.congr_fun (D.stageDescent i) x
 
 /-- The stage monodromy intertwines through every filtered transition. -/
@@ -99,10 +98,8 @@ theorem stageMonodromy_after_transition
     cocone.psi j (sys.f hij (D.stageMonodromy i x)) =
       D.ambientMonodromy
         (cocone.psi j (sys.f hij x)) := by
-  rw [D.ambientMonodromy_stage_independent hij x]
-  rw [cocone.colimit_functional_trace_comm
-    D.ambientMonodromy.toLinearMap hij (D.stageMonodromy i x)]
-  exact LinearMap.congr_fun (D.stageDescent i) (D.stageMonodromy i x)
+  rw [cocone.cocone_eval_comm hij x]
+  exact (LinearMap.congr_fun (D.stageDescent i) x).symm
 
 /-- The categorical cocone, Hestenes analyticity, and Artin braid laws form one
 descent packet. -/

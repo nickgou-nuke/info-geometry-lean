@@ -115,6 +115,7 @@ import InfoGeometry.Clifford.SplitClifford55PureSpinorGrassmannianBridge
 import InfoGeometry.Clifford.SplitClifford55ExteriorFiniteGraded
 import InfoGeometry.Clifford.Cl55ExteriorSpinorCoordinateReadout
 import InfoGeometry.Clifford.Cl55FockMatrixIntertwiner
+import InfoGeometry.Clifford.Cl55MatStageCarrierEquiv
 import InfoGeometry.Clifford.SplitClifford55ExteriorParity
 import InfoGeometry.Clifford.Cl55ZornCARComparison
 import InfoGeometry.Clifford.Cl55NambuZornPeirceBridge
@@ -354,6 +355,7 @@ import InfoGeometry.Clifford.Cl55MatrixSplitFlowLimit
 import InfoGeometry.Clifford.FoundationalInvolutionsBridge
 import InfoGeometry.Clifford.Cl55HypercubePeirceCube
 import InfoGeometry.Clifford.Cl55VirasoroWeightShiftBridge
+import InfoGeometry.Clifford.Cl55MatrixGradeTransport
 
 namespace InfoGeometry
 

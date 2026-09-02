@@ -48,6 +48,14 @@ theorem exterior3PeirceBasis_ιMulti (i : Fin 8) :
   rw [exterior3PeirceBasis_apply, exterior3BasisFinset_apply,
     degreeBasis3_apply]
 
+theorem exterior3PeirceBasis_mem_exteriorPower (i : Fin 8) :
+    exterior3PeirceBasis i ∈
+      (⋀[ℝ]^(peirceSubset i).card (Fin 3 → ℝ)) := by
+  rw [exterior3PeirceBasis_ιMulti]
+  apply ExteriorAlgebra.ιMulti_range
+  exact ⟨vBasis3 ∘ (Set.powersetCard.ofFinEmbEquiv.symm
+      ⟨peirceSubset i, by simp⟩), rfl⟩
+
 theorem degreeBasis3_listProduct (k : ℕ)
     (s : Set.powersetCard (Fin 3) k) :
     degreeBasis3 k s =

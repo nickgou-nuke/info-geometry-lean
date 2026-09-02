@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+import InfoGeometry.Quantum.ApolloniusFisherInformation
 
 /-!
 # Apollonius lambda-DAG topological closure
@@ -26,6 +27,7 @@ namespace InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
 open InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
 open InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 open InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+open InfoGeometry.Quantum.ApolloniusFisherInformation
 
 /-- The theorem-owned stages reachable from the corrected Apollonius seed. -/
 inductive Node where
@@ -167,10 +169,9 @@ theorem lambda_unit_circle_chart (t : ℝ) :
 
 /-- The Apollonius Fisher metric is positive definite on nonzero tangent vectors. -/
 theorem lambda_fisher_positive
-    (st : InfoGeometry.Quantum.ApolloniusFisherInformation.ApolloniusState)
+    (st : ApolloniusState)
     (v : Fin 2 → ℝ) (hv : v ≠ 0) :
-    0 < InfoGeometry.Quantum.ApolloniusFisherInformation.
-      apolloniusFisherQuadraticForm st v :=
+    0 < apolloniusFisherQuadraticForm st v :=
   apollonius_fisher_positive st v hv
 
 /-- The repository's information potential is nonnegative. -/
@@ -247,4 +248,3 @@ theorem current_topological_closure :
 end InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
 
 end noncomputable section
-

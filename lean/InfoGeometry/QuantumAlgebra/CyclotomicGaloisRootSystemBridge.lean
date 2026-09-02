@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumAlgebra.RankTwoCyclotomicArtinBridge
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-! Galois transport for the cyclotomic root-system layer.  The action is
 coefficient transport; it is not identified with the Weyl or Artin action. -/
@@ -17,6 +18,26 @@ theorem galois_preserves_cyclotomic12 (σ : R →+* R) (ζ : R)
     (hζ : cyclotomic12 ζ = 0) : cyclotomic12 (σ ζ) = 0 := by
   dsimp [cyclotomic12] at hζ ⊢
   simpa [map_add, map_sub, map_pow] using congrArg σ hζ
+
+/-- The two cyclotomic root loci are kept as an indexed family so that
+coefficient transport can use the repository-wide grade-action interface.
+The index records which polynomial is being imposed; it is not a Weyl or
+Artin grade. -/
+def cyclotomicRootGrade (n : Fin 2) : Set R :=
+  match n with
+  | 0 => {ζ | cyclotomic10 ζ = 0}
+  | 1 => {ζ | cyclotomic12 ζ = 0}
+
+theorem galois_mapsTo_cyclotomicRootGrade
+    (σ : R →+* R) :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (cyclotomicRootGrade (R := R))
+      (fun _ : Unit => fun ζ => σ ζ)
+      (fun _ n => n) := by
+  intro _ n ζ hζ
+  fin_cases n
+  · exact galois_preserves_cyclotomic10 σ ζ hζ
+  · exact galois_preserves_cyclotomic12 σ ζ hζ
 
 theorem galois_preserves_quantum_dimension_five
     (σ : R →+* R) (d : R) (h : d ^ 2 = d + 1) :

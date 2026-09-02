@@ -1,5 +1,7 @@
 import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
+import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-!
 # Operatorial five-grade routing on the native `Cl(5,5)` carrier
@@ -21,7 +23,7 @@ def cl55GradeSubmodule (k : ℤ) : Submodule ℝ Cl55 :=
 
 def spinTransportedCl55GradeSubmodule (g : Spin55) (k : ℤ) :
     Submodule ℝ Cl55 :=
-  gradeSubmodule (spinTransportedNumberOperator55 g) k
+    gradeSubmodule (spinTransportedNumberOperator55 g) k
 
 theorem spinTransported_grade_mem_of_mem
     (g : Spin55) (k : ℤ) {X : Cl55}
@@ -35,34 +37,57 @@ theorem spinTransported_grade_mem_of_mem
     ← (spinCliffordRingEquiv g).map_sub, hX]
   simp
 
+theorem spinTransported_maps_grade_family (g : Spin55) :
+    InfoGeometry.OperatorAlgebra.MapsToGradeBetween
+      (fun k : ℤ => {X : Cl55 | X ∈ cl55GradeSubmodule k})
+      (fun k : ℤ => {X : Cl55 | X ∈ spinTransportedCl55GradeSubmodule g k})
+      (fun _ : Unit => fun X => spinCliffordRingEquiv g X)
+      (fun _ : Unit => fun k => k) := by
+  let hsmul : ∀ r : ℝ, ∀ X : Cl55,
+      spinCliffordRingEquiv g (r • X) = r • spinCliffordRingEquiv g X := by
+    intro r X
+    change InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+        (spinGroup.toUnits g) (r • X) =
+      r • InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+        (spinGroup.toUnits g) X
+    exact InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul
+      (spinGroup.toUnits g) r X
+  simpa [spinTransportedNumberOperator55, spinTransportedCl55GradeSubmodule] using
+    (InfoGeometry.OperatorAlgebra.ringEquiv_mapsToGradeSubmoduleBetween
+      (spinCliffordRingEquiv g) numberOperator55 hsmul)
+
 theorem spinTransported_grade_mem_iff
     (g : Spin55) (k : ℤ) (X : Cl55) :
     spinCliffordRingEquiv g X ∈ spinTransportedCl55GradeSubmodule g k ↔
       X ∈ cl55GradeSubmodule k := by
-  constructor
-  · intro hX
-    change HasOperatorGrade (spinTransportedNumberOperator55 g)
-      (spinCliffordRingEquiv g X) k at hX
-    unfold HasOperatorGrade spinTransportedNumberOperator55 at hX
-    have hMapped := congrArg (fun Y => (spinCliffordRingEquiv g).symm Y) hX
-    have hscalar :
-        (spinCliffordRingEquiv g).symm
-            ((k : ℝ) • (spinCliffordRingEquiv g) X) =
-          (k : ℝ) • X := by
-      change InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
-          (spinGroup.toUnits g)⁻¹
-          ((k : ℝ) • InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
-            (spinGroup.toUnits g) X) = (k : ℝ) • X
-      rw [InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul]
-      rw [← InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_comp]
-      simp [InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation]
-    change HasOperatorGrade numberOperator55 X k
-    unfold HasOperatorGrade numberOperator55
-    dsimp only at hMapped
-    rw [hscalar] at hMapped
-    simpa only [map_sub, map_mul, map_smul,
-      RingEquiv.symm_apply_apply] using hMapped
-  · exact spinTransported_grade_mem_of_mem g k
+  let hsmul : ∀ r : ℝ, ∀ Y : Cl55,
+      spinCliffordRingEquiv g (r • Y) = r • spinCliffordRingEquiv g Y := by
+    intro r Y
+    change InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+        (spinGroup.toUnits g) (r • Y) =
+      r • InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+        (spinGroup.toUnits g) Y
+    exact InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul
+      (spinGroup.toUnits g) r Y
+  simpa [spinTransportedNumberOperator55, spinTransportedCl55GradeSubmodule,
+    cl55GradeSubmodule] using
+    InfoGeometry.OperatorAlgebra.ringEquiv_map_gradeSubmodule_transport
+      (spinCliffordRingEquiv g) numberOperator55 k hsmul X
+
+theorem spinTransported_gradeSubmodule_map
+    (g : Spin55) (k : ℤ) :
+    Submodule.map
+        (InfoGeometry.OperatorAlgebra.ringEquivLinearEquiv
+          (spinCliffordRingEquiv g) (by
+            intro r X
+            change InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+                (spinGroup.toUnits g) (r • X) =
+              r • InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+                (spinGroup.toUnits g) X
+            exact InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul
+              (spinGroup.toUnits g) r X)).toLinearMap
+        (cl55GradeSubmodule k) = spinTransportedCl55GradeSubmodule g k := by
+  apply InfoGeometry.OperatorAlgebra.ringEquivLinearEquiv_map_gradeSubmodule
 
 theorem spinTransported_grade_mul_mem_of_mem
     (g : Spin55) (k l : ℤ) {X Y : Cl55}
@@ -91,6 +116,19 @@ theorem spinTransported_grade_commutator_mem_of_mem
   exact grade_commutator
     (spinTransported_grade_mem_of_mem g k hX)
     (spinTransported_grade_mem_of_mem g l hY)
+
+theorem spinTransported_bracket_left_mapsToGradeBetween
+    (g : Spin55) {k : ℤ} {X : Cl55}
+    (hX : X ∈ cl55GradeSubmodule k) :
+    InfoGeometry.OperatorAlgebra.MapsToGradeBetween
+      (fun l : ℤ => (cl55GradeSubmodule l : Set Cl55))
+      (fun l : ℤ =>
+        (spinTransportedCl55GradeSubmodule g l : Set Cl55))
+      (fun _ : Unit => fun Y =>
+        spinCliffordRingEquiv g (X * Y - Y * X))
+      (fun _ l => k + l) := by
+  intro _ l Y hY
+  simpa using spinTransported_grade_commutator_mem_of_mem g k l hX hY
 
 theorem spinTransported_grade_anticommutator_mem_of_mem
     (g : Spin55) (k l : ℤ) {X Y : Cl55}

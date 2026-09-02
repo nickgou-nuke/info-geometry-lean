@@ -4,6 +4,7 @@ import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 import Mathlib.Tactic.NoncommRing
 
 open InfoGeometry.CliffordTower
@@ -120,6 +121,33 @@ theorem theta_maps (g : ConformalGrade) (x : Alg 5) (hx : x ∈ gradeSpace g) :
   dsimp
   rw [sub_eq_zero]
 
+/-! The conformal inversion is exposed through the common grade-action
+interface, while retaining its native `ConformalGrade` labels. -/
+theorem theta_mapsToGrade :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
+      (fun _ : Unit => fun x => thetaOp x)
+      (fun _ g => ConformalGrade.swap g) := by
+  intro _ g x hx
+  exact theta_maps g x hx
+
+theorem theta_twice_mapsToGrade :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
+      (fun _ : Unit => fun x => thetaOp (thetaOp x))
+      (fun _ g => ConformalGrade.swap (ConformalGrade.swap g)) := by
+  intro _ g x hx
+  exact InfoGeometry.OperatorAlgebra.mapsToGradeBetween_comp
+    theta_mapsToGrade theta_mapsToGrade () () g hx
+
+theorem theta_twice_mapsToGrade_identity :
+    InfoGeometry.OperatorAlgebra.PreservesGrade
+      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
+      (fun _ : Unit => fun x => thetaOp (thetaOp x)) := by
+  intro _ g x hx
+  have h := theta_twice_mapsToGrade () g hx
+  simpa [theta_inv] using h
+
 /-- The grade subspaces intersected with the even Clifford subalgebra. -/
 def gradeSpaceEven (g : ConformalGrade) : Submodule ℝ (CliffordAlgebra.even (Qsplit 5)) :=
   (gradeSpace g).comap (Subalgebra.toSubmodule (CliffordAlgebra.even (Qsplit 5))).subtype
@@ -153,6 +181,14 @@ theorem theta_maps_even (g : ConformalGrade) (x : CliffordAlgebra.even (Qsplit 5
     thetaOpEven x ∈ gradeSpaceEven (ConformalGrade.swap g) := by
   dsimp [gradeSpaceEven, thetaOpEven]
   exact theta_maps g x.val hx
+
+theorem thetaOpEven_mapsToGrade :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun g : ConformalGrade => (gradeSpaceEven g : Set (CliffordAlgebra.even (Qsplit 5))))
+      (fun _ : Unit => fun x => thetaOpEven x)
+      (fun _ g => ConformalGrade.swap g) := by
+  intro _ g x hx
+  exact theta_maps_even g x hx
 
 def HomogeneousElementEven := Σ (g : ConformalGrade), gradeSpaceEven g
 

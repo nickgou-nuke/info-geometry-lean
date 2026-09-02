@@ -96,7 +96,7 @@ theorem exteriorDegreeProjector1331_sum_eq_id :
 
 /-- Each transported degree projector is idempotent. -/
 theorem exteriorDegreeProjector1331_idempotent (k : ℕ) :
-    exteriorDegreeProjector1331 k.comp exteriorDegreeProjector1331 k =
+    (exteriorDegreeProjector1331 k).comp (exteriorDegreeProjector1331 k) =
       exteriorDegreeProjector1331 k := by
   ext x
   apply exterior3PeirceBasis.equivFun.injective
@@ -138,12 +138,9 @@ theorem peirceVacuum_eq_exteriorVacuum :
 /-- Wedge creation from the degree-zero vacuum reaches exactly the three
 established degree-one Peirce channels. -/
 theorem peirceDegreeOne_from_vacuum (i : Fin 3) :
-    exteriorWedge3
-        (InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift.modeVector i)
-        (exterior3PeirceBasis 0) =
-      exterior3PeirceBasis ⟨i.1 + 1, by omega⟩ := by
-  simpa [InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift.modeVector] using
-    exteriorWedge3_basis_zero i
+    exteriorWedge3 (Pi.single i 1) (exterior3PeirceBasis 0) =
+      exterior3PeirceBasis ⟨i.1 + 1, by omega⟩ :=
+  exteriorWedge3_basis_zero i
 
 /-- The three selected dual Clifford channels annihilate the pure-spinor
 vacuum.  These are the dual channels paired with the same first-three creation
@@ -159,9 +156,7 @@ annihilator channels. -/
 theorem vacuum_degreeOne_annihilator_1331_packet (i : Fin 3) :
     exteriorDegree1331 0 = 0 ∧
     exteriorDegree1331 ⟨i.1 + 1, by omega⟩ = 1 ∧
-    exteriorWedge3
-        (InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift.modeVector i)
-        (exterior3PeirceBasis 0) =
+    exteriorWedge3 (Pi.single i 1) (exterior3PeirceBasis 0) =
       exterior3PeirceBasis ⟨i.1 + 1, by omega⟩ ∧
     (0, dualBasisVector (firstThreeIndex i)) ∈
       neutralAnnihilator (1 : Spinor) := by
@@ -187,9 +182,7 @@ theorem peirce_exterior_pureSpinor_corridor (i : Fin 3) :
     (exteriorDegreeProjector1331 0 + exteriorDegreeProjector1331 1 +
         exteriorDegreeProjector1331 2 + exteriorDegreeProjector1331 3 =
       LinearMap.id) ∧
-    exteriorWedge3
-        (InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift.modeVector i)
-        (exterior3PeirceBasis 0) =
+    exteriorWedge3 (Pi.single i 1) (exterior3PeirceBasis 0) =
       exterior3PeirceBasis ⟨i.1 + 1, by omega⟩ ∧
     (0, dualBasisVector (firstThreeIndex i)) ∈
       neutralAnnihilator (1 : Spinor) ∧

@@ -82,6 +82,39 @@ noncomputable def straightStrandBond
       straightStrandGenerator n i := by
   exact PresentedGroup.toGroup.of h
 
+/-- A group-level Artin equality is exactly the free-group relator
+condition used by PresentedGroup.toGroup. -/
+theorem freeGroup_lift_braid_relator
+    {α G : Type*} [Group G] (f : α → G) (a b : α)
+    (h : f a * f b * f a = f b * f a * f b) :
+    FreeGroup.lift f (Braid.braid_rel a b) = 1 := by
+  simp only [Braid.braid_rel, map_mul, map_inv,
+    FreeGroup.lift_apply_of]
+  simpa [mul_assoc] using (mul_inv_eq_one.mpr h)
+
+/-- A group-level commutation equality is exactly the free-group relator
+condition for the repository's comm_rel presentation word. -/
+theorem freeGroup_lift_comm_relator
+    {α G : Type*} [Group G] (f : α → G) (a b : α)
+    (h : f a * f b = f b * f a) :
+    FreeGroup.lift f (Braid.comm_rel a b) = 1 := by
+  simp only [Braid.comm_rel, map_mul, map_inv,
+    FreeGroup.lift_apply_of]
+  simpa [mul_assoc] using (mul_inv_eq_one.mpr h)
+
+/-- The relation-preservation obligation can be checked on the two
+presentation families: adjacent braid words and separated commutators. -/
+abbrev straightStrandRelatorsChecked (n : ℕ) : Prop :=
+  ∀ r : FreeGroup (Fin n), r ∈ Braid.braid_rels n →
+    FreeGroup.lift (straightStrandGenerator n) r = 1
+
+/-- The checked relator predicate is definitionally the predicate used to
+construct the finite straight-strand homomorphism. -/
+theorem straightStrandRelatorsChecked_eq
+    (n : ℕ) :
+    straightStrandRelatorsChecked n = straightStrandRelators n := by
+  rfl
+
 /-- The finite presented braid tower input: all existing Artin relators are
 preserved by the straight-strand generator assignment. -/
 structure FinitePresentedBraidTowerInput where

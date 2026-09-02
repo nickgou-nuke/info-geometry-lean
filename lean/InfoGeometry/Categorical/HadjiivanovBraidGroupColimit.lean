@@ -1,7 +1,10 @@
 import Mathlib.Algebra.Category.Grp.Limits
+import Mathlib.Algebra.Category.Grp.Basic
+import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.Algebra.Category.Grp.FilteredColimits
 import Mathlib.CategoryTheory.Functor.OfSequence
-import Mathlib.CategoryTheory.Limits.Shapes.Types
+import Mathlib.CategoryTheory.Limits.Types
+import Mathlib.CategoryTheory.NatTrans
 
 /-!
 # Categorical colimit of filtered braid-group stages
@@ -45,6 +48,16 @@ def BraidGroupTower.diagram (T : BraidGroupTower.{u}) : BraidGroupDiagram.{u} :=
 /-- The genuine categorical colimit of a supplied braid-group diagram. -/
 abbrev BraidGroupColimit (B : BraidGroupDiagram.{u}) : Grp.{u} :=
   colimit B
+
+/-- The same categorical colimit under the shorter braid-specific name used
+by the Hadjiivanov representation layer. -/
+abbrev BraidColimit (B : BraidGroupDiagram.{u}) : Grp.{u} :=
+  BraidGroupColimit B
+
+/-- Universal stage inclusion under the braid-specific API name. -/
+abbrev stageInclusion (B : BraidGroupDiagram.{u}) (n : ℕ) :
+    B.obj n ⟶ BraidColimit B :=
+  stageInjection B n
 
 /-- The canonical inclusion of the nth braid-group stage into the colimit. -/
 abbrev stageInjection (B : BraidGroupDiagram.{u}) (n : ℕ) :
@@ -192,6 +205,53 @@ theorem descendedRepresentation_unique
   apply colimit.hom_ext
   intro n
   rw [h n, stageInjection_descendedRepresentation]
+
+/-- A compatible representation cocone descends to a single group
+homomorphism out of the categorical braid colimit. -/
+abbrev descendedRep
+    (B : BraidGroupDiagram.{u}) (rep_family : Cocone B) :
+    BraidColimit B ⟶ rep_family.pt :=
+  colimit.desc B rep_family
+
+/-- The descended representation restricts to the prescribed stage map. -/
+theorem rep_stage_commutation
+    (B : BraidGroupDiagram.{u}) (rep_family : Cocone B) (n : ℕ) :
+    stageInclusion B n ≫ descendedRep B rep_family =
+      rep_family.ι.app n := by
+  exact colimit.ι_desc rep_family n
+
+/-- Uniqueness of a descended representation from all stage inclusions. -/
+theorem rep_uniqueness
+    (B : BraidGroupDiagram.{u}) (rep_family : Cocone B)
+    (f g : BraidColimit B ⟶ rep_family.pt)
+    (h_eq : ∀ n : ℕ, stageInclusion B n ≫ f =
+      stageInclusion B n ≫ g) :
+    f = g := by
+  apply colimit.hom_ext
+  intro n
+  exact h_eq n
+
+/-- Pointwise commutation descends through a Grp stage inclusion. -/
+theorem descended_commutation
+    (B : BraidGroupDiagram.{u}) {n : ℕ} (x y : B.obj n)
+    (h_comm : x * y = y * x) :
+    (stageInclusion B n) x * (stageInclusion B n) y =
+      (stageInclusion B n) y * (stageInclusion B n) x := by
+  let ι_n : B.obj n →* BraidColimit B := stageInclusion B n
+  change ι_n x * ι_n y = ι_n y * ι_n x
+  simpa only [map_mul] using congrArg ι_n h_comm
+
+/-- Pointwise Artin braid relation descent through a Grp stage inclusion. -/
+theorem descended_artin_relation
+    (B : BraidGroupDiagram.{u}) {n : ℕ} {x y : B.obj n}
+    (h_artin : x * y * x = y * x * y) :
+    (stageInclusion B n) x * (stageInclusion B n) y *
+        (stageInclusion B n) x =
+      (stageInclusion B n) y * (stageInclusion B n) x *
+        (stageInclusion B n) y := by
+  let ι_n : B.obj n →* BraidColimit B := stageInclusion B n
+  change ι_n x * ι_n y * ι_n x = ι_n y * ι_n x * ι_n y
+  simpa only [map_mul] using congrArg ι_n h_artin
 
 /-- The complete group-level braid-colimit packet. -/
 theorem braid_group_colimit_artin_packet

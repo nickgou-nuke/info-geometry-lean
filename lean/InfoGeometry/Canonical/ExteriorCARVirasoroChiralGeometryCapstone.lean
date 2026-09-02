@@ -25,7 +25,7 @@ constructed by the imported owners:
 * the four-coordinate Soloviev, split-octonion derivation, BKM/Berry,
   para-Kähler, and metriplectic readouts.
 
-The imported modules intentionally retain their distinct carriers.  This
+The imported modules intentionally retain their distinct carriers. This
 capstone does not assert any unproved definitional identification between:
 
 * Zorn multiplication and exterior wedge multiplication;
@@ -41,12 +41,3 @@ capstone does not assert any unproved definitional identification between:
 Its purpose is compositional: downstream developments can import one module
 while continuing to use the native theorem owners for every individual edge.
 -/
-
-namespace InfoGeometry.Canonical.ExteriorCARVirasoroChiralGeometryCapstone
-
-/-- A marker proposition certifying that this aggregate owner has no additional
-mathematical premise beyond its imported theorem modules. -/
-theorem corridor_imported : True := by
-  trivial
-
-end InfoGeometry.Canonical.ExteriorCARVirasoroChiralGeometryCapstone

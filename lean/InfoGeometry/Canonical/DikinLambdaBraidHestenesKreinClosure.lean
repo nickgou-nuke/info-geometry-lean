@@ -10,6 +10,7 @@ readouts already owned by the repository.
 -/
 
 import InfoGeometry.Canonical.DikinMetriplecticCapstone
+import InfoGeometry.Convex.SelfConcordantLogBarrier
 import InfoGeometry.Canonical.BKMDriftMetric
 import InfoGeometry.Categorical.LambdaBraidHestenesKreinBridge
 
@@ -18,6 +19,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 
 open InfoGeometry.Canonical.DikinMetriplecticCapstone
+open InfoGeometry.Convex.SelfConcordantLogBarrier
 open InfoGeometry.SymmetricDomains.DikinMetriplectic
 open InfoGeometry.Canonical.BKMDriftMetric
 open InfoGeometry.Categorical.LambdaBraidHestenesKreinBridge
@@ -73,6 +75,9 @@ structure CertifiedReadout
   hessianDeterminant :
     (coneHessianMetric D.tube).det =
       1 / (coneCharacteristicPoly D.tube) ^ 2
+  logBarrierSelfConcordant :
+    OneDimSelfConcordantCurvature
+      logBarrierHessian logBarrierThirdAbs (Set.Ioi (0 : ℝ))
   surprisalNonnegative :
     0 ≤ Real.exp (-D.surprisal_coordinate) - 1 +
       D.surprisal_coordinate
@@ -113,6 +118,7 @@ def of (D : ClosureData Weight Tangent State) : CertifiedReadout D where
     (verification_capstone D.tube D.v1 D.v2 D.radius
       D.radius_nonneg D.radius_lt_one D.dikin_bound
       D.surprisal_coordinate D.metriplectic_state).2.1
+  logBarrierSelfConcordant := logBarrier_selfConcordant_on_Ioi
   surprisalNonnegative :=
     (verification_capstone D.tube D.v1 D.v2 D.radius
       D.radius_nonneg D.radius_lt_one D.dikin_bound

@@ -1,6 +1,7 @@
 import InfoGeometry.Categorical.BraidGroup3PresentationBridge
 import InfoGeometry.Categorical.LogJordanBraidProject3Representation
 import InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
+import InfoGeometry.Categorical.LogJordanTensorPowerStabilization
 
 /-!
 # Hadjiivanov checked R-matrix braid
@@ -32,6 +33,11 @@ open InfoGeometry.Categorical.LogJordanBraidGroup3Representation
 open InfoGeometry.Categorical.LogJordanBraidProject3Representation
 open InfoGeometry.Categorical.LogJordanBraidGroup3CategoricalLift
 open InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
+open InfoGeometry.Categorical.LogNilpotentTensorPowerBraid
+open InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
+open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
+open InfoGeometry.Categorical.LogJordanTensorPowerStabilization
+open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 open InfoGeometry.Clifford.LogCftMonodromy
 
 /-- The repository-owned Hadjiivanov checked R-matrix on the standard
@@ -138,5 +144,67 @@ theorem hadjiivanov_sigmaOne_forget :
   simpa [standardHadjiivanovBraidProject3Representation,
     standardHadjiivanovBraidProject3Hom] using
       standardCategoricalSigmaTwo_hom
+
+
+/-! ## Uniform finite Hadjiivanov braid tower -/
+
+/-- Right-associated carrier of the standard Hadjiivanov logarithmic tensor
+power. -/
+abbrev hadjiivanovTensorPower (n : ℕ) :=
+  tensorPowerObj standardJordanObject n
+
+/-- The local Hadjiivanov checked-R inserted at the `i`th adjacent pair. -/
+abbrev hadjiivanovTensorPowerGenerator
+    (n : ℕ) (i : Fin (n + 1)) :=
+  standardTensorPowerGenerator n i
+
+/-- Uniform group-level action of `B_{n+2}` by adjacent Hadjiivanov checked-R
+slices. -/
+def hadjiivanovBraidProjectHom (n : ℕ) :
+    braid_group (n + 2) →*
+      (hadjiivanovTensorPower (n + 2) ≃ₗ[ℂ]
+        hadjiivanovTensorPower (n + 2)) :=
+  standardHadjiivanovBraidProjectHom n
+
+/-- Native Mathlib representation at every finite braid stage. -/
+def hadjiivanovBraidProjectRepresentation (n : ℕ) :
+    Representation ℂ (braid_group (n + 2))
+      (hadjiivanovTensorPower (n + 2)) :=
+  standardHadjiivanovBraidProjectRepresentation n
+
+/-- Every abstract Artin generator evaluates to its corresponding adjacent
+Hadjiivanov checked-R slice. -/
+@[simp]
+theorem hadjiivanovBraidProject_sigma
+    (n : ℕ) (i : Fin (n + 1)) :
+    hadjiivanovBraidProjectHom n (σ' (n + 1) i) =
+      hadjiivanovTensorPowerGenerator n i :=
+  standardHadjiivanovBraidProject_sigma n i
+
+/-- The four-strand stage simultaneously witnesses adjacent Yang--Baxter and
+far commutation. -/
+theorem hadjiivanovBraidProject_stage4_relations :
+    hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (1 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) =
+      hadjiivanovBraidProjectHom 2 (σ' 3 (1 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (1 : Fin 3)) ∧
+    hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (2 : Fin 3)) =
+      hadjiivanovBraidProjectHom 2 (σ' 3 (2 : Fin 3)) *
+        hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) := by
+  exact standardTensorPower_stage4_relation_packet
+
+/-- The finite-stage Hadjiivanov actions are equivariant under right
+stabilization by the primary spectator for every braid element. -/
+theorem hadjiivanovBraidProject_stabilization
+    (n : ℕ) (g : braid_group (n + 2)) :
+    (appendPrimaryBonding (n + 1)).hom.comp
+        (hadjiivanovBraidProjectHom n g).toLinearMap =
+      (hadjiivanovBraidProjectHom (n + 1)
+          (finiteSuccGroupHom (n + 1) g)).toLinearMap.comp
+        (appendPrimaryBonding (n + 1)).hom :=
+  appendPrimaryBonding_braid_compat n g
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

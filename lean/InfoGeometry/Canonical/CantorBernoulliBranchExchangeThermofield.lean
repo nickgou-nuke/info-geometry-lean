@@ -4,6 +4,7 @@ import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 import InfoGeometry.Canonical.SpinorCantorL2ConcreteIntertwiner
 import InfoGeometry.Canonical.ThermofieldMobiusResonator
+import InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
 
 /-
 # Cantor branch exchange and the twin thermofield carrier
@@ -33,6 +34,7 @@ open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 open InfoGeometry.Canonical.SpinorCantorL2ConcreteIntertwiner
+open InfoGeometry.Canonical.SpinorCantorL2HilbertIntertwinerBridge
 open InfoGeometry.Canonical.ThermofieldBidirectionalResonator
 open InfoGeometry.Canonical.ThermofieldMobiusResonator
 

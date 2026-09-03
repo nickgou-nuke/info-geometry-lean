@@ -42,20 +42,17 @@ theorem nativeDerivationLane_faithful :
 @[simp] theorem nativeDerivationLane_operatorAction
     (D : NativeDerivation) (X : ZornCarrier) :
     nativeDerivationLane.operatorAction D X = D.1 X :=
-  InfoGeometry.Lie.CanonicalZornDerivation
-    .canonicalZornDerivationLane_operatorAction D X
+  InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivationLane_operatorAction D X
 
 /-- The native split-octonion derivation lane has dimension 14. -/
 theorem nativeDerivation_finrank :
     Module.finrank ℝ NativeDerivation = 14 :=
-  InfoGeometry.Lie.RealSplitOctonionG2Classification
-    .canonical_split_octonion_derivation_finrank
+  InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank
 
 /-- The standard split-octonion derivations span the native derivation lane. -/
 theorem nativeStandardDerivations_span_top :
     InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ :=
-  InfoGeometry.Lie.RealSplitOctonionG2Classification
-    .standard_split_octonion_derivations_span
+  InfoGeometry.Lie.RealSplitOctonionG2Classification.standard_split_octonion_derivations_span
 
 /-- A typed socket from the native Zorn derivation algebra into a
 five-graded TKK target.

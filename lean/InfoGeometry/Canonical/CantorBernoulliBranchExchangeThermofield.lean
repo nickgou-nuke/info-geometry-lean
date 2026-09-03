@@ -207,6 +207,22 @@ embedded into the concrete Cantor carrier. -/
 def cantorThermofieldAmplitude (β E γ ω g t : ℝ) : L2Carrier :=
   twinAmplitudeToCantorLinear (thermofieldAmplitude β E γ ω g t)
 
+
+/-- The embedded state has the same closed form as the existing thermofield
+solution, now written in the two Cantor branch vectors. -/
+theorem cantorThermofieldAmplitude_closed_form
+    (β E γ ω g t : ℝ) :
+    cantorThermofieldAmplitude β E γ ω g t =
+      ((thermalWeight β E * Real.exp (-γ * t) : ℝ) : ℂ) •
+        ((Complex.exp (-Complex.I * ω * t) *
+              (Real.cos (g * t) : ℂ)) • branchVector false +
+          (-Complex.I * Complex.exp (-Complex.I * ω * t) *
+              (Real.sin (g * t) : ℂ)) • branchVector true) := by
+  simp [cantorThermofieldAmplitude, twinAmplitudeToCantorLinear,
+    twinAmplitudeToCantor, thermofieldAmplitude, smul_add, smul_smul] <;>
+    ring
+
+
 /-- The branch-exchange readout of the existing twin thermofield wave. -/
 theorem branchExchangeOp_cantorThermofieldAmplitude
     (β E γ ω g t : ℝ) :

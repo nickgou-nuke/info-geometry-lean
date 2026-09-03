@@ -3587,6 +3587,7 @@ import InfoGeometry.Canonical.F4ActionMatrixRankCertificateCapstone
 import InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
 import InfoGeometry.Canonical.NoncommutativeGibbsNormalizedBKMTwoPointBridge
 import InfoGeometry.Canonical.NoncommutativeGibbsCenteredFrechetBKMBridge
+import InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
 
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.

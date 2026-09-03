@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.LogosPartiturePoset
 import InfoGeometry.Canonical.BitWordSimplexFaceCancellation
 import InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates
 import InfoGeometry.Canonical.Cl11WittVacancyTensorFactorization

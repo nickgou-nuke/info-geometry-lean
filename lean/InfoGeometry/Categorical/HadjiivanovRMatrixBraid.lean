@@ -2,6 +2,7 @@ import InfoGeometry.Categorical.BraidGroup3PresentationBridge
 import InfoGeometry.Categorical.LogJordanBraidProject3Representation
 import InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
 import InfoGeometry.Categorical.LogJordanTensorPowerStabilization
+import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 
 /-!
 # Hadjiivanov checked R-matrix braid
@@ -11,10 +12,11 @@ Named capstone for the repository's logarithmic Hadjiivanov checked braid.
 No operator or braid presentation is redefined here.  The file assembles the
 existing owner chain
 
-`logShearBase → checkR → YBE → BraidProject B₃ → categorical automorphisms`
+`logShearBase → checkR → YBE → B_n → B_∞ → tensor-power colimit`
 
-and records the exact compatibility between the carrier representation and the
-finite-nilpotent logarithmic category.
+and records the exact compatibility between the carrier representations, the
+finite-nilpotent logarithmic category, finite braid stabilization, and the
+single stabilized module colimit.
 -/
 
 noncomputable section
@@ -37,6 +39,9 @@ open InfoGeometry.Categorical.LogNilpotentTensorPowerBraid
 open InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
 open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
 open InfoGeometry.Categorical.LogJordanTensorPowerStabilization
+open InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit
+open InfoGeometry.Categorical.LogJordanBraidInfiniteGeneratorColimit
+open InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 open InfoGeometry.Clifford.LogCftMonodromy
 
@@ -145,7 +150,6 @@ theorem hadjiivanov_sigmaOne_forget :
     standardHadjiivanovBraidProject3Hom] using
       standardCategoricalSigmaTwo_hom
 
-
 /-! ## Uniform finite Hadjiivanov braid tower -/
 
 /-- Right-associated carrier of the standard Hadjiivanov logarithmic tensor
@@ -206,5 +210,40 @@ theorem hadjiivanovBraidProject_stabilization
           (finiteSuccGroupHom (n + 1) g)).toLinearMap.comp
         (appendPrimaryBonding (n + 1)).hom :=
   appendPrimaryBonding_braid_compat n g
+
+/-! ## Global infinite braid action on the tensor-power colimit -/
+
+/-- The stabilized logarithmic tensor-power carrier receiving the infinite
+Hadjiivanov braid action. -/
+abbrev hadjiivanovTensorPowerColimit := StandardTensorPowerColimit
+
+/-- The `i`th infinite Artin generator acts by the canonical colimit
+automorphism induced from the finite checked-R slices on its cofinal tail. -/
+abbrev hadjiivanovInfiniteGenerator (i : ℕ) :
+    Aut hadjiivanovTensorPowerColimit :=
+  infiniteGeneratorAut i
+
+/-- Global group action of the repository-owned presented `B_∞` on the single
+stabilized logarithmic tensor-power colimit. -/
+abbrev hadjiivanovBraidGroupInfHom :
+    braid_group_inf →* Aut hadjiivanovTensorPowerColimit :=
+  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInfHom
+
+/-- Global generator readback. -/
+@[simp]
+theorem hadjiivanovBraidGroupInf_sigma (i : ℕ) :
+    hadjiivanovBraidGroupInfHom (σi i) = hadjiivanovInfiniteGenerator i :=
+  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInfHom_sigma i
+
+/-- Finite-stage readback of every infinite generator once that generator is
+present at the finite stage. -/
+theorem hadjiivanovBraidGroupInf_sigma_stage
+    (i n : ℕ) (h : i ≤ n) :
+    stageInclusion n ≫ (hadjiivanovBraidGroupInfHom (σi i)).hom =
+      ModuleCat.ofHom
+          (hadjiivanovTensorPowerGenerator n ⟨i, by omega⟩).toLinearMap ≫
+        stageInclusion n :=
+  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInf_sigma_stage
+    i n h
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

@@ -3,6 +3,8 @@ import InfoGeometry.Categorical.LogJordanBraidProject3Representation
 import InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
 import InfoGeometry.Categorical.LogJordanTensorPowerStabilization
 import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
+import InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
+import InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 
 /-!
 # Hadjiivanov checked R-matrix braid
@@ -12,11 +14,10 @@ Named capstone for the repository's logarithmic Hadjiivanov checked braid.
 No operator or braid presentation is redefined here.  The file assembles the
 existing owner chain
 
-`logShearBase → checkR → YBE → B_n → B_∞ → tensor-power colimit`
+`logShearBase → checkR → YBE → B_n → B_∞ → Aut(colim J^{⊗n})`
 
-and records the exact compatibility between the carrier representations, the
-finite-nilpotent logarithmic category, finite braid stabilization, and the
-single stabilized module colimit.
+and records the exact compatibility between finite stages, the infinite braid
+group, and the finite-stage group colimit.
 -/
 
 noncomputable section
@@ -39,10 +40,10 @@ open InfoGeometry.Categorical.LogNilpotentTensorPowerBraid
 open InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
 open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
 open InfoGeometry.Categorical.LogJordanTensorPowerStabilization
-open InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit
-open InfoGeometry.Categorical.LogJordanBraidInfiniteGeneratorColimit
-open InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
+open InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
+open InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
+open InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 open InfoGeometry.Clifford.LogCftMonodromy
 
 /-- The repository-owned Hadjiivanov checked R-matrix on the standard
@@ -97,16 +98,12 @@ def hadjiivanovBraidProject3CategoricalHom :
     braid_group 3 →* Aut StandardTripleObject :=
   standardCategoricalBraidGroup3Hom.comp braidProjectToPresentedB3
 
-/-- The first BraidProject generator acts by the first local categorical
-Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaZero :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (0 : Fin 2)) =
       standardCategoricalSigmaOneIso := by
   simp [hadjiivanovBraidProject3CategoricalHom]
 
-/-- The second BraidProject generator acts by the second local categorical
-Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaOne :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (1 : Fin 2)) =
@@ -152,12 +149,9 @@ theorem hadjiivanov_sigmaOne_forget :
 
 /-! ## Uniform finite Hadjiivanov braid tower -/
 
-/-- Right-associated carrier of the standard Hadjiivanov logarithmic tensor
-power. -/
 abbrev hadjiivanovTensorPower (n : ℕ) :=
   tensorPowerObj standardJordanObject n
 
-/-- The local Hadjiivanov checked-R inserted at the `i`th adjacent pair. -/
 abbrev hadjiivanovTensorPowerGenerator
     (n : ℕ) (i : Fin (n + 1)) :=
   standardTensorPowerGenerator n i
@@ -176,8 +170,6 @@ def hadjiivanovBraidProjectRepresentation (n : ℕ) :
       (hadjiivanovTensorPower (n + 2)) :=
   standardHadjiivanovBraidProjectRepresentation n
 
-/-- Every abstract Artin generator evaluates to its corresponding adjacent
-Hadjiivanov checked-R slice. -/
 @[simp]
 theorem hadjiivanovBraidProject_sigma
     (n : ℕ) (i : Fin (n + 1)) :
@@ -211,39 +203,26 @@ theorem hadjiivanovBraidProject_stabilization
         (appendPrimaryBonding (n + 1)).hom :=
   appendPrimaryBonding_braid_compat n g
 
-/-! ## Global infinite braid action on the tensor-power colimit -/
+/-! ## Infinite braid / colimit closure -/
 
-/-- The stabilized logarithmic tensor-power carrier receiving the infinite
-Hadjiivanov braid action. -/
-abbrev hadjiivanovTensorPowerColimit := StandardTensorPowerColimit
+/-- The repository-owned presented infinite braid group acts on the single
+native stabilized tensor-power colimit. -/
+abbrev hadjiivanovBraidInfinity :=
+  hadjiivanovBraidGroupInfHom
 
-/-- The `i`th infinite Artin generator acts by the canonical colimit
-automorphism induced from the finite checked-R slices on its cofinal tail. -/
-abbrev hadjiivanovInfiniteGenerator (i : ℕ) :
-    Aut hadjiivanovTensorPowerColimit :=
-  infiniteGeneratorAut i
+/-- Arbitrary finite braid elements agree with their canonical `B_∞` images
+after passage to the stabilized tensor-power colimit. -/
+theorem hadjiivanov_finite_to_infinite
+    (n : ℕ) (g : braid_group (n + 2)) :=
+  hadjiivanov_finite_infinite_compatibility_hom n g
 
-/-- Global group action of the repository-owned presented `B_∞` on the single
-stabilized logarithmic tensor-power colimit. -/
-abbrev hadjiivanovBraidGroupInfHom :
-    braid_group_inf →* Aut hadjiivanovTensorPowerColimit :=
-  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInfHom
+/-- Structural group-theoretic closure: the repository-presented `B_∞` is
+canonically isomorphic to Mathlib's colimit of the finite stabilization tower. -/
+abbrev braidInfinityColimitIso :=
+  braidGroupColimitIsoInfinite
 
-/-- Global generator readback. -/
-@[simp]
-theorem hadjiivanovBraidGroupInf_sigma (i : ℕ) :
-    hadjiivanovBraidGroupInfHom (σi i) = hadjiivanovInfiniteGenerator i :=
-  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInfHom_sigma i
-
-/-- Finite-stage readback of every infinite generator once that generator is
-present at the finite stage. -/
-theorem hadjiivanovBraidGroupInf_sigma_stage
-    (i n : ℕ) (h : i ≤ n) :
-    stageInclusion n ≫ (hadjiivanovBraidGroupInfHom (σi i)).hom =
-      ModuleCat.ofHom
-          (hadjiivanovTensorPowerGenerator n ⟨i, by omega⟩).toLinearMap ≫
-        stageInclusion n :=
-  LogJordanBraidGroupInfRepresentation.hadjiivanovBraidGroupInf_sigma_stage
-    i n h
+/-- The existing `B_∞` boundary cocone is a genuine colimit cocone. -/
+abbrev braidInfinityIsColimit :=
+  braidGroupBoundaryCoconeIsColimit
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

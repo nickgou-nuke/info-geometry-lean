@@ -50,3 +50,4 @@ import InfoGeometry.Categorical.ChiralBraidDouble
 import InfoGeometry.Categorical.PolarizedBraidMirror
 import InfoGeometry.Categorical.FibonacciFinitePentagonHom
 import InfoGeometry.Categorical.FibonacciTwoSidedBraid
+import InfoGeometry.Categorical.LogJordanTensorPowerBraidSector

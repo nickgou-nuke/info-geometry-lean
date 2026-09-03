@@ -57,6 +57,20 @@ def transportedHessianReadout
   D.readout
     (operatorInformationHessian (E := E) (D.map H) (D.map A))
 
+/-- The transported readout uses the existing double transport
+commutator owner for the relational operatorial Hessian. -/
+theorem transportedHessianReadout_eq_double_transportCommutator
+    {n : ℕ}
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (D : TransportData n E)
+    (H A B : FiniteOperator n) :
+    transportedHessianReadout D H A B =
+      D.readout
+        (transportCommutator (D.map H) (D.map A)) := by
+  unfold transportedHessianReadout
+  rw [operatorInformationHessian_eq_double_transportCommutator]
+
 /-- The adapter exposes the finite Gibbs centered response exactly when the
 explicit compatibility field is available. -/
 theorem transportedHessianReadout_eq_centeredFrechetResponse

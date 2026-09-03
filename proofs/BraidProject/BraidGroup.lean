@@ -176,9 +176,74 @@ does not instantiate the Ore-localization equivalence for `BraidMonoidInf`.
 def embed_inf : BraidMonoidInf →* braid_group_inf :=
   PresentedMonoid.toMonoid (fun a => σi a) embed_inf_helper
 
-/-
-We need a theorem that says that we can define a function from the braid group by giving any
-function on the generators that satisfies the relations.
+/-! ## Universal target-group maps for the presented braid groups -/
 
-This should just be a nicer repackaging of `PresentedGroup.toGroup`.
+/--
+Universal map out of the finite braid group `B_{n+1}`.
+
+This is the promised thin repackaging of `PresentedGroup.toGroup`: to define a
+homomorphism out of the braid group it is enough to give the images of the `n`
+Artin generators and prove that every relation in the already-owned
+`braid_rels n` is sent to the identity.
 -/
+noncomputable def braid_group.toGroup
+    {n : ℕ} {G : Type*} [Group G]
+    (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1) :
+    braid_group (n + 1) →* G := by
+  change PresentedGroup (braid_rels n) →* G
+  exact PresentedGroup.toGroup (f := f) hrels
+
+@[simp]
+theorem braid_group.toGroup_sigma
+    {n : ℕ} {G : Type*} [Group G]
+    (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1)
+    (i : Fin n) :
+    braid_group.toGroup f hrels (σ' n i) = f i := by
+  exact PresentedGroup.toGroup.of hrels
+
+/-- A homomorphism out of `B_{n+1}` is uniquely determined by its Artin
+generator images. -/
+theorem braid_group.toGroup_unique
+    {n : ℕ} {G : Type*} [Group G]
+    (f : Fin n → G)
+    (hrels : ∀ r ∈ braid_rels n, FreeGroup.lift f r = 1)
+    (φ : braid_group (n + 1) →* G)
+    (hφ : ∀ i : Fin n, φ (σ' n i) = f i) :
+    φ = braid_group.toGroup f hrels := by
+  apply PresentedGroup.ext
+  intro i
+  exact (hφ i).trans (braid_group.toGroup_sigma f hrels i).symm
+
+/-- Universal map out of the infinite braid group `B_∞`. -/
+noncomputable def braid_group_inf.toGroup
+    {G : Type*} [Group G]
+    (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1) :
+    braid_group_inf →* G :=
+  PresentedGroup.toGroup (f := f) hrels
+
+@[simp]
+theorem braid_group_inf.toGroup_sigma
+    {G : Type*} [Group G]
+    (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1)
+    (i : ℕ) :
+    braid_group_inf.toGroup f hrels (σi i) = f i := by
+  exact PresentedGroup.toGroup.of hrels
+
+/-- A homomorphism out of `B_∞` is uniquely determined by its countable Artin
+generator images. -/
+theorem braid_group_inf.toGroup_unique
+    {G : Type*} [Group G]
+    (f : ℕ → G)
+    (hrels : ∀ r ∈ braid_rels_inf, FreeGroup.lift f r = 1)
+    (φ : braid_group_inf →* G)
+    (hφ : ∀ i : ℕ, φ (σi i) = f i) :
+    φ = braid_group_inf.toGroup f hrels := by
+  apply PresentedGroup.ext
+  intro i
+  exact (hφ i).trans (braid_group_inf.toGroup_sigma f hrels i).symm
+
+end Braid

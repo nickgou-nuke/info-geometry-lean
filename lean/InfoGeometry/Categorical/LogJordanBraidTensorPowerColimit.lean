@@ -98,4 +98,60 @@ theorem stabilized_generator_same_colimit_image
         (standardTensorPowerGenerator n i v) := by
   simpa using stabilized_braid_same_colimit_image n (σ' (n + 1) i) v
 
+
+/-- A compatible family of stage endomorphisms for the stabilized tensor-power
+diagram.  The naturality law is stated for every comparison map in the
+sequence, so the family is exactly the data needed to act on the categorical
+colimit. -/
+structure CompatibleStageEndomorphism where
+  map : ∀ n : ℕ,
+    standardTensorPowerModuleDiagram.obj n ⟶
+      standardTensorPowerModuleDiagram.obj n
+  naturality : ∀ {m n : ℕ} (h : m ≤ n),
+    standardTensorPowerModuleDiagram.map (homOfLE h) ≫ map n =
+      map m ≫ standardTensorPowerModuleDiagram.map (homOfLE h)
+
+/-- The cocone obtained by postcomposing each stage inclusion with a
+compatible stage endomorphism. -/
+def compatibleStageEndomorphismCocone
+    (A : CompatibleStageEndomorphism) :
+    CategoryTheory.Limits.Cocone standardTensorPowerModuleDiagram where
+  pt := StandardTensorPowerColimit
+  ι :=
+    { app := fun n => A.map n ≫ stageInclusion n
+      naturality := by
+        intro m n h
+        dsimp
+        rw [← Category.assoc, A.naturality h, Category.assoc,
+          SequentialModule.inclusion_naturality ℂ
+            (F := standardTensorPowerModuleDiagram) h] }
+
+/-- The unique endomorphism of the module colimit induced by a compatible
+family of finite-stage endomorphisms. -/
+def colimitEndomorphism (A : CompatibleStageEndomorphism) :
+    StandardTensorPowerColimit ⟶ StandardTensorPowerColimit :=
+  SequentialModule.desc ℂ (compatibleStageEndomorphismCocone A)
+
+/-- Stage readback for the induced colimit endomorphism. -/
+@[simp]
+theorem colimitEndomorphism_stage
+    (A : CompatibleStageEndomorphism) (n : ℕ) :
+    stageInclusion n ≫ colimitEndomorphism A =
+      A.map n ≫ stageInclusion n := by
+  simpa [colimitEndomorphism, stageInclusion] using
+    (SequentialModule.descend_fac ℂ
+      (compatibleStageEndomorphismCocone A) n)
+
+/-- The colimit endomorphism is uniquely determined by all of its stage
+readbacks. -/
+theorem colimitEndomorphism_unique
+    (A : CompatibleStageEndomorphism)
+    (f : StandardTensorPowerColimit ⟶ StandardTensorPowerColimit)
+    (hf : ∀ n : ℕ,
+      stageInclusion n ≫ f = A.map n ≫ stageInclusion n) :
+    f = colimitEndomorphism A := by
+  apply colimit.hom_ext
+  intro n
+  exact (hf n).trans (colimitEndomorphism_stage A n).symm
+
 end InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit

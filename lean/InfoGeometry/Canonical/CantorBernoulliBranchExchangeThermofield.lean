@@ -214,4 +214,83 @@ theorem branchExchangeOp_cantorThermofieldAmplitude
   exact branchExchangeOp_twinAmplitude
     (thermofieldAmplitude β E γ ω g t)
 
+/-!
+### Hierarchical cylinder propagation
+
+The same finite exchange can be transported to every finite cylinder by
+conjugating it with the existing Cuntz word operator.  This is a passive
+hierarchical embedding; it is not an assertion of a global automorphism of
+the universal Cuntz algebra.
+-/
+
+/-- Exchange localized to the cylinder indexed by a finite binary word w. -/
+def prefixExchangeOp (w : List Bool) : BoundaryOperator :=
+  (operatorWord w).comp (branchExchangeOp.comp (operatorWordDag w))
+
+/-- Conjugating by a Cuntz word transports the branch exchange to that
+cylinder. -/
+theorem prefixExchangeOp_apply_prefix (w : List Bool) (x : L2Carrier) :
+    prefixExchangeOp w (operatorWord w x) =
+      operatorWord w (branchExchangeOp x) := by
+  change
+    operatorWord w
+        (branchExchangeOp
+          (operatorWordDag w (operatorWord w x))) =
+      operatorWord w (branchExchangeOp x)
+  have hcancel :
+      operatorWordDag w (operatorWord w x) = x := by
+    exact ContinuousLinearMap.ext_iff.mp
+      (operatorWordDag_comp_operatorWord w) x
+  rw [hcancel]
+
+/-- The localized operator exchanges the two children of every finite
+cylinder. -/
+theorem prefixExchangeOp_apply_branch
+    (w : List Bool) (b : Bool) :
+    prefixExchangeOp w (operatorWord w (branchVector b)) =
+      operatorWord w
+        (branchVector (match b with | false => true | true => false)) := by
+  rw [prefixExchangeOp_apply_prefix, branchExchangeOp_apply_branchVector]
+
+/-- The existing thermofield solution embedded in an arbitrary finite
+cylinder. -/
+def prefixThermofieldAmplitude
+    (w : List Bool) (β E γ ω g t : ℝ) : L2Carrier :=
+  operatorWord w (cantorThermofieldAmplitude β E γ ω g t)
+
+/-- The localized exchange readout of the thermofield solution. -/
+theorem prefixExchangeOp_apply_thermofield
+    (w : List Bool) (β E γ ω g t : ℝ) :
+    prefixExchangeOp w (prefixThermofieldAmplitude w β E γ ω g t) =
+      operatorWord w
+        (twinAmplitudeToCantorLinear
+          (twinAmplitudeSwapLinear
+            (thermofieldAmplitude β E γ ω g t))) := by
+  calc
+    prefixExchangeOp w (prefixThermofieldAmplitude w β E γ ω g t) =
+        operatorWord w
+          (branchExchangeOp (cantorThermofieldAmplitude β E γ ω g t)) := by
+      exact prefixExchangeOp_apply_prefix w
+        (cantorThermofieldAmplitude β E γ ω g t)
+    _ = operatorWord w
+        (twinAmplitudeToCantorLinear
+          (twinAmplitudeSwapLinear
+            (thermofieldAmplitude β E γ ω g t))) := by
+      rw [branchExchangeOp_cantorThermofieldAmplitude]
+
+/-- The Cantor carrier map used here agrees with the repository's existing
+spinor-to-Cantor map on the two-channel realization of a twin amplitude. -/
+def twinAmplitudeToSpinor (a : TwinAmplitude) : SpinorSpace :=
+  a.aPlus • spinorBasis 0 + a.aMinus • spinorBasis 1
+
+theorem spinorToCantorL2_twinAmplitudeToSpinor (a : TwinAmplitude) :
+    spinorToCantorL2 (twinAmplitudeToSpinor a) =
+      twinAmplitudeToCantorLinear a := by
+  change
+    spinorToCantorL2
+        (a.aPlus • spinorBasis 0 + a.aMinus • spinorBasis 1) =
+      a.aPlus • branchVector false + a.aMinus • branchVector true
+  rw [map_add, map_smul, map_smul,
+    spinorToCantorL2_basis_0, spinorToCantorL2_basis_1]
+
 end InfoGeometry.Canonical.CantorBernoulliBranchExchangeThermofield

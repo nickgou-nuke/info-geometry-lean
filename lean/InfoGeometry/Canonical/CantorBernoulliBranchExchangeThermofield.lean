@@ -295,4 +295,66 @@ theorem spinorToCantorL2_twinAmplitudeToSpinor (a : TwinAmplitude) :
   rw [map_add, map_smul, map_smul,
     spinorToCantorL2_basis_0, spinorToCantorL2_basis_1]
 
+/-- The existing Pauli matrix owner sends the two-channel spinor to its
+swapped channel. -/
+theorem pauliSigma1_on_twinAmplitude (a : TwinAmplitude) :
+    Matrix.toEuclideanLin
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+        (twinAmplitudeToSpinor a) =
+      twinAmplitudeToSpinor (twinAmplitudeSwapLinear a) := by
+  ext i
+  fin_cases i <;>
+    simp [twinAmplitudeToSpinor, twinAmplitudeSwapLinear,
+      Matrix.toEuclideanLin, Matrix.vecHead, Matrix.vecTail,
+      InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1] <;>
+    ring_nf
+
+/-- On the already existing first-level carrier, the Cuntz exchange is the
+same operator action as the repository's Pauli sigma-one representation. -/
+theorem branchExchangeOp_eq_pauliSigma1_on_twinAmplitude
+    (a : TwinAmplitude) :
+    branchExchangeOp (twinAmplitudeToCantorLinear a) =
+      InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+        .pauliCuntzMatrixRepresentation
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+        (twinAmplitudeToCantorLinear a) := by
+  calc
+    branchExchangeOp (twinAmplitudeToCantorLinear a) =
+        twinAmplitudeToCantorLinear (twinAmplitudeSwapLinear a) :=
+      branchExchangeOp_twinAmplitude a
+    _ = spinorToCantorL2 (twinAmplitudeToSpinor (twinAmplitudeSwapLinear a)) :=
+      (spinorToCantorL2_twinAmplitudeToSpinor
+        (twinAmplitudeSwapLinear a)).symm
+    _ = spinorToCantorL2
+        (Matrix.toEuclideanLin
+          InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+          (twinAmplitudeToSpinor a)) := by
+      rw [pauliSigma1_on_twinAmplitude]
+    _ = InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+        .pauliCuntzMatrixRepresentation
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+        (spinorToCantorL2 (twinAmplitudeToSpinor a)) := by
+      symm
+      exact InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+        .pauliCuntzMatrixRepresentation_intertwines
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+        (twinAmplitudeToSpinor a)
+    _ = InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+        .pauliCuntzMatrixRepresentation
+        InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+        (twinAmplitudeToCantorLinear a) := by
+      rw [spinorToCantorL2_twinAmplitudeToSpinor]
+
+/-- The effective generator intertwining can therefore be read as a Pauli
+sigma-one/Cuntz intertwining on the finite channel sector. -/
+theorem cantorEffectiveGenerator_exchange_part_pauli
+    (a : TwinAmplitude) (g : ℝ) :
+    (g : ℂ) • branchExchangeOp (twinAmplitudeToCantorLinear a) =
+      (g : ℂ) •
+        InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+          .pauliCuntzMatrixRepresentation
+          InfoGeometry.Physics.ChiralPoincareSouriauBridge.σ1
+          (twinAmplitudeToCantorLinear a) := by
+  rw [branchExchangeOp_eq_pauliSigma1_on_twinAmplitude]
+
 end InfoGeometry.Canonical.CantorBernoulliBranchExchangeThermofield

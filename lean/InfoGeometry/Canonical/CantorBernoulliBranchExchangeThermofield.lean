@@ -5,6 +5,7 @@ import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 import InfoGeometry.Canonical.SpinorCantorL2ConcreteIntertwiner
 import InfoGeometry.Canonical.ThermofieldMobiusResonator
 import InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner
+import InfoGeometry.Canonical.CantorCylinderChiral
 
 /-
 # Cantor branch exchange and the twin thermofield carrier
@@ -269,6 +270,60 @@ theorem prefixExchangeOp_apply_branch
       operatorWord w
         (branchVector (match b with | false => true | true => false)) := by
   rw [prefixExchangeOp_apply_prefix, branchExchangeOp_apply_branchVector]
+
+/-!
+### Chiral word labels
+
+The existing chiral Cantor owner uses ChiralArrow.L and ChiralArrow.R.
+This adapter identifies those labels with the two concrete Bernoulli branch
+bits used by the Cuntz word operators.
+-/
+
+/-- The branch bit attached to an existing chiral arrow. -/
+def chiralArrowBit :
+    InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow → Bool
+  | InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.L => false
+  | InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.R => true
+
+/-- Append one chiral child to a finite binary cylinder word. -/
+def chiralChildWord
+    (w : List Bool)
+    (a : InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow) : List Bool :=
+  w ++ [chiralArrowBit a]
+
+@[simp] theorem chiralArrowBit_left :
+    chiralArrowBit
+      InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.L = false := rfl
+
+@[simp] theorem chiralArrowBit_right :
+    chiralArrowBit
+      InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.R = true := rfl
+
+theorem chiralArrowBit_conjugate (a :
+    InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow) :
+    chiralArrowBit
+        (InfoGeometry.Canonical.CantorCylinderChiral.chiralConj a) =
+      !(chiralArrowBit a) := by
+  cases a <;> rfl
+
+theorem chiralChildWord_left_ne_right (w : List Bool) :
+    chiralChildWord w
+        InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.L ≠
+      chiralChildWord w
+        InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow.R := by
+  simp [chiralChildWord, chiralArrowBit]
+
+/-- The finite Cuntz word owner realizes a chiral child word as a parent
+word followed by the corresponding branch vector. -/
+theorem operatorWord_chiralChildWord
+    (w : List Bool)
+    (a : InfoGeometry.Canonical.CantorCylinderChiral.ChiralArrow) :
+    operatorWord (chiralChildWord w a) vacuumL2 =
+      operatorWord w (branchVector (chiralArrowBit a)) := by
+  unfold chiralChildWord
+  rw [operatorWord_append]
+  cases a <;> rfl
+
 
 /-- The existing thermofield solution embedded in an arbitrary finite
 cylinder. -/

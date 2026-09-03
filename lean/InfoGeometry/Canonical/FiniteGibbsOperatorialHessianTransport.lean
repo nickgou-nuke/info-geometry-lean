@@ -41,7 +41,7 @@ structure TransportData
   hessian_readout :
     ∀ (H : FiniteOperator n) (hH : IsSelfAdjoint H)
       (hZ : 0 < gibbsPartitionReal H)
-      (A B : FiniteOperator n) (hA : IsSelfAdjoint A),
+      (A B : FiniteOperator n),
       readout
           (operatorInformationHessian
             (E := E) (map H) (map A)) =
@@ -66,9 +66,9 @@ theorem transportedHessianReadout_eq_centeredFrechetResponse
     (D : TransportData n E)
     (H : FiniteOperator n) (hH : IsSelfAdjoint H)
     (hZ : 0 < gibbsPartitionReal H)
-    (A B : FiniteOperator n) (hA : IsSelfAdjoint A) :
+    (A B : FiniteOperator n) :
     transportedHessianReadout D H A B =
       centeredFrechetResponse H hH hZ A B :=
-  D.hessian_readout H hH hZ A B hA
+  D.hessian_readout H hH hZ A B
 
 end InfoGeometry.Canonical.FiniteGibbsOperatorialHessianTransport

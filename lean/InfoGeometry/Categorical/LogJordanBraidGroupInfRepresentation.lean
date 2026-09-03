@@ -341,5 +341,5 @@ theorem hadjiivanovBraidGroupInf_finite_stage
       rw [finiteToInfiniteGroupHom_sigma]
       rw [hadjiivanovBraidGroupInfHom_sigma]
       rw [standardHadjiivanovBraidProject_sigma]
-      exact infiniteGeneratorAut_stage_of_le i n hi)
+      exact infiniteGeneratorAut_stage_of_le i n hi) g
 end InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation

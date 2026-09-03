@@ -13,9 +13,9 @@ separately:
 * `proofs.BraidInductiveColimitCategory` owns the categorical colimit of the
   finite generator and finite-word towers.
 
-No new braid presentation is introduced.  We only construct the canonical
-homomorphisms induced by the existing generator inclusions and prove their
-stabilization compatibility.
+No new braid presentation is introduced.  We construct the canonical group
+homomorphisms induced by the existing generator inclusions, prove their
+stabilization compatibility, and package them as a Mathlib `GrpCat` cocone.
 -/
 
 noncomputable section
@@ -24,6 +24,8 @@ namespace InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 
 open Braid
 open BraidInductiveColimitComplement
+open CategoryTheory
+open CategoryTheory.Limits
 
 /-- Every defining relation of the finite stage is satisfied by the
 corresponding generators in `B_∞`. -/
@@ -58,17 +60,16 @@ theorem finiteRelations_hold_in_infinite (n : ℕ) :
 /-- Canonical group homomorphism `B_{n+1} → B_∞`, sending the finite generator
 `σ_i` to the infinite generator with the same index. -/
 noncomputable def finiteToInfiniteGroupHom (n : ℕ) :
-    braid_group (n + 1) →* braid_group_inf := by
-  change PresentedGroup (braid_rels n) →* braid_group_inf
-  exact PresentedGroup.toGroup
-    (f := fun i : Fin n => σi i.1)
+    braid_group (n + 1) →* braid_group_inf :=
+  braid_group.toGroup (fun i : Fin n => σi i.1)
     (finiteRelations_hold_in_infinite n)
 
 @[simp]
 theorem finiteToInfiniteGroupHom_sigma
     (n : ℕ) (i : Fin n) :
     finiteToInfiniteGroupHom n (σ' n i) = σi i.1 := by
-  exact PresentedGroup.toGroup.of (finiteRelations_hold_in_infinite n)
+  exact braid_group.toGroup_sigma
+    (fun i : Fin n => σi i.1) (finiteRelations_hold_in_infinite n) i
 
 /-- Every defining relation at stage `n` is also satisfied after the successor
 inclusion of generators into stage `n+1`. -/
@@ -103,26 +104,29 @@ theorem finiteRelations_hold_after_succ (n : ℕ) :
 /-- Standard stabilization `B_{n+1} → B_{n+2}` induced by `Fin.castSucc` on
 Artin generators. -/
 noncomputable def finiteSuccGroupHom (n : ℕ) :
-    braid_group (n + 1) →* braid_group (n + 2) := by
-  change PresentedGroup (braid_rels n) →* braid_group (n + 2)
-  exact PresentedGroup.toGroup
-    (f := fun i : Fin n => (σ' (n + 1) i.castSucc : braid_group (n + 2)))
+    braid_group (n + 1) →* braid_group (n + 2) :=
+  braid_group.toGroup
+    (fun i : Fin n => (σ' (n + 1) i.castSucc : braid_group (n + 2)))
     (finiteRelations_hold_after_succ n)
 
 @[simp]
 theorem finiteSuccGroupHom_sigma
     (n : ℕ) (i : Fin n) :
     finiteSuccGroupHom n (σ' n i) = σ' (n + 1) i.castSucc := by
-  exact PresentedGroup.toGroup.of (finiteRelations_hold_after_succ n)
+  exact braid_group.toGroup_sigma
+    (fun i : Fin n => (σ' (n + 1) i.castSucc : braid_group (n + 2)))
+    (finiteRelations_hold_after_succ n) i
 
 /-- The finite-to-infinite group maps form a cocone over stabilization:
 embedding after one finite stabilization is exactly the original embedding. -/
 theorem finiteToInfiniteGroupHom_succ_compatible (n : ℕ) :
     (finiteToInfiniteGroupHom (n + 1)).comp (finiteSuccGroupHom n) =
       finiteToInfiniteGroupHom n := by
-  apply PresentedGroup.ext
+  apply braid_group.toGroup_unique
+    (fun i : Fin n => σi i.1)
+    (finiteRelations_hold_in_infinite n)
   intro i
-  simp [finiteToInfiniteGroupHom_sigma, finiteSuccGroupHom_sigma]
+  simp
 
 /-- Pointwise compatibility form of the finite braid-group cocone. -/
 theorem finiteToInfiniteGroupHom_succ_apply
@@ -137,8 +141,51 @@ theorem group_generator_matches_colimit_boundary
     (n : ℕ) (i : FiniteBraidGenerators n) :
     finiteToInfiniteGroupHom n (σ' n i) =
       σi (generatorFromColimit
-        (CategoryTheory.Limits.colimit.ι braidGeneratorDiagram n i)) := by
+        (colimit.ι braidGeneratorDiagram n i)) := by
   rw [generatorFromColimit_ι]
   exact finiteToInfiniteGroupHom_sigma n i
+
+/-! ## Mathlib group-category cocone -/
+
+/-- The finite braid-group tower as a sequence in Mathlib's category of groups. -/
+def braidGroupDiagram : ℕ ⥤ GrpCat :=
+  Functor.ofSequence
+    (fun n => GrpCat.ofHom (finiteSuccGroupHom n))
+
+/-- The existing infinite braid group as a cocone point for the finite tower. -/
+def braidGroupBoundaryCocone : Cocone braidGroupDiagram where
+  pt := GrpCat.of braid_group_inf
+  ι :=
+    NatTrans.ofSequence
+      (app := fun n => GrpCat.ofHom (finiteToInfiniteGroupHom n))
+      (naturality := by
+        intro n
+        apply GrpCat.hom_ext
+        exact finiteToInfiniteGroupHom_succ_compatible n)
+
+/-- Mathlib's categorical colimit object of the finite braid-group tower. -/
+def braidGroupColimit : GrpCat :=
+  colimit braidGroupDiagram
+
+/-- Canonical comparison map from the categorical finite-stage colimit to the
+repository-owned presented infinite braid group. -/
+def groupFromColimit : braidGroupColimit ⟶ GrpCat.of braid_group_inf :=
+  colimit.desc braidGroupBoundaryCocone
+
+/-- The comparison map restricts on every finite stage to the canonical
+`B_{n+1} → B_∞` embedding. -/
+theorem groupFromColimit_ι (n : ℕ) :
+    colimit.ι braidGroupDiagram n ≫ groupFromColimit =
+      GrpCat.ofHom (finiteToInfiniteGroupHom n) := by
+  exact colimit.ι_desc braidGroupBoundaryCocone n
+
+/-- Elementwise stage readback of the group-colimit comparison map. -/
+theorem groupFromColimit_ι_apply
+    (n : ℕ) (g : braid_group (n + 1)) :
+    groupFromColimit (colimit.ι braidGroupDiagram n g) =
+      finiteToInfiniteGroupHom n g := by
+  have h := congrArg
+    (fun f => f g) (groupFromColimit_ι n)
+  exact h
 
 end InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge

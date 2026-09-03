@@ -29,6 +29,7 @@ import InfoGeometry.Thermo.SouriauOnsagerBKMProbe
 import InfoGeometry.Thermo.GenericMetriplecticFlow
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo
+import InfoGeometry.Thermo.LambdaReductionAffinity
 
 namespace InfoGeometry
 

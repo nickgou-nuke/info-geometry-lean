@@ -30,6 +30,7 @@ open InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
 open InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
 open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
 open InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit
+open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimit
 open InfoGeometry.Categorical.LogJordanBraidInfiniteGeneratorColimit
 open InfoGeometry.Spectral.Colimit.SequentialModule
 
@@ -195,4 +196,148 @@ theorem hadjiivanovBraidGroupInf_sigma_stage
   rw [hadjiivanovBraidGroupInfHom_sigma]
   exact infiniteGeneratorAut_stage_of_le i n h
 
+/-- Finite-stage braids whose global action agrees with the finite tensor-power
+representation after passage to the module colimit. -/
+def finiteStageReadbackSubgroup (n : ℕ) :
+    Subgroup (braid_group (n + 2)) where
+  carrier := {g |
+    stageInclusion n ≫
+        (hadjiivanovBraidGroupInfHom
+          (finiteToInfiniteGroupHom (n + 1) g)).hom =
+      ModuleCat.ofHom
+          (standardHadjiivanovBraidProjectHom n g).toLinearMap ≫
+        stageInclusion n}
+  one_mem' := by
+    apply ModuleCat.hom_ext
+    ext x
+    simp [ModuleCat.comp_apply]
+  mul_mem' := by
+    intro g h hg hh
+    change
+      stageInclusion n ≫
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g)).hom =
+        ModuleCat.ofHom
+            (standardHadjiivanovBraidProjectHom n g).toLinearMap ≫
+          stageInclusion n at hg
+    change
+      stageInclusion n ≫
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) h)).hom =
+        ModuleCat.ofHom
+            (standardHadjiivanovBraidProjectHom n h).toLinearMap ≫
+          stageInclusion n at hh
+    apply ModuleCat.hom_ext
+    ext x
+    have hgx := congrArg
+      (fun f : standardTensorPowerModuleDiagram.obj n ⟶
+          StandardTensorPowerColimit => f.hom x) hg
+    have hhx := congrArg
+      (fun f : standardTensorPowerModuleDiagram.obj n ⟶
+          StandardTensorPowerColimit =>
+        f.hom (standardHadjiivanovBraidProjectHom n g x)) hh
+    have hgx' :
+        (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g)).hom.hom
+            ((stageInclusion n).hom x) =
+          (stageInclusion n).hom
+            (standardHadjiivanovBraidProjectHom n g x) := by
+      simpa [ModuleCat.comp_apply] using hgx
+    have hhx' :
+        (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) h)).hom.hom
+            ((stageInclusion n).hom
+              (standardHadjiivanovBraidProjectHom n g x)) =
+          (stageInclusion n).hom
+            (standardHadjiivanovBraidProjectHom n h
+              (standardHadjiivanovBraidProjectHom n g x)) := by
+      simpa [ModuleCat.comp_apply] using hhx
+    calc
+      (stageInclusion n ≫
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) (g * h))).hom).hom x =
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) (g * h))).hom.hom
+            ((stageInclusion n).hom x) := by
+              simp [ModuleCat.comp_apply]
+      _ = (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) h)).hom.hom
+            ((hadjiivanovBraidGroupInfHom
+              (finiteToInfiniteGroupHom (n + 1) g)).hom.hom
+              ((stageInclusion n).hom x)) := by
+              simp [map_mul, LinearEquiv.mul_apply]
+      _ = (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) h)).hom.hom
+            ((stageInclusion n).hom
+              (standardHadjiivanovBraidProjectHom n g x)) := by
+              rw [hgx']
+      _ = (stageInclusion n).hom
+          (standardHadjiivanovBraidProjectHom n h
+            (standardHadjiivanovBraidProjectHom n g x)) := by
+              rw [hhx']
+      _ = (stageInclusion n).hom
+          (standardHadjiivanovBraidProjectHom n (g * h) x) := by
+              simp [map_mul, LinearEquiv.mul_apply]
+      _ = (ModuleCat.ofHom
+          (standardHadjiivanovBraidProjectHom n (g * h)).toLinearMap ≫
+            stageInclusion n).hom x := by
+              simp [ModuleCat.comp_apply]
+  inv_mem' := by
+    intro g hg
+    change
+      stageInclusion n ≫
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g)).hom =
+        ModuleCat.ofHom
+            (standardHadjiivanovBraidProjectHom n g).toLinearMap ≫
+          stageInclusion n at hg
+    change
+      stageInclusion n ≫
+          (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g⁻¹)).hom =
+        ModuleCat.ofHom
+            (standardHadjiivanovBraidProjectHom n g⁻¹).toLinearMap ≫
+          stageInclusion n
+    apply ModuleCat.hom_ext
+    ext x
+    have h := congrArg
+      (fun f : standardTensorPowerModuleDiagram.obj n ⟶
+          StandardTensorPowerColimit =>
+        f.hom ((standardHadjiivanovBraidProjectHom n g).symm x)) hg
+    have h' := congrArg
+      (fun y =>
+        (hadjiivanovBraidGroupInfHom
+          (finiteToInfiniteGroupHom (n + 1) g)).inv.hom.hom y) h
+    simpa [ModuleCat.comp_apply, map_inv] using h'.symm
+
+/-- Arbitrary finite braid-element compatibility with the global `B_∞` action.
+For every `g : B_{n+2}`, its finite tensor-power action agrees, after the
+stage inclusion, with the action of its canonical image in the presented
+infinite braid group. -/
+theorem hadjiivanovBraidGroupInf_finite_stage
+    (n : ℕ) (g : braid_group (n + 2)) :
+    stageInclusion n ≫
+        (hadjiivanovBraidGroupInfHom
+          (finiteToInfiniteGroupHom (n + 1) g)).hom =
+      ModuleCat.ofHom
+          (standardHadjiivanovBraidProjectHom n g).toLinearMap ≫
+        stageInclusion n := by
+  exact Braid.generated_by (n + 1)
+    (finiteStageReadbackSubgroup n)
+    (by
+      intro i
+      change
+        stageInclusion n ≫
+            (hadjiivanovBraidGroupInfHom
+              (finiteToInfiniteGroupHom (n + 1)
+                (σ' (n + 1) i))).hom =
+          ModuleCat.ofHom
+              (standardHadjiivanovBraidProjectHom n
+                (σ' (n + 1) i)).toLinearMap ≫
+            stageInclusion n
+      have hi : (i : ℕ) ≤ n := by omega
+      rw [finiteToInfiniteGroupHom_sigma]
+      rw [hadjiivanovBraidGroupInfHom_sigma]
+      rw [standardHadjiivanovBraidProject_sigma]
+      exact infiniteGeneratorAut_stage_of_le i n hi)
 end InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation

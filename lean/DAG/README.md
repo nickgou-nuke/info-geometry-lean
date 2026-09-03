@@ -100,6 +100,19 @@ It remains subordinate to Lean source:
 | `GlobalDisassembler.lean` | Environment-wide disassembly pass |
 | `SemanticServerRpc.lean` | RPC interface for semantic graph queries |
 
+### Object-language lambda topology
+
+| File | Purpose |
+|------|---------|
+| LambdaDeBruijnTopology.lean | Path-indexed de Bruijn incidence graph; proof-carrying binder lookup and unresolved-variable edges; typed TripleSystem incidence; proof-relevant beta-reduction paths |
+
+The object-language graph is distinct from ExprArangoExport. The latter walks
+Lean.Expr syntax in the meta layer; this module walks the existing
+LambdaTerm/BetaStep carrier in the theorem layer. Binding edges retain the
+full binder stack and lookup witness. The combined syntax/binding relation is
+not asserted to be acyclic, because occurrence-to-enclosing-binder edges can
+point toward an ancestor.
+
 ### Tests
 
 | File | Purpose |

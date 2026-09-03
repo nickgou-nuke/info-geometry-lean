@@ -156,14 +156,14 @@ theorem log_mean_inequality_nonneg {a b : ℝ}
       (div_lt_one hb).2 h_lt
     have h_log_neg : Real.log (a / b) < 0 :=
       Real.log_neg (div_pos ha hb) h_ratio_lt
-    exact mul_nonneg (sub_nonpos.mpr h_lt) h_log_neg.le
+    exact mul_nonneg (sub_nonpos.mpr h_lt.le) h_log_neg.le
   · subst b
     simp
   · have h_ratio_gt : 1 < a / b :=
       (one_lt_div hb).2 h_gt
     have h_log_pos : 0 < Real.log (a / b) :=
       Real.log_pos h_ratio_gt
-    exact mul_nonneg (sub_nonneg.mpr h_gt) h_log_pos.le
+    exact mul_nonneg (sub_nonneg.mpr h_gt.le) h_log_pos.le
 
 /-- Positive occupations and positive rates give nonnegative local dissipation. -/
 theorem edgeDissipation_nonneg

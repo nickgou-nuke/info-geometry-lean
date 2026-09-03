@@ -189,8 +189,7 @@ abbrev Term := DAG.LambdaDeBruijnTopology.Term
 
 /-- The logical edge relation obtained from the existing proof-relevant step. -/
 abbrev Step : Term → Term → Prop :=
-  InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
-    .LambdaTerm.BetaStepExists
+  InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge.LambdaTerm.BetaStepExists
 
 /-- Positive rates on the existing de Bruijn beta graph. -/
 abbrev Rates := ReductionMarkovRates Step
@@ -203,8 +202,7 @@ theorem betaStep_to_step
     {t u : Term}
     (h : DAG.LambdaDeBruijnTopology.BetaStep t u) :
     Step t u :=
-  InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
-    .LambdaTerm.betaStep_exists h
+  InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge.LambdaTerm.betaStep_exists h
 
 end DeBruijn
 

@@ -297,7 +297,7 @@ noncomputable def standardTensorPowerBraidGenerators :
 
 /-- Existing presented-group action on the third tensor power. -/
 noncomputable def standardTensorPowerBraidGroupHom :
-    BraidGroup3 →
+    BraidGroup3 →*
       (StandardTripleCarrier ≃ₗ[ℂ] StandardTripleCarrier) :=
   standardHadjiivanovBraidGroup3Hom
 

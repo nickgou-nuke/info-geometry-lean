@@ -4,6 +4,8 @@ import DAG.AnalyticBridge
 import DAG.Basic
 import DAG.ProofRelevantRelation
 import DAG.ReductionTrace
+import DAG.LambdaReductionAlexandrov
+import DAG.LambdaReductionThermodynamics
 import DAG.BlockDecomposition
 import DAG.BlockExport
 import DAG.ConnesHodgeBridge

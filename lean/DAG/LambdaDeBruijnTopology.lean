@@ -101,7 +101,6 @@ inductive LambdaGraphEdge : Type
   | appRight (parent : LambdaPath)
   | bound (witness : BindingWitness)
   | unbound (witness : UnboundWitness)
-  deriving Repr
 
 namespace LambdaGraphEdge
 
@@ -369,7 +368,8 @@ abbrev ScopedPHOAS (B F : Type) :=
 /-- PHOAS bound and free variables remain constructor-distinct. -/
 theorem scopedPHOAS_bvar_ne_fvar
     {B F : Type} (bound : B) (free : F) :
-    ScopedPHOAS B F |>.bvar bound ≠ ScopedPHOAS B F |>.fvar free := by
+    DAG.PHOASExpressionLayer.ScopedPHOASExpr.bvar bound ≠
+      DAG.PHOASExpressionLayer.ScopedPHOASExpr.fvar free := by
   intro h
   cases h
 

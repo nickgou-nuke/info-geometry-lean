@@ -18,10 +18,16 @@ with the actual rank-two logarithmic Jordan nilpotent used by
 `LogJordanVirasoroIntertwiner` and then lifts the result to an endomorphism of
 the actual tensor-product carrier `(𝕜²) ⊗ (𝕜²)`.
 
-Thus the tensor product of two rank-two logarithmic Jordan sectors has a
-nilpotent contribution of order at most three.  This is the nearest formal DAG
-edge toward a tensor-closed non-semisimple/logarithmic monoidal sector; no
-braided-category packaging is asserted here.
+It also proves the full zero-mode fusion law
+
+`L₀(Δ₁) ⊗ id + id ⊗ L₀(Δ₂) = (Δ₁ + Δ₂) id + N₁₂`,
+
+with `N₁₂³ = 0`.  Thus the tensor product is a generalized eigenspace of weight
+`Δ₁ + Δ₂` with logarithmic depth at most three.
+
+This is the nearest formal DAG edge toward a tensor-closed
+non-semisimple/logarithmic monoidal sector; no braided-category packaging is
+asserted here.
 -/
 
 noncomputable section
@@ -164,5 +170,84 @@ theorem logTensorNilpotentEnd_cube_zero :
   ext u v
   simp [LinearMap.comp_apply, logTensorNilpotentEnd_apply_tmul,
     logTensorNilpotentEnd_sq_tmul]
+
+/-! ## Full zero-mode fusion law -/
+
+/-- The full rank-two logarithmic Jordan cell as a linear endomorphism. -/
+def jordanCellLinear (Δ : 𝕜) : Module.End 𝕜 (JordanCarrier 𝕜) :=
+  Matrix.toLin' (jordanCell Δ)
+
+/-- Every logarithmic Jordan cell is its scalar weight plus the universal
+nilpotent shift. -/
+@[simp]
+theorem jordanCellLinear_apply (Δ : 𝕜) (v : JordanCarrier 𝕜) :
+    jordanCellLinear Δ v =
+      Δ • v + jordanNilpotentLinear (𝕜 := 𝕜) v := by
+  ext i
+  fin_cases i <;>
+    simp [jordanCellLinear, jordanNilpotentLinear, jordanCell,
+      jordanNilpotent, Matrix.mulVec, Fin.sum_univ_two]
+
+/-- Coproduct/primitive zero-mode action on two logarithmic Jordan sectors. -/
+def logTensorZeroMode (Δ₁ Δ₂ : 𝕜) :
+    Module.End 𝕜 (JordanCarrier 𝕜 ⊗[𝕜] JordanCarrier 𝕜) :=
+  TensorProduct.map
+      (jordanCellLinear Δ₁)
+      (LinearMap.id : Module.End 𝕜 (JordanCarrier 𝕜)) +
+    TensorProduct.map
+      (LinearMap.id : Module.End 𝕜 (JordanCarrier 𝕜))
+      (jordanCellLinear Δ₂)
+
+/-- On pure tensors, conformal weights add and the residual logarithmic part is
+exactly `N ⊗ id + id ⊗ N`. -/
+@[simp]
+theorem logTensorZeroMode_apply_tmul
+    (Δ₁ Δ₂ : 𝕜) (u v : JordanCarrier 𝕜) :
+    logTensorZeroMode Δ₁ Δ₂ (u ⊗ₜ[𝕜] v) =
+      (Δ₁ + Δ₂) • (u ⊗ₜ[𝕜] v) +
+        logTensorNilpotentEnd (𝕜 := 𝕜) (u ⊗ₜ[𝕜] v) := by
+  rw [logTensorNilpotentEnd_apply_tmul]
+  simp [logTensorZeroMode, jordanCellLinear_apply, TensorProduct.map_tmul,
+    TensorProduct.add_tmul, TensorProduct.tmul_add, add_smul]
+  module
+
+/-- Global tensor-fusion law for two logarithmic rank-two zero modes:
+`L₀₁₂ = (Δ₁ + Δ₂) id + N₁₂`. -/
+theorem logTensorZeroMode_eq_weight_add_nilpotent
+    (Δ₁ Δ₂ : 𝕜) :
+    logTensorZeroMode Δ₁ Δ₂ =
+      (Δ₁ + Δ₂) •
+          (LinearMap.id : Module.End 𝕜
+            (JordanCarrier 𝕜 ⊗[𝕜] JordanCarrier 𝕜)) +
+        logTensorNilpotentEnd (𝕜 := 𝕜) := by
+  ext u v
+  simpa using (logTensorZeroMode_apply_tmul (𝕜 := 𝕜) Δ₁ Δ₂ u v)
+
+/-- Zero mode centered at the summed conformal weight. -/
+def centeredLogTensorZeroMode (Δ₁ Δ₂ : 𝕜) :
+    Module.End 𝕜 (JordanCarrier 𝕜 ⊗[𝕜] JordanCarrier 𝕜) :=
+  logTensorZeroMode Δ₁ Δ₂ -
+    (Δ₁ + Δ₂) •
+      (LinearMap.id : Module.End 𝕜
+        (JordanCarrier 𝕜 ⊗[𝕜] JordanCarrier 𝕜))
+
+/-- Centering the fused zero mode removes exactly the scalar conformal weight
+and leaves the logarithmic tensor nilpotent. -/
+theorem centeredLogTensorZeroMode_eq_nilpotent
+    (Δ₁ Δ₂ : 𝕜) :
+    centeredLogTensorZeroMode Δ₁ Δ₂ =
+      logTensorNilpotentEnd (𝕜 := 𝕜) := by
+  rw [centeredLogTensorZeroMode, logTensorZeroMode_eq_weight_add_nilpotent]
+  abel
+
+/-- The tensor product of two rank-two logarithmic zero-mode sectors is a
+generalized eigenspace of weight `Δ₁ + Δ₂` with nilpotent depth at most three. -/
+theorem centeredLogTensorZeroMode_cube_zero
+    (Δ₁ Δ₂ : 𝕜) :
+    ((centeredLogTensorZeroMode Δ₁ Δ₂).comp
+        (centeredLogTensorZeroMode Δ₁ Δ₂)).comp
+      (centeredLogTensorZeroMode Δ₁ Δ₂) = 0 := by
+  rw [centeredLogTensorZeroMode_eq_nilpotent]
+  exact logTensorNilpotentEnd_cube_zero (𝕜 := 𝕜)
 
 end InfoGeometry.Canonical.LogJordanTensorFusion

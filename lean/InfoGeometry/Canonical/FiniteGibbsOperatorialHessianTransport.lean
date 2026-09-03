@@ -85,4 +85,34 @@ theorem transportedHessianReadout_eq_centeredFrechetResponse
       centeredFrechetResponse H hH hZ A B :=
   D.hessian_readout H hH hZ A B
 
+/-- The complete finite-stage bridge: after explicit carrier transport, the
+relational Hessian readout is the native centered BKM covariance.  The
+self-adjointness premise is exactly the premise required by the existing
+centered-response theorem; no Hessian identity is inferred for arbitrary
+observables. -/
+theorem transportedHessianReadout_eq_centeredBKMRealCovariance
+    {n : ℕ}
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (D : TransportData n E)
+    (H : FiniteOperator n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H)
+    (A B : FiniteOperator n) (hA : IsSelfAdjoint A) :
+    transportedHessianReadout D H A B =
+      centeredBKMRealCovariance
+        (faithfulGibbsDensity H hH hZ)
+        (continuous_faithfulGibbsDensity_rpow H hH hZ)
+        A B := by
+  calc
+    transportedHessianReadout D H A B =
+        centeredFrechetResponse H hH hZ A B :=
+      transportedHessianReadout_eq_centeredFrechetResponse
+        D H hH hZ A B
+    _ = centeredBKMRealCovariance
+        (faithfulGibbsDensity H hH hZ)
+        (continuous_faithfulGibbsDensity_rpow H hH hZ)
+        A B :=
+      centeredFrechetResponse_eq_centeredBKMRealCovariance
+        H hH hZ A B hA
+
 end InfoGeometry.Canonical.FiniteGibbsOperatorialHessianTransport

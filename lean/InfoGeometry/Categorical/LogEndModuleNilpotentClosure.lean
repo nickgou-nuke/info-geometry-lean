@@ -47,6 +47,12 @@ def rightTensorEnd (X Y : LogEndModule 𝕜) :
     Module.End 𝕜 (X ⊗[𝕜] Y) :=
   TensorProduct.map (LinearMap.id : Module.End 𝕜 X) Y.N
 
+/-- Mixed tensor endomorphism `N_X ⊗ N_Y`.  This is the nilpotent cross term
+that appears in finite logarithmic exchange / monodromy readouts. -/
+def crossTensorEnd (X Y : LogEndModule 𝕜) :
+    Module.End 𝕜 (X ⊗[𝕜] Y) :=
+  TensorProduct.map X.N Y.N
+
 /-- The two tensor-leg endomorphisms commute. -/
 theorem leftTensorEnd_commute_rightTensorEnd (X Y : LogEndModule 𝕜) :
     Commute (leftTensorEnd X Y) (rightTensorEnd X Y) := by
@@ -105,6 +111,56 @@ commuting tensor-leg extensions. -/
 theorem tensorObj_N_eq_left_add_right (X Y : LogEndModule 𝕜) :
     (tensorObj X Y).N = leftTensorEnd X Y + rightTensorEnd X Y := by
   rfl
+
+/-- If both logarithmic directions are square-zero, then the mixed cross term
+`N_X ⊗ N_Y` is itself square-zero. -/
+theorem crossTensorEnd_sq_eq_zero_of_sq_zero
+    (X Y : LogEndModule 𝕜)
+    (hX : X.N ^ 2 = 0) (hY : Y.N ^ 2 = 0) :
+    (crossTensorEnd X Y) ^ 2 = 0 := by
+  ext x y
+  have hx := congrArg (fun T : Module.End 𝕜 X => T x) hX
+  have hy := congrArg (fun T : Module.End 𝕜 Y => T y) hY
+  simp [crossTensorEnd, pow_two, Module.End.mul_eq_comp,
+    LinearMap.comp_apply, TensorProduct.map_tmul] at hx hy ⊢
+  simp [hx, hy]
+
+/-- For square-zero factors, applying the mixed cross term after the primitive
+tensor nilpotent gives zero. -/
+theorem crossTensorEnd_comp_tensorObj_N_eq_zero
+    (X Y : LogEndModule 𝕜)
+    (hX : X.N ^ 2 = 0) (hY : Y.N ^ 2 = 0) :
+    (crossTensorEnd X Y).comp (tensorObj X Y).N = 0 := by
+  ext x y
+  have hx := congrArg (fun T : Module.End 𝕜 X => T x) hX
+  have hy := congrArg (fun T : Module.End 𝕜 Y => T y) hY
+  simp [crossTensorEnd, tensorObj_N_tmul, LinearMap.comp_apply,
+    TensorProduct.map_tmul, pow_two, Module.End.mul_eq_comp] at hx hy ⊢
+  simp [hx, hy]
+
+/-- For square-zero factors, applying the primitive tensor nilpotent after the
+mixed cross term also gives zero. -/
+theorem tensorObj_N_comp_crossTensorEnd_eq_zero
+    (X Y : LogEndModule 𝕜)
+    (hX : X.N ^ 2 = 0) (hY : Y.N ^ 2 = 0) :
+    (tensorObj X Y).N.comp (crossTensorEnd X Y) = 0 := by
+  ext x y
+  have hx := congrArg (fun T : Module.End 𝕜 X => T x) hX
+  have hy := congrArg (fun T : Module.End 𝕜 Y => T y) hY
+  simp [crossTensorEnd, tensorObj_N_tmul, LinearMap.comp_apply,
+    TensorProduct.map_tmul, pow_two, Module.End.mul_eq_comp] at hx hy ⊢
+  simp [hx, hy]
+
+/-- Hence the mixed square-zero cross term commutes with the primitive
+logarithmic tensor endomorphism.  In fact both ordered products vanish. -/
+theorem crossTensorEnd_commute_tensorObj_N_of_sq_zero
+    (X Y : LogEndModule 𝕜)
+    (hX : X.N ^ 2 = 0) (hY : Y.N ^ 2 = 0) :
+    Commute (crossTensorEnd X Y) (tensorObj X Y).N := by
+  apply Commute.eq
+  rw [Module.End.mul_eq_comp, Module.End.mul_eq_comp,
+    crossTensorEnd_comp_tensorObj_N_eq_zero X Y hX hY,
+    tensorObj_N_comp_crossTensorEnd_eq_zero X Y hX hY]
 
 /-- General logarithmic tensor-closure bound.
 

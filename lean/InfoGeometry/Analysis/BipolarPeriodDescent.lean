@@ -59,8 +59,9 @@ theorem hasDerivAt_signedCrossRatio01
     {s : ℂ} (hs : s ∈ punctured01) :
     HasDerivAt signedCrossRatio01 (-1 / (s - 1) ^ 2) s := by
   have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
+  have h₂ : 1 - s ≠ 0 := one_sub_ne_zero_of_mem hs
   convert (hasDerivAt_crossRatio01 hs.2).neg using 1
-  field_simp [h₁]
+  field_simp [h₁, h₂]
   ring
 
 /-- Both sign conventions have the same logarithmic derivative. -/
@@ -90,9 +91,10 @@ def circlePolePullback (c : ℂ) (r : ℝ) (t : ℝ) : ℂ :=
 theorem circlePolePullback_eq_I
     {c : ℂ} {r : ℝ} (hr : 0 < r) (t : ℝ) :
     circlePolePullback c r t = Complex.I := by
-  change
-    (Complex.I * (r : ℂ) * Complex.exp (Complex.I * (t : ℂ))) /
-      ((r : ℂ) * Complex.exp (Complex.I * (t : ℂ))) = Complex.I
+  unfold circlePolePullback circleVelocity circleParam
+  rw [show
+    c + (r : ℂ) * Complex.exp (Complex.I * (t : ℂ)) - c =
+      (r : ℂ) * Complex.exp (Complex.I * (t : ℂ)) by ring]
   exact circle_log_deriv_quotient r hr t
 
 /-- Genuine interval-integral evaluation of the elementary Cauchy pole. -/
@@ -142,10 +144,12 @@ theorem circulationPeriod_eq_zero_iff (w : WindingPair) :
     circulationPeriod w = 0 ↔ w.1 = w.2 := by
   constructor
   · intro h
+    rw [circulationPeriod] at h
     have hcast : (residueWinding w : ℂ) = 0 := by
       exact (mul_eq_zero.mp h).resolve_right twoPiI_ne_zero
     have hint : residueWinding w = 0 := by
       exact_mod_cast hcast
+    change w.1 - w.2 = 0 at hint
     exact sub_eq_zero.mp hint
   · intro h
     simp [circulationPeriod, residueWinding, h]

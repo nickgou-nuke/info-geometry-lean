@@ -119,7 +119,7 @@ theorem jordanTriple_first_identity (u v x y z : H3) :
       abel
     _ = inner P Q z + (I Q) * z - (J P) * z +
           inner (I x) y z + inner x (I y) z := by
-      rw [← hcomm]
+      rw [hcomm]
       simp only [inner, h3ZornJordanInnerDerivation_apply]
       abel
     _ = inner (P * x) y z - inner x (P * y) z +

@@ -7,9 +7,9 @@ import Mathlib.Tactic
 # Determinant-one lift of the bipolar logarithmic coordinate
 
 This file is a finite linear-algebra layer over
-`InfoGeometry.Analysis.BipolarCrossRatioLog`.  It packages the multiplicative
+`InfoGeometry.Analysis.BipolarCrossRatioLog`. It packages the multiplicative
 coordinate `q` and the logarithmic coordinate `W` into diagonal `2 × 2` complex
-matrices.  No Lorentz, spin, electromagnetic, or thermodynamic interpretation
+matrices. No Lorentz, spin, electromagnetic, or thermodynamic interpretation
 is used in the definitions or theorems.
 -/
 
@@ -48,8 +48,8 @@ def halfLogLift (s : ℂ) : SL2Block :=
 theorem halfLogLift_det (s : ℂ) :
     Matrix.det (halfLogLift s) = 1 := by
   rw [Matrix.det_fin_two]
-  simp [halfLogLift, plusWeight, minusWeight]
-  rw [← Complex.exp_add]
+  change plusWeight s * minusWeight s - 0 * 0 = 1
+  rw [zero_mul, sub_zero, plusWeight, minusWeight, ← Complex.exp_add]
   have hzero : bipolarLog s / 2 + -bipolarLog s / 2 = 0 := by ring
   rw [hzero, Complex.exp_zero]
 
@@ -102,10 +102,11 @@ theorem halfLogLift_logistic (t : ℝ) :
     halfLogLift (logistic t : ℂ) =
       !![Complex.exp ((t : ℂ) / 2), 0;
          0, Complex.exp (-(t : ℂ) / 2)] := by
+  have hlogReal :
+      Complex.log (Real.exp t : ℂ) = (Real.log (Real.exp t) : ℂ) := by
+    exact (Complex.ofReal_log (le_of_lt (Real.exp_pos t))).symm
   have hlog : bipolarLog (logistic t : ℂ) = (t : ℂ) := by
-    rw [bipolarLog, crossRatio01_logistic]
-    rw [← Complex.ofReal_log (le_of_lt (Real.exp_pos t))]
-    simp
+    rw [bipolarLog, crossRatio01_logistic, hlogReal, Real.log_exp]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [halfLogLift, plusWeight, minusWeight, hlog]

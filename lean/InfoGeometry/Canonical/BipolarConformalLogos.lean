@@ -1,20 +1,24 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Canonical.BipolarLogSL2
+import InfoGeometry.Canonical.PerfectPairBosonVortexBridge
 
 /-!
 # Bipolar conformal logos
 
 This capstone records the exact mathematical spine recovered from a physically
-phrased note.  The hierarchy is deliberately strict:
+phrased note. The hierarchy is deliberately strict:
 
 1. Möbius coordinate `q(s)=s/(1-s)`;
 2. principal logarithmic readout `W=log q` where a branch is chosen;
 3. branch-independent meromorphic differential `dq/q`;
-4. determinant-one diagonal `2 × 2` realization.
+4. determinant-one diagonal `2 × 2` realization;
+5. optional perfect-pair occupation and `U(1)` vortex interpretation for
+   composite pair modes.
 
-No electrostatic, Maxwell, superconducting, Lorentz, or global Hodge assertion
-is part of this owner.
+The final layer is still mathematical: perfect matchings, occupation numbers,
+phase doubling, and winding. It does not assert a microscopic superconducting
+Hamiltonian, a spectral gap, or dynamical Bose condensation.
 -/
 
 noncomputable section
@@ -24,6 +28,8 @@ namespace InfoGeometry.Canonical.BipolarConformalLogos
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Canonical.BipolarLogSL2
+open InfoGeometry.Canonical.FinitePerfectMatching
+open InfoGeometry.Canonical.PerfectPairBosonVortexBridge
 
 /-- Exact multiplicative/additive/differential packet on the punctured domain. -/
 theorem bipolar_logos_packet {s : ℂ} (hs : s ∈ punctured01) :
@@ -32,7 +38,7 @@ theorem bipolar_logos_packet {s : ℂ} (hs : s ∈ punctured01) :
     Matrix.det (torusLift s) = 1 := by
   exact ⟨exp_bipolarLog hs, dlog01_eq_one_div_mul hs, torusLift_det hs⟩
 
-/-- Exact source/sink exchange packet.  The coordinate is inverted, the
+/-- Exact source/sink exchange packet. The coordinate is inverted, the
 coefficient of the logarithmic form is symmetric, and the pulled-back one-form
 is odd because the involution has derivative `-1`. -/
 theorem exchange_packet {s : ℂ} (hs : s ∈ punctured01) :
@@ -65,5 +71,19 @@ theorem logistic_packet (t : ℝ) :
 theorem residue_balance_packet :
     residuePair = ((1 : ℂ), (-1 : ℂ)) ∧ residuePair.1 + residuePair.2 = 0 := by
   exact ⟨rfl, residuePair_sum_zero⟩
+
+/-- The theorem-safe replacement for the informal superconducting layer:
+perfect pairing gives composite modes, occupation-number states provide the
+bosonic combinatorial carrier, the composite phase doubles the constituent
+angle, and integer pair-vortex winding closes. -/
+theorem paired_condensate_vortex_packet
+    {m : ℕ} (M : PerfectMatching m)
+    (mode : PairMode M) (N : ℕ) (n : ℤ) :
+    Fintype.card (PairMode M) = m ∧
+      totalPairOccupation M (purePairCondensate M mode N) = N ∧
+      pairPhase (pairVortexAngle n) = constituentPhase (pairVortexAngle n) ^ 2 ∧
+      pairPhase (pairVortexAngle n) = 1 ∧
+      residuePair.1 + residuePair.2 = 0 := by
+  exact perfect_pair_boson_vortex_packet M mode N n
 
 end InfoGeometry.Canonical.BipolarConformalLogos

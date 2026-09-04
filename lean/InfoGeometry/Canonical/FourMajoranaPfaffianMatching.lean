@@ -16,6 +16,11 @@ These are exactly the three signed pairing channels
 (12)(34), (13)(24), and (14)(23).  The square of this signed pairing sum is
 proved to be the matrix determinant.
 
+The three channels are also instantiated as genuine values of the repository's
+`Volume.OrientedPfaffian.PerfectMatching 2` type.  Their crossing signs are
+proved to be `+,-,+`, and their weights on the concrete skew matrix are the
+three Pfaffian monomials.
+
 This is a finite algebraic theorem.  It does not assert a planar Kasteleyn
 orientation theorem, a Grassmann Gaussian integral in arbitrary dimension, or
 a Moore--Read wavefunction identity.
@@ -26,6 +31,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.FourMajoranaPfaffianMatching
 
 open Matrix
+open InfoGeometry.Volume.OrientedPfaffian
 
 variable {R : Type*} [CommRing R]
 
@@ -60,6 +66,74 @@ theorem skew4_transpose
       -(skew4 a12 a13 a14 a23 a24 a34) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [skew4]
+
+/-! ## Concrete perfect matchings on four Majorana labels -/
+
+/-- Pairing `(01)(23)`, corresponding to the conventional `(12)(34)` channel. -/
+def matching12_34 : PerfectMatching 2 where
+  partner := ![1, 0, 3, 2]
+  involutive := by intro i; fin_cases i <;> rfl
+  fixed_free := by intro i; fin_cases i <;> decide
+
+/-- Pairing `(02)(13)`, the unique crossing channel. -/
+def matching13_24 : PerfectMatching 2 where
+  partner := ![2, 3, 0, 1]
+  involutive := by intro i; fin_cases i <;> rfl
+  fixed_free := by intro i; fin_cases i <;> decide
+
+/-- Pairing `(03)(12)`, the nested non-crossing channel. -/
+def matching14_23 : PerfectMatching 2 where
+  partner := ![3, 2, 1, 0]
+  involutive := by intro i; fin_cases i <;> rfl
+  fixed_free := by intro i; fin_cases i <;> decide
+
+@[simp] theorem matching12_34_sign : matching12_34.matchingSign = 1 := by
+  norm_num [PerfectMatching.matchingSign, PerfectMatching.crossingNumber,
+    PerfectMatching.crossingPairs, PerfectMatching.leftEndpoints, matching12_34]
+
+@[simp] theorem matching13_24_sign : matching13_24.matchingSign = -1 := by
+  norm_num [PerfectMatching.matchingSign, PerfectMatching.crossingNumber,
+    PerfectMatching.crossingPairs, PerfectMatching.leftEndpoints, matching13_24]
+
+@[simp] theorem matching14_23_sign : matching14_23.matchingSign = 1 := by
+  norm_num [PerfectMatching.matchingSign, PerfectMatching.crossingNumber,
+    PerfectMatching.crossingPairs, PerfectMatching.leftEndpoints, matching14_23]
+
+@[simp] theorem matching12_34_weight
+    (a12 a13 a14 a23 a24 a34 : ℝ) :
+    matching12_34.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+      a12 * a34 := by
+  norm_num [PerfectMatching.matchingWeight, PerfectMatching.leftEndpoints,
+    matching12_34, skew4]
+
+@[simp] theorem matching13_24_weight
+    (a12 a13 a14 a23 a24 a34 : ℝ) :
+    matching13_24.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+      a13 * a24 := by
+  norm_num [PerfectMatching.matchingWeight, PerfectMatching.leftEndpoints,
+    matching13_24, skew4]
+
+@[simp] theorem matching14_23_weight
+    (a12 a13 a14 a23 a24 a34 : ℝ) :
+    matching14_23.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+      a14 * a23 := by
+  norm_num [PerfectMatching.matchingWeight, PerfectMatching.leftEndpoints,
+    matching14_23, skew4]
+
+/-- The three concrete matching contributions reproduce the signed Pfaffian
+monomials `+a12*a34`, `-a13*a24`, `+a14*a23`. -/
+theorem concrete_matching_signed_weights
+    (a12 a13 a14 a23 a24 a34 : ℝ) :
+    matching12_34.matchingSign *
+        matching12_34.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+          a12 * a34 ∧
+    matching13_24.matchingSign *
+        matching13_24.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+          -(a13 * a24) ∧
+    matching14_23.matchingSign *
+        matching14_23.matchingWeight (skew4 a12 a13 a14 a23 a24 a34) =
+          a14 * a23 := by
+  simp
 
 /-- Expansion of a 4x4 determinant into the standard 24-term formula.
 This local lemma is reused from the repository's finite Vandermonde lane. -/

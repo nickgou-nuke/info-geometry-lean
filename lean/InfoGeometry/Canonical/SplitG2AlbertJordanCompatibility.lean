@@ -59,7 +59,6 @@ theorem zornDerivation_tracePair_skew
     (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv.symm Y)
   simpa [nativeCanonicalWittPairing, vDer,
     canonicalToVectorDerivation_apply,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv.apply_symm_apply,
     ZornVectorMatrix.trace_mul_comm] using h
 
 /-- The entrywise Albert lift has zero linear trace because it fixes all three
@@ -87,9 +86,6 @@ theorem liftG2End_adjointQuad (D : G2Der) (X : H3) :
     liftG2End D (H3Zorn.adjointQuad X) =
       H3Zorn.crossProduct (liftG2End D X) X := by
   let d := vDer D
-  have hta := zornDerivation_output_trace_zero D X.a
-  have htb := zornDerivation_output_trace_zero D X.b
-  have htc := zornDerivation_output_trace_zero D X.c
   have hca := zornDerivation_output_conj_eq_neg D X.a
   have hcb := zornDerivation_output_conj_eq_neg D X.b
   have hcc := zornDerivation_output_conj_eq_neg D X.c
@@ -193,9 +189,11 @@ theorem entrywiseCoordJordanCompatible_all (D : G2Der) :
   intro X Y
   apply h3Soldering.injective
   rw [h3Soldering_jordan_intertwines]
-  rw [entrywiseCoordEnd_soldering, entrywiseCoordEnd_soldering,
-    entrywiseCoordEnd_soldering]
-  exact liftG2End_isJordanDerivation D (h3Soldering X) (h3Soldering Y)
+  rw [h3Soldering_entrywise_intertwines,
+    h3Soldering_entrywise_intertwines,
+    h3Soldering_entrywise_intertwines]
+  simpa [candidateJordanMul_eq_mul] using
+    liftG2End_isJordanDerivation D (h3Soldering X) (h3Soldering Y)
 
 /-- The coordinate compatibility subspace is all of split `G2(2)`. -/
 def entrywiseCompatibleG2 : Submodule ℝ G2Der :=
@@ -218,6 +216,7 @@ noncomputable def g2ToF4 : G2Der →ₗ⁅ℝ⁆ H3ZornF4Derivations :=
 /-- The embedded split `G2` subalgebra has exact real dimension 14. -/
 theorem g2ToF4_range_finrank :
     Module.finrank ℝ (LinearMap.range g2ToF4) = 14 :=
-  g2ToF4_range_finrank unconditionalG2F4Soldering
+  InfoGeometry.Canonical.SplitG2AlbertEntrywiseLift.g2ToF4_range_finrank
+    unconditionalG2F4Soldering
 
 end InfoGeometry.Canonical.SplitG2AlbertJordanCompatibility

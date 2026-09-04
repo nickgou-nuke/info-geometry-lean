@@ -46,23 +46,15 @@ open InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
 open InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 open InfoGeometry.Clifford.LogCftMonodromy
 
-/-- The repository-owned Hadjiivanov checked R-matrix on the standard
-rank-two logarithmic tensor square. -/
 abbrev hadjiivanovCheckedR :=
   standardHadjiivanovCheckedRDatum.checkR
 
-/-- The first local Hadjiivanov checked R-matrix on the right-associated tensor
-cube. -/
 abbrev hadjiivanovCheckedR12 :=
   standardHadjiivanovCheckedRDatum.checkR12
 
-/-- The second local Hadjiivanov checked R-matrix on the right-associated tensor
-cube. -/
 abbrev hadjiivanovCheckedR23 :=
   standardHadjiivanovCheckedRDatum.checkR23
 
-/-- The checked R-matrix intertwines the primitive logarithmic nilpotent on the
-tensor square. -/
 theorem hadjiivanovCheckedR_commutes_tensorN :
     hadjiivanovCheckedR.toLinearMap.comp
         (PairObj standardJordanObject).N =
@@ -70,8 +62,6 @@ theorem hadjiivanovCheckedR_commutes_tensorN :
         hadjiivanovCheckedR.toLinearMap :=
   standardHadjiivanov_checkedR_commutes_tensorN
 
-/-- The two local Hadjiivanov checked R-matrices satisfy the exact
-Yang--Baxter/Artin equation. -/
 theorem hadjiivanovCheckedR_yangBaxter :
     hadjiivanovCheckedR12.toLinearMap ∘ₗ
           hadjiivanovCheckedR23.toLinearMap ∘ₗ
@@ -81,19 +71,14 @@ theorem hadjiivanovCheckedR_yangBaxter :
           hadjiivanovCheckedR23.toLinearMap :=
   standardHadjiivanov_yangBaxter
 
-/-- The Hadjiivanov checked R-matrix is genuinely non-symmetric: its double
-braiding is not the identity. -/
 theorem hadjiivanovCheckedR_monodromy_ne_id :
     standardHadjiivanovCheckedRDatum.monodromy.toLinearMap ≠ LinearMap.id :=
   standardHadjiivanov_monodromy_ne_id
 
-/-- The Hadjiivanov checked R-matrix as an automorphism of the logarithmic
-tensor-square object. -/
 abbrev hadjiivanovCheckedRLogIso :
     PairObj standardJordanObject ≅ PairObj standardJordanObject :=
   standardHadjiivanovCheckedRLogIso
 
-/-- Categorical Hadjiivanov braid action on the actual `BraidProject` B₃ stage. -/
 def hadjiivanovBraidProject3CategoricalHom :
     braid_group 3 →* Aut StandardTripleObject :=
   standardCategoricalBraidGroup3Hom.comp braidProjectToPresentedB3
@@ -187,8 +172,6 @@ theorem hadjiivanovBraidProject_stabilization
           (finiteSuccGroupHom (n + 1) g)).toLinearMap.comp
         (appendPrimaryBonding (n + 1)).hom :=
   appendPrimaryBonding_braid_compat n g
-
-/-! ## Infinite braid / colimit closure -/
 
 abbrev hadjiivanovBraidInfinity :=
   hadjiivanovBraidGroupInfHom

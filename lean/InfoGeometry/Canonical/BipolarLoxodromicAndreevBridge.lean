@@ -11,7 +11,7 @@ import Mathlib.Tactic
 This file separates two involutions that were conflated in an informal physics
 narrative.
 
-* The geometric reflection is `s ↦ 1 - conj(s)`.  It flips the radial logarithm
+* The geometric reflection is `s ↦ 1 - conj(s)`. It flips the radial logarithm
   and preserves the angular phase at the multiplicative level:
   `q(mirror s) = conj(q s)⁻¹`.
 * Particle-hole/Andreev phase conjugation is a different operation: it flips the
@@ -50,27 +50,35 @@ theorem bipolarLoxodromic_criticalLine_unit (y : ℝ) :
     ‖bipolarLoxodromic (criticalLine y)‖ = 1 := by
   rw [norm_bipolarLoxodromic, eta_criticalLine, Real.exp_zero]
 
+/-- Reflection preserves the punctured domain. -/
+theorem mirror_mem_punctured01 {s : ℂ} (hs : s ∈ punctured01) :
+    mirror s ∈ punctured01 := by
+  constructor
+  · intro h0
+    apply hs.2
+    have hc : Complex.conj s = 1 := by
+      calc
+        Complex.conj s = 1 - mirror s := by simp [mirror]
+        _ = 1 := by rw [h0]; ring
+    have := congrArg Complex.conj hc
+    simpa using this
+  · intro h1
+    apply hs.1
+    have hc : Complex.conj s = 0 := by
+      calc
+        Complex.conj s = 1 - mirror s := by simp [mirror]
+        _ = 0 := by rw [h1]; ring
+    have := congrArg Complex.conj hc
+    simpa using this
+
 /-- Reflection sends the exact loxodromic/Cayley scalar to inverse conjugate. -/
 theorem bipolarLoxodromic_mirror {s : ℂ} (hs : s ∈ punctured01) :
     bipolarLoxodromic (mirror s) =
       (Complex.conj (bipolarLoxodromic s))⁻¹ := by
-  have hmirror : mirror s ∈ punctured01 := by
-    constructor
-    · intro h0
-      apply hs.2
-      have hc : Complex.conj s = 1 := by
-        simpa [mirror] using sub_eq_zero.mp h0
-      simpa using congrArg Complex.conj hc
-    · intro h1
-      apply hs.1
-      have hc : Complex.conj s = 0 := by
-        have := sub_eq_zero.mp (sub_eq_zero.mpr h1)
-        simpa [mirror] using this
-      simpa using congrArg Complex.conj hc
-  rw [bipolarLoxodromic_eq_crossRatio01 hmirror,
+  rw [bipolarLoxodromic_eq_crossRatio01 (mirror_mem_punctured01 hs),
     bipolarLoxodromic_eq_crossRatio01 hs, crossRatio01_mirror]
 
-/-- Complex phase conjugation.  This is distinct from geometric reflection. -/
+/-- Complex phase conjugation. This is distinct from geometric reflection. -/
 def phaseConjugate (z : ℂ) : ℂ := Complex.conj z
 
 @[simp] theorem phaseConjugate_involutive (z : ℂ) :
@@ -80,15 +88,16 @@ def phaseConjugate (z : ℂ) : ℂ := Complex.conj z
 /-- On unit norm, phase conjugation is inversion. -/
 theorem phaseConjugate_eq_inv_of_norm_one {z : ℂ} (hz : ‖z‖ = 1) :
     phaseConjugate z = z⁻¹ := by
-  apply (mul_left_cancel₀ (show z ≠ 0 by
+  have hz0 : z ≠ 0 := by
     intro h
     rw [h, norm_zero] at hz
-    norm_num at hz))
-  rw [mul_inv_cancel₀]
+    norm_num at hz
+  apply mul_left_cancel₀ hz0
+  rw [mul_inv_cancel₀ hz0]
   have hsq : Complex.normSq z = 1 := by
     rw [Complex.normSq_eq_norm_sq, hz]
     norm_num
-  simpa [phaseConjugate, Complex.normSq_apply, mul_comm] using hsq.symm
+  simpa [phaseConjugate, Complex.normSq_apply] using hsq
 
 /-- Complex Nambu-style amplitudes indexed by the repository-owned Andreev channels. -/
 abbrev ComplexAndreevAmplitude := AndreevChannel → ℂ

@@ -113,23 +113,20 @@ theorem liftG2End_map_lie (D E : G2Der) :
       canonicalToVectorDerivation ⁅D, E⁆ X.a =
         canonicalToVectorDerivation D (canonicalToVectorDerivation E X.a) -
           canonicalToVectorDerivation E (canonicalToVectorDerivation D X.a)
-    have h :=
-      (vectorCanonicalLieEquiv.symm.map_lie D E)
-    exact congrArg (fun K => K X.a) h
+    have h := vectorCanonicalLieEquiv.symm.map_lie D E
+    simpa [Ring.lie_def] using congrArg (fun K => K X.a) h
   · change
       canonicalToVectorDerivation ⁅D, E⁆ X.b =
         canonicalToVectorDerivation D (canonicalToVectorDerivation E X.b) -
           canonicalToVectorDerivation E (canonicalToVectorDerivation D X.b)
-    have h :=
-      (vectorCanonicalLieEquiv.symm.map_lie D E)
-    exact congrArg (fun K => K X.b) h
+    have h := vectorCanonicalLieEquiv.symm.map_lie D E
+    simpa [Ring.lie_def] using congrArg (fun K => K X.b) h
   · change
       canonicalToVectorDerivation ⁅D, E⁆ X.c =
         canonicalToVectorDerivation D (canonicalToVectorDerivation E X.c) -
           canonicalToVectorDerivation E (canonicalToVectorDerivation D X.c)
-    have h :=
-      (vectorCanonicalLieEquiv.symm.map_lie D E)
-    exact congrArg (fun K => K X.c) h
+    have h := vectorCanonicalLieEquiv.symm.map_lie D E
+    simpa [Ring.lie_def] using congrArg (fun K => K X.c) h
 
 /-- Faithful Lie representation of split `G2(2)` on the split-Albert carrier
 before imposing the Jordan-derivation landing condition. -/

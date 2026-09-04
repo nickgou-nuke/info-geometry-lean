@@ -61,7 +61,8 @@ def twelvePhaseOrbit (z : ℂ) (k : ℕ) : ℂ :=
 /-- The 12-phase subsequence is periodic with period 12. -/
 theorem twelvePhaseOrbit_add_12 (z : ℂ) (k : ℕ) :
     twelvePhaseOrbit z (k + 12) = twelvePhaseOrbit z k := by
-  simp [twelvePhaseOrbit, planeOrbit, Nat.mul_add, pow_add, mul_assoc]
+  unfold twelvePhaseOrbit
+  convert planeOrbit_add_24 z (2 * k) using 1 <;> omega
 
 /-- The 6-gon phase subsequence is obtained by taking every fourth point of
 the primitive 24-gon. -/
@@ -71,7 +72,8 @@ def sixPhaseOrbit (z : ℂ) (k : ℕ) : ℂ :=
 /-- The 6-phase subsequence is periodic with period 6. -/
 theorem sixPhaseOrbit_add_6 (z : ℂ) (k : ℕ) :
     sixPhaseOrbit z (k + 6) = sixPhaseOrbit z k := by
-  simp [sixPhaseOrbit, planeOrbit, Nat.mul_add, pow_add, mul_assoc]
+  unfold sixPhaseOrbit
+  convert planeOrbit_add_24 z (4 * k) using 1 <;> omega
 
 /-- A generic iterate used to state projection equivariance without assuming a
 Leech-lattice carrier that the repository does not yet construct. -/
@@ -90,7 +92,7 @@ theorem projected_iterate_eq_planeOrbit
   | zero => simp [iterate, planeOrbit]
   | succ n ih =>
       rw [iterate, hpi, ih]
-      simp [planeOrbit, pow_succ, mul_assoc]
+      simp [planeOrbit, pow_succ, mul_comm, mul_left_comm, mul_assoc]
 
 /-- Under the same equivariance hypothesis, a nonzero projected vector has 24
 distinct projected points in its first cycle. -/

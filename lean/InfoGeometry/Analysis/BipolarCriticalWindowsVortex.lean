@@ -70,8 +70,10 @@ def upperNode (W : CriticalWindow) : ℂ := criticalNode W.upper
 /-- The two endpoint nodes are distinct. -/
 theorem nodes_ne (W : CriticalWindow) : W.lowerNode ≠ W.upperNode := by
   intro h
-  have him := congrArg Complex.im h
-  simpa [lowerNode, upperNode, criticalNode] using ne_of_lt W.ordered
+  have him : W.lower = W.upper := by
+    have := congrArg Complex.im h
+    simpa [lowerNode, upperNode, criticalNode] using this
+  exact (ne_of_lt W.ordered) him
 
 /-- Membership of a height in the open window. -/
 def Contains (W : CriticalWindow) (y : ℝ) : Prop := W.lower < y ∧ y < W.upper

@@ -44,7 +44,11 @@ def logarithmicDerivationLinear (s : ℂ) : Matrix2C →ₗ[ℂ] Matrix2C :=
 /-- Repository-native operator derivation carrying the same inner commutator. -/
 def logarithmicOpDerivation (s : ℂ) : OpDerivation ℂ Matrix2C where
   toLinearMap := logarithmicDerivationLinear s
-  leibniz' := logarithmicDerivationLinear_leibniz s
+  leibniz' := by
+    intro X Y
+    simpa [logarithmicDerivationLinear] using
+      adK_algebra_is_derivation (R := ℂ)
+        (logarithmicCartanGenerator s) X Y
 
 @[simp] theorem logarithmicDerivation_apply (s : ℂ) (X : Matrix2C) :
     logarithmicDerivation s X =

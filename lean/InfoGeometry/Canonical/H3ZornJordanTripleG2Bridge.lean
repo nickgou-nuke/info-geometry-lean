@@ -108,9 +108,11 @@ multiplications, so it is recovered from the antisymmetric triple sector. -/
 theorem jordanTriple_antisym_eq_two_baezInner (x y z : H3) :
     jordanTriple x y z - jordanTriple y x z =
       (2 : ℝ) • (h3ZornJordanInnerDerivation x y : Module.End ℝ H3) z := by
+  have hmul (a b : H3) : a * b = candidateJordanMul a b := by
+    exact candidateJordanMul_eq_mul a b |>.symm
   change _ = (2 : ℝ) •
-    (candidateJordanMul x (candidateJordanMul y z) -
-      candidateJordanMul y (candidateJordanMul x z))
+    (x * (y * z) - y * (x * z))
+  rw [hmul x (y * z), hmul y (x * z), hmul y z, hmul x z]
   exact jordanTriple_antisym_eq_two_inner x y z
 
 /-- A Jordan derivation differentiates the associated triple product in all
@@ -122,8 +124,13 @@ theorem jordanTriple_derivation
       jordanTriple (D x) y z +
         jordanTriple x (D y) z +
           jordanTriple x y (D z) := by
+  have hDc (a b : H3) :
+      D (candidateJordanMul a b) =
+        candidateJordanMul (D a) b + candidateJordanMul a (D b) := by
+    simpa only [candidateJordanMul_eq_mul] using hD a b
   simp only [jordanTriple, map_add, map_sub]
-  rw [hD, hD, hD, hD, hD, hD]
+  rw [hDc, hDc, hDc]
+  rw [hDc, hDc, hDc, hDc, hDc, hDc]
   simp [candidateJordanMul_comm]
   abel
 

@@ -1,7 +1,6 @@
 import InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 import InfoGeometry.Canonical.OperatorWeylChiralCurvatureResidue
 import InfoGeometry.Canonical.WeylChiralHodgeCurvatureSplit
-import InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
 
 /-!
 # InfoGeometry.Canonical.OperatorCliffordWeylCurvatureCapstone
@@ -29,7 +28,6 @@ open InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 open InfoGeometry.Canonical.OperatorWeylChiralCurvatureBlocks
 open InfoGeometry.Canonical.OperatorWeylChiralCurvatureResidue
 open InfoGeometry.Canonical.WeylChiralHodgeCurvatureSplit
-open InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
 open InfoGeometry.Optics.OperatorCausalSoldering
 open InfoGeometry.Canonical.QuaternionEmbedding
 

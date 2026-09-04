@@ -76,6 +76,7 @@ import InfoGeometry.BottPeriodicityReconciliation
 import InfoGeometry.Bridge.CliffordFourExteriorGradeBridge
 import InfoGeometry.Bridge.ModularVirasoro
 import InfoGeometry.Bridge.OperatorPauliFactorizationDefect
+import InfoGeometry.Bridge.OperatorPauliLubanskiLift
 import InfoGeometry.Bridge.PolarAxialChiralParityBridge
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 import InfoGeometry.Bridge.QuaternionicTwistorSphere

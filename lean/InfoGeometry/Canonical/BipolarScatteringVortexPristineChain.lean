@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
 import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
+import InfoGeometry.Canonical.BipolarLogarithmicRootCharacterRepresentation
 import InfoGeometry.Analysis.BipolarCriticalWindowsVortex
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 import InfoGeometry.Canonical.BipolarTwoPortScattering
@@ -49,6 +50,7 @@ open InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
 open InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
+open InfoGeometry.Canonical.BipolarLogarithmicRootCharacterRepresentation
 open InfoGeometry.Canonical.BipolarTwoPortScattering
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.Topology.Weyl
@@ -99,7 +101,7 @@ theorem pristine_logarithmic_adjoint_flow_core
     finiteAdjointFlow s σMinus = (crossRatio01 s)⁻¹ • σMinus := by
   exact logarithmic_cartan_adjoint_flow_packet hs
 
-/-- Corrected full logarithmic character chain.  The generator is one complex
+/-- Corrected full logarithmic character chain. The generator is one complex
 Cartan direction, its operator derivative is a genuine Leibniz derivation, the
 two parabolic sheets are the opposite root spaces, and finite conjugation is
 the exponential character specialized to `q` and `q⁻¹`. -/
@@ -120,7 +122,24 @@ theorem pristine_logarithmic_adjoint_character_core
       minusRootCharacter (bipolarLog s) = (crossRatio01 s)⁻¹ := by
   exact bipolar_logarithmic_adjoint_character_packet hs X Y
 
-/-- Critical-line specialization of the two root characters.  Vanishing radial
+/-- The same finite root weights are genuine Mathlib characters into `ℂˣ`,
+not merely scalar functions satisfying ad hoc multiplication formulas. -/
+theorem pristine_bundled_root_character_core
+    {s : ℂ} (hs : s ∈ punctured01) :
+    finiteAdjointFlow s σPlus =
+        ((plusRootCharacterHom
+          (Multiplicative.ofAdd (bipolarLog s)) : ℂˣ) : ℂ) • σPlus ∧
+      finiteAdjointFlow s σMinus =
+        ((minusRootCharacterHom
+          (Multiplicative.ofAdd (bipolarLog s)) : ℂˣ) : ℂ) • σMinus ∧
+      ((plusRootCharacterHom
+        (Multiplicative.ofAdd (bipolarLog s)) : ℂˣ) : ℂ) = crossRatio01 s ∧
+      ((minusRootCharacterHom
+        (Multiplicative.ofAdd (bipolarLog s)) : ℂˣ) : ℂ) =
+          (crossRatio01 s)⁻¹ := by
+  exact bipolar_root_character_representation_packet hs
+
+/-- Critical-line specialization of the two root characters. Vanishing radial
 coordinate means unit-modulus finite characters; it does not identify the two
 root spaces or make the infinitesimal generator vanish. -/
 theorem pristine_critical_root_character_core (y : ℝ) :

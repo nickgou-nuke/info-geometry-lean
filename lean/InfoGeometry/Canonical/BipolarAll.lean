@@ -34,6 +34,7 @@ import InfoGeometry.Canonical.BipolarVariableConnectionAnalyticExterior
 import InfoGeometry.Canonical.BipolarVariableCartanCurvatureForm
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
 import InfoGeometry.Canonical.BipolarSpinHolonomy
+import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Canonical.BipolarPeriodAdjointDescentBridge
 import InfoGeometry.Canonical.BipolarWittProjectiveWardBridge
@@ -54,6 +55,7 @@ import InfoGeometry.Canonical.BipolarVariableConnectionPoissonPristineChain
 import InfoGeometry.Canonical.BipolarVariableConnectionPoissonCosymplecticClosure
 import InfoGeometry.Canonical.BipolarSchwarzianWardPristineChain
 import InfoGeometry.Canonical.BipolarContourPeriodSchwarzianWardPristineChain
+import InfoGeometry.Canonical.BipolarContourU1HolonomyPristineChain
 import InfoGeometry.Canonical.BipolarConformalLogos
 
 /-!

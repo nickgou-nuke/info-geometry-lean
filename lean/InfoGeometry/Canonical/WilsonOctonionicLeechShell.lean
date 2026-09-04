@@ -81,6 +81,25 @@ theorem wilson_three_octonion_dimensions :
     3 * dimE8Space = dimLeechLattice :=
   leech_lattice_triplication
 
+/-! ## Normalization boundary
+
+For the displayed triple norm `1/2 (|x|^2+|y|^2+|z|^2)`, a type-I vector
+`(2 lambda,0,0)` has value `2 * |lambda|^2`.  Thus root squared norm `1`
+gives shell value `2`, while the standard E8 root squared norm `2` gives shell
+value `4`.  The lattice realization must choose one convention explicitly.
+-/
+
+def typeITripleNormFromRootNormSq (rootNormSq : ℝ) : ℝ :=
+  (1 / 2 : ℝ) * (4 * rootNormSq)
+
+@[simp] theorem typeI_norm_of_root_norm_one :
+    typeITripleNormFromRootNormSq 1 = 2 := by
+  norm_num [typeITripleNormFromRootNormSq]
+
+@[simp] theorem typeI_norm_of_root_norm_two :
+    typeITripleNormFromRootNormSq 2 = 4 := by
+  norm_num [typeITripleNormFromRootNormSq]
+
 /-- Data required to turn the finite Wilson index shell into an actual shell
 of vectors in a future octonionic Leech-lattice carrier.  The present file
 keeps these as explicit witness obligations rather than assuming them. -/

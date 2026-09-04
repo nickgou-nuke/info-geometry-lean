@@ -7,12 +7,13 @@ import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 import InfoGeometry.Canonical.BipolarPristineMathematicalChain
 import InfoGeometry.Canonical.PerfectPairBosonVortexBridge
+import InfoGeometry.Canonical.BipolarOperatorGeodesicGENERICPristineChain
 
 /-!
 # Bipolar conformal logos
 
-This capstone records the exact mathematical spine recovered from a physically
-phrased note. The hierarchy is deliberately strict:
+This capstone records the exact mathematical spine recovered from physically
+phrased notes. The hierarchy is deliberately strict:
 
 1. Möbius coordinate `q(s)=s/(1-s)`;
 2. principal logarithmic readout `W=log q` where a branch is chosen;
@@ -22,11 +23,13 @@ phrased note. The hierarchy is deliberately strict:
 6. inversion-chart correction at the omitted infinity point;
 7. two-generator winding lattice and residue-difference period;
 8. determinant-one diagonal `2 × 2` realization and native `SL₂(ℂ)` soldering;
-9. optional perfect-pair occupation and doubled `U(1)` vortex interpretation.
+9. optional perfect-pair occupation and doubled `U(1)` vortex interpretation;
+10. two-sheet Cartan connection, central spin holonomy, flat coordinate
+    geodesics, and an explicit finite GENERIC realization.
 
 The capstone deliberately does not infer a conductor, Maxwell field, microscopic
-superconductivity, global Hodge decomposition, or a de Rham classification not
-already installed in the repository.
+superconductivity, global Hodge decomposition, continuum gauge bundle, or a de
+Rham classification not already installed in the repository.
 -/
 
 noncomputable section
@@ -38,12 +41,19 @@ open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
+open InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
 open InfoGeometry.Canonical.BipolarLogSL2
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
 open InfoGeometry.Canonical.BipolarPristineMathematicalChain
 open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 open InfoGeometry.Canonical.FinitePerfectMatching
 open InfoGeometry.Canonical.PerfectPairBosonVortexBridge
+open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+open InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
+open InfoGeometry.Canonical.BipolarSpinHolonomy
+open InfoGeometry.Canonical.BipolarOperatorGeodesicGENERICPristineChain
+open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
+open InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 
 /-- Exact multiplicative/additive/differential packet on the punctured domain. -/
 theorem bipolar_logos_packet {s : ℂ} (hs : s ∈ punctured01) :
@@ -157,5 +167,26 @@ theorem paired_condensate_vortex_packet
       pairPhase (pairVortexAngle n) = 1 ∧
       residuePair.1 + residuePair.2 = 0 := by
   exact perfect_pair_boson_vortex_packet M mode N n
+
+/-- Downstream operator/holonomy/geodesic/GENERIC packet. Local commutator
+curvature vanishes, the elementary half-Cartan holonomy is the nontrivial
+central sign, flat coordinate lines are affine geodesics, and the concrete
+GENERIC model conserves energy while producing entropy. -/
+theorem operator_holonomy_geodesic_GENERIC_packet
+    (p : FlatCoordinatePoint) :
+    wedge (operatorConnection Kboost Kcirc)
+        (operatorConnection Kboost Kcirc) = 0 ∧
+      spinHolonomy originWinding =
+        -(1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+      IsFlatAffineGeodesic (negativeEtaLine p) ∧
+      IsFlatAffineGeodesic (thetaLine p) ∧
+      bipolarGENERIC.dH bipolarGENERIC.flow = 0 ∧
+      bipolarGENERIC.dS bipolarGENERIC.flow = 1 := by
+  exact ⟨canonicalConnection_selfWedge_zero,
+    spinHolonomy_origin,
+    negativeEtaLine_isFlatAffineGeodesic p,
+    thetaLine_isFlatAffineGeodesic p,
+    bipolarGENERIC_energy_rate,
+    bipolarGENERIC_entropy_rate⟩
 
 end InfoGeometry.Canonical.BipolarConformalLogos

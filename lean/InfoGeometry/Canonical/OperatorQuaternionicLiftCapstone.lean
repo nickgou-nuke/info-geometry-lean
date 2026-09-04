@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.OperatorChiralDeterminantDefect
+import InfoGeometry.Algebra.CircularChiralOperatorEightBridge
+import InfoGeometry.Canonical.ChiralZornNCZornBridge
 import InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 import InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
@@ -29,6 +31,8 @@ geometric interpretations:
    Pauli factorization defect and connection curvature as commutator residues;
 7. the repository-owned tripotent construction reconstructs every element from
    its five grouped Peirce components.
+8. the existing eight-element circular chiral frame and its matrix-coefficient
+   noncommutative Zorn transport are exposed without carrier identification.
 
 Exterior Clifford degree and the tripotent/TKK five-grading remain separate
 structures.  No Berry connection, DeWitt supermetric, unbounded Dirac operator,
@@ -48,6 +52,11 @@ open InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 open InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 open InfoGeometry.Physics.Algebra
+open InfoGeometry.Algebra.CircularChiralCausalConeBasis
+open InfoGeometry.Algebra.CircularChiralOperatorEightBridge
+open InfoGeometry.Canonical.ChiralZornNCZornBridge
+open InfoGeometry.Physics.NCG
+open InfoGeometry.Physics.Octonion
 
 /-- The complete algebraic operator-lift packet on the finite Pauli/Dirac
 carriers. -/
@@ -120,6 +129,26 @@ theorem quaternionic_bivector_commutant_packet
     (a b c : ℂ) :
     Commute N (quaternionicBivectorCombination a b c) :=
   commute_quaternionicBivectorCombination_of_first_two N hi hj a b c
+
+/-! ## Circular chiral operator frame and noncommutative Zorn transport -/
+
+/-- The existing circular chiral frame supplies eight distinct native
+operator readouts.  This theorem packages the cardinality and injectivity
+owners without identifying this readout carrier with the finite Dirac or
+tensor-colimit carriers. -/
+theorem circular_chiral_eight_operator_packet :
+    Fintype.card ChiralBasis = 8 ∧
+      Function.Injective operatorFrame := by
+  exact ⟨chiral_basis_card, operatorFrame_injective⟩
+
+/-- Matrix-valued chiral coordinates are transported through the existing
+noncommutative Zorn presentation.  The product is preserved as an explicit
+coordinate law, not promoted to an unjustified associative octonion ring. -/
+theorem matrix_coefficient_chiral_zorn_packet
+    (X Y : ChiralZornMatrix MatrixTwoOperator) :
+    toNC (X * Y) =
+      NCZornElement.mul (toNC X) (toNC Y) :=
+  toNC_matrixTwo_mul X Y
 
 /-! ## Genuine operator-valued causal tier -/
 

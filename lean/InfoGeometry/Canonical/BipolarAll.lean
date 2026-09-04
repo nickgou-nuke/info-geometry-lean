@@ -4,6 +4,7 @@ import InfoGeometry.Analysis.BipolarSimplePoleResidues
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 import InfoGeometry.Analysis.BipolarMetricEndLengths
 import InfoGeometry.Analysis.BipolarBoundaryTrace
+import InfoGeometry.Analysis.BipolarBoundarySurfaceCharge
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
 import InfoGeometry.Analysis.BipolarCriticalPhase
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate

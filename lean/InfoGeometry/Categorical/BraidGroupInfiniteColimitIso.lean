@@ -15,9 +15,8 @@ This file constructs the inverse of the existing comparison
 Artin generators.  No new braid presentation is introduced.
 
 This closes the structural group-colimit theorem used by the Hadjiivanov braid
-capstone: the repository-presented `B_∞` is not merely a compatible cocone
-point, but is canonically isomorphic to Mathlib's categorical colimit of the
-finite braid-group stabilization tower.
+capstone: the repository-presented `B_∞` is canonically isomorphic to Mathlib's
+categorical colimit of the finite braid-group stabilization tower.
 -/
 
 noncomputable section
@@ -35,16 +34,13 @@ def colimitGenerator (i : ℕ) : braidGroupColimit :=
   colimit.ι braidGroupDiagram (i + 1)
     (σ' (i + 1) (⟨i, by omega⟩ : Fin (i + 1)))
 
-/-- The colimit image of a fixed Artin generator is unchanged by any number of
-successor stabilizations. -/
 theorem colimitGenerator_stage_add (i k : ℕ) :
     colimitGenerator i =
       colimit.ι braidGroupDiagram (i + 1 + k)
         (σ' (i + 1 + k)
           (⟨i, by omega⟩ : Fin (i + 1 + k))) := by
   induction k with
-  | zero =>
-      rfl
+  | zero => rfl
   | succ k ih =>
       rw [ih]
       let n := i + 1 + k
@@ -61,7 +57,6 @@ theorem colimitGenerator_stage_add (i k : ℕ) :
       rw [hstep] at happ
       simpa [n, finiteSuccGroupHom_sigma] using happ.symm
 
-/-- Convenient later-stage readback of the same colimit generator. -/
 theorem colimitGenerator_stage
     (i n : ℕ) (h : i < n) :
     colimitGenerator i =
@@ -74,7 +69,6 @@ theorem colimitGenerator_stage
     omega
   simpa [hk] using colimitGenerator_stage_add i k
 
-/-- Adjacent colimit generators satisfy the Artin relation. -/
 theorem colimitGenerator_artin (i : ℕ) :
     colimitGenerator i * colimitGenerator (i + 1) * colimitGenerator i =
       colimitGenerator (i + 1) * colimitGenerator i *
@@ -88,7 +82,6 @@ theorem colimitGenerator_artin (i : ℕ) :
   have hi1 := colimitGenerator_stage (i + 1) (i + 2) (by omega)
   simpa [hi, hi1, map_mul] using hmap
 
-/-- Separated colimit generators commute. -/
 theorem colimitGenerator_far
     (i j : ℕ) (hij : i + 2 ≤ j) :
     colimitGenerator i * colimitGenerator j =
@@ -108,8 +101,6 @@ theorem colimitGenerator_far
   have hj := colimitGenerator_stage j (j + 1) (by omega)
   simpa [a, b, hi, hj, Nat.sub_add_cancel hj2, map_mul] using hmap
 
-/-- Every defining relation of the presented infinite braid group holds for the
-canonical generator images in the finite-stage group colimit. -/
 theorem colimitGenerator_relations :
     ∀ r ∈ braid_rels_inf,
       FreeGroup.lift colimitGenerator r = (1 : braidGroupColimit) := by
@@ -126,8 +117,6 @@ theorem colimitGenerator_relations :
     rw [h]
     group
 
-/-- Canonical inverse comparison from the presented `B_∞` to Mathlib's finite
-braid-group colimit. -/
 def infiniteToGroupColimit : braid_group_inf →* braidGroupColimit :=
   braid_group_inf.toGroup colimitGenerator colimitGenerator_relations
 
@@ -137,8 +126,6 @@ theorem infiniteToGroupColimit_sigma (i : ℕ) :
   exact braid_group_inf.toGroup_sigma
     colimitGenerator colimitGenerator_relations i
 
-/-- The inverse comparison restricts on every finite stage to the canonical
-colimit injection. -/
 theorem infiniteToGroupColimit_comp_finiteToInfinite (n : ℕ) :
     infiniteToGroupColimit.comp (finiteToInfiniteGroupHom n) =
       (colimit.ι braidGroupDiagram n).hom := by
@@ -148,8 +135,6 @@ theorem infiniteToGroupColimit_comp_finiteToInfinite (n : ℕ) :
     infiniteToGroupColimit_sigma]
   exact colimitGenerator_stage i.1 n i.2
 
-/-- The canonical comparison followed by the generator-defined inverse is the
-identity on the categorical finite-stage colimit. -/
 theorem groupFromColimit_hom_inv :
     groupFromColimit ≫ GrpCat.ofHom infiniteToGroupColimit =
       𝟙 braidGroupColimit := by
@@ -162,8 +147,6 @@ theorem groupFromColimit_hom_inv :
   rw [groupFromColimit_ι]
   exact infiniteToGroupColimit_comp_finiteToInfinite n
 
-/-- The generator-defined inverse followed by the canonical comparison is the
-identity on the presented infinite braid group. -/
 theorem groupFromColimit_inv_hom :
     GrpCat.ofHom infiniteToGroupColimit ≫ groupFromColimit =
       𝟙 (GrpCat.of braid_group_inf) := by
@@ -175,8 +158,6 @@ theorem groupFromColimit_inv_hom :
   simp [colimitGenerator, groupFromColimit_ι_apply,
     finiteToInfiniteGroupHom_sigma]
 
-/-- Canonical group-category isomorphism
-`colim_n B_n ≅ B_∞`. -/
 def braidGroupColimitIsoInfinite :
     braidGroupColimit ≅ GrpCat.of braid_group_inf where
   hom := groupFromColimit
@@ -184,12 +165,9 @@ def braidGroupColimitIsoInfinite :
   hom_inv_id := groupFromColimit_hom_inv
   inv_hom_id := groupFromColimit_inv_hom
 
-/-- The existing comparison morphism is an isomorphism. -/
 noncomputable instance groupFromColimit_isIso : IsIso groupFromColimit :=
   braidGroupColimitIsoInfinite.isIso_hom
 
-/-- The repository-presented infinite braid group is itself a genuine Mathlib
-colimit of the finite braid-group stabilization tower. -/
 def braidGroupBoundaryCoconeIsColimit :
     IsColimit braidGroupBoundaryCocone := by
   exact (colimit.isColimit braidGroupDiagram).ofPointIso

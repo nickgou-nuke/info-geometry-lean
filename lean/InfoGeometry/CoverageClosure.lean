@@ -74,6 +74,7 @@ import InfoGeometry.AsanoRuelle.UnrestrictedFalse
 import InfoGeometry.Automorphic.LFunctionRepresentationBridge
 import InfoGeometry.BottPeriodicityReconciliation
 import InfoGeometry.Bridge.ModularVirasoro
+import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 import InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
 import InfoGeometry.Canonical.AlgebraicDerivations
 import InfoGeometry.Canonical.ArakiConnesHaagerupBridge

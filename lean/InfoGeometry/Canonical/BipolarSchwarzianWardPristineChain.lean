@@ -41,6 +41,7 @@ open InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 open InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
 open InfoGeometry.Canonical.BipolarPeriodAdjointDescentBridge
 open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+open InfoGeometry.Canonical.BipolarSpinHolonomy
 open InfoGeometry.Physics.ChiralCausalCone
 
 /-- Exact sign-convention and logarithmic-differential reconciliation. -/

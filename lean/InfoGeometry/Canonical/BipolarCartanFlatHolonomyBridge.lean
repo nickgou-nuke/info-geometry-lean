@@ -14,12 +14,12 @@ The canonical constant-coefficient connection is
       = ((v_η + i v_θ)/2) σ3`.
 
 All its values lie in one abelian Cartan line, so its operator self-wedge
-vanishes for every pair of tangent vectors.  Independently, the logarithmic
+vanishes for every pair of tangent vectors. Independently, the logarithmic
 period lattice produces nontrivial half-Cartan holonomy: either elementary
 puncture loop gives `-I₂`, while the combined loop gives `I₂`.
 
 The central sign acts nontrivially on two-component spinors but trivially by
-matrix conjugation.  This is the exact finite double-cover distinction.  No
+matrix conjugation. This is the exact finite double-cover distinction. No
 smooth principal bundle or path-ordered exponential is constructed here.
 -/
 
@@ -32,6 +32,9 @@ open InfoGeometry.Canonical.BipolarSpinHolonomy
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
+
+/-- Unambiguous local matrix carrier. -/
+abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
 
 /-- Complex coordinate differential `v_η + i v_θ`. -/
 def complexCoordinateDifferential (v : Tangent2) : ℂ :=
@@ -73,23 +76,23 @@ theorem canonicalConnection_coordinate_curvature_zero :
     wedge (operatorConnection Kboost Kcirc)
         (operatorConnection Kboost Kcirc) etaTangent thetaTangent = 0 := by
   rw [canonicalConnection_selfWedge_zero]
-  rfl
+  simp
 
 /-- Two-component complex spinor carrier. -/
 abbrev Spinor2 := Fin 2 → ℂ
 
 /-- Matrix action on a two-component spinor. -/
-def spinorAction (M : M2C) (ψ : Spinor2) : Spinor2 :=
+def spinorAction (M : Matrix2C) (ψ : Spinor2) : Spinor2 :=
   M *ᵥ ψ
 
 @[simp] theorem spinorAction_one (ψ : Spinor2) :
-    spinorAction (1 : M2C) ψ = ψ := by
+    spinorAction (1 : Matrix2C) ψ = ψ := by
   ext i
   fin_cases i <;>
     simp [spinorAction, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
 @[simp] theorem spinorAction_neg_one (ψ : Spinor2) :
-    spinorAction (-(1 : M2C)) ψ = -ψ := by
+    spinorAction (-(1 : Matrix2C)) ψ = -ψ := by
   ext i
   fin_cases i <;>
     simp [spinorAction, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
@@ -104,11 +107,16 @@ theorem originHolonomy_spinor_sign (ψ : Spinor2) :
 theorem originHolonomy_spinor_two_turns (ψ : Spinor2) :
     spinorAction (spinHolonomy originWinding)
         (spinorAction (spinHolonomy originWinding) ψ) = ψ := by
-  rw [originHolonomy_spinor_sign, originHolonomy_spinor_sign]
-  simp
+  calc
+    spinorAction (spinHolonomy originWinding)
+        (spinorAction (spinHolonomy originWinding) ψ)
+        = -(spinorAction (spinHolonomy originWinding) ψ) :=
+          originHolonomy_spinor_sign _
+    _ = -(-ψ) := by rw [originHolonomy_spinor_sign]
+    _ = ψ := by simp
 
 /-- The central one-turn sign is invisible in the adjoint matrix action. -/
-theorem originHolonomy_adjoint_trivial (X : M2C) :
+theorem originHolonomy_adjoint_trivial (X : Matrix2C) :
     spinHolonomy originWinding * X * spinHolonomy originWinding = X := by
   rw [spinHolonomy_origin]
   simp
@@ -124,8 +132,8 @@ theorem combinedHolonomy_spinor_trivial (ψ : Spinor2) :
 theorem flat_connection_nontrivial_holonomy_packet :
     wedge (operatorConnection Kboost Kcirc)
         (operatorConnection Kboost Kcirc) = 0 ∧
-      spinHolonomy originWinding = -(1 : M2C) ∧
-      spinHolonomy originWinding ≠ (1 : M2C) ∧
+      spinHolonomy originWinding = -(1 : Matrix2C) ∧
+      spinHolonomy originWinding ≠ (1 : Matrix2C) ∧
       spinHolonomy (originWinding + oneWinding) = 1 := by
   exact ⟨canonicalConnection_selfWedge_zero,
     spinHolonomy_origin,

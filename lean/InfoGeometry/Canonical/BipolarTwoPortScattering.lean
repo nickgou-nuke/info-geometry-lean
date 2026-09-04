@@ -15,7 +15,7 @@ matrices.
   `J = diag(1,-1)`.
 
 No resonance, bound-state, Josephson, or spectral-zero claim follows merely from
-zero transmission.  No literal equality `SU(1,1) = SL(2,R)` is asserted.
+zero transmission. No literal equality `SU(1,1) = SL(2,R)` is asserted.
 -/
 
 noncomputable section
@@ -39,7 +39,7 @@ def ScatteringNormalized (r t : ℂ) : Prop :=
 /-- Determinant of the scattering block is the total amplitude norm. -/
 theorem det_scatteringBlock (r t : ℂ) :
     Matrix.det (scatteringBlock r t) =
-      (Complex.normSq r + Complex.normSq t : ℝ) := by
+      ((Complex.normSq r + Complex.normSq t : ℝ) : ℂ) := by
   rw [Matrix.det_fin_two]
   simp [scatteringBlock, Complex.normSq_apply]
   ring
@@ -53,7 +53,7 @@ theorem det_scatteringBlock_eq_one {r t : ℂ} (h : ScatteringNormalized r t) :
 /-- Exact unitary identity for the canonical scattering block. -/
 theorem scatteringBlock_conjTranspose_mul (r t : ℂ) :
     (scatteringBlock r t)ᴴ * scatteringBlock r t =
-      (Complex.normSq r + Complex.normSq t : ℂ) • (1 : M2C) := by
+      ((Complex.normSq r + Complex.normSq t : ℝ) : ℂ) • (1 : M2C) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [scatteringBlock, Matrix.conjTranspose, Matrix.mul_apply,
@@ -121,20 +121,27 @@ def hyperbolicTransfer (α : ℝ) : M2C :=
 /-- The hyperbolic transfer block has determinant one. -/
 theorem hyperbolicTransfer_det (α : ℝ) : Matrix.det (hyperbolicTransfer α) = 1 := by
   rw [Matrix.det_fin_two]
-  simp [hyperbolicTransfer]
-  push_cast
-  exact_mod_cast Real.cosh_sq_sub_sinh_sq α
+  change ((Real.cosh α ^ 2 - Real.sinh α ^ 2 : ℝ) : ℂ) = 1
+  rw [Real.cosh_sq_sub_sinh_sq]
+  norm_num
 
 /-- The hyperbolic transfer block preserves the signature form. -/
 theorem hyperbolicTransfer_junitary (α : ℝ) : IsJUnitary (hyperbolicTransfer α) := by
   unfold IsJUnitary
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [hyperbolicTransfer, JMetric, Matrix.conjTranspose, Matrix.mul_apply,
-      Fin.sum_univ_two] <;> push_cast <;> ring_nf
-  · exact_mod_cast Real.cosh_sq_sub_sinh_sq α
-  · have h := Real.cosh_sq_sub_sinh_sq α
-    nlinarith
+  fin_cases i <;> fin_cases j
+  · change (((Real.cosh α ^ 2 - Real.sinh α ^ 2 : ℝ) : ℂ)) = 1
+    rw [Real.cosh_sq_sub_sinh_sq]
+    norm_num
+  · simp [hyperbolicTransfer, JMetric, Matrix.conjTranspose, Matrix.mul_apply,
+      Fin.sum_univ_two]
+    ring
+  · simp [hyperbolicTransfer, JMetric, Matrix.conjTranspose, Matrix.mul_apply,
+      Fin.sum_univ_two]
+    ring
+  · change (-((Real.cosh α ^ 2 - Real.sinh α ^ 2 : ℝ) : ℂ)) = -1
+    rw [Real.cosh_sq_sub_sinh_sq]
+    norm_num
 
 /-- Therefore the hyperbolic block is special `J`-unitary. -/
 theorem hyperbolicTransfer_special (α : ℝ) :

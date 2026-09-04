@@ -14,10 +14,10 @@ Named capstone for the repository's logarithmic Hadjiivanov checked braid.
 No operator or braid presentation is redefined here.  The file assembles the
 existing owner chain
 
-`logShearBase → checkR → YBE → B_n → B_∞ → Aut(colim J^{⊗n})`
+`logShearBase → checkR → YBE → BraidProject B₃ → categorical automorphisms`
 
-and records the exact compatibility between finite stages, the infinite braid
-group, and the finite-stage group colimit.
+and records the exact compatibility between the carrier representation and the
+finite-nilpotent logarithmic category.
 -/
 
 noncomputable section
@@ -98,12 +98,16 @@ def hadjiivanovBraidProject3CategoricalHom :
     braid_group 3 →* Aut StandardTripleObject :=
   standardCategoricalBraidGroup3Hom.comp braidProjectToPresentedB3
 
+/-- The first BraidProject generator acts by the first local categorical
+Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaZero :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (0 : Fin 2)) =
       standardCategoricalSigmaOneIso := by
   simp [hadjiivanovBraidProject3CategoricalHom]
 
+/-- The second BraidProject generator acts by the second local categorical
+Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaOne :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (1 : Fin 2)) =
@@ -149,9 +153,12 @@ theorem hadjiivanov_sigmaOne_forget :
 
 /-! ## Uniform finite Hadjiivanov braid tower -/
 
+/-- Right-associated carrier of the standard Hadjiivanov logarithmic tensor
+power. -/
 abbrev hadjiivanovTensorPower (n : ℕ) :=
   tensorPowerObj standardJordanObject n
 
+/-- The local Hadjiivanov checked-R inserted at the `i`th adjacent pair. -/
 abbrev hadjiivanovTensorPowerGenerator
     (n : ℕ) (i : Fin (n + 1)) :=
   standardTensorPowerGenerator n i

@@ -6,16 +6,19 @@ import proofs.BraidProject.BraidGroup
 # Global B-infinity action on the Hadjiivanov tensor-power colimit
 
 The finite logarithmic braid representations are already compatible under
-right stabilization, and each fixed Artin generator has therefore been
-promoted to an automorphism of the single `ModuleCat` tensor-power colimit.
-This file proves that those global generator automorphisms satisfy the defining
-relations of the repository-owned presented infinite braid group and applies
+right stabilization, and each fixed Artin generator has therefore been promoted
+to an automorphism of the single `ModuleCat` tensor-power colimit.  This file
+proves that those global generator automorphisms satisfy the defining relations
+of the repository-owned presented infinite braid group and applies
 `Braid.braid_group_inf.toGroup`.
 
-No identification `B_∞ ≅ colim B_n` is needed for this construction: the
-module-colimit action is obtained directly from the compatible finite-stage
-operators, while the existing presented-group universal property supplies the
-group action.
+It also closes the full finite/infinite readback: every finite braid element,
+not only every generator, agrees with the action of its canonical image in
+`B_∞` after the finite-stage carrier is included into the module colimit.
+
+No identification `B_∞ ≅ colim B_n` is needed to construct the action itself;
+that independent structural isomorphism is owned by
+`BraidGroupInfiniteColimitIso`.
 -/
 
 noncomputable section
@@ -30,7 +33,7 @@ open InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
 open InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
 open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
 open InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit
-open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimit
+open InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 open InfoGeometry.Categorical.LogJordanBraidInfiniteGeneratorColimit
 open InfoGeometry.Spectral.Colimit.SequentialModule
 
@@ -110,7 +113,6 @@ theorem infiniteGenerator_far
   have hjm : j ≤ m := by
     dsimp [m]
     omega
-  have hmj : j < m + 1 := by omega
   let a : Fin (m + 1) := ⟨i, by omega⟩
   let b : Fin (m + 1) := ⟨j - 2, by omega⟩
   have hab : a ≤ b := by
@@ -342,4 +344,5 @@ theorem hadjiivanovBraidGroupInf_finite_stage
       rw [hadjiivanovBraidGroupInfHom_sigma]
       rw [standardHadjiivanovBraidProject_sigma]
       exact infiniteGeneratorAut_stage_of_le i n hi) g
+
 end InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation

@@ -5,13 +5,13 @@ import Mathlib.Tactic
 # Orthogonal planar flow split for the bipolar potential
 
 The informal metriplectic discussion mixed the harmonic-conjugate potential with
-the Hamiltonian generator.  Pointwise on the Euclidean plane the clean algebra is
+the Hamiltonian generator. Pointwise on the Euclidean plane the clean algebra is
 simpler: for one scalar potential `Phi`, the gradient channel and its Hodge-rotated
 channel are
 
 `G = -grad Phi`,    `H = J grad Phi`.
 
-These two vectors are orthogonal and have equal Euclidean squared norm.  Because
+These two vectors are orthogonal and have equal Euclidean squared norm. Because
 `dPsi = J dPhi`, using `Psi` as a Hamiltonian would rotate once more and recover
 `-dPhi`; it is not an independent third channel.
 
@@ -90,10 +90,11 @@ theorem metricFlow_half_ne_zero (y : ℝ) : metricFlow (1 / 2) y ≠ 0 := by
   intro h
   have h0 := congrFun h 0
   rw [metricFlow_half] at h0
-  simp at h0
+  have hvanish : 1 / ((1 / 4 : ℝ) + y ^ 2) = 0 := by
+    simpa using neg_eq_zero.mp (by simpa using h0)
   have hpos : 0 < (1 / 4 : ℝ) + y ^ 2 := by
     nlinarith [sq_nonneg y]
-  exact (one_div_ne_zero (ne_of_gt hpos)) (by simpa using h0)
+  exact (one_div_ne_zero (ne_of_gt hpos)) hvanish
 
 /-- Compact corrected flow packet. -/
 theorem orthogonal_flow_packet (x y : ℝ) :

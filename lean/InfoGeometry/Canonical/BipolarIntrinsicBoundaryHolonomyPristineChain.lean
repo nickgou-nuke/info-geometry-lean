@@ -43,7 +43,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BipolarIntrinsicBoundaryHolonomyPristineChain
 
-open Filter MeasureTheory
+open Complex Metric Filter MeasureTheory
 open scoped Interval Real Topology
 
 open InfoGeometry.Analysis.BipolarCrossRatioLog

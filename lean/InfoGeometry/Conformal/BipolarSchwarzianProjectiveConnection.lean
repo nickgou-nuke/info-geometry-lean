@@ -170,6 +170,58 @@ theorem crossRatioSchwarzian_eq_zero
 def bipolarSchwarzian (s : ℂ) : ℂ :=
   schwarzianJet (logarithmicJet₁ s) (logarithmicJet₂ s) (logarithmicJet₃ s)
 
+/-- Rational representative of the logarithmic Schwarzian away from the two
+punctures. -/
+def bipolarSchwarzianRational (s : ℂ) : ℂ :=
+  1 / (2 * s ^ 2 * (s - 1) ^ 2)
+
+/-- Derivative coefficient of the rational Schwarzian representative. -/
+def bipolarSchwarzianRationalDeriv (s : ℂ) : ℂ :=
+  -(2 * s - 1) / (s ^ 3 * (s - 1) ^ 3)
+
+/-- Polynomial denominator of the rational Schwarzian representative. -/
+def schwarzianPoleDenominator (s : ℂ) : ℂ :=
+  2 * s ^ 2 * (s - 1) ^ 2
+
+/-- Derivative of the polynomial Schwarzian denominator. -/
+def schwarzianPoleDenominatorDeriv (s : ℂ) : ℂ :=
+  4 * s * (s - 1) * (2 * s - 1)
+
+/-- Genuine derivative of the polynomial Schwarzian denominator. -/
+theorem hasDerivAt_schwarzianPoleDenominator (s : ℂ) :
+    HasDerivAt schwarzianPoleDenominator
+      (schwarzianPoleDenominatorDeriv s) s := by
+  have h₀ := (hasDerivAt_id s).pow 2
+  have h₁ := ((hasDerivAt_id s).sub_const 1).pow 2
+  have h := (h₀.mul h₁).const_mul (2 : ℂ)
+  convert h using 1 <;>
+    simp [schwarzianPoleDenominator,
+      schwarzianPoleDenominatorDeriv] <;> ring
+
+/-- Genuine derivative of the rational Schwarzian representative. -/
+theorem hasDerivAt_bipolarSchwarzianRational
+    {s : ℂ} (hs : s ∈ punctured01) :
+    HasDerivAt bipolarSchwarzianRational
+      (bipolarSchwarzianRationalDeriv s) s := by
+  have h₀ : s ≠ 0 := hs.1
+  have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
+  have hden : schwarzianPoleDenominator s ≠ 0 := by
+    unfold schwarzianPoleDenominator
+    exact mul_ne_zero
+      (mul_ne_zero (by norm_num) (pow_ne_zero 2 h₀))
+      (pow_ne_zero 2 h₁)
+  have hraw :=
+    (hasDerivAt_const s (1 : ℂ)).div
+      (hasDerivAt_schwarzianPoleDenominator s) hden
+  change HasDerivAt
+    (fun z : ℂ => 1 / schwarzianPoleDenominator z)
+    (bipolarSchwarzianRationalDeriv s) s
+  convert hraw using 1
+  unfold bipolarSchwarzianRationalDeriv schwarzianPoleDenominator
+    schwarzianPoleDenominatorDeriv
+  field_simp [h₀, h₁]
+  ring
+
 /-- Exact quadratic-pole normal form of the logarithmic Schwarzian. -/
 theorem bipolarSchwarzian_eq_rational
     {s : ℂ} (hs : s ∈ punctured01) :
@@ -184,6 +236,39 @@ theorem bipolarSchwarzian_eq_rational
   unfold schwarzianJet
   field_simp [h₀, h₁, h₂]
   ring
+
+/-- Function-valued form of the rational normal-form theorem. -/
+theorem bipolarSchwarzian_eq_rationalFunction
+    {s : ℂ} (hs : s ∈ punctured01) :
+    bipolarSchwarzian s = bipolarSchwarzianRational s := by
+  simpa [bipolarSchwarzianRational] using
+    bipolarSchwarzian_eq_rational hs
+
+/-- The twice-punctured domain is open. -/
+theorem isOpen_punctured01 : IsOpen punctured01 := by
+  have hset :
+      punctured01 = ({0}ᶜ ∩ {1}ᶜ : Set ℂ) := by
+    ext z
+    simp [punctured01]
+  rw [hset]
+  exact isClosed_singleton.isOpen_compl.inter
+    isClosed_singleton.isOpen_compl
+
+/-- The Schwarzian defined from the derivative jet has the genuine derivative
+of its rational representative on the punctured domain. -/
+theorem hasDerivAt_bipolarSchwarzian
+    {s : ℂ} (hs : s ∈ punctured01) :
+    HasDerivAt bipolarSchwarzian
+      (bipolarSchwarzianRationalDeriv s) s := by
+  apply (hasDerivAt_bipolarSchwarzianRational hs).congr_of_eventuallyEq
+  filter_upwards [isOpen_punctured01.mem_nhds hs] with z hz
+  exact bipolarSchwarzian_eq_rationalFunction hz
+
+/-- Ordinary derivative readout of the logarithmic Schwarzian. -/
+theorem deriv_bipolarSchwarzian
+    {s : ℂ} (hs : s ∈ punctured01) :
+    deriv bipolarSchwarzian s = bipolarSchwarzianRationalDeriv s := by
+  exact (hasDerivAt_bipolarSchwarzian hs).deriv
 
 /-- The logarithmic Schwarzian is one half of the square of the global
 logarithmic one-form coefficient. -/
@@ -239,9 +324,11 @@ theorem bipolar_schwarzian_packet
     {s : ℂ} (hs : s ∈ punctured01) :
     crossRatioSchwarzian s = 0 ∧
       bipolarSchwarzian s = 1 / (2 * s ^ 2 * (s - 1) ^ 2) ∧
+      deriv bipolarSchwarzian s = bipolarSchwarzianRationalDeriv s ∧
       bipolarSchwarzian s = (1 / 2 : ℂ) * dlog01 s ^ 2 := by
   exact ⟨crossRatioSchwarzian_eq_zero hs,
     bipolarSchwarzian_eq_rational hs,
+    deriv_bipolarSchwarzian hs,
     bipolarSchwarzian_eq_half_dlog01_sq hs⟩
 
 end InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection

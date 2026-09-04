@@ -216,4 +216,26 @@ theorem wittSoldering_intertwines_thermalDilation
     simp [wittSoldering, thermalDilation, wittThermalDilation,
       positiveCircularEmbedding, negativeCircularEmbedding, smul_eq_mul]
 
+/-- Reciprocal thermal dilation preserves the split `(4,4)` Witt polar form. -/
+theorem wittThermalDilation_isometry
+    (r : ℝ) (z w : WittCoord) :
+    circularPeircePolar (wittThermalDilation r z)
+        (wittThermalDilation r w) = circularPeircePolar z w := by
+  have hcancel : Real.exp r * Real.exp (-r) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  simp [circularPeircePolar, wittThermalDilation]
+  ring_nf
+  simp [hcancel]
+
+/-- The doubled thermal squeeze preserves the pulled-back Witt metric. -/
+theorem thermalDilation_soldered_isometry
+    (r : ℝ) (u v : DoubledSpace V4) :
+    circularPeircePolar (wittSoldering (thermalDilation r u))
+        (wittSoldering (thermalDilation r v)) =
+      circularPeircePolar (wittSoldering u) (wittSoldering v) := by
+  rw [wittSoldering_intertwines_thermalDilation,
+    wittSoldering_intertwines_thermalDilation]
+  exact wittThermalDilation_isometry r (wittSoldering u) (wittSoldering v)
+
 end InfoGeometry.Canonical.ThermofieldWittSoldering

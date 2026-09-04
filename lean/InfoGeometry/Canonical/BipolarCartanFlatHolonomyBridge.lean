@@ -13,10 +13,11 @@ The canonical constant-coefficient connection is
 `A(v) = v_η Kboost + v_θ Kcirc
       = ((v_η + i v_θ)/2) σ3`.
 
-All its values lie in one abelian Cartan line, so its operator self-wedge
-vanishes for every pair of tangent vectors. Independently, the logarithmic
-period lattice produces nontrivial half-Cartan holonomy: either elementary
-puncture loop gives `-I₂`, while the combined loop gives `I₂`.
+All its values lie in one abelian Cartan line. Its exterior derivative is zero
+in the constant-coefficient model and its operator self-wedge also vanishes,
+so the modeled curvature is zero. Independently, the logarithmic period lattice
+produces nontrivial half-Cartan holonomy: either elementary puncture loop gives
+`-I₂`, while the combined loop gives `I₂`.
 
 The central sign acts nontrivially on two-component spinors but trivially by
 matrix conjugation. This is the exact finite double-cover distinction. No
@@ -71,11 +72,33 @@ theorem canonicalConnection_selfWedge_zero :
       Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply] <;>
     ring
 
+/-- Exterior derivative in the finite constant-coefficient connection model. -/
+def constantExteriorDerivative
+    (_A : Op1Form ℝ Tangent2 Matrix2C) : Op2Form ℝ Tangent2 Matrix2C :=
+  0
+
+@[simp] theorem constantExteriorDerivative_apply
+    (A : Op1Form ℝ Tangent2 Matrix2C) (u v : Tangent2) :
+    constantExteriorDerivative A u v = 0 := by
+  rfl
+
+/-- Curvature of a constant-coefficient operator connection in this finite
+model: zero derivative term plus the operator self-wedge. -/
+def constantConnectionCurvature
+    (A : Op1Form ℝ Tangent2 Matrix2C) : Op2Form ℝ Tangent2 Matrix2C :=
+  constantExteriorDerivative A + wedge A A
+
+/-- Full modeled curvature of the canonical Cartan connection vanishes. -/
+theorem canonicalConstantConnectionCurvature_zero :
+    constantConnectionCurvature (operatorConnection Kboost Kcirc) = 0 := by
+  simp [constantConnectionCurvature, constantExteriorDerivative,
+    canonicalConnection_selfWedge_zero]
+
 /-- In particular the coordinate curvature coefficient vanishes. -/
 theorem canonicalConnection_coordinate_curvature_zero :
-    wedge (operatorConnection Kboost Kcirc)
-        (operatorConnection Kboost Kcirc) etaTangent thetaTangent = 0 := by
-  rw [canonicalConnection_selfWedge_zero]
+    constantConnectionCurvature (operatorConnection Kboost Kcirc)
+        etaTangent thetaTangent = 0 := by
+  rw [canonicalConstantConnectionCurvature_zero]
   simp
 
 /-- Two-component complex spinor carrier. -/
@@ -130,12 +153,11 @@ theorem combinedHolonomy_spinor_trivial (ψ : Spinor2) :
 
 /-- Compact local-flat/global-monodromy packet. -/
 theorem flat_connection_nontrivial_holonomy_packet :
-    wedge (operatorConnection Kboost Kcirc)
-        (operatorConnection Kboost Kcirc) = 0 ∧
+    constantConnectionCurvature (operatorConnection Kboost Kcirc) = 0 ∧
       spinHolonomy originWinding = -(1 : Matrix2C) ∧
       spinHolonomy originWinding ≠ (1 : Matrix2C) ∧
       spinHolonomy (originWinding + oneWinding) = 1 := by
-  exact ⟨canonicalConnection_selfWedge_zero,
+  exact ⟨canonicalConstantConnectionCurvature_zero,
     spinHolonomy_origin,
     spinHolonomy_origin_ne_one,
     spinHolonomy_origin_add_one⟩

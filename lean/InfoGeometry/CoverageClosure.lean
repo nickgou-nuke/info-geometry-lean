@@ -80,6 +80,7 @@ import InfoGeometry.Bridge.OperatorPauliLubanskiLift
 import InfoGeometry.Bridge.PolarAxialChiralParityBridge
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 import InfoGeometry.Bridge.QuaternionicTwistorSphere
+import InfoGeometry.Bridge.ZornConformalSixConeBridge
 import InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
 import InfoGeometry.Canonical.AlgebraicDerivations
 import InfoGeometry.Canonical.ArakiConnesHaagerupBridge

@@ -29,6 +29,10 @@ namespace InfoGeometry.Analysis.BipolarMetricEndLengths
 open Filter Set MeasureTheory
 open scoped Topology Interval
 
+open InfoGeometry.Analysis.BipolarCrossRatioLog
+open InfoGeometry.Analysis.BipolarLogDifferential
+open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+
 /-- Positive real-axis speed of the logarithmic metric between the punctures. -/
 def middleAxisSpeed (x : ℝ) : ℝ :=
   1 / (x * (1 - x))

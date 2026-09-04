@@ -143,8 +143,7 @@ theorem hasDerivAt_bipolarSchwarzian_readout
     {s : ℂ} (hs : s ∈ punctured01) :
     HasDerivAt bipolarSchwarzian (bipolarSchwarzianDeriv s) s := by
   simpa [bipolarSchwarzianDeriv] using
-    InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection.
-      hasDerivAt_bipolarSchwarzian hs
+    InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection.hasDerivAt_bipolarSchwarzian hs
 
 /-- Ordinary derivative readout of the bare Schwarzian. -/
 theorem deriv_bipolarSchwarzian_readout

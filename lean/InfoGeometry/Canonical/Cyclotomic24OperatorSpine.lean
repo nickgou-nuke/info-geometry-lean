@@ -11,7 +11,9 @@ The master polynomial is
 `P₂₅(X) = X * (X^24 - 1)`.
 
 We prove its exact factorization through the cyclotomic factors indexed by the
-divisors of `24`, and prove that the lower stage polynomials divide it.
+divisors of `24`, prove that the lower stage polynomials divide it, and then
+transport those divisibility statements to finite complex operators by
+polynomial evaluation.
 
 No claim is made that `P₂₅` is the minimal polynomial of a single physical
 operator, nor that the `Φ₁₂` and `Φ₂₄` factors by themselves identify a `G₂`
@@ -196,5 +198,141 @@ theorem cyclotomic24_nested_factor_packet :
     X6_sub_one_dvd_master25,
     X12_sub_one_dvd_master25,
     phi24_dvd_master25⟩
+
+/-! ## Finite operator realization of the annihilator spine -/
+
+/-- Complex-coefficient version of the master polynomial, used for finite
+complex matrix evaluation. -/
+def master25C : ℂ[X] :=
+  X * (X ^ 24 - 1)
+
+/-- Any polynomial factor annihilating an operator also forces the master
+polynomial to annihilate it, provided that factor divides the master polynomial. -/
+theorem aeval_master25C_eq_zero_of_dvd
+    {n : ℕ} (p : ℂ[X])
+    (hp : p ∣ master25C)
+    (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : aeval T p = 0) :
+    aeval T master25C = 0 := by
+  rcases hp with ⟨q, rfl⟩
+  rw [map_mul, hT, zero_mul]
+
+/-- The tripotent polynomial divides the complex master polynomial. -/
+theorem tripotent_dvd_master25C :
+    X ^ 3 - X ∣ master25C := by
+  refine ⟨(X ^ 21 + X ^ 19 + X ^ 17 + X ^ 15 + X ^ 13 + X ^ 11 +
+      X ^ 9 + X ^ 7 + X ^ 5 + X ^ 3 + X) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- The `0,±i` cubic polynomial divides the complex master polynomial. -/
+theorem complex_structure_dvd_master25C :
+    X ^ 3 + X ∣ master25C := by
+  refine ⟨(X ^ 21 - X ^ 19 + X ^ 17 - X ^ 15 + X ^ 13 - X ^ 11 +
+      X ^ 9 - X ^ 7 + X ^ 5 - X ^ 3 + X) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- The eighth-cyclotomic stage divides the complex master polynomial. -/
+theorem phi8_dvd_master25C :
+    X ^ 4 + 1 ∣ master25C := by
+  refine ⟨(X * (X ^ 20 - X ^ 16 + X ^ 12 - X ^ 8 + X ^ 4 - 1)) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- The sixfold closure divides the complex master polynomial. -/
+theorem X6_sub_one_dvd_master25C :
+    X ^ 6 - 1 ∣ master25C := by
+  refine ⟨(X * (X ^ 18 + X ^ 12 + X ^ 6 + 1)) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- The twelvefold closure divides the complex master polynomial. -/
+theorem X12_sub_one_dvd_master25C :
+    X ^ 12 - 1 ∣ master25C := by
+  refine ⟨(X * (X ^ 12 + 1)) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- The primitive 24th cyclotomic factor divides the complex master polynomial. -/
+theorem phi24_dvd_master25C :
+    X ^ 8 - X ^ 4 + 1 ∣ master25C := by
+  refine ⟨(X * (X ^ 16 + X ^ 12 - X ^ 4 - 1)) : ℂ[X], ?_⟩
+  simp [master25C]
+  ring
+
+/-- A tripotent finite operator is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_tripotenT
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 3 = T) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd (X ^ 3 - X) tripotent_dvd_master25C T
+  simp [hT]
+
+/-- A finite operator satisfying `T³ = -T` is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_complex_structure
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 3 = -T) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd (X ^ 3 + X) complex_structure_dvd_master25C T
+  simp [hT]
+
+/-- A finite `Φ₈` operator is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_phi8
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 4 = -1) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd (X ^ 4 + 1) phi8_dvd_master25C T
+  simp [hT]
+
+/-- A sixfold finite operator is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_order6
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 6 = 1) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd (X ^ 6 - 1) X6_sub_one_dvd_master25C T
+  simp [hT]
+
+/-- A twelvefold finite operator is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_order12
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 12 = 1) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd (X ^ 12 - 1) X12_sub_one_dvd_master25C T
+  simp [hT]
+
+/-- A primitive-24-factor finite operator is annihilated by the master polynomial. -/
+theorem master25C_annihilates_of_phi24
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 8 - T ^ 4 + 1 = 0) :
+    aeval T master25C = 0 := by
+  apply aeval_master25C_eq_zero_of_dvd
+    (X ^ 8 - X ^ 4 + 1) phi24_dvd_master25C T
+  simpa using hT
+
+/-- Direct master closure: every finite operator of order dividing 24 is
+annihilated by `P₂₅`. -/
+theorem master25C_annihilates_of_order24
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
+    (hT : T ^ 24 = 1) :
+    aeval T master25C = 0 := by
+  simp [master25C, hT]
+
+/-- Compact operator-level closure packet.  Each implication is conditional on
+an explicit annihilator equation for the supplied finite operator. -/
+theorem cyclotomic24_operator_annihilator_packet
+    {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ) :
+    (T ^ 3 = T → aeval T master25C = 0) ∧
+    (T ^ 3 = -T → aeval T master25C = 0) ∧
+    (T ^ 4 = -1 → aeval T master25C = 0) ∧
+    (T ^ 6 = 1 → aeval T master25C = 0) ∧
+    (T ^ 12 = 1 → aeval T master25C = 0) ∧
+    (T ^ 24 = 1 → aeval T master25C = 0) := by
+  exact ⟨master25C_annihilates_of_tripotenT T,
+    master25C_annihilates_of_complex_structure T,
+    master25C_annihilates_of_phi8 T,
+    master25C_annihilates_of_order6 T,
+    master25C_annihilates_of_order12 T,
+    master25C_annihilates_of_order24 T⟩
 
 end InfoGeometry.Canonical.Cyclotomic24OperatorSpine

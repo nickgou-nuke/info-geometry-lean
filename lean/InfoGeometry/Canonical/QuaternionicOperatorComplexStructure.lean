@@ -112,6 +112,99 @@ def pauliQuaternionicOperatorFrame :
   jk := InfoGeometry.Clifford.QuaternionPauliRealForm.qj_mul_qk
   ki := InfoGeometry.Clifford.QuaternionPauliRealForm.qk_mul_qi
 
+/-- The native two-dimensional Pauli column carrier. -/
+abbrev PauliMatrix :=
+  InfoGeometry.Clifford.QuaternionPauliRealForm.Mat2C
+abbrev PauliSpinor := Fin 2 → ℂ
+abbrev PauliSpinorOperator := PauliSpinor →ₗ[ℂ] PauliSpinor
+
+/-- The left action of a two-by-two Pauli matrix on its column carrier. -/
+noncomputable def pauliSpinorAction (A : PauliMatrix) : PauliSpinorOperator :=
+  Matrix.toLin' A
+
+theorem pauliSpinorAction_mul (A B : PauliMatrix) :
+    (pauliSpinorAction A).comp (pauliSpinorAction B) =
+      pauliSpinorAction (A * B) := by
+  change (Matrix.toLin' A).comp (Matrix.toLin' B) =
+    Matrix.toLin' (A * B)
+  rw [← Matrix.toLin'_mul]
+
+theorem pauliSpinorAction_sq_of (A : PauliMatrix)
+    (hA : A * A = -(1 : PauliMatrix)) :
+    (pauliSpinorAction A).comp (pauliSpinorAction A) =
+      -(LinearMap.id : PauliSpinorOperator) := by
+  have hcomp :
+      (Matrix.toLin' A).comp (Matrix.toLin' A) =
+        Matrix.toLin' (-(1 : PauliMatrix)) := by
+    rw [← Matrix.toLin'_mul, hA]
+  simpa [pauliSpinorAction] using hcomp
+
+noncomputable def pauliComplexI : PauliSpinorOperator :=
+  pauliSpinorAction InfoGeometry.Clifford.QuaternionPauliRealForm.qi
+
+noncomputable def pauliComplexJ : PauliSpinorOperator :=
+  pauliSpinorAction InfoGeometry.Clifford.QuaternionPauliRealForm.qj
+
+noncomputable def pauliComplexK : PauliSpinorOperator :=
+  pauliSpinorAction InfoGeometry.Clifford.QuaternionPauliRealForm.qk
+
+theorem pauliComplexI_sq :
+    pauliComplexI.comp pauliComplexI =
+      -(LinearMap.id : PauliSpinorOperator) := by
+  simpa [pauliComplexI] using
+    (pauliSpinorAction_sq_of
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qi
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qi_sq)
+
+theorem pauliComplexJ_sq :
+    pauliComplexJ.comp pauliComplexJ =
+      -(LinearMap.id : PauliSpinorOperator) := by
+  simpa [pauliComplexJ] using
+    (pauliSpinorAction_sq_of
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qj
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qj_sq)
+
+theorem pauliComplexK_sq :
+    pauliComplexK.comp pauliComplexK =
+      -(LinearMap.id : PauliSpinorOperator) := by
+  simpa [pauliComplexK] using
+    (pauliSpinorAction_sq_of
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qk
+      InfoGeometry.Clifford.QuaternionPauliRealForm.qk_sq)
+
+theorem pauliComplexI_comp_J :
+    pauliComplexI.comp pauliComplexJ = pauliComplexK := by
+  calc
+    pauliComplexI.comp pauliComplexJ =
+        pauliSpinorAction
+          (InfoGeometry.Clifford.QuaternionPauliRealForm.qi *
+            InfoGeometry.Clifford.QuaternionPauliRealForm.qj) :=
+      pauliSpinorAction_mul _ _
+    _ = pauliComplexK := by
+      rw [InfoGeometry.Clifford.QuaternionPauliRealForm.qi_mul_qj]
+
+theorem pauliComplexJ_comp_K :
+    pauliComplexJ.comp pauliComplexK = pauliComplexI := by
+  calc
+    pauliComplexJ.comp pauliComplexK =
+        pauliSpinorAction
+          (InfoGeometry.Clifford.QuaternionPauliRealForm.qj *
+            InfoGeometry.Clifford.QuaternionPauliRealForm.qk) :=
+      pauliSpinorAction_mul _ _
+    _ = pauliComplexI := by
+      rw [InfoGeometry.Clifford.QuaternionPauliRealForm.qj_mul_qk]
+
+theorem pauliComplexK_comp_I :
+    pauliComplexK.comp pauliComplexI = pauliComplexJ := by
+  calc
+    pauliComplexK.comp pauliComplexI =
+        pauliSpinorAction
+          (InfoGeometry.Clifford.QuaternionPauliRealForm.qk *
+            InfoGeometry.Clifford.QuaternionPauliRealForm.qi) :=
+      pauliSpinorAction_mul _ _
+    _ = pauliComplexJ := by
+      rw [InfoGeometry.Clifford.QuaternionPauliRealForm.qk_mul_qi]
+
 /-! ## Lifting matrix operators to spinor endomorphisms -/
 
 abbrev SpinorCarrier := DiracSpinor

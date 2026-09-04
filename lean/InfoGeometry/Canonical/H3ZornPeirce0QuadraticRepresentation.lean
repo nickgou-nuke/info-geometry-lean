@@ -127,10 +127,10 @@ def quadraticP (y x : H3Zorn ℝ) : H3Zorn ℝ :=
 cubic quadratic operator `H3Zorn.U`. -/
 theorem quadraticP_eq_U (y x : H3Zorn ℝ) :
     quadraticP y x = H3Zorn.U y x := by
-  rw [quadraticP, ← candidateJordanMul_eq_mul,
-    ← candidateJordanMul_eq_mul y x,
-    ← candidateJordanMul_eq_mul y y,
-    ← candidateJordanMul_eq_mul]
+  rw [quadraticP]
+  change
+    (2 : ℝ) • candidateJordanMul y (candidateJordanMul y x) -
+        candidateJordanMul (candidateJordanMul y y) x = H3Zorn.U y x
   rw [H3ZornJordanQuadraticReconstruction]
   simp only [candidateJordanMul, H3Zorn.T_smul_left,
     H3Zorn.T_smul_right, smul_smul]

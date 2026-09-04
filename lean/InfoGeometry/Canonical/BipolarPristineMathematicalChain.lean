@@ -2,6 +2,8 @@ import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
+import InfoGeometry.Analysis.BipolarBoundaryTrace
+import InfoGeometry.Analysis.BipolarPlanarHodgePair
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -10,20 +12,9 @@ import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 # Pristine mathematical chain behind the bipolar conformal construction
 
 This file is an architectural capstone with no physical vocabulary in its
-statements.  It records the exact chain that survives after separating the
-conformal, logarithmic, local differential, winding, and finite representation
-layers.
-
-The global objects are
-
-* `q(s) = s/(1-s)`;
-* the branch-independent logarithmic differential `dq/q`;
-* the reflection `s ↦ 1-conj(s)`;
-* the algebraic two-puncture winding lattice;
-* the determinant-one diagonal `2 × 2` representation.
-
-The principal logarithm is used only locally under an explicit slit-plane
-hypothesis.
+statements. It records the exact chain that survives after separating the
+conformal, logarithmic, local differential, planar Hodge, winding, and finite
+representation layers.
 -/
 
 noncomputable section
@@ -34,12 +25,14 @@ open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
+open InfoGeometry.Analysis.BipolarBoundaryTrace
+open InfoGeometry.Analysis.BipolarPlanarHodgePair
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarLogSL2
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
 open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 
-/-- Local analytic core.  On a compatible branch, `W` is a noncritical local
+/-- Local analytic core. On a compatible branch, `W` is a noncritical local
 primitive of the global logarithmic differential. -/
 theorem pristine_local_analytic_core
     {s : ℂ} (hs : s ∈ punctured01)
@@ -68,6 +61,25 @@ theorem pristine_reflection_apollonius_core
     crossRatio01_mirror s,
     eta_mirror s,
     eta_eq_iff_apollonius hs c⟩
+
+/-- Exact real-coordinate boundary trace and planar Hodge core. -/
+theorem pristine_boundary_hodge_core (y : ℝ) :
+    phiXY (1 / 2) y = 0 ∧
+      deriv (fun t => phiXY t y) (1 / 2) = 1 / ((1 / 4 : ℝ) + y ^ 2) ∧
+      dPhiCoeff (1 / 2) y 1 = 0 ∧
+      dPsiCoeff (1 / 2) y 0 = 0 ∧
+      dPsiCoeff (1 / 2) y 1 = 1 / ((1 / 4 : ℝ) + y ^ 2) := by
+  exact ⟨phiXY_half y,
+    deriv_phiXY_half y,
+    dPhiCoeff_half_tangent_zero y,
+    dPsiCoeff_half_normal_zero y,
+    dPsiCoeff_half_tangent y⟩
+
+/-- Pointwise Euclidean Hodge relation between the radial and angular forms. -/
+theorem pristine_planar_hodge_core (x y : ℝ) :
+    dPsiCoeff x y = hodgeRotate (dPhiCoeff x y) ∧
+      hodgeRotate (dPsiCoeff x y) = -dPhiCoeff x y := by
+  exact planar_hodge_packet x y
 
 /-- The metric coefficient has two finite logarithmic poles but a removable
 point at infinity in the inversion chart. -/
@@ -123,7 +135,7 @@ theorem pristine_logistic_core (t : ℝ) :
     eta_logistic t⟩
 
 /-- Compact master theorem exposing one theorem from every mathematically
-independent layer, without adding any physical interpretation. -/
+independent global/local layer, without adding physical interpretation. -/
 theorem pristine_master_chain
     {s : ℂ} (hs : s ∈ punctured01)
     (hslit : crossRatio01 s ∈ Complex.slitPlane)

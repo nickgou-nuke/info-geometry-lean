@@ -1,5 +1,3 @@
-import Mathlib
-import InfoGeometry.Canonical.ThermofieldWittThermalIsometry
 import InfoGeometry.Jordan.LogDet
 
 /-!
@@ -17,12 +15,12 @@ The skew part contributes exactly zero to every diagonal quadratic form, so the
 sign of `xᵀ Γdiff x` is controlled entirely by the symmetric part.
 
 A second layer identifies the symmetric mobility with the inverse of an existing
-`InfoGeometry.Jordan.SPD` Hessian metric.  Mathlib's native `Matrix.PosDef.inv`
+`InfoGeometry.Jordan.SPD` Hessian metric. Mathlib's native `Matrix.PosDef.inv`
 theorem then supplies positivity of the inverse directly; no invertibility axiom
 or proof-wrapper field is introduced.
 
 The resulting quadratic quantity is called `entropyProduction` only after an
-explicit `IsOnsagerDissipative` hypothesis.  The theorem does not identify an
+explicit `IsOnsagerDissipative` hypothesis. The theorem does not identify an
 arbitrary connection difference with physical entropy production, nor does it
 assert a GENERIC, GKSL, or hydrodynamic constitutive law.
 -/
@@ -30,7 +28,6 @@ assert a GENERIC, GKSL, or hydrodynamic constitutive law.
 noncomputable section
 
 open Matrix
-open scoped BigOperators
 
 namespace InfoGeometry.Canonical.ThermofieldOnsagerDikinBridge
 
@@ -43,7 +40,7 @@ structure DoubledConnection (n : ℕ) where
 
 namespace DoubledConnection
 
-/-- Average branch connection.  This is kinematic data only. -/
+/-- Average branch connection. This is kinematic data only. -/
 def gammaSum (Γ : DoubledConnection n) : Matrix (Fin n) (Fin n) ℝ :=
   (1 / 2 : ℝ) • (Γ.gammaPlus + Γ.gammaMinus)
 
@@ -114,10 +111,10 @@ theorem gammaDiff_quadraticResponse_eq_onsager
     quadraticResponse Γ.gammaDiff x =
       quadraticResponse Γ.onsagerTensor x := by
   rw [Γ.gammaDiff_eq_onsager_add_casimir]
-  unfold quadraticResponse
-  rw [Matrix.add_mulVec, dotProduct_add]
-  rw [skew_quadraticResponse_zero Γ.casimirTensor Γ.casimirTensor_transpose x]
-  ring
+  have hskew :=
+    skew_quadraticResponse_zero Γ.casimirTensor Γ.casimirTensor_transpose x
+  unfold quadraticResponse at hskew ⊢
+  rw [Matrix.add_mulVec, dotProduct_add, hskew, add_zero]
 
 /-- The precise finite second-law hypothesis: the symmetric response is positive
 semidefinite as a quadratic form. -/
@@ -134,7 +131,7 @@ theorem branchDifference_nonneg_of_onsager
   rw [gammaDiff_quadraticResponse_eq_onsager]
   exact hΓ x
 
-/-- Thermodynamic entropy-production readout.  Its nonnegativity is not built
+/-- Thermodynamic entropy-production readout. Its nonnegativity is not built
 into the definition; it follows only under `IsOnsagerDissipative`. -/
 def entropyProduction (Γ : DoubledConnection n) (x : Fin n → ℝ) : ℝ :=
   quadraticResponse Γ.gammaDiff x
@@ -198,7 +195,7 @@ theorem isOnsagerDissipative_of_kvCompatible
     (hcompat : IsKVCompatible Γ g) :
     IsOnsagerDissipative Γ := by
   intro x
-  rw [IsKVCompatible] at hcompat
+  change Γ.onsagerTensor = dikinMobility g at hcompat
   rw [hcompat]
   exact dikinMobility_quadraticResponse_nonneg g x
 
@@ -218,7 +215,7 @@ def squaredNewtonDecrement
   quadraticResponse (dikinMobility g) x
 
 /-- Under KV compatibility the symmetric Onsager dissipation is exactly the
-squared Newton decrement quadratic form.  This is an algebraic identity; a
+squared Newton decrement quadratic form. This is an algebraic identity; a
 physical identification of the supplied vector with `-∇F` is downstream data. -/
 theorem onsagerResponse_eq_squaredNewtonDecrement
     (Γ : DoubledConnection n) (g : InfoGeometry.Jordan.SPD n)
@@ -226,8 +223,9 @@ theorem onsagerResponse_eq_squaredNewtonDecrement
     (x : Fin n → ℝ) :
     quadraticResponse Γ.onsagerTensor x =
       squaredNewtonDecrement g x := by
-  rw [IsKVCompatible] at hcompat
-  simp [squaredNewtonDecrement, hcompat]
+  change Γ.onsagerTensor = dikinMobility g at hcompat
+  rw [hcompat]
+  rfl
 
 /-- The full branch-difference readout therefore equals the Newton-decrement
 quadratic form whenever the symmetric sector is KV-compatible. -/
@@ -252,7 +250,8 @@ theorem onsager_unit_sublevel_eq_dualDikinUnitBall
     {x : Fin n → ℝ | quadraticResponse Γ.onsagerTensor x ≤ 1} =
       dualDikinUnitBall g := by
   ext x
-  simp only [Set.mem_setOf_eq, dualDikinUnitBall]
+  change quadraticResponse Γ.onsagerTensor x ≤ 1 ↔
+    squaredNewtonDecrement g x ≤ 1
   rw [onsagerResponse_eq_squaredNewtonDecrement Γ g hcompat x]
 
 /-- Compact theorem packet for the kinematic-to-positive-response bridge. -/

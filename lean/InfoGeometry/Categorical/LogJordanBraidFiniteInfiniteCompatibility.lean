@@ -5,14 +5,13 @@ import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 # Finite/infinite Hadjiivanov braid compatibility
 
 The infinite Hadjiivanov representation is constructed generatorwise from
-upper-tail actions on the tensor-power colimit.  This file closes the remaining
-finite-stage readback gap: every finite braid element, not only every Artin
-generator, intertwines with the canonical stage inclusion.
+upper-tail actions on the tensor-power colimit.  This file closes the
+finite-stage readback theorem for every finite braid element, not only every
+Artin generator.
 
-The proof deliberately does not revisit the colimit construction.  For a fixed
-finite stage, the braid elements satisfying the intertwining equation form a
-subgroup.  The existing `Braid.generated_by` theorem then reduces the result to
-the already-proved generator readback.
+For a fixed finite stage, the braid elements satisfying the intertwining square
+form a subgroup.  The existing `Braid.generated_by` theorem therefore reduces
+the full result to the already-proved generator readback.
 -/
 
 noncomputable section
@@ -27,11 +26,7 @@ open InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
 open InfoGeometry.Categorical.LogJordanBraidTensorPowerColimit
 open InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
 
-/-- Pointwise finite-stage intertwining predicate for a braid element.
-
-The orientation follows the actual colimit maps: first act on the finite tensor
-stage and then include, or first include and then act by the global `B_∞`
-automorphism. -/
+/-- Pointwise finite-stage intertwining predicate for a braid element. -/
 def BraidElementCompatible
     (n : ℕ) (g : braid_group (n + 2)) : Prop :=
   ∀ v : tensorPowerObj standardJordanObject (n + 2),
@@ -84,8 +79,6 @@ private theorem compatible_inv
           (finiteToInfiniteGroupHom (n + 1) g⁻¹)).hom w) h
   simpa [map_inv, LinearEquiv.inv_apply_apply] using h'.symm
 
-/-- The already-owned global generator readback gives compatibility for every
-finite Artin generator. -/
 private theorem compatible_sigma
     (n : ℕ) (i : Fin (n + 1)) :
     BraidElementCompatible n (σ' (n + 1) i) := by
@@ -98,11 +91,8 @@ private theorem compatible_sigma
   have hv := congrArg (fun f => f.hom v) h
   simpa [ModuleCat.comp_apply] using hv.symm
 
-/-- Master finite-stage compatibility theorem.
-
-For every `g ∈ B_{n+2}`, the finite Hadjiivanov action on `J^{⊗(n+2)}` and the
-global `B_∞` action on the tensor-power colimit agree after the canonical stage
-inclusion. -/
+/-- For every `g ∈ B_{n+2}`, the finite Hadjiivanov action and the global
+`B_∞` action agree after the canonical stage inclusion. -/
 theorem hadjiivanov_finite_infinite_compatibility
     (n : ℕ) (g : braid_group (n + 2)) :
     BraidElementCompatible n g := by
@@ -120,8 +110,8 @@ theorem hadjiivanov_finite_infinite_compatibility
     exact compatible_sigma n i
   exact Braid.generated_by (n + 1) H hgen g
 
-/-- Categorical morphism form of the master theorem.  This is the exact
-finite-to-infinite representation square used by the Hadjiivanov capstone. -/
+/-- Categorical morphism form of the master finite-to-infinite compatibility
+square. -/
 theorem hadjiivanov_finite_infinite_compatibility_hom
     (n : ℕ) (g : braid_group (n + 2)) :
     ModuleCat.ofHom

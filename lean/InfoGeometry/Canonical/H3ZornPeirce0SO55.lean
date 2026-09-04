@@ -38,6 +38,11 @@ theorem BQ10_coordinate (u v : V10) :
           zornPair (zornOfMinkowski10 u) (zornOfMinkowski10 v)) := by
   rfl
 
+/-- Symmetry of the ten-dimensional polarized metric. -/
+theorem BQ10_comm (u v : V10) : BQ10 u v = BQ10 v u := by
+  unfold BQ10
+  exact BPeirce_comm (toH3 u) (toH3 v)
+
 /-- Additivity in the first argument. -/
 theorem BQ10_add_left (u₁ u₂ v : V10) :
     BQ10 (u₁ + u₂) v = BQ10 u₁ v + BQ10 u₂ v := by
@@ -59,18 +64,13 @@ theorem BQ10_smul_left (r : ℝ) (u v : V10) :
 /-- Additivity in the second argument. -/
 theorem BQ10_add_right (u v₁ v₂ : V10) :
     BQ10 u (v₁ + v₂) = BQ10 u v₁ + BQ10 u v₂ := by
-  rw [BQ10_self] at * <;> try skip
-  rw [show BQ10 u (v₁ + v₂) = BQ10 (v₁ + v₂) u by
-    exact BPeirce_comm _ _, BQ10_add_left]
-  rw [show BQ10 v₁ u = BQ10 u v₁ by exact BPeirce_comm _ _,
-      show BQ10 v₂ u = BQ10 u v₂ by exact BPeirce_comm _ _]
+  rw [BQ10_comm u (v₁ + v₂), BQ10_add_left,
+    BQ10_comm v₁ u, BQ10_comm v₂ u]
 
 /-- Homogeneity in the second argument. -/
 theorem BQ10_smul_right (r : ℝ) (u v : V10) :
     BQ10 u (r • v) = r * BQ10 u v := by
-  rw [show BQ10 u (r • v) = BQ10 (r • v) u by exact BPeirce_comm _ _,
-    BQ10_smul_left]
-  rw [show BQ10 v u = BQ10 u v by exact BPeirce_comm _ _]
+  rw [BQ10_comm u (r • v), BQ10_smul_left, BQ10_comm v u]
 
 /-- Negation in the first argument. -/
 theorem BQ10_neg_left (u v : V10) : BQ10 (-u) v = -BQ10 u v := by
@@ -116,16 +116,9 @@ theorem bivectorGen_in_so55 (x y : V10) :
   rw [BQ10_smul_left, BQ10_sub_left,
     BQ10_smul_left, BQ10_smul_left,
     BQ10_smul_right, BQ10_sub_right,
-    BQ10_smul_right, BQ10_smul_right]
-  have hxy : BQ10 x v = BQ10 v x := by
-    exact BPeirce_comm _ _
-  have hyx : BQ10 y v = BQ10 v y := by
-    exact BPeirce_comm _ _
-  have hux : BQ10 u x = BQ10 x u := by
-    exact BPeirce_comm _ _
-  have huy : BQ10 u y = BQ10 y u := by
-    exact BPeirce_comm _ _
-  rw [hxy, hyx, hux, huy]
+    BQ10_smul_right, BQ10_smul_right,
+    BQ10_comm x v, BQ10_comm y v,
+    BQ10_comm u x, BQ10_comm u y]
   ring
 
 /-- Skewness in the bivector labels. -/

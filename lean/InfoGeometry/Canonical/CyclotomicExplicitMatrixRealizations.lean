@@ -26,6 +26,7 @@ abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
 abbrev M3Z := Matrix (Fin 3) (Fin 3) ℤ
 abbrev M4Z := Matrix (Fin 4) (Fin 4) ℤ
 abbrev M8Z := Matrix (Fin 8) (Fin 8) ℤ
+abbrev M4Q := Matrix (Fin 4) (Fin 4) ℚ
 
 /-- Ground-center witness. -/
 def zeroStage : M1Z := 0
@@ -146,6 +147,29 @@ theorem phi24Companion_pow_twenty_four : phi24Companion ^ 24 = 1 := by
 
 /-- It satisfies the common master 25-potent equation. -/
 theorem phi24Companion_master25 : phi24Companion ^ 25 = phi24Companion := by
+  native_decide
+
+/-! ## Peirce structure-operator boundary -/
+
+/-- Rank-one Hermitian Peirce structure operator in the normalized basis from
+the matrix example.  Its eigenvalues are `1,0,1/2,1/2`. -/
+def hermitianRankOnePeirceOperator : M4Q :=
+  !![1, 0, 0, 0;
+     0, 0, 0, 0;
+     0, 0, (1 / 2 : ℚ), 0;
+     0, 0, 0, (1 / 2 : ℚ)]
+
+/-- The Peirce structure operator is not itself tripotent: the tripotent object
+is `e`, while `L(e,e)` carries the half-Peirce eigenspaces. -/
+theorem hermitianRankOnePeirceOperator_not_tripotent :
+    hermitianRankOnePeirceOperator ^ 3 ≠ hermitianRankOnePeirceOperator := by
+  native_decide
+
+/-- For the same reason, this Peirce structure operator does not satisfy the
+25-potent master equation.  Thus it must not be inserted into the cyclotomic
+master family without an additional rescaling or different operator choice. -/
+theorem hermitianRankOnePeirceOperator_not_master25 :
+    hermitianRankOnePeirceOperator ^ 25 ≠ hermitianRankOnePeirceOperator := by
   native_decide
 
 /-- Compact concrete realization packet. -/

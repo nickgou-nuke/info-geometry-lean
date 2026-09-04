@@ -15,6 +15,14 @@ open InfoGeometry.Canonical.SplitAlbertPeirceZeroQuadraticRepresentation
 abbrev H3 := H3Zorn ℝ
 abbrev Spin10 := SplitSpacetime10
 
+/-- The Peirce-zero predicate is stable under addition. -/
+theorem add_preserves_peirceZero
+    {X Y : H3} (hX : InPeirceZero X) (hY : InPeirceZero Y) :
+    InPeirceZero (X + Y) := by
+  rcases hX with ⟨hX1, hXa, hXc⟩
+  rcases hY with ⟨hY1, hYa, hYc⟩
+  simp [InPeirceZero, H3Zorn.add_readback, hX1, hXa, hXc, hY1, hYa, hYc]
+
 /-- The ambient Albert Jordan triple product preserves the fixed-`e1`
 Peirce-zero subalgebra. -/
 theorem jordanTriple_preserves_peirceZero
@@ -23,7 +31,7 @@ theorem jordanTriple_preserves_peirceZero
     InPeirceZero (jordanTriple x y z) := by
   unfold jordanTriple
   apply sub_preserves_peirceZero
-  · exact add_mem
+  · exact add_preserves_peirceZero
       (candidateJordanMul_preserves_peirceZero
         (candidateJordanMul_preserves_peirceZero hx hy) hz)
       (candidateJordanMul_preserves_peirceZero

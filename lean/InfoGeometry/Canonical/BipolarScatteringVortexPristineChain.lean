@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.BipolarLoxodromicAndreevBridge
 import InfoGeometry.Canonical.BipolarTwoSheetCore
+import InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
+import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 import InfoGeometry.Analysis.BipolarCriticalWindowsVortex
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 import InfoGeometry.Canonical.BipolarTwoPortScattering
@@ -11,29 +13,35 @@ import Mathlib.Tactic
 
 This capstone reconstructs the exact mathematics behind a second informal stream
 that mixed loxodromic Möbius modes, critical-line zeros, Aharonov--Bohm vortices,
-Andreev reflection, two-port scattering, and metriplectic language.
+Andreev reflection, two-port scattering, metriplectic language, and a two-sheet
+parabolic causal-boundary intuition.
 
 The organizing carrier is the repository-owned two-sheet `ChiralSheet` double
-cover.  On the critical line the base point is fixed while the lifted mirror
-exchanges the two sheets.  Incoming/outgoing and particle/hole language are
-therefore adapters to one common `Z/2` sheet architecture, not primitive
-identifications.
+cover. On the critical line the base point is fixed while the lifted mirror
+exchanges the two sheets. Each sheet is then welded to one of the two opposite
+parabolic nilpotent generators `σPlus`, `σMinus`. Their even/odd combinations
+recover independent transverse Pauli directions, while the critical unit phase
+lifts to a null representative in the repository-owned four-real-coordinate
+causal carrier.
 
 The theorem-safe hierarchy is:
 
 1. `q(s)` is the loxodromic scalar `exp(eta+i theta)`;
 2. the two-sheet lifted mirror swaps sheets and reflects the base;
 3. on the critical line the base is fixed but the two lifts are exchanged;
-4. particle-hole phase closure is an anti-linear realization of sheet exchange;
-5. a critical-line point is merely a marked node unless an actual zero law is
-   supplied;
-6. a vortex at such a node requires a separate translated pole/residue datum;
-7. a critical window can carry an ordinary unitary two-port scattering block;
-8. a transfer block may instead satisfy determinant-one `J`-unitarity;
-9. the planar gradient and Hodge-rotated channels are orthogonal and equal-norm.
+4. the two sheets carry the opposite parabolic nilpotents `σPlus`, `σMinus`;
+5. their symmetric/antisymmetric combinations reconstruct transverse directions;
+6. the critical unit phase maps to a native null causal representative;
+7. particle-hole phase closure is an anti-linear realization of sheet exchange;
+8. a critical-line point is merely a marked node unless an actual zero law is supplied;
+9. a vortex at such a node requires a separate translated pole/residue datum;
+10. a critical window can carry an ordinary unitary two-port scattering block;
+11. a transfer block may instead satisfy determinant-one `J`-unitarity;
+12. the planar gradient and Hodge-rotated channels are orthogonal and equal-norm.
 
 No RH, automatic vortex assignment, bound-state theorem, BdG spectral theorem,
-Maxwell duality, or dissipative second-law statement is inferred.
+Maxwell duality, AdS/CFT theorem, Einstein dynamics, or dissipative second-law
+statement is inferred.
 -/
 
 noncomputable section
@@ -48,8 +56,13 @@ open InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 open InfoGeometry.Analysis.BipolarPlanarHodgePair
 open InfoGeometry.Canonical.BipolarLoxodromicAndreevBridge
 open InfoGeometry.Canonical.BipolarTwoSheetCore
+open InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
+open InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 open InfoGeometry.Canonical.BipolarTwoPortScattering
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
+open InfoGeometry.Topology.Weyl
+open InfoGeometry.Physics.ChiralCausalCone
+open InfoGeometry.Algebra.RealPauliCausalCone
 
 /-- The two-sheet core is the common carrier: the critical base point is fixed
 while its plus/minus lifts are exchanged, and their Cayley readouts are inverse. -/
@@ -59,6 +72,32 @@ theorem pristine_two_sheet_core (y : ℝ) :
         (sheetCayleyReadout (plusLift (criticalLine y)))⁻¹ ∧
       antiLinearDeck (criticalSheetPhase y) = criticalSheetPhase y := by
   exact two_sheet_core_packet y
+
+/-- The two-sheet cover is welded to the parabolic causal boundary: deck exchange
+interchanges the two nilpotents, their anticommutator is the identity, their
+symmetric combination is the first transverse Pauli direction, and the critical
+phase lifts to a null causal representative. -/
+theorem pristine_two_sheet_parabolic_causal_core (y : ℝ) :
+    sheetParabolicGenerator ChiralSheet.plus.swap =
+      (sheetParabolicGenerator ChiralSheet.plus)ᴴ ∧
+    sheetParabolicGenerator ChiralSheet.plus *
+        sheetParabolicGenerator ChiralSheet.minus +
+      sheetParabolicGenerator ChiralSheet.minus *
+        sheetParabolicGenerator ChiralSheet.plus = 1 ∧
+    sheetParabolicGenerator ChiralSheet.plus +
+      sheetParabolicGenerator ChiralSheet.minus = σ1 ∧
+    detMinkowski (criticalNullBulk y) = 0 := by
+  exact two_sheet_parabolic_boundary_reconstruction y
+
+/-- The doubled parabolic pair, together with scalar and grading directions,
+reconstructs every `2 × 2` complex matrix. -/
+theorem pristine_two_sheet_full_matrix_reconstruction
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    ∃ a h p m : ℂ,
+      M = a • (1 : Matrix (Fin 2) (Fin 2) ℂ) + h • σ3c +
+        p • sheetParabolicGenerator ChiralSheet.plus +
+        m • sheetParabolicGenerator ChiralSheet.minus := by
+  exact two_sheet_generates_full_pauli_carrier M
 
 /-- Loxodromic/reflection core with the critical-line unit-modulus specialization. -/
 theorem pristine_loxodromic_reflection_core
@@ -122,13 +161,14 @@ theorem pristine_critical_flow_core (y : ℝ) :
       metricFlow (1 / 2) y ≠ 0 := by
   exact ⟨metricFlow_half y, hamiltonianFlow_half y, metricFlow_half_ne_zero y⟩
 
-/-- Master packet for the recovered second stream, now explicitly rooted in the
-two-sheet cover. -/
+/-- Master packet for the recovered second stream, rooted in the two-sheet
+parabolic causal boundary. -/
 theorem pristine_scattering_vortex_master
     {s : ℂ} (hs : s ∈ punctured01)
     {r t : ℂ} (hS : ScatteringNormalized r t)
     (α x y : ℝ) :
     sheetMirror (plusLift (criticalLine y)) = minusLift (criticalLine y) ∧
+      detMinkowski (criticalNullBulk y) = 0 ∧
       bipolarLoxodromic s = crossRatio01 s ∧
       bipolarLoxodromic (mirror s) =
         (Complex.conj (bipolarLoxodromic s))⁻¹ ∧
@@ -136,6 +176,7 @@ theorem pristine_scattering_vortex_master
       IsSpecialJUnitary (hyperbolicTransfer α) ∧
       planeDot (metricFlow x y) (hamiltonianFlow x y) = 0 := by
   exact ⟨sheetMirror_plus_criticalLine y,
+    criticalNullBulk_lightlike y,
     bipolarLoxodromic_eq_crossRatio01 hs,
     bipolarLoxodromic_mirror hs,
     scatteringBlock_unitary hS,

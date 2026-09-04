@@ -10,14 +10,7 @@ import InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 # Hadjiivanov checked R-matrix braid
 
 Named capstone for the repository's logarithmic Hadjiivanov checked braid.
-
-No operator or braid presentation is redefined here.  The file assembles the
-existing owner chain
-
-`logShearBase → checkR → YBE → BraidProject B₃ → categorical automorphisms`
-
-and records the exact compatibility between the carrier representation and the
-finite-nilpotent logarithmic category.
+No operator or braid presentation is redefined here.
 -/
 
 noncomputable section
@@ -26,7 +19,6 @@ namespace InfoGeometry.Categorical.HadjiivanovRMatrixBraid
 
 open CategoryTheory
 open Braid
-
 open InfoGeometry.Categorical.BraidGroup3PresentationBridge
 open InfoGeometry.Categorical.FibonacciBraidGroup3Representation
 open InfoGeometry.Categorical.LogNilpotentCheckedRAdapter

@@ -84,8 +84,7 @@ theorem integral_boundaryKernel :
   simp_rw [boundaryKernel_eq_four_mul_inv_one_add_sq]
   rw [MeasureTheory.integral_const_mul,
     integral_univ_inv_one_add_mul_sq (2 : ℝ)]
-  norm_num
-  ring
+  norm_num <;> ring
 
 /-- Image-normalized scalar potential.  The parameter `epsilon` is kept
 explicit; a physical permittivity interpretation is additional data. -/

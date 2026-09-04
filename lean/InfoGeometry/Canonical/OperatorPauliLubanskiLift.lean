@@ -311,4 +311,39 @@ theorem pauliLubanski_spin_half_packet (P : PauliMomentum) :
     pauliLubanski_sq_eq_mass_spin_casimir P, ?_⟩
   rw [toMatrix_zornLift, pauliLubanski_sq_eq_three_quarters_mass]
 
+
+/-- The six independent Pauli--Lubanski commutators in the convention of
+this owner.  The temporal--spatial equations carry a minus sign because
+the left-handed boosts are defined by Kᵢ = -i Sᵢ; this is checked directly
+from the Pauli multiplication table. -/
+theorem pauliLubanski_commutator_packet (P : PauliMomentum) :
+    pauliLubanski0 P * pauliLubanski1 P -
+          pauliLubanski1 P * pauliLubanski0 P =
+        (-Complex.I) •
+          (P.py • pauliLubanski3 P - P.pz • pauliLubanski2 P) ∧
+      pauliLubanski0 P * pauliLubanski2 P -
+          pauliLubanski2 P * pauliLubanski0 P =
+        (-Complex.I) •
+          (P.pz • pauliLubanski1 P - P.px • pauliLubanski3 P) ∧
+      pauliLubanski0 P * pauliLubanski3 P -
+          pauliLubanski3 P * pauliLubanski0 P =
+        (-Complex.I) •
+          (P.px • pauliLubanski2 P - P.py • pauliLubanski1 P) ∧
+      pauliLubanski1 P * pauliLubanski2 P -
+          pauliLubanski2 P * pauliLubanski1 P =
+        Complex.I • (P.E • pauliLubanski3 P - P.pz • pauliLubanski0 P) ∧
+      pauliLubanski2 P * pauliLubanski3 P -
+          pauliLubanski3 P * pauliLubanski2 P =
+        Complex.I • (P.E • pauliLubanski1 P - P.px • pauliLubanski0 P) ∧
+      pauliLubanski3 P * pauliLubanski1 P -
+          pauliLubanski1 P * pauliLubanski3 P =
+        Complex.I • (P.E • pauliLubanski2 P - P.py • pauliLubanski0 P) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [pauliLubanski0, pauliLubanski1, pauliLubanski2,
+      pauliLubanski3, momentumDotSpin, boostX, boostY, boostZ,
+      spinX, spinY, spinZ, σ1, σ2, σ3, Matrix.mul_apply,
+      Fin.sum_univ_two, Complex.I_sq] <;>
+    ring
+
 end InfoGeometry.Canonical.OperatorPauliLubanskiLift

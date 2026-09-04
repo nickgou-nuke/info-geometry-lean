@@ -2,11 +2,12 @@ import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
+import InfoGeometry.Thermo.BipolarBKMOperatorConnectionReadout
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 import Mathlib.Tactic
 
 /-!
-# Pristine operator, holonomy, geodesic, and GENERIC chain
+# Pristine operator, holonomy, geodesic, BKM, and GENERIC chain
 
 This capstone records the theorem-safe content of the operator-connection
 blueprint after four corrections:
@@ -18,8 +19,9 @@ blueprint after four corrections:
 3. coordinate lines are native differentiable affine geodesics in the flat
    `(η,θ)` carrier, without asserting a global geodesic theorem in the original
    punctured plane;
-4. a nontrivial GENERIC realization requires explicit skew, positive, and
-   Casimir data, and `η = 0` does not imply `dη = 0`.
+4. BKM symmetric response, alternating curvature, and GENERIC evolution are
+   separate structures with separate hypotheses; `η = 0` does not imply
+   `dη = 0`.
 
 No physical gauge bundle, BKM constitutive identification, or continuum
 holographic reconstruction is asserted.
@@ -38,7 +40,10 @@ open InfoGeometry.Canonical.BipolarSpinHolonomy
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
+open InfoGeometry.Thermo.BipolarBKMOperatorConnectionReadout
+open InfoGeometry.Thermo.SouriauOnsagerBKMOperatorForms
 open InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
+open SouriauOnsagerBKM
 
 /-- Infinitesimal and finite two-sheet Cartan character law, expressed through
 the repository-native operator derivation. -/
@@ -90,6 +95,29 @@ theorem pristine_flat_coordinate_derivative_core
       deriv (fun u : ℝ => deriv (negativeEtaLine p) u) t = 0 ∧
       deriv (fun u : ℝ => deriv (thetaLine p) u) t = 0 := by
   exact bipolar_flat_coordinate_derivative_packet p t
+
+/-- Native separation of the symmetric BKM response and alternating curvature
+readout on the same bipolar tangent carrier. -/
+theorem pristine_BKM_curvature_readout_core {n : ℕ}
+    (D : FaithfulDensityOperator n) (hD : Continuous D.rpow)
+    (Q Kη Kθ Lη Lθ : FiniteOperatorAlgebra n) (u v : Tangent2) :
+    bkmOperator1Form D hD
+        (finiteOperatorConnection Kη Kθ)
+        (finiteOperatorConnection Lη Lθ) u =
+      bkmOperator1Form D hD
+        (finiteOperatorConnection Lη Lθ)
+        (finiteOperatorConnection Kη Kθ) u ∧
+    0 ≤ bkmOperator1Form D hD
+      (finiteOperatorConnection Kη Kθ)
+      (finiteOperatorConnection Kη Kθ) u ∧
+    bkmProbeReadout D hD Q
+        (wedge (finiteOperatorConnection Kη Kθ)
+          (finiteOperatorConnection Kη Kθ)) u v =
+      -bkmProbeReadout D hD Q
+        (wedge (finiteOperatorConnection Kη Kθ)
+          (finiteOperatorConnection Kη Kθ)) v u := by
+  exact bipolar_BKM_curvature_separation_packet
+    D hD Q Kη Kθ Lη Lθ u v
 
 /-- Explicit nontrivial GENERIC realization of the longitudinal/transverse
 coordinate assignment. -/

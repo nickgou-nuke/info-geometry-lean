@@ -98,24 +98,18 @@ def hadjiivanovBraidProject3CategoricalHom :
     braid_group 3 →* Aut StandardTripleObject :=
   standardCategoricalBraidGroup3Hom.comp braidProjectToPresentedB3
 
-/-- The first BraidProject generator acts by the first local categorical
-Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaZero :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (0 : Fin 2)) =
       standardCategoricalSigmaOneIso := by
   simp [hadjiivanovBraidProject3CategoricalHom]
 
-/-- The second BraidProject generator acts by the second local categorical
-Hadjiivanov checked R-matrix. -/
 @[simp]
 theorem hadjiivanovBraidProject3CategoricalHom_sigmaOne :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (1 : Fin 2)) =
       standardCategoricalSigmaTwoIso := by
   simp [hadjiivanovBraidProject3CategoricalHom]
 
-/-- The BraidProject action satisfies the Artin relation in the actual
-automorphism group of the logarithmic tensor cube. -/
 theorem hadjiivanovBraidProject3CategoricalHom_artin :
     hadjiivanovBraidProject3CategoricalHom (σ' 2 (0 : Fin 2)) *
         hadjiivanovBraidProject3CategoricalHom (σ' 2 (1 : Fin 2)) *
@@ -127,8 +121,6 @@ theorem hadjiivanovBraidProject3CategoricalHom_artin :
     hadjiivanovBraidProject3CategoricalHom_sigmaOne]
   exact standardCategoricalBraidGroup3Hom_artin
 
-/-- Forgetting the logarithmic categorical structure on the first generator
-recovers the existing BraidProject carrier representation. -/
 theorem hadjiivanov_sigmaZero_forget :
     (hadjiivanovBraidProject3CategoricalHom
       (σ' 2 (0 : Fin 2))).hom.hom =
@@ -139,8 +131,6 @@ theorem hadjiivanov_sigmaZero_forget :
     standardHadjiivanovBraidProject3Hom] using
       standardCategoricalSigmaOne_hom
 
-/-- Forgetting the logarithmic categorical structure on the second generator
-recovers the existing BraidProject carrier representation. -/
 theorem hadjiivanov_sigmaOne_forget :
     (hadjiivanovBraidProject3CategoricalHom
       (σ' 2 (1 : Fin 2))).hom.hom =
@@ -151,27 +141,19 @@ theorem hadjiivanov_sigmaOne_forget :
     standardHadjiivanovBraidProject3Hom] using
       standardCategoricalSigmaTwo_hom
 
-/-! ## Uniform finite Hadjiivanov braid tower -/
-
-/-- Right-associated carrier of the standard Hadjiivanov logarithmic tensor
-power. -/
 abbrev hadjiivanovTensorPower (n : ℕ) :=
   tensorPowerObj standardJordanObject n
 
-/-- The local Hadjiivanov checked-R inserted at the `i`th adjacent pair. -/
 abbrev hadjiivanovTensorPowerGenerator
     (n : ℕ) (i : Fin (n + 1)) :=
   standardTensorPowerGenerator n i
 
-/-- Uniform group-level action of `B_{n+2}` by adjacent Hadjiivanov checked-R
-slices. -/
 def hadjiivanovBraidProjectHom (n : ℕ) :
     braid_group (n + 2) →*
       (hadjiivanovTensorPower (n + 2) ≃ₗ[ℂ]
         hadjiivanovTensorPower (n + 2)) :=
   standardHadjiivanovBraidProjectHom n
 
-/-- Native Mathlib representation at every finite braid stage. -/
 def hadjiivanovBraidProjectRepresentation (n : ℕ) :
     Representation ℂ (braid_group (n + 2))
       (hadjiivanovTensorPower (n + 2)) :=
@@ -184,8 +166,6 @@ theorem hadjiivanovBraidProject_sigma
       hadjiivanovTensorPowerGenerator n i :=
   standardHadjiivanovBraidProject_sigma n i
 
-/-- The four-strand stage simultaneously witnesses adjacent Yang--Baxter and
-far commutation. -/
 theorem hadjiivanovBraidProject_stage4_relations :
     hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) *
         hadjiivanovBraidProjectHom 2 (σ' 3 (1 : Fin 3)) *
@@ -199,8 +179,6 @@ theorem hadjiivanovBraidProject_stage4_relations :
         hadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) := by
   exact standardTensorPower_stage4_relation_packet
 
-/-- The finite-stage Hadjiivanov actions are equivariant under right
-stabilization by the primary spectator for every braid element. -/
 theorem hadjiivanovBraidProject_stabilization
     (n : ℕ) (g : braid_group (n + 2)) :
     (appendPrimaryBonding (n + 1)).hom.comp
@@ -212,23 +190,16 @@ theorem hadjiivanovBraidProject_stabilization
 
 /-! ## Infinite braid / colimit closure -/
 
-/-- The repository-owned presented infinite braid group acts on the single
-native stabilized tensor-power colimit. -/
 abbrev hadjiivanovBraidInfinity :=
   hadjiivanovBraidGroupInfHom
 
-/-- Arbitrary finite braid elements agree with their canonical `B_∞` images
-after passage to the stabilized tensor-power colimit. -/
 theorem hadjiivanov_finite_to_infinite
     (n : ℕ) (g : braid_group (n + 2)) :=
   hadjiivanov_finite_infinite_compatibility_hom n g
 
-/-- Structural group-theoretic closure: the repository-presented `B_∞` is
-canonically isomorphic to Mathlib's colimit of the finite stabilization tower. -/
 abbrev braidInfinityColimitIso :=
   braidGroupColimitIsoInfinite
 
-/-- The existing `B_∞` boundary cocone is a genuine colimit cocone. -/
 abbrev braidInfinityIsColimit :=
   braidGroupBoundaryCoconeIsColimit
 

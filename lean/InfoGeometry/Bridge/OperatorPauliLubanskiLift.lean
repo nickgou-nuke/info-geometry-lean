@@ -82,21 +82,30 @@ def momentumContraction
 def minkowskiMatrixSq (W : Fin 4 → PauliBlock) : PauliBlock :=
   W 0 * W 0 - W 1 * W 1 - W 2 * W 2 - W 3 * W 3
 
+def spatialMomentumComponent (P : PauliParavector) : Fin 3 → ℂ
+  | 0 => P.px
+  | 1 => P.py
+  | 2 => P.pz
+
+def spatialPauliAxis : Fin 3 → PauliBlock
+  | 0 => sigma1
+  | 1 => sigma2
+  | 2 => sigma3
+
 /-- Correct Pauli cross-product rearrangement for the conventions in this
 file:
 `-i (p cross sigma)_j = (p dot sigma) sigma_j - p_j I`. -/
 theorem minus_i_cross_eq_dot_mul_sigma_sub
     (P : PauliParavector) (j : Fin 3) :
     (-Complex.I) • momentumCrossSigma P j =
-      momentumDotSigma P *
-          (match j with | 0 => sigma1 | 1 => sigma2 | 2 => sigma3) -
-        ((match j with | 0 => P.px | 1 => P.py | 2 => P.pz : ℝ) : ℂ) •
-          (1 : PauliBlock) := by
+      momentumDotSigma P * spatialPauliAxis j -
+        spatialMomentumComponent P j • (1 : PauliBlock) := by
   fin_cases j
   all_goals
     ext i k
     fin_cases i <;> fin_cases k <;>
-      simp [momentumCrossSigma, momentumDotSigma, sigma1, sigma2, sigma3,
+      simp [momentumCrossSigma, momentumDotSigma, spatialPauliAxis,
+        spatialMomentumComponent, sigma1, sigma2, sigma3,
         sigma1C, sigma2C, sigma3C, Matrix.mul_apply, Fin.sum_univ_two] <;>
       ring_nf
   all_goals try rw [Complex.I_sq]

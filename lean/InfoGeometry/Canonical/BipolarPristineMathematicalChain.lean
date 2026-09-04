@@ -4,6 +4,7 @@ import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Analysis.BipolarBoundaryTrace
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
+import InfoGeometry.Analysis.BipolarCriticalPhase
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -27,6 +28,7 @@ open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 open InfoGeometry.Analysis.BipolarBoundaryTrace
 open InfoGeometry.Analysis.BipolarPlanarHodgePair
+open InfoGeometry.Analysis.BipolarCriticalPhase
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarLogSL2
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -110,15 +112,16 @@ theorem pristine_cartan_representation_core
     halfLogLift_isSL2C s,
     bipolarSolderingAction_det s X⟩
 
-/-- Critical-line specialization: the radial logarithmic coordinate vanishes,
-the Cayley image has unit norm, and the noncompact Cartan factor disappears. -/
+/-- Critical-line specialization in branch-independent form. -/
 theorem pristine_critical_line_core (y : ℝ) :
     eta (criticalLine y) = 0 ∧
-      ‖crossRatio01 (criticalLine y)‖ = 1 ∧
+      crossRatio01 (criticalLine y) = criticalPhase y ∧
+      ‖criticalPhase y‖ = 1 ∧
       halfLogLift (criticalLine y) = compactK (theta (criticalLine y) / 2) ∧
       isSU2 (halfLogLift (criticalLine y)) := by
   exact ⟨eta_criticalLine y,
-    norm_crossRatio01_criticalLine y,
+    crossRatio01_criticalLine_eq_criticalPhase y,
+    norm_criticalPhase y,
     halfLogLift_criticalLine_eq_compactK y,
     halfLogLift_criticalLine_isSU2 y⟩
 

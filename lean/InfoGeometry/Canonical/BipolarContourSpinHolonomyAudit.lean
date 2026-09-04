@@ -1,0 +1,44 @@
+import InfoGeometry.Canonical.BipolarContourSpinHolonomy
+
+/-!
+# Transitive axiom inspection for the contour extension
+
+Run this file after building `InfoGeometry.Canonical.BipolarContourSpinHolonomy`.
+These commands inspect the elaborated declarations, including their transitive
+proof dependencies. They do not certify anything until Lean actually executes.
+An acceptable report contains only the standard logical axioms `propext`,
+`Classical.choice`, and `Quot.sound`, or no axioms. A successful build alone is
+not sufficient if any declaration depends on `sorryAx` or a custom axiom.
+-/
+
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegrable_pole_of_not_mem_sphere
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_pole_eq_enclosure
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegrable_dlog01_of_avoids_punctures
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_eq_enclosure_difference
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_eq_circulationPeriod
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_of_both_inside
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_of_both_outside
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_eq_of_enclosurePair_eq
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.exp_circleIntegral_dlog01
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.sphere_origin_subset_punctured01
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.no_primitive_on_origin_circle
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.no_global_dlog01_primitive
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.negative_radius_exterior_counterexample
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.exp_neg_half_period_eq_exp_half
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.exp_half_period_mul_self
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.spinHolonomy_eq_scalar_one
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.spinHolonomy_eq_one_or_neg_one
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.spinHolonomy_adjoint_trivial_all
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.spinHolonomy_sq_all
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.spinHolonomy_eq_half_u1_scalar
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_det
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_eq_winding
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourU1Holonomy_eq_winding
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_eq_half_u1_scalar
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_origin
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_one
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_of_both_inside
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_sq
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_adjoint_trivial
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourSpinHolonomy_origin_spinor
+#print axioms InfoGeometry.Canonical.BipolarContourSpinHolonomy.contourU1Holonomy_integer_coupling

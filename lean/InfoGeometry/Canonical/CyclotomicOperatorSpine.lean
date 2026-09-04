@@ -160,6 +160,67 @@ theorem masterP25_eq_zero_of_pow12_eq_one
 
 end OperatorPolynomial
 
+section ConditionalSpectrum
+
+variable {V : Type*} [AddCommGroup V] [Module ℂ V] [NoZeroSMulDivisors ℂ V]
+
+local notation "EndV" => Module.End ℂ V
+
+/-- Powers of an endomorphism act by powers of its eigenvalue on an eigenvector. -/
+theorem pow_apply_of_eigenpair
+    (T : EndV) {v : V} {lam : ℂ} (hv : T v = lam • v) :
+    ∀ k : ℕ, T ^ k v = lam ^ k • v := by
+  intro k
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [pow_succ, Module.End.mul_apply, hv, map_smul, ih, pow_succ, smul_smul]
+      congr 1
+      ring
+
+/-- Evaluating `P25(T)` on an eigenvector evaluates the scalar polynomial on the eigenvalue. -/
+theorem masterP25_apply_eigenpair
+    (T : EndV) {v : V} {lam : ℂ} (hv : T v = lam • v) :
+    masterP25 T v = (lam * (lam ^ 24 - 1)) • v := by
+  rw [masterP25, Module.End.mul_apply]
+  change T ((T ^ 24) v - v) = _
+  rw [pow_apply_of_eigenpair T hv 24]
+  rw [← sub_smul, map_smul, hv, smul_smul]
+  congr 1
+  ring
+
+/-- If `P25(T)=0`, every eigenvalue is either zero or a 24th root of unity. -/
+theorem eigenvalue_zero_or_pow24_eq_one_of_masterP25_eq_zero
+    (T : EndV) {v : V} {lam : ℂ}
+    (hv0 : v ≠ 0) (hv : T v = lam • v) (hP : masterP25 T = 0) :
+    lam = 0 ∨ lam ^ 24 = 1 := by
+  have hzero : (lam * (lam ^ 24 - 1)) • v = 0 := by
+    rw [← masterP25_apply_eigenpair T hv, hP]
+    rfl
+  have hscalar : lam * (lam ^ 24 - 1) = 0 :=
+    (smul_eq_zero.mp hzero).resolve_right hv0
+  rcases mul_eq_zero.mp hscalar with hlam | hpow
+  · exact Or.inl hlam
+  · exact Or.inr (sub_eq_zero.mp hpow)
+
+/-- Conditional spectral enumeration: every nonzero eigenvalue is one of the explicit 24th roots. -/
+theorem eigenvalue_zero_or_rootOfUnity24_of_masterP25_eq_zero
+    (T : EndV) {v : V} {lam : ℂ}
+    (hv0 : v ≠ 0) (hv : T v = lam • v) (hP : masterP25 T = 0) :
+    lam = 0 ∨ ∃ k : ℕ, k < 24 ∧ lam = rootOfUnity 24 k := by
+  rcases eigenvalue_zero_or_pow24_eq_one_of_masterP25_eq_zero T hv0 hv hP with
+    hlam | hpow
+  · exact Or.inl hlam
+  · right
+    have hprimitive : IsPrimitiveRoot (rootOfUnity 24 1) 24 :=
+      isPrimitiveRoot_rootOfUnity_one 24 (by norm_num)
+    obtain ⟨k, hk, hkpow⟩ := hprimitive.eq_pow_of_pow_eq_one hpow
+    refine ⟨k, hk, ?_⟩
+    rw [rootOfUnity_eq_pow_rootOfUnity_one (q := 24) (k := k) (by norm_num)]
+    exact hkpow.symm
+
+end ConditionalSpectrum
+
 section ComplexRoots
 
 /-- The existing exact roots-of-unity owner specializes at conductor 24. -/

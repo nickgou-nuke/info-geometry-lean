@@ -130,31 +130,17 @@ theorem spinorAction_mul (A B : DiracMatrix) :
     Matrix.toLin' (A * B)
   rw [← Matrix.toLin'_mul]
 
-/-- The matrix identity acts as the identity spinor endomorphism. -/
-theorem spinorAction_one :
-    spinorAction (1 : DiracMatrix) =
-      (LinearMap.id : SpinorOperator) := by
-  ext ψ
-  simp [spinorAction, Matrix.toLin'_apply, Matrix.mulVec]
-
-/-- The negative matrix identity acts as the negative identity operator. -/
-theorem spinorAction_neg_one :
-    spinorAction (-(1 : DiracMatrix)) =
-      -(LinearMap.id : SpinorOperator) := by
-  ext ψ
-  simp [spinorAction, Matrix.toLin'_apply, Matrix.mulVec]
-
 /-- A square-minus-one matrix operator gives a square-minus-one complex
 spinor endomorphism. -/
 theorem spinorAction_sq_of (A : DiracMatrix)
     (hA : A * A = -(1 : DiracMatrix)) :
     (spinorAction A).comp (spinorAction A) =
       -(LinearMap.id : SpinorOperator) := by
-  calc
-    (spinorAction A).comp (spinorAction A) =
-        spinorAction (A * A) := spinorAction_mul A A
-    _ = spinorAction (-(1 : DiracMatrix)) := by rw [hA]
-    _ = -(LinearMap.id : SpinorOperator) := spinorAction_neg_one
+  have hcomp :
+      (Matrix.toLin' A).comp (Matrix.toLin' A) =
+        Matrix.toLin' (-(1 : DiracMatrix)) := by
+    rw [← Matrix.toLin'_mul, hA]
+  simpa [spinorAction] using hcomp
 
 /-- The same finite action, viewed on the underlying real spinor space. -/
 noncomputable def realSpinorAction (A : DiracMatrix) : RealSpinorOperator :=

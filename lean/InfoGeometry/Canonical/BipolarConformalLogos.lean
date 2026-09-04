@@ -5,6 +5,7 @@ import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
+import InfoGeometry.Canonical.BipolarPristineMathematicalChain
 import InfoGeometry.Canonical.PerfectPairBosonVortexBridge
 
 /-!
@@ -39,6 +40,7 @@ open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarLogSL2
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
+open InfoGeometry.Canonical.BipolarPristineMathematicalChain
 open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 open InfoGeometry.Canonical.FinitePerfectMatching
 open InfoGeometry.Canonical.PerfectPairBosonVortexBridge
@@ -126,6 +128,21 @@ theorem critical_line_compact_packet (y : ℝ) :
       isSU2 (halfLogLift (criticalLine y)) := by
   exact ⟨halfLogLift_criticalLine_eq_compactK y,
     halfLogLift_criticalLine_isSU2 y⟩
+
+/-- Direct readback of the physics-free architectural master theorem. -/
+theorem pristine_chain_packet
+    {s : ℂ} (hs : s ∈ punctured01)
+    (hslit : crossRatio01 s ∈ Complex.slitPlane)
+    (X : HermitianMat2) :
+    Complex.exp (bipolarLog s) = crossRatio01 s ∧
+      HasDerivAt bipolarLog (dlog01 s) s ∧
+      dlog01 s = 1 / (s * (1 - s)) ∧
+      eta (mirror s) = -eta s ∧
+      (mirror s = s ↔ s.re = 1 / 2) ∧
+      halfLogLift s = compactK (theta s / 2) * boostA (eta s / 2) ∧
+      isSL2C (halfLogLift s) ∧
+      (bipolarSolderingAction s X).mat.det = X.mat.det := by
+  exact pristine_master_chain hs hslit X
 
 /-- The theorem-safe replacement for the informal superconducting layer:
 perfect pairing gives composite modes, occupation-number states provide the

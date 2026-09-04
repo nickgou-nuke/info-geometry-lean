@@ -120,7 +120,8 @@ theorem hadjiivanov_finite_infinite_compatibility
     exact compatible_sigma n i
   exact Braid.generated_by (n + 1) H hgen g
 
-/-- Categorical morphism form of the master theorem. -/
+/-- Categorical morphism form of the master theorem.  This is the exact
+finite-to-infinite representation square used by the Hadjiivanov capstone. -/
 theorem hadjiivanov_finite_infinite_compatibility_hom
     (n : ℕ) (g : braid_group (n + 2)) :
     ModuleCat.ofHom

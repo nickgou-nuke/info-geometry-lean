@@ -196,6 +196,17 @@ theorem coordinateG2End_is_derivation (D : G2Derivation) :
     simp [RealAlbertMatrix.mul, coordinateG2End]
     module
 
+/-- The inverse of the algebraic soldering is the maintained `fromH3`
+coordinate readback. -/
+@[simp] theorem h3Soldering_symm_apply (X : H3Zorn ℝ) :
+    h3Soldering.symm X =
+      RealAlbertH3ZornCarrierAlignment.fromH3 X := by
+  apply h3Soldering.injective
+  rw [h3Soldering.apply_symm_apply]
+  simp [h3Soldering_apply,
+    RealAlbertH3ZornCarrierAlignment.fromH3,
+    RealAlbertH3ZornCarrierAlignment.toH3]
+
 /-- The explicit coordinate action is exactly the existing raw `liftG2End`
 after algebraic soldering. -/
 theorem coordinateG2End_solders (D : G2Derivation) :
@@ -210,11 +221,14 @@ theorem coordinateG2End_solders (D : G2Derivation) :
   · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
       liftG2End]
   · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      liftG2End, splitOctEntryEnd, RealAlbertH3ZornCarrierAlignment.fromH3]
+      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
+      RealAlbertH3ZornCarrierAlignment.fromH3]
   · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      liftG2End, splitOctEntryEnd, RealAlbertH3ZornCarrierAlignment.fromH3]
+      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
+      RealAlbertH3ZornCarrierAlignment.fromH3]
   · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      liftG2End, splitOctEntryEnd, RealAlbertH3ZornCarrierAlignment.fromH3]
+      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
+      RealAlbertH3ZornCarrierAlignment.fromH3]
 
 /-- The formerly conditional compatible G2 subalgebra is the entire native
 split-octonion derivation algebra. -/
@@ -222,13 +236,29 @@ theorem entrywiseCompatibleG2_eq_top : entrywiseCompatibleG2 = ⊤ := by
   exact entrywiseCompatibleG2_eq_top_of_algebraic_soldering
     coordinateG2End coordinateG2End_is_derivation coordinateG2End_solders
 
-/-- Full faithful native G2 -> F4 Lie embedding obtained by restricting the
-existing raw entrywise representation to the now-proved total compatibility. -/
+/-- Full native G2 -> F4 Lie homomorphism. -/
 noncomputable def fullG2ToF4LieHom :
-    G2Derivation →ₗ⁅ℝ⁆ H3ZornF4Derivations := by
-  let E : G2Derivation ≃ₗ⁅ℝ⁆ entrywiseCompatibleG2 :=
-    LieEquiv.ofEq entrywiseCompatibleG2_eq_top |>.symm.trans
-      (LieEquiv.topEquiv : (⊤ : LieSubalgebra ℝ G2Derivation) ≃ₗ⁅ℝ⁆ G2Derivation) |>.symm
-  exact compatibleG2ToF4LieHom.comp E.toLieHom
+    G2Derivation →ₗ⁅ℝ⁆ H3ZornF4Derivations where
+  toFun D :=
+    ⟨liftG2End D, by
+      have hmem : D ∈ entrywiseCompatibleG2 := by
+        rw [entrywiseCompatibleG2_eq_top]
+        exact LieSubalgebra.mem_top D
+      exact hmem⟩
+  map_add' D E := by
+    apply Subtype.ext
+    exact liftG2End_add D E
+  map_smul' r D := by
+    apply Subtype.ext
+    exact liftG2End_smul r D
+  map_lie' D E := by
+    apply Subtype.ext
+    exact liftG2End_lie D E
+
+/-- The full soldered G2 -> F4 map remains faithful. -/
+theorem fullG2ToF4LieHom_injective : Function.Injective fullG2ToF4LieHom := by
+  intro D E h
+  apply liftG2End_injective
+  exact congrArg Subtype.val h
 
 end InfoGeometry.Canonical.G2H3ZornCoordinateSolderingClosure

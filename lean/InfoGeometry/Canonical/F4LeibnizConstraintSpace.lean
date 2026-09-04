@@ -42,10 +42,11 @@ theorem f4Readout_injective : Function.Injective f4ReadoutLM := by
   simp only [map_sum, map_smul]
   apply Finset.sum_congr rfl
   intro r hr
-  congr 1
-  apply h3ZornCoordinateBasis.repr.injective
-  ext c
-  exact congrFun (congrFun hDE r) c
+  have hrEq : D (h3ZornCoordinateBasis r) = E (h3ZornCoordinateBasis r) := by
+    apply h3ZornCoordinateBasis.repr.injective
+    ext c
+    exact congrFun (congrFun hDE r) c
+  exact congrArg (fun Z : H3 => (h3ZornCoordinateBasis.repr X r) • Z) hrEq
 
 /-- The Jordan-Leibniz defect of an arbitrary endomorphism, bundled as a
 bilinear map.  A genuine `F4` derivation is exactly an endomorphism whose

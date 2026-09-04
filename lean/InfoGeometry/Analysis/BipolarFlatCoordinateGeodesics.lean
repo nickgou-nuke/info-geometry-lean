@@ -1,23 +1,24 @@
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
+import Mathlib.Analysis.Calculus.Deriv.AffineMap
 import Mathlib.Tactic
 
 /-!
 # Flat affine geodesics in bipolar logarithmic coordinates
 
 The pullback metric associated with a local logarithmic chart is Euclidean in
-coordinates `(η, θ)`: `dη² + dθ²`.  This file formalizes the safe finite affine
-content of that statement.
+coordinates `(η, θ)`: `dη² + dθ²`. This file formalizes the safe affine content
+of that statement.
 
-A curve in the coordinate carrier is declared flat-affine when its centered
-second difference vanishes.  Every curve `p + t v` has this property.  In
-particular:
+Every curve `p + t v` is represented by Mathlib's native `AffineMap.lineMap`,
+has constant derivative `v`, zero derivative of its velocity, and zero centered
+second difference. In particular:
 
 * the negative-`η` coordinate line keeps `θ` fixed;
 * the `θ` coordinate line keeps `η` fixed;
 * both have unit coordinate speed and orthogonal velocities.
 
-These are the coordinate representatives of the local geodesics in a flat
-`(η,θ)` chart.  No global Riemannian manifold, Levi-Civita connection, or claim
+These are the coordinate representatives of local geodesics in a flat
+`(η,θ)` chart. No global Riemannian manifold, Levi-Civita connection, or claim
 about Euclidean field lines in the original `s`-plane is introduced here.
 
 The general identity
@@ -46,6 +47,60 @@ def thetaBasis : FlatCoordinatePoint := ![0, 1]
 def affineCoordinateLine
     (p v : FlatCoordinatePoint) (t : ℝ) : FlatCoordinatePoint :=
   p + t • v
+
+/-- The native affine-map owner of `affineCoordinateLine`. -/
+def affineCoordinateMap
+    (p v : FlatCoordinatePoint) : ℝ →ᵃ[ℝ] FlatCoordinatePoint :=
+  AffineMap.lineMap p (p + v)
+
+/-- The native affine map evaluates to the elementary coordinate formula. -/
+theorem affineCoordinateMap_apply
+    (p v : FlatCoordinatePoint) (t : ℝ) :
+    affineCoordinateMap p v t = affineCoordinateLine p v t := by
+  ext i
+  fin_cases i <;>
+    simp [affineCoordinateMap, affineCoordinateLine,
+      AffineMap.lineMap_apply_module'] <;>
+    ring
+
+/-- Native Mathlib derivative theorem for a flat coordinate line. -/
+theorem hasDerivAt_affineCoordinateLine
+    (p v : FlatCoordinatePoint) (t : ℝ) :
+    HasDerivAt (affineCoordinateLine p v) v t := by
+  have h :=
+    AffineMap.hasDerivAt_lineMap
+      (𝕜 := ℝ) (a := p) (b := p + v) (x := t)
+  have hfun :
+      (AffineMap.lineMap p (p + v) : ℝ → FlatCoordinatePoint) =
+        affineCoordinateLine p v := by
+    funext u
+    exact affineCoordinateMap_apply p v u
+  rw [hfun] at h
+  simpa using h
+
+/-- Ordinary derivative readout of the constant velocity. -/
+theorem deriv_affineCoordinateLine
+    (p v : FlatCoordinatePoint) (t : ℝ) :
+    deriv (affineCoordinateLine p v) t = v :=
+  (hasDerivAt_affineCoordinateLine p v t).deriv
+
+/-- The velocity field of an affine coordinate line has zero derivative. -/
+theorem hasDerivAt_affineCoordinateVelocity_zero
+    (p v : FlatCoordinatePoint) (t : ℝ) :
+    HasDerivAt (fun u : ℝ => deriv (affineCoordinateLine p v) u) 0 t := by
+  have hfun :
+      (fun u : ℝ => deriv (affineCoordinateLine p v) u) =
+        fun _ : ℝ => v := by
+    funext u
+    exact deriv_affineCoordinateLine p v u
+  rw [hfun]
+  exact hasDerivAt_const t v
+
+/-- Zero acceleration readout in native derivative notation. -/
+theorem deriv_velocity_affineCoordinateLine_zero
+    (p v : FlatCoordinatePoint) (t : ℝ) :
+    deriv (fun u : ℝ => deriv (affineCoordinateLine p v) u) t = 0 :=
+  (hasDerivAt_affineCoordinateVelocity_zero p v t).deriv
 
 /-- Centered second difference of a coordinate curve. -/
 def centeredSecondDifference
@@ -116,6 +171,26 @@ theorem thetaLine_isFlatAffineGeodesic (p : FlatCoordinatePoint) :
     IsFlatAffineGeodesic (thetaLine p) := by
   exact affineCoordinateLine_isFlatAffineGeodesic p thetaBasis
 
+/-- Native derivative of the negative-`η` coordinate line. -/
+theorem hasDerivAt_negativeEtaLine
+    (p : FlatCoordinatePoint) (t : ℝ) :
+    HasDerivAt (negativeEtaLine p) (-etaBasis) t := by
+  exact hasDerivAt_affineCoordinateLine p (-etaBasis) t
+
+/-- Native derivative of the `θ` coordinate line. -/
+theorem hasDerivAt_thetaLine
+    (p : FlatCoordinatePoint) (t : ℝ) :
+    HasDerivAt (thetaLine p) thetaBasis t := by
+  exact hasDerivAt_affineCoordinateLine p thetaBasis t
+
+/-- Both canonical coordinate lines have zero acceleration. -/
+theorem canonical_coordinate_lines_zero_acceleration
+    (p : FlatCoordinatePoint) (t : ℝ) :
+    deriv (fun u : ℝ => deriv (negativeEtaLine p) u) t = 0 ∧
+      deriv (fun u : ℝ => deriv (thetaLine p) u) t = 0 := by
+  exact ⟨deriv_velocity_affineCoordinateLine_zero p (-etaBasis) t,
+    deriv_velocity_affineCoordinateLine_zero p thetaBasis t⟩
+
 /-- The two logarithmic coordinate directions are orthogonal. -/
 theorem etaBasis_thetaBasis_orthogonal :
     planeDot etaBasis thetaBasis = 0 := by
@@ -153,5 +228,17 @@ theorem bipolar_flat_coordinate_geodesic_packet
     thetaLine_isFlatAffineGeodesic p,
     negativeEtaLine_theta p,
     thetaLine_eta p⟩
+
+/-- Derivative-level geodesic packet for the two canonical coordinate lines. -/
+theorem bipolar_flat_coordinate_derivative_packet
+    (p : FlatCoordinatePoint) (t : ℝ) :
+    HasDerivAt (negativeEtaLine p) (-etaBasis) t ∧
+      HasDerivAt (thetaLine p) thetaBasis t ∧
+      deriv (fun u : ℝ => deriv (negativeEtaLine p) u) t = 0 ∧
+      deriv (fun u : ℝ => deriv (thetaLine p) u) t = 0 := by
+  exact ⟨hasDerivAt_negativeEtaLine p t,
+    hasDerivAt_thetaLine p t,
+    (canonical_coordinate_lines_zero_acceleration p t).1,
+    (canonical_coordinate_lines_zero_acceleration p t).2⟩
 
 end InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics

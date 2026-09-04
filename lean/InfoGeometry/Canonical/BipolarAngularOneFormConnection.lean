@@ -51,8 +51,8 @@ def angularOneFormAt (s : ℂ) : ℂ →ₗ[ℝ] ℝ where
   map_smul' c v := by
     change (dlog01 s * ((c : ℂ) * v)).im =
       c * (dlog01 s * v).im
-    rw [← mul_assoc]
-    simp
+    simp [Complex.mul_re, Complex.mul_im]
+    ring
 
 @[simp] theorem angularOneFormAt_apply (s v : ℂ) :
     angularOneFormAt s v = (dlog01 s * v).im := rfl

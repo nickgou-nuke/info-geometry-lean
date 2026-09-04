@@ -3,6 +3,7 @@ import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Canonical.H3ZornAlgebraicSoldering
 
 noncomputable section
 
@@ -11,6 +12,7 @@ namespace InfoGeometry.Canonical.SplitG2AlbertEntrywiseLift
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.H3Zorn
 open InfoGeometry.Lie.CanonicalZornDerivation
+open InfoGeometry.Canonical.H3ZornAlgebraicSoldering
 
 abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
 abbrev Zorn := ZornVectorMatrix ℝ
@@ -148,11 +150,66 @@ theorem liftG2LieHom_range_finrank :
     _ = 14 :=
       InfoGeometry.Lie.CanonicalZornDerivationDimension.finrank_canonicalZornDerivations
 
-/-- The only additional compatibility needed to land the entrywise action in
-the native split-Albert `F4` derivation algebra.  This is deliberately a
-soldering datum rather than an unproved theorem. -/
+/-! ## Algebraic soldering of the entrywise coordinate action -/
+
+/-- The same `G2` action written directly on the six-lane Peirce coordinate
+carrier. -/
+noncomputable def entrywiseCoordEnd (D : G2Der) :
+    Module.End ℝ H3Coord where
+  toFun X :=
+    (0, (0, (0,
+      (canonicalToVectorDerivation D X.2.2.2.1,
+       (canonicalToVectorDerivation D X.2.2.2.2.1,
+        canonicalToVectorDerivation D X.2.2.2.2.2)))))
+  map_add' X Y := by
+    ext <;> simp [canonicalToVectorDerivation]
+  map_smul' r X := by
+    ext <;> simp [canonicalToVectorDerivation]
+
+/-- The concrete entrywise action commutes with the algebraic soldering
+square. -/
+theorem h3Soldering_entrywise_intertwines (D : G2Der) (X : H3Coord) :
+    h3Soldering (entrywiseCoordEnd D X) =
+      liftG2End D (h3Soldering X) := by
+  rfl
+
+/-- Endomorphism form of the same commutative square. -/
+theorem liftG2End_eq_soldered_entrywise (D : G2Der) :
+    liftG2End D =
+      h3Soldering.toLinearMap.comp
+        ((entrywiseCoordEnd D).comp h3Soldering.symm.toLinearMap) := by
+  apply LinearMap.ext
+  intro X
+  rw [LinearMap.comp_apply, LinearMap.comp_apply]
+  rw [h3Soldering_entrywise_intertwines]
+  simp
+
+/-- Source-side compatibility: the coordinate entrywise action is a
+derivation of the pulled-back Jordan product.  This is the only algebraic
+obligation left after introducing the soldering. -/
+def EntrywiseCoordJordanCompatible (D : G2Der) : Prop :=
+  ∀ X Y : H3Coord,
+    entrywiseCoordEnd D (coordJordanMul X Y) =
+      coordJordanMul (entrywiseCoordEnd D X) Y +
+        coordJordanMul X (entrywiseCoordEnd D Y)
+
+/-- Product-preserving soldering transports a source-side coordinate
+Leibniz theorem to the installed native Albert Jordan product. -/
+theorem liftG2End_isJordanDerivation_of_coord
+    (D : G2Der) (hD : EntrywiseCoordJordanCompatible D) :
+    H3ZornJordanDerivation (liftG2End D) := by
+  rw [liftG2End_eq_soldered_entrywise D]
+  exact h3JordanDerivation_transport (entrywiseCoordEnd D) hD
+
+/-- A universal source-side coordinate Leibniz theorem constructs the previous
+`G2F4Soldering` datum automatically. -/
 structure G2F4Soldering where
   jordan : ∀ D : G2Der, H3ZornJordanDerivation (liftG2End D)
+
+noncomputable def g2F4SolderingOfCoord
+    (hcoord : ∀ D : G2Der, EntrywiseCoordJordanCompatible D) :
+    G2F4Soldering where
+  jordan D := liftG2End_isJordanDerivation_of_coord D (hcoord D)
 
 /-- A supplied Jordan-compatibility soldering upgrades the faithful entrywise
 representation to a genuine Lie homomorphism into the native `F4` derivation

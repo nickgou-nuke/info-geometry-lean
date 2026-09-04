@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.Information.ModularSurprisalDerivationBridge
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -10,7 +11,8 @@ Leibniz derivation. This file applies the repository-owned inner derivations
 
 `adK(K)(X) = KX - XK`
 
-and its complex-linear algebra form to the combined bipolar Cartan generator
+and packages the complex-linear form as the repository-native `OpDerivation`
+for the combined bipolar Cartan generator
 
 `K(s) = η(s) Kboost + θ(s) Kcirc`.
 
@@ -26,6 +28,7 @@ namespace InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.Information.ModularSurprisalDerivationBridge
+open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
 abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
@@ -37,6 +40,11 @@ def logarithmicDerivation (s : ℂ) : Matrix2C →+ Matrix2C :=
 /-- Native complex-linear inner derivation on the matrix algebra. -/
 def logarithmicDerivationLinear (s : ℂ) : Matrix2C →ₗ[ℂ] Matrix2C :=
   adK_algebra (R := ℂ) (logarithmicCartanGenerator s)
+
+/-- Repository-native operator derivation carrying the same inner commutator. -/
+def logarithmicOpDerivation (s : ℂ) : OpDerivation ℂ Matrix2C where
+  toLinearMap := logarithmicDerivationLinear s
+  leibniz' := logarithmicDerivationLinear_leibniz s
 
 @[simp] theorem logarithmicDerivation_apply (s : ℂ) (X : Matrix2C) :
     logarithmicDerivation s X =
@@ -65,6 +73,19 @@ theorem logarithmicDerivationLinear_leibniz
     adK_algebra_is_derivation (R := ℂ)
       (logarithmicCartanGenerator s) X Y
 
+@[simp] theorem logarithmicOpDerivation_apply (s : ℂ) (X : Matrix2C) :
+    logarithmicOpDerivation s X =
+      logarithmicCartanGenerator s * X - X * logarithmicCartanGenerator s :=
+  rfl
+
+/-- The `OpDerivation` carrier exposes the Leibniz identity directly. -/
+theorem logarithmicOpDerivation_leibniz
+    (s : ℂ) (X Y : Matrix2C) :
+    logarithmicOpDerivation s (X * Y) =
+      logarithmicOpDerivation s X * Y +
+        X * logarithmicOpDerivation s Y := by
+  exact (logarithmicOpDerivation s).leibniz X Y
+
 /-- The derivation annihilates the identity. -/
 @[simp] theorem logarithmicDerivation_one (s : ℂ) :
     logarithmicDerivation s (1 : Matrix2C) = 0 := by
@@ -76,6 +97,11 @@ theorem logarithmicDerivationLinear_leibniz
     logarithmicDerivationLinear s (1 : Matrix2C) = 0 := by
   simpa [logarithmicDerivationLinear] using
     adK_algebra_one (R := ℂ) (logarithmicCartanGenerator s)
+
+@[simp] theorem logarithmicOpDerivation_one (s : ℂ) :
+    logarithmicOpDerivation s (1 : Matrix2C) = 0 := by
+  rw [logarithmicOpDerivation_apply]
+  simp
 
 /-- Plus-sheet adjoint eigenoperator law. -/
 theorem logarithmicDerivation_sigmaPlus (s : ℂ) :
@@ -101,35 +127,47 @@ theorem logarithmicDerivationLinear_sigmaMinus (s : ℂ) :
   rw [logarithmicDerivationLinear_apply, logarithmicCartan_comm_sigmaMinus]
   simp [minusCartanWeight, plusCartanWeight_eq_bipolarLog]
 
+/-- Native `OpDerivation` plus-sheet eigenoperator law. -/
+theorem logarithmicOpDerivation_sigmaPlus (s : ℂ) :
+    logarithmicOpDerivation s σPlus = bipolarLog s • σPlus := by
+  rw [logarithmicOpDerivation_apply]
+  rw [logarithmicCartan_comm_sigmaPlus, plusCartanWeight_eq_bipolarLog]
+
+/-- Native `OpDerivation` minus-sheet eigenoperator law. -/
+theorem logarithmicOpDerivation_sigmaMinus (s : ℂ) :
+    logarithmicOpDerivation s σMinus = (-bipolarLog s) • σMinus := by
+  rw [logarithmicOpDerivation_apply, logarithmicCartan_comm_sigmaMinus]
+  simp [minusCartanWeight, plusCartanWeight_eq_bipolarLog]
+
 /-- The finite adjoint action integrates the plus-sheet derivation character. -/
 theorem logarithmicDerivation_integrates_plus
     {s : ℂ} (hs : s ∈ punctured01) :
-    logarithmicDerivationLinear s σPlus = bipolarLog s • σPlus ∧
+    logarithmicOpDerivation s σPlus = bipolarLog s • σPlus ∧
       finiteAdjointFlow s σPlus = crossRatio01 s • σPlus := by
-  exact ⟨logarithmicDerivationLinear_sigmaPlus s,
+  exact ⟨logarithmicOpDerivation_sigmaPlus s,
     finiteAdjointFlow_sigmaPlus_eq_crossRatio hs⟩
 
 /-- The finite adjoint action integrates the minus-sheet derivation character. -/
 theorem logarithmicDerivation_integrates_minus
     {s : ℂ} (hs : s ∈ punctured01) :
-    logarithmicDerivationLinear s σMinus = (-bipolarLog s) • σMinus ∧
+    logarithmicOpDerivation s σMinus = (-bipolarLog s) • σMinus ∧
       finiteAdjointFlow s σMinus = (crossRatio01 s)⁻¹ • σMinus := by
-  exact ⟨logarithmicDerivationLinear_sigmaMinus s,
+  exact ⟨logarithmicOpDerivation_sigmaMinus s,
     finiteAdjointFlow_sigmaMinus_eq_crossRatio_inv hs⟩
 
 /-- Compact derivation/integration packet. -/
 theorem bipolar_logarithmic_derivation_packet
     {s : ℂ} (hs : s ∈ punctured01) (X Y : Matrix2C) :
-    logarithmicDerivationLinear s (X * Y) =
-        logarithmicDerivationLinear s X * Y +
-          X * logarithmicDerivationLinear s Y ∧
-      logarithmicDerivationLinear s σPlus = bipolarLog s • σPlus ∧
-      logarithmicDerivationLinear s σMinus = (-bipolarLog s) • σMinus ∧
+    logarithmicOpDerivation s (X * Y) =
+        logarithmicOpDerivation s X * Y +
+          X * logarithmicOpDerivation s Y ∧
+      logarithmicOpDerivation s σPlus = bipolarLog s • σPlus ∧
+      logarithmicOpDerivation s σMinus = (-bipolarLog s) • σMinus ∧
       finiteAdjointFlow s σPlus = crossRatio01 s • σPlus ∧
       finiteAdjointFlow s σMinus = (crossRatio01 s)⁻¹ • σMinus := by
-  exact ⟨logarithmicDerivationLinear_leibniz s X Y,
-    logarithmicDerivationLinear_sigmaPlus s,
-    logarithmicDerivationLinear_sigmaMinus s,
+  exact ⟨logarithmicOpDerivation_leibniz s X Y,
+    logarithmicOpDerivation_sigmaPlus s,
+    logarithmicOpDerivation_sigmaMinus s,
     finiteAdjointFlow_sigmaPlus_eq_crossRatio hs,
     finiteAdjointFlow_sigmaMinus_eq_crossRatio_inv hs⟩
 

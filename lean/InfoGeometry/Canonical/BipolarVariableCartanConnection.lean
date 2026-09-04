@@ -58,7 +58,9 @@ theorem hasDerivAt_dlog01 {s : ℂ} (hs : s ∈ punctured01) :
   have hlin : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := by
     simpa using (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
   have h1 := hlin.inv (one_sub_ne_zero_of_mem hs)
-  simpa [dlog01, dlog01Deriv, one_div] using h0.add h1
+  convert h0.add h1 using 1 <;>
+    simp [dlog01, dlog01Deriv, one_div] <;>
+    ring
 
 /-- The nonconstant Cartan-valued one-form at a base point `s`. -/
 def variableCartanConnection (s : ℂ) : Op1Form ℂ ℂ Matrix2C where
@@ -201,12 +203,28 @@ theorem hasDerivAt_halfLogLift
       (hasDerivAt_const s (0 : ℂ))
   · simpa [halfLogLift, halfLogLiftDerivative] using
       (hasDerivAt_const s (0 : ℂ))
-  · simpa [halfLogLift, halfLogLiftDerivative, mul_assoc] using
-      hasDerivAt_minusWeight hs hslit
+  · convert hasDerivAt_minusWeight hs hslit using 1 <;>
+      simp [halfLogLift, halfLogLiftDerivative] <;>
+      ring
 
 /-- Differential of the half-log frame evaluated on a tangent vector. -/
 def halfLogLiftDifferential (s v : ℂ) : Matrix2C :=
   v • halfLogLiftDerivative s
+
+/-- The displayed differential is the genuine derivative along an affine
+complex tangent line. -/
+theorem hasDerivAt_halfLogLift_along
+    {s : ℂ} (hs : s ∈ punctured01)
+    (hslit : crossRatio01 s ∈ Complex.slitPlane) (v : ℂ) :
+    HasDerivAt
+      (fun t : ℂ => halfLogLift (s + t * v))
+      (halfLogLiftDifferential s v) 0 := by
+  have hline : HasDerivAt (fun t : ℂ => s + t * v) v 0 := by
+    simpa using
+      (hasDerivAt_const (0 : ℂ) s).add
+        ((hasDerivAt_id (0 : ℂ)).mul_const v)
+  have h := (hasDerivAt_halfLogLift hs hslit).comp 0 hline
+  simpa [halfLogLiftDifferential] using h
 
 /-- Algebraic local pure-gauge identity `G⁻¹ dG = A`. -/
 theorem halfLogLiftInv_mul_differential (s v : ℂ) :
@@ -217,18 +235,20 @@ theorem halfLogLiftInv_mul_differential (s v : ℂ) :
     simp [halfLogLiftInv, halfLogLiftDifferential, halfLogLiftDerivative,
       variableCartanConnection, σ3c, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.smul_apply, plusWeight_mul_minusWeight,
-      minusWeight_mul_plusWeight] <;>
+      minusWeight_mul_plusWeight, mul_assoc, mul_comm, mul_left_comm] <;>
     ring
 
-/-- Local integrability packet: the derivative is genuine and its left
-Maurer--Cartan quotient is the variable connection. -/
+/-- Local integrability packet: the directional derivative is genuine and its
+left Maurer--Cartan quotient is the variable connection. -/
 theorem local_pure_gauge_packet
     {s : ℂ} (hs : s ∈ punctured01)
     (hslit : crossRatio01 s ∈ Complex.slitPlane) (v : ℂ) :
-    HasDerivAt halfLogLift (halfLogLiftDerivative s) s ∧
+    HasDerivAt
+        (fun t : ℂ => halfLogLift (s + t * v))
+        (halfLogLiftDifferential s v) 0 ∧
       halfLogLiftInv s * halfLogLiftDifferential s v =
         variableCartanConnection s v := by
-  exact ⟨hasDerivAt_halfLogLift hs hslit,
+  exact ⟨hasDerivAt_halfLogLift_along hs hslit v,
     halfLogLiftInv_mul_differential s v⟩
 
 /-- Compact variable-connection packet. -/
@@ -239,12 +259,16 @@ theorem bipolar_variable_cartan_packet
       variableExteriorDerivative s u v = 0 ∧
       wedge (variableCartanConnection s) (variableCartanConnection s) u v = 0 ∧
       variableCartanCurvature s u v = 0 ∧
+      HasDerivAt
+        (fun t : ℂ => halfLogLift (s + t * v))
+        (halfLogLiftDifferential s v) 0 ∧
       halfLogLiftInv s * halfLogLiftDifferential s v =
         variableCartanConnection s v := by
   exact ⟨hasDerivAt_dlog01 hs,
     by simp [variableExteriorDerivative],
     by rw [variableCartanConnection_selfWedge_zero]; simp,
     by rw [variableCartanCurvature_eq_zero hs]; simp,
+    hasDerivAt_halfLogLift_along hs hslit v,
     halfLogLiftInv_mul_differential s v⟩
 
 end InfoGeometry.Canonical.BipolarVariableCartanConnection

@@ -88,9 +88,8 @@ theorem slash_isCliffordOdd (A : ComplexFourVector) :
 theorem axialSlash_isCliffordOdd (B : ComplexFourVector) :
     IsCliffordOdd (axialSlash B) := by
   unfold IsCliffordOdd axialSlash
-  rw [gamma5_mul_self]
-  rw [gamma5_mul_slash_eq_neg]
-  noncomm_ring
+  have hswap := gamma5_mul_slash_eq_neg B
+  noncomm_ring [gamma5_mul_self, hswap]
 
 /-- The full vector plus axial-vector potential is Clifford-odd. -/
 theorem oddPotential_isCliffordOdd
@@ -151,6 +150,8 @@ theorem oddPotential_sq_decomposition
         mixedBivectorResidue A B := by
   unfold oddPotential mixedBivectorResidue axialSlash
   have hswap := gamma5_mul_slash_eq_neg A
+  have haxial := axialSlash_sq B
+  unfold axialSlash at haxial
   calc
     (slash A + slash B * gamma5) *
         (slash A + slash B * gamma5) =
@@ -161,7 +162,7 @@ theorem oddPotential_sq_decomposition
     _ = minkowskiQuadratic A • (1 : DiracMatrix) +
         (slash A * slash B - slash B * slash A) * gamma5 +
         (-(minkowskiQuadratic B) • (1 : DiracMatrix)) := by
-          rw [slash_sq, axialSlash_sq]
+          rw [slash_sq, haxial]
     _ = (minkowskiQuadratic A - minkowskiQuadratic B) •
           (1 : DiracMatrix) +
         (slash A * slash B - slash B * slash A) * gamma5 := by
@@ -186,7 +187,12 @@ theorem pureVector_square_is_scalar
     (A : ComplexFourVector) :
     oddPotential A 0 * oddPotential A 0 =
       minkowskiQuadratic A • (1 : DiracMatrix) := by
-  simp [oddPotential, axialSlash, slash, slash_sq, minkowskiQuadratic]
+  have hzero : axialSlash (0 : ComplexFourVector) = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [axialSlash, slash]
+  rw [oddPotential, hzero, add_zero]
+  exact slash_sq A
 
 /-! ## Quaternionic spatial-bivector packet -/
 
@@ -213,5 +219,25 @@ theorem commute_quaternionic_third_of_first_two
     Commute N quat_k := by
   rw [← quat_ij_eq_k]
   exact hi.mul_right hj
+
+/-- Complex linear combinations of the three spatial quaternionic bivectors. -/
+def quaternionicBivectorCombination
+    (a b c : ℂ) : DiracMatrix :=
+  a • quat_i + b • quat_j + c • quat_k
+
+/-- Commuting with the first two quaternionic generators protects the full
+three-dimensional spatial-bivector span.  This is the theorem-supported core
+of the proposed `N`-intertwining statement; no self-duality label is needed. -/
+theorem commute_quaternionicBivectorCombination_of_first_two
+    (N : DiracMatrix)
+    (hi : Commute N quat_i)
+    (hj : Commute N quat_j)
+    (a b c : ℂ) :
+    Commute N (quaternionicBivectorCombination a b c) := by
+  have hk : Commute N quat_k :=
+    commute_quaternionic_third_of_first_two N hi hj
+  unfold quaternionicBivectorCombination
+  exact (hi.smul_right a).add_right
+    ((hj.smul_right b).add_right (hk.smul_right c))
 
 end InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge

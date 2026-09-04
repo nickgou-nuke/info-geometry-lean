@@ -1,6 +1,9 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarLogDifferential
+import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.BipolarLogSL2
+import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 import InfoGeometry.Canonical.PerfectPairBosonVortexBridge
 
 /-!
@@ -12,13 +15,15 @@ phrased note. The hierarchy is deliberately strict:
 1. Möbius coordinate `q(s)=s/(1-s)`;
 2. principal logarithmic readout `W=log q` where a branch is chosen;
 3. branch-independent meromorphic differential `dq/q`;
-4. determinant-one diagonal `2 × 2` realization;
-5. optional perfect-pair occupation and `U(1)` vortex interpretation for
-   composite pair modes.
+4. Apollonius level sets and the reflection `s ↦ 1-conj(s)`;
+5. pullback metric density with the infinity-chart correction;
+6. two-generator winding lattice and residue-difference period;
+7. determinant-one diagonal `2 × 2` realization and native `SL₂(ℂ)` soldering;
+8. optional perfect-pair occupation and doubled `U(1)` vortex interpretation.
 
-The final layer is still mathematical: perfect matchings, occupation numbers,
-phase doubling, and winding. It does not assert a microscopic superconducting
-Hamiltonian, a spectral gap, or dynamical Bose condensation.
+The capstone deliberately does not infer a conductor, Maxwell field, microscopic
+superconductivity, global Hodge decomposition, or a de Rham classification not
+already installed in the repository.
 -/
 
 noncomputable section
@@ -27,7 +32,11 @@ namespace InfoGeometry.Canonical.BipolarConformalLogos
 
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
+open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarLogSL2
+open InfoGeometry.Canonical.BipolarCartanLorentzBridge
+open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 open InfoGeometry.Canonical.FinitePerfectMatching
 open InfoGeometry.Canonical.PerfectPairBosonVortexBridge
 
@@ -38,23 +47,21 @@ theorem bipolar_logos_packet {s : ℂ} (hs : s ∈ punctured01) :
     Matrix.det (torusLift s) = 1 := by
   exact ⟨exp_bipolarLog hs, dlog01_eq_one_div_mul hs, torusLift_det hs⟩
 
-/-- Exact source/sink exchange packet. The coordinate is inverted, the
-coefficient of the logarithmic form is symmetric, and the pulled-back one-form
-is odd because the involution has derivative `-1`. -/
+/-- Exact source/sink exchange packet at the level of functions and one-forms. -/
 theorem exchange_packet {s : ℂ} (hs : s ∈ punctured01) :
     crossRatio01 (1 - s) = (crossRatio01 s)⁻¹ ∧
     dlog01 (1 - s) = dlog01 s ∧
     (-1 : ℂ) * dlog01 (1 - s) = -dlog01 s := by
   exact ⟨crossRatio01_one_sub hs, dlog01_one_sub s, pullback_one_sub_dlog01 s⟩
 
-/-- Exact reflection packet. -/
+/-- Exact complex-conjugation packet. -/
 theorem conjugation_packet (s : ℂ) :
     crossRatio01 (Complex.conj s) = Complex.conj (crossRatio01 s) ∧
     dlog01 (Complex.conj s) = Complex.conj (dlog01 s) := by
   exact ⟨crossRatio01_conj s, dlog01_conj s⟩
 
-/-- The midpoint vertical line is exactly the zero radial-logarithm locus for
-the canonical Cayley coordinate, and its multiplicative image has unit norm. -/
+/-- The midpoint vertical line is the zero radial-logarithm locus and maps to
+unit modulus. -/
 theorem critical_line_packet (y : ℝ) :
     eta (criticalLine y) = 0 ∧
     ‖crossRatio01 (criticalLine y)‖ = 1 := by
@@ -71,6 +78,42 @@ theorem logistic_packet (t : ℝ) :
 theorem residue_balance_packet :
     residuePair = ((1 : ℂ), (-1 : ℂ)) ∧ residuePair.1 + residuePair.2 = 0 := by
   exact ⟨rfl, residuePair_sum_zero⟩
+
+/-- Corrected method-of-images/metric packet: reflection is exact, Apollonius
+levels are exact, and infinity is a removable point for the metric coefficient. -/
+theorem apollonius_reflection_metric_packet
+    {s : ℂ} (hs : s ∈ punctured01) (c : ℝ) :
+    (eta s = c ↔ ‖s‖ = Real.exp c * ‖1 - s‖) ∧
+      eta (mirror s) = -eta s ∧
+      (mirror s = s ↔ s.re = 1 / 2) ∧
+      infinityChartDensity 0 = 1 := by
+  exact ⟨eta_eq_iff_apollonius hs c, eta_mirror s,
+    mirror_fixed_iff s, infinityChartDensity_zero⟩
+
+/-- Corrected two-puncture period packet. The two elementary windings remain
+distinct although the bipolar residue-difference form annihilates the diagonal. -/
+theorem winding_period_packet :
+    circulationPeriod originWinding = (2 * Real.pi * Complex.I : ℂ) ∧
+      circulationPeriod oneWinding = -(2 * Real.pi * Complex.I : ℂ) ∧
+      circulationPeriod (diagonalWinding 1) = 0 := by
+  exact bipolar_period_packet
+
+/-- Native `SL₂(ℂ)` soldering packet for the bipolar Cartan element. -/
+theorem cartan_soldering_packet (s : ℂ) (X : HermitianMat2) :
+    halfLogLift s = compactK (theta s / 2) * boostA (eta s / 2) ∧
+      isSL2C (halfLogLift s) ∧
+      (bipolarSolderingAction s X).mat.det = X.mat.det := by
+  exact ⟨halfLogLift_eq_compactK_mul_boostA s,
+    halfLogLift_isSL2C s,
+    bipolarSolderingAction_det s X⟩
+
+/-- On the critical line the bipolar Cartan element is exactly compact and
+therefore belongs to the repository's `SU(2)` predicate. -/
+theorem critical_line_compact_packet (y : ℝ) :
+    halfLogLift (criticalLine y) = compactK (theta (criticalLine y) / 2) ∧
+      isSU2 (halfLogLift (criticalLine y)) := by
+  exact ⟨halfLogLift_criticalLine_eq_compactK y,
+    halfLogLift_criticalLine_isSU2 y⟩
 
 /-- The theorem-safe replacement for the informal superconducting layer:
 perfect pairing gives composite modes, occupation-number states provide the

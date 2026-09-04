@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FinitePerfectMatching
+import InfoGeometry.Canonical.CausalVortexCooperPairing
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import Mathlib.Analysis.SpecialFunctions.Complex.Exponential
@@ -19,8 +20,10 @@ The formal hierarchy is:
    pair mode;
 4. a composite made from two equally charged constituents carries the square of
    the constituent `U(1)` phase;
-5. integer vortex winding gives trivial closed-loop composite phase;
-6. the bipolar logarithmic differential supplies the balanced two-pole
+5. the existing finite Cooper-pair operator therefore sees twice the constituent
+   gauge angle;
+6. integer vortex winding gives trivial closed-loop composite phase;
+7. the bipolar logarithmic differential supplies the balanced two-pole
    `( +1, -1 )` residue datum.
 
 This does **not** claim that arbitrary fermion bilinears satisfy canonical CCR,
@@ -109,6 +112,23 @@ theorem pairPhase_eq_constituentPhase_sq (θ : ℝ) :
 @[simp] theorem norm_pairPhase (θ : ℝ) : ‖pairPhase θ‖ = 1 := by
   rw [pairPhase_eq_constituentPhase_sq, norm_pow, norm_constituentPhase, one_pow]
 
+/-- Adapter to the existing finite Cooper-pair owner: if `θ` is the constituent
+gauge angle, the composite order parameter is rotated by `2θ`. -/
+theorem cooperPairPhaseRotation_constituentGauge
+    {n : ℕ} (M : CausalVortex.NullBoundaryMajoranas n) (θ : ℝ) :
+    CausalVortex.cooperPairPhaseRotation M (2 * θ) =
+      pairPhase θ • CausalVortex.cooperPairCondensate M := by
+  rfl
+
+/-- Equivalently, the existing Cooper-pair rotation carries the square of the
+constituent phase. -/
+theorem cooperPairPhaseRotation_eq_constituentPhase_sq
+    {n : ℕ} (M : CausalVortex.NullBoundaryMajoranas n) (θ : ℝ) :
+    CausalVortex.cooperPairPhaseRotation M (2 * θ) =
+      constituentPhase θ ^ 2 • CausalVortex.cooperPairCondensate M := by
+  rw [cooperPairPhaseRotation_constituentGauge M θ,
+    pairPhase_eq_constituentPhase_sq]
+
 /-- Dimensionless integer vortex angle for a charge-two composite. A half-turn
 `π n` of the constituent phase becomes a full `2π n` turn of the pair phase. -/
 def pairVortexAngle (n : ℤ) : ℝ := Real.pi * n
@@ -124,6 +144,15 @@ theorem pairPhase_vortex_winding (n : ℤ) :
     ring
   rw [harg]
   simpa using Complex.exp_int_mul_two_pi_mul_I n
+
+/-- The existing Cooper-pair operator is single-valued after an integer pair
+vortex winding in the constituent gauge angle. -/
+theorem cooperPairPhaseRotation_vortex
+    {n : ℕ} (M : CausalVortex.NullBoundaryMajoranas n) (k : ℤ) :
+    CausalVortex.cooperPairPhaseRotation M (2 * pairVortexAngle k) =
+      CausalVortex.cooperPairCondensate M := by
+  rw [cooperPairPhaseRotation_constituentGauge, pairPhase_vortex_winding]
+  simp
 
 /-- The same integer winding is the exponential of the repository's canonical
 `2πi` logarithmic period. -/

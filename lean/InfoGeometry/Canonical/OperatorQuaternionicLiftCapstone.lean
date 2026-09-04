@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.ChiralZornNCZornBridge
 import InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 import InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
+import InfoGeometry.Canonical.OperatorPauliLubanskiLift
 import InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 import InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
@@ -14,7 +15,7 @@ import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 Canonical owner for the parts of the quaternion/Pauli/chiral operator lift
 that are already theorem-supported in the repository.
 
-The capstone deliberately separates seven algebraic layers from stronger
+The capstone deliberately separates finite algebraic layers from stronger
 geometric interpretations:
 
 1. the classical chiral adjugate identity acquires explicit commutator defects
@@ -25,13 +26,16 @@ geometric interpretations:
    skew-Hermitian Lie channels;
 4. spin-half projections and the quadratic spin Casimir transport exactly to
    the associative operator-Zorn/chiral coordinates;
-5. concrete vector/axial Dirac matrices are `γ5`-odd and their square is
+5. the finite Pauli--Lubanski vector combines the external mass Casimir with
+   the internal spin Casimir, and its null `z`-ray restrictions recover the
+   two Weyl helicities on the corresponding circular projectors;
+6. concrete vector/axial Dirac matrices are `γ5`-odd and their square is
    `γ5`-even, with scalar plus explicit mixed bivector residue;
-6. the genuinely operator-valued causal soldering owner records the ordered
+7. the genuinely operator-valued causal soldering owner records the ordered
    Pauli factorization defect and connection curvature as commutator residues;
-7. the repository-owned tripotent construction reconstructs every element from
-   its five grouped Peirce components.
-8. the existing eight-element circular chiral frame and its matrix-coefficient
+8. the repository-owned tripotent construction reconstructs every element from
+   its five grouped Peirce components;
+9. the existing eight-element circular chiral frame and its matrix-coefficient
    noncommutative Zorn transport are exposed without carrier identification.
 
 Exterior Clifford degree and the tripotent/TKK five-grading remain separate
@@ -50,6 +54,7 @@ open InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 open InfoGeometry.Canonical.QuaternionicOperatorComplexStructure
 open InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
+open InfoGeometry.Canonical.OperatorPauliLubanskiLift
 open InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 open InfoGeometry.Physics.Algebra
 open InfoGeometry.Algebra.CircularChiralCausalConeBasis
@@ -97,6 +102,24 @@ theorem finite_operator_spin_casimir_packet :
       InfoGeometry.Physics.OperatorZornMatrix.toMatrix zornSpinHalfCasimir =
         (3 / 4 : ℂ) • (1 : Mat2C) :=
   operatorZorn_spin_half_packet
+
+/-- Massive/massless Wigner packet at the finite matrix level.  The two
+helicity signs are carried by opposite Weyl boost conventions on the same
+future null `z` ray. -/
+theorem finite_pauliLubanski_wigner_packet
+    (E : ℂ) (mu : Fin 4) :
+    massCasimir (nullZMomentum E) = 0 ∧
+      pauliLubanskiComponent (nullZMomentum E) mu *
+          InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge.circularPlus =
+        (((2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) •
+          InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge.circularPlus) ∧
+      rightPauliLubanskiComponent (nullZMomentum E) mu *
+          InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge.circularMinus =
+        ((-(2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) •
+          InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge.circularMinus) := by
+  exact ⟨nullZMomentum_massCasimir E,
+    pauliLubanski_nullZ_positive_helicity E mu,
+    pauliLubanski_nullZ_negative_helicity E mu⟩
 
 /-- Exterior-Clifford parity packet for the finite vector plus axial-vector
 operator.  This is the theorem-honest replacement for identifying the

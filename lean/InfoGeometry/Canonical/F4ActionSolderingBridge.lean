@@ -100,9 +100,14 @@ certificate transfers immediately to linear independence of the genuine
 theorem f4Basis_linearIndependent_of_soldering
     (hS : CertificateIsSoldered) :
     LinearIndependent ℝ (fun i : Fin 52 => ((f4Basis i).1 : EndH3)) := by
-  apply LinearIndependent.of_comp actionSoldering
-  simpa [CertificateIsSoldered, hS] using
-    f4ActionMatrixReal_linearIndependent
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  have hsolder := congrArg actionSoldering hg
+  simp only [map_sum, map_smul, map_zero] at hsolder
+  have hcert : ∑ j : Fin 52, g j • f4ActionMatrixReal j = 0 := by
+    simpa only [hS] using hsolder
+  rw [Fintype.linearIndependent_iff] at f4ActionMatrixReal_linearIndependent
+  exact f4ActionMatrixReal_linearIndependent g hcert i
 
 /-- The native span of the 52 actual derivations therefore has exact finrank
 52 as soon as the certificate/readout soldering equation is supplied. -/

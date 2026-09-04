@@ -52,6 +52,7 @@ import InfoGeometry.Categorical.FibonacciFinitePentagonHom
 import InfoGeometry.Categorical.FibonacciTwoSidedBraid
 import InfoGeometry.Categorical.LogJordanTensorPowerBraidSector
 import InfoGeometry.Categorical.HadjiivanovRMatrixBraid
+import InfoGeometry.Categorical.LogNilpotentPhysicalBraiding
 
 import InfoGeometry.Categorical.LogJordanBraidProject4Representation
 import InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation

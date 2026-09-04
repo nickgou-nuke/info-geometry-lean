@@ -39,6 +39,7 @@ open scoped Interval Real
 open Complex Metric
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
+open InfoGeometry.Analysis.BipolarPeriodDescent
 open InfoGeometry.Analysis.BipolarElementaryContourPeriods
 
 /-- Real angular period detected by the bipolar residue pairing. -/

@@ -1,6 +1,7 @@
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Analysis.CauchyResidueWindingBridge
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.MeasureTheory.Integral.CircleIntegral
 import Mathlib.Tactic
 
 /-!
@@ -17,17 +18,18 @@ onto the one-dimensional period image `2πiℤ` and has diagonal kernel.  This f
 proves that exact image/kernel statement and then constructs the genuine
 quotient descent of the complex exponential.
 
-The elementary circle calculation below certifies the local `2πi` period of a
-single Cauchy pole.  It is not promoted to a classification of all continuous
-loops in the punctured plane; that would require a separate homology or winding
-number theorem.
+The elementary circle calculation uses Mathlib's native `circleMap`, its genuine
+derivative theorem, and the native Cauchy circle integral.  It is not promoted
+to a classification of all continuous loops in the punctured plane; that would
+require a separate homology or winding-number theorem.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Analysis.BipolarPeriodDescent
 
-open Complex Real intervalIntegral
+open scoped Interval Real
+open Complex Real intervalIntegral Metric
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
@@ -74,28 +76,23 @@ theorem signedCrossRatio01_logarithmicDerivative
   field_simp [hs.1, h₁, h₂]
   ring
 
-/-- Counterclockwise circle parameterization around `c`. -/
-def circleParam (c : ℂ) (r : ℝ) (t : ℝ) : ℂ :=
-  c + (r : ℂ) * Complex.exp (Complex.I * (t : ℂ))
-
-/-- Velocity assigned to the standard circle parameterization. -/
-def circleVelocity (r : ℝ) (t : ℝ) : ℂ :=
-  Complex.I * (r : ℂ) * Complex.exp (Complex.I * (t : ℂ))
-
-/-- Pullback coefficient of the Cauchy pole along a nondegenerate positively
-oriented circle. -/
+/-- Pullback coefficient of `(z-c)⁻¹ dz` along Mathlib's native circle map. -/
 def circlePolePullback (c : ℂ) (r : ℝ) (t : ℝ) : ℂ :=
-  circleVelocity r t / (circleParam c r t - c)
+  deriv (circleMap c r) t / (circleMap c r t - c)
+
+/-- The velocity used in the pullback is the genuine derivative of the native
+circle parameterization. -/
+theorem circleMap_velocity (c : ℂ) (r t : ℝ) :
+    HasDerivAt (circleMap c r) (circleMap 0 r t * Complex.I) t := by
+  exact hasDerivAt_circleMap c r t
 
 /-- The pullback of `(z-c)⁻¹ dz` is the constant coefficient `i`. -/
 theorem circlePolePullback_eq_I
     {c : ℂ} {r : ℝ} (hr : 0 < r) (t : ℝ) :
     circlePolePullback c r t = Complex.I := by
-  unfold circlePolePullback circleVelocity circleParam
-  rw [show
-    c + (r : ℂ) * Complex.exp (Complex.I * (t : ℂ)) - c =
-      (r : ℂ) * Complex.exp (Complex.I * (t : ℂ)) by ring]
-  exact circle_log_deriv_quotient r hr t
+  rw [circlePolePullback, deriv_circleMap, circleMap_sub_center, mul_comm]
+  exact mul_div_cancel_right₀ Complex.I
+    (circleMap_ne_center (c := 0) (R := r) (ne_of_gt hr))
 
 /-- Genuine interval-integral evaluation of the elementary Cauchy pole. -/
 theorem intervalIntegral_circlePolePullback
@@ -108,6 +105,14 @@ theorem intervalIntegral_circlePolePullback
     exact circlePolePullback_eq_I hr t
   rw [hfun]
   exact circle_pole_integral
+
+/-- Native Mathlib contour-integral form of the same elementary Cauchy period. -/
+theorem circleIntegral_sub_inv_center
+    {c : ℂ} {r : ℝ} (hr : 0 < r) :
+    (∮ z in C(c, r), (z - c)⁻¹) =
+      (2 * (Real.pi : ℂ) * Complex.I : ℂ) := by
+  apply circleIntegral.integral_sub_inv_of_mem_ball
+  simpa [mem_ball] using hr
 
 /-- Predicate for the image lattice `2πiℤ` inside `ℂ`. -/
 def IsTwoPiIPeriod (z : ℂ) : Prop :=

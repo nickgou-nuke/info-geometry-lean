@@ -15,6 +15,7 @@ import InfoGeometry.Analysis.BipolarSignedLogConventionBridge
 import InfoGeometry.Analysis.BipolarWindingExactSequence
 import InfoGeometry.Analysis.BipolarNativeExpCoveringBridge
 import InfoGeometry.Analysis.BipolarElementaryContourPeriods
+import InfoGeometry.Analysis.BipolarCircleEnclosurePeriods
 import InfoGeometry.Analysis.BipolarCriticalWindowsVortex
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 import InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
@@ -38,6 +39,7 @@ import InfoGeometry.Canonical.BipolarVariableCartanCurvatureForm
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
 import InfoGeometry.Canonical.BipolarSpinHolonomy
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
+import InfoGeometry.Canonical.BipolarContourSpinHolonomy
 import InfoGeometry.Canonical.BipolarAngularOneFormConnection
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Canonical.BipolarPeriodAdjointDescentBridge

@@ -12,7 +12,7 @@ The repository already constructs the extended binary Golay code and the
 24-coordinate Leech numerator set.  Here a coordinate permutation is bundled
 with the exact hypothesis that it preserves the Golay code.  From that premise
 we derive preservation of both Leech numerator branches and of the Euclidean
-quadratic norm.
+bilinear/quadratic forms.
 
 No identification with `M24`, `Co₀`, an ATLAS matrix representation, or the
 196560-vector minimal shell is made in this owner.
@@ -20,6 +20,7 @@ No identification with `M24`, `Co₀`, an ATLAS matrix representation, or the
 
 namespace InfoGeometry.Canonical.LeechGolayCoordinateAction
 
+open Matrix
 open InfoGeometry.Combinatorics.ExtendedBinaryGolay
 open InfoGeometry.Combinatorics.GolayConstructionA
 open InfoGeometry.Combinatorics.LeechLattice
@@ -90,6 +91,10 @@ def onBinary (g : GolayCoordinateAutomorphism) (c : Word24) : Word24 :=
 def onInteger (g : GolayCoordinateAutomorphism) (z : IntegerWord24) : IntegerWord24 :=
   permuteCoords g.perm z
 
+/-- The corresponding action on the ambient real 24-space. -/
+def onReal (g : GolayCoordinateAutomorphism) (x : Fin 24 → ℝ) : Fin 24 → ℝ :=
+  permuteCoords g.perm x
+
 /-- A Golay-preserving coordinate permutation maps the actual Leech numerator
 carrier to itself. -/
 theorem mapsTo_numerator (g : GolayCoordinateAutomorphism) :
@@ -118,6 +123,21 @@ theorem normSqNumerator_onInteger
     normSqNumerator (g.onInteger a) = normSqNumerator a := by
   unfold normSqNumerator onInteger permuteCoords
   exact Fintype.sum_equiv g.perm.symm _ _ (fun _ => rfl)
+
+/-- The ambient real coordinate action preserves the full Euclidean bilinear
+form.  This is the exact orthogonality statement for the permutation part of
+the eventual monomial/Conway action. -/
+theorem dotProduct_onReal
+    (g : GolayCoordinateAutomorphism) (x y : Fin 24 → ℝ) :
+    dotProduct (g.onReal x) (g.onReal y) = dotProduct x y := by
+  unfold dotProduct onReal permuteCoords
+  exact Fintype.sum_equiv g.perm.symm _ _ (fun _ => rfl)
+
+/-- In particular, the real coordinate action preserves squared Euclidean norm. -/
+theorem normSq_onReal
+    (g : GolayCoordinateAutomorphism) (x : Fin 24 → ℝ) :
+    dotProduct (g.onReal x) (g.onReal x) = dotProduct x x :=
+  g.dotProduct_onReal x x
 
 /-- Coordinate action commutes with the conventional real `1/sqrt 8`
 realization. -/
@@ -156,10 +176,12 @@ native Leech numerator and preserves its scaled Euclidean quadratic norm. -/
 theorem golay_coordinate_action_packet
     (g : GolayCoordinateAutomorphism) :
     Set.MapsTo g.onInteger numerator numerator ∧
+    (∀ x y : Fin 24 → ℝ,
+      dotProduct (g.onReal x) (g.onReal y) = dotProduct x y) ∧
     ∀ a : IntegerWord24,
       (∑ i, scaledRealization (g.onInteger a) i *
           scaledRealization (g.onInteger a) i) =
         ∑ i, scaledRealization a i * scaledRealization a i := by
-  exact ⟨g.mapsTo_numerator, g.scaled_normSq_preserved⟩
+  exact ⟨g.mapsTo_numerator, g.dotProduct_onReal, g.scaled_normSq_preserved⟩
 
 end InfoGeometry.Canonical.LeechGolayCoordinateAction

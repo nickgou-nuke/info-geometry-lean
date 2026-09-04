@@ -46,28 +46,19 @@ open InfoGeometry.Categorical.LogJordanBraidFiniteInfiniteCompatibility
 open InfoGeometry.Categorical.BraidGroupInfiniteColimitIso
 open InfoGeometry.Clifford.LogCftMonodromy
 
-abbrev hadjiivanovCheckedR :=
-  standardHadjiivanovCheckedRDatum.checkR
-
-abbrev hadjiivanovCheckedR12 :=
-  standardHadjiivanovCheckedRDatum.checkR12
-
-abbrev hadjiivanovCheckedR23 :=
-  standardHadjiivanovCheckedRDatum.checkR23
+abbrev hadjiivanovCheckedR := standardHadjiivanovCheckedRDatum.checkR
+abbrev hadjiivanovCheckedR12 := standardHadjiivanovCheckedRDatum.checkR12
+abbrev hadjiivanovCheckedR23 := standardHadjiivanovCheckedRDatum.checkR23
 
 theorem hadjiivanovCheckedR_commutes_tensorN :
-    hadjiivanovCheckedR.toLinearMap.comp
-        (PairObj standardJordanObject).N =
-      (PairObj standardJordanObject).N.comp
-        hadjiivanovCheckedR.toLinearMap :=
+    hadjiivanovCheckedR.toLinearMap.comp (PairObj standardJordanObject).N =
+      (PairObj standardJordanObject).N.comp hadjiivanovCheckedR.toLinearMap :=
   standardHadjiivanov_checkedR_commutes_tensorN
 
 theorem hadjiivanovCheckedR_yangBaxter :
-    hadjiivanovCheckedR12.toLinearMap ∘ₗ
-          hadjiivanovCheckedR23.toLinearMap ∘ₗ
+    hadjiivanovCheckedR12.toLinearMap ∘ₗ hadjiivanovCheckedR23.toLinearMap ∘ₗ
           hadjiivanovCheckedR12.toLinearMap =
-      hadjiivanovCheckedR23.toLinearMap ∘ₗ
-          hadjiivanovCheckedR12.toLinearMap ∘ₗ
+      hadjiivanovCheckedR23.toLinearMap ∘ₗ hadjiivanovCheckedR12.toLinearMap ∘ₗ
           hadjiivanovCheckedR23.toLinearMap :=
   standardHadjiivanov_yangBaxter
 
@@ -107,46 +98,34 @@ theorem hadjiivanovBraidProject3CategoricalHom_artin :
   exact standardCategoricalBraidGroup3Hom_artin
 
 theorem hadjiivanov_sigmaZero_forget :
-    (hadjiivanovBraidProject3CategoricalHom
-      (σ' 2 (0 : Fin 2))).hom.hom =
-        standardHadjiivanovBraidProject3Representation
-          (σ' 2 (0 : Fin 2)) := by
+    (hadjiivanovBraidProject3CategoricalHom (σ' 2 (0 : Fin 2))).hom.hom =
+      standardHadjiivanovBraidProject3Representation (σ' 2 (0 : Fin 2)) := by
   rw [hadjiivanovBraidProject3CategoricalHom_sigmaZero]
   simpa [standardHadjiivanovBraidProject3Representation,
-    standardHadjiivanovBraidProject3Hom] using
-      standardCategoricalSigmaOne_hom
+    standardHadjiivanovBraidProject3Hom] using standardCategoricalSigmaOne_hom
 
 theorem hadjiivanov_sigmaOne_forget :
-    (hadjiivanovBraidProject3CategoricalHom
-      (σ' 2 (1 : Fin 2))).hom.hom =
-        standardHadjiivanovBraidProject3Representation
-          (σ' 2 (1 : Fin 2)) := by
+    (hadjiivanovBraidProject3CategoricalHom (σ' 2 (1 : Fin 2))).hom.hom =
+      standardHadjiivanovBraidProject3Representation (σ' 2 (1 : Fin 2)) := by
   rw [hadjiivanovBraidProject3CategoricalHom_sigmaOne]
   simpa [standardHadjiivanovBraidProject3Representation,
-    standardHadjiivanovBraidProject3Hom] using
-      standardCategoricalSigmaTwo_hom
+    standardHadjiivanovBraidProject3Hom] using standardCategoricalSigmaTwo_hom
 
-abbrev hadjiivanovTensorPower (n : ℕ) :=
-  tensorPowerObj standardJordanObject n
-
-abbrev hadjiivanovTensorPowerGenerator
-    (n : ℕ) (i : Fin (n + 1)) :=
+abbrev hadjiivanovTensorPower (n : ℕ) := tensorPowerObj standardJordanObject n
+abbrev hadjiivanovTensorPowerGenerator (n : ℕ) (i : Fin (n + 1)) :=
   standardTensorPowerGenerator n i
 
 def hadjiivanovBraidProjectHom (n : ℕ) :
     braid_group (n + 2) →*
-      (hadjiivanovTensorPower (n + 2) ≃ₗ[ℂ]
-        hadjiivanovTensorPower (n + 2)) :=
+      (hadjiivanovTensorPower (n + 2) ≃ₗ[ℂ] hadjiivanovTensorPower (n + 2)) :=
   standardHadjiivanovBraidProjectHom n
 
 def hadjiivanovBraidProjectRepresentation (n : ℕ) :
-    Representation ℂ (braid_group (n + 2))
-      (hadjiivanovTensorPower (n + 2)) :=
+    Representation ℂ (braid_group (n + 2)) (hadjiivanovTensorPower (n + 2)) :=
   standardHadjiivanovBraidProjectRepresentation n
 
 @[simp]
-theorem hadjiivanovBraidProject_sigma
-    (n : ℕ) (i : Fin (n + 1)) :
+theorem hadjiivanovBraidProject_sigma (n : ℕ) (i : Fin (n + 1)) :
     hadjiivanovBraidProjectHom n (σ' (n + 1) i) =
       hadjiivanovTensorPowerGenerator n i :=
   standardHadjiivanovBraidProject_sigma n i
@@ -173,17 +152,13 @@ theorem hadjiivanovBraidProject_stabilization
         (appendPrimaryBonding (n + 1)).hom :=
   appendPrimaryBonding_braid_compat n g
 
-abbrev hadjiivanovBraidInfinity :=
-  hadjiivanovBraidGroupInfHom
+abbrev hadjiivanovBraidInfinity := hadjiivanovBraidGroupInfHom
 
 theorem hadjiivanov_finite_to_infinite
     (n : ℕ) (g : braid_group (n + 2)) :=
   hadjiivanov_finite_infinite_compatibility_hom n g
 
-abbrev braidInfinityColimitIso :=
-  braidGroupColimitIsoInfinite
-
-abbrev braidInfinityIsColimit :=
-  braidGroupBoundaryCoconeIsColimit
+abbrev braidInfinityColimitIso := braidGroupColimitIsoInfinite
+abbrev braidInfinityIsColimit := braidGroupBoundaryCoconeIsColimit
 
 end InfoGeometry.Categorical.HadjiivanovRMatrixBraid

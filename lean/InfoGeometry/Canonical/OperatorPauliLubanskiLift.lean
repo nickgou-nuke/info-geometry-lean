@@ -18,11 +18,13 @@ the missing fundamental Pauli representation:
 * `W^0 = p · S` and `W⃗ = E S⃗ + p⃗ × K⃗`;
 * `P · W = 0`;
 * `W² = -(3/4) Q(P) I₂ = -Q(P) S²`;
-* exact transport of the second Casimir to the diagonal operator-Zorn sector.
+* exact transport of the second Casimir to the diagonal operator-Zorn sector;
+* for the null ray `P = (E,0,0,E)`, the left Weyl sector obeys
+  `W_L^μ P₊ = +(1/2) P^μ P₊`, while the right Weyl companion obeys
+  `W_R^μ P₋ = -(1/2) P^μ P₋`.
 
-The massless identity `W^μ = λ P^μ` is not asserted as an operator identity:
-it holds after restriction to a helicity eigenspace.  The theorem-supported
-massless consequence proved here is the vanishing quadratic Casimir.
+The two signs belong to the two Weyl chiralities.  They are not asserted
+simultaneously for one fixed choice of boost generators.
 -/
 
 noncomputable section
@@ -32,6 +34,7 @@ namespace InfoGeometry.Canonical.OperatorPauliLubanskiLift
 open Matrix
 open InfoGeometry.Quantum.PauliSoldering
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
+open InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge
 open InfoGeometry.Physics
 open InfoGeometry.Physics.OperatorZornMatrix
 
@@ -132,6 +135,143 @@ theorem pauliLubanski_null_limit
     pauliLubanskiSq P = 0 := by
   rw [pauliLubanski_sq_eq_three_quarters_mass, hP]
   simp
+
+/-! ## Null z-axis momentum and helicity projection -/
+
+/-- Future-pointing algebraic null ray aligned with the circular `z` axis. -/
+def nullZMomentum (E : ℂ) : PauliMomentum :=
+  ⟨E, 0, 0, E⟩
+
+@[simp] theorem nullZMomentum_massCasimir (E : ℂ) :
+    massCasimir (nullZMomentum E) = 0 := by
+  simp [massCasimir, nullZMomentum]
+
+/-- Contravariant momentum component readout in the order `(0,1,2,3)`. -/
+def momentumComponent (P : PauliMomentum) : Fin 4 → ℂ
+  | 0 => P.E
+  | 1 => P.px
+  | 2 => P.py
+  | 3 => P.pz
+
+/-- Left-handed Pauli--Lubanski component readout. -/
+def pauliLubanskiComponent (P : PauliMomentum) : Fin 4 → Mat2C
+  | 0 => pauliLubanski0 P
+  | 1 => pauliLubanski1 P
+  | 2 => pauliLubanski2 P
+  | 3 => pauliLubanski3 P
+
+/-- On the `+z` null ray the left-handed transverse components are the
+positive circular raising rail. -/
+theorem nullZ_left_transverse_packet (E : ℂ) :
+    pauliLubanski1 (nullZMomentum E) = E • spinRaise ∧
+      pauliLubanski2 (nullZMomentum E) = (-Complex.I * E) • spinRaise := by
+  constructor <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [nullZMomentum, pauliLubanski1, pauliLubanski2,
+        boostX, boostY, boostZ, spinRaise, sigmaPlus,
+        InfoGeometry.Optics.ChiralLorentzOperatorLift.create,
+        spinX, spinY, spinZ, σ1, σ2, σ3, Complex.I_sq] <;>
+      ring
+
+/-- The positive circular sector is the physical helicity `+1/2` eigenspace
+for the left-handed Weyl representation on the future `+z` null ray:
+`W_L^μ P₊ = +(1/2) P^μ P₊` for all four components. -/
+theorem pauliLubanski_nullZ_positive_helicity
+    (E : ℂ) (mu : Fin 4) :
+    pauliLubanskiComponent (nullZMomentum E) mu * circularPlus =
+      (((2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) • circularPlus) := by
+  fin_cases mu <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [pauliLubanskiComponent, momentumComponent, nullZMomentum,
+        pauliLubanski0, pauliLubanski1, pauliLubanski2, pauliLubanski3,
+        momentumDotSpin, boostX, boostY, boostZ,
+        spinX, spinY, spinZ,
+        circularPlus,
+        InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularPlusProjector,
+        InfoGeometry.Optics.JonesPoincareSphere.FiniteJonesModel.sProjector,
+        InfoGeometry.Optics.JonesPoincareSphere.FiniteJonesModel.diagJones,
+        σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two,
+        Complex.I_sq] <;>
+      ring
+
+/-! The opposite helicity belongs to the opposite Weyl chirality.  We therefore
+add the right-handed boost representation rather than asserting a false
+`P₋` theorem for the fixed left-handed generators above. -/
+
+/-- Right-handed boost generators `K_i^R = +i S_i`. -/
+def rightBoostX : Mat2C := Complex.I • spinX
+/-- Right-handed second boost generator. -/
+def rightBoostY : Mat2C := Complex.I • spinY
+/-- Right-handed third boost generator. -/
+def rightBoostZ : Mat2C := Complex.I • spinZ
+
+/-- Right-handed temporal component; rotations are unchanged. -/
+def rightPauliLubanski0 (P : PauliMomentum) : Mat2C :=
+  momentumDotSpin P
+
+/-- Right-handed first spatial component. -/
+def rightPauliLubanski1 (P : PauliMomentum) : Mat2C :=
+  P.E • spinX + P.py • rightBoostZ - P.pz • rightBoostY
+
+/-- Right-handed second spatial component. -/
+def rightPauliLubanski2 (P : PauliMomentum) : Mat2C :=
+  P.E • spinY + P.pz • rightBoostX - P.px • rightBoostZ
+
+/-- Right-handed third spatial component. -/
+def rightPauliLubanski3 (P : PauliMomentum) : Mat2C :=
+  P.E • spinZ + P.px • rightBoostY - P.py • rightBoostX
+
+/-- Right-handed Pauli--Lubanski component readout. -/
+def rightPauliLubanskiComponent (P : PauliMomentum) : Fin 4 → Mat2C
+  | 0 => rightPauliLubanski0 P
+  | 1 => rightPauliLubanski1 P
+  | 2 => rightPauliLubanski2 P
+  | 3 => rightPauliLubanski3 P
+
+/-- On the `+z` null ray the right-handed transverse components are the
+negative circular lowering rail. -/
+theorem nullZ_right_transverse_packet (E : ℂ) :
+    rightPauliLubanski1 (nullZMomentum E) = E • spinLower ∧
+      rightPauliLubanski2 (nullZMomentum E) = (Complex.I * E) • spinLower := by
+  constructor <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [nullZMomentum, rightPauliLubanski1, rightPauliLubanski2,
+        rightBoostX, rightBoostY, rightBoostZ, spinLower, sigmaMinus,
+        InfoGeometry.Optics.ChiralLorentzOperatorLift.annihilate,
+        spinX, spinY, spinZ, σ1, σ2, σ3, Complex.I_sq] <;>
+      ring
+
+/-- The negative circular sector is the physical helicity `-1/2` eigenspace
+for the right-handed Weyl representation on the same future `+z` null ray:
+`W_R^μ P₋ = -(1/2) P^μ P₋`. -/
+theorem pauliLubanski_nullZ_negative_helicity
+    (E : ℂ) (mu : Fin 4) :
+    rightPauliLubanskiComponent (nullZMomentum E) mu * circularMinus =
+      ((-(2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) • circularMinus) := by
+  fin_cases mu <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [rightPauliLubanskiComponent, momentumComponent, nullZMomentum,
+        rightPauliLubanski0, rightPauliLubanski1,
+        rightPauliLubanski2, rightPauliLubanski3,
+        momentumDotSpin, rightBoostX, rightBoostY, rightBoostZ,
+        spinX, spinY, spinZ,
+        circularMinus,
+        InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularMinusProjector,
+        InfoGeometry.Optics.JonesPoincareSphere.FiniteJonesModel.pProjector,
+        InfoGeometry.Optics.JonesPoincareSphere.FiniteJonesModel.diagJones,
+        σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two,
+        Complex.I_sq] <;>
+      ring
+
+/-- Paired finite Wigner-helicity packet on a future null `z` ray. -/
+theorem pauliLubanski_nullZ_helicity_packet
+    (E : ℂ) (mu : Fin 4) :
+    pauliLubanskiComponent (nullZMomentum E) mu * circularPlus =
+        (((2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) • circularPlus) ∧
+      rightPauliLubanskiComponent (nullZMomentum E) mu * circularMinus =
+        ((-(2 : ℂ)⁻¹ * momentumComponent (nullZMomentum E) mu) • circularMinus) :=
+  ⟨pauliLubanski_nullZ_positive_helicity E mu,
+    pauliLubanski_nullZ_negative_helicity E mu⟩
 
 /-- Transport the Pauli--Lubanski quadratic Casimir through the existing
 matrix-to-operator-Zorn equivalence. -/

@@ -5,11 +5,11 @@ import Mathlib.Tactic
 # A concrete GENERIC model for bipolar coordinate lanes
 
 The informal assignment `dS = -dη`, `dH = dθ` does not by itself define a
-metriplectic system.  The skew operator, positive symmetric operator, and both
+metriplectic system. The skew operator, positive symmetric operator, and both
 Casimir conditions must be supplied and proved.
 
-This file gives one explicit nontrivial finite model.  The state carrier has
-three real coordinates `(η, θ, a)`.  The auxiliary coordinate `a` is conjugate
+This file gives one explicit nontrivial finite model. The state carrier has
+three real coordinates `(η, θ, a)`. The auxiliary coordinate `a` is conjugate
 to `θ` in the reversible plane, while `η` is a Casimir of the skew operator.
 The dissipative operator is the positive rank-one projector in the `η`
 direction.
@@ -22,7 +22,7 @@ we obtain
 
 `L dH = -e_a`,  `M dS = -e_η`,
 
-energy rate zero, and entropy rate one.  In particular, the condition `η = 0`
+energy rate zero, and entropy rate one. In particular, the condition `η = 0`
 at a state does not imply `dη = 0` or make the dissipative lane disappear.
 
 This is a finite linear GENERIC realization, not a BKM identification or a
@@ -66,32 +66,32 @@ def auxiliaryCovector : Covector State3 where
   map_smul' c x := by simp
 
 @[simp] theorem etaCovector_etaBasis3 : etaCovector etaBasis3 = 1 := by
-  rfl
+  simp [etaCovector, etaBasis3]
 
 @[simp] theorem etaCovector_thetaBasis3 : etaCovector thetaBasis3 = 0 := by
-  rfl
+  simp [etaCovector, thetaBasis3]
 
 @[simp] theorem etaCovector_auxiliaryBasis3 : etaCovector auxiliaryBasis3 = 0 := by
-  rfl
+  simp [etaCovector, auxiliaryBasis3]
 
 @[simp] theorem thetaCovector_etaBasis3 : thetaCovector etaBasis3 = 0 := by
-  rfl
+  simp [thetaCovector, etaBasis3]
 
 @[simp] theorem thetaCovector_thetaBasis3 : thetaCovector thetaBasis3 = 1 := by
-  rfl
+  simp [thetaCovector, thetaBasis3]
 
 @[simp] theorem thetaCovector_auxiliaryBasis3 : thetaCovector auxiliaryBasis3 = 0 := by
-  rfl
+  simp [thetaCovector, auxiliaryBasis3]
 
 @[simp] theorem auxiliaryCovector_etaBasis3 : auxiliaryCovector etaBasis3 = 0 := by
-  rfl
+  simp [auxiliaryCovector, etaBasis3]
 
 @[simp] theorem auxiliaryCovector_thetaBasis3 : auxiliaryCovector thetaBasis3 = 0 := by
-  rfl
+  simp [auxiliaryCovector, thetaBasis3]
 
 @[simp] theorem auxiliaryCovector_auxiliaryBasis3 :
     auxiliaryCovector auxiliaryBasis3 = 1 := by
-  rfl
+  simp [auxiliaryCovector, auxiliaryBasis3]
 
 /-- Degenerate Poisson operator on the `(θ, auxiliary)` plane. -/
 def reversibleOperator : Covector State3 →ₗ[ℝ] State3 where
@@ -134,8 +134,7 @@ theorem dissipativeOperator_symmetric (α β : Covector State3) :
 /-- The dissipative quadratic response is a square. -/
 theorem dissipativeOperator_nonneg (α : Covector State3) :
     0 ≤ α (dissipativeOperator α) := by
-  simp [dissipativeOperator]
-  exact sq_nonneg (α etaBasis3)
+  simpa [dissipativeOperator, pow_two] using sq_nonneg (α etaBasis3)
 
 /-- Longitudinal entropy covector is a Casimir of the skew operator. -/
 theorem reversibleOperator_neg_eta_zero :
@@ -182,7 +181,10 @@ theorem dissipative_component :
 /-- The full GENERIC velocity contains both independent components. -/
 theorem bipolarGENERIC_flow :
     bipolarGENERIC.flow = -auxiliaryBasis3 - etaBasis3 := by
-  rw [System.flow, reversible_component, dissipative_component]
+  change bipolarGENERIC.L bipolarGENERIC.dH +
+      bipolarGENERIC.M bipolarGENERIC.dS =
+    -auxiliaryBasis3 - etaBasis3
+  rw [reversible_component, dissipative_component]
   abel
 
 /-- Energy is conserved by the concrete GENERIC flow. -/
@@ -207,13 +209,13 @@ def criticalCoordinateState (θ a : ℝ) : State3 := ![0, θ, a]
 
 @[simp] theorem etaCovector_criticalCoordinateState (θ a : ℝ) :
     etaCovector (criticalCoordinateState θ a) = 0 := by
-  rfl
+  simp [etaCovector, criticalCoordinateState]
 
 /-- The entropy covector itself remains nonzero when evaluated on its dual basis
 vector; a zero coordinate value does not annihilate its differential. -/
 theorem entropyCovector_etaBasis3 :
     bipolarGENERIC.dS etaBasis3 = -1 := by
-  rfl
+  simp [bipolarGENERIC, etaCovector, etaBasis3]
 
 /-- The dissipative component does not vanish merely because the state lies on
 `η = 0`. -/

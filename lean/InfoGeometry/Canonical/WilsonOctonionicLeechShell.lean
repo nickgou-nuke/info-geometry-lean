@@ -26,8 +26,27 @@ abbrev CoordinateChoice := Fin 3
 /-- Abstract index for one of the 240 `E8` roots used in Wilson's formula. -/
 abbrev E8RootIndex := Fin 240
 
-/-- Abstract index for one of the 16 signed octonion coordinate units. -/
+/-- Abstract index for one of the 16 signed octonion coordinate units.
+The sign is already part of this index; no independent extra `±` bit is used
+in the Wilson shell counts below. -/
 abbrev SignedUnitIndex := Fin 16
+
+/-- Equivalent bookkeeping convention: eight unsigned basis units together
+with one explicit sign bit. -/
+abbrev PositiveUnitIndex := Fin 8
+abbrev ExplicitSignIndex := Fin 2
+
+/-- The two legitimate sign conventions both have cardinality 16. -/
+theorem signed_unit_bookkeeping_equivalent :
+    Fintype.card SignedUnitIndex =
+      Fintype.card (PositiveUnitIndex × ExplicitSignIndex) := by
+  simp [SignedUnitIndex, PositiveUnitIndex, ExplicitSignIndex]
+
+/-- Adding an independent sign bit on top of `SignedUnitIndex` would double
+count the same signed-unit choice. -/
+theorem signed_unit_with_extra_sign_card :
+    Fintype.card (SignedUnitIndex × ExplicitSignIndex) = 32 := by
+  simp [SignedUnitIndex, ExplicitSignIndex]
 
 /-- Wilson type-I indexing: coordinate choice and one `E8` root. -/
 abbrev TypeIIndex := CoordinateChoice × E8RootIndex

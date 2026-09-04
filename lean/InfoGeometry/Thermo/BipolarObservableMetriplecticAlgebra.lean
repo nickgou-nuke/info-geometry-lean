@@ -21,7 +21,9 @@ to satisfy Jacobi. The dissipative lane is the rank-one symmetric biderivation
 
 Their sum is a metriplectic biderivation, not a Poisson bracket: it is neither
 skew nor symmetric in general. Under the two mutual degeneracy conditions, the
-single generator `H+S` yields energy conservation and entropy production.
+single generator `H+S` yields energy conservation and an entropy-rate square.
+Nonnegativity is stated only after applying a real-valued ring readout; an
+arbitrary commutative observable algebra has no intrinsic order.
 
 The final section identifies the covector contraction of the already-owned
 three-coordinate reversible operator with the same coordinate bivector.
@@ -217,10 +219,13 @@ theorem metricBracket_sq (D : DerivationFrame A) (F : A) :
   unfold metricBracket
   ring
 
-/-- Positivity of the diagonal metric response for real-valued observables. -/
-theorem metricBracket_nonneg (D : DerivationFrame ℝ) (F : ℝ) :
-    0 ≤ metricBracket D F F := by
-  rw [metricBracket_sq]
+/-- Every real-valued ring readout of a diagonal metric response is
+nonnegative. This is the correct ordered statement for a generally unordered
+observable algebra. -/
+theorem metricBracket_readout_nonneg
+    (D : DerivationFrame A) (ev : A →+* ℝ) (F : A) :
+    0 ≤ ev (metricBracket D F F) := by
+  rw [metricBracket_sq, map_pow]
   exact sq_nonneg _
 
 /-- Sum of the reversible and dissipative biderivations. It is not asserted to
@@ -316,13 +321,13 @@ theorem metriplectic_second_law
     rw [poissonBracket_skew, hS H, neg_zero]
   rw [hp, zero_add, metricBracket_sq]
 
-/-- Real-valued entropy production is nonnegative. -/
-theorem metriplectic_second_law_nonneg
-    (D : DerivationFrame ℝ) (H S : ℝ)
+/-- Every real-valued ring readout sees nonnegative entropy production. -/
+theorem metriplectic_second_law_readout_nonneg
+    (D : DerivationFrame A) (ev : A →+* ℝ) (H S : A)
     (hS : IsPoissonCasimir D S)
     (hH : IsMetricKernel D H) :
-    0 ≤ metriplecticBracket D S (H + S) := by
-  rw [metriplectic_second_law D H S hS hH]
+    0 ≤ ev (metriplecticBracket D S (H + S)) := by
+  rw [metriplectic_second_law D H S hS hH, map_pow]
   exact sq_nonneg _
 
 /-! ## Bridge to the finite three-coordinate GENERIC carrier -/
@@ -358,11 +363,16 @@ bivector. -/
 theorem etaCovector_is_reversible_casimir :
     reversibleOperator etaCovector = 0 := by
   have h := reversibleOperator_neg_eta_zero
-  simpa using congrArg Neg.neg h
+  have hmap : reversibleOperator (-etaCovector) =
+      -reversibleOperator etaCovector :=
+    reversibleOperator.map_neg etaCovector
+  rw [hmap] at h
+  exact neg_eq_zero.mp h
 
 /-- Compact observable-level packet. -/
 theorem bipolar_observable_metriplectic_packet
-    (D : DerivationFrame ℝ) (H S F G K : ℝ)
+    (D : DerivationFrame A) (ev : A →+* ℝ)
+    (H S F G K : A)
     (hS : IsPoissonCasimir D S)
     (hH : IsMetricKernel D H) :
     poissonBracket D (poissonBracket D F G) K +
@@ -370,10 +380,10 @@ theorem bipolar_observable_metriplectic_packet
         poissonBracket D (poissonBracket D K F) G = 0 ∧
       metriplecticBracket D H (H + S) = 0 ∧
       metriplecticBracket D S (H + S) = (D.Deta S) ^ 2 ∧
-      0 ≤ metriplecticBracket D S (H + S) := by
+      0 ≤ ev (metriplecticBracket D S (H + S)) := by
   exact ⟨poissonBracket_jacobi D F G K,
     metriplectic_first_law D H S hS hH,
     metriplectic_second_law D H S hS hH,
-    metriplectic_second_law_nonneg D H S hS hH⟩
+    metriplectic_second_law_readout_nonneg D ev H S hS hH⟩
 
 end InfoGeometry.Thermo.BipolarObservableMetriplecticAlgebra

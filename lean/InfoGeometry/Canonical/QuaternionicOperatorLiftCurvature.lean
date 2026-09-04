@@ -21,6 +21,7 @@ import Mathlib.Algebra.Quaternion
 import Mathlib.Tactic
 import InfoGeometry.Canonical.QuaternionCoaxialOrbit
 import InfoGeometry.Canonical.QuaternionicOperatorComplexStructure
+import InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 import InfoGeometry.Optics.OperatorCausalSoldering
 
 noncomputable section

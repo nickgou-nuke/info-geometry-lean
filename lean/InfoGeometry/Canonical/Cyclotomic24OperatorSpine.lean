@@ -220,16 +220,16 @@ theorem aeval_master25C_eq_zero_of_dvd
 /-- The tripotent polynomial divides the complex master polynomial. -/
 theorem tripotent_dvd_master25C :
     X ^ 3 - X ∣ master25C := by
-  refine ⟨(X ^ 21 + X ^ 19 + X ^ 17 + X ^ 15 + X ^ 13 + X ^ 11 +
-      X ^ 9 + X ^ 7 + X ^ 5 + X ^ 3 + X) : ℂ[X], ?_⟩
+  refine ⟨(X ^ 22 + X ^ 20 + X ^ 18 + X ^ 16 + X ^ 14 + X ^ 12 +
+      X ^ 10 + X ^ 8 + X ^ 6 + X ^ 4 + X ^ 2 + 1) : ℂ[X], ?_⟩
   simp [master25C]
   ring
 
 /-- The `0,±i` cubic polynomial divides the complex master polynomial. -/
 theorem complex_structure_dvd_master25C :
     X ^ 3 + X ∣ master25C := by
-  refine ⟨(X ^ 21 - X ^ 19 + X ^ 17 - X ^ 15 + X ^ 13 - X ^ 11 +
-      X ^ 9 - X ^ 7 + X ^ 5 - X ^ 3 + X) : ℂ[X], ?_⟩
+  refine ⟨(X ^ 22 - X ^ 20 + X ^ 18 - X ^ 16 + X ^ 14 - X ^ 12 +
+      X ^ 10 - X ^ 8 + X ^ 6 - X ^ 4 + X ^ 2 - 1) : ℂ[X], ?_⟩
   simp [master25C]
   ring
 
@@ -262,7 +262,7 @@ theorem phi24_dvd_master25C :
   ring
 
 /-- A tripotent finite operator is annihilated by the master polynomial. -/
-theorem master25C_annihilates_of_tripotenT
+theorem master25C_annihilates_of_tripotent
     {n : ℕ} (T : Matrix (Fin n) (Fin n) ℂ)
     (hT : T ^ 3 = T) :
     aeval T master25C = 0 := by
@@ -328,7 +328,7 @@ theorem cyclotomic24_operator_annihilator_packet
     (T ^ 6 = 1 → aeval T master25C = 0) ∧
     (T ^ 12 = 1 → aeval T master25C = 0) ∧
     (T ^ 24 = 1 → aeval T master25C = 0) := by
-  exact ⟨master25C_annihilates_of_tripotenT T,
+  exact ⟨master25C_annihilates_of_tripotent T,
     master25C_annihilates_of_complex_structure T,
     master25C_annihilates_of_phi8 T,
     master25C_annihilates_of_order6 T,

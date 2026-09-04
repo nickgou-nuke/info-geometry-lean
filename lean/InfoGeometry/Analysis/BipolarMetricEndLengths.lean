@@ -12,9 +12,10 @@ differential is represented by the positive scalar speeds
 * `1 / (x * (1 - x))` on `0 < x < 1`;
 * `1 / (x * (x - 1))` on `1 < x`.
 
-This file proves exact truncated integral formulas and their limiting behavior.
-The two finite punctures have divergent radial length, while the positive real
-ray from `2` to infinity has finite limiting length `log 2`.
+This file identifies those speeds with the actual norm of `dlog01`, proves exact
+truncated integral formulas, and determines their limiting behavior. The two
+finite punctures have divergent radial length, while the positive real ray from
+`2` to infinity has finite limiting length `log 2`.
 
 These are path-length theorems. They do not by themselves assert a global
 Hopf--Rinow or geodesic-completeness classification of the full punctured
@@ -44,6 +45,90 @@ def middleAxisPrimitive (x : ℝ) : ℝ :=
 /-- Primitive of the outer-axis speed on `(1,∞)`. -/
 def outerAxisPrimitive (x : ℝ) : ℝ :=
   Real.log (x - 1) - Real.log x
+
+/-- A real point strictly between the punctures belongs to the punctured
+complex domain. -/
+lemma real_between_mem_punctured01
+    {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :
+    (x : ℂ) ∈ punctured01 := by
+  constructor
+  · intro h
+    have hre := congrArg Complex.re h
+    simp at hre
+    exact (ne_of_gt hx0) hre
+  · intro h
+    have hre := congrArg Complex.re h
+    simp at hre
+    linarith
+
+/-- A real point beyond the second puncture belongs to the punctured domain. -/
+lemma real_outer_mem_punctured01
+    {x : ℝ} (hx : 1 < x) :
+    (x : ℂ) ∈ punctured01 := by
+  constructor
+  · intro h
+    have hre := congrArg Complex.re h
+    simp at hre
+    linarith
+  · intro h
+    have hre := congrArg Complex.re h
+    simp at hre
+    linarith
+
+/-- The middle-axis scalar speed is exactly the norm of the global logarithmic
+differential. -/
+theorem norm_dlog01_real_between
+    {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :
+    ‖dlog01 (x : ℂ)‖ = middleAxisSpeed x := by
+  have hs := real_between_mem_punctured01 hx0 hx1
+  have hcast : (1 : ℂ) - (x : ℂ) = ((1 - x : ℝ) : ℂ) := by
+    apply Complex.ext <;> simp
+  rw [dlog01_eq_one_div_mul hs, norm_div, norm_one, norm_mul,
+    Complex.norm_real, hcast, Complex.norm_real,
+    Real.norm_of_nonneg hx0.le,
+    Real.norm_of_nonneg (sub_nonneg.mpr hx1.le)]
+  rfl
+
+/-- The outer-axis scalar speed is exactly the norm of the global logarithmic
+differential. -/
+theorem norm_dlog01_real_outer
+    {x : ℝ} (hx : 1 < x) :
+    ‖dlog01 (x : ℂ)‖ = outerAxisSpeed x := by
+  have hs := real_outer_mem_punctured01 hx
+  have hx0 : 0 < x := lt_trans zero_lt_one hx
+  have hcast : (1 : ℂ) - (x : ℂ) = ((1 - x : ℝ) : ℂ) := by
+    apply Complex.ext <;> simp
+  have hnorm : ‖(1 - x : ℝ)‖ = x - 1 := by
+    rw [Real.norm_eq_abs, abs_of_neg (sub_neg.mpr hx)]
+    ring
+  rw [dlog01_eq_one_div_mul hs, norm_div, norm_one, norm_mul,
+    Complex.norm_real, hcast, Complex.norm_real,
+    Real.norm_of_nonneg hx0.le, hnorm]
+  rfl
+
+/-- Equal Euclidean distance from `0` and `1` is exactly the vertical
+bisector. -/
+theorem norm_eq_norm_one_sub_iff_re_eq_half (s : ℂ) :
+    ‖s‖ = ‖1 - s‖ ↔ s.re = 1 / 2 := by
+  constructor
+  · intro h
+    have hsq : Complex.normSq s = Complex.normSq (1 - s) := by
+      rw [Complex.normSq_eq_norm_sq, Complex.normSq_eq_norm_sq, h]
+    simp [Complex.normSq_apply] at hsq
+    nlinarith
+  · intro hre
+    have hmirror : mirror s = s := (mirror_fixed_iff s).2 hre
+    have hc := congrArg Complex.conj hmirror
+    have hone : 1 - s = Complex.conj s := by
+      simpa [mirror] using hc
+    rw [hone, Complex.norm_conj]
+
+/-- Exact critical-line theorem for the logarithmic radial coordinate. -/
+theorem eta_zero_iff_re_eq_half
+    {s : ℂ} (hs : s ∈ punctured01) :
+    eta s = 0 ↔ s.re = 1 / 2 :=
+  (eta_eq_zero_iff_equidistant hs).trans
+    (norm_eq_norm_one_sub_iff_re_eq_half s)
 
 /-- The middle-axis logarithmic speed is strictly positive. -/
 theorem middleAxisSpeed_pos {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :

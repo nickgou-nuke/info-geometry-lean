@@ -1,6 +1,7 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+import InfoGeometry.Analysis.BipolarMetricEndLengths
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Analysis.BipolarBoundaryTrace
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
@@ -22,9 +23,13 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BipolarPristineMathematicalChain
 
+open Filter
+open scoped Topology
+
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+open InfoGeometry.Analysis.BipolarMetricEndLengths
 open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 open InfoGeometry.Analysis.BipolarBoundaryTrace
 open InfoGeometry.Analysis.BipolarPlanarHodgePair
@@ -64,6 +69,12 @@ theorem pristine_reflection_apollonius_core
     eta_mirror s,
     eta_eq_iff_apollonius hs c⟩
 
+/-- Exact zero-level characterization by the critical bisector. -/
+theorem pristine_eta_zero_critical_core
+    {s : ℂ} (hs : s ∈ punctured01) :
+    eta s = 0 ↔ s.re = 1 / 2 :=
+  eta_zero_iff_re_eq_half hs
+
 /-- Exact real-coordinate boundary trace and planar Hodge core. -/
 theorem pristine_boundary_hodge_core (y : ℝ) :
     phiXY (1 / 2) y = 0 ∧
@@ -90,6 +101,15 @@ theorem pristine_metric_infinity_core
     inversionPullbackDlog u = 1 / (1 - u) ∧
       infinityChartDensity 0 = 1 := by
   exact ⟨inversionPullbackDlog_eq hu0 hu1, infinityChartDensity_zero⟩
+
+/-- Actual radial length asymptotics of the logarithmic metric: both finite
+punctures are infinitely far along the middle real axis, whereas the positive
+real escape from `2` to infinity has finite length `log 2`. -/
+theorem pristine_metric_end_length_core :
+    Tendsto originTruncatedLength (𝓝[>] 0) atTop ∧
+      Tendsto oneTruncatedLength (𝓝[>] 0) atTop ∧
+      Tendsto infinityTruncatedLength atTop (𝓝 (Real.log 2)) :=
+  bipolar_metric_end_length_packet
 
 /-- The explicit two-generator winding carrier and the period detected by the
 residue-difference logarithmic form. -/

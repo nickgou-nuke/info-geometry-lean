@@ -25,7 +25,7 @@ The formal hierarchy is:
 
 This does **not** claim that arbitrary fermion bilinears satisfy canonical CCR,
 that a microscopic BCS Hamiltonian has a gap, or that Bose condensation occurs
-dynamically.  Those require additional operator, spectral, and thermodynamic
+dynamically. Those require additional operator, spectral, and thermodynamic
 hypotheses.
 -/
 
@@ -39,7 +39,7 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 
 variable {m : ℕ}
 
-/-- One composite mode for each unordered matched pair.  The smaller endpoint
+/-- One composite mode for each unordered matched pair. The smaller endpoint
 is used as the canonical representative, so every pair occurs exactly once. -/
 abbrev PairMode (M : PerfectMatching m) :=
   {i : Fin (2 * m) // i ∈ M.leftEndpoints}
@@ -49,13 +49,15 @@ abbrev PairOccupation (M : PerfectMatching m) := PairMode M → ℕ
 
 /-- The number of distinct composite pair modes is exactly `m`. -/
 theorem pairMode_card (M : PerfectMatching m) : Fintype.card (PairMode M) = m := by
-  rw [Fintype.card_subtype_iff]
-  simpa [PairMode] using M.leftEndpoints_card
+  calc
+    Fintype.card (PairMode M) = M.leftEndpoints.card := by
+      simpa [PairMode] using (Fintype.card_coe M.leftEndpoints)
+    _ = m := M.leftEndpoints_card
 
 /-- Vacuum occupation of the composite modes. -/
 def vacuumOccupation (M : PerfectMatching m) : PairOccupation M := fun _ => 0
 
-/-- Put exactly `N` matched composites into one selected mode.  This is the
+/-- Put exactly `N` matched composites into one selected mode. This is the
 finite occupation-number analogue of a pure one-mode condensate. -/
 def purePairCondensate (M : PerfectMatching m) (mode : PairMode M) (N : ℕ) :
     PairOccupation M :=
@@ -102,12 +104,12 @@ theorem pairPhase_eq_constituentPhase_sq (θ : ℝ) :
   ring
 
 @[simp] theorem norm_constituentPhase (θ : ℝ) : ‖constituentPhase θ‖ = 1 := by
-  simpa [constituentPhase] using Complex.norm_exp_ofReal_mul_I θ
+  simpa [constituentPhase, mul_comm] using Complex.norm_exp_ofReal_mul_I θ
 
 @[simp] theorem norm_pairPhase (θ : ℝ) : ‖pairPhase θ‖ = 1 := by
   rw [pairPhase_eq_constituentPhase_sq, norm_pow, norm_constituentPhase, one_pow]
 
-/-- Dimensionless integer vortex angle for a charge-two composite.  A half-turn
+/-- Dimensionless integer vortex angle for a charge-two composite. A half-turn
 `π n` of the constituent phase becomes a full `2π n` turn of the pair phase. -/
 def pairVortexAngle (n : ℤ) : ℝ := Real.pi * n
 

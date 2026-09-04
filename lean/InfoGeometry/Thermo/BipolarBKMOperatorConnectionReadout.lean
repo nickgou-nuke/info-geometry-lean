@@ -6,7 +6,7 @@ import Mathlib.Tactic
 # BKM and curvature readouts of a bipolar operator connection
 
 The same real tangent carrier `(dη,dθ)` can support an operator-valued one-form
-with values in the repository's native finite C-star operator algebra.  This
+with values in the repository's native finite C-star operator algebra. This
 file keeps two readouts strictly separate:
 
 * `bkmOperator1Form` is symmetric and nonnegative on the diagonal;
@@ -34,8 +34,7 @@ def finiteOperatorConnection {n : ℕ}
     simp [add_smul]
     abel
   map_smul' c v := by
-    simp [mul_smul]
-    module
+    simp [mul_smul, smul_add]
 
 @[simp] theorem finiteOperatorConnection_eta {n : ℕ}
     (Kη Kθ : FiniteOperatorAlgebra n) :
@@ -114,8 +113,9 @@ theorem bkm_connection_curvature_coordinate {n : ℕ}
         (wedge (finiteOperatorConnection Kη Kθ)
           (finiteOperatorConnection Kη Kθ)) etaTangent thetaTangent =
       D.bkmRealBilinForm hD (Kη * Kθ - Kθ * Kη) Q := by
-  exact bkmProbeReadout_wedge_self D hD Q
-    (finiteOperatorConnection Kη Kθ) etaTangent thetaTangent
+  simpa using
+    bkmProbeReadout_wedge_self D hD Q
+      (finiteOperatorConnection Kη Kθ) etaTangent thetaTangent
 
 /-- Compact separation theorem for the symmetric and alternating readouts. -/
 theorem bipolar_BKM_curvature_separation_packet {n : ℕ}

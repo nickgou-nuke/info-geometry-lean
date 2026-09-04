@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
-import InfoGeometry.Algebra.H3ZornCarrierBasis
+import InfoGeometry.Canonical.SplitAlbertTripotentPeirceBoundary
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateCapstone
 
 noncomputable section
@@ -16,17 +16,20 @@ open InfoGeometry.Canonical.F4ActionMatrixRationalCertificate
 abbrev Zorn := ZornVectorMatrix ℝ
 abbrev H3 := H3Zorn ℝ
 
-/-- Traceless split-octonions in the native Zorn carrier. -/
-def ZornTraceless := {x : Zorn // x.a + x.b = 0}
+/-- Linear trace of the native Zorn carrier. -/
+def zornTraceLinear : Zorn →ₗ[ℝ] ℝ where
+  toFun x := x.a + x.b
+  map_add' x y := by rfl
+  map_smul' r x := by rfl
 
-instance : AddCommGroup ZornTraceless := Subtype.instAddCommGroup
-instance : Module ℝ ZornTraceless := Subtype.instModule
+/-- Traceless split-octonions as the kernel of the native linear trace. -/
+abbrev ZornTraceless := LinearMap.ker zornTraceLinear
 
 /-- Explicit `1+3+3=7` coordinate model of the traceless Zorn subspace. -/
 def zornTracelessEquiv :
     ZornTraceless ≃ₗ[ℝ] (ℝ × ((Fin 3 → ℝ) × (Fin 3 → ℝ))) where
   toFun x := (x.1.a, (x.1.v, x.1.w))
-  invFun p := ⟨⟨p.1, p.2.1, p.2.2, -p.1⟩, by simp⟩
+  invFun p := ⟨⟨p.1, p.2.1, p.2.2, -p.1⟩, by simp [zornTraceLinear]⟩
   left_inv x := by
     apply Subtype.ext
     rcases x with ⟨x,hx⟩
@@ -34,8 +37,12 @@ def zornTracelessEquiv :
     · rfl
     · rfl
     · rfl
-    · linarith
-  right_inv p := by rcases p with ⟨a,v,w⟩; rfl
+    · change x.a + x.b = 0 at hx
+      linarith
+  right_inv p := by
+    rcases p with ⟨a,p⟩
+    rcases p with ⟨v,w⟩
+    rfl
   map_add' x y := rfl
   map_smul' r x := rfl
 
@@ -44,11 +51,14 @@ def zornTracelessEquiv :
   rw [zornTracelessEquiv.finrank_eq, Module.finrank_prod, Module.finrank_prod]
   simp
 
-/-- Traceless split-Albert elements for the native linear trace. -/
-def AlbertTraceless := {x : H3 // linearTrace x = 0}
+/-- Linear trace of the native split-Albert carrier. -/
+def albertTraceLinear : H3 →ₗ[ℝ] ℝ where
+  toFun := linearTrace
+  map_add' := linearTrace_add
+  map_smul' := linearTrace_smul
 
-instance : AddCommGroup AlbertTraceless := Subtype.instAddCommGroup
-instance : Module ℝ AlbertTraceless := Subtype.instModule
+/-- Traceless split-Albert elements as a genuine linear submodule. -/
+abbrev AlbertTraceless := LinearMap.ker albertTraceLinear
 
 /-- Explicit `2 + 3*8 = 26` coordinate model of the traceless Albert subspace. -/
 def albertTracelessEquiv :
@@ -57,20 +67,24 @@ def albertTracelessEquiv :
   toFun x := (x.1.α₁, (x.1.α₂, (x.1.a, (x.1.b, x.1.c))))
   invFun p :=
     ⟨⟨p.1, p.2.1, -p.1 - p.2.1, p.2.2.1, p.2.2.2.1, p.2.2.2.2⟩,
-      by simp [linearTrace]⟩
+      by simp [albertTraceLinear, linearTrace]⟩
   left_inv x := by
     apply Subtype.ext
     rcases x with ⟨x,hx⟩
     apply H3Zorn.ext_h3
     · rfl
     · rfl
-    · dsimp [linearTrace] at hx
+    · change linearTrace x = 0 at hx
+      dsimp [linearTrace] at hx
       linarith
     · rfl
     · rfl
     · rfl
   right_inv p := by
-    rcases p with ⟨a1,a2,a,b,c⟩
+    rcases p with ⟨a1,p⟩
+    rcases p with ⟨a2,p⟩
+    rcases p with ⟨a,p⟩
+    rcases p with ⟨b,c⟩
     rfl
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -78,8 +92,8 @@ def albertTracelessEquiv :
 @[simp] theorem albertTraceless_finrank :
     Module.finrank ℝ AlbertTraceless = 26 := by
   rw [albertTracelessEquiv.finrank_eq]
-  simp only [Module.finrank_prod]
-  rw [InfoGeometry.Algebra.H3ZornCarrierBasis.zorn_finrank]
+  repeat' rw [Module.finrank_prod]
+  rw [InfoGeometry.Canonical.SplitAlbertTripotentPeirceBoundary.zorn_finrank_eq_eight]
   norm_num
 
 /-- Finite coordinate realization of the mixed tensor sector after choosing
@@ -104,7 +118,7 @@ abbrev G2CertifiedCarrier := canonicalZornDerivations
 
 @[simp] theorem g2CertifiedCarrier_finrank :
     Module.finrank ℝ G2CertifiedCarrier = 14 :=
-  canonicalZornDerivations_finrank
+  canonical_derivation_finrank
 
 /-- The theorem-safe finite carrier corresponding to the Tits vector-space
 decomposition `g2 ⊕ (O'_s ⊗ H3(O_s)') ⊕ f4` after choosing bases in the mixed

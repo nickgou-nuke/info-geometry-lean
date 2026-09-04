@@ -76,7 +76,9 @@ theorem integrable_boundaryKernel :
       Integrable (fun y : ℝ =>
         4 * (1 + ((2 : ℝ) * y) ^ 2)⁻¹) :=
     Integrable.const_mul hbase 4
-  simpa only [boundaryKernel_eq_four_mul_inv_one_add_sq] using hscaled
+  refine hscaled.congr ?_
+  filter_upwards with y
+  exact (boundaryKernel_eq_four_mul_inv_one_add_sq y).symm
 
 /-- Exact total mass of the bisector Cauchy kernel. -/
 theorem integral_boundaryKernel :

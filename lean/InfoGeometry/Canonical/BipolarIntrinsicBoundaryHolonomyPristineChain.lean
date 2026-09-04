@@ -127,7 +127,7 @@ theorem pristine_integral_half_holonomy_core
 /-- Master intrinsic chain.  Every displayed statement is owned by a genuine
 analytic or algebraic theorem; the physical realizations remain downstream. -/
 theorem pristine_intrinsic_boundary_holonomy_master
-    (sourceStrength epsilon α : ℝ) (hepsilon : epsilon ≠ 0)
+    (sourceStrength α : ℝ)
     {s : ℂ} (hs : s ∈ punctured01)
     (u v : ℂ) {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
     (eta s = 0 ↔ s.re = 1 / 2) ∧

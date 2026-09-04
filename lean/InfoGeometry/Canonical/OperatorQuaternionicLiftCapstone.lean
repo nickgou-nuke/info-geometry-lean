@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.OperatorChiralDeterminantDefect
 import InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 import InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
+import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 
 /-!
@@ -9,7 +10,7 @@ import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 Canonical owner for the parts of the quaternion/Pauli/chiral operator lift
 that are already theorem-supported in the repository.
 
-The capstone deliberately separates four algebraic facts from stronger
+The capstone deliberately separates five algebraic facts from stronger
 geometric interpretations:
 
 1. the classical chiral adjugate identity acquires explicit commutator defects
@@ -18,7 +19,9 @@ geometric interpretations:
    `a I + b J + c K` of pointwise complex structures;
 3. products of Hermitian finite operators split into Hermitian Jordan and
    skew-Hermitian Lie channels;
-4. the repository-owned tripotent construction reconstructs every element from
+4. spin-half projections and the quadratic spin Casimir transport exactly to
+   the associative operator-Zorn/chiral coordinates;
+5. the repository-owned tripotent construction reconstructs every element from
    its five grouped Peirce components.
 
 No Berry connection, DeWitt supermetric, unbounded Dirac operator, or
@@ -36,6 +39,7 @@ open InfoGeometry.Canonical.OperatorChiralDeterminantDefect
 open InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 open InfoGeometry.Canonical.QuaternionicOperatorComplexStructure
 open InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
+open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 open InfoGeometry.Physics.Algebra
 
 /-- The complete algebraic operator-lift packet on the finite Pauli/Dirac
@@ -65,6 +69,18 @@ theorem finite_operator_lift_packet
     operator_product_eq_jordan_add_half_lie H K,
     operatorJordanProduct_isHermitian hH hK,
     operatorLieBracket_conjTranspose hH hK⟩
+
+/-- Spin-half data in the chiral operator-Zorn carrier: helicity remains an
+involution, the two spin projectors remain complementary idempotents, and the
+quadratic Casimir remains the scalar `3/4` channel. -/
+theorem finite_operator_spin_casimir_packet :
+    zornHelicity * zornHelicity = 1 ∧
+      zornSpinPlusProjector * zornSpinPlusProjector = zornSpinPlusProjector ∧
+      zornSpinMinusProjector * zornSpinMinusProjector = zornSpinMinusProjector ∧
+      zornSpinPlusProjector * zornSpinMinusProjector = 0 ∧
+      InfoGeometry.Physics.OperatorZornMatrix.toMatrix zornSpinHalfCasimir =
+        (3 / 4 : ℂ) • (1 : Mat2C) :=
+  operatorZorn_spin_half_packet
 
 /-- The existing five-grade owner is the correct Peirce reconstruction layer;
 this alias exposes it from the operator-lift capstone without introducing a

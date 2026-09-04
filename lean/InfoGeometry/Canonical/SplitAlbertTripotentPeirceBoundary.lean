@@ -184,7 +184,11 @@ Dikin/Riemannian metric. -/
 theorem halfBarrierSecondCoeff_can_be_negative
     {lambda : ℝ} (hlambda : 0 < lambda) :
     halfBarrierSecondCoeff lambda negativeNormZorn 0 < 0 := by
-  simp [halfBarrierSecondCoeff, hlambda]
+  have hneg : (-2 : ℝ) < 0 := by norm_num
+  have hform : halfBarrierSecondCoeff lambda negativeNormZorn 0 = (-2 : ℝ) / lambda := by
+    simp [halfBarrierSecondCoeff]
+  rw [hform]
+  exact div_neg_of_neg_of_pos hneg hlambda
 
 /-- The transversal second-variation form is also indefinite. -/
 theorem zeroBarrierSecondCoeff_can_be_negative :

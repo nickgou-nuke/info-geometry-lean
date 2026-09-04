@@ -73,6 +73,7 @@ import InfoGeometry.AsanoRuelle.UnrestrictedFalse
 
 import InfoGeometry.Automorphic.LFunctionRepresentationBridge
 import InfoGeometry.BottPeriodicityReconciliation
+import InfoGeometry.Bridge.CliffordFourExteriorGradeBridge
 import InfoGeometry.Bridge.ModularVirasoro
 import InfoGeometry.Bridge.OperatorPauliFactorizationDefect
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering

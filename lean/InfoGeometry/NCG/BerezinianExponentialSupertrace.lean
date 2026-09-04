@@ -95,4 +95,41 @@ theorem blockBerezinian_exp_eq_one_of_supertrace_zero
   rw [blockBerezinian_exp_eq_exp_supertrace, h]
   simp
 
+/--
+Constant-generator finite graded flow law:
+
+`Ber(exp(t A), exp(t D)) = exp(t * str(A,D))`.
+
+This is a kinematic Jacobian-volume statement.  No entropy-production
+interpretation is built into the theorem.
+-/
+theorem blockBerezinian_lieFlow
+    (A : Matrix m m ℝ) (D : Matrix n n ℝ) (t : ℝ) :
+    blockBerezinian (expBlockDiag (t • A) (t • D)) =
+      Real.exp
+        (t * supertrace
+          (⟨A, 0, 0, D⟩ : SuperMatrix (m := m) (n := n) (R := ℝ))) := by
+  rw [blockBerezinian_exp_eq_exp_supertrace_generator]
+  simp [supertrace, Matrix.trace_smul, smul_eq_mul]
+  congr 1
+  ring
+
+/-- Negative logarithm of the finite graded flow Berezinian. -/
+theorem neg_log_blockBerezinian_lieFlow
+    (A : Matrix m m ℝ) (D : Matrix n n ℝ) (t : ℝ) :
+    -Real.log (blockBerezinian (expBlockDiag (t • A) (t • D))) =
+      -(t * supertrace
+        (⟨A, 0, 0, D⟩ : SuperMatrix (m := m) (n := n) (R := ℝ))) := by
+  rw [blockBerezinian_lieFlow, Real.log_exp]
+
+/-- Supertrace-zero generators preserve the finite graded Berezinian volume at every time. -/
+theorem blockBerezinian_lieFlow_eq_one_of_supertrace_zero
+    (A : Matrix m m ℝ) (D : Matrix n n ℝ)
+    (h : supertrace
+      (⟨A, 0, 0, D⟩ : SuperMatrix (m := m) (n := n) (R := ℝ)) = 0) :
+    ∀ t : ℝ, blockBerezinian (expBlockDiag (t • A) (t • D)) = 1 := by
+  intro t
+  rw [blockBerezinian_lieFlow, h]
+  simp
+
 end InfoGeometry.NCG.BerezinianExponentialSupertrace

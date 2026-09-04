@@ -228,9 +228,10 @@ theorem bipolarSchwarzian_composition
     crossRatioSchwarzian_eq_zero hs]
   have h₀ : s ≠ 0 := hs.1
   have h₁ : 1 - s ≠ 0 := one_sub_ne_zero_of_mem hs
+  have h₂ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
   unfold crossRatioJet₁ oneMinusInv crossRatio01
     InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.cayleyToFugacity
-  field_simp [h₀, h₁]
+  field_simp [h₀, h₁, h₂]
   ring
 
 /-- Compact Möbius/logarithm/Schwarzian packet. -/

@@ -13,10 +13,10 @@ It proves its genuine complex derivative, the algebraic Virasoro coadjoint
 compatibility, disappearance of the central term on quadratic projective vector
 fields, and the two equal double-pole coefficients `-c/24`.
 
-The coefficient `-c/24` is a double-pole coefficient, not a residue.  It may be
-read as a cylinder-vacuum Casimir weight only after a CFT state, coordinate
-transformation convention, and central-charge normalization have been supplied.
-No such physical data are assumed here.
+The coefficient `-c/24` is a double-pole coefficient, not a residue.  The exact
+partial-fraction formula also contains simple-pole terms.  A cylinder-vacuum
+Casimir interpretation requires a CFT state, coordinate convention, and
+central-charge normalization; no such physical data are assumed here.
 -/
 
 noncomputable section
@@ -24,6 +24,7 @@ noncomputable section
 namespace InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
 
 open InfoGeometry.Analysis.BipolarCrossRatioLog
+open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 
 /-- Common denominator of the bipolar quadratic-pole coefficient. -/
@@ -33,6 +34,10 @@ def poleDenominator (s : ℂ) : ℂ :=
 /-- Derivative of the common denominator. -/
 def poleDenominatorDeriv (s : ℂ) : ℂ :=
   2 * s * (s - 1) ^ 2 + 2 * (s - 1) * s ^ 2
+
+/-- Common leading coefficient of the two quadratic poles. -/
+def doublePoleCoefficient (c : ℂ) : ℂ :=
+  -c / 24
 
 /-- Genuine derivative of the polynomial pole denominator. -/
 theorem hasDerivAt_poleDenominator (s : ℂ) :
@@ -45,7 +50,7 @@ theorem hasDerivAt_poleDenominator (s : ℂ) :
 /-- Normalized projective connection associated with the bipolar logarithmic
 Schwarzian. -/
 def bipolarProjectiveConnection (c : ℂ) (s : ℂ) : ℂ :=
-  (-c / 24) / poleDenominator s
+  doublePoleCoefficient c / poleDenominator s
 
 /-- Rational derivative coefficient of the normalized projective connection. -/
 def bipolarProjectiveConnectionDeriv (c : ℂ) (s : ℂ) : ℂ :=
@@ -58,7 +63,7 @@ theorem bipolarProjectiveConnection_eq_schwarzian
     bipolarProjectiveConnection c s =
       -(c / 12) * bipolarSchwarzian s := by
   rw [bipolarSchwarzian_eq_rational hs]
-  unfold bipolarProjectiveConnection poleDenominator
+  unfold bipolarProjectiveConnection doublePoleCoefficient poleDenominator
   have h₀ : s ≠ 0 := hs.1
   have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
   field_simp [h₀, h₁]
@@ -66,10 +71,38 @@ theorem bipolarProjectiveConnection_eq_schwarzian
 
 /-- Rational normal form stated without the intermediate Schwarzian name. -/
 theorem bipolarProjectiveConnection_eq_rational
-    (c : ℂ) {s : ℂ} (_hs : s ∈ punctured01) :
+    (c : ℂ) {s : ℂ} (hs : s ∈ punctured01) :
     bipolarProjectiveConnection c s =
       -c / (24 * s ^ 2 * (s - 1) ^ 2) := by
+  have h₀ : s ≠ 0 := hs.1
+  have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
+  unfold bipolarProjectiveConnection doublePoleCoefficient poleDenominator
+  field_simp [h₀, h₁]
+  ring
+
+/-- Exact square-of-the-logarithmic-form factorization. -/
+theorem bipolarProjectiveConnection_eq_dlog01_sq
+    (c : ℂ) {s : ℂ} (hs : s ∈ punctured01) :
+    bipolarProjectiveConnection c s =
+      -(c / 24) * dlog01 s ^ 2 := by
+  rw [bipolarProjectiveConnection_eq_schwarzian c hs,
+    bipolarSchwarzian_eq_half_dlog01_sq hs]
+  ring
+
+/-- Exact partial-fraction decomposition.  In addition to the equal quadratic
+pole coefficients, the global rational function contains fixed simple-pole
+terms. -/
+theorem bipolarProjectiveConnection_partialFractions
+    (c : ℂ) {s : ℂ} (hs : s ∈ punctured01) :
+    bipolarProjectiveConnection c s =
+      doublePoleCoefficient c / s ^ 2 +
+      doublePoleCoefficient c / (s - 1) ^ 2 +
+      (2 * doublePoleCoefficient c) / s -
+      (2 * doublePoleCoefficient c) / (s - 1) := by
+  have h₀ : s ≠ 0 := hs.1
+  have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
   unfold bipolarProjectiveConnection poleDenominator
+  field_simp [h₀, h₁]
   ring
 
 /-- Genuine complex derivative of the normalized projective connection away
@@ -83,14 +116,14 @@ theorem hasDerivAt_bipolarProjectiveConnection
   have hden : poleDenominator s ≠ 0 := by
     exact mul_ne_zero (pow_ne_zero 2 h₀) (pow_ne_zero 2 h₁)
   have hraw :=
-    (hasDerivAt_const s (-c / 24)).div
+    (hasDerivAt_const s (doublePoleCoefficient c)).div
       (hasDerivAt_poleDenominator s) hden
   change HasDerivAt
-    (fun z : ℂ => (-c / 24) / poleDenominator z)
+    (fun z : ℂ => doublePoleCoefficient c / poleDenominator z)
     (bipolarProjectiveConnectionDeriv c s) s
   convert hraw using 1
-  unfold bipolarProjectiveConnectionDeriv poleDenominator
-    poleDenominatorDeriv
+  unfold bipolarProjectiveConnectionDeriv doublePoleCoefficient
+    poleDenominator poleDenominatorDeriv
   field_simp [h₀, h₁]
   ring
 
@@ -103,7 +136,21 @@ theorem deriv_bipolarProjectiveConnection
 
 /-- Derivative of the bare bipolar Schwarzian coefficient. -/
 def bipolarSchwarzianDeriv (s : ℂ) : ℂ :=
-  -(2 * s - 1) / (s ^ 3 * (s - 1) ^ 3)
+  bipolarSchwarzianRationalDeriv s
+
+/-- The bare Schwarzian derivative symbol is a genuine derivative. -/
+theorem hasDerivAt_bipolarSchwarzian_readout
+    {s : ℂ} (hs : s ∈ punctured01) :
+    HasDerivAt bipolarSchwarzian (bipolarSchwarzianDeriv s) s := by
+  simpa [bipolarSchwarzianDeriv] using
+    InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection.
+      hasDerivAt_bipolarSchwarzian hs
+
+/-- Ordinary derivative readout of the bare Schwarzian. -/
+theorem deriv_bipolarSchwarzian_readout
+    {s : ℂ} (hs : s ∈ punctured01) :
+    deriv bipolarSchwarzian s = bipolarSchwarzianDeriv s := by
+  exact (hasDerivAt_bipolarSchwarzian_readout hs).deriv
 
 /-- The normalized derivative is `-(c/12)` times the bare Schwarzian derivative. -/
 theorem bipolarProjectiveConnectionDeriv_eq_schwarzianDeriv
@@ -111,6 +158,7 @@ theorem bipolarProjectiveConnectionDeriv_eq_schwarzianDeriv
     bipolarProjectiveConnectionDeriv c s =
       -(c / 12) * bipolarSchwarzianDeriv s := by
   unfold bipolarProjectiveConnectionDeriv bipolarSchwarzianDeriv
+    bipolarSchwarzianRationalDeriv
   ring
 
 /-- Chosen infinitesimal projective-connection convention for a Schwarzian
@@ -135,7 +183,8 @@ theorem ward_schwarzian_scaling
   unfold schwarzianCoadjointVariation projectiveConnectionVariation
   ring
 
-/-- Specialized Ward compatibility for the bipolar projective connection. -/
+/-- Specialized Ward compatibility for the bipolar projective connection.  Both
+`S'` and `P'` in this statement are independently certified derivatives. -/
 theorem bipolar_ward_schwarzian_compatibility
     (c : ℂ) {s : ℂ} (hs : s ∈ punctured01)
     (v v' v''' : ℂ) :
@@ -149,8 +198,9 @@ theorem bipolar_ward_schwarzian_compatibility
   exact ward_schwarzian_scaling c
     (bipolarSchwarzian s) (bipolarSchwarzianDeriv s) v v' v'''
 
-/-- Holomorphic polynomial vector fields of degree at most two, the Lie algebra
-of global projective transformations on the affine chart. -/
+/-- Holomorphic polynomial vector fields of degree at most two, used only as an
+analytic evaluation carrier.  The repository's genuine Witt algebra remains
+the algebraic owner of the projective modes. -/
 structure ProjectiveVectorField where
   constant : ℂ
   linear : ℂ
@@ -199,7 +249,8 @@ theorem hasDerivAt_second (v : ProjectiveVectorField) (s : ℂ) :
 
 end ProjectiveVectorField
 
-/-- The Virasoro central term vanishes on every global projective vector field. -/
+/-- The Virasoro central term vanishes on every quadratic projective vector
+field. -/
 theorem projectiveVectorField_centralTerm_zero
     (c : ℂ) (v : ProjectiveVectorField) (s : ℂ) :
     (c / 12) * v.third s = 0 := by
@@ -215,10 +266,6 @@ theorem projectiveVectorField_variation_no_central
       v.value s * P' + 2 * v.first s * P := by
   simp [projectiveConnectionVariation, ProjectiveVectorField.third]
 
-/-- Common leading coefficient of the two quadratic poles. -/
-def doublePoleCoefficient (c : ℂ) : ℂ :=
-  -c / 24
-
 /-- Regularized coefficient in the local coordinate at `s=0`. -/
 def regularizedAtZero (c : ℂ) (s : ℂ) : ℂ :=
   doublePoleCoefficient c / (s - 1) ^ 2
@@ -233,8 +280,7 @@ theorem zero_doublePole_factorization
     s ^ 2 * bipolarProjectiveConnection c s = regularizedAtZero c s := by
   have h₀ : s ≠ 0 := hs.1
   have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
-  unfold bipolarProjectiveConnection regularizedAtZero doublePoleCoefficient
-    poleDenominator
+  unfold bipolarProjectiveConnection regularizedAtZero poleDenominator
   field_simp [h₀, h₁]
   ring
 
@@ -244,8 +290,7 @@ theorem one_doublePole_factorization
     (s - 1) ^ 2 * bipolarProjectiveConnection c s = regularizedAtOne c s := by
   have h₀ : s ≠ 0 := hs.1
   have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
-  unfold bipolarProjectiveConnection regularizedAtOne doublePoleCoefficient
-    poleDenominator
+  unfold bipolarProjectiveConnection regularizedAtOne poleDenominator
   field_simp [h₀, h₁]
   ring
 
@@ -265,12 +310,17 @@ theorem bipolar_projective_connection_packet
     (v : ProjectiveVectorField) :
     bipolarProjectiveConnection c s =
         -(c / 12) * bipolarSchwarzian s ∧
+      bipolarProjectiveConnection c s =
+        -(c / 24) * dlog01 s ^ 2 ∧
+      deriv bipolarSchwarzian s = bipolarSchwarzianDeriv s ∧
       deriv (bipolarProjectiveConnection c) s =
         bipolarProjectiveConnectionDeriv c s ∧
       (c / 12) * v.third s = 0 ∧
       regularizedAtZero c 0 = doublePoleCoefficient c ∧
       regularizedAtOne c 1 = doublePoleCoefficient c := by
   exact ⟨bipolarProjectiveConnection_eq_schwarzian c hs,
+    bipolarProjectiveConnection_eq_dlog01_sq c hs,
+    deriv_bipolarSchwarzian_readout hs,
     deriv_bipolarProjectiveConnection c hs,
     projectiveVectorField_centralTerm_zero c v s,
     regularizedAtZero_zero c,

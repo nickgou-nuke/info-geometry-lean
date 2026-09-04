@@ -7,7 +7,7 @@ import Mathlib.Tactic
 # Spinorial holonomy of the bipolar winding lattice
 
 The logarithmic differential has period `(m-n) * 2πi` on the explicit
-winding lattice `ℤ × ℤ`.  Applying the half-Cartan character gives the diagonal
+winding lattice `ℤ × ℤ`. Applying the half-Cartan character gives the diagonal
 matrix
 
 `diag(exp(period/2), exp(-period/2))`.
@@ -17,7 +17,7 @@ has central holonomy `-I₂`, while the combined winding has holonomy `I₂`.
 Thus two elementary half-Cartan monodromies close after two turns.
 
 No contour-integral construction, gauge bundle, Aharonov--Bohm experiment, or
-Riemann-zero interpretation is asserted.  The input period map is the explicit
+Riemann-zero interpretation is asserted. The input period map is the explicit
 algebraic owner in `BipolarWindingPeriodLattice`.
 -/
 
@@ -123,7 +123,7 @@ theorem spinHolonomy_one :
     simp [spinHolonomy, exp_one_half_period,
       exp_neg_one_half_period]
 
-/-- Equal winding around both punctures has trivial half-Cartan holonomy because
+/-- Equal winding around both finite punctures has trivial half-Cartan holonomy because
 this residue-difference form has zero diagonal period. -/
 theorem spinHolonomy_diagonal (n : ℤ) :
     spinHolonomy (diagonalWinding n) = 1 := by
@@ -134,7 +134,7 @@ theorem spinHolonomy_diagonal (n : ℤ) :
 /-- The sum of the two elementary windings is the unit diagonal winding. -/
 theorem origin_add_one_eq_diagonal :
     originWinding + oneWinding = diagonalWinding 1 := by
-  rfl
+  norm_num [originWinding, oneWinding, diagonalWinding]
 
 /-- Encircling both finite punctures therefore has trivial holonomy. -/
 theorem spinHolonomy_origin_add_one :

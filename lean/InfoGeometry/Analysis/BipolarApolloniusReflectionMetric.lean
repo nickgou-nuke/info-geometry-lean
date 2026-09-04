@@ -13,7 +13,7 @@ The reflection used here is
 `mirror(s) = 1 - conj(s)`.
 
 Its fixed set is exactly `Re(s)=1/2`, and the logarithmic radial coordinate
-`eta = log |s/(1-s)|` is odd under this reflection.  This is the rigorous
+`eta = log |s/(1-s)|` is odd under this reflection. This is the rigorous
 reflection principle behind the image-charge language; no conductor boundary
 condition or physical surface charge is asserted.
 
@@ -22,7 +22,7 @@ The pullback metric is represented only by its conformal density
 `|dW|^2 = |dlog01(s)|^2`.
 
 The density has poles at `0` and `1`, but the inversion chart `u=1/s` shows that
-the end `s=∞` is removable for the metric coefficient.  Therefore one must not
+the end `s=∞` is removable for the metric coefficient. Therefore one must not
 claim that the metric on `ℂ \ {0,1}` is globally complete merely because the two
 finite punctures are infinitely far away.
 -/
@@ -83,6 +83,28 @@ theorem eta_eq_log_norm_ratio (s : ℂ) :
   rw [eta, bipolarLog, Complex.log_re]
   simp [crossRatio01, InfoGeometry.Canonical.CayleyCriticalLineCircleBridge.cayleyToFugacity,
     norm_div]
+
+/-- Every radial level is exactly an Apollonius ratio locus. -/
+theorem eta_eq_iff_apollonius {s : ℂ} (hs : s ∈ punctured01) (c : ℝ) :
+    eta s = c ↔ ‖s‖ = Real.exp c * ‖1 - s‖ := by
+  have hspos : 0 < ‖s‖ := norm_pos_iff.mpr hs.1
+  have hdenpos : 0 < ‖1 - s‖ := norm_pos_iff.mpr (one_sub_ne_zero_of_mem hs)
+  have hratio : 0 < ‖s‖ / ‖1 - s‖ := div_pos hspos hdenpos
+  constructor
+  · intro h
+    have hexp := congrArg Real.exp h
+    rw [eta_eq_log_norm_ratio, Real.exp_log hratio] at hexp
+    exact (div_eq_iff (ne_of_gt hdenpos)).mp hexp
+  · intro h
+    rw [eta_eq_log_norm_ratio]
+    have hratioeq : ‖s‖ / ‖1 - s‖ = Real.exp c :=
+      (div_eq_iff (ne_of_gt hdenpos)).2 h
+    rw [hratioeq, Real.log_exp]
+
+/-- Zero radial level is exactly equal distance from the two punctures. -/
+theorem eta_eq_zero_iff_equidistant {s : ℂ} (hs : s ∈ punctured01) :
+    eta s = 0 ↔ ‖s‖ = ‖1 - s‖ := by
+  simpa using (eta_eq_iff_apollonius hs 0)
 
 /-- The conformal density of the pullback metric `|dW|²`. -/
 def metricDensity (s : ℂ) : ℝ := Complex.normSq (dlog01 s)

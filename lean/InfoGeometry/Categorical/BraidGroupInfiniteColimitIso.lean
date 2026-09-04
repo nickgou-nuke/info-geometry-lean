@@ -13,6 +13,11 @@ The repository already owns both sides of this statement:
 This file constructs the inverse of the existing comparison
 `groupFromColimit : braidGroupColimit ⟶ GrpCat.of braid_group_inf` directly on
 Artin generators.  No new braid presentation is introduced.
+
+This closes the structural group-colimit theorem used by the Hadjiivanov braid
+capstone: the repository-presented `B_∞` is not merely a compatible cocone
+point, but is canonically isomorphic to Mathlib's categorical colimit of the
+finite braid-group stabilization tower.
 -/
 
 noncomputable section
@@ -188,5 +193,6 @@ colimit of the finite braid-group stabilization tower. -/
 def braidGroupBoundaryCoconeIsColimit :
     IsColimit braidGroupBoundaryCocone := by
   exact (colimit.isColimit braidGroupDiagram).ofPointIso
+    braidGroupColimitIsoInfinite
 
 end InfoGeometry.Categorical.BraidGroupInfiniteColimitIso

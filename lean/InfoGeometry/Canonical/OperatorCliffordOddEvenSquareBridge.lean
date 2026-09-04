@@ -237,7 +237,8 @@ theorem commute_quaternionicBivectorCombination_of_first_two
   have hk : Commute N quat_k :=
     commute_quaternionic_third_of_first_two N hi hj
   unfold quaternionicBivectorCombination
-  exact (hi.smul_right a).add_right
-    ((hj.smul_right b).add_right (hk.smul_right c))
+  simpa [add_assoc] using
+    (hi.smul_right a).add_right
+      ((hj.smul_right b).add_right (hk.smul_right c))
 
 end InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge

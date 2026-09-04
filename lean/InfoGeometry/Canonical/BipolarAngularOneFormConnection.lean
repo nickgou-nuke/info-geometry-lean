@@ -194,7 +194,7 @@ theorem angularCircleIntegral_eq_contourAngularPeriod
     angularOneFormAt contourAngularPeriod
   rw [circleIntegral]
   simpa [smul_eq_mul, mul_comm] using
-    (intervalIntegral.intervalIntegral_im h.out)
+    (Complex.imCLM.intervalIntegral_comp_comm h.out)
 
 /-- Direct angular period around the origin is `+2 pi`. -/
 theorem angularCircleIntegral_origin

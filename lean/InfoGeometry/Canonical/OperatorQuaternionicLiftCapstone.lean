@@ -2,6 +2,8 @@ import InfoGeometry.Canonical.OperatorChiralDeterminantDefect
 import InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 import InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
+import InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
+import InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 
 /-!
@@ -10,7 +12,7 @@ import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 Canonical owner for the parts of the quaternion/Pauli/chiral operator lift
 that are already theorem-supported in the repository.
 
-The capstone deliberately separates five algebraic facts from stronger
+The capstone deliberately separates seven algebraic layers from stronger
 geometric interpretations:
 
 1. the classical chiral adjugate identity acquires explicit commutator defects
@@ -21,12 +23,16 @@ geometric interpretations:
    skew-Hermitian Lie channels;
 4. spin-half projections and the quadratic spin Casimir transport exactly to
    the associative operator-Zorn/chiral coordinates;
-5. the repository-owned tripotent construction reconstructs every element from
+5. concrete vector/axial Dirac matrices are `γ5`-odd and their square is
+   `γ5`-even, with scalar plus explicit mixed bivector residue;
+6. the genuinely operator-valued causal soldering owner records the ordered
+   Pauli factorization defect and connection curvature as commutator residues;
+7. the repository-owned tripotent construction reconstructs every element from
    its five grouped Peirce components.
 
-No Berry connection, DeWitt supermetric, unbounded Dirac operator, or
-Lichnerowicz curvature theorem is inferred merely from these algebraic facts.
-Those require their own differential/topological/analytic hypotheses.
+Exterior Clifford degree and the tripotent/TKK five-grading remain separate
+structures.  No Berry connection, DeWitt supermetric, unbounded Dirac operator,
+or Lichnerowicz theorem is inferred merely from these finite algebraic facts.
 -/
 
 noncomputable section
@@ -40,6 +46,7 @@ open InfoGeometry.Canonical.QuaternionicTwistorSphereOperator
 open InfoGeometry.Canonical.QuaternionicOperatorComplexStructure
 open InfoGeometry.Canonical.OperatorHermitianLieJordanSplit
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
+open InfoGeometry.Canonical.OperatorCliffordOddEvenSquareBridge
 open InfoGeometry.Physics.Algebra
 
 /-- The complete algebraic operator-lift packet on the finite Pauli/Dirac
@@ -52,8 +59,8 @@ theorem finite_operator_lift_packet
     (hH : H.IsHermitian) (hK : K.IsHermitian) :
     chiralBlock p m r l * chiralAdjugate p m r l =
         !![leftQuadraticReadout p m r l,
-            operatorCommutator r p;
-           operatorCommutator l m,
+            OperatorChiralDeterminantDefect.operatorCommutator r p;
+           OperatorChiralDeterminantDefect.operatorCommutator l m,
             rightQuadraticReadout p m r l] ∧
       (pauliTwistorComplexStructure a b c).comp
           (pauliTwistorComplexStructure a b c) =
@@ -81,6 +88,84 @@ theorem finite_operator_spin_casimir_packet :
       InfoGeometry.Physics.OperatorZornMatrix.toMatrix zornSpinHalfCasimir =
         (3 / 4 : ℂ) • (1 : Mat2C) :=
   operatorZorn_spin_half_packet
+
+/-- Exterior-Clifford parity packet for the finite vector plus axial-vector
+operator.  This is the theorem-honest replacement for identifying the
+tripotent five-grading with exterior degrees `0,...,4`. -/
+theorem finite_clifford_odd_even_square_packet
+    (A B : OperatorCliffordOddEvenSquareBridge.ComplexFourVector) :
+    IsCliffordOdd (oddPotential A B) ∧
+      IsCliffordEven (oddPotential A B * oddPotential A B) ∧
+      oddPotential A B * oddPotential A B =
+        (minkowskiQuadratic A - minkowskiQuadratic B) •
+            (1 : DiracMatrix) +
+          mixedBivectorResidue A B := by
+  exact ⟨oddPotential_isCliffordOdd A B,
+    oddPotential_sq_isCliffordEven A B,
+    oddPotential_sq_decomposition A B⟩
+
+/-- Pure-vector Dirac linearization packet. -/
+theorem finite_vector_square_root_packet
+    (A : OperatorCliffordOddEvenSquareBridge.ComplexFourVector) :
+    IsCliffordOdd (slash A) ∧
+      slash A * slash A = minkowskiQuadratic A • (1 : DiracMatrix) := by
+  exact ⟨slash_isCliffordOdd A, slash_sq A⟩
+
+/-- Commuting with two quaternionic spatial bivectors protects the entire
+three-dimensional quaternionic bivector span. -/
+theorem quaternionic_bivector_commutant_packet
+    (N : DiracMatrix)
+    (hi : Commute N InfoGeometry.Canonical.QuaternionEmbedding.quat_i)
+    (hj : Commute N InfoGeometry.Canonical.QuaternionEmbedding.quat_j)
+    (a b c : ℂ) :
+    Commute N (quaternionicBivectorCombination a b c) :=
+  commute_quaternionicBivectorCombination_of_first_two N hi hj a b c
+
+/-! ## Genuine operator-valued causal tier -/
+
+section OperatorCurvature
+
+open InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
+open InfoGeometry.Optics.OperatorCausalSoldering
+
+variable {W : Type*} [AddCommGroup W] [Module ℂ W]
+
+/-- The actual operator-valued Pauli determinant proxy separates into a
+symmetric quadratic channel and explicit noncommutative commutators. -/
+theorem operator_pauli_factorization_packet
+    (v : OperatorFourVector W) :
+    orderedPauliFactor v =
+        symmetricPauliQuadratic v -
+          QuaternionicOperatorLiftCurvature.operatorCommutator (v 0) (v 3) -
+          Complex.I •
+            QuaternionicOperatorLiftCurvature.operatorCommutator (v 1) (v 2) ∧
+      pauliFactorizationCurvature v =
+        (-2 : ℂ) •
+          (QuaternionicOperatorLiftCurvature.operatorCommutator (v 0) (v 3) +
+            Complex.I •
+              QuaternionicOperatorLiftCurvature.operatorCommutator (v 1) (v 2)) := by
+  exact ⟨orderedPauliFactor_eq_symmetric_sub_commutators v,
+    pauliFactorizationCurvature_eq_commutator_residue v⟩
+
+section Connection
+
+variable {Point Tangent : Type*}
+
+/-- The repository's genuine connection owner supplies the differential term
+plus the operator commutator.  This is the first layer at which `curvature` is
+used literally rather than as an analogy. -/
+theorem operator_connection_curvature_packet
+    (C : CausalOperatorConnection W Point Tangent)
+    (p : Point) (X Y : Tangent) :
+    matrixAction (curvature (matrixConnection C) p X Y) =
+      matrixAction (reconstruct_causal (C.derivative p X Y)) +
+        QuaternionicOperatorLiftCurvature.operatorCommutator
+          (matrixAction (reconstruct_causal (C.form p X)))
+          (matrixAction (reconstruct_causal (C.form p Y))) :=
+  matrixConnection_curvature_eq_derivative_add_commutator C p X Y
+
+end Connection
+end OperatorCurvature
 
 /-- The existing five-grade owner is the correct Peirce reconstruction layer;
 this alias exposes it from the operator-lift capstone without introducing a

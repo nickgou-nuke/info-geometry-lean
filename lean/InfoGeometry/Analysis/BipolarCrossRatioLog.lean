@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Tactic
@@ -5,32 +6,27 @@ import Mathlib.Tactic
 /-!
 # Bipolar cross-ratio logarithmic coordinate
 
-This file formalizes the complex-analytic core of the two-puncture construction
-on `ℂ \ {0,1}`. It deliberately contains no electrostatic, thermodynamic, or
-relativistic interpretation.
+This file adds only the logarithmic layer over the repository's existing
+`CayleyCriticalLineCircleBridge`. The underlying Möbius map is not duplicated:
+`crossRatio01` is an abbreviation for the canonical `cayleyToFugacity` owner.
 
-The primary coordinate is
-
-`q(s) = s / (1 - s)`
-
-and its principal logarithmic readout is
-
-`W(s) = Complex.log (q(s)) = eta(s) + i theta(s)`.
-
+No electrostatic, thermodynamic, or relativistic interpretation is used here.
 Because `Complex.log` is the principal branch, source/sink exchange is recorded
-first at the exact multiplicative level. We do not assert the globally false
-principal-branch identity `W(1-s) = -W(s)`.
+at the exact multiplicative level and through exponentiation; we do not assert
+the globally false principal-branch equality `W(1-s) = -W(s)`.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Analysis.BipolarCrossRatioLog
 
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+
 /-- The twice-punctured complex plane. -/
 def punctured01 : Set ℂ := {s | s ≠ 0 ∧ s ≠ 1}
 
-/-- Möbius coordinate sending `0 ↦ 0` and `1 ↦ ∞`. -/
-def crossRatio01 (s : ℂ) : ℂ := s / (1 - s)
+/-- Canonical repository Möbius coordinate `s / (1-s)`. -/
+abbrev crossRatio01 : ℂ → ℂ := cayleyToFugacity
 
 /-- Principal logarithmic coordinate associated with `crossRatio01`. -/
 def bipolarLog (s : ℂ) : ℂ := Complex.log (crossRatio01 s)
@@ -47,6 +43,7 @@ lemma one_sub_ne_zero_of_mem {s : ℂ} (hs : s ∈ punctured01) :
 
 lemma crossRatio01_ne_zero {s : ℂ} (hs : s ∈ punctured01) :
     crossRatio01 s ≠ 0 := by
+  unfold crossRatio01 cayleyToFugacity
   exact div_ne_zero hs.1 (one_sub_ne_zero_of_mem hs)
 
 lemma one_sub_mem_punctured01 {s : ℂ} (hs : s ∈ punctured01) :
@@ -60,25 +57,22 @@ lemma one_sub_mem_punctured01 {s : ℂ} (hs : s ∈ punctured01) :
       _ = 1 - 1 := by rw [h]
       _ = 0 := by ring
 
-/-- Exchange of the two distinguished points acts by inversion on `q`. -/
-theorem crossRatio01_one_sub {s : ℂ} (hs : s ∈ punctured01) :
-    crossRatio01 (1 - s) = (crossRatio01 s)⁻¹ := by
-  rcases hs with ⟨hs0, hs1⟩
-  unfold crossRatio01
-  have hden : 1 - s ≠ 0 := sub_ne_zero.mpr hs1.symm
-  field_simp [hs0, hden]
+/-- Readback of the repository-owned source/sink inversion theorem. -/
+theorem crossRatio01_one_sub {s : ℂ} (_hs : s ∈ punctured01) :
+    crossRatio01 (1 - s) = (crossRatio01 s)⁻¹ :=
+  cayleyToFugacity_one_sub_eq_inv s
 
-/-- Reflection commutes exactly with the Möbius coordinate. -/
+/-- Reflection commutes exactly with the canonical Möbius coordinate. -/
 theorem crossRatio01_conj (s : ℂ) :
     crossRatio01 (Complex.conj s) = Complex.conj (crossRatio01 s) := by
-  simp [crossRatio01]
+  simp [cayleyToFugacity]
 
 /-- Exponentiating the principal logarithm recovers `q` on the punctured domain. -/
 theorem exp_bipolarLog {s : ℂ} (hs : s ∈ punctured01) :
     Complex.exp (bipolarLog s) = crossRatio01 s := by
   exact Complex.exp_log (crossRatio01_ne_zero hs)
 
-/-- The real and angular readouts are exactly modulus-log and principal argument. -/
+/-- The real and angular readouts are modulus-log and principal argument. -/
 theorem bipolarLog_real_imag (s : ℂ) :
     eta s = Real.log ‖crossRatio01 s‖ ∧
       theta s = Complex.arg (crossRatio01 s) := by
@@ -103,6 +97,17 @@ def criticalLine (y : ℝ) : ℂ :=
     (criticalLine y).im = y := by
   simp [criticalLine]
 
+/-- The new generic critical-line parameter satisfies the canonical owner predicate. -/
+theorem criticalLine_onCanonicalCriticalLine (y : ℝ) :
+    OnCriticalLine (criticalLine y) := by
+  simp [OnCriticalLine]
+
+/-- Canonical squared-norm readback: the vertical bisector maps to the unit circle. -/
+theorem normSq_crossRatio01_criticalLine (y : ℝ) :
+    Complex.normSq (crossRatio01 (criticalLine y)) = 1 :=
+  cayleyToFugacity_mem_unitCircle_of_criticalLine
+    (criticalLine y) (criticalLine_onCanonicalCriticalLine y)
+
 /-- On the vertical bisector, subtraction from `1` is complex conjugation. -/
 theorem one_sub_criticalLine (y : ℝ) :
     1 - criticalLine y = Complex.conj (criticalLine y) := by
@@ -121,10 +126,10 @@ lemma criticalLine_ne_one (y : ℝ) : criticalLine y ≠ 1 := by
 lemma criticalLine_mem_punctured01 (y : ℝ) : criticalLine y ∈ punctured01 :=
   ⟨criticalLine_ne_zero y, criticalLine_ne_one y⟩
 
-/-- The vertical bisector is mapped by `q` to the unit circle. -/
+/-- Norm-one form of the canonical squared-norm theorem. -/
 theorem norm_crossRatio01_criticalLine (y : ℝ) :
     ‖crossRatio01 (criticalLine y)‖ = 1 := by
-  rw [crossRatio01, norm_div, one_sub_criticalLine, Complex.norm_conj]
+  rw [cayleyToFugacity, norm_div, one_sub_criticalLine, Complex.norm_conj]
   exact div_self (by simpa using criticalLine_ne_zero y)
 
 /-- Consequently the logarithmic radial coordinate vanishes identically there. -/
@@ -132,8 +137,7 @@ theorem eta_criticalLine (y : ℝ) : eta (criticalLine y) = 0 := by
   rw [eta, bipolarLog, Complex.log_re, norm_crossRatio01_criticalLine]
   simp
 
-/-- The exponential decomposition is exact independently of how `eta` and `theta`
-are subsequently interpreted. -/
+/-- Exact exponential decomposition `exp(eta + i theta) = q`. -/
 theorem exp_eta_theta {s : ℂ} (hs : s ∈ punctured01) :
     Complex.exp ((eta s : ℂ) + (theta s : ℂ) * Complex.I) = crossRatio01 s := by
   have hsplit :
@@ -142,7 +146,7 @@ theorem exp_eta_theta {s : ℂ} (hs : s ∈ punctured01) :
   rw [hsplit]
   exact exp_bipolarLog hs
 
-/-- Real logistic compactification, retained as a purely analytic coordinate map. -/
+/-- Real logistic compactification. -/
 def logistic (t : ℝ) : ℝ := Real.exp t / (1 + Real.exp t)
 
 theorem logistic_pos (t : ℝ) : 0 < logistic t := by
@@ -152,11 +156,11 @@ theorem logistic_lt_one (t : ℝ) : logistic t < 1 := by
   rw [logistic]
   exact (div_lt_one (by positivity)).2 (by linarith [Real.exp_pos t])
 
-/-- On the real logistic slice, the Möbius coordinate is exactly `exp(t)`. -/
+/-- On the real logistic slice, the canonical Möbius coordinate is `exp(t)`. -/
 theorem crossRatio01_logistic (t : ℝ) :
     crossRatio01 (logistic t : ℂ) = (Real.exp t : ℂ) := by
   have he : Real.exp t ≠ 0 := ne_of_gt (Real.exp_pos t)
-  unfold crossRatio01 logistic
+  unfold crossRatio01 cayleyToFugacity logistic
   push_cast
   field_simp [he]
   ring

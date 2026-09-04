@@ -6,7 +6,7 @@ import Mathlib.Tactic
 # Bipolar cross-ratio logarithmic coordinate
 
 This file formalizes the complex-analytic core of the two-puncture construction
-on `ℂ \ {0,1}`.  It deliberately contains no electrostatic, thermodynamic, or
+on `ℂ \ {0,1}`. It deliberately contains no electrostatic, thermodynamic, or
 relativistic interpretation.
 
 The primary coordinate is
@@ -18,7 +18,7 @@ and its principal logarithmic readout is
 `W(s) = Complex.log (q(s)) = eta(s) + i theta(s)`.
 
 Because `Complex.log` is the principal branch, source/sink exchange is recorded
-first at the exact multiplicative level.  We do not assert the globally false
+first at the exact multiplicative level. We do not assert the globally false
 principal-branch identity `W(1-s) = -W(s)`.
 -/
 
@@ -70,7 +70,7 @@ theorem crossRatio01_one_sub {s : ℂ} (hs : s ∈ punctured01) :
 
 /-- Reflection commutes exactly with the Möbius coordinate. -/
 theorem crossRatio01_conj (s : ℂ) :
-    crossRatio01 (starRingEnd ℂ s) = starRingEnd ℂ (crossRatio01 s) := by
+    crossRatio01 (Complex.conj s) = Complex.conj (crossRatio01 s) := by
   simp [crossRatio01]
 
 /-- Exponentiating the principal logarithm recovers `q` on the punctured domain. -/
@@ -105,18 +105,18 @@ def criticalLine (y : ℝ) : ℂ :=
 
 /-- On the vertical bisector, subtraction from `1` is complex conjugation. -/
 theorem one_sub_criticalLine (y : ℝ) :
-    1 - criticalLine y = starRingEnd ℂ (criticalLine y) := by
+    1 - criticalLine y = Complex.conj (criticalLine y) := by
   apply Complex.ext <;> simp [criticalLine] <;> ring
 
 lemma criticalLine_ne_zero (y : ℝ) : criticalLine y ≠ 0 := by
   intro h
   have hre := congrArg Complex.re h
-  simp [criticalLine] at hre
+  norm_num [criticalLine] at hre
 
 lemma criticalLine_ne_one (y : ℝ) : criticalLine y ≠ 1 := by
   intro h
   have hre := congrArg Complex.re h
-  simp [criticalLine] at hre
+  norm_num [criticalLine] at hre
 
 lemma criticalLine_mem_punctured01 (y : ℝ) : criticalLine y ∈ punctured01 :=
   ⟨criticalLine_ne_zero y, criticalLine_ne_one y⟩
@@ -124,8 +124,7 @@ lemma criticalLine_mem_punctured01 (y : ℝ) : criticalLine y ∈ punctured01 :=
 /-- The vertical bisector is mapped by `q` to the unit circle. -/
 theorem norm_crossRatio01_criticalLine (y : ℝ) :
     ‖crossRatio01 (criticalLine y)‖ = 1 := by
-  rw [crossRatio01, norm_div, one_sub_criticalLine]
-  rw [map_norm]
+  rw [crossRatio01, norm_div, one_sub_criticalLine, Complex.norm_conj]
   exact div_self (by simpa using criticalLine_ne_zero y)
 
 /-- Consequently the logarithmic radial coordinate vanishes identically there. -/

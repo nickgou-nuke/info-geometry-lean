@@ -602,6 +602,7 @@ import InfoGeometry.Canonical.SouriauBostConnesTransition
 import InfoGeometry.Canonical.QuaternionEmbedding
 import InfoGeometry.Canonical.QuaternionicOperatorComplexStructure
 import InfoGeometry.Canonical.QuaternionicOperatorLiftCurvature
+import InfoGeometry.Canonical.OperatorQuaternionicLiftCapstone
 import InfoGeometry.Canonical.BiquaternionSU2
 import InfoGeometry.Canonical.PauliBraidB3
 import InfoGeometry.Canonical.BiquaternionDualRootRegularizer

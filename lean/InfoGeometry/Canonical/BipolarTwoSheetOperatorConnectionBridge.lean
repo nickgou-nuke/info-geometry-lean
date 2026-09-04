@@ -237,11 +237,7 @@ exactly `q(s)⁻¹`. -/
 theorem finiteAdjointFlow_sigmaMinus_eq_crossRatio_inv
     {s : ℂ} (hs : s ∈ punctured01) :
     finiteAdjointFlow s σMinus = (crossRatio01 s)⁻¹ • σMinus := by
-  rw [finiteAdjointFlow_sigmaMinus]
-  have hnonzero := crossRatio01_ne_zero hs
-  rw [show Complex.exp (-bipolarLog s) = (Complex.exp (bipolarLog s))⁻¹ by
-    rw [← Complex.exp_neg]]
-  rw [exp_bipolarLog hs]
+  rw [finiteAdjointFlow_sigmaMinus, Complex.exp_neg, exp_bipolarLog hs]
 
 /-- Closed scalar-to-operator bridge: the infinitesimal adjoint eigenvalue is
 `±W`, and the finite adjoint action carries the multiplicative weights

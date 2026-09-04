@@ -281,4 +281,56 @@ theorem squareZero_log_operator_quaternionic_packet
   ⟨hN2, hNI, hNJ,
     commute_third_quaternionic_axis hK hNI hNJ⟩
 
+/-- Scalar linear combinations of quaternionic axes are preserved by every
+endomorphism commuting with the three axes.  The coefficients are base-ring
+scalars; operator-valued coefficients require their own commutation
+hypotheses. -/
+theorem commute_quaternionic_axis_combination
+    {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
+    {I J K N : Module.End R V}
+    (a b c : R)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N)
+    (hNK : N * K = K * N) :
+    N * (a • I + b • J + c • K) =
+      (a • I + b • J + c • K) * N := by
+  calc
+    N * (a • I + b • J + c • K) =
+        a • (N * I) + b • (N * J) + c • (N * K) := by
+          simp [mul_add, mul_smul_comm]
+    _ = a • (I * N) + b • (J * N) + c • (K * N) := by
+          rw [hNI, hNJ, hNK]
+    _ = (a • I + b • J + c • K) * N := by
+          simp [add_mul, smul_mul_assoc]
+
+/-- Commutation with two quaternionic generators is sufficient for every
+scalar quaternionic axis once `K = I J` is supplied. -/
+theorem commute_every_quaternionic_axis_of_two
+    {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
+    {I J K N : Module.End R V}
+    (a b c : R)
+    (hK : I * J = K)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N) :
+    N * (a • I + b • J + c • K) =
+      (a • I + b • J + c • K) * N := by
+  exact commute_quaternionic_axis_combination a b c hNI hNJ
+    (commute_third_quaternionic_axis hK hNI hNJ)
+
+/-- Square-zero logarithmic endomorphisms commuting with two axes preserve
+every scalar self-dual/quaternionic linear combination.  This is an algebraic
+intertwining theorem, not by itself a topological-protection statement. -/
+theorem squareZero_log_operator_commutes_every_quaternionic_axis
+    {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+    {I J K N : Module.End R V}
+    (a b c : R)
+    (hK : I * J = K)
+    (hNI : N * I = I * N)
+    (hNJ : N * J = J * N)
+    (hN2 : N * N = 0) :
+    N * N = 0 ∧
+      N * (a • I + b • J + c • K) =
+        (a • I + b • J + c • K) * N :=
+  ⟨hN2, commute_every_quaternionic_axis_of_two a b c hK hNI hNJ⟩
+
 end InfoGeometry.Bridge.QuaternionicPauliDiracSoldering

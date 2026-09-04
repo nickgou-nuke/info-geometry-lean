@@ -60,6 +60,7 @@ import InfoGeometry.Canonical.BipolarVariableConnectionPoissonCosymplecticClosur
 import InfoGeometry.Canonical.BipolarSchwarzianWardPristineChain
 import InfoGeometry.Canonical.BipolarContourPeriodSchwarzianWardPristineChain
 import InfoGeometry.Canonical.BipolarContourU1HolonomyPristineChain
+import InfoGeometry.Canonical.BipolarIntrinsicBoundaryHolonomyPristineChain
 import InfoGeometry.Canonical.BipolarConformalLogos
 
 /-!

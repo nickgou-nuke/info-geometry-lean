@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Algebra.KantorTripleFiveGrading
 import InfoGeometry.Lie.G2DoubleStarRootDecomposition
+import InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors
 import Omega.Zeta.CyclotomicSectorIdentity
 
 noncomputable section
@@ -180,6 +181,36 @@ theorem kantor_first_identity_readout
   K.D_comm_D u v x y
 
 end KantorReadout
+
+section PeirceFiveGradeReadout
+
+open InfoGeometry.Physics.Algebra
+
+variable {R : Type*} [Ring R] [Algebra ℝ R]
+
+/-- Tripotency of an algebra element induces tripotency of its left regular operator. -/
+theorem tripotent_left_regular_readout
+    {e : R} (he : e * e * e = e) :
+    leftMulLinear e * leftMulLinear e * leftMulLinear e = leftMulLinear e :=
+  leftMulLinear_tripotent he
+
+/-- The native five grouped Peirce projectors reconstruct the whole endomorphism space. -/
+theorem tripotent_five_grade_projectors_sum_eq_id (e : R) :
+    gradeNegTwoProjector e + gradeNegOneProjector e + gradeZeroProjector e +
+        gradePosOneProjector e + gradePosTwoProjector e = LinearMap.id :=
+  fiveGradeProjectors_sum_eq_id e
+
+/-- Every joint Peirce component is an adjoint eigenvector with weight lambda-mu. -/
+theorem tripotent_joint_peirce_adjoint_weight
+    {e : R} (he : e * e * e = e)
+    (left right : PeirceSign) (x : R) :
+    e * jointPeirceProjector e left right x -
+        jointPeirceProjector e left right x * e =
+      (peirceScalar left - peirceScalar right) •
+        jointPeirceProjector e left right x :=
+  jointPeirceProjector_adjoint_weight he left right x
+
+end PeirceFiveGradeReadout
 
 section G2Readout
 

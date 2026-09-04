@@ -1,6 +1,7 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -16,10 +17,11 @@ phrased note. The hierarchy is deliberately strict:
 2. principal logarithmic readout `W=log q` where a branch is chosen;
 3. branch-independent meromorphic differential `dq/q`;
 4. Apollonius level sets and the reflection `s ↦ 1-conj(s)`;
-5. pullback metric density with the infinity-chart correction;
-6. two-generator winding lattice and residue-difference period;
-7. determinant-one diagonal `2 × 2` realization and native `SL₂(ℂ)` soldering;
-8. optional perfect-pair occupation and doubled `U(1)` vortex interpretation.
+5. noncritical local conformal coordinates and pullback metric density;
+6. inversion-chart correction at the omitted infinity point;
+7. two-generator winding lattice and residue-difference period;
+8. determinant-one diagonal `2 × 2` realization and native `SL₂(ℂ)` soldering;
+9. optional perfect-pair occupation and doubled `U(1)` vortex interpretation.
 
 The capstone deliberately does not infer a conductor, Maxwell field, microscopic
 superconductivity, global Hodge decomposition, or a de Rham classification not
@@ -33,6 +35,7 @@ namespace InfoGeometry.Canonical.BipolarConformalLogos
 open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarLogDifferential
 open InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+open InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 open InfoGeometry.Canonical.BipolarLogSL2
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -89,6 +92,15 @@ theorem apollonius_reflection_metric_packet
       infinityChartDensity 0 = 1 := by
   exact ⟨eta_eq_iff_apollonius hs c, eta_mirror s,
     mirror_fixed_iff s, infinityChartDensity_zero⟩
+
+/-- Exact local-conformal replacement for the informal curvature statement. -/
+theorem local_conformal_coordinate_packet
+    {s : ℂ} (hs : s ∈ punctured01)
+    (hslit : crossRatio01 s ∈ Complex.slitPlane) :
+    HasDerivAt bipolarLog (dlog01 s) s ∧
+      dlog01 s ≠ 0 ∧
+      0 < metricDensity s := by
+  exact local_conformal_packet hs hslit
 
 /-- Corrected two-puncture period packet. The two elementary windings remain
 distinct although the bipolar residue-difference form annihilates the diagonal. -/

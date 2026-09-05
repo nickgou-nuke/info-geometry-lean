@@ -1,0 +1,16 @@
+{
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "b0fa422e6cb6d3da5be7cbbb5ecfae5c12f3237b",
+  "branch": "causal-boundary-gauge-g2-reconstruction",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "source_attachment": "Pasted markdown(20260905-094838).md",
+  "source_sha256": "5961c43d6957dd6c463a011cfc7d9ff6b53484d7bc88cf9099f992e64285a930",
+  "new_lean_modules": 10,
+  "public_theorems": 76,
+  "public_definitions": 34,
+  "public_abbreviations": 3,
+  "Lean_elaboration_executed": false,
+  "local_launcher_exit_status": 127,
+  "independent_exact_regressions_executed": true
+}

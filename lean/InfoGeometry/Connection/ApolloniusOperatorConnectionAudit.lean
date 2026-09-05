@@ -1,0 +1,30 @@
+import InfoGeometry.Connection.ApolloniusOperatorConnection
+
+/-!
+# Transitive axiom inspection for the native Apollonius connection layer
+
+Run this file after elaborating the owner module.  Any occurrence of `sorryAx`
+or a project-specific axiom is a verification failure.  The commands do not
+replace an executable Lean kernel run.
+-/
+
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.operatorConnectionAt_apply
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.operatorConnectionAt_value_trace_zero
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.operatorConnectionAt_analytic_pureGauge
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.operatorConnectionAt_selfWedge_zero
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.operatorCurvatureAt_eq_zero
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.circularOpDerivation_leibniz
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.circularOpDerivation_sigmaPlus
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.circularOpDerivation_sigmaMinus
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.planarAngularCurvatureAt_eq_zero
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.coupledAngularCircleIntegral_origin
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.coupledAngularCircleIntegral_one
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.planarU1Holonomy_origin_eq_winding
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.planarU1Holonomy_one_eq_winding
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_origin
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_one
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_of_both_inside
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_sq
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_adjoint_trivial
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.spinContourHolonomy_origin_spinor
+#print axioms InfoGeometry.Connection.ApolloniusOperatorConnection.apollonius_operator_connection_packet

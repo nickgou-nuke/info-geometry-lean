@@ -7,7 +7,7 @@ import Mathlib.Tactic
 # Explicit finite Berezinian realization of the bipolar Cayley readout
 
 The informal formula `-coth(W/2) = Ber(D)` is not a theorem until the
-supermatrix `D` is specified.  This file supplies one exact finite `1|1`
+supermatrix `D` is specified. This file supplies one exact finite `1|1`
 realization:
 
 `D(q) = diag(1+q, 1-q)`.
@@ -19,7 +19,7 @@ Its block-diagonal Berezinian is
 For `q = exp W`, this is the exponential formula for `-coth(W/2)`, and for
 `q(s)=s/(1-s)` it reduces to `1/(1-2s)` away from the odd-block singularity.
 
-This is a finite supermatrix identity.  It does not construct a
+This is a finite supermatrix identity. It does not construct a
 super-Riemann surface, a superconformal field theory, or a canonical operator
 called `D` beyond the explicit block chosen here.
 -/
@@ -48,7 +48,7 @@ def superCayleyEven (q : ℂ) : ScalarBlock := scalarBlock (1 + q)
 /-- Odd block of the explicit `1|1` Cayley supermatrix. -/
 def superCayleyOdd (q : ℂ) : ScalarBlock := scalarBlock (1 - q)
 
-/-- Berezinian readout of the explicit diagonal supermatrix.  The inverse
+/-- Berezinian readout of the explicit diagonal supermatrix. The inverse
 parameter is displayed explicitly, as required by the repository owner. -/
 def superCayleyBerezinian (q : ℂ) : ℂ :=
   berezinianBlockDiag (superCayleyEven q) (superCayleyOdd q) (1 - q)⁻¹
@@ -66,7 +66,7 @@ theorem superCayleyOdd_inverse_certificate
   simp [superCayleyOdd, hq]
 
 /-- Exponential definition of the readout traditionally denoted
-`-coth(W/2)`.  It is used instead of introducing a second hyperbolic-function
+`-coth(W/2)`. It is used instead of introducing a second hyperbolic-function
 API. -/
 def negCothHalfExp (W : ℂ) : ℂ :=
   (1 + Complex.exp W) / (1 - Complex.exp W)
@@ -96,14 +96,21 @@ theorem superCayleyBerezinian_crossRatio01
       (1 - 2 * s)⁻¹ := by
   rw [superCayleyBerezinian_eq]
   have hden : 1 - s ≠ 0 := one_sub_ne_zero_of_mem hs
+  have hodd :
+      1 - s / (1 - s) = (1 - 2 * s) / (1 - s) := by
+    field_simp [hden]
+    ring
+  have hodd_ne : 1 - s / (1 - s) ≠ 0 := by
+    rw [hodd]
+    exact div_ne_zero hcrit hden
   unfold crossRatio01 cayleyToFugacity
-  field_simp [hden, hcrit]
+  field_simp [hden, hodd_ne, hcrit]
   ring
 
 /-- The odd block is singular exactly when the Cayley coordinate equals one. -/
 theorem det_superCayleyOdd_eq_zero_iff (q : ℂ) :
     Matrix.det (superCayleyOdd q) = 0 ↔ q = 1 := by
-  simp [superCayleyOdd, sub_eq_zero]
+  simp [superCayleyOdd, sub_eq_zero, eq_comm]
 
 /-- On the bipolar chart, the odd-block singularity is exactly the affine
 critical point `s = 1/2`. -/
@@ -118,9 +125,12 @@ theorem det_superCayleyOdd_crossRatio01_eq_zero_iff
     have hmul : s = 1 * (1 - s) := by
       apply (div_eq_iff hden).mp
       simpa [crossRatio01, cayleyToFugacity] using hq
-    have : 2 * s = 1 := by
-      simpa using congrArg (fun z : ℂ => z + s) hmul
-    linarith
+    have htwo : s * 2 = 1 := by
+      calc
+        s * 2 = s + s := by ring
+        _ = (1 - s) + s := by rw [hmul]
+        _ = 1 := by ring
+    exact (eq_div_iff (by norm_num : (2 : ℂ) ≠ 0)).2 htwo
   · intro hsHalf
     rw [hsHalf]
     norm_num [crossRatio01, cayleyToFugacity]

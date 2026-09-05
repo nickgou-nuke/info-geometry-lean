@@ -56,3 +56,4 @@ failure. The audit is not a substitute for kernel execution.
 
 #print axioms InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure.projected_soloviev_closure
 #print axioms InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure.nuclear_five_grade_car_phonon_bdg_soloviev_packet
+#print axioms InfoGeometry.Physics.NuclearFiveGradeSameCarrierClosure.nuclear_same_carrier_closure_packet

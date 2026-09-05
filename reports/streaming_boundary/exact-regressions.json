@@ -1,0 +1,59 @@
+{
+  "boundary": {
+    "general_pairing_conservation": true,
+    "hard_terminal_zero_component": true,
+    "conditioned_step_consistent": true,
+    "conditioned_kernel_stochastic": true
+  },
+  "memory": {
+    "discrete_convolution_lengths": 13,
+    "all_chunk_splits": 91,
+    "continuous_integrating_factor_derivative": true,
+    "unipotent_inverse_and_addition": true
+  },
+  "weak_value": {
+    "Pauli_weak_value": "1/epsilon",
+    "identity_weak_value": 1,
+    "success_weighted_square": "1/(1+epsilon^2)"
+  },
+  "gauge": {
+    "all_node_covariance": 3,
+    "path_defect_covariance": 27,
+    "pure_frame_flatness": 27,
+    "normalized_average_is_singular": true
+  },
+  "graph": {
+    "generic_rectangular_differential_squared": 0,
+    "codifferential_squared": 0,
+    "Dirac_Laplacian_blocks": true,
+    "Dirac_is_odd": true,
+    "energy_identity": true,
+    "path_graph_constant_kernel": true
+  },
+  "roots": {
+    "root_count": 12,
+    "grade_counts": {
+      "-2": 1,
+      "-1": 4,
+      "0": 2,
+      "1": 4,
+      "2": 1
+    },
+    "length_counts": {
+      "2": 6,
+      "6": 6
+    },
+    "two_Weyl_permutation_normalizations": true,
+    "root_length_is_not_grade": true
+  },
+  "pairing": {
+    "Hermitian_pairing_block": true,
+    "spectral_square": true,
+    "characteristic_polynomial": true,
+    "radicand_nonnegative_decomposition": "(1-T)+T*cos(phi/2)^2",
+    "no_topological_classification_tested": true
+  },
+  "all_checks_passed": true,
+  "Lean_kernel_executed": false,
+  "method": "Exact symbolic and rational arithmetic; finite algebra regressions only"
+}

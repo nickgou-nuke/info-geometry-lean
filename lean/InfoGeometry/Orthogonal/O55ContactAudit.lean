@@ -1,0 +1,65 @@
+import InfoGeometry.Orthogonal.O55ContactAll
+
+/-!
+# Transitive axiom audit
+
+This file is executable only after Lean elaborates the exact branch head.  It
+requests the transitive axiom dependencies of the principal theorem surface.
+-/
+
+#print axioms InfoGeometry.Orthogonal.O55Contact.splitPairing_comm
+#print axioms InfoGeometry.Orthogonal.O55Contact.splitPairing_nondegenerate_left
+#print axioms InfoGeometry.Orthogonal.O55Contact.split_signature_five_five_certificate
+#print axioms InfoGeometry.Orthogonal.O55Contact.isSplitSkew_commutator
+#print axioms InfoGeometry.Orthogonal.O55Contact.crosscapConjugation_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.contactEuler_cube
+#print axioms InfoGeometry.Orthogonal.O55Contact.contactGrade_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.splitRankTwo_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.five_grades_inhabited
+#print axioms InfoGeometry.Orthogonal.O55Contact.crosscap_reverses_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.weightProjector_resolution
+#print axioms InfoGeometry.Orthogonal.O55Contact.blockComponent_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.blockComponent_mul_of_mismatch
+#print axioms InfoGeometry.Orthogonal.O55Contact.full_block_decomposition
+#print axioms InfoGeometry.Orthogonal.O55Contact.multigraded_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.multigraded_crosscap
+#print axioms InfoGeometry.Orthogonal.O55Contact.splitRankTwoEnd_commutator
+#print axioms InfoGeometry.Orthogonal.O55Contact.negativeOne_bracket_scalar
+#print axioms InfoGeometry.Orthogonal.O55Contact.positiveOne_bracket_scalar
+#print axioms InfoGeometry.Orthogonal.O55Contact.negative_heisenberg_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.positive_heisenberg_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.blockComponent_pairing
+#print axioms InfoGeometry.Orthogonal.O55Contact.grade_projection_membership
+#print axioms InfoGeometry.Orthogonal.O55Contact.five_grade_reconstruction
+#print axioms InfoGeometry.Orthogonal.O55Contact.exact_five_grading_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.BoundaryPair55.idempotent_sq
+#print axioms InfoGeometry.Orthogonal.O55Contact.BoundaryPair55.idempotent_sandwich
+#print axioms InfoGeometry.Orthogonal.O55Contact.BoundaryPair55.readout_rescale
+#print axioms InfoGeometry.Orthogonal.O55Contact.homogeneous_matrix_coefficient_balance
+#print axioms InfoGeometry.Orthogonal.O55Contact.homogeneous_readout_eq_zero_of_weight_mismatch
+#print axioms InfoGeometry.Orthogonal.O55Contact.contact_degree_of_nonzero_readout
+#print axioms InfoGeometry.Orthogonal.O55Contact.crosscap_selection_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.wittPlus_wittMinus
+#print axioms InfoGeometry.Orthogonal.O55Contact.witt_reconstruction
+#print axioms InfoGeometry.Orthogonal.O55Contact.full_multigrading_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.matrix_clifford_count_agreement
+#print axioms InfoGeometry.Orthogonal.O55Contact.contact_pin_grade_sheet_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.fermion_CAR
+#print axioms InfoGeometry.Orthogonal.O55Contact.boson_CCR
+#print axioms InfoGeometry.Orthogonal.O55Contact.diagonalFermionRepresentation_injective
+#print axioms InfoGeometry.Orthogonal.O55Contact.commonAction_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.commonRepresentation_injective
+#print axioms InfoGeometry.Orthogonal.O55Contact.commonRepresentation_preserves_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.contact_lane_label_counts
+#print axioms InfoGeometry.Orthogonal.O55Contact.ContactGeneratorLabel.generator_mem_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.commonCrosscap_conjugates_action
+#print axioms InfoGeometry.Orthogonal.O55Contact.commonCrosscap_reverses_represented_grade
+#print axioms InfoGeometry.Orthogonal.O55Contact.outerZero_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.middleZero_bracket
+#print axioms InfoGeometry.Orthogonal.O55Contact.zero_grade_structure_packet
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_multigrading_core
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_heisenberg_zero_core
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_boundary_selection_core
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_operator_envelope_core
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_structural_census
+#print axioms InfoGeometry.Orthogonal.O55Contact.o55_contact_full_formalism_packet

@@ -1,6 +1,8 @@
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
+import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
+import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 import InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 import InfoGeometry.Physics.NuclearSolovievCompression
 import InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian
@@ -15,12 +17,11 @@ This declaration-free surface exports:
 
 * the globally Jacobi-closed two-mode CAR five-grading;
 * its five adjoint eigenspaces as native Mathlib submodules with bracket maps;
-* a multiplicative, grade-preserving representation of that five-grading on a
-  common two-mode CAR--phonon carrier;
-* the concrete one-quasiparticle common carrier with exact CAR and CCR used by
-  the finite Soloviev compression;
-* the explicit compression to the finite Soloviev QPNM matrix;
-* the idempotent model-space projector and exact `P H P` relation;
+* a native Lie homomorphism representing that five-grading on a common
+  two-mode CAR--phonon carrier;
+* exact CAR and CCR on that carrier, with commuting Zorn-derivation symmetry;
+* a same-carrier idempotent `P H P` compression to the Soloviev QPNM block;
+* the earlier one-mode concrete `CoupledQuasiparticlePhononSystem` instance;
 * the exact two-level BdG square, spectrum, and conjugate-linear symmetry;
 * the affine BdG decomposition of the Soloviev block.
 

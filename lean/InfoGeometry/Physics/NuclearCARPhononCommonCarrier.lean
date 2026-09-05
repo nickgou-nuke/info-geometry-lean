@@ -226,15 +226,15 @@ def commonRPA : PhononRPA (Fin 1) Operator where
   Qdag := fun _ => phononCreation
   comm_Q_Q := by
     intro i j
-    simp [comm]
+    simp [InfoGeometry.Physics.NuclearPhononRPA.comm]
   comm_Qdag_Qdag := by
     intro i j
-    simp [comm]
+    simp [InfoGeometry.Physics.NuclearPhononRPA.comm]
   comm_Q_Qdag := by
     intro i j
     have hij : i = j := Subsingleton.elim i j
     subst j
-    simpa [comm] using phonon_CCR
+    simpa [InfoGeometry.Physics.NuclearPhononRPA.comm] using phonon_CCR
 
 /-- The abstract coupled quasiparticle--phonon socket now has a concrete
 instance on one associative operator algebra. -/
@@ -244,16 +244,20 @@ def commonCoupledSystem :
   rpa := commonRPA
   cross_comm_a_Q := by
     intro i j
-    rw [comm, qpAnnihilation_commutes_phononAnnihilation, sub_self]
+    rw [InfoGeometry.Physics.NuclearPhononRPA.comm,
+      qpAnnihilation_commutes_phononAnnihilation, sub_self]
   cross_comm_adag_Q := by
     intro i j
-    rw [comm, qpCreation_commutes_phononAnnihilation, sub_self]
+    rw [InfoGeometry.Physics.NuclearPhononRPA.comm,
+      qpCreation_commutes_phononAnnihilation, sub_self]
   cross_comm_a_Qdag := by
     intro i j
-    rw [comm, qpAnnihilation_commutes_phononCreation, sub_self]
+    rw [InfoGeometry.Physics.NuclearPhononRPA.comm,
+      qpAnnihilation_commutes_phononCreation, sub_self]
   cross_comm_adag_Qdag := by
     intro i j
-    rw [comm, qpCreation_commutes_phononCreation, sub_self]
+    rw [InfoGeometry.Physics.NuclearPhononRPA.comm,
+      qpCreation_commutes_phononCreation, sub_self]
 
 /-! ## Coefficient derivations as even internal symmetries -/
 

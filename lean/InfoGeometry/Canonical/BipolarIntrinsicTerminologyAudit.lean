@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain
 
 These commands inspect elaborated declarations once Lean executes this file.
 Any occurrence of `sorryAx` or a project-specific axiom is a verification
-failure.  This audit does not substitute for an actual kernel run.
+failure. This audit does not substitute for an actual kernel run.
 -/
 
 #print axioms InfoGeometry.Analysis.BipolarMobiusPunctureEquiv.mobiusPunctureEquiv
@@ -27,4 +27,11 @@ failure.  This audit does not substitute for an actual kernel run.
 #print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.fundamentalAction_deck
 #print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.observableAction_deck
 
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyBerezinian_eq
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyOdd_inverse_certificate
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.negCothHalfExp_bipolarLog
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyBerezinian_crossRatio01
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.det_superCayleyOdd_crossRatio01_eq_zero_iff
+
+#print axioms InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain.pristine_berezinian_realization_core
 #print axioms InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain.bipolar_intrinsic_terminology_pristine_chain

@@ -1,0 +1,4 @@
+1. Native homogeneous bases and finranks 1,12,19,12,1.
+2. Explicit Lie equivalence g0 ≃ gl(2,R) ⊕ so(3,3).
+3. Concrete intertwiner to the existing Clifford/Pin realization.
+4. Kernel elaboration and transitive axiom audit on the exact branch head.

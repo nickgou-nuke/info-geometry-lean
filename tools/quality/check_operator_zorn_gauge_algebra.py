@@ -53,6 +53,8 @@ def dot(u: Z, v: Z) -> P: return u[0]*v[0]+u[1]*v[1]+u[2]*v[2]
 def cross(u: Z, v: Z) -> Z:
     return (u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0])
 def zm(x: Z, y: Z) -> Z:
+    if len(x) != 8 or len(y) != 8:
+        raise ValueError('Zorn values have exactly eight coefficient entries')
     a,b,u,v = x[0],x[1],x[2:5],x[5:8]
     c,d,w,t = y[0],y[1],y[2:5],y[5:8]
     vt,uw = cross(v,t),cross(u,w)
@@ -103,7 +105,7 @@ def main() -> None:
     check('gauge_field_strength',gauge(field(p,q,a,b)),field(cg(p),cg(q),gauge(a),gauge(b)))
     check('gauge_full_curvature',gauge(curv(p,q,a,b,x)),curv(cg(p),cg(q),gauge(a),gauge(b),gauge(x)))
     check('operator_cross_self',cross((p,q,r),(p,q,r)),(cb(q,r),cb(r,p),cb(p,q)))
-    u=(zero,zero,p,q,zero,zero,zero,zero,zero)
+    u=(zero,zero,p,q,zero,zero,zero,zero)
     pole=(one,zero,zero,zero,zero,zero,zero,zero)
     defect=assoc(u,u,pole)
     check('alternativity_defect',defect,(zero,zero,zero,zero,zero,zero,zero,cb(p,q)))

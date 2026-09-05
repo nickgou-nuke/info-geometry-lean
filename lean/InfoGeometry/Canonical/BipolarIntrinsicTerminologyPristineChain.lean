@@ -2,6 +2,7 @@ import InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 import InfoGeometry.Convex.BipolarLogitBarrierDuality
 import InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
+import InfoGeometry.NCG.BipolarCayleyBerezinianRealization
 
 /-!
 # Pristine intrinsic terminology for the bipolar coordinate
@@ -9,15 +10,17 @@ import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 This capstone records the exact mathematical replacements for several names
 that were superimposed in the informal synthesis.
 
-* `q(s)=s/(1-s)` is a Möbius equivalence between punctured affine charts.  It
+* `q(s)=s/(1-s)` is a Möbius equivalence between punctured affine charts. It
   is not declared to be the universal covering of the thrice-punctured sphere.
 * `log x - log(1-x)` is the odd logit coordinate, whereas
   `-log x - log(1-x)` is the even two-sided logarithmic barrier.
 * the half-weight construction defines a square-root cover with central deck
-  sign.  This is a spinorial descent mechanism, not a definition of physical
+  sign. This is a spinorial descent mechanism, not a definition of physical
   angular momentum or a tangent-bundle spin structure.
+* the informal Berezinian/coth formula becomes a theorem only after specifying
+  the explicit `1|1` diagonal supermatrix `diag(1+q,1-q)`.
 * the Schwarzian, contour, operator-connection, Poisson, and GENERIC owners
-  remain independent layers.  No twistor transform, hyper-para-Kaehler
+  remain independent layers. No twistor transform, hyper-para-Kaehler
   structure, modular-lambda uniformization, BdG model, or optimal-transport
   dynamics is inferred merely from sharing notation.
 -/
@@ -30,6 +33,7 @@ open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 open InfoGeometry.Convex.BipolarLogitBarrierDuality
 open InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent
+open InfoGeometry.NCG.BipolarCayleyBerezinianRealization
 
 /-- The exact finite coordinate statement replacing the overstrong word
 "uniformization" in the elementary bipolar layer. -/
@@ -63,6 +67,17 @@ theorem pristine_spinorial_descent_core
       fundamentalAction (deck p) ψ = -fundamentalAction p ψ ∧
       observableAction (deck p) X = observableAction p X :=
   bipolar_square_root_spinorial_descent_packet p ψ X
+
+/-- The exact finite statement replacing the undefined slogan
+`-coth(W/2)=Ber(D)`: the block `D` and its invertibility condition are explicit. -/
+theorem pristine_berezinian_realization_core
+    {s : ℂ} (hs : s ∈ punctured01)
+    (hcrit : 1 - 2 * s ≠ 0) :
+    negCothHalfExp (bipolarLog s) =
+        superCayleyBerezinian (crossRatio01 s) ∧
+      superCayleyBerezinian (crossRatio01 s) =
+        (1 - 2 * s)⁻¹ :=
+  bipolar_cayley_berezinian_packet hs hcrit
 
 /-- Combined intrinsic correction packet. -/
 theorem bipolar_intrinsic_terminology_pristine_chain

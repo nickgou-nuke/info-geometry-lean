@@ -5,7 +5,7 @@ import InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 # Bundled eigenspaces for the concrete nuclear five-grading
 
 The unbundled relation `[H,X] = kX` from the two-mode CAR model is packaged as
-a Mathlib `Submodule`.  The matrix commutator adds weights, giving a reusable
+a Mathlib `Submodule`. The matrix commutator adds weights, giving a reusable
 bracket map from grade `k` and grade `l` into grade `k+l`.
 -/
 
@@ -98,6 +98,6 @@ theorem bundled_five_grade_packet :
       ⁅pairCreation, pairAnnihilation⁆ ∈ gradeSpace 0 := by
   refine ⟨pairAnnihilation_grade, a1_grade,
     mixed_a1_a1Dag_grade_zero, a1Dag_grade, pairCreation_grade, ?_⟩
-  exact lie_mem_grade_add pairCreation_grade pairAnnihilation_grade
+  simpa using lie_mem_grade_add pairCreation_grade pairAnnihilation_grade
 
 end InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules

@@ -25,6 +25,7 @@ import InfoGeometry.Conformal.BipolarSignedLogSchwarzianBridge
 import InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
+import InfoGeometry.Canonical.BipolarComplexCartanLine
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
 import InfoGeometry.Canonical.BipolarPauliZornWittBridge
 import InfoGeometry.Canonical.BipolarTwoSheetCore

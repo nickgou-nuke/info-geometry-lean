@@ -1,0 +1,2 @@
+base=freudenthal-symplectic-contact-lie-representation
+head=o55-contact-multigrading-formalism-release

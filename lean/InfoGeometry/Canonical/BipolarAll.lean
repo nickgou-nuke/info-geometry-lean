@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarSimplePoleResidues
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
@@ -19,6 +20,7 @@ import InfoGeometry.Analysis.BipolarCircleEnclosurePeriods
 import InfoGeometry.Analysis.BipolarCriticalWindowsVortex
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
 import InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
+import InfoGeometry.Convex.BipolarLogitBarrierDuality
 import InfoGeometry.Conformal.ComplexSchwarzianJet
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 import InfoGeometry.Conformal.BipolarSignedLogSchwarzianBridge
@@ -32,6 +34,7 @@ import InfoGeometry.Canonical.BipolarTwoSheetCore
 import InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
 import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 import InfoGeometry.Canonical.BipolarLogarithmicRootCharacterRepresentation
 import InfoGeometry.Canonical.BipolarVariableCartanConnection
@@ -70,6 +73,7 @@ import InfoGeometry.Canonical.BipolarSchwarzianWardPristineChain
 import InfoGeometry.Canonical.BipolarContourPeriodSchwarzianWardPristineChain
 import InfoGeometry.Canonical.BipolarContourU1HolonomyPristineChain
 import InfoGeometry.Canonical.BipolarIntrinsicBoundaryHolonomyPristineChain
+import InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain
 import InfoGeometry.Canonical.BipolarConformalLogos
 
 /-!

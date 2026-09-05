@@ -1,0 +1,30 @@
+import InfoGeometry.Orthogonal.O55MultigradedAll
+
+#print axioms InfoGeometry.Orthogonal.O55D5.Root.multiDegree_sq_sum
+#print axioms InfoGeometry.Orthogonal.O55D5.root_card
+#print axioms InfoGeometry.Orthogonal.O55D5.contact_five_grade_total_dimension
+#print axioms InfoGeometry.Orthogonal.O55Witt.wittAdjoint_mul
+#print axioms InfoGeometry.Orthogonal.O55Witt.isSplitOrthogonal_commutator
+#print axioms InfoGeometry.Orthogonal.O55Witt.splitO55Lie
+#print axioms InfoGeometry.Orthogonal.O55Witt.cartan_commutator_rootMatrix
+#print axioms InfoGeometry.Orthogonal.O55Witt.contactGrading_rootMatrix
+#print axioms InfoGeometry.Orthogonal.O55WittCoordinates.coordinateEquiv
+#print axioms InfoGeometry.Orthogonal.O55WittCoordinates.encode_extract
+#print axioms InfoGeometry.Orthogonal.O55Contact.rootMatrix_mem_multiWeightSpace
+#print axioms InfoGeometry.Orthogonal.O55Contact.commutator_mem_multiWeightSpace
+#print axioms InfoGeometry.Orthogonal.O55Contact.splitO55_bracket_grade_add
+#print axioms InfoGeometry.Orthogonal.O55ContactDirectSum.o55GradeProjection_idempotent
+#print axioms InfoGeometry.Orthogonal.O55ContactDirectSum.o55GradeProjection_orthogonal
+#print axioms InfoGeometry.Orthogonal.O55ContactDirectSum.sum_o55GradeProjection
+#print axioms InfoGeometry.Streaming.MultigradedTwoBoundarySelection.numerator_weight_equation
+#print axioms InfoGeometry.Streaming.MultigradedTwoBoundarySelection.weakValue_ne_zero_implies_weight_match
+#print axioms InfoGeometry.Orthogonal.O55TwoBoundary.rootOperator_multiweight
+#print axioms InfoGeometry.Orthogonal.O55TwoBoundary.rootReadout_ne_zero_implies_multidegree
+#print axioms InfoGeometry.Orthogonal.O55TwoBoundary.sheetExchange_sq
+#print axioms InfoGeometry.Orthogonal.O55TwoBoundary.sheetConjugate_multiweight
+#print axioms InfoGeometry.Orthogonal.O55TwoBoundary.weakValue_exchangeBoundary
+#print axioms InfoGeometry.Orthogonal.O55ExistingBridge.contact_grade_count_agrees_with_existing_o55
+#print axioms InfoGeometry.Orthogonal.O55ExistingBridge.affine_glide_and_internal_sheet_packet
+#print axioms InfoGeometry.Canonical.O55MultigradedTwoBoundary.o55_multigraded_two_boundary_pristine_chain
+#print axioms InfoGeometry.Canonical.O55MultigradedTwoBoundary.o55_full_five_grade_structure_packet
+#print axioms InfoGeometry.Canonical.O55MultigradedTwoBoundary.o55_direct_sum_and_selection_packet

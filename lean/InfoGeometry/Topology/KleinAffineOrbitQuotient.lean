@@ -36,7 +36,7 @@ def orbitSetoid : Setoid Plane where
     · intro p q r hpq hqr
       rcases hpq with ⟨g, rfl⟩
       rcases hqr with ⟨h, rfl⟩
-      exact ⟨h * g, (deckAct_mul h g p).symm⟩
+      exact ⟨h * g, deckAct_mul h g p⟩
 
 /-- Topological orbit quotient. -/
 abbrev KleinAffineQuotient := Quotient orbitSetoid

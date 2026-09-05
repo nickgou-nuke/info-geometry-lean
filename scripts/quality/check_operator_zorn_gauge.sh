@@ -15,7 +15,10 @@ python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
   InfoGeometry.Canonical.OperatorZornGaugeCovariance
 log="$(mktemp)"
 trap 'rm -f "$log"' EXIT
-lake env lean tests/OperatorZornGaugeAxiomAudit.lean >"$log" 2>&1
+if ! lake env lean tests/OperatorZornGaugeAxiomAudit.lean >"$log" 2>&1; then
+  cat "$log" >&2
+  exit 1
+fi
 cat "$log"
 python3 - "$log" <<'PY'
 import pathlib,re,sys
@@ -28,7 +31,7 @@ for m in re.finditer(r"'([^']+)'\s+(?:depends on axioms:\s*\[([^\]]*)\]|does not
     found[m.group(1)]={x.strip() for x in (m.group(2) or '').split(',') if x.strip()}
 missing=expected-set(found)
 bad={n:sorted(found[n]-allowed) for n in expected & set(found) if found[n]-allowed}
-if missing or bad or re.search(r'\b(?:error|warning):',text):
+if not expected or missing or bad or re.search(r'\b(?:error|warning):',text):
     raise SystemExit(f'FAIL: missing={sorted(missing)}; unexpected_axioms={bad}; inspect diagnostics above')
 print(f'PASS: all {len(expected)} theorem readouts present; only the allowed foundational axioms.')
 PY

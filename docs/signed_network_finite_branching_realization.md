@@ -3,7 +3,8 @@
 ## Status and scope
 
 This is a mathematical construction and proof for the explicitly specified
-finite-state process. It is not a report that the complete stochastic theorem
+finite-cell process on a countable configuration space. It is not a report that
+the complete stochastic theorem
 has been elaborated in Lean. The companion Lean extension formalizes the
 ensemble jump generator, native next-event and exponential holding-time laws,
 unbiased initialization, local Hamiltonian intertwining, population generator
@@ -62,8 +63,8 @@ replaces each cell's counts by
 Cancellation is applied after a birth, with the next birth rate evaluated
 on the remaining configuration. The pruned construction may also cancel the
 initial configuration before starting its clock; this leaves the signed
-initial expectation unchanged and only reduces its population bound. It does not identify particle sign with
-routing direction or a different algebraic sheet.
+initial expectation unchanged and only reduces its population bound. It does
+not identify particle sign with routing direction or a different algebraic sheet.
 
 For either process, if N(n(0)) <= n0 almost surely and
 E[eta S(n(0))] = w0, then the process exists for all t >= 0 almost surely and

@@ -7,9 +7,9 @@ The common algebraic carrier is
 
 `N -> ((R x F(J) x R) x (R x F(J) x R))`.
 
-The inner doubling carries an exact one-mode CAR representation.  The outer
+The inner doubling carries an exact one-mode CAR representation. The outer
 countable coordinate carries the unnormalised algebraic oscillator shifts with
-exact CCR.  The faithful contact representation acts coefficientwise on both
+exact CCR. The faithful contact representation acts coefficientwise on both
 fermionic sheets and therefore commutes with all universal ladder maps.
 
 No Hilbert completion, adjoint-domain statement, or boundedness assertion is
@@ -80,8 +80,10 @@ def contactFermionCreation :
 
 /-- Exact one-mode CAR. -/
 theorem contactFermion_CAR :
-    contactFermionAnnihilation (J := J) * contactFermionCreation +
-      contactFermionCreation * contactFermionAnnihilation = 1 := by
+    contactFermionAnnihilation (J := J) *
+        contactFermionCreation (J := J) +
+      contactFermionCreation (J := J) *
+        contactFermionAnnihilation (J := J) = 1 := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -129,8 +131,10 @@ def contactBosonAnnihilation :
 
 /-- Exact algebraic Heisenberg CCR. -/
 theorem contactBoson_CCR :
-    contactBosonAnnihilation (J := J) * contactBosonCreation -
-      contactBosonCreation * contactBosonAnnihilation = 1 := by
+    contactBosonAnnihilation (J := J) *
+        contactBosonCreation (J := J) -
+      contactBosonCreation (J := J) *
+        contactBosonAnnihilation (J := J) = 1 := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -151,8 +155,10 @@ theorem contactBoson_CCR :
 
 /-- Fermionic annihilation commutes with bosonic creation. -/
 theorem contactFermionAnnihilation_commutes_bosonCreation :
-    contactFermionAnnihilation (J := J) * contactBosonCreation =
-      contactBosonCreation * contactFermionAnnihilation := by
+    contactFermionAnnihilation (J := J) *
+        contactBosonCreation (J := J) =
+      contactBosonCreation (J := J) *
+        contactFermionAnnihilation (J := J) := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -160,8 +166,8 @@ theorem contactFermionAnnihilation_commutes_bosonCreation :
 
 /-- Fermionic creation commutes with bosonic creation. -/
 theorem contactFermionCreation_commutes_bosonCreation :
-    contactFermionCreation (J := J) * contactBosonCreation =
-      contactBosonCreation * contactFermionCreation := by
+    contactFermionCreation (J := J) * contactBosonCreation (J := J) =
+      contactBosonCreation (J := J) * contactFermionCreation (J := J) := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -169,8 +175,10 @@ theorem contactFermionCreation_commutes_bosonCreation :
 
 /-- Fermionic annihilation commutes with bosonic annihilation. -/
 theorem contactFermionAnnihilation_commutes_bosonAnnihilation :
-    contactFermionAnnihilation (J := J) * contactBosonAnnihilation =
-      contactBosonAnnihilation * contactFermionAnnihilation := by
+    contactFermionAnnihilation (J := J) *
+        contactBosonAnnihilation (J := J) =
+      contactBosonAnnihilation (J := J) *
+        contactFermionAnnihilation (J := J) := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -180,8 +188,10 @@ theorem contactFermionAnnihilation_commutes_bosonAnnihilation :
 
 /-- Fermionic creation commutes with bosonic annihilation. -/
 theorem contactFermionCreation_commutes_bosonAnnihilation :
-    contactFermionCreation (J := J) * contactBosonAnnihilation =
-      contactBosonAnnihilation * contactFermionCreation := by
+    contactFermionCreation (J := J) *
+        contactBosonAnnihilation (J := J) =
+      contactBosonAnnihilation (J := J) *
+        contactFermionCreation (J := J) := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -241,7 +251,8 @@ theorem symplecticContactCommonLift_injective :
     fun _ => (x, 0)
   have h0 := congrArg
     (fun F : SymplecticContactCommonEnd (J := J) => F ψ 0) hST
-  simpa [ψ] using congrArg (fun q => q.1) h0
+  simpa [symplecticContactCommonLift, ψ] using
+    congrArg (fun q => q.1) h0
 
 /-- The coefficientwise lift as a native Lie homomorphism. -/
 def symplecticContactCommonLiftLieHom :
@@ -281,15 +292,15 @@ theorem symplecticContactCommonRepresentation_injective :
   intro u v huv
   apply symplecticContactRepresentationLieHom_injective D
   apply symplecticContactCommonLift_injective (J := J)
-  exact huv
+  simpa [symplecticContactCommonRepresentation] using huv
 
 /-- The represented Lie algebra commutes with the universal fermionic
 annihilation operator. -/
 theorem symplecticContactCommonRepresentation_commutes_fermionAnnihilation
     (u : FiveGradedCarrier D) :
     symplecticContactCommonRepresentation D u *
-        contactFermionAnnihilation =
-      contactFermionAnnihilation *
+        contactFermionAnnihilation (J := J) =
+      contactFermionAnnihilation (J := J) *
         symplecticContactCommonRepresentation D u := by
   apply LinearMap.ext
   intro ψ
@@ -300,8 +311,10 @@ theorem symplecticContactCommonRepresentation_commutes_fermionAnnihilation
 operator. -/
 theorem symplecticContactCommonRepresentation_commutes_fermionCreation
     (u : FiveGradedCarrier D) :
-    symplecticContactCommonRepresentation D u * contactFermionCreation =
-      contactFermionCreation * symplecticContactCommonRepresentation D u := by
+    symplecticContactCommonRepresentation D u *
+        contactFermionCreation (J := J) =
+      contactFermionCreation (J := J) *
+        symplecticContactCommonRepresentation D u := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -310,8 +323,10 @@ theorem symplecticContactCommonRepresentation_commutes_fermionCreation
 /-- The represented Lie algebra commutes with bosonic creation. -/
 theorem symplecticContactCommonRepresentation_commutes_bosonCreation
     (u : FiveGradedCarrier D) :
-    symplecticContactCommonRepresentation D u * contactBosonCreation =
-      contactBosonCreation * symplecticContactCommonRepresentation D u := by
+    symplecticContactCommonRepresentation D u *
+        contactBosonCreation (J := J) =
+      contactBosonCreation (J := J) *
+        symplecticContactCommonRepresentation D u := by
   apply LinearMap.ext
   intro ψ
   funext n
@@ -320,16 +335,18 @@ theorem symplecticContactCommonRepresentation_commutes_bosonCreation
 /-- The represented Lie algebra commutes with bosonic annihilation. -/
 theorem symplecticContactCommonRepresentation_commutes_bosonAnnihilation
     (u : FiveGradedCarrier D) :
-    symplecticContactCommonRepresentation D u * contactBosonAnnihilation =
-      contactBosonAnnihilation * symplecticContactCommonRepresentation D u := by
+    symplecticContactCommonRepresentation D u *
+        contactBosonAnnihilation (J := J) =
+      contactBosonAnnihilation (J := J) *
+        symplecticContactCommonRepresentation D u := by
   apply LinearMap.ext
   intro ψ
   funext n
   change
     (symplecticContactRepresentation D u
-      (((n + 1 : ℕ) : ℝ) • (ψ (n + 1)).1),
-     symplecticContactRepresentation D u
-      (((n + 1 : ℕ) : ℝ) • (ψ (n + 1)).2)) =
+        (((n + 1 : ℕ) : ℝ) • (ψ (n + 1)).1),
+      symplecticContactRepresentation D u
+        (((n + 1 : ℕ) : ℝ) • (ψ (n + 1)).2)) =
     (((n + 1 : ℕ) : ℝ) •
         symplecticContactRepresentation D u (ψ (n + 1)).1,
       ((n + 1 : ℕ) : ℝ) •
@@ -344,23 +361,70 @@ def SymplecticContactCommonHasGrade
   ⁅symplecticContactCommonRepresentation D (symplecticContactEuler D), T⁆ =
     (k : ℝ) • T
 
+/-- Grade-`k` operator eigenspace on the common target. -/
+def symplecticContactCommonGradeSpace (k : ℤ) :
+    Submodule ℝ (SymplecticContactCommonEnd (J := J)) where
+  carrier := {T | SymplecticContactCommonHasGrade D k T}
+  zero_mem' := by
+    simp [SymplecticContactCommonHasGrade]
+  add_mem' := by
+    intro S T hS hT
+    unfold SymplecticContactCommonHasGrade at hS hT ⊢
+    rw [lie_add, hS, hT, smul_add]
+  smul_mem' := by
+    intro c T hT
+    unfold SymplecticContactCommonHasGrade at hT ⊢
+    rw [lie_smul, hT]
+    simp [smul_smul, mul_comm]
+
+@[simp] theorem mem_symplecticContactCommonGradeSpace
+    (k : ℤ) (T : SymplecticContactCommonEnd (J := J)) :
+    T ∈ symplecticContactCommonGradeSpace D k ↔
+      SymplecticContactCommonHasGrade D k T := Iff.rfl
+
+/-- Operator commutators add represented grades. -/
+theorem symplecticContactCommon_lie_mem_grade_add
+    {k l : ℤ}
+    {S T : SymplecticContactCommonEnd (J := J)}
+    (hS : S ∈ symplecticContactCommonGradeSpace D k)
+    (hT : T ∈ symplecticContactCommonGradeSpace D l) :
+    ⁅S, T⁆ ∈ symplecticContactCommonGradeSpace D (k + l) := by
+  unfold SymplecticContactCommonHasGrade at hS hT ⊢
+  rw [leibniz_lie, hS, hT, smul_lie, lie_smul, ← add_smul]
+  simp only [Int.cast_add]
+
 /-- The common representation preserves every contact grade. -/
 theorem symplecticContactCommonRepresentation_preserves_grade
     {k : ℤ} {u : FiveGradedCarrier D}
     (hu : u ∈ symplecticContactGradeSpace D k) :
-    SymplecticContactCommonHasGrade D k
-      (symplecticContactCommonRepresentation D u) := by
-  unfold SymplecticContactCommonHasGrade
+    symplecticContactCommonRepresentation D u ∈
+      symplecticContactCommonGradeSpace D k := by
+  change SymplecticContactCommonHasGrade D k
+    (symplecticContactCommonRepresentation D u)
   change SymplecticContactHasGrade D k u at hu
-  unfold SymplecticContactHasGrade at hu
+  unfold SymplecticContactCommonHasGrade SymplecticContactHasGrade at *
   rw [← symplecticContactCommonRepresentation_bracket, hu, map_smul]
 
-/-- Set-theoretic form of `rho(g_k) subseteq g_k^op`. -/
+/-- Restricted grade-preserving linear representation. -/
+def symplecticContactCommonGradeMap (k : ℤ) :
+    symplecticContactGradeSpace D k →ₗ[ℝ]
+      symplecticContactCommonGradeSpace D k where
+  toFun u :=
+    ⟨symplecticContactCommonRepresentation D u.1,
+      symplecticContactCommonRepresentation_preserves_grade D u.2⟩
+  map_add' u v := by
+    apply Subtype.ext
+    simp
+  map_smul' c u := by
+    apply Subtype.ext
+    simp
+
+/-- Literal submodule form of `rho(g_k) subseteq g_k^op`. -/
 theorem symplecticContactCommonRepresentation_grade_subset
     (k : ℤ) :
     ∀ u ∈ symplecticContactGradeSpace D k,
-      SymplecticContactCommonHasGrade D k
-        (symplecticContactCommonRepresentation D u) := by
+      symplecticContactCommonRepresentation D u ∈
+        symplecticContactCommonGradeSpace D k := by
   intro u hu
   exact symplecticContactCommonRepresentation_preserves_grade D hu
 
@@ -371,16 +435,22 @@ theorem symplectic_contact_common_CAR_CCR_packet
         ⁅symplecticContactCommonRepresentation D u,
           symplecticContactCommonRepresentation D v⁆ ∧
       Function.Injective (symplecticContactCommonRepresentation D) ∧
-      contactFermionAnnihilation (J := J) * contactFermionCreation +
-        contactFermionCreation * contactFermionAnnihilation = 1 ∧
-      contactBosonAnnihilation (J := J) * contactBosonCreation -
-        contactBosonCreation * contactBosonAnnihilation = 1 ∧
+      contactFermionAnnihilation (J := J) *
+          contactFermionCreation (J := J) +
+        contactFermionCreation (J := J) *
+          contactFermionAnnihilation (J := J) = 1 ∧
+      contactBosonAnnihilation (J := J) *
+          contactBosonCreation (J := J) -
+        contactBosonCreation (J := J) *
+          contactBosonAnnihilation (J := J) = 1 ∧
       symplecticContactCommonRepresentation D u *
-          contactFermionCreation =
-        contactFermionCreation * symplecticContactCommonRepresentation D u ∧
+          contactFermionCreation (J := J) =
+        contactFermionCreation (J := J) *
+          symplecticContactCommonRepresentation D u ∧
       symplecticContactCommonRepresentation D u *
-          contactBosonCreation =
-        contactBosonCreation * symplecticContactCommonRepresentation D u := by
+          contactBosonCreation (J := J) =
+        contactBosonCreation (J := J) *
+          symplecticContactCommonRepresentation D u := by
   exact ⟨symplecticContactCommonRepresentation_bracket D u v,
     symplecticContactCommonRepresentation_injective D,
     contactFermion_CAR,

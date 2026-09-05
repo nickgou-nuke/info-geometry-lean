@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
+import InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
 import InfoGeometry.Physics.NuclearFiveGradeDegreeZeroSL2
@@ -19,7 +20,9 @@ This declaration-free surface exports:
 
 * the globally Jacobi-closed two-mode CAR five-grading;
 * its five adjoint eigenspaces as native Mathlib submodules with bracket maps;
-* a native Lie homomorphism representing that five-grading on a common
+* the exact identification of those eigenspaces with the generic associative
+  Kantor--Peirce commutator-component predicate for a tripotent grading matrix;
+* a native Lie homomorphism representing the five-grading on a common
   two-mode CAR--phonon carrier;
 * a number-preserving degree-zero `sl₂` with explicit doublet selection rules;
 * exact CAR and CCR on the common carrier, with commuting Zorn-derivation

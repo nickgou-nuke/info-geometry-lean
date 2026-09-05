@@ -22,6 +22,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.PenroseOnsagerYangCondensationPristineChain
 
+open scoped BigOperators ComplexOrder
 open InfoGeometry.Quantum.PenroseOnsagerYang
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]

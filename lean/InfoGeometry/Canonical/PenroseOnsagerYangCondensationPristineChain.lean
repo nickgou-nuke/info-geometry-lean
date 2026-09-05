@@ -60,11 +60,12 @@ theorem pristine_spectralKernel
   exact ⟨spectralKernel_posSemidef occupation mode,
     trace_spectralKernel occupation hoccupation mode hmode⟩
 
-/-- Exact finite coherent/fragmented two-mode separation. -/
+/-- Exact finite coherent/diagonal two-mode separation. -/
 theorem pristine_twoMode_coherence
     {a b : ℂ} (hab : a * Complex.conj b ≠ 0) :
     Matrix.det (coherentTwoModeKernel a b) = 0 ∧
       (coherentTwoModeKernel a b).PosSemidef ∧
+      (incoherentKernelOfAmplitudes a b).PosSemidef ∧
       coherentTwoModeKernel a b 0 0 =
         incoherentKernelOfAmplitudes a b 0 0 ∧
       coherentTwoModeKernel a b 1 1 =
@@ -91,6 +92,7 @@ theorem penrose_onsager_yang_condensation_pristine_chain
       modeNormSq (orderParameter N0 χ) = N0 ∧
       Matrix.trace (rankOneKernel (orderParameter N0 χ)) = (N0 : ℂ) ∧
       rankOneKernel (scalarAction u χ) = rankOneKernel χ ∧
+      (incoherentKernelOfAmplitudes a b).PosSemidef ∧
       coherentTwoModeKernel a b ≠ incoherentKernelOfAmplitudes a b := by
   exact ⟨simple_not_fragmented hF,
     spectralKernel_posSemidef occupation mode,
@@ -98,6 +100,7 @@ theorem penrose_onsager_yang_condensation_pristine_chain
     modeNormSq_orderParameter hN0 hχ,
     trace_orderParameterKernel hN0 hχ,
     rankOneKernel_globalPhase_invariant hu χ,
+    incoherentKernelOfAmplitudes_posSemidef a b,
     coherent_ne_incoherent_of_cross_ne_zero hab⟩
 
 end InfoGeometry.Canonical.PenroseOnsagerYangCondensationPristineChain

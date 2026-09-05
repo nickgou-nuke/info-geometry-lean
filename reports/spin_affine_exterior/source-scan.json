@@ -1,0 +1,13 @@
+{
+  "new_Lean_files": 9,
+  "public_declarations": 134,
+  "counts": {
+    "theorem": 99,
+    "lemma": 0,
+    "def": 32,
+    "abbrev": 3
+  },
+  "forbidden_tokens": [],
+  "audit_coverage_matches": true,
+  "transitive_axiom_audit_executed": false
+}

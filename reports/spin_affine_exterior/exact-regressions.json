@@ -1,0 +1,125 @@
+{
+  "affine": {
+    "noncommutative_affine_bracket_cases": 9,
+    "ordered_quadratic_expansion": true,
+    "inverse_metric_shear_regression": true
+  },
+  "spin": {
+    "mixed_ladder_relation": true,
+    "full_Cartan_defect": true,
+    "exact_hyperbolic_counterexample": [
+      "5/4",
+      "3/4"
+    ],
+    "spin_half_Casimir": true,
+    "transverse_inverse": true,
+    "rho_shift": true
+  },
+  "zorn_exterior": {
+    "regular_CAR_relations": 27,
+    "vacuum_rank": 1,
+    "Peirce_left_action_rank": 4,
+    "regular_action_not_multiplicative": true,
+    "sandwich_exchanges_poles": true,
+    "exterior_to_Zorn_matrix": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "intertwined_creation_modes": 3,
+    "intertwined_annihilation_modes": 3,
+    "parity_intertwined": true,
+    "negative_Clifford_relations": 9,
+    "reflection_polynomial_identity": true
+  },
+  "quaternion": {
+    "Q8_native_table_cases": 64,
+    "faithful_matrix_count": 8,
+    "time_reversal_square": -1,
+    "time_reversal_orthogonality": true
+  },
+  "torus": {
+    "full_symbolic_Zorn_torus_multiplicativity": true
+  },
+  "all_checks_passed": true,
+  "Lean_kernel_executed": false,
+  "method": "Exact SymPy polynomial arithmetic, free associative words, and finite matrices",
+  "limitation": "Independent regressions are not Lean elaboration or a transitive axiom audit."
+}

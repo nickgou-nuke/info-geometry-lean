@@ -9,6 +9,7 @@ import InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 import InfoGeometry.Physics.NuclearSolovievCompression
 import InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
+import InfoGeometry.Physics.NuclearBdGBogoliubovCAR
 import InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
 import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure
 import InfoGeometry.Physics.NuclearFiveGradeSameCarrierClosure
@@ -28,10 +29,12 @@ This declaration-free surface exports:
 * exact CAR and CCR on the common carrier, with commuting Zorn-derivation
   symmetry;
 * a same-carrier idempotent `P H P` compression to the Soloviev QPNM block;
-* the earlier one-mode concrete `CoupledQuasiparticlePhononSystem` instance;
-* the exact two-level BdG square, spectrum, and conjugate-linear symmetry;
+* the exact two-level BdG square, characteristic roots, spectral intertwiner,
+  and conjugate-linear particle--hole symmetry;
+* an explicit normalized positive-energy BdG eigenmode whose associated
+  Bogoliubov creation/annihilation pair preserves CAR;
 * the affine BdG decomposition of the Soloviev block;
-* one end-to-end same-carrier closure theorem exposing all these identities.
+* one end-to-end same-carrier closure theorem exposing these identities.
 
 The transitive axiom audit remains a separate executable target.
 -/

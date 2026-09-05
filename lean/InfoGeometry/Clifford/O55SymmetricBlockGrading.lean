@@ -47,6 +47,20 @@ def cartanInvolution (X : Mat55) : Mat55 :=
   unfold cartanInvolution
   noncomm_ring [splitMetric_sq]
 
+/-- Additivity of the involution. -/
+theorem cartanInvolution_add (X Y : Mat55) :
+    cartanInvolution (X + Y) =
+      cartanInvolution X + cartanInvolution Y := by
+  unfold cartanInvolution
+  noncomm_ring
+
+/-- Compatibility with subtraction. -/
+theorem cartanInvolution_sub (X Y : Mat55) :
+    cartanInvolution (X - Y) =
+      cartanInvolution X - cartanInvolution Y := by
+  unfold cartanInvolution
+  noncomm_ring
+
 /-- Multiplicativity of the involution. -/
 theorem cartanInvolution_mul (X Y : Mat55) :
     cartanInvolution (X * Y) =
@@ -70,8 +84,9 @@ def IsOdd (X : Mat55) : Prop :=
 theorem cartanInvolution_commutator (X Y : Mat55) :
     cartanInvolution (commutator X Y) =
       commutator (cartanInvolution X) (cartanInvolution Y) := by
-  simp only [commutator, cartanInvolution, mul_sub, sub_mul]
-  rw [cartanInvolution_mul, cartanInvolution_mul]
+  unfold commutator
+  rw [cartanInvolution_sub, cartanInvolution_mul,
+    cartanInvolution_mul]
 
 /-- Even-even commutators are even. -/
 theorem commutator_even_even {X Y : Mat55}
@@ -214,9 +229,9 @@ theorem o55_symmetric_grading_packet :
       fullEvenGeneratorCount + fullOddGeneratorCount = 45 := by
   exact ⟨splitMetric_sq,
     cartanInvolution_involutive,
-    fun _ _ => o55_even_even,
-    fun _ _ => o55_even_odd,
-    fun _ _ => o55_odd_odd,
+    fun _ _ hX hY => o55_even_even hX hY,
+    fun _ _ hX hY => o55_even_odd hX hY,
+    fun _ _ hX hY => o55_odd_odd hX hY,
     full_even_generator_count_eq,
     full_odd_generator_count_eq,
     full_even_add_odd_eq⟩

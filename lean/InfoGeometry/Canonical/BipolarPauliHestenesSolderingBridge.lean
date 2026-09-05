@@ -15,13 +15,13 @@ operation:
   Hermitian `2 × 2` representative of a real Minkowski paravector.
 
 This file proves that conjugation by the bipolar half-log lift acts on the four
-matrix entries with exactly those abstract weights.  Thus the phrases
+matrix entries with exactly those abstract weights. Thus the phrases
 "light-cone dilation" and "circular transverse phase" become a theorem about
 one concrete matrix action rather than two parallel descriptions.
 
 The two Cartan coefficients are independent over `ℝ` but dependent over `ℂ`:
-`Kcirc = i Kboost`.  The corresponding statement is proved directly on the
-matrix carrier.  No Clifford-algebra isomorphism, global spin-group
+`Kcirc = i Kboost`. The corresponding statement is proved directly on the
+matrix carrier. No Clifford-algebra isomorphism, global spin-group
 classification, gauge dynamics, or physical momentum interpretation is added.
 -/
 
@@ -122,6 +122,50 @@ theorem minusWeight_mul_conj_plusWeight (s : ℂ) :
   rw [minusWeight, plusWeight, ← Complex.exp_conj,
     ← Complex.exp_add, harg]
 
+/-- Diagonal positive weight acting on an arbitrary matrix entry. -/
+theorem plusWeight_mul_entry_mul_conj_plusWeight
+    (s z : ℂ) :
+    plusWeight s * z * Complex.conj (plusWeight s) =
+      Complex.exp (eta s : ℂ) * z := by
+  calc
+    plusWeight s * z * Complex.conj (plusWeight s) =
+        (plusWeight s * Complex.conj (plusWeight s)) * z := by ring
+    _ = Complex.exp (eta s : ℂ) * z := by
+      rw [plusWeight_mul_conj_plusWeight]
+
+/-- Diagonal negative weight acting on an arbitrary matrix entry. -/
+theorem minusWeight_mul_entry_mul_conj_minusWeight
+    (s z : ℂ) :
+    minusWeight s * z * Complex.conj (minusWeight s) =
+      Complex.exp (-(eta s : ℂ)) * z := by
+  calc
+    minusWeight s * z * Complex.conj (minusWeight s) =
+        (minusWeight s * Complex.conj (minusWeight s)) * z := by ring
+    _ = Complex.exp (-(eta s : ℂ)) * z := by
+      rw [minusWeight_mul_conj_minusWeight]
+
+/-- Positive circular weight acting on an off-diagonal matrix entry. -/
+theorem plusWeight_mul_entry_mul_conj_minusWeight
+    (s z : ℂ) :
+    plusWeight s * z * Complex.conj (minusWeight s) =
+      Complex.exp (Complex.I * (theta s : ℂ)) * z := by
+  calc
+    plusWeight s * z * Complex.conj (minusWeight s) =
+        (plusWeight s * Complex.conj (minusWeight s)) * z := by ring
+    _ = Complex.exp (Complex.I * (theta s : ℂ)) * z := by
+      rw [plusWeight_mul_conj_minusWeight]
+
+/-- Negative circular weight acting on the opposite off-diagonal entry. -/
+theorem minusWeight_mul_entry_mul_conj_plusWeight
+    (s z : ℂ) :
+    minusWeight s * z * Complex.conj (plusWeight s) =
+      Complex.exp (-Complex.I * (theta s : ℂ)) * z := by
+  calc
+    minusWeight s * z * Complex.conj (plusWeight s) =
+        (minusWeight s * Complex.conj (plusWeight s)) * z := by ring
+    _ = Complex.exp (-Complex.I * (theta s : ℂ)) * z := by
+      rw [minusWeight_mul_conj_plusWeight]
+
 /-- Conjugation by the half-log lift realizes the abstract four-coordinate
 Cartan action exactly. -/
 theorem halfLogLift_conjugation_matrixOfCartanCoordinates
@@ -134,10 +178,10 @@ theorem halfLogLift_conjugation_matrixOfCartanCoordinates
       bipolarCoordinateAction, cartanCoordinateAction,
       Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.conjTranspose, Matrix.transpose_apply,
-      plusWeight_mul_conj_plusWeight,
-      minusWeight_mul_conj_minusWeight,
-      plusWeight_mul_conj_minusWeight,
-      minusWeight_mul_conj_plusWeight] <;> ring
+      plusWeight_mul_entry_mul_conj_plusWeight,
+      minusWeight_mul_entry_mul_conj_minusWeight,
+      plusWeight_mul_entry_mul_conj_minusWeight,
+      minusWeight_mul_entry_mul_conj_plusWeight]
 
 /-- Native Pauli/Hestenes specialization of the exact Cartan weight action. -/
 theorem bipolarSolderingAction_pauliMatrix

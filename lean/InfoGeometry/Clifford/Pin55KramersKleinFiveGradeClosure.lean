@@ -22,6 +22,8 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.Pin55KramersKleinFiveGradeClosure
 
+open InfoGeometry.CliffordTower
+open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Quantum.ComplexKramersAntiunitary
 open InfoGeometry.Quantum.KramersPhaseGlideRepresentation
 open InfoGeometry.Quantum.FiveGradedKramersModule

@@ -1,0 +1,371 @@
+import Mathlib
+import InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
+import InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
+
+/-!
+# Grade-preserving representation on a common two-mode CAR--phonon carrier
+
+This file supplies the missing common representation map for the concrete
+nuclear five-grading.  The finite fermionic sector is the existing two-mode
+Jordan--Wigner carrier `Fin 4`; each coefficient is a native Zorn module
+vector, and the outer countable coordinate is the algebraic phonon occupation.
+
+A real `4 × 4` matrix acts on the fermionic coordinate by the ordinary module
+matrix action and pointwise on every phonon level.  This gives a linear and
+multiplicative representation into an associative endomorphism ring, hence a
+Lie representation for commutators.  The five adjoint grades are preserved.
+The phonon shifts commute with the represented fermionic algebra, while native
+Zorn derivations act coefficientwise and commute with both sectors.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
+
+open Matrix
+open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+open InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
+open InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
+open InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
+
+abbrev Coefficient := NativeZorn
+abbrev FermionVector := Fin 4 → Coefficient
+abbrev FermionEnd := Module.End ℝ FermionVector
+abbrev Carrier := ℕ → FermionVector
+abbrev Operator := Module.End ℝ Carrier
+
+/-- Ordinary matrix action on a four-component module vector. -/
+def fermionAction (M : M4R) : FermionEnd where
+  toFun v i := ∑ j, M i j • v j
+  map_add' v w := by
+    funext i
+    simp [smul_add, Finset.sum_add_distrib]
+  map_smul' c v := by
+    funext i
+    simp only [Pi.smul_apply, smul_smul]
+    rw [← Finset.smul_sum]
+    apply Finset.sum_congr rfl
+    intro j hj
+    rw [mul_comm]
+
+@[simp] theorem fermionAction_apply
+    (M : M4R) (v : FermionVector) (i : Fin 4) :
+    fermionAction M v i = ∑ j, M i j • v j := rfl
+
+/-- The identity matrix acts identically. -/
+theorem fermionAction_one :
+    fermionAction (1 : M4R) = 1 := by
+  apply LinearMap.ext
+  intro v
+  funext i
+  simp [fermionAction]
+
+/-- Matrix multiplication is represented by composition. -/
+theorem fermionAction_mul (M N : M4R) :
+    fermionAction (M * N) = fermionAction M * fermionAction N := by
+  apply LinearMap.ext
+  intro v
+  funext i
+  fin_cases i <;>
+    simp [fermionAction, Matrix.mul_apply, Module.End.mul_apply,
+      Fin.sum_univ_four] <;>
+    module
+
+/-- Pointwise extension through the phonon occupation coordinate. -/
+def occupationLift (T : FermionEnd) : Operator where
+  toFun ψ n := T (ψ n)
+  map_add' ψ φ := by
+    funext n
+    exact T.map_add (ψ n) (φ n)
+  map_smul' c ψ := by
+    funext n
+    exact T.map_smul c (ψ n)
+
+@[simp] theorem occupationLift_apply
+    (T : FermionEnd) (ψ : Carrier) (n : ℕ) :
+    occupationLift T ψ n = T (ψ n) := rfl
+
+/-- Pointwise extension preserves composition. -/
+theorem occupationLift_mul (S T : FermionEnd) :
+    occupationLift (S * T) = occupationLift S * occupationLift T := by
+  apply LinearMap.ext
+  intro ψ
+  funext n
+  rfl
+
+/-- Concrete operator representation of the two-mode matrix algebra. -/
+def representation (M : M4R) : Operator :=
+  occupationLift (fermionAction M)
+
+@[simp] theorem representation_apply
+    (M : M4R) (ψ : Carrier) (n : ℕ) (i : Fin 4) :
+    representation M ψ n i = ∑ j, M i j • ψ n j := rfl
+
+/-- Additivity of the representation. -/
+theorem representation_add (M N : M4R) :
+    representation (M + N) = representation M + representation N := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  simp [representation, occupationLift, fermionAction,
+    Finset.sum_add_distrib, add_smul]
+
+/-- Scalar compatibility. -/
+theorem representation_smul (c : ℝ) (M : M4R) :
+    representation (c • M) = c • representation M := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  simp only [representation_apply, Pi.smul_apply, smul_eq_mul,
+    Matrix.smul_apply, LinearMap.smul_apply, RingHom.id_apply, smul_smul]
+  rw [← Finset.smul_sum]
+
+/-- Unit preservation. -/
+theorem representation_one :
+    representation (1 : M4R) = 1 := by
+  rw [representation, fermionAction_one]
+  apply LinearMap.ext
+  intro ψ
+  funext n
+  rfl
+
+/-- Multiplicativity. -/
+theorem representation_mul (M N : M4R) :
+    representation (M * N) = representation M * representation N := by
+  rw [representation, representation,
+    fermionAction_mul, occupationLift_mul]
+
+/-- The representation as a native linear map. -/
+def representationLinear : M4R →ₗ[ℝ] Operator where
+  toFun := representation
+  map_add' := representation_add
+  map_smul' := representation_smul
+
+@[simp] theorem representationLinear_apply (M : M4R) :
+    representationLinear M = representation M := rfl
+
+/-- The matrix commutator is transported to the operator commutator. -/
+theorem representation_commutator (M N : M4R) :
+    representation (comm M N) =
+      representation M * representation N -
+        representation N * representation M := by
+  rw [comm, representationLinear.map_sub,
+    representation_mul, representation_mul]
+  rfl
+
+/-- Grade readout on represented operators. -/
+def RepresentedHasGrade (k : ℤ) (T : Operator) : Prop :=
+  representation gradingOperator * T -
+      T * representation gradingOperator = (k : ℝ) • T
+
+/-- The common representation preserves every adjoint grade. -/
+theorem representation_preserves_grade
+    {k : ℤ} {X : M4R} (hX : HasGrade k X) :
+    RepresentedHasGrade k (representation X) := by
+  unfold RepresentedHasGrade
+  rw [← representation_mul, ← representation_mul,
+    ← representationLinear.map_sub]
+  change representation (comm gradingOperator X) = _
+  rw [hX, representation_smul]
+
+/-- The named five lanes act on the common carrier with the same weights. -/
+theorem represented_named_five_grade_packet :
+    RepresentedHasGrade 2 (representation pairCreation) ∧
+      RepresentedHasGrade 1 (representation a1Dag) ∧
+      RepresentedHasGrade 1 (representation a2Dag) ∧
+      RepresentedHasGrade (-1) (representation a1) ∧
+      RepresentedHasGrade (-1) (representation a2) ∧
+      RepresentedHasGrade (-2) (representation pairAnnihilation) := by
+  exact ⟨representation_preserves_grade pairCreation_grade,
+    representation_preserves_grade a1Dag_grade,
+    representation_preserves_grade a2Dag_grade,
+    representation_preserves_grade a1_grade,
+    representation_preserves_grade a2_grade,
+    representation_preserves_grade pairAnnihilation_grade⟩
+
+/-- The represented two-mode CAR relations. -/
+theorem represented_mode1_CAR :
+    representation a1 * representation a1Dag +
+      representation a1Dag * representation a1 = 1 := by
+  rw [← representation_mul, ← representation_mul,
+    ← representation_add, mode1_car_identity, representation_one]
+
+/-- The represented second-mode CAR relation. -/
+theorem represented_mode2_CAR :
+    representation a2 * representation a2Dag +
+      representation a2Dag * representation a2 = 1 := by
+  rw [← representation_mul, ← representation_mul,
+    ← representation_add, mode2_car_identity, representation_one]
+
+/-- Cross-mode represented CAR. -/
+theorem represented_cross_CAR :
+    representation a1 * representation a2Dag +
+      representation a2Dag * representation a1 = 0 := by
+  rw [← representation_mul, ← representation_mul,
+    ← representation_add, cross_mixed_anticommute]
+  rfl
+
+/-! ## Phonon shifts on the common carrier -/
+
+/-- Phonon creation shift on the outer occupation coordinate. -/
+def phononCreation : Operator where
+  toFun ψ n :=
+    match n with
+    | 0 => 0
+    | k + 1 => ψ k
+  map_add' ψ φ := by
+    funext n
+    cases n <;> rfl
+  map_smul' c ψ := by
+    funext n
+    cases n <;> rfl
+
+/-- Unnormalised phonon annihilation shift. -/
+def phononAnnihilation : Operator where
+  toFun ψ n := ((n + 1 : ℕ) : ℝ) • ψ (n + 1)
+  map_add' ψ φ := by
+    funext n
+    simp [smul_add]
+  map_smul' c ψ := by
+    funext n
+    simp only [Pi.smul_apply, smul_smul]
+    rw [mul_comm]
+
+/-- Exact CCR. -/
+theorem phonon_CCR :
+    phononAnnihilation * phononCreation -
+      phononCreation * phononAnnihilation = 1 := by
+  apply LinearMap.ext
+  intro ψ
+  funext n
+  change phononAnnihilation (phononCreation ψ) n -
+      phononCreation (phononAnnihilation ψ) n = ψ n
+  cases n with
+  | zero =>
+      change (1 : ℝ) • ψ 0 - 0 = ψ 0
+      simp
+  | succ n =>
+      change (((n + 2 : ℕ) : ℝ) • ψ (n + 1)) -
+          (((n + 1 : ℕ) : ℝ) • ψ (n + 1)) = ψ (n + 1)
+      rw [← sub_smul]
+      have hscalar :
+          (((n + 2 : ℕ) : ℝ) - ((n + 1 : ℕ) : ℝ)) = 1 := by
+        norm_num
+      rw [hscalar, one_smul]
+
+/-- Every represented fermionic matrix commutes with phonon creation. -/
+theorem representation_commutes_phononCreation (M : M4R) :
+    representation M * phononCreation =
+      phononCreation * representation M := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  cases n <;> simp [representation, occupationLift, fermionAction,
+    phononCreation]
+
+/-- Every represented fermionic matrix commutes with phonon annihilation. -/
+theorem representation_commutes_phononAnnihilation (M : M4R) :
+    representation M * phononAnnihilation =
+      phononAnnihilation * representation M := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  simp only [Module.End.mul_apply, representation_apply,
+    phononAnnihilation, LinearMap.coe_mk, AddHom.coe_mk,
+    Pi.smul_apply]
+  rw [Finset.smul_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [smul_smul, mul_comm]
+
+/-! ## Native Zorn derivations on coefficients -/
+
+/-- Coefficientwise lift of a native Zorn endomorphism. -/
+def coefficientLift (D : NativeZornEnd) : Operator where
+  toFun ψ n i := D (ψ n i)
+  map_add' ψ φ := by
+    funext n i
+    exact D.map_add _ _
+  map_smul' c ψ := by
+    funext n i
+    exact D.map_smul c _
+
+/-- Coefficient lifts preserve composition. -/
+theorem coefficientLift_mul (D E : NativeZornEnd) :
+    coefficientLift (D * E) = coefficientLift D * coefficientLift E := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  rfl
+
+/-- They preserve the derivation Lie bracket. -/
+theorem coefficientLift_commutator (D E : NativeZornEnd) :
+    coefficientLift (D * E - E * D) =
+      coefficientLift D * coefficientLift E -
+        coefficientLift E * coefficientLift D := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  rfl
+
+/-- Coefficient endomorphisms commute with the represented fermionic algebra. -/
+theorem coefficientLift_commutes_representation
+    (D : NativeZornEnd) (M : M4R) :
+    coefficientLift D * representation M =
+      representation M * coefficientLift D := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  simp only [Module.End.mul_apply, coefficientLift, LinearMap.coe_mk,
+    AddHom.coe_mk, representation_apply]
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  exact D.map_smul (M i j) (ψ n j)
+
+/-- Coefficient endomorphisms commute with both phonon shifts. -/
+theorem coefficientLift_commutes_phonons (D : NativeZornEnd) :
+    coefficientLift D * phononCreation =
+        phononCreation * coefficientLift D ∧
+      coefficientLift D * phononAnnihilation =
+        phononAnnihilation * coefficientLift D := by
+  constructor
+  · apply LinearMap.ext
+    intro ψ
+    funext n i
+    cases n <;> rfl
+  · apply LinearMap.ext
+    intro ψ
+    funext n i
+    change D (((n + 1 : ℕ) : ℝ) • ψ (n + 1) i) =
+      ((n + 1 : ℕ) : ℝ) • D (ψ (n + 1) i)
+    exact D.map_smul _ _
+
+/-- Concrete grade-preserving common representation closure. -/
+theorem five_grade_common_representation_packet
+    (D E : NativeZornDerLie) :
+    RepresentedHasGrade 2 (representation pairCreation) ∧
+      RepresentedHasGrade (-2) (representation pairAnnihilation) ∧
+      representation a1 * representation a1Dag +
+          representation a1Dag * representation a1 = 1 ∧
+      phononAnnihilation * phononCreation -
+          phononCreation * phononAnnihilation = 1 ∧
+      representation pairCreation * phononCreation =
+          phononCreation * representation pairCreation ∧
+      coefficientLift ((⁅D, E⁆ : NativeZornDerLie) : NativeZornEnd) =
+        coefficientLift (D : NativeZornEnd) *
+            coefficientLift (E : NativeZornEnd) -
+          coefficientLift (E : NativeZornEnd) *
+            coefficientLift (D : NativeZornEnd) := by
+  refine ⟨representation_preserves_grade pairCreation_grade,
+    representation_preserves_grade pairAnnihilation_grade,
+    represented_mode1_CAR,
+    phonon_CCR,
+    representation_commutes_phononCreation pairCreation,
+    ?_⟩
+  change coefficientLift
+      ((D : NativeZornEnd) * (E : NativeZornEnd) -
+        (E : NativeZornEnd) * (D : NativeZornEnd)) = _
+  exact coefficientLift_commutator (D : NativeZornEnd) (E : NativeZornEnd)
+
+end InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation

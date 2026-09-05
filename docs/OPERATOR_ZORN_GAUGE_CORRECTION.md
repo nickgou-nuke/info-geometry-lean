@@ -20,10 +20,14 @@ The earlier CAR/Clifford modules in PR #146 are separate representation
 results. They do not implement the full four-potential gauge problem and
 are not the primary field carrier for this correction. No source is deleted.
 
-For each spacetime index mu in Fin 4, the connection coefficient Phi(mu)
-has two independent operator-valued scalar slots and two independent
-three-component operator-valued vector slots. `Fin 4` is the external
-spacetime covector index; it does not replace the eight internal entries.
+The connection coefficients are now indexed by an arbitrary type `Direction`,
+via `ConnectionCoefficients Direction A`. They are not spacetime directions.
+Each coefficient retains two independent operator-valued scalar slots and two
+independent three-component operator-valued vector slots. `FourPotential` is
+only a legacy four-label specialization, not a dimension of state space.
+The four Zorn fields are internal algebraic slots. The projective construction
+and its state-variation directions are in
+`docs/PROJECTIVE_ZORN_ATTENTION_RECONSTRUCTION.md`.
 No equality of the diagonal slots, identification of the two vector slots,
 single-colour restriction, electrostatic reduction, or Cartan restriction
 is imposed.
@@ -52,7 +56,7 @@ coefficient multiplication. In particular,
 
     [delta_p, delta_q] X = delta_[p,q] X.
 
-No hypothesis declares the four background operators P_mu to commute.
+No hypothesis declares the background operators P_mu to commute.
 They may be differential operators in a suitable operator algebra, but
 this algebraic construction does not by itself construct an unbounded
 operator domain or a manifold derivative realization.
@@ -61,7 +65,7 @@ Write X star Y for the native Zorn product and
 
     as(X,Y,Z) = (X star Y) star Z - X star (Y star Z).
 
-The implemented four-potential calculus is
+The direction-polymorphic algebraic calculus is
 
     nabla_mu X = delta_Pmu X + Phi_mu star X,
     F_mu,nu = delta_Pmu Phi_nu - delta_Pnu Phi_mu
@@ -78,10 +82,10 @@ is left multiplication by F alone. The proof performs ring normalization
 only after reducing to individual expressions in the coefficient algebra;
 it never invokes associativity of the Zorn carrier.
 
-The temporal/spatial components E_i = F_0,i+1 and the oriented spatial
-components B = (F_23,F_31,F_12) remain full Zorn-valued objects. They are
-curvature-sector names with the displayed sign convention, not a silent
-identification with a prescribed physical electromagnetic field.
+Legacy names E_i = F_0,i+1 and B = (F_23,F_31,F_12) select pairs of four
+labels only. They carry no temporal, spatial or physical electromagnetic
+interpretation. The general curvature and Bianchi theorems have no fixed
+index cardinality. The full Zorn-valued expressions are unchanged.
 
 ## Bianchi / Akivis source
 

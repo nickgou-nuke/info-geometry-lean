@@ -1,0 +1,84 @@
+{
+  "lean_kernel_verified": false,
+  "native_check_exit_code": 2,
+  "native_check_reason": "lake unavailable",
+  "parent_commit": "611403d3d75103e1b120af871a4ec99874a3c6f7",
+  "source_module_count": 10,
+  "theorem_count_in_audited_sources": 119,
+  "new_theorem_count": 90,
+  "audit_declaration_count": 184,
+  "source_token_scan": "No sorry, admit, custom axiom, unsafe or native_decide tokens outside comments/strings; lexical check only, not a transitive audit",
+  "delimiter_check": "Balanced (), [] and {} outside comments/strings; not Lean syntax checking",
+  "modules": [
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornFourPotentialGauge.lean",
+      "sha256": "f8945dcfbac21cef4e305868ab2a22db06a51fa538b1c3593217070e3a9f0e7c",
+      "git_blob_sha": "7410eb42144b467c542f7e0c7873f2f811424b18",
+      "theorem_count": 10,
+      "declaration_count": 24
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornGaugeCovariance.lean",
+      "sha256": "a42a3b3fb71228641c346fc6a86ed54e05f5d57192c0a2bcc26e683b5ce194bc",
+      "git_blob_sha": "8930dd5e3e3271c2365246c87134130a91b3c7d4",
+      "theorem_count": 19,
+      "declaration_count": 23
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornRealModule.lean",
+      "sha256": "6b4acdaebd923c008fffc7cd8c4e1d61ca39ca46f8a7ff2f75f9e828b44424e2",
+      "git_blob_sha": "712e91e4a606c90e0835f9c835b061018b18b5b6",
+      "theorem_count": 9,
+      "declaration_count": 15
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ProjectiveZornAttention.lean",
+      "sha256": "49f89c0a776ae45296397d35b5d2d74475642e87951fef5f81d9b10ee545e298",
+      "git_blob_sha": "1185308abfd70a8c340e10b1df055cbd58fb85ae",
+      "theorem_count": 0,
+      "declaration_count": 0
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/AttentionFrameCorrections.lean",
+      "sha256": "a59d94cd5755a8d3727239450f4947be2a0841b544340a28c5ff805355b81d16",
+      "git_blob_sha": "893b8c0721da49739c8f0139b967d2bcb6730947",
+      "theorem_count": 15,
+      "declaration_count": 25
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/ExpectationRatioMetric.lean",
+      "sha256": "0987df59bc684529d59aec4a69ef8703dc15890151cda87304cf358384c43e88",
+      "git_blob_sha": "d6a9c8917a96fc123393e438739d4870f202b852",
+      "theorem_count": 26,
+      "declaration_count": 37
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/GibbsRayGeometry.lean",
+      "sha256": "6931b9bee86af054cbd120988494bd80d9074647473f7b6ec2fc9af343c8c75c",
+      "git_blob_sha": "cd662239e33261545d2851b6e1b96f0832263109",
+      "theorem_count": 14,
+      "declaration_count": 19
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/LogRatioDifferential.lean",
+      "sha256": "e37989a0909bc9fb6ed862918196179aa2f8b0052a095d6b3fa69288ef7e6450",
+      "git_blob_sha": "5c7703b16f10f7ce6a09f8f681203669daa9d213",
+      "theorem_count": 10,
+      "declaration_count": 12
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/OperatorZornStateGeometry.lean",
+      "sha256": "00b95122bf5d5f2d74bb5cbda186631a5e15b123d527674c5a13726869879e6b",
+      "git_blob_sha": "b15d4f5dd639433249229f758f76f0c340aa6b7f",
+      "theorem_count": 10,
+      "declaration_count": 16
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/PositiveOperatorExpectation.lean",
+      "sha256": "9772861128c195ff3663e66ac372fc58cf910dfcf0822ae1a6dc1ed7b76810ea",
+      "git_blob_sha": "0bae9a7cfd7fd06957fbd7e33ed342c5405d9f0d",
+      "theorem_count": 6,
+      "declaration_count": 13
+    }
+  ]
+}

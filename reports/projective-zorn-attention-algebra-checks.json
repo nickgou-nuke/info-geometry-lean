@@ -1,0 +1,227 @@
+{
+  "lean_kernel_verified": false,
+  "status": "passed",
+  "check_count": 44,
+  "checks": [
+    {
+      "name": "independent scale cross-ratio 00",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 00",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 01",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 01",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 02",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 02",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 10",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 10",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 11",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 11",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 12",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 12",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 20",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 20",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 21",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 21",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "independent scale cross-ratio 22",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "horizontal log differential 22",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "ratio cocycle",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "centered covariance",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "Fisher homogeneous expression",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "Fisher radial zero",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "log ratio actual derivative 01",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "log ratio actual derivative 12",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "log ratio actual derivative 20",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "positive score sign",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "partition Hessian variance",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "relative reference entropy",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "source occupation overlap",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "source occupations not orthogonal",
+      "kind": "exact counterexample",
+      "passed": true
+    },
+    {
+      "name": "source occupations not complete",
+      "kind": "exact counterexample",
+      "passed": true
+    },
+    {
+      "name": "source occupation not central",
+      "kind": "exact counterexample",
+      "passed": true
+    },
+    {
+      "name": "key 0 normalized",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "key 0 uniform density readout",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "key 1 normalized",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "key 1 uniform density readout",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "key 2 normalized",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "key 2 uniform density readout",
+      "kind": "exact finite witness",
+      "passed": true
+    },
+    {
+      "name": "overcomplete readouts sum",
+      "kind": "exact counterexample value",
+      "passed": true
+    },
+    {
+      "name": "not softmax probability row",
+      "kind": "exact counterexample",
+      "passed": true
+    },
+    {
+      "name": "nonzero normalized Zorn associator",
+      "kind": "exact counterexample value",
+      "passed": true
+    },
+    {
+      "name": "expectation not multiplicative",
+      "kind": "exact counterexample",
+      "passed": true
+    },
+    {
+      "name": "positive coefficient state squares",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "metric triangle on 64 triples",
+      "kind": "finite sanity check, not a proof",
+      "passed": true
+    }
+  ]
+}

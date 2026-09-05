@@ -22,7 +22,7 @@ open InfoGeometry.Physics.NCG
 open OperatorZornFourPotentialGauge
 open OperatorZornRepresentationCurvatureBridge
 
-variable {A B : Type*} [Ring A] [Ring B]
+variable {A B Direction : Type*} [Ring A] [Ring B]
 
 /-- Entrywise coefficient transport; the Zorn carrier and product are retained. -/
 def mapCoefficients (f : A →+* B) (X : OperatorZornMatrix A) : OperatorZornMatrix B :=
@@ -68,24 +68,24 @@ theorem mapCoefficients_deriv (f : A →+* B) (p : A) (X : OperatorZornMatrix A)
     coefficientDeriv, coefficientBracket]
   all_goals simp only [map_sub, map_mul]
 
-theorem mapCoefficients_covariant (f : A →+* B) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu : Fin 4) (X : OperatorZornMatrix A) :
+theorem mapCoefficients_covariant (f : A →+* B) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu : Direction) (X : OperatorZornMatrix A) :
     mapCoefficients f (covariant p Phi mu X) =
       covariant (fun i => f (p i)) (fun i => mapCoefficients f (Phi i)) mu
         (mapCoefficients f X) := by
   unfold covariant
   rw [mapCoefficients_add, mapCoefficients_deriv, mapCoefficients_mul]
 
-theorem mapCoefficients_fieldStrength (f : A →+* B) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) :
+theorem mapCoefficients_fieldStrength (f : A →+* B) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) :
     mapCoefficients f (fieldStrength p Phi mu nu) =
       fieldStrength (fun i => f (p i)) (fun i => mapCoefficients f (Phi i)) mu nu := by
   unfold fieldStrength bracket
   simp only [mapCoefficients_add, mapCoefficients_sub, mapCoefficients_deriv,
     mapCoefficients_mul]
 
-theorem mapCoefficients_curvatureAction (f : A →+* B) (p : Fin 4 → A)
-    (Phi : FourPotential A) (mu nu : Fin 4) (X : OperatorZornMatrix A) :
+theorem mapCoefficients_curvatureAction (f : A →+* B) (p : Direction → A)
+    (Phi : ConnectionCoefficients Direction A) (mu nu : Direction) (X : OperatorZornMatrix A) :
     mapCoefficients f (curvatureAction p Phi mu nu X) =
       curvatureAction (fun i => f (p i)) (fun i => mapCoefficients f (Phi i)) mu nu
         (mapCoefficients f X) := by
@@ -93,8 +93,8 @@ theorem mapCoefficients_curvatureAction (f : A →+* B) (p : Fin 4 → A)
   rw [mapCoefficients_sub]
   simp only [mapCoefficients_covariant]
 
-theorem mapCoefficients_adjointCovariant (f : A →+* B) (p : Fin 4 → A)
-    (Phi : FourPotential A) (mu : Fin 4) (X : OperatorZornMatrix A) :
+theorem mapCoefficients_adjointCovariant (f : A →+* B) (p : Direction → A)
+    (Phi : ConnectionCoefficients Direction A) (mu : Direction) (X : OperatorZornMatrix A) :
     mapCoefficients f (adjointCovariant p Phi mu X) =
       adjointCovariant (fun i => f (p i)) (fun i => mapCoefficients f (Phi i)) mu
         (mapCoefficients f X) := by
@@ -102,8 +102,8 @@ theorem mapCoefficients_adjointCovariant (f : A →+* B) (p : Fin 4 → A)
   simp only [mapCoefficients_add, mapCoefficients_sub, mapCoefficients_deriv,
     mapCoefficients_mul]
 
-theorem mapCoefficients_bianchi (f : A →+* B) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu rho : Fin 4) :
+theorem mapCoefficients_bianchi (f : A →+* B) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu rho : Direction) :
     mapCoefficients f (bianchi p Phi mu nu rho) =
       bianchi (fun i => f (p i)) (fun i => mapCoefficients f (Phi i)) mu nu rho := by
   unfold bianchi
@@ -170,29 +170,29 @@ theorem gauge_associator (g : Aˣ) (X Y Z : OperatorZornMatrix A) :
     gauge g (associator X Y Z) = associator (gauge g X) (gauge g Y) (gauge g Z) :=
   mapCoefficients_associator (coefficientConjugation g) X Y Z
 
-theorem gauge_covariant (g : Aˣ) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu : Fin 4) (X : OperatorZornMatrix A) :
+theorem gauge_covariant (g : Aˣ) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu : Direction) (X : OperatorZornMatrix A) :
     gauge g (covariant p Phi mu X) =
       covariant (fun i => coefficientConjugation g (p i)) (fun i => gauge g (Phi i))
         mu (gauge g X) :=
   mapCoefficients_covariant (coefficientConjugation g) p Phi mu X
 
-theorem gauge_fieldStrength (g : Aˣ) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) :
+theorem gauge_fieldStrength (g : Aˣ) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) :
     gauge g (fieldStrength p Phi mu nu) =
       fieldStrength (fun i => coefficientConjugation g (p i)) (fun i => gauge g (Phi i))
         mu nu :=
   mapCoefficients_fieldStrength (coefficientConjugation g) p Phi mu nu
 
-theorem gauge_curvatureAction (g : Aˣ) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) (X : OperatorZornMatrix A) :
+theorem gauge_curvatureAction (g : Aˣ) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) (X : OperatorZornMatrix A) :
     gauge g (curvatureAction p Phi mu nu X) =
       curvatureAction (fun i => coefficientConjugation g (p i)) (fun i => gauge g (Phi i))
         mu nu (gauge g X) :=
   mapCoefficients_curvatureAction (coefficientConjugation g) p Phi mu nu X
 
-theorem gauge_bianchi (g : Aˣ) (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu rho : Fin 4) :
+theorem gauge_bianchi (g : Aˣ) (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu rho : Direction) :
     gauge g (bianchi p Phi mu nu rho) =
       bianchi (fun i => coefficientConjugation g (p i)) (fun i => gauge g (Phi i))
         mu nu rho :=

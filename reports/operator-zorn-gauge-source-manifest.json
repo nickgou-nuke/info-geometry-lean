@@ -35,11 +35,12 @@
   "source_files": [
     {
       "path": "lean/InfoGeometry/Canonical/OperatorZornFourPotentialGauge.lean",
-      "sha256": "a17c100f8dc0e7219f71dd1fd685e687e9bb072e7a1ceb52721503a510676d76"
+      "sha256": "f8945dcfbac21cef4e305868ab2a22db06a51fa538b1c3593217070e3a9f0e7c"
     },
     {
       "path": "lean/InfoGeometry/Canonical/OperatorZornGaugeCovariance.lean",
-      "sha256": "ede165f8d1fd595c672807260e69242e4e939f1e10af79cc2470994073139589"
+      "sha256": "a42a3b3fb71228641c346fc6a86ed54e05f5d57192c0a2bcc26e683b5ce194bc"
     }
-  ]
+  ],
+  "scope": "Direction-polymorphic refactor of the existing 29 gauge theorem scripts; no spacetime interpretation"
 }

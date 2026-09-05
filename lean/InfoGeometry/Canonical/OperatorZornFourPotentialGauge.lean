@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.OperatorZornConnectionCurvatureBridge
 
 /-!
-# Four-component gauge potentials on the nonassociative operator-Zorn carrier
+# Direction-indexed potentials on the nonassociative operator-Zorn carrier
 
 The coefficient algebra may be any associative ring of operators. The Zorn
 product is the existing `NCZornElement.mul`, not composition of endomorphisms.
@@ -9,7 +9,7 @@ No associative or alternative instance is installed on the Zorn carrier.
 Both scalar blocks and all six vector entries remain independent.
 
 `coefficientDeriv p` is the coefficientwise commutator with an actual element
-`p` of the coefficient algebra. Its product rule is proved. Four such
+`p` of the coefficient algebra. Its product rule is proved. These
 operators need not commute: their curvature is retained in every identity.
 These are algebraic operator identities, not a claim that arbitrary operators
 are coordinate partial derivatives on a manifold.
@@ -19,10 +19,15 @@ namespace InfoGeometry.Canonical.OperatorZornFourPotentialGauge
 
 open InfoGeometry.Physics.NCG
 
-variable {A : Type*} [Ring A]
+variable {A Direction : Type*} [Ring A]
 
-/-- Four spacetime-indexed, full operator-Zorn connection coefficients. -/
-abbrev FourPotential (A : Type*) [Ring A] := Fin 4 → OperatorZornMatrix A
+/-- Full Zorn coefficients indexed by state variations or an algebraic frame.
+No dimension, metric signature, or spacetime interpretation is imposed. -/
+abbrev ConnectionCoefficients (Direction A : Type*) [Ring A] :=
+  Direction → OperatorZornMatrix A
+
+/-- Legacy four-label specialization; the labels have no temporal/spatial meaning. -/
+abbrev FourPotential (A : Type*) [Ring A] := ConnectionCoefficients (Fin 4) A
 
 /-- Ordered commutator in the coefficient operator algebra. -/
 def coefficientBracket (p q : A) : A := p * q - q * p
@@ -76,23 +81,23 @@ theorem coefficientDeriv_commutator (p q : A) (X : OperatorZornMatrix A) :
   all_goals noncomm_ring
 
 /-- Covariant differentiation of Zorn-valued fields, with the Zorn product intact. -/
-def covariant (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu : Fin 4) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+def covariant (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu : Direction) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
   coefficientDeriv (p mu) X + Phi mu * X
 
 /-- Zorn-valued field strength, before acting on a field. -/
-def fieldStrength (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) : OperatorZornMatrix A :=
+def fieldStrength (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) : OperatorZornMatrix A :=
   coefficientDeriv (p mu) (Phi nu) - coefficientDeriv (p nu) (Phi mu) +
     bracket (Phi mu) (Phi nu)
 
 /-- Curvature action; its associator contribution is not absorbed into `fieldStrength`. -/
-def curvatureAction (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+def curvatureAction (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
   covariant p Phi mu (covariant p Phi nu X) -
     covariant p Phi nu (covariant p Phi mu X)
 
-theorem fieldStrength_swap (p : Fin 4 → A) (Phi : FourPotential A) (mu nu : Fin 4) :
+theorem fieldStrength_swap (p : Direction → A) (Phi : ConnectionCoefficients Direction A) (mu nu : Direction) :
     fieldStrength p Phi nu mu = -fieldStrength p Phi mu nu := by
   apply operatorZornMatrix_ext
   all_goals first | (funext i; fin_cases i) | skip
@@ -101,8 +106,8 @@ theorem fieldStrength_swap (p : Fin 4 → A) (Phi : FourPotential A) (mu nu : Fi
   all_goals noncomm_ring
 
 /-- Full curvature identity: background curvature and both associators survive. -/
-theorem curvatureAction_eq (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu nu : Fin 4) (X : OperatorZornMatrix A) :
+theorem curvatureAction_eq (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu nu : Direction) (X : OperatorZornMatrix A) :
     curvatureAction p Phi mu nu X =
       coefficientDeriv (coefficientBracket (p mu) (p nu)) X +
         fieldStrength p Phi mu nu * X -
@@ -115,8 +120,8 @@ theorem curvatureAction_eq (p : Fin 4 → A) (Phi : FourPotential A)
   all_goals noncomm_ring
 
 /-- Adjoint covariant derivative, without claiming that the Zorn bracket is Lie. -/
-def adjointCovariant (p : Fin 4 → A) (Phi : FourPotential A)
-    (mu : Fin 4) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+def adjointCovariant (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
+    (mu : Direction) (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
   coefficientDeriv (p mu) X + bracket (Phi mu) X
 
 /-- The six-term Akivis alternation, with no alternativity assumption. -/
@@ -135,14 +140,14 @@ theorem rightJacobiator_eq (X Y Z : OperatorZornMatrix A) :
   all_goals noncomm_ring
 
 /-- Bianchi expression in the coefficient-commutator differential calculus. -/
-def bianchi (p : Fin 4 → A) (Phi : FourPotential A) (mu nu rho : Fin 4) :
+def bianchi (p : Direction → A) (Phi : ConnectionCoefficients Direction A) (mu nu rho : Direction) :
     OperatorZornMatrix A :=
   adjointCovariant p Phi mu (fieldStrength p Phi nu rho) +
     adjointCovariant p Phi nu (fieldStrength p Phi rho mu) +
       adjointCovariant p Phi rho (fieldStrength p Phi mu nu)
 
 /-- Neither the coefficient-curvature source nor the Akivis source is set to zero. -/
-theorem bianchi_eq (p : Fin 4 → A) (Phi : FourPotential A) (mu nu rho : Fin 4) :
+theorem bianchi_eq (p : Direction → A) (Phi : ConnectionCoefficients Direction A) (mu nu rho : Direction) :
     bianchi p Phi mu nu rho =
       coefficientDeriv (coefficientBracket (p mu) (p nu)) (Phi rho) +
         coefficientDeriv (coefficientBracket (p nu) (p rho)) (Phi mu) +
@@ -155,17 +160,17 @@ theorem bianchi_eq (p : Fin 4 → A) (Phi : FourPotential A) (mu nu rho : Fin 4)
     operatorZornCoordinates, NCZornElement.mul, NCZornElement.zornDot, NCZornElement.zornCross]
   all_goals noncomm_ring
 
-/-- The temporal/spatial field-strength sector; no electrostatic specialization. -/
+/-- Legacy name for the field-strength pairs (0,i.succ); no distinguished time. -/
 def electric (p : Fin 4 → A) (Phi : FourPotential A) : Fin 3 → OperatorZornMatrix A :=
   fun i => fieldStrength p Phi 0 i.succ
 
-/-- Oriented spatial field-strength sector, still Zorn-valued. -/
+/-- Legacy name for three chosen pairs of four labels; still Zorn-valued. -/
 def magnetic (p : Fin 4 → A) (Phi : FourPotential A) : Fin 3 → OperatorZornMatrix A
   | 0 => fieldStrength p Phi 2 3
   | 1 => fieldStrength p Phi 3 1
   | 2 => fieldStrength p Phi 1 2
 
-/-- Electric curvature retains the temporal/spatial Zorn commutator. -/
+/-- The selected index-pair sector retains its full Zorn commutator. -/
 theorem electric_eq (p : Fin 4 → A) (Phi : FourPotential A) (i : Fin 3) :
     electric p Phi i = coefficientDeriv (p 0) (Phi i.succ) -
       coefficientDeriv (p i.succ) (Phi 0) + bracket (Phi 0) (Phi i.succ) := rfl

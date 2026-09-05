@@ -5,12 +5,12 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
 # Explicit Jacobi counterexample for the legacy five-grade bracket
 
 The old operation `fiveGradedBracket` cannot receive a native Lie-algebra
-instance.  Its failure is already visible in the elementary homogeneous triple
+instance. Its failure is already visible in the elementary homogeneous triple
 
 `(E₋, x₋, E₊)`.
 
 For every negative charge `x`, the cyclic Jacobi expression evaluates to
-`2 • x` in grade `-1`.  Choosing the nonzero scalar-coordinate charge
+`2 • x` in grade `-1`. Choosing the nonzero scalar-coordinate charge
 `alphaCharge` gives an unconditional counterexample.
 -/
 
@@ -76,7 +76,8 @@ theorem legacy_extreme_charge_jacobi_readout
   rw [legacy_minus1_plus2, legacy_minus2_plus1,
     legacy_plus2_minus2, legacy_minus1_scale,
     legacy_minus2_minus1]
-  simp [injChargeMinus]
+  apply FiveGradedCarrier.ext <;>
+    simp [fiveGradedBracket, injChargeMinus, genEplus, two_smul]
 
 /-- The selected scalar-coordinate charge is nonzero after multiplication by
 `2`. -/
@@ -93,9 +94,10 @@ theorem injected_two_alphaCharge_ne_zero :
   intro h
   have hm := congrArg
     (fun u : FiveGradedCarrier D => u.minus1) h
-  exact two_smul_alphaCharge_ne_zero (J := J) (by simpa [injChargeMinus] using hm)
+  exact two_smul_alphaCharge_ne_zero (J := J)
+    (by simpa [injChargeMinus] using hm)
 
-/-- The legacy bracket fails the Jacobi identity.  This theorem blocks any
+/-- The legacy bracket fails the Jacobi identity. This theorem blocks any
 attempt to install a `LieRing` or `LieAlgebra` instance using that operation. -/
 theorem legacy_fiveGradedBracket_not_jacobi :
     ¬ (∀ u v w : FiveGradedCarrier D,

@@ -9,6 +9,7 @@ import InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
 import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure
+import InfoGeometry.Physics.NuclearFiveGradeSameCarrierClosure
 
 /-!
 # Focused aggregate for the closed finite nuclear symmetry lane
@@ -23,7 +24,8 @@ This declaration-free surface exports:
 * a same-carrier idempotent `P H P` compression to the Soloviev QPNM block;
 * the earlier one-mode concrete `CoupledQuasiparticlePhononSystem` instance;
 * the exact two-level BdG square, spectrum, and conjugate-linear symmetry;
-* the affine BdG decomposition of the Soloviev block.
+* the affine BdG decomposition of the Soloviev block;
+* one end-to-end same-carrier closure theorem exposing all these identities.
 
 The transitive axiom audit remains a separate executable target.
 -/

@@ -1,13 +1,14 @@
+import InfoGeometry.Canonical.BipolarComplexCartanLine
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
 import InfoGeometry.Canonical.BipolarPauliZornWittBridge
 
 /-!
 # Pristine Pauli--Zorn realization of the bipolar Cartan action
 
-This capstone contains no new interpretation.  It combines the proved finite
+This capstone contains no new interpretation. It combines the proved finite
 bridges:
 
-* the two real Cartan directions form one complex Cartan line;
+* the two real Cartan directions form one trace-zero complex Cartan line;
 * the abstract four Cartan weights are the actual entries of the conjugated
   Pauli/Hestenes matrix;
 * the preserved Pauli determinant equals both the corrected Zorn norm and the
@@ -21,6 +22,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BipolarPauliZornPristineChain
 
+open InfoGeometry.Canonical.BipolarComplexCartanLine
 open InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
 open InfoGeometry.Canonical.BipolarPauliZornWittBridge
 open InfoGeometry.Canonical.BipolarCartanLorentzBridge
@@ -39,6 +41,8 @@ theorem bipolar_pauli_zorn_pristine_chain
       (∀ a b : ℝ,
         (a : ℂ) • Kboost + (b : ℂ) • Kcirc = 0 →
           a = 0 ∧ b = 0) ∧
+      logarithmicCartanGenerator s ∈ cartanLine ∧
+      Matrix.trace (logarithmicCartanGenerator s) = 0 ∧
       (bipolarSolderingAction s (pauliHermitian P)).mat =
         matrixOfCartanCoordinates
           (bipolarCoordinateAction s (pauliCartanCoordinates P)) ∧
@@ -50,6 +54,8 @@ theorem bipolar_pauli_zorn_pristine_chain
         (ZornMatrix.zornNorm (pauliZorn P) : ℂ) := by
   exact ⟨cartan_real_complex_rank_packet.1,
     cartan_real_complex_rank_packet.2,
+    logarithmicCartanGenerator_mem_cartanLine s,
+    logarithmicCartanGenerator_trace_zero s,
     bipolarSolderingAction_pauliMatrix s P,
     zornNorm_pauliZorn P,
     circularWittQuadratic_pauli P,

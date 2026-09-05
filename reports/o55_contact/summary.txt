@@ -1,0 +1,4 @@
+Native split (5,5) carrier; so(5,5) Lie subalgebra; exact |2|-grading;
+3x3 block bigrading; parity; Heisenberg radicals; degree-zero bracket;
+exact five-term reconstruction; Witt frame; two-boundary selection; faithful
+CAR-CCR representation; crosscap and Pin readouts.

@@ -5,11 +5,11 @@ import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 # Concrete nuclear five-grading in the two-mode CAR matrix algebra
 
 The generic Freudenthal bracket candidate has a separately identified mixed
-Jacobi obstruction.  This file closes the nuclear five-grade lane on a concrete
+Jacobi obstruction. This file closes the nuclear five-grade lane on a concrete
 carrier instead of assuming that obstruction away.
 
 The associative algebra `M₄(ℝ)` carries the two-mode Jordan--Wigner CAR
-representation.  Its commutator is an ordinary Lie bracket.  The centered total
+representation. Its commutator is an ordinary Lie bracket. The centered total
 occupation operator defines an adjoint grading with weights `-2,-1,0,1,2`:
 
 * pair annihilation/creation have grades `-2/+2`;
@@ -79,12 +79,12 @@ def HasGrade (k : ℤ) (X : M4R) : Prop :=
 /-- Scalar compatibility of the commutator. -/
 theorem comm_smul_left (c : ℝ) (X Y : M4R) :
     comm (c • X) Y = c • comm X Y := by
-  simp only [comm, smul_mul, mul_smul, smul_sub]
+  simp [comm, smul_mul_assoc, mul_smul_comm, smul_sub]
 
 /-- Scalar compatibility of the commutator. -/
 theorem comm_smul_right (c : ℝ) (X Y : M4R) :
     comm X (c • Y) = c • comm X Y := by
-  simp only [comm, smul_mul, mul_smul, smul_sub]
+  simp [comm, smul_mul_assoc, mul_smul_comm, smul_sub]
 
 /-- Brackets add grades. -/
 theorem comm_hasGrade
@@ -94,7 +94,7 @@ theorem comm_hasGrade
   unfold HasGrade at hX hY ⊢
   rw [comm_derivation, hX, hY,
     comm_smul_left, comm_smul_right, ← add_smul]
-  norm_cast
+  simp only [Int.cast_add]
 
 /-- Grade `+1` creation operators. -/
 theorem a1Dag_grade : HasGrade 1 a1Dag := by

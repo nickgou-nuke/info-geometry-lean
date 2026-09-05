@@ -1,0 +1,36 @@
+{
+  "polynomial": {
+    "arbitrary_coefficient_commutator": true,
+    "six_term_operator_triple": true,
+    "test_function": "generic smooth symbolic f(q0,q1,q2,q3), not a truncated polynomial space"
+  },
+  "real_geometry": {
+    "signed_pairing": true,
+    "signed_triple_closure": true,
+    "candidate_alternativity_left": "0",
+    "candidate_alternativity_right": "-2*k*testY",
+    "candidate_product_norm": 0,
+    "product_of_input_norms": -1
+  },
+  "legacy": {
+    "exact_historical_product_left_up2": 0,
+    "exact_historical_product_right_up2": -1,
+    "historical_dot_Y_Y": 2
+  },
+  "completion": {
+    "native_zorn_composition": true,
+    "native_left_alternativity": true,
+    "native_right_alternativity": true,
+    "explicit_witt_inverse": true,
+    "witt_unit": true,
+    "selected_product_XY": "-e3",
+    "selected_product_XY_norm": -1
+  },
+  "source_scan": {
+    "lean_files": 7,
+    "new_source_forbidden_tokens": [],
+    "transitive_dependencies_scanned": false
+  },
+  "lean_kernel_executed": false,
+  "method": "Exact independent SymPy symbolic identities"
+}

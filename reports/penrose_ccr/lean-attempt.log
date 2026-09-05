@@ -1,0 +1,2 @@
+ERROR: lake is not installed or not on PATH; no Lean elaboration was executed.
+Exit status: 127

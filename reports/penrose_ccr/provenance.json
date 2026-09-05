@@ -1,0 +1,16 @@
+{
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "b0fa422e6cb6d3da5be7cbbb5ecfae5c12f3237b",
+  "branch": "penrose-ccr-triple-witt-completion",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "source_attachment": "193-217.pdf",
+  "source_pdf_sha256": "a7c7a9b63514d7f6bad998c9d8f977a8d1351a8ad109b6c39245c71508e2de3f",
+  "source": "Roger Penrose, Chapter 7: Quantized Twistors, G2*, and the Split Octonions (2022), printed pp. 165-189",
+  "lean_verification": "Not executed: local launch stopped before compilation because lake is unavailable (exit 127).",
+  "inventory": {
+    "theorem": 78,
+    "abbrev": 4,
+    "def": 29
+  }
+}

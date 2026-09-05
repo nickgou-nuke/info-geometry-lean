@@ -10,13 +10,13 @@ The common representation carrier
 `ℕ → (Fin 4 → NativeZorn)`
 
 already supports the complete concrete two-mode five-grading, exact fermionic
-CAR, exact phonon CCR, and the coefficientwise Zorn derivation action.  This
+CAR, exact phonon CCR, and the coefficientwise Zorn derivation action. This
 file selects one occupied quasiparticle basis vector at phonon levels zero and
 one and proves that the compressed represented Hamiltonian is exactly the
 finite Soloviev QPNM matrix.
 
-Thus the five-grade representation and the Soloviev compression now live on
-the same operator carrier.
+Thus the five-grade representation and the Soloviev compression live on the
+same operator carrier.
 -/
 
 noncomputable section
@@ -129,9 +129,32 @@ theorem number1_eq_diagonal :
     norm_num [number1, a1, a1Dag, Matrix.mul_apply,
       Fin.sum_univ_four]
 
+/-- The selected quasiparticle ket has first-mode occupation one. -/
+theorem fermionAction_number1_quasiparticleKet (c : ℝ) :
+    fermionAction number1 (quasiparticleKet c) = quasiparticleKet c := by
+  rw [number1_eq_diagonal]
+  ext i
+  fin_cases i <;>
+    simp [fermionAction, quasiparticleKet, scalarCoefficient,
+      Fin.sum_univ_four]
+
 /-- Represented quasiparticle number. -/
 def quasiparticleNumber : Operator :=
   representation number1
+
+/-- The embedded model sector has exactly one quasiparticle. -/
+@[simp] theorem quasiparticleNumber_modelEmbed (v : ModelVector) :
+    quasiparticleNumber (modelEmbed v) = modelEmbed v := by
+  funext n
+  cases n with
+  | zero =>
+      exact fermionAction_number1_quasiparticleKet (v 0)
+  | succ n =>
+      cases n with
+      | zero =>
+          exact fermionAction_number1_quasiparticleKet (v 1)
+      | succ n =>
+          simp [quasiparticleNumber, representation, occupationLift]
 
 /-- Phonon number. -/
 def phononNumber : Operator :=
@@ -151,16 +174,10 @@ def compressedAction (Eqp omega V : ℝ) :
 theorem compressedAction_zero
     (Eqp omega V C D : ℝ) :
     compressedAction Eqp omega V ![C, D] 0 = Eqp * C + V * D := by
-  rw [show number1 =
-      !![0, 0, 0, 0;
-          0, 0, 0, 0;
-          0, 0, 1, 0;
-          0, 0, 0, 1] from number1_eq_diagonal]
-  simp [compressedAction, fullHamiltonian, quasiparticleNumber,
-    phononNumber, modelReadout, modelEmbed, quasiparticleKet,
-    scalarCoefficient, representation, occupationLift, fermionAction,
-    phononCreation, phononAnnihilation, Module.End.mul_apply,
-    Fin.sum_univ_four]
+  simp [compressedAction, fullHamiltonian, phononNumber,
+    modelReadout, modelEmbed, quasiparticleKet, scalarCoefficient,
+    quasiparticleNumber_modelEmbed, phononCreation,
+    phononAnnihilation, Module.End.mul_apply]
   ring
 
 /-- One-phonon readout. -/
@@ -168,16 +185,10 @@ theorem compressedAction_one
     (Eqp omega V C D : ℝ) :
     compressedAction Eqp omega V ![C, D] 1 =
       V * C + (Eqp + omega) * D := by
-  rw [show number1 =
-      !![0, 0, 0, 0;
-          0, 0, 0, 0;
-          0, 0, 1, 0;
-          0, 0, 0, 1] from number1_eq_diagonal]
-  simp [compressedAction, fullHamiltonian, quasiparticleNumber,
-    phononNumber, modelReadout, modelEmbed, quasiparticleKet,
-    scalarCoefficient, representation, occupationLift, fermionAction,
-    phononCreation, phononAnnihilation, Module.End.mul_apply,
-    Fin.sum_univ_four]
+  simp [compressedAction, fullHamiltonian, phononNumber,
+    modelReadout, modelEmbed, quasiparticleKet, scalarCoefficient,
+    quasiparticleNumber_modelEmbed, phononCreation,
+    phononAnnihilation, Module.End.mul_apply]
   ring
 
 /-- Main same-carrier compression theorem. -/

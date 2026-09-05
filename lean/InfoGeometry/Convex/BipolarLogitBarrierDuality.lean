@@ -11,13 +11,13 @@ On `0 < x < 1` they are:
 * the odd logit coordinate `log x - log (1-x)`;
 * the even interval barrier `-log x - log (1-x)`.
 
-They have the same distinguished midpoint but different differentials.  The
+They have the same distinguished midpoint but different differentials. The
 logit has derivative `4` at `x = 1/2`, while the symmetric barrier has zero
-first derivative and positive Hessian there.  Thus the equation `eta = 0`
+first derivative and positive Hessian there. Thus the equation `eta = 0`
 must not be confused with vanishing of the logarithmic-coordinate gradient.
 
 The interval barrier is exactly the sum of two copies of the repository's
-standard one-sided logarithmic barrier.  This file proves the analytic and
+standard one-sided logarithmic barrier. This file proves the analytic and
 Hadamard identities needed by the bipolar DAG; it does not identify either
 function with entropy, free energy, or a force law.
 -/
@@ -53,7 +53,7 @@ def intervalBarrierGradient (x : ℝ) : ℝ :=
 
 /-- Hessian readout of the symmetric interval barrier. -/
 def intervalBarrierHessian (x : ℝ) : ℝ :=
-  x⁻¹ ^ 2 + (1 - x)⁻¹ ^ 2
+  1 / x ^ 2 + 1 / (1 - x) ^ 2
 
 /-- The interval barrier is exactly a sum of two repository-owned standard
 one-sided logarithmic barriers. -/
@@ -160,8 +160,8 @@ theorem intervalBarrierHessian_pos
     {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :
     0 < intervalBarrierHessian x := by
   unfold intervalBarrierHessian
-  have hxinv : 0 < x⁻¹ := inv_pos.mpr hx0
-  have h1inv : 0 < (1 - x)⁻¹ := inv_pos.mpr (sub_pos.mpr hx1)
+  have hx2 : 0 < x ^ 2 := sq_pos_of_pos hx0
+  have h1x2 : 0 < (1 - x) ^ 2 := sq_pos_of_pos (sub_pos.mpr hx1)
   positivity
 
 /-- The logit coordinate vanishes at the midpoint. -/

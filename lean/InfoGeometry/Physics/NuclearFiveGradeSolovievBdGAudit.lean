@@ -1,17 +1,20 @@
-import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure
+import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGAll
 
 /-!
 # Transitive axiom inspection for the nuclear closure lane
 
 These commands inspect the elaborated dependency closures when Lean executes
-this file.  Any `sorryAx` or project-specific custom axiom is a verification
-failure.  The audit is not a substitute for kernel execution.
+this file. Any `sorryAx` or project-specific custom axiom is a verification
+failure. The audit is not a substitute for kernel execution.
 -/
 
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.comm_jacobi
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.comm_hasGrade
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.pair_extreme_bracket
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.concrete_nuclear_five_grade_packet
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.gradeSpace
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.gradeBracket
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.bundled_five_grade_packet
 
 #print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.qp_CAR
 #print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.phonon_CCR

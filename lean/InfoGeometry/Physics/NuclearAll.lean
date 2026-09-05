@@ -22,6 +22,7 @@ import InfoGeometry.Physics.NuclearRPAQuantumNumberSeparation
 import InfoGeometry.Physics.NuclearCl55CartanParityDictionary
 import InfoGeometry.Physics.NuclearWignerDensityProjectorBridge
 import InfoGeometry.Physics.NuclearCartanGradeNormalizationBridge
+import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGAll
 
 /-!
 # Nuclear formalization umbrella
@@ -32,6 +33,15 @@ This declaration-free umbrella exposes the current finite nuclear lane:
 * quasiparticle CAR and RPA phonon algebras;
 * Soloviev finite quasiparticle-phonon eigenproblem and transition strengths;
 * finite CAR projection and spectral readouts;
+* a concrete globally Jacobi-closed two-mode CAR five-grading;
+* an explicit common quasiparticle--phonon carrier with exact CAR, exact CCR,
+  and vanishing cross commutators;
+* an embed--compress theorem deriving the Soloviev QPNM matrix from the common
+  occupation-space Hamiltonian;
+* an exact two-level BdG block with Hermiticity, square law, characteristic
+  roots, spectral intertwiner, and conjugate-linear particle--hole symmetry;
+* the affine decomposition of every finite Soloviev block into a scalar center
+  plus a traceless BdG block;
 * Cartan generators in both `±2` and balanced `±1` normalizations;
 * occupation/isospin projectors and quasiparticle fermion parity;
 * generic parity-graded Hamiltonians with the theorem
@@ -47,9 +57,15 @@ This declaration-free umbrella exposes the current finite nuclear lane:
   Cartan-Fock owners;
 * Wigner charge-exchange amplitudes as normalized left/right Gram densities.
 
+The generic Freudenthal contact bracket is still kept distinct: its known
+mixed Jacobi obstruction must be closed by the missing triple identity before
+it receives a global Lie-algebra instance.  The concrete two-mode realization
+does not assume that identity; its Jacobi theorem is inherited from associative
+matrix composition.
+
 The umbrella does not assert a complete phenomenological nuclear model, a
 complete shell-model quantum-number classification, or empirical predictive
-validity.  It is the stable import surface for the theorem-bearing finite
+validity. It is the stable import surface for the theorem-bearing finite
 structural lane currently present in the repository.
 -/
 

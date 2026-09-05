@@ -14,15 +14,18 @@ python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
   InfoGeometry.Canonical.ProjectiveZornAttention
 log="$(mktemp)"
 trap 'rm -f "$log"' EXIT
-if ! lake env lean tests/ProjectiveZornAttentionAxiomAudit.lean >"$log" 2>&1; then
-  cat "$log" >&2
-  exit 1
-fi
+for audit in tests/ProjectiveZornAttentionAxiomAudit.lean tests/GibbsReferenceGaugeAxiomAudit.lean; do
+  if ! lake env lean "$audit" >>"$log" 2>&1; then
+    cat "$log" >&2
+    exit 1
+  fi
+done
 cat "$log"
 python3 - "$log" <<'PY'
 import pathlib,re,sys
 text=pathlib.Path(sys.argv[1]).read_text()
-audit=pathlib.Path('tests/ProjectiveZornAttentionAxiomAudit.lean').read_text()
+audit='\n'.join(pathlib.Path(p).read_text() for p in [
+    'tests/ProjectiveZornAttentionAxiomAudit.lean', 'tests/GibbsReferenceGaugeAxiomAudit.lean'])
 expected=set(re.findall(r'^#print axioms (\S+)',audit,re.M))
 allowed={'propext','Classical.choice','Quot.sound'}
 found={}

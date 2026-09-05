@@ -163,6 +163,21 @@ This is a reference-dependent scalar identity. It is not an operator logarithm,
 a von Neumann entropy of arbitrary nonorthogonal key mixtures, or a theorem
 about irreversible entropy production. The reference is never silently erased.
 
+`GibbsReferenceGauge` additionally removes its arbitrary scale. The
+reference-scale invariant log-partition comparison is
+
+    Psi = log(Z_tilt/Z_reference).
+
+The fully normalized reference entropy is
+
+    S_barw(p) = -sum_i p_i log(p_i/normalize(w)_i)
+              = Psi - beta mean_p(s).
+
+Its invariance under reference rescaling and common score shifts is proved
+in the scripts. Psi alone still changes under a common score shift; the
+entropy combination does not. Raw log Z and S_w are gauge potentials, not
+scale-independent observables.
+
 ### State variations, not spacetime derivatives
 
 `LogRatioDifferential` bundles the native linear map
@@ -297,7 +312,7 @@ python3 tools/quality/check_projective_zorn_attention.py
 python3 tools/quality/check_operator_zorn_gauge_algebra.py
 ```
 
-The new script has 44 checks: exact symbolic identities and counterexamples,
+The new script has 47 checks: exact symbolic identities and counterexamples,
 plus an explicitly labelled finite metric-triangle sanity check. The parent
 free-noncommuting-coefficient checker has 16 identities / 116 coordinate
 comparisons. Neither is a Lean certificate. Source-token scans and hashes are

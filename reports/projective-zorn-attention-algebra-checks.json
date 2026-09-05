@@ -1,7 +1,7 @@
 {
   "lean_kernel_verified": false,
   "status": "passed",
-  "check_count": 44,
+  "check_count": 47,
   "checks": [
     {
       "name": "independent scale cross-ratio 00",
@@ -140,6 +140,21 @@
     },
     {
       "name": "relative reference entropy",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "normalized reference probabilities scale",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "relative partition comparison scale",
+      "kind": "symbolic identity",
+      "passed": true
+    },
+    {
+      "name": "normalized reference entropy",
       "kind": "symbolic identity",
       "passed": true
     },

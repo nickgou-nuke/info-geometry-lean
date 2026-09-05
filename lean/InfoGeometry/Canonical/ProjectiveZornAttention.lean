@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.AttentionFrameCorrections
+import InfoGeometry.Projective.GibbsReferenceGauge
 import InfoGeometry.Projective.PositiveOperatorExpectation
 
 /-!

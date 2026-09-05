@@ -1,0 +1,10 @@
+import InfoGeometry.Projective.GibbsReferenceGauge
+
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.tilt_reference_scale
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.normalizedReferenceEntropy
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.normalizedReferenceEntropy_reference_scale
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.normalizedReferenceEntropy_score_shift
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.relativeLogPartition
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.relativeLogPartition_reference_scale
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.log_normalized_reference_probability
+#print axioms InfoGeometry.Projective.GibbsReferenceGauge.normalizedReferenceEntropy_eq

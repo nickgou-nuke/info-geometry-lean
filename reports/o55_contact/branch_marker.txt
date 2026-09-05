@@ -1,0 +1,3 @@
+Review branch: o55-contact-multigrading-formalism-release
+Development source branch: o55-contact-multigrading-formalism-v2
+Stacked base: freudenthal-symplectic-contact-lie-representation

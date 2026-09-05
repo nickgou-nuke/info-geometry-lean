@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.PenroseOnsagerYangCondensationPristineChain
 
 These commands inspect elaborated declarations when Lean executes the file.
 Any `sorryAx` or project-specific custom axiom in the dependency closure is a
-verification failure.  This audit is not a substitute for kernel execution.
+verification failure. This audit is not a substitute for kernel execution.
 -/
 
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.occupation_le_total
@@ -13,6 +13,7 @@ verification failure.  This audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.simple_not_fragmented
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.normal_not_simple
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.normal_not_fragmented
+#print axioms InfoGeometry.Quantum.PenroseOnsagerYang.macroscopic_linear_sandwich
 
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.rankOneKernel_posSemidef
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.trace_rankOneKernel_eq_modeNormSq
@@ -24,6 +25,7 @@ verification failure.  This audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.trace_spectralKernel
 
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherentTwoModeKernel_det
+#print axioms InfoGeometry.Quantum.PenroseOnsagerYang.diagonalTwoModeKernel_det
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherent_incoherent_same_diagonal
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherent_ne_incoherent_of_cross_ne_zero
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherentTwoModeKernel_globalPhase_invariant

@@ -63,6 +63,7 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalizedPositiveEigenvector_eigen
 #print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalized_bdg_CAR
 #print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalized_bdg_bogoliubov_packet
+#print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.exists_normalized_positive_eigenmode_with_CAR
 
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_eq_center_add_bdg
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_upper_bdg_root

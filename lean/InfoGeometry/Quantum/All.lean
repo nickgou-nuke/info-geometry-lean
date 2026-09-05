@@ -114,6 +114,7 @@ import InfoGeometry.Quantum.KleinBottleModularThroat
 import InfoGeometry.Quantum.CantorTransferOperator
 import InfoGeometry.Quantum.BifurcateHorizonEquilibrium
 import InfoGeometry.Quantum.SuperHolographicMonad
+import InfoGeometry.Quantum.PenroseOnsagerYangAll
 
 namespace InfoGeometry
 

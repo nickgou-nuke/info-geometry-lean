@@ -4,7 +4,7 @@ import Mathlib.Tactic
 /-!
 # Möbius equivalence of the bipolar punctured coordinate charts
 
-The rational function `q(s) = s / (1 - s)` is a Möbius coordinate.  On the
+The rational function `q(s) = s / (1 - s)` is a Möbius coordinate. On the
 affine twice-punctured plane it gives an equivalence
 
 `C \ {0,1}  ≃  C \ {0,-1}`
@@ -12,7 +12,7 @@ affine twice-punctured plane it gives an equivalence
 with inverse `z ↦ z / (1 + z)`.
 
 This is the exact finite conformal statement behind the informal
-"uniformizing coordinate" language.  It is not the universal covering of the
+"uniformizing coordinate" language. It is not the universal covering of the
 thrice-punctured sphere; a modular-lambda or Fuchsian-group uniformization is a
 separate global theorem requiring additional analytic and group-theoretic
 infrastructure.
@@ -114,10 +114,8 @@ theorem inverseCrossRatio01_crossRatio01
 theorem crossRatio01_inverseCrossRatio01
     {z : ℂ} (hz : z ∈ punctured0NegOne) :
     crossRatio01 (inverseCrossRatio01 z) = z := by
-  rw [show crossRatio01 (inverseCrossRatio01 z) =
-      inverseCrossRatio01 z / (1 - inverseCrossRatio01 z) by
-        rfl,
-    one_sub_inverseCrossRatio01 hz, div_inv]
+  change inverseCrossRatio01 z / (1 - inverseCrossRatio01 z) = z
+  rw [one_sub_inverseCrossRatio01 hz, div_inv]
   unfold inverseCrossRatio01
   exact div_mul_cancel₀ z (one_add_ne_zero_of_mem hz)
 

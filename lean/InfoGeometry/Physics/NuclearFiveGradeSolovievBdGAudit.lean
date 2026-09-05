@@ -25,6 +25,9 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearSolovievCompression.modelReadout_modelEmbed
 #print axioms InfoGeometry.Physics.NuclearSolovievCompression.compressedAction_eq_qpnm_mulVec
 #print axioms InfoGeometry.Physics.NuclearSolovievCompression.compressed_eigenvalue_system
+#print axioms InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian.modelProjection_idempotent
+#print axioms InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian.projected_fullQPNM_on_model
+#print axioms InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian.projected_soloviev_packet
 
 #print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdgBlock_sq
 #print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdg_characteristic

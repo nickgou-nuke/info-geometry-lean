@@ -4,14 +4,14 @@ import Mathlib
 # Finite Penrose--Onsager--Yang occupation spectra
 
 This file isolates the representation-independent spectral content of quantum
-condensation.  A reduced density operator is read through its nonnegative
-occupation eigenvalues.  A mode is called macroscopic when its occupation
+condensation. A reduced density operator is read through its nonnegative
+occupation eigenvalues. A mode is called macroscopic when its occupation
 retains a fixed positive fraction of the linear population scale along a
-family.  Simple and fragmented condensation are then exact predicates on the
+family. Simple and fragmented condensation are then exact predicates on the
 number of macroscopic modes.
 
 The definitions are deliberately independent of whether the relevant reduced
-operator is one-body, two-body, or higher-body.  No Bose/Fermi statistics,
+operator is one-body, two-body, or higher-body. No Bose/Fermi statistics,
 Hamiltonian, spontaneous symmetry breaking, ODLRO limit, or microscopic
 superconducting model is inferred here.
 -/
@@ -87,7 +87,7 @@ theorem sum_occupationFraction_eq_one
 
 /-- A population-indexed family of nonnegative occupation spectra.
 
-The natural-number argument is the population parameter.  No condition is
+The natural-number argument is the population parameter. No condition is
 placed on the trace because one-body and higher-body reduced density matrices
 use different trace normalizations. -/
 structure OccupationFamily (ι : Type*) [Fintype ι] where
@@ -142,7 +142,7 @@ theorem simple_macroscopic_mode_unique
     (hi : IsMacroscopicMode F i)
     (hj : IsMacroscopicMode F j) :
     i = j := by
-  rcases hF with ⟨k, hk, huniq⟩
+  rcases hF with ⟨k, _hk, huniq⟩
   exact (huniq i hi).trans (huniq j hj).symm
 
 /-- Simple and fragmented condensation are mutually exclusive. -/
@@ -182,6 +182,21 @@ theorem scaledOccupation_le_one
     scaledOccupation F i n ≤ 1 := by
   rw [scaledOccupation, div_le_one (populationScale_pos n)]
   exact hF n i
+
+/-- A macroscopic mode in a linearly bounded family satisfies an eventual
+positive linear sandwich `c ≤ occupation/N ≤ 1`. -/
+theorem macroscopic_linear_sandwich
+    {F : OccupationFamily ι}
+    (hbound : IsLinearlyPopulationBounded F)
+    {i : ι}
+    (hi : IsMacroscopicMode F i) :
+    ∃ c : ℝ, 0 < c ∧
+      ∀ᶠ n in atTop,
+        c ≤ scaledOccupation F i n ∧ scaledOccupation F i n ≤ 1 := by
+  rcases hi with ⟨c, hc, hcevent⟩
+  refine ⟨c, hc, ?_⟩
+  filter_upwards [hcevent] with n hn
+  exact ⟨hn, scaledOccupation_le_one hbound i n⟩
 
 /-- Compact classification packet. -/
 theorem occupation_classification_packet

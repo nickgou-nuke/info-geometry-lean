@@ -16,6 +16,11 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.gradeBracket
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.bundled_five_grade_packet
 
+#print axioms InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge.gradingOperator_isTripotent
+#print axioms InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge.hasGrade_iff_isCommutatorComponent
+#print axioms InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge.product_isCommutatorComponent
+#print axioms InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge.named_kantor_component_packet
+
 #print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.fermionAction_mul
 #print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.representation_mul
 #print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.representation_commutator

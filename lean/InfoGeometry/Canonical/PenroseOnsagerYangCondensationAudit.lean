@@ -24,6 +24,9 @@ verification failure. This audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.spectralKernel_posSemidef
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.trace_spectralKernel
 
+#print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherentTwoModeKernel_posSemidef
+#print axioms InfoGeometry.Quantum.PenroseOnsagerYang.diagonalTwoModeKernel_posSemidef
+#print axioms InfoGeometry.Quantum.PenroseOnsagerYang.incoherentKernelOfAmplitudes_posSemidef
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherentTwoModeKernel_det
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.diagonalTwoModeKernel_det
 #print axioms InfoGeometry.Quantum.PenroseOnsagerYang.coherent_incoherent_same_diagonal

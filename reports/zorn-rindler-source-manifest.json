@@ -1,0 +1,57 @@
+{
+  "verification_status": "UNVERIFIED by Lean kernel; complete proof scripts only",
+  "source_module_count": 8,
+  "theorem_count": 112,
+  "axiom_audit_declaration_count": 112,
+  "source_token_scan": "No sorry, admit, custom axiom, unsafe or native_decide tokens outside comments or strings; not a transitive axiom audit",
+  "modules": [
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornCARAdjoint.lean",
+      "theorem_count": 6,
+      "sha256": "4231b610927ac8a040f6a9bd4e98476716f69bb4f7dcfb6fc9a1bfef31e24852",
+      "git_blob_sha": "6bfccebbad6de1044b929f51e12ec6db92ac8ee1"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornLeftCAR.lean",
+      "theorem_count": 18,
+      "sha256": "49808699d6369549c74e5c4201ce246796481651017f1eb8f1ced9b4f53b1d23",
+      "git_blob_sha": "d86b30e0a09be90afd1d3dacc4fdb27ae22c7050"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean",
+      "theorem_count": 26,
+      "sha256": "fdf28347f710c67d0d2510a2f5a14f6e3a899f30d59cc1ea4976699244ffdbf9",
+      "git_blob_sha": "25e135696ad6174a1016e23f10398c6f3ae6a97f"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZornRindlerReconstruction.lean",
+      "theorem_count": 0,
+      "sha256": "61aac11e6d1a36eaa3a613940df3a77a59a59de93c845f07493473d07afe45db",
+      "git_blob_sha": "57e7a372dcc3f7289f14b61c00bac71b420787c7"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/RindlerCartanFrame.lean",
+      "theorem_count": 6,
+      "sha256": "d33b96a1e15d22f9caa747fc42d53d836e9e6e664195034438d9f9fa2de80202",
+      "git_blob_sha": "59a9c0540da247d8e13458ca3b17ffa2dbeb5837"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/RindlerLapseCalculus.lean",
+      "theorem_count": 22,
+      "sha256": "7471467af6b31ddecc44b01564dde904528848899ea90e56462aa9fd99fbaa18",
+      "git_blob_sha": "3ec5d4179e04e0a1d78f39545f8c10b64be79f1a"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/BoltzmannPoissonReconstruction.lean",
+      "theorem_count": 19,
+      "sha256": "d1dae2287e93b8ecdc8c4d85ada39da19511e1d2fe54ae8cf1b54c3046831676",
+      "git_blob_sha": "b06187569d3c21b41263f4abf2ad80ee7f9df41c"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/TwoBandAffineShift.lean",
+      "theorem_count": 15,
+      "sha256": "7d069aad249df50a2ff74ef5fb96601a3abd38a0126fcdc750cd2898ef3926f4",
+      "git_blob_sha": "b8b5a17646f48116020bd80508f42cd96c4ad797"
+    }
+  ]
+}

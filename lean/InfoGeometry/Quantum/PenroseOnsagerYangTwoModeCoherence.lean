@@ -33,8 +33,7 @@ def coherentTwoModeKernel (a b : ℂ) : TwoModeKernel :=
 
 /-- Diagonal two-mode occupation kernel, with no cross coherence. -/
 def diagonalTwoModeKernel (N0 N1 : ℝ) : TwoModeKernel :=
-  !![(N0 : ℂ), 0;
-     0, (N1 : ℂ)]
+  Matrix.diagonal ![(N0 : ℂ), (N1 : ℂ)]
 
 /-- Diagonal kernel carrying the same two occupation magnitudes as amplitudes
 `a` and `b`. -/
@@ -71,6 +70,24 @@ def incoherentKernelOfAmplitudes (a b : ℂ) : TwoModeKernel :=
 theorem coherentTwoModeKernel_posSemidef (a b : ℂ) :
     (coherentTwoModeKernel a b).PosSemidef :=
   rankOneKernel_posSemidef (twoModeVector a b)
+
+/-- A nonnegative diagonal occupation kernel is positive semidefinite. -/
+theorem diagonalTwoModeKernel_posSemidef
+    {N0 N1 : ℝ} (hN0 : 0 ≤ N0) (hN1 : 0 ≤ N1) :
+    (diagonalTwoModeKernel N0 N1).PosSemidef := by
+  unfold diagonalTwoModeKernel
+  apply Matrix.PosSemidef.diagonal
+  intro i
+  fin_cases i
+  · simpa using hN0
+  · simpa using hN1
+
+/-- The diagonal kernel associated with two amplitudes is positive
+semidefinite. -/
+theorem incoherentKernelOfAmplitudes_posSemidef (a b : ℂ) :
+    (incoherentKernelOfAmplitudes a b).PosSemidef := by
+  exact diagonalTwoModeKernel_posSemidef
+    (Complex.normSq_nonneg a) (Complex.normSq_nonneg b)
 
 /-- A coherent two-mode kernel has determinant zero. -/
 @[simp] theorem coherentTwoModeKernel_det (a b : ℂ) :
@@ -148,6 +165,7 @@ theorem twoMode_coherence_packet
     {a b : ℂ} (hab : a * Complex.conj b ≠ 0) :
     Matrix.det (coherentTwoModeKernel a b) = 0 ∧
       (coherentTwoModeKernel a b).PosSemidef ∧
+      (incoherentKernelOfAmplitudes a b).PosSemidef ∧
       coherentTwoModeKernel a b 0 0 =
         incoherentKernelOfAmplitudes a b 0 0 ∧
       coherentTwoModeKernel a b 1 1 =
@@ -155,6 +173,7 @@ theorem twoMode_coherence_packet
       coherentTwoModeKernel a b ≠ incoherentKernelOfAmplitudes a b := by
   exact ⟨coherentTwoModeKernel_det a b,
     coherentTwoModeKernel_posSemidef a b,
+    incoherentKernelOfAmplitudes_posSemidef a b,
     (coherent_incoherent_same_diagonal a b).1,
     (coherent_incoherent_same_diagonal a b).2,
     coherent_ne_incoherent_of_cross_ne_zero hab⟩

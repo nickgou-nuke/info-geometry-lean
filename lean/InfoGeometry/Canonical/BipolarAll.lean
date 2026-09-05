@@ -25,6 +25,7 @@ import InfoGeometry.Conformal.ComplexSchwarzianJet
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 import InfoGeometry.Conformal.BipolarSignedLogSchwarzianBridge
 import InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
+import InfoGeometry.NCG.BipolarCayleyBerezinianRealization
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
 import InfoGeometry.Canonical.BipolarComplexCartanLine

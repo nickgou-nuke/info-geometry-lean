@@ -1,0 +1,28 @@
+import InfoGeometry.Canonical.ZornQuaternionPeirceCARPristineChain
+
+/-!
+# Transitive axiom inspection for the Zorn quaternion/Peirce chain
+
+These commands inspect elaborated declarations when Lean executes the file.
+Any occurrence of `sorryAx` or a project-specific custom axiom is a verification
+failure. This audit does not replace kernel execution.
+-/
+
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.leftIdempotent_sq
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.rightIdempotent_sq
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.peirce_CAR
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.upperRoot_anticommutator_zero
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.lowerRoot_anticommutator_zero
+
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.negativeCliffordGenerator_sq
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.splitCliffordGenerator_sq
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.negativeCliffordGenerator_anticommutator
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.splitCliffordGenerator_anticommutator
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.negative_split_anticommutator_zero
+
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.paravectorZorn_assoc
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.zornMul_assoc_of_mem_quaternionSlice
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.quaternion_table_packet
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.zornMul_not_associative_witness
+
+#print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCARPristineChain.zorn_quaternion_peirce_car_pristine_chain

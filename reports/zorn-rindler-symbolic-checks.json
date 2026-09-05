@@ -1,0 +1,215 @@
+{
+  "evidence": "exact SymPy identities; NOT Lean elaboration or kernel verification",
+  "sympy_version": "1.14.0",
+  "check_count": 52,
+  "checks": [
+    {
+      "name": "orientation intertwines the two sign conventions",
+      "status": "passed"
+    },
+    {
+      "name": "orientation preserves split norm",
+      "status": "passed"
+    },
+    {
+      "name": "left unit",
+      "status": "passed"
+    },
+    {
+      "name": "right unit",
+      "status": "passed"
+    },
+    {
+      "name": "poles are complementary",
+      "status": "passed"
+    },
+    {
+      "name": "upper pole idempotent",
+      "status": "passed"
+    },
+    {
+      "name": "lower pole idempotent",
+      "status": "passed"
+    },
+    {
+      "name": "pole orthogonality both orders",
+      "status": "passed"
+    },
+    {
+      "name": "gamma square",
+      "status": "passed"
+    },
+    {
+      "name": "kappa square",
+      "status": "passed"
+    },
+    {
+      "name": "quaternion vector product",
+      "status": "passed"
+    },
+    {
+      "name": "full quaternion multiplication embedding",
+      "status": "passed"
+    },
+    {
+      "name": "creation square",
+      "status": "passed"
+    },
+    {
+      "name": "annihilation square",
+      "status": "passed"
+    },
+    {
+      "name": "mixed product upper",
+      "status": "passed"
+    },
+    {
+      "name": "mixed product lower",
+      "status": "passed"
+    },
+    {
+      "name": "creation creation cross term",
+      "status": "passed"
+    },
+    {
+      "name": "annihilation annihilation cross term",
+      "status": "passed"
+    },
+    {
+      "name": "left alternativity on full eight-coordinate module",
+      "status": "passed"
+    },
+    {
+      "name": "polarized left alternativity",
+      "status": "passed"
+    },
+    {
+      "name": "operator same-raising CAR",
+      "status": "passed"
+    },
+    {
+      "name": "operator same-lowering CAR",
+      "status": "passed"
+    },
+    {
+      "name": "operator mixed CAR",
+      "status": "passed"
+    },
+    {
+      "name": "positive coefficient adjoint",
+      "status": "passed"
+    },
+    {
+      "name": "number operator scaled idempotence",
+      "status": "passed"
+    },
+    {
+      "name": "Cl(3,3) vector square",
+      "status": "passed"
+    },
+    {
+      "name": "quaternion element product is not full-module operator product",
+      "status": "passed"
+    },
+    {
+      "name": "log lapse gradient",
+      "status": "passed"
+    },
+    {
+      "name": "stationary acceleration gradient",
+      "status": "passed"
+    },
+    {
+      "name": "time Jacobian",
+      "status": "passed"
+    },
+    {
+      "name": "space Jacobian",
+      "status": "passed"
+    },
+    {
+      "name": "Minkowski metric pullback",
+      "status": "passed"
+    },
+    {
+      "name": "coordinate Jacobian determinant",
+      "status": "passed"
+    },
+    {
+      "name": "Lorentz skew connection",
+      "status": "passed"
+    },
+    {
+      "name": "Cartan torsion coefficient",
+      "status": "passed"
+    },
+    {
+      "name": "constant one-direction connection curvature",
+      "status": "passed"
+    },
+    {
+      "name": "Tolman product",
+      "status": "passed"
+    },
+    {
+      "name": "Euclidean angle normalization",
+      "status": "passed"
+    },
+    {
+      "name": "modular rapidity normalization",
+      "status": "passed"
+    },
+    {
+      "name": "uniform-charge Gauss law",
+      "status": "passed"
+    },
+    {
+      "name": "uniform-charge Poisson equation",
+      "status": "passed"
+    },
+    {
+      "name": "log-lapse electrostatic source",
+      "status": "passed"
+    },
+    {
+      "name": "Hermiticity",
+      "status": "passed"
+    },
+    {
+      "name": "centred matrix square",
+      "status": "passed"
+    },
+    {
+      "name": "characteristic determinant",
+      "status": "passed"
+    },
+    {
+      "name": "positive characteristic root",
+      "status": "passed"
+    },
+    {
+      "name": "negative characteristic root",
+      "status": "passed"
+    },
+    {
+      "name": "shift-independent band gap",
+      "status": "passed"
+    },
+    {
+      "name": "particle-hole obstruction",
+      "status": "passed"
+    },
+    {
+      "name": "Boltzmann mass action",
+      "status": "passed"
+    },
+    {
+      "name": "charge sign identity",
+      "status": "passed"
+    },
+    {
+      "name": "charge differential",
+      "status": "passed"
+    }
+  ]
+}

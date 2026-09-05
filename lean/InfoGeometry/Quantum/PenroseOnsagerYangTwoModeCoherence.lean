@@ -2,15 +2,17 @@ import InfoGeometry.Quantum.PenroseOnsagerYangOrderParameter
 import Mathlib
 
 /-!
-# Two-mode fragmented versus coherent kernels
+# Two-mode diagonal versus coherent kernels
 
 The same diagonal occupation data can be represented either by a diagonal
 mixture with no cross coherence or by a rank-one coherent mode with nonzero
-off-diagonal entries.  This is the finite algebraic distinction underlying the
+off-diagonal entries. This is the finite algebraic distinction underlying the
 Fock/coherent comparison in the Penrose--Onsager--Yang discussion.
 
-No energetic preference, dynamical transition, measurement postulate, or
-spontaneous symmetry breaking is asserted.
+A diagonal kernel is called fragmented only after a separate population-scale
+theorem proves that at least two of its occupations are macroscopic. No
+energetic preference, dynamical transition, measurement postulate, or
+spontaneous symmetry breaking is asserted here.
 -/
 
 noncomputable section
@@ -30,14 +32,14 @@ def coherentTwoModeKernel (a b : ℂ) : TwoModeKernel :=
   rankOneKernel (twoModeVector a b)
 
 /-- Diagonal two-mode occupation kernel, with no cross coherence. -/
-def fragmentedTwoModeKernel (N0 N1 : ℝ) : TwoModeKernel :=
+def diagonalTwoModeKernel (N0 N1 : ℝ) : TwoModeKernel :=
   !![(N0 : ℂ), 0;
      0, (N1 : ℂ)]
 
 /-- Diagonal kernel carrying the same two occupation magnitudes as amplitudes
 `a` and `b`. -/
 def incoherentKernelOfAmplitudes (a b : ℂ) : TwoModeKernel :=
-  fragmentedTwoModeKernel (Complex.normSq a) (Complex.normSq b)
+  diagonalTwoModeKernel (Complex.normSq a) (Complex.normSq b)
 
 @[simp] theorem coherentTwoModeKernel_zero_zero (a b : ℂ) :
     coherentTwoModeKernel a b 0 0 = (Complex.normSq a : ℂ) := by
@@ -57,13 +59,13 @@ def incoherentKernelOfAmplitudes (a b : ℂ) : TwoModeKernel :=
     coherentTwoModeKernel a b 1 0 = b * Complex.conj a := by
   simp [coherentTwoModeKernel, rankOneKernel, twoModeVector]
 
-@[simp] theorem fragmentedTwoModeKernel_zero_one (N0 N1 : ℝ) :
-    fragmentedTwoModeKernel N0 N1 0 1 = 0 := by
-  simp [fragmentedTwoModeKernel]
+@[simp] theorem diagonalTwoModeKernel_zero_one (N0 N1 : ℝ) :
+    diagonalTwoModeKernel N0 N1 0 1 = 0 := by
+  simp [diagonalTwoModeKernel]
 
-@[simp] theorem fragmentedTwoModeKernel_one_zero (N0 N1 : ℝ) :
-    fragmentedTwoModeKernel N0 N1 1 0 = 0 := by
-  simp [fragmentedTwoModeKernel]
+@[simp] theorem diagonalTwoModeKernel_one_zero (N0 N1 : ℝ) :
+    diagonalTwoModeKernel N0 N1 1 0 = 0 := by
+  simp [diagonalTwoModeKernel]
 
 /-- A coherent two-mode kernel is positive semidefinite. -/
 theorem coherentTwoModeKernel_posSemidef (a b : ℂ) :
@@ -84,18 +86,18 @@ theorem coherentTwoModeKernel_trace (a b : ℂ) :
   simp [Matrix.trace, coherentTwoModeKernel, rankOneKernel,
     twoModeVector, Complex.mul_conj, Fin.sum_univ_two]
 
-/-- Determinant of the diagonal fragmented kernel. -/
-theorem fragmentedTwoModeKernel_det (N0 N1 : ℝ) :
-    Matrix.det (fragmentedTwoModeKernel N0 N1) =
+/-- Determinant of the diagonal occupation kernel. -/
+theorem diagonalTwoModeKernel_det (N0 N1 : ℝ) :
+    Matrix.det (diagonalTwoModeKernel N0 N1) =
       (N0 : ℂ) * (N1 : ℂ) := by
   rw [Matrix.det_fin_two]
-  simp [fragmentedTwoModeKernel]
+  simp [diagonalTwoModeKernel]
 
-/-- Trace of the diagonal fragmented kernel. -/
-theorem fragmentedTwoModeKernel_trace (N0 N1 : ℝ) :
-    Matrix.trace (fragmentedTwoModeKernel N0 N1) =
+/-- Trace of the diagonal occupation kernel. -/
+theorem diagonalTwoModeKernel_trace (N0 N1 : ℝ) :
+    Matrix.trace (diagonalTwoModeKernel N0 N1) =
       (N0 : ℂ) + (N1 : ℂ) := by
-  simp [Matrix.trace, fragmentedTwoModeKernel, Fin.sum_univ_two]
+  simp [Matrix.trace, diagonalTwoModeKernel, Fin.sum_univ_two]
 
 /-- Coherent and incoherent kernels built from the same amplitudes have the
 same diagonal occupations. -/
@@ -105,7 +107,7 @@ theorem coherent_incoherent_same_diagonal (a b : ℂ) :
       coherentTwoModeKernel a b 1 1 =
         incoherentKernelOfAmplitudes a b 1 1 := by
   constructor <;>
-    simp [incoherentKernelOfAmplitudes, fragmentedTwoModeKernel]
+    simp [incoherentKernelOfAmplitudes, diagonalTwoModeKernel]
 
 /-- Their off-diagonal entries differ precisely by the coherence amplitude. -/
 theorem coherent_incoherent_offDiagonal_readout (a b : ℂ) :

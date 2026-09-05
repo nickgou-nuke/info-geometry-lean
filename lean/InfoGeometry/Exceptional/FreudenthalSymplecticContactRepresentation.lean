@@ -12,7 +12,7 @@ The repository contains a concrete counterexample to the corresponding mixed
 triple identity, so that operation cannot be promoted to a Lie bracket.
 
 This file constructs the canonical Lie-theoretic object actually determined by
-all currently available data.  For the symplectic module
+all currently available data. For the symplectic module
 
 `F = FreudenthalCharge J`
 
@@ -29,9 +29,9 @@ A six-lane element `(m,x,T,h,y,p)` acts by the symplectic block endomorphism
    m*r - omega(x,z) - h*s).
 ```
 
-Composition in `End_R(Ftilde)` forces a corrected contact bracket.  In
+Composition in `End_R(Ftilde)` forces a corrected contact bracket. In
 particular, the negative Heisenberg bracket is `-2*omega` and the
-`g_{-2}` action on `g_{+1}` has a minus sign.  These signs are not conventions:
+`g_{-2}` action on `g_{+1}` has a minus sign. These signs are not conventions:
 they are forced by the faithful block representation and the Jacobi identity.
 -/
 
@@ -170,49 +170,31 @@ theorem symplecticContactRepresentation_bracket
   apply LinearMap.ext
   rintro ⟨r, ⟨z, s⟩⟩
   apply Prod.ext
-  · simp only [symplecticContactRepresentation_apply,
-      symplecticContactBracket, Module.End.sub_apply,
-      Module.End.mul_apply, FiveGradedCarrier.sub_zero_scale,
-      FiveGradedCarrier.sub_plus2, FiveGradedCarrier.sub_plus1,
-      FiveGradedCarrier.add_zero_scale, FiveGradedCarrier.add_plus2,
-      FiveGradedCarrier.add_plus1, FiveGradedCarrier.smul_plus1,
-      LinearMap.add_apply, LinearMap.sub_apply,
-      LinearMap.smul_apply, RingHom.id_apply,
-      mixedSymplecticBracket_val, symplecticRankTwo_apply,
-      symplecticForm_add_left, symplecticForm_add_right,
-      symplecticForm_sub_left, symplecticForm_sub_right,
-      symplecticForm_smul_left, symplecticForm_smul_right]
+  · simp [symplecticContactBracket, Module.End.mul_apply,
+      Ring.lie_def, mixedSymplecticBracket_val,
+      symplecticRankTwo_apply, symplecticForm_add_left,
+      symplecticForm_add_right, symplecticForm_sub_left,
+      symplecticForm_sub_right, symplecticForm_smul_left,
+      symplecticForm_smul_right]
     rw [symplecticOperator_move_right D v.zero_symp u.plus1 z,
       symplecticOperator_move_right D u.zero_symp v.plus1 z]
     ring
   · apply Prod.ext
-    · simp only [symplecticContactRepresentation_apply,
-        symplecticContactBracket, Module.End.sub_apply,
-        Module.End.mul_apply, FiveGradedCarrier.sub_minus1,
-        FiveGradedCarrier.sub_plus1, FiveGradedCarrier.add_minus1,
-        FiveGradedCarrier.add_plus1, FiveGradedCarrier.smul_minus1,
-        FiveGradedCarrier.smul_plus1, LinearMap.add_apply,
-        LinearMap.sub_apply, LinearMap.smul_apply,
-        RingHom.id_apply, mixedSymplecticBracket_val,
+    · simp [symplecticContactBracket, Module.End.mul_apply,
+        Ring.lie_def, mixedSymplecticBracket_val,
         symplecticRankTwo_apply]
       module
-    · simp only [symplecticContactRepresentation_apply,
-        symplecticContactBracket, Module.End.sub_apply,
-        Module.End.mul_apply, FiveGradedCarrier.sub_minus2,
-        FiveGradedCarrier.sub_minus1, FiveGradedCarrier.sub_zero_scale,
-        FiveGradedCarrier.add_minus2, FiveGradedCarrier.add_minus1,
-        FiveGradedCarrier.add_zero_scale, FiveGradedCarrier.smul_minus1,
-        LinearMap.add_apply, LinearMap.sub_apply,
-        LinearMap.smul_apply, RingHom.id_apply,
-        mixedSymplecticBracket_val, symplecticRankTwo_apply,
-        symplecticForm_add_left, symplecticForm_add_right,
-        symplecticForm_sub_left, symplecticForm_sub_right,
-        symplecticForm_smul_left, symplecticForm_smul_right]
+    · simp [symplecticContactBracket, Module.End.mul_apply,
+        Ring.lie_def, mixedSymplecticBracket_val,
+        symplecticRankTwo_apply, symplecticForm_add_left,
+        symplecticForm_add_right, symplecticForm_sub_left,
+        symplecticForm_sub_right, symplecticForm_smul_left,
+        symplecticForm_smul_right]
       rw [symplecticOperator_move_right D v.zero_symp u.minus1 z,
         symplecticOperator_move_right D u.zero_symp v.minus1 z]
       ring
 
-/-- The block representation is faithful.  No nondegeneracy hypothesis on the
+/-- The block representation is faithful. No nondegeneracy hypothesis on the
 symplectic form is needed: the extreme and charge components are read from the
 two scalar basis vectors, and the zero-grade endomorphism is read from the
 middle summand. -/
@@ -245,7 +227,7 @@ theorem symplecticContactRepresentation_injective :
     simpa using congrArg (fun q => q.2.1) hz
   exact FiveGradedCarrier.ext u v hm2 hm1 hsymp hscale hp1 hp2
 
-/-- The corrected and legacy brackets are genuinely different.  The sign is
+/-- The corrected and legacy brackets are genuinely different. The sign is
 already forced in the `(-1,-1)` Heisenberg lane. -/
 theorem corrected_minus1_minus1_bracket
     (x y : FreudenthalCharge J) :

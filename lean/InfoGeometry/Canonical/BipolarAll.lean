@@ -44,6 +44,7 @@ import InfoGeometry.Canonical.BipolarSpinHolonomy
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
 import InfoGeometry.Canonical.BipolarContourSpinHolonomy
 import InfoGeometry.Canonical.BipolarAngularOneFormConnection
+import InfoGeometry.Connection.ApolloniusOperatorConnection
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Canonical.BipolarPeriodAdjointDescentBridge
 import InfoGeometry.Canonical.BipolarWittProjectiveWardBridge

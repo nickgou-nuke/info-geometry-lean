@@ -1,0 +1,45 @@
+{
+  "lean_kernel_verified": false,
+  "theorem_count": 29,
+  "theorems": [
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.coefficientDeriv_add",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.coefficientDeriv_sub",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.coefficientDeriv_mul",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.coefficientDeriv_commutator",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.fieldStrength_swap",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.curvatureAction_eq",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.rightJacobiator_eq",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.bianchi_eq",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.electric_eq",
+    "InfoGeometry.Canonical.OperatorZornFourPotentialGauge.chiral_square_retains_curvature",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_add",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_sub",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_mul",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_associator",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_deriv",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_covariant",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_fieldStrength",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_curvatureAction",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_adjointCovariant",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.mapCoefficients_bianchi",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.coefficientConjugation_inverse_apply",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.transformed_generator_eq",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_inverse_apply",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_mul",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_associator",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_covariant",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_fieldStrength",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_curvatureAction",
+    "InfoGeometry.Canonical.OperatorZornGaugeCovariance.gauge_bianchi"
+  ],
+  "source_files": [
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornFourPotentialGauge.lean",
+      "sha256": "a17c100f8dc0e7219f71dd1fd685e687e9bb072e7a1ceb52721503a510676d76"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornGaugeCovariance.lean",
+      "sha256": "ede165f8d1fd595c672807260e69242e4e939f1e10af79cc2470994073139589"
+    }
+  ]
+}

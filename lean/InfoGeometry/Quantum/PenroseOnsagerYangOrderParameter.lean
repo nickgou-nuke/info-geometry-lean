@@ -13,8 +13,8 @@ global unit-modulus scalar, and the Penrose--Onsager--Yang normalization
 
   `Phi = sqrt(N0) chi`,  `||Phi||^2 = N0`
 
-for a normalized mode.  It also builds finite positive spectral kernels from
-arbitrary nonnegative occupations.  No spontaneous-symmetry-breaking
+for a normalized mode. It also builds finite positive spectral kernels from
+arbitrary nonnegative occupations. No spontaneous-symmetry-breaking
 expectation value or microscopic pairing Hamiltonian is used.
 -/
 
@@ -112,10 +112,8 @@ theorem modeNormSq_orderParameter
     modeNormSq (orderParameter N0 χ) = N0 := by
   unfold orderParameter
   rw [modeNormSq_scalarAction]
-  have hsqrt : Real.sqrt N0 * Real.sqrt N0 = N0 :=
-    Real.mul_self_sqrt hN0
-  simp [Complex.normSq_ofReal, hsqrt, IsNormalizedMode] at hχ ⊢
-  exact hχ
+  change modeNormSq χ = 1 at hχ
+  rw [Complex.normSq_ofReal, Real.mul_self_sqrt hN0, hχ, mul_one]
 
 /-- The condensate kernel of `sqrt(N0) chi` is `N0 |chi><chi|`. -/
 theorem rankOneKernel_orderParameter

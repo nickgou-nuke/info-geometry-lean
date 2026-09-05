@@ -1,0 +1,31 @@
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactAll
+
+/-!
+# Transitive axiom inspection for the corrected symplectic contact lane
+
+These commands are intended to be executed by Lean.  Any `sorryAx` or
+project-specific custom axiom in the dependency closure is a verification
+failure.
+-/
+
+#print axioms InfoGeometry.Exceptional.Freudenthal.legacy_fiveGradedBracket_not_jacobi
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactRepresentation_bracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactRepresentation_injective
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactBracket_cyclic_jacobi
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactRepresentationLieHom
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactImageEquiv
+
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContact_lie_mem_grade_add
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactGradeBracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContact_named_grade_packet
+
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactCommonRepresentation_bracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactCommonRepresentation_injective
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactCommonRepresentation_preserves_grade
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactFermion_CAR
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactBoson_CCR
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContact_common_representation_packet
+
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactRho_map_bracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactCommonRho_map_bracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplectic_contact_five_grade_closure_packet

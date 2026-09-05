@@ -55,17 +55,34 @@ structure Deck where
   vertical : ℤ
   deriving DecidableEq, Repr
 
-instance : Mul Deck where
-  mul g h :=
-    ⟨g.horizontal + paritySign g.vertical * h.horizontal,
-      g.vertical + h.vertical⟩
+private def deckMul (g h : Deck) : Deck :=
+  ⟨g.horizontal + paritySign g.vertical * h.horizontal,
+    g.vertical + h.vertical⟩
 
-instance : One Deck where
-  one := ⟨0, 0⟩
+private def deckOne : Deck := ⟨0, 0⟩
 
-instance : Inv Deck where
-  inv g :=
-    ⟨-(paritySign g.vertical * g.horizontal), -g.vertical⟩
+private def deckInv (g : Deck) : Deck :=
+  ⟨-(paritySign g.vertical * g.horizontal), -g.vertical⟩
+
+/-- The normal forms carry the Klein semidirect-product group law. -/
+instance : Group Deck where
+  mul := deckMul
+  one := deckOne
+  inv := deckInv
+  mul_assoc g h k := by
+    ext
+    · simp [deckMul, paritySign_add]
+      ring
+    · simp [deckMul]
+  one_mul g := by
+    ext <;> simp [deckMul, deckOne]
+  mul_one g := by
+    ext <;> simp [deckMul, deckOne]
+  inv_mul_cancel g := by
+    ext
+    · simp [deckMul, deckOne, deckInv, paritySign_neg]
+      ring
+    · simp [deckMul, deckOne, deckInv]
 
 @[simp] theorem mul_horizontal (g h : Deck) :
     (g * h).horizontal =
@@ -82,23 +99,6 @@ instance : Inv Deck where
 
 @[simp] theorem inv_vertical (g : Deck) :
     g⁻¹.vertical = -g.vertical := rfl
-
-/-- The normal forms carry the Klein semidirect-product group law. -/
-instance : Group Deck where
-  mul_assoc g h k := by
-    ext
-    · simp [paritySign_add]
-      ring
-    · simp
-  one_mul g := by
-    ext <;> simp
-  mul_one g := by
-    ext <;> simp
-  inv_mul_cancel g := by
-    ext
-    · simp [paritySign_neg]
-      ring
-    · simp
 
 /-- Universal-cover affine plane. -/
 abbrev Plane := ℝ × ℝ
@@ -119,19 +119,27 @@ theorem deckAct_mul (g h : Deck) (p : Plane) :
   rcases p with ⟨x, y⟩
   ext <;> simp [deckAct, paritySign_add] <;> ring
 
+/-- Native multiplicative action on the affine plane. -/
+instance : MulAction Deck Plane where
+  smul := deckAct
+  one_smul := deckAct_one
+  mul_smul := deckAct_mul
+
 /-- The identity is the only deck element fixing a point. -/
 theorem deckAct_eq_self_iff (g : Deck) (p : Plane) :
     deckAct g p = p ↔ g = 1 := by
   constructor
   · intro h
-    have hy := congrArg Prod.snd h
+    have hy : p.2 + (g.vertical : ℝ) = p.2 := by
+      simpa [deckAct] using congrArg Prod.snd h
     have hvr : (g.vertical : ℝ) = 0 := by
-      simpa [deckAct] using sub_eq_zero.mp (sub_eq_zero.mpr hy)
+      linarith
     have hv : g.vertical = 0 := by
       exact_mod_cast hvr
-    have hx := congrArg Prod.fst h
+    have hx : p.1 + (g.horizontal : ℝ) = p.1 := by
+      simpa [deckAct, hv] using congrArg Prod.fst h
     have hhr : (g.horizontal : ℝ) = 0 := by
-      simpa [deckAct, hv] using sub_eq_zero.mp (sub_eq_zero.mpr hx)
+      linarith
     have hh : g.horizontal = 0 := by
       exact_mod_cast hhr
     ext <;> simp [hh, hv]
@@ -160,7 +168,7 @@ def b : Deck := ⟨0, 1⟩
 
 /-- Klein-bottle presentation relation `b a = a⁻¹ b`. -/
 theorem klein_relation : b * a = a⁻¹ * b := by
-  ext <;> norm_num [a, b, paritySign]
+  ext <;> norm_num [a, b, deckMul, deckInv, paritySign]
 
 /-- Conjugation presentation `b a b⁻¹ = a⁻¹`. -/
 theorem klein_conjugation_relation : b * a * b⁻¹ = a⁻¹ := by

@@ -1,6 +1,7 @@
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 import InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 import InfoGeometry.Physics.NuclearSolovievCompression
+import InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
@@ -14,11 +15,11 @@ This capstone separates two facts.
    Jacobi obstruction unless its missing triple identity is established.
 2. The concrete nuclear operator realization is already globally closed:
    two-mode CAR matrices give a genuine five-grading and global Jacobi; a
-   common infinite occupation carrier gives exact CAR and CCR; compression
-   yields the finite Soloviev matrix; and every Soloviev block is an affine
-   scalar shift of a traceless BdG block.
+   common infinite occupation carrier gives exact CAR and CCR; an idempotent
+   model-space projector yields the finite Soloviev matrix; and every Soloviev
+   block is an affine scalar shift of a traceless BdG block.
 
-The second statement is a complete finite/algebraic model.  It does not erase
+The second statement is a complete finite/algebraic model. It does not erase
 or assume away the first, more general, exceptional-algebra frontier.
 -/
 
@@ -31,6 +32,7 @@ open InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
 open InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 open InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 open InfoGeometry.Physics.NuclearSolovievCompression
+open InfoGeometry.Physics.NuclearSolovievProjectedHamiltonian
 open InfoGeometry.Physics.NuclearBdGTwoLevelExact
 open InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
@@ -74,6 +76,17 @@ theorem common_operator_carrier_closure
   have h := common_car_phonon_packet D E
   exact ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩
 
+/-- Exact `P H P` compression packet. -/
+theorem projected_soloviev_closure
+    (Eqp omega V C D : ℝ) :
+    modelProjection * modelProjection = modelProjection ∧
+      modelProjection (modelEmbed ![C, D]) = modelEmbed ![C, D] ∧
+      modelProjection
+          (fullQPNMHamiltonian Eqp omega V
+            (modelProjection (modelEmbed ![C, D]))) =
+        modelEmbed (mulVec (qpnmMatrix Eqp omega V) ![C, D]) :=
+  projected_soloviev_packet Eqp omega V C D
+
 /-- The full operator compression and finite BdG/Soloviev spectral relation. -/
 theorem finite_bdg_soloviev_closure
     (ξ Δ Eqp omega V C D : ℝ)
@@ -113,10 +126,12 @@ theorem nuclear_five_grade_car_phonon_bdg_soloviev_packet
       qpAnnihilation * qpCreation + qpCreation * qpAnnihilation = 1 ∧
       phononAnnihilation * phononCreation -
           phononCreation * phononAnnihilation = 1 ∧
-      modelReadout
+      modelProjection * modelProjection = modelProjection ∧
+      modelProjection
           (bdgSolovievHamiltonian ξ Δ omega V
-            (modelEmbed ![C₀, C₁])) =
-        mulVec (bdgSolovievBlock ξ Δ omega V) ![C₀, C₁] ∧
+            (modelProjection (modelEmbed ![C₀, C₁]))) =
+        modelEmbed
+          (mulVec (bdgSolovievBlock ξ Δ omega V) ![C₀, C₁]) ∧
       bdgSolovievBlock ξ Δ omega V =
         solovievCenter (bdgEnergy ξ Δ) omega •
             (1 : InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.M2R) +
@@ -132,11 +147,15 @@ theorem nuclear_five_grade_car_phonon_bdg_soloviev_packet
     pairCreation_grade,
     qp_CAR,
     phonon_CCR,
-    bdgSoloviev_compression ξ Δ omega V C₀ C₁,
+    modelProjection_idempotent,
+    ?_,
     bdgSolovievBlock_affine ξ Δ omega V,
     particleHole_sq ψ,
     ?_⟩
-  have h := common_car_phonon_packet D₁ D₂
-  exact h.2.2.2.1
+  · simpa [bdgSolovievHamiltonian, bdgSolovievBlock] using
+      projected_fullQPNM_on_model
+        (bdgEnergy ξ Δ) omega V C₀ C₁
+  · have h := common_car_phonon_packet D₁ D₂
+    exact h.2.2.2.1
 
 end InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure

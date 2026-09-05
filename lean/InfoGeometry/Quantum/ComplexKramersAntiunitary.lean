@@ -141,7 +141,7 @@ theorem timeReversal_preserves_real_eigenvalue
     (λ : ℝ) (v : H2)
     (hv : A v = (λ : ℂ) • v) :
     A (timeReversal v) = (λ : ℂ) • timeReversal v := by
-  rw [hcomm, hv, timeReversal_smul]
+  rw [hcomm v, hv, timeReversal_smul]
   simp
 
 /-- Finite Kramers-pair packet for a symmetry-compatible eigenspace. -/

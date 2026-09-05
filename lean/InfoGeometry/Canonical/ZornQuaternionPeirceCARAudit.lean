@@ -1,7 +1,8 @@
 import InfoGeometry.Canonical.ZornQuaternionPeirceCARPristineChain
+import InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
 
 /-!
-# Transitive axiom inspection for the Zorn quaternion/Peirce chain
+# Transitive axiom inspection for the Zorn/derivation/CAR/CCR chain
 
 These commands inspect elaborated declarations when Lean executes the file.
 Any occurrence of `sorryAx` or a project-specific custom axiom is a verification
@@ -24,5 +25,18 @@ failure. This audit does not replace kernel execution.
 #print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.zornMul_assoc_of_mem_quaternionSlice
 #print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.quaternion_table_packet
 #print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCAR.zornMul_not_associative_witness
+
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.derivationLie_leibniz
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.derivationLie_bracket_apply
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.derivationLie_commutator_mem
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.fermionAnnihilation_sq
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.fermionCreation_sq
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.fermion_CAR
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.fermionNumber_comm_creation
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.fermionNumber_comm_annihilation
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.derivation_even_CAR_symmetry
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.boson_CCR
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.derivation_even_CCR_symmetry
+#print axioms InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope.zorn_derivation_lie_CAR_CCR_packet
 
 #print axioms InfoGeometry.Canonical.ZornQuaternionPeirceCARPristineChain.zorn_quaternion_peirce_car_pristine_chain

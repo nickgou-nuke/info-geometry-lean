@@ -1,0 +1,19 @@
+import InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge
+
+/-!
+# Transitive axiom inspection for the finite Cartan--`Cl(3)` phase bridge
+
+Execute this module after building the theorem owner. Any `sorryAx` or custom
+axiom in the printed transitive dependencies is a failure.
+-/
+
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.realificationOrderSwap_sq
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.orderSwap_conjugation_mul
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.orderSwap_conjugates_complexStructure_to_realPhaseAxis
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.orderSwap_complexStructure_eq_real_pauli_volume
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.interleavedRealify_mul
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.interleavedRealify_complexPhase
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.interleavedKcirc_eq_realPhaseAxis_mul_interleavedKboost
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.interleavedKcirc_eq_real_pauli_volume_mul_interleavedKboost
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.real_pauli_volume_sq
+#print axioms InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge.bipolar_cartan_cl3_phase_packet

@@ -23,6 +23,8 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.O55FiveGradeKramersBridge
 
+open InfoGeometry.CliffordTower
+open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Canonical.O55FiveGradeClosure

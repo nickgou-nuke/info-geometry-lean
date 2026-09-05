@@ -58,8 +58,8 @@ def Weight.parity (w : Weight) : ZMod 2 :=
 
 @[simp] theorem Weight.parity_opposite (w : Weight) :
     w.opposite.parity = w.parity := by
-  change ((-w.value : ℤ) : ZMod 2) = (w.value : ZMod 2)
-  simp only [Int.cast_neg]
+  unfold Weight.parity
+  rw [Weight.value_opposite, Int.cast_neg]
   exact ZMod.neg_eq_self_mod_two _
 
 /-- Five graded copies of the canonical two-component Kramers carrier. -/

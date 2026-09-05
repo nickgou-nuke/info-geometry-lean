@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "method": "exact free noncommuting coefficient words; Zorn product not reassociated",
+  "lean_kernel_verified": false,
+  "identities": 16,
+  "coordinate_checks": 116,
+  "checks": [
+    {
+      "name": "coefficient_deriv_add",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "coefficient_deriv_sub",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "coefficient_deriv_product_rule",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "coefficient_deriv_commutator",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "field_strength_swap",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "full_curvature",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "right_Akivis_identity",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "full_Bianchi_with_both_sources",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "gauge_preserves_Zorn_product",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "gauge_preserves_associator",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "inhomogeneous_generator",
+      "coordinate_checks": 1,
+      "passed": true
+    },
+    {
+      "name": "gauge_covariant_derivative",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "gauge_field_strength",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "gauge_full_curvature",
+      "coordinate_checks": 8,
+      "passed": true
+    },
+    {
+      "name": "operator_cross_self",
+      "coordinate_checks": 3,
+      "passed": true
+    },
+    {
+      "name": "alternativity_defect",
+      "coordinate_checks": 8,
+      "passed": true
+    }
+  ]
+}

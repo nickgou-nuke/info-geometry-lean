@@ -6,14 +6,14 @@ import InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
 # Grade-preserving representation on a common two-mode CAR--phonon carrier
 
 This file supplies the missing common representation map for the concrete
-nuclear five-grading.  The finite fermionic sector is the existing two-mode
+nuclear five-grading. The finite fermionic sector is the existing two-mode
 Jordan--Wigner carrier `Fin 4`; each coefficient is a native Zorn module
 vector, and the outer countable coordinate is the algebraic phonon occupation.
 
 A real `4 × 4` matrix acts on the fermionic coordinate by the ordinary module
-matrix action and pointwise on every phonon level.  This gives a linear and
+matrix action and pointwise on every phonon level. This gives a linear and
 multiplicative representation into an associative endomorphism ring, hence a
-Lie representation for commutators.  The five adjoint grades are preserved.
+Lie representation for commutators. The five adjoint grades are preserved.
 The phonon shifts commute with the represented fermionic algebra, while native
 Zorn derivations act coefficientwise and commute with both sectors.
 -/
@@ -42,11 +42,12 @@ def fermionAction (M : M4R) : FermionEnd where
     simp [smul_add, Finset.sum_add_distrib]
   map_smul' c v := by
     funext i
-    simp only [Pi.smul_apply, smul_smul]
-    rw [← Finset.smul_sum]
+    change (∑ j, M i j • (c • v j)) =
+      c • (∑ j, M i j • v j)
+    rw [Finset.smul_sum]
     apply Finset.sum_congr rfl
     intro j hj
-    rw [mul_comm]
+    simp [smul_smul, mul_comm]
 
 @[simp] theorem fermionAction_apply
     (M : M4R) (v : FermionVector) (i : Fin 4) :
@@ -116,14 +117,26 @@ theorem representation_smul (c : ℝ) (M : M4R) :
   apply LinearMap.ext
   intro ψ
   funext n i
-  simp only [representation_apply, Pi.smul_apply, smul_eq_mul,
-    Matrix.smul_apply, LinearMap.smul_apply, RingHom.id_apply, smul_smul]
-  rw [← Finset.smul_sum]
+  change (∑ j, (c * M i j) • ψ n j) =
+    c • (∑ j, M i j • ψ n j)
+  rw [Finset.smul_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  simp [smul_smul]
+
+/-- Zero preservation. -/
+theorem representation_zero :
+    representation (0 : M4R) = 0 := by
+  apply LinearMap.ext
+  intro ψ
+  funext n i
+  simp [representation, occupationLift, fermionAction]
 
 /-- Unit preservation. -/
 theorem representation_one :
     representation (1 : M4R) = 1 := by
-  rw [representation, fermionAction_one]
+  unfold representation
+  rw [fermionAction_one]
   apply LinearMap.ext
   intro ψ
   funext n
@@ -132,8 +145,8 @@ theorem representation_one :
 /-- Multiplicativity. -/
 theorem representation_mul (M N : M4R) :
     representation (M * N) = representation M * representation N := by
-  rw [representation, representation,
-    fermionAction_mul, occupationLift_mul]
+  unfold representation
+  rw [fermionAction_mul, occupationLift_mul]
 
 /-- The representation as a native linear map. -/
 def representationLinear : M4R →ₗ[ℝ] Operator where
@@ -149,9 +162,14 @@ theorem representation_commutator (M N : M4R) :
     representation (comm M N) =
       representation M * representation N -
         representation N * representation M := by
-  rw [comm, representationLinear.map_sub,
-    representation_mul, representation_mul]
-  rfl
+  rw [comm]
+  calc
+    representation (M * N - N * M) =
+        representation (M * N) - representation (N * M) :=
+      representationLinear.map_sub (M * N) (N * M)
+    _ = representation M * representation N -
+          representation N * representation M := by
+      rw [representation_mul, representation_mul]
 
 /-- Grade readout on represented operators. -/
 def RepresentedHasGrade (k : ℤ) (T : Operator) : Prop :=
@@ -163,10 +181,7 @@ theorem representation_preserves_grade
     {k : ℤ} {X : M4R} (hX : HasGrade k X) :
     RepresentedHasGrade k (representation X) := by
   unfold RepresentedHasGrade
-  rw [← representation_mul, ← representation_mul,
-    ← representationLinear.map_sub]
-  change representation (comm gradingOperator X) = _
-  rw [hX, representation_smul]
+  rw [← representation_commutator, hX, representation_smul]
 
 /-- The named five lanes act on the common carrier with the same weights. -/
 theorem represented_named_five_grade_packet :
@@ -183,7 +198,7 @@ theorem represented_named_five_grade_packet :
     representation_preserves_grade a2_grade,
     representation_preserves_grade pairAnnihilation_grade⟩
 
-/-- The represented two-mode CAR relations. -/
+/-- The represented first-mode CAR relation. -/
 theorem represented_mode1_CAR :
     representation a1 * representation a1Dag +
       representation a1Dag * representation a1 = 1 := by
@@ -202,8 +217,8 @@ theorem represented_cross_CAR :
     representation a1 * representation a2Dag +
       representation a2Dag * representation a1 = 0 := by
   rw [← representation_mul, ← representation_mul,
-    ← representation_add, cross_mixed_anticommute]
-  rfl
+    ← representation_add, cross_mixed_anticommute,
+    representation_zero]
 
 /-! ## Phonon shifts on the common carrier -/
 

@@ -1,0 +1,36 @@
+import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure
+
+/-!
+# Transitive axiom inspection for the nuclear closure lane
+
+These commands inspect the elaborated dependency closures when Lean executes
+this file.  Any `sorryAx` or project-specific custom axiom is a verification
+failure.  The audit is not a substitute for kernel execution.
+-/
+
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.comm_jacobi
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.comm_hasGrade
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.pair_extreme_bracket
+#print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.concrete_nuclear_five_grade_packet
+
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.qp_CAR
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.phonon_CCR
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.commonCoupledSystem
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.coefficientLift_commutator
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.common_car_phonon_packet
+
+#print axioms InfoGeometry.Physics.NuclearSolovievCompression.modelReadout_modelEmbed
+#print axioms InfoGeometry.Physics.NuclearSolovievCompression.compressedAction_eq_qpnm_mulVec
+#print axioms InfoGeometry.Physics.NuclearSolovievCompression.compressed_eigenvalue_system
+
+#print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdgBlock_sq
+#print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdg_characteristic
+#print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdg_eigenbasis_intertwines
+#print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.particleHole_sq
+#print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.particleHole_anticommutes
+
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_eq_center_add_bdg
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_upper_bdg_root
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.bdgSoloviev_compression
+
+#print axioms InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure.nuclear_five_grade_car_phonon_bdg_soloviev_packet

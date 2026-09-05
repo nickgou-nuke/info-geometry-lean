@@ -1,0 +1,1 @@
+Full finite algebraic O(5,5) contact multigrading implementation; source-level only pending Lean kernel verification.

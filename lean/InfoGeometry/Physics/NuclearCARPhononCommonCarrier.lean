@@ -7,7 +7,7 @@ import InfoGeometry.Physics.NuclearPhononRPAAlgebra
 # A common algebraic carrier for one quasiparticle mode and one phonon mode
 
 This module closes the previously abstract CAR--RPA socket on an explicit
-associative endomorphism algebra.  The coefficient module is the native real
+associative endomorphism algebra. The coefficient module is the native real
 Zorn split-octonion module, but none of the operator products below uses the
 nonassociative Zorn multiplication: all ladder products are compositions in a
 linear endomorphism ring.
@@ -17,7 +17,7 @@ The carrier
 `ℕ → (NativeZorn × NativeZorn)`
 
 combines a two-sheet one-mode CAR module with a countable algebraic boson
-occupation module.  It supports exact CAR, exact CCR, all quasiparticle--phonon
+occupation module. It supports exact CAR, exact CCR, all quasiparticle--phonon
 cross commutators, and the coefficientwise action of the Zorn derivation Lie
 algebra.
 -/
@@ -320,7 +320,9 @@ theorem coefficientLift_even_CCR (D : NativeZornEnd) :
         D (((n + 1 : ℕ) : ℝ) • (ψ (n + 1)).2)) =
       (((n + 1 : ℕ) : ℝ) • D (ψ (n + 1)).1,
         ((n + 1 : ℕ) : ℝ) • D (ψ (n + 1)).2)
-    constructor <;> exact D.map_smul _ _
+    apply Prod.ext
+    · exact D.map_smul _ _
+    · exact D.map_smul _ _
   · apply LinearMap.ext
     intro ψ
     funext n
@@ -342,7 +344,9 @@ theorem common_car_phonon_packet
         qpCreation * coefficientLift (D : NativeZornEnd) := by
   refine ⟨qp_CAR, phonon_CCR, qpCreation_commutes_phononCreation, ?_,
     (coefficientLift_even_CAR (D : NativeZornEnd)).2⟩
-  rw [derivationLie_bracket_apply]
+  change coefficientLift
+      ((D : NativeZornEnd) * (E : NativeZornEnd) -
+        (E : NativeZornEnd) * (D : NativeZornEnd)) = _
   exact coefficientLift_commutator (D : NativeZornEnd) (E : NativeZornEnd)
 
 end InfoGeometry.Physics.NuclearCARPhononCommonCarrier

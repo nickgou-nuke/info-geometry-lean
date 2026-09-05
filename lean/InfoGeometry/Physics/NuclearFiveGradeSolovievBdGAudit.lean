@@ -16,6 +16,14 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.gradeBracket
 #print axioms InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules.bundled_five_grade_packet
 
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.fermionAction_mul
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.representation_mul
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.representation_commutator
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.representation_preserves_grade
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.represented_mode1_CAR
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.phonon_CCR
+#print axioms InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation.five_grade_common_representation_packet
+
 #print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.qp_CAR
 #print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.phonon_CCR
 #print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.commonCoupledSystem
@@ -39,4 +47,5 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_upper_bdg_root
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.bdgSoloviev_compression
 
+#print axioms InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure.projected_soloviev_closure
 #print axioms InfoGeometry.Physics.NuclearFiveGradeSolovievBdGClosure.nuclear_five_grade_car_phonon_bdg_soloviev_packet

@@ -5,7 +5,7 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
 # Native Lie algebra structure for the corrected symplectic contact bracket
 
 Jacobi is not postulated and is not proved by an exhaustive table of 216
-homogeneous cells.  It is pulled back from the associative commutator through
+homogeneous cells. It is pulled back from the associative commutator through
 the faithful block representation constructed in
 `FreudenthalSymplecticContactRepresentation`.
 
@@ -141,11 +141,10 @@ def symplecticContactImage :
     LieSubalgebra ℝ (SymplecticContactEnd (J := J)) :=
   LieHom.range (symplecticContactRepresentationLieHom D)
 
-/-- The source is linearly equivalent to its faithful Lie image. -/
+/-- The source is Lie-equivalent to its faithful image. -/
 noncomputable def symplecticContactImageEquiv :
-    FiveGradedCarrier D ≃ₗ[ℝ] symplecticContactImage D :=
-  LinearEquiv.ofInjective
-    (symplecticContactRepresentationLieHom D).toLinearMap
+    FiveGradedCarrier D ≃ₗ⁅ℝ⁆ symplecticContactImage D :=
+  (symplecticContactRepresentationLieHom D).equivRangeOfInjective
     (symplecticContactRepresentationLieHom_injective D)
 
 /-- Compact closure theorem: native Jacobi, native Lie representation, and

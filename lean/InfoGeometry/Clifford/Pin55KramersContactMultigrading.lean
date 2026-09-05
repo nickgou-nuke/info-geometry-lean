@@ -2,24 +2,25 @@ import InfoGeometry.Quantum.FiveGradedKramersModule
 import InfoGeometry.Topology.KleinDeckNormalForm
 import InfoGeometry.Exceptional.FreudenthalContactParityGrading
 import InfoGeometry.Clifford.O55SymmetricBlockGrading
+import InfoGeometry.Clifford.O55FiveGradeKramersBridge
 import proofs.PinO55GlideReflection
 
 /-!
 # Pin(5,5), Kramers, Klein, and contact multiple grading
 
-Four gradings/involutions coexist in the reconstructed architecture:
+Five independent labels coexist in the reconstructed architecture:
 
-1. the contact integer degree `-2,-1,0,1,2`;
+1. the Freudenthal contact integer degree;
 2. its derived parity modulo two;
-3. the symmetric-pair parity of `o(5,5)` (compact rotations versus mixed
+3. the native `Cl(5,5)` conformal integer degree and its parity;
+4. the symmetric-pair parity of `o(5,5)` (compact rotations versus mixed
    boosts);
-4. the orientation parity of the Klein deck action.
+5. the orientation parity of the Klein deck action.
 
-They are assembled as a product degree rather than identified.  The complex
-Kramers operator reverses the contact integer degree while preserving its
-mod-two parity.  The native Pin(5,5) crosscap separately exchanges the two
-projective null directions and the affine Klein generator reverses
-orientation.
+They are assembled as product data rather than identified.  Kramers opposition
+reverses both integer labels and preserves their mod-two reductions.  The
+native Pin(5,5) crosscap separately exchanges the two projective null
+directions, while the affine Klein generator reverses orientation.
 -/
 
 noncomputable section
@@ -29,6 +30,9 @@ namespace InfoGeometry.Clifford.Pin55KramersContactMultigrading
 open InfoGeometry.Quantum.FiveGradedKramersModule
 open InfoGeometry.Topology.KleinDeckNormalForm
 open InfoGeometry.Exceptional.Freudenthal
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
+open InfoGeometry.Clifford.ConformalLieAlgebra55
+open InfoGeometry.Clifford.O55FiveGradeKramersBridge
 open InfoGeometry.Clifford.O55SymmetricBlockGrading
 
 /-- Product of the independent grading labels. -/
@@ -36,7 +40,9 @@ open InfoGeometry.Clifford.O55SymmetricBlockGrading
 structure MultiDegree where
   contactWeight : ℤ
   contactParity : ZMod 2
-  o55Parity : ZMod 2
+  o55FiveWeight : ℤ
+  o55FiveParity : ZMod 2
+  o55SymmetricParity : ZMod 2
   orientationParity : ZMod 2
   deriving DecidableEq, Repr
 
@@ -52,23 +58,28 @@ def deckOrientationParity (g : Deck) : ZMod 2 :=
     deckOrientationParity b = 1 := by
   rfl
 
-/-- Assemble one finite contact weight, one `o(5,5)` generator family, and one
-deck normal form into a product degree. -/
+/-- Assemble one contact weight, one native O(5,5) conformal grade, one
+symmetric-pair generator family, and one deck normal form. -/
 def degreeOf
     (w : Weight)
+    (g₅ : ConformalGrade)
     (q : O55GradedGeneratorBasis.O55GeneratorGrade)
     (g : Deck) : MultiDegree where
   contactWeight := w.value
   contactParity := w.parity
-  o55Parity := generatorParity q
+  o55FiveWeight := toInt g₅
+  o55FiveParity := O55FiveGradeKramersBridge.o55FiveParity g₅
+  o55SymmetricParity := generatorParity q
   orientationParity := deckOrientationParity g
 
-/-- Kramers opposition acts only on the integer contact degree; its parity is
-unchanged. -/
+/-- Kramers opposition reverses both integer five-grades and preserves all
+parity labels. -/
 def kramersOppositeDegree (d : MultiDegree) : MultiDegree where
   contactWeight := -d.contactWeight
   contactParity := d.contactParity
-  o55Parity := d.o55Parity
+  o55FiveWeight := -d.o55FiveWeight
+  o55FiveParity := d.o55FiveParity
+  o55SymmetricParity := d.o55SymmetricParity
   orientationParity := d.orientationParity
 
 @[simp] theorem kramersOppositeDegree_involutive (d : MultiDegree) :
@@ -77,11 +88,14 @@ def kramersOppositeDegree (d : MultiDegree) : MultiDegree where
 
 @[simp] theorem degreeOf_opposite
     (w : Weight)
+    (g₅ : ConformalGrade)
     (q : O55GradedGeneratorBasis.O55GeneratorGrade)
     (g : Deck) :
-    degreeOf w.opposite q g =
-      kramersOppositeDegree (degreeOf w q g) := by
-  ext <;> simp [degreeOf, kramersOppositeDegree]
+    degreeOf w.opposite g₅.swap q g =
+      kramersOppositeDegree (degreeOf w g₅ q g) := by
+  ext <;>
+    simp [degreeOf, kramersOppositeDegree,
+      O55FiveGradeKramersBridge.o55FiveParity_swap]
 
 /-- The `o(5,5)` family partition has twenty even and twenty-five odd
     generators. -/

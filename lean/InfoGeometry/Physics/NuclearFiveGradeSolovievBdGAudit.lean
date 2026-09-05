@@ -59,6 +59,10 @@ failure. The audit is not a substitute for kernel execution.
 #print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdg_eigenbasis_intertwines
 #print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.particleHole_sq
 #print axioms InfoGeometry.Physics.NuclearBdGTwoLevelExact.particleHole_anticommutes
+#print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.uCoeff_sq_add_vCoeff_sq
+#print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalizedPositiveEigenvector_eigen
+#print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalized_bdg_CAR
+#print axioms InfoGeometry.Physics.NuclearBdGBogoliubovCAR.normalized_bdg_bogoliubov_packet
 
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_eq_center_add_bdg
 #print axioms InfoGeometry.Physics.NuclearBdGSolovievAffineBridge.qpnm_upper_bdg_root

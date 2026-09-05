@@ -6,7 +6,7 @@ import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 # Exact compression of the common CAR--phonon Hamiltonian
 
 The scalar Soloviev parameters are realized here as matrix elements of one
-explicit operator on the common quasiparticle--phonon carrier.  The two model
+explicit operator on the common quasiparticle--phonon carrier. The two model
 channels are the occupied quasiparticle state with zero and one phonon.
 
 The theorem is a genuine section--retraction compression statement:
@@ -53,19 +53,19 @@ def modelEmbed : ModelVector →ₗ[ℝ] Carrier where
   map_add' v w := by
     funext n
     cases n with
-    | zero => rfl
+    | zero => simp [occupiedKet, scalarCoefficient]
     | succ n =>
         cases n with
-        | zero => rfl
-        | succ n => rfl
+        | zero => simp [occupiedKet, scalarCoefficient]
+        | succ n => simp
   map_smul' c v := by
     funext n
     cases n with
-    | zero => rfl
+    | zero => simp [occupiedKet, scalarCoefficient]
     | succ n =>
         cases n with
-        | zero => rfl
-        | succ n => rfl
+        | zero => simp [occupiedKet, scalarCoefficient]
+        | succ n => simp
 
 @[simp] theorem modelEmbed_zero_level (v : ModelVector) :
     modelEmbed v 0 = occupiedKet (v 0) := rfl
@@ -84,10 +84,10 @@ def modelReadout : Carrier →ₗ[ℝ] ModelVector where
   toFun ψ := ![(ψ 0).2.a, (ψ 1).2.a]
   map_add' ψ φ := by
     ext i
-    fin_cases i <;> rfl
+    fin_cases i <;> simp
   map_smul' c ψ := by
     ext i
-    fin_cases i <;> rfl
+    fin_cases i <;> simp
 
 /-- The readout is a left inverse of the model embedding. -/
 @[simp] theorem modelReadout_modelEmbed (v : ModelVector) :
@@ -115,7 +115,7 @@ def phononNumber : Operator :=
     phononNumber ψ (n + 1) = ((n + 1 : ℕ) : ℝ) • ψ (n + 1) := rfl
 
 /-- Full one-quasiparticle harmonic-phonon Hamiltonian with linear channel
-coupling.  Its model compression is the Soloviev QPNM matrix. -/
+coupling. Its model compression is the Soloviev QPNM matrix. -/
 def fullQPNMHamiltonian (Eqp omega V : ℝ) : Operator :=
   Eqp • qpNumber + omega • phononNumber +
     V • (phononCreation + phononAnnihilation)

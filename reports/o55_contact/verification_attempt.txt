@@ -1,0 +1,9 @@
+UNVERIFIED
+
+The authoring environment did not provide a local authenticated checkout with
+Lake/Lean for the exact branch head. No successful kernel elaboration is
+claimed by this file.
+
+Required command:
+
+bash scripts/check_o55_contact_full_formalism.sh

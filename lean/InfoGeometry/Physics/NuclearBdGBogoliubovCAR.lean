@@ -7,14 +7,15 @@ import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
 For nonzero pairing `Δ`, the positive-energy eigenvector
 
-`(Δ, E - ξ)`,  where `E = sqrt(ξ²+Δ²)`,
+`(Δ, E - ξ)`, where `E = sqrt(ξ²+Δ²)`,
 
-is nonzero and can be normalized explicitly.  Its coefficients `u,v` satisfy
-`u²+v²=1`.  Substituting the same coefficients into the two-mode CAR algebra
+is nonzero and can be normalized explicitly. Its coefficients `u,v` satisfy
+`u²+v²=1`. Substituting the same coefficients into the two-mode CAR algebra
 gives an exact Bogoliubov annihilation/creation pair which is nilpotent and
 satisfies the canonical anticommutation relation.
 
-The zero-pairing case is already diagonal and is recorded separately.
+For zero pairing the BdG block is already diagonal. The final existence theorem
+covers all real parameters by selecting the appropriate coordinate eigenvector.
 -/
 
 noncomputable section
@@ -66,8 +67,6 @@ theorem positiveNorm_sq
 theorem uCoeff_sq_add_vCoeff_sq
     {ξ Δ : ℝ} (hΔ : Δ ≠ 0) :
     (uCoeff ξ Δ) ^ 2 + (vCoeff ξ Δ) ^ 2 = 1 := by
-  have hnorm : positiveNorm ξ Δ ≠ 0 :=
-    ne_of_gt (positiveNorm_pos hΔ)
   have hsq := positiveNorm_sq hΔ
   unfold uCoeff vCoeff rawPositiveNormSq at *
   rw [div_pow, div_pow, ← add_div, hsq]
@@ -183,5 +182,46 @@ theorem normalized_bdg_bogoliubov_packet
 theorem bdgBlock_zero_pairing (ξ : ℝ) :
     bdgBlock ξ 0 = !![ξ, 0; 0, -ξ] := by
   rfl
+
+/-- Positive-energy value for zero pairing. -/
+theorem bdgEnergy_zero_pairing (ξ : ℝ) :
+    bdgEnergy ξ 0 = |ξ| := by
+  simp [bdgEnergy, Real.sqrt_sq_eq_abs]
+
+/-- Every real two-level BdG block has normalized real coefficients which are
+an eigenvector for the nonnegative energy and whose Bogoliubov ladder obeys
+CAR.  The nonzero-pairing case uses the explicit normalized vector above; the
+zero-pairing cases select the appropriate coordinate vector. -/
+theorem exists_normalized_positive_eigenmode_with_CAR (ξ Δ : ℝ) :
+    ∃ u v : ℝ,
+      u ^ 2 + v ^ 2 = 1 ∧
+      mulVec (bdgBlock ξ Δ) ![u, v] =
+        bdgEnergy ξ Δ • ![u, v] ∧
+      bogoliubovAnnihilation u v * bogoliubovCreation u v +
+        bogoliubovCreation u v * bogoliubovAnnihilation u v = 1 := by
+  by_cases hΔ : Δ = 0
+  · subst Δ
+    by_cases hξ : 0 ≤ ξ
+    · refine ⟨1, 0, by norm_num, ?_,
+        bogoliubov_CAR_of_normalized 1 0 (by norm_num)⟩
+      have hE : bdgEnergy ξ 0 = ξ := by
+        rw [bdgEnergy_zero_pairing, abs_of_nonneg hξ]
+      rw [hE]
+      ext i
+      fin_cases i <;>
+        simp [bdgBlock, mulVec, dotProduct, Fin.sum_univ_two]
+    · have hξneg : ξ < 0 := lt_of_not_ge hξ
+      refine ⟨0, 1, by norm_num, ?_,
+        bogoliubov_CAR_of_normalized 0 1 (by norm_num)⟩
+      have hE : bdgEnergy ξ 0 = -ξ := by
+        rw [bdgEnergy_zero_pairing, abs_of_neg hξneg]
+      rw [hE]
+      ext i
+      fin_cases i <;>
+        simp [bdgBlock, mulVec, dotProduct, Fin.sum_univ_two]
+  · refine ⟨uCoeff ξ Δ, vCoeff ξ Δ,
+      uCoeff_sq_add_vCoeff_sq hΔ, ?_, normalized_bdg_CAR hΔ⟩
+    simpa [normalizedPositiveEigenvector] using
+      normalizedPositiveEigenvector_eigen hΔ
 
 end InfoGeometry.Physics.NuclearBdGBogoliubovCAR

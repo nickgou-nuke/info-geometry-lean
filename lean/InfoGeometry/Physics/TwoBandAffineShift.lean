@@ -69,8 +69,7 @@ theorem energyPlus_characteristic_root (b m : ℝ) (d : ℂ) :
   have hz : (b - energyPlus b m d) ^ 2 - gapSquare m d = 0 := by
     dsimp [energyPlus]
     nlinarith
-  rw [hz]
-  rfl
+  simp only [hz, Complex.ofReal_zero]
 
 theorem energyMinus_characteristic_root (b m : ℝ) (d : ℂ) :
     Matrix.det (hamiltonian b m d - (energyMinus b m d : ℂ) • (1 : Mat2)) = 0 := by
@@ -79,8 +78,7 @@ theorem energyMinus_characteristic_root (b m : ℝ) (d : ℂ) :
   have hz : (b - energyMinus b m d) ^ 2 - gapSquare m d = 0 := by
     dsimp [energyMinus]
     nlinarith
-  rw [hz]
-  rfl
+  simp only [hz, Complex.ofReal_zero]
 
 /-- The hybridized gap is independent of the electrostatic centre b. -/
 theorem gap_independent_of_shift (b m : ℝ) (d : ℂ) :

@@ -148,17 +148,49 @@ def quasiparticleNumber : Operator :=
   funext n
   cases n with
   | zero =>
-      exact fermionAction_number1_quasiparticleKet (v 0)
+      simpa [quasiparticleNumber, representation, occupationLift] using
+        fermionAction_number1_quasiparticleKet (v 0)
   | succ n =>
       cases n with
       | zero =>
-          exact fermionAction_number1_quasiparticleKet (v 1)
+          simpa [quasiparticleNumber, representation, occupationLift] using
+            fermionAction_number1_quasiparticleKet (v 1)
       | succ n =>
           simp [quasiparticleNumber, representation, occupationLift]
 
 /-- Phonon number. -/
 def phononNumber : Operator :=
   phononCreation * phononAnnihilation
+
+/-- Readout of the quasiparticle-number term. -/
+@[simp] theorem readout_quasiparticleNumber_modelEmbed (v : ModelVector) :
+    modelReadout (quasiparticleNumber (modelEmbed v)) = v := by
+  rw [quasiparticleNumber_modelEmbed, modelReadout_modelEmbed]
+
+/-- Readout of the phonon-number term. -/
+@[simp] theorem readout_phononNumber_modelEmbed (C D : ℝ) :
+    modelReadout (phononNumber (modelEmbed ![C, D])) = ![0, D] := by
+  ext i
+  fin_cases i <;>
+    simp [phononNumber, modelReadout, modelEmbed, quasiparticleKet,
+      scalarCoefficient, phononCreation, phononAnnihilation,
+      Module.End.mul_apply]
+
+/-- Readout of one phonon creation. -/
+@[simp] theorem readout_phononCreation_modelEmbed (C D : ℝ) :
+    modelReadout (phononCreation (modelEmbed ![C, D])) = ![0, C] := by
+  ext i
+  fin_cases i <;>
+    simp [modelReadout, modelEmbed, quasiparticleKet,
+      scalarCoefficient, phononCreation]
+
+/-- Readout of one phonon annihilation. -/
+@[simp] theorem readout_phononAnnihilation_modelEmbed (C D : ℝ) :
+    modelReadout (phononAnnihilation (modelEmbed ![C, D])) = ![D, 0] := by
+  ext i
+  fin_cases i <;>
+    simp [modelReadout, modelEmbed, quasiparticleKet,
+      scalarCoefficient, phononAnnihilation]
 
 /-- Full represented quasiparticle--phonon Hamiltonian. -/
 def fullHamiltonian (Eqp omega V : ℝ) : Operator :=
@@ -170,38 +202,41 @@ def compressedAction (Eqp omega V : ℝ) :
     ModelVector →ₗ[ℝ] ModelVector :=
   modelReadout.comp ((fullHamiltonian Eqp omega V).comp modelEmbed)
 
+/-- Full compressed action as a vector identity. -/
+theorem compressedAction_vector
+    (Eqp omega V C D : ℝ) :
+    compressedAction Eqp omega V ![C, D] =
+      ![Eqp * C + V * D, V * C + (Eqp + omega) * D] := by
+  change modelReadout
+      (fullHamiltonian Eqp omega V (modelEmbed ![C, D])) = _
+  simp [fullHamiltonian]
+  ext i
+  fin_cases i <;> simp <;> ring
+
 /-- Zero-phonon readout. -/
 theorem compressedAction_zero
     (Eqp omega V C D : ℝ) :
     compressedAction Eqp omega V ![C, D] 0 = Eqp * C + V * D := by
-  simp [compressedAction, fullHamiltonian, phononNumber,
-    modelReadout, modelEmbed, quasiparticleKet, scalarCoefficient,
-    quasiparticleNumber_modelEmbed, phononCreation,
-    phononAnnihilation, Module.End.mul_apply]
-  ring
+  rw [compressedAction_vector]
+  rfl
 
 /-- One-phonon readout. -/
 theorem compressedAction_one
     (Eqp omega V C D : ℝ) :
     compressedAction Eqp omega V ![C, D] 1 =
       V * C + (Eqp + omega) * D := by
-  simp [compressedAction, fullHamiltonian, phononNumber,
-    modelReadout, modelEmbed, quasiparticleKet, scalarCoefficient,
-    quasiparticleNumber_modelEmbed, phononCreation,
-    phononAnnihilation, Module.End.mul_apply]
-  ring
+  rw [compressedAction_vector]
+  rfl
 
 /-- Main same-carrier compression theorem. -/
 theorem compressedAction_eq_qpnm_mulVec
     (Eqp omega V C D : ℝ) :
     compressedAction Eqp omega V ![C, D] =
       mulVec (qpnmMatrix Eqp omega V) ![C, D] := by
+  rw [compressedAction_vector]
   ext i
-  fin_cases i
-  · rw [compressedAction_zero]
-    simp [qpnmMatrix, mulVec, dotProduct, Fin.sum_univ_two]
-  · rw [compressedAction_one]
-    simp [qpnmMatrix, mulVec, dotProduct, Fin.sum_univ_two]
+  fin_cases i <;>
+    simp [qpnmMatrix, mulVec, dotProduct, Fin.sum_univ_two] <;>
     ring
 
 /-- Exact projected-Hamiltonian theorem on the represented common carrier. -/

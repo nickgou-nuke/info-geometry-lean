@@ -29,14 +29,14 @@ open InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
 open InfoGeometry.Canonical.PauliHestenesSpinMomentum
 
 variable {A : Type*}
-variable [Ring A] [StarRing A] [Algebra C A]
+variable [Ring A] [StarRing A] [Algebra ℂ A]
 
 abbrev Matrix2 (A : Type*) := Matrix (Fin 2) (Fin 2) A
 
 /-- Central realization of the complex imaginary unit in the coefficient
 algebra. -/
 def imagUnit : A :=
-  algebraMap C A Complex.I
+  algebraMap ℂ A Complex.I
 
 /-- Longitudinal future light-cone coordinate. -/
 def lightPlus (x : FourOperatorVector A) : A :=
@@ -158,9 +158,9 @@ section ScalarPauliRecovery
 /-- Scalar complex four-vector associated with the repository's real Pauli
 paravector. -/
 def ofPauliParavector (p : PauliParavector) :
-    FourOperatorVector C :=
-  ⟨(p.energy : C),
-    ![(p.px : C), (p.py : C), (p.pz : C)]⟩
+    FourOperatorVector ℂ :=
+  ⟨(p.energy : ℂ),
+    ![(p.px : ℂ), (p.py : ℂ), (p.pz : ℂ)]⟩
 
 /-- The generic light-cone/circular soldering specializes exactly to the
 existing Pauli paravector matrix. -/

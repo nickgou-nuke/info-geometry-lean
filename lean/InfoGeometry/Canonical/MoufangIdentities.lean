@@ -43,7 +43,7 @@ theorem splitOctonion_moufang_left
   let X := zornVectorMatrixRationalEquiv (integralToRational x)
   let Y := zornVectorMatrixRationalEquiv (integralToRational y)
   let Z := zornVectorMatrixRationalEquiv (integralToRational z)
-  have h := InfoGeometry.Algebra.ZornVectorMatrix.left_moufang X Y Z
+  have h := InfoGeometry.Algebra.ZornVectorMatrix.left_moufang Y Z X
   apply EquivLike.injective zornVectorMatrixRationalEquiv
   rw [zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
@@ -64,7 +64,7 @@ theorem splitOctonion_moufang_right
   let X := zornVectorMatrixRationalEquiv (integralToRational x)
   let Y := zornVectorMatrixRationalEquiv (integralToRational y)
   let Z := zornVectorMatrixRationalEquiv (integralToRational z)
-  have h := InfoGeometry.Algebra.ZornVectorMatrix.right_moufang X Y Z
+  have h := InfoGeometry.Algebra.ZornVectorMatrix.right_moufang X Z Y
   apply EquivLike.injective zornVectorMatrixRationalEquiv
   rw [zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,

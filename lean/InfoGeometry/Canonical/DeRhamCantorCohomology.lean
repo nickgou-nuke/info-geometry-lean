@@ -52,6 +52,52 @@ theorem cantor_de_rham_trivial (f : CantorBoundary → ℂ) (h : IsClosed f) : I
   rw [h_add, ← h_zero]
   exact UHF_Laplacian_op_eq_id f
 
+def UHF_boundary_op_linear : (CantorBoundary → ℂ) →ₗ[ℂ] (CantorBoundary → ℂ) where
+  toFun := UHF_boundary_op
+  map_add' := by
+    intro f g
+    ext x
+    dsimp [UHF_boundary_op, S_L_op, star_S_R_op]
+    split <;> ring
+  map_smul' := by
+    intro c f
+    ext x
+    dsimp [UHF_boundary_op, S_L_op, star_S_R_op]
+    split <;> ring
+
+def closedSubmodule : Submodule ℂ (CantorBoundary → ℂ) :=
+  LinearMap.ker UHF_boundary_op_linear
+
+def exactInClosedSubmodule : Submodule ℂ closedSubmodule :=
+  (LinearMap.range UHF_boundary_op_linear).comap closedSubmodule.subtype
+
+abbrev DeRhamH1 := closedSubmodule ⧸ exactInClosedSubmodule
+
+theorem isClosed_iff_mem_closedSubmodule (f : CantorBoundary → ℂ) :
+    IsClosed f ↔ f ∈ closedSubmodule :=
+  Iff.rfl
+
+theorem exactSubmodule_le_closedSubmodule :
+    LinearMap.range UHF_boundary_op_linear ≤ closedSubmodule := by
+  rintro f ⟨g, rfl⟩
+  exact UHF_boundary_op_sq_zero g
+
+theorem closed_mem_exactInClosedSubmodule (f : closedSubmodule) :
+    f ∈ exactInClosedSubmodule := by
+  have hf : IsClosed f.1 := f.2
+  rcases cantor_de_rham_trivial f.1 hf with ⟨g, hg⟩
+  exact ⟨g, hg.symm⟩
+
+theorem deRhamH1_subsingleton (x : DeRhamH1) : x = 0 := by
+  refine Submodule.Quotient.induction_on exactInClosedSubmodule x ?_
+  intro f
+  exact (Submodule.Quotient.mk_eq_zero exactInClosedSubmodule).mpr
+    (closed_mem_exactInClosedSubmodule f)
+
+instance : Subsingleton DeRhamH1 :=
+  ⟨fun x y => by rw [deRhamH1_subsingleton x, deRhamH1_subsingleton y]⟩
+
 end InfoGeometry.Canonical.DeRhamCantorCohomology
 
 end noncomputable section
+

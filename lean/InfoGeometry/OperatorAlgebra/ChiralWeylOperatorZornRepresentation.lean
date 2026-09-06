@@ -48,7 +48,8 @@ def groupBlock (g : G) : ZornBlock B :=
 
 /-- Explicit inverse block. -/
 def groupBlockInv (g : G) : ZornBlock B :=
-  ⟨((R.left g)⁻¹ : Units B), ((R.right g)⁻¹ : Units B), 0, 0⟩
+  ⟨(((R.left g)⁻¹ : Units B) : B),
+    (((R.right g)⁻¹ : Units B) : B), 0, 0⟩
 
 @[simp] theorem groupBlock_mul_groupBlockInv (g : G) :
     R.groupBlock g * R.groupBlockInv g = 1 := by
@@ -83,8 +84,8 @@ theorem conjugate_pureChiralBlock_coordinates
     (g : G) (Q : R.ChiralIntertwiner) :
     R.conjugate g (R.pureChiralBlock Q) =
       (⟨0, 0,
-        (R.left g : B) * Q.plus * ((R.right g)⁻¹ : Units B),
-        (R.right g : B) * Q.minus * ((R.left g)⁻¹ : Units B)⟩ :
+        (R.left g : B) * Q.plus * (((R.right g)⁻¹ : Units B) : B),
+        (R.right g : B) * Q.minus * (((R.left g)⁻¹ : Units B) : B)⟩ :
         ZornBlock B) := by
   apply zornBlock_ext <;>
     simp [conjugate, groupBlock, groupBlockInv, pureChiralBlock]
@@ -98,13 +99,15 @@ theorem conjugate_pureChiralBlock
   · rfl
   · rfl
   · calc
-      (R.left g : B) * Q.plus * ((R.right g)⁻¹ : Units B) =
-          (Q.plus * (R.right g : B)) * ((R.right g)⁻¹ : Units B) := by
+      (R.left g : B) * Q.plus * (((R.right g)⁻¹ : Units B) : B) =
+          (Q.plus * (R.right g : B)) *
+            (((R.right g)⁻¹ : Units B) : B) := by
             rw [Q.plus_intertwines]
       _ = Q.plus := by rw [mul_assoc, Units.mul_inv, mul_one]
   · calc
-      (R.right g : B) * Q.minus * ((R.left g)⁻¹ : Units B) =
-          (Q.minus * (R.left g : B)) * ((R.left g)⁻¹ : Units B) := by
+      (R.right g : B) * Q.minus * (((R.left g)⁻¹ : Units B) : B) =
+          (Q.minus * (R.left g : B)) *
+            (((R.left g)⁻¹ : Units B) : B) := by
             rw [Q.minus_intertwines]
       _ = Q.minus := by rw [mul_assoc, Units.mul_inv, mul_one]
 
@@ -112,13 +115,13 @@ end ChiralRepresentationPair
 
 /-- Cartan clock `diag(zeta,zeta^{-1})`. -/
 def cartanClock (zeta : Units B) : ZornBlock B :=
-  ⟨(zeta : B), (zeta⁻¹ : Units B), 0, 0⟩
+  ⟨(zeta : B), ((zeta⁻¹ : Units B) : B), 0, 0⟩
 
 /-- Exact power display for the Cartan clock. -/
 theorem cartanClock_pow (zeta : Units B) (n : Nat) :
     cartanClock zeta ^ n =
-      (⟨(zeta ^ n : Units B), ((zeta⁻¹) ^ n : Units B), 0, 0⟩ :
-        ZornBlock B) := by
+      (⟨((zeta ^ n : Units B) : B),
+        (((zeta⁻¹) ^ n : Units B) : B), 0, 0⟩ : ZornBlock B) := by
   induction n with
   | zero =>
       apply zornBlock_ext <;> simp [cartanClock]
@@ -178,9 +181,9 @@ theorem cartanClock_conjugates_lower
 /-- Re-export the concrete two-sheet/three-colour cyclotomic packet already
 proved in the repository. -/
 theorem existing_two_sheet_three_colour_packet
-    (omega : C) (homega : omega ^ 3 = 1) :
-    InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixClock omega ^ 3 = 1 /\
-      InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixShift ^ 3 = 1 /\
+    (omega : ℂ) (homega : omega ^ 3 = 1) :
+    InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixClock omega ^ 3 = 1 ∧
+      InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixShift ^ 3 = 1 ∧
       InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixSheetExchange ^ 2 = 1 := by
   exact ⟨
     InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixClock_cubed omega homega,

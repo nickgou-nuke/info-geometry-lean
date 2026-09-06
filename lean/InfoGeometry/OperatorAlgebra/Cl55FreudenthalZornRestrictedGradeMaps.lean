@@ -26,10 +26,14 @@ def jointGradeSpace (k : ℤ) :
     Submodule ℝ (JointEnvelope (J := J)) where
   carrier := {X | HasJointGrade datum k X}
   zero_mem' := by
+    change HasJointGrade datum k 0
     unfold HasJointGrade HasAdjointGrade commutator
     simp
   add_mem' := by
     intro X Y hX hY
+    change HasJointGrade datum k X at hX
+    change HasJointGrade datum k Y at hY
+    change HasJointGrade datum k (X + Y)
     unfold HasJointGrade HasAdjointGrade commutator at hX hY ⊢
     calc
       diagonal (jointEulerCoefficient datum) * (X + Y) -
@@ -43,6 +47,8 @@ def jointGradeSpace (k : ℤ) :
       _ = (k : ℝ) • (X + Y) := by rw [smul_add]
   smul_mem' := by
     intro r X hX
+    change HasJointGrade datum k X at hX
+    change HasJointGrade datum k (r • X)
     unfold HasJointGrade HasAdjointGrade commutator at hX ⊢
     calc
       diagonal (jointEulerCoefficient datum) * (r • X) -
@@ -64,7 +70,10 @@ theorem commutator_mem_jointGradeSpace_add
     (hX : X ∈ jointGradeSpace datum k)
     (hY : Y ∈ jointGradeSpace datum l) :
     commutator X Y ∈ jointGradeSpace datum (k + l) := by
-  unfold jointGradeSpace HasJointGrade HasAdjointGrade at hX hY ⊢
+  change HasJointGrade datum k X at hX
+  change HasJointGrade datum l Y at hY
+  change HasJointGrade datum (k + l) (commutator X Y)
+  unfold HasJointGrade HasAdjointGrade at hX hY ⊢
   unfold commutator at hX hY ⊢
   let H := diagonal (jointEulerCoefficient datum)
   change H * X - X * H = (k : ℝ) • X at hX
@@ -80,10 +89,17 @@ theorem commutator_mem_jointGradeSpace_add
     _ = ((k : ℝ) • X) * Y + X * ((l : ℝ) • Y) -
           (((l : ℝ) • Y) * X + Y * ((k : ℝ) • X)) := by
             rw [hX, hY]
-    _ = (((k : ℝ) + (l : ℝ)) • (X * Y - Y * X)) := by
-          simp [Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
-            smul_sub, add_smul]
-          noncomm_ring
+    _ = (k : ℝ) • (X * Y) + (l : ℝ) • (X * Y) -
+          ((l : ℝ) • (Y * X) + (k : ℝ) • (Y * X)) := by
+            simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
+    _ = ((k : ℝ) + (l : ℝ)) • (X * Y) -
+          ((l : ℝ) + (k : ℝ)) • (Y * X) := by
+            rw [add_smul, add_smul]
+    _ = ((k : ℝ) + (l : ℝ)) • (X * Y) -
+          ((k : ℝ) + (l : ℝ)) • (Y * X) := by
+            rw [add_comm (l : ℝ) (k : ℝ)]
+    _ = ((k : ℝ) + (l : ℝ)) • (X * Y - Y * X) := by
+          rw [smul_sub]
     _ = ((k + l : ℤ) : ℝ) • (X * Y - Y * X) := by
           rw [Int.cast_add]
 

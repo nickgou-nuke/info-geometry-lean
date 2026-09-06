@@ -148,7 +148,7 @@ noncomputable def partition (θ : E) : ℝ :=
 noncomputable def logPartition (θ : E) : ℝ :=
   Real.log (partition σ θ)
 
-/-- The von Mises--Fisher law as Mathlib's normalized exponential (Esscher) tilt. -/
+/-- Normalized exponential tilt of a spherical base probability law. -/
 noncomputable def law (θ : E) : Measure (UnitSphere E) :=
   σ.tilted (spinObservable θ)
 
@@ -165,27 +165,6 @@ instance instIsProbabilityMeasureLaw (θ : E) : IsProbabilityMeasure (law σ θ)
 @[simp] theorem law_zero : law σ (0 : E) = σ := by
   simpa [law, spinObservable] using MeasureTheory.tilted_zero σ
 
-/-- Conventional inverse-temperature/field parametrization `θ = β h`. -/
-noncomputable def vmfPartition (β : ℝ) (h : E) : ℝ :=
-  partition σ (β • h)
-
-/-- Conventional vMF law with inverse temperature `β` and field `h`. -/
-noncomputable def vmfLaw (β : ℝ) (h : E) : Measure (UnitSphere E) :=
-  σ.tilted (β * spinObservable h ·)
-
-instance instIsProbabilityMeasureVMFLaw (β : ℝ) (h : E) :
-    IsProbabilityMeasure (vmfLaw σ β h) := by
-  apply MeasureTheory.isProbabilityMeasure_tilted
-  exact integrable_exp_mul_spinObservable σ β h
-
-/-- The `(β,h)` parametrization agrees with the natural parameter `θ = β h`. -/
-theorem vmfLaw_eq_law (β : ℝ) (h : E) :
-    vmfLaw σ β h = law σ (β • h) := by
-  unfold vmfLaw law
-  apply MeasureTheory.tilted_congr
-  filter_upwards with s
-  simp [spinObservable, real_inner_smul_left]
-
 /-- The spherical partition is the MGF of the linear observable at parameter `1`. -/
 theorem partition_eq_mgf_one (θ : E) :
     partition σ θ = ProbabilityTheory.mgf (spinObservable θ) σ 1 := by
@@ -199,15 +178,6 @@ theorem partition_pos (θ : E) : 0 < partition σ θ := by
 /-- Mean spin (magnetization response) under the tilted spherical law. -/
 noncomputable def response (θ : E) : E :=
   ∫ s, (s : E) ∂(law σ θ)
-
-/-- Conventional vMF magnetization response at `θ = β h`. -/
-noncomputable def vmfResponse (β : ℝ) (h : E) : E :=
-  ∫ s, (s : E) ∂(vmfLaw σ β h)
-
-/-- The `(β,h)` response agrees with the natural-parameter response. -/
-theorem vmfResponse_eq_response (β : ℝ) (h : E) :
-    vmfResponse σ β h = response σ (β • h) := by
-  rw [vmfResponse, response, vmfLaw_eq_law]
 
 /-- The mean spin remains in the closed unit ball. -/
 theorem norm_response_le_one (θ : E) : ‖response σ θ‖ ≤ 1 := by
@@ -362,7 +332,74 @@ theorem iteratedDeriv_two_directionalPotential_zero_eq_covarianceHessian
       rw [covarianceHessian, ProbabilityTheory.covariance_self
         (continuous_spinObservable v).aemeasurable]
 
+/-- Polarization recovers the mixed covariance Hessian from second directional derivatives. -/
+theorem two_mul_covarianceHessian_eq_polarized_second_derivative
+    (θ u v : E) :
+    2 * covarianceHessian σ θ u v =
+      iteratedDeriv 2 (directionalPotential σ θ (u + v)) 0 -
+      iteratedDeriv 2 (directionalPotential σ θ u) 0 -
+      iteratedDeriv 2 (directionalPotential σ θ v) 0 := by
+  rw [iteratedDeriv_two_directionalPotential_zero_eq_covarianceHessian,
+    iteratedDeriv_two_directionalPotential_zero_eq_covarianceHessian,
+    iteratedDeriv_two_directionalPotential_zero_eq_covarianceHessian,
+    covarianceHessian_add_left, covarianceHessian_add_right,
+    covarianceHessian_symm σ θ v u]
+  ring
+
 end ExponentialFamily
+
+section VonMisesFisher
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [CompleteSpace E] [MeasurableSpace E] [BorelSpace E]
+  [FiniteDimensional ℝ E] [Nontrivial E]
+
+variable (μ : Measure E) [μ.IsAddHaarMeasure]
+
+/-- The normalized Haar-induced probability measure on the unit sphere. -/
+noncomputable def vmfBaseMeasure : Measure (UnitSphere E) :=
+  sphereHaarProbability μ
+
+instance instIsProbabilityMeasureVMFBase : IsProbabilityMeasure (vmfBaseMeasure μ) := by
+  unfold vmfBaseMeasure
+  infer_instance
+
+/-- vMF partition function in the natural parameter `θ = β h`. -/
+noncomputable def vmfPartition (β : ℝ) (h : E) : ℝ :=
+  partition (vmfBaseMeasure μ) (β • h)
+
+/-- vMF log-partition potential. -/
+noncomputable def vmfLogPartition (β : ℝ) (h : E) : ℝ :=
+  logPartition (vmfBaseMeasure μ) (β • h)
+
+/-- The von Mises--Fisher probability law on the Haar-normalized unit sphere. -/
+noncomputable def vmfLaw (β : ℝ) (h : E) : Measure (UnitSphere E) :=
+  law (vmfBaseMeasure μ) (β • h)
+
+instance instIsProbabilityMeasureVMFLaw (β : ℝ) (h : E) :
+    IsProbabilityMeasure (vmfLaw μ β h) := by
+  unfold vmfLaw
+  infer_instance
+
+/-- vMF mean spin response. -/
+noncomputable def vmfResponse (β : ℝ) (h : E) : E :=
+  response (vmfBaseMeasure μ) (β • h)
+
+/-- The vMF response remains in the closed unit ball. -/
+theorem norm_vmfResponse_le_one (β : ℝ) (h : E) :
+    ‖vmfResponse μ β h‖ ≤ 1 := by
+  exact norm_response_le_one (vmfBaseMeasure μ) (β • h)
+
+/-- The vMF covariance Hessian as a native bilinear form. -/
+noncomputable def vmfCovarianceHessian (β : ℝ) (h : E) : LinearMap.BilinForm ℝ E :=
+  covarianceHessianBilin (vmfBaseMeasure μ) (β • h)
+
+/-- Positive semidefiniteness of the vMF covariance Hessian. -/
+theorem vmfCovarianceHessian_nonneg (β : ℝ) (h v : E) :
+    0 ≤ vmfCovarianceHessian μ β h v v := by
+  exact covarianceHessian_nonneg (vmfBaseMeasure μ) (β • h) v
+
+end VonMisesFisher
 
 end
 end InfoGeometry.LLM.SphericalVMF

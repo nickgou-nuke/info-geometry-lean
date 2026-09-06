@@ -26,6 +26,7 @@ namespace InfoGeometry.OperatorAlgebra.FiniteTwoTermDiracHodgeZorn
 
 open Matrix
 open InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+open InfoGeometry.Canonical
 
 abbrev ZeroForms (n0 : ℕ) := Fin n0 → ℝ
 abbrev OneForms (n1 : ℕ) := Fin n1 → ℝ
@@ -39,48 +40,26 @@ def exteriorDerivative
     (B : Matrix (Fin n1) (Fin n0) ℝ) : FormEnd n0 n1 where
   toFun omega := (0, B.mulVec omega.1)
   map_add' omega eta := by
-    apply Prod.ext
-    · rfl
-    · funext i
-      simp [Matrix.mulVec, dotProduct, mul_add, Finset.sum_add_distrib]
+    ext <;> simp [Matrix.mulVec_add]
   map_smul' r omega := by
-    apply Prod.ext
-    · rfl
-    · funext i
-      simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul]
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro j hj
-      ring
+    ext <;> simp [Matrix.mulVec_smul]
 
 /-- Codifferential obtained from the transpose incidence matrix. -/
 def codifferential
     (B : Matrix (Fin n1) (Fin n0) ℝ) : FormEnd n0 n1 where
   toFun omega := (B.transpose.mulVec omega.2, 0)
   map_add' omega eta := by
-    apply Prod.ext
-    · funext i
-      simp [Matrix.mulVec, dotProduct, mul_add, Finset.sum_add_distrib]
-    · rfl
+    ext <;> simp [Matrix.mulVec_add]
   map_smul' r omega := by
-    apply Prod.ext
-    · funext i
-      simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul]
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro j hj
-      ring
-    · rfl
+    ext <;> simp [Matrix.mulVec_smul]
 
 /-- Even/odd form-degree involution. -/
 def chirality : FormEnd n0 n1 where
   toFun omega := (omega.1, -omega.2)
   map_add' omega eta := by
-    apply Prod.ext <;> simp
+    ext <;> simp [add_comm]
   map_smul' r omega := by
-    apply Prod.ext
-    · rfl
-    · simp
+    ext <;> simp
 
 @[simp] theorem exteriorDerivative_apply
     (B : Matrix (Fin n1) (Fin n0) ℝ)
@@ -101,10 +80,7 @@ def chirality : FormEnd n0 n1 where
     exteriorDerivative B * exteriorDerivative B = 0 := by
   apply LinearMap.ext
   rintro ⟨f, g⟩
-  change exteriorDerivative B (exteriorDerivative B (f, g)) = 0
-  apply Prod.ext
-  · rfl
-  · simp [exteriorDerivative, Matrix.mulVec, dotProduct]
+  ext <;> simp
 
 /-- The strict degree-lowering block is nilpotent. -/
 @[simp] theorem codifferential_sq
@@ -112,10 +88,7 @@ def chirality : FormEnd n0 n1 where
     codifferential B * codifferential B = 0 := by
   apply LinearMap.ext
   rintro ⟨f, g⟩
-  change codifferential B (codifferential B (f, g)) = 0
-  apply Prod.ext
-  · simp [codifferential, Matrix.mulVec, dotProduct]
-  · rfl
+  ext <;> simp
 
 /-- Chirality is an involution. -/
 @[simp] theorem chirality_sq :
@@ -127,13 +100,13 @@ def chirality : FormEnd n0 n1 where
 /-- Concrete Dirac--Hodge operator `D = d + delta`. -/
 def diracHodge
     (B : Matrix (Fin n1) (Fin n0) ℝ) : FormEnd n0 n1 :=
-  InfoGeometry.Canonical.DiscreteDiracHodgeChiral.diracHodge
+  DiscreteDiracHodgeChiral.diracHodge
     (exteriorDerivative B) (codifferential B)
 
 /-- Concrete Hodge Laplacian. -/
 def hodgeLaplacian
     (B : Matrix (Fin n1) (Fin n0) ℝ) : FormEnd n0 n1 :=
-  InfoGeometry.Canonical.DiscreteDiracHodgeChiral.hodgeLaplacian
+  DiscreteDiracHodgeChiral.hodgeLaplacian
     (exteriorDerivative B) (codifferential B)
 
 @[simp] theorem diracHodge_apply
@@ -141,18 +114,15 @@ def hodgeLaplacian
     (omega : TotalForms n0 n1) :
     diracHodge B omega =
       (B.transpose.mulVec omega.2, B.mulVec omega.1) := by
-  simp [diracHodge,
-    InfoGeometry.Canonical.DiscreteDiracHodgeChiral.diracHodge]
+  ext <;> simp [diracHodge, DiscreteDiracHodgeChiral.diracHodge]
 
 /-- The requested plus-sign Dirac--Kahler identity. -/
 theorem diracHodge_sq_eq_hodgeLaplacian
     (B : Matrix (Fin n1) (Fin n0) ℝ) :
-    diracHodge B * diracHodge B = hodgeLaplacian B := by
-  exact
-    InfoGeometry.Canonical.DiscreteDiracHodgeChiral.
-      diracHodge_sq_eq_hodgeLaplacian
-        (exteriorDerivative B) (codifferential B)
-        (exteriorDerivative_sq B) (codifferential_sq B)
+    diracHodge B * diracHodge B = hodgeLaplacian B :=
+  DiscreteDiracHodgeChiral.diracHodge_sq_eq_hodgeLaplacian
+    (exteriorDerivative B) (codifferential B)
+    (exteriorDerivative_sq B) (codifferential_sq B)
 
 /-- `d` is odd for form-degree parity. -/
 theorem exteriorDerivative_anticommutes_chirality
@@ -163,7 +133,7 @@ theorem exteriorDerivative_anticommutes_chirality
   rintro ⟨f, g⟩
   change exteriorDerivative B (chirality (f, g)) =
     -chirality (exteriorDerivative B (f, g))
-  simp [exteriorDerivative, chirality]
+  ext <;> simp [exteriorDerivative, chirality]
 
 /-- `delta` is odd for form-degree parity. -/
 theorem codifferential_anticommutes_chirality
@@ -174,34 +144,26 @@ theorem codifferential_anticommutes_chirality
   rintro ⟨f, g⟩
   change codifferential B (chirality (f, g)) =
     -chirality (codifferential B (f, g))
-  apply Prod.ext
-  · funext i
-    simp [codifferential, chirality, Matrix.mulVec, dotProduct,
-      Finset.sum_neg_distrib]
-  · simp [codifferential, chirality]
+  ext <;> simp [codifferential, chirality, Matrix.mulVec_neg]
 
 /-- The full `D=d+delta` is odd. -/
 theorem diracHodge_anticommutes_chirality
     (B : Matrix (Fin n1) (Fin n0) ℝ) :
-    diracHodge B * chirality = -(chirality * diracHodge B) := by
-  exact
-    InfoGeometry.Canonical.DiscreteDiracHodgeChiral.
-      diracHodge_anticommutes_chirality
-        (exteriorDerivative B) (codifferential B) chirality
-        (exteriorDerivative_anticommutes_chirality B)
-        (codifferential_anticommutes_chirality B)
+    diracHodge B * chirality = -(chirality * diracHodge B) :=
+  DiscreteDiracHodgeChiral.diracHodge_anticommutes_chirality
+    (exteriorDerivative B) (codifferential B) chirality
+    (exteriorDerivative_anticommutes_chirality B)
+    (codifferential_anticommutes_chirality B)
 
 /-- The Hodge Laplacian is parity-even. -/
 theorem hodgeLaplacian_commutes_chirality
     (B : Matrix (Fin n1) (Fin n0) ℝ) :
-    hodgeLaplacian B * chirality = chirality * hodgeLaplacian B := by
-  exact
-    InfoGeometry.Canonical.DiscreteDiracHodgeChiral.
-      hodgeLaplacian_commutes_chirality
-        (exteriorDerivative B) (codifferential B) chirality
-        (exteriorDerivative_sq B) (codifferential_sq B)
-        (exteriorDerivative_anticommutes_chirality B)
-        (codifferential_anticommutes_chirality B)
+    hodgeLaplacian B * chirality = chirality * hodgeLaplacian B :=
+  DiscreteDiracHodgeChiral.hodgeLaplacian_commutes_chirality
+    (exteriorDerivative B) (codifferential B) chirality
+    (exteriorDerivative_sq B) (codifferential_sq B)
+    (exteriorDerivative_anticommutes_chirality B)
+    (codifferential_anticommutes_chirality B)
 
 /-- Euclidean pairings on the two cochain degrees. -/
 def innerZero (f h : ZeroForms n0) : ℝ :=
@@ -262,7 +224,8 @@ theorem diracZornBlock_sq
     diracZornBlock B * diracZornBlock B =
       !![codifferential B * exteriorDerivative B, 0;
          0, exteriorDerivative B * codifferential B] := by
-  ext i j
+  apply Matrix.ext
+  intro i j
   fin_cases i <;> fin_cases j <;>
     simp [diracZornBlock, Matrix.mul_apply, Fin.sum_univ_two]
 

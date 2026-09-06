@@ -61,6 +61,16 @@ theorem integral_linear_centeredField_eq_zero
     exact hH.sub (integrable_const _)
   rw [D.integral_comp_comm hcenter, integral_centeredField_eq_zero μ H hH, map_zero]
 
+/-- Affine response maps commute with expectation and have zero closure defect. -/
+theorem closureDefect_affine_eq_zero
+    (H : Ω → E) (A : E →L[ℝ] F) (b : F) (hH : Integrable H μ) :
+    closureDefect μ (fun x => A x + b) H = 0 := by
+  unfold closureDefect mean
+  have hAH : Integrable (fun ω => A (H ω)) μ := A.integrable_comp hH
+  rw [integral_add hAH (integrable_const b)]
+  rw [A.integral_comp_comm hH]
+  simp
+
 /-- Pointwise second-order Taylor decomposition, with no approximation hidden in the notation. -/
 theorem secondOrder_decomposition
     (φ : E → F) (D : E →L[ℝ] F) (B : E →L[ℝ] E →L[ℝ] F)
@@ -72,7 +82,7 @@ theorem secondOrder_decomposition
 
 /-- Exact continuous Plefka/delta-method identity.
 
-The linear fluctuation term cancels because `E[H - E[H]] = 0`.  What remains is the
+The linear fluctuation term cancels because `E[H - E[H]] = 0`. What remains is the
 quadratic covariance contraction plus the integrated second-order remainder.
 -/
 theorem closureDefect_eq_quadraticClosureTerm_add_remainder
@@ -118,7 +128,7 @@ theorem closureDefect_eq_quadraticClosureTerm_add_remainder
 
 If the pointwise Taylor remainder is bounded by `(C / 6) * ‖H - E[H]‖³`, then the
 error after retaining the quadratic covariance term is bounded by the corresponding
-third centered moment.  This is the rigorous content hidden by an informal `O(‖ξ‖³)`.
+third centered moment. This is the rigorous content hidden by an informal `O(‖ξ‖³)`.
 -/
 theorem norm_closureDefect_sub_quadraticClosureTerm_le_thirdMoment
     (φ : E → F) (H : Ω → E)
@@ -137,9 +147,13 @@ theorem norm_closureDefect_sub_quadraticClosureTerm_le_thirdMoment
         (C / 6) * ‖centeredField μ H ω‖ ^ (3 : ℕ)) :
     ‖closureDefect μ φ H - quadraticClosureTerm μ H B‖ ≤
       ∫ ω, (C / 6) * ‖centeredField μ H ω‖ ^ (3 : ℕ) ∂μ := by
-  rw [closureDefect_eq_quadraticClosureTerm_add_remainder
-    μ φ H D B hH hQ hR]
-  simp only [add_sub_cancel_left]
+  have hidentity :
+      closureDefect μ φ H - quadraticClosureTerm μ H B =
+        ∫ ω, secondOrderRemainder φ D B (mean μ H) (H ω) ∂μ := by
+    rw [closureDefect_eq_quadraticClosureTerm_add_remainder
+      μ φ H D B hH hQ hR]
+    abel
+  rw [hidentity]
   exact norm_integral_le_of_norm_le hThird hbound
 
 end Probability

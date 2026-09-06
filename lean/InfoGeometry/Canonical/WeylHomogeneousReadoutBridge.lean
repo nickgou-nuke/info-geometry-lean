@@ -36,6 +36,12 @@ namespace WeylHomogeneousOperatorReadout
 variable {Op : Type*}
 variable (W : WeylHomogeneousOperatorReadout Op)
 
+/-- Direct readback of the Weyl homogeneity law. -/
+@[rep_depth operator]
+theorem readout_scale :
+    ∀ c A, W.readout (W.scale c A) = c ^ W.weight * W.readout A :=
+  W.readout_scale_law
+
 /-- Weight-zero readouts are scale-invariant. -/
 @[rep_depth operator]
 theorem readout_scale_of_weight_zero
@@ -43,7 +49,7 @@ theorem readout_scale_of_weight_zero
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = W.readout A := by
-  rw [W.readout_scale_law, hW]
+  rw [W.readout_scale, hW]
   simp
 
 /-- Weight-one readouts scale linearly. -/
@@ -53,7 +59,7 @@ theorem readout_scale_of_weight_one
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c * W.readout A := by
-  rw [W.readout_scale_law, hW]
+  rw [W.readout_scale, hW]
   simp
 
 /-- Weight-two readouts scale quadratically. -/
@@ -63,7 +69,7 @@ theorem readout_scale_of_weight_two
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c ^ 2 * W.readout A := by
-  rw [W.readout_scale_law, hW]
+  rw [W.readout_scale, hW]
 
 end WeylHomogeneousOperatorReadout
 
@@ -85,6 +91,15 @@ namespace WeylInvariantShapeReadout
 
 variable {Op Shape : Type*}
 variable (S : WeylInvariantShapeReadout Op Shape)
+
+/-- Direct readback of scale invariance for the projective shape. -/
+@[rep_depth operator]
+theorem shape_scale
+    (c : ℝ)
+    (A : Op)
+    (hc : c ≠ 0) :
+    S.shape (S.scale c A) = S.shape A :=
+  S.shape_scale_law c A hc
 
 end WeylInvariantShapeReadout
 
@@ -122,5 +137,15 @@ theorem physical_eq_scale_pow_mul_shape
   F.physicalReadout_factorization A
 
 end WeylPhysicalReadoutFactorization
+
+/--
+The count/projective Weyl owner surface is imported explicitly.
+
+This alias makes the dependency direction visible: operator physical readouts
+should consume Weyl scale/shape data; they should not silently normalize away
+the homogeneous representative.
+-/
+abbrev ArithmeticProjectiveWeylGaugeCalibration :=
+  InfoGeometry.Arithmetic.ProjectiveWeylGauge.ProjectiveWeylGaugeCalibration
 
 end InfoGeometry.Canonical.WeylHomogeneousReadoutBridge

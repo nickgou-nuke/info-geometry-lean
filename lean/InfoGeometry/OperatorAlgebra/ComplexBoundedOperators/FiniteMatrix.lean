@@ -120,4 +120,4 @@ theorem dotProduct_conjTranspose_mulVec
   simp
 
 end FiniteMatrix
-end ComplexBoundedOperators
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators

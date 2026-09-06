@@ -74,4 +74,3 @@ abbrev heisenbergModeFlipLieHom :
 end Heisenberg
 
 end
-end InfoGeometry.Canonical.CurrentSugawaraFlipBridge

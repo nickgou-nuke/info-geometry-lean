@@ -51,3 +51,4 @@ theorem logPotential_explicit (P : PositivePartition) (s : ℝ) :
 end
 
 end InfoGeometry.Canonical.CartanExponentialAmariPotentialBridge
+

@@ -28,7 +28,11 @@ We install the typeclass instances so that `+` = `ZornVectorMatrix.add`,
 This is done by defining each instance with the explicit operation as data.
 -/
 
+noncomputable instance zvmAdd : Add (ZornVectorMatrix R) where add := ZornVectorMatrix.add
+noncomputable instance zvmNeg : Neg (ZornVectorMatrix R) where neg := ZornVectorMatrix.neg
+noncomputable instance zvmZero : Zero (ZornVectorMatrix R) where zero := ZornVectorMatrix.zero
 noncomputable instance zvmMul : Mul (ZornVectorMatrix R) where mul := ZornVectorMatrix.mul
+noncomputable instance zvmSMul : SMul R (ZornVectorMatrix R) where smul := ZornVectorMatrix.smul
 
 -- Definitional equalities — these must hold by construction
 @[simp] theorem zvm_add_def (X Y : ZornVectorMatrix R) :
@@ -42,11 +46,30 @@ noncomputable instance zvmMul : Mul (ZornVectorMatrix R) where mul := ZornVector
 @[simp] theorem zvm_smul_def (r : R) (X : ZornVectorMatrix R) :
     r • X = ZornVectorMatrix.smul r X := rfl
 
+noncomputable instance : Sub (ZornVectorMatrix R) where sub X Y := X + (-Y)
+
+noncomputable instance : AddGroup (ZornVectorMatrix R) :=
+  AddGroup.ofLeftAxioms ZornVectorMatrix.add_assoc ZornVectorMatrix.zero_add
+    (fun X => ZornVectorMatrix.add_left_neg X)
+
+noncomputable instance : AddCommGroup (ZornVectorMatrix R) :=
+  AddCommGroup.mk ZornVectorMatrix.add_comm
+
 noncomputable instance : NonUnitalNonAssocRing (ZornVectorMatrix R) where
   zero_mul := ZornVectorMatrix.zero_mul
   mul_zero := ZornVectorMatrix.mul_zero
   left_distrib := ZornVectorMatrix.mul_add
   right_distrib := ZornVectorMatrix.add_mul
+
+noncomputable instance : Module R (ZornVectorMatrix R) where
+  one_smul := ZornVectorMatrix.one_smul
+  mul_smul := fun r s X => by
+    show ZornVectorMatrix.smul (r * s) X = ZornVectorMatrix.smul r (ZornVectorMatrix.smul s X)
+    ext i <;> simp [ZornVectorMatrix.smul, mul_assoc]
+  smul_zero := fun r => ZornVectorMatrix.smul_zero r
+  smul_add := ZornVectorMatrix.smul_add
+  add_smul := ZornVectorMatrix.add_smul
+  zero_smul := ZornVectorMatrix.zero_smul
 
 noncomputable instance : IsScalarTower R (ZornVectorMatrix R) (ZornVectorMatrix R) where
   smul_assoc r X Y := by
@@ -65,9 +88,9 @@ namespace ZornVectorMatrix
 /-- Conjugation is scalar trace minus the original Zorn element. -/
 lemma conj_eq_scalar_trace_sub (X : ZornVectorMatrix R) :
     conj X = sub (scalar (trace X)) X := by
+  change conj X = scalar (trace X) - X
   have h : X + conj X = scalar (trace X) := conj_trace_identity X
-  have h' := eq_sub_of_add_eq' h
-  simpa only [_root_.sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg] using h'
+  exact eq_sub_of_add_eq' h
 
 /-- Kirmse's left contraction, derived from conjugation and left alternativity. -/
 theorem kirmse_left (X Y : ZornVectorMatrix R) :
@@ -75,10 +98,9 @@ theorem kirmse_left (X Y : ZornVectorMatrix R) :
   rw [conj_eq_scalar_trace_sub, sub_mul, scalar_mul]
   have halt : mul X (mul X Y) = mul (mul X X) Y := by
     have h := associator_left_alternative X Y
-    have h' : mul (mul X X) Y - mul X (mul X Y) = 0 := by
-      simpa only [ZornVectorMatrix.associator,
-        ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using h
-    exact (sub_eq_zero.mp h').symm
+    change sub (mul (mul X X) Y) (mul X (mul X Y)) = zero at h
+    change mul (mul X X) Y - mul X (mul X Y) = 0 at h
+    exact (sub_eq_zero.mp h).symm
   rw [halt, ← smul_mul, ← scalar_mul, ← sub_mul, ← sub_mul]
   rw [← conj_eq_scalar_trace_sub, conj_norm_identity_right, scalar_mul]
 
@@ -88,10 +110,9 @@ theorem kirmse_right (X Y : ZornVectorMatrix R) :
   rw [conj_eq_scalar_trace_sub, mul_sub, mul_scalar]
   have halt : mul (mul Y X) X = mul Y (mul X X) := by
     have h := associator_right_alternative Y X
-    have h' : mul (mul Y X) X - mul Y (mul X X) = 0 := by
-      simpa only [ZornVectorMatrix.associator,
-        ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using h
-    exact sub_eq_zero.mp h'
+    change sub (mul (mul Y X) X) (mul Y (mul X X)) = zero at h
+    change mul (mul Y X) X - mul Y (mul X X) = 0 at h
+    exact sub_eq_zero.mp h
   rw [halt, ← mul_smul, ← mul_scalar, ← mul_sub, ← mul_sub]
   rw [← conj_eq_scalar_trace_sub, conj_norm_identity_left, mul_scalar]
 
@@ -201,19 +222,15 @@ the split-octonion realization of the Lie algebra of type `G₂`.
 theorem zorn_left_alternative (X Y : ZornVectorMatrix R) :
     (X * X) * Y = X * (X * Y) := by
   have h := ZornVectorMatrix.associator_left_alternative X Y
-  have h' : (X * X) * Y - X * (X * Y) = 0 := by
-    simpa only [ZornVectorMatrix.associator,
-      ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using h
-  exact sub_eq_zero.mp h'
+  change (X * X) * Y - X * (X * Y) = 0 at h
+  exact sub_eq_zero.mp h
 
 /-- The bundled Zorn product satisfies the right alternative law. -/
 theorem zorn_right_alternative (X Y : ZornVectorMatrix R) :
     (Y * X) * X = Y * (X * X) := by
   have h := ZornVectorMatrix.associator_right_alternative Y X
-  have h' : (Y * X) * X - Y * (X * X) = 0 := by
-    simpa only [ZornVectorMatrix.associator,
-      ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using h
-  exact sub_eq_zero.mp h'
+  change (Y * X) * X - Y * (X * X) = 0 at h
+  exact sub_eq_zero.mp h
 
 /-- The standard operator `D_{a,b}` as a genuine derivation of Zorn split octonions. -/
 noncomputable def zornStanDerivation (a b : ZornVectorMatrix R) :

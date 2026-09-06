@@ -45,7 +45,7 @@ structure GWProjectiveCountCalibration
     (G T Target Coeff : Type*) where
   /-- Finite GW/Erlangen localization packet. -/
   localization :
-    VirtualLocalizationOrbitData G T Target Coeff
+    VirtualLocalizationOrbitPacket G T Target Coeff
 
   /-- Atomic labels for count sectors. -/
   CountAtom : Type*

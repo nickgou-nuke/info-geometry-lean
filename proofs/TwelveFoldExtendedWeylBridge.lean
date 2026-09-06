@@ -1,4 +1,4 @@
-import proofs.TwoSheetThreeColorWeyl
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import proofs.TwelveFoldArithmetic
 import proofs.TwelveFoldSheetColorOmega
 import Mathlib.Data.ZMod.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciTensorHomDef
+import InfoGeometry.Categorical.FibonacciBraidedCategory
 
 noncomputable section
 

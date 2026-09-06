@@ -1,0 +1,7 @@
+import Mathlib
+import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
+import Mathlib.NumberTheory.EulerProduct.Basic
+import Mathlib.NumberTheory.EulerProduct.ExpLog
+
+#check riemannZeta_eulerProduct
+#check ArithmeticFunction.LSeries_zeta_eulerProduct

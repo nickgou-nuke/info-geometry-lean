@@ -48,10 +48,6 @@ theorem circleIntegral_one_div (R : ℝ) (hR : 0 < R) :
 noncomputable def logarithmicPhase (n : ℤ) : ℂ :=
   (n : ℂ) * (2 * Real.pi * Complex.I : ℂ)
 
-@[simp] theorem logarithmicPhase_add (m n : ℤ) :
-    logarithmicPhase (m + n) = logarithmicPhase m + logarithmicPhase n := by
-  simp [logarithmicPhase, add_mul, mul_add, add_comm, add_left_comm, add_assoc]
-
 /-- Algebraic monodromy on the universal cover increments by `2πi` per sheet. -/
 theorem universalCoverLog_sheet_increment (z : ℂ) (n : ℤ) :
     uLog (z, n + 1) - uLog (z, n) = (2 * Real.pi * Complex.I : ℂ) := by
@@ -82,13 +78,6 @@ theorem deRhamClass_of_winding (R : ℝ) (hR : 0 < R) (n : ℤ) :
             rw [circleIntegral_one_div R hR]
     _ = logarithmicPhase n := rfl
 
-theorem deRhamClass_of_winding_add (R : ℝ) (hR : 0 < R) (m n : ℤ) :
-    (m + n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) =
-      (m : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) +
-        (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) := by
-  rw [circleIntegral_one_div R hR]
-  ring
-
 /-- Wilson-loop phase for an integer winding: integrating the log-derivative form.
 
     This is the multiplicative holonomy around the chiral null cone boundary
@@ -96,7 +85,7 @@ theorem deRhamClass_of_winding_add (R : ℝ) (hR : 0 < R) (m n : ℤ) :
 theorem wilsonPhase_of_winding (R : ℝ) (hR : 0 < R) (n : ℤ) :
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z)) = (1 : ℂ) := by
   rw [deRhamClass_of_winding (R := R) hR n]
-  simp [logarithmicPhase, Complex.exp_int_mul_two_pi_mul_I n]
+  simpa [logarithmicPhase] using (Complex.exp_int_mul_two_pi_mul_I n)
 
 /-- Determinant/quadric classification: null (zero) determinant is equivalent to
     self-orthogonality for the Klein polar form over `ℂ`.
@@ -122,7 +111,7 @@ theorem chiralNullConductor_eq_selfOrthogonal (P : Plucker6 ℂ) :
     exact Plucker6.polar_self P
   constructor
   · intro hQ
-    simp [hpolar, hQ]
+    simpa [hpolar, hQ]
   · intro hPP
     have hmul : (2 : ℂ) * kleinPotential P = 0 := by
       simpa [hpolar] using hPP

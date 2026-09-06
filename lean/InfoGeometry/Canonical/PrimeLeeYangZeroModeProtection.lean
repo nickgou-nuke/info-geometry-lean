@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
@@ -20,19 +21,10 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 
-open InfoGeometry.Canonical.PrimeMertensDefectBoundary
+@[socket_debt_tag]
+structure ZeroModeProtectionPacket
+    (CompletedXiReadout ProtectionReadout : Type) where
+  defectFreeLimit : CompletedXiReadout
+  protectionReadout : ProtectionReadout
 
-/-! ## Defect-free zero-mode readout packet -/
-
-/--
-The theorem-safe zero-mode protection packet for the prime Lee--Yang lane.
-
-This is exactly the existing defect-free bridge data: a finite Lee--Yang
-approximation together with the supplied large-deviation witness needed to read
-the defect-free limit.  It stores no arbitrary SUSY, RH, or completed-`xi`
-zero-identification proposition fields.
--/
-abbrev ZeroModeProtectionPacket (CompletedXiReadout : Type) : Type (u+1) :=
-  MertensToDefectFreeBridge CompletedXiReadout
-
-end PrimeLeeYangZeroModeProtection
+end InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection

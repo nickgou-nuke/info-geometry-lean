@@ -80,7 +80,7 @@ theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
       change mul (embed nativeBasePoint)
           (embed (nativeBasePoint + y)) = zero
       have hembed : embed (nativeBasePoint + y) =
-          embed nativeBasePoint + embed y := by
+          add (embed nativeBasePoint) (embed y) := by
         have hi : octImToImaginary (nativeBasePoint + y) =
             InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.imaginaryAdd
               (octImToImaginary nativeBasePoint) (octImToImaginary y) := by
@@ -102,17 +102,8 @@ theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
         exact congrArg Subtype.val hi
       rw [hembed]
       change mul (embed nativeBasePoint)
-          (embed nativeBasePoint + embed y) = zero
-      calc
-        mul (embed nativeBasePoint) (embed nativeBasePoint + embed y) =
-            add (mul (embed nativeBasePoint) (embed nativeBasePoint))
-              (mul (embed nativeBasePoint) (embed y)) :=
-          InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.mul_add _ _ _
-        _ = zero := by
-          have hsq : mul (embed nativeBasePoint) (embed nativeBasePoint) = zero := by
-            rfl
-          rw [hsq, hmul]
-          rfl
+          (add (embed nativeBasePoint) (embed y)) = zero
+      native_decide +revert
   simpa [candidates, kernelCandidate] using htranslated
 
 theorem lineSet_eq_lineSet_iff

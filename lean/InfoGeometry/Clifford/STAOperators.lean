@@ -7,7 +7,7 @@ This module records the Lean-native finite matrix lane suggested by Doran,
 Lasenby, and Gull's spacetime-algebra translation of states and operators.
 
 It deliberately proves only coordinate facts over the existing Crawford/Dirac
-gamma matrices.  No spacetime-algebra property packet is introduced: the scalar
+gamma matrices.  No spacetime-algebra witness packet is introduced: the scalar
 imaginary replacement and the two-sided gamma actions are concrete matrix
 operations with kernel-checked square laws.
 -/

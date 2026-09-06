@@ -1,0 +1,2 @@
+import InfoGeometry.External.Auto.goutev_principle
+#check bridge_registry

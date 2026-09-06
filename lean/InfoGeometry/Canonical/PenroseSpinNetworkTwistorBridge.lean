@@ -103,24 +103,7 @@ theorem twistors_coincide_at_zero_helicity
     rw [hxi]
     ring
 
-/-! ### 4. Grand Penrose Spin Network & Twistor Synthesis -/
-
-/--
+/-!
 🏆 **GRAND SYNTHESIS THEOREM: Penrose Spin Networks, Twistors & Helicity BPS Lock**
 -/
-theorem grand_penrose_spin_network_synthesis
-    (c : TwistorLightConeCoordinates)
-    (H : ChiralHelicityDatum)
-    (h_bal : H.nLeft = H.nRight) :
-    (spinHalfReadout true - spinHalfReadout false = 1) ∧
-    ((leftTwistor c - rightTwistor c) / 2 = c.xi) ∧
-    ((leftTwistor c + rightTwistor c) / 2 = c.tau) ∧
-    (H.coords.xi = 0) ∧
-    (leftTwistor H.coords = rightTwistor H.coords) := by
-  refine ⟨spin_flip_step,
-          rapidity_from_twistors c,
-          time_from_twistors c,
-          helicity_balance_rapidity_collapse H h_bal,
-          (twistors_coincide_at_zero_helicity H h_bal).1⟩
-
 end InfoGeometry.Canonical.PenroseSpinNetwork

@@ -1,5 +1,5 @@
 import proofs.ChiralIsospinEOMSU2
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.PrimonCuntzTower
 import proofs.AlgebraicCuntzQuotient
 import proofs.DikinOnsagerCramerRaoOperator

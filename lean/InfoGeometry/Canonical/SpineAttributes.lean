@@ -82,10 +82,6 @@ def spineTagsOf (env : Environment) (declName : Name) : Array Name :=
       tags := tags.push `spine_functor_responder
     tags
 
-/-- String readout of the ordered semantic tags attached to a declaration. -/
-def spineTagStringsOf (env : Environment) (declName : Name) : Array String :=
-  (spineTagsOf env declName).map Name.toString
-
 /-- Test whether a declaration is marked as a canonical spine object. -/
 def isSpineObject (env : Environment) (declName : Name) : Bool :=
   spineObjectAttr.hasTag env declName
@@ -127,6 +123,17 @@ def spineFunctorKind? (env : Environment) (declName : Name) : Option SpineFuncto
   match spineFunctorKindsOf env declName with
   | #[kind] => some kind
   | _ => none
+
+/-- Collect the functor-role taxonomy attached to a declaration as strings. -/
+def spineFunctorKindStringsOf (env : Environment) (declName : Name) : Array String :=
+  (spineFunctorKindsOf env declName).map fun
+    | .lift => "lift"
+    | .constructor => "constructor"
+    | .responder => "responder"
+
+/-- Collect all semantic spine tags attached to a declaration as strings. -/
+def spineTagStringsOf (env : Environment) (declName : Name) : Array String :=
+  (spineTagsOf env declName).map toString
 
 /-- Test whether a declaration belongs to the tagged semantic spine. -/
 def isSpineTagged (env : Environment) (declName : Name) : Bool :=

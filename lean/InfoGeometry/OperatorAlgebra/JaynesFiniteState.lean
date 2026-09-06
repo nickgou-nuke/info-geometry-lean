@@ -84,7 +84,7 @@ theorem finiteEmpiricalFunctional_map_smul
 /--
 Normalized finite empirical average of a finite sample of algebraic states.
 
-The property `hweight` is the exact finite normalization law.
+The hypothesis `hweight` is the exact finite normalization law.
 -/
 def finiteEmpiricalState
     (weight : R)
@@ -178,25 +178,12 @@ A bundled finite family of algebraic states together with its normalization law.
 This is finite compatibility data for Jaynes averaging only; it is not yet the
 Nat-indexed directed-system compatibility used in later transport files.
 -/
-abbrev FiniteStateCompatibleFamily :=
-  {p : R × FiniteObservableSample R A ι //
-    p.1 * (Fintype.card ι : R) = 1}
+structure FiniteStateCompatibleFamily where
+  weight : R
+  sample : FiniteObservableSample R A ι
+  hweight : weight * (Fintype.card ι : R) = 1
 
 namespace FiniteStateCompatibleFamily
-
-abbrev weight
-    (F : FiniteStateCompatibleFamily (R := R) (A := A) (ι := ι)) : R :=
-  F.1.1
-
-abbrev sample
-    (F : FiniteStateCompatibleFamily (R := R) (A := A) (ι := ι)) :
-    FiniteObservableSample R A ι :=
-  F.1.2
-
-abbrev hweight
-    (F : FiniteStateCompatibleFamily (R := R) (A := A) (ι := ι)) :
-    F.weight * (Fintype.card ι : R) = 1 :=
-  F.2
 
 /-- The normalized empirical average associated to the bundled finite family. -/
 def averageState

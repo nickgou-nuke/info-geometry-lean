@@ -21,23 +21,29 @@ This file stays at the algebraic shadow level owned by the repo:
 It does not derive the field equations from a continuum variational calculus.
 -/
 
+/-- Finite action-density variation packet. -/
+structure EffectiveActionPacket where
+  dirac : ℂ
+  mass : ℂ
+  curvature : ℂ
+  torsionNorm : ℂ
+  κInv : ℂ
+  α : ℂ
+
 /-- The finite emergent-gravity action density. -/
-def effectiveActionVariation
-    (dirac mass curvature torsionNorm κInv α : ℂ) : ℂ :=
-  dirac - mass + ((κInv / 2) * curvature) + ((α / 4) * torsionNorm)
+def effectiveActionVariation (p : EffectiveActionPacket) : ℂ :=
+  p.dirac - p.mass + ((p.κInv / 2) * p.curvature) + ((p.α / 4) * p.torsionNorm)
 
 /-- Zero torsion removes the torsion contribution from the action density. -/
-theorem effectiveActionVariation_zero_torsion
-    (dirac mass curvature κInv α : ℂ) :
-    effectiveActionVariation dirac mass curvature 0 κInv α =
-      dirac - mass + ((κInv / 2) * curvature) := by
+theorem effectiveActionVariation_zero_torsion (p : EffectiveActionPacket) :
+    effectiveActionVariation { p with torsionNorm := 0 } =
+      p.dirac - p.mass + ((p.κInv / 2) * p.curvature) := by
   simp [effectiveActionVariation]
 
 /-- The torsion part splits additively from the finite action density. -/
-theorem effectiveActionVariation_torsion_split
-    (dirac mass curvature torsionNorm κInv α : ℂ) :
-    effectiveActionVariation dirac mass curvature torsionNorm κInv α =
-      (dirac - mass + ((κInv / 2) * curvature)) + ((α / 4) * torsionNorm) := by
+theorem effectiveActionVariation_torsion_split (p : EffectiveActionPacket) :
+    effectiveActionVariation p =
+      (p.dirac - p.mass + ((p.κInv / 2) * p.curvature)) + ((p.α / 4) * p.torsionNorm) := by
   simp [effectiveActionVariation]
 
 /-- A finite Belinfante readout packaged from the owner tensor. -/

@@ -14,7 +14,7 @@ It does not identify finite `E8(8)` with Virasoro. The bridge is mediated by
 an affine/current extension, morally `E9(9)`, and a Sugawara/stress-tensor
 calibration.
 
-The physical statement is property-gated:
+The physical statement is witness-gated:
 
   hidden grade-two memory
       -> affine current mode
@@ -25,6 +25,7 @@ The physical statement is property-gated:
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -144,7 +145,7 @@ end HiddenMemoryAffineCurrentCalibration
 /--
 A scalar Virasoro/stress readout of the hidden memory sector.
 
-This is the formal interface for saying:
+This is the formal socket for saying:
 
   hidden grade-two memory contributes to the Virasoro stress/anomaly ledger.
 
@@ -270,7 +271,7 @@ end HiddenMemoryVirasoroReadout
 /--
 Combined horizon KMS and exceptional affine/Virasoro bridge.
 
-This is the exact interface for:
+This is the exact socket for:
 
   hidden grade-two memory
       -> affine current mode
@@ -593,7 +594,7 @@ Once the bridge is supplied:
 * hidden grade-two memory is represented as an affine current;
 * the hidden memory scalar equals the Virasoro/current stress readout.
 -/
-theorem exceptionalVirasoroBridge_readout :
+theorem exceptionalVirasoroBridgeOwnerTarget :
   ∀ (J L Obs Memory Finite AffineAlg : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
@@ -613,5 +614,26 @@ theorem exceptionalVirasoroBridge_readout :
           (B.currentCalibration.finiteChargeOf x y) := by
   intro J L Obs Memory Finite AffineAlg _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ G A B
   exact fun x y => B.hidden_memory_eq_current_mode x y
+
+/-- Packet readout for one exceptional Virasoro horizon bridge. -/
+theorem exceptionalVirasoroBridge_packet
+    (J L Obs Memory Finite AffineAlg : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup AffineAlg] [Module ℝ AffineAlg]
+    [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg]
+    (G : FiveGrading L)
+    (A : FiveGradeProjectedAccounting J L Obs G)
+    (B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A)
+    (x y : J) :
+    B.currentCalibration.memoryToAffine
+        (hiddenMemoryReadout B.horizon.ledger x y) =
+      B.currentCalibration.affineVirasoro.affine.Current
+        (B.currentCalibration.modeOf x y)
+        (B.currentCalibration.finiteChargeOf x y) :=
+  exceptionalVirasoroBridgeOwnerTarget J L Obs Memory Finite AffineAlg G A B x y
 
 end InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge

@@ -4,7 +4,6 @@ import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 import InfoGeometry.NCG.CategoricalInductiveColimitKMSBridge
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Categorical Colimit State Lift & Universal KMS Descent Capstone
@@ -30,7 +29,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open InfoGeometry.NCG.ColimitKMS
 open InfoGeometry.NCG.ColimitKMS.InductiveCocone
-open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 
@@ -78,7 +76,7 @@ theorem colimit_kms_boundary_descent (phi_inf : A_inf →ₗ[Ring_R] Ring_R)
   rw [c.modular_flow_intertwine F_flow hij x, c.eval_comm hij x]
   exact h_kms
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Universal Categorical Colimit Lift**
 
 Unifies:
@@ -87,7 +85,7 @@ Unifies:
 3. **KMS Boundary Commutation Descent**: $\Phi(\psi_j(F_j(f_{i, j}(x)))) = \text{scale} \cdot \Phi(\psi_j(f_{i, j}(x)))$.
 4. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_categorical_colimit_lift_synthesis
+/- theorem grand_categorical_colimit_lift_synthesis
     (phi_inf : A_inf →ₗ[Ring_R] Ring_R)
     (h_inv : ∀ i (x : A i), phi_inf (c.leg i (F_flow.flow i x)) = phi_inf (c.leg i x))
     {i j : I} (hij : i ≤ j) (x : A i) (scale : Ring_R)
@@ -101,6 +99,6 @@ theorem grand_categorical_colimit_lift_synthesis
    colimit_modular_flow_invariance c F_flow phi_inf h_inv hij x,
    colimit_kms_boundary_descent c F_flow phi_inf hij x scale h_kms,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.NCG.ColimitStateLift

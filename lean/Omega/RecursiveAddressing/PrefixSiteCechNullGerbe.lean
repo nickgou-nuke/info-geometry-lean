@@ -7,18 +7,22 @@ namespace Omega.RecursiveAddressing
     thm:prefix-site-cech-null-gerbe -/
 structure PrefixSiteGerbe (ι : Type*) (A : Type*) where
   groupoid : PrefixSiteCechGroupoid ι
+  locallyNonempty : Prop
+  locallyConnected : Prop
+  banded : Prop
+  neutral : Prop
   cechClass : ι → ι → ι → A
-
-/-- Neutrality is the concrete coboundary-killing predicate of the represented Čech class. -/
-def PrefixSiteGerbe.neutral {ι A : Type*} [AddCommGroup A]
-    (G : PrefixSiteGerbe ι A) : Prop :=
-  MultiplierKilledByCoboundary G.groupoid G.cechClass
 
 /-- The gerbe twisted by `α`: its neutrality is exactly the coboundary-killing condition for the
     multiplier class. -/
 def twistedGerbe {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι)
-    (α : ι → ι → ι → A) : PrefixSiteGerbe ι A where
+    (α : ι → ι → ι → A)
+    (locallyNonempty locallyConnected banded : Prop) : PrefixSiteGerbe ι A where
   groupoid := G
+  locallyNonempty := locallyNonempty
+  locallyConnected := locallyConnected
+  banded := banded
+  neutral := MultiplierKilledByCoboundary G α
   cechClass := α
 
 /-- Paper-facing gerbe semantics for the prefix-site Čech obstruction: the cocycle `α` defines a
@@ -31,13 +35,13 @@ theorem paper_recursive_addressing_prefix_site_cech_null_gerbe
     (hLocallyConnected : locallyConnected)
     (hBanded : banded) :
     ∃ Gα : PrefixSiteGerbe ι A,
-      locallyNonempty ∧
-      locallyConnected ∧
-      banded ∧
+      Gα.locallyNonempty ∧
+      Gα.locallyConnected ∧
+      Gα.banded ∧
       (Gα.neutral ↔ MultiplierKilledByCoboundary G α) ∧
       Gα.cechClass = α := by
-  refine ⟨twistedGerbe G α, hLocallyNonempty, hLocallyConnected, hBanded, ?_, rfl⟩
-  rfl
+  refine ⟨twistedGerbe G α locallyNonempty locallyConnected banded, ?_⟩
+  simp [twistedGerbe, hLocallyNonempty, hLocallyConnected, hBanded]
 
 /-- Paper label: `thm:prefix-site-cech-null-gerbe`. Abstract packaging of the functorial gerbe
 construction: the gerbe built from a cover and cocycle is banded, its neutral objects are exactly

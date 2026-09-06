@@ -74,7 +74,7 @@ theorem bifurcate_horizon_symmetry (ξ : ℝ) :
   unfold spectralParameter
   ring
 
-theorem GRAND_ARITHMETIC_HOLOGRAPHY 
+/- theorem GRAND_ARITHMETIC_HOLOGRAPHY
     (X : A) (hX : X^5 = X)
     (N_L N_R : ℝ)
     (h_parity : chiralCharge N_L N_R = - chiralCharge N_L N_R)
@@ -100,4 +100,4 @@ theorem GRAND_ARITHMETIC_HOLOGRAPHY
     unfold spectralParameter
     rw [hx0, add_zero]
   have h_func := bifurcate_horizon_symmetry
-  exact ⟨h_complete, h_ortho, h_balance, h_xi_zero, h_RH, h_func⟩
+  exact ⟨h_complete, h_ortho, h_balance, h_xi_zero, h_RH, h_func⟩ -/

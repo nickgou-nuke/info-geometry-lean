@@ -30,7 +30,8 @@ def excitation : Carrier :=
 
 theorem initialRelation (i j : Fin 3) :
     star (generator i) * generator j = if i = j then 1 else 0 := by
-  simpa [generator] using toeplitz_orthogonality 3 i j
+  rw [generator, star_toeplitzS]
+  exact toeplitz_orthogonality 3 i j
 
 theorem rangeProjection_idempotent (i : Fin 3) :
     rangeProjection i * rangeProjection i = rangeProjection i := by
@@ -59,6 +60,7 @@ theorem resolution :
 
 theorem vacuumDefect_selfAdjoint :
     star vacuumDefect = vacuumDefect := by
-  simp [vacuumDefect, rangeProjection, generator, star_toeplitzS]
+  simp [vacuumDefect, rangeProjection, generator, star_toeplitzS,
+    star_toeplitzSdag]
 
 end InfoGeometry.Canonical.NativeToeplitzCuntzThree

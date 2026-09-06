@@ -10,7 +10,7 @@ Constructive theorem package for the holographic chain:
 
 - emergent time-flow from Sinkhorn/Weyl gauge dynamics
 - anomaly-to-scale (chiral phase) emergence
-- torsion/path-dependence and explicit update-order hysteresis property
+- torsion/path-dependence and explicit update-order hysteresis witness
 
 This module provides the stable, non-vacuous components of the holographic 
 emergence bridge. Degenerate zero-quadratic-form scaffolds have been removed.
@@ -70,23 +70,23 @@ theorem pathDependence_of_twistedInference
     UpdateOrderPathDependent T.dual.nabla :=
   twistedInference_updateOrderPathDependent (T := T)
 
-/-- Lemma 1: the explicit 2×2 Weyl property has the required row positivity. -/
+/-- Lemma 1: the explicit 2×2 Weyl witness has the required row positivity. -/
 theorem weylWitness_has_positive_rows :
     HasPositiveRowSums 2 weylOrderWitnessMatrix2 := by
   exact weylOrderWitnessMatrix2_positiveRows
 
-/-- Lemma 2: row-normalizing the explicit property leaves positive column sums. -/
+/-- Lemma 2: row-normalizing the explicit witness leaves positive column sums. -/
 theorem weylWitness_rowNormalize_has_positive_cols :
     HasPositiveColSums 2
       (rowNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_rows) := by
   exact weylOrderWitnessMatrix2_positiveCols_afterRow
 
-/-- Lemma 3: the explicit 2×2 Weyl property has the required column positivity. -/
+/-- Lemma 3: the explicit 2×2 Weyl witness has the required column positivity. -/
 theorem weylWitness_has_positive_cols :
     HasPositiveColSums 2 weylOrderWitnessMatrix2 := by
   exact weylOrderWitnessMatrix2_positiveCols
 
-/-- Lemma 4: column-normalizing the explicit property leaves positive row sums. -/
+/-- Lemma 4: column-normalizing the explicit witness leaves positive row sums. -/
 theorem weylWitness_colNormalize_has_positive_rows :
     HasPositiveRowSums 2
       (colNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_cols) := by
@@ -107,7 +107,7 @@ theorem weylWitness_rowThenCol_ne_colThenRow :
     weylOrderWitnessMatrix2, weylWitness_has_positive_rows, weylWitness_rowNormalize_has_positive_cols,
     weylWitness_has_positive_cols, weylWitness_colNormalize_has_positive_rows] at h00
 
-/-- Lemma 6: the explicit property has update-order hysteresis. -/
+/-- Lemma 6: the explicit witness has update-order hysteresis. -/
 theorem weylWitness_updateOrderHysteresis :
     UpdateOrderHysteresis 2 weylOrderWitnessMatrix2
       weylWitness_has_positive_rows
@@ -117,7 +117,7 @@ theorem weylWitness_updateOrderHysteresis :
   unfold UpdateOrderHysteresis
   exact weylWitness_rowThenCol_ne_colThenRow
 
-/-- The explicit row-then-column Weyl property has zero column residual after its column step. -/
+/-- The explicit row-then-column Weyl witness has zero column residual after its column step. -/
 theorem weylWitness_rowThenCol_colLyapunov_eq_zero :
     colLyapunov 2
       (rowThenColUpdate 2 weylOrderWitnessMatrix2
@@ -127,7 +127,7 @@ theorem weylWitness_rowThenCol_colLyapunov_eq_zero :
     (M := rowNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_rows)
     weylWitness_rowNormalize_has_positive_cols
 
-/-- The explicit column-then-row Weyl property has zero row residual after its row step. -/
+/-- The explicit column-then-row Weyl witness has zero row residual after its row step. -/
 theorem weylWitness_colThenRow_rowLyapunov_eq_zero :
     rowLyapunov 2
       (colThenRowUpdate 2 weylOrderWitnessMatrix2
@@ -137,7 +137,7 @@ theorem weylWitness_colThenRow_rowLyapunov_eq_zero :
     (M := colNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_cols)
     weylWitness_colNormalize_has_positive_rows
 
-/-- Theorem: an explicit 2×2 gauge-order hysteresis property exists. -/
+/-- Theorem: an explicit 2×2 gauge-order hysteresis witness exists. -/
 theorem exists_gaugeOrderHysteresis :
     ∃ (M : Coupling 2)
       (hrow : HasPositiveRowSums 2 M)

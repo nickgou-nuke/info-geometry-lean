@@ -102,4 +102,15 @@ theorem zeta_pole_model_inverse {β : ℝ} (h : β ≠ 1) :
     (β - 1) * poleModel β 1 = 1 := by
   simpa [poleRate, poleModel] using poleModel_is_inverse (β := β) (βc := 1) h
 
+/-- Consolidated pole-criterion package. -/
+theorem partition_pole_criterion_synthesis :
+    (∀ β βc E, poleIntegrand β βc E = Real.exp (-(poleRate β βc * E))) ∧
+    (∀ β βc, β ≠ βc → poleRate β βc * poleModel β βc = 1) ∧
+    (∀ β βc, βc < β → 0 < poleModel β βc) ∧
+    (∀ β, poleRate β 1 = β - 1) ∧
+    (∀ β, β ≠ 1 → (β - 1) * poleModel β 1 = 1) := by
+  exact ⟨poleIntegrand_eq_rate, fun β βc h => poleModel_is_inverse h,
+    fun β βc h => poleModel_positive h, zeta_critical_rate,
+    fun β h => zeta_pole_model_inverse h⟩
+
 end noncomputable section

@@ -42,7 +42,7 @@ open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-! ## 1. Finite exterior prime algebra -/
 
-/-- A finite prime cutoff is a property finite register of primes. -/
+/-- A finite prime cutoff is a certified finite register of primes. -/
 abbrev PrimeCutoff :=
   PrimeRegister
 
@@ -207,21 +207,6 @@ theorem finiteFullSUSYProduct_eq_one
   unfold finiteFullSUSYProduct finiteBosonicPrimePartition
   exact inv_mul_cancel₀ hdenom
 
-/--
-The finite signed supertrace cancels the finite bosonic reciprocal partition.
-
-This is the real finite readout form of the boson/signed-supertrace
-cancellation.  It is distinct from the unsigned square-free partition, whose
-local factors are `1 + primeWeight β p` rather than `1 - primeWeight β p`.
--/
-theorem finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
-    (P : PrimeCutoff) (β : ℝ)
-    (hdenom : finitePrimeDenominator P β ≠ 0) :
-    finitePrimeSupertrace P β * finiteBosonicPrimePartition P β = 1 := by
-  rw [finitePrimeSupertrace_eq_denominator]
-  unfold finiteBosonicPrimePartition
-  exact mul_inv_cancel₀ hdenom
-
 /-! ## 3. Möbius interpretation and differential guardrails -/
 
 /-! ## 2. Complex finite-volume zeta bridge -/
@@ -285,21 +270,6 @@ theorem finiteComplexFermionSupertrace_eq_eulerProduct
   unfold finiteComplexFermionSupertrace
   simpa [sub_eq_add_neg, complexPrimeWeight] using
     (Finset.prod_one_add (s := S) (f := fun p : Nat.Primes => -complexPrimeWeight s p)).symm
-
-/-! ## 3. Finite complex boson/fermion cancellation -/
-
-/-- The finite complex fermionic supertrace cancels the finite bosonic
-reciprocal Euler product whenever every local denominator is nonzero. -/
-theorem finiteComplexFermionSupertrace_mul_finiteComplexBosonPartition_eq_one
-    (S : Finset Nat.Primes) (s : ℂ)
-    (hdenom : ∀ p ∈ S, (1 - complexPrimeWeight s p) ≠ 0) :
-    finiteComplexFermionSupertrace S s * finiteComplexBosonPartition S s = 1 := by
-  rw [finiteComplexFermionSupertrace_eq_eulerProduct]
-  unfold finiteComplexBosonPartition
-  rw [← Finset.prod_mul_distrib]
-  apply Finset.prod_eq_one
-  intro p hp
-  exact mul_inv_cancel₀ (hdenom p hp)
 
 /-- The infinite bosonic Euler product used by Mathlib's zeta theorem. -/
 def infiniteComplexBosonicEulerProduct
@@ -386,4 +356,4 @@ theorem inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta
   exact congrArg (fun z : ℂ => z⁻¹)
     (infiniteComplexBosonicEulerProduct_eq_riemannZeta hs)
 
-end PrimeSuperalgebra
+end InfoGeometry.Arithmetic.PrimeSuperalgebra

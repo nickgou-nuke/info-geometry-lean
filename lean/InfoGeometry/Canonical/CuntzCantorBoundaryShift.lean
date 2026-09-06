@@ -37,11 +37,11 @@ namespace InfoGeometry.Canonical.CuntzCantorBoundaryShift
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 /-- Prepend one branch bit to an infinite Cantor boundary point. -/
-def prependBit (b : Bool) (x : (ℕ → Bool)) : (ℕ → Bool) :=
+def prependBit (b : Bool) (x : CantorBoundary) : CantorBoundary :=
   fun n => if n = 0 then b else x (n - 1)
 
 /-- Drop the head bit of an infinite Cantor boundary point. -/
-def tail (x : (ℕ → Bool)) : (ℕ → Bool) :=
+def tail (x : CantorBoundary) : CantorBoundary :=
   fun n => x (n + 1)
 
 /-- Finite prefix obtained by prepending a branch bit to a word. -/
@@ -50,47 +50,25 @@ def branchPrefix (n : ℕ) (b : Bool) (w : BitWord n) : BitWord (n + 1) :=
     if h : i.1 = 0 then b
     else w ⟨i.1 - 1, by omega⟩
 
-@[simp] theorem prependBit_zero (b : Bool) (x : (ℕ → Bool)) :
+@[simp] theorem prependBit_zero (b : Bool) (x : CantorBoundary) :
     prependBit b x 0 = b := by
   simp [prependBit]
 
-@[simp] theorem prependBit_succ (b : Bool) (x : (ℕ → Bool)) (n : ℕ) :
+@[simp] theorem prependBit_succ (b : Bool) (x : CantorBoundary) (n : ℕ) :
     prependBit b x (n + 1) = x n := by
   simp [prependBit]
 
-@[simp] theorem tail_apply (x : (ℕ → Bool)) (n : ℕ) :
+@[simp] theorem tail_apply (x : CantorBoundary) (n : ℕ) :
     tail x n = x (n + 1) := rfl
 
-theorem continuous_prependBit (b : Bool) :
-    Continuous (prependBit b) := by
-  apply continuous_pi
-  intro n
-  cases n with
-  | zero => exact continuous_const
-  | succ n =>
-      simpa [prependBit] using (continuous_apply n :
-        Continuous (fun x : (ℕ → Bool) => x n))
-
-theorem continuous_tail :
-    Continuous tail := by
-  apply continuous_pi
-  intro n
-  simpa [tail] using (continuous_apply (n + 1) :
-    Continuous (fun x : (ℕ → Bool) => x (n + 1)))
-
 /-- Dropping the head after prepending a branch bit recovers the old boundary. -/
-theorem tail_prependBit (b : Bool) (x : (ℕ → Bool)) :
+theorem tail_prependBit (b : Bool) (x : CantorBoundary) :
     tail (prependBit b x) = x := by
   ext n
   simp [tail]
 
-theorem tail_surjective :
-    Function.Surjective tail := by
-  intro x
-  exact ⟨prependBit false x, tail_prependBit false x⟩
-
 /-- The head of a prepended boundary is the prepended branch bit. -/
-theorem prependBit_head (b : Bool) (x : (ℕ → Bool)) :
+theorem prependBit_head (b : Bool) (x : CantorBoundary) :
     prependBit b x 0 = b := by
   simp
 
@@ -102,7 +80,7 @@ theorem prependBit_injective (b : Bool) :
   simpa [tail_prependBit] using htail
 
 /-- A boundary whose head is `b` is recovered by prepending `b` to its tail. -/
-theorem prependBit_tail_of_head {x : (ℕ → Bool)} {b : Bool} (h : x 0 = b) :
+theorem prependBit_tail_of_head {x : CantorBoundary} {b : Bool} (h : x 0 = b) :
     prependBit b (tail x) = x := by
   ext n
   cases n with
@@ -112,7 +90,7 @@ theorem prependBit_tail_of_head {x : (ℕ → Bool)} {b : Bool} (h : x 0 = b) :
       simp [tail]
 
 /-- The two branch maps cover the full Cantor boundary. -/
-theorem prependBit_range_cover (x : (ℕ → Bool)) :
+theorem prependBit_range_cover (x : CantorBoundary) :
     x ∈ Set.range (prependBit false) ∪ Set.range (prependBit true) := by
   cases hx : x 0
   · left
@@ -139,7 +117,7 @@ theorem prependBit_false_true_disjoint :
   simp [branchPrefix]
 
 /-- Prefixes commute with branch prepending. -/
-theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : (ℕ → Bool)) :
+theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : CantorBoundary) :
     boundaryPrefix (n + 1) (prependBit b x) =
       branchPrefix n b (boundaryPrefix n x) := by
   ext i
@@ -151,189 +129,62 @@ theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : (ℕ → Bool)) :
 def branchPullback (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) : DiagAlg n :=
   fun w => f (branchPrefix n b w)
 
-@[simp] theorem branchPullback_zero (n : ℕ) (b : Bool) :
-    branchPullback n b (0 : DiagAlg (n + 1)) = 0 := by
-  rfl
-
-@[simp] theorem branchPullback_one (n : ℕ) (b : Bool) :
-    branchPullback n b (1 : DiagAlg (n + 1)) = 1 := by
-  rfl
-
-theorem branchPullback_add
-    (n : ℕ) (b : Bool) (f g : DiagAlg (n + 1)) :
-    branchPullback n b (f + g) =
-      branchPullback n b f + branchPullback n b g := by
-  rfl
-
-theorem branchPullback_mul
-    (n : ℕ) (b : Bool) (f g : DiagAlg (n + 1)) :
-    branchPullback n b (f * g) =
-      branchPullback n b f * branchPullback n b g := by
-  rfl
-
-theorem branchPullback_star
-    (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
-    branchPullback n b (star f) =
-      star (branchPullback n b f) := by
-  rfl
-
-theorem branchPullback_smul
-    (n : ℕ) (b : Bool) (c : ℂ) (f : DiagAlg (n + 1)) :
-    branchPullback n b (c • f) =
-      c • branchPullback n b f := by
-  rfl
-
-theorem branchPullback_surjective
-    (n : ℕ) (b : Bool) :
-    Function.Surjective (branchPullback n b) := by
-  intro g
-  let f : DiagAlg (n + 1) := fun w =>
-    if w ⟨0, Nat.succ_pos n⟩ = b then
-      g (fun i => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
-    else 0
-  refine ⟨f, ?_⟩
-  funext w
-  change
-    (if branchPrefix n b w ⟨0, Nat.succ_pos n⟩ = b then
-        g (fun i => branchPrefix n b w
-          ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
-      else 0) = g w
-  rw [branchPrefix_zero]
-  rw [if_pos rfl]
-  apply congrArg g
-  funext i
-  exact branchPrefix_succ n b w i
-
-theorem branchPullback_eq_zero_iff
-    (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
-    branchPullback n b f = 0 ↔
-      ∀ w : BitWord n, f (branchPrefix n b w) = 0 := by
-  constructor
-  · intro h w
-    have hw := congrFun h w
-    simpa [branchPullback] using hw
-  · intro h
-    funext w
-    simp [branchPullback, h]
-
-theorem branchPrefix_head_tail (n : ℕ) (w : BitWord (n + 1)) :
+private theorem branchPrefix_tail (n : ℕ) (w : BitWord (n + 1)) :
     branchPrefix n (w ⟨0, Nat.succ_pos n⟩)
         (fun i : Fin n => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩) = w := by
   funext i
-  by_cases hi : i.1 = 0
-  · have hi0 : i = (0 : Fin (n + 1)) := Fin.ext hi
+  by_cases h : i.1 = 0
+  · have hi : i = ⟨0, Nat.succ_pos n⟩ := Fin.ext h
     subst i
     rfl
-  · simp [branchPrefix, hi]
+  · simp [branchPrefix, h]
     apply congrArg w
     apply Fin.ext
-    exact Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hi)
+    exact Nat.sub_add_cancel (by omega : 1 ≤ i.1)
 
+/-- The two branch pullbacks jointly determine a finite diagonal observable. -/
 theorem branchPullback_pair_injective (n : ℕ) :
     Function.Injective (fun f : DiagAlg (n + 1) =>
       (branchPullback n false f, branchPullback n true f)) := by
   intro f g h
   funext w
-  let tail : BitWord n :=
-    fun i => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩
-  have htail :
-      branchPrefix n (w ⟨0, Nat.succ_pos n⟩) tail = w := by
-    simpa [tail] using branchPrefix_head_tail n w
+  let t : BitWord n := fun i => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩
   cases hb : w ⟨0, Nat.succ_pos n⟩ with
   | false =>
-      have htailFalse : branchPrefix n false tail = w := by
-        rw [← hb]
-        exact htail
-      have hh : branchPullback n false f tail =
-          branchPullback n false g tail :=
-        congrFun (congrArg (fun p => p.1) h) tail
-      calc
-        f w = f (branchPrefix n false tail) := by rw [htailFalse]
-        _ = g (branchPrefix n false tail) := by simpa [branchPullback] using hh
-        _ = g w := by rw [htailFalse]
+      have ht := congrFun (congrArg Prod.fst h) t
+      rw [← branchPrefix_tail n w]
+      have hbt : branchPrefix n (w ⟨0, Nat.succ_pos n⟩) t =
+          branchPrefix n false t := by rw [hb]
+      rw [hbt]
+      simpa [branchPullback, t] using ht
   | true =>
-      have htailTrue : branchPrefix n true tail = w := by
-        rw [← hb]
-        exact htail
-      have hh : branchPullback n true f tail =
-          branchPullback n true g tail :=
-        congrFun (congrArg (fun p => p.2) h) tail
-      calc
-        f w = f (branchPrefix n true tail) := by rw [htailTrue]
-        _ = g (branchPrefix n true tail) := by simpa [branchPullback] using hh
-        _ = g w := by rw [htailTrue]
+      have ht := congrFun (congrArg Prod.snd h) t
+      rw [← branchPrefix_tail n w]
+      have hbt : branchPrefix n (w ⟨0, Nat.succ_pos n⟩) t =
+          branchPrefix n true t := by rw [hb]
+      rw [hbt]
+      simpa [branchPullback, t] using ht
 
+/-- Every pair of finite diagonal observables is obtained by branch pullback. -/
 theorem branchPullback_pair_surjective (n : ℕ) :
     Function.Surjective (fun f : DiagAlg (n + 1) =>
       (branchPullback n false f, branchPullback n true f)) := by
-  intro p
-  let f : DiagAlg (n + 1) := fun z =>
-    if z ⟨0, Nat.succ_pos n⟩ = false then
-      p.1 (fun i => z ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
+  rintro ⟨p, q⟩
+  let f : DiagAlg (n + 1) := fun w =>
+    if w ⟨0, Nat.succ_pos n⟩ then
+      q (fun i : Fin n => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
     else
-      p.2 (fun i => z ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
+      p (fun i : Fin n => w ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩)
   refine ⟨f, ?_⟩
   apply Prod.ext
   · funext w
-    change f (branchPrefix n false w) = p.1 w
-    dsimp [f]
-    change (if branchPrefix n false w ⟨0, Nat.succ_pos n⟩ = false then _ else _) = _
-    rw [branchPrefix_zero]
-    apply congrArg p.1
-    funext i
-    exact branchPrefix_succ n false w i
+    simp [branchPullback, f, branchPrefix]
   · funext w
-    change f (branchPrefix n true w) = p.2 w
-    dsimp [f]
-    change (if branchPrefix n true w ⟨0, Nat.succ_pos n⟩ = false then _ else _) = _
-    rw [branchPrefix_zero]
-    simp only [Bool.true_eq_false, if_false]
-    apply congrArg p.2
-    funext i
-    exact branchPrefix_succ n true w i
-
-theorem branchPullback_pair_bijective (n : ℕ) :
-    Function.Bijective (fun f : DiagAlg (n + 1) =>
-      (branchPullback n false f, branchPullback n true f)) :=
-  ⟨branchPullback_pair_injective n, branchPullback_pair_surjective n⟩
-
-theorem branchPullback_pair_one (n : ℕ) :
-    (branchPullback n false (1 : DiagAlg (n + 1)),
-      branchPullback n true (1 : DiagAlg (n + 1))) =
-      (1 : DiagAlg n × DiagAlg n) := by
-  apply Prod.ext
-  · exact branchPullback_one n false
-  · exact branchPullback_one n true
-
-theorem branchPullback_pair_add
-    (n : ℕ) (f g : DiagAlg (n + 1)) :
-    (branchPullback n false (f + g), branchPullback n true (f + g)) =
-      (branchPullback n false f, branchPullback n true f) +
-        (branchPullback n false g, branchPullback n true g) := by
-  apply Prod.ext
-  · exact branchPullback_add n false f g
-  · exact branchPullback_add n true f g
-
-theorem branchPullback_pair_mul
-    (n : ℕ) (f g : DiagAlg (n + 1)) :
-    (branchPullback n false (f * g), branchPullback n true (f * g)) =
-      (branchPullback n false f, branchPullback n true f) *
-        (branchPullback n false g, branchPullback n true g) := by
-  apply Prod.ext
-  · exact branchPullback_mul n false f g
-  · exact branchPullback_mul n true f g
-
-theorem branchPullback_pair_star
-    (n : ℕ) (f : DiagAlg (n + 1)) :
-    (branchPullback n false (star f), branchPullback n true (star f)) =
-      star (branchPullback n false f, branchPullback n true f) := by
-  apply Prod.ext
-  · exact branchPullback_star n false f
-  · exact branchPullback_star n true f
+    simp [branchPullback, f, branchPrefix]
 
 /-- Pulling a finite cylinder back along a branch is again a finite cylinder. -/
 theorem cylinder_branch_pullback (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
-    (fun x : (ℕ → Bool) => cylinder (n + 1) f (prependBit b x)) =
+    (fun x : CantorBoundary => cylinder (n + 1) f (prependBit b x)) =
       cylinder n (branchPullback n b f) := by
   ext x
   simp [cylinder, branchPullback, boundaryPrefix_prependBit]
@@ -343,19 +194,28 @@ theorem branch_pullback_mem_colimit (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
     cylinder n (branchPullback n b f) ∈ CylinderColimit := by
   exact cylinder_mem_colimit n (branchPullback n b f)
 
-/-- Synthesis theorem combining branch coverage and cylinder pullback coherence. -/
+/--
+Consolidated finite Cuntz-Cantor shift package: the two binary branches are
+injective, disjoint, cover the boundary, and preserve finite-cylinder status by
+pullback.
+-/
 theorem finite_cuntz_cantor_shift_synthesis :
     Function.Injective (prependBit false) ∧
     Function.Injective (prependBit true) ∧
     Disjoint (Set.range (prependBit false)) (Set.range (prependBit true)) ∧
-    (∀ x : (ℕ → Bool), x ∈ Set.range (prependBit false) ∪ Set.range (prependBit true)) ∧
+    (∀ x : CantorBoundary,
+      x ∈ Set.range (prependBit false) ∪ Set.range (prependBit true)) ∧
     (∀ n : ℕ, ∀ b : Bool, ∀ f : DiagAlg (n + 1),
-      (fun x : (ℕ → Bool) => cylinder (n + 1) f (prependBit b x)) =
+      (fun x : CantorBoundary => cylinder (n + 1) f (prependBit b x)) =
         cylinder n (branchPullback n b f)) ∧
     (∀ n : ℕ, ∀ b : Bool, ∀ f : DiagAlg (n + 1),
-      cylinder n (branchPullback n b f) ∈ CylinderColimit) :=
-  ⟨prependBit_injective false, prependBit_injective true, prependBit_false_true_disjoint,
-   prependBit_range_cover, cylinder_branch_pullback, branch_pullback_mem_colimit⟩
+      cylinder n (branchPullback n b f) ∈ CylinderColimit) := by
+  exact ⟨prependBit_injective false,
+    prependBit_injective true,
+    prependBit_false_true_disjoint,
+    prependBit_range_cover,
+    cylinder_branch_pullback,
+    branch_pullback_mem_colimit⟩
 
 end InfoGeometry.Canonical.CuntzCantorBoundaryShift
 

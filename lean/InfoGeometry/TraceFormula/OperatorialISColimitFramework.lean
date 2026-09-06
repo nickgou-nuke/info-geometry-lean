@@ -299,11 +299,11 @@ theorem bkm_realMatrixOperator_tomita_conjugation_invariant
     introducing a second descent construction. -/
 theorem concreteOperator_colimit_realMatrixOperator_readout
     (n : ℕ) (s : ℝ) (A : MatrixStage n) :
-    traceColimitFunctional concreteStep concrete_trace_compatible
+    traceColimitFunctional concreteStep concreteData.trace_compatible
         (traceColimitInclusion concreteStep n
           (operatorToMatrixLinearMap n (realMatrixOperator n A))) =
       Complex.ofReal (normalizedTrace n A) := by
-  change traceColimitFunctional concreteStep concrete_trace_compatible
+  change traceColimitFunctional concreteStep concreteData.trace_compatible
       (traceColimitInclusion concreteStep n
         (CblinfunMatrix.matrixOfOp (realMatrixOperator n A))) = _
   rw [traceColimitFunctional_inclusion_bkm]
@@ -317,7 +317,7 @@ theorem concreteOperator_colimit_realMatrixOperator_readout
 theorem concreteOperator_colimit_tracePairingNative_readout
     (n : ℕ) (s : ℝ)
     (X Y : InfoGeometry.Physics.TraceOperatorSpace (BitWord n)) :
-    traceColimitFunctional concreteStep concrete_trace_compatible
+    traceColimitFunctional concreteStep concreteData.trace_compatible
         (traceColimitInclusion concreteStep n
           (operatorToMatrixLinearMap n
             ((realMatrixOperator n
@@ -326,7 +326,7 @@ theorem concreteOperator_colimit_tracePairingNative_readout
                 (traceOperatorSpaceMatrixStageEquiv n Y))))) =
       Complex.ofReal
         ((1 / (2 ^ n : ℝ)) * InfoGeometry.Physics.tracePairingNative X Y) := by
-  change traceColimitFunctional concreteStep concrete_trace_compatible
+  change traceColimitFunctional concreteStep concreteData.trace_compatible
       (traceColimitInclusion concreteStep n
         (CblinfunMatrix.matrixOfOp
           ((realMatrixOperator n

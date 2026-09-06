@@ -149,19 +149,6 @@ theorem blahut_arimoto_lyapunov_contraction (d_0 Kc : ℝ) (hKc_nonneg : 0 ≤ K
 ### 4. Grand Synthesis
 -/
 
-/-- 🏆 GRAND SYNTHESIS: Complete Information-Theoretic Dikin Lyapunov Trap on Apollonian Scale Space -/
-theorem grand_dikin_souriau_trap_synthesis
-    (ξ : ℝ) (r : ℝ) (hr : 0 ≤ r) (h_ell : inDikinEllipsoid ξ r) :
-    (dikinBarrier ξ = - Real.log (1 - (Real.tanh ξ) ^ 2)) ∧
-    (dikinMetric ξ = 2 * (1 - (Real.tanh ξ) ^ 2)) ∧
-    (dikinMetric 0 = 2) ∧
-    (0 < dikinMetric ξ) ∧
-    (|ξ| ≤ r / Real.sqrt 2) :=
-  ⟨dikin_barrier_eq_neg_log_one_sub_tanh_sq ξ,
-   dikin_metric_eq_two_mul_one_sub_tanh_sq ξ,
-   dikin_metric_at_origin,
-   dikin_metric_pos ξ,
-   dikin_ellipsoid_confinement ξ r hr h_ell⟩
 
 end
 

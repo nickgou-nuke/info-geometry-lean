@@ -12,13 +12,13 @@ namespace InfoGeometry.TrifactorSpectralDecomposition
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
 /-- The null boundary projector, corresponding to the `0` sector. -/
-def P_zero (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_zero T
+abbrev P_zero (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_zero T
 
 /-- The positive conformal-flow projector, corresponding to the `+1` sector. -/
-def P_plus (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_plus T
+abbrev P_plus (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_plus T
 
 /-- The negative mirror projector, corresponding to the `-1` sector. -/
-def P_minus (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_minus T
+abbrev P_minus (T : R) : R := InfoGeometry.Canonical.TrifactorDecomposition.P_minus T
 
 omit [Invertible (2 : R)] in
 theorem P_zero_idempotent (T : R) (h_cube : T ^ 3 = T) :

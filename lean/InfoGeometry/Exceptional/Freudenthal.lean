@@ -3,7 +3,7 @@ InfoGeometry/Exceptional/Freudenthal.lean
 
 Freudenthal phase-space and TKK closure signatures.
 
-This file is intentionally property-gated. It does not construct `E₇(7)`.
+This file is intentionally witness-gated. It does not construct `E₇(7)`.
 It defines the algebraic operations needed to form the Freudenthal charge
 space over an abstract cubic Jordan datum, and proves only consequences of
 those stored operations.
@@ -107,16 +107,6 @@ def quarticInvariant
       - D.traceBilin (D.adjointQuad Q.x) (D.adjointQuad Q.y)
   term1 ^ 2 - 4 * term2
 
-/-- The zero charge has vanishing quartic invariant whenever the cubic datum
-  has its expected zero-value laws.  The hypotheses are explicit because
-  `CubicJordanDatum` intentionally stores no normalization axioms. -/
-theorem quarticInvariant_zeroCharge
-    (D : CubicJordanDatum J)
-    (hN : D.normCubic 0 = 0)
-    (hA : D.adjointQuad 0 = 0) :
-    quarticInvariant D ({ alpha := 0, beta := 0, x := 0, y := 0 } : FreudenthalCharge J) = 0 := by
-  simp [quarticInvariant, hN, hA]
-
 /--
 The scalar formula for the canonical Freudenthal symplectic pairing
 
@@ -158,12 +148,6 @@ end FreudenthalCharge
 
 /-! ### 2a. The symplectic Heisenberg sector -/
 
-/-- The central Heisenberg extension of the Freudenthal charge carrier.
-
-The first field is the Freudenthal charge and the second field is the central
-grade-two coordinate.  This is the concrete carrier for the bracket whose
-central component is the Freudenthal symplectic pairing.
--/
 @[ext]
 structure HeisenbergElement (J : Type*) [AddCommGroup J] [Module ℝ J] where
   charge : FreudenthalCharge J
@@ -173,19 +157,28 @@ namespace HeisenbergElement
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 
-/-- The zero charge used by the central Heisenberg bracket. -/
 def zeroCharge : FreudenthalCharge J where
   alpha := 0
   beta := 0
   x := 0
   y := 0
 
-/-- The zero element of the central Heisenberg carrier. -/
+theorem zeroCharge_eq_iff (Q : FreudenthalCharge J) :
+    Q = (zeroCharge : FreudenthalCharge J) ↔
+      Q.alpha = 0 ∧ Q.beta = 0 ∧ Q.x = 0 ∧ Q.y = 0 := by
+  constructor
+  · intro h
+    cases h
+    exact ⟨rfl, rfl, rfl, rfl⟩
+  · rintro ⟨ha, hb, hx, hy⟩
+    cases Q with
+    | mk alpha beta x y =>
+      simp_all [zeroCharge]
+
 def zero : HeisenbergElement J where
   charge := zeroCharge
   center := 0
 
-/-- The Heisenberg bracket determined by the Freudenthal symplectic form. -/
 def bracket
     (D : CubicJordanDatum J)
     (X Y : HeisenbergElement J) : HeisenbergElement J where
@@ -200,7 +193,6 @@ def bracket
     (D : CubicJordanDatum J) (X Y : HeisenbergElement J) :
     (bracket D X Y).center = FreudenthalCharge.symplecticForm D X.charge Y.charge := rfl
 
-/-- The Heisenberg bracket is skew-symmetric. -/
 theorem bracket_skew
     (D : CubicJordanDatum J) (X Y : HeisenbergElement J) :
     bracket D Y X =
@@ -210,7 +202,6 @@ theorem bracket_skew
   · rfl
   · exact FreudenthalCharge.symplectic_form_skew D X.charge Y.charge
 
-/-- The bracket of an element with itself vanishes. -/
 @[simp] theorem bracket_self
     (D : CubicJordanDatum J) (X : HeisenbergElement J) :
     bracket D X X = zero := by
@@ -219,7 +210,6 @@ theorem bracket_skew
   · simpa only [bracket, zero] using
       (FreudenthalCharge.symplectic_form_alternating D X.charge)
 
-/-- The grade-two coordinate is central for the Heisenberg bracket. -/
 @[simp] theorem bracket_bracket_left
     (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
     bracket D (bracket D X Y) Z = zero := by
@@ -227,15 +217,13 @@ theorem bracket_skew
   · rfl
   · simp [bracket, zero, zeroCharge, FreudenthalCharge.symplecticForm]
 
- /-- The corresponding right-nested bracket is also zero. -/
- theorem bracket_bracket_right
+theorem bracket_bracket_right
     (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
     bracket D X (bracket D Y Z) = zero := by
   apply HeisenbergElement.ext
   · rfl
   · simp [bracket, zero, zeroCharge, FreudenthalCharge.symplecticForm]
 
-/-- Each nested bracket vanishes because the grade-two coordinate is central. -/
 theorem bracket_jacobi_terms_vanish
     (D : CubicJordanDatum J) (X Y Z : HeisenbergElement J) :
     bracket D X (bracket D Y Z) = zero ∧

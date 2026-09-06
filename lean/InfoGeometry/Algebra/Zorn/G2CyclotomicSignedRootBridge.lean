@@ -60,6 +60,7 @@ def cyclotomicS2Fun : Root → Root
   | (false, k) => (false, 2 - k)
   | (true, k) => (true, 3 - k)
 
+
 theorem cyclotomicS1Fun_bijective : Function.Bijective cyclotomicS1Fun := by
   classical
   decide

@@ -219,3 +219,5 @@ end NaturalConeVolumeBridge
 end Core
 
 end InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
+
+end

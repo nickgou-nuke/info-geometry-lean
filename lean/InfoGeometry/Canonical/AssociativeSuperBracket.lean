@@ -22,45 +22,6 @@ variable {A B : Type*} [Ring A] [Algebra ℝ A] [Ring B] [Algebra ℝ B]
 noncomputable def superBracket (p q : SuperParity) (a b : A) : A :=
   a * b - paritySign p q • (b * a)
 
-def parityAdd : SuperParity → SuperParity → SuperParity
-  | .even, q => q
-  | .odd, .even => .odd
-  | .odd, .odd => .even
-
-@[simp] theorem parityAdd_even_left (p : SuperParity) :
-    parityAdd .even p = p := by
-  cases p <;> rfl
-
-@[simp] theorem parityAdd_even_right (p : SuperParity) :
-    parityAdd p .even = p := by
-  cases p <;> rfl
-
-@[simp] theorem parityAdd_self (p : SuperParity) :
-    parityAdd p p = .even := by
-  cases p <;> rfl
-
-theorem parityAdd_comm (p q : SuperParity) :
-    parityAdd p q = parityAdd q p := by
-  cases p <;> cases q <;> rfl
-
-theorem parityAdd_assoc (p q r : SuperParity) :
-    parityAdd (parityAdd p q) r =
-      parityAdd p (parityAdd q r) := by
-  cases p <;> cases q <;> cases r <;> rfl
-
-theorem superBracket_graded_jacobi
-    (p q r : SuperParity) (x y z : A) :
-    paritySign p r • superBracket p (parityAdd q r) x
-        (superBracket q r y z) +
-      paritySign q p • superBracket q (parityAdd r p) y
-        (superBracket r p z x) +
-      paritySign r q • superBracket r (parityAdd p q) z
-        (superBracket p q x y) = 0 := by
-  cases p <;> cases q <;> cases r <;>
-    simp [superBracket, paritySign, parityAdd, sub_eq_add_neg,
-      Algebra.smul_def] <;>
-    noncomm_ring
-
 /-- Even-even channel: the ordinary commutator. -/
 @[rep_depth krein]
 noncomputable abbrev commutator (a b : A) : A :=
@@ -108,28 +69,9 @@ noncomputable abbrev anticommutator (a b : A) : A :=
     superBracket SuperParity.even q a b = a * b - b * a := by
   simp [superBracket, paritySign]
 
-@[rep_depth krein, simp] lemma superBracket_even_right
-    (p : SuperParity) (a b : A) :
-    superBracket p SuperParity.even a b = a * b - b * a := by
-  simp [superBracket, paritySign]
-
-@[rep_depth krein, simp] lemma superBracket_even_even
-    (a b : A) :
-    superBracket .even .even a b = a * b - b * a := by
-  simp [superBracket, paritySign]
-
 @[rep_depth krein, simp] lemma superBracket_odd_odd
     (a b : A) :
     superBracket SuperParity.odd SuperParity.odd a b = a * b + b * a := by
   simp [superBracket, paritySign, sub_eq_add_neg]
-
-theorem superBracket_swap
-    (p q : SuperParity) (a b : A) :
-    superBracket p q a b =
-      - paritySign p q • superBracket q p b a := by
-  cases p <;> cases q <;>
-    simp [superBracket, paritySign, sub_eq_add_neg,
-      Algebra.smul_def]
-  all_goals first | noncomm_ring | abel
 
 end InfoGeometry.Canonical.AssociativeSuperBracket

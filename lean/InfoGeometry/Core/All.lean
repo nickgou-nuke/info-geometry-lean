@@ -5,7 +5,6 @@ import InfoGeometry.Core.Entropy
 import InfoGeometry.Core.GrandCanonical
 import InfoGeometry.Core.Involution
 import InfoGeometry.Core.Jordan
-import InfoGeometry.Core.HomogeneousSpaces
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.SymmetricLieMetric
@@ -15,10 +14,6 @@ import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
-import InfoGeometry.Core.Foundations
-import InfoGeometry.Core.PeirceDecomposition
-import InfoGeometry.Core.JordanPeirceDecomposition
-import InfoGeometry.Core.DoubleCoset
 
 namespace InfoGeometry
 

@@ -83,4 +83,23 @@ theorem brst_quotient_pairing_eval
     brstQuotientPairing inner q hq2 h_adj h_zero1 h_zero2 h_add1 h_add2 (Submodule.Quotient.mk u) (Submodule.Quotient.mk v) =
       inner u.1 v.1 := rfl
 
+/-- **Theorem**: Master BRST Quotient Inner Product Lift & Physical Cohomology Pairing Synthesis.
+    Unifies:
+    1. Complete representative gauge invariance for the bilinear pairing.
+    2. Literal quotient-lifted function definition brstQuotientPairing : H_Q → H_Q → R on the BRST cohomology quotient module H_Q = Ker Q / Im Q.
+    3. Proof closure for literal quotient evaluation ⟨[ψ], [φ]⟩ = ⟨ψ, φ⟩. -/
+theorem master_brst_quotient_inner_product_lift_synthesis
+    (inner : H → H → R)
+    (q : Module.End R H)
+    (hq2 : q.comp q = 0)
+    (h_adj : ∀ x y, inner (q x) y = inner x (q y))
+    (h_zero1 : ∀ y, inner 0 y = 0)
+    (h_zero2 : ∀ x, inner x 0 = 0)
+    (h_add1 : ∀ x y z, inner (x + y) z = inner x z + inner y z)
+    (h_add2 : ∀ x y z, inner x (y + z) = inner x y + inner x z)
+    (u v : LinearMap.ker q) :
+    (brstQuotientPairing inner q hq2 h_adj h_zero1 h_zero2 h_add1 h_add2 (Submodule.Quotient.mk u) (Submodule.Quotient.mk v) =
+      inner u.1 v.1) :=
+  rfl
+
 end InfoGeometry.Canonical.BRSTQuotientInnerProductLiftBridge

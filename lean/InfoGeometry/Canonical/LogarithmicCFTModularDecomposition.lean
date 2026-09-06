@@ -19,25 +19,6 @@ open InfoGeometry.Canonical.Drazin
 
 variable {K : Type*} [Field K]
 
-def standardJordanNilpotent : Matrix (Fin 2) (Fin 2) K :=
-  !![0, 1; 0, 0]
-
-def standardJordanSemisimple (Δ : K) : Matrix (Fin 2) (Fin 2) K :=
-  Δ • (1 : Matrix (Fin 2) (Fin 2) K)
-
-theorem standardJordanNilpotent_sq :
-    standardJordanNilpotent * standardJordanNilpotent =
-      (0 : Matrix (Fin 2) (Fin 2) K) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [standardJordanNilpotent, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem standardJordanSemisimple_commute (Δ : K) :
-    standardJordanSemisimple Δ * standardJordanNilpotent =
-      standardJordanNilpotent * standardJordanSemisimple Δ := by
-  simp [standardJordanSemisimple, standardJordanNilpotent,
-    Matrix.smul_mul, Matrix.mul_smul]
-
 /--
 Modular deviation operator representing `Δ - I` on LCFT state spaces.
 This deviation acts as the generator for non-diagonalizable Jordan structures
@@ -52,13 +33,6 @@ structure LogarithmicModularDeviation (n : Type*) [Fintype n] [DecidableEq n] (K
   hN : N ^ 2 = 0
   /-- Commutative compatibility between the semisimple and nilpotent components. -/
   hComm : S * N = N * S
-
-def standardLogarithmicModularDeviation (Δ : K) :
-    LogarithmicModularDeviation (Fin 2) K where
-  S := standardJordanSemisimple Δ
-  N := standardJordanNilpotent
-  hN := by simpa [pow_two] using standardJordanNilpotent_sq
-  hComm := standardJordanSemisimple_commute Δ
 
 namespace LogarithmicModularDeviation
 

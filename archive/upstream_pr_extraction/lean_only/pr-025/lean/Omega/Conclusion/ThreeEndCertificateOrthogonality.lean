@@ -1,0 +1,79 @@
+import Mathlib.Tactic
+import Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
+import Omega.TypedAddressBiaxialCompletion.BudgetOrthogonality
+import Omega.TypedAddressBiaxialCompletion.ThreeEndBudget
+
+namespace Omega.Conclusion
+
+open Omega.TypedAddressBiaxialCompletion
+
+theorem paper_conclusion_three_end_certificate_orthogonality
+    (boundary : BoundaryJointVerifierData)
+    (radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed : Prop)
+    (verifierAccepts failureWitness : Prop)
+    (accepts_of_jointClosure :
+      radiusBudgetClosed -> addressBudgetClosed -> endpointBudgetClosed ->
+        toeplitzPsdClosed -> verifierAccepts)
+    (failure_of_radius : ¬ radiusBudgetClosed -> failureWitness)
+    (failure_of_address : ¬ addressBudgetClosed -> failureWitness)
+    (failure_of_endpoint : ¬ endpointBudgetClosed -> failureWitness)
+    (failure_of_toeplitz : ¬ toeplitzPsdClosed -> failureWitness)
+    (legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed : Prop)
+    (visible_required : legalReadout → visibleBudgetPassed)
+    (register_required : legalReadout → registerBudgetPassed)
+    (mode_required : legalReadout → modeBudgetPassed)
+    (visible_failure_obstructs :
+      registerBudgetPassed → modeBudgetPassed → ¬ visibleBudgetPassed → ¬ legalReadout)
+    (register_failure_obstructs :
+      visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout)
+    (mode_failure_obstructs :
+      visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout) :
+    ((boundary.axes.radiusBlindspotClosed ∧
+        boundary.axes.addressCollisionClosed ∧
+        boundary.axes.endpointHeatClosed ∧ boundary.toeplitzPsdPassed ∧
+        legalReadout ∧ radiusBudgetClosed ∧ addressBudgetClosed ∧
+        endpointBudgetClosed ∧ toeplitzPsdClosed) →
+      boundary.verifierResult = .certificate ∧
+        visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed ∧ verifierAccepts) ∧
+    (((boundary.axes.addressCollisionClosed ∧ boundary.axes.endpointHeatClosed ∧
+        ¬ boundary.axes.radiusBlindspotClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.endpointHeatClosed ∧
+        ¬ boundary.axes.addressCollisionClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.addressCollisionClosed ∧
+        ¬ boundary.axes.endpointHeatClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((registerBudgetPassed ∧ modeBudgetPassed ∧ ¬ visibleBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((visibleBudgetPassed ∧ modeBudgetPassed ∧ ¬ registerBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((visibleBudgetPassed ∧ registerBudgetPassed ∧ ¬ modeBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((¬ radiusBudgetClosed ∨ ¬ addressBudgetClosed ∨ ¬ endpointBudgetClosed ∨
+        ¬ toeplitzPsdClosed) → failureWitness)) := by
+  have hBoundary :=
+    paper_typed_address_biaxial_completion_boundary_joint_sufficiency boundary
+  have hBudget :=
+    paper_typed_address_biaxial_completion_budget_orthogonality
+      legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed
+      visible_required register_required mode_required visible_failure_obstructs
+      register_failure_obstructs mode_failure_obstructs
+  have hClosure := paper_typed_address_biaxial_completion_three_end_budget
+    radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed
+    verifierAccepts failureWitness accepts_of_jointClosure failure_of_radius failure_of_address
+    failure_of_endpoint failure_of_toeplitz
+  rcases hBoundary with ⟨hBoundaryAccepts, _, hBoundaryRadius, hBoundaryAddress,
+    hBoundaryEndpoint⟩
+  rcases hBudget with ⟨hBudgetPasses, hBudgetVisible, hBudgetRegister, hBudgetMode⟩
+  rcases hClosure with ⟨hClosureAccepts, hClosureFailure⟩
+  constructor
+  · rintro ⟨hr, ha, he, hpsd, hlegal, hcr, hca, hce, hct⟩
+    have hBoundaryCert : boundary.verifierResult = .certificate :=
+      hBoundaryAccepts ⟨hr, ha, he, hpsd⟩
+    have hBudgetAll :
+        visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed :=
+      hBudgetPasses hlegal
+    have hClosureCert : verifierAccepts := hClosureAccepts ⟨hcr, hca, hce, hct⟩
+    exact ⟨hBoundaryCert, hBudgetAll.1, hBudgetAll.2.1, hBudgetAll.2.2, hClosureCert⟩
+  · exact ⟨hBoundaryRadius, hBoundaryAddress, hBoundaryEndpoint, hBudgetVisible,
+      hBudgetRegister, hBudgetMode, hClosureFailure⟩
+
+end Omega.Conclusion

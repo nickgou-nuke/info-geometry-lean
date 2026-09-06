@@ -210,14 +210,9 @@ theorem local_cayley_klein_atom :
     Pminus * Pminus = Pminus ∧
     Pplus * Pminus = (0 : Mat2) ∧
     Pplus + Pminus = (1 : Mat2) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact I_sq
-  · exact E_sq
-  · exact N_sq
-  · exact Pplus_idempotent
-  · exact Pminus_idempotent
-  · exact Pplus_mul_Pminus
-  · exact Pplus_add_Pminus
+  exact ⟨I_sq, E_sq, N_sq,
+    Pplus_idempotent, Pminus_idempotent,
+    Pplus_mul_Pminus, Pplus_add_Pminus⟩
 
 /-! ## Moore--Penrose inverse of the parabolic nilpotent -/
 
@@ -249,44 +244,38 @@ noncomputable def NSourceProj : Mat2 :=
 @[simp]
 theorem N_mul_Nmp :
     N * Nmp = NRangeProj := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [N, Nmp, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Nmp, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Nmp_mul_N :
     Nmp * N = NSourceProj := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [N, Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NRangeProj_idempotent :
     NRangeProj * NRangeProj = NRangeProj := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NSourceProj_idempotent :
     NSourceProj * NSourceProj = NSourceProj := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NRangeProj_mul_NSourceProj :
     NRangeProj * NSourceProj = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NSourceProj_mul_NRangeProj :
     NSourceProj * NRangeProj = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-! ## Chiral circular-polarized projector corridor -/
 
@@ -308,12 +297,10 @@ Nilpotent boundary channel is isolated by chiral projectors:
 theorem chiral_nilpotent_isolation_left_right :
     Pminus * N = (0 : Mat2) ∧ N * Pplus = (0 : Mat2) := by
   constructor
-  · ext i j
-    fin_cases i <;> fin_cases j
-    all_goals norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j
-    fin_cases i <;> fin_cases j
-    all_goals norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Complementary nilpotent channel survives exactly in the opposite chirality:
@@ -322,12 +309,10 @@ Complementary nilpotent channel survives exactly in the opposite chirality:
 theorem chiral_nilpotent_survives_complement :
     Pplus * N = N ∧ N * Pminus = N := by
   constructor
-  · ext i j
-    fin_cases i <;> fin_cases j
-    all_goals norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j
-    fin_cases i <;> fin_cases j
-    all_goals norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Owner-side closure packet for the `Op² = -1, +1, 0` corridor with chiral isolation.
@@ -339,12 +324,7 @@ theorem hypercomplex_chiral_closure_packet :
     Pminus * N = (0 : Mat2) ∧
     N * Pplus = (0 : Mat2) := by
   rcases chiral_nilpotent_isolation_left_right with ⟨hL, hR⟩
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact I_sq
-  · exact E_sq
-  · exact N_sq
-  · exact hL
-  · exact hR
+  exact ⟨I_sq, E_sq, N_sq, hL, hR⟩
 
 /--
 First Moore--Penrose equation:
@@ -354,9 +334,8 @@ First Moore--Penrose equation:
 theorem N_moore_penrose_1 :
     N * Nmp * N = N := by
   rw [N_mul_Nmp]
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [N, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Second Moore--Penrose equation:
@@ -366,9 +345,8 @@ Second Moore--Penrose equation:
 theorem N_moore_penrose_2 :
     Nmp * N * Nmp = Nmp := by
   rw [Nmp_mul_N]
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals norm_num [Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Third Moore--Penrose equation in concrete real form:
@@ -377,9 +355,7 @@ Third Moore--Penrose equation in concrete real form:
 -/
 theorem N_moore_penrose_range_projector :
     N * Nmp = NRangeProj ∧ NRangeProj * NRangeProj = NRangeProj := by
-  refine ⟨?_, ?_⟩
-  · exact N_mul_Nmp
-  · exact NRangeProj_idempotent
+  exact ⟨N_mul_Nmp, NRangeProj_idempotent⟩
 
 /--
 Fourth Moore--Penrose equation in concrete real form:
@@ -388,9 +364,7 @@ Fourth Moore--Penrose equation in concrete real form:
 -/
 theorem N_moore_penrose_source_projector :
     Nmp * N = NSourceProj ∧ NSourceProj * NSourceProj = NSourceProj := by
-  refine ⟨?_, ?_⟩
-  · exact Nmp_mul_N
-  · exact NSourceProj_idempotent
+  exact ⟨Nmp_mul_N, NSourceProj_idempotent⟩
 
 /--
 The Moore--Penrose inverse is not a two-sided inverse.
@@ -424,14 +398,14 @@ theorem N_moore_penrose_profile :
     NSourceProj * NSourceProj = NSourceProj ∧
     NRangeProj * NSourceProj = 0 ∧
     NSourceProj * NRangeProj = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact N_sq
-  · exact N_moore_penrose_1
-  · exact N_moore_penrose_2
-  · exact NRangeProj_idempotent
-  · exact NSourceProj_idempotent
-  · exact NRangeProj_mul_NSourceProj
-  · exact NSourceProj_mul_NRangeProj
+  exact
+    ⟨N_sq,
+     N_moore_penrose_1,
+     N_moore_penrose_2,
+     NRangeProj_idempotent,
+     NSourceProj_idempotent,
+     NRangeProj_mul_NSourceProj,
+     NSourceProj_mul_NRangeProj⟩
 
 /--
 The concrete triad status:
@@ -442,11 +416,6 @@ The concrete triad status:
 -/
 theorem concrete_hypercomplex_triad :
     IsUnit I ∧ IsUnit E ∧ N ≠ 0 ∧ N * N = 0 ∧ ¬ IsUnit N := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact ⟨I_unit, rfl⟩
-  · exact ⟨E_unit, rfl⟩
-  · exact N_ne_zero
-  · exact N_sq
-  · exact N_not_isUnit
+  exact ⟨⟨I_unit, rfl⟩, ⟨E_unit, rfl⟩, N_ne_zero, N_sq, N_not_isUnit⟩
 
 end InfoGeometry.Algebra.HypercomplexTriad

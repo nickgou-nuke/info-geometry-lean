@@ -9,7 +9,7 @@ with eigenvalue `1` has zero second component.  Thus the eigenspace is the
 single Jones line spanned by `[1,0]^T` when `x ≠ 0`.
 
 This is the algebraic core of the "polarization black-hole" / EP defect story.
-It proves a finite matrix fact, not a fabrication-property physical device.
+It proves a finite matrix fact, not a fabrication-certified physical device.
 -/
 
 noncomputable section

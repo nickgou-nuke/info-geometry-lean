@@ -64,8 +64,10 @@ theorem FaithfulDensityOperator.kuboMoriPairing_self_real_of_continuous_rpow
     (A : FiniteOperatorAlgebra n)
     (h : Continuous D.rpow) :
     (D.kuboMoriPairing A A).im = 0 := by
-  exact D.kuboMoriPairing_self_real A
-    ((D.continuous_kuboMoriIntegrand_of_continuous_rpow A A h).intervalIntegrable 0 1)
+  have hs := D.kuboMoriPairing_conj_symm_of_continuous_rpow A A h
+  have him := congrArg Complex.im hs
+  simp only [Complex.star_def, Complex.conj_im] at him
+  linarith
 
 /-- The real part of the Hermitian BKM pairing as a native real bilinear
 response form on the full finite operator algebra. -/

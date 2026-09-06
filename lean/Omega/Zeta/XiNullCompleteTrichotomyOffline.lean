@@ -5,17 +5,9 @@ namespace Omega.Zeta
 
 /-- Paper label: `thm:xi-null-complete-trichotomy-offline`. -/
 theorem paper_xi_null_complete_trichotomy_offline
-    (exhaustive semanticFailuresRequireAddressChange protocolFailuresNeedProtocolRepair
-      collisionFailuresNeedSupportAxisBudget : Prop)
-    (hExhaustive : exhaustive)
-    (hSemanticRepair : semanticFailuresRequireAddressChange)
-    (hProtocolRepair : protocolFailuresNeedProtocolRepair)
-    (hCollisionRepair : collisionFailuresNeedSupportAxisBudget) :
-    exhaustive ∧ semanticFailuresRequireAddressChange ∧
-      protocolFailuresNeedProtocolRepair ∧ collisionFailuresNeedSupportAxisBudget := by
-  exact Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_null_exhaustive
-    exhaustive semanticFailuresRequireAddressChange protocolFailuresNeedProtocolRepair
-    collisionFailuresNeedSupportAxisBudget hExhaustive hSemanticRepair hProtocolRepair
-    hCollisionRepair
+    (h : Omega.TypedAddressBiaxialCompletion.TypedAddressNullTrichotomyData) :
+    h.exhaustive ∧ h.semanticFailuresRequireAddressChange ∧
+      h.protocolFailuresNeedProtocolRepair ∧ h.collisionFailuresNeedSupportAxisBudget := by
+  exact Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_null_exhaustive h
 
 end Omega.Zeta

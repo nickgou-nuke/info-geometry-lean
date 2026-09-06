@@ -111,7 +111,7 @@ variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
-Control property coupling Sinkhorn balancing to KMS residuals:
+Control hypothesis coupling Sinkhorn balancing to KMS residuals:
 the residual at step `k+1` is bounded by the post-step RN barrier.
 -/
 def SinkhornKMSControl

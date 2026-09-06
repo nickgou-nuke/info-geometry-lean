@@ -79,6 +79,35 @@ theorem chiral_charge_parity_odd {n : ℕ} (state : BiCantorState n) :
   unfold chiralCharge paritySwap numberL numberR
   ring
 
+/-! The total particle/hole population is even under the chiral exchange. -/
+theorem total_population_parity_even {n : ℕ} (state : BiCantorState n) :
+    numberL (paritySwap state) + numberR (paritySwap state) =
+      numberL state + numberR state := by
+  unfold paritySwap numberL numberR
+  ring
+
+/-! The chiral charge is the odd particle/hole component of the state. -/
+theorem total_and_chiral_charge_decomposition {n : ℕ} (state : BiCantorState n) :
+    numberL state =
+      ((numberL state + numberR state) + chiralCharge state) / 2 := by
+  unfold chiralCharge
+  ring
+
+theorem right_population_from_total_and_chiral_charge {n : ℕ}
+    (state : BiCantorState n) :
+    numberR state =
+      ((numberL state + numberR state) - chiralCharge state) / 2 := by
+  unfold chiralCharge
+  ring
+
+theorem chiral_charge_eq_zero_iff_equal_populations {n : ℕ}
+    (state : BiCantorState n) :
+    chiralCharge state = 0 ↔ numberL state = numberR state := by
+  unfold chiralCharge
+  constructor <;> intro h
+  · linarith
+  · linarith
+
 /-- 🏆 THEOREM 3: Symmetric Cantor cylinders carry zero chiral charge -/
 theorem chiral_charge_symmetric_zero {n : ℕ} (state : BiCantorState n)
     (h_symm : state.left = state.right) :
@@ -99,20 +128,6 @@ theorem critical_line_from_bidirectional_balance (σ : ℝ)
     (h_balance : σ - 1 / 2 = 0) :
     σ = 1 / 2 := by
   linarith
-
-/-- 🏆 GRAND CAPSTONE: Complete Bidirectional Chiral Random Walk Synthesis -/
-theorem grand_bidirectional_chiral_synthesis {n : ℕ} (state : BiCantorState n)
-    (h_symm : state.left = state.right) (σ : ℝ) (h_balance : σ - 1 / 2 = 0) :
-    (paritySwap (paritySwap state) = state) ∧
-    (chiralCharge (paritySwap state) = - chiralCharge state) ∧
-    (chiralCharge state = 0) ∧
-    (numberL state = numberR state) ∧
-    (σ = 1 / 2) :=
-  ⟨parity_swap_involutive state,
-   chiral_charge_parity_odd state,
-   chiral_charge_symmetric_zero state h_symm,
-   equal_populations_of_zero_charge state (chiral_charge_symmetric_zero state h_symm),
-   critical_line_from_bidirectional_balance σ h_balance⟩
 
 end
 

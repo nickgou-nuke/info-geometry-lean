@@ -88,14 +88,41 @@ theorem flat_soldering_covariant_constancy_owner
           Section7.soldering a nu A Bp * Section7.spinConnection mu Bp Ap) = 0 :=
   Section7.soldering_covariant_constancy_flat a mu nu A Ap
 
-/-- Section 8 owns the flat tetrad-property coefficient shadow. -/
-theorem flat_tetrad_property_owner (mu nu a : Fin 4) :
+/-- Section 8 owns the flat tetrad-postulate coefficient shadow. -/
+theorem flat_tetrad_postulate_owner (mu nu a : Fin 4) :
     (0 : ℝ) - 0 + Section8.Quat.spinConnectionFlat mu a nu = 0 :=
-  Section8.Quat.tetrad_property_flat mu nu a
+  Section8.Quat.tetrad_postulate_flat mu nu a
 
 /-- Section 12 owns the flat Clifford-soldering covariant-derivative shadow. -/
 theorem flat_clifford_soldering_derivative_owner (E : Section12.SpinMat) :
     Section12.cliffordSolderingDerivative 0 0 E = 0 :=
   Section12.cliffordSolderingDerivative_flat E
+
+/--
+Finite Section 3 repair packet: raw Pauli soldering is closed, and the curved
+language is restricted to existing flat/finite theorem owners.
+-/
+theorem repaired_section3_soldering_packet :
+    (∀ a b : Fin 4,
+      ((∑ i : Fin 2, (sf a * sf b) i i) / (2 : ℂ)) =
+        if a = b then (1 : ℂ) else 0) ∧
+    (∀ t x y z : ℂ, ∀ a : Fin 4,
+      ((∑ i : Fin 2, (sf a * (t • s0 + x • s1 + y • s2 + z • s3)) i i)
+          / (2 : ℂ)) =
+        match a with | 0 => t | 1 => x | 2 => y | 3 => z) ∧
+    (∀ A B Ap Bp : Fin 2,
+      (∑ a : Fin 4, ∑ b : Fin 4, eta4 a b * sf a A Ap * sf b B Bp) =
+        (-2 : ℂ) * eps A B * eps Ap Bp) ∧
+    Section7.eTetradᵀ * Section7.eta4 * Section7.eTetrad = Section7.eta4 ∧
+    (∀ mu A B, Section7.spinConnection mu A B = 0) ∧
+    (∀ a mu nu A Ap,
+      (∑ B : Fin 2, Section7.spinConnection mu A B * Section7.soldering a nu B Ap)
+        - (∑ Bp : Fin 2,
+            Section7.soldering a nu A Bp * Section7.spinConnection mu Bp Ap) = 0) ∧
+    (∀ mu nu a, (0 : ℝ) - 0 + Section8.Quat.spinConnectionFlat mu a nu = 0) ∧
+    (∀ E : Section12.SpinMat, Section12.cliffordSolderingDerivative 0 0 E = 0) := by
+  exact ⟨trace_ortho, vec_recover, completeness, flat_tetrad_metric_owner,
+    flat_spin_connection_owner, flat_soldering_covariant_constancy_owner,
+    flat_tetrad_postulate_owner, flat_clifford_soldering_derivative_owner⟩
 
 end Section3

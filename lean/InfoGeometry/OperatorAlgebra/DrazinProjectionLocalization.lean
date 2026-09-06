@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Singular.Drazin
 
 /-!
 # Drazin Projection Localization
@@ -28,6 +27,12 @@ structure SelfAdjointIdempotentPair (A : Type*) [Ring A] [StarRing A] where
   support_selfAdjoint : star support = support
   residue_selfAdjoint : star residue = residue
 
+namespace SelfAdjointIdempotentPair
+
+variable {A : Type*} [Ring A] [StarRing A]
+variable (P : SelfAdjointIdempotentPair A)
+
+end SelfAdjointIdempotentPair
 
 /-- Drazin inverse data for one algebra element. -/
 structure DrazinInverseData (A : Type*) [Ring A] where
@@ -54,33 +59,7 @@ theorem inverse_mul_element_mul_inverse :
     D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse :=
   D.inverse_element_inverse
 
-/-- Native Drazin property obtained from the local support package. -/
-theorem toIsDrazinInverse
-    (k : ℕ)
-    (hpow : D.element ^ k =
-      D.element ^ (k + 1) * D.drazinInverse) :
-    InfoGeometry.Singular.Drazin.IsDrazinInverse
-      D.element D.drazinInverse k :=
-  InfoGeometry.Singular.Drazin.IsDrazinInverse.mk
-    D.inverse_element_inverse D.commutes hpow
-
 end DrazinInverseData
-
-/-- Local support data reconstructed from a native Drazin property. -/
-def DrazinInverseData.fromIsDrazinInverse
-    {A : Type*} [Ring A]
-    {element drazinInverse : A} {k : ℕ}
-    (h : InfoGeometry.Singular.Drazin.IsDrazinInverse
-      element drazinInverse k) :
-    DrazinInverseData A where
-  element := element
-  drazinInverse := drazinInverse
-  support := element * drazinInverse
-  element_mul_inverse_eq_support := rfl
-  inverse_mul_element_eq_support := by
-    rw [h.comm]
-  commutes := h.comm
-  inverse_element_inverse := h.dad_eq_d
 
 /-! ## Finite fiber-product Drazin assembly -/
 
@@ -154,7 +133,7 @@ end FiberwiseDrazinData
 /--
 External algebra decomposed into Drazin fibers.
 
-This is the theorem-safe interface for later direct-sum/direct-integral models:
+This is the theorem-safe socket for later direct-sum/direct-integral models:
 a concrete model supplies the ring equivalence to a product of fibers, and the
 finite product theorem runs on the product side.
 -/
@@ -304,6 +283,11 @@ structure DivisionResidueBlockPacket where
   residueProjection : Block → Type*
   carrier_divisionRing : ∀ b, DivisionRing (DivisionCarrier b)
 
+namespace DivisionResidueBlockPacket
+
+variable (P : DivisionResidueBlockPacket)
+
+end DivisionResidueBlockPacket
 
 /--
 A Frobenius functional whose multiplication pairing is nondegenerate.

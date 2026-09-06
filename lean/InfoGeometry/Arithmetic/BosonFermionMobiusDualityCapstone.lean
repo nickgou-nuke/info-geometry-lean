@@ -8,7 +8,6 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.JordanWignerMobiusZetaMasterBridge
 import InfoGeometry.Arithmetic.HilbertPolyaThreeOperatorsOneObjectCapstone
 import InfoGeometry.Arithmetic.RiemannZetaPrimonSouriauCayleyCapstone
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Boson-Fermion Möbius Duality & Role-Swap Capstone
@@ -33,7 +32,6 @@ open Complex
 open InfoGeometry.Arithmetic.JordanWignerMobiusZeta
 open InfoGeometry.Arithmetic.HilbertPolya
 open InfoGeometry.Arithmetic.PrimonSouriauCayley
-open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 
@@ -65,31 +63,5 @@ theorem boson_fermion_projective_duality (z : ℂ) (hz : z ≠ 0) :
 theorem jordan_wigner_single_mode_fermion_det (q : ℝ) :
     Matrix.trace (Gamma2 * localThermalDensity q) = 1 - q :=
   (jordan_wigner_supertrace_eq_det q).2
-
-/--
-🏆 **MASTER SYNTHESIS: Boson-Fermion Möbius Role-Swap & Spectral Duality**
-
-Unifies:
-1. **Möbius-Zeta Dirichlet Inversion**: $\mu * \zeta = 1$ and $\zeta * \mu = 1$.
-2. **Affine Projective Duality**: $\zeta \cdot (1/\zeta) = 1$.
-3. **Local Jordan-Wigner Single-Mode Fermion**: $\operatorname{Tr}(\Gamma \cdot \rho) = 1 - q$.
-4. **Unitary Cayley Compactification**: $|\mathcal{C}(x)|^2 = 1$.
-5. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
--/
-theorem grand_boson_fermion_mobius_duality_synthesis
-    (z : ℂ) (hz : z ≠ 0) (q : ℝ) (x : ℝ) :
-    (((ArithmeticFunction.moebius * ArithmeticFunction.zeta : ArithmeticFunction ℤ) = 1) ∧
-     ((ArithmeticFunction.zeta * ArithmeticFunction.moebius : ArithmeticFunction ℤ) = 1)) ∧
-    (z * (1 / z) = 1) ∧
-    (Matrix.trace (Gamma2 * localThermalDensity q) = 1 - q) ∧
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
-  ⟨mobius_inversion_swaps_boson_fermion,
-   boson_fermion_projective_duality z hz,
-   jordan_wigner_single_mode_fermion_det q,
-   cayley_transform_is_unitary x,
-   F_sq,
-   F_B_F_eq_R⟩
 
 end InfoGeometry.Arithmetic.BosonFermionDuality

@@ -10,7 +10,7 @@ This module is deliberately small.  It formalizes the statement:
 
 It does not identify the survivor with a center, horizon, winding number,
 natural cone, BPS charge, or any other model-specific invariant.  Those
-identifications require separate property structures.
+identifications require separate witness structures.
 -/
 
 import Mathlib.Tactic
@@ -228,7 +228,7 @@ theorem invariantReadout_inv_eq
 /--
 The paired readout that remembers both chart representatives.
 
-This is the formal relation for symmetrized visible/hidden memory accounting:
+This is the formal socket for symmetrized visible/hidden memory accounting:
 under inversion, the two components swap.
 -/
 def symmetrizedReadout

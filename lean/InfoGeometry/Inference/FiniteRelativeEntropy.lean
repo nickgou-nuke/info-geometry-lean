@@ -26,6 +26,12 @@ noncomputable def finiteRelativeEntropy
     (q p : Data → ℝ) : ℝ :=
   ∑ i : Data, (q i * Real.log (q i / p i))
 
+theorem finiteRelativeEntropy_self (p : Data → ℝ)
+    (hp_ne : ∀ i, p i ≠ 0) :
+    finiteRelativeEntropy p p = 0 := by
+  unfold finiteRelativeEntropy
+  simp [div_self (hp_ne _), Real.log_one]
+
 theorem finiteRelativeEntropy_nonneg
     (q p : Data → ℝ)
     (hq_pos : ∀ i, 0 < q i)

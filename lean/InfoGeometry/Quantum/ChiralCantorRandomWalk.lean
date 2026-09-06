@@ -98,25 +98,3 @@ theorem critical_line_from_chiral_walk_balance (σ : ℝ)
     (h_balance : σ - 1 / 2 = 0) :
     σ = 1 / 2 := by
   linarith
-
-theorem grand_chiral_cantor_random_walk_synthesis {n : ℕ} (state : BiCantorState n)
-    (w : ChiralBitWord n n)
-    (h_symm : state.left = state.right)
-    (h_balanced : wordDisplacement w.1 = wordDisplacement w.2)
-    (σ : ℝ) (h_balance : σ - 1 / 2 = 0) :
-    (paritySwap (paritySwap state) = state) ∧
-    (chiralCharge (paritySwap state) = -chiralCharge state) ∧
-    (chiralCharge state = 0) ∧
-    (numberL state = numberR state) ∧
-    (lightConeU w * lightConeV w = (chiralScale n n) ^ 2 - (chiralRapidity w) ^ 2) ∧
-    (chiralCylinderWeight n n = (1 / 2 : ℝ) ^ (n + n)) ∧
-    (chiralRapidity w = 0) ∧
-    (σ = 1 / 2) :=
-  ⟨parity_swap_involutive state,
-   chiral_charge_parity_odd state,
-   chiral_charge_symmetric_zero state h_symm,
-   equal_populations_of_zero_charge state (chiral_charge_symmetric_zero state h_symm),
-   lightcone_chiral_factorization w,
-   chiral_cylinder_weight_eq n n,
-   chiral_parity_equilibrium w h_balanced,
-   critical_line_from_chiral_walk_balance σ h_balance⟩

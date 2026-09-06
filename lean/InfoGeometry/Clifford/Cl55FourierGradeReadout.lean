@@ -1,10 +1,7 @@
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 
-/-! Native five-grade readout.  The pinned repository exposes grades as
-submodules, which is the canonical Mathlib representation before choosing
-polynomial projectors on a finite-dimensional endomorphism carrier. -/
+/-! Native five-grade readout using the repository's grade submodules. -/
 namespace InfoGeometry.Clifford.Clifford55
-
 open InfoGeometry.OperatorAlgebra
 
 theorem fourierClifford_grade_readout (i j : Fin 5) :
@@ -12,8 +9,7 @@ theorem fourierClifford_grade_readout (i j : Fin 5) :
     annihilation55 i ∈ cl55GradeSubmodule (-1) ∧
     creation55 i * creation55 j ∈ cl55GradeSubmodule 2 ∧
     annihilation55 i * annihilation55 j ∈ cl55GradeSubmodule (-2) := by
-  exact ⟨creation55_mem_grade_one i,
-    annihilation55_mem_grade_neg_one i,
+  exact ⟨creation55_mem_grade_one i, annihilation55_mem_grade_neg_one i,
     creation55_mul_creation55_mem_grade_two i j,
     annihilation55_mul_annihilation55_mem_grade_neg_two i j⟩
 

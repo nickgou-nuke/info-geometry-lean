@@ -49,7 +49,8 @@ theorem mem_bathCommutant_iff
     (bath : Subalgebra ℝ A) (X : A) :
     X ∈ bathCommutant bath ↔
       ∀ B : A, B ∈ bath → B * X = X * B := by
-  simp [bathCommutant, Subalgebra.mem_centralizer_iff]
+  rw [bathCommutant, Subalgebra.mem_centralizer_iff]
+  simpa only [SetLike.mem_coe]
 
 /-- Two observables commuting with the bath have a commutator that also
 commutes with the bath. -/

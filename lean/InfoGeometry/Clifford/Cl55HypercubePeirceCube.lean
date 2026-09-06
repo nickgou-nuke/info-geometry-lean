@@ -289,3 +289,4 @@ theorem grand_hypercube_peirce_synthesis (i : Fin r) (t : ℝ) :
 end SplitCartanSector
 
 end InfoGeometry.Clifford.Hypercube
+

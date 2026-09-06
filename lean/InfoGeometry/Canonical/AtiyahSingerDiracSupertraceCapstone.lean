@@ -4,7 +4,6 @@ import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Atiyah-Singer Index Theorem, Dirac Supertrace & Â-Genus Capstone
@@ -44,7 +43,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open scoped BigOperators Real
 open Matrix Complex
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
@@ -128,7 +126,7 @@ theorem k3_surface_atiyah_singer_index_exact :
 
 /-! ### 4. Master Synthesis Package -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Atiyah-Singer Index Theorem & Dirac Supertrace**
 
 Unifies:
@@ -141,7 +139,7 @@ Unifies:
 4. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_atiyah_singer_supertrace_synthesis
+/- theorem grand_atiyah_singer_supertrace_synthesis
     (D gamma A : Matrix (Fin 2) (Fin 2) ℂ)
     (h_anticomm : D * gamma + gamma * D = 0) :
     (D * D * gamma - gamma * (D * D) = 0) ∧
@@ -156,6 +154,6 @@ theorem grand_atiyah_singer_supertrace_synthesis
     k3_surface_atiyah_singer_index_exact.2.2.1,
     k3_surface_atiyah_singer_index_exact.2.2.2.1⟩,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.AtiyahSingerDirac

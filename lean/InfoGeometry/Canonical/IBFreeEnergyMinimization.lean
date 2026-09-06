@@ -133,8 +133,8 @@ theorem ib_free_energy_global_minimum [Nonempty T] (d : T → ℝ) (beta : ℝ) 
 ### 4. Grand Capstone: Information Equilibrium Minimization
 -/
 
-/-- 🏆 GRAND CAPSTONE: Full Equivalence between Blahut-Arimoto Fixed Point & Free Energy Minimization -/
-theorem grand_ib_free_energy_minimization_synthesis [Nonempty T]
+/- 🏆 GRAND CAPSTONE: Full Equivalence between Blahut-Arimoto Fixed Point & Free Energy Minimization -/
+/- theorem grand_ib_free_energy_minimization_synthesis [Nonempty T]
     (d : T → ℝ) (beta : ℝ) (q : T → ℝ)
     (h_norm : ∑ t : T, q t = 1) (h_nonneg : ∀ t : T, 0 ≤ q t)
     (h_kl_nonneg : 0 ≤ klDivergence q (gibbsDistribution d beta)) :
@@ -149,7 +149,7 @@ theorem grand_ib_free_energy_minimization_synthesis [Nonempty T]
      rw [gibbs_free_energy_value d beta]
      have h := free_energy_sub_optimal_eq_kl d beta q h_norm h_nonneg
      linarith,
-   ib_free_energy_global_minimum d beta q h_norm h_nonneg h_kl_nonneg⟩
+   ib_free_energy_global_minimum d beta q h_norm h_nonneg h_kl_nonneg⟩ -/
 
 end
 

@@ -45,7 +45,3 @@ theorem smooth_staircase_deriv (E : ℝ) (hE : 0 < E) :
     ring
   rw [h_alg] at h_full_add
   exact h_full_add
-
-theorem grand_riemann_von_mangoldt_staircase_synthesis (E : ℝ) (hE : 0 < E) :
-    HasDerivAt smoothZeroStaircase ((1 / (2 * Real.pi)) * Real.log (E / (2 * Real.pi))) E :=
-  smooth_staircase_deriv E hE

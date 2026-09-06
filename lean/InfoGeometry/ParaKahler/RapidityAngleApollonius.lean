@@ -159,25 +159,6 @@ theorem hilbertPolyaMode_equator_unitary (γ θ : ℝ) :
   rw [hilbertPolyaMode_normSq γ 0 θ]
   simp
 
-/-!
-### 5. Grand Capstone Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Rapidity and Angle Apollonian Lorentzian/Conformal Synthesis -/
-theorem grand_rapidity_angle_apollonius_synthesis (γ χ θ : ℝ) :
-    (masterPotential χ θ = (1 / 2 : ℝ) * (lightConeU χ θ) * (lightConeV χ θ)) ∧
-    (souriauSignature 0 = 0) ∧
-    (0 < dikinRapidityMetric χ) ∧
-    (dikinRapidityMetric 0 = 2) ∧
-    (Complex.normSq (hilbertPolyaMode γ 0 θ) = 1) ∧
-    (Complex.normSq (hilbertPolyaMode γ χ θ) = Real.exp (-χ)) :=
-  ⟨masterPotential_lightCone_factorization χ θ,
-   souriauSignature_zero,
-   dikinRapidityMetric_pos χ,
-   dikinRapidityMetric_zero,
-   hilbertPolyaMode_equator_unitary γ θ,
-   hilbertPolyaMode_normSq γ χ θ⟩
-
 end
 
 end InfoGeometry.ParaKahler.RapidityAngleApollonius

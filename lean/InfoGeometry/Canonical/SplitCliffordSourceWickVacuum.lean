@@ -14,7 +14,7 @@ This file stays on the current owner surfaces:
 * `BosonizationConstructiveCurrent` (raw/normal-ordered finite-cutoff currents),
 * `SplitCliffordWickDiracSea` (finite-cutoff Heisenberg shape).
 
-It introduces no new algebraic structures.  The only property is the
+It introduces no new algebraic structures.  The only hypothesis is the
 concrete boundary-term vanishing condition on the chosen vacuum/evaluation lane.
 -/
 
@@ -58,7 +58,7 @@ theorem vacuum_commutator_base_of_boundary_zero
 /--
 Positive-mode spelling of the same base-case commutator (`m > 0`).
 
-The positivity property is carried for downstream physical readout
+The positivity hypothesis is carried for downstream physical readout
 conventions; the algebraic identity is unchanged.
 -/
 theorem vacuum_commutator_base_pos_mode_of_boundary_zero

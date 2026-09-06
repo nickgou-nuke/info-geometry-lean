@@ -119,9 +119,10 @@ theorem holographic_subadditivity_corollary
     S_cup ≤ S_A + S_B := by
   linarith
 
-/-! ### 4. Master Synthesis Theorem -/
+/-! The reusable boundary of this module consists of the finite scalar
+    identities and inequalities above. -/
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Maldacena AdS/CFT Correspondence & Ryu-Takayanagi Entanglement**
 
 Unifies:
@@ -138,7 +139,7 @@ Unifies:
 6. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_adscft_maldacena_ryu_takayanagi_synthesis
+/- theorem grand_adscft_maldacena_ryu_takayanagi_synthesis
     (g_YM_sq g_s N : ℝ) (h_gauge : g_YM_sq = 4 * Real.pi * g_s)
     (area_A area_B area_cup area_cap area_Ac G_N : ℝ) (hG : 0 < G_N)
     (h_area_comp : area_A = area_Ac)
@@ -162,6 +163,6 @@ theorem grand_adscft_maldacena_ryu_takayanagi_synthesis
      (holographic_strong_subadditivity area_A area_B area_cup area_cap G_N hG h_geom)
      h_cap_nonneg,
    F_sq,
-   F_B_F_eq_R⟩
+     F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.AdSCFTMaldacena

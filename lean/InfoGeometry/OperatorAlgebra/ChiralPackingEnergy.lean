@@ -20,6 +20,7 @@ No ethical claim is encoded.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CrossoverResidue
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -393,5 +394,52 @@ theorem every_reoriented_residue_benign
   all_residues_benign_reorientAll D A.H.globalOrientation hR
 
 end ChiralPackingAudit
+
+/-! ## 6. Owner theorem -/
+
+/--
+A successful audit proves:
+
+* positive coupling;
+* same-chirality pair preference;
+* reorientation preserves finite support and total divisor weight.
+-/
+theorem chiralPackingAuditOwnerTarget :
+  ∀ (Site V : Type*)
+    [AddCommGroup V] [Module ℝ V],
+  ∀ C : ConformalCrossoverDatum V,
+  ∀ D : HawkingPointDivisor C,
+  ∀ A : ChiralPackingAudit (Site := Site) D,
+    0 < A.H.couplingJ ∧
+    (∀ χ : Chirality,
+      A.H.pairEnergy χ χ <
+        A.H.pairEnergy χ (Chirality.flip χ)) ∧
+    (reorientAll D A.H.globalOrientation).supportCard =
+      D.supportCard ∧
+    (reorientAll D A.H.globalOrientation).totalWeight =
+      D.totalWeight := by
+  intro Site V _ _ C D A
+  refine ⟨A.couplingJ_pos, ?_, ?_, ?_⟩
+  · intro χ
+    exact A.same_chirality_preferred χ
+  · exact ChiralPackingAudit.reoriented_supportCard_eq A
+  · exact ChiralPackingAudit.reoriented_totalWeight_eq A
+
+/-- Readout packet for one successful chiral packing audit. -/
+theorem chiralPackingAudit_packet
+    {Site V : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    {C : ConformalCrossoverDatum V}
+    {D : HawkingPointDivisor C}
+    (A : ChiralPackingAudit (Site := Site) D) :
+    0 < A.H.couplingJ ∧
+      (∀ χ : Chirality,
+        A.H.pairEnergy χ χ <
+          A.H.pairEnergy χ (Chirality.flip χ)) ∧
+      (reorientAll D A.H.globalOrientation).supportCard =
+        D.supportCard ∧
+      (reorientAll D A.H.globalOrientation).totalWeight =
+        D.totalWeight :=
+  chiralPackingAuditOwnerTarget Site V C D A
 
 end InfoGeometry.OperatorAlgebra.ChiralPackingEnergy

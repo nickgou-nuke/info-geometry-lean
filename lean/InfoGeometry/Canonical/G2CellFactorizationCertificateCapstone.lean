@@ -17,3 +17,4 @@ theorem g2_cell_factorization_certificate_canonical_capstone
   representative_mem_concreteBruhatCell C k i hi
 
 end InfoGeometry.Canonical.G2CellFactorizationCertificateCapstone
+

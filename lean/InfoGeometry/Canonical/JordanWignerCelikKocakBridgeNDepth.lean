@@ -12,13 +12,15 @@ open InfoGeometry.Canonical.CelikKocakCantorOperators
 open InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace
 open InfoGeometry.Clifford.Cl11TensorTower
 
+abbrev CantorOp (n : ℕ) := FunctionSpace n →ₗ[ℂ] FunctionSpace n
+
 /-- Product of parity signs from all coordinates strictly before `k`. -/
-def prefixSign {n : ℕ} (k : ℕ) (x : ((Fin n) → Bool)) : ℂ :=
+def prefixSign {n : ℕ} (k : ℕ) (x : CantorAddress n) : ℂ :=
   (Finset.range k).prod fun i =>
     if h : i < n then (if x ⟨i, h⟩ then (-1 : ℂ) else 1) else 1
 
 /-- Jordan--Wigner chiral string on finite Cantor endpoint functions. -/
-def cantorChiralString (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) where
+def cantorChiralString (n : ℕ) (k : Fin n) : CantorOp n where
   toFun f := fun x => prefixSign k.val x * f x
   map_add' := by
     intro f g
@@ -31,7 +33,7 @@ def cantorChiralString (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →�
     ring
 
 /-- N-depth Cantor creation operator. -/
-def cantorCreation (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) where
+def cantorCreation (n : ℕ) (k : Fin n) : CantorOp n where
   toFun f := fun x => prefixSign k.val x * if x k then 0 else f (CantorAddress.flipAt k x)
   map_add' := by
     intro f g
@@ -46,7 +48,7 @@ def cantorCreation (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[�
       ring
 
 /-- N-depth Cantor annihilation operator. -/
-def cantorAnnihilation (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) where
+def cantorAnnihilation (n : ℕ) (k : Fin n) : CantorOp n where
   toFun f := fun x => prefixSign k.val x * if x k then f (CantorAddress.flipAt k x) else 0
   map_add' := by
     intro f g
@@ -61,24 +63,24 @@ def cantorAnnihilation (n : ℕ) (k : Fin n) : (((Fin n) → Bool) → ℂ) →�
     · simp [hx]
 
 @[simp] theorem cantorChiralString_apply {n : ℕ} (k : Fin n)
-    (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+    (f : FunctionSpace n) (x : CantorAddress n) :
     cantorChiralString n k f x = prefixSign k.val x * f x :=
   rfl
 
 @[simp] theorem cantorCreation_apply {n : ℕ} (k : Fin n)
-    (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+    (f : FunctionSpace n) (x : CantorAddress n) :
     cantorCreation n k f x =
       prefixSign k.val x * if x k then 0 else f (CantorAddress.flipAt k x) :=
   rfl
 
 @[simp] theorem cantorAnnihilation_apply {n : ℕ} (k : Fin n)
-    (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+    (f : FunctionSpace n) (x : CantorAddress n) :
     cantorAnnihilation n k f x =
       prefixSign k.val x * if x k then f (CantorAddress.flipAt k x) else 0 :=
   rfl
 
 /-- The parity string is unchanged by flipping the local site `k`. -/
-theorem prefixSign_flipAt_same {n : ℕ} (k : Fin n) (x : ((Fin n) → Bool)) :
+theorem prefixSign_flipAt_same {n : ℕ} (k : Fin n) (x : CantorAddress n) :
     prefixSign k.val (CantorAddress.flipAt k x) = prefixSign k.val x := by
   unfold prefixSign
   refine Finset.prod_congr rfl ?_
@@ -92,7 +94,7 @@ theorem prefixSign_flipAt_same {n : ℕ} (k : Fin n) (x : ((Fin n) → Bool)) :
   · simp [hin]
 
 /-- The parity string squares to one. -/
-theorem prefixSign_sq {n : ℕ} (k : ℕ) (x : ((Fin n) → Bool)) :
+theorem prefixSign_sq {n : ℕ} (k : ℕ) (x : CantorAddress n) :
     prefixSign k x * prefixSign k x = 1 := by
   unfold prefixSign
   rw [← Finset.prod_mul_distrib]

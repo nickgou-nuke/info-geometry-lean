@@ -76,6 +76,20 @@ theorem finitePrimonMellin_log_generator_eq_KAN_logdet (n : ℕ) :
       ∑ i : Fin (n + 1), Real.log ((i.1 + 1 : ℝ)) :=
   InfoGeometry.Quantum.PrimonCuntzTower.primonCuntz_tower_kan_log_bridge n
 
+/--
+Bundled finite bridge: heat trace, Gamma-normalized Mellin trace, Dirichlet
+trace, and KAN log-determinant generator all describe the same finite spectrum.
+-/
+theorem finitePrimonMellin_KAN_synthesis (n : ℕ) (s : ℂ) :
+    finitePrimonHeatTrace n s = finitePrimonMellinTrace n s ∧
+      finitePrimonMellinTrace n s = finitePrimonDirichletTrace n s ∧
+      Real.log (Matrix.det (InfoGeometry.Quantum.KANFormalization.KANFactor.total
+        (InfoGeometry.Quantum.PrimonCuntzTower.primonCuntzKANFactor n))) =
+        ∑ i : Fin (n + 1), Real.log ((i.1 + 1 : ℝ)) := by
+  exact ⟨finitePrimonHeatTrace_eq_mellin n s,
+    finitePrimonMellinTrace_eq_dirichlet n s,
+    finitePrimonMellin_log_generator_eq_KAN_logdet n⟩
+
 /-!
 Infinite algebraic analyticity interface
 
@@ -151,7 +165,7 @@ def criticalLineParam (t : ℝ) : ℂ :=
   simp [criticalLineParam]
 
 /--
-A conservative bridge property between a spectral determinant and a
+A conservative bridge certificate between a spectral determinant and a
 self-adjoint Hilbert-Pólya operator.
 -/
 structure BridgeCertificate
@@ -196,8 +210,8 @@ zero-parametrization theorem.  This connects the bridge interface to the
 existing colimit machinery without adding extra axioms in this file.
 -/
 def bridgeOfDiracColimit
-    (S : InfoGeometry.Canonical.DiracColimit.DiracTowerData)
-    (L : InfoGeometry.Canonical.DiracColimit.DiracCompatibleLimitData S)
+    (S : InfoGeometry.Canonical.DiracColimit.DiracColimitData)
+    (L : InfoGeometry.Canonical.DiracColimit.DiracColimitLimit S)
     (spectralDeterminant : ℂ → ℂ)
     (zero_to_real_spectral_parameter :
       ∀ s : ℂ, spectralDeterminant s = 0 →
@@ -205,7 +219,7 @@ def bridgeOfDiracColimit
     BridgeCertificate L.Hlim L.Dlim where
   spectralDeterminant := spectralDeterminant
   selfAdjoint :=
-    InfoGeometry.Canonical.DiracColimit.dirac_compatible_limit_selfAdjoint S L
+    InfoGeometry.Canonical.DiracColimit.dirac_colimit_selfAdjoint S L
   zero_to_real_spectral_parameter := zero_to_real_spectral_parameter
 
 /--
@@ -271,19 +285,18 @@ theorem deterministic_riemann_critical_line
 
 /--
 Bridge package for a concrete colimit Dirac operator with the stronger `hBridge`
-property made explicit.
+assumption made explicit.
 -/
 def bridgeOfDiracColimit
-    (S : InfoGeometry.Canonical.DiracColimit.DiracTowerData)
-    (L : InfoGeometry.Canonical.DiracColimit.DiracCompatibleLimitData S)
+    (S : InfoGeometry.Canonical.DiracColimit.DiracColimitData)
+    (L : InfoGeometry.Canonical.DiracColimit.DiracColimitLimit S)
     (spectralDet : ℂ → ℂ)
     (hBridge :
       ∀ s : ℂ, spectralDet s = 0 ↔
         ∃ t : ℝ, s = criticalLineParam t ∧ (t : ℂ) ∈ spectrum ℂ L.Dlim) :
     ZetaSpectralData L.Hlim where
   D := L.Dlim
-  hD_selfAdjoint :=
-    InfoGeometry.Canonical.DiracColimit.dirac_compatible_limit_selfAdjoint S L
+  hD_selfAdjoint := InfoGeometry.Canonical.DiracColimit.dirac_colimit_selfAdjoint S L
   spectralDet := spectralDet
   hBridge := hBridge
 

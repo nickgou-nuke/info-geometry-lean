@@ -163,6 +163,8 @@ theorem jkoFunctor_zero_colimit_apply
 
 end JKO
 
+end InfoGeometry.Capstone.BenamouBrenier
+
 namespace InfoGeometry.Capstone.BenamouBrenierBridge
 
 open TrivSqZeroExt Finset InfoGeometry.Canonical.SouriauOperatorialLogPotential
@@ -222,12 +224,12 @@ fractal Cantor boundaries via the exact TrivSqZeroExt `discreteDuhamelSum`.
 -/
 def TrivSqZeroExtDuhamel (n : ℕ) :
     DuhamelOperatorDerivative S (TrivSqZeroExt S N) (TrivSqZeroExt S N) :=
-  { K := fun β => inl β
-    directionToInsertion := fun δ => δ
-    higherSimplexOrderedForms := fun
+  (fun β => inl β,
+    fun δ => δ,
+    fun
       | 1, β, [δ] => discreteDuhamelSum β (δ.snd) n
-      | _, _, _ => 0
-    traceStateKMSReadout := fun _ => 0 }
+      | _, _, _ => 0,
+    fun _ => 0)
 
 /--
 Physical Test Instantiation: Exact Non-Commutative Expansion for the SE(3) Dual Quaternion Twist.
@@ -242,7 +244,7 @@ end Bridge
 
 end InfoGeometry.Capstone.BenamouBrenierBridge
 
-namespace UHFHookup
+namespace InfoGeometry.Capstone.UHFHookup
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Capstone.BenamouBrenierBridge
 open TrivSqZeroExt Finset
@@ -295,5 +297,4 @@ theorem uhf_duhamel_naturality (n : ℕ) (A B : DiagAlg n) (k : ℕ) :
   rw [map_mul, map_mul, uhfTrivSqZeroExtEmbed_inl, uhfTrivSqZeroExtEmbed_inr, uhfTrivSqZeroExtEmbed_inl]
   rw [diagEmbedSucc_pow, diagEmbedSucc_pow]
 
-end UHFHookup
-end InfoGeometry.Capstone.BenamouBrenier
+end InfoGeometry.Capstone.UHFHookup

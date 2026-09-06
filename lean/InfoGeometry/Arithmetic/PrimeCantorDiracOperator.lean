@@ -58,7 +58,7 @@ def axisFlip
   InfoGeometry.Arithmetic.PrimeBooleanCube.flipVertex p hp v
 
 /-- Prime-axis flip is involutive. -/
-@[simp, rep_depth thermo]
+@[simp, bridge_target_tag, rep_depth thermo]
 theorem axisFlip_involutive
     (P : PrimeRegister)
     (p : ℕ)
@@ -69,7 +69,7 @@ theorem axisFlip_involutive
     InfoGeometry.Arithmetic.PrimeBooleanCube.flipVertex_involutive p hp v
 
 /-- The flipped mode is occupied iff it was previously unoccupied. -/
-@[simp, rep_depth thermo]
+@[simp, bridge_target_tag, rep_depth thermo]
 theorem mem_axisFlip_self
     (P : PrimeRegister)
     (p : ℕ)
@@ -80,7 +80,7 @@ theorem mem_axisFlip_self
     InfoGeometry.Arithmetic.PrimeBooleanCube.mem_flipVertex_self p hp v
 
 /-- Other modes are unaffected by the prime-axis flip. -/
-@[simp, rep_depth thermo]
+@[simp, bridge_target_tag, rep_depth thermo]
 theorem mem_axisFlip_of_ne
     (P : PrimeRegister)
     {p q : ℕ}
@@ -113,7 +113,7 @@ The axis difference flips sign after traversing the same edge.
 
 This is the finite graph analogue of orientation reversal.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem axisDifference_after_axisFlip
     (P : PrimeRegister)
     (p : ℕ)
@@ -156,7 +156,7 @@ def cantorAdjacency
     κ p.1 * f (axisFlip P p.1 p.2 v))
 
 /-- The Cantor difference Dirac annihilates constant fields. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem cantorDirac_const_zero
     (P : PrimeRegister)
     (κ : ℕ → ℝ)
@@ -170,7 +170,7 @@ theorem cantorDirac_const_zero
 Pointwise expansion of the Cantor Dirac as adjacency minus diagonal degree
 term.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem cantorDirac_eq_adjacency_sub_weight_sum
     (P : PrimeRegister)
     (κ : ℕ → ℝ)
@@ -228,7 +228,7 @@ def occupancyHamiltonian
 /--
 The register-wide occupancy Hamiltonian equals the occupied-mode sum.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem occupancyHamiltonian_eq_arithmeticHamiltonian
     (P : PrimeRegister)
     (lam : ℕ → ℝ)
@@ -303,7 +303,7 @@ def hamiltonian
   arithmeticHamiltonian D.P D.lam v
 
 /-- The Dirac kills constant fields. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem dirac_const_zero
     (D : FinitePrimeCantorDirac)
     (c : ℝ)
@@ -312,7 +312,7 @@ theorem dirac_const_zero
   exact cantorDirac_const_zero D.P D.κ c v
 
 /-- The Hamiltonian can be read as a register-wide occupancy sum. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem occupancy_hamiltonian_eq_hamiltonian
     (D : FinitePrimeCantorDirac)
     (v : D.Vertex) :

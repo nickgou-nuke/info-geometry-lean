@@ -7,6 +7,8 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
 
 open Complex
+open scoped ArithmeticFunction.Moebius
+open scoped LSeries.notation
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
@@ -111,9 +113,9 @@ theorem criticalLine_iff_cayley_unitCircle_native (s : ℂ) :
 identity, not a KMS or C*-dynamical theorem. -/
 theorem moebius_readout_eq_reciprocal_riemannZeta
     (beta : ℝ) (hbeta : beta > 1) :
-    (moebiusLSeriesReadout beta : ℂ) =
+    (L ↗μ (beta : ℂ)) =
       (riemannZeta (beta : ℂ))⁻¹ :=
-  ofReal_moebiusLSeriesReadout_eq_reciprocal_zeta beta hbeta
+  BostConnesThermofield.witten_index_eq_reciprocal_zeta beta hbeta
 
 /-! On the open critical strip, the existing Cayley Xi bridge transfers the
 zero question to the ordinary Riemann zeta zero question. -/
@@ -129,7 +131,7 @@ theorem native_riemann_zeta_cayley_bost_connes_closure
     toSymmetryAdapted (1 - s) = -toSymmetryAdapted s ∧
     riemannXi (1 - s) = riemannXi s ∧
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ ∧
-    (moebiusLSeriesReadout beta : ℂ) =
+    (L ↗μ (beta : ℂ)) =
       (riemannZeta (beta : ℂ))⁻¹ := by
   exact ⟨toSymmetryAdapted_one_sub s,
     riemannXi_one_sub s,

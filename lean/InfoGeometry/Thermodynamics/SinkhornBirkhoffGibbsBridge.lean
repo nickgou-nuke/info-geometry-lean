@@ -161,28 +161,77 @@ theorem softmaxAttention_row_stochastic [Fintype N] [Nonempty N] (E : Regulariza
   rw [← Finset.sum_div]
   exact div_self (row_partitionSum_ne_zero E C m)
 
-/-! ### 6. Grand Synthesis: Transport Polytope vs Attention Simplex -/
+/-! ### 6. Log-potential cancellation on a closed alternating cycle -/
 
-/--
-🏆 **GRAND SYNTHESIS: Sinkhorn-Birkhoff Transport vs Softmax Attention Simplex**
+theorem sinkhorn_cycle_log_sum_zero
+    {α β : Type*} (n : ℕ) (r : ℕ → α) (c : ℕ → β)
+    (hr : r n = r 0) (log_u : α → ℝ) (log_v : β → ℝ) :
+    ∑ i ∈ Finset.range n,
+      ((log_u (r i) + log_v (c i)) -
+        (log_u (r (i + 1)) + log_v (c i))) = 0 := by
+  have hterm (i : ℕ) :
+      ((log_u (r i) + log_v (c i)) -
+        (log_u (r (i + 1)) + log_v (c i))) =
+        log_u (r i) - log_u (r (i + 1)) := by
+    ring
+  simp_rw [hterm]
+  have htelescope (f : ℕ → ℝ) (k : ℕ) :
+      ∑ i ∈ Finset.range k, (f i - f (i + 1)) = f 0 - f k := by
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      rw [Finset.sum_range_succ, ih]
+      ring
+  rw [htelescope]
+  exact sub_eq_zero.mpr (congrArg log_u hr).symm
 
-Unifies:
-1. Row factorization of Sinkhorn coupling: $\sum_n P_{mn} = u_m \sum_n K_{mn} v_n$.
-2. Column factorization of Sinkhorn coupling: $\sum_m P_{mn} = v_n \sum_m u_m K_{mn}$.
-3. Doubly-stochastic Birkhoff closure under dual diagonal scaling.
-4. 1-sided row normalization of Softmax attention: $\sum_n A_{mn} = 1$.
+/-!
+The multiplicative form of the same closed-cycle cancellation.  The
+exponential coordinates are the positive Sinkhorn scale coordinates, so no
+division-by-zero hypothesis is needed: cancellation is performed in the
+additive log-potential lane above and then transported by `Real.exp`.
 -/
-theorem grand_sinkhorn_birkhoff_synthesis [Fintype N] [Nonempty N]
-    (E : RegularizationParam) (C : N → N → ℝ) (S : ScalingPotentials N N)
-    (hu : ∀ i : N, S.u i * (∑ j : N, gibbsKernel E C i j * S.v j) = 1)
-    (hv : ∀ j : N, S.v j * (∑ i : N, S.u i * gibbsKernel E C i j) = 1) :
-    (IsDoublyStochastic (sinkhornCoupling E C S) ∧
-     (∀ i : N, rowMarginal (sinkhornCoupling E C S) i = S.u i * ∑ j : N, gibbsKernel E C i j * S.v j) ∧
-     (∀ j : N, colMarginal (sinkhornCoupling E C S) j = S.v j * ∑ i : N, S.u i * gibbsKernel E C i j)) ∧
-    (∀ i : N, rowMarginal (softmaxAttentionMatrix E C) i = 1) :=
-  ⟨⟨sinkhorn_doublyStochastic_of_coupled_scaling E C S hu hv,
-     fun i => sinkhorn_row_marginal E C S i,
-     fun j => sinkhorn_col_marginal E C S j⟩,
-   fun i => softmaxAttention_row_stochastic E C i⟩
+theorem sinkhorn_cycle_product_unity
+    {α β : Type*} (n : ℕ) (r : ℕ → α) (c : ℕ → β)
+    (hr : r n = r 0) (log_u : α → ℝ) (log_v : β → ℝ) :
+    ∏ i ∈ Finset.range n,
+      Real.exp ((log_u (r i) + log_v (c i)) -
+        (log_u (r (i + 1)) + log_v (c i))) = 1 := by
+  rw [← Real.exp_sum]
+  rw [sinkhorn_cycle_log_sum_zero n r c hr log_u log_v]
+  exact Real.exp_zero
+
+/-!
+The same cancellation in multiplicative coordinates.  The kernel entries and
+the two scale vectors are required to be nonzero exactly where cancellation
+uses division.
+-/
+theorem sinkhorn_cycle_product_unity_mul
+    {α β : Type*} (n : ℕ) (r : ℕ → α) (c : ℕ → β)
+    (hr : r n = r 0) (P K : α → β → ℝ) (u : α → ℝ) (v : β → ℝ)
+    (hu : ∀ i, u (r i) ≠ 0) (hv : ∀ i, v (c i) ≠ 0)
+    (hK : ∀ i j, K i j ≠ 0)
+    (hP : ∀ i j, P i j = u i * K i j * v j) :
+    ∏ i ∈ Finset.range n,
+      ((P (r i) (c i) * K (r (i + 1)) (c i)) /
+        (K (r i) (c i) * P (r (i + 1)) (c i))) = 1 := by
+  have hterm (i : ℕ) :
+      ((P (r i) (c i) * K (r (i + 1)) (c i)) /
+        (K (r i) (c i) * P (r (i + 1)) (c i))) =
+        u (r i) / u (r (i + 1)) := by
+    rw [hP, hP]
+    field_simp [hu i, hu (i + 1), hv i, hK (r i) (c i),
+      hK (r (i + 1)) (c i)]
+  simp_rw [hterm]
+  have htelescope (f : ℕ → ℝ) (k : ℕ) (hf : ∀ i, f i ≠ 0) :
+      ∏ i ∈ Finset.range k, (f i / f (i + 1)) = f 0 / f k := by
+    induction k with
+    | zero => simp [hf 0]
+    | succ k ih =>
+        rw [Finset.prod_range_succ, ih]
+        field_simp [hf k, hf (k + 1)]
+  rw [htelescope (fun i => u (r i)) n (fun i => hu i)]
+  rw [hr]
+  exact div_self (hu 0)
 
 end InfoGeometry.Thermodynamics.SinkhornBirkhoff

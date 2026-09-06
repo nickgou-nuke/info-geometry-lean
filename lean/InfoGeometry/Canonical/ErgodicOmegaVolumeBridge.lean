@@ -13,7 +13,7 @@ Adapter from ergodic self-similar fixed operators to the standard-form
 
 This file does not prove a von Neumann ergodic theorem and does not construct a
 centralizer.  Those analytic facts are model-level input.  The bridge records
-the calibrated interface:
+the calibrated socket:
 
 * the ergodic owner supplies modular/scale fixed operators;
 * the standard-form owner supplies finite natural-cone face expectations;
@@ -32,7 +32,6 @@ section Core
 
 variable {E H LieAlgebra Word : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace (DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]
@@ -45,7 +44,7 @@ local notation "VolEnd" => AlgebraEnd H
 Calibration bridge from operator ergodic fixed points to natural-cone
 `Ω`-localized face volumes.
 
-`toVolumeOperator` is explicit property data because the ergodic observable
+`toVolumeOperator` is explicit witness data because the ergodic observable
 carrier and the standard-form volume carrier need not be definitionally the
 same type in every model.
 -/

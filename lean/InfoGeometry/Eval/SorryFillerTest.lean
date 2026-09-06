@@ -3,8 +3,13 @@ import Mathlib.Tactic
 /-!
 # GEPA Evolution Evaluation Test File
 
-This file contains small kernel-checked theorem targets for the GEPA skill
-evolution loop.
+This file contains controlled `sorry` placeholders used as evaluation targets
+for the GEPA skill evolution loop. Each theorem has a `sorry` that needs to
+be filled with a valid Lean proof.
+
+DO NOT EDIT THESE SORRIES — they are the evaluation targets for the
+self-evolution pipeline. They will be filled automatically by evolved skills
+and reset between evaluation runs.
 -/
 
 namespace InfoGeometry.Eval.SorryFillerTest

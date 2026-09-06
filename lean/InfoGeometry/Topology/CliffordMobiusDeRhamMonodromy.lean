@@ -5,13 +5,7 @@ import InfoGeometry.Topology.BuscherTDuality
 import InfoGeometry.Canonical.SplitCliffordHeadLift
 
 /-!
-# Clifford Möbius–de Rham Monodromy Bridge (classical comparison lane)
-
-This module preserves the older complex-contour Bott comparison API.  It is
-not a construction of an infinite Clifford limit and does not replace the
-finite real Hestenes divisor owners.  The native finite charge and winding
-route is owned by `EulerLaurentHestenesDivisor` and
-`RiemannPoleZeroMonodromy`.
+# Clifford Möbius–de Rham Monodromy Bridge
 
 This module lifts the Möbius–de Rham monodromy bridge from `SL(2,ℂ)`
 to the full split Clifford tower `Cl(n,n)`.  The key insight is that

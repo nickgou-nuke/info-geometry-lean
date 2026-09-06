@@ -39,6 +39,15 @@ structure FiveGradeBoundaryCurrentPacket
     [Fintype ι] [DecidableEq ι] [Ring R] where
   inversion : FiveGradedConformalInversion L
   occ : ι → ℤ
+  matrixUnitWick :
+    ∀ a b c d : ι,
+      algebraCommutator
+          (normalOrderedMatrixUnit (R := R) occ a b)
+          (normalOrderedMatrixUnit (R := R) occ c d)
+        =
+        (if b = c then normalOrderedMatrixUnit (R := R) occ a d else 0)
+          - (if a = d then normalOrderedMatrixUnit (R := R) occ c b else 0)
+          + wickCorrection (R := R) occ a b c d
 
 namespace FiveGradeBoundaryCurrentPacket
 
@@ -68,7 +77,7 @@ theorem matrixUnitWick_readout
       (if b = c then normalOrderedMatrixUnit (R := R) P.occ a d else 0)
         - (if a = d then normalOrderedMatrixUnit (R := R) P.occ c b else 0)
         + wickCorrection (R := R) P.occ a b c d := by
-  exact normalOrdered_matrixUnit_commutator P.occ a b c d
+  simpa using P.matrixUnitWick a b c d
 
 /-- The source sector is carried to the sink sector by the packet inversion. -/
 theorem source_to_sink
@@ -90,20 +99,6 @@ theorem center_stable
     x ∈ P.centerSet ↔ P.inversion.theta x ∈ P.centerSet := by
   simpa [centerSet] using (mem_center_iff_mem_center (G := P.inversion) x)
 
-/-- Standard boundary current packet on ConformalGrade. -/
-def standardPacket (ι R : Type*) [Fintype ι] [DecidableEq ι] [Ring R] :
-    FiveGradeBoundaryCurrentPacket ConformalGrade ι R where
-  inversion := FiveGradedConformalInversion.standardInversion
-  occ := fun _ => 0
-
-/-- Standard boundary current packet on Unit. -/
-def unitPacket (ι R : Type*) [Fintype ι] [DecidableEq ι] [Ring R] :
-    FiveGradeBoundaryCurrentPacket Unit ι R where
-  inversion := FiveGradedConformalInversion.unitInversion
-  occ := fun _ => 0
-
 end FiveGradeBoundaryCurrentPacket
 
-end ConformalFiveGradeCurrentPacket
-
-
+end InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket

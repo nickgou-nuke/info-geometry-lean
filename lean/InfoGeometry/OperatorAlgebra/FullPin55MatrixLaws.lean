@@ -50,7 +50,7 @@ def IsO55 (A : M10Z) : Prop := Aᵀ * eta * A = eta
 /--
 Off-diagonal `O(5,5)` metric `[[0, I₅], [I₅, 0]]`.
 
-This is the exact finite matrix instantiated from the symbolic CAS property
+This is the exact finite matrix instantiated from the symbolic CAS witness
 `sympy_t_duality_cascade.py`.
 -/
 def etaOff : M10Z :=
@@ -140,71 +140,10 @@ theorem IsO55_mul {A B : M10Z} (hA : IsO55 A) (hB : IsO55 B) : IsO55 (A * B) := 
     _ = Bᵀ * eta * B := by rw [hA]
     _ = eta := hB
 
-/-- The off-diagonal split orthogonal predicate is closed under multiplication. -/
-theorem IsO55Off_mul {A B : M10Z} (hA : IsO55Off A) (hB : IsO55Off B) :
-    IsO55Off (A * B) := by
-  unfold IsO55Off at hA hB ⊢
-  rw [transpose_mul]
-  calc
-    (Bᵀ * Aᵀ) * etaOff * (A * B) = Bᵀ * (Aᵀ * etaOff * A) * B := by
-      simp only [mul_assoc]
-    _ = Bᵀ * etaOff * B := by rw [hA]
-    _ = etaOff := hB
-
 /-- Every product of two basis-generator Pin reflections is an `O(5,5)` matrix. -/
 theorem pinProduct_all_o55 : ∀ i j : Fin 10, IsO55 (pinProduct i j) := by
   intro i j
   exact IsO55_mul (pinReflect_all_o55 i) (pinReflect_all_o55 j)
-
-/-! ## Determinant parity of the finite reflection readout -/
-
-/-- Each coordinate reflection reverses orientation on the ten-dimensional carrier.
-
-This is a determinant statement about the concrete matrix readout only.  It does
-not assert membership in a topological `Pin` group or identify the matrix with a
-Clifford algebra element.
--/
-theorem pinReflect_eq_diagonal (k : Fin 10) :
-    pinReflect k = Matrix.diagonal (fun i => if i = k then (-1 : ℤ) else 1) := by
-  ext i j
-  by_cases hij : i = j
-  · subst j
-    simp [pinReflect]
-  · simp [pinReflect, hij]
-
-theorem pinReflect_det : ∀ k : Fin 10, (pinReflect k).det = (-1 : ℤ) := by
-  intro k
-  rw [pinReflect_eq_diagonal]
-  rw [Matrix.det_diagonal]
-  fin_cases k <;> decide
-
-/-- A product of two basis reflections has even determinant parity. -/
-theorem pinProduct_det (i j : Fin 10) : (pinProduct i j).det = (1 : ℤ) := by
-  rw [pinProduct, Matrix.det_mul, pinReflect_det i, pinReflect_det j]
-  norm_num
-
-/-- The ordered finite word in the coordinate reflection readouts. -/
-def pinReflectionWord : List (Fin 10) → M10Z
-  | [] => 1
-  | k :: ks => pinReflect k * pinReflectionWord ks
-
-/-- Every finite reflection word preserves the diagonal split form. -/
-theorem pinReflectionWord_all_o55 :
-    ∀ ks : List (Fin 10), IsO55 (pinReflectionWord ks) := by
-  intro ks
-  induction ks with
-  | nil => simp [pinReflectionWord, IsO55]
-  | cons k ks ih =>
-      simpa [pinReflectionWord] using IsO55_mul (pinReflect_all_o55 k) ih
-
-/-- Determinant parity is the parity of the reflection-word length. -/
-theorem pinReflectionWord_det (ks : List (Fin 10)) :
-    (pinReflectionWord ks).det = (-1 : ℤ) ^ ks.length := by
-  induction ks with
-  | nil => simp [pinReflectionWord]
-  | cons k ks ih =>
-      rw [pinReflectionWord, Matrix.det_mul, pinReflect_det k, ih]
-      simp [pow_succ]
 
 /-! ## Off-diagonal `O(5,5)` Buscher-swap instantiation from CAS -/
 
@@ -236,6 +175,17 @@ theorem buscherSwapFirst_nontrivial :
   rw [buscherSwapFirst_basis_zero]
   decide
 
+/-- Closed finite packet for the off-diagonal `O(5,5)` Buscher-swap surface. -/
+theorem buscherSwapFirst_packet :
+    IsO55Off buscherSwapFirst ∧
+      buscherSwapFirst * buscherSwapFirst = 1 ∧
+      buscherSwapFirst.mulVec (basisVec 0) = basisVec 5 ∧
+      buscherSwapFirst.mulVec (basisVec 5) = basisVec 0 ∧
+      buscherSwapFirst.mulVec (basisVec 0) ≠ basisVec 0 := by
+  exact ⟨buscherSwapFirst_o55Off, buscherSwapFirst_involutive,
+    buscherSwapFirst_basis_zero, buscherSwapFirst_basis_five,
+    buscherSwapFirst_nontrivial⟩
+
 /-- A basis Pin reflection negates its own coordinate basis vector. -/
 theorem pinReflect_self_action :
     ∀ k : Fin 10, (pinReflect k).mulVec (basisVec k) = -basisVec k := by
@@ -259,23 +209,6 @@ theorem pinReflect_basis_action :
     simp [pinReflect_self_action]
   · simp [h, pinReflect_other_action k j h]
 
-/-- A basis reflection flips exactly one coordinate of an arbitrary vector. -/
-theorem pinReflect_mulVec (k : Fin 10) (v : V10Z) :
-    (pinReflect k).mulVec v = fun i => if i = k then -v i else v i := by
-  funext i
-  unfold pinReflect Matrix.mulVec dotProduct
-  by_cases h : i = k
-  · subst k
-    simp
-  · simp [h]
-
-/-- The coordinate reflection action is involutive on every vector. -/
-theorem pinReflect_mulVec_involutive (k : Fin 10) (v : V10Z) :
-    (pinReflect k).mulVec ((pinReflect k).mulVec v) = v := by
-  rw [pinReflect_mulVec, pinReflect_mulVec]
-  funext i
-  by_cases h : i = k <;> simp [h]
-
 /-- Clifford algebra dimension shadow: `dim Cl(5,5) = 2^10 = 1024`. -/
 theorem cl55_dimension_shadow : 2 ^ 10 = (1024 : ℕ) := by
   decide
@@ -287,5 +220,17 @@ theorem pin_parity_half_shadow : 2 ^ 9 = (512 : ℕ) := by
 /-- Bivector/Spin Lie algebra dimension shadow: `10 choose 2 = 45`. -/
 theorem spin55_bivector_count_shadow : 10 * 9 / 2 = (45 : ℕ) := by
   decide
+
+/-- Closed finite packet for the basis-generator `Pin(5,5)` matrix-law surface. -/
+theorem full_pin55_basis_packet :
+    (∀ k : Fin 10, IsO55 (pinReflect k)) ∧
+      (∀ k : Fin 10, pinReflect k * pinReflect k = 1) ∧
+      (∀ i j : Fin 10, IsO55 (pinProduct i j)) ∧
+      (∀ k j : Fin 10,
+        (pinReflect k).mulVec (basisVec j) = if k = j then -basisVec j else basisVec j) ∧
+      (∀ i : Fin 5, cliffordSquareSign ⟨i.val, by omega⟩ = 1) ∧
+      (∀ i : Fin 5, cliffordSquareSign ⟨i.val + 5, by omega⟩ = -1) := by
+  exact ⟨pinReflect_all_o55, pinReflect_all_involutive, pinProduct_all_o55,
+    pinReflect_basis_action, positive_square_signs, negative_square_signs⟩
 
 end InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws

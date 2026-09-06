@@ -31,9 +31,3 @@ theorem t_duality_momentum_exchange (n w : ℤ) (R : ℝ) (hR : R ≠ 0) :
   unfold narainLeftMomentum tDualityRadius
   field_simp [hR]
   ring
-
-theorem grand_narain_t_duality_synthesis (n w : ℤ) (R : ℝ) (hR : R ≠ 0) :
-    (tDualityRadius (tDualityRadius R) = R) ∧
-    (narainLeftMomentum n w (tDualityRadius R) = narainLeftMomentum w n R) :=
-  ⟨t_duality_involution R hR,
-   t_duality_momentum_exchange n w R hR⟩

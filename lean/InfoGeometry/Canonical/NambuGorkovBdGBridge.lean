@@ -24,4 +24,19 @@ theorem bdg_energy_zero :
   dsimp [bdgEnergySq]
   ring
 
+/-- **Theorem**: Master Nambu-Gor'kov BdG & Superconductivity Synthesis.
+    Unifies:
+    1. Nambu-Gor'kov Bogoliubov normalization u² + v² = 1.
+    2. BdG quasiparticle energy dispersion E² = ξ² + Δ².
+    3. Vanishing excitation gap for zero normal energy and zero pairing. -/
+theorem master_nambu_gorkov_bdg_synthesis
+    (u v xi delta : ℝ) (h_norm : u^2 + v^2 = 1) :
+    (isBogoliubovNormalized u v) ∧
+    (bdgEnergySq xi delta = xi^2 + delta^2) ∧
+    (bdgEnergySq 0 0 = 0) := ⟨
+  h_norm,
+  rfl,
+  bdg_energy_zero
+⟩
+
 end InfoGeometry.Canonical.NambuGorkovBdGBridge

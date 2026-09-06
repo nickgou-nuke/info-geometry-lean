@@ -79,10 +79,10 @@ theorem kms_cuntzMap_invariant
 
 /-! ### 4. Grand Cuntz Endomorphism Synthesis -/
 
-/--
+/-!
 🏆 **GRAND SYNTHESIS THEOREM: Cuntz Algebra O₂, Canonical Endomorphism & KMS Invariant Equilibrium**
 -/
-theorem grand_cuntz_endomorphism_synthesis
+/- theorem grand_cuntz_endomorphism_synthesis
     {Op : Type*} [Ring Op] [StarRing Op]
     (C : CuntzTwoAlgebra Op)
     (phiState : KMSStateFunctional Op)
@@ -94,6 +94,6 @@ theorem grand_cuntz_endomorphism_synthesis
   refine ⟨⟨C.isometry_L, C.isometry_R⟩,
           C.partition_of_unity,
           cuntzMap_unital C,
-          kms_cuntzMap_invariant C phiState X⟩
+          kms_cuntzMap_invariant C phiState X⟩ -/
 
 end InfoGeometry.Canonical.CuntzEndomorphism

@@ -3,7 +3,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Constructive Geometric Langlands Correspondence & Hitchin Integrable System Capstone
@@ -38,7 +37,6 @@ All proofs are 100% constructive Mathlib 4 terms checked by the Lean kernel.
 
 open scoped BigOperators Real
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
@@ -102,9 +100,10 @@ theorem hecke_eigen_defect_zero (hx lambda_x e : ℝ) (h_eigen : hx * e = lambda
   dsimp [heckeEigenDefect]
   linarith
 
-/-! ### 5. Master Synthesis Theorem -/
+/-! The reusable boundary of this module is the finite matrix, dimension, and
+    scalar-defect lemmas above. -/
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Constructive Geometric Langlands & Hitchin Systems**
 
 Unifies:
@@ -119,7 +118,7 @@ Unifies:
 5. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_geometric_langlands_hitchin_synthesis
+/- theorem grand_geometric_langlands_hitchin_synthesis
     (lambda a b c : ℝ) (r g : ℤ)
     (hx lambda_x e : ℝ) (h_eigen : hx * e = lambda_x * e) :
     (Matrix.det (charMatrix lambda a b c) = lambda ^ 2 + Matrix.det (higgsMatrix a b c)) ∧
@@ -133,6 +132,6 @@ theorem grand_geometric_langlands_hitchin_synthesis
    hitchin_base_eq_prym_dim r g,
    hecke_eigen_defect_zero hx lambda_x e h_eigen,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.GeometricLanglandsHitchin

@@ -77,20 +77,7 @@ theorem energy_nonneg (F : FieldDerivatives2D) :
   dsimp [energyDensity]
   positivity
 
-/-! ### 3. Grand Hestenes GA Synthesis -/
-
-/--
+/-!
 🏆 **GRAND SYNTHESIS THEOREM: Hestenes Geometric Algebra, Monogenic Derivative & Harmonic Vanishing**
 -/
-theorem grand_hestenes_ga_synthesis (F : FieldDerivatives2D) :
-    -- 1. Monogenic Cauchy-Riemann Relations
-    (F.d1_u = F.d2_v ∧ F.d2_u = -F.d1_v) ∧
-    -- 2. Harmonic Ground State: Δ u = 0
-    (laplacian F = 0) ∧
-    -- 3. Non-negative Energy Density
-    (0 ≤ energyDensity F) := by
-  refine ⟨⟨F.h_cr1, F.h_cr2⟩,
-          monogenic_field_is_harmonic F,
-          energy_nonneg F⟩
-
 end InfoGeometry.Canonical.HestenesGA

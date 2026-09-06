@@ -62,7 +62,8 @@ theorem finite_primon_susy_master_identity
       InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge.finitePrimeBosonicInverseDenominator
           P.primes q *
         InfoGeometry.Arithmetic.MobiusDirichletInverseBridge.finiteMobiusDirichletPolynomial
-          P q = 1 := by
-  exact InfoGeometry.Arithmetic.MobiusWittenWeylDenominator.finite_mobius_witten_weyl_packet P q h
+          P q = 1 :=
+  InfoGeometry.Arithmetic.MobiusWittenWeylDenominator.finite_mobius_witten_weyl_packet P q h
 
 end InfoGeometry.Canonical.PrimonSupersymmetry
+

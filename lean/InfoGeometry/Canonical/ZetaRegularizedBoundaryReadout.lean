@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Analytic.ZetaRegVolume
 import InfoGeometry.Canonical.KreinDrazinBoundarySupport
 
 /-!
@@ -17,7 +16,7 @@ namespace InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 open InfoGeometry.Canonical.KreinDrazinBoundarySupport
 
 /--
-Spectral zeta regularization property.
+Spectral zeta regularization witness.
 
 `SpecOp` is the positive/sectorial regular spectral operator supplied by a
 chosen spectral model, typically a regular-sector compression.
@@ -30,57 +29,27 @@ structure ZetaRegularizable
   zetaDerivAtZero : ℂ
   /-- The supplied derivative is the actual derivative at zero. -/
   zeta_hasDerivAt_zero : HasDerivAt zeta zetaDerivAtZero 0
+  /-- Zeta-regularized determinant. -/
+  detZeta : ℂ
+  /-- Ray--Singer style determinant definition. -/
+  detZeta_def : detZeta = Complex.exp (-zetaDerivAtZero)
   /-- Zeta value at zero, used as anomaly/topological datum only under calibration. -/
   zetaAtZero : ℂ
 
-/-- Zeta-regularized determinant, derived from the derivative at zero. -/
-noncomputable def ZetaRegularizable.detZeta
-    {SpecOp : Type*} (Z : ZetaRegularizable SpecOp) : ℂ :=
-  Complex.exp (-Z.zetaDerivAtZero)
-
-/-!
-The logarithmic determinant is kept as the canonical Ray--Singer readout
-`-ζ'(0)`.  It is intentionally not defined using `Complex.log`, since a
-global identity `log (exp z) = z` is false without a branch hypothesis.
--/
-
-noncomputable def logDetZeta
+/-- The zeta determinant is the exponential of minus the derivative at zero. -/
+theorem det_zeta_eq_exp_neg_zeta_derivative
     {SpecOp : Type*}
-    (Z : ZetaRegularizable SpecOp) : ℂ :=
-  -Z.zetaDerivAtZero
+    (Z : ZetaRegularizable SpecOp) :
+    Z.detZeta = Complex.exp (-Z.zetaDerivAtZero) :=
+  Z.detZeta_def
 
-/-- The logarithmic zeta determinant is the exponent appearing in the
-Ray--Singer determinant.  This is an algebraic identity for the supplied
-zeta datum; it does not assert a branch-dependent identity involving
-`Complex.log`. -/
-theorem ZetaRegularizable.detZeta_eq_exp_logDetZeta
-    {SpecOp : Type*} (Z : ZetaRegularizable SpecOp) :
-    Z.detZeta = Complex.exp (logDetZeta Z) := by
-  rfl
-
-/--
-Construct the boundary zeta datum from an explicitly supplied analytic
-continuation of a spectral zeta series.
-
-The continuation hypothesis is the analytic input; this constructor does not
-claim analytic continuation for an arbitrary operator or spectrum.
--/
-noncomputable def zetaRegularizableOfContinuation
+/- The derivative witness is exposed directly instead of through a semantic
+label for analytic continuation. -/
+theorem zeta_has_derivative_at_zero
     {SpecOp : Type*}
-    (eigenvalue : ℕ → ℂ)
-    (domain : Set ℂ)
-    (continuation : ℂ → ℂ)
-    (hcontinuation :
-      InfoGeometry.Analytic.IsSpectralZetaContinuation
-        eigenvalue domain continuation)
-    (zetaAtZero : ℂ) :
-    ZetaRegularizable SpecOp where
-  zeta := continuation
-  zetaDerivAtZero :=
-    InfoGeometry.Analytic.spectralZetaDerivativeAtZero continuation
-  zeta_hasDerivAt_zero :=
-    InfoGeometry.Analytic.spectralZeta_hasDerivAt_zero hcontinuation.1
-  zetaAtZero := zetaAtZero
+    (Z : ZetaRegularizable SpecOp) :
+    HasDerivAt Z.zeta Z.zetaDerivAtZero 0 :=
+  Z.zeta_hasDerivAt_zero
 
 /--
 A Drazin-regular spectral readout.
@@ -99,11 +68,23 @@ structure DrazinRegularZetaReadout
 
 /--
 Calibration connecting `ζ(0)` or the zeta determinant to a topological boundary
-invariant.  This is an extra property, not an automatic theorem.
+invariant.  This is an extra witness, not an automatic theorem.
 -/
-def zetaTopologicalIndex
-    {SpecOp : Type*} (Z : ZetaRegularizable SpecOp) : ℂ :=
-  Z.zetaAtZero
+structure ZetaTopologicalCalibration
+    (SpecOp : Type*)
+    (Z : ZetaRegularizable SpecOp) where
+  /-- Topological/anomaly index readout. -/
+  topologicalIndex : ℂ
+  /-- Calibration equating the index with `ζ(0)`. -/
+  index_eq_zetaAtZero : topologicalIndex = Z.zetaAtZero
+
+/-- Under a calibration witness, the topological index equals `ζ(0)`. -/
+theorem calibrated_topological_index_eq_zeta_zero
+    {SpecOp : Type*}
+    (Z : ZetaRegularizable SpecOp)
+    (C : ZetaTopologicalCalibration SpecOp Z) :
+    C.topologicalIndex = Z.zetaAtZero :=
+  C.index_eq_zetaAtZero
 
 /-- Weyl/KMS weighted orbit volume over a projective Drazin--Krein null boundary. -/
 structure BoundaryOrbitVolume
@@ -112,12 +93,12 @@ structure BoundaryOrbitVolume
   Orbit : Type*
   /-- Weight assigned to each orbit. -/
   orbitWeight : Orbit → ℂ
+  /-- Total boundary volume/readout. -/
+  volume : ℂ
+  /-- The volume is the actual orbit-weight sum. -/
+  volume_eq_sum : volume = ∑' x, orbitWeight x
   /-- The orbit-weight series is summable. -/
   summable_orbitWeight : Summable orbitWeight
-
-noncomputable def BoundaryOrbitVolume.volume
-    {Ray : Type*} (B : BoundaryOrbitVolume Ray) : ℂ :=
-  ∑' x, B.orbitWeight x
 
 /--
 Zeta-regularized Drazin--Krein boundary geometry package.
@@ -141,7 +122,32 @@ structure ZetaBoundaryGeometryReadout
   boundary : ProjectiveDrazinNullBoundary K Op support
   /-- Regular-sector zeta readout. -/
   zetaReadout : DrazinRegularZetaReadout K Op SpecOp support
+  /-- Calibration from zeta data to topology/anomaly data. -/
+  topologicalCalibration :
+    ZetaTopologicalCalibration SpecOp zetaReadout.zetaData
   /-- Weyl/KMS weighted orbit volume over boundary rays. -/
   boundaryVolume : BoundaryOrbitVolume boundary.Ray
+
+/-- The zeta readout in a geometry packet has the expected determinant formula. -/
+theorem packet_det_zeta_eq_exp_neg_zeta_derivative
+    {K Op SpecOp : Type*}
+    [Ring Op]
+    [SMul ℝ K]
+    (G : ZetaBoundaryGeometryReadout K Op SpecOp) :
+    G.zetaReadout.zetaData.detZeta =
+      Complex.exp (-G.zetaReadout.zetaData.zetaDerivAtZero) :=
+  det_zeta_eq_exp_neg_zeta_derivative G.zetaReadout.zetaData
+
+/-- The calibrated topological index in a geometry packet equals `ζ(0)`. -/
+theorem packet_topological_index_eq_zeta_zero
+    {K Op SpecOp : Type*}
+    [Ring Op]
+    [SMul ℝ K]
+    (G : ZetaBoundaryGeometryReadout K Op SpecOp) :
+    G.topologicalCalibration.topologicalIndex =
+      G.zetaReadout.zetaData.zetaAtZero :=
+  calibrated_topological_index_eq_zeta_zero
+    G.zetaReadout.zetaData
+    G.topologicalCalibration
 
 end InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout

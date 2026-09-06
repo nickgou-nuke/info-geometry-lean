@@ -22,18 +22,15 @@ open InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 
 abbrev Coordinate := Fin 8 → ℝ
 
+set_option maxHeartbeats 1000000 in
 def circularMinkowskiEmbedding : Minkowski4 →ₗ[ℝ] Coordinate where
   toFun v := ![v.t + v.z, v.x, v.y, 0, v.t - v.z, v.x, v.y, 0]
   map_add' v w := by
     funext i
-    fin_cases i <;> simp [Minkowski4.t, Minkowski4.x, Minkowski4.y,
-      Minkowski4.z]
-    <;> ring
+    fin_cases i <;> change _ = _ <;> ring
   map_smul' c v := by
     funext i
-    fin_cases i <;> simp [Minkowski4.t, Minkowski4.x, Minkowski4.y,
-      Minkowski4.z]
-    <;> ring
+    fin_cases i <;> change _ = _ <;> ring
 
 @[simp] theorem circularMinkowskiEmbedding_apply (v : Minkowski4) :
     circularMinkowskiEmbedding v =
@@ -54,21 +51,18 @@ theorem circularWittNorm_circularMinkowskiEmbedding_eq_zero_iff
 theorem circularMinkowskiEmbedding_injective :
     Function.Injective circularMinkowskiEmbedding := by
   intro v w h
-  funext i
-  fin_cases i
+  apply Minkowski4.ext
   · have h0 := congrFun h 0
     have h4 := congrFun h 4
     dsimp [circularMinkowskiEmbedding, Minkowski4.t, Minkowski4.z] at h0 h4
-    change v 0 = w 0
     linarith
-  · change v 1 = w 1
+  · change v.x = w.x
     simpa [circularMinkowskiEmbedding, Minkowski4.x] using congrFun h 1
-  · change v 2 = w 2
+  · change v.y = w.y
     simpa [circularMinkowskiEmbedding, Minkowski4.y] using congrFun h 2
   · have h0 := congrFun h 0
     have h4 := congrFun h 4
     dsimp [circularMinkowskiEmbedding, Minkowski4.t, Minkowski4.z] at h0 h4
-    change v 3 = w 3
     linarith
 
 end InfoGeometry.Lie.SplitOctonionCircularWittMinkowskiBridge

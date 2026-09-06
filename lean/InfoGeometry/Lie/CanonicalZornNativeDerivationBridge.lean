@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Canonical.CanonicalZornNonUnitalNonAssocRing
 
 /-!
 # Predicate bridge for canonical Zorn derivations

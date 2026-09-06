@@ -82,4 +82,20 @@ theorem braidTorsion_zero (v : HestenesField) :
   rw [spectral_yang_baxter v]
   simp
 
+/-- Consolidated finite spectral-YBE package. -/
+theorem spectral_yang_baxter_synthesis :
+    (∀ v : HestenesField, sigma₁ (sigma₁ v) = v) ∧
+    (∀ v : HestenesField, sigma₂ (sigma₂ v) = v) ∧
+    (∀ v : HestenesField,
+      sigma₁ (sigma₂ (sigma₁ v)) = sigma₂ (sigma₁ (sigma₂ v))) ∧
+    (∀ u v, spectralParameter v u = -spectralParameter u v) ∧
+    (∀ u v, spectralParameter (cptInvertScale u) (cptInvertScale v) =
+      -spectralParameter u v) ∧
+    (∀ u v w, spectralParameter u w =
+      spectralParameter u v + spectralParameter v w) ∧
+    (∀ v : HestenesField, braidTorsion v = 0) := by
+  exact ⟨sigma₁_involutive, sigma₂_involutive, spectral_yang_baxter,
+    spectralParameter_swap, spectralParameter_cpt, spectralParameter_additive,
+    braidTorsion_zero⟩
+
 end noncomputable section

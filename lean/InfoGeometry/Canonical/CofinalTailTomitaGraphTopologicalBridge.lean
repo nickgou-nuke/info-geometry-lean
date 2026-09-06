@@ -24,8 +24,6 @@ open FilteredColimit.Native.Topological
 
 universe u
 
-set_option linter.unusedSectionVars false
-
 variable {I : Type u} [Preorder I] [Nonempty I] [IsDirectedOrder I]
 variable [DecidableEq I]
 variable (Stage : I → Type u)
@@ -41,7 +39,7 @@ abbrev upperGraphTopologicalDiagram (i₀ : I) :
   upperIndexInclusion i₀ ⋙ graphTopologicalDiagram Stage sys ω
 
 abbrev upperGraphTopologicalColimit (i₀ : I) : TopCat :=
-  colimit (upperGraphTopologicalDiagram Stage sys ω i₀)
+  topologicalDirectColimit (upperGraphTopologicalDiagram Stage sys ω i₀)
 
 def upperGraphToGraphColimitCocone (i₀ : I) :
     Cocone (upperGraphTopologicalDiagram Stage sys ω i₀) :=
@@ -51,14 +49,14 @@ def upperGraphToGraphColimitCocone (i₀ : I) :
 noncomputable def upperGraphTopologicalColimitToGraph (i₀ : I) :
     upperGraphTopologicalColimit Stage sys ω i₀ ⟶
       graphTopologicalColimit Stage sys ω :=
-  colimit.desc
+  topologicalDirectDescend
     (upperGraphTopologicalDiagram Stage sys ω i₀)
     (upperGraphToGraphColimitCocone Stage sys ω i₀)
 
 @[reassoc]
 theorem upperGraphTopologicalColimitToGraph_stage
     (i₀ : I) (j : UpperIndex i₀) :
-    colimit.ι
+    topologicalDirectInjection
         (upperGraphTopologicalDiagram Stage sys ω i₀) j ≫
       upperGraphTopologicalColimitToGraph Stage sys ω i₀ =
       (upperGraphToGraphColimitCocone Stage sys ω i₀).ι.app j := by
@@ -74,7 +72,7 @@ def upperGraphToGlobalPairCocone (i₀ : I) :
 noncomputable def upperGraphTopologicalColimitToGlobalPair (i₀ : I) :
     upperGraphTopologicalColimit Stage sys ω i₀ ⟶
       TopCat.of (globalGraphPair Stage sys ω) :=
-  colimit.desc
+  topologicalDirectDescend
     (upperGraphTopologicalDiagram Stage sys ω i₀)
     (upperGraphToGlobalPairCocone Stage sys ω i₀)
 
@@ -83,7 +81,7 @@ theorem upperGraphTopologicalColimitToGlobalPair_stage
     (i₀ : I) (j : UpperIndex i₀)
     (p : graphCarrier Stage sys ω j.1) :
     upperGraphTopologicalColimitToGlobalPair Stage sys ω i₀
-        (colimit.ι
+        (topologicalDirectInjection
           (upperGraphTopologicalDiagram Stage sys ω i₀) j p) =
       graphStageToGlobalPair Stage sys ω j.1 p := by
   have h := topologicalDirectDescend_stage

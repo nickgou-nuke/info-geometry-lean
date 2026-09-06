@@ -191,7 +191,7 @@ If the negative logarithm of the diagonal determinant tends to `+∞`, then the
 diagonal barrier tends to `+∞`.
 
 This is the robust repository-level limit lemma. The separate analytic fact
-`-log t → +∞` as `t → 0⁺` can be plugged into the property without hiding it
+`-log t → +∞` as `t → 0⁺` can be plugged into the hypothesis without hiding it
 inside this file.
 -/
 theorem diagonalBarrier_tendsto_atTop_of_negLog_det

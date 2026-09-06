@@ -14,9 +14,9 @@ Principle:
 * modular fixedness upgrades that support to a physical horizon;
 * horizon zero modes are observables localized on that Drazin horizon;
 * Fierz residual vanishing is not inferred from modular fixedness alone, but
-  from an explicit compatibility property for horizon zero-mode channels.
+  from an explicit compatibility hypothesis for horizon zero-mode channels.
 
-This file is an abstract interface.  It does not replace the repo's concrete
+This file is an abstract socket.  It does not replace the repo's concrete
 Drazin, modular-flow, or Fierz readout owners.
 -/
 
@@ -354,7 +354,7 @@ theorem transported_support_eq_moving_boundary
   exact ((flow.flow t).map_mul D.A D.AD).symm
 
 /--
-State invariance interface for real expectation readouts.
+State invariance socket for real expectation readouts.
 
 This is the expectation-only substitute for trace cyclicity/conservation.
 -/
@@ -445,9 +445,9 @@ def horizonFierzVector
   fun ch => φA.expect (C.channel ch D.AD)
 
 /--
-Compatibility property for the model-specific Fierz identity.
+Compatibility assumption for the model-specific Fierz identity.
 
-This is not an owner-derived theorem.  It is an explicitly named property
+This is not an owner-derived theorem.  It is an explicitly named assumption
 packet.  Modular fixedness of the Drazin support alone gives no-leakage, not a
 Fierz identity.
 -/
@@ -458,7 +458,7 @@ structure HorizonFierzCompatibilityAssumption
   compressedState : RealExpectationState Obs
   channels : FierzChannelMap Obs
   residual : FierzResidual
-  compatibility_property :
+  compatibility_assumption :
     ∀ D : DrazinSupportData Obs,
       IsPhysicalHorizon flow D →
       ChannelsAreHorizonZeroModes flow D channels →
@@ -468,17 +468,17 @@ structure HorizonFierzCompatibilityAssumption
 Assumption-derived Fierz readback.
 
 If the Drazin support is a modular physical horizon, the Fierz channels are
-horizon zero modes, and the explicit compatibility property is supplied, then
+horizon zero modes, and the explicit compatibility assumption is supplied, then
 the compressed expectation vector satisfies the supplied Fierz residual law.
 -/
 @[rep_depth operator]
-theorem fierz_quadric_from_modular_physical_horizon_property
+theorem fierz_quadric_from_modular_physical_horizon_assumption
     {Obs : Type*} [Ring Obs] [Star Obs]
     (K : HorizonFierzCompatibilityAssumption Obs)
     (D : DrazinSupportData Obs)
     (hHorizon : IsPhysicalHorizon K.flow D)
     (hChannels : ChannelsAreHorizonZeroModes K.flow D K.channels) :
     K.residual.residual (horizonFierzVector K.compressedState K.channels D) = 0 :=
-  K.compatibility_property D hHorizon hChannels
+  K.compatibility_assumption D hHorizon hChannels
 
 end InfoGeometry.Canonical.DrazinModularPersistence

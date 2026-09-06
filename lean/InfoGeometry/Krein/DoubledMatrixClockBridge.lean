@@ -102,14 +102,11 @@ noncomputable def ρclockAlg : Mat2 →ₐ[ℝ] End₂ E :=
     map_add' := (ρclock (E := E)).map_add
     commutes' := by
       intro r
-      rw [Algebra.algebraMap_eq_smul_one]
       apply LinearMap.ext
       intro u
       apply DoubledSpace.ext <;>
-        simp [ρclock, matrixAction, Matrix.scalar, WithLp.smul_fst,
-          WithLp.smul_snd, Matrix.algebraMap_matrix_apply, Pi.algebraMap_def,
-          Algebra.smul_def,
-          smul_add, smul_smul] }
+      simp [ρclock, matrixAction, Matrix.algebraMap_matrix_apply,
+        Algebra.smul_def] }
 
 /-- Matrix of the modular swap. -/
 def matrixJ : Mat2 :=

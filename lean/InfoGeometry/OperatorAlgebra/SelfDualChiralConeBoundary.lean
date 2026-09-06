@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SelfDualChiralConeBoundary.lean
 
-Self-dual chiral cone boundary data.
+Self-dual chiral cone boundary socket.
 
 This module formalizes a narrow Operator-Erlangen reading of the phrase:
 
@@ -17,11 +17,12 @@ It records:
 
 It does not identify the fixed boundary with a center, horizon, winding number,
 BPS charge, natural cone, or Shilov boundary unless a separate model supplies
-that property.
+that witness.
 -/
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -34,7 +35,7 @@ set_option linter.dupNamespace false
 /-! ## 1. Self-dual chiral cone boundary datum -/
 
 /--
-A property-gated self-dual chiral cone boundary.
+A witness-gated self-dual chiral cone boundary.
 
 `cone = dualCone` records self-duality at the level of the chosen model.
 `boundaryOf` is the horizon/boundary predicate. The closure involution exchanges
@@ -203,5 +204,27 @@ theorem swapped_boundary_imbalance_anti_fixed
     exact B.closure.difference_anti_fixed_of_swap hxy hyx
 
 end SelfDualChiralConeBoundary
+
+/-! ## 2. Owner theorem -/
+
+/--
+Every fixed-boundary point is boundary data and is closure-fixed.
+-/
+theorem selfDualChiralConeBoundaryOwnerTarget :
+  ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
+  ∀ B : SelfDualChiralConeBoundary V,
+  ∀ x : V,
+    x ∈ B.FixedBoundary →
+      B.boundaryOf x ∧ B.closure.theta x = x := by
+  intro V _ _ B x hx
+  exact hx
+
+/-- Fixed-boundary readout for one point in a self-dual chiral cone boundary. -/
+theorem fixedBoundary_packet
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (B : SelfDualChiralConeBoundary V) {x : V}
+    (hx : x ∈ B.FixedBoundary) :
+    B.boundaryOf x ∧ B.closure.theta x = x :=
+  selfDualChiralConeBoundaryOwnerTarget V B x hx
 
 end InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary

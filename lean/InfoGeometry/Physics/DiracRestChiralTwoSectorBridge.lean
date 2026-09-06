@@ -52,7 +52,7 @@ theorem dirac_rest_transition_double_angle (m c t : ℝ) :
     (1 - Real.cos (2 * (m * c ^ 2) * t)) / 2 :=
   transition_double_angle (m * c ^ 2) t
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Dirac Rest-Frame Weyl Chiral Two-Sector Bridge**
 
 Unifies:
@@ -60,7 +60,7 @@ Unifies:
 2. Exact rest-energy splitting: $\Delta E = 2|m|c^2$.
 3. Matching Compton frequency transition flow: $P(t) = \frac{1 - \cos(2mc^2 t)}{2}$.
 -/
-theorem grand_dirac_rest_chiral_synthesis (m c E t : ℝ) :
+/- theorem grand_dirac_rest_chiral_synthesis (m c E t : ℝ) :
     (Matrix.det (diracRestHamiltonian m c - E • (1 : Mat2)) =
      (E - (-(m * c ^ 2))) * (E - (m * c ^ 2))) ∧
     (|(0 + m * c ^ 2) - (0 - m * c ^ 2)| = 2 * |m| * c ^ 2) ∧
@@ -69,6 +69,6 @@ theorem grand_dirac_rest_chiral_synthesis (m c E t : ℝ) :
   have h_gap := dirac_rest_mass_gap m c
   have h_trans := dirac_rest_transition_double_angle m c t
   simp only [zero_sub, zero_add] at h_det
-  exact ⟨h_det, h_gap, h_trans⟩
+  exact ⟨h_det, h_gap, h_trans⟩ -/
 
 end InfoGeometry.Physics.DiracRest

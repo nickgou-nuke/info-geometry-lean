@@ -50,21 +50,6 @@ def mapFlow (toLimit : Stage →+* Limit)
   P_forward := toLimit flow.P_forward
   P_backward := toLimit flow.P_backward
 
-/-- Mapping a finite flow along the identity ring homomorphism changes nothing. -/
-theorem mapFlow_id
-    (flow : ThermodynamicGauge.CausalNonequilibriumFlow Stage) :
-    mapFlow (RingHom.id Stage) flow = flow := by
-  rfl
-
-/-- Mapping a finite flow along composed ring homomorphisms is functorial. -/
-theorem mapFlow_comp
-    {Target : Type*} [Ring Target]
-    (toLimit : Stage →+* Limit) (toTarget : Limit →+* Target)
-    (flow : ThermodynamicGauge.CausalNonequilibriumFlow Stage) :
-    mapFlow toTarget (mapFlow toLimit flow) =
-      mapFlow (toTarget.comp toLimit) flow := by
-  rfl
-
 /-- The entropy commutator comparison transports into the supplied limit algebra. -/
 theorem map_entropy_commutator_to_limit
     (toLimit : Stage →+* Limit)

@@ -19,7 +19,3 @@ theorem tamagawa_volume_is_one :
     tamagawaVolumeSL2 = 1 := by
   unfold tamagawaVolumeSL2
   rfl
-
-theorem grand_narain_tamagawa_synthesis :
-    tamagawaVolumeSL2 = 1 :=
-  tamagawa_volume_is_one

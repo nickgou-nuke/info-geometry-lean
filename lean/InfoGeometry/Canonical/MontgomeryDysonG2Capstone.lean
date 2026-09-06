@@ -1,12 +1,12 @@
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import InfoGeometry.Canonical.MontgomeryDysonG2Bridge
 
 namespace InfoGeometry.Canonical.MontgomeryDysonG2Capstone
 
 open InfoGeometry.Canonical.MontgomeryDysonG2
 
-/--
-🏆 **CAPSTONE: Canonical Montgomery-Dyson G₂ Verification**
--/
+/-- Canonical projection of the finite Montgomery--Dyson `G₂` certificate. -/
 theorem montgomery_dyson_g2_canonical_capstone
     (s : ℝ) (hs : s ^ 2 ≤ 1) (hs_nonneg : 0 ≤ s ^ 2) :
     (montgomeryDysonCorrelation 1 = 0) ∧

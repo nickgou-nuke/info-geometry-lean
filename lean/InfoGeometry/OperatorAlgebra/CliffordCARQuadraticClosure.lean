@@ -167,6 +167,88 @@ def wittNegTwoLieSubalgebra (n : ℕ) : LieSubalgebra ℝ (Clnn n) where
     change x * y - y * x ∈ wittNegTwo n
     exact wittNegTwo_commutator_mem_wittNegTwo n hx hy
 
+theorem wittZero_commutator_mem_wittZero
+    (n : ℕ) {X Y : Clnn n}
+    (hX : X ∈ wittZero n) (hY : Y ∈ wittZero n) :
+    X * Y - Y * X ∈ wittZero n := by
+  have hsmul_right : ∀ (c : ℝ) (x y : Clnn n),
+      x * (c • y) - (c • y) * x = c • (x * y - y * x) := by
+    intro c x y
+    simp only [Algebra.smul_def]
+    calc
+      x * ((algebraMap ℝ (Clnn n)) c * y) -
+          ((algebraMap ℝ (Clnn n)) c * y) * x =
+          ((algebraMap ℝ (Clnn n)) c * x) * y -
+            ((algebraMap ℝ (Clnn n)) c * y) * x := by
+              rw [← mul_assoc x (algebraMap ℝ (Clnn n) c) y,
+                ← Algebra.commutes c x]
+      _ = (algebraMap ℝ (Clnn n)) c * (x * y) -
+            (algebraMap ℝ (Clnn n)) c * (y * x) := by
+              rw [mul_assoc, mul_assoc]
+      _ = (algebraMap ℝ (Clnn n)) c * (x * y - y * x) := by
+            noncomm_ring
+  have hsmul_left : ∀ (c : ℝ) (x y : Clnn n),
+      (c • x) * y - y * (c • x) = c • (x * y - y * x) := by
+    intro c x y
+    simp only [Algebra.smul_def]
+    calc
+      ((algebraMap ℝ (Clnn n)) c * x) * y -
+          y * ((algebraMap ℝ (Clnn n)) c * x) =
+          (algebraMap ℝ (Clnn n)) c * (x * y) -
+            ((algebraMap ℝ (Clnn n)) c * y) * x := by
+              rw [Algebra.commutes c y]
+              noncomm_ring
+      _ = (algebraMap ℝ (Clnn n)) c * (x * y - y * x) := by
+            noncomm_ring
+  refine Submodule.span_induction
+    (p := fun X _ => X * Y - Y * X ∈ wittZero n)
+    ?_ ?_ ?_ ?_ hX
+  · intro x hx
+    rcases hx with ⟨⟨i, j⟩, rfl⟩
+    refine Submodule.span_induction
+      (p := fun Y _ => mixedGenerator n i j * Y -
+        Y * mixedGenerator n i j ∈ wittZero n)
+      ?_ ?_ ?_ ?_ hY
+    · intro y hy
+      rcases hy with ⟨⟨k, l⟩, rfl⟩
+      rw [mixedGenerator_commutator_mixedGenerator]
+      by_cases hjk : j = k
+      · by_cases hil : i = l
+        · simp only [if_pos hjk, if_pos hil]
+          exact (wittZero n).sub_mem
+            (Submodule.subset_span (Set.mem_range_self (i, l)))
+            (Submodule.subset_span (Set.mem_range_self (k, j)))
+        · simp only [if_pos hjk, if_neg hil]
+          exact (wittZero n).sub_mem
+            (Submodule.subset_span (Set.mem_range_self (i, l)))
+            (Submodule.zero_mem _)
+      · by_cases hil : i = l
+        · simp only [if_neg hjk, if_pos hil]
+          exact (wittZero n).sub_mem
+            (Submodule.zero_mem _)
+            (Submodule.subset_span (Set.mem_range_self (k, j)))
+        · simp only [if_neg hjk, if_neg hil]
+          simpa using (Submodule.zero_mem (wittZero n))
+    · simpa using (Submodule.zero_mem (wittZero n))
+    · intro y₁ y₂ _ _ hy₁ hy₂
+      rw [show mixedGenerator n i j * (y₁ + y₂) -
+          (y₁ + y₂) * mixedGenerator n i j =
+          (mixedGenerator n i j * y₁ - y₁ * mixedGenerator n i j) +
+            (mixedGenerator n i j * y₂ - y₂ * mixedGenerator n i j) by
+              noncomm_ring]
+      exact (wittZero n).add_mem hy₁ hy₂
+    · intro c y _ hy
+      rw [hsmul_right c (mixedGenerator n i j) y]
+      exact (wittZero n).smul_mem c hy
+  · simpa using (Submodule.zero_mem (wittZero n))
+  · intro x₁ x₂ _ _ hx₁ hx₂
+    rw [show (x₁ + x₂) * Y - Y * (x₁ + x₂) =
+        (x₁ * Y - Y * x₁) + (x₂ * Y - Y * x₂) by noncomm_ring]
+    exact (wittZero n).add_mem hx₁ hx₂
+  · intro c x _ hx
+    rw [hsmul_left c x Y]
+    exact (wittZero n).smul_mem c hx
+
 /-- The degree-zero mixed quadratic sector as a native Lie subalgebra. -/
 def wittZeroLieSubalgebra (n : ℕ) : LieSubalgebra ℝ (Clnn n) where
   carrier := wittZero n

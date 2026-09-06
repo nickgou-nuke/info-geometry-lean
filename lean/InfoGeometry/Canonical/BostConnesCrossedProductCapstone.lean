@@ -9,7 +9,8 @@ theorem capstone_bost_connes_crossed_product_synthesis
     (h_comm : ∀ x, g (alpha x) = alpha (g x))
     (h_rel : crossedProductRelation Sp A (alpha A)) :
     (cyclotomicPhase (r1 + r2) = cyclotomicPhase r1 * cyclotomicPhase r2) ∧
-    (crossedProductRelation (g Sp) (g A) (alpha (g A))) :=
-  grand_bost_connes_crossed_product_synthesis g alpha Sp A r1 r2 h_comm h_rel
+    (crossedProductRelation (g Sp) (g A) (alpha (g A))) := by
+  exact ⟨cyclotomic_phase_add r1 r2,
+    galois_crossed_product_equivariance g alpha Sp A h_comm h_rel⟩
 
 end InfoGeometry.Canonical.BostConnesCrossedProductCapstone

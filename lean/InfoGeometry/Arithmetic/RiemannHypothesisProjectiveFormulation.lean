@@ -35,6 +35,35 @@ def RiemannHypothesisProjectiveCircle : Prop :=
   ∀ s ∈ nontrivialZeroSet,
     OnLeeYangCircle (cayleyToFugacity s)
 
+/-! The set-theoretic forms below are the native `Set.image` and predicate
+formulations of the same Cayley equivalence. -/
+
+def cayleyImage (A : Set ℂ) : Set ℂ :=
+  cayleyToFugacity '' A
+
+def unitCircleSet : Set ℂ :=
+  {z | OnLeeYangCircle z}
+
+theorem subset_cayley_unitCircle_iff_subset_criticalLine (A : Set ℂ) :
+    (A ⊆ {s | OnCriticalLine s}) ↔
+      (cayleyImage A ⊆ {z | OnLeeYangCircle z}) := by
+  constructor
+  · intro h z hz
+    rcases hz with ⟨s, hs, rfl⟩
+    exact cayleyToFugacity_mem_unitCircle_of_criticalLine s (h hs)
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).mpr (h ⟨s, hs, rfl⟩)
+
+theorem cayleyImage_subset_unitCircle_iff (A : Set ℂ) :
+    cayleyImage A ⊆ {z | OnLeeYangCircle z} ↔
+      A ⊆ {s | OnCriticalLine s} := by
+  exact (subset_cayley_unitCircle_iff_subset_criticalLine A).symm
+
+theorem cayleyImage_subset_unitCircleSet_iff (A : Set ℂ) :
+    cayleyImage A ⊆ unitCircleSet ↔
+      A ⊆ {s | OnCriticalLine s} := by
+  exact cayleyImage_subset_unitCircle_iff A
+
 /--
 The critical-line and projective-circle formulations are exactly equivalent.
 
@@ -44,9 +73,8 @@ It does not prove that either equivalent proposition holds.
 theorem riemannHypothesisCriticalLine_iff_projectiveCircle :
     RiemannHypothesisCriticalLine ↔
       RiemannHypothesisProjectiveCircle := by
-  exact
-    (subset_cayley_unitCircle_iff_subset_criticalLine
-      nontrivialZeroSet).symm
+  simpa [RiemannHypothesisCriticalLine, RiemannHypothesisProjectiveCircle] using
+    (subset_cayley_unitCircle_iff_subset_criticalLine nontrivialZeroSet).symm
 
 /--
 The image of the nontrivial zero locus under the Cayley coordinate chart.

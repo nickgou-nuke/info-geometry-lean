@@ -131,8 +131,8 @@ def rootShadow : HomogeneousRootShadow G where
   CurveDegree := Degree
   rootDegree := fun _ => Degree.line
 
-/-- Minimal orbit-curve property. -/
-def orbitData : LieOrbitCurveData G T Target where
+/-- Minimal orbit-curve witness. -/
+def orbitWitness : LieOrbitCurveWitness G T Target where
   rootShadow := rootShadow
   fixedSector := fun x => x
   OrbitCurve := fun x y =>
@@ -153,8 +153,8 @@ def orbitData : LieOrbitCurveData G T Target where
     rfl
 
 /-- Minimal localization graph: two vertices and one line edge. -/
-def localizationGraph : LocalizationGraphData G T Target where
-  orbitData := orbitData
+def localizationGraph : LocalizationGraphWitness G T Target where
+  orbitWitness := orbitWitness
   Vertex := Fixed
   vertexLabel := fun x => x
   Edge := Edge
@@ -169,7 +169,7 @@ def localizationGraph : LocalizationGraphData G T Target where
     rfl
 
 /-- Minimal virtual localization packet with unit contributions. -/
-def virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff where
+def virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff where
   graph := localizationGraph
   vertexContribution := fun _ => 1
   edgeContribution := fun _ => 1

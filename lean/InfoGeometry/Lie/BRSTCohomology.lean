@@ -9,18 +9,9 @@ namespace InfoGeometry.Lie.BRSTCohomology
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- A BRST Differential Operator Q with Q ∘ Q = 0 -/
-abbrev BRSTComplex (V : Type*) [AddCommGroup V] [Module ℝ V] :=
-  {Q : V →ₗ[ℝ] V // Q.comp Q = 0}
-
-namespace BRSTComplex
-
-abbrev Q {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (C : BRSTComplex V) : V →ₗ[ℝ] V := C.1
-
-abbrev Q_sq_zero {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (C : BRSTComplex V) : C.Q.comp C.Q = 0 := C.2
-
-end BRSTComplex
+structure BRSTComplex (V : Type*) [AddCommGroup V] [Module ℝ V] where
+  Q : V →ₗ[ℝ] V
+  Q_sq_zero : Q.comp Q = 0
 
 /-- Theorem: Im(Q) ⊆ Ker(Q) for any BRST operator Q -/
 theorem range_le_ker (C : BRSTComplex V) :
@@ -46,8 +37,9 @@ theorem nambuBRSTOp_sq : nambuBRSTOp.comp nambuBRSTOp = 0 := by
   dsimp [nambuBRSTOp]
   rw [← Matrix.mulVecLin_mul, annihilationR_sq, Matrix.mulVecLin_zero]
 
-def nambuBRSTComplex : BRSTComplex (Fin 2 → ℝ) :=
-  ⟨nambuBRSTOp, nambuBRSTOp_sq⟩
+def nambuBRSTComplex : BRSTComplex (Fin 2 → ℝ) where
+  Q := nambuBRSTOp
+  Q_sq_zero := nambuBRSTOp_sq
 
 /-- Explicit kernel characterization: Ker(Q) = span { ![(1:ℝ), 0] } -/
 theorem nambu_ker_characterization (v : Fin 2 → ℝ) :

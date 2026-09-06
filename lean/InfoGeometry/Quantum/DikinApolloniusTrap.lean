@@ -119,24 +119,6 @@ theorem blahut_arimoto_dikin_shrinkage
         nlinarith
     _ = (Kc * r) ^ 2 := by ring
 
-/-!
-### 3. Master Capstone: Dikin-Apollonius Trap Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Full synthesis of the self-concordant Dikin barrier,
-    strict metric positivity, equilibrium value g(0) = 2, and Blahut-Arimoto ellipsoidal trapping -/
-theorem grand_dikin_apollonius_trap_synthesis
-    (ξ r : ℝ) :
-    (dikinScaleBarrier ξ = 2 * Real.log (Real.cosh ξ)) ∧
-    (0 < dikinScaleMetric ξ) ∧
-    (dikinScaleMetric 0 = 2) ∧
-    (∀ y Ty Kc, 0 ≤ Kc → y ∈ dikinEquilibriumEllipsoid r → |Ty| ≤ Kc * |y| →
-      2 * Ty ^ 2 ≤ (Kc * r) ^ 2) :=
-  ⟨dikin_barrier_eq_two_log_cosh ξ,
-   dikin_scale_metric_pos ξ,
-   dikin_scale_metric_at_zero,
-   fun y Ty Kc hKc0 hy hT => blahut_arimoto_dikin_shrinkage Kc r y hKc0 hy Ty hT⟩
-
 end
 
 end InfoGeometry.Quantum.DikinApolloniusTrap

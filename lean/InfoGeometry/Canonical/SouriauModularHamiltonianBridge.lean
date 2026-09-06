@@ -37,7 +37,6 @@ section Core
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {LieAlgebra : Type*}
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -60,7 +59,7 @@ Hamiltonian surrogate to a Souriau/free-energy/negative-log operator readout.
 
 This carrier is deliberately weaker than the calibrated bridge structure: it
 only records the calibrated origin statement `K_sur = F_Souriau` as external
-property data.
+witness data.
 -/
 @[rep_depth operator]
 structure SouriauModularHamiltonianCarrier (BetaSource : Type*) where
@@ -100,7 +99,7 @@ structure Bridge where
   /-- The operatorial Souriau family carrying `K̂_β`, `Φ(β)`, and `H_mod`. -/
   family : QuantumOperatorialSouriauFamily LieAlgebra EndH
 
-  /-- Calibration interface: the Souriau bare source is the bounded surrogate. -/
+  /-- Calibration socket: the Souriau bare source is the bounded surrogate. -/
   Khat_beta_eq_Ksur : family.Khat_beta = superBridge.Ksur
 
 namespace Bridge
@@ -288,7 +287,7 @@ Intended formula:
 
 `K_sur = μ_Q • (P_D * (Q * Q) * P_D)`.
 
-This is a bounded/compressed surrogate interface.  It is not asserted to be the
+This is a bounded/compressed surrogate socket.  It is not asserted to be the
 unbounded Type III modular Hamiltonian.
 -/
 @[rep_depth operator]
@@ -319,7 +318,7 @@ end BoundedModularHamiltonianSurrogate
 /--
 Operator-level calibration.
 
-This property is required before identifying the bounded Drazin surrogate with a
+This witness is required before identifying the bounded Drazin surrogate with a
 Souriau operator-valued free-energy representative.
 -/
 @[rep_depth operator]
@@ -334,7 +333,7 @@ def IsOperatorCalibratedBySouriau
 /--
 Expectation-level calibration.
 
-This property states that the compressed expectation of the Souriau operator
+This witness states that the compressed expectation of the Souriau operator
 representative is the scalar Souriau free energy.
 -/
 @[rep_depth operator]
@@ -349,7 +348,7 @@ def IsSouriauFreeEnergyReadoutCalibrated
 /--
 Operator-level calibrated equality.
 
-This is not automatic.  It is exactly the supplied operator calibration property.
+This is not automatic.  It is exactly the supplied operator calibration witness.
 -/
 @[rep_depth operator]
 theorem surrogate_eq_souriau_freeEnergyObservable

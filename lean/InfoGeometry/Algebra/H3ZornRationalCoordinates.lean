@@ -10,6 +10,8 @@ probe order used by the existing `f4Basis` evaluator.
 
 namespace InfoGeometry.Algebra
 
+noncomputable section
+
 open H3Zorn
 
 variable {R : Type*} [Field R]
@@ -138,4 +140,5 @@ noncomputable def f4GeneratorActionMatrixQ :
         (f4GeneratorPairsR (R := ℚ) i).2 r c := by
   exact cubicJordanActionMatrix_apply (pairs := f4GeneratorPairsR (R := ℚ)) i r c
 
+end
 end InfoGeometry.Algebra

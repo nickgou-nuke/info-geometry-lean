@@ -191,30 +191,4 @@ theorem freeEnergy_ge_equilibrium
     mul_nonneg (one_div_pos.mpr T.beta_pos).le h_kl_nonneg
   linarith
 
-/-! ### 4. Grand Variational Synthesis -/
-
-/--
-🏆 **GRAND SYNTHESIS: Thermodynamic Variational Characterization of Softmax**
-
-Unifies:
-1. Positivity and normalization of the Gibbs state: $\sum p_i^\ast = 1, p_i^\ast > 0$.
-2. Equilibrium free energy: $\mathcal{F}_\beta(p^\ast) = -\frac{1}{\beta}\log Z$.
-3. Exact Free Energy - KL Identity: $\mathcal{F}_\beta(p) - \mathcal{F}_\beta(p^\ast) = \frac{1}{\beta} D_{\mathrm{KL}}(p \parallel p^\ast)$.
-4. Global Variational Minimality: $\mathcal{F}_\beta(p^\ast) \le \mathcal{F}_\beta(p)$.
--/
-theorem grand_softmax_variational_synthesis
-    (T : InverseTemperature) (H : I → ℝ) (p : I → ℝ)
-    (hp_sum : ∑ i : I, p i = 1)
-    (hp_pos : ∀ i : I, 0 < p i) :
-    (∑ i : I, gibbsState T H i = 1 ∧
-     freeEnergy T H (gibbsState T H) = -(1 / T.beta) * Real.log (partitionSum T H)) ∧
-    (freeEnergy T H p - freeEnergy T H (gibbsState T H) =
-      (1 / T.beta) * klDivergence p (gibbsState T H)) ∧
-    (freeEnergy T H (gibbsState T H) ≤ freeEnergy T H p) := by
-  have h_fe_gibbs := freeEnergy_gibbsState T H
-  have h_kl := freeEnergy_sub_equilibrium_eq_kl T H p hp_sum hp_pos
-  rw [← h_fe_gibbs] at h_kl
-  have h_min := freeEnergy_ge_equilibrium T H p hp_sum hp_pos
-  exact ⟨⟨gibbsState_sum_one T H, h_fe_gibbs⟩, h_kl, h_min⟩
-
 end InfoGeometry.Thermodynamics.SoftmaxGibbsVariational

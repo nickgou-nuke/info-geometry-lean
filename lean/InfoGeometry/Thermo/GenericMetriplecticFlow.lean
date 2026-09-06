@@ -34,6 +34,13 @@ namespace System
 
 variable (S : System V)
 
+/-- The four linear maps determine a system; its law fields are propositions. -/
+@[ext] theorem ext {T : System V} (hH : S.dH = T.dH) (hS : S.dS = T.dS)
+    (hL : S.L = T.L) (hM : S.M = T.M) : S = T := by
+  cases S
+  cases T
+  simp_all
+
 def flow : V := S.L S.dH + S.M S.dS
 
 theorem reversible_hamiltonian_rate :
@@ -67,6 +74,75 @@ theorem entropy_rate_nonneg :
     0 ≤ S.dS S.flow := by
   rw [S.entropy_rate_eq_dissipative]
   exact S.M_nonneg S.dS
+
+variable {W : Type*} [AddCommGroup W] [Module ℝ W]
+
+/-- Change coordinates on a GENERIC system. Covectors pull back along the
+inverse equivalence; the two operators push forward vectors and pull back
+their covector arguments. -/
+def transport (e : V ≃ₗ[ℝ] W) : System W where
+  dH := S.dH.comp e.symm.toLinearMap
+  dS := S.dS.comp e.symm.toLinearMap
+  L := e.toLinearMap.comp (S.L.comp e.toLinearMap.dualMap)
+  M := e.toLinearMap.comp (S.M.comp e.toLinearMap.dualMap)
+  L_skew := by
+    intro α β
+    exact S.L_skew (α.comp e.toLinearMap) (β.comp e.toLinearMap)
+  L_entropy_casimir := by
+    have h : (S.dS.comp e.symm.toLinearMap).comp e.toLinearMap = S.dS := by
+      ext x
+      simp
+    change e (S.L ((S.dS.comp e.symm.toLinearMap).comp e.toLinearMap)) = 0
+    rw [h, S.L_entropy_casimir, map_zero]
+  M_symmetric := by
+    intro α β
+    exact S.M_symmetric (α.comp e.toLinearMap) (β.comp e.toLinearMap)
+  M_hamiltonian_casimir := by
+    have h : (S.dH.comp e.symm.toLinearMap).comp e.toLinearMap = S.dH := by
+      ext x
+      simp
+    change e (S.M ((S.dH.comp e.symm.toLinearMap).comp e.toLinearMap)) = 0
+    rw [h, S.M_hamiltonian_casimir, map_zero]
+  M_nonneg := by
+    intro α
+    exact S.M_nonneg (α.comp e.toLinearMap)
+
+/-- The vector field transforms covariantly under a linear change of state
+coordinates, including both reversible and dissipative summands. -/
+theorem transport_flow (e : V ≃ₗ[ℝ] W) :
+    (S.transport e).flow = e S.flow := by
+  have hH : (S.dH.comp e.symm.toLinearMap).comp e.toLinearMap = S.dH := by
+    ext x
+    simp
+  have hS : (S.dS.comp e.symm.toLinearMap).comp e.toLinearMap = S.dS := by
+    ext x
+    simp
+  change e (S.L ((S.dH.comp e.symm.toLinearMap).comp e.toLinearMap)) +
+      e (S.M ((S.dS.comp e.symm.toLinearMap).comp e.toLinearMap)) =
+    e (S.L S.dH + S.M S.dS)
+  rw [hH, hS, map_add]
+
+/-- Identity coordinates leave all four defining maps unchanged. -/
+@[simp] theorem transport_refl :
+    S.transport (LinearEquiv.refl ℝ V) = S := by
+  apply System.ext <;> ext x <;> rfl
+
+/-- Coordinate changes compose, with contravariant covector transport and
+covariant vector transport in both operator lanes. -/
+theorem transport_trans {U : Type*} [AddCommGroup U] [Module ℝ U]
+    (e : V ≃ₗ[ℝ] W) (f : W ≃ₗ[ℝ] U) :
+    (S.transport e).transport f = S.transport (e.trans f) := by
+  apply System.ext <;> ext x <;> rfl
+
+/-- Reversing a coordinate change recovers the original system, not merely
+its scalar energy and entropy rates. -/
+@[simp] theorem transport_symm (e : V ≃ₗ[ℝ] W) :
+    (S.transport e).transport e.symm = S := by
+  rw [transport_trans]
+  have h : e.trans e.symm = LinearEquiv.refl ℝ V := by
+    ext x
+    simp
+  rw [h, transport_refl]
 
 end System
 

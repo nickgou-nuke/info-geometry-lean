@@ -157,30 +157,4 @@ theorem optimizeStep_eval (τ θ g : ℝ) :
   · simp [optimizeStep, mulVec, dotProduct, jkoStep_matrix]
   · simp [optimizeStep, mulVec, dotProduct, jkoStep_matrix]
 
-/-! ### 4. Grand Para-Kähler JKO Ricci Flow Synthesis -/
-
-/--
-🏆 **GRAND SYNTHESIS: Para-Kähler JKO Ricci Flow & Unipotent Optimization**
-
-Unifies:
-1. Para-Kähler split algebra: $K^2 = 1, P_+ + P_- = 1, P_+ P_- = 0$.
-2. Nilpotent parabolic shear: $N^2 = 0, [K, N] = 2N, P_+ N P_- = N$.
-3. JKO optimal transport group law: $\mathcal{U}(t_1)\mathcal{U}(t_2) = \mathcal{U}(t_1+t_2), \det \mathcal{U}(t) = 1$.
-4. Backpropagation gradient stability: $\mathcal{U}(\tau)^n = \mathcal{U}(n\tau)$.
--/
-theorem grand_parakahler_jko_ricciflow_synthesis
-    (t₁ t₂ τ : ℝ) (n : ℕ) (θ g : ℝ) :
-    (paraK * paraK = 1 ∧
-     peircePlus + peirceMinus = 1 ∧
-     peircePlus * peirceMinus = 0 ∧
-     nilpotentN * nilpotentN = 0 ∧
-     paraK * nilpotentN - nilpotentN * paraK = (2 : ℝ) • nilpotentN) ∧
-    (jkoStep t₁ * jkoStep t₂ = jkoStep (t₁ + t₂) ∧
-     det (jkoStep t₁) = 1 ∧
-     jkoStep τ ^ n = jkoStep ((n : ℝ) * τ)) ∧
-    (optimizeStep τ ![θ, g] = ![θ + τ * g, g]) :=
-  ⟨⟨paraK_sq, peirce_completeness, peirce_orthogonal, nilpotentN_sq, paraK_comm_N⟩,
-   ⟨jkoStep_add t₁ t₂, jkoStep_det t₁, jkoStep_pow τ n⟩,
-   optimizeStep_eval τ θ g⟩
-
 end InfoGeometry.Dynamics.ParaKahlerJKORicciFlow

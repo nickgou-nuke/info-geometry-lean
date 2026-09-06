@@ -79,3 +79,5 @@ theorem subgroup_of_cyclic_is_cyclic {G : Type u} [Group G] [IsCyclic G] (H : Su
   infer_instance
 
 end Classification
+
+end

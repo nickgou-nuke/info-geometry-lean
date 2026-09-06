@@ -27,6 +27,10 @@ abbrev BitWord (n : ℕ) : Type :=
 abbrev DiagAlg (n : ℕ) : Type :=
   BitWord n → ℂ
 
+/-- Cantor boundary of the diagonal UHF algebra. -/
+abbrev CantorBoundary : Type :=
+  ℕ → Bool
+
 /-- Prefix a word of length `n+1` down to length `n`. -/
 def prefixSucc (n : ℕ) (w : BitWord (n + 1)) : BitWord n :=
   fun i => w ⟨i.1, Nat.lt_trans i.2 (Nat.lt_succ_self n)⟩
@@ -36,15 +40,15 @@ def diagEmbedSucc (n : ℕ) : DiagAlg n → DiagAlg (n + 1) :=
   fun f w => f (prefixSucc n w)
 
 /-- Restrict a boundary point to its first `n` bits. -/
-def boundaryPrefix (n : ℕ) (b : (ℕ → Bool)) : BitWord n :=
+def boundaryPrefix (n : ℕ) (b : CantorBoundary) : BitWord n :=
   fun i => b i.1
 
 /-- Finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder (n : ℕ) (f : DiagAlg n) : (ℕ → Bool) → ℂ :=
+def cylinder (n : ℕ) (f : DiagAlg n) : CantorBoundary → ℂ :=
   fun b => f (boundaryPrefix n b)
 
 theorem boundaryPrefix_succ_eq_prefixSucc
-    (n : ℕ) (b : (ℕ → Bool)) :
+    (n : ℕ) (b : CantorBoundary) :
     prefixSucc n (boundaryPrefix (n + 1) b) = boundaryPrefix n b := by
   ext i
   rfl
@@ -56,12 +60,12 @@ theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) :
   simp [cylinder, diagEmbedSucc, boundaryPrefix_succ_eq_prefixSucc]
 
 theorem cylinder_one (n : ℕ) :
-    cylinder n 1 = (1 : (ℕ → Bool) → ℂ) := by
+    cylinder n 1 = (1 : CantorBoundary → ℂ) := by
   ext b
   rfl
 
 /-- Finite-cylinder functions: the concrete diagonal UHF inductive colimit. -/
-def CylinderColimit : Set ((ℕ → Bool) → ℂ) :=
+def CylinderColimit : Set (CantorBoundary → ℂ) :=
   Set.range (fun p : Sigma DiagAlg => cylinder p.1 p.2)
 
 theorem cylinder_mem_colimit (n : ℕ) (f : DiagAlg n) :
@@ -168,7 +172,7 @@ theorem gradedFockStage_add_prime
   simp [gradedFockStageObservable, constantStageObservable,
     cylinder, diagEmbedSucc, gradedFockSupertrace_snoc]
 
-/-- Bosonic and graded stage observables cancel pointwise under the finite property. -/
+/-- Bosonic and graded stage observables cancel pointwise under the finite hypothesis. -/
 theorem fock_stage_cancellation_observable
     (xs : List ℂ) (hxs : ∀ x ∈ xs, x ≠ 1) :
     bosonicFockStageObservable xs * gradedFockStageObservable xs =
@@ -183,9 +187,45 @@ theorem fock_stage_cancellation_cylinder
     cylinder xs.length
         (bosonicFockStageObservable xs * gradedFockStageObservable xs)
       =
-    (1 : (ℕ → Bool) → ℂ) := by
+    (1 : CantorBoundary → ℂ) := by
   rw [fock_stage_cancellation_observable xs hxs]
   exact cylinder_one xs.length
+
+/--
+Consolidated bridge:
+finite Fock determinants are UHF cylinder observables, are compatible with the
+UHF embedding, update by local prime factors, and cancel pointwise.
+-/
+theorem fock_uhf_bridge_synthesis :
+    (∀ xs : List ℂ,
+      cylinder xs.length (gradedFockStageObservable xs) ∈ CylinderColimit) ∧
+    (∀ xs : List ℂ,
+      cylinder xs.length (bosonicFockStageObservable xs) ∈ CylinderColimit) ∧
+    (∀ xs : List ℂ,
+      cylinder (xs.length + 1)
+          (diagEmbedSucc xs.length (gradedFockStageObservable xs))
+        =
+      cylinder xs.length (gradedFockStageObservable xs)) ∧
+    (∀ xs : List ℂ, ∀ x : ℂ,
+      gradedFockSupertrace (xs ++ [x]) =
+        gradedFockSupertrace xs * (1 - x)) ∧
+    (∀ xs : List ℂ, ∀ x : ℂ,
+      cylinder ((xs ++ [x]).length) (gradedFockStageObservable (xs ++ [x]))
+        =
+      cylinder (xs.length + 1)
+        (diagEmbedSucc xs.length (gradedFockStageObservable xs) *
+          constantStageObservable (xs.length + 1) (1 - x))) ∧
+    (∀ xs : List ℂ, (∀ x ∈ xs, x ≠ 1) →
+      cylinder xs.length
+          (bosonicFockStageObservable xs * gradedFockStageObservable xs)
+        =
+      (1 : CantorBoundary → ℂ)) := by
+  exact ⟨gradedFockStage_mem_colimit,
+    bosonicFockStage_mem_colimit,
+    gradedFockStage_embed_same_cylinder,
+    gradedFockSupertrace_snoc,
+    gradedFockStage_add_prime,
+    fock_stage_cancellation_cylinder⟩
 
 end FockUHFBridge
 

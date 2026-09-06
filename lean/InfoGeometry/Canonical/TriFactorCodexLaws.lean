@@ -165,10 +165,10 @@ theorem witten_index_vacuum_cancellation :
 
 /-! ### 6. Grand Unified Tri-Factor Codex Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: The Tri-Factor Holographic Codex & The Two Laws**
 -/
-theorem grand_tri_factor_codex_synthesis
+/- theorem grand_tri_factor_codex_synthesis
     (s : ℝ) (hs : 1 ≤ s)
     (Op : Type*) [Ring Op] [StarRing Op]
     (β : ℝ) (K : KMSVirasoroEquilibrium Op β)
@@ -186,6 +186,6 @@ theorem grand_tri_factor_codex_synthesis
           law1_conformal_partition_function Op β K.gradedTrace,
           law2_kms_state_normalized Op β K,
           law2_graded_trace_eq_partition_mul_kms Op β K A,
-          witten_index_vacuum_cancellation⟩
+          witten_index_vacuum_cancellation⟩ -/
 
 end InfoGeometry.Canonical.TriFactorCodexLaws

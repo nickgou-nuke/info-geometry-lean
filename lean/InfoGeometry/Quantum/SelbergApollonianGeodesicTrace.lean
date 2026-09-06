@@ -86,18 +86,6 @@ theorem spectral_resonance_bounded (γ p : ℝ) :
   exact abs_le.mpr ⟨by linarith [Real.cos_le_one (γ * Real.log p), Real.neg_one_le_cos (γ * Real.log p)],
                     Real.cos_le_one (γ * Real.log p)⟩
 
-/-- 🏆 GRAND CAPSTONE: Complete Selberg Apollonian Geodesic Trace Synthesis. -/
-theorem grand_selberg_trace_synthesis (p q γ : ℝ) (k : ℕ)
-    (hp : 2 ≤ p) (hq : 0 < q) (hk : 1 ≤ k) :
-    (0 < primitiveGeodesicLength p) ∧
-    (primitiveGeodesicLength (p * q) = primitiveGeodesicLength p + primitiveGeodesicLength q) ∧
-    (0 < selbergOrbitalWeight p k) ∧
-    (|spectralResonance γ p| ≤ 1) :=
-  ⟨primitive_geodesic_length_pos p hp,
-   geodesic_length_multiplicative p q (by linarith) hq,
-   selberg_orbital_weight_pos p k hp hk,
-   spectral_resonance_bounded γ p⟩
-
 end
 
 end InfoGeometry.Quantum.SelbergApollonianGeodesicTrace

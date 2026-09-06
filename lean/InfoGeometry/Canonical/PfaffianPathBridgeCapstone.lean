@@ -4,17 +4,16 @@ namespace InfoGeometry.Canonical.PfaffianPathBridgeCapstone
 
 open InfoGeometry.Volume.PfaffianPathBridge
 
-theorem pfaffian_path_bridge_canonical_capstone :
-    (PfaffianMatchingExpansionPacket.ofEmpty.pfaffianAmplitude ^ 2 =
-      PfaffianMatchingExpansionPacket.ofEmpty.determinantEvenVolume) ∧
-    (∀ a : ℝ,
-      (PfaffianMatchingExpansionPacket.ofTwoByTwo a).pfaffianAmplitude ^ 2 =
-        (PfaffianMatchingExpansionPacket.ofTwoByTwo a).determinantEvenVolume ∧
-      (PfaffianMatchingExpansionPacket.ofTwoByTwo a).pfaffianAmplitude = a) := by
-  constructor
-  · exact PfaffianMatchingExpansionPacket.ofEmpty.pfaffian_sq_eq_determinantEvenVolume
-  · intro a
-    exact ⟨PfaffianMatchingExpansionPacket.ofTwoByTwo a
-      |>.pfaffian_sq_eq_determinantEvenVolume, rfl⟩
+theorem pfaffian_path_bridge_capstone
+    (P : PfaffianPathBridgePacket) :
+    P.pfaffianPairings.pfaffianAmplitude ^ 2 =
+        P.pfaffianPairings.determinantEvenVolume ∧
+      P.pfaffianPairings.pfaffianAmplitude =
+        P.pfaffianPairings.matchingExpansion ∧
+      P.pfaffianPairings.determinantEvenVolume =
+        P.pfaffianPairings.pfaffianAmplitude ^ 2 := by
+  exact ⟨constructPfaffianPathBridgeTarget P,
+    pfaffian_eq_fermionic_pairing P,
+    determinant_even_volume_eq_pfaffian_sq_bridge P⟩
 
 end InfoGeometry.Canonical.PfaffianPathBridgeCapstone

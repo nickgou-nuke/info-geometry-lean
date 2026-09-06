@@ -4,11 +4,14 @@ noncomputable section
 
 namespace InfoGeometry.Projective.Sandbox.QuantumTwistorDiracGNS
 
+/-- Binary cylinder words, kept local to this sandbox statement surface. -/
+abbrev BinaryWord : Type := List Bool
+
 /-- Complex finite cylinder vectors on binary words. -/
-abbrev CylinderVector : Type := List Bool →₀ ℂ
+abbrev CylinderVector : Type := BinaryWord →₀ ℂ
 
 /-- A simple positive cylinder weight used by the algebraic pre-inner formula. -/
-def gnsCylinderWeight (w : List Bool) : ℝ := (2 : ℝ) ^ (-(w.length : ℤ))
+def gnsCylinderWeight (w : BinaryWord) : ℝ := (2 : ℝ) ^ (-(w.length : ℤ))
 
 /-- Complexified cylinder pre-inner expression on finite vectors.  This is only
 an algebraic formula; no Hilbert-space instance is installed. -/

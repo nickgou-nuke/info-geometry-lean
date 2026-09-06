@@ -9,7 +9,7 @@ algebras*, Trans. AMS 139 (1969), 495--510, DOI
 `10.1090/s0002-9947-1969-0238916-9`.
 
 The coefficients are extracted from the global adjoint identity by finite
-differences over `ℝ`. No cancellation or nonvanishing property on the
+differences over `ℝ`. No cancellation or nonvanishing hypothesis on the
 split cubic norm is used.
 -/
 

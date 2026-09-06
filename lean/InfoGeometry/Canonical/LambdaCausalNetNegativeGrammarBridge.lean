@@ -69,28 +69,6 @@ def lambdaToCausalNet (t : LambdaTerm) : CausalNet :=
       let carg := lambdaToCausalNet arg
       ⟨cf.vertices + carg.vertices + 1, cf.edges + carg.edges + 1⟩
 
-theorem lambdaToCausalNet_vertices_pos (t : LambdaTerm) :
-    0 < (lambdaToCausalNet t).vertices := by
-  induction t with
-  | var n => simp [lambdaToCausalNet]
-  | abs body ih =>
-      simp only [lambdaToCausalNet]
-      omega
-  | app f arg ihf iha =>
-      simp only [lambdaToCausalNet]
-      omega
-
-theorem lambdaToCausalNet_edges_lt_vertices (t : LambdaTerm) :
-    (lambdaToCausalNet t).edges < (lambdaToCausalNet t).vertices := by
-  induction t with
-  | var n => simp [lambdaToCausalNet]
-  | abs body ih =>
-      simp only [lambdaToCausalNet]
-      omega
-  | app f arg ihf iha =>
-      simp only [lambdaToCausalNet]
-      omega
-
 /-- A causal past is present exactly when the net contains a dependency edge. -/
 def CausalNet.HasCausalPast (net : CausalNet) : Prop :=
   0 < net.edges

@@ -26,6 +26,10 @@ open Finset
 def IsIdempotent {R : Type*} [Mul R] (p : R) : Prop :=
   p * p = p
 
+/-- An element of finite order, expressed by its root-of-identity equation. -/
+def IsRootOfUnity {R : Type*} [Monoid R] (x : R) (n : ℕ) : Prop :=
+  x ^ n = 1
+
 /-- An element `x` is $n$-potent if `x ^ n = x`. -/
 def IsNPotent {R : Type*} [Monoid R] (x : R) (n : ℕ) : Prop :=
   x ^ n = x
@@ -326,6 +330,14 @@ end CyclotomicGeometricSum
 section CyclotomicFieldSpecialization
 
 variable {K : Type*} [Field K]
+
+/-- A finite-order element has minimal polynomial dividing its root polynomial. -/
+theorem minpoly_dvd_pow_sub_one_of_root {u : K} {n : ℕ}
+    (hu : IsRootOfUnity u n) :
+    minpoly K u ∣ (Polynomial.X ^ n - 1) := by
+  apply minpoly.dvd
+  simpa [IsRootOfUnity, Polynomial.aeval_def] using
+    (sub_eq_zero.mpr hu)
 
 /-- In a field, every nontrivial finite-order element has zero geometric sum. -/
 theorem root_of_unity_geometric_sum_eq_zero_of_ne_one {u : K} {n : ℕ}

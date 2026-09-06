@@ -208,8 +208,8 @@ def canonicalSplitOctonionBoundaryPacket
     pPlus_notIncident_pMinus_lemma B,
     upperLightray_incident_lowerLightray_iff_lemma B⟩
 
-/-- The boundary packet exposes its explicit null ray property. -/
-def projective_null_boundary_property
+/-- The boundary packet exposes its explicit null ray witness. -/
+def projective_null_boundary_witness
     {V : Type v} [AddCommGroup V] [Module ℝ V]
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (P : SplitOctonionBoundaryPacket V B) :

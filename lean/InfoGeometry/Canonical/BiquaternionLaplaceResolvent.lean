@@ -36,4 +36,12 @@ theorem resolvent_identity_right (s a0 a1 a2 a3 : ℂ) :
       resolventDenominator s a0 a1 a2 a3 • (1 : M2C) :=
   BiquaternionLaplaceTripotent.biquat_resolvent_right s a0 a1 a2 a3
 
+/-- Consolidated closed-form resolvent certificate. -/
+theorem laplace_resolvent_synthesis (s a0 a1 a2 a3 : ℂ) :
+    (s • (1 : M2C) - X a0 a1 a2 a3) * resolventNumerator s a0 a1 a2 a3 =
+      resolventDenominator s a0 a1 a2 a3 • (1 : M2C) ∧
+    resolventNumerator s a0 a1 a2 a3 * (s • (1 : M2C) - X a0 a1 a2 a3) =
+      resolventDenominator s a0 a1 a2 a3 • (1 : M2C) := by
+  exact ⟨resolvent_identity_left s a0 a1 a2 a3, resolvent_identity_right s a0 a1 a2 a3⟩
+
 end InfoGeometry.Canonical.BiquaternionLaplaceResolvent

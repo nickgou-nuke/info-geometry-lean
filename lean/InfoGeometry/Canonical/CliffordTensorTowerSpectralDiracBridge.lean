@@ -47,14 +47,9 @@ theorem cliffordStageDim_strictMono :
   unfold cliffordStageDim
   exact Nat.pow_lt_pow_right (by decide) h
 
-/-! The stage state is natively its finite complex coordinate vector. -/
-abbrev CliffordTensorState (n : ℕ) := Fin (2 ^ n) → ℂ
-
-namespace CliffordTensorState
-
-def vec (ψ : CliffordTensorState n) : Fin (2 ^ n) → ℂ := ψ
-
-end CliffordTensorState
+/-- Clifford tensor stage state vector structure. -/
+structure CliffordTensorState (n : ℕ) where
+  vec : Fin (2 ^ n) → ℂ
 
 /-- The Clifford tower uses the common finite-stage Dirac owner. -/
 abbrev CliffordDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] :=
@@ -118,10 +113,11 @@ theorem grand_clifford_tensor_tower_spectral_dirac_master_duality
     (cliffordStageDim n < cliffordStageDim m) ∧
     (LinearMap.ker f = ⊥) ∧
     (f v ≠ 0) ∧
-    (f v ∈ diracKernel DW) := by
-  refine ⟨cliffordStageDim_strictMono hnm,
-    clifford_stage_inclusion_ker_bot f h_inj, ?_, ?_⟩
-  · exact (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1
-  · exact (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).2
+    (f v ∈ diracKernel DW) := ⟨
+  cliffordStageDim_strictMono hnm,
+  clifford_stage_inclusion_ker_bot f h_inj,
+  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1,
+  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).2
+⟩
 
 end InfoGeometry.Canonical.CliffordTensorTowerSpectralDiracBridge

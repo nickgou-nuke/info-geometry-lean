@@ -23,6 +23,9 @@ namespace InfoGeometry.Physics.WassersteinBakryEmeryLogCFT
 open Matrix
 open InfoGeometry.Physics.LogCFTJordanShear
 open InfoGeometry.Dynamics.WassersteinProximalBridge
+open InfoGeometry.Clifford.MonodromyFlowAdapter
+open InfoGeometry.Codes.MajoranaStabilizerThreshold
+open InfoGeometry.Clifford.LogCftMonodromy
 
 /--
 THEOREM 1: The unipotent Jordan shear $U(\tau)$ has determinant equal to 1 for all $\tau \in \mathbb{C}$.
@@ -105,8 +108,9 @@ THEOREM 4: The discrete JKO proximal step preserves phase-space volume identical
 -/
 theorem jko_unipotent_is_volume_preserving (η : ℂ) :
     Matrix.det (jkoEntropyStep η) = 1 := by
-  rw [jkoEntropyStep_eq_logCFTJordanShear]
-  exact unipotentShear_det_one η
+  unfold jkoEntropyStep errorFlowStep
+  simp [lcftParabolicFlowStep, infinitesimalNullGenerator,
+    epsilon, jordanNilpotent, Matrix.det_fin_two]
 
 /-- Every finite composition of the JKO-style unipotent step preserves volume. -/
 theorem jko_unipotent_power_is_volume_preserving (η : ℂ) (n : ℕ) :

@@ -95,21 +95,6 @@ theorem bps_critical_line_confinement (σ : ℝ)
   unfold chiralHamiltonian at h_bps
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Chiral Supercharge & BPS Synthesis -/
-theorem grand_chiral_supercharge_synthesis
-    (a_L_dag a_L f_L_dag f_L : R)
-    (h_car : f_L * f_L_dag = 1 - f_L_dag * f_L)
-    (h_ccr : a_L * a_L_dag = 1 + a_L_dag * a_L)
-    (E_vac : R)
-    (σ : ℝ) (h_bps : chiralHamiltonian 0 0 (1 / 2 : ℝ) = σ) :
-    (a_L_dag * a_L * (f_L * f_L_dag) + (a_L * a_L_dag) * (f_L_dag * f_L) =
-     a_L_dag * a_L + f_L_dag * f_L) ∧
-    (chiralHamiltonian 0 0 E_vac = E_vac) ∧
-    (σ = 1 / 2) :=
-  ⟨chiral_supercharge_anticommutator_identity a_L_dag a_L f_L_dag f_L h_car h_ccr,
-   chiral_hamiltonian_ground_state E_vac,
-   bps_critical_line_confinement σ h_bps⟩
-
 end
 
 end InfoGeometry.Quantum.ChiralSuperchargeWittenIndex

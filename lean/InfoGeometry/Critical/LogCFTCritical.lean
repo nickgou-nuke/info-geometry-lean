@@ -6,7 +6,6 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Algebraic.OddNilpotentOSpBridge
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # LogCFTCritical — Logarithmic Conformal Field Theory at β = 1
@@ -36,7 +35,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 open Matrix Complex
 open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Algebraic.OddNilpotentOSpBridge
-open InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Critical.LogCFTCritical
 
@@ -54,27 +52,5 @@ theorem nilpotent_jordan_square_zero :
 theorem superparity_flip_involutive (p : SuperParity) :
     SuperParity.flip (SuperParity.flip p) = p :=
   SuperParity.flip_flip p
-
-/--
-🏆 **MASTER SYNTHESIS: Logarithmic CFT Critical Classification at β = 1**
-
-Unifies:
-1. **Virasoro Jordan Cell Decomposition**: $L_0 = h \cdot I + N$.
-2. **Nilpotent Square Zero**: $N^2 = 0$.
-3. **Superparity Invariance**: $\operatorname{flip}(\operatorname{flip}(p)) = p$.
-4. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
--/
-theorem grand_log_cft_critical_classification_synthesis
-    (h : ℂ) (p : SuperParity) :
-    (virasoroL0Cell h = h • (1 : Matrix (Fin 2) (Fin 2) ℂ) + jordanNilpotent) ∧
-    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0) ∧
-    (SuperParity.flip (SuperParity.flip p) = p) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
-  ⟨virasoro_jordan_block_at_critical h,
-   nilpotent_jordan_square_zero,
-   superparity_flip_involutive p,
-   F_sq,
-   F_B_F_eq_R⟩
 
 end InfoGeometry.Critical.LogCFTCritical

@@ -46,3 +46,4 @@ theorem cartanSouriauPotentialZorn_scalar_zero_iff
 
 end InfoGeometry.Canonical.CartanSouriauZornPotentialBridge
 end noncomputable section
+

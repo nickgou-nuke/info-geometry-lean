@@ -22,7 +22,7 @@ alignment, or real transformer internals.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
-All theorems are conditional on the imported abstract `CuntzIsometryData` Cuntz
+All theorems are conditional on the imported abstract `UHFAlgebra` Cuntz
 relations.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -42,7 +42,7 @@ open InfoGeometry.Canonical.PrimitiveCuntzIsometry
 open InfoGeometry.Canonical.PrimitiveCuntzCohomology
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-variable [UHF : CuntzIsometryData A]
+variable [UHF : UHFAlgebra A]
 
 /--
 Finite Cuntz overlap used as a toy attention crossing.

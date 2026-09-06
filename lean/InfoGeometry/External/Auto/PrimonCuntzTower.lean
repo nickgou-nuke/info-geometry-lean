@@ -276,6 +276,26 @@ theorem diracHodgeCuntz_embIter_compatible (n k : ℕ) (f : Stage n) :
   rw [stageToSequence_diracHodgeCuntz n f]
   rw [stageToSequence_embIter]
 
+/-- Scaffold data record (parallel to the existing finite-stage interface). -/
+structure PrimonCuntzTowerData where
+  Stage : ℕ → Type*
+  [hNorm : ∀ n, NormedAddCommGroup (Stage n)]
+  [hIP : ∀ n, InnerProductSpace ℂ (Stage n)]
+  [hCS : ∀ n, CompleteSpace (Stage n)]
+  emb : ∀ n, Stage n →ₗᵢ[ℂ] Stage (n + 1)
+  D : ∀ n, Stage n →L[ℂ] Stage n
+  hD_selfAdj : ∀ n, IsSelfAdjoint (D n)
+  hD_comm : ∀ n, (D (n + 1)).comp (emb n).toContinuousLinearMap =
+    (emb n).toContinuousLinearMap.comp (D n)
+
+/-- Concrete finite scaffold package for this step of the tower. -/
+def primonCuntzTowerData : PrimonCuntzTowerData :=
+  { Stage := Stage
+  , emb := embIsometry
+  , D := D_n
+  , hD_selfAdj := D_n_selfAdjoint
+  , hD_comm := D_n_comm }
+
 /-- KAN-modeled finite spectral sector at stage `n`: compact/nilpotent sectors are unit,
     logarithmic sector is diagonal weights `i+1`. -/
 def primonCuntzKANFactor (n : ℕ) : InfoGeometry.Quantum.KANFormalization.KANFactor (Fin (n + 1)) :=
@@ -366,5 +386,79 @@ theorem primonCuntz_finite_stage_KAN_bridge (n : ℕ) :
     by simp [primonCuntzKANFactor],
     by simp [primonCuntzKANFactor],
     primonCuntz_tower_kan_log_bridge n⟩
+
+/-- Concrete Dirac-colimit record using this explicit finite model. -/
+def primonCuntzDiracData : InfoGeometry.Canonical.DiracColimit.DiracColimitData :=
+  { Stage := Stage
+  , hNorm := by infer_instance
+  , hIP := by infer_instance
+  , hCS := by infer_instance
+  , emb := embIsometry
+  , D := D_n
+  , hD_selfAdj := by intro n; exact D_n_selfAdjoint n
+  , hD_comm := D_n_comm
+  }
+
+/-- A synthesis lemma in the same explicit style as previous scaffold files. -/
+theorem primon_cuntz_tower_synthesis :
+    (∀ n, ∀ f g : Stage n, emb n (f + g) = emb n f + emb n g) ∧
+    (∀ n, ∀ f : Stage n, ‖embFun n f‖ = ‖f‖) ∧
+    (∀ n, ∀ f g : Stage n, inner ℂ ((D_n n) f) g = inner ℂ f ((D_n n) g)) ∧
+    (∀ n, diracHodgeCuntz n = D_n n) ∧
+    (∀ n, (D_n (n + 1)).comp (emb n).toContinuousLinearMap =
+      (emb n).toContinuousLinearMap.comp (D_n n)) ∧
+    (∀ n, ∀ f : Stage n,
+      stageToSequence (n + 1) (emb n f) = stageToSequence n f) ∧
+    (∀ n, ∀ f : Stage n,
+      stageToSequence n ((D_n n) f) = algebraicDirac (stageToSequence n f)) ∧
+    (∀ n, ∀ f : Stage n,
+      stageToSequence n (diracHodgeCuntz n f) =
+        algebraicDirac (stageToSequence n f)) ∧
+    (∀ n, ∀ f : Stage n,
+      stageToSequence (n + 1) (diracHodgeCuntz (n + 1) (emb n f)) =
+        stageToSequence n (diracHodgeCuntz n f)) ∧
+    (∀ n k, ∀ f : Stage n,
+      stageToSequence (n + k) (embIter n k f) = stageToSequence n f) ∧
+    (∀ n k, ∀ f : Stage n,
+      stageToSequence (n + k)
+          (diracHodgeCuntz (n + k) (embIter n k f)) =
+        stageToSequence n (diracHodgeCuntz n f)) ∧
+    (∀ x : CuntzSequence, x ∈ AlgebraicCuntzColimit →
+      algebraicDirac x ∈ AlgebraicCuntzColimit) := by
+  constructor
+  · intro n f g
+    exact (emb n).map_add f g
+  constructor
+  · intro n f
+    exact emb_isometry n f
+  constructor
+  · intro n f g
+    exact (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp (D_n_selfAdjoint n)) f g
+  constructor
+  · intro n
+    exact diracHodgeCuntz_eq_D_n n
+  constructor
+  · intro n
+    exact D_n_comm n
+  constructor
+  · intro n f
+    exact stageToSequence_emb n f
+  constructor
+  · intro n f
+    exact stageToSequence_D n f
+  constructor
+  · intro n f
+    exact stageToSequence_diracHodgeCuntz n f
+  constructor
+  · intro n f
+    exact diracHodgeCuntz_emb_compatible n f
+  constructor
+  · intro n k f
+    exact stageToSequence_embIter n k f
+  constructor
+  · intro n k f
+    exact diracHodgeCuntz_embIter_compatible n k f
+  · intro x hx
+    exact algebraicDirac_preserves_colimit hx
 
 end InfoGeometry.Quantum.PrimonCuntzTower

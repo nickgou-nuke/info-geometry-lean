@@ -1,21 +1,10 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
-import Mathlib.Tactic
 import InfoGeometry.Canonical.IBFreeEnergyMinimization
 import InfoGeometry.Canonical.YangBaxterProof
-
-/-!
-# IB Free Energy Minimization & Gibbs Distribution Capstone (Canonical Export)
-
-Canonical umbrella export of the variational principle for the Information Bottleneck
-free energy functional and its global minimization at the Gibbs / Blahut-Arimoto distribution.
--/
 
 namespace InfoGeometry.Canonical.IB
 
 open InfoGeometry.Canonical.YangBaxterProof
 
-/-- 🏆 Canonical Grand Synthesis of Free Energy Minimization & Yang-Baxter Integrability -/
 theorem grand_canonical_ib_free_energy_minimization_synthesis
     {T : Type*} [Fintype T] [DecidableEq T] [Nonempty T]
     (d : T → ℝ) (beta : ℝ) (q : T → ℝ)
@@ -27,15 +16,12 @@ theorem grand_canonical_ib_free_energy_minimization_synthesis
       klDivergence q (gibbsDistribution d beta)) ∧
     (ibFreeEnergy d beta (gibbsDistribution d beta) ≤ ibFreeEnergy d beta q) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
-    (F * B * F = R) :=
-  ⟨gibbsDistribution_sum_one d beta,
-   gibbs_free_energy_value d beta,
-   by
-     rw [gibbs_free_energy_value d beta]
-     have h := free_energy_sub_optimal_eq_kl d beta q h_norm h_nonneg
-     linarith,
-   ib_free_energy_global_minimum d beta q h_norm h_nonneg h_kl_nonneg,
-   F_sq,
-   F_B_F_eq_R⟩
+    (F * B * F = R) := by
+  exact ⟨gibbsDistribution_sum_one d beta, gibbs_free_energy_value d beta,
+    by rw [gibbs_free_energy_value d beta]
+       have h := free_energy_sub_optimal_eq_kl d beta q h_norm h_nonneg
+       linarith,
+    ib_free_energy_global_minimum d beta q h_norm h_nonneg h_kl_nonneg,
+    F_sq, F_B_F_eq_R⟩
 
 end InfoGeometry.Canonical.IB

@@ -96,3 +96,5 @@ theorem concrete_capstone_sixfold
           bregman_pythagorean_holds F x y z hproj⟩
 
 end InfoGeometry.Capstone.ConcreteCapstone
+
+end

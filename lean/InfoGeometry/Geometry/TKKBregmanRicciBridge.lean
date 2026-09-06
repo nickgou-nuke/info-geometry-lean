@@ -7,7 +7,7 @@ This module connects the algebraic/conformal TKK closure ledger to the
 information-geometric Bregman shear ledger.
 
 It is the adapter for the newer
-`OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum` interface. It does not
+`OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum` socket. It does not
 replace the older repo-native `BregmanRicciFluxBridge` already defined in
 `Geometry.OperatorBregmanDivergence` for the `PO55RicciFlux` /
 `TKKLieClosure` lane.
@@ -56,6 +56,7 @@ structure Bridge
     (gradPhi :
       OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
     (F : ModularRegularConeFlow (E := E) c)
+    (D2 : SecondVariationAtZero)
     (L State Geometry : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
@@ -83,7 +84,7 @@ structure Bridge
       fluxScalar
           (R.ricciFlux (generatorOf U) (stateOf U))
         =
-        SecondVariationAtZero (modularBregmanEnergy (E := E) ω gradPhi F U)
+      D2.eval (modularBregmanEnergy (E := E) ω gradPhi F U)
 
 namespace Bridge
 
@@ -93,6 +94,7 @@ variable
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow (E := E) c}
+    {D2 : SecondVariationAtZero}
     {L State Geometry : Type*}
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
@@ -101,7 +103,7 @@ variable
 
 variable
     (B : Bridge
-      (E := E) c ω gradPhi F L State Geometry R)
+      (E := E) c ω gradPhi F D2 L State Geometry R)
 
 /-- Re-export the TKK/Bregman bridge law. -/
 theorem ricciFlux_eq_bregman_secondVariation
@@ -109,7 +111,7 @@ theorem ricciFlux_eq_bregman_secondVariation
     B.fluxScalar
         (R.ricciFlux (B.generatorOf U) (B.stateOf U))
       =
-    SecondVariationAtZero (modularBregmanEnergy (E := E) ω gradPhi F U) :=
+    D2.eval (modularBregmanEnergy (E := E) ω gradPhi F U) :=
   B.scalar_ricciFlux_eq_bregman_secondVariation U
 
 /--
@@ -126,7 +128,7 @@ theorem scalar_curvatureVariation_eq_bregman_of_closed
           (B.generatorOf U)
           (B.stateOf U))
       =
-    SecondVariationAtZero (modularBregmanEnergy (E := E) ω gradPhi F U) := by
+    D2.eval (modularBregmanEnergy (E := E) ω gradPhi F U) := by
   have hflux :=
     B.ricciFlux_eq_bregman_secondVariation U
   have hricci :
@@ -157,7 +159,7 @@ theorem scalar_closureDefect_eq_bregman_of_curvature_stationary
           (B.generatorOf U)
           (B.stateOf U))
       =
-    SecondVariationAtZero (modularBregmanEnergy (E := E) ω gradPhi F U) := by
+    D2.eval (modularBregmanEnergy (E := E) ω gradPhi F U) := by
   have hflux :=
     B.ricciFlux_eq_bregman_secondVariation U
   have hricci :
@@ -171,5 +173,24 @@ theorem scalar_closureDefect_eq_bregman_of_curvature_stationary
   exact hflux
 
 end Bridge
+
+/-! ## 2. Owner target -/
+
+/-- Owner target for installing a TKK/Bregman Ricci-flux bridge. -/
+def TKKBregmanRicciBridgeOwnerTarget
+    (c : CertifiedModularReduction
+      (E := InfoGeometry.Krein.DoubledSpace E))
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (F : ModularRegularConeFlow (E := E) c)
+    (D2 : SecondVariationAtZero)
+    (L State Geometry : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry]
+    (R : TKKRicciFluxDatum L State Geometry) : Prop :=
+  Nonempty
+    (Bridge
+      (E := E) c ω gradPhi F D2 L State Geometry R)
 
 end InfoGeometry.Geometry.TKKBregmanRicciBridge

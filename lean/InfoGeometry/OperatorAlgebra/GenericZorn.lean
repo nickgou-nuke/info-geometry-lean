@@ -236,17 +236,8 @@ def conjugate (x : ZornSplitOctonion R) : ZornSplitOctonion R :=
   cases x
   ext <;> simp [conjugate]
 
-theorem toCanonical_conjugate (x : ZornSplitOctonion R) :
-    toCanonical (conjugate x) =
-      InfoGeometry.Canonical.ZornMatrix.conjugate (toCanonical x) := by
-  cases x with
-  | mk a b x0 x1 x2 y0 y1 y2 =>
-      apply InfoGeometry.Canonical.ZornMatrix.ext
-      · rfl
-      · rfl
-      · funext i; fin_cases i <;> rfl
-      · funext i; fin_cases i <;> rfl
-
+/- The canonical `ZornMatrix` owner does not currently expose a conjugation
+   operation, so this cross-carrier statement is intentionally deferred. -/
 /-! Cayley conjugation is the anti-involution underlying the Zorn model. -/
 theorem conjugate_mul (x y : ZornSplitOctonion R) :
     conjugate (mul x y) = mul (conjugate y) (conjugate x) := by

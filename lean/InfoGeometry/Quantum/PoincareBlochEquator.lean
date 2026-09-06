@@ -50,12 +50,3 @@ theorem poincare_equator_critical_line (σ : ℝ)
 
 theorem vacuum_energy_equals_critical_pole :
     vacuumZeroPointEnergy = 1 / 2 := rfl
-
-theorem grand_poincare_bloch_synthesis (σ : ℝ)
-    (h_equator : isEquatorialBlochState (σ - 1/2)) :
-    (stokesCircularAsymmetry (σ - 1/2) = 0 ↔ σ - 1/2 = 0) ∧
-    (σ = 1 / 2) ∧
-    (vacuumZeroPointEnergy = 1 / 2) :=
-  ⟨stokes_asymmetry_zero_iff (σ - 1 / 2),
-   poincare_equator_critical_line σ h_equator,
-   vacuum_energy_equals_critical_pole⟩

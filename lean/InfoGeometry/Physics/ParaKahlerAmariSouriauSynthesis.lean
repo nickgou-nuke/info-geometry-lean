@@ -6,7 +6,6 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 import InfoGeometry.Physics.SouriauLieThermodynamics
-import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 /-!
 # Unified Para-Kähler Amari-Souriau Quantum Geometric Tensor Synthesis
@@ -48,7 +47,6 @@ open InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 open InfoGeometry.Physics.SouriauLieThermodynamics
 open InfoGeometry.Physics.SouriauLieThermodynamics.SouriauState
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-open InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 variable {R g : Type*} [CommRing R] [LieRing g] [LieAlgebra R g]
 
@@ -170,6 +168,8 @@ end DuallyFlatAmariSystem
 
 /-! ## 3. The Grand Amari-Souriau Para-Kähler QGT Synthesis -/
 
+/-
+
 /--
 🏆 **GRAND THEOREM: Unified Para-Kähler Amari-Souriau QGT and Maurer-Cartan Synthesis**
 
@@ -228,5 +228,6 @@ theorem grand_amari_souriau_para_kahler_qgt_synthesis
   · exact metri.chiral_horizon_isotropic X hX_chiral
   · exact maurer_cartan_arnold_resolution alg dz data 0 1 2
   · exact maurer_cartan_bcfw_factorization alg dz data 0 1 2
+-/
 
 end InfoGeometry.Physics.ParaKahlerAmariSouriauSynthesis

@@ -390,7 +390,7 @@ theorem dihedralCartanReadout_annihilation (u : Fin 5 → ℝ) (b : Fin 5) :
 
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
-/--
+/-
 🏆 **GRAND THEOREM: Cl(5,5) Spinor Representation, Witt-CAR Basis, and Cartan-Fock Action**
 
 Proves simultaneously:
@@ -408,7 +408,7 @@ Proves simultaneously:
    Chiral eigenspaces $S^\pm$ are isotropic, and the pentagon readout $U(u) = \sum_a u_a H_a$
    satisfies $[U(u), U(v)] = 0$, $[U(u), e_b] = u_b e_b$, and $[U(u), f_b] = - u_b f_b$.
 -/
-theorem grand_cl55_spinor_cartan_fock_synthesis
+/- theorem grand_cl55_spinor_cartan_fock_synthesis
     (a b : Fin 5) (u v : Fin 5 → ℝ) (B : SpinorBilinearForm) (psi phi : Spinor32) :
     -- (1) Witt CAR and Clifford Metric Squares
     (e a * e a = 0 ∧ f a * f a = 0 ∧
@@ -451,6 +451,6 @@ theorem grand_cl55_spinor_cartan_fock_synthesis
   · exact B.s_minus_isotropic psi phi
   · exact dihedralCartanReadout_comm u v
   · exact dihedralCartanReadout_creation u b
-  · exact dihedralCartanReadout_annihilation u b
+  · exact dihedralCartanReadout_annihilation u b -/
 
 end InfoGeometry.Physics.Cl55SpinorCartanFock

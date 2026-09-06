@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 import DAG.GraphHodge
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap
@@ -59,101 +61,91 @@ inductive OperatorOwnerStatus where
   | notClaimed
 deriving DecidableEq, Repr
 
-/-- Finite set of owner modules used by the DAG/Hodge routing layer. -/
-@[rep_depth operator]
-inductive DAGHodgeOwnerModule where
-  | graphHodge
-  | kreinPrelude
-  | realIncidenceHomology
-  | chiralDiracHomology
-  | primeExteriorGraphDirac
-deriving DecidableEq, Repr
-
 /-- One entry of the DAG-to-InfoGeometry owner map. -/
 @[rep_depth operator]
 structure DAGHodgeOperatorOwner where
   kind : DAGHodgeOperatorKind
-  dagDefinition : DAGHodgeOperatorKind
-  dagFile : DAGHodgeOwnerModule
-  interpretationOwner : DAGHodgeOwnerModule
+  dagDefinition : String
+  dagFile : String
+  interpretationOwner : String
   status : OperatorOwnerStatus
 deriving Repr
 
 /-- Concrete DAG file that owns the graph-Hodge operator definitions. -/
 @[rep_depth operator]
-def dagGraphHodgeFile : DAGHodgeOwnerModule :=
-  DAGHodgeOwnerModule.graphHodge
+def dagGraphHodgeFile : String :=
+  "lean/DAG/GraphHodge.lean"
 
 /-- InfoGeometry file owning doubled/Krein chirality readouts. -/
 @[rep_depth operator]
-def kreinChiralityOwnerFile : DAGHodgeOwnerModule :=
-  DAGHodgeOwnerModule.kreinPrelude
+def kreinChiralityOwnerFile : String :=
+  "lean/InfoGeometry/Krein/Prelude.lean"
 
 /-- Canonical bridge file for incidence/Hodge/Dirac readouts. -/
 @[rep_depth operator]
-def realIncidenceHomologyBridgeFile : DAGHodgeOwnerModule :=
-  DAGHodgeOwnerModule.realIncidenceHomology
+def realIncidenceHomologyBridgeFile : String :=
+  "lean/InfoGeometry/Canonical/RealIncidenceHomologyBridge.lean"
 
 /-- Canonical bridge file for chiral Dirac/homology readouts. -/
 @[rep_depth operator]
-def chiralDiracHomologyBridgeFile : DAGHodgeOwnerModule :=
-  DAGHodgeOwnerModule.chiralDiracHomology
+def chiralDiracHomologyBridgeFile : String :=
+  "lean/InfoGeometry/Canonical/ChiralDiracHomologyBridge.lean"
 
 /-- Finite exterior/Fock graph-Hodge owner. -/
 @[rep_depth operator]
-def finiteExteriorGraphDiracOwnerFile : DAGHodgeOwnerModule :=
-  DAGHodgeOwnerModule.primeExteriorGraphDirac
+def finiteExteriorGraphDiracOwnerFile : String :=
+  "lean/InfoGeometry/Arithmetic/PrimeExteriorGraphDirac.lean"
 
 /-- `δ₀ = ∂₁ᵀ` owner entry. -/
 @[rep_depth operator]
 def coboundary0Owner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.coboundary0
-    dagDefinition := DAGHodgeOperatorKind.coboundary0
+    dagDefinition := "DAG.coboundary0"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "DAG.GraphHodge native coboundary readout"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- `δ₁ = ∂₂ᵀ` owner entry. -/
 @[rep_depth operator]
 def coboundary1Owner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.coboundary1
-    dagDefinition := DAGHodgeOperatorKind.coboundary1
+    dagDefinition := "DAG.coboundary1"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "DAG.GraphHodge native coboundary readout"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- `Δ₀ = ∂₁ᵀ∂₁` owner entry. -/
 @[rep_depth operator]
 def laplacian0Owner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.laplacian0
-    dagDefinition := DAGHodgeOperatorKind.laplacian0
+    dagDefinition := "DAG.laplacian0"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "DAG.GraphHodge native 0-chain Laplacian"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- `Δ₁ = ∂₁∂₁ᵀ + ∂₂ᵀ∂₂` owner entry. -/
 @[rep_depth operator]
 def laplacian1Owner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.laplacian1
-    dagDefinition := DAGHodgeOperatorKind.laplacian1
+    dagDefinition := "DAG.laplacian1"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "DAG.GraphHodge native 1-chain Hodge Laplacian"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- Graph Dirac owner entry. -/
 @[rep_depth operator]
 def graphDiracOwner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.graphDirac
-    dagDefinition := DAGHodgeOperatorKind.graphDirac
+    dagDefinition := "DAG.graphDirac"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.chiralDiracHomology
+    interpretationOwner := "Canonical chiral/Hodge/Dirac bridges interpret this matrix"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- Chiral grading owner entry. -/
 @[rep_depth operator]
 def chiralGradingOwner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.chiralGrading
-    dagDefinition := DAGHodgeOperatorKind.chiralGrading
+    dagDefinition := "DAG.ChiralGrading"
     dagFile := dagGraphHodgeFile
     interpretationOwner := kreinChiralityOwnerFile
     status := OperatorOwnerStatus.kreinOwner }
@@ -162,7 +154,7 @@ def chiralGradingOwner : DAGHodgeOperatorOwner :=
 @[rep_depth operator]
 def extendedChiralGradingOwner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.extendedChiralGrading
-    dagDefinition := DAGHodgeOperatorKind.extendedChiralGrading
+    dagDefinition := "DAG.extendedChiralGrading"
     dagFile := dagGraphHodgeFile
     interpretationOwner := chiralDiracHomologyBridgeFile
     status := OperatorOwnerStatus.canonicalBridge }
@@ -171,18 +163,18 @@ def extendedChiralGradingOwner : DAGHodgeOperatorOwner :=
 @[rep_depth operator]
 def chiralAnticommutationOwner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.chiralAnticommutationCheck
-    dagDefinition := DAGHodgeOperatorKind.chiralAnticommutationCheck
+    dagDefinition := "DAG.chiralAnticommutes"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "checks ΓD + DΓ = 0 at DAG matrix level"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- Hodge summary owner entry. -/
 @[rep_depth operator]
 def hodgeSummaryOwner : DAGHodgeOperatorOwner :=
   { kind := DAGHodgeOperatorKind.hodgeSummary
-    dagDefinition := DAGHodgeOperatorKind.hodgeSummary
+    dagDefinition := "DAG.hodgeSummary"
     dagFile := dagGraphHodgeFile
-    interpretationOwner := DAGHodgeOwnerModule.graphHodge
+    interpretationOwner := "DAG native invariant summary; canonical files may consume readouts"
     status := OperatorOwnerStatus.nativeDAGClosure }
 
 /-- Compact owner map. -/

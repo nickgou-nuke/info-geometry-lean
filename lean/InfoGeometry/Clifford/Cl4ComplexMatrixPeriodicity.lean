@@ -14,6 +14,7 @@ silently interchangeable with the complex algebra `M₄(ℂ)`.
 
 open scoped Matrix
 
+set_option maxHeartbeats 900000
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySimpa false
 

@@ -37,47 +37,24 @@ abbrev ConfinedState (q : QuadraticForm K V) :=
   { x : V // x ∈ NullCone q }
 
 /-- `\mathrm{project}:V\to V` with image in `\mathrm{NullCone}(q)`. -/
-structure ConfinementOperatorData (q : QuadraticForm K V) where
+structure ConfinementOperator (q : QuadraticForm K V) where
   /-- The abstract projection map -/
   project : V → V
-
-def ConfinementOperatorLaws
-    {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
-    {q : QuadraticForm K V}
-    (op : ConfinementOperatorData q) : Prop :=
-  (∀ x, op.project x ∈ NullCone q) ∧
-  (∀ x, x ∈ NullCone q → op.project x = x)
-
-def ConfinementOperator
-    {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
-    (q : QuadraticForm K V) :=
-  {op : ConfinementOperatorData q // ConfinementOperatorLaws op}
-
-namespace ConfinementOperator
-
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
-variable {q : QuadraticForm K V}
-
-abbrev project (op : ConfinementOperator q) : V → V := op.1.project
-
-abbrev confines (op : ConfinementOperator q) :
-    ∀ x, project op x ∈ NullCone q := op.2.1
-
-abbrev idempotent_on_cone (op : ConfinementOperator q) :
-    ∀ x, x ∈ NullCone q → project op x = x := op.2.2
-
-end ConfinementOperator
+  /-- The projected state unconditionally satisfies the null cone constraint -/
+  confines : ∀ (x : V), project x ∈ NullCone q
+  /-- The operator acts as the identity on states already confined -/
+  idempotent_on_cone : ∀ (x : V), x ∈ NullCone q → project x = x
 
 /-- `\mathrm{enforce\_confinement}`. -/
 def enforce_confinement {q : QuadraticForm K V} 
   (op : ConfinementOperator q) (x : V) : ConfinedState q :=
-  ⟨ConfinementOperator.project op x, ConfinementOperator.confines op x⟩
+  ⟨op.project x, op.confines x⟩
 
 /-- `x\in\mathrm{NullCone}(q) \to \mathrm{project}(x)=x`. -/
 theorem confinement_preserves_valid_states {q : QuadraticForm K V}
   (op : ConfinementOperator q) (x : V) (hx : x ∈ NullCone q) :
   (enforce_confinement op x).1 = x := by
   dsimp [enforce_confinement]
-  exact ConfinementOperator.idempotent_on_cone op x hx
+  exact op.idempotent_on_cone x hx
 
 end InfoGeometry.Canonical.NullConeConfinement

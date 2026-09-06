@@ -40,7 +40,3 @@ theorem off_line_zero_violates_unitarity (σ p : ℝ) (hp : 2 ≤ p) (h_neq : σ
   intro h_contra
   have h_sigma := spectral_confinement_sigma_half σ p hp h_contra
   exact h_neq h_sigma
-
-theorem grand_rh_absolute_proof_closure (σ p : ℝ) (hp : 2 ≤ p) (h_unitaire : spectralScalingFactor σ p = 1) :
-    (σ = 1 / 2) ∧ (spectralCompletenessCondition true = true) :=
-  ⟨spectral_confinement_sigma_half σ p hp h_unitaire, rfl⟩

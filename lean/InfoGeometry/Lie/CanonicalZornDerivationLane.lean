@@ -20,18 +20,19 @@ abbrev ZornCarrier := InfoGeometry.Canonical.ZornMatrix ℝ
 
 /-- The canonical Zorn derivations, viewed as a faithful operator Lie lane. -/
 noncomputable def canonicalZornDerivationLane :
-    DerivationLieLane ℝ ZornCarrier where
+    LieActionLane ℝ ZornCarrier where
   L := canonicalZornDerivations
   lieRing := inferInstance
   lieAlgebra := inferInstance
-  act := (LieHom.id : canonicalZornDerivations →ₗ⁅ℝ⁆ canonicalZornDerivations)
-  faithful := by
-    intro D E h
-    exact h
+  act := {
+    toFun := fun D => D.1
+    map_add' := by intro D E; rfl
+    map_smul' := by intro r D; rfl
+    map_lie' := by intro D E; rfl }
 
 @[simp] theorem canonicalZornDerivationLane_act (D : canonicalZornDerivations) :
-    canonicalZornDerivationLane.act D = D := by
-  exact LieHom.id_apply D
+    canonicalZornDerivationLane.act D = D.1 := by
+  rfl
 
 @[simp] theorem canonicalZornDerivationLane_operatorAction (D : canonicalZornDerivations)
     (X : ZornCarrier) :

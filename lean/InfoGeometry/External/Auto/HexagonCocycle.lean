@@ -31,7 +31,7 @@ section HexagonAxiom
 variable (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] [BraidedCategory.{v} C]
 
 /--
-The first hexagon identity (hexagon_forward) is the ax!om of a braided
+The first hexagon identity (hexagon_forward) is the axiom of a braided
 monoidal category. It states that two ways to go from X⊗(Y⊗Z) to (Y⊗Z)⊗X
 are equal.
 
@@ -136,20 +136,13 @@ The unified cocycle diagram connects all structures:
 
 Reference: KB entry "Unified Cocycle Diagram"
 -/
-inductive CocycleNode
-  | hexagon
-  | yangBaxter
-  | quadraticLegendre
-  | gaussianFisher
-  deriving DecidableEq
-
 structure CocycleLink where
-  source : CocycleNode
-  target : CocycleNode
+  source : String
+  target : String
 
 def unified_cocycle_diagram : List CocycleLink :=
-  [ { source := .hexagon, target := .yangBaxter },
-    { source := .quadraticLegendre, target := .gaussianFisher } ]
+  [ { source := "hexagon", target := "Yang-Baxter" },
+    { source := "quadratic Legendre", target := "Gaussian Fisher" } ]
 
 theorem unified_cocycle_diagram_length :
     unified_cocycle_diagram.length = 2 := by

@@ -107,10 +107,7 @@ exact Hilbert--Pólya realization of all zeta zeros. -/
 theorem finiteCriticalLine_selfAdjoint
     {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
     (L : InfoGeometry.Arithmetic.LatticeHilbertPolyaPipeline.FiniteHestenesKreinLattice P)
-    (hP : P.primes.Nonempty) (s : ℂ)
-    (hhol : L.packet.holonomy s =
-      InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.zetaHolonomy (P := P) s)
-    (hs : s.re = 1 / 2) :
+    (hP : P.primes.Nonempty) (s : ℂ) (hs : s.re = 1 / 2) :
     InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac.IsAdjointPair
       (P := P) (L.packet.D s) (L.packet.D s) :=
   L.D_selfAdjoint_of_zetaCriticalLine hP s hs
@@ -130,8 +127,10 @@ theorem finite_riemann_weil_trace_packet
         InfoGeometry.Spectral.RiemannWeilTrace.primePhaseHolonomy p m₂ γ) ∧
     (InfoGeometry.Spectral.RiemannWeilTrace.monochromaticSpectralMode (-γ) τ =
       InfoGeometry.Spectral.RiemannWeilTrace.monochromaticSpectralMode γ τ) :=
-  InfoGeometry.Spectral.RiemannWeilTrace.grand_riemann_weil_trace_synthesis
-    p m m₁ m₂ γ τ hp hm
+  ⟨InfoGeometry.Spectral.RiemannWeilTrace.prime_orbit_weight_pos p m hp hm,
+   InfoGeometry.Spectral.RiemannWeilTrace.prime_phase_holonomy_unitary p m γ,
+   InfoGeometry.Spectral.RiemannWeilTrace.prime_phase_holonomy_multiplicative p m₁ m₂ γ,
+   InfoGeometry.Spectral.RiemannWeilTrace.monochromatic_spectral_mode_even γ τ⟩
 
 /-- The theorem-owned portion of the requested chain in one dependency packet.
 The later Hilbert--Pólya, explicit-formula, and GUE arrows are intentionally

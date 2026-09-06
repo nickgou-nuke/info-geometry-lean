@@ -51,18 +51,26 @@ theorem leftRegular_anticommutator (a b : CZ) :
   apply LinearMap.ext
   intro y
   change a * (b * y) + b * (a * y) = (a * b + b * a) * y
-  rw [add_mul]
-  have hskew := InfoGeometry.Algebra.alternative_associator_swap12 zorn_left_alt b a y
-  change (b * a) * y - b * (a * y) = -((a * b) * y - a * (b * y)) at hskew
-  have hzero : (b * a) * y - b * (a * y) +
-      ((a * b) * y - a * (b * y)) = 0 :=
-    (eq_neg_iff_add_eq_zero.mp hskew)
-  apply sub_eq_zero.mp
-  calc
-    a * (b * y) + b * (a * y) - ((a * b) * y + (b * a) * y) =
-        -((b * a) * y - b * (a * y) +
-          ((a * b) * y - a * (b * y))) := by abel
-    _ = 0 := neg_eq_zero.mpr hzero
+  rcases a with ⟨a₁, a₂, a₃, a₄⟩
+  rcases b with ⟨b₁, b₂, b₃, b₄⟩
+  rcases y with ⟨y₁, y₂, y₃, y₄⟩
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross] <;> ring
+  · funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross] <;> ring
 
 theorem leftRegular_sq_zero_of_sq_zero (x : CZ) (hx : x * x = 0) :
     leftRegular x * leftRegular x = 0 := by

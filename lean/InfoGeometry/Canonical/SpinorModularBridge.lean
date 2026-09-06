@@ -269,7 +269,7 @@ theorem exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_identifie
 /--
 Kernel-separation variant of the transported dangling-zero-mode bridge.
 
-This removes the raw pointwise boundary-activity property and derives it from
+This removes the raw pointwise boundary-activity assumption and derives it from
 trivial intersection between the transported bulk kernel and boundary-generator
 kernel.
 -/

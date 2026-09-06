@@ -36,3 +36,4 @@ theorem grand_unification_symmetry (vac : UnifiedVacuum) :
   ring
 
 end InfoGeometry.Topology.GrandUnification
+

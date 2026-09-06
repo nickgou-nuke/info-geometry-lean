@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup
 open Setoid
 
 set_option autoImplicit false
@@ -332,12 +331,6 @@ variable {N P : Type u} [AddCommMonoid N] [AddCommMonoid P]
 def grothendieckFunctor (f : M →+ N) : Grothendieck M →+ Grothendieck N :=
   grothendieckLift ((grothendieckMap N).comp f)
 
-@[simp]
-theorem grothendieckFunctor_map (f : M →+ N) (m : M) :
-    grothendieckFunctor f (grothendieckMap M m) =
-      grothendieckMap N (f m) := by
-  exact grothendieckLift_comp ((grothendieckMap N).comp f) m
-
 theorem grothendieckFunctor_mk (f : M →+ N) (x : M × M) :
     grothendieckFunctor f (Quotient.mk (grothendieckSetoid M) x) =
       Quotient.mk (grothendieckSetoid N) (f x.1, f x.2) := by
@@ -372,144 +365,4 @@ theorem grothendieckFunctor_comp (f : M →+ N) (g : N →+ P) :
             _ = ((grothendieckMap P).comp (g.comp f)) m := by simp)
         x
 
-/-- The universal lift is natural with respect to the induced Grothendieck
-    functor. -/
-theorem grothendieckLift_naturality
-    {A : Type*} [AddCommGroup A] (f : M →+ N) (g : N →+ A) :
-    grothendieckLift (g.comp f) =
-      (grothendieckLift g).comp (grothendieckFunctor f) := by
-  ext x
-  exact (grothendieckLift_unique (g.comp f)
-    ((grothendieckLift g).comp (grothendieckFunctor f)) (by
-      intro m
-      change grothendieckLift g
-          (grothendieckFunctor f (grothendieckMap M m)) = g (f m)
-      rw [grothendieckFunctor_map]
-      exact grothendieckLift_comp g (f m)) x).symm
-
 end functoriality
-
-/-! ## Universal extension equivalence -/
-
-/-- Additive homomorphisms out of the Grothendieck completion are uniquely
-    determined by their restriction along the canonical map. -/
-def grothendieckExtensionEquiv {A : Type*} [AddCommGroup A] :
-    (Grothendieck M →+ A) ≃ (M →+ A) where
-  toFun g := g.comp (grothendieckMap M)
-  invFun f := grothendieckLift f
-  left_inv g := by
-    apply AddMonoidHom.ext
-    intro x
-    exact (grothendieckLift_unique
-      (g.comp (grothendieckMap M)) g (by intro m; rfl) x).symm
-  right_inv f := by
-    apply AddMonoidHom.ext
-    intro m
-    exact grothendieckLift_comp f m
-
-/-! ## Bridge to Mathlib's canonical additive Grothendieck group -/
-
-noncomputable def grothendieckMathlibEquiv :
-    Grothendieck M ≃+ Algebra.GrothendieckAddGroup M where
-  toFun := grothendieckLift Algebra.GrothendieckAddGroup.of
-  invFun := Algebra.GrothendieckAddGroup.lift (grothendieckMap M)
-  map_add' x y := by simp
-  left_inv x := by
-    rcases grothendieck_eq_sub x with ⟨a, b, rfl⟩
-    have h := (Algebra.GrothendieckAddGroup.lift (G := Grothendieck M)).left_inv
-      (grothendieckMap M)
-    have ha : (Algebra.GrothendieckAddGroup.lift (grothendieckMap M))
-        (Algebra.GrothendieckAddGroup.of a) = grothendieckMap M a := by
-      change (Algebra.GrothendieckAddGroup.lift.invFun
-        (Algebra.GrothendieckAddGroup.lift.toFun (grothendieckMap M))) a = _
-      exact congrArg (fun f => f a) h
-    have hb : (Algebra.GrothendieckAddGroup.lift (grothendieckMap M))
-        (Algebra.GrothendieckAddGroup.of b) = grothendieckMap M b := by
-      change (Algebra.GrothendieckAddGroup.lift.invFun
-        (Algebra.GrothendieckAddGroup.lift.toFun (grothendieckMap M))) b = _
-      exact congrArg (fun f => f b) h
-    rw [map_sub, grothendieckLift_comp, grothendieckLift_comp, map_sub]
-    change (Algebra.GrothendieckAddGroup.lift (grothendieckMap M))
-        (Algebra.GrothendieckAddGroup.of a) -
-      (Algebra.GrothendieckAddGroup.lift (grothendieckMap M))
-        (Algebra.GrothendieckAddGroup.of b) = _
-    rw [ha, hb]
-  right_inv x := by
-    let F : Grothendieck M →+ Algebra.GrothendieckAddGroup M :=
-      grothendieckLift Algebra.GrothendieckAddGroup.of
-    let G : Algebra.GrothendieckAddGroup M →+ Grothendieck M :=
-      Algebra.GrothendieckAddGroup.lift (grothendieckMap M)
-    have hFG : (F.comp G).comp (Algebra.GrothendieckAddGroup.of : M →+ _) =
-        Algebra.GrothendieckAddGroup.of := by
-      ext m
-      change grothendieckLift Algebra.GrothendieckAddGroup.of
-        (G (Algebra.GrothendieckAddGroup.of m)) = _
-      rw [show G (Algebra.GrothendieckAddGroup.of m) = grothendieckMap M m by
-        exact congrArg (fun f => f m)
-          ((Algebra.GrothendieckAddGroup.lift (G := Grothendieck M)).left_inv
-            (grothendieckMap M))]
-      exact grothendieckLift_comp Algebra.GrothendieckAddGroup.of m
-    have hLift :=
-      (Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup M)).right_inv
-        (F.comp G)
-    have hOf :=
-      (Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup M)).right_inv
-        (AddMonoidHom.id _)
-    calc
-      (F.comp G) x =
-          (Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup M))
-            ((F.comp G).comp (Algebra.GrothendieckAddGroup.of)) x := by
-              simpa using congrArg (fun f => f x) hLift.symm
-      _ = (Algebra.GrothendieckAddGroup.lift
-            (G := Algebra.GrothendieckAddGroup M))
-            (Algebra.GrothendieckAddGroup.of) x := by rw [hFG]
-      _ = x := by
-        have := congrArg (fun f => f x) hOf
-        simpa using this
-
-@[simp]
-theorem grothendieckMathlibEquiv_grothendieckMap (m : M) :
-    grothendieckMathlibEquiv (grothendieckMap M m) =
-      Algebra.GrothendieckAddGroup.of m := by
-  exact grothendieckLift_comp Algebra.GrothendieckAddGroup.of m
-
-@[simp]
-theorem grothendieckMathlibEquiv_symm_of (m : M) :
-    (grothendieckMathlibEquiv (M := M)).symm
-        (Algebra.GrothendieckAddGroup.of m) = grothendieckMap M m := by
-  rw [← grothendieckMathlibEquiv_grothendieckMap (M := M) m]
-  exact (grothendieckMathlibEquiv (M := M)).symm_apply_apply _
-
-theorem grothendieckMathlibEquiv_naturality
-    {N : Type u} [AddCommMonoid N] (f : M →+ N) (x : Grothendieck M) :
-    grothendieckMathlibEquiv (M := N) (grothendieckFunctor f x) =
-      Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup N)
-        ((Algebra.GrothendieckAddGroup.of).comp f)
-        (grothendieckMathlibEquiv (M := M) x) := by
-  rcases grothendieck_eq_sub x with ⟨a, b, rfl⟩
-  rw [map_sub, map_sub, map_sub (grothendieckMathlibEquiv (M := M))]
-  rw [grothendieckFunctor_map, grothendieckFunctor_map]
-  rw [grothendieckMathlibEquiv_grothendieckMap,
-    grothendieckMathlibEquiv_grothendieckMap]
-  have hmap := map_sub (Algebra.GrothendieckAddGroup.lift
-    ((Algebra.GrothendieckAddGroup.of).comp f))
-      (grothendieckMathlibEquiv (M := M) (grothendieckMap M a))
-      (grothendieckMathlibEquiv (M := M) (grothendieckMap M b))
-  rw [hmap]
-  have ha := congrArg (fun q => q a)
-    ((Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup N)).left_inv
-      ((Algebra.GrothendieckAddGroup.of).comp f))
-  have hb := congrArg (fun q => q b)
-    ((Algebra.GrothendieckAddGroup.lift (G := Algebra.GrothendieckAddGroup N)).left_inv
-      ((Algebra.GrothendieckAddGroup.of).comp f))
-  rw [grothendieckMathlibEquiv_grothendieckMap,
-    grothendieckMathlibEquiv_grothendieckMap]
-  exact congrArg₂ (fun x y => x - y) ha.symm hb.symm
-
-@[simp]
-theorem mathlibGrothendieckLift_of
-    {G : Type*} [AddCommGroup G] (f : M →+ G) (m : M) :
-    Algebra.GrothendieckAddGroup.lift f
-        (Algebra.GrothendieckAddGroup.of m) = f m := by
-  exact congrArg (fun q => q m)
-    ((Algebra.GrothendieckAddGroup.lift (G := G)).left_inv f)

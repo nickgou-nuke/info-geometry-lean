@@ -63,6 +63,22 @@ theorem K_sq (X : RealSplitCl11Action H) :
     _ = -x := by rw [X.eps_sq_apply]
     _ = (-(ContinuousLinearMap.id ℝ H)) x := by simp
 
+/-- Transport a real split-`Cl(1,1)` action along a continuous linear equivalence. -/
+noncomputable def ofContinuousLinearEquiv
+    {H' : Type*} [NormedAddCommGroup H'] [InnerProductSpace ℝ H'] [CompleteSpace H']
+    (e : H ≃L[ℝ] H') (X : RealSplitCl11Action H) : RealSplitCl11Action H' where
+  eps := e.toContinuousLinearMap.comp (X.eps.comp e.symm.toContinuousLinearMap)
+  J := e.toContinuousLinearMap.comp (X.J.comp e.symm.toContinuousLinearMap)
+  eps_sq := by
+    ext x
+    simp [ContinuousLinearMap.comp_assoc, X.eps_sq_apply]
+  J_sq := by
+    ext x
+    simp [ContinuousLinearMap.comp_assoc, X.J_sq_apply]
+  J_eps_anti := by
+    ext x
+    simp [ContinuousLinearMap.comp_assoc, X.J_eps_anti_apply]
+
 end RealSplitCl11Action
 
 section DoubledSpaceSeed

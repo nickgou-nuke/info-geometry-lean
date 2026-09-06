@@ -1,6 +1,5 @@
 import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
-import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
@@ -19,7 +18,6 @@ namespace InfoGeometry.Projective.Conf3ConcreteDLog
 
 open InfoGeometry.Projective.TwistorConfigurationSpace
 open InfoGeometry.Projective.KleinQuadric.DeRhamMotive
-open InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 
 noncomputable section
@@ -49,11 +47,11 @@ def translationDirection : C4 :=
 
 /-- A nonconstant affine chart obtained by translating all three points. -/
 def affineTranslationChart (t : ℝ) : FQ3 :=
-  ⟨fun i => standardPoints i + (t : ℂ) • translationDirection,
+    ⟨fun i => standardPoints i + (t : ℂ) • translationDirection,
     by
       intro i j hij
-      rw [quadSeparation_translate]
-      exact standardPoints_pairwise_non_isotropic i j hij⟩
+      simpa [quadSeparation_translate] using
+        standardPoints_pairwise_non_isotropic i j hij⟩
 
 theorem affineTranslationChart_separation
     (t : ℝ) (i j : Fin 3) :
@@ -63,21 +61,19 @@ theorem affineTranslationChart_separation
 
 /- A nonconstant chart which rescales every separation by a nonzero factor. -/
 def exponentialScalingChart (t : ℝ) : FQ3 :=
-  ⟨fun i => Complex.exp (t : ℂ) • standardPoints i,
+    ⟨fun i => Complex.exp (t : ℂ) • standardPoints i,
     by
       intro i j hij
-      rw [quadSeparation_smul]
-      apply mul_ne_zero
-      · exact pow_ne_zero 2 (Complex.exp_ne_zero (t : ℂ))
-      · exact standardPoints_pairwise_non_isotropic i j hij⟩
+      simpa [quadSeparation_smul] using
+        mul_ne_zero (pow_ne_zero 2 (Complex.exp_ne_zero (t : ℂ)))
+          (standardPoints_pairwise_non_isotropic i j hij)⟩
 
 def scaleConfiguration (c : ℂ) (X : FQ3) (hc : c ≠ 0) : FQ3 :=
-  ⟨fun i => c • X.points i,
+    ⟨fun i => c • X.points i,
     by
       intro i j hij
-      rw [quadSeparation_smul]
-      exact mul_ne_zero (pow_ne_zero 2 hc)
-        (X.pairwise_non_isotropic i j hij)⟩
+      simpa [quadSeparation_smul] using
+        mul_ne_zero (pow_ne_zero 2 hc) (X.pairwise_non_isotropic i j hij)⟩
 
 theorem scaleConfiguration_separation
     (c : ℂ) (X : FQ3) (hc : c ≠ 0) (i j : Fin 3) :
@@ -115,7 +111,7 @@ noncomputable def logPotential (X : FQ3) (i j : Fin 3) : ℝ :=
   Real.log ‖X.separation i j‖
 
 /-- Pullback of the projective logarithmic potential along a real chart. -/
-def chartLogPotential (γ : ℝ → FQ3) (i j : Fin 3) : InfoGeometry.LogPotential ℝ :=
+def chartLogPotential (γ : ℝ → FQ3) (i j : Fin 3) : ℝ → ℝ :=
   fun t => logPotential (γ t) i j
 
 theorem exponentialScalingChart_logPotential

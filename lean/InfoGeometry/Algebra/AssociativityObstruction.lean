@@ -28,7 +28,7 @@ This is the exact obstruction:
 * ordinary matrix multiplication is associative;
 * an injective multiplicative representation into it would force associativity
   of the source multiplication;
-* therefore a genuinely nonassociative algebra cannot sorry such a
+* therefore a genuinely nonassociative algebra cannot admit such a
   representation.
 -/
 theorem associative_of_injective_mul_map_to_semigroup

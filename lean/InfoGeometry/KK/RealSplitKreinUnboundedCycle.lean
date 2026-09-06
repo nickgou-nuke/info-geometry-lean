@@ -142,49 +142,17 @@ noncomputable def gradeOnDomain
   | ⟨x, hx⟩ =>
       ⟨KreinGradedModule.gradeCLM (H := H) x, X.grade_preserves_domain hx⟩
 
-@[simp] lemma gradeOnDomain_apply
-    (X : RealSplitKreinUnboundedCycle A B H)
-    (x : {x // x ∈ X.domain}) :
-    X.gradeOnDomain x =
-      ⟨KreinGradedModule.gradeCLM (H := H) x.1,
-        X.grade_preserves_domain x.2⟩ := by
-  cases x
-  rfl
-
-lemma D_odd_on_gradeOnDomain
-    (X : RealSplitKreinUnboundedCycle A B H)
-    (x : {x // x ∈ X.domain}) :
-    X.D (X.gradeOnDomain x) =
-      -(KreinGradedModule.gradeCLM (H := H) (X.D x)) := by
-  exact X.D_odd x
-
 /-- The `A`-action preserves the unbounded operator domain. -/
 def piOnDomain
     (X : RealSplitKreinUnboundedCycle A B H) (a : A) :
     {x // x ∈ X.domain} → {x // x ∈ X.domain}
   | ⟨x, hx⟩ => ⟨(X.π a) x, X.π_preserves_domain a hx⟩
 
-@[simp] lemma piOnDomain_apply
-    (X : RealSplitKreinUnboundedCycle A B H) (a : A)
-    (x : {x // x ∈ X.domain}) :
-    X.piOnDomain a x =
-      ⟨(X.π a) x.1, X.π_preserves_domain a x.2⟩ := by
-  cases x
-  rfl
-
 /-- The `B`-action preserves the unbounded operator domain. -/
 def rhoOnDomain
     (X : RealSplitKreinUnboundedCycle A B H) (b : B) :
     {x // x ∈ X.domain} → {x // x ∈ X.domain}
   | ⟨x, hx⟩ => ⟨(X.ρ b) x, X.ρ_preserves_domain b hx⟩
-
-@[simp] lemma rhoOnDomain_apply
-    (X : RealSplitKreinUnboundedCycle A B H) (b : B)
-    (x : {x // x ∈ X.domain}) :
-    X.rhoOnDomain b x =
-      ⟨(X.ρ b) x.1, X.ρ_preserves_domain b x.2⟩ := by
-  cases x
-  rfl
 
 lemma pi_comp_resolvent_compact
     (X : RealSplitKreinUnboundedCycle A B H) (a : A) :

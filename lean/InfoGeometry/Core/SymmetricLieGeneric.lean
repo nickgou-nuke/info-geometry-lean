@@ -239,13 +239,6 @@ theorem bracket_k_p {x y : L} (hx : x ∈ S.𝔨) (hy : y ∈ S.𝔭) :
   refine (S.mem_𝔭_iff ⁅x, y⁆).2 ?_
   simp [LieEquiv.map_lie, hx', hy']
 
-theorem bracket_p_k {x y : L} (hx : x ∈ S.𝔭) (hy : y ∈ S.𝔨) :
-    ⁅x, y⁆ ∈ S.𝔭 := by
-  have hx' : S.θ x = -x := (S.mem_𝔭_iff x).1 hx
-  have hy' : S.θ y = y := (S.mem_𝔨_iff y).1 hy
-  refine (S.mem_𝔭_iff ⁅x, y⁆).2 ?_
-  simp [LieEquiv.map_lie, hx', hy']
-
 theorem bracket_p_p {x y : L} (hx : x ∈ S.𝔭) (hy : y ∈ S.𝔭) :
     ⁅x, y⁆ ∈ S.𝔨 := by
   have hx' : S.θ x = -x := (S.mem_𝔭_iff x).1 hx
@@ -285,116 +278,6 @@ def IsotropyIrreducible (S : SymmetricLieAlgebra R L) : Prop :=
 /-- A bilinear form on 𝔭 is 𝔨-invariant if it is invariant under the adjoint action of 𝔨. -/
 def IsKInvariant (S : SymmetricLieAlgebra R L) (Φ : LinearMap.BilinForm R S.𝔭) : Prop :=
   ∀ (x : S.𝔨) (v w : S.𝔭), Φ (S.ad_k_on_p x v) w + Φ v (S.ad_k_on_p x w) = 0
-
-def bilinearLeftKernel
-    (Φ : LinearMap.BilinForm R S.𝔭) : Submodule R S.𝔭 where
-  carrier := {v | ∀ w, Φ v w = 0}
-  zero_mem' := by
-    intro w
-    simp
-  add_mem' := by
-    intro v₁ v₂ hv₁ hv₂ w
-    simp [map_add, hv₁ w, hv₂ w]
-  smul_mem' := by
-    intro r v hv w
-    simp [map_smul, hv w]
-
-def bilinearRightKernel
-    (Φ : LinearMap.BilinForm R S.𝔭) : Submodule R S.𝔭 where
-  carrier := {w | ∀ v, Φ v w = 0}
-  zero_mem' := by
-    intro v
-    simp
-  add_mem' := by
-    intro w₁ w₂ hw₁ hw₂ v
-    simp [map_add, hw₁ v, hw₂ v]
-  smul_mem' := by
-    intro r w hw v
-    simp [map_smul, hw v]
-
-def bilinearLeftMap
-    (Φ : LinearMap.BilinForm R S.𝔭) :
-    S.𝔭 →ₗ[R] (S.𝔭 →ₗ[R] R) where
-  toFun v := Φ v
-  map_add' v w := by
-    ext z
-    simp
-  map_smul' r v := by
-    ext z
-    simp
-
-theorem bilinearLeftKernel_isInvariant
-    (hΦ : IsKInvariant S Φ) :
-    ∀ (x : S.𝔨) (v : S.𝔭),
-      v ∈ bilinearLeftKernel S Φ →
-        S.ad_k_on_p x v ∈ bilinearLeftKernel S Φ := by
-  intro x v hv w
-  have h := hΦ x v w
-  rw [hv (S.ad_k_on_p x w)] at h
-  simpa using h
-
-theorem bilinearRightKernel_isInvariant
-    (hΦ : IsKInvariant S Φ) :
-    ∀ (x : S.𝔨) (w : S.𝔭),
-      w ∈ bilinearRightKernel S Φ →
-        S.ad_k_on_p x w ∈ bilinearRightKernel S Φ := by
-  intro x w hw v
-  have h := hΦ x v w
-  rw [hw (S.ad_k_on_p x v)] at h
-  simpa using h
-
-theorem invariant_bilinear_nonzero_left_nondegenerate
-    (hirr : IsotropyIrreducible S)
-    (hΦ : IsKInvariant S Φ)
-    (hΦ0 : Φ ≠ 0) :
-    bilinearLeftKernel S Φ = ⊥ := by
-  have h_or := hirr (bilinearLeftKernel S Φ)
-    (bilinearLeftKernel_isInvariant S hΦ)
-  rcases h_or with hbot | htop
-  · exact hbot
-  · exfalso
-    apply hΦ0
-    apply LinearMap.BilinForm.ext
-    intro v w
-    have hv : v ∈ bilinearLeftKernel S Φ := by
-      rw [htop]
-      exact Submodule.mem_top
-    exact hv w
-
-theorem invariant_bilinear_nonzero_right_nondegenerate
-    (hirr : IsotropyIrreducible S)
-    (hΦ : IsKInvariant S Φ)
-    (hΦ0 : Φ ≠ 0) :
-    bilinearRightKernel S Φ = ⊥ := by
-  have h_or := hirr (bilinearRightKernel S Φ)
-    (bilinearRightKernel_isInvariant S hΦ)
-  rcases h_or with hbot | htop
-  · exact hbot
-  · exfalso
-    apply hΦ0
-    apply LinearMap.BilinForm.ext
-    intro v w
-    have hw : w ∈ bilinearRightKernel S Φ := by
-      rw [htop]
-      exact Submodule.mem_top
-    exact hw v
-
-theorem invariant_bilinear_nonzero_leftMap_injective
-    (hirr : IsotropyIrreducible S)
-    (hΦ : IsKInvariant S Φ)
-    (hΦ0 : Φ ≠ 0) :
-    Function.Injective (bilinearLeftMap S Φ) := by
-  have hker : bilinearLeftKernel S Φ = ⊥ :=
-    invariant_bilinear_nonzero_left_nondegenerate S hirr hΦ hΦ0
-  intro v w hvw
-  have hdiff : v - w ∈ bilinearLeftKernel S Φ := by
-    intro z
-    have hz := congrArg (fun f : S.𝔭 →ₗ[R] R => f z) hvw
-    simpa [bilinearLeftMap, sub_eq_add_neg] using sub_eq_zero.mpr hz
-  have hzero : v - w = 0 := by
-    rw [hker] at hdiff
-    simpa using hdiff
-  exact sub_eq_zero.mp hzero
 
 /-!
 Schur-type proportionality on `𝔭` is deferred at this layer.

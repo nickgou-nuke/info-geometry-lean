@@ -1,0 +1,242 @@
+/-
+Copyright (c) 2024 Kalle Kytölä. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kalle Kytölä
+-/
+import InfoGeometry.External.Virasoro.IsCentralExtension
+import VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+import InfoGeometry.External.Virasoro.VirasoroCocycle
+
+/-!
+# The Virasoro algebra
+
+This file defines the Virasoro algebra, an infinite-dimensional Lie algebra which is the unique
+one-dimensional central extension of the Witt algebra.
+
+(In two-dimensional conformal field theory (CFT), the Virasoro algebra describes the effects of
+infinitesimal conformal transformations on the state space of the theory, or equivalently on its
+space of local fields.)
+
+## Main definitions
+
+* `VirasoroAlgebra`: The Virasoro algebra.
+* `VirasoroAlgebra.lgen`: The (commonly used) elements Lₙ, n ∈ ℤ, of the Virasoro algebra.
+* `VirasoroAlgebra.cgen`: The (commonly used) central element C of the Virasoro algebra.
+* `VirasoroAlgebra.basisLC`: The basis of the Virasoro algebra consisting of `Lₙ` (`n ∈ ℤ`) and `C`.
+* `VirasoroAlgebra.ofCentral` and `VirasoroAlgebra.toWittAlgebra`: The maps in the short exact
+  sequence 0 ⟶ 𝕜 ⟶ VirasoroAlgebra ⟶ WittAlgebra ⟶ 0.
+
+## Main statements
+
+* `VirasoroAlgebra.instLieAlgebra`: The Virasoro algebra is a Lie algebra.
+* `VirasoroAlgebra.isCentralExtension`: The Virasoro algebra is a cetral extension of the
+  Witt algebra.
+
+## Implementation notes
+
+The Virasoro algebra is defined as a central extension of the Witt algebra. (A more direct
+definition based on defining a Lie bracket on a countably infinite dimensional vector space
+would also be possible.)
+
+## Tags
+
+Virasoro algebra
+
+-/
+
+namespace VirasoroProject
+
+section VirasoroAlgebra
+
+/-! ### The Virasoro algebra -/
+
+variable (𝕜 : Type*) [Field 𝕜]
+variable [CharZero 𝕜]
+
+/-- The Virasoro algebra. -/
+def VirasoroAlgebra := LieTwoCocycle.CentralExtension (WittAlgebra.virasoroCocycle 𝕜)
+
+namespace VirasoroAlgebra
+
+lemma ext' {X Y : VirasoroAlgebra 𝕜} (h₁ : X.fst = Y.fst) (h₂ : X.snd = Y.snd) :
+    X = Y :=
+  LieTwoCocycle.CentralExtension.ext h₁ h₂
+
+/-- The Virasoro algebra is a Lie ring. -/
+noncomputable instance : LieRing (VirasoroAlgebra 𝕜) :=
+  LieTwoCocycle.CentralExtension.instLieRing _
+
+/-- The Virasoro algebra is a Lie algebra. -/
+noncomputable instance : LieAlgebra 𝕜 (VirasoroAlgebra 𝕜) :=
+  LieTwoCocycle.CentralExtension.instLieAlgebra _
+
+variable {𝕜}
+
+/-- The projection from Virasoro algebra to Witt algebra. -/
+noncomputable def toWittAlgebra : VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ WittAlgebra 𝕜 :=
+  LieTwoCocycle.CentralExtension.proj (WittAlgebra.virasoroCocycle 𝕜)
+
+variable (𝕜)
+
+/-- The embedding of central elements to Virasoro algebra. -/
+noncomputable def ofCentral : 𝕜 →ₗ⁅𝕜⁆ VirasoroAlgebra 𝕜 :=
+  LieTwoCocycle.CentralExtension.emb (WittAlgebra.virasoroCocycle 𝕜)
+
+lemma bracket_def' (X Y : VirasoroAlgebra 𝕜) :
+    ⁅X, Y⁆ = ⟨⁅toWittAlgebra X, toWittAlgebra Y⁆,
+              (WittAlgebra.virasoroCocycle 𝕜) (toWittAlgebra X) (toWittAlgebra Y)⟩ := by
+  rfl
+
+@[simp] lemma bracket_fst (X Y : VirasoroAlgebra 𝕜) :
+    ⁅X, Y⁆.fst = ⁅toWittAlgebra X, toWittAlgebra Y⁆ := rfl
+
+@[simp] lemma bracket_snd (X Y : VirasoroAlgebra 𝕜) :
+    ⁅X, Y⁆.snd = (WittAlgebra.virasoroCocycle 𝕜) (toWittAlgebra X) (toWittAlgebra Y) := rfl
+
+lemma add_def' (X Y : VirasoroAlgebra 𝕜) :
+    X + Y = ⟨X.fst + Y.fst, X.snd + Y.snd⟩ := rfl
+
+lemma smul_def' (c : 𝕜) (X : VirasoroAlgebra 𝕜) :
+    c • X = ⟨c • X.fst, c * X.snd⟩ := rfl
+
+@[simp] lemma add_fst (X Y : VirasoroAlgebra 𝕜) :
+    (X + Y).fst = X.fst + Y.fst := rfl
+
+@[simp] lemma add_snd (X Y : VirasoroAlgebra 𝕜) :
+    (X + Y).snd = X.snd + Y.snd := rfl
+
+@[simp] lemma smul_fst (c : 𝕜) (X : VirasoroAlgebra 𝕜) :
+    (c • X).fst = c • X.fst := rfl
+
+@[simp] lemma smul_snd (c : 𝕜) (X : VirasoroAlgebra 𝕜) :
+    (c • X).snd = c * X.snd := rfl
+
+/-- The Virasoro algebra is a central extension of the Witt algebra. -/
+instance isCentralExtension : LieAlgebra.IsCentralExtension (ofCentral 𝕜) toWittAlgebra :=
+  LieTwoCocycle.CentralExtension.isCentralExtension _
+
+/-- The (commonly used) `Lₙ` elements of the Virasoro algebra, for `n ∈ ℤ`. -/
+noncomputable def lgen (n : ℤ) : VirasoroAlgebra 𝕜 :=
+  ⟨WittAlgebra.lgen 𝕜 n, 0⟩
+
+/-- The (commonly used) `C` central element of the Virasoro algebra. -/
+noncomputable def cgen : VirasoroAlgebra 𝕜 := ofCentral 𝕜 1
+
+lemma cgen_eq_ofCentral_one : cgen 𝕜 = ofCentral 𝕜 1 := rfl
+
+lemma cgen_eq' : cgen 𝕜 = ⟨0, 1⟩ := rfl
+
+lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
+
+@[simp] lemma ofCentral_apply (a : 𝕜) : ofCentral 𝕜 a = a • (cgen 𝕜) := by
+  change (⟨0, a⟩ : VirasoroAlgebra 𝕜) = a • ⟨0, 1⟩
+  aesop
+
+@[simp] lemma toWittAlgebra_cgen :
+  toWittAlgebra (cgen 𝕜) = 0 := rfl
+
+@[simp] lemma toWittAlgebra_lgen (n : ℤ) :
+  toWittAlgebra (lgen 𝕜 n) = WittAlgebra.lgen 𝕜 n := rfl
+
+@[simp] lemma toWittAlgebra_ofCentral (a : 𝕜) :
+    toWittAlgebra (ofCentral 𝕜 a) = 0 := by
+  rw [ofCentral_apply, map_smul, toWittAlgebra_cgen, smul_zero]
+
+@[simp] lemma cgen_bracket (Z : VirasoroAlgebra 𝕜) :
+    ⁅cgen 𝕜, Z⁆ = 0 :=
+  (isCentralExtension 𝕜).central 1 Z
+
+@[simp] lemma bracket_cgen (Z : VirasoroAlgebra 𝕜) :
+    ⁅Z, cgen 𝕜⁆ = 0 := by
+  simp [← lie_skew Z (cgen 𝕜)]
+
+@[simp] lemma lgen_bracket (n m : ℤ) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆
+      = (n - m : 𝕜) • lgen 𝕜 (n + m) + if n + m = 0 then ((n^3 - n : 𝕜)/12) • cgen 𝕜 else 0 := by
+  simp_rw [bracket_def']
+  by_cases h : n + m = 0
+  · simp [h]
+    apply ext'
+    · simp [lgen, cgen_eq']
+    · simp [WittAlgebra.virasoroCocycle_apply_lgen_lgen, lgen, cgen_eq', h]
+  · simp [h]
+    apply ext'
+    · simp [lgen]
+    · simp [WittAlgebra.virasoroCocycle_apply_lgen_lgen, h, lgen]
+
+/-- The Virasoro `L_n` bracket has no central term away from the resonance `n + m = 0`. -/
+@[simp] lemma lgen_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆ = (n - m : 𝕜) • lgen 𝕜 (n + m) := by
+  rw [lgen_bracket, if_neg h, add_zero]
+
+/-- The Virasoro `L_n` bracket at the resonance `n + m = 0` has the central correction term. -/
+@[simp] lemma lgen_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆ =
+      (n - m : 𝕜) • lgen 𝕜 (n + m) + ((n^3 - n : 𝕜)/12) • cgen 𝕜 := by
+  rw [lgen_bracket, if_pos h]
+
+lemma lgen_bracket' (n m : ℤ) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆
+      = (n - m : 𝕜) • lgen 𝕜 (n + m)
+        + if n + m = 0 then ((n-1 : 𝕜)*n*(n+1)/12) • cgen 𝕜 else 0 := by
+  rw [lgen_bracket] ; congr ; ring
+
+/-- A section of the standard projection from the Virasoro algebra to the Witt algebra. -/
+noncomputable def lsection : WittAlgebra 𝕜 →ₗ[𝕜] VirasoroAlgebra 𝕜 :=
+  LieTwoCocycle.CentralExtension.stdSection (WittAlgebra.virasoroCocycle 𝕜)
+
+/-- The standard section is a right inverse to the Virasoro projection. -/
+@[simp] lemma toWittAlgebra_lsection (X : WittAlgebra 𝕜) :
+    toWittAlgebra (lsection 𝕜 X) = X := by
+  have h := LieTwoCocycle.CentralExtension.stdSection_prop (WittAlgebra.virasoroCocycle 𝕜)
+  simpa [lsection] using congrArg (fun f => f X) h
+
+/-- The Virasoro section lifts the Witt bracket and the projection recovers it. -/
+@[simp] lemma toWittAlgebra_bracket_lsection (X Y : WittAlgebra 𝕜) :
+    toWittAlgebra ⁅lsection 𝕜 X, lsection 𝕜 Y⁆ = ⁅X, Y⁆ := by
+  rw [toWittAlgebra.map_lie, toWittAlgebra_lsection, toWittAlgebra_lsection]
+
+@[simp] lemma lsection_lgen (n : ℤ) :
+    lsection 𝕜 (WittAlgebra.lgen 𝕜 n) = lgen 𝕜 n :=
+  rfl
+
+open Module in
+/-- The most commonly used basis of the Virasoro algebra, consisting of `Lₙ` (`n ∈ ℤ`)
+and the central element `C`. (Lean notation: `lgen _ n` and `cgen _`, respectively.) -/
+noncomputable def basisLC : Basis (Option ℤ) 𝕜 (VirasoroAlgebra 𝕜) :=
+  ((isCentralExtension 𝕜).basis (lsection 𝕜) rfl
+        (Basis.singleton Unit 𝕜) (WittAlgebra.lgen 𝕜)).reindex
+    { toFun uz := match uz with
+        | Sum.inl _ => none
+        | Sum.inr l => some l
+      invFun oz := match oz with
+        | none => Sum.inl ⟨⟩
+        | some l => Sum.inr l
+      left_inv uz := match uz with
+        | Sum.inl _ => rfl
+        | Sum.inr _ => rfl
+      right_inv oz := match oz with
+        | none => rfl
+        | some _ => rfl }
+
+@[simp] lemma basisLC_some (n : ℤ) :
+    basisLC 𝕜 (some n) = lgen 𝕜 n := by
+  simp [basisLC]
+
+@[simp] lemma basisLC_none :
+    basisLC 𝕜 none = cgen 𝕜 := by
+  simp [basisLC]
+
+@[simp] lemma toWittAlgebra_basisLC_some (n : ℤ) :
+    toWittAlgebra (basisLC 𝕜 (some n)) = WittAlgebra.lgen 𝕜 n := by
+  simp
+
+@[simp] lemma toWittAlgebra_basisLC_none :
+    toWittAlgebra (basisLC 𝕜 none) = 0 := by
+  simp
+
+end VirasoroAlgebra -- namespace
+
+end VirasoroAlgebra -- section
+
+end VirasoroProject -- namespace

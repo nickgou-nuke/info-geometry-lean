@@ -1,5 +1,4 @@
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.Group.TransferInstance
 import Mathlib.Algebra.Module.TransferInstance
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -11,7 +10,7 @@ import InfoGeometry.Meta.Architecture
 Formalization of Zorn matrices over split-octonions, providing the algebraic
 foundation for the $C\ell(4,4)$ informational gravity framework.
 
-This module replaces the lyrical property of "Zorn spinors" with an explicit
+This module replaces the lyrical hypothesis of "Zorn spinors" with an explicit
 algebraic construction.
 -/
 
@@ -46,37 +45,6 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
     rcases c with ⟨a, b, x, y⟩
     rfl
 
-/-! A flat eight-coordinate presentation of the same canonical carrier. -/
-abbrev FinCoord (R : Type*) [CommRing R] := Fin 8 → R
-
-def toFinCoord (z : ZornMatrix R) : FinCoord R :=
-  ![z.a, z.b, z.x 0, z.x 1, z.x 2, z.y 0, z.y 1, z.y 2]
-
-def fromFinCoord (c : FinCoord R) : ZornMatrix R :=
-  { a := c 0
-    b := c 1
-    x := ![c 2, c 3, c 4]
-    y := ![c 5, c 6, c 7] }
-
-@[simp] theorem fromFinCoord_toFinCoord (z : ZornMatrix R) :
-    fromFinCoord (toFinCoord z) = z := by
-  apply ZornMatrix.ext
-  · rfl
-  · rfl
-  · funext i; fin_cases i <;> rfl
-  · funext i; fin_cases i <;> rfl
-
-@[simp] theorem toFinCoord_fromFinCoord (c : FinCoord R) :
-    toFinCoord (fromFinCoord c) = c := by
-  funext i
-  fin_cases i <;> rfl
-
-def finCoordEquiv : ZornMatrix R ≃ FinCoord R where
-  toFun := toFinCoord
-  invFun := fromFinCoord
-  left_inv := fromFinCoord_toFinCoord
-  right_inv := toFinCoord_fromFinCoord
-
 /-- Zorn matrices inherit their additive commutative group structure from coordinates. -/
 instance : AddCommGroup (ZornMatrix R) :=
   Equiv.addCommGroup coordEquiv
@@ -85,17 +53,10 @@ instance : AddCommGroup (ZornMatrix R) :=
 instance : Module R (ZornMatrix R) :=
   Equiv.module R coordEquiv
 
-def finCoordLinearEquiv : ZornMatrix R ≃ₗ[R] FinCoord R where
-  toFun := toFinCoord
-  invFun := fromFinCoord
-  left_inv := fromFinCoord_toFinCoord
-  right_inv := toFinCoord_fromFinCoord
-  map_add' z₁ z₂ := by
-    funext i
-    fin_cases i <;> rfl
-  map_smul' r z := by
-    funext i
-    fin_cases i <;> rfl
+theorem smul_a (c : R) (Z : ZornMatrix R) : (c • Z).a = c * Z.a := rfl
+theorem smul_b (c : R) (Z : ZornMatrix R) : (c • Z).b = c * Z.b := rfl
+theorem smul_x (c : R) (Z : ZornMatrix R) : (c • Z).x = c • Z.x := rfl
+theorem smul_y (c : R) (Z : ZornMatrix R) : (c • Z).y = c • Z.y := rfl
 
 /-- Standard dot product for 3-vectors. -/
 def dot (v1 v2 : Fin 3 → R) : R :=
@@ -131,50 +92,6 @@ instance : Mul (ZornMatrix R) where
 
 @[simp] theorem neg_def (z : ZornMatrix R) :
   -z = { a := -z.a, b := -z.b, x := -z.x, y := -z.y } := rfl
-
-/-! Cayley conjugation on the canonical Zorn carrier. -/
-def conjugate (z : ZornMatrix R) : ZornMatrix R :=
-  { a := z.b, b := z.a, x := -z.x, y := -z.y }
-
-theorem conjugate_add (z₁ z₂ : ZornMatrix R) :
-    conjugate (z₁ + z₂) = conjugate z₁ + conjugate z₂ := by
-  apply ZornMatrix.ext <;> simp [conjugate, add_comm]
-
-theorem conjugate_conjugate (z : ZornMatrix R) :
-    conjugate (conjugate z) = z := by
-  apply ZornMatrix.ext
-  · rfl
-  · rfl
-  · funext i; simp [conjugate]
-  · funext i; simp [conjugate]
-
-theorem conjugate_mul (z₁ z₂ : ZornMatrix R) :
-    conjugate (mul z₁ z₂) = mul (conjugate z₂) (conjugate z₁) := by
-  cases z₁ with
-  | mk a b x y =>
-    cases z₂ with
-    | mk c d u v =>
-      apply ZornMatrix.ext
-      · simp [conjugate, mul, dot]
-        ring
-      · simp [conjugate, mul, dot]
-        ring
-      · funext i
-        fin_cases i <;>
-          simp [conjugate, mul, dot, cross, Matrix.vecHead, Matrix.vecTail]
-        all_goals ring
-      · funext i
-        fin_cases i <;>
-          simp [conjugate, mul, dot, cross, Matrix.vecHead, Matrix.vecTail]
-        all_goals ring
-
-@[simp] theorem smul_a (r : R) (z : ZornMatrix R) : (r • z).a = r * z.a := rfl
-
-@[simp] theorem smul_b (r : R) (z : ZornMatrix R) : (r • z).b = r * z.b := rfl
-
-@[simp] theorem smul_x (r : R) (z : ZornMatrix R) (i : Fin 3) : (r • z).x i = r * z.x i := rfl
-
-@[simp] theorem smul_y (r : R) (z : ZornMatrix R) (i : Fin 3) : (r • z).y i = r * z.y i := rfl
 
 /-- Zorn matrix identity. -/
 instance : One (ZornMatrix R) where
@@ -287,6 +204,33 @@ theorem anticolorProject_apply (Z : ZornMatrix R) :
   · fin_cases i <;> rfl
   · fin_cases i <;> rfl
 
+/-- Native upper and lower chiral Peirce coordinate vectors. -/
+def chiralUpperBasis (i : Fin 3) : ZornMatrix R :=
+  { a := 0, b := 0, x := Pi.single i 1, y := 0 }
+
+def chiralLowerBasis (i : Fin 3) : ZornMatrix R :=
+  { a := 0, b := 0, x := 0, y := Pi.single i 1 }
+
+theorem colorProject_eq_chiralUpper_sum (Z : ZornMatrix R) :
+    colorProject Z = ∑ i : Fin 3, Z.x i • chiralUpperBasis i := by
+  rw [colorProject_apply]
+  apply ZornMatrix.ext
+  · simp [chiralUpperBasis, Fin.sum_univ_three, smul_a]
+  · simp [chiralUpperBasis, Fin.sum_univ_three, smul_b]
+  · funext j
+    fin_cases j <;> simp [chiralUpperBasis, Fin.sum_univ_three, smul_x]
+  · simp [chiralUpperBasis, Fin.sum_univ_three, smul_y]
+
+theorem anticolorProject_eq_chiralLower_sum (Z : ZornMatrix R) :
+    anticolorProject Z = ∑ i : Fin 3, Z.y i • chiralLowerBasis i := by
+  rw [anticolorProject_apply]
+  apply ZornMatrix.ext
+  · simp [chiralLowerBasis, Fin.sum_univ_three, smul_a]
+  · simp [chiralLowerBasis, Fin.sum_univ_three, smul_b]
+  · simp [chiralLowerBasis, Fin.sum_univ_three, smul_x]
+  · funext j
+    fin_cases j <;> simp [chiralLowerBasis, Fin.sum_univ_three, smul_y]
+
 /-- The lower diagonal Peirce component extracts the `b` scalar. -/
 theorem peirce_minus_minus_apply (Z : ZornMatrix R) :
     peirceComponent (zornMinus (R := R)) zornMinus Z =
@@ -304,78 +248,6 @@ theorem colorProject_idempotent (Z : ZornMatrix R) :
 theorem anticolorProject_idempotent (Z : ZornMatrix R) :
     anticolorProject (anticolorProject Z) = anticolorProject Z := by
   rw [anticolorProject_apply, anticolorProject_apply]
-
-/-- The upper chiral basis vectors are the off-diagonal vector generators. -/
-def chiralUpperBasis (i : Fin 3) : ZornMatrix R :=
-  { a := 0, b := 0, x := Pi.single i 1, y := 0 }
-
-/-- The lower chiral basis vectors are the off-diagonal covector generators. -/
-def chiralLowerBasis (i : Fin 3) : ZornMatrix R :=
-  { a := 0, b := 0, x := 0, y := Pi.single i 1 }
-
-private theorem smul_a_projection (r : R) (Z : ZornMatrix R) :
-    (r • Z).a = r * Z.a := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
-
-private theorem smul_b_projection (r : R) (Z : ZornMatrix R) :
-    (r • Z).b = r * Z.b := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
-
-private theorem smul_x_projection (r : R) (Z : ZornMatrix R) (i : Fin 3) :
-    (r • Z).x i = r * Z.x i := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
-
-private theorem smul_y_projection (r : R) (Z : ZornMatrix R) (i : Fin 3) :
-    (r • Z).y i = r * Z.y i := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
-
-/-- The color projector is the sum of the three upper chiral basis vectors. -/
-theorem colorProject_eq_chiralUpper_sum (Z : ZornMatrix R) :
-    colorProject Z = ∑ i : Fin 3, Z.x i • chiralUpperBasis i := by
-  cases Z
-  apply ZornMatrix.ext
-  · simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
-      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-      smul_x_projection, smul_y_projection]
-  · simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
-      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-      smul_x_projection, smul_y_projection]
-  · funext i
-    fin_cases i <;>
-      simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
-        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-        smul_x_projection, smul_y_projection]
-  · funext i
-    fin_cases i <;>
-      simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
-        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-        smul_x_projection, smul_y_projection]
-
-/-- The anticolor projector is the sum of the three lower chiral basis vectors. -/
-theorem anticolorProject_eq_chiralLower_sum (Z : ZornMatrix R) :
-    anticolorProject Z = ∑ i : Fin 3, Z.y i • chiralLowerBasis i := by
-  cases Z
-  apply ZornMatrix.ext
-  · simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
-      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-      smul_x_projection, smul_y_projection]
-  · simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
-      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-      smul_x_projection, smul_y_projection]
-  · funext i
-    fin_cases i <;>
-      simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
-        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-        smul_x_projection, smul_y_projection]
-  · funext i
-    fin_cases i <;>
-      simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
-        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
-        smul_x_projection, smul_y_projection]
 
 /-- The four Peirce components reconstruct the Zorn cell. -/
 theorem zorn_peirce_decomposition (Z : ZornMatrix R) :

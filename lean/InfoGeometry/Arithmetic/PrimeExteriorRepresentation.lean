@@ -6,69 +6,37 @@ namespace InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 
 open scoped BigOperators
 
-abbrev SquareFreePrimeState (PrimeLabel : Type*) := Finset PrimeLabel
-
-/-! ## Finite Boolean-coordinate form of the exterior carrier -/
-
-/-
-The square-free carrier is a finite subset carrier.  When the label type is
-finite, its Boolean-coordinate presentation is an actual equivalence, not a
-second algebra or a colimit interface.
+/--
+Square-free prime states are represented as finite subsets of prime labels.
+This corresponds to the states |n⟩ where n is square-free, represented by the
+set of its prime factors.
 -/
-
-def toBooleanCoordinates {PrimeLabel : Type*} [DecidableEq PrimeLabel]
-    (S : SquareFreePrimeState PrimeLabel) : PrimeLabel → Bool :=
-  fun p => decide (p ∈ S)
-
-def ofBooleanCoordinates {PrimeLabel : Type*} [Fintype PrimeLabel]
-    (b : PrimeLabel → Bool) : SquareFreePrimeState PrimeLabel :=
-  Finset.univ.filter (fun p => b p = true)
-
-def booleanCoordinatesEquiv (PrimeLabel : Type*) [Fintype PrimeLabel]
-    [DecidableEq PrimeLabel] :
-    SquareFreePrimeState PrimeLabel ≃ (PrimeLabel → Bool) where
-  toFun := toBooleanCoordinates
-  invFun := ofBooleanCoordinates
-  left_inv := by
-    intro S
-    ext p
-    simp [toBooleanCoordinates, ofBooleanCoordinates]
-  right_inv := by
-    intro b
-    funext p
-    simp [toBooleanCoordinates, ofBooleanCoordinates]
-
-@[simp] theorem booleanCoordinatesEquiv_apply_mem
-    {PrimeLabel : Type*} [Fintype PrimeLabel] [DecidableEq PrimeLabel]
-    (S : SquareFreePrimeState PrimeLabel) (p : PrimeLabel) :
-    booleanCoordinatesEquiv PrimeLabel S p = decide (p ∈ S) := rfl
-
-@[simp] theorem booleanCoordinatesEquiv_symm_apply
-    {PrimeLabel : Type*} [Fintype PrimeLabel] [DecidableEq PrimeLabel]
-    (b : PrimeLabel → Bool) :
-    (booleanCoordinatesEquiv PrimeLabel).symm b =
-      Finset.univ.filter (fun p => b p = true) := rfl
-
-theorem card_squareFreePrimeState
-    (PrimeLabel : Type*) [Fintype PrimeLabel] [DecidableEq PrimeLabel] :
-    Fintype.card (SquareFreePrimeState PrimeLabel) =
-      2 ^ Fintype.card PrimeLabel := by
-  simpa [Fintype.card_fun, Fintype.card_bool] using
-    Fintype.card_congr (booleanCoordinatesEquiv PrimeLabel)
+abbrev SquareFreePrimeState (PrimeLabel : Type*) := Finset PrimeLabel
 
 namespace SquareFreePrimeState
 
 variable {PrimeLabel : Type*} [DecidableEq PrimeLabel]
 
+/-- The total fermion number of a square-free state is the number of its prime factors. -/
 def fermionNumber (S : SquareFreePrimeState PrimeLabel) : ℕ :=
   S.card
 
+/-- 
+The fermion parity (chirality) of a square-free state.
+This is the eigenvalue of the global Gamma operator, and corresponds
+to the Möbius function μ(n) for square-free n.
+-/
 def fermionParitySign (S : SquareFreePrimeState PrimeLabel) : ℤ :=
   (-1 : ℤ) ^ S.card
 
+/-- Global chirality alias for the square-free sector. -/
 def Gamma (S : SquareFreePrimeState PrimeLabel) : ℤ :=
   fermionParitySign S
 
+/-- 
+The local occupation number of a state.
+This represents the action of the local number operator N_p on the state |S⟩.
+-/
 def localOccupation (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) : ℕ :=
   if p ∈ S then 1 else 0
 
@@ -82,6 +50,7 @@ lemma localOccupation_le_one (p : PrimeLabel) (S : SquareFreePrimeState PrimeLab
   unfold localOccupation
   split_ifs <;> norm_num
 
+/-- Local occupation is `1` exactly when the prime is present in the state. -/
 theorem localOccupation_eq_one_iff_mem
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
     localOccupation p S = 1 ↔ p ∈ S := by
@@ -90,6 +59,7 @@ theorem localOccupation_eq_one_iff_mem
   · simp [h]
   · simp [h]
 
+/-- Local occupation is `0` exactly when the prime is absent from the state. -/
 theorem localOccupation_eq_zero_iff_not_mem
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
     localOccupation p S = 0 ↔ p ∉ S := by
@@ -98,9 +68,14 @@ theorem localOccupation_eq_zero_iff_not_mem
   · simp [h]
   · simp [h]
 
+/-- 
+The local parity of a state.
+This represents the action of the local Möbius operator Π_p on the state |S⟩.
+-/
 def localParitySign (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) : ℤ :=
   if p ∈ S then -1 else 1
 
+/-- Local parity is `-1` exactly when the prime is present in the state. -/
 theorem localParitySign_eq_neg_one_iff_mem
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
     localParitySign p S = -1 ↔ p ∈ S := by
@@ -109,6 +84,7 @@ theorem localParitySign_eq_neg_one_iff_mem
   · simp [h]
   · simp [h]
 
+/-- Local parity is `+1` exactly when the prime is absent from the state. -/
 theorem localParitySign_eq_one_iff_not_mem
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
     localParitySign p S = 1 ↔ p ∉ S := by
@@ -117,6 +93,10 @@ theorem localParitySign_eq_one_iff_not_mem
   · simp [h]
   · simp [h]
 
+/-- 
+The fundamental identity connecting local parity and occupation:
+Π_p = 1 - 2N_p evaluated on states.
+-/
 theorem localParitySign_eq_one_sub_two_localOccupation
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
     localParitySign p S = 1 - 2 * (localOccupation p S : ℤ) := by
@@ -125,6 +105,11 @@ theorem localParitySign_eq_one_sub_two_localOccupation
   · norm_num
   · norm_num
 
+/--
+Global chirality is the product of local parities on the square-free sector.
+This is the diagonal Möbius/Witten readout; the sign-sensitive CAR action is
+kept separate.
+-/
 theorem gamma_eq_prod_localParity
     (S : SquareFreePrimeState PrimeLabel) :
     Gamma S = ∏ p ∈ S, localParitySign p S := by
@@ -143,22 +128,16 @@ theorem gamma_eq_prod_localParity
       simp [localParitySign, hp]
 
 omit [DecidableEq PrimeLabel] in
+/-- The global chirality is the square-free fermion parity `(-1)^F`. -/
 theorem Gamma_eq_negOne_pow_fermionNumber
     (S : SquareFreePrimeState PrimeLabel) :
     Gamma S = (-1 : ℤ) ^ fermionNumber S := by
   rfl
 
-omit [DecidableEq PrimeLabel] in
-theorem Gamma_mul_self (S : SquareFreePrimeState PrimeLabel) :
-    Gamma S * Gamma S = 1 := by
-  rw [Gamma_eq_negOne_pow_fermionNumber]
-  rw [← pow_add]
-  have hpow : (-1 : ℤ) ^ (S.card + S.card) = 1 := by
-    rw [show S.card + S.card = 2 * S.card by omega]
-    rw [pow_mul]
-    norm_num
-  exact hpow
-
+/-- 
+The energy of a state is the sum of the energies of its occupied modes.
+For the arithmetic Hamiltonian, energy p = log p, so this will yield log n.
+-/
 def squareFreeEnergy
     (energy : PrimeLabel → ℝ)
     (S : SquareFreePrimeState PrimeLabel) : ℝ :=

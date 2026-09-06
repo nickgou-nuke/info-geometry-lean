@@ -31,7 +31,7 @@ For `|0⟩ = [1,0]ᵀ`, this is the `(0,0)` matrix entry.
 def vev (M : M2R) : ℝ := M 0 0
 
 /-- Local annihilation operator. -/
-abbrev a_op : M2R := N
+def a_op : M2R := N
 
 /-- Local creation operator. -/
 def aDag_op : M2R :=

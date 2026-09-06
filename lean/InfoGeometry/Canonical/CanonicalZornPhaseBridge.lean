@@ -24,29 +24,21 @@ def phaseToPaper : Phase →ₗ[ℝ] PaperZorn where
   toFun X := { a := 0, v := X.1, w := X.2, b := 0 }
   map_add' X Y := by
     apply InfoGeometry.Algebra.ZornMatrix.ext
-    · change (0 : ℝ) = 0 + 0
-      simp
-    · change X.1 + Y.1 = X.1 + Y.1
-      rfl
-    · change X.2 + Y.2 = X.2 + Y.2
-      rfl
-    · change (0 : ℝ) = 0 + 0
-      simp
+    · simp
+    · funext i; fin_cases i <;> rfl
+    · funext i; fin_cases i <;> rfl
+    · simp
   map_smul' r X := by
     apply InfoGeometry.Algebra.ZornMatrix.ext
-    · change (0 : ℝ) = r • 0
-      simp
-    · change r • X.1 = r • X.1
-      rfl
-    · change r • X.2 = r • X.2
-      rfl
-    · change (0 : ℝ) = r • 0
-      simp
+    · simp
+    · funext i; fin_cases i <;> rfl
+    · funext i; fin_cases i <;> rfl
+    · simp
 
 def paperToPhase : PaperZorn →ₗ[ℝ] Phase where
   toFun X := (X.v, X.w)
-  map_add' X Y := by ext i <;> rfl
-  map_smul' r X := by ext i <;> rfl
+  map_add' X Y := by ext i <;> fin_cases i <;> rfl
+  map_smul' r X := by ext i <;> fin_cases i <;> rfl
 
 @[simp] theorem paperToPhase_phaseToPaper (X : Phase) :
     paperToPhase (phaseToPaper X) = X := rfl
@@ -129,9 +121,11 @@ theorem preservesPhase_smul
   rcases hD X with ⟨ha, hb⟩
   constructor
   · change (r • D.1 (phaseToCanonical X)).a = 0
-    simp [ha]
+    change r * (D.1 (phaseToCanonical X)).a = 0
+    rw [ha, mul_zero]
   · change (r • D.1 (phaseToCanonical X)).b = 0
-    simp [hb]
+    change r * (D.1 (phaseToCanonical X)).b = 0
+    rw [hb, mul_zero]
 
 theorem preservesPhase_neg
     {D : Derivation} (hD : PreservesPhase D) :

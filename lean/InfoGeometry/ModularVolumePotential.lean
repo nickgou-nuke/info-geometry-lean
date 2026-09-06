@@ -170,7 +170,7 @@ abbrev SupervolumePacket (Algebra : Type*) [Ring Algebra] : Type _ :=
 /--
 Dissipative KMS-compatible flow skeleton (GKSL-style container).
 
-This remains a property-level wrapper of a generator and entropy/energy
+This remains a witness-level wrapper of a generator and entropy/energy
 functional decay shadow.
 -/
 abbrev GKSLPacket (n : ℕ) : Type _ :=
@@ -210,7 +210,7 @@ end GKSLPacket
 /-!
 Finite spectral-thermal normalization schema.
 
-These structures model the modular spectral partition function at the property level:
+These structures model the modular spectral partition function at the witness level:
 `Z = Σ e^{-βE} dν_H(E)` on a finite spectrum index.
 -/
 /-- Spectral data with explicit modular tilt. -/
@@ -237,30 +237,14 @@ abbrev boltzmannFactor_eq {S : Type*} (Z : SpectralBoltzmannPacket S) :
 
 end SpectralBoltzmannPacket
 
-abbrev FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] :=
-  SpectralBoltzmannPacket S
-
-namespace FiniteSpectralBoltzmannPartition
-
-/-- Compatibility accessor for the native dependent-sum carrier. -/
-abbrev spectrum {S : Type*} [Fintype S]
-    (Z : FiniteSpectralBoltzmannPartition S) : SpectralBoltzmannPacket S := Z
-
-/-- The finite partition value determined by the supplied spectral data. -/
-noncomputable abbrev partition
-    {S : Type*} [Fintype S]
-    (Z : FiniteSpectralBoltzmannPartition S) : ℝ :=
-  ∑ s : S, Z.spectrum.boltzmannFactor s * Z.spectrum.spectralVolume s
-
-/-- The partition value is exactly its defining finite spectral sum. -/
-theorem partition_eq
-    {S : Type*} [Fintype S]
-    (Z : FiniteSpectralBoltzmannPartition S) :
-    Z.partition =
-      ∑ s : S, Z.spectrum.boltzmannFactor s * Z.spectrum.spectralVolume s := by
-  rfl
-
-end FiniteSpectralBoltzmannPartition
+structure FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] where
+  /-- Spectral tilt data for the model. -/
+  spectrum : SpectralBoltzmannPacket S
+  /-- Partition value (`Z_β`) for the supplied finite spectrum. -/
+  partition : ℝ
+  /-- Core partition identity, expressed as finite spectral sum. -/
+  partition_eq :
+    partition = ∑ s : S, spectrum.boltzmannFactor s * spectrum.spectralVolume s
 
 /--
 Partition normalization identity in the explicit tilt form.

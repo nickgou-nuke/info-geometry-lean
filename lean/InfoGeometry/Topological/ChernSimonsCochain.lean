@@ -41,9 +41,3 @@ theorem wilson_loop_lower_bound (γ : ℝ) (p : ℝ) (hp : 0 < p) :
     rw [h_inv]
     exact h_am_gm
   linarith
-
-theorem grand_chern_simons_cochain_synthesis (k w : ℤ) (γ p : ℝ) (hp : 0 < p) :
-    (Complex.exp (((k * w : ℤ) : ℂ) * (2 * Real.pi * Complex.I)) = 1) ∧
-    (2 ≤ wilsonLoopTrace γ p) :=
-  ⟨large_gauge_exp_integer k w,
-   wilson_loop_lower_bound γ p hp⟩

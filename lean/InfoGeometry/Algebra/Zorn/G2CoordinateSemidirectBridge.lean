@@ -1,7 +1,6 @@
 import InfoGeometry.Algebra.Zorn.G2CoordinateCoxeterRelations
 import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import InfoGeometry.Exceptional.G2ArtinRootPermutationLift
-import InfoGeometry.Exceptional.G2ArtinRootPermutationLift
 
 namespace InfoGeometry.Algebra.Zorn.G2CoordinateSemidirectBridge
 

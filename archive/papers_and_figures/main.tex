@@ -1,0 +1,63 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\title{InfoGeometry Framework: Formal Verification and Structural Maps}
+\author{InfoGeometry Team}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% Abstract drafted last.
+\end{abstract}
+
+\section{Claim Matrix}
+\label{sec:claim_matrix}
+
+Before detailing the technical methods, we freeze the claim hierarchy. Every statement in this paper is assigned to one of four classes, ensuring that subsequent sections only inherit claims supported by present evidence.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Class} & \textbf{Meaning} \\
+\midrule
+Theorem & Compiled Lean theorem with published \texttt{\#print axioms} output. \\
+Implementation invariant & Enforced by regression tests and structural typing. \\
+Mathlib-Rooted Lemma & Promoted proposition discharged by genuine native Lean derivation chains in Mathlib. \\
+Open Closure Debt & Temporary witness/certificate scaffolding lacking a native explicit Lean proof. \\
+\bottomrule
+\end{tabular}
+\caption{Classification of claims within the framework.}
+\label{tab:claim_classes}
+\end{table}
+
+\subsection{Formalized Theorems}
+% Map out the verified theorems here
+\begin{itemize}
+    \item \textbf{Split-Quaternion Conjugation:} The Clifford conjugation in the standard $Cl(1,1)$ operator basis is strictly equivalent to the adjugate matrix, yielding the indefinite signature quadratic form $q \bar{q} = a^2 - b^2 + c^2 - d^2$. (Verified in \texttt{InfoGeometry.Clifford.Cl11SplitQuaternion}).
+    \item \textbf{Bogoliubov/Pauli Scalar Extension:} Real-to-complex Bogoliubov/Pauli operator bridge via $M_2(\text{End}_\mathbb{C}(W))$. (Verified in \texttt{InfoGeometry.Optics.OperatorBogoliubovPauliBridge}).
+    \item \textbf{Bilingual Hestenes-Krein Operator Definition:} The complex numbers are strictly avoided; standard complex phase is recovered structurally via the real phase axis $K = J\varepsilon$ on the doubled Krein space $\mathcal{H}_2$.
+    \item \textbf{Bogoliubov/QGT Intertwining:} The \texttt{UnifiedGeometricState} requires structural compatibility, proving that the Quantum Geometric Tensor (\texttt{QGTSoldering}) operator exactly matches the real Bogoliubov matrix readout lifted to the complexified space. (Verified in \texttt{proofs/BogoliubovQGTSoldering.lean}).
+    \item \textbf{Split-Octonionic Chiral Projection:} \texttt{UnifiedChiralGeometricState} guarantees the QGT operator projects perfectly onto the left-multiplication action of the split-octonions via a structural \texttt{chiralProjection} down to the rational split-octonion skeleton. (Verified in \texttt{proofs/SplitOctonionQGTSoldering.lean}).
+    \item \textbf{Split-Quaternion Anti-Automorphism \& Norm:} Formal ring-verification of the anti-automorphism identity (\texttt{splitQuaternion\_conjugate\_mul}) and proof of the exact quadratic signature $(2,2)$ of the form (\texttt{splitQuaternion\_norm\_signature}). (Verified in \texttt{proofs/SplitQuaternionCliffordConjugation.lean}).
+    \item \textbf{Cl(1,1) to Cl(4,4) Subset Subalgebra:} Establishes \texttt{Cl11PacketInCl44Subset}, verifying an injective algebra homomorphism $M_2(\mathbb{R}) \to \text{SplitCl44Algebra}$, anchoring the $Cl(1,1)$ basis inside the $Cl(4,4)$ causal envelope. (Verified in \texttt{proofs/Cl11PacketInCl44.lean}).
+\end{itemize}
+
+\section{Methods}
+\label{sec:methods}
+% Methods section
+
+\section{Formal Verification}
+\label{sec:verification}
+% Formal verification section
+
+\section{Benchmarks}
+\label{sec:benchmarks}
+% Benchmarks section
+
+\end{document}

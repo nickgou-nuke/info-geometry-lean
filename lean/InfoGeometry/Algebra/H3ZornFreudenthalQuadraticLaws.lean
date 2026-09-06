@@ -2,11 +2,10 @@ import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Exceptional.CubicJordanQuadraticLaws
 
 /-!
-# Quadratic-law interface for the canonical split Albert owner
+# Reusable quadratic-law interface for the native split-Albert owner
 
-This file exposes the already proved `H3Zorn` polarization and adjoint
-identities through the reusable quadratic-law structure.  It introduces no
-second Jordan or Freudenthal carrier.
+This packages the existing `H3Zorn` polarization and adjoint laws.  It does
+not introduce a second carrier or an exceptional Lie-algebra claim.
 -/
 
 namespace InfoGeometry.Algebra
@@ -20,18 +19,17 @@ noncomputable def h3zornCrossLinear :
     { toFun := fun Y => crossProduct X Y
       map_add' := fun Y Z => H3Zorn.crossProduct_add_right X Y Z
       map_smul' := fun r Y => H3Zorn.crossProduct_smul_right r X Y }
-  map_add' := fun X Y => by
+  map_add' := by
+    intro X Y
     apply LinearMap.ext
     intro Z
-    change crossProduct (X + Y) Z = crossProduct X Z + crossProduct Y Z
     exact H3Zorn.crossProduct_add_left X Y Z
-  map_smul' := fun r X => by
+  map_smul' := by
+    intro r X
     apply LinearMap.ext
     intro Y
-    change crossProduct (r • X) Y = r • crossProduct X Y
     exact H3Zorn.crossProduct_smul_left r X Y
 
-/-- The canonical quadratic-law package on the split Albert carrier. -/
 noncomputable def h3zornCubicJordanQuadraticLaws :
     CubicJordanQuadraticLaws h3zornCubicJordanDatum where
   cross := h3zornCrossLinear

@@ -1,7 +1,6 @@
 import DAG.TwoComplex
 import DAG.CocycleBridge
 import DAG.HodgeTheorems
-import Batteries.Data.Array.Lemmas
 
 /-!
 # DAG.TwoComplexColimitRecursor
@@ -140,14 +139,6 @@ def pushFace {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) (f : Nat ×
 def pushDigon {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) (d : Nat × Nat) :
     TwoComplex α :=
   { tc with digons := tc.digons.push d }
-
-/-! The finite induction engine used by the filtration is exposed separately
-from any invariant-specific statement. -/
-theorem foldl_preserves
-    {β γ : Type} (xs : Array γ) (step : β → γ → β) (P : β → Prop)
-    (hstep : ∀ b x, P b → P (step b x)) (b : β) (hb : P b) :
-    P (xs.foldl step b) :=
-  Array.foldl_induction (fun _ v => P v) hb (fun _ v hv => hstep v _ hv)
 
 /- ##Wiring to CocycleBridge -/
 

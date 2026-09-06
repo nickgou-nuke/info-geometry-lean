@@ -1,7 +1,5 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
 import InfoGeometry.Clifford.MonodromyFlowAdapter
-import InfoGeometry.Physics.LogCFTJordanShear
-import InfoGeometry.Canonical.RealParabolicProximal
 import Mathlib.Analysis.Complex.Basic
 
 noncomputable section
@@ -37,115 +35,14 @@ plays the role of the discrete time step / learning rate.
 def jkoEntropyStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   errorFlowStep η
 
-def realStepAsComplex (η : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
-  fun i j => (InfoGeometry.Canonical.RealParabolicProximal.step η i j : ℂ)
-
-theorem realStepAsComplex_eq_jkoEntropyStep (η : ℝ) :
-    realStepAsComplex η = jkoEntropyStep (η : ℂ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [realStepAsComplex, jkoEntropyStep, errorFlowStep,
-      lcftParabolicFlowStep, infinitesimalNullGenerator,
-      InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
-      InfoGeometry.Canonical.RealParabolicProximal.step]
-
-theorem jkoEntropyStep_eq_logCFTJordanShear (η : ℂ) :
-    jkoEntropyStep η =
-      InfoGeometry.Physics.LogCFTJordanShear.unipotentShear η := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [jkoEntropyStep, errorFlowStep, lcftParabolicFlowStep,
-      infinitesimalNullGenerator,
-      InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
-      InfoGeometry.Physics.LogCFTJordanShear.unipotentShear,
-      InfoGeometry.Physics.LogCFTJordanShear.nilpotentN,
-      InfoGeometry.Clifford.LogCftMonodromy.epsilon,
-      Matrix.add_apply]
-
-theorem jkoEntropyStep_eq_exp (η : ℂ) :
-    jkoEntropyStep η =
-      NormedSpace.exp (η • infinitesimalNullGenerator) := by
-  have hN : infinitesimalNullGenerator =
-      InfoGeometry.Physics.LogCFTJordanShear.nilpotentN := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [infinitesimalNullGenerator,
-        InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent,
-        InfoGeometry.Physics.LogCFTJordanShear.nilpotentN]
-  rw [hN, InfoGeometry.Physics.LogCFTJordanShear.exp_scaledNilpotent]
-  exact jkoEntropyStep_eq_logCFTJordanShear η
-
 /-- A covariance-envelope step uses the heat-flow convention `variance += 2t`. -/
 def gaussianHeatEnvelopeStep (η : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   jkoEntropyStep (2 * η)
-
-theorem gaussianHeatEnvelopeStep_zero :
-    gaussianHeatEnvelopeStep 0 = 1 := by
-  unfold gaussianHeatEnvelopeStep
-  rw [jkoEntropyStep_eq_logCFTJordanShear]
-  simp [InfoGeometry.Physics.LogCFTJordanShear.unipotentShear]
-
-theorem gaussianHeatEnvelopeStep_eq_exp (η : ℂ) :
-    gaussianHeatEnvelopeStep η =
-      NormedSpace.exp ((2 * η) • infinitesimalNullGenerator) := by
-  unfold gaussianHeatEnvelopeStep
-  exact jkoEntropyStep_eq_exp (2 * η)
-
-theorem gaussianHeatEnvelopeStep_composition (η₁ η₂ : ℂ) :
-    gaussianHeatEnvelopeStep η₁ * gaussianHeatEnvelopeStep η₂ =
-      gaussianHeatEnvelopeStep (η₁ + η₂) := by
-  change errorFlowStep (2 * η₁) * errorFlowStep (2 * η₂) =
-    errorFlowStep (2 * (η₁ + η₂))
-  rw [errorFlow_composition]
-  congr 1
-  ring
 
 /-- The JKO-style proximal steps compose additively in their time parameters. -/
 theorem jkoEntropyStep_composition (η₁ η₂ : ℂ) :
     jkoEntropyStep η₁ * jkoEntropyStep η₂ = jkoEntropyStep (η₁ + η₂) := by
   exact errorFlow_composition η₁ η₂
-
-theorem realStepAsComplex_composition (η₁ η₂ : ℝ) :
-    realStepAsComplex η₁ * realStepAsComplex η₂ =
-      realStepAsComplex (η₁ + η₂) := by
-  rw [realStepAsComplex_eq_jkoEntropyStep,
-    realStepAsComplex_eq_jkoEntropyStep,
-    jkoEntropyStep_composition,
-    realStepAsComplex_eq_jkoEntropyStep]
-  norm_num
-
-theorem realStepAsComplex_mul_neg (η : ℝ) :
-    realStepAsComplex η * realStepAsComplex (-η) = 1 := by
-  rw [realStepAsComplex_composition]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [realStepAsComplex,
-      InfoGeometry.Canonical.RealParabolicProximal.step]
-
-theorem realStepAsComplex_neg_mul (η : ℝ) :
-    realStepAsComplex (-η) * realStepAsComplex η = 1 := by
-  rw [realStepAsComplex_composition]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [realStepAsComplex,
-      InfoGeometry.Canonical.RealParabolicProximal.step]
-
-theorem jkoEntropyStep_zero :
-    jkoEntropyStep 0 = 1 := by
-  simp [jkoEntropyStep, errorFlowStep, lcftParabolicFlowStep,
-    infinitesimalNullGenerator,
-    InfoGeometry.Clifford.LogCftMonodromy.epsilon,
-    InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent]
-
-theorem jkoEntropyStep_mul_neg (η : ℂ) :
-    jkoEntropyStep η * jkoEntropyStep (-η) = 1 := by
-  unfold jkoEntropyStep
-  exact lcftParabolicFlow_mul_neg η
-
-theorem jkoEntropyStep_neg_mul (η : ℂ) :
-    jkoEntropyStep (-η) * jkoEntropyStep η = 1 := by
-  unfold jkoEntropyStep
-  exact lcftParabolicFlow_neg_mul η
 
 /--
 Executing `n` constant JKO-style steps with parameter `η` is the same as one
@@ -154,18 +51,6 @@ parabolic update with accumulated time `(n : ℂ) * η`.
 theorem jko_flow_stability_induction (η : ℂ) (n : ℕ) :
     jkoEntropyStep η ^ n = errorFlowStep ((n : ℂ) * η) := by
   exact error_threshold_linear_induction η n
-
-theorem jkoEntropyStep_pow (η : ℂ) (n : ℕ) :
-    jkoEntropyStep η ^ n = jkoEntropyStep ((n : ℂ) * η) := by
-  exact jko_flow_stability_induction η n
-
-theorem realStepAsComplex_pow (η : ℝ) (n : ℕ) :
-    realStepAsComplex η ^ n =
-      realStepAsComplex ((n : ℝ) * η) := by
-  rw [realStepAsComplex_eq_jkoEntropyStep,
-    jkoEntropyStep_pow,
-    realStepAsComplex_eq_jkoEntropyStep]
-  norm_num
 
 /-- The off-diagonal update entry records total discrete optimization time. -/
 theorem jko_accumulated_step (η : ℂ) (n : ℕ) :
@@ -179,38 +64,6 @@ For the Gaussian heat-envelope convention, variance time accumulates as
 theorem gaussianHeatEnvelope_accumulated_variance_step (η : ℂ) (n : ℕ) :
     ((gaussianHeatEnvelopeStep η) ^ n) 0 1 = (n : ℂ) * (2 * η) := by
   exact jko_accumulated_step (2 * η) n
-
-theorem gaussianHeatEnvelope_flow_stability (η : ℂ) (n : ℕ) :
-    gaussianHeatEnvelopeStep η ^ n =
-      errorFlowStep ((n : ℂ) * (2 * η)) := by
-  exact jko_flow_stability_induction (2 * η) n
-
-theorem gaussianHeatEnvelope_pow (η : ℂ) (n : ℕ) :
-    gaussianHeatEnvelopeStep η ^ n =
-      gaussianHeatEnvelopeStep ((n : ℂ) * η) := by
-  unfold gaussianHeatEnvelopeStep
-  rw [jkoEntropyStep_eq_logCFTJordanShear,
-    jkoEntropyStep_eq_logCFTJordanShear]
-  convert
-    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_pow_eq
-      (2 * η) n) using 1
-  ring_nf
-
-theorem gaussianHeatEnvelopeStep_mul_neg (η : ℂ) :
-    gaussianHeatEnvelopeStep η * gaussianHeatEnvelopeStep (-η) = 1 := by
-  unfold gaussianHeatEnvelopeStep
-  rw [jkoEntropyStep_eq_logCFTJordanShear,
-    jkoEntropyStep_eq_logCFTJordanShear]
-  simpa using
-    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_mul_neg (2 * η))
-
-theorem gaussianHeatEnvelopeStep_neg_mul (η : ℂ) :
-    gaussianHeatEnvelopeStep (-η) * gaussianHeatEnvelopeStep η = 1 := by
-  unfold gaussianHeatEnvelopeStep
-  rw [jkoEntropyStep_eq_logCFTJordanShear,
-    jkoEntropyStep_eq_logCFTJordanShear]
-  simpa using
-    (InfoGeometry.Physics.LogCFTJordanShear.unipotentShear_neg_mul (2 * η))
 
 /--
 LCFT monodromy is the same parabolic optimizer envelope at the imaginary step
@@ -227,16 +80,6 @@ theorem optimizer_threshold_bound (η : ℂ) (n : ℕ) (Λ : ℝ)
     (h_budget : (n : ℝ) * ‖η‖ ≤ Λ) :
     ‖(((jkoEntropyStep η) ^ n) 0 1)‖ ≤ Λ := by
   exact threshold_condition η n Λ h_budget
-
-theorem gaussianHeatEnvelope_threshold_bound (η : ℂ) (n : ℕ) (Λ : ℝ)
-    (h_budget : (n : ℝ) * ‖2 * η‖ ≤ Λ) :
-    ‖(((gaussianHeatEnvelopeStep η) ^ n) 0 1)‖ ≤ Λ := by
-  exact threshold_condition (2 * η) n Λ h_budget
-
-theorem gaussianHeatEnvelope_real_drift_is_linear (η : ℂ) (n : ℕ) :
-    (((gaussianHeatEnvelopeStep η) ^ n) 0 1).re =
-      (n : ℝ) * (2 * η).re := by
-  exact dephasing_drift_is_linear (2 * η) n
 
 /-- Real drift in the optimization envelope is linear in the iteration count. -/
 theorem optimizer_real_drift_is_linear (η : ℂ) (n : ℕ) :

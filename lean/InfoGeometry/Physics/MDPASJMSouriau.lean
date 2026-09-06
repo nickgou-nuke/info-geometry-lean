@@ -50,14 +50,14 @@ def pfaffian4 (A : Tensor2) : ℚ :=
   A 0 1 * A 2 3 - A 0 2 * A 1 3 + A 0 3 * A 1 2
 
 /-- Finite electromagnetic tensor from electric/magnetic triples.
-The sign convention is only a finite property convention. -/
+The sign convention is only a finite certificate convention. -/
 def emTensor (E B : Fin 3 → ℚ) : Tensor2 :=
   !![(0 : ℚ), E 0, E 1, E 2;
      -E 0, 0, -B 2, B 1;
      -E 1, B 2, 0, -B 0;
      -E 2, -B 1, B 0, 0]
 
-/-- Prequantization integrality condition: the integer `k` must
+/-- Prequantization integrality socket made dependent: the integer `k` must
 actually clear `2s/h`, i.e. `2s = k h`. -/
 def SpinPrequantized (s h : ℚ) : Prop := ∃ k : ℤ, 2 * s = k * h
 
@@ -145,7 +145,7 @@ theorem antisymmetric_power_zero (F : Tensor2) (p : Vec4) (hF : IsAntisymmetric 
   rw [h00, h11, h22, h33, h01, h02, h03, h12, h13, h23]
   ring
 
-/-- Mass shell for the unit rest momentum used as a finite sanity property. -/
+/-- Mass shell for the unit rest momentum used as a finite sanity certificate. -/
 theorem rest_momentum_mass_shell (m : ℚ) :
     massShell (fun i => if i = 0 then m else 0) m := by
   simp [massShell, minkowskiDot]
@@ -178,11 +178,11 @@ namespace FiniteSpinParticleCertificate
 
 variable (C : FiniteSpinParticleCertificate)
 
-/-- The property's decomposable spin bivector is antisymmetric. -/
+/-- The certificate's decomposable spin bivector is antisymmetric. -/
 theorem spin_antisym : IsAntisymmetric (wedge C.u C.v) :=
   wedge_antisymmetric C.u C.v
 
-/-- The property's decomposable spin bivector has zero Pfaffian. -/
+/-- The certificate's decomposable spin bivector has zero Pfaffian. -/
 theorem spin_plucker : pfaffian4 (wedge C.u C.v) = 0 :=
   pfaffian4_wedge_zero C.u C.v
 
@@ -212,6 +212,7 @@ theorem spin_half_prequantization
 
 end FiniteSpinParticleCertificate
 
-end MDPASJMSouriau
-end Physics
-end InfoGeometry
+def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field) :
+    FiniteSpinParticleCertificate := ⟨p, u, v, field, hfield⟩
+
+end InfoGeometry.Physics.MDPASJMSouriau

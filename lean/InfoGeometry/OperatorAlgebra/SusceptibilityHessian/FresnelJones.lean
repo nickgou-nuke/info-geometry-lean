@@ -42,7 +42,7 @@ end FresnelCoefficientReadout
 /--
 Eigen-response of the susceptibility/Hessian in the `s/p` polarization basis.
 
-This is a state-indexed calibration interface: a concrete material/interface
+This is a state-indexed calibration socket: a concrete material/interface
 model supplies the laws saying these are the local eigenchannel readouts.
 -/
 def StatePolarizationEigenResponse (State : Type*) :=
@@ -200,7 +200,7 @@ structure JonesFromMaterialCalibration
 /--
 Canonical material-to-Jones calibration induced by Fresnel coefficients.
 
-The remaining property is the Fresnel boundary law itself, carried by `F`; the
+The remaining witness is the Fresnel boundary law itself, carried by `F`; the
 Jones event, basis, and diagonal coefficient equalities are constructed.
 -/
 def jonesFromMaterialCalibrationOfFresnel

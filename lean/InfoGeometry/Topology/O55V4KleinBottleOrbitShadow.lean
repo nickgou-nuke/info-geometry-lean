@@ -13,8 +13,8 @@ Closed content:
 - the four-point V4 orbit shadow is closed under the two generating reflections;
 - the central sign sends the orbit shadow of `x` to the orbit shadow of `negAll x`.
 
-The module provides the finite projective-sign and orbit-shadow packet used by
-the `(5,5)` topology lane.
+It does **not** prove the actual quotient space `Vec55/{±I}`, a Lie-group action,
+a `Pin(5,5)` double cover, or a full orbit classification.
 -/
 
 namespace InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
@@ -144,14 +144,9 @@ theorem finite_projective_v4_orbit_packet (x y z : Vec55) :
     (InV4OrbitShadow x y → InV4OrbitShadow x (reflPair0 y)) ∧
     (InV4OrbitShadow x y → InV4OrbitShadow x (reflPair1 y)) ∧
     (InV4OrbitShadow x y → InV4OrbitShadow (negAll x) (negAll y)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact projectiveSignEq_symm
-  · exact projectiveSignEq_trans
-  · exact reflPair0_descends_projective
-  · exact reflPair1_descends_projective
-  · exact reflPair01_descends_projective
-  · exact reflPair0_orbitShadow_closed
-  · exact reflPair1_orbitShadow_closed
-  · exact negAll_orbitShadow_closed
+  exact ⟨projectiveSignEq_symm, projectiveSignEq_trans,
+    reflPair0_descends_projective, reflPair1_descends_projective,
+    reflPair01_descends_projective, reflPair0_orbitShadow_closed,
+    reflPair1_orbitShadow_closed, negAll_orbitShadow_closed⟩
 
 end InfoGeometry.Topology.O55V4KleinBottleOrbitShadow

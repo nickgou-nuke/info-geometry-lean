@@ -1,12 +1,8 @@
 import InfoGeometry.Algebra.KingdonSplitOctonion
-import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
-import InfoGeometry.Algebra.NonAssocDerivation
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Subalgebra
-
-set_option synthInstance.maxHeartbeats 100000
 
 /-!
 # Canonical and Kingdon realization of the Zorn derivation Lie algebra
@@ -28,37 +24,31 @@ open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev VectorDerivation := ZornVectorMatrix.Derivation (R := ℝ)
 abbrev CanonicalEnd := Module.End ℝ CZ
-/- The transported carrier is the native AbstractKingdon owner; the bridge
-   keeps that type explicit instead of introducing a second carrier alias. -/
+abbrev Kingdon :=
+  InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon
+abbrev KingdonEnd := Module.End ℝ Kingdon
 
 @[simp] theorem zMul_eq_canonical_mul (X Y : CZ) : zMul X Y = X * Y := rfl
 
-noncomputable def canonicalVectorLinearEquiv : CZ ≃ₗ[ℝ] VZ where
-  toFun := canonicalVectorEquiv
-  invFun := canonicalVectorEquiv.symm
-  left_inv := canonicalVectorEquiv.left_inv
-  right_inv := canonicalVectorEquiv.right_inv
-  map_add' := canonicalVectorEquiv_add
-  map_smul' := canonicalVectorEquiv_smul
-
 /-- Conjugate a native Zorn-vector-matrix derivation onto the canonical Zorn carrier. -/
-noncomputable def toCanonicalEnd (D : VectorDerivation) : CanonicalEnd :=
-  NonAssocDerivation.transport ℝ VZ canonicalVectorLinearEquiv.symm
-    (toNonAssocDerivation D)
+noncomputable def toCanonicalEnd (D : VectorDerivation) : CanonicalEnd where
+  toFun X := canonicalVectorEquiv.symm (D (canonicalVectorEquiv X))
+  map_add' X Y := by
+    rw [canonicalVectorEquiv_add, ZornVectorMatrix.Derivation.map_add]
+    exact canonicalVectorEquiv_symm_add _ _
+  map_smul' r X := by
+    rw [canonicalVectorEquiv_smul, ZornVectorMatrix.Derivation.map_smul]
+    exact canonicalVectorEquiv_symm_smul _ _
 
 @[simp] theorem toCanonicalEnd_apply (D : VectorDerivation) (X : CZ) :
-    toCanonicalEnd D X = canonicalVectorLinearEquiv.symm (D (canonicalVectorLinearEquiv X)) := by
-  rfl
+    toCanonicalEnd D X = canonicalVectorEquiv.symm (D (canonicalVectorEquiv X)) := rfl
 
 /-- The transported canonical endomorphism satisfies the nonassociative Leibniz law. -/
 @[simp] theorem toCanonicalEnd_leibniz (D : VectorDerivation) (X Y : CZ) :
     toCanonicalEnd D (X * Y) = toCanonicalEnd D X * Y + X * toCanonicalEnd D Y := by
-  apply canonicalVectorLinearEquiv.injective
-  change D (canonicalVectorEquiv (X * Y)) =
-    canonicalVectorEquiv (toCanonicalEnd D X * Y + X * toCanonicalEnd D Y)
-  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_add,
-    toCanonicalEnd_apply, Equiv.apply_symm_apply]
-  exact ZornVectorMatrix.Derivation.map_mul D _ _
+  apply canonicalVectorEquiv.injective
+  simp only [toCanonicalEnd_apply, Equiv.apply_symm_apply, canonicalVectorEquiv_mul,
+    canonicalVectorEquiv_add, ZornVectorMatrix.Derivation.map_mul]
 
 /-- Transport of native derivations as a real-linear map into canonical endomorphisms. -/
 noncomputable def canonicalDerivationLinearMap : VectorDerivation →ₗ[ℝ] CanonicalEnd where
@@ -87,8 +77,7 @@ theorem canonicalDerivationLinearMap_injective :
   apply ZornVectorMatrix.Derivation.ext
   intro X
   have hX := LinearMap.congr_fun h (canonicalVectorEquiv.symm X)
-  have hX' := congrArg canonicalVectorEquiv hX
-  simpa only [toCanonicalEnd_apply, LinearEquiv.apply_symm_apply] using hX'
+  exact canonicalVectorEquiv.symm.injective (by simpa [toCanonicalEnd] using hX)
 
 /-- Transport identifies the native derivation bracket with the endomorphism commutator. -/
 theorem toCanonicalEnd_bracket (D E : VectorDerivation) :
@@ -96,10 +85,10 @@ theorem toCanonicalEnd_bracket (D E : VectorDerivation) :
       toCanonicalEnd D * toCanonicalEnd E - toCanonicalEnd E * toCanonicalEnd D := by
   apply LinearMap.ext
   intro X
-  apply canonicalVectorLinearEquiv.injective
-  change (D (E (canonicalVectorEquiv X)) - E (D (canonicalVectorEquiv X))) =
-    D (E (canonicalVectorEquiv X)) - E (D (canonicalVectorEquiv X))
-  rfl
+  apply canonicalVectorEquiv.injective
+  simp only [toCanonicalEnd_apply, ZornVectorMatrix.Derivation.bracket_apply,
+    Equiv.apply_symm_apply, LinearMap.sub_apply, Module.End.mul_apply,
+    canonicalVectorEquiv_sub]
 
 /-- Native Zorn derivations represented in the canonical endomorphism Lie algebra. -/
 noncomputable def canonicalDerivationLieHom : VectorDerivation →ₗ⁅ℝ⁆ CanonicalEnd where
@@ -129,27 +118,30 @@ noncomputable def canonicalDerivationLieEquiv :
   rfl
 
 /-- Conjugate a native Zorn derivation through the canonical realization of AbstractKingdon. -/
-noncomputable def toKingdonEnd (D : VectorDerivation) :
-    Module.End ℝ InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon :=
-  NonAssocDerivation.transport ℝ CZ kingdonCanonicalLinearEquiv.symm
-    (toCanonicalEnd D)
+noncomputable def toKingdonEnd (D : VectorDerivation) : KingdonEnd where
+  toFun x := kingdonCanonicalLinearEquiv.symm
+    (toCanonicalEnd D (kingdonCanonicalLinearEquiv x))
+  map_add' x y := by
+    apply kingdonCanonicalLinearEquiv.injective
+    simp only [LinearEquiv.apply_symm_apply, LinearEquiv.map_add, LinearMap.map_add]
+  map_smul' r x := by
+    apply kingdonCanonicalLinearEquiv.injective
+    simp only [LinearEquiv.apply_symm_apply, LinearEquiv.map_smul, LinearMap.map_smul,
+      RingHom.id_apply]
 
-@[simp] theorem toKingdonEnd_apply (D : VectorDerivation)
-    (x : InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) :
+@[simp] theorem toKingdonEnd_apply (D : VectorDerivation) (x : Kingdon) :
     toKingdonEnd D x = kingdonCanonicalLinearEquiv.symm
       (toCanonicalEnd D (kingdonCanonicalLinearEquiv x)) := rfl
 
 /-- The transported AbstractKingdon endomorphism satisfies the Leibniz law. -/
-@[simp] theorem toKingdonEnd_leibniz (D : VectorDerivation)
-    (x y : InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) :
+@[simp] theorem toKingdonEnd_leibniz (D : VectorDerivation) (x y : Kingdon) :
     toKingdonEnd D (x * y) = toKingdonEnd D x * y + x * toKingdonEnd D y := by
   apply kingdonCanonicalLinearEquiv.injective
   simp only [toKingdonEnd_apply, LinearEquiv.apply_symm_apply, LinearEquiv.map_add,
     kingdonCanonicalLinearEquiv_mul, zMul_eq_canonical_mul, toCanonicalEnd_leibniz]
 
 /-- Transport of native derivations as a real-linear map into Kingdon endomorphisms. -/
-noncomputable def kingdonDerivationLinearMap : VectorDerivation →ₗ[ℝ]
-    Module.End ℝ InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon where
+noncomputable def kingdonDerivationLinearMap : VectorDerivation →ₗ[ℝ] KingdonEnd where
   toFun := toKingdonEnd
   map_add' D E := by
     apply LinearMap.ext
@@ -168,8 +160,7 @@ noncomputable def kingdonDerivationLinearMap : VectorDerivation →ₗ[ℝ]
       LinearMap.congr_fun (canonicalDerivationLinearMap.map_smul r D)
         (kingdonCanonicalLinearEquiv x)
 
-@[simp] theorem kingdonDerivationLinearMap_apply (D : VectorDerivation)
-    (x : InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) :
+@[simp] theorem kingdonDerivationLinearMap_apply (D : VectorDerivation) (x : Kingdon) :
     kingdonDerivationLinearMap D x = toKingdonEnd D x := rfl
 
 theorem kingdonDerivationLinearMap_injective :
@@ -180,9 +171,7 @@ theorem kingdonDerivationLinearMap_injective :
   intro X
   let x := kingdonCanonicalLinearEquiv.symm X
   have hx := LinearMap.congr_fun h x
-  have hx' := congrArg kingdonCanonicalLinearEquiv hx
-  simpa only [x, kingdonDerivationLinearMap_apply, toKingdonEnd_apply,
-    canonicalDerivationLinearMap_apply, LinearEquiv.apply_symm_apply] using hx'
+  exact kingdonCanonicalLinearEquiv.symm.injective (by simpa [x, toKingdonEnd] using hx)
 
 /-- Kingdon transport also identifies the native bracket with the endomorphism commutator. -/
 theorem toKingdonEnd_bracket (D E : VectorDerivation) :
@@ -196,8 +185,7 @@ theorem toKingdonEnd_bracket (D E : VectorDerivation) :
   exact LinearMap.congr_fun (toCanonicalEnd_bracket D E) (kingdonCanonicalLinearEquiv x)
 
 /-- Native Zorn derivations represented in the AbstractKingdon endomorphism Lie algebra. -/
-noncomputable def kingdonDerivationLieHom : VectorDerivation →ₗ⁅ℝ⁆
-    (Module.End ℝ InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) where
+noncomputable def kingdonDerivationLieHom : VectorDerivation →ₗ⁅ℝ⁆ KingdonEnd where
   toLinearMap := kingdonDerivationLinearMap
   map_lie' := by
     intro D E
@@ -206,8 +194,7 @@ noncomputable def kingdonDerivationLieHom : VectorDerivation →ₗ⁅ℝ⁆
     simpa only [LieRing.of_associative_ring_bracket] using toKingdonEnd_bracket D E
 
 /-- The Kingdon derivation Lie algebra as the exact transported image. -/
-noncomputable def kingdonDerivationLieAlgebra : LieSubalgebra ℝ
-    (Module.End ℝ InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) :=
+noncomputable def kingdonDerivationLieAlgebra : LieSubalgebra ℝ KingdonEnd :=
   kingdonDerivationLieHom.range
 
 theorem kingdonDerivationLieHom_injective :
@@ -221,9 +208,7 @@ noncomputable def kingdonDerivationLieEquiv :
   kingdonDerivationLieHom.equivRangeOfInjective kingdonDerivationLieHom_injective
 
 @[simp] theorem kingdonDerivationLieEquiv_apply (D : VectorDerivation) :
-    (kingdonDerivationLieEquiv D :
-      Module.End ℝ InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon) =
-      toKingdonEnd D := by
+    (kingdonDerivationLieEquiv D : KingdonEnd) = toKingdonEnd D := by
   rfl
 
 end InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge

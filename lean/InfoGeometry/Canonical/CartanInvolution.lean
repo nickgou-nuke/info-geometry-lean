@@ -15,16 +15,16 @@ open InfoGeometry.Clifford.DiracPauliGamma
 /-!
 # Quaternion Cartan Decomposition Witness
 
-This file records the finite matrix-side Cartan/involution property for the
+This file records the finite matrix-side Cartan/involution witness for the
 quaternion condensate lane.
 
 The intended reading is not a literal universal embedding theorem.  Instead,
-the explicit `4x4` matrices property the compact / noncompact split induced by
+the explicit `4x4` matrices witness the compact / noncompact split induced by
 the Cartan involution, and the associated finite projection layer is the
 matrix-side shadow of the `OP^3 = OP` decomposition story.
 
 The file only proves the quaternion basis relations and the finite matrix
-projection property.  It does not prove a universal algebra equivalence
+projection witness.  It does not prove a universal algebra equivalence
 `ℍ ≃ Cl(0,2)` and does not prove a full `Cl(1,3; ℂ)` embedding theorem.
 -/
 
@@ -81,25 +81,6 @@ def embedH4 (q : H4) : DiracMatrix :=
   ext r c
   fin_cases r <;> fin_cases c <;>
     simp [cartan_involution, gamma0, gamma1, Matrix.mul_apply, Fin.sum_univ_succ]
-
-@[simp] theorem compact_projection_embedI :
-    compact_projection gamma0 embedI = embedI := by
-  simp [compact_projection]
-  module
-
-@[simp] theorem compact_projection_embedJ :
-    compact_projection gamma0 embedJ = embedJ := by
-  simp [compact_projection]
-  module
-
-@[simp] theorem compact_projection_embedK :
-    compact_projection gamma0 embedK = embedK := by
-  simp [compact_projection]
-  module
-
-@[simp] theorem compact_projection_boost :
-    compact_projection gamma0 (gamma0 * gamma1) = 0 := by
-  simp [compact_projection]
 
 @[simp] theorem embedI_sq : embedI * embedI = -embedOne := by
   ext r c

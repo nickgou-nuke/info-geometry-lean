@@ -1,0 +1,205 @@
+import InfoGeometry.Canonical.InverseKernelAlgebra
+
+namespace InfoGeometry.Canonical
+
+open InfoGeometry.Canonical.Drazin
+open InfoGeometry.Canonical.MoorePenrose
+
+/-!
+# EP And Group Inverse
+
+This file isolates the EP corridor of the certified inverse-kernel package.
+Here the Moore-Penrose range and domain projectors agree, the dilation gap
+collapses, and the Moore-Penrose inverse itself satisfies the Drazin laws with
+index `1`.
+-/
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+namespace InverseKernel
+
+variable (IK : InverseKernel E)
+
+/-- EP condition: the Moore-Penrose range and domain projectors agree. -/
+def IsEP : Prop :=
+  IK.mpRangeProjector = IK.metricProjector
+
+/-- The EP condition is exactly the commutation of `A` and its Moore-Penrose inverse. -/
+theorem isEP_iff_comm :
+    IK.IsEP ↔ IK.A * IK.A_MP = IK.A_MP * IK.A := by
+  unfold InverseKernel.IsEP InverseKernel.mpRangeProjector InverseKernel.metricProjector
+  rfl
+
+/-- Under EP, the Moore-Penrose range and domain projectors coincide. -/
+theorem mpRangeProjector_eq_metricProjector_of_isEP
+    (hEP : IK.IsEP) :
+    IK.mpRangeProjector = IK.metricProjector :=
+  hEP
+
+/-- Under EP, the left/right mismatch operators coincide. -/
+theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
+    (hEP : IK.IsEP) :
+    IK.rightProjectorMismatch = IK.projectorMismatch := by
+  unfold InverseKernel.rightProjectorMismatch InverseKernel.projectorMismatch
+  rw [hEP]
+
+/-- Under EP, the dilation gap vanishes. -/
+theorem dilationGap_eq_zero_of_isEP
+    (hEP : IK.IsEP) :
+    IK.dilationGap = 0 := by
+  unfold InverseKernel.dilationGap
+  rw [hEP]
+  simp
+
+/-- Vanishing dilation gap forces the EP condition. -/
+theorem isEP_of_dilationGap_eq_zero
+    (hGap : IK.dilationGap = 0) :
+    IK.IsEP := by
+  have hSmul :
+      ((2 : ℝ)⁻¹) • (IK.mpRangeProjector - IK.metricProjector) = 0 := by
+    simpa [InverseKernel.dilationGap] using hGap
+  have hDiff : IK.mpRangeProjector - IK.metricProjector = 0 := by
+    exact (smul_eq_zero.mp hSmul).resolve_left (by norm_num)
+  exact sub_eq_zero.mp hDiff
+
+/-- EP is equivalent to vanishing dilation gap. -/
+theorem isEP_iff_dilationGap_eq_zero :
+    IK.IsEP ↔ IK.dilationGap = 0 := by
+  constructor
+  · exact IK.dilationGap_eq_zero_of_isEP
+  · exact IK.isEP_of_dilationGap_eq_zero
+
+/-- Under EP, the right and left anomaly conventions agree. -/
+theorem rightChiralAnomaly_eq_chiralAnomaly_of_isEP
+    (hEP : IK.IsEP) :
+    IK.rightChiralAnomaly = IK.chiralAnomaly :=
+  IK.rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement hEP
+
+/--
+In the EP corridor, the Moore-Penrose inverse satisfies the Drazin laws with
+index `1`, so it is a group inverse witness.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_isEP
+    (hMP : IsMoorePenroseInverse IK.A IK.A_MP)
+    (hEP : IK.IsEP) :
+    IsDrazinInverse IK.A IK.A_MP 1 := by
+  refine IsDrazinInverse.mk ?_ ?_ ?_
+  · simpa [InverseKernel.IsEP, InverseKernel.mpRangeProjector, InverseKernel.metricProjector] using hEP
+  · exact hMP.bab_eq_b
+  · have hComm : IK.A * IK.A_MP = IK.A_MP * IK.A := by
+      simpa [InverseKernel.IsEP, InverseKernel.mpRangeProjector, InverseKernel.metricProjector] using hEP
+    calc
+      IK.A ^ (1 + 1) * IK.A_MP = IK.A * IK.A * IK.A_MP := by
+        simp [pow_two, mul_assoc]
+      _ = IK.A * (IK.A * IK.A_MP) := by
+        simp [mul_assoc]
+      _ = IK.A * (IK.A_MP * IK.A) := by
+        rw [hComm]
+      _ = IK.A * IK.A_MP * IK.A := by
+        simp [mul_assoc]
+      _ = IK.A := hMP.aba_eq_a
+      _ = IK.A ^ 1 := by simp
+
+/--
+Vanishing dilation gap is a smaller constructive route to the group-inverse
+Drazin witness: the EP packet is recovered internally from the gap collapse.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+    (hMP : IsMoorePenroseInverse IK.A IK.A_MP)
+    (hGap : IK.dilationGap = 0) :
+    IsDrazinInverse IK.A IK.A_MP 1 :=
+  IK.moorePenrose_isDrazinInverse_one_of_isEP hMP (IK.isEP_of_dilationGap_eq_zero hGap)
+
+end InverseKernel
+
+namespace CertifiedInverseKernel
+
+variable (CIK : CertifiedInverseKernel E)
+
+/-- Certified EP condition. -/
+def IsEP : Prop :=
+  CIK.toInverseKernel'.IsEP
+
+/-- Certified EP is exactly commutation of `A` and `A_MP`. -/
+theorem isEP_iff_comm :
+    CIK.IsEP ↔ CIK.A * CIK.A_MP = CIK.A_MP * CIK.A := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.isEP_iff_comm
+
+/-- Under certified EP, the Moore-Penrose range and domain projectors agree. -/
+theorem mpRangeProjector_eq_metricProjector_of_isEP
+    (hEP : CIK.IsEP) :
+    CIK.mpRangeProjector = CIK.metricProjector :=
+  hEP
+
+/-- Under certified EP, the left/right mismatch operators agree. -/
+theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
+    (hEP : CIK.IsEP) :
+    CIK.rightProjectorMismatch = CIK.projectorMismatch := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.rightProjectorMismatch,
+    CertifiedInverseKernel.projectorMismatch, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.rightProjectorMismatch_eq_projectorMismatch_of_isEP hEP
+
+/-- Under certified EP, the dilation gap vanishes. -/
+theorem dilationGap_eq_zero_of_isEP
+    (hEP : CIK.IsEP) :
+    CIK.dilationGap = 0 := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.dilationGap,
+    CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.dilationGap_eq_zero_of_isEP hEP
+
+/-- Certified vanishing dilation gap forces EP. -/
+theorem isEP_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    CIK.IsEP := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.dilationGap,
+    CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.isEP_of_dilationGap_eq_zero hGap
+
+/-- Certified EP is equivalent to vanishing dilation gap. -/
+theorem isEP_iff_dilationGap_eq_zero :
+    CIK.IsEP ↔ CIK.dilationGap = 0 := by
+  constructor
+  · exact CIK.dilationGap_eq_zero_of_isEP
+  · exact CIK.isEP_of_dilationGap_eq_zero
+
+/-- Under certified EP, the right and left anomaly conventions agree. -/
+theorem rightChiralAnomaly_eq_chiralAnomaly_of_isEP
+    (hEP : CIK.IsEP) :
+    CIK.rightChiralAnomaly = CIK.chiralAnomaly := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.rightChiralAnomaly,
+    CertifiedInverseKernel.chiralAnomaly, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_isEP hEP
+
+/-- Under certified EP, the spectral/dilation commutator vanishes trivially. -/
+theorem spectralProjector_commutator_dilationGap_eq_zero_of_isEP
+    (hEP : CIK.IsEP) :
+    CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector = 0 := by
+  have hGap : CIK.dilationGap = 0 := CIK.dilationGap_eq_zero_of_isEP hEP
+  simp [hGap]
+
+/--
+In the certified EP corridor, the Moore-Penrose inverse is a Drazin inverse of
+index `1`.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_isEP
+    (hEP : CIK.IsEP) :
+    IsDrazinInverse CIK.A CIK.A_MP 1 := by
+  simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.moorePenrose_isDrazinInverse_one_of_isEP CIK.hMoorePenrose hEP
+
+/--
+Certified gap-collapse route to the group-inverse Drazin witness.  This keeps
+legacy EP-based theorem names, while callers that already own `dilationGap = 0`
+do not need to provide a separate `CIK.IsEP` packet.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    IsDrazinInverse CIK.A CIK.A_MP 1 := by
+  simpa [CertifiedInverseKernel.dilationGap, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+      CIK.hMoorePenrose hGap
+
+end CertifiedInverseKernel
+
+end InfoGeometry.Canonical

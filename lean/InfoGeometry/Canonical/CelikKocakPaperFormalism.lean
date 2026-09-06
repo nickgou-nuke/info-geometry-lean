@@ -16,7 +16,7 @@ Cantor address model:
 * tilt/switch operators,
 * the canonical finite basis on endpoint functions.
 
-No property-only basis packet is used here.
+No witness-only basis packet is used here.
 -/
 
 noncomputable section
@@ -28,6 +28,12 @@ open InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 open InfoGeometry.Clifford.Cl11Matrix
 open scoped Kronecker
 open scoped TensorProduct
+
+/-- Paper-facing alias for the finite Cantor address space. -/
+abbrev CantorAddress (n : ℕ) := InfoGeometry.Canonical.CelikKocakCantorOperators.CantorAddress n
+
+/-- Paper-facing alias for the finite endpoint function space. -/
+abbrev FunctionSpace (n : ℕ) := InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace n
 
 namespace FunctionSpace
 
@@ -68,7 +74,7 @@ theorem tilt_switch_anticomm (j : Fin n) :
   InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace.tilt_switch_anticomm (n := n) j
 
 /-- Paper-facing local pair operator `T_j * S_j`. -/
-def pairTerm (j : ℕ) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) :=
+def pairTerm (j : ℕ) : FunctionSpace n →ₗ[ℂ] FunctionSpace n :=
   if hj : j < n then FunctionSpace.tilt (n := n) ⟨j, hj⟩ * FunctionSpace.switch (n := n) ⟨j, hj⟩ else 1
 
 @[simp] theorem pairTerm_of_lt {j : ℕ} (hj : j < n) :
@@ -81,7 +87,7 @@ def pairTerm (j : ℕ) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → 
   by simp [pairTerm, hj]
 
 theorem pairTerm_sq {j : ℕ} (hj : j < n) :
-    pairTerm (n := n) j * pairTerm (n := n) j = - (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
+    pairTerm (n := n) j * pairTerm (n := n) j = - (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
   by
     rw [pairTerm_of_lt (n := n) hj]
     calc
@@ -111,7 +117,7 @@ theorem pairTerm_sq {j : ℕ} (hj : j < n) :
                             * FunctionSpace.switch (n := n) ⟨j, hj⟩) := by
                             simp [mul_assoc]
                   )
-      _ = - (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) := by
+      _ = - (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
                 simp [tilt_sq, switch_sq]
 
 theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
@@ -146,7 +152,7 @@ theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
     · simp [pairTerm, hi]
 
 /-- Recursive prefix product of the local pair operators `T_j * S_j`. -/
-def pairPrefix : ℕ → (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)
+def pairPrefix : ℕ → FunctionSpace n →ₗ[ℂ] FunctionSpace n
   | 0 => 1
   | m + 1 => pairPrefix m * pairTerm (n := n) m
 
@@ -179,7 +185,7 @@ theorem pairTerm_commute_pairPrefix {m i : ℕ} (hmi : m ≤ i) :
 /-- The recursive prefix product squares to the expected scalar sign. -/
 theorem pairPrefix_sq {m : ℕ} (hm : m ≤ n) :
     pairPrefix (n := n) m * pairPrefix (n := n) m
-      = ((-1 : ℂ) ^ m) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) := by
+      = ((-1 : ℂ) ^ m) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
   induction m with
   | zero =>
       simp [pairPrefix]
@@ -189,7 +195,7 @@ theorem pairPrefix_sq {m : ℕ} (hm : m ≤ n) :
       have hlt : m < n := Nat.lt_of_lt_of_le (Nat.lt_succ_self m) hm
       change (pairPrefix (n := n) m * pairTerm (n := n) m)
           * (pairPrefix (n := n) m * pairTerm (n := n) m)
-          = ((-1 : ℂ) ^ (m + 1)) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ))
+          = ((-1 : ℂ) ^ (m + 1)) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)
       calc
         (pairPrefix (n := n) m * pairTerm (n := n) m)
             * (pairPrefix (n := n) m * pairTerm (n := n) m)
@@ -204,14 +210,14 @@ theorem pairPrefix_sq {m : ℕ} (hm : m ≤ n) :
         _ = (pairPrefix (n := n) m * pairPrefix (n := n) m)
               * (pairTerm (n := n) m * pairTerm (n := n) m) := by
                   simp [mul_assoc]
-        _ = (((-1 : ℂ) ^ m) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))
-              * (- (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ))) := by
+        _ = (((-1 : ℂ) ^ m) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))
+              * (- (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)) := by
                   rw [ih (Nat.le_of_succ_le hm), pairTerm_sq (n := n) (j := m) hlt]
-        _ = - (((-1 : ℂ) ^ m) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ))) := by
+        _ = - (((-1 : ℂ) ^ m) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)) := by
                   simp
-        _ = ((-((-1 : ℂ) ^ m)) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ))) := by
-                  exact (neg_smul (((-1 : ℂ) ^ m)) (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ))).symm
-        _ = ((-1 : ℂ) ^ (m + 1)) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) := by
+        _ = ((-((-1 : ℂ) ^ m)) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)) := by
+                  exact (neg_smul (((-1 : ℂ) ^ m)) (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)).symm
+        _ = ((-1 : ℂ) ^ (m + 1)) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
                   simp [pow_succ, mul_comm]
 
 theorem tilt_comm_pairPrefix {m j : ℕ} (hmj : m ≤ j) (hj : j < n) :
@@ -274,11 +280,11 @@ def paperPhase (j : ℕ) : ℂ :=
   Complex.I ^ j
 
 /-- The paper's odd generator in normalized Cantor form. -/
-def paperOddGenerator (j : ℕ) (hj : j < n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) :=
+def paperOddGenerator (j : ℕ) (hj : j < n) : FunctionSpace n →ₗ[ℂ] FunctionSpace n :=
   paperPhase j • (FunctionSpace.tilt (n := n) ⟨j, hj⟩ * pairPrefix (n := n) j)
 
 /-- The paper's even generator in normalized Cantor form. -/
-def paperEvenGenerator (j : ℕ) (hj : j < n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) :=
+def paperEvenGenerator (j : ℕ) (hj : j < n) : FunctionSpace n →ₗ[ℂ] FunctionSpace n :=
   paperPhase j • (FunctionSpace.switch (n := n) ⟨j, hj⟩ * pairPrefix (n := n) j)
 
 theorem paperPhase_sq (j : ℕ) :
@@ -305,7 +311,7 @@ theorem paperOddGenerator_sq (j : ℕ) (hj : j < n) :
   have hcomm : Commute (FunctionSpace.tilt (n := n) ⟨j, hj⟩) (pairPrefix (n := n) j) :=
     tilt_comm_pairPrefix (n := n) (m := j) (j := j) (Nat.le_refl j) hj
   have hpair_sq : pairPrefix (n := n) j * pairPrefix (n := n) j
-      = ((-1 : ℂ) ^ j) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
+      = ((-1 : ℂ) ^ j) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
     pairPrefix_sq (n := n) (m := j) (Nat.le_of_lt hj)
   calc
     paperOddGenerator (n := n) j hj * paperOddGenerator (n := n) j hj
@@ -326,7 +332,7 @@ theorem paperOddGenerator_sq (j : ℕ) (hj : j < n) :
                   (d := pairPrefix (n := n) j))
     _ = ((-1 : ℂ) ^ j) •
           (((FunctionSpace.tilt (n := n) ⟨j, hj⟩ * FunctionSpace.tilt (n := n) ⟨j, hj⟩))
-            * (((-1 : ℂ) ^ j) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))) := by
+            * (((-1 : ℂ) ^ j) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))) := by
               rw [hpair_sq]
     _ = 1 := by
               have hsign : ((-1 : ℂ) ^ j) * ((-1 : ℂ) ^ j) = 1 := by
@@ -339,7 +345,7 @@ theorem paperEvenGenerator_sq (j : ℕ) (hj : j < n) :
   have hcomm : Commute (FunctionSpace.switch (n := n) ⟨j, hj⟩) (pairPrefix (n := n) j) :=
     switch_comm_pairPrefix (n := n) (m := j) (j := j) (Nat.le_refl j) hj
   have hpair_sq : pairPrefix (n := n) j * pairPrefix (n := n) j
-      = ((-1 : ℂ) ^ j) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
+      = ((-1 : ℂ) ^ j) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
     pairPrefix_sq (n := n) (m := j) (Nat.le_of_lt hj)
   calc
     paperEvenGenerator (n := n) j hj * paperEvenGenerator (n := n) j hj
@@ -360,7 +366,7 @@ theorem paperEvenGenerator_sq (j : ℕ) (hj : j < n) :
                   (d := pairPrefix (n := n) j))
     _ = ((-1 : ℂ) ^ j) •
           (((FunctionSpace.switch (n := n) ⟨j, hj⟩ * FunctionSpace.switch (n := n) ⟨j, hj⟩))
-            * (((-1 : ℂ) ^ j) • (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))) := by
+            * (((-1 : ℂ) ^ j) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))) := by
               rw [hpair_sq]
     _ = 1 := by
               have hsign : ((-1 : ℂ) ^ j) * ((-1 : ℂ) ^ j) = 1 := by
@@ -429,28 +435,28 @@ theorem paperOddGenerator_anticomm_paperEvenGenerator (j : ℕ) (hj : j < n) :
 
 /-- Paper-facing finite endpoint basis. -/
 noncomputable def endpointBasis (n : ℕ) :
-    Module.Basis (((Fin n) → Bool)) ℂ ((((Fin n) → Bool) → ℂ)) :=
+    Module.Basis (CantorAddress n) ℂ (FunctionSpace n) :=
   InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n)
 
-@[simp] theorem endpointBasis_apply (n : ℕ) (x : ((Fin n) → Bool)) :
+@[simp] theorem endpointBasis_apply (n : ℕ) (x : CantorAddress n) :
     endpointBasis (n := n) x = Pi.single x (1 : ℂ) :=
   InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis_apply (n := n) x
 
-theorem endpointBasis_repr_apply (n : ℕ) (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+theorem endpointBasis_repr_apply (n : ℕ) (f : FunctionSpace n) (x : CantorAddress n) :
     (endpointBasis (n := n)).repr f x = f x :=
   InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis_repr_apply (n := n) f x
 
 /-- A pure tensor of endpoint basis vectors is the corresponding tensor basis vector. -/
 @[simp] theorem endpointBasis_tensorProduct_apply {m n : ℕ}
-    (x : ((Fin m) → Bool)) (y : ((Fin n) → Bool)) :
+    (x : CantorAddress m) (y : CantorAddress n) :
     (endpointBasis (n := m)).tensorProduct (endpointBasis (n := n)) (x, y)
       = (endpointBasis (n := m) x) ⊗ₜ (endpointBasis (n := n) y) := by
   simp [endpointBasis]
 
 /-- The finite endpoint bases satisfy the tensor-product matrix identity from Mathlib. -/
 theorem endpointBasis_tensorProduct_toMatrix {m n : ℕ}
-    (f : (((Fin m) → Bool) → ℂ) →ₗ[ℂ] (((Fin m) → Bool) → ℂ))
-    (g : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :
+    (f : FunctionSpace m →ₗ[ℂ] FunctionSpace m)
+    (g : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :
     LinearMap.toMatrix
         ((endpointBasis (n := m)).tensorProduct (endpointBasis (n := n)))
         ((endpointBasis (n := m)).tensorProduct (endpointBasis (n := n)))
@@ -467,41 +473,41 @@ end FunctionSpace
 
 /-- The paper's `n = 1` finite Pauli bridge is theorem-backed. -/
 theorem cl11PauliBridge_target :
-    InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge
+    (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma
         ⟨0, by decide⟩ = Eplus ∧
-      InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma
         ⟨1, by decide⟩ = J1 ∧
       (∀ i : Fin (2 * 1),
-        InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge i *
-          InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge i = 1) ∧
+        (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i *
+          (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i = 1) ∧
       (∀ {i j : Fin (2 * 1)}, i ≠ j →
-        InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge i *
-            InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge j +
-          InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge j *
-            InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge i = 0) :=
+        (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i *
+            (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma j +
+          (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma j *
+            (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i = 0) :=
 by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · rfl
-  · rfl
+  · exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_zero
+  · exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_one
   · intro i
     exact
-      InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_sq i
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).clifford_sq i
   · intro i j hij
     rw [
-      InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_anticomm hij]
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).clifford_anticomm i j hij]
     simp
 
 /-- The first paper generator in the `n = 1` matrix base case. -/
 theorem cl11PauliBridge_psiGamma_zero :
-    InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge ⟨0, by decide⟩
+    (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma ⟨0, by decide⟩
       = Eplus :=
-  rfl
+  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_zero
 
 /-- The second paper generator in the `n = 1` matrix base case. -/
 theorem cl11PauliBridge_psiGamma_one :
-    InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge ⟨1, by decide⟩
+    (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma ⟨1, by decide⟩
       = J1 :=
-  rfl
+  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_one
 
 /-- The `Cl(1,1)` matrix isomorphism underlying the paper's base case. -/
 noncomputable def cl11PauliMatrixEquiv :

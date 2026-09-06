@@ -65,13 +65,6 @@ theorem conjugatingBraidAction_inverse_cancel {G : Type} [Group G] (base x : G) 
     conjugatingBraidAction base⁻¹ (conjugatingBraidAction base x) = x := by
   simp [conjugatingBraidAction, mul_assoc]
 
-/- Conjugating actions compose according to multiplication of their bases. -/
-theorem conjugatingBraidAction_comp {G : Type} [Group G]
-    (base₁ base₂ x : G) :
-    conjugatingBraidAction base₁ (conjugatingBraidAction base₂ x) =
-      conjugatingBraidAction (base₁ * base₂) x := by
-  simp [conjugatingBraidAction, mul_assoc]
-
 /-- The `A`-side action is conjugation by the pointed element. -/
 def pointedBraidActionX
     {Carrier : Type} [Group Carrier] (base x : Carrier) : Carrier :=
@@ -115,21 +108,21 @@ This restores the historical public carrier without storing coherence as
 evidence: the nontrivial action is owned by the native automorphism
 `MulAut.conj`, while `base`, `x`, and `y` are genuine group data.
 -/
-def PointedGroupBraidData (Carrier : Type) [Group Carrier] :=
+def PointedGroupBraidWitness (Carrier : Type) [Group Carrier] :=
   Carrier × Carrier × Carrier
 
-namespace PointedGroupBraidData
+namespace PointedGroupBraidWitness
 
 variable {Carrier : Type} [Group Carrier]
-variable (W : PointedGroupBraidData Carrier)
+variable (W : PointedGroupBraidWitness Carrier)
 
-abbrev base : Carrier := W.1
+def base : Carrier := W.1
 
-abbrev x : Carrier := W.2.1
+def x : Carrier := W.2.1
 
-abbrev y : Carrier := W.2.2
+def y : Carrier := W.2.2
 
-def mk (base x y : Carrier) : PointedGroupBraidData Carrier :=
+def mk (base x y : Carrier) : PointedGroupBraidWitness Carrier :=
   (base, x, y)
 
 /-- The bundled `A`-side action, evaluated through the native conjugation owner. -/
@@ -150,6 +143,6 @@ theorem actionY_eq :
     W.actionY = W.y :=
   rfl
 
-end PointedGroupBraidData
+end PointedGroupBraidWitness
 
 end InfoGeometry.Topology.PointedGroups

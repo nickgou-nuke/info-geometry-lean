@@ -98,12 +98,13 @@ theorem colimit_transport_invariance
     C.toLimit (n + 1) (C.shift n x) = C.toLimit n x :=
   C.compatibility n x
 
-/-! ### 5. Grand Proof 2-Category & Hodge Colimit Synthesis -/
+/-! The reusable boundary is the individual Dirac, cone, and colimit lemmas
+    above; the former aggregate synthesis theorem is omitted. -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Proof 2-Category, Dirac-Hodge Square & Acyclic Colimit Closure**
 -/
-theorem grand_proof_2cat_hodge_colimit_synthesis
+/- theorem grand_proof_2cat_hodge_colimit_synthesis
     (TwoCat : ProofTwoCategoryData)
     {nE nV : ℕ} (b1 : Matrix (Fin nE) (Fin nV) ℝ)
     {Node : Type*} (D : DAGNodeCone Node) (a : Node)
@@ -118,6 +119,6 @@ theorem grand_proof_2cat_hodge_colimit_synthesis
     (Colim.toLimit (n + 1) (Colim.shift n x) = Colim.toLimit n x) := by
   refine ⟨dirac_square_eq_hodge_laplacian b1,
           dag_cone_acyclic_self D a,
-          colimit_transport_invariance Colim n x⟩
+          colimit_transport_invariance Colim n x⟩ -/
 
 end InfoGeometry.Canonical.ProofTwoCategoryHodge

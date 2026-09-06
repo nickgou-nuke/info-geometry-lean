@@ -1,10 +1,10 @@
 import Mathlib.Tactic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Arithmetic.MoebiusSignature
 
-open InfoGeometry.Topology.FractalCantorFock.CantorBoundaryFunctionSpace
+open InfoGeometry.Topology.FractalCantorFockWitness.CantorBoundaryFunctionSpace
 
 /-!
 # Cyclic Cocycle on the Cantor Boundary
@@ -38,7 +38,7 @@ abbrev KTheoryProjection (n : ℕ) :=
 
 namespace KTheoryProjection
 
-abbrev e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
+def e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
 
 theorem is_idempotent {n : ℕ} (proj : KTheoryProjection n) :
     e proj * e proj = e proj := by
@@ -77,25 +77,6 @@ theorem matrix_trace_comm_lemma2 (tilt D e D_inv : Matrix (Fin 2) (Fin 2) ℂ)
     D * (D_inv * tilt * e) = (D * D_inv) * (tilt * e) := by simp [Matrix.mul_assoc]
     _ = 1 * (tilt * e) := by rw [hDleft]
     _ = tilt * e := by simp
-
-theorem finiteChiralCocycle0_conjugation_invariant
-    (tilt D e D_inv : Matrix (Fin 2) (Fin 2) ℂ)
-    (hComm : D * e = e * D)
-    (hDleft : D * D_inv = 1) :
-    finiteChiralCocycle0 (D_inv * tilt * D) e =
-      finiteChiralCocycle0 tilt e := by
-  unfold finiteChiralCocycle0
-  calc
-    Matrix.trace ((D_inv * tilt * D) * e) =
-        Matrix.trace ((D_inv * tilt * e) * D) := by
-      rw [show (D_inv * tilt * D) * e = D_inv * (tilt * D) * e by
-        simp [Matrix.mul_assoc]]
-      exact congrArg Matrix.trace
-        (matrix_trace_comm_lemma1 tilt D e D_inv hComm)
-    _ = Matrix.trace (D * (D_inv * tilt * e)) := by
-      rw [Matrix.trace_mul_comm]
-    _ = Matrix.trace (tilt * e) := by
-      rw [matrix_trace_comm_lemma2 tilt D e D_inv hDleft]
 
 /--
 Finite chiral trace cancellation.

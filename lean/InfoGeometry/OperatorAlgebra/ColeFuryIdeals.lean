@@ -51,6 +51,28 @@ def g0Core : Spin32Matrix := horizonDown * horizonUp - horizonUp * horizonDown
 /-- Explicit diagonal `diag(-I₁₆,+I₁₆)` target for the commutator closure. -/
 def expectedG0Core : Spin32Matrix := -upperLeft + lowerRight
 
+/-- Structure packaging the quadrant splitting laws. -/
+structure ColeFurySplit where
+  horizonUp : Spin32Matrix
+  horizonDown : Spin32Matrix
+  h_nilpotent : horizonUp * horizonUp = 0
+  h_dag_nilpotent : horizonDown * horizonDown = 0
+  h_commutator : horizonDown * horizonUp - horizonUp * horizonDown = expectedG0Core
+
+/-- Concrete quadrant split. -/
+def concreteSplit : ColeFurySplit where
+  horizonUp := horizonUp
+  horizonDown := horizonDown
+  h_nilpotent := by
+    unfold horizonUp
+    native_decide
+  h_dag_nilpotent := by
+    unfold horizonDown
+    native_decide
+  h_commutator := by
+    unfold horizonUp horizonDown expectedG0Core upperLeft lowerRight
+    native_decide
+
 /-- Upper-left quadrant is an idempotent projector. -/
 theorem upperLeft_idempotent : upperLeft * upperLeft = upperLeft := by
   unfold upperLeft
@@ -77,14 +99,12 @@ theorem diagonal_quadrants_sum : upperLeft + lowerRight = 1 := by
   native_decide
 
 /-- The upper-right horizon block is nilpotent. -/
-theorem horizonUp_nilpotent : horizonUp * horizonUp = 0 := by
-  unfold horizonUp
-  native_decide
+theorem horizonUp_nilpotent : horizonUp * horizonUp = 0 :=
+  concreteSplit.h_nilpotent
 
 /-- The lower-left horizon block is nilpotent. -/
-theorem horizonDown_nilpotent : horizonDown * horizonDown = 0 := by
-  unfold horizonDown
-  native_decide
+theorem horizonDown_nilpotent : horizonDown * horizonDown = 0 :=
+  concreteSplit.h_dag_nilpotent
 
 /-- Upper-right followed by lower-left closes to the upper-left diagonal block. -/
 theorem horizonUp_horizonDown : horizonUp * horizonDown = upperLeft := by
@@ -103,9 +123,7 @@ theorem horizon_anticomm_identity : horizonUp * horizonDown + horizonDown * hori
 /-- The horizon commutator closes into the diagonal grading core. -/
 theorem horizon_commutator_expected :
     horizonDown * horizonUp - horizonUp * horizonDown = expectedG0Core :=
-  by
-    unfold horizonUp horizonDown expectedG0Core upperLeft lowerRight
-    native_decide
+  concreteSplit.h_commutator
 
 /-- The named grading core equals the explicit diagonal target. -/
 theorem g0Core_eq_expected : g0Core = expectedG0Core := by
@@ -126,5 +144,22 @@ theorem g0Core_horizonUp_weight : g0Core * horizonUp - horizonUp * g0Core = (-2 
 theorem g0Core_horizonDown_weight : g0Core * horizonDown - horizonDown * g0Core = (2 : ℤ) • horizonDown := by
   unfold g0Core horizonUp horizonDown
   native_decide
+
+/-- Finite kernel-checked packet for the 32-dimensional quadrant ideal laws. -/
+theorem coleFury_ideal_packet :
+    upperLeft * upperLeft = upperLeft ∧
+      lowerRight * lowerRight = lowerRight ∧
+      horizonUp * horizonUp = 0 ∧
+      horizonDown * horizonDown = 0 ∧
+      horizonUp * horizonDown = upperLeft ∧
+      horizonDown * horizonUp = lowerRight ∧
+      horizonDown * horizonUp - horizonUp * horizonDown = expectedG0Core ∧
+      g0Core * g0Core = 1 ∧
+      g0Core * horizonUp - horizonUp * g0Core = (-2 : ℤ) • horizonUp ∧
+      g0Core * horizonDown - horizonDown * g0Core = (2 : ℤ) • horizonDown := by
+  exact ⟨upperLeft_idempotent, lowerRight_idempotent, horizonUp_nilpotent,
+    horizonDown_nilpotent, horizonUp_horizonDown, horizonDown_horizonUp,
+    horizon_commutator_expected, g0Core_sq, g0Core_horizonUp_weight,
+    g0Core_horizonDown_weight⟩
 
 end InfoGeometry.OperatorAlgebra.ColeFury

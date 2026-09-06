@@ -46,6 +46,11 @@ structure RelativeEntropyPersistenceCutoffCompatibleFamily
   map :
     ∀ ε : ℝ,
       C(X, RelativeEntropyPersistenceColimit (n := n) ε)
+  compatible :
+    ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
+      relativeEntropyPersistenceCutoffColimitMap hε
+          (map ε₂ x) =
+        map ε₁ x
 
 namespace RelativeEntropyPersistenceCutoffCompatibleFamily
 
@@ -53,12 +58,7 @@ namespace RelativeEntropyPersistenceCutoffCompatibleFamily
 noncomputable def toCone
     {n : ℕ} {X : Type} [TopologicalSpace X]
     (family :
-      RelativeEntropyPersistenceCutoffCompatibleFamily n X)
-    (hcompat :
-      ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
-        relativeEntropyPersistenceCutoffColimitMap hε
-            (family.map ε₂ x) =
-          family.map ε₁ x) :
+      RelativeEntropyPersistenceCutoffCompatibleFamily n X) :
     Cone (relativeEntropyPersistenceCutoffFunctor n) where
   pt := TopCat.of X
   π :=
@@ -67,38 +67,28 @@ noncomputable def toCone
         intro ε₂ ε₁ h
         apply TopCat.hom_ext
         ext x
-        exact (hcompat (leOfHom h.unop) x).symm }
+        exact (family.compatible (leOfHom h.unop) x).symm }
 
 /-- The continuous map induced into the cutoff inverse limit. -/
 noncomputable def lift
     {n : ℕ} {X : Type} [TopologicalSpace X]
     (family :
-      RelativeEntropyPersistenceCutoffCompatibleFamily n X)
-    (hcompat :
-      ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
-        relativeEntropyPersistenceCutoffColimitMap hε
-            (family.map ε₂ x) =
-          family.map ε₁ x) :
+      RelativeEntropyPersistenceCutoffCompatibleFamily n X) :
     C(X, RelativeEntropyPersistenceCutoffLimit n) :=
   (limit.lift
     (relativeEntropyPersistenceCutoffFunctor n)
-    (family.toCone hcompat)).hom
+    family.toCone).hom
 
 @[simp] theorem projection_lift
     {n : ℕ} {X : Type} [TopologicalSpace X]
     (family :
       RelativeEntropyPersistenceCutoffCompatibleFamily n X)
-    (hcompat :
-      ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
-        relativeEntropyPersistenceCutoffColimitMap hε
-            (family.map ε₂ x) =
-          family.map ε₁ x)
     (ε : ℝ) (x : X) :
     relativeEntropyPersistenceCutoffLimitProjection n ε
-        (family.lift hcompat x) =
+        (family.lift x) =
       family.map ε x := by
   have hfac :=
-    limit.lift_π (family.toCone hcompat) (Opposite.op ε)
+    limit.lift_π family.toCone (Opposite.op ε)
   exact congrArg
     (fun k :
       TopCat.of X ⟶
@@ -110,49 +100,39 @@ theorem lift_unique
     {n : ℕ} {X : Type} [TopologicalSpace X]
     (family :
       RelativeEntropyPersistenceCutoffCompatibleFamily n X)
-    (hcompat :
-      ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
-        relativeEntropyPersistenceCutoffColimitMap hε
-            (family.map ε₂ x) =
-          family.map ε₁ x)
     (g : C(X, RelativeEntropyPersistenceCutoffLimit n))
     (hg :
       ∀ (ε : ℝ) (x : X),
         relativeEntropyPersistenceCutoffLimitProjection n ε (g x) =
           family.map ε x) :
-    g = family.lift hcompat := by
+    g = family.lift := by
   have hhom :
       TopCat.ofHom g =
         limit.lift
           (relativeEntropyPersistenceCutoffFunctor n)
-          (family.toCone hcompat) := by
+          family.toCone := by
     apply limit.hom_ext
     intro ε
     apply TopCat.hom_ext
     ext x
     exact
       (hg ε.unop x).trans
-        (family.projection_lift hcompat ε.unop x).symm
+        (family.projection_lift ε.unop x).symm
   exact congrArg TopCat.Hom.hom hhom
 
 theorem existsUnique_lift
     {n : ℕ} {X : Type} [TopologicalSpace X]
     (family :
-      RelativeEntropyPersistenceCutoffCompatibleFamily n X)
-    (hcompat :
-      ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂) (x : X),
-        relativeEntropyPersistenceCutoffColimitMap hε
-            (family.map ε₂ x) =
-          family.map ε₁ x) :
+      RelativeEntropyPersistenceCutoffCompatibleFamily n X) :
     ∃! g : C(X, RelativeEntropyPersistenceCutoffLimit n),
       ∀ (ε : ℝ) (x : X),
         relativeEntropyPersistenceCutoffLimitProjection n ε (g x) =
           family.map ε x := by
-  refine ⟨family.lift hcompat, ?_, ?_⟩
+  refine ⟨family.lift, ?_, ?_⟩
   · intro ε x
-    exact family.projection_lift hcompat ε x
+    exact family.projection_lift ε x
   · intro g hg
-    exact family.lift_unique hcompat g hg
+    exact family.lift_unique g hg
 
 end RelativeEntropyPersistenceCutoffCompatibleFamily
 

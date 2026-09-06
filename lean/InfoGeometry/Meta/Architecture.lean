@@ -64,64 +64,6 @@ def RepDepth.exportTags (depth : RepDepth) : Array String :=
    , s!"rep_layer:{depth.layerLabel}"
    , s!"rep_layer_description:{depth.layerDescription}" ]
 
-/-! ### Typed semantic-edge metadata
-
-These tags classify the *meaning of a declaration-level bridge* for graph
-projection.  They do not assert that a dependency edge is a theorem: Lean
-source and the kernel remain the authority for that.  The exporter merely
-preserves the author-supplied ontology alongside the declaration node.
--/
-
-inductive EdgeKind where
-  | theorem
-  | equivalence
-  | representation
-  | analogy
-  | conjecturalBridge
-  deriving DecidableEq, Repr, Inhabited
-
-def EdgeKind.slug : EdgeKind → String
-  | .theorem => "theorem"
-  | .equivalence => "equivalence"
-  | .representation => "representation"
-  | .analogy => "analogy"
-  | .conjecturalBridge => "conjectural_bridge"
-
-def parseEdgeKind? (n : Name) : Option EdgeKind :=
-  if n.toString == "proof" then some .theorem else match n.eraseMacroScopes with
-  | `theorem => some .theorem
-  | `proof => some .theorem
-  | `equivalence => some .equivalence
-  | `representation => some .representation
-  | `analogy => some .analogy
-  | `conjectural_bridge => some .conjecturalBridge
-  | _ => none
-
-syntax (name := edge_kind) "edge_kind " ident : attr
-
-initialize edgeKindAttr : ParametricAttribute EdgeKind ←
-  registerParametricAttribute {
-    name := `edge_kind
-    descr := "Classify the semantic role of a declaration-level graph bridge."
-    getParam := fun _ stx => do
-      match stx with
-      | `(attr| edge_kind $id:ident) =>
-          let raw := id.getId
-          match parseEdgeKind? raw with
-          | some k => pure k
-          | none =>
-              throwError "invalid `edge_kind` value `{raw}`; expected theorem, equivalence, representation, analogy, or conjectural_bridge"
-      | _ => throwUnsupportedSyntax
-    }
-
-def edgeKind? (env : Environment) (declName : Name) : Option EdgeKind :=
-  edgeKindAttr.getParam? env declName
-
-def edgeKindTagStringsOf (env : Environment) (declName : Name) : Array String :=
-  match edgeKind? env declName with
-  | some kind => #[s!"edge_kind:{kind.slug}"]
-  | none => #[]
-
 /-- Parse attribute syntax into the internal representation depth. -/
 def parseRepDepth? (n : Name) : Option RepDepth :=
   match n.eraseMacroScopes with
@@ -336,19 +278,30 @@ dependencies.  This computes the same relation as the breadth-first traversal,
 but shares results across audited roots instead of repeatedly walking the same
 subgraph.
 -/
-def nearestTaggedDescendantsMemo
+partial def nearestTaggedDescendantsMemo
     (env : Environment)
     (directDeps : Std.HashMap Name (Array Name))
     (cacheRef : IO.Ref (Std.HashMap Name NameSet))
     (root : Name)
-    (_visiting : NameSet := {}) : CoreM NameSet := do
+    (visiting : NameSet := {}) : CoreM NameSet := do
   let cache ← cacheRef.get
   match cache.get? root with
   | some cached => pure cached
   | none =>
-      let nearest := nearestTaggedDescendantsFromDeps env directDeps root
-      cacheRef.modify fun cache => cache.insert root nearest
-      pure nearest
+      if visiting.contains root then
+        pure {}
+      else
+        let visiting := visiting.insert root
+        let mut nearest : NameSet := {}
+        for dep in directDeps.getD root #[] do
+          if (repDepth? env dep).isSome then
+            nearest := nearest.insert dep
+          else
+            let depNearest ←
+              nearestTaggedDescendantsMemo env directDeps cacheRef dep visiting
+            nearest := nearest.union depNearest
+        cacheRef.modify fun cache => cache.insert root nearest
+        pure nearest
 
 /-- Architecture violations detected from direct and transitive tagged dependencies. -/
 def taggedDependencyViolations

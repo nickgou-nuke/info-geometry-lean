@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -231,7 +232,7 @@ local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
-Bridge property linking an LLM router-residual operator to the canonical observer-defect residual.
+Bridge assumption linking an LLM router-residual operator to the canonical observer-defect residual.
 -/
 structure RouterDefectBridge where
   CIK : CertifiedInverseKernel H₂
@@ -272,14 +273,14 @@ noncomputable def sourcedGenerator (B : RouterDefectBridge (E := E)) : EndH :=
   B.flow.K0 + B.routerResidual
 
 /-- LLM-side sourced generator coincides with canonical sourced modular generator under bridge equality. -/
-@[rep_depth transport]
+@[bridge_target_tag, rep_depth transport]
 theorem sourcedGenerator_eq_canonical (B : RouterDefectBridge (E := E)) :
     B.sourcedGenerator = sourcedModularGenerator B.CIK B.obs B.flow := by
   unfold sourcedGenerator sourcedModularGenerator
   simp [B.residual_eq_observerDefect]
 
 /-- Drazin-cut preservation follows immediately once the router residual is identified canonically. -/
-@[rep_depth transport]
+@[bridge_target_tag, rep_depth transport]
 theorem sourcedGenerator_respects_cut (B : RouterDefectBridge (E := E)) :
     Commute B.sourcedGenerator B.CIK.spectralComplementaryProjector := by
   rw [sourcedGenerator_eq_canonical (B := B)]
@@ -416,7 +417,7 @@ def ObserverDefectResidualWeylThermodynamicBoundedByZD
     (obs : ObserverL5 CIK) : Prop :=
   -- DEBT_ID: LLM-ZD-001
   -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: boundedness is recorded as a nonempty comparison property rather than a proven theorem.
+  -- ZERO_DATUM: boundedness is recorded as a nonempty comparison witness rather than a proven theorem.
   Nonempty
     (WeylThermodynamicOperatorComparison (E := E)
       (observerDefectResidual CIK obs)
@@ -439,10 +440,10 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
   ⟨cmp⟩
 
 /--
-Constructive property packet for the corrected Weyl/thermodynamic observer-defect
+Constructive witness packet for the corrected Weyl/thermodynamic observer-defect
 bound. This carries the comparison packet as explicit data, so downstream
 constructors do not need to consume a bare `Nonempty` proposition when an
-honest property is already available.
+honest witness is already available.
 -/
 @[rep_depth transport]
 structure ObserverDefectResidualWeylThermodynamicControl
@@ -454,7 +455,7 @@ structure ObserverDefectResidualWeylThermodynamicControl
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
 
 /--
-An explicit Weyl/thermodynamic control property closes the theorem-level bounded
+An explicit Weyl/thermodynamic control witness closes the theorem-level bounded
 observer-defect target.
 -/
 @[rep_depth transport]
@@ -564,7 +565,7 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD
 
 /--
 Canonical constructor for the thermodynamic router bridge from an explicit
-Weyl/thermodynamic comparison property packet.
+Weyl/thermodynamic comparison witness packet.
 
 This keeps the corrected D3 transport on the theorem-backed constructor lane
 without requiring downstream callers to eliminate the theorem-level `Nonempty`
@@ -618,7 +619,7 @@ Canonical theorem-backed constructor for the bounded bridge.
 
 This constructor identifies the router residual with the canonical observer-defect
 residual. The bound is derived from the deviation-control predicate instead of
-requiring an explicit norm-bound property.
+requiring an explicit norm-bound hypothesis.
 -/
 noncomputable def ofCanonicalObserverDefect
   (CIK : CertifiedInverseKernel H₂)
@@ -634,7 +635,7 @@ noncomputable def ofCanonicalObserverDefect
 /--
 Core canonical constructor for a canonical observer controlled by `Z_D` — this route
 consumes the owner predicate `ObserverDeviationControlledByZD` directly, eliminating
-the explicit bound property on this lane.
+the explicit bound hypothesis on this lane.
 -/
 noncomputable def ofCanonicalControlledObserver
   (CIK : CertifiedInverseKernel H₂)
@@ -661,7 +662,7 @@ noncomputable def ofZDControlledObserver
 
 /--
 Constructive bounded constructor for a canonical observer carrying an explicit
-owner-side deviation-control property packet.
+owner-side deviation-control witness packet.
 -/
 noncomputable def ofControlObserver
     (CIK : CertifiedInverseKernel H₂)
@@ -746,9 +747,9 @@ zero.
 /--
 Zero-defect bounded constructor for an aligned observer.
 
-This closes the `ZD` budget without a free inequality property in the
+This closes the `ZD` budget without a free inequality assumption in the
 equilibrium lane: alignment constructs an explicit owner-side
-`ObserverDeviationControl` property, and the general `ofControlObserver`
+`ObserverDeviationControl` witness, and the general `ofControlObserver`
 constructor consumes that packet without reopening a bridge-local residual
 budget.
 -/
@@ -778,7 +779,7 @@ noncomputable def ofStrainZeroObserver
 
 /--
 Zero-defect bounded constructor for an observer whose local slice is exactly the
-property spectral projector.  The owner lane first constructs the exact
+certified spectral projector.  The owner lane first constructs the exact
 deviation-control predicate, and the bounded bridge is then obtained from the
 general `ofZDControlledObserver` constructor.
 -/
@@ -884,7 +885,7 @@ theorem ofZDControlledObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
   exact flow.commutesQ0
 
 /--
-If an observer is carried by an explicit owner-side deviation-control property and
+If an observer is carried by an explicit owner-side deviation-control witness and
 `Z_D` vanishes, the bounded sourced generator collapses to the background flow.
 -/
 @[rep_depth transport]
@@ -903,7 +904,7 @@ theorem ofControlObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
       (hZD := hZD)
 
 /--
-If an observer is carried by an explicit owner-side deviation-control property and
+If an observer is carried by an explicit owner-side deviation-control witness and
 `Z_D` vanishes, Drazin-cut preservation reduces to flow commutation.
 -/
 @[rep_depth transport]
@@ -922,7 +923,7 @@ theorem ofControlObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
   exact flow.commutesQ0
 
 /--
-Strain-zero sourced-flow collapse for the control-property constructor.
+Strain-zero sourced-flow collapse for the control-witness constructor.
 
 This is a constructive infinite-lane descent that removes the extra `Z_D = 0`
 input on this branch: the owner theorem
@@ -946,8 +947,8 @@ theorem ofControlObserver_sourcedGenerator_eq_flow_of_strain_eq_zero
   simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 /--
-On the exact projector-deviation-zero branch, the control-property constructor
-already collapses the router residual without any extra `Z_D = 0` property.
+On the exact projector-deviation-zero branch, the control-witness constructor
+already collapses the router residual without any extra `Z_D = 0` hypothesis.
 -/
 @[rep_depth transport]
 theorem ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
@@ -963,9 +964,9 @@ theorem ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
   simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 /--
-On the exact projector-deviation-zero branch, the control-property constructor
+On the exact projector-deviation-zero branch, the control-witness constructor
 already collapses the sourced generator to the background flow without any extra
-`Z_D = 0` property.
+`Z_D = 0` hypothesis.
 -/
 @[rep_depth transport]
 theorem ofControlObserver_sourcedGenerator_eq_flow_of_deviation_eq_zero
@@ -982,7 +983,7 @@ theorem ofControlObserver_sourcedGenerator_eq_flow_of_deviation_eq_zero
         (E := E) (CIK := CIK) (obs := obs) (flow := flow) (c := c) (hDev := hDev))
 
 /--
-Under zero central defect, the control-property constructor forces zero scalarized
+Under zero central defect, the control-witness constructor forces zero scalarized
 observer strain on the owner lane.
 -/
 @[rep_depth transport]
@@ -1134,9 +1135,9 @@ theorem sourcedGenerator_deviation_norm_le_ZD
   B.residual_norm_le_ZD
 
 /--
-Constructive readback for the property-routed bounded constructor: the router residual
+Constructive readback for the witness-routed bounded constructor: the router residual
 inherits the canonical `Z_D` budget from the explicit `ObserverDeviationControl`
-packet, without reopening a bare `ObserverDeviationControlledByZD` property.
+packet, without reopening a bare `ObserverDeviationControlledByZD` hypothesis.
 -/
 @[rep_depth transport]
 theorem ofControlObserver_routerResidual_norm_le_ZD

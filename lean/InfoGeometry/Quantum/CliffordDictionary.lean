@@ -32,58 +32,44 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 **Cl(1,1) Atomic Dictionary**:
 Structural identification of split-signature generators.
 -/
-structure Cl11DictionaryData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+structure Cl11Dictionary (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Graduation/Chirality operator squaring to +1. -/
   ε : DoubledSpace E →L[ℝ] DoubledSpace E
   /-- Conjugation/Fundamental symmetry squaring to +1. -/
   J : DoubledSpace E →L[ℝ] DoubledSpace E
   /-- Internal complex structure K = J ∘ ε squaring to -1. -/
   K : DoubledSpace E →L[ℝ] DoubledSpace E
-
-def Cl11DictionaryLaws (D : Cl11DictionaryData E) : Prop :=
-  D.ε.comp D.ε = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-  D.J.comp D.J = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-  D.J.comp D.ε = -(D.ε.comp D.J) ∧
-  D.K = D.J.comp D.ε ∧
-  D.K.comp D.K = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
-
-def Cl11Dictionary (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] :=
-  { D : Cl11DictionaryData E // Cl11DictionaryLaws D }
+  ε_inv : ε.comp ε = ContinuousLinearMap.id ℝ (DoubledSpace E)
+  J_inv : J.comp J = ContinuousLinearMap.id ℝ (DoubledSpace E)
+  anticomm : J.comp ε = -(ε.comp J)
+  K_def : K = J.comp ε
+  K_sq : K.comp K = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
 
 namespace Cl11Dictionary
 
-def ε (D : Cl11Dictionary E) : EndH := D.1.ε
-def J (D : Cl11Dictionary E) : EndH := D.1.J
-def K (D : Cl11Dictionary E) : EndH := D.1.K
-
 /-- Canonical dictionary instance for the doubled real model. -/
-noncomputable def canonical : Cl11Dictionary E := by
-  let D : Cl11DictionaryData E := {
-    ε := modularSignEpsilon (E := E)
-    J := modularConjugationJ (E := E)
-    K := modularComplexI (E := E)
-  }
-  exact ⟨D, by
-    refine ⟨modularSignEpsilon_sq (E := E), modularConjugationJ_sq (E := E), ?_, ?_,
-      modularComplexI_sq (E := E)⟩
-    · exact InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutes_modularSign (E := E)
-    · rfl⟩
-
-theorem canonical_laws : Cl11DictionaryLaws (canonical (E := E)).1 := by
-  exact (canonical (E := E)).2
+noncomputable def canonical : Cl11Dictionary E where
+  ε := modularSignEpsilon (E := E)
+  J := modularConjugationJ (E := E)
+  K := modularComplexI (E := E)
+  ε_inv := modularSignEpsilon_sq (E := E)
+  J_inv := modularConjugationJ_sq (E := E)
+  anticomm := InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutes_modularSign (E := E)
+  K_def := by
+    rfl
+  K_sq := modularComplexI_sq (E := E)
 
 @[simp] theorem canonical_eps_eq_spectral_epsilon :
     (canonical (E := E)).ε = spectral_epsilon (E := E) := by
-  simp [ε, canonical, modularSignEpsilon_eq_spectral_epsilon]
+  simp [canonical, modularSignEpsilon_eq_spectral_epsilon]
 
 @[simp] theorem canonical_J_eq_modular_j :
     (canonical (E := E)).J = modular_j (E := E) := by
-  simp [J, canonical, modularConjugationJ_eq_modular_j]
+  simp [canonical, modularConjugationJ_eq_modular_j]
 
 @[simp] theorem canonical_K_eq_complex_i :
     (canonical (E := E)).K = complex_i (E := E) := by
-  simp [K, canonical, modularComplexI_eq_complex_i]
+  simp [canonical, modularComplexI_eq_complex_i]
 
 /-- The canonical chirality atom is the Tomita-named modular sign `ε`. -/
 @[simp] theorem canonical_eps_eq_modularSignEpsilon :
@@ -101,59 +87,59 @@ theorem canonical_laws : Cl11DictionaryLaws (canonical (E := E)).1 := by
   rfl
 
 @[simp] theorem canonical_eps_sq :
-  ((canonical (E := E)).ε).comp ((canonical (E := E)).ε) =
+    ((canonical (E := E)).ε).comp ((canonical (E := E)).ε) =
       ContinuousLinearMap.id ℝ H₂ :=
-  (canonical_laws (E := E)).1
+  (canonical (E := E)).ε_inv
 
 @[simp] theorem canonical_J_sq :
     ((canonical (E := E)).J).comp ((canonical (E := E)).J) =
       ContinuousLinearMap.id ℝ H₂ :=
-  (canonical_laws (E := E)).2.1
+  (canonical (E := E)).J_inv
 
 @[simp] theorem canonical_K_sq :
     ((canonical (E := E)).K).comp ((canonical (E := E)).K) =
       -(ContinuousLinearMap.id ℝ H₂) :=
-  (canonical_laws (E := E)).2.2.2.2
+  (canonical (E := E)).K_sq
 
 /-- The canonical atoms satisfy `Jε = K`. -/
 @[simp] theorem canonical_J_comp_eps :
     ((canonical (E := E)).J).comp ((canonical (E := E)).ε) =
       (canonical (E := E)).K := by
-  exact (canonical_laws (E := E)).2.2.2.1.symm
+  exact (canonical (E := E)).K_def.symm
 
 /-- The reversed product satisfies `εJ = -K`. -/
 @[simp] theorem canonical_eps_comp_J :
     ((canonical (E := E)).ε).comp ((canonical (E := E)).J) =
       -((canonical (E := E)).K) := by
-  simpa [Cl11Dictionary.K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (spectral_epsilon_comp_modular_j (E := E))
 
 /-- Multiplication by `J` sends the phase atom back to the sign atom. -/
 @[simp] theorem canonical_J_comp_K :
     ((canonical (E := E)).J).comp ((canonical (E := E)).K) =
       (canonical (E := E)).ε := by
-  simpa [K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (modular_j_comp_complex_i (E := E))
 
 /-- Right multiplication by `J` sends the phase atom to minus the sign atom. -/
 @[simp] theorem canonical_K_comp_J :
     ((canonical (E := E)).K).comp ((canonical (E := E)).J) =
       -((canonical (E := E)).ε) := by
-  simpa [Cl11Dictionary.K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_comp_modular_j (E := E))
 
 /-- Multiplication by `ε` sends the phase atom to minus the conjugation atom. -/
 @[simp] theorem canonical_eps_comp_K :
     ((canonical (E := E)).ε).comp ((canonical (E := E)).K) =
       -((canonical (E := E)).J) := by
-  simpa [Cl11Dictionary.K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (spectral_epsilon_comp_complex_i (E := E))
 
 /-- Right multiplication by `ε` sends the phase atom back to conjugation. -/
 @[simp] theorem canonical_K_comp_eps :
     ((canonical (E := E)).K).comp ((canonical (E := E)).ε) =
       (canonical (E := E)).J := by
-  simpa [Cl11Dictionary.K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_comp_spectral_epsilon (E := E))
 
 /-- The modular sign is block-diagonal on the doubled real carrier. -/
@@ -169,7 +155,7 @@ theorem canonical_laws : Cl11DictionaryLaws (canonical (E := E)).1 := by
 /-- The composite `Jε` is the signed off-block phase axis. -/
 @[simp] theorem canonical_K_to_doubled (x ξ : E) :
     (canonical (E := E)).K (to_doubled x ξ : H₂) = to_doubled (-ξ) x := by
-  simpa [Cl11Dictionary.K, canonical, modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_to_doubled (E := E) x ξ)
 
 /-- The canonical conjugation atom is even for the modular block grading. -/

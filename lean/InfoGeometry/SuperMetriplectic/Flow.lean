@@ -46,7 +46,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 def quadratic (L : OnsagerMetricData V) (x : V) : ℝ :=
   L.pairing x (L.onsager x)
 
-/-- The Onsager quadratic form is nonnegative by packet property. -/
+/-- The Onsager quadratic form is nonnegative by packet assumption. -/
 theorem quadratic_nonnegative (L : OnsagerMetricData V) (x : V) :
     0 ≤ L.quadratic x :=
   L.metric_nonnegative x
@@ -96,6 +96,17 @@ theorem entropyProduction_nonnegative
   rw [F.entropyProduction_eq_onsager_quadratic]
   exact F.metric.metric_nonnegative F.entropyForce
 
+/-!
+The total metriplectic vector is the reversible vector plus the Onsager
+response to the entropy force.  This is the canonical interface used by
+concrete attention, Cuntz, and modular-flow realizations.
+-/
+theorem totalFlow_eq_reversible_add_onsager_entropy
+    (F : MetriplecticFlow V) :
+    F.totalFlow = F.reversibleFlow + F.metric.onsager F.entropyForce := by
+  rw [F.totalFlow_eq_reversible_add_dissipative,
+    F.dissipativeFlow_eq_onsager_entropy]
+
 /--
 Energy degeneracy of the dissipative flow:
 `⟨dH, L dS⟩ = 0`, using metric symmetry and `L dH = 0`.
@@ -136,6 +147,36 @@ theorem equilibrium_iff_dissipativeFlow_eq_zero
     F.equilibrium_of_dissipativeFlow_eq_zero⟩
 
 end MetriplecticFlow
+
+/--
+Scalar-body shadow of the coadjoint-leaf decomposition.
+
+`leafEntropyChange` records the reversible/symplectic motion along a leaf,
+while `transverseEntropyProduction` records the Onsager motion across leaves.
+-/
+structure CoadjointLeafEntropySplit where
+  transverseEntropyProduction : ℝ
+  totalEntropyChange : ℝ
+  transverseEntropyProduction_nonnegative :
+    0 ≤ transverseEntropyProduction
+  totalEntropyChange_eq_transverse :
+    totalEntropyChange = transverseEntropyProduction
+
+namespace CoadjointLeafEntropySplit
+
+/-- Transverse Onsager motion carries nonnegative entropy production. -/
+theorem transverse_entropy_nonnegative (S : CoadjointLeafEntropySplit) :
+    0 ≤ S.transverseEntropyProduction :=
+  S.transverseEntropyProduction_nonnegative
+
+/-- Total entropy change is nonnegative. -/
+theorem totalEntropyChange_nonnegative
+    (S : CoadjointLeafEntropySplit) :
+    0 ≤ S.totalEntropyChange := by
+  rw [S.totalEntropyChange_eq_transverse]
+  exact S.transverseEntropyProduction_nonnegative
+
+end CoadjointLeafEntropySplit
 
 /--
 Capstone packet for relativistic conformal viscous hydrodynamics at the

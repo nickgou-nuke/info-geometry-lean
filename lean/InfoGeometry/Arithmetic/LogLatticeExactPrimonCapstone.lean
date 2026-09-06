@@ -6,7 +6,6 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Tactic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Exact Algebraic Structure of the Log Lattice in the Primon Gas Capstone
@@ -28,7 +27,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 -/
 
 open scoped BigOperators Real
-open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 
@@ -73,29 +71,5 @@ theorem logLatticeEval_single_smul (p : PrimeIndex) (k : ℤ) :
     logLatticeEval (Finsupp.single p k) = (k : ℝ) * Real.log (p.val.val : ℝ) := by
   unfold logLatticeEval
   simp
-
-/--
-🏆 **MASTER SYNTHESIS: Exact Structure of the Log Lattice**
-
-Unifies:
-1. **Homomorphism Additivity**: $\text{ev}(v_1 + v_2) = \text{ev}(v_1) + \text{ev}(v_2)$.
-2. **Zero Invariance**: $\text{ev}(0) = 0$.
-3. **Prime Surprisal Generator**: $\text{ev}([p]) = \ln p$.
-4. **Integer Scaling**: $\text{ev}(k \cdot [p]) = k \cdot \ln p$.
-5. **Yang-Baxter Topological Integrability**: $F \cdot B \cdot F = R$ and $F^2 = 1$.
--/
-theorem grand_log_lattice_synthesis (p : PrimeIndex) (v1 v2 : LogLatticeElement) (k : ℤ) :
-    (logLatticeEval (v1 + v2) = logLatticeEval v1 + logLatticeEval v2) ∧
-    (logLatticeEval 0 = 0) ∧
-    (logLatticeEval (Finsupp.single p 1) = Real.log (p.val.val : ℝ)) ∧
-    (logLatticeEval (Finsupp.single p k) = (k : ℝ) * Real.log (p.val.val : ℝ)) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
-  ⟨logLatticeEval_add v1 v2,
-   logLatticeEval_zero,
-   logLatticeEval_single p,
-   logLatticeEval_single_smul p k,
-   F_sq,
-   F_B_F_eq_R⟩
 
 end InfoGeometry.Arithmetic.LogLattice

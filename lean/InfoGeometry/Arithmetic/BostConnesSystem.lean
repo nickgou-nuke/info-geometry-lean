@@ -44,44 +44,45 @@ def MultiplicativeIndexing.primePNat (p : ℕ) (hp : Nat.Prime p) : ℕ+ :=
   ⟨p, hp.pos⟩
 
 /-- Positive-integer indexed multiplicative generators. -/
-abbrev MultiplicativeIndexingHom (Op : Type*) [Monoid Op] := ℕ+ →* Op
+structure MultiplicativeIndexing (Op : Type*) [Monoid Op] where
+  S : ℕ+ →* Op
 
 namespace MultiplicativeIndexing
 
 variable {Op : Type*} [Monoid Op]
 
 /-- The generator at index `n`. -/
-def generator (C : MultiplicativeIndexingHom Op) (n : ℕ+) : Op :=
-  C n
+def generator (C : MultiplicativeIndexing Op) (n : ℕ+) : Op :=
+  C.S n
 
-@[simp] theorem generator_one (C : MultiplicativeIndexingHom Op) :
-    generator C 1 = 1 := by
-  simpa [generator] using C.map_one
+@[simp] theorem generator_one (C : MultiplicativeIndexing Op) :
+    C.generator 1 = 1 := by
+  simp [generator]
 
-@[simp] theorem generator_mul (C : MultiplicativeIndexingHom Op) (n m : ℕ+) :
-    generator C (n * m) = generator C n * generator C m := by
-  simpa [generator] using C.map_mul n m
+@[simp] theorem generator_mul (C : MultiplicativeIndexing Op) (n m : ℕ+) :
+    C.generator (n * m) = C.generator n * C.generator m := by
+  simp [generator]
 
-@[simp] theorem generator_pow (C : MultiplicativeIndexingHom Op) (n : ℕ+) (k : ℕ) :
-    generator C (n ^ k) = generator C n ^ k := by
-  simpa [generator] using C.map_pow n k
+@[simp] theorem generator_pow (C : MultiplicativeIndexing Op) (n : ℕ+) (k : ℕ) :
+    C.generator (n ^ k) = C.generator n ^ k := by
+  simp [generator]
 
 /-- Ordered product readback for multiplicative generators. -/
-theorem generator_list_prod (C : MultiplicativeIndexingHom Op) (l : List ℕ+) :
-    generator C l.prod = (l.map (generator C)).prod := by
+theorem generator_list_prod (C : MultiplicativeIndexing Op) (l : List ℕ+) :
+    C.generator l.prod = (l.map C.generator).prod := by
   induction l with
   | nil => simp [generator]
   | cons a rest ih =>
-      simpa [generator] using congrArg (fun x => generator C a * x) ih
+      simpa [generator] using congrArg (fun x => C.S a * x) ih
 
 /-- Prime-indexed generator notation. -/
-def S_prime (C : MultiplicativeIndexingHom Op) (p : ℕ) [Fact p.Prime] : Op :=
-  generator C (primePNat p (Fact.out : p.Prime))
+def S_prime (C : MultiplicativeIndexing Op) (p : ℕ) [Fact p.Prime] : Op :=
+  C.generator (primePNat p (Fact.out : p.Prime))
 
-@[simp] theorem S_prime_power (C : MultiplicativeIndexingHom Op)
+@[simp] theorem S_prime_power (C : MultiplicativeIndexing Op)
     (p k : ℕ) (hp : Nat.Prime p) :
-    generator C ((primePNat p hp) ^ k) = generator C (primePNat p hp) ^ k := by
-  simpa [generator] using C.map_pow (primePNat p hp) k
+    C.generator ((primePNat p hp) ^ k) = C.generator (primePNat p hp) ^ k := by
+  simp [generator]
 
 end MultiplicativeIndexing
 
@@ -93,36 +94,30 @@ map is a monoid homomorphism, its value at `1` is the unit; demanding
 `star (S 1) * S n = 0` for `n ≠ 1` would force every non-unit generator to be
 zero and collapse any nontrivial ring.
 -/
-structure CuntzMultiplicativeIndexing (Op : Type*) [Semiring Op] [StarRing Op] where
-  S : ℕ+ →* Op
-  generator_isometry : ∀ n : ℕ+, star (S n) * S n = 1
-
-/-- Compatibility view of the Cuntz indexing as the native multiplicative indexing. -/
-abbrev CuntzMultiplicativeIndexing.toMultiplicativeIndexingHom
-    {Op : Type*} [Semiring Op] [StarRing Op]
-    (C : CuntzMultiplicativeIndexing Op) : MultiplicativeIndexingHom Op := C.S
+structure CuntzMultiplicativeIndexing (Op : Type*) [Ring Op] [StarRing Op]
+    extends MultiplicativeIndexing Op where
+  generator_isometry : ∀ n : ℕ+, star (toMultiplicativeIndexing.generator n) *
+      toMultiplicativeIndexing.generator n = 1
 
 namespace CuntzMultiplicativeIndexing
 
-variable {Op : Type*} [Semiring Op] [StarRing Op]
+variable {Op : Type*} [Ring Op] [StarRing Op]
 
 /-- Re-export the indexed generator. -/
 def generator (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
-  C.toMultiplicativeIndexingHom n
+  C.toMultiplicativeIndexing.generator n
 
 @[simp] theorem generator_one (C : CuntzMultiplicativeIndexing Op) :
-    generator C 1 = 1 :=
-  by simpa [generator, CuntzMultiplicativeIndexing.toMultiplicativeIndexingHom] using
-    C.S.map_one
+    C.generator 1 = 1 :=
+  C.toMultiplicativeIndexing.generator_one
 
 @[simp] theorem generator_mul (C : CuntzMultiplicativeIndexing Op) (n m : ℕ+) :
-    generator C (n * m) = generator C n * generator C m :=
-  by simpa [generator, CuntzMultiplicativeIndexing.toMultiplicativeIndexingHom] using
-    C.S.map_mul n m
+    C.generator (n * m) = C.generator n * C.generator m :=
+  C.toMultiplicativeIndexing.generator_mul n m
 
 /-- The range projection of the isometry indexed by `n`. -/
 def rangeProjection (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
-  generator C n * star (generator C n)
+  C.generator n * star (C.generator n)
 
 /-- Range projections are idempotent, by the isometry law. -/
 @[simp] theorem rangeProjection_idempotent (C : CuntzMultiplicativeIndexing Op)
@@ -131,9 +126,9 @@ def rangeProjection (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
     simpa [generator] using C.generator_isometry n
   calc
     C.rangeProjection n * C.rangeProjection n =
-        generator C n * (star (generator C n) * generator C n) * star (generator C n) := by
+        C.generator n * (star (C.generator n) * C.generator n) * star (C.generator n) := by
           simp only [rangeProjection, mul_assoc]
-    _ = generator C n * 1 * star (generator C n) := by rw [hIso]
+    _ = C.generator n * 1 * star (C.generator n) := by rw [hIso]
     _ = C.rangeProjection n := by simp [rangeProjection]
 
 /-- Range projections are self-adjoint. -/
@@ -166,7 +161,7 @@ The Nica meet law for positive-integer indexed range projections.  In a
 concrete Bost--Connes representation, the product of the `n` and `m` range
 projections is the range projection indexed by `lcm n m`.
 
-This is a predicate on a representation, not an additional owner ax!om.
+This is a predicate on a representation, not an additional owner axiom.
 -/
 def IsNicaCovariant (C : CuntzMultiplicativeIndexing Op) : Prop :=
   ∀ n m : ℕ+,
@@ -185,9 +180,9 @@ theorem rangeProjectionsCommute_of_isNicaCovariant
 /-- Prime generators inherit the isometry law. -/
 theorem prime_generator_isometry (C : CuntzMultiplicativeIndexing Op)
     (p : ℕ) [Fact p.Prime] :
-    star (generator C (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime))) *
-        generator C (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime)) = 1 := by
-  simpa [generator] using C.generator_isometry (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime))
+    star (C.generator (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime))) *
+        C.generator (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime)) = 1 :=
+  C.generator_isometry _
 
 end CuntzMultiplicativeIndexing
 

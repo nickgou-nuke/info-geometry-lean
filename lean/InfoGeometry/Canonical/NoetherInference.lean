@@ -280,7 +280,7 @@ theorem fisher_metric_eq_killing_form_of_orbit_base_relation_and_killing_conjuga
           rw [hKInv X Y]
 
 /--
-Orbit-level Fisher/Killing proportionality under a more structural property:
+Orbit-level Fisher/Killing proportionality under a more structural hypothesis:
 the symmetric involution `θ` commutes with operator conjugation, so the
 required Killing-side invariance is derived rather than supplied separately.
 -/
@@ -386,20 +386,5 @@ def BayesianSymmetryOrbit.update
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
   orbit.update 0 = prior := by
   simp [BayesianSymmetryOrbit.update, orbit.U_zero]
-
-theorem BayesianSymmetryOrbit.update_preserves_hessian
-    {prior : DSpace E}
-    (orbit : BayesianSymmetryOrbit (E := E) prior)
-    (t : ℝ) (x y : DSpace E) :
-    hessian_indefinite_form (E := E) (orbit.U t x) (orbit.U t y) =
-      hessian_indefinite_form (E := E) x y := by
-  exact orbit.preserves_hessian t x y
-
-theorem BayesianSymmetryOrbit.update_hessian_invariant
-    {prior : DSpace E}
-    (orbit : BayesianSymmetryOrbit (E := E) prior) (t : ℝ) :
-    hessian_indefinite_form (E := E) (orbit.update t) (orbit.update t) =
-      hessian_indefinite_form (E := E) prior prior := by
-  exact orbit.preserves_hessian t prior prior
 
 end InfoGeometry.Canonical.NoetherInference

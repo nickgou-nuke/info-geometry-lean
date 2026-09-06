@@ -14,7 +14,7 @@ locally in Lean:
 
 It deliberately does not package an `osp(1|2)` embedding, a super
 Jacobson--Morozov theorem, a CAR inductive-limit construction, a Cantor
-homeomorphism, or an AQFT representation theorem as property fields.  Those
+homeomorphism, or an AQFT representation theorem as witness fields.  Those
 claims need their own constructive owner modules.
 -/
 
@@ -50,22 +50,22 @@ theorem flip_flip (p : SuperParity) : flip (flip p) = p := by
 end SuperParity
 
 /-- Abstract vector superspace dimensions. -/
-def SuperDimension : Type :=
-  ℕ × ℕ
+structure SuperDimension where
+  /-- Even dimension. -/
+  evenDim : ℕ
+  /-- Odd dimension. -/
+  oddDim : ℕ
 
-namespace SuperDimension
-
-@[simp] def evenDim (D : SuperDimension) : ℕ :=
-  D.1
-
-@[simp] def oddDim (D : SuperDimension) : ℕ :=
-  D.2
-
-end SuperDimension
+/-- Super Jordan block descriptor. -/
+structure SuperJordanBlock where
+  /-- Length of the alternating-parity Jordan chain. -/
+  size : ℕ
+  /-- Positivity witness. -/
+  size_pos : 0 < size
 
 /-- A super Jordan block is admissible for `osp(1|2)` iff its size is odd. -/
-def SuperJordanBlock.AdmissibleOdd (size : ℕ) : Prop :=
-  size % 2 = 1
+def SuperJordanBlock.AdmissibleOdd (B : SuperJordanBlock) : Prop :=
+  B.size % 2 = 1
 
 namespace SuperJordanBlock
 
@@ -75,23 +75,23 @@ Parity at a position in an alternating super Jordan block.
 This is only the finite parity bookkeeping.  It does not construct a Jordan
 normal form or a matrix representation.
 -/
-def parityAt (size : ℕ) (start : SuperParity) (k : Fin size) :
+def parityAt (B : SuperJordanBlock) (start : SuperParity) (k : Fin B.size) :
     SuperParity :=
   if k.1 % 2 = 0 then start else start.flip
 
 @[simp]
 theorem parityAt_zero
-    (size : ℕ)
+    (B : SuperJordanBlock)
     (start : SuperParity)
-    (hB : 0 < size) :
-    parityAt size start ⟨0, hB⟩ = start := by
+    (hB : 0 < B.size) :
+    B.parityAt start ⟨0, hB⟩ = start := by
   simp [parityAt]
 
 @[simp]
 theorem parityAt_zero_even
-    (size : ℕ)
-    (hB : 0 < size) :
-    parityAt size SuperParity.even ⟨0, hB⟩ = SuperParity.even := by
+    (B : SuperJordanBlock)
+    (hB : 0 < B.size) :
+    B.parityAt SuperParity.even ⟨0, hB⟩ = SuperParity.even := by
   simp
 
 /--
@@ -101,8 +101,8 @@ This readback keeps the paper's odd-block criterion as a finite arithmetic
 predicate, without deriving an `osp(1|2)` embedding by itself.
 -/
 theorem admissibleOdd_iff
-    (size : ℕ) :
-    SuperJordanBlock.AdmissibleOdd size ↔ size % 2 = 1 :=
+    (B : SuperJordanBlock) :
+    B.AdmissibleOdd ↔ B.size % 2 = 1 :=
   Iff.rfl
 
 end SuperJordanBlock

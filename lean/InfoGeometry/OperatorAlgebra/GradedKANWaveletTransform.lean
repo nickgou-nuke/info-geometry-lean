@@ -136,7 +136,7 @@ end GradedWaveletCarrier
 
 /-! ## Master Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Multi-Graded $KAN$ Wavelet Transform & Channel Conservation**
 
 Unifies:
@@ -144,7 +144,7 @@ Unifies:
 2. Right channel summation $\sum_{\epsilon'} \mathcal{W}_{\epsilon, \epsilon'}(g) = \langle P_\epsilon f, \pi(g) \psi \rangle$.
 3. Total channel conservation $\sum_{\epsilon, \epsilon'} \mathcal{W}_{\epsilon, \epsilon'}(g) = \langle f, \pi(g) \psi \rangle$.
 -/
-theorem grand_graded_kan_wavelet_synthesis
+/- theorem grand_graded_kan_wavelet_synthesis
     (W : GradedWaveletCarrier V G ι)
     (f : V) (g : G) (eps : ι) :
     (∀ i j, i ≠ j → W.projectors.P i ∘ₗ W.projectors.P j = 0) ∧
@@ -152,6 +152,6 @@ theorem grand_graded_kan_wavelet_synthesis
     (∑ eps : ι, ∑ eps' : ι, W.channelCoeff f g eps eps') = W.totalCoeff f g :=
   ⟨W.projectors.orthogonal,
    W.sum_right_channels f g eps,
-   W.channel_conservation f g⟩
+   W.channel_conservation f g⟩ -/
 
 end InfoGeometry.OperatorAlgebra.GradedKANWaveletTransform

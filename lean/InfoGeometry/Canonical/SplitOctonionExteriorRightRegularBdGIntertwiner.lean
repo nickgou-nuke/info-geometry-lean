@@ -58,6 +58,7 @@ open InfoGeometry.Lie.SplitOctonionEllCircularCAR
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 
 abbrev Exterior3 :=
   InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3
@@ -109,8 +110,8 @@ def bdgCoordinateSignEquiv : Coord8 ≃ₗ[ℝ] Coord8 where
   ext j
   by_cases h : j = i
   · subst j
-    simp [bdgCoordinateSignEquiv, Pi.single_apply]
-  · simp [bdgCoordinateSignEquiv, Pi.single_apply, h]
+    simp [bdgCoordinateSignEquiv]
+  · simp [bdgCoordinateSignEquiv, h]
 
 noncomputable def exteriorBdGEquiv : Exterior3 ≃ₗ[ℝ] CZ :=
   exterior3SplitOctonionCoordinateEquiv.trans
@@ -175,12 +176,15 @@ noncomputable def rootPlusLinear : V3 →ₗ[ℝ] CZ where
 @[simp] theorem rootPlusLinear_modeVector (i : Fin 3) :
     rootPlusLinear (modeVector i) = rootPlus i := by
   fin_cases i <;>
-    simp [rootPlusLinear, modeVector, Fin.sum_univ_three, Pi.single_apply]
+    simp [rootPlusLinear, modeVector, Fin.sum_univ_three]
 
 private theorem smul_mul_smul_anticommutator_zero
     (a b : ℝ) (x y : CZ) (hxy : x * y + y * x = 0) :
     (a • x) * (b • y) + (b • y) * (a • x) = 0 := by
-  rw [smul_mul_assoc, mul_smul_comm, smul_mul_assoc, mul_smul_comm]
+  rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul]
   simp only [smul_smul]
   calc
     (a * b) • (x * y) + (b * a) • (y * x) =
@@ -190,7 +194,9 @@ private theorem smul_mul_smul_anticommutator_zero
 private theorem smul_sq_zero
     (a : ℝ) (x : CZ) (hx : x * x = 0) :
     (a • x) * (a • x) = 0 := by
-  rw [smul_mul_assoc, mul_smul_comm, smul_smul, hx, smul_zero]
+  rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul,
+    smul_smul, hx, smul_zero]
 
 private theorem add_three_sq_zero
     (x y z : CZ)
@@ -241,10 +247,24 @@ noncomputable def rightRegularLinear : CZ →ₗ[ℝ] EndCZ where
     apply LinearMap.ext
     intro x
     change x * (c • a) = c • (x * a)
-    exact mul_smul_comm c x a
+    exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul c x a
 
 noncomputable def rightCreationMap : V3 →ₗ[ℝ] EndCZ :=
   rightRegularLinear.comp rootPlusLinear
+
+private theorem end_mul_smul (A B : EndCZ) (r : ℝ) :
+    A * (r • B) = r • (A * B) := by
+  apply LinearMap.ext
+  intro x
+  change A (r • B x) = r • A (B x)
+  rw [map_smul]
+
+private theorem smul_end_mul (A B : EndCZ) (r : ℝ) :
+    (r • A) * B = r • (A * B) := by
+  apply LinearMap.ext
+  intro x
+  change (r • A) (B x) = r • (A (B x))
+  simp only [LinearMap.smul_apply]
 
 @[simp] theorem rightCreationMap_modeVector (i : Fin 3) :
     rightCreationMap (modeVector i) = rightRegular (rootPlus i) := by
@@ -299,11 +319,9 @@ theorem rightAnnihilation_creationMap_CAR (i : Fin 3) (v : V3) :
       (modeCovector i v) • (1 : EndCZ) := by
   have hv : rightCreationMap v =
       ∑ j : Fin 3, v j • rightRegular (rootPlus j) := by
-    apply LinearMap.ext
-    intro x
-    change x * rootPlusLinear v =
-      (∑ j : Fin 3, v j • rightRegular (rootPlus j)) x
-    simp [rootPlusLinear, rightRegular_apply, Finset.mul_sum, mul_smul_comm]
+    change rightRegularLinear (rootPlusLinear v) =
+      ∑ j : Fin 3, v j • rightRegular (rootPlus j)
+    simp [rootPlusLinear, rightRegularLinear]
   rw [hv]
   calc
     rightRegular (rootMinus i) *
@@ -316,21 +334,21 @@ theorem rightAnnihilation_creationMap_CAR (i : Fin 3) (v : V3) :
             rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib]
             apply Finset.sum_congr rfl
             intro j hj
-            simp only [mul_smul_comm, smul_mul_assoc, smul_add]
+            rw [end_mul_smul, smul_end_mul, smul_add]
     _ = ∑ j : Fin 3, v j •
         ((if i = j then (1 : ℝ) else 0) • (1 : EndCZ)) := by
           apply Finset.sum_congr rfl
           intro j hj
           rw [rightRegular_root_anticommutator j i]
           by_cases h : i = j
-          · simp [h, smul_add, smul_smul]
+          · simp [h]
           · have h' : ¬ j = i := by
               intro hji
               exact h hji.symm
-            simp [h, h', smul_add, smul_smul]
+            simp [h, h']
     _ = (modeCovector i v) • (1 : EndCZ) := by
           fin_cases i <;>
-            simp [Fin.sum_univ_three, modeCovector, smul_smul]
+            simp [modeCovector]
 
 theorem fockToZorn_annihilation (i : Fin 3) (ψ : Exterior3) :
     fockToZorn (exteriorContract3 (modeCovector i) ψ) =
@@ -341,7 +359,8 @@ theorem fockToZorn_annihilation (i : Fin 3) (ψ : Exterior3) :
         (algebraMap ℝ Exterior3 r) = 0 by simp [exteriorContract3]]
     rw [map_zero, fockToZorn_algebraMap]
     change 0 = (r • uPlus) * rootMinus i
-    rw [smul_mul_assoc, uPlus_mul_rootMinus i, smul_zero]
+    rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
+      uPlus_mul_rootMinus i, smul_zero]
   · intro x y hx hy
     simp only [map_add, hx, hy]
   · intro x v hx
@@ -383,16 +402,23 @@ private theorem rightRegular_rootPlus012_uPlus :
         (rightRegular (rootPlus 1)
           (rightRegular (rootPlus 2) uPlus)) = -uMinus := by
   change ((uPlus * rootPlus 2) * rootPlus 1) * rootPlus 0 = -uMinus
-  rw [uPlus_mul_rootPlus 2, rootPlus_two_mul_rootPlus_one, neg_mul,
+  rw [uPlus_mul_rootPlus 2, rootPlus_two_mul_rootPlus_one]
+  have hneg : (-rootMinus 0 : CZ) = (-1 : ℝ) • rootMinus 0 := by
+    ext <;> simp
+  rw [hneg]
+  rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
     rootMinus_mul_rootPlus_delta]
-  simp [uPlus_add_uMinus]
+  norm_num
 
 private theorem fock_basis_prod_4 :
     ((uPlus * rootPlus 2) * rootPlus 1) * rootPlus 0 = -uMinus := by
   rw [uPlus_mul_rootPlus, rootPlus_two_mul_rootPlus_one]
-  simp only [neg_mul]
-  rw [rootMinus_mul_rootPlus_delta]
-  rfl
+  have hneg : (-rootMinus 0 : CZ) = (-1 : ℝ) • rootMinus 0 := by
+    ext <;> simp
+  rw [hneg]
+  rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.smul_mul,
+    rootMinus_mul_rootPlus_delta]
+  norm_num
 
 private theorem zornMul_rootMinus_rootPlus (i j : Fin 3) :
     rootMinus i * rootPlus j = (if i = j then uMinus else 0) := by
@@ -422,7 +448,7 @@ theorem fockToZorn_ιMode_mul (i : Fin 3) (ψ : Exterior3) :
 @[simp] theorem fockToZorn_preimageBasis (j : Fin 8) :
     fockToZorn (fockPreimageBasis j) = circularPeirceBasis j := by
   fin_cases j
-  · simp [fockPreimageBasis, frame, circularPeirceBasis_zero]
+  · simp [fockPreimageBasis, frame]
   · simp only [fockPreimageBasis]
     rw [fockToZorn_ιMode]
     simpa [fockToZorn_one, circularPeirceBasis_one, frame, rightRegular_apply] using

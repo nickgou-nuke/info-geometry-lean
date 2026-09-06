@@ -162,6 +162,10 @@ def FrameCarrierLift.generator (C : FrameCarrierLift (E := E)) :
     PrimonUHFAlgebra :=
   toColimit C.stage (C.matrix (finiteGenerator C.frame))
 
+def FrameCarrierLift.weightedGenerator (C : FrameCarrierLift (E := E)) (γ : ℝ) :
+    PrimonUHFAlgebra :=
+  toColimit C.stage (C.matrix (finiteWeightedGenerator C.frame γ))
+
 theorem FrameCarrierLift.hamiltonian_action
     (C : FrameCarrierLift (E := E)) (Y : TraceOperatorSpace (BitWord C.stage)) :
     liftedLeftAction C.hamiltonian (toColimit C.stage (C.matrix Y)) =
@@ -189,6 +193,38 @@ theorem FrameCarrierLift.generator_action
       toColimit C.stage (C.matrix (finiteGenerator C.frame * Y)) := by
   simp [FrameCarrierLift.generator, FrameCarrierLift.matrix,
     liftedLeftAction]
+
+theorem FrameCarrierLift.weightedGenerator_action
+    (C : FrameCarrierLift (E := E)) (γ : ℝ)
+    (Y : TraceOperatorSpace (BitWord C.stage)) :
+    liftedLeftAction (C.weightedGenerator γ)
+      (toColimit C.stage (C.matrix Y)) =
+      toColimit C.stage
+        (C.matrix (weightedMetriplecticGenerator γ C.frame.H C.frame.S
+          C.frame.X * Y)) := by
+  simp [FrameCarrierLift.weightedGenerator, FrameCarrierLift.matrix,
+    finiteWeightedGenerator, liftedLeftAction]
+
+/-! The finite trace-bimodule and the colimit action are two readouts of the
+same weighted noncommutative driver.  This packet deliberately keeps the
+pairing statement on the finite stage and the multiplication statement on
+the colimit; no analytic limit or scalar diagonalization is involved. -/
+theorem FrameCarrierLift.weighted_metriplectic_packet
+    (C : FrameCarrierLift (E := E)) (γ : ℝ)
+    (Y : TraceOperatorSpace (BitWord C.stage)) :
+    tracePairingNative (finiteWeightedGenerator C.frame γ) Y =
+        - tracePairingNative C.frame.X
+            (conservativeDriver C.frame.H Y) +
+          γ * tracePairingNative C.frame.X
+            (dissipativeDriver C.frame.S Y) ∧
+      liftedLeftAction (C.weightedGenerator γ)
+        (toColimit C.stage (C.matrix Y)) =
+        toColimit C.stage
+          (C.matrix (weightedMetriplecticGenerator γ C.frame.H
+            C.frame.S C.frame.X * Y)) := by
+  constructor
+  · exact finiteWeightedGenerator_tracePairing_decomposition C.frame γ Y
+  · exact C.weightedGenerator_action γ Y
 
 theorem FrameCarrierLift.hamiltonian_commonCarrier
     (C : FrameCarrierLift (E := E)) :

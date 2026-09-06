@@ -18,7 +18,7 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H]
 
 /--
-Standard-form natural-cone data over a Hestenes/Krein carrier.
+Standard-form natural-cone socket over a Hestenes/Krein carrier.
 
 The `naturalCone` field is not defined as the Krein nonnegative/light cone.
 It is supplied as the candidate standard-form natural positive cone.  The
@@ -85,86 +85,6 @@ theorem naturalCone_self_dual :
     B.naturalCone = {ξ | ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0} :=
   B.naturalCone_self_dual_holds
 
-theorem mem_naturalCone_iff (ξ : H) :
-    ξ ∈ B.naturalCone ↔ ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0 := by
-  exact Set.ext_iff.mp B.naturalCone_self_dual ξ
-
-@[simp] theorem zero_mem_naturalCone :
-    (0 : H) ∈ B.naturalCone := by
-  rw [B.naturalCone_self_dual]
-  intro η hη
-  simp
-
-theorem add_mem_naturalCone {ξ ζ : H}
-    (hξ : ξ ∈ B.naturalCone) (hζ : ζ ∈ B.naturalCone) :
-    ξ + ζ ∈ B.naturalCone := by
-  rw [B.naturalCone_self_dual]
-  intro η hη
-  have hξdual : ξ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
-    rw [← B.naturalCone_self_dual]
-    exact hξ
-  have hζdual : ζ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
-    rw [← B.naturalCone_self_dual]
-    exact hζ
-  have hξ' : ⟪ξ, η⟫_ℝ ≥ 0 := hξdual η hη
-  have hζ' : ⟪ζ, η⟫_ℝ ≥ 0 := hζdual η hη
-  rw [inner_add_left]
-  exact add_nonneg hξ' hζ'
-
-theorem smul_mem_naturalCone {r : ℝ} {ξ : H}
-    (hr : 0 ≤ r) (hξ : ξ ∈ B.naturalCone) :
-    r • ξ ∈ B.naturalCone := by
-  rw [B.naturalCone_self_dual]
-  intro η hη
-  have hξdual : ξ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
-    rw [← B.naturalCone_self_dual]
-    exact hξ
-  have hξ' : ⟪ξ, η⟫_ℝ ≥ 0 := hξdual η hη
-  rw [real_inner_smul_left]
-  exact mul_nonneg hr hξ'
-
-theorem naturalCone_neg_mem_eq_zero {ξ : H}
-    (hξ : ξ ∈ B.naturalCone) (hneg : -ξ ∈ B.naturalCone) :
-    ξ = 0 := by
-  have hpos : 0 ≤ ⟪ξ, ξ⟫_ℝ := by
-    exact (B.mem_naturalCone_iff ξ).mp hξ ξ hξ
-  have hnegpos : 0 ≤ ⟪-ξ, ξ⟫_ℝ := by
-    exact (B.mem_naturalCone_iff (-ξ)).mp hneg ξ hξ
-  rw [inner_neg_left] at hnegpos
-  have hzero : ⟪ξ, ξ⟫_ℝ = 0 := by linarith
-  exact inner_self_eq_zero.mp hzero
-
-theorem neg_not_mem_naturalCone {ξ : H}
-    (hξ : ξ ∈ B.naturalCone) (hξ0 : ξ ≠ 0) :
-    -ξ ∉ B.naturalCone := by
-  intro hneg
-  exact hξ0 (B.naturalCone_neg_mem_eq_zero hξ hneg)
-
-theorem convex_naturalCone : Convex ℝ B.naturalCone := by
-  intro ξ hξ ζ hζ a b ha hb hab
-  exact B.add_mem_naturalCone
-    (B.smul_mem_naturalCone ha hξ)
-    (B.smul_mem_naturalCone hb hζ)
-
-theorem eval_zero_of_act_zero
-    (ω : NormalPositive) (A : Op) (hA : B.act A = 0) :
-    B.eval ω A = 0 := by
-  rw [B.eval_eq_krein_vector_readout_law ω A, hA]
-  simp
-
-theorem eval_zero_of_coneVector_zero
-    (ω : NormalPositive) (A : Op) (hω : B.coneVector ω = 0) :
-    B.eval ω A = 0 := by
-  rw [B.eval_eq_krein_vector_readout_law ω A, hω]
-  simp
-
-theorem eval_zero_of_act_at_coneVector_zero
-    (ω : NormalPositive) (A : Op)
-    (hA : B.act A (B.coneVector ω) = 0) :
-    B.eval ω A = 0 := by
-  rw [B.eval_eq_krein_vector_readout_law ω A, hA]
-  simp
-
 end Bridge
 
 /--
@@ -175,38 +95,28 @@ natural cone.
 state/weight representative.
 -/
 @[rep_depth krein]
-abbrev HestenesKreinNaturalConeVacuum :=
-  { data :
-      Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op) × H //
-    data.2 ∈ data.1.naturalCone ∧
-    KreinSpace.jCLM (H := H) data.2 = data.2 ∧
-    KreinSpace.kreinInner (H := H) data.2 data.2 = 1 }
+structure HestenesKreinNaturalConeVacuum where
+  /-- Natural-cone carrier. -/
+  natural :
+    Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op)
+
+  /-- Vacuum vector `Ω`. -/
+  Omega : H
+
+  /-- The vacuum lies in the supplied natural cone. -/
+  omega_in_cone : Omega ∈ natural.naturalCone
+
+  /-- The Krein/Tomita reflection fixes the vacuum. -/
+  J_fixes_omega : KreinSpace.jCLM (H := H) Omega = Omega
+
+  /-- The vacuum is normalized in the supplied Krein convention. -/
+  omega_normalized : KreinSpace.kreinInner (H := H) Omega Omega = 1
 
 namespace HestenesKreinNaturalConeVacuum
 
-abbrev natural
-    (V : HestenesKreinNaturalConeVacuum (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op) := V.1.1
+variable (V : HestenesKreinNaturalConeVacuum (H := H)
+  (NormalPositive := NormalPositive) (Op := Op))
 
-abbrev Omega
-    (V : HestenesKreinNaturalConeVacuum (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) : H := V.1.2
-
-abbrev omega_in_cone
-    (V : HestenesKreinNaturalConeVacuum (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    V.Omega ∈ V.natural.naturalCone := V.2.1
-
-abbrev J_fixes_omega
-    (V : HestenesKreinNaturalConeVacuum (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    KreinSpace.jCLM (H := H) V.Omega = V.Omega := V.2.2.1
-
-abbrev omega_normalized
-    (V : HestenesKreinNaturalConeVacuum (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    KreinSpace.kreinInner (H := H) V.Omega V.Omega = 1 := V.2.2.2
 
 end HestenesKreinNaturalConeVacuum
 
@@ -219,7 +129,7 @@ KMS adapter for a Hestenes/Krein natural-cone readout.
 
 The geometric real readout and the complex KMS state are connected by an
 explicit theorem owner below.  The analytic strip condition remains the
-existing `OperatorThermodynamics.KMSState` property.
+existing `OperatorThermodynamics.KMSState` certificate.
 -/
 @[rep_depth krein]
 structure HestenesKreinNaturalConeKMSBridge where
@@ -237,7 +147,7 @@ structure HestenesKreinNaturalConeKMSBridge where
   /-- Inverse temperature. -/
   beta : ℝ
 
-  /-- Existing complex KMS state/property. -/
+  /-- Existing complex KMS state/certificate. -/
   kms : KMSState Op flow beta
 
   /-- The selected state is calibrated to the vacuum vector `Ω`. -/
@@ -252,6 +162,35 @@ namespace HestenesKreinNaturalConeKMSBridge
 
 variable (B : HestenesKreinNaturalConeKMSBridge (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
+
+/-- Compatibility constructor that re-export a KMS bridge while preserving
+the underlying complex state. -/
+@[rep_depth krein]
+def fromKMSBridgeCompat :
+    HestenesKreinNaturalConeKMSBridge (H := H)
+      (NormalPositive := NormalPositive) (Op := Op) := by
+  let kms : KMSState Op B.flow B.beta :=
+    { state := B.kms.state
+      flow_invariant := B.kms.flow_invariant
+      correlation := B.kms.correlation
+      correlation_differentiableOn_openStrip :=
+        B.kms.correlation_differentiableOn_openStrip
+      correlation_lower_boundary := B.kms.correlation_lower_boundary
+      correlation_upper_boundary := B.kms.correlation_upper_boundary }
+  exact
+    { vacuum := B.vacuum
+      omegaState := B.omegaState
+      flow := B.flow
+      beta := B.beta
+      kms := kms
+      coneVector_eq_Omega_law := B.coneVector_eq_Omega_law
+      complexEval_eq_realConeEval_law := B.complexEval_eq_realConeEval_law }
+
+/-- The re-exported `fromKMSBridge` keeps the same underlying state. -/
+@[rep_depth krein]
+theorem fromKMSBridge_state_eq_compat :
+    (B.fromKMSBridgeCompat).kms.state = B.kms.state := by
+  rfl
 
 /-- The complex KMS readout is represented by the vacuum vector, after calibration. -/
 @[rep_depth krein]
@@ -281,7 +220,7 @@ end KMS
 /--
 Vector-side flow carrier with a supplied Krein-isometry law.
 
-This is the correct property surface for null-cone preservation; it is not
+This is the correct hypothesis surface for null-cone preservation; it is not
 derived from an operator flow or from `K² = -1`.
 -/
 @[rep_depth krein]

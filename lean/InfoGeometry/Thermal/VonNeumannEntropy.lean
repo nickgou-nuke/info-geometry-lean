@@ -32,9 +32,5 @@ theorem prob_sum_eq_one (p : ℕ) (β : ℝ) (hp : 2 ≤ p) :
                (1 + Real.rpow (p : ℝ) (-β)) / (1 + Real.rpow (p : ℝ) (-β)) := by ring
   rw [h_sum, div_self h_den]
 
-theorem grand_von_neumann_entropy_synthesis (p : ℕ) (β : ℝ) (hp : 2 ≤ p) (hβ : 0 < β) :
-    probVacuum p β + probOccupied p β = 1 :=
-  prob_sum_eq_one p β hp
-
 end
 end InfoGeometry.Thermal.VonNeumannEntropy

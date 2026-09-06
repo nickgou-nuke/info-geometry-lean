@@ -162,27 +162,4 @@ theorem berry_keating_dilation_p (x p : A) (h_ccr : commutator x p = Complex.I �
     rw [mul_sub]
   rw [h_factor, h_ccr, Algebra.mul_smul_comm, mul_one]
 
-/-! ### 3. Master Capstone: Grand Unification Synthesis -/
-
-/-- 🏆 GRAND CAPSTONE: Complete Berry-Keating Heisenberg CCR & Möbius Apollonius Synthesis -/
-theorem grand_berry_keating_mobius_apollonius_ccr_synthesis
-    (σ t : ℝ) (h_half : σ = 1/2) (σ_disk : ℝ) (h_gt : 1/2 < σ_disk)
-    (x p : A) (h_ccr : commutator x p = Complex.I • (1 : A)) :
-    (apolloniusNumerator σ t = apolloniusDenominator σ t) ∧
-    (apolloniusNumerator σ_disk t < apolloniusDenominator σ_disk t) ∧
-    (berryKeatingH x p = x * p - (Complex.I / 2 : ℂ) • (1 : A)) ∧
-    (berryKeatingH x p = p * x + (Complex.I / 2 : ℂ) • (1 : A)) ∧
-    (commutator (berryKeatingH x p) x = - (Complex.I : ℂ) • x) ∧
-    (commutator (berryKeatingH x p) p = Complex.I • p) ∧
-    (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
-    (F * B * F = R) :=
-  ⟨(apollonius_unitary_level_set_iff σ t).mpr h_half,
-   (apollonius_lt_iff_right_of_critical σ_disk t).mpr h_gt,
-   berry_keating_normal_ordered x p h_ccr,
-   berry_keating_anti_normal_ordered x p h_ccr,
-   berry_keating_dilation_x x p h_ccr,
-   berry_keating_dilation_p x p h_ccr,
-   F_sq,
-   F_B_F_eq_R⟩
-
 end InfoGeometry.Quantum.BerryKeatingCCR

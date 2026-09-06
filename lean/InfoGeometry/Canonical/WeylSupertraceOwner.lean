@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation
-import InfoGeometry.Canonical.ParityTraceData
+import InfoGeometry.Canonical.ParityTraceWitness
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
@@ -20,7 +20,7 @@ open InfoGeometry.Algebraic.SplitSignature
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.SouriauThermalEvaluation
-open InfoGeometry.Canonical.ParityTraceData
+open InfoGeometry.Canonical.ParityTraceWitness
 open InfoGeometry.Canonical.PrimeGasPartitions
 open InfoGeometry.Arithmetic.PrimeSuperalgebra
 
@@ -111,23 +111,18 @@ Split Clifford translation of the Weyl supertrace owner.
 This keeps the prime/Weyl surface compatible with the new parity/supervolume
 language without collapsing the prime lattice into the split Clifford carrier.
 -/
-abbrev SplitWeylSupertraceShadow (n : ℕ) := SplitCliffordEnd n
-
-namespace SplitWeylSupertraceShadow
-
-abbrev operator {n : ℕ} (S : SplitWeylSupertraceShadow n) : SplitCliffordEnd n := S
+structure SplitWeylSupertraceShadow (n : ℕ) where
+  operator : SplitCliffordEnd n
 
 /-- The supertrace readout is derived from the supplied Clifford operator. -/
-noncomputable def supertraceReadout
+noncomputable def SplitWeylSupertraceShadow.supertraceReadout
     {n : ℕ} (S : SplitWeylSupertraceShadow n) : ℝ :=
   cliffordSupertrace n S.operator
 
 /-- The super-Berezinian readout is derived from the supplied Clifford operator. -/
-noncomputable def superBerezinianReadout
+noncomputable def SplitWeylSupertraceShadow.superBerezinianReadout
     {n : ℕ} (S : SplitWeylSupertraceShadow n) : ℝ :=
   superBerezinian n S.operator
-
-end SplitWeylSupertraceShadow
 
 
 

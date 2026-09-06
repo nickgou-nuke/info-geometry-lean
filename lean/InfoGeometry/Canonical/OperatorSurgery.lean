@@ -141,7 +141,7 @@ theorem nil_core_apply_eq_zero {A : EndV} {W : DrazinSurgeryData A} (hW : IsDraz
   exact add_left_cancel hcancel
 
 /--
-Construct the Drazin surgery projectors from a supplied Drazin inverse property.
+Construct the Drazin surgery projectors from a supplied Drazin inverse witness.
 
 Core projector: `P = A * D`.
 

@@ -12,7 +12,7 @@ This file keeps the geometric claim constructive:
 
 - the boost generator is a real bivector axis,
 - the orbit labels are explicit natural-number data,
-- the prime-label property is a property,
+- the prime-label property is a hypothesis,
 - the energy readout is `log n`,
 - the Klein bottle orientifold is carried separately as a filter packet.
 
@@ -30,12 +30,11 @@ universe u
 
 /-- A discrete orbit label together with its primitive/irreducible status. -/
 @[rep_depth transport]
-abbrev PrimeGeodesicOrbit := {n : ℕ // Nat.Prime n}
+structure PrimeGeodesicOrbit where
+  label : ℕ
+  primeLabel : Nat.Prime label
 
 namespace PrimeGeodesicOrbit
-
-abbrev label (o : PrimeGeodesicOrbit) : ℕ := o.1
-abbrev primeLabel (o : PrimeGeodesicOrbit) : Nat.Prime o.label := o.2
 
 /-- The boost-energy readout of the orbit. -/
 @[rep_depth transport]
@@ -69,5 +68,22 @@ structure PrimeGeodesicEmergence
   boostBivector_sq : boostBivector * boostBivector = 1
   orbit : PrimeGeodesicOrbit
   orientifold : KleinBottleOrientifold
+
+/--
+Bridge packet tying prime-gas MaxEnt data to prime-orbit emergence.
+
+This is the honest “number theory from geometry” surface: the prime gas is a
+Jaynes packet, and the orbit emergence/orientifold data are explicit
+hypotheses.
+-/
+@[rep_depth transport]
+structure PrimeGeodesicEmergencePacket
+    (D : PrimeGasJaynesData) (A : Type u) [Mul A] [One A] [Neg A] where
+  primeGas :
+    PrimeGasJaynesData.PrimeGasJaynesConjecture D
+  emergence : PrimeGeodesicEmergence A
+  orbitEnergy_eq_log_label : emergence.orbit.energy = Real.log emergence.orbit.label
+  primeOrbit : Nat.Prime emergence.orbit.label
+  squareFreeSupport : Squarefree emergence.orbit.label
 
 end InfoGeometry.Canonical.PrimeGeodesicEmergence

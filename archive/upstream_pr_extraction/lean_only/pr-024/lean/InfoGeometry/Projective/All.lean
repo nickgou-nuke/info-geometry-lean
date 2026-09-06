@@ -1,0 +1,123 @@
+import InfoGeometry.Projective.MobiusDual
+import InfoGeometry.Projective.KuzminCuntzPath
+import InfoGeometry.Projective.KuzminInductiveLimitBridge
+import InfoGeometry.Projective.KuzminColimit
+import InfoGeometry.Projective.SplitOctonions.OctonionicProjectiveLine
+import InfoGeometry.Projective.SplitOctonions.ProjectiveLine
+import InfoGeometry.Projective.SplitOctonions.VoelkelSectionPacket
+import InfoGeometry.Projective.OctonionicKuzminBoundaryBridge
+import InfoGeometry.Projective.SplitOctonions.ZornMatrix
+import InfoGeometry.Projective.Bridge
+import InfoGeometry.Projective.ConeKL
+import InfoGeometry.Projective.CrossRatio
+import InfoGeometry.Projective.MobiusGauge
+import InfoGeometry.Projective.Dynamics
+import InfoGeometry.Projective.FaithfulKL
+import InfoGeometry.Projective.KasparovKreinDIIIBridge
+import InfoGeometry.Projective.HorizonInformationScrambling
+import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
+import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
+import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
+import InfoGeometry.Projective.OnShellResidueBCFWBridge
+import InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
+import InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
+import InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
+import InfoGeometry.Projective.GaugeQuotient
+import InfoGeometry.Projective.GaugeReduction
+import InfoGeometry.Projective.LogSum
+import InfoGeometry.Projective.MTC_PentagonTriangle
+import InfoGeometry.Projective.ArnoldRelations
+import InfoGeometry.Projective.BostConnesZeta
+import InfoGeometry.Projective.BostConnesZetaIdentity
+import InfoGeometry.Projective.KreinAttention
+import InfoGeometry.Projective.KreinHodgeBridge
+import InfoGeometry.Projective.RohozhkinDelaunayBraiding
+import InfoGeometry.Projective.RokhlinBraidInvariant
+import InfoGeometry.Projective.LogSumIneq
+import InfoGeometry.Projective.KleinCrossRatioInvariant
+import InfoGeometry.Projective.Quadrics.PluckerKlein
+import InfoGeometry.Projective.Quadrics.Polarization
+import InfoGeometry.Projective.Quadrics.AffineSlices
+import InfoGeometry.Projective.Quadrics.SignatureDeterminant
+import InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
+import InfoGeometry.Projective.KleinQuadric
+import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Projective.KleinQuadricMonodromy
+import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
+import InfoGeometry.Projective.KleinQuadricTime
+import InfoGeometry.Projective.PenroseSpinTilingConfig
+import InfoGeometry.Projective.KleinQuadricPlucker
+import InfoGeometry.Projective.KleinQuadricIncidence
+import InfoGeometry.Projective.NoncommutativeCrossRatio
+import InfoGeometry.Projective.Normalize
+import InfoGeometry.Projective.Null
+import InfoGeometry.Projective.NullBoundary
+import InfoGeometry.Projective.SplitCl44NullBoundary
+import InfoGeometry.Projective.Orthant
+import InfoGeometry.Projective.PhysicalKinematics
+import InfoGeometry.Projective.Projective
+import InfoGeometry.Projective.ProjectiveMap
+import InfoGeometry.Projective.Quadrics.MonomialBulk2x2
+import InfoGeometry.Projective.Quadrics.PluckerKlein
+import InfoGeometry.Projective.Quadrics.Polarization
+import InfoGeometry.Projective.Rays
+import InfoGeometry.Projective.SelfDualCone
+import InfoGeometry.Projective.SplitOctonions
+import InfoGeometry.Projective.SplitOctonions.BektasMatrix
+import InfoGeometry.Projective.SplitOctonions.BoundaryPacket
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsBarrier
+import InfoGeometry.Projective.SplitOctonions.ZornBaseProjection
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsProjectivePolar
+import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
+import InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolume
+import InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolumeAbstract
+import InfoGeometry.Projective.SplitOctonions.Polar
+import InfoGeometry.Projective.SplitOctonions.PolarConcrete
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
+import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
+import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
+import InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsTraceIncidence
+import InfoGeometry.Projective.SplitOctonions.ZornInstance
+import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Projective.TwistorAmplituhedronBoundary
+import InfoGeometry.Projective.TwistorAmplituhedronBridge
+import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
+import InfoGeometry.Projective.BuresMetricStabilization
+import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
+import InfoGeometry.Projective.MacaulayTrackBIngestion
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Projective.All
+
+Stable umbrella module for the projective and self-dual cone layer.
+The zero-null twistor bridge remains quarantined and must be imported explicitly.
+
+Split-octonion note:
+- `SplitOctonions.Polar` owns projective polar/incidence descent.
+- `SplitOctonions.SplitOctonionsBarrier` owns the logarithmic barrier/Hessian
+  information-metric slice model.
+These are companion lanes (boundary potential vs incidence geometry), not
+mutual owner replacements.
+-/
+
+/-!
+Kernel-bridged finite closure manifest for this projective spike:
+
+- `InfoGeometry.Topology.WilsonLoopThermodynamics` supplies the conservative
+  loop-holonomy abstraction over thermodynamic flow words.
+- `InfoGeometry.Topology.BostConnesWilsonLoop` records conservative trace
+  readouts that keep Wilson/Bost-Connes steps explicit.
+- `InfoGeometry.Projective.OnShellResidueBCFWBridge` provides finite BCFW
+  residue readouts linked to the thermodynamic/flow theorem.
+- `InfoGeometry.Topology.GrandUnificationLinker` furnishes the DAG-edge
+  volume-preservation and boundary-collapse theorems feeding this interface.
+
+Assumptions are intentionally explicit; no unconditional partition-function
+identification is claimed in this kernel layer.
+-/
+
+end InfoGeometry

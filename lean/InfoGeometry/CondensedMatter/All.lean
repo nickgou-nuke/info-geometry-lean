@@ -7,7 +7,7 @@ namespace InfoGeometry.CondensedMatter
 /-!
 # Condensed Matter Interfaces
 
-Physical condensed-matter bridges for topological phases and BdG symmetry
+Physical condensed-matter sockets for topological phases and BdG symmetry
 classes.
 -/
 

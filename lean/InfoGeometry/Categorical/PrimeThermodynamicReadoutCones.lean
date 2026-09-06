@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
+import InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
 import InfoGeometry.Arithmetic.ChiralPrimonGas

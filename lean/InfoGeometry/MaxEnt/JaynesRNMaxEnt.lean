@@ -90,7 +90,7 @@ noncomputable def potential (lam : ι → ℝ) : Ω → ℝ :=
 noncomputable def partitionFunction (lam : ι → ℝ) : ℝ :=
   ∫ x, Real.exp (potential (C := C) lam x) ∂μ₀
 
-/-- Finiteness property for the partition function integrand. -/
+/-- Finiteness hypothesis for the partition function integrand. -/
 def PartitionIntegrable (lam : ι → ℝ) : Prop :=
   Integrable (fun x => Real.exp (potential (C := C) lam x)) μ₀
 
@@ -217,4 +217,4 @@ end JaynesRNMaxEnt
 
 namespace InfoGeometry.MaxEnt.JaynesRNMaxEnt
 
-end JaynesRNMaxEnt
+end InfoGeometry.MaxEnt.JaynesRNMaxEnt

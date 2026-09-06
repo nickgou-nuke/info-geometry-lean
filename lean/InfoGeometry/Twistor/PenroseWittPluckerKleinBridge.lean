@@ -86,7 +86,9 @@ def wittUminus (Z : Twistor4) : ℝ := (Z.1 0).re - (Z.2 0).re
 
 /-- 🏆 MASTER THEOREM: The Zorn reduced norm decomposes into the diagonal Witt product minus the Klein quadric. -/
 theorem penroseWittZorn_norm_eq_diagonal_sub_kleinQ (Z : Twistor4) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (penroseWittZornMap Z) =
       wittUplus Z * wittUminus Z - kleinQ (penroseWittPlucker6 Z) := by
   rw [penroseWittZorn_norm_eq_splitSignature]
   dsimp [penroseRealSplitSignature, wittUplus, wittUminus, kleinQ, penroseWittPlucker6]
@@ -95,7 +97,9 @@ theorem penroseWittZorn_norm_eq_diagonal_sub_kleinQ (Z : Twistor4) :
 /-- 🏆 THEOREM: Off-diagonal null equivalence on the Klein quadric. -/
 theorem offDiagonal_null_iff_klein_null (Z : Twistor4)
     (h_diag : wittUplus Z * wittUminus Z = 0) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (penroseWittZornMap Z) = 0 ↔
       kleinQ (penroseWittPlucker6 Z) = 0 := by
   rw [penroseWittZorn_norm_eq_diagonal_sub_kleinQ, h_diag, zero_sub]
   constructor

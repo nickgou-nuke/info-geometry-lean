@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/RealPhaseSpectralTriple.lean
 
-Real phase-compatible spectral triple definitions.
+Real phase-compatible spectral triple sockets.
 
 This module keeps the strict separation:
 
@@ -167,7 +167,7 @@ structure RepresentedAlgebra
     [NormedAddCommGroup H] [NormedSpace ℝ H] where
   rep : A →+* RealEnd H
 
-/-- Order-one condition, kept as a property at the abstract layer. -/
+/-- Order-one condition, kept as a witness at the abstract layer. -/
 def OrderOneCondition
     {A H : Type*} [Ring A]
     [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -195,10 +195,10 @@ theorem lipschitzSeminorm_nonneg
     0 ≤ lipschitzSeminorm ρ D a :=
   norm_nonneg _
 
-/-! ## 5. Phase-real spectral triple -/
+/-! ## 5. Phase-real spectral triple socket -/
 
 /--
-Real, phase-compatible spectral triple relation.
+Real, phase-compatible spectral triple socket.
 
 The `order_one` field is supplied abstractly and should be proved in concrete
 representation modules.

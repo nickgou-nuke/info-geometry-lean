@@ -296,3 +296,4 @@ theorem grand_clifford_moe_synthesis
      hypercube_expert_orthogonal_pp_pm csp⟩⟩
 
 end InfoGeometry.Clifford.Cl55PeirceMoERouting
+

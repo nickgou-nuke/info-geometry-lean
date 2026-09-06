@@ -13,7 +13,8 @@ pp. 165–189): **"Quantized Twistors, $G_2^*$, and the Split Octonions"**.
 
 ### Mathematical Core:
 1. **Stereographic Projection of the Riemann Sphere (Eqs 7.1–7.2)**:
-   - For $\zeta \in \mathbb{C}$, the stereographic map from the south pole $(0, 0, -1)$
+   - For $\zeta \in \mathbb{C}$, the inverse stereographic chart sending `0` to
+     the north pole $(0, 0, 1)$
      onto the unit sphere $S^2 \subset \mathbb{R}^3$:
      $$\vec{x}(\zeta) = \frac{1}{1 + |\zeta|^2} (\zeta + \bar{\zeta}, -i(\zeta - \bar{\zeta}), 1 - |\zeta|^2)$$
    - Exact identity: $\|\vec{x}(\zeta)\|^2 = X^2 + Y^2 + Z^2 = 1$.
@@ -66,8 +67,8 @@ structure SpherePoint where
   Y : ℝ
   Z : ℝ
 
-/-- The stereographic projection from the south pole $(0,0,-1)$ of $\mathbb{S}^2$
-to the complex plane $\mathbb{C}$ (Penrose Eq. 7.2):
+/-- The inverse stereographic chart from the complex plane to the unit sphere,
+with `0` sent to the north pole `(0, 0, 1)` (Penrose Eq. 7.2):
 $$(X, Y, Z) = \frac{1}{1 + |\zeta|^2} (\zeta + \bar{\zeta}, -i(\zeta - \bar{\zeta}), 1 - |\zeta|^2)$$ -/
 def stereographicSphere (ζ : ℂ) : SpherePoint where
   X := (ζ.re * 2) / (1 + (ζ.re^2 + ζ.im^2))

@@ -9,7 +9,7 @@ This module packages the capstone boundary event:
     + extreme shear threshold
     + conserved topological obstruction
     + chiral lightcone support
-    ⇒ stable chiral residue / tubule boundary property.
+    ⇒ stable chiral residue / tubule boundary witness.
 
 The Unruh temperature may drive the threshold once a modular acceleration
 calibration is supplied, but temperature alone is not the snap theorem.
@@ -24,6 +24,7 @@ import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -41,7 +42,7 @@ open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 /--
 A Hessian collapse event.
 
-This is the abstract interface for the point where the Bregman/information Hessian
+This is the abstract socket for the point where the Bregman/information Hessian
 ceases to define a locally invertible material/vacuum response.
 -/
 structure HessianCollapseEvent
@@ -58,7 +59,7 @@ structure HessianCollapseEvent
   /-- The Hessian vanishes or collapses along the chosen direction. -/
   hessian_collapse : response state nullDirection = 0
 
-  /-- Rank-defect / loss-of-invertibility property. -/
+  /-- Rank-defect / loss-of-invertibility certificate. -/
   rank_defect : ¬ Function.Injective (response state)
 
 /-!
@@ -202,7 +203,7 @@ end TopologicalObstruction
 /--
 A stable chiral residue.
 
-This is the abstract “Majorana-Weyl/tubule residue” interface. It is not derived
+This is the abstract “Majorana-Weyl/tubule residue” socket. It is not derived
 from temperature alone. It is attached after the snap boundary has been
 calibrated.
 -/
@@ -218,14 +219,14 @@ structure ChiralResidue
   State evolution used to express residue stability.
 
   Stability is an actual fixed-point equation for the supplied evolution map,
-  rather than an untyped evidence interface.
+  rather than an untyped evidence socket.
   -/
   stabilityMap : State → State
 
   /-- The residue state is fixed by the model-specific stability evolution. -/
   stable : stabilityMap state = state
 
-/-! ## 4. Chiral tubule boundary property -/
+/-! ## 4. Chiral tubule boundary witness -/
 
 /--
 The capstone boundary event.
@@ -337,7 +338,7 @@ structure UnruhDrivenChiralTubuleBoundary
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) where
 
-  /-- Underlying chiral tubule boundary property. -/
+  /-- Underlying chiral tubule boundary witness. -/
   boundary :
     ChiralTubuleBoundaryWitness
       State Tangent Charge Residue H Q C
@@ -458,8 +459,20 @@ namespace BrewsterDrazinBoundary
 variable {Op : Type*} [Ring Op]
 variable (B : BrewsterDrazinBoundary Op)
 
+/-- The calibrated Brewster event has vanishing p/second coefficient. -/
+theorem rp_eq_zero :
+    B.calibration.event.secondCoeff = 0 :=
+  B.calibration.rp_eq_zero
+
+/-- The nil/p-channel sector is killed by the reflection operator. -/
+theorem killed_sector :
+    B.calibration.split.R * B.calibration.split.Pnil = 0 :=
+  B.calibration.killed_sector
+
+/-- The Drazin/core inverse recovers the surviving core projector. -/
 theorem reflected_core_identity :
-    B.calibration.split.R * B.calibration.split.RD = B.calibration.split.Pcore :=
+    B.calibration.split.R * B.calibration.split.RD =
+      B.calibration.split.Pcore :=
   B.calibration.reflected_core_identity
 
 end BrewsterDrazinBoundary
@@ -542,7 +555,7 @@ structure TomitaChiralLocalLossBoundary
   /-- Locally lost observable. -/
   observable : Op
 
-  /-- Local loss property for the observable. -/
+  /-- Local loss hypothesis for the observable. -/
   locally_lost :
     Phi.IsLocallyLost observable
 
@@ -590,7 +603,7 @@ theorem locally_lost_is_commutant_chiral_lightcone :
 
 end TomitaChiralLocalLossBoundary
 
-/-! ## 6. Brewster / Jones event as a rank-collapse interface -/
+/-! ## 6. Brewster / Jones event as a rank-collapse socket -/
 
 /--
 A Jones/Fresnel rank-collapse event.
@@ -641,6 +654,143 @@ theorem s_eigenvalue_ne_zero :
 
 end JonesRankCollapseEvent
 
-/-! ## 7. Finite boundary structures -/
+/-! ## 7. Owner targets -/
+
+/--
+Compatibility predicate for constructing a chiral tubule boundary.
+
+Concrete models should replace this by assumptions on Hessian collapse,
+susceptibility response, conserved obstruction, and chiral lightcone support.
+-/
+def ChiralTubuleBoundaryCompatibility
+    (_State _Tangent Charge _Residue H : Type*)
+    [Zero _Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H) : Prop :=
+  Nonempty
+    (ChiralTubuleBoundaryWitness
+      _State _Tangent Charge _Residue H Q C)
+
+/-- Construct the chiral tubule boundary witness from its explicit compatibility data. -/
+theorem chiralTubuleBoundaryOwnerTarget :
+  ∀ (State Tangent Charge Residue H : Type*)
+    [Zero Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H],
+  ∀ (Q : KreinIsotropicCone.KreinQuadraticDatum H),
+  ∀ (C : ModuleCircularPolarization H),
+    ChiralTubuleBoundaryCompatibility State Tangent Charge Residue H Q C →
+      Nonempty
+        (ChiralTubuleBoundaryWitness
+          State Tangent Charge Residue H Q C) := by
+  intro State Tangent Charge Residue H _ _ _ _ Q C h
+  exact h
+
+/-- Packet readout for a concrete chiral tubule boundary compatibility witness. -/
+theorem chiralTubuleBoundary_packet
+    (State Tangent Charge Residue H : Type*)
+    [Zero Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (h :
+      ChiralTubuleBoundaryCompatibility
+        State Tangent Charge Residue H Q C) :
+    Nonempty
+      (ChiralTubuleBoundaryWitness
+        State Tangent Charge Residue H Q C) :=
+  chiralTubuleBoundaryOwnerTarget State Tangent Charge Residue H Q C h
+
+/--
+Compatibility predicate for constructing an Unruh-driven chiral tubule
+boundary.
+-/
+def UnruhDrivenChiralTubuleCompatibility
+    (_State _Tangent Charge _Residue H : Type*)
+    [Zero _Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H) : Prop :=
+  Nonempty
+    (UnruhDrivenChiralTubuleBoundary
+      _State _Tangent Charge _Residue H Q C)
+
+/-- Construct the Unruh-driven boundary from its explicit compatibility data. -/
+theorem unruhDrivenChiralTubuleOwnerTarget :
+  ∀ (State Tangent Charge Residue H : Type*)
+    [Zero Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H],
+  ∀ (Q : KreinIsotropicCone.KreinQuadraticDatum H),
+  ∀ (C : ModuleCircularPolarization H),
+    UnruhDrivenChiralTubuleCompatibility
+      State Tangent Charge Residue H Q C →
+      Nonempty
+        (UnruhDrivenChiralTubuleBoundary
+          State Tangent Charge Residue H Q C) := by
+  intro State Tangent Charge Residue H _ _ _ _ Q C h
+  exact h
+
+/-- Packet readout for a concrete Unruh-driven chiral tubule compatibility witness. -/
+theorem unruhDrivenChiralTubule_packet
+    (State Tangent Charge Residue H : Type*)
+    [Zero Tangent] [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (h :
+      UnruhDrivenChiralTubuleCompatibility
+        State Tangent Charge Residue H Q C) :
+    Nonempty
+      (UnruhDrivenChiralTubuleBoundary
+        State Tangent Charge Residue H Q C) :=
+  unruhDrivenChiralTubuleOwnerTarget State Tangent Charge Residue H Q C h
+
+attribute [rep_depth operator]
+  HessianCollapseEvent
+  ShearReadout
+  ExtremeShearThreshold
+  CrossesShearThreshold
+  ExtremeShearThreshold.crosses_iff
+  UnruhShearCalibration
+  UnruhShearCalibration.driven_state_crosses_shear_threshold
+  UnruhShearCalibration.unruh_temperature
+  TopologicalObstruction
+  TopologicalObstruction.not_flat_of_nonzero
+  ChiralResidue
+  ChiralTubuleBoundaryWitness
+  ChiralTubuleBoundaryWitness.collapse_state_not_flat
+  ChiralTubuleBoundaryWitness.collapse_state_on_chiral_lightcone
+  ChiralTubuleBoundaryWitness.collapse_state_crosses_threshold
+  ChiralTubuleBoundaryWitness.exists_stable_chiral_residue
+  UnruhDrivenChiralTubuleBoundary
+  UnruhDrivenChiralTubuleBoundary.unruh_crosses_boundary_threshold
+  UnruhDrivenChiralTubuleBoundary.collapse_state_not_flat
+  UnruhDrivenChiralTubuleBoundary.exists_stable_chiral_residue
+  UnruhDrivenChiralTubuleBoundary.unruh_temperature
+  ConservedSnapBoundary
+  ConservedSnapBoundary.state_not_flat
+  ConservedSnapBoundary.cannot_flow_to_flat
+  ConservedSnapBoundary.no_nontrivial_flattening
+  BrewsterDrazinBoundary
+  BrewsterDrazinBoundary.rp_eq_zero
+  BrewsterDrazinBoundary.killed_sector
+  BrewsterDrazinBoundary.reflected_core_identity
+  ChiralLightconeStinespringBoundary
+  ChiralLightconeStinespringBoundary.accessible_loss_eq_hidden_information
+  ChiralLightconeStinespringBoundary.hidden_right_of_visible_left
+  ChiralLightconeStinespringBoundary.hidden_left_of_visible_right
+  TomitaChiralLocalLossBoundary
+  TomitaChiralLocalLossBoundary.locally_lost_global_in_commutant
+  TomitaChiralLocalLossBoundary.locally_lost_has_chiral_lightcone_readout
+  TomitaChiralLocalLossBoundary.locally_lost_is_commutant_chiral_lightcone
+  JonesRankCollapseEvent
+  JonesRankCollapseEvent.p_eigenvalue_eq_zero
+  JonesRankCollapseEvent.r_p_eq_zero
+  ChiralTubuleBoundaryCompatibility
+  chiralTubuleBoundaryOwnerTarget
+  chiralTubuleBoundary_packet
+  UnruhDrivenChiralTubuleCompatibility
+  unruhDrivenChiralTubuleOwnerTarget
+  unruhDrivenChiralTubule_packet
 
 end InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary

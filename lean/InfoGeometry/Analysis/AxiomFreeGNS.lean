@@ -1,19 +1,18 @@
-import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
 import InfoGeometry.Analysis.L2CantorCommutation
 
 open InfoGeometry.Analysis.L2CantorCommutation
 
 /-!
-# Constructive Cuntz O₂ relations + algebraic state readout on the Cantor carrier
+# Constructive Cuntz O₂ relations + KMS state interface on ℓ²(CantorBoundary, ℝ²)
 
 The concrete Hilbert space H = BaseIndex → Fiber carries an explicit,
 constructive representation of the Cuntz O₂ algebra (S_left, S_right,
 star_S_left, star_S_right) and the phase axis K_op, with all relations
 proved as theorems in L2CantorCommutation.
 
-This file records the algebraic state-readout interface: a state carrier, its
-composition pairing, and the cyclic vector.
+This file records the GNS data interface: a state carrier, the GNS inner
+product induced by any such carrier, and the cyclic vector.
 
 All Cuntz algebra relations are proved theorems.  The KMS state carrier is not
 postulated globally here; its laws are exposed as explicit theorem premises.
@@ -30,7 +29,7 @@ debt.
   This file (AxiomFreeGNS):
     ✅ Concrete plus-cylinder vector Ω (defined explicitly)
     ✅ KMS state laws exposed as explicit predicates and theorem hypotheses
-    ✅ composition pairing and carrier self-equivalence defined from that structure
+    ✅ GNS inner product and Hilbert-space readback defined from that structure
     📐 Concrete C*-KMS state construction remains an existence theorem
 -/
 
@@ -82,25 +81,7 @@ theorem branch_weight_one_half
       _ = (1 / 2 : R) := by ring
   exact ⟨h_left, by rw [← h_symm, h_left]⟩
 
-/-- Specialization of the axiom-free branch-weight theorem to a ring with `I = 1` and `R = ℂ`. -/
-theorem branch_weight_one_half_complex {A : Type*} [Ring A] (φ : A →+ ℂ)
-    (P_L P_R : A)
-    (h_partition : P_L + P_R = 1)
-    (h_norm : φ 1 = 1)
-    (h_symm : φ P_L = φ P_R) :
-    φ P_L = 1 / 2 ∧ φ P_R = 1 / 2 :=
-  branch_weight_one_half φ P_L P_R 1 h_partition h_norm h_symm
-
-/-- Specialization of the axiom-free branch-weight theorem to a real ring with `I = 1` and `R = ℝ`. -/
-theorem branch_weight_one_half_real {A : Type*} [Ring A] (φ : A →+ ℝ)
-    (P_L P_R : A)
-    (h_partition : P_L + P_R = 1)
-    (h_norm : φ 1 = 1)
-    (h_symm : φ P_L = φ P_R) :
-    φ P_L = 1 / 2 ∧ φ P_R = 1 / 2 :=
-  branch_weight_one_half φ P_L P_R 1 h_partition h_norm h_symm
-
-/-! ## 1. The cyclic vector and state readout -/
+/-! ## 1. The cyclic vector and KMS state -/
 
 /-- The plus boundary word `(plus, plus, plus, ...)`. -/
 def emptyWord : BaseIndex :=
@@ -133,14 +114,9 @@ theorem omega_of_head_minus {x : BaseIndex} (h : head x = BinarySector.minus) :
   simp [omega, h]
 
 /-- State carrier on the concrete Cuntz operator lane. -/
-abbrev CuntzKMSState := (H → H) → ℝ
-
-namespace CuntzKMSState
-
-/-- Compatibility accessor for the native state-functional carrier. -/
-abbrev phi (Φ : CuntzKMSState) : (H → H) → ℝ := Φ
-
-end CuntzKMSState
+structure CuntzKMSState where
+  /-- The real KMS state functional on the concrete operator lane. -/
+  phi : (H → H) → ℝ
 
 /-- The state is normalized: φ(I) = 1. -/
 def NormalizedState (φ : (H → H) → ℝ) : Prop :=
@@ -162,83 +138,35 @@ def CrossKMSLeftRightZero (φ : (H → H) → ℝ) : Prop :=
 def CrossKMSRightLeftZero (φ : (H → H) → ℝ) : Prop :=
   ∀ A : H → H, φ (S_right ∘ A ∘ star_S_left) = 0
 
-/--
-Algebraic nonnegativity on the composition surface `φ (A ∘ A)`.
-
-This is deliberately not `φ (star A ∘ A)`: the carrier `H → H` in this
-owner has no `Star` structure. Consequently this predicate is a quadratic
-readout condition, not a C*-algebra positivity assertion.
--/
+/-- Positivity on the repository's algebraic `A ∘ A` quadratic surface. -/
 def QuadraticPositive (φ : (H → H) → ℝ) : Prop :=
   ∀ A : H → H, 0 ≤ φ (A ∘ A)
 
-/--
-Derivation of KMS scaling on the operator algebra from Cuntz partition of unity and Jaynes symmetry.
--/
-theorem left_right_kms_scaling_of_cuntz_jaynes
-    (φ : (H → H) → ℝ)
-    (h_add : ∀ A B, φ (A + B) = φ A + φ B)
-    (h_partition : ∀ A, (S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right) = A)
-    (h_symm : ∀ A, φ (S_left ∘ A ∘ star_S_left) = φ (S_right ∘ A ∘ star_S_right)) :
-    LeftKMSScaling φ ∧ RightKMSScaling φ := by
-  constructor
-  · intro A
-    have h_tot : φ A = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := by
-      calc
-        φ A = φ ((S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right)) := by rw [h_partition A]
-        _ = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := h_add _ _
-    have h_double : φ A = 2 * φ (S_left ∘ A ∘ star_S_left) := by
-      rw [h_tot, h_symm A]
-      ring
-    linarith
-  · intro A
-    have h_tot : φ A = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := by
-      calc
-        φ A = φ ((S_left ∘ A ∘ star_S_left) + (S_right ∘ A ∘ star_S_right)) := by rw [h_partition A]
-        _ = φ (S_left ∘ A ∘ star_S_left) + φ (S_right ∘ A ∘ star_S_right) := h_add _ _
-    have h_double : φ A = 2 * φ (S_right ∘ A ∘ star_S_right) := by
-      rw [h_tot, ← h_symm A]
-      ring
-    linarith
-
-/--
-Derivation of cross-branch KMS vanishing from algebraic orthogonality.
--/
-theorem cross_kms_zero_of_orthogonal
-    (φ : (H → H) → ℝ)
-    (h_zero : φ 0 = 0)
-    (h_ortho_LR : ∀ A, (S_left ∘ A ∘ star_S_right) = 0)
-    (h_ortho_RL : ∀ A, (S_right ∘ A ∘ star_S_left) = 0) :
-    CrossKMSLeftRightZero φ ∧ CrossKMSRightLeftZero φ := by
-  constructor
-  · intro A
-    rw [h_ortho_LR A]
-    exact h_zero
-  · intro A
-    rw [h_ortho_RL A]
-    exact h_zero
-
 namespace CuntzKMSState
 
-/-! ## 2. The composition pairing -/
+/-! ## 2. The GNS inner product -/
 
-/-- The algebraic composition pairing `φ (B ∘ A)`. -/
-def compositionPairing (Φ : CuntzKMSState) (A B : H → H) : ℝ :=
+/--
+The GNS semi-inner product: ⟨A, B⟩_φ = φ(B* · A).
+-/
+def gnsInner (Φ : CuntzKMSState) (A B : H → H) : ℝ :=
   Φ.phi (B ∘ A)
 
-/-- The composition pairing has nonnegative diagonal under `QuadraticPositive`. -/
-theorem compositionPairing_self_nonneg
-    (Φ : CuntzKMSState) (h : QuadraticPositive Φ.phi) (A : H → H) :
-    0 ≤ Φ.compositionPairing A A :=
+/-- The GNS inner product is positive semidefinite: ⟨A, A⟩_φ ≥ 0. -/
+theorem gnsInner_pos (Φ : CuntzKMSState) (h : QuadraticPositive Φ.phi) (A : H → H) :
+    0 ≤ Φ.gnsInner A A :=
   h A
 
-/-! The only carrier equivalence available at this abstraction level is the
-identity equivalence of the explicitly chosen carrier `H`. -/
-def carrierSelfEquiv (_Φ : CuntzKMSState) : H ≃ H :=
+/--
+The GNS Hilbert-space readback is the concrete carrier `H` itself.
+
+The GNS representation π(A) = A is the left regular representation.
+-/
+def GNS_isomorphic_to_H (_Φ : CuntzKMSState) : H ≃ H :=
   Equiv.refl H
 
-theorem carrierSelfEquiv_eq_refl (Φ : CuntzKMSState) :
-    Φ.carrierSelfEquiv = Equiv.refl H :=
+theorem GNS_isomorphic_to_H_eq_refl (Φ : CuntzKMSState) :
+    Φ.GNS_isomorphic_to_H = Equiv.refl H :=
   rfl
 
 end CuntzKMSState

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
 import InfoGeometry.Canonical.SplitOctonionSignalMultiplication
+import InfoGeometry.Algebra.ZornMatrixRealModule
 import InfoGeometry.Algebra.Zorn.CanonicalConjugation
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
@@ -17,8 +18,22 @@ noncomputable def paperCanonicalLinearEquiv : PaperZorn ≃ₗ[ℝ] CanonicalZor
   invFun X := { a := X.a, v := X.x, w := X.y, b := X.b }
   left_inv X := by cases X; rfl
   right_inv X := by cases X; rfl
-  map_add' X Y := by ext <;> rfl
-  map_smul' r X := by ext <;> rfl
+  map_add' X Y := by
+    apply InfoGeometry.Canonical.ZornMatrix.ext
+    · rfl
+    · rfl
+    · funext i
+      fin_cases i <;> rfl
+    · funext i
+      fin_cases i <;> rfl
+  map_smul' r X := by
+    apply InfoGeometry.Canonical.ZornMatrix.ext
+    · rfl
+    · rfl
+    · funext i
+      fin_cases i <;> rfl
+    · funext i
+      fin_cases i <;> rfl
 
 @[simp] theorem paperCanonicalLinearEquiv_a (X : PaperZorn) :
     (paperCanonicalLinearEquiv X).a = X.a := rfl
@@ -123,16 +138,18 @@ theorem paperCanonicalLinearEquiv_signalConj
 @[simp] theorem paperCanonicalLinearEquiv_norm (X : PaperZorn) :
     InfoGeometry.Algebra.ZornMatrix.zornNorm X =
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (paperCanonicalLinearEquiv X) := by
-  simp [paperCanonicalLinearEquiv,
-    InfoGeometry.Algebra.ZornMatrix.zornNorm,
-    InfoGeometry.Algebra.Vec3.dot,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-    InfoGeometry.Canonical.ZornMatrix.dot]
+  change X.a * X.b -
+      (X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2) =
+    X.a * X.b -
+      (X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2)
+  rfl
 
 theorem paperNorm_eq_canonicalDet_of_signal
     (c : ℝ) (s : InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge.SignalCoordinates) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (paperCanonicalLinearEquiv
           (InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge.toNativeZorn c s)) =
       InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge.signalNorm c s := by

@@ -22,7 +22,3 @@ theorem modular_S_involution (τ : ℂ) (hτ : τ ≠ 0) :
     modularS (modularS τ) = τ := by
   unfold modularS
   field_simp [hτ]
-
-theorem grand_modular_invariance_synthesis (τ : ℂ) (hτ : τ ≠ 0) :
-    modularS (modularS τ) = τ :=
-  modular_S_involution τ hτ

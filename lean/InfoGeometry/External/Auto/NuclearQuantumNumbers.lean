@@ -64,12 +64,12 @@ def NucleusQuantumNumbers.mirrorPair
     (p : NucleusPoint) :
     NucleusQuantumNumbers × NucleusQuantumNumbers :=
   let np := NucleusQuantumNumbers.ofPoint p
-  let nq := NucleusQuantumNumbers.ofPoint (p.2, p.1)
+  let nq := NucleusQuantumNumbers.ofPoint { Z := p.N, N := p.Z }
   (np, nq)
 
 /-- A nucleus derived from the Q₈ chiral data. -/
 def NucleusQuantumNumbers.ofQ8 (_qI _qJ _qK : M2C) : NucleusQuantumNumbers :=
-  NucleusQuantumNumbers.ofPoint (0, 0)
+  NucleusQuantumNumbers.ofPoint { Z := 0, N := 0 }
 
 /-! ## Physical constraints as lemmas -/
 

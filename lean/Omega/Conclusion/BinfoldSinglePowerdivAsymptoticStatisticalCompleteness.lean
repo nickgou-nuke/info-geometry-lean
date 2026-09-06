@@ -52,7 +52,7 @@ theorem paper_conclusion_binfold_single_powerdiv_asymptotic_statistical_complete
     (let D : BinfoldEscortCsiszarBlackwellPhiDatum := { p := 0, q := 1 }; D.Holds) ∧
     BinfoldEscortBlackwellDatum.AsymptoticallyBlackwellEquivalent
       conclusion_binfold_single_powerdiv_asymptotic_statistical_completeness_blackwell_datum := by
-  let Dchi : conclusion_chi2_recovers_full_power_divergence_family_data := Unit.unit
+  let Dchi : conclusion_chi2_recovers_full_power_divergence_family_data := {}
   let Descort : BinfoldEscortCsiszarBlackwellPhiDatum := { p := 0, q := 1 }
   have hchi := paper_conclusion_chi2_recovers_full_power_divergence_family Dchi
   have hescort := paper_conclusion_binfold_escort_csiszar_blackwell_phi Descort

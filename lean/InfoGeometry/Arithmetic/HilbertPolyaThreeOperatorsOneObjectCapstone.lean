@@ -56,34 +56,4 @@ theorem projective_closure_identity (z : ℂ) (hz : z ≠ 0) :
     z * (1 / z) = 1 := by
   rw [one_div, mul_inv_cancel₀ hz]
 
-/--
-🏆 **MASTER HILBERT-PÓLYA TRINITY SYNTHESIS: Three Operators, One Object**
-
-Unifies:
-1. **Statistical Mechanics (H)**: Fermionic supertrace Euler product STr(q) = ∏ (1 - q_p).
-2. **Topology (Δ = Q²)**: Hodge-Dirac commutation [Δ, γ] = 0.
-3. **Supersymmetry (D = Q)**: Chiral anticommutation {Q, γ} = 0.
-4. **Unitary Cayley Orbit**: |C(x)|² = 1.
-5. **Affine Projective Closure**: ζ · (1/ζ) = 1.
-6. **Yang-Baxter Topological Integrability**: F · B · F = R and F² = 1.
--/
-theorem grand_hilbert_polya_trinity_synthesis
-    {Op : Type*} [Ring Op] (star Q : Op)
-    (h_anticomm : Q * star = -(star * Q))
-    (x : ℝ) (z : ℂ) (hz : z ≠ 0)
-    {ι M : Type*} [DecidableEq ι] [CommRing M]
-    (modes : Finset ι) (q_modes : ι → M) :
-    ((Q * Q) * star = star * (Q * Q)) ∧
-    (z * (1 / z) = 1) ∧
-    (finiteFermionSupertrace modes q_modes = ∏ p ∈ modes, (1 - q_modes p)) ∧
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) :=
-  ⟨hodge_dirac_laplacian_supercommutation star Q h_anticomm,
-   projective_closure_identity z hz,
-   finiteFermionSupertrace_eq_eulerProduct modes q_modes,
-   cayley_transform_is_unitary x,
-   F_sq,
-   F_B_F_eq_R⟩
-
 end InfoGeometry.Arithmetic.HilbertPolya

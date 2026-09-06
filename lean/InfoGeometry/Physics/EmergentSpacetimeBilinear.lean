@@ -1,125 +1,113 @@
 import Mathlib
 import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
+import InfoGeometry.Physics.MatrixTraceBimodulePairingNative
 
-namespace InfoGeometry.Physics.EmergentSpacetime
+/-!
+# Finite Cl(5,5) Krein bilinear readout
 
-open InfoGeometry.Clifford.DyadicMorita
+This owner formalizes only the finite kernel-checkable layer:
+
+* a real `32 = 16 + 16` signature operator on the native spinor carrier;
+* the associated Krein bra and rank-one density dyad;
+* scalar operator readout by matrix trace;
+* a symmetric anticommutator metric shadow;
+* transport of both readouts through the already-proved
+  `cl55SpinorAlgEquiv : Cl55 ≃ₐ[ℝ] Matrix (Fin 32) (Fin 32) ℝ`.
+
+No theorem here identifies the coordinate readout with a spacetime manifold,
+Einstein metric, Tomita--Takesaki modular conjugation, or gravitational field.
+Those require separate analytic/geometric bridge data.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.Physics.EmergentSpacetimeBilinear
+
+open Matrix
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.SpinorRep
 
-/-- Coordinate-wise sign for the fixed (16, 16) Krein splitting. -/
-def kreinSign (i : Fin 32) : ℝ :=
-  if (i : ℕ) < 16 then 1 else -1
+abbrev Spinor32 : Type := InfoGeometry.Clifford.Clifford55.Spinor32
+abbrev Mat32 : Type := InfoGeometry.Clifford.Clifford55.Mat32
 
-/-- The fundamental Krein metric $\eta = \operatorname{diag}(+1_{16}, -1_{16})$. -/
+/-- Coordinate sign for the fixed `16 + 16` Krein splitting. -/
+def kreinSign (i : Fin 32) : ℝ :=
+  if (i : Nat) < 16 then 1 else -1
+
+/-- Diagonal fundamental symmetry with `16` positive and `16` negative entries. -/
 def kreinEta : Mat32 :=
   Matrix.diagonal kreinSign
 
-theorem kreinEta_mul_self : kreinEta * kreinEta = 1 := by
-  classical
-  rw [kreinEta, Matrix.diagonal_mul_diagonal]
-  ext i j
-  by_cases h : i = j
-  · subst h
-    simp only [Matrix.diagonal_apply_eq, Matrix.one_apply_eq, kreinSign]
-    split_ifs <;> ring
-  · simp only [Matrix.diagonal_apply_ne _ h, Matrix.one_apply_ne h]
+@[simp] theorem kreinEta_diag (i : Fin 32) :
+    kreinEta i i = kreinSign i := by
+  simp [kreinEta]
 
-theorem kreinEta_transpose : kreinEta.transpose = kreinEta := by
-  dsimp [kreinEta]
-  ext i j
-  simp only [Matrix.transpose_apply, Matrix.diagonal_apply]
-  by_cases hij : i = j
-  · subst hij
-    simp
-  · have hji : j ≠ i := Ne.symm hij
-    simp [hij, hji]
-
-/-- The real Krein-dual co-spinor $\langle \psi|_\eta$. -/
+/-- The coordinate Krein dual of a real spinor.  This identifies the algebraic
+row functional with its coefficient vector in the standard basis. -/
 def kreinBra (psi : Spinor32) : Spinor32 :=
   fun i => kreinSign i * psi i
 
-/-- The Krein density matrix dyad $\rho_\eta(\psi) = |\psi\rangle \langle \psi|_\eta$. -/
+/-- Rank-one Krein density dyad `|psi><psi|_eta`. -/
 def kreinDensity (psi : Spinor32) : Mat32 :=
   ketBra psi (kreinBra psi)
 
-theorem kreinDensity_apply (psi : Spinor32) (i j : Fin 32) :
-    kreinDensity psi i j = psi i * (kreinSign j * psi j) := rfl
+@[simp] theorem kreinDensity_apply (psi : Spinor32) (i j : Fin 32) :
+    kreinDensity psi i j = psi i * (kreinSign j * psi j) := by
+  rfl
 
-/-- Scalar expectation value / coordinate readback $X_A(\psi) = \operatorname{Tr}(\rho_\eta(\psi) A)$. -/
+/-- Scalar state/operator readout `Tr(rho_eta(psi) A)`. -/
 def spacetimeCoordinate (psi : Spinor32) (A : Mat32) : ℝ :=
   Matrix.trace (kreinDensity psi * A)
 
-theorem spacetimeCoordinate_eq_trace (psi : Spinor32) (A : Mat32) :
-    spacetimeCoordinate psi A = Matrix.trace (kreinDensity psi * A) := rfl
+@[simp] theorem spacetimeCoordinate_zero_operator (psi : Spinor32) :
+    spacetimeCoordinate psi 0 = 0 := by
+  simp [spacetimeCoordinate]
 
-/-- Krein-adjoint of an operator $A^\dagger_\eta = \eta A^\top \eta$. -/
-def kreinAdj (A : Mat32) : Mat32 :=
-  kreinEta * A.transpose * kreinEta
-
-theorem kreinAdj_mul (A B : Mat32) :
-    kreinAdj (A * B) = kreinAdj B * kreinAdj A := by
-  dsimp [kreinAdj]
-  rw [Matrix.transpose_mul]
-  simp only [mul_assoc]
-  have h : B.transpose * (kreinEta * (kreinEta * (A.transpose * kreinEta))) =
-      B.transpose * (A.transpose * kreinEta) := by
-    rw [← mul_assoc kreinEta, kreinEta_mul_self, one_mul]
-  rw [h]
-
-theorem kreinAdj_sub (A B : Mat32) :
-    kreinAdj (A - B) = kreinAdj A - kreinAdj B := by
-  dsimp [kreinAdj]
-  rw [Matrix.transpose_sub]
-  simp only [mul_sub, sub_mul]
-
-/-- The modular derivation / quantum commutator generator $\operatorname{ad}_K(A) = [K, A]$. -/
-def modularFlowGenerator (K A : Mat32) : Mat32 :=
-  K * A - A * K
-
-theorem modularFlowGenerator_trace (K A : Mat32) :
-    Matrix.trace (modularFlowGenerator K A) = 0 := by
-  dsimp [modularFlowGenerator]
-  rw [Matrix.trace_sub, Matrix.trace_mul_comm]
-  exact sub_self _
-
-theorem modularFlowGenerator_krein_antisymm (K A : Mat32)
-    (hK : kreinAdj K = K) (hA : kreinAdj A = A) :
-    kreinAdj (modularFlowGenerator K A) =
-      -modularFlowGenerator K A := by
-  rw [modularFlowGenerator, kreinAdj_sub, kreinAdj_mul, kreinAdj_mul,
-    hK, hA]
-  module
-
-/-- Emergent state-dependent fluctuation metric $g_\psi(A, B) = \frac{1}{2}(X_{AB}(\psi) + X_{BA}(\psi))$. -/
-noncomputable def emergentMetric (psi : Spinor32) (A B : Mat32) : ℝ :=
+/-- The finite metric shadow obtained from the symmetrized operator product. -/
+def emergentMetric (psi : Spinor32) (A B : Mat32) : ℝ :=
   (1 / 2 : ℝ) *
-    (spacetimeCoordinate psi (A * B) +
-      spacetimeCoordinate psi (B * A))
+    (spacetimeCoordinate psi (A * B) + spacetimeCoordinate psi (B * A))
 
+/-- The anticommutator metric shadow is symmetric by construction. -/
 theorem emergentMetric_symm (psi : Spinor32) (A B : Mat32) :
     emergentMetric psi A B = emergentMetric psi B A := by
-  dsimp [emergentMetric]
-  rw [add_comm]
+  simp [emergentMetric, add_comm]
 
-/-- Pullback of the coordinate functional to the Clifford algebra $\operatorname{Cl}(5,5)$. -/
-noncomputable def cliffordCoordinate (psi : Spinor32) (x : Cl55) : ℝ :=
+/-- The coordinate readout is exactly the native trace pairing of the Krein
+density with the supplied operator. -/
+theorem spacetimeCoordinate_eq_tracePairingNative (psi : Spinor32) (A : Mat32) :
+    spacetimeCoordinate psi A = tracePairingNative (kreinDensity psi) A := by
+  rfl
+
+/-- Pull the scalar coordinate readout back to the native Clifford carrier. -/
+def cliffordCoordinate (psi : Spinor32) (x : Cl55) : ℝ :=
   spacetimeCoordinate psi (cl55SpinorAlgEquiv x)
 
-/-- Pullback of the emergent metric to the Clifford algebra $\operatorname{Cl}(5,5)$. -/
-noncomputable def cliffordMetric (psi : Spinor32) (x y : Cl55) : ℝ :=
+/-- Pull the symmetric anticommutator metric shadow back to `Cl(5,5)`. -/
+def cliffordMetric (psi : Spinor32) (x y : Cl55) : ℝ :=
   emergentMetric psi (cl55SpinorAlgEquiv x) (cl55SpinorAlgEquiv y)
 
+/-- Clifford-side metric symmetry. -/
 theorem cliffordMetric_symm (psi : Spinor32) (x y : Cl55) :
-    cliffordMetric psi x y = cliffordMetric psi y x :=
-  emergentMetric_symm psi (cl55SpinorAlgEquiv x) (cl55SpinorAlgEquiv y)
+    cliffordMetric psi x y = cliffordMetric psi y x := by
+  exact emergentMetric_symm psi (cl55SpinorAlgEquiv x) (cl55SpinorAlgEquiv y)
 
+/-- The Clifford pullback is the expectation of the native algebra product,
+using multiplicativity of `cl55SpinorAlgEquiv`. -/
 theorem cliffordMetric_eq_product_readout (psi : Spinor32) (x y : Cl55) :
     cliffordMetric psi x y =
       (1 / 2 : ℝ) *
-        (cliffordCoordinate psi (x * y) +
-          cliffordCoordinate psi (y * x)) := by
-  dsimp [cliffordMetric, emergentMetric, cliffordCoordinate]
-  simp only [map_mul]
+        (cliffordCoordinate psi (x * y) + cliffordCoordinate psi (y * x)) := by
+  simp [cliffordMetric, emergentMetric, cliffordCoordinate, map_mul]
 
-end InfoGeometry.Physics.EmergentSpacetime
+/-- The finite readout depends only on the dyadic density and the operator image;
+this is the exact bridge to the preceding Morita reconstruction owner. -/
+theorem cliffordCoordinate_dyadic_readback (psi : Spinor32) (x : Cl55) :
+    cliffordCoordinate psi x =
+      Matrix.trace (kreinDensity psi * cl55SpinorAlgEquiv x) := by
+  rfl
+
+end InfoGeometry.Physics.EmergentSpacetimeBilinear
+
+end noncomputable section
+

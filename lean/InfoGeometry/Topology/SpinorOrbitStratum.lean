@@ -14,8 +14,9 @@ quadratic form:
 It also specializes the trichotomy to the concrete split `(5,5)` form `q55`
 from `Physics/Pin55Formal.lean`.
 
-The module gives the predicate and case-split layer used by the `(5,5)` orbit
-stratum files.
+Boundary: this is a predicate/case-split layer only.  It does **not** prove a
+full group orbit classification, spin-action invariance, a `Pin(5,5) → O(5,5)`
+double-cover theorem, CCC, analytic conformality, or global conformal inversion.
 -/
 
 namespace InfoGeometry.Topology.SpinorOrbitStratum
@@ -42,7 +43,7 @@ theorem orbit_classify_trichotomy [DecidableEq R] [DecidableEq M]
     · exact Or.inl ⟨hx, hQ⟩
     · exact Or.inr hQ
 
-/-- Constructive stratum property for any vector. -/
+/-- Constructive stratum witness for any vector. -/
 def classifyOrbit [DecidableEq R] [DecidableEq M]
     (Q : QuadraticForm R M) (x : M) : OrbitStratum Q x := by
   by_cases hx : x = 0

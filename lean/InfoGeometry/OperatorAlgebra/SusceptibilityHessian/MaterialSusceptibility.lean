@@ -5,7 +5,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 
-/-! ## 2. Material susceptibility interface -/
+/-! ## 2. Material susceptibility socket -/
 
 /--
 Material response model.

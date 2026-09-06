@@ -166,24 +166,4 @@ theorem cylinder_measure_conservation (n : ℕ) :
   rw [pow_succ]
   ring
 
-/-! ## 4. Grand Master Synthesis -/
-
-/--
-🏆 **PRISTINE MASTER SYNTHESIS: Riemann Zeta Primon Gas ↔ Cayley Compactification ↔ Cuntz $\mathcal{O}_2$ Holography**
--/
-theorem grand_riemann_primon_cayley_souriau_synthesis
-    (x : ℝ) (n : ℕ)
-    {O2 : Type*} [Ring O2] [StarRing O2]
-    (S_L S_R : O2)
-    (φ : State O2)
-    (h_kms : IsKMSState S_L S_R φ) :
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (cylinderMeasure (n + 1) + cylinderMeasure (n + 1) = cylinderMeasure n) ∧
-    (F * B * F = R) ∧
-    (φ (S_L * star S_L) - φ (S_R * star S_R) = 0) :=
-  ⟨cayley_transform_is_unitary x,
-   cylinder_measure_conservation n,
-   F_B_F_eq_R,
-   kms_chiral_charge_vanishes S_L S_R φ h_kms⟩
-
 end InfoGeometry.Arithmetic.PrimonSouriauCayley

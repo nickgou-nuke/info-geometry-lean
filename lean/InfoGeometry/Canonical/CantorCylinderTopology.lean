@@ -74,12 +74,6 @@ theorem initialSegmentCylinder_mem_nhds (x : CantorStream) (n : ℕ) :
     initialSegmentCylinder x n ∈ 𝓝 x :=
   finiteCoordinateCylinder_mem_nhds x (initialSegmentSet_finite n)
 
-theorem initialSegmentCylinder_mono
-    (x : CantorStream) {m n : ℕ} (hmn : m ≤ n) :
-    initialSegmentCylinder x n ⊆ initialSegmentCylinder x m := by
-  intro y hy i hi
-  exact hy i (lt_of_lt_of_le hi hmn)
-
 @[simp] theorem mem_initialSegmentCylinder
     (x y : CantorStream) (n : ℕ) :
     y ∈ initialSegmentCylinder x n ↔ ∀ i, i < n → y i = x i := by

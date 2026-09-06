@@ -82,18 +82,24 @@ theorem relative_log_mass_scale_invariant
 
 /-- Log-mass translation as the repository's generic positional-encoding type. -/
 def logMassTranslation (c : ℝ) : InfoGeometry.LLM.PositionalEncoding ℝ :=
-  fun x => x + c
+  { encode := fun x => x + c }
 
 @[simp] theorem logMassTranslation_apply (c x : ℝ) :
-    (logMassTranslation c).encode x = x + c := rfl
+    (logMassTranslation c).encode x = x + c := by rfl
 
 /-- Sequential scale translations add their logarithmic shifts. -/
 theorem logMassTranslation_comp (a b : ℝ) :
     InfoGeometry.LLM.PositionalEncoding.comp
       (logMassTranslation a) (logMassTranslation b) =
     logMassTranslation (a + b) := by
+  unfold InfoGeometry.LLM.PositionalEncoding.comp logMassTranslation
+  change
+    ({ encode := fun x : ℝ => (x + a) + b } :
+      InfoGeometry.LLM.PositionalEncoding ℝ) =
+      ({ encode := fun x : ℝ => x + (a + b) } :
+        InfoGeometry.LLM.PositionalEncoding ℝ)
+  congr 1
   funext x
-  simp [InfoGeometry.LLM.PositionalEncoding.comp, logMassTranslation]
   ring
 
 end InfoGeometry.MassSpectrometry

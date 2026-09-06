@@ -12,7 +12,7 @@ Their concrete generated image on the `s`-plane is therefore Klein-four, not a
 faithful `D_∞` action.  The critical line `Re(s) = 1/2` is the fixed locus of
 the antiunitary reflection `s ↦ 1 - conj s`.
 
-No deferred interfaces. No certificates. No axioms. No `sorry`.
+No sockets. No certificates. No axioms. No `sorry`.
 -/
 
 noncomputable section
@@ -96,4 +96,4 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
     simpa [tau, sigma, Complex.sub_re] using h_re
   · simp [tau, sigma, functionalReflection, conjugationReflection]
 
-end ZetaDihedral
+end InfoGeometry.Arithmetic.ZetaDihedral

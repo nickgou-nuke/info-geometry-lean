@@ -202,9 +202,7 @@ theorem fisher_variance_on_critical_line (t : ℝ) :
   fisherRaoMetric_on_critical_line t
 
 theorem primon_susy_bridge (β : ℝ) (hβ : β > 1) :
-    (riemannZeta (β : ℂ)) *
-        (moebiusLSeriesReadout β : ℂ) = 1 := by
-  rw [moebius_readout_eq_reciprocal_riemannZeta β hβ]
+    (riemannZeta (β : ℂ)) * (riemannZeta (β : ℂ))⁻¹ = 1 := by
   apply mul_inv_cancel₀
   apply riemannZeta_ne_zero_of_one_lt_re
   simpa using hβ

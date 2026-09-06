@@ -46,13 +46,13 @@ theorem upperTailQCCRRestriction_fiber_ambient_natural
     (upperTailQCCRZeroFiberRestrictionMap Stage T m ≫
         qCcrParameterZeroFiberToParameterLimit
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j =
       upperTailQCCRZeroFiberRestrictionMap Stage T m ≫
         (qCcrParameterZeroFiberToParameterLimit
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) ≫
-          limit.π
+          topologicalInverseProjection
             (qCcrParameterTopologicalDiagram
               (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j) := by
         rw [Category.assoc]
@@ -61,20 +61,20 @@ theorem upperTailQCCRRestriction_fiber_ambient_natural
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)).π.app j := by
         rw [qCcrParameterZeroFiberToParameterLimit_projection]
     _ = upperTailQCCRZeroFiberRestrictionMap Stage T m ≫
-        (limit.π
+        (topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j ≫
           (qCcrParameterZeroFiberToParameterNatTrans
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)).app j) := by
         rfl
     _ = (upperTailQCCRZeroFiberRestrictionMap Stage T m ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j) ≫
         (qCcrParameterZeroFiberToParameterNatTrans
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)).app j := by
         rw [Category.assoc]
-    _ = limit.π
+    _ = topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram Stage
             T.toContinuousStarInductiveSystem) jfull ≫
         (qCcrParameterZeroFiberToParameterNatTrans
@@ -83,7 +83,7 @@ theorem upperTailQCCRRestriction_fiber_ambient_natural
     _ = (qCcrParameterZeroFiberToParameterLimit Stage
           T.toContinuousStarInductiveSystem ≫
         upperTailQCCRParameterRestrictionMap Stage T m) ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j := by
         rw [Category.assoc,
@@ -106,18 +106,18 @@ theorem upperTailQCCRRestriction_between_fiber_ambient_natural
     (upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn ≫
         qCcrParameterZeroFiberToParameterLimit
           (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j =
       upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn ≫
         (qCcrParameterZeroFiberToParameterLimit
           (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n) ≫
-          limit.π
+          topologicalInverseProjection
             (qCcrParameterTopologicalDiagram
               (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j) := by
         rw [Category.assoc]
     _ = upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn ≫
-        (limit.π
+        (topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j ≫
           (qCcrParameterZeroFiberToParameterNatTrans
@@ -125,13 +125,13 @@ theorem upperTailQCCRRestriction_between_fiber_ambient_natural
         rw [qCcrParameterZeroFiberToParameterLimit_projection]
         rfl
     _ = (upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j) ≫
         (qCcrParameterZeroFiberToParameterNatTrans
           (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)).app j := by
         rw [Category.assoc]
-    _ = limit.π
+    _ = topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) jm ≫
         (qCcrParameterZeroFiberToParameterNatTrans
@@ -140,7 +140,7 @@ theorem upperTailQCCRRestriction_between_fiber_ambient_natural
     _ = (qCcrParameterZeroFiberToParameterLimit
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) ≫
         upperTailQCCRParameterRestrictionMap_between Stage T m n hmn) ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j := by
         rw [Category.assoc,

@@ -247,6 +247,10 @@ structure BoundaryDefectLedger
   /-- Volume defect density. -/
   defectDensity :
     Point → Value
+  /-- The geometric derivative of the boundary one-form is the defect density. -/
+  derivative_eq_defect :
+    ∀ p : Point,
+      I.geometricDerivative omega p = defectDensity p
 
 namespace BoundaryDefectLedger
 
@@ -259,40 +263,33 @@ variable (L : BoundaryDefectLedger Region Point Tangent Value I)
 
 /-- The boundary integral equals the volume integral of the defect density. -/
 theorem boundaryIntegral_eq_volumeDefect
-    (hL : ∀ p : Point,
-      I.geometricDerivative L.omega p = L.defectDensity p)
     (Ω : Region) :
     I.boundaryIntegral Ω L.omega =
       I.volumeIntegral Ω L.defectDensity := by
   rw [I.stokes_eq Ω L.omega]
   have h :
       I.geometricDerivative L.omega = L.defectDensity :=
-    funext hL
+    funext L.derivative_eq_defect
   rw [h]
 
 /-- Closedness of the boundary form is equivalent to zero defect density. -/
 theorem closed_iff_zero_defect :
-    (hL : ∀ p : Point,
-      I.geometricDerivative L.omega p = L.defectDensity p) →
     I.IsClosedGeometricForm L.omega ↔
       ∀ p : Point, L.defectDensity p = 0 := by
-  intro hL
   constructor
   · intro h p
-    rw [← hL p]
+    rw [← L.derivative_eq_defect p]
     exact h p
   · intro h p
-    rw [hL p]
+    rw [L.derivative_eq_defect p]
     exact h p
 
 /-- If the defect density vanishes pointwise, the boundary integral vanishes. -/
 theorem boundaryIntegral_eq_zero_of_zero_defect
-    (hL : ∀ p : Point,
-      I.geometricDerivative L.omega p = L.defectDensity p)
     (Ω : Region)
     (hzero : ∀ p : Point, L.defectDensity p = 0) :
     I.boundaryIntegral Ω L.omega = 0 := by
-  rw [L.boundaryIntegral_eq_volumeDefect hL Ω]
+  rw [L.boundaryIntegral_eq_volumeDefect Ω]
   exact
     I.volumeIntegral_zero_of_pointwise_zero
       Ω
@@ -344,13 +341,10 @@ def index : Scalar :=
 
 /-- Boundary equals volume defect by the stored boundary ledger. -/
 theorem boundary_eq_volume_defect
-    (hL : ∀ p : Point,
-      I.geometricDerivative K.boundaryLedger.omega p =
-        K.boundaryLedger.defectDensity p)
     (Ω : Region) :
     I.boundaryIntegral Ω K.boundaryLedger.omega =
       I.volumeIntegral Ω K.boundaryLedger.defectDensity :=
-  K.boundaryLedger.boundaryIntegral_eq_volumeDefect hL Ω
+  K.boundaryLedger.boundaryIntegral_eq_volumeDefect Ω
 
 end KasparovBoundaryAccounting
 

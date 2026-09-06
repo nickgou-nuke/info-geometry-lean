@@ -140,7 +140,7 @@ theorem nonzero_row_count (h : ReducedRowEchelon A p) :
     · intro hi
       obtain ⟨s, -, rfl⟩ := Finset.mem_image.mp hi
       exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h.row_ne_zero s⟩
-  rw [hfinset, Finset.card_image_iff.mpr he.injOn]
+  rw [hfinset, Finset.card_image_iff.mpr he]
   simp
 
 end ReducedRowEchelon

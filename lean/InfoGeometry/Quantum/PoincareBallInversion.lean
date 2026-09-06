@@ -58,16 +58,3 @@ theorem poincare_inner_outer_critical_line (σ : ℝ) (h_inv : poincareInversion
   have h_log := congr_arg Real.log h_eq_one
   rw [Real.log_exp, Real.log_one] at h_log
   linarith
-
-theorem grand_poincare_ball_inversion_synthesis (r σ : ℝ) (hr : 0 < r)
-    (h_inv : poincareInversion (Real.exp (σ - 1/2)) = Real.exp (σ - 1/2)) :
-    (poincareInversion (poincareInversion r) = r) ∧
-    (rapidityScale (poincareInversion r) = - rapidityScale r) ∧
-    (poincareInversion 1 = 1) ∧
-    (poincareInversion r = r ↔ r = 1) ∧
-    (σ = 1 / 2) :=
-  ⟨poincare_inversion_involution r (ne_of_gt hr),
-   poincare_inversion_rapidity_neg r hr,
-   poincare_equator_fixed_point,
-   poincare_inversion_fixed_iff r hr,
-   poincare_inner_outer_critical_line σ h_inv⟩

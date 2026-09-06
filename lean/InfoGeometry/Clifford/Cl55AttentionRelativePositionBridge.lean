@@ -73,25 +73,6 @@ theorem cliffordAttention_relative_position
   unfold cliffordAttentionBilinear
   rw [clifford_relative_position_product]
 
-/-- A typed query/key embedding packet.  No neural-network semantics are
-assumed beyond the supplied linear maps into the native Clifford carrier. -/
-structure AttentionEmbeddingDatum (X : Type*) [AddCommGroup X] [Module ℝ X] where
-  WQ : X →ₗ[ℝ] Cl55
-  WK : X →ₗ[ℝ] Cl55
-
-/-- Relative-position attention readout after arbitrary supplied linear query
-and key embeddings. -/
-theorem embeddedAttention_relative_position
-    {X : Type*} [AddCommGroup X] [Module ℝ X]
-    (D : AttentionEmbeddingDatum X)
-    (i : Fin 5) (theta m n : ℝ) (xm xn : X) :
-    cliffordAttentionBilinear
-        (D.WQ xm * ropeRotor55 i (-(m * theta)))
-        (ropeRotor55 i (n * theta) * D.WK xn) =
-      scalarTrace55
-        (D.WQ xm * ropeRotor55 i ((n - m) * theta) * D.WK xn) := by
-  exact cliffordAttention_relative_position i theta m n (D.WQ xm) (D.WK xn)
-
 end
 
 end InfoGeometry.Clifford.Clifford55

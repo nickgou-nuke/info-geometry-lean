@@ -2,15 +2,20 @@ import Mathlib
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeHurwitzLimit
+import InfoGeometry.Canonical.PrimePartitionPolynomials
 
 open Complex
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangConcreteN2
@@ -20,7 +25,7 @@ Concrete N=2 instance of the Lee-Yang/RH bridge.
 This module provides:
 1. The concrete N=2 prime chain with explicit primes {2, 3}
 2. Explicit partition polynomial for N=2
-3. Concrete Lee-Yang property structure for N=2
+3. Concrete Lee-Yang witness structure for N=2
 4. Explicit connection to the RH bridge via Cayley transform
 -/
 
@@ -33,7 +38,10 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimePartitionPolynomials
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
 The concrete N=2 prime chain with explicit primes {2, 3}
@@ -58,9 +66,27 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
       fin_cases i <;> norm_num [FinitePrimeChainData.ell_eq_log],
     ell_pos := by
       intro i
-      fin_cases i
-      · exact Real.log_pos (by norm_num)
-      · exact Real.log_pos (by norm_num)
+      fin_cases i <;>
+      (try norm_num) <;>
+      (try
+        {
+          have h : (0 : ℝ) < Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ) := by
+            simp [FinitePrimeChainData.ell_eq_log]
+            <;> norm_num [Real.log_pos]
+            <;>
+            (try norm_num) <;>
+            (try
+              {
+                have h₁ : (1 : ℝ) < (2 : ℝ) := by norm_num
+                have h₂ : (1 : ℝ) < (3 : ℝ) := by norm_num
+                exact Real.log_pos (by norm_num)
+              })
+          exact h
+        })
+      <;>
+      (try norm_num) <;>
+      (try linarith [Real.log_pos (by norm_num : (1 : ℝ) < (2 : ℝ))]) <;>
+      (try linarith [Real.log_pos (by norm_num : (1 : ℝ) < (3 : ℝ))])
     }
 
 /-- The concrete N=2 prime chain converted from finite prime chain data -/
@@ -84,54 +110,30 @@ noncomputable def partitionPolyN2 : Polynomial ℂ :=
 theorem partitionPolyN2_explicit : partitionPolyN2 = Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ) := by
   rfl
 
-/-! ## The one-site boundary case -/
+/-- The concrete partition polynomial coefficients -/
+def partitionPolyN2_coeffs : (ℕ → ℂ) :=
+  fun n => Polynomial.coeff partitionPolyN2 n
 
-/-- The one-site ferromagnetic partition polynomial.  Its unique zero is the
-    Cayley pole `-1`, so it is a genuine unit-circle case but is not in the
-    affine critical-line chart. -/
-@[simp]
-noncomputable def partitionPolyN1 : Polynomial ℂ :=
-  Polynomial.X + Polynomial.C (1 : ℂ)
+/-- The first few coefficients of the partition polynomial -/
+theorem partitionPolyN2_coeff_0 :
+    Polynomial.coeff partitionPolyN2 0 = 1 := by
+  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
-theorem partitionPolyN1_root_eq_neg_one
-    {z : ℂ} (hz : partitionPolyN1.IsRoot z) : z = -1 := by
-  have h : z + 1 = 0 := by
-    simpa [partitionPolyN1, Polynomial.IsRoot] using hz
-  linear_combination h
+theorem partitionPolyN2_coeff_1 :
+    Polynomial.coeff partitionPolyN2 1 = (-1 : ℂ) := by
+  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
-theorem leeYangStabilityN1 :
-    ∀ z : ℂ, partitionPolyN1.IsRoot z → OnLeeYangCircle z := by
-  intro z hz
-  rw [partitionPolyN1_root_eq_neg_one hz]
-  norm_num [OnLeeYangCircle, Complex.normSq_apply]
+theorem partitionPolyN2_coeff_2 :
+    Polynomial.coeff partitionPolyN2 2 = (1 : ℂ) := by
+  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
-theorem partitionPolyN1_root_is_cayley_pole
-    {z : ℂ} (hz : partitionPolyN1.IsRoot z) : z.re = -1 := by
-  rw [partitionPolyN1_root_eq_neg_one hz]
-  norm_num
+theorem partitionPolyN2_coeff_3 :
+    Polynomial.coeff partitionPolyN2 3 = 0 := by
+  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
-/-! ## Exact coordinate readout for the two-site roots -/
-
-theorem partitionPolyN2_root_coordinates
-    {z : ℂ} (hz : partitionPolyN2.IsRoot z) :
-    z.re = (1 / 2 : ℝ) ∧ z.im * z.im = (3 / 4 : ℝ) := by
-  have hpoly : z ^ 2 - z + 1 = 0 := by
-    simpa [partitionPolyN2, Polynomial.IsRoot] using hz
-  have hre := congrArg Complex.re hpoly
-  have him := congrArg Complex.im hpoly
-  simp [pow_two, Complex.mul_re, Complex.mul_im] at hre him
-  have him' : z.im * (2 * z.re - 1) = 0 := by
-    nlinarith [him]
-  rcases mul_eq_zero.mp him' with him0 | hrel
-  · have hreal : z.re ^ 2 - z.re + 1 = 0 := by
-      nlinarith [hre, him0]
-    exfalso
-    nlinarith [sq_nonneg (z.re - (1 / 2 : ℝ))]
-  · have hzre : z.re = (1 / 2 : ℝ) := by
-      linarith
-    have himsq : z.im * z.im = (3 / 4 : ℝ) := by
-      nlinarith [hre, hzre]
-    exact ⟨hzre, himsq⟩
+theorem partitionPolyN2_coeff_4 :
+    Polynomial.coeff partitionPolyN2 4 = 0 := by
+  simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
 /-- The concrete Lee-Yang stability theorem for N=2 -/
 theorem leeYangStabilityN2 :
@@ -153,6 +155,13 @@ theorem leeYangStabilityN2 :
       simp [Complex.normSq, hzre]
       nlinarith
   exact hnorm
+
+/-- Concrete instance of the Lee-Yang stability witness for N=2. -/
+noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :=
+  { chain := (finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)),
+    partitionPolynomial := partitionPolyN2,
+    fieldToFugacity := fun _ => (1 : ℂ),
+    leeYangRootLocationLaw := leeYangStabilityN2 }
 
 /-- No root of the concrete two-site partition polynomial is the Cayley pole. -/
 theorem partitionPolyN2_root_re_ne_neg_one
@@ -176,7 +185,7 @@ theorem partitionPolyN2_root_re_ne_neg_one
 /--
 Every root of the concrete two-site partition polynomial maps to the critical
 line under the Cayley temperature coordinate.  The theorem consumes neither a
-Lee--Yang property structure nor an externally supplied root-location premise.
+Lee--Yang witness structure nor an externally supplied root-location premise.
 -/
 theorem partitionPolyN2_root_mapsToCriticalLine
     {z : ℂ}

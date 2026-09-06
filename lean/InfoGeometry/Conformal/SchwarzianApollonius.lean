@@ -62,17 +62,5 @@ theorem apollonius_virasoro_anomaly_zero (s : ℂ) (hs : s + ⟨1 / 2, 0⟩ ≠ 
   have h_schwarz := apollonius_schwarzian_identity s hs
   rw [h_schwarz, mul_zero]
 
-/-!
-### 3. Гранд Капстоун Синтез
--/
-
-/-- 🏆 ГРАНД СИНТЕЗ: Комплексна аналитичност, афинна връзка, пълно анулиране на
+/-! 🏆 ГРАНД СИНТЕЗ: Комплексна аналитичност, афинна връзка, пълно анулиране на
     Шварцовата производна {w, s} = 0 и запазване на конформния тензор на енергия-импулс -/
-theorem grand_apollonius_schwarzian_synthesis
-    (s : ℂ) (hs : s + ⟨1 / 2, 0⟩ ≠ 0) (c : ℂ) :
-    (apolloniusDeriv2 s / apolloniusDeriv1 s = apolloniusAffineConnection s) ∧
-    (2 / (s + ⟨1 / 2, 0⟩) ^ 2 - (1 / 2 : ℂ) * (apolloniusAffineConnection s) ^ 2 = 0) ∧
-    (- (c / 12) * (2 / (s + ⟨1 / 2, 0⟩) ^ 2 - (1 / 2 : ℂ) * (apolloniusAffineConnection s) ^ 2) = 0) :=
-  ⟨apollonius_deriv2_div_deriv1 s hs,
-   apollonius_schwarzian_identity s hs,
-   apollonius_virasoro_anomaly_zero s hs c⟩

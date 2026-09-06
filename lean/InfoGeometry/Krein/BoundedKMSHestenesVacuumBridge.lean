@@ -10,10 +10,10 @@ noncomputable section
 # InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
 
 Adapter from the bounded KMS Hestenes real-form bridge to the existing
-Hestenes/Krein vacuum-vector interface.
+Hestenes/Krein vacuum-vector socket.
 
 This is the point where the complex state-functional readout is identified
-with a real Krein vacuum expectation `[AΩ, Ω]_J`, when such an `Ω` property is
+with a real Krein vacuum expectation `[AΩ, Ω]_J`, when such an `Ω` witness is
 supplied.
 -/
 
@@ -26,7 +26,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [KreinSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -52,27 +51,20 @@ calibration states that the real shadow of the complex KMS functional is the
 Krein vacuum expectation.
 -/
 @[rep_depth krein]
-abbrev BoundedKMSHestenesVacuumBridge :=
-  { data :
-      Σ boundedHestenes :
-        BoundedKMSHestenesBridge (E := E) (LieAlgebra := LieAlgebra),
-        HestenesKreinVacuum boundedHestenes.hestenes //
-    ∀ A : EndH,
-      data.1.realState A = data.2.vacuumRealState A }
+structure BoundedKMSHestenesVacuumBridge where
+  /-- Bounded KMS to Hestenes real-form adapter. -/
+  boundedHestenes :
+    BoundedKMSHestenesBridge (E := E) (LieAlgebra := LieAlgebra)
+
+  /-- Vacuum vector socket for the same Hestenes packet. -/
+  vacuum :
+    HestenesKreinVacuum boundedHestenes.hestenes
+
+  /-- The bounded real state shadow is the Hestenes/Krein vacuum state. -/
+  realState_eq_vacuumRealState :
+    ∀ A : EndH, boundedHestenes.realState A = vacuum.vacuumRealState A
 
 namespace BoundedKMSHestenesVacuumBridge
-
-abbrev boundedHestenes
-    (B : BoundedKMSHestenesVacuumBridge (E := E) (LieAlgebra := LieAlgebra)) :
-    BoundedKMSHestenesBridge (E := E) (LieAlgebra := LieAlgebra) := B.1.1
-
-abbrev vacuum
-    (B : BoundedKMSHestenesVacuumBridge (E := E) (LieAlgebra := LieAlgebra)) :
-    HestenesKreinVacuum B.boundedHestenes.hestenes := B.1.2
-
-abbrev realState_eq_vacuumRealState
-    (B : BoundedKMSHestenesVacuumBridge (E := E) (LieAlgebra := LieAlgebra)) :
-    ∀ A : EndH, B.boundedHestenes.realState A = B.vacuum.vacuumRealState A := B.2
 
 variable (B : BoundedKMSHestenesVacuumBridge (E := E) (LieAlgebra := LieAlgebra))
 

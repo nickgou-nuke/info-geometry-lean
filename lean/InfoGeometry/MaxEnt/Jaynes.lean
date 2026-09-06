@@ -12,7 +12,7 @@ This module packages finite, Mathlib-native pieces of Jaynes' rationale:
 - Shannon entropy on finite simplices
 - combinatorial multiplicity via multinomial coefficients
 - linear-constraint feasible classes
-- entropy concentration as a formal property interface
+- entropy concentration as a formal certificate interface
 - Gibbs canonical form as MaxEnt optimizer
 - time-series autocovariance and Burg-style AR spectral form
 -/
@@ -304,6 +304,14 @@ lemma thermodynamicPreference_pos
   unfold thermodynamicPreference
   exact Real.exp_pos _
 
+/-- A formal witness for the asymptotic equipartition statement. -/
+structure AsymptoticEquipartitionWitness (p : Fin n → ℝ) where
+  countsSeq : ℕ → Fin n → ℕ
+  total_pos : ∀ N, 0 < totalCount (countsSeq N)
+  tendsToEntropy :
+    Filter.Tendsto (fun N => normalizedLogMultiplicity (countsSeq N))
+      Filter.atTop (nhds (ShannonEntropy p))
+
 end Multiplicity
 
 section LinearConstraints
@@ -409,7 +417,14 @@ lemma goodFraction_le_one
 def entropyConfidenceInterval (Hstar eps : ℝ) : Set ℝ :=
   Set.Icc (Hstar - eps) (Hstar + eps)
 
-
+/-- Finite concentration certificate mirroring Jaynes-style concentration statements. -/
+structure EntropyConcentrationCertificate
+    (S : Finset (Fin n → ℝ))
+    (Hstar eps eta : ℝ) where
+  eps_nonneg : 0 ≤ eps
+  eta_bounds : 0 ≤ eta ∧ eta ≤ 1
+  nonempty : S.Nonempty
+  lower_fraction_bound : eta ≤ goodFraction S Hstar eps
 
 /-- Membership in the entropy confidence interval implies entropy-band control. -/
 lemma entropyBand_of_mem_confidenceInterval

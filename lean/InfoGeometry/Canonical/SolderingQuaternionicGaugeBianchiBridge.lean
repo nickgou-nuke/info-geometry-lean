@@ -47,6 +47,7 @@ def parafermionPhase : ℂ := Real.cos (2 * Real.pi / 3) + I * Real.sin (2 * Rea
 structure ParafermionPair where
   gamma1 : Matrix (Fin 3) (Fin 3) ℂ
   gamma2 : Matrix (Fin 3) (Fin 3) ℂ
+  h_para_comm : gamma1 * gamma2 = parafermionPhase • (gamma2 * gamma1)
 
 namespace ParafermionPair
 
@@ -54,11 +55,9 @@ variable (para : ParafermionPair)
 
 /-- **Theorem**: Parafermion Commutator Trace Vanishing: Tr(γ₁ γ₂ - ω γ₂ γ₁) = 0. -/
 theorem parafermion_comm_trace_zero :
-    (hcomm : para.gamma1 * para.gamma2 =
-      parafermionPhase • (para.gamma2 * para.gamma1)) →
     trace (para.gamma1 * para.gamma2 - parafermionPhase • (para.gamma2 * para.gamma1)) = 0 := by
-  intro hcomm
-  rw [hcomm, sub_self, trace_zero]
+  have h := para.h_para_comm
+  rw [h, sub_self, trace_zero]
 
 /-- **Theorem**: Parafermion Trace Commutativity: Tr(γ₁ γ₂) = Tr(γ₂ γ₁). -/
 theorem parafermion_trace_comm :

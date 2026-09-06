@@ -32,7 +32,7 @@ This is the theorem-safe bridge:
 * KMS/Jaynes reproducing weights;
 * calibrated effective volume;
 * projective count coordinates;
-* property-gated (Native Closure Mandated: Closure Debt) Fierz--Klein readout.
+* witness-gated (Native Closure Mandated: Closure Debt) Fierz--Klein readout.
 
 The Gromov--Witten interpretation is explicitly calibration data.  The raw
 finite object is a real weighted zero-mode orbit count.
@@ -48,6 +48,10 @@ open scoped BigOperators
 abbrev SuperOrbitSpace (Γ : Type*) := Γ → Bool
 
 namespace SuperOrbitSpace
+
+/-- Projection-compatible name for the direct parity function. -/
+abbrev parity {Γ : Type*} (S : SuperOrbitSpace Γ) : Γ → Bool := S
+
 end SuperOrbitSpace
 
 /-- Real Witten sign of an orbit sector. -/
@@ -55,16 +59,9 @@ def paritySign {Γ : Type*} (S : SuperOrbitSpace Γ) (γ : Γ) : ℝ :=
   if S γ then -1 else 1
 
 /-- A Weyl gauge assigns a positive local dilation weight to each orbit sector. -/
-abbrev WeylGaugeWeight (Γ : Type*) :=
-  {weight : Γ → ℝ // ∀ γ, 0 < weight γ}
-
-namespace WeylGaugeWeight
-
-abbrev weight {Γ : Type*} (Ω : WeylGaugeWeight Γ) : Γ → ℝ := Ω.1
-
-abbrev positive {Γ : Type*} (Ω : WeylGaugeWeight Γ) : ∀ γ, 0 < Ω.weight γ := Ω.2
-
-end WeylGaugeWeight
+structure WeylGaugeWeight (Γ : Type*) where
+  weight : Γ → ℝ
+  positive : ∀ γ, 0 < weight γ
 
 /--
 A KMS/Jaynes reproducing state on orbit projectors.
@@ -72,16 +69,9 @@ A KMS/Jaynes reproducing state on orbit projectors.
 `expect γ` is the real expectation value of the projector/indicator for the
 orbit sector `γ`.
 -/
-abbrev KMSOrbitState (Γ : Type*) :=
-  {expect : Γ → ℝ // ∀ γ, 0 ≤ expect γ}
-
-namespace KMSOrbitState
-
-abbrev expect {Γ : Type*} (φ : KMSOrbitState Γ) : Γ → ℝ := φ.1
-
-abbrev nonnegative {Γ : Type*} (φ : KMSOrbitState Γ) : ∀ γ, 0 ≤ φ.expect γ := φ.2
-
-end KMSOrbitState
+structure KMSOrbitState (Γ : Type*) where
+  expect : Γ → ℝ
+  nonnegative : ∀ γ, 0 ≤ expect γ
 
 /--
 Weyl/KMS weighted signed zero-mode count.
@@ -119,22 +109,73 @@ def projectiveOrbitCoordinate
     (γ : Γ) : ℝ :=
   Ω.weight γ * φ.expect γ / orbitPartitionFunction Ω φ
 
-/-- A finite weight function has the Weyl/KMS orbit sum when its pointwise
-    values are identified with the corresponding Weyl/KMS weights. -/
+/--
+Witness that zero-mode orbit sectors are identified with curve/stable-map
+sectors of a GW-type theory.
+
+This prevents the overclaim that every zero-mode count is automatically a
+Gromov--Witten invariant.
+-/
+structure GromovWittenCalibration
+    {Γ : Type*}
+    [Fintype Γ]
+    (Ω : WeylGaugeWeight Γ)
+    (φ : KMSOrbitState Γ) where
+  curveClass : Γ → Type*
+  gwWeight : Γ → ℝ
+  gwWeight_eq_weylKMS :
+    ∀ γ : Γ, gwWeight γ = Ω.weight γ * φ.expect γ
+
+namespace GromovWittenCalibration
+
+/--
+The total calibrated Gromov--Witten weight is the Weyl/KMS orbit partition
+function.
+-/
 theorem sum_gwWeight_eq_orbitPartitionFunction
     {Γ : Type*}
     [Fintype Γ]
     {Ω : WeylGaugeWeight Γ}
     {φ : KMSOrbitState Γ}
-    (gwWeight : Γ → ℝ)
-    (h_gwWeight_eq_weylKMS :
-      ∀ γ : Γ, gwWeight γ = Ω.weight γ * φ.expect γ) :
-    Finset.univ.sum gwWeight =
+    (C : GromovWittenCalibration Ω φ) :
+    Finset.univ.sum C.gwWeight =
       orbitPartitionFunction Ω φ := by
   unfold orbitPartitionFunction
   apply Finset.sum_congr rfl
   intro γ _
-  exact h_gwWeight_eq_weylKMS γ
+  exact C.gwWeight_eq_weylKMS γ
+
+end GromovWittenCalibration
+
+/--
+A calibrated effective volume law.
+
+The effective volume equals a scale times the Weyl/KMS zero-mode count only
+under this explicit calibration.
+-/
+structure WeylKMSVolumeCalibration
+    {Γ : Type*}
+    [Fintype Γ]
+    (S : SuperOrbitSpace Γ)
+    (Ω : WeylGaugeWeight Γ)
+    (φ : KMSOrbitState Γ) where
+
+  volume : ℝ
+  scale : ℝ
+
+  volume_eq_weighted_count :
+    volume = scale * weightedZeroModeCount S Ω φ
+
+/-- Read back the calibrated effective volume law. -/
+theorem effective_volume_from_weyl_kms_counts
+    {Γ : Type*}
+    [Fintype Γ]
+    (S : SuperOrbitSpace Γ)
+    (Ω : WeylGaugeWeight Γ)
+    (φ : KMSOrbitState Γ)
+    (C : WeylKMSVolumeCalibration S Ω φ) :
+    C.volume = C.scale * weightedZeroModeCount S Ω φ :=
+  C.volume_eq_weighted_count
 
 /--
 Real Fierz channels for projective count readout.
@@ -156,6 +197,13 @@ abbrev FierzFromProjectiveCounts (Γ : Type*) [Fintype Γ] :=
 
 /-- Residual measuring failure of the intended Fierz--Klein relation. -/
 abbrev FierzKleinResidual := (FierzChannel → ℝ) → ℝ
+
+namespace FierzKleinResidual
+
+/-- Projection-compatible name for the direct residual function. -/
+abbrev residual (R : FierzKleinResidual) : (FierzChannel → ℝ) → ℝ := R
+
+end FierzKleinResidual
 
 /--
 Projective Weyl/KMS count readout data for Fierz--Klein coordinates.
@@ -187,52 +235,5 @@ def coords {Γ : Type*} [Fintype Γ]
       (fun γ => projectiveOrbitCoordinate D.Ω D.φ γ)
 
 end ProjectiveCountFierzKleinData
-
-/-! ### Constructive Fierz-Klein Model on 2-Orbit Space -/
-
-/-- Standard symmetric Weyl gauge weight on 2-orbit space. -/
-def standardTwoOrbitWeylGauge : WeylGaugeWeight (Fin 2) :=
-  ⟨fun _ => 1, fun _ => by norm_num⟩
-
-/-- Standard KMS state with equal expectation values on 2-orbit space. -/
-def standardTwoOrbitKMS : KMSOrbitState (Fin 2) :=
-  ⟨fun _ => 1, fun _ => by norm_num⟩
-
-/-- Standard super-orbit grading. -/
-def standardTwoOrbitSuperSpace : SuperOrbitSpace (Fin 2) :=
-  fun i => i == 1
-
-/-- Standard Fierz readout mapping projective coordinates $(p_0, p_1)$ to Fierz multivectors. -/
-def standardFierzReadout : FierzFromProjectiveCounts (Fin 2) :=
-  fun ch p =>
-    match ch with
-    | FierzChannel.scalar => p 0 + p 1
-    | FierzChannel.rotor => p 0 - p 1
-    | FierzChannel.vector => 2 * (p 0 * p 1)
-    | FierzChannel.axial => 0
-    | FierzChannel.area => 0
-
-/-- Fierz-Klein quadratic residual: $\text{scalar}^2 - \text{rotor}^2 - 4 p_0 p_1 = 0$. -/
-def standardKleinResidual : FierzKleinResidual :=
-  fun c => (c FierzChannel.scalar) ^ 2 - (c FierzChannel.rotor) ^ 2 - 2 * (c FierzChannel.vector)
-
-/-- Concrete 2-orbit Projective Count Fierz-Klein data package. -/
-def standardProjectiveFierzData : ProjectiveCountFierzKleinData (Fin 2) where
-  S := standardTwoOrbitSuperSpace
-  Ω := standardTwoOrbitWeylGauge
-  φ := standardTwoOrbitKMS
-  readout := standardFierzReadout
-  residual := standardKleinResidual
-
-/-- 🏆 THEOREM (Constructive Fierz-Klein Quadric Identity):
-    The projective Fierz-Klein residual vanishes identically on the constructive 2-orbit model:
-    $R(\text{coords}) = 0$. -/
-theorem standard_fierz_klein_quadric_exact :
-    standardProjectiveFierzData.residual standardProjectiveFierzData.coords = 0 := by
-  dsimp [standardProjectiveFierzData, ProjectiveCountFierzKleinData.coords,
-         standardKleinResidual, standardFierzReadout, projectiveOrbitCoordinate,
-         orbitPartitionFunction, standardTwoOrbitWeylGauge, standardTwoOrbitKMS]
-  simp [Fin.sum_univ_two]
-  ring
 
 end InfoGeometry.Canonical.WeylKMSGromovWittenCounts

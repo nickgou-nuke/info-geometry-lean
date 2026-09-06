@@ -23,6 +23,7 @@ open InfoGeometry.Lie.SplitOctonionAxialKleinBridge
 open InfoGeometry.Lie.SplitOctonionAxialKleinProjective
 open InfoGeometry.Lie.SplitOctonionAxialSupportGrading
 open InfoGeometry.Lie.SplitOctonionAxialWittReduction
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
@@ -154,12 +155,12 @@ theorem activeCartanProjectiveEquiv_add_apply
 /-- The restricted Cartan flow preserves the native active determinant. -/
 theorem activeCartanFlow_preserves_det
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X : ActiveSector) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (activeCartanFlow k hk t X).1 =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 := by
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
       (axialCartanFlow k t X.1) =
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1
   have h := axialCartanFlow_preserves_active_det k hk t X.1
   rw [axialCartanFlow_commutes_activeSupport] at h
   rw [activeSupport_self X] at h
@@ -187,11 +188,11 @@ theorem activeCartanFlow_preserves_activeDetPolar
   unfold activeDetPolar
   have hsum := congrArg Subtype.val
     ((activeCartanFlow k hk t).map_add X Y)
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
       ((activeCartanFlow k hk t X + activeCartanFlow k hk t Y).1) -
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (activeCartanFlow k hk t X).1 -
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (activeCartanFlow k hk t Y).1 = _
   rw [← hsum]
   rw [activeCartanFlow_preserves_det k hk t (X + Y),

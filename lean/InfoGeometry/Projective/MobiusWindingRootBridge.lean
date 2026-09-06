@@ -78,20 +78,10 @@ theorem rootMinus_matrix_sq : toMatrix rootMinus * toMatrix rootMinus = 0 := by
     simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem rootPlus_matrix_det : (toMatrix rootPlus).det = 0 := by
-  calc
-    (toMatrix rootPlus).det = det_2x2 (toMatrix rootPlus) := by
-      symm
-      exact det_2x2_eq_matrix_det _
-    _ = norm rootPlus := by symm; exact norm_eq_det rootPlus
-    _ = 0 := rootPlus_norm
+  simp [toMatrix, rootPlus, Matrix.det_fin_two]
 
 theorem rootMinus_matrix_det : (toMatrix rootMinus).det = 0 := by
-  calc
-    (toMatrix rootMinus).det = det_2x2 (toMatrix rootMinus) := by
-      symm
-      exact det_2x2_eq_matrix_det _
-    _ = norm rootMinus := by symm; exact norm_eq_det rootMinus
-    _ = 0 := rootMinus_norm
+  simp [toMatrix, rootMinus, Matrix.det_fin_two]
 
 theorem cartan_rootPlus_commutator :
     sqSub (cartan * rootPlus) (rootPlus * cartan) =
@@ -193,7 +183,9 @@ theorem logCoordinate_sheet_add (z : ℂ) (n k : ℤ) :
     logCoordinate (z, n + k) =
       logCoordinate (z, n) +
         (2 * Real.pi * Complex.I : ℂ) * (k : ℂ) := by
-  exact uLog_sheet_add z n k
+  unfold logCoordinate uLog
+  push_cast
+  ring
 
 theorem logCoordinate_deck_additive (z : ℂ) (n k l : ℤ) :
     logCoordinate (z, n + k + l) =

@@ -1,0 +1,1 @@
+/media/goutev/SP DS72/auto/proofs/SplitOctonionBraidSU3.lean

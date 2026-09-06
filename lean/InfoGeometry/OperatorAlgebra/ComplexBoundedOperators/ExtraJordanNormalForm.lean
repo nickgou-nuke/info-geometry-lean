@@ -185,4 +185,4 @@ theorem gramSchmidtBasis_apply_of_orthogonal
 end GramSchmidt
 
 end ExtraJordanNormalForm
-end ComplexBoundedOperators
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators

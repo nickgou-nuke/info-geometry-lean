@@ -105,4 +105,19 @@ theorem transferM_reflections (k α γ : ℝ) :
   · simp [rightReflection, scatteringFromTransfer, transferM, m21, m22, div_eq_mul_inv]
     ring
 
+/-- Consolidated package. -/
+theorem transfer_matrix_scattering_synthesis :
+    (∀ k α γ : ℝ, (transferM k α γ).det = 1) ∧
+    (∀ α γ : ℝ, Matrix.trace (berryConnection α γ) = 0) ∧
+    (∀ M : M2R, M.det = 1 → (scatteringFromTransfer M) 0 0 = (scatteringFromTransfer M) 1 1) ∧
+    (∀ k α γ : ℝ, scatteringFromTransfer (transferM k α γ) =
+      (1 / (γ * Real.exp α * Real.sin k + Real.exp (-α) * Real.cos k)) •
+        !![1,
+           -(γ * Real.exp α * Real.cos k - Real.exp (-α) * Real.sin k);
+           Real.exp α * Real.sin k,
+           1]) := by
+  exact ⟨transferM_det, berryConnection_trace_zero,
+    fun _ h => scattering_transmissions_equal_of_det_one h,
+    scattering_transferM_formula⟩
+
 end InfoGeometry.GrandUnification.TransferMatrixScattering

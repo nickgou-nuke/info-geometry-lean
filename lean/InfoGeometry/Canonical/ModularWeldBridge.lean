@@ -232,7 +232,7 @@ variable {H : Type*}
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /-! Tomita flow lemmas here remain on the surface/diagnostic layer for
-Connes-Araki consumers. The noncommutative owner property remains external. -/
+Connes-Araki consumers. The noncommutative owner witness remains external. -/
 
 /--
 Tomita flow carries a canonical derived cocycle by evaluating the flow on
@@ -257,9 +257,11 @@ theorem tomita_modularSign_flow_one
     modularSignAdditiveModularFlow (E := H) t
       (1 : AlgebraEnd H)
       =
-    (1 : AlgebraEnd H) :=
-  InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
-    (H := H) (σ := modularSignAdditiveModularFlow (E := H)) t
+    (1 : AlgebraEnd H) := by
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle]
+    using
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+        (H := H) (σ := modularSignAdditiveModularFlow (E := H)) t)
 
 /-- Tomita modular-sign flow-unit cocycle is a Connes-cocycle equation at each `(s,t)`. -/
 @[rep_depth operator]
@@ -285,7 +287,7 @@ theorem tomita_modularSign_flowUnitCocycle_cocycle
 @[simp, rep_depth operator] theorem tomita_modularSign_flowUnitCocycle_one
     (t : ℝ) :
     flowUnitCocycle (H := H) (modularSignAdditiveModularFlow (E := H)) t = 1 := by
-  exact (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+  simpa using (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
     (H := H) (σ := modularSignAdditiveModularFlow (E := H)) t)
 
 end TomitaFlow

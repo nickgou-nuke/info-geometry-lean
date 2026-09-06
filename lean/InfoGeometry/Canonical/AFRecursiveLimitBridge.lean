@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 /-!
 # AF-style algebraic direct-limit input
 
-`AFRecursiveLimitData` is the actual finite-stage cone data required to use
+`AFRecursiveLimitPacket` is the actual finite-stage cone data required to use
 the repository's algebraic direct-limit owner.  Universal factorization,
 stage-image constancy, and stage readback are imported from
 `CategoricalRecursiveClosureBridge`; this module does not duplicate them.
@@ -23,14 +23,14 @@ variable {Stage : Nat → Type u} [∀ n : Nat, Semiring (Stage n)]
 variable {Limit : Type u} [Semiring Limit]
 
 /-- One-step bonds and a compatible cone into a direct-limit target. -/
-structure AFRecursiveLimitData where
+structure AFRecursiveLimitPacket where
   bond : ∀ n : Nat, Stage n →+* Stage (n + 1)
   toLimit : ∀ n : Nat, Stage n →+* Limit
   hcone : ConeCompatible bond toLimit
 
-namespace AFRecursiveLimitData
+namespace AFRecursiveLimitPacket
 
-variable (P : AFRecursiveLimitData (Stage := Stage) (Limit := Limit))
+variable (P : AFRecursiveLimitPacket (Stage := Stage) (Limit := Limit))
 
 /-- Idempotence is preserved by the canonical cone map. -/
 theorem readback_idempotent
@@ -49,6 +49,6 @@ theorem readback_squareZero
         directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n q) = 0 := by
   simpa [map_mul] using congrArg (P.toLimit n) hq
 
-end AFRecursiveLimitData
+end AFRecursiveLimitPacket
 
 end InfoGeometry.Canonical.AFRecursiveLimitBridge

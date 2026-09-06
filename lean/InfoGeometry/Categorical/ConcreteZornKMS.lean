@@ -56,7 +56,7 @@ noncomputable def zornConjugateLinear : ZornMatrix ℚ →ₗ[ℚ] ZornMatrix �
 The lifting of this conjugation to the colimit.
 -/
 noncomputable def continuumStar : 
-    ↑(colimit concreteZornSequence) → ↑(colimit concreteZornSequence) :=
+    ↑(zornContinuumModule ℚ concreteZornSequence) → ↑(zornContinuumModule ℚ concreteZornSequence) :=
   fun c => invToColimit (zornConjugateLinear (homToZorn c))
 
 /--
@@ -68,7 +68,7 @@ def stageIndex : ℕ → ℕ+ :=
 /--
 A macroscopic state functional.
 -/
-noncomputable def zornState : ↑(colimit concreteZornSequence) → ℝ :=
+noncomputable def zornState : ↑(zornContinuumModule ℚ concreteZornSequence) → ℝ :=
   fun c => ((homToZorn c).a : ℝ)
 
 /--
@@ -80,10 +80,10 @@ noncomputable def concreteZornBraidKMSState {Op : Type*} [Ring Op] [StarRing Op]
     ZornBraidKMSState C concreteZornSequence :=
   let result := Prod.mk bcKMS (Prod.mk zornState (Prod.mk stageIndex continuumStar))
   show KMSProjectionState C ×
-      ((↑(colimit concreteZornSequence) → ℝ) ×
+      ((↑(zornContinuumModule ℚ concreteZornSequence) → ℝ) ×
         ((ℕ → ℕ+) ×
-          (↑(colimit concreteZornSequence) →
-            ↑(colimit concreteZornSequence))))
+          (↑(zornContinuumModule ℚ concreteZornSequence) →
+            ↑(zornContinuumModule ℚ concreteZornSequence))))
     from result
 
 end InfoGeometry.Categorical.ConcreteZornKMS

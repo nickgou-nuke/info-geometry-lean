@@ -46,7 +46,7 @@ def psl3F3Order : ℕ := 5616
 def pgl3F3Order : ℕ := 5616
 
 /-- `F₃` has no nontrivial field automorphism, so `PΓL₃(3)` has the same order as `PGL₃(3)`. -/
-abbrev pgammaL3F3Order : ℕ := pgl3F3Order
+def pgammaL3F3Order : ℕ := pgl3F3Order
 
 /-- The finite `G2(2)` group is an index-two extension of its derived subgroup at the order level. -/
 theorem g2Two_derived_index_order : g2TwoDerivedOrder * 2 = g2TwoOrder := by
@@ -93,5 +93,23 @@ theorem pgl3F3Order_ne_g2TwoOrder : pgl3F3Order ≠ g2TwoOrder := by
 theorem g2TwoDerivedOrder_double_eq_g2TwoOrder :
     g2TwoDerivedOrder + g2TwoDerivedOrder = g2TwoOrder := by
   norm_num [g2TwoDerivedOrder, g2TwoOrder]
+
+/-- Closed arithmetic packet for the finite `G2(2)` order ledger. -/
+theorem finite_g2two_order_ledger_packet :
+    g2TwoDerivedOrder * 2 = g2TwoOrder ∧
+      psu3F3Order = g2TwoDerivedOrder ∧
+      pgammaU3F3Order = g2TwoOrder ∧
+      psu3F3Order * 2 = pgammaU3F3Order ∧
+      gl3F3Order = (3 ^ 3 - 1) * (3 ^ 3 - 3) * (3 ^ 3 - 3 ^ 2) ∧
+      pgl3F3Order * 2 = gl3F3Order ∧
+      psl3F3Order = pgl3F3Order ∧
+      pgammaL3F3Order = pgl3F3Order ∧
+      pgammaL3F3Order ≠ g2TwoOrder ∧
+      pgl3F3Order ≠ g2TwoOrder := by
+  exact ⟨g2Two_derived_index_order, psu3F3Order_eq_g2TwoDerivedOrder,
+    pgammaU3F3Order_eq_g2TwoOrder, psu3F3Order_unitary_extension_index,
+    gl3F3_order_formula, pgl3F3_order_formula, psl3F3_order_eq_pgl3F3_order,
+    pgammaL3F3_order_eq_pgl3F3_order, pgammaL3F3Order_ne_g2TwoOrder,
+    pgl3F3Order_ne_g2TwoOrder⟩
 
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger

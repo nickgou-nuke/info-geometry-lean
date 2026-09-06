@@ -118,25 +118,13 @@ projection or Drazin projector formula; those require separate spectral-contour
 hypotheses.
 -/
 @[rep_depth operator]
-abbrev ResolventOrbitCurrentDatum
+structure ResolventOrbitCurrentDatum
     {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
     (Time State Form : Type*)
-    (K Z : Value) :=
-  OrbitCurrentStokesDatum Time State Form Value ×
-    (VerifiedCauchyKernel.VerifiedKernelFamily K Z × (ℝ → Form))
-
-namespace ResolventOrbitCurrentDatum
-
-variable
-    {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
-    {Time State Form : Type*} {K Z : Value}
-    (R : ResolventOrbitCurrentDatum Time State Form K Z)
-
-abbrev stokes : OrbitCurrentStokesDatum Time State Form Value := R.1
-abbrev kernelFamily : VerifiedCauchyKernel.VerifiedKernelFamily K Z := R.2.1
-abbrev kernelForm : ℝ → Form := R.2.2
-
-end ResolventOrbitCurrentDatum
+    (K Z : Value) where
+  stokes : OrbitCurrentStokesDatum Time State Form Value
+  kernelFamily : VerifiedCauchyKernel.VerifiedKernelFamily K Z
+  kernelForm : ℝ → Form
 
 /-! ## Finite defect Stokes readback -/
 
@@ -149,7 +137,7 @@ The finite one-point defect model as an orbit-current Stokes datum.
 
 The orbit and surface pairings are the already-owned finite Stokes pairings.
 The `Form` parameter is `Unit`, because this readback exposes only the single
-property finite defect form.
+certified finite defect form.
 -/
 def finiteDefectOrbitCurrentStokesDatum :
     OrbitCurrentStokesDatum Unit Unit Unit Mat2 where

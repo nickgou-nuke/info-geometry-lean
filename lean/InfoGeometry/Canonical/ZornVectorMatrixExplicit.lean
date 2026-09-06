@@ -91,49 +91,6 @@ def upperVectorZorn (x : Vec3) : ZornCoord :=
 def lowerVectorZorn (y : Vec3) : ZornCoord :=
   zornMk 0 0 0 y
 
-/-- The diagonal chirality element `e₊ - e₋` in the explicit Zorn carrier. -/
-def zornChirality : ZornCoord :=
-  zornMk 1 (-1) 0 0
-
-theorem zornChirality_square :
-    zornMul zornChirality zornChirality = zornOne := by
-  ext <;>
-    simp [zornChirality, zornOne, zornMul, zornMk, zornA, zornB, zornX, zornY,
-      dot3, cross3]
-  · rename_i i
-    fin_cases i <;> simp
-  · rename_i i
-    fin_cases i <;> simp
-
-theorem zornChirality_mul_upperVectorZorn (x : Vec3) :
-    zornMul zornChirality (upperVectorZorn x) = upperVectorZorn x := by
-  ext <;>
-    simp [zornChirality, upperVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
-    try { rename_i i; fin_cases i <;> rfl }
-
-theorem upperVectorZorn_mul_zornChirality (x : Vec3) :
-    zornMul (upperVectorZorn x) zornChirality =
-      upperVectorZorn (-x) := by
-  ext <;>
-    simp [zornChirality, upperVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
-    try { rename_i i; fin_cases i <;> rfl }
-
-theorem zornChirality_mul_lowerVectorZorn (x : Vec3) :
-    zornMul zornChirality (lowerVectorZorn x) = lowerVectorZorn (-x) := by
-  ext <;>
-    simp [zornChirality, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
-    try { rename_i i; fin_cases i <;> rfl }
-
-theorem lowerVectorZorn_mul_zornChirality (x : Vec3) :
-    zornMul (lowerVectorZorn x) zornChirality = lowerVectorZorn x := by
-  ext <;>
-    simp [zornChirality, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] <;>
-    try { rename_i i; fin_cases i <;> rfl }
-
 def IsZornNull (z : ZornCoord) : Prop :=
   zornNorm z = 0
 
@@ -249,24 +206,6 @@ theorem lowerVectorZorn_square_zero (y : Vec3) :
     simp [lowerVectorZorn, zornMul, zornMk, zornA, zornB, zornX, zornY, dot3,
       cross3_self]
 
-/-- The two off-diagonal chiral sheets are null for the reduced Zorn norm. -/
-theorem upperVectorZorn_isNull (x : Vec3) :
-    IsZornNull (upperVectorZorn x) := by
-  simp [IsZornNull, zornNorm, upperVectorZorn, zornMk, zornA, zornB,
-    zornX, zornY, dot3]
-
-theorem lowerVectorZorn_isNull (y : Vec3) :
-    IsZornNull (lowerVectorZorn y) := by
-  simp [IsZornNull, zornNorm, lowerVectorZorn, zornMk, zornA, zornB,
-    zornX, zornY, dot3]
-
-/-- The paravector slice exposes the split quadratic pairing directly. -/
-theorem zornNorm_paravectorZorn (a : ℝ) (x : Vec3) :
-    zornNorm (paravectorZorn a x) = a * a + dot3 x x := by
-  simp [zornNorm, paravectorZorn, zornMk, zornA, zornB, zornX, zornY,
-    dot3]
-  ring
-
 theorem upperVectorZorn_mul_lowerVectorZorn (x y : Vec3) :
     zornMul (upperVectorZorn x) (lowerVectorZorn y) =
       zornMk (dot3 x y) 0 0 0 := by
@@ -285,69 +224,23 @@ theorem lowerVectorZorn_mul_upperVectorZorn (x y : Vec3) :
     try fin_cases i <;>
     simp
 
+/-! The same-sheet products expose the alternating cross-product channels. -/
+
 theorem upperVectorZorn_mul_upperVectorZorn (x y : Vec3) :
     zornMul (upperVectorZorn x) (upperVectorZorn y) =
       lowerVectorZorn (cross3 x y) := by
   ext i <;>
     simp [upperVectorZorn, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] ;
-    try fin_cases i <;>
-    simp
+      zornX, zornY, dot3, cross3] <;>
+    fin_cases i <;> simp
 
 theorem lowerVectorZorn_mul_lowerVectorZorn (x y : Vec3) :
     zornMul (lowerVectorZorn x) (lowerVectorZorn y) =
       upperVectorZorn (-(cross3 x y)) := by
   ext i <;>
     simp [upperVectorZorn, lowerVectorZorn, zornMul, zornMk, zornA, zornB,
-      zornX, zornY, dot3, cross3] ;
-    try fin_cases i <;>
-    simp
-
-theorem upperVectorZorn_add_mul_reverse_zero (x y : Vec3) :
-    zornMul (upperVectorZorn x) (upperVectorZorn y) +
-      zornMul (upperVectorZorn y) (upperVectorZorn x) = 0 := by
-  rw [upperVectorZorn_mul_upperVectorZorn,
-    upperVectorZorn_mul_upperVectorZorn]
-  ext i <;>
-    simp [lowerVectorZorn, zornMk] ;
-    try fin_cases i <;>
-    simp [cross3] <;>
-    ring
-
-theorem upperVectorZorn_sub_mul_reverse_eq_cross (x y : Vec3) :
-    zornMul (upperVectorZorn x) (upperVectorZorn y) -
-      zornMul (upperVectorZorn y) (upperVectorZorn x) =
-        lowerVectorZorn (2 • cross3 x y) := by
-  rw [upperVectorZorn_mul_upperVectorZorn,
-    upperVectorZorn_mul_upperVectorZorn]
-  ext i <;>
-    simp [lowerVectorZorn, zornMk, sub_eq_add_neg] ;
-    try fin_cases i <;>
-    simp [cross3] <;>
-    ring
-
-theorem lowerVectorZorn_add_mul_reverse_zero (x y : Vec3) :
-    zornMul (lowerVectorZorn x) (lowerVectorZorn y) +
-      zornMul (lowerVectorZorn y) (lowerVectorZorn x) = 0 := by
-  rw [lowerVectorZorn_mul_lowerVectorZorn,
-    lowerVectorZorn_mul_lowerVectorZorn]
-  ext i <;>
-    simp [upperVectorZorn, zornMk] ;
-    try fin_cases i <;>
-    simp [cross3] <;>
-    ring
-
-theorem lowerVectorZorn_sub_mul_reverse_eq_cross (x y : Vec3) :
-    zornMul (lowerVectorZorn x) (lowerVectorZorn y) -
-      zornMul (lowerVectorZorn y) (lowerVectorZorn x) =
-        upperVectorZorn (-(2 • cross3 x y)) := by
-  rw [lowerVectorZorn_mul_lowerVectorZorn,
-    lowerVectorZorn_mul_lowerVectorZorn]
-  ext i <;>
-    simp [upperVectorZorn, zornMk, sub_eq_add_neg] ;
-    try fin_cases i <;>
-    simp [cross3] <;>
-    ring
+      zornX, zornY, dot3, cross3] <;>
+    fin_cases i <;> simp
 
 /--
 The upper/lower rank-one blocks have scalar anticommutator: this is the explicit
@@ -370,13 +263,6 @@ theorem upperLower_sub_lowerUpper_diag (x y : Vec3) :
     zornMk (dot3 x y) (-(dot3 x y)) 0 0 := by
   rw [upperVectorZorn_mul_lowerVectorZorn, lowerVectorZorn_mul_upperVectorZorn]
   ext i <;> simp [zornMk, dot3_comm]
-
-theorem upperLower_sub_lowerUpper_chirality (x y : Vec3) :
-    zornMul (upperVectorZorn x) (lowerVectorZorn y) -
-      zornMul (lowerVectorZorn y) (upperVectorZorn x) =
-        dot3 x y • zornChirality := by
-  rw [upperLower_sub_lowerUpper_diag]
-  ext i <;> simp [zornChirality, zornMk]
 
 theorem zornTrace_conj (z : ZornCoord) :
     zornTrace (zornConj z) = zornTrace z := by
@@ -483,20 +369,20 @@ end InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 namespace ZornVectorMatrixExplicit
 
-@[reducible] def Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
-@[reducible] def ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
-@[reducible] def dot3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3
-@[reducible] def cross3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3
-@[reducible] def zornMk := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMk
-@[reducible] def zornOne := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornOne
-@[reducible] def zornTrace := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornTrace
-@[reducible] def zornNorm := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
-@[reducible] def zornConj := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj
-@[reducible] def zornMul := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
-@[reducible] def scalarZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.scalarZorn
-@[reducible] def paravectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.paravectorZorn
-@[reducible] def upperVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.upperVectorZorn
-@[reducible] def lowerVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.lowerVectorZorn
+abbrev Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
+abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
+abbrev dot3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3
+abbrev cross3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3
+abbrev zornMk := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMk
+abbrev zornOne := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornOne
+abbrev zornTrace := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornTrace
+abbrev zornNorm := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
+abbrev zornConj := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj
+abbrev zornMul := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
+abbrev scalarZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.scalarZorn
+abbrev paravectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.paravectorZorn
+abbrev upperVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.upperVectorZorn
+abbrev lowerVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.lowerVectorZorn
 
 @[simp] theorem dot3_comm (u v : Vec3) :
     dot3 u v = dot3 v u :=

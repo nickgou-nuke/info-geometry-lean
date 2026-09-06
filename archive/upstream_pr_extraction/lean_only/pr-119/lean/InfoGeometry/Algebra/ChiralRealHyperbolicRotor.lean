@@ -1,0 +1,78 @@
+import Mathlib
+
+/-!
+# Exact real hyperbolic rotor identities
+
+This owner complements `ChiralRealBivectorRotor`.  It records the split
+(`D^2 = 1`) rotor algebra with exact scalar coefficients.  The parameters
+`c` and `s` are intentionally supplied with the identity `c^2 - s^2 = 1`;
+no complex scalar and no analytic exponential are introduced here.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.OperatorAlgebra
+
+variable {A : Type*} [Ring A] [Algebra ℝ A]
+
+def hyperbolicRotor (D : A) (c s : ℝ) : A :=
+  c • (1 : A) + s • D
+
+def reverseHyperbolicRotor (D : A) (c s : ℝ) : A :=
+  c • (1 : A) - s • D
+
+theorem hyperbolicRotor_mul_reverse
+    (D : A) (c s : ℝ)
+    (hD : D * D = 1)
+    (hcs : c * c - s * s = 1) :
+    hyperbolicRotor D c s * reverseHyperbolicRotor D c s = 1 := by
+  simp only [hyperbolicRotor, reverseHyperbolicRotor]
+  rw [show
+      (c • (1 : A) + s • D) * (c • (1 : A) - s • D) =
+      (c * c - s * s) • (1 : A) + (s * c - c * s) • D +
+          (s * s) • (1 - D * D) by
+      simp only [Algebra.smul_def]
+      simp only [map_sub, map_mul]
+      simp only [mul_add, add_mul, sub_eq_add_neg]
+      simp only [neg_mul, mul_neg, mul_assoc, mul_one]
+      simp only [(Algebra.commutes c D).symm]
+      have hsd : D * ((algebraMap ℝ A) s * D) =
+          (algebraMap ℝ A) s * (D * D) := by
+        rw [← mul_assoc, ← Algebra.commutes s D, mul_assoc]
+      rw [hsd]
+      abel_nf]
+  have hcross : s * c - c * s = 0 := by ring
+  rw [hD, hcs, hcross]
+  simp
+
+theorem reverseHyperbolicRotor_mul
+    (D : A) (c s : ℝ)
+    (hD : D * D = 1)
+    (hcs : c * c - s * s = 1) :
+    reverseHyperbolicRotor D c s * hyperbolicRotor D c s = 1 := by
+  simp only [hyperbolicRotor, reverseHyperbolicRotor]
+  rw [show
+      (c • (1 : A) - s • D) * (c • (1 : A) + s • D) =
+      (c * c - s * s) • (1 : A) + (c * s - s * c) • D +
+          (s * s) • (1 - D * D) by
+      simp only [Algebra.smul_def]
+      simp only [map_sub, map_mul]
+      simp only [mul_add, add_mul, sub_eq_add_neg]
+      simp only [neg_mul, mul_neg, mul_assoc, mul_one]
+      simp only [(Algebra.commutes c D).symm]
+      have hsd : D * ((algebraMap ℝ A) s * D) =
+          (algebraMap ℝ A) s * (D * D) := by
+        rw [← mul_assoc, ← Algebra.commutes s D, mul_assoc]
+      rw [hsd]
+      abel_nf]
+  have hcross : c * s - s * c = 0 := by ring
+  rw [hD, hcs, hcross]
+  simp
+
+theorem hyperbolicRotor_conjugate_mul
+    (D X : A) (c s : ℝ) :
+    hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s =
+      (c • (1 : A) + s • D) * X * (c • (1 : A) - s • D) := by
+  rfl
+
+end InfoGeometry.OperatorAlgebra

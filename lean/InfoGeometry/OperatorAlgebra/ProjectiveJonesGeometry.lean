@@ -53,7 +53,7 @@ end OperatorialJonesTransform
 Cartan/chiral axis for a two-state projective Jones geometry.
 
 `chi` is the axis operator.  `P_left` and `P_right` are the two pole
-projectors, supplied proof-carryingly so this interface does not depend on a
+projectors, supplied proof-carryingly so this socket does not depend on a
 particular scalar normalization.
 -/
 structure JonesCartanAxis

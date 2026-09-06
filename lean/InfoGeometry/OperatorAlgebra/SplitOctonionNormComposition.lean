@@ -30,4 +30,10 @@ theorem detZ_mulZ (X Y : SplitOct) : detZ (mulZ X Y) = detZ X * detZ Y := by
 theorem diagonal_idempotents_split_null : detZ ePlus = 0 ∧ detZ eMinus = 0 := by
   constructor <;> rfl
 
+/-- Multiplying by a basis vector slot preserves the zero-norm readback predicted by composition. -/
+theorem upper_lower_norm_composition_zero (i : Fin 3) :
+    detZ (mulZ (up i) (down i)) = detZ (up i) * detZ (down i) ∧
+      detZ (mulZ (down i) (up i)) = detZ (down i) * detZ (up i) := by
+  exact ⟨detZ_mulZ (up i) (down i), detZ_mulZ (down i) (up i)⟩
+
 end InfoGeometry.OperatorAlgebra.SplitOctonions.NormComposition

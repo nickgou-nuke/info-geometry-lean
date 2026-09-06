@@ -14,25 +14,24 @@ Literature owner:
   Peter Fletcher, "Discrete Wavelets with Quaternion and Clifford Coefficients"
   in Advances in Applied Clifford Algebras.
 
-This file owns a theorem-safe interface for:
+This file owns the theorem-safe interface for the discrete Hurwitz--Clifford
+filter-bank layer:
 
-* an abstract remainder-size model inspired by Hurwitz integers;
-* abstract star-ring-valued filter coefficients;
-* pointwise low/high branch normalization;
-* the resulting pointwise norm-square sum rule;
-* cascade realizations carrying explicit convergence, compact-range,
-  and reconstruction witnesses.
+* Hurwitz-type discrete coefficient geometry;
+* quaternion / Clifford-valued filter coefficients;
+* paraunitary two-channel normalization;
+* perfect reconstruction and energy preservation as consequences of
+  paraunitarity;
+* a cascade system with explicit convergence and regularity sockets.
 
-It does not yet define a genuine polyphase paraunitary matrix, derive perfect
-reconstruction from filter identities, prove energy preservation of an
-analysis operator, or identify the signal carrier with an `L²` space.
+It does not assert any prime-number, Lee--Yang, xi, or RH theorem.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 
-/-- Abstract remainder-size packet inspired by the Hurwitz integer lattice. -/
+/-- Abstract Hurwitz integer lattice used as the discrete coefficient geometry. -/
 @[rep_depth operator]
 structure HurwitzIntegerModel where
   Point : Type
@@ -50,19 +49,16 @@ attribute [instance] HurwitzIntegerModel.instAdd
 attribute [instance] HurwitzIntegerModel.instMul
 attribute [instance] HurwitzIntegerModel.instInv
 
-/-- The owner packet carries a full quotient-remainder property. -/
-@[rep_depth operator]
-theorem HurwitzIntegerModel.exists_division_remainder (h : HurwitzIntegerModel)
-    (a b : h.Point) (hb : b ≠ 0) :
-    ∃ q r : h.Point, a = q * b + r ∧ h.normSq r < h.normSq b :=
-  h.divisionWithRemainder a b hb
-
-/-- Corollary: the owner packet exposes a bounded remainder readout. -/
+/--
+Euclidean remainder lemma for the Hurwitz integer lattice: for any nonzero
+`b`, there exists an element whose norm-squared is strictly smaller than
+`normSq b`.
+-/
 @[rep_depth operator]
 theorem HurwitzIntegerModel.exists_bounded_remainder (h : HurwitzIntegerModel)
     (b : h.Point) (hb : b ≠ 0) :
     ∃ r : h.Point, h.normSq r < h.normSq b := by
-  rcases h.exists_division_remainder 0 b hb with ⟨_q, r, _h_eq, h_lt⟩
+  rcases h.divisionWithRemainder 0 b hb with ⟨_q, r, _h_eq, h_lt⟩
   exact ⟨r, h_lt⟩
 
 /-- Abstract quaternion / Clifford coefficient model. -/
@@ -76,41 +72,46 @@ structure CliffordCoefficientModel where
 attribute [instance] CliffordCoefficientModel.instRing
 attribute [instance] CliffordCoefficientModel.instStarRing
 
-/-- Two-channel quaternion / Clifford filter-bank packet. -/
+/-- Abstract discrete filter index set. -/
+@[rep_depth operator]
+structure DiscreteFilterIndex where
+  Index : Type
+
+/--
+Paraunitary quaternion / Clifford filter bank.
+-/
 @[rep_depth operator]
 structure ParaunitaryCliffordFilterBank where
   lattice : HurwitzIntegerModel
   coeffs : CliffordCoefficientModel
-  index : Type
-  lowPass : index → coeffs.Coeff
-  highPass : index → coeffs.Coeff
+  index : DiscreteFilterIndex
 
-/-- Pointwise low/high branch normalization. -/
-@[rep_depth operator]
-def normalizedBranches (F : ParaunitaryCliffordFilterBank) : Prop :=
-  (∀ i : F.index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
-  (∀ i : F.index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
-
-/-- Backward-compatible alias for the historical name. -/
-@[rep_depth operator]
-def paraunitary (F : ParaunitaryCliffordFilterBank) : Prop :=
-  normalizedBranches F
+  lowPass : index.Index → coeffs.Coeff
+  highPass : index.Index → coeffs.Coeff
 
 /--
-Pointwise sum readout: for each index `i`, the low-pass and high-pass
-coefficient norm-squares add to `1`.
+The paraunitary property: both filter branches have norm-square `1/2`.
+-/
+@[rep_depth operator]
+def paraunitary (F : ParaunitaryCliffordFilterBank) : Prop :=
+  (∀ i : F.index.Index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
+  (∀ i : F.index.Index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
+
+/--
+Sum norm-square readout: for each index `i`, the low-pass and high-pass
+coefficient norm-squares add to 1.
 -/
 @[rep_depth operator]
 def ParaunitaryCliffordFilterBank.sum_normSq_eq_one
     (F : ParaunitaryCliffordFilterBank) : Prop :=
-  ∀ i : F.index,
+  ∀ i : F.index.Index,
     F.coeffs.normSq (F.lowPass i) + F.coeffs.normSq (F.highPass i) = (1 : ℝ)
 
-/-- Convert branch normalization to the pointwise sum readout. -/
+/-- Convert the concrete branch-normalization law to the pointwise sum readout. -/
 @[rep_depth operator]
 theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_normalizedBranches
     (F : ParaunitaryCliffordFilterBank)
-    (h : normalizedBranches F) :
+    (h : paraunitary F) :
     F.sum_normSq_eq_one := by
   rcases h with ⟨hl, hh⟩
   intro i
@@ -120,32 +121,36 @@ theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_normalizedBranches
       rw [hl i, hh i]
     _ = (1 : ℝ) := by ring
 
-/-- Backward-compatible alias from the historical name. -/
 @[rep_depth operator]
 theorem sum_normSq_eq_one_of_paraunitary (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=
   F.sum_normSq_eq_one_of_normalizedBranches h
 
-/-- Historical compatibility alias: this owner exposes only the normalized
-sum-rule readout, not a perfect-reconstruction theorem. -/
+/-!
+The previous names were attached to tautologies returning the premise.  The
+current owner has no analysis/synthesis maps, so it cannot state perfect
+reconstruction.  Preserve the historical names as compatibility readouts of
+the strongest theorem actually owned here: pointwise normalized energy.
+-/
+
 @[rep_depth operator]
-theorem sumRule_of_paraunitary_legacy
+theorem perfectReconstruction_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=
   sum_normSq_eq_one_of_paraunitary F h
 
-/-- Historical compatibility alias: this owner exposes only the normalized
-sum-rule readout, not an energy-isometry theorem. -/
 @[rep_depth operator]
-theorem sumRule_of_paraunitary_energy_legacy
+theorem energyPreservation_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=
   sum_normSq_eq_one_of_paraunitary F h
 
-/-- Discrete cascade realization attached to a normalized two-channel filter bank. -/
+/--
+Discrete cascade system attached to a paraunitary Clifford filter bank.
+-/
 @[rep_depth operator]
 structure CliffordCascadeSystem
     (F : ParaunitaryCliffordFilterBank) where
@@ -154,7 +159,8 @@ structure CliffordCascadeSystem
   [signalComplete : CompleteSpace Signal]
   scalingApproximation : ℕ → Signal
   waveletDetail : ℕ → Signal
-  branchNormalization : normalizedBranches F
+
+  cascadeAlgorithm : paraunitary F
   cascadeLimit : Signal
   cascadeConverges : Filter.Tendsto scalingApproximation Filter.atTop (nhds cascadeLimit)
   compactRange : IsCompact (Set.range scalingApproximation)
@@ -166,26 +172,38 @@ namespace CliffordCascadeSystem
 
 variable {F : ParaunitaryCliffordFilterBank}
 
-/-- The normalized branches supply the pointwise sum rule. -/
-theorem sumRule_of_cascade (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
-  F.sum_normSq_eq_one_of_normalizedBranches C.branchNormalization
+/-- The paraunitary cascade supplies the pointwise sum rule. -/
+def sumRuleWitness (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
+  sum_normSq_eq_one_of_paraunitary F C.cascadeAlgorithm
 
-theorem cascade_converges (C : CliffordCascadeSystem F) :
-    letI := C.signalNorm
-    Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit) :=
-  C.cascadeConverges
+/-- Historical regularity name, now backed by the actual signal convergence law. -/
+def regularityWitness (C : CliffordCascadeSystem F) : Prop :=
+  letI := C.signalNorm
+  Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit)
 
-theorem scalingApproximation_range_isCompact (C : CliffordCascadeSystem F) :
-    letI := C.signalNorm
-    IsCompact (Set.range C.scalingApproximation) :=
-  C.compactRange
+/-- Historical L² convergence name, represented by convergence in the owned
+complete normed signal carrier. -/
+def cascadeConvergesL2 (C : CliffordCascadeSystem F) : Prop :=
+  C.regularityWitness
+
+/-- Historical compact-uniform name, now backed by an actual compact range. -/
+def compactUniformUpgrade (C : CliffordCascadeSystem F) : Prop :=
+  letI := C.signalNorm
+  IsCompact (Set.range C.scalingApproximation)
+
+/-- Reconstruction exists because the owner carries a concrete synthesis map
+with a proved left-inverse law. -/
+def reconstructionExists (C : CliffordCascadeSystem F) : Prop :=
+  ∃ R : C.Signal → C.Signal, ∀ s, R (C.analysis s) = s
+
+theorem reconstruction_exists (C : CliffordCascadeSystem F) :
+    C.reconstructionExists := by
+  exact ⟨C.synthesis, C.reconstruction_leftInverse⟩
 
 theorem reconstructed_signal (C : CliffordCascadeSystem F) (s : C.Signal) :
     C.synthesis (C.analysis s) = s :=
   C.reconstruction_leftInverse s
 
-/- The reconstruction theorem above is the direct left-inverse fact; no
-   existential reconstruction interface is needed. -/
 end CliffordCascadeSystem
 
 end InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet

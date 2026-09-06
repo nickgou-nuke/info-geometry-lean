@@ -56,17 +56,4 @@ theorem klein_bottle_abelian_bp_trivial {G : Type} [CommGroup G]
     rw [mul_comm B_q B_p, mul_inv_cancel_right, sq]
   exact h1 ▸ h
 
-/-- In an Abelian group, the Klein-bottle constraint is equivalent to the
-order-two condition on `B_p`. -/
-theorem klein_bottle_abelian_iff_bp_sq_eq_one {G : Type} [CommGroup G]
-    (B_p B_q : G) :
-    is_klein_bottle_gapped_phase B_p B_q ↔ B_p ^ 2 = 1 := by
-  constructor
-  · exact klein_bottle_abelian_bp_trivial B_p B_q
-  · intro h
-    calc
-      B_q * B_p * B_q⁻¹ * B_p = B_p ^ 2 := by
-        rw [mul_comm B_q B_p, mul_inv_cancel_right, sq]
-      _ = 1 := h
-
 end InfoGeometry.Topology.NonorientableExceptionalBraids

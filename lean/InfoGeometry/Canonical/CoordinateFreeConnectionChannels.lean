@@ -104,13 +104,10 @@ A representation channel from one associative algebra to another.
 For the intended geometry, the source is the coordinate-free connection algebra
 and targets are the vector, spinor, or quaternion readout algebras.
 -/
-abbrev ConnectionChannel := A →+* B
+structure ConnectionChannel where
+  map : A →+* B
 
 namespace ConnectionChannel
-
-/-- Compatibility accessor for the native ring-hom channel. -/
-abbrev map (ρ : ConnectionChannel (A := A) (B := B)) : A →+* B := ρ
-
 
 /-- A channel preserves commutators. -/
 theorem map_commutator (ρ : ConnectionChannel (A := A) (B := B)) (X Y : A) :
@@ -252,6 +249,17 @@ theorem map_bianchi_zero_all
   exact ⟨C.vector.map_cyclicSum_of_zero X Y Z h,
     C.spinor.map_cyclicSum_of_zero X Y Z h,
     C.quaternion.map_cyclicSum_of_zero X Y Z h⟩
+
+/-- The trifactor law transports to all three representation channels. -/
+theorem map_trifactor_law_all
+    (C : ThreeConnectionChannels (A := A) (V := V) (S := S) (Q := Q))
+    (T : A) (hT : T ^ 3 = T) :
+    C.vector.map T ^ 3 = C.vector.map T
+      ∧ C.spinor.map T ^ 3 = C.spinor.map T
+      ∧ C.quaternion.map T ^ 3 = C.quaternion.map T := by
+  exact ⟨C.vector.map_trifactor_law T hT,
+    C.spinor.map_trifactor_law T hT,
+    C.quaternion.map_trifactor_law T hT⟩
 
 end ThreeConnectionChannels
 

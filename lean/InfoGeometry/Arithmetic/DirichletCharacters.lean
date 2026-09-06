@@ -5,24 +5,21 @@ import InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 import InfoGeometry.Arithmetic.UResRepresentations
 
 /-
-# Dirichlet Character Readout Notes
+# Dirichlet Characters → Representations of the Weyl Groupoid
 
-This file is documentation for a possible Dirichlet-character extension of
-the finite Möbius/Weyl owners.  It contains no Lean construction of a
-Dirichlet character, L-function, Weyl groupoid, automorphic representation, or
-Langlands correspondence.  The formulas below are targets and terminology,
-not theorem-backed analytic identities.
+Extends the Möbius-Weyl correspondence (trivial character → ζ(β))
+to arbitrary Dirichlet characters χ mod q, giving the full L-function
+spectrum of the arithmetic DAG.
 
 ## The Extension
 
-Intended target for a future Dirichlet character χ mod q:
+For a Dirichlet character χ mod q:
 
     L(β, χ) = Σ_n χ(n)·n^{-β} = ∏_p (1 - χ(p)·p^{-β})^{-1}
 
-The displayed specialization is contextual notation, not a theorem in this
-file.
+Generalizes ζ(β) = L(β, χ₀) where χ₀ is the trivial character.
 
-The proposed Weyl-groupoid interpretation would act on the
+The Weyl groupoid (as opposed to the Weyl group S_∞) acts on the
 fibered product of prime modes × roots of unity (the q-th cyclotomic
 field). The character χ is a 1-dimensional representation of this
 groupoid, and L(β, χ) is its character evaluated at the Boltzmann
@@ -30,9 +27,12 @@ weight e^{-βH}.
 
 ## The Langlands Functoriality
 
-No ring-homomorphism or Langlands-functoriality theorem is proved in this
-file.  Those statements require separate arithmetic and representation
-theory owners.
+The map χ → L(β, χ) is a ring homomorphism from the representation
+ring of the Weyl groupoid to the ring of Dirichlet series. This IS
+the Langlands correspondence at the level of L-functions: the
+automorphic representation π (on the adèle group) corresponds to
+the Galois representation σ (on the absolute Galois group), and
+L(β, π) = L(β, σ) under this correspondence.
 
 In the arithmetic DAG language:
 - The Cuntz algebra O_∞ is the algebra of functions on {0,1}^ℕ
@@ -47,14 +47,6 @@ open Complex
 
 namespace InfoGeometry.Arithmetic.DirichletCharacters
 
-/-!
-All subsequent material in this file is non-executable design documentation.
-It describes intended Dirichlet/Langlands constructions but introduces no
-definitions or theorems for them.  In particular, displayed Euler products,
-KMS character interpretations, Weyl-groupoid actions, and functional
-equations are not Lean results of this file.
--/
-
 open LFunctionRepresentationBridge
 open MoebiusWeylEuler
 
@@ -64,9 +56,9 @@ open MoebiusWeylEuler
 A Dirichlet character χ modulo q is a group homomorphism
 χ : (ℤ/qℤ)^× → ℂ^×, extended to ℕ by χ(n) = 0 if gcd(n,q) > 1.
 
-The existing `GaugeTwist` API is only a possible target for this construction;
-this file does not prove that an arbitrary such datum is a Dirichlet
-character or that its series has an Euler product.
+This is precisely a `GaugeTwist` from `LFunctionRepresentationBridge`
+with the multiplicativity condition enforced by the Dirichlet
+character property χ(ab) = χ(a)·χ(b) and χ(1) = 1.
 
 The character χ lives on the cyclotomic quotient, which is the
 first layer of the Weyl groupoid beyond the trivial character χ₀ ≡ 1

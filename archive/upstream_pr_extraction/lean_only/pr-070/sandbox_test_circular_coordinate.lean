@@ -1,0 +1,2 @@
+import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
+#check InfoGeometry.Lie.SplitOctonionCircularPeirceBasis.circularCoordinate

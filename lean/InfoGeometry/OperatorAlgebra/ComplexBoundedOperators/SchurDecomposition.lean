@@ -338,59 +338,7 @@ namespace SchurDecompositionPacket
 
 variable {K : Type*} [Field K] {n : ℕ}
 
-/-- Canonical Schur decomposition of the 0-by-0 empty matrix. -/
-def ofZero (K : Type*) [Field K] : SchurDecompositionPacket K 0 where
-  A := 0
-  eigenvalues := []
-  B := 0
-  P := 1
-  Q := 1
-  factorization := by ext i; exact i.elim0
-  P_mul_Q := by ext i; exact i.elim0
-  Q_mul_P := by ext i; exact i.elim0
-  upper_triangular := by intro i; exact i.elim0
-  diag_eq := rfl
-
-/-- Canonical Schur decomposition of a 1-by-1 matrix. -/
-def ofOne (K : Type*) [Field K] (c : K) : SchurDecompositionPacket K 1 where
-  A := fun _ _ => c
-  eigenvalues := [c]
-  B := fun _ _ => c
-  P := 1
-  Q := 1
-  factorization := by
-    ext i j
-    fin_cases i; fin_cases j
-    simp
-  P_mul_Q := by simp
-  Q_mul_P := by simp
-  upper_triangular := by
-    intro i j hij
-    have hi : i = 0 := Subsingleton.elim i 0
-    have hj : j = 0 := Subsingleton.elim j 0
-    rw [hi, hj] at hij
-    exact (lt_irrefl (0 : Fin 1) hij).elim
-  diag_eq := by
-    unfold diagList
-    simp
-
-/-- Canonical Schur decomposition of an upper-triangular matrix (similarity via identity). -/
-def ofUpperTriangular (K : Type*) [Field K] {n : ℕ}
-    (B : Matrix (Fin n) (Fin n) K) (hB : UpperTriangular B) :
-    SchurDecompositionPacket K n where
-  A := B
-  eigenvalues := diagList B
-  B := B
-  P := 1
-  Q := 1
-  factorization := by simp
-  P_mul_Q := by simp
-  Q_mul_P := by simp
-  upper_triangular := hB
-  diag_eq := rfl
-
-/-- Similarity property carried by a Schur packet. -/
-
+/-- Similarity witness carried by a Schur packet. -/
 def similarWitness (S : SchurDecompositionPacket K n) :
     SimilarMatrixWitness S.A S.B where
   P := S.P
@@ -408,7 +356,7 @@ theorem schur_decomposition (S : SchurDecompositionPacket K n) :
       diagList S.B = S.eigenvalues :=
   ⟨S.factorization, S.P_mul_Q, S.Q_mul_P, S.upper_triangular, S.diag_eq⟩
 
-/-- The upper-triangular component of a property Schur decomposition. -/
+/-- The upper-triangular component of a certified Schur decomposition. -/
 def schurUpperTriangular (S : SchurDecompositionPacket K n) :
     Matrix (Fin n) (Fin n) K :=
   S.B
@@ -483,7 +431,7 @@ structure SchurStepPacket (K : Type*) [Field K] (n : ℕ) where
   /-- Eigenvector equation in matrix-vector form. -/
   eigenvector_eq :
     A.mulVec eigenvector = fun i => eigenvalue * eigenvector i
-  /-- Nonzero eigenvector property. -/
+  /-- Nonzero eigenvector witness. -/
   eigenvector_ne_zero : eigenvector ≠ 0
   /-- Basis completion used by the step. -/
   basisCompletion : BasisCompletionPacket K (n + 1)
@@ -629,7 +577,7 @@ Recursive Schur tail assembly in block form.
 
 This is the AFP-style recursive seam: the first Schur step is rewritten into a
 block matrix whose lower-right block is the recursive tail decomposition, and
-the whole block form is conjugated by the tail similarity property.
+the whole block form is conjugated by the tail similarity witness.
 
 The theorem is stated on the block-reindexed matrix because that is the honest
 recursive object produced by the AFP proof.
@@ -662,7 +610,7 @@ end SchurStepPacket
 /--
 Upper block-triangular characteristic-polynomial packet.
 
-This is the AFP `char_poly_0_block` conclusion, stated as a reusable property
+This is the AFP `char_poly_0_block` conclusion, stated as a reusable certified
 carrier over `Matrix.fromBlocks`.
 -/
 theorem char_poly_fromBlocks_zero₁₂
@@ -683,7 +631,7 @@ structure CharpolyUpperBlockPacket (K : Type*) [CommRing K]
   A : Matrix (n ⊕ m) (n ⊕ m) K
   /-- Block decomposition with zero lower-left block. -/
   A_eq : A = Matrix.fromBlocks B C 0 D
-  /-- Characteristic polynomial multiplicativity property. -/
+  /-- Characteristic polynomial multiplicativity witness. -/
   charpoly_eq : A.charpoly = B.charpoly * D.charpoly
 
 namespace CharpolyUpperBlockPacket
@@ -720,7 +668,7 @@ structure CharpolyLowerBlockPacket (K : Type*) [CommRing K]
   A : Matrix (n ⊕ m) (n ⊕ m) K
   /-- Block decomposition with zero upper-right block. -/
   A_eq : A = Matrix.fromBlocks B 0 C D
-  /-- Characteristic polynomial multiplicativity property. -/
+  /-- Characteristic polynomial multiplicativity witness. -/
   charpoly_eq : A.charpoly = B.charpoly * D.charpoly
 
 namespace CharpolyLowerBlockPacket
@@ -734,5 +682,4 @@ theorem char_poly_0_block' (P : CharpolyLowerBlockPacket K n m) :
 
 end CharpolyLowerBlockPacket
 
-end SchurDecomposition
-
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition

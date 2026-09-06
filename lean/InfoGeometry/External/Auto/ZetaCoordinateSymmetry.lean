@@ -15,7 +15,7 @@ locus of the chosen affine chart for the antiunitary reflection
 the orbit closure it imposes on any zero predicate stable under the functional
 reflection and complex conjugation.
 
-No analytic zeta function is constructed here, and no Riemann-property claim
+No analytic zeta function is constructed here, and no Riemann-hypothesis claim
 is made.
 -/
 

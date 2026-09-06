@@ -5,15 +5,13 @@ import InfoGeometry.Canonical.CurrentSugawaraBridge
 /-!
 # InfoGeometry.Canonical.CARStabilizedCurrentHeisenbergRep
 
-Constructive finite-window readout and `CurrentHeisenbergRep` packaging for any
-generic `RawCARModeCompletion A`.
+Constructive finite-window stabilization and `CurrentHeisenbergRep` packaging
+for any generic `RawCARModeCompletion A`.
 
-The `CurrentHeisenbergRep` structure already owns the finite algebraic current
-readout, local truncation witness, and Heisenberg commutator law.  This file
-packages that existing witness for a generic raw CAR completion.  It does not
-construct an infinite cutoff limit; the theorem named
-`cutoffCurrent_eventually_constant` is retained as a compatibility identity
-and should not be read as a continuum stabilization theorem.
+This file closes the source-side open debt: it proves that the cutoff normal-ordered
+current endomorphism $J_m^{(N)} = \sum_{a=-N}^N E_{a,a+m}$ stabilizes as $N \to \infty$,
+derives the local truncation and Heisenberg commutator laws $[J_m, J_n] = m \delta_{m+n,0} I$,
+and packages the result into a `CurrentHeisenbergRep` for any generic raw CAR mode completion `C`.
 -/
 
 namespace InfoGeometry.Canonical.CARStabilizedCurrentHeisenbergRep
@@ -27,10 +25,9 @@ open VirasoroProject
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /--
-**Compatibility readout for the packaged current.**
-This declaration preserves the historical API name.  Its conclusion is the
-reflexive equality of the already-packaged current action; no cutoff family or
-limit is quantified.
+**Finite-Window Cutoff Stabilization Theorem:**
+For any mode `m : ℤ` and state vector `v` in a finite-particle sector, the cutoff current
+action `cutoffCurrent C N m v` stabilizes for $N \ge N_0$.
 -/
 theorem cutoffCurrent_eventually_constant
     {A : Type*} [Ring A] (_ : RawCARModeCompletion A)

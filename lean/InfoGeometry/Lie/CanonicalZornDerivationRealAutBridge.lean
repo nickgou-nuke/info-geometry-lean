@@ -134,8 +134,11 @@ theorem zornFlow_preserves_null
     (D : canonicalZornDerivations)
     (t : ℝ)
     (X : CZ) :
-    ZornMatrix.IsNull (zornFlowLinearEquiv D.1 t X) ↔
-      ZornMatrix.IsNull X := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (zornFlowLinearEquiv D.1 t X) ↔
+      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   simpa using
     (RealSplitOctonionAut.preserves_null (zornFlowRealAut D t) X)
 

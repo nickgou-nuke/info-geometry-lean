@@ -140,36 +140,4 @@ theorem complete_transfer_at_quarter_period (Delta : ℝ) (hD : Delta ≠ 0) :
   rw [h_arg, Real.sin_pi_div_two]
   ring
 
-/-! ### 5. Grand Two-Sector Spectral Oscillation Synthesis -/
-
-/--
-🏆 **GRAND SYNTHESIS: Exact Symmetric Two-Sector Spectral Splitting and Coherent Oscillation**
-
-Unifies:
-1. Exact secular characteristic determinant: $\det(H - E I) = (E - (E_0 - \Delta))(E - (E_0 + \Delta))$.
-2. Symmetric and antisymmetric eigenmodes: $H |+\rangle = (E_0 + \Delta) |+\rangle$, $H |-\rangle = (E_0 - \Delta) |-\rangle$.
-3. Exact physical nonnegative gap: $|E_+ - E_-| = 2|\Delta|$.
-4. Coherent probability flow: $P(t) = \frac{1 - \cos(2\Delta t)}{2}$ with $0 \le P(t) \le 1$.
-5. Complete transfer quarter-period: $P(\frac{\pi}{2\Delta}) = 1$ when $\Delta \ne 0$.
--/
-theorem grand_two_sector_spectral_synthesis
-    (E0 Delta E t : ℝ) (hD : Delta ≠ 0) :
-    (det (twoSectorHamiltonian E0 Delta - E • (1 : Mat2)) =
-     (E - (E0 - Delta)) * (E - (E0 + Delta))) ∧
-    (mulVec (twoSectorHamiltonian E0 Delta) eigenPlus =
-     (E0 + Delta) • eigenPlus) ∧
-    (mulVec (twoSectorHamiltonian E0 Delta) eigenMinus =
-     (E0 - Delta) • eigenMinus) ∧
-    (|(E0 + Delta) - (E0 - Delta)| = 2 * |Delta|) ∧
-    (transitionProb Delta t = (1 - Real.cos (2 * Delta * t)) / 2) ∧
-    (0 ≤ transitionProb Delta t ∧ transitionProb Delta t ≤ 1) ∧
-    (transitionProb Delta (Real.pi / (2 * Delta)) = 1) :=
-  ⟨secular_roots E0 Delta E,
-   plus_eigenmode E0 Delta,
-   minus_eigenmode E0 Delta,
-   physical_spectral_gap E0 Delta,
-   transition_double_angle Delta t,
-   transition_prob_bounds Delta t,
-   complete_transfer_at_quarter_period Delta hD⟩
-
 end InfoGeometry.Physics.TwoSector

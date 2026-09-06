@@ -19,8 +19,8 @@ variable (n : Nat) [Nonempty (Fin n)]
 Token-local grand-canonical parameters induced by router energy over the expert index.
 -/
 noncomputable def routerParams (x : Fin n → V) (i : Fin n) :
-    GrandCanonicalParams (ExpertIdx n) :=
-  routerEnergy n x i
+    GrandCanonicalParams (ExpertIdx n) where
+  energy := routerEnergy n x i
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 @[simp] lemma gc_partition_eq_routerPartition (β : ℝ) (x : Fin n → V) (i : Fin n) :
@@ -71,7 +71,7 @@ lemma switchMatrix_mem_rowStochastic (β : ℝ) (x : Fin n → V) :
     exact switchMatrix_row_sum_one (n := n) β x i
 
 /--
-Column-normalization property for the switch matrix.
+Column-normalization hypothesis for the switch matrix.
 
 When this holds together with the always-true row normalization, the switch is bistochastic.
 -/
@@ -109,9 +109,9 @@ theorem exists_perm_decomposition_of_bistochastic
     (switchMatrix_mem_doublyStochastic (n := n) β x hcol)
 
 /--
-Data witnessing that a switch matrix has been Sinkhorn-balanced into a bistochastic matrix.
+Certificate that a switch matrix has been Sinkhorn-balanced into a bistochastic matrix.
 -/
-structure SinkhornBalanceData (β : ℝ) (x : Fin n → V) where
+structure SinkhornCertificate (β : ℝ) (x : Fin n → V) where
   leftScale : Fin n → ℝ
   rightScale : Fin n → ℝ
   leftScale_pos : ∀ i, 0 < leftScale i
@@ -121,10 +121,10 @@ structure SinkhornBalanceData (β : ℝ) (x : Fin n → V) where
       ∈ doublyStochastic ℝ (Fin n)
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
-/-- Construct a property trivially when the switch is already bistochastic. -/
-noncomputable def SinkhornBalanceData.ofBistochastic
+/-- Construct a certificate trivially when the switch is already bistochastic. -/
+noncomputable def SinkhornCertificate.ofBistochastic
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x) :
-    SinkhornBalanceData (n := n) β x where
+    SinkhornCertificate (n := n) β x where
   leftScale := fun _ => 1
   rightScale := fun _ => 1
   leftScale_pos _ := zero_lt_one
@@ -139,7 +139,7 @@ omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 Any Sinkhorn-balanced switch matrix admits a permutation simplex decomposition.
 -/
 theorem exists_perm_decomposition_of_sinkhornBalanced
-    (β : ℝ) (x : Fin n → V) (cert : SinkhornBalanceData (n := n) β x) :
+    (β : ℝ) (x : Fin n → V) (cert : SinkhornCertificate (n := n) β x) :
     ∃ w : Equiv.Perm (Fin n) → ℝ,
       (∀ σ, 0 ≤ w σ) ∧
       ∑ σ, w σ = 1 ∧
@@ -165,11 +165,11 @@ noncomputable def rowSum (M : SinkhornMatrix n) (i : Fin n) : ℝ :=
 noncomputable def colSum (M : SinkhornMatrix n) (j : Fin n) : ℝ :=
   ∑ i : Fin n, M i j
 
-/-- Positivity property for row sums (required for row normalization). -/
+/-- Positivity certificate for row sums (required for row normalization). -/
 def HasPositiveRowSums (M : SinkhornMatrix n) : Prop :=
   ∀ i : Fin n, 0 < rowSum n M i
 
-/-- Positivity property for column sums (required for column normalization). -/
+/-- Positivity certificate for column sums (required for column normalization). -/
 def HasPositiveColSums (M : SinkhornMatrix n) : Prop :=
   ∀ j : Fin n, 0 < colSum n M j
 
@@ -864,7 +864,7 @@ attribute [rep_depth operator]
   switchMatrix_row_sum_one
   switchMatrix_mem_rowStochastic
   switchMatrix_mem_doublyStochastic
-  SinkhornBalanceData.ofBistochastic
+  SinkhornCertificate.ofBistochastic
   gc_partition_eq_routerPartition
   gc_gibbsWeight_eq_normalizedWeights
   routerParams
@@ -956,6 +956,43 @@ attribute [rep_depth operator]
   schroedingerBridgeStep_radonNikodymBarrier_monotone
   rowBarrierPotential
   colBarrierPotential
+
+/-! Finite cycle cancellation for multiplicative gauge potentials. -/
+
+lemma prod_range_div_telescope {M : Type*} [CommGroupWithZero M]
+    (f : ℕ → M) (hf : ∀ i, f i ≠ 0) (n : ℕ) :
+    ∏ i ∈ Finset.range n, f i / f (i + 1) = f 0 / f n := by
+  induction n with
+  | zero => simp [div_self (hf 0)]
+  | succ n ih =>
+      rw [Finset.prod_range_succ, ih]
+      field_simp [hf n, hf (n + 1)]
+
+lemma prod_range_div_telescope_cycle {M : Type*} [CommGroupWithZero M]
+    (f : ℕ → M) (hf : ∀ i, f i ≠ 0) (n : ℕ)
+    (hcycle : f n = f 0) :
+    ∏ i ∈ Finset.range n, f i / f (i + 1) = 1 := by
+  rw [prod_range_div_telescope f hf n, hcycle, div_self (hf 0)]
+
+lemma sum_range_sub_telescope {M : Type*} [AddCommGroup M]
+    (f : ℕ → M) (n : ℕ) :
+    ∑ i ∈ Finset.range n, (f i - f (i + 1)) = f 0 - f n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Finset.sum_range_succ, ih]
+      abel
+
+lemma sum_range_sub_telescope_cycle {M : Type*} [AddCommGroup M]
+    (f : ℕ → M) (n : ℕ) (hcycle : f n = f 0) :
+    ∑ i ∈ Finset.range n, (f i - f (i + 1)) = 0 := by
+  rw [sum_range_sub_telescope f n, hcycle, sub_self]
+
+lemma prod_range_exp_sub_telescope_cycle (f : ℕ → ℝ) (n : ℕ)
+    (hcycle : f n = f 0) :
+    ∏ i ∈ Finset.range n, Real.exp (f i - f (i + 1)) = 1 := by
+  rw [← Real.exp_sum]
+  rw [sum_range_sub_telescope_cycle f n hcycle, Real.exp_zero]
 
 end EntropicOTBridge
 

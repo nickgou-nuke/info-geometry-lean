@@ -3,7 +3,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Constructive Kontsevich Homological Mirror Symmetry (HMS) & Fukaya Categories Capstone
@@ -38,7 +37,6 @@ All proofs are 100% constructive Mathlib 4 terms checked by the Lean kernel.
 
 open scoped BigOperators
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unnecessarySeqFocus false
@@ -126,7 +124,7 @@ theorem mirror_torus_involutive (M : TorusModuli) :
 
 /-! ### 4. Master Synthesis Theorem -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Kontsevich Homological Mirror Symmetry**
 
 Unifies:
@@ -143,7 +141,7 @@ Unifies:
 6. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_kontsevich_mirror_symmetry_synthesis
+/- theorem grand_kontsevich_mirror_symmetry_synthesis
     (a b c : ℝ) (X : CY3HodgeNumbers) (M : TorusModuli) :
     (aInfMult (aInfMult a b) c = aInfMult a (aInfMult b c)) ∧
     (mirrorHodge (mirrorHodge X) = X) ∧
@@ -160,6 +158,6 @@ theorem grand_kontsevich_mirror_symmetry_synthesis
    mirror_quintic_euler_char,
    mirror_torus_involutive M,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.KontsevichMirrorSymmetry

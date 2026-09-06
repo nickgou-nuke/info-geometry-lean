@@ -6,7 +6,8 @@ namespace InfoGeometry
 /-!
 # InfoGeometry.Canonical.ConnesArakiFramework
 
-Canonical export surface for the Connes--Araki framework owners.
+Umbrella import for the Connes-Araki carrier and its Tomita-specialized
+endpoints.
 -/
 
 end InfoGeometry

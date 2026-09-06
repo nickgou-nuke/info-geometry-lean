@@ -176,28 +176,4 @@ theorem rope_softmax_invariance [Nonempty T]
     (softmaxGibbs_shift_equivariance state (fun y => f (y - m))
       (shiftEquiv (-c)) (n + c))
 
-/-! ### 6. Grand Thermodynamic Synthesis -/
-
-/--
-**Finite Gibbs/softmax synthesis**
-
-Collects:
-1. Positivity of statistical sum Z > 0.
-2. Conservation of probability ∑ p_i = 1.
-3. Partition function shift invariance Z(E ∘ σ) = Z(E).
-4. Exact relative-position RoPE invariance p_{m+c}(n+c) = p_m(n).
--/
-theorem grand_souriau_softmax_synthesis [Nonempty I] [Nonempty T]
-    (state : ThermalState) (energy : I → ℝ) (sigma : I ≃ I)
-    (f : T → ℝ) (m n c : T) :
-    (0 < partitionFunction state energy ∧
-     ∑ i : I, softmaxGibbs state energy i = 1 ∧
-     partitionFunction state (energy ∘ sigma) = partitionFunction state energy) ∧
-    (softmaxGibbs (I := T) state (fun x => f (x - (m + c))) (n + c) =
-     softmaxGibbs (I := T) state (fun x => f (x - m)) n) :=
-  ⟨⟨partitionFunction_pos state energy,
-     softmaxGibbs_sum_eq_one state energy,
-     partitionFunction_shift_invariant state energy sigma⟩,
-   rope_softmax_invariance state f m n c⟩
-
 end InfoGeometry.Clifford.SouriauThermodynamics

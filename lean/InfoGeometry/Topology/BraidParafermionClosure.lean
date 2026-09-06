@@ -73,18 +73,13 @@ theorem finite_braid_parafermion_closure (t : ℂ) :
     sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t ∧
       z3Unit + z3Unit + z3Unit = 0 ∧
         z3Unit ≠ 0 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact su3_parafermion_braiding t
-  · exact z3Unit_three_windings
-  · exact z3Unit_nonzero
+  exact ⟨su3_parafermion_braiding t, z3Unit_three_windings, z3Unit_nonzero⟩
 
 /-- `(\mathrm{Artin})\wedge(v^3=1)`. -/
 theorem finite_braid_vortex_closure (t : ℂ) (v : AharonovBohmVortex) :
     sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t ∧
       vortexOperator v * vortexOperator v * vortexOperator v = 1 := by
-  refine ⟨?_, ?_⟩
-  · exact su3_parafermion_braiding t
-  · exact vortexOperator_cube_eq_one v
+  exact ⟨su3_parafermion_braiding t, vortexOperator_cube_eq_one v⟩
 
 end InfoGeometry.Topology.BraidParafermionClosure
 

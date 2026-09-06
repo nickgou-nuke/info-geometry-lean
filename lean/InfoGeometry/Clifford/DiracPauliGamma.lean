@@ -21,6 +21,7 @@ namespace InfoGeometry.Clifford.DiracPauliGamma
 
 open scoped Matrix
 
+set_option maxHeartbeats 800000
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySimpa false
 
@@ -104,6 +105,118 @@ theorem gamma3_mul_self : gamma3 * gamma3 = -1 := by
   fin_cases i <;> fin_cases j <;>
     simp [gamma3, Matrix.mul_apply, Fin.sum_univ_succ, Matrix.neg_apply]
 
+/-! The finite complex structure carried by the spatial `2-3` plane. -/
+
+/-- The bivector `γ²γ³`, viewed as an endomorphism of the Dirac spinor. -/
+def gamma23 : DiracMatrix := gamma2 * gamma3
+
+/-- The spatial bivector `γ²γ³` squares to `-1`. -/
+theorem gamma23_mul_self : gamma23 * gamma23 = -(1 : DiracMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ,
+      Matrix.neg_apply]
+
+/-- `γ²γ³` commutes with the temporal gamma matrix. -/
+theorem gamma23_comm_gamma0 : gamma23 * gamma0 = gamma0 * gamma23 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma0, gamma2, gamma3, Matrix.mul_apply,
+      Fin.sum_univ_succ]
+
+/-- `γ²γ³` commutes with the first spatial gamma matrix. -/
+theorem gamma23_comm_gamma1 : gamma23 * gamma1 = gamma1 * gamma23 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma1, gamma2, gamma3, Matrix.mul_apply,
+      Fin.sum_univ_succ]
+
+/-- `γ²γ³` anticommutes with `γ²`. -/
+theorem gamma23_anticomm_gamma2 : gamma23 * gamma2 + gamma2 * gamma23 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- `γ²γ³` anticommutes with `γ³`. -/
+theorem gamma23_anticomm_gamma3 : gamma23 * gamma3 + gamma3 * gamma23 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- The spatial bivector preserves the repository's chirality operator. -/
+theorem gamma23_comm_gamma5 : gamma23 * gamma5 = gamma5 * gamma23 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, gamma5, Matrix.mul_apply,
+      Fin.sum_univ_succ]
+
+/-! Finite spectral projectors for the `2-3` complex structure. -/
+
+noncomputable def gamma23ProjectorPlus : DiracMatrix :=
+  !![(1 / 2 : ℂ), 1 / 2, 0, 0;
+     1 / 2, 1 / 2, 0, 0;
+     0, 0, 1 / 2, 1 / 2;
+     0, 0, 1 / 2, 1 / 2]
+
+noncomputable def gamma23ProjectorMinus : DiracMatrix :=
+  !![(1 / 2 : ℂ), -(1 / 2), 0, 0;
+     -(1 / 2), 1 / 2, 0, 0;
+     0, 0, 1 / 2, -(1 / 2);
+     0, 0, -(1 / 2), 1 / 2]
+
+theorem gamma23ProjectorPlus_idem :
+    gamma23ProjectorPlus * gamma23ProjectorPlus = gamma23ProjectorPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorPlus, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring
+
+theorem gamma23ProjectorMinus_idem :
+    gamma23ProjectorMinus * gamma23ProjectorMinus = gamma23ProjectorMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorMinus, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring
+
+theorem gamma23ProjectorPlus_add_minus :
+    gamma23ProjectorPlus + gamma23ProjectorMinus = (1 : DiracMatrix) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorPlus, gamma23ProjectorMinus, Matrix.one_apply] <;> ring
+
+theorem gamma23ProjectorPlus_mul_minus :
+    gamma23ProjectorPlus * gamma23ProjectorMinus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorPlus, gamma23ProjectorMinus, Matrix.mul_apply,
+      Fin.sum_univ_succ] <;> ring
+
+theorem gamma23_mul_projectorPlus :
+    gamma23 * gamma23ProjectorPlus = (-Complex.I) • gamma23ProjectorPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, gamma23ProjectorPlus, Matrix.mul_apply,
+      Fin.sum_univ_succ, Matrix.smul_apply] <;> ring
+
+theorem gamma23_mul_projectorMinus :
+    gamma23 * gamma23ProjectorMinus = Complex.I • gamma23ProjectorMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23, gamma2, gamma3, gamma23ProjectorMinus, Matrix.mul_apply,
+      Fin.sum_univ_succ, Matrix.smul_apply] <;> ring
+
+theorem gamma23ProjectorPlus_comm_gamma5 :
+    gamma23ProjectorPlus * gamma5 = gamma5 * gamma23ProjectorPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorPlus, gamma5, Matrix.mul_apply,
+      Fin.sum_univ_succ] <;> ring
+
+theorem gamma23ProjectorMinus_comm_gamma5 :
+    gamma23ProjectorMinus * gamma5 = gamma5 * gamma23ProjectorMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma23ProjectorMinus, gamma5, Matrix.mul_apply,
+      Fin.sum_univ_succ] <;> ring
+
 theorem gamma5_eq_i_mul_product :
     Complex.I • (((gamma0 * gamma1) * gamma2) * gamma3) = gamma5 := by
   ext i j
@@ -114,13 +227,6 @@ theorem gamma5_mul_self : gamma5 * gamma5 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [gamma5, Matrix.mul_apply, Fin.sum_univ_succ]
-
-@[simp] theorem gamma5_gamma5_anticomm :
-    gamma5 * gamma5 + gamma5 * gamma5 = (2 : ℂ) • (1 : DiracMatrix) := by
-  rw [gamma5_mul_self]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.smul_apply] <;> norm_num
 
 @[simp] theorem gamma0_gamma0_anticomm :
     gamma0 * gamma0 + gamma0 * gamma0 = (2 : ℂ) • (1 : DiracMatrix) := by

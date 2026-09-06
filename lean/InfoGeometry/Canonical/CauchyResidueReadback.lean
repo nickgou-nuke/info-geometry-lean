@@ -19,7 +19,7 @@ This file records the real Hestenes--Krein readback of Cauchy/residue language.
 No complex contour integral, scalar-complex holomorphy, or analytic ODE theorem
 is introduced here.  The implemented meanings are:
 
-* Cauchy vanishing: a boundary paired with a boundary-vanishing property is zero;
+* Cauchy vanishing: a boundary paired with a boundary-vanishing witness is zero;
 * Cauchy homology invariance: such witnesses depend only on homology class;
 * residue readout: scalar readout through the calibrated Drazin complementary
   projector, equivalently through the calibrated harmonic projector.
@@ -36,7 +36,7 @@ variable (B : RealBoundaryOperator Chain)
 variable (P : RealPairing Chain Cochain)
 
 /--
-Real Cauchy vanishing: a boundary has zero readout against a property that
+Real Cauchy vanishing: a boundary has zero readout against a witness that
 vanishes on generated boundaries.
 -/
 @[rep_depth operator]
@@ -63,7 +63,7 @@ theorem cauchy_readout_homology_invariant
 
 /--
 If a boundary is homologous to zero, its readout vanishes against every
-boundary-vanishing property.
+boundary-vanishing witness.
 -/
 @[rep_depth operator]
 theorem cauchy_vanishing_of_homologous_zero
@@ -88,7 +88,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "EndH" => E →L[ℝ] E
 
 /--
-Real Drazin residue readout: evaluate the scalar property on the Drazin
+Real Drazin residue readout: evaluate the scalar witness on the Drazin
 generalized-null representative selected by the complementary projector.
 -/
 @[rep_depth krein]
@@ -99,7 +99,7 @@ def drazinResidueReadout
   φ (R.CIK.spectralComplementaryProjector x)
 
 /--
-Hodge/harmonic residue readout: evaluate the scalar property on the supplied
+Hodge/harmonic residue readout: evaluate the scalar witness on the supplied
 harmonic representative.
 -/
 @[rep_depth krein]

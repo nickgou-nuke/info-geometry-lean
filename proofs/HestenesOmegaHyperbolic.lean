@@ -1,4 +1,4 @@
-import proofs.HestenesEvenPauliEquiv
+import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 
 noncomputable section
 namespace HestenesOmegaHyperbolic

@@ -108,17 +108,5 @@ theorem prime_orbit_term_nonneg (p : ℕ) (hp : 1 < p) (m : ℕ) (test : AdeleTe
 ### 3. Grand Capstone: Connes Trace Formula Equivalence
 -/
 
-/-- 🏆 GRAND CAPSTONE: Full synthesis linking the spectral zeros, the adele class space
-    periodic orbits, and the Riemann explicit duality formula -/
-theorem grand_connes_adele_trace_synthesis
-    {N : ℕ} (zeros : RiemannZeroRegister (N + 1)) (test : AdeleTestFunction)
-    (p : ℕ) (hp : 1 < p) (m : ℕ) (h_pos : ∀ x, 0 ≤ test.h x) :
-    (test.h_hat ⟨1 / 2, zeros.gamma 0⟩ = test.h_hat (1 - ⟨1 / 2, zeros.gamma 0⟩)) ∧
-    (Real.log ((p : ℝ) ^ m) = (m : ℝ) * Real.log (p : ℝ)) ∧
-    (0 ≤ primeOrbitOrbitalTerm p (m + 1) test) :=
-  ⟨spectral_zero_functional_symmetry test (zeros.gamma 0),
-   prime_orbit_period_scaling p (by omega) m,
-   prime_orbit_term_nonneg p hp m test h_pos⟩
-
 end
 end InfoGeometry.Quantum.ConnesAdeleTrace

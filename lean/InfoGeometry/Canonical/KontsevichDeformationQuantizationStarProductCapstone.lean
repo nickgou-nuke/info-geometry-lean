@@ -2,7 +2,6 @@
 
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Constructive Kontsevich Deformation Quantization & Formal Star Product Capstone
@@ -39,7 +38,6 @@ All proofs are 100% constructive Mathlib 4 terms checked by the Lean kernel.
 
 open scoped BigOperators Real
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unnecessarySeqFocus false
@@ -102,9 +100,10 @@ theorem star_associator_linear (f g : LinearObservable) :
     poissonBracket f g - poissonBracket f g = 0 := by
   ring
 
-/-! ### 4. Master Synthesis Theorem -/
+/-! The reusable boundary of this module is the finite Poisson and
+    star-commutator calculus above. -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Kontsevich Deformation Quantization**
 
 Unifies:
@@ -121,7 +120,7 @@ Unifies:
 6. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_kontsevich_deformation_quantization_synthesis
+/- theorem grand_kontsevich_deformation_quantization_synthesis
     (f g h : LinearObservable) (hbar : ℝ) (h_hbar : hbar ≠ 0) :
     (poissonBracket g f = - poissonBracket f g) ∧
     (starCommutator hbar f g = hbar * poissonBracket f g) ∧
@@ -136,6 +135,6 @@ theorem grand_kontsevich_deformation_quantization_synthesis
    jacobi_identity_linear f g h,
    star_associator_linear f g,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.KontsevichDeformation

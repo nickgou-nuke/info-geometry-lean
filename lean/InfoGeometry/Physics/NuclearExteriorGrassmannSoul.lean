@@ -46,7 +46,14 @@ def theta (v : V) : GrassmannAlgebra (R := R) (V := V) :=
 theorem theta_anticomm (v w : V) :
     theta (R := R) (V := V) v * theta (R := R) (V := V) w =
       -(theta (R := R) (V := V) w * theta (R := R) (V := V) v) := by
-  exact exterior_generator_anticomm v w
+  have h := neg_eq_iff_add_eq_zero.mpr
+    (ExteriorAlgebra.ι_add_mul_swap (R := R) (M := V) v w)
+  change ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R w =
+    -(ExteriorAlgebra.ι R w * ExteriorAlgebra.ι R v)
+  calc
+    ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R w =
+        -(-(ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R w)) := by simp
+    _ = -(ExteriorAlgebra.ι R w * ExteriorAlgebra.ι R v) := by rw [h]
 
 /-- A one-form Grassmann generator has nilpotence order two. -/
 theorem theta_isNilpotent_two (v : V) :

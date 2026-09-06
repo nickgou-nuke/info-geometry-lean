@@ -9,11 +9,11 @@ open scoped InnerProductSpace
 
 KKT-grade bridge for the primitive bounded real split-Krein Fredholm carrier.
 
-This bridge is intentionally explicit about the only extra property it needs:
+This bridge is intentionally explicit about the only extra hypothesis it needs:
 the ambient `Γ`-grading on the Krein module agrees with the split-`Cl(1,1)`
 pseudoscalar `eps` carried by the cycle.
 
-Under that property:
+Under that hypothesis:
 
 - even algebra representations land in KKT grade zero,
 - the odd phase has zero KKT grade-zero component,

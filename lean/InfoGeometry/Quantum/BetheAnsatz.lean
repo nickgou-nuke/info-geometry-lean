@@ -112,17 +112,3 @@ theorem bethe_logarithmic_quantization (Γ u_k Θ : ℝ) (I_k : ℤ)
   have h_comm : Complex.I * (2 * Real.pi * (I_k : ℂ)) = (I_k : ℂ) * (2 * Real.pi * Complex.I) := by ring
   rw [h_comm]
   exact Complex.exp_int_mul_two_pi_mul_I I_k
-
-theorem grand_bethe_ansatz_synthesis
-    (Γ u u_k Θ : ℝ) (I_k : ℤ) (h_quant : Γ * u_k - Θ = 2 * Real.pi * (I_k : ℝ)) :
-    (‖vacuumEigenvalueA Γ u‖ = 1 ∧ ‖vacuumEigenvalueD Γ u‖ = 1) ∧
-    (vacuumEigenvalueA Γ u / vacuumEigenvalueD Γ u = betheVacuumRatio Γ u) ∧
-    (vacuumEigenvalueA Γ u + vacuumEigenvalueD Γ u = ((2 * Real.cos ((Γ / 2) * u) : ℝ) : ℂ)) ∧
-    (betheVacuumRatio Γ u_k = betheScatteringPhase Θ ↔
-     Complex.exp (Complex.I * (((Γ * u_k - Θ : ℝ) : ℂ))) = 1) ∧
-    (Complex.exp (Complex.I * (((Γ * u_k - Θ : ℝ) : ℂ))) = 1) :=
-  ⟨vacuum_eigenvalues_unitary Γ u,
-   bethe_vacuum_ratio_exact Γ u,
-   vacuum_transfer_eigenvalue Γ u,
-   bethe_ansatz_root_condition Γ u_k Θ,
-   bethe_logarithmic_quantization Γ u_k Θ I_k h_quant⟩

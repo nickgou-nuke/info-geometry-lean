@@ -185,7 +185,7 @@ theorem cl55_nilpotent_laplace_emergence (i : Fin 5) :
 
 /-! ## 6. Grand Master Synthesis Theorem -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Iwasawa $KAN$ Lorentz-Clifford Decomposition**
 
 Unifies:
@@ -195,27 +195,4 @@ Unifies:
 4. Composite Iwasawa element normalization $g(0,0,0) = 1$.
 5. Native $\mathrm{Cl}(5,5)$ realization without approximations.
 -/
-theorem grand_iwasawa_kan_synthesis
-    (kan : IwasawaKANClifford A)
-    (theta1 theta2 t1 t2 x1 x2 : ℝ)
-    (i : Fin 5) :
-    -- (1) Nilpotent Emergence
-    (kan.N_plus * kan.N_plus = 0 ∧
-     kan.N_minus * kan.N_minus = 0) ∧
-    -- (2) 1-Parameter Group Flow Homomorphisms
-    (kan.flow_K 0 = 1 ∧
-     kan.flow_K (theta1 + theta2) = kan.flow_K theta1 * kan.flow_K theta2 ∧
-     kan.flow_A 0 = 1 ∧
-     kan.flow_A (t1 + t2) = kan.flow_A t1 * kan.flow_A t2 ∧
-     kan.flow_N 0 = 1 ∧
-     kan.flow_N (x1 + x2) = kan.flow_N x1 * kan.flow_N x2) ∧
-    -- (3) Iwasawa Trifactor Element & Cl(5,5) Native Closure
-    (kan.iwasawa_element 0 0 0 = 1 ∧
-     (cl55IwasawaKAN i).N_plus * (cl55IwasawaKAN i).N_plus = 0) := by
-  refine ⟨⟨kan.N_plus_sq_zero, kan.N_minus_sq_zero⟩,
-          ⟨kan.flow_K_zero, kan.flow_K_add theta1 theta2,
-           kan.flow_A_zero, kan.flow_A_add t1 t2,
-           kan.flow_N_zero, kan.flow_N_add x1 x2⟩,
-          ⟨kan.iwasawa_element_zero, cl55_nilpotent_laplace_emergence i⟩⟩
-
 end InfoGeometry.OperatorAlgebra.IwasawaKAN

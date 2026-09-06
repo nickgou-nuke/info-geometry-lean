@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.PimsnerPopaIndexBound
+import Omega.OperatorAlgebra.PimsnerPopaWitnessBound
 import Mathlib.Tactic
 
 namespace Omega.OperatorAlgebra

@@ -1,0 +1,12 @@
+services:
+  memgraph:
+    image: memgraph/memgraph-platform:latest
+    ports:
+      - "7687:7687"
+      - "3000:3000"
+    environment:
+      - MEMGRAPH_ENTERPRISE_LICENSE= # Optional, leave empty for community
+    # In-memory database, so no volume needed for a temporary research session,
+    # but add one if you want persistence.
+    # volumes:
+    #   - ./mg_lib:/var/lib/memgraph

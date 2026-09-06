@@ -22,7 +22,3 @@ theorem kzb_flat_connection (grad_z grad_tau : ℝ) :
     kzbCurvatureCommutator grad_z grad_tau = 0 := by
   unfold kzbCurvatureCommutator
   ring
-
-theorem grand_kzb_conformal_blocks_synthesis (grad_z grad_tau : ℝ) :
-    kzbCurvatureCommutator grad_z grad_tau = 0 :=
-  kzb_flat_connection grad_z grad_tau

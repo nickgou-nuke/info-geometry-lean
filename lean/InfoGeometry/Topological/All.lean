@@ -3,8 +3,12 @@ import InfoGeometry.Topological.CartanBoundaryLimit
 import InfoGeometry.Topological.RealCuspLimitT
 import InfoGeometry.Topological.OrbifoldCorner
 import InfoGeometry.Topological.StabilizerAnomalies
-import InfoGeometry.Topological.ChernSimonsCochain
-import InfoGeometry.Topological.VerlindeDefectFusion
-import InfoGeometry.Topological.WilsonHooftDefects
+import InfoGeometry.Topological.FibonacciBraiding
 
+/-!
+# InfoGeometry.Topological.All
+
+Topological-facing aggregate imports for the algebraic boundary and braid
+layers, including the Fibonacci wrapper.
+-/
 

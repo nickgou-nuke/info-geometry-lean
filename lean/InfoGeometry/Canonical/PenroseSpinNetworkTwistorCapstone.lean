@@ -4,9 +4,7 @@ namespace InfoGeometry.Canonical.PenroseSpinNetworkTwistorCapstone
 
 open InfoGeometry.Canonical.PenroseSpinNetwork
 
-/--
-🏆 **CAPSTONE: Canonical Penrose Spin Network & Twistor Helicity Verification**
--/
+/-- The theorem-only public capstone for the existing Penrose/twistor bridge. -/
 theorem penrose_spin_network_canonical_capstone
     (c : TwistorLightConeCoordinates)
     (H : ChiralHelicityDatum)
@@ -15,7 +13,9 @@ theorem penrose_spin_network_canonical_capstone
     ((leftTwistor c - rightTwistor c) / 2 = c.xi) ∧
     ((leftTwistor c + rightTwistor c) / 2 = c.tau) ∧
     (H.coords.xi = 0) ∧
-    (leftTwistor H.coords = rightTwistor H.coords) :=
-  grand_penrose_spin_network_synthesis c H h_bal
+    (leftTwistor H.coords = rightTwistor H.coords) := by
+  refine ⟨spin_flip_step, rapidity_from_twistors c, time_from_twistors c,
+    helicity_balance_rapidity_collapse H h_bal, ?_⟩
+  exact (twistors_coincide_at_zero_helicity H h_bal).1
 
 end InfoGeometry.Canonical.PenroseSpinNetworkTwistorCapstone

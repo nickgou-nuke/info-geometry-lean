@@ -110,33 +110,33 @@ theorem rightRegular_eq_coordinate_conjugate (x : CZ) :
   intro y
   simp [rightRegular, rightCoordinateOperator]
 
+set_option maxHeartbeats 800000 in
 theorem rightRegular_anticommutator (a b : CZ) :
     rightRegular a * rightRegular b + rightRegular b * rightRegular a =
       rightRegular (a * b + b * a) := by
   apply LinearMap.ext
   intro y
   change (y * b) * a + (y * a) * b = y * (a * b + b * a)
-  rw [mul_add]
-  have hab := canonical_right_alternative (a + b) y
-  have ha := canonical_right_alternative a y
-  have hb := canonical_right_alternative b y
-  change (y * (a + b)) * (a + b) = y * ((a + b) * (a + b)) at hab
-  change (y * a) * a = y * (a * a) at ha
-  change (y * b) * b = y * (b * b) at hb
-  simp only [add_mul, mul_add] at hab
-  rw [ha, hb] at hab
-  have hab' :
-      y * (a * a) + ((y * b) * a + (y * a) * b) =
-        y * (a * a) + (y * (b * a) + y * (a * b)) := by
-    calc
-      y * (a * a) + ((y * b) * a + (y * a) * b) =
-          y * (a * a) + y * (b * a) + (y * (a * b) + y * (b * b)) -
-            y * (b * b) := by
-              rw [← hab]
-              abel
-      _ = y * (a * a) + (y * (b * a) + y * (a * b)) := by
-            abel
-  simpa [add_comm, add_left_comm, add_assoc] using add_left_cancel hab'
+  rcases a with ⟨a₁, a₂, a₃, a₄⟩
+  rcases b with ⟨b₁, b₂, b₃, b₄⟩
+  rcases y with ⟨y₁, y₂, y₃, y₄⟩
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross] <;> ring
+  · funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross] <;> ring
 
 theorem rightRegular_sq_zero_of_sq_zero (x : CZ) (hx : x * x = 0) :
     rightRegular x * rightRegular x = 0 := by

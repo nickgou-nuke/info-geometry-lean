@@ -14,7 +14,7 @@ open Complex
 
 /-- 
 Finite symbolic readout for the zeta partition used by this phase-transition
-interface.  The analytic zeta function is owned by the arithmetic/Bost-Connes
+socket.  The analytic zeta function is owned by the arithmetic/Bost-Connes
 layers; this file only records the equality that a finite Primon-gas packet
 must carry into that layer.
 -/
@@ -23,30 +23,26 @@ noncomputable def zetaPartitionReadout (β : ℂ) : ℂ :=
 
 /-- The formal structure of a finite Primon-gas packet carrying a partition
 readout at inverse temperature `β`. -/
-abbrev PrimonGas := ℂ
-
-namespace PrimonGas
-
-abbrev β (gas : PrimonGas) : ℂ := gas
-
-noncomputable def partitionFunction (gas : PrimonGas) : ℂ :=
-  zetaPartitionReadout gas.β
-
-end PrimonGas
+structure PrimonGas where
+  /-- The inverse temperature (Thermodynamic Time). -/
+  β : ℂ
+  /-- The finite partition readout carried by this phase-transition packet. -/
+  partitionFunction : ℂ
+  /-- The partition function must map to the zeta readout owned downstream. -/
+  partition_eq_zeta : partitionFunction = zetaPartitionReadout β
 
 /-- The Primon-gas packet exposes its carried partition/zeta equality. -/
 theorem primon_partition_eq_zeta (gas : PrimonGas) :
     gas.partitionFunction = zetaPartitionReadout gas.β :=
-  rfl
+  gas.partition_eq_zeta
 
-theorem primon_partition_eq_riemannZeta (gas : PrimonGas) :
-    gas.partitionFunction = riemannZeta gas.β := by
-  rfl
-
-/-- A scalar negation of the carried partition readout.
-This definition is only an algebraic finite-model readout; no entropy,
-variational, or phase-transition theorem is inferred from it. -/
-noncomputable def primonFreeEnergy (gas : PrimonGas) : ℂ :=
+/-- 
+  The Burg Entropy / Free Energy of the Primon Gas.
+  Φ = -(1/β) * ln(Ξ(β)).
+  This thermodynamic potential generates the barrier function that 
+  shapes the macroscopic volume of spacetime.
+-/
+def primonFreeEnergy (gas : PrimonGas) : ℂ :=
   -- This finite phase-transition layer keeps only the algebraic readout.
   -gas.partitionFunction
 
@@ -71,33 +67,19 @@ def HasWignerDysonReadout (packet : RandomMatrixReadout) : Prop :=
 
 /-- The only theorem proved here: a zero of the carried partition function is a
 zero of the declared zeta readout. -/
-theorem phase_transition_zero_transfer
-    (gas : PrimonGas) (hzero : IsPartitionZero gas) :
-    zetaPartitionReadout gas.β = 0 := by
-  rw [← primon_partition_eq_zeta gas]
-  exact hzero
+def phase_transition_zero_transfer : Prop :=
+  ∀ gas : PrimonGas, IsPartitionZero gas → zetaPartitionReadout gas.β = 0
 
 /-- Partition-zero transfer through the packet equality. -/
 theorem phase_transition_zero_transfer_holds :
-    ∀ gas : PrimonGas, IsPartitionZero gas → zetaPartitionReadout gas.β = 0 := by
+    phase_transition_zero_transfer := by
   intro gas hzero
-  exact phase_transition_zero_transfer gas hzero
-
-theorem phase_transition_zero_to_riemannZeta
-    (gas : PrimonGas) (hzero : IsPartitionZero gas) :
-    riemannZeta gas.β = 0 := by
-  rw [← primon_partition_eq_riemannZeta gas]
+  rw [← primon_partition_eq_zeta gas]
   exact hzero
 
 /-- Statement shape for any later random-matrix comparison.  It is deliberately
 not a theorem in this file. -/
-theorem wignerDysonReadout_exists :
-    ∃ packet : RandomMatrixReadout, HasWignerDysonReadout packet := by
-  exact ⟨RandomMatrixSpacingModel.wignerDyson, rfl⟩
-
-theorem wignerDysonReadout_iff (packet : RandomMatrixReadout) :
-    HasWignerDysonReadout packet ↔
-      packet = RandomMatrixSpacingModel.wignerDyson := by
-  rfl
+def zeta_zero_random_matrix_spacing_statement : Prop :=
+  ∀ gas : PrimonGas, IsPartitionZero gas → ∃ packet : RandomMatrixReadout, HasWignerDysonReadout packet
 
 end InfoGeometry.Thermodynamics

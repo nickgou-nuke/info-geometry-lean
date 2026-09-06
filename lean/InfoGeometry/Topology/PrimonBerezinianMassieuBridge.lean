@@ -97,7 +97,10 @@ theorem primon_boson_fermion_berezinian_cancellation (zeta_val : ℂ) (hzeta : z
 /-- Reciprocal determinant blocks have Berezinian `a²`, not `1`. -/
 theorem primon_reciprocal_blocks_berezinian (a : ℝ) (ha : a ≠ 0) :
     InfoGeometry.Canonical.Berezinian.ber a a⁻¹ (inv_ne_zero ha) = a ^ 2 :=
-  InfoGeometry.Canonical.Berezinian.ber_reciprocal_blocks a ha
+  by
+    unfold InfoGeometry.Canonical.Berezinian.ber
+    rw [div_inv_eq_mul]
+    ring
 
 /-! ### 5. Master Primon Berezinian Massieu Synthesis Packet -/
 

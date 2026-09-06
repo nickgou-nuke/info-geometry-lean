@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ChiralCausalConeFlow
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 /-!
 # Time as logarithmic monodromy in 3D chiral cone geometry
@@ -117,6 +118,19 @@ theorem lightcone_entropy_readout_support :
     lightconeEntropyReadoutSupport := by
   intro X
   exact boundary_eq_det_zero_iff X
+
+/-- `\log\det` / volume-compression carrier. -/
+noncomputable def lightconeBarrierCarrier :
+    InfoGeometry.Canonical.SouriauOperatorialLogPotential.RegularizedJacobianPotential Chiral3 :=
+  (fun _ => (1 : ℝ), fun X => Real.log (lightconePotential X))
+
+theorem lightconeBarrierCarrier_entropyReadoutRequiresStateClaim :
+    lightconeEntropyReadoutSupport :=
+  lightcone_entropy_readout_support
+
+@[simp] theorem lightcone_barrier_equals_neg_logdet (X : Chiral3) :
+    lightconeBarrierCarrier.volumeCompressionPotential X = -Real.log (lightconePotential X) := by
+  rfl
 
 /-- `Q(\mathrm{rindler\_boost}(X,\eta)) = Q(X)`. -/
 theorem rindler_isometry [ModularTimeFlow ℝ] (X : Chiral3) (η : ℝ) :

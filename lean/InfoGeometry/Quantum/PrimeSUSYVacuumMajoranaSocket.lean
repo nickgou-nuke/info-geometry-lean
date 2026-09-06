@@ -140,24 +140,4 @@ theorem subsystem_witten_index_zero_of_nonempty (S : Finset ℕ) (p : ℕ) (hp_i
   rw [Finset.prod_eq_zero hp_in]
   exact prime_thermal_witten_factor_zero p hp_prime
 
-/-! ## 4. Master Packet Synthesis -/
-
-/-- 🏆 GRAND CAPSTONE: Complete Prime SUSY Vacuum & Majorana-Polya-Hilbert Socket -/
-theorem grand_prime_susy_vacuum_majorana_synthesis
-    (omega : ℝ) (S : Finset ℕ) (p : ℕ) (hp_in : p ∈ S) (hp_prime : 2 ≤ p) :
-    (cAnnihilate * cAnnihilate = 0) ∧
-    (cCreate * cCreate = 0) ∧
-    (cAnnihilate * cCreate + cCreate * cAnnihilate = 1) ∧
-    (parityOp * cAnnihilate + cAnnihilate * parityOp = 0) ∧
-    (majoranaGamma1 * majoranaGamma1 = 1) ∧
-    ((omega • majoranaGamma1) * (omega • majoranaGamma1) = (omega ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ∧
-    (subsystemThermalWittenIndex S 0 = 0) :=
-  ⟨c_annihilate_nilpotent,
-   c_create_nilpotent,
-   car_anticommutation,
-   parity_anticomm_annihilate,
-   majorana1_sq,
-   susy_dirac_sq omega,
-   subsystem_witten_index_zero_of_nonempty S p hp_in hp_prime⟩
-
 end PrimeSUSYVacuum

@@ -24,11 +24,6 @@ Zero global axioms. All proofs chain existing repository theorems.
 
 namespace InfoGeometry.Canonical.ZeroTemperatureCrystallization
 
-local instance moduleMulAction
-    {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M] :
-    MulAction R M :=
-  (Module.toDistribMulAction (R := R) (M := M)).toMulAction
-
 /-! ### 1. Hodge duality: S_R = J·S_L·J -/
 
 /--
@@ -123,11 +118,9 @@ theorem zero_temperature_chiral_cancellation
     (h_anticomm : D * tilt + tilt * D = 0)
     (h_comm : D * proj = proj * D)
     (h_Dinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1) :
-    CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, h_proj_idem⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0 :=
-  by
-    rcases h_Dinv with ⟨D_inv, h_Dleft, h_Dright⟩
-    exact CyclicCocycleCantor.chiral_anomaly_vanishes_at_flat_boundary
-      tilt D D_inv ⟨proj, h_proj_idem⟩ h_anticomm h_comm h_Dleft h_Dright
+    index_pairing tilt (⟨proj, h_proj_idem⟩ : KTheoryProjection 2) = 0 :=
+  chiral_anomaly_vanishes_at_flat_boundary
+    tilt D h_anticomm ⟨proj, h_proj_idem⟩ h_comm h_Dinv
 
 /-! ### 4. KMS symmetric distribution (1/2, 1/2) -/
 

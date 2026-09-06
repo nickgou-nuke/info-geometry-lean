@@ -46,14 +46,3 @@ theorem riemann_critical_line_loxodromic (σ θ : ℝ)
     σ = 1 / 2 := by
   have h_zero : σ - 1 / 2 = 0 := (unitary_loxodromic_confinement (σ - 1/2) θ).mp h_unitary
   linarith
-
-theorem grand_loxodromic_gauge_synthesis (ξ θ σ : ℝ) 
-    (h_unitary : ‖loxodromicMap (σ - 1/2) θ‖ = 1) :
-    (loxodromicMap ξ θ = ((Real.exp ξ : ℝ) : ℂ) * Complex.exp (↑θ * Complex.I)) ∧
-    (‖loxodromicMap ξ θ‖ = Real.exp ξ) ∧
-    (‖loxodromicMap ξ θ‖ = 1 ↔ ξ = 0) ∧
-    (σ = 1 / 2) :=
-  ⟨loxodromic_factorization ξ θ,
-   loxodromic_scale_factor ξ θ,
-   unitary_loxodromic_confinement ξ θ,
-   riemann_critical_line_loxodromic σ θ h_unitary⟩

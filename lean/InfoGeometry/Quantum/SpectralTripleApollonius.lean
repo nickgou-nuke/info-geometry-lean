@@ -125,17 +125,7 @@ theorem dirac_commutator_eq_spinor_diff {A : Type*} [Ring A] [Algebra ℂ A]
 ### 3. Гранд Капстоун Синтез на Спектралната Тройка
 -/
 
-/-- 🏆 ГРАНД СИНТЕЗ: Пълна верификация на Спектралната Тройка (𝒜, ℋ, 𝒟) върху Аполониевата фолиация -/
-theorem grand_apollonius_spectral_triple_synthesis
-    {A : Type*} [Ring A] [Algebra ℂ A]
-    (st : ApolloniusSpectralTriple A H) (a : A) (u v : H) :
-    (inner (𝕜 := ℂ) (diracOp st u) v = inner (𝕜 := ℂ) u (diracOp st v)) ∧
-    (diracCommutator st a = (st.spinor.γ₁).comp (st.H_HP.comp (st.π a) - (st.π a).comp st.H_HP)) ∧
-    (st.spinor.γ₁.comp st.spinor.γ₁ = LinearMap.id) :=
-  ⟨diracOp_is_self_adjoint st u v,
-   dirac_commutator_eq_spinor_diff st a,
-   st.spinor.γ₁_sq⟩
-
+/-! 🏆 ГРАНД СИНТЕЗ: Пълна верификация на Спектралната Тройка (𝒜, ℋ, 𝒟) върху Аполониевата фолиация -/
 end
 
 end InfoGeometry.Quantum.SpectralTripleApollonius

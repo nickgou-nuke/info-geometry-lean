@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 /-!
 # InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
 
-Stage-4 bridge from the Fibonacci self-dual carrier interface to the existing
+Stage-4 bridge from the Fibonacci self-dual carrier socket to the existing
 Majorana bulk-boundary zero-mode owner.
 
 This file does not construct an O(5,5) representation or identify every
@@ -12,7 +12,7 @@ Fibonacci braid observable with a boundary Majorana operator.  It records the
 safe combined readout currently supported by the repo:
 
 * the Fibonacci carrier has a Hilbert self-dual cone;
-* the installed boundary owner gives an actual nonzero kernel property for the
+* the installed boundary owner gives an actual nonzero kernel witness for the
   open-chain operator.
 -/
 
@@ -43,7 +43,7 @@ a Fibonacci carrier supplies the self-dual cone, and the Majorana
 bulk-boundary owner supplies a genuine surface zero mode.
 -/
 theorem carrier_selfDualCone_and_boundary_zeroMode
-    (C : ActionModel (E := E) A)
+    (C : Carrier (E := E) A)
     {M : RealMajoranaDatum (S := S)}
     {P0 : KPolarization (S := S) M}
     {localOp : KitaevCell → EndS}

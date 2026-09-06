@@ -43,11 +43,12 @@ theorem v55Flatten_globalSheetPin_matrix (x : V55) :
 
 theorem v55Flatten_globalSheetPin_matrix_isO55 :
     IsO55Real
-      (intMatrixToReal
+  (intMatrixToReal
         (pinReflect 5 * pinReflect 6 * pinReflect 7 * pinReflect 8 * pinReflect 9)) := by
   apply intMatrixToReal_isO55
-  simpa [pinReflectionWord, mul_assoc] using
-    (pinReflectionWord_all_o55
-      ([5, 6, 7, 8, 9] : List (Fin 10)))
+  have h₅₆ := IsO55_mul (pinReflect_all_o55 5) (pinReflect_all_o55 6)
+  have h₅₆₇ := IsO55_mul h₅₆ (pinReflect_all_o55 7)
+  have h₅₆₇₈ := IsO55_mul h₅₆₇ (pinReflect_all_o55 8)
+  exact IsO55_mul h₅₆₇₈ (pinReflect_all_o55 9)
 
 end InfoGeometry.Clifford.Clifford55

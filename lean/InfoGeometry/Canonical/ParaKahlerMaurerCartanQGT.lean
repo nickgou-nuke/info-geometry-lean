@@ -3,7 +3,6 @@ import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 noncomputable section
 
@@ -13,7 +12,6 @@ open scoped BigOperators
 open InfoGeometry.Canonical.BerryPhase
 open InfoGeometry.Canonical.MaurerCartanFactorization
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-open InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 /-!
 # Para-Kähler Quantum Geometric Tensor (QGT) and Maurer-Cartan Berry Framework
@@ -289,40 +287,5 @@ theorem maurer_cartan_bcfw_factorization
   have h := arnold_cohen_three_term_relation alg dz data i j k
   rw [add_assoc] at h
   exact eq_neg_of_add_eq_zero_left h
-
-/-! ## 4. The Grand Para-Kähler Maurer-Cartan QGT Synthesis -/
-
-/-- 
-🏆 **GRAND THEOREM: Para-Kähler Maurer-Cartan QGT Master Resolution**
-
-Unifies:
-1. Para-Kähler Berry Curvature Skew-Symmetry: $\Omega(v, u) = - \Omega(u, v)$.
-2. Para-QGT Metric-Berry Decomposition: $\mathcal{Q} = g + e \Omega$.
-3. Null Boundary Isotropicity: $g(u, u) = 0$ on chiral eigenspaces $K u = u$.
-4. Maurer-Cartan Resolution of Arnold-Cohen Relations: $\sum_{\text{cyc}} \omega_{ij} \wedge \omega_{jk} = 0$.
-5. BCFW Pole Channel Factorization: $\omega_{12}\wedge\omega_{23} = -(\omega_{23}\wedge\omega_{31} + \omega_{31}\wedge\omega_{12})$.
--/
-theorem grand_para_kahler_maurer_cartan_qgt_synthesis
-    (D : ParaKahlerDatum R V) (u v : V)
-    {M : Type*} [AddCommGroup M] [Module R M]
-    (alg : ExteriorFormAlgebra (R := R) M)
-    (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) :
-    -- (1) Skew-symmetry of Para-Berry 2-form
-    (D.paraBerryTwoForm v u = - D.paraBerryTwoForm u v) ∧
-    -- (2) Para-QGT Conjugation Duality
-    ((paraQGT D v u).re = (paraQGT D u v).re ∧ (paraQGT D v u).ep = - (paraQGT D u v).ep) ∧
-    -- (3) Maurer-Cartan Arnold-Cohen 3-Term Relation
-    (alg.wedge (data.form dz 0 1) (data.form dz 1 2) +
-     alg.wedge (data.form dz 1 2) (data.form dz 2 0) +
-     alg.wedge (data.form dz 2 0) (data.form dz 0 1) = 0) ∧
-    -- (4) Maurer-Cartan BCFW Factorization
-    (alg.wedge (data.form dz 0 1) (data.form dz 1 2) =
-      - (alg.wedge (data.form dz 1 2) (data.form dz 2 0) +
-         alg.wedge (data.form dz 2 0) (data.form dz 0 1))) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact D.paraBerryTwoForm_skew u v
-  · exact paraQGT_conjugation D u v
-  · exact maurer_cartan_arnold_resolution alg dz data 0 1 2
-  · exact maurer_cartan_bcfw_factorization alg dz data 0 1 2
 
 end InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT

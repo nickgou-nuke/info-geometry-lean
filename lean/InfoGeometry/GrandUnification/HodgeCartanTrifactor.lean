@@ -2,14 +2,14 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.TrifactorDecomposition
 
 /-!
-# Hodge Decomposition and Cartan Involution on the Trifactor Geometry
+# Hodge-style Trifactor Sectors and Cartan Involution
 
-This module formally implements the strict, functorial isomorphism between classical
-differential geometry (Hodge decomposition, Cartan Involution) and the non-commutative
-O^3 = O Trifactor grading that constrains the Riemann Zeta boundary thermodynamics.
+This module records the finite algebraic correspondence between Hodge-style labels
+and the non-commutative `T ^ 3 = T` trifactor grading.  It does not construct a
+differential complex or identify these sectors with analytic differential forms.
 
-1. **Hodge Decomposition**: Any state is uniquely decomposed into an Exact (d, P_+),
-   Co-exact (δ, P_-), and Harmonic (H, P_0) part.
+1. **Finite partition**: The unit is decomposed into Exact (`P_+`),
+   Co-exact (`P_-`), and Harmonic (`P_0`) scalar components.
 2. **Cartan Involution**: The involution θ = 1 - 2T² which splits the space into
    the Symmetric core (𝔨, Harmonic, +1 eigenspace) and Antisymmetric driver
    (𝔭, Active Bulk, -1 eigenspace).
@@ -44,9 +44,8 @@ theorem cartan_involution_square (hT : T ^ 3 = T) :
     _ = 1 - 4 * T^2 + 4 * T^2 := by ring
     _ = 1 := by ring
 
-/-- **Theorem: Symmetric Sector (𝔨)**
-The Harmonic sector (P_0) is in the +1 eigenspace of the Cartan Involution.
-This confirms the completed Xi function is strictly Symmetric. -/
+/-- The harmonic trifactor component is in the `+1` eigenspace of the
+    algebraic Cartan involution. -/
 theorem cartan_symmetric_harmonic (hT : T ^ 3 = T) :
     cartan_involution T * harmonic_op T = harmonic_op T := by
   unfold cartan_involution harmonic_op P_zero InfoGeometry.Canonical.TriFacetGeometry.P_par
@@ -63,21 +62,19 @@ section WithHalf
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable (T : R)
 
-/-- The Exact (Holomorphic) operator, corresponding to d (P_plus) -/
+/-- The finite exact-sector component, represented by `P_plus`. -/
 def exact_op : R := P_plus T
 
-/-- The Co-exact (Anti-holomorphic) operator, corresponding to δ (P_minus) -/
+/-- The finite coexact-sector component, represented by `P_minus`. -/
 def coexact_op : R := P_minus T
 
-/-- **Theorem: The Non-Commutative Hodge Decomposition**
-Every state decomposes into Exact, Co-exact, and Harmonic components.
-This is the operator algebra equivalent of Ω^k = d(Ω^{k-1}) ⊕ δ(Ω^{k+1}) ⊕ ℋ^k -/
+/-- The finite trifactor partition of the unit into three scalar components. -/
 theorem hodge_decomposition : harmonic_op T + exact_op T + coexact_op T = 1 := by
   unfold harmonic_op exact_op coexact_op
   exact partition_of_unity T
 
-/-- **Theorem: Antisymmetric Sector (𝔭)**
-The Exact sector (P_+) is in the -1 eigenspace of the Cartan Involution. -/
+/-- The exact trifactor component is in the `-1` eigenspace of the algebraic
+    Cartan involution. -/
 theorem cartan_antisymmetric_exact (hT : T ^ 3 = T) :
     cartan_involution T * exact_op T = - exact_op T := by
   unfold cartan_involution exact_op P_plus InfoGeometry.Canonical.TriFacetGeometry.P_hyp
@@ -88,8 +85,8 @@ theorem cartan_antisymmetric_exact (hT : T ^ 3 = T) :
     _ = ⅟(2 : R) * (- T^2 - T) := by ring
     _ = - (⅟(2 : R) * (T^2 + T)) := by ring
 
-/-- **Theorem: Antisymmetric Sector (𝔭)**
-The Co-exact sector (P_-) is in the -1 eigenspace of the Cartan Involution. -/
+/-- The coexact trifactor component is in the `-1` eigenspace of the algebraic
+    Cartan involution. -/
 theorem cartan_antisymmetric_coexact (hT : T ^ 3 = T) :
     cartan_involution T * coexact_op T = - coexact_op T := by
   unfold cartan_involution coexact_op P_minus InfoGeometry.Canonical.TriFacetGeometry.P_ell

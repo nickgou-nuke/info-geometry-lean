@@ -60,11 +60,5 @@ theorem galois_hecke_shift (s : R) (q : A) (g : A →+* A)
   rw [h1, h3, map_sub, h2]
   abel
 
-theorem grand_braid_galois_synthesis (s : R) (q q_inv : A) (g : A →+* A) 
-    (hq : q_inv * q = 1) (h_hecke : HeckeRelation s q) :
-    (s * (algebraMap A R q_inv * s - algebraMap A R (q_inv * (q - 1))) = 1) ∧ 
-    (s * s = algebraMap A R (g q - 1) * s + algebraMap A R (g q) - algebraMap A R (g q - q) * (s + 1)) :=
-  ⟨braid_inverse s q q_inv hq h_hecke, 
-   galois_hecke_shift s q g h_hecke⟩
 
 end InfoGeometry.Quantum.ArtinBraidBostConnes

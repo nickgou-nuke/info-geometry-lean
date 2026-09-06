@@ -16,6 +16,9 @@ This module formalizes:
 
 variable {R : Type*} [CommRing R]
 
+/-- Theta function of E₈ lattice in terms of Eisenstein series E₄. -/
+def thetaE8 (E4 : R) : R := E4
+
 /-- Theta function of Leech lattice Λ₂₄ in terms of E₄ and Ramanujan Δ. -/
 def thetaLeech24 (E4 Delta : R) : R := E4 ^ 3 - (720 : R) * Delta
 

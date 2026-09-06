@@ -29,7 +29,7 @@ The Petz Rényi operator kernel
 `ρ ^ α * σ ^ (1 - α)`.
 
 The order of multiplication is part of the definition and is not erased by a
-commutativity or diagonalizability property.
+commutativity or diagonalizability assumption.
 -/
 noncomputable def petzKernel (α : ℝ) (ρ σ : A) : A :=
   ρ ^ α * σ ^ (1 - α)
@@ -39,7 +39,7 @@ The exponent used to conjugate `ρ` in the sandwiched Rényi kernel.
 
 The order `α = 0` is excluded by the mathematical application, but the
 operator expression is kept total at the definition level.  The appropriate
-nonzero/order property belongs on the theorem that consumes it.
+nonzero/order hypothesis belongs on the theorem that consumes it.
 -/
 noncomputable def sandwichExponent (α : ℝ) : ℝ :=
   (1 - α) / (2 * α)
@@ -118,15 +118,6 @@ theorem stateSurprisal_apply (ρ : A) :
     stateSurprisal ρ = -cfc Real.log ρ :=
   rfl
 
-/-- Exponentiating the negative state surprisal recovers a strictly positive
-state operator.  This is the precise CFC bridge behind `ρ = exp (-Kρ)`.-/
-theorem exp_neg_stateSurprisal
-    (ρ : A) (hρ : IsStrictlyPositive ρ) :
-    NormedSpace.exp (-stateSurprisal ρ) = ρ := by
-  unfold stateSurprisal
-  rw [neg_neg]
-  exact CFC.exp_log ρ hρ
-
 @[simp]
 theorem relativeLogDensity_apply (ρ σ : A) :
     relativeLogDensity ρ σ = cfc Real.log ρ - cfc Real.log σ :=
@@ -166,13 +157,6 @@ theorem petzMoment_apply
     petzMoment τ α ρ σ = τ (ρ ^ α * σ ^ (1 - α)) :=
   rfl
 
-/-- The Petz kernel at order one reduces to its first state argument. -/
-theorem petzKernel_one (ρ σ : A) (hρ : 0 ≤ ρ) (hσ : 0 ≤ σ) :
-    petzKernel 1 ρ σ = ρ := by
-  unfold petzKernel
-  norm_num
-  rw [CFC.rpow_one ρ hρ, CFC.rpow_zero σ hσ, mul_one]
-
 @[simp]
 theorem sandwichedMoment_apply
     (τ : A →ₚ[ℂ] ℂ) (α : ℝ) (ρ σ : A) :
@@ -185,7 +169,7 @@ theorem sandwichedMoment_apply
 The sandwiched core is positive whenever the state operator `ρ` is positive.
 
 This is the native star-ordered-ring conjugation theorem; no commutation or
-diagonalization property is used.
+diagonalization hypothesis is used.
 -/
 theorem sandwichedCore_nonneg
     (α : ℝ) {ρ σ : A} (hρ : 0 ≤ ρ) :

@@ -83,7 +83,7 @@ theorem leibniz_H_H_eq_zero
 /--
 Second-law style decomposition:
 `[S,H]_L = {S,H} + ((S,H))`, where the Poisson part can be eliminated
-when `S` is a right-Casimir property.
+when `S` is a right-Casimir witness.
 -/
 theorem leibniz_entropy_H_decompose :
     M.leibniz M.Entropy M.Hamiltonian
@@ -96,73 +96,6 @@ theorem leibniz_entropy_H_eq_metric
     M.leibniz M.Entropy M.Hamiltonian = M.metric M.Entropy M.Hamiltonian := by
   unfold leibniz
   rw [h_casimir_right, zero_add]
-
-/-- Right-Casimir specialization pointwise in the second argument. -/
-theorem leibniz_entropy_eq_metric_right
-    (h_casimir_right : ∀ x, M.poisson M.Entropy x = 0) :
-    ∀ x, M.leibniz M.Entropy x = M.metric M.Entropy x := by
-  intro x
-  unfold leibniz
-  rw [h_casimir_right x, zero_add]
-
-/-! ### Separation of Hamiltonian and entropy roles -/
-
-/--
-Identifying the entropy with the Hamiltonian collapses both metriplectic
-channels on that distinguished element.  This is an audit theorem, not a
-construction: a nontrivial response therefore rules out `Entropy = Hamiltonian`.
--/
-theorem entropy_eq_hamiltonian_collapses_channels
-    (hSH : M.Entropy = M.Hamiltonian) :
-    (∀ x, M.poisson x M.Hamiltonian = 0) ∧
-    (∀ x, M.metric x M.Hamiltonian = 0) := by
-  constructor
-  · intro x
-    rw [← hSH]
-    exact M.poisson_entropy_zero x
-  · intro x
-    exact M.hamiltonian_conserved x
-
-/-- A nonzero Poisson response excludes identifying entropy and Hamiltonian. -/
-theorem entropy_ne_hamiltonian_of_poisson_response
-    (x : A) (h_response : M.poisson x M.Hamiltonian ≠ 0) :
-    M.Entropy ≠ M.Hamiltonian := by
-  intro hSH
-  exact h_response ((M.entropy_eq_hamiltonian_collapses_channels hSH).1 x)
-
-/-- A nonzero metric response excludes identifying entropy and Hamiltonian. -/
-theorem entropy_ne_hamiltonian_of_metric_response
-    (x : A) (h_response : M.metric x M.Hamiltonian ≠ 0) :
-    M.Entropy ≠ M.Hamiltonian := by
-  intro hSH
-  exact h_response ((M.entropy_eq_hamiltonian_collapses_channels hSH).2 x)
-
-/-- Packaged finite metriplectic core summary: bracket antisymmetry,
-kernel identities, and the two first/second-law style readbacks. -/
-theorem metriplectic_summary
-    (h_poisson_diag : M.poisson M.Hamiltonian M.Hamiltonian = 0) :
-    (∀ x, M.metric x M.Hamiltonian = 0) ∧
-    (∀ x, M.metric M.Hamiltonian x = 0) ∧
-    (∀ x, M.poisson x M.Entropy = 0) ∧
-    (∀ x, M.poisson M.Entropy x = 0) ∧
-    M.leibniz M.Hamiltonian M.Hamiltonian = 0 ∧
-    (∀ x, M.leibniz M.Entropy x = M.metric M.Entropy x) := by
-  constructor
-  · intro x
-    exact M.metric_H_zero x
-  · constructor
-    · intro x
-      exact M.metric_H_zero_right x
-    · constructor
-      · intro x
-        exact M.poisson_entropy_zero x
-      · constructor
-        · intro x
-          exact M.poisson_entropy_zero_right x
-        · constructor
-          · exact M.leibniz_H_H_eq_zero h_poisson_diag
-          · intro x
-            exact M.leibniz_entropy_eq_metric_right M.poisson_entropy_zero_right x
 
 end MetriplecticSystem
 

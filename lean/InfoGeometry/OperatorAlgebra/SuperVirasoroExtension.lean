@@ -59,6 +59,9 @@ variable (V : VirasoroAlgebraDatum L)
 /-- The central charge is central. -/
 alias central_commutes := VirasoroAlgebraDatum.central_commutes_hyp
 
+/-- Read back the supplied Virasoro bracket formula. -/
+alias bracket_genL := VirasoroAlgebraDatum.virasoro_bracket
+
 end VirasoroAlgebraDatum
 
 /-! ## 2. Global conformal anomaly coefficient -/
@@ -93,7 +96,7 @@ Super-Virasoro extension.
 
 The chiral supercharges are represented by `genG`.
 
-The anticommutation law is kept as a proof-carrying property because the
+The anticommutation law is kept as a proof-carrying certificate because the
 index set differs between the Ramond and Neveu-Schwarz sectors.
 -/
 structure SuperVirasoroAlgebraDatum
@@ -122,6 +125,9 @@ namespace SuperVirasoroAlgebraDatum
 variable
     {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (S : SuperVirasoroAlgebraDatum L)
+
+/-- Read back the supplied odd/odd supercharge bracket formula. -/
+alias bracket_genG := SuperVirasoroAlgebraDatum.super_bracket
 
 end SuperVirasoroAlgebraDatum
 
@@ -165,6 +171,10 @@ variable
 
 variable
     (B : VirasoroCentralChargeBridge L State Defect)
+
+/-- The macroscopic defect equals the central charge readout. -/
+alias defect_eq_central_charge_readout :=
+  VirasoroCentralChargeBridge.defect_is_central_charge
 
 end VirasoroCentralChargeBridge
 
@@ -214,6 +224,4 @@ theorem virasoroProject_cocycle_class_nonzero
     (VirasoroProject.WittAlgebra.virasoroCocycle 𝕜).cohomologyClass ≠ 0 := by
   exact VirasoroProject.WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero 𝕜
 
-end SuperVirasoroExtension
-
-end InfoGeometry.OperatorAlgebra
+end InfoGeometry.OperatorAlgebra.SuperVirasoroExtension

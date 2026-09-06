@@ -4,7 +4,7 @@ import InfoGeometry.Spectral.Cohomology.MayerVietoris
 /-!
 # Locality on the critical strip
 
-The continuum property in this module is a compatible filtered inductive
+The continuum witness in this module is a compatible filtered inductive
 Hestenes-Krein family.  No analytic continuation or epsilon-limit principle
 is postulated.  De Rham locality is supplied by explicit local complexes and
 additive cohomology equivalences.
@@ -66,14 +66,14 @@ theorem hkLocalToGlobal
   P.localWitness s
 
 /-- The filtered-inductive family remains explicitly available from every
-locality property. -/
+locality witness. -/
 def filtered_owner
     {f : ℂ → ℂ} [HestenesKreinSpace ℂ]
     (P : HKLocalityPrinciple f) :
     FilteredInductiveHKAnalytic f :=
   P.filtered
 
-end Locality
+end InfoGeometry.Spectral.Cohomology.Locality
 
 namespace InfoGeometry.Spectral.Cohomology
 
@@ -82,7 +82,7 @@ open InfoGeometry.Spectral.Cohomology.deRham
 
 universe u
 
-/-- Public extraction of the HK locality property. -/
+/-- Public extraction of the HK locality witness. -/
 theorem HKLocalityPrinciple
     {f : ℂ → ℂ} [HestenesKreinSpace ℂ]
     (P : Locality.HKLocalityPrinciple f)
@@ -92,7 +92,7 @@ theorem HKLocalityPrinciple
         (inferInstance : HestenesKreinSpace ℂ) f U :=
   P.localWitness s
 
-/-- Public extraction of the de Rham locality property. -/
+/-- Public extraction of the de Rham locality witness. -/
 theorem deRhamLocalityPrinciple
     {V : Type u} [AddCommGroup V] [Module ℝ V]
     [SmoothManifold ℂ] [DifferentialForms ℂ V]

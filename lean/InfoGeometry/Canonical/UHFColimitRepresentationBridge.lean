@@ -13,7 +13,7 @@ This module maps the infinite-dimensional direct colimit algebra from
 Cantor boundary representation.
 
 We define the concrete Cuntz operators as linear maps on the boundary function space,
-instantiate the `SupergradedClosureAt` structure on `Module.End ℂ ((ℕ → Bool) → ℂ)`,
+instantiate the `SupergradedClosureAt` structure on `Module.End ℂ (CantorBoundary → ℂ)`,
 and prove that the finite diagonal algebra stages embed compatibly into this operator algebra.
 -/
 
@@ -28,7 +28,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 
 /-- Left Cuntz operator as a linear map. -/
-def S_L_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) where
+def S_L_linear : (CantorBoundary → ℂ) →ₗ[ℂ] (CantorBoundary → ℂ) where
   toFun := S_L_op
   map_add' f g := by
     funext x
@@ -44,7 +44,7 @@ def S_L_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) w
     · simp [h]
 
 /-- Right Cuntz operator as a linear map. -/
-def S_R_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) where
+def S_R_linear : (CantorBoundary → ℂ) →ₗ[ℂ] (CantorBoundary → ℂ) where
   toFun := S_R_op
   map_add' f g := by
     funext x
@@ -60,7 +60,7 @@ def S_R_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) w
     · simp [h]
 
 /-- Pullback of left Cuntz operator as a linear map. -/
-def star_S_L_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) where
+def star_S_L_linear : (CantorBoundary → ℂ) →ₗ[ℂ] (CantorBoundary → ℂ) where
   toFun := star_S_L_op
   map_add' f g := by
     funext x
@@ -70,7 +70,7 @@ def star_S_L_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → �
     rfl
 
 /-- Pullback of right Cuntz operator as a linear map. -/
-def star_S_R_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → ℂ) where
+def star_S_R_linear : (CantorBoundary → ℂ) →ₗ[ℂ] (CantorBoundary → ℂ) where
   toFun := star_S_R_op
   map_add' f g := by
     funext x
@@ -79,7 +79,7 @@ def star_S_R_linear : ((ℕ → Bool) → ℂ) →ₗ[ℂ] ((ℕ → Bool) → �
     funext x
     rfl
 
-theorem star_UHF_boundary_op_sq_zero (f : (ℕ → Bool) → ℂ) :
+theorem star_UHF_boundary_op_sq_zero (f : CantorBoundary → ℂ) :
     star_UHF_boundary_op (star_UHF_boundary_op f) = 0 := by
   funext x
   dsimp [star_UHF_boundary_op, S_R_op, star_S_L_op]
@@ -116,19 +116,19 @@ theorem S_R_star_S_L_mul_S_L_star_S_R :
   rw [star_S_L_op_S_L_op]
 
 /-- Odd operators on the Cantor boundary function space. -/
-def op_is_odd (T : Module.End ℂ ((ℕ → Bool) → ℂ)) : Prop :=
+def op_is_odd (T : Module.End ℂ (CantorBoundary → ℂ)) : Prop :=
   (∃ c : ℂ, T = c • (S_L_linear * star_S_R_linear)) ∨
   (∃ c : ℂ, T = c • (S_R_linear * star_S_L_linear))
 
 /-- Even operators on the Cantor boundary function space. -/
-def op_is_even (T : Module.End ℂ ((ℕ → Bool) → ℂ)) : Prop :=
-  ∃ g : (ℕ → Bool) → ℂ, g ∈ CylinderColimit ∧ T = Algebra.lmul ℂ ((ℕ → Bool) → ℂ) g
+def op_is_even (T : Module.End ℂ (CantorBoundary → ℂ)) : Prop :=
+  ∃ g : CantorBoundary → ℂ, g ∈ CylinderColimit ∧ T = Algebra.lmul ℂ (CantorBoundary → ℂ) g
 
 /-- Central operators on the Cantor boundary function space. -/
-def op_is_central (T : Module.End ℂ ((ℕ → Bool) → ℂ)) : Prop :=
+def op_is_central (T : Module.End ℂ (CantorBoundary → ℂ)) : Prop :=
   ∃ a : ℂ, T = a • 1
 
-theorem op_odd_nilpotency (T : Module.End ℂ ((ℕ → Bool) → ℂ)) (h : op_is_odd T) : T * T = 0 := by
+theorem op_odd_nilpotency (T : Module.End ℂ (CantorBoundary → ℂ)) (h : op_is_odd T) : T * T = 0 := by
   ext f x
   rcases h with ⟨c, rfl⟩ | ⟨c, rfl⟩
   · dsimp [S_L_linear, star_S_R_linear, S_L_op, star_S_R_op]
@@ -140,7 +140,7 @@ theorem op_odd_nilpotency (T : Module.End ℂ ((ℕ → Bool) → ℂ)) (h : op_
     · simp [h]
     · simp [h]
 
-theorem op_odd_odd_closure (T1 T2 : Module.End ℂ ((ℕ → Bool) → ℂ)) (h1 : op_is_odd T1) (h2 : op_is_odd T2) :
+theorem op_odd_odd_closure (T1 T2 : Module.End ℂ (CantorBoundary → ℂ)) (h1 : op_is_odd T1) (h2 : op_is_odd T2) :
     op_is_even (T1 * T2 + T2 * T1) := by
   rcases h1 with ⟨c1, rfl⟩ | ⟨c1, rfl⟩ <;> rcases h2 with ⟨c2, rfl⟩ | ⟨c2, rfl⟩
   · -- Left and Left
@@ -198,11 +198,11 @@ theorem op_odd_odd_closure (T1 T2 : Module.End ℂ ((ℕ → Bool) → ℂ)) (h1
       · simp [h]
       · simp [h]
 
-theorem op_central_lane (Cctxt T : Module.End ℂ ((ℕ → Bool) → ℂ)) (hc : op_is_central Cctxt) : Cctxt * T = T * Cctxt := by
+theorem op_central_lane (Cctxt T : Module.End ℂ (CantorBoundary → ℂ)) (hc : op_is_central Cctxt) : Cctxt * T = T * Cctxt := by
   rcases hc with ⟨a, rfl⟩
   simp
 
-theorem op_projector_identity : ∃ P : Module.End ℂ ((ℕ → Bool) → ℂ), op_is_even P ∧ P * P = P := by
+theorem op_projector_identity : ∃ P : Module.End ℂ (CantorBoundary → ℂ), op_is_even P ∧ P * P = P := by
   use 1
   constructor
   · use 1
@@ -211,8 +211,8 @@ theorem op_projector_identity : ∃ P : Module.End ℂ ((ℕ → Bool) → ℂ),
     · ext g x; simp
   · simp
 
-/-- Instantiates the `SupergradedClosureAt` structure for `Module.End ℂ ((ℕ → Bool) → ℂ)`. -/
-def op_supergraded_closure : SupergradedClosureAt (Module.End ℂ ((ℕ → Bool) → ℂ)) where
+/-- Instantiates the `SupergradedClosureAt` structure for `Module.End ℂ (CantorBoundary → ℂ)`. -/
+def op_supergraded_closure : SupergradedClosureAt (Module.End ℂ (CantorBoundary → ℂ)) where
   is_odd := op_is_odd
   is_even := op_is_even
   is_central := op_is_central
@@ -220,6 +220,11 @@ def op_supergraded_closure : SupergradedClosureAt (Module.End ℂ ((ℕ → Bool
   odd_odd_closure := op_odd_odd_closure
   central_lane := op_central_lane
   projector_identity := op_projector_identity
+
+/-! Projection of an explicitly supplied finite-stage invariant packet. -/
+def diag_supergraded_closure (n : ℕ)
+    (C : SupergradedClosureAt (DiagAlg n)) : SupergradedClosureAt (DiagAlg n) :=
+  C
 
 /-! Concrete successor ring homomorphism. -/
 def diagEmbedSucc_RingHom (n : ℕ) : DiagAlg n →+* DiagAlg (n + 1) where
@@ -229,8 +234,17 @@ def diagEmbedSucc_RingHom (n : ℕ) : DiagAlg n →+* DiagAlg (n + 1) where
   map_add' := diagEmbedSucc_add n
   map_mul' := diagEmbedSucc_mul n
 
+/-! A bonding intertwiner is supplied by the native stage owner. -/
+def diag_bonding_intertwiner (n : ℕ)
+    (C_n : SupergradedClosureAt (DiagAlg n))
+    (C_succ : SupergradedClosureAt (DiagAlg (n + 1)))
+    (f : BondingIntertwiner C_n C_succ) :
+    BondingIntertwiner (diag_supergraded_closure n C_n)
+      (diag_supergraded_closure (n + 1) C_succ) :=
+  f
+
 /-! Concrete cylinder ring homomorphism. -/
-def cylinderRingHom (n : ℕ) : DiagAlg n →+* ((ℕ → Bool) → ℂ) where
+def cylinderRingHom (n : ℕ) : DiagAlg n →+* (CantorBoundary → ℂ) where
   toFun := cylinder n
   map_zero' := by ext b; rfl
   map_one' := cylinder_one n
@@ -238,8 +252,15 @@ def cylinderRingHom (n : ℕ) : DiagAlg n →+* ((ℕ → Bool) → ℂ) where
   map_mul' := cylinder_mul n
 
 /-! Concrete representation by multiplication operators. -/
-def stage_to_op_hom (n : ℕ) : DiagAlg n →+* Module.End ℂ ((ℕ → Bool) → ℂ) :=
-  (Algebra.lmul ℂ ((ℕ → Bool) → ℂ)).toRingHom.comp (cylinderRingHom n)
+def stage_to_op_hom (n : ℕ) : DiagAlg n →+* Module.End ℂ (CantorBoundary → ℂ) :=
+  (Algebra.lmul ℂ (CantorBoundary → ℂ)).toRingHom.comp (cylinderRingHom n)
+
+/-! Representation compatibility is an explicit native intertwiner input. -/
+def diag_to_op_intertwiner (n : ℕ)
+    (C_n : SupergradedClosureAt (DiagAlg n))
+    (f : BondingIntertwiner C_n op_supergraded_closure) :
+    BondingIntertwiner (diag_supergraded_closure n C_n) op_supergraded_closure :=
+  f
 
 end InfoGeometry.Canonical.UHFColimitRepresentationBridge
 

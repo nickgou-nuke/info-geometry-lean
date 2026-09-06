@@ -9,6 +9,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.HestenesAnalyticity
 open InfoGeometry.Canonical.FilteredHestenesKreinColimit
+open InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 
 /-- A nonlinear observable family on a filtered Hestenes--Krein tower.
 
@@ -33,36 +34,6 @@ structure AnalyticFamily (C : HestenesKreinCone) where
 namespace AnalyticFamily
 
 variable {C : HestenesKreinCone} (F : AnalyticFamily C)
-
-open InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
-
-private theorem map_bondIterate
-    (n m : ℕ) (x : DoubledSpace (C.Base n)) :
-    F.map (n + m)
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x) =
-      FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m (F.map n x) := by
-  induction m with
-  | zero => rfl
-  | succ m ih =>
-      change F.map (n + (m + 1))
-          (C.bond (n + m)
-            (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)) =
-        C.bond (n + m)
-          (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m (F.map n x))
-      calc
-        F.map (n + (m + 1))
-            (C.bond (n + m)
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)) =
-            C.bond (n + m)
-              (F.map (n + m)
-                (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)) := by
-          symm
-          simpa [Nat.add_assoc] using
-            F.map_bond (n + m)
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)
-        _ = C.bond (n + m)
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m
-                (F.map n x)) := by rw [ih]
 
 /-- Read a finite-stage observable in the doubled filtered-colimit carrier. -/
 def colimitReadout (n : ℕ) :
@@ -107,92 +78,18 @@ theorem colimitReadout_bond
   rw [← F.map_bond n x]
   exact C.ι_bond_apply n (F.map n x)
 
-/-
-The colimit readout is independent of every finite number of filtered
-transitions, not only of one successor step.
--/
+/-! Compatibility with an arbitrary finite composite of bonding maps. -/
 theorem colimitReadout_bondIterate
-    (n m : ℕ) (x : DoubledSpace (C.Base n)) :
-    F.colimitReadout (n + m)
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x) =
-      F.colimitReadout n x := by
-  unfold colimitReadout
-  rw [map_bondIterate F n m x]
-  exact FilteredPhaseCone.ι_bondIterate_apply C.toFilteredPhaseCone n m
-    (F.map n x)
-
-private theorem deriv_bondIterate
-    (n m : ℕ) (x : DoubledSpace (C.Base n)) :
-    ((F.analytic (n + m)
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv).comp
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m) =
-      (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m).comp
-        ((F.analytic n x).deriv) := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-      calc
-        ((F.analytic (n + (m + 1))
-            (C.bond (n + m)
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x))).deriv).comp
-            (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n (m + 1)) =
-          ((F.analytic (n + (m + 1))
-            (C.bond (n + m)
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x))).deriv).comp
-            ((C.bond (n + m)).comp
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m)) := by
-                rfl
-        _ = (C.bond (n + m)).comp
-              (((F.analytic (n + m)
-                (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv).comp
-              (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m)) := by
-                have hderiv := F.deriv_bond (n + m)
-                  (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)
-                have hderiv' :
-                    ((F.analytic (n + (m + 1))
-                      (C.bond (n + m)
-                        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x))).deriv).comp
-                        (C.bond (n + m)) =
-                      (C.bond (n + m)).comp
-                        ((F.analytic (n + m)
-                          (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv) := by
-                  simpa [Nat.add_assoc] using hderiv
-                exact congrArg
-                  (fun L => L.comp
-                    (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m)) hderiv'
-        _ = (C.bond (n + m)).comp
-              ((FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m).comp
-              ((F.analytic n x).deriv)) := by rw [ih]
-        _ = (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n (m + 1)).comp
-              ((F.analytic n x).deriv) := by rfl
-
-/-- The colimit derivative is independent of every finite filtered transition. -/
-theorem colimitReadout_deriv_bondIterate
-    (n m : ℕ) (x : DoubledSpace (C.Base n)) :
-    ((C.ι (n + m)).comp
-      ((F.analytic (n + m)
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv)).comp
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m) =
-      (C.ι n).comp ((F.analytic n x).deriv) := by
-  calc
-    ((C.ι (n + m)).comp
-      ((F.analytic (n + m)
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv)).comp
-        (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m) =
-      (C.ι (n + m)).comp
-        (((F.analytic (n + m)
-          (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m x)).deriv).comp
-          (FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m)) := by
-            simp [ContinuousLinearMap.comp_assoc]
-    _ = (C.ι (n + m)).comp
-          ((FilteredPhaseCone.bondIterate C.toFilteredPhaseCone n m).comp
-          ((F.analytic n x).deriv)) := by
-            rw [deriv_bondIterate F n m x]
-        _ = (C.ι n).comp ((F.analytic n x).deriv) := by
-            have hι := FilteredPhaseCone.ι_comp_bondIterate
-              C.toFilteredPhaseCone n m
-            simpa [ContinuousLinearMap.comp_assoc] using congrArg
-              (fun L => L.comp ((F.analytic n x).deriv)) hι
+    (n : ℕ) : ∀ m : ℕ, ∀ x : DoubledSpace (C.Base n),
+      F.colimitReadout (n + m)
+          (C.toFilteredPhaseCone.bondIterate n m x) =
+        F.colimitReadout n x
+  | 0, x => by simp [FilteredPhaseCone.bondIterate, colimitReadout]
+  | m + 1, x => by
+      simpa [FilteredPhaseCone.bondIterate, Nat.add_assoc] using
+        (F.colimitReadout_bond (n + m)
+          (C.toFilteredPhaseCone.bondIterate n m x)).trans
+          (colimitReadout_bondIterate n m x)
 
 /-- The derivative obtained after advancing one stage and differentiating
 along the bonding map equals the derivative of the original colimit readout. -/
@@ -218,6 +115,24 @@ theorem colimitReadout_deriv_bond
           simp [ContinuousLinearMap.comp_assoc]
     _ = (C.ι n).comp ((F.analytic n x).deriv) := by
           rw [C.ι_bond n]
+
+/-! Derivative compatibility for an arbitrary finite composite. -/
+theorem colimitReadout_deriv_bondIterate
+    (n : ℕ) : ∀ m : ℕ, ∀ x : DoubledSpace (C.Base n),
+      ((C.ι (n + m)).comp
+        ((F.analytic (n + m)
+          (C.toFilteredPhaseCone.bondIterate n m x)).deriv)).comp
+        (C.toFilteredPhaseCone.bondIterate n m) =
+      (C.ι n).comp ((F.analytic n x).deriv)
+  | 0, x => by simp [FilteredPhaseCone.bondIterate]
+  | m + 1, x => by
+      have hstep := F.colimitReadout_deriv_bond
+        (n + m) (C.toFilteredPhaseCone.bondIterate n m x)
+      have hprev := colimitReadout_deriv_bondIterate n m x
+      have hcomp := congrArg
+        (fun L => L.comp (C.toFilteredPhaseCone.bondIterate n m)) hstep
+      simpa [FilteredPhaseCone.bondIterate, Nat.add_assoc,
+        ContinuousLinearMap.comp_assoc] using hcomp.trans hprev
 
 /-- The colimit-readout derivative obeys the Hestenes clock-axis
 Cauchy--Riemann law. -/

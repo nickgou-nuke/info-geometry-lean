@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Projective.Conf3ConcreteDLog
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-import InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 noncomputable section
 
@@ -11,7 +10,6 @@ namespace InfoGeometry.Canonical.KZLogarithmicConnection
 open scoped BigOperators
 open InfoGeometry.Projective.Conf3ConcreteDLog
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-open InfoGeometry.Projective.ProjectiveLogarithmicBoundaryGeometry
 
 /-!
 # Knizhnik-Zamolodchikov (KZ) Logarithmic Connection and Flatness

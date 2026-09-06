@@ -6,7 +6,7 @@ namespace InfoGeometry
 /-!
 # InfoGeometry.Canonical.YangMillsFinite
 
-Umbrella facade for the finite constructive Yang--Mills corridor.
+Umbrella façade for the finite constructive Yang-Mills corridor.
 -/
 
 end InfoGeometry

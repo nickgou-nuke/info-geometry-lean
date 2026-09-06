@@ -46,7 +46,7 @@ theorem canonicalSoldering_coordinate_roundtrip (x : SplitCoordinates) :
   exact canonicalSoldering.apply_symm_apply x
 
 theorem canonicalSoldering_norm_pullback (X : SplitCarrier) :
-    detZ X = circularNormQuad (canonicalSoldering X) := by
+    detZ realCrossProduct3 X = circularNormQuad (canonicalSoldering X) := by
   rw [circularNorm_eq X, canonicalSoldering_apply,
     circularPeirceBasis_coordinate_eq_equivFun]
   rfl
@@ -54,7 +54,7 @@ theorem canonicalSoldering_norm_pullback (X : SplitCarrier) :
 /-! The soldering form identifies the split null cone with the coordinate
     null cone.  This is the zero-locus form of the quadratic pullback above. -/
 theorem canonicalSoldering_null_cone (X : SplitCarrier) :
-    detZ X = 0 ↔ circularNormQuad (canonicalSoldering X) = 0 := by
+    detZ realCrossProduct3 X = 0 ↔ circularNormQuad (canonicalSoldering X) = 0 := by
   rw [← canonicalSoldering_norm_pullback]
 
 theorem canonicalSoldering_flow_equivariant (t : ℝ) (X : SplitCarrier) :
@@ -70,7 +70,8 @@ theorem canonicalSoldering_flow_preserves_norm (t : ℝ) (X : SplitCarrier) :
   exact circularNormQuad_hyperbolicFlow t (canonicalSoldering X)
 
 theorem canonicalSoldering_flow_preserves_null_cone (t : ℝ) (X : SplitCarrier) :
-    detZ (hyperbolicFlowZorn t X) = 0 ↔ detZ X = 0 := by
+    detZ realCrossProduct3 (hyperbolicFlowZorn t X) = 0 ↔
+      detZ realCrossProduct3 X = 0 := by
   constructor
   · intro h
     apply (canonicalSoldering_null_cone X).mpr

@@ -35,7 +35,7 @@ def vacuum_closes_external_heisenberg_rep
     (h_wick : SplitSourceEndWickLaw J) :
     CurrentHeisenbergRep 𝕜 V := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
-    { J := J, trunc := h_trunc, comm := h_wick }
+    packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentHeisenbergRep W
 
 /--
@@ -49,7 +49,7 @@ noncomputable def vacuum_closes_external_sugawara_morphism
     (h_wick : SplitSourceEndWickLaw J) :
     CurrentSugawaraMorphism 𝕜 V := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
-    { J := J, trunc := h_trunc, comm := h_wick }
+    packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentSugawaraMorphism W
 
 /-- Explicit Wick data read out as the exact external Heisenberg current laws. -/

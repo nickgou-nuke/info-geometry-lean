@@ -1,7 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Vector.Basic
 import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 namespace InfoGeometry.Canonical.ExceptionalQuarticInvariant
 
@@ -34,21 +33,6 @@ def I4_invariant (Z : E66Charge27) : ℝ :=
   let s_norm := Z.spinor_chiral.toList.foldl (fun acc x => acc + x^2) 0
   -- The invariant combines scalar, vector, and spinor degrees of freedom
   (Z.kk_scalar ^ 2) * v_norm - Z.kk_scalar * s_norm + (s_norm ^ 2)
-
-/-- 
-🏆 THEOREM (Completion-of-Squares Positivity of the Quartic Invariant):
-When the vector charge density satisfies $v_2 \ge 1/4$, $I_4(s, v_2, s_2) \ge 0$ unconditionally
-for all scalar charges $s$ and spinor charges $s_2$.
--/
-theorem i4_positive_completion_of_squares (s v2 s2 : ℝ) (hv : 1 / 4 ≤ v2) :
-    0 ≤ s^2 * v2 - s * s2 + s2^2 := by
-  have h_sq : 0 ≤ (s2 - s / 2) ^ 2 := sq_nonneg _
-  have h_v : 0 ≤ v2 - 1 / 4 := by linarith
-  have h_s2 : 0 ≤ s^2 := sq_nonneg _
-  have h_prod : 0 ≤ s^2 * (v2 - 1 / 4) := mul_nonneg h_s2 h_v
-  have h_id : s^2 * v2 - s * s2 + s2^2 = (s2 - s / 2)^2 + s^2 * (v2 - 1 / 4) := by ring
-  rw [h_id]
-  exact add_nonneg h_sq h_prod
 
 /-- 
 Theorem: The Quartic Invariant is strictly positive on pure macroscopic 

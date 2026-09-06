@@ -13,7 +13,7 @@ The chart is still deliberately finite:
 * collision theorem: if the denominator vanishes, then the numerator vanishes.
 
 This stays below the threshold of a full Weyl-character theorem while giving a
-genuine three-node cancellation property.
+genuine three-node cancellation witness.
 -/
 
 namespace InfoGeometry.Canonical.WeylA2CancellationChart
@@ -45,10 +45,15 @@ def nodes : Fin 3 → ℝ
 noncomputable def expNodes : Fin 3 → ℝ :=
   fun i => Real.exp (C.nodes i)
 
+/-- Finite Vandermonde witness for the denominator lane. -/
+@[rep_depth thermo]
+def denominatorWitness : Fin 3 → ℝ :=
+  C.nodes
+
 /-- Denominator value. -/
 @[rep_depth thermo]
 def denominator : ℝ :=
-  FiniteVandermondeExclusionWitness.determinant C.nodes
+  FiniteVandermondeExclusionWitness.determinant C.denominatorWitness
 
 /-- Numerator value: Vandermonde determinant of the exponential nodes. -/
 @[rep_depth thermo]
@@ -68,10 +73,10 @@ noncomputable def quotient (_h : C.NoncollisionDomain) : ℝ :=
 /-- Denominator zero is exactly collision of two scalar nodes. -/
 @[rep_depth thermo]
 theorem denominator_eq_zero_iff_collision :
-  C.denominator = 0 ↔
+    C.denominator = 0 ↔
       ∃ i j : Fin 3, C.nodes i = C.nodes j ∧ i ≠ j :=
   FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision
-    C.nodes
+    C.denominatorWitness
 
 /-- Numerator zero is exactly collision of two exponential nodes. -/
 @[rep_depth thermo]

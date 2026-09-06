@@ -30,6 +30,7 @@ def twistorCoordinateZero : TwistorCarrier := fun i =>
 
 @[simp] theorem twistorCoordinateZero_zornDet :
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (twistorCircularPeirceEquiv twistorCoordinateZero) = 0 := by
   have hcoord := twistorCircularPeirceEquiv_circularCoordinates
     twistorCoordinateZero
@@ -39,8 +40,9 @@ def twistorCoordinateZero : TwistorCarrier := fun i =>
   simp [penrosePeirceEquiv, twistorCoordinateZero]
 
 theorem twistorCircularPeirceEquiv_not_quadratic_isometry :
-    ∃ z : TwistorCarrier,
+      ∃ z : TwistorCarrier,
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (twistorCircularPeirceEquiv z) ≠
         twistorRealQuadraticForm z := by
   refine ⟨twistorCoordinateZero, ?_⟩

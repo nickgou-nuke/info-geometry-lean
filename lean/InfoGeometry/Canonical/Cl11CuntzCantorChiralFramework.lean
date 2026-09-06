@@ -123,23 +123,28 @@ theorem representation_commutator (K X : CompatibleCarrier) :
 
 def cantorOrbit (R : CompatibleCuntzRepresentation (Op := Op))
     (w : List Bool) : Op :=
-  orbit R.cuntz R.seed w
+  CantorCuntzBasisPacket.orbit
+    ({ cuntz := R.cuntz, seed := R.seed } : CantorCuntzBasisPacket Op) w
 
 @[simp] theorem cantorOrbit_root :
     cantorOrbit R [] = R.seed := by
-  rfl
+  simp [cantorOrbit, CantorCuntzBasisPacket.orbit]
 
 theorem cantorOrbit_branch (b : Bool) (w : List Bool) :
     cantorOrbit R (b :: w) =
       (if b then CuntzO2Carrier.S_right R.cuntz
       else CuntzO2Carrier.S_left R.cuntz) * cantorOrbit R w := by
-  exact orbit_branch_recursion R.cuntz R.seed b w
+  exact CantorCuntzBasisPacket.orbit_branch_recursion
+    ({ cuntz := R.cuntz, seed := R.seed } : CantorCuntzBasisPacket Op) b w
 
 theorem cantorOrbit_branch_adjoint_same (b : Bool) (w : List Bool) :
-    star (if b then CuntzO2Carrier.S_right R.cuntz
-      else CuntzO2Carrier.S_left R.cuntz) * R.cantorOrbit (b :: w) =
+      star (if b then CuntzO2Carrier.S_right R.cuntz
+      else CuntzO2Carrier.S_left R.cuntz) * cantorOrbit R (b :: w) =
       cantorOrbit R w := by
-  exact orbit_branch_adjoint_same R.cuntz R.seed b w
+  cases b <;>
+    rw [cantorOrbit_branch R _ w] <;>
+    simp [cantorOrbit, CantorCuntzBasisPacket.orbit, ← mul_assoc,
+      CuntzO2Carrier.left_isometry, CuntzO2Carrier.right_isometry]
 
 theorem cantor_root_branching (ξ : ℕ → Bool) :
     (CuntzO2Carrier.leftRangeProjection R.cuntz * R.seed +

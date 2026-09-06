@@ -10,7 +10,7 @@ This module formalizes the finite linear-algebra readout of the proposed
 * the remaining eight coordinates are the transverse coordinates;
 * the decidable integer core has Gram matrix `diag(2,2,1,...,1)`, so the first
   doubled cell is the only part needing the external `1 / sqrt 2`
-  normalization used by the SymPy property;
+  normalization used by the SymPy witness;
 * the shifted closed-string mass readout with zero intercept is recorded as a
   conditional algebraic formula.
 
@@ -41,7 +41,7 @@ The decidable integer core of the finite light-cone projection matrix.
 
 Rows `0,1` perform the unnormalized light-cone rotation of the first doubled
 cell. Rows `2` through `9` leave the eight transverse coordinates fixed.  The
-SymPy property applies the external normalization `1 / sqrt 2` to the first
+SymPy witness applies the external normalization `1 / sqrt 2` to the first
 block.
 -/
 def lightConeIntegerCore : M10Z :=
@@ -90,25 +90,17 @@ theorem intercept_zero_reduces_standard_massSq
     {alphaPrime excitation intercept : ℝ} (hintercept : intercept = 0) :
     standardClosedMassSq alphaPrime excitation intercept =
       doubledClosedMassSq alphaPrime excitation := by
-  calc
-    standardClosedMassSq alphaPrime excitation intercept
-        = (4 / alphaPrime) * (excitation - 0) := by
-          simp [standardClosedMassSq, hintercept]
-    _ = doubledClosedMassSq alphaPrime excitation := by
-      simp [standardClosedMassSq, doubledClosedMassSq]
+  simp [standardClosedMassSq, doubledClosedMassSq, hintercept]
 
 /-- The zero-intercept ground-state readout is massless algebraically. -/
 theorem doubled_ground_massSq_zero (alphaPrime : ℝ) :
     doubledClosedMassSq alphaPrime 0 = 0 := by
-  -- zero excitation collapses the `doubled` normalization factor.
-  change (4 / alphaPrime) * (0 : ℝ) = 0
-  ring
+  simp [doubledClosedMassSq]
 
 /-- The first excited zero-intercept readout is `4 / alphaPrime`. -/
 theorem doubled_first_excited_massSq (alphaPrime : ℝ) :
     doubledClosedMassSq alphaPrime 1 = 4 / alphaPrime := by
-  -- the first excitation step is exactly one normalized quantum.
-  simpa [doubledClosedMassSq]
+  simp [doubledClosedMassSq]
 
 /-- The finite packet combining the light-cone integer core and zero-intercept readout. -/
 theorem lightCone_zeroIntercept_packet (alphaPrime : ℝ) :

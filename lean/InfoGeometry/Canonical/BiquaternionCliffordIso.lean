@@ -3,9 +3,9 @@ import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
 open Matrix Complex
 
 /-!
-# Biquaternion–Pauli/Clifford property
+# Biquaternion–Pauli/Clifford witness
 
-Maintained owner for the finite Pauli/Clifford property recovered from the
+Maintained owner for the finite Pauli/Clifford witness recovered from the
 external-auto and removable-disk lanes. It reuses the canonical Pauli matrices
 already restored in `BiquaternionNegativeRootsLog` and packages the explicit
 matrix identities implementing the `M₂(ℂ)` realization.
@@ -23,16 +23,16 @@ def σ₃ : M2C := BiquaternionNegativeRootsLog.σ₃
 
 lemma σ₁_sq : σ₁ * σ₁ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₁, BiquaternionNegativeRootsLog.σ₁, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [σ₁, BiquaternionNegativeRootsLog.σ₁, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two]
 
 lemma σ₂_sq : σ₂ * σ₂ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₂, BiquaternionNegativeRootsLog.σ₂, Matrix.mul_apply, Fin.sum_univ_two,
+    simp [σ₂, BiquaternionNegativeRootsLog.σ₂, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two,
       Complex.I_mul_I]
 
 lemma σ₃_sq : σ₃ * σ₃ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₃, BiquaternionNegativeRootsLog.σ₃, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [σ₃, BiquaternionNegativeRootsLog.σ₃, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two]
 
 lemma σ₁σ₂_anti : σ₁ * σ₂ = -(σ₂ * σ₁) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -98,7 +98,7 @@ lemma ω_eq_iI : ω = I • (1 : M2C) := by
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply]
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
 
 lemma ω_sq : ω * ω = -(1 : M2C) := by
   rw [ω_eq_iI]
@@ -108,19 +108,19 @@ lemma ω_comm_σ₁ : ω * σ₁ = σ₁ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₁, BiquaternionNegativeRootsLog.σ₁,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
 
 lemma ω_comm_σ₂ : ω * σ₂ = σ₂ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₂, BiquaternionNegativeRootsLog.σ₂,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
 
 lemma ω_comm_σ₃ : ω * σ₃ = σ₃ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₃, BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
 
 theorem M2C_pauli_decompose (M : M2C) :
     M = ((M 0 0 + M 1 1) / 2) • (1 : M2C) +
@@ -132,7 +132,7 @@ theorem M2C_pauli_decompose (M : M2C) :
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.smul_apply, Matrix.add_apply] <;>
+      Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply] <;>
     (ring_nf; try simp [Complex.I_mul_I]; try ring)
 
 theorem pauli_det (α x y z : ℂ) :
@@ -142,9 +142,23 @@ theorem pauli_det (α x y z : ℂ) :
     BiquaternionNegativeRootsLog.σ₁,
     BiquaternionNegativeRootsLog.σ₂,
     BiquaternionNegativeRootsLog.σ₃,
-    Matrix.det_fin_two, Matrix.smul_apply, Matrix.add_apply]
+    Matrix.det_fin_two, Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply]
   ring_nf
   simp [Complex.I_mul_I]
   ring
+
+theorem biquaternion_clifford_synthesis :
+    (σ₁ * σ₁ = (1 : M2C) ∧
+     σ₂ * σ₂ = (1 : M2C) ∧
+     σ₃ * σ₃ = (1 : M2C)) ∧
+    (i_q * i_q = -(1 : M2C) ∧
+     j_q * j_q = -(1 : M2C) ∧
+     k_q * k_q = -(1 : M2C) ∧
+     i_q * j_q = k_q) ∧
+    (ω * ω = -(1 : M2C) ∧
+     ω * σ₁ = σ₁ * ω ∧ ω * σ₂ = σ₂ * ω ∧ ω * σ₃ = σ₃ * ω) := by
+  exact ⟨⟨σ₁_sq, σ₂_sq, σ₃_sq⟩,
+         ⟨i_q_sq, j_q_sq, k_q_sq, ij_eq_k⟩,
+         ⟨ω_sq, ω_comm_σ₁, ω_comm_σ₂, ω_comm_σ₃⟩⟩
 
 end InfoGeometry.Canonical.BiquaternionCliffordIso

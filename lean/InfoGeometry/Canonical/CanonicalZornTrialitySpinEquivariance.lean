@@ -38,46 +38,12 @@ def axisCycleCopy (sector : TrialitySector) :
   (copyLinearEquivCoordinates sector).trans
     (axisCycleCoordinates.trans (copyLinearEquivCoordinates sector).symm)
 
-theorem copyLinearEquivCoordinates_axisCycleCopy
-    (sector : TrialitySector) (X : ZornCopy sector) :
-    copyLinearEquivCoordinates sector (axisCycleCopy sector X) =
-      axisCycleCoordinates (copyLinearEquivCoordinates sector X) := by
-  simp [axisCycleCopy]
-
 theorem axisCycleCopy_val {sector : TrialitySector} (X : ZornCopy sector) :
     (axisCycleCopy sector X).val = canonicalTriality X.val := by
   apply CanonicalZornCompositionTriality.zornCoordinates_injective
   funext i
   fin_cases i <;> rfl
 
-/-! ## The sector-indexed cyclic transport -/
-
-def trialityCycle : TrialitySector → TrialitySector
-  | .vector => .spinorPlus
-  | .spinorPlus => .spinorMinus
-  | .spinorMinus => .vector
-
-/-- The three concrete maps are one dependent family over the triality cycle. -/
-def trialitySectorTransport (sector : TrialitySector) :
-    ZornCopy sector ≃ₗ[ℂ] ZornCopy (trialityCycle sector) := by
-  cases sector with
-  | vector => exact vectorToSpinorPlus
-  | spinorPlus => exact spinorPlusToSpinorMinus
-  | spinorMinus => exact spinorMinusToVector
-
-theorem trialitySectorTransport_at_vector (X : Vector8) :
-    trialitySectorTransport .vector X = vectorToSpinorPlus X := by
-  rfl
-
-theorem trialitySectorTransport_at_spinorPlus (X : SpinorPlus8) :
-    trialitySectorTransport .spinorPlus X = spinorPlusToSpinorMinus X := by
-  rfl
-
-theorem trialitySectorTransport_at_spinorMinus (X : SpinorMinus8) :
-    trialitySectorTransport .spinorMinus X = spinorMinusToVector X := by
-  rfl
-
-/-- The coordinate axis cycle intertwines with the cyclic transport family. -/
 theorem canonicalTriality_conj (X : Zorn) :
     canonicalTriality (zornConj X) = zornConj (canonicalTriality X) := by
   apply zorn_ext
@@ -100,39 +66,6 @@ abbrev spinorPlusAxisCycle : SpinorPlus8 ≃ₗ[ℂ] SpinorPlus8 :=
   axisCycleCopy .spinorPlus
 abbrev spinorMinusAxisCycle : SpinorMinus8 ≃ₗ[ℂ] SpinorMinus8 :=
   axisCycleCopy .spinorMinus
-
-theorem vectorToSpinorPlus_axisCycle_natural (V : Vector8) :
-    spinorPlusAxisCycle (vectorToSpinorPlus V) =
-      vectorToSpinorPlus (vectorAxisCycle V) := by
-  apply ZornCopy.ext
-  apply CanonicalZornCompositionTriality.zornCoordinates_injective
-  rfl
-
-theorem spinorPlusToSpinorMinus_axisCycle_natural (S : SpinorPlus8) :
-    spinorMinusAxisCycle (spinorPlusToSpinorMinus S) =
-      spinorPlusToSpinorMinus (spinorPlusAxisCycle S) := by
-  apply ZornCopy.ext
-  apply CanonicalZornCompositionTriality.zornCoordinates_injective
-  rfl
-
-theorem spinorMinusToVector_axisCycle_natural (C : SpinorMinus8) :
-    vectorAxisCycle (spinorMinusToVector C) =
-      spinorMinusToVector (spinorMinusAxisCycle C) := by
-  apply ZornCopy.ext
-  apply CanonicalZornCompositionTriality.zornCoordinates_injective
-  rfl
-
-theorem trialitySectorTransport_axisCycle_natural
-  (sector : TrialitySector) (X : ZornCopy sector) :
-    axisCycleCopy (trialityCycle sector) (trialitySectorTransport sector X) =
-      trialitySectorTransport sector (axisCycleCopy sector X) := by
-  fin_cases sector
-  · simpa [trialitySectorTransport, trialityCycle] using
-      vectorToSpinorPlus_axisCycle_natural X
-  · simpa [trialitySectorTransport, trialityCycle] using
-      spinorPlusToSpinorMinus_axisCycle_natural X
-  · simpa [trialitySectorTransport, trialityCycle] using
-      spinorMinusToVector_axisCycle_natural X
 
 theorem vectorAxisCycle_norm (V : Vector8) :
     vectorNorm (vectorAxisCycle V) = vectorNorm V := by
@@ -295,6 +228,13 @@ def axisTransportedSpinRepresentation :
   map_mul' g h := by
     simp only [map_mul]
     group
+
+theorem axisTransportedSpinRepresentation_apply
+    (g : spinGroup vectorQuadratic) :
+    axisTransportedSpinRepresentation g =
+      diracAxisCycleUnit * complexSpinDiracRepresentation g *
+        diracAxisCycleUnit⁻¹ := by
+  rfl
 
 /-- Composition triality, internal axis covariance, the Clifford lift, the
 five-graded automorphism, and spin transport are simultaneously present. -/

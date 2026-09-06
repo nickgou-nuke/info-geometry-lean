@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Applications.STUBlackHoleQubit
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry/Canonical/GeometricCalculusSTUBridge.lean
@@ -39,7 +40,7 @@ Freudenthal charge geometry attached to any cubic Jordan datum.
 The horizon locus is intentionally left as `Set.univ`: this adapter only
 supplies the quartic invariant and entropy normalization.  More refined large
 or small black-hole strata should be supplied by a stronger charge-boundary
-property.
+witness.
 -/
 def freudenthalChargeGeometry
     {J : Type*} [AddCommGroup J] [Module ℝ J]
@@ -174,20 +175,25 @@ theorem STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy
 /--
 Owner target for reading the STU-specialized boundary bridge.
 
-The construction remains property-gated: the Clifford resolvent family,
+The construction remains witness-gated: the Clifford resolvent family,
 boundary, observer, and flux/entropy equality must still be supplied by future
 analytic geometry.
 -/
-theorem stuQubitBoundaryFlux_eq_hyperdeterminantEntropy :
+@[owner_target_tag]
+def STUQubitBoundaryFluxOwnerTarget : Prop :=
   ∀ (E : Type uE) (P : Type uP)
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P],
     ∀ D : STUQubitBoundaryDatum.{uE, uP, uΩ} E P,
       D.geometry = stuQubitChargeGeometry →
-        ∀ W : STUQubitBoundaryFluxBridge D,
+        ∀ W : STUQubitBoundaryFluxBridge.{uE, uP, uΩ, uΩ} D,
           FluxEqualsQuarticEntropy
             D.A W.resolvent D.boundary W.normalizationFactor W.observer
-            D.geometry D.boundaryCharges := by
+            D.geometry D.boundaryCharges
+
+/-- A supplied STU boundary bridge reads out scalar flux as quartic entropy. -/
+theorem stuQubitBoundaryFluxOwnerTarget :
+    STUQubitBoundaryFluxOwnerTarget.{uE, uP, uΩ} := by
   intro E P _ _ _ _ _ D _ W
   exact STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy W
 

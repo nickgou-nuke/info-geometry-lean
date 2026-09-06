@@ -13,7 +13,7 @@ lemma that was not present in that owner.
 
 /--
 Finite coefficient positivity available from the strict convex-combination
-property.  This is the closed algebraic fragment currently derivable here;
+hypothesis.  This is the closed algebraic fragment currently derivable here;
 the full log-det barrier strict-convexity theorem belongs to the symmetric cone
 owner, not to this audit file.
 -/

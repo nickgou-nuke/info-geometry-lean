@@ -34,4 +34,4 @@ theorem paper_pom_bc_chain_deviation_probability_bound (D : BCHighOrderLedgerDat
   unfold pom_bc_chain_deviation_probability_bound_bad_event
   rw [← hdecomp]
 
-end Omega.POM
+end

@@ -65,33 +65,11 @@ theorem logarithmicScale_eq_zero_iff (s : ℂ) :
       exact (sub_eq_zero.mp hs1).symm
   · rintro (rfl | rfl) <;> simp [logarithmicScale]
 
-/-- The phase field is tangent to the critical line while the `u` coordinate
-field is normal to it. -/
-theorem critical_line_tangent_normal_packet (t : ℝ) :
-    (rotationalField (1 / 2) t).1 = 0 ∧
-    (dilationCoordinateField (1 / 2) t).2 = 0 ∧
-    (rotationalField (1 / 2) t).2 = 1 / 4 + t ^ 2 ∧
-    (dilationCoordinateField (1 / 2) t).1 = -(1 / 4 + t ^ 2) :=
-  ⟨rotationalField_criticalLine_transverse_zero t,
-    dilationCoordinateField_criticalLine_longitudinal_zero t,
-    rotationalField_criticalLine_longitudinal t,
-    dilationCoordinateField_criticalLine_transverse t⟩
-
 /-- The two coordinate directions are orthogonal everywhere. -/
 theorem apollonius_coordinate_orthogonality (sigma t : ℝ) :
     (rotationalField sigma t).1 * (dilationCoordinateField sigma t).1 +
       (rotationalField sigma t).2 * (dilationCoordinateField sigma t).2 = 0 :=
   rotational_dilation_orthogonal sigma t
-
-/-- Compact corrected packet. -/
-theorem corrected_apollonius_packet (s : ℂ) (sigma t : ℝ) :
-    (1 - s = s ↔ s = (1 / 2 : ℂ)) ∧
-    (logarithmicScale s = 0 ↔ s = 0 ∨ s = 1) ∧
-    ((rotationalField sigma t).1 * (dilationCoordinateField sigma t).1 +
-      (rotationalField sigma t).2 * (dilationCoordinateField sigma t).2 = 0) :=
-  ⟨reflection_fixed_iff s,
-    logarithmicScale_eq_zero_iff s,
-    apollonius_coordinate_orthogonality sigma t⟩
 
 end InfoGeometry.Arithmetic.RiemannApolloniusCorrectedCapstone
 

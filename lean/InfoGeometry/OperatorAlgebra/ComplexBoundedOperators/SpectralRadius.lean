@@ -9,7 +9,7 @@ Lean-native owner surface for AFP `Jordan_Normal_Form.Spectral_Radius`.
 The AFP file uses the characteristic-polynomial/eigenvalue bridge and the
 Jordan-normal-form existence theorem to turn spectral-radius assumptions into
 growth bounds.  This module provides the spectral-radius API and keeps the JNF
-growth conclusions property-gated, so downstream code can consume the same
+growth conclusions witness-gated, so downstream code can consume the same
 interfaces while the full AFP JNF growth machinery is ported incrementally.
 -/
 
@@ -20,7 +20,7 @@ namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius
 open scoped BigOperators
 open Polynomial
 
-/-- Local eigenvector predicate used by the spectral-radius growth property. -/
+/-- Local eigenvector predicate used by the spectral-radius growth witness. -/
 def Eigenvector {K ι : Type*} [Semiring K] [Fintype ι]
     (A : Matrix ι ι K) (v : ι → K) (k : K) : Prop :=
   v ≠ 0 ∧ A.mulVec v = k • v
@@ -208,15 +208,15 @@ theorem spectralRadius_jnf_norm_bound_less_one {n : Nat}
   rcases P with ⟨_, c, hbound⟩
   exact ⟨c, hbound⟩
 
-/-- Lemma 1: the eigenvector property contains nonzero vector data. -/
+/-- Lemma 1: the eigenvector hypothesis contains nonzero vector data. -/
 theorem eigenvector_nonzero_of_Eigenvector {n : Nat}
     {A : Matrix (Fin n) (Fin n) ℂ} {v : Fin n → ℂ} {c : ℂ}
     (hv : Eigenvector A v c) :
     v ≠ 0 := by
   exact hv.1
 
-/-- Lemma 2: the spectral-growth property is the strict norm inequality. -/
-theorem eigenvalue_norm_gt_one_of_property {c : ℂ}
+/-- Lemma 2: the spectral-growth hypothesis is the strict norm inequality. -/
+theorem eigenvalue_norm_gt_one_of_hypothesis {c : ℂ}
     (hc : 1 < ‖c‖) :
     1 < ‖c‖ := by
   exact hc
@@ -240,7 +240,7 @@ theorem eigenvalue_gt_one_power_growth {n : Nat}
     v ≠ 0 ∧ 1 < ‖c‖ ∧
       ∀ k : Nat, (A ^ k).mulVec v = (c ^ k) • v := by
   exact ⟨eigenvector_nonzero_of_Eigenvector hv,
-    eigenvalue_norm_gt_one_of_property hc,
+    eigenvalue_norm_gt_one_of_hypothesis hc,
     eigenvector_power_action hv⟩
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius

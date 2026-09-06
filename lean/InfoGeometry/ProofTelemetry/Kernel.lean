@@ -27,7 +27,7 @@ structure ProofGoal where
   text : String
 deriving Repr, DecidableEq, Inhabited
 
-/-- A pretty-printed local property. -/
+/-- A pretty-printed local hypothesis. -/
 structure ProofHypothesis where
   id : String
   name : String
@@ -209,7 +209,7 @@ inductive ProofNodeKind where
   | proof
   | goal
   | tactic
-  | property
+  | hypothesis
   | reference
   | closedGoal
 deriving Repr, DecidableEq
@@ -293,7 +293,7 @@ def proofForest (trace : PaperproofTrace) : ProofForest :=
       for i in [:step.hypothesesBefore.size] do
         let hyp := step.hypothesesBefore[i]!
         let hid := hypNodeId trace.id step.index "before" i hyp
-        nodes := pushUniqueNode nodes { id := hid, kind := .property, text := s!"{hyp.name} : {hyp.type}", stepIndex := step.index }
+        nodes := pushUniqueNode nodes { id := hid, kind := .hypothesis, text := s!"{hyp.name} : {hyp.type}", stepIndex := step.index }
         edges := edges.push { source := hid, target := tacticId, role := .availableHypothesis }
 
       for i in [:step.references.size] do

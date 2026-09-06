@@ -15,7 +15,7 @@ picture:
 * `Q² = H`;
 * therefore `H` is even: it commutes with `Γ`.
 
-The Hopf/CFT/BRST/Schroedinger/RH interpretations are represented as property
+The Hopf/CFT/BRST/Schroedinger/RH interpretations are represented as witness
 gates.  No RH theorem, zero-location theorem, or spectral-density theorem is
 asserted here.
 -/
@@ -32,7 +32,7 @@ Parity/supercharge/Hamiltonian packet in an abstract operator ring.
 `Γ` is the square-free/Möbius parity involution, `Q` is the odd supercharge,
 and `H` is its square.
 -/
-structure ParitySuperchargeData
+structure ParitySuperchargePacket
     (Op : Type*) [Ring Op] where
   parity : Op
   supercharge : Op
@@ -44,11 +44,11 @@ structure ParitySuperchargeData
   squareLaw :
     supercharge * supercharge = hamiltonian
 
-namespace ParitySuperchargeData
+namespace ParitySuperchargePacket
 
 variable
     {Op : Type*} [Ring Op]
-    (P : ParitySuperchargeData Op)
+    (P : ParitySuperchargePacket Op)
 
 /--
 The square of an odd supercharge commutes with parity.
@@ -99,6 +99,6 @@ theorem supercharge_commutes_with_hamiltonian :
     _ = P.hamiltonian * P.supercharge := by
           rw [P.squareLaw]
 
-end ParitySuperchargeData
+end ParitySuperchargePacket
 
 end InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge

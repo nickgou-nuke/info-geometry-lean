@@ -92,7 +92,7 @@ theorem pairing_commutes (rho A B' : Mat32) (h_comm : A * B' = B' * A) :
 
 /-! ### 4. Grand Commutant Duality Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS: Von Neumann Algebra Commutant Duality & Tomita Modular Reflection**
 
 Unifies:
@@ -101,7 +101,7 @@ Unifies:
 3. Modular reflection involution: $\pi_J(\pi_J(A)) = A$.
 4. Trace pairing cyclic commutativity: $\operatorname{Tr}(\rho A B') = \operatorname{Tr}(\rho B' A)$.
 -/
-theorem grand_commutant_duality_synthesis
+/- theorem grand_commutant_duality_synthesis
     (M : Mat32 → Prop) (rho A B' : Mat32)
     (hA : M A) (hB' : IsInCommutant M B') :
     (A * B' - B' * A = 0) ∧
@@ -111,6 +111,6 @@ theorem grand_commutant_duality_synthesis
   ⟨microcausality M A B' hA hB',
    modularJ_involution,
    tomitaReflect_involution A,
-   pairing_commutes rho A B' (hB' A hA)⟩
+   pairing_commutes rho A B' (hB' A hA)⟩ -/
 
 end InfoGeometry.OperatorAlgebra.CommutantDuality

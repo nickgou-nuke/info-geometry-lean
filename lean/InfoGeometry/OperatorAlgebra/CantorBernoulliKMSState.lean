@@ -83,7 +83,7 @@ theorem modularFlowGen_add (z w : ℂ) (b : Bool) :
     modularFlowGen (z + w) b =
       binaryModularFactor z • modularFlowGen w b := by
   dsimp [modularFlowGen, binaryModularFactor]
-  rw [modularPhaseComplex_add, mul_smul]
+  rw [InfoGeometry.Algebra.CuntzKMSCondition.modularPhaseComplex_add, mul_smul]
 
 /-- Cylinder projection P_b = V_b V_b† is strictly invariant under modular flow for all z ∈ ℂ. -/
 theorem modularFlow_projection_invariant (z : ℂ) (b : Bool) :
@@ -96,7 +96,7 @@ theorem modularFlow_projection_invariant (z : ℂ) (b : Bool) :
   simp only [ContinuousLinearMap.comp_id, ContinuousLinearMap.id_comp,
     ContinuousLinearMap.comp_smul, smul_smul]
   have hmul : binaryModularFactor z * binaryModularFactorInv z = 1 :=
-    modularPhaseComplex_mul_inv 2 z
+    InfoGeometry.Algebra.CuntzKMSCondition.modularPhaseComplex_mul_inv 2 z
   rw [hmul, one_smul]
 
 /-- The Boltzmann factor at critical parameter β = 1 is 1/2. -/

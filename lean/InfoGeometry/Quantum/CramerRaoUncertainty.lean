@@ -25,12 +25,3 @@ theorem cramer_rao_variance_product (v F : ℝ) (hF : 0 < F) (hCR : cramerRaoBou
   have h_mul : 1 / F * F ≤ v * F := mul_le_mul_of_nonneg_right h_le (le_of_lt hF)
   rw [one_div_mul_cancel (ne_of_gt hF)] at h_mul
   exact h_mul
-
-theorem heisenberg_cramer_rao_equivalence (v F : ℝ) (hF : 0 < F) (hCR : cramerRaoBound v F) :
-    v * F ≥ 1 :=
-  cramer_rao_variance_product v F hF hCR
-
-theorem grand_cramer_rao_uncertainty_synthesis (v F : ℝ) (hF : 0 < F) (hCR : cramerRaoBound v F) :
-    (v * F ≥ 1) ∧ (v * F ≥ 1) :=
-  ⟨cramer_rao_variance_product v F hF hCR,
-   heisenberg_cramer_rao_equivalence v F hF hCR⟩

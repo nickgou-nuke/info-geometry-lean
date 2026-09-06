@@ -27,7 +27,3 @@ theorem heisenberg_time_log_scale (E : ℝ) :
     _ = (2 * Real.pi * (1 / (2 * Real.pi))) * Real.log (E / (2 * Real.pi)) := by ring
     _ = 1 * Real.log (E / (2 * Real.pi)) := by rw [mul_one_div_cancel h_pi_nz]
     _ = Real.log (E / (2 * Real.pi)) := by ring
-
-theorem grand_heisenberg_time_synthesis (E : ℝ) :
-    heisenbergTime E = Real.log (E / (2 * Real.pi)) :=
-  heisenberg_time_log_scale E

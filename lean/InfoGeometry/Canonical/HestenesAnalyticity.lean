@@ -146,7 +146,7 @@ def IsHestenesAnalyticSymmetry (A : EndH) : Prop :=
 /-- The identity endomorphism is a Hestenes-analytic symmetry generator.
 
 This is the constructive owner route for the identity-mode branch: callers no
-longer need to pass a bare phase-axis-preservation property for the identity
+longer need to pass a bare phase-axis-preservation hypothesis for the identity
 operator before using commutator closure. -/
 @[rep_depth krein]
 theorem id_isHestenesAnalyticSymmetry :
@@ -179,9 +179,9 @@ theorem hestenesAnalyticSymmetry_commutator
     _ = (InfoGeometry.Krein.clockAxis (E := E)).comp (A.comp B - B.comp A) := by
             simp [ContinuousLinearMap.comp_sub, ContinuousLinearMap.comp_assoc]
 
-/-- Right-identity commutator branch with the identity analytic property derived
+/-- Right-identity commutator branch with the identity analytic witness derived
 constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
-property. -/
+hypothesis. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator_id_right
     {A : EndH}
@@ -191,9 +191,9 @@ theorem hestenesAnalyticSymmetry_commutator_id_right
   exact hestenesAnalyticSymmetry_commutator (E := E) hA
     (id_isHestenesAnalyticSymmetry (E := E))
 
-/-- Left-identity commutator branch with the identity analytic property derived
+/-- Left-identity commutator branch with the identity analytic witness derived
 constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
-property. -/
+hypothesis. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator_id_left
     {A : EndH}
@@ -333,20 +333,10 @@ compatibility backend. -/
 noncomputable def bilingualAnalyticAtEquiv
     (Fmap : H₂E → H₂F) (Fgeo : Point → Value) (x : H₂E) :
     BilingualAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I Fmap Fgeo x ≃
-      { data :
-          CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ×
-            (CauchyHestenesCompatibility (clockPhaseStructure (E := E))
-              (clockPhaseStructure (E := F)) I ×
-              HestenesFormCalibration Point Tangent Value) //
-          data.2.2.formOf Fgeo =
-            data.2.1.cauchyFormOf data.1.deriv } where
-  toFun A :=
-    ⟨(A.cauchy, (A.compatibility, A.calibration)), A.calibration_eq⟩
-  invFun s :=
-    { cauchy := s.1.1
-      compatibility := s.1.2.1
-      calibration := s.1.2.2
-      calibration_eq := s.2 }
+      CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ×
+      CauchyHestenesCompatibility (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I where
+  toFun A := ⟨A.cauchy, A.compatibility⟩
+  invFun s := { cauchy := s.1, compatibility := s.2 }
   left_inv A := by
     cases A
     rfl

@@ -20,6 +20,7 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -760,7 +761,7 @@ structure GeometricOriginData
 Every symmetry action has a nonempty invariant subring: at least `0` and `1`
 are invariant.
 -/
-theorem symmetry_one_invariant :
+theorem symmetryInvariantOwnerTarget :
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
   ∀ α : SymmetryAction G Op,
@@ -771,13 +772,22 @@ theorem symmetry_one_invariant :
 /--
 Every symmetry action has at least the trivial invariant projectors `0` and `1`.
 -/
-theorem invariant_one_projector :
+theorem invariantProjectorOwnerTarget :
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
   ∀ α : SymmetryAction G Op,
     IsInvariantProjector α (1 : Op) := by
   intro G _ Op _ α
   exact Projector.one_isInvariantProjector α
+
+/-- Trivial invariant packet: unit lies in the invariant subring and is an invariant projector. -/
+theorem trivialInvariant_unit_packet
+    (G : Type uG) [Group G]
+    (Op : Type uOp) [Ring Op]
+    (α : SymmetryAction G Op) :
+    (⟨1, IsInvariant.one α⟩ : invariantSubring α).val = 1 ∧
+      IsInvariantProjector α (1 : Op) := by
+  exact ⟨rfl, Projector.one_isInvariantProjector α⟩
 
 /-! ## 9. Real-linear operator symmetry actions -/
 
@@ -1256,7 +1266,7 @@ theorem apply_invariant
 
 end InvariantReadout
 
-/-! ### Invariant sets and concrete sector interfaces -/
+/-! ### Invariant sets and concrete sector sockets -/
 
 /--
 A subset of the ambient operator algebra is invariant if it is stable under
@@ -1494,6 +1504,22 @@ theorem nil_invariant :
     Geom.preserves_drazin
 
 end InvariantDrazinGeometry
+
+/--
+Owner target for reconstructing geometry from invariant operator structure.
+
+A future concrete theorem should instantiate this from a represented operator
+system, a symmetry action, circular polarization, Drazin projectors, and
+trace/weight/spectral readouts.
+-/
+@[owner_target_tag]
+def GeometricOriginOwnerTarget : Prop :=
+  ∃ S : OperatorSymmetryAction G Op,
+  ∃ Geom : S.InvariantDrazinGeometry,
+    S.IsInvariantSet (leftImage Geom.circular.P_left) ∧
+      S.IsInvariantSet (leftImage Geom.circular.P_right) ∧
+      S.IsInvariantSet (leftImage Geom.projectors.Pcore) ∧
+      S.IsInvariantSet (leftImage Geom.projectors.Pnil)
 
 end OperatorSymmetryAction
 

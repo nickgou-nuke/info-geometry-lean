@@ -190,8 +190,8 @@ theorem spectralPacketShift_eq_zero_of_same_datum_and_probe
 
 /--
 Certified-kernel bridge:
-if the gauge analyzer is the property spectral projector, the gauge
-obstruction of the property metric projector is exactly the property left
+if the gauge analyzer is the certified spectral projector, the gauge
+obstruction of the certified metric projector is exactly the certified left
 chiral anomaly.
 -/
 @[rep_depth transport]

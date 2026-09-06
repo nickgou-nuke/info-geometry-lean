@@ -1,0 +1,8 @@
+import Mathlib
+import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
+import Mathlib.NumberTheory.EulerProduct.Basic
+import Mathlib.NumberTheory.EulerProduct.ExpLog
+
+#check EulerProduct.eulerProduct
+#check EulerProduct.eulerProduct_completely_multiplicative
+#check riemannZeta_eulerProduct_exp_log

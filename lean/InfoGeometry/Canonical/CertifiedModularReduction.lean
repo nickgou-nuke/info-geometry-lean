@@ -53,7 +53,7 @@ theorem metricProjectorOf_idempotent
 Certified modular reduction package for projector-controlled logarithmic lane
 execution.
 
-This is an interface object: support and anomaly laws are carried as property
+This is an interface object: support and anomaly laws are carried as certified
 fields so downstream modules cannot apply `log`/`inverse`/entropy formulas to a
 bare operator.
 -/
@@ -81,7 +81,7 @@ structure CertifiedModularReduction where
   metricSide : MetricSide
   hPmetricKrein : Commute (metricProjectorOf (E := E) metricSide cik) cik.GammaS
 
-  -- property execution laws
+  -- certified execution laws
   hKambient_supported_on_Preg :
     let Kreg := -(logOn logDomain)
     let Kambient := compress cik.spectralProjector Kreg
@@ -153,7 +153,7 @@ def anomaly : EndH :=
 def SpectralMetricAlignment : Prop :=
   Commute (Preg c) (Pmetric c)
 
-/-- Spectral commutation property for `Preg` and `Δ`. -/
+/-- Spectral commutation certificate for `Preg` and `Δ`. -/
 @[rep_depth operator]
 theorem Preg_commutes :
     Commute (Preg c) c.Δ :=
@@ -161,7 +161,7 @@ theorem Preg_commutes :
 
 /--
 Functional-calculus readiness on the regular Drazin lane:
-the logarithm domain property is available on `Δreg = Preg Δ Preg`.
+the logarithm domain certificate is available on `Δreg = Preg Δ Preg`.
 -/
 @[rep_depth operator]
 theorem log_defined_on_Δreg :
@@ -193,33 +193,13 @@ theorem Kambient_supported_on_Preg :
     Preg c * Kambient c = Kambient c ∧ Kambient c * Preg c = Kambient c := by
   simpa [Preg, Kambient, Kreg, compress] using c.hKambient_supported_on_Preg
 
-/- The regular generator commutes with its supporting spectral projector. -/
-@[rep_depth operator]
-theorem Kambient_commutes_Preg :
-    Commute (Preg c) (Kambient c) := by
-  change Preg c * Kambient c = Kambient c * Preg c
-  rw [(Kambient_supported_on_Preg (c := c)).1,
-    (Kambient_supported_on_Preg (c := c)).2]
-
 /-- `Kambient` annihilates the Drazin defect lane on both sides. -/
 @[rep_depth operator]
 theorem Kambient_kills_Pzero :
     Pzero c * Kambient c = 0 ∧ Kambient c * Pzero c = 0 := by
   simpa [Pzero, Kambient, Kreg, compress] using c.hKambient_kills_Pzero
 
-/- The regular generator has no matrix element from the defect lane. -/
-@[rep_depth operator]
-theorem Pzero_Kambient_eq_zero :
-    Pzero c * Kambient c = 0 :=
-  (Kambient_kills_Pzero (c := c)).1
-
-/- The regular generator has no matrix element into the defect lane. -/
-@[rep_depth operator]
-theorem Kambient_Pzero_eq_zero :
-    Kambient c * Pzero c = 0 :=
-  (Kambient_kills_Pzero (c := c)).2
-
-/-- No analytic logarithm property is available on the pure defect compression. -/
+/-- No analytic logarithm certificate is available on the pure defect compression. -/
 @[rep_depth operator]
 theorem no_log_on_zero_sector :
     ¬ c.logAdmissible (compress (Pzero c) c.Δ) :=

@@ -148,19 +148,13 @@ lemma routingSoftmaxWeight_sum_one
 
 /-- Sparse mask surface for top-k style gating over the score-softmax weights. -/
 @[rep_depth operator]
-abbrev SparseMask (n : Nat) := ExpertIdx n → Bool
-
-namespace SparseMask
-
-abbrev active {n : Nat} (mask : SparseMask n) : ExpertIdx n → Bool :=
-  mask
-
-end SparseMask
+structure SparseMask (n : Nat) where
+  active : ExpertIdx n → Bool
 
 /-- All-active mask recovers ordinary softmax routing. -/
 @[rep_depth operator]
-def allActiveMask (n : Nat) : SparseMask n :=
-  fun _ => true
+def allActiveMask (n : Nat) : SparseMask n where
+  active := fun _ => true
 
 /-- Masked score-softmax weight. -/
 @[rep_depth operator]

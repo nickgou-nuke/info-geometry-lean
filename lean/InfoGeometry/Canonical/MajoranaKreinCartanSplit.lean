@@ -286,7 +286,7 @@ Constructive `K`-split collapse from the exact thermodynamic stationary packet.
 This is a smaller downstream route than `IsPotentialKillingOperator`: callers
 that already own the stationary readout predicate can reuse the existing
 owner-level equivalence and reach the `K`-split collapse without repackaging a
-separate Killing property.
+separate Killing witness.
 -/
 @[rep_depth transport]
 theorem comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
@@ -319,7 +319,7 @@ theorem comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
 /--
 Constructive phase-part collapse from the exact thermodynamic stationary packet.
 
-This avoids reintroducing a separate Killing property when the caller already
+This avoids reintroducing a separate Killing witness when the caller already
 owns the smaller readout-stationarity predicate.
 -/
 @[rep_depth transport]

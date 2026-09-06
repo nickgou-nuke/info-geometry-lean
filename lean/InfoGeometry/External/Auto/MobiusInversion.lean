@@ -62,4 +62,17 @@ theorem mobius_inversion_divisor_sum {f g : ℕ → ℤ} :
       ∀ n > 0, ∑ x ∈ n.divisorsAntidiagonal, (μ x.fst : ℤ) * g x.snd = f n :=
   sum_eq_iff_sum_mul_moebius_eq
 
+/-- Consolidated finite theorem package for the divisor-lattice inversion. -/
+theorem mobius_discrete_transform_synthesis :
+    dirichletConvolution bosonicKernel fermionicMobiusKernel = vacuumKernel ∧
+    dirichletConvolution fermionicMobiusKernel bosonicKernel = vacuumKernel ∧
+    (∀ f : ArithmeticFunction ℤ,
+      dirichletConvolution (dirichletConvolution f bosonicKernel)
+        fermionicMobiusKernel = f) ∧
+    (∀ f : ArithmeticFunction ℤ,
+      dirichletConvolution (dirichletConvolution f fermionicMobiusKernel)
+        bosonicKernel = f) := by
+  exact ⟨mobius_is_dirichlet_inverse, mobius_inverse_left,
+    boson_then_fermion_recovers, fermion_then_boson_recovers⟩
+
 end noncomputable section

@@ -88,7 +88,7 @@ lemma omegaSeed_nonzero_of_thermalVacuum
   omegaSeed_nonzero (F := F) vac.Omega vac.vacuum_nonzero
 
 /--
-Joint-kernel property on `Ω`: the modular defect `(σ_β(B) - B)` annihilates
+Joint-kernel hypothesis on `Ω`: the modular defect `(σ_β(B) - B)` annihilates
 `Ω` for every observable `B`.
 -/
 def JointKernelOnOmega
@@ -104,7 +104,7 @@ def CommutatorOrthogonalOnOmega
   ∀ A B : AlgebraEnd F, inner ℝ (((A * B - B * A) Ω)) Ω = 0
 
 /--
-Proof-carrying seed property for the structural KMS lane: a concrete doubled seed
+Proof-carrying seed witness for the structural KMS lane: a concrete doubled seed
 vector together with its nonzero, joint-kernel, and commutator-orthogonality
 certificates.
 -/
@@ -117,7 +117,7 @@ structure ExpectationSeedStructuralWitness
 
 namespace ExpectationSeedStructuralWitness
 
-/-- Nontriviality of `ωSeed` extracted from a structural property. -/
+/-- Nontriviality of `ωSeed` extracted from a structural witness. -/
 theorem omegaSeed_nonzero
     (W : ExpectationSeedStructuralWitness (F := F) K β) :
     omegaSeed (F := F) W.Ω ≠ 0 :=
@@ -284,7 +284,7 @@ theorem omegaSeed_kms_of_jointKernel_commutator
     (cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal)
 
 /--
-Witness-routed KMS law for `ωSeed`, replacing the raw structural property pair
+Witness-routed KMS law for `ωSeed`, replacing the raw structural hypothesis pair
 with a proof-carrying seed packet.
 -/
 theorem omegaSeed_kms_of_structuralWitness
@@ -296,7 +296,7 @@ theorem omegaSeed_kms_of_structuralWitness
     (F := F) (K := K) (β := β) (Ω := W.Ω) W.jointKernel W.commutatorOrthogonal
 
 /--
-Constructive seed property from a pairwise-commutative operator lane.
+Constructive seed witness from a pairwise-commutative operator lane.
 -/
 def ExpectationSeedStructuralWitness.ofPairwiseCommute
     (K : AlgebraEnd F)

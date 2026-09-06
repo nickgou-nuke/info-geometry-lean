@@ -9,7 +9,7 @@ open InfoGeometry.Canonical.MoorePenrose
 /-!
 # Inverse Kernel Algebra
 
-The property inverse kernel already packages the core Drazin/Moore-Penrose
+The certified inverse kernel already packages the core Drazin/Moore-Penrose
 data. This file develops the next algebraic layer built from that package:
 complementary projectors, left/right mismatch operators, and the exact
 identities relating these observables to the dilation gap and anomaly
@@ -138,77 +138,77 @@ theorem metricProjector_add_metricComplementaryProjector :
     CIK.metricProjector + CIK.metricComplementaryProjector = (1 : E →L[ℝ] E) := by
   exact CIK.toInverseKernel'.metricProjector_add_metricComplementaryProjector
 
-/-- The property complementary Drazin projector is idempotent. -/
+/-- The certified complementary Drazin projector is idempotent. -/
 theorem spectralComplementaryProjector_idempotent :
     CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector =
       CIK.spectralComplementaryProjector := by
   change (1 - CIK.spectralProjector) * (1 - CIK.spectralProjector) = 1 - CIK.spectralProjector
   noncomm_ring [CIK.spectralProjector_idempotent]
 
-/-- The property Drazin projector is left-orthogonal to its complement. -/
+/-- The certified Drazin projector is left-orthogonal to its complement. -/
 theorem spectralProjector_mul_spectralComplementaryProjector :
     CIK.spectralProjector * CIK.spectralComplementaryProjector = 0 := by
   change CIK.spectralProjector * (1 - CIK.spectralProjector) = 0
   noncomm_ring [CIK.spectralProjector_idempotent]
 
-/-- The property Drazin projector is right-orthogonal to its complement. -/
+/-- The certified Drazin projector is right-orthogonal to its complement. -/
 theorem spectralComplementaryProjector_mul_spectralProjector :
     CIK.spectralComplementaryProjector * CIK.spectralProjector = 0 := by
   change (1 - CIK.spectralProjector) * CIK.spectralProjector = 0
   noncomm_ring [CIK.spectralProjector_idempotent]
 
-/-- The property complementary Moore-Penrose range projector is idempotent. -/
+/-- The certified complementary Moore-Penrose range projector is idempotent. -/
 theorem mpRangeComplementaryProjector_idempotent :
     CIK.mpRangeComplementaryProjector * CIK.mpRangeComplementaryProjector =
       CIK.mpRangeComplementaryProjector := by
   change (1 - CIK.mpRangeProjector) * (1 - CIK.mpRangeProjector) = 1 - CIK.mpRangeProjector
   noncomm_ring [CIK.mpRangeProjector_idempotent]
 
-/-- The property Moore-Penrose range projector is left-orthogonal to its complement. -/
+/-- The certified Moore-Penrose range projector is left-orthogonal to its complement. -/
 theorem mpRangeProjector_mul_mpRangeComplementaryProjector :
     CIK.mpRangeProjector * CIK.mpRangeComplementaryProjector = 0 := by
   change CIK.mpRangeProjector * (1 - CIK.mpRangeProjector) = 0
   noncomm_ring [CIK.mpRangeProjector_idempotent]
 
-/-- The property Moore-Penrose range projector is right-orthogonal to its complement. -/
+/-- The certified Moore-Penrose range projector is right-orthogonal to its complement. -/
 theorem mpRangeComplementaryProjector_mul_mpRangeProjector :
     CIK.mpRangeComplementaryProjector * CIK.mpRangeProjector = 0 := by
   change (1 - CIK.mpRangeProjector) * CIK.mpRangeProjector = 0
   noncomm_ring [CIK.mpRangeProjector_idempotent]
 
-/-- The property complementary Moore-Penrose domain projector is idempotent. -/
+/-- The certified complementary Moore-Penrose domain projector is idempotent. -/
 theorem metricComplementaryProjector_idempotent :
     CIK.metricComplementaryProjector * CIK.metricComplementaryProjector =
       CIK.metricComplementaryProjector := by
   change (1 - CIK.metricProjector) * (1 - CIK.metricProjector) = 1 - CIK.metricProjector
   noncomm_ring [CIK.metricProjector_idempotent]
 
-/-- The property Moore-Penrose domain projector is left-orthogonal to its complement. -/
+/-- The certified Moore-Penrose domain projector is left-orthogonal to its complement. -/
 theorem metricProjector_mul_metricComplementaryProjector :
     CIK.metricProjector * CIK.metricComplementaryProjector = 0 := by
   change CIK.metricProjector * (1 - CIK.metricProjector) = 0
   noncomm_ring [CIK.metricProjector_idempotent]
 
-/-- The property Moore-Penrose domain projector is right-orthogonal to its complement. -/
+/-- The certified Moore-Penrose domain projector is right-orthogonal to its complement. -/
 theorem metricComplementaryProjector_mul_metricProjector :
     CIK.metricComplementaryProjector * CIK.metricProjector = 0 := by
   change (1 - CIK.metricProjector) * CIK.metricProjector = 0
   noncomm_ring [CIK.metricProjector_idempotent]
 
-/-- The property complementary Moore-Penrose range projector is self-adjoint. -/
+/-- The certified complementary Moore-Penrose range projector is self-adjoint. -/
 theorem mpRangeComplementaryProjector_star :
     star CIK.mpRangeComplementaryProjector = CIK.mpRangeComplementaryProjector := by
   change star (1 - CIK.mpRangeProjector) = 1 - CIK.mpRangeProjector
   simp [CIK.mpRangeProjector_star]
 
-/-- The property complementary Moore-Penrose domain projector is self-adjoint. -/
+/-- The certified complementary Moore-Penrose domain projector is self-adjoint. -/
 theorem metricComplementaryProjector_star :
     star CIK.metricComplementaryProjector = CIK.metricComplementaryProjector := by
   change star (1 - CIK.metricProjector) = 1 - CIK.metricProjector
   simp [CIK.metricProjector_star]
 
 /--
-The property complementary Drazin spectral projector is self-adjoint whenever
+The certified complementary Drazin spectral projector is self-adjoint whenever
 `A` is self-adjoint.  The self-adjointness of `A_D` is derived internally from
 Drazin uniqueness.
 -/
@@ -298,7 +298,7 @@ theorem spectralComplementaryProjector_mul_chiralAnomaly_mul_spectralComplementa
     _ = 0 := by simp [hQP, hPQ]
 
 /--
-Off-diagonal Drazin-split decomposition of the property anomaly:
+Off-diagonal Drazin-split decomposition of the certified anomaly:
 `χ = P_D χ P₀ + P₀ χ P_D`.
 -/
 theorem chiralAnomaly_eq_offDiagonal_spectralSplit :

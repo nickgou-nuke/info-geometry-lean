@@ -15,13 +15,16 @@ universe u
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex (PrimeRegister)
 
-abbrev PrimeMode (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
+abbrev PrimeCutoff :=
+  InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff
+
+abbrev PrimeMode (P : PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeMode P
 
-abbrev CantorField (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
+abbrev CantorField (P : PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.CantorField P
 
-abbrev Vertex (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) :=
+abbrev Vertex (P : PrimeCutoff) :=
   InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.Vertex P
 
 structure FiniteMajoranaLattice
@@ -45,7 +48,7 @@ def H (M : FiniteMajoranaLattice Op) : Op :=
 
 theorem D_selfAdjoint (M : FiniteMajoranaLattice Op) :
     IsSelfAdjoint M.D := by
-  exact InfoGeometry.Arithmetic.CantorDiracOperator.cantorDirac_is_selfAdjoint
+  exact InfoGeometry.Arithmetic.CantorDiracOperator.cantorDirac_selfAdjoint_of_generator_selfAdjoint
     M.register M.gamma M.gamma_selfAdjoint
 
 theorem D_sq_eq_H (M : FiniteMajoranaLattice Op) :
@@ -66,14 +69,14 @@ theorem D_commutes_H (M : FiniteMajoranaLattice Op) :
 
 end FiniteMajoranaLattice
 
-structure FiniteZetaDiracLattice (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) where
+structure FiniteZetaDiracLattice (P : PrimeCutoff) where
   packet : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac P
   amplitude_selfAdjoint :
     ∀ p : PrimeMode P, star (packet.amplitude p) = packet.amplitude p
 
 namespace FiniteZetaDiracLattice
 
-variable {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
+variable {P : PrimeCutoff}
 
 def D (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P :=
   Z.packet.op s
@@ -83,6 +86,11 @@ def Q (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P
 
 def Qsharp (Z : FiniteZetaDiracLattice P) (s : ℂ) : CantorField P → CantorField P :=
   Z.packet.Qsharp s
+
+theorem D_eq_Q_add_Qsharp
+    (Z : FiniteZetaDiracLattice P) (s : ℂ) (f : CantorField P) (S : Vertex P) :
+    Z.D s f S = Z.Q s f S + Z.Qsharp s f S := by
+  rfl
 
 theorem D_selfAdjoint_of_unitary
     (Z : FiniteZetaDiracLattice P) (s : ℂ)
@@ -255,7 +263,7 @@ theorem cone_inductionSeries_square_closure_zeroStage
 
 end FiniteSuperchargeInduction
 
-structure FiniteHestenesKreinLattice (P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff) where
+structure FiniteHestenesKreinLattice (P : PrimeCutoff) where
   packet :
     InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.FiniteBerryKeatingCantorDirac P
   amplitude_selfAdjoint :
@@ -267,12 +275,17 @@ structure FiniteHestenesKreinLattice (P : InfoGeometry.Arithmetic.PrimeCantorZet
 
 namespace FiniteHestenesKreinLattice
 
-variable {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
+variable {P : PrimeCutoff}
 
 def toZetaDiracLattice (L : FiniteHestenesKreinLattice P) :
     FiniteZetaDiracLattice P :=
   { packet := L.packet.toCantorZetaDirac
     amplitude_selfAdjoint := L.amplitude_selfAdjoint }
+
+theorem D_eq_Q_add_Qsharp
+    (L : FiniteHestenesKreinLattice P) (s : ℂ) (f : CantorField P) (S : Vertex P) :
+    L.packet.D s f S = L.packet.Q s f S + L.packet.Qsharp s f S := by
+  rfl
 
 theorem D_selfAdjoint_of_zetaCriticalLine
     (L : FiniteHestenesKreinLattice P) (hP : P.primes.Nonempty) (s : ℂ)
@@ -304,14 +317,14 @@ namespace HilbertPolyaLemmaSeries
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 def FiniteCriticalLineSelfAdjointLemma
-    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff} (L : FiniteHestenesKreinLattice P) : Prop :=
+    {P : PrimeCutoff} (L : FiniteHestenesKreinLattice P) : Prop :=
   P.primes.Nonempty →
     ∀ s : ℂ, s.re = 1 / 2 →
       InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac.IsAdjointPair
         (P := P) (L.packet.D s) (L.packet.D s)
 
 theorem finiteCriticalLineSelfAdjoint
-    {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff} (L : FiniteHestenesKreinLattice P) :
+    {P : PrimeCutoff} (L : FiniteHestenesKreinLattice P) :
     FiniteCriticalLineSelfAdjointLemma L := by
   intro hP s hs
   exact L.D_selfAdjoint_of_zetaCriticalLine hP s hs
@@ -478,7 +491,7 @@ def RealSpectrumAwayFromDefinitizingZeros
     (q : Polynomial ℂ) (T : Carrier → Carrier) : Prop :=
   ∀ lambda : ℂ, EigenvalueEquation T lambda → q.eval lambda ≠ 0 → lambda.im = 0
 
-structure KreinDefinitizableRealSpectrumData
+structure KreinDefinitizableRealSpectrumPacket
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier) where
@@ -489,31 +502,31 @@ structure KreinDefinitizableRealSpectrumData
   realAwayFromDefinitizingZeros :
     RealSpectrumAwayFromDefinitizingZeros definitizingPolynomial T
 
-namespace KreinDefinitizableRealSpectrumData
+namespace KreinDefinitizableRealSpectrumPacket
 
 variable {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
 variable {pairing : Carrier → Carrier → ℂ} {T : Carrier → Carrier}
 
 theorem eigen_im_eq_zero
-    (P : KreinDefinitizableRealSpectrumData pairing T)
+    (P : KreinDefinitizableRealSpectrumPacket pairing T)
     (lambda : ℂ) (hEigen : EigenvalueEquation T lambda) :
     lambda.im = 0 :=
   P.realAwayFromDefinitizingZeros lambda hEigen
     (P.avoidsDefinitizingZeros lambda hEigen)
 
 theorem toHestenesKreinRealSpectrumLemma
-    (P : KreinDefinitizableRealSpectrumData pairing T) :
+    (P : KreinDefinitizableRealSpectrumPacket pairing T) :
     HestenesKreinRealSpectrumLemma pairing T := by
   intro _ lambda hEigen
   exact P.eigen_im_eq_zero lambda hEigen
 
-end KreinDefinitizableRealSpectrumData
+end KreinDefinitizableRealSpectrumPacket
 
 theorem kreinDefinitizableRealSpectrum_of_packet
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (P : KreinDefinitizableRealSpectrumData pairing T) :
+    (P : KreinDefinitizableRealSpectrumPacket pairing T) :
     HestenesKreinRealSpectrumLemma pairing T :=
   P.toHestenesKreinRealSpectrumLemma
 
@@ -612,7 +625,7 @@ def CompletedXiSpectralDeterminantLemma
     (Xi : ℂ → ℂ) (T : Carrier → Carrier) : Prop :=
   ∀ s : ℂ, Xi s = 0 → EigenvalueEquation T (hilbertPolyaEigenparameter s)
 
-structure CompletedXiSpectralDeterminantData
+structure CompletedXiSpectralDeterminantPacket
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (Xi : ℂ → ℂ) (T : Carrier → Carrier) where
   spectralDeterminant : ℂ → ℂ
@@ -624,13 +637,13 @@ structure CompletedXiSpectralDeterminantData
     ∀ s : ℂ, spectralDeterminant s = 0 →
       EigenvalueEquation T (hilbertPolyaEigenparameter s)
 
-namespace CompletedXiSpectralDeterminantData
+namespace CompletedXiSpectralDeterminantPacket
 
 variable {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
 variable {Xi : ℂ → ℂ} {T : Carrier → Carrier}
 
 theorem spectralDeterminant_zero_of_xi_zero
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hXi : Xi s = 0) :
     P.spectralDeterminant s = 0 := by
   have hUnitDet : P.normalizingUnit s * P.spectralDeterminant s = 0 := by
@@ -638,44 +651,44 @@ theorem spectralDeterminant_zero_of_xi_zero
   exact Or.resolve_left (mul_eq_zero.mp hUnitDet) (P.normalizingUnit_nonzero s)
 
 theorem xi_zero_of_spectralDeterminant_zero
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hDet : P.spectralDeterminant s = 0) :
     Xi s = 0 := by
   rw [P.xi_eq_unit_mul_det s, hDet, mul_zero]
 
 theorem xi_zero_iff_spectralDeterminant_zero
-    (P : CompletedXiSpectralDeterminantData Xi T) (s : ℂ) :
+    (P : CompletedXiSpectralDeterminantPacket Xi T) (s : ℂ) :
     Xi s = 0 ↔ P.spectralDeterminant s = 0 :=
   ⟨P.spectralDeterminant_zero_of_xi_zero, P.xi_zero_of_spectralDeterminant_zero⟩
 
 theorem spectralDeterminant_ne_zero_of_xi_ne_zero
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hXi : Xi s ≠ 0) :
     P.spectralDeterminant s ≠ 0 := by
   intro hDet
   exact hXi (P.xi_zero_of_spectralDeterminant_zero hDet)
 
 theorem xi_ne_zero_of_spectralDeterminant_ne_zero
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hDet : P.spectralDeterminant s ≠ 0) :
     Xi s ≠ 0 := by
   intro hXi
   exact hDet (P.spectralDeterminant_zero_of_xi_zero hXi)
 
 theorem xi_ne_zero_iff_spectralDeterminant_ne_zero
-    (P : CompletedXiSpectralDeterminantData Xi T) (s : ℂ) :
+    (P : CompletedXiSpectralDeterminantPacket Xi T) (s : ℂ) :
     Xi s ≠ 0 ↔ P.spectralDeterminant s ≠ 0 :=
   ⟨P.spectralDeterminant_ne_zero_of_xi_ne_zero,
     P.xi_ne_zero_of_spectralDeterminant_ne_zero⟩
 
 theorem eigen_of_xi_zero
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hXi : Xi s = 0) :
     EigenvalueEquation T (hilbertPolyaEigenparameter s) :=
   P.determinant_zero_to_eigen s (P.spectralDeterminant_zero_of_xi_zero hXi)
 
 theorem spectralDeterminant_ne_zero_of_not_eigen
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ}
     (hNoEigen : ¬ EigenvalueEquation T (hilbertPolyaEigenparameter s)) :
     P.spectralDeterminant s ≠ 0 := by
@@ -683,19 +696,19 @@ theorem spectralDeterminant_ne_zero_of_not_eigen
   exact hNoEigen (P.determinant_zero_to_eigen s hDet)
 
 theorem xi_ne_zero_of_not_eigen
-    (P : CompletedXiSpectralDeterminantData Xi T)
+    (P : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ}
     (hNoEigen : ¬ EigenvalueEquation T (hilbertPolyaEigenparameter s)) :
     Xi s ≠ 0 :=
   P.xi_ne_zero_of_spectralDeterminant_ne_zero
     (P.spectralDeterminant_ne_zero_of_not_eigen hNoEigen)
 
-end CompletedXiSpectralDeterminantData
+end CompletedXiSpectralDeterminantPacket
 
 theorem completedXiSpectralDeterminant_of_packet
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (Xi : ℂ → ℂ) (T : Carrier → Carrier)
-    (P : CompletedXiSpectralDeterminantData Xi T) :
+    (P : CompletedXiSpectralDeterminantPacket Xi T) :
     CompletedXiSpectralDeterminantLemma Xi T := by
   intro s hXi
   exact P.eigen_of_xi_zero hXi
@@ -712,7 +725,7 @@ def completedXiSpectralDeterminantPacket_of_finiteCharacteristicDeterminant
         Xi s =
           normalizingUnit s *
             finiteCharacteristicDeterminant T (hilbertPolyaEigenparameter s)) :
-    CompletedXiSpectralDeterminantData Xi (fun x => T x) where
+    CompletedXiSpectralDeterminantPacket Xi (fun x => T x) where
   spectralDeterminant s :=
     finiteCharacteristicDeterminant T (hilbertPolyaEigenparameter s)
   normalizingUnit := normalizingUnit
@@ -841,8 +854,8 @@ theorem hilbertPolyaCriticalLineConclusion_of_kreinDefinitizable_packet
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumData pairing T)
-    (D : CompletedXiSpectralDeterminantData Xi T) :
+    (K : KreinDefinitizableRealSpectrumPacket pairing T)
+    (D : CompletedXiSpectralDeterminantPacket Xi T) :
     HilbertPolyaCriticalLineConclusion Xi :=
   hilbertPolyaCriticalLineConclusion_of_lemmaSeries
     Xi pairing T K.symmetric
@@ -854,8 +867,8 @@ theorem hilbertPolyaNoOffCriticalZerosConclusion_of_kreinDefinitizable_packet
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumData pairing T)
-    (D : CompletedXiSpectralDeterminantData Xi T) :
+    (K : KreinDefinitizableRealSpectrumPacket pairing T)
+    (D : CompletedXiSpectralDeterminantPacket Xi T) :
     HilbertPolyaNoOffCriticalZerosConclusion Xi :=
   hilbertPolyaNoOffCriticalZerosConclusion_of_criticalLine Xi
     (hilbertPolyaCriticalLineConclusion_of_kreinDefinitizable_packet Xi pairing T K D)
@@ -865,8 +878,8 @@ theorem xi_ne_zero_of_kreinDefinitizable_packet_offCritical
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumData pairing T)
-    (D : CompletedXiSpectralDeterminantData Xi T)
+    (K : KreinDefinitizableRealSpectrumPacket pairing T)
+    (D : CompletedXiSpectralDeterminantPacket Xi T)
     {s : ℂ} (hOff : s.re ≠ 1 / 2) :
     Xi s ≠ 0 :=
   (hilbertPolyaNoOffCriticalZerosConclusion_of_kreinDefinitizable_packet
@@ -922,7 +935,7 @@ theorem hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint_packet
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x)) :
+    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x)) :
     HilbertPolyaCriticalLineConclusion Xi :=
   hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint
     Xi T hSelf (completedXiSpectralDeterminant_of_packet Xi (fun x => T x) P)
@@ -933,7 +946,7 @@ theorem hilbertPolyaNoOffCriticalZerosConclusion_of_hilbertSelfAdjoint_packet
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x)) :
+    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x)) :
     HilbertPolyaNoOffCriticalZerosConclusion Xi :=
   hilbertPolyaNoOffCriticalZerosConclusion_of_criticalLine Xi
     (hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint_packet Xi T hSelf P)
@@ -944,7 +957,7 @@ theorem xi_ne_zero_of_hilbertSelfAdjoint_packet_offCritical
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x))
+    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x))
     {s : ℂ} (hOff : s.re ≠ 1 / 2) :
     Xi s ≠ 0 :=
   (hilbertPolyaNoOffCriticalZerosConclusion_of_hilbertSelfAdjoint_packet

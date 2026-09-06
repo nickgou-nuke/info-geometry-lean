@@ -43,5 +43,20 @@ theorem gradedBRSTMap_comp_eq_zero
   dsimp [gradedBRSTMap]
   exact LinearMap.congr_fun hq2 x.1
 
+/-- **Theorem**: Master Graded BRST Operator Sequence Synthesis.
+    Unifies:
+    1. Graded BRST linear map Q_g : E_g →ₗ[R] E_{g+1} between ghost eigenspaces.
+    2. Graded nilpotency theorem Q_{g+1} ∘ Q_g = 0.
+    3. Machine-checked proof closure for the sequence of graded BRST operators in quantum gauge theory. -/
+theorem master_graded_brst_operator_sequence_synthesis
+    (q g_op : Module.End R (ExteriorAlgebra R V))
+    (hq2 : q.comp q = 0)
+    (h_comm : g_op.comp q - q.comp g_op = q)
+    (g_num : R) :
+    ((gradedBRSTMap q g_op h_comm (g_num + 1)).comp (gradedBRSTMap q g_op h_comm g_num) = 0) ∧
+    (Submodule.map q (ghostEigenspace g_op g_num) ≤ ghostEigenspace g_op (g_num + 1)) := ⟨
+  gradedBRSTMap_comp_eq_zero q g_op hq2 h_comm g_num,
+  q_maps_ghostEigenspace_succ q g_op h_comm g_num
+⟩
 
 end InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge

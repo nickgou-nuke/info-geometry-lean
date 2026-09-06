@@ -118,6 +118,37 @@ theorem three_lane_graded_projection (x y z : ℂ) :
     1 - (x + y + z) + (x * y + x * z + y * z) - x * y * z := by
   ring
 
+/--
+Consolidated symbolic lane package:
+idempotent occupation variables allow CAS-style symbolic manipulation before
+projecting back to ordinary or graded finite Fock factors.
+-/
+theorem symbolic_fock_lane_synthesis :
+    (∀ x : ℂ, occupationLane 0 x = 1) ∧
+    (∀ x : ℂ, occupationLane 1 x = x) ∧
+    parityLane 0 = 1 ∧
+    parityLane 1 = -1 ∧
+    (∀ e x : ℂ, Idempotent e → gradedLane e x = 1 - e - e * x) ∧
+    (∀ x : ℂ, occupationLane 0 x + occupationLane 1 x = 1 + x) ∧
+    (∀ x : ℂ,
+      parityLane 0 * occupationLane 0 x +
+        parityLane 1 * occupationLane 1 x = 1 - x) ∧
+    (∀ x y : ℂ,
+      (parityLane 0 * occupationLane 0 x +
+          parityLane 1 * occupationLane 1 x) *
+        (parityLane 0 * occupationLane 0 y +
+          parityLane 1 * occupationLane 1 y)
+        =
+      (1 - x) * (1 - y)) := by
+  exact ⟨occupationLane_empty,
+    occupationLane_occupied,
+    parityLane_empty,
+    parityLane_occupied,
+    fun e x he => gradedLane_idempotent he,
+    ordinary_projected_local_factor,
+    graded_projected_local_factor,
+    two_lane_graded_projection⟩
+
 end SymbolicFockLane
 
 end noncomputable section

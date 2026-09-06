@@ -9,7 +9,7 @@ import InfoGeometry.Topology.MaximumCaliberPath
 This module composes existing owner surfaces:
 
 * `BayesianMarkovChain` owns constrained Bayesian projection/minimizer readouts;
-* `MaximumCaliberPath` owns thermodynamic path-current calibration interfaces;
+* `MaximumCaliberPath` owns thermodynamic path-current calibration sockets;
 * `DiscreteDiracHodge` and `DiscreteHodgeStabilizer` own finite Hodge/Dirac
   and stabilizer-code identities.
 

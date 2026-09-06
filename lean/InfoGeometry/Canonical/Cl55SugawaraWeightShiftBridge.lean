@@ -1,9 +1,8 @@
 import InfoGeometry.Clifford.Cl55VirasoroWeightShiftBridge
 import InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 
-/-! Comparison of the two native weight-shift mechanisms.  The carriers remain
-distinct: this file records the common law and the precise truncation
-obstruction, not an unsupported representation equivalence. -/
+/-! Comparison of the native Sugawara and Clifford weight-shift mechanisms.
+The two carriers remain distinct; this file records only the shared shift law. -/
 namespace InfoGeometry.Canonical.Cl55SugawaraWeightShiftBridge
 
 open InfoGeometry.Canonical.SugawaraFiveGradingObstruction

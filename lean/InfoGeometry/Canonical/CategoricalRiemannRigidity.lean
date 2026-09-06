@@ -20,8 +20,8 @@ theorem criticalStripZeros_on_line_iff_fixed_by_reflection (f : ℂ → ℂ) :
   · intro h s hs
     exact (critical_line_fixed_locus_iff s).1 (h s hs)
 
-/-- The usual critical-strip formulation of the Riemann property. This is a
-definition, not a proof of the property. -/
+/-- The usual critical-strip formulation of the Riemann hypothesis. This is a
+definition, not a proof of the hypothesis. -/
 def RiemannHypothesisCriticalStrip : Prop :=
   ∀ s, IsCriticalStripZero riemannZeta s → s.re = 1 / 2
 

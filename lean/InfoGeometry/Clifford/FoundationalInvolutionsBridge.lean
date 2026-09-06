@@ -157,3 +157,4 @@ theorem grand_foundational_involutions_synthesis
    modularJ_krein_selfadjoint⟩
 
 end InfoGeometry.Clifford.Involutions
+

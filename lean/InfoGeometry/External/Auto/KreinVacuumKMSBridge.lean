@@ -12,9 +12,9 @@ open InfoGeometry.Quantum.KreinVacuumPropagator
 /--
 Tracial KMS sector at inverse temperature `β`.
 
-This is a proof-carrying finite sector, not a global KMS-state postulat3.  The
+This is a proof-carrying finite sector, not a global KMS-state postulate.  The
 linear functional and the cyclicity law are explicit fields, so downstream
-vacuum-cancellation theorems cannot rely on a top-level ax!om.
+vacuum-cancellation theorems cannot rely on a top-level axiom.
 -/
 structure CyclicKMSSector (H : Type*) [AddCommGroup H] [Module ℂ H] where
   beta : ℝ
@@ -59,7 +59,7 @@ Delta-regularized thermodynamic UV-finiteness.
 
 This is the non-global KMS version of the propagator cancellation: the KMS
 functional is used only on a sector where the regularized modular defect
-`σ(A)-A` has zero pairing, so the cyclic trace property follows from twisted
+`σ(A)-A` has zero pairing, so the cyclic trace hypothesis follows from twisted
 cyclicity plus defect subtraction rather than being postulated outright.
 -/
 theorem deltaRegularized_kms_vacuum_is_finite

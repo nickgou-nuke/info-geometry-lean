@@ -23,9 +23,5 @@ theorem cylinder_metric_conformal_flat (dξ dθ : ℝ) :
   unfold cylinderMetric
   rfl
 
-theorem grand_apollonius_cylinder_synthesis (dξ dθ : ℝ) :
-    cylinderMetric dξ dθ = dξ ^ 2 + dθ ^ 2 :=
-  cylinder_metric_conformal_flat dξ dθ
-
 end
 end InfoGeometry.LightCone.ApolloniusCylinder

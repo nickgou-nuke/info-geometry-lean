@@ -58,7 +58,7 @@ the two anchors have the same potential value.
   exact twoStateGap_eq_of_referenceValueEq (E := E) P reference₀ reference₁ comparison hRef
 
 /--
-Projector-sector degeneracy property: the potential datum takes the same
+Projector-sector degeneracy hypothesis: the potential datum takes the same
 value on every pair of fixed points of the projector.
 -/
 @[rep_depth transport] theorem twoStateGap_eq_of_projectorSectorDegeneracy

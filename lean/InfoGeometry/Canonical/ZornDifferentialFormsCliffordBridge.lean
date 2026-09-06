@@ -24,7 +24,7 @@ variable [Semiring C] [Algebra R C]
 structure FormHodgeCliffordData where
   Q : QuadraticForm R V
   differential : ExteriorAlgebra R V →ₗ[R] ExteriorAlgebra R V
-  differential_sq : differential.comp differential = LinearMap.id
+  differential_sq : differential.comp differential = 0
   hodgeStar : ExteriorAlgebra R V →ₗ[R] ExteriorAlgebra R V
   hodgeSquareSign : R
   hodgeStar_sq : hodgeStar.comp hodgeStar = hodgeSquareSign • LinearMap.id
@@ -46,7 +46,7 @@ def hodgeDirac (D : FormHodgeCliffordData (R := R) (V := V) (C := C)) :
 theorem differential_square_apply
     (D : FormHodgeCliffordData (R := R) (V := V) (C := C))
     (ω : ExteriorAlgebra R V) :
-    D.differential (D.differential ω) = ω := by
+    D.differential (D.differential ω) = 0 := by
   have h := congrArg (fun f : ExteriorAlgebra R V →ₗ[R] ExteriorAlgebra R V => f ω)
     D.differential_sq
   simpa [LinearMap.comp_apply] using h

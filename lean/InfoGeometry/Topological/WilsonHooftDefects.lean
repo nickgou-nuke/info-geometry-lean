@@ -110,26 +110,8 @@ theorem wilson_defects_commute (p q γ : ℝ) :
     wilsonLoopDefect q γ * wilsonLoopDefect p γ = 0 := by
   ring
 
-/-!
-### 3. Гранд Капстоун: Синтез на Wilson и 't Hooft Дефектите
--/
-
-/-- 🏆 ГРАНД КАПСТОУН: Пълна формална верификация на Wilson и 't Hooft дефектите:
-    вакуумен Wilson дефект W_p(0) = 2, четност W_p(-γ) = W_p(γ), унитарност на 't Hooft оператора,
-    квантуване на фазата на свързване B(k, kn) = 1 и точна комутация на дефектите [W_p, W_q] = 0 -/
-theorem grand_wilson_hooft_defects_synthesis
-    (p q γ k : ℝ) (n : ℤ) (hk : k ≠ 0) :
-    (wilsonLoopDefect p 0 = 2) ∧
-    (wilsonLoopDefect p (-γ) = wilsonLoopDefect p γ) ∧
-    (‖tHooftDefectOperator 1 γ‖ = 1) ∧
-    (topologicalLinkingPhase k (k * (n : ℝ)) = 1) ∧
-    (wilsonLoopDefect p γ * wilsonLoopDefect q γ -
-     wilsonLoopDefect q γ * wilsonLoopDefect p γ = 0) :=
-  ⟨wilson_defect_vacuum p,
-   wilson_defect_even p γ,
-   t_hooft_defect_unitary 1 γ,
-   topological_linking_quantization k n hk,
-   wilson_defects_commute p q γ⟩
+/-! The reusable boundary is given by the individual finite defect identities
+    above; the former aggregate synthesis theorem is intentionally omitted. -/
 
 end
 

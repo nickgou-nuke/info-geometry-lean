@@ -4,7 +4,7 @@ import Mathlib.Tactic
 /-!
 # InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 
-Thin algebraic Hodge--Dirac--Laplacian interface.
+Thin algebraic Hodge--Dirac--Laplacian socket.
 
 This file does not construct a global Hodge theory and does not assert a
 signature-independent `*² = -1` law.  The Hodge/phase convention is supplied as
@@ -24,25 +24,23 @@ namespace InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 /--
 Carrier for a Hodge/Dirac/Laplacian readout.
 
-The carrier is the native nested product `Op × (Op × (Op × Op))`; its four
-coordinates are exposed by the accessors below.  No custom evidence structure
-is needed for a tuple of operators.
+`centralReadout` is deliberately only a field.  This module does not identify it
+with a Virasoro/Kac--Moody central charge; that belongs to the affine/Sugawara
+lane after the relevant current data are supplied.
 -/
 @[rep_depth operator]
-abbrev HodgeDiracLaplacianCarrier (Op : Type*) :=
-  Op × (Op × (Op × Op))
+structure HodgeDiracLaplacianCarrier (Op : Type*) where
+  /-- Supplied Hodge star / phase / chirality operator. -/
+  hodgeStar : Op
 
-def hodgeStar {Op : Type*} (C : HodgeDiracLaplacianCarrier Op) : Op :=
-  C.1
+  /-- Supplied Dirac or supercharge-like odd operator. -/
+  dirac : Op
 
-def dirac {Op : Type*} (C : HodgeDiracLaplacianCarrier Op) : Op :=
-  C.2.1
+  /-- Supplied Laplacian or even Hamiltonian-like operator. -/
+  laplacian : Op
 
-def laplacian {Op : Type*} (C : HodgeDiracLaplacianCarrier Op) : Op :=
-  C.2.2.1
-
-def centralReadout {Op : Type*} (C : HodgeDiracLaplacianCarrier Op) : Op :=
-  C.2.2.2
+  /-- Supplied central/anomaly readout token. -/
+  centralReadout : Op
 
 /--
 Phase convention for the Hodge star.
@@ -52,19 +50,19 @@ signature convention.
 -/
 @[rep_depth operator]
 def IsHodgePhase {Op : Type*} [Ring Op] (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  hodgeStar C * hodgeStar C = -(1 : Op)
+  C.hodgeStar * C.hodgeStar = -(1 : Op)
 
 /-- The Dirac/supercharge anticommutes with the supplied Hodge/phase axis. -/
 @[rep_depth operator]
 def IsDiracHodgeChiral {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  dirac C * hodgeStar C = -(hodgeStar C * dirac C)
+  C.dirac * C.hodgeStar = -(C.hodgeStar * C.dirac)
 
 /-- The Laplacian is supplied as the square of the Dirac/supercharge. -/
 @[rep_depth operator]
 def IsLaplacianFromDirac {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  laplacian C = dirac C * dirac C
+  C.laplacian = C.dirac * C.dirac
 
 /-- Direct readback of the supplied Hodge phase convention. -/
 @[rep_depth operator]
@@ -72,7 +70,7 @@ theorem hodge_phase_sq_eq_neg_one
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (hStar : IsHodgePhase C) :
-    hodgeStar C * hodgeStar C = -(1 : Op) :=
+    C.hodgeStar * C.hodgeStar = -(1 : Op) :=
   hStar
 
 /-- Direct readback of the supplied Dirac/Hodge chirality law. -/
@@ -81,7 +79,7 @@ theorem dirac_anticommutes_hodge
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C) :
-    dirac C * hodgeStar C = -(hodgeStar C * dirac C) :=
+    C.dirac * C.hodgeStar = -(C.hodgeStar * C.dirac) :=
   hChiral
 
 /-- Direct readback that the Laplacian is the Dirac square. -/
@@ -90,7 +88,7 @@ theorem laplacian_eq_dirac_sq_of_closure
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (hDelta : IsLaplacianFromDirac C) :
-    laplacian C = dirac C * dirac C :=
+    C.laplacian = C.dirac * C.dirac :=
   hDelta
 
 /--
@@ -125,9 +123,9 @@ theorem dirac_sq_commutes_hodge_of_chiral
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C) :
-    (dirac C * dirac C) * hodgeStar C =
-      hodgeStar C * (dirac C * dirac C) :=
-  dirac_sq_commutes_hodge (hodgeStar C) (dirac C) hChiral
+    (C.dirac * C.dirac) * C.hodgeStar =
+      C.hodgeStar * (C.dirac * C.dirac) :=
+  dirac_sq_commutes_hodge C.hodgeStar C.dirac hChiral
 
 /-- If `Δ = Q²`, then the supplied Laplacian commutes with the Hodge axis. -/
 @[rep_depth operator]
@@ -136,50 +134,53 @@ theorem laplacian_commutes_hodge_of_dirac_closure
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C)
     (hDelta : IsLaplacianFromDirac C) :
-    laplacian C * hodgeStar C =
-      hodgeStar C * laplacian C := by
+    C.laplacian * C.hodgeStar =
+      C.hodgeStar * C.laplacian := by
   rw [hDelta]
   exact dirac_sq_commutes_hodge_of_chiral C hChiral
 
 /--
-Central readout remains property-gated.
+Central readout remains witness-gated.
 
-This is intentionally a property-gated interface for downstream affine/Sugawara
+This is intentionally a witness-gated interface for downstream affine/Sugawara
 calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
-abbrev CentralReadoutCommutes
+structure CentralReadoutWitness
     {Op : Type*} [Ring Op]
-    (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  ∀ A : Op, Commute (centralReadout C) A
+    (C : HodgeDiracLaplacianCarrier Op) where
+  centralReadout : Op
+  centralReadout_eq_carrier : centralReadout = C.centralReadout
+  centrality : ∀ A : Op, Commute centralReadout A
 
 /--
-Owner-facing central-readout gate: the bridge exports only a supplied property
+Owner-facing central-readout gate: the bridge exports only a supplied witness
 whose readout is tied to the carrier readout.
 -/
 @[rep_depth operator]
 def IsCentralReadoutFromLaplacianAnomaly
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  ∀ A : Op, Commute (centralReadout C) A
+  ∀ A : Op, Commute C.centralReadout A
 
-/-- Readback from a central/anomaly property to the carrier readout. -/
+/-- Readback from a central/anomaly witness to the carrier readout. -/
 @[rep_depth operator]
-theorem centralReadout_eq_carrier_of_property
+theorem centralReadout_eq_carrier_of_witness
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
-    (W : CentralReadoutCommutes C) :
-    centralReadout C = centralReadout C ∧
-      IsCentralReadoutFromLaplacianAnomaly C :=
-  ⟨rfl, W⟩
+    (W : CentralReadoutWitness C) :
+    W.centralReadout = C.centralReadout :=
+  W.centralReadout_eq_carrier
 
-/-- A genuine centrality property transfers to the carrier readout. -/
+/-- A genuine centrality witness transfers to the carrier readout. -/
 @[rep_depth operator]
-theorem centralReadout_isCentral_of_property
+theorem centralReadout_isCentral_of_witness
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
-    (W : CentralReadoutCommutes C) :
+    (W : CentralReadoutWitness C) :
     IsCentralReadoutFromLaplacianAnomaly C := by
-  exact W
+  intro A
+  rw [← W.centralReadout_eq_carrier]
+  exact W.centrality A
 
 end InfoGeometry.Canonical.HodgeDiracLaplacianBridge

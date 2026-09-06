@@ -5,13 +5,13 @@ import InfoGeometry.Canonical.HolographicSouriauReconstruction
 # Wallpaper symmetries compatible with the Klein-bottle Cartan shadow
 
 Finite exact-rational audit layer for wallpaper point symmetries compatible with
-the Brillouin Klein-bottle cell used in the five-graded `O(5,5)`/Pin interface.
+the Brillouin Klein-bottle cell used in the five-graded `O(5,5)`/Pin socket.
 
 The concrete finite result is the signed-permutation point group `D₄` generated
 by the Brillouin twist `T² = -I` and glide `G T = - T G`.  These eight matrices
 are the wallpaper point symmetries which normalize the Klein-bottle momentum
 cell.  Full crystallographic wallpaper-group classification, Pin(5,5) bundle
-construction, and global Cartan geometry remain explicit property layers.
+construction, and global Cartan geometry remain explicit certificate layers.
 -/
 
 namespace InfoGeometry.Canonical.WallpaperKleinBottleCartan
@@ -116,63 +116,94 @@ theorem wallpaperD4_reflections_anticommute (i : Fin 4) :
   fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
     norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- A finite classification property: an owner can identify any wallpaper
+/-- A finite classification certificate: an owner can identify any wallpaper
 point symmetry satisfying the Klein compatibility predicates with one of the
 eight displayed `D₄` elements. -/
-structure WallpaperKleinClassification where
-  candidate : Set Mat2Q
+structure WallpaperKleinClassificationCertificate where
+  candidate : Mat2Q → Prop
+  candidate_compatible :
+    ∀ S, candidate S → IsKleinCompatibleWallpaper S
+  candidate_classified :
+    ∀ S, candidate S → ∃ i : Fin 8, S = wallpaperD4 i
 
-namespace WallpaperKleinClassification
+namespace WallpaperKleinClassificationCertificate
 
-variable (C : WallpaperKleinClassification)
+variable (C : WallpaperKleinClassificationCertificate)
 
-/-- Read out the explicit eight-element classification from the property. -/
-theorem classified_as_D4
-    {S : Mat2Q} (hS : S ∈ C.candidate)
-    (hClass : ∀ S : Mat2Q, S ∈ C.candidate → ∃ i : Fin 8, S = wallpaperD4 i) :
+/-- Read out the explicit eight-element classification from the certificate. -/
+theorem classified_as_D4 {S : Mat2Q} (hS : C.candidate S) :
     ∃ i : Fin 8, S = wallpaperD4 i :=
-  hClass S hS
+  C.candidate_classified S hS
 
 /-- Any classified candidate is compatible with the Klein-bottle cell. -/
-theorem classified_is_compatible
-    {S : Mat2Q} (hS : S ∈ C.candidate)
-    (hComp : ∀ S : Mat2Q, S ∈ C.candidate → IsKleinCompatibleWallpaper S) :
+theorem classified_is_compatible {S : Mat2Q} (hS : C.candidate S) :
     IsKleinCompatibleWallpaper S :=
-  hComp S hS
+  C.candidate_compatible S hS
 
-end WallpaperKleinClassification
+end WallpaperKleinClassificationCertificate
 
-/-- Five-graded Cartan shadow for the split `O(5,5)`/Pin interface.  The Cartan and
+/-- Five-graded Cartan shadow for the split `O(5,5)`/Pin socket.  The Cartan and
 grade-compatibility claims are intentionally explicit predicates. -/
-structure Pin55CartanWallpaperData where
+structure Pin55CartanWallpaperSocket where
   cartan : Set Mat10Q
   grade : Fin 5 → Set Mat10Q
   wallpaperAction : Fin 8 → Mat10Q → Mat10Q
+  preservesCartan :
+    ∀ i : Fin 8, ∀ X : Mat10Q,
+      X ∈ cartan → wallpaperAction i X ∈ cartan
+  preservesFiveGrade :
+    ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
+      X ∈ grade g → wallpaperAction i X ∈ grade g
+  kleinCompatible : ∀ i : Fin 8, IsKleinCompatibleWallpaper (wallpaperD4 i)
+  cartan_readout :
+    ∀ i : Fin 8, ∀ X : Mat10Q,
+      X ∈ cartan → wallpaperAction i X ∈ cartan
+  grade_readout :
+    ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
+      X ∈ grade g → wallpaperAction i X ∈ grade g
 
-namespace Pin55CartanWallpaperData
+namespace Pin55CartanWallpaperSocket
 
 /-- The wallpaper `D₄` action preserves the supplied Cartan shadow. -/
-theorem preserves_cartan_readout (S : Pin55CartanWallpaperData)
-    (hCartan :
-      ∀ i : Fin 8, ∀ X : Mat10Q,
-        X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan) :
+theorem preserves_cartan_readout (S : Pin55CartanWallpaperSocket) :
     ∀ i : Fin 8, ∀ X : Mat10Q,
-      X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan := hCartan
+      X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan :=
+  S.cartan_readout
 
 /-- The wallpaper `D₄` action preserves the supplied five-grade decomposition. -/
-theorem preserves_five_grade_readout (S : Pin55CartanWallpaperData)
-    (hGrade :
-      ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-        X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g) :
+theorem preserves_five_grade_readout (S : Pin55CartanWallpaperSocket) :
     ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-      X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g := hGrade
+      X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g :=
+  S.grade_readout
 
 /-- Each finite wallpaper point symmetry is Klein-compatible. -/
-theorem klein_compatible_readout (S : Pin55CartanWallpaperData) (i : Fin 8) :
+theorem klein_compatible_readout (S : Pin55CartanWallpaperSocket) (i : Fin 8) :
     IsKleinCompatibleWallpaper (wallpaperD4 i) :=
-  wallpaperD4_is_klein_compatible i
+  S.kleinCompatible i
 
-end Pin55CartanWallpaperData
+end Pin55CartanWallpaperSocket
+
+/-- Canonical finite socket using the proved compatibility theorem for the eight
+point symmetries; the Cartan/five-grade preservation premises are supplied by
+the Pin(5,5) owner. -/
+def pin55WallpaperSocketOfPremises
+    (cartan : Set Mat10Q) (grade : Fin 5 → Set Mat10Q)
+    (wallpaperAction : Fin 8 → Mat10Q → Mat10Q)
+    (hCartan :
+      ∀ i : Fin 8, ∀ X : Mat10Q,
+        X ∈ cartan → wallpaperAction i X ∈ cartan)
+    (hGrade :
+      ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
+        X ∈ grade g → wallpaperAction i X ∈ grade g) :
+    Pin55CartanWallpaperSocket where
+  cartan := cartan
+  grade := grade
+  wallpaperAction := wallpaperAction
+  preservesCartan := hCartan
+  preservesFiveGrade := hGrade
+  kleinCompatible := wallpaperD4_is_klein_compatible
+  cartan_readout := hCartan
+  grade_readout := hGrade
 
 end
 

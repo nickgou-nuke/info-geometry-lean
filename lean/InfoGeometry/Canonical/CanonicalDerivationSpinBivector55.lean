@@ -57,6 +57,12 @@ theorem canonicalDerivationToSpinBivector_map_smul (r : ℝ) (D : Derivation) :
       r • canonicalDerivationToSpinBivector D :=
   canonicalDerivationToSpinBivector.map_smul r D
 
+theorem canonicalDerivationToSpinBivector_eq_restricted (D : Derivation) :
+    canonicalDerivationToSpinBivector D =
+      so55RestrictedToBivector
+        ⟨derivationToSO55 D, derivationToSO55_mem_so55LeviSubalgebra D⟩ := by
+  rfl
+
 /-- 🏆 THEOREM 3: Vector Action Commutator Agreement. -/
 theorem canonicalDerivationToSpinBivector_vector_agrees (u v w : V55) :
     ⁅ι55 u * ι55 v, ι55 w⁆ = ι55 (bivectorVectorTransform u v w) :=

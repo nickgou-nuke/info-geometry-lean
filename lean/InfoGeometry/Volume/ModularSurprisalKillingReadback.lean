@@ -41,8 +41,8 @@ theorem modular_generator_has_zero_derivation_on_self
 theorem modular_generator_power_preserved
     (K : AlgebraEnd H) (n : ℕ) (t : ℝ) :
     modularHamiltonianAction (H := H) K (K ^ n) t = K ^ n := by
-  rw [modularHamiltonianAction_pow]
-  rw [modular_generator_preserved]
+  apply modularHamiltonianAction_eq_self_of_commute K (K ^ n) t
+  exact ((Commute.refl K).pow_right n).symm
 
 /-! ## General commutator-generated modular derivation -/
 
@@ -53,24 +53,5 @@ theorem modular_surprisal_flow_derivative
       (modularHamiltonianAction (H := H) K ⁅K, A⁆ t)
       t := by
   exact modularHamiltonianAction_hasDerivAt K A t
-
-theorem modular_surprisal_flow_preserves_commutator
-    (K A B : AlgebraEnd H) (t : ℝ) :
-    modularHamiltonianAction (H := H) K ⁅A, B⁆ t =
-      ⁅modularHamiltonianAction (H := H) K A t,
-        modularHamiltonianAction (H := H) K B t⁆ := by
-  exact modularHamiltonianAction_lie K A B t
-
-theorem modular_surprisal_flow_commutes_with_derivation
-    (K A : AlgebraEnd H) (t : ℝ) :
-    modularHamiltonianAction (H := H) K ⁅K, A⁆ t =
-      ⁅K, modularHamiltonianAction (H := H) K A t⁆ := by
-  simpa using
-    (modularHamiltonianAction_lie (H := H) K K A t)
-
-noncomputable def modular_surprisal_flow_is_algebra_equiv
-    (K : AlgebraEnd H) (t : ℝ) :
-    AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H :=
-  modularHamiltonianActionAlgEquiv K t
 
 end InfoGeometry.Volume.ModularSurprisalKillingReadback

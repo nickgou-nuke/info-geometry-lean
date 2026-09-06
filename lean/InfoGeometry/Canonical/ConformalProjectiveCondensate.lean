@@ -51,13 +51,13 @@ structure ProjectiveCondensate (E : Type*)
   heisenberg_saturation : VarX * VarP = 1 / 4
 
 /-- The nilpotent boundary differential represents the parabolic nilpotent radical generator. -/
-theorem nilpotent_radical_generator (f : (ℕ → Bool) → ℂ) :
+theorem nilpotent_radical_generator (f : CantorBoundary → ℂ) :
     UHF_boundary_op (UHF_boundary_op f) = 0 :=
   UHF_boundary_op_sq_zero f
 
 /-- The momentum variance of a valid condensate is strictly positive. -/
 theorem condensate_varP_pos {E : Type*}
-  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [FiniteDimensional ℝ E] (vac : ProjectiveCondensate E) :
     vac.VarP > 0 := by
   have h_pos := vac.VarX_pos

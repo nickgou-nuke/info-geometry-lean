@@ -28,21 +28,43 @@ namespace InfoGeometry.Topology.AmplituhedronBoundary
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
 open InfoGeometry.Projective.PenroseSpinTiling
 
-/- Explicit external rank evidence sufficient to match the finite `Fin 32` carrier. -/
+/-- Explicit external rank evidence sufficient to match the finite `Fin 32` carrier. -/
+abbrev ExternalRank32BoundaryCertificate : Type :=
+  Σ' data : ExternalBettiData,
+    HasConf3AmbientDimension data ∧
+      RankDataConsistent data ∧
+        data.totalRank = 8
+
+namespace ExternalRank32BoundaryCertificate
+
+abbrev data (C : ExternalRank32BoundaryCertificate) : ExternalBettiData :=
+  C.1
+
+abbrev ambient (C : ExternalRank32BoundaryCertificate) :
+    HasConf3AmbientDimension C.data :=
+  C.2.1
+
+abbrev consistent (C : ExternalRank32BoundaryCertificate) :
+    RankDataConsistent C.data :=
+  C.2.2.1
+
+abbrev localRank_eq (C : ExternalRank32BoundaryCertificate) :
+    C.data.totalRank = 8 :=
+  C.2.2.2
+
+end ExternalRank32BoundaryCertificate
+
 /--
 The spin-tiled external rank equals the cardinality of the finite rank-32
 boundary carrier.
 -/
 theorem external_spin_tiled_rank_eq_boundary_card
-    (data : ExternalBettiData)
-    (hAmbient : HasConf3AmbientDimension data)
-    (hConsistent : RankDataConsistent data)
-    (hLocalRank : data.totalRank = 8) :
-    data.totalRank * spinTilingMultiplicity =
+    (C : ExternalRank32BoundaryCertificate) :
+    C.data.totalRank * spinTilingMultiplicity =
       Fintype.card BoundaryRank32State := by
   calc
-    data.totalRank * spinTilingMultiplicity = 32 :=
-      spin_tiled_rank_from_external_data data hAmbient hConsistent hLocalRank
+    C.data.totalRank * spinTilingMultiplicity = 32 :=
+      spin_tiled_rank_from_external_data C.data C.ambient C.consistent C.localRank_eq
     _ = Fintype.card BoundaryRank32State := by
       exact boundaryRank32State_card.symm
 
@@ -56,11 +78,14 @@ theorem candidate_spin_tiled_rank_eq_boundary_card :
     _ = Fintype.card BoundaryRank32State := by
       exact boundaryRank32State_card.symm
 
-/-
+/--
 A rank-32 boundary realization with attached external rank evidence.
 
 This remains a data bridge; it does not assert that `carrierReadout` is a de Rham
 basis.
 -/
+structure ExternalRank32BoundaryRealization (Op : Type*) [Ring Op]
+    extends Rank32BoundaryRealization Op where
+  cert : ExternalRank32BoundaryCertificate
 
 end InfoGeometry.Topology.AmplituhedronBoundary

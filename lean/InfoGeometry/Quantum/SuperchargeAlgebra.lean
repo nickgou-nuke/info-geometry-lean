@@ -34,11 +34,4 @@ theorem super_hamiltonian_vacuum_energy (E_0 : R) :
   unfold SuperHamiltonian
   simp
 
-theorem grand_supercharge_algebra_synthesis (a_dag f : R) (E_0 : R)
-    (hf : f * f = 0) (h_comm : f * a_dag = a_dag * f) :
-    (NilpotentSquare (a_dag * f)) ∧
-    (SuperHamiltonian 0 0 E_0 = E_0) :=
-  ⟨supercharge_nilpotent_of_square_zero a_dag f hf h_comm,
-   super_hamiltonian_vacuum_energy E_0⟩
-
 end InfoGeometry.Quantum.SuperchargeAlgebra

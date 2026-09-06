@@ -10,11 +10,11 @@ import InfoGeometry.Inference.TCSCertifiedTemperatureSelection
 import InfoGeometry.Inference.TCSSensitivityCertificate
 
 /-!
-# End-to-end property TCS sensitivity selection
+# End-to-end certified TCS sensitivity selection
 
 This theorem composes the finite Poisson temperature selector with the local
 inverse-Fisher sensitivity report. It remains conditional on the experimental
-property supplied for each admissible schedule point.
+certificate supplied for each admissible schedule point.
 -/
 
 namespace InfoGeometry.Inference
@@ -24,7 +24,7 @@ open FiniteGibbs
 
 variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
-theorem exists_tcs_property_sensitivity_selection
+theorem exists_tcs_certified_sensitivity_selection
     (observed x liveTime : Data → ℝ)
     (hobs : ∀ i, 0 ≤ observed i)
     (p : TCSParameter x liveTime)
@@ -61,7 +61,7 @@ theorem exists_tcs_property_sensitivity_selection
               (tcsPoissonModel observed x liveTime hobs) p ε i)
             liveTime x) c := by
   obtain ⟨ε, hεS, c, hcε, hεP, hmax⟩ :=
-    exists_tcs_property_schedule_max_susceptibility
+    exists_tcs_certified_schedule_max_susceptibility
       observed x liveTime hobs p S P hP hcertificate
   refine ⟨ε, hεS, c, hcε, hεP, hmax, ?_, ?_⟩
   · exact tcsCLocalStdDev_nonneg _ c

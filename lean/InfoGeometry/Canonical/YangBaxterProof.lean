@@ -304,38 +304,6 @@ theorem q_inv_four_eq_neg_q : (q ^ 4)⁻¹ = -q := by
   rw [q_pow_five]
   ring
 
-theorem det_R_sq_add_one_ne_zero :
-    Matrix.det (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0 := by
-  intro hdet
-  have hdiag : (q ^ 4)⁻¹ * (q ^ 4)⁻¹ + 1 = 0 ∨ q ^ 3 * q ^ 3 + 1 = 0 := by
-    simpa [R, Matrix.det_fin_two, Matrix.mul_apply, Matrix.add_apply,
-      Matrix.one_apply, Fin.sum_univ_two] using hdet
-  rcases hdiag with hleft | hright
-  · have hq2 : q ^ 2 = -1 := by
-      rw [q_inv_four_eq_neg_q] at hleft
-      linear_combination hleft
-    have hq5 := q_pow_five
-    have hq5eq : q ^ 5 = q := by
-      rw [show q ^ 5 = q * (q ^ 2) ^ 2 by ring, hq2]
-      ring
-    have hq : q = -1 := by
-      calc q = q ^ 5 := hq5eq.symm
-           _ = -1 := q_pow_five
-    rw [hq] at hq2
-    norm_num at hq2
-  · have hq6 : q ^ 6 = -1 := by
-      calc
-        q ^ 6 = q ^ 3 * q ^ 3 := by ring
-        _ = -1 := by linear_combination hright
-    have hq5 := q_pow_five
-    have hq : q = 1 := by
-      have hq6eq : q ^ 6 = -q := by
-        rw [show q ^ 6 = q ^ 5 * q by ring, hq5]
-        ring
-      linear_combination hq6eq - hq6
-    rw [hq] at hq5
-    norm_num at hq5
-
 /-- τ = q - q⁴ - 1 (cross relation, using q⁻¹ = -q⁴ from q⁵ = -1). -/
 theorem τ_eq_q_minus_q4_minus_one : τ = q - q ^ 4 - 1 := by
   have h_qinv_eq_neg_q4 : q⁻¹ = -(q ^ 4) := by
@@ -432,4 +400,4 @@ theorem braid_relation : R * B * R = B * R * B := by
   rw [hR, hB]
   exact diagonal_artin_relation_complex τ s (-q) (q ^ 3) hF hA
 
-end YangBaxterProof
+end InfoGeometry.Canonical.YangBaxterProof

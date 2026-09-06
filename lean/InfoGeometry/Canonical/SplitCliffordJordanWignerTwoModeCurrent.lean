@@ -8,7 +8,7 @@ Finite two-mode current table from the Jordan--Wigner CAR matrices.
 This file proves concrete current identities in `M₄(ℝ)`.
 
 No wrappers.
-No abstract property.
+No abstract witness.
 No Sugawara.
 No `sorry`.
 -/

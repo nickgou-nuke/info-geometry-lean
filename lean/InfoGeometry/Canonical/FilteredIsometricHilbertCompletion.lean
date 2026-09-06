@@ -9,7 +9,7 @@ Mathlib module direct limit.  The common-stage inner product constructed in
 carrier.  This file installs it as a native `InnerProductSpace.Core` and takes
 the uniform completion.
 
-No ambient Hilbert space or compatibility property is assumed: the inner
+No ambient Hilbert space or compatibility witness is assumed: the inner
 product and complex scalar action are both descended from the transition
 isometries.
 -/
@@ -241,14 +241,6 @@ theorem stageToHilbertDirectLimit_transition
   exact congrArg
     (directLimitToCompletion E sys)
     (stageToDirectLimitLinearMap_transition E sys hij x)
-
-theorem stageToHilbertDirectLimit_inner
-    (i : I) (x y : E i) :
-    inner ℂ
-        (stageToHilbertDirectLimit E sys i x)
-        (stageToHilbertDirectLimit E sys i y) =
-      inner ℂ x y := by
-  exact (stageToHilbertDirectLimit E sys i).inner_map_map x y
 
 /-- The union of the stage images is dense in the completed filtered Hilbert
 colimit.  Thus the completion introduces no extra finite-stage generators. -/

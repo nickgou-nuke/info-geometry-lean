@@ -20,7 +20,7 @@ noncomputable def sectorModel
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
     (β μ : ℝ) :
     FiniteGibbs.Model (Data := Sector) (Theta := Unit) :=
-  fun s _ => effectiveSectorPotential State energy particleNumber β μ s
+  ⟨fun s _ => effectiveSectorPotential State energy particleNumber β μ s⟩
 
 /-- The sector model's partition at temperature `1 / β` is the hierarchical
     grand partition. -/
@@ -98,7 +98,7 @@ theorem sectorVariationalObjective_eq_grandFreeEnergy_add_relativeEntropy
       exact sectorModel_weight_eq_sectorWeight
         State energy particleNumber β μ hβne s
 
-/-- The KL term in the sector variational property is nonnegative. -/
+/-- The KL term in the sector variational certificate is nonnegative. -/
 theorem sectorVariationalGap_nonneg
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
     {β μ : ℝ} (hβ : 0 < β) (q : Sector → ℝ)

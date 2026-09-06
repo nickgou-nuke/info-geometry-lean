@@ -91,13 +91,5 @@ theorem zorn_maximal_boundary_subsystem
     ∃ m, s0 ⊆ m ∧ Maximal (fun x => x ∈ F) m :=
   zorn_subset_nonempty F h_chain s0 hs0
 
-theorem grand_concrete_cuntz_zorn_synthesis
-    (v : Fin 2 → ℝ) (ω₁ ω₂ : CantorWord) :
-    (J0 (J0 v) = -v) ∧
-    (S_left ∘ K_op = K_op ∘ S_left) ∧
-    (S_right ∘ K_op = K_op ∘ S_right) ∧
-    (prefix0 ω₁ ≠ prefix1 ω₂) :=
-  ⟨J0_sq v, S_left_commutes_K, S_right_commutes_K,
-    prefix0_ne_prefix1 ω₁ ω₂⟩
 
 end InfoGeometry.Quantum.ConcreteCuntz

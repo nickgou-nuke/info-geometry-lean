@@ -124,3 +124,4 @@ theorem grand_rope_attention_pairing_synthesis
    P.attentionScore_eq_relative W_Q W_K theta0 m n xm xn⟩
 
 end InfoGeometry.Clifford.Cl55RoPEAttentionPairing
+

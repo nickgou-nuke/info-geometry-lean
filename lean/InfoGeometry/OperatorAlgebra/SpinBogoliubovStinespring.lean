@@ -83,7 +83,7 @@ local notation "EndH" =>
 /--
 The concrete spin-connection transport on neutral-space endomorphisms.
 
-This replaces the abstract preservation property by the existing
+This replaces the abstract preservation hypothesis by the existing
 dimension-agnostic transport theorems from `Canonical.SpinConnection`.
 -/
 noncomputable def spinConnectionEndTransport

@@ -1,7 +1,7 @@
 import InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 
 /-!
-# Section 33 repaired: Pauli completion and finite biquaternion pair
+# Section 33 repaired: Pauli completion and finite biquaternion socket
 
 The source repeats the Section 32 quaternionic-emergent-spacetime program and
 adds much stronger continuum/phenomenological claims.  This repaired file keeps
@@ -10,7 +10,7 @@ only finite algebraic content:
 * the Pauli matrices plus identity decompose every `2 × 2` complex matrix;
 * radius-`r` Bloch density matrices are idempotent under the algebraic unit
   condition `r²‖n‖² = 1`;
-* the same condition gives the determinant-zero/null-boundary property from
+* the same condition gives the determinant-zero/null-boundary certificate from
   Section 32;
 * a biquaternion is represented theorem-safely as a pair of finite Pauli
   matrices, with a checked dual-swap involution.
@@ -116,22 +116,16 @@ theorem blochSpacetimePoint_det_zero_of_scaled_unit (t r n1 n2 n3 : ℂ)
   rw [blochSpacetimePoint_det, hunit]
   ring
 
-/-! ## Finite biquaternion-pair construction -/
+/-! ## Finite biquaternion-pair socket -/
 
 /-- The theorem-safe finite shadow of a biquaternion: two Pauli-matrix parts. -/
-abbrev BiquaternionPair := Mat2 × Mat2
-
-namespace BiquaternionPair
-
-abbrev primal (q : BiquaternionPair) : Mat2 := q.1
-
-abbrev dual (q : BiquaternionPair) : Mat2 := q.2
-
-end BiquaternionPair
+structure BiquaternionPair where
+  primal : Mat2
+  dual : Mat2
 
 /-- Swap the two finite Pauli components. -/
 def dualSwap (q : BiquaternionPair) : BiquaternionPair :=
-  (q.dual, q.primal)
+  { primal := q.dual, dual := q.primal }
 
 /-- The dual swap is an involution. -/
 theorem dualSwap_involutive (q : BiquaternionPair) :
@@ -141,20 +135,13 @@ theorem dualSwap_involutive (q : BiquaternionPair) :
 
 /-- Recompose both parts of a biquaternion pair from Pauli coefficients. -/
 def pauliRecomposePair (q : BiquaternionPair) : BiquaternionPair :=
-  (pauliRecompose q.primal, pauliRecompose q.dual)
+  { primal := pauliRecompose q.primal, dual := pauliRecompose q.dual }
 
 /-- Pauli recomposition fixes both parts of a finite biquaternion pair. -/
 theorem pauliRecomposePair_eq_self (q : BiquaternionPair) :
     pauliRecomposePair q = q := by
   cases q
   simp [pauliRecomposePair, pauli_recompose_eq_self]
-
-/-- Pauli recomposition is equivariant for the primal/dual swap. -/
-theorem dualSwap_pauliRecomposePair (q : BiquaternionPair) :
-    dualSwap (pauliRecomposePair q) =
-      pauliRecomposePair (dualSwap q) := by
-  cases q
-  rfl
 
 /-- Repaired Section 33 packet: basis completion, pure density, and null boundary. -/
 theorem repaired_section33_pauli_biquaternion_packet
@@ -164,10 +151,9 @@ theorem repaired_section33_pauli_biquaternion_packet
     blochDensityAtRadius r n1 n2 n3 * blochDensityAtRadius r n1 n2 n3 =
       blochDensityAtRadius r n1 n2 n3 ∧
     (blochSpacetimePoint t r n1 n2 n3).det = 0 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact pauli_recompose_eq_self A
-  · exact blochDensityAtRadius_idempotent_of_scaled_unit r n1 n2 n3 hunit
-  · exact blochSpacetimePoint_det_zero_of_scaled_unit t r n1 n2 n3 hunit
+  exact ⟨pauli_recompose_eq_self A,
+    blochDensityAtRadius_idempotent_of_scaled_unit r n1 n2 n3 hunit,
+    blochSpacetimePoint_det_zero_of_scaled_unit t r n1 n2 n3 hunit⟩
 
 end InfoGeometry.Physics.Section33PauliBiquaternionCompletion
 

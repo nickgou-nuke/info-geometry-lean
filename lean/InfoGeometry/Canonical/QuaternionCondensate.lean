@@ -79,30 +79,6 @@ def conj (q : H4) : H4 :=
 def normSq (q : H4) : ℝ :=
   q.re ^ 2 + q.imI ^ 2 + q.imJ ^ 2 + q.imK ^ 2
 
-theorem normSq_nonneg (q : H4) : 0 ≤ normSq q := by
-  unfold normSq
-  positivity
-
-theorem normSq_eq_zero_iff (q : H4) :
-    normSq q = 0 ↔ q = zero := by
-  cases q with
-  | mk re imI imJ imK =>
-      constructor
-      · intro h
-        dsimp [normSq] at h
-        have hre : re = 0 := by
-          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
-        have hi : imI = 0 := by
-          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
-        have hj : imJ = 0 := by
-          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
-        have hk : imK = 0 := by
-          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
-        simp [zero, hre, hi, hj, hk]
-      · intro h
-        cases h
-        norm_num [normSq, zero]
-
 /-- Real part readout. -/
 def realPart (q : H4) : ℝ := q.re
 
@@ -145,12 +121,6 @@ def realPart (q : H4) : ℝ := q.re
 theorem normSq_conj (q : H4) : normSq (conj q) = normSq q := by
   simp [normSq, conj]
 
-theorem conj_mul (p q : H4) :
-    conj (mul p q) = mul (conj q) (conj p) := by
-  cases p
-  cases q
-  ext <;> simp [conj, mul] <;> ring
-
 theorem mul_conj (q : H4) :
     mul q (conj q) = ⟨normSq q, 0, 0, 0⟩ := by
   ext <;> simp [mul, conj, normSq] <;> ring
@@ -161,13 +131,6 @@ theorem normSq_mul (p q : H4) :
   cases q
   simp [normSq, mul]
   ring
-
-theorem mul_assoc (p q r : H4) :
-    mul (mul p q) r = mul p (mul q r) := by
-  cases p
-  cases q
-  cases r
-  ext <;> simp [mul] <;> ring
 
 /-- Unit complex phase inside the quaternion `1-i` plane. -/
 def phase (c s : ℝ) : H4 :=
@@ -198,13 +161,6 @@ theorem normSq_phaseRotate_of_unit
 /-- Commutator in the finite quaternion carrier. -/
 def commutator (p q : H4) : H4 :=
   add (mul p q) (neg (mul q p))
-
-theorem realPart_commutator_zero (p q : H4) :
-    realPart (commutator p q) = 0 := by
-  cases p
-  cases q
-  simp [realPart, commutator, add, neg, mul]
-  ring
 
 theorem commutator_antisymm (p q : H4) :
     commutator q p = neg (commutator p q) := by

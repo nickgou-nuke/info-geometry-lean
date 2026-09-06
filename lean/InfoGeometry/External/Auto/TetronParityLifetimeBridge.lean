@@ -70,4 +70,17 @@ theorem opticalPropagationTime_pos {L vg : ℝ} (hL : 0 < L) (hvg : 0 < vg) :
   unfold opticalPropagationTime
   positivity
 
+/-- Consolidated lifetime bridge package. -/
+theorem tetron_parity_lifetime_bridge_synthesis :
+    (∀ {tau0 theta gap1 gap2 : ℝ}, 0 ≤ tau0 → 0 < theta → gap1 ≤ gap2 →
+      parityLifetime tau0 gap1 theta ≤ parityLifetime tau0 gap2 theta) ∧
+    (∀ {tau0 gap1 gap2 theta : ℝ}, tau0 ≠ 0 →
+      parityLifetime tau0 gap2 theta / parityLifetime tau0 gap1 theta = lifetimeRatio gap1 gap2 theta) ∧
+    (∀ tau gap theta : ℝ, parityLifetime (calibratedTau0 tau gap theta) gap theta = tau) ∧
+    (∀ {L vg : ℝ}, 0 < L → 0 < vg → 0 < opticalPropagationTime L vg) := by
+  exact ⟨fun htau htheta hgap => parityLifetime_mono_gap htau htheta hgap,
+    fun htau => parityLifetime_ratio_formula htau,
+    calibratedTau0_reproduces,
+    fun hL hvg => opticalPropagationTime_pos hL hvg⟩
+
 end InfoGeometry.GrandUnification.TetronParityLifetimeBridge

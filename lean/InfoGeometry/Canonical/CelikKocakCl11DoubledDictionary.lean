@@ -39,6 +39,13 @@ open InfoGeometry.Quantum.RealSplitCl11Action
 
 namespace CelikKocakCl11DoubledDictionary
 
+@[rep_depth operator]
+structure FiniteCl11DoubledDictionary
+    (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+  source : CelikKocakCl11ConcretePacket
+  target : Quantum.RealSplitCl11Action (InfoGeometry.Krein.DoubledSpace E)
+
 namespace FiniteCl11DoubledDictionary
 
 variable {E : Type*}
@@ -49,28 +56,28 @@ Canonical finite dictionary: the `n = 1` Çelik--Koçak source packet read again
 the canonical doubled-space split `Cl(1,1)` action.
 -/
 @[rep_depth operator]
-def canonicalTarget :
-    Quantum.RealSplitCl11Action (InfoGeometry.Krein.DoubledSpace E) :=
-  Quantum.doubledSpaceCl11Action (E := E)
+def canonical : FiniteCl11DoubledDictionary E where
+  source := CelikKocakCl11ConcretePacket.canonical
+  target := Quantum.doubledSpaceCl11Action (E := E)
 
 /-- Matrix-side first generator in the canonical finite source packet. -/
 @[rep_depth operator]
 theorem source_gamma_zero_eq_Eplus :
-    CelikKocakCl11ConcretePacket.canonicalPauliGamma ⟨0, by decide⟩ = Eplus :=
+    (canonical (E := E)).source.pauliBridge.psiGamma ⟨0, by decide⟩ = Eplus :=
   CelikKocakCl11ConcretePacket.canonical_psiGamma_zero
 
 /-- Matrix-side second generator in the canonical finite source packet. -/
 @[rep_depth operator]
 theorem source_gamma_one_eq_J1 :
-    CelikKocakCl11ConcretePacket.canonicalPauliGamma ⟨1, by decide⟩ = J1 :=
+    (canonical (E := E)).source.pauliBridge.psiGamma ⟨1, by decide⟩ = J1 :=
   CelikKocakCl11ConcretePacket.canonical_psiGamma_one
 
 /-- The derived matrix phase generator is `Eminus = Eplus * J1`. -/
 @[rep_depth operator]
 theorem source_phase_eq_Eminus :
-    CelikKocakCl11ConcretePacket.canonicalPauliGamma ⟨0, by decide⟩ *
-        CelikKocakCl11ConcretePacket.canonicalPauliGamma ⟨1, by decide⟩ = Eminus := by
-  rw [source_gamma_zero_eq_Eplus, source_gamma_one_eq_J1]
+    (canonical (E := E)).source.pauliBridge.psiGamma ⟨0, by decide⟩ *
+        (canonical (E := E)).source.pauliBridge.psiGamma ⟨1, by decide⟩ = Eminus := by
+  rw [source_gamma_zero_eq_Eplus (E := E), source_gamma_one_eq_J1 (E := E)]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [Eplus, J1, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
@@ -78,7 +85,7 @@ theorem source_phase_eq_Eminus :
 /-- The split left generator reads back to doubled `J`. -/
 @[rep_depth krein]
 theorem leftGenerator_readback :
-    (canonicalTarget (E := E)).J =
+    (canonical (E := E)).target.J =
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)) := by
   simpa using Quantum.doubledSpaceCl11Action_J_eq_cl11Rep_leftGenerator (E := E)
@@ -86,7 +93,7 @@ theorem leftGenerator_readback :
 /-- The split pseudoscalar reads back to doubled `ε`. -/
 @[rep_depth krein]
 theorem pseudoscalar_readback :
-    (canonicalTarget (E := E)).eps =
+    (canonical (E := E)).target.eps =
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0) *
           CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
@@ -95,7 +102,7 @@ theorem pseudoscalar_readback :
 /-- The split right generator reads back to doubled `K = J ∘ ε`. -/
 @[rep_depth krein]
 theorem rightGenerator_readback :
-    (canonicalTarget (E := E)).K =
+    (canonical (E := E)).target.K =
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
   simpa using Quantum.doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E)
@@ -103,23 +110,23 @@ theorem rightGenerator_readback :
 /-- The doubled phase axis squares to `-1`, matching the derived matrix phase channel. -/
 @[rep_depth krein]
 theorem target_phase_sq :
-    ((canonicalTarget (E := E)).K).comp ((canonicalTarget (E := E)).K) =
+    ((canonical (E := E)).target.K).comp ((canonical (E := E)).target.K) =
       -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
-  simpa using (canonicalTarget (E := E)).K_sq
+  simpa using (canonical (E := E)).target.K_sq
 
 /-- The doubled spectral involution squares to identity. -/
 @[rep_depth krein]
 theorem target_epsilon_sq :
-    ((canonicalTarget (E := E)).eps).comp ((canonicalTarget (E := E)).eps) =
+    ((canonical (E := E)).target.eps).comp ((canonical (E := E)).target.eps) =
       ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
-  simpa using (canonicalTarget (E := E)).eps_sq
+  simpa using (canonical (E := E)).target.eps_sq
 
 /-- The doubled modular involution squares to identity. -/
 @[rep_depth krein]
 theorem target_J_sq :
-    ((canonicalTarget (E := E)).J).comp ((canonicalTarget (E := E)).J) =
+    ((canonical (E := E)).target.J).comp ((canonical (E := E)).target.J) =
       ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
-  simpa using (canonicalTarget (E := E)).J_sq
+  simpa using (canonical (E := E)).target.J_sq
 
 end FiniteCl11DoubledDictionary
 end CelikKocakCl11DoubledDictionary

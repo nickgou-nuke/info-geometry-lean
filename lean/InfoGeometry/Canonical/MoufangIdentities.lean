@@ -19,6 +19,10 @@ theorem splitOctonion_moufang_middle
   rw [integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul]
+  let X := zornVectorMatrixRationalEquiv (integralToRational x)
+  let Y := zornVectorMatrixRationalEquiv (integralToRational y)
+  let Z := zornVectorMatrixRationalEquiv (integralToRational z)
+  have h := InfoGeometry.Algebra.ZornVectorMatrix.middle_moufang X Y Z
   apply zornVectorMatrixRationalEquiv.injective
   rw [zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
@@ -26,7 +30,7 @@ theorem splitOctonion_moufang_middle
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul]
-  exact InfoGeometry.Algebra.ZornVectorMatrix.middle_moufang _ _ _
+  exact h
 
 theorem splitOctonion_moufang_left
     (x y z : StandardIntegralSplitOctonion) :
@@ -36,6 +40,10 @@ theorem splitOctonion_moufang_left
   rw [integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul]
+  let X := zornVectorMatrixRationalEquiv (integralToRational x)
+  let Y := zornVectorMatrixRationalEquiv (integralToRational y)
+  let Z := zornVectorMatrixRationalEquiv (integralToRational z)
+  have h := InfoGeometry.Algebra.ZornVectorMatrix.left_moufang X Y Z
   apply zornVectorMatrixRationalEquiv.injective
   rw [zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
@@ -43,7 +51,7 @@ theorem splitOctonion_moufang_left
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul]
-  exact InfoGeometry.Algebra.ZornVectorMatrix.left_moufang _ _ _
+  exact h
 
 theorem splitOctonion_moufang_right
     (x y z : StandardIntegralSplitOctonion) :
@@ -53,6 +61,10 @@ theorem splitOctonion_moufang_right
   rw [integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul,
     integralToRational_mul, integralToRational_mul]
+  let X := zornVectorMatrixRationalEquiv (integralToRational x)
+  let Y := zornVectorMatrixRationalEquiv (integralToRational y)
+  let Z := zornVectorMatrixRationalEquiv (integralToRational z)
+  have h := InfoGeometry.Algebra.ZornVectorMatrix.right_moufang X Y Z
   apply zornVectorMatrixRationalEquiv.injective
   rw [zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
@@ -60,6 +72,6 @@ theorem splitOctonion_moufang_right
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul,
     zornVectorMatrixRationalEquiv_map_mul]
-  exact InfoGeometry.Algebra.ZornVectorMatrix.right_moufang _ _ _
+  exact h
 
 end InfoGeometry.Canonical

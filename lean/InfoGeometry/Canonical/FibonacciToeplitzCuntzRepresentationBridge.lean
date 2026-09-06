@@ -514,12 +514,14 @@ theorem master_fibonacci_toeplitz_cuntz_representation {K A : Type*} [CommRing K
     kuntzBraidGen1 ck q1 q2 * kuntzBraidGen2 ck a b q1 q2 * kuntzBraidGen1 ck q1 q2 =
       kuntzBraidGen2 ck a b q1 q2 * kuntzBraidGen1 ck q1 q2 * kuntzBraidGen2 ck a b q1 q2 ∧
     extendedBraidGen1 ck q1 q2 * extendedBraidGen2 ck a b q1 q2 * extendedBraidGen1 ck q1 q2 =
-      extendedBraidGen2 ck a b q1 q2 * extendedBraidGen1 ck q1 q2 * extendedBraidGen2 ck a b q1 q2 := by
-  refine ⟨matrixToCuntz_one ck, extendedMatrixToCuntz_one ck,
-    extended_fMatrix_sq ck a b h_norm, ?_, ?_, ?_, ?_⟩
-  · exact fun M => extendedMatrixToCuntz_fixes_defect ck M
-  · exact fun M => defect_fixes_extendedMatrixToCuntz ck M
-  · exact kuntz_artin_braid_relation ck a b q1 q2 h_norm h_braid
-  · exact extended_artin_braid_relation ck a b q1 q2 h_norm h_braid
+      extendedBraidGen2 ck a b q1 q2 * extendedBraidGen1 ck q1 q2 * extendedBraidGen2 ck a b q1 q2 := ⟨
+  matrixToCuntz_one ck,
+  extendedMatrixToCuntz_one ck,
+  extended_fMatrix_sq ck a b h_norm,
+  fun M => extendedMatrixToCuntz_fixes_defect ck M,
+  fun M => defect_fixes_extendedMatrixToCuntz ck M,
+  kuntz_artin_braid_relation ck a b q1 q2 h_norm h_braid,
+  extended_artin_braid_relation ck a b q1 q2 h_norm h_braid
+⟩
 
 end InfoGeometry.Canonical.FibonacciToeplitzCuntzRepresentationBridge

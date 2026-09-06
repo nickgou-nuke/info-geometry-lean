@@ -16,6 +16,40 @@ equivalence.
 
 namespace InfoGeometry.Algebra
 
+/-! ## Lie actions on modules
+
+This lane is intentionally weaker than `DerivationLieLane`: a Lie action on a
+module does not require the module to carry an ambient multiplication.  This
+is the canonical interface for the native non-associative Zorn carrier.
+-/
+
+structure LieActionLane (R A : Type*) [CommRing R]
+    [AddCommGroup A] [Module R A] where
+  L : Type*
+  lieRing : LieRing L
+  lieAlgebra : LieAlgebra R L
+  act : L →ₗ⁅R⁆ Module.End R A
+
+attribute [instance] LieActionLane.lieRing LieActionLane.lieAlgebra
+
+namespace LieActionLane
+
+variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable (K : LieActionLane R A)
+
+abbrev operatorAction : K.L →ₗ[R] Module.End R A := K.act.toLinearMap
+
+@[simp] theorem operatorAction_apply (x : K.L) (a : A) :
+    K.operatorAction x a = (K.act x : Module.End R A) a := rfl
+
+theorem operatorAction_commutator_apply (x y : K.L) (a : A) :
+    K.operatorAction ⁅x, y⁆ a = K.operatorAction x (K.operatorAction y a) -
+      K.operatorAction y (K.operatorAction x a) := by
+  have h := K.act.map_lie x y
+  exact congrArg (fun T : Module.End R A => T a) h
+
+end LieActionLane
+
 variable {R A : Type*} [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
   [IsScalarTower R A A] [SMulCommClass R A A]
 

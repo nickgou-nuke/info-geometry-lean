@@ -45,7 +45,7 @@ A linearized fluid readout.
 
 This stores velocity, density, and pressure data. It does not by itself encode
 the incompressibility equation; incompressibility or volume preservation must be
-supplied separately by a smoothing/backend property.
+supplied separately by a smoothing/backend witness.
 -/
 structure FluidState
     (E : Type _)
@@ -156,7 +156,7 @@ Modular-level circulation pairing.
 This pairs an installed modular Hamiltonian/readout `K` with a surface operator
 `Sigma` under the linear weight `ω`. This definition does not construct `K` as
 `-log ρ`; that identification belongs in a separate modular/Radon-Nikodym
-property.
+witness.
 -/
 noncomputable def modularCirculation
     {E : Type _}
@@ -351,8 +351,8 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization
 
 omit [FiniteDimensional ℝ E] in
 /--
-Regularization-driven momentum closure with existential Drazin property:
-for fixed `B_dr`, a property `∃ k, IsDrazinInverse A B_dr k` is sufficient.
+Regularization-driven momentum closure with existential Drazin witness:
+for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
 -/
 theorem anomalyMomentumResidual_eq_zero_of_regularization_exists
     (A B_mp B_dr : VelocityField E)
@@ -384,8 +384,8 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization
 
 omit [FiniteDimensional ℝ E] in
 /--
-State-level regularization closure with existential Drazin property:
-for fixed `B_dr`, a property `∃ k, IsDrazinInverse A B_dr k` is sufficient.
+State-level regularization closure with existential Drazin witness:
+for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
 -/
 theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
     (A B_mp B_dr : VelocityField E)
@@ -399,7 +399,7 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
 
 /--
 Finite-dimensional regularization package:
-derive a canonical Drazin property internally and expose anomaly skewness as a
+derive a canonical Drazin witness internally and expose anomaly skewness as a
 star-selfadjointness consequence on the induced Drazin regularization channel.
 -/
 theorem anomalySkew_of_regularization_of_finiteDimensional
@@ -426,7 +426,7 @@ theorem anomalySkew_of_regularization_of_finiteDimensional
 
 /--
 Finite-dimensional regularization package at the momentum-closure level:
-derive a canonical Drazin property internally and reduce closure to the
+derive a canonical Drazin witness internally and reduce closure to the
 star-selfadjointness channel.
 -/
 theorem anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
@@ -445,7 +445,7 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
 
 /--
 Finite-dimensional regularization package at the state level:
-derive a canonical Drazin property internally and reduce state momentum closure
+derive a canonical Drazin witness internally and reduce state momentum closure
 to the star-selfadjointness channel.
 -/
 theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDimensional
@@ -464,7 +464,7 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDi
 
 /--
 Finite-dimensional global-Drazin regularization wrapper:
-derive a canonical Drazin property internally and expose momentum closure while
+derive a canonical Drazin witness internally and expose momentum closure while
 keeping only the star/selfadjointness channel as external input.
 -/
 theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
@@ -489,7 +489,7 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
 
 /--
 Finite-dimensional global-Drazin state-level wrapper:
-derive a canonical Drazin property internally and expose fluid-state momentum
+derive a canonical Drazin witness internally and expose fluid-state momentum
 closure while keeping only the star/selfadjointness channel as external input.
 -/
 theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_drazin
@@ -632,7 +632,7 @@ def IsThermodynamicallySmoothed
 
 set_option linter.unusedSectionVars false in
 /--
-Canonical smoothing property at thermal equilibrium (`β = 0`):
+Canonical smoothing witness at thermal equilibrium (`β = 0`):
 the collapsed modular velocity vanishes, so the Jacobian is the identity and
 the absolute volume change is one.
 -/
@@ -678,7 +678,7 @@ noncomputable def madelungPhase
 /--
 Madelung functor (linearized):
 thermal-vacuum modular data is promoted to a finite-dimensional fluid state
-under an installed smoothing/volume-preservation property.
+under an installed smoothing/volume-preservation witness.
 -/
 noncomputable def madelungFluidState
     (β : ℝ)
@@ -702,7 +702,7 @@ noncomputable def madelungFluidState
       = collapseToBaseVelocity (E := E) (modularVelocity β K) := rfl
 
 /--
-A Madelung fluid state equipped with the determinant/volume smoothing property
+A Madelung fluid state equipped with the determinant/volume smoothing witness
 from the modular velocity construction.
 -/
 structure SmoothedMadelungFluidState
@@ -718,7 +718,7 @@ structure SmoothedMadelungFluidState
       collapseToBaseVelocity (E := E)
         (modularVelocity (E := E) β K)
 
-/-- Proof-bearing Madelung state constructor preserving the smoothing property. -/
+/-- Proof-bearing Madelung state constructor preserving the smoothing witness. -/
 noncomputable def smoothedMadelungFluidState
     (β : ℝ)
     (K : AlgebraEnd E)
@@ -800,37 +800,6 @@ theorem madelung_divergence_free_iff (β : ℝ) (K : AlgebraEnd E)
   unfold modularHamiltonian
   rw [trace_madelung_velocity_eq]
   exact mul_eq_zero
-
-/-- If the collapsed base velocity has zero trace, the Madelung fluid state is
-divergence-free for every inverse temperature. -/
-theorem madelung_divergence_free_of_trace_zero (β : ℝ) (K : AlgebraEnd E)
-    (vac : ThermalVacuum (E := E) K) (ω : AlgebraEnd E →L[ℝ] ℝ)
-    (hSmooth : IsThermodynamicallySmoothed β K)
-    (hTrace : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
-    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
-  rw [madelung_divergence_free_iff β K vac ω hSmooth]
-  exact Or.inr hTrace
-
-/-- If the inverse temperature is zero, the Madelung fluid state is
-divergence-free. -/
-theorem madelung_divergence_free_of_zero_beta (β : ℝ) (K : AlgebraEnd E)
-    (vac : ThermalVacuum (E := E) K) (ω : AlgebraEnd E →L[ℝ] ℝ)
-    (hSmooth : IsThermodynamicallySmoothed β K)
-    (h_beta : β = 0) :
-    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
-  rw [madelung_divergence_free_iff β K vac ω hSmooth]
-  exact Or.inl h_beta
-
-/-- The zero-parameter Madelung state has divergence-free velocity. -/
-theorem madelungFluidState_isDivergenceFree_of_zero_beta
-    (K : AlgebraEnd E)
-    (vac : ThermalVacuum (E := E) K)
-    (ω : AlgebraEnd E →L[ℝ] ℝ) :
-    IsDivergenceFree
-      (madelungFluidState_zero (E := E) K vac ω).u := by
-  unfold IsDivergenceFree
-  rw [madelungFluidState_zero_velocity]
-  simp
 
 end MadelungBridge
 
@@ -1028,7 +997,5 @@ attribute [rep_depth krein]
   IsDivergenceFree
   trace_adjoint
   vorticity_isDivergenceFree
-  madelung_divergence_free_of_trace_zero
-  madelung_divergence_free_of_zero_beta
 
 end InfoGeometry.Canonical

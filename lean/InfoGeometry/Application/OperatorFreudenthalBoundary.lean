@@ -164,7 +164,7 @@ structure FreudenthalBoundarySurgery
   /-- Drazin inverse assigned at the boundary. -/
   drazinInverseAtBoundary : EndH → EndH
 
-  /-- Boundary-state Drazin surgery. -/
+  /-- Boundary states admit Drazin surgery. -/
   boundary_has_drazin :
     ∀ ρ : EndH,
       FreudenthalBoundary D (C.chargeOf ρ) →

@@ -60,7 +60,7 @@ def matrixTraceProbe (n : ℕ) :
   toLinearMap := matrixTraceFunctional n
   positive := by
     intro A
-    exact matrixTraceState_realPart_star_mul_self_nonneg n A
+    exact InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness.matrixTraceState_star_mul_self_re_nonneg n A
   normalized := by
     exact matrixTraceState_one n
 
@@ -125,12 +125,12 @@ theorem bitWordMatrixTraceProbe_positive
 
 theorem bitWordMatrixTraceProbe_colimit_inclusion
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (A : BitWordMatrixStage n) :
-    traceColimitFunctional T hT
+    traceColimitFunctional T
         (traceColimitInclusion T n (bitWordStageStarAlgEquiv n A)) =
       bitWordMatrixTraceProbe n A := by
-  rw [traceColimitFunctional_inclusion T hT]
+  rw [traceColimitFunctional_inclusion T n (bitWordStageStarAlgEquiv n A)]
   rw [bitWordMatrixTraceProbe_apply, matrixTraceProbe_apply]
   rfl
 
@@ -158,29 +158,29 @@ def bkmProbeReadoutOfState
 def traceColimitBkmReadout
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (κ : Op2Form ℂ V (BitWordMatrixStage n)) (u v : V) : ℂ :=
-  traceColimitFunctional T hT
+  traceColimitFunctional T
     (traceColimitInclusion T n (bitWordStageStarAlgEquiv n (κ u v)))
 
 theorem traceColimitBkmReadout_eq_finite_probe
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (κ : Op2Form ℂ V (BitWordMatrixStage n)) (u v : V) :
     traceColimitBkmReadout T hT n κ u v =
       bkmProbeReadoutOfState (bitWordMatrixTraceProbe n) κ u v := by
   unfold traceColimitBkmReadout bkmProbeReadoutOfState readout
-  rw [traceColimitFunctional_inclusion T hT]
+  rw [traceColimitFunctional_inclusion T n (bitWordStageStarAlgEquiv n (κ u v))]
   rw [bitWordMatrixTraceProbe_apply, matrixTraceProbe_apply]
   rfl
 
 theorem bkmProbeReadoutOfState_colimit_inclusion
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (κ : Op2Form ℂ V (BitWordMatrixStage n)) (u v : V) :
-    traceColimitFunctional T hT
+    traceColimitFunctional T
         (traceColimitInclusion T n
           (bitWordStageStarAlgEquiv n (κ u v))) =
       bkmProbeReadoutOfState (bitWordMatrixTraceProbe n) κ u v := by
@@ -190,9 +190,9 @@ theorem bkmProbeReadoutOfState_colimit_inclusion
 theorem bkmProbeReadoutOfState_wedge_self_colimit_inclusion
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (α : Op1Form ℂ V (BitWordMatrixStage n)) (u v : V) :
-    traceColimitFunctional T hT
+    traceColimitFunctional T
         (traceColimitInclusion T n
           (bitWordStageStarAlgEquiv n ((wedge α α) u v))) =
       bkmProbeReadoutOfState (bitWordMatrixTraceProbe n) (wedge α α) u v := by
@@ -201,12 +201,12 @@ theorem bkmProbeReadoutOfState_wedge_self_colimit_inclusion
 theorem bkmProbeReadoutOfState_wedge_self_colimit_inclusion_diag_zero
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ) (α : Op1Form ℂ V (BitWordMatrixStage n)) (u : V) :
-    traceColimitFunctional T hT
+    traceColimitFunctional T
         (traceColimitInclusion T n
           (bitWordStageStarAlgEquiv n ((wedge α α) u u))) = 0 := by
-  rw [bkmProbeReadoutOfState_wedge_self_colimit_inclusion]
+  rw [bkmProbeReadoutOfState_colimit_inclusion T hT n (wedge α α) u u]
   unfold bkmProbeReadoutOfState readout
   rw [wedge_apply]
   simp
@@ -220,7 +220,7 @@ theorem bitWordMatrixTraceProbe_transition
   rw [matrixTraceProbe_apply, matrixTraceProbe_apply]
   rw [bitWordDyadicStarEmbedding_apply]
   simp only [StarAlgEquiv.apply_symm_apply]
-  exact concrete_trace_compatible n (bitWordStageStarAlgEquiv n A)
+  exact concreteData.trace_compatible n (bitWordStageStarAlgEquiv n A)
 
 theorem bitWordMatrixTraceProbe_map
     {i j : ℕ} (hij : i ≤ j) (A : BitWordMatrixStage i) :
@@ -394,7 +394,7 @@ theorem bkmProbeReadoutOfState_map_wedge_self_diag_zero
 theorem traceColimitBkmReadout_map_wedge
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     {i j : ℕ} (hij : i ≤ j)
     (α β : Op1Form ℂ V (BitWordMatrixStage i)) (u v : V) :
     traceColimitBkmReadout T hT j
@@ -407,7 +407,7 @@ theorem traceColimitBkmReadout_map_wedge
 theorem traceColimitBkmReadout_map_comp
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k)
     (κ : Op2Form ℂ V (BitWordMatrixStage i)) (u v : V) :
     traceColimitBkmReadout T hT k
@@ -419,7 +419,7 @@ theorem traceColimitBkmReadout_map_comp
 theorem traceColimitBkmReadout_map_wedge_self_diag_zero
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     {i j : ℕ} (hij : i ≤ j)
     (α : Op1Form ℂ V (BitWordMatrixStage i)) (u : V) :
     traceColimitBkmReadout T hT j
@@ -681,7 +681,7 @@ theorem bkmProbeReadoutOfState_curvature_diag_zero
 theorem traceColimitBkmReadout_curvature_map
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     {i j : ℕ} (hij : i ≤ j)
     (α : Op1Form ℂ V (BitWordMatrixStage i))
     (dα : Op2Form ℂ V (BitWordMatrixStage i)) (u v : V) :
@@ -696,7 +696,7 @@ theorem traceColimitBkmReadout_curvature_map
 theorem traceColimitBkmReadout_curvature_map_comp
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k)
     (α : Op1Form ℂ V (BitWordMatrixStage i))
     (dα : Op2Form ℂ V (BitWordMatrixStage i)) (u v : V) :
@@ -712,7 +712,7 @@ theorem traceColimitBkmReadout_curvature_map_comp
 theorem traceColimitBkmReadout_curvature_diag_zero
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ)
     (α : Op1Form ℂ V (BitWordMatrixStage n))
     (dα : Op2Form ℂ V (BitWordMatrixStage n)) (u : V) :
@@ -726,7 +726,7 @@ theorem traceColimitBkmReadout_curvature_diag_zero
 theorem traceColimitBkmReadout_curvature_skew
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (n : ℕ)
     (α : Op1Form ℂ V (BitWordMatrixStage n))
     (dα : Op2Form ℂ V (BitWordMatrixStage n)) (u v : V) :

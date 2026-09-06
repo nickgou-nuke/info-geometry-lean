@@ -19,41 +19,30 @@ open InfoGeometry.OperatorAlgebra.ConstructiveCayley
 A constructively verified Cauchy Kernel.
 The kernel is the resolvent R(ζ) = (ζ - Z)⁻¹.
 -/
-abbrev VerifiedResolvent
+structure VerifiedKernel
     {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
-    (Z : Value) (ζ : ℝ) : Prop :=
-  IsUnit (algebraMap ℝ Value ζ - Z)
+    (_K : Value) -- The phase axis in the algebra (parameter for future compatibility)
+    (Z : Value)  -- The operator point
+    (ζ : ℝ)       -- The parameter
+    where
+  /-- The explicit kernel element (ζ·1 - Z)⁻¹ -/
+  kernelVal : Value
 
-abbrev IsResolventRegular := @VerifiedResolvent
+  /-- The kernel is a true right inverse. -/
+  inv_right : (algebraMap ℝ Value ζ - Z) * kernelVal = 1
 
-noncomputable def resolvent
-    {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
-    (Z : Value) (ζ : ℝ) : Value :=
-  Ring.inverse (algebraMap ℝ Value ζ - Z)
+  /-- The kernel is a true left inverse. -/
+  inv_left : kernelVal * (algebraMap ℝ Value ζ - Z) = 1
 
-namespace VerifiedResolvent
+namespace VerifiedKernel
 
 variable {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
-variable {Z : Value} {ζ : ℝ}
-variable (R : VerifiedResolvent Z ζ)
-
-/-- The canonical totalized inverse of the resolvent difference. -/
-def kernelVal (R : VerifiedResolvent Z ζ) : Value :=
-  resolvent Z ζ
-
-/-- The native unit gives the right inverse law for the resolvent difference. -/
-theorem inv_right :
-    (algebraMap ℝ Value ζ - Z) * R.kernelVal = 1 := by
-  exact Ring.mul_inverse_cancel _ R
-
-/-- The native unit gives the left inverse law for the resolvent difference. -/
-theorem inv_left :
-    R.kernelVal * (algebraMap ℝ Value ζ - Z) = 1 := by
-  exact Ring.inverse_mul_cancel _ R
+variable {K Z : Value} {ζ : ℝ}
+variable (R : VerifiedKernel K Z ζ)
 
 /-- The real resolvent difference `ζ • 1 - Z`. -/
 def resolventDiff
-    (_R : VerifiedResolvent Z ζ) : Value :=
+    (_R : VerifiedKernel K Z ζ) : Value :=
   algebraMap ℝ Value ζ - Z
 
 /-- The resolvent difference times the kernel is `1`. -/
@@ -66,14 +55,14 @@ theorem kernel_mul_diff :
     R.kernelVal * R.resolventDiff = 1 :=
   R.inv_left
 
-end VerifiedResolvent
+end VerifiedKernel
 
 /-! ## Fixed-operator kernel families -/
 
 /--
 A verified Cauchy kernel family for one fixed operator point `Z`.
 
-The pointwise datum `VerifiedResolvent Z ζ` proves a single inverse.  This
+The pointwise datum `VerifiedKernel K Z ζ` proves a single inverse.  This
 family packages a whole admissible real parameter domain and gives a kernel
 value for each parameter.
 -/
@@ -112,9 +101,10 @@ variable (R : VerifiedKernelFamily K Z)
 def kernelAt
     (ζ : ℝ)
     (hζ : R.IsAdmissible ζ) :
-  VerifiedResolvent Z ζ := by
-  exact ⟨⟨algebraMap ℝ Value ζ - Z, R.kernelVal ζ,
-    R.inv_right ζ hζ, R.inv_left ζ hζ⟩, rfl⟩
+    VerifiedKernel K Z ζ where
+  kernelVal := R.kernelVal ζ
+  inv_right := R.inv_right ζ hζ
+  inv_left := R.inv_left ζ hζ
 
 /--
 Convert a fixed-operator real resolvent family into the generic
@@ -158,8 +148,8 @@ This identity is the algebraic source of the kernel's analyticity.
 theorem resolvent_identity
     {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
     {K Z : Value} {ζ₁ ζ₂ : ℝ}
-    (R1 : VerifiedResolvent Z ζ₁)
-    (R2 : VerifiedResolvent Z ζ₂) :
+    (R1 : VerifiedKernel K Z ζ₁)
+    (R2 : VerifiedKernel K Z ζ₂) :
     R1.kernelVal - R2.kernelVal = (ζ₂ - ζ₁) • (R1.kernelVal * R2.kernelVal) := by
   have h_diff :
       (algebraMap ℝ Value ζ₂ - Z) - (algebraMap ℝ Value ζ₁ - Z)

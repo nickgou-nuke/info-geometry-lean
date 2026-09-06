@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-QMS isolated proof targets for replacing two impossible Duhamel theorem deferred interfaces
+QMS isolated proof targets for replacing two impossible Duhamel theorem sockets
 in `InfoGeometry.Canonical.SouriauOperatorialLogPotential` with positive
 first-order readback theorems.
 

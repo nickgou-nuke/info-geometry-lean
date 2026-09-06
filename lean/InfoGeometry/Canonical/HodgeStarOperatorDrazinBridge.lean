@@ -19,12 +19,12 @@ section Core
 
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [InfoGeometry.Krein.HodgeStarOperator.KreinSpace E]
 variable (B : DrazinHodgeChiralBridge (E := E))
-variable [InfoGeometry.Krein.KreinSpace E]
 
 /-- The generic Hodge-star linear map on the Drazin carrier. -/
 noncomputable def nativeHodgeStar : E →ₗ[ℝ] E :=
-  hodgeStar E
+  InfoGeometry.Krein.HodgeStarOperator.hodgeStar E
 
 /-- The explicit comparison datum between the two Hodge-star implementations. -/
 def HodgeStarCompatibility : Prop :=
@@ -32,7 +32,7 @@ def HodgeStarCompatibility : Prop :=
 
 theorem nativeHodgeStar_involutive (x : E) :
     nativeHodgeStar (E := E) (nativeHodgeStar (E := E) x) = x := by
-  exact hodge_star_involutive E x
+  exact InfoGeometry.Krein.HodgeStarOperator.hodge_star_involutive E x
 
 /-- The concrete Drazin Hodge star inherits involutivity from the generic owner
     once the carrier comparison is supplied. -/

@@ -1,0 +1,8 @@
+import InfoGeometry.RootSystem.D4RootLattice
+import InfoGeometry.RootSystem.D4DualLattice
+import InfoGeometry.RootSystem.D4DualExponentTwo
+import InfoGeometry.RootSystem.D4DualCosetNormalForm
+import InfoGeometry.RootSystem.D4DiscriminantCardinality
+import InfoGeometry.RootSystem.D4DualTriality
+import InfoGeometry.RootSystem.D4TrialityAction
+import InfoGeometry.RootSystem.D4WeylGroup

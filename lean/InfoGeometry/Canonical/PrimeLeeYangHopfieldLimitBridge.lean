@@ -1,6 +1,7 @@
-import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
@@ -18,7 +19,7 @@ This file proves finite algebraic facts about the centered chain:
 * the centered occupation coupling equals `κ` times that two-prime coefficient.
 
 The infinite Lee--Yang/Hurwitz transfer to completed `xi` remains a
-proof-carrying interface.  No RH theorem is asserted here.
+proof-carrying socket.  No RH theorem is asserted here.
 -/
 
 noncomputable section
@@ -125,23 +126,5 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
       C.kappa * twoPrimeLogConvolutionCoeff C i j := by
   unfold PrimeFerromagneticChain.centeredOccupationCoupling twoPrimeLogConvolutionCoeff
   ring
-
-/--!
-Hurwitz-Lee-Yang Xi limit packet.
-
-This is the abstract convergence carrier that, when combined with a concrete
-`PrimeLeeYangToHurwitzWitness`, yields the Lee--Yang/Hurwitz bridge.
--/
-@[rep_depth operator]
-structure HurwitzLeeYangXiLimitPacket
-    (CompletedXiReadout RenormalizationReadout LimitReadout : Type) where
-  completedXiReadout : CompletedXiReadout
-  renormalizationReadout : RenormalizationReadout
-  limitReadout : LimitReadout
-  finiteLeeYangStability : Sort
-  nonvanishingRenormalization : Sort
-  locallyUniformXiLimit : Sort
-  noSpuriousZeros : Sort
-  hurwitzTransfer : Sort
 
 end InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

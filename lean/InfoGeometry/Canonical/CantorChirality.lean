@@ -24,7 +24,7 @@ open InfoGeometry.Canonical.CantorDiracPropagation
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 
 /-- The boundary chirality operator `Γ = s_L s_L* - s_R s_R*`. -/
-def ChiralityOp : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
+def ChiralityOp : CantorOp :=
   (S_L_linear * star_S_L_linear) - (S_R_linear * star_S_R_linear)
 
 /-- The chirality operator squares to the identity (`Γ² = 1`). -/

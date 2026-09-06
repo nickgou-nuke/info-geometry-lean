@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
+
+namespace InfoGeometry.Canonical.SouriauTranslatorAudit
+end InfoGeometry.Canonical.SouriauTranslatorAudit

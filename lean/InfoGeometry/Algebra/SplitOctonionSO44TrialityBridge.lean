@@ -66,4 +66,16 @@ theorem proj_completeness [Invertible (2 : R)] :
 
 end Cl44Generators
 
+/-- **Theorem**: Master Split-Octonion & SO(4,4) Triality Synthesis.
+    Unifies:
+    1. Zorn split-octonion determinant norm N(0) = 0 over signature (4,4).
+    2. Cl(4,4) chiral projector completeness P₊ + P⋺ = 1. -/
+theorem master_split_octonion_so44_triality_synthesis
+    {R : Type*} [CommRing R] [Invertible (2 : R)] (g : Cl44Generators R) :
+    (ZornSplitOctonion.normSq (⟨0, 0, 0, 0⟩ : ZornSplitOctonion R) = 0) ∧
+    (g.projPlus + g.projMinus = 1) := ⟨
+  ZornSplitOctonion.normSq_zero,
+  g.proj_completeness
+⟩
+
 end InfoGeometry.Algebra.SplitOctonionSO44TrialityBridge

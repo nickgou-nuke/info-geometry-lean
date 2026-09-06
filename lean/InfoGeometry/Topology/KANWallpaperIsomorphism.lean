@@ -72,48 +72,6 @@ theorem translation_is_nilpotent_horizon : n * n = 0 := by
   fin_cases i <;> fin_cases j <;>
     simp [n, T_x, Matrix.mul_apply, Fin.sum_univ_three]
 
-theorem translation_generator_nonzero : n ≠ 0 := by
-  intro h
-  have h02 := congrArg (fun M : ProjMatrix => M 0 2) h
-  change n 0 2 = (0 : ProjMatrix) 0 2 at h02
-  simp [n, T_x, Matrix.sub_apply, Matrix.zero_apply] at h02
-
-def translationFlow (t : ℝ) : ProjMatrix := 1 + t • n
-
-theorem translationFlow_add (s t : ℝ) :
-    translationFlow s * translationFlow t = translationFlow (s + t) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [translationFlow, n, T_x, Matrix.mul_apply,
-      Fin.sum_univ_three, Matrix.sub_apply]
-  ring
-
-theorem translationFlow_zero :
-    translationFlow 0 = 1 := by
-  simp [translationFlow]
-
-theorem translationFlow_inverse (t : ℝ) :
-    translationFlow t * translationFlow (-t) = 1 := by
-  rw [translationFlow_add]
-  simp [translationFlow_zero]
-
-theorem translationFlow_left_inverse (t : ℝ) :
-    translationFlow (-t) * translationFlow t = 1 := by
-  rw [translationFlow_add]
-  simp [translationFlow_zero]
-
-theorem translationFlow_commute (s t : ℝ) :
-    translationFlow s * translationFlow t =
-      translationFlow t * translationFlow s := by
-  rw [translationFlow_add, translationFlow_add, add_comm]
-
-theorem translationFlow_nonzero (t : ℝ) :
-    translationFlow t ≠ 0 := by
-  intro h
-  have h00 := congrArg (fun M : ProjMatrix => M 0 0) h
-  change translationFlow t 0 0 = (0 : ProjMatrix) 0 0 at h00
-  simp [translationFlow, n, T_x, Matrix.sub_apply, Matrix.zero_apply] at h00
-
 end InfoGeometry.Topology.KANWallpaper
 
 end noncomputable section

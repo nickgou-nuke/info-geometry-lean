@@ -19,7 +19,6 @@ open KreinSpace
 open scoped InnerProductSpace
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
-  [CompleteSpace H] [KreinSpace H]
 
 local notation "EndH" => H →L[ℝ] H
 
@@ -145,14 +144,17 @@ noncomputable instance rightOperatorModule : Module EndHᵐᵒᵖ EndH where
   ext u
   simp [operatorBimoduleAction, leftOperatorAction, rightOperatorAction]
 
-/-! The Hilbert-positive conjugation already present in `KreinSpace` is one
-pure bimodule action with the adjoint in the opposite slot. -/
+/-! Pairing the right factor with the Hilbert adjoint pulls the quadratic
+form back along that adjoint. This does not require a fundamental symmetry. -/
 
-theorem operatorBimoduleAction_adjoint_eq_positiveConjugation
-    (A X : EndH) :
-    operatorBimoduleAction A (MulOpposite.op (ContinuousLinearMap.adjoint A)) X =
-      positiveConjugation A X :=
-  rfl
+variable [CompleteSpace H]
+
+theorem operatorBimoduleAction_adjoint_inner
+    (A X : EndH) (u v : H) :
+    ⟪operatorBimoduleAction A (MulOpposite.op (ContinuousLinearMap.adjoint A)) X u,
+      v⟫_ℝ = ⟪X (ContinuousLinearMap.adjoint A u), ContinuousLinearMap.adjoint A v⟫_ℝ := by
+  exact (ContinuousLinearMap.adjoint_inner_right A
+    (X (ContinuousLinearMap.adjoint A u)) v).symm
 
 /-- The left/right opposite-algebra action preserves Hilbert positivity. -/
 theorem operatorBimoduleAction_adjoint_inner_nonneg
@@ -162,8 +164,8 @@ theorem operatorBimoduleAction_adjoint_inner_nonneg
     0 ≤
       ⟪operatorBimoduleAction A
           (MulOpposite.op (ContinuousLinearMap.adjoint A)) X u, u⟫_ℝ := by
-  rw [operatorBimoduleAction_adjoint_eq_positiveConjugation]
-  exact KreinSpace.inner_positiveConjugation_nonneg A X hX u
+  rw [operatorBimoduleAction_adjoint_inner]
+  exact hX (ContinuousLinearMap.adjoint A u)
 
 /-! ## Tensor-product lift of the bimodule action -/
 
@@ -218,7 +220,7 @@ theorem operatorModuleInner_right_op_action
     operatorModuleInner X (rightOperatorAction B Y) =
       rightOperatorAction B (operatorModuleInner X Y) := by
   ext u
-  simp [operatorModuleInner, rightOperatorAction, ContinuousLinearMap.comp_assoc]
+  simp [operatorModuleInner, rightOperatorAction]
 
 /-! The two-sided transport law used by the tensor-action. -/
 
@@ -260,7 +262,7 @@ noncomputable def leftOperatorAlgHom : EndH →ₐ[ℝ] Module.End ℝ EndH :=
     intro A B
     ext X u
     simp [leftOperatorRepresentation, leftOperatorAction,
-      Module.End.mul_apply, ContinuousLinearMap.comp_assoc])
+      Module.End.mul_apply])
 
 noncomputable def rightOperatorAlgHom : EndHᵐᵒᵖ →ₐ[ℝ] Module.End ℝ EndH :=
   AlgHom.ofLinearMap rightOperatorRepresentation (by
@@ -271,6 +273,7 @@ noncomputable def rightOperatorAlgHom : EndHᵐᵒᵖ →ₐ[ℝ] Module.End ℝ
     simp [rightOperatorRepresentation, rightOperatorAction,
       Module.End.mul_apply, ContinuousLinearMap.comp_assoc])
 
+omit [CompleteSpace H] in
 theorem leftOperatorRepresentation_commutes_right
     (A : EndH) (B : EndHᵐᵒᵖ) :
     Commute (leftOperatorAlgHom A) (rightOperatorAlgHom B) := by
@@ -289,6 +292,7 @@ noncomputable def operatorBimoduleTensorAction :
   _root_.Algebra.TensorProduct.lift leftOperatorAlgHom rightOperatorAlgHom
     leftOperatorRepresentation_commutes_right
 
+omit [CompleteSpace H] in
 @[simp] theorem operatorBimoduleTensorAction_tmul
     (A : EndH) (B : EndHᵐᵒᵖ) (X : EndH) :
     operatorBimoduleTensorAction (A ⊗ₜ[ℝ] B) X =
@@ -305,5 +309,17 @@ theorem operatorBimoduleTensorAction_tmul_adjoint_inner_nonneg
           (A ⊗ₜ[ℝ] MulOpposite.op (ContinuousLinearMap.adjoint A)) X u, u⟫_ℝ := by
   rw [operatorBimoduleTensorAction_tmul]
   exact operatorBimoduleAction_adjoint_inner_nonneg A X hX u
+
+/-- A finite sum of adjoint-paired tensors preserves Hilbert positivity.
+No positivity claim is made for an arbitrary element of the tensor algebra. -/
+theorem operatorBimoduleTensorAction_sum_adjoint_inner_nonneg
+    {ι : Type*} (I : Finset ι) (A : ι → EndH) (X : EndH)
+    (hX : ∀ u : H, 0 ≤ ⟪X u, u⟫_ℝ) (u : H) :
+    0 ≤ ⟪operatorBimoduleTensorAction
+      (∑ i ∈ I, A i ⊗ₜ[ℝ] MulOpposite.op (ContinuousLinearMap.adjoint (A i))) X u,
+      u⟫_ℝ := by
+  simp only [map_sum, LinearMap.sum_apply, ContinuousLinearMap.sum_apply, sum_inner]
+  exact Finset.sum_nonneg fun i _ =>
+    operatorBimoduleTensorAction_tmul_adjoint_inner_nonneg (A i) X hX u
 
 end InfoGeometry.Krein

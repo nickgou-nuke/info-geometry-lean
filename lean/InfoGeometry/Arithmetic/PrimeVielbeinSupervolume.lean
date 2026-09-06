@@ -17,7 +17,7 @@ No zeta regularization.
 The finite prime cutoff gives a finite Weyl/prime state space.
 The supertrace is the alternating finite sum.
 The supervolume is the finite Weyl denominator product.
-The negative-log potential is gated by a positivity property.
+The negative-log potential is gated by a positivity witness.
 -/
 
 noncomputable section
@@ -56,34 +56,29 @@ theorem finitePrimeVielbeinSupertrace_eq_supervolume
 Finite prime-vielbein readout.
 
 The supertrace is the alternating finite sum, the supervolume is the finite
-Weyl denominator, and the property stores the equality between them.
+Weyl denominator, and the witness stores the equality between them.
 -/
 structure PrimeVielbeinReadout (L : FormalPrimeRootLattice) where
   evaluation : SouriauThermalEvaluation L
+  supertraceReadout : ℝ
+  supervolumeReadout : ℝ
+  supertrace_eq_supervolume : supertraceReadout = supervolumeReadout
 
 namespace PrimeVielbeinReadout
 
 variable {L : FormalPrimeRootLattice}
 
-def supertraceReadout (R : PrimeVielbeinReadout L) : ℝ :=
-  finitePrimeVielbeinSupertrace R.evaluation
-
-def supervolumeReadout (R : PrimeVielbeinReadout L) : ℝ :=
-  finitePrimeVielbeinSupervolume R.evaluation
-
-theorem supertraceReadout_eq_supervolumeReadout
-    (R : PrimeVielbeinReadout L) :
-    R.supertraceReadout = R.supervolumeReadout := by
-  exact finitePrimeVielbeinSupertrace_eq_supervolume R.evaluation
-
 /-- Canonical finite prime-vielbein readout. -/
 def canonical (E : SouriauThermalEvaluation L) : PrimeVielbeinReadout L where
   evaluation := E
+  supertraceReadout := finitePrimeVielbeinSupertrace (E := E)
+  supervolumeReadout := finitePrimeVielbeinSupervolume (E := E)
+  supertrace_eq_supervolume := finitePrimeVielbeinSupertrace_eq_supervolume E
 
 end PrimeVielbeinReadout
 
 /--
-Positivity property for a finite supervolume potential.
+Positivity witness for a finite supervolume potential.
 
 This keeps the negative logarithm explicit and proof-carrying.
 -/

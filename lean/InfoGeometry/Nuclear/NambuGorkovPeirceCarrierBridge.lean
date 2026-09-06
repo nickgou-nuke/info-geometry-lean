@@ -47,4 +47,31 @@ theorem toPeirce_injective :
       cases hdelta
       rfl
 
+theorem toPeirce_mem_range_iff (x : PeirceCarrier) :
+    x ∈ Set.range toPeirce ↔
+      x 4 = -x 0 ∧ x 5 = x 1 ∧ x 6 = x 2 ∧ x 7 = x 3 := by
+  constructor
+  · rintro ⟨N, rfl⟩
+    rw [toPeirce_apply]
+    constructor
+    · rfl
+    constructor
+    · rfl
+    constructor <;> rfl
+  · rintro ⟨h4, h5, h6, h7⟩
+    let N : NambuGorkovCarrier ℝ :=
+      { xi := x 0, delta := ![x 1, x 2, x 3] }
+    refine ⟨N, ?_⟩
+    rw [toPeirce_apply]
+    funext i
+    fin_cases i
+    · rfl
+    · rfl
+    · rfl
+    · rfl
+    · exact h4.symm
+    · exact h5.symm
+    · exact h6.symm
+    · exact h7.symm
+
 end InfoGeometry.Nuclear.NambuGorkovPeirceCarrierBridge

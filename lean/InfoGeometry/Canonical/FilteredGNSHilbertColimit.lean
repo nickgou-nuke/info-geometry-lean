@@ -116,19 +116,6 @@ def gnsStageToHilbertColimit
 
 /-- The union of the noncommutative stage GNS images is dense in the completed
 filtered GNS Hilbert colimit. -/
-theorem gnsStageToHilbertColimit_norm
-    (i : I) (x : (ω.state i).functional.GNS) :
-    ‖gnsStageToHilbertColimit Stage sys ω i x‖ = ‖x‖ := by
-  exact (gnsStageToHilbertColimit Stage sys ω i).norm_map x
-
-theorem gnsStageToHilbertColimit_inner
-    (i : I) (x y : (ω.state i).functional.GNS) :
-    inner ℂ
-        (gnsStageToHilbertColimit Stage sys ω i x)
-        (gnsStageToHilbertColimit Stage sys ω i y) =
-      inner ℂ x y := by
-  exact (gnsStageToHilbertColimit Stage sys ω i).inner_map_map x y
-
 theorem dense_iUnion_range_gnsStageToHilbertColimit :
     Dense
       (⋃ i : I,

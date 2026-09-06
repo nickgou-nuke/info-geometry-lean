@@ -32,7 +32,7 @@ abbrev CausalFunctor (α : Type*) [PartialOrder α] :=
 -/
 noncomputable abbrev UniversalCausalFuture
     (F : CausalFunctor α) [HasColimit F] : RingCat :=
-  CategoryTheory.Limits.colimit F
+  colimit F
 
 /--
   The Causal Propagation Theorem:
@@ -46,7 +46,7 @@ theorem causal_information_conservation
     (x : F.obj A) :
     (colimit.ι F A) x = (colimit.ι F B) ((F.map (homOfLE causal_link)) x) := by
   have h := colimit.w F (homOfLE causal_link)
-  exact congr_arg (fun (f : F.obj A ⟶ CategoryTheory.Limits.colimit F) => f x) h.symm
+  exact congr_arg (fun (f : F.obj A ⟶ colimit F) => f x) h.symm
 
 /--
   Two events are spacelike separated if they have no causal relationship.

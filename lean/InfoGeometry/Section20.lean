@@ -57,13 +57,12 @@ theorem coordinate_cartan_readouts_reconcile
     Section12.torsionTwoFormCoeff Section12.zeroConnection
         (Section12.coordinateConnectionForm Gamma) Section12.coordinateFrame a b c =
       Section12.torsionTensor Gamma a b c ∧
-        Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
+    Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
         Gamma Section12Formalized.coordinateFrame a c b =
       Section12Formalized.torsionTensor Gamma a b c := by
-  refine ⟨?_, ?_⟩
-  · exact Section12.torsionTwoFormCoeff_coordinate_eq_torsionTensor Gamma a b c
-  · exact Section12Formalized.coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor
-      Gamma a b c
+  exact ⟨Section12.torsionTwoFormCoeff_coordinate_eq_torsionTensor Gamma a b c,
+    Section12Formalized.coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor
+      Gamma a b c⟩
 
 /-- Both torsion modules use the same quaternion commutator covariant derivative. -/
 theorem quaternion_torsion_definitions_agree (dq Omega q : Quat) :
@@ -72,7 +71,7 @@ theorem quaternion_torsion_definitions_agree (dq Omega q : Quat) :
   rfl
 
 /--
-The finite noncommutative shift property is exactly an instance of the generic
+The finite noncommutative shift witness is exactly an instance of the generic
 commutator readout used by the formalized torsion corridor.
 -/
 theorem finite_shift_commutator_is_generic_readout :
@@ -87,5 +86,24 @@ theorem finite_shift_generic_readout_ne_zero :
         Section12.finiteShiftL Section12.finiteShiftR ≠ (0 : ShiftMat) := by
   rw [finite_shift_commutator_is_generic_readout]
   exact Section12.finiteShiftCommutator_ne_zero
+
+theorem section20_capstone :
+    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
+      Section12.torsionTensor Gamma a b c =
+        Section12Formalized.torsionTensor Gamma a b c) ∧
+    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
+      Section12.torsionTwoFormCoeff Section12.zeroConnection
+          (Section12.coordinateConnectionForm Gamma) Section12.coordinateFrame a b c =
+        Section12.torsionTensor Gamma a b c ∧
+      Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
+          Gamma Section12Formalized.coordinateFrame a c b =
+        Section12Formalized.torsionTensor Gamma a b c) ∧
+    (∀ dq Omega q : Quat,
+      Section12.quaternionTorsion dq Omega q =
+        Section12Formalized.quaternionTorsion dq Omega q) ∧
+    Section12Formalized.macroscopicCuntzTorsion
+        Section12.finiteShiftL Section12.finiteShiftR ≠ (0 : ShiftMat) := by
+  exact ⟨torsion_coefficient_definitions_agree, coordinate_cartan_readouts_reconcile,
+    quaternion_torsion_definitions_agree, finite_shift_generic_readout_ne_zero⟩
 
 end Section20

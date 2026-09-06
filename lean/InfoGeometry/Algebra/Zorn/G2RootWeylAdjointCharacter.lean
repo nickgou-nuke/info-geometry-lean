@@ -328,6 +328,35 @@ def finiteReflectionPhase : Root → Root
     | 5 => 1
     | _ => 0)
 
+/-! The finite and concrete cyclotomic reflections use different axes in the
+    long sector.  The canonical comparison is the sector-dependent shift
+    `k ↦ k + 1` there, while the short sector is unchanged. -/
+
+def finiteToConcretePhaseCalibration : Root → Root
+  | (false, k) => (false, k)
+  | (true, k) => (true, k + 1)
+
+theorem finiteToConcretePhaseCalibration_bijective :
+    Function.Bijective finiteToConcretePhaseCalibration := by
+  native_decide
+
+noncomputable def finiteToConcretePhaseEquiv : Root ≃ Root :=
+  Equiv.ofBijective finiteToConcretePhaseCalibration
+    finiteToConcretePhaseCalibration_bijective
+
+theorem finiteToConcretePhaseCalibration_reflection_conjugacy (r : Root) :
+    finiteToConcretePhaseCalibration (finiteReflectionPhase r) =
+      InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.cyclotomicS1Fun
+        (finiteToConcretePhaseCalibration r) := by
+  rcases r with ⟨b, k⟩
+  cases b <;> fin_cases k <;> decide
+
+theorem finiteToConcretePhaseEquiv_reflection_conjugacy (r : Root) :
+    finiteToConcretePhaseEquiv (finiteReflectionPhase r) =
+      InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.cyclotomicS1Perm
+        (finiteToConcretePhaseEquiv r) := by
+  exact finiteToConcretePhaseCalibration_reflection_conjugacy r
+
 theorem finiteReflectionPhase_bijective :
     Function.Bijective finiteReflectionPhase := by
   native_decide

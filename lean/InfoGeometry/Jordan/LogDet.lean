@@ -3,11 +3,10 @@ import Mathlib.Analysis.Matrix.Order
 import Mathlib.Tactic
 
 /-!
-# Log-Det Barrier and Squared Log-Volume Ratio on SPD
+# Log-Det Barrier and Determinant Divergence on SPD
 
-Determinant-only convex potential and squared relative log-volume readout for
-real symmetric positive-definite matrices.  The Burg/Stein divergence is
-owned by `InfoGeometry.Jordan.BurgStein`.
+Determinant-only convex potential and relative-volume divergence for real
+symmetric positive-definite matrices.
 -/
 
 namespace InfoGeometry.Jordan
@@ -58,21 +57,16 @@ lemma normalizedDistortion_det (X Y : SPD n) :
     _ = Matrix.det X.mat / Matrix.det Y.mat := by
           simp [div_eq_mul_inv, mul_comm]
 
-/-! The squared log-determinant ratio is a log-volume distance, not the
-    Burg/Stein Bregman divergence. -/
-noncomputable def logDetRatioSq (X Y : SPD n) : ℝ :=
+/-- Determinant-relative log-volume divergence on SPD. -/
+noncomputable def logDetBregman (X Y : SPD n) : ℝ :=
   (Real.log (Matrix.det (normalizedDistortion X Y))) ^ (2 : ℕ)
 
-/-! Compatibility name retained for downstream clients of the former API. -/
-noncomputable def logDetBregman (X Y : SPD n) : ℝ :=
-  logDetRatioSq X Y
-
-lemma logDetRatioSq_eq_logdet_ratio_sq (X Y : SPD n) :
-    logDetRatioSq X Y
+lemma logDetBregman_eq_burg_form (X Y : SPD n) :
+    logDetBregman X Y
       = (Real.log (Matrix.det X.mat) - Real.log (Matrix.det Y.mat)) ^ (2 : ℕ) := by
   have hX : Matrix.det X.mat ≠ 0 := X.det_ne_zero
   have hY : Matrix.det Y.mat ≠ 0 := Y.det_ne_zero
-  unfold logDetRatioSq
+  unfold logDetBregman
   rw [normalizedDistortion_det, Real.log_div hX hY]
 
 /-- Determinant-only nonnegativity template under positive-definiteness. -/
@@ -83,48 +77,28 @@ lemma logdet_square_nonneg_of_posDef
   simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det A))
 
 /-- Nonnegativity of the determinant-relative divergence (commuting case). -/
-lemma logDetRatioSq_nonneg_of_commute
+lemma logDetBregman_nonneg_of_commute
     (X Y : SPD n)
     (_hcomm : Commute X.mat Y.mat⁻¹) :
-    0 ≤ logDetRatioSq X Y := by
-  unfold logDetRatioSq
+    0 ≤ logDetBregman X Y := by
+  unfold logDetBregman
   simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det (normalizedDistortion X Y)))
 
 /-- Unconditional nonnegativity of the determinant-relative divergence on SPD. -/
-lemma logDetRatioSq_nonneg
-    (X Y : SPD n) :
-    0 ≤ logDetRatioSq X Y := by
-  unfold logDetRatioSq
-  simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det (normalizedDistortion X Y)))
-
-@[simp]
-lemma logDetRatioSq_self (X : SPD n) :
-    logDetRatioSq X X = 0 := by
-  have hdet : Matrix.det X.mat ≠ 0 := X.det_ne_zero
-  unfold logDetRatioSq
-  rw [normalizedDistortion_det]
-  field_simp [hdet]
-  simp
-
-lemma logDetBregman_eq_burg_form (X Y : SPD n) :
-    logDetBregman X Y
-      = (Real.log (Matrix.det X.mat) - Real.log (Matrix.det Y.mat)) ^ (2 : ℕ) := by
-  simpa [logDetBregman] using logDetRatioSq_eq_logdet_ratio_sq X Y
-
-lemma logDetBregman_nonneg_of_commute
-    (X Y : SPD n)
-    (hcomm : Commute X.mat Y.mat⁻¹) :
-    0 ≤ logDetBregman X Y := by
-  simpa [logDetBregman] using logDetRatioSq_nonneg_of_commute X Y hcomm
-
 lemma logDetBregman_nonneg
     (X Y : SPD n) :
     0 ≤ logDetBregman X Y := by
-  simpa [logDetBregman] using logDetRatioSq_nonneg X Y
+  unfold logDetBregman
+  simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det (normalizedDistortion X Y)))
 
-@[simp] lemma logDetBregman_self (X : SPD n) :
+@[simp]
+lemma logDetBregman_self (X : SPD n) :
     logDetBregman X X = 0 := by
-  simpa [logDetBregman] using logDetRatioSq_self X
+  have hdet : Matrix.det X.mat ≠ 0 := X.det_ne_zero
+  unfold logDetBregman
+  rw [normalizedDistortion_det]
+  field_simp [hdet]
+  simp
 
 end SPD
 

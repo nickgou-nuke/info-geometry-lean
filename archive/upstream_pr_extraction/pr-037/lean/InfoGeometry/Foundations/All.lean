@@ -1,0 +1,7 @@
+import InfoGeometry.Foundations.AxiomaticDependencyGraph
+import InfoGeometry.Foundations.NewtonKantorovichBase
+import InfoGeometry.Foundations.NewtonKantorovichRoots
+import InfoGeometry.Foundations.NewtonKantorovichSequence
+import InfoGeometry.Foundations.NewtonKantorovichCertificate
+import InfoGeometry.Foundations.NewtonKantorovich
+import InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate

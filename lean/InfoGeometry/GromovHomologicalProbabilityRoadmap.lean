@@ -8,9 +8,9 @@ Canonical theorem-safe surface for the Gromov lecture spine:
 momentum map → homological measure → moving-ball filtration →
 cycle-space spectrum → Weyl volume gauge.
 
-This file intentionally avoids property packets and constructor reexports.  It
+This file intentionally avoids witness packets and constructor reexports.  It
 states only finite logical content directly from explicit types, maps, and a
-volume-bound property.  No geometric or analytic theorem is asserted.
+volume-bound hypothesis.  No geometric or analytic theorem is asserted.
 -/
 
 noncomputable section
@@ -21,7 +21,7 @@ namespace GromovHomologicalProbabilityRoadmap
 
 /--
 Direct roadmap target: an explicitly supplied state-to-cycle map with an
-explicit volume bound gives the corresponding existential cycle property.
+explicit volume bound gives the corresponding existential cycle witness.
 -/
 theorem constructGromovHomologicalProbabilityRoadmapTarget
     (ProjectiveStateSpace CycleSpace : Type*)

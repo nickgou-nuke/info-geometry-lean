@@ -24,9 +24,10 @@ namespace InfoGeometry.Krein.SplitBoost
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
 
+abbrev SC := InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
 
 /-- The canonical split boost element `cosh t + j sinh t`. -/
-def boostElement (t : ℝ) : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex :=
+def boostElement (t : ℝ) : SC :=
   ⟨Real.cosh t, Real.sinh t⟩
 
 @[simp] theorem boostElement_re (t : ℝ) :
@@ -67,29 +68,29 @@ theorem boostElement_mul_neg (t : ℝ) :
   rw [← boostElement_add, add_neg_cancel, boostElement_zero]
 
 /-- Left light-cone coordinate scales by `exp(t)` under the boost action. -/
-theorem boost_leftPart_mul (t : ℝ) (x : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) :
+theorem boost_leftPart_mul (t : ℝ) (x : SC) :
     leftPart (mul (boostElement t) x) = Real.exp t * leftPart x := by
   rw [SplitComplex.leftPart_mul]
   simp [boostElement, leftPart, Real.cosh_add_sinh]
 
 /-- Right light-cone coordinate scales by `exp(-t)` under the boost action. -/
-theorem boost_rightPart_mul (t : ℝ) (x : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) :
+theorem boost_rightPart_mul (t : ℝ) (x : SC) :
     rightPart (mul (boostElement t) x) = Real.exp (-t) * rightPart x := by
   rw [SplitComplex.rightPart_mul]
   simp [boostElement, rightPart, Real.cosh_sub_sinh]
 
 /-- The split boost action preserves the split norm. -/
-theorem boost_norm_preserved (t : ℝ) (x : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) :
+theorem boost_norm_preserved (t : ℝ) (x : SC) :
     SplitComplex.norm (mul (boostElement t) x) = SplitComplex.norm x := by
   rw [SplitComplex.norm_mul, boostElement_norm, one_mul]
 
 /-- The split boost preserves the split norm. -/
-theorem splitBoost_preserves_norm (t : ℝ) (x : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) :
+theorem splitBoost_preserves_norm (t : ℝ) (x : SC) :
     SplitComplex.norm (mul (boostElement t) x) = SplitComplex.norm x := by
   simpa using (boost_norm_preserved (t := t) (x := x))
 
 /-- A split-boost unit preserves any zero-norm element. -/
-theorem boost_preserves_zeroNorm (t : ℝ) (x : InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex) (hx : SplitComplex.norm x = 0) :
+theorem boost_preserves_zeroNorm (t : ℝ) (x : SC) (hx : SplitComplex.norm x = 0) :
     SplitComplex.norm (mul (boostElement t) x) = 0 := by
   rw [boost_norm_preserved, hx]
 

@@ -85,18 +85,4 @@ theorem dual_metric_vanishes_at_critical_boundary (ε : ℝ) (hε : 0 < ε) :
     have h_sq_pos : 0 < eta ^ 2 := sq_pos_of_pos h_eta_pos
     exact (one_div_lt hε h_sq_pos).mp h_sq_lt
 
-/-! ## Master Capstone -/
-
-/-- 🏆 GRAND CAPSTONE: Complete Formal Asymptotic Legendre Duality at β = 1 -/
-theorem grand_bost_connes_legendre_asymptotic_synthesis
-    (eta : ℝ) (h_eta : 0 < eta) :
-    (dPhiAsymptotic eta = -1 - 1 / eta) ∧
-    (dPhiAsymptotic eta = - betaAsymptotic eta) ∧
-    (0 < dualHessianAsymptotic eta) ∧
-    (phiAsymptotic eta - eta * dPhiAsymptotic eta = - Real.log eta) :=
-  ⟨rfl,
-   dphi_eq_neg_beta eta,
-   dual_hessian_pos eta h_eta,
-   legendre_fenchel_identity eta h_eta⟩
-
 end InfoGeometry.Quantum.BostConnes

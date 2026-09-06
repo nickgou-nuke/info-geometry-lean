@@ -2,6 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
@@ -28,6 +29,7 @@ open MeasureTheory
 open scoped BigOperators Topology ENNReal Classical
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
+open InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
@@ -71,7 +73,8 @@ theorem measurableSet_wordBranchSet (w : List Bool) :
         simp only [tail_prependBit] at hy
         exact ⟨y, hy, rfl⟩
     rw [h_range]
-    exact (measurableSet_prependBitBranch b).inter (continuous_tail.measurable ih)
+    exact (measurableSet_prependBitBranch b).inter
+      (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_tail.measurable ih)
 
 theorem μC_image_prependBit (b : Bool) (s : Set Boundary) (hs : MeasurableSet s) :
     μC (prependBit b '' s) = (1 / 2 : ℝ≥0∞) * μC s := by
@@ -87,11 +90,13 @@ theorem μC_image_prependBit (b : Bool) (s : Set Boundary) (hs : MeasurableSet s
   rw [h_range]
   have h_inter : Set.range (prependBit b) ∩ tail ⁻¹' s =
       (tail ⁻¹' s) ∩ Set.range (prependBit b) := Set.inter_comm _ _
-  rw [h_inter, ← Measure.restrict_apply (continuous_tail.measurable hs)]
+  rw [h_inter, ← Measure.restrict_apply
+    (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_tail.measurable hs)]
   have h_map := tail_measure_map_restrict_prependBitBranch b
   have h_eval := congrArg (fun μ : Measure Boundary => μ s) h_map
   dsimp at h_eval
-  rw [Measure.map_apply continuous_tail.measurable hs] at h_eval
+  rw [Measure.map_apply
+    InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_tail.measurable hs] at h_eval
   exact h_eval
 
 /-- The Bernoulli measure of a cylinder set is exactly $2^{-|w|}$. -/

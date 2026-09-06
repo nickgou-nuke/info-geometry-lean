@@ -20,7 +20,7 @@ and a residual-zero Ward constraint:
 * the global modes are the modes for which that residual vanishes.
 
 The role of the file is to make the "Virasoro constraints as equilibrium
-equations" interpretation explicit without turning it into an ax!om.
+equations" interpretation explicit without turning it into an axiom.
 -/
 
 namespace InfoGeometry.Canonical.VirasoroWardEquilibrium
@@ -39,12 +39,12 @@ instantiations.
 structure VirasoroWardEquilibriumPacket
     (Alg Op : Type*)
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op] where
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
   /-- Virasoro generator datum. -/
   virasoro : VirasoroDatum Alg
 
   /-- Thermodynamic owner packet carrying the global log-partition potential. -/
-  thermodynamics : OperatorFirstThermodynamicsPacket Unit Op
+  thermodynamics : OperatorThermodynamicsPacket Op
 
   /-- Abstract Ward action on the scalar free-energy readout. -/
   wardAction : ℤ → ℝ → ℝ
@@ -69,7 +69,7 @@ namespace VirasoroWardEquilibriumPacket
 
 variable {Alg Op : Type*}
 variable [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-variable [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable [NormedAddCommGroup Op] [NormedSpace ℝ Op]
 
 /-- The free-energy readout of a Virasoro Ward packet is the existing operatorial one. -/
 @[simp]
@@ -77,7 +77,8 @@ theorem freeEnergy_eq_neg_log_partition
     (W : VirasoroWardEquilibriumPacket Alg Op) :
     W.thermodynamics.freeEnergy =
       - Real.log W.thermodynamics.partitionFunction :=
-  rfl
+  OperatorThermodynamicsPacket.freeEnergy_eq_neg_log_partition'
+    W.thermodynamics
 
 /-- The Ward residual is the abstract action applied to the free-energy readout. -/
 def wardResidual (W : VirasoroWardEquilibriumPacket Alg Op) (n : ℤ) : ℝ :=
@@ -116,20 +117,6 @@ theorem thermodynamics_freeEnergy_eq_neg_log_partition
     W.thermodynamics.freeEnergy =
       - Real.log W.thermodynamics.partitionFunction :=
   W.freeEnergy_eq_neg_log_partition
-
-/--
-Canonical vacuum/trivial equilibrium packet where all Ward variations vanish identically.
--/
-def ofTrivialEquilibrium
-    (V : VirasoroDatum Alg)
-    (T : OperatorFirstThermodynamicsPacket Unit Op) :
-    VirasoroWardEquilibriumPacket Alg Op where
-  virasoro := V
-  thermodynamics := T
-  wardAction := fun _ _ => 0
-  wardConstraint := fun _ => True
-  wardConstraint_eq_zero := fun _ => by simp
-  globalWardConstraint := fun _ _ => trivial
 
 end VirasoroWardEquilibriumPacket
 

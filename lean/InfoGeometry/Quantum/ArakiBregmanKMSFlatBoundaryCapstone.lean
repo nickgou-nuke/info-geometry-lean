@@ -127,19 +127,4 @@ theorem araki_shape_deformation_vanishes_at_flat_boundary (ω : ℝ) :
   ext i j; fin_cases i <;> fin_cases j <;>
   { simp }
 
-/--
-🏆 **GRAND CAPSTONE MASTER THEOREM: Full Synthesis of Tensor Commutation & KMS Dissipation**
--/
-theorem grand_araki_bregman_kms_synthesis
-    (x : ℝ)
-    (ω : ℝ) :
-    (S_L_total * K_total = K_total * S_L_total) ∧
-    (0 ≤ bregman_div x) ∧
-    (bregman_div 0 = 0) ∧
-    (araki_shape_deformation 0 ω = 0) :=
-  ⟨cantor_S_left_commutes_fiber_K,
-   bregman_div_nonneg x,
-   bregman_div_zero,
-   araki_shape_deformation_vanishes_at_flat_boundary ω⟩
-
 end InfoGeometry.Quantum.ArakiBregmanKMS

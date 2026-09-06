@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Algebra.ZornMatrix
 
+set_option maxHeartbeats 2000000
+
 /-!
 # Circular/Peirce readback for the native split-octonion carrier
 
@@ -78,33 +80,67 @@ noncomputable def circularChiralPacket : CircularChiralPacket where
 -/
 
 @[simp] theorem uPlus_add_uMinus : uPlus + uMinus = (I : Carrier) :=
-  E11_add_E22
+  by
+    apply ZornMatrix.ext
+    · rw [add_a]
+      norm_num [uPlus, uMinus, I, E11, E22]
+    · rw [add_v]
+      ext j
+      dsimp [uPlus, uMinus, I, E11, E22, Vec3.add]
+      fin_cases j <;>
+        simp
+    · rw [add_w]
+      ext j
+      dsimp [uPlus, uMinus, I, E11, E22, Vec3.add]
+      fin_cases j <;>
+        simp
+    · rw [add_b]
+      norm_num [uPlus, uMinus, I, E11, E22]
 
 @[simp] theorem uPlus_mul_uMinus : uPlus * uMinus = (0 : Carrier) :=
-  E11_mul_E22
+  by simpa [uPlus, uMinus] using (E11_mul_E22 (R := ℝ))
 
 @[simp] theorem uMinus_mul_uPlus : uMinus * uPlus = (0 : Carrier) :=
-  E22_mul_E11
+  by simpa [uPlus, uMinus] using (E22_mul_E11 (R := ℝ))
 
 @[simp] theorem sigmaPlus_mul_sigmaMinus (i j : Fin 3) :
     sigmaPlus i * sigmaMinus j = if i = j then uPlus else 0 :=
-  U_mul_V i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      simp [sigmaPlus, sigmaMinus, uPlus, U, V, E11, zero, ZornMatrix.mul,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis] <;> ring
 
 @[simp] theorem sigmaMinus_mul_sigmaPlus (i j : Fin 3) :
     sigmaMinus i * sigmaPlus j = if i = j then uMinus else 0 :=
-  V_mul_U i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      simp [sigmaPlus, sigmaMinus, uMinus, U, V, E22, zero, ZornMatrix.mul,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis] <;> ring
 
 theorem sigmaPlus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaPlus i) (sigmaPlus j) = 0 :=
-  by simpa [anticommutator] using U_anticommute i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      simp [anticommutator, sigmaPlus, U, zero, ZornMatrix.mul,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis] <;>
+      ext <;> simp [ZornMatrix.add, Vec3.add, Vec3.smul] <;> ring
 
 theorem sigmaMinus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaMinus i) (sigmaMinus j) = 0 :=
-  by simpa [anticommutator] using V_anticommute i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      simp [anticommutator, sigmaMinus, V, zero, ZornMatrix.mul,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul, Vec3.basis] <;>
+      ext <;> simp [ZornMatrix.add, Vec3.add, Vec3.smul] <;> ring
 
 theorem sigmaPlus_sigmaMinus_anticommutator (i j : Fin 3) :
     anticommutator (sigmaPlus i) (sigmaMinus j) = if i = j then I else 0 :=
-  U_V_anticommutator i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      simp [anticommutator, sigmaPlus, sigmaMinus, U, V, I, E11, E22, zero,
+        ZornMatrix.mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul,
+        Vec3.basis] <;> ext <;>
+      simp [ZornMatrix.add, Vec3.add, Vec3.smul] <;> ring
 
 /-
 structure LocalM2Packet (i : Fin 3) where
@@ -128,14 +164,16 @@ theorem localM2Laws (i : Fin 3) :
     sigmaPlus i * sigmaMinus i = uPlus ∧
     sigmaMinus i * sigmaPlus i = uMinus ∧
     anticommutator (sigmaPlus i) (sigmaMinus i) = (I : Carrier) := by
-  exact ⟨U_mul_self_zero i, V_mul_self_zero i, U_mul_V_self i,
-    V_mul_U_self i, by simpa using U_V_anticommutator i i⟩
+  exact ⟨U_mul_self_zero i, V_mul_self_zero i,
+    by simpa using sigmaPlus_mul_sigmaMinus i i,
+    by simpa using sigmaMinus_mul_sigmaPlus i i,
+    by simpa [anticommutator] using sigmaPlus_sigmaMinus_anticommutator i i⟩
 
 theorem commutator_sigmaPlus_sigmaMinus (i j : Fin 3) :
     commutator (sigmaPlus i) (sigmaMinus j) =
       if i = j then chirality else 0 := by
   unfold commutator
-  rw [U_mul_V, V_mul_U]
+  rw [sigmaPlus_mul_sigmaMinus i j, sigmaMinus_mul_sigmaPlus j i]
   by_cases h : i = j
   · subst j
     simp [chirality, E11, E22, sub, zero]
@@ -144,16 +182,16 @@ theorem commutator_sigmaPlus_sigmaMinus (i j : Fin 3) :
       exact h hji.symm
     simp only [h, h']
     apply ZornMatrix.ext
-    · simp [sub_a, zero]
+    · simp [ZornMatrix.sub, zero]
     · funext k
-      fin_cases k <;> simp [sub_v, zero, Vec3.sub]
+      fin_cases k <;> simp [ZornMatrix.sub, zero, Vec3.sub]
     · funext k
-      fin_cases k <;> simp [sub_w, zero, Vec3.sub]
-    · simp [sub_b, zero]
+      fin_cases k <;> simp [ZornMatrix.sub, zero, Vec3.sub]
+    · simp [ZornMatrix.sub, zero]
 
 theorem nonassociative_circular_property :
     ((sigmaPlus 0 * sigmaPlus 1) * sigmaPlus 2) ≠
       sigmaPlus 0 * (sigmaPlus 1 * sigmaPlus 2) := by
-  exact ZornMatrix.nonassociative_property (R := ℝ)
+  exact ZornMatrix.nonassociative_witness (R := ℝ)
 
 end InfoGeometry.Canonical.SplitOctonionCircularChiralClosure

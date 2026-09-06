@@ -6,3 +6,5 @@ import InfoGeometry.RootSystem.D4DiscriminantCardinality
 import InfoGeometry.RootSystem.D4DualTriality
 import InfoGeometry.RootSystem.D4TrialityAction
 import InfoGeometry.RootSystem.D4WeylGroup
+import InfoGeometry.RootSystem.CoxeterPlaneProjection
+import InfoGeometry.RootSystem.G2CoxeterPlaneProjection

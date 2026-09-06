@@ -41,30 +41,30 @@ transport follow by theorem from the tessellation owner lane.
 -/
 structure CantorDiracSeaWalkDatum
     (Op Charge : Type*) [Ring Op] where
-  sector : List Bool → Diamond Op
+  sector : FiniteBinaryWord → Diamond Op
   leftHop :
-    ∀ w : List Bool,
+    ∀ w : FiniteBinaryWord,
       IncidentLightray Op (sector w)
-        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w false))
+        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false))
   rightHop :
-    ∀ w : List Bool,
+    ∀ w : FiniteBinaryWord,
       IncidentLightray Op (sector w)
-        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w true))
+        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true))
   leftOrthogonal :
-    ∀ w : List Bool,
+    ∀ w : FiniteBinaryWord,
       (sector w).P *
-        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w false)).P = 0
+        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false)).P = 0
   rightOrthogonal :
-    ∀ w : List Bool,
+    ∀ w : FiniteBinaryWord,
       (sector w).P *
-        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w true)).P = 0
-  charge : List Bool → Charge
-  admissibleLeft : List Bool → Prop
-  admissibleRight : List Bool → Prop
+        (sector (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true)).P = 0
+  charge : FiniteBinaryWord → Charge
+  admissibleLeft : FiniteBinaryWord → Prop
+  admissibleRight : FiniteBinaryWord → Prop
   left_charge_respects :
-    ∀ w : List Bool, admissibleLeft w
+    ∀ w : FiniteBinaryWord, admissibleLeft w
   right_charge_respects :
-    ∀ w : List Bool, admissibleRight w
+    ∀ w : FiniteBinaryWord, admissibleRight w
   tiltReadout : BinaryWordTiltReadout Op
 
 namespace CantorDiracSeaWalkDatum
@@ -73,76 +73,44 @@ variable {Op Charge : Type*} [Ring Op]
 variable (D : CantorDiracSeaWalkDatum Op Charge)
 
 /-- The left binary hop is square-zero by orthogonal support. -/
-theorem leftHop_square_zero
-    (w : List Bool) :
+theorem leftHop_square_zero (w : FiniteBinaryWord) :
     (D.leftHop w).N * (D.leftHop w).N = 0 :=
   (D.leftHop w).square_zero_of_orthogonal (D.leftOrthogonal w)
 
 /-- The right binary hop is square-zero by orthogonal support. -/
-theorem rightHop_square_zero
-    (w : List Bool) :
+theorem rightHop_square_zero (w : FiniteBinaryWord) :
     (D.rightHop w).N * (D.rightHop w).N = 0 :=
   (D.rightHop w).square_zero_of_orthogonal (D.rightOrthogonal w)
 
 /-- The left binary hop generates a unipotent flow unit. -/
-def leftFlowUnit
-    (w : List Bool) : Opˣ :=
+def leftFlowUnit (w : FiniteBinaryWord) : Opˣ :=
   (D.leftHop w).flowUnit (D.leftOrthogonal w)
 
 /-- The right binary hop generates a unipotent flow unit. -/
-def rightFlowUnit
-    (w : List Bool) : Opˣ :=
+def rightFlowUnit (w : FiniteBinaryWord) : Opˣ :=
   (D.rightHop w).flowUnit (D.rightOrthogonal w)
-
-theorem leftFlowUnit_val
-    (w : List Bool) :
-    ((D.leftFlowUnit w : Opˣ) : Op) = 1 + (D.leftHop w).N := by
-  simpa [leftFlowUnit, IncidentLightray.flowUnit] using
-    (IncidentLightray.flowUnit_val
-      (D.leftHop w) (D.leftOrthogonal w))
-
-theorem rightFlowUnit_val
-    (w : List Bool) :
-    ((D.rightFlowUnit w : Opˣ) : Op) = 1 + (D.rightHop w).N := by
-  simpa [rightFlowUnit, IncidentLightray.flowUnit] using
-    (IncidentLightray.flowUnit_val
-      (D.rightHop w) (D.rightOrthogonal w))
-
-theorem leftFlowUnit_inv_val
-    (w : List Bool) :
-    (((D.leftFlowUnit w)⁻¹ : Opˣ) : Op) = 1 - (D.leftHop w).N := by
-  simpa [leftFlowUnit, IncidentLightray.flowUnit] using
-    (oneAddSquareZeroUnit_inv_val
-      (D.leftHop w).N (D.leftHop_square_zero w))
-
-theorem rightFlowUnit_inv_val
-    (w : List Bool) :
-    (((D.rightFlowUnit w)⁻¹ : Opˣ) : Op) = 1 - (D.rightHop w).N := by
-  simpa [rightFlowUnit, IncidentLightray.flowUnit] using
-    (oneAddSquareZeroUnit_inv_val
-      (D.rightHop w).N (D.rightHop_square_zero w))
 
 /-- Prepending a false bit exposes `false` as the new boundary head. -/
 @[simp] theorem boundaryHead_boundaryCons_false
-    (ξ : (ℕ → Bool)) :
+    (ξ : InfiniteBinaryWordSpace) :
     boundaryHead (boundaryCons false ξ) = false := by
   simp
 
 /-- Prepending a true bit exposes `true` as the new boundary head. -/
 @[simp] theorem boundaryHead_boundaryCons_true
-    (ξ : (ℕ → Bool)) :
+    (ξ : InfiniteBinaryWordSpace) :
     boundaryHead (boundaryCons true ξ) = true := by
   simp
 
 /-- The first prefix symbol of a false-prepended boundary code is `false`. -/
 theorem boundaryPrefix_one_false
-    (ξ : (ℕ → Bool)) :
+    (ξ : InfiniteBinaryWordSpace) :
     boundaryPrefix 1 (boundaryCons false ξ) = [false] := by
   simp [boundaryPrefix]
 
 /-- The first prefix symbol of a true-prepended boundary code is `true`. -/
 theorem boundaryPrefix_one_true
-    (ξ : (ℕ → Bool)) :
+    (ξ : InfiniteBinaryWordSpace) :
     boundaryPrefix 1 (boundaryCons true ξ) = [true] := by
   simp [boundaryPrefix]
 

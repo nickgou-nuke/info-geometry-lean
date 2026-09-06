@@ -114,8 +114,9 @@ end DeBruijnPayload
 namespace CandidateContractionRecord
 
 /-- Lift the payload of a candidate graph record while preserving graph endpoints. -/
-def lift (delta : ℕ) (r : CandidateContractionRecord) : CandidateContractionRecord :=
-  (r.endpoints, r.payload.lift delta)
+def lift (delta : ℕ) (r : CandidateContractionRecord) : CandidateContractionRecord where
+  endpoints := r.endpoints
+  payload := r.payload.lift delta
 
 @[simp] theorem lift_endpoints (delta : ℕ) (r : CandidateContractionRecord) :
     (r.lift delta).endpoints = r.endpoints :=

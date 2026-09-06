@@ -4,7 +4,7 @@ noncomputable section
 namespace InfoGeometry.Topology.CantorBoundaryCuntzLengthTwoSector
 open InfoGeometry.Topology.CantorBoundaryCuntzFamily
 open InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
-abbrev Op := ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)
+abbrev Op := C4Functions →ₗ[ℂ] C4Functions
 
 /-- First grouped creation branch on the concrete four-ary Cantor carrier. -/
 def gS0 : Op := cuntzS 0 + cuntzS 1
@@ -199,7 +199,10 @@ lemma P_mul_qPlusC : P * qPlusC = qPlusC := by
     _ = qPlusC := by
       have htriple : qPlusC * qMinusC * qPlusC = qPlusC := by
         change QPlus g * QMinus g * QPlus g = QPlus g
-        exact qplus_qminus_qplus g o11 o00
+        rw [qplus_qminus_product g o11]
+        change gS0 * (gT0 * gS0) * gT1 = gS0 * gT1
+        rw [o00]
+        simp
       have hnil : qMinusC * qPlusC * qPlusC = 0 := by
         rw [mul_assoc, qPlusC_sq, mul_zero]
       rw [htriple, hnil]
@@ -214,7 +217,10 @@ lemma qPlusC_mul_P : qPlusC * P = qPlusC := by
     _ = qPlusC := by
       have htriple : qPlusC * qMinusC * qPlusC = qPlusC := by
         change QPlus g * QMinus g * QPlus g = QPlus g
-        exact qplus_qminus_qplus g o11 o00
+        rw [qplus_qminus_product g o11]
+        change gS0 * (gT0 * gS0) * gT1 = gS0 * gT1
+        rw [o00]
+        simp
       have hnil : qPlusC * qPlusC * qMinusC = 0 := by
         rw [qPlusC_sq, zero_mul]
       rw [hnil, htriple]
@@ -229,7 +235,10 @@ lemma P_mul_qMinusC : P * qMinusC = qMinusC := by
     _ = qMinusC := by
       have htriple : qMinusC * qPlusC * qMinusC = qMinusC := by
         change QMinus g * QPlus g * QMinus g = QMinus g
-        exact qminus_qplus_qminus g o00 o11
+        rw [qminus_qplus_product g o00]
+        change gS1 * (gT1 * gS1) * gT0 = gS1 * gT0
+        rw [o11]
+        simp
       have hnil : qPlusC * qMinusC * qMinusC = 0 := by
         rw [mul_assoc, qMinusC_sq, mul_zero]
       rw [hnil, htriple]
@@ -244,7 +253,10 @@ lemma qMinusC_mul_P : qMinusC * P = qMinusC := by
     _ = qMinusC := by
       have htriple : qMinusC * qPlusC * qMinusC = qMinusC := by
         change QMinus g * QPlus g * QMinus g = QMinus g
-        exact qminus_qplus_qminus g o00 o11
+        rw [qminus_qplus_product g o00]
+        change gS1 * (gT1 * gS1) * gT0 = gS1 * gT0
+        rw [o11]
+        simp
       have hnil : qMinusC * qMinusC * qPlusC = 0 := by
         rw [qMinusC_sq, zero_mul]
       rw [htriple, hnil]

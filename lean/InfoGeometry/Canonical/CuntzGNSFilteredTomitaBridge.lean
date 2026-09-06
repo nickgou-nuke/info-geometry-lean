@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.FilteredGNSTomitaModularForm
 # Cuntz filtered GNS Tomita-form bridge
 
 This is the honest modular-theoretic boundary of the current Cuntz data.  A
-stagewise closability property is an explicit input; from it we transport the
+stagewise closability witness is an explicit input; from it we transport the
 native closed Tomita form through the Cuntz GNS colimit.  No bounded modular
 operator or Tomita--Takesaki completion is postulated here.
 -/

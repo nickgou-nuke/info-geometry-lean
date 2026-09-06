@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
+
 /-!
 # Corrected Apollonius rotational/dilation vector fields
 
@@ -42,7 +43,15 @@ theorem logarithmicScale_real_coordinates (sigma t : ℝ) :
     logarithmicScale ((sigma : ℂ) + Complex.I * (t : ℂ)) =
       (scaleA sigma t : ℂ) + Complex.I * (scaleB sigma t : ℂ) := by
   unfold logarithmicScale scaleA scaleB
-  apply Complex.ext <;> simp [mul_re, mul_im, sub_re, sub_im, pow_two] <;> ring
+  apply Complex.ext <;> simp [mul_re, mul_im, sub_re, sub_im]
+  · have hpow : ((t : ℂ) ^ 2).re = t ^ 2 := by
+      norm_num [pow_two, Complex.mul_re]
+    rw [hpow]
+    ring
+  · have hpow : ((t : ℂ) ^ 2).im = 0 := by
+      norm_num [pow_two, Complex.mul_im]
+    rw [hpow]
+    ring
 
 /-- Centered form of the real scale component. -/
 theorem scaleA_centered (sigma t : ℝ) :
@@ -124,10 +133,13 @@ theorem rotationalField_centered_complex (delta t : ℝ) :
     (((rotationalField (delta + 1 / 2) t).1 : ℂ) +
       Complex.I * ((rotationalField (delta + 1 / 2) t).2 : ℂ)) =
       Complex.I * centeredScale z := by
-  dsimp
-  rw [rotationalField_complex, logarithmicScale_centered]
-  simp [centered, centeredScale]
-  ring
+  intro z
+  rw [rotationalField_complex]
+  rw [logarithmicScale_centered]
+  congr 1
+  apply Complex.ext <;>
+    simp [centeredScale, centered, z, Complex.mul_re, Complex.mul_im] <;>
+    ring
 
 /-- Master finite coordinate packet. -/
 theorem apollonius_vector_field_packet (sigma t : ℝ) :

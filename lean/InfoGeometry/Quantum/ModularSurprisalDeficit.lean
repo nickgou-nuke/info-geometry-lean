@@ -89,15 +89,7 @@ theorem modular_first_law_saturation (deltaK deltaS : ℝ) (h_sat : deltaK - del
 ### 3. Grand Synthesis
 -/
 
-/-- 🏆 GRAND SYNTHESIS: Modular Surprisal Deficit, Convexity & Casini-Bekenstein Thermodynamics -/
-theorem grand_modular_surprisal_synthesis
-    (x : ℝ) (deltaK deltaS : ℝ) (h_rel : 0 ≤ deltaK - deltaS) :
-    (0 ≤ modularDeficit x) ∧
-    (modularDeficit x = 0 ↔ x = 0) ∧
-    (deltaS ≤ deltaK) :=
-  ⟨modular_deficit_nonneg x,
-   modular_deficit_eq_zero_iff x,
-   casini_bekenstein_bound deltaK deltaS h_rel⟩
+
 
 end
 

@@ -4,7 +4,6 @@ import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Constructive Donaldson-Witten TQFT & Seiberg-Witten Monopole Equations Capstone
@@ -41,7 +40,6 @@ All proofs are 100% constructive Mathlib 4 terms checked by the Lean kernel.
 
 open scoped BigOperators Real ComplexConjugate
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unnecessarySeqFocus false
@@ -128,9 +126,10 @@ theorem sw_moduli_dimension_zero (c1_sq chi_X sigma_X : ℝ)
   rw [h_dim]
   ring
 
-/-! ### 4. Master Synthesis Theorem -/
+/-! The reusable boundary of this module is the finite spinor, curvature,
+    positivity, and dimension lemmas above. -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Donaldson-Witten TQFT & Seiberg-Witten Monopoles**
 
 Unifies:
@@ -145,7 +144,7 @@ Unifies:
 5. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_donaldson_witten_seiberg_witten_synthesis
+/- theorem grand_donaldson_witten_seiberg_witten_synthesis
     (psi : Spinor2) (s : ℝ) (hs : 0 < s)
     (h_pot : weitzenbockPotential s (spinorNormSqReal psi) ≤ 0)
     (c1_sq chi_X sigma_X : ℝ) (h_dim : c1_sq = 2 * chi_X + 3 * sigma_X) :
@@ -160,6 +159,6 @@ theorem grand_donaldson_witten_seiberg_witten_synthesis
    positive_scalar_curvature_vanishing s (spinorNormSqReal psi) hs (spinor_norm_sq_nonneg psi) h_pot,
    sw_moduli_dimension_zero c1_sq chi_X sigma_X h_dim,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.DonaldsonSeibergWitten

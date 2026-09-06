@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeOccupationAlgebra
 import InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
-import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 import InfoGeometry.Categorical.PrimeThermodynamicDLogQColimit
 import InfoGeometry.Categorical.PrimeThermodynamicReadoutCones
 
@@ -14,7 +13,6 @@ open InfoGeometry.Arithmetic.PrimeOccupationAlgebra
 open InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Arithmetic.ChiralPrimonGas
-open InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 open InfoGeometry.Categorical.PrimeThermodynamicDLogQColimit
 open InfoGeometry.Categorical.PrimeThermodynamicReadoutCones
 
@@ -41,7 +39,7 @@ theorem stateSumPrimeModeEquiv_natural {n m : ℕ} (h : n ≤ m) :
 abbrev StateSumAlgebra := DirectLimitSuperClosure stateBond
 abbrev StateSumUniversalSpace := StateSumAlgebra
 
-def stateSumToPrimeMode : StateSumUniversalSpace →+* BostConnesUniversalSpace :=
+def stateSumToPrimeMode : StateSumUniversalSpace →+* PrimonAlgebra :=
   directLimitLift stateBond
     (fun n => directLimitOf primeBond n)
     (by
@@ -49,7 +47,7 @@ def stateSumToPrimeMode : StateSumUniversalSpace →+* BostConnesUniversalSpace 
       change directLimitOf primeBond (n + 1) (primeBond n x) = directLimitOf primeBond n x
       exact directLimitOf_bond primeBond n x)
 
-def primeModeToStateSum : BostConnesUniversalSpace →+* StateSumUniversalSpace :=
+def primeModeToStateSum : PrimonAlgebra →+* StateSumUniversalSpace :=
   directLimitLift primeBond
     (fun n => directLimitOf stateBond n)
     (by
@@ -75,7 +73,7 @@ theorem stateSumPrimeMode_leftInverse :
   rw [stateSumToPrimeMode_comp_of n x, primeModeToStateSum_comp_of n x]
 
 theorem stateSumPrimeMode_rightInverse :
-    stateSumToPrimeMode.comp primeModeToStateSum = RingHom.id BostConnesUniversalSpace := by
+    stateSumToPrimeMode.comp primeModeToStateSum = RingHom.id PrimonAlgebra := by
   apply DirectLimit.Ring.hom_ext
   intro n
   apply RingHom.ext
@@ -83,7 +81,7 @@ theorem stateSumPrimeMode_rightInverse :
   change stateSumToPrimeMode (primeModeToStateSum (directLimitOf primeBond n x)) = directLimitOf primeBond n x
   rw [primeModeToStateSum_comp_of n x, stateSumToPrimeMode_comp_of n x]
 
-def stateSumPrimeModeColimitEquiv : StateSumUniversalSpace ≃+* BostConnesUniversalSpace :=
+def stateSumPrimeModeColimitEquiv : StateSumUniversalSpace ≃+* PrimonAlgebra :=
   RingEquiv.ofRingHom
     stateSumToPrimeMode
     primeModeToStateSum

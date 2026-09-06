@@ -485,8 +485,14 @@ private theorem gaugeWitness_parameterUnit_mem_of_readout
       InfoGeometry.Lie.CanonicalZornDerivationDimension.canonicalParameterLinearEquiv
         (InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit j) := by
     apply InfoGeometry.Lie.CanonicalZornDerivationDimension.canonicalParameterLinearEquiv.symm.injective
-    rw [map_smul, hreadout,
-      InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit_eq_smul]
+    have hscale :
+        InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit j r =
+          r • InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit j := by
+      funext i
+      by_cases h : i = j <;>
+        simp [InfoGeometry.Lie.SplitOctonionStandardDerivation.parameterUnit, h]
+    simp only [map_smul]
+    rw [hreadout, hscale]
     simp [smul_smul, hr]
   rwa [heq] at hm
 

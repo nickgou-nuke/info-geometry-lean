@@ -64,7 +64,9 @@ noncomputable def ofConeInteriorStateSpace :
 noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure α ℝ :=
   InfoGeometry.Projective.Normalize.normalizeOnProj (α := α)
 
-/-- The canonical affine chart coordinates of a positive projective ray. -/
+/-! The canonical affine chart is the Euclidean realization of the gauge
+    representative.  Keep this owner here: downstream coordinate bridges use
+    these definitions as the canonical projective-to-chart interface. -/
 @[rep_depth projective]
 noncomputable def chartCoordinates (q : PositiveRay α) : EuclideanSpace ℝ α :=
   WithLp.toLp (2 : ENNReal) (fun a => gaugeSection (α := α) q a)

@@ -153,4 +153,4 @@ theorem degenerate_contracted_zero_forces_forbidden
   degenerate_contracted_root_mem_negProductSet
     K₁ K₂ hD hdeg hK₁ hK₂ hz
 
-end AsanoRuelleEndpoint
+end InfoGeometry.Canonical.AsanoRuelleEndpoint

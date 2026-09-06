@@ -1,16 +1,14 @@
 import Mathlib.Tactic
+import InfoGeometry.External.Auto.A67MirrorE1
 
 noncomputable section
 
 namespace SouriauCasimirEntropyLeaves
 
-abbrev GroupAction (G X : Type*) := G → X → X
+open A67MirrorE1
 
-namespace GroupAction
-
-abbrev act {G X : Type*} (A : GroupAction G X) : G → X → X := A
-
-end GroupAction
+structure GroupAction (G X : Type*) where
+  act : G → X → X
 
 def invariant {G X R : Type*} (A : GroupAction G X) (f : X → R) : Prop :=
   ∀ g x, f (A.act g x) = f x
@@ -105,6 +103,23 @@ theorem A67_isospin_shell_entropy_preserved (a c : ℚ) :
     isospinShellEntropy a c (1 / 2) =
       a * (3 / 4) + c := by
   norm_num [isospinShellEntropy, isospinCasimir]
+
+def A67_IVGMR_kernel : ℚ :=
+  inducedIsoscalarE1Kernel 67 1 1 20 1 1
+
+theorem A67_IVGMR_transverse_kernel_exact :
+    A67_IVGMR_kernel = 33 / 20 := by
+  exact IVGMR_unit_kernel_A67
+
+def formalSummary : Prop :=
+  isospinCasimir (1 / 2) = 3 / 4 ∧
+    TzMinusHalf + TzPlusHalf = 0 ∧
+    dilationSpringStiffnessFromC1 (poincareMassCasimir 67) = 67 ∧
+    A67_IVGMR_kernel = 33 / 20
+
+theorem formalSummary_proved : formalSummary := by
+  exact ⟨isospin_half_casimir, A67_isospin_flip_preserves_casimir.2,
+    dilation_spring_stiffness_massSq 67, A67_IVGMR_transverse_kernel_exact⟩
 
 end SouriauCasimirEntropyLeaves
 

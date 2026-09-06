@@ -25,6 +25,14 @@ open InfoGeometry.Lie.SplitOctonionImaginaryAction
 abbrev CZ := CanonicalZorn
 abbrev Imaginary := InfoGeometry.Lie.SplitOctonionImaginaryAction.Imaginary
 
+/-! The existing intrinsic coordinate carrier is already the seven-dimensional
+    realization.  The upstream name `ImaginarySeven` was stale; identify it
+    with that owner rather than introducing a second coordinate type. -/
+abbrev ImaginarySeven := InfoGeometry.Lie.SplitOctonionImaginaryAction.ImaginaryCoords
+
+abbrev imaginaryCoords_seven : ImaginarySeven ≃ₗ[ℝ] ImaginaryCoords :=
+  LinearEquiv.refl ℝ ImaginaryCoords
+
 theorem realZornTrace_mul_cyclic (X Y Z : CZ) :
     realZornTrace ((X * Y) * Z) = realZornTrace ((Y * Z) * X) := by
   change InfoGeometry.Algebra.ZornVectorMatrix.trace

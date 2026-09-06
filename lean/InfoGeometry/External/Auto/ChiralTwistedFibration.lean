@@ -302,27 +302,22 @@ structure Transport where
   kind : TransportKind
   source : BaseChart
   target : BaseChart
-
-namespace Transport
-
-/-- The orientation sign determined by the transport kind. -/
-abbrev sign (T : Transport) : ℤ := orientationSign T.kind
-
-/-- The transport sign is its canonical orientation sign. -/
-theorem sign_eq (T : Transport) : T.sign = orientationSign T.kind := by
-  rfl
-
-end Transport
+  sign : ℤ
+  sign_eq : sign = orientationSign kind
 
 def glideTransport : Transport where
   kind := TransportKind.glideMonodromy
   source := BaseChart.S4
   target := BaseChart.kleinOrbifold
+  sign := -1
+  sign_eq := rfl
 
 def chiralTransport : Transport where
   kind := TransportKind.pentagonChiralBraid
   source := BaseChart.CP2
   target := BaseChart.CP2
+  sign := 1
+  sign_eq := rfl
 
 /-- Chiral twisted fibration theorem: base charts and fiber sectors remain typed
     separately, while glide monodromy reverses orientation and chiral transport
@@ -335,6 +330,25 @@ theorem chiral_twisted_fibration_theorem :
     glideTransport.sign = -1 ∧
     chiralTransport.sign = 1 := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+
+/-- Consolidated twistor-fiber chirality package. -/
+theorem twistor_fiber_chiral_projector_synthesis :
+    chiralProjectorL * chiralProjectorL = chiralProjectorL ∧
+    chiralProjectorR * chiralProjectorR = chiralProjectorR ∧
+    chiralProjectorL * chiralProjectorR = 0 ∧
+    chiralProjectorR * chiralProjectorL = 0 ∧
+    chiralProjectorL + chiralProjectorR = (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+    (∀ z : TwistorFiberCoord,
+      applyTwistorProjector chiralProjectorL z = fun i => if i = 0 then z 0 else 0) ∧
+    (∀ z : TwistorFiberCoord,
+      applyTwistorProjector chiralProjectorR z = fun i => if i = 1 then z 1 else 0) := by
+  exact ⟨chiralProjectorL_idempotent,
+    chiralProjectorR_idempotent,
+    chiralProjector_orthogonal.1,
+    chiralProjector_orthogonal.2,
+    chiralProjector_partition,
+    chiralProjectorL_apply,
+    chiralProjectorR_apply⟩
 
 /-- Two-sheeted complex polarization package:
     sheet swap `J`, grading `ε`, and emergent `K = J ε`, with `K² = -I`. -/

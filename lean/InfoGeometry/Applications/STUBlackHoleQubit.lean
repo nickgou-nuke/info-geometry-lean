@@ -25,18 +25,17 @@ open InfoGeometry.Exceptional.Freudenthal
 The 8 real amplitudes of a 3-qubit state (or STU black hole charge vector).
 Indices represent Alice (i), Bob (j), and Charlie (k).
 -/
-abbrev ThreeQubitState := Fin 8 → ℝ
+structure ThreeQubitState where
+  a000 : ℝ
+  a001 : ℝ
+  a010 : ℝ
+  a011 : ℝ
+  a100 : ℝ
+  a101 : ℝ
+  a110 : ℝ
+  a111 : ℝ
 
 namespace ThreeQubitState
-
-abbrev a000 (psi : ThreeQubitState) : ℝ := psi 0
-abbrev a001 (psi : ThreeQubitState) : ℝ := psi 1
-abbrev a010 (psi : ThreeQubitState) : ℝ := psi 2
-abbrev a011 (psi : ThreeQubitState) : ℝ := psi 3
-abbrev a100 (psi : ThreeQubitState) : ℝ := psi 4
-abbrev a101 (psi : ThreeQubitState) : ℝ := psi 5
-abbrev a110 (psi : ThreeQubitState) : ℝ := psi 6
-abbrev a111 (psi : ThreeQubitState) : ℝ := psi 7
 
 /--
 Cayley's Hyperdeterminant (Det_{2,2,2}).
@@ -114,7 +113,7 @@ structure BlackHoleQubitDictionary
 /--
 An explicit tensor-factor carrier for a Drazin regular core.  The
 factorization is stored as a Mathlib linear equivalence, rather than as an
-uninterpreted proposition-valued property.
+uninterpreted proposition-valued certificate.
 -/
 structure DrazinBipartiteCore where
   Core : Type*
@@ -133,7 +132,7 @@ The algebraic correspondence of quantum decoherence to geometric surgery.
 If a GHZ state loses a qubit (e.g., Alice is traced out), the state drops 
 rank into the W-class horizon. 
 
-This structure requires a property that the Drazin projector resolving 
+This structure requires a witness that the Drazin projector resolving 
 the Small Black Hole singularity precisely yields the bipartite entanglement 
 subspace of the remaining qubits.
 -/

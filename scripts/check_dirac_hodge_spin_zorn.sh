@@ -13,6 +13,7 @@ targets=(
   lean/InfoGeometry/OperatorAlgebra/RealWeylAdjointSpinRepresentation.lean
   lean/InfoGeometry/OperatorAlgebra/Cl55FreudenthalZornGradeIntertwiner.lean
   lean/InfoGeometry/OperatorAlgebra/Cl55FreudenthalZornRestrictedGradeMaps.lean
+  lean/InfoGeometry/OperatorAlgebra/Cl55FreudenthalZornLieRepresentation.lean
   lean/InfoGeometry/OperatorAlgebra/DiracHodgeSpinZornIntertwinerClosure.lean
   lean/InfoGeometry/OperatorAlgebra/DiracHodgeSpinZornAll.lean
 )

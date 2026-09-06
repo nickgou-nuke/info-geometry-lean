@@ -23,7 +23,10 @@ open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 
 def pauliMajorana : NullBoundaryMajoranas 2 :=
   { gamma_L := involutiveUnit σ1 pauli_sigma1_sq
-    gamma_R := involutiveUnit σ3 pauli_sigma3_sq }
+    gamma_R := involutiveUnit σ3 pauli_sigma3_sq
+    h_anticomm := pauli_sigma1_anti_sigma3
+    h_L_sq := pauli_sigma1_sq
+    h_R_sq := pauli_sigma3_sq }
 
 theorem pauliMajorana_exists :
     ∃ m : NullBoundaryMajoranas 2,
@@ -60,7 +63,6 @@ theorem pauli_cooper_pair_is_nilpotent :
     cooperPairCondensate pauliMajorana *
         cooperPairCondensate pauliMajorana = 0 := by
   exact cooper_pair_is_nilpotent_cap pauliMajorana
-    pauli_sigma1_anti_sigma3 pauli_sigma1_sq pauli_sigma3_sq
 
 theorem pauli_cooper_pair_car :
     cooperPairCondensate pauliMajorana *
@@ -68,7 +70,7 @@ theorem pauli_cooper_pair_car :
         cooperPairConjugate pauliMajorana *
           cooperPairCondensate pauliMajorana =
       (2 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  exact majorana_car pauliMajorana pauli_sigma1_sq pauli_sigma3_sq
+  exact majorana_car pauliMajorana
 
 noncomputable def pauliNumberOperator : M2C :=
   cooperPairConjugate pauliMajorana * cooperPairCondensate pauliMajorana
@@ -82,8 +84,8 @@ theorem pauli_number_operator_eq_one_add_sigma2 :
     pauliMajorana gammaLVal gammaRVal involutiveUnit
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [σ1, σ2, σ3, Matrix.conjTranspose, Matrix.mul_apply,
-      Fin.sum_univ_two, Complex.I_mul_I] <;>
+    simp [σ1, σ2, σ3, Matrix.mul_apply,
+      Fin.sum_univ_two] <;>
     field_simp [Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)] <;>
       norm_num [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2), Complex.I_mul_I] <;>
       exact hs.symm
@@ -103,7 +105,7 @@ theorem pauli_number_operator_quadratic :
     pauliNumberOperator * pauliNumberOperator =
       (2 : ℂ) • pauliNumberOperator := by
   rw [pauli_number_operator_eq_one_add_sigma2]
-  simp [add_mul, mul_add, pauli_sigma2_sq, smul_add, add_smul,
+  simp [add_mul, mul_add, pauli_sigma2_sq, smul_add,
     two_smul, add_assoc, add_left_comm, add_comm]
 
 end CausalVortex

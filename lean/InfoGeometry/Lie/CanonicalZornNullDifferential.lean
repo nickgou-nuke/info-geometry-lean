@@ -38,4 +38,40 @@ theorem dNull_anticommute_omega :
   have h1 := cl11Rep_e1_anticommute_omega
   rw [h0, h1, neg_add]
 
+/-- The Dirac-Kähler operator for the null differential evaluates to 2 • ⋆. -/
+theorem diracKahler_dNull_eq :
+    diracKahler dNull = (2 : ℝ) • circularHodgeStar := by
+  dsimp [diracKahler, codiff, dNull]
+  have h_star := cl11Rep_e0
+  rw [map_add, h_star]
+  have h_anti : circularHodgeStar * cl11Rep e1 = -(cl11Rep e1 * circularHodgeStar) := by
+    rw [cl11Rep_e1]
+    have h1 : circularHodgeStar * (circularHodgeStar * circularGradedChirality) =
+        circularGradedChirality := by
+      rw [← mul_assoc, circularHodgeStar_sq, one_mul]
+    have h2 : (circularHodgeStar * circularGradedChirality) * circularHodgeStar =
+        -circularGradedChirality := by
+      have h_comm : circularGradedChirality * circularHodgeStar =
+          -(circularHodgeStar * circularGradedChirality) := by
+        rw [← neg_neg (circularGradedChirality * circularHodgeStar),
+            ← circularHodgeStar_gradedChirality_anticommutes]
+      rw [mul_assoc, h_comm, mul_neg, ← mul_assoc, circularHodgeStar_sq, one_mul]
+    rw [h1, h2, neg_neg]
+  have h_conj :
+      circularHodgeStar * (circularHodgeStar + cl11Rep e1) * circularHodgeStar =
+        circularHodgeStar - cl11Rep e1 := by
+    simp only [mul_add, add_mul, circularHodgeStar_sq, one_mul]
+    rw [h_anti, neg_mul, mul_assoc, circularHodgeStar_sq, mul_one, sub_eq_add_neg]
+  rw [h_conj]
+  simp only [sub_neg_eq_add]
+  rw [two_smul]
+  abel
+
+/-- The Hodge Laplacian for the null differential is the constant mass gap 4 • id. -/
+theorem hodgeLaplacian_dNull_eq :
+    hodgeLaplacian dNull = (4 : ℝ) • (1 : EndCZ) := by
+  rw [← diracKahler_sq dNull dNull_sq, diracKahler_dNull_eq]
+  rw [smul_mul_smul, circularHodgeStar_sq]
+  norm_num
+
 end InfoGeometry.Lie.CanonicalZornNullDifferential

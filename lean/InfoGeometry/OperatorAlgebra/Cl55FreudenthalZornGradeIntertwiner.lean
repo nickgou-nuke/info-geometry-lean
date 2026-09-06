@@ -167,24 +167,35 @@ def jointEulerCoefficient : JointCoefficient (J := J) :=
 def HasJointGrade (k : ℤ) (X : JointEnvelope (J := J)) : Prop :=
   HasAdjointGrade (jointEulerCoefficient datum) k X
 
+/-- Extract the adjoint eigenvalue equation from native Clifford grade
+membership. -/
+theorem cl55_grade_equation
+    (g : ConformalGrade) {x : Cl55}
+    (hx : x ∈ gradeSpace g) :
+    InfoGeometry.Clifford.ConformalLieAlgebra55.D * x -
+        x * InfoGeometry.Clifford.ConformalLieAlgebra55.D =
+      (toInt g : ℝ) • x := by
+  have hx0 :
+      (adD - (toInt g : ℝ) • (LinearMap.id : Cl55 →ₗ[ℝ] Cl55)) x = 0 :=
+    LinearMap.mem_ker.mp hx
+  have hx1 : adD x - (toInt g : ℝ) • x = 0 := by
+    simpa using hx0
+  have hx2 : adD x = (toInt g : ℝ) • x :=
+    sub_eq_zero.mp hx1
+  simpa [adD] using hx2
+
 /-- Every native Cl(5,5) conformal grade is preserved by the faithful envelope
 map. -/
 theorem cl55EnvelopeMap_preserves_grade
     (g : ConformalGrade) {x : Cl55}
     (hx : x ∈ gradeSpace g) :
     HasJointGrade datum (toInt g) (cl55EnvelopeMap (J := J) x) := by
-  have hx' : adD x = (toInt g : ℝ) • x :=
-    sub_eq_zero.mp (LinearMap.mem_ker.mp hx)
-  have hcomm :
-      InfoGeometry.Clifford.ConformalLieAlgebra55.D * x -
-          x * InfoGeometry.Clifford.ConformalLieAlgebra55.D =
-        (toInt g : ℝ) • x := by
-    simpa [adD] using hx'
   unfold HasJointGrade jointEulerCoefficient cl55EnvelopeMap cl55Coefficient
   apply diagonal_preserves_adjoint_grade
   apply Prod.ext
   · exact leftRegular_preserves_adjoint_grade
-      InfoGeometry.Clifford.ConformalLieAlgebra55.D x (toInt g) hcomm
+      InfoGeometry.Clifford.ConformalLieAlgebra55.D x (toInt g)
+      (cl55_grade_equation g hx)
   · simp
 
 /-- Every corrected Freudenthal contact grade is preserved in the same common
@@ -193,11 +204,10 @@ theorem contactEnvelopeMap_preserves_grade
     (k : ℤ) {u : FiveGradedCarrier datum}
     (hu : u ∈ symplecticContactGradeSpace datum k) :
     HasJointGrade datum k (contactEnvelopeMap datum u) := by
-  have hu' :
-      ⁅symplecticContactEuler datum, u⁆ = (k : ℝ) • u := hu
+  change SymplecticContactHasGrade datum k u at hu
   have hrho := congrArg
     (fun w : FiveGradedCarrier datum =>
-      symplecticContactCommonRepresentation datum w) hu'
+      symplecticContactCommonRepresentation datum w) hu
   rw [symplecticContactCommonRepresentation_bracket] at hrho
   rw [map_smul] at hrho
   change
@@ -252,9 +262,8 @@ theorem cl55SpinorEnvelopeMap_preserves_grade
       (spinorRepresentation 5
         InfoGeometry.Clifford.ConformalLieAlgebra55.D)
       (toInt g) (cl55SpinorEnvelopeMap x) := by
-  have hx' : adD x = (toInt g : ℝ) • x :=
-    sub_eq_zero.mp (LinearMap.mem_ker.mp hx)
-  have hmap := congrArg (spinorRepresentation 5) hx'
+  have hmap := congrArg (spinorRepresentation 5)
+    (cl55_grade_equation g hx)
   have hcomm :
       spinorRepresentation 5
           InfoGeometry.Clifford.ConformalLieAlgebra55.D *
@@ -263,7 +272,7 @@ theorem cl55SpinorEnvelopeMap_preserves_grade
           spinorRepresentation 5
             InfoGeometry.Clifford.ConformalLieAlgebra55.D =
       (toInt g : ℝ) • spinorRepresentation 5 x := by
-    simpa [adD] using hmap
+    simpa using hmap
   exact diagonal_preserves_adjoint_grade _ _ _ hcomm
 
 /-- The five selected native Cl(5,5) lanes all land in the corresponding

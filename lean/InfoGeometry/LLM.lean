@@ -28,6 +28,7 @@ import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.SinkhornDefectFlow
 import InfoGeometry.LLM.BogoliubovSinkhornRouting
+import InfoGeometry.LLM.SphericalVMFExponentialFamily
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
@@ -47,6 +48,7 @@ Unified entrypoint for LLM-oriented formalization layers:
 - geometric multi-head attention and output projection
 - canonical transformer-block scaffold (attention + residual + normalization + MLP)
 - causal-mask transformer interface
+- spherical von Mises--Fisher exponential-family responses and covariance Hessians
 -/
 
 end InfoGeometry

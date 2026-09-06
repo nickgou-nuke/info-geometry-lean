@@ -24,7 +24,7 @@ noncomputable section
 
 namespace InfoGeometry.Exceptional.Freudenthal
 
-variable {J : Type*} [AddCommGroup J] [Module ℝ J] [Nontrivial J]
+variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
 /-- Exact value of the false `(2,-2,1)` homogeneous Jacobi cell. -/
@@ -35,7 +35,7 @@ theorem legacy_extreme_extreme_plus_jacobiator
       injChargePlus D ((-2 : ℝ) • y) := by
   apply FiveGradedCarrier.ext <;>
     simp [fiveJacobiator, fiveGradedBracket, genEplus, genEminus,
-      genHscale, injChargePlus]
+      injChargePlus]
   module
 
 /-- Concrete nonzero witness using the scalar alpha charge. This rules out
@@ -47,10 +47,7 @@ theorem legacy_fiveGradedBracket_not_jacobi :
   intro h
   have hplus := congrArg
     (fun u : FiveGradedCarrier D => u.plus1.alpha) h
-  have htwo : (2 : ℝ) • (1 : J) = 0 := by
-    simpa [injChargePlus, alphaCharge, two_smul] using hplus
-  rcases smul_eq_zero.mp htwo with htwo | hone
-  · norm_num at htwo
-  · exact one_ne_zero hone
+  change (-2 : ℝ) * 1 = 0 at hplus
+  norm_num at hplus
 
 end InfoGeometry.Exceptional.Freudenthal

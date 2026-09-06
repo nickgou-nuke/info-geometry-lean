@@ -24,6 +24,9 @@ abbrev R7 := Fin 7 → ℝ
 def basisVector (i : Fin 7) : R7 :=
   Pi.single i 1
 
+/-- Paravector carrier for real octonions in the Fano chart. -/
+abbrev OctonionCarrier := Paravector R7
+
 /-- The first Fano basis vector. -/
 def e0 : R7 := fun i => if i.val = 0 then 1 else 0
 

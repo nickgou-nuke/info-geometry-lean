@@ -82,7 +82,10 @@ theorem dirac_laplacian_commutes_with_mobius_parity
 /-- The prime atom's Dirac data, with its Laplacian fixed to `Q²`. -/
 def primeHodgeCarrier (atom : Cl11Atom A) (Q : A) :
     HodgeDiracLaplacianCarrier A :=
-  (atom.mobiusParity, Q, (Q * Q, 0))
+  { hodgeStar := atom.mobiusParity,
+    dirac := Q,
+    laplacian := Q * Q,
+    centralReadout := 0 }
 
 /-- Chiral anticommutation of `Q` is exactly the Hodge predicate on the carrier. -/
 theorem primeHodgeCarrier_isDiracHodgeChiral
@@ -96,8 +99,8 @@ theorem primeHodgeCarrier_laplacian_commutes
     (atom : Cl11Atom A) (Q : A)
     (h_chiral : Q * atom.mobiusParity =
       -(atom.mobiusParity * Q)) :
-    laplacian (primeHodgeCarrier atom Q) * hodgeStar (primeHodgeCarrier atom Q) =
-      hodgeStar (primeHodgeCarrier atom Q) * laplacian (primeHodgeCarrier atom Q) := by
+    (primeHodgeCarrier atom Q).laplacian * (primeHodgeCarrier atom Q).hodgeStar =
+      (primeHodgeCarrier atom Q).hodgeStar * (primeHodgeCarrier atom Q).laplacian := by
   exact laplacian_commutes_hodge_of_dirac_closure
     (primeHodgeCarrier atom Q)
     (primeHodgeCarrier_isDiracHodgeChiral atom Q h_chiral)
@@ -182,8 +185,8 @@ theorem grand_bost_connes_lee_yang_super_kms_synthesis
     (modes : Finset ι) (q : ι → M) :
     (atom.mobiusParity * atom.mobiusParity = 1) ∧
     ((Q * Q) * atom.mobiusParity = atom.mobiusParity * (Q * Q)) ∧
-    (laplacian (primeHodgeCarrier atom Q) * hodgeStar (primeHodgeCarrier atom Q) =
-      hodgeStar (primeHodgeCarrier atom Q) * laplacian (primeHodgeCarrier atom Q)) ∧
+    ((primeHodgeCarrier atom Q).laplacian * (primeHodgeCarrier atom Q).hodgeStar =
+      (primeHodgeCarrier atom Q).hodgeStar * (primeHodgeCarrier atom Q).laplacian) ∧
     (finiteFermionSupertrace modes q = ∏ p ∈ modes, (1 - q p)) ∧
     (InfoGeometry.Canonical.PrimeGasPartitions.infiniteParityTrace s =
       (riemannZeta s)⁻¹) ∧

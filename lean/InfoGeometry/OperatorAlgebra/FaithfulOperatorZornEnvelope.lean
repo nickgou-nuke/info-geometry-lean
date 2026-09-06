@@ -148,7 +148,7 @@ def leftMultiply (a : A) : Module.End ℝ A where
   toFun x := a * x
   map_add' x y := by rw [mul_add]
   map_smul' r x := by
-    exact (Algebra.mul_smul_comm r a x).symm
+    exact Algebra.mul_smul_comm r a x
 
 @[simp] theorem leftMultiply_apply (a x : A) :
     leftMultiply a x = a * x := rfl
@@ -206,10 +206,9 @@ theorem leftRegular_commutator (a b : A) :
     leftMultiply (a * b - b * a) =
       leftMultiply a * leftMultiply b -
         leftMultiply b * leftMultiply a := by
-  rw [sub_eq_add_neg, leftMultiply_add]
   apply LinearMap.ext
   intro x
-  simp [leftMultiply, mul_assoc]
+  simp [leftMultiply, sub_mul, mul_assoc]
 
 /-- Source adjoint degree is preserved by the faithful regular action. -/
 theorem leftRegular_preserves_adjoint_grade

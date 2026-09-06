@@ -132,8 +132,8 @@ chosen thermodynamic scaling.
 -/
 theorem finitePrimeChain_largeDeviationPrinciple
     (W : DefectFreeLimitPacket CompletedXiReadout) :
-    W.largeDeviation.largeDeviationPrinciple_prop :=
-  W.largeDeviation.largeDeviationPrinciple_proof
+    LargeDeviationPrinciple W.largeDeviation.law W.largeDeviation.speed W.largeDeviation.rateFunction :=
+  W.largeDeviation.largeDeviationPrinciple
 
 end DefectFreeLimitPacket
 

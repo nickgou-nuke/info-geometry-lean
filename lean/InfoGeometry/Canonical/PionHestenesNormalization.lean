@@ -46,6 +46,7 @@ noncomputable abbrev pionMinus : EndH :=
 noncomputable def pionZero : EndH :=
   (1 / 2 : ℝ) • spectral_epsilon (E := E)
 
+omit [CompleteSpace E] in
 @[simp] theorem two_smul_pionZero :
     (2 : ℝ) • pionZero (E := E) = spectral_epsilon (E := E) := by
   simp [pionZero, smul_smul]
@@ -54,19 +55,15 @@ noncomputable def pionZero : EndH :=
 theorem pionPlus_eq_half_H_sub_K :
     pionPlus (E := E) =
       (1 / 2 : ℝ) •
-        (modular_j (E := E) - complex_i (E := E)) := by
-  simpa [pionPlus, InfoGeometry.Krein.hestenesPionPlus,
-    div_eq_mul_inv] using
-    (hestenesPionPlus_eq_doubledSpace_formula (E := E))
+        (modular_j (E := E) - complex_i (E := E)) :=
+  hestenesPionPlus_eq_doubledSpace_formula (E := E)
 
 /-- The concrete `-1` lane is the Hestenes formula `½ (H + K)`. -/
 theorem pionMinus_eq_half_H_add_K :
     pionMinus (E := E) =
       (1 / 2 : ℝ) •
-        (modular_j (E := E) + complex_i (E := E)) := by
-  simpa [pionMinus, InfoGeometry.Krein.hestenesPionMinus,
-    div_eq_mul_inv] using
-    (hestenesPionMinus_eq_doubledSpace_formula (E := E))
+        (modular_j (E := E) + complex_i (E := E)) :=
+  hestenesPionMinus_eq_doubledSpace_formula (E := E)
 
 theorem modular_j_eq_pionPlus_add_pionMinus :
     modular_j (E := E) =

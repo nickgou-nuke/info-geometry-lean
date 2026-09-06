@@ -5,7 +5,7 @@ import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.Canonical.Cl11PolarizedBasis
-import InfoGeometry.Canonical.Cl11PolarizedBasis
+import InfoGeometry.Canonical.BogoliubovClosedForms
 
 /-!
 # Native chiral Lie/CAR closure
@@ -37,6 +37,7 @@ namespace SymmetricLieAlgebra
 
 variable (S : SymmetricLieAlgebra R L)
 
+omit [Invertible (2 : R)] in
 /-- The three symmetric-pair bracket rules, packaged without a new carrier. -/
 theorem symmetric_pair_bracket_closure :
     (∀ {x y : L}, x ∈ S.𝔨 → y ∈ S.𝔨 → ⁅x, y⁆ ∈ S.𝔨) ∧
@@ -97,17 +98,17 @@ def pionLieSubalgebra : LieSubalgebra ℂ M2C :=
 theorem piPlus_mem_pionLieSubalgebra :
     piPlus ∈ pionLieSubalgebra := by
   apply LieSubalgebra.subset_lieSpan
-  simp [pionLieSubalgebra]
+  simp
 
 theorem piMinus_mem_pionLieSubalgebra :
     piMinus ∈ pionLieSubalgebra := by
   apply LieSubalgebra.subset_lieSpan
-  simp [pionLieSubalgebra]
+  simp
 
 theorem piZero_mem_pionLieSubalgebra :
     piZero ∈ pionLieSubalgebra := by
   apply LieSubalgebra.subset_lieSpan
-  simp [pionLieSubalgebra]
+  simp
 
 theorem pionLieSubalgebra_closed :
     ⁅piPlus, piMinus⁆ ∈ pionLieSubalgebra ∧
@@ -187,6 +188,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 open InfoGeometry.Canonical.Cl11PolarizedBasis
+open InfoGeometry.Canonical.BogoliubovFockSuper
 
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -205,15 +207,51 @@ repository-owned concrete CAR presentation. -/
 
 theorem hestenesPionPlus_eq_doubledSpace_formula :
     hestenesPionPlus (E := E) =
-      InfoGeometry.Krein.hestenesPionPlus (E := E) := by
-  exact (TomitaKreinNilpotentAtom.hestenesPionPlus_eq_concreteCARCreation
-    (E := E)).symm
+      (1 / 2 : ℝ) • (modular_j (E := E) - complex_i (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp
+  rw [← hu]
+  apply DoubledSpace.ext
+  · simp only [hestenesPionPlus, concreteCARCreation,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+      cliffordConcreteCreation_apply_to_doubled,
+      WithLp.smul_fst, WithLp.sub_fst,
+      modular_j_to_doubled, complex_i_to_doubled,
+      fst_to_doubled, sub_neg_eq_add]
+    rw [← two_smul ℝ, ← mul_smul]
+    norm_num
+  · simp only [hestenesPionPlus, concreteCARCreation,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+      cliffordConcreteCreation_apply_to_doubled,
+      WithLp.smul_snd, WithLp.sub_snd,
+      modular_j_to_doubled, complex_i_to_doubled,
+      snd_to_doubled, sub_self, smul_zero]
 
 theorem hestenesPionMinus_eq_doubledSpace_formula :
     hestenesPionMinus (E := E) =
-      InfoGeometry.Krein.hestenesPionMinus (E := E) := by
-  exact (TomitaKreinNilpotentAtom.hestenesPionMinus_eq_concreteCARAnnihilation
-    (E := E)).symm
+      (1 / 2 : ℝ) • (modular_j (E := E) + complex_i (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp
+  rw [← hu]
+  apply DoubledSpace.ext
+  · simp only [hestenesPionMinus, concreteCARAnnihilation,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+      cliffordConcreteAnnihilation_apply_to_doubled,
+      WithLp.smul_fst, WithLp.add_fst,
+      modular_j_to_doubled, complex_i_to_doubled,
+      fst_to_doubled, add_neg_cancel, smul_zero]
+  · simp only [hestenesPionMinus, concreteCARAnnihilation,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+      cliffordConcreteAnnihilation_apply_to_doubled,
+      WithLp.smul_snd, WithLp.add_snd,
+      modular_j_to_doubled, complex_i_to_doubled,
+      snd_to_doubled]
+    rw [← two_smul ℝ, ← mul_smul]
+    norm_num
 
 @[simp] theorem hestenesPionPlus_sq :
     (hestenesPionPlus (E := E)).comp
@@ -288,6 +326,7 @@ theorem hestenesPion_triplet_real_closure :
     hestenesPion_plus_minus_lie (E := E),
     complex_i_sq E⟩
 
+omit [CompleteSpace E] in
 theorem hestenesPionZero_eq_half_spectral_epsilon :
     hestenesPionZero (E := E) =
       (1 / 2 : ℝ) • spectral_epsilon (E := E) := by
@@ -318,8 +357,8 @@ theorem doubledUPlus_modular_j_eq_hestenesPionPlus :
       InfoGeometry.Canonical.KKTCore.minusProjector,
       InfoGeometry.Quantum.doubledSpaceCl11Action,
       hestenesPionPlus,
-      concreteCARCreation] <;>
-    module
+      concreteCARCreation]
+  module
 
 theorem doubledUMinus_modular_j_eq_hestenesPionMinus :
     doubledUMinus (E := E) (modular_j (E := E)) =
@@ -336,8 +375,8 @@ theorem doubledUMinus_modular_j_eq_hestenesPionMinus :
       InfoGeometry.Canonical.KKTCore.minusProjector,
       InfoGeometry.Quantum.doubledSpaceCl11Action,
       hestenesPionMinus,
-      concreteCARAnnihilation] <;>
-    module
+      concreteCARAnnihilation]
+  module
 
 theorem hestenesPionPlus_isGOne :
     InfoGeometry.Canonical.KKTCore.IsGOne

@@ -4,6 +4,7 @@ import InfoGeometry.OperatorAlgebra.ModularTwinZornRepresentation
 import InfoGeometry.OperatorAlgebra.KleinDiracKahlerOperatorZorn
 import InfoGeometry.OperatorAlgebra.ChiralWeylOperatorZornRepresentation
 import InfoGeometry.OperatorAlgebra.TwinLightconeWeylOperatorZorn
+import InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction
 import InfoGeometry.OperatorAlgebra.KreinModularTwinFourVector
 import InfoGeometry.OperatorAlgebra.TwoBoundaryWeakValueZorn
 import InfoGeometry.Clifford.Pin55KramersKleinAll
@@ -22,13 +23,12 @@ between its operations:
 * a Kramers antiunitary with square `-1`;
 * a Dirac--Kahler odd block and diagonal square;
 * a Klein sheet exchange satisfying `G T G = T^{-1}`;
-* abstract left/right chiral representation intertwiners;
+* abstract and concrete `SL(2,C)_L x SL(2,C)_R` chiral actions;
 * cyclotomic roots of identity and Peirce roots of zero.
 
 The capstone deliberately does not identify the native Zorn product with the
 associative matrix product, the Tomita involution with Kramers time reversal,
-or an abstract chiral representation pair with the Lorentz group before an
-explicit representation is supplied.
+or the complex Kramers fibre with the full `Spin(5,5)` module.
 -/
 
 noncomputable section
@@ -134,6 +134,36 @@ theorem left_right_chiral_block_invariant
   R.conjugate_pureChiralBlock g Q
 
 end ChiralRepresentation
+
+/-- Concrete two-copy Lorentz-spin action on the nested Weyl--Zorn block. -/
+theorem concrete_sl2c_left_right_packet
+    (g h : InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.ChiralLorentzPair)
+    (Z : InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.TwinWeylBlock) :
+    InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act (1, 1) Z = Z ∧
+      InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act
+          (g.1 * h.1, g.2 * h.2) Z =
+        InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act g
+          (InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act h Z) ∧
+      cartanInvolution
+          (InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act g Z) =
+        InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act g
+          (cartanInvolution Z) := by
+  exact ⟨
+    InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act_one Z,
+    InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.act_mul g h Z,
+    InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction.cartanInvolution_act g Z⟩
+
+/-- A two-boundary readout respects the same Cartan even/odd polarization. -/
+theorem two_boundary_readout_cartan
+    (B : InfoGeometry.OperatorAlgebra.TwoBoundaryWeakValueZorn.BoundaryPair)
+    (Z : ZornBlock
+      InfoGeometry.OperatorAlgebra.TwoBoundaryWeakValueZorn.Mat2C) :
+    B.readout (cartanInvolution Z) =
+      { forwardWave := (B.readout Z).forwardWave
+        backwardWave := (B.readout Z).backwardWave
+        leftToRight := -(B.readout Z).leftToRight
+        rightToLeft := -(B.readout Z).rightToLeft } :=
+  B.readout_cartanInvolution Z
 
 /-- Kramers remains the square-minus-one complex antiunitary already proved in
 the stacked base branch. -/

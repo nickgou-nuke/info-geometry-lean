@@ -26,7 +26,9 @@ def exactRefinementSequence (x : Sector 0) : (n : ℕ) → Sector n
 def exactRefinementVacuum (x : Sector 0) : CoherentCantorVacuum where
   seq := exactRefinementSequence x
   coherent n := by
-    rw [exactRefinementSequence, coarseSector_refineSector]
+    change coarseSector (refineSector (exactRefinementSequence x n)) =
+      exactRefinementSequence x n
+    exact coarseSector_refineSector _
 
 @[simp] theorem exactRefinementVacuum_zero (x : Sector 0) :
     (exactRefinementVacuum x).seq 0 = x := rfl

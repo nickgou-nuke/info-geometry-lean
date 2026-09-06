@@ -14,7 +14,7 @@ identification:
 
 The file does **not** claim a canonical transported `StarRing` instance on the
 direct-limit carrier.  That is a separate carrier-transport theorem.  Here we
-record the explicit algebraic GNS interface over the identified carrier.
+record the explicit algebraic GNS socket over the identified carrier.
 -/
 
 noncomputable section
@@ -36,7 +36,7 @@ This is the conservative representation surface: the caller supplies the
 involution and the state on the direct-limit carrier, together with stagewise
 readback data compatible with the canonical embeddings.
 -/
-structure CPTDirectLimitGNSData where
+structure CPTDirectLimitGNSPacket where
   /-- Carrier-level involution on the identified direct-limit algebra. -/
   carrierStar : CPTGNSCarrier → CPTGNSCarrier
   /-- Involution law. -/
@@ -67,9 +67,9 @@ structure CPTDirectLimitGNSData where
     ∀ n : ℕ, ∀ x : Stage n, carrierStar (cptTensorInductiveLimit.inj n x) =
       cptTensorInductiveLimit.inj n (star x)
 
-namespace CPTDirectLimitGNSData
+namespace CPTDirectLimitGNSPacket
 
-variable (P : CPTDirectLimitGNSData)
+variable (P : CPTDirectLimitGNSPacket)
 
 /-- The GNS null set on the identified direct-limit carrier. -/
 def gnsNullSet : Set CPTGNSCarrier :=
@@ -79,6 +79,21 @@ def gnsNullSet : Set CPTGNSCarrier :=
     x ∈ P.gnsNullSet ↔ P.state (P.carrierStar x * x) = 0 :=
   Iff.rfl
 
-end CPTDirectLimitGNSData
+/-- The direct-limit unit is normalized. -/
+theorem eval_one : P.state 1 = 1 :=
+  P.normalized
+
+/-- Stage readback at depth `n`. -/
+theorem stage_eval (n : ℕ) (x : Stage n) :
+    P.state (cptTensorInductiveLimit.inj n x) = (P.stage_state n).eval x :=
+  P.stage_readback n x
+
+/-- Stagewise carrier involution readback at depth `n`. -/
+theorem stage_star (n : ℕ) (x : Stage n) :
+    P.carrierStar (cptTensorInductiveLimit.inj n x) =
+      cptTensorInductiveLimit.inj n (star x) :=
+  P.stage_star_readback n x
+
+end CPTDirectLimitGNSPacket
 
 end InfoGeometry.Canonical.CPTDirectLimitGNS

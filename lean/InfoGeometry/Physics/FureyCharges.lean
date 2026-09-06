@@ -41,7 +41,8 @@ def fureyCharge : FureyAlg :=
 /-- Each component number operator is idempotent. -/
 theorem fureyNumber_idempotent (i : Fin 3) :
     fureyNumber i * fureyNumber i = fureyNumber i := by
-  fin_cases i
+  rcases i with ⟨i, hi⟩
+  interval_cases i
   · exact numberOp0_idem
   · exact numberOp1_idem
   · exact numberOp2_idem

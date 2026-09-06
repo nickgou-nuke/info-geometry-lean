@@ -50,7 +50,7 @@ The Fenchel-Legendre gap represents information-theoretic loss.
 At equilibrium, this loss vanishes.
 -/
 theorem information_loss_vanishes (L : LegendreModel) (θ η : ℝ)
-  (hd : HasDerivAt L.L (L.grad θ) θ)
+  (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
   (h_eq : η = L.grad θ) :
   L.fenchelGap θ η = 0 := by
   rw [fenchelGap_eq_zero_iff_contact L θ η hd]
@@ -64,7 +64,7 @@ For attention mechanisms: logits ↔ probabilities via softmax = ∇logZ.
 -/
 theorem legendre_duality_attention (L : LegendreModel) (θ : ℝ) :
   ∃ η : ℝ, η = L.grad θ ∧
-  L.L θ + L.φ η - θ * η = 0 := by
+    L.L.ψ θ + L.φ η - θ * η = 0 := by
   use L.grad θ
   refine ⟨rfl, ?_⟩
   exact L.fenchelGap_eq_zero_at_contact θ
@@ -145,7 +145,7 @@ theorem complete_worldline_divergence_free_attention
   (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
   (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
   (hSmooth : IsThermodynamicallySmoothed β K)
-  (_hd : HasDerivAt L.L (L.grad θ) θ)
+  (_hd : HasDerivAt L.L.ψ (L.grad θ) θ)
   (_h_eq : η = L.grad θ)
   (h_bivector : star K = -K)
   (_h_contact : η = L.grad θ ↔

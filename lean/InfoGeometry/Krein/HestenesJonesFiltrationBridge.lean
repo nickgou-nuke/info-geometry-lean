@@ -31,7 +31,7 @@ local instance instTopologicalRingEndH : IsTopologicalRing EndH := inferInstance
 local instance instCompleteSpaceEndH : CompleteSpace EndH := inferInstance
 
 /--
-Jones/Wigner atom filtration bridge for the Hestenes/Krein phase-volume interface.
+Jones/Wigner atom filtration bridge for the Hestenes/Krein phase-volume socket.
 
 This adapter connects the core Hestenes vacuum state `V.vacuumRealState` to the
 existing standard-form Ω-volume owner `NaturalConeVolumeBridge`.  It does not
@@ -46,11 +46,11 @@ structure Bridge where
   packet :
     HestenesKreinKMSPacket (E := H₂)
 
-  /-- Hestenes/Krein vacuum vector interface. -/
+  /-- Hestenes/Krein vacuum vector socket. -/
   vacuum :
     HestenesKreinVacuum (E := H₂) packet
 
-  /-- Core Hestenes phase-volume/log-det interface on units. -/
+  /-- Core Hestenes phase-volume/log-det socket on units. -/
   phase :
     _root_.InfoGeometry.Krein.HestenesPhaseVolumeBridge.Bridge
       (E := H₂) packet vacuum

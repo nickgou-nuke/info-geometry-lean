@@ -4,7 +4,8 @@ import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Order.Directed
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
-import InfoGeometry.Categorical.Holonomy
+import InfoGeometry.Categorical.FilteredDirectLimitOwner
+import InfoGeometry.Categorical.StateSpaceColimitCommutativity
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -21,27 +22,15 @@ structure DirectInductiveSystem (R : Type*) [CommRing R] (I : Type*) [Preorder I
   f_comp : ∀ {i j k : I} (hij : i ≤ j) (hjk : j ≤ k), (f hjk).comp (f hij) = f (le_trans hij hjk)
 
 /-- Cocone over a Direct Inductive System targeting a Module A_inf. -/
-abbrev InductiveCocone (R : Type*) [CommRing R] {I : Type*} [Preorder I]
-    {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
-    (sys : DirectInductiveSystem R I A) (A_inf : Type*)
-    [AddCommGroup A_inf] [Module R A_inf] : Type _ :=
-  {psi : ∀ i : I, A i →ₗ[R] A_inf //
-    ∀ {i j : I} (hij : i ≤ j), (psi j).comp (sys.f hij) = psi i}
+structure InductiveCocone (R : Type*) [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] (sys : DirectInductiveSystem R I A) (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf] where
+  psi : ∀ i : I, A i →ₗ[R] A_inf
+  psi_comm : ∀ {i j : I} (hij : i ≤ j), (psi j).comp (sys.f hij) = psi i
 
 namespace InductiveCocone
 
 variable {R : Type*} [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
 variable {sys : DirectInductiveSystem R I A} {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]
 variable (cocone : InductiveCocone R sys A_inf)
-
-abbrev psi (cocone : InductiveCocone R sys A_inf) (i : I) :
-    A i →ₗ[R] A_inf := cocone.1 i
-
-abbrev psi_comm (cocone : InductiveCocone R sys A_inf)
-    {i j : I} (hij : i ≤ j) :
-    (cocone.psi j).comp (sys.f hij) = cocone.psi i := by
-  change (cocone.1 j).comp (sys.f hij) = cocone.1 i
-  exact cocone.2 hij
 
 /-- **Theorem**: Direct Inductive Colimit Cocone Commutativity:
     For any transition map f_{i, j} (i ≤ j) and element x ∈ A_i,
@@ -65,23 +54,6 @@ def dualInverseTransition (sys : DirectInductiveSystem R I A) {i j : I} (hij : i
   map_add' phi1 phi2 := rfl
   map_smul' c phi := rfl
 
-/-- The dual transition along an identity arrow is the identity map. -/
-theorem dual_inverse_id
-    (sys : DirectInductiveSystem R I A) (i : I)
-    (phi_i : A i →ₗ[R] R) :
-    dualInverseTransition sys (le_refl i) phi_i = phi_i := by
-  dsimp [dualInverseTransition]
-  rw [sys.f_id]
-  rfl
-
-/-- The dual transition along an identity arrow is the identity linear map. -/
-theorem dual_inverse_id_map
-    (sys : DirectInductiveSystem R I A) (i : I) :
-    dualInverseTransition sys (le_refl i) = LinearMap.id := by
-  apply LinearMap.ext
-  intro phi
-  simpa using dual_inverse_id sys i phi
-
 /-- **Theorem**: Dual Inverse System Composition Property:
     g_{i, h} ∘ g_{j, i} = g_{j, h} for dual functionals. -/
 theorem dual_inverse_comp (sys : DirectInductiveSystem R I A) {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) (phi_k : A k →ₗ[R] R) :
@@ -93,18 +65,6 @@ theorem dual_inverse_comp (sys : DirectInductiveSystem R I A) {i j k : I} (hij :
   have h_eval := LinearMap.congr_fun h_comp x
   dsimp at h_eval
   rw [h_eval]
-
-/-- The dual transition maps satisfy the inverse-system composition law as a
-    linear-map equality. -/
-theorem dual_inverse_comp_map
-    (sys : DirectInductiveSystem R I A) {i j k : I}
-    (hij : i ≤ j) (hjk : j ≤ k) :
-    (dualInverseTransition sys hij).comp
-        (dualInverseTransition sys hjk) =
-      dualInverseTransition sys (le_trans hij hjk) := by
-  apply LinearMap.ext
-  intro phi
-  simpa using dual_inverse_comp sys hij hjk phi
 
 /-- **Theorem**: Filtered Direct Colimit State Duality Pairings:
     The pairing <ψ_i(x), φ_inf> on the colimit equals the local stage pairing <x, φ_i>
@@ -179,27 +139,13 @@ theorem moduleColimit_desc_stage
       (moduleCocone sys cocone).ι.app i := by
   exact colimit.ι_desc (moduleCocone sys cocone) i
 
-/-! The descended map is uniquely determined by its finite-stage readouts. -/
-theorem descendModuleCocone_unique
-    (sys : DirectInductiveSystem R I A)
-    (cocone : InductiveCocone R sys (A_inf := A_inf))
-    (g : colimit (moduleDiagram sys) ⟶ ModuleCat.of R A_inf)
-    (hg : ∀ i,
-      colimit.ι (moduleDiagram sys) i ≫ g =
-        (moduleCocone sys cocone).ι.app i) :
-    g = descendModuleCocone sys cocone := by
-  apply colimit.hom_ext
-  intro i
-  rw [moduleColimit_desc_stage sys cocone i]
-  exact hg i
-
 variable {K : Type u} [Category.{u} K]
 
 /-! The inverse direction is the actual projective limit of a `ModuleCat`
 diagram, not merely the composition law of precomposition maps. -/
 
 noncomputable abbrev projectiveModuleLimit (G : K ⥤ ModuleCat.{u} R) : ModuleCat.{u} R :=
-  CategoryTheory.Limits.limit G
+  limit G
 
 noncomputable def projectiveLimitProjection
     (G : K ⥤ ModuleCat.{u} R) (k : K) :
@@ -226,7 +172,7 @@ preservation theorem, rather than by a finite or diagonal surrogate. -/
 
 noncomputable def filteredColimitFiniteLimitIso
     (F : L ⥤ J ⥤ ModuleCat.{u} R) :
-    colimit (CategoryTheory.Limits.limit F) ≅ limit (CategoryTheory.Limits.colimit F.flip) := by
+    colimit (limit F) ≅ limit (colimit F.flip) := by
   exact InfoGeometry.Categorical.Holonomy.colimit_limit_iso R F
 
 end Native

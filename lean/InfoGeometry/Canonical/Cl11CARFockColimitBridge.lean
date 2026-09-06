@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
 import InfoGeometry.Canonical.GNSCARColimit
-import InfoGeometry.Canonical.CelikKocakCuntzFockBridge
+import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Canonical.Cl11WittOccupationParityFactorization
 
 /-!
 # Native `Cl(1,1)` CAR pairs for the finite/Fock interface
@@ -46,7 +47,8 @@ def algebraicCARPair (k : ℕ) :
   nilpotent_annihilation := limit_v_sq_zero k
   nilpotent_creation := limit_u_sq_zero k
   car := by
-    simpa [add_comm] using limit_uv_anticomm k
+    rw [add_comm]
+    exact limit_uv_anticomm k
 
 @[simp] theorem algebraicCARPair_annihilation (k : ℕ) :
     (algebraicCARPair k).annihilation = limit_v k := rfl
@@ -67,6 +69,26 @@ theorem finiteLastCARPair_creation_to_colimit (k : ℕ) :
   rw [finiteLastCARPair_creation]
   rw [jwCreation_last_eq_jw_u_new]
   rfl
+
+/-- The last-site occupation projector maps to the colimit creation-annihilation product. -/
+theorem occupationAt_last_to_algebraic (k : ℕ) :
+    ofStage (k + 1)
+      (Cl11WittOccupationParityFactorization.occupationAt (k + 1) (Fin.last k)) =
+      (algebraicCARPair k).creation * (algebraicCARPair k).annihilation := by
+  change ofStage (k + 1)
+    ((finiteLastCARPair k).creation * (finiteLastCARPair k).annihilation) = _
+  rw [ofStage_mul, finiteLastCARPair_creation_to_colimit,
+    finiteLastCARPair_annihilation_to_colimit]
+
+/-- The last-site vacancy projector maps to the opposite colimit product. -/
+theorem vacancyAt_last_to_algebraic (k : ℕ) :
+    ofStage (k + 1)
+      (Cl11WittVacancyTensorFactorization.vacancyAt (k + 1) (Fin.last k)) =
+      (algebraicCARPair k).annihilation * (algebraicCARPair k).creation := by
+  change ofStage (k + 1)
+    ((finiteLastCARPair k).annihilation * (finiteLastCARPair k).creation) = _
+  rw [ofStage_mul, finiteLastCARPair_annihilation_to_colimit,
+    finiteLastCARPair_creation_to_colimit]
 
 def finiteLastCARPair_colimitReadout (k : ℕ) :
     RealCARPair InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit where

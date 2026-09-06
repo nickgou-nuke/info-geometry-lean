@@ -1,7 +1,5 @@
 import Mathlib.Tactic
 
-namespace ExternalTemp
-
 abbrev Q := ℚ
 
 def allOnes3 : Matrix (Fin 3) (Fin 3) Q := 1
@@ -14,5 +12,3 @@ def allOnesAlternatingProduct : Q := alternatingFourEntryProduct allOnes3
 theorem allOnesAlternatingProduct_eq_zero : allOnesAlternatingProduct = 0 := by
   dsimp [allOnesAlternatingProduct, alternatingFourEntryProduct, allOnes3]
   norm_num [Matrix.one_apply]
-
-end ExternalTemp

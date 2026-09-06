@@ -22,9 +22,8 @@ theorem paper_derived_watatani_positive_laurent_towers :
          D.conclusion_tqft_genus_hausdorff_moment_sequence_complete_monotonicity ∧
          D.conclusion_tqft_genus_hausdorff_moment_sequence_hankel_positivity) := by
   refine ⟨?_, ?_⟩
-  · simpa [Omega.Conclusion.conclusion_qfold_channel_choi_rank_equals_qcollision_statement] using
-      (Omega.Conclusion.conclusion_qfold_channel_choi_rank_equals_qcollision_verified
-        (fold := fun b : Bool => b) 2 (by decide))
+  · exact Omega.Conclusion.conclusion_qfold_channel_choi_rank_equals_qcollision_verified
+      (fold := fun b : Bool => b) 2 (by decide)
   · exact Omega.Conclusion.paper_conclusion_tqft_genus_hausdorff_moment_sequence
       { n := 1
         conclusion_tqft_genus_hausdorff_moment_sequence_dm := fun _ => 1

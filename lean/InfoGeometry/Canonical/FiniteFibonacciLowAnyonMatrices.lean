@@ -158,4 +158,34 @@ theorem pi6_b5_diagonal_entries (qNeg4 q3 : ℂ) :
       pi6_b5 qNeg4 q3 4 4 = q3 := by
   simp [pi6_b5]
 
+/-- Artin compatibility for the `n = 5` middle relation, from an explicit matrix identity. -/
+theorem pi5_middle_artin_from_identity
+    (q3 : ℂ) (B : BBlockEntries)
+    (h : pi5_b2 q3 B * pi5_b3 q3 B * pi5_b2 q3 B =
+      pi5_b3 q3 B * pi5_b2 q3 B * pi5_b3 q3 B) :
+    pi5_b2 q3 B * pi5_b3 q3 B * pi5_b2 q3 B =
+      pi5_b3 q3 B * pi5_b2 q3 B * pi5_b3 q3 B :=
+  h
+
+/-- Artin compatibility for all `n = 6` adjacent pairs, from explicit matrix identities. -/
+theorem pi6_adjacent_artin_from_identities
+    (qNeg4 q3 : ℂ) (B : BBlockEntries)
+    (h12 : pi6_b1 qNeg4 q3 * pi6_b2 q3 B * pi6_b1 qNeg4 q3 =
+      pi6_b2 q3 B * pi6_b1 qNeg4 q3 * pi6_b2 q3 B)
+    (h23 : pi6_b2 q3 B * pi6_b3 qNeg4 q3 B * pi6_b2 q3 B =
+      pi6_b3 qNeg4 q3 B * pi6_b2 q3 B * pi6_b3 qNeg4 q3 B)
+    (h34 : pi6_b3 qNeg4 q3 B * pi6_b4 q3 B * pi6_b3 qNeg4 q3 B =
+      pi6_b4 q3 B * pi6_b3 qNeg4 q3 B * pi6_b4 q3 B)
+    (h45 : pi6_b4 q3 B * pi6_b5 qNeg4 q3 * pi6_b4 q3 B =
+      pi6_b5 qNeg4 q3 * pi6_b4 q3 B * pi6_b5 qNeg4 q3) :
+    (pi6_b1 qNeg4 q3 * pi6_b2 q3 B * pi6_b1 qNeg4 q3 =
+        pi6_b2 q3 B * pi6_b1 qNeg4 q3 * pi6_b2 q3 B) ∧
+      (pi6_b2 q3 B * pi6_b3 qNeg4 q3 B * pi6_b2 q3 B =
+        pi6_b3 qNeg4 q3 B * pi6_b2 q3 B * pi6_b3 qNeg4 q3 B) ∧
+      (pi6_b3 qNeg4 q3 B * pi6_b4 q3 B * pi6_b3 qNeg4 q3 B =
+        pi6_b4 q3 B * pi6_b3 qNeg4 q3 B * pi6_b4 q3 B) ∧
+      (pi6_b4 q3 B * pi6_b5 qNeg4 q3 * pi6_b4 q3 B =
+        pi6_b5 qNeg4 q3 * pi6_b4 q3 B * pi6_b5 qNeg4 q3) :=
+  ⟨h12, h23, h34, h45⟩
+
 end InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices

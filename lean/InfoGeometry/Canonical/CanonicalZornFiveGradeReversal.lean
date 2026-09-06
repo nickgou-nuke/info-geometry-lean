@@ -144,7 +144,7 @@ theorem conformalGradeReversal_symmetric_pair_properties :
       A ∈ (conformalGradeReversalSymmetricLie).oddSubmodule →
       B ∈ (conformalGradeReversalSymmetricLie).oddSubmodule →
       ⁅A, B⁆ ∈ (conformalGradeReversalSymmetricLie).evenLieSubalgebra) :=
-  InfoGeometry.Core.SymmetricLieAlgebra.symmetric_pair_properties
+  InfoGeometry.Core.SymmetricLieAlgebra.symmetric_pair_axioms
     conformalGradeReversalSymmetricLie
 
 theorem conformalGradeReversalLieAut_reverses_grade

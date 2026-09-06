@@ -127,23 +127,24 @@ theorem markedCount_add_unmarkedCount
   unfold markedCount unmarkedCount
   exact Finset.card_filter_add_card_filter_not (s := A) (p := marked)
 
-/-! ## 3. Prime-oracle and quantum-counting layer -/
+/-! ## 3. Prime-oracle and quantum-counting sockets -/
 
-/-- A finite register of natural-number modes.  Marking is native primality. -/
-structure FinitePrimeOracleRegister where
+/--
+Finite prime-oracle packet.
+
+The `marked` predicate is intended to be primality on a finite register, but it
+is stored as a supplied decidable predicate so the oracle layer stays generic.
+-/
+structure FinitePrimeOraclePacket where
   support : Finset ℕ
+  marked : ℕ → Prop
+  decidableMarked : DecidablePred marked
 
-def FinitePrimeOracleRegister.marked (_P : FinitePrimeOracleRegister) (n : ℕ) : Prop :=
-  Nat.Prime n
+namespace FinitePrimeOraclePacket
 
-instance FinitePrimeOracleRegister.decidableMarked (P : FinitePrimeOracleRegister) :
-    DecidablePred P.marked := fun n => by
-      change Decidable (Nat.Prime n)
-      infer_instance
+attribute [local instance] decidableMarked
 
-namespace FinitePrimeOracleRegister
-
-variable (P : FinitePrimeOracleRegister)
+variable (P : FinitePrimeOraclePacket)
 
 /-- Phase sign for the packet's marked predicate. -/
 def sign (n : ℕ) : ℝ :=
@@ -177,26 +178,33 @@ theorem markedCard_add_unmarkedCard :
     P.markedCard + P.unmarkedCard = P.support.card := by
   exact markedCount_add_unmarkedCount P.support P.marked
 
-end FinitePrimeOracleRegister
+end FinitePrimeOraclePacket
+
+/--
+Historical quantum-counting gate name, now owned by the concrete numerical
+accuracy and Chernoff-bound structure.
+-/
+abbrev QuantumCountingGate :=
+  InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy
 
 namespace QuantumCountingGate
 
-/-- A property quantum-counting run uses a positive number of queries. -/
+/-- A certified quantum-counting run uses a positive number of queries. -/
 theorem query_bound_holds
-    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
+    (G : QuantumCountingGate) :
     0 < G.queries :=
   G.queries_pos
 
 /-- The estimate satisfies its explicit absolute-error tolerance. -/
 theorem counting_accuracy_holds
-    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
+    (G : QuantumCountingGate) :
     InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
       G.estimate G.actual G.ε :=
   G.counting_accuracy
 
 /-- The run's failure probability satisfies its explicit Chernoff bound. -/
 theorem chernoff_bound_holds
-    (G : InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy) :
+    (G : QuantumCountingGate) :
     2 * Real.exp (-2 * (G.queries : ℝ) * G.ε ^ 2) ≤ G.failure_prob :=
   G.chernoff_bound
 
@@ -204,37 +212,32 @@ end QuantumCountingGate
 
 /-! ## 4. Error-budget certificates for RH-style fluctuation tests -/
 
-/-- Raw coordinates for a finite fluctuation property. -/
-abbrev QuantumCountingFluctuationCoordinates :=
-  ℝ × (ℝ × (ℝ × (ℝ × ℝ)))
+/--
+Finite estimate is within absolute error `ε` of the actual readout.
 
-/-- The two property inequalities carried by a fluctuation property. -/
-def QuantumCountingFluctuationPredicate
-    (p : QuantumCountingFluctuationCoordinates) : Prop :=
+This is an operational numerical predicate; it is not an RH statement.
+-/
+abbrev WithinError :=
   InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
-      p.1 p.2.1 p.2.2.2.1 ∧
-    |p.1 - p.2.2.1| + p.2.2.2.1 ≤ p.2.2.2.2
 
-/-- Finite quantum-counting fluctuation evidence as a native subtype. -/
-abbrev QuantumCountingFluctuationPacket :=
-  {p : QuantumCountingFluctuationCoordinates // QuantumCountingFluctuationPredicate p}
+/--
+Quantum-counting certified finite fluctuation packet.
+
+The theorem below extracts the finite fluctuation bound from the estimate,
+the counting error bound, and the supplied error budget.
+-/
+structure QuantumCountingFluctuationPacket where
+  estimate : ℝ
+  actual : ℝ
+  expected : ℝ
+  ε : ℝ
+  bound : ℝ
+  counting_error : WithinError estimate actual ε
+  error_budget : |estimate - expected| + ε ≤ bound
 
 namespace QuantumCountingFluctuationPacket
 
-abbrev estimate (P : QuantumCountingFluctuationPacket) : ℝ := P.1.1
-abbrev actual (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.1
-abbrev expected (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.1
-abbrev ε (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.1
-abbrev bound (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.2
-
-lemma counting_error (P : QuantumCountingFluctuationPacket) :
-    InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
-      P.estimate P.actual P.ε := P.2.1
-
-lemma error_budget (P : QuantumCountingFluctuationPacket) :
-    |P.estimate - P.expected| + P.ε ≤ P.bound := P.2.2
-
-/-- Re-export of the property finite fluctuation bound. -/
+/-- Re-export of the certified finite fluctuation bound. -/
 theorem fluctuation_bound
     (P : QuantumCountingFluctuationPacket) :
     |P.actual - P.expected| ≤ P.bound := by

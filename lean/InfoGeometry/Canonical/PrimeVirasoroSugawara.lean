@@ -12,7 +12,7 @@ import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 Prime-indexed OPE, affine-current, and Sugawara/Virasoro bridge.
 
-This file is a theorem-safe algebraic interface.  It connects the existing
+This file is a theorem-safe algebraic socket.  It connects the existing
 prime Majorana OPE grammar to the existing affine-current / Virasoro owner
 surface, but it does not construct a vertex operator algebra, prove a
 Gromov--Witten interpretation, assert a topological string partition function,
@@ -21,7 +21,7 @@ or evaluate the large-`N` central-charge anomaly.
 The finite algebraic content is:
 
 * split-Majorana OPE laws are supplied by `PrimeMajoranaOPE`;
-* current OPE/current-action laws are supplied as property fields;
+* current OPE/current-action laws are supplied as witness fields;
 * affine Kac--Moody and Virasoro brackets are supplied by
   `AffineVirasoroBridgeDatum`;
 * the Sugawara mode-sum identity is supplied by
@@ -40,6 +40,44 @@ open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-! ## Prime OPE and current layer -/
 
+namespace CurrentCurrentLevelOneEvidence
+
+/-- Canonical resonant level-one Heisenberg commutator. -/
+@[rep_depth operator]
+theorem owner_level_one
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+      (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
+  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
+    (𝕜 := 𝕜)
+
+/-- Canonical reversed resonant commutator. -/
+@[rep_depth operator]
+theorem owner_level_one_reverse
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
+      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
+      ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
+  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_neg_one_one
+    (𝕜 := 𝕜)
+
+end CurrentCurrentLevelOneEvidence
+
+/-- Both canonical level-one laws, discharged directly by the infinite-current owner. -/
+@[rep_depth operator]
+theorem canonicalCurrentCurrentLevelOneEvidence :
+    (∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
+        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+          (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) ∧
+      (∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
+        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
+          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
+          ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) :=
+  ⟨CurrentCurrentLevelOneEvidence.owner_level_one,
+    CurrentCurrentLevelOneEvidence.owner_level_one_reverse⟩
+
 /--
 Prime current OPE packet.
 
@@ -47,9 +85,9 @@ Prime current OPE packet.
 carrier used by the OPE backend, and `Coeff` is the symbolic singular-coefficient
 carrier.  The repository now contains owner-side same-mode and off-diagonal
 current-action laws for `j_p = c_p d_p`, together with specialized transport of
-those laws into the symbolic `MobiusCurrentOPE` interface in a concrete owner
-corridor.  This file still keeps the symbolic current interface and the level-one
-current-current OPE as property fields because it does not yet choose a
+those laws into the symbolic `MobiusCurrentOPE` socket in a concrete owner
+corridor.  This file still keeps the symbolic current socket and the level-one
+current-current OPE as witness fields because it does not yet choose a
 Laurent-series/OPE realization identifying this symbolic carrier with the
 concrete owner current and its level-one current-current law.
 -/
@@ -60,7 +98,7 @@ structure PrimeCurrentOPEPacket
   splitMajorana :
     SplitMajoranaOPE PrimeLabel Field Coeff
 
-  /-- Current interface for `j_p = :c_p d_p:`. -/
+  /-- Current socket for `j_p = :c_p d_p:`. -/
   mobiusCurrent :
     MobiusCurrentOPE PrimeLabel Field
 
@@ -75,7 +113,7 @@ The level-one current-current OPE law attached to the prime current packet.
 The remaining debt is now precise: the repository already contains owner-side
 same-mode and off-diagonal current-action laws for `j_p = c_p d_p`, together
 with specialized transport of those laws into the symbolic `MobiusCurrentOPE`
-interface, and it already contains a concrete owner current with the correct
+socket, and it already contains a concrete owner current with the correct
 level-one Heisenberg commutator.  What is still missing here is the
 Laurent/OPE realization that transports that owner current-current theorem into
 the symbolic `PrimeCurrentOPEPacket` interface.
@@ -86,14 +124,27 @@ def CurrentCurrentLevelOneLaw : Prop :=
       InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
       (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
 
+/-- The packet exposes both canonical laws without storing duplicate evidence. -/
+@[rep_depth operator]
+theorem current_current_level_one_evidence
+    :
+    (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
+        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+          (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) ∧
+      (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
+        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
+          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
+          ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) := by
+  exact canonicalCurrentCurrentLevelOneEvidence
+
 /-- The packet exposes the imported owner-backed level-one current-current law. -/
 @[rep_depth operator]
 theorem currentCurrentLevelOneLaw_holds
     : CurrentCurrentLevelOneLaw :=
 by
   intro 𝕜 _ _
-  exact InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
-    (𝕜 := 𝕜)
+  exact CurrentCurrentLevelOneEvidence.owner_level_one 𝕜
 
 end PrimeCurrentOPEPacket
 
@@ -111,7 +162,7 @@ Concrete level-one current-current readback on the canonical infinite-current
 owner carrier.
 
 This theorem is the exact owner theorem currently available to the prime
-Sugawara corridor.  The direct `CurrentCurrentLevelOne` theorems expose
+Sugawara corridor.  The direct `CurrentCurrentLevelOneEvidence` theorems expose
 this typed owner result; the remaining gap is the Laurent/OPE
 realization transporting it into the symbolic `Field` carrier.
 -/
@@ -164,16 +215,6 @@ variable
     {PrimeLabel Field Coeff Finite Alg : Type*}
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-
-/--
-Construct a `PrimeSugawaraVirasoroPacket` directly from a prime current packet and a Sugawara mode construction datum.
--/
-def ofCurrentAndSugawara
-    (primeCurrent : PrimeCurrentOPEPacket PrimeLabel Field Coeff)
-    (sugawara : SugawaraModeConstructionDatum Finite Alg) :
-    PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg where
-  primeCurrent := primeCurrent
-  sugawara := sugawara
 
 variable (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
 
@@ -476,10 +517,9 @@ theorem virasoro_bracket_sl2_low_modes
     ∧
     ⁅P.affineVirasoro.virasoro.Lmode 0,
       P.affineVirasoro.virasoro.Lmode 0⁆ = 0 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact P.virasoro_bracket_one_negOne_strict hvir
-  · exact P.virasoro_bracket_negOne_one_strict hvir
-  · exact P.virasoro_bracket_zero_zero hvir
+  exact ⟨P.virasoro_bracket_one_negOne_strict hvir,
+    P.virasoro_bracket_negOne_one_strict hvir,
+    P.virasoro_bracket_zero_zero hvir⟩
 
 /-- Virasoro modes reparametrize affine currents by the supplied bridge law. -/
 @[rep_depth operator]
@@ -539,15 +579,15 @@ end PrimeSugawaraVirasoroPacket
 The canonical VirasoroProject realization is available to this prime bridge.
 
 This theorem does not instantiate the prime OPE packet.  It records that the
-Virasoro owner surface used downstream has a property concrete realization.
+Virasoro owner surface used downstream has a certified concrete realization.
 -/
 @[rep_depth operator]
-theorem virasoro_project_owner_property :
+theorem virasoro_project_owner_certified :
     ∃ V : VirasoroDatum (VirasoroProject.VirasoroAlgebra ℝ),
       InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.VirasoroProjectRealizes V :=
-  InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.virasoro_project_is_property
+  InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.virasoro_project_is_certified
 
-/-- The property Heisenberg Sugawara owner has central charge `1`. -/
+/-- The certified Heisenberg Sugawara owner has central charge `1`. -/
 @[rep_depth operator]
 theorem heisenberg_sugawara_centralCharge_eq_one :
     InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1 :=

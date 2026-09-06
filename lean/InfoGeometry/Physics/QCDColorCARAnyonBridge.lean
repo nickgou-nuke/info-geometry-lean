@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Clifford.Cl55ThreeColorChiralSums
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Algebra.GellMannBridge
 import InfoGeometry.Lie.SplitOctonionGellMannCartan
@@ -97,20 +98,32 @@ theorem circular_and_cl55_color_car_packet (a b : Fin 3) :
           InfoGeometry.Clifford.Clifford55.chiralMinusSum = 0) := by
   refine ⟨cartesianZorn_rootPlus_sq a, cartesianZorn_rootMinus_sq a,
     cartesianZorn_root_anticommutator_if a b, ?_⟩
-  exact ⟨color_car_native_closure.1, color_car_native_closure.2.1⟩
+  exact ⟨InfoGeometry.Clifford.Clifford55.chiralPlusSum_sq,
+    InfoGeometry.Clifford.Clifford55.chiralMinusSum_sq⟩
 
 /-- The promoted finite Furey-style generation contains the vacuum and all
 three one-creation colour states. This is a span-membership packet, not a
 minimal-left-ideal theorem. -/
 theorem furey_generation_packet :
-    vacuum ∈ (fureyGeneration : Submodule ℝ CAR3) ∧
-      carCre0 ∈ (fureyGeneration : Submodule ℝ CAR3) ∧
-      carCre1 ∈ (fureyGeneration : Submodule ℝ CAR3) ∧
-      carCre2 ∈ (fureyGeneration : Submodule ℝ CAR3) :=
-  ⟨vacuum_mem_fureyGeneration,
-    carCre0_mem_fureyGeneration,
-    carCre1_mem_fureyGeneration,
-    carCre2_mem_fureyGeneration⟩
+    vacuum ∈ fureyGeneration ∧
+      carCre0 ∈ fureyGeneration ∧
+      carCre1 ∈ fureyGeneration ∧
+      carCre2 ∈ fureyGeneration := by
+  constructor
+  · apply Submodule.subset_span
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    exact Or.inl trivial
+  constructor
+  · apply Submodule.subset_span
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    exact Or.inr (Or.inl trivial)
+  constructor
+  · apply Submodule.subset_span
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    exact Or.inr (Or.inr (Or.inl trivial))
+  · apply Submodule.subset_span
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    exact Or.inr (Or.inr (Or.inr (Or.inl trivial)))
 
 /-- The finite Furey occupation readout has projector number operators and the
 exact scalar spectrum `{0, 1/3, 2/3, 1}`. -/

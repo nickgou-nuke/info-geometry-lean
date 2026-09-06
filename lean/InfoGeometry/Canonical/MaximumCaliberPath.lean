@@ -14,7 +14,7 @@ thermodynamic-curvature path packet.  This file adds:
 
 * graph-path readbacks through `ThermodynamicChiralGraphCalculus`;
 * collapse of exact closed-loop path constraints to detailed balance; and
-* compatibility with the explicit Bayesian projection interface.
+* compatibility with the explicit Bayesian projection socket.
 
 No analytic MaxCal existence theorem, CP map construction, KMS uniqueness
 theorem, or continuous path-integral result is asserted here.
@@ -57,7 +57,7 @@ variable (L : GraphMaxCalPathLaw G PathSample)
 
 /-- Convert the MaxCal path law to the generic fluctuation-ratio owner packet. -/
 noncomputable def toPathProbabilityRatioLaw :
-    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioData
+    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioLaw
       PathSample where
   forwardProbability := L.forwardProbability
   backwardProbability := L.backwardProbability
@@ -106,8 +106,8 @@ theorem detailedBalanceOnCycle_of_pathEntropyProduction_eq_zero
     (hpos : ∀ e ∈ C.edges, 0 < G.forwardRate e / G.reverseRate e)
     (hzero : G.pathEntropyProduction C.edges = 0) :
     G.DetailedBalanceOnCycle C := by
-  exact (G.logWilsonCycleLaw_of_pos C hpos).mpr
-    (by simpa [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C] using hzero)
+  rw [(G.logWilsonCycleLaw_of_pos C hpos).detailedBalance_iff_zero_log_curvature]
+  simpa [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C] using hzero
 
 end ThermodynamicGraph
 
@@ -138,7 +138,7 @@ variable
     {constraint : State → Prop}
     {prior posterior : State}
 
-/-- The Markov step is a Bayesian/MaxCal projection in the supplied property. -/
+/-- The Markov step is a Bayesian/MaxCal projection in the supplied witness. -/
 theorem markov_step_is_bayesian_projection
     (B : MaximumCaliberMarkovBridge M divergence constraint prior posterior) :
     TensorLimitStateSpace.IsBayesianProjection divergence constraint prior (M prior) :=

@@ -83,6 +83,26 @@ theorem matrixGrade_mapsTo_cl55SpinorAlgEquiv_symm :
   intro _ k Y hY
   exact cl55SpinorAlgEquiv_symm_mapsTo_cl55Grade hY
 
+/- The two existing transport directions assemble into the exact image
+   equality required by the common graded-action interface. -/
+theorem cl55SpinorAlgEquiv_grade_image (k : ℤ) :
+    cl55SpinorAlgEquiv.toLinearEquiv ''
+        (gradeSubmodule numberOperator55 k : Set Cl55) =
+      (matrixGradeSubmodule k : Set SpinorMatrix) := by
+  apply InfoGeometry.OperatorAlgebra.linearEquiv_mapsToGradeBetween_image_eq
+    cl55SpinorAlgEquiv.toLinearEquiv
+    (fun j : ℤ => (gradeSubmodule numberOperator55 j : Set Cl55))
+    (fun j : ℤ => (matrixGradeSubmodule j : Set SpinorMatrix))
+    (fun j => j) (fun j => j)
+  · intro j
+    intro X hX
+    exact cl55SpinorAlgEquiv_mapsTo_matrixGrade () j hX
+  · intro j
+    intro Y hY
+    exact matrixGrade_mapsTo_cl55SpinorAlgEquiv_symm () j hY
+  · intro j
+    rfl
+
 theorem matrixGrade_mul_mem {k l : ℤ} {X Y : Cl55}
     (hX : X ∈ gradeSubmodule numberOperator55 k)
     (hY : Y ∈ gradeSubmodule numberOperator55 l) :

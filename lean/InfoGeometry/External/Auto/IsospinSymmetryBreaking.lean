@@ -22,7 +22,7 @@ def IMME (a b c : ℝ) (T_z : ℝ) : ℝ :=
 
 /-- 
 In superallowed 0+ -> 0+ beta decay, the conserved vector current (CVC) 
-property implies a constant Ft value. 
+hypothesis implies a constant Ft value. 
 Ft = ft (1 + \delta_R) (1 - \delta_C)
 -/
 def SuperallowedFt (ft : ℝ) (delta_R : ℝ) (delta_C : ℝ) : ℝ :=

@@ -108,22 +108,5 @@ theorem dikin_barrier_at_zero :
   · rfl
   · ring
 
-/-!
-### 4. Grand Capstone: The Master Potential Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Complete formal verification that the Para-Kähler metric,
-    the Berry symplectic form, the Maurer-Cartan algebra, and the Dikin barrier
-    are all manifestations of the single master potential K(ξ, θ) -/
-theorem grand_master_potential_synthesis (dξ dθ : ℝ) :
-    (hessianMetricFromPotential 0 0 = 1 ∧ hessianMetricFromPotential 1 1 = -1) ∧
-    (berryFormFromPotential.det = 1) ∧
-    ((maurerCartanForm dξ dθ).det = dξ ^ 2 - dθ ^ 2) ∧
-    (dikinBarrierPotential 0 = 0) :=
-  ⟨⟨rfl, rfl⟩,
-   berry_form_properties.1,
-   (maurer_cartan_trace_and_det dξ dθ).2,
-   dikin_barrier_at_zero.1⟩
-
 end
 end InfoGeometry.ParaKahler.UnifiedPotential

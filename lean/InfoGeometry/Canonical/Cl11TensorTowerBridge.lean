@@ -121,7 +121,7 @@ theorem scalar_normalizedLogDet_tensorId2_step
  scalar_normalizedLogDet_tensorId2_step]
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-[The recurrence property `hF` is the explicit finite compatibility property.]
+[The recurrence hypothesis `hF` is the explicit finite compatibility witness.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 [No hyperfinite `II₁` factor theorem, no Type `III` classification theorem,

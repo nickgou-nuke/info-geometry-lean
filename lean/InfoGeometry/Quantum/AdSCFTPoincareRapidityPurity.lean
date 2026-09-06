@@ -85,18 +85,6 @@ theorem off_critical_mixed_state (σ : ℝ) (h_ne : σ ≠ 1 / 2) :
   have h_neg : - 4 * (σ - 1 / 2) ^ 2 < 0 := by linarith
   exact Real.exp_lt_one_iff.mpr h_neg
 
-/-- 🏆 GRAND CAPSTONE: Complete Arithmetic AdS/CFT Rapidity & Quantum Purity Synthesis. -/
-theorem grand_adscft_purity_synthesis (p q σ : ℝ) (hp : 0 < p) (hq : 0 < q)
-    (h_pure : quantumPurity σ = 1) :
-    (rapidityBoost (p * q) = rapidityBoost p + rapidityBoost q) ∧
-    (quantumPurity σ ≤ 1) ∧
-    (quantumPurity (1 / 2) = 1) ∧
-    (σ = 1 / 2) :=
-  ⟨rapidity_boost_additivity p q hp hq,
-   quantum_purity_le_one σ,
-   critical_line_purity,
-   pure_state_confinement σ h_pure⟩
-
 end
 
 end InfoGeometry.Quantum.AdSCFTPoincareRapidityPurity

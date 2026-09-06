@@ -2,13 +2,13 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
-import InfoGeometry.Canonical.ParityTraceData
+import InfoGeometry.Canonical.ParityTraceWitness
 
 open scoped BigOperators
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
-open InfoGeometry.Canonical.ParityTraceData
+open InfoGeometry.Canonical.ParityTraceWitness
 
 /-!
 # InfoGeometry.Canonical.BooleanCubeDictionary
@@ -138,27 +138,6 @@ theorem sign_preservation (S : {S : Finset ℕ // S ⊆ P.primes}) :
   rw [subsetWeylSign, subsetToArithmeticEquiv]
   simp
   exact (mobius_prime_product_eq_parity S.val hprime).symm
-
-/-- The state presentation has the same Weyl/Möbius sign as fermion parity.
-
-This is the explicit state-level composite of the subset/arithmetic
-dictionary with the prime-bit Witten readout.  It is restricted to the finite
-square-free register represented by `P`; no unrestricted identity
-`μ n = (-1) ^ Ω n` is asserted.
--/
-@[rep_depth thermo]
-theorem state_sign_preservation (ψ : PrimeBitState P) :
-    (subsetWeylSign (occupiedPrimeSet P ψ) : ℤ) =
-      fermionParityOfState P ψ := by
-  calc
-    (subsetWeylSign (occupiedPrimeSet P ψ) : ℤ) =
-        ArithmeticFunction.moebius
-          (subsetToArithmeticEquiv P (stateToSubsetEquiv P ψ)).val := by
-      exact sign_preservation P (stateToSubsetEquiv P ψ)
-    _ = ArithmeticFunction.moebius (representedNatOfState P ψ) := by
-      rfl
-    _ = fermionParityOfState P ψ :=
-      mobius_representedNatOfState_eq_fermionParity P ψ
 
 /--
 The dictionary is coherent: all three presentations agree on the truth of the

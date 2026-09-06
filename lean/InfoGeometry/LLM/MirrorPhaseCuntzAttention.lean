@@ -55,7 +55,7 @@ def twoBranchAttentionWeight (_i : Fin 2) : ℝ :=
   1 / 2
 
 /-- Index `0` is the left/false Cuntz branch, index `1` is the right/true branch. -/
-def depthOneBranchWord (i : Fin 2) : List Bool :=
+def depthOneBranchWord (i : Fin 2) : BinaryWord :=
   if i = 0 then [false] else [true]
 
 /-- Every weight in the exact two-branch attention row is nonnegative. -/

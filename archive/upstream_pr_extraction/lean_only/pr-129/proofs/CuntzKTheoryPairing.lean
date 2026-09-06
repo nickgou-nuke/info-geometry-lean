@@ -1,0 +1,293 @@
+import Mathlib
+import proofs.ConnesSpectralAction
+import proofs.AnomalousKMSFlow
+import InfoGeometry.Topology.KTheoryO2
+
+noncomputable section
+
+namespace CuntzKTheoryPairing
+
+open Complex
+
+/--
+Abstract Connes–Chern pairing interface:
+`pair : K0 × K1 → ℂ`.
+-/
+class ConnesChernPairing (K0 K1 : Type*) [AddCommGroup K0] [AddCommGroup K1] where
+  pair : K0 → K1 → ℂ
+  zero_left : ∀ x : K1, pair 0 x = 0
+
+/-- If K₀ is propositionally trivial, every Connes–Chern pairing value vanishes. -/
+theorem connesChernPairing_zero_of_trivial_K0
+    {K0 K1 : Type*} [AddCommGroup K0] [AddCommGroup K1]
+    [Subsingleton K0] [CP : ConnesChernPairing K0 K1] :
+    ∀ k : K0, ∀ x : K1, CP.pair k x = 0 := by
+  intro k x
+  have hk : k = 0 := Subsingleton.elim k 0
+  simpa [hk] using (CP.zero_left x)
+
+/--
+Proof-carrying formal encoding of an already-established `K₀(𝒪₂)=0` theorem.
+
+This class is not itself a proof of the Cuntz-algebra K-theory calculation. It
+is the exact algebraic hypothesis needed by this finite Connes–Chern interface:
+the chosen K₀ carrier is propositionally trivial.
+-/
+class O2K0Trivial (K0 : Type*) [AddCommGroup K0] : Prop where
+  triviality : Subsingleton K0
+
+/-- Under the explicit `O2K0Trivial` proof-carrying hypothesis, every pairing vanishes. -/
+theorem connesChernPairing_zero_of_O2K0Trivial
+    {K0 K1 : Type*} [AddCommGroup K0] [AddCommGroup K1]
+    [O2K0Trivial K0] [CP : ConnesChernPairing K0 K1] :
+    ∀ k : K0, ∀ x : K1, CP.pair k x = 0 := by
+  letI : Subsingleton K0 := O2K0Trivial.triviality
+  exact connesChernPairing_zero_of_trivial_K0 (K0 := K0) (K1 := K1)
+
+/--
+Finite compatibility layer over the repository-owned `K₀(O₂)` readout.
+
+Do not read this as a construction of the Cuntz algebra or as a proof of
+`K₀(𝒪₂)=0`; it consumes the existing `ZMod 1` readout.
+-/
+abbrev O2_K0 : Type := InfoGeometry.Topology.KTheory.K0_O_2
+
+instance : Subsingleton O2_K0 where
+  allEq a b :=
+    (InfoGeometry.Topology.KTheory.k0_o2_is_trivial a).trans
+      (InfoGeometry.Topology.KTheory.k0_o2_is_trivial b).symm
+
+instance : O2K0Trivial O2_K0 :=
+  ⟨inferInstance⟩
+
+/-- Canonical zero pairing for the O₂ model.
+This models `⟨[C], [e]⟩ = 0` under the trivial K₀ assumption.
+-/
+def O2ConnesChernPairing (K1 : Type*) [AddCommGroup K1] : O2_K0 → K1 → ℂ :=
+  fun _ _ => 0
+
+instance (K1 : Type*) [AddCommGroup K1] : ConnesChernPairing O2_K0 K1 where
+  pair := O2ConnesChernPairing K1
+  zero_left := by intro x; rfl
+
+/-- Connes–Chern pairing over `K₀(𝒪₂)` is identically zero. -/
+theorem connesChernPairing_zero_on_O2
+    {K1 : Type*} [AddCommGroup K1] (k : O2_K0) (x : K1) :
+    (inferInstance : ConnesChernPairing O2_K0 K1).pair k x = 0 := by
+  simpa [O2ConnesChernPairing] using
+    (connesChernPairing_zero_of_O2K0Trivial (K0 := O2_K0) (K1 := K1) k x)
+
+/-- If an anomaly index is identified with a pairing over a proof-trivial K₀ carrier, it is zero. -/
+theorem anomalousIndex_from_trivial_K0_pairing_zero
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    {K0 K1 : Type*} [AddCommGroup K0] [AddCommGroup K1]
+    [O2K0Trivial K0] [CP : ConnesChernPairing K0 K1]
+    (k : K0) (x : K1)
+    (hPair : AnomalousKMSFlow.anomalousIndex H C = CP.pair k x) :
+    AnomalousKMSFlow.anomalousIndex H C = 0 := by
+  rw [hPair]
+  exact connesChernPairing_zero_of_O2K0Trivial (K0 := K0) (K1 := K1) k x
+
+/-- If an anomalous index is identified with an O₂ pairing value, it is zero. -/
+theorem anomalousIndex_from_O2_pairing_zero (H : Type*)
+    [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    AnomalousKMSFlow.anomalousIndex H C = 0 := by
+  exact anomalousIndex_from_trivial_K0_pairing_zero (H := H) C k x hPair
+
+/-- Bonus: if the trace is faithful and the index is matched to a trivial O₂ pairing,
+then the anomaly operator itself vanishes. -/
+theorem O2_pairing_vanishes_implies_anomaly_zero
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    C.δK = 0 := by
+  have hIndex : AnomalousKMSFlow.anomalousIndex H C = 0 :=
+    anomalousIndex_from_O2_pairing_zero (H := H) C k x hPair
+  have htrace : C.tr C.δK = 0 := by
+    have hFormula := AnomalousKMSFlow.anomaly_trace_formula (H := H) C
+    have hmul : (1 / 2 : ℂ) * C.tr C.δK = 0 := by
+      calc
+        (1 / 2 : ℂ) * C.tr C.δK = C.tr C.K := by
+          simpa using hFormula.symm
+        _ = 0 := by
+          simpa [AnomalousKMSFlow.anomalousIndex, hIndex]
+    exact (mul_eq_zero.mp hmul).resolve_left (by norm_num)
+  have hzero : C.tr C.δK = C.tr (0 : Module.End ℂ H) := by
+    simpa using htrace
+  exact hFaith hzero
+
+/-- If an O₂ pairing is trivial, spectral anomaly action is minimized at the trap
+operator and achieves the bare level `S0`.
+-/
+theorem O2_pairing_vanishes_implies_action_minimum
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (S0 c : ℝ) (hc : 0 ≤ c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ≤
+          ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c) ∧
+      ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0 := by
+  have hδ : C.δK = 0 :=
+    O2_pairing_vanishes_implies_anomaly_zero (H := H) C hFaith k x hPair
+  have hbaseline : ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0 := by
+    rw [hδ]
+    exact ConnesSpectralAction.connesSpectralAction_zero (H := H) C S0 c
+  refine ⟨?_, hbaseline⟩
+  intro δ
+  rw [hbaseline]
+  exact ConnesSpectralAction.connesAction_ge_baseline (H := H) C S0 c hc δ
+
+/-- If an O₂ pairing is trivial, the unique minimizer of the Connes-style action
+is exactly `C.δK`.
+-/
+theorem O2_pairing_vanishes_implies_unique_spectral_minimizer
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (S0 c : ℝ) (hc : 0 < c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    (∀ δ : Module.End ℂ H,
+      ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+        ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔ δ = C.δK) := by
+  have hδ : C.δK = 0 :=
+    O2_pairing_vanishes_implies_anomaly_zero (H := H) C hFaith k x hPair
+  intro δ
+  constructor
+  · intro hEq
+    have hEq' : ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+        ConnesSpectralAction.connesSpectralAction (H := H) C (0 : Module.End ℂ H) S0 c := by
+      simpa [hδ] using hEq
+    have hδop : δ = 0 :=
+      (ConnesSpectralAction.connesAction_eq_baseline_iff_zero (H := H) C hFaith S0 c hc δ).1 hEq'
+    simpa [hδ] using hδop
+  · intro h
+    subst h
+    rfl
+
+/-- Trivial O₂ pairing annihilates the index-induced leakage profile. -/
+theorem O2_pairing_vanishes_implies_no_leakage
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    ∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0 := by
+  have hIndex : AnomalousKMSFlow.anomalousIndex H C = 0 :=
+    anomalousIndex_from_O2_pairing_zero (H := H) C k x hPair
+  exact AnomalousKMSFlow.anomalous_index_zero_implies_no_leakage (H := H) C hIndex
+
+/-- Full O₂-driven bridge: trivial Connes–Chern input forces anomaly annihilation,
+spectral minimum and no-leakage.
+-/
+theorem O2_pairing_triviality_yields_full_anomaly_collapse
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (S0 c : ℝ) (hc : 0 < c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    C.δK = 0 ∧
+      (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ≤
+          ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c) ∧
+      (ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0) ∧
+      (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+          ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔
+            δ = C.δK) ∧
+      (∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0) := by
+  have hδ : C.δK = 0 :=
+    O2_pairing_vanishes_implies_anomaly_zero (H := H) C hFaith k x hPair
+  have hMin :
+      (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ≤
+          ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c) ∧
+      ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0 :=
+    O2_pairing_vanishes_implies_action_minimum (H := H) C hFaith S0 c (hc := le_of_lt hc) k x hPair
+  have hUnique :
+      (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+          ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔
+            δ = C.δK) :=
+    O2_pairing_vanishes_implies_unique_spectral_minimizer (H := H) C hFaith S0 c hc k x hPair
+  have hLeak : ∀ s,
+      AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0 :=
+    O2_pairing_vanishes_implies_no_leakage (H := H) C k x hPair
+  exact ⟨hδ, hMin.1, hMin.2, hUnique, hLeak⟩
+
+/-- Connes–Chern holographic slogan theorem: trivial O₂ pairing kills the anomaly
+sector completely: `δK = 0`, spectral profile is minimized at the trap operator,
+and index-induced leakage is identically zero.
+-/
+theorem connes_chern_holographic_index_pairing_zero
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (_S0 c : ℝ) (_hc : 0 < c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    C.δK = 0 ∧
+    AnomalousKMSFlow.anomalousIndex H C = 0 ∧
+    C.tr C.K = 0 := by
+  have hIndex : AnomalousKMSFlow.anomalousIndex H C = 0 :=
+    anomalousIndex_from_O2_pairing_zero (H := H) C k x hPair
+  have hδ : C.δK = 0 :=
+    O2_pairing_vanishes_implies_anomaly_zero (H := H) C hFaith k x hPair
+  have hTraceK : C.tr C.K = 0 :=
+    AnomalousKMSFlow.anomaly_trace_total_zero (H := H) C hFaith
+  exact ⟨hδ, hIndex, hTraceK⟩
+
+/-- Full holographic collapse summary: index pairing triviality kills anomaly,
+forces spectral minimization, and removes spectral leakage.
+-/
+theorem connes_chern_holographic_minimization_summary
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (S0 c : ℝ) (hc : 0 < c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+    (C.δK = 0) ∧
+      (ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0) ∧
+      (∀ δ : Module.End ℂ H,
+        ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+          ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔ δ = C.δK) ∧
+      (∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0) := by
+  rcases O2_pairing_triviality_yields_full_anomaly_collapse
+      (H := H) C hFaith S0 c hc k x hPair with ⟨hδ, hmin, hBase, huniq, hLeak⟩
+  exact ⟨hδ, hBase, huniq, hLeak⟩
+
+end CuntzKTheoryPairing

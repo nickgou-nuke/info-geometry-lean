@@ -26,9 +26,9 @@ theorem faithful_stateSurprisal_apply (D : FaithfulDensityOperator n) :
     stateSurprisal D.rho = -cfc Real.log D.rho := by
   exact stateSurprisal_apply D.rho
 
-theorem faithful_exp_neg_stateSurprisal (D : FaithfulDensityOperator n) :
-    NormedSpace.exp (-stateSurprisal D.rho) = D.rho := by
-  exact exp_neg_stateSurprisal D.rho D.strictlyPositive
+theorem faithful_neg_stateSurprisal_apply (D : FaithfulDensityOperator n) :
+    -stateSurprisal D.rho = cfc Real.log D.rho := by
+  simp [stateSurprisal]
 
 theorem bkm_hessian_readout (D : FaithfulDensityOperator n)
     (hpow : Continuous D.rpow) (A B : FiniteOperatorAlgebra n) :

@@ -33,7 +33,7 @@ def EntropicMetricCanopyPackage
 
 /--
 Constructive canopy package replacing the bare unit-relative-volume equality
-with the proof-carrying `UnitRelativeVolumeBit` property.
+with the proof-carrying `UnitRelativeVolumeBit` witness.
 -/
 def EntropicMetricCanopyBitPackage
     (n : Nat)

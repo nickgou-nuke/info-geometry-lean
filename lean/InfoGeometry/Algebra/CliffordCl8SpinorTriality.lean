@@ -1,8 +1,5 @@
 import Mathlib.Tactic
 
-set_option linter.unusedVariables false
-set_option linter.unusedSectionVars false
-
 noncomputable section
 
 namespace InfoGeometry.Algebra.CliffordCl8SpinorTriality
@@ -15,68 +12,50 @@ theorem anticomm_symm (a b : R) (h : a * b = - (b * a)) : b * a = - (a * b) := b
 /-- Generators of the 8-dimensional Clifford Algebra Cl(8,0) over a commutative ring R.
     Satisfies anti-commutation gᵢ gⱼ + gⱼ gᵢ = 2 δᵢⱼ 1 and gᵢ² = 1. -/
 structure Clifford8Generators (R : Type*) [Ring R] where
-  g : Fin 8 → R
-  g_sq : ∀ i : Fin 8, g i * g i = 1
-  anticomm : ∀ i j : Fin 8, i ≠ j → g i * g j = - (g j * g i)
-
-namespace Clifford8Generators
-
-variable (gen : Clifford8Generators R)
-
-def g1 : R := gen.g 0
-def g2 : R := gen.g 1
-def g3 : R := gen.g 2
-def g4 : R := gen.g 3
-def g5 : R := gen.g 4
-def g6 : R := gen.g 5
-def g7 : R := gen.g 6
-def g8 : R := gen.g 7
-
-theorem g1_sq : gen.g1 * gen.g1 = 1 := gen.g_sq 0
-theorem g2_sq : gen.g2 * gen.g2 = 1 := gen.g_sq 1
-theorem g3_sq : gen.g3 * gen.g3 = 1 := gen.g_sq 2
-theorem g4_sq : gen.g4 * gen.g4 = 1 := gen.g_sq 3
-theorem g5_sq : gen.g5 * gen.g5 = 1 := gen.g_sq 4
-theorem g6_sq : gen.g6 * gen.g6 = 1 := gen.g_sq 5
-theorem g7_sq : gen.g7 * gen.g7 = 1 := gen.g_sq 6
-theorem g8_sq : gen.g8 * gen.g8 = 1 := gen.g_sq 7
-
-theorem g12 : gen.g1 * gen.g2 = - (gen.g2 * gen.g1) := gen.anticomm 0 1 (by decide)
-theorem g13 : gen.g1 * gen.g3 = - (gen.g3 * gen.g1) := gen.anticomm 0 2 (by decide)
-theorem g14 : gen.g1 * gen.g4 = - (gen.g4 * gen.g1) := gen.anticomm 0 3 (by decide)
-theorem g15 : gen.g1 * gen.g5 = - (gen.g5 * gen.g1) := gen.anticomm 0 4 (by decide)
-theorem g16 : gen.g1 * gen.g6 = - (gen.g6 * gen.g1) := gen.anticomm 0 5 (by decide)
-theorem g17 : gen.g1 * gen.g7 = - (gen.g7 * gen.g1) := gen.anticomm 0 6 (by decide)
-theorem g18 : gen.g1 * gen.g8 = - (gen.g8 * gen.g1) := gen.anticomm 0 7 (by decide)
-
-theorem g23 : gen.g2 * gen.g3 = - (gen.g3 * gen.g2) := gen.anticomm 1 2 (by decide)
-theorem g24 : gen.g2 * gen.g4 = - (gen.g4 * gen.g2) := gen.anticomm 1 3 (by decide)
-theorem g25 : gen.g2 * gen.g5 = - (gen.g5 * gen.g2) := gen.anticomm 1 4 (by decide)
-theorem g26 : gen.g2 * gen.g6 = - (gen.g6 * gen.g2) := gen.anticomm 1 5 (by decide)
-theorem g27 : gen.g2 * gen.g7 = - (gen.g7 * gen.g2) := gen.anticomm 1 6 (by decide)
-theorem g28 : gen.g2 * gen.g8 = - (gen.g8 * gen.g2) := gen.anticomm 1 7 (by decide)
-
-theorem g34 : gen.g3 * gen.g4 = - (gen.g4 * gen.g3) := gen.anticomm 2 3 (by decide)
-theorem g35 : gen.g3 * gen.g5 = - (gen.g5 * gen.g3) := gen.anticomm 2 4 (by decide)
-theorem g36 : gen.g3 * gen.g6 = - (gen.g6 * gen.g3) := gen.anticomm 2 5 (by decide)
-theorem g37 : gen.g3 * gen.g7 = - (gen.g7 * gen.g3) := gen.anticomm 2 6 (by decide)
-theorem g38 : gen.g3 * gen.g8 = - (gen.g8 * gen.g3) := gen.anticomm 2 7 (by decide)
-
-theorem g45 : gen.g4 * gen.g5 = - (gen.g5 * gen.g4) := gen.anticomm 3 4 (by decide)
-theorem g46 : gen.g4 * gen.g6 = - (gen.g6 * gen.g4) := gen.anticomm 3 5 (by decide)
-theorem g47 : gen.g4 * gen.g7 = - (gen.g7 * gen.g4) := gen.anticomm 3 6 (by decide)
-theorem g48 : gen.g4 * gen.g8 = - (gen.g8 * gen.g4) := gen.anticomm 3 7 (by decide)
-
-theorem g56 : gen.g5 * gen.g6 = - (gen.g6 * gen.g5) := gen.anticomm 4 5 (by decide)
-theorem g57 : gen.g5 * gen.g7 = - (gen.g7 * gen.g5) := gen.anticomm 4 6 (by decide)
-theorem g58 : gen.g5 * gen.g8 = - (gen.g8 * gen.g5) := gen.anticomm 4 7 (by decide)
-
-theorem g67 : gen.g6 * gen.g7 = - (gen.g7 * gen.g6) := gen.anticomm 5 6 (by decide)
-theorem g68 : gen.g6 * gen.g8 = - (gen.g8 * gen.g6) := gen.anticomm 5 7 (by decide)
-
-theorem g78 : gen.g7 * gen.g8 = - (gen.g8 * gen.g7) := gen.anticomm 6 7 (by decide)
-
-end Clifford8Generators
+  g1 : R
+  g2 : R
+  g3 : R
+  g4 : R
+  g5 : R
+  g6 : R
+  g7 : R
+  g8 : R
+  g1_sq : g1 * g1 = 1
+  g2_sq : g2 * g2 = 1
+  g3_sq : g3 * g3 = 1
+  g4_sq : g4 * g4 = 1
+  g5_sq : g5 * g5 = 1
+  g6_sq : g6 * g6 = 1
+  g7_sq : g7 * g7 = 1
+  g8_sq : g8 * g8 = 1
+  g12 : g1 * g2 = - (g2 * g1)
+  g13 : g1 * g3 = - (g3 * g1)
+  g14 : g1 * g4 = - (g4 * g1)
+  g15 : g1 * g5 = - (g5 * g1)
+  g16 : g1 * g6 = - (g6 * g1)
+  g17 : g1 * g7 = - (g7 * g1)
+  g18 : g1 * g8 = - (g8 * g1)
+  g23 : g2 * g3 = - (g3 * g2)
+  g24 : g2 * g4 = - (g4 * g2)
+  g25 : g2 * g5 = - (g5 * g2)
+  g26 : g2 * g6 = - (g6 * g2)
+  g27 : g2 * g7 = - (g7 * g2)
+  g28 : g2 * g8 = - (g8 * g2)
+  g34 : g3 * g4 = - (g4 * g3)
+  g35 : g3 * g5 = - (g5 * g3)
+  g36 : g3 * g6 = - (g6 * g3)
+  g37 : g3 * g7 = - (g7 * g3)
+  g38 : g3 * g8 = - (g8 * g3)
+  g45 : g4 * g5 = - (g5 * g4)
+  g46 : g4 * g6 = - (g6 * g4)
+  g47 : g4 * g7 = - (g7 * g4)
+  g48 : g4 * g8 = - (g8 * g4)
+  g56 : g5 * g6 = - (g6 * g5)
+  g57 : g5 * g7 = - (g7 * g5)
+  g58 : g5 * g8 = - (g8 * g5)
+  g67 : g6 * g7 = - (g7 * g6)
+  g68 : g6 * g8 = - (g8 * g6)
+  g78 : g7 * g8 = - (g8 * g7)
 
 /-- The Chiral Volume Form Γ = γ₁ γ₂ γ₃ γ₄ γ₅ γ₆ γ₇ γ₈ in Cl(8,0). -/
 def Gamma (g : Clifford8Generators R) : R :=
@@ -386,13 +365,13 @@ theorem master_spin8_triality_chiral_parity
     (PPlus g + PMinus g = 1) ∧
     (PPlus g * PPlus g = PPlus g) ∧
     (PPlus g * PMinus g = 0) ∧
-    (PPlus g * g.g1 = g.g1 * PMinus g) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact gamma_sq_eq_one g
-  · exact gamma_anticomm_g1 g
-  · exact chiral_projectors_completeness g
-  · exact pplus_idempotent g
-  · exact chiral_projectors_orthogonal g
-  · exact pplus_gamma1_flip g
+    (PPlus g * g.g1 = g.g1 * PMinus g) := ⟨
+  gamma_sq_eq_one g,
+  gamma_anticomm_g1 g,
+  chiral_projectors_completeness g,
+  pplus_idempotent g,
+  chiral_projectors_orthogonal g,
+  pplus_gamma1_flip g
+⟩
 
 end InfoGeometry.Algebra.CliffordCl8SpinorTriality

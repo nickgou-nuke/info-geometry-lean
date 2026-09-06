@@ -64,18 +64,6 @@ theorem critical_line_from_modular_equilibrium (σ : ℝ) (h_casimir : σ - 1 / 
     σ = 1 / 2 := by
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Tomita-Takesaki Modular Spacetime Emergence Synthesis -/
-theorem grand_tomita_spacetime_synthesis (pair : ℝ × ℝ) (h_eq : pair.1 = pair.2)
-    (σ : ℝ) (h_casimir : σ - 1 / 2 = 0) :
-    (modularConjugation (modularConjugation pair) = pair) ∧
-    (modularRapidity (modularConjugation pair) = - modularRapidity pair) ∧
-    (modularRapidity pair = 0) ∧
-    (σ = 1 / 2) :=
-  ⟨modular_conjugation_involutive pair,
-   modular_rapidity_conjugation_odd pair,
-   modular_equilibrium_zero_drift pair h_eq,
-   critical_line_from_modular_equilibrium σ h_casimir⟩
-
 end
 
 end InfoGeometry.Quantum.TomitaTakesakiModularSpacetimeEmergence

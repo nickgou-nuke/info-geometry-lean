@@ -11,13 +11,13 @@ This file connects:
 * TKK Ricci flux;
 * closure defect / anomaly readout.
 
-It remains property-gated. The bridge does not assert that every heat loss is
+It remains witness-gated. The bridge does not assert that every heat loss is
 Ricci flux. It says that once a scalar Ricci-flux calibration is supplied, the
 ledger identity is available.
 
 This module uses the already-compiled `StinespringDilation` heat APIs
 (`DissipativeChannel`, `BregmanDivergenceDatum`, `HeatEqualsHiddenInformation`)
-and the `TKKConformalClosure.TKKRicciFluxDatum` interface. It is complementary to
+and the `TKKConformalClosure.TKKRicciFluxDatum` socket. It is complementary to
 `TKKFluxBalance`, which decomposes the closure defect itself into hidden,
 material, and topological ledgers.
 -/
@@ -25,6 +25,7 @@ material, and topological ledgers.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -255,7 +256,7 @@ and the bridge asserts:
   `scalar(closureDefect(generatorOf x)(stateOf x)) = anomalyReadout x`
 
 for all visible states `x`, **without** requiring curvature stationarity as
-a property.
+a hypothesis.
 
 This is the direct Fradkin–Tseytlin identification: the conformal anomaly
 equals the TKK closure-defect scalar readout.
@@ -458,7 +459,7 @@ Conformal ledger bridge readout.
 Once the conformal thermodynamic ledger is supplied, heat, hidden information,
 and scalarized TKK Ricci flux agree by the bridge laws.
 -/
-theorem conformalLedgerBridge_readout :
+theorem conformalLedgerBridgeOwnerTarget :
   ∀ (Sys Comm L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
@@ -476,5 +477,24 @@ theorem conformalLedgerBridge_readout :
         (Λ.heatRicciBridge.stateOf x) := by
   intro Sys Comm L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ Λ x
   exact Λ.heat_eq_tkk_ricci_flux x
+
+/-- Packet readout for one conformal thermodynamic ledger. -/
+theorem conformalLedgerBridge_packet
+    (Sys Comm L State Geometry : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry]
+    (Λ : ConformalThermodynamicLedger
+      Sys Comm L State Geometry)
+    (x : Sys) :
+    heatLoss Λ.bregman Λ.channel x =
+      scalarTKKRicciFlux
+        Λ.closure
+        Λ.heatRicciBridge.scalarReadout
+        (Λ.heatRicciBridge.generatorOf x)
+        (Λ.heatRicciBridge.stateOf x) :=
+  conformalLedgerBridgeOwnerTarget Sys Comm L State Geometry Λ x
 
 end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

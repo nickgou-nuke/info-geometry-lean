@@ -122,6 +122,16 @@ theorem matStageToRecursiveMatrix_gradeSubmodule_map (k : ℤ) :
     matStageToRecursiveMatrix
       InfoGeometry.Canonical.Cl55WittLieRouting.numberOperator k
 
+theorem matStageToRecursiveMatrix_grade_image (k : ℤ) :
+    matStageToRecursiveMatrix.toLinearEquiv ''
+        (matStageGradeSubmodule k : Set Mat32) =
+      (recursiveMatrixGradeSubmodule k : Set RecursiveMatrix) := by
+  change matStageToRecursiveMatrix.toLinearMap ''
+      (matStageGradeSubmodule k : Set Mat32) = _
+  rw [← Submodule.map_coe]
+  exact congrArg (fun P : Submodule ℝ RecursiveMatrix => (P : Set RecursiveMatrix))
+    (matStageToRecursiveMatrix_gradeSubmodule_map k)
+
 theorem matStageToRecursiveMatrix_grade_mem_iff
     {X : Mat32} {k : ℤ} :
     X ∈ matStageGradeSubmodule k ↔
@@ -129,6 +139,20 @@ theorem matStageToRecursiveMatrix_grade_mem_iff
   simpa [matStageGradeSubmodule, recursiveMatrixGradeSubmodule] using
     (InfoGeometry.OperatorAlgebra.algEquiv_map_mem_gradeSubmodule_between_iff
       matStageToRecursiveMatrix InfoGeometry.Canonical.Cl55WittLieRouting.numberOperator X k).symm
+
+theorem recursiveMatrixToCl55_grade_image (k : ℤ) :
+    Clifford55.cl55SpinorAlgEquiv.symm.toLinearEquiv ''
+        (recursiveMatrixGradeSubmodule k : Set RecursiveMatrix) =
+      (cl55TransportedMatStageGradeSubmodule k : Set Clifford55.Cl55) := by
+  change Clifford55.cl55SpinorAlgEquiv.symm.toLinearMap ''
+      (recursiveMatrixGradeSubmodule k : Set RecursiveMatrix) = _
+  rw [← Submodule.map_coe]
+  exact congrArg (fun P : Submodule ℝ Clifford55.Cl55 =>
+      (P : Set Clifford55.Cl55))
+    (InfoGeometry.OperatorAlgebra.algEquiv_map_gradeSubmodule_of
+      Clifford55.cl55SpinorAlgEquiv.symm
+      (matStageToRecursiveMatrix
+        InfoGeometry.Canonical.Cl55WittLieRouting.numberOperator) k)
 
 theorem matStage_recursive_grade_transport :
     MapsToGradeBetween
@@ -162,6 +186,24 @@ theorem matStage_cl55_grade_transport_via_recursive :
   have hcomp := InfoGeometry.OperatorAlgebra.mapsToGradeBetween_comp_family h₁ h₂
   have hcomp' := hcomp (b, ()) i hX
   simpa [matStageToCl55] using hcomp'
+
+/- The direct Mat32-to-Cl55 carrier equivalence therefore has an exact image
+   statement, assembled from the already-owned two-way grade transport. -/
+theorem matStageToCl55_grade_image (k : ℤ) :
+    matStageToCl55.toLinearEquiv ''
+        (matStageGradeSubmodule k : Set Mat32) =
+      (cl55TransportedMatStageGradeSubmodule k : Set Clifford55.Cl55) := by
+  apply InfoGeometry.OperatorAlgebra.linearEquiv_mapsToGradeBetween_image_eq
+    matStageToCl55.toLinearEquiv
+    (fun j : ℤ => (matStageGradeSubmodule j : Set Mat32))
+    (fun j : ℤ => (cl55TransportedMatStageGradeSubmodule j : Set Clifford55.Cl55))
+    (fun j => j) (fun j => j)
+  · intro j
+    exact matStage_cl55_grade_transport () j
+  · intro j
+    exact cl55ToMatStage_maps_grade_family () j
+  · intro j
+    rfl
 
 def transportedCreation55 (i : Fin 5) : Clifford55.Cl55 :=
   matStageToCl55 (InfoGeometry.Canonical.Cl55WittCAR.creation i)

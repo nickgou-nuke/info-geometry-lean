@@ -31,12 +31,3 @@ theorem bosonic_inverse_is_fermionic (p : ℕ) (s : ℂ) (h_nz : primeFermionicF
     primeFermionicFactor p s = (primeBosonicFactor p s)⁻¹ := by
   unfold primeBosonicFactor primeFermionicFactor at *
   rw [inv_div, div_one]
-
-theorem grand_susy_reciprocity_synthesis (p : ℕ) (hp : Nat.Prime p) (s : ℂ)
-    (hs : primeFermionicFactor p s ≠ 0) :
-    (primeFermionicFactor p s ≠ 0) ∧
-    (primeSusyPartitionFunction p s = 1) ∧
-    (primeFermionicFactor p s = (primeBosonicFactor p s)⁻¹) :=
-  ⟨hs,
-   prime_susy_reciprocity p s hs,
-   bosonic_inverse_is_fermionic p s hs⟩

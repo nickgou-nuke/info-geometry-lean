@@ -55,11 +55,12 @@ theorem kms_functional_family_compat (n : ℕ) (f : DiagAlg n) :
 /-- **Theorem: CPT/KMS Compatible Functional Family**
     The collection of normalized KMS traces at every finite stage n forms a compatible
     functional family over the diagonal algebra tower. -/
-def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) diagBondAlg :=
-  fun n => normalizedTraceLinear n
+def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) diagBondAlg where
+  omega n := normalizedTraceLinear n
+  compatible n f := kms_functional_family_compat n f
 
 /-- The cylinder map as an algebra homomorphism over `ℂ`. -/
-noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] ((ℕ → Bool) → ℂ) where
+noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] (CantorBoundary → ℂ) where
   toFun := cylinder n
   map_one' := cylinder_one n
   map_mul' f g := cylinder_mul n f g
@@ -71,7 +72,7 @@ noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] ((ℕ → Bool) 
     The diagonal algebra tower with successor embeddings and cylinder maps
     forms a valid algebraic tensor inductive limit carrier. -/
 noncomputable def diagonalUHFInductiveLimit : TensorInductiveLimit (R := ℂ) (A := DiagAlg) diagBondAlg where
-  AInf := (ℕ → Bool) → ℂ
+  AInf := CantorBoundary → ℂ
   instSemiring := inferInstance
   instAlgebra := inferInstance
   inj n := cylinderAlg n

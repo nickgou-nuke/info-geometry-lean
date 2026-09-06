@@ -101,18 +101,6 @@ theorem primon_term_eq_vonMangoldt_term (beta : ℝ) (pair : PrimeNat × ℕ) :
   rw [if_pos h_ge2, h_lambda, h_log_pow, h_rpow_pow, h_rpow_neg']
   field_simp
 
-/-!
-### 3. Master Synthesis: The Fubini Identity
--/
-
-/-- 🏆 GRAND CAPSTONE: Exchange of the Double Sum with the von Mangoldt Dirichlet Series -/
-theorem grand_primon_double_sum_exchange_synthesis
-    (p : PrimeNat) (beta : ℝ) (k : ℕ) :
-    (((p : ℝ) ^ (-beta)) ^ (k + 1) = (p : ℝ) ^ (-(k + 1 : ℝ) * beta)) ∧
-    (primonDoubleTerm beta ⟨p, k⟩ = vonMangoldtDirichletTerm beta (primePowerEquiv ⟨p, k⟩)) :=
-  ⟨primon_power_law (p : ℕ) p.2.two_le beta k,
-   primon_term_eq_vonMangoldt_term beta ⟨p, k⟩⟩
-
 end
 
 end InfoGeometry.Quantum.PrimonSeries

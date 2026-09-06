@@ -53,63 +53,6 @@ noncomputable def imaginaryCoordLinearEquiv : Imaginary ≃ₗ[ℝ] ImaginaryCoo
 @[simp] theorem imaginaryCoordLinearEquiv_symm_val (c : ImaginaryCoords) :
     (imaginaryCoordLinearEquiv.symm c : CanonicalZorn) = ⟨c.1, -c.1, c.2.1, c.2.2⟩ := rfl
 
-/-- The seven free coordinates of a trace-zero split-octonion element in a
-finite Fano-plane coordinate carrier.  The order is scalar trace coordinate,
-the three upper-vector coordinates, then the three lower-vector coordinates.
--/
-abbrev ImaginarySeven := Fin 7 → ℝ
-
-noncomputable def imaginaryCoords_seven : ImaginaryCoords ≃ₗ[ℝ] ImaginarySeven where
-  toFun c := ![c.1, c.2.1 0, c.2.1 1, c.2.1 2, c.2.2 0, c.2.2 1, c.2.2 2]
-  invFun v := (v 0, ![v 1, v 2, v 3], ![v 4, v 5, v 6])
-  left_inv c := by
-    rcases c with ⟨a, x, y⟩
-    apply Prod.ext
-    · rfl
-    · apply Prod.ext
-      · funext i
-        fin_cases i <;> rfl
-      · funext i
-        fin_cases i <;> rfl
-  right_inv v := by
-    funext i
-    fin_cases i <;> rfl
-  map_add' c d := by
-    funext i
-    fin_cases i <;> simp
-  map_smul' r c := by
-    funext i
-    fin_cases i <;> simp
-
-@[simp] theorem imaginaryCoords_seven_apply_zero (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 0 = c.1 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_upper_zero (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 1 = c.2.1 0 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_upper_one (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 2 = c.2.1 1 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_upper_two (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 3 = c.2.1 2 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_lower_zero (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 4 = c.2.2 0 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_lower_one (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 5 = c.2.2 1 := rfl
-
-@[simp] theorem imaginaryCoords_seven_apply_lower_two (c : ImaginaryCoords) :
-    imaginaryCoords_seven c 6 = c.2.2 2 := rfl
-
-theorem detZ_imaginaryCoord (c : ImaginaryCoords) :
-    ZornMatrix.detZ (imaginaryCoordLinearEquiv.symm c).1 =
-      -(c.1 ^ 2) -
-        (c.2.1 0 * c.2.2 0 + c.2.1 1 * c.2.2 1 + c.2.1 2 * c.2.2 2) := by
-  simp [imaginaryCoordLinearEquiv, ZornMatrix.detZ,
-    InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three]
-  ring
-
 /-- The imaginary split-octonion space has real dimension seven. -/
 theorem finrank_imaginary : Module.finrank ℝ Imaginary = 7 := by
   calc
@@ -141,24 +84,17 @@ noncomputable def imaginaryAut
 
 @[simp] theorem imaginaryAut_preserves_norm
     (φ : realZornCompositionAut) (X : Imaginary) :
-    ZornMatrix.detZ (imaginaryAut φ X).1 =
-      ZornMatrix.detZ X.1 :=
+    ZornMatrix.detZ realCrossProduct3 (imaginaryAut φ X).1 =
+      ZornMatrix.detZ realCrossProduct3 X.1 :=
   realZornCompositionAut_preserves_det φ X.1
 
 /-- The norm level set inside the seven-dimensional imaginary split-octonion
-space. -/
+space. No transitivity claim is built into this definition. -/
 def NormLevel (c : ℝ) : Set Imaginary :=
-  {X | ZornMatrix.detZ X.1 = c}
+  {X | ZornMatrix.detZ realCrossProduct3 X.1 = c}
 
 @[simp] theorem mem_normLevel_iff (c : ℝ) (X : Imaginary) :
-    X ∈ NormLevel c ↔ ZornMatrix.detZ X.1 = c := Iff.rfl
-
-theorem imaginaryCoord_mem_null_iff (c : ImaginaryCoords) :
-    imaginaryCoordLinearEquiv.symm c ∈ NormLevel 0 ↔
-      c.1 ^ 2 +
-          (c.2.1 0 * c.2.2 0 + c.2.1 1 * c.2.2 1 + c.2.1 2 * c.2.2 2) = 0 := by
-  rw [mem_normLevel_iff, detZ_imaginaryCoord]
-  constructor <;> intro h <;> linarith
+    X ∈ NormLevel c ↔ ZornMatrix.detZ realCrossProduct3 X.1 = c := Iff.rfl
 
 /-- Every imaginary norm level is invariant under every split-octonion
 multiplication automorphism. -/
@@ -167,7 +103,8 @@ multiplication automorphism. -/
     imaginaryAut φ X ∈ NormLevel c ↔ X ∈ NormLevel c := by
   simp only [mem_normLevel_iff, imaginaryAut_preserves_norm]
 
-/-- In particular, the imaginary null cone is invariant. -/
+/-- In particular, the imaginary null cone is invariant. This is an
+invariance theorem, not an assertion that its nonzero locus is one orbit. -/
 @[simp] theorem imaginaryAut_preserves_null
     (φ : realZornCompositionAut) (X : Imaginary) :
     imaginaryAut φ X ∈ NormLevel 0 ↔ X ∈ NormLevel 0 :=
@@ -213,9 +150,9 @@ noncomputable def Annihilator (X : Imaginary) : Submodule ℝ Imaginary :=
 /-- Polarization of the canonical Zorn determinant on the imaginary
 hyperplane. -/
 def imaginaryPolar (X Y : Imaginary) : ℝ :=
-    ZornMatrix.detZ (X.1 + Y.1) -
-    ZornMatrix.detZ X.1 -
-      ZornMatrix.detZ Y.1
+  ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) -
+    ZornMatrix.detZ realCrossProduct3 X.1 -
+      ZornMatrix.detZ realCrossProduct3 Y.1
 
 /-- Polarized left alternativity transported from the native Zorn owner. -/
 theorem canonical_left_linearized (X Y Z : CanonicalZorn) :
@@ -245,14 +182,14 @@ theorem imaginary_anticommutator_eq (X Y : Imaginary) :
   rw [htraceX, zero_smul] at hx
   rw [htraceY, zero_smul] at hy
   change (X.1 + Y.1) * (X.1 + Y.1) +
-    ZornMatrix.detZ (X.1 + Y.1) • (1 : CanonicalZorn) = 0 at hsum
+    ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) • (1 : CanonicalZorn) = 0 at hsum
   rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_add,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul] at hsum
   change X.1 * X.1 +
-    ZornMatrix.detZ X.1 • (1 : CanonicalZorn) = 0 at hx
+    ZornMatrix.detZ realCrossProduct3 X.1 • (1 : CanonicalZorn) = 0 at hx
   change Y.1 * Y.1 +
-    ZornMatrix.detZ Y.1 • (1 : CanonicalZorn) = 0 at hy
+    ZornMatrix.detZ realCrossProduct3 Y.1 • (1 : CanonicalZorn) = 0 at hy
   change X.1 * Y.1 + Y.1 * X.1 =
     -(imaginaryPolar X Y) • (1 : CanonicalZorn)
   unfold imaginaryPolar
@@ -569,9 +506,9 @@ instance : MulAction realZornCompositionAut Imaginary where
     apply Subtype.ext
     rfl
 
-/-- The point stabilizer for the split-octonion automorphism action on its
-imaginary hyperplane. The `SL₃(ℝ)` and `SU(2,1)` identification lane is carried
-by separate classification files. -/
+/-- The genuine point stabilizer for the split-octonion automorphism action on
+its imaginary hyperplane. No identification with `SL₃(ℝ)` or `SU(2,1)` is
+claimed here. -/
 def PointStabilizer (X : Imaginary) : Subgroup realZornCompositionAut :=
   MulAction.stabilizer realZornCompositionAut X
 
@@ -585,13 +522,13 @@ def Orbit (X : Imaginary) : Set Imaginary :=
     φ ∈ PointStabilizer X ↔ imaginaryAut φ X = X := Iff.rfl
 
 /-- Every automorphism orbit is contained in the norm level through its base
-point. -/
+point. This deliberately does not assert the converse transitivity claim. -/
 theorem orbit_subset_normLevel (X : Imaginary) :
-    Orbit X ⊆ NormLevel (ZornMatrix.detZ X.1) := by
+    Orbit X ⊆ NormLevel (ZornMatrix.detZ realCrossProduct3 X.1) := by
   intro Y hY
   rcases hY with ⟨φ, rfl⟩
-  change ZornMatrix.detZ (imaginaryAut φ X).1 =
-    ZornMatrix.detZ X.1
+  change ZornMatrix.detZ realCrossProduct3 (imaginaryAut φ X).1 =
+    ZornMatrix.detZ realCrossProduct3 X.1
   exact imaginaryAut_preserves_norm φ X
 
 /-- Concrete imaginary split-octonion examples for the nonmultiplicativity obstruction. -/

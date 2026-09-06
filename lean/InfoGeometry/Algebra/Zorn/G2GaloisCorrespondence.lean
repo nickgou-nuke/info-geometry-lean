@@ -134,7 +134,7 @@ theorem zero_mem_galoisFixedSet (H : Subgroup SplitOctF2Aut) :
 theorem add_mem_galoisFixedSet {H : Subgroup SplitOctF2Aut}
     {X Y : SplitOctF2}
     (hX : X ∈ galoisFixedSet H) (hY : Y ∈ galoisFixedSet H) :
-    X + Y ∈ galoisFixedSet H := by
+    add X Y ∈ galoisFixedSet H := by
   intro g hg
   change g.1 (add X Y) = add X Y
   rw [automorphism_map_add, hX g hg, hY g hg]

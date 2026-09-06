@@ -47,15 +47,3 @@ theorem susy_prime_phase_cancellation (γ p : ℝ) :
   rw [← Complex.exp_add]
   have : Complex.I * (γ * Real.log p : ℂ) + -Complex.I * (γ * Real.log p : ℂ) = 0 := by ring
   rw [this, Complex.exp_zero]
-
-theorem grand_witten_index_vacuum_synthesis
-    (E β γ p : ℝ) :
-    (excitedLevelWittenContribution E β = 0) ∧
-    (HasDerivAt (wittenIndexThermal 1 0) 0 β) ∧
-    (wittenIndex 1 0 = 1) ∧
-    ((Complex.exp (Complex.I * (γ * Real.log p : ℂ))) *
-     (Complex.exp (-Complex.I * (γ * Real.log p : ℂ))) = 1) :=
-  ⟨excited_level_witten_cancels E β,
-   hasDerivAt_witten_index_zero 1 0 β,
-   witten_index_unique_vacuum,
-   susy_prime_phase_cancellation γ p⟩

@@ -216,7 +216,9 @@ theorem etaChiral_isChiralKreinUnitary :
 /-- The sheet flip is `J`-Hermitian for the cross-sheet Krein form. -/
 theorem etaChiral_isChiralKreinHermitian :
     IsChiralKreinHermitian (etaChiral (E := E)) := by
-  exact etaChiral_is_fundamental_symmetry (E := E)
+  intro u v
+  simp [IsChiralKreinAdjoint, chiralKreinForm, etaChiral, modular_j,
+    WithLp.prod_inner_apply, real_inner_comm, add_comm]
 
 /-- The sheet flip is simultaneously `J`-Hermitian and `J`-unitary. -/
 theorem etaChiral_isChiralKreinHermitian_and_unitary :
@@ -247,16 +249,11 @@ theorem gamma5_isChiralKreinSkewHermitian :
 theorem chiralComplexStructure_isChiralKreinAntiIsometry :
     ∀ u v,
       chiralKreinForm
-          ((chiralComplexStructure (E := E)) u)
-          ((chiralComplexStructure (E := E)) v) =
+          ((complex_i (E := E)) u)
+          ((complex_i (E := E)) v) =
         -chiralKreinForm u v := by
   intro u v
-  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
-    exact DoubledSpace.ext rfl rfl
-  have hv : to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
-    exact DoubledSpace.ext rfl rfl
-  rw [← hu, ← hv]
-  simp [chiralComplexStructure_to_doubled, chiralKreinForm_to_doubled,
-    real_inner_comm, add_comm, sub_eq_add_neg]
+  simp [complex_i, modular_j, spectral_epsilon, chiralKreinForm,
+    WithLp.prod_inner_apply, real_inner_comm, add_comm, sub_eq_add_neg]
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint

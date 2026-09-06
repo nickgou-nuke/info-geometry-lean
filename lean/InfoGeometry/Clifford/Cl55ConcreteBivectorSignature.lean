@@ -82,9 +82,20 @@ theorem mixedBivector45_square :
   apply mixed_bivector_sq_one
   · exact gammaBasis55_45_positive_square
   · exact gammaBasis55_45_negative_square
-  · have h := gammaBasis55_anticomm_45
-    rw [h]
-    abel
+  · have hpolar : QuadraticMap.polar (Qsplit 5)
+        (vec55SplitEquiv (vec55Basis 4))
+        (vec55SplitEquiv (vec55Basis 5)) = 0 := by
+      rw [vec55SplitEquiv_basis4, vec55SplitEquiv_basis5]
+      rw [QuadraticMap.polar]
+      change (Qsplit 5) (vec55SplitEquiv (vec55Basis 4 + vec55Basis 5)) -
+        (Qsplit 5) (vec55SplitEquiv (vec55Basis 4)) -
+        (Qsplit 5) (vec55SplitEquiv (vec55Basis 5)) = 0
+      rw [splitQ_vec55SplitEquiv, splitQ_vec55SplitEquiv,
+        splitQ_vec55SplitEquiv]
+      simp [vec55Basis, q55Real]
+    have h := gamma55_anticomm (vec55Basis 4) (vec55Basis 5)
+    rw [hpolar, map_zero] at h
+    simpa [gammaBasis55] using h
 
 theorem gammaBasis55_10_anticomm :
     gammaBasis55 0 * gammaBasis55 1 =

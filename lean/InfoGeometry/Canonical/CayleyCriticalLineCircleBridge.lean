@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -37,94 +39,17 @@ def OnCriticalLine (s : ℂ) : Prop :=
 def OnLeeYangCircle (z : ℂ) : Prop :=
   Complex.normSq z = 1
 
-def criticalLineSet : Set ℂ :=
-  {s | OnCriticalLine s}
+/-! Set-level forms of the same two pointwise predicates. -/
 
-def unitCircleSet : Set ℂ :=
-  {z | OnLeeYangCircle z}
+def unitCircleSet : Set ℂ := {z | OnLeeYangCircle z}
 
-/-! ## Midpoint Apollonius geometry for the critical line -/
-
-/-- Squared distance from `σ + i t` to the zero `3 / 2` on the real axis. -/
-def apolloniusNumerator (σ t : ℝ) : ℝ :=
-  (σ - 3 / 2) ^ 2 + t ^ 2
-
-/-- Squared distance from `σ + i t` to the pole `-1 / 2` on the real axis. -/
-def apolloniusDenominator (σ t : ℝ) : ℝ :=
-  (σ + 1 / 2) ^ 2 + t ^ 2
-
-/--
-For the midpoint pair `(-1/2, 3/2)`, the Apollonius numerator-minus-denominator
-difference is affine in the real coordinate and independent of the imaginary
-height.
--/
-theorem apollonius_difference (σ t : ℝ) :
-    apolloniusNumerator σ t - apolloniusDenominator σ t = -4 * σ + 2 := by
-  dsimp [apolloniusNumerator, apolloniusDenominator]
-  ring
-
-/--
-The unit Apollonius level set for the midpoint pair `(-1/2, 3/2)` is exactly
-the critical vertical line `σ = 1/2`.
--/
-theorem apollonius_unitary_level_set_iff (σ t : ℝ) :
-    apolloniusNumerator σ t = apolloniusDenominator σ t ↔ σ = 1 / 2 := by
-  have hdiff := apollonius_difference σ t
-  constructor
-  · intro h
-    have hzero : apolloniusNumerator σ t - apolloniusDenominator σ t = 0 :=
-      sub_eq_zero.mpr h
-    rw [hdiff] at hzero
-    linarith
-  · intro h
-    have hzero : apolloniusNumerator σ t - apolloniusDenominator σ t = 0 := by
-      rw [hdiff, h]
-      ring
-    exact sub_eq_zero.mp hzero
-
-/--
-The strict interior Apollonius inequality for the midpoint pair `(-1/2, 3/2)`
-is exactly the right half-plane `σ > 1/2`.
--/
-theorem apollonius_lt_iff_right_of_critical (σ t : ℝ) :
-    apolloniusNumerator σ t < apolloniusDenominator σ t ↔ 1 / 2 < σ := by
-  have hdiff := apollonius_difference σ t
-  constructor
-  · intro h
-    have hneg : apolloniusNumerator σ t - apolloniusDenominator σ t < 0 :=
-      sub_neg.mpr h
-    rw [hdiff] at hneg
-    linarith
-  · intro h
-    have hneg : apolloniusNumerator σ t - apolloniusDenominator σ t < 0 := by
-      rw [hdiff]
-      linarith
-    exact sub_neg.mp hneg
-
-/--
-The strict exterior Apollonius inequality for the midpoint pair `(-1/2, 3/2)`
-is exactly the left half-plane `σ < 1/2`.
--/
-theorem apollonius_gt_iff_left_of_critical (σ t : ℝ) :
-    apolloniusNumerator σ t > apolloniusDenominator σ t ↔ σ < 1 / 2 := by
-  have hdiff := apollonius_difference σ t
-  constructor
-  · intro h
-    have hpos : 0 < apolloniusNumerator σ t - apolloniusDenominator σ t :=
-      sub_pos.mpr h
-    rw [hdiff] at hpos
-    linarith
-  · intro h
-    have hpos : 0 < apolloniusNumerator σ t - apolloniusDenominator σ t := by
-      rw [hdiff]
-      linarith
-    exact sub_pos.mp hpos
+def cayleyImage (S : Set ℂ) : Set ℂ := cayleyToFugacity '' S
 
 /--
 The Cayley maps are inverse away from the pole `s = 1`.
 
 Lean's field division is total, so the pole is recorded explicitly as a
-property.
+hypothesis.
 -/
 theorem cayleyToTemperature_cayleyToFugacity
     (s : ℂ)
@@ -138,7 +63,7 @@ theorem cayleyToTemperature_cayleyToFugacity
 The inverse Cayley maps are inverse away from the pole `z = -1`.
 
 Lean's field division is total, so the pole is recorded explicitly as a
-property.
+hypothesis.
 -/
 theorem cayleyToFugacity_cayleyToTemperature
     (z : ℂ)
@@ -147,24 +72,6 @@ theorem cayleyToFugacity_cayleyToTemperature
   unfold cayleyToFugacity cayleyToTemperature
   field_simp [hz]
   ring
-
-theorem cayleyToFugacity_injective_of_ne_one
-    {s t : ℂ} (hs : 1 - s ≠ 0) (ht : 1 - t ≠ 0)
-    (h : cayleyToFugacity s = cayleyToFugacity t) :
-    s = t := by
-  have h' := congrArg cayleyToTemperature h
-  rw [cayleyToTemperature_cayleyToFugacity s hs,
-    cayleyToTemperature_cayleyToFugacity t ht] at h'
-  exact h'
-
-theorem cayleyToTemperature_injective_of_ne_neg_one
-    {z w : ℂ} (hz : 1 + z ≠ 0) (hw : 1 + w ≠ 0)
-    (h : cayleyToTemperature z = cayleyToTemperature w) :
-    z = w := by
-  have h' := congrArg cayleyToFugacity h
-  rw [cayleyToFugacity_cayleyToTemperature z hz,
-    cayleyToFugacity_cayleyToTemperature w hw] at h'
-  exact h'
 
 /--
 The Cayley transform maps the critical line to the Lee--Yang unit circle.
@@ -220,38 +127,6 @@ theorem criticalLine_iff_cayley_unitCircle
     simp only [Complex.sub_re, Complex.one_re, Complex.sub_im, Complex.one_im] at hnorm
     nlinarith
 
-theorem subset_cayley_unitCircle_iff_subset_criticalLine
-    (Z : Set ℂ) :
-    (∀ s ∈ Z, OnLeeYangCircle (cayleyToFugacity s)) ↔
-      (∀ s ∈ Z, OnCriticalLine s) := by
-  constructor
-  · intro h s hs
-    exact (criticalLine_iff_cayley_unitCircle s).2 (h s hs)
-  · intro h s hs
-    exact (criticalLine_iff_cayley_unitCircle s).1 (h s hs)
-
-def cayleyImage (Z : Set ℂ) : Set ℂ :=
-  cayleyToFugacity '' Z
-
-theorem cayleyImage_subset_unitCircle_iff
-    (Z : Set ℂ) :
-    cayleyImage Z ⊆ {z | OnLeeYangCircle z} ↔
-      Z ⊆ {s | OnCriticalLine s} := by
-  constructor
-  · intro h s hs
-    exact (criticalLine_iff_cayley_unitCircle s).2
-      (h ⟨s, hs, rfl⟩)
-  · intro h z hz
-    rcases hz with ⟨s, hs, rfl⟩
-    exact (criticalLine_iff_cayley_unitCircle s).1 (h hs)
-
-theorem cayleyImage_subset_unitCircleSet_iff
-    (Z : Set ℂ) :
-    cayleyImage Z ⊆ unitCircleSet ↔
-      Z ⊆ criticalLineSet := by
-  simpa [unitCircleSet, criticalLineSet] using
-    (cayleyImage_subset_unitCircle_iff Z)
-
 /-- The Lee--Yang unit circle condition is equivalent to the critical line after Cayley. -/
 @[simp]
 theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine
@@ -259,11 +134,66 @@ theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine
     OnLeeYangCircle (cayleyToFugacity s) ↔ OnCriticalLine s := by
   simpa using (criticalLine_iff_cayley_unitCircle s).symm
 
+theorem subset_cayley_unitCircle_iff_subset_criticalLine (S : Set ℂ) :
+    (∀ s ∈ S, OnLeeYangCircle (cayleyToFugacity s)) ↔
+      S ⊆ {s | OnCriticalLine s} := by
+  constructor
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).2 (h s hs)
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).1 (h hs)
+
+theorem cayleyImage_subset_unitCircle_iff (S : Set ℂ) :
+    cayleyImage S ⊆ {z | OnLeeYangCircle z} ↔
+      S ⊆ {s | OnCriticalLine s} := by
+  constructor
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).2 (h ⟨s, hs, rfl⟩)
+  · intro h z hz
+    rcases hz with ⟨s, hs, rfl⟩
+    exact (criticalLine_iff_cayley_unitCircle s).1 (h hs)
+
+theorem cayleyImage_subset_unitCircleSet_iff (S : Set ℂ) :
+    cayleyImage S ⊆ unitCircleSet ↔
+      S ⊆ {s | OnCriticalLine s} := by
+  simpa [unitCircleSet] using cayleyImage_subset_unitCircle_iff S
+
+/-- The finite Cayley chart never attains its projective endpoint. -/
+theorem cayleyToFugacity_ne_neg_one (s : ℂ) :
+    cayleyToFugacity s ≠ -1 := by
+  by_cases hs : 1 - s = 0
+  · simp [cayleyToFugacity, hs]
+  · intro h
+    have heq : s = (-1 : ℂ) * (1 - s) :=
+      (div_eq_iff hs).mp h
+    have hzero : (1 : ℂ) = 0 := by linear_combination heq
+    exact one_ne_zero hzero
+
+/-- The finite critical line parametrizes the punctured circle, not the
+whole compact circle. The excluded point is the image of projective infinity. -/
+theorem cayleyImage_criticalLine :
+    cayleyImage {s | OnCriticalLine s} =
+      {z | OnLeeYangCircle z ∧ z ≠ -1} := by
+  ext z
+  constructor
+  · rintro ⟨s, hs, rfl⟩
+    exact ⟨(criticalLine_iff_cayley_unitCircle s).mp hs,
+      cayleyToFugacity_ne_neg_one s⟩
+  · rintro ⟨hz, hne⟩
+    have hden : 1 + z ≠ 0 := by
+      intro h
+      apply hne
+      linear_combination h
+    have hinv := cayleyToFugacity_cayleyToTemperature z hden
+    refine ⟨cayleyToTemperature z, ?_, hinv⟩
+    apply (criticalLine_iff_cayley_unitCircle _).mpr
+    rwa [hinv]
+
 /--
 The inverse Cayley transform maps the Lee--Yang unit circle back to the
 critical line.
 
-The property `z.re ≠ -1` excludes the point `z = -1`, where
+The hypothesis `z.re ≠ -1` excludes the point `z = -1`, where
 `s = z / (1 + z)` is singular. On the unit circle this is the same excluded
 endpoint of the Cayley chart.
 -/
@@ -318,29 +248,24 @@ theorem cayleyToFugacity_one_sub_eq_inv
   field_simp [hs, h1s]
   ring
 
-/-! The inverse Cayley chart carries fugacity inversion back to reflection. -/
-theorem cayleyToTemperature_inv_eq_one_sub
-    {z : ℂ} (hz : z ≠ 0) (hz' : 1 + z ≠ 0) :
-    cayleyToTemperature z⁻¹ = 1 - cayleyToTemperature z := by
-  unfold cayleyToTemperature
-  field_simp [hz, hz']
-  have hden : z + 1 ≠ 0 := by simpa [add_comm] using hz'
-  rw [show 1 + z = z + 1 by ring, div_self hden]
-  ring
+/-! ## Lee--Yang admissibility socket -/
 
-/-! The unit-circle condition is stable under fugacity inversion. -/
-theorem onLeeYangCircle_inv
-    {z : ℂ} (hz : OnLeeYangCircle z) :
-    OnLeeYangCircle z⁻¹ := by
-  have hz0 : z ≠ 0 := by
-    intro h
-    subst z
-    norm_num [OnLeeYangCircle] at hz
-  unfold OnLeeYangCircle at hz ⊢
-  rw [Complex.normSq_inv, hz]
-  simp
+/--
+Data carrier for a possible Lee--Yang admissible determinant readout through
+the Cayley transform.
 
-/-! ## Prime-gas Lee--Yang approximation interface -/
+The Lee--Yang circle theorem is not proved here. A concrete prime/Majorana
+system must prove admissibility, the determinant identification with completed
+`xi`, and the zero-location law outside this data structure.
+-/
+@[socket_debt_tag]
+structure LeeYangCayleyRiemannWitness
+    (PartitionFunction CompletedXiReadout ZeroReadout : Type*) where
+  partitionFunction : PartitionFunction
+  completedXiReadout : CompletedXiReadout
+  zeroReadout : ZeroReadout
+
+/-! ## Prime-gas Lee--Yang approximation socket -/
 
 /--
 Finite-volume Lee--Yang approximation scheme for the completed
@@ -367,4 +292,11 @@ structure LeeYangPrimeApproximation
   /-- The completed `xi` readout in Cayley fugacity coordinates. -/
   completedXiCayley : CompletedXiReadout
 
-end CayleyCriticalLineCircleBridge
+namespace LeeYangPrimeApproximation
+
+variable {CompletedXiReadout : Type*}
+variable (A : LeeYangPrimeApproximation CompletedXiReadout)
+
+end LeeYangPrimeApproximation
+
+end InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

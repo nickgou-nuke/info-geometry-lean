@@ -21,9 +21,5 @@ theorem natural_embed_ratio (n : ℕ) (p : ℝ) (hp : p ≠ 0) :
   dsimp
   rw [mul_div_cancel_right₀ (n : ℝ) hp]
 
-theorem grand_natural_embedding_synthesis (n : ℕ) (p : ℝ) (hp : p ≠ 0) :
-    (naturalEmbed n p).1 / (naturalEmbed n p).2 = (n : ℝ) :=
-  natural_embed_ratio n p hp
-
 end
 end InfoGeometry.Projective.NaturalEmbedding

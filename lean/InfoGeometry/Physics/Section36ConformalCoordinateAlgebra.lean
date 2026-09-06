@@ -122,11 +122,10 @@ theorem repaired_section36_conformal_coordinate_packet
       t ^ 2 * properTimeSqResidual r ∧
     entropyQuadraticDefect r = -timeDilationQuadraticDefect r ∧
     (hamiltonianAsymmetry H1 H2 = 0 ↔ H1 = H2) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact spatialNormSq_conformalSpatial_unit t r n hunit
-  · exact time_minus_space_residual_unit t r n hunit
-  · exact entropyQuadraticDefect_eq_neg_timeDilationQuadraticDefect r
-  · exact hamiltonianAsymmetry_zero_iff H1 H2
+  exact ⟨spatialNormSq_conformalSpatial_unit t r n hunit,
+    time_minus_space_residual_unit t r n hunit,
+    entropyQuadraticDefect_eq_neg_timeDilationQuadraticDefect r,
+    hamiltonianAsymmetry_zero_iff H1 H2⟩
 
 end InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
 

@@ -31,11 +31,3 @@ theorem sff_ramp (τ : ℝ) (h_nonneg : 0 ≤ τ) (h_lt : τ < 1) :
   have h_abs : |τ| = τ := abs_of_nonneg h_nonneg
   rw [h_abs]
   simp [h_lt]
-
-theorem grand_spectral_form_factor_synthesis (τ : ℝ) (h_nonneg : 0 ≤ τ) (h_lt : τ < 1) :
-    (spectralFormFactor 0 = 0) ∧
-    (spectralFormFactor (-τ) = spectralFormFactor τ) ∧
-    (spectralFormFactor τ = τ) :=
-  ⟨sff_at_zero,
-   sff_even τ,
-   sff_ramp τ h_nonneg h_lt⟩

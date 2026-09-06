@@ -83,13 +83,38 @@ theorem localCl11Switch_centralInversion
   have hp' :
       P.tiltSwitch.S P.word.length * localCl11Positive P *
           P.tiltSwitch.S P.word.length = -localCl11Positive P := by
-    simpa [BinaryWordTiltReadout.bitOperator] using
-      switch_conj_localCl11Positive P
+    unfold localCl11Positive
+    have h := eq_neg_of_add_eq_zero_left P.bitOperator_anticomm
+    calc
+      P.bitOperator true * P.bitOperator false * P.bitOperator true =
+          P.bitOperator true * (P.bitOperator false * P.bitOperator true) := by
+            noncomm_ring
+      _ = P.bitOperator true * (-(P.bitOperator true * P.bitOperator false)) := by
+            congr 1
+      _ = -P.bitOperator false := by
+            calc
+              P.bitOperator true * (-(P.bitOperator true * P.bitOperator false)) =
+                  -((P.bitOperator true * P.bitOperator true) * P.bitOperator false) := by
+                    noncomm_ring
+              _ = -P.bitOperator false := by
+                    rw [P.bitOperator_true_sq]
+                    simp
   have hn' :
       P.tiltSwitch.S P.word.length * localCl11Negative P *
           P.tiltSwitch.S P.word.length = -localCl11Negative P := by
-    simpa [BinaryWordTiltReadout.bitOperator] using
-      switch_conj_localCl11Negative P
+    unfold localCl11Negative
+    have h := eq_neg_of_add_eq_zero_right P.bitOperator_anticomm
+    calc
+      P.bitOperator true * (P.bitOperator false * P.bitOperator true) *
+          P.bitOperator true =
+          (P.bitOperator true * P.bitOperator false) *
+            (P.bitOperator true * P.bitOperator true) := by
+              noncomm_ring
+      _ = -(P.bitOperator false * P.bitOperator true) := by
+            rw [h]
+            simp only [mul_neg, neg_mul, neg_neg]
+            rw [P.bitOperator_true_sq]
+            simp
   rw [hp, hn, hp', hn']
   simp
 

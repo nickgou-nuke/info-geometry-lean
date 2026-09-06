@@ -32,7 +32,6 @@ open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Canonical.ThermodynamicGenerator
 open InfoGeometry.Canonical.RelativeModularPotential
 open InfoGeometry.Krein
-open InfoGeometry.Quantum
 
 section Core
 
@@ -189,37 +188,6 @@ theorem fisher_readout_eq_channelKreinMetric
     channelKreinMetricAtState (E := E) v X Y :=
   by
     rw [fisherBilinAt_apply, channelKreinMetricAtState_apply]
-
-/--
-Canonical constructor from a Quantum Geometric Tensor `Q : QGT E` and a relative modular potential datum `P`.
-Sets standard unmixed Bogoliubov mixing (`θ = 0`), observable `H`, and chemical potential `μ`.
--/
-@[rep_depth krein]
-noncomputable def ofQGTAndPotential
-    (Q : QGT E)
-    (P : PotentialDatum (E := E))
-    (observable : EndH)
-    (chemicalPotential : ℝ) :
-    OperatorSuperKaehlerMassieuPacket (E := E) where
-  hestenes := SuperHestenesKaehlerDatum.ofQGT Q
-  potential := P
-  mixing := InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle 0
-  observable := observable
-  chemicalPotential := chemicalPotential
-
-/--
-Canonical vacuum constructor from explicit Hestenes datum and potential datum with zero observable and zero chemical potential.
--/
-@[rep_depth krein]
-noncomputable def ofCanonical
-    (S : SuperHestenesKaehlerDatum (E := E))
-    (P : PotentialDatum (E := E)) :
-    OperatorSuperKaehlerMassieuPacket (E := E) where
-  hestenes := S
-  potential := P
-  mixing := InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle 0
-  observable := 0
-  chemicalPotential := 0
 
 end Core
 

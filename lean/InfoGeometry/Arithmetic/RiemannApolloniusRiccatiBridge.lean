@@ -59,6 +59,77 @@ theorem centered_reflection (s : ℂ) :
 def apolloniusRatio (s : ℂ) : ℂ :=
   s / (s - 1)
 
+/-! The coefficient of the logarithmic dipole one-form
+`d log (s / (s - 1))`, on the punctured affine chart. -/
+def dipoleFormCoefficient (s : ℂ) : ℂ :=
+  1 / (s - 1) - 1 / s
+
+theorem dipoleFormCoefficient_eq_rational (s : ℂ)
+    (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    dipoleFormCoefficient s = 1 / (s * (s - 1)) := by
+  unfold dipoleFormCoefficient
+  field_simp [hs0, sub_ne_zero.mpr hs1]
+  ring
+
+theorem dipoleFormCoefficient_residue_numerators :
+    (1 - 1 : ℂ) = 0 ∧ ((1 : ℂ) - 0) = 1 := by
+  norm_num
+
+/- The dipole coefficient is even under the affine reflection `s ↦ 1 - s`.
+
+This is the algebraic replacement for an orientation statement: it is a
+pointwise identity on the punctured affine chart, and does not assert a
+contour integral or a global cohomology theorem.
+-/
+theorem dipoleFormCoefficient_reflection (s : ℂ)
+    (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    dipoleFormCoefficient (1 - s) = dipoleFormCoefficient s := by
+  unfold dipoleFormCoefficient
+  have hs : 1 - s ≠ 0 := sub_ne_zero.mpr (Ne.symm hs1)
+  have hsm1 : (1 - s) - 1 ≠ 0 := by
+    intro h
+    apply hs0
+    have h' : -s = 0 := by
+      calc
+        -s = (1 - s) - 1 := by ring
+        _ = 0 := h
+    exact neg_eq_zero.mp h'
+  field_simp [hs, hsm1, hs0, sub_ne_zero.mpr hs1]
+  ring
+
+/- The reflected pullback of the one-form has the opposite orientation.
+
+Here the factor `-1` is the derivative of `s ↦ 1 - s`; this is a
+pointwise pullback identity and does not require a global contour model.
+-/
+theorem dipoleFormCoefficient_reflected_pullback (s : ℂ)
+    (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    - dipoleFormCoefficient (1 - s) = - dipoleFormCoefficient s := by
+  rw [dipoleFormCoefficient_reflection s hs0 hs1]
+
+theorem dipoleFormCoefficient_reflected_pullback_eq
+    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    (-1 : ℂ) * dipoleFormCoefficient (1 - s) =
+      (-1 : ℂ) * dipoleFormCoefficient s := by
+  rw [dipoleFormCoefficient_reflection s hs0 hs1]
+
+/- Algebraic local-residue readouts for the two punctures. -/
+theorem dipoleFormCoefficient_mul_sub_one (s : ℂ) (hs1 : s ≠ 1) :
+    (s - 1) * dipoleFormCoefficient s = 1 - (s - 1) / s := by
+  unfold dipoleFormCoefficient
+  field_simp [sub_ne_zero.mpr hs1]
+
+theorem dipoleFormCoefficient_mul_at_zero (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    s * dipoleFormCoefficient s = s / (s - 1) - 1 := by
+  unfold dipoleFormCoefficient
+  field_simp [hs0, sub_ne_zero.mpr hs1]
+
+theorem dipoleFormCoefficient_residue_at_zero :
+    ∀ s : ℂ, s ≠ 0 → s ≠ 1 →
+      s * dipoleFormCoefficient s = s / (s - 1) - 1 := by
+  intro s hs0 hs1
+  exact dipoleFormCoefficient_mul_at_zero s hs0 hs1
+
 /-- Rational inverse of the Apollonius coordinate. -/
 def invApolloniusRatio (w : ℂ) : ℂ :=
   w / (w - 1)

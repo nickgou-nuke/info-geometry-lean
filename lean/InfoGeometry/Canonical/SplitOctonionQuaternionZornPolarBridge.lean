@@ -7,6 +7,7 @@ namespace InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
 
 open SplitOctonion
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev H := Quaternion ℝ
 abbrev Vec3 := Fin 3 → ℝ
@@ -112,9 +113,9 @@ theorem quaternionNorm_coordinates (q : H) :
   ring
 
 theorem splitOctonionCanonicalZornEquiv_norm (X : SplitOctonion) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (splitOctonionCanonicalZornEquiv X) = normSQ X := by
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
       (cartesianZornLinearEquiv
         (quaternionCoordinatesEquiv X.a, quaternionCoordinatesEquiv X.b)) = normSQ X
   rw [detZ_cartesianZornLinearEquiv]
@@ -124,7 +125,7 @@ theorem splitOctonionCanonicalZornEquiv_norm (X : SplitOctonion) :
 
 theorem isHyperbolic_iff_canonicalZorn_det_pos (X : SplitOctonion) :
     isHyperbolic X ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (splitOctonionCanonicalZornEquiv X) > 0 := by
   unfold isHyperbolic
   rw [splitOctonionCanonicalZornEquiv_norm]
@@ -132,7 +133,7 @@ theorem isHyperbolic_iff_canonicalZorn_det_pos (X : SplitOctonion) :
 theorem polarRho_eq_canonicalZorn_det_sqrt
     (X : SplitOctonion) (h : isHyperbolic X) :
     polarRho X h = Real.sqrt
-      (InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      (InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (splitOctonionCanonicalZornEquiv X)) := by
   unfold polarRho
   rw [splitOctonionCanonicalZornEquiv_norm]

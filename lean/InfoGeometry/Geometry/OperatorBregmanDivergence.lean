@@ -149,58 +149,6 @@ theorem operatorBregmanSym_self
     operatorBregmanSym ω gradPhi U U = 0 := by
   simp [operatorBregmanSym]
 
-@[simp]
-theorem operatorBregmanSkew_self
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (ω : OperatorEnd E →L[ℝ] ℝ)
-    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
-    (U : RegularConePoint c) :
-    operatorBregmanSkew ω gradPhi U U = 0 := by
-  simp [operatorBregmanSkew]
-
-theorem operatorBregmanSym_swap
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (ω : OperatorEnd E →L[ℝ] ℝ)
-    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
-    (U V : RegularConePoint c) :
-    operatorBregmanSym ω gradPhi V U =
-      operatorBregmanSym ω gradPhi U V := by
-  dsimp [operatorBregmanSym]
-  ring
-
-theorem operatorBregmanSkew_eq_zero_iff
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (ω : OperatorEnd E →L[ℝ] ℝ)
-    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
-    (U V : RegularConePoint c) :
-    operatorBregmanSkew ω gradPhi U V = 0 ↔
-      operatorBregmanDivergence ω gradPhi U V =
-        operatorBregmanDivergence ω gradPhi V U := by
-  dsimp [operatorBregmanSkew]
-  constructor <;> intro h <;> linarith
-
-theorem operatorBregmanSym_add_operatorBregmanSkew
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (ω : OperatorEnd E →L[ℝ] ℝ)
-    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
-    (U V : RegularConePoint c) :
-    operatorBregmanSym ω gradPhi U V +
-        operatorBregmanSkew ω gradPhi U V =
-      2 * operatorBregmanDivergence ω gradPhi U V := by
-  dsimp [operatorBregmanSym, operatorBregmanSkew]
-  ring
-
-theorem operatorBregmanSym_sub_operatorBregmanSkew
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (ω : OperatorEnd E →L[ℝ] ℝ)
-    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
-    (U V : RegularConePoint c) :
-    operatorBregmanSym ω gradPhi U V -
-        operatorBregmanSkew ω gradPhi U V =
-      2 * operatorBregmanDivergence ω gradPhi V U := by
-  dsimp [operatorBregmanSym, operatorBregmanSkew]
-  ring
-
 /-! ## 3. Convexity datum for the regular cone -/
 
 /--
@@ -271,34 +219,6 @@ theorem sym_nonneg
   have hVU := C.nonneg V U
   linarith
 
-theorem sym_eq_zero_iff_eq
-    (C : OperatorBregmanConvexityDatum c ω gradPhi)
-    (U V : RegularConePoint c) :
-    operatorBregmanSym ω gradPhi U V = 0 ↔ U.op = V.op := by
-  constructor
-  · intro h
-    have hUV : operatorBregmanDivergence ω gradPhi U V = 0 := by
-      have hnonneg := C.nonneg U V
-      have hother := C.nonneg V U
-      dsimp [operatorBregmanSym] at h
-      linarith
-    exact (C.eq_zero_iff U V).mp hUV
-  · intro h
-    simp [operatorBregmanSym, operatorBregmanDivergence, h]
-
-theorem sym_pos_iff_ne
-    (C : OperatorBregmanConvexityDatum c ω gradPhi)
-    (U V : RegularConePoint c) :
-    0 < operatorBregmanSym ω gradPhi U V ↔ U.op ≠ V.op := by
-  constructor
-  · intro hpos hEq
-    have hzero := C.sym_eq_zero_iff_eq U V
-    linarith [hzero.mpr hEq]
-  · intro hne
-    apply lt_of_le_of_ne (C.sym_nonneg U V)
-    intro hzero
-    exact hne ((C.sym_eq_zero_iff_eq U V).mp hzero.symm)
-
 end OperatorBregmanConvexityDatum
 
 /-! ## 4. Cone-preserving modular flows -/
@@ -332,8 +252,9 @@ variable (F : ModularRegularConeFlow c)
 def mapPoint
     (t : ℝ)
     (U : RegularConePoint c) :
-    RegularConePoint c :=
-  ⟨F.flow t U.op, F.preserves_cone t U.op U.mem⟩
+    RegularConePoint c where
+  op := F.flow t U.op
+  mem := F.preserves_cone t U.op U.mem
 
 @[simp]
 theorem mapPoint_zero
@@ -388,20 +309,17 @@ theorem modularBregmanEnergy_nonneg
     0 ≤ modularBregmanEnergy ω gradPhi F U t :=
   C.nonneg U (F.mapPoint t U)
 
-/-! ## 6. Canonical second variation -/
+/-! ## 6. Second-variation socket -/
 
-/-- The totalized second derivative at zero of a real path. -/
-noncomputable def SecondVariationAtZero (f : ℝ → ℝ) : ℝ :=
-  fderiv ℝ (fun t => fderiv ℝ f t) 0 1 1
+/--
+A second-variation extractor at `t = 0`.
 
-namespace SecondVariationAtZero
-
-def eval (f : ℝ → ℝ) : ℝ := SecondVariationAtZero f
-
-@[simp] theorem eval_eq (f : ℝ → ℝ) :
-    eval f = SecondVariationAtZero f := rfl
-
-end SecondVariationAtZero
+Concrete calculus modules may instantiate this by a second derivative at zero
+or by a quadratic-form/Hessian construction.
+-/
+structure SecondVariationAtZero where
+  /-- Second variation of a real path at zero. -/
+  eval : (ℝ → ℝ) → ℝ
 
 /-! ## 7. Bregman realization of Ricci flux -/
 
@@ -419,6 +337,7 @@ structure BregmanRicciFluxBridge
     (ω : OperatorEnd E →L[ℝ] ℝ)
     (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
     (F : ModularRegularConeFlow c)
+    (D2 : SecondVariationAtZero)
     (J L Obs : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
@@ -433,8 +352,7 @@ structure BregmanRicciFluxBridge
   flux_eq_bregman_secondVariation :
     ∀ (x y : J),
       R.flux x y =
-        SecondVariationAtZero
-          (modularBregmanEnergy ω gradPhi F (conePointOf x y))
+        D2.eval (modularBregmanEnergy ω gradPhi F (conePointOf x y))
 
 namespace BregmanRicciFluxBridge
 
@@ -443,13 +361,14 @@ variable
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
     {J L Obs : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
-    (B : BregmanRicciFluxBridge c ω gradPhi F J L Obs T R)
+    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R)
 
 /-- The Bregman energy path realizing the Ricci flux for `(x,y)`. -/
 def energyPath
@@ -459,9 +378,39 @@ def energyPath
 /-- Re-export the Ricci/Bregman bridge law. -/
 theorem ricciFlux_eq_secondVariation
     (x y : J) :
-    R.flux x y = SecondVariationAtZero (B.energyPath x y) :=
+    R.flux x y = D2.eval (B.energyPath x y) :=
   B.flux_eq_bregman_secondVariation x y
 
 end BregmanRicciFluxBridge
+
+/-! ## 8. Owner targets -/
+
+/-- Owner target for constructing a convex Bregman geometry on the regular cone. -/
+def OperatorBregmanConvexityOwnerTarget
+    (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E))
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ) : Prop :=
+  (∀ U V : RegularConePoint c,
+    0 ≤ operatorBregmanDivergence ω gradPhi U V) ∧
+  (∀ U V : RegularConePoint c,
+    operatorBregmanDivergence ω gradPhi U V = 0 ↔ U.op = V.op)
+
+/-- Owner target for a modular Bregman/Ricci bridge. -/
+def BregmanRicciFluxBridgeOwnerTarget
+    (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E))
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (F : ModularRegularConeFlow c)
+    (D2 : SecondVariationAtZero)
+    (J L Obs : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    (T : TKKLieClosure J L)
+    (R : RicciFluxReadout J L Obs T) : Prop :=
+  ∃ conePointOf : J → J → RegularConePoint c,
+    ∀ (x y : J),
+      R.flux x y =
+        D2.eval (modularBregmanEnergy ω gradPhi F (conePointOf x y))
 
 end InfoGeometry.Geometry.OperatorBregmanDivergence

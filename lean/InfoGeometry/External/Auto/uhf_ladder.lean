@@ -6,7 +6,7 @@ open Matrix
 # UHF/CAR Ladder Seed
 
 This file keeps the ladder finite and checkable: the Clifford seed is the
-real Pauli model of `Cl(1,1)`, and the UHF levels are property by their
+real Pauli model of `Cl(1,1)`, and the UHF levels are certified by their
 matrix sizes `2^n`.
 -/
 
@@ -74,23 +74,13 @@ theorem detSign_clI : detSign clI = DetSign.positive := by
   simp [detSign, det_clI]
 
 /-- Finite-level dimension theorem data for the UHF tower. -/
-abbrev MatrixTowerLevel := ℕ
-
-namespace MatrixTowerLevel
-
-abbrev n (L : MatrixTowerLevel) : ℕ := L
-
-/-- The matrix level dimension determined by its level index. -/
-abbrev dim (L : MatrixTowerLevel) : ℕ := 2 ^ L
-
-/-- The level dimension is its canonical power-of-two dimension. -/
-theorem dim_eq (L : MatrixTowerLevel) : L.dim = 2 ^ L.n := by
-  rfl
-
-end MatrixTowerLevel
+structure MatrixTowerLevel where
+  n : ℕ
+  dim : ℕ
+  dim_eq : dim = 2 ^ n
 
 def towerLevel (n : ℕ) : MatrixTowerLevel :=
-  n
+  ⟨n, 2 ^ n, rfl⟩
 
 theorem towerLevel_succ_dim (n : ℕ) :
     (towerLevel (n + 1)).dim = (towerLevel n).dim * 2 := by
@@ -132,17 +122,8 @@ structure ThermodynamicLadder where
   level : ℕ → MatrixTowerLevel
   level_dim : ∀ n, (level n).dim = 2 ^ n
   doubles : ∀ n, (level (n + 1)).dim = (level n).dim * 2
-
-namespace ThermodynamicLadder
-
-/-- The ladder has the fixed ternary braid-mode readout. -/
-abbrev braidModes (_ : ThermodynamicLadder) : ℕ := 3
-
-/-- The braid-mode readout is definitionally three. -/
-theorem braidModes_eq (T : ThermodynamicLadder) : T.braidModes = 3 := by
-  rfl
-
-end ThermodynamicLadder
+  braidModes : ℕ
+  braidModes_eq : braidModes = 3
 
 def thermodynamicLadder : ThermodynamicLadder where
   seed := cl11Seed
@@ -151,3 +132,5 @@ def thermodynamicLadder : ThermodynamicLadder where
     intro n
     rfl
   doubles := towerLevel_succ_dim
+  braidModes := 3
+  braidModes_eq := rfl

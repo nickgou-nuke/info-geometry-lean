@@ -1,4 +1,4 @@
-import proofs.HestenesHermitianMatrixBridge
+import InfoGeometry.Canonical.HestenesHermitianMatrixBridge
 import Mathlib.Algebra.QuaternionBasis
 
 noncomputable section

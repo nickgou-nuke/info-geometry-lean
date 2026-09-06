@@ -26,8 +26,8 @@ This module serves as the grand capstone unifying:
    The positive orthant as a smooth $C^\infty$ manifold modelled on `EuclideanSpace ℝ α`.
 2. **The Continuous Exact 1-Form & Fréchet Derivative** (`InfoGeometry.Continuous.DeRhamBridge`):
    $\operatorname{fderiv} \Phi(x) = \frac{1}{x_i} \mathbf{e}_i^*$.
-3. **The Continuous Stokes / FTC Path Integral** (`InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge`):
-   $\int_a^b \omega = \Phi(\gamma(b)) - \Phi(\gamma(a))$, and closed loop vanishing $\oint_\gamma \omega = 0$.
+3. **The Continuous FTC Path Integral** (`InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge`):
+   $\int_a^b \omega = \Phi(\gamma(b)) - \Phi(\gamma(a))$, with vanishing on a closed coordinate path.
 4. **The Discrete Groupoid Potential & Exact Differential** (`InfoGeometry.Canonical.DeRhamThermodynamicPotential`):
    $V(q_1, q_2) = d_0 \Phi(q_1, q_2) = \Phi(q_2) - \Phi(q_1)$.
 5. **The Redline Grand Duality**:
@@ -56,8 +56,8 @@ variable {α : Type*} [Fintype α]
   This theorem packages:
   1. The smooth manifold structure on the positive orthant.
   2. The exact 1-form property of the continuous modular gradient.
-  3. The Fundamental Theorem of Calculus (Stokes) along smooth trajectories.
-  4. The First Law of Thermodynamics (zero loop circulation ∮ ω = 0).
+  3. The Fundamental Theorem of Calculus along paths satisfying the stated derivative and integrability hypotheses.
+  4. Zero circulation for the exact coordinate one-form on a closed path.
   5. The discrete 1-cocycle groupoid identity on positive rays.
   6. The canonical Boltzmann exponential map Δ = e⁻ⱽ.
 -/

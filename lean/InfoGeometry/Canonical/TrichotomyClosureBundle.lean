@@ -23,16 +23,6 @@ theorem trichotomy_closed_under_sector_split
   · exact cone_projector_preserves_boundary hP
   · exact cone_projector_preserves_null hP
 
-/-- Summary wrapper for the trichotomy/sector bundle. -/
-theorem TrichotomySummaryTheorems
-    (T : KANTriple V) {S : CausalSplit V} {P : Module.End ℝ V}
-    (hP : IsConeCompatibleProjector S P) :
-    IsElliptic T.K ∧ IsHyperbolic T.A ∧ IsParabolic T.N ∧
-    (∀ x, x ∈ S.bulk → P x ∈ S.bulk) ∧
-    (∀ x, x ∈ S.boundary → P x ∈ S.boundary) ∧
-    (∀ x, x ∈ S.nullCone → P x ∈ S.nullCone) :=
-  trichotomy_closed_under_sector_split T hP
-
 /-- Parabolic (`N²=0`) boundary channel is exact and remains in the boundary sector. -/
 theorem nilpotent_boundary_channel_exact
     (S : CausalSplit V) (N : Module.End ℝ V)

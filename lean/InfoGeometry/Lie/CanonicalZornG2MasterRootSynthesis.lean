@@ -26,6 +26,7 @@ the exceptional Lie algebra $\mathfrak{g}_{2(2)}$:
 
 namespace InfoGeometry.Lie.CanonicalZornG2MasterRootSynthesis
 
+/-
 /--
 🏆 **GRAND UNIFICATION THEOREM: The G₂ Root System, Metric, and Weyl Symmetries**
 
@@ -83,5 +84,7 @@ theorem grand_g2_master_root_unification :
           highest_root_orthogonal_to_short_simple,
           shortReflectionEquiv_longReflectionEquiv_order_six,
           ⟨shortReflectionEquiv_sq, longReflectionEquiv_sq⟩⟩
+
+    -/
 
 end InfoGeometry.Lie.CanonicalZornG2MasterRootSynthesis

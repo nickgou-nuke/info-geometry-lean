@@ -1,0 +1,203 @@
+/-
+InfoGeometry/OperatorAlgebra/IndividuatedCasimir.lean
+
+The individuation of the Casimir.
+
+This file kills the first Casimir shadow.
+
+Instead of assuming
+
+  is_central : Prop
+  is_invariant : Prop
+
+we construct a quadratic Clifford-type Casimir
+
+  C = sum_i gamma_i gamma_i
+
+from a finite Clifford frame satisfying
+
+  gamma_i gamma_i = q_i • 1.
+
+Then we prove constructively:
+
+  C = (sum_i q_i) • 1,
+  C is central,
+  C is invariant under every invertible conjugation.
+
+This is the algebraic core needed before moving to trace/Pfaffian/Freudenthal
+or Cl(4,4)-specific realizations.
+-/
+
+import Mathlib.Tactic
+
+noncomputable section
+
+open scoped BigOperators
+
+namespace InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+
+/-! ## 1. Invertible conjugation -/
+
+/-!
+`InvertibleTransport` is the repository-facing name for Mathlib's native unit
+carrier.  The alias preserves the existing API while making the inverse laws
+and coercions come from `Units` rather than from a duplicate wrapper.
+-/
+abbrev InvertibleTransport (Op : Type*) [Monoid Op] := Opˣ
+
+namespace InvertibleTransport
+
+variable {Op : Type*} [Monoid Op]
+
+/--
+Conjugation by an invertible transport:
+
+`T ↦ U T U⁻¹`.
+-/
+def conjugate
+    (U : InvertibleTransport Op)
+    (T : Op) : Op :=
+  U.val * T * U.inv
+
+end InvertibleTransport
+
+/-! ## 2. Verified Casimir -/
+
+namespace VerifiedCasimir
+
+variable {Op : Type*} [Monoid Op]
+
+/--
+A verified Casimir is fixed by every invertible conjugation.
+-/
+theorem central_fixed_by_conjugation
+    (C : Op)
+    (central : ∀ X : Op, C * X = X * C)
+    (U : InvertibleTransport Op) :
+    U.conjugate C = C := by
+  dsimp [InvertibleTransport.conjugate]
+  calc
+    U.val * C * U.inv
+        = C * U.val * U.inv := by
+            rw [← central U.val]
+    _ = C * (U.val * U.inv) := by
+            rw [mul_assoc]
+    _ = C * 1 := by
+            rw [U.val_inv]
+    _ = C := by
+            simp
+
+end VerifiedCasimir
+
+/-! ## 3. Scalar Casimirs are constructively central -/
+
+/--
+Scalar Casimirs are invariant under invertible conjugation.
+-/
+theorem scalarVerifiedCasimir_fixed_by_conjugation
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (a : ℝ)
+    (U : InvertibleTransport Op) :
+    U.conjugate (algebraMap ℝ Op a) =
+      algebraMap ℝ Op a :=
+  VerifiedCasimir.central_fixed_by_conjugation (algebraMap ℝ Op a)
+    (fun X => Algebra.commutes a X) U
+
+/-! ## 4. Finite Clifford frame -/
+
+/--
+A finite Clifford-type frame.
+
+The key constructive law is
+
+`gamma_i gamma_i = q_i • 1`.
+
+The anticommutation law is included because it is part of the Clifford frame,
+but the first quadratic Casimir centrality theorem only needs the square laws.
+-/
+structure CliffordFrame
+    (ι Op : Type*) [Fintype ι] [DecidableEq ι]
+    [Ring Op] [Algebra ℝ Op] where
+
+  /-- Clifford generators. -/
+  gamma : ι → Op
+
+  /-- Signature coefficient of each generator. -/
+  signature : ι → ℝ
+
+  /-- Squaring law: `gamma_i^2 = q_i · 1`. -/
+  gamma_sq :
+    ∀ i : ι,
+      gamma i * gamma i = algebraMap ℝ Op (signature i)
+
+  /-- Anticommutation for distinct generators. -/
+  anticomm :
+    ∀ i j : ι,
+      i ≠ j →
+        gamma i * gamma j + gamma j * gamma i = 0
+
+namespace CliffordFrame
+
+variable
+    {ι Op : Type*}
+    [Fintype ι] [DecidableEq ι]
+    [Ring Op] [Algebra ℝ Op]
+
+variable (F : CliffordFrame ι Op)
+
+/--
+Quadratic Clifford Casimir:
+
+`C = sum_i gamma_i gamma_i`.
+-/
+def quadraticCasimir : Op :=
+  ∑ i : ι, F.gamma i * F.gamma i
+
+/--
+Scalar value of the quadratic Casimir:
+
+`sum_i q_i`.
+-/
+def quadraticScalar : ℝ :=
+  ∑ i : ι, F.signature i
+
+/--
+The quadratic Clifford Casimir is exactly scalar.
+-/
+theorem quadraticCasimir_eq_scalar :
+    F.quadraticCasimir =
+      algebraMap ℝ Op F.quadraticScalar := by
+  dsimp [quadraticCasimir, quadraticScalar]
+  calc
+    (∑ i : ι, F.gamma i * F.gamma i)
+        = ∑ i : ι, algebraMap ℝ Op (F.signature i) := by
+            apply Finset.sum_congr rfl
+            intro i _hi
+            exact F.gamma_sq i
+    _ = algebraMap ℝ Op (∑ i : ι, F.signature i) := by
+            simp only [
+              (map_sum (algebraMap ℝ Op)
+                (fun i : ι => F.signature i)
+                Finset.univ).symm]
+
+/--
+The quadratic Clifford Casimir is constructively central.
+-/
+theorem quadraticCasimir_central
+    (X : Op) :
+    F.quadraticCasimir * X = X * F.quadraticCasimir := by
+  rw [F.quadraticCasimir_eq_scalar]
+  exact Algebra.commutes F.quadraticScalar X
+
+/--
+The quadratic Clifford Casimir is invariant under every invertible conjugation.
+-/
+theorem quadraticCasimir_fixed_by_conjugation
+    (U : InvertibleTransport Op) :
+    U.conjugate F.quadraticCasimir = F.quadraticCasimir :=
+  VerifiedCasimir.central_fixed_by_conjugation F.quadraticCasimir
+    F.quadraticCasimir_central U
+
+end CliffordFrame
+
+end InfoGeometry.OperatorAlgebra.IndividuatedCasimir

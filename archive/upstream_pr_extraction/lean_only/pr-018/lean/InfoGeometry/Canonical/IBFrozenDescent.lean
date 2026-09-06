@@ -1,0 +1,769 @@
+import InfoGeometry.Canonical.IBUpdate
+
+/-!
+# InfoGeometry.Canonical.IBFrozenDescent
+
+Frozen free-energy, Lyapunov, and descent analysis for the finite Information
+Bottleneck dynamics.
+-/
+
+open scoped BigOperators ENNReal NNReal
+
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+
+namespace InfoGeometry.Canonical.IB
+
+variable {X Y T : Type} [Fintype X] [Fintype Y] [Fintype T]
+variable [MeasurableSpace X] [MeasurableSingletonClass X]
+variable [MeasurableSpace Y] [MeasurableSingletonClass Y]
+variable [MeasurableSpace T] [MeasurableSingletonClass T]
+
+/--
+KL Lyapunov functional with a frozen BA target:
+`p ↦ ∑ₓ KL(p(·|x) || BA[p_anchor](·|x))`.
+-/
+noncomputable def baFrozenTargetGap
+    (prob : IBProblem (X := X) (Y := Y))
+    (pAnchor p : X → FinProb T) : ℝ :=
+  ∑ x : X, (InfoGeometry.fin_kl_div (p x) ((ibBlahutArimotoStep prob pAnchor) x)).toReal
+
+/--
+Frozen-target KL Lyapunov functional with explicit target `(qT, mY_givenT)`.
+-/
+noncomputable def baFrozenTargetGapWith
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T) : ℝ :=
+  ∑ x : X, (InfoGeometry.fin_kl_div (p x) ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x)).toReal
+
+theorem baFrozenTargetGap_eq_baFrozenTargetGapWith_induced
+    (prob : IBProblem (X := X) (Y := Y))
+    (pAnchor p : X → FinProb T) :
+    baFrozenTargetGap prob pAnchor p
+      = baFrozenTargetGapWith prob
+          (inducedMarginalT prob pAnchor)
+          (inducedMProjection prob pAnchor)
+          p := by
+  unfold baFrozenTargetGap baFrozenTargetGapWith
+  refine Finset.sum_congr rfl ?_
+  intro x hx
+  simp [ibBlahutArimotoStep_eq_frozen_induced]
+
+/-! ### Fully Internal Frozen Free-Energy Descent (Jaynes Slice) -/
+
+/--
+Frozen free-energy functional in Jaynes form (fixed `qT`, fixed `mY_givenT`):
+`∑ₓ p(x) [ KL(p(t|x)||qT) + β E_{t~p(t|x)} KL(p(y|x)||m(y|t)) ]`.
+-/
+noncomputable def ibFrozenFreeEnergy
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T) : ℝ :=
+  let pX := marginal_x prob
+  ∑ x : X, (pX x).toReal *
+    ((InfoGeometry.fin_kl_div (p x) qT).toReal
+      + prob.beta * ∑ t : T, (p x t).toReal *
+          (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+
+/--
+Frozen log-partition offset:
+`∑ₓ p(x) log Z_x`.
+-/
+noncomputable def frozenLogPartitionOffset
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y) : ℝ :=
+  let pX := marginal_x prob
+  ∑ x : X, (pX x).toReal * logPartitionFrozen prob qT mY_givenT x
+
+section FrozenInternalDescent
+
+variable [DecidableEq T]
+
+/--
+Jaynes-slice frozen Gibbs update (definitionally the Gibbs posterior
+from `frozenSliceJaynes` at each `x`).
+-/
+noncomputable def ibBlahutArimotoStepFrozenGibbs
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal) :
+    X → FinProb T := by
+  classical
+  intro x
+  let J := frozenSliceJaynes (X := X) (Y := Y) (T := T) prob qT mY_givenT x
+  let lam : Unit → ℝ := fun _ => 1
+  let hZ : J.partition lam ≠ 0 :=
+    frozenSliceJaynes_partition_one_ne_zero
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT x hq
+  exact J.gibbsDist lam hZ
+
+/--
+The frozen BA step is exactly the Jaynes-slice Gibbs posterior step.
+-/
+theorem ibBlahutArimotoStepFrozen_eq_frozenGibbs
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal) :
+    ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT
+      =
+    ibBlahutArimotoStepFrozenGibbs (X := X) (Y := Y) (T := T) prob qT mY_givenT hq := by
+  funext x
+  ext t
+  let J := frozenSliceJaynes (X := X) (Y := Y) (T := T) prob qT mY_givenT x
+  let lam : Unit → ℝ := fun _ => 1
+  let hZ : J.partition lam ≠ 0 :=
+    frozenSliceJaynes_partition_one_ne_zero
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT x hq
+  have hpart : J.partition lam = ((∑' t', baScoreFrozen prob qT mY_givenT x t').toReal) := by
+    simpa [J, lam] using
+      (frozenSlice_partition_eq_baScoreFrozen_tsum_toReal
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT x)
+  have hleft_toReal :
+      ((ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT x) t).toReal
+        =
+      (qT t).toReal *
+        Real.exp
+          (-prob.beta *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+        / J.partition lam := by
+    calc
+      ((ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT x) t).toReal
+          = ((baScoreFrozen prob qT mY_givenT x t).toReal) /
+              ((∑' t', baScoreFrozen prob qT mY_givenT x t').toReal) := by
+                simp [ibBlahutArimotoStepFrozen, PMF.normalize_apply, div_eq_mul_inv]
+      _ =
+        (qT t).toReal *
+          Real.exp
+            (-prob.beta *
+              (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+          / J.partition lam := by
+            rw [← hpart]
+            unfold baScoreFrozen
+            rw [ENNReal.toReal_mul]
+            rw [ENNReal.toReal_ofReal (le_of_lt (Real.exp_pos _))]
+  have hright_toReal :
+      ((ibBlahutArimotoStepFrozenGibbs (X := X) (Y := Y) (T := T) prob qT mY_givenT hq x) t).toReal
+        =
+      (qT t).toReal *
+        Real.exp
+          (-prob.beta *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+        / J.partition lam := by
+    simp [ibBlahutArimotoStepFrozenGibbs, J, lam, frozenSliceJaynes,
+      InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.ofLogLikelihood,
+      InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.gibbsDist_pointwise,
+      InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.gibbsProb,
+      InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.gibbsWeight,
+      InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.energy]
+  have hleft_ne_top :
+      ((ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT x) t) ≠ ⊤ := by
+    exact ne_of_lt (lt_of_le_of_lt (PMF.coe_le_one _ t) ENNReal.one_lt_top)
+  have hright_ne_top :
+      ((ibBlahutArimotoStepFrozenGibbs (X := X) (Y := Y) (T := T) prob qT mY_givenT hq x) t) ≠ ⊤ := by
+    exact ne_of_lt (lt_of_le_of_lt (PMF.coe_le_one _ t) ENNReal.one_lt_top)
+  exact (ENNReal.toReal_eq_toReal_iff' hleft_ne_top hright_ne_top).1
+    (hleft_toReal.trans hright_toReal.symm)
+
+/--
+Weighted frozen KL gap to the Jaynes-slice Gibbs update.
+-/
+noncomputable def baFrozenTargetGapWithGibbs
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) : ℝ :=
+  let pX := marginal_x prob
+  ∑ x : X, (pX x).toReal *
+    (InfoGeometry.fin_kl_div (p x)
+      ((ibBlahutArimotoStepFrozenGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal
+
+/--
+Decomposition of frozen free energy into weighted Gibbs KL gap minus the
+weighted log-partition offset, derived slice-wise from `local_free_energy_identity`.
+-/
+theorem ibFrozenFreeEnergy_eq_gap_minus_logPartition
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    ibFrozenFreeEnergy prob qT mY_givenT p
+      =
+    baFrozenTargetGapWithGibbs
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p
+      - frozenLogPartitionOffset prob qT mY_givenT := by
+  classical
+  let pX := marginal_x prob
+  have hslice :
+      ∀ x : X,
+        (InfoGeometry.fin_kl_div (p x) qT).toReal +
+            prob.beta * ∑ t : T, (p x t).toReal *
+              (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal
+          =
+        (InfoGeometry.fin_kl_div (p x)
+          ((ibBlahutArimotoStepFrozenGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal
+          - logPartitionFrozen prob qT mY_givenT x := by
+    intro x
+    let J := frozenSliceJaynes (X := X) (Y := Y) (T := T) prob qT mY_givenT x
+    let lam : Unit → ℝ := fun _ => 1
+    let hZ : J.partition lam ≠ 0 :=
+      frozenSliceJaynes_partition_one_ne_zero
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT x hq
+    have hloc :
+        (InfoGeometry.fin_kl_div (p x) qT).toReal +
+            prob.beta * ∑ t : T, (p x t).toReal *
+              (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal
+          =
+        (InfoGeometry.fin_kl_div (p x) (J.gibbsDist lam hZ)).toReal
+          - J.logPartition lam := by
+      simpa [J, lam, hZ] using
+        (local_free_energy_identity
+          (X := X) (Y := Y) (T := T)
+          prob qT mY_givenT x (p x) hq)
+    have hlog : J.logPartition lam = logPartitionFrozen prob qT mY_givenT x := by
+      simpa [J, lam] using
+        (frozenSlice_logPartition_eq_logPartitionFrozen
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT x)
+    calc
+      (InfoGeometry.fin_kl_div (p x) qT).toReal +
+          prob.beta * ∑ t : T, (p x t).toReal *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal
+        =
+      (InfoGeometry.fin_kl_div (p x) (J.gibbsDist lam hZ)).toReal
+        - J.logPartition lam := hloc
+      _ =
+      (InfoGeometry.fin_kl_div (p x)
+        ((ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal
+        - logPartitionFrozen prob qT mY_givenT x := by
+          rw [hlog]
+          rfl
+  unfold ibFrozenFreeEnergy baFrozenTargetGapWithGibbs frozenLogPartitionOffset
+  dsimp [pX]
+  calc
+    ∑ x : X, (pX x).toReal *
+        ((InfoGeometry.fin_kl_div (p x) qT).toReal +
+          prob.beta * ∑ t : T, (p x t).toReal *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+      =
+    ∑ x : X, (pX x).toReal *
+      ((InfoGeometry.fin_kl_div (p x)
+        ((ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal
+        - logPartitionFrozen prob qT mY_givenT x) := by
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          exact congrArg (fun z => (pX x).toReal * z) (hslice x)
+    _ =
+    ∑ x : X,
+      ((pX x).toReal *
+        (InfoGeometry.fin_kl_div (p x)
+          ((ibBlahutArimotoStepFrozenGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal
+        -
+        (pX x).toReal * logPartitionFrozen prob qT mY_givenT x) := by
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          ring
+    _ =
+      (∑ x : X, (pX x).toReal *
+        (InfoGeometry.fin_kl_div (p x)
+          ((ibBlahutArimotoStepFrozenGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)).toReal)
+      -
+      (∑ x : X, (pX x).toReal * logPartitionFrozen prob qT mY_givenT x) := by
+          rw [Finset.sum_sub_distrib]
+
+/--
+Derived decomposition hypothesis for the Gibbs-slice frozen step.
+-/
+lemma ibFrozenFreeEnergy_hStepDecomp
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal) :
+    let C := -frozenLogPartitionOffset prob qT mY_givenT
+    ibFrozenFreeEnergy prob qT mY_givenT
+      (ibBlahutArimotoStepFrozenGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq)
+      = C + baFrozenTargetGapWithGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+          (ibBlahutArimotoStepFrozenGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) := by
+  intro C
+  unfold C
+  have h :=
+    ibFrozenFreeEnergy_eq_gap_minus_logPartition
+      (X := X) (Y := Y) (T := T)
+      prob qT mY_givenT hq
+      (ibBlahutArimotoStepFrozenGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq)
+  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+
+/--
+Derived decomposition hypothesis for an arbitrary encoder policy `p`.
+-/
+lemma ibFrozenFreeEnergy_hPDecomp
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    let C := -frozenLogPartitionOffset prob qT mY_givenT
+    ibFrozenFreeEnergy prob qT mY_givenT p
+      = C + baFrozenTargetGapWithGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p := by
+  intro C
+  unfold C
+  have h :=
+    ibFrozenFreeEnergy_eq_gap_minus_logPartition
+      (X := X) (Y := Y) (T := T)
+      prob qT mY_givenT hq p
+  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+
+/-- Nonnegativity of the weighted frozen Gibbs KL gap. -/
+lemma baFrozenTargetGapWithGibbs_nonneg
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    0 ≤ baFrozenTargetGapWithGibbs
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p := by
+  unfold baFrozenTargetGapWithGibbs
+  refine Finset.sum_nonneg ?_
+  intro x hx
+  exact mul_nonneg (ENNReal.toReal_nonneg) ENNReal.toReal_nonneg
+
+/--
+The weighted frozen Gibbs KL gap vanishes at the Gibbs-slice frozen step.
+-/
+theorem baFrozenTargetGapWithGibbs_step_eq_zero
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal) :
+    baFrozenTargetGapWithGibbs
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+      (ibBlahutArimotoStepFrozenGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) = 0 := by
+  unfold baFrozenTargetGapWithGibbs
+  refine Finset.sum_eq_zero ?_
+  intro x hx
+  have hkl :
+      InfoGeometry.fin_kl_div
+        ((ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)
+        ((ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x) = 0 := by
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    simpa using
+      (InformationTheory.klDiv_self
+        (μ := (((ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x).toMeasure)))
+  simp [hkl]
+
+/--
+Fully internal frozen descent:
+`ibFrozenFreeEnergy` decreases along the Gibbs-slice frozen step.
+-/
+theorem ibFrozenFreeEnergy_frozen_descent_internal
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    ibFrozenFreeEnergy prob qT mY_givenT
+      (ibBlahutArimotoStepFrozenGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq)
+    ≤
+    ibFrozenFreeEnergy prob qT mY_givenT p := by
+  let C := -frozenLogPartitionOffset prob qT mY_givenT
+  have hStepDecomp :
+      ibFrozenFreeEnergy prob qT mY_givenT
+        (ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq)
+        = C + baFrozenTargetGapWithGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+            (ibBlahutArimotoStepFrozenGibbs
+              (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) := by
+    simpa [C] using
+      (ibFrozenFreeEnergy_hStepDecomp
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq)
+  have hPDecomp :
+      ibFrozenFreeEnergy prob qT mY_givenT p
+        = C + baFrozenTargetGapWithGibbs
+            (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p := by
+    simpa [C] using
+      (ibFrozenFreeEnergy_hPDecomp
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p)
+  rw [hStepDecomp, hPDecomp]
+  have hzero :
+      baFrozenTargetGapWithGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+        (ibBlahutArimotoStepFrozenGibbs
+          (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) = 0 :=
+    baFrozenTargetGapWithGibbs_step_eq_zero
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+  rw [hzero, add_zero]
+  have hnonneg :
+      0 ≤ baFrozenTargetGapWithGibbs
+        (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p :=
+    baFrozenTargetGapWithGibbs_nonneg
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p
+  simpa [add_comm, add_left_comm, add_assoc] using add_le_add_left hnonneg C
+
+/--
+Internal frozen descent rewritten on the canonical frozen BA step symbol.
+-/
+theorem ibFrozenFreeEnergy_frozen_descent
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    ibFrozenFreeEnergy prob qT mY_givenT
+      (ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT)
+    ≤
+    ibFrozenFreeEnergy prob qT mY_givenT p := by
+  have hEq :
+      ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT
+        =
+      ibBlahutArimotoStepFrozenGibbs (X := X) (Y := Y) (T := T) prob qT mY_givenT hq :=
+    ibBlahutArimotoStepFrozen_eq_frozenGibbs
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq
+  simpa [hEq] using
+    (ibFrozenFreeEnergy_frozen_descent_internal
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p)
+
+end FrozenInternalDescent
+
+/--
+Canonical frozen variational functional in Jaynes form.
+
+This is the frozen-target objective whose decomposition is derived internally
+from `local_free_energy_identity`.
+-/
+noncomputable def ibVariationalFunctionalFrozen
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T) : ℝ :=
+  ibFrozenFreeEnergy prob qT mY_givenT p
+
+/--
+Fully internal frozen descent theorem in canonical variational form.
+
+No external decomposition hypotheses are required: the decomposition is derived
+from the local free-energy identity via the frozen Jaynes layer.
+-/
+theorem ibVariationalFunctional_frozen_descent
+    [DecidableEq T]
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (p : X → FinProb T) :
+    ibVariationalFunctionalFrozen prob qT mY_givenT
+      (ibBlahutArimotoStepFrozen (X := X) (Y := Y) (T := T) prob qT mY_givenT)
+    ≤ ibVariationalFunctionalFrozen prob qT mY_givenT p := by
+  simpa [ibVariationalFunctionalFrozen] using
+    (ibFrozenFreeEnergy_frozen_descent
+      (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p)
+
+/--
+The 'loose' IB variational functional (thermodynamic upper bound):
+$F_{loose}(p, m, q) = \sum_x p(x) [ KL(p(t|x) || q(t)) + \beta \sum_t p(t|x) KL(p(y|x) || m(y|t)) ]$.
+
+This functional admits an exact slice-wise Jaynes/Gibbs decomposition.
+-/
+noncomputable def ibVariationalFunctionalLoose
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T) : ℝ :=
+  ibFrozenFreeEnergy prob qT mY_givenT p
+
+/--
+Theorem: Loose functional identity.
+The loose variational functional is exactly the sum of local free energies.
+-/
+theorem ibVariationalFunctionalLoose_eq_sum_local
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T) :
+    ibVariationalFunctionalLoose prob p mY_givenT qT =
+    let pX := marginal_x prob
+    ∑ x : X, (pX x).toReal *
+      ((InfoGeometry.fin_kl_div (p x) qT).toReal
+        + prob.beta * ∑ t : T, (p x t).toReal *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal) := rfl
+
+/--
+The 'strict' variational functional is bounded above by the 'loose' functional.
+This is a direct consequence of the convexity of the KL divergence (Jensen's inequality).
+-/
+theorem ibVariationalFunctional_le_loose
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T)
+    (hMI :
+      mutualInformation (jointXT (prob := prob) p)
+        = ∑ x : X, ((marginal_x (prob := prob) x).toReal *
+            (InfoGeometry.fin_kl_div (p x) qT).toReal))
+    (hJensen :
+      ∀ x : X,
+        (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal
+          ≤
+        ∑ t : T, (p x t).toReal *
+          (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal) :
+    ibVariationalFunctional prob p mY_givenT ≤
+    ibVariationalFunctionalLoose prob p mY_givenT qT := by
+  let pX := marginal_x (prob := prob)
+  unfold ibVariationalFunctional ibVariationalFunctionalLoose ibFrozenFreeEnergy
+  let A : ℝ :=
+    ∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal
+  let B : ℝ :=
+    ∑ x : X,
+      (pX x).toReal *
+        (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal
+  let C : ℝ :=
+    ∑ x : X,
+      (pX x).toReal *
+        (∑ t : T, (p x t).toReal *
+          (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+  have hLeft :
+      (have pX := marginal_x (prob := prob)
+       have pXT := jointXT (prob := prob) p
+       mutualInformation pXT +
+         prob.beta *
+           ∑ x : X,
+             (pX x).toReal *
+               (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal)
+        =
+      A + prob.beta * B := by
+    simp [A, B, pX, hMI]
+  rw [hLeft]
+  have hWeighted :
+      B ≤ C := by
+    unfold B C
+    refine Finset.sum_le_sum ?_
+    intro x _hx
+    exact mul_le_mul_of_nonneg_left (hJensen x) ((pX x).toReal_nonneg)
+  have hβnn : 0 ≤ prob.beta := le_of_lt prob.beta_pos
+  have hBetaWeighted :
+      prob.beta * B ≤ prob.beta * C := by
+    exact mul_le_mul_of_nonneg_left hWeighted hβnn
+  have hMain :
+      A + prob.beta * B ≤ A + prob.beta * C := by
+    simpa [add_comm, add_left_comm, add_assoc] using add_le_add_left hBetaWeighted A
+  have hRight :
+      (have pX := marginal_x (prob := prob)
+       ∑ x : X,
+         (pX x).toReal *
+           ((InfoGeometry.fin_kl_div (p x) qT).toReal
+             + prob.beta * ∑ t : T, (p x t).toReal *
+                 (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+        =
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+    simp [pX]
+  have hRhs :
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+        = A + prob.beta * C := by
+    calc
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+          =
+        ∑ x : X,
+          ((pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal
+            +
+            (pX x).toReal *
+              (prob.beta * ∑ t : T, (p x t).toReal *
+                (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              refine Finset.sum_congr rfl ?_
+              intro x hx
+              ring
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        (∑ x : X,
+            (pX x).toReal *
+              (prob.beta * ∑ t : T, (p x t).toReal *
+                (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              rw [Finset.sum_add_distrib]
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        (∑ x : X,
+            prob.beta *
+              ((pX x).toReal *
+                (∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))) := by
+              refine congrArg (fun z => (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal) + z) ?_
+              refine Finset.sum_congr rfl ?_
+              intro x hx
+              ring
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        prob.beta *
+          (∑ x : X,
+              (pX x).toReal *
+                (∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              rw [Finset.mul_sum]
+      _ = A + prob.beta * C := by simp [A, C]
+  rw [hRight]
+  exact (by simpa [A, B, C] using hMain.trans_eq hRhs.symm)
+
+/-- Nonnegativity of the explicit frozen-target KL Lyapunov functional. -/
+lemma baFrozenTargetGapWith_nonneg
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T) :
+    0 ≤ baFrozenTargetGapWith prob qT mY_givenT p := by
+  unfold baFrozenTargetGapWith
+  refine Finset.sum_nonneg ?_
+  intro x hx
+  exact ENNReal.toReal_nonneg
+
+/--
+Frozen-target gap with explicit target vanishes at the frozen BA update.
+-/
+theorem baFrozenTargetGapWith_step_eq_zero
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y) :
+    baFrozenTargetGapWith prob qT mY_givenT
+      (ibBlahutArimotoStepFrozen prob qT mY_givenT) = 0 := by
+  unfold baFrozenTargetGapWith
+  refine Finset.sum_eq_zero ?_
+  intro x hx
+  have hkl :
+      InfoGeometry.fin_kl_div
+        ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x)
+        ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x) = 0 := by
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    simpa using
+      (InformationTheory.klDiv_self
+        (μ := (((ibBlahutArimotoStepFrozen prob qT mY_givenT) x).toMeasure)))
+  simpa [hkl]
+
+/--
+Constructive one-step frozen-target descent for the explicit KL Lyapunov gap.
+-/
+theorem ibBlahutArimotoStepFrozen_descent_frozenTargetGap
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T) :
+    baFrozenTargetGapWith prob qT mY_givenT
+      (ibBlahutArimotoStepFrozen prob qT mY_givenT)
+      ≤ baFrozenTargetGapWith prob qT mY_givenT p := by
+  have hzero :
+      baFrozenTargetGapWith prob qT mY_givenT
+        (ibBlahutArimotoStepFrozen prob qT mY_givenT) = 0 :=
+    baFrozenTargetGapWith_step_eq_zero (prob := prob) (qT := qT) (mY_givenT := mY_givenT)
+  rw [hzero]
+  exact baFrozenTargetGapWith_nonneg (prob := prob) (qT := qT) (mY_givenT := mY_givenT) (p := p)
+
+/--
+Bridge theorem: frozen variational descent follows from a decomposition of the
+variational functional into a constant offset plus the fully internal frozen free energy.
+
+This bridges the external gap decomposition to the internal canonical descent.
+-/
+theorem ibVariationalFunctional_frozen_descent_of_gap_decomposition
+    [DecidableEq T]
+    (prob : IBProblem (X := X) (Y := Y))
+    (qT : FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (p : X → FinProb T)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
+    (C : ℝ)
+    (hStepDecomp :
+      ibVariationalFunctional prob
+        (ibBlahutArimotoStepFrozen prob qT mY_givenT) mY_givenT
+        = C + ibVariationalFunctionalFrozen prob qT mY_givenT
+            (ibBlahutArimotoStepFrozen prob qT mY_givenT))
+    (hPDecomp :
+      ibVariationalFunctional prob p mY_givenT
+        = C + ibVariationalFunctionalFrozen prob qT mY_givenT p) :
+    ibVariationalFunctional prob
+      (ibBlahutArimotoStepFrozen prob qT mY_givenT) mY_givenT
+    ≤ ibVariationalFunctional prob p mY_givenT := by
+  rw [hStepDecomp, hPDecomp]
+  have h_descent := ibVariationalFunctional_frozen_descent prob qT mY_givenT hq p
+  linarith
+
+/-- Nonnegativity of the frozen-target KL Lyapunov functional. -/
+lemma baFrozenTargetGap_nonneg
+    (prob : IBProblem (X := X) (Y := Y))
+    (pAnchor p : X → FinProb T) :
+    0 ≤ baFrozenTargetGap prob pAnchor p := by
+  unfold baFrozenTargetGap
+  refine Finset.sum_nonneg ?_
+  intro x hx
+  exact ENNReal.toReal_nonneg
+
+/--
+Frozen-target gap vanishes when evaluated at the BA updated policy.
+-/
+theorem baFrozenTargetGap_step_eq_zero
+    (prob : IBProblem (X := X) (Y := Y))
+    (pOld : X → FinProb T) :
+    baFrozenTargetGap prob pOld (ibBlahutArimotoStep prob pOld) = 0 := by
+  unfold baFrozenTargetGap
+  refine Finset.sum_eq_zero ?_
+  intro x hx
+  have hkl :
+      InfoGeometry.fin_kl_div
+        ((ibBlahutArimotoStep prob pOld) x)
+        ((ibBlahutArimotoStep prob pOld) x) = 0 := by
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    simpa using
+      (InformationTheory.klDiv_self
+        (μ := (((ibBlahutArimotoStep prob pOld) x).toMeasure)))
+  simpa [hkl]
+
+/--
+Constructive one-step BA descent (frozen-target form):
+after one BA update, the frozen-target KL gap is minimized to `0`, hence
+it is no larger than its pre-update value.
+-/
+theorem ibBlahutArimotoStep_descent_frozenTarget
+    (prob : IBProblem (X := X) (Y := Y))
+    (pOld : X → FinProb T) :
+    baFrozenTargetGap prob pOld (ibBlahutArimotoStep prob pOld)
+      ≤ baFrozenTargetGap prob pOld pOld := by
+  have hzero :
+      baFrozenTargetGap prob pOld (ibBlahutArimotoStep prob pOld) = 0 :=
+    baFrozenTargetGap_step_eq_zero (prob := prob) (pOld := pOld)
+  rw [hzero]
+  exact baFrozenTargetGap_nonneg (prob := prob) (pAnchor := pOld) (p := pOld)
+
+end InfoGeometry.Canonical.IB

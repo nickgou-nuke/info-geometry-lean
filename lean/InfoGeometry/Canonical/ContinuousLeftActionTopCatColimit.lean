@@ -45,7 +45,7 @@ def translationNaturalTransformation (a : M) :
 noncomputable def translationColimit (a : M) :
     colimit (constantTopDiagram (J := J) (X := X)) ⟶
       colimit (constantTopDiagram (J := J) (X := X)) :=
-  topologicalDirectMapBetween (translationNaturalTransformation A a)
+  colim.map (translationNaturalTransformation A a)
 
 @[reassoc]
 theorem translationColimit_stage (a : M) (j : J) :
@@ -53,8 +53,7 @@ theorem translationColimit_stage (a : M) (j : J) :
         translationColimit A a =
       translation A a ≫
         colimit.ι (constantTopDiagram (J := J) (X := X)) j := by
-  exact topologicalDirectMapBetween_injection
-    (translationNaturalTransformation A a) j
+  exact colimit.ι_map (translationNaturalTransformation A a) j
 
 theorem translationColimit_apply_stage (a : M) (j : J) (x : X) :
     translationColimit A a

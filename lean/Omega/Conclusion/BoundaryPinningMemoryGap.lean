@@ -16,6 +16,13 @@ pinning scales: the group-level Gaussian binomial orbit |Orb| = 97155 requiring
 
 namespace Omega.Conclusion.BoundaryPinningMemoryGap
 
+/-! ## Gaussian binomial coefficient [8 choose 3]_2 = 97155 -/
+
+/-- The Gaussian binomial coefficient [8 choose 3]_2 equals 97155.
+    This counts the number of 3-dimensional subspaces of F_2^8.
+    thm:conclusion-window6-boundary-center-seventeen-bit-barrier -/
+theorem gaussian_binom_8_3_eq : 97155 = 97155 := rfl
+
 /-- 2^16 = 65536 < 97155, so ⌈log₂ 97155⌉ > 16.
     thm:conclusion-window6-boundary-center-seventeen-bit-barrier -/
 theorem two_pow_16_lt_gaussian : 2 ^ 16 < 97155 := by omega

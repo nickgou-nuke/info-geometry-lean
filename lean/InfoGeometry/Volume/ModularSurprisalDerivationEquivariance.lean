@@ -45,39 +45,11 @@ theorem modular_flow_fixes_generator (K : AlgebraEnd H) (t : ℝ) :
 theorem modular_derivation_of_generator_zero (K : AlgebraEnd H) :
     ⁅K, K⁆ = 0 := by simp
 
-/-- The modular flow commutes with its own derivation.
-
-This is the core equivariance theorem: the transported commutator equals
-the commutator with the transported generator.
+/-!
+The former commutator-equivariance packet depended on an absent algebra
+automorphism owner.  The verified generator-fixed and derivative laws remain
+owned by `ModularSurprisalKillingReadback`; no stronger transport theorem is
+asserted here without that carrier.
 -/
-theorem modular_derivation_equivariant
-    (K A : AlgebraEnd H) (t : ℝ) :
-    modularHamiltonianAction K ⁅K, A⁆ t =
-      ⁅K, modularHamiltonianAction K A t⁆ := by
-  exact modular_surprisal_flow_commutes_with_derivation K A t
-
-/-- Additive parameter version: the equivariance is symmetric in the
-flow parameters when applied to the modular derivation. -/
-theorem modular_derivation_equivariant_add
-    (K A : AlgebraEnd H) (s t : ℝ) :
-    modularHamiltonianAction K (modularHamiltonianAction K ⁅K, A⁆ s) t =
-      modularHamiltonianAction K (modularHamiltonianAction K ⁅K, A⁆ t) s := by
-  calc
-    modularHamiltonianAction K (modularHamiltonianAction K ⁅K, A⁆ s) t =
-        modularHamiltonianAction K ⁅K, A⁆ (t + s) :=
-      (modularHamiltonianAction_add K ⁅K, A⁆ t s).symm
-    _ = modularHamiltonianAction K ⁅K, A⁆ (s + t) := by rw [add_comm]
-    _ = modularHamiltonianAction K (modularHamiltonianAction K ⁅K, A⁆ t) s :=
-      modularHamiltonianAction_add K ⁅K, A⁆ s t
-
-theorem modular_flow_fixes_generator_pow
-    (K : AlgebraEnd H) (n : ℕ) (t : ℝ) :
-    modularHamiltonianAction K (K ^ n) t = K ^ n := by
-  rw [modularHamiltonianAction_pow, modular_flow_fixes_generator]
-
-theorem modular_flow_fixes_generator_smul
-    (K : AlgebraEnd H) (r t : ℝ) :
-    modularHamiltonianAction K (r • K) t = r • K := by
-  rw [modularHamiltonianAction_smul, modular_flow_fixes_generator]
 
 end InfoGeometry.Volume.ModularSurprisalDerivationEquivariance

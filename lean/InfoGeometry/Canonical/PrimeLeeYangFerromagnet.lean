@@ -1,29 +1,24 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-import Mathlib.Data.Real.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
 Finite ferromagnetic prime-chain anchor.
 
-This file owns the small, theorem-safe surface for the off-diagonal part of the
-rank-one interaction matrix, with the Ising diagonal deleted:
+This file owns the small, theorem-safe surface for the rank-one interaction
+matrix
 
-`Jᵢⱼ = (λ / 2) log(pᵢ) log(pⱼ)` for `i ≠ j`, and `Jᵢᵢ = 0`.
+`Jᵢⱼ = (λ / 2) log(pᵢ) log(pⱼ)`
 
-It proves:
-1. Canonical constructor `ofPrimes` deriving `log(pᵢ) > 0` directly from `Nat.Prime (p i)`.
-2. The finite ferromagnetic condition ($J_{ij} \ge 0$, symmetry $J_{ij} = J_{ji}$, $J_{ii} = 0$).
-3. Particle-hole oddness $A(-\sigma) = -A(\sigma)$.
-4. Exact quadratic decomposition theorem for Ising spins ($\sigma_i^2 = 1$):
-   $$H(\sigma; w) = -\frac{1}{2}\sum_{i,j} J_{ij}\sigma_i\sigma_j + \frac{w}{2}\sum_i \ell_i\sigma_i - \frac{\lambda}{4}\sum_i \ell_i^2$$
+with the Ising diagonal deleted by convention.  It proves the finite
+ferromagnetic condition from supplied positivity of the prime logarithms.
 
-The richer centered-chain development lives in `PrimeLeeYangFerromagneticChain`.
+The richer centered-chain development lives in
+`PrimeLeeYangFerromagneticChain`.  This file gives the compact interface used
+by the Lee--Yang/RH bridge layer.  It does not assert Lee--Yang stability,
+analytic convergence to completed `xi`, or RH.
 -/
 
 noncomputable section
@@ -34,8 +29,15 @@ namespace InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
 open PrimeLeeYangFerromagneticChain
 
+/-! An Ising configuration has squared spin equal to one at every site. -/
+def IsIsingSpin {N : ℕ} (σ : Fin N → ℝ) : Prop :=
+  ∀ i, σ i ^ 2 = 1
+
 /--
 Finite prime-chain data.
+
+The logarithm positivity is stored explicitly so this anchor remains
+independent of scalar-complex coercion proof obligations.
 -/
 @[rep_depth thermo]
 structure FinitePrimeChainData
@@ -46,28 +48,9 @@ structure FinitePrimeChainData
   ell_eq_log : ∀ i, ell i = Real.log ((p i : ℝ))
   ell_pos : ∀ i, 0 < ell i
 
-/-- Ising spin configuration predicate: σᵢ² = 1 for all i -/
-def IsIsingSpin {N : ℕ} (σ : Fin N → ℝ) : Prop :=
-  ∀ i, (σ i) ^ 2 = 1
-
 namespace FinitePrimeChainData
 
 variable {N : ℕ}
-
-/-- 🏆 Constructor from genuine Nat primes without requiring redundant ell_pos hypothesis -/
-def ofPrimes (p : Fin N → ℕ) (hp : ∀ i, Nat.Prime (p i)) : FinitePrimeChainData N where
-  p := p
-  prime := hp
-  ell := fun i => Real.log (p i : ℝ)
-  ell_eq_log := fun i => rfl
-  ell_pos := by
-    intro i
-    have hp_ge : 2 ≤ p i := (hp i).two_le
-    have hp_one_lt : (1 : ℝ) < (p i : ℝ) := by
-      have : (2 : ℝ) ≤ (p i : ℝ) := by exact_mod_cast hp_ge
-      linarith
-    exact Real.log_pos hp_one_lt
-
 variable (D : FinitePrimeChainData N)
 
 /--
@@ -85,19 +68,6 @@ def toPrimeFerromagneticChain
   prime_isPrime := D.prime
   kappa := lam
   kappa_nonneg := hLam
-
-@[rep_depth thermo]
-theorem toPrimeFerromagneticChain_siteEnergy_eq_ell
-    (lam : ℝ) (hLam : 0 ≤ lam) (i : Fin N) :
-    (D.toPrimeFerromagneticChain lam hLam).siteEnergy i = D.ell i := by
-  unfold PrimeFerromagneticChain.siteEnergy toPrimeFerromagneticChain
-  exact (D.ell_eq_log i).symm
-
-@[rep_depth thermo]
-theorem toPrimeFerromagneticChain_prime_eq
-    (lam : ℝ) (hLam : 0 ≤ lam) :
-    (D.toPrimeFerromagneticChain lam hLam).prime = D.p :=
-  rfl
 
 /--
 Centered logarithmic magnetization
@@ -206,77 +176,12 @@ theorem fullRankOneCoupling_cross_minor
   unfold fullRankOneCoupling
   ring
 
-/-- Matrix readout of the full rank-one coupling before diagonal deletion. -/
-@[rep_depth thermo]
-def fullRankOneCouplingMatrix
-    (lam : ℝ) : Matrix (Fin N) (Fin N) ℝ :=
-  fun i j => D.fullRankOneCoupling lam i j
-
-/-- The full rank-one coupling matrix is a scalar Gram matrix. -/
-@[rep_depth thermo]
-theorem fullRankOneCouplingMatrix_eq_smul_vecMulVec
-    (lam : ℝ) :
-    D.fullRankOneCouplingMatrix lam =
-      (lam / 2) • Matrix.vecMulVec D.ell D.ell := by
-  ext i j
-  simp [fullRankOneCouplingMatrix, fullRankOneCoupling,
-    Matrix.vecMulVec]
-  ring
-
-/-- The full rank-one readout agrees with the existing finite ferromagnetic
-chain carrier at coupling scale `lam / 2`. -/
-@[rep_depth thermo]
-theorem fullRankOneCouplingMatrix_eq_toPrimeFerromagneticChain_couplingMatrix
-    (lam : ℝ) (hLam : 0 ≤ lam) :
-    D.fullRankOneCouplingMatrix lam =
-      (D.toPrimeFerromagneticChain (lam / 2)
-        (div_nonneg hLam (by norm_num))).couplingMatrix := by
-  ext i j
-  change (lam / 2) * D.ell i * D.ell j =
-    (lam / 2) *
-      (D.toPrimeFerromagneticChain (lam / 2)
-        (div_nonneg hLam (by norm_num))).siteEnergy i *
-      (D.toPrimeFerromagneticChain (lam / 2)
-        (div_nonneg hLam (by norm_num))).siteEnergy j
-  rw [D.toPrimeFerromagneticChain_siteEnergy_eq_ell,
-    D.toPrimeFerromagneticChain_siteEnergy_eq_ell]
-
-/-- Nonnegative coupling scale gives a positive-semidefinite full rank-one
-coupling matrix. -/
-@[rep_depth thermo]
-theorem fullRankOneCouplingMatrix_posSemidef
-    {lam : ℝ} (hLam : 0 ≤ lam) :
-    Matrix.PosSemidef (D.fullRankOneCouplingMatrix lam) := by
-  rw [D.fullRankOneCouplingMatrix_eq_smul_vecMulVec]
-  exact (Matrix.posSemidef_vecMulVec_self_star D.ell).smul
-    (div_nonneg hLam (by norm_num))
-
-/-- Matrix readout of the diagonal-deleted Lee--Yang interaction. -/
-@[rep_depth thermo]
-def spinCouplingMatrix
-    (lam : ℝ) : Matrix (Fin N) (Fin N) ℝ :=
-  fun i j => D.spinCoupling lam i j
-
-/-- The Lee--Yang interaction is the full rank-one coupling with its diagonal
-removed. -/
-@[rep_depth thermo]
-theorem spinCouplingMatrix_eq_fullRankOne_sub_diagonal
-    (lam : ℝ) :
-    D.spinCouplingMatrix lam =
-      D.fullRankOneCouplingMatrix lam -
-        Matrix.diagonal (fun i => D.fullRankOneCoupling lam i i) := by
-  ext i j
-  by_cases hij : i = j
-  · subst j
-    simp [spinCouplingMatrix, spinCoupling, fullRankOneCouplingMatrix,
-      fullRankOneCoupling, Matrix.diagonal]
-  · simp [spinCouplingMatrix, spinCoupling, fullRankOneCouplingMatrix,
-      fullRankOneCoupling, Matrix.diagonal, hij]
-
 /--
 Finite Lee--Yang Hamiltonian in spin variables:
 
 `H(σ; w) = -(λ/4)(∑ᵢ ellᵢ σᵢ)^2 + (w/2)∑ᵢ ellᵢ σᵢ`.
+
+The sign convention is chosen so that the pair interaction is ferromagnetic.
 -/
 @[rep_depth thermo]
 def spinHamiltonian
@@ -285,113 +190,136 @@ def spinHamiltonian
   - (lam / 4) * (∑ i, D.ell i * σ i) ^ 2
     + (w / 2) * ∑ i, D.ell i * σ i
 
-@[rep_depth thermo]
-theorem spinHamiltonian_zeroField_neg (lam : ℝ) (σ : Fin N → ℝ) :
-    D.spinHamiltonian lam 0 (-σ) = D.spinHamiltonian lam 0 σ := by
-  unfold spinHamiltonian
-  simp only [Pi.neg_apply, mul_neg]
-  rw [Finset.sum_neg_distrib]
-  ring
-
-@[rep_depth thermo]
-theorem spinHamiltonian_field_spin_reversal
-    (lam w : ℝ) (σ : Fin N → ℝ) :
-    D.spinHamiltonian lam (-w) (-σ) = D.spinHamiltonian lam w σ := by
-  unfold spinHamiltonian
-  simp only [Pi.neg_apply, mul_neg]
-  rw [Finset.sum_neg_distrib]
-  ring
-
-/-- 🏆 THEOREM: Quadratic expansion of the collective interaction sum -/
-@[rep_depth thermo]
 theorem sum_ell_sigma_sq (σ : Fin N → ℝ) :
     (∑ i, D.ell i * σ i) ^ 2 =
-      (∑ i, (D.ell i)^2 * (σ i)^2) + (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-  have h_sq := Finset.sum_mul_sum (Finset.univ : Finset (Fin N)) (Finset.univ : Finset (Fin N))
-    (fun i => D.ell i * σ i) (fun j => D.ell j * σ j)
-  have h_prod : (∑ i, D.ell i * σ i) ^ 2 = ∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j) := by
+      (∑ i, (D.ell i)^2 * (σ i)^2) +
+        (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+  have h_sq := Finset.sum_mul_sum (Finset.univ : Finset (Fin N))
+    (Finset.univ : Finset (Fin N)) (fun i => D.ell i * σ i)
+    (fun j => D.ell j * σ j)
+  have h_prod : (∑ i, D.ell i * σ i) ^ 2 =
+      ∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j) := by
     rw [sq, h_sq]
   rw [h_prod]
   have h_split : (∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j)) =
-    (∑ i, (D.ell i * σ i)^2) + (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-      have h_inner : ∀ i, (∑ j, (D.ell i * σ i) * (D.ell j * σ j)) =
-        (D.ell i * σ i)^2 + (∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-          intro i
-          have h_diag : (D.ell i * σ i)^2 = (D.ell i * σ i) * (D.ell i * σ i) := by ring
-          have h_sum_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
-            (fun j => (D.ell i * σ i) * (D.ell j * σ j))
-          rw [h_sum_split, ← h_diag]
-          congr 1
-          have h_ite : (∑ x ∈ Finset.univ \ {i}, (D.ell i * σ i) * (D.ell x * σ x)) =
-            ∑ j ∈ Finset.univ, if i = j then 0 else D.ell i * D.ell j * σ i * σ j := by
-              have h_ite_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
-                (fun j => if i = j then 0 else D.ell i * D.ell j * σ i * σ j)
-              simp only [if_true, zero_add] at h_ite_split
-              rw [h_ite_split]
-              apply Finset.sum_congr rfl
-              intro j hj
-              have hj_ne : i ≠ j := by
-                have : j ∉ ({i} : Finset (Fin N)) := (Finset.mem_sdiff.mp hj).2
-                intro h_eq
-                subst h_eq
-                exact this (Finset.mem_singleton_self i)
-              simp [hj_ne]
-              ring
-          rw [h_ite]
-      calc (∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j))
-        _ = ∑ i, ((D.ell i * σ i)^2 + (∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j)) := by
-          apply Finset.sum_congr rfl
-          intro i _
-          exact h_inner i
-        _ = (∑ i, (D.ell i * σ i)^2) + (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-          rw [Finset.sum_add_distrib]
+      (∑ i, (D.ell i * σ i)^2) +
+        (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+    have h_inner : ∀ i, (∑ j, (D.ell i * σ i) * (D.ell j * σ j)) =
+        (D.ell i * σ i)^2 +
+          (∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+      intro i
+      have h_sum_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
+        (fun j => (D.ell i * σ i) * (D.ell j * σ j))
+      rw [h_sum_split]
+      have h_diag : (D.ell i * σ i)^2 =
+          (D.ell i * σ i) * (D.ell i * σ i) := by ring
+      rw [← h_diag]
+      congr 1
+      have h_ite : (∑ x ∈ Finset.univ \ {i},
+          (D.ell i * σ i) * (D.ell x * σ x)) =
+          ∑ j ∈ Finset.univ, if i = j then 0 else
+            D.ell i * D.ell j * σ i * σ j := by
+        have h_ite_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
+          (fun j => if i = j then 0 else D.ell i * D.ell j * σ i * σ j)
+        simp only [if_true, zero_add] at h_ite_split
+        rw [h_ite_split]
+        apply Finset.sum_congr rfl
+        intro j hj
+        have hj_ne : i ≠ j := by
+          intro h_eq
+          subst h_eq
+          exact (Finset.mem_sdiff.mp hj).2 (Finset.mem_singleton_self i)
+        simp [hj_ne]
+        ring
+      rw [h_ite]
+    calc
+      (∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j)) =
+          ∑ i, ((D.ell i * σ i)^2 +
+            (∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j)) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        exact h_inner i
+      _ = (∑ i, (D.ell i * σ i)^2) +
+          (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+        rw [Finset.sum_add_distrib]
   rw [h_split]
   congr 1
   apply Finset.sum_congr rfl
-  intro i _
+  intro i hi
   ring
 
-/-- 🏆 THEOREM: Exact Ising Hamiltonian reduction theorem -/
-@[rep_depth thermo]
-theorem spinHamiltonian_ising_decomposition (lam w : ℝ) (σ : Fin N → ℝ) (h_ising : IsIsingSpin σ) :
+theorem spinHamiltonian_ising_decomposition (lam w : ℝ) (σ : Fin N → ℝ)
+    (h_ising : IsIsingSpin σ) :
     D.spinHamiltonian lam w σ =
       - (1 / 2 : ℝ) * (∑ i, ∑ j, D.spinCoupling lam i j * σ i * σ j)
-      + (w / 2) * (∑ i, D.ell i * σ i)
-      - (lam / 4) * ∑ i, (D.ell i)^2 := by
+        + (w / 2) * (∑ i, D.ell i * σ i)
+        - (lam / 4) * ∑ i, (D.ell i)^2 := by
   dsimp [spinHamiltonian]
-  have h_exp := sum_ell_sigma_sq D σ
-  have h_diag_ising : (∑ i, (D.ell i)^2 * (σ i)^2) = ∑ i, (D.ell i)^2 := by
+  have h_exp := D.sum_ell_sigma_sq σ
+  have h_diag_ising : (∑ i, (D.ell i)^2 * (σ i)^2) =
+      ∑ i, (D.ell i)^2 := by
     apply Finset.sum_congr rfl
-    intro i _
-    have : (σ i)^2 = 1 := h_ising i
-    rw [this, mul_one]
+    intro i hi
+    rw [h_ising i, mul_one]
   rw [h_exp, h_diag_ising]
   have h_coupling_term : (∑ i, ∑ j, D.spinCoupling lam i j * σ i * σ j) =
-    (lam / 2) * (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-      have h_term : ∀ i j, D.spinCoupling lam i j * σ i * σ j =
+      (lam / 2) * (∑ i, ∑ j,
+        if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+    have h_term : ∀ i j, D.spinCoupling lam i j * σ i * σ j =
         (lam / 2) * (if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-          intro i j
-          dsimp [spinCoupling]
-          by_cases hij : i = j
-          · simp [hij]
-          · simp [hij]
-            ring
-      calc (∑ i, ∑ j, D.spinCoupling lam i j * σ i * σ j)
-        _ = ∑ i, ∑ j, (lam / 2) * (if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-          apply Finset.sum_congr rfl
-          intro i _
-          apply Finset.sum_congr rfl
-          intro j _
-          exact h_term i j
-        _ = ∑ i, (lam / 2) * ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j := by
-          apply Finset.sum_congr rfl
-          intro i _
-          rw [← Finset.mul_sum]
-        _ = (lam / 2) * (∑ i, ∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
-          rw [← Finset.mul_sum]
+      intro i j
+      dsimp [spinCoupling]
+      by_cases hij : i = j
+      · simp [hij]
+      · simp [hij]
+        ring
+    calc
+      (∑ i, ∑ j, D.spinCoupling lam i j * σ i * σ j) =
+          ∑ i, ∑ j, (lam / 2) *
+            (if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        apply Finset.sum_congr rfl
+        intro j hj
+        exact h_term i j
+      _ = ∑ i, (lam / 2) * ∑ j,
+            if i = j then 0 else D.ell i * D.ell j * σ i * σ j := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [← Finset.mul_sum]
+      _ = (lam / 2) * (∑ i, ∑ j,
+            if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
+        rw [← Finset.mul_sum]
   rw [h_coupling_term]
   ring
 
+/-! A finite sum with one zero diagonal entry is the corresponding erased sum. -/
+theorem sum_eq_sum_erase_of_eq_zero
+    {α R : Type*} [AddCommMonoid R] [DecidableEq α]
+    (s : Finset α) (a : α) (f : α → R) (ha : a ∈ s) :
+    (∑ x ∈ s, if x = a then 0 else f x) = ∑ x ∈ s.erase a, f x := by
+  have h := Finset.sum_erase_add s (fun x => if x = a then 0 else f x) ha
+  have h' : (∑ x ∈ s, if x = a then 0 else f x) =
+      ∑ x ∈ s.erase a, (if x = a then 0 else f x) := by
+    simpa using h.symm
+  rw [h']
+  apply Finset.sum_congr rfl
+  intro x hx
+  simp only [Finset.mem_erase] at hx
+  simp [hx.1]
+
+/-- The owner target follows from the explicit finite matrix elements. -/
+theorem primeLeeYangFerromagnetOwnerTarget :
+    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
+      0 ≤ lam →
+        ∀ i j : Fin N,
+          0 ≤ D.spinCoupling lam i j ∧
+            D.spinCoupling lam i j = D.spinCoupling lam j i ∧
+              D.spinCoupling lam i i = 0 := by
+  intro N D lam hLam i j
+  exact ⟨D.spinCoupling_nonneg hLam i j, D.spinCoupling_symm lam i j,
+    D.spinCoupling_self lam i⟩
+
 end FinitePrimeChainData
 
-end PrimeLeeYangFerromagnet
+end InfoGeometry.Canonical.PrimeLeeYangFerromagnet

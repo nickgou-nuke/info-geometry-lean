@@ -34,9 +34,3 @@ theorem cyclotomic_phase_unitary (r : ℚ) :
   have h_norm := Complex.norm_exp (2 * Real.pi * Complex.I * ((r : ℝ) : ℂ))
   rw [h_re, Real.exp_zero] at h_norm
   exact h_norm
-
-theorem grand_bost_connes_galois_synthesis (g : ℤ) (n : ℕ) (r : ℚ) :
-    (galoisAction g (semigroupEndo n r) = semigroupEndo n (galoisAction g r)) ∧
-    (‖cyclotomicPhase r‖ = 1) :=
-  ⟨galois_semigroup_equivariance g n r,
-   cyclotomic_phase_unitary r⟩

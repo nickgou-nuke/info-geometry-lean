@@ -75,5 +75,23 @@ theorem nonabelian_traced_curvature_square_closed
   rw [LinearMap.map_zero] at h
   exact h.symm
 
+/-- **Theorem**: Master Non-Abelian Covariant Bianchi Chern-Weil Synthesis.
+    Unifies:
+    1. Matrix commutator [A, M] = A * M - M * A definition.
+    2. Non-Abelian covariant derivative D_A M = d M + [A, M] definition.
+    3. Vanishing trace commutator theorem Tr([A, M]) = 0.
+    4. Covariant trace reduction Tr(D_A M) = d(Tr(M)).
+    5. Non-Abelian Chern-Weil closedness theorem d(Tr(F ∧ F)) = 0 from D_A(F ∧ F) = 0. -/
+theorem master_nonabelian_covariant_bianchi_synthesis
+    (h_cyclic : ∀ A M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V), matrixTraceForm (A * M) = matrixTraceForm (M * A))
+    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    (d : Module.End R (ExteriorAlgebra R V))
+    (F2 : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    (h_bianchi_cov : covariantDerivative A d F2 = 0) :
+    (matrixTraceForm (matrixCommutator A F2) = 0) ∧
+    (d (matrixTraceForm F2) = 0) := ⟨
+  trace_matrix_commutator_zero h_cyclic A F2,
+  nonabelian_traced_curvature_square_closed h_cyclic A d F2 h_bianchi_cov
+⟩
 
 end InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge

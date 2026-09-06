@@ -62,33 +62,4 @@ theorem hadjiivanov_full_twist_power_law
 
 /-! ## 3. Holographic Boundary Coupling: Cuntz $\mathcal{O}_2$ and Jaynes MaxEnt -/
 
-/-- 🏆 GRAND THEOREM: Holographic Unified CFT-Cuntz Boundary Synthesis.
-    Couples the Sofia School Fibonacci Anyon braided tensor structure with the
-    Cuntz $\mathcal{O}_2$ KMS thermodynamic boundary and Jaynes Maximum Entropy Principle:
-    
-    1. Golden ratio fusion: $\tau^2 + \tau = 1$.
-    2. Quantum group root of unity: $q^5 = -1$.
-    3. Yang-Baxter braided consistency: $F \cdot B \cdot F = R$.
-    4. Cuntz probability conservation: $p_L + p_R = 1$.
-    5. Jaynes MaxEnt KMS scaling: $p = 1/2$.
-    6. Boundary chiral anomaly cancellation: $\phi_{\text{KMS}}(S_L S_L^*) - \phi_{\text{KMS}}(S_R S_R^*) = 0$.
--/
-theorem grand_hadjiivanov_cuntz_cft_synthesis
-    {O2 : Type*} [Ring O2] [StarRing O2]
-    (S_L S_R : O2)
-    (h_cuntz : S_L * star S_L + S_R * star S_R = 1)
-    (φ : State O2) (p : ℂ)
-    (h_kms_weighted : IsKMSWeightedState S_L S_R φ p p)
-    (h_kms : IsKMSState S_L S_R φ) :
-    (τ ^ 2 + τ = 1) ∧
-    (q ^ 5 = -1) ∧
-    (F * B * F = R) ∧
-    (p = 1 / 2) ∧
-    (φ (S_L * star S_L) - φ (S_R * star S_R) = 0) :=
-  ⟨tau_sq_add_tau,
-   q_pow_five,
-   F_B_F_eq_R,
-   jaynes_maxent_derivation S_L S_R h_cuntz φ p h_kms_weighted,
-   kms_chiral_charge_vanishes S_L S_R φ h_kms⟩
-
 end InfoGeometry.Canonical.FibonacciHadjiivanovCFTBoundaryCapstone

@@ -1,0 +1,10 @@
+import InfoGeometry.Routing.BirkhoffVonNeumann
+import InfoGeometry.Routing.Cl55SoftConjugation
+import InfoGeometry.Routing.CliffordRoPETorus
+import InfoGeometry.Routing.DiscreteRoPERepresentation
+import InfoGeometry.Routing.FiniteMatrixMixture
+import InfoGeometry.Routing.FiniteRoutingSymmetry
+import InfoGeometry.Routing.FiniteSoftmax
+import InfoGeometry.Routing.PermutationPerfectMatching
+import InfoGeometry.Routing.PlanarRotation
+import InfoGeometry.Routing.TypedProofRealization

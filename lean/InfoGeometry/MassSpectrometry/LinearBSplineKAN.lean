@@ -1,12 +1,10 @@
 import Mathlib
-import InfoGeometry.Analysis.ComplexBSpline
 import InfoGeometry.MassSpectrometry.CausalCrossGramian
 
 /-!
 # Continuous linear B-spline specialization for causal KAN kernels
 
 The repository already contains an analytic complex-B-spline corridor in
-`InfoGeometry.Analysis.ComplexBSpline`.  For executable mass-spectrometry KAN
 features we additionally need a small real, compactly supported basis with
 fully elementary proofs.
 

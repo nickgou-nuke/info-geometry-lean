@@ -5,7 +5,7 @@ import Mathlib.Tactic
 # Normal-Ordered Matrix Units
 
 This file deliberately does not introduce raw CAR mode records, assumed
-current laws, or theorem placeholders.
+current laws, or theorem sockets.
 
 The owner theorem here is the canonical finite matrix-unit calculation supported
 directly by mathlib's `Matrix.single` API:
@@ -129,15 +129,6 @@ theorem normalOrdered_matrixUnit_commutator (occ : ι → ℤ) (a b c d : ι) :
 /-- Symmetric integer cutoff window `{-N, ..., N}` for later current sums. -/
 def integerWindow (N : ℕ) : Finset ℤ :=
   (Finset.range (2 * N + 1)).image fun k : ℕ => (k : ℤ) - (N : ℤ)
-
-theorem integerWindow_card (N : ℕ) :
-    (integerWindow N).card = 2 * N + 1 := by
-  unfold integerWindow
-  rw [Finset.card_image_of_injective]
-  · simp
-  · intro a b hab
-    have hcast : (a : ℤ) = b := by linarith
-    exact_mod_cast hcast
 
 end CanonicalMatrixUnits
 

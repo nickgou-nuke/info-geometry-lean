@@ -77,7 +77,7 @@ theorem vector_state_recovers_omega (a : Alg n) :
   simp
 
 /-- Cyclicity: every GNS vector is the restriction of an ambient algebra element. -/
-theorem cyclic_property (x : GNS p) :
+theorem cyclic_witness (x : GNS p) :
     ∃ a : Alg n, restrict p a = x := by
   let a : Alg n := fun i => if h : p i then x ⟨i, h⟩ else 0
   refine ⟨a, ?_⟩

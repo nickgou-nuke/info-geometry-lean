@@ -50,7 +50,7 @@ variable (Q : Spinor)
 /-- Honest finite conjunction for the quaternion effective/stationary bridge. -/
 def quantumStationaryBridge
     (D : NarainSupervolumeBridgeData n)
-    (P : CalibrationVariationData) : Prop :=
+    (P : CalibrationVariationPacket) : Prop :=
   D.negativeLogPotential = -Real.log D.supervolume ∧
   S_freeFirstVariation P = 0 ∧
   quaternion_field_residual nabla e_inv m Q gamma_action = 0
@@ -58,7 +58,7 @@ def quantumStationaryBridge
 /-- Expands the finite bridge into the explicit scalar equalities it asserts. -/
 theorem quantumStationaryBridge_iff
     (D : NarainSupervolumeBridgeData n)
-    (P : CalibrationVariationData) :
+    (P : CalibrationVariationPacket) :
     quantumStationaryBridge nabla e_inv m gamma_action Q D P ↔
       (D.negativeLogPotential = -Real.log D.supervolume) ∧
       (P.dMassieu - P.dKL - P.lambdaInc * P.dIncidenceFriction -

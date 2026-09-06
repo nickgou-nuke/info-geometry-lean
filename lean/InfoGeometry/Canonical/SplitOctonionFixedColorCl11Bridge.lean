@@ -33,31 +33,43 @@ theorem fixedColorReadout_add (i : Fin 3) (A B : Mat2) :
     fixedColorReadout i (A + B) =
       fixedColorReadout i A + fixedColorReadout i B := by
   apply ZornMatrix.ext
-  · simp [fixedColorReadout, ZornMatrix.add, Vec3.add, Vec3.smul,
-      Matrix.add_apply]
+  · rfl
   · funext j
-    fin_cases i <;> fin_cases j <;>
-      simp [fixedColorReadout, ZornMatrix.add, Vec3.add, Vec3.smul,
-        Matrix.add_apply] <;> ring
+    have hV :
+        (fixedColorReadout i A + fixedColorReadout i B).v =
+          Vec3.add (A 0 1 • Vec3.basis i) (B 0 1 • Vec3.basis i) := rfl
+    rw [hV]
+    simp only [fixedColorReadout, Matrix.add_apply, Vec3.add, Vec3.smul]
+    fin_cases j <;> simp [Vec3.smul] <;> ring
   · funext j
-    fin_cases i <;> fin_cases j <;>
-      simp [fixedColorReadout, ZornMatrix.add, Vec3.add, Vec3.smul,
-        Matrix.add_apply] <;> ring
-  · simp [fixedColorReadout, ZornMatrix.add, Vec3.add, Vec3.smul,
-      Matrix.add_apply]
+    have hW :
+        (fixedColorReadout i A + fixedColorReadout i B).w =
+          Vec3.add (A 1 0 • Vec3.basis i) (B 1 0 • Vec3.basis i) := rfl
+    rw [hW]
+    simp only [fixedColorReadout, Matrix.add_apply, Vec3.add, Vec3.smul]
+    fin_cases j <;> simp [Vec3.smul] <;> ring
+  · rfl
 
 theorem fixedColorReadout_smul (i : Fin 3) (c : ℝ) (A : Mat2) :
     fixedColorReadout i (c • A) = c • fixedColorReadout i A := by
   apply ZornMatrix.ext
   · rfl
   · funext j
-    fin_cases i <;> fin_cases j <;>
-      simp [fixedColorReadout, ZornMatrix.smul, Vec3.smul,
-        Matrix.smul_apply] <;> ring
+    have hV :
+        (c • fixedColorReadout i A).v =
+          Vec3.smul c (A 0 1 • Vec3.basis i) := rfl
+    rw [hV]
+    simp only [fixedColorReadout, ZornMatrix.smul, Vec3.smul,
+      Matrix.smul_apply]
+    fin_cases j <;> simp [Vec3.smul] <;> ring
   · funext j
-    fin_cases i <;> fin_cases j <;>
-      simp [fixedColorReadout, ZornMatrix.smul, Vec3.smul,
-        Matrix.smul_apply] <;> ring
+    have hW :
+        (c • fixedColorReadout i A).w =
+          Vec3.smul c (A 1 0 • Vec3.basis i) := rfl
+    rw [hW]
+    simp only [fixedColorReadout, ZornMatrix.smul, Vec3.smul,
+      Matrix.smul_apply]
+    fin_cases j <;> simp [Vec3.smul] <;> ring
   · rfl
 
 theorem basis_dot_basis (i : Fin 3) :

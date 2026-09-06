@@ -1,12 +1,11 @@
 import Mathlib.Tactic
 import Mathlib.LinearAlgebra.CrossProduct
-import InfoGeometry.Algebra.Zorn.Concrete
 import InfoGeometry.Canonical.LieGeometricDuality
 
 /-!
 # InfoGeometry.Canonical.SO3FenchelDuality
 
-Concrete `SO(3)` primal/dual property for the Lie/Fenchel dictionary.
+Concrete `SO(3)` primal/dual witness for the Lie/Fenchel dictionary.
 
 Highlights:
 * `so3Action` is the coadjoint-adjoint action by matrix multiplication,
@@ -34,59 +33,8 @@ local instance : LieAlgebra ℝ V3 := by
   change crossProduct x (a • y) = a • crossProduct x y
   simpa using (crossProduct x).map_smul a y
 
-private theorem cross_mulVec_eq_adjugate_transpose_mulVec
-    (M : Matrix (Fin 3) (Fin 3) ℝ) (x y : V3) :
-    crossProduct (M *ᵥ x) (M *ᵥ y) =
-      M.adjugate.transpose *ᵥ crossProduct x y := by
-  funext k
-  fin_cases k <;>
-    simp [crossProduct, Matrix.mulVec, Matrix.adjugate_fin_three,
-      dotProduct, Fin.sum_univ_three] <;>
-    ring
-
 /-- `SO(3)` action on vectors and hence on momentum coordinates. -/
 def so3Action (R : SO3) (x : V3) : V3 := (R : Matrix (Fin 3) (Fin 3) ℝ) *ᵥ x
-
-@[simp]
-theorem so3Action_one (x : V3) : so3Action (1 : SO3) x = x := by
-  simp [so3Action]
-
-theorem so3Action_mul (R S : SO3) (x : V3) :
-    so3Action (R * S) x = so3Action R (so3Action S x) := by
-  simp [so3Action, Matrix.mulVec_mulVec]
-
-@[simp] theorem so3Action_add (R : SO3) (x y : V3) :
-    so3Action R (x + y) = so3Action R x + so3Action R y := by
-  simp [so3Action, Matrix.mulVec_add]
-
-@[simp] theorem so3Action_sub (R : SO3) (x y : V3) :
-    so3Action R (x - y) = so3Action R x - so3Action R y := by
-  simp [so3Action, Matrix.mulVec_sub]
-
-@[simp] theorem so3Action_smul (R : SO3) (a : ℝ) (x : V3) :
-    so3Action R (a • x) = a • so3Action R x := by
-  simp [so3Action, Matrix.mulVec_smul]
-
-theorem so3_cross_equivariant (R : SO3) (x y : V3) :
-    so3Action R (crossProduct x y) =
-      crossProduct (so3Action R x) (so3Action R y) := by
-  let M : Matrix (Fin 3) (Fin 3) ℝ := R
-  have horth : M.transpose * M = 1 := by
-    exact (Matrix.mem_orthogonalGroup_iff' (n := Fin 3) (R := ℝ)).1
-      ((Matrix.mem_specialOrthogonalGroup_iff.mp R.property).1)
-  have hdet : M.det = 1 := (Matrix.mem_specialOrthogonalGroup_iff.mp R.property).2
-  letI : Invertible M := invertibleOfLeftInverse M M.transpose horth
-  have hMMt : M * M.transpose = 1 := by
-    rw [← Matrix.inv_eq_left_inv horth]
-    exact Matrix.mul_inv_of_invertible M
-  have hadj : M.adjugate = M.transpose := by
-    exact Matrix.left_inv_eq_left_inv
-      (by rw [Matrix.adjugate_mul, hdet, one_smul]) horth
-  change M *ᵥ crossProduct x y =
-    crossProduct (M *ᵥ x) (M *ᵥ y)
-  rw [cross_mulVec_eq_adjugate_transpose_mulVec]
-  rw [hadj]
-  simp [so3Action, M]
 
 /-- Dot-product is `SO(3)`-invariant. -/
 theorem so3_dotProduct_invariant (R : SO3) (x y : V3) :
@@ -110,171 +58,6 @@ theorem so3_dotProduct_invariant (R : SO3) (x y : V3) :
                 (B := (R : Matrix (Fin 3) (Fin 3) ℝ)) x)
     _ = Matrix.vecMul x 1 ⬝ᵥ y := by rw [hmul]
     _ = x ⬝ᵥ y := by simp [Matrix.vecMul_one]
-
-open InfoGeometry.Algebra.Zorn.Concrete
-
-def zornXVec (X : ZornCell ℝ) : V3 := ![X.x1, X.x2, X.x3]
-
-def zornYVec (X : ZornCell ℝ) : V3 := ![X.y1, X.y2, X.y3]
-
-theorem zornCell_ext {X Y : ZornCell ℝ}
-    (hr : X.r = Y.r) (hs : X.s = Y.s)
-    (hx1 : X.x1 = Y.x1) (hx2 : X.x2 = Y.x2) (hx3 : X.x3 = Y.x3)
-    (hy1 : X.y1 = Y.y1) (hy2 : X.y2 = Y.y2) (hy3 : X.y3 = Y.y3) :
-    X = Y := by
-  cases X
-  cases Y
-  simp_all
-
-def zornMulXVec (X Y : ZornCell ℝ) : V3 :=
-  X.r • zornXVec Y + Y.s • zornXVec X -
-    crossProduct (zornYVec X) (zornYVec Y)
-
-def zornMulYVec (X Y : ZornCell ℝ) : V3 :=
-  Y.r • zornYVec X + X.s • zornYVec Y +
-    crossProduct (zornXVec X) (zornXVec Y)
-
-theorem zornXVec_mulZ (X Y : ZornCell ℝ) :
-    zornXVec (ZornCell.mulZ X Y) = zornMulXVec X Y := by
-  cases X with
-  | mk r s x1 x2 x3 y1 y2 y3 =>
-    cases Y with
-    | mk a d u1 u2 u3 v1 v2 v3 =>
-      funext i
-      fin_cases i <;>
-        simp [zornXVec, zornYVec, zornMulXVec, ZornCell.mulZ,
-          cross_apply, Fin.sum_univ_three] <;> ring
-
-theorem zornYVec_mulZ (X Y : ZornCell ℝ) :
-    zornYVec (ZornCell.mulZ X Y) = zornMulYVec X Y := by
-  cases X with
-  | mk r s x1 x2 x3 y1 y2 y3 =>
-    cases Y with
-    | mk a d u1 u2 u3 v1 v2 v3 =>
-      funext i
-      fin_cases i <;>
-        simp [zornXVec, zornYVec, zornMulYVec, ZornCell.mulZ,
-          cross_apply, Fin.sum_univ_three] <;> ring
-
-/-- The genuine `SO(3)` action on a real Zorn cell: scalar slots are fixed and
-the two vector slots transform by the same special-orthogonal matrix. -/
-def so3ZornAction (R : SO3) (X : ZornCell ℝ) : ZornCell ℝ where
-  r := X.r
-  s := X.s
-  x1 := so3Action R (zornXVec X) 0
-  x2 := so3Action R (zornXVec X) 1
-  x3 := so3Action R (zornXVec X) 2
-  y1 := so3Action R (zornYVec X) 0
-  y2 := so3Action R (zornYVec X) 1
-  y3 := so3Action R (zornYVec X) 2
-
-@[simp]
-theorem so3ZornAction_r (R : SO3) (X : ZornCell ℝ) :
-    (so3ZornAction R X).r = X.r := rfl
-
-@[simp]
-theorem so3ZornAction_s (R : SO3) (X : ZornCell ℝ) :
-    (so3ZornAction R X).s = X.s := rfl
-
-theorem so3ZornAction_detZ (R : SO3) (X : ZornCell ℝ) :
-    ZornCell.detZ (so3ZornAction R X) = ZornCell.detZ X := by
-  have hdot := so3_dotProduct_invariant R (zornXVec X) (zornYVec X)
-  simpa [so3ZornAction, ZornCell.detZ, zornXVec, zornYVec,
-    dotProduct, Fin.sum_univ_three] using congrArg
-      (fun z : ℝ => X.r * X.s - z) hdot
-
-@[simp]
-theorem so3ZornAction_one (X : ZornCell ℝ) :
-    so3ZornAction (1 : SO3) X = X := by
-  cases X with
-  | mk r s x1 x2 x3 y1 y2 y3 =>
-      simp [so3ZornAction, zornXVec, zornYVec, so3Action]
-
-theorem so3ZornAction_mul (R S : SO3) (X : ZornCell ℝ) :
-    so3ZornAction (R * S) X = so3ZornAction R (so3ZornAction S X) := by
-  cases X with
-  | mk r s x1 x2 x3 y1 y2 y3 =>
-      have hx :
-          ![so3Action S ![x1, x2, x3] 0,
-            so3Action S ![x1, x2, x3] 1,
-            so3Action S ![x1, x2, x3] 2] =
-            so3Action S ![x1, x2, x3] := by
-        funext i
-        fin_cases i <;> rfl
-      have hy :
-          ![so3Action S ![y1, y2, y3] 0,
-            so3Action S ![y1, y2, y3] 1,
-            so3Action S ![y1, y2, y3] 2] =
-            so3Action S ![y1, y2, y3] := by
-        funext i
-        fin_cases i <;> rfl
-      simp [so3ZornAction, zornXVec, zornYVec, hx, hy, so3Action_mul]
-
-theorem so3ZornAction_mulZ (R : SO3) (X Y : ZornCell ℝ) :
-    so3ZornAction R (ZornCell.mulZ X Y) =
-      ZornCell.mulZ (so3ZornAction R X) (so3ZornAction R Y) := by
-  have hx :
-      zornXVec (so3ZornAction R X) = so3Action R (zornXVec X) := by
-    funext i
-    fin_cases i <;> rfl
-  have hy :
-      zornYVec (so3ZornAction R X) = so3Action R (zornYVec X) := by
-    funext i
-    fin_cases i <;> rfl
-  have hxY :
-      zornXVec (so3ZornAction R Y) = so3Action R (zornXVec Y) := by
-    funext i
-    fin_cases i <;> rfl
-  have hyY :
-      zornYVec (so3ZornAction R Y) = so3Action R (zornYVec Y) := by
-    funext i
-    fin_cases i <;> rfl
-  have hdotX := so3_dotProduct_invariant R (zornXVec X) (zornYVec Y)
-  have hdotY := so3_dotProduct_invariant R (zornYVec X) (zornXVec Y)
-  have hcrossX := so3_cross_equivariant R (zornYVec X) (zornYVec Y)
-  have hcrossY := so3_cross_equivariant R (zornXVec X) (zornXVec Y)
-  have hX :
-      so3Action R (zornMulXVec X Y) =
-        zornMulXVec (so3ZornAction R X) (so3ZornAction R Y) := by
-    rw [zornMulXVec, zornMulXVec, hx, hy, hxY, hyY]
-    rw [← hcrossX]
-    simp [so3Action, Matrix.mulVec_add, Matrix.mulVec_sub,
-      Matrix.mulVec_smul]
-  have hY :
-      so3Action R (zornMulYVec X Y) =
-        zornMulYVec (so3ZornAction R X) (so3ZornAction R Y) := by
-    rw [zornMulYVec, zornMulYVec, hx, hy, hxY, hyY]
-    rw [← hcrossY]
-    simp [so3Action, Matrix.mulVec_add, Matrix.mulVec_smul]
-  apply zornCell_ext
-  · simpa [so3ZornAction, ZornCell.mulZ, zornXVec, zornYVec,
-      dotProduct, Fin.sum_univ_three] using hdotX.symm
-  · simpa [so3ZornAction, ZornCell.mulZ, zornXVec, zornYVec,
-      dotProduct, Fin.sum_univ_three] using hdotY.symm
-  · have := hX
-    rw [← zornXVec_mulZ X Y, ← zornXVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 0
-  · have := hX
-    rw [← zornXVec_mulZ X Y, ← zornXVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 1
-  · have := hX
-    rw [← zornXVec_mulZ X Y, ← zornXVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 2
-  · have := hY
-    rw [← zornYVec_mulZ X Y, ← zornYVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 0
-  · have := hY
-    rw [← zornYVec_mulZ X Y, ← zornYVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 1
-  · have := hY
-    rw [← zornYVec_mulZ X Y, ← zornYVec_mulZ
-      (so3ZornAction R X) (so3ZornAction R Y)] at this
-    exact congrFun this 2
 
 /-- Quadratic Casimir / squared spin magnitude. -/
 def casimir (L : V3) : ℝ := L ⬝ᵥ L
@@ -362,7 +145,7 @@ theorem dualBregman_eq_norm_sq (I : ℝ) (L1 L2 : V3) :
   rw [dotProduct_comm L2 L1]
   ring_nf
 
-/-- Conjugate coadjoint orbit converse (finite-dimensional property): equal Casimir implies same `SO(3)` orbit. -/
+/-- Conjugate coadjoint orbit converse (finite-dimensional witness): equal Casimir implies same `SO(3)` orbit. -/
 theorem so3_converse_equal_casimir (x y : V3) (h : casimir x = casimir y) :
     ∃ Q : SO3, so3Action Q x = y := by
   let xE : EuclideanSpace ℝ (Fin 3) := (EuclideanSpace.equiv (Fin 3) ℝ).symm x

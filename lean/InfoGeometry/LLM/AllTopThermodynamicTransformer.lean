@@ -124,11 +124,12 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable {n : Nat} [Nonempty (Fin n)]
 
 /-- Zero expert used to prove exact-reuse fallback behavior. -/
-def zeroExpert : Expert V := fun _ => 0
+def zeroExpert : Expert V where
+  apply := fun _ => 0
 
 /-- Zero routed MoE layer (all experts are zero maps). -/
-def zeroMoE : MoELayer n V :=
-  fun _ => zeroExpert (V := V)
+def zeroMoE : MoELayer n V where
+  experts := fun _ => zeroExpert (V := V)
 
 section OmitWeightReuseRouterVars
 

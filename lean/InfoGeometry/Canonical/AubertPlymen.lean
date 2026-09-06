@@ -9,7 +9,7 @@ set_option linter.unusedSimpArgs false
 /-!
 # Aubert--Plymen twisted group algebra: concrete 2×2 representation
 
-This file is the Lean 4 translation of the SymPy property in
+This file is the Lean 4 translation of the SymPy certificate in
 `sympy_twisted_algebra.py` for the real matrix slice of the Aubert--Plymen
 simple modules.
 
@@ -113,5 +113,6 @@ theorem relation_package (z w : ℝ) :
   exact ⟨s_sq, sX_eq_Xinv_s z, sY_eq_neg_Ys w, XY_eq_YX z w,
     sXs_eq_Xinv z, sYs_eq_Yneg w⟩
 
-
 end AubertPlymen
+
+end

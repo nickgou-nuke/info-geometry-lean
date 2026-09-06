@@ -107,35 +107,6 @@ theorem casimir_commutes' (P_u P_v : R) :
 theorem supercharge_generates_translation (Q Qbar P_u : R) (h : anticommutator Q Qbar = 2 * P_u) :
     anticommutator Q Qbar = 2 * P_u := h
 
-/-- Grand synthesis of Super-Poincaré Casimir algebra. -/
-theorem grand_super_poincare_casimir_synthesis (P_u P_v Q Qbar : R)
-    (h_susy : anticommutator Q Qbar = 2 * P_u) :
-    (commutator (superPoincareCasimir P_u P_v) P_u = 0) ∧
-    (commutator (superPoincareCasimir P_u P_v) P_v = 0) ∧
-    (anticommutator Q Qbar = 2 * P_u) := by
-  refine ⟨casimir_commutes P_u P_v, casimir_commutes' P_u P_v, supercharge_generates_translation Q Qbar P_u h_susy⟩
-
-/-! ## 4. Grand Synthesis: All Pieces Together -/
-
-/-- The grand synthesis theorem: The Klein bottle throat = critical line = BPS standing waves = Riemann zeros. -/
-theorem grand_klein_bottle_throat_synthesis
-    (z : ℂ) (N_L N_R : ℝ)
-    (h_standing : N_L = N_R) (σ : ℝ) (h_throat : σ - 1 / 2 = 0)
-    (Q Qbar H : R) (h_susy : anticommutator Q Qbar = 2 * H) :
-    (modularInvolution (modularInvolution z) = z) ∧
-    (‖z‖ = 1 ↔ ‖modularInvolution z‖ = 1) ∧
-    (throatRapidity N_L N_R = 0) ∧
-    (σ = 1 / 2) ∧
-    (anticommutator Q Qbar = 2 * H) := by
-  have h₁ : modularInvolution (modularInvolution z) = z := modular_involution_involution z
-  have h₂ : ‖z‖ = 1 ↔ ‖modularInvolution z‖ = 1 := throat_equator_invariance z
-  have h₃ : throatRapidity N_L N_R = 0 := by
-    unfold throatRapidity
-    linarith
-  have h₄ : σ = 1 / 2 := by
-    linarith
-  exact ⟨h₁, h₂, h₃, h₄, h_susy⟩
-
 /-- The ultimate synthesis: Riemann zeros are the resonant frequencies of the Klein bottle throat. -/
 theorem riemann_zeros_are_klein_throat_resonances
     (σ : ℝ) (h_bps : BPSState 0 (σ - 1/2)) :

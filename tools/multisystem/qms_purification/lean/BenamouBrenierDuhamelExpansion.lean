@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-QMS isolated proof target for the live `discrete_duhamel_expansion` deferred interface in
+QMS isolated proof target for the live `discrete_duhamel_expansion` socket in
 `InfoGeometry.Capstone.BenamouBrenierBridge`.
 
 The proof is purely algebraic and uses mathlib's native `TrivSqZeroExt` power

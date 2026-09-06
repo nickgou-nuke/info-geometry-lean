@@ -53,19 +53,29 @@ abbrev SplitSpinGroup (n : ℕ) : Type :=
 instance (n : ℕ) : Group (SplitSpinGroup n) :=
   inferInstance
 
+/--
+Orientation and volume data for a chosen split Clifford basis.
+
+The pseudoscalar depends on the basis/orientation convention, so it is kept
+as explicit data rather than baked into the carrier.
+-/
+structure SplitVolumeData (n : ℕ) where
+  volume : Cl_nn n
+  volume_sq_one : volume * volume = 1
+
 /-- Positive chiral projector once split volume data is supplied. -/
 noncomputable def chiralProjectorPlus
     {n : ℕ}
-    (volume : Cl_nn n) :
+    (Ω : SplitVolumeData n) :
     Cl_nn n :=
-  ((1 : ℝ) / 2) • (1 + volume)
+  ((1 : ℝ) / 2) • (1 + Ω.volume)
 
 /-- Negative chiral projector once split volume data is supplied. -/
 noncomputable def chiralProjectorMinus
     {n : ℕ}
-    (volume : Cl_nn n) :
+    (Ω : SplitVolumeData n) :
     Cl_nn n :=
-  ((1 : ℝ) / 2) • (1 - volume)
+  ((1 : ℝ) / 2) • (1 - Ω.volume)
 
 /--
 Split-signature rotor cocycle.

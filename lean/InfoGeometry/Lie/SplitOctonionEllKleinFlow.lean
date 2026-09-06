@@ -46,40 +46,40 @@ theorem ellFlowPhi_commutes_PZero (t : ℝ) (Z : CZ) :
 /-- The positive root sector is totally isotropic for the raw determinant
 polarization. -/
 theorem ellFlowPPlus_det_polar_zero (X Y : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPPlus X + ellFlowPPlus Y) -
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPPlus X) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPPlus Y) = 0 := by
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPPlus X) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPPlus Y) = 0 := by
   rw [ellFlowPPlus_coord, ellFlowPPlus_coord]
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- The negative root sector is totally isotropic for the raw determinant
 polarization. -/
 theorem ellFlowPMinus_det_polar_zero (X Y : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPMinus X + ellFlowPMinus Y) -
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPMinus X) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPMinus Y) = 0 := by
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPMinus X) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPMinus Y) = 0 := by
   rw [ellFlowPMinus_coord, ellFlowPMinus_coord]
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- Opposite root weights preserve their raw determinant cross-pairing under
 the closed flow. -/
 theorem ellFlowPhi_preserves_dual_root_polar
     (t : ℝ) (X Y : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPhi t (ellFlowPPlus X) +
             ellFlowPhi t (ellFlowPMinus Y)) -
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPhi t (ellFlowPPlus X)) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
             (ellFlowPhi t (ellFlowPMinus Y)) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPPlus X + ellFlowPMinus Y) -
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPPlus X) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPMinus Y) := by
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPPlus X) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPMinus Y) := by
   have h := ellFlowPhi_preserves_det_polarization t
     (ellFlowPPlus X) (ellFlowPMinus Y)
   rw [(ellFlowPhi t).map_add] at h
@@ -163,9 +163,9 @@ theorem ellFlowActive_kleinForm_eq_zero_iff (t : ℝ) (X : ActiveSector) :
         (activeExteriorLinearEquiv X) = 0 := by
   rw [exteriorKleinForm_activeExterior,
     exteriorKleinForm_activeExterior]
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
       (ellFlowPhi t X.1) = 0 ↔
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 = 0
   rw [ellFlowPhi_preserves_det]
 
 /-- The restricted closed `ell` flow preserves the full active Klein
@@ -185,13 +185,13 @@ theorem ellFlowActive_preserves_kleinPolar (t : ℝ) (X Y : ActiveSector) :
           (ellFlowActive t (X + Y)).1 := hsum.symm
       have hXY : (X + Y).1 = X.1 + Y.1 := rfl
       rw [hsum']
-      change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPhi t (X + Y).1) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t X.1) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t Y.1) =
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X.1 + Y.1) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 -
-            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y.1
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t X.1) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t Y.1) =
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 -
+            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Y.1
       rw [ellFlowPhi_preserves_det, ellFlowPhi_preserves_det,
         ellFlowPhi_preserves_det]
       rw [← hXY]

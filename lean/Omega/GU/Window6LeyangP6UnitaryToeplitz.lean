@@ -8,8 +8,7 @@ unit-circle root of the completed characteristic polynomial, and the Jensen-defe
 equivalences recorded by the certificate loop.
     thm:window6-leyang-p6-unitary-toeplitz -/
 theorem paper_window6_leyang_p6_unitary_toeplitz
-    (D : Window6P6ToeplitzCertificateChainData)
-    (hUnitarySliceLocked : D.certificateLoop.unitarySliceLocked) :
+    (D : Window6P6ToeplitzCertificateChainData) :
     (D.commutantWitness.transpose = D.commutantWitness) ∧
       window6P6FiniteCommutant D ∧
       window6P6UnitCircleRoot D ∧
@@ -17,7 +16,7 @@ theorem paper_window6_leyang_p6_unitary_toeplitz
       (D.certificateLoop.jensenDefectZeroLimit ↔ D.certificateLoop.repulsionRadiusTendsToOne) ∧
       (D.certificateLoop.repulsionRadiusTendsToOne ↔ D.certificateLoop.toeplitzPsdAll) ∧
       (D.certificateLoop.toeplitzPsdAll ↔ D.certificateLoop.toeplitzPsdCofinal) := by
-  rcases paper_window6_p6_toeplitz_certificate_chain D hUnitarySliceLocked with
+  rcases paper_window6_p6_toeplitz_certificate_chain D with
     ⟨_, hSelfadjoint, hCommutant, hRH, hJensen, hToeplitzAll, hToeplitzCofinal, _, _, _, _, _,
       _, hUnitRoot⟩
   exact ⟨hSelfadjoint, hCommutant, hUnitRoot, hRH, hJensen, hToeplitzAll, hToeplitzCofinal⟩

@@ -161,3 +161,5 @@ noncomputable def absorption_capstone_unified : AbsorptionRoof where
     exact tail_predicate_lifts_to_infinity (P := P) hTail z
 
 end InfoGeometry.Capstone.AbsorptionCapstone
+
+end

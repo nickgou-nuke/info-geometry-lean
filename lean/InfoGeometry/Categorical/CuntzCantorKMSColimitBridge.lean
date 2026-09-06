@@ -86,7 +86,18 @@ theorem cylinderProjection_child_sum (n : ℕ) (w : BitWord n) :
       cylinderProjection (n + 1) (prefixWord true w) x =
     cylinderProjection n w x
   rw [cylinderProjection_apply, cylinderProjection_apply,
-    cylinderProjection_apply, boundaryPrefix_succ_eq_extendSucc]
+    cylinderProjection_apply]
+  have hboundary :
+      boundaryPrefix (n + 1) x =
+        extendSucc n (boundaryPrefix n x) (x n) := by
+    ext i
+    by_cases hi : i.1 < n
+    · simp [boundaryPrefix, prefixBoundary, extendSucc, hi]
+    · have hi' : i.1 = n := by omega
+      have hi_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext hi'
+      subst i
+      simp [boundaryPrefix, prefixBoundary, extendSucc]
+  rw [hboundary]
   cases hb : x n with
   | false =>
       have hfalse :

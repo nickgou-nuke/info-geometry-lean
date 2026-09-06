@@ -50,7 +50,7 @@ theorem chiralPoincareAct_comp (G H : ChiralPoincareElement) (P : FourMomentum) 
     simp [Matrix.mul_assoc, add_assoc, add_comm, add_left_comm]
   -- Use extensionality via pauliMomentum
   have h₂ : chiralPoincareAct (chiralPoincareComp G H) P = chiralPoincareAct G (chiralPoincareAct H P) := by
-    apply InfoGeometry.Physics.ChiralPoincareSouriauBridge.fourMomentum_ext_of_pauliMomentum_eq
+    apply InfoGeometry.Physics.LorentzChiralCuntzBridge.fourMomentum_ext_of_pauliMomentum_eq
     exact h₁
   exact h₂
 
@@ -61,12 +61,9 @@ def transportedRelation (L R : ChiralPoincareSouriauBridge.M2C) (S : CuntzDeform
 /-- The Lorentz transport of the Cuntz-deformed relation holds for `SL(2,ℂ)` spin matrices. -/
 theorem sl2c_transportedRelation_holds (g : SL2C)
     (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation)
-    (hS : CuntzDeformedSuperPoincare.ChiralOperatorPresentationLaws S) :
+    :
     transportedRelation (spinMatrix g) (spinMatrix g⁻¹) S := by
-  have h₁ : CuntzDeformedSuperPoincare.spinTransport (spinMatrix g) (spinMatrix g⁻¹) S.antiQQbar = (2 : ℂ) • CuntzDeformedSuperPoincare.spinTransport (spinMatrix g) (spinMatrix g⁻¹) S.Pspinor := by
-    have h₂ := CuntzDeformedSuperPoincare.spinTransport_super_poincare
-      (spinMatrix g) (spinMatrix g⁻¹) S hS
-    simpa [CuntzDeformedSuperPoincare.spinTransport] using h₂
-  exact h₁
+  exact CuntzDeformedSuperPoincare.transportedRelation_holds
+    (spinMatrix g) (spinMatrix g⁻¹) S
 
 end InfoGeometry.Physics.ChiralPoincareSemidirect

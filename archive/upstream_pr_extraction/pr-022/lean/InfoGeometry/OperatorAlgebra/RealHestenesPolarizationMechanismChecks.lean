@@ -1,0 +1,19 @@
+import InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism
+
+namespace InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism.Checks
+
+#check doubledKrein_spectral_decomposition
+#check doubledKrein_plus_idempotent
+#check doubledKrein_minus_idempotent
+#check hestenesAxis_square_minus_one
+#check KPolarization_K_maps_plus_to_minus
+#check KPolarization_K_maps_minus_to_plus
+#check chiralityPolarization_is_J
+#check bogoliubov_transportK_square_minus_one
+#check bogoliubov_preservesPolarization_iff_transportP_eq
+#check bogoliubov_preserves_or_mixes
+#check RealHestenesPolarizationMechanismPacket
+#check RealHestenesPolarizationMechanismPacket.diagonalShadowGuard
+#check RealHestenesPolarizationMechanismPacket.realOnlyGuard
+
+end InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism.Checks

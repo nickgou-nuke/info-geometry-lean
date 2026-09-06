@@ -96,13 +96,10 @@ theorem splitCl44ProjectiveNullBoundary_nonempty :
         simpa using hExterior⟩, rfl, rfl⟩
 
 /-- The split `Cl(4,4)` projective null quotient is inhabited by the concrete
-   head-null ray. -/
-noncomputable def splitCl44ProjectiveNullPoint : SplitCl44ProjectiveNullSpace := by
-  exact splitCl44NullMk
-    (Classical.choose splitCl44ProjectiveNullBoundary_nonempty)
-
+head-null ray. -/
 theorem splitCl44ProjectiveNullSpace_nonempty :
     Nonempty SplitCl44ProjectiveNullSpace := by
-  exact ⟨splitCl44ProjectiveNullPoint⟩
+  rcases splitCl44ProjectiveNullBoundary_nonempty with ⟨Z, _hZ, _hmk⟩
+  exact ⟨splitCl44NullMk Z⟩
 
 end InfoGeometry.Projective.SplitCl44NullBoundary

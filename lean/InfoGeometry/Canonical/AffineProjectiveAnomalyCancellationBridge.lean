@@ -57,7 +57,16 @@ def conjugateDirac (Op : SkewDiracOperator E) : DoubledSpace E →L[ℝ] Doubled
 theorem conjugate_dirac_eq_neg (Op : SkewDiracOperator E) :
     conjugateDirac Op = -Op.D := by
   dsimp [conjugateDirac]
-  exact particleHole_conjugation_neg Op.D Op.anticommute
+  calc
+    ((particleHoleC (E := E)).comp Op.D).comp (particleHoleC (E := E)) =
+        (particleHoleC (E := E)).comp (Op.D.comp (particleHoleC (E := E))) := by
+      rw [ContinuousLinearMap.comp_assoc]
+    _ = (particleHoleC (E := E)).comp
+        (-((particleHoleC (E := E)).comp Op.D)) := by rw [Op.anticommute]
+    _ = -(((particleHoleC (E := E)).comp (particleHoleC (E := E))).comp Op.D) := by
+      rw [ContinuousLinearMap.comp_neg, ContinuousLinearMap.comp_assoc]
+    _ = -Op.D := by rw [show (particleHoleC (E := E)).comp particleHoleC =
+        ContinuousLinearMap.id ℝ (DoubledSpace E) from modular_j_involution E]; simp
 
 /-! ### 3. The Master Anomaly Cancellation Theorem -/
 

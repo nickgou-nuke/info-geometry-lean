@@ -50,14 +50,6 @@ theorem poincare_equator_confinement (σ : ℝ)
     exact Real.exp_injective h_exp0
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Synthesis of CCR/CAR Quantization and Poincaré Sphere Equator Confinement. -/
-theorem grand_poincare_bloch_synthesis (σ : ℝ)
-    (h_balanced : Real.exp (2 * (σ - 1 / 2)) = 1) :
-    (vacuumZeroPointEnergy = 1 / 2) ∧
-    (σ = 1 / 2) :=
-  ⟨berry_keating_ground_state_energy,
-   poincare_equator_confinement σ h_balanced⟩
-
 end
 
 end InfoGeometry.Quantum.PoincareBlochQuantization

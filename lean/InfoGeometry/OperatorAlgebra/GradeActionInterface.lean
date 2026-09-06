@@ -89,6 +89,22 @@ theorem linearEquiv_mapsToGradeBetween_image_eq
       simpa [hleft i] using hy'
     exact ⟨e.symm y, hxi, e.apply_symm_apply y⟩
 
+/- Exact image transports compose.  This is the carrier-level composition law
+   used when a grade is read through more than one existing equivalence. -/
+theorem linearEquiv_image_eq_comp
+    {R A B C ι : Type*} [Semiring R]
+    [AddCommMonoid A] [Module R A]
+    [AddCommMonoid B] [Module R B]
+    [AddCommMonoid C] [Module R C]
+    (e₁ : A ≃ₗ[R] B) (e₂ : B ≃ₗ[R] C)
+    (source : ι → Set A) (middle : ι → Set B) (target : ι → Set C)
+    (perm₁ perm₂ : ι → ι)
+    (h₁ : ∀ i, e₁ '' source i = middle (perm₁ i))
+    (h₂ : ∀ j, e₂ '' middle j = target (perm₂ j)) (i : ι) :
+    (e₁.trans e₂) '' source i = target (perm₂ (perm₁ i)) := by
+  change (fun x => e₂ (e₁ x)) '' source i = target (perm₂ (perm₁ i))
+  rw [← Set.image_image, h₁ i, h₂ (perm₁ i)]
+
 /-! A grade-preserving equivalence carries every sector onto itself. -/
 theorem linearEquiv_preservesGrade_image_eq
     {R A ι : Type*} [Semiring R] [AddCommMonoid A] [Module R A]

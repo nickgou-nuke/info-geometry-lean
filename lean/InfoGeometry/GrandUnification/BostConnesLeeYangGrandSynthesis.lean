@@ -140,7 +140,7 @@ theorem cayley_unitarity_of_critical_line (s : ℂ) (h_crit : s.re = 1 / 2) :
 
 /-! ## 4. Grand Master Unification Synthesis -/
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Algebraic Bost-Connes/Cayley and Cantor-Crystal Readouts**
 
 Unifies:
@@ -157,7 +157,7 @@ Unifies:
 These are conditional algebraic readouts; they do not imply a Lee--Yang zero
 theorem, anomaly cancellation in an analytic model, or the Riemann hypothesis.
 -/
-theorem grand_bost_connes_lee_yang_superalgebra_unification
+/- theorem grand_bost_connes_lee_yang_superalgebra_unification
     (atom : Cl11Atom A)
     (Q : A)
     (h_chiral : Q * (atom.mobiusParity) = -(atom.mobiusParity * Q))
@@ -190,6 +190,6 @@ theorem grand_bost_connes_lee_yang_superalgebra_unification
    hopping_L_R_is_fermionic S_L S_R h_star_L_L h_star_R_R h_star_R_L,
    witten_index_vanishes S_L S_R φ h_kms,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.GrandUnification.BostConnesLeeYang

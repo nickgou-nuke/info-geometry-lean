@@ -15,7 +15,7 @@ locus of the chosen affine chart for the antiunitary reflection
 the orbit closure it imposes on any zero predicate stable under the functional
 reflection and complex conjugation.
 
-No analytic zeta function is constructed here, and no Riemann-property claim
+No analytic zeta function is constructed here, and no Riemann-hypothesis claim
 is made.
 -/
 
@@ -29,17 +29,12 @@ open CompletedZetaSouriauDInfinityThermodynamics
 /-! ## Affine chart for the zeta plane -/
 
 /-- Real affine chart for a complex spectral parameter `s = σ + iτ`. -/
-abbrev ZetaAffineChart := ℝ × ℝ
+structure ZetaAffineChart where
+  sigma : ℝ
+  tau : ℝ
+  deriving DecidableEq
 
 namespace ZetaAffineChart
-
-abbrev sigma (z : ZetaAffineChart) : ℝ := z.1
-
-abbrev tau (z : ZetaAffineChart) : ℝ := z.2
-
-@[simp] theorem sigma_apply (z : ZetaAffineChart) : sigma z = z.1 := rfl
-
-@[simp] theorem tau_apply (z : ZetaAffineChart) : tau z = z.2 := rfl
 
 @[ext] theorem ext {z w : ZetaAffineChart}
     (hsigma : z.sigma = w.sigma) (htau : z.tau = w.tau) : z = w := by
@@ -360,17 +355,12 @@ In these coordinates the zeta symmetry frame is linear:
 * functional duality is `(u, v) ↦ (-u, -v)`;
 * the critical antiunitary mirror is `(u, v) ↦ (-u, v)`.
 -/
-abbrev ZetaCenteredChart := ℝ × ℝ
+structure ZetaCenteredChart where
+  u : ℝ
+  v : ℝ
+  deriving DecidableEq
 
 namespace ZetaCenteredChart
-
-abbrev u (x : ZetaCenteredChart) : ℝ := x.1
-
-abbrev v (x : ZetaCenteredChart) : ℝ := x.2
-
-@[simp] theorem u_apply (x : ZetaCenteredChart) : u x = x.1 := rfl
-
-@[simp] theorem v_apply (x : ZetaCenteredChart) : v x = x.2 := rfl
 
 @[ext] theorem ext {x y : ZetaCenteredChart}
     (hu : x.u = y.u) (hv : x.v = y.v) : x = y := by
@@ -748,22 +738,6 @@ theorem toCentered_chartCriticalMirror (z : ZetaAffineChart) :
     ring
   · simp [toCentered, centeredSigma, chartCriticalMirror, ZetaCenteredChart.criticalMirror]
 
-/-! ## Critical-line transport through the centered chart -/
-
-/-- The affine critical line is exactly vanishing of the centered normal coordinate. -/
-theorem chartCriticalLine_iff_toCentered_u_eq_zero (z : ZetaAffineChart) :
-    chartCriticalLine z ↔ (toCentered z).u = 0 := by
-  simp only [chartCriticalLine, toCentered, ZetaCenteredChart.u,
-    centeredSigma]
-  constructor <;> intro h <;> linarith
-
-/-- The affine critical mirror fixes precisely the points with zero centered normal coordinate. -/
-theorem chartCriticalMirror_eq_self_iff_toCentered_u_eq_zero
-    (z : ZetaAffineChart) :
-    chartCriticalMirror z = z ↔ (toCentered z).u = 0 := by
-  rw [fixed_chartCriticalMirror_iff_criticalLine,
-    chartCriticalLine_iff_toCentered_u_eq_zero]
-
 /-! ## The generated finite symmetry frame -/
 
 /--
@@ -952,4 +926,4 @@ end ZeroSetSymmetry
 
 end ZetaAffineChart
 
-end ZetaCoordinateSymmetry
+end InfoGeometry.Arithmetic.ZetaCoordinateSymmetry

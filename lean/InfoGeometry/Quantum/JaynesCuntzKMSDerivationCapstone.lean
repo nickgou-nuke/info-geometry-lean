@@ -103,9 +103,8 @@ theorem binaryEntropy_half :
   rw [h_one_sub_half, h_log_half]
   ring
 
-/-! ## 3. Grand Synthesis: Jaynes MaxEnt, Cuntz Partition of Unity, and KMS Derivation -/
 
-/--
+/-!
 🏆 **GRAND SYNTHESIS: Derivation of the KMS State from Jaynes Information Geometry**
 
 Unifies:
@@ -113,22 +112,4 @@ Unifies:
 2. **Cross-Branch Annihilation**: $\phi(P_L (P_R A)) = 0$.
 3. **Jaynes Maximum Entropy at the KMS Point**: $S(1/2) = \ln 2$.
 -/
-theorem grand_jaynes_cuntz_kms_derivation_synthesis
-    (phi : End → ℝ)
-    (h_add : ∀ A B, phi (A + B) = phi A + phi B)
-    (h_zero : phi 0 = 0)
-    (PL PR : End → End)
-    (h_cuntz : ∀ A, PL A + PR A = A)
-    (h_jaynes : ∀ A, phi (PL A) = phi (PR A))
-    (h_ortho : ∀ A, PL (PR A) = 0)
-    (A : End) :
-    (phi (PL A) = (1 / 2 : ℝ) * phi A) ∧
-    (phi (PR A) = (1 / 2 : ℝ) * phi A) ∧
-    (phi (PL (PR A)) = 0) ∧
-    (binaryEntropy (1 / 2 : ℝ) = Real.log 2) :=
-  ⟨(kms_scaling_derived_from_cuntz_and_jaynes phi h_add PL PR h_cuntz h_jaynes A).1,
-   (kms_scaling_derived_from_cuntz_and_jaynes phi h_add PL PR h_cuntz h_jaynes A).2,
-   kms_cross_branch_annihilation phi h_zero PL PR h_ortho A,
-   binaryEntropy_half⟩
-
 end InfoGeometry.Quantum.JaynesKMS

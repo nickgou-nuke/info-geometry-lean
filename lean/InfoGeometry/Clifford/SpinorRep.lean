@@ -98,26 +98,25 @@ theorem splitHeadAtom_sq (x : ℝ × ℝ) :
       (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) =
         (InfoGeometry.CliffordTower.Q11 x) •
           (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
+  ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [gammaPlusAtom, gammaMinusAtom, gammaPlus, gammaMinus,
       InfoGeometry.Clifford.Cl11Matrix.Eplus, InfoGeometry.Clifford.Cl11Matrix.Eminus,
-      Matrix.mul_apply, Fin.sum_univ_two]
+      InfoGeometry.CliffordTower.Q11_apply, Matrix.mul_apply, Fin.sum_univ_two]
     <;> ring_nf
 
 theorem gradingAtom_sq :
     gradingAtom * gradingAtom = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  exact gamma12_sq
+  simpa [gradingAtom] using gamma12_sq
 
 theorem gradingAtom_splitHeadAtom_anticomm (x : ℝ × ℝ) :
     gradingAtom * (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) +
       (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) * gradingAtom =
         (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
+  ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [gradingAtom, gammaPlusAtom, gammaMinusAtom, gamma12_eq,
-      gammaPlus, gammaMinus, InfoGeometry.Clifford.Cl11Matrix.Eplus,
-      InfoGeometry.Clifford.Cl11Matrix.Eminus]
+      gammaPlus, gammaMinus, InfoGeometry.Clifford.Cl11Matrix.J1,
+      InfoGeometry.Clifford.Cl11Matrix.Eplus, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 
 theorem appendAtom_grading_square {n : ℕ} {s : ℝ}
@@ -129,7 +128,7 @@ theorem appendAtom_grading_square {n : ℕ} {s : ℝ}
   rcases i with ⟨i, a⟩
   rcases j with ⟨j, b⟩
   by_cases hij : i = j <;> by_cases hab : a = b <;>
-    simp [appendAtom_apply, hij, hab]
+    simp [appendAtom_apply, Matrix.one_apply, hij, hab]
 
 theorem appendAtom_cross_splitHead_anticommutator {n : ℕ}
     (A : SplitGammaMatrix n) (x : ℝ × ℝ) :
@@ -144,7 +143,7 @@ theorem appendAtom_cross_splitHead_anticommutator {n : ℕ}
   ext i j
   rcases i with ⟨i, a⟩
   rcases j with ⟨j, b⟩
-  simp
+  simp [Matrix.one_apply]
   rw [← mul_add]
   have hentry :
       (gradingAtom * (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom)) a b +
@@ -361,8 +360,7 @@ finite-dimensional representation theorem and is not asserted here. -/
 theorem spinorRepresentation_range (n : ℕ) :
     (spinorRepresentation n).range =
       Algebra.adjoin ℝ (Set.range (recursiveGamma n)) := by
-  simp only [spinorRepresentation]
-  exact
+  simpa [spinorRepresentation] using
     (CliffordAlgebra.range_lift
       (Q := SplitQuad n) (f := recursiveGamma n)
       (cond := fun v => recursiveGamma_sq n v))

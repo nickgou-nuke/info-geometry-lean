@@ -14,6 +14,9 @@ theorem adscft_poincare_rapidity_purity_canonical_capstone
     (quantumPurity σ ≤ 1) ∧
     (quantumPurity (1 / 2) = 1) ∧
     (σ = 1 / 2) :=
-  grand_adscft_purity_synthesis p q σ hp hq h_pure
+  ⟨rapidity_boost_additivity p q hp hq,
+   quantum_purity_le_one σ,
+   critical_line_purity,
+   pure_state_confinement σ h_pure⟩
 
 end InfoGeometry.Canonical

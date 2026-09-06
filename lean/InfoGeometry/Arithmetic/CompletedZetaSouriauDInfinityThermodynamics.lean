@@ -91,4 +91,4 @@ theorem completedZetaBregman_self_eq_zero
 
 
 
-end CompletedZetaSouriauDInfinityThermodynamics
+end InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics

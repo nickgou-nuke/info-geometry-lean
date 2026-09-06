@@ -9,7 +9,7 @@ Source: `github-nick:nickgou-nuke/MD`, file `011.md`.
 Chapter 11 applies statistical mechanics and information geometry to matrix
 spaces.  The text also discusses emergent spacetime, entropy arrows, optimal
 transport, and Einstein equations; those are not finite algebraic theorems.
-This owner extracts the finite algebraic core:
+This owner extracts the finite socket:
 
 * finite real ensemble means and covariance entries;
 * covariance symmetry and variance self-covariance;

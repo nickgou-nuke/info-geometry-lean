@@ -1,5 +1,4 @@
 import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
 /-!
@@ -17,8 +16,6 @@ This file proves:
 namespace InfoGeometry.Canonical.CARVacuumContraction
 
 open scoped BigOperators
-
-set_option linter.unusedSimpArgs false
 
 variable {𝕜 V ι : Type*}
 variable [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -69,48 +66,5 @@ theorem car_vacuum_contraction_sum
             car_vacuum_contraction (A i) (C i) (c i) (h_car i hi) v (h_vac i hi)
     _ = (Finset.sum S c) • v := by
           simpa using (Finset.sum_smul (s := S) (f := c) (x := v)).symm
-
-/-! ### Constructive 2×2 Matrix CAR Fermion Fock Model -/
-
-open Matrix
-
-/-- Fermionic annihilation operator: $a = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$. -/
-def carAnnihilate (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
-  !![0, 1;
-     0, 0]
-
-/-- Fermionic creation operator: $a^\dagger = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$. -/
-def carCreate (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 2) R :=
-  !![0, 0;
-     1, 0]
-
-/-- Vacuum state column vector: $v_0 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$. -/
-def carVacuumCol (R : Type*) [CommRing R] : Matrix (Fin 2) (Fin 1) R :=
-  !![1;
-     0]
-
-/-- 🏆 THEOREM 1 (Constructive Vacuum Annihilation):
-    $a \cdot v_0 = 0$. -/
-theorem car_vacuum_annihilate_exact (R : Type*) [CommRing R] :
-    carAnnihilate R * carVacuumCol R = 0 := by
-  dsimp [carAnnihilate, carVacuumCol]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- 🏆 THEOREM 2 (Constructive Canonical Anticommutation Relation):
-    $\{a, a^\dagger\} = a a^\dagger + a^\dagger a = I_2$. -/
-theorem car_anticommutation_exact (R : Type*) [CommRing R] :
-    carAnnihilate R * carCreate R + carCreate R * carAnnihilate R = 1 := by
-  dsimp [carAnnihilate, carCreate]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- 🏆 THEOREM 3 (Constructive Single-Mode Fock Contraction):
-    $a (a^\dagger v_0) = v_0$. -/
-theorem car_vacuum_contraction_matrix_exact (R : Type*) [CommRing R] :
-    carAnnihilate R * (carCreate R * carVacuumCol R) = carVacuumCol R := by
-  dsimp [carAnnihilate, carCreate, carVacuumCol]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.CARVacuumContraction

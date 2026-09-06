@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Section 28 repaired: finite Einstein--torsion--spinor tensor interface
+# Section 28 repaired: finite Einstein--torsion--spinor tensor socket
 
 The source `section28.txt` sketches modified Einstein equations with torsion and
 spinor coupling, but it overstates several analytic/geometric facts.  In
@@ -122,6 +122,21 @@ theorem modifiedEinsteinResidual_symmetric
   intro μ ν
   unfold modifiedEinsteinResidual
   rw [hG μ ν, hg μ ν, hH μ ν, hψ μ ν, hT μ ν]
+
+/--
+End-to-end symmetry packet for the repaired Section 28 algebraic stress shadows.
+-/
+theorem repaired_section28_symmetric_residual_packet
+    {G g H A B : Tensor2} {trA torsionNorm Lambda alpha1 alpha2 eightPiG : ℝ}
+    (hG : Symmetric2 G) (hg : Symmetric2 g) (hH : Symmetric2 H) (hB : Symmetric2 B) :
+    Symmetric2
+      (modifiedEinsteinResidual G g H
+        (spinorStressShadow g A trA)
+        (torsionStressShadow g B torsionNorm alpha2)
+        Lambda alpha1 eightPiG) := by
+  exact modifiedEinsteinResidual_symmetric hG hg hH
+    (spinorStressShadow_symmetric hg)
+    (torsionStressShadow_symmetric hg hB)
 
 end InfoGeometry.Physics.Section28EinsteinTorsionSpinor
 

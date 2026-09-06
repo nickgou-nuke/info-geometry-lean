@@ -145,22 +145,6 @@ theorem connesDistance_triangle (t₁ t₂ t₃ : ℝ) :
   rw [this]
   exact abs_add_le (t₁ - t₂) (t₂ - t₃)
 
-/-!
-### 5. Гранд Капстоун Синтез
--/
-
-/-- 🏆 ГРАНД СИНТЕЗ: Пълна еквивалентност между некомутативната метрика на Кон,
-    Липшицовото условие на Дирак и класическото геодезично разстояние -/
-theorem grand_connes_metric_synthesis (t₁ t₂ t₃ : ℝ) :
-    (connesDistance t₁ t₂ = |t₁ - t₂|) ∧
-    (connesDistance t₁ t₁ = 0) ∧
-    (connesDistance t₁ t₂ = connesDistance t₂ t₁) ∧
-    (connesDistance t₁ t₃ ≤ connesDistance t₁ t₂ + connesDistance t₂ t₃) :=
-  ⟨connesDistance_eq_abs_sub t₁ t₂,
-   connesDistance_self t₁,
-   connesDistance_comm t₁ t₂,
-   connesDistance_triangle t₁ t₂ t₃⟩
-
 end
 
 end InfoGeometry.Noncommutative.ConnesMetric

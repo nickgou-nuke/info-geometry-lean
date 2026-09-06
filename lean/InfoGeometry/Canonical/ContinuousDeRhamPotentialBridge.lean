@@ -3,29 +3,23 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 
 /-!
-# Continuous de Rham Cohomology & Calculus Bridge for Modular Potentials
+# Logarithmic potentials along real parameterized functions
 
-This module formalizes the continuous calculus bridge connecting:
-1. **Smooth Paths of Positive Densities**:
-   $\gamma : \mathbb{R} \to \mathbb{R}$ with $\forall t, 0 < \gamma(t)$.
-2. **Smooth 0-Form Potential along Trajectories**:
-   $\Phi(t) = -\ln(\gamma(t)) + \ln(\gamma_0)$.
-3. **The Exact Continuous 1-Form / Maurer-Cartan Velocity (Fisher Score)**:
-   $\frac{d}{dt} \Phi(t) = -\frac{\gamma'(t)}{\gamma(t)}$.
-4. **Line Integrals & Path Independence (The Fundamental Theorem of Calculus)**:
-   The total change in potential along any smooth curve equals the terminal potential difference:
-   $\Phi(t_1) - \Phi(t_0) = -\ln(\gamma(t_1)) + \ln(\gamma(t_0))$.
-5. **Closed Loop Vanishing (Conservation of Energy)**:
-   Along any closed trajectory $\gamma(t_1) = \gamma(t_0)$, the net loop work vanishes:
-   $\Phi(t_1) - \Phi(t_0) = 0$.
+For `trajectoryPotential γ γ₀ t = -log (γ t) + log γ₀`, this owner
+proves a derivative formula at positive differentiability points, unconditional
+endpoint-difference identities, and an interval integral formula under explicit
+positivity, differentiability, and integrability hypotheses.
 
-All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+Endpoint equality alone gives a zero potential difference. Its interpretation
+as a zero integral additionally requires the hypotheses of
+`integral_logarithmicDerivative`. No cohomology identification is asserted.
 -/
 
 noncomputable section
@@ -69,12 +63,7 @@ theorem deriv_trajectoryPotential
     deriv (trajectoryPotential γ γ₀) t = - (γ' / γ t) :=
   (hasDerivAt_trajectoryPotential hγ hpos).deriv
 
-/-- 
-  THEOREM 3: Path Independence of Continuous Potential Difference.
-  The total work / potential difference between two parameters t₀ and t₁ depends
-  strictly on the endpoints γ(t₀) and γ(t₁), completely independent of the path:
-    Φ(t₁) - Φ(t₀) = -ln(γ(t₁)) + ln(γ(t₀))
--/
+/-- The reference constant cancels in the endpoint difference. -/
 theorem trajectoryPotential_difference
     (γ : ℝ → ℝ) (γ₀ : ℝ) (t₀ t₁ : ℝ) :
     trajectoryPotential γ γ₀ t₁ - trajectoryPotential γ γ₀ t₀ =
@@ -82,17 +71,31 @@ theorem trajectoryPotential_difference
   dsimp [trajectoryPotential]
   ring
 
-/-- 
-  THEOREM 4: Closed Loop Reversibility (First Law of Continuous Thermodynamics).
-  Along any closed loop where γ(t₁) = γ(t₀), the net integrated work vanishes identically:
-    Φ(t₁) - Φ(t₀) = 0
--/
+/-- Equal endpoint values give zero potential difference. -/
 theorem trajectoryPotential_closed_loop
     (γ : ℝ → ℝ) (γ₀ : ℝ) (t₀ t₁ : ℝ) (h_loop : γ t₁ = γ t₀) :
     trajectoryPotential γ γ₀ t₁ - trajectoryPotential γ γ₀ t₀ = 0 := by
   rw [trajectoryPotential_difference]
   rw [h_loop]
   ring
+
+/-- The negative logarithmic derivative integrates to the logarithmic
+endpoint difference on an interval where the function is positive. -/
+theorem integral_logarithmicDerivative
+    {γ γ' : ℝ → ℝ} {a b : ℝ}
+    (hγ : ∀ t ∈ Set.uIcc a b, HasDerivAt γ (γ' t) t)
+    (hpos : ∀ t ∈ Set.uIcc a b, 0 < γ t)
+    (hi : IntervalIntegrable (fun t => -(γ' t / γ t))
+      MeasureTheory.volume a b) :
+    (∫ t in a..b, -(γ' t / γ t)) = -Real.log (γ b) + Real.log (γ a) := by
+  calc
+    (∫ t in a..b, -(γ' t / γ t)) =
+        trajectoryPotential γ 1 b - trajectoryPotential γ 1 a := by
+      apply intervalIntegral.integral_eq_sub_of_hasDerivAt _ hi
+      intro t ht
+      exact hasDerivAt_trajectoryPotential (hγ t ht) (hpos t ht)
+    _ = -Real.log (γ b) + Real.log (γ a) :=
+      trajectoryPotential_difference γ 1 a b
 
 end InfoGeometry.Canonical.ContinuousDeRhamPotentialBridge
 

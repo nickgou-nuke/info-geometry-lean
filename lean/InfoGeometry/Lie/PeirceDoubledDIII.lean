@@ -21,15 +21,12 @@ def datum : DIIISuperfluidDatum Op where
   Theta := theta
   Xi := xi
   chi := chi
-
-theorem datum_laws : DIIISuperfluidLaws datum := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [Op] using theta_sq
-  · simpa [Op] using xi_sq
-  · simpa [Op] using chi_sq
-  · simp [datum]
-  · simp [datum]
-  · simp [datum]
-  · rfl
+  Theta_square := by simpa [Op] using theta_sq
+  Xi_square := by simpa [Op] using xi_sq
+  chi_square := by simpa [Op] using chi_sq
+  time_reversal_symmetry := by simp
+  particle_hole_symmetry := by simp
+  chiral_symmetry := by simp
+  chiral_is_phase_corrected_product := by rfl
 
 end InfoGeometry.Lie.PeirceDoubledDIII

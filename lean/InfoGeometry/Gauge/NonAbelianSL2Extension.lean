@@ -53,15 +53,3 @@ theorem comm_E_F :
     genE * genF - genF * genE = genK := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [genE, genF, genK, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem grand_sl2_algebra_synthesis :
-    (genJ * genJ = - 1) ∧
-    (genK * genK = 1) ∧
-    (genK * genE - genE * genK = (2 : ℝ) • genE) ∧
-    (genK * genF - genF * genK = -((2 : ℝ) • genF)) ∧
-    (genE * genF - genF * genE = genK) :=
-  ⟨genJ_sq_eq_neg_one,
-   genK_sq_eq_one,
-   comm_K_E,
-   comm_K_F,
-   comm_E_F⟩

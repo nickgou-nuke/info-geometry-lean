@@ -36,15 +36,11 @@ A J₂(𝕆_s) coordinate carrier in the finite 10D split-octonion packet.
 where `ξ₊, ξ₋ ∈ ℚ` are the light-cone coordinates and `Z ∈ 𝕆_s`
 (Zorn 8-coordinate SplitOct cell).
 -/
-abbrev JordanMatrix10D := ℚ × ℚ × SplitOct
-
-namespace JordanMatrix10D
-
-abbrev xp (X : JordanMatrix10D) : ℚ := X.1
-abbrev xm (X : JordanMatrix10D) : ℚ := X.2.1
-abbrev z (X : JordanMatrix10D) : SplitOct := X.2.2
-
-end JordanMatrix10D
+structure JordanMatrix10D where
+  xp : ℚ    -- ξ₊
+  xm : ℚ    -- ξ₋
+  z : SplitOct  -- Z ∈ 𝕆_s
+  deriving DecidableEq, Repr
 
 namespace JordanMatrix10D
 

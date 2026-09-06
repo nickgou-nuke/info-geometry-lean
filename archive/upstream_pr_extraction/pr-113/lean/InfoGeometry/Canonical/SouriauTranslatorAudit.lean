@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
+
+namespace InfoGeometry.Canonical.SouriauTranslatorAudit
+end InfoGeometry.Canonical.SouriauTranslatorAudit

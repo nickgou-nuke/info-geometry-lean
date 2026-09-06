@@ -18,8 +18,7 @@ This application-level bridge separates:
 * thermofield/GNS purification, which lives on a tensor-product carrier
   `H ⊗ Hbar`;
 * direct-sum Krein signature doubling, which lives on a carrier `H ⊕ H`;
-* the Möbius/Krein supertrace sector, whose inverse-zeta-labelled value is
-  stored only through an explicit calibration field;
+* the Möbius/Krein supertrace index, where the signed readout is `1 / ζ(β)`;
 * modular Hamiltonian normalization, where the scalar `log Z(β)` normalizes the
   state and does not itself create the modular flow.
 
@@ -35,23 +34,31 @@ namespace InfoGeometry.Applications.PrimeKreinKMSBridge
 
 /-! ## 1. Positive primon Gibbs/KMS sector -/
 
-/-- Supplied positive Gibbs/KMS data, including its normalizability gate. -/
+/--
+Positive Gibbs data for the bosonic primon Hamiltonian.
+
+Interpretation:
+
+* `H e_n = log n e_n`;
+* `Z(β) = Tr(exp(-βH)) = ζ(β)`;
+* `beta_gt_one` is the normalizability / trace-class gate.
+-/
 structure PositivePrimonGibbsGate
     (State Observable : Type*) [Ring Observable] where
   /-- Inverse temperature. -/
   beta : ℝ
   /-- Normalizability / trace-class gate. -/
   beta_gt_one : 1 < beta
-  /-- Supplied positive partition readout. -/
+  /-- Positive partition function, intended to be `ζ(β)`. -/
   partition : ℝ
   /-- Positivity of the positive partition. -/
   partition_pos : 0 < partition
-  /-- Positive Gibbs-state carrier. -/
+  /-- Positive Gibbs/KMS state carrier. -/
   gibbsState : State
-  /-- Supplied modular flow datum on the observable algebra. -/
+  /-- Native modular flow acting on the noncommutative observable algebra. -/
   modularFlow :
     InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Observable
-  /-- KMS-state datum for `modularFlow` at inverse temperature `beta`. -/
+  /-- Genuine analytic KMS state for `modularFlow` at inverse temperature `beta`. -/
   kmsState :
     InfoGeometry.OperatorAlgebra.Thermodynamics.KMSState
       Observable modularFlow beta
@@ -60,20 +67,28 @@ namespace PositivePrimonGibbsGate
 
 variable {State Observable : Type*} [Ring Observable]
 
-/-- Complex-valued observable expectation supplied by the KMS datum. -/
+/-- Complex-valued observable expectation supplied by the native KMS state. -/
 def expectation
     (G : PositivePrimonGibbsGate State Observable) :
     Observable → ℂ :=
   G.kmsState.state.eval
 
-/-- The boundary-condition proposition carried by the supplied KMS datum. -/
+/-- The exact analytic strip and both noncommutative KMS boundary equations. -/
 def KMSCondition
     (G : PositivePrimonGibbsGate State Observable) : Prop :=
   G.kmsState.kms.boundaryCondition
 
 end PositivePrimonGibbsGate
 
-/-- Supplied thermofield-style tensor-product doubling data. -/
+/--
+Thermofield purification gate.
+
+This is the tensor-product/GNS-style doubling:
+
+`Ψβ ∈ H ⊗ Hbar`.
+
+It is not the same object as the direct-sum Krein carrier.
+-/
 structure ThermofieldGNSGate
     (ThermofieldVector Observable : Type*)
     [NormedAddCommGroup ThermofieldVector] where
@@ -81,15 +96,15 @@ structure ThermofieldGNSGate
   beta : ℝ
   /-- Positive normalizability domain. -/
   beta_gt_one : 1 < beta
-  /-- Supplied thermofield vector. -/
+  /-- Unnormalized or normalized thermofield vector. -/
   psi_beta : ThermofieldVector
-  /-- Partition readout calibrated by the thermofield norm square. -/
+  /-- Positive partition function represented by the thermofield norm square. -/
   partition : ℝ
   /-- Positivity of the partition in the normalizable regime. -/
   partition_pos : 0 < partition
   /-- Genuine norm-square/partition calibration. -/
   normSq_eq_partition : ‖psi_beta‖ ^ 2 = partition
-  /-- Supplied positive expectation readout. -/
+  /-- Positive expectation readout, intended as `Tr(ρβ A)`. -/
   expectation : Observable → ℝ
 
 namespace ThermofieldGNSGate
@@ -132,7 +147,7 @@ def modular_automorphism_group
     InfoGeometry.OperatorAlgebra.Thermodynamics.ModularFlow Algebra :=
   T.modularFlow
 
-/-- The supplied Tomita datum satisfies its stored KMS boundary condition. -/
+/-- The native Tomita owner yields the full analytic KMS boundary condition. -/
 theorem KMS_in_modular_time
     (T : TomitaModularGate Algebra) :
     T.toKMSState.kms.boundaryCondition :=
@@ -187,22 +202,27 @@ abbrev DirectSumKreinCarrier (K : Type*) := K × K
 
 /-! ## 4. Möbius / fermionic square-free Krein index sector -/
 
-/-- Supplied signed/supertrace data for a finite or square-free index sector.
+/--
+Möbius/Krein signature gate on the square-free fermionic sector.
 
-The structure stores the parity and zeta-side readouts as data; it does not
-construct an operator trace or an analytic Dirichlet series.
+Interpretation:
+
+* `Γ ψ_n = μ(n) ψ_n` on square-free states;
+* `Tr(Γ exp(-βH)) = Σ μ(n)n^{-β} = 1 / ζ(β)`.
+
+This is an index/supertrace, not a positive partition function.
 -/
 structure MobiusKreinIndexGate
     (FermionSpace Operator : Type*) where
   /-- Inverse temperature. -/
   beta : ℝ
-  /-- Supplied convergence-domain hypothesis for the calibration. -/
+  /-- Positive convergence domain used by the analytic calibration. -/
   beta_gt_one : 1 < beta
-  /-- Supplied fermion/parity operator. -/
+  /-- Fermion/Möbius parity operator, intended as `Γ = (-1)^F`. -/
   parityOperator : Operator
   /-- Signed trace / Krein trace readout. -/
   signedTrace : ℝ
-  /-- Supplied inverse-zeta-labelled readout. -/
+  /-- Intended zeta-side readout, usually `(ζ(β))⁻¹`. -/
   inverseZetaReadout : ℝ
   /-- Supplied signed trace / inverse-zeta calibration. -/
   signedTrace_eq_inverseZeta :
@@ -288,8 +308,7 @@ automorphism flow.
 -/
 abbrev GibbsModularHamiltonianGate
     (E LieAlgebra : Type*)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [AddMonoid LieAlgebra] :=
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
     (E := E) (LieAlgebra := LieAlgebra)
 
@@ -300,7 +319,6 @@ open InfoGeometry.Canonical.BoundedModularFlowCalibration
 variable
     {E LieAlgebra : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [AddMonoid LieAlgebra]
 
 /-- The normalized modular Hamiltonian is the Souriau generator plus its
 Massieu/partition-potential identity shift. -/
@@ -398,7 +416,6 @@ The positive state and the Krein index are not identified.
 structure PrimeKreinKMSBridgeData
     (State Observable ThermofieldVector Algebra FermionSpace Operator K
       LieAlgebra : Type*)
-    [AddMonoid LieAlgebra]
     [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
     [InfoGeometry.Krein.KreinSpace K]
     [NormedAddCommGroup ThermofieldVector] [Ring Observable] [Ring Algebra] where
@@ -434,7 +451,6 @@ namespace PrimeKreinKMSBridgeData
 variable
     {State Observable ThermofieldVector Algebra FermionSpace Operator K
       LieAlgebra : Type*}
-    [AddMonoid LieAlgebra]
     [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
     [InfoGeometry.Krein.KreinSpace K]
     [NormedAddCommGroup ThermofieldVector]

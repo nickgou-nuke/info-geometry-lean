@@ -153,52 +153,11 @@ theorem bracket_grade_outside_zero {R : Type*} [CommRing R] (G : FiveGradedLieAl
     ⁅x, y⁆ = 0 :=
   G.bracket_eq_zero_none hij hx hy
 
-/-!
-`gradeAdd` is a partial operation because the five-grade window is finite.
-The following theorem is the usable exhaustive closure statement: a bracket
-of homogeneous elements either lands in one of the five graded submodules or
-vanishes when the formal grade sum leaves the window.
--/
-theorem bracket_grade_closed_or_zero
-    {R : Type*} [CommRing R] (G : FiveGradedLieAlgebra R)
-    {i j : TKKGrade} {x y : G.L}
-    (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
-    (∃ k : TKKGrade, ⁅x, y⁆ ∈ G.grade k) ∨ ⁅x, y⁆ = 0 := by
-  cases h : gradeAdd i j with
-  | none =>
-      exact Or.inr (bracket_grade_outside_zero G h hx hy)
-  | some k =>
-      exact Or.inl ⟨k, bracket_grade_closed G h hx hy⟩
-
-theorem gradeAdd_none_iff_natAbs_weight_sum_gt_two
-    (i j : TKKGrade) :
-    gradeAdd i j = none ↔
-      2 < Int.natAbs (weight i + weight j) := by
-  cases i <;> cases j <;> decide
-
-theorem gradeAdd_some_weight_eq_sum
-    {i j k : TKKGrade}
-    (hijk : gradeAdd i j = some k) :
-    weight k = weight i + weight j := by
-  cases i <;> cases j <;> cases k <;>
-    simp [gradeAdd, ofWeight, weight] at hijk ⊢
-
-theorem bracket_grade_outside_window_zero
-    {R : Type*} [CommRing R] (G : FiveGradedLieAlgebra R)
-    {i j : TKKGrade}
-    (hij : 2 < Int.natAbs (weight i + weight j))
-    {x y : G.L} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
-    ⁅x, y⁆ = 0 := by
-  exact bracket_grade_outside_zero G
-    ((gradeAdd_none_iff_natAbs_weight_sum_gt_two i j).2 hij) hx hy
-
 /-- Core definitional readout preserved from the archived lane. -/
 theorem tkk_jordan_pair_data_synthesis :
     gradeAdd z0 p1 = some p1 ∧
     gradeAdd m1 p1 = some z0 ∧
     gradeAdd p2 p1 = none := by
-  constructor
-  · rfl
-  constructor <;> rfl
+  exact ⟨rfl, rfl, rfl⟩
 
 end TKKJordanPairData

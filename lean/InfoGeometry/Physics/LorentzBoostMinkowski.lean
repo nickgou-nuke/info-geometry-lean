@@ -1,21 +1,15 @@
 import Mathlib.Tactic
-import Mathlib
 
 noncomputable section
 
 namespace InfoGeometry.Physics.LorentzBoostMinkowski
 
-/-- Four-vector with components `(t,x,y,z)`, represented natively as a product. -/
-abbrev FourVector := ℝ × (ℝ × (ℝ × ℝ))
-
-namespace FourVector
-
-@[simp] def t (p : FourVector) : ℝ := p.1
-@[simp] def x (p : FourVector) : ℝ := p.2.1
-@[simp] def y (p : FourVector) : ℝ := p.2.2.1
-@[simp] def z (p : FourVector) : ℝ := p.2.2.2
-
-end FourVector
+/-- Four-vector with components `(t,x,y,z)`. -/
+structure FourVector where
+  t : ℝ
+  x : ℝ
+  y : ℝ
+  z : ℝ
 
 /-- Minkowski bilinear form with signature `(+---)`. -/
 def minkowskiPair (a b : FourVector) : ℝ :=
@@ -26,52 +20,10 @@ def minkowskiSq (p : FourVector) : ℝ := minkowskiPair p p
 
 /-- Standard boost in the x-direction with rapidity `φ`. -/
 def boostX (φ : ℝ) (p : FourVector) : FourVector where
-  fst := Real.cosh φ * p.t + Real.sinh φ * p.x
-  snd :=
-    (Real.sinh φ * p.t + Real.cosh φ * p.x,
-      (p.y, p.z))
-
-@[simp] theorem boostX_zero (p : FourVector) :
-    boostX 0 p = p := by
-  cases p
-  simp [boostX]
-
-theorem boostX_add (φ ψ : ℝ) (p : FourVector) :
-    boostX (φ + ψ) p = boostX φ (boostX ψ p) := by
-  cases p
-  ext <;> simp [boostX, Real.cosh_add, Real.sinh_add] <;> ring
-
-theorem boostX_neg_left (φ : ℝ) (p : FourVector) :
-    boostX (-φ) (boostX φ p) = p := by
-  rw [← boostX_add]
-  simp
-
-theorem boostX_neg_right (φ : ℝ) (p : FourVector) :
-    boostX φ (boostX (-φ) p) = p := by
-  rw [← boostX_add]
-  simp
-
-/-- The finite Lorentz boost is a real-linear equivalence of four-vectors. -/
-def boostXLinearEquiv (φ : ℝ) : FourVector ≃ₗ[ℝ] FourVector where
-  toFun := boostX φ
-  invFun := boostX (-φ)
-  left_inv := boostX_neg_left φ
-  right_inv := boostX_neg_right φ
-  map_add' := by
-    intro p q
-    cases p
-    cases q
-    ext <;> simp [boostX, add_mul, mul_add] <;> ring
-  map_smul' := by
-    intro c p
-    cases p
-    ext <;> simp [boostX, smul_eq_mul] <;> ring
-
-@[simp] theorem boostXLinearEquiv_apply (φ : ℝ) (p : FourVector) :
-    boostXLinearEquiv φ p = boostX φ p := rfl
-
-@[simp] theorem boostXLinearEquiv_symm_apply (φ : ℝ) (p : FourVector) :
-    (boostXLinearEquiv φ).symm p = boostX (-φ) p := rfl
+  t := Real.cosh φ * p.t + Real.sinh φ * p.x
+  x := Real.sinh φ * p.t + Real.cosh φ * p.x
+  y := p.y
+  z := p.z
 
 @[simp] theorem minkowskiPair_symmetric (a b : FourVector) :
     minkowskiPair a b = minkowskiPair b a := by
@@ -97,19 +49,6 @@ theorem boostX_preserves_minkowskiPair (φ : ℝ) (a b : FourVector) :
 theorem boostX_preserves_minkowskiSq (φ : ℝ) (p : FourVector) :
     minkowskiSq (boostX φ p) = minkowskiSq p := by
   simp [minkowskiSq, boostX_preserves_minkowskiPair]
-
-theorem boostXLinearEquiv_preserves_minkowskiPair
-    (φ : ℝ) (a b : FourVector) :
-    minkowskiPair (boostXLinearEquiv φ a) (boostXLinearEquiv φ b) =
-      minkowskiPair a b := by
-  simpa only [boostXLinearEquiv_apply] using
-    boostX_preserves_minkowskiPair φ a b
-
-theorem boostXLinearEquiv_preserves_minkowskiSq
-    (φ : ℝ) (p : FourVector) :
-    minkowskiSq (boostXLinearEquiv φ p) = minkowskiSq p := by
-  simpa only [boostXLinearEquiv_apply] using
-    boostX_preserves_minkowskiSq φ p
 
 /-- The Souriau beta-energy pairing is Lorentz invariant when both beta and momentum are boosted. -/
 theorem boostX_preserves_beta_energy_pair (φ : ℝ) (β p : FourVector) :

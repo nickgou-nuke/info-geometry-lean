@@ -1,4 +1,4 @@
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Cl(1,1) atom to chiral CAR basis bridge

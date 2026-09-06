@@ -11,7 +11,7 @@ abstract self-dual-colimit transport:
 * a proper carrier is modeled as an increasing sequence of finite/staged
   carriers;
 * dual positivity on the directed union is detected by an explicit finite-stage
-  property;
+  witness;
 * the self-dual cone then extends to the whole algebraic colimit carrier.
 
 #### BUCKET 1: CLOSED FINITE/COLIMIT THEOREMS
@@ -49,19 +49,6 @@ theorem selfDualCone_dual_exhaustive_of_stage_detector
   intro x hx
   rcases hdetect x hx with ⟨n, hxn⟩
   exact Set.mem_iUnion.mpr ⟨n, hxn⟩
-
-/-- Finite-stage detection is equivalent to dual-positive exhaustiveness on the union. -/
-theorem stage_detector_iff_dual_exhaustive
-    {E : Type*}
-    (pairing : E → E → ℝ)
-    (K : ℕ → Set E) :
-    (∀ x, (∀ y, y ∈ Set.iUnion K → 0 ≤ pairing x y) → ∃ n : ℕ, x ∈ K n) ↔
-      ∀ x, (∀ y, y ∈ Set.iUnion K → 0 ≤ pairing x y) → x ∈ Set.iUnion K := by
-  constructor
-  · exact selfDualCone_dual_exhaustive_of_stage_detector pairing K
-  · intro hexhaustive x hx
-    rcases Set.mem_iUnion.mp (hexhaustive x hx) with ⟨n, hxn⟩
-    exact ⟨n, hxn⟩
 
 /--
 Proper-carrier induction plus an explicit finite-stage detector extends a

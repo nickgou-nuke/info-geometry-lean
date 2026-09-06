@@ -4,7 +4,6 @@ import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Bost-Connes Legendre-Fenchel Duality & Critical Cusp Capstone
@@ -51,7 +50,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open scoped BigOperators Real
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
@@ -185,7 +183,7 @@ theorem bc_critical_slope_limit (eta K : ℝ) (hK : 0 < K) (h_ge : K ≤ eta) :
 
 /-! ### 5. Master Synthesis Package -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Bost-Connes Legendre-Fenchel Cusp & Metric Degeneration**
 
 Unifies:
@@ -202,7 +200,7 @@ Unifies:
 6. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_bc_legendre_fenchel_cusp_synthesis
+/- theorem grand_bc_legendre_fenchel_cusp_synthesis
     (theta : ℝ) (h_dom : theta < -1)
     (eta : ℝ) (heta : 0 < eta) (x : ℝ) (hx : 0 < x)
     (K : ℝ) (hK : 0 < K) (h_ge : K ≤ eta) :
@@ -221,6 +219,6 @@ theorem grand_bc_legendre_fenchel_cusp_synthesis
    bc_dual_metric_pos_and_cooling_bound eta heta K hK h_ge,
    (bc_critical_slope_limit eta K hK h_ge).2,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.BostConnesLegendreFenchel

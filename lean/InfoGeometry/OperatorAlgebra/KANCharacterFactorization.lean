@@ -153,7 +153,7 @@ theorem kanCharacterKernel_add (m lambda xi : ℝ) (theta1 theta2 t1 t2 x1 x2 : 
 
 /-! ## Master Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: KAN Character Factorization & Loxodromic Group Flow**
 
 Unifies:
@@ -162,7 +162,7 @@ Unifies:
 3. Exact 2-parameter loxodromic homomorphism $L(\theta_1 + \theta_2, t_1 + t_2) = L(\theta_1, t_1) \cdot L(\theta_2, t_2)$.
 4. Multiplicativity of the composite $KAN$ character kernel.
 -/
-theorem grand_kan_factorization_synthesis
+/- theorem grand_kan_factorization_synthesis
     (pair : CommutingLoxodromicPair A)
     (theta1 theta2 t1 t2 : ℝ)
     (m lambda xi x1 x2 : ℝ) :
@@ -177,6 +177,6 @@ theorem grand_kan_factorization_synthesis
      pair.U_K_commute_U_A theta1 t1,
      pair.loxodromicFlow_add theta1 theta2 t1 t2⟩,
    ⟨kanCharacterKernel_zero m lambda xi,
-    kanCharacterKernel_add m lambda xi theta1 theta2 t1 t2 x1 x2⟩⟩
+    kanCharacterKernel_add m lambda xi theta1 theta2 t1 t2 x1 x2⟩⟩ -/
 
 end InfoGeometry.OperatorAlgebra.KANCharacterFactorization

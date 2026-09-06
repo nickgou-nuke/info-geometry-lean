@@ -55,3 +55,4 @@ theorem splitRotor55_eq_peirceSpectral (i : Fin 5) (t : ℝ) :
   module
 
 end InfoGeometry.Clifford.Cl55SplitRotorPeirce
+

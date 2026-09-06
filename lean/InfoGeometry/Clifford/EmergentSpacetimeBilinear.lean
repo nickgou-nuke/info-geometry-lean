@@ -86,3 +86,4 @@ theorem emergentMetric_symm (psi : Cl55Mat) (gamma_mu gamma_nu : Cl55Mat) :
   rw [add_comm]
 
 end InfoGeometry.Clifford.EmergentSpacetime
+

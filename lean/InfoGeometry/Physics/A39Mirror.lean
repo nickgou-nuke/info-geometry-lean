@@ -8,8 +8,10 @@ namespace InfoGeometry.Physics
 
 /-- The A=39 mirror pair (Ca-39 and K-39). -/
 def A39Pair : MirrorPair where
-  val := ((20, 19), (19, 20))
-  property := by norm_num
+  nuc1 := { Z := 20, N := 19 }
+  nuc2 := { Z := 19, N := 20 }
+  mirror_cond_Z := rfl
+  mirror_cond_N := rfl
 
 /-- Cross-shell excitations for the A=39 mirror pair. -/
 inductive ExcitationsA39
@@ -17,17 +19,12 @@ inductive ExcitationsA39
   | p2_h3 : ExcitationsA39 -- 2 particles, 3 holes
 
 /-- Nuclear state properties specific to the A=39 CED downsloping analysis. -/
-abbrev A39State := ExcitationsA39 × ℝ × ℚ × ℤ × ℝ
-
-namespace A39State
-
-abbrev excitation (state : A39State) : ExcitationsA39 := state.1
-abbrev excitation_energy (state : A39State) : ℝ := state.2.1
-abbrev spin (state : A39State) : ℚ := state.2.2.1
-abbrev parity (state : A39State) : ℤ := state.2.2.2.1
-abbrev spatial_overlap (state : A39State) : ℝ := state.2.2.2.2
-
-end A39State
+structure A39State where
+  excitation : ExcitationsA39
+  excitation_energy : ℝ
+  spin : ℚ
+  parity : ℤ
+  spatial_overlap : ℝ
 
 /-- Coulomb Energy Difference (CED) as a function of the A=39 state. -/
 noncomputable def CED (state : A39State) : ℝ :=
@@ -37,13 +34,21 @@ noncomputable def CED (state : A39State) : ℝ :=
   let k : ℝ := 50.0
   base_CED - k * state.spatial_overlap
 
-/-- The CED decreases when the overlap parameter increases. -/
+/-- The CED downsloping trend for the A=39 mirror pair.
+For negative parity states from p1_h2 cross-shell excitations,
+as excitation energy increases, spatial overlap increases (expansion),
+which directly reduces the Coulomb energy (Thomas-Ehrman shift analog)
+and generates a negative CED slope. -/
 theorem downsloping_CED_A39 (s1 s2 : A39State)
+    (_h_exc1 : s1.excitation = ExcitationsA39.p1_h2)
+    (_h_exc2 : s2.excitation = ExcitationsA39.p1_h2)
+    (_h_parity1 : s1.parity = -1)
+    (_h_parity2 : s2.parity = -1)
+    (_h_energy_inc : s1.excitation_energy < s2.excitation_energy)
     (h_overlap_inc : s2.spatial_overlap > s1.spatial_overlap) :
     s2.spatial_overlap > s1.spatial_overlap ∧ CED s2 < CED s1 := by
   refine ⟨h_overlap_inc, ?_⟩
   unfold CED
-  simp only [A39State.spatial_overlap] at h_overlap_inc ⊢
   nlinarith [h_overlap_inc]
 
 end InfoGeometry.Physics

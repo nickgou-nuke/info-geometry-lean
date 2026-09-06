@@ -7,7 +7,7 @@ open CategoryTheory
 open CategoryTheory.Limits
 open FilteredColimit.Native.Topological
 open InfoGeometry.Canonical.InductiveColimitBridge
-open InfoGeometry.Canonical.Cl11SequentialStageSystemBridge
+open InfoGeometry.Canonical.Cl11SequentialColimitSystemBridge
 open InfoGeometry.Canonical.Cl11ConcreteSequentialColimitConsequences
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -114,9 +114,7 @@ theorem modularSpinor_Cl11SequentialColimit_transport_preserves_threeForm
         ((modularSpinorTransport
           B.spectrumBridge.boundaryBridge.connection path) z) =
       canonicalSplitG2ThreeFormValue x y z := by
-  have h := modularSpinor_filteredColimit_transport_preserves_threeForm F B path x y z
-  simp_all [modularSpinorTransport]
-  <;> exact h
+  exact modularSpinor_filteredColimit_transport_preserves_threeForm F B path x y z
 
 /-- The concrete phase axis image remains available inside the joint bridge. -/
 def cl11_sequentialColimit_phaseAxisImage : InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit :=
@@ -158,7 +156,7 @@ theorem cl11_sequentialColimit_compatibleProperty_bondSeq
   (hP : cl11System.CompatibleProperty P)
   (n m : ℕ) (x : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n) (hx : P n x) :
     P (n + m) (cl11System.bondSeq n m x) := by
-  exact SequentialStageSystem.compatibleProperty_bondSeq cl11System P hP n m x hx
+  exact SequentialColimitSystem.compatibleProperty_bondSeq cl11System P hP n m x hx
 
 end
 

@@ -4,14 +4,14 @@ InfoGeometry/Arithmetic/PrimitiveSouriauPipeline.lean
 Owner-target surface for the primitive/Souriau/projective arithmetic sidecar
 stack.
 
-This module bundles the already-installed property-gated corridors:
+This module bundles the already-installed witness-gated corridors:
 
 * primitive finite Mellin/Gibbs readouts;
 * Souriau zeta calibration;
 * projective temperature inversion;
 * prime/von-Mangoldt projective partition;
 * projective relative-entropy readouts and Weyl-gauge decompositions;
-* finite arithmetic KMS interfaces.
+* finite arithmetic KMS sockets.
 
 It does not prove the Erdős primitive-set theorem, Bost-Connes theorem, KMS
 existence/uniqueness, the prime number theorem, analytic continuation, or a
@@ -21,11 +21,12 @@ global KL/Jensen theorem.
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
-import InfoGeometry.Canonical.SelfDualNormalConeBridge
+import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -41,17 +42,17 @@ open InfoGeometry.Arithmetic.ProjectiveWeylGauge
 open InfoGeometry.Arithmetic.WeylArithmeticDivergence
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
 
-/-! ## 1. Bundled installed property surface -/
+/-! ## 1. Bundled installed witness surface -/
 
 /--
-Bundled property surface for the finite primitive/Souriau/projective arithmetic
+Bundled witness surface for the finite primitive/Souriau/projective arithmetic
 pipeline.
 
 All substantial mathematical claims remain in the supplied witnesses.  This
 structure exists so graph/orchestration tooling can point at one owner surface
 instead of many sidecars.
 -/
-structure PrimitiveSouriauPipelineData
+structure PrimitiveSouriauPipelineWitness
     (State : Type*) where
   /-- Finite support under inspection. -/
   support : Finset ℕ
@@ -75,8 +76,8 @@ structure PrimitiveSouriauPipelineData
   /-- Projective Weyl-gauge calibration. -/
   weyl : ProjectiveWeylGaugeCalibration State
 
-  /-- Projective arithmetic KMS property. -/
-  kms : ProjectiveArithmeticKMSData State
+  /-- Projective arithmetic KMS witness. -/
+  kms : ProjectiveArithmeticKMSWitness State
 
   /-- Compatibility between projective KMS flow and prime flow. -/
   kmsPrime : ProjectiveKMSPrimeCompatibility State
@@ -86,10 +87,10 @@ structure PrimitiveSouriauPipelineData
     ArithmeticDivergenceReadout :=
       readoutOfProjectiveWeylGaugeCalibration weyl
 
-namespace PrimitiveSouriauPipelineData
+namespace PrimitiveSouriauPipelineWitness
 
 variable {State : Type*}
-variable (P : PrimitiveSouriauPipelineData State)
+variable (P : PrimitiveSouriauPipelineWitness State)
 
 /-- In the compact projective sector, the inverse temperature lies in the cold finite regime. -/
 theorem beta_cold :
@@ -147,9 +148,9 @@ theorem itakura_shape_scale_right
 
 /-! ## 2. Owner target -/
 
-/-- The owner target follows directly from the supplied property bundle. -/
-theorem primitiveSouriauPipeline :
-    ∀ (State : Type*) (P : PrimitiveSouriauPipelineData State),
+/-- The owner target follows directly from the supplied witness bundle. -/
+theorem primitiveSouriauPipelineOwnerTarget :
+    ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
       1 < betaInvert P.u ∧
       0 ≤ projectiveArithmeticGibbsPartition P.support P.u ∧
       P.kms.projectiveModularFlowReadout (P.kms.stateOfFinset P.support) P.u =
@@ -174,6 +175,6 @@ theorem primitiveSouriauPipeline :
     P.weyl_total_eq_scale_mul_shape
   ⟩
 
-end PrimitiveSouriauPipelineData
+end PrimitiveSouriauPipelineWitness
 
 end InfoGeometry.Arithmetic.PrimitiveSouriauPipeline

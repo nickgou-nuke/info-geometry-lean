@@ -1141,7 +1141,8 @@ theorem splitOct_basis8_seven_shape_square_y2
     (mul (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)
       (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)).y2 =
       Bool.xor b a := by
-  simp [mul, dot3, cross0, cross1, cross2, add2, mul2]
+  cases a <;> cases b <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;>
+    decide
 
 theorem splitOct_basis8_seven_shape_square_y2_of_trace
     (a b x1 x2 y0 y1 : F2Bit)
@@ -1156,15 +1157,16 @@ theorem splitOct_basis8_seven_shape_square_a
     (mul (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)
       (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)).a =
       Bool.xor (Bool.xor a (x1 && y1)) x2 := by
-  simp [mul, dot3, cross0, cross1, cross2, add2, mul2]
+  cases a <;> cases b <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;>
+    decide
 
 theorem splitOct_basis8_seven_shape_square_b
     (a b x1 x2 y0 y1 : F2Bit) :
     (mul (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)
       (⟨a, b, false, x1, x2, y0, y1, true⟩ : SplitOctF2)).b =
       Bool.xor (Bool.xor b (x1 && y1)) x2 := by
-  simp [mul, dot3, cross0, cross1, cross2, add2, mul2]
-  cases x1 <;> cases y1 <;> rfl
+  cases a <;> cases b <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;>
+    rfl
 
 theorem splitOct_basis8_seven_shape_square_a_zero_iff_x2
     (a b x1 x2 y0 y1 : F2Bit)
@@ -1846,16 +1848,18 @@ theorem fullPeel_basis8_two_trace_zero_shape
 theorem mul_basis8_two_basis8_fifth_a (X : SplitOctF2) :
     (mul X (basis8 5)).a = X.x0 := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  simp [mul, dot3, cross0, cross1, cross2, basis8, up0, up1, up2,
-    down0, down1, down2, ePlus, eMinus, add2, mul2]
+  cases a <;> cases b <;> cases x0 <;> cases x1 <;> cases x2 <;>
+    cases y0 <;> cases y1 <;> cases y2 <;>
+    simp [mul, add, dot3, cross0, cross1, cross2, add2, mul2,
+      basis8, up0, up1, up2, down0, down1, down2, ePlus, eMinus]
 
 theorem mul_basis8_two_add_four_fifth_a (X : SplitOctF2) :
     (mul X (add (basis8 4) (basis8 5))).a = X.x0 := by
-  rw [mul_add]
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  simp [mul, dot3, cross0, cross1, cross2, basis8, up0, up1, up2,
-    down0, down1, down2, ePlus, eMinus, add2, mul2]
-  simp [add, add2]
+  cases a <;> cases b <;> cases x0 <;> cases x1 <;> cases x2 <;>
+    cases y0 <;> cases y1 <;> cases y2 <;>
+    simp [mul, add, dot3, cross0, cross1, cross2, add2, mul2,
+      basis8, up0, up1, up2, down0, down1, down2, ePlus, eMinus]
 
 theorem fullPeel_basis8_two_readback_of_preceding
     {g : SplitOctF2Aut}

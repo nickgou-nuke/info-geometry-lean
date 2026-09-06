@@ -22,12 +22,22 @@ namespace InfoGeometry.Physics.NuclearZornAssociatorOperatorBridge
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 abbrev Zorn := SplitOct
-abbrev ZornEnd := Module.End ℤ SplitOct
+abbrev ZornEnd := Zorn → Zorn
+
+instance : Zero ZornEnd := ⟨fun _ => zeroZ⟩
+instance : Sub ZornEnd := ⟨fun f g z => subZ (f z) (g z)⟩
+instance : Mul ZornEnd := ⟨fun f g z => f (g z)⟩
+
+private theorem subZ_eq_zero_iff (x y : Zorn) : subZ x y = zeroZ ↔ x = y := by
+  cases x <;> cases y <;> simp [subZ, zeroZ] <;> omega
+
+private theorem negZ_eq_zero_iff (x : Zorn) : negZ x = zeroZ ↔ x = zeroZ := by
+  cases x <;> simp [negZ, zeroZ]
 
 /-- Left-regular Zorn multiplication as an associative linear-operator
 carrier. -/
 def leftOp (X : Zorn) : ZornEnd :=
-  leftRegularLinear X
+  leftRegular X
 
 @[simp] theorem leftOp_apply (X Y : Zorn) :
     leftOp X Y = mulZ X Y := by
@@ -50,7 +60,7 @@ theorem leftOp_mul_apply_eq_of_associator_zero
   have h := leftOp_composition_defect_apply X Y Z
   rw [hAssoc] at h
   change (leftOp X * leftOp Y) Z - leftOp (mulZ X Y) Z = 0 at h
-  exact sub_eq_zero.mp h
+  exact (subZ_eq_zero_iff _ _).mp h
 
 /-- Conversely, exact multiplicativity of the left-regular action on a vector
 forces the corresponding associator to vanish. -/
@@ -62,13 +72,13 @@ theorem associator_zero_of_leftOp_mul_apply_eq
   have hzero :
       (leftOp X * leftOp Y - leftOp (mulZ X Y)) Z = 0 := by
     change (leftOp X * leftOp Y) Z - leftOp (mulZ X Y) Z = 0
-    exact sub_eq_zero.mpr hMul
+    exact (subZ_eq_zero_iff _ _).mpr hMul
   rw [hzero] at h
   have hneg : negZ (associator X Y Z) = 0 := h.symm
   have hneg' : -(associator X Y Z) = 0 := by
     change negZ (associator X Y Z) = 0
     exact hneg
-  exact neg_eq_zero.mp hneg'
+  exact (negZ_eq_zero_iff _).mp hneg'
 
 /-- The nonassociative and operator formulations agree exactly on whether the
 local composition defect vanishes. -/

@@ -25,9 +25,5 @@ theorem mertens_at_one :
   have h_icc : Finset.Icc 1 1 = {1} := Finset.Icc_self 1
   rw [h_icc, Finset.sum_singleton, moebius_apply_one]
 
-theorem grand_mertens_partial_trace_synthesis :
-    mertensSum 1 = 1 :=
-  mertens_at_one
-
 end
 end InfoGeometry.Quantum.MertensPartialTrace

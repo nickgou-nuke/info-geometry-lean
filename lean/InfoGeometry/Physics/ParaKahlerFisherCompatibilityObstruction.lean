@@ -49,9 +49,15 @@ theorem not_fisher_diagonal_pos_of_nonneg
 theorem finite_logPartition_hessian_pos_of_generator_ne
     {α : Type*} [Fintype α] [Nonempty α]
     (K : α → ℝ) (β : ℝ) {i j : α} (hij : K i ≠ K j) :
-    0 < GrandCanonical.hessian K β := by
+    0 < GrandCanonical.hessian (canonicalParams K) β := by
   rw [logPartition_second_deriv_eq_variance]
-  exact GrandCanonical.variance_pos_of_energy_ne K β hij
+  have hnonneg := GrandCanonical.variance_nonneg (canonicalParams K) β
+  have hne : GrandCanonical.variance (canonicalParams K) β ≠ 0 := by
+    intro hz
+    have hall := GrandCanonical.variance_eq_zero_iff_energy_eq_mean
+      (canonicalParams K) β |>.mp hz
+    exact hij (hall i |>.trans (hall j |>.symm))
+  exact lt_of_le_of_ne hnonneg (Ne.symm hne)
 
 theorem no_global_paraMetric_fisher_hessian_identification
     {α : Type*} [Fintype α] [Nonempty α]
@@ -60,7 +66,7 @@ theorem no_global_paraMetric_fisher_hessian_identification
     (hnonneg : ∀ X : g, 0 ≤ sys.fisherMetric.cov X X)
     (hfixed : ∀ X : g, sys.fundamentalSymmetry X = X)
     (X : g)
-    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.hessian K β) :
+    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.hessian (canonicalParams K) β) :
     False := by
   have hz := fisher_diagonal_eq_zero_of_nonneg sys hnonneg hfixed X
   have hp := finite_logPartition_hessian_pos_of_generator_ne K β hij
@@ -74,10 +80,17 @@ theorem no_global_paraMetric_fisher_variance_identification
     (hnonneg : ∀ X : g, 0 ≤ sys.fisherMetric.cov X X)
     (hfixed : ∀ X : g, sys.fundamentalSymmetry X = X)
     (X : g)
-    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.variance K β) :
+    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.variance (canonicalParams K) β) :
     False := by
   have hz := fisher_diagonal_eq_zero_of_nonneg sys hnonneg hfixed X
-  have hp := GrandCanonical.variance_pos_of_energy_ne K β hij
+  have hnonneg := GrandCanonical.variance_nonneg (canonicalParams K) β
+  have hne : GrandCanonical.variance (canonicalParams K) β ≠ 0 := by
+    intro hz
+    have hall := GrandCanonical.variance_eq_zero_iff_energy_eq_mean
+      (canonicalParams K) β |>.mp hz
+    exact hij (hall i |>.trans (hall j |>.symm))
+  have hp : 0 < GrandCanonical.variance (canonicalParams K) β :=
+    lt_of_le_of_ne hnonneg (Ne.symm hne)
   rw [← hmatch, hz] at hp
   exact (lt_irrefl 0) hp
 

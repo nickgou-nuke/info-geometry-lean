@@ -178,9 +178,8 @@ def grothendieckRingMap
   toFun := grothendieckFunctor f.toAddMonoidHom
   map_one' := by
     rw [← grothendieckMap_one (M := M)]
-    rw [grothendieckFunctor_map]
-    change grothendieckMap N (f 1) = 1
-    rw [f.map_one, grothendieckMap_one]
+    simpa [grothendieckMap] using
+      grothendieckFunctor_mk f.toAddMonoidHom (1, 0)
   map_mul' := grothendieckFunctor_map_mul f
   map_zero' := (grothendieckFunctor f.toAddMonoidHom).map_zero
   map_add' := (grothendieckFunctor f.toAddMonoidHom).map_add
@@ -190,7 +189,8 @@ theorem grothendieckRingMap_apply_canonical
     {N : Type u} [CommSemiring N] (f : M →+* N) (m : M) :
     grothendieckRingMap f (grothendieckMap M m) =
       grothendieckMap N (f m) := by
-  exact grothendieckFunctor_map f.toAddMonoidHom m
+  simpa [grothendieckMap] using
+    grothendieckFunctor_mk f.toAddMonoidHom (m, 0)
 
 theorem ringHom_ext_of_grothendieckMap
     {A : Type*} [CommRing A]

@@ -162,7 +162,7 @@ theorem modeCreationOperator_eq_leftRegular (k : ℕ) :
   ext x
   change ofStage (k + 1) (jwCreation (k + 1)
       ⟨k, Nat.lt_succ_self k⟩) * x = limit_u k * x
-  rw [limit_u_eq_algebraicCreationElement]
+  rw [limit_u_eq_uImage_last]
   rfl
 
 theorem modeAnnihilationOperator_eq_leftRegular (k : ℕ) :
@@ -170,7 +170,7 @@ theorem modeAnnihilationOperator_eq_leftRegular (k : ℕ) :
   ext x
   change ofStage (k + 1) (jwAnnihilation (k + 1)
       ⟨k, Nat.lt_succ_self k⟩) * x = limit_v k * x
-  rw [limit_v_eq_algebraicAnnihilationElement]
+  rw [limit_v_eq_vImage_last]
   rfl
 
 theorem modeCreationOperator_sq_zero (k : ℕ) :

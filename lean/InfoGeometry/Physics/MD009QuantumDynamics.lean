@@ -9,7 +9,7 @@ Chapter 9 discusses canonical position/momentum operators, matrix CCRs,
 quaternion derivative conventions, Hilbert spaces, Schrödinger/Heisenberg
 pictures, and path-integral/propagator outlines.  The continuum claims require
 unbounded operators, domains, differentiability, Hilbert-space analysis, and
-measure theory, so this owner extracts only the finite algebraic core:
+measure theory, so this owner extracts only the finite algebraic socket:
 
 * normalized Pauli completeness behind the matrix CCR coefficient;
 * transport of a vector CCR Kronecker table through the Pauli soldering forms;
@@ -127,6 +127,21 @@ theorem unscaledQuaternionDerivativeOnQ_eq_four :
 theorem canonicallyScaledQuaternionDerivativeOnQ_eq_one :
     canonicallyScaledQuaternionDerivativeOnQ = 1 := by
   norm_num [canonicallyScaledQuaternionDerivativeOnQ, standardQuaternionDerivativeOnQ_eq_two]
+
+/-- Repaired theorem-safe Chapter 9 finite dynamics packet. -/
+theorem repaired_MD009_quantum_dynamics_packet (c ihbar : ℂ) (hc : IsPauliNormalization c) :
+    (∀ A Ap B Bp : Fin 2,
+      pauliCompletenessCoeff c A Ap B Bp = delta2 A B * delta2 Ap Bp) ∧
+    (∀ A Ap B Bp : Fin 2,
+      matrixCCRCoeff c ihbar A Ap B Bp = ihbar * delta2 A B * delta2 Ap Bp) ∧
+    standardQuaternionDerivativeOnQ = 2 ∧
+    unscaledQuaternionDerivativeOnQ = 4 ∧
+    canonicallyScaledQuaternionDerivativeOnQ = 1 := by
+  exact ⟨fun A Ap B Bp => normalized_pauli_completeness c hc A Ap B Bp,
+    fun A Ap B Bp => matrix_ccr_coefficient c ihbar hc A Ap B Bp,
+    standardQuaternionDerivativeOnQ_eq_two,
+    unscaledQuaternionDerivativeOnQ_eq_four,
+    canonicallyScaledQuaternionDerivativeOnQ_eq_one⟩
 
 end InfoGeometry.Physics.MD009QuantumDynamics
 

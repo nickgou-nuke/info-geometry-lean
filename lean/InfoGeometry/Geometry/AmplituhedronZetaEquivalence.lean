@@ -11,44 +11,19 @@ open scoped Manifold
 
 namespace InfoGeometry.Geometry
 
-/-- The readouts and nonzero-pole property of a canonical volume form.
+/-- The Canonical Differential Volume Form on the Amplituhedron -/
+structure CanonicalVolumeForm (k n : ℕ) where
+  omega : Set (Fin (k * n) → ℝ) → ℝ  -- Representation of the integrated volume
+  logPoleResidue : Set (Fin (k * n) → ℝ) → ℝ
+  logPoleBoundary : Set (Fin (k * n) → ℝ)
+  has_log_poles : logPoleResidue logPoleBoundary ≠ 0
 
-This is a subtype rather than a wrapper record: the carrier is the native
-product of the three readouts, and the only extra datum is its predicate.
--/
-abbrev CanonicalVolumeForm (k n : ℕ) :=
-  {data :
-      (Set (Fin (k * n) → ℝ) → ℝ) ×
-        ((Set (Fin (k * n) → ℝ) → ℝ) × Set (Fin (k * n) → ℝ)) //
-    data.2.1 data.2.2 ≠ 0}
-
-namespace CanonicalVolumeForm
-
-abbrev omega {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
-    Set (Fin (k * n) → ℝ) → ℝ := Ω.1.1
-
-abbrev logPoleResidue {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
-    Set (Fin (k * n) → ℝ) → ℝ := Ω.1.2.1
-
-abbrev logPoleBoundary {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
-    Set (Fin (k * n) → ℝ) := Ω.1.2.2
-
-theorem has_log_poles {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
-    Ω.logPoleResidue Ω.logPoleBoundary ≠ 0 := Ω.2
-
-end CanonicalVolumeForm
-
-/-- The zeta-volume comparison predicate. -/
-def AmplituhedronZetaComparison {k n : ℕ}
+/-- The Zeta-Volume Equivalence Theorem Predicate -/
+def AmplituhedronZetaEquivalence {k n : ℕ} 
     (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
-  -- Explicit comparison property between a geometric volume readout and a
-  -- partition readout at the chosen inverse temperature.
+  -- Asserting that the geometric volume of the cell boundary matches
+  -- the partition function evaluated at the critical thermodynamic inverse temperature
   Ω.omega Set.univ = Z β_critical
-
-/-- Backwards-compatible alias for the zeta-volume comparison predicate. -/
-abbrev AmplituhedronZetaEquivalence {k n : ℕ}
-    (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
-  AmplituhedronZetaComparison Ω Z β_critical
 
 variable {M : Type*} [TopologicalSpace M] [ChartedSpace (ℝ × ℝ) M]
 
@@ -84,17 +59,11 @@ theorem isClosedGaugeConnection_constant (c : ℝ) :
   intro x
   exact thermodynamicGaugeConnection_constant (M := M) c x
 
-/-- The geometric-thermodynamic comparison carrier. -/
-def AmplituhedronGaugeComparison {k n : ℕ} (Ω : CanonicalVolumeForm k n)
+/-- The Geometric-Thermodynamic Unification Theorem -/
+def AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
-  -- Explicit comparison property between the volume readout and the gauge
-  -- readout at the chosen inverse temperature.
+  -- Fusing the Amplituhedron canonical volume directly to the integrated thermodynamic gauge trace
   IsClosedGaugeConnection Potential ∧ Ω.omega Set.univ = β_critical
-
-/-- Backwards-compatible alias for the geometric-thermodynamic comparison carrier. -/
-abbrev AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
-    (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
-  AmplituhedronGaugeComparison Ω Potential β_critical
 
 /-- Closed gauge readout from an explicit zero-connection proof. -/
 theorem isClosedGaugeConnection_of_thermodynamicPotential
@@ -103,13 +72,13 @@ theorem isClosedGaugeConnection_of_thermodynamicPotential
     IsClosedGaugeConnection Potential :=
   hClosed
 
-/-- Gauge comparison combines an explicit closed-connection proof and volume calibration. -/
-theorem amplituhedronGaugeComparison_readout
+/-- Gauge equivalence combines an explicit closed-connection proof and volume calibration. -/
+theorem amplituhedronGaugeEquivalence_readout
     {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ)
     (hClosed : IsClosedGaugeConnection Potential)
     (hVol : Ω.omega Set.univ = β_critical) :
-    AmplituhedronGaugeComparison Ω Potential β_critical :=
+    AmplituhedronGaugeEquivalence Ω Potential β_critical :=
   ⟨hClosed, hVol⟩
 
 end InfoGeometry.Geometry

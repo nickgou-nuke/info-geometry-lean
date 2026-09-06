@@ -20,12 +20,12 @@ namespace FrechetCliffordOperatorFormBridge
 def Form0 (n : ℕ) [DecidableEq (Fin n)] := Matrix (Fin n) (Fin n) ℂ
 
 /-- 1-Form Fréchet Differential dA(H₁) ∈ Mₙ(ℂ). -/
-abbrev Form1 (n : ℕ) [DecidableEq (Fin n)] :=
-  Matrix (Fin n) (Fin n) ℂ
+structure Form1 (n : ℕ) [DecidableEq (Fin n)] where
+  frechet_differential : Matrix (Fin n) (Fin n) ℂ
 
 /-- 2-Form Second Fréchet Differential d²A(H₁, H₂) ∈ Mₙ(ℂ). -/
-abbrev Form2 (n : ℕ) [DecidableEq (Fin n)] :=
-  Matrix (Fin n) (Fin n) ℂ
+structure Form2 (n : ℕ) [DecidableEq (Fin n)] where
+  frechet_second_differential : Matrix (Fin n) (Fin n) ℂ
 
 namespace Form1
 

@@ -6,7 +6,6 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Rieffel Noncommutative Torus $A_\theta$, Quantum Projections & K-Theory Capstone
@@ -41,7 +40,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 open Real Complex
 open Matrix
 open scoped BigOperators
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 
@@ -135,7 +133,7 @@ theorem k0TraceMap_injective_of_irrational (theta : ℝ) (h_irrat : Irrational t
 
 /-! ### 4. Master Synthesis Theorem -/
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Rieffel Noncommutative Torus, Projections & K-Theory**
 
 Unifies:
@@ -148,7 +146,7 @@ Unifies:
 4. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_rieffel_torus_ktheory_synthesis
+/- theorem grand_rieffel_torus_ktheory_synthesis
     (theta : ℝ) (h0 : 0 ≤ theta) (h1 : theta ≤ 1) (h_irrat : Irrational theta)
     (m n : ℤ) (h_zero : k0TraceMap m n theta = 0) :
     (‖weylPhase theta‖ = 1) ∧
@@ -162,6 +160,6 @@ theorem grand_rieffel_torus_ktheory_synthesis
    rieffelTrace_bounds theta h0 h1,
    k0TraceMap_injective_of_irrational theta h_irrat m n h_zero,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.RieffelTorusKTheory

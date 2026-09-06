@@ -19,6 +19,11 @@ open Matrix
 
 /-! ## Alternating supergrading on binary words -/
 
+/-- Finite binary/qubit word. -/
+abbrev BinaryWord (n : ℕ) : Type := Fin n → Bool
+
+/-- Infinite binary/qubit word. -/
+abbrev InfiniteBinaryWord : Type := ℕ → Bool
 
 /-- Alternating `+1,-1,+1,-1,...` sign chain. -/
 def alternatingSign (k : ℕ) : ℤ := if k % 2 = 0 then 1 else -1
@@ -34,10 +39,10 @@ def bitSign (b : Bool) : ℤ := if b then -1 else 1
   cases b <;> norm_num [bitSign]
 
 /-- Finite supergrading sign of a binary word. -/
-def wordParitySign {n : ℕ} (w : Fin n → Bool) : ℤ :=
+def wordParitySign {n : ℕ} (w : BinaryWord n) : ℤ :=
   ∏ i, bitSign (w i)
 
-@[simp] theorem wordParitySign_sq {n : ℕ} (w : Fin n → Bool) :
+@[simp] theorem wordParitySign_sq {n : ℕ} (w : BinaryWord n) :
     wordParitySign w * wordParitySign w = 1 := by
   classical
   unfold wordParitySign

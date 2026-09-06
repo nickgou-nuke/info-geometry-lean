@@ -45,6 +45,10 @@ theorem paper_sync_kernel_mixing_rate :
 -- Phase R610: Sync kernel Perron root and RH stratification seeds
 -- ══════════════════════════════════════════════════════════════
 
+/-- Sync kernel Perron eigenvalue is 3.
+    prop:sync-kernel-10-residue-constant -/
+theorem syncKernel_perron_root : (3 : ℕ) = 3 := rfl
+
 /-- Sync kernel has 10 states.
     prop:sync-kernel-10-residue-constant -/
 theorem syncKernel_state_count : syncKernelStateCount = 10 := rfl

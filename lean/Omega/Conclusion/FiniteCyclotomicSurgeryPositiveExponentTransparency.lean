@@ -4,6 +4,24 @@ namespace Omega.Conclusion
 
 noncomputable section
 
+/-- Concrete singular-radius data for
+`thm:conclusion-finite-cyclotomic-surgery-positive-exponent-transparency`.  The core
+singular radius is positive; the finite cyclotomic surgery adds only unit-radius singularities,
+so the post-surgery singular radius is the minimum of the core radius and `1`. -/
+structure conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_Data where
+  lambda : ℝ
+  coreRadius : ℝ
+  rhoCore : ℝ
+  rhoN : ℝ
+  thetaCore : ℝ
+  thetaN : ℝ
+  lambda_gt_one : 1 < lambda
+  coreRadius_pos : 0 < coreRadius
+  rhoCore_eq : rhoCore = coreRadius⁻¹
+  rhoN_eq : rhoN = (min 1 coreRadius)⁻¹
+  thetaCore_eq : thetaCore = Real.log rhoCore / Real.log lambda
+  thetaN_eq : thetaN = Real.log rhoN / Real.log lambda
+
 lemma conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_inv_min
     (r : ℝ) (hr : 0 < r) : (min 1 r)⁻¹ = max 1 r⁻¹ := by
   by_cases h : r ≤ 1
@@ -31,44 +49,39 @@ lemma conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_log_ma
 /-- Paper label:
 `thm:conclusion-finite-cyclotomic-surgery-positive-exponent-transparency`. -/
 theorem paper_conclusion_finite_cyclotomic_surgery_positive_exponent_transparency
-    (lambda coreRadius rhoCore rhoN thetaCore thetaN : ℝ)
-    (lambda_gt_one : 1 < lambda) (coreRadius_pos : 0 < coreRadius)
-    (rhoCore_eq : rhoCore = coreRadius⁻¹)
-    (rhoN_eq : rhoN = (min 1 coreRadius)⁻¹)
-    (thetaCore_eq : thetaCore = Real.log rhoCore / Real.log lambda)
-    (thetaN_eq : thetaN = Real.log rhoN / Real.log lambda) :
-    rhoN = max 1 rhoCore ∧ thetaN = max 0 thetaCore ∧
-      ∀ tau : ℝ, 0 < tau → (thetaN > tau ↔ thetaCore > tau) := by
-  have hrhoCore_pos : 0 < rhoCore := by
-    rw [rhoCore_eq]
-    exact inv_pos.mpr coreRadius_pos
-  have hrho : rhoN = max 1 rhoCore := by
+    (D : conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_Data) :
+    D.rhoN = max 1 D.rhoCore ∧ D.thetaN = max 0 D.thetaCore ∧
+      ∀ tau : ℝ, 0 < tau → (D.thetaN > tau ↔ D.thetaCore > tau) := by
+  have hrhoCore_pos : 0 < D.rhoCore := by
+    rw [D.rhoCore_eq]
+    exact inv_pos.mpr D.coreRadius_pos
+  have hrho : D.rhoN = max 1 D.rhoCore := by
     calc
-      rhoN = (min 1 coreRadius)⁻¹ := rhoN_eq
-      _ = max 1 coreRadius⁻¹ :=
+      D.rhoN = (min 1 D.coreRadius)⁻¹ := D.rhoN_eq
+      _ = max 1 D.coreRadius⁻¹ :=
         conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_inv_min
-          coreRadius coreRadius_pos
-      _ = max 1 rhoCore := by rw [← rhoCore_eq]
-  have htheta : thetaN = max 0 thetaCore := by
+          D.coreRadius D.coreRadius_pos
+      _ = max 1 D.rhoCore := by rw [← D.rhoCore_eq]
+  have htheta : D.thetaN = max 0 D.thetaCore := by
     calc
-      thetaN = Real.log rhoN / Real.log lambda := thetaN_eq
-      _ = Real.log (max 1 rhoCore) / Real.log lambda := by rw [hrho]
-      _ = max 0 (Real.log rhoCore / Real.log lambda) :=
+      D.thetaN = Real.log D.rhoN / Real.log D.lambda := D.thetaN_eq
+      _ = Real.log (max 1 D.rhoCore) / Real.log D.lambda := by rw [hrho]
+      _ = max 0 (Real.log D.rhoCore / Real.log D.lambda) :=
         conclusion_finite_cyclotomic_surgery_positive_exponent_transparency_log_max
-          lambda rhoCore lambda_gt_one hrhoCore_pos
-      _ = max 0 thetaCore := by rw [← thetaCore_eq]
+          D.lambda D.rhoCore D.lambda_gt_one hrhoCore_pos
+      _ = max 0 D.thetaCore := by rw [← D.thetaCore_eq]
   refine ⟨hrho, htheta, ?_⟩
   intro tau htau
   constructor
   · intro hN
     rw [htheta] at hN
     by_contra hcore
-    have hcore_le : thetaCore ≤ tau := le_of_not_gt hcore
-    have hmax_le : max 0 thetaCore ≤ tau := max_le (le_of_lt htau) hcore_le
+    have hcore_le : D.thetaCore ≤ tau := le_of_not_gt hcore
+    have hmax_le : max 0 D.thetaCore ≤ tau := max_le (le_of_lt htau) hcore_le
     linarith
   · intro hcore
     rw [htheta]
-    exact lt_of_lt_of_le hcore (le_max_right 0 thetaCore)
+    exact lt_of_lt_of_le hcore (le_max_right 0 D.thetaCore)
 
 end
 

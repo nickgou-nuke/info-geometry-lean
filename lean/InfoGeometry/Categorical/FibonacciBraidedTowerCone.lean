@@ -82,7 +82,7 @@ theorem tower_psi_comp_iota_seq
 
 omit [Invertible (2 : R)] in
 /-- Stagewise nonvanishing is transported to the target map under the explicit
-kernel-lifting property. This wrapper preserves the categorical module's
+kernel-lifting hypothesis. This wrapper preserves the categorical module's
 legacy API; it asserts no topology or universal-property result. -/
 theorem protected_state_survives
     (iota : ∀ n, A n →ₗ[R] A (n + 1))

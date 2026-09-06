@@ -13,7 +13,7 @@ properties one expects from loop-word composition and double-cover lifting:
 * boundary preservation is stable under composed loop words;
 * lifted boundary braid actions on the double cover also compose;
 * Cayley--Möbius inversion commutes with a boundary braid action under an
-  explicit finite commutation property on labels.
+  explicit finite commutation hypothesis on labels.
 
 No analytic loop group.
 No Poincaré-ball topology.
@@ -153,7 +153,7 @@ theorem compactifiedInversion_commutes_boundaryLoopAction
         boundaryLoopAction, AlgebraicCompactification.map, hcomm]
 
 /-- A finite packet of boundary loop symmetry data. -/
-structure BoundaryLoopClosureData where
+structure BoundaryLoopClosurePacket where
   /-- Cayley--Möbius inversion. -/
   cayley : CayleyMobiusInversion ℕ
   /-- Loop word acting on boundary labels. -/
@@ -162,30 +162,30 @@ structure BoundaryLoopClosureData where
   commutes_with_cayley : ∀ n : ℕ,
     cayley.inv (evalBraidWord loop n) = evalBraidWord loop (cayley.inv n)
 
-namespace BoundaryLoopClosureData
+namespace BoundaryLoopClosurePacket
 
 /-- The packet loop action preserves boundary states. -/
-theorem preserves_boundary (P : BoundaryLoopClosureData)
+theorem preserves_boundary (P : BoundaryLoopClosurePacket)
     {p : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ}
     (hp : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification.IsBoundary p) :
     CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification.IsBoundary (boundaryLoopAction P.loop p) :=
   boundaryLoopAction_preserves_boundary P.loop hp
 
 /-- The packet Cayley inversion commutes with its loop action. -/
-theorem cayley_commutes_loop (P : BoundaryLoopClosureData)
+theorem cayley_commutes_loop (P : BoundaryLoopClosurePacket)
     (p : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ) :
     P.cayley.compactifiedInversion (boundaryLoopAction P.loop p) =
       boundaryLoopAction P.loop (P.cayley.compactifiedInversion p) :=
   compactifiedInversion_commutes_boundaryLoopAction P.cayley P.loop P.commutes_with_cayley p
 
 /-- The packet lifted loop action commutes with the deck involution. -/
-theorem lifted_commutes_deck (P : BoundaryLoopClosureData)
+theorem lifted_commutes_deck (P : BoundaryLoopClosurePacket)
     (x : CayleyMobiusBoundaryBraidClosure.DoubleCover
       (CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ)) :
     liftedBoundaryLoopAction P.loop (CayleyMobiusBoundaryBraidClosure.deckInvolution x) =
       CayleyMobiusBoundaryBraidClosure.deckInvolution (liftedBoundaryLoopAction P.loop x) :=
   liftedBoundaryLoopAction_commutes_deck P.loop x
 
-end BoundaryLoopClosureData
+end BoundaryLoopClosurePacket
 
 end InfoGeometry.Canonical.BoundaryLoopSuperClosure

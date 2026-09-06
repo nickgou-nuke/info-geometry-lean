@@ -6,7 +6,7 @@ Constructive elimination of Cayley hypotheses.
 This module proves the phase-linearity of the bounded Cayley transform from
 the phase-linearity of `D` and the explicit two-sided inverse of `D + K`.
 
-No independent `cayley_phase_linear` or `denomInv_phase_linear` property is
+No independent `cayley_phase_linear` or `denomInv_phase_linear` hypothesis is
 kept.
 -/
 
@@ -165,7 +165,7 @@ theorem inverse_phaseLinear
       h_left
       hB.symm).symm
 
-/-! ## 3. Phase resolvent without inverse phase-linearity property -/
+/-! ## 3. Phase resolvent without inverse phase-linearity hypothesis -/
 
 /--
 A verified phase resolvent.
@@ -238,7 +238,7 @@ def boundedCayley
 /--
 Constructive proof: the Cayley transform is phase-linear.
 
-No independent `cayley_phase_linear` property is needed.
+No independent `cayley_phase_linear` hypothesis is needed.
 -/
 theorem boundedCayley_is_phase_linear
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]

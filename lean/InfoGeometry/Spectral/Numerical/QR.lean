@@ -6,7 +6,7 @@ import Mathlib.LinearAlgebra.Matrix.Orthogonal
 /-!
 # Upper-triangular QR readout
 
-This file does not construct Gram--Schmidt.  It records the finite property
+This file does not construct Gram--Schmidt.  It records the finite certified
 readout that an already upper-triangular matrix has the QR factorization
 `A = I * A`, with orthogonal factor `I` and triangular factor `A`.
 -/

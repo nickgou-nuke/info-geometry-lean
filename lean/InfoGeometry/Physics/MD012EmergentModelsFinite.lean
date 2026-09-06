@@ -12,7 +12,7 @@ signature from biquaternion statistics, density-matrix stress tensors, and
 quaternionic condensate/torsion dynamics.  The continuum and gravitational
 claims are hypotheses in the manuscript, not finite Lean theorems.
 
-This owner formalizes only the finite algebraic core:
+This owner formalizes only the finite algebraic socket:
 
 * an eight-component diagonal covariance table with two time-sector entries and
   six space-sector entries, together with its diagonal inverse;
@@ -48,17 +48,9 @@ abbrev ModelSpacetimeIndex := Fin 4
 def diagMatrix {n : Type} [DecidableEq n] (d : n → ℝ) : Matrix n n ℝ :=
   fun i j => if i = j then d i else 0
 
-theorem diagMatrix_mul_diagMatrix_eq_one
-    {n : Type} [Fintype n] [DecidableEq n]
-    (d e : n → ℝ) (h : ∀ i, d i * e i = 1) :
-    diagMatrix d * diagMatrix e = 1 := by
-  ext i j
-  by_cases hij : i = j
-  · subst j
-    simp [diagMatrix, Matrix.mul_apply, h]
-  · simp [diagMatrix, Matrix.mul_apply, hij]
-
-/-- Diagonal covariance entries: two positive time-sector and six negative space-sector entries. -/
+/-- Diagonal covariance entries with the source's time/space sign pattern.
+    Positivity or negativity of the numerical entries requires explicit sign
+    hypotheses on the parameters and is not built into this definition. -/
 def lorentzCovDiagEntry (beta tau kappa : ℝ) (i : BiquatStatIndex) : ℝ :=
   if (i : Nat) < 2 then 1 / (beta * tau) else - (1 / (beta * kappa))
 
@@ -73,28 +65,6 @@ def lorentzCovariance8 (beta tau kappa : ℝ) : Matrix BiquatStatIndex BiquatSta
 /-- Finite inverse-covariance table for the repaired statistical model. -/
 def lorentzInverseCovariance8 (beta tau kappa : ℝ) : Matrix BiquatStatIndex BiquatStatIndex ℝ :=
   diagMatrix (lorentzInvDiagEntry beta tau kappa)
-
-@[simp] theorem lorentzCovariance8_diag (beta tau kappa : ℝ)
-    (i : BiquatStatIndex) :
-    lorentzCovariance8 beta tau kappa i i =
-      lorentzCovDiagEntry beta tau kappa i := by
-  simp [lorentzCovariance8, diagMatrix]
-
-@[simp] theorem lorentzCovariance8_offdiag (beta tau kappa : ℝ)
-    {i j : BiquatStatIndex} (hij : i ≠ j) :
-    lorentzCovariance8 beta tau kappa i j = 0 := by
-  simp [lorentzCovariance8, diagMatrix, hij]
-
-@[simp] theorem lorentzInverseCovariance8_diag (beta tau kappa : ℝ)
-    (i : BiquatStatIndex) :
-    lorentzInverseCovariance8 beta tau kappa i i =
-      lorentzInvDiagEntry beta tau kappa i := by
-  simp [lorentzInverseCovariance8, diagMatrix]
-
-@[simp] theorem lorentzInverseCovariance8_offdiag (beta tau kappa : ℝ)
-    {i j : BiquatStatIndex} (hij : i ≠ j) :
-    lorentzInverseCovariance8 beta tau kappa i j = 0 := by
-  simp [lorentzInverseCovariance8, diagMatrix, hij]
 
 /-- The diagonal inverse covariance is a left inverse to the diagonal covariance. -/
 theorem lorentzInverseCovariance8_mul_covariance8

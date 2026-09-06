@@ -1,0 +1,28 @@
+import InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
+
+/-!
+# Checks for the Operator Erlangen--Legendre packet
+-/
+
+noncomputable section
+
+namespace InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.Checks
+
+#check OperatorErlangenLegendrePacket
+#check OperatorErlangenLegendrePacket.modular_derivation_law
+#check OperatorErlangenLegendrePacket.stabilizer_law_valid
+#check OperatorErlangenLegendrePacket.exponential_legendre_law_valid
+#check OperatorErlangenLegendrePacket.StateStabilizer
+#check OperatorErlangenLegendrePacket.mem_stateStabilizer_iff
+#check OperatorErlangenLegendrePacket.spectraFirstGuard
+#check OperatorErlangenLegendrePacket.diagonalPrimitiveGuard
+#check OperatorErlangenLegendreTarget
+#check constructOperatorErlangenLegendreTarget
+#check HilbertPolyaOperatorPacket
+#check HilbertPolyaOperatorPacket.selfAdjoint_law
+#check HilbertPolyaOperatorPacket.determinant_law
+#check HilbertPolyaOperatorPacket.zero_iff_spectral_value
+#check HilbertPolyaOperatorPacket.functionalEquation_law
+
+end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.Checks
+

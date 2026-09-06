@@ -53,7 +53,7 @@ structure Calibration where
     ∀ (t u : ℝ) (s : State),
       modularFlow (t + u) s = modularFlow t (modularFlow u s)
 
-  /-- Calibration property: the modular flow is the `K_sur` action. -/
+  /-- Calibration witness: the modular flow is the `K_sur` action. -/
   Ksur_calibrates_modularFlow :
     ∀ (t : ℝ) (s : State), modularFlow t s = KsurFlow t s
 
@@ -166,6 +166,6 @@ end Calibration
 
 end Calibration
 
-end ModularHamiltonianSurrogateCalibration
+end InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 
-end Canonical
+end

@@ -31,7 +31,7 @@ This module keeps the proof surface finite and algebraic:
 * prime-register particle counts are taken from the finite prime-bit carrier;
 * the hyperbolic Bogoliubov bracket closure is imported from the canonical
   projector-super algebra;
-* no placeholder interfaces, certificates, or CFT central-charge claims are introduced here.
+* no sockets, certificates, or CFT central-charge claims are introduced here.
 -/
 
 noncomputable section
@@ -502,7 +502,7 @@ end FiniteLegendre
 /--
 Finite Boolean-cube parity and Möbius readout on the prime lattice.
 
-The orientifold/Klein bottle layer remains a separate property surface; the
+The orientifold/Klein bottle layer remains a separate hypothesis surface; the
 native theorem content here is the finite binary-lattice parity law.
 -/
 @[rep_depth thermo]

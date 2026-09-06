@@ -17,26 +17,16 @@ namespace InfoGeometry.Geometry.JonesTransportMetric
 
 open InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
-/-!
-A projective polarization state is the native subtype of algebraic
-projectors.  This replaces the former one-field property structure while
-retaining the `P` and `idem` accessors used by the owner API.
+/--
+A projective polarization state represented by an algebraic projector.
 -/
-abbrev ProjectivePolarizationState
-    (Op : Type*) [Mul Op] :=
-  {P : Op // IsProjector P}
+structure ProjectivePolarizationState
+    (Op : Type*) [Mul Op] where
+  /-- Projector representative. -/
+  P : Op
 
-namespace ProjectivePolarizationState
-
-abbrev P {Op : Type*} [Mul Op]
-    (A : ProjectivePolarizationState Op) : Op :=
-  A.1
-
-abbrev idem {Op : Type*} [Mul Op]
-    (A : ProjectivePolarizationState Op) : IsProjector A.P :=
-  A.2
-
-end ProjectivePolarizationState
+  /-- Idempotence of the representative. -/
+  idem : IsProjector P
 
 /--
 A Jones transport takes one projective state to another.
@@ -59,7 +49,7 @@ structure JonesTransportMetricDatum
 
   A concrete model can restrict this to lossless, Krein-calibrated, coherent, or
   other theorem-owned transport classes. This file does not manufacture such a
-  class from an arbitrary property on `OperatorialJonesDatum`.
+  class from an arbitrary certificate on `OperatorialJonesDatum`.
   -/
   admissible : OperatorialJonesDatum Op → Prop
 

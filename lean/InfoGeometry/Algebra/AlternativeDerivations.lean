@@ -118,47 +118,25 @@ def stanDerMap (a b : A) : A →ₗ[R] A :=
   ((L_map a).comp (R_map b) - (R_map b).comp (L_map a)) +
   ((R_map a).comp (R_map b) - (R_map b).comp (R_map a))
 
-@[simp] theorem stanDerMap_add_left (a₁ a₂ b : A) :
-    stanDerMap (R := R) (a₁ + a₂) b =
-      stanDerMap (R := R) a₁ b + stanDerMap (R := R) a₂ b := by
-  apply LinearMap.ext
-  intro z
+theorem stanDerMap_add_left (a a' b x : A) :
+    stanDerMap (R := R) (a + a') b x = stanDerMap (R := R) a b x + stanDerMap (R := R) a' b x := by
   simp [stanDerMap, L_map, R_map, add_mul, mul_add]
   abel_nf
 
-@[simp] theorem stanDerMap_smul_left (r : R) (a b : A) :
-    stanDerMap (R := R) (r • a) b =
-      r • stanDerMap (R := R) a b := by
-  apply LinearMap.ext
-  intro z
+theorem stanDerMap_smul_left (r : R) (a b x : A) :
+    stanDerMap (R := R) (r • a) b x = r • stanDerMap (R := R) a b x := by
   simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
-    smul_add]
-  simp only [smul_sub]
+    smul_add, smul_sub, smul_neg, neg_smul]
 
-@[simp] theorem stanDerMap_add_right (a b₁ b₂ : A) :
-    stanDerMap (R := R) a (b₁ + b₂) =
-      stanDerMap (R := R) a b₁ + stanDerMap (R := R) a b₂ := by
-  apply LinearMap.ext
-  intro z
+theorem stanDerMap_add_right (a b b' x : A) :
+    stanDerMap (R := R) a (b + b') x = stanDerMap (R := R) a b x + stanDerMap (R := R) a b' x := by
   simp [stanDerMap, L_map, R_map, add_mul, mul_add]
-  abel
+  abel_nf
 
-@[simp] theorem stanDerMap_smul_right (r : R) (a b : A) :
-    stanDerMap (R := R) a (r • b) =
-      r • stanDerMap (R := R) a b := by
-  apply LinearMap.ext
-  intro z
+theorem stanDerMap_smul_right (r : R) (a b x : A) :
+    stanDerMap (R := R) a (r • b) x = r • stanDerMap (R := R) a b x := by
   simp [stanDerMap, L_map, R_map, smul_mul_assoc, mul_smul_comm,
-    smul_add]
-  simp only [smul_sub]
-
-/-- The standard alternative-algebra derivation operator packaged as a
-bilinear map.  Its derivation law is supplied separately by
-`stanDerMap_isLeibniz` under alternativity hypotheses. -/
-noncomputable def stanDerMapBilinear : A →ₗ[R] A →ₗ[R] (A →ₗ[R] A) :=
-  LinearMap.mk₂ R (stanDerMap (R := R))
-    stanDerMap_add_left stanDerMap_smul_left
-    stanDerMap_add_right stanDerMap_smul_right
+    smul_add, smul_sub, smul_neg, neg_smul]
 
 /-!
 ### Standard derivations in an alternative algebra
@@ -314,7 +292,7 @@ theorem stanDerMap_apply_normal_form (a b x : A) :
   abel
 
 include hleft hright in
-lemma alternative_commutator_product (c x y : A) :
+private lemma alternative_commutator_product (c x y : A) :
     c * (x * y) - (x * y) * c =
       (c * x - x * c) * y + x * (c * y - y * c) -
         3 • associator c x y := by
@@ -337,18 +315,10 @@ lemma alternative_commutator_product (c x y : A) :
   abel
 
 include hleft hright in
-theorem commutator_leibniz_defect (c x y : A) :
-    (c * (x * y) - (x * y) * c) -
-        ((c * x - x * c) * y + x * (c * y - y * c)) =
-      -(3 • associator c x y) := by
-  rw [alternative_commutator_product hleft hright]
-  abel
-
-include hleft hright in
 /--
 The standard endomorphism `D_{a,b}` obeys the Leibniz rule in every alternative
 ring.  This is the derivation construction used in the octonionic model of
-`g₂`; no coordinate expansion or external property is used.
+`g₂`; no coordinate expansion or external certificate is used.
 -/
 theorem stanDerMap_isLeibniz (a b : A) :
     ∀ x y : A,

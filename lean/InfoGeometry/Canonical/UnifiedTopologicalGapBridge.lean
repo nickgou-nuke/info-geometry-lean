@@ -18,7 +18,7 @@ topological-gap shadow interface.
 * `UnifiedSuperchargeOddOddBridge` owns the derived odd-odd decomposition.
 
 Because the gap owner now uses the same real odd-odd self-closure `{Q_D, Q_D}`
-as the unified Drazin lane, no extra compatibility property is needed here.
+as the unified Drazin lane, no extra compatibility hypothesis is needed here.
 -/
 
 namespace InfoGeometry.Canonical.UnifiedTopologicalGapBridge
@@ -48,15 +48,12 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /-- Bridge packet tying the unified Drazin owner lane to the generic gap
 shadow on the same carrier. -/
 @[rep_depth transport]
-abbrev UnifiedTopologicalGapCompatibility :=
-  InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E)
+structure UnifiedTopologicalGapCompatibility where
+  U : InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E)
 
 namespace UnifiedTopologicalGapCompatibility
 
 variable (C : UnifiedTopologicalGapCompatibility (E := E))
-
-abbrev U : InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage
-    (E := E) := C
 local notation "ownerTranslation" =>
   InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate
 local notation "ownerCentral" =>

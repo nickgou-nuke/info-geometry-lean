@@ -53,7 +53,7 @@ abbrev CZ := CanonicalZorn
 
 /-- The norm in circular Witt coordinates. -/
 theorem circularNorm_eq (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X =
       circularCoordinate (cartesianZornLinearEquiv.symm X) 0 * circularCoordinate (cartesianZornLinearEquiv.symm X) 4 -
       ∑ i : Fin 3, circularCoordinate (cartesianZornLinearEquiv.symm X) ⟨i.val + 1, by omega⟩ *
         circularCoordinate (cartesianZornLinearEquiv.symm X) ⟨i.val + 5, by omega⟩ := by
@@ -68,7 +68,7 @@ theorem circularNorm_eq (X : CZ) :
 
 /-- The zero-norm cone in circular Witt coordinates. -/
 theorem circularNorm_zero_iff (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X = 0 ↔
       circularCoordinate (cartesianZornLinearEquiv.symm X) 0 * circularCoordinate (cartesianZornLinearEquiv.symm X) 4 =
       ∑ i : Fin 3, circularCoordinate (cartesianZornLinearEquiv.symm X) ⟨i.val + 1, by omega⟩ *
         circularCoordinate (cartesianZornLinearEquiv.symm X) ⟨i.val + 5, by omega⟩ := by

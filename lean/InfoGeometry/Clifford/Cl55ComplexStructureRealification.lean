@@ -87,36 +87,4 @@ theorem complexRealification_phase (B : A) (theta : ℝ) :
              Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
              mul_zero, mul_one, sub_zero, zero_add, add_zero]
 
-/-! ## Master Synthesis -/
-
-/--
-🏆 **GRAND SYNTHESIS THEOREM: Complex Realification & Phase-Rotor Correspondence**
-
-Unifies:
-1. Preservation of unit: $\iota_B(1) = 1$.
-2. Additive linearity: $\iota_B(z_1 + z_2) = \iota_B(z_1) + \iota_B(z_2)$.
-3. Multiplicative homomorphism: $\iota_B(z_1 z_2) = \iota_B(z_1) \iota_B(z_2)$ under $B^2 = -1$.
-4. Exact phase-to-rotor map: $\iota_B(e^{i\theta}) = \cos\theta \cdot 1 + \sin\theta \cdot B$.
--/
-theorem grand_complex_realification_synthesis
-    (B : A) (hB : B * B = -1)
-    (z1 z2 : ℂ) (theta1 theta2 : ℝ) :
-    (complexRealification B 1 = 1 ∧
-     complexRealification B (z1 + z2) = complexRealification B z1 + complexRealification B z2 ∧
-     complexRealification B (z1 * z2) = complexRealification B z1 * complexRealification B z2) ∧
-    (complexRealification B (Complex.exp ((theta1 : ℂ) * Complex.I)) =
-     (Real.cos theta1) • (1 : A) + (Real.sin theta1) • B ∧
-     complexRealification B (Complex.exp (((theta1 + theta2) : ℂ) * Complex.I)) =
-     complexRealification B (Complex.exp ((theta1 : ℂ) * Complex.I)) *
-     complexRealification B (Complex.exp ((theta2 : ℂ) * Complex.I))) := by
-  refine ⟨⟨complexRealification_one B,
-           complexRealification_add B z1 z2,
-           complexRealification_mul B hB z1 z2⟩,
-          ⟨complexRealification_phase B theta1, ?_⟩⟩
-  have h_exp_add : Complex.exp (((theta1 + theta2) : ℂ) * Complex.I) =
-                   Complex.exp ((theta1 : ℂ) * Complex.I) * Complex.exp ((theta2 : ℂ) * Complex.I) := by
-    have h : ((theta1 + theta2) : ℂ) * Complex.I = (theta1 : ℂ) * Complex.I + (theta2 : ℂ) * Complex.I := by ring
-    rw [h, Complex.exp_add]
-  rw [h_exp_add, complexRealification_mul B hB]
-
 end InfoGeometry.Clifford.Cl55ComplexStructureRealification

@@ -47,7 +47,7 @@ def vandermonde_product : ℝ :=
 /--
 The finite product-to-sum logarithm identity for the Vandermonde shadow.
 
-The injectivity property is the exact finite exclusion condition needed to
+The injectivity hypothesis is the exact finite exclusion condition needed to
 ensure every nontrivial factor in the product is nonzero.
 -/
 theorem log_vandermonde_eq_sum_log (h_inj : Function.Injective lam) :

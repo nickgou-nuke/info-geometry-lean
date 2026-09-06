@@ -114,7 +114,7 @@ theorem dirac_sea_grading_sq_eq_one
 
 /-! ## 4. The Grand Bost-Connes / Cantor / Yang-Baxter / Souriau Synthesis -/
 
-/--
+/-!
 🏆 **GRAND SYNTHESIS THEOREM**:
 Unifies the 5 pillars of the theory:
 1. **Cayley Torus Compactification**: $\|W(x)\|^2 = 1$.
@@ -123,22 +123,5 @@ Unifies the 5 pillars of the theory:
 4. **Jaynes-Cuntz KMS Equilibrium**: $p = 1/2$.
 5. **Thermodynamic Chiral Anomaly Cancellation**: $\phi_{\text{KMS}}(S_L S_L^*) - \phi_{\text{KMS}}(S_R S_R^*) = 0$.
 -/
-theorem grand_bost_connes_cantor_spin_chain_synthesis
-    (x : ℝ) (beta : ℝ)
-    (S_L S_R : O2)
-    (h_cuntz : S_L * star S_L + S_R * star S_R = 1)
-    (φ : State O2) (p : ℂ)
-    (h_kms_weighted : IsKMSWeightedState S_L S_R φ p p)
-    (h_kms : IsKMSState S_L S_R φ) :
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (gibbsBoltzmannFactor beta 1 = 1) ∧
-    (F * B * F = R) ∧
-    (p = 1 / 2) ∧
-    (φ (S_L * star S_L) - φ (S_R * star S_R) = 0) :=
-  ⟨cayley_transform_is_unitary x,
-   primon_ground_state_energy_zero beta,
-   F_B_F_eq_R,
-   jaynes_maxent_derivation S_L S_R h_cuntz φ p h_kms_weighted,
-   kms_chiral_charge_vanishes S_L S_R φ h_kms⟩
 
 end InfoGeometry.Quantum.BostConnesPrimon

@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Krein.HestenesModularKMSBridge
 import InfoGeometry.Krein.HilbertBridge
-import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 
 /-!
 # Hestenes-Krein Translated RH on a Real Doubled Carrier
@@ -17,7 +16,7 @@ coordinates:
 * `height` — the modular phase/flow coordinate.
 
 The "critical line" becomes a `throat` predicate on real Krein states.  The
-remaining analytic interface is stated in order language:
+remaining analytic socket is stated in order language:
 
 * every zero-state must be supported by some finite stage of an inductive
   colimit; or
@@ -42,7 +41,6 @@ namespace InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 
 open InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.FilteredHestenesKreinColimit
 open InfoGeometry.Krein
 
 /--
@@ -155,23 +153,8 @@ def KreinSpectralConcentration
     (C : KreinSpectralChart H) : Prop :=
   ∀ ψ : H, C.zeroSector ψ → C.throat ψ
 
-theorem kreinRH_of_oddObstruction
-    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [KreinSpace H]
-    {C : KreinSpectralChart H}
-    (oddObstruction : H → Prop)
-    (off_throat_obstructs :
-      ∀ ψ : H, C.zeroSector ψ → ¬ C.throat ψ → oddObstruction ψ)
-    (obstruction_vanishes :
-      ∀ ψ : H, C.zeroSector ψ → ¬ oddObstruction ψ) :
-    KreinRH C := by
-  intro ψ hzero
-  by_contra hnot
-  exact obstruction_vanishes ψ hzero
-    (off_throat_obstructs ψ hzero hnot)
-
 /--
-Obstruction data for the final no-leakage step.
+Proof-carrying obstruction certificate for the final no-leakage step.
 
 This is the precise place where the topology enters the RH reformulation:
 an off-throat zero must create a `J`-odd obstruction, while the twisted-index
@@ -179,7 +162,7 @@ vanishing theorem supplies the obstruction-vanishing clause.  Only the
 combination proves spectral concentration.
 -/
 @[rep_depth krein]
-structure KreinOddObstructionData
+structure KreinOddObstructionCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -193,14 +176,14 @@ structure KreinOddObstructionData
     ∀ ψ : H, C.zeroSector ψ → ¬ oddObstruction ψ
 
 /--
-Inductive-colimit support property for the zero sector.
+Inductive-colimit support certificate for the zero sector.
 
 The intended use is finite-stage arithmetic/Fredholm/Krein data transported
 through a direct-limit carrier.  It says every zero-state has a finite-stage
 representative, and every such stage already proves the throat condition.
 -/
 @[rep_depth krein]
-structure KreinFiniteStageSupportData
+structure KreinInductiveColimitSupportCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -215,59 +198,15 @@ structure KreinFiniteStageSupportData
   stage_no_leakage :
     ∀ n : Stage, ∀ ψ : H, stageMember n ψ → C.zeroSector ψ → C.throat ψ
 
-/-
-Concrete filtered-colimit support data.  Unlike the abstract `stageMember`
-interface above, this packet uses the actual canonical maps `ι n` of a
-Hestenes--Krein cone.  The only supplied non-formal ingredient is the support
-claim that every zero state has such a finite representative; the transport
-from representatives to the native Krein support theorem is definitional.
--/
-@[rep_depth krein]
-structure HestenesKreinColimitSupportData
-    (K : HestenesKreinCone)
-    (C : KreinSpectralChart (DoubledSpace K.LimitBase)) where
-  zero_has_stage :
-    ∀ ψ : DoubledSpace K.LimitBase, C.zeroSector ψ →
-      ∃ n : ℕ, ∃ x : DoubledSpace (K.Base n), K.ι n x = ψ
-  stage_no_leakage :
-    ∀ n : ℕ, ∀ x : DoubledSpace (K.Base n),
-      C.zeroSector (K.ι n x) → C.throat (K.ι n x)
-
-@[rep_depth krein]
-def HestenesKreinColimitSupportData.toFiniteStageSupportData
-    {K : HestenesKreinCone}
-    {C : KreinSpectralChart (DoubledSpace K.LimitBase)}
-    (S : HestenesKreinColimitSupportData K C) :
-    KreinFiniteStageSupportData C where
-  Stage := ℕ
-  stageMember n ψ := ∃ x : DoubledSpace (K.Base n), K.ι n x = ψ
-  zero_has_stage := S.zero_has_stage
-  stage_no_leakage := by
-    intro n ψ hψ hzero
-    rcases hψ with ⟨x, rfl⟩
-    exact S.stage_no_leakage n x hzero
-
-@[rep_depth krein]
-theorem kreinRH_of_hestenesKreinColimitSupport
-    {K : HestenesKreinCone}
-    {C : KreinSpectralChart (DoubledSpace K.LimitBase)}
-    (S : HestenesKreinColimitSupportData K C) :
-    KreinRH C := by
-  intro ψ hzero
-  rcases S.zero_has_stage ψ hzero with ⟨n, x, hx⟩
-  rw [← hx]
-  apply S.stage_no_leakage n x
-  simpa [hx] using hzero
-
 /--
-Zorn-maximal subsystem property for the zero sector.
+Zorn-maximal subsystem certificate for the zero sector.
 
 This mirrors the repository's boundary Zorn theorems: choose an admissible
 subsystem between a seed and an ambient boundary, make it maximal by Zorn's
 lemma, and prove the zero sector is contained in that maximal subsystem.
 -/
 @[rep_depth krein]
-structure KreinZornMaximalSubsystemData
+structure KreinZornMaximalSubsystemCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -279,9 +218,19 @@ structure KreinZornMaximalSubsystemData
   ambient : Set H
   /-- Zorn-maximal subsystem between `seed` and `ambient`. -/
   maximal : Set H
-  /-- Native order-theoretic maximality in the constrained subsystem set. -/
+  seed_subset_ambient : seed ⊆ ambient
+  seed_admissible : admissible seed
+  maximal_contains_seed : seed ⊆ maximal
+  maximal_subset_ambient : maximal ⊆ ambient
+  maximal_admissible : admissible maximal
+  /-- Maximality condition produced by the Zorn step. -/
   maximality :
-    Maximal (fun N : Set H => seed ⊆ N ∧ N ⊆ ambient ∧ admissible N) maximal
+    ∀ N : Set H,
+      seed ⊆ N →
+        N ⊆ ambient →
+          admissible N →
+            maximal ⊆ N →
+              N = maximal
   /-- The analytic zero sector is contained in the Zorn-maximal subsystem. -/
   zero_subset_maximal :
     ∀ ψ : H, C.zeroSector ψ → ψ ∈ maximal
@@ -315,7 +264,7 @@ theorem hestenesKreinTranslatedRH_iff_kreinRH
 
 /--
 The real doubled Krein RH/no-leakage statement follows from an explicit
-`J`-odd obstruction property.
+`J`-odd obstruction certificate.
 
 This avoids the invalid shortcut "`J`-odd trace vanishes, therefore all poles
 are on the throat" unless the chart supplies the separation statement that an
@@ -326,7 +275,7 @@ theorem kreinRH_of_oddObstructionCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (O : KreinOddObstructionData C) :
+    (O : KreinOddObstructionCertificate C) :
     KreinRH C := by
   intro ψ hzero
   by_contra hnot
@@ -338,7 +287,7 @@ theorem kreinSpectralConcentration_of_oddObstructionCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (O : KreinOddObstructionData C) :
+    (O : KreinOddObstructionCertificate C) :
     KreinSpectralConcentration C :=
   kreinRH_of_oddObstructionCertificate O
 
@@ -348,7 +297,7 @@ theorem kreinRH_of_inductiveColimitSupport
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (L : KreinFiniteStageSupportData C) :
+    (L : KreinInductiveColimitSupportCertificate C) :
     KreinRH C := by
   intro ψ hzero
   rcases L.zero_has_stage ψ hzero with ⟨n, hn⟩
@@ -359,7 +308,7 @@ theorem kreinSpectralConcentration_of_inductiveColimitSupport
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (L : KreinFiniteStageSupportData C) :
+    (L : KreinInductiveColimitSupportCertificate C) :
     KreinSpectralConcentration C :=
   kreinRH_of_inductiveColimitSupport L
 
@@ -369,7 +318,7 @@ theorem kreinRH_of_zornMaximalSubsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (Z : KreinZornMaximalSubsystemData C) :
+    (Z : KreinZornMaximalSubsystemCertificate C) :
     KreinRH C := by
   intro ψ hzero
   exact Z.maximal_no_leakage ψ (Z.zero_subset_maximal ψ hzero) hzero
@@ -379,7 +328,7 @@ theorem kreinSpectralConcentration_of_zornMaximalSubsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (Z : KreinZornMaximalSubsystemData C) :
+    (Z : KreinZornMaximalSubsystemCertificate C) :
     KreinSpectralConcentration C :=
   kreinRH_of_zornMaximalSubsystem Z
 
@@ -426,7 +375,7 @@ def ComplexRH (XiZero : ℂ → Prop) : Prop :=
 /--
 Chart from classical completed-zeta zeros to real doubled Krein zero states.
 
-This is the analytic/interface boundary: the map from a complex zero to a Krein
+This is the analytic/socket boundary: the map from a complex zero to a Krein
 state is not invented by this file.
 -/
 @[rep_depth krein]
@@ -521,3 +470,5 @@ abbrev RealDoubledKreinSpectralChart
   KreinSpectralChart (RealDoubledConformalKreinCarrier E)
 
 end InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
+
+end

@@ -260,43 +260,27 @@ theorem causal_null_closure_laws :
 @[rep_depth krein]
 theorem causalNullPlus_sq :
     causalNullPlus * causalNullPlus = 0 :=
-  by
-    simp [causalNullPlus, splitQuaternionI, splitQuaternionJ,
-      mul_add, add_mul, smul_add]
-    module
+  causal_null_closure_laws.1
 
 @[rep_depth krein]
 theorem causalNullMinus_sq :
     causalNullMinus * causalNullMinus = 0 :=
-  by
-    simp [causalNullMinus, splitQuaternionI, splitQuaternionJ,
-      sub_eq_add_neg, mul_add, add_mul, smul_add]
-    module
+  causal_null_closure_laws.2.1
 
 @[rep_depth krein]
 theorem causalNullPlus_mul_causalNullMinus :
     causalNullPlus * causalNullMinus = kreinPlusProjector :=
-  by
-    simp [causalNullPlus, causalNullMinus, kreinPlusProjector,
-      splitQuaternionI, splitQuaternionJ, splitQuaternionK,
-      sub_eq_add_neg, mul_add, add_mul, smul_add]
-    module
+  causal_null_closure_laws.2.2.1
 
 @[rep_depth krein]
 theorem causalNullMinus_mul_causalNullPlus :
     causalNullMinus * causalNullPlus = kreinMinusProjector :=
-  by
-    simp [causalNullPlus, causalNullMinus, kreinMinusProjector,
-      splitQuaternionI, splitQuaternionJ, splitQuaternionK,
-      sub_eq_add_neg, mul_add, add_mul, smul_add]
-    module
+  causal_null_closure_laws.2.2.2.1
 
 @[rep_depth krein]
 theorem kreinProjector_sum :
     kreinPlusProjector + kreinMinusProjector = (1 : Alg) :=
-  by
-    simp [kreinPlusProjector, kreinMinusProjector, splitQuaternionK]
-    module
+  krein_projector_laws.2.2.2.2
 
 @[rep_depth krein]
 theorem kreinMinusProjector_mul_causalNullPlus :
@@ -646,23 +630,14 @@ abbrev LocalCausalConeClosure : Prop :=
 
 @[rep_depth krein]
 theorem localCausalConeClosure : LocalCausalConeClosure := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact split_quaternion_basis_laws
-  · exact matrix_split_quaternion_basis_laws
-  · exact matrix_krein_projectors_explicit
-  · exact matrix_causal_nulls_explicit
-  · exact matrix_causal_null_closure_laws
-  · exact matrix_krein_projectors_noncentral
-  · exact matrix_projector_spinor_action
-  · exact matrix_null_spinor_action
-  · exact krein_projector_laws
-  · exact causal_null_closure_laws
-  · exact sector_hopping_laws
-  · exact finite_dilaton_action_on_nulls
-  · exact krein_squeeze_left_right_null_scaling
-  · exact krein_squeeze_half_conjugates_nulls
-  · exact mass_bridge_beta_laws
-  · exact massless_null_dirac_symbol_sq
+  exact ⟨split_quaternion_basis_laws, matrix_split_quaternion_basis_laws,
+    matrix_krein_projectors_explicit, matrix_causal_nulls_explicit,
+    matrix_causal_null_closure_laws, matrix_krein_projectors_noncentral,
+    matrix_projector_spinor_action, matrix_null_spinor_action,
+    krein_projector_laws, causal_null_closure_laws, sector_hopping_laws,
+    finite_dilaton_action_on_nulls, krein_squeeze_left_right_null_scaling,
+    krein_squeeze_half_conjugates_nulls, mass_bridge_beta_laws,
+    massless_null_dirac_symbol_sq⟩
 
 /--
 Compressed readback of the final finite causal-cone identities.
@@ -692,18 +667,7 @@ theorem final_local_causal_cone_identities :
   rcases split_quaternion_basis_laws with ⟨hI, _hJ, hK, _hIJ, _hJI⟩
   rcases causal_null_closure_laws with ⟨hNp, hNm, hpm, hmp, hsum, hdiff⟩
   rcases mass_bridge_beta_laws with ⟨_hβsq, hβanti, _hβp, _hβm⟩
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact hI
-  · exact hK
-  · exact hNp
-  · exact hNm
-  · rfl
-  · rfl
-  · exact hpm
-  · exact hmp
-  · exact hsum
-  · exact hdiff
-  · exact krein_squeeze_projector_decomposition
-  · exact hβanti
+  exact ⟨hI, hK, hNp, hNm, rfl, rfl, hpm, hmp, hsum, hdiff,
+    krein_squeeze_projector_decomposition, hβanti⟩
 
 end InfoGeometry.Clifford.SplitQ11CausalCone

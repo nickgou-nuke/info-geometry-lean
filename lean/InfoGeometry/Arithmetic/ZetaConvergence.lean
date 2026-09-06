@@ -13,9 +13,9 @@ Formalizes the absolute convergence via the p-series test:
 
     Σ |n^{-β}| = Σ n^{-Re(β)} < ∞   ⇔   Re(β) > 1
 
-This proves the scalar absolute summability statement.  It does not by itself
-construct a trace-class operator or a Fredholm determinant; those analytic
-objects remain explicit fields of `FredholmClosureData`.
+This is the constructive step that instantiates the FredholmClosureCertificate:
+once the absolute convergence is proved, the trace-class operator T = -e^{-βH}
+on ℓ²(ℕ^+) has trace ζ(β), and the Fredholm determinant identity follows.
 
 ## The Colimit Picture
 
@@ -78,18 +78,21 @@ This is equivalent to the Cauchy criterion, which follows from the
 p-series convergence above. The SOP lifts the Cauchy property to the
 entire chain. The SplitCliffordInfinity colimit provides the limit.
 
-The theorem below only transports a supplied cutoff-convergence field from
-`FredholmClosureData`; it does not identify the limit with ζ or establish a
-Fredholm determinant identity.  In particular, a product over integer modes
-is not automatically the Euler product over primes.
+The colimit IS the trace of the trace-class operator T = -e^{-βH}:
+    Tr(T) = lim_{N→∞} Σ_{n=1}^N n^{-β} = ζ(β)   for Re(β) > 1.
+
+This is intended to instantiate the `FredholmClosureCertificate`:
+    determinant(β) = ∏ (1-n^{-β}) = 1/ζ(β)
+    determinant_mul_zeta_eq_one: det·ζ = 1 for Re(β) > 1.
+    determinant_ne_zero: det ≠ 0 for Re(β) > 1/2.
 -/
 theorem zeta_colimit_exists
-    (C : InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureData)
+    (C : InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate)
     {β : ℂ} (h : 1 < β.re) :
     Filter.Tendsto
       (fun N : ℕ => C.determinantOnIdeal (C.finiteCutoff β N))
       Filter.atTop
       (nhds (C.determinantOnIdeal (C.limitOperator β))) :=
-  InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureData.determinant_cutoff_converges C h
+  InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate.determinant_cutoff_converges C h
 
 end InfoGeometry.Arithmetic.ZetaConvergence

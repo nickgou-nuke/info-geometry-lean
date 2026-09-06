@@ -53,14 +53,4 @@ theorem fourier_tripartite_annihilation (X : R) (hX : IsFourierFourthRoot X) :
     X * (X ^ 2 - 1) * (X ^ 2 + 1) = 0 := by
   rw [tripartite_factorization_eq_quintic, fourier_fourth_root_annihilates_quintic X hX]
 
-theorem grand_fourier_operator_polynomial_synthesis (X : R) (k : ℕ) (hX : IsFourierFourthRoot X) :
-    (X * (X ^ 2 - 1) * (X ^ 2 + 1) = X ^ 5 - X) ∧
-    (X * (X ^ (2 * k) - 1) * (X ^ (2 * k) + 1) = X ^ (4 * k + 1) - X) ∧
-    (X ^ 5 - X = 0) ∧
-    (X * (X ^ 2 - 1) * (X ^ 2 + 1) = 0) :=
-  ⟨tripartite_factorization_eq_quintic X,
-   general_tripartite_factorization X k,
-   fourier_fourth_root_annihilates_quintic X hX,
-   fourier_tripartite_annihilation X hX⟩
-
 end InfoGeometry.Quantum.FourierOperatorPolynomial

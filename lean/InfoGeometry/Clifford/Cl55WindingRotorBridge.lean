@@ -30,10 +30,9 @@ theorem windingRotor_add (w : G →+ ℤ) (i : Fin 5) (theta : ℝ) (g h : G) :
   rw [map_add, ropeRotor55Int_add]
 
 theorem windingRotor_inverse (w : G →+ ℤ) (i : Fin 5) (theta : ℝ) (g : G)
-    (hneg : w (-g) = -(w g)) :
-    windingRotor w i theta g * windingRotor w i theta (-g) = 1 := by
+    : windingRotor w i theta g * windingRotor w i theta (-g) = 1 := by
   unfold windingRotor
-  rw [hneg]
+  rw [map_neg]
   exact ropeRotor55Int_inverse i theta (w g)
 
 end InfoGeometry.Clifford.Cl55WindingRotorBridge

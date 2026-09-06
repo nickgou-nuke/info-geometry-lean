@@ -71,18 +71,4 @@ theorem colimitCocone_apex_inversePair {F : J ⥤ C} {s t : Cocone F}
   · simp
   · simp
 
-/-- Morphisms into a limiting apex are determined by their cone components. -/
-theorem limitCone_apex_hom_ext {F : J ⥤ C} {s t : Cone F}
-    (ht : IsLimit t) {f g : s.pt ⟶ t.pt}
-    (h : ∀ j, f ≫ t.π.app j = g ≫ t.π.app j) :
-    f = g := by
-  exact ht.hom_ext h
-
-/-- Morphisms out of a colimiting apex are determined by their cocone components. -/
-theorem colimitCocone_apex_hom_ext {F : J ⥤ C} {s t : Cocone F}
-    (hs : IsColimit s) {f g : s.pt ⟶ t.pt}
-    (h : ∀ j, s.ι.app j ≫ f = s.ι.app j ≫ g) :
-    f = g := by
-  exact hs.hom_ext h
-
 end InfoGeometry.Canonical.CategoryTheoryConeUniqueness

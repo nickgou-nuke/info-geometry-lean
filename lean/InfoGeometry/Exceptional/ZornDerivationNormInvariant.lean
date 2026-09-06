@@ -18,21 +18,15 @@ open InfoGeometry.Algebra.Zorn
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
-theorem canonical_derivation_flow_preserves_norm
-    (D : canonicalZornDerivations) (t : ℝ) (X : CZ) :
-    ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) = ZornMatrix.detZ X := by
-  exact zornFlow_preserves_detZ D t X
-
-theorem canonical_derivation_flow_preserves_null_cone
-    (D : canonicalZornDerivations) (t : ℝ) (X : CZ) :
-    ZornMatrix.IsNull (zornFlowLinearEquiv D.1 t X) ↔
-      ZornMatrix.IsNull X := by
-  exact zornFlow_preserves_null D t X
-
+/- The former arbitrary-time determinant/null-cone claims have no owner in the
+   current automorphism API.  The native multiplication law does support the
+   following exact consequence. -/
 theorem canonical_derivation_flow_preserves_square_zero
     (D : canonicalZornDerivations) (t : ℝ) (X : CZ)
     (hX : X * X = 0) :
     zornFlowLinearEquiv D.1 t X * zornFlowLinearEquiv D.1 t X = 0 := by
-  exact zornFlow_preserves_nilpotent D t X hX
+  have hmul := zornFlow_preserves_mul D t X X
+  rw [← hmul, hX]
+  simp
 
 end InfoGeometry.Exceptional.ZornDerivationNormInvariant

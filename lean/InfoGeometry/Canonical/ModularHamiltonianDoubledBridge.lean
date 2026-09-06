@@ -15,7 +15,7 @@ Krein/Hestenes lane.
 
 This file does not introduce a new Hamiltonian ontology. It rewrites the owned
 Tomita package into explicit `J, ε, J∘ε` equalities on the doubled carrier and
-keeps the `K = -log Δ` meaning via the exponential property.
+keeps the `K = -log Δ` meaning via the exponential certificate.
 -/
 
 namespace InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
@@ -78,7 +78,7 @@ theorem modularHamiltonian_eq_phaseAxisForm
         rw [modularHamiltonianDoubledExpr]
         rfl
 
-/-- The canonical Tomita package is an explicit `exp/log` property on doubled space. -/
+/-- The canonical Tomita package is an explicit `exp/log` witness on doubled space. -/
 @[rep_depth transport]
 theorem canonicalTomitaLogData_exp_deltaLog
     (CIK : CertifiedInverseKernel H₂) :
@@ -182,7 +182,7 @@ theorem canonicalTomita_adjointFlow_eq_exp_generator_conjugation
 
 /--
 Owner closure hook: projected-even super-Hamiltonian equals the canonical true
-modular generator on the same property lane.
+modular generator on the same certified lane.
 -/
 @[rep_depth transport]
 theorem projectedEven_superHamiltonian_eq_canonicalTomita_generator

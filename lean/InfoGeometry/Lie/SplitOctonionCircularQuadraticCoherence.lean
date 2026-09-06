@@ -26,15 +26,15 @@ theorem circularPeirceQuadratic_eq_circularWittQuadratic (x : Fin 8 → ℝ) :
 
 theorem circularPeirceQuadratic_diagonal_eq_minkowski_q
     (v : Minkowski4) :
-    circularPeirceQuadratic (minkowskiDiagonalEmbedding v) = v.q := by
+    circularPeirceQuadratic
+        (minkowskiDiagonalEmbedding (minkowskiCoordinates v)) = v.q := by
   rw [circularPeirceQuadratic_eq_circularWittQuadratic]
-  rw [circularWittQuadratic_diagonal_eq_minkowskiSq v]
-  dsimp [minkowskiSq, Minkowski4.q, Minkowski4.t, Minkowski4.x, Minkowski4.y, Minkowski4.z]
-  ring
+  exact circularWittQuadratic_diagonal_eq_minkowski_q v
 
 theorem circularPeirceQuadratic_diagonal_eq_canonical_pauliDet
     (v : Minkowski4) :
-    (circularPeirceQuadratic (minkowskiDiagonalEmbedding v) : ℂ) =
+    (circularPeirceQuadratic
+        (minkowskiDiagonalEmbedding (minkowskiCoordinates v)) : ℂ) =
       Matrix.det (pauliMatrix v) := by
   rw [circularPeirceQuadratic_diagonal_eq_minkowski_q]
   exact (det_pauliMatrix v).symm ▸ rfl

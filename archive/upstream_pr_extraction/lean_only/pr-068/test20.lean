@@ -1,0 +1,7 @@
+import InfoGeometry.Canonical.HeisenbergDerivative
+import InfoGeometry.Canonical.NavierStokesBridge
+
+open InfoGeometry.Canonical.TopologicalKMSFlow
+open InfoGeometry.Canonical.HeisenbergDerivative
+open InfoGeometry.Clifford.Cl44Witt
+open InfoGeometry.Clifford

@@ -1,6 +1,7 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.Basis.Basic
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # Seven-coordinate split-imaginary carrier
@@ -18,13 +19,24 @@ open InfoGeometry.Lie.SplitOctonionImaginaryAction
 
 abbrev SplitFanoCoordinates := Fin 7 → ℝ
 
+noncomputable instance : FiniteDimensional ℝ Imaginary :=
+  FiniteDimensional.of_finrank_pos (by rw [finrank_imaginary]; norm_num)
+
+noncomputable def imaginaryBasis : Module.Basis (Fin 7) ℝ Imaginary := by
+  let b := Module.Basis.ofVectorSpace ℝ Imaginary
+  have hcard : Fintype.card (Module.Basis.ofVectorSpaceIndex ℝ Imaginary) = 7 := by
+    have h := Module.finrank_eq_card_basis b
+    rw [finrank_imaginary] at h
+    exact h.symm
+  exact b.reindex (Fintype.equivFinOfCardEq hcard)
+
 noncomputable def imaginaryToSplitFano :
     Imaginary ≃ₗ[ℝ] SplitFanoCoordinates :=
-  imaginaryCoordLinearEquiv.trans imaginaryCoords_seven
+  imaginaryBasis.equivFun
 
 @[simp] theorem imaginaryToSplitFano_apply (X : Imaginary) :
     imaginaryToSplitFano X =
-      imaginaryCoords_seven (imaginaryCoordLinearEquiv X) := rfl
+      imaginaryBasis.equivFun X := rfl
 
 noncomputable def splitFanoBasis : Fin 7 → Imaginary :=
   fun i => imaginaryToSplitFano.symm (Pi.single i 1)
@@ -52,7 +64,7 @@ theorem splitFanoBasis_expansion (X : Imaginary) :
     X = ∑ i : Fin 7,
       (imaginaryToSplitFano X i) • splitFanoBasis i := by
   symm
-  simpa [splitFanoBasis] using
-    ((Module.Basis.ofEquivFun imaginaryToSplitFano).sum_repr X)
+  simpa [splitFanoBasis, imaginaryToSplitFano] using
+    (imaginaryBasis.sum_repr X)
 
 end InfoGeometry.Canonical.SplitOctonionImaginaryFanoBridge

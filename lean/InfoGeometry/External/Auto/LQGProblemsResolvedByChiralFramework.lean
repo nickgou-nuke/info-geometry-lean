@@ -336,3 +336,14 @@ theorem pentagon_diagram_is_jacobi :
 ---------------------------------------------------------------
 -- Summary: The Four Resolutions
 ---------------------------------------------------------------
+
+/-- The four LQG problems and their chiral resolutions, in a single record. -/
+structure LQGResolution where
+  problem_1_intertwiner : String
+  problem_2_6j_symbols : String
+  problem_3_volume : String
+  problem_4_pentagon : String
+  master_statement : String
+  empirical_foundation : String
+
+end

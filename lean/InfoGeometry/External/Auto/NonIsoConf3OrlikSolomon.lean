@@ -96,6 +96,13 @@ def slotRank : CohomologySlot → ℕ
   | degreeQuadratic => 2
   | other => 0
 
+theorem cohomology_rank_synthesis :
+    slotRank degree0 = 1 ∧
+    slotRank degreeGenerator = 3 ∧
+    slotRank degreeQuadratic = 2 ∧
+    slotRank other = 0 := by
+  simp [slotRank]
+
 /-- A minimal tensor target for the `12|3` cooperad cocomposition. -/
 structure CooperadTensor where
   macroPart : Option PairGen
@@ -121,6 +128,20 @@ theorem delta12_external_13 : delta12 A13 = { macroPart := some A13, micro := no
 theorem delta12_external_23 : delta12 A23 = { macroPart := some A13, micro := none } := rfl
 
 
+
+/-- Capstone for the formal three-point OS/cooperad skeleton. -/
+theorem non_iso_conf3_os_cooperad_synthesis :
+    vadd (vsub (reduceProduct A12A23) (reduceProduct A12A13))
+      (reduceProduct A23A13) = 0 ∧
+    slotRank degree0 = 1 ∧
+    slotRank degreeGenerator = 3 ∧
+    slotRank degreeQuadratic = 2 ∧
+    delta12 A12 = { macroPart := none, micro := some A12 } ∧
+    delta12 A13 = { macroPart := some A13, micro := none } := by
+  exact ⟨arnold_orlik_solomon_relation,
+    rfl, rfl, rfl,
+    delta12_internal,
+    delta12_external_13⟩
 
 end NonIsoConf3OrlikSolomon
 

@@ -19,9 +19,6 @@ import Mathlib.Algebra.Module.LinearMap.End
 import Mathlib.Algebra.Module.Submodule.Ker
 import Mathlib.Algebra.Module.Submodule.Lattice
 import Mathlib.Algebra.Module.Submodule.Range
-import Mathlib.Algebra.Module.Prod
-import Mathlib.Algebra.Module.Pi
-
 
 noncomputable section
 
@@ -38,7 +35,7 @@ Witness for a split Siegel-Eisenstein boundary sequence.
 
 `eisenstein` is a chosen Eisenstein lift/section `ℰ_P`.
 
-The section ax!om says:
+The section axiom says:
 
 `𝔖_P ∘ ℰ_P = id`.
 
@@ -52,7 +49,7 @@ structure SiegelEisensteinWitness
   eisenstein : Boundary →ₗ[ℝ] Bulk
 
   /-- The Eisenstein lift is a strict right-inverse to the Siegel operator. -/
-  section_property :
+  section_axiom :
     siegel.comp eisenstein = LinearMap.id
 
 namespace SiegelEisensteinWitness
@@ -64,14 +61,14 @@ variable (W : SiegelEisensteinWitness Bulk Boundary)
 
 /-! ### 2. Basic section consequences -/
 
-/-- Pointwise form of the section ax!om. -/
+/-- Pointwise form of the section axiom. -/
 @[simp]
 theorem section_apply (b : Boundary) :
     W.siegel (W.eisenstein b) = b := by
   have h :=
     congrArg
       (fun f : Boundary →ₗ[ℝ] Boundary => f b)
-      W.section_property
+      W.section_axiom
   simpa [LinearMap.comp_apply] using h
 
 /-- The Siegel operator is surjective. -/
@@ -464,138 +461,4 @@ theorem globalCuspidalSubspace_le_ker
       LinearMap.ker (siegelFamily P) := by
   exact iInf_le _ P
 
-/-! ### 7. Canonical explicit constructors and instances -/
-
-/-- Linear projection to the first factor. -/
-def prodFst (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    (Ker × Boundary) →ₗ[ℝ] Ker where
-  toFun := Prod.fst
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
-
-/-- Linear projection to the second factor (Siegel constant term operator). -/
-def prodSnd (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    (Ker × Boundary) →ₗ[ℝ] Boundary where
-  toFun := Prod.snd
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
-
-/-- Linear inclusion of the first factor (Cuspidal core embedding). -/
-def prodInl (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    Ker →ₗ[ℝ] (Ker × Boundary) where
-  toFun k := (k, 0)
-  map_add' _ _ := by ext <;> simp
-  map_smul' _ _ := by ext <;> simp
-
-/-- Linear inclusion of the second factor (Eisenstein section lift). -/
-def prodInr (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    Boundary →ₗ[ℝ] (Ker × Boundary) where
-  toFun b := (0, b)
-  map_add' _ _ := by ext <;> simp
-  map_smul' _ _ := by ext <;> simp
-
-/-- Canonical split constructor from a direct product `Ker × Boundary`. -/
-def ofProd
-    (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    SiegelEisensteinWitness (Ker × Boundary) Boundary where
-  siegel := prodSnd Ker Boundary
-  eisenstein := prodInr Ker Boundary
-  section_property := by
-    apply LinearMap.ext
-    intro b
-    rfl
-
-/-- Trivial self-split on any vector space `Space`. -/
-def ofId
-    (Space : Type*)
-    [AddCommGroup Space] [Module ℝ Space] :
-    SiegelEisensteinWitness Space Space where
-  siegel := LinearMap.id
-  eisenstein := LinearMap.id
-  section_property := by
-    apply LinearMap.ext
-    intro x
-    rfl
-
-/-- Canonical split constructor from a linear equivalence. -/
-def ofLinearEquiv
-    {Bulk Boundary : Type*}
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    (e : Bulk ≃ₗ[ℝ] Boundary) :
-    SiegelEisensteinWitness Bulk Boundary where
-  siegel := e.toLinearMap
-  eisenstein := e.symm.toLinearMap
-  section_property := by
-    apply LinearMap.ext
-    intro b
-    simp
-
-/-- In a product split, the cuspidal subspace is isomorphic to `Ker × {0}`. -/
-theorem ofProd_ker_siegel
-    (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary] :
-    LinearMap.ker (ofProd Ker Boundary).siegel = LinearMap.range (prodInl Ker Boundary) := by
-  apply le_antisymm
-  · rintro ⟨k, b⟩ (h : (ofProd Ker Boundary).siegel (k, b) = 0)
-    simp [ofProd, prodSnd] at h
-    subst h
-    exact LinearMap.mem_range.mpr ⟨k, rfl⟩
-  · rintro x ⟨k, rfl⟩
-    simp [ofProd, prodSnd, prodInl]
-
-/-- The boundary projector on `Ker × Boundary` is projection onto `{0} × Boundary`. -/
-theorem ofProd_boundaryProjector
-    (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    (x : Ker × Boundary) :
-    (ofProd Ker Boundary).boundaryProjector x = (0, x.2) := by
-  rfl
-
-/-- The cuspidal projector on `Ker × Boundary` is projection onto `Ker × {0}`. -/
-theorem ofProd_cuspidalProjector
-    (Ker Boundary : Type*)
-    [AddCommGroup Ker] [Module ℝ Ker]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    (x : Ker × Boundary) :
-    (ofProd Ker Boundary).cuspidalProjector x = (x.1, 0) := by
-  ext <;> simp [SiegelEisensteinWitness.cuspidalProjector, ofProd, prodInr, prodSnd]
-
-/-- Canonical Fourier Constant-Term Witness for discrete frequency approximations `Fin (n + 1) → ℝ`.
-    `siegel` extracts the 0th Fourier mode (constant term).
-    `eisenstein` lifts a constant to the 0th Fourier mode. -/
-def finFourierSiegelWitness (n : ℕ) :
-    SiegelEisensteinWitness (Fin (n + 1) → ℝ) ℝ where
-  siegel := {
-    toFun := fun f => f 0
-    map_add' := fun f g => rfl
-    map_smul' := fun r f => rfl
-  }
-  eisenstein := {
-    toFun := fun c => fun i => if i = 0 then c else 0
-    map_add' := fun c d => by
-      ext i
-      by_cases h : i = 0 <;> simp [h]
-    map_smul' := fun r c => by
-      ext i
-      by_cases h : i = 0 <;> simp [h]
-  }
-  section_property := by
-    apply LinearMap.ext
-    intro c
-    dsimp
-
-end SiegelResonance
-
+end InfoGeometry.Automorphic.SiegelResonance

@@ -1,4 +1,4 @@
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralTensorRecoupling
 import proofs.TLChain
 import proofs.JonesBraidB3

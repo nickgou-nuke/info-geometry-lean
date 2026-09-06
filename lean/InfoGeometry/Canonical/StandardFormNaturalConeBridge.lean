@@ -247,19 +247,19 @@ structure NaturalConeCantorFaceSystem
 
   /-- Cylinder projection associated to a finite binary word. -/
   cylinderProjection :
-    List Bool → Alg
+    TypeIIIModularCantorSystem.BinaryWord → Alg
 
   /-- Localized face of the natural cone. -/
   face :
-    List Bool → Set Hilb
+    TypeIIIModularCantorSystem.BinaryWord → Set Hilb
 
   /-- Cylinder weight/readout, replacing trace-size. -/
   cylinderWeight :
-    List Bool → ℝ
+    TypeIIIModularCantorSystem.BinaryWord → ℝ
 
   /-- Positivity of cylinder weights. -/
   cylinderWeight_pos :
-    ∀ w : List Bool, 0 < cylinderWeight w
+    ∀ w : TypeIIIModularCantorSystem.BinaryWord, 0 < cylinderWeight w
 
 namespace NaturalConeCantorFaceSystem
 
@@ -269,20 +269,20 @@ variable (C : NaturalConeCantorFaceSystem Alg Hilb NormalPositive)
 /-- Negative logarithmic cylinder potential. -/
 @[rep_depth thermo]
 noncomputable def cylinderPotential
-    (w : List Bool) : ℝ :=
+    (w : TypeIIIModularCantorSystem.BinaryWord) : ℝ :=
   TypeIIIModularCantorSystem.cylinderPotential C.cylinderWeight w
 
 /-- Local branch information increment. -/
 @[rep_depth thermo]
 noncomputable def branchIncrement
-    (w : List Bool) (b : Bool) : ℝ :=
+    (w : TypeIIIModularCantorSystem.BinaryWord) (b : Bool) : ℝ :=
   TypeIIIModularCantorSystem.branchIncrement C.cylinderWeight w b
 
 /-- Logarithmic chain rule for cylinder potentials. -/
 @[rep_depth thermo]
 theorem cylinderPotential_child
-    (w : List Bool) (b : Bool) :
-    C.cylinderPotential (TypeIIIModularCantorSystem.child w b) =
+    (w : TypeIIIModularCantorSystem.BinaryWord) (b : Bool) :
+    C.cylinderPotential (TypeIIIModularCantorSystem.BinaryWord.child w b) =
       C.cylinderPotential w + C.branchIncrement w b := by
   exact
     TypeIIIModularCantorSystem.cylinderPotential_child
@@ -298,11 +298,11 @@ open TypeIIIModularCantorSystem
 
 /-- Concrete list of all binary words at level `n`. -/
 @[rep_depth projective]
-def wordsList : ℕ → List (List Bool)
+def wordsList : ℕ → List BinaryWord
   | 0 => [[]]
   | n + 1 =>
       (wordsList n).flatMap
-        (fun w => [TypeIIIModularCantorSystem.child w false, TypeIIIModularCantorSystem.child w true])
+        (fun w => [BinaryWord.child w false, BinaryWord.child w true])
 
 /--
 Concrete finite set of binary words at level `n`.
@@ -313,21 +313,21 @@ partition theorems below use the list directly to avoid hiding multiplicity
 assumptions in `Finset` coercions.
 -/
 @[rep_depth projective]
-def words (n : ℕ) : Finset (List Bool) :=
+def words (n : ℕ) : Finset BinaryWord :=
   (wordsList n).toFinset
 
 @[simp] theorem wordsList_zero :
-    wordsList 0 = ([[]] : List (List Bool)) :=
+    wordsList 0 = ([[]] : List BinaryWord) :=
   rfl
 
 @[simp] theorem wordsList_succ (n : ℕ) :
     wordsList (n + 1) =
       (wordsList n).flatMap
-        (fun w => [TypeIIIModularCantorSystem.child w false, TypeIIIModularCantorSystem.child w true]) :=
+        (fun w => [BinaryWord.child w false, BinaryWord.child w true]) :=
   rfl
 
 @[simp] theorem words_zero :
-    words 0 = ({[]} : Finset (List Bool)) :=
+    words 0 = ({[]} : Finset BinaryWord) :=
   rfl
 
 section Partition
@@ -336,21 +336,21 @@ variable {Alg : Type*} [AddCommMonoid Alg]
 
 /-- Sum of a projection family over the concrete binary level list. -/
 @[rep_depth projective]
-def levelSum (projectionOf : List Bool → Alg) (n : ℕ) : Alg :=
+def levelSum (projectionOf : BinaryWord → Alg) (n : ℕ) : Alg :=
   ((wordsList n).map projectionOf).sum
 
 @[simp] theorem levelSum_zero
-    (projectionOf : List Bool → Alg) :
+    (projectionOf : BinaryWord → Alg) :
     levelSum projectionOf 0 = projectionOf [] := by
   simp [levelSum]
 
 @[simp] theorem levelSum_succ
-    (projectionOf : List Bool → Alg) (n : ℕ) :
+    (projectionOf : BinaryWord → Alg) (n : ℕ) :
     levelSum projectionOf (n + 1) =
       ((wordsList n).flatMap
         (fun w =>
-          [projectionOf (TypeIIIModularCantorSystem.child w false),
-            projectionOf (TypeIIIModularCantorSystem.child w true)])).sum := by
+          [projectionOf (BinaryWord.child w false),
+            projectionOf (BinaryWord.child w true)])).sum := by
   unfold levelSum
   rw [wordsList_succ]
   simp [List.map_flatMap]
@@ -364,12 +364,12 @@ projection.
 -/
 @[rep_depth projective]
 theorem levelSum_eq_root_of_binary_split
-    (projectionOf : List Bool → Alg)
+    (projectionOf : BinaryWord → Alg)
     (hSplit :
-      ∀ w : List Bool,
+      ∀ w : BinaryWord,
         projectionOf w =
-          projectionOf (TypeIIIModularCantorSystem.child w false) +
-            projectionOf (TypeIIIModularCantorSystem.child w true))
+          projectionOf (BinaryWord.child w false) +
+            projectionOf (BinaryWord.child w true))
     (n : ℕ) :
     levelSum projectionOf n = projectionOf [] := by
   induction n with
@@ -379,8 +379,8 @@ theorem levelSum_eq_root_of_binary_split
       have hmap :
           ((wordsList n).flatMap
             (fun w =>
-              [projectionOf (TypeIIIModularCantorSystem.child w false),
-                projectionOf (TypeIIIModularCantorSystem.child w true)])).sum =
+              [projectionOf (BinaryWord.child w false),
+                projectionOf (BinaryWord.child w true)])).sum =
             ((wordsList n).map projectionOf).sum := by
         induction wordsList n with
         | nil =>
@@ -392,8 +392,8 @@ theorem levelSum_eq_root_of_binary_split
             =
           ((wordsList n).flatMap
             (fun w =>
-              [projectionOf (TypeIIIModularCantorSystem.child w false),
-                projectionOf (TypeIIIModularCantorSystem.child w true)])).sum := by
+              [projectionOf (BinaryWord.child w false),
+                projectionOf (BinaryWord.child w true)])).sum := by
               rw [levelSum_succ]
         _ = ((wordsList n).map projectionOf).sum := hmap
         _ = projectionOf [] := ih
@@ -409,7 +409,7 @@ variable [AddCommMonoid Alg]
 @[rep_depth projective]
 def EvalPreservesBinaryLevelListSums
     (eval : State → Alg → ℝ) : Prop :=
-  ∀ (ω : State) (n : ℕ) (projectionOf : List Bool → Alg),
+  ∀ (ω : State) (n : ℕ) (projectionOf : BinaryWord → Alg),
     eval ω (levelSum projectionOf n) =
       ((wordsList n).map (fun w => eval ω (projectionOf w))).sum
 
@@ -422,13 +422,13 @@ finite additivity of the chosen readout over the concrete level lists.
 @[rep_depth projective]
 theorem expectation_level_sum_eq_root_of_binary_split
     (eval : State → Alg → ℝ)
-    (projectionOf : List Bool → Alg)
+    (projectionOf : BinaryWord → Alg)
     (ω : State)
     (hSplit :
-      ∀ w : List Bool,
+      ∀ w : BinaryWord,
         projectionOf w =
-          projectionOf (TypeIIIModularCantorSystem.child w false) +
-            projectionOf (TypeIIIModularCantorSystem.child w true))
+          projectionOf (BinaryWord.child w false) +
+            projectionOf (BinaryWord.child w true))
     (hEval : EvalPreservesBinaryLevelListSums eval)
     (n : ℕ) :
     ((wordsList n).map (fun w => eval ω (projectionOf w))).sum =
@@ -454,15 +454,15 @@ carrier.
 @[rep_depth projective]
 def IsFinitePartitionOfUnity
     {Proj End : Type*} [AddCommMonoid End] [One End]
-    (words : Finset (List Bool))
-    (projectionOf : List Bool → Proj)
+    (words : Finset TypeIIIModularCantorSystem.BinaryWord)
+    (projectionOf : TypeIIIModularCantorSystem.BinaryWord → Proj)
     (toOperator : Proj → End) : Prop :=
   Finset.sum words (fun w => toOperator (projectionOf w)) = 1
 
 /--
 Predicate: an evaluation functional preserves finite binary-word indexed sums.
 
-This avoids any injectivity/deduplication property on the map from cylinder
+This avoids any injectivity/deduplication assumption on the map from cylinder
 words to concrete operators, while staying at the actual Cantor index type used
 by this bridge.
 -/
@@ -470,8 +470,8 @@ by this bridge.
 def EvalPreservesFiniteIndexedSums
     {State End : Type*} [AddCommMonoid End]
     (eval : State → End → ℝ) : Prop :=
-  ∀ (ω : State) (s : Finset (List Bool))
-    (f : List Bool → End),
+  ∀ (ω : State) (s : Finset TypeIIIModularCantorSystem.BinaryWord)
+    (f : TypeIIIModularCantorSystem.BinaryWord → End),
     eval ω (Finset.sum s f) = Finset.sum s (fun i => eval ω (f i))
 
 /--
@@ -486,8 +486,8 @@ theorem expectation_sum_eq_total_of_partition
     {Alg Hilb NormalPositive Proj : Type*}
     [AddCommMonoid Alg] [One Alg]
     (S : NaturalConeStandardFormInterface Alg Hilb NormalPositive)
-    (words : Finset (List Bool))
-    (projectionOf : List Bool → Proj)
+    (words : Finset TypeIIIModularCantorSystem.BinaryWord)
+    (projectionOf : TypeIIIModularCantorSystem.BinaryWord → Proj)
     (toOperator : Proj → Alg)
     (ω : NormalPositive)
     (hPartition : IsFinitePartitionOfUnity words projectionOf toOperator)
@@ -524,7 +524,7 @@ structure FiniteCylinderExpectationPartition
 
   /-- Finite set of active words at level `n`. -/
   levelWords :
-    ℕ → Finset (List Bool)
+    ℕ → Finset TypeIIIModularCantorSystem.BinaryWord
 
   /-- Distinguished normal positive functional, e.g. vacuum/KMS state. -/
   omega :
@@ -586,7 +586,7 @@ theorem level_expectation_sum_eq_one
 /-- Readback of the standard-form vector law on a cylinder projection. -/
 @[rep_depth projective]
 theorem cylinderExpectation_eq_vector_readout
-    (w : List Bool) :
+    (w : TypeIIIModularCantorSystem.BinaryWord) :
     P.faces.standard.eval P.omega (P.faces.cylinderProjection w) =
       P.faces.standard.innerReadout
         (P.faces.standard.act (P.faces.cylinderProjection w)
@@ -731,12 +731,12 @@ end ModularNaturalConeFaceBridge
 Binary-word specialization of the modular natural-cone face bridge.
 
 This is the theorem-safe version of the proposed `ModularFaceBridge`: it uses
-the repo-owned `List Bool` and the bounded doubled
+the repo-owned `TypeIIIModularCantorSystem.BinaryWord` and the bounded doubled
 carrier, while keeping all natural-cone preservation laws explicit.
 -/
 @[rep_depth operator]
 abbrev BinaryWordModularFaceBridge :=
-  ModularNaturalConeFaceBridge (H := H) (List Bool)
+  ModularNaturalConeFaceBridge (H := H) TypeIIIModularCantorSystem.BinaryWord
 
 namespace BinaryWordModularFaceBridge
 
@@ -745,7 +745,7 @@ variable (B : BinaryWordModularFaceBridge (H := H))
 /-- Binary-word localized modular face operator, morally `L_w = p_w J p_w J`. -/
 @[rep_depth operator]
 noncomputable def localizationOp
-    (w : List Bool) : EndH :=
+    (w : TypeIIIModularCantorSystem.BinaryWord) : EndH :=
   ModularNaturalConeFaceBridge.localizationOp B w
 
 /--
@@ -754,7 +754,7 @@ natural-cone shadow.
 -/
 @[rep_depth operator]
 theorem cone_face_localization
-    (w : List Bool)
+    (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : H₂} (hξ : ξ ∈ B.naturalCone) :
     BinaryWordModularFaceBridge.localizationOp B w ξ ∈ B.naturalCone :=
   ModularNaturalConeFaceBridge.localizationOp_mem_naturalCone B w hξ
@@ -762,13 +762,13 @@ theorem cone_face_localization
 /-- Binary-word localized modular cone face. -/
 @[rep_depth operator]
 noncomputable def modularConeFace
-    (w : List Bool) : Set H₂ :=
+    (w : TypeIIIModularCantorSystem.BinaryWord) : Set H₂ :=
   ModularNaturalConeFaceBridge.modularConeFace B w
 
 /-- Membership in a binary-word face is cone membership plus localizer fixedness. -/
 @[rep_depth operator]
 theorem mem_modularConeFace_iff
-    (w : List Bool) (ξ : H₂) :
+    (w : TypeIIIModularCantorSystem.BinaryWord) (ξ : H₂) :
     ξ ∈ BinaryWordModularFaceBridge.modularConeFace B w ↔
       ξ ∈ B.naturalCone ∧ BinaryWordModularFaceBridge.localizationOp B w ξ = ξ :=
   Iff.rfl
@@ -776,7 +776,7 @@ theorem mem_modularConeFace_iff
 /-- Binary-word localized modular cone faces sit inside the supplied natural cone. -/
 @[rep_depth operator]
 theorem modularConeFace_subset_naturalCone
-    (w : List Bool)
+    (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : H₂} (hξ : ξ ∈ BinaryWordModularFaceBridge.modularConeFace B w) :
     ξ ∈ B.naturalCone :=
   ModularNaturalConeFaceBridge.modularConeFace_subset_naturalCone B w hξ
@@ -784,7 +784,7 @@ theorem modularConeFace_subset_naturalCone
 /-- Binary-word face vectors are fixed by the binary-word localizer. -/
 @[rep_depth operator]
 theorem localizationOp_fixes_of_mem_modularConeFace
-    (w : List Bool)
+    (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : H₂} (hξ : ξ ∈ BinaryWordModularFaceBridge.modularConeFace B w) :
     BinaryWordModularFaceBridge.localizationOp B w ξ = ξ :=
   ModularNaturalConeFaceBridge.localizationOp_fixes_of_mem_modularConeFace B w hξ

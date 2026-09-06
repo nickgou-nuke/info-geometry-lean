@@ -2,13 +2,18 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Projective.ApolloniusNatural
 
-/-! Finite, native bridge from Apollonius coordinates to the Zorn carrier. -/
-noncomputable section
+/-! # Apollonius Zorn potential
 
+Finite algebraic embedding of the native Apollonius coordinates.  The raw
+`ZornMatrix` carrier intentionally has operations but no additive-group
+structure in this import, so the reflection is stated as an involution rather
+than being incorrectly advertised as a `LinearEquiv`.
+-/
+
+noncomputable section
 namespace InfoGeometry.Canonical.ApolloniusZornPotential
 
-open InfoGeometry.Algebra
-open InfoGeometry.Algebra.ZornMatrix
+open InfoGeometry.Algebra InfoGeometry.Algebra.ZornMatrix
 open InfoGeometry.Projective.ApolloniusNatural
 
 def apolloniusPotentialZorn (ξ θ χ : ℝ) : ZornMatrix ℝ where
@@ -23,55 +28,14 @@ def dilationReflection (Z : ZornMatrix ℝ) : ZornMatrix ℝ where
   w := ![Z.w 0, -Z.w 1, Z.w 2]
   b := -Z.b
 
-def dilationReflectionLinear : ZornMatrix ℝ →ₗ[ℝ] ZornMatrix ℝ where
-  toFun := dilationReflection
-  map_add' X Y := by
-    apply InfoGeometry.Algebra.ZornMatrix.ext
-    · change -(X.a + Y.a) = -X.a + -Y.a
-      ring
-    · funext i; fin_cases i
-      · change X.v 0 + Y.v 0 = X.v 0 + Y.v 0; rfl
-      · change -(X.v 1 + Y.v 1) = -X.v 1 + -Y.v 1; ring
-      · change X.v 2 + Y.v 2 = X.v 2 + Y.v 2; rfl
-    · funext i; fin_cases i
-      · change X.w 0 + Y.w 0 = X.w 0 + Y.w 0; rfl
-      · change -(X.w 1 + Y.w 1) = -X.w 1 + -Y.w 1; ring
-      · change X.w 2 + Y.w 2 = X.w 2 + Y.w 2; rfl
-    · change -(X.b + Y.b) = -X.b + -Y.b
-      ring
-  map_smul' r X := by
-    apply InfoGeometry.Algebra.ZornMatrix.ext
-    · change -(r * X.a) = r * -X.a
-      ring
-    · funext i; fin_cases i
-      · change r * X.v 0 = r * X.v 0; rfl
-      · change -(r * X.v 1) = r * -X.v 1; ring
-      · change r * X.v 2 = r * X.v 2; rfl
-    · funext i; fin_cases i
-      · change r * X.w 0 = r * X.w 0; rfl
-      · change -(r * X.w 1) = r * -X.w 1; ring
-      · change r * X.w 2 = r * X.w 2; rfl
-    · change -(r * X.b) = r * -X.b
-      ring
-
-@[simp] theorem dilationReflectionLinear_apply (Z : ZornMatrix ℝ) :
-    dilationReflectionLinear Z = dilationReflection Z := rfl
-
-theorem dilationReflectionLinear_involutive :
-    Function.Involutive dilationReflectionLinear := by
+theorem dilationReflection_involutive :
+    Function.Involutive dilationReflection := by
   intro Z
   apply InfoGeometry.Algebra.ZornMatrix.ext
-  · simp [dilationReflectionLinear, dilationReflection]
-  · funext i; fin_cases i <;> simp [dilationReflectionLinear, dilationReflection]
-  · funext i; fin_cases i <;> simp [dilationReflectionLinear, dilationReflection]
-  · simp [dilationReflectionLinear, dilationReflection]
-
-def dilationReflectionEquiv : ZornMatrix ℝ ≃ₗ[ℝ] ZornMatrix ℝ :=
-  LinearEquiv.ofInvolutive dilationReflectionLinear
-    dilationReflectionLinear_involutive
-
-@[simp] theorem dilationReflectionEquiv_apply (Z : ZornMatrix ℝ) :
-    dilationReflectionEquiv Z = dilationReflection Z := rfl
+  · simp [dilationReflection]
+  · funext i; fin_cases i <;> simp [dilationReflection]
+  · funext i; fin_cases i <;> simp [dilationReflection]
+  · simp [dilationReflection]
 
 theorem zornTrace_dilationReflection (Z : ZornMatrix ℝ) :
     zornTrace (dilationReflection Z) = -zornTrace Z := by
@@ -81,10 +45,6 @@ theorem zornTrace_dilationReflection (Z : ZornMatrix ℝ) :
 theorem zornNorm_dilationReflection (Z : ZornMatrix ℝ) :
     zornNorm (dilationReflection Z) = zornNorm Z := by
   simp [zornNorm, dilationReflection, Vec3.dot]
-
-theorem zornNorm_dilationReflectionEquiv (Z : ZornMatrix ℝ) :
-    zornNorm (dilationReflectionEquiv Z) = zornNorm Z := by
-  rw [dilationReflectionEquiv_apply, zornNorm_dilationReflection]
 
 @[simp] theorem apolloniusPotentialZorn_trace (ξ θ χ : ℝ) :
     zornTrace (apolloniusPotentialZorn ξ θ χ) = 0 := by
@@ -101,17 +61,9 @@ theorem apolloniusPotentialZorn_reflection (ξ θ χ : ℝ) :
       dilationReflection (apolloniusPotentialZorn ξ θ χ) := by
   apply InfoGeometry.Algebra.ZornMatrix.ext
   · simp [apolloniusPotentialZorn, dilationReflection]
-  · funext i
-    fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
-  · funext i
-    fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
+  · funext i; fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
+  · funext i; fin_cases i <;> simp [apolloniusPotentialZorn, dilationReflection]
   · simp [apolloniusPotentialZorn, dilationReflection]
-
-theorem apolloniusPotentialZorn_reflection_equiv (ξ θ χ : ℝ) :
-    apolloniusPotentialZorn (-ξ) θ χ =
-      dilationReflectionEquiv (apolloniusPotentialZorn ξ θ χ) := by
-  rw [dilationReflectionEquiv_apply]
-  exact apolloniusPotentialZorn_reflection ξ θ χ
 
 theorem apolloniusPotentialZorn_reflection_norm (ξ θ χ : ℝ) :
     zornNorm (apolloniusPotentialZorn (-ξ) θ χ) =
@@ -119,7 +71,8 @@ theorem apolloniusPotentialZorn_reflection_norm (ξ θ χ : ℝ) :
   rw [apolloniusPotentialZorn_reflection]
   exact zornNorm_dilationReflection _
 
-@[simp] theorem apolloniusPotentialZorn_scalar_zero_iff (ξ θ χ : ℝ) :
+@[simp] theorem apolloniusPotentialZorn_scalar_zero_iff
+    (ξ θ χ : ℝ) :
     (apolloniusPotentialZorn ξ θ χ).a = 0 ↔ ξ = 0 := by
   rfl
 
@@ -138,4 +91,3 @@ theorem apolloniusPotentialZorn_norm_critical_leaf (θ χ : ℝ) :
   ring
 
 end InfoGeometry.Canonical.ApolloniusZornPotential
-end noncomputable section

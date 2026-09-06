@@ -28,11 +28,6 @@ open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
-theorem sugawaraCentralCharge_eq_dimG_of_level_one_dualCoxeter_zero
-    (dimG : ℝ) :
-    sugawaraCentralCharge 1 dimG 0 = dimG := by
-  simp [sugawaraCentralCharge]
-
 /--
 Dedicated finite prime-lattice packet for the Sugawara readout.
 
@@ -99,22 +94,6 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
         (booleanCubeSugawaraPacket P v).bridge.dimG /
           ((booleanCubeSugawaraPacket P v).bridge.level +
             (booleanCubeSugawaraPacket P v).bridge.hDual) := by
-  calc
-    (booleanCubeSugawaraPacket P v).bridge.centralCharge =
-        (booleanCubeSugawaraPacket P v).bridge.dimG := by
-      exact (booleanCubeSugawaraPacket P v).centralCharge_eq_card
-    _ = sugawaraCentralCharge
-        (booleanCubeSugawaraPacket P v).bridge.level
-        (booleanCubeSugawaraPacket P v).bridge.dimG
-        (booleanCubeSugawaraPacket P v).bridge.hDual := by
-      rw [show (booleanCubeSugawaraPacket P v).bridge.level = 1 by rfl,
-        show (booleanCubeSugawaraPacket P v).bridge.hDual = 0 by rfl]
-      exact (sugawaraCentralCharge_eq_dimG_of_level_one_dualCoxeter_zero
-        (booleanCubeSugawaraPacket P v).bridge.dimG).symm
-    _ = (booleanCubeSugawaraPacket P v).bridge.level *
-        (booleanCubeSugawaraPacket P v).bridge.dimG /
-          ((booleanCubeSugawaraPacket P v).bridge.level +
-            (booleanCubeSugawaraPacket P v).bridge.hDual) := by
-      rfl
+  simp [booleanCubeSugawaraPacket]
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

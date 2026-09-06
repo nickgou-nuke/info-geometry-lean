@@ -10,7 +10,7 @@ Closure-clean spectral bridge constructors for the infinite-dimensional Drazin l
 This file does not introduce new ontological assumptions. It packages explicit
 re-projection constructors from:
 - spectral isolation at `0`,
-- finite ascent/descent property,
+- finite ascent/descent witness,
 - classical and generalized Riesz interfaces,
 
 into the bundled `DrazinInfiniteAssumptions` owner from
@@ -26,10 +26,33 @@ variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace
 variable {T : E →L[𝕂] E}
 
 /--
-Bridge constructor for the full infinite-dimensional Drazin property package.
+Bridge constructor for the finite ascent/descent lane at spectral point `0`.
+
+This is an explicit witness re-projection surface:
+- it records that the spectral isolation witness `h` is in scope;
+- it does not hide any additional algebraic requirements.
+-/
+@[rep_depth operator]
+noncomputable def HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum
+    (_h : ZeroIsolatedInSpectrum T)
+    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
+    HasFiniteAscentDescentAtZero T.toLinearMap :=
+  hFinite
+
+/--
+The finite ascent/descent bridge constructor is definitional on the finite witness.
+-/
+@[rep_depth operator]
+theorem HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq
+    (h : ZeroIsolatedInSpectrum T)
+    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
+    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum (T := T) h hFinite = hFinite := rfl
+
+/--
+Bridge constructor for the full infinite-dimensional Drazin assumption package.
 
 This definition is intentionally explicit: every nontrivial algebraic field is
-provided as a caller property, while `h` supplies the spectral-isolation field.
+provided as a caller witness, while `h` supplies the spectral-isolation field.
 -/
 @[rep_depth operator]
 noncomputable def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum
@@ -38,13 +61,14 @@ noncomputable def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum
     (hClassical : HasClassicalRieszDecompositionAtZero T)
     (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
     DrazinInfiniteAssumptions T where
-  finite_ascent_descent := hFinite
+  finite_ascent_descent :=
+    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum h hFinite
   zero_isolated_spectrum := h
   classical_riesz := hClassical
   generalized_riesz := hGeneralized
 
 /--
-Field projection: finite ascent/descent property of the bundled bridge package.
+Field projection: finite ascent/descent witness of the bundled bridge package.
 -/
 @[rep_depth operator]
 theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_finite_ascent_descent
@@ -57,7 +81,7 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_finite_ascent_descen
   rfl
 
 /--
-Field projection: spectral isolation property of the bundled bridge package.
+Field projection: spectral isolation witness of the bundled bridge package.
 -/
 @[rep_depth operator]
 theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated
@@ -70,7 +94,7 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated
   rfl
 
 /--
-Field projection: classical Riesz property of the bundled bridge package.
+Field projection: classical Riesz witness of the bundled bridge package.
 -/
 @[rep_depth operator]
 theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_classical
@@ -83,7 +107,7 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_classical
   rfl
 
 /--
-Field projection: generalized Riesz property of the bundled bridge package.
+Field projection: generalized Riesz witness of the bundled bridge package.
 -/
 @[rep_depth operator]
 theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized
@@ -97,7 +121,7 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized
 
 /--
 Constructive spectral bridge:
-from isolation at `0` plus finite ascent/descent, recover a Drazin property.
+from isolation at `0` plus finite ascent/descent, recover a Drazin witness.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
@@ -109,7 +133,7 @@ theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
       (T := T.toLinearMap) hFinite
 
 /--
-The bundled spectral bridge package carries a canonical Drazin property.
+The bundled spectral bridge package carries a canonical Drazin witness.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_package

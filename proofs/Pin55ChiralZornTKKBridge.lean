@@ -2,7 +2,7 @@ import proofs.Clifford55AnomalyOSP
 import proofs.ArtinCentralizerMonodromy
 import proofs.Pin55CartanDecomposition
 import proofs.PinO55GlideReflection
-import proofs.ChiralCausalConeTKKBridge
+import InfoGeometry.Canonical.ChiralCausalConeTKKBridge
 import proofs.ZornChiralBridge
 import proofs.ZornParavectorNullspace
 import InfoGeometry.Canonical.ZornTrialityTKKBridge

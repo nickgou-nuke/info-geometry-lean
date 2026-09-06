@@ -17,7 +17,7 @@ theorem lee_yang_asano_poincare_contraction_canonical_capstone
     (‖cayleyForward s‖ = 1) := by
   refine ⟨inner_ball_zero_free roots hLY,
     outer_ball_zero_free roots hLY,
-    riemann_inverse_on_unit_circle z (hLY hz) hz_ne_neg1,
-    cayley_forward_on_imaginary_axis s hre hs⟩
+    lee_yang_root_to_critical_line z (hLY z hz) hz_ne_neg1,
+    imaginary_point_to_unit_circle s hre hs⟩
 
 end InfoGeometry.Canonical

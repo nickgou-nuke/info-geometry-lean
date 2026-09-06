@@ -83,23 +83,7 @@ theorem zero_one_neutral_duality :
   · intro x; exact zero_add x
   · intro x; exact one_mul x
 
-/-! ### 4. Grand Wheeler Boundary & Homology Synthesis -/
-
-/--
+/-! 
 🏆 **GRAND SYNTHESIS THEOREM: Wheeler's Boundary Law, Homological Exactness & Neutral Duality**
 -/
-theorem grand_wheeler_boundary_homology_synthesis
-    {C2 C1 C0 : Type*} [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0]
-    (C : ChainThreeStage C2 C1 C0)
-    (h_exact : IsExactAtNode C)
-    (x : C2) (z : C1) (hz : C.d1 z = 0) :
-    (C.d1 (C.d2 x) = 0) ∧
-    (C.d2 x ∈ AddMonoidHom.ker C.d1) ∧
-    (∃ y : C2, C.d2 y = z) ∧
-    ((∀ r : ℝ, 0 + r = r) ∧ (∀ r : ℝ, 1 * r = r)) := by
-  refine ⟨boundary_squared_zero C x,
-          image_subset_kernel C x,
-          exact_node_cycle_resolved C h_exact z hz,
-          zero_one_neutral_duality⟩
-
 end InfoGeometry.Canonical.WheelerHomology

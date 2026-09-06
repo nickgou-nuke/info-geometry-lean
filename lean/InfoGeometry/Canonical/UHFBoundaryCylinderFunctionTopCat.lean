@@ -23,7 +23,7 @@ abbrev CylinderAlgebra :=
   InfoGeometry.Canonical.UHFBoundaryOperatorTopology.CylinderAlgebra
 
 def cylinderToBoundaryFunctionTopCatHom :
-    TopCat.of CylinderAlgebra ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of CylinderAlgebra ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := fun g => g.1
       continuous_toFun := continuous_subtype_val }
@@ -101,67 +101,64 @@ theorem UHF_boundary_cylinder_function_square :
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
   change UHF_boundary_op g =
-    (UHF_boundary_cylinderMap g : (ℕ → Bool) → ℂ)
+    (UHF_boundary_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem UHF_laplacian_cylinder_function_square :
     cylinderToBoundaryFunctionTopCatHom ≫
-        InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.UHF_Laplacian_opTopCatHom =
+        UHF_laplacian_topCatHom =
       UHF_laplacian_cylinderTopCatHom ≫
         cylinderToBoundaryFunctionTopCatHom := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  rw [InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.UHF_Laplacian_opTopCatHom_apply]
+  change UHF_Laplacian_op g =
+    (UHF_Laplacian_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem S_L_cylinder_function_square :
-    cylinderToBoundaryFunctionTopCatHom ≫
-        InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.S_L_opTopCatHom =
+    cylinderToBoundaryFunctionTopCatHom ≫ S_L_topCatHom =
       S_L_cylinderTopCatHom ≫
         cylinderToBoundaryFunctionTopCatHom := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  rw [InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.S_L_opTopCatHom_apply]
+  change S_L_op g = (S_L_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem S_R_cylinder_function_square :
-    cylinderToBoundaryFunctionTopCatHom ≫
-        InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.S_R_opTopCatHom =
+    cylinderToBoundaryFunctionTopCatHom ≫ S_R_topCatHom =
       S_R_cylinderTopCatHom ≫
         cylinderToBoundaryFunctionTopCatHom := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  rw [InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.S_R_opTopCatHom_apply]
+  change S_R_op g = (S_R_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem star_S_L_cylinder_function_square :
-    cylinderToBoundaryFunctionTopCatHom ≫
-        InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.star_S_L_opTopCatHom =
+    cylinderToBoundaryFunctionTopCatHom ≫ star_S_L_topCatHom =
       star_S_L_cylinderTopCatHom ≫
         cylinderToBoundaryFunctionTopCatHom := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  rw [InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.star_S_L_opTopCatHom_apply]
+  change star_S_L_op g = (star_S_L_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem star_S_R_cylinder_function_square :
-    cylinderToBoundaryFunctionTopCatHom ≫
-        InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.star_S_R_opTopCatHom =
+    cylinderToBoundaryFunctionTopCatHom ≫ star_S_R_topCatHom =
       star_S_R_cylinderTopCatHom ≫
         cylinderToBoundaryFunctionTopCatHom := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  rw [InfoGeometry.Canonical.UHFBoundaryOperatorTopCat.star_S_R_opTopCatHom_apply]
+  change star_S_R_op g = (star_S_R_cylinderMap g : BoundaryFunction)
   rfl
 
 theorem UHF_laplacian_cylinderTopCatHom_eq_id :
@@ -200,9 +197,9 @@ theorem cuntzPartition_cylinderTopCatHom_eq_id :
   intro g
   rw [TopCat.id_app]
   apply Subtype.ext
-  change S_L_op (star_S_L_op (g : (ℕ → Bool) → ℂ)) +
-      S_R_op (star_S_R_op (g : (ℕ → Bool) → ℂ)) = (g : (ℕ → Bool) → ℂ)
-  exact cuntz_partition_op (g : (ℕ → Bool) → ℂ)
+  change S_L_op (star_S_L_op (g : BoundaryFunction)) +
+      S_R_op (star_S_R_op (g : BoundaryFunction)) = (g : BoundaryFunction)
+  exact cuntz_partition_op (g : BoundaryFunction)
 
 theorem cuntzPartition_cylinder_function_square :
     cylinderToBoundaryFunctionTopCatHom ≫ cuntzPartitionTopCatHom =
@@ -212,8 +209,8 @@ theorem cuntzPartition_cylinder_function_square :
   apply ContinuousMap.ext
   intro g
   rw [TopCat.comp_app, TopCat.comp_app]
-  change S_L_op (star_S_L_op (g : (ℕ → Bool) → ℂ)) +
-      S_R_op (star_S_R_op (g : (ℕ → Bool) → ℂ)) =
+  change S_L_op (star_S_L_op (g : BoundaryFunction)) +
+      S_R_op (star_S_R_op (g : BoundaryFunction)) =
     ↑(S_L_cylinderMap (star_S_L_cylinderMap g) +
       S_R_cylinderMap (star_S_R_cylinderMap g) : CylinderAlgebra)
   exact rfl
@@ -225,7 +222,7 @@ theorem S_L_cylinderTopCatHom_star_comp_eq_id :
   intro g
   rw [TopCat.comp_app, TopCat.id_app]
   apply Subtype.ext
-  exact star_S_L_op_S_L_op (g : (ℕ → Bool) → ℂ)
+  exact star_S_L_op_S_L_op (g : BoundaryFunction)
 
 theorem S_R_cylinderTopCatHom_star_comp_eq_id :
     S_R_cylinderTopCatHom ≫ star_S_R_cylinderTopCatHom = 𝟙 _ := by
@@ -234,7 +231,7 @@ theorem S_R_cylinderTopCatHom_star_comp_eq_id :
   intro g
   rw [TopCat.comp_app, TopCat.id_app]
   apply Subtype.ext
-  exact star_S_R_op_S_R_op (g : (ℕ → Bool) → ℂ)
+  exact star_S_R_op_S_R_op (g : BoundaryFunction)
 
 theorem S_R_cylinderTopCatHom_star_S_L_comp_eq_zero :
     S_R_cylinderTopCatHom ≫ star_S_L_cylinderTopCatHom =
@@ -244,7 +241,7 @@ theorem S_R_cylinderTopCatHom_star_S_L_comp_eq_zero :
   intro g
   rw [TopCat.comp_app]
   apply Subtype.ext
-  exact star_S_L_op_S_R_op (g : (ℕ → Bool) → ℂ)
+  exact star_S_L_op_S_R_op (g : BoundaryFunction)
 
 theorem S_L_cylinderTopCatHom_star_S_R_comp_eq_zero :
     S_L_cylinderTopCatHom ≫ star_S_R_cylinderTopCatHom =
@@ -254,6 +251,6 @@ theorem S_L_cylinderTopCatHom_star_S_R_comp_eq_zero :
   intro g
   rw [TopCat.comp_app]
   apply Subtype.ext
-  exact star_S_R_op_S_L_op (g : (ℕ → Bool) → ℂ)
+  exact star_S_R_op_S_L_op (g : BoundaryFunction)
 
 end InfoGeometry.Canonical.UHFBoundaryCylinderFunctionTopCat

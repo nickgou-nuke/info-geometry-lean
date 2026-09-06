@@ -44,7 +44,7 @@ rotor periodicity rather than as a primitive complex-analytic KMS statement.
 
 The existing `HestenesKreinKMSPacket` remains the implementation owner for
 phase-axis compatibility and rotor conjugation.  This owner surface gives
-downstream modules a KMS-free name for the same real boundary law.
+downstream modules a KMS-free name for the same real boundary socket.
 -/
 @[rep_depth krein]
 structure Bridge where
@@ -98,23 +98,14 @@ theorem rotor_preserves_krein_null
     (hξ : KreinSpace.kreinInner (H := E) ξ ξ = 0) :
     KreinSpace.kreinInner (H := E)
       (B.packet.rotor t ξ) (B.packet.rotor t ξ) = 0 :=
-    B.packet.modular_rotor_preserves_null_cone t hξ
-
-/-- The zero-time boundary specializes to cyclicity of the real readout. -/
-@[rep_depth krein]
-theorem rotor_boundary_at_zero
-    (hperiod : B.period = 0)
-    (X Y : EndH) :
-    B.realState (X * Y) = B.realState (Y * X) := by
-  simpa [hperiod, B.packet.modularFlow.flow_zero] using
-    B.rotor_boundary_holds X Y
+  B.packet.modular_rotor_preserves_null_cone t hξ
 
 end Bridge
 
 /--
 Vacuum specialization of the Hestenes-Krein real rotor boundary.
 
-This connects the rotor-boundary law to the installed vacuum readout
+This connects the rotor-boundary socket to the installed vacuum readout
 `phi_Omega(A) = [A Omega, Omega]_J`.
 -/
 @[rep_depth krein]

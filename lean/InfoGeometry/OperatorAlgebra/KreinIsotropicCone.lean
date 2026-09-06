@@ -18,7 +18,7 @@ namespace InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 
 open InfoGeometry.OperatorAlgebra
 
-/-! ## 1. Quadratic Krein cone interfaces -/
+/-! ## 1. Quadratic Krein cone sockets -/
 
 /--
 A Krein quadratic datum on a carrier with real scaling.
@@ -77,7 +77,7 @@ end KreinQuadraticDatum
 /--
 Projective ray equivalence by nonzero real scalar rescaling.
 
-This is a relation-level interface; quotient/projective-space constructions can
+This is a relation-level socket; quotient/projective-space constructions can
 be added later when needed.
 -/
 def SameProjectiveRay
@@ -328,7 +328,7 @@ end IsNonzeroKreinNull
 /-! ## 6. Projective absolute boundary versus interior metric -/
 
 /--
-A relation separating the Krein isotropic cone from an interior Poincare-type
+A socket separating the Krein isotropic cone from an interior Poincare-type
 metric domain.
 
 The null cone is the projective absolute/boundary.  Hyperbolic/Poincare
@@ -433,7 +433,7 @@ end MetricIsotropicAlgebraBridge
 /-! ## 8. Drazin inverse and Drazin-nil support -/
 
 /--
-An element `a` has a Drazin inverse `x` with property index `index`.
+An element `a` has a Drazin inverse `x` with witness index `index`.
 
 The identities are:
 
@@ -441,41 +441,34 @@ The identities are:
 * `x * a * x = x`;
 * `a^(index + 1) * x = a^index`.
 
-The index is a property, not asserted here to be minimal.
+The index is a witness, not asserted here to be minimal.
 -/
-def HasDrazinInverse
+structure HasDrazinInverse
     {A : Type*} [Ring A]
-    (a : A) : Type _ :=
-  {p : A × ℕ //
-    a * p.1 = p.1 * a ∧
-      p.1 * a * p.1 = p.1 ∧
-        a ^ (p.2 + 1) * p.1 = a ^ p.2}
+    (a : A) where
+  /-- Drazin inverse candidate. -/
+  x : A
 
-namespace HasDrazinInverse
+  /-- Drazin index witness. Not asserted minimal. -/
+  index : ℕ
 
-abbrev x {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : A := h.1.1
+  /-- Commutation with the original element. -/
+  commute :
+    a * x = x * a
 
-abbrev index {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : ℕ := h.1.2
+  /-- Generalized inverse identity. -/
+  inverse_identity :
+    x * a * x = x
 
-theorem commute {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
-    a * h.x = h.x * a :=
-  h.2.1
-
-theorem inverse_identity {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
-    h.x * a * h.x = h.x :=
-  h.2.2.1
-
-theorem power_identity {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
-    a ^ (h.index + 1) * h.x = a ^ h.index :=
-  h.2.2.2
-
-end HasDrazinInverse
+  /-- Drazin power identity. -/
+  power_identity :
+    a ^ (index + 1) * x = a ^ index
 
 /--
 Drazin-nilpotent support.
 
 An element is Drazin-nilpotent if it has a Drazin inverse equal to zero, with a
-nonzero index property.
+nonzero index witness.
 -/
 def IsDrazinNilpotent
     {A : Type*} [Ring A]

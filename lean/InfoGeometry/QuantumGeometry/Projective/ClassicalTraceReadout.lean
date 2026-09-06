@@ -93,6 +93,11 @@ def qgtAmariBase
     (X Y : EndQ) : AmariBase where
   e_connection := fun t =>
     t * (quantumTraceToClassical (horizontalGramMatrix ψ X Y)).re
+  m_connection := fun t =>
+    -t * (quantumTraceToClassical (horizontalGramMatrix ψ X Y)).re
+  duality := by
+    intro t
+    ring
 
 @[simp]
 theorem qgtAmariBase_e_connection_one

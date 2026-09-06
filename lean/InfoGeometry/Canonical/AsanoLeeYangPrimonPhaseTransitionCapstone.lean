@@ -90,6 +90,15 @@ def openUnitDisk : Set ℂ := {z : ℂ | ‖z‖ < 1}
 /-- The unit circle $S^1 = \{z \in \mathbb{C} \mid \|z\| = 1\}$. -/
 def unitCircle : Set ℂ := {z : ℂ | ‖z‖ = 1}
 
+theorem v4Action_involutive (g : V4) (z : ℂ) :
+    v4Action g (v4Action g z) = z := by
+  cases g <;> simp [v4Action]
+
+theorem v4Action_preserves_unitCircle (g : V4) {z : ℂ}
+    (hz : z ∈ unitCircle) : v4Action g z ∈ unitCircle := by
+  change ‖z‖ = 1 at hz
+  cases g <;> simp [v4Action, unitCircle, hz]
+
 /-- 🏆 THEOREM 1 (Asano Root Map Cancellation):
     $C + D z_1 \neq 0 \implies P(z_1, -(A + B z_1)/(C + D z_1)) = 0$. -/
 theorem asano_root_map_cancellation (A B C D z1 : ℂ) (hden : C + D * z1 ≠ 0) :

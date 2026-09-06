@@ -1,29 +1,26 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
+import InfoGeometry.Analysis.L2CantorCommutation
+
+open InfoGeometry.Analysis.L2CantorCommutation
 
 set_option linter.unusedSectionVars false
 
 /-!
-# Jaynes Relative States, Duality, and the Difference Vacuum on the Cantor Boundary
+# Jaynes Relative States — Cuntz branch weights and relative vacua
 
-This module formalizes the derivation of the Cuntz KMS laws and their relation to 
-Jaynes' relative states, exploring the duality between the Symmetric (KMS) state
-and the Asymmetric (Chiral Difference) state.
+This module keeps the Jaynes/Cuntz `1 / 2` branch-weight derivation on the
+concrete `L2CantorCommutation` operator lane, as well as the algebraic duality
+between the Symmetric (KMS) state and the Asymmetric (Chiral Difference) state
+on generic Cuntz relations.
 
-We define:
-1. The Cuntz Partition of Unity and generic Ring State.
-2. The Left and Right relative vacua (completely polarized states).
-3. The Jaynes parameterized state $\phi_p = p \cdot \phi_L + (1-p) \cdot \phi_R$.
-4. The Difference Vacuum: $\phi_{\text{diff}} = \phi_L - \phi_R$.
-5. 🏆 THEOREM: The Difference Vacuum imbalance: eigenvalues $1$ on $S_L S_L^*$ and $-1$ on $S_R S_R^*$.
-6. 🏆 THEOREM: The Derivation of the Cuntz KMS Scaling laws ($1/2$) at $p = 1/2$.
-7. 🏆 THEOREM: The Symmetric KMS state has chiral charge 0 (the anomaly vanishes).
-8. 🏆 THEOREM: The Difference Vacuum state has chiral charge 2 (maximum chirality / polarization).
+The generic owner algebraic theorem is in
+`InfoGeometry.Analysis.AxiomFreeGNS.branch_weight_one_half`. This file records
+the same transparent calculation on the concrete Cuntz range projections,
+plus the general Cuntz state formalization.
 
-All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+No global postulate declarations are introduced here.
 -/
 
 namespace InfoGeometry.Analysis.JaynesRelativeStates
@@ -37,16 +34,16 @@ structure State (O2 : Type*) [Ring O2] where
 
 instance : CoeFun (State O2) (fun _ => O2 → ℂ) := ⟨fun f => f.val⟩
 
-/-- The KMS scaling coefficients $p_L$ and $p_R$ represent the relative states' weights. -/
+/-- The KMS scaling coefficients $ and $ represent the relative states' weights. -/
 structure IsKMSWeightedState (S_L S_R : O2) (φ : State O2) (p_L p_R : ℂ) : Prop where
   kms_L : ∀ (A : O2), φ (S_L * A * star S_L) = p_L * φ A
   kms_R : ∀ (A : O2), φ (S_R * A * star S_R) = p_R * φ A
 
 /-- 🏆 THEOREM: The Jaynes-Cuntz Derivation.
     If a state $\phi$ is a KMS-weighted state under the Cuntz partition of unity
-    $S_L S_L^* + S_R S_R^* = 1$, and we apply the Jaynes Maximum Entropy Principle
-    (which dictates left-right symmetry, i.e., $p_L = p_R = p$), then the scaling factor
-    is uniquely forced to be exactly $1/2$. -/
+     S_L^* + S_R S_R^* = 1$, and we apply the Jaynes Maximum Entropy Principle
+    (which dictates left-right symmetry, i.e.,  = p_R = p$), then the scaling factor
+    is uniquely forced to be exactly /2$. -/
 theorem jaynes_maxent_derivation
     (S_L S_R : O2)
     (h_unity_cuntz : S_L * star S_L + S_R * star S_R = 1)
@@ -108,20 +105,20 @@ structure CuntzAlgebra (O2 : Type*) [Ring O2] [StarRing O2] where
   partition_of_unity : S_L * star S_L + S_R * star S_R = 1
 
 /-- 🏆 THEOREM: Jaynes-Cuntz Derivation on a Bundled Cuntz Algebra.
-    For any state $\phi$ on a Cuntz algebra satisfying the Jaynes left-right symmetry $p_L = p_R = p$,
-    the KMS scaling factor is strictly forced to be $1/2$. -/
+    For any state $\phi$ on a Cuntz algebra satisfying the Jaynes left-right symmetry  = p_R = p$,
+    the KMS scaling factor is strictly forced to be /2$. -/
 theorem jaynes_maxent_derivation_bundled
     (O : CuntzAlgebra O2)
     (φ : State O2) (p : ℂ)
     (h_kms : IsKMSWeightedState O.S_L O.S_R φ p p) : p = 1 / 2 :=
   jaynes_maxent_derivation O.S_L O.S_R O.partition_of_unity φ p h_kms
 
-/-- The Left Vacuum state (completely polarized to the left branch: $p_L = 1, p_R = 0$). -/
+/-- The Left Vacuum state (completely polarized to the left branch:  = 1, p_R = 0$). -/
 structure IsLeftVacuum (S_L S_R : O2) (φ : State O2) : Prop where
   prop_L : ∀ A, φ (S_L * A * star S_L) = φ A
   prop_R : ∀ A, φ (S_R * A * star S_R) = 0
 
-/-- The Right Vacuum state (completely polarized to the right branch: $p_L = 0, p_R = 1$). -/
+/-- The Right Vacuum state (completely polarized to the right branch:  = 0, p_R = 1$). -/
 structure IsRightVacuum (S_L S_R : O2) (φ : State O2) : Prop where
   prop_L : ∀ A, φ (S_L * A * star S_L) = 0
   prop_R : ∀ A, φ (S_R * A * star S_R) = φ A
@@ -143,8 +140,6 @@ def jaynes_state (φ_L φ_R : State O2) (p : ℂ) : O2 →+ ℂ where
          (p * φ_L.val x + (1 - p) * φ_R.val x) + (p * φ_L.val y + (1 - p) * φ_R.val y)
     rw [φ_L.val.map_add x y, φ_R.val.map_add x y]
     ring
-
-/-! The affine mixture is normalized independently of any KMS hypothesis. -/
 
 /-- The Jaynes mixture preserves the unit when its coefficients sum to one. -/
 theorem jaynes_state_map_one
@@ -178,8 +173,8 @@ def difference_vacuum (φ_L φ_R : State O2) : O2 →+ ℂ :=
   chiral_diff_state φ_L φ_R
 
 /-- 🏆 THEOREM: The Left-Right Vacuum difference under the partition of unity.
-    Evaluating the difference vacuum on the Cuntz stabilizers $S_L S_L^*$ and $S_R S_R^*$
-    yields the exact eigenvalues ($1$ and $-1$), disclosing the underlying geometric 
+    Evaluating the difference vacuum on the Cuntz stabilizers  S_L^*$ and  S_R^*$
+    yields the exact eigenvalues ($ and hBc1$), disclosing the underlying geometric 
     imbalance of the polarized states. -/
 theorem difference_vacuum_imbalance
     (S_L S_R : O2)
@@ -227,7 +222,7 @@ theorem jaynes_state_branch_reduction
     If we require a state $\phi$ to be a weighted combination of the left and right relative states:
       $\phi = p \cdot \phi_L + (1 - p) \cdot \phi_R$
     And we apply Jaynes' Maximum Entropy Principle (which dictates left-right exchange 
-    symmetry, i.e., $p = 1 - p = 1/2$), then we recover exactly the ($1/2$) scaling 
+    symmetry, i.e.,  = 1 - p = 1/2$), then we recover exactly the (/2$) scaling 
     coefficient of the Cuntz KMS state. -/
 theorem jaynes_KMS_scaling_derivation
     (S_L S_R : O2)
@@ -265,7 +260,7 @@ theorem kms_chiral_charge_vanishes
 /-- 🏆 THEOREM 2: The Difference Vacuum has Chiral Charge 2.
     The difference of the polarized left and right relative states is the exact 
     eigenstate of the phase axis operator, achieving the maximum possible 
-    chiral charge of 2: $1 - (-1) = 2$. -/
+    chiral charge of 2:  - (-1) = 2$. -/
 theorem difference_vacuum_maximal_chiral_charge
     (S_L S_R : O2)
     (φ_L φ_R : State O2)
@@ -289,7 +284,7 @@ theorem difference_vacuum_maximal_chiral_charge
 🏆 **GRAND SYNTHESIS: Algebraic Duality of Jaynes Relative States and KMS Anomaly Cancellation**
 
 Unifies:
-1. **Conservation of Total Branch Probability**: $p_L + p_R = 1$.
+1. **Conservation of Total Branch Probability**:  + p_R = 1$.
 2. **Eigenvalue Imbalance**: $\phi_{\text{diff}}(S_L S_L^*) = 1$ and $\phi_{\text{diff}}(S_R S_R^*) = -1$.
 3. **Jaynes KMS Scaling Derivation**: $\phi_{1/2}(S_L A S_L^*) = \frac{1}{2} \phi_L(A)$ and $\phi_{1/2}(S_R A S_R^*) = \frac{1}{2} \phi_R(A)$.
 4. **Symmetric KMS Vacuum Anomaly Cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
@@ -315,5 +310,35 @@ theorem grand_jaynes_cuntz_duality_synthesis
    jaynes_KMS_scaling_derivation S_L S_R φ_L φ_R h_L h_R,
    kms_chiral_charge_vanishes S_L S_R φ_kms h_kms,
    difference_vacuum_maximal_chiral_charge S_L S_R φ_L φ_R h_L h_R⟩
+
+/-- Additive-hom specialization to the concrete Cuntz range projections. -/
+theorem branch_weight_one_half_on_cuntz_projections
+    (φ : (H → H) →+ ℝ)
+    (h_one : φ id = 1)
+    (h_symm : φ (S_left ∘ star_S_left) = φ (S_right ∘ star_S_right)) :
+    φ (S_left ∘ star_S_left) = (1 / 2 : ℝ) ∧
+    φ (S_right ∘ star_S_right) = (1 / 2 : ℝ) := by
+  have h_sum :
+      φ (S_left ∘ star_S_left) + φ (S_right ∘ star_S_right) = (1 : ℝ) := by
+    calc
+      φ (S_left ∘ star_S_left) + φ (S_right ∘ star_S_right)
+          = φ ((S_left ∘ star_S_left) + (S_right ∘ star_S_right)) := by
+            exact (φ.map_add (S_left ∘ star_S_left) (S_right ∘ star_S_right)).symm
+      _ = φ id := by rw [S_left_star_S_left_add_S_right_star_S_right]
+      _ = 1 := h_one
+  have h_double : (2 : ℝ) * φ (S_left ∘ star_S_left) = 1 := by
+    calc
+      (2 : ℝ) * φ (S_left ∘ star_S_left)
+          = φ (S_left ∘ star_S_left) + φ (S_left ∘ star_S_left) := by ring
+      _ = φ (S_left ∘ star_S_left) + φ (S_right ∘ star_S_right) := by
+        rw [h_symm]
+      _ = 1 := h_sum
+  have h_left : φ (S_left ∘ star_S_left) = (1 / 2 : ℝ) := by
+    calc
+      φ (S_left ∘ star_S_left)
+          = ((2 : ℝ) * φ (S_left ∘ star_S_left)) * (1 / 2 : ℝ) := by ring
+      _ = 1 * (1 / 2 : ℝ) := by rw [h_double]
+      _ = (1 / 2 : ℝ) := by ring
+  exact ⟨h_left, by rw [← h_symm, h_left]⟩
 
 end InfoGeometry.Analysis.JaynesRelativeStates

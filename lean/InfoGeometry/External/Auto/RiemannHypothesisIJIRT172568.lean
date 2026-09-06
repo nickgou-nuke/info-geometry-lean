@@ -148,7 +148,7 @@ theorem riemannHypothesis_equiv :
     unfold isOnCriticalLine
     simpa
 
-/-- Finite numerical check: the first 10^13 zeros lie on the critical line.
+/-- Numerical evidence: the first 10^13 zeros lie on the critical line.
     We formalize this as a finite verification statement. -/
 def numericalVerification (N : ℕ) : Prop :=
   ∀ (k : ℕ), k < N → isOnCriticalLine (Complex.I * 14.13472514173469379045725198356247027078)
@@ -328,6 +328,7 @@ structure RiemannHypothesisPaper where
   theorem2_PNT : primeNumberTheorem
   theorem3_PrimeGaps : averagePrimeGapTheorem
   theorem4_GUE : (ℕ → ℝ) → ℝ → Prop
+  numericalEvidence : String
 
 namespace RiemannHypothesisPaper
 
@@ -339,6 +340,7 @@ def wignerDysonFormula (_paper : RiemannHypothesisPaper) : ℝ → ℝ :=
 @[simp] theorem wignerDysonFormula_eq (paper : RiemannHypothesisPaper) :
     paper.wignerDysonFormula = wignerDysonPDF := rfl
 
+end RiemannHypothesisPaper
 
 /-- The paper's central insight: prime distribution, ζ-zeros, and
     random matrix spectra are manifestations of a single underlying
@@ -399,4 +401,4 @@ def wignerDysonPeakStatement : Prop :=
 def wignerDysonSmallSpacingApproxStatement : Prop :=
   Filter.Tendsto (fun Δ : ℝ => wignerDysonPDF Δ / Δ) (nhdsWithin 0 (Set.Ioi 0)) (nhds (π / 2))
 
-end RiemannHypothesisPaper
+end

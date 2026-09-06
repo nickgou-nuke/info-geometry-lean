@@ -83,7 +83,7 @@ theorem finiteState_stage_compatibility (n : ℕ) (A : MatrixState n) :
       (finiteState n).eval A := by
   change (matrixTraceRealAlgebraicState (n + 1)).eval (concreteStep n A) =
     (matrixTraceRealAlgebraicState n).eval A
-  exact congrArg Complex.re (concrete_trace_compatible n A)
+  exact congrArg Complex.re (concreteData.trace_compatible n A)
 
 theorem finiteState_unruh_inverse_temperature
     (acceleration : ℝ) :

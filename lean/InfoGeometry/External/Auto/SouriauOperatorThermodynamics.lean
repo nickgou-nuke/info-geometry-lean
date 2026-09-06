@@ -6,7 +6,7 @@ import Mathlib.Tactic
 This file puts the Radon--Nikodym / modular Hamiltonian / log-partition /
 Legendre--Fenchel words in their natural finite Souriau context.
 
-The analytic measure-theoretic and Tomita--Takesaki claims are outside this owner.
+The analytic measure-theoretic and Tomita--Takesaki claims are not asserted here.
 The proved core is the exponential-family identity
 
   `-log exp(-βE - ψ) = βE + ψ`,
@@ -116,14 +116,13 @@ variable (𝔤 A : Type*) [Ring A] [Algebra ℝ A]
 /-- Operatorial Souriau system: the thermodynamic covector `β` is sent to an
 observable/modular-energy operator.  Scalar thermodynamic potentials are not
 primitive; they are read out by states. -/
-abbrev OperatorSouriauSystem := 𝔤 → A
+structure OperatorSouriauSystem where
+  hamiltonianOp : 𝔤 → A
 
 namespace OperatorSouriauSystem
 
 variable {𝔤 A : Type*} [Ring A] [Algebra ℝ A]
 variable (S : OperatorSouriauSystem 𝔤 A)
-
-abbrev hamiltonianOp (S : OperatorSouriauSystem 𝔤 A) : 𝔤 → A := S
 
 /-- Add a scalar log-potential to an operator as `ψ·1`. -/
 def potentialOp (ψ : ℝ) : A :=
@@ -164,7 +163,7 @@ theorem normalized_expectation_modularHamiltonianOp
 
 The regularized modular deviation is the operator-level Bregman divergence
 generator. Its second-order truncation `(ε²/2)·K²` is well-defined in any
-`Ring A` with `Algebra ℝ A`. The full exponential series is outside this finite truncation. -/
+`Ring A` with `Algebra ℝ A`. The full exponential series is socketed. -/
 
 /-- Second-order truncation of the Goutev–Tonev regularized deviation:
 `(ε²/2)·K²`. This is the leading term of `exp(ε·K) - I - ε·K` and is
@@ -179,7 +178,7 @@ def identityOp : A := 1
 
 The second-order truncation `goutevTonevUnit` is proved above.  The full
 operator exponential `exp(ε·K)` is represented by an explicit parameter
-`expOp : A → A`; convergence and functional calculus are analytic extensions.
+`expOp : A → A`; convergence/functional calculus is an analytic socket.
 
 The information unit is operatorial before it is scalar:
 
@@ -236,6 +235,19 @@ theorem expectation_goutevTonevUnit
     (ω : StateExpectation (A := A)) (ε : ℝ) (K : A) :
     ω (goutevTonevUnit (A := A) ε K) = (ε ^ 2 / 2) * ω (K * K) := by
   simp [goutevTonevUnit]
+
+/-- Closed finite algebraic synthesis for the Goutev--Tonev operator unit. -/
+theorem goutevTonev_operator_synthesis
+    (ω : StateExpectation (A := A)) (expOp : A → A) (h0 : expOp 0 = (1 : A)) :
+    (∀ K : A, operatorBregmanGenerator (A := A) expOp 0 K = 0) ∧
+    (∀ (ε : ℝ) (K : A),
+      ω (operatorBregmanGenerator (A := A) expOp ε K) =
+        ω (expOp (ε • K)) - ω (1 : A) - ε * ω K) ∧
+    (∀ (ε : ℝ) (K : A),
+      ω (goutevTonevUnit (A := A) ε K) = (ε ^ 2 / 2) * ω (K * K)) := by
+  exact ⟨operatorBregmanGenerator_zero (A := A) expOp h0,
+    expectation_operatorBregmanGenerator (A := A) (ω := ω) expOp,
+    expectation_goutevTonevUnit (A := A) (ω := ω)⟩
 
 end OperatorSouriauSystem
 

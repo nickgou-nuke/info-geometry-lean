@@ -7,10 +7,10 @@ open FreeMonoid
 
 variable {α M : Type*} [CommMonoid M]
 
-/-- Commuting pair: for `a ≠ b`, the words `[a,b]` and `[b,a]` collapse under any
+/-- Witness pair: for `a ≠ b`, the words `[a,b]` and `[b,a]` collapse under any
     commutative hom but are not equal in the free monoid.
     thm:pom-commutative-prime-register-order-nonrecoverable -/
-theorem commuting_pair_of_ne (Φ : FreeMonoid α →* M) (a b : α) (hab : a ≠ b) :
+theorem witness_pair_of_ne (Φ : FreeMonoid α →* M) (a b : α) (hab : a ≠ b) :
     Φ (of a * of b) = Φ (of b * of a) ∧
       (of a * of b : FreeMonoid α) ≠ of b * of a := by
   refine ⟨?_, ?_⟩
@@ -31,7 +31,7 @@ theorem paper_pom_commutative_prime_register_order_nonrecoverable
     (Φ : FreeMonoid α →* M) (a b : α) (hab : a ≠ b) :
     ¬ Function.Injective Φ := by
   intro hΦ_inj
-  obtain ⟨h_eq, h_ne⟩ := commuting_pair_of_ne Φ a b hab
+  obtain ⟨h_eq, h_ne⟩ := witness_pair_of_ne Φ a b hab
   exact h_ne (hΦ_inj h_eq)
 
 end Omega.POM.CommutativePrimeRegisterOrderNonrecoverable

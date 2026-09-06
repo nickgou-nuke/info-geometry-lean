@@ -185,7 +185,7 @@ theorem pin_conjugate_gap_involutive
 end SpinPinTransformerLayer
 
 /--
-`Cl(4,4)` head-factor property used as the `Pin(4,4)` geometric anchor
+`Cl(4,4)` head-factor witness used as the `Pin(4,4)` geometric anchor
 for LLM-side spin/transport layers.
 -/
 @[rep_depth krein]

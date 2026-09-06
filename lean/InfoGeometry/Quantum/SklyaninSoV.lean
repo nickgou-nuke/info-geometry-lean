@@ -84,11 +84,3 @@ theorem sov_wavefunction2_unitary (γ₁ γ₂ x₁ x₂ : ℝ) :
     ‖sovWaveFunction2 γ₁ γ₂ x₁ x₂‖ = 1 := by
   unfold sovWaveFunction2
   rw [norm_mul, sov_wave_component_unitary γ₁ x₁, sov_wave_component_unitary γ₂ x₂, mul_one]
-
-theorem grand_sklyanin_sov_synthesis (γ γ₁ γ₂ x x₁ x₂ η : ℝ) :
-    (sovBaxter1DLHS γ x η = sovBaxter1DRHS γ x η) ∧
-    (‖sovWaveComponent γ x‖ = 1) ∧
-    (‖sovWaveFunction2 γ₁ γ₂ x₁ x₂‖ = 1) :=
-  ⟨sov_baxter_1d_exact γ x η,
-   sov_wave_component_unitary γ x,
-   sov_wavefunction2_unitary γ₁ γ₂ x₁ x₂⟩

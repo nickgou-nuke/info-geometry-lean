@@ -41,12 +41,6 @@ noncomputable def pfaffian2D
     (W : H →ₗ[ℝ] H) (_hDim : Module.finrank ℝ H = 2) : ℝ :=
   Real.sqrt |LinearMap.det W|
 
-theorem pfaffian2D_nonneg (W : H →ₗ[ℝ] H)
-    (hDim : Module.finrank ℝ H = 2) :
-    0 ≤ pfaffian2D W hDim := by
-  unfold pfaffian2D
-  exact Real.sqrt_nonneg _
-
 /--
 Theorem: Pfaffian-Determinant Identity for 2D.
 The square of the Pfaffian is the absolute determinant of the skew operator.
@@ -59,11 +53,6 @@ theorem pfaffian2D_sq_eq_abs_det (W : H →ₗ[ℝ] H) (hDim : Module.finrank �
 /-- Global Pfaffian, defined as the positive branch `sqrt |det|`. -/
 noncomputable def pfaffian (W : H →ₗ[ℝ] H) : ℝ :=
   Real.sqrt |LinearMap.det W|
-
-theorem pfaffian_nonneg (W : H →ₗ[ℝ] H) :
-    0 ≤ pfaffian W := by
-  unfold pfaffian
-  exact Real.sqrt_nonneg _
 
 theorem pfaffian_sq_eq_abs_det (W : H →ₗ[ℝ] H)
     (_hDim : Module.finrank ℝ H = 2) :

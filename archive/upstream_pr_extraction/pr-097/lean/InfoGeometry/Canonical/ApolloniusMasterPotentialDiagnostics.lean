@@ -1,0 +1,32 @@
+import Mathlib
+import InfoGeometry.Canonical.ApolloniusMasterPotentialHelmholtz
+import InfoGeometry.Canonical.ApolloniusMasterPotentialDAGBridge
+
+open InfoGeometry.Canonical.ApolloniusMasterPotentialHelmholtz
+open InfoGeometry.Canonical.ApolloniusMasterPotentialDAGBridge
+
+#check centeredRatio_eq_apolloniusRatio
+#check centeredRatio_neg
+#check masterPotentialDerivative_mul_h
+#check hScale_ne_zero_iff
+#check scalarPotential_centralLeaf
+#check scalarPotential_reflection
+#check J_sq
+#check metricGradientPhi_eq_dilation
+#check metricGradientPsi_eq_neg_rotational
+#check rotational_eq_J_metricGradientPhi
+#check potential_unitary_orthogonal
+#check unifiedField_eq_master_reciprocal
+#check masterPotential_helmholtz_packet
+#check reachable_masterPotential_helmholtz
+#check reachable_masterPotential_lyapunov
+#check masterPotential_global_closure
+
+#print axioms masterPotentialDerivative_mul_h
+#print axioms scalarPotential_centralLeaf
+#print axioms scalarPotential_reflection
+#print axioms metricGradientPhi_eq_dilation
+#print axioms rotational_eq_J_metricGradientPhi
+#print axioms potential_unitary_orthogonal
+#print axioms unifiedField_eq_master_reciprocal
+#print axioms masterPotential_global_closure

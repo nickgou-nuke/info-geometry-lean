@@ -72,7 +72,7 @@ end MoorePenroseVolumeCalibration
 /--
 A faithful dimension-trace calibration on division fibers.
 
-This is the minimal trace interface needed for the division-fiber argument: the
+This is the minimal trace socket needed for the division-fiber argument: the
 identity element of a nontrivial division block has trace/rank at least one.
 -/
 structure FaithfulDivisionTraceLaw (Op State : Type*) where

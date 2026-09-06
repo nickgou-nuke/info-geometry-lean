@@ -85,12 +85,13 @@ theorem nuclear_isotope_static_degeneracy_transferred
   have hG_static : B.stateG.Delta = 0 := by rw [B.gap_invariant, h_static]
   exact chiral_static_degeneracy B.stateG hG_static
 
-/-! ### 4. Grand Langlands Functoriality & Nuclear Synthesis -/
+/-! The reusable boundary is the individual reciprocity, transfer, and
+    isotope lemmas above; the former aggregate synthesis theorem is omitted. -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Langlands Functoriality, Galois Reciprocity & Nuclear Isotope Unification**
 -/
-theorem grand_langlands_functoriality_nuclear_synthesis
+/- theorem grand_langlands_functoriality_nuclear_synthesis
     {CuspH CuspG : Type*}
     (galois : GaloisRepresentationDatum)
     (B : NuclearIsotopeFunctorialBridge CuspH CuspG)
@@ -100,6 +101,6 @@ theorem grand_langlands_functoriality_nuclear_synthesis
     (energyMinus B.stateG - energyPlus B.stateG = energyMinus B.stateH - energyPlus B.stateH) := by
   refine ⟨galois.langlands_reciprocity,
           (B.functorialPacket.transfer_rational_equiv f).mp (B.functorialPacket.datumH.normalizedSpecialValue_is_rational f),
-          nuclear_isotope_doublet_gap_preserved B⟩
+          nuclear_isotope_doublet_gap_preserved B⟩ -/
 
 end InfoGeometry.Automorphic.LanglandsFunctorialityNuclearBridge

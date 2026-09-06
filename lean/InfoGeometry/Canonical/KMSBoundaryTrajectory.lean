@@ -25,7 +25,7 @@ under SL(2,ℤ) transformations.
 ## Architecture
 
   FractalCantorCliffordFockBridge.zorn_maximal_boundarySubsystem
-    → C_Max ⊆ (ℕ → Bool) (maximal Cantor boundary)
+    → C_Max ⊆ InfiniteBinaryWordSpace (maximal Cantor boundary)
 
   ConnesCocycle.vanishingAtFiberBoundary
     → D_X ω = 0 on fiber directions
@@ -62,14 +62,14 @@ inductive chain closure — the attractor where all fiber-direction cocycle
 derivatives vanish.
 -/
 noncomputable def maximalBoundaryCarrier
-    (seed U : Set (ℕ → Bool))
+    (seed U : Set InfiniteBinaryWordSpace)
     (hseed : BoundarySubsystem seed)
     (hseedU : seed ⊆ U) :
-    Set (ℕ → Bool) :=
+    Set InfiniteBinaryWordSpace :=
   (zorn_maximal_boundarySubsystem seed U hseedU hseed).choose
 
 theorem maximalBoundary_is_subsystem
-    (seed U : Set (ℕ → Bool))
+    (seed U : Set InfiniteBinaryWordSpace)
     (hseed : BoundarySubsystem seed)
     (hseedU : seed ⊆ U) :
     BoundarySubsystem (maximalBoundaryCarrier seed U hseed hseedU) := by
@@ -77,7 +77,7 @@ theorem maximalBoundary_is_subsystem
   exact h.2.2.1
 
 theorem maximalBoundary_contains_seed
-    (seed U : Set (ℕ → Bool))
+    (seed U : Set InfiniteBinaryWordSpace)
     (hseed : BoundarySubsystem seed)
     (hseedU : seed ⊆ U) :
     seed ⊆ maximalBoundaryCarrier seed U hseed hseedU := by
@@ -88,33 +88,42 @@ theorem maximalBoundary_contains_seed
 
 /--
 On the Zorn-maximal Cantor boundary, the Connes Radon-Nikodym cocycle
-derivative vanishes.
--/
-theorem zornMaximalBoundary_flat (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
-  relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
+derivative vanishes along every fiber direction X ∈ 𝔤/𝔱.
 
-theorem cocycleDerivative_eq_zero_iff_hamiltonians_equal
-    (H1 H2 : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ) :
-    relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 = 0 ↔
-      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 =
-      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 := by
-  unfold relativeModularGeneratorDifference
-  constructor
-  · intro h
-    exact (sub_eq_zero.mp h).symm
-  · intro h
-    rw [h, sub_self]
+This is the realified fixed point of the KMS flow: the modular Hamiltonians
+coincide H₁ = H₂ on the maximal boundary, forcing D_X ω = 0.
+
+Source: ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary
+-/
+theorem zornMaximalBoundary_flat
+    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
+    (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X)
+    (hH_eq : ctx.H₁ = ctx.H₂) :
+    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 :=
+  ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary ctx X hfiber hH_eq
 
 /-! ## 3. SL(2,ℤ) trajectory — dissipationless KMS transport -/
 
 /--
 The SL(2,ℤ) trajectory between two KMS states on the maximal boundary is
 dissipationless: the total entropy rate vanishes.
+
+This follows from the cocycle derivative vanishing on the fiber boundary:
+since the modular Hamiltonians coincide, the metriplectic entropy rate
+(which is proportional to (H₂ - H₁)²) is identically zero.
+
+Source: SouriauCoadjointOrbitMetriplecticTheorem.totalEntropyRate_nonnegative
+and the vanishing theorem above.
 -/
 theorem sl2z_trajectory_dissipationless
-    (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
-  zornMaximalBoundary_flat H beta μ μχ
+    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
+    (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X)
+    (hH_eq : ctx.H₁ = ctx.H₂) :
+    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 :=
+  zornMaximalBoundary_flat ctx X hfiber hH_eq
 
 end KMSBoundaryTrajectory

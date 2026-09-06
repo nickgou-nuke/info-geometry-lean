@@ -32,10 +32,3 @@ theorem cylinder_mode_unitary (γ τ : ℝ) :
   have h_norm := Complex.norm_exp (Complex.I * ((γ * τ : ℝ) : ℂ))
   rw [h_re, Real.exp_zero] at h_norm
   exact h_norm
-
-theorem grand_hilbert_polya_synthesis (γ x : ℝ) (hx : 0 < x) (τ : ℝ) :
-    (dilationEigenfunction γ x =
-     ((Real.rpow x (-1 / 2) : ℝ) : ℂ) * cylinderPhaseMode γ (Real.log x)) ∧
-    (‖cylinderPhaseMode γ τ‖ = 1) :=
-  ⟨dilation_mode_factorization γ x hx,
-   cylinder_mode_unitary γ τ⟩

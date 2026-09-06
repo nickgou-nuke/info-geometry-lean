@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+import InfoGeometry.Canonical.SelfConcordantLogGeneratingLyapunov
 import InfoGeometry.Quantum.ApolloniusFisherInformation
 
 /-!
@@ -27,6 +28,7 @@ namespace InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
 open InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
 open InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 open InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+open InfoGeometry.Canonical.SelfConcordantLogGeneratingLyapunov
 open InfoGeometry.Quantum.ApolloniusFisherInformation
 
 /-- The theorem-owned stages reachable from the corrected Apollonius seed. -/
@@ -47,6 +49,8 @@ inductive Node where
   | apolloniusLeaf
   | fisherMetric
   | informationPotential
+  | selfConcordantLyapunov
+  | naturalGradientFlow
   | entropyGradient
   | metriplecticScalarFlow
   | dilationGroup
@@ -73,7 +77,9 @@ inductive Edge : Node → Node → Prop where
   | circle_apollonius : Edge .unitCircleChart .apolloniusLeaf
   | apollonius_fisher : Edge .apolloniusLeaf .fisherMetric
   | fisher_potential : Edge .fisherMetric .informationPotential
-  | potential_entropy : Edge .informationPotential .entropyGradient
+  | potential_lyapunov : Edge .informationPotential .selfConcordantLyapunov
+  | lyapunov_gradient : Edge .selfConcordantLyapunov .naturalGradientFlow
+  | gradient_entropy : Edge .naturalGradientFlow .entropyGradient
   | entropy_metriplectic : Edge .entropyGradient .metriplecticScalarFlow
   | critical_dilation : Edge .criticalTangentNormal .dilationGroup
   | dilation_phase : Edge .dilationGroup .phaseCircleTransport
@@ -109,8 +115,10 @@ def rank : Node → Nat
   | .apolloniusLeaf => 8
   | .fisherMetric => 9
   | .informationPotential => 10
-  | .entropyGradient => 11
-  | .metriplecticScalarFlow => 12
+  | .selfConcordantLyapunov => 11
+  | .naturalGradientFlow => 12
+  | .entropyGradient => 13
+  | .metriplecticScalarFlow => 14
   | .dilationGroup => 7
   | .phaseCircleTransport => 8
   | .transferOperator => 9
@@ -172,12 +180,18 @@ theorem lambda_fisher_positive
     (st : ApolloniusState)
     (v : Fin 2 → ℝ) (hv : v ≠ 0) :
     0 < apolloniusFisherQuadraticForm st v :=
-  apollonius_fisher_positive st v hv
+  apollonius_fisher_pos_def st v hv
 
-/-- The repository's information potential is nonnegative. -/
-theorem lambda_information_potential_nonnegative (x : ℝ) :
-    0 ≤ Real.exp (-x) - 1 + x :=
-  information_geometric_potential_nonnegative x
+/-- The normalized log-generating potential is a globally strict
+self-concordant Lyapunov function for its Hessian natural-gradient flow. -/
+theorem lambda_global_selfConcordant_lyapunov
+    (kappa x : ℝ) (hkappa : 0 < kappa) (hx : 0 < x) :
+    0 ≤ lyapunovPotential x ∧
+      (lyapunovPotential x = 0 ↔ x = 1) ∧
+      0 < hessianMetric x ∧
+      lyapunovLieDerivative kappa x ≤ 0 ∧
+      (lyapunovLieDerivative kappa x = 0 ↔ x = 1) :=
+  global_selfConcordant_lyapunov kappa x hkappa hx
 
 /-- The native dilation group composes. -/
 theorem lambda_dilation_group (t1 t2 x : ℝ) :
@@ -217,11 +231,23 @@ theorem affine_reaches_informationPotential :
   apply reachable_trans (edge_reachable Edge.apollonius_fisher)
   exact edge_reachable Edge.fisher_potential
 
+/-- The globally strict Lyapunov node is reachable from the affine seed. -/
+theorem affine_reaches_selfConcordantLyapunov :
+    Reachable .affineCoordinate .selfConcordantLyapunov := by
+  apply reachable_trans affine_reaches_informationPotential
+  exact edge_reachable Edge.potential_lyapunov
+
+/-- The Hessian natural-gradient flow is reachable from the affine seed. -/
+theorem affine_reaches_naturalGradientFlow :
+    Reachable .affineCoordinate .naturalGradientFlow := by
+  apply reachable_trans affine_reaches_selfConcordantLyapunov
+  exact edge_reachable Edge.lyapunov_gradient
+
 /-- The scalar metriplectic branch is reachable from the affine seed. -/
 theorem affine_reaches_metriplecticScalarFlow :
     Reachable .affineCoordinate .metriplecticScalarFlow := by
-  apply reachable_trans affine_reaches_informationPotential
-  apply reachable_trans (edge_reachable Edge.potential_entropy)
+  apply reachable_trans affine_reaches_naturalGradientFlow
+  apply reachable_trans (edge_reachable Edge.gradient_entropy)
   exact edge_reachable Edge.entropy_metriplectic
 
 /-- The transfer-operator branch is reachable from the same central-leaf split. -/
@@ -239,9 +265,11 @@ theorem affine_reaches_transferOperator :
 /-- Current maximal theorem-safe topological closure from the affine seed. -/
 theorem current_topological_closure :
     Reachable .affineCoordinate .sl2Generator ∧
+    Reachable .affineCoordinate .selfConcordantLyapunov ∧
     Reachable .affineCoordinate .metriplecticScalarFlow ∧
     Reachable .affineCoordinate .transferOperator :=
   ⟨affine_reaches_sl2Generator,
+    affine_reaches_selfConcordantLyapunov,
     affine_reaches_metriplecticScalarFlow,
     affine_reaches_transferOperator⟩
 

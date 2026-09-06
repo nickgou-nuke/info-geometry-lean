@@ -54,7 +54,7 @@ theorem uncompleted_zeta_driver [ModularConjugation V] (zeta : V) (h_not_even : 
   have h_one : (2 : ℝ) * (1 / 2) = 1 := by ring
   rw [h_one, one_smul] at h_smul
   have h_eq : zeta = ModularConjugation.J zeta := by exact sub_eq_zero.mp h_smul
-  -- This contradicts the non-even property
+  -- This contradicts the non-even hypothesis
   exact h_not_even h_eq.symm
 
 end InfoGeometry.ChiralConeZeta

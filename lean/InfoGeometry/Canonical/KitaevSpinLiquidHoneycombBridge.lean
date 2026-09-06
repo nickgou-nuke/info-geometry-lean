@@ -12,19 +12,18 @@ noncomputable section
 namespace KitaevSpinLiquid
 
 /-- Plaquette Flux Operator W_p on hexagonal lattice with Z₂ eigenvalues ±1. -/
-abbrev PlaquetteFlux := ℝ
+structure PlaquetteFlux where
+  fluxValue : ℝ
+  flux_sq : fluxValue ^ 2 = 1
 
 namespace PlaquetteFlux
 
 variable (W : PlaquetteFlux)
 
-/-- Compatibility accessor for the native scalar flux readout. -/
-abbrev fluxValue : ℝ := W
-
 /-- **Theorem**: Z₂ Plaquette Flux Eigenvalues are strictly ±1. -/
-theorem flux_eigenvalues_pm_one
-    (h_sq : W.fluxValue ^ 2 = 1) :
+theorem flux_eigenvalues_pm_one :
     W.fluxValue = 1 ∨ W.fluxValue = -1 := by
+  have h_sq := W.flux_sq
   have h_fact : (W.fluxValue - 1) * (W.fluxValue + 1) = 0 := by
     calc (W.fluxValue - 1) * (W.fluxValue + 1)
       _ = W.fluxValue ^ 2 - 1 := by ring

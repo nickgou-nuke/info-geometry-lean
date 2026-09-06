@@ -1,0 +1,22 @@
+import InfoGeometry.Convex.Bregman
+import InfoGeometry.Convex.Duality
+import InfoGeometry.Convex.Euclidean
+import InfoGeometry.Convex.FenchelConjugate
+import InfoGeometry.Convex.LogSumExp
+import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Convex.Legendre
+import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Convex.RadonHelly
+import InfoGeometry.Convex.SelfDualCone
+import InfoGeometry.Convex.SpinFactorHessian
+import InfoGeometry.Convex.EuclideanMonotonicity
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Convex.All
+
+Umbrella module for the convex information geometry layer.
+-/
+
+end InfoGeometry

@@ -115,7 +115,7 @@ theorem hyperbolic_projector_minus_mul_generator (K : A) (hK : K * K = 1) :
 
 /-! ## 2. Continuous MoE Routing Flow Identity -/
 
-/--
+/-
 **Theorem**: The Hyperbolic RoPE flow $H(t) = \cosh(t\theta) \cdot 1 + \sinh(t\theta) \cdot K$
 equals the continuous spectral mixture:
 $$H(t) = e^{t\theta} P_+ + e^{-t\theta} P_-.$$
@@ -151,7 +151,7 @@ theorem hyperbolicRoPE_is_projector_flow
 
 /-! ## 3. Master Synthesis Theorem -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Hyperbolic RoPE as Continuous MoE Projector Flow**
 
 Unifies:
@@ -159,7 +159,7 @@ Unifies:
 2. Involutive generator representation $K = P_+ - P_-$.
 3. Exact continuous MoE spectral mixture flow identity $H(t) = e^{t\theta} P_+ + e^{-t\theta} P_-$.
 -/
-theorem grand_hyperbolic_moe_projector_synthesis
+/- theorem grand_hyperbolic_moe_projector_synthesis
     (K : A) (hK : K * K = 1) (theta : ℝ) (t : ℝ) :
     let projs := makeHyperbolicProjectors K hK
     -- (1) Projector Idempotency & Orthogonality
@@ -176,6 +176,6 @@ theorem grand_hyperbolic_moe_projector_synthesis
            hyperbolic_projectors_sum K hK,
            hyperbolic_projectors_mul_zero K hK,
            hyperbolic_projectors_diff K hK⟩,
-          hyperbolicRoPE_is_projector_flow K hK theta t⟩
+          hyperbolicRoPE_is_projector_flow K hK theta t⟩ -/
 
 end InfoGeometry.OperatorAlgebra.HyperbolicMoEProjector

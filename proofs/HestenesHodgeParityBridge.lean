@@ -1,6 +1,6 @@
-import proofs.HestenesEvenPauliEquiv
+import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 import proofs.HestenesCliffordCenter
-import proofs.HestenesHermitianAdjoint
+import InfoGeometry.Canonical.HestenesHermitianAdjoint
 
 /-!
 # Hodge parity and the odd--even Hestenes bridge

@@ -29,7 +29,7 @@ def scalarPauliReadout (A : Mat32) : M2C :=
 
 /-- The rest-frame Pauli momentum with unit energy. -/
 def unitTimeMomentum : FourMomentum :=
-  (1, (0, (0, 0)))
+  ⟨1, 0, 0, 0⟩
 
 @[simp] theorem pauli_unitTimeMomentum :
     pauliMomentum unitTimeMomentum = (1 : M2C) := by

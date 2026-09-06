@@ -39,7 +39,7 @@ These are the Witt null vectors — the parabolic generators of the causal cone.
 In the manuscript's notation: u_k = (e_k + e_{k+5})/2 → u_k² = 0.
 
 Proved in `Cl44Witt.lean` for Cl(4,4); the Cl(5,5) version is an explicit
-conformal null-pair property in `FibonacciCl55Carrier.lean`.
+conformal null-pair hypothesis in `FibonacciCl55Carrier.lean`.
 
 The proof uses the split quadratic form Q(e) = +1, Q(f) = -1:
     a² = ((e+f)/2)² = (e² + e·f + f·e + f²)/4
@@ -52,7 +52,7 @@ theorem witt_nilpotency_creation_Cl44 (i : Fin 4) : adag i * adag i = 0 :=
   adag_sq_zero i
 
 /--
-**Cl(5,5) version.** The conformal null-pair property gives isotropy:
+**Cl(5,5) version.** The conformal null-pair hypothesis gives isotropy:
 if u² = 0 and v² = 0 and {u,v} = 1, then u and v are the Witt null vectors
 of the 5+5 split-signature Clifford algebra.
 -/
@@ -91,7 +91,7 @@ theorem car_algebra_Cl44 (i j : Fin 4) :
   witt_CAR i j
 
 /--
-**Cl(5,5) version.** The conformal null-pair property gives the
+**Cl(5,5) version.** The conformal null-pair hypothesis gives the
 anticommutator relation.{u, v} = u·v + v·u = 1.
 -/
 theorem car_algebra_Cl55 (u v : ConformalLift55.Cl55)

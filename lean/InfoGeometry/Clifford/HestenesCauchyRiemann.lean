@@ -13,8 +13,9 @@ A small real-only owner surface for two related lanes:
   is read as right multiplication by a distinguished bivector squaring to `-1`.
 
 This module is intentionally algebraic.  It introduces no analytic axioms and no
-scalar `Complex` import.  Analyticity is represented through explicit
-partial-derivative data.
+scalar `Complex` import.  Analyticity appears only through explicit socket
+structures carrying whichever expansion/partial-derivative data a downstream
+owner chooses to provide.
 -/
 
 namespace InfoGeometry.Clifford.HestenesCauchyRiemann
@@ -150,65 +151,20 @@ theorem krein_inner_symmetry (q₁ q₂ : HestenesSpinor) :
   simp [hMul, reverse]
   ring
 
-/-- The two real directional derivatives used in the Hestenes CR operator. -/
-structure HestenesDerivativePair where
+/-- The two real directional derivatives used in the Hestenes CR socket. -/
+structure HestenesPartialDerivs where
   dx : HestenesSpinor
   dy : HestenesSpinor
 
 /-- Hestenes-style CR operator `∂x ψ + ∂y ψ · I`. -/
-def hestenesCROperator (D : HestenesDerivativePair) : HestenesSpinor :=
+def hestenesCROperator (D : HestenesPartialDerivs) : HestenesSpinor :=
   D.dx + D.dy * bivector_i
-
-/-! ### Full four-component operator kernel -/
-
-/-- Coordinate kernel condition for the full Hestenes CR operator. -/
-def hestenesCROperatorKernel (D : HestenesDerivativePair) : Prop :=
-  D.dx.a = D.dy.d ∧ D.dx.d = -D.dy.a ∧
-    D.dx.b = D.dy.c ∧ D.dx.c = -D.dy.b
-
-/-- The full Hestenes CR operator vanishes exactly under its component kernel law. -/
-theorem hestenesCROperator_eq_zero_iff
-    (D : HestenesDerivativePair) :
-    hestenesCROperator D = 0 ↔ hestenesCROperatorKernel D := by
-  cases D with
-  | mk dx dy =>
-    cases dx with
-    | mk dxa dxb dxc dxd =>
-      cases dy with
-      | mk dya dyb dyc dyd =>
-        change
-          (⟨dxa, dxb, dxc, dxd⟩ +
-              hMul ⟨dya, dyb, dyc, dyd⟩ bivector_i = 0) ↔
-            (dxa = dyd ∧ dxd = -dya ∧ dxb = dyc ∧ dxc = -dyb)
-        constructor
-        · intro h
-          have ha := congrArg (fun q : HestenesSpinor => q.a) h
-          have hb := congrArg (fun q : HestenesSpinor => q.b) h
-          have hc := congrArg (fun q : HestenesSpinor => q.c) h
-          have hd := congrArg (fun q : HestenesSpinor => q.d) h
-          have ha' : dxa - dyd = 0 := by
-            simpa [hMul, bivector_i] using ha
-          have hb' : dxb - dyc = 0 := by
-            simpa [hMul, bivector_i] using hb
-          have hc' : dxc + dyb = 0 := by
-            simpa [hMul, bivector_i] using hc
-          have hd' : dxd + dya = 0 := by
-            simpa [hMul, bivector_i] using hd
-          exact ⟨by linarith, by linarith, by linarith, by linarith⟩
-        · rintro ⟨ha, hd, hb, hc⟩
-          apply HestenesSpinor.ext
-          · simpa [hMul, bivector_i] using sub_eq_zero.mpr ha
-          · simpa [hMul, bivector_i] using sub_eq_zero.mpr hb
-          · have hc' : dxc + dyb = 0 := by linarith
-            simpa [hMul, bivector_i] using hc'
-          · have hd' : dxd + dya = 0 := by linarith
-            simpa [hMul, bivector_i] using hd'
 
 /--
 Hestenes-style CR law in unpacked real coordinates for the toy even-spinor lane.
 This is the component form of the vanishing condition `hestenesCROperator D = 0`.
 -/
-def satisfy_hestenes_cr (D : HestenesDerivativePair) : Prop :=
+def satisfy_hestenes_cr (D : HestenesPartialDerivs) : Prop :=
   D.dx.a = D.dy.d ∧ D.dx.d = -D.dy.a ∧ D.dx.b = -D.dy.c ∧ D.dx.c = D.dy.b
 
 /-- Standard coordinate Cauchy-Riemann components. -/
@@ -226,7 +182,7 @@ def satisfy_standard_cr (C : StandardCRComponents) : Prop :=
 Embed standard CR data into the toy Hestenes spinor model via the real-even lane
 `u + v I` with `I = bivector_i`.
 -/
-def standardCRToHestenes (C : StandardCRComponents) : HestenesDerivativePair :=
+def standardCRToHestenes (C : StandardCRComponents) : HestenesPartialDerivs :=
   ⟨⟨C.ux, 0, 0, C.vx⟩, ⟨C.uy, 0, 0, C.vy⟩⟩
 
 theorem hestenes_cr_equivalence (C : StandardCRComponents) :
@@ -251,5 +207,44 @@ theorem hestenes_cr_equivalence (C : StandardCRComponents) :
         constructor
         · norm_num [standardCRToHestenes]
         · norm_num [standardCRToHestenes]
+
+/--
+A Weierstrass-style analytic socket for a real-coordinate complex function.
+No convergence theorem is asserted here; this is only the owner surface carrying
+power-series data and the radius on which a downstream module may reason.
+-/
+structure WeierstrassAnalyticSocket (f : ComplexReal → ComplexReal) (z₀ : ComplexReal) where
+  coeffs : ℕ → ComplexReal
+  radius : ℝ
+  radius_pos : 0 < radius
+  seriesModel : ComplexReal → ComplexReal
+
+namespace WeierstrassAnalyticSocket
+
+/-- The analytic socket center is the index parameter supplied to the owner. -/
+def center {f : ComplexReal → ComplexReal} {z₀ : ComplexReal}
+    (_ : WeierstrassAnalyticSocket f z₀) : ComplexReal := z₀
+
+/-- The analytic socket source is the function supplied to the owner. -/
+def source {f : ComplexReal → ComplexReal} {z₀ : ComplexReal}
+    (_ : WeierstrassAnalyticSocket f z₀) : ComplexReal → ComplexReal := f
+
+end WeierstrassAnalyticSocket
+
+/--
+A Hestenes-style analytic socket: explicit partial-derivative data together with
+an owned CR readback on the selected real phase plane.
+-/
+structure HestenesAnalyticSocket (ψ : ℝ → ℝ → HestenesSpinor) where
+  partials : ℝ → ℝ → HestenesPartialDerivs
+  hestenes_cr_law : ∀ x y : ℝ, satisfy_hestenes_cr (partials x y)
+
+namespace HestenesAnalyticSocket
+
+/-- The Hestenes analytic source is the function supplied to the owner. -/
+def source {ψ : ℝ → ℝ → HestenesSpinor}
+    (_ : HestenesAnalyticSocket ψ) : ℝ → ℝ → HestenesSpinor := ψ
+
+end HestenesAnalyticSocket
 
 end InfoGeometry.Clifford.HestenesCauchyRiemann

@@ -1,0 +1,319 @@
+/-
+InfoGeometry/Arithmetic/WeylArithmeticDivergence.lean
+
+Gauge-invariant and gauge-covariant arithmetic divergence data over the
+projective temperature coordinate.
+
+This module is a narrow sidecar over `ProjectiveWeylGauge` and
+`ProjectivePrimePartition`.  It does not assert that KL, IS, or any zeta
+readout is automatically invariant under temperature inversion.  Invariance
+and covariance are supplied as property fields and re-exported as theorem
+payload.
+-/
+
+import InfoGeometry.Arithmetic.ProjectiveWeylGauge
+import InfoGeometry.Arithmetic.ProjectivePrimePartition
+import Mathlib.Tactic.Linarith
+
+noncomputable section
+
+namespace InfoGeometry.Arithmetic.WeylArithmeticDivergence
+
+open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+open InfoGeometry.Arithmetic
+open InfoGeometry.Arithmetic.ProjectiveWeylGauge
+open InfoGeometry.Arithmetic.ProjectivePrimePartition
+open InfoGeometry.Thermodynamics.ProjectiveTemperature
+
+/-! ## 1. Generic arithmetic divergence readouts -/
+
+/-- A finite arithmetic divergence readout in projective temperature. -/
+/- A divergence readout is already the function it evaluates. The former
+one-field structure added no data or law beyond this function. -/
+abbrev ArithmeticDivergenceReadout :=
+  CountProfile → CountProfile → Finset ℕ → ℝ → ℝ
+
+namespace ArithmeticDivergenceReadout
+
+variable (D : ArithmeticDivergenceReadout)
+
+/-- Pull a divergence readout through a temperature map. -/
+def transportTemperature
+    (φ : ℝ → ℝ) : ArithmeticDivergenceReadout :=
+  fun counts₁ counts₂ support u => D counts₁ counts₂ support (φ u)
+
+@[simp]
+theorem transportTemperature_apply
+    (φ : ℝ → ℝ)
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
+    D.transportTemperature φ counts₁ counts₂ support u =
+      D counts₁ counts₂ support (φ u) :=
+  rfl
+
+end ArithmeticDivergenceReadout
+
+/-! ## 2. Gauge invariance and covariance witnesses -/
+
+/--
+Witness that a divergence readout is invariant under global Weyl rescaling of
+both arithmetic profiles.
+-/
+def GaugeInvariantDivergence
+    (D : ArithmeticDivergenceReadout) : Prop :=
+  ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+    c ≠ 0 →
+      D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
+        D counts₁ counts₂ support u
+
+namespace GaugeInvariantDivergence
+
+variable {D : ArithmeticDivergenceReadout}
+variable (G : GaugeInvariantDivergence D)
+
+/-- Re-export simultaneous Weyl-scale invariance. -/
+theorem readout_scale_invariant
+    (G : GaugeInvariantDivergence D)
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ)
+    (hc : c ≠ 0) :
+    D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
+      D counts₁ counts₂ support u :=
+  G counts₁ counts₂ support u c hc
+
+end GaugeInvariantDivergence
+
+/--
+Witness that a divergence readout transforms covariantly by a Weyl factor under
+a projective temperature transport.
+-/
+structure GaugeCovariantTemperatureDivergence
+    (D : ArithmeticDivergenceReadout)
+    (φ : ℝ → ℝ) where
+  /-- Weyl factor for the transported temperature coordinate. -/
+  weylFactor : ℝ → ℝ
+
+  /-- Covariance law under the temperature transport. -/
+  transported_eq_factor_mul :
+    ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
+      D counts₁ counts₂ support (φ u) =
+        weylFactor u * D counts₁ counts₂ support u
+
+namespace GaugeCovariantTemperatureDivergence
+
+variable {D : ArithmeticDivergenceReadout} {φ : ℝ → ℝ}
+variable (G : GaugeCovariantTemperatureDivergence D φ)
+
+/-- Re-export temperature covariance. -/
+theorem readout_transport_eq_factor_mul
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
+    D counts₁ counts₂ support (φ u) =
+      G.weylFactor u * D counts₁ counts₂ support u :=
+  G.transported_eq_factor_mul counts₁ counts₂ support u
+
+end GaugeCovariantTemperatureDivergence
+
+/-! ## 3. Projective inversion specialization -/
+
+/--
+Witness that a divergence readout is invariant under projective temperature
+inversion `u ↦ u⁻¹`.
+-/
+def InversionInvariantDivergence
+    (D : ArithmeticDivergenceReadout) : Prop :=
+  ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
+    D counts₁ counts₂ support (betaInvert u) =
+      D counts₁ counts₂ support u
+
+namespace InversionInvariantDivergence
+
+variable {D : ArithmeticDivergenceReadout}
+variable (G : InversionInvariantDivergence D)
+
+/-- Re-export projective inversion invariance. -/
+theorem readout_betaInvert_eq
+    (G : InversionInvariantDivergence D)
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
+    D counts₁ counts₂ support (betaInvert u) =
+      D counts₁ counts₂ support u :=
+  G counts₁ counts₂ support u
+
+/-- Applying inversion twice returns the original readout. -/
+theorem readout_betaInvert_betaInvert_eq
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
+    D counts₁ counts₂ support (betaInvert (betaInvert u)) =
+      D counts₁ counts₂ support u := by
+  rw [betaInvert_involutive]
+
+end InversionInvariantDivergence
+
+/-! ## 4. Canonical readouts from existing projective Weyl/prime lanes -/
+
+/-- Arithmetic divergence readout induced by a supplied Weyl-gauge calibration. -/
+def readoutOfProjectiveWeylGaugeCalibration
+    {State : Type*}
+    (C : ProjectiveWeylGaugeCalibration State) :
+    ArithmeticDivergenceReadout :=
+  fun counts₁ counts₂ support u =>
+    C.totalReadout (C.stateOfProfiles counts₁ counts₂ support) u
+
+/-- Prime modular-flow divergence readout induced by a supplied prime calibration. -/
+def readoutOfProjectivePrimeCalibration
+    {State : Type*}
+    (C : ProjectivePrimeCalibration State) :
+    Finset ℕ → ℝ → ℝ :=
+  fun A u => C.modularFlowReadout (C.stateOfFinset A) u
+
+/-- The Weyl-gauge calibrated divergence factors through scale and shape. -/
+theorem readoutOfProjectiveWeylGaugeCalibration_factorization
+    {State : Type*}
+    (C : ProjectiveWeylGaugeCalibration State)
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
+    readoutOfProjectiveWeylGaugeCalibration C counts₁ counts₂ support u =
+      C.weylScaleReadout (C.stateOfProfiles counts₁ counts₂ support) u *
+        C.shapeCoreReadout (C.stateOfProfiles counts₁ counts₂ support) u :=
+  C.total_eq_scale_mul_shape counts₁ counts₂ support u
+
+/-- The prime calibration readout agrees with the projective prime partition. -/
+theorem readoutOfProjectivePrimeCalibration_eq
+    {State : Type*}
+    (C : ProjectivePrimeCalibration State)
+    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
+    readoutOfProjectivePrimeCalibration C A u =
+      projectivePrimePartition A u :=
+  C.flow_eq_projectivePrimePartition A u hu
+
+/-! ## 5. Itakura-Saito shape core and Weyl thermal mass -/
+
+/--
+Pointwise Itakura-Saito divergence.
+
+For spectral densities `x` and `y`, this is `x / y - log (x / y) - 1`.
+No nonnegativity theorem is asserted here; the positivity hypotheses and proof
+belong to a concrete model property.
+-/
+def itakuraSaito (x y : ℝ) : ℝ :=
+  x / y - Real.log (x / y) - 1
+
+/-- The scalar Itakura--Saito divergence is nonnegative on positive inputs.
+
+This is the native convexity inequality `log t ≤ t - 1`, applied to
+`t = x / y`; no model-specific property or wrapper is involved.
+-/
+theorem itakuraSaito_nonneg {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    0 ≤ itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : 0 < x / y := div_pos hx hy
+  have hlog := Real.log_le_sub_one_of_pos hratio
+  linarith
+
+/-! Logarithmic coordinates make the common scale quotient explicit. -/
+
+theorem itakuraSaito_exp_exp_eq_log_difference (u v : ℝ) :
+    itakuraSaito (Real.exp u) (Real.exp v) =
+      Real.exp (u - v) - (u - v) - 1 := by
+  unfold itakuraSaito
+  have hratio : Real.exp u / Real.exp v = Real.exp (u - v) := by
+    rw [← Real.exp_sub]
+  rw [hratio, Real.log_exp]
+
+theorem itakuraSaito_exp_exp_common_shift (u v c : ℝ) :
+    itakuraSaito (Real.exp (u + c)) (Real.exp (v + c)) =
+      itakuraSaito (Real.exp u) (Real.exp v) := by
+  rw [itakuraSaito_exp_exp_eq_log_difference,
+    itakuraSaito_exp_exp_eq_log_difference]
+  have hshift : u + c - (v + c) = u - v := by ring
+  rw [hshift]
+
+theorem itakuraSaito_scale_invariant {x y c : ℝ} (hc : c ≠ 0) :
+    itakuraSaito (c * x) (c * y) = itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : (c * x) / (c * y) = x / y := by
+    field_simp [hc]
+  rw [hratio]
+
+theorem itakuraSaito_self_eq_zero {x : ℝ} (hx : x ≠ 0) :
+    itakuraSaito x x = 0 := by
+  unfold itakuraSaito
+  rw [div_self hx, Real.log_one]
+  norm_num
+
+theorem itakuraSaito_eq_zero_iff {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    itakuraSaito x y = 0 ↔ x = y := by
+  constructor
+  · intro hzero
+    have hratio : 0 < x / y := div_pos hx hy
+    by_contra hxy
+    have hratio_ne : x / y ≠ 1 := by
+      intro hone
+      apply hxy
+      field_simp [ne_of_gt hy] at hone
+      exact hone
+    have hstrict := Real.log_lt_sub_one_of_pos hratio hratio_ne
+    unfold itakuraSaito at hzero
+    linarith
+  · intro hxy
+    subst y
+    exact itakuraSaito_self_eq_zero (ne_of_gt hx)
+
+/--
+Arithmetic scale-invariant shape divergence between two finite count profiles.
+
+The readout is evaluated on `arithmeticBaseShape`, so the total mass is divided
+out before the Itakura-Saito core is read.
+-/
+def arithmeticShapeDivergence
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ) : ℝ :=
+  Finset.sum A (fun n =>
+    itakuraSaito (arithmeticBaseShape A countsP n)
+      (arithmeticBaseShape A countsQ n))
+
+/-- A finite arithmetic shape divergence is nonnegative when both normalized
+profiles are strictly positive on the support. -/
+theorem arithmeticShapeDivergence_nonneg
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ)
+    (hP : ∀ n ∈ A, 0 < arithmeticBaseShape A countsP n)
+    (hQ : ∀ n ∈ A, 0 < arithmeticBaseShape A countsQ n) :
+    0 ≤ arithmeticShapeDivergence A countsP countsQ := by
+  unfold arithmeticShapeDivergence
+  exact Finset.sum_nonneg (fun n hn =>
+    itakuraSaito_nonneg (hP n hn) (hQ n hn))
+
+/--
+Relative thermal mass / Weyl conformal factor between two arithmetic profiles.
+-/
+def weylThermalScale
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ) : ℝ :=
+  arithmeticTotalMass A countsP / arithmeticTotalMass A countsQ
+
+/-! ## 6. Finite Weyl gauge decomposition property -/
+
+variable {State : Type*}
+
+/--
+If the thermal masses are identical, the Weyl scale is `1`, so the total
+divergence reduces to the scale-invariant Itakura-Saito shape core.
+-/
+theorem totalDivergence_eq_shape_of_equal_mass
+    (stateOfFinset : Finset ℕ → State)
+    (totalDivergence : State → State → ℝ)
+    (weyl_decomposition_law :
+      ∀ (A : Finset ℕ) (countsP countsQ : ℕ → ℝ),
+        0 < arithmeticTotalMass A countsP →
+        0 < arithmeticTotalMass A countsQ →
+          totalDivergence (stateOfFinset A) (stateOfFinset A) =
+            weylThermalScale A countsP countsQ *
+              arithmeticShapeDivergence A countsP countsQ)
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ)
+    (hP : 0 < arithmeticTotalMass A countsP)
+    (hQ : 0 < arithmeticTotalMass A countsQ)
+    (hMassEq : arithmeticTotalMass A countsP = arithmeticTotalMass A countsQ) :
+    totalDivergence (stateOfFinset A) (stateOfFinset A) =
+      arithmeticShapeDivergence A countsP countsQ := by
+  have hScaleOne : weylThermalScale A countsP countsQ = 1 := by
+    unfold weylThermalScale
+    rw [hMassEq]
+    exact div_self hQ.ne'
+  rw [weyl_decomposition_law A countsP countsQ hP hQ]
+  rw [hScaleOne]
+  ring
+
+end InfoGeometry.Arithmetic.WeylArithmeticDivergence

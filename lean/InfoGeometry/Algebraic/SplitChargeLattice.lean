@@ -66,42 +66,6 @@ def hyperbolicNorm {n : ℕ}
     (q : SplitCharge n) : ℤ :=
   hyperbolicPair q q
 
-@[simp]
-theorem hyperbolicPair_comm {n : ℕ} (q r : SplitCharge n) :
-    hyperbolicPair q r = hyperbolicPair r q := by
-  unfold hyperbolicPair
-  apply Finset.sum_congr rfl
-  intro i hi
-  dsimp
-  ring
-
-theorem hyperbolicNorm_eq_two_mul_dot {n : ℕ} (q : SplitCharge n) :
-    hyperbolicNorm q =
-      2 * ∑ i : Fin n, q.momentum i * q.winding i := by
-  unfold hyperbolicNorm hyperbolicPair
-  calc
-    ∑ i : Fin n,
-        (q.momentum i * q.winding i + q.winding i * q.momentum i) =
-        ∑ i : Fin n, 2 * (q.momentum i * q.winding i) := by
-          apply Finset.sum_congr rfl
-          intro i hi
-          ring
-    _ = 2 * ∑ i : Fin n, q.momentum i * q.winding i := by
-      rw [Finset.mul_sum]
-
-theorem hyperbolicNorm_even {n : ℕ} (q : SplitCharge n) :
-    ∃ k : ℤ, hyperbolicNorm q = 2 * k := by
-  refine ⟨∑ i : Fin n, q.momentum i * q.winding i, ?_⟩
-  exact hyperbolicNorm_eq_two_mul_dot q
-
-theorem momentum_sector_isotropic {n : ℕ} (m m' : Fin n → ℤ) :
-    hyperbolicPair (m, fun _ => 0) (m', fun _ => 0) = 0 := by
-  simp [hyperbolicPair, momentum, winding]
-
-theorem winding_sector_isotropic {n : ℕ} (w w' : Fin n → ℤ) :
-    hyperbolicPair (fun _ => 0, w) (fun _ => 0, w') = 0 := by
-  simp [hyperbolicPair, momentum, winding]
-
 /--
 Realification of a split charge into the diagonal real split space.
 

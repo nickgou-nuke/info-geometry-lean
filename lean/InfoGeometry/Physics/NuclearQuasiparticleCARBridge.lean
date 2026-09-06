@@ -157,6 +157,28 @@ theorem comm_numberOp_adag_distinct (i j : ι) (hij : i ≠ j) :
         simp only [mul_assoc, sub_neg_eq_add]
         abel
 
+omit [Algebra ℝ A] in
+/-- Number operators belonging to distinct modes commute with annihilation. -/
+theorem comm_numberOp_a_distinct_carrier (i j : ι) (hij : i ≠ j) :
+    comm (car.numberOp i) (car.a j) = 0 := by
+  dsimp [comm, numberOp]
+  have h₁ := car.anticomm_a_a i j
+  have h₂ := car.anticomm_a_adag j i
+  simp only [if_neg (Ne.symm hij)] at h₂
+  calc car.adag i * car.a i * car.a j - car.a j * (car.adag i * car.a i)
+      = car.adag i * (car.a i * car.a j) -
+          (car.a j * car.adag i) * car.a i := by
+        simp only [mul_assoc]
+    _ = car.adag i * (-(car.a j * car.a i)) -
+          (-(car.adag i * car.a j)) * car.a i := by
+        rw [show car.a i * car.a j = -(car.a j * car.a i) by
+          exact eq_neg_of_add_eq_zero_left h₁]
+        rw [show car.a j * car.adag i = -(car.adag i * car.a j) by
+          exact eq_neg_of_add_eq_zero_left h₂]
+    _ = 0 := by
+      simp only [mul_neg, neg_mul, mul_assoc, sub_neg_eq_add]
+      abel
+
 /-- Free single-particle Hamiltonian for a finite mode set: $H_{\text{qp}} = \sum_{i \in s} \varepsilon_i N_i$. -/
 def freeQuasiparticleHamiltonian (s : Finset ι) (eps : ι → ℝ) : A :=
   ∑ i ∈ s, (eps i) • car.numberOp i
@@ -179,6 +201,42 @@ theorem comm_freeQuasiparticleHamiltonian_adag (s : Finset ι) (eps : ι → ℝ
   · rw [car.comm_numberOp_adag_same k]
   · intro j hj hjk
     rw [car.comm_numberOp_adag_distinct j k hjk, smul_zero]
+  · intro hnk
+    exact False.elim (hnk hk)
+
+/-- The free Hamiltonian has the opposite weight on annihilation operators. -/
+theorem comm_freeQuasiparticleHamiltonian_a (s : Finset ι) (eps : ι → ℝ) (k : ι) (hk : k ∈ s) :
+    comm (car.freeQuasiparticleHamiltonian s eps) (car.a k) =
+      - ((eps k) • car.a k) := by
+  dsimp [freeQuasiparticleHamiltonian, comm]
+  have h_comm_sum : (∑ i ∈ s, (eps i) • car.numberOp i) * car.a k -
+                    car.a k * (∑ i ∈ s, (eps i) • car.numberOp i) =
+      ∑ i ∈ s, (eps i) • comm (car.numberOp i) (car.a k) := by
+    rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
+    apply Finset.sum_congr rfl
+    intro i _
+    dsimp [comm]
+    simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+  rw [h_comm_sum]
+  rw [Finset.sum_eq_single k]
+  · have h_same : comm (car.numberOp k) (car.a k) = - car.a k := by
+      dsimp [comm, numberOp]
+      calc car.adag k * car.a k * car.a k - car.a k * (car.adag k * car.a k)
+          = car.adag k * (car.a k * car.a k) -
+              (car.a k * car.adag k) * car.a k := by
+            noncomm_ring
+        _ = car.adag k * 0 - (1 - car.adag k * car.a k) * car.a k := by
+            rw [car.a_sq k, car.a_mul_adag_same k]
+        _ = - car.a k + (car.adag k * car.a k) * car.a k := by
+            rw [sub_mul]
+            simp only [mul_zero, one_mul, zero_sub]
+            abel_nf
+        _ = - car.a k := by
+            rw [mul_assoc, car.a_sq k, mul_zero, add_zero]
+    rw [h_same]
+    exact smul_neg _ _
+  · intro j hj hjk
+    rw [car.comm_numberOp_a_distinct_carrier j k hjk, smul_zero]
   · intro hnk
     exact False.elim (hnk hk)
 

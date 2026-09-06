@@ -8,7 +8,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.VarlamovClifford
 
-Varlamov/Drazin Clifford theorem layer.
+Theorem-safe Varlamov/Drazin Clifford socket.
 
 The finite Clifford automorphism side of Varlamov's paper is not rewrapped
 here.  It is imported directly from mathlib:
@@ -23,7 +23,7 @@ This module formalizes the algebraic part only:
 * a degenerate Clifford-style carrier with a nilpotent distinguished direction;
 * a Varlamov-style Drazin adjoint `bar x = J * star x * JD`;
 * covariance of the Hodge-Drazin envelope under this adjoint, when the required
-  commutation hypotheses are supplied;
+  commutation witnesses are supplied;
 * the universal exterior-derivative law for idempotents:
   `p * d p * p = 0`.
 
@@ -41,7 +41,7 @@ open InfoGeometry.Canonical.HodgeDrazinEnvelope
 Degenerate Clifford-style generators for a toy `Cl(n,0,1)` chart.
 
 The concrete multiplication table is supplied as fields.  This is a local
-algebraic interface, not a global Clifford algebra construction.
+algebraic socket, not a global Clifford algebra construction.
 -/
 @[rep_depth operator]
 structure DegenerateCliffordChart

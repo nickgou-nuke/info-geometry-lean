@@ -13,13 +13,13 @@ a block `k`-circulant matrix is again block `k`-circulant.  This file records
 the kernel-checked algebraic core used by the external CAS lanes:
 
 * a `3 × 3` block-circulant commutation law against the cyclic shift;
-* a concrete `3`-block, `2 × 2`-block exact rational property;
+* a concrete `3`-block, `2 × 2`-block exact rational witness;
 * its Moore-Penrose inverse, checked by the four Penrose equations;
 * preservation of the same block-circulant shift commutation by the inverse.
 
 The generic finite Fourier diagonalization and the analytic uniqueness theorem
-remain represented by the stated Smith property interface below; the closed
-matrix property is the exact rational property consumed by the Sage/GAP/M2/
+remain represented by the stated Smith certificate interface below; the closed
+matrix witness is the exact rational certificate consumed by the Sage/GAP/M2/
 SymPy/Clifford lanes.
 -/
 
@@ -57,7 +57,7 @@ theorem blockCirculant3_commutes_cyclicShift
 Certificate shape for Smith's block `k`-circulant Moore-Penrose theorem.
 
 The theorem is parameterized by the shift commutant (`isBlockKCirculant`), the
-unit-modulus property on `k`, and a Moore-Penrose operation.
+unit-modulus hypothesis on `k`, and a Moore-Penrose operation.
 -/
 structure BlockKCirculantMPCertificate (α : Type*) [Ring α] [StarRing α] where
   isBlockKCirculant : α → Prop
@@ -77,7 +77,7 @@ variable {α : Type*} [Ring α] [StarRing α]
 variable (C : BlockKCirculantMPCertificate α)
 
 /-- Historical unit-modulus name, now the native star-unitarity predicate on
-the property's actual twist parameter. -/
+the certificate's actual twist parameter. -/
 abbrev unitModulusK : Prop :=
   star C.k * C.k = 1 ∧ C.k * star C.k = 1
 
@@ -127,35 +127,29 @@ def smithAMP : Mat6 ℚ :=
      (-1 / 2 : ℚ), 0, (1 / 2 : ℚ), 0, (1 / 2 : ℚ), 0;
      0, (1 / 9 : ℚ), 0, (-2 / 9 : ℚ), 0, (4 / 9 : ℚ)]
 
-/-- The property is block-circulant, expressed as commutation with `Q ⊗ I₂`. -/
+/-- The witness is block-circulant, expressed as commutation with `Q ⊗ I₂`. -/
 theorem smithA_commutes_shift :
     smithA * smithShift6 = smithShift6 * smithA := by
   native_decide
 
-/-- Smith's conclusion in the concrete rational property: the MP inverse commutes too. -/
+/-- Smith's conclusion in the concrete rational witness: the MP inverse commutes too. -/
 theorem smithAMP_commutes_shift :
     smithAMP * smithShift6 = smithShift6 * smithAMP := by
   native_decide
 
-/-- Exact left inverse property. -/
+/-- Exact left inverse certificate. -/
 theorem smithAMP_mul_smithA :
     smithAMP * smithA = 1 := by
   native_decide
 
-/-- Exact right inverse property. -/
+/-- Exact right inverse certificate. -/
 theorem smithA_mul_smithAMP :
     smithA * smithAMP = 1 := by
   native_decide
 
-/-- Determinant sanity check for the exact rational property. -/
+/-- Determinant sanity check for the exact rational witness. -/
 theorem smithA_det_eq :
     Matrix.det smithA = (18 : ℚ) := by
-  native_decide
-
-/-- The determinant of the explicit Moore--Penrose inverse is the reciprocal
-    of the determinant of the invertible Smith matrix. -/
-theorem smithAMP_det_eq :
-    Matrix.det smithAMP = (1 / 18 : ℚ) := by
   native_decide
 
 /-- The exact inverse is the Moore-Penrose inverse in the existing repo predicate. -/

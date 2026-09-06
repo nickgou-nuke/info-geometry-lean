@@ -118,29 +118,6 @@ theorem dikin_metric_prime_scale (p : ℕ) (hp : 0 < p) (x : ℝ) (hx : 0 < x) :
   have h_mul_sq : ((p : ℝ) * x) ^ 2 = (p : ℝ) ^ 2 * x ^ 2 := mul_pow (p : ℝ) x 2
   rw [h_mul_sq, one_div_mul_one_div]
 
-/-!
-### 3. Grand Capstone: Dikin-Blahut-Orbit Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Full synthesis uniting the Dikin barrier geometry,
-    Blahut-Arimoto contraction, and prime periodic orbit confinement -/
-theorem grand_dikin_blahut_orbit_synthesis
-    (p : ℕ) (hp : 1 < p) (x y r Kc : ℝ)
-    (hx : 0 < x) (hr_nonneg : 0 ≤ r) (hr_lt : r < 1)
-    (hKc_nonneg : 0 ≤ Kc) (hKc_le : Kc < 1)
-    (h_in : InDikinEllipsoid x y (Kc * r)) :
-    (0 < primeOrbitPeriod p) ∧
-    (0 < y) ∧
-    (InDikinEllipsoid x y r) ∧
-    (dikinMetric ((p : ℝ) * x) = (1 / (p : ℝ) ^ 2) * dikinMetric x) :=
-  ⟨Real.log_pos (by exact Nat.one_lt_cast.mpr hp),
-   dikin_ellipsoid_strictly_positive x y (Kc * r) hx (mul_nonneg hKc_nonneg hr_nonneg)
-     (by
-       have : Kc * r < 1 * 1 := mul_lt_mul'' hKc_le hr_lt hKc_nonneg hr_nonneg
-       linarith) h_in,
-   dikin_ellipsoid_nested_shrink x y r Kc hx hr_nonneg hKc_nonneg (le_of_lt hKc_le) h_in,
-   dikin_metric_prime_scale p (by omega) x hx⟩
-
 end
 
 end InfoGeometry.Quantum.DikinBlahutOrbits

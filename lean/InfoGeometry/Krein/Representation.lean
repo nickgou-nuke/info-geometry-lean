@@ -102,28 +102,6 @@ lemma cl11Rep_ι_zero_one :
   intro w
   simp [cl11RepLin]
 
-lemma cl11Rep_ι_one_zero_apply (x : DoubledSpace E) :
-    cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)) x =
-      modular_j (E := E) x := by
-  rw [cl11Rep_ι_one_zero]
-
-lemma cl11Rep_ι_zero_one_apply (x : DoubledSpace E) :
-    cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) x =
-      complex_i (E := E) x := by
-  rw [cl11Rep_ι_zero_one]
-
-lemma cl11Rep_ι_one_zero_apply_eq_modular_jLE (x : DoubledSpace E) :
-    cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)) x =
-      modular_jLE (E := E) x := by
-  rw [cl11Rep_ι_one_zero_apply]
-  rfl
-
-lemma cl11Rep_ι_zero_one_apply_eq_complex_iLE (x : DoubledSpace E) :
-    cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) x =
-      complex_iLE (E := E) x := by
-  rw [cl11Rep_ι_zero_one_apply]
-  rfl
-
 lemma cl11Rep_ι_one_zero_sq :
     cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))
       * cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))

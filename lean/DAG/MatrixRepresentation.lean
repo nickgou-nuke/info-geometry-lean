@@ -106,8 +106,7 @@ theorem majorana_skew_symmetric {n0 n1 n2 : ℕ}
 
 theorem pfaffian_sq_eq_det_2x2 (a : ℚ) :
     a * a = Matrix.det (!![(0 : ℚ), a; -a, 0]) := by
-  rw [Matrix.det_fin_two]
-  norm_num
+  simp [Matrix.det_fin_two]
 
 /-! ## MatrixRep structure -/
 

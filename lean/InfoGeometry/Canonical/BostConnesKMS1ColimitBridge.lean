@@ -29,6 +29,7 @@ set_option linter.unusedSimpArgs false
 namespace InfoGeometry.Canonical.BostConnesKMS1Colimit
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveLimitBoundary
 open InfoGeometry.Canonical.UHFWeilPositivity
 
 /-- Prime energy weights for a stage n. -/

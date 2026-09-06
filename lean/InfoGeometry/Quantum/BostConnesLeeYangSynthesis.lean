@@ -49,7 +49,7 @@ theorem laplacian_commutes_hodge_star
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C)
     (hDelta : IsLaplacianFromDirac C) :
-    laplacian C * hodgeStar C = hodgeStar C * laplacian C :=
+    C.laplacian * C.hodgeStar = C.hodgeStar * C.laplacian :=
   laplacian_commutes_hodge_of_dirac_closure C hChiral hDelta
 
 /-! ## 2. Prime `Cl(1,1)`-style atom and parity -/
@@ -72,7 +72,7 @@ theorem lee_yang_circle_unitary (x : ℝ) :
 
 /-! ## 4. Conditional algebraic synthesis -/
 
-/--
+/-
 **Conditional algebraic synthesis theorem.**
 
 Unifies:
@@ -82,25 +82,4 @@ Unifies:
 4. **Finite Yang--Baxter identity**: $F \cdot B \cdot F = R$.
 5. **KMS-like algebraic charge cancellation** under the supplied relation.
 -/
-theorem grand_bost_connes_lee_yang_synthesis
-    (atom : Cl11Atom Op)
-    (C : HodgeDiracLaplacianCarrier Op)
-    (hChiral : IsDiracHodgeChiral C)
-    (hDelta : IsLaplacianFromDirac C)
-    (x : ℝ)
-    {O2 : Type*} [Ring O2] [StarRing O2]
-    (S_L S_R : O2)
-    (φ : State O2)
-    (h_kms : IsKMSState S_L S_R φ) :
-    (atom.mobiusParity * atom.mobiusParity = 1) ∧
-    (laplacian C * hodgeStar C = hodgeStar C * laplacian C) ∧
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (F * B * F = R) ∧
-    (φ (S_L * star S_L) - φ (S_R * star S_R) = 0) :=
-  ⟨atom.mobiusParity_sq_eq_one,
-   laplacian_commutes_hodge_of_dirac_closure C hChiral hDelta,
-   cayley_transform_is_unitary x,
-   F_B_F_eq_R,
-   kms_chiral_charge_vanishes S_L S_R φ h_kms⟩
-
 end InfoGeometry.Quantum.BostConnesLeeYang

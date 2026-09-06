@@ -38,38 +38,38 @@ theorem continuous_cylinder (n : ℕ) (f : DiagAlg n) :
     (continuous_boundaryPrefix n)
 
 theorem continuous_tail :
-    Continuous (tail : (ℕ → Bool) → (ℕ → Bool)) := by
+    Continuous (tail : CantorBoundary → CantorBoundary) := by
   apply continuous_pi
   intro n
   simpa [tail] using (continuous_apply (n + 1))
 
 theorem continuous_prependBit (b : Bool) :
-    Continuous (prependBit b : (ℕ → Bool) → (ℕ → Bool)) := by
+    Continuous (prependBit b : CantorBoundary → CantorBoundary) := by
   apply continuous_pi
   intro n
   cases n with
   | zero =>
       simpa [prependBit] using (continuous_const :
-        Continuous (fun _ : (ℕ → Bool) => b))
+        Continuous (fun _ : CantorBoundary => b))
   | succ k =>
       simpa [prependBit] using (continuous_apply k)
 
 theorem continuous_cylinder_branch_pullback
     (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
     Continuous
-      (fun x : (ℕ → Bool) =>
+      (fun x : CantorBoundary =>
         cylinder (n + 1) f (prependBit b x)) := by
   exact (continuous_cylinder (n + 1) f).comp
     (continuous_prependBit b)
 
 theorem cylinder_colimit_mem_continuous
-    {g : (ℕ → Bool) → ℂ} (hg : g ∈ CylinderColimit) :
+    {g : CantorBoundary → ℂ} (hg : g ∈ CylinderColimit) :
     Continuous g := by
   rcases hg with ⟨p, rfl⟩
   exact continuous_cylinder p.1 p.2
 
 theorem cantorBoundary_compact :
-    IsCompact (Set.univ : Set (ℕ → Bool)) :=
+    IsCompact (Set.univ : Set CantorBoundary) :=
   isCompact_univ
 
 theorem prependBit_image_compact (b : Bool) :
@@ -78,7 +78,7 @@ theorem prependBit_image_compact (b : Bool) :
 
 theorem prependBit_isClosedEmbedding (b : Bool) :
     Topology.IsClosedEmbedding
-      (prependBit b : (ℕ → Bool) → (ℕ → Bool)) :=
+      (prependBit b : CantorBoundary → CantorBoundary) :=
   (continuous_prependBit b).isClosedEmbedding
     (prependBit_injective b)
 
@@ -118,24 +118,24 @@ theorem prependBit_image_clopen (b : Bool) :
 
 /-- Each binary branch is homeomorphic to its closed image. -/
 noncomputable def prependBitHomeomorph (b : Bool) :
-    (ℕ → Bool) ≃ₜ Set.range (prependBit b) :=
+    CantorBoundary ≃ₜ Set.range (prependBit b) :=
   (prependBit_isClosedEmbedding b).isEmbedding.toHomeomorph
 
 @[simp] theorem prependBitHomeomorph_apply
-    (b : Bool) (x : (ℕ → Bool)) :
-    ((prependBitHomeomorph b x : Set.range (prependBit b)) : (ℕ → Bool)) =
+    (b : Bool) (x : CantorBoundary) :
+    ((prependBitHomeomorph b x : Set.range (prependBit b)) : CantorBoundary) =
       prependBit b x :=
   rfl
 
 @[simp] theorem prependBitHomeomorph_symm_apply
-    (b : Bool) (x : (ℕ → Bool)) :
+    (b : Bool) (x : CantorBoundary) :
     (prependBitHomeomorph b).symm
         ⟨prependBit b x, ⟨x, rfl⟩⟩ = x := by
   exact Topology.IsEmbedding.toHomeomorph_symm_apply
     (prependBit_isClosedEmbedding b).isEmbedding x
 
 theorem tail_image_compact :
-    IsCompact (Set.range (tail : (ℕ → Bool) → (ℕ → Bool))) :=
+    IsCompact (Set.range (tail : CantorBoundary → CantorBoundary)) :=
   isCompact_range continuous_tail
 
 /-! The Cuntz branch operators preserve the finite-cylinder carrier. -/
@@ -148,13 +148,13 @@ def dropHeadWord (n : ℕ) (w : BitWord (n + 1)) : BitWord n :=
 def branchCylinder (n : ℕ) (b : Bool) (f : DiagAlg n) : DiagAlg (n + 1) :=
   fun w => if w ⟨0, Nat.succ_pos n⟩ = b then f (dropHeadWord n w) else 0
 
-theorem dropHeadWord_boundaryPrefix (n : ℕ) (x : (ℕ → Bool)) :
+theorem dropHeadWord_boundaryPrefix (n : ℕ) (x : CantorBoundary) :
     dropHeadWord n (boundaryPrefix (n + 1) x) = boundaryPrefix n (tail x) := by
   ext i
   rfl
 
 theorem cylinder_branchCylinder (n : ℕ) (b : Bool) (f : DiagAlg n)
-    (x : (ℕ → Bool)) :
+    (x : CantorBoundary) :
     cylinder (n + 1) (branchCylinder n b f) x =
       if x 0 = b then cylinder n f (tail x) else 0 := by
   dsimp [cylinder, branchCylinder, dropHeadWord, boundaryPrefix, tail]
@@ -182,12 +182,12 @@ theorem S_R_op_mem_cylinder_colimit (n : ℕ) (f : DiagAlg n) :
     S_R_op (cylinder n f) ∈ CylinderColimit := by
   exact ⟨⟨n + 1, branchCylinder n true f⟩, (S_R_op_cylinder n f).symm⟩
 
-theorem S_L_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem S_L_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : S_L_op g ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
   exact S_L_op_mem_cylinder_colimit n f
 
-theorem S_R_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem S_R_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : S_R_op g ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
   exact S_R_op_mem_cylinder_colimit n f
@@ -203,7 +203,7 @@ def prependHeadWord : (n : ℕ) → Bool → BitWord n → BitWord n
 def prependHeadDiag (n : ℕ) (b : Bool) (f : DiagAlg n) : DiagAlg n :=
   fun w => f (prependHeadWord n b w)
 
-theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : (ℕ → Bool)) :
+theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : CantorBoundary) :
     boundaryPrefix n (prependBit b x) =
       prependHeadWord n b (boundaryPrefix n x) := by
   cases n with
@@ -236,27 +236,27 @@ theorem star_S_R_op_mem_cylinder_colimit (n : ℕ) (f : DiagAlg n) :
     star_S_R_op (cylinder n f) ∈ CylinderColimit := by
   exact ⟨⟨n, prependHeadDiag n true f⟩, (star_S_R_op_cylinder n f).symm⟩
 
-theorem star_S_L_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem star_S_L_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : star_S_L_op g ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
   exact star_S_L_op_mem_cylinder_colimit n f
 
-theorem star_S_R_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem star_S_R_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : star_S_R_op g ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
   exact star_S_R_op_mem_cylinder_colimit n f
 
-theorem UHF_boundary_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem UHF_boundary_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : UHF_boundary_op g ∈ CylinderColimit := by
   exact S_L_op_preserves_cylinder_colimit
     (star_S_R_op_preserves_cylinder_colimit hg)
 
-theorem star_UHF_boundary_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem star_UHF_boundary_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : star_UHF_boundary_op g ∈ CylinderColimit := by
   exact S_R_op_preserves_cylinder_colimit
     (star_S_L_op_preserves_cylinder_colimit hg)
 
-theorem UHF_Laplacian_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
+theorem UHF_Laplacian_op_preserves_cylinder_colimit {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : UHF_Laplacian_op g ∈ CylinderColimit := by
   rw [UHF_Laplacian_op_eq_id]
   exact hg
@@ -264,7 +264,7 @@ theorem UHF_Laplacian_op_preserves_cylinder_colimit {g : (ℕ → Bool) → ℂ}
 /-! Prefix cylinders are the compact clopen pieces of the boundary topology. -/
 
 /-- The basic clopen cylinder determined by a finite binary word. -/
-def cylinderSet (n : ℕ) (w : BitWord n) : Set (ℕ → Bool) :=
+def cylinderSet (n : ℕ) (w : BitWord n) : Set CantorBoundary :=
   boundaryPrefix n ⁻¹' ({w} : Set (BitWord n))
 
 theorem cylinderSet_isClopen (n : ℕ) (w : BitWord n) :
@@ -284,7 +284,7 @@ theorem cylinderSet_disjoint {n : ℕ} {w v : BitWord n} (h : w ≠ v) :
   change boundaryPrefix n x = v at hy
   exact h (hx.symm.trans hy)
 
-theorem cylinderSet_separates {x y : (ℕ → Bool)} (hxy : x ≠ y) :
+theorem cylinderSet_separates {x y : CantorBoundary} (hxy : x ≠ y) :
     ∃ n : ℕ, ∃ w : BitWord n,
       x ∈ cylinderSet n w ∧ y ∉ cylinderSet n w := by
   obtain ⟨i, hi⟩ := Function.ne_iff.mp hxy
@@ -300,7 +300,7 @@ theorem cylinderSet_separates {x y : (ℕ → Bool)} (hxy : x ≠ y) :
 def prependWord (n : ℕ) (b : Bool) (w : BitWord n) : BitWord (n + 1) :=
   fun i => i.cases b (fun j => w j)
 
-theorem boundaryPrefix_succ_prependBit (n : ℕ) (b : Bool) (x : (ℕ → Bool)) :
+theorem boundaryPrefix_succ_prependBit (n : ℕ) (b : Bool) (x : CantorBoundary) :
     boundaryPrefix (n + 1) (prependBit b x) =
       prependWord n b (boundaryPrefix n x) := by
   funext i
@@ -338,14 +338,14 @@ This uses only Mathlib's product-topology basis theorem; no metric or
 analytic completion is used in this statement. -/
 theorem isTopologicalBasis_cylinderSet :
     TopologicalSpace.IsTopologicalBasis
-      {s : Set (ℕ → Bool) |
+      {s : Set CantorBoundary |
         ∃ (n : ℕ) (w : BitWord n), s = cylinderSet n w} := by
   apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
   · rintro s ⟨n, w, rfl⟩
     exact (cylinderSet_isClopen n w).isOpen
   · intro x u hx hu
     obtain ⟨v, ⟨V, F, -, rfl⟩, hxv, hvu⟩ :
-        ∃ v ∈ { S : Set (ℕ → Bool) | ∃ (V : ∀ i : ℕ, Set Bool)
+        ∃ v ∈ { S : Set CantorBoundary | ∃ (V : ∀ i : ℕ, Set Bool)
           (F : Finset ℕ),
           (∀ i : ℕ, i ∈ F → V i ∈ { s : Set Bool | IsOpen s }) ∧
             S = (F : Set ℕ).pi V },
@@ -384,7 +384,7 @@ def prefixTo (n m : ℕ) (h : n ≤ m) (w : BitWord m) : BitWord n :=
 def diagEmbedTo (n m : ℕ) (h : n ≤ m) (f : DiagAlg n) : DiagAlg m :=
   fun w => f (prefixTo n m h w)
 
-theorem boundaryPrefix_prefixTo (n m : ℕ) (h : n ≤ m) (x : (ℕ → Bool)) :
+theorem boundaryPrefix_prefixTo (n m : ℕ) (h : n ≤ m) (x : CantorBoundary) :
     prefixTo n m h (boundaryPrefix m x) = boundaryPrefix n x := by
   ext i
   rfl
@@ -395,7 +395,7 @@ theorem cylinder_diagEmbedTo (n m : ℕ) (h : n ≤ m) (f : DiagAlg n) :
   dsimp [cylinder, diagEmbedTo]
   rw [boundaryPrefix_prefixTo]
 
-theorem cylinder_colimit_add {g h : (ℕ → Bool) → ℂ}
+theorem cylinder_colimit_add {g h : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) (hh : h ∈ CylinderColimit) :
     g + h ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
@@ -407,7 +407,7 @@ theorem cylinder_colimit_add {g h : (ℕ → Bool) → ℂ}
   change cylinder k (f' + g') = cylinder n f + cylinder m g
   rw [cylinder_add, cylinder_diagEmbedTo, cylinder_diagEmbedTo]
 
-theorem cylinder_colimit_mul {g h : (ℕ → Bool) → ℂ}
+theorem cylinder_colimit_mul {g h : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) (hh : h ∈ CylinderColimit) :
     g * h ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
@@ -419,18 +419,18 @@ theorem cylinder_colimit_mul {g h : (ℕ → Bool) → ℂ}
   change cylinder k (f' * g') = cylinder n f * cylinder m g
   rw [cylinder_mul, cylinder_diagEmbedTo, cylinder_diagEmbedTo]
 
-theorem cylinder_colimit_zero : (0 : (ℕ → Bool) → ℂ) ∈ CylinderColimit := by
+theorem cylinder_colimit_zero : (0 : CantorBoundary → ℂ) ∈ CylinderColimit := by
   exact ⟨⟨0, 0⟩, by ext x; rfl⟩
 
-theorem cylinder_colimit_one : (1 : (ℕ → Bool) → ℂ) ∈ CylinderColimit := by
+theorem cylinder_colimit_one : (1 : CantorBoundary → ℂ) ∈ CylinderColimit := by
   exact ⟨⟨0, 1⟩, by ext x; rfl⟩
 
 theorem cylinder_colimit_algebraMap (c : ℂ) :
-    algebraMap ℂ ((ℕ → Bool) → ℂ) c ∈ CylinderColimit := by
+    algebraMap ℂ (CantorBoundary → ℂ) c ∈ CylinderColimit := by
   exact ⟨⟨0, constantStageObservable 0 c⟩, by ext x; change c = c; rfl⟩
 
 /-- The finite-cylinder carrier as a native subalgebra of boundary functions. -/
-def cylinderColimitSubalgebra : Subalgebra ℂ ((ℕ → Bool) → ℂ) :=
+def cylinderColimitSubalgebra : Subalgebra ℂ (CantorBoundary → ℂ) :=
   { carrier := CylinderColimit
     zero_mem' := cylinder_colimit_zero
     add_mem' := cylinder_colimit_add
@@ -441,17 +441,17 @@ def cylinderColimitSubalgebra : Subalgebra ℂ ((ℕ → Bool) → ℂ) :=
 
 /-- View every finite-cylinder observable as a continuous function. -/
 noncomputable def cylinderContinuousMap (g : cylinderColimitSubalgebra) :
-    C((ℕ → Bool), ℂ) :=
+    C(CantorBoundary, ℂ) :=
   { toFun := g.1
     continuous_toFun := cylinder_colimit_mem_continuous g.property }
 
 @[simp] theorem cylinderContinuousMap_apply
-    (g : cylinderColimitSubalgebra) (x : (ℕ → Bool)) :
+    (g : cylinderColimitSubalgebra) (x : CantorBoundary) :
     cylinderContinuousMap g x = g.1 x := rfl
 
 /-- The algebraic cylinder colimit embeds into the topological function algebra. -/
 noncomputable def cylinderColimitToContinuousMap :
-    cylinderColimitSubalgebra →ₐ[ℂ] C((ℕ → Bool), ℂ) where
+    cylinderColimitSubalgebra →ₐ[ℂ] C(CantorBoundary, ℂ) where
   toFun := cylinderContinuousMap
   map_one' := by
     ext x
@@ -474,11 +474,11 @@ theorem cylinderColimitToContinuousMap_injective :
   intro g h gh
   apply Subtype.ext
   funext x
-  exact congrArg (fun k : C((ℕ → Bool), ℂ) => k x) gh
+  exact congrArg (fun k : C(CantorBoundary, ℂ) => k x) gh
 
 /-! Star closure and topological density of the finite-cylinder image. -/
 
-theorem cylinder_colimit_star {g : (ℕ → Bool) → ℂ}
+theorem cylinder_colimit_star {g : CantorBoundary → ℂ}
     (hg : g ∈ CylinderColimit) : star g ∈ CylinderColimit := by
   rcases hg with ⟨⟨n, f⟩, rfl⟩
   refine ⟨⟨n, fun w => star (f w)⟩, ?_⟩
@@ -486,12 +486,12 @@ theorem cylinder_colimit_star {g : (ℕ → Bool) → ℂ}
   rfl
 
 def cylinderColimitStarSubalgebra :
-    StarSubalgebra ℂ ((ℕ → Bool) → ℂ) :=
+    StarSubalgebra ℂ (CantorBoundary → ℂ) :=
   { toSubalgebra := cylinderColimitSubalgebra
     star_mem' := cylinder_colimit_star }
 
 noncomputable def cylinderColimitToContinuousMapStarAlgHom :
-    cylinderColimitStarSubalgebra →⋆ₐ[ℂ] C((ℕ → Bool), ℂ) where
+    cylinderColimitStarSubalgebra →⋆ₐ[ℂ] C(CantorBoundary, ℂ) where
   toFun := fun g => cylinderContinuousMap ⟨g.1, g.property⟩
   map_one' := by
     ext x
@@ -513,7 +513,7 @@ noncomputable def cylinderColimitToContinuousMapStarAlgHom :
     rfl
 
 noncomputable def cylinderContinuousStarSubalgebra :
-    StarSubalgebra ℂ C((ℕ → Bool), ℂ) :=
+    StarSubalgebra ℂ C(CantorBoundary, ℂ) :=
   cylinderColimitToContinuousMapStarAlgHom.range
 
 theorem cylinderContinuousStarSubalgebra_separatesPoints :
@@ -541,13 +541,13 @@ theorem cylinderContinuousStarSubalgebra_dense :
     `DenseRange` form of the Stone--Weierstrass closure statement above. -/
 theorem cylinderColimitToContinuousMapStarAlgHom_denseRange :
     DenseRange (cylinderColimitToContinuousMapStarAlgHom :
-      cylinderColimitStarSubalgebra → C((ℕ → Bool), ℂ)) := by
+      cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ)) := by
   rw [denseRange_iff_closure_range]
   have h := cylinderContinuousStarSubalgebra_dense
-  have h' := congrArg (fun s : StarSubalgebra ℂ C((ℕ → Bool), ℂ) =>
-      (s : Set C((ℕ → Bool), ℂ))) h
+  have h' := congrArg (fun s : StarSubalgebra ℂ C(CantorBoundary, ℂ) =>
+      (s : Set C(CantorBoundary, ℂ))) h
   change closure (↑cylinderContinuousStarSubalgebra) =
-      (Set.univ : Set C((ℕ → Bool), ℂ)) at h'
+      (Set.univ : Set C(CantorBoundary, ℂ)) at h'
   simpa [cylinderContinuousStarSubalgebra] using h'
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology

@@ -6,7 +6,7 @@ import InfoGeometry.Topology.DiscreteHodgeStabilizer
 /-!
 # Bayesian Markov / Discrete Dirac--Hodge Bridge
 
-Theorem-safe adapter between the Bayesian projection/Markov definitions and the
+Theorem-safe adapter between the Bayesian projection/Markov socket and the
 finite discrete Hodge stabilizer layer.
 
 No analytic convergence, CP construction, graph limit, or continuum spacetime
@@ -124,7 +124,7 @@ abbrev ExactDetailedBalanceSector
 Coexact Hodge current sector.
 
 Entropy production is derived below as the native squared Hodge norm; it is
-not supplied as an independent scalar together with an equality property.
+not supplied as an independent scalar together with an equality certificate.
 -/
 abbrev CoexactEntropySector
     {n1 n2 : ℕ}

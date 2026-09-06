@@ -41,11 +41,3 @@ theorem montgomery_at_integer (k : ℤ) (hk : k ≠ 0) :
   have h_sin : Real.sin (Real.pi * (k : ℝ)) = 0 := by
     rw [mul_comm, Real.sin_int_mul_pi]
   rw [h_sin, zero_div, sq (0 : ℝ), mul_zero, sub_zero]
-
-theorem grand_montgomery_pair_correlation_synthesis (k : ℤ) (hk : k ≠ 0) (s : ℝ) :
-    (montgomeryPairCorrelation 0 = 0) ∧
-    (montgomeryPairCorrelation (-s) = montgomeryPairCorrelation s) ∧
-    (montgomeryPairCorrelation (k : ℝ) = 1) :=
-  ⟨montgomery_at_zero,
-   montgomery_even s,
-   montgomery_at_integer k hk⟩

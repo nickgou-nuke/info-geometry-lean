@@ -42,6 +42,7 @@ theorem scalarItakuraSaito_positiveScale_common_shift
       scalarItakuraSaito (positiveScale u / positiveScale v) := by
   exact scalarItakuraSaito_exp_common_shift u v c
 
+/-
 theorem centeredPart_positiveScale_shift
     {ι : Type*} [Fintype ι] [Nonempty ι]
     (θ : ι → ℝ) (c : ℝ) :
@@ -53,6 +54,8 @@ theorem prob_positiveScale_shift
     (θ : ι → ℝ) (c : ℝ) (i : ι) :
     prob (fun j => θ j + c) i = prob θ i := by
   exact prob_add_const θ c i
+
+-/
 
 end
 end InfoGeometry.Geometry.Statistical.ScaleLogItakuraSaitoBridge

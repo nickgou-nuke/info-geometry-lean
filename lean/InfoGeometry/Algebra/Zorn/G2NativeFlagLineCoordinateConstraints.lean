@@ -406,10 +406,10 @@ theorem nativeFlagStabilizer_basis8_zero_a
   have ha : (g.1 one).a = (one : SplitOctF2).a := by rw [hone]
   have hone_a : (one : SplitOctF2).a = true := rfl
   rw [hsplit] at ha
-  change (add2 (g.1 (basis8 0)).a (g.1 (basis8 1)).a) = true at ha
-  rw [nativeFlagStabilizer_basis8_one_a hg] at ha
-  change (add2 (g.1 (basis8 0)).a false) = true at ha
-  simpa [add2] using ha
+  have ha' : add2 (g.1 (basis8 0)).a (g.1 (basis8 1)).a = true := by
+    simpa [add, basis8, add2, hone_a] using ha
+  rw [nativeFlagStabilizer_basis8_one_a hg] at ha'
+  simpa [add2] using ha'
 
 theorem nativeFlagStabilizer_basis8_two_x0
     {g : SplitOctF2Aut}

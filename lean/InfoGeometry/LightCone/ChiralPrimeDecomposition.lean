@@ -27,9 +27,3 @@ theorem scaling_generator_decomposition (d_chi d_theta : ℝ) :
     chiralLeftGen d_chi d_theta + chiralRightGen d_chi d_theta = d_chi := by
   unfold chiralLeftGen chiralRightGen
   ring
-
-theorem grand_chiral_prime_decomposition_synthesis (d_chi d_theta : ℝ) :
-    (chiralLeftGen d_chi d_theta - chiralRightGen d_chi d_theta = d_theta) ∧
-    (chiralLeftGen d_chi d_theta + chiralRightGen d_chi d_theta = d_chi) :=
-  ⟨angular_generator_decomposition d_chi d_theta,
-   scaling_generator_decomposition d_chi d_theta⟩

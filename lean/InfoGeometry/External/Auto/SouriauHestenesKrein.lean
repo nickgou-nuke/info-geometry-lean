@@ -2,8 +2,6 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
-namespace SouriauHestenesKrein
-
 /-!
 # Souriau Beta Vectors, Hestenes Bivectors, and Krein Determinant Sectors
 
@@ -130,6 +128,26 @@ theorem gradedSupertracePole_iff_denominator_zero (z : ℂ) :
     gradedSupertracePole z ↔ z = 0 := by
   rfl
 
-end
+/-- Consolidated Souriau-Hestenes-Krein finite matrix package. -/
+theorem souriau_hestenes_krein_synthesis :
+    ellipticUnit * ellipticUnit = -1 ∧
+    hyperbolicUnit * hyperbolicUnit = 1 ∧
+    parabolicUnit * parabolicUnit = 0 ∧
+    (∀ β τ, (ellipticTemperatureOperator β τ).det = β ^ 2 + τ ^ 2) ∧
+    (∀ β τ, (hyperbolicTemperatureOperator β τ).det = β ^ 2 - τ ^ 2) ∧
+    (∀ β τ, (parabolicTemperatureOperator β τ).det = β ^ 2) ∧
+    (∀ q, q ^ 3 = q →
+      sectorTripotentOperator q * sectorTripotentOperator q *
+        sectorTripotentOperator q = sectorTripotentOperator q) ∧
+    determinantSector (sectorTripotentOperator 1).det = DeterminantSector.elliptic ∧
+    determinantSector (sectorTripotentOperator 0).det = DeterminantSector.parabolic ∧
+    determinantSector (sectorTripotentOperator (-1)).det = DeterminantSector.hyperbolic ∧
+    (∀ z : ℂ, gradedSupertracePole z ↔ z = 0) := by
+  exact ⟨ellipticUnit_sq, hyperbolicUnit_sq, parabolicUnit_sq,
+    det_ellipticTemperatureOperator, det_hyperbolicTemperatureOperator,
+    det_parabolicTemperatureOperator,
+    fun q hq => sectorTripotentOperator_cube hq,
+    sectorTripotent_positive, sectorTripotent_zero, sectorTripotent_negative,
+    gradedSupertracePole_iff_denominator_zero⟩
 
-end SouriauHestenesKrein
+end noncomputable section

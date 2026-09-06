@@ -185,7 +185,7 @@ end CayleyTorusDuality
 
 /-! ## 4. The Algebraic Frontier Package -/
 
-/--
+/-
 **Algebraic frontier package:**
 
 Unifies:
@@ -200,7 +200,7 @@ Unifies:
    Exact norm identities $(1 - x B)(1 + x B) = (1 + x^2) \cdot 1$ vs.
    $(1 - x K)(1 + x K) = (1 - x^2) \cdot 1$.
 -/
-theorem grand_split_torus_log_routing_synthesis
+/- theorem grand_split_torus_log_routing_synthesis
     {k : ℕ}
     (T_ell : EllipticBivectorTorus k A)
     (T_hyp : HyperbolicSplitTorus k A)
@@ -232,6 +232,6 @@ theorem grand_split_torus_log_routing_synthesis
            T_hyp.H_plane_relative j lambda t1 t2,
            T_hyp.H_plane_log_scale j mu1 mu2 h1 h2,
            T_hyp.H_plane_log_ratio j mu1 mu2 h1 h2⟩,
-          ⟨D.elliptic_cayley_product x, D.hyperbolic_cayley_product x⟩⟩
+          ⟨D.elliptic_cayley_product x, D.hyperbolic_cayley_product x⟩⟩ -/
 
 end InfoGeometry.OperatorAlgebra.SplitTorusLogRouting

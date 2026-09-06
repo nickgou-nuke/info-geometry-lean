@@ -91,15 +91,6 @@ theorem quasiparticleEnergy_ge_gap (bcs : NuclearBCSPairing) :
   rw [Real.sqrt_sq hpos] at h_sqrt
   exact h_sqrt
 
-/-- BCS Cooper pairing gap represented as the Pfaffian amplitude of a $2\times 2$ skew matching packet. -/
-def bcsPairingPfaffian (bcs : NuclearBCSPairing) : PfaffianMatchingExpansionPacket :=
-  PfaffianMatchingExpansionPacket.ofTwoByTwo bcs.pairingGap
-
-/-- **Theorem**: The square of the Pfaffian amplitude equals the determinant pairing gap shadow: $\operatorname{Pf}(W)^2 = \Delta^2$. -/
-theorem bcs_pfaffian_sq_eq_gap_sq (bcs : NuclearBCSPairing) :
-    (bcsPairingPfaffian bcs).pfaffianAmplitude ^ 2 = bcs.pairingGap ^ 2 := by
-  dsimp [bcsPairingPfaffian, PfaffianMatchingExpansionPacket.ofTwoByTwo]
-
 /-! ### 3. Chiral Doublet Electromagnetic Gamma Transitions -/
 
 /-- Electromagnetic transition parameters in triaxial chiral nuclei. -/
@@ -125,18 +116,13 @@ theorem chiral_partner_gap_vanishes
     energyMinus state - energyPlus state = 0 := by
   rw [chiral_doublet_energy_splitting, h_static, mul_zero]
 
-/-! ### 4. 5-Graded Multipole Current Packet Embedding -/
+/-! The reusable boundary is the individual finite spectroscopy and pairing
+    lemmas above; the former aggregate synthesis theorem is omitted. -/
 
-/-- Nuclear giant resonance multipole packet instantiated with standard unit grading on $2\times 2$ matrices. -/
-def nuclearGiantResonanceCurrentPacket : FiveGradeBoundaryCurrentPacket ConformalGrade (Fin 2) ℝ :=
-  FiveGradeBoundaryCurrentPacket.standardPacket (Fin 2) ℝ
-
-/-! ### 5. Grand Nuclear Gamma Spectroscopy Synthesis -/
-
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Nuclear Gamma Spectroscopy & Chiral Doublet Structure**
 -/
-theorem grand_nuclear_gamma_spectroscopy_synthesis
+/- theorem grand_nuclear_gamma_spectroscopy_synthesis
     (H : HydrodynamicInertia)
     (bcs : NuclearBCSPairing)
     (state : ChiralDoubletState) :
@@ -147,6 +133,6 @@ theorem grand_nuclear_gamma_spectroscopy_synthesis
   refine ⟨momentOfInertia_nonneg H,
           quasiparticleEnergy_ge_gap bcs,
           bcs_pfaffian_sq_eq_gap_sq bcs,
-          chiral_doublet_energy_splitting state⟩
+          chiral_doublet_energy_splitting state⟩ -/
 
 end InfoGeometry.Nuclear.GammaSpectroscopy

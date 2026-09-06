@@ -74,4 +74,21 @@ theorem spinorOuter_det_zero (a b : ℂ) : (spinorOuter a b).det = 0 := by
   simp [spinorOuter, Matrix.det_fin_two]
   ring
 
+/-- Main synthesis theorem. -/
+theorem spacetime_is_spin_synthesis :
+    (∀ t x y z : ℂ, tr2 (Xst t x y z) = 2 * t) ∧
+    (∀ t x y z : ℂ, (Xst t x y z).det = t^2 - x^2 - y^2 - z^2) ∧
+    (∀ lam t x y z : ℂ,
+      ((lam • (1 : M2C)) - Xst t x y z).det = (lam - t)^2 - (x^2 + y^2 + z^2)) ∧
+    (∀ L X : M2C, (L * X * Lᵀ).det = L.det^2 * X.det) ∧
+    (∀ a b : ℂ, (spinorOuter a b).det = 0) := by
+  exact ⟨Xst_trace, Xst_det, Xst_char_det, det_congruence, spinorOuter_det_zero⟩
+
+#check Xst_trace
+#check Xst_det
+#check Xst_char_det
+#check det_congruence
+#check spinorOuter_det_zero
+#check spacetime_is_spin_synthesis
+
 end SpacetimeIsSpin

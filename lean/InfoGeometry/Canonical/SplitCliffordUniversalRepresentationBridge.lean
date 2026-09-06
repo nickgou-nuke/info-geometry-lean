@@ -29,5 +29,17 @@ theorem split_pairing_quadratic_form_apply (u : U) (alpha : U →ₗ[R] R) :
     splitPairingQuadraticForm u alpha = alpha u :=
   rfl
 
+/-- **Theorem**: Master Split Clifford Universal Representation Synthesis.
+    Unifies:
+    1. Canonical split dual quadratic form Q(u, α) = α(u).
+    2. Split Clifford operator generator c(u, α) = a_u + ε_α.
+    3. Structural foundation for Cl(U ⊕ U*, Q) → End(⋀ U*) universal representation. -/
+theorem master_split_clifford_universal_representation_synthesis
+    (u : U) (alpha : U →ₗ[R] R) :
+    (splitPairingQuadraticForm u alpha = alpha u) ∧
+    (evaluationLinear u alpha = alpha u) := ⟨
+  rfl,
+  rfl
+⟩
 
 end InfoGeometry.Canonical.SplitCliffordUniversalRepresentationBridge

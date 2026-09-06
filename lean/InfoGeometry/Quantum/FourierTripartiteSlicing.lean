@@ -46,11 +46,3 @@ theorem orthogonal_sym_anti_of_X5_eq_X (X : R) (h : X^5 = X) :
       _ = X * X^3 := by rw [h]
       _ = X^4 := by ring
   rw [orthogonal_sym_anti, h8, sub_self, mul_zero]
-
-theorem grand_fourier_tripartite_synthesis (X : R) (h : X^5 = X) :
-    (P_vac X + P_sym X + P_anti X = 1) ∧
-    (P_sym X * P_anti X = half * half * (X^8 - X^4)) ∧
-    (P_sym X * P_anti X = 0) :=
-  ⟨completeness X,
-   orthogonal_sym_anti X,
-   orthogonal_sym_anti_of_X5_eq_X X h⟩

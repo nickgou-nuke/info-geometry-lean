@@ -94,28 +94,4 @@ theorem hodge_star_legendre_conjugation :
     modularJ * clockK * modularJ = -clockK := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [clockK, modularJ, spectralEpsilon, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-! ### 4. Grand Rational Hestenes-Krein Synthesis -/
-
-/--
-🏆 **GRAND SYNTHESIS THEOREM: Pure Rational Skeleton & Real Doubled Hestenes-Krein Discrete Carrier**
--/
-theorem grand_rational_hestenes_krein_synthesis
-    {nV nE nF : ℕ} (tc : RationalTwoComplex nV nE nF) :
-    -- 1. Rational boundary nilpotence
-    (tc.b2 * tc.b1 = 0) ∧
-    -- 2. Dirac square equals block Laplacian over ℚ
-    (rationalDiracMatrix tc.b1 * rationalDiracMatrix tc.b1 =
-      Matrix.fromBlocks (tc.b1 * tc.b1.transpose) 0 0 (tc.b1.transpose * tc.b1)) ∧
-    -- 3. Modular J and Epsilon involutions
-    (modularJ * modularJ = 1 ∧ spectralEpsilon * spectralEpsilon = 1) ∧
-    -- 4. Emergent complex structure K² = -I
-    (clockK * clockK = -1) ∧
-    -- 5. Hodge star Legendre transform J K J = -K
-    (modularJ * clockK * modularJ = -clockK) := by
-  refine ⟨rational_boundary_squared_zero tc,
-          rational_dirac_square_eq_hodge tc.b1,
-          modular_j_spectral_epsilon_involutions,
-          clock_k_squared_neg_one,
-          hodge_star_legendre_conjugation⟩
-
 end InfoGeometry.Canonical.RationalHestenesKrein

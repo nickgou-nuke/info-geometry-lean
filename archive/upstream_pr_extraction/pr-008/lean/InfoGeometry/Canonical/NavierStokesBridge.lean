@@ -1,0 +1,365 @@
+import InfoGeometry.Canonical.Singular
+import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.Thermal
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.ProdL2
+import Mathlib.LinearAlgebra.Trace
+import Mathlib.Tactic.NormNum
+
+/-!
+# Navier-Stokes Bridge
+
+Operator-level bridge from singular inverse anomalies to circulation observables.
+
+The module models a linearized horizon fluid state on a finite-dimensional
+real carrier and connects vorticity to the commutator anomaly
+`EinsteinAnomaly` built from Moore-Penrose and Drazin projectors.
+-/
+
+namespace InfoGeometry.Canonical
+
+open scoped InnerProductSpace
+
+/-- Linearized velocity field (Jacobian-level) on a real Hilbert carrier. -/
+abbrev VelocityField
+    (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
+  E →L[ℝ] E
+
+/--
+A linearized incompressible fluid state.
+
+Incompressibility is modeled via the volume form/density conservation (Madelung-style).
+For Type III contexts, we use the Radon-Nikodym derivative / modular density `ρ`.
+-/
+structure FluidState
+    (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E] where
+  u : VelocityField E
+  ρ : ℝ
+  p : ℝ
+  -- Incompressibility: the modular density is stationary under the flow
+  density_stationary : ρ > 0
+
+/-- Vorticity operator: skew-adjoint part of a velocity Jacobian. -/
+noncomputable def vorticity
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (u : VelocityField E) : VelocityField E :=
+  (2 : ℝ)⁻¹ • (u - ContinuousLinearMap.adjoint u)
+
+/--
+Modular-level circulation:
+Modeled via the negative logarithmic Radon-Nikodym derivative (the modular Hamiltonian).
+This avoids the 'trace fail' for Type III algebras by using the weight/state `ω`.
+-/
+noncomputable def modularCirculation
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E]
+    (K : AlgebraEnd E) (Sigma : AlgebraEnd E) (ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
+  -- Pair the modular Hamiltonian K with the surface operator Sigma under the weight ω
+  ω (Sigma.comp K)
+
+section RealFluid
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+/--
+Anomaly-to-Vorticity Bridge for Type III contexts.
+The anomaly is mapped to a velocity Jacobian, and 'incompressibility' is verified
+via the positivity and stationarity of the modular density (Shannon/Madelung entropy).
+-/
+theorem anomaly_as_fluid_state_with_density
+    (A B_mp B_dr : VelocityField E)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (ρ_val : ℝ) (h_pos : ρ_val > 0) :
+    ∃ state : FluidState E,
+      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr ∧ state.ρ = ρ_val := by
+  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+  let state : FluidState E :=
+    { u := ε
+      ρ := ρ_val
+      p := 0
+      density_stationary := h_pos }
+  exact ⟨state, rfl, rfl⟩
+
+/--
+Modular response theorem:
+The circulation pairing `ω(Sigma ∘ K)` is the linear response
+of the modular flow to the geometric deformation `Sigma`.
+-/
+theorem modular_circulation_response
+    (K Sigma : AlgebraEnd E)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    modularCirculation K Sigma ω = ω (Sigma.comp K) :=
+  rfl
+
+end RealFluid
+
+section RealKreinFluid
+
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+omit [FiniteDimensional ℝ E] in
+/-- The vorticity of a skew-adjoint velocity field equals the field itself. -/
+lemma vorticity_eq_self_of_skew
+    {u : VelocityField E}
+    (hSkew : ContinuousLinearMap.adjoint u = -u) :
+    vorticity u = u := by
+  unfold vorticity
+  rw [hSkew]
+  calc
+    (2 : ℝ)⁻¹ • (u - -u) = (2 : ℝ)⁻¹ • (u + u) := by simp
+    _ = (2 : ℝ)⁻¹ • ((2 : ℝ) • u) := by simp [two_smul]
+    _ = ((2 : ℝ)⁻¹ * (2 : ℝ)) • u := by rw [smul_smul]
+    _ = u := by norm_num
+
+/--
+Operator-level membrane bridge:
+The Einstein Anomaly [P_D, P_MP], being a commutator, is naturally trace-free.
+Therefore, it can directly serve as the velocity Jacobian of an incompressible fluid state.
+-/
+theorem anomaly_as_fluid_state
+    (A B_mp B_dr : VelocityField E)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k) :
+    ∃ state : FluidState E,
+      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr := by
+  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+  let state : FluidState E :=
+    { u := ε
+      ρ := 1
+      p := 0
+      -- Incompressibility: the modular density is stationary under the flow
+      density_stationary := by norm_num }
+  exact ⟨state, rfl⟩
+
+end RealKreinFluid
+
+section MadelungBridge
+
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+/-- Doubled real carrier used as the Arnold/Majorana context-adaptive state space. -/
+abbrev ArnoldMajoranaCarrier (E : Type _) := DoubledSpace E
+
+/-- Modular Hamiltonian as an operator on the doubled carrier. -/
+abbrev modularHamiltonian (K : AlgebraEnd E) : AlgebraEnd E := K
+
+/--
+Second-order regularizer: composition square of the modular Hamiltonian.
+-/
+noncomputable def freeEnergyHessianRegularizer
+    (K : AlgebraEnd E) : AlgebraEnd E :=
+  K.comp K
+
+/-- Grand-canonical ensemble scalar average of a modular observable. -/
+noncomputable def grandCanonicalEnsembleAverage
+    (ω : AlgebraEnd E →L[ℝ] ℝ) (K : AlgebraEnd E) : ℝ :=
+  ω K
+
+/-- Linearized modular flow converted to a velocity field. -/
+def modularVelocity
+    (β : ℝ) (K : AlgebraEnd E) :
+    AlgebraEnd E :=
+  β • modularHamiltonian (E := E) K
+
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
+/--
+Differential identity at `β = 0`:
+the modular-velocity linear response is the modular Hamiltonian.
+-/
+theorem hasDerivAt_modularVelocity_zero
+    (K : AlgebraEnd E) :
+    HasDerivAt
+      (fun β : ℝ => modularVelocity (E := E) β K)
+      (modularHamiltonian (E := E) K)
+      0 := by
+  simpa [modularVelocity, modularHamiltonian] using
+    ((hasDerivAt_id (x := (0 : ℝ))).smul_const (modularHamiltonian (E := E) K))
+
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
+/-- Derivative form of `hasDerivAt_modularVelocity_zero`. -/
+theorem deriv_modularVelocity_zero
+    (K : AlgebraEnd E) :
+    deriv (fun β : ℝ => modularVelocity (E := E) β K) 0 =
+      modularHamiltonian (E := E) K := by
+  have hDerivAt :
+      HasDerivAt
+        (fun β : ℝ => modularVelocity (E := E) β K)
+        (modularHamiltonian (E := E) K)
+        (0 : ℝ) :=
+    hasDerivAt_modularVelocity_zero (E := E) K
+  exact HasDerivAt.deriv
+    (𝕜 := ℝ)
+    (f := fun β : ℝ => modularVelocity (E := E) β K)
+    (x := (0 : ℝ))
+    (f' := modularHamiltonian (E := E) K)
+    hDerivAt
+
+/-- Linear embedding of the base carrier into the doubled carrier (`x ↦ (x,0)`). -/
+noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
+  toLinearMap :=
+    { toFun := fun x => (x, 0)
+      map_add' := by intro x y; simp
+      map_smul' := by intro a x; simp }
+  cont := by continuity
+
+/-- First-component projection from doubled carrier to the base carrier. -/
+noncomputable def projBase : ArnoldMajoranaCarrier E →L[ℝ] E where
+  toLinearMap :=
+    { toFun := fun v => v.1
+      map_add' := by intro v w; simp
+      map_smul' := by intro a v; simp }
+  cont := by continuity
+
+/-- Collapses a doubled-carrier modular velocity into a base-carrier velocity field. -/
+noncomputable def collapseToBaseVelocity
+    (M : AlgebraEnd E) : VelocityField E :=
+  (projBase (E := E)).comp (M.comp (embedBase (E := E)))
+
+/-- Thermodynamic/probabilistic smoothing criterion: divergence-free collapsed modular velocity. -/
+def IsThermodynamicallySmoothed
+    (β : ℝ) (K : AlgebraEnd E) : Prop :=
+  LinearMap.trace ℝ E
+    (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap = 0
+
+/-- Madelung density from the doubled real thermal vacuum amplitude. -/
+noncomputable def madelungDensity
+    {K : AlgebraEnd E}
+    (vac : ThermalVacuum (E := E) K) : ℝ :=
+  ‖vac.Omega.1‖ ^ (2 : ℕ) + ‖vac.Omega.2‖ ^ (2 : ℕ)
+
+set_option linter.unusedSectionVars false in
+/-- The Madelung density is strictly positive for nondegenerate thermal vacua. -/
+lemma madelungDensity_pos
+    {K : AlgebraEnd E}
+    (vac : ThermalVacuum (E := E) K) :
+    0 < madelungDensity (E := E) vac := by
+  rcases vac with ⟨⟨x, y⟩, _, _, hxy⟩
+  dsimp [madelungDensity]
+  by_cases hx : x = 0
+  · have hy : y ≠ 0 := by
+      intro hy
+      exact hxy (by simp [hx, hy])
+    have hy_pos : 0 < ‖y‖ ^ (2 : ℕ) := by
+      exact pow_pos (norm_pos_iff.mpr hy) 2
+    simpa [hx] using
+      add_pos_of_nonneg_of_pos (pow_nonneg (norm_nonneg x) 2) hy_pos
+  · have hx_pos : 0 < ‖x‖ ^ (2 : ℕ) := by
+      exact pow_pos (norm_pos_iff.mpr hx) 2
+    simpa using
+      add_pos_of_pos_of_nonneg hx_pos (pow_nonneg (norm_nonneg y) 2)
+
+/-- Madelung phase from ensemble averaging of the modular Hamiltonian. -/
+noncomputable def madelungPhase
+    (ω : AlgebraEnd E →L[ℝ] ℝ) (K : AlgebraEnd E) : ℝ :=
+  grandCanonicalEnsembleAverage (E := E) ω K
+
+/--
+Madelung functor (linearized):
+thermal-vacuum modular data is promoted to a divergence-free fluid state.
+-/
+noncomputable def madelungFluidState
+    (β : ℝ)
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (_hSmooth : IsThermodynamicallySmoothed β K) :
+    FluidState E :=
+  { u := collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)
+    ρ := madelungDensity (E := E) vac
+    p := madelungPhase (E := E) ω K
+    density_stationary := madelungDensity_pos (E := E) vac }
+
+@[simp] theorem madelungFluidState_velocity
+    (β : ℝ)
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K) :
+    (madelungFluidState β K vac ω hSmooth).u
+      = collapseToBaseVelocity (E := E) (modularVelocity β K) := rfl
+
+end MadelungBridge
+
+
+section ChiralFlowBridge
+
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+/-!
+### Krein-Modular Basis for Chiral Flow
+
+The 'two types' of chiral charges are formally identified with the eigenspaces
+of the Krein spectral involution `ε`, or equivalently, the sectors swapped by
+the modular conjugation `J`.
+-/
+
+/--
+Krein spectral projectors: $P_+ = (I + ε)/2$ and $P_- = (I - ε)/2$.
+These isolate the two types of chiral sectors.
+-/
+noncomputable def kreinPlusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectralEpsilon)
+
+noncomputable def kreinMinusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectralEpsilon)
+
+/--
+Two-type Chiral Charges:
+Representing the 'plus' and 'minus' sectors of the modular doubling.
+Linked to the Krein projectors $P_+$ and $P_-$.
+-/
+structure ChiralCharges where
+  plus : ℝ
+  minus : ℝ
+
+/-- Net Chiral Charge: the imbalance (chirality) between the two sectors. -/
+def netChiralCharge (c : ChiralCharges) : ℝ := c.plus - c.minus
+
+/--
+Chiral Flux:
+Current generated by the Einstein Anomaly acting as a transition operator.
+For Type III factors, this is the modular response (weight pairing) to the anomaly.
+The flux is the mechanism that 'charges' the two sectors by shifting population across $J$.
+-/
+noncomputable def chiralFlux
+    (χ : VelocityField E) (ω : VelocityField E →L[ℝ] ℝ) : ℝ :=
+  -- Expectation value of the anomaly under the state/weight ω.
+  ω χ
+
+omit [FiniteDimensional ℝ E] in
+/--
+Theorem: Anomaly sources Chiral Flow.
+The commutator anomaly χ [P_D, P_MP] sources the currents between the two charge sectors.
+This formally encodes the hunch that circulation is a flow of chiral charges,
+driven by the mismatch between geometric (Penrose) and spectral (Drazin) data.
+-/
+theorem chiral_anomaly_sources_flow
+    (A B_mp B_dr : VelocityField E) (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (ω : VelocityField E →L[ℝ] ℝ) :
+    let χ := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+    chiralFlux χ ω = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) :=
+  rfl
+
+end ChiralFlowBridge
+
+end InfoGeometry.Canonical

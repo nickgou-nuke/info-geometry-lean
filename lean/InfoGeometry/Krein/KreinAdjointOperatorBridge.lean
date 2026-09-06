@@ -47,7 +47,7 @@ theorem kreinSelfAdjointOperator_eq
     (hsym : ∀ u v, kreinMetric X u (C v) = kreinMetric X (C u) v) :
     kreinAdjointOperator X C = C := by
   ext v
-  apply X.flat_injective
+  apply X.pairing_nondegenerate
   ext u
   change X.kreinPairing (kreinAdjointOperator X C v) u =
     X.kreinPairing (C v) u

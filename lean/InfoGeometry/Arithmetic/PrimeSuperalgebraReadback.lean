@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 
@@ -31,8 +31,8 @@ namespace InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
-open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+open PrimeBitWittenIndex
+open MobiusDirichletInverseBridge
 
 /-! ## 1. Fermionic prime-bit supersector -/
 
@@ -137,6 +137,11 @@ def thermalPrimeFactor
     (p : ℕ) : ℂ :=
   (Real.exp (-β * Real.log (p : ℝ)) : ℂ)
 
+lemma thermalPrimeFactor_ne_zero (β : ℝ) (p : ℕ) :
+    thermalPrimeFactor β p ≠ 0 := by
+  unfold thermalPrimeFactor
+  exact_mod_cast (Real.exp_ne_zero _)
+
 /-- Finite thermal supertrace over a prime register. -/
 def finiteThermalSupertrace
     (P : FermionicPrimeRegister)
@@ -163,4 +168,4 @@ theorem finiteThermalSupertrace_eq_inverseEulerProduct
 -- Finite supertrace equals finite inverse Euler product.
 -- Thermal finite cutoffs.
 
-end PrimeSuperalgebraReadback
+end InfoGeometry.Arithmetic.PrimeSuperalgebraReadback

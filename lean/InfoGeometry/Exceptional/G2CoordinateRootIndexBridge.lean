@@ -6,6 +6,7 @@ import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import InfoGeometry.Lie.CanonicalZornG2ToMatrixBridge
 import InfoGeometry.Lie.CanonicalZornG2RootStarAction
+import InfoGeometry.Exceptional.G2ConcreteCoordinateCalibration
 
 /-!
 # Carrier bridge from coordinate roots to the native Lie root index
@@ -42,6 +43,20 @@ def coordinateRootToNativeRootIndex :
 def coordinateRootToLieRootIndex :
     CoordinateRoot ≃ RootIndex :=
   coordinateRootToNativeRootIndex.trans nativeRootIndexEquiv
+
+/-! The finite-root and concrete-coordinate owners use different cyclic
+    labels.  Their canonical comparison is therefore an equivalence of the
+    root carrier, not an equality of the two label maps. -/
+
+noncomputable def finiteToConcreteRootCalibration : G2Root ≃ G2Root :=
+  finiteRootCoordinateEquiv.trans
+    InfoGeometry.Exceptional.G2ConcreteCoordinateCalibration.concreteRootCoordinateEquiv.symm
+
+theorem finiteToConcreteRootCalibration_transport :
+    finiteToConcreteRootCalibration.trans
+        InfoGeometry.Exceptional.G2ConcreteCoordinateCalibration.concreteRootCoordinateEquiv =
+      finiteRootCoordinateEquiv := by
+  simp [finiteToConcreteRootCalibration, Equiv.trans_assoc]
 
 /-! Canonical finite cyclotomic carrier for the coordinate roots.  This is
     only an equivalence of carriers; action equivariance is proved separately. -/
@@ -216,6 +231,17 @@ theorem coordinateRootActionOnNative_apply
         (finiteRootCoordinateEquiv.symm x))))
   rw [finiteRootCoordinateEquiv.symm_apply_apply]
 
+theorem coordinateRootActionOnNative_reflection_readback
+    (x : CoordinateRoot) :
+    coordinateRootActionOnNative (0, true)
+        (coordinateRootToNativeRootIndex x) =
+      coordinateRootToNativeRootIndex
+        (finiteRootCoordinateEquiv
+          (InfoGeometry.Algebra.Zorn.G2TwoRootSystem.sAction
+            (finiteRootCoordinateEquiv.symm x))) := by
+  simpa [InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction]
+    using coordinateRootActionOnNative_apply (0, true) x
+
 /- theorem coordinateRootActionOnNative_reflection_apply (x : CoordinateRoot) :
     coordinateRootActionOnNative (0, true)
         (coordinateRootToNativeRootIndex x) =
@@ -233,6 +259,17 @@ noncomputable def lieRootAction
     RootIndex ≃ RootIndex :=
     nativeRootIndexEquiv.symm.trans
     ((nativeNonzeroIndexActionEquiv p).trans nativeRootIndexEquiv)
+
+theorem coordinateRootActionOnNative_lieRootIndex
+    (p : InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification.WeylG2)
+    (x : CoordinateRoot) :
+    nativeRootIndexEquiv
+        (coordinateRootActionOnNative p (coordinateRootToNativeRootIndex x)) =
+      lieRootAction p (coordinateRootToLieRootIndex x) := by
+  simp [coordinateRootActionOnNative, lieRootAction,
+    nativeNonzeroIndexActionEquiv, coordinateRootToLieRootIndex,
+    coordinateRootToNativeRootIndex,
+    nonzeroIndexAction_apply_root]
 
 noncomputable def rootIndexToG2Root : RootIndex ≃
     InfoGeometry.Algebra.Zorn.G2TwoRootSystem.G2Root :=

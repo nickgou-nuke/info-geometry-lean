@@ -22,7 +22,7 @@ automorphisms.
 -/
 noncomputable def linearEquivExactBridge :
     ExactMultiplicativeToAdditiveBridge (V ≃ₗ[ℝ] V) ℝˣ ℝ where
-  toExactAbelianizingBridge := VolumeHom
+  toExactAbelianizingBridge := ⟨VolumeHom⟩
   toAdditiveLinearization := logAbsUnitsLinearization
 
 /-- High-level logarithmic generator induced by determinant/volume change. -/

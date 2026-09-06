@@ -78,4 +78,33 @@ theorem ncDerivative_leibniz (Q a b : R) :
 
 end Derivation
 
+/-! ## 3. Categorical/non-invertible symmetry synthesis -/
+
+/-- Synthesis theorem for non-invertible Penrose categorical symmetry. -/
+theorem noninvertible_penrose_categorical_symmetry_synthesis :
+    IsTripotent Tzero ∧
+    Pzero * Pzero = Pzero ∧
+    Tzero * Pzero = Tzero ∧
+    Pzero * Tzero = Tzero ∧
+    Tzero.mulVec zeroMode = 0 ∧
+    (¬ ∃ L : Matrix (Fin 3) (Fin 3) ℤ, L * Tzero = 1) := by
+  constructor
+  · exact Tzero_tripotent
+  constructor
+  · exact Pzero_idempotent
+  constructor
+  · exact Tzero_mul_Pzero
+  constructor
+  · exact Pzero_mul_Tzero
+  constructor
+  · exact Tzero_annihilates_zeroMode
+  · exact Tzero_no_left_inverse
+
+#check Tzero_tripotent
+#check Pzero_idempotent
+#check Tzero_annihilates_zeroMode
+#check Tzero_no_left_inverse
+#check ncDerivative_leibniz
+#check noninvertible_penrose_categorical_symmetry_synthesis
+
 end NonInvertiblePenroseCategoricalSymmetry

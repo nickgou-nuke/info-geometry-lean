@@ -1,0 +1,42 @@
+import Mathlib.Data.Rat.Defs
+import Mathlib.Data.Rat.Lemmas
+import Mathlib.Tactic.NormNum
+import InfoGeometry.Physics.IsospinMirrorDynamics
+
+namespace InfoGeometry.Physics
+
+/-- The A=73 mirror pair (Sr-73 and Br-73). -/
+def Sr73 : Nucleus := { Z := 38, N := 35 }
+def Br73 : Nucleus := { Z := 35, N := 38 }
+
+/-- The A=73 MirrorPair instance for Sr-73 and Br-73. -/
+def A73Pair : MirrorPair where
+  nuc1 := Sr73
+  nuc2 := Br73
+  mirror_cond_Z := by rfl
+  mirror_cond_N := by rfl
+
+/-- Nuclear state properties including spin. -/
+structure A73State where
+  energy : ℝ
+  spin : ℚ
+  parity : ℤ
+
+/-- The ground state of a given nucleus. -/
+noncomputable def ground_state (nuc : Nucleus) : A73State :=
+  { energy := 0.0,
+    spin := if nuc.Z = 38 then 5 / 2 else 1 / 2,
+    parity := 1 }
+
+/-- Structure representing the A=73 Mirror Symmetry Violation.
+    The ground state spin of Sr-73 is 5/2 while the ground state spin of Br-73 is 1/2. -/
+structure A73MirrorSymmetryViolation where
+  (violation : (ground_state Sr73).spin = 5 / 2 ∧ (ground_state Br73).spin = 1 / 2)
+
+/-- Formal proof that the ground state spins of Sr-73 and Br-73 are not equal. -/
+theorem sr73_br73_spin_neq (m : A73MirrorSymmetryViolation) : (ground_state Sr73).spin ≠ (ground_state Br73).spin := by
+  have h := m.violation
+  rw [h.1, h.2]
+  norm_num
+
+end InfoGeometry.Physics

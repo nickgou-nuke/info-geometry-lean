@@ -117,11 +117,11 @@ theorem pentagon_appendix_statement
 /-- The Appendix A five-flip block as `n = 1` Delaunay flip contexts. -/
 noncomputable def appendixPentagonContexts
     (zi zj zk zl zm : ℚ) : List (DelaunayFlipContext 1) :=
-  [pentagonGamma5 zi zj zk zl zm,
-   pentagonGamma4 zi zj zk zl zm,
-   pentagonGamma3 zi zj zk zl zm,
-   pentagonGamma2 zi zj zk zl zm,
-   pentagonGamma1 zi zj zk zl zm]
+  [{ matrix := pentagonGamma5 zi zj zk zl zm },
+   { matrix := pentagonGamma4 zi zj zk zl zm },
+   { matrix := pentagonGamma3 zi zj zk zl zm },
+   { matrix := pentagonGamma2 zi zj zk zl zm },
+   { matrix := pentagonGamma1 zi zj zk zl zm }]
 
 /--
 The Appendix A pentagon is a concrete witnessed five-flip deletion move for the
@@ -136,17 +136,17 @@ theorem rohozhkin_invariant_under_appendix_pentagon_move
     (h_jl : zj - zl ≠ 0)
     (w₁ w₂ : List (DelaunayFlipContext 1)) :
     rohozhkinMatrix
-        (w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1) =
       rohozhkinMatrix
-        (w₁ ++ w₂ : DelaunayFlipWord 1) := by
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) := by
   dsimp [appendixPentagonContexts]
   exact rohozhkin_invariant_under_pentagon_move w₁ w₂
-    (pentagonGamma5 zi zj zk zl zm)
-    (pentagonGamma4 zi zj zk zl zm)
-    (pentagonGamma3 zi zj zk zl zm)
-    (pentagonGamma2 zi zj zk zl zm)
-    (pentagonGamma1 zi zj zk zl zm)
+    { matrix := pentagonGamma5 zi zj zk zl zm }
+    { matrix := pentagonGamma4 zi zj zk zl zm }
+    { matrix := pentagonGamma3 zi zj zk zl zm }
+    { matrix := pentagonGamma2 zi zj zk zl zm }
+    { matrix := pentagonGamma1 zi zj zk zl zm }
     (pentagon_appendix_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl)
 
 /--
@@ -165,17 +165,17 @@ theorem appendix_pentagon_delaunay_equiv
     (h_jl : zj - zl ≠ 0)
     (w₁ w₂ : List (DelaunayFlipContext 1)) :
     DelaunayEquiv
-        (w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1)
-        (w₁ ++ w₂ : DelaunayFlipWord 1) := by
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) := by
   dsimp [appendixPentagonContexts]
   exact DelaunayEquiv.step .pentagon _ _
     (DelaunayMoveList.pentagon w₁ w₂
-      (pentagonGamma5 zi zj zk zl zm)
-      (pentagonGamma4 zi zj zk zl zm)
-      (pentagonGamma3 zi zj zk zl zm)
-      (pentagonGamma2 zi zj zk zl zm)
-      (pentagonGamma1 zi zj zk zl zm)
+      { matrix := pentagonGamma5 zi zj zk zl zm }
+      { matrix := pentagonGamma4 zi zj zk zl zm }
+      { matrix := pentagonGamma3 zi zj zk zl zm }
+      { matrix := pentagonGamma2 zi zj zk zl zm }
+      { matrix := pentagonGamma1 zi zj zk zl zm }
       (pentagon_appendix_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl))
 
 /--
@@ -193,10 +193,10 @@ theorem tiling_pentagon_braid_readout
     (h_jl : zj - zl ≠ 0)
     (w₁ w₂ : List (DelaunayFlipContext 1)) :
     rohozhkinMatrix
-        (w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1) =
       rohozhkinMatrix
-        (w₁ ++ w₂ : DelaunayFlipWord 1) :=
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) :=
   rohozhkin_invariant_under_equiv
     (appendix_pentagon_delaunay_equiv zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl w₁ w₂)

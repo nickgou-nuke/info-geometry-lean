@@ -141,24 +141,6 @@ theorem fisher_line_element_scaling
   have h_scale_sq_pos : lam_scale ^ 2 ≠ 0 := ne_of_gt (sq_pos_of_ne_zero (ne_of_gt h_lam))
   rw [mul_div_mul_left _ _ h_scale_sq_pos]
 
-/-!
-### 4. Master Capstone: Fisher-Rao / Poincaré Metric Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Complete Fisher-Rao Metric Identity & Riemannian Properties -/
-theorem grand_poincare_fisher_rao_synthesis
-    (p : UpperHalfPlanePoint) (v : Fin 2 → ℝ) (hv : v ≠ 0) :
-    (fisherMetricMatrix p 0 0 = 1 / p.y ^ 2) ∧
-    (fisherMetricMatrix p 0 1 = 0) ∧
-    ((fisherMetricMatrix p).det = 1 / p.y ^ 4) ∧
-    (Real.log (fisherMetricMatrix p).det = -4 * Real.log p.y) ∧
-    (0 < dotProduct (mulVec (fisherMetricMatrix p) v) v) :=
-  ⟨rfl,
-   rfl,
-   fisher_metric_det p,
-   fisher_metric_log_det p,
-   fisher_metric_pos_def p v hv⟩
-
 end
 
 end InfoGeometry.Differential.PoincareFisherRao

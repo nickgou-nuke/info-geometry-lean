@@ -50,16 +50,6 @@ theorem critical_line_from_zero_dissipation (σ : ℝ) (h_casimir : σ - 1 / 2 =
     σ = 1 / 2 := by
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Landauer Reversibility Synthesis -/
-theorem grand_chiral_landauer_synthesis (k T σ : ℝ) (hk : 0 < k) (hT : 0 < T)
-    (h_casimir : σ - 1 / 2 = 0) :
-    (0 < landauerDissipatedHeat k T) ∧
-    (landauerDissipatedHeat 0 T = 0) ∧
-    (σ = 1 / 2) :=
-  ⟨irreversible_landauer_dissipation_pos k T hk hT,
-   bilateral_chiral_shift_zero_dissipation T,
-   critical_line_from_zero_dissipation σ h_casimir⟩
-
 end
 
 end InfoGeometry.Quantum.ChiralCantorLandauerReversibility

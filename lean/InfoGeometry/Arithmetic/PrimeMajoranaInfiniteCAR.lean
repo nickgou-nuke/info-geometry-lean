@@ -6,6 +6,18 @@ Bulgarian Academy of Sciences.
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 
+/-!
+# Infinite Majorana CAR Extension via Inductive Direct Limit
+
+This module formalizes the infinite-dimensional direct-limit transport for
+Majorana prime generators.
+
+The first theorem is the generic finite-stage image invariant for the local
+CAR closure. The second layer generalizes the same induction pattern to the
+derived `parityOp` observable of a transported `ExteriorCARPair` chain.
+
+No analytic completion is claimed.
+-/
 
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
@@ -17,6 +29,12 @@ variable (L : Type*) [Ring L]
 variable (φ : ∀ n : ℕ, A n →+* A (Nat.succ n))
 variable (ι : ∀ n : ℕ, A n →+* L)
 
+/--
+Finite-stage CAR image invariant for a transported `ExteriorCARPair` chain.
+
+This is the direct infinite-target version of the local split-Majorana pair:
+`ε² = ι² = 0` and `{ε,ι} = 1` are preserved in every compatible image.
+-/
 theorem infinite_majorana_car_closure
     (Q R H Z : ∀ n : ℕ, A n)
     (hQ0 : Q 0 * Q 0 = 0)
@@ -38,6 +56,7 @@ theorem infinite_majorana_car_closure
   intro n
   exact limit_image_inductive_susy_closure φ ι Q R H Z hQ0 hR0 hclosure0 hZQ0 hZR0 hQstep hRstep hHstep hZstep n
 
+/-- Stepwise transport of `cMajorana = ε + ι` in a finite Majorana tower. -/
 theorem exteriorCARPair_cMajorana_step
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -47,6 +66,7 @@ theorem exteriorCARPair_cMajorana_step
   dsimp [InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.cMajorana]
   rw [map_add, h_eps n, h_iota n]
 
+/-- Stepwise transport of `dMajorana = ε - ι` in a finite Majorana tower. -/
 theorem exteriorCARPair_dMajorana_step
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -56,6 +76,7 @@ theorem exteriorCARPair_dMajorana_step
   dsimp [InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.dMajorana]
   rw [map_sub, h_eps n, h_iota n]
 
+/-- Stepwise transport of the local number operator `N = ε ι`. -/
 theorem exteriorCARPair_numberOp_step
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -65,6 +86,7 @@ theorem exteriorCARPair_numberOp_step
   dsimp [InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.numberOp]
   rw [map_mul, h_eps n, h_iota n]
 
+/-- Stepwise transport of the local parity operator `Π = c d`. -/
 theorem exteriorCARPair_parityOp_step
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -76,6 +98,10 @@ theorem exteriorCARPair_parityOp_step
     InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.dMajorana,
     map_add, map_sub, map_mul, h_eps n, h_iota n]
 
+/--
+The transported CAR pair satisfies the local CAR laws in every finite-stage
+image inside the explicit target ring.
+-/
 theorem exteriorCARPair_limit_image_car
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -113,11 +139,9 @@ theorem exteriorCARPair_limit_image_car
         simp)
       n
   rcases h with ⟨hQ, hR, hQR, _, _, _⟩
-  refine ⟨?_, ?_, ?_⟩
-  · exact hQ
-  · exact hR
-  · simpa using hQR
+  exact ⟨hQ, hR, by simpa using hQR⟩
 
+/-- The compatible cone reads back the transported `c = ε + ι` Majorana at stage zero. -/
 theorem exteriorCARPair_cMajorana_limit_image
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -140,6 +164,7 @@ theorem exteriorCARPair_cMajorana_limit_image
         _ = ι n ((P n).cMajorana) := hcone n ((P n).cMajorana)
         _ = ι 0 ((P 0).cMajorana) := ih
 
+/-- The compatible cone reads back the transported `d = ε - ι` Majorana at stage zero. -/
 theorem exteriorCARPair_dMajorana_limit_image
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -162,6 +187,7 @@ theorem exteriorCARPair_dMajorana_limit_image
         _ = ι n ((P n).dMajorana) := hcone n ((P n).dMajorana)
         _ = ι 0 ((P 0).dMajorana) := ih
 
+/-- The compatible cone reads back the transported number operator at stage zero. -/
 theorem exteriorCARPair_numberOp_limit_image
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -184,6 +210,7 @@ theorem exteriorCARPair_numberOp_limit_image
         _ = ι n ((P n).numberOp) := hcone n ((P n).numberOp)
         _ = ι 0 ((P 0).numberOp) := ih
 
+/-- The compatible cone reads back the transported parity operator at stage zero. -/
 theorem exteriorCARPair_parityOp_limit_image
     (P : ∀ n : ℕ, ExteriorCARPair (A n))
     (h_eps : ∀ n : ℕ, φ n (P n).eps = (P (Nat.succ n)).eps)
@@ -209,6 +236,7 @@ theorem exteriorCARPair_parityOp_limit_image
         _ = ι n ((P n).parityOp) := hcone n ((P n).parityOp)
         _ = ι 0 ((P 0).parityOp) := ih
 
+/-- The image of the transported number operator remains idempotent at every stage. -/
 theorem exteriorCARPair_limit_image_numberOp_idem
     (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
     ∀ n : ℕ,
@@ -216,15 +244,9 @@ theorem exteriorCARPair_limit_image_numberOp_idem
   intro n
   simpa using congrArg (ι n) ((P n).numberOp_idem)
 
-theorem exteriorCARPair_limit_image_complementary_idem
-    (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
-    ∀ n : ℕ,
-      ι n ((P n).iota * (P n).eps) *
-          ι n ((P n).iota * (P n).eps) =
-        ι n ((P n).iota * (P n).eps) := by
-  intro n
-  simpa using congrArg (ι n) ((P n).iota_mul_eps_idem)
-
+/--
+The image of the transported parity operator satisfies `Π = 1 - 2N` at every stage.
+-/
 theorem exteriorCARPair_limit_image_parityOp_eq_one_sub_two_numberOp
     (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
     ∀ n : ℕ,
@@ -239,6 +261,13 @@ theorem exteriorCARPair_limit_image_parityOp_eq_one_sub_two_numberOp
       simp
     _ = 1 - (2 : L) * ι n ((P n).numberOp) := by
       rw [h2]
+/--
+Finite split-Majorana laws hold in every finite-stage image in the target ring.
+
+This is an image-local algebraic statement: it proves the involution and
+anticommutation identities for the explicit images `ι n`, not for arbitrary
+operators of `L`.
+-/
 theorem exteriorCARPair_limit_image_majorana_laws
     (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
     ∀ n : ℕ,
@@ -248,10 +277,10 @@ theorem exteriorCARPair_limit_image_majorana_laws
           ι n ((P n).dMajorana) * ι n ((P n).cMajorana) = 0 ∧
       ι n ((P n).parityOp) * ι n ((P n).parityOp) = 1 := by
   intro n
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · simpa using congrArg (ι n) ((P n).cMajorana_sq)
-  · simpa using congrArg (ι n) ((P n).dMajorana_sq)
-  · simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero)
-  · simpa using congrArg (ι n) ((P n).parityOp_sq)
+  exact
+    ⟨by simpa using congrArg (ι n) ((P n).cMajorana_sq),
+      by simpa using congrArg (ι n) ((P n).dMajorana_sq),
+      by simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero),
+      by simpa using congrArg (ι n) ((P n).parityOp_sq)⟩
 
 end InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR

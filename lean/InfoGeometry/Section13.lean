@@ -57,7 +57,7 @@ def S7Shadow := {ψ : TwoQubitVec // IsNormalized ψ}
 
 namespace S7Shadow
 
-abbrev vec (ψ : S7Shadow) : TwoQubitVec := ψ.1
+def vec (ψ : S7Shadow) : TwoQubitVec := ψ.1
 
 theorem normalized (ψ : S7Shadow) : IsNormalized ψ.vec := ψ.2
 
@@ -178,7 +178,7 @@ theorem sameFiber_equivalence : Equivalence sameFiber where
   symm := by intro ψ φ h; exact sameFiber_symm h
   trans := by intro ψ φ χ hψφ hφχ; exact sameFiber_trans hψφ hφχ
 
-/-- Same-fiber states share normalization because the property is norm-preserving. -/
+/-- Same-fiber states share normalization because the witness is norm-preserving. -/
 theorem sameFiber_preserves_normalized {ψ φ : TwoQubitVec}
     (hFiber : sameFiber ψ φ) (hψ : IsNormalized ψ) :
     IsNormalized φ := by
@@ -258,5 +258,22 @@ theorem gamma5_anticommutes_gamma0 :
     Section5.γ5 * Section5.γ0 + Section5.γ0 * Section5.γ5 =
       (0 : DiracMatrix) :=
   (Section5.γ5_anticomm).1
+
+/-- Capstone packet for the finite algebraic Section 13 surface. -/
+theorem section13_capstone :
+    (∀ u v : OneQubitVec,
+      stateNormSq (tensor2 u v) = oneQubitNormSq u * oneQubitNormSq v) ∧
+    (∀ ψ φ : TwoQubitVec, sameFiber ψ φ → IsNormalized ψ → IsNormalized φ) ∧
+    (∀ u v : OneQubitVec, concurrenceAmplitude (tensor2 u v) = 0) ∧
+    (∀ ψ : TwoQubitVec, (∑ i : Fin 4, density ψ i i) = stateNormSq ψ) ∧
+    (∀ ψ : TwoQubitVec, ∀ i j k l : Fin 4,
+      density ψ i j * density ψ k l = density ψ i l * density ψ k j) ∧
+    hopfBaseReadout 0 = 0 ∧
+    Section5.γ5 * Section5.γ0 + Section5.γ0 * Section5.γ5 =
+      (0 : DiracMatrix) := by
+  exact ⟨stateNormSq_tensor2,
+    (fun ψ φ hFiber hψ => sameFiber_preserves_normalized hFiber hψ),
+    concurrenceAmplitude_tensor2, density_trace_eq_norm, density_rank_one_minor,
+    hopfBaseReadout_zero, gamma5_anticommutes_gamma0⟩
 
 end Section13

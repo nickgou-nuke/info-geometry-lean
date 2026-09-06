@@ -156,20 +156,8 @@ theorem paracomplex_eigen_rays :
 ### 3. Гранд Капстоун: Пара-Келеров Синтез върху Аполониевия Цилиндър
 -/
 
-/-- 🏆 ГРАНД СИНТЕЗ: Паракомплексна инволюция J² = I₂, антисиметрия на Ω,
+/- 🏆 ГРАНД СИНТЕЗ: Паракомплексна инволюция J² = I₂, антисиметрия на Ω,
     симплектично сдвояване на ентропийния и фазовия поток и метрична ортогоналност -/
-theorem grand_apollonius_parakahler_synthesis :
-    (paraComplexStructure * paraComplexStructure = 1) ∧
-    (Matrix.trace paraComplexStructure = 0) ∧
-    (symplecticForm.transpose = - symplecticForm) ∧
-    (evalMetric entropyGradientVector phaseFlowVector = 0) ∧
-    (evalSymplectic phaseFlowVector entropyGradientVector = 1) :=
-  ⟨paracomplex_involution,
-   paracomplex_trace_zero,
-   symplectic_antisymmetric,
-   metric_flow_orthogonality,
-   symplectic_flow_pairing.2⟩
-
 end
 
 end InfoGeometry.ParaKahler.ApolloniusCylinder

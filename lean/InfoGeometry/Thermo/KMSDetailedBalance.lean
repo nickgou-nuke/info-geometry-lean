@@ -31,27 +31,21 @@ The KMS strip at inverse temperature `β`.
 This is only the geometric bookkeeping layer: lower boundary `t`, upper
 boundary `t + iβ`, and the closed horizontal strip.
 -/
-abbrev KMSRegionCoordinates := Set ℂ × ((ℝ → ℂ) × (ℝ → ℂ))
-
-/-- Geometric KMS strip coordinates at inverse temperature `β`. -/
-abbrev KMSRegion (β : ℝ) := KMSRegionCoordinates
-
-namespace KMSRegion
-
-abbrev strip (R : KMSRegion β) : Set ℂ := R.1
-
-abbrev lowerBoundary (R : KMSRegion β) : ℝ → ℂ := R.2.1
-
-abbrev upperBoundary (R : KMSRegion β) : ℝ → ℂ := R.2.2
-
-end KMSRegion
+structure KMSRegion (β : ℝ) where
+  /-- The closed strip `0 ≤ Im z ≤ β`. -/
+  strip : Set ℂ
+  /-- Lower real-time boundary. -/
+  lowerBoundary : ℝ → ℂ
+  /-- Upper imaginary-time boundary. -/
+  upperBoundary : ℝ → ℂ
 
 /-- The standard closed KMS strip model. -/
 def standardKMSRegion
     (β : ℝ) :
-    KMSRegion β :=
-  ({z : ℂ | 0 ≤ z.im ∧ z.im ≤ β},
-    (fun t => (t : ℂ), fun t => complexClockPoint t β))
+    KMSRegion β where
+  strip := {z : ℂ | 0 ≤ z.im ∧ z.im ≤ β}
+  lowerBoundary := fun t => (t : ℂ)
+  upperBoundary := fun t => complexClockPoint t β
 
 @[simp]
 theorem standardKMSRegion_lowerBoundary
@@ -90,12 +84,11 @@ the lower and upper strip correlations.
 theorem lowerKMSCorrelation_eq_upper
     {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
-    (hK : KMSBoundaryLaw K)
     (t : ℝ)
     (a b : A) :
     lowerKMSCorrelation K t a b =
       upperKMSCorrelation K t a b := by
-  exact KMSBoundaryLaw.boundary K hK t a b
+  exact K.kms_boundary t a b
 
 /--
 Thermal Wilson transport through one inverse-temperature period, at real
@@ -115,12 +108,11 @@ def thermalWilsonHolonomyAt
 theorem lowerKMSCorrelation_eq_wilsonHolonomy
     {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
-    (hK : KMSBoundaryLaw K)
     (t : ℝ)
     (a b : A) :
     lowerKMSCorrelation K t a b =
       K.omega_eval (thermalWilsonHolonomyAt K t b) a := by
-  exact KMSBoundaryLaw.boundary K hK t a b
+  exact K.kms_boundary t a b
 
 /-! ## 3. Detailed balance as Stokes closure -/
 
@@ -131,11 +123,16 @@ The form is operator/thermal-model specific.  The only constructive theorem
 claimed here is that closedness of the form forces vanishing boundary integral
 through the supplied Stokes backend.
 -/
-abbrev KMSDetailedBalanceForm
+structure KMSDetailedBalanceForm
     (Region Point Tangent Value : Type*)
     [AddCommGroup Value] [Module ℝ Value]
-    (I : GeometricIntegralBackend Region Point Tangent Value) :=
-  {ω : OperatorOneForm Point Tangent Value // I.IsClosedGeometricForm ω}
+    (I : GeometricIntegralBackend Region Point Tangent Value) where
+  /-- Thermal/KMS correlation one-form. -/
+  modularForm :
+    OperatorOneForm Point Tangent Value
+  /-- Detailed balance as closedness/monogenicity of the modular form. -/
+  closed_modularForm :
+    I.IsClosedGeometricForm modularForm
 
 namespace KMSDetailedBalanceForm
 
@@ -145,12 +142,6 @@ variable
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
 variable (D : KMSDetailedBalanceForm Region Point Tangent Value I)
-
-/-- Compatibility accessor for the thermal/KMS correlation one-form. -/
-abbrev modularForm : OperatorOneForm Point Tangent Value := D.1
-
-/-- Compatibility accessor for its closedness proof. -/
-abbrev closed_modularForm : I.IsClosedGeometricForm D.modularForm := D.2
 
 /--
 Detailed balance implies the thermal boundary integral vanishes.
@@ -223,21 +214,19 @@ variable (D : KMSDetailedBalance A Region Point Tangent Value I)
 
 /-- Algebraic KMS/detailed-balance boundary identity. -/
 theorem kms_boundary
-    (hK : KMSBoundaryLaw D.kms)
     (t : ℝ)
     (a b : A) :
     lowerKMSCorrelation D.kms t a b =
       upperKMSCorrelation D.kms t a b :=
-  lowerKMSCorrelation_eq_upper D.kms hK t a b
+  lowerKMSCorrelation_eq_upper D.kms t a b
 
 /-- KMS boundary identity through thermal Wilson transport. -/
 theorem kms_boundary_wilson
-    (hK : KMSBoundaryLaw D.kms)
     (t : ℝ)
     (a b : A) :
     lowerKMSCorrelation D.kms t a b =
       D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a :=
-  lowerKMSCorrelation_eq_wilsonHolonomy D.kms hK t a b
+  lowerKMSCorrelation_eq_wilsonHolonomy D.kms t a b
 
 /-- Stokes/detailed-balance boundary integral vanishes. -/
 theorem boundaryIntegral_eq_zero
@@ -246,6 +235,43 @@ theorem boundaryIntegral_eq_zero
   D.form.boundaryIntegral_eq_zero Ω
 
 /-! ## 5. Owner target -/
+
+/--
+Owner target for the constructive KMS/Stokes bridge.
+
+This target records only the kernel-checked consequences already proved from the
+stored algebraic KMS data and the closed-form/Stokes backend. It does not keep
+the model-specific calibration proposition as theorem force.
+-/
+def KMSDetailedBalanceOwnerTarget
+    (A Region Point Tangent Value : Type*)
+    [Monoid A]
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value) : Prop :=
+  ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)
+    (t : ℝ) (a b : A) (Ω : Region),
+      lowerKMSCorrelation D.kms t a b = upperKMSCorrelation D.kms t a b ∧
+      lowerKMSCorrelation D.kms t a b =
+        D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a ∧
+      I.boundaryIntegral Ω D.form.modularForm = 0
+
+/--
+Any installed KMS detailed-balance packet satisfies the owner-side KMS boundary,
+thermal Wilson, and Stokes vanishing laws proved in this file.
+-/
+theorem kmsDetailedBalanceOwnerTarget
+    (A Region Point Tangent Value : Type*)
+    [Monoid A]
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value) :
+    ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)
+      (t : ℝ) (a b : A) (Ω : Region),
+        lowerKMSCorrelation D.kms t a b = upperKMSCorrelation D.kms t a b ∧
+        lowerKMSCorrelation D.kms t a b =
+          D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a ∧
+        I.boundaryIntegral Ω D.form.modularForm = 0 := by
+  intro D t a b Ω
+  exact ⟨D.kms_boundary t a b, D.kms_boundary_wilson t a b, D.boundaryIntegral_eq_zero Ω⟩
 
 end KMSDetailedBalance
 

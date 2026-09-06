@@ -442,10 +442,10 @@ theorem monogenic_cell_harmonic (cell : MonogenicHodgeCell) :
     cell.laplacian_u = 0 :=
   cell.h_harmonic
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Hestenes Geometric Algebra, Chiral Split & Harmonic Ground State**
 -/
-theorem grand_hestenes_krein_chiral_synthesis
+/- theorem grand_hestenes_krein_chiral_synthesis
     (ψ : Multivector2D) (cell : MonogenicHodgeCell) :
     (EvenMultivector.I * EvenMultivector.I = ⟨-1, 0⟩) ∧
     (Multivector2D.chiralLeft ψ + Multivector2D.chiralRight ψ = ψ) ∧
@@ -456,9 +456,8 @@ theorem grand_hestenes_krein_chiral_synthesis
           Multivector2D.chiral_decomposition_complete ψ,
           Multivector2D.chiralLeft_sandwich ψ,
           Multivector2D.chiralRight_sandwich ψ,
-          monogenic_cell_harmonic cell⟩
+          monogenic_cell_harmonic cell⟩ -/
 
 end HestenesChiral
 
 end InfoGeometry.Canonical
-

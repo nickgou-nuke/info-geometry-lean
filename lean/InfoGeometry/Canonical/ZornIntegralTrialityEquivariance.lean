@@ -20,7 +20,9 @@ open InfoGeometry.Canonical.ZornIntegralSpinTrialityClosure
 
 variable {R : Type*} [CommRing R]
 
-attribute [local simp] ZornMatrix.smul_a ZornMatrix.smul_b ZornMatrix.smul_x ZornMatrix.smul_y Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply
+attribute [local simp] ZornMatrix.smul_a ZornMatrix.smul_b ZornMatrix.smul_x ZornMatrix.smul_y
+  Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero Matrix.cons_val_one
+  Matrix.cons_val_two Matrix.cons_val_succ Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply
 
 /-- Cyclic coordinate triality as an `R`-linear equivalence. -/
 def zornTrialityEquiv : ZornMatrix R ≃ₗ[R] ZornMatrix R where

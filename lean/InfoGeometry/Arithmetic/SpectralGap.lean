@@ -18,7 +18,15 @@ exponential decay of correlations to the KMS ground state.
 
 At `Re(s) = 0`, the scalar factor `|2^{-it}|` has modulus `1`, so the
 positive-real-part contraction estimate no longer applies.  This elementary
-bound is separate from any Lee--Yang or Riemann-property statement.
+bound is separate from any Lee--Yang or Riemann-hypothesis statement.
+
+## The Spectral Gap Typeclass
+
+    HasSpectralGap H_op gap where
+      gap_pos : 0 < gap
+      strict_contraction : ∀ s > 0, ‖exp(-s·H)‖ ≤ exp(-s·gap)
+
+For the primon gas: gap = log 2.
 
 ## Physical Meaning
 
@@ -33,6 +41,15 @@ open Complex
 open Real
 
 namespace InfoGeometry.Arithmetic.SpectralGap
+
+/--
+The spectral gap of the primon gas: log 2 > 0.
+
+On the excited subspace ℓ²({n ≥ 2}):
+    |n^{-s}| = n^{-Re(s)} ≤ 2^{-Re(s)} < 1   for Re(s) > 0
+-/
+theorem primon_gap_pos : 0 < Real.log 2 := by
+  exact Real.log_pos (by norm_num : 1 < (2 : ℝ))
 
 /--
 For n ≥ 2 and Re(s) > 0: n^{-Re(s)} ≤ 2^{-Re(s)} < 1.

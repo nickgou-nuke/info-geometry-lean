@@ -129,8 +129,9 @@ theorem critical_line_from_chiral_balance (σ : ℝ) (h : σ - 1 / 2 = 0) :
     σ = 1 / 2 := by
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Bidirectional Chiral Cantor Cylinder Synthesis -/
-theorem grand_cantor_cylinder_chiral_synthesis (a : ChiralArrow) (past future : ℕ → Bool) (n : ℕ)
+/-! The reusable boundary of this owner is the finite chiral, path, Cuntz,
+    and scalar lemmas above. -/
+/- theorem grand_cantor_cylinder_chiral_synthesis (a : ChiralArrow) (past future : ℕ → Bool) (n : ℕ)
     (w : BitWord n) (C : ChiralCuntzPair R) (N_L N_R : ℝ) (h_bal : N_L = N_R)
     (σ : ℝ) (h_crit : σ - 1 / 2 = 0) :
     (chirality (chiralConj a) = -chirality a) ∧
@@ -148,4 +149,4 @@ theorem grand_cantor_cylinder_chiral_synthesis (a : ChiralArrow) (past future : 
    ⟨C.isometry_L, C.isometry_R, C.orthogonal_LR⟩,
    chiralKMS_asymmetry n,
    chiral_rapidity_balance N_L N_R h_bal,
-   critical_line_from_chiral_balance σ h_crit⟩
+   critical_line_from_chiral_balance σ h_crit⟩ -/

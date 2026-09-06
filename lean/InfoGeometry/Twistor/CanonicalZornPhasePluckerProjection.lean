@@ -216,15 +216,16 @@ theorem offDiagonalPhase_pluckerLine_of_circularKleinNull
   rw [← hcoord, hx]
 
 theorem detZ_eq_diagonal_sub_kleinQ (X : CanonicalZorn) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X =
       X.a * X.b -
         InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
           (phaseToPlucker6 (offDiagonalPhase X)) := by
   rw [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
     kleinQ_offDiagonalPhase]
+  rfl
 
 theorem detZ_eq_zero_iff_diagonal_eq_kleinQ (X : CanonicalZorn) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X = 0 ↔
       X.a * X.b =
         InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
           (phaseToPlucker6 (offDiagonalPhase X)) := by
@@ -233,7 +234,7 @@ theorem detZ_eq_zero_iff_diagonal_eq_kleinQ (X : CanonicalZorn) :
 
 theorem detZ_null_iff_kleinNull_of_diagonal_product_zero
     (X : CanonicalZorn) (hdiag : X.a * X.b = 0) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X = 0 ↔
       InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
           (phaseToPlucker6 (offDiagonalPhase X)) = 0 := by
   rw [detZ_eq_diagonal_sub_kleinQ, hdiag]

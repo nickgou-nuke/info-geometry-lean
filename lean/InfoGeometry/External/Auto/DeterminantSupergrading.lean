@@ -139,7 +139,7 @@ theorem superGrade_table :
       superGrade emergentK = (1 : SignType) := by
   exact ⟨superGrade_modular_j, superGrade_chiralParity, superGrade_emergentK⟩
 
-/-- A consolidated property theorem for this construction. -/
+/-- A consolidated witness theorem for this construction. -/
 theorem determinant_supergrading_central_package :
     (∀ A B : M2R, superGrade (A * B) = superGrade A * superGrade B) ∧
       superGrade modular_j = (-1 : SignType) ∧

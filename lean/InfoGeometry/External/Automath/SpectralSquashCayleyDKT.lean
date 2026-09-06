@@ -9,7 +9,7 @@ import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 This file proves the finite algebraic kernel behind the regularization pipeline.
 It does **not** claim a full unbounded-operator colimit theorem. The analytic
 C*-inductive-limit, inverse Cayley boundary, and Tomita--Takesaki antiunitary
-closure are recorded as explicit interfaces.
+closure are recorded as sockets.
 -/
 
 noncomputable section
@@ -95,7 +95,7 @@ theorem eta_selfadjoint : star eta = eta := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [eta]
 
 /-- Finite linear shadow of the unified Dirac--Krein--Tomita adjoint:
-`X ↦ η X† η`. The antiunitary Tomita `J` is intentionally left abstract below. -/
+`X ↦ η X† η`. The antiunitary Tomita `J` is intentionally socketed below. -/
 def dktAdjoint (X : M2C) : M2C := eta * star X * eta
 
 /-- The finite DKT/Krein adjoint shadow is involutive. -/
@@ -119,7 +119,7 @@ theorem dktAdjoint_stageOperator (lam : ℝ) : dktAdjoint (stageOperator lam) = 
       Matrix.vecHead, Matrix.vecTail, htwo]
 
 /-- On the diagonal Cayley boundary, the finite DKT/Krein shadow collapses to the
-ordinary Hilbert adjoint. The full anti-linear Tomita step remains abstract. -/
+ordinary Hilbert adjoint. The full anti-linear Tomita step remains socketed. -/
 theorem dktAdjoint_cayleyStage_eq_star (lam : ℝ) :
     dktAdjoint (cayleyStage lam) = star (cayleyStage lam) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -133,6 +133,41 @@ theorem cayleyStage_dkt_unitary (lam : ℝ) :
   rw [dktAdjoint_cayleyStage_eq_star]
   exact cayleyStage_unitary lam
 
+/--
+Typed analytic/categorical assembly for extending the finite Cayley stage.
+
+This structure contains mathematical objects and laws rather than proposition
+markers.  `Affiliated` and its self-adjoint locus remain supplied by the
+chosen analytic realization because bare algebraic Mathlib does not identify
+unbounded affiliated operators with bounded matrices.
+-/
+structure RegularizationColimitSocket
+    (C Affiliated Boundary V A : Type*)
+    [CategoryTheory.Category C]
+    [AddCommGroup V] [Module ℝ V]
+    [Ring A]
+    (F : ℕ ⥤ C) where
+  /-- Self-adjointness predicate in the selected affiliated-operator model. -/
+  selfAdjointAffiliated : Affiliated → Prop
+  /-- A genuine affiliated operator in the self-adjoint locus. -/
+  unboundedSelfAdjointAffiliatedOperators :
+    {T : Affiliated // selfAdjointAffiliated T}
+  /-- The chosen categorical inductive colimit and its universal property. -/
+  cStarInductiveColimit : CategoryTheory.Limits.ColimitCocone F
+  /-- Cayley boundary coordinate of an affiliated operator. -/
+  cayley : Affiliated → Boundary
+  /-- Inverse Cayley reconstruction on the selected boundary carrier. -/
+  inverseCayley : Boundary → Affiliated
+  /-- Exact recovery of affiliated operators from their Cayley coordinates. -/
+  inverseCayleyBoundaryRecovery :
+    Function.LeftInverse inverseCayley cayley
+  /-- Repository-owned Tomita involution on the selected real carrier. -/
+  tomitaTakesakiAntiunitaryJ :
+    InfoGeometry.Canonical.TomitaTakesakiWickRotation.TomitaTakesakiConjugation V
+  /-- Renormalized trace/cocycle backend carrying its defining laws. -/
+  traceDivergenceRenormalizationTheorem :
+    InfoGeometry.OperatorAlgebra.RenormalizedTraceBackend A
+
 /-- Synthesis theorem: finite squashing is bounded, finite Cayley coordinates are
 unitary, and the finite DKT/Krein adjoint shadow is an anti-involution. -/
 theorem spectral_squash_cayley_dkt_synthesis (lam : ℝ) :
@@ -145,10 +180,8 @@ theorem spectral_squash_cayley_dkt_synthesis (lam : ℝ) :
     cayleyStage lam * dktAdjoint (cayleyStage lam) = 1 ∧
     (∀ X : M2C, dktAdjoint (dktAdjoint X) = X) ∧
     (∀ X Y : M2C, dktAdjoint (X * Y) = dktAdjoint Y * dktAdjoint X) := by
-  refine ⟨eta_eq_projection_difference, eta_sq, squashCoord_bounded lam,
-    cayleyStage_unitary lam, dktAdjoint_stageOperator lam,
-    dktAdjoint_cayleyStage_eq_star lam, cayleyStage_dkt_unitary lam, ?_, ?_⟩
-  · exact dktAdjoint_involutive
-  · exact dktAdjoint_mul
+  exact ⟨eta_eq_projection_difference, eta_sq, squashCoord_bounded lam, cayleyStage_unitary lam,
+    dktAdjoint_stageOperator lam, dktAdjoint_cayleyStage_eq_star lam, cayleyStage_dkt_unitary lam,
+    dktAdjoint_involutive, dktAdjoint_mul⟩
 
 end SpectralSquashCayleyDKT

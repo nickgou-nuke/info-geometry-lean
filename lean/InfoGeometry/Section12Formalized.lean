@@ -259,4 +259,21 @@ $T_{Cuntz} = S_L S_R - S_R S_L$.
 def macroscopicCuntzTorsion {A : Type*} [Ring A] (SL SR : A) : A :=
   SL * SR - SR * SL
 
+theorem section12_formalized_capstone :
+    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
+      torsionTensor Gamma a c b = -torsionTensor Gamma a b c) ∧
+    (∀ Gamma : ConnectionCoeff,
+      (∀ a b c : Fin 4, torsionTensor Gamma a b c = 0) ↔
+        ∀ a b c : Fin 4, Gamma a b c = Gamma a c b) ∧
+    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
+      torsionTwoFormCoeff zeroConnection Gamma coordinateFrame a c b = torsionTensor Gamma a b c) ∧
+    (∀ dPsi : Spinor, ∀ omegaLeviCivita contorsion : SpinMat, ∀ psi : Spinor,
+      spinorCovariantDerivative dPsi
+          (spinConnectionWithContorsion omegaLeviCivita contorsion) psi
+        = spinorCovariantDerivative dPsi omegaLeviCivita psi + contorsion * psi) ∧
+    (∀ q : Quat, maurerCartanTorsion q 0 = 0) := by
+  exact ⟨torsionTensor_antisymmetric_lower, torsionTensor_zero_iff_lower_symmetric,
+    coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor,
+    spinorCovariantDerivative_withContorsion, maurerCartanTorsion_constant_field⟩
+
 end Section12Formalized

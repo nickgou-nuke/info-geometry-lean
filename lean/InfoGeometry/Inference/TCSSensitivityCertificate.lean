@@ -13,7 +13,7 @@ import InfoGeometry.Inference.TCSSensitivity
 /-!
 # Certified local TCS sensitivity
 
-The selected Fisher property provides local quadratic sensitivity variances
+The selected Fisher certificate provides local quadratic sensitivity variances
 for the physical `C` and `K` coordinates. These are local information-geometric
 quantities; no global confidence or exact finite-sample covariance claim is
 made here.

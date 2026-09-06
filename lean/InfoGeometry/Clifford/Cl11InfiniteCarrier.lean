@@ -108,19 +108,6 @@ theorem carrier_ringCommutator_isDerivation
     ringCommutator K (X * Y) = ringCommutator K X * Y + X * ringCommutator K Y :=
   ringCommutator_isDerivation K X Y
 
-/-!
-The chiral `plus/minus` generator difference is itself an inner derivation.  This is
-proved directly on the algebraic colimit carrier; it does not introduce an
-analytic completion or identify the generators with an unrelated finite model.
--/
-theorem carrier_difference_ringCommutator_isDerivation
-    (Kplus Kminus X Y : CompatibleCarrier) :
-    ringCommutator (Kplus - Kminus) (X * Y) =
-      ringCommutator (Kplus - Kminus) X * Y +
-        X * ringCommutator (Kplus - Kminus) Y := by
-  unfold ringCommutator
-  noncomm_ring
-
 /-- Difference of finite generators survives as difference of carrier commutators. -/
 theorem carrier_ringCommutator_sub_left
     (K₁ K₂ X : CompatibleCarrier) :
@@ -137,24 +124,6 @@ theorem finiteAdvance_ringCommutator_derivation
   rw [map_mul]
   exact ringCommutator_isDerivation (finiteAdvance m k K) (finiteAdvance m k X)
     (finiteAdvance m k Y)
-
-/-!
-The same Leibniz law is preserved when the finite-stage generator is a
-plus/minus difference.  This is the stagewise statement needed before passing
-to the compatible colimit cone.
--/
-theorem finiteAdvance_difference_ringCommutator_derivation
-    (m k : ℕ) (Kplus Kminus X Y : Stage m) :
-    ringCommutator (finiteAdvance m k (Kplus - Kminus))
-        (finiteAdvance m k (X * Y)) =
-      ringCommutator (finiteAdvance m k (Kplus - Kminus))
-          (finiteAdvance m k X) * finiteAdvance m k Y +
-        finiteAdvance m k X *
-          ringCommutator (finiteAdvance m k (Kplus - Kminus))
-            (finiteAdvance m k Y) := by
-  simp only [finiteAdvance, map_sub, map_mul]
-  unfold ringCommutator
-  noncomm_ring
 
 /-- The Markov trace readout is stable along every finite stage embedding chain. -/
 theorem compatibleMarkovTrace_stable
@@ -230,68 +199,6 @@ theorem phaseAxis_limit_image (k : ℕ) :
     intoCarrier (1 + k) (finiteAdvance 1 k phaseAxisStage) = globalPhaseAxis := by
   rw [globalPhaseAxis]
   exact intoCarrier_finiteAdvance 1 k phaseAxisStage
-
-/-! The finite scalar/phase plane and its direct-limit readout. -/
-
-/-- The `a + K b` phase plane at the finite stage reached after `k` embeddings. -/
-def phasePlaneStage (k : ℕ) (a b : ℝ) : Stage (1 + k) :=
-  a • (1 : Stage (1 + k)) + b • finiteAdvance 1 k phaseAxisStage
-
-theorem phasePlaneStage_mul (k : ℕ) (a b c d : ℝ) :
-    phasePlaneStage k a b * phasePlaneStage k c d =
-      phasePlaneStage k (a * c - b * d) (a * d + b * c) := by
-  simp only [phasePlaneStage, add_mul, mul_add, smul_mul_assoc,
-    mul_smul_comm, smul_add, smul_smul, smul_neg, neg_smul,
-    one_smul, one_mul, mul_one]
-  rw [phaseAxis_finiteAdvance_sq]
-  module
-
-theorem phasePlaneStage_conj_mul (k : ℕ) (a b : ℝ) :
-    phasePlaneStage k a b * phasePlaneStage k a (-b) =
-      (a ^ 2 + b ^ 2) • (1 : Stage (1 + k)) := by
-  rw [phasePlaneStage_mul]
-  simp only [phasePlaneStage, mul_neg, neg_mul, neg_neg]
-  rw [show -(a * b) + b * a = 0 by ring, zero_smul, add_zero]
-  congr 1
-  ring
-
-theorem phasePlane_intoCarrier (k : ℕ) (a b : ℝ) :
-    intoCarrier (1 + k) (phasePlaneStage k a b) =
-      a • (1 : CompatibleCarrier) + b • globalPhaseAxis := by
-  simp only [phasePlaneStage, Algebra.smul_def, map_add, map_mul, map_one]
-  have ha :
-      intoCarrier (1 + k) (algebraMap ℝ (Stage (1 + k)) a) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap a := by
-    simpa [intoCarrier] using
-      (InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap_stage
-        (1 + k) a).symm
-  have hb :
-      intoCarrier (1 + k) (algebraMap ℝ (Stage (1 + k)) b) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap b := by
-    simpa [intoCarrier] using
-      (InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap_stage
-        (1 + k) b).symm
-  rw [ha, hb, phaseAxis_limit_image]
-  rfl
-
-theorem phasePlane_intoCarrier_conj_mul (k : ℕ) (a b : ℝ) :
-    intoCarrier (1 + k) (phasePlaneStage k a b) *
-      intoCarrier (1 + k) (phasePlaneStage k a (-b)) =
-      (a ^ 2 + b ^ 2) • (1 : CompatibleCarrier) := by
-  calc
-    intoCarrier (1 + k) (phasePlaneStage k a b) *
-          intoCarrier (1 + k) (phasePlaneStage k a (-b)) =
-        intoCarrier (1 + k)
-          (phasePlaneStage k a b * phasePlaneStage k a (-b)) := by
-            symm
-            exact map_mul (intoCarrier (1 + k)) _ _
-    _ = intoCarrier (1 + k)
-          ((a ^ 2 + b ^ 2) • (1 : Stage (1 + k))) := by
-            rw [phasePlaneStage_conj_mul]
-    _ = (a ^ 2 + b ^ 2) • (1 : CompatibleCarrier) := by
-            simpa only [Algebra.smul_def, mul_one, intoCarrier] using
-              (InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap_stage
-                (1 + k) (a ^ 2 + b ^ 2)).symm
 
 /-!
 Summary:

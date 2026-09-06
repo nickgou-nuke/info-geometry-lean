@@ -48,6 +48,8 @@ instance : Zero (Op2Form R V A) where
       simp
   }
 
+@[simp] theorem zero_apply (u v : V) : (0 : Op2Form R V A) u v = 0 := rfl
+
 instance : Neg (Op2Form R V A) where
   neg ω := {
     toBilin := -ω.toBilin

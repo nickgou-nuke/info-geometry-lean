@@ -32,14 +32,9 @@ theorem swap_involutive (t : SpectralToken V) :
 
 end SpectralToken
 
-/-- A token encoder is natively a function into the spectral token carrier. -/
-abbrev TokenEncoder (Tok V : Type _) := Tok → SpectralToken V
-
-abbrev TokenEncoder.encode
-    {Tok V : Type _} (E : TokenEncoder Tok V) : Tok → SpectralToken V := E
-
-def TokenEncoder.mk
-    {Tok V : Type _} (encode : Tok → SpectralToken V) : TokenEncoder Tok V := encode
+/-- Token encoder into the spectral (primal/dual) carrier. -/
+structure TokenEncoder (Tok V : Type _) where
+  encode : Tok → SpectralToken V
 
 namespace TokenEncoder
 
@@ -87,14 +82,13 @@ theorem actToken_involutive (G : SpectralGrading V) (t : SpectralToken V) :
 
 end SpectralGrading
 
-/-- The Q/K/V interface is natively a binary function. -/
-abbrev QKVTrialityCarrier (Q K Vout : Type _) := Q → K → Vout
-
-abbrev QKVTrialityCarrier.pair
-    {Q K Vout : Type _} (T : QKVTrialityCarrier Q K Vout) : Q → K → Vout := T
-
-def QKVTrialityCarrier.mk
-    {Q K Vout : Type _} (pair : Q → K → Vout) : QKVTrialityCarrier Q K Vout := pair
+/--
+Minimal Q/K/V triality carrier:
+`pair` packages the tri-linear interface down to a binary map from Q and K
+into the value lane.
+-/
+structure QKVTrialityCarrier (Q K Vout : Type _) where
+  pair : Q → K → Vout
 
 namespace QKVTrialityCarrier
 

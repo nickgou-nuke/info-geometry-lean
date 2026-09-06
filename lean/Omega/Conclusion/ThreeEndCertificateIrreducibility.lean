@@ -25,9 +25,9 @@ structure ThreeEndCertificateIrreducibilityData where
       core.budget.modeBudgetPassed ∧
       ¬ core.budget.registerBudgetPassed
   missingAddressWitness :
-    core.boundary.radiusBlindspotClosed ∧
-      core.boundary.endpointHeatClosed ∧
-      ¬ core.boundary.addressCollisionClosed
+    core.boundary.axes.radiusBlindspotClosed ∧
+      core.boundary.axes.endpointHeatClosed ∧
+      ¬ core.boundary.axes.addressCollisionClosed
 
 namespace ThreeEndCertificateIrreducibilityData
 
@@ -48,30 +48,25 @@ open ThreeEndCertificateIrreducibilityData
 Each putative verifier that keeps only two ends is refuted by the omission witness for the third
 end, using the conclusion-level orthogonality package. -/
 theorem paper_conclusion_three_end_certificate_irreducibility
-    (D : ThreeEndCertificateIrreducibilityData)
-    (hBoundaryAddress : D.core.boundary.radiusBlindspotClosed →
-      D.core.boundary.endpointHeatClosed →
-        ¬ D.core.boundary.addressCollisionClosed →
-          D.core.boundary.verifierResult ≠ .certificate) :
+    (D : ThreeEndCertificateIrreducibilityData) :
     (D.addrDefSoundComplete → False) ∧
       (D.addrLinSoundComplete → False) ∧
       (D.defLinSoundComplete → False) := by
-  have hBudgetRegister := D.core.budget.register_failure_obstructs
-  have hClosureFailure := D.core.closure.failure_of_toeplitz
+  rcases paper_conclusion_three_end_certificate_orthogonality D.core with ⟨_, hOrthogonal⟩
+  rcases hOrthogonal with
+    ⟨_, hBoundaryAddress, _, _, hBudgetRegister, _, hClosureFailure⟩
   refine ⟨?_, ?_⟩
   · intro hSC
     have hNoFailure := D.addrDefRejectsFailureWitness hSC
     have hFailure : D.core.closure.failureWitness :=
-      hClosureFailure D.missingLinearWitness
+      hClosureFailure (Or.inr (Or.inr (Or.inr D.missingLinearWitness)))
     exact hNoFailure hFailure
   · refine ⟨?_, ?_⟩
     · intro hSC
       have hLegal := D.addrLinRequiresLegalReadout hSC
-      rcases D.missingDefectWitness with ⟨hVisible, hMode, hNotRegister⟩
-      exact (hBudgetRegister hVisible hMode hNotRegister) hLegal
+      exact (hBudgetRegister D.missingDefectWitness) hLegal
     · intro hSC
       have hCert := D.defLinRequiresBoundaryCertificate hSC
-      rcases D.missingAddressWitness with ⟨hRadius, hEndpoint, hNotAddress⟩
-      exact (hBoundaryAddress hRadius hEndpoint hNotAddress) hCert
+      exact (hBoundaryAddress D.missingAddressWitness) hCert
 
 end Omega.Conclusion

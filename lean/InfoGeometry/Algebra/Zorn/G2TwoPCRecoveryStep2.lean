@@ -17,7 +17,8 @@ lemma automorphism_mul_apply_local (g h : SplitOctF2Aut) (X : SplitOctF2) :
 lemma automorphism_map_add_y1 (g : SplitOctF2Aut) (X Y : SplitOctF2) :
     (g.1 (add X Y)).y1 = add2 (g.1 X).y1 (g.1 Y).y1 := by
   rw [automorphism_map_add]
-  rfl
+  simp [add, add2, Bool.xor]
+  cases (g.1 X).y1 <;> cases (g.1 Y).y1 <;> simp
 
 lemma automorphism_map_add5_y1 (g : SplitOctF2Aut)
     (X₀ X₁ X₂ X₃ X₄ : SplitOctF2) :
@@ -197,8 +198,12 @@ lemma peel1_sum_basis_y1 (f : SplitOctF2Aut) :
     rw [automorphism_map_add_y1 f (basis8 4) (basis8 5)]
     rw [automorphism_map_add_y1 f (basis8 2) (basis8 4)]
     rw [← bitToF2_eq_iff]
-    simp only [add2, bitToF2_xor]
-    ring_nf; simp [F2_mul_two, F2_mul_three, F2_mul_four]
+    generalize h2 : (f.1 (basis8 2)).y1 = a
+    generalize h3 : (f.1 (basis8 3)).y1 = b
+    generalize h4 : (f.1 (basis8 4)).y1 = c
+    generalize h5 : (f.1 (basis8 5)).y1 = d
+    generalize h6 : (f.1 (basis8 6)).y1 = e
+    cases a <;> cases b <;> cases c <;> cases d <;> cases e <;> rfl
   · rfl
 
 lemma extractBit2_pcWord (e : PCWordExp) :

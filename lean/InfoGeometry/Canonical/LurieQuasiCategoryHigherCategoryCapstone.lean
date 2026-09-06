@@ -2,7 +2,6 @@
 
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Lurie Quasi-Categories, Higher Categories & Kan Complex Homotopy Capstone
@@ -34,7 +33,6 @@ All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, an
 
 open scoped BigOperators
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedVariables false
 
@@ -125,9 +123,11 @@ theorem infinity_groupoid_kan_condition (C : Type*)
     inv_f.inv.src = f.tgt ∧ inv_f.inv.tgt = f.src :=
   ⟨inv_f.h_inv_src, inv_f.h_inv_tgt⟩
 
-/-! ### 4. Master Synthesis Theorem -/
+/-! The reusable boundary of this module is the explicit finite horn and
+    endpoint data above.  It does not promote those records to a general
+    higher-categorical theorem. -/
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Lurie Quasi-Categories, Higher Stacks & ∞-Groupoids**
 
 Unifies:
@@ -140,7 +140,7 @@ Unifies:
 4. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_higher_categories_lurie_synthesis
+/- theorem grand_higher_categories_lurie_synthesis
     (C : Type*) (horn : Inner2Horn C) (d : Horn3Data C)
     (f : Simplicial1Simplex C) (inv_f : Invertible1Simplex C f) :
     (∃ s : Simplex2 C, s.comp.src = horn.X0 ∧ s.comp.tgt = horn.X2) ∧
@@ -152,6 +152,6 @@ theorem grand_higher_categories_lurie_synthesis
    quasi_category_homotopy_associativity C d,
    infinity_groupoid_kan_condition C f inv_f,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.LurieHigherCategories

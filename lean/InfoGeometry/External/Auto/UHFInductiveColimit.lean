@@ -29,6 +29,10 @@ abbrev BitWord (n : ℕ) : Type :=
 abbrev DiagAlg (n : ℕ) : Type :=
   BitWord n → ℂ
 
+/-- Cantor boundary of the diagonal UHF algebra. -/
+abbrev CantorBoundary : Type :=
+  ℕ → Bool
+
 /-- Prefix a word of length `n+1` down to length `n`. -/
 def prefixSucc (n : ℕ) (w : BitWord (n + 1)) : BitWord n :=
   fun i => w ⟨i.1, Nat.lt_trans i.2 (Nat.lt_succ_self n)⟩
@@ -78,18 +82,18 @@ theorem diagEmbedSucc_injective (n : ℕ) :
   simpa [diagEmbedSucc_apply, prefixSucc_extendSucc] using happ
 
 /-- Restrict a boundary point to its first `n` bits. -/
-def boundaryPrefix (n : ℕ) (b : (ℕ → Bool)) : BitWord n :=
+def boundaryPrefix (n : ℕ) (b : CantorBoundary) : BitWord n :=
   fun i => b i.1
 
 /-- Finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder (n : ℕ) (f : DiagAlg n) : (ℕ → Bool) → ℂ :=
+def cylinder (n : ℕ) (f : DiagAlg n) : CantorBoundary → ℂ :=
   fun b => f (boundaryPrefix n b)
 
-theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : (ℕ → Bool)) :
+theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : CantorBoundary) :
     cylinder n f b = f (boundaryPrefix n b) := rfl
 
 theorem boundaryPrefix_succ_eq_prefixSucc
-    (n : ℕ) (b : (ℕ → Bool)) :
+    (n : ℕ) (b : CantorBoundary) :
     prefixSucc n (boundaryPrefix (n + 1) b) = boundaryPrefix n b := by
   ext i
   rfl
@@ -111,12 +115,12 @@ theorem cylinder_mul (n : ℕ) (f g : DiagAlg n) :
   rfl
 
 theorem cylinder_one (n : ℕ) :
-    cylinder n 1 = (1 : (ℕ → Bool) → ℂ) := by
+    cylinder n 1 = (1 : CantorBoundary → ℂ) := by
   ext b
   rfl
 
 /-- Finite-cylinder functions: the concrete diagonal UHF inductive colimit. -/
-def CylinderColimit : Set ((ℕ → Bool) → ℂ) :=
+def CylinderColimit : Set (CantorBoundary → ℂ) :=
   Set.range (fun p : Sigma DiagAlg => cylinder p.1 p.2)
 
 theorem cylinder_mem_colimit (n : ℕ) (f : DiagAlg n) :
@@ -150,6 +154,32 @@ theorem constant_cylinder_compatible
       =
     cylinder n (constantStageObservable n z) := by
   exact cylinder_compatible_succ n (constantStageObservable n z)
+
+/--
+Consolidated UHF/MASA colimit package:
+successor embeddings preserve algebra operations, are injective, and finite
+Fock constants define compatible cylinder observables in the colimit.
+-/
+theorem uhf_inductive_colimit_synthesis :
+    (∀ n : ℕ, Function.Injective (diagEmbedSucc n)) ∧
+    (∀ n : ℕ, ∀ f g : DiagAlg n,
+      diagEmbedSucc n (f + g) = diagEmbedSucc n f + diagEmbedSucc n g) ∧
+    (∀ n : ℕ, ∀ f g : DiagAlg n,
+      diagEmbedSucc n (f * g) = diagEmbedSucc n f * diagEmbedSucc n g) ∧
+    (∀ n : ℕ, diagEmbedSucc n 1 = (1 : DiagAlg (n + 1))) ∧
+    (∀ n : ℕ, ∀ f : DiagAlg n,
+      cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f) ∧
+    (∀ n : ℕ, ∀ z : ℂ,
+      diagEmbedSucc n (constantStageObservable n z) =
+        constantStageObservable (n + 1) z) ∧
+    (∀ n : ℕ, ∀ f : DiagAlg n, cylinder n f ∈ CylinderColimit) := by
+  exact ⟨diagEmbedSucc_injective,
+    diagEmbedSucc_add,
+    diagEmbedSucc_mul,
+    diagEmbedSucc_one,
+    cylinder_compatible_succ,
+    constantStageObservable_embed,
+    cylinder_mem_colimit⟩
 
 end UHFInductiveColimit
 

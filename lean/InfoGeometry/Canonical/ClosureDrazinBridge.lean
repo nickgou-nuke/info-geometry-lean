@@ -22,7 +22,7 @@ local notation "EndH" => E →L[ℝ] E
 /--
 A non-circular closure package for the chiral/Drazin lane.
 
-This stores only the property inverse-kernel owner.  The chiral closure facts
+This stores only the certified inverse-kernel owner.  The chiral closure facts
 below are read directly from `CertifiedInverseKernel` and
 `ChiralOperatorConeClosure`, without an intermediate proof packet.
 -/
@@ -33,7 +33,7 @@ namespace ConstructiveClosureDrazinData
 
 variable (C : ConstructiveClosureDrazinData (E := E))
 
-/-- KKT-lane view of the same property kernel. -/
+/-- KKT-lane view of the same certified kernel. -/
 @[rep_depth krein]
 def toDPDKKT : DPDKKT E :=
   ⟨C⟩

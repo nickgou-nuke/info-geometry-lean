@@ -75,25 +75,6 @@ def mul (X Y : RealSplitOct) : RealSplitOct :=
     Y.a * X.y1 + X.b * Y.y1 + (X.x2 * Y.x0 - X.x0 * Y.x2),
     Y.a * X.y2 + X.b * Y.y2 + (X.x0 * Y.x1 - X.x1 * Y.x0) ⟩
 
-/-- Scalar embedding into the split-octonion Zorn coordinates. -/
-def scalar (r : ℝ) : RealSplitOct :=
-  ⟨r, r, 0, 0, 0, 0, 0, 0⟩
-
-/-- The quadratic split-octonion norm in real Zorn coordinates. -/
-def normSq (X : RealSplitOct) : ℝ :=
-  X.a * X.b - (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2)
-
-/-- Multiplication by the conjugate is the scalar quadratic norm. -/
-theorem mul_conj_eq_scalar_normSq (X : RealSplitOct) :
-    mul X (conj X) = scalar (normSq X) := by
-  ext <;> simp [mul, conj, scalar, normSq] <;> ring
-
-/-- The quadratic split-octonion norm is multiplicative. -/
-theorem normSq_mul (X Y : RealSplitOct) :
-    normSq (mul X Y) = normSq X * normSq Y := by
-  simp [normSq, mul]
-  ring
-
 end RealSplitOct
 
 /-- The real Albert matrix coordinate carrier `ℝ^{27}`. -/
@@ -185,5 +166,3 @@ theorem mul_upper_unit_self :
 end RealAlbertMatrix
 
 end
-
-end InfoGeometry.Algebra

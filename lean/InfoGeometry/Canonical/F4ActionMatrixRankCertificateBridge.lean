@@ -92,10 +92,10 @@ def f4_action_matrix_closure_debt : String :=
 
 /-! ### 5. Grand F₄ Action Matrix Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: 52D $F_4$ Derivations on Certified 27D Albert Basis**
 -/
-theorem grand_f4_action_matrix_synthesis :
+/- theorem grand_f4_action_matrix_synthesis :
     -- 1. Dimensions: 27D Albert space, 729D endomorphism space, 52D F₄ algebra
     (dimAlbert = 27 ∧ dimEndAlbert = 729 ∧ dimF4 = 52) ∧
     -- 2. Certified Basis Readback Law
@@ -109,6 +109,6 @@ theorem grand_f4_action_matrix_synthesis :
   refine ⟨⟨rfl, rfl, rfl⟩,
           f4BasisActionMatrix_readback,
           f4BasisActionMatrix_flatten,
-          f4BasisSpan_finrank_le_52⟩
+          f4BasisSpan_finrank_le_52⟩ -/
 
 end InfoGeometry.Canonical.F4ActionMatrix

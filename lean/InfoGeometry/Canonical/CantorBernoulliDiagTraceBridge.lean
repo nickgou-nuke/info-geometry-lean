@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorKMSState
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 
 /-!
@@ -23,14 +24,6 @@ open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Analysis.FractalMeasure.Basic
-
-theorem diagTrace_cylinderIndicator_eq_fractalMeasure_toReal
-    (n : ℕ) (w : BitWord n) :
-    DiagTrace n (cylinderIndicator n w) =
-      ((fractalMeasure
-          (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w)).toReal : ℂ) := by
-  rw [DiagTrace_cylinderIndicator, fractalMeasure_topologyCylinderSet]
-  norm_num [ENNReal.toReal_ofNat]
 
 theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal
     (n : ℕ) (w : BitWord n) :

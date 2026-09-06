@@ -4,7 +4,6 @@ import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
-import InfoGeometry.OperatorAlgebra.GradeActionInterface
 import Mathlib.Tactic.NoncommRing
 
 open InfoGeometry.CliffordTower
@@ -46,47 +45,6 @@ theorem adD_mul (a b : Alg 5) : adD (a * b) = adD a * b + a * adD b := by
   dsimp [adD]
   noncomm_ring
 
-theorem gradeSpace_mul_of_sum
-    (g h k : ConformalGrade) {x y : Alg 5}
-    (hx : x ∈ gradeSpace g) (hy : y ∈ gradeSpace h)
-    (hgrade : toInt k = toInt g + toInt h) :
-    x * y ∈ gradeSpace k := by
-  have hx' : adD x = (toInt g : ℝ) • x :=
-    sub_eq_zero.mp (LinearMap.mem_ker.mp hx)
-  have hy' : adD y = (toInt h : ℝ) • y :=
-    sub_eq_zero.mp (LinearMap.mem_ker.mp hy)
-  have hxy : adD (x * y) =
-      ((toInt g : ℝ) + (toInt h : ℝ)) • (x * y) := by
-    rw [adD_mul, hx', hy', smul_mul_assoc, Algebra.mul_smul_comm]
-    rw [add_smul]
-  dsimp [gradeSpace]
-  rw [LinearMap.mem_ker]
-  change adD (x * y) - (toInt k : ℝ) • (x * y) = 0
-  rw [hxy, hgrade, Int.cast_add]
-  exact sub_self _
-
-theorem gradeSpace_commutator_of_sum
-    (g h k : ConformalGrade) {x y : Alg 5}
-    (hx : x ∈ gradeSpace g) (hy : y ∈ gradeSpace h)
-    (hgrade : toInt k = toInt g + toInt h) :
-    x * y - y * x ∈ gradeSpace k := by
-  have hxy := gradeSpace_mul_of_sum g h k hx hy hgrade
-  have hyx : y * x ∈ gradeSpace k := by
-    apply gradeSpace_mul_of_sum h g k hy hx
-    rw [hgrade, add_comm]
-  exact sub_mem hxy hyx
-
-theorem gradeSpace_anticommutator_of_sum
-    (g h k : ConformalGrade) {x y : Alg 5}
-    (hx : x ∈ gradeSpace g) (hy : y ∈ gradeSpace h)
-    (hgrade : toInt k = toInt g + toInt h) :
-    x * y + y * x ∈ gradeSpace k := by
-  have hxy := gradeSpace_mul_of_sum g h k hx hy hgrade
-  have hyx : y * x ∈ gradeSpace k := by
-    apply gradeSpace_mul_of_sum h g k hy hx
-    rw [hgrade, add_comm]
-  exact add_mem hxy hyx
-
 
 
 /-- `thetaOp` intertwines with `adD` up to a sign. -/
@@ -120,33 +78,6 @@ theorem theta_maps (g : ConformalGrade) (x : Alg 5) (hx : x ∈ gradeSpace g) :
   rw [h_goal]
   dsimp
   rw [sub_eq_zero]
-
-/-! The conformal inversion is exposed through the common grade-action
-interface, while retaining its native `ConformalGrade` labels. -/
-theorem theta_mapsToGrade :
-    InfoGeometry.OperatorAlgebra.MapsToGrade
-      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
-      (fun _ : Unit => fun x => thetaOp x)
-      (fun _ g => ConformalGrade.swap g) := by
-  intro _ g x hx
-  exact theta_maps g x hx
-
-theorem theta_twice_mapsToGrade :
-    InfoGeometry.OperatorAlgebra.MapsToGrade
-      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
-      (fun _ : Unit => fun x => thetaOp (thetaOp x))
-      (fun _ g => ConformalGrade.swap (ConformalGrade.swap g)) := by
-  intro _ g x hx
-  exact InfoGeometry.OperatorAlgebra.mapsToGradeBetween_comp
-    theta_mapsToGrade theta_mapsToGrade () () g hx
-
-theorem theta_twice_mapsToGrade_identity :
-    InfoGeometry.OperatorAlgebra.PreservesGrade
-      (fun g : ConformalGrade => (gradeSpace g : Set (Alg 5)))
-      (fun _ : Unit => fun x => thetaOp (thetaOp x)) := by
-  intro _ g x hx
-  have h := theta_twice_mapsToGrade () g hx
-  simpa [theta_inv] using h
 
 /-- The grade subspaces intersected with the even Clifford subalgebra. -/
 def gradeSpaceEven (g : ConformalGrade) : Submodule ℝ (CliffordAlgebra.even (Qsplit 5)) :=
@@ -182,17 +113,9 @@ theorem theta_maps_even (g : ConformalGrade) (x : CliffordAlgebra.even (Qsplit 5
   dsimp [gradeSpaceEven, thetaOpEven]
   exact theta_maps g x.val hx
 
-theorem thetaOpEven_mapsToGrade :
-    InfoGeometry.OperatorAlgebra.MapsToGrade
-      (fun g : ConformalGrade => (gradeSpaceEven g : Set (CliffordAlgebra.even (Qsplit 5))))
-      (fun _ : Unit => fun x => thetaOpEven x)
-      (fun _ g => ConformalGrade.swap g) := by
-  intro _ g x hx
-  exact theta_maps_even g x hx
-
 def HomogeneousElementEven := Σ (g : ConformalGrade), gradeSpaceEven g
 
-abbrev homogeneousGradeEven (x : HomogeneousElementEven) : ConformalGrade := x.1
+def homogeneousGradeEven (x : HomogeneousElementEven) : ConformalGrade := x.1
 
 def homogeneousThetaEven (x : HomogeneousElementEven) : HomogeneousElementEven :=
   ⟨ConformalGrade.swap x.1, ⟨thetaOpEven x.2.1, theta_maps_even x.1 x.2.1 x.2.2⟩⟩

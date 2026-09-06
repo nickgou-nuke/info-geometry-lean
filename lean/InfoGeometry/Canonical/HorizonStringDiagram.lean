@@ -113,6 +113,13 @@ namespace WeylWeightedHorizonStringDiagram
 variable {State EdgeLabel Edge Weight Obj : Type*}
 variable (D : WeylWeightedHorizonStringDiagram State EdgeLabel Edge Weight Obj)
 
+@[rep_depth operator]
+theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
+    D.homogeneousReadout.readout (D.homogeneousReadout.scale c x)
+      =
+    c ^ D.homogeneousReadout.weight * D.homogeneousReadout.readout x :=
+  D.homogeneousReadout.readout_scale c x
+
 end WeylWeightedHorizonStringDiagram
 
 /--
@@ -128,5 +135,11 @@ structure HorizonStringFlowCarrier
   diagram : HorizonStringDiagram State EdgeLabel Edge Weight
   flowGenerator : FlowGenerator
 
+namespace HorizonStringFlowCarrier
+
+variable {State EdgeLabel Edge Weight FlowGenerator : Type*}
+variable (C : HorizonStringFlowCarrier State EdgeLabel Edge Weight FlowGenerator)
+
+end HorizonStringFlowCarrier
 
 end InfoGeometry.Canonical

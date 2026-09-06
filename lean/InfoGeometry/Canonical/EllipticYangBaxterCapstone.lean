@@ -14,7 +14,10 @@ theorem capstone_elliptic_yang_baxter_synthesis (γ₁ γ₂ γ₃ γ_i γ_j Ω 
      R₁₂_u * R₁₃_uv * R₂₃_v = R₂₃_v * R₁₃_uv * R₁₂_u) ∧
     (‖ellipticRMatrix Ω u‖ = 1) ∧
     (ellipticRMatrix (γ_i * γ_j) 0 = 1) ∧
-    (ellipticRMatrix Ω u * ellipticRMatrix Ω (-u) = 1) :=
-  grand_elliptic_yang_baxter_synthesis γ₁ γ₂ γ₃ γ_i γ_j Ω u v
+    (ellipticRMatrix Ω u * ellipticRMatrix Ω (-u) = 1) := by
+  exact ⟨elliptic_yang_baxter_identity γ₁ γ₂ γ₃ u v,
+    elliptic_R_matrix_unitary Ω u,
+    elliptic_R_matrix_at_zero γ_i γ_j,
+    elliptic_R_matrix_inversion Ω u⟩
 
 end InfoGeometry.Canonical.EllipticYangBaxterCapstone

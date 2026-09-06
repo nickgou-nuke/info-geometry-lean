@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 
 The repo already owns the symbolic Cantor fractal limit carrier in
 `FractalCantorCliffordFockBridge` as the infinite binary boundary
-`(ℕ → Bool) = ℕ → Bool`, together with prefix/tail reconstruction.
+`InfiniteBinaryWordSpace = ℕ → Bool`, together with prefix/tail reconstruction.
 
 This file proves the missing bridge: any compatible finite-stage MDPAS/JM tower
 whose finite stages have compatible Cantor addresses descends uniquely through
@@ -44,7 +44,7 @@ open InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 open InfoGeometry.Topology.ThermodynamicGauge
 
 /-- The Turing-tape carrier is the same repo-owned Cantor boundary: infinite binary words. -/
-abbrev TuringTape := (ℕ → Bool)
+abbrev TuringTape := InfiniteBinaryWordSpace
 
 /-- A finite observation window on an infinite Turing tape. -/
 def turingWindow (n : ℕ) (τ : TuringTape) : List Bool :=
@@ -65,21 +65,21 @@ repo-owned Cantor fractal boundary.
 -/
 structure MDPASCantorAddressSystem
     (ι : Type*) [Fintype ι] [Nonempty ι]
-    (Op : Type*) [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
-    (State LieAlgebra LieDual : Type*) [AddMonoid LieAlgebra] where
+    (Op : Type*) [Ring Op] [Algebra ℝ Op]
+    (State LieAlgebra LieDual : Type*) where
   direct : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual
-  address : ∀ _n : ℕ, Op → (ℕ → Bool)
+  address : ∀ _n : ℕ, Op → InfiniteBinaryWordSpace
   address_bond : ∀ n x, address (n + 1) (direct.bond n x) = address n x
 
 namespace MDPASCantorAddressSystem
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
-variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
+variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
+variable {State LieAlgebra LieDual : Type*}
 
 /-- The proper infinite carrier is the established Cantor fractal boundary. -/
 abbrev ProperCantorCarrier (_T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual) : Type :=
-  (ℕ → Bool)
+  InfiniteBinaryWordSpace
 
 /-- The unique map from the MDPAS quotient carrier into the Cantor fractal limit. -/
 def cantorLimitMap (T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual) :
@@ -107,7 +107,7 @@ theorem cantorLimitMap_ofStage
 /-- The map to the Cantor boundary is unique among compatible finite-stage maps. -/
 theorem cantorLimitMap_unique
     (T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual)
-    (Φ : FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct → (ℕ → Bool))
+    (Φ : FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct → InfiniteBinaryWordSpace)
     (hΦ : ∀ n x, Φ (ofStage T.direct n x) = T.address n x) :
     Φ = T.cantorLimitMap :=
   compatibleLift_unique T.direct T.address T.address_bond Φ hΦ
@@ -220,7 +220,7 @@ quotient direct limit and finite-prefix reconstruction at all depths.
 theorem mdpas_infinite_object_is_cantor_fractal_colimit
     (T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual) :
     Nonempty (FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct) ∧
-      ∃! Φ : FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct → (ℕ → Bool),
+      ∃! Φ : FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct → InfiniteBinaryWordSpace,
         (∀ n x, Φ (ofStage T.direct n x) = T.address n x) ∧
           (∀ q, Φ q = boundaryCons (boundaryHead (Φ q)) (boundaryTail (Φ q))) ∧
           (∀ q n, Φ q = boundaryConsList (boundaryPrefix n (Φ q))
@@ -264,6 +264,4 @@ theorem curvature_cantor_address_compatible
 
 end MDPASCantorAddressSystem
 
-end MDPASJMSouriauCantorColimit
-end Physics
-end InfoGeometry
+end InfoGeometry.Physics.MDPASJMSouriauCantorColimit

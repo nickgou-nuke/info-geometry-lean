@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Fibonacci.FibAnyonSpectralObstruction
 import InfoGeometry.Physics.B3PresentedGroup
 import Mathlib.Tactic
 
@@ -150,7 +151,9 @@ theorem direct_intertwiner_eq_zero_of_left_inverse
 /-- The concrete Fibonacci phase has a nonsingular spectral obstruction. -/
 theorem obstruction_det_ne_zero :
     Matrix.det (R_Fib * R_Fib + (1 : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0 := by
-  exact InfoGeometry.Canonical.YangBaxterProof.det_R_sq_add_one_ne_zero
+  simpa [InfoGeometry.Canonical.YangBaxterProof.R,
+    InfoGeometry.Fibonacci.FibAnyonThm3.R] using
+    InfoGeometry.Fibonacci.FibAnyonSpectralObstruction.R_sq_add_one_det_ne_zero
 
 /-- No nonzero direct intertwiner exists for the concrete first-generator
 representations. -/

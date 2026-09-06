@@ -166,6 +166,25 @@ theorem three_prime_supertrace
       - x₂ * x₃ * x₅ := by
   ring
 
+/-- Consolidated finite algebraic package. -/
+theorem souriau_hestenes_mobius_pole_synthesis :
+    (∀ OP : ℂ, CubicProjector OP ↔ OP * (OP - 1) * (OP + 1) = 0) ∧
+    (∀ x : ℂ, x ≠ 1 → bosonicLocalFactor x * gradedLocalFactor x = 1) ∧
+    (∀ Zeta : ℂ → ℂ, ∀ s, reciprocalPoleCandidate Zeta s ↔ Zeta s = 0) ∧
+    (∀ c s rho : ℂ, c ≠ 0 → s ≠ rho →
+      (c * (s - rho))⁻¹ = c⁻¹ * (s - rho)⁻¹) ∧
+    (∀ x₂ x₃ x₅ : ℂ,
+      (1 - x₂) * (1 - x₃) * (1 - x₅)
+        =
+      1 - (x₂ + x₃ + x₅)
+        + (x₂ * x₃ + x₂ * x₅ + x₃ * x₅)
+        - x₂ * x₃ * x₅) := by
+  exact ⟨fun OP => cubic_projector_iff_trifactor OP,
+    fun x hx => gradedLocal_cancels_bosonic hx,
+    reciprocalPoleCandidate_iff_zeta_zero,
+    fun c s rho hc hs => reciprocal_simple_zero_model hc hs,
+    three_prime_supertrace⟩
+
 end SouriauHestenesMobiusPole
 
 end noncomputable section

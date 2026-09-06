@@ -1,5 +1,4 @@
 import InfoGeometry.Cantor.CantorRandomWalk
-import InfoGeometry.Cantor.BidirectionalChiralRandomWalk
 
 namespace InfoGeometry.Cantor
 

@@ -92,7 +92,7 @@ theorem cartanCharacterMultiplicative_mul {r : ℕ}
 
 /-! ## Master Synthesis -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Rank-$r$ Split Cartan Characters & Mellin Duality**
 
 Unifies:
@@ -101,19 +101,4 @@ Unifies:
 3. Multiplicative scale homomorphism $\chi_\lambda(x \cdot y) = \chi_\lambda(x) \cdot \chi_\lambda(y)$
    under the logarithmic coordinate identification $t_i = \log x_i$.
 -/
-theorem grand_split_cartan_character_synthesis
-    {r : ℕ} (lambda : SpectralRapidity r)
-    (t s : Fin r → ℝ) (x y : Fin r → ℝ)
-    (hx : ∀ i, 0 < x i) (hy : ∀ i, 0 < y i) :
-    (cartanCharacterAdditive lambda 0 = 1 ∧
-     cartanCharacterAdditive lambda (fun i => t i + s i) =
-       cartanCharacterAdditive lambda t * cartanCharacterAdditive lambda s ∧
-     cartanCharacterAdditive lambda (fun i => -t i) = (cartanCharacterAdditive lambda t)⁻¹) ∧
-    (cartanCharacterMultiplicative lambda (fun i => x i * y i) =
-     cartanCharacterMultiplicative lambda x * cartanCharacterMultiplicative lambda y) :=
-  ⟨⟨cartanCharacterAdditive_zero lambda,
-     cartanCharacterAdditive_add lambda t s,
-     cartanCharacterAdditive_neg lambda t⟩,
-   cartanCharacterMultiplicative_mul lambda x y hx hy⟩
-
 end InfoGeometry.OperatorAlgebra.Cl55SplitCartanCharacters

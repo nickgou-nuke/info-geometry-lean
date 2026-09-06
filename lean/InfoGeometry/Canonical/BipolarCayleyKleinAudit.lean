@@ -1,0 +1,98 @@
+import InfoGeometry.Canonical.BipolarCayleyKleinPristineChain
+
+/-!
+# Native transitive axiom inspection
+
+These commands inspect actual proof dependencies only when Lean executes.
+Source scans and exact external algebra checks are not substitutes for this
+kernel run. Standard logical axioms are acceptable; `sorryAx` and any
+project-specific assumed mathematical axiom are not.
+-/
+
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_eq_one_iff
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.homogeneous_associative_of_cocycle
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_mul
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_inv
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.relativeTwist_mul
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_relativeTwist
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.target_associator_is_relative_coboundary
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.relativeTwist_pentagon
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_zero_left
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_zero_middle
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.associator_zero_right
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.signUnit_add
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.bilinear_sign_cocycle
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.bilinear_sign_associator_one
+#print axioms InfoGeometry.Algebra.Zorn.CochainTwistSeparation.bilinear_sign_homogeneous_associative
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.splitDouble_coordinates
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.core_mul
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.core_one
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.core_injective
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.ell_sq
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.ell_core
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.coreConj_eq_neg_of_trace_zero
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.complexDouble_mul
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.splitDouble_mul
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.complexMatrix_finrank
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.splitCarrier_finrank
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.matrixSplitLinearEquiv_double
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.matrixSplitLinearEquiv_I
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.native_associator_witness
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.no_surjective_multiplicative_matrix_map
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.matrixSplitLinearEquiv_not_multiplicative
+#print axioms InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation.ell_not_supercommutative_odd
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.matrixSplitLinearEquiv_grade
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.matrixGrade_mul
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.splitGrade_mul
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.matrixExponent_cocycle
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.matrixCochain_associator_one
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.splitExponent_coboundary
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.splitCochain_associator
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.splitCochain_associator_basis
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.nativeTwist_product
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.nativeTwist_coboundary
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.nativeTwist_pentagon
+#print axioms InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist.splitCochain_not_bilinear
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.mul_quadraticInverse
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.quadraticInverse_mul
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.cayley_denominator_inverse
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.cayley_denominator_norm
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.diagonal_cayley_regular_iff
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.nativeCayley_diagonal
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.core_elliptic_negative_square
+#print axioms InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain.nontrivial_sum_of_squares_zero
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.fugacityCayley_eq_polarization
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.crossRatio_add_one
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.crossRatio_add_one_ne_zero
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.fugacityCayley_crossRatio
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.fugacityCayley_normSq_lt_one_iff
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.fugacityCayley_exp
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.occupation_real_exp
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.real_polarization_eq_tanh
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.logistic_logOdds
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.logistic_odds
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.logOdds_logistic
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.real_polarization_bounds
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.polarization_eq_zero_iff
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.polarization_criticalLine
+#print axioms InfoGeometry.Analysis.BipolarCayleyOccupation.criticalLine_polarization_zero_iff
+#print axioms InfoGeometry.Canonical.BipolarCayleyKleinPristineChain.pristine_eight_dimensional_separation
+#print axioms InfoGeometry.Canonical.BipolarCayleyKleinPristineChain.pristine_native_twist
+#print axioms InfoGeometry.Canonical.BipolarCayleyKleinPristineChain.pristine_real_occupation
+#print axioms InfoGeometry.Canonical.BipolarCayleyKleinPristineChain.pristine_cayley_berezinian
+#print axioms InfoGeometry.Canonical.BipolarCayleyKleinPristineChain.pristine_critical_line_correction
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.fugacityBerezinianReadout_eq
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.diagonalBerezinian_fugacity
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.diagonalBerezinian_ne_zero
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.fugacityBerezinianReadout_eq_neg_inv_cayley
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.fugacityBerezinianReadout_crossRatio
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.one_sub_crossRatio
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.odd_block_ne_zero_iff
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.diagonal_blocks_regular
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.diagonalBerezinian_exp
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.centeredBerezinian_pole_coefficient
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.centeredBerezinian_simple_pole
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.centeredBerezinian_criticalLine
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.criticalLine_odd_block_regular
+#print axioms InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley.midpoint_odd_block_not_unit
+

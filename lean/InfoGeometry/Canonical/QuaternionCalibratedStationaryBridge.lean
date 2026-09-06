@@ -44,7 +44,7 @@ variable (Q : Spinor)
 /-- Honest finite compatibility packet for the current quaternion bridge lane. -/
 def quaternionCalibratedStationary
     (D : NarainSupervolumeBridgeData n)
-    (P : CalibrationVariationData) : Prop :=
+    (P : CalibrationVariationPacket) : Prop :=
   D.negativeLogPotential = -Real.log D.supervolume ∧
   calibratedStationary P ∧
   quaternion_field_residual nabla e_inv m Q gamma_action = 0
@@ -52,7 +52,7 @@ def quaternionCalibratedStationary
 /-- Expand the packet into the exact finite scalar equalities and residual it asserts. -/
 theorem quaternionCalibratedStationary_iff
     (D : NarainSupervolumeBridgeData n)
-    (P : CalibrationVariationData) :
+    (P : CalibrationVariationPacket) :
     quaternionCalibratedStationary nabla e_inv m gamma_action Q D P ↔
       (D.negativeLogPotential = -Real.log D.supervolume) ∧
       ((P.dMassieu - P.dKL - P.lambdaInc * P.dIncidenceFriction -

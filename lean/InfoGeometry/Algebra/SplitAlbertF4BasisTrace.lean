@@ -641,7 +641,7 @@ action table below is a genuine finite evaluator, rather than a parameterized
 readout depending on an unspecified family of probes.
 -/
 
-def h3ZornProbe (j : Fin 27) : H3Zorn ℝ :=
+noncomputable def h3ZornProbe (j : Fin 27) : H3Zorn ℝ :=
   ![h3_diag₁, h3_diag₂, h3_diag₃,
     h3_off₁₂ 0, h3_off₁₂ 1, h3_off₁₂ 2, h3_off₁₂ 3,
     h3_off₁₂ 4, h3_off₁₂ 5, h3_off₁₂ 6, h3_off₁₂ 7,

@@ -1,0 +1,17 @@
+import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+
+/-!
+# InfoGeometry.Arithmetic.MobiusDirichletInverseBridgeChecks
+
+Availability checks for the finite Möbius/Witten inverse bridge.
+-/
+
+namespace InfoGeometry.Arithmetic.MobiusDirichletInverseBridge.Checks
+
+#check finiteMobiusDirichletPolynomial
+#check finiteFermionicEulerProduct
+#check finiteMobiusDirichletPolynomial_eq_finiteFermionicEulerProduct
+#check finiteMobiusDirichletPolynomial_empty
+#check finiteFermionicEulerProduct_empty
+
+end InfoGeometry.Arithmetic.MobiusDirichletInverseBridge.Checks

@@ -140,7 +140,7 @@ theorem hexagram_full_turn :
 
 /-! ## 4. Master Grand Cyclotomic Bridge Theorem -/
 
-/--
+/-
 🏆 **MASTER THEOREM: Matrix Cyclotomic Potential, Operatorial VEV, and Double Star of David**
 
 Unifies:
@@ -150,7 +150,7 @@ Unifies:
 4. **Operatorial Bregman Non-negativity**: $\sum_i (e^{-\beta \lambda_i} - 1 + \beta \lambda_i) \ge 0$.
 5. **Hexagram Angle Rotation**: $12 \cdot (\pi / 6) = 2\pi$.
 -/
-theorem grand_operator_cyclotomic_double_star_synthesis
+/- theorem grand_operator_cyclotomic_double_star_synthesis
     (ev : Fin n → ℝ)
     (h_vev : ∀ i, ev i ^ 2 = (1 / 2 : ℝ))
     (beta : ℝ) :
@@ -163,6 +163,6 @@ theorem grand_operator_cyclotomic_double_star_synthesis
    spectral_phi12_lower_bound ev,
    spectralBregmanDivergence_nonneg beta ev,
    spectralBregmanDivergence_zero ev,
-   hexagram_full_turn⟩
+   hexagram_full_turn⟩ -/
 
 end InfoGeometry.Physics.OperatorCyclotomic

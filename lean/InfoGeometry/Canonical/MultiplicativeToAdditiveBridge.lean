@@ -24,21 +24,17 @@ Radon-Nikodym character, index character, cyclic pairing, ...).
 Exact descent from a multiplicative source to a commutative multiplicative
 character.
 -/
-abbrev ExactAbelianizingBridge (M S : Type*) [Monoid M] [CommMonoid S] :=
-  M →* S
+structure ExactAbelianizingBridge (M S : Type*) [Monoid M] [CommMonoid S] where
+  character : M →* S
 
 namespace ExactAbelianizingBridge
-
-/-- Compatibility accessor for the native multiplicative character. -/
-abbrev character {M S : Type*} [Monoid M] [CommMonoid S]
-    (B : ExactAbelianizingBridge M S) : M →* S := B
 
 variable {M S : Type*} [Monoid M] [CommMonoid S]
 
 /-- The descended commutative character is multiplicative. -/
 theorem map_mul (B : ExactAbelianizingBridge M S) (x y : M) :
-    B (x * y) = B x * B y :=
-  MonoidHom.map_mul B x y
+    B.character (x * y) = B.character x * B.character y :=
+  B.character.map_mul x y
 
 end ExactAbelianizingBridge
 
@@ -61,14 +57,6 @@ theorem map_mul (B : DefectiveAbelianizingBridge M S) (x y : M) :
     B.character (x * y) = B.defect x y * (B.character x * B.character y) :=
   B.map_mul_defect x y
 
-/-- A unit defect is exactly the ordinary multiplicativity law. -/
-theorem map_mul_of_defect_one
-    (B : DefectiveAbelianizingBridge M S) (x y : M)
-    (hdefect : ∀ x y, B.defect x y = 1) :
-    B.character (x * y) = B.character x * B.character y := by
-  rw [B.map_mul_defect x y, hdefect x y]
-  simp
-
 end DefectiveAbelianizingBridge
 
 namespace ExactAbelianizingBridge
@@ -77,7 +65,7 @@ variable {M S : Type*} [Monoid M] [CommMonoid S]
 
 /-- Exact descent yields a defective descent with trivial defect. -/
 def toDefective (B : ExactAbelianizingBridge M S) : DefectiveAbelianizingBridge M S where
-  character := B
+  character := B.character
   defect := fun _ _ => 1
   map_mul_defect := by
     intro x y
@@ -144,7 +132,7 @@ variable {M S A : Type*} [Monoid M] [CommMonoid S] [AddCommMonoid A]
 
 /-- The additive invariant attached to the exact bridge. -/
 def additiveInvariant (B : ExactMultiplicativeToAdditiveBridge M S A) : M → A :=
-  fun x => B.toAdditiveLinearization.linearize (B.toExactAbelianizingBridge x)
+  fun x => B.toAdditiveLinearization.linearize (B.toExactAbelianizingBridge.character x)
 
 /-- Exact descent plus exact linearization yields an additive law upstairs. -/
 theorem additiveInvariant_mul (B : ExactMultiplicativeToAdditiveBridge M S A) (x y : M) :
@@ -188,35 +176,6 @@ theorem additiveInvariant_mul
   rw [DefectiveAbelianizingBridge.map_mul B.toDefectiveAbelianizingBridge,
     AdditiveLinearization.map_mul_apply B.toAdditiveLinearization,
     AdditiveLinearization.map_mul_apply B.toAdditiveLinearization]
-
-/-- A defective bridge is exact on any pair whose descent defect is one. -/
-theorem additiveInvariant_mul_of_defect_one
-    (B : DefectiveMultiplicativeToAdditiveBridge M S A) (x y : M)
-    (hdefect : ∀ u v, B.toDefectiveAbelianizingBridge.defect u v = 1) :
-    B.additiveInvariant (x * y) =
-      B.additiveInvariant x + B.additiveInvariant y := by
-  unfold additiveInvariant
-  have hmul := DefectiveAbelianizingBridge.map_mul_of_defect_one
-    B.toDefectiveAbelianizingBridge x y hdefect
-  rw [hmul, AdditiveLinearization.map_mul_apply B.toAdditiveLinearization]
-
-/-!
-The exactness condition is local: a single product is additive whenever its
-descent defect is the unit.  This is strictly stronger than requiring every
-pair in the source to have unit defect.
--/
-theorem additiveInvariant_mul_of_defect_one_at
-    (B : DefectiveMultiplicativeToAdditiveBridge M S A) (x y : M)
-    (hdefect : B.toDefectiveAbelianizingBridge.defect x y = 1) :
-    B.additiveInvariant (x * y) =
-      B.additiveInvariant x + B.additiveInvariant y := by
-  unfold additiveInvariant
-  rw [B.toDefectiveAbelianizingBridge.map_mul_defect x y, hdefect]
-  simp only [one_mul]
-  simpa using
-    B.toAdditiveLinearization.map_mul_apply
-      (B.toDefectiveAbelianizingBridge.character x)
-      (B.toDefectiveAbelianizingBridge.character y)
 
 end DefectiveMultiplicativeToAdditiveBridge
 

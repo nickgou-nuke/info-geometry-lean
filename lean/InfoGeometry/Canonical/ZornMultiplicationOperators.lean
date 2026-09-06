@@ -4,6 +4,36 @@ namespace InfoGeometry.Canonical.ZornMatrix
 
 variable {R : Type*} [CommRing R]
 
+/- The canonical spinor owner predates a named conjugation API.  Keep the
+   involution here, next to the multiplication operators which use it. -/
+def conjugate (z : ZornMatrix R) : ZornMatrix R :=
+  { a := z.b, b := z.a, x := -z.x, y := -z.y }
+
+@[simp] theorem conjugate_add (z w : ZornMatrix R) :
+    conjugate (z + w) = conjugate z + conjugate w := by
+  cases z; cases w
+  apply ZornMatrix.ext <;> simp [conjugate]
+
+theorem conjugate_mul (z w : ZornMatrix R) :
+    conjugate (z * w) = conjugate w * conjugate z := by
+  cases z with
+  | mk a b x y =>
+    cases w with
+    | mk c d p q =>
+      apply ZornMatrix.ext
+      · simp [conjugate, ZornMatrix.mul, ZornMatrix.dot]
+        ring
+      · simp [conjugate, ZornMatrix.mul, ZornMatrix.dot]
+        ring
+      · funext i
+        fin_cases i <;>
+          simp [conjugate, ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+            Matrix.vecHead, Matrix.vecTail] <;> ring
+      · funext i
+        fin_cases i <;>
+          simp [conjugate, ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+            Matrix.vecHead, Matrix.vecTail] <;> ring
+
 /-- Left multiplication by a fixed Zorn matrix, viewed as a linear map. -/
 def leftMulLinear (z : ZornMatrix R) : ZornMatrix R →ₗ[R] ZornMatrix R where
   toFun w := z * w

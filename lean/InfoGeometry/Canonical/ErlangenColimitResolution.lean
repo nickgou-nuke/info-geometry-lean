@@ -32,7 +32,7 @@ by constructing the colimit stage via a global ambient algebra.
 
 When the inductive chain A_n maps injectively into a universal global algebra A_infty,
 and the grading predicates extend continuously/compatibly, the invariants transport
-exactly to the ambient closure, resolving the interface natively without axioms.
+exactly to the ambient closure, resolving the socket natively without axioms.
 -/
 @[rep_depth transport]
 def resolveColimitInheritsInvariants_of_ambient

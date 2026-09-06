@@ -90,17 +90,19 @@ theorem master_toeplitz_cuntz_fusion_braid_tensor_synthesis (b1 b2 : A)
     D.Qbr * D.P0 = 0 ∧
     D.P0 * D.Qbr = 0 := by
   intro D
+  have h_master := master_abstract_braided_compression_synthesis D
   have h_cube : D.Qbr * D.Qbr * D.Qbr = D.fullTwist * g.P1 := by
-    have h_c := braidedCubicSupercharge_cube D
+    have h_c := h_master.2.1
     rw [fullTwist_val D] at h_c
     exact h_c
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact fullTwist_comm_b1 D
-  · exact fullTwist_comm_b2 D
-  · exact h_cube
-  · exact braidedCubicSupercharge_star_mul_self D
-  · exact braidedCubicSupercharge_mul_star D
-  · exact braidedCubicSupercharge_mul_defect D
-  · exact defect_mul_braidedCubicSupercharge D
+  exact ⟨
+    fullTwist_comm_b1 D,
+    fullTwist_comm_b2 D,
+    h_cube,
+    h_master.2.2.1,
+    h_master.2.2.2.1,
+    h_master.2.2.2.2.1,
+    h_master.2.2.2.2.2
+  ⟩
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeFusionBraidTensorBridge

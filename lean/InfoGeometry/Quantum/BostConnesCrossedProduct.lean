@@ -42,12 +42,3 @@ theorem galois_crossed_product_equivariance
     _ = g (alpha A * Sp) := by rw [h_rel]
     _ = g (alpha A) * g Sp := map_mul g (alpha A) Sp
     _ = alpha (g A) * g Sp := by rw [h_comm]
-
-theorem grand_bost_connes_crossed_product_synthesis
-    (g alpha : R →+* R) (Sp A : R) (r1 r2 : ℚ)
-    (h_comm : ∀ x, g (alpha x) = alpha (g x))
-    (h_rel : crossedProductRelation Sp A (alpha A)) :
-    (cyclotomicPhase (r1 + r2) = cyclotomicPhase r1 * cyclotomicPhase r2) ∧
-    (crossedProductRelation (g Sp) (g A) (alpha (g A))) :=
-  ⟨cyclotomic_phase_add r1 r2,
-   galois_crossed_product_equivariance g alpha Sp A h_comm h_rel⟩

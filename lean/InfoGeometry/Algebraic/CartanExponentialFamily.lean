@@ -90,68 +90,6 @@ noncomputable def fisherCov (θ : ι → ℝ) (X Y : ι → ℝ) : ℝ :=
 def centered (X : ι → ℝ) : Prop :=
   ∑ i, X i = 0
 
-/-! ## Common-shift quotient coordinates -/
-
-/-- The trace/mean-free representative of a finite Cartan coordinate. -/
-noncomputable def centeredPart [Nonempty ι] (θ : ι → ℝ) : ι → ℝ :=
-  fun i => θ i - (1 / Fintype.card ι : ℝ) * ∑ j, θ j
-
-theorem centeredPart_centered [Nonempty ι] (θ : ι → ℝ) :
-    centered (centeredPart θ) := by
-  unfold centered centeredPart
-  rw [Finset.sum_sub_distrib]
-  have hsum :
-      (∑ i : ι, (1 / Fintype.card ι : ℝ) * ∑ j, θ j) =
-        (Fintype.card ι : ℝ) * (1 / Fintype.card ι : ℝ) * ∑ j, θ j := by
-    rw [← Finset.sum_mul]
-    simp
-  rw [hsum]
-  have hcard : (Fintype.card ι : ℝ) ≠ 0 := by
-    exact_mod_cast (Fintype.card_ne_zero : Fintype.card ι ≠ 0)
-  field_simp [hcard]
-  ring_nf
-
-theorem centeredPart_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) :
-    centeredPart (fun i => θ i + c) = centeredPart θ := by
-  funext i
-  unfold centeredPart
-  rw [Finset.sum_add_distrib]
-  have hsum_const : (∑ _i : ι, c) = (Fintype.card ι : ℝ) * c := by
-    simp
-  rw [hsum_const]
-  have hcard : (Fintype.card ι : ℝ) ≠ 0 := by
-    exact_mod_cast (Fintype.card_ne_zero : Fintype.card ι ≠ 0)
-  field_simp [hcard]
-  ring_nf
-
-theorem centeredPart_eq_self_of_centered [Nonempty ι]
-    (θ : ι → ℝ) (hθ : centered θ) :
-    centeredPart θ = θ := by
-  funext i
-  unfold centeredPart
-  rw [hθ]
-  simp
-
-theorem centeredPart_idempotent [Nonempty ι] (θ : ι → ℝ) :
-    centeredPart (centeredPart θ) = centeredPart θ := by
-  exact centeredPart_eq_self_of_centered _ (centeredPart_centered θ)
-
-theorem centeredPart_add [Nonempty ι] (θ X : ι → ℝ) :
-    centeredPart (fun i => θ i + X i) =
-      fun i => centeredPart θ i + centeredPart X i := by
-  funext i
-  unfold centeredPart
-  rw [Finset.sum_add_distrib]
-  ring
-
-theorem centeredPart_smul [Nonempty ι] (r : ℝ) (θ : ι → ℝ) :
-    centeredPart (r • θ) = r • centeredPart θ := by
-  funext i
-  unfold centeredPart
-  simp only [Pi.smul_apply, smul_eq_mul]
-  rw [← Finset.mul_sum]
-  ring
-
 /-- The Weyl/log-volume Cartan readout is affine along every Cartan direction. -/
 theorem weylLogVolume_add_smul (θ X : ι → ℝ) (t : ℝ) :
     weylLogVolume (fun i => θ i + t * X i) =
@@ -186,55 +124,6 @@ lemma Z_pos [Nonempty ι] (θ : ι → ℝ) : 0 < Z θ := by
         intro i hi
         exact Real.exp_pos _)
       Finset.univ_nonempty
-
-/-- A common additive shift of all natural parameters translates the
-log-partition potential by the same amount. -/
-theorem Phi_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) :
-    Phi (fun i => θ i + c) = Phi θ + c := by
-  have hZ : 0 < Z θ := Z_pos θ
-  have hscale :
-      Z (fun i => θ i + c) = Real.exp c * Z θ := by
-    unfold Z
-    calc
-      ∑ i, Real.exp (θ i + c) = ∑ i, (Real.exp (θ i) * Real.exp c) := by
-        apply Finset.sum_congr rfl
-        intro i hi
-        rw [Real.exp_add]
-      _ = (∑ i, Real.exp (θ i)) * Real.exp c := by
-        rw [Finset.sum_mul]
-      _ = Real.exp c * Z θ := by
-        simp [Z, mul_comm]
-  unfold Phi
-  rw [hscale, Real.log_mul (Real.exp_ne_zero c) hZ.ne']
-  simp
-  ring
-
-/-- The normalized finite Gibbs probabilities are invariant under a common
-additive shift of all natural parameters. -/
-theorem prob_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) (i : ι) :
-    prob (fun j => θ j + c) i = prob θ i := by
-  have hZ : 0 < Z θ := Z_pos θ
-  have hscale :
-      Z (fun j => θ j + c) = Real.exp c * Z θ := by
-    unfold Z
-    calc
-      ∑ j, Real.exp (θ j + c) = ∑ j, (Real.exp (θ j) * Real.exp c) := by
-        apply Finset.sum_congr rfl
-        intro j hj
-        rw [Real.exp_add]
-      _ = (∑ j, Real.exp (θ j)) * Real.exp c := by
-        rw [Finset.sum_mul]
-      _ = Real.exp c * Z θ := by simp [Z, mul_comm]
-  unfold prob
-  rw [Real.exp_add, hscale]
-  field_simp [Real.exp_ne_zero c, hZ.ne']
-
-/-- The algebraic log-density is likewise unchanged by a common shift. -/
-theorem logDensity_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) (i : ι) :
-    logDensity (fun j => θ j + c) i = logDensity θ i := by
-  unfold logDensity
-  rw [Phi_add_const θ c]
-  ring
 
 lemma prob_pos (θ : ι → ℝ) (hZ : 0 < Z θ) (i : ι) :
     0 < prob θ i := by

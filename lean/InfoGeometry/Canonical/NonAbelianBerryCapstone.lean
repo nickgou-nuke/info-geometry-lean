@@ -6,6 +6,7 @@ open InfoGeometry.Topological.NonAbelianBerry
 
 set_option linter.unusedVariables false
 
+/-- Canonical export of the proved Berry-connection and holonomy identities. -/
 theorem verification_capstone (θ ω α : ℝ) :
     (star (apolloniusLoopConnection θ ω) = apolloniusLoopConnection θ ω) ∧
       (star (apolloniusHolonomyMatrix α) *

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeGasSuperKMSBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -22,7 +23,7 @@ Theorem-safe synthesis for the requested lane:
 
 This file does not assert RH, zeta analytic continuation, a Lee--Yang theorem
 for the prime chain, or a full braided-category instance.  Those remain owned
-by their existing property-gated or categorical files.
+by their existing witness-gated or categorical files.
 -/
 
 noncomputable section
@@ -30,11 +31,10 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeGasSuperKMS
-open InfoGeometry.Canonical.AlgebraicKMSStateColimit
 open InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
-open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open InfoGeometry.Tessellation
 open InfoGeometry.Canonical.HodgeDiracLaplacianBridge
@@ -53,7 +53,18 @@ theorem riemannReflection_eq_fugacityInversion
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ :=
   cayleyToFugacity_one_sub_eq_inv s
 
-/-! ## Prime chain and noncommutative KMS readout -/
+/-- Conditional RH readout remains routed through the witness-gated Lee--Yang bridge. -/
+theorem conditional_RH_from_primeLeeYang
+    {n : ℕ}
+    (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))
+    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {z : ℂ}
+    (hz : W.partitionPolynomial.IsRoot z)
+    (hpole : z.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z) :=
+  partitionRoot_mapsToCriticalLine W.partitionPolynomial hLeeYang hz hpole
+
+/-! ## Prime chain and zero-temperature KMS readouts -/
 
 /-- Prime-chain couplings are ferromagnetic and symmetric. -/
 theorem primeChain_coupling_nonnegative_symmetric
@@ -63,24 +74,44 @@ theorem primeChain_coupling_nonnegative_symmetric
     0 ≤ C.couplingMatrix i j ∧ C.couplingMatrix i j = C.couplingMatrix j i :=
   ⟨C.couplingMatrix_entry_nonneg i j, C.couplingMatrix_symm i j⟩
 
-/-- The primon bridge exposes the native noncommutative KMS boundary law. -/
-theorem primeGas_superKMS_boundary
-    (B : PrimeGasSuperKMSBridge)
-    (x y : Carrier) :
-    deltaWeightedFunctional B.density (x * y) =
-      deltaWeightedFunctional B.density (y * B.imaginaryTime x) :=
-  B.kms_boundary x y
+/-- The super-KMS bridge exposes the zero odd-temperature boundary and detailed balance. -/
+theorem primeGas_superKMS_zeroOdd_and_detailedBalance
+    (B : PrimeGasSuperKMSBridge) :
+    B.superTemperature.oddTemperature = 0 ∧
+      B.kmsTarget.absorption =
+        B.kmsTarget.spontaneousEmission + B.kmsTarget.stimulatedEmission :=
+  ⟨B.superTemperature_odd_eq_zero, B.detailedBalance⟩
 
-/-! ## Cantor binary words and finite Euler-product structure -/
+/-! ## Cantor binary words, prime parity, and finite Euler product readbacks -/
 
 /-- The binary Cantor cylinder splits into root, left child, and right child. -/
 theorem cantorCylinder_binarySplit
-    (w : List Bool) :
-    TypeIIIModularCantorSystem.closedCylinder w =
-      ({w} : Set (List Bool))
-        ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w false)
-        ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w true) :=
-  TypeIIIModularCantorSystem.closedCylinder_split w
+    (w : BinaryCantorLattice) :
+    binaryClosedCylinder w =
+      ({w} : Set BinaryCantorLattice)
+        ∪ binaryClosedCylinder (binaryChild w false)
+        ∪ binaryClosedCylinder (binaryChild w true) :=
+  binaryClosedCylinder_split w
+
+/-- Finite prime supertrace readback equals the finite inverse Euler product. -/
+theorem primeSupertrace_eq_inverseEulerProduct
+    (P : FermionicPrimeRegister)
+    (x : ℕ → ℂ) :
+    finiteSupertraceDirichlet P x = finiteInverseEulerProduct P x :=
+  finiteSupertrace_readback P x
+
+/-- Möbius parity is read back from the finite fermionic prime register. -/
+theorem mobiusParity_eq_fermionParity
+    (P : FermionicPrimeRegister)
+    (ψ : FermionicPrimeState P) :
+    ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
+      fermionParity P ψ :=
+  mobiusParity_readback P ψ
+
+/-- The Cantor binary Dirac-sea operator-geometry packet is already discharged. -/
+theorem cantorDiracSea_operatorGeometry :
+    CantorDiracSeaOperatorGeometryOwnerTarget :=
+  cantorDiracSeaOperatorGeometryOwnerTarget
 
 /-! ## Hodge--Dirac and Yang--Baxter owner readouts -/
 
@@ -90,8 +121,8 @@ theorem hodgeDirac_laplacian_even
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C)
     (hDelta : IsLaplacianFromDirac C) :
-    laplacian C * hodgeStar C =
-      hodgeStar C * laplacian C :=
+    C.laplacian * C.hodgeStar =
+      C.hodgeStar * C.laplacian :=
   laplacian_commutes_hodge_of_dirac_closure C hChiral hDelta
 
 /-- Finite Fibonacci Yang--Baxter/Artin relation from the exact owner matrix proof. -/

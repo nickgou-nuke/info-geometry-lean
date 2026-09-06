@@ -20,10 +20,10 @@ namespace InfoGeometry.Geometry.OperatorialJonesConnection
 /-! ## 1. Inner conjugation and projectors -/
 
 /-- Algebraic projector. -/
-abbrev IsProjector
+def IsProjector
     {Op : Type*} [Monoid Op]
     (P : Op) : Prop :=
-  IsIdempotentElem P
+  P * P = P
 
 /-- The inner conjugation action `P ↦ U P U⁻¹`. -/
 def conjugationAction
@@ -45,8 +45,7 @@ theorem isProjector_conjugationAction
     {Op : Type*} [Monoid Op]
     (U : Units Op) {P : Op} (hP : IsProjector P) :
     IsProjector (conjugationAction U P) := by
-  change conjugationAction U P * conjugationAction U P = conjugationAction U P
-  rw [← conjugationAction_mul, hP]
+  rw [IsProjector, ← conjugationAction_mul, hP]
 
 /-! ## 2. Chiral/Cartan projectors -/
 
@@ -55,31 +54,40 @@ A chiral Cartan projector datum.
 
 `chi` is the Cartan eigenoperator.  `PL` and `PR` are the two pole projectors.
 -/
-abbrev ChiralCartanProjectors
-    (Op : Type*) [Ring Op] :=
-  {p : Op × (Op × Op) //
-    p.1 * p.1 = 1 ∧
-      IsProjector p.2.1 ∧
-      IsProjector p.2.2 ∧
-      p.2.1 + p.2.2 = 1 ∧
-      p.2.1 * p.2.2 = 0 ∧
-      p.2.2 * p.2.1 = 0}
+structure ChiralCartanProjectors
+    (Op : Type*) [Ring Op] where
+  /-- Cartan/chiral eigenoperator. -/
+  chi : Op
 
-namespace ChiralCartanProjectors
+  /-- Left/north-pole projector. -/
+  PL : Op
 
-variable {Op : Type*} [Ring Op]
+  /-- Right/south-pole projector. -/
+  PR : Op
 
-abbrev chi (C : ChiralCartanProjectors Op) : Op := C.1.1
-abbrev PL (C : ChiralCartanProjectors Op) : Op := C.1.2.1
-abbrev PR (C : ChiralCartanProjectors Op) : Op := C.1.2.2
-abbrev chi_square (C : ChiralCartanProjectors Op) : C.chi * C.chi = 1 := C.2.1
-abbrev PL_idem (C : ChiralCartanProjectors Op) : IsProjector C.PL := C.2.2.1
-abbrev PR_idem (C : ChiralCartanProjectors Op) : IsProjector C.PR := C.2.2.2.1
-abbrev complementary (C : ChiralCartanProjectors Op) : C.PL + C.PR = 1 := C.2.2.2.2.1
-abbrev disjoint_left (C : ChiralCartanProjectors Op) : C.PL * C.PR = 0 := C.2.2.2.2.2.1
-abbrev disjoint_right (C : ChiralCartanProjectors Op) : C.PR * C.PL = 0 := C.2.2.2.2.2.2
+  /-- `chi² = 1`. -/
+  chi_square :
+    chi * chi = 1
 
-end ChiralCartanProjectors
+  /-- Left projector is idempotent. -/
+  PL_idem :
+    IsProjector PL
+
+  /-- Right projector is idempotent. -/
+  PR_idem :
+    IsProjector PR
+
+  /-- The two pole projectors are complementary. -/
+  complementary :
+    PL + PR = 1
+
+  /-- Left then right vanishes. -/
+  disjoint_left :
+    PL * PR = 0
+
+  /-- Right then left vanishes. -/
+  disjoint_right :
+    PR * PL = 0
 
 /-- A transport preserves the Cartan/chiral axis if it commutes with `chi`. -/
 def PreservesCartanAxis
@@ -108,7 +116,7 @@ This packages a Jones-like unit `U` acting on polarization projectors by
 conjugation.
 
 For ordinary lossless optics, `U` may be unitary.  For the doubled Krein layer,
-one should supply a separate `J`-unitarity property.
+one should supply a separate `J`-unitarity certificate.
 -/
 abbrev OperatorialJonesTransport
     (Op : Type*) [Ring Op]

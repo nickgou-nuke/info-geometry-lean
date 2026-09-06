@@ -4,9 +4,6 @@ namespace InfoGeometry.Canonical.ProofTwoCategoryHodgeColimitCapstone
 
 open InfoGeometry.Canonical.ProofTwoCategoryHodge
 
-/--
-🏆 **CAPSTONE: Canonical Verification of Proof 2-Category, Hodge Dirac & Colimit Closure**
--/
 theorem proof_2cat_hodge_colimit_canonical_capstone
     (TwoCat : ProofTwoCategoryData)
     {nE nV : ℕ} (b1 : Matrix (Fin nE) (Fin nV) ℝ)
@@ -17,6 +14,8 @@ theorem proof_2cat_hodge_colimit_canonical_capstone
       Matrix.fromBlocks (b1 * b1.transpose) 0 0 (b1.transpose * b1)) ∧
     (a ∈ D.forwardCone a ∩ D.backwardCone a) ∧
     (Colim.toLimit (n + 1) (Colim.shift n x) = Colim.toLimit n x) :=
-  grand_proof_2cat_hodge_colimit_synthesis TwoCat b1 D a Colim n x
+  ⟨dirac_square_eq_hodge_laplacian b1,
+    dag_cone_acyclic_self D a,
+    colimit_transport_invariance Colim n x⟩
 
 end InfoGeometry.Canonical.ProofTwoCategoryHodgeColimitCapstone

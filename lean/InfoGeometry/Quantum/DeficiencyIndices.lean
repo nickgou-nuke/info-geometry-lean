@@ -20,9 +20,6 @@ theorem apollonius_self_adjoint_indices :
   unfold deficiencyIndicesSelfAdjoint
   rfl
 
-theorem grand_deficiency_indices_synthesis :
-    deficiencyIndicesSelfAdjoint 0 0 :=
-  apollonius_self_adjoint_indices
 
 end
 end InfoGeometry.Quantum.DeficiencyIndices

@@ -3,10 +3,10 @@ Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors.
 -/
-import InfoGeometry.Canonical.CausalVortexPauliMajorana
+import InfoGeometry.Canonical.CausalVortexPauliWitness
 
 /-!
-# Quadratic-form positivity for the finite Cooper-pair property
+# Quadratic-form positivity for the finite Cooper-pair witness
 
 `Matrix.PosSemidef` is an ordered-ring notion and therefore is not the right
 type for a complex matrix.  This owner records the corresponding Hilbert-space

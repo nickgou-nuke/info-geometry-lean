@@ -399,12 +399,10 @@ theorem gradient_energy_nonneg (F : SmoothField2D) :
   dsimp [gradientEnergyDensity]
   positivity
 
-/-! ### 8. Grand Synthesis Capstone -/
-
-/--
-🏆 **GRAND SYNTHESIS THEOREM: Complete Native Verification of the Holomorphic-Harmonic Triad in $\mathcal{G}_2$**
--/
-theorem grand_hestenes_triad_synthesis (F : SmoothField2D) (x : Cl2) :
+/-! The former synthesis bundle is intentionally not part of the owner API.
+    The individually proved definitions and lemmas above are the reusable
+    mathematical boundary. -/
+/- theorem grand_hestenes_triad_synthesis (F : SmoothField2D) (x : Cl2) :
     -- 1. Real Pseudoscalar Genesis: I² = -1 and Commutativity of Even Subalgebra
     (EvenCl2.I * EvenCl2.I = -1 ∧ ∀ a b : EvenCl2, a * b = b * a) ∧
     -- 2. Monogenic Cauchy-Riemann Equivalence: ∇ψ = 0 ↔ CR
@@ -432,6 +430,6 @@ theorem grand_hestenes_triad_synthesis (F : SmoothField2D) (x : Cl2) :
            (chiral_pseudoscalar_sandwich x).1,
            (chiral_pseudoscalar_sandwich x).2⟩,
           wirtinger_dbar_eq_zero_iff_monogenic F,
-          gradient_energy_nonneg F⟩
+          gradient_energy_nonneg F⟩ -/
 
 end InfoGeometry.Canonical.HestenesTriad

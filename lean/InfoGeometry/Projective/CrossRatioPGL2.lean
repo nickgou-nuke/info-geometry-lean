@@ -108,20 +108,8 @@ theorem apollonian_cross_ratio_eq_moebius (s : ℂ) (hs : s - p0 ≠ 0) :
   have : (-1 : ℂ) ≠ 0 := by norm_num
   exact mul_div_mul_right (s - z0) (s - p0) this
 
-/-!
-### 4. Master Capstone Synthesis
--/
-
-/-- 🏆 GRAND CAPSTONE: Complete formal verification of projective ℂP¹ cross-ratio invariance
-    under PGL(2, ℂ) and its reduction to the Apollonian Möbius map -/
-theorem grand_cross_ratio_pgl2_synthesis
-    (s : ℂ) (hs : s - p0 ≠ 0)
-    (M : Matrix (Fin 2) (Fin 2) ℂ) (hM : M.det ≠ 0) :
-    (detBracket (affinePoint s) pointAtInfinity = -1) ∧
-    (crossRatio (affinePoint s) (affinePoint z0) (affinePoint p0) pointAtInfinity =
-     (s - z0) / (s - p0)) :=
-  ⟨detBracket_infinity s,
-   apollonian_cross_ratio_eq_moebius s hs⟩
+/-! The reusable boundary is given by the individual projective identities
+    above; the former aggregate synthesis theorem is omitted. -/
 
 end
 end InfoGeometry.Projective.CrossRatioPGL2

@@ -1,7 +1,7 @@
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-!
-# Affine Cl(4,4) / so(4,4) Cardy Entropy
+# Affine Cl(4,4) / so(4,4) Cardy Entropy Socket
 
 This module installs the theorem-safe correction for the affine
 `so(4,4)`/`so(8)` Sugawara central charge:
@@ -9,7 +9,7 @@ This module installs the theorem-safe correction for the affine
 `c = k * dim(g) / (k + h∨)`, with `k = 1`, `dim so(8) = 28`, `h∨ = 6`,
 so `c = 4`.
 
-The Cardy entropy layer remains property-gated.  No Kac-Moody construction,
+The Cardy entropy layer remains witness-gated.  No Kac-Moody construction,
 Sugawara theorem, or Cardy theorem is proved here.
 -/
 
@@ -60,7 +60,7 @@ end BridgeDatum
 Witness-gated Cardy entropy calibration.
 
 The shifted energy and entropy formula are supplied by the CFT model.  This
-interface only records the readout and exposes positivity under explicit regime
+socket only records the readout and exposes positivity under explicit regime
 witnesses.
 -/
 structure CardyEntropyCalibration where
@@ -93,43 +93,6 @@ theorem entropy_nonneg :
     0 ≤ C.entropy := by
   rw [C.entropy_eq]
   positivity
-
-theorem entropy_eq_zero_iff :
-    C.entropy = 0 ↔ C.shiftedEnergy = 0 := by
-  rw [C.entropy_eq]
-  have hc : 0 < C.centralCharge / 6 :=
-    div_pos C.centralCharge_pos (by norm_num)
-  have harg : 0 ≤ (C.centralCharge / 6) * C.shiftedEnergy :=
-    mul_nonneg (le_of_lt hc) C.shiftedEnergy_nonneg
-  constructor
-  · intro h
-    have hs : Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) = 0 := by
-      nlinarith [Real.pi_pos]
-    have hsquare := Real.sq_sqrt harg
-    have hproduct : (C.centralCharge / 6) * C.shiftedEnergy = 0 := by
-      nlinarith
-    nlinarith
-  · intro h
-    simp [h]
-
-theorem entropy_pos_iff :
-    0 < C.entropy ↔ 0 < C.shiftedEnergy := by
-  rw [C.entropy_eq]
-  have hc : 0 < C.centralCharge / 6 :=
-    div_pos C.centralCharge_pos (by norm_num)
-  constructor
-  · intro h
-    have hs : 0 < Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) := by
-      nlinarith [Real.pi_pos]
-    have harg : 0 < (C.centralCharge / 6) * C.shiftedEnergy :=
-      (Real.sqrt_pos).mp hs
-    nlinarith
-  · intro h
-    have harg : 0 < (C.centralCharge / 6) * C.shiftedEnergy :=
-      mul_pos hc h
-    have hs : 0 < Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) :=
-      Real.sqrt_pos.mpr harg
-    nlinarith [Real.pi_pos]
 
 end CardyEntropyCalibration
 

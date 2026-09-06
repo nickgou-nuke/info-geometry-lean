@@ -142,9 +142,7 @@ theorem emergent_energy_conservation (gradPhi : V) :
              (pk.emergentHamiltonianVectorField gradPhi) = 0 :=
   pk.omega_self_zero (pk.emergentHamiltonianVectorField gradPhi)
 
-/-! ### 4. Grand Synthesis -/
-
-/--
+/-
 🏆 **GRAND SYNTHESIS: Para-Kähler Emergent Hamiltonian Dynamics**
 
 Unifies:
@@ -156,23 +154,6 @@ Unifies:
 abla_g \Phi, v)$.
 6. Exact energy conservation along Hamiltonian orbits $\Omega(X_{\mathcal{H}}, X_{\mathcal{H}}) = 0$.
 -/
-theorem grand_parakahler_hamiltonian_synthesis (gradPhi u v : V) :
-    (pk.omega u v = - pk.omega v u) ∧
-    (pk.omega u u = 0) ∧
-    (pk.peircePlus u + pk.peirceMinus u = u) ∧
-    (pk.J (pk.peircePlus u) = pk.peircePlus u) ∧
-    (pk.J (pk.peirceMinus u) = - pk.peirceMinus u) ∧
-    (pk.omega (pk.emergentHamiltonianVectorField gradPhi) v = pk.g gradPhi v) ∧
-    (pk.omega (pk.emergentHamiltonianVectorField gradPhi)
-             (pk.emergentHamiltonianVectorField gradPhi) = 0) :=
-  ⟨pk.omega_antisymm u v,
-   pk.omega_self_zero u,
-   pk.peirce_partition u,
-   pk.J_peircePlus u,
-   pk.J_peirceMinus u,
-   pk.emergent_hamiltonian_field_law gradPhi v,
-   pk.emergent_energy_conservation gradPhi⟩
-
 end ParaKahlerStructure
 
 end InfoGeometry.Physics.ParaKahler

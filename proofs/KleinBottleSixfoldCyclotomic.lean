@@ -1,5 +1,5 @@
 import proofs.TitsBruhatBrillouinKlein
-import proofs.TwoSheetThreeColorWeyl
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
 /-!
 # Klein-bottle glide and the sixfold cyclotomic family fibre

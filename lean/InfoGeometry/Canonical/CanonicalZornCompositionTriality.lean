@@ -113,6 +113,51 @@ theorem zornNorm_mul (X Y : Zorn) :
     zornNorm (zornMul X Y) = zornNorm X * zornNorm Y := by
   exact InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm_mul X Y
 
+/-! ### Quadratic sandwiches and the composition cone
+
+The sandwich is written with its parentheses explicitly.  No associativity
+of the Zorn product is assumed here; the displayed expression is the
+canonical quadratic map used below.
+-/
+
+def zornQuadraticSandwich (X Y : Zorn) : Zorn :=
+  zornMul X (zornMul Y X)
+
+def zornZeroCone (X : Zorn) : Prop := zornNorm X = 0
+
+theorem zornNorm_quadraticSandwich (X Y : Zorn) :
+    zornNorm (zornQuadraticSandwich X Y) =
+      zornNorm X ^ 2 * zornNorm Y := by
+  unfold zornQuadraticSandwich
+  rw [zornNorm_mul, zornNorm_mul]
+  ring
+
+theorem zornQuadraticSandwich_mem_zeroCone_of_left
+    (X Y : Zorn) (hX : zornZeroCone X) :
+    zornZeroCone (zornQuadraticSandwich X Y) := by
+  unfold zornZeroCone at hX ⊢
+  rw [zornNorm_quadraticSandwich, hX]
+  ring
+
+theorem zornQuadraticSandwich_mem_zeroCone_of_right
+    (X Y : Zorn) (hY : zornZeroCone Y) :
+    zornZeroCone (zornQuadraticSandwich X Y) := by
+  unfold zornZeroCone at hY ⊢
+  rw [zornNorm_quadraticSandwich, hY]
+  ring
+
+theorem zornMul_mem_zeroCone_of_left
+    (X Y : Zorn) (hX : zornZeroCone X) :
+    zornZeroCone (zornMul X Y) := by
+  unfold zornZeroCone at hX ⊢
+  rw [zornNorm_mul, hX, zero_mul]
+
+theorem zornMul_mem_zeroCone_of_right
+    (X Y : Zorn) (hY : zornZeroCone Y) :
+    zornZeroCone (zornMul X Y) := by
+  unfold zornZeroCone at hY ⊢
+  rw [zornNorm_mul, hY, mul_zero]
+
 /-- Conjugation reverses the Zorn product. -/
 theorem zornConj_mul (X Y : Zorn) :
     zornConj (zornMul X Y) = zornMul (zornConj Y) (zornConj X) := by
@@ -505,7 +550,7 @@ theorem zornAlternatingTripleTrace_scalar_right (r : ℂ) (X Y Z : Zorn) :
         rw [zornAlternatingTripleTrace_cyclic Z Y X, zornAlternatingTripleTrace_swap12 X Y Z]
 
 /-- Any multiplication-preserving, trace-preserving map preserves the
-six-term octonionic three-form.  In particular, this is the exact property
+six-term octonionic three-form.  In particular, this is the exact hypothesis
 needed to obtain the usual `G₂`/`G₂(2)` invariance statement; no unsupported
 identification of a coordinate permutation with an automorphism is made here. -/
 theorem zornAlternatingTripleTrace_map

@@ -5,8 +5,8 @@ version: "1.23.0-CUC-Bridge"
 type: software
 license: Apache-2.0
 date-released: 2026-06-18
-repository-code: "https://github.com/nklgtv-nuke/info-geometry-lean"
-url: "https://github.com/nklgtv-nuke/info-geometry-lean"
+repository-code: "https://github.com/nickgou-nuke/info-geometry-lean"
+url: "https://github.com/nickgou-nuke/info-geometry-lean"
 abstract: >
   Lean 4 formalization project for information geometry unifying Condensed Matter, Noncommutative Geometry,
   and Quantum Gravity. Features the ultimate theoretical capstone: formal verification of the Minkowski 

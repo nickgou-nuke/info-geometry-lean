@@ -64,7 +64,9 @@ def ua_minus (i : Fin 3) : ZornMatrix R := V i
 /-- 🏆 THEOREM: Peirce idempotents sum to the identity in $\Pi_0$. -/
 @[simp] theorem peirce_sum_id :
     (u0_plus (R := R)) + u0_minus = I :=
-  E11_add_E22
+  by
+    ext j <;>
+      simp [u0_plus, u0_minus, E11, E22, I, Vec3.add]
 
 /-- 🏆 THEOREM: Peirce idempotents are orthogonal: $u_0^+ u_0^- = 0$. -/
 @[simp] theorem peirce_plus_mul_minus :
@@ -110,17 +112,29 @@ def ua_minus (i : Fin 3) : ZornMatrix R := V i
 theorem ladder_car_anticommutator (i j : Fin 3) :
     (ua_plus (R := R) i) * ua_minus j + ua_minus j * ua_plus i =
       if i = j then I else 0 :=
-  U_V_anticommutator i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      ext k <;>
+        simp [ua_plus, ua_minus, U, V, I, zero, Vec3.basis, mul,
+          Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 /-- 🏆 THEOREM: Ladder creation operators anti-commute: $\{u_a^+, u_b^+\} = 0$. -/
 theorem ladder_plus_anticommute (i j : Fin 3) :
     (ua_plus (R := R) i) * ua_plus j + ua_plus j * ua_plus i = 0 :=
-  U_anticommute i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      ext k <;>
+        simp [ua_plus, U, zero, Vec3.basis, mul, Vec3.dot, Vec3.cross,
+          Vec3.add, Vec3.sub, Vec3.smul]
 
 /-- 🏆 THEOREM: Ladder annihilation operators anti-commute: $\{u_a^-, u_b^-\} = 0$. -/
 theorem ladder_minus_anticommute (i j : Fin 3) :
     (ua_minus (R := R) i) * ua_minus j + ua_minus j * ua_minus i = 0 :=
-  V_anticommute i j
+  by
+    fin_cases i <;> fin_cases j <;>
+      ext k <;>
+        simp [ua_minus, V, zero, Vec3.basis, mul, Vec3.dot, Vec3.cross,
+          Vec3.add, Vec3.sub, Vec3.smul]
 
 /-! ## 3. Pauli Quasispin Operators in the Witt Basis -/
 
@@ -142,7 +156,7 @@ def tau1 (i : Fin 3) : ZornMatrix R := ua_plus i + ua_minus i
   dsimp [tau1, ua_plus, ua_minus]
   fin_cases i <;>
     ext j <;>
-      simp [U, V, I, Vec3.basis, mul, add, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+      simp [U, V, I, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 /-- 🏆 THEOREM: $\tau_3$ and $\tau_1(i)$ strictly anti-commute: $\{\tau_3, \tau_1(i)\} = 0$. -/
 theorem tau3_tau1_anticommute (i : Fin 3) :
@@ -150,7 +164,7 @@ theorem tau3_tau1_anticommute (i : Fin 3) :
   dsimp [tau3, tau1, u0_plus, u0_minus, ua_plus, ua_minus]
   fin_cases i <;>
     ext j <;>
-      simp [E11, E22, U, V, zero, Vec3.basis, mul, add,
+      simp [E11, E22, U, V, zero, Vec3.basis, mul,
         Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 /-! ## 4. Nambu-Gorkov Quasiparticle Carrier and Zorn Matrix Lift -/
@@ -221,9 +235,11 @@ theorem toZorn_coordEquiv (N : NambuGorkovCarrier R) :
 
 /-- 🏆 THEOREM: Linear expansion of the Nambu-Gorkov state into the 4 Witt planes. -/
 theorem toZorn_eq_witt_expansion (N : NambuGorkovCarrier R) :
-    toZorn N = N.xi • tau3 +
-      N.delta 0 • tau1 0 + N.delta 1 • tau1 1 + N.delta 2 • tau1 2 := by
-  have hrw : N.xi • tau3 + N.delta 0 • tau1 0 + N.delta 1 • tau1 1 + N.delta 2 • tau1 2 =
+    toZorn N = N.xi • (tau3 (R := R)) +
+      N.delta 0 • (tau1 (R := R) 0) + N.delta 1 • (tau1 (R := R) 1) +
+        N.delta 2 • (tau1 (R := R) 2) := by
+  have hrw : N.xi • (tau3 (R := R)) + N.delta 0 • (tau1 (R := R) 0) +
+      N.delta 1 • (tau1 (R := R) 1) + N.delta 2 • (tau1 (R := R) 2) =
     add (add (add (smul N.xi (sub E11 E22)) (smul (N.delta 0) (add (U 0) (V 0))))
              (smul (N.delta 1) (add (U 1) (V 1))))
         (smul (N.delta 2) (add (U 2) (V 2))) := rfl

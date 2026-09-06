@@ -18,15 +18,12 @@ The cocycle generator is exactly the difference of modular Hamiltonians.
 
 namespace InfoGeometry.OperatorAlgebra.ConnesArakiG2
 
-/-- The G₂ derivation associated with a modular Hamiltonian. 
-In the split real form, G₂(ℝ) acts on the Zorn matrix algebra. 
-Here we define the purely algebraic generator of the Connes-Araki cocycle. -/
-noncomputable def connesArakiG2Generator (H1 H2 : Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ) : Operator :=
-  relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2
-
-/-- The Connes-Araki cocycle generator vanishes when the modular states coincide. -/
-theorem connesArakiG2Generator_zero_of_eq (H : Operator) (beta μ μχ : ℝ) :
-    connesArakiG2Generator H H beta μ μχ beta μ μχ = 0 :=
-  relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
+/-!
+The former generator declarations referenced an owner that is not present in
+the repository and therefore did not constitute formal mathematics.  This
+module intentionally exposes no replacement: a relative modular generator
+requires an explicit carrier and its defining data before a theorem can be
+stated truthfully.
+-/
 
 end InfoGeometry.OperatorAlgebra.ConnesArakiG2

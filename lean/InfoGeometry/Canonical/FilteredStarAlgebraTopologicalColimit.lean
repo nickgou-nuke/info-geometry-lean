@@ -58,11 +58,11 @@ def topologicalDiagram : I ⥤ TopCat where
     exact h
 
 abbrev topologicalColimit : TopCat :=
-  colimit (topologicalDiagram Stage sys)
+  topologicalDirectColimit (topologicalDiagram Stage sys)
 
 def topologicalInjection (i : I) :
     (topologicalDiagram Stage sys).obj i ⟶ topologicalColimit Stage sys :=
-  colimit.ι (topologicalDiagram Stage sys) i
+  topologicalDirectInjection (topologicalDiagram Stage sys) i
 
 /-! The next lemma records the cocone equation at the morphism level.  Keeping
 this equation bundled is useful for later `TopCat` colimit constructions: no

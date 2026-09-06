@@ -9,6 +9,23 @@ noncomputable section
 
 variable {n : ℕ}
 
+/-! The Clifford sign convention is the existing Dirac--Hodge operator with
+the codifferential negated.  Keeping this as a local definition avoids a
+second operator carrier. -/
+def cliffordDirac (d δ : EndCochain n) : EndCochain n :=
+  diracHodge d (-δ)
+
+theorem cliffordDirac_sq_eq_neg_hodgeLaplacian
+    (d δ : EndCochain n)
+    (hd : d * d = 0) (hδ : δ * δ = 0) :
+    cliffordDirac d δ * cliffordDirac d δ = -hodgeLaplacian d δ := by
+  unfold cliffordDirac
+  rw [diracHodge_sq_eq_hodgeLaplacian d (-δ) hd]
+  · unfold hodgeLaplacian
+    simp only [neg_mul, mul_neg, neg_neg]
+    abel
+  · simpa [neg_mul, mul_neg] using hδ
+
 /-- Clifford-analysis convention: `∇ = d - δ`. -/
 abbrev hodgeDiracOperator (d δ : EndCochain n) :
     Cochains n →ₗ[ℝ] Cochains n :=
@@ -74,7 +91,17 @@ theorem monogenic_is_laplaceHarmonic
     (hd : d * d = 0) (hδ : δ * δ = 0)
     {x : Cochains n} (hx : x ∈ MonogenicFields d δ) :
     IsLaplaceHarmonic d δ x :=
-  cliffordMonogenic_is_laplaceHarmonic d δ hd hδ hx
+  by
+    unfold MonogenicFields hodgeDiracOperator at hx
+    unfold IsLaplaceHarmonic
+    have hzero :
+        (cliffordDirac d δ * cliffordDirac d δ).mulVec x = 0 := by
+      have h := congrArg (cliffordDirac d δ).mulVec hx
+      simpa [Matrix.mulVec_mulVec] using h
+    rw [cliffordDirac_sq_eq_neg_hodgeLaplacian d δ hd hδ] at hzero
+    have hzero' : -((hodgeLaplacian d δ).mulVec x) = 0 := by
+      simpa [Matrix.neg_mulVec] using hzero
+    exact neg_eq_zero.mp hzero'
 
 /-! ## Modular conjugation of the two Dirac sectors -/
 

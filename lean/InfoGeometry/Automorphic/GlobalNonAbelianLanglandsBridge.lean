@@ -90,12 +90,13 @@ theorem automorphic_transfer_markov {n : ℕ} (x : BitWord n) :
     automorphicTransferTrace (fun _ => 0) (fun _ => 1) x = 2 :=
   transfer_markov_unweighted x
 
-/-! ### 4. Grand Non-Abelian Langlands Synthesis -/
+/-! The reusable boundary is the individual packet and transfer lemmas above;
+    the former aggregate synthesis theorem is omitted. -/
 
-/--
+/-
 🏆 **GRAND SYNTHESIS THEOREM: Global Non-Abelian Langlands Program & Deligne Period Rationality**
 -/
-theorem grand_nonabelian_langlands_synthesis
+/- theorem grand_nonabelian_langlands_synthesis
     {Cusp : Type*}
     (K : KudlaRallisDoublingPacket Cusp)
     (f : Cusp) :
@@ -104,6 +105,6 @@ theorem grand_nonabelian_langlands_synthesis
     (∀ (n : ℕ) (x : BitWord n), automorphicTransferTrace (fun _ => 0) (fun _ => 1) x = 2) := by
   refine ⟨K.datum.normalizedSpecialValue_is_rational f,
           K.doubling_factorization f,
-          fun n x => automorphic_transfer_markov x⟩
+          fun n x => automorphic_transfer_markov x⟩ -/
 
 end InfoGeometry.Automorphic.GlobalNonAbelianLanglandsBridge

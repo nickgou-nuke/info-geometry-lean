@@ -36,10 +36,8 @@ theorem swap01_mul (X Y : SplitOctF2) :
     swap01Fun (mul X Y) = mul (swap01Fun X) (swap01Fun Y) := by
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  ext <;>
-    simp [swap01Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      Bool.xor_comm, Bool.and_comm, Bool.and_left_comm] <;>
-    exact Bool.xor_left_comm _ _ _
+  revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
+  native_decide
 
 noncomputable def swap01Aut : SplitOctF2Aut :=
   ⟨swap01Equiv, by
@@ -90,10 +88,8 @@ theorem cycle012_mul (X Y : SplitOctF2) :
     cycle012Fun (mul X Y) = mul (cycle012Fun X) (cycle012Fun Y) := by
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  ext <;>
-    simp [cycle012Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      Bool.xor_comm, Bool.and_comm, Bool.and_left_comm] <;>
-    exact Bool.xor_left_comm _ _ _
+  revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
+  native_decide
 
 noncomputable def cycle012Aut : SplitOctF2Aut :=
   ⟨cycle012Equiv, by
@@ -148,10 +144,10 @@ theorem simple_root_generators_distinct :
   revert h_apply
   decide
 
-def conjugateAut (g u : SplitOctF2Aut) : SplitOctF2Aut :=
+noncomputable def conjugateAut (g u : SplitOctF2Aut) : SplitOctF2Aut :=
   g * u * g⁻¹
 
-def automorphismCommutator (g h : SplitOctF2Aut) : SplitOctF2Aut :=
+noncomputable def automorphismCommutator (g h : SplitOctF2Aut) : SplitOctF2Aut :=
   g * h * g⁻¹ * h⁻¹
 
 @[simp] theorem automorphism_mul_apply (g h : SplitOctF2Aut) (X : SplitOctF2) :
@@ -181,10 +177,8 @@ theorem simpleRootProduct_four :
   have hone : (1 : SplitOctF2Aut).1 X = X := by rfl
   rw [hone]
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  ext <;>
-    simp [pow_succ, automorphism_mul_apply, simpleRootProduct_apply,
-      unipotentShort, unipotentLong, add2, one,
-      Bool.xor_comm, Bool.xor_left_comm, Bool.xor_assoc]
+  revert a b x0 x1 x2 y0 y1 y2
+  decide
 
 theorem simpleRootProduct_ne_one :
         unipotentShortAut true * unipotentLongAut true ≠
@@ -580,7 +574,7 @@ theorem simpleRootSubgroup_long_mem :
 simple-root generators.  We keep it as a commutator object until the full
 Steinberg commutator formula identifies its root-coordinate expansion. -/
 
-def simpleRootCommutator : SplitOctF2Aut :=
+noncomputable def simpleRootCommutator : SplitOctF2Aut :=
   automorphismCommutator (unipotentShortAut true) (unipotentLongAut true)
 
 theorem simpleRootCommutator_mem :
@@ -601,7 +595,7 @@ theorem simpleRootSubgroup_contains_product :
   exact simpleRootSubgroup.mul_mem
     simpleRootSubgroup_short_mem simpleRootSubgroup_long_mem
 
-def fourRootSubgroupWords : Fin 4 → simpleRootSubgroup
+noncomputable def fourRootSubgroupWords : Fin 4 → simpleRootSubgroup
   | 0 => ⟨1, simpleRootSubgroup.one_mem⟩
   | 1 => ⟨unipotentShortAut true, simpleRootSubgroup_short_mem⟩
   | 2 => ⟨unipotentLongAut true, simpleRootSubgroup_long_mem⟩
@@ -681,7 +675,7 @@ private lemma simpleRootSubgroup_short_product_cube_mem :
   exact simpleRootSubgroup.mul_mem
     simpleRootSubgroup_short_mem simpleRootSubgroup_product_cube_mem
 
-def eightRootSubgroupWords : Fin 8 → simpleRootSubgroup
+noncomputable def eightRootSubgroupWords : Fin 8 → simpleRootSubgroup
   | 0 => ⟨1, simpleRootSubgroup.one_mem⟩
   | 1 => ⟨unipotentShortAut true * unipotentLongAut true,
     simpleRootSubgroup_contains_product⟩

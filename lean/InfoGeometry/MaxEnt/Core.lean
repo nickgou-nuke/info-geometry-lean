@@ -182,7 +182,7 @@ def HasExponentialRNFormSigmaFinite
 ## Dual/Fenchel Finite-Support API
 
 This section exposes the proved finite-support route from primal MaxEnt
-optimality to exponential-family RN form. No extra bundled property layer
+optimality to exponential-family RN form. No extra bundled certificate layer
 is kept in the stable surface.
 -/
 
@@ -210,4 +210,4 @@ theorem IsMaxEntSolution.hasExponentialRNForm_of_finiteSupportDuality
   rcases strongDualityAtOpt hP with ⟨Λ, hEq⟩
   exact ⟨Λ, equalityImpliesExponential hP.1 hEq⟩
 
-end MaxEnt
+end InfoGeometry.MaxEnt

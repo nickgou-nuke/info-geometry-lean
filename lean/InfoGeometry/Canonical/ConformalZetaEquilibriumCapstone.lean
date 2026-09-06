@@ -48,21 +48,4 @@ theorem law2_kms_normalized_trace
     τ.τL0 (S C n * star (S C m)) = ζβ * Φ.φ (S C n * star (S C m)) :=
   structural_bridge_is_identity Op C τ ζβ hBridge Φ hΦ_β hΦ_ζβ n m
 
-/--
-🏆 **GRAND SYNTHESIS CAPSTONE: Conformal Zeta & Thermodynamic KMS Equilibrium**
--/
-theorem conformal_zeta_equilibrium_canonical_capstone
-    (β : ℝ) (hβ : 1 < β)
-    (τ : GradedTraceDatum Op β)
-    (Φ : KMSProjectionState C)
-    (hΦ_β : Φ.β = β) (hΦ_ζβ : Φ.ζβ = bostConnesPartition β)
-    (hBridge : hTrace Op C τ (bostConnesPartition β)) :
-    (bostConnesPartition β = (riemannZeta (β : ℂ)).re) ∧
-    (∑' n : ℕ+, normalizedBostConnesWeight β n = 1) ∧
-    (∀ n m : ℕ+, τ.τL0 (S C n * star (S C m)) =
-      bostConnesPartition β * Φ.φ (S C n * star (S C m))) := by
-  refine ⟨law1_conformal_zeta_partition β hβ,
-          tsum_normalizedBostConnesWeight β hβ,
-          fun n m => law2_kms_normalized_trace C τ (bostConnesPartition β) hBridge Φ hΦ_β hΦ_ζβ n m⟩
-
 end InfoGeometry.Canonical.ConformalZetaEquilibriumCapstone

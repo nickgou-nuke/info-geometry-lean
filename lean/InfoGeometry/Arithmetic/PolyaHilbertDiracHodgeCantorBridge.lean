@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
+import InfoGeometry.Arithmetic.HilbertPolyaBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Meta.Architecture
 import Omega.Zeta.XiHilbertPolyaNinefoldEquivalenceDoubledSelfadjointCompression
@@ -32,6 +33,24 @@ namespace InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
 
 open Omega.Zeta
 
+/--
+Re-export: the ninefold Hilbert-Polya equivalence from automath.
+Proved, 0 sorries.
+-/
+@[rep_depth operator]
+theorem ninefold_equivalence
+    (rh roots_interval roots_unit cayley_real caratheodory toeplitz_psd herglotz cmv_unitary
+      doubled_selfadjoint : Prop)
+    (h12 : rh ↔ roots_interval) (h23 : roots_interval ↔ roots_unit)
+    (h34 : roots_unit ↔ cayley_real) (h35 : roots_unit ↔ caratheodory)
+    (h56 : caratheodory ↔ toeplitz_psd) (h57 : caratheodory ↔ herglotz)
+    (h38 : roots_unit ↔ cmv_unitary) (h29 : roots_interval ↔ doubled_selfadjoint) :
+    (rh ↔ roots_interval) ∧ (rh ↔ roots_unit) ∧ (rh ↔ cayley_real) ∧
+      (rh ↔ caratheodory) ∧ (rh ↔ toeplitz_psd) ∧ (rh ↔ herglotz) ∧
+        (rh ↔ cmv_unitary) ∧ (rh ↔ doubled_selfadjoint) :=
+  paper_xi_hilbert_polya_ninefold_equivalence_doubled_selfadjoint_compression
+    rh roots_interval roots_unit cayley_real caratheodory toeplitz_psd herglotz
+    cmv_unitary doubled_selfadjoint h12 h23 h34 h35 h56 h57 h38 h29
 
 /--
 **Polya-Hilbert Dirac-Hodge Cantor conclusion.**
@@ -56,7 +75,7 @@ theorem polya_hilbert_dirac_hodge_cantor_conclusion
     (h_doubled_unit : doubled_selfadjoint ↔ roots_unit) :
     rh ↔ roots_unit :=
   let h_rh_unit : rh ↔ roots_unit := h_rh_doubled.trans h_doubled_unit
-  let result := paper_xi_hilbert_polya_ninefold_equivalence_doubled_selfadjoint_compression rh roots_unit roots_unit cayley_real
+  let result := ninefold_equivalence rh roots_unit roots_unit cayley_real
     caratheodory toeplitz_psd herglotz cmv_unitary doubled_selfadjoint
     h_rh_unit Iff.rfl h_unit_cayley h_unit_caratheodory h_caratheodory_toeplitz
     h_caratheodory_herglotz h_unit_cmv h_doubled_unit.symm

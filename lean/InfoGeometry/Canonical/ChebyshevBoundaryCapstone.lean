@@ -12,3 +12,4 @@ theorem capstone_chebyshev_boundary_synthesis (x γ : ℝ) (hx : 0 < x) :
   grand_chebyshev_boundary_synthesis x γ hx
 
 end InfoGeometry.Canonical.ChebyshevBoundaryCapstone
+

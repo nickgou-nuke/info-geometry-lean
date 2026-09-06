@@ -51,14 +51,3 @@ theorem hasDerivAt_liouville_potential (b μ ϕ : ℝ) :
   have h_eval : μ * (Real.exp (2 * b * ϕ) * (2 * b)) = 2 * b * (μ * Real.exp (2 * b * ϕ)) := by ring
   rw [h_eval] at h_mul
   exact h_mul
-
-theorem grand_chern_simons_to_liouville_synthesis (b μ ϕ : ℝ) (hb : b ≠ 0) :
-    (liouvilleBackgroundCharge (1 / b) = liouvilleBackgroundCharge b) ∧
-    (liouvilleCentralCharge (1 / b) = liouvilleCentralCharge b) ∧
-    (brownHenneauxCentralCharge (1 / 6) = 1) ∧
-    (HasDerivAt (fun x : ℝ => μ * Real.exp (2 * b * x))
-                (2 * b * (μ * Real.exp (2 * b * ϕ))) ϕ) :=
-  ⟨liouville_background_charge_self_dual b hb,
-   liouville_central_charge_self_dual b hb,
-   brown_henneaux_c1_at_one_sixth,
-   hasDerivAt_liouville_potential b μ ϕ⟩

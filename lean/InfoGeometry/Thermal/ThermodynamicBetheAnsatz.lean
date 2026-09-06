@@ -75,13 +75,3 @@ theorem total_cft_central_charge_from_tba :
     effectiveCentralChargeTBA + effectiveCentralChargeTBA = 1 := by
   rw [effective_central_charge_tba_eval]
   ring
-
-theorem grand_thermodynamic_bethe_ansatz_synthesis (ε : ℝ) :
-    (0 < yangYangLFunction ε) ∧
-    (HasDerivAt yangYangLFunction (- (1 / (1 + Real.exp ε))) ε) ∧
-    (effectiveCentralChargeTBA = 1 / 2) ∧
-    (effectiveCentralChargeTBA + effectiveCentralChargeTBA = 1) :=
-  ⟨yang_yang_L_function_pos ε,
-   hasDerivAt_yangYangLFunction ε,
-   effective_central_charge_tba_eval,
-   total_cft_central_charge_from_tba⟩

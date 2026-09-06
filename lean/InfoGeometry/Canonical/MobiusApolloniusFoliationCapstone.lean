@@ -1,19 +1,5 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Tactic
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Complex.MobiusApolloniusFoliation
-
-/-!
-# Möbius Apollonius Midpoint Conformal Foliation Capstone
-
-Canonical umbrella export connecting the Möbius Midpoint Apollonian foliation,
-critical line perpendicular bisector degeneration, vertical Hamiltonian flow invariance,
-and Yang-Baxter braid integrability.
--/
 
 open scoped BigOperators Real Complex Matrix
 open Complex Matrix
@@ -22,7 +8,7 @@ open InfoGeometry.Complex.MobiusApollonius
 
 namespace InfoGeometry.Canonical.MobiusApolloniusFoliation
 
-/-- 🏆 GRAND CAPSTONE: Complete Möbius Apollonius Foliation & Yang-Baxter Synthesis -/
+/-- Canonical packaging of the Möbius--Apollonius and Yang--Baxter identities. -/
 theorem grand_mobius_apollonius_foliation_synthesis
     (σ t : ℝ) (h_half : σ = 1/2)
     (σ_disk : ℝ) (h_disk : 1/2 < σ_disk)
@@ -37,15 +23,15 @@ theorem grand_mobius_apollonius_foliation_synthesis
       (1 - lam) * ((σ - apolloniusCenter lam) ^ 2 + t ^ 2 - apolloniusRadiusSq lam)) ∧
     (mobiusMap (1 - s) = (mobiusMap s)⁻¹) ∧
     (F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
-    (F * B * F = R) :=
-  ⟨mobius_norm_diff σ t,
-   (mobius_unitary_iff σ t).mpr h_half,
-   mobius_critical_line_vertical_flow t,
-   (mobius_disk_foliation_iff σ_disk t).mpr h_disk,
-   (mobius_exterior_foliation_iff σ_ext t).mpr h_ext,
-   apollonius_circle_identity σ t lam h_lam,
-   mobius_functional_equation_dual s,
-   F_sq,
-   F_B_F_eq_R⟩
+    (F * B * F = R) := by
+  exact ⟨mobius_norm_diff σ t,
+    (mobius_unitary_iff σ t).mpr h_half,
+    mobius_critical_line_vertical_flow t,
+    (mobius_disk_foliation_iff σ_disk t).mpr h_disk,
+    (mobius_exterior_foliation_iff σ_ext t).mpr h_ext,
+    apollonius_circle_identity σ t lam h_lam,
+    mobius_functional_equation_dual s,
+    F_sq,
+    F_B_F_eq_R⟩
 
 end InfoGeometry.Canonical.MobiusApolloniusFoliation

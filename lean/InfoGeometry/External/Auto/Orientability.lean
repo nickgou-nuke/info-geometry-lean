@@ -4,14 +4,9 @@ import Mathlib.Data.Set.Basic
 /-- A simplified abstract model of Spacetime and its coordinate patches.
     In full Mathlib this would use SmoothManifoldWithCorners, but we use an 
     abstracted version to guarantee compilation without missing dependencies. -/
-abbrev CoordinatePatch (M : Type) := Set M × (M → ℝ)
-
-namespace CoordinatePatch
-
-def domain {M : Type} (patch : CoordinatePatch M) : Set M := patch.1
-def coord {M : Type} (patch : CoordinatePatch M) : M → ℝ := patch.2
-
-end CoordinatePatch
+structure CoordinatePatch (M : Type) where
+  domain : Set M
+  coord : M → ℝ
 
 /-- An atlas for a Spacetime manifold. -/
 structure SpacetimeAtlas (M : Type) where

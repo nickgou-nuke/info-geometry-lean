@@ -81,7 +81,8 @@ def productSystem (sys1 : LogPotentialSystem S₁) (sys2 : LogPotentialSystem S�
     rcases sys2.nonempty with ⟨s2⟩
     exact ⟨(s1, s2)⟩
 
-/-- Conditional factorization of the log-generating potential. -/
+/-- Conditional factorization of the log-generating potential.  This is the
+honest algebraic interface used by later sockets. -/
 theorem logGenerating_additive_of_partition_mul
     (sys1 : LogPotentialSystem S₁) (sys2 : LogPotentialSystem S₂)
     (hβ : sys1.beta = sys2.beta)
@@ -110,24 +111,23 @@ def entropyGapValue (entropyPotentialProduct entropyPotentialOS : ℝ) : ℝ :=
   entropyPotentialProduct - entropyPotentialOS
 
 /-- Compact diagnostic tuple for algebraic branch choice. -/
-abbrev EntropicBranchChoice := ℝ × ℝ
+structure EntropicBranchChoice where
+  entropyPotentialProduct : ℝ
+  entropyPotentialOS : ℝ
 
 namespace EntropicBranchChoice
 
-def entropyPotentialProduct (d : EntropicBranchChoice) : ℝ := d.1
-def entropyPotentialOS (d : EntropicBranchChoice) : ℝ := d.2
-
 def entropyGap (d : EntropicBranchChoice) : ℝ :=
-  entropyGapValue (entropyPotentialProduct d) (entropyPotentialOS d)
+  entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS
 
 @[simp] theorem entropyGapEq (d : EntropicBranchChoice) :
-    entropyGap d = entropyGapValue (entropyPotentialProduct d) (entropyPotentialOS d) := rfl
+    d.entropyGap = entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS := rfl
 
 def chosen (d : EntropicBranchChoice) : ModelChoice :=
-  logPotentialBranchChoice (entropyPotentialProduct d) (entropyPotentialOS d)
+  logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS
 
 @[simp] theorem chosen_eq (d : EntropicBranchChoice) :
-    chosen d = logPotentialBranchChoice (entropyPotentialProduct d) (entropyPotentialOS d) := rfl
+    d.chosen = logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS := rfl
 
 end EntropicBranchChoice
 

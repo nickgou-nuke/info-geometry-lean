@@ -78,6 +78,30 @@ theorem metriplectic_entropy_production_nonneg {Obs : Type*}
     (M : MetriplecticSystem Obs) :
     0 ≤ M.metric M.S M.S := M.metric_psd M.S
 
+inductive FlowConcept where
+  | Metriplectic_Evolution
+  | WeylSystem
+  | Wasserstein_Gradient_Flow
+  | Itakura_Saito_Divergence
+  | Legendre_Fenchel_Duality
+  deriving DecidableEq, Repr
+
+inductive FlowEdge where
+  | symplectic_part
+  | metric_part
+  | minimizes_distortion
+  | generated_by
+  | stabilizes_vacuum
+  deriving DecidableEq, Repr
+
+def edgeHolds : FlowConcept → FlowEdge → FlowConcept → Bool
+  | FlowConcept.Metriplectic_Evolution, FlowEdge.symplectic_part, FlowConcept.WeylSystem => true
+  | FlowConcept.Metriplectic_Evolution, FlowEdge.metric_part, FlowConcept.Wasserstein_Gradient_Flow => true
+  | FlowConcept.Wasserstein_Gradient_Flow, FlowEdge.minimizes_distortion, FlowConcept.Itakura_Saito_Divergence => true
+  | FlowConcept.Itakura_Saito_Divergence, FlowEdge.generated_by, FlowConcept.Legendre_Fenchel_Duality => true
+  | FlowConcept.Legendre_Fenchel_Duality, FlowEdge.stabilizes_vacuum, FlowConcept.Metriplectic_Evolution => true
+  | _, _, _ => false
+
 end SarsMetriplecticOT
 
 end noncomputable section

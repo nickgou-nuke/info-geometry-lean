@@ -1,5 +1,6 @@
 import InfoGeometry.Optics.Cl11SplitQuaternionConjugationSoldering
 import InfoGeometry.Lie.SplitOctonionQuaternionTwistedConjugation
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 set_option autoImplicit false
 
@@ -16,6 +17,7 @@ noncomputable section
 namespace InfoGeometry.Optics.Cl11QuaternionTwistedConjugationBridge
 
 open InfoGeometry.Algebra
+open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 open InfoGeometry.Clifford.Cl11CoordinateAlgebra
 open InfoGeometry.Canonical.SplitOctonionFixedColorCl11Bridge
@@ -64,11 +66,15 @@ theorem nativeToCanonical_injective : Function.Injective nativeToCanonical := by
 /-- The canonical determinant is the older native Zorn norm under the
 coordinate-preserving bridge. -/
 @[simp] theorem detZ_nativeToCanonical (X : Native) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (nativeToCanonical X) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (nativeToCanonical X) =
     InfoGeometry.Algebra.ZornMatrix.zornNorm X := by
-  simp [nativeToCanonical, canonicalVectorEquiv, toVectorMatrix,
+    simp [nativeToCanonical, canonicalVectorEquiv, toVectorMatrix,
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
     InfoGeometry.Algebra.ZornMatrix.zornNorm,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Algebra.Vec3.dot]
 
@@ -131,9 +137,11 @@ theorem normDifference_cl11Cartesian (i : Fin 3) (q : Cl11) :
     quaternionNorm (cl11Cartesian i q).1 -
           quaternionNorm (cl11Cartesian i q).2 =
         InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (cartesianZornLinearEquiv (cl11Cartesian i q)) :=
       (detZ_cartesianZornLinearEquiv (cl11Cartesian i q)).symm
     _ = InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (nativeToCanonical (cl11FixedColorSplitOctonion i q)) := by
       rw [cartesianZorn_cl11Cartesian]
     _ = InfoGeometry.Algebra.ZornMatrix.zornNorm

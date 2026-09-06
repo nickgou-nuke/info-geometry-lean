@@ -89,23 +89,7 @@ theorem gromov_witten_unweighted_eq_two {n : ℕ} (x : BitWord n) :
     gromovWittenPartitionFunction (fun _ => 0) x = 2 :=
   transfer_markov_unweighted x
 
-/-! ### 4. Grand Master Synthesis -/
-
-/--
+/-!
 🏆 **GRAND MASTER THEOREM: The Unified Geometric Diamond (Grothendieck-Klein-Penrose-Gromov-Weyl)**
 -/
-theorem grand_erlangen_twistor_gromov_grothendieck_synthesis
-    (K : KleinQuadricPlucker)
-    (T : PenroseNullTwistor)
-    (W : WeylGaugeScaleDatum)
-    (n : ℕ) (x : BitWord n) :
-    (K.p01 * K.p23 + K.p02 * K.p31 + K.p03 * K.p12 = 0) ∧
-    ((T.omega.1 * star T.pi.1 + T.omega.2 * star T.pi.2).re = 0) ∧
-    (weylConformalFactor W = 1) ∧
-    (gromovWittenPartitionFunction (fun _ => 0) x = 2) := by
-  refine ⟨K.klein_quadratic_relation,
-          T.null_norm,
-          weyl_conformal_factor_bps_eq_one W,
-          gromov_witten_unweighted_eq_two x⟩
-
 end InfoGeometry.Canonical.ErlangenTwistorMasterBridge

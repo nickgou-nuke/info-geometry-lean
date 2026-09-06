@@ -27,13 +27,13 @@ local instance instCompleteSpaceEndH : CompleteSpace EndH := inferInstance
 /--
 Hestenes/Krein real-form KMS packet.
 
-This is the theorem-safe real translation of the modular/KMS data:
+This is the theorem-safe real translation of the modular/KMS socket:
 
 * the abstract complex unit is represented by a real phase axis `K` with `K² = -1`;
 * the modular dynamics is a repository-native `OperatorFlow` on bounded real
   endomorphisms;
 * Hestenes analyticity is stored as `σₜ(KA) = K σₜ(A)`;
-* null-cone preservation is a vector-rotor/Krein-isometry property, not an
+* null-cone preservation is a vector-rotor/Krein-isometry witness, not an
   unsupported consequence of the observable flow.
 -/
 @[rep_depth krein]
@@ -86,7 +86,7 @@ def hestenesExpectation (_P : HestenesKreinKMSPacket (E := E)) (Ω : E) (A : End
 KMS boundary condition in the real Hestenes language.
 
 The imaginary-time shift is represented by the supplied modular boundary at
-`β`; Hestenes real analyticity remains the separate phase-axis property.
+`β`; Hestenes real analyticity remains the separate phase-axis witness.
 -/
 @[rep_depth krein]
 def IsHestenesKMSCondition (β : ℝ) (φ : EndH → ℝ) : Prop :=
@@ -129,7 +129,7 @@ theorem modular_rotor_preserves_null_cone
   rw [P.rotor_preserves_kreinInner t ξ ξ]
   exact h_null
 
-/-- The stored KMS boundary property can be read as a theorem. -/
+/-- The stored KMS boundary certificate can be read as a theorem. -/
 @[rep_depth krein]
 theorem hestenes_kms_boundary
     {β : ℝ} {φ : EndH → ℝ}
@@ -147,38 +147,8 @@ theorem hestenesExpectation_kms_boundary
       P.hestenesExpectation Ω (B * A) :=
   hKMS A B
 
-/--
-Canonical concrete construction of a Hestenes-Krein KMS packet from any
-phase axis `K` (`K² = -1`) and static/trivial modular dynamics.
--/
-@[rep_depth krein]
-def ofStaticFlow
-    (K : EndH)
-    (hK_sq : K * K = -(1 : EndH)) :
-    HestenesKreinKMSPacket (E := E) where
-  phaseAxis := K
-  phase_sq := hK_sq
-  modularFlow := {
-    flow := fun _ => MulEquiv.refl EndH
-    flow_zero := by intros; rfl
-    flow_add := by intros; rfl
-  }
-  rotor := fun _ => 1
-  rotorInv := fun _ => 1
-  modularFlow_eq_rotor_conjugation := by
-    intro t A
-    simp
-  rotor_preserves_kreinInner := by
-    intro t ξ η
-    simp
-  flow_is_hestenes_analytic := by
-    intro t A
-    rfl
-
 end HestenesKreinKMSPacket
 
 end Core
 
-end HestenesModularKMSBridge
-
-
+end InfoGeometry.Krein.HestenesModularKMSBridge

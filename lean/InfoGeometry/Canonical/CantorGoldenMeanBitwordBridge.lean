@@ -21,20 +21,34 @@ namespace InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
 
 open InfoGeometry.Cantor.CantorRandomWalk
 
+abbrev L2BinarySector : Type :=
+  InfoGeometry.Analysis.L2CantorCommutation.BinarySector
+
+abbrev L2BaseIndex : Type :=
+  InfoGeometry.Analysis.L2CantorCommutation.BaseIndex
+
+/-- The full dyadic Cantor boundary used by the repo's bit models. -/
+abbrev CantorBoundary : Type :=
+  CantorWord
+
 /-- The Omega/golden-mean admissibility predicate: no adjacent occupied bits. -/
-def NoAdjacentOnes (x : ℕ → Bool) : Prop :=
+def NoAdjacentOnes (x : CantorBoundary) : Prop :=
   ∀ n : Nat, ¬ (x n = true ∧ x (n + 1) = true)
 
 /-- The golden-mean subshift as a subtype of the full Cantor boundary. -/
 abbrev GoldenMeanBoundary : Type :=
-  {x : ℕ → Bool // NoAdjacentOnes x}
+  {x : CantorBoundary // NoAdjacentOnes x}
+
+/-- Fixed-length binary readout of an infinite Cantor boundary point. -/
+abbrev FiniteBitword (n : Nat) : Type :=
+  Fin n -> Bool
 
 /-- The length-`n` prefix of an infinite Cantor boundary point. -/
-def prefixWord (x : ℕ → Bool) (n : Nat) : Fin n → Bool :=
+def prefixWord (x : CantorBoundary) (n : Nat) : FiniteBitword n :=
   fun i => x i.1
 
 /-- Finite no-adjacent-ones predicate on a fixed-length bitword. -/
-def NoAdjacentFinite {n : Nat} (w : Fin n → Bool) : Prop :=
+def NoAdjacentFinite {n : Nat} (w : FiniteBitword n) : Prop :=
   ∀ i : Fin n, ∀ hnext : i.1 + 1 < n,
     ¬ (w i = true ∧ w ⟨i.1 + 1, hnext⟩ = true)
 
@@ -51,13 +65,13 @@ This is the repo-native counterpart of Omega's inverse-limit determinacy
 statement for stable addresses.
 -/
 theorem eq_of_prefix_eq
-    (x y : ℕ → Bool)
+    (x y : CantorBoundary)
     (h : ∀ n : Nat, prefixWord x n = prefixWord y n) :
     x = y := by
   funext k
   have hk :=
     congrArg
-      (fun w : Fin (k + 1) → Bool => w ⟨k, Nat.lt_succ_self k⟩)
+      (fun w : FiniteBitword (k + 1) => w ⟨k, Nat.lt_succ_self k⟩)
       (h (k + 1))
   simpa [prefixWord] using hk
 
@@ -72,12 +86,12 @@ theorem goldenMean_ext
 /-! ## Boolean boundary versus plus/minus Cuntz boundary -/
 
 /-- Boolean `false/true` as the `plus/minus` branch alphabet of `L2CantorCommutation`. -/
-def sectorOfBool : Bool -> InfoGeometry.Analysis.L2CantorCommutation.BinarySector
+def sectorOfBool : Bool -> L2BinarySector
   | false => InfoGeometry.Analysis.L2CantorCommutation.BinarySector.plus
   | true => InfoGeometry.Analysis.L2CantorCommutation.BinarySector.minus
 
 /-- Inverse alphabet map from `plus/minus` sectors to Boolean bits. -/
-def boolOfSector : InfoGeometry.Analysis.L2CantorCommutation.BinarySector -> Bool
+def boolOfSector : L2BinarySector -> Bool
   | InfoGeometry.Analysis.L2CantorCommutation.BinarySector.plus => false
   | InfoGeometry.Analysis.L2CantorCommutation.BinarySector.minus => true
 
@@ -85,50 +99,50 @@ def boolOfSector : InfoGeometry.Analysis.L2CantorCommutation.BinarySector -> Boo
     boolOfSector (sectorOfBool b) = b := by
   cases b <;> rfl
 
-@[simp] theorem sectorOfBool_boolOfSector (s : InfoGeometry.Analysis.L2CantorCommutation.BinarySector) :
+@[simp] theorem sectorOfBool_boolOfSector (s : L2BinarySector) :
     sectorOfBool (boolOfSector s) = s := by
   cases s <;> rfl
 
 /-- Convert a Boolean Cantor boundary point to the `plus/minus` Cuntz boundary. -/
-def toBaseIndex (x : ℕ → Bool) : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex :=
+def toBaseIndex (x : CantorBoundary) : L2BaseIndex :=
   fun n => sectorOfBool (x n)
 
 /-- Convert the `plus/minus` Cuntz boundary back to Boolean bits. -/
-def ofBaseIndex (x : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex) : ℕ → Bool :=
+def ofBaseIndex (x : L2BaseIndex) : CantorBoundary :=
   fun n => boolOfSector (x n)
 
-@[simp] theorem ofBaseIndex_toBaseIndex (x : ℕ → Bool) :
+@[simp] theorem ofBaseIndex_toBaseIndex (x : CantorBoundary) :
     ofBaseIndex (toBaseIndex x) = x := by
   funext n
   simp [ofBaseIndex, toBaseIndex]
 
-@[simp] theorem toBaseIndex_ofBaseIndex (x : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex) :
+@[simp] theorem toBaseIndex_ofBaseIndex (x : L2BaseIndex) :
     toBaseIndex (ofBaseIndex x) = x := by
   funext n
   simp [ofBaseIndex, toBaseIndex]
 
 /-- The full Boolean Cantor boundary is equivalent to the repo's `plus/minus` Cuntz boundary. -/
-def cantorBoundaryEquivBaseIndex : (ℕ → Bool) ≃ InfoGeometry.Analysis.L2CantorCommutation.BaseIndex where
+def cantorBoundaryEquivBaseIndex : CantorBoundary ≃ L2BaseIndex where
   toFun := toBaseIndex
   invFun := ofBaseIndex
   left_inv := ofBaseIndex_toBaseIndex
   right_inv := toBaseIndex_ofBaseIndex
 
 /-- Prepend a Boolean bit to an infinite boundary point. -/
-def consBit (b : Bool) (x : ℕ → Bool) : ℕ → Bool
+def consBit (b : Bool) (x : CantorBoundary) : CantorBoundary
   | 0 => b
   | n + 1 => x n
 
-@[simp] theorem consBit_zero (b : Bool) (x : ℕ → Bool) :
+@[simp] theorem consBit_zero (b : Bool) (x : CantorBoundary) :
     consBit b x 0 = b := by
   rfl
 
-@[simp] theorem consBit_succ (b : Bool) (x : ℕ → Bool) (n : Nat) :
+@[simp] theorem consBit_succ (b : Bool) (x : CantorBoundary) (n : Nat) :
     consBit b x (n + 1) = x n := by
   rfl
 
 /-- Boolean prepend is transported to `L2.prepend` under the alphabet equivalence. -/
-theorem toBaseIndex_consBit (b : Bool) (x : ℕ → Bool) :
+theorem toBaseIndex_consBit (b : Bool) (x : CantorBoundary) :
     toBaseIndex (consBit b x) =
       InfoGeometry.Analysis.L2CantorCommutation.prepend (sectorOfBool b) (toBaseIndex x) := by
   funext n
@@ -167,25 +181,6 @@ theorem noAdjacentOnes_cons_true_of_head_false
       contradiction
   | succ n =>
       exact x.2 n hpair
-
-theorem noAdjacentOnes_cons_true_iff_head_false
-    (x : GoldenMeanBoundary) :
-    NoAdjacentOnes (consBit true x.1) ↔ x.1 0 = false := by
-  constructor
-  · intro h
-    by_cases hx : x.1 0 = false
-    · exact hx
-    · have hxtrue : x.1 0 = true := by
-        cases hbit : x.1 0 <;> simp_all
-      have hpair :
-          consBit true x.1 0 = true ∧
-            consBit true x.1 (0 + 1) = true := by
-        constructor
-        · rfl
-        · simpa [consBit] using hxtrue
-      exact False.elim (h 0 hpair)
-  · intro hhead
-    exact noAdjacentOnes_cons_true_of_head_false x hhead
 
 /-- Finite prefixes remain golden-mean admissible after legally prepending `true`. -/
 theorem prefix_noAdjacentFinite_cons_true_of_head_false

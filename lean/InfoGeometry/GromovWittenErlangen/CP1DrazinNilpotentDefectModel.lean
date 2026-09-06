@@ -39,7 +39,7 @@ abbrev Coeff := CP1DrazinModel.Coeff
 abbrev Algebra := ℤ × ZMod 4
 
 /-- Reuse the minimal two-fixed-point, one-edge virtual localization packet. -/
-def virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff :=
+def virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff :=
   CP1DrazinModel.virtualLocalization
 
 /-- Complementary support/residue projections for the product coefficient algebra. -/

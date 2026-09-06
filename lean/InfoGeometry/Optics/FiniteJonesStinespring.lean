@@ -9,7 +9,7 @@ This file proves the finite optical conservation identity:
       =>
   1 - R† R = V† V.
 
-The theorem is constructive and contains no physical property assumption.
+The theorem is constructive and contains no physical witness socket.
 Physical interpretations such as "metal lattice", "heat", or "commutant" are
 added in later calibration layers.
 -/
@@ -57,24 +57,20 @@ Finite Stinespring isometry pair.
 `R` is the visible optical channel.
 `V` is the hidden/environment channel.
 
-The only property is the constructive conservation law
+The only hypothesis is the constructive conservation law
 `R†R + V†V = 1`.
 -/
-abbrev StinespringIsometry
-    (Op : Type*) [Ring Op] [StarRing Op] :=
-  {p : Op × Op //
-    star p.1 * p.1 + star p.2 * p.2 = 1}
+structure StinespringIsometry
+    (Op : Type*) [Ring Op] [StarRing Op] where
+  R : Op
+  V : Op
+  isometry_eq_one :
+    star R * R + star V * V = 1
 
 namespace StinespringIsometry
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (S : StinespringIsometry Op)
-
-abbrev R : Op := S.1.1
-
-abbrev V : Op := S.1.2
-
-abbrev isometry_eq_one : star S.R * S.R + star S.V * S.V = 1 := S.2
 
 /--
 The visible optical defect is exactly hidden gain.
@@ -168,9 +164,10 @@ def diagonalStinespringIsometry
     (rs rp vs vp : ℂ)
     (hs : star rs * rs + star vs * vs = 1)
     (hp : star rp * rp + star vp * vp = 1) :
-    StinespringIsometry JonesMat :=
-  ⟨⟨diagonalVisibleChannel rs rp, diagonalEnvironmentChannel vs vp⟩,
-    diagonal_left_column_isometry rs rp vs vp hs hp⟩
+    StinespringIsometry JonesMat where
+  R := diagonalVisibleChannel rs rp
+  V := diagonalEnvironmentChannel vs vp
+  isometry_eq_one := diagonal_left_column_isometry rs rp vs vp hs hp
 
 /--
 For a diagonal lossy mirror, visible defect equals hidden gain.

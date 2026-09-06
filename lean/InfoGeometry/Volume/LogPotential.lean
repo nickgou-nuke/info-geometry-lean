@@ -41,4 +41,4 @@ end LogPotential
 
 namespace InfoGeometry.Volume.LogPotential
 
-end LogPotential
+end InfoGeometry.Volume.LogPotential

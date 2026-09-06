@@ -29,7 +29,7 @@ def carSingleModePacket (w : ℝ) : ChiralSuperPoincareSouriauPacket (Clnn 1) wh
   momentumOp := InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w) * InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Qdag 1 (λ _ => w) + InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Qdag 1 (λ _ => w) * InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w)
   beta4 := λ _ => 0
   energyMomentum4 := λ μ => if μ = 0 then w * w else 0
-  twistorData := {
+  twistorSocket := {
     nullCone := fun _ =>
       InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w) *
           InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w) = 0 ∧

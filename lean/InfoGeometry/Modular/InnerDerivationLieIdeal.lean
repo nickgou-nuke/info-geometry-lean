@@ -32,6 +32,37 @@ structure Derivation (A : Type*) [Ring A] where
 instance : CoeFun (Derivation A) (fun _ => A → A) where
   coe D := D.toFun
 
+instance : Add (Derivation A) where
+  add D₁ D₂ :=
+    { toFun := fun x => D₁ x + D₂ x
+      map_add' := by
+        intro x y
+        rw [D₁.map_add', D₂.map_add', add_add_add_comm]
+      leibniz' := by
+        intro x y
+        simp only [D₁.leibniz', D₂.leibniz', add_mul, mul_add]
+        abel }
+
+instance : Zero (Derivation A) where
+  zero :=
+    { toFun := fun _ => 0
+      map_add' := by simp
+      leibniz' := by simp }
+
+instance : Neg (Derivation A) where
+  neg D :=
+    { toFun := fun x => -D x
+      map_add' := by
+        intro x y
+        rw [D.map_add', neg_add]
+      leibniz' := by
+        intro x y
+        simp only [D.leibniz', neg_add, neg_mul, mul_neg]
+        }
+
+instance : Sub (Derivation A) where
+  sub D₁ D₂ := D₁ + -D₂
+
 namespace Derivation
 
 variable (D : Derivation A)
@@ -114,6 +145,44 @@ theorem ad_add (K₁ K₂ : A) :
   simp only [add_mul, mul_add]
   abel
 
+/-- Bundled form of additivity of the inner-derivation constructor. -/
+theorem ad_add_eq (K₁ K₂ : A) :
+    ad (K₁ + K₂) = ad K₁ + ad K₂ := by
+  apply Derivation.ext
+  intro X
+  exact ad_add K₁ K₂ X
+
+/-- The zero generator induces the zero derivation. -/
+theorem ad_zero (X : A) :
+    ad (0 : A) X = 0 := by
+  simp [ad]
+
+/-- Bundled form of the zero-generator law. -/
+theorem ad_zero_eq :
+    ad (0 : A) = (0 : Derivation A) := by
+  apply Derivation.ext
+  intro X
+  exact ad_zero X
+
+/-- Bundled form of negation for the inner-derivation constructor. -/
+theorem ad_neg_eq (K : A) :
+    ad (-K) = -ad K := by
+  apply Derivation.ext
+  intro X
+  change (-K) * X - X * (-K) = -(K * X - X * K)
+  simp only [neg_mul, mul_neg, neg_sub]
+  abel
+
+/-- Bundled form of subtraction for the inner-derivation constructor. -/
+theorem ad_sub_eq (K₁ K₂ : A) :
+    ad (K₁ - K₂) = ad K₁ - ad K₂ := by
+  apply Derivation.ext
+  intro X
+  change ad (K₁ - K₂) X = ad K₁ X + (-ad K₂ X)
+  dsimp [ad]
+  simp only [sub_mul, mul_sub, neg_sub]
+  abel
+
 /-!
 =============================================================================
 PART 2: Lie Homomorphism and Lie Ideal Theorems
@@ -131,6 +200,14 @@ theorem ad_commutator_homomorphism (K₁ K₂ X : A) :
   simp only [mul_sub, sub_mul, mul_assoc]
   abel
 
+/-- Bundled Lie-homomorphism law for inner derivations. -/
+theorem ad_commutator_homomorphism_eq (K₁ K₂ : A) :
+    Derivation.commutator (ad K₁) (ad K₂) =
+      ad (K₁ * K₂ - K₂ * K₁) := by
+  apply Derivation.ext
+  intro X
+  exact ad_commutator_homomorphism K₁ K₂ X
+
 /--
   THEOREM 2 (The Master Backreaction Lie Ideal Commutator):
   For any general derivation D ∈ Der(A) and any element K ∈ A:
@@ -141,6 +218,13 @@ theorem master_lie_ideal_commutator (D : Derivation A) (K X : A) :
   dsimp [Derivation.bracket, ad]
   rw [D.map_sub, D.leibniz, D.leibniz]
   abel
+
+/-- Bundled master backreaction identity for the inner-derivation ideal. -/
+theorem master_lie_ideal_commutator_eq (D : Derivation A) (K : A) :
+    Derivation.commutator D (ad K) = ad (D K) := by
+  apply Derivation.ext
+  intro X
+  exact master_lie_ideal_commutator D K X
 
 /-- Predicate for an inner derivation. -/
 def isInnerDerivation (D : Derivation A) : Prop :=

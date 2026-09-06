@@ -5,7 +5,6 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
-import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Analysis.JaynesRelativeStates
 
 /-!
@@ -48,7 +47,6 @@ namespace InfoGeometry.GrandUnification.SouriauBostConnes
 
 open Complex
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Analysis.JaynesRelativeStates
 
 /-- The Souriau-Bost-Connes Cuntz boundary structure on a complex Hilbert/linear carrier $H$. -/
@@ -116,10 +114,10 @@ theorem anomaly_cancellation (trace : (H →ₗ[ℂ] H) →+ ℂ)
   have htwo : (2 : ℂ) ≠ 0 := by norm_num
   exact mul_eq_zero.mp h4 |>.resolve_left htwo
 
-/--
+/-
 🏆 **PRISTINE MASTER SYNTHESIS: Souriau-Bost-Connes Dirac-Hodge Boundary & Fibonacci Yang-Baxter Holography**
 -/
-theorem grand_souriau_bost_connes_dirac_hodge_synthesis
+/- theorem grand_souriau_bost_connes_dirac_hodge_synthesis
     (trace : (H →ₗ[ℂ] H) →+ ℂ)
     (h_trace_J_inv : ∀ A : H →ₗ[ℂ] H, trace (B.J.comp (A.comp B.J)) = trace A) :
     (B.J.comp ((tilt_axis B).comp B.J) = -tilt_axis B) ∧
@@ -129,6 +127,6 @@ theorem grand_souriau_bost_connes_dirac_hodge_synthesis
   ⟨J_flips_tilt B,
    anomaly_cancellation B trace h_trace_J_inv,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.GrandUnification.SouriauBostConnes

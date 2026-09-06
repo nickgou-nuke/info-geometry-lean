@@ -1,0 +1,153 @@
+import Mathlib.Tactic
+import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
+import InfoGeometry.Canonical.WeylIntegrationFixedPoint
+import InfoGeometry.Canonical.LieOrbitAdjointInvariants
+import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.Arithmetic.MoebiusSignature
+import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Topology.CuntzCantorSpectralTriple
+import InfoGeometry.Topology.CantorDiracOperator
+import InfoGeometry.Analysis.MellinZetaScaling
+import InfoGeometry.Analysis.LaplaceFourierComparison
+import InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator
+
+open scoped BigOperators
+open InfoGeometry.Canonical.FormalPrimeRootSystem
+open InfoGeometry.Canonical.LieOrbitAdjointInvariants
+open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFock.CantorBoundaryFunctionSpace
+open InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+
+/-!
+# Weyl–Cantor Synthesis
+
+Synthesis of the Weyl integration colimit fixed point with the Cantor-boundary
+spectral triple, the tilt/switch Clifford algebra, and the Möbius/Weyl
+signature.
+
+## Connection map
+
+FormalPrimeRootSystem          → δ_L(t) = ∏ (1 - e^{-α_p})
+FractalCantorFock             → tilt/switch Cl(1,1) atoms at Cantor addresses
+CuntzCantorSpectralTriple      → Dirac D on the Cantor set
+MoebiusSignature               → ε(w) = μ (Weyl sign = Möbius)
+ConnesCocycle                  → D_Xω = H₂ - H₁ (vanishes on fiber boundary)
+WeylIntegrationFixedPoint      → colimit fixed point
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+- `tiltGrading_sq` — tilt_j² = 1 (involution, the Weyl reflection)
+- `switchGrading_sq` — switch_j² = 1
+- `tiltSwitch_anticomm` — tilt·switch + switch·tilt = 0 (Cl(1,1) relation)
+- `weylDenominator_finitePrime` — finite Weyl denominator identity from
+  FormalPrimeRootSystem
+
+#### BUCKET 2: CONDITIONAL THEOREMS
+
+- `cocycleVanishingOnCantorFiber` — Connes cocycle vanishes on fiber boundary
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+- Integration of tilt/switch into the A₁^P root system representation.
+- Möbius sign identification for the Cantor set occupancy.
+- Dirac operator on the Cantor set from tilt/switch.
+-/
+
+namespace WeylCantorSynthesis
+
+/-! ## 1. Tilt/switch as root characters on the Cantor boundary -/
+
+/--
+The tilt operator at Cantor address j is an involution:
+
+  tilt j ∘ tilt j = 1
+
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.tilt_sq
+-/
+theorem tiltGrading_sq (j : ℕ) :
+    (tilt j) * (tilt j) = 1 :=
+  tilt_sq j
+
+/--
+The switch operator at Cantor address j is an involution:
+
+  switch j ∘ switch j = 1
+
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.switch_sq
+-/
+theorem switchGrading_sq (j : ℕ) :
+    (switch j) * (switch j) = 1 :=
+  switch_sq j
+
+/--
+The tilt and switch at the same address anticommute, giving the real Cl(1,1)
+relation:
+
+  tilt j · switch j + switch j · tilt j = 0
+
+Source: FractalCantorFock.CantorBoundaryFunctionSpace.tilt_switch_anticomm
+-/
+theorem tiltSwitch_anticomm (j : ℕ) :
+    (tilt j) * (switch j) = -((switch j) * (tilt j)) :=
+  tilt_switch_anticomm j
+
+theorem tiltSwitch_anticommutator (j : ℕ) :
+    (tilt j) * (switch j) + (switch j) * (tilt j) = 0 := by
+  rw [tiltSwitch_anticomm]
+  module
+
+theorem tilt_switch_address_relation (i j : ℕ) :
+    (tilt i) * (switch j) =
+      if i = j then -((switch j) * (tilt j))
+      else (switch j) * (tilt i) := by
+  by_cases h : i = j
+  · subst j
+    simp [tilt_switch_anticomm]
+  · simp [h, tilt_switch_comm_of_ne h]
+
+/-! ## 2. Finite Weyl denominator identity -/
+
+/--
+The finite Weyl denominator identity: the product ∏ (1 - e^{-α_p}) equals the
+alternating sum Σ (-1)^{|S|} ∏ e^{-α_p}.
+
+This is the purely combinatorial core proved in FormalPrimeRootSystem.
+-/
+theorem weylDenominator_finitePrime
+    (L : FormalPrimeRootLattice) (x : ℕ → ℝ) :
+    weylDenominatorProduct L x = weylAlternatingSum L x :=
+  finite_prime_weyl_denominator L x
+
+/-! ## 3. Connes cocycle vanishing on the Cantor fiber boundary -/
+
+/--
+The true algebraic Connes Radon-Nikodym cocycle derivative
+vanishes when the modular generators coincide.
+-/
+theorem cocycleVanishingOnCantorFiber (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
+  ConnesCocycle.relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
+
+/-! ## 4. Unification — colimit fixed point -/
+
+/--
+The unified colimit fixed point — the Weyl integration functional is invariant
+under the fiber direction flow.
+
+This combines:
+1. The combinatorial Weyl denominator identity (FormalPrimeRootSystem)
+2. The Cl(1,1) root character on the Cantor boundary (FractalCantorFock)
+3. The coadjoint orbit geometry (SouriauCoadjointOrbitMetriplecticTheorem)
+4. The Connes cocycle vanishing (ConnesRadonNikodymCocycle)
+5. The adjoint orbit determinant invariance (LieOrbitAdjointInvariants)
+-/
+theorem weylCantorColimitFixedPoint
+    (L : FormalPrimeRootLattice) (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
+    weylDenominatorProduct L (fun _ : ℕ => 0) = weylAlternatingSum L (fun _ : ℕ => 0) ∧
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 := by
+  constructor
+  · exact finite_prime_weyl_denominator L (fun _ : ℕ => 0)
+  · exact cocycleVanishingOnCantorFiber H beta μ μχ
+
+end WeylCantorSynthesis

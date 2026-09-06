@@ -30,13 +30,13 @@ open Finset
 /-! ## Finite Jaynes/LDDS centering -/
 
 /-- Finite density data relative to a finite reference density. -/
-def FiniteLDDSDatum (ι : Type*) := (ι → ℝ) × (ι → ℝ)
+structure FiniteLDDSDatum (ι : Type*) where
+  /-- The measured/discrete density. -/
+  density : ι → ℝ
+  /-- The reference limiting-density-of-discrete-states weight. -/
+  reference : ι → ℝ
 
 namespace FiniteLDDSDatum
-
-abbrev density (D : FiniteLDDSDatum ι) : ι → ℝ := D.1
-
-abbrev reference (D : FiniteLDDSDatum ι) : ι → ℝ := D.2
 
 variable {ι : Type*} [Fintype ι]
 

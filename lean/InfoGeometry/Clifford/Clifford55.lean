@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Data.Real.Basic
@@ -48,21 +47,11 @@ noncomputable def Q55 : QuadraticForm ℝ V55 :=
 abbrev Cl55 := CliffordAlgebra Q55
 abbrev ι55 : V55 →ₗ[ℝ] Cl55 := CliffordAlgebra.ι Q55
 
-/-- The canonical linear readout of the `Cl(5,5)` algebra as an exterior
-    algebra, supplied by Mathlib's Clifford-to-exterior equivalence. -/
-noncomputable def cl55ExteriorEquiv :
-    Cl55 ≃ₗ[ℝ] ExteriorAlgebra ℝ V55 :=
-  CliffordAlgebra.equivExterior Q55
-
-@[simp] theorem cl55ExteriorEquiv_ι (v : V55) :
-    cl55ExteriorEquiv (ι55 v) = ExteriorAlgebra.ι ℝ v := by
-  simp [cl55ExteriorEquiv, ι55, CliffordAlgebra.changeForm_ι]
-
 theorem ι55_injective : Function.Injective (ι55) := by
   intro x y h
-  apply (ExteriorAlgebra.ι_inj ℝ x y).mp
-  have hh := congrArg cl55ExteriorEquiv h
-  simpa only [cl55ExteriorEquiv_ι] using hh
+  have hh := congrArg (CliffordAlgebra.equivExterior Q55) h
+  exact (ExteriorAlgebra.ι_inj ℝ x y).mp (by
+    simpa [CliffordAlgebra.equivExterior, CliffordAlgebra.changeForm_ι] using hh)
 
 noncomputable def ι55RangeEquiv : V55 ≃ₗ[ℝ] LinearMap.range (ι55) :=
   LinearEquiv.ofInjective ι55 ι55_injective
@@ -79,9 +68,8 @@ abbrev LipschitzGroup : Subgroup Cl55ˣ := LipschitzGroup55
 
 abbrev pinToUnits : Pin55 →* Cl55ˣ := pinGroup.toUnits
 
-abbrev twisted_adj (g : Pin55) (v : V55) : Cl55 :=
-  CliffordAlgebra.involute (pinToUnits g : Cl55) * ι55 v *
-    (↑((pinToUnits g)⁻¹) : Cl55)
+def twisted_adj (g : Pin55) (v : V55) : Cl55 :=
+  (pinToUnits g : Cl55) * ι55 v * (↑((pinToUnits g)⁻¹) : Cl55)
 
 theorem pin_units_mem_lipschitz (g : Pin55) : pinToUnits g ∈ LipschitzGroup55 := by
   apply pinGroup.units_mem_lipschitzGroup (x := pinToUnits g)

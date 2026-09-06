@@ -64,20 +64,6 @@ theorem wigner_bps_casimir_confinement (σ : ℝ) (h_casimir : σ - 1 / 2 = 0) :
     σ = 1 / 2 := by
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Symphony of Infinity Synthesis -/
-theorem grand_harmonic_symphony_synthesis
-    (p q α ψ σ : ℝ)
-    (hp : 0 < p) (hq : 0 < q)
-    (h_casimir : σ - 1 / 2 = 0) :
-    (rapidityFrequency (p * q) = rapidityFrequency p + rapidityFrequency q) ∧
-    (weylEvolution α 0 = 1) ∧
-    ((weylEvolution α 0) * ψ = ψ) ∧
-    (σ = 1 / 2) :=
-  ⟨logarithmic_rosetta_stone p q hp hq,
-   bps_shield_operator_identity α,
-   bps_macroscopic_invariance α ψ,
-   wigner_bps_casimir_confinement σ h_casimir⟩
-
 end
 
 end InfoGeometry.Quantum.HarmonicOscillatorRealityWeylBPS

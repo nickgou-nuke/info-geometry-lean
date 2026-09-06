@@ -5,8 +5,7 @@ namespace AgentBrain
 
 abbrev CognitiveHash := String
 
-def empty_hash : CognitiveHash :=
-  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+def empty_hash : CognitiveHash := "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 def hash_to_action (h : CognitiveHash) : ℝ :=
   if h = empty_hash then 0 else 1

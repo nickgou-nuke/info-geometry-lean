@@ -52,7 +52,7 @@ noncomputable def vec55SplitEquiv :
 
 theorem splitQ_vec55SplitEquiv (v : Fin 10 → ℝ) :
     Qsplit 5 (vec55SplitEquiv v) = q55Real v := by
-  simp [vec55SplitEquiv, Qsplit, q55Real]
+  simp [vec55SplitEquiv, Qsplit, q55Real, CliffordTower.Q11_apply]
   ring
 
 def castVec55 (v : Fin 10 → ℚ) : Fin 10 → ℝ :=
@@ -139,7 +139,7 @@ theorem gammaBasis55_pair05 :
   rw [vec55SplitEquiv_basis0, vec55SplitEquiv_basis5]
   rw [recursiveGammaTensor_headPair, recursiveGammaTensor_headPair]
   rw [appendAtom_mul]
-  simp [gradingAtom, InfoGeometry.Clifford.GammaMatrices.gamma12_eq]
+  simpa [gradingAtom, InfoGeometry.Clifford.GammaMatrices.gamma12_eq]
 
 theorem recursiveGammaTensor_basis1 :
     recursiveGammaTensor 5 (vec55SplitEquiv (vec55Basis 1)) =
@@ -393,7 +393,7 @@ theorem pairedGammaProduct_two :
   rw [InfoGeometry.Clifford.SpinorRep.appendAtom_mul_assoc_left]
   rw [recursiveGammaTensor_splitHeadPlus,
     recursiveGammaTensor_splitHeadMinus]
-  simp [gradingTensor, mul_assoc]
+  simp [gradingTensor, gamma12_sq, mul_assoc]
   rw [appendAtom_mul, ← gamma12_eq]
   simp [gradingAtom]
 
@@ -463,15 +463,14 @@ theorem pairedGammaProduct_succ (n : ℕ) :
         appendAtom (1 : SplitGammaMatrix n) gammaMinusAtom =
       appendAtom (1 : SplitGammaMatrix n) gradingAtom := by
     rw [appendAtom_mul]
-    simp [gradingAtom, gamma12_eq]
+    simpa [gradingAtom, gamma12_eq]
   rw [hpm]
   rw [pairedGammaTailFold_lifted]
   have hpow :
       gradingAtom * gradingAtom ^ (pairedSplitVectors n).length = gradingAtom := by
     rw [pairedSplitVectors_length_even]
     have hsq : gradingAtom ^ 2 = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-      rw [pow_two]
-      exact gradingAtom_sq
+      simpa [pow_two] using gradingAtom_sq
     rw [pow_mul]
     simp [hsq]
   rw [hpow]
@@ -533,7 +532,7 @@ private theorem gamma55_anticomm_of_polar_zero
   rw [hpolar, map_zero] at h
   exact eq_neg_of_add_eq_zero_left h
 
-theorem gammaBasis55_anticomm_45 :
+private theorem gammaBasis55_anticomm_45 :
     gammaBasis55 4 * gammaBasis55 5 = -(gammaBasis55 5 * gammaBasis55 4) := by
   have hpolar : QuadraticMap.polar (Qsplit 5)
       (vec55SplitEquiv (vec55Basis 4)) (vec55SplitEquiv (vec55Basis 5)) = 0 := by
@@ -673,6 +672,7 @@ private theorem gammaBasis55_anticomm_48 :
   simpa [gammaBasis55] using
     (gamma55_anticomm_of_polar_zero (v := vec55Basis 4) (w := vec55Basis 8) hpolar)
 
+set_option maxHeartbeats 1000000 in
 theorem orderedGammaVolume55_eq_chiralityMatrix :
     orderedGammaVolume55 = chiralityMatrix := by
   have hswap1 :
@@ -937,12 +937,6 @@ theorem orderedGammaVolume55_eq_chiralityMatrix :
     ← List.prod_eq_foldl, hlist]
   exact hpaired.trans hchir
 
-theorem orderedGammaVolume55_sq :
-    orderedGammaVolume55 * orderedGammaVolume55 =
-      (1 : SpinorMatrix 5) := by
-  rw [orderedGammaVolume55_eq_chiralityMatrix]
-  exact chiralityMatrix_sq
-
 /-- Canonical concrete `Cl(5,5)` chirality owner on the recursive spinor
 matrix carrier. -/
 noncomputable def chirality55 : SpinorMatrix 5 :=
@@ -1023,9 +1017,7 @@ theorem toVec55Q_jordanNullMinus :
     toVec55Q jordanNullMinus =
       fun i => if i = 0 then 1 / 2 else if i = 5 then -(1 / 2) else 0 := by
   funext i
-  fin_cases i
-  all_goals simp [jordanNullMinus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero]
-  all_goals ring
+  fin_cases i <;> simp [jordanNullMinus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero] <;> ring
 
 noncomputable def gammaJordanNullPlus : SpinorMatrix 5 :=
   hermitianGamma jordanNullPlus
@@ -1040,7 +1032,7 @@ theorem vec55Split_jordanNullPlus :
     headNullMinus, headPair, Algebra.SplitOctonionQ.SplitO.zero] <;>
     try norm_num
   all_goals exfalso
-  all_goals exact Fin.elim0 ‹_›
+  all_goals exact Fin.elim0 (by assumption)
 
 theorem vec55Split_jordanNullMinus :
     vec55SplitEquiv (castVec55 (toVec55Q jordanNullMinus)) =
@@ -1049,7 +1041,7 @@ theorem vec55Split_jordanNullMinus :
     headNullPlus, headPair, Algebra.SplitOctonionQ.SplitO.zero] <;>
     try norm_num
   all_goals exfalso
-  all_goals exact Fin.elim0 ‹_›
+  all_goals exact Fin.elim0 (by assumption)
 
 theorem gammaJordanNullPlus_eq_u5 :
     gammaJordanNullPlus =
@@ -1127,27 +1119,25 @@ noncomputable def cl55R5 : SpinorMatrix 5 :=
 noncomputable def cl55Atom : Cl11Atom (SpinorMatrix 5) where
   r0 := cl55R0
   r5 := cl55R5
- 
-noncomputable def cl55AtomLaws : Cl11AtomLaws cl55Atom := by
-  refine ⟨?_, ?_, ?_⟩
-  ·
+  r0_sq := by
     have hq : SplitQuad 5 cl55R0Vec = 1 := by
       norm_num [cl55R0Vec, headPair, SplitQuad, Qsplit,
         CliffordTower.Q11]
     simpa [cl55R0] using (recursiveGamma_sq 5 cl55R0Vec).trans
       (by rw [hq]; simp)
-  ·
+  r5_sq := by
     have hq : SplitQuad 5 cl55R5Vec = -1 := by
       norm_num [cl55R5Vec, headPair, SplitQuad, Qsplit,
         CliffordTower.Q11]
     simpa [cl55R5] using (recursiveGamma_sq 5 cl55R5Vec).trans
       (by rw [hq]; simp)
-  ·
+  anticommute := by
     have h := gammaGenerator_anticomm 5 cl55R0Vec cl55R5Vec
     have hm := congrArg (spinorRepresentation 5) h
     have hp : QuadraticMap.polar (SplitQuad 5) cl55R0Vec cl55R5Vec = 0 := by
-      simp [cl55R0Vec, cl55R5Vec, headPair, SplitQuad, Qsplit,
-        QuadraticMap.polar, CliffordTower.Q11]
+      simpa [cl55R0Vec, cl55R5Vec, headPair, SplitQuad, Qsplit,
+        QuadraticMap.polar, InfoGeometry.Clifford.splitB11_apply,
+        CliffordTower.Q11]
     rw [map_add, map_mul, map_mul] at hm
     rw [spinorRepresentation_ι, spinorRepresentation_ι] at hm
     rw [hp, map_zero] at hm
@@ -1156,22 +1146,22 @@ noncomputable def cl55AtomLaws : Cl11AtomLaws cl55Atom := by
     exact eq_neg_of_add_eq_zero_left hm0
 
 noncomputable def cl55ChiralityOperator : ChiralityOperator cl55Atom :=
-  eulerAsChirality cl55Atom cl55AtomLaws
+  eulerAsChirality cl55Atom
 
 theorem cl55ChiralityOperator_sq :
     cl55ChiralityOperator.rho * cl55ChiralityOperator.rho =
       (1 : SpinorMatrix 5) :=
-  ChiralityOperator.rho_sq_one cl55Atom cl55ChiralityOperator
+  cl55ChiralityOperator.rho_sq_one
 
 theorem cl55ChiralityOperator_anticomm_r0 :
     cl55ChiralityOperator.rho * cl55Atom.r0 =
       -(cl55Atom.r0 * cl55ChiralityOperator.rho) :=
-  ChiralityOperator.anticomm_r0 cl55Atom cl55ChiralityOperator
+  cl55ChiralityOperator.anticomm_r0
 
 theorem cl55ChiralityOperator_anticomm_r5 :
     cl55ChiralityOperator.rho * cl55Atom.r5 =
       -(cl55Atom.r5 * cl55ChiralityOperator.rho) :=
-  ChiralityOperator.anticomm_r5 cl55Atom cl55ChiralityOperator
+  cl55ChiralityOperator.anticomm_r5
 
 noncomputable def cl55ChiralProjectorPlus : SpinorMatrix 5 :=
   chiralProjectorPlus cl55Atom
@@ -1181,7 +1171,7 @@ noncomputable def cl55ChiralProjectorMinus : SpinorMatrix 5 :=
 
 theorem cl55ChiralProjectors_orthogonal :
     cl55ChiralProjectorPlus * cl55ChiralProjectorMinus = 0 :=
-  chiral_sheets_orthogonal cl55Atom cl55AtomLaws
+  chiral_sheets_orthogonal cl55Atom
 
 theorem cl55ChiralProjectors_partition :
     cl55ChiralProjectorPlus + cl55ChiralProjectorMinus =
@@ -1191,17 +1181,17 @@ theorem cl55ChiralProjectors_partition :
 theorem cl55ChiralProjectorPlus_idempotent :
     cl55ChiralProjectorPlus * cl55ChiralProjectorPlus =
       cl55ChiralProjectorPlus :=
-  chiral_plus_idempotent cl55Atom cl55AtomLaws
+  chiral_plus_idempotent cl55Atom
 
 theorem cl55ChiralProjectorMinus_idempotent :
     cl55ChiralProjectorMinus * cl55ChiralProjectorMinus =
       cl55ChiralProjectorMinus :=
-  chiral_minus_idempotent cl55Atom cl55AtomLaws
+  chiral_minus_idempotent cl55Atom
 
 theorem cl55Euler_flips_chiral_sheets :
     cl55ChiralProjectorPlus * cl55ChiralityOperator.rho =
       cl55ChiralityOperator.rho * cl55ChiralProjectorMinus :=
-  euler_operator_reverses_chiral_sheets cl55Atom cl55AtomLaws
+  euler_operator_reverses_chiral_sheets cl55Atom
 
 /-- Matrix action on the real spinor carrier. -/
 def matrixApply (A : SpinorMatrix 5) (ψ : SpinorSpace 5) : SpinorSpace 5 :=

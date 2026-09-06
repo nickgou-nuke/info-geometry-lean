@@ -1,0 +1,231 @@
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Block
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic
+
+/-!
+# Trifold Surprisal Decomposition and Intertwining Fisher Score Bridge
+
+Formalizes the exact algebraic decomposition of the modular relative surprisal
+into its three invariant canonical sectors:
+
+  `𝒦_{ϕ|ψ} = α • I  +  β • Γ  +  𝒦₀`
+
+Where:
+  1. `α • I`: Common Weyl / Radon–Nikodym scalar volume dilation (purely central).
+  2. `β • Γ`: Chiral Weyl / Berezinian imbalance mode (supertrace carrier).
+  3. `𝒦₀`: Nonabelian Split-Octonion Shape Derivation mode:
+       `Tr(𝒦₀) = 0`  and  `STr(𝒦₀) = 0`.
+
+THEOREMS PROVED NATIVELY:
+  1. `ad_alpha_one_eq_zero`: The common volume mode α • I generates zero derivation:
+       `ad_{α • I}(X) = 0`.
+  2. `ad_trifold_eq`: The modular derivation decomposes into the chiral parity and shape derivations:
+       `ad_𝒦(X) = β • ad_Γ(X) + ad_{𝒦₀}(X)`.
+  3. `outerDeriv_trifold_eq`: Any outer derivation D annihilating 1 and Γ filters out the scalar modes:
+       `D(𝒦) = D(𝒦₀)`.
+  4. `bdg_pairing_traceless` & `bdg_pairing_supertraceless`: Off-diagonal BdG pairing operators belong strictly to 𝒦₀:
+       `Tr(Δ_pair) = 0`  and  `STr(Δ_pair) = 0`.
+  5. `derivation_commutator_eq_ad_deriv`: The commutator `[D, ad_K] = ad_{D(K)}`.
+  6. `intertwining_fisher_score`: Master Intertwining Commutator Identity:
+       `[D, ad_𝒦](X) = ad_{D(𝒦₀)}(X)`.
+
+All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+-/
+
+namespace InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge
+
+/-! =========================================================================
+    1. Grading, Supertrace, and Commutators
+    ========================================================================= -/
+
+/-- Involutive Grading Operator Γ = [[1, 0], [0, -1]] -/
+def GammaGrading {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R] :
+    Matrix (ι ⊕ ι) (ι ⊕ ι) R :=
+  Matrix.fromBlocks (1 : Matrix ι ι R) 0 0 (-1 : Matrix ι ι R)
+
+/-- Supertrace of a doubled block matrix: STr(M) = Tr(Γ * M) -/
+def STr {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (M : Matrix (ι ⊕ ι) (ι ⊕ ι) R) : R :=
+  Matrix.trace (GammaGrading * M)
+
+/-- Commutator derivation ad_K(X) = [K, X] = K * X - X * K. -/
+def adK {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (K X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R :=
+  K * X - X * K
+
+@[simp]
+theorem adK_apply {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (K X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) : adK K X = K * X - X * K :=
+  rfl
+
+@[simp]
+theorem adK_smul_one {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (α : R) (X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    adK (α • (1 : Matrix (ι ⊕ ι) (ι ⊕ ι) R)) X = 0 := by
+  simp only [adK_apply, smul_mul_assoc, one_mul, Algebra.mul_smul_comm, mul_one, sub_self]
+
+theorem adK_add {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (K₁ K₂ X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    adK (K₁ + K₂) X = adK K₁ X + adK K₂ X := by
+  simp only [adK_apply, add_mul, mul_add]
+  abel
+
+theorem adK_smul {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (c : R) (K X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    adK (c • K) X = c • adK K X := by
+  simp only [adK_apply, smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
+
+/-! =========================================================================
+    2. Trifold Surprisal Structure
+    ========================================================================= -/
+
+/--
+Universal Trifold Surprisal Datum:
+  `𝒦 = α • I + β • Γ + 𝒦₀` with `Tr(𝒦₀) = 0` and `STr(𝒦₀) = 0`.
+-/
+structure TrifoldSurprisal (ι : Type*) (R : Type*) [Fintype ι] [DecidableEq ι] [CommRing R] where
+  alpha : R
+  beta : R
+  K0 : Matrix (ι ⊕ ι) (ι ⊕ ι) R
+  h_tr : Matrix.trace K0 = 0
+  h_str : STr K0 = 0
+
+/-- Reconstructed operator Matrix: 𝒦 = α • I + β • Γ + 𝒦₀. -/
+def TrifoldSurprisal.toBlockMatrix {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (t : TrifoldSurprisal ι R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R :=
+  t.alpha • (1 : Matrix (ι ⊕ ι) (ι ⊕ ι) R) + t.beta • GammaGrading + t.K0
+
+/-! =========================================================================
+    3. The Central Invariance of the Common Volume Mode α • I
+    ========================================================================= -/
+
+/--
+THEOREM 1 (Common Weyl Mode is Purely Central):
+The scalar volume mode `α • I` generates an identically vanishing modular derivation:
+  `ad_{α • I}(X) = 0`
+-/
+@[simp]
+theorem ad_alpha_one_eq_zero {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (alpha : R) (X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    adK (alpha • (1 : Matrix (ι ⊕ ι) (ι ⊕ ι) R)) X = 0 :=
+  adK_smul_one alpha X
+
+/--
+THEOREM 2 (Trifold Modular Derivation Decomposition):
+The inner derivation generated by the total surprisal 𝒦 decomposes into
+the chiral parity derivation and the shape derivation:
+  `ad_𝒦(X) = β • ad_Γ(X) + ad_{𝒦₀}(X)`
+-/
+theorem ad_trifold_eq {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (t : TrifoldSurprisal ι R) (X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    adK t.toBlockMatrix X = t.beta • adK GammaGrading X + adK t.K0 X := by
+  dsimp [TrifoldSurprisal.toBlockMatrix, adK]
+  simp only [add_mul, mul_add, smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_sub]
+  abel
+
+/-! =========================================================================
+    4. Outer Derivations and Mode Filtering
+    ========================================================================= -/
+
+/--
+An Outer Derivation `D ∈ Der(BlockMat)` annihilating the identity and chiral grading:
+  `D(1) = 0` and `D(Γ) = 0`.
+-/
+structure OuterDerivation (ι : Type*) (R : Type*) [Fintype ι] [DecidableEq ι] [CommRing R] where
+  toLinearMap : Matrix (ι ⊕ ι) (ι ⊕ ι) R →ₗ[R] Matrix (ι ⊕ ι) (ι ⊕ ι) R
+  leibniz' : ∀ (X Y : Matrix (ι ⊕ ι) (ι ⊕ ι) R), toLinearMap (X * Y) = toLinearMap X * Y + X * toLinearMap Y
+  map_one' : toLinearMap 1 = 0
+  map_gamma' : toLinearMap GammaGrading = 0
+
+instance {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R] :
+    CoeFun (OuterDerivation ι R) (fun _ => Matrix (ι ⊕ ι) (ι ⊕ ι) R → Matrix (ι ⊕ ι) (ι ⊕ ι) R) where
+  coe D := D.toLinearMap
+
+/--
+THEOREM 3 (Outer Derivation Filters Out Scalar Modes):
+Any outer derivation `D` annihilating `1` and `Γ` completely eliminates the
+common volume and chiral imbalance modes:
+  `D(𝒦) = D(𝒦₀)`
+-/
+theorem outerDeriv_trifold_eq {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (D : OuterDerivation ι R) (t : TrifoldSurprisal ι R) :
+    D t.toBlockMatrix = D t.K0 := by
+  dsimp [TrifoldSurprisal.toBlockMatrix]
+  rw [map_add, map_add, map_smul, map_smul, D.map_one', D.map_gamma',
+      smul_zero, smul_zero, zero_add, zero_add]
+
+/-! =========================================================================
+    5. Off-Diagonal BdG Superconducting Pairing Operators
+    ========================================================================= -/
+
+/-- Trace of block 2x2 matrix decomposes into the sum of diagonal block traces. -/
+theorem trace_fromBlocks {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (A B C D : Matrix ι ι R) :
+    Matrix.trace (Matrix.fromBlocks A B C D) = Matrix.trace A + Matrix.trace D := by
+  simp only [Matrix.trace, Matrix.diag_apply, Fintype.sum_sum_type,
+             Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂]
+
+/-- The off-diagonal Bogoliubov–de Gennes pairing operator `Δ_pair = [[0, Δ], [-Δ, 0]]`. -/
+def bdgPairing {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (Delta_SC : Matrix ι ι R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R :=
+  Matrix.fromBlocks 0 Delta_SC (-Delta_SC) 0
+
+/--
+THEOREM 4A (BdG Pairing is Traceless):
+  `Tr(Δ_pair) = 0`
+-/
+theorem bdg_pairing_traceless {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (Delta_SC : Matrix ι ι R) :
+    Matrix.trace (bdgPairing Delta_SC) = 0 := by
+  simp [bdgPairing, trace_fromBlocks]
+
+/--
+THEOREM 4B (BdG Pairing is Supertraceless):
+  `STr(Δ_pair) = 0`
+-/
+theorem bdg_pairing_supertraceless {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (Delta_SC : Matrix ι ι R) :
+    STr (bdgPairing Delta_SC) = 0 := by
+  dsimp [STr, GammaGrading, bdgPairing]
+  have h_mul :
+    Matrix.fromBlocks (1 : Matrix ι ι R) 0 0 (-1 : Matrix ι ι R) * Matrix.fromBlocks 0 Delta_SC (-Delta_SC) 0 =
+      Matrix.fromBlocks 0 Delta_SC Delta_SC 0 := by
+    rw [Matrix.fromBlocks_multiply]
+    simp only [mul_zero, zero_mul, add_zero, zero_add, one_mul, neg_mul, neg_neg]
+  simp [h_mul, trace_fromBlocks]
+
+/-! =========================================================================
+    6. Master Intertwining Commutator Identity
+    ========================================================================= -/
+
+/--
+LEMMA (Commutator of Derivation with Inner Derivation):
+For any linear derivation `D`, `D([K, X]) - [K, D(X)] = [D(K), X]`:
+  `[D, ad_K] = ad_{D(K)}`
+-/
+theorem derivation_commutator_eq_ad_deriv {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (D : OuterDerivation ι R)
+    (K X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    D (adK K X) - adK K (D X) = adK (D K) X := by
+  simp only [adK_apply]
+  rw [map_sub, D.leibniz', D.leibniz']
+  abel
+
+/--
+MASTER THEOREM 5 (Intertwining Fisher Score Identity):
+The Lie commutator between an outer geometric derivation `D` and the total
+modular statistical flow generator `ad_𝒦` isolates precisely the
+transformed shape derivation `ad_{D(𝒦₀)}`:
+  `[D, ad_𝒦](X) = ad_{D(𝒦₀)}(X)`
+-/
+theorem intertwining_fisher_score {ι : Type*} [Fintype ι] [DecidableEq ι] {R : Type*} [CommRing R]
+    (D : OuterDerivation ι R) (t : TrifoldSurprisal ι R) (X : Matrix (ι ⊕ ι) (ι ⊕ ι) R) :
+    D (adK t.toBlockMatrix X) - adK t.toBlockMatrix (D X) =
+      adK (D t.K0) X := by
+  rw [derivation_commutator_eq_ad_deriv D t.toBlockMatrix X,
+      outerDeriv_trifold_eq D t]
+
+end InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge

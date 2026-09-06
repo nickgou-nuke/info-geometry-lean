@@ -1,0 +1,204 @@
+/-
+InfoGeometry/CondensedMatter/DIIISuperfluid.lean
+
+Abstract DIII topological superfluid symmetry datum.
+
+Class DIII has:
+
+  Theta^2 = -1    time reversal / Kramers symmetry
+  Xi^2 = +1       particle-hole / Majorana symmetry
+  chi^2 = +1      phase-corrected chiral grading
+  chi H chi = -H  chiral symmetry of the BdG Hamiltonian
+
+This module records the condensed-matter interpretation of the
+operator-algebraic DIII branch.  Concrete 3He-B, lattice BdG, or continuum
+Dirac/Majorana models can instantiate the datum later.
+-/
+
+import Mathlib
+import InfoGeometry.OperatorAlgebra.DIIISuperfluid
+import InfoGeometry.OperatorAlgebra.ModularChiralMirror
+import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
+import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
+
+noncomputable section
+
+namespace InfoGeometry.CondensedMatter.DIIISuperfluid
+
+/-! ## 1. Condensed-matter DIII BdG datum -/
+
+/--
+Abstract DIII superfluid symmetry datum in a real operator algebra.
+
+`Hbdg` is the BdG Hamiltonian.
+
+`Theta` is time reversal, with `Theta² = -1`.
+
+`Xi` is particle-hole / Majorana conjugation, with `Xi² = +1`.
+
+`chi` is the phase-corrected chiral grading, with `chi² = +1`.
+-/
+structure DIIISuperfluidDatum
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] where
+  /-- BdG Hamiltonian. -/
+  Hbdg : Op
+
+  /-- Time-reversal operator, encoded in the real doubled algebra. -/
+  Theta : Op
+
+  /-- Particle-hole / Majorana operator. -/
+  Xi : Op
+
+  /-- Phase-corrected chiral grading. -/
+  chi : Op
+
+  /-- DIII time-reversal sign: `Theta² = -1`. -/
+  Theta_square :
+    Theta * Theta = -1
+
+  /-- DIII particle-hole sign: `Xi² = +1`. -/
+  Xi_square :
+    Xi * Xi = 1
+
+  /-- Chiral grading law: `chi² = +1`. -/
+  chi_square :
+    chi * chi = 1
+
+  /--
+  Time reversal symmetry.
+
+  Since `Theta² = -1`, one has `Theta⁻¹ = -Theta`; this equation is the
+  inverse-free form of `Theta H Theta⁻¹ = H`.
+  -/
+  time_reversal_symmetry :
+    Theta * Hbdg * Theta = -Hbdg
+
+  /--
+  Particle-hole symmetry.
+
+  Since `Xi² = 1`, this is the inverse-free form of `Xi H Xi⁻¹ = -H`.
+  -/
+  particle_hole_symmetry :
+    Xi * Hbdg * Xi = -Hbdg
+
+  /--
+  Chiral symmetry.
+
+  Since `chi² = 1`, this is equivalent to anticommutation with `Hbdg`.
+  -/
+  chiral_symmetry :
+    chi * Hbdg * chi = -Hbdg
+
+  /--
+  Phase-corrected product relation.
+
+  In complex notation this is morally `chi = i Theta Xi`.  In the real doubled
+  formalism, the phase correction is represented by the Hestenes/modular phase
+  structure, so the concrete relation is supplied as data.
+  -/
+  chiral_is_phase_corrected_product : Prop
+
+  /--
+  Topological phase/winding certificate.
+
+  In 3D free-fermion DIII this is an integer winding number.  With strong
+  interactions the free `Z` classification may reduce, for example to `Z16` in
+  standard 3D class DIII.
+  -/
+  topological_classification_certificate : Prop
+
+namespace DIIISuperfluidDatum
+
+variable
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (D : DIIISuperfluidDatum Op)
+
+/--
+The chiral grading anticommutes with the BdG Hamiltonian:
+
+`chi H = - H chi`.
+-/
+theorem chi_anticommutes_H :
+    D.chi * D.Hbdg = -(D.Hbdg * D.chi) := by
+  calc
+    D.chi * D.Hbdg
+        = D.chi * D.Hbdg * 1 := by
+            rw [mul_one]
+    _ = D.chi * D.Hbdg * (D.chi * D.chi) := by
+            rw [D.chi_square]
+    _ = (D.chi * D.Hbdg * D.chi) * D.chi := by
+            noncomm_ring
+    _ = (-D.Hbdg) * D.chi := by
+            rw [D.chiral_symmetry]
+    _ = -(D.Hbdg * D.chi) := by
+            rw [neg_mul]
+
+/--
+The off-diagonal/chiral BdG relation.
+
+This is the algebraic statement behind the left/right sector splitting of a
+chiral Hamiltonian.
+-/
+def ChiralOffDiagonal : Prop :=
+  D.chi * D.Hbdg = -(D.Hbdg * D.chi)
+
+/-- The DIII datum supplies the chiral off-diagonal relation. -/
+theorem chiral_offDiagonal :
+    D.ChiralOffDiagonal :=
+  D.chi_anticommutes_H
+
+end DIIISuperfluidDatum
+
+/-! ## 2. Topological invariant sockets -/
+
+/--
+Coarse labels for the standard DIII topological-invariant regimes.
+
+This is deliberately only a label.  Concrete models should provide their own
+winding, parity, or interacting classification backend.
+-/
+inductive DIIITopologicalRegime where
+  /-- One-dimensional endpoint/Kramers-Majorana parity regime. -/
+  | oneDimensionalZ2
+  /-- Two-dimensional helical Majorana edge parity regime. -/
+  | twoDimensionalZ2
+  /-- Three-dimensional free-fermion integer winding regime. -/
+  | threeDimensionalFreeZ
+  /-- Three-dimensional interacting reduction, often represented as `Z16`. -/
+  | threeDimensionalInteractingZ16
+deriving DecidableEq, Repr
+
+/--
+A model-specific topological readout attached to a DIII datum.
+
+The invariant value is intentionally abstract: the same symmetry class supports
+different classification groups depending on dimension and interaction regime.
+-/
+structure DIIITopologicalReadout
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (D : DIIISuperfluidDatum Op) where
+  /-- Classification regime being represented. -/
+  regime : DIIITopologicalRegime
+
+  /-- Model-specific invariant carrier, for example `Z`, `Z2`, or `Z16`. -/
+  invariantType : Type*
+
+  /-- Chosen invariant value/readout. -/
+  invariant : invariantType
+
+  /-- Certificate that the readout is compatible with the supplied DIII model. -/
+  invariant_certificate : Prop
+
+/-! ## 3. Owner target -/
+
+/--
+Owner target for a concrete DIII superfluid model.
+
+Concrete instances include continuum 3He-B, lattice BdG models, or
+Dirac/Majorana effective surface theories.
+-/
+def DIIISuperfluidOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
+  Nonempty (DIIISuperfluidDatum Op)
+
+end InfoGeometry.CondensedMatter.DIIISuperfluid

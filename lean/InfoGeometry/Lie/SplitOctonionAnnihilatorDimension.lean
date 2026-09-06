@@ -1,6 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Algebra.ZornAlternativeLaws
-import InfoGeometry.Algebra.Zorn.CanonicalConjugation
 
 /-!
 # Dimension of null split-octonion annihilators
@@ -25,9 +24,9 @@ open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 /-- Polarization of the canonical determinant on the full split-octonion
 space. -/
 def canonicalPolar (X Y : CanonicalZorn) : ℝ :=
-  ZornMatrix.detZ (X + Y) -
-    ZornMatrix.detZ X -
-      ZornMatrix.detZ Y
+  ZornMatrix.detZ realCrossProduct3 (X + Y) -
+    ZornMatrix.detZ realCrossProduct3 X -
+      ZornMatrix.detZ realCrossProduct3 Y
 
 /-- The canonical determinant polar form is nondegenerate.  This transports the
 already proved real Kingdon nondegeneracy theorem through the canonical linear
@@ -49,18 +48,34 @@ theorem canonicalPolar_nondegenerate (X : CanonicalZorn)
   apply kingdonCanonicalLinearEquiv.symm.injective
   simpa [x] using hx
 
+/-- Canonical conjugation transported from the native Zorn owner. -/
+def canonicalConj (X : CanonicalZorn) : CanonicalZorn :=
+  canonicalVectorEquiv.symm
+    (InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv X))
+
+@[simp] theorem canonicalVectorEquiv_canonicalConj (X : CanonicalZorn) :
+    canonicalVectorEquiv (canonicalConj X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv X) := by
+  simp [canonicalConj]
+
+@[simp] theorem canonicalConj_add (X Z : CanonicalZorn) :
+    canonicalConj (X + Z) = canonicalConj X + canonicalConj Z := by
+  apply canonicalVectorEquiv.injective
+  simp only [canonicalVectorEquiv_canonicalConj, canonicalVectorEquiv_add,
+    InfoGeometry.Algebra.ZornVectorMatrix.conj_add]
+
 /-- The native Zorn norm agrees with the canonical determinant. -/
 theorem vector_norm_eq_canonical_det (X : CanonicalZorn) :
     InfoGeometry.Algebra.ZornVectorMatrix.norm (canonicalVectorEquiv X) =
-    ZornMatrix.detZ X := by
+      ZornMatrix.detZ realCrossProduct3 X := by
   simp [InfoGeometry.Algebra.ZornVectorMatrix.norm, ZornMatrix.detZ,
-    InfoGeometry.Algebra.ZornVec3.dot,
+    realCrossProduct3, InfoGeometry.Algebra.ZornVec3.dot,
     InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three]
 
 /-- Kirmse right contraction on the canonical carrier. -/
 theorem canonical_kirmse_right (X Y : CanonicalZorn) :
     (Y * X) * canonicalConj X =
-      ZornMatrix.detZ X • Y := by
+      ZornMatrix.detZ realCrossProduct3 X • Y := by
   apply canonicalVectorEquiv.injective
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_canonicalConj,
     canonicalVectorEquiv_smul]
@@ -112,84 +127,6 @@ noncomputable def fullRightMulLinear (X : CanonicalZorn) :
 
 @[simp] theorem fullRightMulLinear_apply (X Y : CanonicalZorn) :
     fullRightMulLinear X Y = Y * X := rfl
-
-/-- Full-space left multiplication by a canonical split octonion. -/
-noncomputable def fullLeftMulLinear (X : CanonicalZorn) :
-    CanonicalZorn →ₗ[ℝ] CanonicalZorn where
-  toFun Y := X * Y
-  map_add' Y Z :=
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_add X Y Z
-  map_smul' r Y :=
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul r X Y
-
-@[simp] theorem fullLeftMulLinear_apply (X Y : CanonicalZorn) :
-    fullLeftMulLinear X Y = X * Y := rfl
-
-/-- Conjugation identifies the left kernel of `X` with the right kernel of
-`conj X`.  This is the structural left/right bridge used for annihilator
-dimension statements. -/
-noncomputable def leftKernelConjEquiv (X : CanonicalZorn) :
-    LinearMap.ker (fullLeftMulLinear X) ≃ₗ[ℝ]
-      LinearMap.ker (fullRightMulLinear (canonicalConj X)) where
-  toFun Y := by
-    refine ⟨canonicalConj Y.1, ?_⟩
-    change canonicalConj Y.1 * canonicalConj X = 0
-    have hY : X * Y.1 = 0 := by
-      exact Y.property
-    rw [← canonicalConj_mul, hY, canonicalConj_zero]
-  invFun Y := by
-    refine ⟨canonicalConj Y.1, ?_⟩
-    change X * canonicalConj Y.1 = 0
-    have hY : Y.1 * canonicalConj X = 0 := by
-      exact Y.property
-    have hc := congrArg canonicalConj hY
-    rw [canonicalConj_mul, canonicalConj_zero] at hc
-    simpa only [canonicalConj_involutive] using hc
-  left_inv Y := by
-    apply Subtype.ext
-    exact canonicalConj_involutive Y.1
-  right_inv Y := by
-    apply Subtype.ext
-    exact canonicalConj_involutive Y.1
-  map_add' Y Z := by
-    apply Subtype.ext
-    exact canonicalConj_add Y.1 Z.1
-  map_smul' r Y := by
-    apply Subtype.ext
-    exact canonicalConj_smul r Y.1
-
-theorem canonicalConj_a (X : CanonicalZorn) : (canonicalConj X).a = X.b := rfl
-theorem canonicalConj_b (X : CanonicalZorn) : (canonicalConj X).b = X.a := rfl
-
-theorem realZornTrace_canonicalConj (X : CanonicalZorn) :
-    realZornTrace (canonicalConj X) = realZornTrace X := by
-  dsimp [realZornTrace]
-  rw [canonicalConj_a, canonicalConj_b, add_comm]
-
-theorem canonicalConj_mem_imaginary (X : Imaginary) :
-    canonicalConj X.1 ∈ Imaginary := by
-  rw [mem_imaginary_iff, realZornTrace_canonicalConj]
-  exact X.2
-
-theorem canonicalConj_ne_zero {X : Imaginary} (hX : X ≠ 0) :
-    canonicalConj X.1 ≠ 0 := by
-  intro h
-  apply hX
-  apply Subtype.ext
-  have hc := congrArg canonicalConj h
-  rw [canonicalConj_involutive, canonicalConj_zero] at hc
-  exact hc
-
-theorem canonicalConj_mem_normLevel_zero {X : Imaginary}
-    (hX : X ∈ NormLevel 0) :
-    (⟨canonicalConj X.1, canonicalConj_mem_imaginary X⟩ : Imaginary) ∈
-      NormLevel 0 := by
-  rw [mem_null_iff_square_zero]
-  have hsq := (mem_null_iff_square_zero X).mp hX
-  have hsq' : X.1 * X.1 = 0 := hsq
-  have hconj := congrArg canonicalConj hsq'
-  rw [canonicalConj_mul, canonicalConj_zero] at hconj
-  simpa only [canonicalConj_involutive] using hconj
 
 /-- Right alternativity transported to the canonical carrier. -/
 theorem canonical_right_alternative (X Y : CanonicalZorn) :
@@ -273,7 +210,7 @@ theorem canonicalPolar_eq_trace_conj_mul (X Z : CanonicalZorn) :
             (InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv Z))) := by
           rw [canonicalVectorEquiv_add,
             InfoGeometry.Algebra.ZornVectorMatrix.norm_add_eq_norm_add_norm_add_trace_mul_conj]
-          ring
+          abel
     _ = InfoGeometry.Algebra.ZornVectorMatrix.trace
           (InfoGeometry.Algebra.ZornVectorMatrix.mul
             (InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv Z))

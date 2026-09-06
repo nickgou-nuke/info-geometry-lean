@@ -8,7 +8,7 @@ Finite Souriau/Onsager metriplectic context.
 This file formalizes only the source-supported finite shadow:
 
 - the reversible/Poisson sector contributes no entropy production under an
-  explicit Casimir property;
+  explicit Casimir hypothesis;
 - the metric/Onsager sector is the existing Souriau-Fisher response
   quadratic form;
 - the response diagonal positivity is constructed from variance identities;
@@ -32,7 +32,7 @@ variable {α : Type _}
 Explicit finite metriplectic context for a Souriau two-channel shadow.
 
 `reversibleEntropyRate` represents the Poisson/symplectic contribution.  The
-field `casimir_reversible` is the honest Casimir property: the reversible
+field `casimir_reversible` is the honest Casimir hypothesis: the reversible
 sector preserves entropy.  The metric sector is the already-owned
 Souriau-Fisher/Onsager response matrix.  Its diagonal PSD entries are proved
 from variance identities; only the finite response-matrix determinant gate
@@ -69,7 +69,7 @@ noncomputable def metricEntropyProduction : ℝ :=
 noncomputable def totalEntropyProduction : ℝ :=
   C.reversibleEntropyProduction + C.metricEntropyProduction
 
-/-- Casimir property: the reversible sector contributes zero entropy production. -/
+/-- Casimir hypothesis: the reversible sector contributes zero entropy production. -/
 @[rep_depth transport]
 theorem reversibleEntropyProduction_eq_zero :
     C.reversibleEntropyProduction = 0 :=

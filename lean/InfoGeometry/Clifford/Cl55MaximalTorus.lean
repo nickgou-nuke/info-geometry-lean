@@ -220,3 +220,4 @@ theorem grand_maximal_torus_synthesis
    multi_channel_rope_relative_pairing_invariance B1 B2 hB1 hB2 h_skew1 h_skew2 h_comm w1 w2 m k q v⟩
 
 end InfoGeometry.Clifford.MaximalTorus
+

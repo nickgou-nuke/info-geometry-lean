@@ -1,7 +1,8 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
-import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -15,7 +16,7 @@ This file separates the chain-complex and Hodge/Dirac readings.
 * A nilpotent chiral differential pair gives cycle/boundary predicates.
 * A chiral Dirac pair gives Laplace/Hodge loops.
 * Identifying homology classes with harmonic representatives requires an
-  explicit Hodge property/calibration.
+  explicit Hodge witness/calibration.
 
 No full Hodge theorem or cohomology theorem is asserted here.
 -/
@@ -26,7 +27,197 @@ open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Canonical.HestenesAnalyticity
 open InfoGeometry.Krein
 
-/-! ## Root doubled-carrier readbacks from the owner lane -/
+/-! ## 1. Pure chiral chain-complex socket -/
+
+/--
+A chiral differential pair.
+
+`dPlus : C₊ → C₋` and `dMinus : C₋ → C₊`.
+
+This is the chain-complex/homology socket. It is valid only when the two
+same-direction two-step composites vanish.
+-/
+@[socket_debt_tag, rep_depth operator]
+structure ChiralComplexSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
+  dPlus : Cplus → Cminus
+  dMinus : Cminus → Cplus
+
+  /-- `d⁺ ∘ d⁻ = 0`, so plus-boundaries land inside plus-cycles. -/
+  dPlus_dMinus_zero :
+    ∀ y : Cminus, dPlus (dMinus y) = 0
+
+  /-- `d⁻ ∘ d⁺ = 0`, so minus-boundaries land inside minus-cycles. -/
+  dMinus_dPlus_zero :
+    ∀ x : Cplus, dMinus (dPlus x) = 0
+
+namespace ChiralComplexSocket
+
+variable {Cplus Cminus : Type*}
+variable [Zero Cplus] [Zero Cminus]
+variable (C : ChiralComplexSocket Cplus Cminus)
+
+/-- Plus cycles: states killed by the outgoing `dPlus` arrow. -/
+@[rep_depth operator]
+def plusCycle (x : Cplus) : Prop :=
+  C.dPlus x = 0
+
+/-- Minus cycles: states killed by the outgoing `dMinus` arrow. -/
+@[rep_depth operator]
+def minusCycle (y : Cminus) : Prop :=
+  C.dMinus y = 0
+
+/-- Plus boundaries: states produced by the incoming `dMinus` arrow. -/
+@[rep_depth operator]
+def plusBoundary (x : Cplus) : Prop :=
+  ∃ y : Cminus, C.dMinus y = x
+
+/-- Minus boundaries: states produced by the incoming `dPlus` arrow. -/
+@[rep_depth operator]
+def minusBoundary (y : Cminus) : Prop :=
+  ∃ x : Cplus, C.dPlus x = y
+
+/--
+Boundary-to-cycle law in the plus sector.
+
+This is the exact algebraic condition needed for the quotient
+`ker dPlus / im dMinus`.
+-/
+@[rep_depth operator]
+theorem plus_boundary_is_cycle
+    {x : Cplus}
+    (hx : plusBoundary C x) :
+    plusCycle C x := by
+  rcases hx with ⟨y, hy⟩
+  unfold plusCycle
+  rw [← hy]
+  exact C.dPlus_dMinus_zero y
+
+/--
+Boundary-to-cycle law in the minus sector.
+
+This is the exact algebraic condition needed for the quotient
+`ker dMinus / im dPlus`.
+-/
+@[rep_depth operator]
+theorem minus_boundary_is_cycle
+    {y : Cminus}
+    (hy : minusBoundary C y) :
+    minusCycle C y := by
+  rcases hy with ⟨x, hx⟩
+  unfold minusCycle
+  rw [← hx]
+  exact C.dMinus_dPlus_zero x
+
+end ChiralComplexSocket
+
+/-! ## 2. Chiral Hodge/Dirac socket -/
+
+/--
+A chiral Hodge/Dirac pair.
+
+This does not require nilpotence. Instead, it carries the Laplace/Hodge loops:
+
+`Δ₊ = D⁻D⁺`, `Δ₋ = D⁺D⁻`.
+-/
+@[socket_debt_tag, rep_depth krein]
+structure ChiralHodgeDiracSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
+  Dplus : Cplus → Cminus
+  Dminus : Cminus → Cplus
+  LapPlus : Cplus → Cplus
+  LapMinus : Cminus → Cminus
+
+  /-- Positive-sector Hodge loop `Δ₊ = D⁻D⁺`. -/
+  LapPlus_eq :
+    ∀ x : Cplus, LapPlus x = Dminus (Dplus x)
+
+  /-- Negative-sector Hodge loop `Δ₋ = D⁺D⁻`. -/
+  LapMinus_eq :
+    ∀ y : Cminus, LapMinus y = Dplus (Dminus y)
+
+namespace ChiralHodgeDiracSocket
+
+variable {Cplus Cminus : Type*}
+variable [Zero Cplus] [Zero Cminus]
+variable (H : ChiralHodgeDiracSocket Cplus Cminus)
+
+/-- Harmonic plus-sector states: kernel of the plus Laplacian. -/
+@[rep_depth krein]
+def plusHarmonic (x : Cplus) : Prop :=
+  H.LapPlus x = 0
+
+/-- Harmonic minus-sector states: kernel of the minus Laplacian. -/
+@[rep_depth krein]
+def minusHarmonic (y : Cminus) : Prop :=
+  H.LapMinus y = 0
+
+/-- Readback: plus harmonic means the `D⁻D⁺` loop vanishes. -/
+@[rep_depth krein]
+theorem plusHarmonic_iff_loop_zero
+    (x : Cplus) :
+    plusHarmonic H x ↔ H.Dminus (H.Dplus x) = 0 := by
+  unfold plusHarmonic
+  rw [H.LapPlus_eq x]
+
+/-- Readback: minus harmonic means the `D⁺D⁻` loop vanishes. -/
+@[rep_depth krein]
+theorem minusHarmonic_iff_loop_zero
+    (y : Cminus) :
+    minusHarmonic H y ↔ H.Dplus (H.Dminus y) = 0 := by
+  unfold minusHarmonic
+  rw [H.LapMinus_eq y]
+
+end ChiralHodgeDiracSocket
+
+/-! ## 3. Chiral Hodge/Dirac calibration data -/
+
+/--
+Explicit data aligning a chiral complex and a chiral Hodge/Dirac socket.
+This file does not assert a Hodge theorem identifying harmonic representatives
+with homology classes.
+-/
+@[rep_depth krein]
+structure ChiralHodgeHomologyCalibration
+    (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
+  complex : ChiralComplexSocket Cplus Cminus
+  hodge : ChiralHodgeDiracSocket Cplus Cminus
+
+  /-- The Hodge `D⁺` agrees with the differential `d⁺`. -/
+  Dplus_eq_dPlus :
+    ∀ x : Cplus, hodge.Dplus x = complex.dPlus x
+
+  /-- The Hodge `D⁻` agrees with the differential `d⁻`. -/
+  Dminus_eq_dMinus :
+    ∀ y : Cminus, hodge.Dminus y = complex.dMinus y
+
+/-! ## 4. File-level owner theorem -/
+
+/-- The chiral/Dirac homology owner target is discharged by the local witnesses. -/
+theorem chiralDiracHomologyBridgeOwnerTarget :
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (C : ChiralComplexSocket Cplus Cminus)
+        {x : Cplus}, C.plusBoundary x → C.plusCycle x) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (C : ChiralComplexSocket Cplus Cminus)
+        {y : Cminus}, C.minusBoundary y → C.minusCycle y) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus),
+        H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
+        H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0) := by
+  constructor
+  · intro Cplus Cminus instC instM C x hx
+    exact C.plus_boundary_is_cycle hx
+  · constructor
+    · intro Cplus Cminus instC instM C y hy
+      exact C.minus_boundary_is_cycle hy
+    · constructor
+      · intro Cplus Cminus instC instM H x
+        exact H.plusHarmonic_iff_loop_zero x
+      · intro Cplus Cminus instC instM H y
+        exact H.minusHarmonic_iff_loop_zero y
+
+/-! ## 4. Root doubled-carrier readbacks from the owner lane -/
 
 section RootReadbacks
 

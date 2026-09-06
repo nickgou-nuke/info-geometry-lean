@@ -99,7 +99,7 @@ namespace FibonacciBlockLabel
 
 variable {N : ℕ} {NC : Type*}
 
-/-- Predicate selecting the computational sector, with an explicit vector property. -/
+/-- Predicate selecting the computational sector, with an explicit vector witness. -/
 def IsComputational (x : FibonacciBlockLabel N NC) : Prop :=
   ∃ α : ComputationalVector N, x = computational α
 

@@ -87,21 +87,6 @@ theorem chiral_projector_complete_idempotent :
     ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem K_sq_eq_one :
-    K * K = (1 : M2R) := by
-  have hK : K = P_L - P_R := by
-    rw [P_L_spec, P_R_spec]
-    exact K_eq_chiral_difference
-  obtain ⟨hSum, hL, hR⟩ := chiral_projector_complete_idempotent
-  obtain ⟨hLR, hRL⟩ := chiral_projector_orthogonal
-  rw [hK]
-  calc
-    (P_L - P_R) * (P_L - P_R) =
-        P_L * P_L - (P_L * P_R + P_R * P_L) + P_R * P_R := by
-          noncomm_ring
-    _ = P_L + P_R := by rw [hL, hR, hLR, hRL]; simp
-    _ = 1 := hSum
-
 /-- `P_L` and `P_R` are `±1` eigenprojectors for the modular generator `K`. -/
 theorem K_mul_chiral_projectors :
     K * P_L = P_L ∧ K * P_R = -P_R := by
@@ -134,102 +119,5 @@ theorem chiral_projectors_mul_K :
   · rw [K_eval, P_R_spec, N_right_eval]
     ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- The raising matrix has positive left and negative right `K` weight. -/
-theorem K_mul_N : K * N = N := by
-  rw [K_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_mul_K : N * K = -N := by
-  rw [K_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- The lowering matrix has negative left and positive right `K` weight. -/
-theorem K_mul_N_transpose : K * Nᵀ = -Nᵀ := by
-  rw [K_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_transpose_mul_K : Nᵀ * K = Nᵀ := by
-  rw [K_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp]
-theorem N_sq : N * N = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp]
-theorem N_transpose_sq : Nᵀ * Nᵀ = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_commutator : N * Nᵀ - Nᵀ * N = K := by
-  rw [K_eq_chiral_difference]
-  rfl
-
-theorem N_anticommutator : N * Nᵀ + Nᵀ * N = (1 : M2R) := by
-  change N_left + N_right = (1 : M2R)
-  rw [N_left_eval, N_right_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem P_L_mul_N : P_L * N = N := by
-  rw [P_L_spec, N_left_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_mul_P_R : N * P_R = N := by
-  rw [P_R_spec, N_right_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem P_R_mul_N_transpose : P_R * Nᵀ = Nᵀ := by
-  rw [P_R_spec, N_right_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_transpose_mul_P_L : Nᵀ * P_L = Nᵀ := by
-  rw [P_L_spec, N_left_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem P_R_mul_N : P_R * N = 0 := by
-  rw [P_R_spec, N_right_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_mul_P_L : N * P_L = 0 := by
-  rw [P_L_spec, N_left_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem P_L_mul_N_transpose : P_L * Nᵀ = 0 := by
-  rw [P_L_spec, N_left_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem N_transpose_mul_P_R : Nᵀ * P_R = 0 := by
-  rw [P_R_spec, N_right_eval]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.SplitCliffordChiralProjection

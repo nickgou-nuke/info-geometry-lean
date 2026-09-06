@@ -6,6 +6,11 @@ import InfoGeometry.Automath.Generated.onsager_entropy_production_zero
 
 namespace InfoGeometry.Canonical.OmegaAutomathCore
 
-/-! The Omega-Automath core bridge. -/
+/--
+The Omega-Automath core bridge.
+This file serves as the formal corridor owner for generated Automath theorems.
+-/
+
+def version : String := "2.0.0"
 
 end InfoGeometry.Canonical.OmegaAutomathCore

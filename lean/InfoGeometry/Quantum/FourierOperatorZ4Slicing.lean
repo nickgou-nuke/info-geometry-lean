@@ -96,15 +96,4 @@ theorem tripartite_spectrum_classification (z : ℂ) (hz : z ^ 5 = z) :
       | inr h_neg1 =>
         right; right; left; exact eq_neg_of_add_eq_zero_left h_neg1
 
-/-- 🏆 GRAND CAPSTONE: Complete Fourier Operator Slicing Synthesis. -/
-theorem grand_fourier_z4_slicing_synthesis (X : R) (z : ℂ) :
-    (X ^ 5 - X = X * (X ^ 2 - 1) * (X ^ 2 + 1)) ∧
-    (X ^ 5 = X ↔ X * (X ^ 2 - 1) * (X ^ 2 + 1) = 0) ∧
-    (X ^ 4 = 1 → X ^ 5 = X) ∧
-    (z ^ 5 = z → z = 0 ∨ z = 1 ∨ z = -1 ∨ z = Complex.I ∨ z = -Complex.I) :=
-  ⟨fourier_quintic_factorization X,
-   fourier_quintic_iff_product_zero X,
-   fourier_order_four_implies_quintic X,
-   tripartite_spectrum_classification z⟩
-
 end InfoGeometry.Quantum.FourierOperatorZ4Slicing

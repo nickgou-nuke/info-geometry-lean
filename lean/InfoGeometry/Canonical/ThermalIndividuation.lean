@@ -15,7 +15,7 @@ centrality field of `VerifiedCasimir`.
 The stationarity theorem is conditional on an explicit `VerifiedCasimir`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-No independent analytic construction of the modular flow or Casimir property is
+No independent analytic construction of the modular flow or Casimir witness is
 claimed here.
 -/
 
@@ -42,25 +42,26 @@ theorem casimir_is_stationary_individuated
     {G : Type*} [Group G]
     (K : EndK)
     (α : SymmetryAction G EndK)
-    (C : VerifiedCasimir α)
-    (hcentral : ∀ x : EndK, C * x = x * C) :
-    ∀ β : ℝ, krein_modular_shift K β C = C := by
+    (V : VerifiedCasimir α) :
+    ∀ β : ℝ, krein_modular_shift K β V.C = V.C := by
   intro β
   unfold krein_modular_shift
 
   -- 1. Derive commutation from centrality
-  have h_comm_K : Commute C (β • K) := by
+  -- V.is_central says: ∀ x : EndK, V.C * x = x * V.C
+  -- Therefore, V.C commutes with (β • K).
+  have h_comm_K : Commute V.C (β • K) := by
     rw [Commute]
-    exact hcentral (β • K)
+    exact V.is_central (β • K)
 
   -- 2. Lift commutation to the exponential
   -- By Mathlib's Commute.exp_right: if [A, B] = 0, then [A, exp(B)] = 0.
-  have h_exp_comm : Commute C (NormedSpace.exp (β • K)) :=
+  have h_exp_comm : Commute V.C (NormedSpace.exp (β • K)) :=
     h_comm_K.exp_right
 
   -- 3. Perform the algebraic reduction
   -- σ_β(C) = exp(βK) * C * exp(-βK) = C * exp(βK) * exp(-βK) = C
-  rw [h_exp_comm.symm.eq]
+  rw [h_exp_comm.symm.eq] -- rw [exp * C = C * exp]
 
   have h_inv : (NormedSpace.exp (β • K)) * (NormedSpace.exp ((-β) • K)) = 1 := by
     rw [← NormedSpace.exp_add_of_commute]

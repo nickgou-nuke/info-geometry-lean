@@ -1,4 +1,4 @@
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Krein.Superalgebra
 
 /-!
@@ -14,7 +14,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 
-open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Krein
 open KreinGradedModule
 
@@ -83,3 +83,4 @@ theorem gamma_superComm_eq_anticomm
   exact superComm_odd_odd (gammaOdd i) (gammaOdd j)
 
 end InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
+

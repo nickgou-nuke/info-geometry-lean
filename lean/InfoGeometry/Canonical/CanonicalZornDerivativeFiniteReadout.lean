@@ -147,6 +147,7 @@ noncomputable def derivativeConstraintKernelDerivationEquiv :
     apply LinearMap.ext
     intro X
     rfl
+
   map_add' D E := by
     apply Subtype.ext
     apply LinearMap.ext

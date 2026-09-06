@@ -89,6 +89,27 @@ theorem spinTransported_gradeSubmodule_map
         (cl55GradeSubmodule k) = spinTransportedCl55GradeSubmodule g k := by
   apply InfoGeometry.OperatorAlgebra.ringEquivLinearEquiv_map_gradeSubmodule
 
+/- The submodule equality above is the native Mathlib image statement in
+   set form.  Keeping this readout explicit lets the generic grade-action
+   interface consume the same Spin transport without introducing a second
+   grade carrier. -/
+theorem spinTransported_grade_image
+    (g : Spin55) (k : ℤ) :
+    (InfoGeometry.OperatorAlgebra.ringEquivLinearEquiv
+      (spinCliffordRingEquiv g) (by
+        intro r X
+        change InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+            (spinGroup.toUnits g) (r • X) =
+          r • InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation
+            (spinGroup.toUnits g) X
+        exact InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul
+          (spinGroup.toUnits g) r X)).toLinearMap ''
+      (cl55GradeSubmodule k : Set Cl55) =
+      (spinTransportedCl55GradeSubmodule g k : Set Cl55) := by
+  rw [← Submodule.map_coe]
+  exact congrArg (fun P : Submodule ℝ Cl55 => (P : Set Cl55))
+    (spinTransported_gradeSubmodule_map g k)
+
 theorem spinTransported_grade_mul_mem_of_mem
     (g : Spin55) (k l : ℤ) {X Y : Cl55}
     (hX : X ∈ cl55GradeSubmodule k)

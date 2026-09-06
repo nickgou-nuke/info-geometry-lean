@@ -11,8 +11,29 @@ collects the unitary-slice closure interface, the `NULL` trichotomy package, and
 readability/three-axis certificates, together with the two paper-facing conclusion clauses. -/
 structure DecidableNullData where
   unitarySliceData : UnitarySliceAddressClosureData
+  nullTrichotomyData : TypedAddressNullTrichotomyData
   compiledReadabilityData : CompiledReadabilityData
   threeAxisData : TypedAddressThreeAxisData
+  nullHasWitness : Prop
+  nonNullHasCertificate : Prop
+  deriveNullWitness :
+    unitarySliceData.readUSClosed →
+      nullTrichotomyData.exhaustive →
+        nullHasWitness
+  deriveNonNullCertificate :
+    unitarySliceData.readUSClosed →
+      compiledReadabilityData.readable →
+      (compiledReadabilityData.readable ↔
+        compiledReadabilityData.addressAdmitted ∧
+          compiledReadabilityData.cechObstructionVanishes ∧
+            compiledReadabilityData.thresholdsMet ∧
+              compiledReadabilityData.certificateFiberNonempty) →
+      threeAxisData.nonNullReadout →
+      (threeAxisData.nonNullReadout →
+        threeAxisData.visibleAxisPassed ∧
+          threeAxisData.residueAxisPassed ∧
+            threeAxisData.modeAxisPassed) →
+      nonNullHasCertificate
 
 /-- The unitary-slice closure law, the `NULL` trichotomy, and the existing non-`NULL`
 readability/axis packages combine into a decidability package: either one extracts a `NULL`
@@ -20,27 +41,12 @@ witness or one extracts a non-`NULL` certificate.
     prop:typed-address-biaxial-completion-decidable-null -/
 theorem paper_typed_address_biaxial_completion_decidable_null
     (D : DecidableNullData)
-    (exhaustive nullHasWitness nonNullHasCertificate : Prop)
-    (hExhaustive : exhaustive)
-    (deriveNullWitness : D.unitarySliceData.readUSClosed → exhaustive → nullHasWitness)
-    (deriveNonNullCertificate :
-      D.unitarySliceData.readUSClosed →
-      D.compiledReadabilityData.readable →
-      (D.compiledReadabilityData.readable ↔
-        D.compiledReadabilityData.addressAdmitted ∧
-          D.compiledReadabilityData.cechObstructionVanishes ∧
-            D.compiledReadabilityData.thresholdsMet ∧
-              D.compiledReadabilityData.certificateFiberNonempty) →
-      D.threeAxisData.nonNullReadout →
-      (D.threeAxisData.nonNullReadout →
-        D.threeAxisData.visibleAxisPassed ∧
-          D.threeAxisData.residueAxisPassed ∧
-            D.threeAxisData.modeAxisPassed) → nonNullHasCertificate)
     (hReadableInput : D.compiledReadabilityData.readable)
     (hNonNullReadout : D.threeAxisData.nonNullReadout) :
-    nullHasWitness ∧ nonNullHasCertificate := by
+    D.nullHasWitness ∧ D.nonNullHasCertificate := by
   have hUnitary : D.unitarySliceData.readUSClosed :=
     paper_typed_address_biaxial_completion_unitary_slice_address_closure D.unitarySliceData
+  have hNullExhaustive : D.nullTrichotomyData.exhaustive := D.nullTrichotomyData.exhaustiveWitness
   have hReadable :
       D.compiledReadabilityData.readable ↔
         D.compiledReadabilityData.addressAdmitted ∧
@@ -56,7 +62,7 @@ theorem paper_typed_address_biaxial_completion_decidable_null
             D.threeAxisData.modeAxisPassed :=
     paper_typed_address_biaxial_completion_nonnull_requires_three_axes D.threeAxisData
   exact
-    ⟨deriveNullWitness hUnitary hExhaustive,
-      deriveNonNullCertificate hUnitary hReadableInput hReadable hNonNullReadout hAxes⟩
+    ⟨D.deriveNullWitness hUnitary hNullExhaustive,
+      D.deriveNonNullCertificate hUnitary hReadableInput hReadable hNonNullReadout hAxes⟩
 
 end Omega.TypedAddressBiaxialCompletion

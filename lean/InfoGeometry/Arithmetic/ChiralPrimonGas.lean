@@ -15,7 +15,7 @@ Finite Souriau-style chiral primon gas on the split-complex plane.
 
 This module keeps the finite model explicit:
 
-* a property prime register, or a concrete cutoff-derived register;
+* a certified prime register, or a concrete cutoff-derived register;
 * chiral inverse temperatures `β₊`, `β₋` and fugacities `ν₊`, `ν₋`;
 * fermionic or bosonic local occupation formulas;
 * finite sector Massieu, energy, particle-number, entropy, and variance
@@ -60,16 +60,20 @@ theorem mem_primesUpto_iff {Λ p : ℕ} :
 /-- A finite prime register obtained from a cutoff. -/
 @[rep_depth thermo]
 def primeCutoffRegister (Λ : ℕ) : PrimeRegister where
-  primes := primesUpto Λ
-  prime_mem := by
+  val := primesUpto Λ
+  property := by
     intro p hp
     exact (Finset.mem_filter.mp hp).2
+
+@[simp, rep_depth thermo]
+theorem primeCutoffRegister_primes (Λ : ℕ) :
+    (primeCutoffRegister Λ).primes = primesUpto Λ := rfl
 
 @[simp, rep_depth thermo]
 theorem primeCutoffRegister_prime_mem {Λ p : ℕ}
     (hp : p ∈ (primeCutoffRegister Λ).primes) :
     Nat.Prime p := by
-  exact (Finset.mem_filter.mp hp).2
+  simpa [primeCutoffRegister] using (Finset.mem_filter.mp hp).2
 
 /-- Chiral inverse-temperature pair `β₊, β₋`. -/
 @[rep_depth thermo]

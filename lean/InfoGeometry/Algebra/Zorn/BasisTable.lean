@@ -168,14 +168,6 @@ theorem cross_sign_packet :
   · exact mulTable_correct v1 v2
   · exact mulTable_correct v2 v1
 
-/-! ## Fixed-colour core ownership
-
-The operator-valued fixed-colour embedding and its multiplication theorem are
-owned by `InfoGeometry.Canonical.FixedColourCoreZornEmbedding`.  This integer
-basis table intentionally contains only the finite native multiplication
-table and its direct packets.
--/
-
 end Basis8
 end ZornCell
 end InfoGeometry.Algebra.Zorn.ConcreteComposition

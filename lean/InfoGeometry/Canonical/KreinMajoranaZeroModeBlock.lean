@@ -309,7 +309,7 @@ theorem polarized_commutator_commutes_zeroModeProjector
     (commutator_uPlus_uMinus_isGZero (X := X) A B)
 
 /--
-Finite property bridge: if the extracted zero-mode polarized channel is modeled
+Finite witness bridge: if the extracted zero-mode polarized channel is modeled
 by a skew Pfaffian kernel, then the Pfaffian amplitude squares to the
 determinant shadow of that extracted block.
 -/
@@ -415,7 +415,7 @@ theorem zeroMode_polarized_detCount_zero_iff_pfaffian_zero
 
 /--
 Nonnegativity of the determinant shadow for the extracted zero-mode polarized
-block under a Pfaffian-kernel property.
+block under a Pfaffian-kernel witness.
 -/
 theorem zeroMode_polarized_det_shadow_nonneg
     {I : Type*} [Fintype I] [DecidableEq I]
@@ -434,7 +434,7 @@ theorem zeroMode_polarized_det_shadow_nonneg
 
 /--
 Nonnegativity of the determinant path-count for the extracted zero-mode
-polarized block, via the same Pfaffian property.
+polarized block, via the same Pfaffian witness.
 -/
 theorem zeroMode_polarized_detCount_nonneg
     {I : Type*} [Fintype I] [DecidableEq I]

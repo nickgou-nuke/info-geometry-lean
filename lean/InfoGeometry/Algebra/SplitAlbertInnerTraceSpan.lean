@@ -38,6 +38,30 @@ def h3ZornTraceZeroEndomorphisms :
     intro r D hD x
     rw [show (r • D) x = r • D x by rfl, linearTrace_smul, hD x, mul_zero]
 
+/-- Trace-zero endomorphisms are closed under the endomorphism Lie bracket.
+This is a statement about the scalar `linearTrace` readout only; it does not
+assert that every Jordan derivation is inner. -/
+def h3ZornTraceZeroLieSubalgebra :
+    LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) where
+  carrier := {D | ∀ x : H3Zorn ℝ, linearTrace (D x) = 0}
+  zero_mem' := by
+    intro x
+    simp [linearTrace]
+  add_mem' := by
+    intro D E hD hE x
+    rw [show (D + E) x = D x + E x by rfl, linearTrace_add, hD x, hE x,
+      add_zero]
+  smul_mem' := by
+    intro r D hD x
+    rw [show (r • D) x = r • D x by rfl, linearTrace_smul, hD x, mul_zero]
+  lie_mem' := by
+    intro D E hD hE x
+    change linearTrace (D (E x) - E (D x)) = 0
+    rw [sub_eq_add_neg, linearTrace_add]
+    rw [show -E (D x) = (-1 : ℝ) • E (D x) by module,
+      linearTrace_smul, hD (E x), hE (D x)]
+    ring
+
 theorem h3ZornInnerDerivationSpan_trace_zero
     {D : Module.End ℝ (H3Zorn ℝ)}
     (hD : D ∈ h3ZornInnerDerivationSpan)
@@ -60,6 +84,15 @@ theorem h3ZornInnerDerivationSpan_trace_zero
 
 theorem h3ZornInnerDerivationSpan_le_traceZero :
     h3ZornInnerDerivationSpan ≤ h3ZornTraceZeroEndomorphisms := by
+  intro D hD
+  exact h3ZornInnerDerivationSpan_trace_zero hD
+
+/-- The inner-derivation span lands in the trace-zero Lie carrier as well as
+the underlying trace-zero submodule.  The two carriers have the same
+pointwise predicate; this theorem exposes the Lie-compatible edge explicitly.
+It makes no claim that this span exhausts all Jordan derivations. -/
+theorem h3ZornInnerDerivationSpan_le_traceZeroLie :
+    h3ZornInnerDerivationSpan ≤ h3ZornTraceZeroLieSubalgebra := by
   intro D hD
   exact h3ZornInnerDerivationSpan_trace_zero hD
 

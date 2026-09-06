@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.PrimeCloseNowProofs
 
-Mathlib-based closure of the elementary interfaces:
+Mathlib-based closure of the elementary sockets:
 
 * Cayley critical-line algebra, in real coordinates.
 * Ferromagnetic positivity of the prime Hopfield matrix.
@@ -248,7 +248,7 @@ end RealFieldZeroFree
 
 /--
 A proof-carrying field coordinate whose zero boundary is the Riemann critical
-line. This is not a property for analytic convergence; it is only the algebraic
+line. This is not a witness for analytic convergence; it is only the algebraic
 boundary map.
 -/
 @[rep_depth operator]

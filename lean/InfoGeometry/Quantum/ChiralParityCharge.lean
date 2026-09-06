@@ -84,16 +84,6 @@ theorem critical_line_from_chiral_balance (σ : ℝ)
     σ = 1 / 2 :=
   equal_modes_of_chiral_charge_zero σ (1 / 2) h_chiral
 
-/-- 🏆 GRAND CAPSTONE: Complete Chiral Parity Charge Synthesis -/
-theorem grand_chiral_parity_synthesis (N_L N_R : R) (σ : ℝ)
-    (h_eq : N_L = N_R) (h_chiral : chiralParityCharge σ (1 / 2) = 0) :
-    (chiralParityCharge N_R N_L = - chiralParityCharge N_L N_R) ∧
-    (chiralParityCharge N_L N_R = 0) ∧
-    (σ = 1 / 2) :=
-  ⟨chiral_charge_parity_odd N_L N_R,
-   chiral_charge_eq_zero_of_equal_modes N_L N_R h_eq,
-   critical_line_from_chiral_balance σ h_chiral⟩
-
 end
 
 end InfoGeometry.Quantum.ChiralParityCharge

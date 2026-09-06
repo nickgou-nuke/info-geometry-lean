@@ -1,13 +1,13 @@
 import Mathlib.Tactic
 
 /-!
-# Zorn Associator and Split-Octonion Data
+# Zorn Associator and Split-Octonion Witness
 
 The determinant/null bridge gives the vector-matrix container.  This layer
 records the key split-octonion feature: Zorn multiplication is generally
 non-associative because the cross product enters the off-diagonal lanes.
 
-We prove a concrete associator property using basis vectors:
+We prove a concrete associator witness using basis vectors:
 
 `A = [[0,e₁],[0,0]]`
 
@@ -155,7 +155,7 @@ theorem L_sq (v : Fin 3 → ℂ) :
   · simp [L, zornMul, dot3]
 
 /--
-Concrete non-associativity property.  The upper vector component is `e₂`.
+Concrete non-associativity witness.  The upper vector component is `e₂`.
 -/
 theorem associator_U₁_L₁_U₂ :
     associator (U e₁) (L e₁) (U e₂) = ⟨0, e₂, 0, 0⟩ := by
@@ -192,6 +192,24 @@ theorem zornDet_Eplus :
 theorem zornDet_Eminus :
     zornDet Eminus = 0 := by
   simp [zornDet, Eminus, dot3]
+
+/--
+Consolidated split-octonion witness: square-zero paravector lanes coexist with
+an explicit nonzero associator.
+-/
+theorem zorn_associator_split_octonion_synthesis :
+    (∀ u : Fin 3 → ℂ, U u * U u = 0) ∧
+    (∀ v : Fin 3 → ℂ, L v * L v = 0) ∧
+    associator (U e₁) (L e₁) (U e₂) = ⟨0, e₂, 0, 0⟩ ∧
+    associator (U e₁) (L e₁) (U e₂) ≠ 0 ∧
+    zornDet Eplus = 0 ∧
+    zornDet Eminus = 0 := by
+  exact ⟨U_sq,
+    L_sq,
+    associator_U₁_L₁_U₂,
+    associator_U₁_L₁_U₂_nonzero,
+    zornDet_Eplus,
+    zornDet_Eminus⟩
 
 end ZornAssociatorSplitOctonion
 

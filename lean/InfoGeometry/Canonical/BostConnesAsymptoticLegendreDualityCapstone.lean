@@ -29,3 +29,4 @@ theorem grand_canonical_bost_connes_asymptotic_synthesis (eta : ℝ) (h_eta : 0 
    F_B_F_eq_R⟩
 
 end InfoGeometry.Canonical.BostConnesAsymptotic
+

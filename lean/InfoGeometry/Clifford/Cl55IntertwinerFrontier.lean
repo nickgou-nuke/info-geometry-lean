@@ -1,10 +1,11 @@
 import Mathlib.Data.Matrix.Basic
 
-/-! Typed frontier for a possible KZ/Cl(5,5) comparison.
+/-!
+# Typed intertwiner frontier for the `Cl(5,5)` lane
 
-The file proves only the algebraic equivalence between conjugation and
-intertwining equations once a two-sided inverse is supplied.  It does not
-construct a monodromy operator or an intertwiner.
+This owner records the exact algebraic equivalence between conjugation and
+intertwining once an inverse is supplied.  It does not assert existence of a
+monodromy operator, a spin representation, or a geometric transport.
 -/
 
 namespace InfoGeometry.Clifford.Cl55IntertwinerFrontier

@@ -1,0 +1,26 @@
+import InfoGeometry.Canonical.OperatorModularTemperatureDuality
+
+/-!
+# InfoGeometry.Canonical.OperatorModularTemperatureDualityChecks
+
+Smoke checks for the operator modular-temperature duality socket.
+-/
+
+namespace InfoGeometry.Canonical.OperatorModularTemperatureDuality.Checks
+
+#check OperatorFrobeniusClosure
+#check OperatorFrobeniusClosure.pairing
+#check OperatorFrobeniusClosure.product_mem_closed
+#check OperatorFrobeniusClosure.pairing_comm
+#check OperatorFrobeniusClosure.pairing_product_left
+#check OperatorModularTemperatureDuality
+#check OperatorModularTemperatureDuality.action_eq_trace_product
+#check OperatorModularTemperatureDuality.contact_balance
+#check OperatorModularTemperatureDuality.fenchel_gap_eq_zero_at_contact
+#check OperatorModularTemperatureDuality.fenchel_gap_nonneg_of_closed
+#check OperatorModularTemperatureDuality.beta_mul_modularHamiltonian_closed
+#check ModularFlowOperatorDuality
+#check ModularFlowOperatorDuality.modularFlow_eq_generated_by_modularHamiltonian
+#check ModularFlowOperatorDuality.contact_balance
+
+end InfoGeometry.Canonical.OperatorModularTemperatureDuality.Checks

@@ -2001,7 +2001,7 @@ theorem finiteJordanProduct_jordan_identity (X Y : HermitianJ3) :
     hermitianToH3_finiteJordanProduct_mul Y (finiteJordanProduct X X),
     hermitianToH3_finiteJordanProduct_mul X Y,
     hermitianToH3_finiteJordanProduct_mul X X]
-  exact InfoGeometry.Algebra.H3ZornJordanProductLaw_holds
+  exact InfoGeometry.Algebra.H3ZornJordanProductLaw_proof
     (hermitianToH3 X) (hermitianToH3 Y)
 
 theorem canonicalHermitianEntry_w (X : HermitianJ3) (i j : Fin 3) :

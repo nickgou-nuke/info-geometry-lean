@@ -23,16 +23,9 @@ Concrete model files must supply generators and prove the predicate.
 
 namespace InfoGeometry.Topology.ArtinBraid
 
-/- Data of a family of braid-generator endomorphisms. -/
-def ArtinBraidRepData (K V : Type*) [Semiring K] [AddCommMonoid V] [Module K V] :=
-  ℕ → V →ₗ[K] V
-
-namespace ArtinBraidRepData
-
-def sigma {K V : Type*} [Semiring K] [AddCommMonoid V] [Module K V]
-    (ρ : ArtinBraidRepData K V) : ℕ → V →ₗ[K] V := ρ
-
-end ArtinBraidRepData
+/-- Data of a family of braid-generator endomorphisms. -/
+structure ArtinBraidRepData (K V : Type*) [Semiring K] [AddCommMonoid V] [Module K V] where
+  sigma : ℕ → V →ₗ[K] V
 
 /-- Adjacent Artin braid relation for the generator family. -/
 def AdjacentBraidLaw {K V : Type*} [Semiring K] [AddCommMonoid V] [Module K V]

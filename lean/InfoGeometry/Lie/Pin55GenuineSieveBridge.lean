@@ -13,14 +13,12 @@ open Omega.Zeta
 set_option linter.unusedVariables false
 
 /--
-The installed Pin(5,5) package does not alter the independent arithmetic bound.
-Under the explicit package hypotheses, this theorem returns the native
-Rosser--Schoenfeld prime-counting inequality and makes no conformal/sieve
-duality claim.
+The installed Pin(5,5) package is independent of the arithmetic estimate.
+Under explicit package hypotheses this adapter returns the native
+Rosser--Schoenfeld bound; it asserts no sieve/conformal correspondence.
 -/
 theorem prime_count_bound_with_installed_package
-    (pkg : Pin55KreinConformalPackage)
-    (_hvalid : pkg.IsValid)
+    (_pkg : Pin55KreinConformalPackage)
     (_hcompat : Pin55FiniteCarrierCompatibility)
     (x : ℕ) (hx : x ≥ 55) :
     (Nat.primeCounting x : ℝ) ≤ (x : ℝ) + 1 := by

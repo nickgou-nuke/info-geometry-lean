@@ -9,10 +9,10 @@ import Mathlib.Order.BooleanAlgebra.Basic
 The product lattice combining Cantor spatial cells with Krein chirality.
 
 At finite level `n`, a sector is defined by selecting both:
-1. A Cantor spatial support: an element of the Boolean algebra of `Set (Fin n → Bool)`.
+1. A Cantor spatial support: an element of the Boolean algebra of `Set (BinaryWord n)`.
 2. A Krein causal chirality: an element of the Krein sector Boolean algebra.
 
-The combined sector lattice is the product lattice `Sector n = Set (Fin n → Bool) × KreinSector`.
+The combined sector lattice is the product lattice `Sector n = Set (BinaryWord n) × KreinSector`.
 Since both factors are complete Boolean algebras, the product is automatically a
 complete Boolean algebra.
 
@@ -34,7 +34,7 @@ abbrev SectorAlg := CliffordAlgebra InfoGeometry.Clifford.splitQ11
 /-! ## 1. Sector Type Definition -/
 
 /-- A combined Cantor-Krein sector at level `n`. -/
-def Sector (n : ℕ) : Type := Set (Fin n → Bool) × KreinSector
+def Sector (n : ℕ) : Type := Set (BinaryWord n) × KreinSector
 
 /-! ## 2. Boolean Algebra Structure -/
 
@@ -56,11 +56,11 @@ noncomputable instance completeLattice (n : ℕ) : CompleteLattice (Sector n) :=
 /-! ## 4. Fundamental Physical Projectors -/
 
 /-- The elementary sector projector $E_{n,w,\varepsilon} = e_{n,w} \otimes p_\varepsilon$. -/
-def elementarySector (n : ℕ) (w : Fin n → Bool) (k : KreinSector) : Sector n :=
+def elementarySector (n : ℕ) (w : BinaryWord n) (k : KreinSector) : Sector n :=
   (cylinder n w, k)
 
 /-- Simultaneous localization (meet) of two elementary sectors. -/
-theorem elementarySector_inf_eq_meet (n : ℕ) (w₁ w₂ : Fin n → Bool) (k₁ k₂ : KreinSector) :
+theorem elementarySector_inf_eq_meet (n : ℕ) (w₁ w₂ : BinaryWord n) (k₁ k₂ : KreinSector) :
     elementarySector n w₁ k₁ ⊓ elementarySector n w₂ k₂ =
       (cylinder n w₁ ⊓ cylinder n w₂, k₁ ⊓ k₂) :=
   rfl
@@ -73,7 +73,7 @@ Physically, the representation map `Φ(e, p) = e ⊗ p` will quotient this out,
 since `0 ⊗ p = 0`. Thus, `(⊥, k)` represents a "null sector" that evaluates to zero
 in the operator algebra.
 -/
-theorem elementarySector_inf_spatial_bot {n : ℕ} {w₁ w₂ : Fin n → Bool}
+theorem elementarySector_inf_spatial_bot {n : ℕ} {w₁ w₂ : BinaryWord n}
     (k₁ k₂ : KreinSector) (h : w₁ ≠ w₂) :
     elementarySector n w₁ k₁ ⊓ elementarySector n w₂ k₂ = (⊥, k₁ ⊓ k₂) := by
   refine Prod.ext ?_ ?_
@@ -83,11 +83,21 @@ theorem elementarySector_inf_spatial_bot {n : ℕ} {w₁ w₂ : Fin n → Bool}
 
 /-! ## 5. Pointwise completed finite projection lattice -/
 
+/--
+The concrete finite Cantor-Krein projection lattice.
+
+Unlike `Set (BinaryWord n) × KreinSector`, this records a separate local Krein
+sector above every Cantor cell.  Joins, meets, complements, and arbitrary
+suprema/infima are inherited pointwise from `KreinSector`.
+-/
+abbrev ProjectionAssignment (n : ℕ) : Type :=
+  BinaryWord n → KreinSector
+
 /-- The pointwise finite Cantor-Krein projection lattice is Boolean. -/
-example (n : ℕ) : BooleanAlgebra ((Fin n → Bool) → KreinSector) := inferInstance
+example (n : ℕ) : BooleanAlgebra (ProjectionAssignment n) := inferInstance
 
 /-- The pointwise finite Cantor-Krein projection lattice is complete. -/
-noncomputable example (n : ℕ) : CompleteLattice ((Fin n → Bool) → KreinSector) := inferInstance
+noncomputable example (n : ℕ) : CompleteLattice (ProjectionAssignment n) := inferInstance
 
 /-- Evaluate a pointwise sector assignment as an actual finite function of split projectors. -/
 noncomputable def kreinMinusProjector : SectorAlg :=
@@ -145,12 +155,11 @@ noncomputable def kreinSectorToAlg : KreinSector → SectorAlg
   | plus => kreinPlusProjector
   | top => 1
 
-noncomputable def projectionAssignmentToAlg {n : ℕ}
-    (P : (Fin n → Bool) → KreinSector) : (Fin n → Bool) → SectorAlg :=
+noncomputable def projectionAssignmentToAlg {n : ℕ} (P : BinaryWord n → KreinSector) : BinaryWord n → SectorAlg :=
   fun w => kreinSectorToAlg (P w)
 
 /-- Pointwise sector assignments evaluate to idempotents in the finite function algebra. -/
-theorem projectionAssignmentToAlg_idempotent {n : ℕ} (P : (Fin n → Bool) → KreinSector) :
+theorem projectionAssignmentToAlg_idempotent {n : ℕ} (P : BinaryWord n → KreinSector) :
     IsIdempotentElem (projectionAssignmentToAlg P) := by
   rw [IsIdempotentElem]
   funext w
@@ -162,31 +171,31 @@ theorem projectionAssignmentToAlg_idempotent {n : ℕ} (P : (Fin n → Bool) →
 
 /-- The elementary sector assignment supported at a single Cantor word. -/
 def elementaryProjectionAssignment {n : ℕ}
-    (w : Fin n → Bool) (k : KreinSector) : (Fin n → Bool) → KreinSector :=
+    (w : BinaryWord n) (k : KreinSector) : ProjectionAssignment n :=
   fun v => if v = w then k else ⊥
 
 @[simp] theorem elementaryProjectionAssignment_self {n : ℕ}
-    (w : Fin n → Bool) (k : KreinSector) :
+    (w : BinaryWord n) (k : KreinSector) :
     elementaryProjectionAssignment w k w = k := by
   simp [elementaryProjectionAssignment]
 
 @[simp] theorem elementaryProjectionAssignment_of_ne {n : ℕ}
-    {v w : Fin n → Bool} (h : v ≠ w) (k : KreinSector) :
+    {v w : BinaryWord n} (h : v ≠ w) (k : KreinSector) :
     elementaryProjectionAssignment w k v = ⊥ := by
   simp [elementaryProjectionAssignment, h]
 
 /-- The elementary finite sector projector is idempotent in the function algebra. -/
 theorem elementaryProjectionAssignment_idempotent {n : ℕ}
-    (w : Fin n → Bool) (k : KreinSector) :
+    (w : BinaryWord n) (k : KreinSector) :
     IsIdempotentElem (projectionAssignmentToAlg (elementaryProjectionAssignment w k)) :=
   projectionAssignmentToAlg_idempotent _
 def refineProjectionAssignment {n : ℕ}
-    (P : (Fin n → Bool) → KreinSector) : (Fin (n + 1) → Bool) → KreinSector :=
+    (P : ProjectionAssignment n) : ProjectionAssignment (n + 1) :=
   fun v => P (truncateWord v)
 
 /-- Coarse-graining is the right adjoint: meet the two children above each parent. -/
 def coarseProjectionAssignment {n : ℕ}
-    (Q : (Fin (n + 1) → Bool) → KreinSector) : (Fin n → Bool) → KreinSector :=
+    (Q : ProjectionAssignment (n + 1)) : ProjectionAssignment n :=
   fun w => Q (leftChild w) ⊓ Q (rightChild w)
 
 /--
@@ -194,7 +203,7 @@ Refining an elementary Cantor-Krein sector gives the join of its two child
 sectors with the same Krein chirality.
 -/
 theorem refineProjectionAssignment_elementary {n : ℕ}
-    (w : Fin n → Bool) (k : KreinSector) :
+    (w : BinaryWord n) (k : KreinSector) :
     refineProjectionAssignment (elementaryProjectionAssignment w k) =
       elementaryProjectionAssignment (leftChild w) k ⊔
         elementaryProjectionAssignment (rightChild w) k := by
@@ -230,7 +239,7 @@ The join of the two elementary child sectors coarse-grains back to the parent
 elementary sector.
 -/
 theorem coarseProjectionAssignment_elementary_children {n : ℕ}
-    (w : Fin n → Bool) (k : KreinSector) :
+    (w : BinaryWord n) (k : KreinSector) :
     coarseProjectionAssignment
         (elementaryProjectionAssignment (leftChild w) k ⊔
           elementaryProjectionAssignment (rightChild w) k) =
@@ -280,13 +289,13 @@ theorem projectionAssignment_galoisConnection (n : ℕ) :
 
 /-- Projection refinement preserves arbitrary joins. -/
 theorem refineProjectionAssignment_iSup {n : ℕ} {ι : Sort*}
-    (P : ι → (Fin n → Bool) → KreinSector) :
+    (P : ι → ProjectionAssignment n) :
     refineProjectionAssignment (⨆ i, P i) = ⨆ i, refineProjectionAssignment (P i) :=
   (projectionAssignment_galoisConnection n).l_iSup
 
 /-- Projection coarse-graining preserves arbitrary meets. -/
 theorem coarseProjectionAssignment_iInf {n : ℕ} {ι : Sort*}
-    (Q : ι → (Fin (n + 1) → Bool) → KreinSector) :
+    (Q : ι → ProjectionAssignment (n + 1)) :
     coarseProjectionAssignment (⨅ i, Q i) = ⨅ i, coarseProjectionAssignment (Q i) :=
   (projectionAssignment_galoisConnection n).u_iInf
 

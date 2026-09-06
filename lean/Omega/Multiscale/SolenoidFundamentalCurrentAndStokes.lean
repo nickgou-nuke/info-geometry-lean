@@ -6,22 +6,40 @@ noncomputable section
 
 open NormalizedStokesFiniteCoverInverseTowerSystem
 
-/-- Representative-independence and levelwise Stokes for normalized solenoid currents. -/
+/-- The normalized bulk current on cylindrical top-degree forms. -/
+def solenoidFundamentalBulkCurrent
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) : ℝ :=
+  normalizedBulk S n
+
+/-- The normalized boundary current on cylindrical boundary forms. -/
+def solenoidFundamentalBoundaryCurrent
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) : ℝ :=
+  normalizedBoundary S n
+
+/-- The normalized bulk current is independent of the chosen finite-level representative. -/
+def solenoidFundamentalBulkWellDefined
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) : Prop :=
+  ∀ n, solenoidFundamentalBulkCurrent S (n + 1) = solenoidFundamentalBulkCurrent S n
+
+/-- The normalized boundary current is independent of the chosen finite-level representative. -/
+def solenoidFundamentalBoundaryWellDefined
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) : Prop :=
+  ∀ n, solenoidFundamentalBoundaryCurrent S (n + 1) = solenoidFundamentalBoundaryCurrent S n
+
+/-- Levelwise Stokes descends to the inverse limit after normalization by the cumulative degree. -/
+def solenoidFundamentalLimitStokesFormula
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) : Prop :=
+  ∀ n, normalizedDifferential S n = solenoidFundamentalBoundaryCurrent S n
+
+/-- Pullback scaling by the covering degree makes the normalized bulk and boundary currents
+representative-independent, and the normalized inverse-limit Stokes formula holds levelwise.
+    thm:app-solenoid-fundamental-current-and-stokes -/
 theorem paper_app_solenoid_fundamental_current_and_stokes
-    (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n)
-    (bulkPullback : ∀ n, S.bulkIntegral (n + 1) =
-      (S.coverDegree n : ℝ) * S.bulkIntegral n)
-    (boundaryPullback : ∀ n, S.boundaryIntegral (n + 1) =
-      (S.coverDegree n : ℝ) * S.boundaryIntegral n)
-    (levelwiseStokes : ∀ n,
-      S.differentialIntegral n = S.boundaryIntegral n) :
-    (∀ n, normalizedBulk S (n + 1) = normalizedBulk S n) ∧
-      (∀ n, normalizedBoundary S (n + 1) = normalizedBoundary S n) ∧
-        (∀ n, normalizedDifferential S n = normalizedBoundary S n) := by
-  exact ⟨normalizedBulk_step S coverDegree_two_le bulkPullback,
-    normalizedBoundary_step S coverDegree_two_le boundaryPullback,
-    normalizedStokes_levelwise S levelwiseStokes⟩
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) :
+    solenoidFundamentalBulkWellDefined S ∧
+      solenoidFundamentalBoundaryWellDefined S ∧
+      solenoidFundamentalLimitStokesFormula S := by
+  exact ⟨normalizedBulk_step S, normalizedBoundary_step S, normalizedStokes_levelwise S⟩
 
 end
 

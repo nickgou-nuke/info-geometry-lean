@@ -26,10 +26,3 @@ theorem bifurcate_mirror_sum (ξ : ℝ) :
     spectralParameter ξ + spectralParameter (-ξ) = 1 := by
   unfold spectralParameter
   ring
-
-theorem grand_bifurcate_horizon_synthesis (disp_L disp_R : ℝ)
-    (h_balanced : disp_L = disp_R) (ξ : ℝ) :
-    (spectralParameter (disp_R - disp_L) = 1 / 2) ∧
-    (spectralParameter ξ + spectralParameter (-ξ) = 1) := by
-  have h := critical_line_of_chiral_balance disp_L disp_R h_balanced
-  exact ⟨h, bifurcate_mirror_sum ξ⟩

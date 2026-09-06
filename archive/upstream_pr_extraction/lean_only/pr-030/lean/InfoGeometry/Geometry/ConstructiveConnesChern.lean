@@ -1,0 +1,60 @@
+/-
+InfoGeometry/Geometry/ConstructiveConnesChern.lean
+-/
+
+import InfoGeometry.Geometry.ConstructiveKasparov
+import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Geometry.SpectralDivisors
+
+noncomputable section
+
+namespace InfoGeometry.Geometry.ConstructiveConnesChern
+
+open InfoGeometry.Geometry.ConstructiveKasparov
+open InfoGeometry.Geometry.BilingualAnalyticity
+open InfoGeometry.Geometry.SpectralDivisors
+
+structure ConnesChernDatum
+    {Region Point Tangent A : Type*}
+    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    (I : GeometricIntegralBackend Region Point Tangent A)
+    (D : VerifiedBoundedDirac A) where
+  ccForm : OperatorOneForm Point Tangent A
+  geometricDerivative_eq_defect :
+    ∀ p : Point, I.geometricDerivative ccForm p = D.P
+
+theorem index_eq_boundary_integral
+    {Region Point Tangent A : Type*}
+    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    (I : GeometricIntegralBackend Region Point Tangent A)
+    (D : VerifiedBoundedDirac A)
+    (CC : ConnesChernDatum I D)
+    (Ω : Region) :
+    I.boundaryIntegral Ω CC.ccForm =
+      I.volumeIntegral Ω (fun _ => D.P) := by
+  have stokes := I.stokes_eq Ω CC.ccForm
+  have defect_subst :
+      I.geometricDerivative CC.ccForm = fun _ => D.P := by
+    ext p
+    exact CC.geometricDerivative_eq_defect p
+  rw [defect_subst] at stokes
+  exact stokes
+
+theorem kasparov_defect_is_quantized
+    {Region Point Tangent A : Type*}
+    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    (I : GeometricIntegralBackend Region Point Tangent A)
+    (D : VerifiedBoundedDirac A)
+    (CC : ConnesChernDatum I D)
+    (N : PhaseResidueNormalizer A)
+    (W : WindingNumberDatum I N CC.ccForm)
+    (Ω : Region) :
+    I.volumeIntegral Ω (fun _ => D.P) =
+      (W.winding Ω : ℝ) • N.phasePeriod := by
+  have h_index := (index_eq_boundary_integral I D CC Ω).symm
+  have h_wind := W.boundaryIntegral_eq_winding_smul Ω
+  rw [h_index]
+  exact h_wind
+
+end InfoGeometry.Geometry.ConstructiveConnesChern
+

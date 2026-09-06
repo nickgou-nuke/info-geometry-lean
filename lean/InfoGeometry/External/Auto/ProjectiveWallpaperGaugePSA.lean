@@ -131,25 +131,21 @@ theorem minusPhase_sq : Z2Phase.toComplex .minus * Z2Phase.toComplex .minus = 1 
   norm_num [Z2Phase.toComplex]
 
 /-- A projective symmetry algebra carrying cohomology invariant labels. -/
-abbrev ProjectiveSymmetryAlgebra := WallpaperGroup × (InvariantClass → Z2Phase)
-
-namespace ProjectiveSymmetryAlgebra
-
-abbrev group (P : ProjectiveSymmetryAlgebra) : WallpaperGroup := P.1
-
-abbrev invariant (P : ProjectiveSymmetryAlgebra) : InvariantClass → Z2Phase := P.2
-
-end ProjectiveSymmetryAlgebra
+structure ProjectiveSymmetryAlgebra where
+  group : WallpaperGroup
+  invariant : InvariantClass → Z2Phase
 
 /-- Ordinary representations have all invariants `+1`. -/
-def ordinaryPSA (G : WallpaperGroup) : ProjectiveSymmetryAlgebra :=
-  (G, fun _ => .plus)
+def ordinaryPSA (G : WallpaperGroup) : ProjectiveSymmetryAlgebra where
+  group := G
+  invariant := fun _ => .plus
 
 /-- A π-flux PSA has nontrivial `σ`. -/
-def piFluxTranslationPSA (G : WallpaperGroup) : ProjectiveSymmetryAlgebra :=
-  (G, fun
+def piFluxTranslationPSA (G : WallpaperGroup) : ProjectiveSymmetryAlgebra where
+  group := G
+  invariant := fun
     | .sigma => .minus
-    | _ => .plus)
+    | _ => .plus
 
 /-- If `σ=-1`, the translation commutator is the π-flux sign. -/
 theorem piFlux_sigma_minus (G : WallpaperGroup) :

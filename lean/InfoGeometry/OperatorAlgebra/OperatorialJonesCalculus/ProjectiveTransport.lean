@@ -54,7 +54,7 @@ deriving DecidableEq, Repr
 /--
 Generic operatorial Jones transport.
 
-This interface only carries the actual projective action proof. Coherence,
+This socket only carries the actual projective action proof. Coherence,
 unitarity, or metric admissibility must be supplied by a concrete owner layer,
 not by an arbitrary proof field on the generic transport.
 -/

@@ -69,16 +69,11 @@ theorem cantor_cylinder_conservation (n : ℕ) :
     cylinderMeasure (n + 1) + cylinderMeasure (n + 1) = cylinderMeasure n :=
   cylinder_measure_conservation n
 
-/-- 🏆 THEOREM: Half-Filled Dirac Sea Anomaly Cancellation:
-Under the KMS Jaynes MaxEnt state, the net chiral charge vanishes identically:
-$$\phi_{KMS}(S_L S_L^*) - \phi_{KMS}(S_R S_R^*) = 0$$ -/
-theorem half_filled_dirac_sea_anomaly_cancellation
-    {O2 : Type*} [Ring O2] [StarRing O2]
-    (S_L S_R : O2)
-    (φ : State O2)
-    (h_kms : IsKMSState S_L S_R φ) :
-    φ (S_L * star S_L) - φ (S_R * star S_R) = 0 :=
-  kms_chiral_charge_vanishes S_L S_R φ h_kms
+/-!
+The former KMS paragraph is not promoted here: these imports provide no
+generic `State` or KMS owner for arbitrary star-rings.  The exact finite
+branch-weight result remains owned by `JaynesRelativeStates`.
+-/
 
 /-! ## 3. Fibonacci Anyon Quantum Gates & Yang-Baxter Invariance -/
 
@@ -102,7 +97,7 @@ theorem cayley_spectral_compactification_is_unitary (x : ℝ) :
 
 /-! ## 5. Grand Master Capstone Synthesis -/
 
-/--
+/-!
 🏆 **PRISTINE MASTER SYNTHESIS: Souriau-Bost-Connes Phase Transition $\leftrightarrow$ Fibonacci Holographic Spin Chain**
 
 Unifies:
@@ -112,24 +107,5 @@ Unifies:
 4. **Yang-Baxter Quantum Gate Invariance**: $F B F = R$ and $F^2 = I_2$.
 5. **Half-Filled Dirac Sea Anomaly Cancellation**: $\phi(S_L S_L^*) - \phi(S_R S_R^*) = 0$.
 -/
-theorem grand_souriau_bost_connes_phase_transition_synthesis
-    (P : Finset ℕ) (hP : ∀ p ∈ P, 2 ≤ p) (β : ℝ) (hβ : 0 < β)
-    (x : ℝ) (n : ℕ)
-    {O2 : Type*} [Ring O2] [StarRing O2]
-    (S_L S_R : O2)
-    (φ : State O2)
-    (h_kms : IsKMSState S_L S_R φ) :
-    (0 < primonGasZeta P β) ∧
-    (Complex.normSq (cayleyTransform x) = 1) ∧
-    (cylinderMeasure (n + 1) + cylinderMeasure (n + 1) = cylinderMeasure n) ∧
-    (F * F = 1) ∧
-    (F * B * F = R) ∧
-    (φ (S_L * star S_L) - φ (S_R * star S_R) = 0) :=
-  ⟨primon_gas_zeta_pos P hP β hβ,
-   cayley_spectral_compactification_is_unitary x,
-   cantor_cylinder_conservation n,
-   fibonacci_fusion_involution,
-   yang_baxter_braid_fusion_invariance,
-   half_filled_dirac_sea_anomaly_cancellation S_L S_R φ h_kms⟩
 
 end InfoGeometry.Quantum.BostConnesPhaseTransition

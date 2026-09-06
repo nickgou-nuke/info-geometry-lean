@@ -31,7 +31,7 @@ open Matrix
 open FiniteFibonacciFusionMatrix
 open FiniteFibonacciMonodromyInterface
 
-/-- Symmetry under swapping the first two anyon labels from an explicit permutation-invariance property. -/
+/-- Symmetry under swapping the first two anyon labels from an explicit permutation-invariance hypothesis. -/
 theorem electronFactor_swap01_invariant {ElectronData Value : Type*}
     (eval : ElectronData → Value)
     (permute : Equiv.Perm (Fin 4) → ElectronData → ElectronData)
@@ -40,7 +40,7 @@ theorem electronFactor_swap01_invariant {ElectronData Value : Type*}
     eval (permute (Equiv.swap (0 : Fin 4) 1) z) = eval z :=
   hperm (Equiv.swap (0 : Fin 4) 1) z
 
-/-- Symmetry under swapping the middle two anyon labels from an explicit property. -/
+/-- Symmetry under swapping the middle two anyon labels from an explicit hypothesis. -/
 theorem electronFactor_swap12_invariant {ElectronData Value : Type*}
     (eval : ElectronData → Value)
     (permute : Equiv.Perm (Fin 4) → ElectronData → ElectronData)
@@ -49,7 +49,7 @@ theorem electronFactor_swap12_invariant {ElectronData Value : Type*}
     eval (permute (Equiv.swap (1 : Fin 4) 2) z) = eval z :=
   hperm (Equiv.swap (1 : Fin 4) 2) z
 
-/-- Symmetry under swapping the last two anyon labels from an explicit property. -/
+/-- Symmetry under swapping the last two anyon labels from an explicit hypothesis. -/
 theorem electronFactor_swap23_invariant {ElectronData Value : Type*}
     (eval : ElectronData → Value)
     (permute : Equiv.Perm (Fin 4) → ElectronData → ElectronData)

@@ -35,4 +35,19 @@ theorem vacuum_expectation_value_pairing (u : U) (alpha : U →ₗ[R] R) :
     (evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U) :=
   rfl
 
+/-- **Theorem**: Master Vacuum Expectation Value & State Pairing Synthesis.
+    Unifies:
+    1. Single-particle state creation on vacuum |α⟩ = ε_α |0⟩ = ι α.
+    2. Vacuum state annihilation a_u |0⟩ = 0 for all u ∈ U.
+    3. Vacuum expectation pairing identity (ev_u α) • |0⟩ = α(u) • |0⟩. -/
+theorem master_vacuum_expectation_value_synthesis
+    (u : U) (alpha : U →ₗ[R] R) :
+    (creationOp alpha (vacuumState R U) = ι R alpha) ∧
+    ((contractionOp (evaluationLinear u)) (vacuumState R U) = 0) ∧
+    ((evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U)) := ⟨
+  single_particle_creation_vacuum alpha,
+  annihilation_vacuum_is_zero u,
+  rfl
+⟩
+
 end InfoGeometry.Canonical.VacuumExpectationValueBridge

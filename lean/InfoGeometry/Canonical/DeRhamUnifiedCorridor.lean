@@ -26,11 +26,12 @@ and continuous differential topology:
    - 1-Cocycle Group Law: `V(q, q₂) = V(q, q₁) + V(q₁, q₂)`
    - Exponential Map: `Δ = exp(-V) ↔ V = -ln Δ`
 
-2. **Continuous Level (Smooth Manifold / Trajectories):**
+2. **Real parameterized functions:**
    - 0-Form: `trajectoryPotential γ γ₀ t := -ln(γ t) + ln γ₀`
    - Exact 1-Form: `d/dt [ -ln γ(t) ] = - (γ'(t) / γ(t))`
-   - FTC / Path Independence: `∫_{t₀}^{t₁} - (γ'/γ) dt = Φ(t₁) - Φ(t₀)`
-   - Zero Curvature: `γ(t₁) = γ(t₀) → ∮ ω = 0`
+   - Endpoint differences: `Φ(t₁) - Φ(t₀) = -log (γ t₁) + log (γ t₀)`.
+   - The interval integral vanishes for equal endpoint values under explicit
+     differentiability, positivity, and integrability hypotheses.
 
 All theorems are fully proved in native Mathlib with 0 sorrys.
 -/
@@ -75,8 +76,8 @@ theorem continuous_maurer_cartan
   hasDerivAt_trajectoryPotential hγ hpos
 
 /-- 
-  🏆 UNIFIED THEOREM 4 (Continuous Path Independence / FTC):
-  The line integral of the continuous 1-form depends strictly on the endpoints.
+  The potential difference depends only on the endpoint values.
+  This statement alone does not assert an integral identity.
 -/
 theorem continuous_path_independence
     (γ : ℝ → ℝ) (γ₀ : ℝ) (t₀ t₁ : ℝ) :
@@ -85,24 +86,35 @@ theorem continuous_path_independence
   trajectoryPotential_difference γ γ₀ t₀ t₁
 
 /-- 
-  🏆 UNIFIED THEOREM 5 (Closed Loop Vanishing / First Law):
-  The closed loop line integral vanishes identically.
+  Equal endpoint values imply zero potential difference.
 -/
 theorem continuous_closed_loop
     (γ : ℝ → ℝ) (γ₀ : ℝ) (t₀ t₁ : ℝ) (h_loop : γ t₁ = γ t₀) :
     trajectoryPotential γ γ₀ t₁ - trajectoryPotential γ γ₀ t₀ = 0 :=
   trajectoryPotential_closed_loop γ γ₀ t₀ t₁ h_loop
 
+/-- The logarithmic derivative has zero interval integral for equal endpoint
+values, with the analytic hypotheses required by the fundamental theorem. -/
+theorem continuous_closed_loop_integral
+    {γ γ' : ℝ → ℝ} {a b : ℝ}
+    (hγ : ∀ t ∈ Set.uIcc a b, HasDerivAt γ (γ' t) t)
+    (hpos : ∀ t ∈ Set.uIcc a b, 0 < γ t)
+    (hi : IntervalIntegrable (fun t => -(γ' t / γ t)) MeasureTheory.volume a b)
+    (hloop : γ b = γ a) :
+    (∫ t in a..b, -(γ' t / γ t)) = 0 := by
+  rw [integral_logarithmicDerivative hγ hpos hi, hloop, neg_add_cancel]
+
 /-- 
-  🏆 UNIFIED THEOREM 6 (The Log-Exponential Functor Duality):
-  The multiplicative gauge density and additive energy potential are exact functorial inverses.
+  The positive relative density and its negative logarithm determine each other.
 -/
 theorem log_exponential_duality
     (q q₁ : PositiveRay α) (a : α) :
     relativeDensity q q₁ a = Real.exp (- relativeModularPotential q q₁ a) ∧
     relativeModularPotential q q₁ a = - Real.log (relativeDensity q q₁ a) := by
   constructor
-  · exact relativeDensity_eq_exp_neg_relativeModularPotential q q₁ a
-  · exact relativeModularPotential_eq_neg_log_relativeDensity q q₁ a
+  · rw [relativeDensity_eq_exp_relativeLogDensity,
+      relativeModularPotential_eq_neg_relativeLogDensity, neg_neg]
+  · rw [relativeModularPotential_eq_neg_relativeLogDensity,
+      relativeDensity_eq_exp_relativeLogDensity, Real.log_exp]
 
 end InfoGeometry.Canonical.DeRhamUnifiedCorridor

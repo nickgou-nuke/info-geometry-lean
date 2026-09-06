@@ -41,6 +41,14 @@ theorem spinCARAutomorphism_maps_grade_family (g : Spin55) :
   simpa only [spinCARAutomorphism_apply] using
     spinTransported_maps_grade_family g
 
+/- The CAR-facing owner exposes the corresponding exact image equality. -/
+theorem spinCARAutomorphism_grade_image (g : Spin55) (k : ℤ) :
+    (spinCARAutomorphism g : Cl55 ≃+* Cl55) ''
+        (cl55GradeSubmodule k : Set Cl55) =
+      (spinTransportedCl55GradeSubmodule g k : Set Cl55) := by
+  simpa only [spinCARAutomorphism_apply] using
+    spinTransported_grade_image g k
+
 theorem spinCARAutomorphism_preserves_car (g : Spin55) (i : Fin 5) :
     spinCARAutomorphism g (annihilation55 i) *
           spinCARAutomorphism g (creation55 i) +

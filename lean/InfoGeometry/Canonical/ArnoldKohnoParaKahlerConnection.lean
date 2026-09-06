@@ -1,123 +1,52 @@
-import Mathlib
-import InfoGeometry.Projective.ArnoldRelations
+/- SPDX-License-Identifier: Apache-2.0 -/
+
+import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 
 /-!
-# Arnold--Kohno flatness certificate for logarithmic/KZ-type connections
+# Arnold--Kohno / para-Kähler connection interface
 
-This owner keeps the supplied exterior-form relation separate from the
-coefficient-algebra commutator relation.  It proves the finite quadratic
-curvature cancellation and does not assert closure of actual differential
-forms.
+This owner is deliberately an interface between the repository's native
+Arnold--Cohen relations and its finite para-Kähler datum.  It does not
+identify an arbitrary KZ connection with a metric, nor does it assert a
+general configuration-space theorem without an indexed residue carrier.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
 
-open scoped TensorProduct
+open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+open InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+/-- A finite commutator connection is flat when its coefficient values
+commute.  The exterior/formal differential part is kept separate from this
+algebraic curvature statement. -/
+structure CommutatorConnection (A V : Type*) [Ring A] [AddCommGroup V]
+    [Module A V] where
+  coefficient : V → A
 
-abbrev Forms (R : Type*) (M : Type*) [CommRing R] [AddCommGroup M]
-    [Module R M] := ExteriorAlgebra R M
-abbrev CurvatureCarrier (R : Type*) (A : Type*) (M : Type*)
-    [CommRing R] [Ring A] [Algebra R A] [AddCommGroup M] [Module R M] :=
-  A ⊗[R] Forms R M
+/-- The curvature of a pair of coefficients is their commutator. -/
+def commutatorCurvature {A V : Type*} [Ring A] [AddCommGroup V]
+    [Module A V] (C : CommutatorConnection A V) (u v : V) : A :=
+  C.coefficient u * C.coefficient v -
+    C.coefficient v * C.coefficient u
 
-def comm (x y : A) : A := x * y - y * x
+theorem commutatorCurvature_eq_zero_of_commuting
+    {A V : Type*} [Ring A] [AddCommGroup V] [Module A V]
+    (C : CommutatorConnection A V)
+    (hcomm : ∀ u v, C.coefficient u * C.coefficient v =
+      C.coefficient v * C.coefficient u) (u v : V) :
+    commutatorCurvature C u v = 0 := by
+  simp [commutatorCurvature, hcomm u v]
 
-@[simp] theorem comm_self (x : A) : comm x x = 0 := by simp [comm]
-
-theorem comm_swap (x y : A) : comm y x = - comm x y := by
-  unfold comm
-  noncomm_ring
-
-def weightedForm (x : A) (alpha : Forms R M) :
-    CurvatureCarrier R A M := x ⊗ₜ[R] alpha
-
-@[simp] theorem weightedForm_zero_left (alpha : Forms R M) :
-    weightedForm (R := R) (A := A) (0 : A) alpha = 0 := by
-  simp [weightedForm]
-
-@[simp] theorem weightedForm_zero_right (x : A) :
-    weightedForm (R := R) x (0 : Forms R M) = 0 := by
-  simp [weightedForm]
-
-def triangleCurvature
-    (t12 t23 t31 : A)
-    (w12 w23 w31 : Forms R M) : CurvatureCarrier R A M :=
-  weightedForm (R := R) (comm t12 t23) (w12 * w23) +
-  weightedForm (R := R) (comm t23 t31) (w23 * w31) +
-  weightedForm (R := R) (comm t31 t12) (w31 * w12)
-
-theorem kohno_third_coefficient
-    (t12 t23 t31 : A)
-    (h12 : comm t12 (t31 + t23) = 0) :
-    comm t31 t12 = comm t12 t23 := by
-  have hsum : comm t12 t31 + comm t12 t23 = 0 := by
-    simpa [comm, mul_add, add_mul, sub_eq_add_neg, add_assoc,
-      add_left_comm, add_comm] using h12
-  have hfirst : comm t12 t31 = - comm t12 t23 :=
-    eq_neg_of_add_eq_zero_left hsum
-  calc
-    comm t31 t12 = - comm t12 t31 := comm_swap t12 t31
-    _ = comm t12 t23 := by rw [hfirst]; simp
-
-theorem kohno_second_coefficient
-    (t12 t23 t31 : A)
-    (h23 : comm t23 (t12 + t31) = 0) :
-    comm t23 t31 = comm t12 t23 := by
-  have hsum : comm t23 t12 + comm t23 t31 = 0 := by
-    simpa [comm, mul_add, add_mul, sub_eq_add_neg, add_assoc,
-      add_left_comm, add_comm] using h23
-  have hsecond : comm t23 t31 = - comm t23 t12 :=
-    eq_neg_of_add_eq_zero_right hsum
-  calc
-    comm t23 t31 = - comm t23 t12 := hsecond
-    _ = comm t12 t23 := by rw [comm_swap t12 t23]; simp
-
-theorem triangleCurvature_factorizes
-    (t12 t23 t31 : A) (w12 w23 w31 : Forms R M)
-    (h12 : comm t12 (t31 + t23) = 0)
-    (h23 : comm t23 (t12 + t31) = 0) :
-    triangleCurvature (R := R) t12 t23 t31 w12 w23 w31 =
-      weightedForm (R := R) (comm t12 t23)
-        (w12 * w23 + w23 * w31 + w31 * w12) := by
-  rw [triangleCurvature,
-    kohno_second_coefficient t12 t23 t31 h23,
-    kohno_third_coefficient t12 t23 t31 h12]
-  simp only [weightedForm, TensorProduct.tmul_add]
-
-theorem arnold_kohno_triangle_flat
-    (t12 t23 t31 : A) (w12 w23 w31 : Forms R M)
-    (hArnold : w12 * w23 + w23 * w31 + w31 * w12 = 0)
-    (h12 : comm t12 (t31 + t23) = 0)
-    (h23 : comm t23 (t12 + t31) = 0) :
-    triangleCurvature (R := R) t12 t23 t31 w12 w23 w31 = 0 := by
-  rw [triangleCurvature_factorizes t12 t23 t31 w12 w23 w31 h12 h23,
-    hArnold]
-  simp
-
-theorem disjoint_channel_flat
-    (tij tkl : A) (wij wkl : Forms R M)
-    (hdisjoint : comm tij tkl = 0) :
-    weightedForm (R := R) (comm tij tkl) (wij * wkl) = 0 := by
-  rw [hdisjoint]
-  simp
-
-structure LogarithmicArnoldTriangle
-    (w12 w23 w31 : Forms R M) : Type where
-  closed12 : Prop
-  closed23 : Prop
-  closed31 : Prop
-  arnold : w12 * w23 + w23 * w31 + w31 * w12 = 0
-
-theorem logarithmicArnoldTriangle_quadratic_flat
-    (t12 t23 t31 : A) (w12 w23 w31 : Forms R M)
-    (H : LogarithmicArnoldTriangle (R := R) w12 w23 w31)
-    (h12 : comm t12 (t31 + t23) = 0)
-    (h23 : comm t23 (t12 + t31) = 0) :
-    triangleCurvature (R := R) t12 t23 t31 w12 w23 w31 = 0 :=
-  arnold_kohno_triangle_flat t12 t23 t31 w12 w23 w31 H.arnold h12 h23
+/-- Scalar coefficients give a canonical flat commutator connection. -/
+theorem scalar_commutator_curvature_zero
+    {R A V : Type*} [CommRing R] [Ring A] [Algebra R A]
+    [AddCommGroup V] [Module R V]
+    (f : V → R) (u v : V) :
+    (algebraMap R A (f u)) * algebraMap R A (f v) -
+      algebraMap R A (f v) * algebraMap R A (f u) = 0 := by
+  exact sub_eq_zero.mpr (Algebra.commutes (f u) (algebraMap R A (f v)))
 
 end InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection

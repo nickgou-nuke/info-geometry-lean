@@ -21,17 +21,10 @@ noncomputable section
 namespace InfoGeometry.GrandUnification.WaveguideEPBraidSpec
 
 /-- Real experimental parameters for one coupled two-waveguide gate. -/
-abbrev WaveguidePairParams := ℝ × ℝ × ℝ
-
-namespace WaveguidePairParams
-
-abbrev betaMean (P : WaveguidePairParams) : ℝ := P.1
-
-abbrev gainLossContrast (P : WaveguidePairParams) : ℝ := P.2.1
-
-abbrev coupling (P : WaveguidePairParams) : ℝ := P.2.2
-
-end WaveguidePairParams
+structure WaveguidePairParams where
+  betaMean : ℝ       -- common propagation constant offset
+  gainLossContrast : ℝ -- `Δγ = γ₁ - γ₂`
+  coupling : ℝ       -- evanescent coupling `κ`
 
 /-- Balanced two-mode EP discriminant: `κ² - (Δγ/2)²`. -/
 def epDiscriminant (P : WaveguidePairParams) : ℝ :=

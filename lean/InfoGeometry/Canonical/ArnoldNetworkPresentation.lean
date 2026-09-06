@@ -89,7 +89,7 @@ theorem arnoldGenerator_totalCost_le_of_contract
 
 /--
 Readout bridge: if the shape/scale cost dominates norm-readout differences, the
-metric readout discrepancy is bounded by the property Arnold cost bound.
+metric readout discrepancy is bounded by the certified Arnold cost bound.
 -/
 @[rep_depth operator]
 theorem arnoldMetricReadout_error_le_of_shapeScaleContract
@@ -160,7 +160,7 @@ theorem arnoldGenerator_eq_of_experts_fix
         intro e
         simpa using hfix e))
 
-/-- Tagged presentation property for the Arnold/Majorana doubled lane. -/
+/-- Tagged presentation witness for the Arnold/Majorana doubled lane. -/
 @[rep_depth operator]
 noncomputable def taggedPresentation
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ) :

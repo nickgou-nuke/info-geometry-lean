@@ -8,7 +8,6 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.BostConnesKMSPhaseTransition
 import InfoGeometry.Canonical.BostConnesPhaseTransition
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Bost-Connes Phase Transition & Spontaneous Symmetry Breaking Capstone
@@ -34,7 +33,6 @@ namespace InfoGeometry.Canonical.BostConnesSSB
 
 open Complex Real
 open InfoGeometry.Algebra.BostConnesKMSPhaseTransition
-open InfoGeometry.Canonical.YangBaxterProof
 
 /-- Critical inverse temperature of the Bost-Connes system: $\beta_c = 1$. -/
 def criticalBeta : ℝ := 1
@@ -60,7 +58,7 @@ theorem ground_state_unit_weight (β : ℝ) :
   dsimp [thermalKMSWeight]
   simp [Real.one_rpow]
 
-/--
+/-
 🏆 **MASTER SYNTHESIS: Bost-Connes Phase Transition & Spontaneous Symmetry Breaking**
 
 Unifies:
@@ -71,7 +69,13 @@ Unifies:
 5. **Phase Disjointness**: $\beta \le 1$ vs $\beta > 1$.
 6. **Yang-Baxter Topological Integrability**:  \cdot B \cdot F = R$ and ^2 = 1$.
 -/
-theorem grand_bost_connes_phase_transition_ssb_synthesis
+/-
+The former grand synthesis combined these finite facts with unrelated
+Yang--Baxter and algebraic structure claims.  Those claims remain available
+through their native owners; this module intentionally stops at the finite
+thermal lemmas above.
+-/
+/- theorem grand_bost_connes_phase_transition_ssb_synthesis
     {R_alg : Type*} [Ring R_alg] (g : BostConnesSystem R_alg)
     (hG : BostConnesSystemLaws g) (m n : ℕ+) (β : ℝ)
     (h_low : isLowTemperaturePhase β) :
@@ -90,6 +94,6 @@ theorem grand_bost_connes_phase_transition_ssb_synthesis
    phase_stratification_disjoint β,
    critical_temperature_boundary β h_low,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.BostConnesSSB

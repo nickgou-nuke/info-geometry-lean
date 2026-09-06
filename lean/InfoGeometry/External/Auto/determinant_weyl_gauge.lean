@@ -123,20 +123,16 @@ theorem parabolic_fixes_base_null_ray (t : ℝ) :
   fin_cases i <;> fin_cases j <;>
     simp [parabolicChart_eq, baseNullRay, Matrix.mul_apply, Fin.sum_univ_two]
 
-abbrev Twistor := (Fin 2 → ℝ) × (Fin 2 → ℝ)
-
-namespace Twistor
-
-abbrev omega (Z : Twistor) : Fin 2 → ℝ := Z.1
-abbrev pi (Z : Twistor) : Fin 2 → ℝ := Z.2
-
-end Twistor
+structure Twistor where
+  omega : Fin 2 → ℝ
+  pi : Fin 2 → ℝ
 
 def twistorIncidence (X : Matrix (Fin 2) (Fin 2) ℝ) (Z : Twistor) : Fin 2 → ℝ :=
   fun i => Z.omega i - ∑ j, X i j * Z.pi j
 
-def scaleTwistor (s : ℝ) (Z : Twistor) : Twistor :=
-  (fun i => s * Z.omega i, fun i => s * Z.pi i)
+def scaleTwistor (s : ℝ) (Z : Twistor) : Twistor where
+  omega := fun i => s * Z.omega i
+  pi := fun i => s * Z.pi i
 
 /-- Twistor incidence is projective: scaling the twistor scales the incidence. -/
 theorem twistor_incidence_homogeneous
@@ -330,3 +326,29 @@ theorem boltzmannDegeneracy_weylFlow_vacuum (t : ℝ) :
     boltzmannDegeneracy (weylLieFlow t (1 : Matrix (Fin 2) (Fin 2) ℝ))
       = Real.exp ((Real.exp t) ^ 2) := by
   simp [boltzmannDegeneracy, fvolume_weylLieFlow_vacuum]
+
+/-- The determinant Weyl gauge theorem: causal grading, exponential charts,
+    conformal boundary, twistor incidence, and CPT determinant invariance. -/
+theorem determinant_weyl_gauge_synthesis :
+    e1 * e1 = 1 ∧
+    e2 * e2 = -1 ∧
+    e1 * e2 = -(e2 * e1) ∧
+    (∀ a b c : ℝ,
+      let X := tracelessPauli a b c
+      X * X = (-(X.det)) • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ∧
+    (∀ t, (hyperbolicChart t).det = 1) ∧
+    (∀ t, (ellipticChart t).det = 1) ∧
+    (∀ t, (parabolicChart t).det = 1) ∧
+    nullProjector.det = 0 ∧
+    nilpotentN.det = 0 ∧
+    (∀ u, (boundaryPoint u).det = 0) ∧
+    (∀ t u, ((parabolicChart t) * boundaryPoint u).det = 0) ∧
+    (∀ s X Z,
+      twistorIncidence X (scaleTwistor s Z) = fun i => s * twistorIncidence X Z i) ∧
+    (∀ x, (P x).det = x.det ∧ (T_op x).det = x.det ∧ (PT x).det = x.det) := by
+  exact ⟨e1_sq, e2_sq_neg, e1_anticomm_e2, tracelessPauli_sq_eq_neg_det,
+    det_hyperbolicChart, det_ellipticChart, det_parabolicChart, det_nullProjector,
+    det_nilpotentN, det_boundaryPoint, parabolic_preserves_boundary_null,
+    twistor_incidence_homogeneous, by
+      intro x
+      exact ⟨det_P x, det_T x, det_PT x⟩⟩

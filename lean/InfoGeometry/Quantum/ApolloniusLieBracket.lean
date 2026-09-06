@@ -115,19 +115,6 @@ theorem souriau_hamiltonian_symplectic_pairing
   rw [h_dsH, h_dtH]
   ring
 
-/-- 🏆 GRAND CAPSTONE: Full Lie Algebraic Decoupling & Orthogonality Synthesis -/
-theorem grand_apollonius_lie_bracket_synthesis
-    (d_sigma_Phi d_t_Phi d_sigma_H d_t_H : ℝ → ℝ → ℝ)
-    (h_cr : HarmonicConjugateData d_sigma_Phi d_t_Phi d_sigma_H d_t_H)
-    (σ t : ℝ) :
-    (innerProduct (souriauGradient d_sigma_Phi d_t_Phi) (hamiltonianGradient d_sigma_H d_t_H) σ t = 0) ∧
-    (innerProduct (hamiltonianFlow d_sigma_H d_t_H) (hamiltonianGradient d_sigma_H d_t_H) σ t = 0) ∧
-    (symplecticForm (hamiltonianGradient d_sigma_H d_t_H) (souriauGradient d_sigma_Phi d_t_Phi) σ t =
-      (d_sigma_Phi σ t)^2 + (d_t_Phi σ t)^2) :=
-  ⟨souriau_hamiltonian_gradients_orthogonal d_sigma_Phi d_t_Phi d_sigma_H d_t_H h_cr σ t,
-   hamiltonian_flow_hamiltonian_grad_orthogonal d_sigma_H d_t_H σ t,
-   souriau_hamiltonian_symplectic_pairing d_sigma_Phi d_t_Phi d_sigma_H d_t_H h_cr σ t⟩
-
 end
 
 end InfoGeometry.Quantum.ApolloniusLieBracket

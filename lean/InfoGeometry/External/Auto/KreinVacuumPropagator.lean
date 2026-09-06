@@ -177,13 +177,13 @@ theorem tomitaBottleJ_chiral_anticommute :
     AnomalousKMSFlow.tomitaBottleΓ_eq_kleinBottleΓ]
     using kleinBottleJ_chiral_anticommute
 
-/-- Closed-form finite Klein context with propagator property `G = J`. -/
+/-- Closed-form finite Klein context with propagator witness `G = J`. -/
 def kleinBottleJPropagatorContext : ChiralPropagatorContext (Fin 2 → ℂ) :=
   kleinBottle_vacuum_bubble_context
     AnomalousKMSFlow.kleinBottleJ
     kleinBottleJ_chiral_anticommute
 
-/-- Closed-form finite TOMITA context with propagator property `G = J`. -/
+/-- Closed-form finite TOMITA context with propagator witness `G = J`. -/
 def tomitaBottleJPropagatorContext : ChiralPropagatorContext (Fin 2 → ℂ) :=
   tomitaBottle_vacuum_bubble_context
     AnomalousKMSFlow.tomitaBottleJ

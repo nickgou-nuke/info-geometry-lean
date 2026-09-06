@@ -60,13 +60,13 @@ theorem gns_null_re_zero (a : A) (h_null : phi.gnsNullSpace a) :
     φ(a * b) = φ(b * σ_iβ(a)). -/
 structure KMSState (sigma_i_beta : A → A) where
   state : PositiveState A
-  kmsLaw : ∀ a b : A, state (a * b) = state (b * sigma_i_beta a)
+  kms_condition : ∀ a b : A, state (a * b) = state (b * sigma_i_beta a)
 
 /-- **Theorem**: KMS Boundary State Commutativity under Identity Modular Automorphism:
     If σ_iβ = Id, then φ(a * b) = φ(b * a) (Tracial State Condition). -/
 theorem kms_tracial_state (kms : KMSState (fun x => x)) (a b : A) :
     kms.state (a * b) = kms.state (b * a) :=
-  kms.kmsLaw a b
+  kms.kms_condition a b
 
 end PositiveState
 
@@ -88,7 +88,7 @@ missing native layer:
 * forgetting multiplication and star recovers the existing
   `FilteredColimit.DirectInductiveSystem` and `InductiveCocone` owners.
 
-No commutativity or diagonalization property is imposed.
+No commutativity or diagonalization hypothesis is imposed.
 -/
 
 namespace CStarStateColimit.Native
@@ -339,12 +339,13 @@ variable {Ainf : Type u}
 variable [CStarAlgebra Ainf] [PartialOrder Ainf] [StarOrderedRing Ainf]
 
 /-- A star-algebraic cocone over the filtered system. -/
-abbrev StarInductiveCocone
-    (sys : ContinuousStarInductiveSystem Stage) : Type _ :=
-  {ι : ∀ i, Stage i →⋆ₐ[ℂ] Ainf //
+structure StarInductiveCocone
+    (sys : ContinuousStarInductiveSystem Stage) where
+  ι : ∀ i, Stage i →⋆ₐ[ℂ] Ainf
+  ι_comm :
     ∀ {i j : I} (hij : i ≤ j),
       (ι j).comp (sys.map hij) =
-        ι i}
+        ι i
 
 namespace StarInductiveCocone
 
@@ -352,26 +353,15 @@ variable
     (cocone :
       StarInductiveCocone (Ainf := Ainf) Stage sys)
 
-def leg (cocone : StarInductiveCocone (Ainf := Ainf) Stage sys)
-    (i : I) : Stage i →⋆ₐ[ℂ] Ainf := cocone.1 i
-
-theorem compatibility (cocone : StarInductiveCocone (Ainf := Ainf) Stage sys)
-    {i j : I} (hij : i ≤ j) :
-    (leg (Stage := Stage) (sys := sys) cocone j).comp (sys.map hij) =
-      leg (Stage := Stage) (sys := sys) cocone i :=
-  cocone.2 hij
-
 /-- Forgetting star and multiplication yields the existing linear cocone. -/
 def toInductiveCocone :
-    InductiveCocone ℂ sys.toDirectInductiveSystem Ainf :=
-  ⟨(fun i => (leg (Stage := Stage) (sys := sys) cocone i).toAlgHom.toLinearMap), by
+    InductiveCocone ℂ sys.toDirectInductiveSystem Ainf where
+  psi := fun i =>
+    (cocone.ι i).toAlgHom.toLinearMap
+  psi_comm := by
     intro i j hij
-    change
-      ((leg (Stage := Stage) (sys := sys) cocone j).toAlgHom.toLinearMap).comp
-          ((sys.map hij).toAlgHom.toLinearMap) =
-        (leg (Stage := Stage) (sys := sys) cocone i).toAlgHom.toLinearMap
-    rw [← compatibility (Stage := Stage) (sys := sys) cocone hij]
-    rfl⟩
+    rw [← cocone.ι_comm hij]
+    rfl
 
 /-- A state on a star-algebraic colimit cocone restricts to a compatible
 inverse family of finite-stage states. -/
@@ -379,17 +369,16 @@ def restrictStateFamily
     (ω : State Ainf) :
     CompatibleStateFamily Stage sys where
   state := fun i =>
-    ω.restrict (leg (Stage := Stage) (sys := sys) cocone i)
+    ω.restrict (cocone.ι i)
   compatible := by
     intro i j hij
     rw [State.restrict_comp]
-    rw [compatibility (Stage := Stage) (sys := sys) cocone hij]
+    rw [cocone.ι_comm hij]
 
 theorem state_readout_continuousLinearMap
     (ω : State Ainf) (i : I) :
     ω.toContinuousLinearMap.comp
-        (starAlgHomToContinuousLinearMap
-          (leg (Stage := Stage) (sys := sys) cocone i)) =
+        (starAlgHomToContinuousLinearMap (cocone.ι i)) =
       ((restrictStateFamily (Stage := Stage) (sys := sys) cocone ω).state i).toContinuousLinearMap := by
   ext a
   rfl
@@ -398,15 +387,12 @@ theorem state_readout_continuousLinearMap
 def ιTopCatHom (i : I) :
     TopCat.of (Stage i) ⟶ TopCat.of Ainf :=
   TopCat.ofHom
-    { toFun := starAlgHomToContinuousLinearMap
-        (leg (Stage := Stage) (sys := sys) cocone i)
+    { toFun := starAlgHomToContinuousLinearMap (cocone.ι i)
       continuous_toFun :=
-        (starAlgHomToContinuousLinearMap
-          (leg (Stage := Stage) (sys := sys) cocone i)).continuous }
+        (starAlgHomToContinuousLinearMap (cocone.ι i)).continuous }
 
 @[simp] theorem ιTopCatHom_apply (i : I) (a : Stage i) :
-    ιTopCatHom (Stage := Stage) (sys := sys) cocone i a =
-      leg (Stage := Stage) (sys := sys) cocone i a :=
+    ιTopCatHom (Stage := Stage) (sys := sys) cocone i a = cocone.ι i a :=
   rfl
 
 /-- The readout of a colimit state is independent of the chosen later-stage
@@ -416,11 +402,11 @@ theorem state_readout_transition
     {i j : I} (hij : i ≤ j)
     (a : Stage i) :
     ω.functional
-        (leg (Stage := Stage) (sys := sys) cocone j (sys.map hij a)) =
-      ω.functional (leg (Stage := Stage) (sys := sys) cocone i a) := by
+        (cocone.ι j (sys.map hij a)) =
+      ω.functional (cocone.ι i a) := by
   have h := congrArg
     (fun f : Stage i →⋆ₐ[ℂ] Ainf => f a)
-    (compatibility (Stage := Stage) (sys := sys) cocone hij)
+    (cocone.ι_comm hij)
   simpa using congrArg ω.functional h
 
 end StarInductiveCocone

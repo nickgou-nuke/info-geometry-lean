@@ -15,9 +15,6 @@ abbrev Der := InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations
 
 open InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge
 
-local instance paperZornAdd : Add PaperZorn :=
-  InfoGeometry.Algebra.ZornMatrix.instAddCommGroup.toAdd
-
 @[simp] theorem paperCanonicalLinearEquiv_zero :
     paperCanonicalLinearEquiv (0 : PaperZorn) = (0 : CanonicalZorn) := by
   apply InfoGeometry.Canonical.ZornMatrix.ext

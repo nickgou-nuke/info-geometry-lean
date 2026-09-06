@@ -16,7 +16,14 @@ theorem capstone_cantor_cylinder_chiral_synthesis
     (C.S_L_star * C.S_L = 1 ∧ C.S_R_star * C.S_R = 1 ∧ C.S_L_star * C.S_R = 0) ∧
     (chiralKMSWeight ChiralArrow.L n ≠ chiralKMSWeight ChiralArrow.R n) ∧
     (chiralRapidity N_L N_R = 0) ∧
-    (σ = 1 / 2) :=
-  grand_cantor_cylinder_chiral_synthesis a past future n w C N_L N_R h_bal σ h_crit
+    (σ = 1 / 2) := by
+  exact ⟨chirality_conj a,
+    pastCone_BiInfinitePathMk past future n,
+    futureCone_BiInfinitePathMk past future n,
+    chiralBranch_truncate_prefix a w,
+    ⟨C.isometry_L, C.isometry_R, C.orthogonal_LR⟩,
+    chiralKMS_asymmetry n,
+    chiral_rapidity_balance N_L N_R h_bal,
+    critical_line_from_chiral_balance σ h_crit⟩
 
 end InfoGeometry.Canonical.CantorCylinderChiralCapstone

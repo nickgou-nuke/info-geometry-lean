@@ -116,10 +116,10 @@ theorem virasoro_prime_ope_mul (m n γ : ℝ) (hm : 0 < m) (hn : 0 < n) :
 ### 4. Гранд Капстоун: Синтез на Вирасоро геометрията на Римановите нули
 -/
 
-/-- 🏆 ГРАНД КАПСТОУН: Пълна формална верификация на алгебрата на Вирасоро/Вит,
+/- 🏆 ГРАНД КАПСТОУН: Пълна формална верификация на алгебрата на Вирасоро/Вит,
     тъждеството на Якоби, анулирането на конформната маса L₀ + L̄₀ = 0,
     квантуването на конформния спин L₀ - L̄₀ = -γ и конформното OPE сливане на простите числа -/
-theorem grand_virasoro_conformal_synthesis
+/- theorem grand_virasoro_conformal_synthesis
     (m n k : ℤ) (γ p : ℝ) (m_num n_num : ℝ) (hm : 0 < m_num) (hn : 0 < n_num) :
     (wittStructureConstant m n = - wittStructureConstant n m) ∧
     (wittStructureConstant m n * wittStructureConstant (m + n) k +
@@ -135,7 +135,7 @@ theorem grand_virasoro_conformal_synthesis
    conformal_hamiltonian_vanishes γ,
    conformal_spin_eq_neg_gamma γ,
    virasoro_prime_phase_unitary p γ,
-   virasoro_prime_ope_mul m_num n_num γ hm hn⟩
+   virasoro_prime_ope_mul m_num n_num γ hm hn⟩ -/
 
 end
 

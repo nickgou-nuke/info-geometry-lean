@@ -1,7 +1,5 @@
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 
-set_option linter.unusedSectionVars false
-
 namespace ConnesChern
 
 open InfoGeometry.Canonical.ConnesKMSIndexPairing
@@ -17,7 +15,7 @@ namespace IdempotentProjection
 
 variable (proj : IdempotentProjection (n := n) (R := R))
 
-abbrev e : Matrix n n R := proj.1
+def e : Matrix n n R := proj.1
 
 theorem idem : e proj * e proj = e proj := by
   simpa only [e, IsIdempotentElem] using proj.2

@@ -21,9 +21,7 @@ universe u
 variable {I : Type u} [Preorder I]
 variable {Stage : I → Type u}
 variable [∀ i, CStarAlgebra (Stage i)]
-variable [∀ i, PartialOrder (Stage i)]
-variable [∀ i, StarOrderedRing (Stage i)]
-variable {Ainf : Type u} [CStarAlgebra Ainf] [PartialOrder Ainf] [StarOrderedRing Ainf]
+variable {Ainf : Type u} [CStarAlgebra Ainf]
 
 def transitionTopCatHom
     (sys : ContinuousStarInductiveSystem Stage)
@@ -86,6 +84,6 @@ theorem transitionTopCatHom_comp_cocone_ιTopCatHom
   intro a
   rw [TopCat.comp_app]
   exact congrArg (fun f : Stage i →⋆ₐ[ℂ] Ainf => f a)
-    (ContinuousStarInductiveSystem.StarInductiveCocone.compatibility (Stage := Stage) (sys := sys) cocone hij)
+    (cocone.ι_comm hij)
 
 end CStarStateColimit.Native.ContinuousStarInductiveSystem

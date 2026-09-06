@@ -10,12 +10,11 @@ doubled carrier H₂ equipped with the Hestenes phase axis K = Jε.
 
 The file is intentionally conservative:
 * finite logarithmic potentials are stated only away from singular divisors;
-* exact horizon/divisor identification is a proof field of the property;
+* exact horizon/divisor identification is a proof field of the witness;
 * no theorem tries to infer an exact zero from an informal divergence argument.
 -/
 
 import Mathlib.Tactic
-import InfoGeometry.Arithmetic.ZetaPotentialSign
 import InfoGeometry.Exceptional.SplitJordanPotential
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.TomitaTakesaki
@@ -102,16 +101,16 @@ def ArithmeticBarrierDivergesAt
     (nhdsWithin s₀ {s | s ≠ s₀})
     atTop
 
-/-! ### 4. Unified Jordan/L-function horizon property -/
+/-! ### 4. Unified Jordan/L-function horizon witness -/
 
 /--
-The unified horizon property in the real-doubled language.
+The unified horizon witness in the real-doubled language.
 
 `potentialEquivalence` is stated on the NonzeroNormPoint locus.
 The correspondence is between the Jordan rank-collapse and the 
 L-function vanishing on the real carrier.
 -/
-structure UnifiedHorizonData
+structure UnifiedHorizonWitness
     (J : Type*) [AddCommGroup J] [Module ℝ J]
     (D : CubicJordanNormDatum J)
     (G : Type*) [Monoid G]
@@ -151,7 +150,7 @@ structure UnifiedHorizonData
       D.norm X = 0 →
         ArithmeticBarrierDivergesAt L (spectralMap X)
 
-namespace UnifiedHorizonData
+namespace UnifiedHorizonWitness
 
 variable
     {J : Type*} [AddCommGroup J] [Module ℝ J]
@@ -163,7 +162,7 @@ variable
 A Jordan rank-deficiency horizon maps to an arithmetic L-divisor.
 -/
 theorem geometric_horizon_is_arithmetic_horizon
-    (W : UnifiedHorizonData J D G L)
+    (W : UnifiedHorizonWitness J D G L)
     (X : J)
     (hRankDeficient : D.norm X = 0) :
     IsArithmeticHorizon L (W.spectralMap X) :=
@@ -174,7 +173,7 @@ An arithmetic L-divisor in the spectral image pulls back to a Jordan
 rank-deficiency horizon.
 -/
 theorem arithmetic_horizon_is_geometric_horizon
-    (W : UnifiedHorizonData J D G L)
+    (W : UnifiedHorizonWitness J D G L)
     (X : J)
     (hArithmetic : IsArithmeticHorizon L (W.spectralMap X)) :
     D.norm X = 0 :=
@@ -184,7 +183,7 @@ theorem arithmetic_horizon_is_geometric_horizon
 The exact equivalence between the Jordan divisor and the arithmetic divisor.
 -/
 theorem geometric_horizon_iff_arithmetic_horizon
-    (W : UnifiedHorizonData J D G L)
+    (W : UnifiedHorizonWitness J D G L)
     (X : J) :
     D.norm X = 0 ↔ IsArithmeticHorizon L (W.spectralMap X) :=
   W.horizonIff X
@@ -193,12 +192,12 @@ theorem geometric_horizon_iff_arithmetic_horizon
 At a geometric horizon, the arithmetic logarithmic barrier diverges.
 -/
 theorem arithmetic_barrier_diverges_at_geometric_horizon
-    (W : UnifiedHorizonData J D G L)
+    (W : UnifiedHorizonWitness J D G L)
     (X : J)
     (hRankDeficient : D.norm X = 0) :
     ArithmeticBarrierDivergesAt L (W.spectralMap X) :=
   W.arithmeticBarrierDivergesOnHorizon X hRankDeficient
 
-end UnifiedHorizonData
+end UnifiedHorizonWitness
 
 end InfoGeometry.Arithmetic.LFunction

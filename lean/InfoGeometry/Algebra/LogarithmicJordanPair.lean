@@ -5,7 +5,7 @@ import Mathlib.Tactic.Module
 /-!
 # Finite logarithmic Jordan pairs
 
-This file isolates the finite-dimensional algebraic property underlying a
+This file isolates the finite-dimensional algebraic certificate underlying a
 rank-two logarithmic sector.  It makes no scaling-limit or LCFT claim.
 
 For an endomorphism `H`, eigenvalue `E`, eigenvector `v`, and generalized

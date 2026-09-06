@@ -134,26 +134,8 @@ theorem prime_defect_commutation (p q γ : ℝ) :
     primeDefectLineAction q γ * primeDefectLineAction p γ = 0 := by
   ring
 
-/-!
-### 3. Гранд Капстоун: Синтез на Верлинде Дефектното Сливане
--/
-
-/-- 🏆 ГРАНД КАПСТОУН: Пълна формална верификация на Верлинде категорията на дефектите:
-    ортогонална S-матрица S Sᵀ = I₂, пълен квантов обем D² = 2, унитарност на дефектните линии |L_p| = 1,
-    точен аритметичен фюжън L_p * L_q = L_{p*q} и взаимна комутация [L_p, L_q] = 0 -/
-theorem grand_verlinde_defect_fusion_synthesis
-    (p q γ : ℝ) (hp : 0 < p) (hq : 0 < q) :
-    (verlindeSMatrix2 * verlindeSMatrix2.transpose = 1) ∧
-    (totalQuantumDimensionSq = 2) ∧
-    (‖primeDefectLineAction p γ‖ = 1) ∧
-    (primeDefectFusion p q γ = primeDefectLineAction (p * q) γ) ∧
-    (primeDefectLineAction p γ * primeDefectLineAction q γ -
-     primeDefectLineAction q γ * primeDefectLineAction p γ = 0) :=
-  ⟨verlinde_S_matrix_unitary,
-   total_quantum_dimension_eval,
-   prime_defect_line_unitary p γ,
-   prime_defect_fusion_match p q γ hp hq,
-   prime_defect_commutation p q γ⟩
+/-! The reusable boundary is given by the individual finite identities above;
+    the former aggregate synthesis theorem is intentionally omitted. -/
 
 end
 

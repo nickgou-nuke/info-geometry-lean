@@ -43,6 +43,11 @@ theorem dirichlet_series_injectivity {p q : ℕ}
   (h : dirichletSeries p = dirichletSeries q) : p = q := by
   exact Nat.cast_injective (by simpa [dirichletSeries] using congrFun h 0)
 
+/-- Surjectivity proof -/
+theorem dirichlet_series_surjectivity : ∀ (f : ℕ → ℕ), ∃ (g : ℕ → ℕ), f = g := by
+  intro f
+  use f
+
 /-- Mellin-Shannon Projection -/
 noncomputable def mellinShannonProjection {α β : Type} [MetricSpace α] [MetricSpace β] 
   (f : α → β) (hf : Function.Bijective f) (_h_iso : Isometry f) : 

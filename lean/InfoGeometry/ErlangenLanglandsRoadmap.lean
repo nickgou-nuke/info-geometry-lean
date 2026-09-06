@@ -43,7 +43,7 @@ def erlangenLanglandsRoadmap : List RoadmapEdge := [
   { src := "InfoGeometry.Automorphic.ProjectedLFunction",
     dst := "InfoGeometry.Automorphic.LanglandsSugawaraBridge",
     theorem_name := "euler_product_holds / completed_functional_equation_holds",
-    requires := ["projected-euler property", "completed functional-equation property"] },
+    requires := ["projected-euler witness", "completed functional-equation witness"] },
 
   { src := "InfoGeometry.Automorphic.LanglandsSugawaraBridge",
     dst := "InfoGeometry.Automorphic.LanglandsPrimeResonance",
@@ -51,26 +51,26 @@ def erlangenLanglandsRoadmap : List RoadmapEdge := [
     requires := ["central-readout bridge", "spectral zero calibration"] },
 
   { src := "InfoGeometry.Automorphic.LanglandsPrimeResonance",
-    dst := "InfoGeometry.OperatorAlgebra.KapustinWittenDuality",
+    dst := "InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket",
     theorem_name := "bulk_central_zero_iff_prime_resonance",
     requires := ["bulk Siegel data", "central-zero stability"] },
 
-  { src := "InfoGeometry.OperatorAlgebra.KapustinWittenDuality",
+  { src := "InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket",
     dst := "InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy",
     theorem_name := "wilsonEigen_transports_to_tHooftEigen",
-    requires := ["S-duality property", "operator readout compatibility"] },
+    requires := ["S-duality witness", "operator readout compatibility"] },
 
   { src := "InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy",
     dst := "InfoGeometry.Canonical.KleinBottleOrientifold",
     theorem_name := "KMS/holonomy recovery payload",
-    requires := ["dual-holonomy recovery", "memory-kernel property"] }
+    requires := ["dual-holonomy recovery", "memory-kernel witness"] }
 ]
 
 /-!
 Execution protocol:
 
 1) Validate each source module's owner target.
-2) Supply required property instances at each W-edge.
+2) Supply required witness instances at each W-edge.
 3) Instantiate only S-edges in first pass; postpone W-edges until compatibility data are
    explicitly available.
 -/

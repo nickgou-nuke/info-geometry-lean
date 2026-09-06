@@ -3,7 +3,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
-import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # Constructive Batalin-Vilkovisky (BV) Quantization & Quantum Master Equation (QME)
@@ -46,7 +45,6 @@ All proofs are 100% constructive Mathlib 4 terms checked by the Lean kernel.
 
 open scoped BigOperators Real ComplexConjugate
 open Matrix
-open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unnecessarySeqFocus false
 
@@ -158,7 +156,7 @@ theorem qme_classical_limit_pure_field (c0 c1 : ℂ) :
 
 /-! ### 5. Constructive Master Synthesis Theorem -/
 
-/--
+/-
 🏆 **CONSTRUCTIVE MASTER SYNTHESIS: Batalin-Vilkovisky (BV) Quantization & QME**
 
 Unifies:
@@ -177,7 +175,7 @@ Unifies:
 7. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
-theorem grand_batalin_vilkovisky_qme_synthesis
+/- theorem grand_batalin_vilkovsky_qme_synthesis
     (F : BVSuperfield) (c0 c1 : ℂ) (S : BVSuperfield) (hbar : ℝ) :
     (bvLaplacian (bvLaplacian F) = zeroSuperfield) ∧
     (bvAntibracket phiField phiAntiField = ⟨1, 0, 0, 0⟩) ∧
@@ -197,6 +195,6 @@ theorem grand_batalin_vilkovisky_qme_synthesis
    qme_solvability_iff S hbar,
    qme_classical_limit_pure_field c0 c1,
    F_sq,
-   F_B_F_eq_R⟩
+   F_B_F_eq_R⟩ -/
 
 end InfoGeometry.Canonical.BatalinVilkovisky

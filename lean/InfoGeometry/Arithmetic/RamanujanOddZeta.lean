@@ -16,7 +16,7 @@ Eisenstein/Lambert-series theory.  It fixes the real-valued statement so that:
   singular origin;
 * the reflected `(-β)^{-n}` weight is represented as
   `(-1)^n * β^{-n}`, avoiding real powers of a negative base;
-* the analytic identity is exposed as a proof-carrying interface, so downstream
+* the analytic identity is exposed as a proof-carrying socket, so downstream
   code can use the exact formula without adding placeholders or fake assumptions.
 -/
 
@@ -153,5 +153,46 @@ theorem ramanujanOddZetaRHS_eq (n : ℕ) (α β : ℝ) :
           (Finset.range (n + 2)).sum (fun k => bernoulliAnomalyTerm n α β k) := by
   rfl
 
+/-! ## Proof-carrying analytic socket -/
 
-end RamanujanOddZeta
+/--
+Analytic owner socket for Ramanujan's odd-zeta transformation.
+
+Instantiating this structure requires the actual analytic theorem.  This file
+only supplies the correctly typed target and theorem-safe consequences.
+-/
+def RamanujanOddZetaAnalyticSocket : Prop :=
+  ∀ (n : ℕ) (α β : ℝ),
+    0 < n →
+    0 < α →
+    0 < β →
+    α * β = Real.pi ^ 2 →
+    RamanujanOddZetaFormula n α β
+
+/-- The socket yields the proposition-form Ramanujan identity. -/
+theorem ramanujan_odd_zeta
+    (R : RamanujanOddZetaAnalyticSocket)
+    (n : ℕ) (hn : 0 < n) (α β : ℝ)
+    (hα : 0 < α) (hβ : 0 < β)
+    (hαβ : α * β = Real.pi ^ 2) :
+    RamanujanOddZetaFormula n α β :=
+  R n α β hn hα hβ hαβ
+
+/--
+Expanded theorem form: the analytic socket gives the exact corrected formula
+with positive-natural Lambert sums and sign-factored beta weight.
+-/
+theorem ramanujan_odd_zeta_expanded
+    (R : RamanujanOddZetaAnalyticSocket)
+    (n : ℕ) (hn : 0 < n) (α β : ℝ)
+    (hα : 0 < α) (hβ : 0 < β)
+    (hαβ : α * β = Real.pi ^ 2) :
+    α ^ (-(n : ℝ)) *
+        ((1 / 2 : ℝ) * oddZetaValue n + ∑' k : ℕ+, lambertTerm n α k) =
+      ((-1 : ℝ) ^ n * β ^ (-(n : ℝ))) *
+          ((1 / 2 : ℝ) * oddZetaValue n + ∑' k : ℕ+, lambertTerm n β k) -
+        (2 : ℝ) ^ (2 * n) *
+          (Finset.range (n + 2)).sum (fun k => bernoulliAnomalyTerm n α β k) := by
+  exact R n α β hn hα hβ hαβ
+
+end InfoGeometry.Arithmetic.RamanujanOddZeta

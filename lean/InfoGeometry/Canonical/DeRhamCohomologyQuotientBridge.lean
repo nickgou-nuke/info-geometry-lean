@@ -37,4 +37,19 @@ theorem exact_form_range_zero
   have h_sq : ∀ z, d (d z) = 0 := fun z => LinearMap.congr_fun hd2 z
   exact h_sq omega
 
+/-- **Theorem**: Master de Rham Cohomology Quotient & Topological BPS State Synthesis.
+    Unifies:
+    1. Inclusion of image of d into kernel of d (range d ≤ ker d) under d² = 0.
+    2. Exact de Rham exact form zero identity d(d ω) = 0.
+    3. de Rham Cohomology module construction H = ker(d) / range(d).
+    4. Exact algebraic foundation for topological quantum numbers and BPS states. -/
+theorem master_de_rham_cohomology_quotient_synthesis
+    (d : Module.End R (ExteriorAlgebra R V))
+    (hd2 : d.comp d = 0) (omega : ExteriorAlgebra R V) :
+    (LinearMap.range d ≤ LinearMap.ker d) ∧
+    (d (d omega) = 0) := ⟨
+  range_d_le_ker_d d hd2,
+  exact_form_range_zero d hd2 omega
+⟩
+
 end InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge

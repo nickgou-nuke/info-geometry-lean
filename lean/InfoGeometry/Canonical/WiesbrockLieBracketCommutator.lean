@@ -8,7 +8,6 @@ import Mathlib.Tactic.Abel
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
 set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
 
 noncomputable section
 
@@ -55,38 +54,6 @@ theorem wiesbrock_lie_bracket_commutator (sc : ModularSupercharges n)
     abel
   rw [h_expand, h_hsmi]
   rw [neg_smul, neg_neg, smul_comm]
-
-/-! ### Constructive 2×2 Matrix Model of Wiesbrock Half-Sided Modular Inclusion -/
-
-/-- Exterior modular Hamiltonian: $K_M = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. -/
-def standardKM : Matrix (Fin 2) (Fin 2) ℂ :=
-  !![1, 0;
-     0, 0]
-
-/-- Interior shifted modular Hamiltonian: $K_N = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix}$. -/
-def standardKN : Matrix (Fin 2) (Fin 2) ℂ :=
-  !![1, 1;
-     0, 0]
-
-/-- Lightlike translation generator: $P = K_M - K_N = \begin{pmatrix} 0 & -1 \\ 0 & 0 \end{pmatrix}$. -/
-def standardPTranslation : Matrix (Fin 2) (Fin 2) ℂ :=
-  standardKM - standardKN
-
-/-- 🏆 THEOREM 1 (Constructive HSMI Commutator Identity):
-    $[K_M, K_N] = -(K_M - K_N)$. -/
-theorem standard_hsmi_bracket_exact :
-    bracket standardKM standardKN = - (standardKM - standardKN) := by
-  dsimp [bracket, standardKM, standardKN]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- 🏆 THEOREM 2 (Constructive Wiesbrock Boost-Translation Commutator):
-    $[K_M, P] = P$. -/
-theorem standard_wiesbrock_bracket_exact :
-    bracket standardKM standardPTranslation = standardPTranslation := by
-  dsimp [bracket, standardKM, standardPTranslation, standardKN]
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 end SuperWiesbrock
 

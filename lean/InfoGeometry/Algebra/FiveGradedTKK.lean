@@ -2,9 +2,9 @@ import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic
 
 /-!
-# Five-graded split-weight interface
+# Five-graded split-weight socket
 
-This module records a finite algebraic interface for the split-idempotent
+This module records a finite algebraic socket for the split-idempotent
 `E`/`Ebar` weight decomposition used to refine coarse
 `zero/null/generic` strata.
 

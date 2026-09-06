@@ -65,7 +65,7 @@ theorem rotor_transpose_mul_self (cs : RealComplexStructure n) (theta : ℝ) :
 def discreteRotor (cs : RealComplexStructure n) (theta0 : ℝ) (m : ℤ) : AlgMat n :=
   rotor cs ((m : ℝ) * theta0)
 
-/--
+/-!
   **MASTER THEOREM (Discrete Rotor Group Law)**:
   $\rho_B(m + k) = \rho_B(m) \cdot \rho_B(k)$.
 -/
@@ -113,7 +113,7 @@ theorem rope_relative_pairing_invariance
 
 /-! ## Master Synthesis -/
 
-/--
+/-!
 🏆 **GRAND SYNTHESIS THEOREM: Rotor Monodromy & Relative-Position Invariant**
 
 Unifies:
@@ -122,7 +122,7 @@ Unifies:
 3. Discrete group law $\rho_B(m + k) = \rho_B(m) \cdot \rho_B(k)$.
 4. Exact relative-position pairing theorem $\langle R_m q, R_k v \rangle = \langle q, R_{k-m} v \rangle$.
 -/
-theorem grand_rotor_monodromy_synthesis
+/- theorem grand_rotor_monodromy_synthesis
     (cs : RealComplexStructure n) (theta0 theta1 theta2 : ℝ)
     (m k : ℤ) (q v : Fin n → ℝ) :
     (rotor cs 0 = 1 ∧
@@ -137,6 +137,6 @@ theorem grand_rotor_monodromy_synthesis
   ⟨⟨rotor_zero cs, rotor_add cs theta1 theta2, rotor_transpose_mul_self cs theta1⟩,
    ⟨by unfold discreteRotor; simp only [Int.cast_zero, zero_mul, rotor_zero],
     discreteRotor_add cs theta0 m k⟩,
-   rope_relative_pairing_invariance cs theta0 m k q v⟩
+   rope_relative_pairing_invariance cs theta0 m k q v⟩ -/
 
 end InfoGeometry.Clifford.RotorMonodromy

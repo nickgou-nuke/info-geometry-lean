@@ -29,14 +29,11 @@ This module formalizes in native Lean 4 / Mathlib:
 namespace InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 
 /-- Microstate space with a statewise microcanonical cell partition. -/
-abbrev MicrostateCellPartition (X : Type*) :=
-  X → {n : ℕ // 1 ≤ n}
+structure MicrostateCellPartition (X : Type*) where
+  /-- Positive statewise phase-volume / multiplicity. -/
+  multiplicity : X → {n : ℕ // 1 ≤ n}
 
 namespace MicrostateCellPartition
-
-abbrev multiplicity {X : Type*} (P : MicrostateCellPartition X) :
-    X → {n : ℕ // 1 ≤ n} :=
-  P
 
 /-- Historical phase-volume selector, derived from positive multiplicity. -/
 def phaseVolume {X : Type*} (P : MicrostateCellPartition X) (x : X) : ℕ :=

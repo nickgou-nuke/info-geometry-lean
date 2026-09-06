@@ -1,7 +1,5 @@
 -- Tomita-Takesaki Theory and Projective Relative Entropy
 
-namespace TomitaTakesakiRelativeEntropy
-
 class VonNeumannAlgebra (M : Type) where
   commutant : Type
 
@@ -17,12 +15,5 @@ theorem tomita_takesaki_holds (M : Type) [VonNeumannAlgebra M] [ModularData M] :
     TomitaTakesakiTheorem M := by
   exact ModularData.is_conjugation
 
-abbrev ProjectiveState (H : Type) := H
-
-namespace ProjectiveState
-
-abbrev ray {H : Type} (x : ProjectiveState H) : H := x
-
-end ProjectiveState
-
-end TomitaTakesakiRelativeEntropy
+structure ProjectiveState (H : Type) where
+  ray : H

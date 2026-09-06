@@ -95,20 +95,8 @@ theorem critical_line_from_transfer_fixed_point (σ : ℝ) (h_casimir : σ - 1 /
     σ = 1 / 2 := by
   linarith
 
-/-- 🏆 GRAND CAPSTONE: Complete Cantor Transfer Operator Synthesis -/
-theorem grand_cantor_transfer_synthesis {n : ℕ} (f g : CylinderFunction (n + 1))
-    (c : ℝ) (x : Fin n → Bool) (σ : ℝ) (h_casimir : σ - 1 / 2 = 0) :
-    (transferOperator (1 / 2) (1 / 2) (fun w => f w + g w) x =
-      transferOperator (1 / 2) (1 / 2) f x + transferOperator (1 / 2) (1 / 2) g x) ∧
-    (transferOperator (1 / 2) (1 / 2) (fun w => c * f w) x =
-      c * transferOperator (1 / 2) (1 / 2) f x) ∧
-    (transferOperator (1 / 2) (1 / 2) (fun _ => 1) x = 1) ∧
-    (σ = 1 / 2) :=
-  ⟨transferOperator_add (1 / 2) (1 / 2) f g x,
-   transferOperator_smul (1 / 2) (1 / 2) c f x,
-   transferOperator_uniform_preserves_one x,
-   critical_line_from_transfer_fixed_point σ h_casimir⟩
-
+/- The final scalar implication assumes `σ - 1 / 2 = 0`; it does not
+   derive that equality from the transfer operator. -/
 end
 
 end InfoGeometry.Quantum.CantorTransferOperator

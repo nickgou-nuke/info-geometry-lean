@@ -47,7 +47,8 @@ theorem representation_fock_packet
       InfoGeometry.Canonical.SplitOctonionCl55ExteriorRestrictionBridge.exterior3ToCl55Carrier
           (ExteriorAlgebra.ι ℝ
             (InfoGeometry.Canonical.SplitOctonionCl55ExteriorRestrictionBridge.basisVector3 i)) ∈
-        InfoGeometry.Physics.ColorCARStandardModel.fureyConjugateGeneration) ∧
+        (InfoGeometry.Physics.ColorCARStandardModel.fureyConjugateGeneration :
+          Submodule ℝ InfoGeometry.Clifford.Clifford55.Cl55)) ∧
     (∀ w : InfoGeometry.Physics.FureyCharges.Occupation3,
       InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = 0 ∨
       InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = (1 / 3 : ℚ) ∨
@@ -55,7 +56,7 @@ theorem representation_fock_packet
       InfoGeometry.Physics.FureyCharges.fureyOccupationCharge w = 1) := by
   exact ⟨gellMann_color_spinor_commutator ψ,
     InfoGeometry.Canonical.SplitOctonionCl55ExteriorRestrictionBridge.exterior3ToCl55Carrier_injective,
-    exterior_basis_generator_mem_fureyConjugateGeneration,
+    InfoGeometry.Physics.QCDExteriorFureyBridge.exterior_basis_generator_mem_fureyConjugateGeneration,
     InfoGeometry.Physics.FureyCharges.fureyOccupationCharge_spectrum⟩
 
 /-- Schur/Artin/twelvefold/anyon capstone on independent carriers.  The theorem

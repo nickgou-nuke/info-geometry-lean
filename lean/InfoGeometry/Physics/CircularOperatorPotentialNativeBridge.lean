@@ -1,14 +1,6 @@
 import InfoGeometry.Physics.CircularChiralFockOperatorZornBridge
 import InfoGeometry.Physics.CircularChiralBivectorRotorBridge
 
-/-!
-# Native circular operator potential
-
-The `1 + 3 + 3 + 1` potential is packaged by the existing chiral packet and
-its associative operator-Zorn shell.  The phase symbol is represented by the
-native real bivector matrix, not by an external complex scalar.
--/
-
 namespace InfoGeometry.Physics.CircularOperatorPotentialNativeBridge
 
 open InfoGeometry.Physics

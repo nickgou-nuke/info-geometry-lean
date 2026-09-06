@@ -5,7 +5,7 @@ import Mathlib.Tactic
 
 Finite Souriau beta-field seed for the modular/thermodynamic corridor.
 
-This file is intentionally local and property-driven:
+This file is intentionally local and witness-driven:
 
 * no global AQFT theorem is asserted,
 * no Type III modular completion is asserted,
@@ -34,7 +34,7 @@ theorem killForm_self (S : SouriauVectorField) (x v : ℝ)
 
 /--
 Unruh-profile readout at the horizon in the finite scalar seed:
-if `z = 1 / a` and the beta norm property is `|β(z)| = 2π/a`,
+if `z = 1 / a` and the beta norm witness is `|β(z)| = 2π/a`,
 then `T(z) = a / (2π)`.
 -/
 theorem unruh_profile_at_horizon

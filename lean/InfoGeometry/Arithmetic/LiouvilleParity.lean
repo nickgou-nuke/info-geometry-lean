@@ -41,6 +41,14 @@ theorem liouville_eq_neg_one_of_odd_totalPrimeFactors {n : ℕ+}
     show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow, one_mul]
 
 /--
+**Corollary: λ(n) is always ±1.** This is already known from
+`liouville_sq` (λ(n)² = 1), but here we prove it constructively
+from the parity of Ω(n).
+-/
+theorem liouville_is_neg_one_pow (n : ℕ+) :
+    liouville n = (-1 : ℤ) ^ (totalPrimeFactors n) := rfl
+
+/--
 **λ(1) = 1** because Ω(1) = 0 which is even.
 -/
 example : liouville 1 = 1 := liouville_one

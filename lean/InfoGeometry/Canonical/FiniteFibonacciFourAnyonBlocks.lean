@@ -159,7 +159,7 @@ theorem fourAnyonGeneratorAction_last_channel (q : Units ℂ)
 
 /--
 Finite `B₄` adjacent Artin relation for `b₁ b₂ b₁ = b₂ b₁ b₂`, under the
-explicit pointwise property for the supplied middle action.
+explicit pointwise hypothesis for the supplied middle action.
 -/
 theorem fourAnyon_first_middle_first_rewrite (q : Units ℂ)
     (middle : PhasedFourAnyonBlock → PhasedFourAnyonBlock)
@@ -173,7 +173,7 @@ theorem fourAnyon_first_middle_first_rewrite (q : Units ℂ)
 
 /--
 Finite `B₄` adjacent Artin relation for `b₂ b₃ b₂ = b₃ b₂ b₃`, under the
-explicit pointwise property for the supplied middle action.
+explicit pointwise hypothesis for the supplied middle action.
 -/
 theorem fourAnyon_middle_last_middle_rewrite (q : Units ℂ)
     (middle : PhasedFourAnyonBlock → PhasedFourAnyonBlock)

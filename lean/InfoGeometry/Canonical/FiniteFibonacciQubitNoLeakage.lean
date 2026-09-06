@@ -88,7 +88,7 @@ noncomputable instance : DecidableEq TwoQubitSixAnyonLabel := by
 
 namespace TwoQubitSixAnyonLabel
 
-/-- Predicate selecting the four computational labels, with an explicit bit-vector property. -/
+/-- Predicate selecting the four computational labels, with an explicit bit-vector witness. -/
 def IsComputational (x : TwoQubitSixAnyonLabel) : Prop :=
   ∃ α : ComputationalVector 2, x = computational α
 

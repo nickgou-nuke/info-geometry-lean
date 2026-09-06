@@ -23,8 +23,3 @@ theorem hecke_prime_shift_commute (p : ℕ) (f : ℕ → ℂ) (n : ℕ) :
     primeShiftOperator p (heckeOperator p f) n := by
   unfold heckeOperator primeShiftOperator
   rfl
-
-theorem grand_hecke_fermion_commutation_synthesis (p : ℕ) (f : ℕ → ℂ) (n : ℕ) :
-    heckeOperator p (primeShiftOperator p f) n =
-    primeShiftOperator p (heckeOperator p f) n :=
-  hecke_prime_shift_commute p f n

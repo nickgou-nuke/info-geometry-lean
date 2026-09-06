@@ -20,8 +20,13 @@ import InfoGeometry.Physics.NuclearSpectroscopyZ2GradingBridge
 import InfoGeometry.Physics.NuclearQuantumNumberPacket
 import InfoGeometry.Physics.NuclearRPAQuantumNumberSeparation
 import InfoGeometry.Physics.NuclearCl55CartanParityDictionary
+import InfoGeometry.Physics.NuclearCl55NativeSoldering
+import InfoGeometry.Physics.NuclearCl55FiveGrade
 import InfoGeometry.Physics.NuclearWignerDensityProjectorBridge
 import InfoGeometry.Physics.NuclearCartanGradeNormalizationBridge
+import InfoGeometry.Physics.NuclearExceptionalArtinGaloisBridge
+import InfoGeometry.Physics.NuclearBdGTwoLevelExact
+import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGAll
 
 /-!
 # Nuclear formalization umbrella

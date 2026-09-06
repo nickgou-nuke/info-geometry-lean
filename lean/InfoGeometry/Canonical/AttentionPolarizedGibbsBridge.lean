@@ -25,8 +25,8 @@ variable {n : ℕ}
 /-- Grand-canonical parameters induced by the positive-sheet split score. -/
 noncomputable def polarizedPlusParams
     (q : E) (ctx : ContextWindow n E V) :
-    GrandCanonicalParams (Fin n) :=
-  fun i => -polarizedPlusScore (E := E) q (ctx.keys i)
+    GrandCanonicalParams (Fin n) where
+  energy := fun i => -polarizedPlusScore (E := E) q (ctx.keys i)
 
 -- theorem-class: bridge
 /-- The polarized grand-canonical energy is the negative positive-sheet split score. -/
@@ -43,7 +43,7 @@ theorem polarizedPlusParams_energy_eq_neg_dot_plus_half_norms
       = -(inner ℝ q (ctx.keys i)
           - (1 / 2 : ℝ) * inner ℝ q q
           - (1 / 2 : ℝ) * inner ℝ (ctx.keys i) (ctx.keys i)) := by
-  simp [polarizedPlusScore_eq_dot_minus_half_norms]
+  simp [polarizedPlusParams, polarizedPlusScore_eq_dot_minus_half_norms]
 
 -- theorem-class: bridge
 /-- Positive-sheet split attention is the softmax of its induced split score logits. -/

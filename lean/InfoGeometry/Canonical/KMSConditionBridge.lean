@@ -9,11 +9,11 @@ noncomputable section
 # KMS Condition Bridge
 
 This file connects the bounded Souriau/Drazin modular-flow calibration to the
-repository's KMS readout data.
+repository's KMS readout socket.
 
 It does not prove analytic strip continuation from bounded algebra alone.  The
 KMS boundary law, state invariance, and support-stability preservation are
-explicit property fields.
+explicit witness fields.
 -/
 
 namespace InfoGeometry.Canonical.KMSConditionBridge
@@ -25,7 +25,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -36,7 +35,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-KMS data for a bounded Souriau/Drazin modular flow.
+KMS socket for a bounded Souriau/Drazin modular flow.
 
 `bounded.flow : ℝ → EndH` is the already-calibrated bounded generator flow.
 `kmsFlow : ℝ → EndH → EndH` is the observable action used for KMS readouts,
@@ -83,7 +82,7 @@ structure BoundedKMSConditionBridge where
   /--
   Preservation of the Drazin regular-support commutation lane.
 
-  This is property data: it does not follow from `flow_eq_exp_Ksur` unless the
+  This is witness data: it does not follow from `flow_eq_exp_Ksur` unless the
   observable action is also known to preserve the commutant of the support
   projector.
   -/
@@ -113,7 +112,8 @@ variable (K : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))
 def toKMSReadoutDatum : KMSReadoutDatum EndH where
   flow := K.kmsFlow
   state := K.state
-  beta := ⟨K.beta, K.beta_pos⟩
+  beta := K.beta
+  beta_pos := K.beta_pos
   flow_zero := K.kmsFlow_zero
   flow_add := K.kmsFlow_add
   flow_invariant := K.state_invariant

@@ -282,8 +282,9 @@ theorem lUnit_left_mul_left_mul (X : CZ) :
 determinant quadratic form.  This is the concrete para-metric sign law for
 the selected axis. -/
 theorem lUnit_left_det_neg (X : CZ) :
-    ZornMatrix.detZ (zMul lUnit X) = -ZornMatrix.detZ X := by
-  simp [ZornMatrix.detZ, zMul, lUnit,
+    ZornMatrix.detZ realCrossProduct3 (zMul lUnit X) =
+      -ZornMatrix.detZ realCrossProduct3 X := by
+  simp [ZornMatrix.detZ, realCrossProduct3, zMul, lUnit,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     smul_eq_mul]

@@ -6,20 +6,7 @@ import InfoGeometry.Physics.NuclearSolovievParitySymmetry
 import InfoGeometry.Physics.NuclearWignerDensityProjectorBridge
 import InfoGeometry.Physics.NuclearSpectroscopyZ2GradingBridge
 
-/-!
-# Focused nuclear diagnostics
-
-This module is intentionally diagnostic rather than part of `NuclearAll`.
-It provides a compact elaboration, axiom-dependency, and vacuity-lint surface
-for the theorem chain introduced while densifying the nuclear lane.
-
-Run directly with
-
-`lake env lean lean/InfoGeometry/Physics/NuclearDiagnostics.lean`
-
-and profile selected production modules separately with the repository-owned
-`scripts/perf/profile_commands.sh` helper.
--/
+/-! Focused diagnostics for the established nuclear theorem packets. -/
 
 #check InfoGeometry.Physics.NuclearQuasiparticleCAR.QuasiparticleCAR.nuclear_sl2_packet
 #check InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge.finite_cartan_parity_soloviev_packet
@@ -34,10 +21,3 @@ and profile selected production modules separately with the repository-owned
 #print axioms InfoGeometry.Physics.NuclearSolovievParitySymmetry.parity_conj_coupledHamiltonian_native
 #print axioms InfoGeometry.Physics.NuclearWignerDensityProjectorBridge.wigner_density_projector_packet
 #print axioms InfoGeometry.Physics.NuclearSpectroscopyZ2GradingBridge.shared_Z2_odd_operator_packet
-
-#lint_vacuity_decl InfoGeometry.Physics.NuclearQuasiparticleCAR.QuasiparticleCAR.nuclear_sl2_packet
-#lint_vacuity_decl InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge.finite_cartan_parity_soloviev_packet
-#lint_vacuity_decl InfoGeometry.Physics.NuclearParityGradedHamiltonian.conjugate_parameterHamiltonian
-#lint_vacuity_decl InfoGeometry.Physics.NuclearSolovievParitySymmetry.parity_conj_coupledHamiltonian_native
-#lint_vacuity_decl InfoGeometry.Physics.NuclearWignerDensityProjectorBridge.wigner_density_projector_packet
-#lint_vacuity_decl InfoGeometry.Physics.NuclearSpectroscopyZ2GradingBridge.shared_Z2_odd_operator_packet

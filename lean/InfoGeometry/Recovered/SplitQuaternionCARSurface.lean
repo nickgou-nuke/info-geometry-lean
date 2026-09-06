@@ -47,10 +47,9 @@ The concrete matrix realization of the fermionic CAR surface.
 def splitMatrixCARSurface : FermionicCARSurface (Matrix (Fin 2) (Fin 2) ℝ) where
   b := matrix_b
   bdag := matrix_bdag
-
-theorem splitMatrixCARSurface_laws :
-    FermionicCARSurfaceLaws splitMatrixCARSurface := by
-  exact ⟨matrix_b_sq, matrix_bdag_sq, matrix_anticomm⟩
+  b_sq := matrix_b_sq
+  bdag_sq := matrix_bdag_sq
+  anticomm := matrix_anticomm
 
 end
 

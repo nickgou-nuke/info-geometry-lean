@@ -12,7 +12,7 @@ open PrimitiveCuntzCohomology
 open UHFCohomology
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-variable [UHF : CuntzIsometryData A]
+variable [UHF : UHFAlgebra A]
 
 /-- 
 The KMS State Scaling (Dyadic Rationals).

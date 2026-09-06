@@ -1,0 +1,2 @@
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Canonical.VarlamovDiscreteSymmetry

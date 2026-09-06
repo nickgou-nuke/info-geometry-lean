@@ -389,7 +389,7 @@ end RegularConeOperatorialResponseContext
 /--
 Operatorial Cramer-Rao realization of the two-channel response packet.
 
-This replaces the explicit determinant property by identifying the probed
+This replaces the explicit determinant hypothesis by identifying the probed
 Souriau/Onsager responses with the owned comparison-state channel metric.  The
 mixed determinant then follows from the repo-native noncommutative
 Cauchy-Schwarz theorem
@@ -540,7 +540,7 @@ theorem operatorialEntropyProduction_nonneg_of_squareResponse
 /--
 Cramer-Rao operatorial second-law gate.  The two-channel determinant required
 by the quadratic form is derived from the comparison-state channel
-Cauchy-Schwarz theorem, not assumed as a scalar PSD property.
+Cauchy-Schwarz theorem, not assumed as a scalar PSD hypothesis.
 -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_nonneg_of_cramerRaoResponse
@@ -566,8 +566,8 @@ theorem canonicalEntropyProduction_nonneg_of_cramerRaoResponse
   have hDiag : 0 ≤ C.diagonalMetricResponse :=
     CramerRaoOperatorialResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
-  rw [InfoGeometry.Canonical.Operators.entropyProduction_eq_probe_hessian]
-  exact hDiag
+  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
 
 /--
 One-channel operatorial second-law gate from the regular Drazin/Krein cone.
@@ -584,8 +584,8 @@ theorem canonicalEntropyProduction_nonneg_of_regularCone
   have hDiag : 0 ≤ C.diagonalMetricResponse :=
     RegularConeXResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
-  rw [InfoGeometry.Canonical.Operators.entropyProduction_eq_probe_hessian]
-  exact hDiag
+  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
 
 /--
 Supergraded even/odd Onsager block packet on the operatorial carrier.
@@ -627,7 +627,7 @@ One-channel operatorial second-law gate on the doubled Krein carrier.
 For a pure `X` force, the entropy production reduces to the diagonal Hessian
 readout times `xForce^2`.  If that diagonal Hessian is a regular-cone positive
 operator read by a positive probe, nonnegativity is constructive and does not
-require a finite response matrix or a two-channel determinant property.
+require a finite response matrix or a two-channel determinant hypothesis.
 -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_xChannel_nonneg_of_regularCone
@@ -811,8 +811,8 @@ attribute [terminal] operatorialDilationGoldstoneCharge_packet
 Supergraded operatorial Fisher/Onsager block packet on the real doubled carrier.
 
 The two response channels `X` and `Y` are the abstract even/odd block labels of
-the operatorial Hessian.  Positivity is not assumed as a bare PSD property:
-it is constructed from a square-response property.  Fermionic/odd closure is
+the operatorial Hessian.  Positivity is not assumed as a bare PSD hypothesis:
+it is constructed from a square-response witness.  Fermionic/odd closure is
 kept in the existing CAR owner and included as a separate proof component.
 
 This is dimension-agnostic: the carrier `E` is arbitrary, and all dynamics live
@@ -869,7 +869,7 @@ Drazin/Krein cone lane.
 
 This removes the old bare positivity route on the two-channel operatorial block:
 nonnegativity now descends from explicit regular-cone witnesses for both
-operatorial Hessian channels together with the mixed-determinant property already
+operatorial Hessian channels together with the mixed-determinant witness already
 carried by `RegularConeOperatorialResponseContext`.
 -/
 @[rep_depth transport]

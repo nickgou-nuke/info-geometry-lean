@@ -40,7 +40,7 @@ structure RationalK0Branch (G : Type*) [AddCommGroup G] where
   squareClosed : IsSquareClosed H
 
 /--
-Conservative Lean-owned replacement for the old theorem-shaped interface.
+Conservative Lean-owned replacement for the old theorem-shaped socket.
 
 The deep Dadarlat hypotheses are not reconstructed here.  Instead, this structure
 stores the actual finite algebraic consequences needed in this repository:
@@ -94,13 +94,8 @@ inductive KirchbergModel where
   | OInfinityTensorUHF
 
 /-- Explicit classification data for a named algebra object. -/
-abbrev AutomaticTrivialityClassification (D : Type*) := KirchbergModel
-
-namespace AutomaticTrivialityClassification
-
-abbrev model {D : Type*} (C : AutomaticTrivialityClassification D) : KirchbergModel := C
-
-end AutomaticTrivialityClassification
+structure AutomaticTrivialityClassification (D : Type*) where
+  model : KirchbergModel
 
 theorem automatic_triviality_classification
     (D : Type*) (C : AutomaticTrivialityClassification D) :

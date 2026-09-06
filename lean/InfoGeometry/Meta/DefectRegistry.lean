@@ -14,7 +14,7 @@ namespace InfoGeometry.Meta
 
 /--
 A theorem is hollow if its formal conclusion is already obtainable from strictly weaker local data,
-or if the advertised domain layer appears only through unused, dead, or property-carried hypotheses.
+or if the advertised domain layer appears only through unused, dead, or assumption-carried hypotheses.
 -/
 initialize hollowAttr : TagAttribute ←
   registerTagAttribute `hollow
@@ -29,7 +29,7 @@ initialize inflatedAttr : TagAttribute ←
     "Mark a declaration as carrying semantic name inflation."
 
 /--
-A theorem where the primary bridge or equality is assumed as a property rather than derived.
+A theorem where the primary bridge or equality is assumed as a hypothesis rather than derived.
 -/
 initialize assumedBridgeAttr : TagAttribute ←
   registerTagAttribute `assumed_bridge

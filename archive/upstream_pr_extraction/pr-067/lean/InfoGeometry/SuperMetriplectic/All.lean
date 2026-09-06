@@ -1,0 +1,46 @@
+import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.SuperMetriplectic.ChiralBridge
+import InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge
+import InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
+import InfoGeometry.SuperMetriplectic.DrazinCartanShadowBridge
+import InfoGeometry.SuperMetriplectic.DrazinProjectorConstraintBridge
+import InfoGeometry.SuperMetriplectic.TriadBridge
+import InfoGeometry.SuperMetriplectic.CartanBridge
+import InfoGeometry.SuperMetriplectic.DrazinBridge
+import InfoGeometry.SuperMetriplectic.EntropyShadowBridge
+import InfoGeometry.SuperMetriplectic.InverseBridge
+import InfoGeometry.SuperMetriplectic.Blocks
+import InfoGeometry.SuperMetriplectic.Flow
+import InfoGeometry.SuperMetriplectic.BPS
+import InfoGeometry.SuperMetriplectic.BlackHoleEntropy
+import InfoGeometry.SuperMetriplectic.SupertraceBodyBridge
+import InfoGeometry.SuperMetriplectic.AdaptedBasis
+import InfoGeometry.SuperMetriplectic.WeylCharacter
+import InfoGeometry.SuperMetriplectic.Cl44WeylD4
+import InfoGeometry.SuperMetriplectic.InformationSuperGas
+import InfoGeometry.SuperMetriplectic.SupervolumeFunctional
+import InfoGeometry.SuperMetriplectic.CasimirZeta
+import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
+import InfoGeometry.SuperMetriplectic.OnsagerCasimirMoebiusBridge
+import InfoGeometry.SuperMetriplectic.OnsagerCasimirMoebiusMetricBridge
+import InfoGeometry.SuperMetriplectic.SeeleyDeWitt
+import InfoGeometry.SuperMetriplectic.InformationEquilibrium
+import InfoGeometry.SuperMetriplectic.DarkEnergyMapping
+import InfoGeometry.SuperMetriplectic.CriticalStiffness
+import InfoGeometry.SuperMetriplectic.OperatorKLBKM
+import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
+import InfoGeometry.SuperMetriplectic.MicroscopicEntropyCalibration
+import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
+import InfoGeometry.SuperMetriplectic.OperatorLorentzCurvature
+import InfoGeometry.Algebraic.SplitSuperGeometry
+
+/-!
+# Supergraded Metriplectic Umbrella
+
+Re-exports the conservative axiomatic skeleton for supergraded metiplectic
+thermodynamics without background spacetime.
+-/
+
+namespace InfoGeometry.SuperMetriplectic
+
+end InfoGeometry.SuperMetriplectic

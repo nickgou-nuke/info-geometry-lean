@@ -42,13 +42,14 @@ theorem op_stabilizer_preserves_three_vector_slots
 /-- Determinant preservation implies preservation of the existing Zorn null
 cone.  This remains an algebraic norm-cone statement, not a confinement law. -/
 theorem determinant_preserving_map_preserves_null_cone
+    (cp : InfoGeometry.Algebra.Zorn.ZornCompositionDatum R)
     (f : ZMat R → ZMat R)
-    (hdet : ∀ X, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (f X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X)
+    (hdet : ∀ X, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp.toCrossProduct3 (f X) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp.toCrossProduct3 X)
     (X : ZMat R)
-    (hX : InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull X) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull (f X) :=
-  preserves_null_cone_of_det_preserving f hdet X hX
+    (hX : InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull cp.toCrossProduct3 X) :
+    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull cp.toCrossProduct3 (f X) :=
+  preserves_null_cone_of_det_preserving cp f hdet X hX
 
 end InfoGeometry.Physics.QCDZornColorSlotBridge
 

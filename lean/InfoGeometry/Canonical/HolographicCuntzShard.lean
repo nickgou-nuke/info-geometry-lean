@@ -27,56 +27,56 @@ variable {Op : Type u} [Ring Op] [StarRing Op]
 
 /-- Left shard reconstruction in an abstract Cuntz `O₂` carrier. -/
 theorem left_cuntz_shard_reconstructs
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (x : Op) :
-    star (InfoGeometry.Topology.CuntzO2Carrier.S_left C) *
-        (InfoGeometry.Topology.CuntzO2Carrier.S_left C * x) = x := by
+    (C : CuntzO2Carrier Op) (x : Op) :
+    star C.S_left * (C.S_left * x) = x := by
   calc
-    star (InfoGeometry.Topology.CuntzO2Carrier.S_left C) *
-        (InfoGeometry.Topology.CuntzO2Carrier.S_left C * x) =
-      (star (InfoGeometry.Topology.CuntzO2Carrier.S_left C) *
-        InfoGeometry.Topology.CuntzO2Carrier.S_left C) * x := by
+    star C.S_left * (C.S_left * x) = (star C.S_left * C.S_left) * x := by
       rw [mul_assoc]
-    _ = 1 * x := by
-      rw [InfoGeometry.Topology.CuntzO2Carrier.left_isometry]
+    _ = 1 * x := by rw [C.left_isometry]
     _ = x := by simp
 
 /-- Right shard reconstruction in an abstract Cuntz `O₂` carrier. -/
 theorem right_cuntz_shard_reconstructs
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (x : Op) :
-    star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) *
-        (InfoGeometry.Topology.CuntzO2Carrier.S_right C * x) = x := by
+    (C : CuntzO2Carrier Op) (x : Op) :
+    star C.S_right * (C.S_right * x) = x := by
   calc
-    star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) *
-        (InfoGeometry.Topology.CuntzO2Carrier.S_right C * x) =
-      (star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) *
-        InfoGeometry.Topology.CuntzO2Carrier.S_right C) * x := by
+    star C.S_right * (C.S_right * x) = (star C.S_right * C.S_right) * x := by
       rw [mul_assoc]
-    _ = 1 * x := by
-      rw [InfoGeometry.Topology.CuntzO2Carrier.right_isometry]
+    _ = 1 * x := by rw [C.right_isometry]
     _ = x := by simp
 
 /-- The left aperture/range projection of a Cuntz shard. -/
-def leftAperture (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) : Op :=
-  InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C
+def leftAperture (C : CuntzO2Carrier Op) : Op :=
+  C.S_left * star C.S_left
 
 /-- The right aperture/range projection of a Cuntz shard. -/
-def rightAperture (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) : Op :=
-  InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C
+def rightAperture (C : CuntzO2Carrier Op) : Op :=
+  C.S_right * star C.S_right
 
 /-- The left aperture is idempotent: the algebraic shadow of restricted viewing angle. -/
-theorem left_aperture_idempotent (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+theorem left_aperture_idempotent (C : CuntzO2Carrier Op) :
     leftAperture C * leftAperture C = leftAperture C := by
-  exact InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection_idempotent C
+  calc
+    (C.S_left * star C.S_left) * (C.S_left * star C.S_left)
+        = C.S_left * (star C.S_left * C.S_left) * star C.S_left := by
+          noncomm_ring
+    _ = C.S_left * 1 * star C.S_left := by rw [C.left_isometry]
+    _ = C.S_left * star C.S_left := by simp
 
 /-- The right aperture is idempotent. -/
-theorem right_aperture_idempotent (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+theorem right_aperture_idempotent (C : CuntzO2Carrier Op) :
     rightAperture C * rightAperture C = rightAperture C := by
-  exact InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection_idempotent C
+  calc
+    (C.S_right * star C.S_right) * (C.S_right * star C.S_right)
+        = C.S_right * (star C.S_right * C.S_right) * star C.S_right := by
+          noncomm_ring
+    _ = C.S_right * 1 * star C.S_right := by rw [C.right_isometry]
+    _ = C.S_right * star C.S_right := by simp
 
 /-- Two-shard aperture partition readout from the Cuntz relation. -/
-theorem aperture_partition (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+theorem aperture_partition (C : CuntzO2Carrier Op) :
     leftAperture C + rightAperture C = 1 :=
-  InfoGeometry.Topology.CuntzO2Carrier.range_sum C
+  C.range_sum
 
 /-! ## Finite exact-rational shard algebra -/
 

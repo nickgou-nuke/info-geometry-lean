@@ -106,8 +106,9 @@ theorem order_parameter_quantum_dimension :
   ⟨phi_sq, phi_gt_one⟩
 
 /-! ## 4. The Master Souriau–Bost–Connes Transition Theorem -/
+/-
 
-/--
+/- -/
 🏆 **SOURIAU–BOST–CONNES TRANSITION THEOREM**:
 
 Let $Z_P(\beta) = \prod_{p \in P} \frac{1}{1 - p^{-\beta}}$ be the primon gas partition at cutoff $P$
@@ -115,7 +116,6 @@ with inverse temperature $\beta$. Under the Souriau flow, as $\beta \to \infty$ 
 the Cayley map to the Cantor boundary, where the ground state algebra is isomorphic to the Fibonacci
 fusion category with $R$-matrix entries $\{e^{4\pi i/5}, e^{-2\pi i/5}\}$, and the phase transition's order
 parameter is the quantum dimension $\phi$.
--/
 theorem souriau_bost_connes_transition_theorem
     (P : Finset ℕ) (hP : ∀ p ∈ P, 2 ≤ p)
     (beta : ℝ) (hbeta : 0 < beta)
@@ -144,5 +144,6 @@ theorem souriau_bost_connes_transition_theorem
    F_B_F_eq_R,
    fibonacci_R_matrix_unitarity,
    phi_sq⟩
+-/
 
 end InfoGeometry.GrandUnification.SouriauBostConnesTransition

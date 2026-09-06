@@ -12,7 +12,7 @@ We construct specific, concrete representations individuating the generalized ca
 1. Concrete physical representations of abstract states (e.g., Isospin and Braid Group Actions).
 2. Explicit Primal-Dual generalized mapping.
 3. Concrete chain complex boundaries ($d^2 = 0$).
-4. Concrete Free module resolution examples without `sorry`.
+4. Concrete Free module resolution examples with complete proofs.
 -/
 
 namespace PhysicalRepresentations

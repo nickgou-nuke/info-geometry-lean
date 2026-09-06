@@ -4,19 +4,11 @@ import Mathlib.Tactic
 import InfoGeometry.Quantum.ApolloniusLieBracket
 import InfoGeometry.Canonical.YangBaxterProof
 
-/-!
-# Apollonius Lie Bracket & Symplectic Decoupling Capstone
-
-Canonical umbrella export connecting the differential Lie bracket, Cauchy-Riemann
-conformal orthogonality, symplectic non-degeneracy, and topological Yang-Baxter integrability.
--/
-
 namespace InfoGeometry.Canonical.ApolloniusLieBracket
 
 open InfoGeometry.Quantum.ApolloniusLieBracket
 open InfoGeometry.Canonical.YangBaxterProof
 
-/-- 🏆 Canonical Grand Synthesis of Apollonius Lie Bracket & Yang-Baxter Integrability -/
 theorem grand_canonical_apollonius_lie_bracket_synthesis
     (d_sigma_Phi d_t_Phi d_sigma_H d_t_H : ℝ → ℝ → ℝ)
     (h_cr : HarmonicConjugateData d_sigma_Phi d_t_Phi d_sigma_H d_t_H)

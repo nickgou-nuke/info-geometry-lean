@@ -354,7 +354,7 @@ import Omega.Zeta.XiLeyangAngleOverPiIrrational
 import Omega.Zeta.XiLeyangLogSingularityTranscendence
 import Omega.Zeta.XiLeyangSolenoidalLiftMonoidal
 import Omega.Zeta.XiInfiniteGrothendieckRankHalfdimensionDivergence
-import Omega.Zeta.XiLeyangIsingLyapunov
+import Omega.Zeta.XiLeyangEvidenceIsingLyapunov
 import Omega.Zeta.PickPoissonConfluentVandermonde
 import Omega.Zeta.XiTimePart9zrReconstructionBudgetPhiCliff
 import Omega.Zeta.XiJoukowskyMultipleAngleChebyshevRadicalNormalform
@@ -952,7 +952,7 @@ import Omega.Zeta.XiTwoParamDisjointnessSpectrumDisjointness
 import Omega.Zeta.XiTimePart60ab2StableSpectrumSelfreciprocalCenter
 import Omega.Zeta.XiTimePart60ab2StableSpectrumFourierPhaseLocking
 import Omega.Zeta.XiTimePart60ab2ExactDarkModeArithmeticCriterion
-import Omega.Zeta.XiMultichannelKappaOrAnomaly
+import Omega.Zeta.XiMultichannelWitnessKappaOrAnom
 import Omega.Zeta.XiTimePart60ab2LogcmShiftInfiniteModal
 import Omega.Zeta.XiCayleyPhaseDoubleRotationRationalParity
 import Omega.Zeta.XiPhiDiskpoleRatioIdentity
@@ -1150,7 +1150,7 @@ import Omega.Zeta.XiDualBaseDealiasing2Phi
 import Omega.Zeta.XiSingularCircleHeckeDirichletZetaMultiplier
 import Omega.Zeta.XiDefectDensityConeChoquetExtreme
 import Omega.Zeta.XiDefectEntropyHeightBudgetVarianceGap
-import Omega.Zeta.XiReverseKLExteriorPolynomialLower
+import Omega.Zeta.XiReverseKLExteriorPolynomialWitnessLower
 import Omega.Zeta.XiRealInput40ZeroTempAbelAtomicShare
 import Omega.Zeta.XiDefectEntropyHyperbolicAreaLaw4pi
 import Omega.Zeta.XiDefectEntropyFeasibleIntervalFluxIndex
@@ -1167,7 +1167,7 @@ import Omega.Zeta.XiScanTailRatioPeeling
 import Omega.Zeta.XiScanAliasingThreshold
 import Omega.Zeta.XiKoenigsPrimeGeneratorSpectralFactorization
 import Omega.Zeta.XiKreinSpectralShiftEqualsKL
-import Omega.Zeta.XiToeplitzNegativeFromScanHankel
+import Omega.Zeta.XiToeplitzNegativeWitnessFromScanHankel
 import Omega.Zeta.XiKreinSpectralShiftStaircaseShadow
 import Omega.Zeta.XiLeyangEdDyExplicitDivisor
 import Omega.Zeta.XiEdYDivisorAndGroupLawIdentity
@@ -1228,7 +1228,7 @@ import Omega.Zeta.XiDeltaLCriticalLineReal
 import Omega.Zeta.XiRhIntervalCriterion
 import Omega.Zeta.XiProjectiveMomentRadiusSubmultiplicative
 import Omega.Zeta.XiPiPowerSmithComplementarity
-import Omega.Zeta.XiTimePart58aDirichletMinimalExponent
+import Omega.Zeta.XiTimePart58aDirichletMinimalWitnessWorstExponent
 import Omega.Zeta.XiTimePart57bcFrozenSupportExactLocalInversionRate
 import Omega.Zeta.XiHorizonB3SectorFrameDecomposition
 import Omega.Zeta.XiHorizonCarathClosure
@@ -1395,7 +1395,7 @@ import Omega.Zeta.XiTimePart60ab4CentralSizeSchattenMomentDimensionConstant
 import Omega.Zeta.XiTimePart60abGaugeConstantNonCfiniteOgfObstruction
 import Omega.Zeta.XiCartesianPowerLeyangDoubleAtomTangentClt
 import Omega.Zeta.XiScanCollisionIllposedness
-import Omega.Zeta.XiScanProfileLpPeakProfile
+import Omega.Zeta.XiScanProfileLpPeakWitness
 import Omega.Zeta.XiOfflineNeumannL2Interaction
 import Omega.Zeta.XiOfflineNeumannCauchySemigroupGenerator
 import Omega.Zeta.XiOffcriticalCountBoundByIntegratedDefect
@@ -2412,7 +2412,7 @@ import Omega.Zeta.XiTerminalGbcStabilizedTerminalObject
 import Omega.Zeta.XiLogisticFanoLowerBoundFromError
 import Omega.Zeta.XiHankelOfflineModularAuditThreshold
 import Omega.Zeta.XiHankelRecurrenceJacobianIdentity
-import Omega.Zeta.XiHorizonReflectionBound
+import Omega.Zeta.XiHorizonReflectionFiniteWitness
 import Omega.Zeta.XiFoldEscortLogMultiplicityTwoAtom
 import Omega.Zeta.XiFoldEscortRenyiConstantThetaClosed
 import Omega.Zeta.XiFoldbinCollisionProbabilityNormalizedGroupoidDimension
@@ -2579,7 +2579,7 @@ import Omega.Zeta.XiTimePart9vkResonanceStieltjesShadowRenormalizationUniqueness
 import Omega.Zeta.BooleanTwoLayerOrderIdealSmithShapeInvariance
 import Omega.Zeta.XiTimePart61accChainGodelAverageVarianceBudgetOptimality
 import Omega.Zeta.XiFoldbinUniversalFibonacciUpperBoundLastbitImprovement
-import Omega.Zeta.XiCpBreakdownFinite
+import Omega.Zeta.XiCpBreakdownFiniteWitness
 import Omega.Zeta.XiEndpointInfiniteBlaschkeDriftIdentifiabilityStability
 import Omega.Zeta.XiFoldCongruenceCrtPrimitiveIdempotents
 import Omega.Zeta.XiFoldCongruencePprimaryQuotientDepth

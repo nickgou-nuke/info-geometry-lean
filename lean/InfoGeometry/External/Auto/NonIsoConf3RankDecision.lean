@@ -63,4 +63,13 @@ theorem finite_candidate_rank_gap :
     Fintype.card ProductBasis - Fintype.card OSFluxBasis = 8 :=
   product_vs_os_rank_gap
 
+/-- Consolidated finite branch bookkeeping. -/
+theorem finite_rank_fork_summary :
+    ¬ tripleDependent expectedCodimData ∧
+    Fintype.card ProductBasis = 32 ∧
+    Fintype.card OSFluxBasis = 24 ∧
+    Fintype.card ProductBasis - Fintype.card OSFluxBasis = 8 :=
+  ⟨configured_triple_not_dependent, productBasis_card, osFluxBasis_card,
+    product_vs_os_rank_gap⟩
+
 end NonIsoConf3RankDecision

@@ -48,3 +48,5 @@ theorem kahler_spine_entropy_identity
 
 
 end LogSpine
+
+end InfoGeometry.Canonical

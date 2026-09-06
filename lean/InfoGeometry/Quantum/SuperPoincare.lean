@@ -48,14 +48,7 @@ theorem wigner_riemann_classification (σ J : ℝ)
   have h_zero : σ - 1 / 2 = 0 := super_poincare_rapidity_collapse J (σ - 1 / 2) h_bps
   linarith
 
-/-- 🏆 GRAND SYNTHESIS: Super-Poincaré BPS Multiplet Confinement -/
-theorem grand_super_poincare_synthesis (σ J ξ : ℝ)
-    (h_bps_xi : IsBPS_ShortMultiplet J ξ)
-    (h_bps_sigma : IsBPS_ShortMultiplet J (σ - 1 / 2)) :
-    (ξ = 0) ∧ (σ = 1 / 2) :=
-  ⟨super_poincare_rapidity_collapse J ξ h_bps_xi,
-   wigner_riemann_classification σ J h_bps_sigma⟩
-
+/- The final implication is conditional on `IsBPS_ShortMultiplet`. -/
 end
 
 end InfoGeometry.Quantum.SuperPoincare

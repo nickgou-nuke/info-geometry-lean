@@ -117,6 +117,38 @@ theorem mapConnection_curvature
     ρ (curvature C p X Y) = curvature (mapConnection ρ C) p X Y := by
   simp [curvature, wedgeSquare, mapConnection]
 
+/-! A representation channel transports the flatness predicate as a direct
+consequence of curvature transport.  The converse requires faithfulness, so
+it is stated for a ring equivalence rather than assumed for an arbitrary
+representation. -/
+
+theorem mapConnection_isFlat
+    (ρ : Value →+* Value')
+    (C : Connection (Point := Point) (Tangent := Tangent) (Value := Value))
+    (hflat : IsFlat C) :
+    IsFlat (mapConnection ρ C) := by
+  intro p X Y
+  rw [← mapConnection_curvature ρ C p X Y]
+  have h := congrArg ρ (hflat p X Y)
+  rw [map_zero] at h
+  exact h
+
+theorem mapConnection_isFlat_iff
+    (ρ : Value ≃+* Value')
+    (C : Connection (Point := Point) (Tangent := Tangent) (Value := Value)) :
+    IsFlat (mapConnection ρ.toRingHom C) ↔ IsFlat C := by
+  constructor
+  · intro hflat p X Y
+    have h := hflat p X Y
+    have hm : ρ (curvature C p X Y) = 0 := by
+      calc
+        ρ (curvature C p X Y) = curvature (mapConnection ρ.toRingHom C) p X Y :=
+          mapConnection_curvature ρ.toRingHom C p X Y
+        _ = 0 := h
+    apply ρ.injective
+    exact hm.trans (map_zero ρ).symm
+  · exact mapConnection_isFlat ρ.toRingHom C
+
 end RingChannels
 
 end InfoGeometry.Optics.OperatorValuedConnection

@@ -91,11 +91,3 @@ theorem quantum_wronskian_eq_constant (Γ u η : ℝ) :
 theorem hasDerivAt_wronskian_zero (Γ η : ℝ) (u : ℝ) :
     HasDerivAt (fun x : ℝ => wronskianConstant Γ η) 0 u :=
   hasDerivAt_const u (wronskianConstant Γ η)
-
-theorem grand_quantum_wronskian_synthesis (Γ u η : ℝ) :
-    (baxterQPos Γ u * baxterQNeg Γ u = 1) ∧
-    (quantumWronskian Γ u η = wronskianConstant Γ η) ∧
-    (HasDerivAt (fun x : ℝ => wronskianConstant Γ η) 0 u) :=
-  ⟨baxter_Q_pos_mul_neg_eq_one Γ u,
-   quantum_wronskian_eq_constant Γ u η,
-   hasDerivAt_wronskian_zero Γ η u⟩

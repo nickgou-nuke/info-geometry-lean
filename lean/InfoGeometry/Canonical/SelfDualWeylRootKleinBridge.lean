@@ -278,7 +278,7 @@ def kleinBx : M3R := !![1, 0, (-1 : ℝ); 0, 1, 0; 0, 0, 1]
 
 /-- `kleinA` conjugates `kleinW` by a non-trivial lattice translation.
 
-This is the finite affine cocycle property: `A` and `W` do not commute, but their
+This is the finite affine cocycle witness: `A` and `W` do not commute, but their
 defect is exactly a unit translation in the first torus coordinate.
 -/
 theorem kleinA_conj_kleinW_translation :
@@ -336,4 +336,5 @@ theorem weyl_klein_torus_noncommute (θ1 θ2 : ℝ) :
 end KleinBottleFinite
 
 end InfoGeometry.Canonical.SelfDualWeylRootKleinBridge
+
 end

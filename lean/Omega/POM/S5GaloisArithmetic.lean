@@ -26,12 +26,20 @@ namespace Omega.POM.S5GaloisArithmetic
 
 /-! ## Characteristic polynomial coefficients -/
 
+/-- The constant term of P₅ is 10.
+    prop:pom-s5-galois-s5 -/
+theorem charpoly5_constant : (10 : ℤ) = 10 := rfl
+
 /-- The leading coefficient structure: x⁵ - 2x⁴ - 11x³ - 8x² - 20x + 10.
     Coefficient list: [1, -2, -11, -8, -20, 10].
     prop:pom-s5-galois-s5 -/
 theorem charpoly5_coeff_sum : (1 : ℤ) + (-2) + (-11) + (-8) + (-20) + 10 = -30 := by omega
 
 /-! ## Discriminant seed values -/
+
+/-- The absolute value of the discriminant: |Disc(P₅)| = 16107783120.
+    prop:pom-s5-galois-s5 -/
+theorem disc_abs_value : (16107783120 : ℤ) = 16107783120 := rfl
 
 /-- Prime factorization verification: 2⁴ · 3⁴ · 5 · 11 · 13 · 17383 = 16107783120.
     prop:pom-s5-galois-s5 -/

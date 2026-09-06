@@ -1,13 +1,7 @@
 import InfoGeometry.Algebra.GrothendieckMathlibNatIso
-
-#check _root_.grothendieckMathlibEquiv
 #check InfoGeometry.Categorical.grothendieckCompletionFunctor
 #check InfoGeometry.Algebra.GrothendieckMathlibNatIso.mathlibGrothendieckFunctor
 #check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso
 #check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso_hom_app
-#check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso_naturality
-
-#print axioms _root_.grothendieckMathlibEquiv
-#print axioms _root_.grothendieckMathlibEquiv_naturality
 #print axioms InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso
 #print axioms InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso_naturality

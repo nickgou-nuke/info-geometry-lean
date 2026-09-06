@@ -1,6 +1,6 @@
 import proofs.OpticalAndreevSpinor
 import proofs.ProjectiveKappaKleinMobius
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralIsospinEOMSU2
 
 /-!

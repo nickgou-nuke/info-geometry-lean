@@ -30,6 +30,7 @@ open InfoGeometry.MaxEnt
 def primeSiteFinset (M : ℕ) : Finset ℕ :=
   (Finset.range (M + 1)).filter Nat.Prime
 
+/-- Prime lattice sites as a finite type. -/
 abbrev PrimeSites (M : ℕ) : Type :=
   {n : ℕ // n ∈ primeSiteFinset M}
 

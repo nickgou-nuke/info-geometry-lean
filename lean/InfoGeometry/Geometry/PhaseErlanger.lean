@@ -17,6 +17,7 @@ polarization projectors.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -465,13 +466,24 @@ def mk
 
 end ErlangerInvariant
 
+/-! ## 6. Owner target -/
 
-/-! ## 6. Native Erlanger phase theorem -/
+/--
+Owner target for the first Erlanger phase layer.
 
-theorem phaseErlanger_id
-    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (K : EndR H) :
-    PhaseLinear K (ContinuousLinearMap.id ℝ H) := by
+The target is intentionally structural: it does not assert a preferred metric,
+a preferred upper-half-plane cone, or a modular subgroup. Those are later
+Erlanger refinements.
+-/
+@[owner_target_tag]
+def PhaseErlangerOwnerTarget : Prop :=
+  ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (K : EndR H),
+    PhaseLinear K (ContinuousLinearMap.id ℝ H)
+
+theorem phaseErlangerOwnerTarget :
+    PhaseErlangerOwnerTarget := by
+  intro H _ _ K
   exact PhaseLinear.id
 
 /-- Every phase axis has a canonical phase-centralizer element: the identity. -/
@@ -479,7 +491,7 @@ def phaseCentralizer_id
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : EndR H) : PhaseCentralizer K where
   op := ContinuousLinearMap.id ℝ H
-  phase_linear := phaseErlanger_id H K
+  phase_linear := phaseErlangerOwnerTarget H K
 
 @[simp] theorem phaseCentralizer_id_op
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]

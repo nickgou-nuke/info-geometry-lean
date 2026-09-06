@@ -32,7 +32,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -70,7 +69,7 @@ structure Bridge where
   state :
     StateFunctional EndH
 
-  /-- KMS analytic property for the bounded surrogate modular flow. -/
+  /-- KMS analytic certificate for the bounded surrogate modular flow. -/
   kms :
     KMSAnalyticCertificate
       boundedFlow.modularFlow.toFlowDatum
@@ -132,14 +131,14 @@ theorem toBoundedKMSConditionBridge_state_eq :
 /--
 The integrated bounded KMS state also reconstructs the real-time invariance
 surface definitionally, so downstream users on the minimal branch no longer
-need to re-supply a separate `hInvariant` property.
+need to re-supply a separate `hInvariant` hypothesis.
 -/
 @[rep_depth thermo]
 theorem flow_invariant
     (t : ℝ) (A : EndH) :
     B.kms.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) =
       B.kms.state.eval A :=
-  B.kms.flow_invariant t A
+  B.kms.flow_invariant_apply t A
 
 /--
 Read back the same real-time invariance statement on the legacy broad bounded
@@ -193,11 +192,11 @@ theorem flow_add_apply
       B.flowDatum.flow s (B.flowDatum.flow t A) :=
   B.boundedFlow.modularFlow.flow_add s t A
 
-/-- Re-export the bounded KMS analytic boundary property. -/
+/-- Re-export the bounded KMS analytic boundary certificate. -/
 @[rep_depth thermo]
 theorem kms_boundary_holds :
     B.kms.boundaryCondition :=
-  KMSAnalyticCertificate.boundaryCondition_holds B.kms
+  B.kms.boundaryCondition_holds
 
 /--
 Build the narrowed integrated KMS carrier from the broad bounded bridge once

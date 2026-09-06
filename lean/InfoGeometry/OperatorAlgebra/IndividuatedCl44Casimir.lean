@@ -104,30 +104,12 @@ The Casimir element is the identity operator scaled by the Clifford trace
 readout of the Drazin-compressed core `P_D D`.
 -/
 def diracSouriauCasimir
-    (T : DiracSouriauCoreTrace)
-    : DiracSouriauOp :=
-  T.constructCasimirElement
-
-theorem diracSouriauCasimir_invariant
     {G : Type*} [Group G]
     (S : OperatorSymmetryAction G DiracSouriauOp)
-    (T : DiracSouriauCoreTrace) :
-    IsInvariant (toSymmetryAction S) (diracSouriauCasimir T) := by
-    dsimp [diracSouriauCasimir, DiracSouriauCoreTrace.constructCasimirElement,
-      toSymmetryAction]
-    intro g
-    change S.act g (T.constructCasimirCandidate • (1 : DiracSouriauOp)) =
-      T.constructCasimirCandidate • (1 : DiracSouriauOp)
-    rw [S.act_smul, S.map_one]
-
-theorem diracSouriauCasimir_central
-    (T : DiracSouriauCoreTrace) :
-    ∀ x : DiracSouriauOp, diracSouriauCasimir T * x = x * diracSouriauCasimir T := by
-    intro x
-    dsimp [diracSouriauCasimir, DiracSouriauCoreTrace.constructCasimirElement]
-    simp only [Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one]
-
-/-
+    (T : DiracSouriauCoreTrace)
+    : VerifiedCasimir (toSymmetryAction S) where
+  C := T.constructCasimirElement
+  
   is_invariant := by
     intro g
     dsimp [DiracSouriauCoreTrace.constructCasimirElement, toSymmetryAction]
@@ -138,15 +120,16 @@ theorem diracSouriauCasimir_central
     -- Scalar multiples of identity commute with everything.
     dsimp [DiracSouriauCoreTrace.constructCasimirElement]
     simp only [Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one]
--/
 
 /--
 The Casimir element is the scalar identity multiple built from the Clifford
 trace candidate.
 -/
 theorem diracSouriauCasimir_eq_trace_identity
+    {G : Type*} [Group G]
+    (S : OperatorSymmetryAction G DiracSouriauOp)
     (T : DiracSouriauCoreTrace) :
-    diracSouriauCasimir T =
+    (diracSouriauCasimir S T).C =
       T.constructCasimirCandidate • (1 : DiracSouriauOp) :=
   rfl
 
@@ -183,8 +166,10 @@ Under a Pfaffian calibration, the Clifford-trace Casimir element can be written
 as the Pfaffian scalar multiple of the identity.
 -/
 theorem casimir_eq_pfaffian_identity
-    (P : PfaffianCasimirCalibration T) :
-    diracSouriauCasimir T =
+    (P : PfaffianCasimirCalibration T)
+    {G : Type*} [Group G]
+    (S : OperatorSymmetryAction G DiracSouriauOp) :
+    (diracSouriauCasimir S T).C =
       T.sector.pfaffian • (1 : DiracSouriauOp) := by
   rw [diracSouriauCasimir_eq_trace_identity]
   rw [P.pfaffian_eq_constructCasimirCandidate]

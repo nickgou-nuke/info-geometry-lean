@@ -13,7 +13,7 @@ This module connects:
 It does not claim that `E8`, a five-grading, or a Clifford algebra alone proves
 Hawking radiation. The KMS and horizon/boost identifications are separate
 theorem-level obligations, and recovery/Page-curve/holographic reconstruction
-statements remain separate property structures.
+statements remain separate certified structures.
 -/
 
 import Mathlib.Tactic
@@ -30,7 +30,7 @@ open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
-/-! ## 1. Modular KMS readout -/
+/-! ## 1. Modular KMS readout socket -/
 
 /--
 A KMS readout datum for a modular or horizon flow.
@@ -47,8 +47,11 @@ structure KMSReadoutDatum
   /-- State or weight readout. -/
   state : Obs → ℝ
 
-  /-- Positive inverse temperature, represented by its native subtype. -/
-  beta : {b : ℝ // 0 < b}
+  /-- Inverse temperature. -/
+  beta : ℝ
+
+  /-- Positive inverse temperature. -/
+  beta_pos : 0 < beta
 
   /-- Zero-time flow law. -/
   flow_zero :
@@ -78,12 +81,8 @@ theorem invariant
 
 /-- The inverse temperature is nonzero. -/
 theorem beta_ne_zero :
-    (K.beta : ℝ) ≠ 0 :=
-  ne_of_gt K.beta.property
-
-@[simp] theorem beta_pos :
-    (0 : ℝ) < K.beta :=
-  K.beta.property
+    K.beta ≠ 0 :=
+  ne_of_gt K.beta_pos
 
 /-- Re-export zero-time flow. -/
 theorem flow_zero_apply
@@ -100,6 +99,50 @@ theorem flow_add_apply
 
 end KMSReadoutDatum
 
+/--
+Backward-compatible alias.
+
+Prefer `KMSReadoutDatum` in new code. This alias exists so older modules that
+refer to `KMSStateDatum` do not need to be migrated immediately.
+-/
+abbrev KMSStateDatum
+    (Obs : Type*) [AddCommGroup Obs] [Module ℝ Obs] :=
+  KMSReadoutDatum Obs
+
+namespace KMSStateDatum
+
+variable
+    {Obs : Type*} [AddCommGroup Obs] [Module ℝ Obs]
+
+variable (K : KMSStateDatum Obs)
+
+/-- Compatibility alias for `KMSReadoutDatum.invariant`. -/
+theorem invariant
+    (t : ℝ)
+    (x : Obs) :
+    K.state (K.flow t x) = K.state x :=
+  KMSReadoutDatum.invariant K t x
+
+/-- Compatibility alias for `KMSReadoutDatum.beta_ne_zero`. -/
+theorem beta_ne_zero :
+    K.beta ≠ 0 :=
+  KMSReadoutDatum.beta_ne_zero K
+
+/-- Compatibility alias for `KMSReadoutDatum.flow_zero_apply`. -/
+theorem flow_zero_apply
+    (x : Obs) :
+    K.flow 0 x = x :=
+  KMSReadoutDatum.flow_zero_apply K x
+
+/-- Compatibility alias for `KMSReadoutDatum.flow_add_apply`. -/
+theorem flow_add_apply
+    (s t : ℝ)
+    (x : Obs) :
+    K.flow (s + t) x = K.flow s (K.flow t x) :=
+  KMSReadoutDatum.flow_add_apply K s t x
+
+end KMSStateDatum
+
 /-! ## 2. Horizon temperature normalization -/
 
 /--
@@ -111,37 +154,46 @@ gravity in the black-hole/Hawking case. Natural units are used:
 `β = 2π / κ`, hence `T = κ / 2π`.
 -/
 structure HorizonKMSNormalization where
-  /-- Positive acceleration or surface gravity. -/
-  surfaceGravity : {κ : ℝ // 0 < κ}
+  /-- Acceleration or surface gravity. -/
+  surfaceGravity : ℝ
+
+  /-- Positive acceleration/surface gravity. -/
+  surfaceGravity_pos :
+    0 < surfaceGravity
+
+  /-- Inverse temperature. -/
+  beta : ℝ
+
+  /-- Temperature. -/
+  temperature : ℝ
+
+  /--
+  Modular/horizon normalization.
+
+  Natural units: `β = 2π / κ`.
+  -/
+  beta_eq_two_pi_over_surfaceGravity :
+    beta = (2 * Real.pi) / surfaceGravity
+
+  /--
+  Natural-unit temperature law.
+
+  `T = κ / 2π`.
+  -/
+  temperature_eq_surfaceGravity_over_two_pi :
+    temperature = surfaceGravity / (2 * Real.pi)
+
+  /--
+  Explicit horizon-modular calibration law.
+
+  Natural units: `β * κ = 2π`.
+  -/
+  horizon_modular_calibration :
+    beta * surfaceGravity = 2 * Real.pi
 
 namespace HorizonKMSNormalization
 
 variable (N : HorizonKMSNormalization)
-
-/-- Inverse temperature determined by the positive surface gravity. -/
-noncomputable def beta : ℝ :=
-  (2 * Real.pi) / (N.surfaceGravity : ℝ)
-
-/-- Temperature determined by the positive surface gravity. -/
-noncomputable def temperature : ℝ :=
-  (N.surfaceGravity : ℝ) / (2 * Real.pi)
-
-theorem surfaceGravity_pos :
-    0 < (N.surfaceGravity : ℝ) :=
-  N.surfaceGravity.property
-
-theorem beta_eq_two_pi_over_surfaceGravity :
-    N.beta = (2 * Real.pi) / (N.surfaceGravity : ℝ) :=
-  rfl
-
-theorem temperature_eq_surfaceGravity_over_two_pi :
-    N.temperature = (N.surfaceGravity : ℝ) / (2 * Real.pi) :=
-  rfl
-
-theorem horizon_modular_calibration :
-    N.beta * (N.surfaceGravity : ℝ) = 2 * Real.pi := by
-  unfold beta
-  field_simp [ne_of_gt N.surfaceGravity_pos]
 
 /-- The calibrated inverse temperature is positive. -/
 theorem beta_pos :
@@ -162,7 +214,7 @@ theorem beta_mul_temperature_eq_one :
     N.beta_eq_two_pi_over_surfaceGravity,
     N.temperature_eq_surfaceGravity_over_two_pi
   ]
-  have hκ : (N.surfaceGravity : ℝ) ≠ 0 :=
+  have hκ : N.surfaceGravity ≠ 0 :=
     ne_of_gt N.surfaceGravity_pos
   have h2π : (2 * Real.pi : ℝ) ≠ 0 := by positivity
   field_simp [hκ, h2π]
@@ -185,7 +237,7 @@ theorem temperature_ne_zero :
 
 /-- Re-export the explicit horizon-modular calibration law. -/
 theorem horizon_modular_calibration_eq :
-    N.beta * (N.surfaceGravity : ℝ) = 2 * Real.pi :=
+    N.beta * N.surfaceGravity = 2 * Real.pi :=
   N.horizon_modular_calibration
 
 end HorizonKMSNormalization
@@ -408,19 +460,19 @@ The exterior KMS inverse temperature equals the horizon-normalized inverse
 temperature.
 -/
 theorem beta_eq_horizon_beta :
-    (H.kms.beta : ℝ) = H.normalization.beta :=
+    H.kms.beta = H.normalization.beta :=
   H.kms_beta_eq_horizon_beta
 
 /-- The horizon-normalized KMS inverse temperature is positive. -/
 theorem kms_beta_pos :
-    0 < (H.kms.beta : ℝ) := by
+    0 < H.kms.beta := by
   rw [H.beta_eq_horizon_beta]
   exact H.normalization.beta_pos
 
 /-- The KMS inverse temperature is nonzero. -/
 theorem kms_beta_ne_zero :
-    (H.kms.beta : ℝ) ≠ 0 :=
-  ne_of_gt (kms_beta_pos H)
+    H.kms.beta ≠ 0 :=
+  ne_of_gt H.kms_beta_pos
 
 /-- The horizon-normalized temperature is positive. -/
 theorem horizon_temperature_pos :
@@ -497,7 +549,7 @@ theorem nonzero_memory_heat_readout
   (H.observed_heat_ne_zero_iff_gradeTwo_memory_heat_ne_zero x y).mpr hmem
 
 /--
-The bridge preserves the lower ledger's property memory-storage implication.
+The bridge preserves the lower ledger's certified memory-storage implication.
 
 This is intentionally weaker than a Page-curve or holographic recovery theorem:
 the five-graded ledger only proves that nonzero memory readout stores a
@@ -513,7 +565,7 @@ theorem full_ledger_recovery_holds :
 Exterior KMS flow calibration as an explicit equation.
 
 This is the local equation-level replacement for the removed
-`exterior_kms_flow_calibration` property: the KMS flow supplied by the bridge is
+`exterior_kms_flow_calibration` witness: the KMS flow supplied by the bridge is
 identified with a designated horizon modular flow.
 -/
 def exterior_kms_flow_calibration
@@ -676,19 +728,42 @@ structure GradeTwoMemoryRecoveryData
       exteriorData (A.observedDefect x y) =
         B.memoryReadout (A.hiddenTotal x y)
 
+namespace GradeTwoMemoryRecoveryData
+
+variable
+    {J L Obs Memory : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    {G : FiveGrading L}
+    {A : FiveGradeProjectedAccounting J L Obs G}
+    {B : BlackHoleInformationLedger J L Obs Memory A}
+
+variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
+
+/-- Hidden memory is recoverable from exterior observed-defect data. -/
+theorem recover_hidden_memory
+    (x y : J) :
+    R.exteriorData (A.observedDefect x y) =
+      B.memoryReadout (A.hiddenTotal x y) :=
+  R.recover_hidden_memory_law x y
+
+end GradeTwoMemoryRecoveryData
+
 /-! ## 8. Thermodynamic Tomita/KMS bridge -/
 
 /--
 Horizon KMS memory bridge using the repository's thermodynamic/Tomita API.
 
-This is the stronger interface tying the five-grade ledger to:
+This is the stronger socket tying the five-grade ledger to:
 
 * a Tomita algebra/commutant split;
 * a ring-level modular flow;
-* a `HorizonKMSThermodynamics` KMS property;
+* a `HorizonKMSThermodynamics` KMS witness;
 * horizon temperature normalization.
 
-The implication remains one-way and property-gated: hidden grade-two memory is
+The implication remains one-way and witness-gated: hidden grade-two memory is
 routed to the commutant and the reduced observer sees KMS thermality. This does
 not assert information recovery.
 -/
@@ -718,7 +793,7 @@ structure HorizonKMSThermodynamicMemoryBridge
   beta :
     ℝ
 
-  /-- Horizon/KMS thermodynamic property. -/
+  /-- Horizon/KMS thermodynamic witness. -/
   horizonKMS :
     InfoGeometry.OperatorAlgebra.Thermodynamics.HorizonKMSThermodynamics
       Op tomita modularFlow beta
@@ -795,7 +870,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.horizonKMS.thermalization.reduction.observableEval :=
   H.horizonKMS.observer_sees_kms
 
-/-- The reduced observer state carries a KMS boundary property. -/
+/-- The reduced observer state carries a KMS boundary certificate. -/
 def reduced_state_is_kms :
     InfoGeometry.OperatorAlgebra.Thermodynamics.KMSAnalyticBoundary
       H.horizonKMS.thermalization.reduction.observableEval
@@ -842,26 +917,94 @@ theorem thermal_agrees_with_global_on_observable
 
 end HorizonKMSThermodynamicMemoryBridge
 
+/-! ## 9. Owner target -/
 
-/-! ## 9. Native horizon KMS calibration theorem -/
+/--
+Owner target for installing a horizon KMS five-grade bridge.
+-/
+def HorizonKMSFiveGradeBridgeOwnerTarget
+    (J L Obs Memory : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
+  ∀ G : FiveGrading L,
+  ∀ A : FiveGradeProjectedAccounting J L Obs G,
+  ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
+  ∀ x y : J,
+    H.heatCalibration.observedHeat (A.observedDefect x y) =
+      H.heatCalibration.memoryHeat
+        (H.ledger.memoryReadout (A.hiddenTotal x y))
 
-theorem horizonKMSFiveGradeBridge_heat
+/--
+Installed-owner target: once a bridge witness is supplied, observed heat equals
+hidden grade-two memory heat.
+-/
+def HorizonKMSFiveGradeBridgeInstalledTarget
+    (J L Obs Memory : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
+  ∀ G : FiveGrading L,
+  ∀ A : FiveGradeProjectedAccounting J L Obs G,
+  ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
+  ∀ x y : J,
+    H.heatCalibration.observedHeat (A.observedDefect x y) =
+      H.heatCalibration.memoryHeat
+        (H.ledger.memoryReadout (A.hiddenTotal x y))
+
+/--
+The installed-owner target follows from the supplied bridge witness.
+-/
+theorem horizonKMSFiveGradeBridgeInstalledTarget
     (J L Obs Memory : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
     [AddCommGroup Memory] [Module ℝ Memory] :
-    ∀ G : FiveGrading L,
-    ∀ A : FiveGradeProjectedAccounting J L Obs G,
-    ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
-    ∀ x y : J,
-      H.heatCalibration.observedHeat (A.observedDefect x y) =
-        H.heatCalibration.memoryHeat
-          (H.ledger.memoryReadout (A.hiddenTotal x y)) := by
+    HorizonKMSFiveGradeBridgeInstalledTarget J L Obs Memory := by
   intro G A H x y
   exact H.observed_heat_eq_gradeTwo_memory_heat x y
 
+/--
+Owner target for grade-two memory recovery.
+
+This remains separate from KMS thermality.
+-/
+def GradeTwoMemoryRecoveryOwnerTarget
+    (J L Obs Memory : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
+  ∀ G : FiveGrading L,
+  ∀ A : FiveGradeProjectedAccounting J L Obs G,
+  ∀ B : BlackHoleInformationLedger J L Obs Memory A,
+    ∃ exteriorData : Obs → Memory,
+      ∀ x y : J,
+        exteriorData (A.observedDefect x y) =
+          B.memoryReadout (A.hiddenTotal x y)
+
+/--
+Owner target for the thermodynamic/Tomita horizon KMS memory bridge.
+-/
+def HorizonKMSThermodynamicMemoryBridgeOwnerTarget
+    (J L Obs Memory Op : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    [Ring Op] : Prop :=
+  ∀ G : FiveGrading L,
+  ∀ A : FiveGradeProjectedAccounting J L Obs G,
+  ∀ H : HorizonKMSThermodynamicMemoryBridge (G := G) J L Obs Memory Op A,
+    H.beta = H.normalization.beta ∧
+      (∀ x y : J,
+        H.memoryToOperator (H.ledger.memoryReadout (A.hiddenTotal x y)) ∈ H.tomita.Mcomm)
+
 /-! ## 10. Exterior KMS flow calibration structure -/
+
 /--
 Exterior KMS flow calibration structure.
 

@@ -1,5 +1,6 @@
 import InfoGeometry.Geometry.ParaHessianMixedPotential
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!
 # The active split-Zorn sector as a mixed para-Hessian geometry
@@ -28,6 +29,7 @@ open InfoGeometry.Lie.SplitOctonionAxialSupportGrading
 open InfoGeometry.Lie.SplitOctonionAxialWittReduction
 open InfoGeometry.Lie.SplitOctonionEllClosedFlow
 open InfoGeometry.Lie.SplitOctonionEllKleinFlow
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev V3 := Fin 3 → ℝ
 abbrev Active :=
@@ -134,25 +136,21 @@ theorem activePotential_root_sum (x y : V3) :
 /-- The potential is precisely minus the native active Zorn determinant. -/
 theorem activePotential_eq_neg_detZ (X : Active) :
     activePotential X =
-      -InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 := by
-  rcases X with ⟨X, Y, hY⟩
-  change dot X.x X.y = -InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X
-  rw [← hY, detZ_axialActiveSupport]
-  simp [axialActiveSupport_apply]
+      -InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
+  rcases X with ⟨_, Y, rfl⟩
+  rw [detZ_axialActiveSupport Y]
+  simp [activePotential, wittPotential, activeSectorEquiv, axialActiveSupport_apply, dot]
 
 /-- The Hessian pairing is exactly the negative raw polarization of the Zorn
 quadratic form. -/
 theorem activeMetric_eq_neg_detPolar (X Y : Active) :
     activeMetric X Y = -activeDetPolar X Y := by
-  rcases X.2 with ⟨X0, hX⟩
-  rcases Y.2 with ⟨Y0, hY⟩
-  have hXa : X.1.a = 0 := by rw [← hX]; rfl
-  have hXb : X.1.b = 0 := by rw [← hX]; rfl
-  have hYa : Y.1.a = 0 := by rw [← hY]; rfl
-  have hYb : Y.1.b = 0 := by rw [← hY]; rfl
-  simp [activeMetric, wittMetric, activeDetPolar, activeSectorEquiv,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, hXa, hXb, hYa, hYb,
-    dot]
+  rw [activeMetric_eq_potential_polarization]
+  rw [activePotential_eq_neg_detZ (X + Y)]
+  rw [activePotential_eq_neg_detZ X]
+  rw [activePotential_eq_neg_detZ Y]
+  unfold activeDetPolar
+  rw [Submodule.coe_add X Y]
   ring
 
 theorem activeMetric_symmetric (X Y : Active) :

@@ -90,11 +90,11 @@ def bdgCoordinateSignEquiv : Coord8 ≃ₗ[ℝ] Coord8 where
   left_inv x := by
     funext i
     change bdgSign i * (bdgSign i * x i) = x i
-    rw [← mul_assoc, bdgSign_sq, one_mul]
+    rw [← mul_assoc, bdgSign_sq, _root_.one_mul]
   right_inv x := by
     funext i
     change bdgSign i * (bdgSign i * x i) = x i
-    rw [← mul_assoc, bdgSign_sq, one_mul]
+    rw [← mul_assoc, bdgSign_sq, _root_.one_mul]
   map_add' x y := by
     funext i
     simp only [Pi.add_apply]

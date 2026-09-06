@@ -51,6 +51,24 @@ theorem cl11Rep_e0_anticommute_omega :
     cl11Rep e0 * cl11Rep omega = -(cl11Rep omega * cl11Rep e0) := by
   rw [cl11Rep_e0, cl11Rep_omega, circularHodgeStar_gradedChirality_anticommutes]
 
+@[simp] theorem cl11Rep_e1 : cl11Rep e1 = circularHodgeStar * circularGradedChirality :=
+  cl11Rep_ι_complex
+
+theorem cl11Rep_e1_anticommute_omega :
+    cl11Rep e1 * cl11Rep omega = -(cl11Rep omega * cl11Rep e1) := by
+  rw [cl11Rep_e1, cl11Rep_omega]
+  have h1 : (circularHodgeStar * circularGradedChirality) * circularGradedChirality =
+      circularHodgeStar := by
+    rw [mul_assoc, circularGradedChirality_sq, mul_one]
+  have h_anti : circularGradedChirality * circularHodgeStar =
+      -(circularHodgeStar * circularGradedChirality) := by
+    rw [← neg_neg (circularGradedChirality * circularHodgeStar),
+        ← circularHodgeStar_gradedChirality_anticommutes]
+  have h2 : circularGradedChirality * (circularHodgeStar * circularGradedChirality) =
+      -circularHodgeStar := by
+    rw [← mul_assoc, h_anti, neg_mul, mul_assoc, circularGradedChirality_sq, mul_one]
+  rw [h1, h2, neg_neg]
+
 /-! ### 2. The Discrete Codifferential and Dirac-Kähler Operator -/
 
 /-- The discrete codifferential δ = -⋆d⋆ expressed via e₀ conjugation. -/

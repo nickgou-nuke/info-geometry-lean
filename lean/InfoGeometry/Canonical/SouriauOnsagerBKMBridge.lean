@@ -296,6 +296,55 @@ def maximallyMixedFaithfulDensityTwo :
         exact matrixOfOp_id]
     simp [Matrix.trace]
 
+/-- The same canonical faithful density is available at every dyadic dimension `2 ^ n`. -/
+def maximallyMixedFaithfulDensityPowTwo (n : ℕ) :
+    FaithfulDensityOperator (2 ^ n) where
+  rho :=
+    (1 / (2 ^ n : ℝ)) •
+      (1 : FiniteOperatorAlgebra (2 ^ n))
+  strictlyPositive := by
+    exact IsStrictlyPositive.smul
+      (by positivity : (0 : ℝ) < 1 / (2 ^ n : ℝ))
+      isStrictlyPositive_one
+  trace_one := by
+    unfold finiteOperatorTrace
+    rw [matrixOfOp_real_smul]
+    rw [show
+      matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+          (1 : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ) by
+        change
+          matrixOfOp
+              (ContinuousLinearMap.id ℂ
+                (FiniteHilbertSpace (2 ^ n))) =
+            1
+        exact matrixOfOp_id]
+    simp [Matrix.trace]
+
+theorem maximallyMixed_bkm_kernel_eq_normalized_trace
+    (n : ℕ) (s : ℝ) (B : FiniteOperatorAlgebra (2 ^ n)) :
+    (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s B =
+      (1 / (2 ^ n : ℂ)) * finiteOperatorTrace B := by
+  rw [FaithfulDensityOperator.kuboMoriKernelFunctional_apply]
+  unfold FaithfulDensityOperator.kuboMoriIntegrand
+  simp only [star_one, mul_one]
+  rw [← (maximallyMixedFaithfulDensityPowTwo n).rpow_add]
+  have hs : s + (1 - s) = 1 := by ring
+  rw [hs, (maximallyMixedFaithfulDensityPowTwo n).rpow_one]
+  change finiteOperatorTrace
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))) * B) = _
+  unfold finiteOperatorTrace
+  change Matrix.trace (matrixOfOp
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))).comp B)) = _
+  rw [matrixOfOp_comp, matrixOfOp_real_smul]
+  have h_one : matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+      (1 : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ) := by
+    change matrixOfOp
+        (ContinuousLinearMap.id ℂ (FiniteHilbertSpace (2 ^ n))) = 1
+    exact matrixOfOp_id
+  rw [h_one, Matrix.smul_mul, one_mul, Matrix.trace_smul]
+  simp [smul_eq_mul]
+
 /-- Concrete noncommutativity witness in the operator carrier used by the BKM
 construction. -/
 theorem exists_noncommuting_finiteOperators :

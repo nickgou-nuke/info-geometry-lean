@@ -46,8 +46,8 @@ theorem relativeModularBerezinianShadow_swap_readout
         (n := n) qMinus q0Minus qPlus q0Plus =
       (relativeModularBerezinianShadow
         (n := n) qPlus q0Plus qMinus q0Minus)⁻¹ := by
-  exact relativeModularBerezinianShadow_swap
-    (n := n) qPlus q0Plus qMinus q0Minus
+  unfold relativeModularBerezinianShadow
+  exact (inv_div _ _).symm
 
 end InfoGeometry.Canonical.RelativeModularOperator
 

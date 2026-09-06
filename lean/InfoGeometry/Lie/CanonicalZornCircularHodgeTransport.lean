@@ -81,7 +81,7 @@ theorem circularHodgeStar_basis (i : Fin 8) :
   rw [circularHodgeStar_coordinate]
   funext j
   fin_cases i <;> fin_cases j <;>
-    simp [circularHodgeIndex, Basis.equivFun_self]
+    simp [-circularPeirceBasis_apply, circularHodgeIndex, Module.Basis.equivFun_self]
 
 /-- The transported three-dimensional Hodge star is an involution. -/
 theorem circularHodgeStar_sq :
@@ -126,7 +126,6 @@ theorem circularHodgeStar_gradedChirality_anticommutes :
       -(circularGradedChirality * circularHodgeStar) := by
   apply LinearMap.ext
   intro x
-  apply circularPeirceBasis.equivFun.injective
   have hanti := LinearMap.congr_fun
     peirceHodgeStar_gradedChirality_anticommutes
     (circularPeirceBasis.equivFun x)
@@ -134,8 +133,10 @@ theorem circularHodgeStar_gradedChirality_anticommutes :
       (peirceGradedChirality (circularPeirceBasis.equivFun x)) =
     -peirceGradedChirality
       (peirceHodgeStar (circularPeirceBasis.equivFun x)) at hanti
-  simpa [circularHodgeStar, circularGradedChirality,
-    Module.End.mul_apply] using hanti
+  simp only [Module.End.mul_apply, LinearMap.neg_apply,
+    circularHodgeStar_apply, circularGradedChirality_apply,
+    LinearEquiv.apply_symm_apply]
+  rw [hanti, map_neg]
 
 end InfoGeometry.Lie.CanonicalZornCircularHodgeTransport
 

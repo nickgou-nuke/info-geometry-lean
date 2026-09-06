@@ -5,6 +5,13 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.SplitSpinFactorTKKConformalSO66
 
+lemma B10_neg_left (u v : V10) : B10 (-u) v = -B10 u v := by
+  have := B10_smul_left (-1) u v
+  simpa using this
+
+lemma B10_add_left (u v w : V10) : B10 (u + v) w = B10 u w + B10 v w := by
+  rw [show u + v = u - (-v) by abel, B10_sub_left, B10_neg_left, sub_neg_eq_add]
+
 /-- Raw TKK parameter carrier before restricting the middle operator to the
 metric-skew zero-grade subspace. -/
 abbrev TKKRawParam := V10 × ((ℝ × Module.End ℝ V10) × V10)
@@ -19,52 +26,47 @@ def tkkParamMap : TKKRawParam →ₗ[ℝ] (V12 → V12) where
     rcases p with ⟨u, ⟨⟨lambda, A⟩, v⟩⟩
     rcases q with ⟨u', ⟨⟨lambda', A'⟩, v'⟩⟩
     funext x
-    rcases x with ⟨s, z, t⟩
-    simp [tkkParamFunction, tkkParamAction, pGen, dGen, rotGen, kGen,
-      B10, zornPolar, ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-      ZornVectorMatrix.conj, ZornVectorMatrix.add, ZornVectorMatrix.smul,
-      ZornVec3.dot, Fin.sum_univ_three]
-    module
+    unfold tkkParamFunction tkkParamAction pGen dGen rotGen kGen
+    ext1
+    · dsimp
+      simp only [B10_add_left, add_mul]
+      ring
+    · ext1
+      · dsimp
+        simp only [smul_add]
+        abel
+      · dsimp
+        simp only [B10_add_left]
+        ring
   map_smul' a p := by
     rcases p with ⟨u, ⟨⟨lambda, A⟩, v⟩⟩
     funext x
-    rcases x with ⟨s, z, t⟩
-    simp [tkkParamFunction, tkkParamAction, pGen, dGen, rotGen, kGen,
-      B10, zornPolar, ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-      ZornVectorMatrix.conj, ZornVectorMatrix.smul, ZornVec3.dot,
-      Fin.sum_univ_three]
-    module
+    unfold tkkParamFunction tkkParamAction pGen dGen rotGen kGen
+    ext1
+    · dsimp
+      simp only [B10_smul_left]
+      ring
+    · ext1
+      · dsimp
+        rw [smul_comm x.2.2 a u, smul_comm x.1 a v]
+        simp only [smul_add, smul_zero]
+      · dsimp
+        simp only [B10_smul_left]
+        ring
 
 @[simp] theorem tkkParamMap_apply
     (u : V10) (lambda : ℝ) (A : Module.End ℝ V10) (v : V10) :
     tkkParamMap (u, ((lambda, A), v)) = tkkParamAction u lambda A v := rfl
 
 /-- Full linear injectivity of the 3-graded TKK parameterization. -/
-theorem tkkParamMap_injective : Function.Injective tkkParamMap := by
-  rw [LinearMap.injective_iff_map_eq_zero]
-  rintro ⟨u, ⟨⟨lambda, A⟩, v⟩⟩ h_zero
-  have hfun : ∀ x : V12, tkkParamAction u lambda A v x = 0 := by
-    intro x
-    have hx := congrFun h_zero x
-    simpa [tkkParamMap, tkkParamFunction] using hx
-  have ⟨hu, hlambda, hA, hv⟩ :=
-    tkk_param_injective u lambda A v hfun
-  apply Prod.ext
-  · exact hu
-  · apply Prod.ext
-    · apply Prod.ext
-      · exact hlambda
-      · exact hA
-    · exact hv
+theorem tkkParamMap_injective : Function.Injective tkkParamMap :=
+  tkkParamFunction_injective
 
 /-- Equivalent pointwise injectivity statement for the underlying function
 parameterization. -/
 theorem tkkParamMap_eq_iff
-    (p q : TKKRawParam) : tkkParamMap p = tkkParamMap q ↔ p = q := by
-  constructor
-  · exact tkkParamMap_injective
-  · intro h
-    exact congrArg tkkParamMap h
+    (p q : TKKRawParam) : tkkParamMap p = tkkParamMap q ↔ p = q :=
+  tkkParamMap_injective.eq_iff
 
 end InfoGeometry.Canonical.SplitSpinFactorTKKConformalSO66
 

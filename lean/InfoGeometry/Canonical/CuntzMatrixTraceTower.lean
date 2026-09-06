@@ -88,6 +88,15 @@ lemma concreteStep_trace (n : ℕ) (A : MatrixStage n) :
   simp
   ring
 
+theorem concreteStep_injective (n : ℕ) :
+    Function.Injective (concreteStep n) := by
+  intro A B hAB
+  ext i j
+  let e := stageIndexEquiv n
+  have hentry := congrArg
+    (fun M : MatrixStage (n + 1) => M (e (i, 0)) (e (j, 0))) hAB
+  simpa [concreteStep, e, Matrix.reindexAlgEquiv] using hentry
+
 /-- Successor maps and preservation of the normalized matrix trace. -/
 structure Data where
   step : ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)

@@ -12,8 +12,6 @@ The matrix representation here is tied to the repository-owned `CZ` basis
 matrix Lie algebra or bracket table is introduced.
 -/
 
-noncomputable section
-
 open scoped Matrix.Norms.Frobenius
 
 namespace InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
@@ -25,10 +23,10 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Canonical.ZornCellScalarExtensionBridge
 
-abbrev Der := CanonicalZornCartanAdjointRootDecomposition.Der
-abbrev CZEnd := Module.End ℝ CanonicalZornDerivation.CZ
+noncomputable abbrev Der := CanonicalZornCartanAdjointRootDecomposition.Der
+noncomputable abbrev CZEnd := Module.End ℝ CanonicalZornDerivation.CZ
 
-abbrev RealCell := InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℝ
+noncomputable abbrev RealCell := InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℝ
 
 /-! The same parameter action over `ℚ`, used only as the finite source for
 the literal coefficient export below.  Its coordinate order is the native
@@ -59,21 +57,24 @@ def rationalParameterAction (p : Fin 14 → ℚ) (X : RationalVZ) : RationalVZ :
     -(p 0 * X.v 0 + p 3 * X.v 1 + p 8 * X.v 2 - p 10 * X.w 0 +
       p 9 * X.w 1 - p 4 * X.w 2)⟩
 
-def rationalAxis (i : Fin 3) : Fin 3 → ℚ := Pi.single i 1
+def rationalAxis (i : Fin 3) : Fin 3 → ℚ := fun j => if i = j then 1 else 0
 
 def rationalFrameVector (a b : ℚ) (v w : Fin 3 → ℚ) : RationalVZ :=
   ⟨a, v, w, b⟩
 
+def zeroVec3 : Fin 3 → ℚ := fun _ => 0
+def zeroVZ : RationalVZ := ⟨0, zeroVec3, zeroVec3, 0⟩
+
 def rationalCircularFrame : Fin 8 → RationalVZ
-  | 0 => rationalFrameVector (1 / 2 : ℚ) (1 / 2 : ℚ) 0 0
+  | 0 => rationalFrameVector (1 / 2 : ℚ) (1 / 2 : ℚ) zeroVec3 zeroVec3
   | 1 => rationalFrameVector 0 0 ((1 / 2 : ℚ) • rationalAxis 0) ((1 / 2 : ℚ) • rationalAxis 0)
   | 2 => rationalFrameVector 0 0 ((1 / 2 : ℚ) • rationalAxis 1) ((1 / 2 : ℚ) • rationalAxis 1)
   | 3 => rationalFrameVector 0 0 ((1 / 2 : ℚ) • rationalAxis 2) ((1 / 2 : ℚ) • rationalAxis 2)
-  | 4 => rationalFrameVector (1 / 2 : ℚ) (-1 / 2 : ℚ) 0 0
+  | 4 => rationalFrameVector (1 / 2 : ℚ) (-1 / 2 : ℚ) zeroVec3 zeroVec3
   | 5 => rationalFrameVector 0 0 (-(1 / 2 : ℚ) • rationalAxis 0) ((1 / 2 : ℚ) • rationalAxis 0)
   | 6 => rationalFrameVector 0 0 (-(1 / 2 : ℚ) • rationalAxis 1) ((1 / 2 : ℚ) • rationalAxis 1)
   | 7 => rationalFrameVector 0 0 (-(1 / 2 : ℚ) • rationalAxis 2) ((1 / 2 : ℚ) • rationalAxis 2)
-  | _ => 0
+  | _ => zeroVZ
 
 def rationalCoordinates (X : RationalVZ) : Fin 8 → ℚ
   | 0 => X.a
@@ -91,21 +92,21 @@ def rationalCircularFrameMatrix : Matrix (Fin 8) (Fin 8) ℚ :=
 
 def rationalStandardVector (j : Fin 8) : RationalVZ :=
   match j with
-  | 0 => rationalFrameVector 1 0 0 0
-  | 1 => rationalFrameVector 0 0 (Pi.single 0 1) 0
-  | 2 => rationalFrameVector 0 0 (Pi.single 1 1) 0
-  | 3 => rationalFrameVector 0 0 (Pi.single 2 1) 0
-  | 4 => rationalFrameVector 0 1 0 0
-  | 5 => rationalFrameVector 0 0 0 (Pi.single 0 1)
-  | 6 => rationalFrameVector 0 0 0 (Pi.single 1 1)
-  | 7 => rationalFrameVector 0 0 0 (Pi.single 2 1)
-  | _ => 0
+  | 0 => rationalFrameVector 1 0 zeroVec3 zeroVec3
+  | 1 => rationalFrameVector 0 0 (rationalAxis 0) zeroVec3
+  | 2 => rationalFrameVector 0 0 (rationalAxis 1) zeroVec3
+  | 3 => rationalFrameVector 0 0 (rationalAxis 2) zeroVec3
+  | 4 => rationalFrameVector 0 1 zeroVec3 zeroVec3
+  | 5 => rationalFrameVector 0 0 zeroVec3 (rationalAxis 0)
+  | 6 => rationalFrameVector 0 0 zeroVec3 (rationalAxis 1)
+  | 7 => rationalFrameVector 0 0 zeroVec3 (rationalAxis 2)
+  | _ => zeroVZ
 
 def rationalParameterMatrix (k : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
   fun i j => rationalCoordinates
-    (rationalParameterAction (Pi.single k 1) (rationalStandardVector j)) i
+    (rationalParameterAction (fun m => if k = m then 1 else 0) (rationalStandardVector j)) i
 
-def rationalCircularOperatorMatrix (k : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
+noncomputable def rationalCircularOperatorMatrix (k : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
   (rationalCircularFrameMatrix)⁻¹ * rationalParameterMatrix k *
     rationalCircularFrameMatrix
 
@@ -133,7 +134,7 @@ theorem rationalCircularFrameMatrix_inv :
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [rationalCircularFrameMatrix, rationalCircularFrame,
-        rationalFrameVector, rationalAxis, rationalCoordinates] <;>
+        rationalFrameVector, rationalAxis, rationalCoordinates, zeroVec3, zeroVZ] <;>
       simp
   rw [hframe]
   apply Matrix.inv_eq_right_inv
@@ -174,6 +175,8 @@ theorem rootDerivationRationalTable_entry (k : Fin 14) (i j : Fin 8) :
   have h := rootDerivationRationalTable_matrix k
   rw [rationalCircularOperatorMatrix, rationalCircularFrameMatrix_inv] at h
   exact congrFun (congrFun h i) j
+
+noncomputable section
 
 noncomputable def nativeParameterMatrix (i : Fin 14) :
     Matrix (Fin 8) (Fin 8) ℝ :=
@@ -373,4 +376,7 @@ theorem nativeParameterMatrix_eq_zero_iff (i : Fin 14) :
   · intro h
     simp [nativeParameterMatrix, h]
 
+end
+
 end InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
+

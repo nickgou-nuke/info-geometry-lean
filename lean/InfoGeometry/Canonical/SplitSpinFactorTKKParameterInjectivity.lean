@@ -23,19 +23,19 @@ theorem tkk_param_injective
     u = 0 ∧ lambda = 0 ∧ A = 0 ∧ v = 0 := by
   have h1 := h_zero ((1 : ℝ), ((0 : V10), (0 : ℝ)))
   simp [tkkParamAction, pGen, dGen, rotGen, kGen] at h1
-  have hlambda : lambda = 0 := congrArg (fun p : V12 => p.1) h1
-  have hv : v = 0 := congrArg (fun p : V12 => p.2.1) h1
+  have hlambda : lambda = 0 := h1.1
+  have hv : v = 0 := h1.2
 
   have h2 := h_zero ((0 : ℝ), ((0 : V10), (1 : ℝ)))
   simp [tkkParamAction, pGen, dGen, rotGen, kGen] at h2
-  have hu : u = 0 := congrArg (fun p : V12 => p.2.1) h2
+  have hu : u = 0 := h2.1
 
   have hA : A = 0 := by
-    ext z
+    apply LinearMap.ext; intro z
     have hz := h_zero ((0 : ℝ), (z, (0 : ℝ)))
     rw [hu, hlambda, hv] at hz
     simp [tkkParamAction, pGen, dGen, rotGen, kGen] at hz
-    exact congrArg (fun p : V12 => p.2.1) hz
+    exact hz
 
   exact ⟨hu, hlambda, hA, hv⟩
 
@@ -56,13 +56,22 @@ theorem tkkParamFunction_injective : Function.Injective tkkParamFunction := by
       tkkParamAction (u - u') (lambda - lambda') (A - A') (v - v') x = 0 := by
     intro x
     have h := congrFun hpq x
-    simp [tkkParamFunction, tkkParamAction, pGen, dGen, rotGen, kGen,
-      B10, zornPolar, ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-      ZornVectorMatrix.conj, ZornVectorMatrix.sub, ZornVectorMatrix.add,
-      ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVec3.dot,
-      Fin.sum_univ_three] at h ⊢
-    module at h ⊢
-    exact h
+    change pGen u x + dGen lambda x + rotGen A x + kGen v x = pGen u' x + dGen lambda' x + rotGen A' x + kGen v' x at h
+    change pGen (u - u') x + dGen (lambda - lambda') x + rotGen (A - A') x + kGen (v - v') x = 0
+    have hz_eq : pGen (u - u') x + dGen (lambda - lambda') x + rotGen (A - A') x + kGen (v - v') x = (pGen u x + dGen lambda x + rotGen A x + kGen v x) - (pGen u' x + dGen lambda' x + rotGen A' x + kGen v' x) := by
+      unfold pGen dGen rotGen kGen
+      ext1
+      · dsimp
+        simp only [B10_sub_left, sub_mul, mul_sub, smul_sub, sub_smul, LinearMap.sub_apply]
+        ring
+      · ext1
+        · dsimp
+          simp only [B10_sub_left, sub_mul, mul_sub, smul_sub, sub_smul, LinearMap.sub_apply]
+          abel
+        · dsimp
+          simp only [B10_sub_left, sub_mul, mul_sub, smul_sub, sub_smul, LinearMap.sub_apply]
+          ring
+    rw [hz_eq, h, sub_self]
   rcases tkk_param_injective (u - u') (lambda - lambda') (A - A') (v - v') hz with
     ⟨hu, hlambda, hA, hv⟩
   apply Prod.ext

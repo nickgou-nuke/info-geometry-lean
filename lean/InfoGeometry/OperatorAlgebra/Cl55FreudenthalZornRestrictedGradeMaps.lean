@@ -26,39 +26,24 @@ def jointGradeSpace (k : ℤ) :
     Submodule ℝ (JointEnvelope (J := J)) where
   carrier := {X | HasJointGrade datum k X}
   zero_mem' := by
-    change HasJointGrade datum k 0
-    unfold HasJointGrade HasAdjointGrade commutator
-    simp
+    simp [HasJointGrade, HasAdjointGrade, commutator]
   add_mem' := by
     intro X Y hX hY
-    change HasJointGrade datum k X at hX
-    change HasJointGrade datum k Y at hY
-    change HasJointGrade datum k (X + Y)
-    unfold HasJointGrade HasAdjointGrade commutator at hX hY ⊢
-    calc
-      diagonal (jointEulerCoefficient datum) * (X + Y) -
-          (X + Y) * diagonal (jointEulerCoefficient datum) =
-        (diagonal (jointEulerCoefficient datum) * X -
-            X * diagonal (jointEulerCoefficient datum)) +
-          (diagonal (jointEulerCoefficient datum) * Y -
-            Y * diagonal (jointEulerCoefficient datum)) := by
-              noncomm_ring
-      _ = (k : ℝ) • X + (k : ℝ) • Y := by rw [hX, hY]
-      _ = (k : ℝ) • (X + Y) := by rw [smul_add]
+    change ⁅diagonal (jointEulerCoefficient datum), X⁆ =
+      (k : ℝ) • X at hX
+    change ⁅diagonal (jointEulerCoefficient datum), Y⁆ =
+      (k : ℝ) • Y at hY
+    change ⁅diagonal (jointEulerCoefficient datum), X + Y⁆ =
+      (k : ℝ) • (X + Y)
+    rw [lie_add, hX, hY, smul_add]
   smul_mem' := by
     intro r X hX
-    change HasJointGrade datum k X at hX
-    change HasJointGrade datum k (r • X)
-    unfold HasJointGrade HasAdjointGrade commutator at hX ⊢
-    calc
-      diagonal (jointEulerCoefficient datum) * (r • X) -
-          (r • X) * diagonal (jointEulerCoefficient datum) =
-        r • (diagonal (jointEulerCoefficient datum) * X -
-          X * diagonal (jointEulerCoefficient datum)) := by
-            rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
-      _ = r • ((k : ℝ) • X) := by rw [hX]
-      _ = (k : ℝ) • (r • X) := by
-        simp [smul_smul, mul_comm]
+    change ⁅diagonal (jointEulerCoefficient datum), X⁆ =
+      (k : ℝ) • X at hX
+    change ⁅diagonal (jointEulerCoefficient datum), r • X⁆ =
+      (k : ℝ) • (r • X)
+    rw [lie_smul, hX]
+    simp [smul_smul, mul_comm]
 
 @[simp] theorem mem_jointGradeSpace
     (k : ℤ) (X : JointEnvelope (J := J)) :
@@ -70,38 +55,15 @@ theorem commutator_mem_jointGradeSpace_add
     (hX : X ∈ jointGradeSpace datum k)
     (hY : Y ∈ jointGradeSpace datum l) :
     commutator X Y ∈ jointGradeSpace datum (k + l) := by
-  change HasJointGrade datum k X at hX
-  change HasJointGrade datum l Y at hY
-  change HasJointGrade datum (k + l) (commutator X Y)
-  unfold HasJointGrade HasAdjointGrade at hX hY ⊢
-  unfold commutator at hX hY ⊢
-  let H := diagonal (jointEulerCoefficient datum)
-  change H * X - X * H = (k : ℝ) • X at hX
-  change H * Y - Y * H = (l : ℝ) • Y at hY
+  change ⁅diagonal (jointEulerCoefficient datum), X⁆ =
+    (k : ℝ) • X at hX
+  change ⁅diagonal (jointEulerCoefficient datum), Y⁆ =
+    (l : ℝ) • Y at hY
   change
-    H * (X * Y - Y * X) - (X * Y - Y * X) * H =
-      ((k + l : ℤ) : ℝ) • (X * Y - Y * X)
-  calc
-    H * (X * Y - Y * X) - (X * Y - Y * X) * H =
-        (H * X - X * H) * Y + X * (H * Y - Y * H) -
-          ((H * Y - Y * H) * X + Y * (H * X - X * H)) := by
-            noncomm_ring
-    _ = ((k : ℝ) • X) * Y + X * ((l : ℝ) • Y) -
-          (((l : ℝ) • Y) * X + Y * ((k : ℝ) • X)) := by
-            rw [hX, hY]
-    _ = (k : ℝ) • (X * Y) + (l : ℝ) • (X * Y) -
-          ((l : ℝ) • (Y * X) + (k : ℝ) • (Y * X)) := by
-            simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
-    _ = ((k : ℝ) + (l : ℝ)) • (X * Y) -
-          ((l : ℝ) + (k : ℝ)) • (Y * X) := by
-            rw [add_smul, add_smul]
-    _ = ((k : ℝ) + (l : ℝ)) • (X * Y) -
-          ((k : ℝ) + (l : ℝ)) • (Y * X) := by
-            rw [add_comm (l : ℝ) (k : ℝ)]
-    _ = ((k : ℝ) + (l : ℝ)) • (X * Y - Y * X) := by
-          rw [smul_sub]
-    _ = ((k + l : ℤ) : ℝ) • (X * Y - Y * X) := by
-          rw [Int.cast_add]
+    ⁅diagonal (jointEulerCoefficient datum), ⁅X, Y⁆⁆ =
+      ((k + l : ℤ) : ℝ) • ⁅X, Y⁆
+  rw [leibniz_lie, hX, hY, smul_lie, lie_smul, ← add_smul]
+  simp only [Int.cast_add]
 
 /-- Native Cl(5,5) grade map into the common target grade. -/
 def cl55RestrictedGradeMap (g : ConformalGrade) :

@@ -1,3 +1,5 @@
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
@@ -139,6 +141,47 @@ theorem circularComplexStructure_sq :
         rw [circularHodgeStar_sq, circularGradedChirality_sq]
     _ = -1 := by
         simp only [mul_one]
+
+/-!
+## Clifford Algebra Representation of the Hodge-Chirality Atom
+-/
+
+/-- The split 2D quadratic space governing the Hodge-Chirality Clifford atom. -/
+def splitQuad2D : QuadraticForm ℝ (ℝ × ℝ) :=
+  QuadraticMap.linMulLin (LinearMap.fst ℝ ℝ ℝ) (LinearMap.fst ℝ ℝ ℝ) +
+    QuadraticMap.linMulLin (LinearMap.snd ℝ ℝ ℝ) (LinearMap.snd ℝ ℝ ℝ)
+
+@[simp] lemma splitQuad2D_apply (v : ℝ × ℝ) :
+    splitQuad2D v = v.1 ^ 2 + v.2 ^ 2 := by
+  simp [splitQuad2D, sq]
+
+/-- The canonical linear generator map sending (u, v) to u • ⋆ + v • Γ. -/
+def hodgeChiralityLinearMap : (ℝ × ℝ) →ₗ[ℝ] EndCZ where
+  toFun v := v.1 • circularHodgeStar + v.2 • circularGradedChirality
+  map_add' v w := by
+    dsimp
+    simp only [add_smul]
+    abel
+  map_smul' a v := by
+    dsimp
+    simp only [smul_add, mul_smul]
+
+/-- The Clifford condition: (u • ⋆ + v • Γ)² = (u² + v²) • 1. -/
+theorem hodge_chirality_clifford_condition (v : ℝ × ℝ) :
+    hodgeChiralityLinearMap v * hodgeChiralityLinearMap v =
+      (splitQuad2D v) • (1 : EndCZ) := by
+  simp only [hodgeChiralityLinearMap, LinearMap.coe_mk, AddHom.coe_mk,
+    add_mul, mul_add, smul_mul_smul, sq, splitQuad2D_apply]
+  rw [circularHodgeStar_sq, circularGradedChirality_sq,
+      circularHodgeStar_gradedChirality_anticommutes,
+      smul_neg, mul_comm v.2 v.1]
+  abel
+  rw [← add_smul]
+
+/-- The Universal Clifford Representation of the 1+3+3+1 Hodge atom on Zorn matrices. -/
+def zornCliffordRepresentation :
+    CliffordAlgebra splitQuad2D →ₐ[ℝ] EndCZ :=
+  CliffordAlgebra.lift splitQuad2D ⟨hodgeChiralityLinearMap, hodge_chirality_clifford_condition⟩
 
 end InfoGeometry.Lie.CanonicalZornCircularHodgeTransport
 

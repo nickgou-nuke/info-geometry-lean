@@ -29,7 +29,7 @@ theorem volume_four_square (Q : QuadraticForm ℝ V) (a b c d : V)
       algebraMap ℝ (CliffordAlgebra Q) (Q a * Q b * Q c * Q d) := by
   rw [cliffordVolumeElement_sq_of_pairwise _ ho]
   congr 1
-  simp [cliffordVolumeSquareScalar] <;> ring
+  simp [cliffordVolumeSquareScalar]; ring
 
 theorem volume_four_euclidean_square (Q : QuadraticForm ℝ V) (a b c d : V)
     (ho : [a, b, c, d].Pairwise (fun v w => Q.IsOrtho v w))
@@ -57,7 +57,7 @@ theorem paravector_mul_conjugate (Q : QuadraticForm ℝ V) (t : ℝ) (v : V) :
     (algebraMap ℝ (CliffordAlgebra Q) t + CliffordAlgebra.ι Q v) *
         (algebraMap ℝ (CliffordAlgebra Q) t - CliffordAlgebra.ι Q v) =
       algebraMap ℝ (CliffordAlgebra Q) (t ^ 2 - Q v) := by
-  have hcomm := (Algebra.commutes t (CliffordAlgebra.ι Q v)).eq
+  have hcomm := Algebra.commutes t (CliffordAlgebra.ι Q v)
   calc
     (algebraMap ℝ (CliffordAlgebra Q) t + CliffordAlgebra.ι Q v) *
           (algebraMap ℝ (CliffordAlgebra Q) t - CliffordAlgebra.ι Q v) =

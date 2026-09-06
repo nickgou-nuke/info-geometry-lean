@@ -17,6 +17,40 @@ open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 open InfoGeometry.Canonical.CantorCylinderTopology
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 
+theorem realBinaryPartialReadout_boundaryCons
+    (N : ℕ) (b : Bool) (ξ : CantorBoundary) :
+    realBinaryPartialReadout (N + 1) (boundaryCons b ξ) =
+      (if b then (1 / 2 : ℝ) else 0) +
+        (1 / 2 : ℝ) * realBinaryPartialReadout N ξ := by
+  induction N with
+  | zero =>
+      simp [realBinaryPartialReadout_succ, realBinaryPartialReadout_zero,
+        realBinaryTerm, boundaryCons]
+  | succ N ih =>
+      rw [realBinaryPartialReadout_succ, ih]
+      rw [realBinaryPartialReadout_succ]
+      have hterm :
+          realBinaryTerm (boundaryCons b ξ) (N + 1) =
+            (1 / 2 : ℝ) * realBinaryTerm ξ N := by
+        by_cases h : ξ N
+        · simp [realBinaryTerm, boundaryCons, h]
+          ring
+        · simp [realBinaryTerm, boundaryCons, h]
+      rw [hterm]
+      ring
+
+theorem realBinaryPartialReadout_boundaryConsList
+    (bs : List Bool) (ξ : CantorBoundary) :
+    realBinaryPartialReadout bs.length (boundaryConsList bs ξ) =
+      finitePrefixReadout bs := by
+  induction bs with
+  | nil =>
+      simp [realBinaryPartialReadout, finitePrefixReadout, boundaryConsList]
+  | cons b bs ih =>
+      rw [List.length_cons, boundaryConsList_cons,
+        realBinaryPartialReadout_boundaryCons, ih]
+      simp [finitePrefixReadout]
+
 theorem prefixExtend_eq_boundaryConsList
     {n : ℕ} (w : BitWord n) (x : CantorBoundary) :
     prefixExtend w x = boundaryConsList (List.ofFn w) x := by
@@ -60,6 +94,36 @@ theorem realBinaryPartialReadout_refinement
   have hbit : prefixExtend w (prefixBit b x) n = b := by
     simp [prefixExtend, prefixBit]
   simp [realBinaryTerm, hbit]
+
+theorem realBinaryPartialReadout_prefixExtend
+    (n : ℕ) (w : BitWord n) (x : CantorBoundary) :
+    realBinaryPartialReadout n (prefixExtend w x) =
+      finitePrefixReadout (List.ofFn w) := by
+  rw [prefixExtend_eq_boundaryConsList]
+  simpa using realBinaryPartialReadout_boundaryConsList (List.ofFn w) x
+
+/-- The tail-free finite-stage form of the refinement identity. -/
+theorem finitePrefixReadout_extendSucc
+    (n : ℕ) (w : BitWord n) (b : Bool) :
+    finitePrefixReadout (List.ofFn (extendSucc n w b)) =
+      finitePrefixReadout (List.ofFn w) +
+        (if b then (1 / 2 : ℝ) ^ (n + 1) else 0) := by
+  let x : CantorBoundary := fun _ => false
+  have h := realBinaryPartialReadout_refinement n w b x
+  rw [realBinaryPartialReadout_prefixExtend,
+    realBinaryPartialReadout_prefixExtend] at h
+  exact h
+
+theorem finitePrefixReadout_extendSucc_child_sum
+    (n : ℕ) (w : BitWord n) :
+    finitePrefixReadout (List.ofFn (extendSucc n w false)) +
+        finitePrefixReadout (List.ofFn (extendSucc n w true)) =
+      2 * finitePrefixReadout (List.ofFn w) +
+        (1 / 2 : ℝ) ^ (n + 1) := by
+  rw [finitePrefixReadout_extendSucc,
+    finitePrefixReadout_extendSucc]
+  simp
+  ring
 
 theorem realBinaryReadout_prefixExtend
     (n : ℕ) (w : BitWord n) (x : CantorBoundary) :

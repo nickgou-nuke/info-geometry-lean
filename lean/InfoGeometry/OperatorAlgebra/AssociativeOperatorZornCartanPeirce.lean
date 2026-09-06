@@ -104,6 +104,13 @@ theorem cartanInvolution_mul (X Y : ZornBlock A) :
   unfold cartanInvolution
   noncomm_ring [grading_sq (A := A)]
 
+/-- The Cartan involution preserves subtraction. -/
+theorem cartanInvolution_sub (X Y : ZornBlock A) :
+    cartanInvolution (X - Y) =
+      cartanInvolution X - cartanInvolution Y := by
+  unfold cartanInvolution
+  rw [mul_sub, sub_mul]
+
 /-- Matrix commutator in the associative shell. -/
 def commutator (X Y : ZornBlock A) : ZornBlock A :=
   X * Y - Y * X
@@ -112,9 +119,9 @@ def commutator (X Y : ZornBlock A) : ZornBlock A :=
 theorem cartanInvolution_commutator (X Y : ZornBlock A) :
     cartanInvolution (commutator X Y) =
       commutator (cartanInvolution X) (cartanInvolution Y) := by
-  unfold commutator cartanInvolution
-  rw [mul_sub, sub_mul]
-  rw [cartanInvolution_mul, cartanInvolution_mul]
+  unfold commutator
+  rw [cartanInvolution_sub, cartanInvolution_mul,
+    cartanInvolution_mul]
 
 /-- Even Cartan sector. -/
 def IsEven (X : ZornBlock A) : Prop :=
@@ -185,8 +192,8 @@ theorem diagonalPart_add_offDiagonalPart (X : ZornBlock A) :
 
 @[simp] theorem cartanInvolution_offDiagonalPart (X : ZornBlock A) :
     cartanInvolution (offDiagonalPart X) = -offDiagonalPart X := by
-  apply zornBlock_ext <;>
-    simp [cartanInvolution_coordinates, offDiagonalPart]
+  rw [cartanInvolution_coordinates]
+  apply zornBlock_ext <;> simp [offDiagonalPart]
 
 /-- Four Peirce corners. -/
 def cornerPP (X : ZornBlock A) : ZornBlock A :=

@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.ViazovskaLeechGolayWeld
 12 nonzero root directions, explicit planar coordinates, exact long/short
 length ratio, 150-degree simple-root angle, highest-root orthogonality, and
 Weyl Coxeter relation of order six. -/
-theorem verified_g2_root_coxeter_packet :=
+abbrev verified_g2_root_coxeter_packet :=
   grand_g2_master_root_unification
 
 /-- The first primitive 24th root used for the abstract Coxeter-plane readout. -/
@@ -40,7 +40,7 @@ def planeOrbit (z : ℂ) (k : ℕ) : ℂ :=
 /-- Every abstract order-24 orbit is 24-periodic. -/
 theorem planeOrbit_add_24 (z : ℂ) (k : ℕ) :
     planeOrbit z (k + 24) = planeOrbit z k := by
-  simp [planeOrbit, pow_add, mul_assoc]
+  simp [planeOrbit, pow_add]
 
 /-- A nonzero projected vector has 24 distinct points in its first orbit cycle. -/
 theorem planeOrbit_injective_on_range
@@ -62,7 +62,7 @@ def twelvePhaseOrbit (z : ℂ) (k : ℕ) : ℂ :=
 theorem twelvePhaseOrbit_add_12 (z : ℂ) (k : ℕ) :
     twelvePhaseOrbit z (k + 12) = twelvePhaseOrbit z k := by
   unfold twelvePhaseOrbit
-  convert planeOrbit_add_24 z (2 * k) using 1 <;> omega
+  convert planeOrbit_add_24 z (2 * k) using 1
 
 /-- The 6-gon phase subsequence is obtained by taking every fourth point of
 the primitive 24-gon. -/
@@ -73,7 +73,7 @@ def sixPhaseOrbit (z : ℂ) (k : ℕ) : ℂ :=
 theorem sixPhaseOrbit_add_6 (z : ℂ) (k : ℕ) :
     sixPhaseOrbit z (k + 6) = sixPhaseOrbit z k := by
   unfold sixPhaseOrbit
-  convert planeOrbit_add_24 z (4 * k) using 1 <;> omega
+  convert planeOrbit_add_24 z (4 * k) using 1
 
 /-- A generic iterate used to state projection equivariance without assuming a
 Leech-lattice carrier that the repository does not yet construct. -/
@@ -92,7 +92,7 @@ theorem projected_iterate_eq_planeOrbit
   | zero => simp [iterate, planeOrbit]
   | succ n ih =>
       rw [iterate, hpi, ih]
-      simp [planeOrbit, pow_succ, mul_comm, mul_left_comm, mul_assoc]
+      simp [planeOrbit, pow_succ, mul_comm, mul_left_comm]
 
 /-- Under the same equivariance hypothesis, a nonzero projected vector has 24
 distinct projected points in its first cycle. -/
@@ -102,6 +102,7 @@ theorem projected_first_cycle_injective
     {x : V} (hx : pi x ≠ 0) :
     Set.InjOn (fun n => pi (iterate w n x)) (↑(Finset.range 24) : Set ℕ) := by
   intro a ha b hb hab
+  dsimp at hab
   rw [projected_iterate_eq_planeOrbit w pi hpi x a,
     projected_iterate_eq_planeOrbit w pi hpi x b] at hab
   exact planeOrbit_injective_on_range hx ha hb hab

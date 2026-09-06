@@ -123,25 +123,53 @@ def IsRightToLeftChannel (q : B) : Prop :=
   forall a : A,
     q * P.rightRep a = P.leftRep (star a) * q
 
-/-- The product of two left-to-right twisted channels lies in the ordinary
-commutant of the represented left algebra whenever `star` is involutive. -/
-theorem leftToRight_square_commutes_left
-    {q : B} (hq : P.IsLeftToRightChannel q) (a : A) :
-    (q * q) * P.leftRep a = P.leftRep a * (q * q) := by
+/-- The closed two-step channel `qMinus*qPlus` commutes with the represented
+left algebra.  Both opposite intertwining laws are essential. -/
+theorem paired_channels_product_commutes_left
+    {qPlus qMinus : B}
+    (hPlus : P.IsLeftToRightChannel qPlus)
+    (hMinus : P.IsRightToLeftChannel qMinus)
+    (a : A) :
+    (qMinus * qPlus) * P.leftRep a =
+      P.leftRep a * (qMinus * qPlus) := by
   calc
-    (q * q) * P.leftRep a = q * (q * P.leftRep a) := by rw [mul_assoc]
-    _ = q * (P.rightRep (star a) * q) := by rw [hq a]
-    _ = (q * P.rightRep (star a)) * q := by rw [← mul_assoc]
-    _ = (P.leftRep (star (star a)) * q) * q := by
-      rw [hq (star a)]
-    _ = P.leftRep a * (q * q) := by simp [mul_assoc]
+    (qMinus * qPlus) * P.leftRep a =
+        qMinus * (qPlus * P.leftRep a) := by rw [mul_assoc]
+    _ = qMinus * (P.rightRep (star a) * qPlus) := by
+      rw [hPlus a]
+    _ = (qMinus * P.rightRep (star a)) * qPlus := by
+      rw [← mul_assoc]
+    _ = (P.leftRep (star (star a)) * qMinus) * qPlus := by
+      rw [hMinus (star a)]
+    _ = P.leftRep a * (qMinus * qPlus) := by
+      simp [mul_assoc]
+
+/-- Dually, `qPlus*qMinus` commutes with the represented right algebra. -/
+theorem paired_channels_product_commutes_right
+    {qPlus qMinus : B}
+    (hPlus : P.IsLeftToRightChannel qPlus)
+    (hMinus : P.IsRightToLeftChannel qMinus)
+    (a : A) :
+    (qPlus * qMinus) * P.rightRep a =
+      P.rightRep a * (qPlus * qMinus) := by
+  calc
+    (qPlus * qMinus) * P.rightRep a =
+        qPlus * (qMinus * P.rightRep a) := by rw [mul_assoc]
+    _ = qPlus * (P.leftRep (star a) * qMinus) := by
+      rw [hMinus a]
+    _ = (qPlus * P.leftRep (star a)) * qMinus := by
+      rw [← mul_assoc]
+    _ = (P.rightRep (star (star a)) * qPlus) * qMinus := by
+      rw [hPlus (star a)]
+    _ = P.rightRep a * (qPlus * qMinus) := by
+      simp [mul_assoc]
 
 /-- A modularly paired pair of channels is exchanged by `J`. -/
 def ChannelsAreModularPartners (qPlus qMinus : B) : Prop :=
   P.modularConjugation qPlus = qMinus ∧
     P.modularConjugation qMinus = qPlus
 
-/-- A self-adjoint diagonal pair with modularly paired off-diagonal channels
+/-- A star-conjugate diagonal pair with modularly paired off-diagonal channels
 is fixed by the full modular sheet exchange. -/
 theorem modularExchange_twinBlock_fixed
     {a b : A} {qPlus qMinus : B}

@@ -52,6 +52,14 @@ def primonPartition (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) : ℂ :=
 def kmsWeight (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n) : ℂ :=
   boltzmannFactor (primes i) β / primonPartition n primes β
 
+/-- The sum of normalized KMS weights equals one. -/
+theorem kmsWeight_sum_eq_one (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
+    (hZ : primonPartition n primes β ≠ 0) :
+    ∑ i : Fin n, kmsWeight n primes β i = 1 := by
+  dsimp [kmsWeight]
+  rw [← Finset.sum_div]
+  exact div_self hZ
+
 /-! ## Diagonal KMS state
 
 The diagonal subalgebra D_n ⊂ O_n is the commutative subalgebra generated
@@ -117,10 +125,7 @@ theorem eval_projector (φ : DiagonalKMSState n) (i : Fin n) :
 def canonical (primes : Fin n → ℕ) (β : ℂ) (hZ : primonPartition n primes β ≠ 0) :
     DiagonalKMSState n where
   weights := λ i => kmsWeight n primes β i
-  weights_sum_one := by
-    dsimp [kmsWeight]
-    rw [← Finset.sum_div]
-    exact div_self hZ
+  weights_sum_one := kmsWeight_sum_eq_one n primes β hZ
 
 /-- The Hamiltonian H = Σ_i ε_i P_i evaluated under the KMS state:
     φ_β(H) = Σ_i ε_i · w_i. -/

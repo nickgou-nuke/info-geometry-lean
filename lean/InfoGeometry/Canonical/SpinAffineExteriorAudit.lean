@@ -1,3 +1,4 @@
+import InfoGeometry.Quantum.QuaternionSpinTimeReversal
 import InfoGeometry.Canonical.SpinAffineExteriorPristineChain
 
 /-!

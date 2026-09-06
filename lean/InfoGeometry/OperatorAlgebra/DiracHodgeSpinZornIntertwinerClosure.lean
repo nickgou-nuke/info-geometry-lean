@@ -24,6 +24,7 @@ namespace InfoGeometry.OperatorAlgebra.DiracHodgeSpinZornIntertwinerClosure
 open InfoGeometry.OperatorAlgebra.FiniteTwoTermDiracHodgeZorn
 open InfoGeometry.OperatorAlgebra.RealWeylAdjointSpinRepresentation
 open InfoGeometry.OperatorAlgebra.Cl55FreudenthalZornGradeIntertwiner
+open InfoGeometry.Clifford.SpinorRep
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Exceptional.Freudenthal
 

@@ -85,11 +85,11 @@ theorem rationalCircularFrame_cast_eq_diagCircularBasis (i : Fin 8) :
   rw [InfoGeometry.Lie.SplitOctonionEllClosedFlow.diagCircularBasis_apply]
   fin_cases i <;>
     simp only [rationalCircularFrame, rationalToCartesian,
-      rationalFrameVector, rationalAxis, circularFrame,
+      rationalFrameVector, circularFrame,
       scalarPlus, scalarMinus, rootPlus, rootMinus,
       InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis.circularBasis_apply]
     <;> ext <;> simp [quaternionScalar, ellScalar, quaternionAxis,
-      ellAxis, axis, Pi.single_apply, smul_eq_mul] <;>
-    (try split_ifs) <;> norm_num
+      ellAxis, axis, Pi.single_apply, smul_eq_mul, zeroVec3, rationalAxis] <;>
+    (try split_ifs) <;> (try { subst_vars; contradiction }) <;> norm_num
 
 end InfoGeometry.Lie.CanonicalZornG2RationalCircularCoordinates

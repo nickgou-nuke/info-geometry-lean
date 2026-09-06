@@ -96,6 +96,15 @@ theorem pac55ToV55_clifford_smul (a : ℝ) (X : PACSplit55) :
   rw [pac55ToV55_smul]
   exact (ι55 : V55 →ₗ[ℝ] Cl55).map_smul a (pac55ToV55 X)
 
+/-- Origin in PAC (5,5) coordinates. -/
+def pacSplit55Zero : PACSplit55 where
+  x0 := 0; x1 := 0; x2 := 0; x3 := 0
+  y0 := 0; y1 := 0; y2 := 0; y3 := 0
+  u := 0; v := 0
+
+@[simp] theorem v55ToPac55_zero :
+    v55ToPac55 (0 : V55) = pacSplit55Zero := rfl
+
 @[simp] theorem pac55ToV55_pacSplit55Zero :
     pac55ToV55 pacSplit55Zero = (0 : V55) := by
   apply Prod.ext
@@ -103,6 +112,16 @@ theorem pac55ToV55_clifford_smul (a : ℝ) (X : PACSplit55) :
     fin_cases i <;> rfl
   · funext i
     fin_cases i <;> rfl
+
+theorem pac55ToV55_eq_zero_iff (X : PACSplit55) :
+    pac55ToV55 X = 0 ↔ X = pacSplit55Zero := by
+  constructor
+  · intro h
+    have := congrArg v55ToPac55 h
+    rw [v55ToPac55_pac55ToV55, v55ToPac55_zero] at this
+    exact this
+  · rintro rfl
+    exact pac55ToV55_pacSplit55Zero
 
 theorem pac55ToV55_projective_line_readout
     {X Y : PACSplit55} (h : sameProjectiveLine55 X Y) :
@@ -113,105 +132,58 @@ theorem pac55ToV55_projective_line_readout
 
 /-! ## Native projective-null boundary descent -/
 
-/-- The chosen nonzero null representative of a PAC projective point,
-transported to the native V55 carrier and then quotiented by native unit
-scaling. The choice is harmless because the target is already a projective
-quotient; all subsequent Pin actions use the native boundary owner. -/
-noncomputable def pacProjectiveNonzeroNull55_to_nativeBoundary
-    (P : ProjectiveNonzeroNull55) : Cl55NullBoundaryBridge.Boundary :=
+/-- Map from a nonzero null PAC vector to the native Cl(5,5) projective null boundary. -/
+def pacNullToNativeBoundary
+    (X : PACSplit55)
+    (hnull : ProjectiveAffineConformalClosure55.Q55 X = 0)
+    (hne : X ≠ pacSplit55Zero) :
+    Cl55NullBoundaryBridge.Boundary :=
   nullMk datum
-    { Z := pac55ToV55 (projectiveNonzeroNull55_representative P)
+    { Z := pac55ToV55 X
       null := by
-        change Q55 (pac55ToV55 (projectiveNonzeroNull55_representative P)) = 0
+        change InfoGeometry.Clifford.Clifford55.Q55 (pac55ToV55 X) = 0
         rw [pac55ToV55_Q55]
-        exact projectiveNonzeroNull55_representative_null P
+        exact hnull
       nonzero := by
         intro hzero
-        change pac55ToV55 (projectiveNonzeroNull55_representative P) =
-          (0 : V55) at hzero
-        have hzero' :
-            pac55ToV55 (projectiveNonzeroNull55_representative P) =
-              pac55ToV55 pacSplit55Zero := by
-          rw [pac55ToV55_pacSplit55Zero]
-          exact hzero
-        have hrep :
-            projectiveNonzeroNull55_representative P =
-              pacSplit55Zero := by
-          exact pac55Equiv.injective hzero'
-        exact projectiveNonzeroNull55_representative_nonzero P hrep }
+        apply hne
+        exact (pac55ToV55_eq_zero_iff X).mp hzero }
 
-@[simp] theorem pacProjectiveNonzeroNull55_to_nativeBoundary_mk
-    (P : ProjectiveNonzeroNull55) :
-    pacProjectiveNonzeroNull55_to_nativeBoundary P =
-      nullMk datum
-        { Z := pac55ToV55 (projectiveNonzeroNull55_representative P)
-          null := by
-            change Q55 (pac55ToV55 (projectiveNonzeroNull55_representative P)) = 0
-            rw [pac55ToV55_Q55]
-            exact projectiveNonzeroNull55_representative_null P
-          nonzero := by
-            intro hzero
-            change pac55ToV55 (projectiveNonzeroNull55_representative P) =
-              (0 : V55) at hzero
-            have hzero' :
-                pac55ToV55 (projectiveNonzeroNull55_representative P) =
-                  pac55ToV55 pacSplit55Zero := by
-              rw [pac55ToV55_pacSplit55Zero]
-              exact hzero
-            have hrep :
-                projectiveNonzeroNull55_representative P =
-                  pacSplit55Zero :=
-              pac55Equiv.injective hzero'
-            exact projectiveNonzeroNull55_representative_nonzero P hrep } :=
-  rfl
-
-theorem pacProjectiveNonzeroNull55_to_nativeBoundary_eq_of_eq
-    {P Q : ProjectiveNonzeroNull55} (hPQ : P = Q) :
-    pacProjectiveNonzeroNull55_to_nativeBoundary P =
-      pacProjectiveNonzeroNull55_to_nativeBoundary Q := by
-  rw [hPQ]
-
-/-- Any other nonzero null representative of the same PAC projective point
-gives the same native projective-null boundary point. -/
-theorem pacProjectiveNonzeroNull55_to_nativeBoundary_independent
-    (P : ProjectiveNonzeroNull55)
-    (X : PACSplit55)
-    (hPX : projectiveMk55 X = P.1)
-    (hXnull : Q55 X = 0)
-    (hXne : X ≠ pacSplit55Zero) :
-    pacProjectiveNonzeroNull55_to_nativeBoundary P =
-      nullMk datum
-        { Z := pac55ToV55 X
-          null := by
-            change Q55 (pac55ToV55 X) = 0
-            rw [pac55ToV55_Q55]
-            exact hXnull
-          nonzero := by
-            intro hzero
-            change pac55ToV55 X = (0 : V55) at hzero
-            apply hXne
-            apply pac55Equiv.injective
-            change pac55ToV55 X = pac55ToV55 pacSplit55Zero
-            rw [pac55ToV55_pacSplit55Zero]
-            exact hzero } := by
-  have hproj :
-      projectiveMk55 (projectiveNonzeroNull55_representative P) =
-        projectiveMk55 X := by
-    exact
-      (projectiveNonzeroNull55_representative_projective P).trans hPX.symm
-  have hline :
-      sameProjectiveLine55
-        (projectiveNonzeroNull55_representative P) X := by
-    exact Quotient.exact hproj
-  rcases hline with ⟨a, ha, hscale⟩
-  rw [pacProjectiveNonzeroNull55_to_nativeBoundary_mk]
-  apply (nullMk_eq_iff_rayRel datum _ _).2
+/-- Two nonzero null PAC vectors defining the same projective line descend
+to the exact same native projective null boundary point. -/
+theorem pacNullToNativeBoundary_eq_of_sameProjectiveLine
+    {X Y : PACSplit55}
+    (hnullX : ProjectiveAffineConformalClosure55.Q55 X = 0)
+    (hneX : X ≠ pacSplit55Zero)
+    (hnullY : ProjectiveAffineConformalClosure55.Q55 Y = 0)
+    (hneY : Y ≠ pacSplit55Zero)
+    (hline : sameProjectiveLine55 X Y) :
+    pacNullToNativeBoundary X hnullX hneX =
+      pacNullToNativeBoundary Y hnullY hneY := by
+  rcases hline with ⟨a, ha, rfl⟩
+  apply Quotient.sound
   refine ⟨Units.mk0 a ha, ?_⟩
-  change
-    (a : ℝ) •
-        pac55ToV55 (projectiveNonzeroNull55_representative P) =
-      pac55ToV55 X
-  rw [← pac55ToV55_smul, hscale]
+  change (a : ℝ) • pac55ToV55 X = pac55ToV55 (smul55 a X)
+  rw [pac55ToV55_smul]
+
+/-- The conformal embedding of any 4+4 split vector is never the zero vector. -/
+theorem conformalEmbed44to55_ne_zero (x : PACSplit44) :
+    conformalEmbed44to55 x ≠ pacSplit55Zero := by
+  intro h
+  have hu : (conformalEmbed44to55 x).u = 0 := by rw [h]; rfl
+  have hv : (conformalEmbed44to55 x).v = 0 := by rw [h]; rfl
+  dsimp [conformalEmbed44to55] at hu hv
+  have hsum : (1 - Q44 x) / 2 + (1 + Q44 x) / 2 = 0 := by rw [hu, hv, add_zero]
+  have hone : (1 : ℝ) = 0 := by
+    calc (1 : ℝ) = (1 - Q44 x) / 2 + (1 + Q44 x) / 2 := by ring
+    _ = 0 := hsum
+  exact one_ne_zero hone
+
+/-- Canonical descent of any 4+4 affine coordinate to the native Cl(5,5) projective null boundary. -/
+def pac44ToNativeBoundary (x : PACSplit44) : Cl55NullBoundaryBridge.Boundary :=
+  pacNullToNativeBoundary (conformalEmbed44to55 x)
+    (conformalEmbed44to55_null x)
+    (conformalEmbed44to55_ne_zero x)
 
 end PACNativeCliffordBridge
 

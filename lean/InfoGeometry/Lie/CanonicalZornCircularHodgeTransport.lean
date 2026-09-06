@@ -2,17 +2,16 @@ import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 /-!
-# Circular Hodge and chirality transport to the native Zorn carrier
+# Circular Hodge and Chirality Transport to the Native Zorn Carrier
 
-The repository already owns the `1 + 3 + 3 + 1` Hodge involution and graded
-chirality on the circular Peirce coordinate carrier.  This file transports
-both operators through the actual Mathlib basis equivalence
+This module transports the `1 + 3 + 3 + 1` Hodge involution and graded
+chirality from circular Peirce coordinates to the native Zorn carrier
+`ZornMatrix ℝ`.
 
-`circularPeirceBasis.equivFun : ZornMatrix R ≃ₗ[R] (Fin 8 → R)`.
-
-The resulting maps are genuine endomorphisms of the native real Zorn carrier.
-No multiplicative compatibility with the nonassociative Zorn product is
-asserted.
+By bundling the coordinate equivalence into the algebra isomorphism
+`LinearEquiv.conjAlgEquiv`, all duality laws ($\star^2 = 1$), graded parity ($\Gamma^2 = 1$),
+and the anticommutation identity ($\star\Gamma = -\Gamma\star$) are proved
+point-free via `AlgEquiv` homomorphisms without point-wise `ext` unfolding.
 -/
 
 noncomputable section
@@ -24,17 +23,20 @@ open InfoGeometry.Lie.PeirceExteriorHodgeTransport
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 abbrev EndCZ := Module.End ℝ CZ
+abbrev EndCoord := Module.End ℝ (Fin 8 → ℝ)
 
-/-- Hodge involution transported from circular Peirce coordinates to the
-native canonical Zorn carrier. -/
+/-- The canonical algebra isomorphism transporting endomorphisms on circular
+Peirce coordinates to endomorphisms on the native Zorn carrier. -/
+def transportAlgEquiv : EndCoord ≃ₐ[ℝ] EndCZ :=
+  circularPeirceBasis.equivFun.symm.conjAlgEquiv ℝ
+
+/-- Hodge involution transported to the native canonical Zorn carrier. -/
 def circularHodgeStar : EndCZ :=
-  circularPeirceBasis.equivFun.symm.toLinearMap.comp
-    (peirceHodgeStar.comp circularPeirceBasis.equivFun.toLinearMap)
+  transportAlgEquiv peirceHodgeStar
 
 /-- Graded chirality transported to the native canonical Zorn carrier. -/
 def circularGradedChirality : EndCZ :=
-  circularPeirceBasis.equivFun.symm.toLinearMap.comp
-    (peirceGradedChirality.comp circularPeirceBasis.equivFun.toLinearMap)
+  transportAlgEquiv peirceGradedChirality
 
 /-- Index involution implementing `Λᵏ ↔ Λ³⁻ᵏ` in the established circular
 Peirce order. -/
@@ -83,60 +85,60 @@ theorem circularHodgeStar_basis (i : Fin 8) :
   fin_cases i <;> fin_cases j <;>
     simp [-circularPeirceBasis_apply, circularHodgeIndex, Module.Basis.equivFun_self]
 
-/-- The transported three-dimensional Hodge star is an involution. -/
+/-!
+## Duality, Parity, and Anticommutation (Point-Free Proofs via AlgEquiv)
+-/
+
+/-- The transported three-dimensional Hodge star is an involution ($\star^2 = 1$). -/
 theorem circularHodgeStar_sq :
     circularHodgeStar * circularHodgeStar = 1 := by
-  apply LinearMap.ext
-  intro x
-  have hstar := LinearMap.congr_fun peirceHodgeStar_sq
-    (circularPeirceBasis.equivFun x)
-  change peirceHodgeStar
-      (peirceHodgeStar (circularPeirceBasis.equivFun x)) =
-    circularPeirceBasis.equivFun x at hstar
-  change circularPeirceBasis.equivFun.symm
-      (peirceHodgeStar
-        (circularPeirceBasis.equivFun
-          (circularPeirceBasis.equivFun.symm
-            (peirceHodgeStar (circularPeirceBasis.equivFun x))))) = x
-  rw [LinearEquiv.apply_symm_apply, hstar,
-    LinearEquiv.symm_apply_apply]
+  rw [circularHodgeStar, ← map_mul, peirceHodgeStar_sq, map_one]
 
-/-- The transported graded chirality is an involution. -/
+/-- Exponential/power form: $(\star)^2 = 1$. -/
+theorem circularHodgeStar_pow_two :
+    circularHodgeStar ^ 2 = 1 := by
+  rw [sq, circularHodgeStar_sq]
+
+/-- The transported graded chirality is an involution ($\Gamma^2 = 1$). -/
 theorem circularGradedChirality_sq :
     circularGradedChirality * circularGradedChirality = 1 := by
-  apply LinearMap.ext
-  intro x
-  have hchirality := LinearMap.congr_fun peirceGradedChirality_sq
-    (circularPeirceBasis.equivFun x)
-  change peirceGradedChirality
-      (peirceGradedChirality (circularPeirceBasis.equivFun x)) =
-    circularPeirceBasis.equivFun x at hchirality
-  change circularPeirceBasis.equivFun.symm
-      (peirceGradedChirality
-        (circularPeirceBasis.equivFun
-          (circularPeirceBasis.equivFun.symm
-            (peirceGradedChirality (circularPeirceBasis.equivFun x))))) = x
-  rw [LinearEquiv.apply_symm_apply, hchirality,
-    LinearEquiv.symm_apply_apply]
+  rw [circularGradedChirality, ← map_mul, peirceGradedChirality_sq, map_one]
 
-/-- Hodge duality anticommutes with graded chirality after transport to the
-native Zorn carrier. -/
+/-- Exponential/power form: $(\Gamma)^2 = 1$. -/
+theorem circularGradedChirality_pow_two :
+    circularGradedChirality ^ 2 = 1 := by
+  rw [sq, circularGradedChirality_sq]
+
+/-- Hodge duality anticommutes with graded chirality on the native Zorn carrier:
+$\star\Gamma = -(\Gamma\star)$. -/
 theorem circularHodgeStar_gradedChirality_anticommutes :
     circularHodgeStar * circularGradedChirality =
       -(circularGradedChirality * circularHodgeStar) := by
-  apply LinearMap.ext
-  intro x
-  have hanti := LinearMap.congr_fun
-    peirceHodgeStar_gradedChirality_anticommutes
-    (circularPeirceBasis.equivFun x)
-  change peirceHodgeStar
-      (peirceGradedChirality (circularPeirceBasis.equivFun x)) =
-    -peirceGradedChirality
-      (peirceHodgeStar (circularPeirceBasis.equivFun x)) at hanti
-  simp only [Module.End.mul_apply, LinearMap.neg_apply,
-    circularHodgeStar_apply, circularGradedChirality_apply,
-    LinearEquiv.apply_symm_apply]
-  rw [hanti, map_neg]
+  rw [circularHodgeStar, circularGradedChirality,
+      ← map_mul, ← map_mul,
+      peirceHodgeStar_gradedChirality_anticommutes,
+      map_neg]
+
+/-- The operator-level complex structure $K := \star\Gamma$ satisfies $K^2 = -1$. -/
+theorem circularComplexStructure_sq :
+    (circularHodgeStar * circularGradedChirality) *
+    (circularHodgeStar * circularGradedChirality) = -1 := by
+  have hanti : circularGradedChirality * circularHodgeStar =
+      -(circularHodgeStar * circularGradedChirality) := by
+    rw [← neg_neg (circularGradedChirality * circularHodgeStar),
+        ← circularHodgeStar_gradedChirality_anticommutes]
+  calc
+    (circularHodgeStar * circularGradedChirality) * (circularHodgeStar * circularGradedChirality)
+      = circularHodgeStar * (circularGradedChirality * circularHodgeStar) * circularGradedChirality := by
+        simp only [mul_assoc]
+    _ = circularHodgeStar * -(circularHodgeStar * circularGradedChirality) * circularGradedChirality := by
+        rw [hanti]
+    _ = - (circularHodgeStar * circularHodgeStar * (circularGradedChirality * circularGradedChirality)) := by
+        simp only [mul_neg, neg_mul, mul_assoc]
+    _ = - (1 * 1) := by
+        rw [circularHodgeStar_sq, circularGradedChirality_sq]
+    _ = -1 := by
+        simp only [mul_one]
 
 end InfoGeometry.Lie.CanonicalZornCircularHodgeTransport
 

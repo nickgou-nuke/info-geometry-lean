@@ -384,7 +384,7 @@ private theorem canonicalStandardDerivation_mem_span (x y : CanonicalZorn) :
     canonicalStandardDerivationOfCanonical x y ∈ standardDerivationSpan :=
   Submodule.subset_span ⟨(x, y), rfl⟩
 
-private theorem parameterUnit_eq_smul (j : Fin 14) (r : ℝ) :
+theorem parameterUnit_eq_smul (j : Fin 14) (r : ℝ) :
     parameterUnit j r = r • parameterUnit j := by
   funext i
   by_cases h : i = j <;> simp [parameterUnit, h]

@@ -122,7 +122,7 @@ def chirality : FormEnd n0 n1 where
     (chirality : FormEnd n0 n1) * chirality = 1 := by
   apply LinearMap.ext
   rintro ⟨f, g⟩
-  rfl
+  simp [chirality]
 
 /-- Concrete Dirac--Hodge operator `D = d + delta`. -/
 def diracHodge
@@ -141,7 +141,8 @@ def hodgeLaplacian
     (omega : TotalForms n0 n1) :
     diracHodge B omega =
       (B.transpose.mulVec omega.2, B.mulVec omega.1) := by
-  rfl
+  simp [diracHodge,
+    InfoGeometry.Canonical.DiscreteDiracHodgeChiral.diracHodge]
 
 /-- The requested plus-sign Dirac--Kahler identity. -/
 theorem diracHodge_sq_eq_hodgeLaplacian
@@ -162,9 +163,7 @@ theorem exteriorDerivative_anticommutes_chirality
   rintro ⟨f, g⟩
   change exteriorDerivative B (chirality (f, g)) =
     -chirality (exteriorDerivative B (f, g))
-  apply Prod.ext
-  · rfl
-  · rfl
+  simp [exteriorDerivative, chirality]
 
 /-- `delta` is odd for form-degree parity. -/
 theorem codifferential_anticommutes_chirality
@@ -176,8 +175,10 @@ theorem codifferential_anticommutes_chirality
   change codifferential B (chirality (f, g)) =
     -chirality (codifferential B (f, g))
   apply Prod.ext
-  · simp [codifferential]
-  · rfl
+  · funext i
+    simp [codifferential, chirality, Matrix.mulVec, dotProduct,
+      Finset.sum_neg_distrib]
+  · simp [codifferential, chirality]
 
 /-- The full `D=d+delta` is odd. -/
 theorem diracHodge_anticommutes_chirality
@@ -222,8 +223,16 @@ theorem exterior_codifferential_adjoint
   rcases omega with ⟨f, g⟩
   rcases eta with ⟨h, k⟩
   change
-    (∑ e : Fin n1, (∑ v : Fin n0, B e v * f v) * k e) =
-      ∑ v : Fin n0, f v * (∑ e : Fin n1, B e v * k e)
+    innerZero (0 : ZeroForms n0) h + innerOne (B.mulVec f) k =
+      innerZero f (B.transpose.mulVec k) +
+        innerOne g (0 : OneForms n1)
+  have hzero0 : innerZero (0 : ZeroForms n0) h = 0 := by
+    simp [innerZero]
+  have hzero1 : innerOne g (0 : OneForms n1) = 0 := by
+    simp [innerOne]
+  rw [hzero0, hzero1, zero_add, add_zero]
+  unfold innerZero innerOne
+  simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply]
   calc
     (∑ e : Fin n1, (∑ v : Fin n0, B e v * f v) * k e) =
         ∑ e : Fin n1, ∑ v : Fin n0, (B e v * f v) * k e := by

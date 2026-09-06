@@ -1,0 +1,16 @@
+{
+  "diagonalization": true,
+  "inverse_both_directions": true,
+  "swap_matrix_determinant": -1,
+  "source_involutions_preserve_q": true,
+  "fundamental_polar_equals_ten_squares": true,
+  "source_sign_flip_negative_witness": -2,
+  "native_Zorn_norm_plus_hyperbolic_plane": true,
+  "native_wedge_coordinate_identities": true,
+  "Lorentz_Hodge_square": -1,
+  "orientation_reversal_swaps_chiral_projections": true,
+  "five_mode_mixed_CAR_cases": 25,
+  "exact_32_by_32_exterior_action_square": true,
+  "Lean_kernel_executed": false,
+  "scope": "Exact symbolic/matrix regression, not Lean elaboration"
+}

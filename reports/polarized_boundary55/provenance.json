@@ -1,0 +1,16 @@
+{
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "b0fa422e6cb6d3da5be7cbbb5ecfae5c12f3237b",
+  "branch": "polarized-minkowski55-native-clifford",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "source_attachment": "Pasted markdown(20260906-072133).md",
+  "source_sha256": "a3f672e78a63f3dbb85e3b15bb0d717615960370c6a1902da7b93a630866944e",
+  "new_Lean_modules": 6,
+  "public_theorems": 55,
+  "public_definitions": 30,
+  "public_abbreviations": 3,
+  "Lean_elaboration_executed": false,
+  "local_launcher_exit_status": 127,
+  "independent_exact_regressions_executed": true
+}

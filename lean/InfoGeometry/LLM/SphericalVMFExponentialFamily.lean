@@ -29,9 +29,29 @@ def spinObservable (v : E) (s : UnitSphere E) : ℝ :=
 @[simp] theorem norm_coe_unitSphere (s : UnitSphere E) : ‖(s : E)‖ = 1 :=
   mem_sphere_zero_iff_norm.mp s.property
 
+@[simp] theorem spinObservable_zero : spinObservable (0 : E) = 0 := by
+  funext s
+  simp [spinObservable]
+
+@[simp] theorem spinObservable_add (u v : E) :
+    spinObservable (u + v) = spinObservable u + spinObservable v := by
+  funext s
+  simp [spinObservable, real_inner_add_left]
+
+@[simp] theorem spinObservable_sub (u v : E) :
+    spinObservable (u - v) = spinObservable u - spinObservable v := by
+  funext s
+  simp [spinObservable, real_inner_sub_left]
+
+@[simp] theorem spinObservable_smul (c : ℝ) (v : E) :
+    spinObservable (c • v) = c • spinObservable v := by
+  funext s
+  simp [spinObservable, real_inner_smul_left]
+
 theorem continuous_spinObservable (v : E) : Continuous (spinObservable v) := by
-  unfold spinObservable
-  fun_prop
+  simpa [spinObservable] using
+    (continuous_const.inner continuous_subtype_val :
+      Continuous (fun s : UnitSphere E => ⟪v, (s : E)⟫_ℝ))
 
 theorem abs_spinObservable_le_norm (v : E) (s : UnitSphere E) :
     |spinObservable v s| ≤ ‖v‖ := by
@@ -75,9 +95,17 @@ theorem mem_interior_integrableExpSet_spinObservable
 theorem integrable_coe_unitSphere
     [CompleteSpace E] (σ : Measure (UnitSphere E)) [IsFiniteMeasure σ] :
     Integrable (fun s : UnitSphere E => (s : E)) σ := by
-  refine Integrable.of_bound (by fun_prop) 1 ?_
+  refine Integrable.of_bound continuous_subtype_val.aestronglyMeasurable 1 ?_
   filter_upwards with s
   simp
+
+/-- Every projected spin coordinate belongs to `L²` for every finite spherical measure. -/
+theorem spinObservable_memLp_two
+    (σ : Measure (UnitSphere E)) [IsFiniteMeasure σ] (v : E) :
+    MemLp (spinObservable v) 2 σ := by
+  refine MemLp.of_bound (continuous_spinObservable v).aestronglyMeasurable ‖v‖ ?_
+  exact Filter.Eventually.of_forall fun s => by
+    simpa [Real.norm_eq_abs] using abs_spinObservable_le_norm v s
 
 end SphereObservable
 
@@ -128,6 +156,36 @@ instance instIsProbabilityMeasureLaw (θ : E) : IsProbabilityMeasure (law σ θ)
   apply MeasureTheory.isProbabilityMeasure_tilted
   simpa using integrable_exp_mul_spinObservable σ 1 θ
 
+@[simp] theorem partition_zero : partition σ (0 : E) = 1 := by
+  simp [partition, spinObservable]
+
+@[simp] theorem logPartition_zero : logPartition σ (0 : E) = 0 := by
+  simp [logPartition]
+
+@[simp] theorem law_zero : law σ (0 : E) = σ := by
+  simpa [law, spinObservable] using MeasureTheory.tilted_zero σ
+
+/-- Conventional inverse-temperature/field parametrization `θ = β h`. -/
+noncomputable def vmfPartition (β : ℝ) (h : E) : ℝ :=
+  partition σ (β • h)
+
+/-- Conventional vMF law with inverse temperature `β` and field `h`. -/
+noncomputable def vmfLaw (β : ℝ) (h : E) : Measure (UnitSphere E) :=
+  σ.tilted (β * spinObservable h ·)
+
+instance instIsProbabilityMeasureVMFLaw (β : ℝ) (h : E) :
+    IsProbabilityMeasure (vmfLaw σ β h) := by
+  apply MeasureTheory.isProbabilityMeasure_tilted
+  exact integrable_exp_mul_spinObservable σ β h
+
+/-- The `(β,h)` parametrization agrees with the natural parameter `θ = β h`. -/
+theorem vmfLaw_eq_law (β : ℝ) (h : E) :
+    vmfLaw σ β h = law σ (β • h) := by
+  unfold vmfLaw law
+  apply MeasureTheory.tilted_congr
+  filter_upwards with s
+  simp [spinObservable, real_inner_smul_left]
+
 /-- The spherical partition is the MGF of the linear observable at parameter `1`. -/
 theorem partition_eq_mgf_one (θ : E) :
     partition σ θ = ProbabilityTheory.mgf (spinObservable θ) σ 1 := by
@@ -141,6 +199,23 @@ theorem partition_pos (θ : E) : 0 < partition σ θ := by
 /-- Mean spin (magnetization response) under the tilted spherical law. -/
 noncomputable def response (θ : E) : E :=
   ∫ s, (s : E) ∂(law σ θ)
+
+/-- Conventional vMF magnetization response at `θ = β h`. -/
+noncomputable def vmfResponse (β : ℝ) (h : E) : E :=
+  ∫ s, (s : E) ∂(vmfLaw σ β h)
+
+/-- The `(β,h)` response agrees with the natural-parameter response. -/
+theorem vmfResponse_eq_response (β : ℝ) (h : E) :
+    vmfResponse σ β h = response σ (β • h) := by
+  rw [vmfResponse, response, vmfLaw_eq_law]
+
+/-- The mean spin remains in the closed unit ball. -/
+theorem norm_response_le_one (θ : E) : ‖response σ θ‖ ≤ 1 := by
+  unfold response
+  have h := norm_integral_le_of_norm_le_const
+    (μ := law σ θ) (C := 1)
+    (Filter.Eventually.of_forall fun s : UnitSphere E => by simp)
+  simpa using h
 
 /-- A projected response is the expectation of the corresponding spin observable. -/
 theorem integral_spinObservable_eq_inner_response (θ v : E) :
@@ -204,6 +279,53 @@ theorem deriv_directionalPotential_zero_eq_inner_response (θ v : E) :
 /-- Covariance bilinear form of the spherical sufficient statistic. -/
 noncomputable def covarianceHessian (θ u v : E) : ℝ :=
   ProbabilityTheory.covariance (spinObservable u) (spinObservable v) (law σ θ)
+
+theorem covarianceHessian_add_left (θ u₁ u₂ v : E) :
+    covarianceHessian σ θ (u₁ + u₂) v =
+      covarianceHessian σ θ u₁ v + covarianceHessian σ θ u₂ v := by
+  unfold covarianceHessian
+  rw [spinObservable_add]
+  exact ProbabilityTheory.covariance_add_left
+    (spinObservable_memLp_two (law σ θ) u₁)
+    (spinObservable_memLp_two (law σ θ) u₂)
+    (spinObservable_memLp_two (law σ θ) v)
+
+theorem covarianceHessian_smul_left (θ : E) (c : ℝ) (u v : E) :
+    covarianceHessian σ θ (c • u) v = c * covarianceHessian σ θ u v := by
+  unfold covarianceHessian
+  rw [spinObservable_smul]
+  exact ProbabilityTheory.covariance_smul_left c
+
+theorem covarianceHessian_add_right (θ u v₁ v₂ : E) :
+    covarianceHessian σ θ u (v₁ + v₂) =
+      covarianceHessian σ θ u v₁ + covarianceHessian σ θ u v₂ := by
+  unfold covarianceHessian
+  rw [spinObservable_add]
+  exact ProbabilityTheory.covariance_add_right
+    (spinObservable_memLp_two (law σ θ) u)
+    (spinObservable_memLp_two (law σ θ) v₁)
+    (spinObservable_memLp_two (law σ θ) v₂)
+
+theorem covarianceHessian_smul_right (θ : E) (c : ℝ) (u v : E) :
+    covarianceHessian σ θ u (c • v) = c * covarianceHessian σ θ u v := by
+  unfold covarianceHessian
+  rw [spinObservable_smul]
+  exact ProbabilityTheory.covariance_smul_right c
+
+/-- The covariance Hessian packaged as a native Mathlib bilinear form. -/
+noncomputable def covarianceHessianBilin (θ : E) : LinearMap.BilinForm ℝ E :=
+  LinearMap.mk₂ ℝ (covarianceHessian σ θ)
+    (covarianceHessian_add_left σ θ)
+    (by
+      intro c u v
+      simpa [smul_eq_mul] using covarianceHessian_smul_left σ θ c u v)
+    (covarianceHessian_add_right σ θ)
+    (by
+      intro c u v
+      simpa [smul_eq_mul] using covarianceHessian_smul_right σ θ c u v)
+
+@[simp] theorem covarianceHessianBilin_apply (θ u v : E) :
+    covarianceHessianBilin σ θ u v = covarianceHessian σ θ u v := rfl
 
 /-- Symmetry of the covariance Hessian. -/
 theorem covarianceHessian_symm (θ u v : E) :

@@ -67,17 +67,16 @@ theorem pureDiracBlock_isOdd (DPlus DMinus : A) :
 theorem pureDiracBlock_sq_isEven (DPlus DMinus : A) :
     IsEven (pureDiracBlock DPlus DMinus *
       pureDiracBlock DPlus DMinus) := by
-  exact commutator_odd_odd
-    (pureDiracBlock_isOdd DPlus DMinus)
-    (pureDiracBlock_isOdd DPlus DMinus) |>.1
+  unfold IsEven
+  rw [pureDiracBlock_sq, cartanInvolution_coordinates]
+  rfl
 
-/-- Direct evenness proof for the diagonal square. -/
+/-- Direct equality form of the evenness theorem. -/
 theorem pureDiracBlock_sq_commutes_grading (DPlus DMinus : A) :
     cartanInvolution
         (pureDiracBlock DPlus DMinus * pureDiracBlock DPlus DMinus) =
       pureDiracBlock DPlus DMinus * pureDiracBlock DPlus DMinus := by
-  rw [pureDiracBlock_sq, cartanInvolution_coordinates]
-  rfl
+  exact pureDiracBlock_sq_isEven DPlus DMinus
 
 /-- Exact decoupling criterion: the two off-diagonal defects must vanish. -/
 theorem twinBoundaryDiracBlock_sq_diagonal
@@ -125,8 +124,13 @@ def zornBlock : ZornBlock A :=
 theorem zornBlock_sq :
     K.zornBlock * K.zornBlock =
       (⟨-K.laplacian, -K.laplacian, 0, 0⟩ : ZornBlock A) := by
-  rw [zornBlock, pureDiracBlock_sq,
-    K.dirac_sq_eq_neg_laplacian]
+  calc
+    K.zornBlock * K.zornBlock =
+        (⟨K.dirac * K.dirac, K.dirac * K.dirac, 0, 0⟩ :
+          ZornBlock A) := by
+            exact pureDiracBlock_sq K.dirac K.dirac
+    _ = (⟨-K.laplacian, -K.laplacian, 0, 0⟩ : ZornBlock A) := by
+      rw [K.dirac_sq_eq_neg_laplacian]
 
 /-- Add two independent boundary waves to the Dirac--Kahler channels. -/
 def withBoundaryWaves (WPlus WMinus : A) : ZornBlock A :=
@@ -141,14 +145,26 @@ theorem withBoundaryWaves_sq (WPlus WMinus : A) :
         -K.laplacian + WMinus * WMinus,
         WPlus * K.dirac + K.dirac * WMinus,
         K.dirac * WPlus + WMinus * K.dirac⟩ : ZornBlock A) := by
-  rw [withBoundaryWaves, twinBoundaryDiracBlock_sq,
-    K.dirac_sq_eq_neg_laplacian]
+  calc
+    K.withBoundaryWaves WPlus WMinus *
+        K.withBoundaryWaves WPlus WMinus =
+      (⟨WPlus * WPlus + K.dirac * K.dirac,
+        K.dirac * K.dirac + WMinus * WMinus,
+        WPlus * K.dirac + K.dirac * WMinus,
+        K.dirac * WPlus + WMinus * K.dirac⟩ : ZornBlock A) := by
+          exact twinBoundaryDiracBlock_sq WPlus WMinus K.dirac K.dirac
+    _ = (⟨WPlus * WPlus - K.laplacian,
+        -K.laplacian + WMinus * WMinus,
+        WPlus * K.dirac + K.dirac * WMinus,
+        K.dirac * WPlus + WMinus * K.dirac⟩ : ZornBlock A) := by
+      rw [K.dirac_sq_eq_neg_laplacian]
+      simp [sub_eq_add_neg]
 
 end RingDiracKahler
 
 /-- Diagonal unit representation of the orientable translation generator. -/
 def phaseTranslation (u : Units A) : ZornBlock A :=
-  ⟨(u : A), (u⁻¹ : Units A), 0, 0⟩
+  ⟨(u : A), ((u⁻¹ : Units A) : A), 0, 0⟩
 
 /-- The sheet exchange represents the orientation-reversing generator. -/
 def kleinGlide : ZornBlock A :=

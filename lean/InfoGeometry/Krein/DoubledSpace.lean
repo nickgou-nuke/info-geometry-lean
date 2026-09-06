@@ -3,7 +3,6 @@ import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Cartan.Involution
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Normed.Lp.ProdLp
 
 /-!
@@ -100,16 +99,6 @@ noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
 /-- Canonical split rotation axis `K = J ∘ ε` on the doubled real carrier. -/
 noncomputable def clockAxis : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complex_i
-
-theorem complex_i_adjoint_eq_neg :
-    ContinuousLinearMap.adjoint (complex_i (E := E)) = -(complex_i (E := E)) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  apply ext_inner_right ℝ
-  intro v
-  rw [ContinuousLinearMap.adjoint_inner_left]
-  simp [complex_i, modular_j, spectral_epsilon, WithLp.prod_inner_apply,
-    real_inner_comm]
 
 omit [CompleteSpace E] in
 @[simp] lemma clockAxis_eq_complex_i :
@@ -270,195 +259,52 @@ lemma spectral_epsilon_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerP
   intro u
   apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
 
+/-! Canonical names for the particle-hole and chiral involutions. -/
+
+noncomputable abbrev particleHoleC : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  modular_j
+
+noncomputable abbrev chiralParity : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  spectral_epsilon
+
+lemma particleHoleC_comp_self :
+    (particleHoleC (E := E)).comp particleHoleC =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) :=
+  modular_j_involution E
+
+lemma chiralParity_comp_self :
+    (chiralParity (E := E)).comp chiralParity =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) :=
+  spectral_epsilon_involution E
+
+lemma particleHoleC_chiralParity_anticommute :
+    (particleHoleC (E := E)).comp chiralParity =
+      -(chiralParity.comp particleHoleC) :=
+  modular_j_spectral_epsilon_anticommute E
+
+lemma particleHole_conjugation_neg
+    (D : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hD : D.comp particleHoleC = -(particleHoleC.comp D)) :
+    (particleHoleC.comp D).comp particleHoleC = -D := by
+  calc
+    (particleHoleC.comp D).comp particleHoleC =
+        particleHoleC.comp (D.comp particleHoleC) := by
+          rw [ContinuousLinearMap.comp_assoc]
+    _ = particleHoleC.comp (-(particleHoleC.comp D)) := by rw [hD]
+    _ = -(particleHoleC.comp (particleHoleC.comp D)) := by
+          rw [ContinuousLinearMap.comp_neg]
+    _ = -D := by
+          rw [← ContinuousLinearMap.comp_assoc, particleHoleC_comp_self]
+          simp
+
 lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (complex_i (E := E)).comp complex_i = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa [complex_i, doubledCarrier]
     using (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
 
-/-- The real elliptic Hestenes axis as a linear equivalence, with inverse `-I`. -/
-noncomputable def complex_iLE (E : Type*) [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] [CompleteSpace E] :
-    DoubledSpace E ≃ₗ[ℝ] DoubledSpace E :=
-  { (complex_i (E := E)).toLinearMap with
-    invFun := fun x => -(complex_i (E := E) x)
-    left_inv := by
-      intro x
-      apply DoubledSpace.ext <;> simp [complex_i]
-    right_inv := by
-      intro x
-      apply DoubledSpace.ext <;> simp [complex_i] }
-
-@[simp]
-lemma complex_iLE_apply (E : Type*) [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] [CompleteSpace E] (x : DoubledSpace E) :
-    complex_iLE E x = complex_i (E := E) x := by
-  rfl
-
-@[simp]
-lemma complex_iLE_symm_apply (E : Type*) [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] [CompleteSpace E] (x : DoubledSpace E) :
-    (complex_iLE E).symm x = -(complex_i (E := E) x) := by
-  rfl
-
 lemma clockAxis_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (clockAxis (E := E)).comp clockAxis = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa [clockAxis] using complex_i_sq (E := E)
-
-/-! ### Real Hestenes pion atom
-
-The doubled carrier has two anticommuting involutions `J` and `ε`, with
-`K = J ε` a square-minus-one axis.  The nilpotent channels therefore use the
-`J/K` pair, not the two involutions `J/ε` directly.  This is the real
-Hestenes presentation of the finite chiral atom.
--/
-
-noncomputable def hestenesPionPlus : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) •
-    (modular_j (E := E) - clockAxis (E := E))
-
-noncomputable def hestenesPionMinus : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) •
-    (modular_j (E := E) + clockAxis (E := E))
-
-noncomputable def hestenesPionZero : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • spectral_epsilon (E := E)
-
-lemma hestenesPionPlus_sq :
-    (hestenesPionPlus (E := E)).comp hestenesPionPlus = 0 := by
-  have hJK :
-      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
-    modular_j_comp_complex_i (E := E)
-  have hKJ :
-      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
-    complex_i_comp_modular_j (E := E)
-  simp [hestenesPionPlus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.sub_comp,
-    ContinuousLinearMap.comp_sub]
-  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
-  module
-
-lemma hestenesPionMinus_sq :
-    (hestenesPionMinus (E := E)).comp hestenesPionMinus = 0 := by
-  have hJK :
-      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
-    modular_j_comp_complex_i (E := E)
-  have hKJ :
-      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
-    complex_i_comp_modular_j (E := E)
-  simp [hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.add_comp,
-    ContinuousLinearMap.comp_add]
-  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
-  module
-
-lemma hestenesPionPlus_mul_minus :
-    (hestenesPionPlus (E := E)).comp hestenesPionMinus =
-      ((1 / 2 : ℝ) •
-        (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E))) := by
-  have hJK :
-      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
-    modular_j_comp_complex_i (E := E)
-  have hKJ :
-      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
-    complex_i_comp_modular_j (E := E)
-  simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.sub_comp,
-    ContinuousLinearMap.comp_add]
-  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
-  module
-
-lemma hestenesPionMinus_mul_plus :
-    (hestenesPionMinus (E := E)).comp hestenesPionPlus =
-      ((1 / 2 : ℝ) •
-        (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E))) := by
-  have hJK :
-      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
-    modular_j_comp_complex_i (E := E)
-  have hKJ :
-      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
-    complex_i_comp_modular_j (E := E)
-  simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.add_comp,
-    ContinuousLinearMap.comp_sub]
-  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
-  module
-
-lemma hestenesPion_car :
-    (hestenesPionPlus (E := E)).comp hestenesPionMinus +
-        (hestenesPionMinus (E := E)).comp hestenesPionPlus =
-      ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  rw [hestenesPionPlus_mul_minus, hestenesPionMinus_mul_plus]
-  module
-
-lemma hestenesPion_commutator :
-    (hestenesPionPlus (E := E)).comp hestenesPionMinus -
-        (hestenesPionMinus (E := E)).comp hestenesPionPlus =
-      spectral_epsilon (E := E) := by
-  rw [hestenesPionPlus_mul_minus, hestenesPionMinus_mul_plus]
-  module
-
-lemma hestenesPion_zero_plus :
-    (hestenesPionZero (E := E)).comp hestenesPionPlus -
-        (hestenesPionPlus (E := E)).comp hestenesPionZero =
-      hestenesPionPlus (E := E) := by
-  simp only [hestenesPionZero, hestenesPionPlus,
-    ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
-    ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub]
-  rw [show (spectral_epsilon (E := E)).comp (modular_j (E := E)) =
-      -(clockAxis (E := E)) by
-        simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E),
-    show (spectral_epsilon (E := E)).comp clockAxis =
-      -(modular_j (E := E)) by
-        simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E),
-    show (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
-      clockAxis (E := E) by rfl,
-    show (clockAxis (E := E)).comp (spectral_epsilon (E := E)) =
-      modular_j (E := E) by
-        simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)]
-  module
-
-lemma hestenesPion_zero_minus :
-    (hestenesPionZero (E := E)).comp hestenesPionMinus -
-        (hestenesPionMinus (E := E)).comp hestenesPionZero =
-      -hestenesPionMinus (E := E) := by
-  simp only [hestenesPionZero, hestenesPionMinus,
-    ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
-    ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add,
-    smul_smul]
-  rw [show (spectral_epsilon (E := E)).comp (modular_j (E := E)) =
-      -(clockAxis (E := E)) by
-        simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E),
-    show (spectral_epsilon (E := E)).comp clockAxis =
-      -(modular_j (E := E)) by
-        simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E),
-    show (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
-      clockAxis (E := E) by rfl,
-    show (clockAxis (E := E)).comp (spectral_epsilon (E := E)) =
-      modular_j (E := E) by
-        simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)]
-  module
-
-/-! ### Inverse basis change for the real nilpotent atom -/
-
-omit [CompleteSpace E] in
-theorem hestenesPionPlus_add_hestenesPionMinus :
-    hestenesPionPlus (E := E) + hestenesPionMinus (E := E) =
-      modular_j (E := E) := by
-  simp [hestenesPionPlus, hestenesPionMinus]
-  module
-
-omit [CompleteSpace E] in
-theorem hestenesPionMinus_sub_hestenesPionPlus :
-    hestenesPionMinus (E := E) - hestenesPionPlus (E := E) =
-      clockAxis (E := E) := by
-  simp [hestenesPionPlus, hestenesPionMinus, sub_eq_add_neg]
-  module
-
-omit [CompleteSpace E] in
-theorem two_smul_hestenesPionZero :
-    (2 : ℝ) • hestenesPionZero (E := E) =
-      spectral_epsilon (E := E) := by
-  simp [hestenesPionZero]
 
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
@@ -506,55 +352,6 @@ lemma spectral_epsilon_is_cartan (E : Type*) [NormedAddCommGroup E] [InnerProduc
 
 end Compatibility
 
-/-! ### Cayley fiber identification -/
-
-open Complex
-
-/-- The real Cayley identification of the doubled scalar fiber with `ℂ`.
-
-This is a fiber-level statement only.  It does not identify an `Lp` space with
-an unweighted `lp` space, nor does it make a claim about a GNS representation.
--/
-noncomputable def cayleyDoubledRealFiber : DoubledSpace ℝ ≃ₗᵢ[ℝ] ℂ where
-  toLinearEquiv :=
-    (WithLp.linearEquiv (2 : ENNReal) ℝ (ℝ × ℝ)).trans
-      Complex.equivRealProdCLM.symm.toLinearEquiv
-  norm_map' u := by
-    change ‖Complex.equivRealProdCLM.symm (WithLp.ofLp u)‖ = ‖u‖
-    have hsq :
-        ‖Complex.equivRealProdCLM.symm (WithLp.ofLp u)‖ ^ 2 = ‖u‖ ^ 2 := by
-      rw [Complex.equivRealProdCLM_symm_apply, Complex.sq_norm,
-        Complex.normSq_add_mul_I, WithLp.prod_norm_sq_eq_of_L2]
-      simp [Real.norm_eq_abs, sq_abs]
-    nlinarith [norm_nonneg (Complex.equivRealProdCLM.symm (WithLp.ofLp u)),
-      norm_nonneg u]
-
-@[simp] theorem cayleyDoubledRealFiber_apply (u : DoubledSpace ℝ) :
-    cayleyDoubledRealFiber u =
-      (WithLp.ofLp u).1 + (WithLp.ofLp u).2 * Complex.I := by
-  change Complex.equivRealProdCLM.symm (WithLp.ofLp u) = _
-  rw [Complex.equivRealProdCLM_symm_apply]
-
-theorem cayleyDoubledRealFiber_complex_i (u : DoubledSpace ℝ) :
-    cayleyDoubledRealFiber (complex_i u) =
-      Complex.I * cayleyDoubledRealFiber u := by
-  rw [cayleyDoubledRealFiber_apply, complex_i_apply,
-    cayleyDoubledRealFiber_apply]
-  have hcoord :
-      WithLp.ofLp
-          (WithLp.toLp (2 : ENNReal)
-            (-WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
-              WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u)) =
-        (-WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
-          WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u) := rfl
-  rw [hcoord]
-  have hu :
-      WithLp.ofLp u =
-        (WithLp.fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u,
-          WithLp.snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ) u) := rfl
-  rw [hu]
-  apply Complex.ext <;> simp [Complex.mul_re, Complex.mul_im]
-
 section KreinAnalytic
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -594,66 +391,5 @@ noncomputable def information_lie_algebra :
       (KreinSpace.isKreinSkewAdjoint_lie (H := H₂) (hA := hA) (hB := hB))
 
 end KreinAnalytic
-
-lemma hestenesPionPlus_sq_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionPlus (E := E) (hestenesPionPlus (E := E) x) = 0 := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPionPlus_sq (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
-
-lemma hestenesPionMinus_sq_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionMinus (E := E) (hestenesPionMinus (E := E) x) = 0 := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPionMinus_sq (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
-
-lemma hestenesPion_car_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionPlus (E := E) (hestenesPionMinus (E := E) x) +
-        hestenesPionMinus (E := E) (hestenesPionPlus (E := E) x) = x := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPion_car (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
-
-lemma hestenesPion_commutator_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionPlus (E := E) (hestenesPionMinus (E := E) x) -
-        hestenesPionMinus (E := E) (hestenesPionPlus (E := E) x) =
-      spectral_epsilon (E := E) x := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPion_commutator (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
-
-lemma hestenesPion_zero_plus_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionZero (E := E) (hestenesPionPlus (E := E) x) -
-        hestenesPionPlus (E := E) (hestenesPionZero (E := E) x) =
-      hestenesPionPlus (E := E) x := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPion_zero_plus (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
-
-lemma hestenesPion_zero_minus_apply
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] (x : DoubledSpace E) :
-    hestenesPionZero (E := E) (hestenesPionMinus (E := E) x) -
-        hestenesPionMinus (E := E) (hestenesPionZero (E := E) x) =
-      -hestenesPionMinus (E := E) x := by
-  have h := congrArg
-    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
-    (hestenesPion_zero_minus (E := E))
-  simpa [ContinuousLinearMap.comp_apply] using h
 
 end InfoGeometry.Krein

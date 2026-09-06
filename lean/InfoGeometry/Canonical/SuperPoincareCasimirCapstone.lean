@@ -9,7 +9,8 @@ theorem capstone_super_poincare_casimir_synthesis
     (h_susy : anticommutator Q Qbar = 2 * P_u) :
     (commutator (superPoincareCasimir P_u P_v) P_u = 0) ∧
     (commutator (superPoincareCasimir P_u P_v) P_v = 0) ∧
-    (anticommutator Q Qbar = 2 * P_u) :=
-  grand_super_poincare_casimir_synthesis P_u P_v Q Qbar h_susy
+    (anticommutator Q Qbar = 2 * P_u) := by
+  exact ⟨casimir_commutes_with_Pu P_u P_v,
+    casimir_commutes_with_Pv P_u P_v, h_susy⟩
 
 end InfoGeometry.Canonical.SuperPoincareCasimirCapstone

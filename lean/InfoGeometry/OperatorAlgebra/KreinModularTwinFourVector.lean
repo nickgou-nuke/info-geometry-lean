@@ -22,7 +22,7 @@ open InfoGeometry.OperatorAlgebra.TwoFourOperatorVectorZorn
 open InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 variable {E : Type*}
-variable [NormedAddCommGroup E] [NormedSpace R E]
+variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 abbrev EndE := RealEnd E
 
@@ -39,7 +39,7 @@ theorem kreinConjugate_involutive
 
 /-- Two independent real modular/Krein sheets. -/
 structure KreinModularTwin (E : Type*)
-    [NormedAddCommGroup E] [NormedSpace R E] where
+    [NormedAddCommGroup E] [NormedSpace ℝ E] where
   plusDatum : KreinHestenesModularDatum E
   minusDatum : KreinHestenesModularDatum E
 
@@ -96,11 +96,14 @@ by the corresponding polarization. -/
 theorem polarize_fourVectorCarrier_scalars
     (uPlus uMinus : Fin 3 -> EndE) :
     (K.polarize (K.fourVectorCarrier uPlus uMinus)).plus.scalar =
-        K.plusDatum.modularGenerator /\
+        K.plusDatum.modularGenerator ∧
       (K.polarize (K.fourVectorCarrier uPlus uMinus)).minus.scalar =
         K.minusDatum.modularGenerator := by
-  exact ⟨K.plusDatum.generator_krein_selfadjoint,
-    K.minusDatum.generator_krein_selfadjoint⟩
+  constructor
+  · simpa [polarize, fourVectorCarrier, kreinConjugate] using
+      K.plusDatum.generator_krein_selfadjoint
+  · simpa [polarize, fourVectorCarrier, kreinConjugate] using
+      K.minusDatum.generator_krein_selfadjoint
 
 /-- Krein-even operator on the positive sheet. -/
 def IsPlusKreinEven (T : EndE) : Prop :=
@@ -129,11 +132,13 @@ theorem polarize_fourVectorCarrier_of_odd_rails
         ⟨K.minusDatum.modularGenerator, -uMinus⟩⟩ := by
   apply TwinFourOperatorVector.ext
   · apply FourOperatorVector.ext
-    · exact K.plusDatum.generator_krein_selfadjoint
+    · simpa [polarize, fourVectorCarrier, kreinConjugate] using
+        K.plusDatum.generator_krein_selfadjoint
     · funext i
       exact hPlus i
   · apply FourOperatorVector.ext
-    · exact K.minusDatum.generator_krein_selfadjoint
+    · simpa [polarize, fourVectorCarrier, kreinConjugate] using
+        K.minusDatum.generator_krein_selfadjoint
     · funext i
       exact hMinus i
 

@@ -208,6 +208,23 @@ commutator vanishes because they occupy different direct-product factors.
 This is a direct-product representation, not an isomorphism or dynamical
 coupling.
 
+The component maps are bundled as native Mathlib Lie homomorphisms.  More
+strongly, the branch constructs one faithful map
+
+```text
+rho_joint : Cl(5,5)_Lie x g_contact ->_Lie Env(A_joint)
+```
+
+with
+
+```text
+rho_joint([z,w]) = [rho_joint(z),rho_joint(w)].
+```
+
+Its injectivity is proved by evaluating the Clifford left-regular component at
+the unit and using faithfulness of the existing contact representation on the
+second component.
+
 ## 6. Grade preservation
 
 The joint Euler coefficient is
@@ -222,7 +239,8 @@ The target grade is the adjoint eigenspace
 Env_k = { X | [diag(L_D,rho_F(H)), X] = k X }.
 ```
 
-The code packages `Env_k` as a Mathlib `Submodule` and proves
+The code packages `Env_k` as a Mathlib `Submodule` and proves with native Lie
+identities
 
 ```text
 [Env_k, Env_l] subset Env_(k+l).
@@ -235,7 +253,14 @@ g_Cl,k -> Env_k,
 g_F,k  -> Env_k
 ```
 
-and proves both are injective.
+and proves both are injective.  It also constructs the synchronized product
+map
+
+```text
+g_Cl,k x g_F,k -> Env_k
+```
+
+and proves it injective.
 
 The selected native Clifford lanes are
 

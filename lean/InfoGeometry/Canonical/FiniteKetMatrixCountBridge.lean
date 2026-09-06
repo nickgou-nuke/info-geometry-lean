@@ -24,6 +24,9 @@ operators into the Hestenes/Krein/modular lanes.
 
 noncomputable section
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+
 namespace InfoGeometry.Canonical.FiniteKetMatrixCountBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
@@ -67,7 +70,11 @@ def matrixOp (A : Matrix κ ι ℂ) : FinKetSpace ι →L[ℂ] FinKetSpace κ wh
     simp [mul_add, Finset.sum_add_distrib]
   map_smul' c x := by
     ext k
-    simp [mul_assoc, Finset.mul_sum]
+    simp only [HSMul.hSMul, SMul.smul, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    dsimp
+    ring
   cont := by
     fun_prop
 
@@ -82,8 +89,12 @@ theorem matrixOp_apply_ket [DecidableEq ι]
     (A : Matrix κ ι ℂ) (i : ι) (k : κ) :
     matrixOp A (ketPi i) k = A k i := by
   classical
-  simpa [matrixOp, ketPi, Matrix.dotProduct] using
-    (Matrix.dotProduct_single_one (v := fun j : ι => A k j) i)
+  simp only [matrixOp_apply, ketPi, Pi.single_apply]
+  rw [Finset.sum_eq_single i]
+  · simp
+  · intro j _ hj
+    simp [hj]
+  · simp
 
 /-- Operator extensionality on finite ket spaces is pointwise extensionality. -/
 @[rep_depth operator]
@@ -110,7 +121,7 @@ theorem matrixOp_add (A B : Matrix κ ι ℂ) :
 theorem matrixOp_smul (c : ℂ) (A : Matrix κ ι ℂ) :
     matrixOp (c • A) = c • matrixOp A := by
   ext x k
-  simp [matrixOp, Finset.mul_sum, mul_assoc, mul_left_comm, mul_comm]
+  simp [matrixOp, Finset.mul_sum, mul_left_comm, mul_comm]
 
 @[simp, rep_depth operator]
 theorem matrixOp_id [DecidableEq ι] :
@@ -198,7 +209,7 @@ theorem matrixOpCountKet_countAtom [DecidableEq ι]
     matrixOpCountKet A (countAtom i) k = A k i := by
   classical
   rw [matrixOpCountKet_apply]
-  simp only [countAtom, countVectorToKet, Pi.single_apply]
+  simp only [countAtom, Pi.single_apply]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j hj hji

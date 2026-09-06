@@ -162,23 +162,24 @@ def synchronizedGradeMap (g : ConformalGrade) :
 theorem synchronizedGradeMap_injective (g : ConformalGrade) :
     Function.Injective (synchronizedGradeMap datum g) := by
   intro z w h
+  have hentry :
+      (leftMultiply z.1.1,
+          symplecticContactCommonRepresentation datum z.2.1) =
+        (leftMultiply w.1.1,
+          symplecticContactCommonRepresentation datum w.2.1) := by
+    have hval := congrArg Subtype.val h
+    have h00 := congrArg
+      (fun M : JointEnvelope (J := J) => M 0 0) hval
+    simpa [synchronizedGradeMap, jointSourceEnvelopeMap, diagonal] using h00
   apply Prod.ext
   · apply Subtype.ext
-    apply cl55EnvelopeMap_injective (J := J)
-    have hval := congrArg Subtype.val h
-    rw [jointSourceEnvelopeMap_eq_add,
-        jointSourceEnvelopeMap_eq_add] at hval
-    have hentry := congrArg
-      (fun M : JointEnvelope (J := J) => M 0 0) hval
-    exact congrArg Prod.fst hentry
+    have hxEnd : leftMultiply z.1.1 = leftMultiply w.1.1 :=
+      congrArg Prod.fst hentry
+    have hx := congrArg (fun T : Cl55RegularEnd => T 1) hxEnd
+    simpa using hx
   · apply Subtype.ext
-    apply contactEnvelopeMap_injective datum
-    have hval := congrArg Subtype.val h
-    rw [jointSourceEnvelopeMap_eq_add,
-        jointSourceEnvelopeMap_eq_add] at hval
-    have hentry := congrArg
-      (fun M : JointEnvelope (J := J) => M 0 0) hval
-    exact congrArg Prod.snd hentry
+    exact symplecticContactCommonRepresentation_injective datum
+      (congrArg Prod.snd hentry)
 
 /-- The component Lie homomorphisms commute pointwise in the common target. -/
 theorem component_lieHom_cross_commutator_zero

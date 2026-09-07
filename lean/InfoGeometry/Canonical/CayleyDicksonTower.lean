@@ -5,7 +5,7 @@ namespace InfoGeometry.Canonical
 open AlbertCayleyDickson
 open AlbertStep
 
-variable {F A : Type*} [CommRing F] [NonAssocRing A] [Module F A] [SMulCommClass F A A] [IsScalarTower F A A] [StarRing A] {γ : F}
+variable {F A : Type*} [CommRing F] [Ring A] [Algebra F A] [StarRing A] {γ : F}
 
 instance : AddCommGroup (AlbertStep F A γ) where
   add := (· + ·)

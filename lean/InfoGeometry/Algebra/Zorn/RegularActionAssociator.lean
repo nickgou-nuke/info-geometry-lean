@@ -40,6 +40,13 @@ theorem leftRightCommutator_apply_of_right_alternative
   rw [leftRightCommutator_apply]
   rw [alternative_associator_swap23 hright x y z]
 
+/-- Alias for `leftRightCommutator_apply_of_right_alternative`. -/
+theorem leftRightCommutator_apply_of_alternative
+    (hright : ∀ x y : A, (y * x) * x = y * (x * x))
+    (x y z : A) :
+    leftRightCommutator (R := R) x y z = associator x y z :=
+  leftRightCommutator_apply_of_right_alternative hright x y z
+
 /--
 Under the two alternative laws, `(x,y) ↦ [L_x,R_y]` is alternating as an
 endomorphism-valued bilinear obstruction.

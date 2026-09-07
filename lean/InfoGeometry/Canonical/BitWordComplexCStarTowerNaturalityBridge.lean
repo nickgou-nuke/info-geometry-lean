@@ -99,6 +99,6 @@ theorem stageStarAlgEquiv_bond_trace
         (stageStarAlgEquiv (n + 1) (ComplexMatrixStage.bondFun n A)) =
       matrixTraceState n (stageStarAlgEquiv n A) := by
   rw [stageStarAlgEquiv_bond]
-exact concreteData.trace_compatible n (stageStarAlgEquiv n A)
+  exact concreteData.trace_compatible n (stageStarAlgEquiv n A)
 
 end InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge

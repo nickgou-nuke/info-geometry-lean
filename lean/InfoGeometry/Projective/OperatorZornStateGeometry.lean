@@ -26,7 +26,7 @@ open OperatorZornRealModule OperatorZornFourPotentialGauge OperatorZornGaugeCova
 open ExpectationRatioMetric LogRatioDifferential
 open scoped BigOperators
 
-variable {ι A Direction : Type*} [Fintype ι] [Nonempty ι] [Ring A] [Algebra ℝ A]
+variable {ι A : Type*} [Fintype ι] [Nonempty ι] [Ring A] [Algebra ℝ A]
 
 /-- Finite convex mixing of linear coefficient observations. -/
 def evaluation (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ) : A →ₗ[ℝ] ℝ where
@@ -72,8 +72,8 @@ theorem readout_associator (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ)
 
 /-- The complete curvature-action identity survives normalized observation. -/
 theorem readout_curvatureAction (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ)
-    (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
-    (ξ η : Direction) (X : OperatorZornMatrix A) :
+    (p : Fin 4 → A) (Phi : FourPotential A)
+    (ξ η : Fin 4) (X : OperatorZornMatrix A) :
     readout q E (curvatureAction p Phi ξ η X) =
       readout q E (coefficientDeriv (coefficientBracket (p ξ) (p η)) X) +
       readout q E (fieldStrength p Phi ξ η * X) -
@@ -116,8 +116,8 @@ theorem readout_gauge_associator (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ) (g 
   exact readout_gauge q E g _
 
 theorem readout_gauge_curvature (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ) (g : Aˣ)
-    (p : Direction → A) (Phi : ConnectionCoefficients Direction A)
-    (ξ η : Direction) (X : OperatorZornMatrix A) :
+    (p : Fin 4 → A) (Phi : FourPotential A)
+    (ξ η : Fin 4) (X : OperatorZornMatrix A) :
     readout q (dualFrame E g)
       (curvatureAction (fun i => coefficientConjugation g (p i))
         (fun i => gauge g (Phi i)) ξ η (gauge g X)) =
@@ -126,7 +126,7 @@ theorem readout_gauge_curvature (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ) (g :
   exact readout_gauge q E g _
 
 theorem readout_gauge_bianchi (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ) (g : Aˣ)
-    (p : Direction → A) (Phi : ConnectionCoefficients Direction A) (ξ η ζ : Direction) :
+    (p : Fin 4 → A) (Phi : FourPotential A) (ξ η ζ : Fin 4) :
     readout q (dualFrame E g)
       (bianchi (fun i => coefficientConjugation g (p i)) (fun i => gauge g (Phi i)) ξ η ζ) =
       readout q E (bianchi p Phi ξ η ζ) := by
@@ -143,6 +143,7 @@ def statePotential (C : Ray ι → (ι × ι) → OperatorZornMatrix A) (w : Wei
   map_smul' c v := by
     simp only [map_smul, Pi.smul_apply, RingHom.id_apply, smul_eq_mul, smul_smul, Finset.smul_sum]
 
+omit [Nonempty ι] in
 /-- All radial directions are vertical gauge and are annihilated. -/
 theorem statePotential_radial (C : Ray ι → (ι × ι) → OperatorZornMatrix A)
     (w : Weight ι) (c : ℝ) : statePotential C w (fun i => c*w i) = 0 := by
@@ -150,6 +151,7 @@ theorem statePotential_radial (C : Ray ι → (ι × ι) → OperatorZornMatrix 
   rw [logDifferential_radial]
   simp
 
+omit [Nonempty ι] in
 /-- Descent includes the derivative of an arbitrary representative rescaling. -/
 theorem statePotential_change_lift (C : Ray ι → (ι × ι) → OperatorZornMatrix A)
     (w : Weight ι) (v : ι → ℝ) (c b : ℝ) (hc : 0 < c) :
@@ -160,6 +162,7 @@ theorem statePotential_change_lift (C : Ray ι → (ι × ι) → OperatorZornMa
   rw [logDifferential_change_lift, ray_scale]
   rfl
 
+omit [Nonempty ι] in
 /-- Scale descent does not annihilate the noncommuting potential wedge. -/
 theorem statePotential_bracket_change_lift
     (C : Ray ι → (ι × ι) → OperatorZornMatrix A)

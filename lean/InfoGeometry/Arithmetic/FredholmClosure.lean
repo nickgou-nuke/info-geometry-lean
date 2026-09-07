@@ -1,6 +1,11 @@
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.NumberTheory.PrimeCounting
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
+import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
+import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
+import InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge
 import InfoGeometry.Analysis.TraceClassBridge
 
 /-!
@@ -27,6 +32,7 @@ trace-class owner file constructs them from first principles.
 -/
 
 open Complex
+open Filter Topology
 open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.FredholmClosure
@@ -78,6 +84,261 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
     regularizedDetStage factor (N + 1) =
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
+
+/-! ## Prime-indexed cutoff stages -/
+
+/-- The `i`-th prime, packaged in the canonical `Nat.Primes` carrier. -/
+noncomputable def primeAt (i : ℕ) : Nat.Primes :=
+  ⟨Nat.nth Nat.Prime i, Nat.prime_nth_prime i⟩
+
+theorem primeAt_val_strictMono : StrictMono (fun i : ℕ => (primeAt i : ℕ)) := by
+  exact Nat.nth_strictMono Nat.infinite_setOf_prime
+
+theorem primeAt_val_tendsto_atTop :
+    Tendsto (fun i : ℕ => (primeAt i : ℕ)) atTop atTop := by
+  exact primeAt_val_strictMono.tendsto_atTop
+
+theorem primeAt_injective : Function.Injective primeAt := by
+  intro i j h
+  exact primeAt_val_strictMono.injective (Subtype.ext_iff.mp h)
+
+/-- The finite carrier consisting of the first `N` primes. -/
+noncomputable def primeCutoff (N : ℕ) : Finset Nat.Primes :=
+  (Finset.range N).image primeAt
+
+theorem card_primeCutoff (N : ℕ) : (primeCutoff N).card = N := by
+  unfold primeCutoff
+  rw [Finset.card_image_of_injective _ primeAt_injective]
+  simp
+
+theorem primeCutoff_mono {N M : ℕ} (hNM : N ≤ M) :
+    primeCutoff N ⊆ primeCutoff M := by
+  unfold primeCutoff
+  intro p hp
+  rcases Finset.mem_image.mp hp with ⟨i, hi, rfl⟩
+  exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr (lt_of_lt_of_le
+    (Finset.mem_range.mp hi) hNM), rfl⟩
+
+theorem mem_primeCutoff_iff {N : ℕ} (p : Nat.Primes) :
+    p ∈ primeCutoff N ↔ (p : ℕ) < (primeAt N : ℕ) := by
+  constructor
+  · intro hp
+    have hp' : ∃ i, i ∈ Finset.range N ∧ primeAt i = p := by
+      simpa [primeCutoff] using (show p ∈ primeCutoff N from ‹p ∈ primeCutoff N›)
+    rcases hp' with ⟨i, hi, hEq⟩
+    have hval : (primeAt i : ℕ) = (p : ℕ) := congrArg Subtype.val hEq
+    rw [← hval]
+    exact primeAt_val_strictMono (Finset.mem_range.mp hi)
+  · intro hp
+    rcases Nat.exists_lt_card_nth_eq p.property with ⟨i, _hcard, hi⟩
+    have hiN : i < N := by
+      apply (primeAt_val_strictMono.lt_iff_lt).mp
+      simpa [primeAt] using (show Nat.nth Nat.Prime i < Nat.nth Nat.Prime N by
+        rw [hi]
+        exact hp)
+    exact Finset.mem_image.mpr ⟨i, Finset.mem_range.mpr hiN, by
+      apply Subtype.ext
+      simpa [primeAt] using hi⟩
+
+theorem primeCutoff_values_eq_primesBelow (N : ℕ) :
+    (primeCutoff N).image (fun p : Nat.Primes => (p : ℕ)) =
+      Nat.primesBelow (primeAt N : ℕ) := by
+  ext x
+  constructor
+  · intro hx
+    rcases Finset.mem_image.mp hx with ⟨p, hp, rfl⟩
+    exact Nat.mem_primesBelow.mpr ⟨
+      mem_primeCutoff_iff p |>.mp hp,
+      p.property⟩
+  · intro hx
+    have hx' := Nat.mem_primesBelow.mp hx
+    let p : Nat.Primes := ⟨x, hx'.2⟩
+    have hp : p ∈ primeCutoff N :=
+      mem_primeCutoff_iff p |>.mpr hx'.1
+    exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
+
+theorem primeCutoff_prod_eq_primesBelow_prod (s : ℂ) (N : ℕ) :
+    (∏ p ∈ primeCutoff N,
+      (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p)⁻¹) =
+      ∏ q ∈ Nat.primesBelow (primeAt N : ℕ),
+        (1 - ((q : ℕ) : ℂ) ^ (-s))⁻¹ := by
+  rw [← primeCutoff_values_eq_primesBelow N]
+  have hinj : Set.InjOn (fun p : Nat.Primes => (p : ℕ)) (primeCutoff N) :=
+    Subtype.val_injective.injOn
+  rw [Finset.prod_image hinj]
+  apply Finset.prod_congr rfl
+  intro p hp
+  rfl
+
+noncomputable def primeCutoffValueTower :
+    InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge.FilteredPrimeTower where
+  stage N := (primeCutoff N).image (fun p : Nat.Primes => (p : ℕ))
+  monotone N := by
+    exact Finset.image_subset_image (primeCutoff_mono (Nat.le_succ N))
+  all_prime N p hp := by
+    rcases Finset.mem_image.mp hp with ⟨q, hq, rfl⟩
+    exact q.property
+
+/-- The local fermionic determinant factor at the `i`-th prime. -/
+noncomputable def primeCutoffFactor (s : ℂ) (i : ℕ) : ℂ :=
+  1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s (primeAt i)
+
+theorem primeCutoffFactor_eq_exp_log (s : ℂ) (i : ℕ) :
+    primeCutoffFactor s i =
+      1 - Complex.exp (-s * (Real.log (primeAt i : ℝ) : ℂ)) := by
+  have h :=
+    InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge.complexPow_nat_eq_exp_neg_log
+      (primeAt i : ℕ) (primeAt i).property.pos s
+  simpa [primeCutoffFactor,
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight] using
+    congrArg (fun z : ℂ => 1 - z) h
+
+/-- Finite determinant stage indexed by the first `N` primes. -/
+noncomputable def primeRegularizedDetStage (s : ℂ) (N : ℕ) : ℂ :=
+  regularizedDetStage (primeCutoffFactor s) N
+
+theorem primeRegularizedDetStage_eq_primeCutoff_prod (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      ∏ p ∈ primeCutoff N,
+        (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p) := by
+  unfold primeRegularizedDetStage primeCutoff primeCutoffFactor regularizedDetStage
+  rw [Finset.prod_image]
+  exact primeAt_injective.injOn
+
+theorem primeRegularizedDetStage_succ (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N * primeCutoffFactor s N := by
+  simp [primeRegularizedDetStage, regularizedDetStage,
+    Finset.prod_range_succ]
+
+theorem primeRegularizedDetStage_succ_exp (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s (N + 1) =
+      primeRegularizedDetStage s N *
+        (1 - Complex.exp (-s * (Real.log (primeAt N : ℝ) : ℂ))) := by
+  rw [primeRegularizedDetStage_succ, primeCutoffFactor_eq_exp_log]
+
+theorem primeRegularizedDetStage_eq_exp_prod (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      ∏ i ∈ Finset.range N,
+        (1 - Complex.exp (-s * (Real.log (primeAt i : ℝ) : ℂ))) := by
+  induction N with
+  | zero => simp [primeRegularizedDetStage, regularizedDetStage]
+  | succ N ih =>
+      rw [primeRegularizedDetStage_succ_exp, ih, Finset.prod_range_succ]
+
+theorem primeRegularizedDetStage_tendsto_tprod
+    (s : ℂ) (L : ℂ)
+    (hprod : HasProd (primeCutoffFactor s) L) :
+    Tendsto (fun N : ℕ => primeRegularizedDetStage s N) atTop (𝓝 L) := by
+  simpa [primeRegularizedDetStage, regularizedDetStage] using
+    hprod.tendsto_prod_nat
+
+theorem primeRegularizedDetStage_inv_tendsto_inv_tprod
+    (s : ℂ) (L : ℂ) (hL : L ≠ 0)
+    (hprod : HasProd (primeCutoffFactor s) L) :
+    Tendsto (fun N : ℕ => (primeRegularizedDetStage s N)⁻¹) atTop (𝓝 L⁻¹) := by
+  exact (primeRegularizedDetStage_tendsto_tprod s L hprod).inv₀ hL
+
+theorem primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition
+    (s : ℂ) (N : ℕ) :
+    (primeRegularizedDetStage s N)⁻¹ =
+      InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+        (primeCutoff N) s := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+  rw [Finset.prod_inv_distrib]
+
+theorem primeRegularizedDetStage_eq_finiteComplexFermionSupertrace
+    (s : ℂ) (N : ℕ) :
+    primeRegularizedDetStage s N =
+      InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace
+        (primeCutoff N) s := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  exact
+    (InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_eq_eulerProduct
+      (primeCutoff N) s).symm
+
+theorem primeRegularizedDetStage_inv_eq_primeBosonicCutoff
+    (s : ℂ) (N : ℕ) :
+    (primeRegularizedDetStage s N)⁻¹ =
+      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
+        (primeAt N : ℕ) s := by
+  rw [primeRegularizedDetStage_inv_eq_finiteComplexBosonPartition]
+  unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+  rw [primeCutoff_prod_eq_primesBelow_prod]
+  rfl
+
+theorem primeRegularizedDetStage_inv_tendsto_riemannZeta
+    {s : ℂ} (hs : 1 < s.re) :
+    Tendsto (fun N : ℕ => (primeRegularizedDetStage s N)⁻¹) atTop
+      (𝓝 (riemannZeta s)) := by
+  have hcut :=
+    InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff_tendsto_riemannZeta hs
+  have hcofinal := primeAt_val_tendsto_atTop
+  have hsub := hcut.comp hcofinal
+  simpa only [primeRegularizedDetStage_inv_eq_primeBosonicCutoff] using hsub
+
+theorem primeRegularizedDetStage_tendsto_inv_riemannZeta
+    {s : ℂ} (hs : 1 < s.re) :
+    Tendsto (fun N : ℕ => primeRegularizedDetStage s N) atTop
+      (𝓝 (riemannZeta s)⁻¹) := by
+  have h := primeRegularizedDetStage_inv_tendsto_riemannZeta hs
+  exact (h.inv₀ (riemannZeta_ne_zero_of_one_lt_re hs)).congr'
+    (Filter.Eventually.of_forall (fun N => inv_inv (primeRegularizedDetStage s N)))
+
+theorem primeRegularizedDetStage_mul_finiteComplexBosonPartition_eq_one
+    (s : ℂ) (N : ℕ)
+    (hdenom : ∀ p ∈ primeCutoff N,
+      (1 - InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight s p) ≠ 0) :
+    primeRegularizedDetStage s N *
+        InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
+          (primeCutoff N) s = 1 := by
+  rw [primeRegularizedDetStage_eq_primeCutoff_prod]
+  rw [← InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_eq_eulerProduct]
+  exact InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_mul_finiteComplexBosonPartition_eq_one
+    (primeCutoff N) s hdenom
+
+theorem primeRegularizedDetStage_ne_zero
+    (s : ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, primeCutoffFactor s n ≠ 0) :
+    primeRegularizedDetStage s N ≠ 0 := by
+  classical
+  induction N with
+  | zero => simp [primeRegularizedDetStage, regularizedDetStage]
+  | succ N ih =>
+      rw [primeRegularizedDetStage_succ]
+      exact mul_ne_zero
+        (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
+        (hfactor N (Nat.lt_succ_self N))
+
+theorem primeRegularizedDetStage_ne_zero_of_one_lt_re
+    {s : ℂ} (hs : 1 < s.re) (N : ℕ) :
+    primeRegularizedDetStage s N ≠ 0 := by
+  apply primeRegularizedDetStage_ne_zero s N
+  intro n hn
+  simpa [primeCutoffFactor,
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.complexPrimeWeight] using
+    (InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor_ne_zero
+      (primeAt n : ℕ) (primeAt n).property hs)
+
+theorem primeRegularizedDetStage_mul_inv_eq_one
+    (s : ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, primeCutoffFactor s n ≠ 0) :
+    primeRegularizedDetStage s N * (primeRegularizedDetStage s N)⁻¹ = 1 := by
+  exact mul_inv_cancel₀ (primeRegularizedDetStage_ne_zero s N hfactor)
+
+theorem regularizedDetStage_ne_zero
+    (factor : ℕ → ℂ) (N : ℕ)
+    (hfactor : ∀ n < N, factor n ≠ 0) :
+    regularizedDetStage factor N ≠ 0 := by
+  classical
+  induction N with
+  | zero =>
+      simp [regularizedDetStage]
+  | succ N ih =>
+      rw [regularizedDetStage_succ]
+      exact mul_ne_zero (ih (fun n hn => hfactor n (Nat.lt_trans hn (Nat.lt_succ_self N))))
+        (hfactor N (Nat.lt_succ_self N))
 
 /- ## The Fredholm Closure Certificate -/
 

@@ -24,9 +24,9 @@ theorem modularBerryRotor_eq_curvatureIntegral_plus_anomaly
     data D
 
 theorem modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly
-    {M : Type u} {Spin : Type v}
-    [Group Spin]
-    (data : InfoGeometry.Canonical.BerryRotorBridge.NonAbelianSpinBerryData M Spin)
+    {M : Type u} {Spin : Type v} {Curv2 : Type u}
+    [Group Spin] [HAdd Curv2 Curv2 Curv2]
+    (data : InfoGeometry.Canonical.BerryRotorBridge.NonAbelianSpinBerryData M Spin Curv2)
     (D : data.Surface) :
     data.holonomy (data.boundary D) =
       data.surfaceOrderedExp D * data.anomaly D :=

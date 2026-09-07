@@ -14,6 +14,8 @@ two structures definitionally.
 
 namespace InfoGeometry.Algebra.SplitOctonionFureyScalarBridge
 
+open InfoGeometry.Canonical.ZornMatrix (smul_a smul_b smul_x smul_y)
+
 abbrev QZ := InfoGeometry.Canonical.ZornMatrix ℚ
 abbrev RZ := InfoGeometry.Algebra.ZornMatrix ℝ
 
@@ -58,14 +60,16 @@ theorem ratToRealZorn_injective : Function.Injective ratToRealZorn := by
 theorem ratToRealZorn_add (X Y : QZ) :
     ratToRealZorn (X + Y) = ratToRealZorn X + ratToRealZorn Y := by
   apply InfoGeometry.Algebra.ZornMatrix.ext <;>
-    simp [ratToRealZorn, InfoGeometry.Algebra.ZornMatrix.add]
+    simp [ratToRealZorn]
   all_goals funext i; fin_cases i <;> rfl
 
 theorem ratToRealZorn_smul (c : ℚ) (X : QZ) :
     ratToRealZorn (c • X) = (c : ℝ) • ratToRealZorn X := by
-  apply InfoGeometry.Algebra.ZornMatrix.ext <;>
-    simp [ratToRealZorn, InfoGeometry.Algebra.ZornMatrix.smul]
-  all_goals funext i; fin_cases i <;> rfl
+  apply InfoGeometry.Algebra.ZornMatrix.ext
+  · simp [ratToRealZorn, smul_a]
+  · funext i; fin_cases i <;> simp [ratToRealZorn, smul_x, InfoGeometry.Algebra.Vec3.smul]
+  · funext i; fin_cases i <;> simp [ratToRealZorn, smul_y, InfoGeometry.Algebra.Vec3.smul]
+  · simp [ratToRealZorn, smul_b]
 
 theorem ratToRealZorn_mul (X Y : QZ) :
     ratToRealZorn (X * Y) = ratToRealZorn X * ratToRealZorn Y := by
@@ -84,8 +88,7 @@ theorem ratToRealZorn_mul (X Y : QZ) :
         InfoGeometry.Algebra.Vec3.add,
         InfoGeometry.Algebra.Vec3.sub,
         InfoGeometry.Algebra.Vec3.smul, Pi.smul_apply, Matrix.vecHead,
-        Matrix.vecTail] <;>
-      ring
+        Matrix.vecTail]
   · funext i
     fin_cases i <;>
       simp [ratToRealZorn, InfoGeometry.Canonical.ZornMatrix.mul,
@@ -94,13 +97,14 @@ theorem ratToRealZorn_mul (X Y : QZ) :
         InfoGeometry.Algebra.ZornMatrix.mul,
         InfoGeometry.Algebra.Vec3.cross,
         InfoGeometry.Algebra.Vec3.add,
+        InfoGeometry.Algebra.Vec3.sub,
         InfoGeometry.Algebra.Vec3.smul, Pi.smul_apply, Matrix.vecHead,
         Matrix.vecTail] <;>
       ring
   · simp [ratToRealZorn, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Algebra.ZornMatrix.mul,
-      InfoGeometry.Algebra.Vec3.dot] <;> ring
+      InfoGeometry.Algebra.Vec3.dot]; ring
 
 theorem ratToRealZorn_up_one_mul_down_one :
     ratToRealZorn

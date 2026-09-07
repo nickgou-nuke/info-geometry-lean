@@ -135,6 +135,28 @@ theorem partitionPolyN2_coeff_4 :
     Polynomial.coeff partitionPolyN2 4 = 0 := by
   simp [partitionPolyN2, Polynomial.coeff_one, Polynomial.coeff_X]
 
+/-- Exact coordinate readout for the two-site roots -/
+theorem partitionPolyN2_root_coordinates
+    {z : ℂ} (hz : partitionPolyN2.IsRoot z) :
+    z.re = (1 / 2 : ℝ) ∧ z.im * z.im = (3 / 4 : ℝ) := by
+  have hpoly : z ^ 2 - z + 1 = 0 := by
+    simpa [partitionPolyN2, Polynomial.IsRoot] using hz
+  have hre := congrArg Complex.re hpoly
+  have him := congrArg Complex.im hpoly
+  simp [pow_two, Complex.mul_re, Complex.mul_im] at hre him
+  have him' : z.im * (2 * z.re - 1) = 0 := by
+    nlinarith [him]
+  rcases mul_eq_zero.mp him' with him0 | hrel
+  · have hreal : z.re ^ 2 - z.re + 1 = 0 := by
+      nlinarith [hre, him0]
+    exfalso
+    nlinarith [sq_nonneg (z.re - (1 / 2 : ℝ))]
+  · have hzre : z.re = (1 / 2 : ℝ) := by
+      linarith
+    have himsq : z.im * z.im = (3 / 4 : ℝ) := by
+      nlinarith [hre, hzre]
+    exact ⟨hzre, himsq⟩
+
 /-- The concrete Lee-Yang stability theorem for N=2 -/
 theorem leeYangStabilityN2 :
     (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) := by

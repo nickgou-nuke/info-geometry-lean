@@ -81,14 +81,21 @@ theorem stageTrace_mul_comm (n : ℕ) (A B : MatrixStage n) :
 /-- Trace of adjoint is complex conjugate of trace. -/
 theorem stageTrace_star (n : ℕ) (A : MatrixStage n) :
     star (stageTrace n A) = stageTrace n (star A) := by
-  dsimp [stageTrace]
-  exact matrixTraceState_star n A
+  dsimp [stageTrace, matrixTraceState, matrixTraceFunctional]
+  rw [map_mul]
+  have hcoef : starRingEnd ℂ (1 / (2 ^ n : ℂ)) = 1 / (2 ^ n : ℂ) := by
+    rw [show (1 / (2 ^ n : ℂ)) = ↑(1 / (2 ^ n : ℝ)) by push_cast; rfl]
+    exact Complex.conj_ofReal _
+  rw [hcoef]
+  change 1 / (2 ^ n : ℂ) * star (Matrix.trace A) = 1 / (2 ^ n : ℂ) * Matrix.trace (star A)
+  rw [← Matrix.trace_conjTranspose]
+  rfl
 
 /-- Trace of a positive element (B* B) is real non-negative. -/
 theorem stageTrace_star_mul_self_nonneg (n : ℕ) (B : MatrixStage n) :
     0 ≤ (stageTrace n (star B * B)).re := by
   dsimp [stageTrace]
-  exact matrixTraceState_realPart_star_mul_self_nonneg n B
+  exact matrixTraceState_nonneg n B
 
 /-! ## Native comparison of the two algebraic colimit presentations -/
 

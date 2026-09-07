@@ -54,7 +54,7 @@ export InfoGeometry.Canonical.HolographicEmergence (
   emergentTimeFlow_of_sinkhornTrajectory
   anomalyScalePhase_of_nonzeroAnomaly
   pathDependence_of_twistedInference
-  exists_gaugeOrderHysteresis_witness
+  exists_gaugeOrderHysteresis
 )
 
 end InfoGeometry.Canonical.DeepHorizon

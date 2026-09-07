@@ -1,7 +1,8 @@
 import Mathlib.Data.Nat.Choose.Multinomial
 import InfoGeometry.KL.Finite
+import InfoGeometry.PositiveMeasure
 
-open scoped BigOperators
+open scoped BigOperators ENNReal
 
 universe u
 
@@ -26,13 +27,13 @@ namespace ProbDist
 variable {Ω : Type} [Fintype Ω]
 
 /-- Convert local Jaynes probability distributions to the core `InfoGeometry` type. -/
-def toInfoProbabilityDist (P : ProbDist Ω) : InfoGeometry.ProbabilityDist (α := Ω) :=
-  { prob := P.f
-    sum_one := P.sum_one
-    nonneg := P.nonneg }
+noncomputable def toInfoProbabilityDist (P : ProbDist Ω) : InfoGeometry.ProbabilityDist Ω :=
+  FinProb.of_fintype (fun i => ENNReal.ofReal (P.f i)) (by
+    rw [← ENNReal.ofReal_sum_of_nonneg (fun i _ => P.nonneg i)]
+    rw [P.sum_one, ENNReal.ofReal_one])
 
-@[simp] lemma toInfoProbabilityDist_prob (P : ProbDist Ω) (i : Ω) :
-    (P.toInfoProbabilityDist).prob i = P.f i := rfl
+@[simp] lemma toInfoProbabilityDist_apply (P : ProbDist Ω) (i : Ω) :
+    P.toInfoProbabilityDist i = ENNReal.ofReal (P.f i) := rfl
 
 end ProbDist
 
@@ -269,44 +270,42 @@ theorem gibbs_is_maximum_entropy
     (P : ProbDist Ω) (hP : satisfiesConstraint P C)
     (hGibbs : satisfiesConstraint (gibbsDist (Ω := Ω) C lam) C) :
     shannonEntropy P ≤ shannonEntropy (gibbsDist (Ω := Ω) C lam) := by
-  have hKLnonneg :
-      0 ≤ InfoGeometry.klDiv
-        P.toInfoProbabilityDist
-        (gibbsDist (Ω := Ω) C lam).toInfoProbabilityDist := by
-    apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
+  have hterm :
+      ∀ i,
+        -(P.f i * Real.log (P.f i))
+          ≤ -(P.f i * Real.log ((gibbsDist C lam).f i)) - P.f i + (gibbsDist C lam).f i := by
     intro i
-    simpa using gibbsDist_pos (C := C) (lam := lam) i
-  have hKLexpand :
-      InfoGeometry.klDiv
-        P.toInfoProbabilityDist
-        (gibbsDist (Ω := Ω) C lam).toInfoProbabilityDist
-        = ∑ i, P.f i * (Real.log (P.f i) - Real.log ((gibbsDist C lam).f i)) := by
-    unfold InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
-    simp [ProbDist.toInfoProbabilityDist]
-  have hkl :
-      0 ≤ (∑ i, P.f i * Real.log (P.f i))
-            - (∑ i, P.f i * Real.log ((gibbsDist C lam).f i)) := by
-    have htmp := hKLnonneg
-    rw [hKLexpand] at htmp
-    have hsum :
-        ∑ i, P.f i * (Real.log (P.f i) - Real.log ((gibbsDist C lam).f i))
-          = (∑ i, P.f i * Real.log (P.f i))
-            - (∑ i, P.f i * Real.log ((gibbsDist C lam).f i)) := by
-      calc
-        ∑ i, P.f i * (Real.log (P.f i) - Real.log ((gibbsDist C lam).f i))
-            = ∑ i, (P.f i * Real.log (P.f i) - P.f i * Real.log ((gibbsDist C lam).f i)) := by
-                refine Finset.sum_congr rfl ?_
-                intro i hi
-                ring
-        _ = (∑ i, P.f i * Real.log (P.f i))
-              - (∑ i, P.f i * Real.log ((gibbsDist C lam).f i)) := by
-              rw [Finset.sum_sub_distrib]
-    exact hsum ▸ htmp
+    by_cases hPi : P.f i = 0
+    · simp only [hPi, neg_zero, zero_mul, sub_zero, zero_add]
+      exact (gibbsDist C lam).nonneg i
+    · have hPi_pos : 0 < P.f i := lt_of_le_of_ne (P.nonneg i) (Ne.symm hPi)
+      have hgi_pos : 0 < (gibbsDist C lam).f i := gibbsDist_pos C lam i
+      have hdiv :
+          Real.log (P.f i / (gibbsDist C lam).f i)
+            = Real.log (P.f i) - Real.log ((gibbsDist C lam).f i) :=
+        Real.log_div hPi hgi_pos.ne'
+      have hgkl :
+          0 ≤ P.f i * Real.log (P.f i / (gibbsDist C lam).f i) - P.f i + (gibbsDist C lam).f i :=
+        PositiveMeasure.gklTerm_nonneg (x := P.f i) (y := (gibbsDist C lam).f i) hPi_pos hgi_pos
+      rw [hdiv] at hgkl
+      linarith
+  have hsum :
+      ∑ i, -(P.f i * Real.log (P.f i))
+        ≤ ∑ i, (-(P.f i * Real.log ((gibbsDist C lam).f i)) - P.f i + (gibbsDist C lam).f i) :=
+    Finset.sum_le_sum (fun i _ => hterm i)
   have hP_le_cross :
       shannonEntropy P ≤ -∑ i, P.f i * Real.log ((gibbsDist C lam).f i) := by
-    have hP_form : shannonEntropy P = -∑ i, P.f i * Real.log (P.f i) := by
-      simp [shannonEntropy]
-    linarith [hkl, hP_form]
+    have hPsum : ∑ i, P.f i = 1 := P.sum_one
+    have hgsum : ∑ i, (gibbsDist C lam).f i = 1 := (gibbsDist C lam).sum_one
+    have hP_form : shannonEntropy P = ∑ i, -(P.f i * Real.log (P.f i)) := by
+      simp [shannonEntropy, Finset.sum_neg_distrib]
+    rw [hP_form]
+    have hsplit :
+        (∑ i, (-(P.f i * Real.log ((gibbsDist C lam).f i)) - P.f i + (gibbsDist C lam).f i))
+          = (-∑ i, P.f i * Real.log ((gibbsDist C lam).f i)) - (∑ i, P.f i) + ∑ i, (gibbsDist C lam).f i := by
+      simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_neg_distrib]
+    rw [hsplit, hPsum, hgsum] at hsum
+    linarith
   have hcross_P :
       -∑ i, P.f i * Real.log ((gibbsDist C lam).f i)
         = lam * C.d + Real.log (partitionFunction C lam) :=

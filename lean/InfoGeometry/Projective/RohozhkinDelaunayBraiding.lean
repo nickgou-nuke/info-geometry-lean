@@ -51,13 +51,7 @@ theorem appendix_pentagon_matrix_identity_readout
     (h_jl : zj - zl ≠ 0) :
     rohozhkinMatrix
         (InfoGeometry.Topology.RohozhkinDelaunayBraiding.appendixPentagonWord
-          zi zj zk zl zm
-          (InfoGeometry.Topology.Delaunay.pentagonGamma5 zi zj zk zl zm *
-            InfoGeometry.Topology.Delaunay.pentagonGamma4 zi zj zk zl zm *
-            InfoGeometry.Topology.Delaunay.pentagonGamma3 zi zj zk zl zm *
-            InfoGeometry.Topology.Delaunay.pentagonGamma2 zi zj zk zl zm *
-            InfoGeometry.Topology.Delaunay.pentagonGamma1 zi zj zk zl zm =
-              (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))) =
+          zi zj zk zl zm) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) :=
   InfoGeometry.Topology.RohozhkinDelaunayBraiding.appendixPentagonWord_matrix_eq_one
     zi zj zk zl zm h_il h_ik h_km h_jm h_jl

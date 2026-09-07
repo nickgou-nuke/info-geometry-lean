@@ -48,19 +48,23 @@ theorem scaleMultiplier_isUnit {p : Fin m} {a : ℚ} (ha : a ≠ 0) :
     IsUnit (scaleMultiplier p a) := by
   let D := scaleMultiplier p a
   let Dinv := scaleMultiplier p a⁻¹
+  have h_diag1 : (fun i => (if i = p then a else 1) * (if i = p then a⁻¹ else 1)) = fun _ => 1 := by
+    ext i
+    by_cases hi : i = p
+    · subst hi; simp [ha]
+    · simp [hi]
+  have h_diag2 : (fun i => (if i = p then a⁻¹ else 1) * (if i = p then a else 1)) = fun _ => 1 := by
+    ext i
+    by_cases hi : i = p
+    · subst hi; simp [ha]
+    · simp [hi]
   have hvalInv : D * Dinv = 1 := by
-    ext i j
-    by_cases hi : i = p
-    · subst i
-      simp [D, Dinv, scaleMultiplier, ha]
-    · simp [D, Dinv, scaleMultiplier, hi]
+    change Matrix.diagonal _ * Matrix.diagonal _ = 1
+    rw [Matrix.diagonal_mul_diagonal, h_diag1, Matrix.diagonal_one]
   have hinvVal : Dinv * D = 1 := by
-    ext i j
-    by_cases hi : i = p
-    · subst i
-      simp [D, Dinv, scaleMultiplier, ha]
-    · simp [D, Dinv, scaleMultiplier, hi]
-  exact ⟨⟨D, Dinv, hinvVal, hvalInv⟩, rfl⟩
+    change Matrix.diagonal _ * Matrix.diagonal _ = 1
+    rw [Matrix.diagonal_mul_diagonal, h_diag2, Matrix.diagonal_one]
+  exact ⟨⟨D, Dinv, hvalInv, hinvVal⟩, rfl⟩
 
 /-- The swap matrix is a unit. -/
 theorem swapMultiplier_isUnit (p q : Fin m) : IsUnit (Matrix.swap ℚ p q) :=
@@ -88,7 +92,7 @@ def clearColumn (B : RatMatrix m n) (p : Fin m) (j : Fin n) : RatMatrix m n :=
     (i : Fin m) :
     clearColumn B p j i c = B i c + clearVector B p j i * B p c := by
   simp [clearColumn, clearMultiplier, clearNilpotent, Matrix.add_mul,
-    Matrix.vecMulVec_mul, Matrix.single_one_vecMul]
+    Matrix.vecMulVec_mul, Matrix.vecMulVec_apply]
 
 @[simp] theorem clearColumn_apply_self (B : RatMatrix m n) (p : Fin m) (j c : Fin n) :
     clearColumn B p j p c = B p c := by
@@ -112,14 +116,10 @@ theorem clearMultiplier_isUnit (B : RatMatrix m n) (p : Fin m) (j : Fin n) :
   have hN : N * N = 0 := by
     simpa [N] using clearNilpotent_sq B p j
   refine ⟨⟨clearMultiplier B p j, 1 - N, ?_, ?_⟩, rfl⟩
-  · change (1 - N) * (1 + N) = 1
-    calc
-      (1 - N) * (1 + N) = 1 - N * N := by noncomm_ring
-      _ = 1 := by rw [hN, sub_zero]
   · change (1 + N) * (1 - N) = 1
-    calc
-      (1 + N) * (1 - N) = 1 - N * N := by noncomm_ring
-      _ = 1 := by rw [hN, sub_zero]
+    rw [mul_sub, mul_one, add_mul, one_mul, hN, add_zero, add_sub_cancel_right]
+  · change (1 - N) * (1 + N) = 1
+    rw [mul_add, mul_one, sub_mul, one_mul, hN, sub_zero, sub_add_cancel]
 
 /-- Normalize the entry at `(p,j)` by scaling row `p`. -/
 def normalizePivot (B : RatMatrix m n) (p : Fin m) (j : Fin n) : RatMatrix m n :=
@@ -153,7 +153,9 @@ theorem pivotStep_eq_mul (B : RatMatrix m n) (p q : Fin m) (j : Fin n) :
 @[simp] theorem pivotStep_pivot_one (B : RatMatrix m n) (p q : Fin m) (j : Fin n)
     (hq : B q j ≠ 0) :
     pivotStep B p q j p j = 1 := by
-  simp [pivotStep, normalizePivot, hq]
+  have hB₁ : swapRows B p q p j ≠ 0 := by
+    simpa using hq
+  rw [pivotStep, clearColumn_apply_self, normalizePivot_pivot _ _ _ hB₁]
 
 /-- Every non-pivot entry in the selected column becomes `0`. -/
 theorem pivotStep_pivot_zero (B : RatMatrix m n) (p q i : Fin m) (j : Fin n)

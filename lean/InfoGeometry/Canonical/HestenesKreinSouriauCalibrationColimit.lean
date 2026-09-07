@@ -70,9 +70,7 @@ theorem realMassieu_invariant_of_thermal_symmetry
     (g : G) (β : ℂ)
     (hg : isThermalSymmetry g) :
     (massieu (actOnBeta g β)).re = (massieu β).re := by
-  exact congrArg Complex.re
-    (massieu_invariant_of_thermal_symmetry actOnBeta partition massieu
-      isThermalSymmetry massieu_eq_log_partition partition_invariant g β hg)
+  rw [massieu_eq_log_partition, massieu_eq_log_partition, partition_invariant g β hg]
 
 theorem zetaCalibration_real_readout
     (zetaTarget : ℂ → ℂ)

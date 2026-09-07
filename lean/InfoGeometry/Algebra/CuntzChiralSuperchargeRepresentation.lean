@@ -76,6 +76,26 @@ theorem qminus_qplus_product (g : CuntzO2Generators R)
   have h_assoc : g.S2 * g.S1star * (g.S1 * g.S2star) = g.S2 * (g.S1star * g.S1) * g.S2star := by noncomm_ring
   rw [h_assoc, hS1star_S1, mul_one]
 
+/-- **Theorem**: Positive Chiral Supercharge Idempotent-Action: Q₊ Q₋ Q₊ = Q₊. -/
+theorem qplus_qminus_qplus (g : CuntzO2Generators R)
+    (hS2star_S2 : g.S2star * g.S2 = 1)
+    (hS1star_S1 : g.S1star * g.S1 = 1) :
+    QPlus g * QMinus g * QPlus g = QPlus g := by
+  rw [qplus_qminus_product g hS2star_S2]
+  dsimp [QPlus]
+  have h_assoc : g.S1 * g.S1star * (g.S1 * g.S2star) = g.S1 * (g.S1star * g.S1) * g.S2star := by noncomm_ring
+  rw [h_assoc, hS1star_S1, mul_one]
+
+/-- **Theorem**: Negative Chiral Supercharge Idempotent-Action: Q₋ Q₊ Q₋ = Q₋. -/
+theorem qminus_qplus_qminus (g : CuntzO2Generators R)
+    (hS1star_S1 : g.S1star * g.S1 = 1)
+    (hS2star_S2 : g.S2star * g.S2 = 1) :
+    QMinus g * QPlus g * QMinus g = QMinus g := by
+  rw [qminus_qplus_product g hS1star_S1]
+  dsimp [QMinus]
+  have h_assoc : g.S2 * g.S2star * (g.S2 * g.S1star) = g.S2 * (g.S2star * g.S2) * g.S1star := by noncomm_ring
+  rw [h_assoc, hS2star_S2, mul_one]
+
 /-- **Theorem**: SUSY Hamiltonian Completeness: {Q₊, Q₋} = Q₊ Q₋ + Q₋ Q₊ = 1. -/
 theorem susy_hamiltonian_completeness (g : CuntzO2Generators R)
     (hS2star_S2 : g.S2star * g.S2 = 1)

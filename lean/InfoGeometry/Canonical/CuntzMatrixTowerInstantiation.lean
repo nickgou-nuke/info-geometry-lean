@@ -102,4 +102,9 @@ theorem matrixTraceState_nonneg (n : ℕ) (A : MatrixStage n) :
   have h_factor : 0 ≤ 1 / (2 ^ n : ℝ) := by positivity
   exact mul_nonneg h_factor (matrixTrace_star_mul_self_nonneg n A)
 
+theorem matrixTraceState_mul_comm (n : ℕ) (A B : MatrixStage n) :
+    matrixTraceState n (A * B) = matrixTraceState n (B * A) := by
+  simp only [matrixTraceState_apply]
+  rw [Matrix.trace_mul_comm]
+
 end InfoGeometry.Canonical.CuntzMatrixTowerInstantiation

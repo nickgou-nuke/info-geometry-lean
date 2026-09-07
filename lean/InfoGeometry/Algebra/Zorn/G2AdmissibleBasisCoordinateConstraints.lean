@@ -10,6 +10,44 @@ assuming a geometric interpretation or a cardinality classification.
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+theorem mul_add (X Y Z : SplitOctF2) : mul X (add Y Z) = add (mul X Y) (mul X Z) := by
+  rcases X with ⟨Xa, Xb, Xx0, Xx1, Xx2, Xy0, Xy1, Xy2⟩
+  rcases Y with ⟨Ya, Yb, Yx0, Yx1, Yx2, Yy0, Yy1, Yy2⟩
+  rcases Z with ⟨Za, Zb, Zx0, Zx1, Zx2, Zy0, Zy1, Zy2⟩
+  apply SplitOctF2.ext
+  all_goals dsimp only [mul, add]
+  · revert Xa Xx0 Xx1 Xx2 Ya Yy0 Yy1 Yy2 Za Zy0 Zy1 Zy2; decide
+  · revert Xb Xy0 Xy1 Xy2 Yb Yx0 Yx1 Yx2 Zb Zx0 Zx1 Zx2; decide
+  · revert Xa Xx0 Xy1 Xy2 Yb Yx0 Yy1 Yy2 Zb Zx0 Zy1 Zy2; decide
+  · revert Xa Xx1 Xy0 Xy2 Yb Yx1 Yy0 Yy2 Zb Zx1 Zy0 Zy2; decide
+  · revert Xa Xx2 Xy0 Xy1 Yb Yx2 Yy0 Yy1 Zb Zx2 Zy0 Zy1; decide
+  · revert Xb Xy0 Xx1 Xx2 Ya Yy0 Yx1 Yx2 Za Zy0 Zx1 Zx2; decide
+  · revert Xb Xy1 Xx0 Xx2 Ya Yy1 Yx0 Yx2 Za Zy1 Zx0 Zx2; decide
+  · revert Xb Xy2 Xx0 Xx1 Ya Yy2 Yx0 Yx1 Za Zy2 Zx0 Zx1; decide
+
+theorem add_mul (X Y Z : SplitOctF2) : mul (add X Y) Z = add (mul X Z) (mul Y Z) := by
+  rcases X with ⟨Xa, Xb, Xx0, Xx1, Xx2, Xy0, Xy1, Xy2⟩
+  rcases Y with ⟨Ya, Yb, Yx0, Yx1, Yx2, Yy0, Yy1, Yy2⟩
+  rcases Z with ⟨Za, Zb, Zx0, Zx1, Zx2, Zy0, Zy1, Zy2⟩
+  apply SplitOctF2.ext
+  all_goals dsimp only [mul, add]
+  · revert Xa Ya Za Xx0 Yx0 Xx1 Yx1 Xx2 Yx2 Zy0 Zy1 Zy2; decide
+  · revert Xb Yb Zb Xy0 Yy0 Xy1 Yy1 Xy2 Yy2 Zx0 Zx1 Zx2; decide
+  · revert Xa Ya Zx0 Zb Xx0 Yx0 Xy1 Yy1 Xy2 Yy2 Zy1 Zy2; decide
+  · revert Xa Ya Zx1 Zb Xx1 Yx1 Xy0 Yy0 Xy2 Yy2 Zy0 Zy2; decide
+  · revert Xa Ya Zx2 Zb Xx2 Yx2 Xy0 Yy0 Xy1 Yy1 Zy0 Zy1; decide
+  · revert Xb Yb Zy0 Za Xy0 Yy0 Xx1 Yx1 Xx2 Yx2 Zx1 Zx2; decide
+  · revert Xb Yb Zy1 Za Xy1 Yy1 Xx0 Yx0 Xx2 Yx2 Zx0 Zx2; decide
+  · revert Xb Yb Zy2 Za Xy2 Yy2 Xx0 Yx0 Xx1 Yx1 Zx0 Zx1; decide
+
+@[simp] theorem one_mul (X : SplitOctF2) : mul one X = X := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  cases a <;> cases b <;> cases x0 <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;> cases y2 <;> rfl
+
+@[simp] theorem mul_one (X : SplitOctF2) : mul X one = X := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  cases a <;> cases b <;> cases x0 <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;> cases y2 <;> rfl
+
 abbrev NontrivialIdempotent :=
   {p : SplitOctF2 // mul p p = p ∧ p ≠ zero ∧ p ≠ one}
 
@@ -686,7 +724,7 @@ theorem admissibleBasis7_to_aut_basis7
   rw [admissibleBasis7_to_aut_apply]
   fin_cases i <;>
     simp [basis8From7, basis7, basisCoordinates, extendBasisMap,
-      add, add2, zero, ePlus, up0, up1, up2, down0, down1, down2]
+      add, zero, ePlus, up0, up1, up2, down0, down1, down2]
 
 theorem admissibleBasis7_all_prefixes_square_zero
     (v : AdmissibleBasis7Carrier) :

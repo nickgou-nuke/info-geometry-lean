@@ -23,13 +23,15 @@ open InfoGeometry.Algebra.FourthRootSpectralProjectors
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 
+local instance : MulAction ℂ (ExteriorAlgebra ℂ V) := Algebra.toModule.toMulAction
+
 /-- A scalar change of generators extended by the native exterior universal property. -/
 def phaseMap (z : ℂ) : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V :=
   ExteriorAlgebra.lift ℂ
     ⟨z • ExteriorAlgebra.ι ℂ, by
       intro v
-      change (z • ExteriorAlgebra.ι ℂ v) * (z • ExteriorAlgebra.ι ℂ v) = 0
-      rw [smul_mul_assoc, mul_smul_comm, ExteriorAlgebra.ι_sq_zero,
+      show (z • ExteriorAlgebra.ι ℂ v) * (z • ExteriorAlgebra.ι ℂ v) = 0
+      rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, ExteriorAlgebra.ι_sq_zero,
         smul_zero, smul_zero]⟩
 
 @[simp] theorem phaseMap_iota (z : ℂ) (v : V) :
@@ -41,16 +43,13 @@ theorem phaseMap_comp (z w : ℂ) :
     (phaseMap (V := V) z).comp (phaseMap w) = phaseMap (z * w) := by
   apply ExteriorAlgebra.hom_ext
   ext v
-  change phaseMap z (phaseMap w (ExteriorAlgebra.ι ℂ v)) =
-    phaseMap (z * w) (ExteriorAlgebra.ι ℂ v)
-  simp only [phaseMap_iota, map_smul, smul_smul]
-  rw [mul_comm]
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply, phaseMap_iota, map_smul]
+  rw [smul_smul, mul_comm]
 
 @[simp] theorem phaseMap_one : phaseMap (V := V) 1 = AlgHom.id ℂ (ExteriorAlgebra ℂ V) := by
   apply ExteriorAlgebra.hom_ext
   ext v
-  change phaseMap 1 (ExteriorAlgebra.ι ℂ v) = ExteriorAlgebra.ι ℂ v
-  simp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.id_apply, phaseMap_iota, one_smul]
 
 /-- Forget multiplication only to obtain the corresponding endomorphism. -/
 def phaseEnd (z : ℂ) : Module.End ℂ (ExteriorAlgebra ℂ V) :=
@@ -58,12 +57,14 @@ def phaseEnd (z : ℂ) : Module.End ℂ (ExteriorAlgebra ℂ V) :=
 
 theorem phaseEnd_mul (z w : ℂ) :
     phaseEnd (V := V) z * phaseEnd w = phaseEnd (z * w) := by
-  ext x
+  apply LinearMap.ext
+  intro x
   exact congrArg (fun f : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V => f x)
     (phaseMap_comp z w)
 
 @[simp] theorem phaseEnd_one : phaseEnd (V := V) 1 = 1 := by
-  ext x
+  apply LinearMap.ext
+  intro x
   exact congrArg (fun f : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V => f x)
     (phaseMap_one (V := V))
 
@@ -97,10 +98,11 @@ allowed; a zero wedge word simply satisfies the same equation. -/
 theorem phaseMap_wedgeWord (z : ℂ) (vs : List V) :
     phaseMap z (wedgeWord vs) = z ^ vs.length • wedgeWord vs := by
   induction vs with
-  | nil => simp [wedgeWord]
+  | nil =>
+      simp only [wedgeWord, map_one, List.length_nil, pow_zero, one_smul]
   | cons v vs ih =>
-      simp only [wedgeWord, map_mul, phaseMap_iota, ih, List.length_cons,
-        smul_mul_assoc, mul_smul_comm, smul_smul, pow_succ']
+      rw [wedgeWord, map_mul, phaseMap_iota, ih, List.length_cons]
+      rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, pow_succ', mul_comm z]
 
 /-- Residue labels belong to `Fin 4`, with the modulus bound proved. -/
 def degreeResidue (k : ℕ) : Fin 4 := ⟨k % 4, Nat.mod_lt _ (by decide)⟩
@@ -145,11 +147,8 @@ theorem phaseMap_neg_one : phaseMap (V := V) (-1) =
     InfoGeometry.Canonical.ExteriorSpinorChiralityBridge.gradeInvolution := by
   apply ExteriorAlgebra.hom_ext
   ext v
-  change phaseMap (-1) (ExteriorAlgebra.ι ℂ v) =
-    InfoGeometry.Canonical.ExteriorSpinorChiralityBridge.gradeInvolution
-      (ExteriorAlgebra.ι ℂ v)
-  simp only [phaseMap_iota, neg_one_smul,
-    InfoGeometry.Canonical.ExteriorSpinorChiralityBridge.gradeInvolution_ι]
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, phaseMap_iota,
+    InfoGeometry.Canonical.ExteriorSpinorChiralityBridge.gradeInvolution_ι, neg_one_smul]
 
 /-- Exact compatibility with the existing chirality, not a parallel definition. -/
 theorem degreeClock_square_eq_existing_parity : degreeClock (V := V) ^ 2 =
@@ -174,7 +173,6 @@ For a general Clifford vector, multiplication of two scaled vectors changes
 its square by a minus sign. -/
 theorem imaginary_scaling_square {A : Type*} [Ring A] [Algebra ℂ A] (v : A) :
     (Complex.I • v) * (Complex.I • v) = -(v * v) := by
-  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
-  norm_num
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, ← mul_smul, Complex.I_mul_I, neg_one_smul]
 
 end InfoGeometry.Clifford.ExteriorDegreeFourierClock

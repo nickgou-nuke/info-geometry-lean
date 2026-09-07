@@ -97,14 +97,25 @@ noncomputable def wallpaperD4Representation : D8PointGroup →* M2Q where
 
 theorem wallpaperD4Representation_Tx :
     wallpaperD4Representation ⟨5⟩ = Tx := by
-  exact d8_wallpaperD4_Tx_identification
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [wallpaperD4Representation, wallpaperD4, Tx,
+      InfoGeometry.Canonical.HolographicSouriauReconstruction.brillouinTwist2,
+      InfoGeometry.Canonical.HolographicSouriauReconstruction.brillouinGlide2]
 
 theorem wallpaperD4Representation_Ty :
     wallpaperD4Representation ⟨4⟩ = Ty := by
-  exact d8_wallpaperD4_Ty_identification
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [wallpaperD4Representation, wallpaperD4, Ty,
+      InfoGeometry.Canonical.HolographicSouriauReconstruction.brillouinGlide2]
 
 theorem wallpaperD4Representation_Txy :
     wallpaperD4Representation ⟨1⟩ = Txy := by
-  exact d8_wallpaperD4_Txy_identification
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [wallpaperD4Representation, wallpaperD4, Txy, Tx, Ty,
+      InfoGeometry.Canonical.HolographicSouriauReconstruction.brillouinTwist2,
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.BrillouinWallpaperD8GroupBridge

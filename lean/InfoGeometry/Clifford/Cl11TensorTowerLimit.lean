@@ -66,6 +66,57 @@ theorem stageStarMap_compat
     rw [hb]
     exact ih
 
+theorem bondMap_star (m n : ℕ) (h : m ≤ n) (x : Stage m) :
+    bondMap stageBond m n h (star x) = star (bondMap stageBond m n h x) := by
+  refine Nat.le_induction
+    (m := m)
+    (P := fun t ht => bondMap stageBond m t ht (star x) = star (bondMap stageBond m t ht x))
+    ?base ?succ n h
+  · dsimp only
+    have h1 : bondMap stageBond m m le_rfl (star x) = star x := by
+      simp [bondMap_refl]
+    have h2 : bondMap stageBond m m le_rfl x = x := by
+      simp [bondMap_refl]
+    rw [h1, h2]
+  · intro t ht ih
+    have hsucc := bondMap_succ stageBond m t ht
+    rw [hsucc, RingHom.comp_apply, RingHom.comp_apply, ih, stageBond]
+    exact stageEmbed_star t _
+
+noncomputable instance limitStar : Star Limit where
+  star :=
+    DirectLimit.map
+      (fun _ _ h => bondMap stageBond _ _ h)
+      (fun _ _ h => bondMap stageBond _ _ h)
+      (fun _ A => star A)
+      (by
+        intro m n h A
+        exact bondMap_star m n h A)
+
+@[simp] theorem limit_star_mk (n : ℕ) (A : Stage n) :
+    star (⟦⟨n, A⟩⟧ : Limit) = (⟦⟨n, star A⟩⟧ : Limit) := rfl
+
+@[simp] theorem ofStage_star (n : ℕ) (A : Stage n) :
+    ofStage n (star A) = star (ofStage n A) := rfl
+
+noncomputable instance limitStarRing : StarRing Limit where
+  star_involutive := by
+    intro x
+    induction x using DirectLimit.induction with
+    | _ n A => simp [limit_star_mk]
+  star_add := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n A B =>
+        rw [DirectLimit.add_def, limit_star_mk, limit_star_mk,
+          limit_star_mk, DirectLimit.add_def, star_add]
+  star_mul := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n A B =>
+        rw [DirectLimit.mul_def, limit_star_mk, limit_star_mk,
+          limit_star_mk, DirectLimit.mul_def, star_mul]
+
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
 -- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 

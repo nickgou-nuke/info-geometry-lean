@@ -159,8 +159,8 @@ def cl11FermionicCARSurface : FermionicCARSurface (CliffordAlgebra q11) where
 Compatibility asserting that the bosonic and fermionic oscillator generators
 commute as independent tensor factors/readouts.
 -/
-structure BosonFermionInterface (Op : Type*) [Ring Op]
-    (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op) where
+structure BosonFermionCommutation (Op : Type*) [Ring Op]
+    (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op) : Prop where
   a_b : B.a * F.b = F.b * B.a
   adag_b : B.adag * F.b = F.b * B.adag
   a_bdag : B.a * F.bdag = F.bdag * B.a
@@ -185,7 +185,7 @@ def susyOscillatorHamiltonian (B : BosonicOscillatorSurface Op) (F : FermionicCA
 
 private theorem qplus_qminus_factor
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (I : BosonFermionCommutation Op B F) :
     (B.adag * F.b) * (B.a * F.bdag) = B.adag * B.a * (F.b * F.bdag) := by
   calc
     (B.adag * F.b) * (B.a * F.bdag)
@@ -195,7 +195,7 @@ private theorem qplus_qminus_factor
 
 private theorem qminus_qplus_factor
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (I : BosonFermionCommutation Op B F) :
     (B.a * F.bdag) * (B.adag * F.b) = B.a * B.adag * (F.bdag * F.b) := by
   calc
     (B.a * F.bdag) * (B.adag * F.b)
@@ -214,7 +214,7 @@ an analytic unbounded-operator representation.
 -/
 theorem osp_supercharge_oscillator_closure
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (I : BosonFermionCommutation Op B F) :
     Qplus B F * Qminus B F + Qminus B F * Qplus B F =
       susyOscillatorHamiltonian B F := by
   unfold Qplus Qminus susyOscillatorHamiltonian

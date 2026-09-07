@@ -206,13 +206,13 @@ structure HigherOrderOnsagerOperatorialTheory where
 def IsClosedGraph
     {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
     (Dom : Submodule ℂ X)
-    (_op : Dom →ₗ[ℂ] X) : Prop :=
-  True
+    (op : Dom →ₗ[ℂ] X) : Prop :=
+  IsClosed (Set.range (fun x : Dom => ((x : X), op x)))
 
 def IsDenseDomain
     {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_Dom : Submodule ℂ X) : Prop :=
-  True
+    (Dom : Submodule ℂ X) : Prop :=
+  Dense (Dom : Set X)
 
 structure ClosedOperatorDatum
     (X : Type*) [NormedAddCommGroup X] [NormedSpace ℂ X] where

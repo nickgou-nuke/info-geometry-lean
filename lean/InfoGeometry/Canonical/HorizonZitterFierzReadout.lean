@@ -60,7 +60,7 @@ structure HorizonZitterFierzCompatibilityAssumption
 Assumption-derived Fierz readback for horizon zitter envelopes.
 -/
 @[rep_depth operator]
-theorem horizonZitter_fierz_quadric_from_assumption
+theorem horizonZitter_fierz_quadric_readout
     {Obs : Type*}
     [Ring Obs] [Star Obs]
     (K : HorizonZitterFierzCompatibilityAssumption Obs)

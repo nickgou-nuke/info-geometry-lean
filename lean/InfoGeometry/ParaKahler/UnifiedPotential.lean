@@ -18,7 +18,8 @@ set_option linter.unusedSimpArgs false
 def masterParaKahlerPotential (ξ θ : ℝ) : ℝ :=
   (1 / 2) * ξ ^ 2 - (1 / 2) * θ ^ 2
 
-/-- The Dikin self-concordant log-barrier potential along the radial scale:
+/-- The transformed interval log-barrier potential along the radial scale.
+Global standard self-concordance is not preserved in this coordinate.
     Φ(ξ) = 2 * ln(cosh(ξ)). -/
 def dikinBarrierPotential (ξ : ℝ) : ℝ :=
   2 * Real.log (Real.cosh ξ)

@@ -8,25 +8,25 @@ universe u
 structure ObserverSpacetimeInterface (State : Type u) where
   timeProjection : State → ℝ
 
-/-- Minimal causal-compatibility interface providing the extracted reachability preorder. -/
-structure CausalCompatibilityInterface (State : Type u) where
+/-- Minimal causal-compatibility relation providing the extracted reachability preorder. -/
+structure CausalCompatibilityRelation (State : Type u) where
   causalPreorder : State → State → Prop
 
 /-- Minimal resource interface providing the scalarized resource quasidistance. -/
 structure ResourceQuasidistanceInterface (State : Type u) where
   resourceQuasidistance : State → State → ℝ
 
-/-- Minimal obstruction interface packaging the residual obstruction readout. -/
-structure ObstructionInterface (State : Type u) where
+/-- Minimal obstruction relation packaging the residual obstruction readout. -/
+structure ObstructionRelation (State : Type u) where
   obstruction : State → State → Prop
 
 /-- Chapter-local admissible instantiation package for the rough spacetime extraction wrapper. -/
 structure AdmissiblePhysicalInstantiation where
   State : Type u
   observerSpacetime : ObserverSpacetimeInterface State
-  causalCompatibility : CausalCompatibilityInterface State
+  causalCompatibility : CausalCompatibilityRelation State
   resourceQuasidistance : ResourceQuasidistanceInterface State
-  obstructionInterface : ObstructionInterface State
+  obstructionInterface : ObstructionRelation State
 
 /-- The extracted rough spacetime quadruple `(≼, τ, d_res, Ω)`. -/
 structure RoughSpacetimeQuadruple (State : Type u) where

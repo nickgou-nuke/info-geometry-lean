@@ -89,9 +89,9 @@ theorem flat_soldering_covariant_constancy_owner
   Section7.soldering_covariant_constancy_flat a mu nu A Ap
 
 /-- Section 8 owns the flat tetrad-postulate coefficient shadow. -/
-theorem flat_tetrad_postulate_owner (mu nu a : Fin 4) :
+theorem flat_tetrad_compatibility_owner (mu nu a : Fin 4) :
     (0 : ℝ) - 0 + Section8.Quat.spinConnectionFlat mu a nu = 0 :=
-  Section8.Quat.tetrad_postulate_flat mu nu a
+  Section8.Quat.tetrad_compatibility_flat mu nu a
 
 /-- Section 12 owns the flat Clifford-soldering covariant-derivative shadow. -/
 theorem flat_clifford_soldering_derivative_owner (E : Section12.SpinMat) :
@@ -123,6 +123,6 @@ theorem repaired_section3_soldering_packet :
     (∀ E : Section12.SpinMat, Section12.cliffordSolderingDerivative 0 0 E = 0) := by
   exact ⟨trace_ortho, vec_recover, completeness, flat_tetrad_metric_owner,
     flat_spin_connection_owner, flat_soldering_covariant_constancy_owner,
-    flat_tetrad_postulate_owner, flat_clifford_soldering_derivative_owner⟩
+    flat_tetrad_compatibility_owner, flat_clifford_soldering_derivative_owner⟩
 
 end Section3

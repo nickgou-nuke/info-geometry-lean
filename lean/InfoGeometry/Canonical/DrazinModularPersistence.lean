@@ -472,7 +472,7 @@ horizon zero modes, and the explicit compatibility assumption is supplied, then
 the compressed expectation vector satisfies the supplied Fierz residual law.
 -/
 @[rep_depth operator]
-theorem fierz_quadric_from_modular_physical_horizon_assumption
+theorem fierz_quadric_from_modular_physical_horizon
     {Obs : Type*} [Ring Obs] [Star Obs]
     (K : HorizonFierzCompatibilityAssumption Obs)
     (D : DrazinSupportData Obs)

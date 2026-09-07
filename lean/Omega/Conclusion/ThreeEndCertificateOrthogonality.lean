@@ -7,6 +7,33 @@ namespace Omega.Conclusion
 
 open Omega.TypedAddressBiaxialCompletion
 
+/-- Concrete closure data used by the conclusion-level three-end package. -/
+structure ThreeEndCertificateClosureData where
+  toeplitzPsdClosed : Prop
+  failureWitness : Prop
+  failure_of_toeplitz : ¬ toeplitzPsdClosed → failureWitness
+
+/-- Concrete visible/register/mode budget data used by the conclusion-level package. -/
+structure ThreeEndCertificateBudgetData where
+  legalReadout : Prop
+  visibleBudgetPassed : Prop
+  registerBudgetPassed : Prop
+  modeBudgetPassed : Prop
+  register_failure_obstructs :
+    visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout
+
+/-- Explicit aggregate owner for the three independent certificate ends. The two conclusion
+properties are carried together with their proof terms, so downstream theorems consume actual
+propositions rather than fabricated evidence predicates. -/
+structure ThreeEndCertificateOrthogonalityData where
+  boundary : BoundaryJointVerifierData
+  budget : ThreeEndCertificateBudgetData
+  closure : ThreeEndCertificateClosureData
+  factorsThroughProduct : Prop
+  failuresAreOrthogonal : Prop
+  h_factorsThroughProduct : factorsThroughProduct
+  h_failuresAreOrthogonal : failuresAreOrthogonal
+
 theorem paper_conclusion_three_end_certificate_orthogonality
     (boundary : BoundaryJointVerifierData)
     (radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed : Prop)

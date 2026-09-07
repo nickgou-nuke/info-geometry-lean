@@ -17,12 +17,10 @@ theorem paper_conclusion_three_end_certificate_joint_sufficiency_minimality
     (hnohidden : hiddenFailure → False) :
     D.factorsThroughProduct ∧ D.failuresAreOrthogonal ∧
       (semanticNull ∨ protocolNull ∨ collisionNull) ∧ ¬ hiddenFailure := by
-  rcases paper_conclusion_three_end_certificate_orthogonality D with
-    ⟨hFactors, hOrthogonal⟩
   rcases
       paper_conclusion_readus_null_trichotomy_normal_form semanticNull protocolNull collisionNull
         hiddenFailure hexhaustive hsem hprot hcoll hnohidden with
     ⟨hTrichotomy, hNoHidden⟩
-  exact ⟨hFactors, hOrthogonal, hTrichotomy, hNoHidden⟩
+  exact ⟨D.h_factorsThroughProduct, D.h_failuresAreOrthogonal, hTrichotomy, hNoHidden⟩
 
 end Omega.Conclusion

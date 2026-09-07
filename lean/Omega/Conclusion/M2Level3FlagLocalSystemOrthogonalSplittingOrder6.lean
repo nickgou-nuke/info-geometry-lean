@@ -78,7 +78,7 @@ theorem paper_conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6
     conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_statement D := by
   rcases paper_conclusion_m2_level3_incidence_24_identification_kill_minus4 with
     ⟨_, _, hker, hcoker, himage, hV24⟩
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ()) with
     ⟨_, _, _, _, hV15KlChar, hV15SiChar, _, _, _⟩
   rcases paper_conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly with
     ⟨_, _, _, _, _, _, hminusKl, _, hminusSi, _, _, _⟩

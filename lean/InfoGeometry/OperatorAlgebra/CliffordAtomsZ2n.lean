@@ -418,13 +418,13 @@ abbrev Z16Charge : Type :=
   ZMod 16
 
 /--
-Interface relating local Clifford signs to a global anomaly or stacking
+System relating local Clifford signs to a global anomaly or stacking
 index.
 
 The fields are proof-carrying on purpose: `Z2^4` gives four independent local
 binary addresses, while `Z16` is a cyclic global stacking law.
 -/
-structure LocalToGlobalAnomalyInterface where
+structure LocalToGlobalAnomalySystem where
   /-- Local admissible four-bit sectors. -/
   localCharge : Z2FourCharge → Prop
 
@@ -457,8 +457,8 @@ namespace GlobalAnomalyClass
 
 variable (G : GlobalAnomalyClass)
 
-/-- Forget a global anomaly class to the local-to-global compatibility interface. -/
-def toLocalToGlobalAnomalyInterface : LocalToGlobalAnomalyInterface where
+/-- Forget a global anomaly class to the local-to-global compatibility system. -/
+def toLocalToGlobalAnomalySystem : LocalToGlobalAnomalySystem where
   localCharge := G.localSector
   globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
 

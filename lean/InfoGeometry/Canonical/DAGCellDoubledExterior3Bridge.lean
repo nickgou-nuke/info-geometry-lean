@@ -9,9 +9,27 @@ open DAG.ChiralDiracAnticommutation
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 
+def cellEightEightFunctionEquiv :
+    (Cell 8 8 0 → ℝ) ≃ₗ[ℝ] (Fin 8 → ℝ) × (Fin 8 → ℝ) where
+  toFun f := (fun i => f (Cell.zero i), fun i => f (Cell.one i))
+  invFun p := fun
+    | Cell.zero i => p.1 i
+    | Cell.one i => p.2 i
+    | Cell.two i => Fin.elim0 i
+  left_inv f := by
+    ext c
+    cases c with
+    | zero i => rfl
+    | one i => rfl
+    | two i => exact Fin.elim0 i
+  right_inv p := by
+    ext <;> rfl
+  map_add' f g := rfl
+  map_smul' r f := rfl
+
 noncomputable def cellEightEightDoubledExterior3Equiv :
     (Cell 8 8 0 → ℝ) ≃ₗ[ℝ] DoubledExterior3 :=
-  (DAG.ChiralDiracAnticommutation.cellEightEightFunctionEquiv).trans
+  cellEightEightFunctionEquiv.trans
     (LinearEquiv.prodCongr
       exterior3SplitOctonionCoordinateEquiv.symm
       exterior3SplitOctonionCoordinateEquiv.symm)
@@ -104,6 +122,23 @@ noncomputable def dagDiracEnd
     (B2 : Matrix (Fin 8) (Fin 0) ℝ) :
     Module.End ℝ (Cell 8 8 0 → ℝ) :=
   (diracOp B1 B2).mulVecLin
+
+theorem chiralGamma_sq {n0 n1 n2 : ℕ} :
+    (chiralGamma (n0 := n0) (n1 := n1) (n2 := n2)) * chiralGamma = 1 := by
+  ext i j
+  simp only [Matrix.mul_apply, chiralGamma, Matrix.one_apply]
+  rw [Finset.sum_eq_single i]
+  · simp only [ite_true]
+    by_cases hij : i = j
+    · subst hij
+      simp only [ite_true]
+      cases i <;> simp [cellParity]
+    · simp only [if_neg hij]
+      cases i <;> simp [cellParity]
+  · intro k _ hki
+    simp only [if_neg (Ne.symm hki), zero_mul]
+  · intro hi
+    exact False.elim (hi (Finset.mem_univ i))
 
 theorem dagChiralEnd_sq :
     dagChiralEnd * dagChiralEnd = 1 := by

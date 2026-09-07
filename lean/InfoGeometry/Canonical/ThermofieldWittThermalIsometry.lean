@@ -33,10 +33,8 @@ theorem wittThermalDilation_preserves_polar
     (r : ℝ) (x y : WittCoord) :
     circularPeircePolar (wittThermalDilation r x)
         (wittThermalDilation r y) =
-      circularPeircePolar x y := by
-  simp [wittThermalDilation, circularPeircePolar, Real.exp_neg]
-  field_simp [Real.exp_ne_zero]
-  ring
+      circularPeircePolar x y :=
+  wittThermalDilation_isometry r x y
 
 /-- The inverse reciprocal dilation is obtained by reversing the thermal
 parameter. -/
@@ -44,18 +42,20 @@ theorem wittThermalDilation_neg_comp
     (r : ℝ) :
     (wittThermalDilation (-r)).comp (wittThermalDilation r) =
       LinearMap.id := by
-  ext z i
-  fin_cases i <;>
-    simp [wittThermalDilation, ← Real.exp_add]
+  apply LinearMap.ext
+  intro z
+  ext i
+  by_cases h : i.val < 4
+  · simp [wittThermalDilation, h, ← mul_assoc, ← Real.exp_add]
+  · simp [wittThermalDilation, h, ← mul_assoc, ← Real.exp_add]
 
 /-- The opposite composition is also the identity. -/
 theorem wittThermalDilation_comp_neg
     (r : ℝ) :
     (wittThermalDilation r).comp (wittThermalDilation (-r)) =
       LinearMap.id := by
-  ext z i
-  fin_cases i <;>
-    simp [wittThermalDilation, ← Real.exp_add]
+  have h := wittThermalDilation_neg_comp (-r)
+  simpa using h
 
 /-- Hence the Witt thermal dilation is injective. -/
 theorem wittThermalDilation_injective (r : ℝ) :

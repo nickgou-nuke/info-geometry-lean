@@ -26,6 +26,7 @@ A = s.symbols('A', positive=True)
 X, Q = s.symbols('X Q', positive=True)
 eps_pi, eps_pj = s.symbols('eps_pi eps_pj', positive=True)
 eps_ti, eps_tj = s.symbols('eps_ti eps_tj', positive=True)
+L1, L2, W_d = s.symbols('L1 L2 W_d', positive=True)
 
 # 2. Linearizer checks
 L = a * d + b
@@ -64,12 +65,9 @@ cross_target_pp = P_j / (B_j * P_ij * W_pp)
 # Response model: Delta I_j = B_j * Q  =>  B_j = (W_pt / W_pp) * (eps_ti / eps_pi)
 ratio_micro = cross_quotient.subs(B_j, eps_ti / eps_pi)
 ratio_micro_target = (P_j / (P_ij * W_0)) * (eps_pi / eps_ti)
-
-# General angular correlation split:
 B_j_angular = (W_pt / W_pp) * (eps_ti / eps_pi)
 ratio_micro_angular = cross_quotient_pp.subs(B_j, B_j_angular)
 ratio_micro_angular_target = (P_j / (P_ij * W_pt)) * (eps_pi / eps_ti)
-
 checks = {
     'linearizer_root': L_at_root,
     'linearizer_extract_d0': (b / a).subs(b, a * d_0) - d_0,
@@ -89,6 +87,15 @@ checks = {
     'eu152_gd_w0_pure_rational': (1 - s.Rational(1, 14)) - s.Rational(13, 14),
     'eu152_sm_1408_w0_pure_rational': (1 + s.Rational(1, 4)) - s.Rational(5, 4),
     'tl208_w0_pure_rational': (1 + s.Rational(5, 28) - s.Rational(1, 231)) - s.Rational(155, 132),
+    'effective_angular_factor_reciprocal': s.simplify(
+        (A * Q / (L1 * L2)) * (P_i * P_j / P_ij)
+        - 1 / ((L1 * L2 / (A * Q)) * (P_ij / (P_i * P_j)))
+    ),
+    'effective_angular_factor_recovers_w': s.simplify(
+        ((A * (A * P_ij * eps_pi * eps_pj * W_d) / ((A * P_i * eps_pi) * (A * P_j * eps_pj)))
+         * (P_i * P_j / P_ij))
+        - W_d
+    ),
 }
 
 results = {k: str(s.factor(v)) for k, v in checks.items()}

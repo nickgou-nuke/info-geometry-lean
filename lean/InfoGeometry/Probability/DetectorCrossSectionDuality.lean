@@ -262,6 +262,31 @@ theorem tl208_angular_correlation_pure :
   dsimp [angularCorrelationZero]
   norm_num
 
+/-! ### 9. Point-by-Point Effective Angular Correlation Inversion W_eff(d) -/
+
+/-- Effective point-by-point angular correlation factor:
+    $W_{\mathrm{eff}}(d) = \frac{A_{\mathrm{ref}} Q(d)}{L_1(d) L_2(d)} \frac{P_1 P_2}{P_{12}}$. -/
+def effectiveAngularFactor (A_ref Q L1 L2 P1 P2 P12 : ℝ) : ℝ :=
+  (A_ref * Q / (L1 * L2)) * (P1 * P2 / P12)
+
+/-- **Theorem**: $W_{\mathrm{eff}}$ is the exact reciprocal of the normalized singles-product ratio:
+    $W_{\mathrm{eff}} = \left( \frac{L_1 L_2}{A_{\mathrm{ref}} Q} \frac{P_{12}}{P_1 P_2} \right)^{-1}$. -/
+theorem effectiveAngularFactor_eq_reciprocal (A_ref Q L1 L2 P1 P2 P12 : ℝ)
+    (hA : A_ref ≠ 0) (hQ : Q ≠ 0) (hL1 : L1 ≠ 0) (hL2 : L2 ≠ 0) (hP1 : P1 ≠ 0) (hP2 : P2 ≠ 0) (hP12 : P12 ≠ 0) :
+    effectiveAngularFactor A_ref Q L1 L2 P1 P2 P12 =
+      ((L1 * L2 / (A_ref * Q)) * (P12 / (P1 * P2)))⁻¹ := by
+  dsimp [effectiveAngularFactor]
+  field_simp
+
+/-- **Theorem**: When count rates follow coincidence scaling with geometric efficiencies $\varepsilon_1, \varepsilon_2$,
+    the effective angular factor identically recovers the underlying geometric factor $W(d)$. -/
+theorem effectiveAngularFactor_recovers_W (A_ref eps1 eps2 W_d P1 P2 P12 : ℝ)
+    (hA : A_ref ≠ 0) (heps1 : eps1 ≠ 0) (heps2 : eps2 ≠ 0) (hP1 : P1 ≠ 0) (hP2 : P2 ≠ 0) (hP12 : P12 ≠ 0) :
+    effectiveAngularFactor A_ref (A_ref * P12 * eps1 * eps2 * W_d)
+      (A_ref * P1 * eps1) (A_ref * P2 * eps2) P1 P2 P12 = W_d := by
+  dsimp [effectiveAngularFactor]
+  field_simp
+
 end
 
 end InfoGeometry.Probability.DetectorCrossSectionDuality

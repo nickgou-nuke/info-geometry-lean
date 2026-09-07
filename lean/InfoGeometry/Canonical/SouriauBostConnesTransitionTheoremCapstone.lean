@@ -82,4 +82,20 @@ compactifies via the Cayley map to the Cantor boundary, where the ground state a
 the Fibonacci fusion category with hBcmatrix satisfying  \cdot B \cdot F = R$, ^2 = 1$, and the order
 parameter is the quantum dimension $\phi$ satisfying $\phi^2 = \phi + 1$.
 -/
+theorem souriau_bost_connes_transition_theorem
+    (P : Finset ℕ) (hP : ∀ p ∈ P, 2 ≤ p) (beta : ℝ) (hbeta : 0 < beta)
+    (x : ℝ) :
+    (0 < primonPartition P beta) ∧
+    (boltzmannWeight beta 1 = 1) ∧
+    (Complex.normSq (cayleyTransform x) = 1) ∧
+    (quantumDimensionPhi ^ 2 = quantumDimensionPhi + 1) ∧
+    (F * F = 1) ∧
+    (F * B * F = R) :=
+  ⟨primon_partition_strictly_positive P hP beta hbeta,
+   ground_state_freezing beta,
+   cayley_boundary_compactification x,
+   quantum_dimension_quadratic,
+   F_sq,
+   F_B_F_eq_R⟩
+
 end InfoGeometry.Canonical.SouriauBostConnesTransition

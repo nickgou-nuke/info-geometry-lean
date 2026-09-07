@@ -110,25 +110,18 @@ def pauliLubanskiSq (P : PauliMomentum) : Mat2C :=
 theorem pauliLubanski_sq_eq_three_quarters_mass (P : PauliMomentum) :
     pauliLubanskiSq P =
       (-(3 / 4 : ℂ) * massCasimir P) • (1 : Mat2C) := by
-  have hI2 : (Complex.I : ℂ) ^ 2 = -1 := by
-    norm_num [pow_two, Complex.I_mul_I]
   have hI4 : (Complex.I : ℂ) ^ 4 = 1 := by
-    rw [show (Complex.I : ℂ) ^ 4 = ((Complex.I : ℂ) ^ 2) ^ 2 by ring, hI2]
-    norm_num
-  have hImul : (Complex.I : ℂ) * Complex.I = -1 := by
-    norm_num
+    calc (Complex.I : ℂ) ^ 4 = (Complex.I ^ 2) ^ 2 := by ring
+    _ = 1 := by rw [Complex.I_sq]; norm_num
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [pauliLubanskiSq, pauliLubanski0,
       pauliLubanski1, pauliLubanski2, pauliLubanski3,
       momentumDotSpin, boostX, boostY, boostZ,
       massCasimir, spinX, spinY, spinZ,
-      σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two,
-      Complex.I_sq, hI2, hI4, pow_succ] <;>
-    try rw [hI2, hI4] <;>
-    simp [hImul] <;>
+      σ1, σ2, σ3] <;>
     ring_nf <;>
-    norm_num [Complex.ext_iff, hI2, hImul] <;>
+    simp (config := { failIfUnchanged := false }) only [Complex.I_sq, hI4] <;>
     ring
 
 /-- The same identity factored through the already-proved internal spin
@@ -181,9 +174,12 @@ theorem nullZ_left_transverse_packet (E : ℂ) :
       simp [nullZMomentum, pauliLubanski1, pauliLubanski2,
         boostX, boostY, boostZ, spinRaise, sigmaPlus,
         InfoGeometry.Optics.ChiralLorentzOperatorLift.create,
-        spinX, spinY, spinZ, σ1, σ2, σ3, Complex.I_sq] <;>
+        spinX, spinY, spinZ, σ1, σ2, σ3] <;>
+      ring_nf <;>
+      simp (config := { failIfUnchanged := false }) only [Complex.I_sq] <;>
       ring
 
+set_option linter.unnecessarySeqFocus false in
 /-- The positive circular sector is the physical helicity `+1/2` eigenspace
 for the left-handed Weyl representation on the future `+z` null ray:
 `W_L^μ P₊ = +(1/2) P^μ P₊` for all four components. -/
@@ -201,13 +197,10 @@ theorem pauliLubanski_nullZ_positive_helicity
         InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularPlusProjector,
         InfoGeometry.Optics.FiniteJonesModel.sProjector,
         InfoGeometry.Optics.FiniteJonesModel.diagJones,
-        σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two,
-        Complex.I_sq] <;>
+        σ1, σ2, σ3, Matrix.mul_apply] <;>
+      ring_nf <;>
+      simp (config := { failIfUnchanged := false }) only [Complex.I_sq] <;>
       ring
-
-/-! The opposite helicity belongs to the opposite Weyl chirality.  We therefore
-add the right-handed boost representation rather than asserting a false
-`P₋` theorem for the fixed left-handed generators above. -/
 
 /-- Right-handed boost generators `K_i^R = +i S_i`. -/
 def rightBoostX : Mat2C := Complex.I • spinX
@@ -249,9 +242,12 @@ theorem nullZ_right_transverse_packet (E : ℂ) :
       simp [nullZMomentum, rightPauliLubanski1, rightPauliLubanski2,
         rightBoostX, rightBoostY, rightBoostZ, spinLower, sigmaMinus,
         InfoGeometry.Optics.ChiralLorentzOperatorLift.annihilate,
-        spinX, spinY, spinZ, σ1, σ2, σ3, Complex.I_sq] <;>
+        spinX, spinY, spinZ, σ1, σ2, σ3] <;>
+      ring_nf <;>
+      simp (config := { failIfUnchanged := false }) only [Complex.I_sq] <;>
       ring
 
+set_option linter.unnecessarySeqFocus false in
 /-- The negative circular sector is the physical helicity `-1/2` eigenspace
 for the right-handed Weyl representation on the same future `+z` null ray:
 `W_R^μ P₋ = -(1/2) P^μ P₋`. -/
@@ -270,8 +266,9 @@ theorem pauliLubanski_nullZ_negative_helicity
         InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularMinusProjector,
         InfoGeometry.Optics.FiniteJonesModel.pProjector,
         InfoGeometry.Optics.FiniteJonesModel.diagJones,
-        σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two,
-        Complex.I_sq] <;>
+        σ1, σ2, σ3, Matrix.mul_apply] <;>
+      ring_nf <;>
+      simp (config := { failIfUnchanged := false }) only [Complex.I_sq] <;>
       ring
 
 /-- Paired finite Wigner-helicity packet on a future null `z` ray. -/
@@ -289,6 +286,10 @@ matrix-to-operator-Zorn equivalence. -/
 def zornPauliLubanskiSq (P : PauliMomentum) : OperatorZornC :=
   zornLift (pauliLubanskiSq P)
 
+/-- Internal spin-half Casimir lifted to the operator-Zorn carrier. -/
+def zornSpinHalfCasimir : OperatorZornC :=
+  zornLift spinHalfCasimir
+
 /-- The second Poincare Casimir is scalar-central in the chiral operator-Zorn
 coordinates. -/
 theorem zornPauliLubanski_sq (P : PauliMomentum) :
@@ -298,19 +299,15 @@ theorem zornPauliLubanski_sq (P : PauliMomentum) :
          sigma_plus_op := 0,
          sigma_minus_op := 0 } : OperatorZornC) := by
   apply (equivMatrix (A := ℂ)).injective
-  rw [toMatrix_zornLift, pauliLubanski_sq_eq_three_quarters_mass]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [toMatrix]
+  simp [zornPauliLubanskiSq, zornLift, ofMatrix, toMatrix,
+    pauliLubanski_sq_eq_three_quarters_mass]
 
 /-- Operator-Zorn second Casimir as the product of the external mass Casimir
 and the already-lifted internal spin Casimir. -/
 theorem zornPauliLubanski_sq_eq_mass_spin (P : PauliMomentum) :
     zornPauliLubanskiSq P =
-      -(massCasimir P) • zornSpinHalfCasimir := by
-  apply (equivMatrix (A := ℂ)).injective
-  simp [zornPauliLubanskiSq, zornSpinHalfCasimir, zornLift,
-    pauliLubanski_sq_eq_mass_spin_casimir]
+      zornLift (-(massCasimir P) • spinHalfCasimir) := by
+  simp [zornPauliLubanskiSq, pauliLubanski_sq_eq_mass_spin_casimir]
 
 /-- Consolidated finite Poincare spin packet. -/
 theorem pauliLubanski_spin_half_packet (P : PauliMomentum) :
@@ -320,9 +317,9 @@ theorem pauliLubanski_spin_half_packet (P : PauliMomentum) :
         (-(3 / 4 : ℂ) * massCasimir P) • (1 : Mat2C) := by
   refine ⟨pauliLubanski_momentum_orthogonal P,
     pauliLubanski_sq_eq_mass_spin_casimir P, ?_⟩
-  rw [toMatrix_zornLift, pauliLubanski_sq_eq_three_quarters_mass]
+  simp [zornPauliLubanskiSq, pauliLubanski_sq_eq_three_quarters_mass]
 
-
+set_option maxHeartbeats 2000000 in
 /-- The six independent Pauli--Lubanski commutators in the convention of
 this owner.  The temporal--spatial equations carry a minus sign because
 the left-handed boosts are defined by Kᵢ = -i Sᵢ; this is checked directly
@@ -349,12 +346,16 @@ theorem pauliLubanski_commutator_packet (P : PauliMomentum) :
       pauliLubanski3 P * pauliLubanski1 P -
           pauliLubanski1 P * pauliLubanski3 P =
         Complex.I • (P.E • pauliLubanski2 P - P.py • pauliLubanski0 P) := by
+  have hI3 : (Complex.I : ℂ) ^ 3 = -Complex.I := by
+    calc (Complex.I : ℂ) ^ 3 = Complex.I ^ 2 * Complex.I := by ring
+    _ = -Complex.I := by rw [Complex.I_sq, neg_one_mul]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [pauliLubanski0, pauliLubanski1, pauliLubanski2,
       pauliLubanski3, momentumDotSpin, boostX, boostY, boostZ,
-      spinX, spinY, spinZ, σ1, σ2, σ3, Matrix.mul_apply,
-      Fin.sum_univ_two, Complex.I_sq] <;>
+      spinX, spinY, spinZ, σ1, σ2, σ3] <;>
+    ring_nf <;>
+    simp (config := { failIfUnchanged := false }) only [Complex.I_sq, hI3] <;>
     ring
 
 end InfoGeometry.Canonical.OperatorPauliLubanskiLift

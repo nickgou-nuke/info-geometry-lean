@@ -31,7 +31,7 @@ No Hilbert--Polya/RH claim.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CausalConeCantorFockMasterBridge
+namespace InfoGeometry.Canonical
 
 open InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 open InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
@@ -45,14 +45,16 @@ The infinite component is literature-owned socket debt.
 -/
 @[rep_depth transport]
 structure CausalConeCantorFockMasterBridge
-    (Raw Op : Type*) [Ring Op] where
+    (Raw Op E : Type*) [Ring Op]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
   finite : WeylGaugeCantorFockBridge Raw Op
-  infiniteSocket : InfiniteCantorCliffordFockSocket Op
+  infiniteSocket : InfiniteCantorCliffordFockSocket E
 
 namespace CausalConeCantorFockMasterBridge
 
-variable {Raw Op : Type*} [Ring Op]
-variable (B : CausalConeCantorFockMasterBridge Raw Op)
+variable {Raw Op E : Type*} [Ring Op]
+variable [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+variable (B : CausalConeCantorFockMasterBridge Raw Op E)
 
 /--
 Finite master coherence:
@@ -67,4 +69,4 @@ theorem finite_master_two_morphism :
 
 end CausalConeCantorFockMasterBridge
 
-end InfoGeometry.Canonical.CausalConeCantorFockMasterBridge
+end InfoGeometry.Canonical

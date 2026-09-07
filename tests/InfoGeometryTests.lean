@@ -19,14 +19,15 @@ import InfoGeometry.Canonical.ComplexAnalyticBridge
 #check InfoGeometry.Canonical.OperatorialFierz.innerDerivation
 #check InfoGeometry.Canonical.OperatorialFierz.emergentSpacetime_is_derivation
 
--- Projective CCR current surface
-open InfoGeometry.Canonical.ProjectiveCCR
-#check ProjectiveBoundaryPacket
-#check ProjectiveBoundaryPacket.mk
-#check ProjectiveBoundaryPacket.cones
-#check ProjectiveBoundaryPacket.gap
-#check ProjectiveBoundaryPacket.zeroMode
-#check ProjectiveBoundaryPacket.kms
+-- Projective CCR owner surfaces (ChiralNullSpaceBridge & SuperKMS_Equilibrium)
+open InfoGeometry.Canonical.ChiralNullSpaceBridge
+open InfoGeometry.Canonical.SuperKMS_Equilibrium
+#check ZeroModeSubtractionWitness
+#check drazinCore_eq_kernel
+#check excitedStateSector_eq_orthogonal
+#check SupergradedAlgebra
+#check SuperKMSEquilibriumState
+#check constructive_detailed_balance
 
 -- Complex analytic doubled bridge
 open InfoGeometry.Canonical.ComplexAnalyticBridge

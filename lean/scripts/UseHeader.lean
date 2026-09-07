@@ -1,2 +1,2 @@
-#include "Header.lean"
+import scripts.Header
 #check False

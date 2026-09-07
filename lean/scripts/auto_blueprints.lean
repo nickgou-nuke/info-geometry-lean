@@ -1,3 +1,11 @@
-@[blueprint] InfoGeometry.Core.core_trivial
-@[blueprint] InfoGeometry.Core.nat_add_comm
-@[blueprint] InfoGeometry.Core.nat_add_assoc
+/-!
+# scripts.auto_blueprints
+
+Auto-generated blueprint stubs for scripts library.
+-/
+
+namespace scripts
+
+def autoBlueprints : Unit := ()
+
+end scripts

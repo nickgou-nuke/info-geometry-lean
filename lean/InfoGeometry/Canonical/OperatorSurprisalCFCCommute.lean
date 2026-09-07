@@ -42,6 +42,13 @@ theorem stateSurprisal_isSelfAdjoint (ρ : A) :
   unfold stateSurprisal
   exact IsSelfAdjoint.cfc.neg
 
+theorem exp_neg_stateSurprisal (ρ : A) (hρ : IsStrictlyPositive ρ) :
+    NormedSpace.exp (- stateSurprisal ρ) = ρ := by
+  have hlog : - stateSurprisal ρ = CFC.log ρ := by
+    simp [stateSurprisal, CFC.log]
+  rw [hlog]
+  exact CFC.exp_log ρ hρ
+
 theorem commute_stateSurprisal_implies_commute_state
     (ρ A : A) (hρ : IsStrictlyPositive ρ)
     (hA : Commute A (stateSurprisal ρ)) :

@@ -27,6 +27,8 @@ X, Q = s.symbols('X Q', positive=True)
 eps_pi, eps_pj = s.symbols('eps_pi eps_pj', positive=True)
 eps_ti, eps_tj = s.symbols('eps_ti eps_tj', positive=True)
 L1, L2, W_d = s.symbols('L1 L2 W_d', positive=True)
+A_d, b_sub, I_gamma, Y_20, f_low = s.symbols('A_d b_sub I_gamma Y_20 f_low', positive=True)
+L_sub, Y1_sub, Y2_sub = s.symbols('L_sub Y1_sub Y2_sub', positive=True)
 
 # 2. Linearizer checks
 L = a * d + b
@@ -95,6 +97,19 @@ checks = {
         ((A * (A * P_ij * eps_pi * eps_pj * W_d) / ((A * P_i * eps_pi) * (A * P_j * eps_pj)))
          * (P_i * P_j / P_ij))
         - W_d
+    ),
+    'coincidence_anchored_daughter_cancellation': s.simplify(
+        (L_sub / ((A_d / b_sub) * (b_sub * I_gamma))) - (L_sub / (A_d * I_gamma))
+    ),
+    'coincidence_anchored_intermediate_link': s.simplify(
+        (L_sub / ((A_d / b_sub) * I_gamma)) - ((L_sub * b_sub) / (A_d * I_gamma))
+    ),
+    'coincidence_anchored_ingrowth_equivalence': s.simplify(
+        (L_sub / ((A_d / b_sub) * (Y_20 / f_low))) - ((L_sub * b_sub * f_low) / (A_d * Y_20))
+    ),
+    'coincidence_anchored_relative_efficiency_invariant': s.simplify(
+        ((L1 / ((A_d / b_sub) * Y1_sub)) / (L2 / ((A_d / b_sub) * Y2_sub)))
+        - ((L1 / Y1_sub) / (L2 / Y2_sub))
     ),
 }
 

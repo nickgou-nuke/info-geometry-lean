@@ -11,7 +11,7 @@ open scoped BigOperators
 open FiniteProjectorSpectralCalculus
 
 variable {K A I : Type*} [CommRing K] [Ring A] [Algebra K A]
-variable [Fintype I] [DecidableEq I]
+variable [Fintype I]
 
 def blocks (e : I → A) (x : A) : Matrix I I A := fun i j => e i * x * e j
 
@@ -20,8 +20,9 @@ def assemble (B : Matrix I I A) : A := ∑ i, ∑ j, B i j
 theorem assemble_blocks (e : I → A)
     (he : CompleteIdempotents e) (x : A) :
     assemble (blocks e x) = x := by
+  have he1 : (∑ i, e i) = 1 := he
   simp only [assemble, blocks, ← Finset.mul_sum, ← Finset.sum_mul,
-    he, one_mul, mul_one]
+    he1, one_mul, mul_one]
 
 def cornerSpace (e : I → A) : Submodule K (Matrix I I A) where
   carrier := {B | ∀ i j, e i * B i j * e j = B i j}
@@ -34,7 +35,7 @@ def cornerSpace (e : I → A) : Submodule K (Matrix I I A) where
     simpa only [Matrix.smul_apply, mul_smul_comm, smul_mul_assoc] using
       congrArg (r • ·) (hB i j)
 
-theorem blocks_mem (e : I → A) (he : OrthogonalIdempotents e) (x : A) :
+theorem blocks_mem [DecidableEq I] (e : I → A) (he : OrthogonalIdempotents e) (x : A) :
     blocks e x ∈ cornerSpace (K := K) e := by
   intro i j
   change e i * (e i * x * e j) * e j = e i * x * e j

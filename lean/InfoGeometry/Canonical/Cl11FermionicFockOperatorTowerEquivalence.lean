@@ -103,8 +103,11 @@ theorem fock_mixed_car (n : ℕ) (i j : Fin n) :
 abbrev FockOpLimit : Type := RealCantorOpInf
 abbrev ClLimit : Type := InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit
 
+noncomputable def clLimitFockOpAlgEquiv : ClLimit ≃ₐ[ℝ] FockOpLimit :=
+  InfoGeometry.Canonical.JordanWignerCantorRepresentation.globalRealCantorAlgEquiv
+
 noncomputable def clLimitFockOpEquiv : ClLimit ≃+* FockOpLimit :=
-  InfoGeometry.Canonical.JordanWignerCantorRepresentation.globalRealCantorAlgEquiv.toRingEquiv
+  clLimitFockOpAlgEquiv.toRingEquiv
 
 @[simp] theorem clLimitFockOpEquiv_ofStage (n : ℕ) (A : ClStage n) :
     clLimitFockOpEquiv (MatOfStage n A) =

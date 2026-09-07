@@ -12,7 +12,7 @@ def conjugate (z : ZornMatrix R) : ZornMatrix R :=
 @[simp] theorem conjugate_add (z w : ZornMatrix R) :
     conjugate (z + w) = conjugate z + conjugate w := by
   cases z; cases w
-  apply ZornMatrix.ext <;> simp [conjugate]
+  apply ZornMatrix.ext <;> simp [conjugate, add_comm]
 
 theorem conjugate_mul (z w : ZornMatrix R) :
     conjugate (z * w) = conjugate w * conjugate z := by
@@ -63,17 +63,19 @@ def leftMulLinear (z : ZornMatrix R) : ZornMatrix R →ₗ[R] ZornMatrix R where
       cases w with
       | mk d e p q =>
         apply ZornMatrix.ext
-        · simp [ZornMatrix.mul, ZornMatrix.dot]
+        · simp [ZornMatrix.mul, ZornMatrix.dot, smul_a, smul_b, smul_x, smul_y]
           ring
-        · simp [ZornMatrix.mul, ZornMatrix.dot]
+        · simp [ZornMatrix.mul, ZornMatrix.dot, smul_a, smul_b, smul_x, smul_y]
           ring
         · funext i
           fin_cases i <;>
             simp [ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+              smul_a, smul_b, smul_x, smul_y,
               Matrix.vecHead, Matrix.vecTail] <;> ring
         · funext i
           fin_cases i <;>
             simp [ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+              smul_a, smul_b, smul_x, smul_y,
               Matrix.vecHead, Matrix.vecTail] <;> ring
 
 @[simp] theorem leftMulLinear_apply (z w : ZornMatrix R) :
@@ -108,17 +110,19 @@ def rightMulLinear (z : ZornMatrix R) : ZornMatrix R →ₗ[R] ZornMatrix R wher
       cases w with
       | mk d e p q =>
         apply ZornMatrix.ext
-        · simp [ZornMatrix.mul, ZornMatrix.dot]
+        · simp [ZornMatrix.mul, ZornMatrix.dot, smul_a, smul_b, smul_x, smul_y]
           ring
-        · simp [ZornMatrix.mul, ZornMatrix.dot]
+        · simp [ZornMatrix.mul, ZornMatrix.dot, smul_a, smul_b, smul_x, smul_y]
           ring
         · funext i
           fin_cases i <;>
             simp [ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+              smul_a, smul_b, smul_x, smul_y,
               Matrix.vecHead, Matrix.vecTail] <;> ring
         · funext i
           fin_cases i <;>
             simp [ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+              smul_a, smul_b, smul_x, smul_y,
               Matrix.vecHead, Matrix.vecTail] <;> ring
 
 @[simp] theorem rightMulLinear_apply (z w : ZornMatrix R) :

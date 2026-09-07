@@ -43,6 +43,10 @@ open NambuGorkovParticleHoleBridge
 open InfoGeometry.Quantum.DikinApolloniusTrap
 open InfoGeometry.Canonical.CramerRaoUncertainty
 
+local notation "L2Carrier" => L2Boundary
+local notation "BoundaryOperator" =>
+  InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization.BoundedL2Operator
+
 /-- A finite grand-canonical state selected for boundary readout. -/
 structure GrandCanonicalBoundaryState
     (α : Type*) [Fintype α] [Nonempty α] where

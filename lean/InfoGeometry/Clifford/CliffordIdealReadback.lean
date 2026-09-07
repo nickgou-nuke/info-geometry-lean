@@ -22,13 +22,10 @@ theorem idempotent_mem_rightIdeal (P : Cl) (hP : P * P = P) :
     P ∈ RightIdeal P := hP
 
 def leftIdealEquiv
-    (P : Cl) (hP : P * P = P) :
+    (P : Cl) (_hP : P * P = P) :
     LeftIdeal P ≃
-      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P hP :=
-  { toFun := fun x => ⟨x.1, x.2⟩
-    invFun := fun x => ⟨x.1, x.2⟩
-    left_inv := by intro x; rfl
-    right_inv := by intro x; rfl }
+      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P :=
+  Equiv.refl _
 
 @[simp] theorem leftIdealEquiv_coe
     (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
@@ -38,7 +35,7 @@ def leftIdealEquiv
 @[simp] theorem leftIdealEquiv_mem
     (P : Cl) (hP : P * P = P) (x : LeftIdeal P) :
     (leftIdealEquiv P hP x :
-      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P hP) =
+      InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal P) =
       ⟨x.1, x.2⟩ :=
   rfl
 
@@ -60,12 +57,12 @@ theorem corner_pairing (P : Cl) (x : LeftIdeal P) (y : RightIdeal P) :
     _ = y.1 * x.1 := by rw [y.2, x.2]
 
 theorem corner_pairing_mem
-    (P : Cl) (hP : P * P = P)
+    (P : Cl) (_hP : P * P = P)
     (x : LeftIdeal P) (y : RightIdeal P) :
-    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner P hP,
+    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.Corner P,
       c.1 = y.1 * x.1 := by
   refine ⟨⟨y.1 * x.1, ?_, ?_⟩, rfl⟩
-  · rw [mul_assoc, x.2]
   · rw [← mul_assoc, y.2]
+  · rw [mul_assoc, x.2]
 
 end InfoGeometry.Clifford

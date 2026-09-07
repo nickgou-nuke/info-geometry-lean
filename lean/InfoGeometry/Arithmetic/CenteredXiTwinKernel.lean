@@ -203,8 +203,8 @@ theorem oneSidedFourierAncestor_im
       filter_upwards [] with y
       rw [oneSidedFourierAncestor_integrand_eq]
       simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re,
-        Complex.ofReal_im, Complex.I_re, Complex.I_im, mul_zero, sub_zero,
-        add_zero, zero_mul]
+        Complex.ofReal_im, Complex.I_re, Complex.I_im, mul_zero,
+        add_zero]
       ring
 
 theorem oneSidedFourierAncestor_eq_quadratures
@@ -275,7 +275,7 @@ theorem oneSidedFourierAncestor_neg_eq_conj
   rw [oneSidedFourierAncestor_eq_quadratures (t := -t) hPhi,
     cosineQuadrature_neg, sineQuadrature_neg,
     oneSidedFourierAncestor_eq_quadratures hPhi]
-  simp [map_add, map_mul, Complex.conj_ofReal]
+  simp [Complex.conj_ofReal]
 
 /-! ## Even and odd frequency projections of the ancestor -/
 
@@ -315,16 +315,17 @@ open InfoGeometry.Geometry
 /-- The real two-component ancestor: cosine channel plus oriented sine channel.
 The coordinates are the scalar and bivector coefficients in the existing
 `RealChiralPhase` carrier. -/
-def hestenesAncestor (Phi : ℝ → ℝ) (t : ℝ) : RealChiralPhase :=
-  (cosineQuadrature Phi t, sineQuadrature Phi t)
+def hestenesAncestor (Phi : ℝ → ℝ) (t : ℝ) : RealChiralPhase where
+  scalar := cosineQuadrature Phi t
+  bivector := sineQuadrature Phi t
 
 /-! The Madelung-style quadratic amplitude of the oriented real ancestor.
 This is only the native rotor norm readout: it does not assert a wave equation
 or identify the ancestor with a quantum state. -/
 theorem hestenesAncestor_neg (Phi : ℝ → ℝ) (t : ℝ) :
     hestenesAncestor Phi (-t) =
-      (cosineQuadrature Phi t, -sineQuadrature Phi t) := by
-  apply Prod.ext
+      { scalar := cosineQuadrature Phi t, bivector := -sineQuadrature Phi t } := by
+  ext
   · exact cosineQuadrature_neg Phi t
   · exact sineQuadrature_neg Phi t
 

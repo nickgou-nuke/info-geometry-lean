@@ -7,6 +7,7 @@ import InfoGeometry.Arithmetic.MeromorphicLogLocalSystem
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor
 import InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
+import InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow
 
 /-!
 # Finite primon logarithmic phase lift
@@ -163,7 +164,7 @@ theorem primonLogGenerator_phase_exp_sheet_invariant
       Complex.exp
         (-(Complex.I * (t : ℂ) * (Real.log (p : ℝ) : ℂ))) := by
   rw [InfoGeometry.Compatibility.chiralToComplex_eq_scalar_add_bivector_I]
-  simp only [primonLogGenerator, Complex.ofReal_zero, zero_mul, zero_add]
+  simp only [primonLogGenerator]
   have harg :
       (((-t * Real.log (p : ℝ) + 2 * Real.pi * (n : ℝ) : ℝ) : ℂ) * Complex.I) =
         -(Complex.I * (t : ℂ) * (Real.log (p : ℝ) : ℂ)) +
@@ -171,7 +172,7 @@ theorem primonLogGenerator_phase_exp_sheet_invariant
     push_cast
     ring
   rw [harg]
-  simp only [Complex.exp_add, Complex.exp_zero, neg_zero, zero_mul, one_mul]
+  simp only [Complex.exp_add, neg_zero, zero_mul]
   rw [Complex.exp_int_mul_two_pi_mul_I]
   simp
 
@@ -188,6 +189,53 @@ theorem primonLogGenerator_phase_exp_eq_bkPrimePhase
       bkPrimePhase logPrime t p := by
   rw [primonLogGenerator_phase_exp_sheet_invariant]
   simp [bkPrimePhase, hlog p]
+
+def bkStateRotor {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)
+    (t : ℝ) (S : PrimeCantorBerryKeatingOperator.Vertex P) :
+    InfoGeometry.Geometry.RealChiralPhase :=
+  ⟨Real.cos (t * bkEnergy logPrime S),
+    -Real.sin (t * bkEnergy logPrime S)⟩
+
+theorem bkStatePhase_insert_of_not_mem {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) (t : ℝ)
+    (p : PrimeCantorBerryKeatingOperator.PrimeMode P)
+    (S : PrimeCantorBerryKeatingOperator.Vertex P) (hp : p ∉ S) :
+    bkStatePhase logPrime t (insert p S) =
+      bkPrimePhase logPrime t p * bkStatePhase logPrime t S := by
+  unfold bkStatePhase bkPrimePhase
+  rw [show bkEnergy logPrime (insert p S) =
+      logPrime p + bkEnergy logPrime S by simp [bkEnergy, hp]]
+  rw [show -(Complex.I * (t : ℂ) *
+      ((logPrime p + bkEnergy logPrime S : ℝ) : ℂ)) =
+      (-(Complex.I * (t : ℂ) * (logPrime p : ℂ))) +
+        (-(Complex.I * (t : ℂ) * (bkEnergy logPrime S : ℂ))) by
+    push_cast
+    ring]
+  rw [Complex.exp_add]
+
+theorem bkStateRotor_complexification {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)
+    (t : ℝ) (S : PrimeCantorBerryKeatingOperator.Vertex P) :
+    InfoGeometry.Compatibility.chiralToComplex
+        (InfoGeometry.Compatibility.realChiralPhaseEquiv
+          (bkStateRotor logPrime t S)) =
+      bkStatePhase logPrime t S := by
+  rw [InfoGeometry.Compatibility.chiralToComplex_eq_scalar_add_bivector_I]
+  simp only [InfoGeometry.Compatibility.realChiralPhaseEquiv_scalar,
+    InfoGeometry.Compatibility.realChiralPhaseEquiv_bivector]
+  unfold bkStateRotor bkStatePhase
+  change (Real.cos (t * bkEnergy logPrime S) : ℂ) +
+      ((-Real.sin (t * bkEnergy logPrime S) : ℝ) : ℂ) * Complex.I =
+    Complex.exp (-(Complex.I * (t : ℂ) *
+      (bkEnergy logPrime S : ℂ)))
+  have harg :
+      -(Complex.I * (t : ℂ) * (bkEnergy logPrime S : ℂ)) =
+        ((-(t * bkEnergy logPrime S) : ℝ) : ℂ) * Complex.I := by
+    push_cast
+    ring
+  rw [harg, Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin]
+  simp
 
 theorem bkStatePhase_eq_product_primon_phase
     {P : InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff}
@@ -495,9 +543,7 @@ theorem cutoffPrimeFerromagneticChain_siteEnergy_sum
     (Fintype.equivFin
       (InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator.PrimeMode P)).symm
   intro i
-  simp [cutoffPrimeFerromagneticChain, PrimeFerromagneticChain.siteEnergy]
-  <;>
-  rfl
+  simp [cutoffPrimeFerromagneticChain]
 
 theorem chainPrimonLogPacket_bivector_sheet_add
     {N : ℕ} (C : PrimeFerromagneticChain N)
@@ -599,7 +645,7 @@ theorem primonPhase_metriplectic_entropy_production_nonnegative
 theorem primonPhase_conserved_current
     {N : ℕ} [Nonempty (Fin N)] (p : Fin N → Nat.Primes)
     (σ t : ℝ) (sheet : Fin N → ℤ)
-    (β : Fin 2 → ℝ) (hβ : 0 < β 0) :
+    (β : Fin 2 → ℝ) (_hβ : 0 < β 0) :
     ∑ i : Fin N,
       probability (primonPhaseFamily p σ t sheet) β i *
         ((primonPhaseFamily p σ t sheet).charge i 0 +
@@ -631,7 +677,7 @@ theorem primonPhase_KMS_condition
 
 theorem primonPhase_entropy_eq_log_partition
     {N : ℕ} [Nonempty (Fin N)] (p : Fin N → Nat.Primes)
-    (σ : ℝ) (β : Fin 2 → ℝ) (hβ : 0 < β 0) (hσ : 0 < σ)
+    (σ : ℝ) (β : Fin 2 → ℝ) (_hβ : 0 < β 0) (_hσ : 0 < σ)
     (sheet : Fin N → ℤ) :
     (finiteCartanMetriplecticFlow
       (primonPhaseFamily p σ 0 sheet) β (fun _ => 0)).entropyProduction =

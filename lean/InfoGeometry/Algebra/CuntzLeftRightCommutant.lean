@@ -11,6 +11,16 @@ variable {n : ℕ}
 
 abbrev CuntzOperator (n : ℕ) := CuntzAlg n →ₗ[ℂ] CuntzAlg n
 
+/-- Left multiplication on the native Cuntz quotient. -/
+noncomputable def leftMultiplication
+    (n : ℕ) (a : CuntzAlg n) : CuntzOperator n :=
+  LinearMap.mulLeft ℂ a
+
+@[simp] theorem leftMultiplication_apply
+    (n : ℕ) (a x : CuntzAlg n) :
+    leftMultiplication n a x = a * x := by
+  rfl
+
 /-- Right multiplication on the native Cuntz quotient. -/
 noncomputable def rightMultiplication
     (n : ℕ) (a : CuntzAlg n) : CuntzOperator n :=

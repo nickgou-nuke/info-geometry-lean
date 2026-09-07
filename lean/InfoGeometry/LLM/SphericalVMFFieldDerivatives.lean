@@ -191,7 +191,7 @@ theorem vmfFieldDirectionalCumulant_eq_directionalCumulant
     vmfPartition μ β (0 : E) = 1 := by
   simp [vmfPartition]
 
-@[simp] theorem vmfPartition_zero_temperature (h : E) :
+@[simp] theorem vmfPartition_zero_beta (h : E) :
     vmfPartition μ 0 h = 1 := by
   simp [vmfPartition]
 

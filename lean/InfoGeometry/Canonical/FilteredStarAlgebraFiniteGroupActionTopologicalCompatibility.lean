@@ -50,13 +50,11 @@ theorem topologicalGroupAction_on_stage
     (T.stage_agreement i g)
 
 theorem topologicalGroupAction_agrees_with_algebraicAction_on_stage
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (g : G) (x : Stage i) :
     T.action g
-        (algebraicDescend Stage sys R hι_comm
+        (algebraicDescend Stage sys R
           (algebraicStarDirectLimitOf Stage sys i x)) =
-      algebraicDescend Stage sys R hι_comm
+      algebraicDescend Stage sys R
         (algebraicColimitGroupAction I G Stage sys A g
           (algebraicStarDirectLimitOf Stage sys i x)) := by
   rw [algebraicDescend_of, algebraicColimitGroupAction_on_stage,
@@ -64,17 +62,15 @@ theorem topologicalGroupAction_agrees_with_algebraicAction_on_stage
   exact topologicalGroupAction_on_stage Stage sys A R T i g x
 
 theorem topologicalGroupAction_agrees_with_algebraicEquiv_on_stage
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (g : G) (x : Stage i) :
     T.action g
-        (algebraicDescend Stage sys R hι_comm
+        (algebraicDescend Stage sys R
           (algebraicStarDirectLimitOf Stage sys i x)) =
-      algebraicDescend Stage sys R hι_comm
+      algebraicDescend Stage sys R
         (algebraicColimitGroupActionEquiv Stage sys A g
           (algebraicStarDirectLimitOf Stage sys i x)) := by
   simpa [algebraicColimitGroupActionEquiv_apply] using
     topologicalGroupAction_agrees_with_algebraicAction_on_stage
-      Stage sys A R T hι_comm i g x
+      Stage sys A R T i g x
 
 end CStarStateColimit.Native.FilteredStarAlgebraFiniteGroupActionTopologicalCompatibility

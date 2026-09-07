@@ -14,6 +14,9 @@ The complex compatibility layer, when needed, must be downstream only.
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.Deriv.Add
 import InfoGeometry.Geometry.RealUpperHalfPlane
 
 noncomputable section
@@ -95,6 +98,48 @@ theorem mul_bivector (z w : RealChiralPhase) :
 @[simp]
 theorem normSq_one : normSq (1 : RealChiralPhase) = 1 := by
   simp [normSq]
+
+@[ext]
+theorem ext {z w : RealChiralPhase}
+    (hs : z.scalar = w.scalar)
+    (hb : z.bivector = w.bivector) :
+    z = w := by
+  cases z
+  cases w
+  simp_all
+
+/-- Real conjugation: reverse the oriented bivector. -/
+def conj (z : RealChiralPhase) : RealChiralPhase where
+  scalar := z.scalar
+  bivector := -z.bivector
+
+/-- Oriented phase rate numerator `scalar * d.2 - bivector * d.1`. -/
+def phaseNumerator (z : RealChiralPhase) (d : ℝ × ℝ) : ℝ :=
+  z.scalar * d.2 - z.bivector * d.1
+
+/-- Chiral phase rate `phaseNumerator / normSq`. -/
+def chiralPhaseRate (z : RealChiralPhase) (d : ℝ × ℝ) : ℝ :=
+  phaseNumerator z d / normSq z
+
+/-- Madelung phase current `(ℏ / m) * phaseNumerator`. -/
+def phaseCurrent (hbar mass : ℝ) (z : RealChiralPhase) (d : ℝ × ℝ) : ℝ :=
+  (hbar / mass) * phaseNumerator z d
+
+/-- Derivative of normSq given component derivatives. -/
+theorem hasDerivAt_normSq_of_components
+    (f g : ℝ → ℝ) (df dg t : ℝ)
+    (hf : HasDerivAt f df t)
+    (hg : HasDerivAt g dg t) :
+    HasDerivAt
+      (fun u => normSq { scalar := f u, bivector := g u })
+      (2 * f t * df + 2 * g t * dg) t := by
+  have h1 : HasDerivAt (fun u => (f u) ^ 2) (2 * f t * df) t := by
+    have h := hf.pow 2
+    simpa [mul_assoc] using h
+  have h2 : HasDerivAt (fun u => (g u) ^ 2) (2 * g t * dg) t := by
+    have h := hg.pow 2
+    simpa [mul_assoc] using h
+  exact h1.add h2
 
 /--
 The normalized rotor associated to a nonzero chiral phase.

@@ -13,6 +13,7 @@ import Mathlib.Data.Complex.Basic
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Geometry.RealMoebiusAction
 import InfoGeometry.Algebraic.RealModularReadout
+import InfoGeometry.Geometry.RealRotorCore
 
 noncomputable section
 
@@ -79,6 +80,29 @@ theorem realToMathlibUHP_eq_re_add_im (τ : RealUpperHalfPlane) :
   apply Complex.ext <;> simp [realToMathlibUHP]
 
 /-! ### 2. Chiral phase / complex shadow -/
+
+/-- Equivalence between the geometric real rotor phase and the algebraic chiral phase. -/
+def realChiralPhaseEquiv : RealChiralPhase ≃ ChiralPhase where
+  toFun z := ⟨z.scalar, z.bivector⟩
+  invFun z := ⟨z.scalar, z.bivector⟩
+  left_inv z := by cases z; rfl
+  right_inv z := by cases z; rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_scalar (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).scalar = z.scalar := rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_bivector (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).bivector = z.bivector := rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_normSq (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).normSq = z.normSq := rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_conj (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).conj = realChiralPhaseEquiv z.conj := rfl
 
 /-- Complex readout of a real scalar/bivector phase. -/
 def chiralToComplex (z : ChiralPhase) : ℂ :=

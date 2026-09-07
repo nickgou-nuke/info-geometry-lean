@@ -141,7 +141,7 @@ theorem logRatioDissipation_nonneg {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
   · rcases lt_or_gt_of_ne hab with hlt | hgt
     · have hquot : a / b < 1 := (div_lt_one hb).mpr hlt
       have hlog : Real.log (a / b) < 0 :=
-        Real.log_lt_zero (div_pos ha hb) hquot
+        Real.log_neg (div_pos ha hb) hquot
       have hsub : a - b < 0 := sub_neg.mpr hlt
       nlinarith
     · have hquot : 1 < a / b := (one_lt_div hb).mpr hgt

@@ -58,11 +58,13 @@ theorem determinantEvenVolume_eq_eulerDensity_sq :
 
 theorem determinantEvenVolume_nonneg :
     0 ≤ P.pfaffianPacket.determinantEvenVolume := by
-  exact P.pfaffianPacket.determinantEvenVolume_nonneg
+  rw [P.determinantEvenVolume_eq_eulerDensity_sq]
+  exact sq_nonneg P.eulerDensity
 
 theorem determinantEvenVolume_eq_zero_iff_eulerDensity_eq_zero :
     P.pfaffianPacket.determinantEvenVolume = 0 ↔ P.eulerDensity = 0 := by
-  exact P.pfaffianPacket.determinantEvenVolume_eq_zero_iff
+  rw [P.determinantEvenVolume_eq_eulerDensity_sq]
+  exact sq_eq_zero_iff
 
 end OrientedSkewCurvaturePacket
 

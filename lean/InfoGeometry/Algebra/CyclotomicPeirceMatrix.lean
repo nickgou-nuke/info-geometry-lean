@@ -31,11 +31,10 @@ def blocks (X : A) : Matrix (Fin n) (Fin n) A :=
 
 /-- Completeness of the original family reconstructs the operator. -/
 theorem sum_blocks (X : A) : (∑ i, ∑ j, blocks F X i j) = X := by
-  calc
-    (∑ i, ∑ j, blocks F X i j) =
-        (∑ i, F.projector i) * X * (∑ j, F.projector j) := by
-      simp only [blocks, Finset.sum_mul, Finset.mul_sum]
-    _ = X := by simp only [F.complete, one_mul, mul_one]
+  simp only [blocks]
+  simp_rw [← Finset.mul_sum]
+  simp_rw [F.complete, mul_one]
+  rw [← Finset.sum_mul, F.complete, one_mul]
 
 /-- Fixed-corner support is a theorem, not arbitrary matrix data. -/
 theorem blocks_supported (X : A) (i j : Fin n) :
@@ -99,7 +98,7 @@ def blocksLinear : A →ₗ[K] Matrix (Fin n) (Fin n) A where
     simp [blocks, mul_add, add_mul]
   map_smul' c X := by
     ext i j
-    simp [blocks, mul_smul_comm, smul_mul_assoc]
+    simp [blocks]
 
 theorem blocks_injective : Function.Injective (blocks F) := by
   intro X Y h

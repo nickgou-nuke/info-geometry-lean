@@ -27,18 +27,21 @@ def coreNMinus : FixedColourCore A := !![0, 0; 0, 1]
 def coreSigmaPlus : FixedColourCore A := !![0, 1; 0, 0]
 def coreSigmaMinus : FixedColourCore A := !![0, 0; 1, 0]
 
+omit [Algebra ℝ A] in
 @[simp] theorem coreSigmaPlus_mul_coreSigmaPlus :
     coreSigmaPlus (A := A) * coreSigmaPlus = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [coreSigmaPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
+omit [Algebra ℝ A] in
 @[simp] theorem coreSigmaMinus_mul_coreSigmaMinus :
     coreSigmaMinus (A := A) * coreSigmaMinus = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [coreSigmaMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
+omit [Algebra ℝ A] in
 @[simp] theorem coreSigmaPlus_mul_coreSigmaMinus :
     coreSigmaPlus (A := A) * coreSigmaMinus = coreNPlus := by
   ext i j
@@ -46,6 +49,7 @@ def coreSigmaMinus : FixedColourCore A := !![0, 0; 1, 0]
     simp [coreSigmaPlus, coreSigmaMinus, coreNPlus,
       Matrix.mul_apply, Fin.sum_univ_two]
 
+omit [Algebra ℝ A] in
 @[simp] theorem coreSigmaMinus_mul_coreSigmaPlus :
     coreSigmaMinus (A := A) * coreSigmaPlus = coreNMinus := by
   ext i j
@@ -84,7 +88,7 @@ def similarity (P PInv X : FixedColourCore A) : FixedColourCore A :=
 
 theorem similarity_map_superBracket
     (P PInv X Y : FixedColourCore A)
-    (hLeft : P * PInv = 1) (hRight : PInv * P = 1)
+    (_hLeft : P * PInv = 1) (hRight : PInv * P = 1)
     (p q : SuperParity) :
     similarity P PInv (superBracket p q X Y) =
     superBracket p q (similarity P PInv X) (similarity P PInv Y) := by

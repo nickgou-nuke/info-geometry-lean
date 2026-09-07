@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.OperatorValuedSouriauFamily
+namespace InfoGeometry.Canonical
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Canonical.OperatorModularTemperatureDuality
@@ -17,7 +17,7 @@ Operator-valued Souriau family.
 also operatorial: `betaOperator : Obs`. Scalar beta/time coordinates are not the
 owner objects; they are chart/readout shadows supplied only after `eval`.
 -/
-structure Family
+structure OperatorValuedSouriauFamily
     (LieAlg Obs State Direction : Type*) where
   /-- Closed product/trace surface used by the modular-temperature duality. -/
   frobenius : OperatorFrobeniusClosure Obs
@@ -78,10 +78,13 @@ structure Family
   exponentialFamily_untraced_beta_eq_expWeight :
     exponentialFamily.untracedExponential betaOperator = expWeight
 
-namespace Family
+namespace OperatorValuedSouriauFamily
+
+/-- Backward-compatible alias. -/
+abbrev Family := OperatorValuedSouriauFamily
 
 variable {LieAlg Obs State Direction : Type*}
-variable (P : Family LieAlg Obs State Direction)
+variable (P : OperatorValuedSouriauFamily LieAlg Obs State Direction)
 
 /-- The existing operatorial exponential family has generator `K_B` at operator beta. -/
 theorem exponentialFamily_K_beta_eq_souriauGenerator_holds :
@@ -129,6 +132,30 @@ def betaSouriauAction : ℝ :=
 def timeSouriauAction : ℝ :=
   P.frobenius.pairing P.timeOperator P.souriauGenerator
 
-end Family
+/-- The inverse temperature parameter is an operator in `Obs`. -/
+def beta_is_operatorial : Obs := P.betaOperator
 
-end InfoGeometry.Canonical.OperatorValuedSouriauFamily
+/-- The clock/time parameter is an operator in `Obs`. -/
+def time_is_operatorial : Obs := P.timeOperator
+
+/-- Scalar time is a chart/readout shadow only. -/
+def scalar_time_chart_only : ℝ := P.timeScalarReadout
+
+/-- Scalar beta is a chart/readout shadow only. -/
+def scalar_beta_chart_shadow_only : ℝ := P.betaScalarReadout
+
+/-- The Souriau generator is an operator in `Obs`. -/
+def souriauGenerator_law_valid : Obs := P.souriauGenerator
+
+/-- The untraced exponential weight is an operator in `Obs`. -/
+def expWeight_law_valid : Obs := P.expWeight
+
+/-- The Duhamel derivative is defined at the operator level. -/
+def duhamel_derivative_law : DuhamelOperatorDerivative Obs Obs Direction := P.duhamelDerivative
+
+/-- Scalar readout is downstream only through `eval`. -/
+def scalar_readout_downstream_only : State → Obs → ℝ := P.eval
+
+end OperatorValuedSouriauFamily
+
+end InfoGeometry.Canonical

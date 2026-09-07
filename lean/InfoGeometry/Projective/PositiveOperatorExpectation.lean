@@ -30,7 +30,7 @@ def operatorExpectation (q : Ray ι) : Matrix ι ι ℝ →ₗ[ℝ] ℝ := evalu
 @[simp] theorem operatorExpectation_one (q : Ray ι) :
     operatorExpectation q (1 : Matrix ι ι ℝ) = 1 := by
   change rayMean q (fun i => (1 : Matrix ι ι ℝ) i i) = 1
-  simpa using rayMean_const q (1 : ℝ)
+  simp [rayMean_const]
 
 theorem operatorExpectation_transpose_mul (q : Ray ι) (M : Matrix ι ι ℝ) :
     operatorExpectation q (M.transpose * M) = rayMean q (fun i => ∑ j, (M j i)^2) := by
@@ -64,19 +64,21 @@ def curvedZorn : OperatorZornMatrix (Matrix (Fin 2) (Fin 2) ℝ) :=
 /-- A genuine nonzero, normalized associator expectation in the full Zorn carrier. -/
 theorem associator_expectation_one_third :
     (readout (ray twoWeights) diagonalState
-      (associator curvedZorn curvedZorn (nPlus 1))).sigma_minus 2 = (1/3 : ℝ) := by
+      (OperatorZornFourPotentialGauge.associator curvedZorn curvedZorn (nPlus 1))).sigma_minus 2 = (1/3 : ℝ) := by
   norm_num [readout, coefficientReadout, evaluation, diagonalState,
     rayMean, ray, mean, weightedSum, twoWeights, PositiveMeasure.Z,
-    associator, curvedZorn, nPlus, sigmaPlus, operatorZornCoordinates,
+    OperatorZornFourPotentialGauge.associator, curvedZorn, nPlus, sigmaPlus, operatorZornCoordinates,
     NCZornElement.mul, NCZornElement.zornDot, NCZornElement.zornCross,
-    e12, e21, Matrix.mul_apply, Fin.sum_univ_two]
+    e12, e21, Matrix.mul_apply, Fin.sum_univ_two, HSub.hSub, Sub.sub]
 
 theorem associator_expectation_ne_zero :
     readout (ray twoWeights) diagonalState
-      (associator curvedZorn curvedZorn (nPlus 1)) ≠ 0 := by
+      (OperatorZornFourPotentialGauge.associator curvedZorn curvedZorn (nPlus 1)) ≠ 0 := by
   intro h
   have hv := congrArg (fun Z : OperatorZornMatrix ℝ => Z.sigma_minus 2) h
+  dsimp at hv
   rw [associator_expectation_one_third] at hv
+  change (1/3 : ℝ) = 0 at hv
   norm_num at hv
 
 end InfoGeometry.Projective.PositiveOperatorExpectation

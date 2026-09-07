@@ -19,6 +19,32 @@ are stated as `Prop` definitions, not as theorems or axioms, so they do not
 contaminate the verified core.
 -/
 
+namespace InfoGeometry.Canonical
+
+abbrev DrazinInverseWitness {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (A D : V →ₗ[ℝ] V) : Prop :=
+  OperatorSurgery.IsDrazinInverse A D
+
+end InfoGeometry.Canonical
+
+namespace InfoGeometry.Analytic
+
+/-- A heat-kernel supertrace witness schema for open problem formalization. -/
+structure HeatKernelWitness where
+  supertrace : ℝ → ℂ
+  traceClass : Prop
+  smallTimeAsymptotics : Prop
+  mellinBridge : Prop
+
+/-- A spectral-zeta witness schema built from a heat-kernel supertrace. -/
+structure SpectralZetaWitness where
+  kernel : HeatKernelWitness
+  spectralZeta : ℂ → ℂ
+  analyticContinuation : Prop
+  derivativeAtZero : ℂ
+
+end InfoGeometry.Analytic
+
 namespace InfoGeometry.Canonical.OpenProblemFormalization
 
 open InfoGeometry.Exceptional.Freudenthal

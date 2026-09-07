@@ -100,14 +100,12 @@ theorem stageMap_algebraMap_real (n : ℕ) (r : ℝ) :
       ext i j
       simp [complexify]
     · ext i j
-      by_cases h : i = j <;> simp [complexify, Matrix.one_apply, h]
+      by_cases h : i = j <;> simp [complexify, h]
   rw [hc, map_smul]
   rw [show algebraMap ℝ BoundedL2Operator r =
       algebraMap ℂ BoundedL2Operator (algebraMap ℝ ℂ r) by
-        ext f
         rfl]
-  simpa [Algebra.smul_def] using
-    (boundaryRep n).commutes (algebraMap ℝ ℂ r)
+  simp [Algebra.smul_def]
 
 def colimitStarAlgHom :
     InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier →⋆ₐ[ℝ]
@@ -127,8 +125,9 @@ def colimitStarAlgHom :
     intro x
     induction x using DirectLimit.induction with
     | _ n A =>
-        change colimitRepresentation (ofStage n (star A)) =
+        change colimitRepresentation (star (ofStage n A)) =
           (colimitRepresentation (ofStage n A))†
+        rw [← ofStage_star]
         rw [colimitRepresentation_stage, colimitRepresentation_stage]
         exact stageMap_star n A
 

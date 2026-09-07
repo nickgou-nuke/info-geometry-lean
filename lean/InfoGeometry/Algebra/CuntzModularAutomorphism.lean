@@ -178,4 +178,24 @@ lemma sigma_mk' (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (x : CuntzTensor n)
   rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
   rw [sigma_mk', sigmaTensor_zero]; rfl
 
+noncomputable def sigmaEquiv (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :
+    CuntzAlg n ≃ₐ[ℂ] CuntzAlg n :=
+  AlgEquiv.ofAlgHom
+    (sigma n primes t)
+    (sigma n primes (-t))
+    (by rw [← sigma_add, add_neg_cancel, sigma_zero])
+    (by rw [← sigma_add, neg_add_cancel, sigma_zero])
+
+@[simp] lemma sigmaEquiv_apply (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (x : CuntzAlg n) :
+    sigmaEquiv n primes t x = sigma n primes t x :=
+  rfl
+
+@[simp] lemma sigmaEquiv_fixes_projector (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (i : Fin n) :
+    sigmaEquiv n primes t (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
+  simp [sigmaEquiv_apply]
+
+lemma sigmaEquiv_add_apply (n : ℕ) (primes : Fin n → ℕ) (t s : ℝ) (x : CuntzAlg n) :
+    sigmaEquiv n primes (t + s) x = sigmaEquiv n primes t (sigmaEquiv n primes s x) := by
+  simp only [sigmaEquiv_apply, sigma_add, AlgHom.coe_comp, Function.comp_apply]
+
 end InfoGeometry.Algebra.CuntzModularAutomorphism

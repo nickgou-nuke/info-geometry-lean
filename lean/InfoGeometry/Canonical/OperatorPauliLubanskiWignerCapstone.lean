@@ -19,6 +19,8 @@ open InfoGeometry.Canonical.OperatorPauliLubanskiMassiveWigner
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 open InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge
 
+abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+
 /-- Massive finite Wigner branch: `W⁰ = 0`, `Wᵢ = mSᵢ`, `su(2)` closure,
 and the spin-half second Casimir. -/
 theorem massive_branch (m : ℂ) :

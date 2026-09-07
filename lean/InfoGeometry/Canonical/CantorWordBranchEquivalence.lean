@@ -26,7 +26,15 @@ theorem branchTail_branchPrefix (n : ℕ) (b : Bool) (w : BitWord n) :
 @[simp]
 theorem branchPrefix_head_branchTail (n : ℕ) (w : BitWord (n + 1)) :
     branchPrefix n (w ⟨0, Nat.succ_pos n⟩) (branchTail w) = w := by
-  exact branchPrefix_head_tail n w
+  funext i
+  by_cases h : i.1 = 0
+  · have hi : i = ⟨0, Nat.succ_pos n⟩ := Fin.ext h
+    subst i
+    rfl
+  · simp [branchPrefix, branchTail, h]
+    apply congrArg w
+    apply Fin.ext
+    exact Nat.sub_add_cancel (by omega : 1 ≤ i.1)
 
 /-- Every finite word is uniquely a head bit together with its tail. -/
 noncomputable def bitWordSuccEquiv (n : ℕ) :

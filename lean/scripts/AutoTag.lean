@@ -11,16 +11,15 @@ lake env lean --run lean/AutoTag.lean InfoGeometry > lean/all_blueprints.lean
 ```
 
 If no prefix is given, all constants are listed. -/
-#eval do
-  -- `IO.getArgs` is not defined; `Lean.getArgs` supplies command-line args
-  let ns := (← Lean.getArgs).headD ""
-  let env ← getEnv
-  for (name, ci) in env.constants.toList do
+def main (args : List String) : IO UInt32 := do
+  let ns := args.headD ""
+  initSearchPath (← findSysroot)
+  let env ← importModules #[{ module := `InfoGeometry }] {}
+  for (name, _) in env.constants do
     let s := name.toString
-    when (ns == "" || s.startsWith (ns ++ ".")) do
-      unless name.isAnonymous do
-        match ci with
-        | .thmInfo _ | .axiomInfo _ | .defnInfo _ | .opaqueInfo _
-        | .inductInfo _ | .ctorInfo _ | .quotInfo _ | .recInfo _ =>
-            IO.println s!"@[blueprint] {name}"
-        | _ => pure ()
+    if ns == "" || s.startsWith (ns ++ ".") then
+      if !name.isAnonymous then
+        IO.println s!"@[blueprint] {name}"
+  return 0
+
+def runMain : List String → IO UInt32 := main

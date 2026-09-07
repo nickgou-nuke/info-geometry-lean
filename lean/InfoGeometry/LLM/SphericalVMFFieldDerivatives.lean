@@ -99,7 +99,9 @@ theorem iteratedDeriv_two_projectedResponseLine_zero_eq_cumulant_three
     exact (deriv_directionalPotential_eq_inner_response σ θ v t).symm
   rw [hline]
   unfold directionalCumulant
-  rw [show (3 : ℕ) = 2 + 1 by norm_num, iteratedDeriv_succ']
+  have hsucc := iteratedDeriv_succ'
+    (n := 2) (f := directionalPotential σ θ v) (x := 0)
+  simpa using hsucc.symm
 
 end NaturalParameterLine
 

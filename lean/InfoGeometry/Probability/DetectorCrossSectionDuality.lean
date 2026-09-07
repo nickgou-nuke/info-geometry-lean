@@ -287,6 +287,64 @@ theorem effectiveAngularFactor_recovers_W (A_ref eps1 eps2 W_d P1 P2 P12 : ℝ)
   dsimp [effectiveAngularFactor]
   field_simp
 
+/-! ### 10. Fast Subchain Secular Equilibrium and Coincidence Anchor -/
+
+/-- Activity of subchain parent (e.g. ²²⁸Th) from daughter activity (e.g. ²⁰⁸Tl)
+    under secular equilibrium with feeding branching ratio `b`:
+    $A_{\mathrm{parent}} = A_{\mathrm{daughter}} / b$. -/
+def subchainParentActivity (A_daughter b : ℝ) : ℝ := A_daughter / b
+
+/-- Photon emission yield per decay of subchain parent (e.g. ²²⁸Th) obtained by
+    rescaling a 20-year chain yield by the lower-chain ingrowth factor $f_{\mathrm{lower}}$:
+    $Y_i^{(\mathrm{parent})} = Y_i^{(20\mathrm{y})} / f_{\mathrm{lower}}$. -/
+def yieldPerParentDecay (Y_20y f_lower : ℝ) : ℝ := Y_20y / f_lower
+
+/-- Absolute photopeak efficiency calibrated via the coincidence-anchored subchain:
+    $\varepsilon_{p,i} = \frac{L_i}{(A_{\mathrm{daughter}} / b) \cdot Y_i^{(\mathrm{parent})}}$. -/
+def coincidenceAnchoredEfficiency (L A_daughter b Y_parent : ℝ) : ℝ :=
+  L / (subchainParentActivity A_daughter b * Y_parent)
+
+/-- **Theorem**: For any transition belonging directly to the coincidence daughter nuclide
+    (where $Y_i^{(\mathrm{parent})} = b \cdot I_{\gamma, i}$), the branching fraction $b$
+    cancels identically, rendering the efficiency independent of daughter feeding branching:
+    $\varepsilon_{p,i} = \frac{L_i}{A_{\mathrm{daughter}} \cdot I_{\gamma, i}}$. -/
+theorem coincidence_anchored_daughter_cancellation (L A_daughter b I_gamma : ℝ)
+    (hb : b ≠ 0) (hA : A_daughter ≠ 0) (hI : I_gamma ≠ 0) :
+    coincidenceAnchoredEfficiency L A_daughter b (b * I_gamma) =
+      L / (A_daughter * I_gamma) := by
+  dsimp [coincidenceAnchoredEfficiency, subchainParentActivity]
+  field_simp
+
+/-- **Theorem**: For an intermediate transition in the fast chain (with 100% feeding through that stage,
+    so $Y_i^{(\mathrm{parent})} = I_{\gamma, i}$), the efficiency connects to the coincidence anchor
+    via the exact daughter branching fraction $b$:
+    $\varepsilon_{p,i} = \frac{L_i \cdot b}{A_{\mathrm{daughter}} \cdot I_{\gamma, i}}$. -/
+theorem coincidence_anchored_intermediate_link (L A_daughter b I_gamma : ℝ)
+    (hb : b ≠ 0) (hA : A_daughter ≠ 0) (hI : I_gamma ≠ 0) :
+    coincidenceAnchoredEfficiency L A_daughter b I_gamma =
+      (L * b) / (A_daughter * I_gamma) := by
+  dsimp [coincidenceAnchoredEfficiency, subchainParentActivity]
+  field_simp
+
+/-- **Theorem**: Rescaling 20-year chain yields by $f_{\mathrm{lower}}$ produces the exact
+    calibrated efficiency without requiring primordial parent age or Ra-228 bottleneck modeling. -/
+theorem coincidence_anchored_ingrowth_equivalence (L A_daughter b Y_20y f_lower : ℝ)
+    (hb : b ≠ 0) (hf : f_lower ≠ 0) (hA : A_daughter ≠ 0) (hY : Y_20y ≠ 0) :
+    coincidenceAnchoredEfficiency L A_daughter b (yieldPerParentDecay Y_20y f_lower) =
+      (L * b * f_lower) / (A_daughter * Y_20y) := by
+  dsimp [coincidenceAnchoredEfficiency, subchainParentActivity, yieldPerParentDecay]
+  field_simp
+
+/-- **Theorem**: Relative efficiency ratio between any two fast-chain lines is completely
+    invariant to the absolute activity anchor, the branching fraction, and the ingrowth factor. -/
+theorem coincidence_anchored_relative_efficiency_invariant (L1 L2 Y1 Y2 A_daughter b : ℝ)
+    (hL2 : L2 ≠ 0) (hY2 : Y2 ≠ 0) (hA : A_daughter ≠ 0) (hb : b ≠ 0) (hY1 : Y1 ≠ 0) :
+    coincidenceAnchoredEfficiency L1 A_daughter b Y1 /
+    coincidenceAnchoredEfficiency L2 A_daughter b Y2 =
+      (L1 / Y1) / (L2 / Y2) := by
+  dsimp [coincidenceAnchoredEfficiency, subchainParentActivity]
+  field_simp
+
 end
 
 end InfoGeometry.Probability.DetectorCrossSectionDuality

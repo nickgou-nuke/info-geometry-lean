@@ -35,6 +35,14 @@ variable {A : Type*} [Semiring A]
 def Corner (e : A) :=
   {c : A // e * c = c ∧ c * e = c}
 
+/-- The principal left ideal `Ae = {x : A | x * e = x}`. -/
+def principalLeftIdeal (e : A) : Set A :=
+  {x : A | x * e = x}
+
+/-- The principal right ideal `eA = {y : A | e * y = y}`. -/
+def principalRightIdeal (e : A) : Set A :=
+  {y : A | e * y = y}
+
 /-- Multiplication inherited by the corner carrier. -/
 def cornerMul (e : A) (c d : Corner e) : Corner e :=
   ⟨c.1 * d.1, by

@@ -49,7 +49,7 @@ theorem zero_gibbs_stage_compatibility (n : ℕ) (A : MatrixStage n) :
   rw [show gibbsFunctional (0 : MatrixStage n) (by simp) 0 =
       matrixTraceFunctional n by
         exact zero_gibbs_eq_matrixTraceFunctional n]
-exact concreteData.trace_compatible n A
+  exact concreteData.trace_compatible n A
 
 theorem traceFunctional_stage_eq_zero_gibbs (n : ℕ) (A : MatrixStage n) :
     traceFunctional (stageInjection n A) =

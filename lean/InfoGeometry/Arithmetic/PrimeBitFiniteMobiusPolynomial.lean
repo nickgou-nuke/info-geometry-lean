@@ -144,8 +144,10 @@ theorem primeCutoffMobiusPolynomial_boltzmann_eq_wittenIndexSum
     (B : ℕ) (β : ℝ) :
     primeCutoffMobiusPolynomial B
         (fun n => (boltzmannWeight β n : ℂ)) =
-      ∑ n ∈ Finset.Icc 1 B, (moebiusWeightedTerm β n : ℂ) := by
+      ∑ n ∈ Finset.Icc 1 B, (wittenIndexTerm β n : ℂ) := by
   rw [primeCutoffMobiusPolynomial_eq_integerCutoff]
-  simp [integerCutoffMobiusPolynomial, moebiusWeightedTerm]
+  unfold integerCutoffMobiusPolynomial wittenIndexTerm
+  push_cast
+  rfl
 
 end InfoGeometry.Arithmetic.PrimeBitFiniteMobiusPolynomial

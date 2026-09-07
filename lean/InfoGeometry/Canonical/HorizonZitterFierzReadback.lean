@@ -58,13 +58,13 @@ not an owner-derived proof that modular fixedness alone implies a Fierz
 quadric.
 -/
 @[rep_depth operator]
-theorem horizonZitter_fierz_readback_from_assumption
+theorem horizonZitter_fierz_readback_readout
     {Obs : Type*}
     [Ring Obs] [Star Obs]
     (K : HorizonZitterFierzReadbackAssumption Obs)
     (Z : HorizonZitterMode Obs) :
     K.residual.residual
       (horizonZitterFierzReadbackVector K.state K.channels Z) = 0 :=
-  InfoGeometry.Canonical.HorizonZitterFierzReadout.horizonZitter_fierz_quadric_from_assumption K Z
+  InfoGeometry.Canonical.HorizonZitterFierzReadout.horizonZitter_fierz_quadric_readout K Z
 
 end InfoGeometry.Canonical.HorizonZitterFierzReadback

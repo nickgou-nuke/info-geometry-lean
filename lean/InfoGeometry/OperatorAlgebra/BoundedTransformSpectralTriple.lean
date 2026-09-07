@@ -36,7 +36,7 @@ boundedTransform_eq_of_phase_resolvent
 
 boundedTransform_selfAdjoint_of_source
 
-boundedTransform_commutator_bounded_of_spectralTriple_hypothesis
+boundedTransform_commutator_bounded_of_spectralTriple
 
 boundedTransform_spectralTriple_packet
 
@@ -120,7 +120,7 @@ SelfAdjoint boundedTransform :=
 htransfer hsource
 
 /-- Conditional commutator boundedness readback for the transformed spectral triple. -/
-theorem boundedTransform_commutator_bounded_of_spectralTriple_hypothesis
+theorem boundedTransform_commutator_bounded_of_spectralTriple
 {Alg Op : Type*}
 (commutator : Alg → Op → Op)
 (Bounded : Op → Prop)

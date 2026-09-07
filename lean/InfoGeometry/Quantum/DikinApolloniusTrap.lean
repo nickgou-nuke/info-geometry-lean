@@ -29,7 +29,9 @@ This module formalizes the information-theoretic Lyapunov trap mechanism:
    $$2 (\mathcal{T}_{\mathrm{BA}}(y))^2 \le (K_c \cdot r)^2$$
 -/
 
-/-- Convex self-concordant information barrier potential on the scale coordinate ξ:
+/-- Convex transformed information potential on the scale coordinate ξ.
+It is not globally standard self-concordant in this nonlinear coordinate:
+see `BinaryBarrierCoordinateHessian.transformed_barrier_self_concordance_counterexample`.
     Φ(ξ) = - ln(1 - tanh²(ξ)) = 2 ln(cosh(ξ)). -/
 def dikinScaleBarrier (ξ : ℝ) : ℝ :=
   - Real.log (1 - (Real.tanh ξ) ^ 2)

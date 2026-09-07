@@ -13,6 +13,10 @@ import InfoGeometry.Nuclear.SolovievQuasiparticlePhononEigenproblem
 import InfoGeometry.Nuclear.NuclearPhononRPAAlgebra
 import InfoGeometry.Nuclear.NuclearQuasiparticleCARBridge
 import InfoGeometry.Nuclear.TwoLevelChiralOscillationBridge
+import InfoGeometry.Nuclear.CrossSectionDuality
+import InfoGeometry.Nuclear.ApollonianBipolarField
+import InfoGeometry.Probability.DetectorScaleInvariance
+import InfoGeometry.Nuclear.DetectorInformationGeometry
 
 namespace InfoGeometry.Nuclear
 

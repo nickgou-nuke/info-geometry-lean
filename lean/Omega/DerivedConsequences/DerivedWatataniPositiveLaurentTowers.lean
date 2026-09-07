@@ -14,7 +14,7 @@ theorem paper_derived_watatani_positive_laurent_towers :
         { n := 1
           conclusion_tqft_genus_hausdorff_moment_sequence_dm := fun _ => 1
           conclusion_tqft_genus_hausdorff_moment_sequence_dm_pos := by
-            intro x
+            intro _
             simp
           conclusion_tqft_genus_hausdorff_moment_sequence_nonempty := by
             simp }
@@ -23,12 +23,12 @@ theorem paper_derived_watatani_positive_laurent_towers :
          D.conclusion_tqft_genus_hausdorff_moment_sequence_hankel_positivity) := by
   refine ⟨?_, ?_⟩
   · exact Omega.Conclusion.conclusion_qfold_channel_choi_rank_equals_qcollision_verified
-      (fold := fun b : Bool => b) 2 (by decide)
+      (fold := fun b : Bool => b) 2
   · exact Omega.Conclusion.paper_conclusion_tqft_genus_hausdorff_moment_sequence
       { n := 1
         conclusion_tqft_genus_hausdorff_moment_sequence_dm := fun _ => 1
         conclusion_tqft_genus_hausdorff_moment_sequence_dm_pos := by
-          intro x
+          intro _
           simp
         conclusion_tqft_genus_hausdorff_moment_sequence_nonempty := by
           simp }

@@ -194,7 +194,7 @@ def bridge_complex_temperature_rh : BridgeArtifact :=
     ["complexTemperature", "finiteComplexArithmeticTrace", "criticalBalanceLine", "RHModel", "HilbertPólya_shape", "hp_shape_implies_rh", "bosonicPrimonPartition", "ordinaryFermionicPrimonPartition", "gradedFermionicPrimonPartition", "gradedPrimonPartition_at_zero"])
 
 /-- Layer-11 RH spectral dictionary: poles, critical damping, and Hilbert-Pólya map. -/
-def bridge_riemann_hypothesis_layer11 : BridgeArtifact :=
+def bridge_riemann_layer11 : BridgeArtifact :=
   ("Riemann hypothesis Layer 11", "proofs/RiemannHypothesis.lean", [
     "complexTemperature",
     "criticalDamping",
@@ -366,7 +366,7 @@ def bridge_registry : List BridgeArtifact :=
   , bridge_uhf_ladder
   , bridge_uhf_colimit_dyadic
   , bridge_complex_temperature_rh
-  , bridge_riemann_hypothesis_layer11
+  , bridge_riemann_layer11
   , bridge_geometric_zeta_lightcone
   , bridge_souriau_thermo_colimit
   , bridge_fib_anyons

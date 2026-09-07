@@ -157,8 +157,8 @@ theorem reciprocal_nonzero_readout {μ : K} (hμ : μ ≠ 0) (h : S.eigenvalueRe
 
 end RetrocirculantSpectralBlockCertificate
 
-/-- Algebraic closure certificate for Smith Theorems 4 and 5. -/
-structure RetrocirculantClosureCertificate
+/-- Algebraic closure system for Smith Theorems 4 and 5. -/
+structure RetrocirculantClosureSystem
     (K : Type u) [Field K] {n : ℕ} where
   isCirculant : Matrix (Fin n) (Fin n) K → Prop
   isRetrocirculant : Matrix (Fin n) (Fin n) K → Prop
@@ -168,10 +168,10 @@ structure RetrocirculantClosureCertificate
   evenPowerCirculant : ∀ A k, isRetrocirculant A → isCirculant (A ^ (2 * k))
   oddPowerRetrocirculant : ∀ A k, isRetrocirculant A → isRetrocirculant (A ^ (2 * k + 1))
 
-namespace RetrocirculantClosureCertificate
+namespace RetrocirculantClosureSystem
 
 variable {K : Type u} [Field K] {n : ℕ}
-variable (C : RetrocirculantClosureCertificate K (n := n))
+variable (C : RetrocirculantClosureSystem K (n := n))
 
 /-- Product of two retrocirculants is circulant. -/
 theorem product_circulant {A B : Matrix (Fin n) (Fin n) K}
@@ -179,7 +179,7 @@ theorem product_circulant {A B : Matrix (Fin n) (Fin n) K}
     C.isCirculant (A * B) :=
   C.productCirculant A B hA hB
 
-end RetrocirculantClosureCertificate
+end RetrocirculantClosureSystem
 
 end
 

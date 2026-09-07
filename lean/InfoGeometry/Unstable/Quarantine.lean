@@ -48,6 +48,18 @@ import InfoGeometry.Exploration.Symphony.Basic
 import InfoGeometry.Exploration.Symphony.Draft
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Unstable.YangMillsBridge
+import InfoGeometry.Canonical.BerryHolonomy
+import InfoGeometry.Canonical.CalabiYauGrandDualityBridge
+import InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge
+import InfoGeometry.Canonical.CuntzCanonicalKMSFunctional
+import InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence
+import InfoGeometry.Canonical.OperatorObservationPrequantumBridge
+import InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge
+import InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization
+import InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge
+import InfoGeometry.Quantum.DoubleCopyBridge
+import InfoGeometry.Canonical.DeepHorizon
+import InfoGeometry.Canonical.ChiralTorsionBridge
 
 namespace InfoGeometry
 

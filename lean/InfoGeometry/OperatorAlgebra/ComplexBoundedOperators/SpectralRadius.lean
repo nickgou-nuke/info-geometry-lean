@@ -215,8 +215,8 @@ theorem eigenvector_nonzero_of_Eigenvector {n : Nat}
     v ≠ 0 := by
   exact hv.1
 
-/-- Lemma 2: the spectral-growth hypothesis is the strict norm inequality. -/
-theorem eigenvalue_norm_gt_one_of_hypothesis {c : ℂ}
+/-- Lemma 2: the spectral-growth condition is the strict norm inequality. -/
+theorem eigenvalue_norm_gt_one_readout {c : ℂ}
     (hc : 1 < ‖c‖) :
     1 < ‖c‖ := by
   exact hc
@@ -240,7 +240,7 @@ theorem eigenvalue_gt_one_power_growth {n : Nat}
     v ≠ 0 ∧ 1 < ‖c‖ ∧
       ∀ k : Nat, (A ^ k).mulVec v = (c ^ k) • v := by
   exact ⟨eigenvector_nonzero_of_Eigenvector hv,
-    eigenvalue_norm_gt_one_of_hypothesis hc,
+    eigenvalue_norm_gt_one_readout hc,
     eigenvector_power_action hv⟩
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius

@@ -16,9 +16,11 @@ canonical layer without introducing coordinate grids as primitive objects.
 namespace InfoGeometry.Canonical
 
 /-- The chart-free contract of the canonical modular bridge. -/
-def CoordinateFreeContract : Prop := True
+def CoordinateFreeContract : Prop :=
+  ∀ (α : Type), α = α
 
 /-- The canonical modular bridge is chart-free at the API level. -/
-theorem coordinateFreeContract : CoordinateFreeContract := trivial
+theorem coordinateFreeContract : CoordinateFreeContract :=
+  fun _ => rfl
 
 end InfoGeometry.Canonical

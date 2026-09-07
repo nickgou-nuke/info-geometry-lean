@@ -25,7 +25,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 
-structure FactorizationAlignmentCertificate where
+structure FactorizationAlignmentSystem where
   base : ∀ k i, (∀ j : Fin 189, ¬ j.val < i.val) →
     flagRepresentative i =
       collect (leftFactorWord k i) *
@@ -46,11 +46,11 @@ structure FactorizationAlignmentCertificate where
     i ∈ orbitCells k → j ∈ orbitCells k →
     residualWord k i = residualWord k j → i = j
 
-/-- The concrete version of the factorization certificate.  In contrast to
+/-- The concrete version of the factorization system.  In contrast to
 the generic predecessor field above, this records that the predecessor and
 the current representative really belong to the same orbit cell and that
 the step is induced by one of the native flag generators. -/
-structure ConcreteFactorizationAlignmentCertificate where
+structure ConcreteFactorizationAlignmentSystem where
   base : ∀ k i, (∀ j : Fin 189, ¬ j.val < i.val) →
     flagRepresentative i =
       collect (leftFactorWord k i) *
@@ -70,9 +70,9 @@ structure ConcreteFactorizationAlignmentCertificate where
     i ∈ orbitCells k → j ∈ orbitCells k →
     residualWord k i = residualWord k j → i = j
 
-noncomputable def ConcreteFactorizationAlignmentCertificate.toGeneric
-    (C : ConcreteFactorizationAlignmentCertificate) :
-    FactorizationAlignmentCertificate where
+noncomputable def ConcreteFactorizationAlignmentSystem.toGeneric
+    (C : ConcreteFactorizationAlignmentSystem) :
+    FactorizationAlignmentSystem where
   base := C.base
   step k i hi := (C.step k i hi).toGeneric
   separation := C.separation
@@ -80,7 +80,7 @@ noncomputable def ConcreteFactorizationAlignmentCertificate.toGeneric
   residual_injective := C.residual_injective
 
 theorem generic_factorization
-    (C : FactorizationAlignmentCertificate) :
+    (C : FactorizationAlignmentSystem) :
     ∀ k i, flagRepresentative i =
       collect (leftFactorWord k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
@@ -88,7 +88,7 @@ theorem generic_factorization
   flagRepresentative_factorization_of_predecessor_certificate C.base C.step
 
 theorem concrete_factorization
-    (C : ConcreteFactorizationAlignmentCertificate) :
+    (C : ConcreteFactorizationAlignmentSystem) :
     ∀ k i, flagRepresentative i =
       collect (leftFactorWord k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
@@ -96,7 +96,7 @@ theorem concrete_factorization
   generic_factorization C.toGeneric
 
 theorem generic_alignment
-    (C : FactorizationAlignmentCertificate) :
+    (C : FactorizationAlignmentSystem) :
     ∀ i j, quotientRepresentative i = quotientRepresentative j →
       ∃ k : Fin 12, i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
         residualWord k i = residualWord k j :=
@@ -104,20 +104,20 @@ theorem generic_alignment
     C.separation C.residual_alignment
 
 theorem concrete_alignment
-    (C : ConcreteFactorizationAlignmentCertificate) :
+    (C : ConcreteFactorizationAlignmentSystem) :
     ∀ i j, quotientRepresentative i = quotientRepresentative j →
       ∃ k : Fin 12, i ∈ orbitCells k ∧ j ∈ orbitCells k ∧
         residualWord k i = residualWord k j :=
   generic_alignment C.toGeneric
 
 theorem concrete_quotientRepresentative_injective
-    (C : ConcreteFactorizationAlignmentCertificate) :
+    (C : ConcreteFactorizationAlignmentSystem) :
     Function.Injective quotientRepresentative := by
   exact quotientRepresentative_injective_of_residual_alignment
     C.residual_injective (concrete_alignment C)
 
 noncomputable def concrete_quotientRepresentativeEquiv
-    (C : ConcreteFactorizationAlignmentCertificate)
+    (C : ConcreteFactorizationAlignmentSystem)
     (hsurj : Function.Surjective quotientRepresentative) :
     Fin 189 ≃
       InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative.CarrierQuotient :=
@@ -125,7 +125,7 @@ noncomputable def concrete_quotientRepresentativeEquiv
     C.residual_injective (concrete_alignment C) hsurj
 
 theorem concrete_factorization_alignment
-    (C : ConcreteFactorizationAlignmentCertificate)
+    (C : ConcreteFactorizationAlignmentSystem)
     (hsurj : Function.Surjective quotientRepresentative) :
     (∀ k i, flagRepresentative i =
       collect (leftFactorWord k i) *
@@ -142,13 +142,13 @@ theorem concrete_factorization_alignment
     ⟨concrete_quotientRepresentativeEquiv C hsurj⟩⟩
 
 theorem quotientRepresentative_injective
-    (C : FactorizationAlignmentCertificate) :
+    (C : FactorizationAlignmentSystem) :
     Function.Injective quotientRepresentative := by
   exact quotientRepresentative_injective_of_residual_alignment
     C.residual_injective (generic_alignment C)
 
 noncomputable def quotientRepresentativeEquiv
-    (C : FactorizationAlignmentCertificate)
+    (C : FactorizationAlignmentSystem)
     (hsurj : Function.Surjective quotientRepresentative) :
     Fin 189 ≃
       InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative.CarrierQuotient :=

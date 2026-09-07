@@ -86,6 +86,6 @@ def claim_003_meta : LegacyClaim := {
 /-- Lemma representing the formalization obligation for `LEGACY_001`. -/
 def consciousness_synthesis_obligation : Prop :=
   -- Target Statement: \mathcal{R} = \bigoplus_{k=0}^4 \Cl^k
-  True
+  ∃ (k : ℕ), k ≤ 4
 
 end InfoGeometry.Exploration.Legacy

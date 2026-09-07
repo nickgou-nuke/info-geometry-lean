@@ -265,7 +265,9 @@ theorem deltaAEM_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
   simp only [coefficientBracket]
   noncomm_ring
 
-theorem deltaW_pure_triplet_gauge (p : Fin 4 → A) (Phi : FourPotential A)
+/-- Full gauge variation of the W-triplet under a pure triplet gauge parameter
+without assuming the scalar blocks of the background four-potential vanish. -/
+theorem deltaW_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
     (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3)
     (hnp : Lambda.n_plus = 0) (hnm : Lambda.n_minus = 0) :
     deltaW p Phi Lambda mu i =
@@ -280,20 +282,6 @@ theorem deltaW_pure_triplet_gauge (p : Fin 4 → A) (Phi : FourPotential A)
        NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
   rw [deltaW_apply]
   rw [hnp, hnm]
-  noncomm_ring
-
-theorem deltaW_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3)
-    (hnp : Lambda.n_plus = 0) (hnm : Lambda.n_minus = 0)
-    (hpnp : (Phi mu).n_plus = 0) (hpnm : (Phi mu).n_minus = 0) :
-    deltaW p Phi Lambda mu i =
-      coefficientBracket (p mu) (wTriplet Lambda i) -
-      (NCZornElement.zornCross (Phi mu).sigma_minus Lambda.sigma_minus i -
-       NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) +
-      (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
-       NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
-  rw [deltaW_pure_triplet_gauge _ _ _ _ _ hnp hnm]
-  rw [hpnp, hpnm]
   noncomm_ring
 
 end InfoGeometry.Canonical.OperatorZornChiralProjection

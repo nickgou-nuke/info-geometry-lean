@@ -38,17 +38,22 @@ theorem actionSoldering_injective : Function.Injective actionSoldering := by
   intro x
   apply h3ZornCoordinateBasis.repr.injective
   ext c
-  have hx := h3ZornCoordinateBasis.sum_repr x
-  rw [← hx]
-  simp only [map_sum, map_smul, Finsupp.sum_apply_index]
   have hs : ∀ r : Fin 27,
       (h3ZornCoordinateBasis.repr (D (h3ZornCoordinateBasis r))) c =
       (h3ZornCoordinateBasis.repr (E (h3ZornCoordinateBasis r))) c := by
     intro r
     let k : Fin 729 := ⟨27 * r.val + c.val, by omega⟩
+    have hr : (⟨k.val / 27, by omega⟩ : Fin 27) = r := Fin.ext (by dsimp [k]; omega)
+    have hc : (⟨k.val % 27, by omega⟩ : Fin 27) = c := Fin.ext (by dsimp [k]; omega)
     have hk := congrFun h k
-    simpa [actionSoldering, k] using hk
-  simp_rw [map_sum, map_smul, Finsupp.sum_apply_index]
+    dsimp [actionSoldering] at hk
+    rw [hr, hc] at hk
+    exact hk
+  have hx := h3ZornCoordinateBasis.sum_repr x
+  conv_lhs => rw [← hx]
+  conv_rhs => rw [← hx]
+  simp only [map_sum, map_smul]
+  simp only [Finsupp.coe_finset_sum, Finset.sum_apply, Finsupp.coe_smul, Pi.smul_apply]
   apply Finset.sum_congr rfl
   intro r hr
   rw [hs r]
@@ -58,13 +63,8 @@ theorem actionSoldering_f4Basis (i : Fin 52) :
   ext k
   let r : Fin 27 := ⟨k.val / 27, by omega⟩
   let c : Fin 27 := ⟨k.val % 27, by omega⟩
-  have hk : k.val = 27 * r.val + c.val := by
-    dsimp [r, c]
-    omega
-  have hkfin : k = ⟨27 * r.val + c.val, by omega⟩ := by
-    apply Fin.ext
-    exact hk
-  rw [hkfin]
+  have hkfin : k = ⟨27 * r.val + c.val, by omega⟩ := Fin.ext (by dsimp [r, c]; omega)
+  conv_rhs => rw [hkfin]
   rw [f4BasisActionMatrix_flatten, f4BasisActionMatrix_readback]
   rfl
 

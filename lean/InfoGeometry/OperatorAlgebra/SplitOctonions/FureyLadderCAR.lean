@@ -249,6 +249,49 @@ def down : Fin 3 → ZornMatrix ℚ
   | ⟨1, _⟩ => { a := 0, b := 0, x := ![0, 0, 0], y := ![0, 1, 0] }
   | ⟨2, _⟩ => { a := 0, b := 0, x := ![0, 0, 0], y := ![0, 0, 1] }
 
+theorem up_one_mul_down_one : up 1 * down 1 = ePlus := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, ePlus, mul, dot, cross]
+  · simp [up, down, ePlus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, ePlus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, ePlus, mul, dot, cross]
+
+theorem up_two_mul_down_two : up 2 * down 2 = ePlus := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, ePlus, mul, dot, cross]
+  · simp [up, down, ePlus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, ePlus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, ePlus, mul, dot, cross]
+
+theorem up_one_mul_down_two : up 1 * down 2 = zeroZ := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, zeroZ, mul, dot, cross]
+  · simp [up, down, zeroZ, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, zeroZ, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, zeroZ, mul, dot, cross]
+
+theorem down_one_mul_up_two : down 1 * up 2 = zeroZ := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, zeroZ, mul, dot, cross]
+  · simp [up, down, zeroZ, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, zeroZ, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, zeroZ, mul, dot, cross]
+
+theorem down_two_mul_up_two : down 2 * up 2 = eMinus := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, eMinus, mul, dot, cross]
+  · simp [up, down, eMinus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, eMinus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, eMinus, mul, dot, cross]
+
+theorem down_one_mul_up_one : down 1 * up 1 = eMinus := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [up, down, eMinus, mul, dot, cross]
+  · simp [up, down, eMinus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, eMinus, mul, dot, cross]
+  · ext i; fin_cases i <;> simp [up, down, eMinus, mul, dot, cross]
+
+
 def J_color (i : Fin 3) : ZornMatrix ℚ := up i - down i
 
 /-- Furey ladder operators for each color -/

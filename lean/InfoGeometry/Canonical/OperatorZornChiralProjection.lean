@@ -13,56 +13,44 @@ open InfoGeometry.Canonical.OperatorZornFourPotentialGauge
 
 variable {A : Type*} [Ring A]
 
-abbrev Z := OperatorZornMatrix A
+def projNPlus (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+  operatorZornCoordinates X.n_plus (0 : A) (fun _ : Fin 3 => (0 : A)) (fun _ : Fin 3 => (0 : A))
 
-def projNPlus (X : Z) : Z :=
-  operatorZornCoordinates X.n_plus 0 (fun _ => 0) (fun _ => 0)
+def projNMinus (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+  operatorZornCoordinates (0 : A) X.n_minus (fun _ : Fin 3 => (0 : A)) (fun _ : Fin 3 => (0 : A))
 
-def projNMinus (X : Z) : Z :=
-  operatorZornCoordinates 0 X.n_minus (fun _ => 0) (fun _ => 0)
+def projSigmaPlus (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+  operatorZornCoordinates (0 : A) (0 : A) X.sigma_plus (fun _ : Fin 3 => (0 : A))
 
-def projSigmaPlus (X : Z) : Z :=
-  operatorZornCoordinates 0 0 X.sigma_plus (fun _ => 0)
+def projSigmaMinus (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
+  operatorZornCoordinates (0 : A) (0 : A) (fun _ : Fin 3 => (0 : A)) X.sigma_minus
 
-def projSigmaMinus (X : Z) : Z :=
-  operatorZornCoordinates 0 0 (fun _ => 0) X.sigma_minus
-
-theorem proj_completeness (X : Z) :
+theorem proj_completeness (X : OperatorZornMatrix A) :
     projNPlus X + projNMinus X + projSigmaPlus X + projSigmaMinus X = X := by
   apply operatorZornMatrix_ext
-  · dsimp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
-    simp only [zornAdd_nPlus, operatorZornCoordinates_n_plus]
-    noncomm_ring
-  · dsimp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
-    simp only [zornAdd_nMinus, operatorZornCoordinates_n_minus]
-    noncomm_ring
+  · simp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
+  · simp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
   · funext i
-    dsimp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
-    simp only [zornAdd_sigmaPlus_apply,
-      operatorZornCoordinates_sigma_plus_apply]
-    noncomm_ring
+    simp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
   · funext i
-    dsimp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
-    simp only [zornAdd_sigmaMinus_apply,
-      operatorZornCoordinates_sigma_minus_apply]
-    noncomm_ring
+    simp [projNPlus, projNMinus, projSigmaPlus, projSigmaMinus]
 
-theorem projNPlus_idempotent (X : Z) :
+theorem projNPlus_idempotent (X : OperatorZornMatrix A) :
     projNPlus (projNPlus X) = projNPlus X := by
   apply operatorZornMatrix_ext <;> (try funext i) <;>
     simp [projNPlus]
 
-theorem projNMinus_idempotent (X : Z) :
+theorem projNMinus_idempotent (X : OperatorZornMatrix A) :
     projNMinus (projNMinus X) = projNMinus X := by
   apply operatorZornMatrix_ext <;> (try funext i) <;>
     simp [projNMinus]
 
-theorem projSigmaPlus_idempotent (X : Z) :
+theorem projSigmaPlus_idempotent (X : OperatorZornMatrix A) :
     projSigmaPlus (projSigmaPlus X) = projSigmaPlus X := by
   apply operatorZornMatrix_ext <;> (try funext i) <;>
     simp [projSigmaPlus]
 
-theorem projSigmaMinus_idempotent (X : Z) :
+theorem projSigmaMinus_idempotent (X : OperatorZornMatrix A) :
     projSigmaMinus (projSigmaMinus X) = projSigmaMinus X := by
   apply operatorZornMatrix_ext <;> (try funext i) <;>
     simp [projSigmaMinus]
@@ -111,46 +99,46 @@ theorem fieldStrength_nMinus (p : Fin 4 → A) (Phi : FourPotential A)
     coefficientDeriv_nMinus, coefficientBracket]
   noncomm_ring
 
-def lambdaEM (Lambda : Z) : A := Lambda.n_plus + Lambda.n_minus
+def lambdaEM (Lambda : OperatorZornMatrix A) : A := Lambda.n_plus + Lambda.n_minus
 
-def lambdaAxial (Lambda : Z) : A := Lambda.n_plus - Lambda.n_minus
+def lambdaAxial (Lambda : OperatorZornMatrix A) : A := Lambda.n_plus - Lambda.n_minus
 
-def wTriplet (Lambda : Z) : Fin 3 → A :=
+def wTriplet (Lambda : OperatorZornMatrix A) : Fin 3 → A :=
   fun i => Lambda.sigma_plus i + Lambda.sigma_minus i
 
-def bTriplet (Lambda : Z) : Fin 3 → A :=
+def bTriplet (Lambda : OperatorZornMatrix A) : Fin 3 → A :=
   fun i => Lambda.sigma_plus i - Lambda.sigma_minus i
 
 def deltaPhi (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) : Z :=
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) : OperatorZornMatrix A :=
   gaugeVariation p Phi Lambda mu
 
 theorem deltaPhi_nPlus (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) :
     (deltaPhi p Phi Lambda mu).n_plus =
       coefficientBracket (p mu) Lambda.n_plus +
       coefficientBracket (Phi mu).n_plus Lambda.n_plus +
       (NCZornElement.zornDot (Phi mu).sigma_plus Lambda.sigma_minus -
        NCZornElement.zornDot Lambda.sigma_plus (Phi mu).sigma_minus) := by
   dsimp [deltaPhi, gaugeVariation, adjointCovariant, bracket]
-  simp only [zornAdd_nPlus, zornMul_nPlus, coefficientDeriv_nPlus,
+  simp only [zornAdd_nPlus, zornSub_nPlus, zornMul_nPlus, coefficientDeriv_nPlus,
     coefficientBracket]
   noncomm_ring
 
 theorem deltaPhi_nMinus (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) :
     (deltaPhi p Phi Lambda mu).n_minus =
       coefficientBracket (p mu) Lambda.n_minus +
       coefficientBracket (Phi mu).n_minus Lambda.n_minus +
       (NCZornElement.zornDot (Phi mu).sigma_minus Lambda.sigma_plus -
        NCZornElement.zornDot Lambda.sigma_minus (Phi mu).sigma_plus) := by
   dsimp [deltaPhi, gaugeVariation, adjointCovariant, bracket]
-  simp only [zornAdd_nMinus, zornMul_nMinus, coefficientDeriv_nMinus,
+  simp only [zornAdd_nMinus, zornSub_nMinus, zornMul_nMinus, coefficientDeriv_nMinus,
     coefficientBracket]
   noncomm_ring
 
 theorem deltaPhi_sigmaPlus_apply (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) (i : Fin 3) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3) :
     (deltaPhi p Phi Lambda mu).sigma_plus i =
       coefficientBracket (p mu) (Lambda.sigma_plus i) +
       ((Phi mu).n_plus * Lambda.sigma_plus i +
@@ -160,12 +148,12 @@ theorem deltaPhi_sigmaPlus_apply (p : Fin 4 → A) (Phi : FourPotential A)
       (NCZornElement.zornCross (Phi mu).sigma_minus Lambda.sigma_minus i -
        NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) := by
   dsimp [deltaPhi, gaugeVariation, adjointCovariant, bracket]
-  simp only [zornAdd_sigmaPlus_apply, zornMul_sigmaPlus_apply,
+  simp only [zornAdd_sigmaPlus_apply, zornSub_sigmaPlus_apply, zornMul_sigmaPlus_apply,
     coefficientDeriv_sigmaPlus_apply, coefficientBracket]
   noncomm_ring
 
 theorem deltaPhi_sigmaMinus_apply (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) (i : Fin 3) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3) :
     (deltaPhi p Phi Lambda mu).sigma_minus i =
       coefficientBracket (p mu) (Lambda.sigma_minus i) +
       ((Phi mu).n_minus * Lambda.sigma_minus i +
@@ -175,16 +163,16 @@ theorem deltaPhi_sigmaMinus_apply (p : Fin 4 → A) (Phi : FourPotential A)
       (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
        NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
   dsimp [deltaPhi, gaugeVariation, adjointCovariant, bracket]
-  simp only [zornAdd_sigmaMinus_apply, zornMul_sigmaMinus_apply,
+  simp only [zornAdd_sigmaMinus_apply, zornSub_sigmaMinus_apply, zornMul_sigmaMinus_apply,
     coefficientDeriv_sigmaMinus_apply, coefficientBracket]
   noncomm_ring
 
 def deltaAEM (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) : A :=
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) : A :=
   (deltaPhi p Phi Lambda mu).n_plus + (deltaPhi p Phi Lambda mu).n_minus
 
 theorem deltaAEM_eq (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) :
     deltaAEM p Phi Lambda mu =
       coefficientBracket (p mu) (lambdaEM Lambda) +
       coefficientBracket (Phi mu).n_plus Lambda.n_plus +
@@ -199,17 +187,17 @@ theorem deltaAEM_eq (p : Fin 4 → A) (Phi : FourPotential A)
   noncomm_ring
 
 def deltaW (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) : Fin 3 → A :=
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) : Fin 3 → A :=
   fun i => (deltaPhi p Phi Lambda mu).sigma_plus i +
     (deltaPhi p Phi Lambda mu).sigma_minus i
 
 def deltaB (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) : Fin 3 → A :=
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) : Fin 3 → A :=
   fun i => (deltaPhi p Phi Lambda mu).sigma_plus i -
     (deltaPhi p Phi Lambda mu).sigma_minus i
 
 theorem deltaW_apply (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) (i : Fin 3) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3) :
     deltaW p Phi Lambda mu i =
       coefficientBracket (p mu) (wTriplet Lambda i) +
       ((Phi mu).n_plus * Lambda.sigma_plus i +
@@ -224,16 +212,13 @@ theorem deltaW_apply (p : Fin 4 → A) (Phi : FourPotential A)
        NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) +
       (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
        NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
-  dsimp [deltaW, deltaPhi, gaugeVariation, adjointCovariant, bracket,
-    wTriplet]
-  simp only [zornAdd_sigmaPlus_apply, zornAdd_sigmaMinus_apply,
-    zornMul_sigmaPlus_apply, zornMul_sigmaMinus_apply,
-    coefficientDeriv_sigmaPlus_apply, coefficientDeriv_sigmaMinus_apply,
-    coefficientBracket]
+  dsimp [deltaW, wTriplet]
+  rw [deltaPhi_sigmaPlus_apply, deltaPhi_sigmaMinus_apply]
+  simp only [coefficientBracket]
   noncomm_ring
 
 theorem deltaB_apply (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) (i : Fin 3) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3) :
     deltaB p Phi Lambda mu i =
       coefficientBracket (p mu) (bTriplet Lambda i) +
       ((Phi mu).n_plus * Lambda.sigma_plus i +
@@ -248,29 +233,26 @@ theorem deltaB_apply (p : Fin 4 → A) (Phi : FourPotential A)
        NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) -
       (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
        NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
-  dsimp [deltaB, deltaPhi, gaugeVariation, adjointCovariant, bracket,
-    bTriplet]
-  simp only [zornSub_sigmaPlus_apply, zornSub_sigmaMinus_apply,
-    zornMul_sigmaPlus_apply, zornMul_sigmaMinus_apply,
-    coefficientDeriv_sigmaPlus_apply, coefficientDeriv_sigmaMinus_apply,
-    coefficientBracket]
+  dsimp [deltaB, bTriplet]
+  rw [deltaPhi_sigmaPlus_apply, deltaPhi_sigmaMinus_apply]
+  simp only [coefficientBracket]
   noncomm_ring
 
 theorem deltaAEM_pure_scalar (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4)
-    (hsp : Lambda.sigma_plus = fun _ => 0)
-    (hsm : Lambda.sigma_minus = fun _ => 0) :
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4)
+    (hsp : Lambda.sigma_plus = fun _ => (0 : A))
+    (hsm : Lambda.sigma_minus = fun _ => (0 : A)) :
     deltaAEM p Phi Lambda mu =
       coefficientBracket (p mu) (lambdaEM Lambda) +
       coefficientBracket (Phi mu).n_plus Lambda.n_plus +
       coefficientBracket (Phi mu).n_minus Lambda.n_minus := by
   rw [deltaAEM_eq]
   rw [hsp, hsm]
-  simp only [NCZornElement.zornDot]
+  dsimp [NCZornElement.zornDot]
   noncomm_ring
 
 theorem deltaAEM_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4)
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4)
     (hnp : Lambda.n_plus = 0) (hnm : Lambda.n_minus = 0) :
     deltaAEM p Phi Lambda mu =
       (NCZornElement.zornDot (Phi mu).sigma_plus Lambda.sigma_minus -
@@ -283,17 +265,35 @@ theorem deltaAEM_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
   simp only [coefficientBracket]
   noncomm_ring
 
-theorem deltaW_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
-    (Lambda : Z) (mu : Fin 4) (i : Fin 3)
+theorem deltaW_pure_triplet_gauge (p : Fin 4 → A) (Phi : FourPotential A)
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3)
     (hnp : Lambda.n_plus = 0) (hnm : Lambda.n_minus = 0) :
     deltaW p Phi Lambda mu i =
-      coefficientBracket (p mu) (wTriplet Lambda i) -
+      coefficientBracket (p mu) (wTriplet Lambda i) +
+      ((Phi mu).n_plus * Lambda.sigma_plus i -
+       Lambda.sigma_plus i * (Phi mu).n_minus) +
+      ((Phi mu).n_minus * Lambda.sigma_minus i -
+       Lambda.sigma_minus i * (Phi mu).n_plus) -
       (NCZornElement.zornCross (Phi mu).sigma_minus Lambda.sigma_minus i -
        NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) +
       (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
        NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
   rw [deltaW_apply]
   rw [hnp, hnm]
+  noncomm_ring
+
+theorem deltaW_pure_triplet (p : Fin 4 → A) (Phi : FourPotential A)
+    (Lambda : OperatorZornMatrix A) (mu : Fin 4) (i : Fin 3)
+    (hnp : Lambda.n_plus = 0) (hnm : Lambda.n_minus = 0)
+    (hpnp : (Phi mu).n_plus = 0) (hpnm : (Phi mu).n_minus = 0) :
+    deltaW p Phi Lambda mu i =
+      coefficientBracket (p mu) (wTriplet Lambda i) -
+      (NCZornElement.zornCross (Phi mu).sigma_minus Lambda.sigma_minus i -
+       NCZornElement.zornCross Lambda.sigma_minus (Phi mu).sigma_minus i) +
+      (NCZornElement.zornCross (Phi mu).sigma_plus Lambda.sigma_plus i -
+       NCZornElement.zornCross Lambda.sigma_plus (Phi mu).sigma_plus i) := by
+  rw [deltaW_pure_triplet_gauge _ _ _ _ _ hnp hnm]
+  rw [hpnp, hpnm]
   noncomm_ring
 
 end InfoGeometry.Canonical.OperatorZornChiralProjection

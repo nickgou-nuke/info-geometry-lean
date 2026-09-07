@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
+import InfoGeometry.Probability.FiniteGibbsVariational
 
 /-!
 # Finite Gibbs relative thermodynamics
@@ -57,9 +58,10 @@ noncomputable def fisherMetric
 /-- Pointwise log-density difference for two finite Cartan Gibbs states. -/
 theorem logDensity_sub_logDensity
     (θ η : FiniteTemperature ι) (i : ι) :
-    logDensity θ i - logDensity η i =
+    InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i =
       (θ i - η i) + (massieuPotential η - massieuPotential θ) := by
-  unfold logDensity massieuPotential
+  unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity massieuPotential
   ring
 
 /--
@@ -84,6 +86,81 @@ theorem relativeEntropy_self
     [Nonempty ι] (θ : FiniteTemperature ι) (hZ : 0 < Z θ) :
     relativeEntropy θ θ = 0 := by
   rw [relativeEntropy_eq_massieuBregman θ θ hZ, massieuBregman_self]
+
+lemma log_prob_eq_logDensity [Nonempty ι] (θ : FiniteTemperature ι) (hZ : 0 < Z θ) (i : ι) :
+    Real.log (prob θ i) = InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
+  unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity Phi
+  rw [Real.log_div (ne_of_gt (Real.exp_pos (θ i))) (ne_of_gt hZ)]
+  rw [Real.log_exp]
+
+/-- The Cartan relative entropy matches the native finite Gibbs relative entropy of the normalized state. -/
+theorem relativeEntropy_eq_normalizedFiniteRelativeEntropy
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    relativeEntropy θ η =
+      InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy (prob θ) (prob η) := by
+  unfold relativeEntropy kl expect InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy
+  apply Finset.sum_congr rfl
+  intro i _hi
+  have hpθ : 0 < prob θ i := prob_pos θ hZθ i
+  have hpη : 0 < prob η i := prob_pos η hZη i
+  rw [Real.log_div (ne_of_gt hpθ) (ne_of_gt hpη)]
+  rw [log_prob_eq_logDensity θ hZθ i]
+  rw [log_prob_eq_logDensity η hZη i]
+
+/-- Nonnegativity of the finite Cartan relative entropy. -/
+theorem relativeEntropy_nonneg
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    0 ≤ relativeEntropy θ η := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hZθ hZη]
+  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_nonneg (prob θ) (prob η)
+    (fun i => prob_pos θ hZθ i)
+    (fun i => prob_pos η hZη i)
+    (prob_sum_one θ hZθ)
+    (prob_sum_one η hZη)
+
+/-- Equality of finite Gibbs states is precisely a common shift along the central Cartan gauge direction. -/
+theorem relativeEntropy_eq_zero_iff_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    relativeEntropy θ η = 0 ↔ ∃ c : ℝ, ∀ i : ι, η i = θ i + c := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hZθ hZη]
+  have hpos_θ : ∀ i, 0 < prob θ i := fun i => prob_pos θ hZθ i
+  have hpos_η : ∀ i, 0 < prob η i := fun i => prob_pos η hZη i
+  have hsum_θ : ∑ i, prob θ i = 1 := prob_sum_one θ hZθ
+  have hsum_η : ∑ i, prob η i = 1 := prob_sum_one η hZη
+  rw [InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_eq_zero_iff
+    (prob θ) (prob η) hpos_θ hpos_η hsum_θ hsum_η]
+  constructor
+  · intro hprob
+    use Phi η - Phi θ
+    intro i
+    have hpi : prob θ i = prob η i := congrFun hprob i
+    have hlog := congrArg Real.log hpi
+    rw [log_prob_eq_logDensity θ hZθ i, log_prob_eq_logDensity η hZη i] at hlog
+    unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity at hlog
+    linarith
+  · rintro ⟨c, hc⟩
+    ext i
+    unfold prob Z
+    have h_exp : ∀ j : ι, Real.exp (η j) = Real.exp (θ j) * Real.exp c := by
+      intro j
+      rw [hc j, Real.exp_add]
+    have h_sum : (∑ j, Real.exp (η j)) = (∑ j, Real.exp (θ j)) * Real.exp c := by
+      simp_rw [h_exp]
+      rw [← Finset.sum_mul]
+    rw [h_exp i, h_sum]
+    have hec : Real.exp c ≠ 0 := ne_of_gt (Real.exp_pos c)
+    rw [mul_div_mul_right _ _ hec]
+
+/-- Strict positivity of the finite Cartan relative entropy away from the central gauge shift. -/
+theorem relativeEntropy_pos_of_not_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η)
+    (hnot : ¬ ∃ c : ℝ, ∀ i : ι, η i = θ i + c) :
+    0 < relativeEntropy θ η := by
+  have hnonneg := relativeEntropy_nonneg θ η hZθ hZη
+  have hne : relativeEntropy θ η ≠ 0 := by
+    intro hz
+    exact hnot ((relativeEntropy_eq_zero_iff_common_shift θ η hZθ hZη).mp hz)
+  exact lt_of_le_of_ne hnonneg (Ne.symm hne)
 
 /-- The Fisher metric is the usual covariance formula. -/
 theorem fisherMetric_eq_covariance

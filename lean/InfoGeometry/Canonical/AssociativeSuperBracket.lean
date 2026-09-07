@@ -74,4 +74,20 @@ noncomputable abbrev anticommutator (a b : A) : A :=
     superBracket SuperParity.odd SuperParity.odd a b = a * b + b * a := by
   simp [superBracket, paritySign, sub_eq_add_neg]
 
+/-- Addition in ℤ/2 for parity tags. -/
+def parityAdd : SuperParity → SuperParity → SuperParity
+  | .even, p => p
+  | .odd, .even => .odd
+  | .odd, .odd => .even
+
+@[rep_depth krein] theorem superBracket_graded_jacobi
+    (p q r : SuperParity) (x y z : A) :
+    paritySign p r • superBracket p (parityAdd q r) x (superBracket q r y z) +
+      paritySign q p • superBracket q (parityAdd r p) y (superBracket r p z x) +
+      paritySign r q • superBracket r (parityAdd p q) z (superBracket p q x y) = 0 := by
+  cases p <;> cases q <;> cases r <;>
+    simp only [parityAdd, paritySign, superBracket, sub_eq_add_neg,
+      one_smul, neg_smul, mul_add, add_mul, neg_add_rev] <;>
+    noncomm_ring
+
 end InfoGeometry.Canonical.AssociativeSuperBracket

@@ -117,13 +117,13 @@ Integrates into a single, fully kernel-verified mathematical theorem:
 theorem grand_rigorous_bost_connes_kms_master_synthesis
     (P : Finset ι) (w : ι → ℝ) (hw : ∀ p ∈ P, w p < 1)
     (β : ℝ) (hβ : 1 < β) (s : ℂ) (hs : 1 < s.re)
-    {Op : Type*} [Semiring Op] [StarRing Op] (C : CuntzMultiplicativeIndexing Op) :
+    {Op : Type*} [Ring Op] [StarRing Op] (C : CuntzMultiplicativeIndexing Op) :
     (finiteFredholmDet P w * finiteZetaStage P w = 1) ∧
     (Summable (fun (n : ℕ) => (n : ℝ) ^ (-β))) ∧
     ((∑' (n : ℕ), ((n : ℝ) ^ (-β) / ∑' (k : ℕ), (k : ℝ) ^ (-β))) = 1) ∧
     (infiniteInverseZeta β = (riemannZeta (β : ℂ))⁻¹) ∧
     (Summable (fun (n : ℕ) => (n : ℝ) ^ (-s.re))) ∧
-    (CuntzMultiplicativeIndexing.generator C 1 = 1) ∧
+    (CuntzMultiplicativeIndexing.generator C (1 : ℕ+) = 1) ∧
     (F * F = 1) ∧
     (F * B * F = R) :=
   ⟨finite_fredholm_zeta_duality P w hw,

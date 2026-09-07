@@ -61,7 +61,6 @@ def MertensSquareRootCancellation : Prop :=
 An OPEN exact-equivalence edge connecting the Mertens cancellation explicitly to the RH property.
 Any actual resolution of this node would constitute a proof of RH.
 -/
-@[edge_kind conjectural_bridge]
 structure MertensRHEquivalenceBridge where
   /-- The forward implication: Mertens cancellation implies the Fredholm/RH nonvanishing claim. -/
   impliesRH : MertensSquareRootCancellation →
@@ -80,7 +79,6 @@ A structural edge (`Distance 2`) linking the discrete prime bit lattice states
 (the graded Primon partition) directly to the Möbius coefficients.
 Evaluating the fermionic partition with graded signs exactly yields the `μ` values.
 -/
-@[edge_kind representation]
 structure PrimonMobiusBridge (L : PrimeBitLattice) where
   /-- Every finite prime bit state's product is squarefree. -/
   state_squarefree : ∀ ε : PrimeBitState L, Squarefree (primeBitInteger L ε)
@@ -103,7 +101,6 @@ theorem primeBitLattice_primonMobiusBridge (L : PrimeBitLattice) :
 The combined typed DAG pathway connecting the discrete prime representations
 all the way to the Riemann Hypothesis equivalence.
 -/
-@[edge_kind equivalence]
 structure PrimonMertensRHTopologicalPath (L : PrimeBitLattice) where
   /-- Distance 2 Edge: Graded Primon to Möbius -/
   primonToMobius : PrimonMobiusBridge L

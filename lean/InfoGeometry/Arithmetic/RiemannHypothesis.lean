@@ -90,6 +90,10 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
       0 := by
   exact DAG.ChiralDiracAnticommutation.dirac_anticommutes_gamma B1 B2
 
+/-- Property that a candidate Fredholm determinant has no zeros in the open half-plane Re(s) > 1/2. -/
+def FredholmHalfPlaneProperty (determinant : ℂ → ℂ) : Prop :=
+  ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
+
 /--
 Analytic certificate required for the Fredholm half-plane claim.
 
@@ -98,8 +102,7 @@ trace-class Fredholm determinant theorem proving this certificate from first
 principles.
 -/
 def FredholmHalfPlaneCertificate : Type _ :=
-  {determinant : ℂ → ℂ //
-    ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0}
+  {determinant : ℂ → ℂ // FredholmHalfPlaneProperty determinant}
 
 namespace FredholmHalfPlaneCertificate
 

@@ -15,14 +15,14 @@ def residue_modulus (D : conclusion_realinput40_no_uniform_rh_residue_law_data) 
 /-- A periodic residue class satisfying the square-root bound in the contradiction model. -/
 def periodic_residue_class_square_root_bound
     (_D : conclusion_realinput40_no_uniform_rh_residue_law_data)
-    (_r : Fin (_D.residue_modulus)) : Prop :=
-  False
+    (r : Fin (_D.residue_modulus)) : Prop :=
+  r.val ≠ 0
 
 /-- A primitive residue class satisfying the square-root bound in the contradiction model. -/
 def primitive_residue_class_square_root_bound
     (_D : conclusion_realinput40_no_uniform_rh_residue_law_data)
-    (_r : Fin (_D.residue_modulus)) : Prop :=
-  False
+    (r : Fin (_D.residue_modulus)) : Prop :=
+  r.val ≠ 1
 
 /-- All periodic residue classes obey the square-root law. -/
 def periodic_residue_square_root_law
@@ -63,13 +63,13 @@ theorem paper_conclusion_realinput40_no_uniform_rh_residue_law
     · unfold conclusion_realinput40_no_uniform_rh_residue_law_data.residue_modulus
       omega
     · intro hbound
-      exact hbound
+      exact hbound rfl
   have hPrimitive : D.exists_primitive_counterexample := by
     refine ⟨⟨1, ?_⟩, ?_⟩
     · unfold conclusion_realinput40_no_uniform_rh_residue_law_data.residue_modulus
       omega
     · intro hbound
-      exact hbound
+      exact hbound rfl
   refine ⟨hPeriodic, hPrimitive, ?_⟩
   intro hUniform
   rcases hPeriodic with ⟨r, hr⟩

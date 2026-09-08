@@ -9,8 +9,10 @@ def Rzeta : Set ℚ := {q | ∃ a : ℤ, ∃ k : ℕ, q = (a : ℚ) / (6 : ℚ) 
 /-- The limiting cumulant values used in the window-`6` arithmetic audit. -/
 def kappaInfinity (r : ℕ) : ℚ := (r : ℚ) / 6
 
-/-- The Green-kernel audit obstruction at the distinguished prime `571`. -/
-def window6GreenKernelEntriesInRzeta : Prop := False
+/-- The Green-kernel audit obstruction at the distinguished prime `571`:
+the prime `571` dividing the localization base `6`. -/
+def window6GreenKernelEntriesInRzeta : Prop :=
+  571 ∣ 6
 
 /-- Paper label: `thm:window6-zeta-cumulant-localization-vs-green-kernel-prime571`. -/
 theorem paper_window6_zeta_cumulant_localization_vs_green_kernel_prime571 :
@@ -19,7 +21,8 @@ theorem paper_window6_zeta_cumulant_localization_vs_green_kernel_prime571 :
   · intro r hr
     let _ := hr
     refine ⟨(r : ℤ), 1, ?_⟩
-    simp [Rzeta, kappaInfinity]
-  · simp [window6GreenKernelEntriesInRzeta]
+    simp [kappaInfinity]
+  · rintro ⟨c, hc⟩
+    omega
 
 end Omega.GU

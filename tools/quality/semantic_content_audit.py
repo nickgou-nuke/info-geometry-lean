@@ -213,7 +213,7 @@ def all_lean_files(
                     "--others",
                     "--exclude-standard",
                     "--",
-                    "*.lean",
+                    "lean/*.lean",
                 ],
                 cwd=ROOT,
                 check=True,

@@ -94,7 +94,7 @@ def tracked_lean_files() -> list[Path]:
     import subprocess
 
     result = subprocess.run(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean/*.lean"],
         check=True,
         capture_output=True,
         text=True,

@@ -30,7 +30,7 @@ def lean_source_files(include_ignored: bool) -> list[Path]:
 
     try:
         result = subprocess.run(
-            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean/*.lean"],
             cwd=REPO_ROOT,
             check=True,
             capture_output=True,
@@ -42,7 +42,7 @@ def lean_source_files(include_ignored: bool) -> list[Path]:
     paths = []
     for raw_path in result.stdout.splitlines():
         path = REPO_ROOT / raw_path
-        if path.is_file() and path.is_relative_to(LEAN_DIR):
+        if path.is_relative_to(LEAN_DIR) and path.is_file():
             paths.append(path)
     return sorted(paths)
 

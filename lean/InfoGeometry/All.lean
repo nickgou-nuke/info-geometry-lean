@@ -2915,6 +2915,8 @@ import InfoGeometry.External.Auto.ModularAutomorphismGroup
 import InfoGeometry.External.Auto.ModularGlideCPT
 import InfoGeometry.External.Auto.ModularHolographicMetric
 import InfoGeometry.External.Auto.ModularItakuraBiquaternion
+import InfoGeometry.External.Auto.master_equation
+import InfoGeometry.Physics.WheelerItFromBit
 import InfoGeometry.External.Auto.ModularKreinReflectionColimit
 import InfoGeometry.External.Auto.ModuleCatCohomology
 import InfoGeometry.External.Auto.MorandiWallpaperCohomology

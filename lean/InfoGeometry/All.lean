@@ -4198,6 +4198,7 @@ import InfoGeometry.Quantum.SouriauFoliation.PositiveTemperatureLeaf
 import InfoGeometry.Quantum.SouriauFoliation.SymplecticLeaf
 import InfoGeometry.Quantum.SouriauFoliation.TransverseJKOFlow
 import InfoGeometry.Quantum.SouriauFoliationFiniteShadow
+import InfoGeometry.Quantum.SklyaninSoV
 import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.Quantum.SplitTrialityKernel

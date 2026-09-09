@@ -1,7 +1,7 @@
 - **Total PRs indexed**: 170
-- **Open PRs**: 88
-- **Closed PRs**: 47
-- **Merged PRs**: 35
+- **Open PRs**: 84
+- **Closed PRs**: 48
+- **Merged PRs**: 38
 - **Branches fully merged into main (0 commits ahead)**: 0
 - **Branches with commits ahead of main**: 157
 
@@ -103,10 +103,10 @@
 | #90 | OPEN | `nuclear-klein-topology-native-mathlib` | 152 | 194 | 82 | Formalize nuclear Klein-equivariant parameter topology in native Mathlib |
 | #91 | OPEN | `nuclear-exceptional-artin-galois-native-mathlib` | 147 | 194 | 80 | Connect nuclear quantum numbers to five-grade, Artin, and Galois symmetry corridors |
 | #92 | OPEN | `qcd-chiral-zorn-structural-native-mathlib` | 201 | 194 | 104 | Add theorem-safe QCD chiral, Zorn, and triality structural lane |
-| #93 | OPEN | `qcd-hestenes-krein-real-color-native-mathlib` | 208 | 194 | 111 | Add real Hestenes-Krein color representation lane |
-| #94 | OPEN | `grothendieck-mathlib-functor-natiso` | 2 | 194 | 2 | Add categorical Mathlib Grothendieck completion natural isomorphism |
-| #95 | OPEN | `riemann-zeta-evidence-corridor-native-mathlib` | 10 | 191 | 10 | Add theorem-safe Riemann zeta evidence corridor |
-| #96 | OPEN | `openai/spectral-corridor-trust-audit` | 1 | 191 | 1 | Document Hilbert–Pólya spectral trust boundary |
+| #93 | MERGED | `qcd-hestenes-krein-real-color-native-mathlib` | 0 | 0 | 3 | Add real Hestenes-Krein color representation lane |
+| #94 | CLOSED | `grothendieck-mathlib-functor-natiso` | 2 | 194 | 2 | Add categorical Mathlib Grothendieck completion natural isomorphism |
+| #95 | MERGED | `riemann-zeta-evidence-corridor-native-mathlib` | 0 | 0 | 10 | Add theorem-safe Riemann zeta evidence corridor |
+| #96 | MERGED | `openai/spectral-corridor-trust-audit` | 0 | 0 | 1 | Document Hilbert–Pólya spectral trust boundary |
 | #97 | OPEN | `apollonius-lambda-dag-topological-closure` | 20 | 191 | 19 | Add Apollonius lambda-DAG topological closure |
 | #98 | OPEN | `openai/apollonius-zorn-potential` | 4 | 191 | 329 | Add native Apollonius Zorn potential bridge |
 | #99 | OPEN | `openai/cartan-souriau-native-amari` | 2 | 191 | 329 | Bridge native Cartan Souriau ensemble to dually-flat geometry |

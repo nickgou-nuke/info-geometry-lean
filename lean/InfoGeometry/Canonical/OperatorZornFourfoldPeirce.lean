@@ -51,7 +51,7 @@ theorem fourierProjector_eq (k : Fin 4) : fourierProjector k = projector k := by
         (Complex.I ^ i.val) ^ m.val = if i = k then 1 else 0 := by
     intro k i
     fin_cases k <;> fin_cases i <;>
-      norm_num [Fin.sum_univ_succ, Complex.I_sq, pow_succ] <;> ring
+      norm_num [Fin.sum_univ_succ, Complex.I_sq, pow_succ]
   ext i j
   simp only [Matrix.sum_apply, Matrix.smul_apply, Matrix.diagonal, Matrix.of_apply]
   by_cases hij : i = j
@@ -144,7 +144,7 @@ theorem diagonal_projector_raising_diagonal (k : Fin 4) :
     rw [coefficientProjector_mul_apply]
     by_cases hi : i = k
     · subst i
-      simp [projector, coefficientProjector, raising]
+      simp [raising]
     · simp [hi]
   · simp [hj]
 

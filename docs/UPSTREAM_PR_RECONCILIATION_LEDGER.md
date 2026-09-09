@@ -1,7 +1,7 @@
 - **Total PRs indexed**: 170
-- **Open PRs**: 104
+- **Open PRs**: 90
 - **Closed PRs**: 47
-- **Merged PRs**: 19
+- **Merged PRs**: 33
 - **Branches fully merged into main (0 commits ahead)**: 0
 - **Branches with commits ahead of main**: 157
 
@@ -87,8 +87,8 @@
 | #74 | OPEN | `freudenthal-generic-jacobi-closure` | 4 | 558 | 4 | Add generic graded Jacobi closure for Freudenthal tower |
 | #75 | OPEN | `agent/circular-operator-eight-bridge` | 1 | 558 | 1 | feat(algebra): bridge eight circular chiral operators to Peirce basis |
 | #76 | OPEN | `agent/cl55-dyadic-morita-bridge` | 2 | 558 | 2 | feat(clifford): add Cl55 dyadic Morita reconstruction |
-| #77 | OPEN | `agent/arnold-kohno-flat-connection` | 1 | 558 | 1 | feat(canonical): add Arnold–Kohno flat connection certificate |
-| #78 | OPEN | `agent/cl55-rope-split-torus` | 3 | 558 | 3 | feat(clifford): formalize elliptic RoPE and split hyperbolic rotors |
+| #77 | MERGED | `agent/arnold-kohno-flat-connection` | 1 | 558 | 1 | feat(canonical): add Arnold–Kohno flat connection certificate |
+| #78 | MERGED | `agent/cl55-rope-split-torus` | 3 | 558 | 3 | feat(clifford): formalize elliptic RoPE and split hyperbolic rotors |
 | #79 | OPEN | `agent/soloviev-qpnm-spectral-closure` | 7 | 558 | 5 | feat(nuclear): add finite Soloviev QPNM spectral closure |
 | #80 | CLOSED | `openai/bkm-positivity-cramer-rao` | 10 | 210 | 4 | Prove pointwise positivity of the operator BKM integrand |
 | #81 | OPEN | `openai/bkm-positivity-cramer-rao` | 10 | 210 | 4 | Prove positivity and strict definiteness of the full operator BKM form |
@@ -154,30 +154,30 @@
 | #141 | OPEN | `bipolar-cayley-klein-cochain-separation` | 180 | 191 | 419 | Reconstruct Cayley–Klein claims via native cochain twists and diagonal Berezinian |
 | #142 | OPEN | `penrose-onsager-yang-condensation-core` | 16 | 191 | 334 | Formalize finite Penrose–Onsager–Yang condensation spectra and kernels |
 | #143 | OPEN | `penrose-ccr-triple-witt-completion` | 2 | 191 | 341 | Formalize Penrose CCR triple, literal cross-product obstruction, and Witt composition completion |
-| #144 | OPEN | `zorn-quaternion-peirce-car` | 8 | 191 | 333 | Formalize Zorn Peirce roots, the derivation Lie algebra, and CAR/CCR envelopes |
+| #144 | MERGED | `zorn-quaternion-peirce-car` | 8 | 191 | 333 | Formalize Zorn Peirce roots, the derivation Lie algebra, and CAR/CCR envelopes |
 | #145 | OPEN | `spin-affine-exterior-pin-reconstruction` | 2 | 191 | 345 | Intertwine exterior CAR with circular Zorn operators and correct affine spin and Pin claims |
 | #146 | OPEN | `zorn-rindler-band-reconstruction` | 26 | 191 | 350 | Retain nonassociative operator-Zorn four-potential, curvature and gauge fields |
-| #147 | OPEN | `nuclear-car-phonon-bdg-soloviev-closure` | 53 | 191 | 350 | Close the concrete nuclear five-grade CAR–phonon BdG–Soloviev lane |
+| #147 | MERGED | `nuclear-car-phonon-bdg-soloviev-closure` | 53 | 191 | 350 | Close the concrete nuclear five-grade CAR–phonon BdG–Soloviev lane |
 | #148 | OPEN | `causal-boundary-gauge-g2-reconstruction` | 2 | 191 | 346 | Formalize causal boundary conditioning, gauge routing, graph Dirac and graded G2 softmax |
 | #149 | OPEN | `signed-network-exact-reconstruction` | 4 | 191 | 345 | Reconstruct signed-network dynamics: cancellation, qubit Wigner kernel, and finite causal resolvent |
 | #150 | OPEN | `projective-zorn-attention-state-geometry` | 28 | 191 | 367 | Replace the false Freudenthal bracket with a faithful symplectic contact Lie representation |
 | #151 | OPEN | `nuclear-fivegrade-car-ccr-soloviev-closure` | 9 | 191 | 336 | Close the finite nuclear five-grade CAR/BdG/CCR/Soloviev corridor |
-| #152 | OPEN | `freudenthal-symplectic-contact-lie-representation` | 67 | 191 | 359 | Replace the false Freudenthal bracket with a faithful symplectic contact Lie representation |
+| #152 | MERGED | `freudenthal-symplectic-contact-lie-representation` | 67 | 191 | 359 | Replace the false Freudenthal bracket with a faithful symplectic contact Lie representation |
 | #153 | OPEN | `two-boundary-weak-property-separation` | 8 | 191 | 352 | Formalize generic two-boundary weak functionals and static Cheshire separation |
 | #154 | OPEN | `cl55-grading-dyad-deck-reconstruction` | 9 | 191 | 362 | Separate Cl55 occupation grades, boundary dyads, affine deck actions and log-ratio relaxation |
 | #155 | OPEN | `projective-graph-cycles-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain full Zorn bilayer defects |
 | #156 | OPEN | `o55-contact-multigrading-formalism-release` | 102 | 191 | 394 | Construct the split O(5,5) contact multigrading and CAR–CCR representation |
 | #157 | OPEN | `o55-d5-multigraded-two-boundary-lift` | 25 | 191 | 369 | Lift two-boundary readouts to the full O(5,5) D5 multigrading |
 | #158 | OPEN | `projective-graph-hodge-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain nonassociative Zorn bilayer defects |
-| #159 | OPEN | `complex-kramers-klein-pin55-multigrading` | 89 | 191 | 373 | Formalize complex Kramers symmetry, Klein deck quotient, and Pin(5,5) multigrading |
+| #159 | MERGED | `complex-kramers-klein-pin55-multigrading` | 89 | 191 | 373 | Formalize complex Kramers symmetry, Klein deck quotient, and Pin(5,5) multigrading |
 | #160 | OPEN | `polarized-zorn-symmetry-reconstruction` | 10 | 191 | 373 | Formalize polarized Zorn symmetries, fundamental metric symmetry, and boundary coefficients |
 | #161 | OPEN | `polarized-minkowski55-native-clifford` | 2 | 191 | 342 | Connect polarized 10D quadratic data to native Cl(5,5), spinors, and exterior Hodge readout |
-| #162 | OPEN | `operator-zorn-twin-weyl-klein-dirac-kahler` | 110 | 191 | 387 | Formalize twin 4-operator Zorn, modular commutant, and Klein Dirac–Kähler blocks |
-| #163 | OPEN | `operator-zorn-twin-cyclotomic-reconstruction` | 42 | 191 | 394 | Preserve full operator-Zorn twin fields and construct coefficient Fourier sectors |
-| #164 | OPEN | `graded-clifford-peirce-fourier-reconstruction` | 2 | 191 | 339 | Construct fourth-root Fourier projectors and native exterior-degree Peirce bridges |
-| #165 | OPEN | `exterior-cyclotomic-peirce-reconstruction` | 2 | 191 | 341 | Construct exterior degree-mod-four projectors and finite Peirce corners from native Clifford parity |
+| #162 | MERGED | `operator-zorn-twin-weyl-klein-dirac-kahler` | 110 | 191 | 387 | Formalize twin 4-operator Zorn, modular commutant, and Klein Dirac–Kähler blocks |
+| #163 | MERGED | `operator-zorn-twin-cyclotomic-reconstruction` | 42 | 191 | 394 | Preserve full operator-Zorn twin fields and construct coefficient Fourier sectors |
+| #164 | MERGED | `graded-clifford-peirce-fourier-reconstruction` | 2 | 191 | 339 | Construct fourth-root Fourier projectors and native exterior-degree Peirce bridges |
+| #165 | MERGED | `exterior-cyclotomic-peirce-reconstruction` | 2 | 191 | 341 | Construct exterior degree-mod-four projectors and finite Peirce corners from native Clifford parity |
 | #166 | MERGED | `dirac-hodge-spin-zorn-grade-intertwiners` | 132 | 191 | 398 | Formalize Dirac–Hodge, real spin, and graded operator-Zorn intertwiners |
-| #167 | OPEN | `mcbal-full-native-corridor-audit` | 4 | 191 | 331 | Map the full mcbal comparison onto the native Sinkhorn–Hodge–IB corridor |
-| #168 | OPEN | `mcbal-spherical-vmf-native` | 18 | 191 | 338 | Formalize spherical vMF measure, cumulant, and controlled closure calculus |
-| #169 | OPEN | `formalization/detector-response-integral-20260908` | 1 | 32 | 14 | Nuclear: actual detector response integral — isolated Lean candidate |
-| #170 | OPEN | `formalize/prolate-rapidity-sech-20260908` | 1 | 32 | 5 | Formalize prolate focal rapidity, flux ratio, and sech profile ODE |
+| #167 | MERGED | `mcbal-full-native-corridor-audit` | 4 | 191 | 331 | Map the full mcbal comparison onto the native Sinkhorn–Hodge–IB corridor |
+| #168 | MERGED | `mcbal-spherical-vmf-native` | 18 | 191 | 338 | Formalize spherical vMF measure, cumulant, and controlled closure calculus |
+| #169 | MERGED | `formalization/detector-response-integral-20260908` | 1 | 32 | 14 | Nuclear: actual detector response integral — isolated Lean candidate |
+| #170 | MERGED | `formalize/prolate-rapidity-sech-20260908` | 1 | 32 | 5 | Formalize prolate focal rapidity, flux ratio, and sech profile ODE |

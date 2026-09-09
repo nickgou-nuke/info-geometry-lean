@@ -1,4 +1,0 @@
-import InfoGeometry.Canonical.GrandSynthesisThermo
-import InfoGeometry.Canonical.GrandSynthesisGeometry
-import InfoGeometry.Canonical.GrandSynthesisBott
-import InfoGeometry.Canonical.GrandSynthesisSingular

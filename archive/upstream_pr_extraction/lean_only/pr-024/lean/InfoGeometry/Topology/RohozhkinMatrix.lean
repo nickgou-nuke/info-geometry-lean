@@ -1,4 +1,0 @@
-import Mathlib
-noncomputable section
-namespace InfoGeometry.Topology.RohozhkinMatrix
-end InfoGeometry.Topology.RohozhkinMatrix

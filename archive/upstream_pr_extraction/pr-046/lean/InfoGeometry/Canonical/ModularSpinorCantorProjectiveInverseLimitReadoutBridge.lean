@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.ModularSpinorFilteredColimitBridge
-import InfoGeometry.Canonical.CantorProjectiveLimitInverseLimitReadoutTopCat

@@ -1,4 +1,0 @@
-import InfoGeometry.Canonical.CliffordDirectColimit
-import InfoGeometry.Canonical.SpinStructureJacobiTheta
-import InfoGeometry.Canonical.ConnesKMSIndexPairing
-import InfoGeometry.Canonical.TomitaTakesakiWickRotation

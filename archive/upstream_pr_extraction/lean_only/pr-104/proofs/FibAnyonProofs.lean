@@ -1,3 +1,0 @@
-import proofs.CuntzPeirceKnillLaflamme
-import proofs.PeirceTensorQEC
-import proofs.MobiusClassification

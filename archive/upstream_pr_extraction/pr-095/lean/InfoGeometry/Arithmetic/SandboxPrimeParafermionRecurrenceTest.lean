@@ -1,8 +1,0 @@
-import InfoGeometry.Arithmetic.PrimeParafermionRecurrence
-
-open InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
-
-#check finiteParafermionLocalFactor_succ
-#check finiteParafermionLocalFactor_mul_one_sub
-#check finiteGrandParafermionPartition_insert
-#check finiteGrandParafermionPartition_mul_denominator

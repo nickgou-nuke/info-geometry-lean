@@ -1,2 +1,0 @@
-import InfoGeometry.Information.Basic
-

@@ -1,6 +1,0 @@
-import InfoGeometry.Canonical.BogoliubovFockSuper
-import InfoGeometry.Canonical.Cl11LorentzAction
-import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
-import InfoGeometry.Canonical.MoebiusClosureBridge
-import InfoGeometry.Quantum.RealMajorana
-import InfoGeometry.Quantum.RealSplitClifford

@@ -1,7 +1,0 @@
-import InfoGeometry.Twistor.FiveGradedIncidence
-import InfoGeometry.Twistor.CliffordBridge
-import InfoGeometry.Twistor.Incidence
-import InfoGeometry.Twistor.LightconeBridge
-import InfoGeometry.Twistor.NullProjective
-import InfoGeometry.Twistor.PenroseTwistor
-import InfoGeometry.Twistor.RollingSpinorMobiusBridge

@@ -1,2 +1,0 @@
-import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormAssoc
-import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormInverse

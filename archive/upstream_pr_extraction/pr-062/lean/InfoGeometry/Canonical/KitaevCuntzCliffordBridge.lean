@@ -1,6 +1,0 @@
-import DAG.GradedBottInclusion
-import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
-import InfoGeometry.Canonical.CelikErlangenBraidBridge
-import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
-import InfoGeometry.Canonical.SplitCliffordJordanWigner
-import InfoGeometry.Tessellation.CantorDiracSeaOperatorGeometry

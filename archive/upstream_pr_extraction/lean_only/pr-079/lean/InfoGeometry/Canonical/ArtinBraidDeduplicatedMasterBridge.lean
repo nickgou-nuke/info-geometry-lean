@@ -1,2 +1,0 @@
-import InfoGeometry.Algebra.AnyonFiniteSpinBraid
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

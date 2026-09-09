@@ -1,4 +1,0 @@
-import Mathlib.Tactic
-
-namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
-end InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge

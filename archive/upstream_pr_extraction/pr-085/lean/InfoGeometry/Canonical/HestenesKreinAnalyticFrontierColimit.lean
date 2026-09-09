@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.FilteredHestenesKreinColimit
-import InfoGeometry.Canonical.FilteredHestenesIteratedTransport

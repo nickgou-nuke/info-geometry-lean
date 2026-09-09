@@ -1,4 +1,0 @@
-import Mathlib
-
-def f4ActionPivot : Fin 52 → Fin 729 :=
-  ![⟨3, by omega⟩, ⟨4, by omega⟩, ⟨5, by omega⟩, ⟨6, by omega⟩, ⟨7, by omega⟩, ⟨8, by omega⟩, ⟨9, by omega⟩, ⟨10, by omega⟩, ⟨19, by omega⟩, ⟨20, by omega⟩, ⟨21, by omega⟩, ⟨22, by omega⟩, ⟨23, by omega⟩, ⟨24, by omega⟩, ⟨25, by omega⟩, ⟨26, by omega⟩, ⟨38, by omega⟩, ⟨39, by omega⟩, ⟨40, by omega⟩, ⟨41, by omega⟩, ⟨42, by omega⟩, ⟨43, by omega⟩, ⟨44, by omega⟩, ⟨45, by omega⟩, ⟨84, by omega⟩, ⟨85, by omega⟩, ⟨86, by omega⟩, ⟨87, by omega⟩, ⟨88, by omega⟩, ⟨89, by omega⟩, ⟨90, by omega⟩, ⟨111, by omega⟩, ⟨112, by omega⟩, ⟨113, by omega⟩, ⟨114, by omega⟩, ⟨116, by omega⟩, ⟨117, by omega⟩, ⟨138, by omega⟩, ⟨139, by omega⟩, ⟨140, by omega⟩, ⟨141, by omega⟩, ⟨144, by omega⟩, ⟨165, by omega⟩, ⟨166, by omega⟩, ⟨167, by omega⟩, ⟨168, by omega⟩, ⟨192, by omega⟩, ⟨194, by omega⟩, ⟨195, by omega⟩, ⟨219, by omega⟩, ⟨222, by omega⟩, ⟨246, by omega⟩]

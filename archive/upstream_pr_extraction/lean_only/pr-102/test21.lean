@@ -1,6 +1,0 @@
-import InfoGeometry.Canonical.SouriauBostConnesTransition
-import InfoGeometry.Canonical.UHFInductiveColimitBoundary
-import InfoGeometry.Canonical.TensorTowerColimit
-import InfoGeometry.Canonical.ErlangenColimitResolution
-
-open InfoGeometry.Canonical.UHFInductiveColimitBoundary

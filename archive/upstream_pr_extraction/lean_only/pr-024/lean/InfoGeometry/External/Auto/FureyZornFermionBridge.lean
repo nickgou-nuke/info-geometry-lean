@@ -1,4 +1,0 @@
-import Mathlib
-
-namespace InfoGeometry.External.Auto.FureyZornFermionBridge
-end InfoGeometry.External.Auto.FureyZornFermionBridge

@@ -1,1 +1,0 @@
-../proofs/YangBaxterQSwap.lean

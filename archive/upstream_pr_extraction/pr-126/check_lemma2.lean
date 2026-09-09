@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.CliffordParityBridge
-#check HasVolumeElement.omega_sq

@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.ModularSpinorCuntzStageTopologicalIsoBridge
-import InfoGeometry.Canonical.CuntzStageModularFlowTopologicalRepresentationBridge

@@ -1,2 +1,0 @@
-import InfoGeometry.OperatorAlgebra.SplitOctonionGroundedCrossSection
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

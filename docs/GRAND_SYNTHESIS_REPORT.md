@@ -5,6 +5,7 @@
 > **Master Synthesis Modules**:
 > - [`InfoGeometry.Canonical.CanonicalZornModularAAVBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornModularAAVBridge.lean)
 > - [`InfoGeometry.Canonical.AAVWeakMeasurementKleinSeamBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AAVWeakMeasurementKleinSeamBridge.lean)
+> - [`InfoGeometry.Canonical.DiracKreinMaurerCartanBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DiracKreinMaurerCartanBridge.lean)
 > - [`InfoGeometry.Canonical.CanonicalZornPalatiniCurvature`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornPalatiniCurvature.lean)
 > - [`InfoGeometry.Canonical.CanonicalZornFisherCooling`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornFisherCooling.lean)
 > - [`InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AnyonicFractalLoomQuantumComputerBridge.lean)
@@ -47,7 +48,7 @@
 | Level in Architecture | Mathematical Apparatus in Lean 4 | Physical Manifestation | Certified Invariant / Core Theorem |
 | :--- | :--- | :--- | :--- |
 | **Level 0: Binary Foundation** | Cuntz Isometries $S_0, S_1$ with $S_0 S_0^* + S_1 S_1^* = I$ | Conservative Cantor binary tree, boundary states | `cuntz_completeness`, `ryu_takayanagi_loom_match` |
-| **Level 1: Clifford Atom** | Krein Parabolic Rays on $\mathbb{R}^{4,4}$, $J = \sigma_x$, AAV Weak Values in [`AAVWeakMeasurementKleinSeamBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AAVWeakMeasurementKleinSeamBridge.lean) | Hardy space, dispersion $E^2 = \|\vec{k}\|^2 + m^2$, Klein bottle seam | `modularJ_involutive`, `seam_cross_overlap_zero`, `modular_horizon_on_klein_seam` |
+| **Level 1: Clifford Atom & Relativistic Observables** | Krein Parabolic Rays, $\eta = \gamma^0$ Fundamental Symmetry in [`DiracKreinMaurerCartanBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DiracKreinMaurerCartanBridge.lean), AAV Weak Values in [`AAVWeakMeasurementKleinSeamBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AAVWeakMeasurementKleinSeamBridge.lean) | Krein-Hermiticity $(\gamma^\mu)^\sharp = \gamma^\mu$, $\mathrm{Spin}(1,3) \cong \mathrm{U}(\mathcal{K})$, Klein seam | `dirac_gamma_all_krein_self_adjoint`, `lorentz_is_krein_unitary`, `cartan_decomposition_sum`, `modular_horizon_on_klein_seam` |
 | **Level 2: Strong Gauge Force** | 8D Lie algebra commutant under $\mathfrak{g}_2^*$ | Vacuum color stabilizer $\mathfrak{su}(3)_{\text{color}}$ | `projColor_commutes_K`, `projMatter_anticommutes_K` |
 | **Level 3: Nonlinear Solitons** | Lax Pair & Zero Curvature via Zorn product in [`ManakovZornSolitonLaxBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ManakovZornSolitonLaxBridge.lean) | Cross-phase modulation, Manakov boomerons | `zornAssociator_transverse_mode_vanishes` ($\chi^{(3)} = 4$) |
 | **Level 4: Palatini Gravity** | Plücker stitches on Klein quadric $\mathcal{Q} \subset \mathbb{PN}^5$ | Palatini action, $G_{\text{eff}} = G_0 / \rho$ | `stitch_on_klein_quadric`, `newton_coupling_scaling` |

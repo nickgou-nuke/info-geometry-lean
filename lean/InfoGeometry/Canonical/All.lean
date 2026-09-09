@@ -2110,6 +2110,10 @@ import InfoGeometry.Canonical.PolarizedZornReconstruction
 import InfoGeometry.Canonical.PolarizedBoundary55PristineChain
 import InfoGeometry.Canonical.OperatorZornTwinCyclotomic
 import InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
+import InfoGeometry.Canonical.ScaleFreeStringMembraneGrandCapstone
+import InfoGeometry.Canonical.SpectroscopyPoissonCoolingAmariBridge
+import InfoGeometry.Canonical.CanonicalZornModularAAVBridge
+import InfoGeometry.Canonical.CanonicalZornPalatiniCurvature
 
 namespace InfoGeometry
 

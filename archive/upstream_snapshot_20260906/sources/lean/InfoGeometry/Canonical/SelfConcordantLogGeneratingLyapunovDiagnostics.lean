@@ -1,0 +1,25 @@
+import InfoGeometry.Canonical.SelfConcordantLogGeneratingLyapunov
+import InfoGeometry.Canonical.SelfConcordantLyapunovDAGBridge
+
+open InfoGeometry.Canonical.SelfConcordantLogGeneratingLyapunov
+open InfoGeometry.Canonical.SelfConcordantLyapunovDAGBridge
+
+#check hasDerivAt_lyapunovPotential
+#check naturalGradientField_eq_metric_gradient
+#check lyapunovLieDerivative_eq
+#check lyapunovLieDerivative_nonpos
+#check lyapunovLieDerivative_neg
+#check lyapunovPotential_eq_zero_iff
+#check naturalGradientField_eq_zero_iff
+#check naturalGradientField_pos_below
+#check naturalGradientField_neg_above
+#check lyapunovPotential_selfConcordance
+#check global_selfConcordant_lyapunov
+#check reachable_informationPotential_has_global_lyapunov
+
+#print axioms lyapunovLieDerivative_eq
+#print axioms lyapunovLieDerivative_neg
+#print axioms naturalGradientField_eq_zero_iff
+#print axioms lyapunovPotential_selfConcordance
+#print axioms global_selfConcordant_lyapunov
+#print axioms reachable_informationPotential_has_global_lyapunov

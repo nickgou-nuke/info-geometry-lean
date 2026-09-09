@@ -99,20 +99,14 @@ def morandiWallpaperCount : ℕ := totalExtensionClasses - 1
 theorem morandiWallpaperCount_eq_17 : morandiWallpaperCount = 17 := by
   simp [morandiWallpaperCount, totalExtensionClasses_eq_18]
 
-/-- The 17 wallpaper-group isomorphism classes. -/
-inductive WallpaperGroup where
-  | p1 | p2 | pm | pg | cm | pmm | pmg | pgg | cmm
-  | p4 | p4m | p4g | p3 | p3m1 | p31m | p6 | p6m
-  deriving DecidableEq, Repr
+/-- Standard international notation for the 17 wallpaper groups. -/
+def wallpaperNames : List String :=
+  ["p1", "p2", "pm", "pg", "cm", "pmm", "pmg", "pgg", "cmm",
+   "p4", "p4m", "p4g", "p3", "p3m1", "p31m", "p6", "p6m"]
 
-/-- A finite carrier for the classical wallpaper-group classification. -/
-def allWallpaperGroups : List WallpaperGroup :=
-  [.p1, .p2, .pm, .pg, .cm, .pmm, .pmg, .pgg, .cmm,
-   .p4, .p4m, .p4g, .p3, .p3m1, .p31m, .p6, .p6m]
-
-/-- The standard classification has exactly 17 wallpaper groups. -/
-theorem allWallpaperGroups_length : allWallpaperGroups.length = 17 := by
-  simp [allWallpaperGroups]
+/-- The standard list has length 17. -/
+theorem wallpaperNames_length : wallpaperNames.length = 17 := by
+  simp [wallpaperNames]
 
 /-! ## 3. Group extensions from 2-cocycles -/
 

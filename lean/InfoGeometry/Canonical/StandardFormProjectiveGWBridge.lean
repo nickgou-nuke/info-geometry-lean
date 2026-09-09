@@ -195,11 +195,11 @@ end Bridge
 
 /--
 Projective-shadow bridge enriched with a theorem-safe binary-word natural-cone
-face-localization interface.
+face-localization socket.
 
 This keeps the projective GW/Weyl cancellation layer separate from the
 standard-form natural-cone face layer.  The face bridge is supplied as an
-external property; this file only transports its localization readback alongside
+external witness; this file only transports its localization readback alongside
 the projective volume cancellation theorem.
 -/
 @[rep_depth projective]
@@ -214,7 +214,7 @@ structure FaceBridge where
     BinaryWordModularFaceBridge (H := H)
 
   /-- Binary word indexing the localized natural-cone face used by the bridge. -/
-  faceWord : List Bool
+  faceWord : TypeIIIModularCantorSystem.BinaryWord
 
   /-- Typed readout from the projective state carrier to the doubled Hilbert carrier. -/
   faceStateOf : State → InfoGeometry.Krein.DoubledSpace H
@@ -254,7 +254,7 @@ theorem localizationOp_fixes_face_state :
 /-- Binary-word localization operator inherited from the standard-form face bridge. -/
 @[rep_depth projective]
 noncomputable def localizationOp
-    (w : List Bool) :
+    (w : TypeIIIModularCantorSystem.BinaryWord) :
     InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H :=
   BinaryWordModularFaceBridge.localizationOp B.faceBridge w
 
@@ -266,7 +266,7 @@ Tomita--Takesaki theorem.
 -/
 @[rep_depth projective]
 theorem cone_face_localization
-    (w : List Bool)
+    (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : InfoGeometry.Krein.DoubledSpace H}
     (hξ : ξ ∈ B.faceBridge.naturalCone) :
     FaceBridge.localizationOp B w ξ ∈

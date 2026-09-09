@@ -14,7 +14,7 @@ This file deliberately separates the layers:
 
 * finite Euler products and Witten parity are arithmetic prime-register facts;
 * the fermionic ladder is the existing split-`Cl(1,1)` CAR pair;
-* the bosonic unit CCR is property-gated by `ScaledCCRPair`, because a true
+* the bosonic unit CCR is witness-gated by `ScaledCCRPair`, because a true
   unit Heisenberg CCR is not a finite-matrix identity;
 * the primitive supercharge CAR/CCR channel is the already-owned
   `J/ε/Q = Jε` doubled-Krein spine;
@@ -229,11 +229,8 @@ theorem primonSupergradedFockSpine :
     ∧
     (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
       = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact primonFermionCAR (E := E)
-  · exact primonSuperchargeCAR_zero (E := E)
-  · exact primonSuperchargeCCR_eq_two_cpt (E := E)
-  · exact chiralSupercharge_sq (E := E)
+  exact ⟨primonFermionCAR (E := E), primonSuperchargeCAR_zero (E := E),
+    primonSuperchargeCCR_eq_two_cpt (E := E), chiralSupercharge_sq (E := E)⟩
 
 end Fock
 

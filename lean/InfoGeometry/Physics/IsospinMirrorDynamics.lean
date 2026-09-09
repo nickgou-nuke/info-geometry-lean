@@ -11,20 +11,11 @@ Transition Rates, Thomas-Ehrman shift, Effective Charges, and Symmetry Energy co
 -/
 
 /-- Isospin representation for a state, characterized by total isospin T and projection T_z. -/
-abbrev Isospin :=
-  Subtype (fun p : ℚ × ℚ => |p.2| ≤ p.1 ∧ ∃ n : ℕ, p.1 - p.2 = n)
-
-namespace Isospin
-
-abbrev T (I : Isospin) : ℚ := I.1.1
-
-abbrev T_z (I : Isospin) : ℚ := I.1.2
-
-abbrev valid (I : Isospin) : |I.T_z| ≤ I.T := I.2.1
-
-abbrev integer_step (I : Isospin) : ∃ n : ℕ, I.T - I.T_z = n := I.2.2
-
-end Isospin
+structure Isospin where
+  T : ℚ
+  T_z : ℚ
+  valid : |T_z| ≤ T
+  integer_step : ∃ (n : ℕ), T - T_z = n
 
 /-- Nucleon type, either proton or neutron. -/
 inductive Nucleon
@@ -38,36 +29,20 @@ def Nucleon.T_z (n : Nucleon) : ℚ :=
   | .proton => 1 / 2
   | .neutron => - (1 / 2)
 
-/-- A nucleus defined by its proton number `Z` and neutron number `N`,
-represented natively as a product. -/
-abbrev Nucleus := ℕ × ℕ
-
-namespace Nucleus
-
-@[simp] def Z (nuc : Nucleus) : ℕ := nuc.1
-@[simp] def N (nuc : Nucleus) : ℕ := nuc.2
-
-end Nucleus
+/-- A nucleus defined by its proton number Z and neutron number N. -/
+structure Nucleus where
+  Z : ℕ
+  N : ℕ
 
 /-- Mass number A of a nucleus. -/
 def Nucleus.A (nuc : Nucleus) : ℕ := nuc.Z + nuc.N
 
 /-- A Mirror Pair of nuclei, where (Z1, N1) = (N2, Z2). -/
-abbrev MirrorPair :=
-  Subtype (fun p : Nucleus × Nucleus =>
-    p.1.Z = p.2.N ∧ p.1.N = p.2.Z)
-
-namespace MirrorPair
-
-abbrev nuc1 (mp : MirrorPair) : Nucleus := mp.1.1
-
-abbrev nuc2 (mp : MirrorPair) : Nucleus := mp.1.2
-
-abbrev mirror_cond_Z (mp : MirrorPair) : mp.nuc1.Z = mp.nuc2.N := mp.2.1
-
-abbrev mirror_cond_N (mp : MirrorPair) : mp.nuc1.N = mp.nuc2.Z := mp.2.2
-
-end MirrorPair
+structure MirrorPair where
+  nuc1 : Nucleus
+  nuc2 : Nucleus
+  mirror_cond_Z : nuc1.Z = nuc2.N
+  mirror_cond_N : nuc1.N = nuc2.Z
 
 /-- Mass number of the mirror pair. -/
 def MirrorPair.A (mp : MirrorPair) : ℕ := mp.nuc1.A
@@ -95,32 +70,17 @@ def MED (E_exc1 E_exc2 : ℝ) : ℝ :=
   E_exc1 - E_exc2
 
 /-- Electromagnetic transition rate B(Eλ). -/
-abbrev TransitionRate (lambda : ℕ) := {rate : ℝ // 0 ≤ rate}
-
-namespace TransitionRate
-
-abbrev rate {lambda : ℕ} (R : TransitionRate lambda) : ℝ := R.1
-
-abbrev rate_nonneg {lambda : ℕ} (R : TransitionRate lambda) : 0 ≤ R.rate := R.2
-
-end TransitionRate
+structure TransitionRate (lambda : ℕ) where
+  rate : ℝ
+  rate_nonneg : 0 ≤ rate
 
 /-- Nuclear State characterizing a level. -/
-abbrev NuclearState := ℝ × ℚ × ℤ × Isospin × ℕ
-
-namespace NuclearState
-
-abbrev energy (S : NuclearState) : ℝ := S.1
-
-abbrev spin (S : NuclearState) : ℚ := S.2.1
-
-abbrev parity (S : NuclearState) : ℤ := S.2.2.1
-
-abbrev isospin (S : NuclearState) : Isospin := S.2.2.2.1
-
-abbrev l (S : NuclearState) : ℕ := S.2.2.2.2
-
-end NuclearState
+structure NuclearState where
+  energy : ℝ
+  spin : ℚ
+  parity : ℤ
+  isospin : Isospin
+  l : ℕ -- orbital angular momentum
 
 /-- Thomas-Ehrman shift observable: proton-rich minus neutron-rich analogue energy. -/
 def thomasEhrmanEnergyShift
@@ -144,33 +104,18 @@ theorem thomas_ehrman_shift
   rfl
 
 /-- Effective charges for protons and neutrons in a given model space. -/
-abbrev EffectiveCharge := ℝ × ℝ
-
-namespace EffectiveCharge
-
-@[simp] def e_pi (e : EffectiveCharge) : ℝ := e.1
-@[simp] def e_nu (e : EffectiveCharge) : ℝ := e.2
-
-end EffectiveCharge
+structure EffectiveCharge where
+  e_pi : ℝ -- effective proton charge
+  e_nu : ℝ -- effective neutron charge
 
 /-- Symmetry Energy parameters. -/
-abbrev EquationOfState := ℝ × ℝ
-
-namespace EquationOfState
-
-@[simp] def S_0 (eos : EquationOfState) : ℝ := eos.1
-@[simp] def L (eos : EquationOfState) : ℝ := eos.2
-
-end EquationOfState
+structure EquationOfState where
+  S_0 : ℝ -- Symmetry energy at saturation density
+  L : ℝ   -- Slope parameter of the symmetry energy
 
 /-- A model for the charge radius difference of mirror nuclei. -/
-abbrev ChargeRadiusDifference := ℝ
-
-namespace ChargeRadiusDifference
-
-@[simp] def delta_R_ch (radius_diff : ChargeRadiusDifference) : ℝ := radius_diff
-
-end ChargeRadiusDifference
+structure ChargeRadiusDifference where
+  delta_R_ch : ℝ
 
 /-- The correlation between the slope of the symmetry energy L and the difference
   in charge radii of mirror nuclei (ΔR_ch). Often formulated as a linear correlation. -/

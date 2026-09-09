@@ -8,7 +8,7 @@ The key type III rule is encoded by separation of structures:
 * `TraceDatum` is for trace-capable layers.
 * `WeightDatum` is for noncommutative integration by weights.
 * `ModularWeightDatum` adds the modular/KMS flow replacing trace cyclicity.
-* `CoreTraceDatum` is the crossed-product/core trace datum.
+* `CoreTraceDatum` is the crossed-product/core trace socket.
 * `SuperTraceDatum` requires an explicit trace or weight backend.
 
 In particular, this file does not put a bare trace field on a type III algebra.
@@ -67,7 +67,7 @@ def IsIncreasingSequentialSup
 A trace-capable noncommutative integration datum.
 
 This structure is intentionally separate from `WeightDatum`: a type III
-algebra should use a weight on the algebra itself, not this bare trace datum.
+algebra should use a weight on the algebra itself, not this bare trace socket.
 -/
 structure TraceDatum
     (A : Type*) [AddCommMonoid A] [Mul A] where
@@ -315,7 +315,7 @@ end ModularWeightDatum
 /--
 A crossed-product/continuous-core trace datum.
 
-This is the trace interface for type III situations: the original algebra `M`
+This is the trace socket for type III situations: the original algebra `M`
 uses a modular weight, while the crossed-product core `Core` may carry an
 honest semifinite trace.
 -/

@@ -269,7 +269,7 @@ def hiddenSheetChargeOf
 
 end HelicalStinespringAccounting
 
-/-! ## 6. Spectral-function calibration interface -/
+/-! ## 6. Spectral-function calibration socket -/
 
 /--
 Calibration saying that a concrete spectral determinant or L-function supplies
@@ -285,5 +285,11 @@ structure SpectralFunctionDivisorCalibration
   /-- Associated divisor charge. -/
   divisorCharge : SpectralDivisorCharge
 
+namespace SpectralFunctionDivisorCalibration
+
+variable {State : Type*}
+variable (C : SpectralFunctionDivisorCalibration State)
+
+end SpectralFunctionDivisorCalibration
 
 end InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring

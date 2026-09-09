@@ -93,10 +93,9 @@ theorem sector_ryu_takayanagi_triality_equivariant
         sectorMinimalSurfaceArea (trialityCycle s) n / (4 * effectiveNewtonConstant) ∧
       sectorSubtreeEntropy (trialityCycle s) n = sectorSubtreeEntropy s n ∧
       sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact sector_ryu_takayanagi_formula (trialityCycle s) n
-  · exact sectorSubtreeEntropy_triality_invariant s n
-  · exact sectorMinimalSurfaceArea_triality_invariant s n
+  exact ⟨sector_ryu_takayanagi_formula (trialityCycle s) n,
+    sectorSubtreeEntropy_triality_invariant s n,
+    sectorMinimalSurfaceArea_triality_invariant s n⟩
 
 /-- Canonical real doubled split-triality square law on the Hestenes/Krein carrier. -/
 theorem splitTrialitySupercharge_square_eq_id

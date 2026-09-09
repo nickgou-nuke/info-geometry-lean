@@ -78,5 +78,3 @@ theorem continuous_readout_coordinate
   exact (continuous_apply n).comp continuous_subtype_val
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
-
-end

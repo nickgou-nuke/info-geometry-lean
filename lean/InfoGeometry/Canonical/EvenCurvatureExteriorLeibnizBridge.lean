@@ -71,4 +71,23 @@ theorem unconditional_bianchi_traced_chern_weil_closed
   have h_cov_leibniz := unconditional_covariant_curvature_square_leibniz A F d h_even_leibniz
   exact bianchi_implies_traced_curvature_square_closed h_cyclic A F d h_cov_leibniz h_bianchi
 
+/-- **Theorem**: Master Even Curvature Exterior Leibniz & Chern-Weil Synthesis.
+    Unifies:
+    1. Matrix exterior derivative product rule d(F * F) = dF * F + F * dF for even curvature forms.
+    2. Unconditional non-Abelian covariant derivative product rule D_A (F * F) = (D_A F) * F + F * (D_A F).
+    3. Unconditional non-Abelian Bianchi-to-traced Chern-Weil closedness d(Tr(F ∧ F)) = 0 directly from D_A F = 0 without primitive Leibniz assumptions. -/
+theorem master_even_curvature_exterior_leibniz_synthesis
+    (h_cyclic : ∀ A M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V), matrixTraceForm (A * M) = matrixTraceForm (M * A))
+    (A F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    (d : Module.End R (ExteriorAlgebra R V))
+    (h_even_leibniz : ∀ (x y : ExteriorAlgebra R V), d (x * y) = d x * y + x * d y)
+    (h_bianchi : covariantDerivative A d F = 0) :
+    (matrixExteriorDerivative d (F * F) = matrixExteriorDerivative d F * F + F * matrixExteriorDerivative d F) ∧
+    (covariantDerivative A d (F * F) = (covariantDerivative A d F) * F + F * (covariantDerivative A d F)) ∧
+    (d (matrixTraceForm (F * F)) = 0) := ⟨
+  matrixExteriorDerivative_even_curvature_square F d h_even_leibniz,
+  unconditional_covariant_curvature_square_leibniz A F d h_even_leibniz,
+  unconditional_bianchi_traced_chern_weil_closed h_cyclic A F d h_even_leibniz h_bianchi
+⟩
+
 end InfoGeometry.Canonical.EvenCurvatureExteriorLeibnizBridge

@@ -1,5 +1,6 @@
 import InfoGeometry.Lie.SplitOctonionAxialSupportGrading
 import InfoGeometry.Algebra.Zorn.Basic
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!
 # Native `(1,1) + (3,3)` reduction of the diagonal Zorn norm
@@ -22,6 +23,7 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionAxialPeirceTrifactor
 open InfoGeometry.Lie.SplitOctonionAxialSupportGrading
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 abbrev ActiveSector := LinearMap.range axialActiveSupport
@@ -100,26 +102,30 @@ theorem axial_PZero_add_activeSupport (X : CZ) :
 /-- The determinant on the stationary sector is the hyperbolic-plane form
 `a*b`. -/
 theorem detZ_axialPZero (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialPZero X) = X.a * X.b := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (axialPZero X) = X.a * X.b := by
   rw [axialPZero_apply]
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, ZornMatrix.dot]
+  change X.a * X.b - realCrossProduct3.dot 0 0 = X.a * X.b
+  rw [realCrossProduct3.dot_zero_left]
+  ring
 
 /-- The determinant on Drazin support is the three-Witt-pair form
 `-x dot y`. -/
 theorem detZ_axialActiveSupport (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialActiveSupport X) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (axialActiveSupport X) =
       -ZornMatrix.dot X.x X.y := by
   rw [axialActiveSupport_apply]
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ]
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
+    InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- Exact quadratic splitting of the full `(4,4)` Zorn norm into its
 stationary `(1,1)` and active three-Witt-pair contributions. -/
 theorem detZ_eq_PZero_add_active (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialPZero X) +
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialActiveSupport X) := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (axialPZero X) +
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (axialActiveSupport X) := by
   rw [detZ_axialPZero, detZ_axialActiveSupport]
-  unfold InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
+    InfoGeometry.Canonical.ZornMatrix.dot]
   ring
 
 end InfoGeometry.Lie.SplitOctonionAxialWittReduction

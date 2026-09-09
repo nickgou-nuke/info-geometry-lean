@@ -28,6 +28,40 @@ theorem ok : True := by
     # `sorryAx` appearing in inert metadata/string context must not hard-fail as a proof hole.
 
 
+def test_proof_hole_ignores_lean_docstrings_and_trace_names(tmp_path: Path) -> None:
+    lean = tmp_path / "Metadata.lean"
+    lean.write_text(
+        """
+/-! This documentation discusses sorry and admit as audit vocabulary. -/
+initialize registerTraceClass `Example.admit
+
+/-- The implementation is complete; the word `sorry` is documentation only. -/
+def implemented : Nat := 0
+""",
+        encoding="utf-8",
+    )
+
+    report = audit_file(lean)
+    assert [f for f in report.findings if f.category == "proof-hole"] == []
+
+
+def test_current_meta_and_lint_owners_have_no_hard_proof_holes() -> None:
+    root = Path(__file__).resolve().parents[1]
+    paths = (
+        root / "lean/DAG/ExactMorphism.lean",
+        root / "lean/InfoGeometry/Lint/Pauli.lean",
+        root / "lean/InfoGeometry/Meta/Trust.lean",
+    )
+
+    for path in paths:
+        report = audit_file(path)
+        hard_holes = [
+            f for f in report.findings
+            if f.category == "proof-hole" and f.severity == "hard"
+        ]
+        assert hard_holes == [], f"stale proof-hole finding for {path}: {hard_holes}"
+
+
 def test_payload_contains_provenance_and_hard_verdict_fields(tmp_path: Path) -> None:
     lean = tmp_path / "Hard.lean"
     lean.write_text(

@@ -4,7 +4,7 @@ import Mathlib.Tactic
 # Riemann Hypothesis: Theorem-Honest Complex-Temperature Boundary
 
 This file records the partition-function dictionary without asserting the
-Riemann Hypothesis as a global ax!om.
+Riemann Hypothesis as a global axiom.
 
 The proved content is finite algebra:
 * `s = σ + i t` has damping coordinate `σ` and phase coordinate `t`;
@@ -14,8 +14,6 @@ The proved content is finite algebra:
 
 The RH-strength claim itself is a `Prop` parameter, not a theorem.
 -/
-
-namespace RiemannHypothesis
 
 noncomputable section
 
@@ -113,6 +111,30 @@ theorem hilbertPolyaShape_implies_RHStatement
   rw [hγ]
   simp [rhCriticalLine]
 
+/-- Consolidated theorem-honest package for the complex-temperature dictionary. -/
+theorem riemannHypothesis_dictionary_synthesis :
+    (∀ σ t, (rhComplexTemperature σ t).re = σ) ∧
+    (∀ σ t, (rhComplexTemperature σ t).im = t) ∧
+    (∀ σ t, rhCriticalLine (rhComplexTemperature σ t) ↔ σ = 1 / 2) ∧
+    (∀ n, rhArithmeticPhase 0 n = 1) ∧
+    (∀ σ N, rhFiniteComplexTrace σ 0 N =
+      (Finset.range N).sum fun k => (rhDampingWeight σ (k + 1) : ℂ)) ∧
+    (∀ s, s ≠ rhHagedornPole → rhPoleModel s * (s - rhHagedornPole) = 1) ∧
+    (∀ Z : ℂ → ℂ, HilbertPolyaShape Z → RHStatement Z) := by
+  constructor
+  · exact rhComplexTemperature_re
+  constructor
+  · exact rhComplexTemperature_im
+  constructor
+  · exact rhCriticalLine_complexTemperature
+  constructor
+  · exact rhArithmeticPhase_zero
+  constructor
+  · exact rhFiniteTrace_zero_phase
+  constructor
+  · exact rhPoleModel_inverse_relation
+  intro Z hHP
+  exact hilbertPolyaShape_implies_RHStatement hHP
 
 /-- Final Layer-11 naming for the spectral-thermodynamic picture. -/
 def criticalDamping : ℝ := 1 / 2
@@ -126,7 +148,7 @@ def complexTemperature (σ t : ℝ) : ℂ :=
 def hagedornTemperature : ℂ :=
   rhHagedornPole
 
-/-- Hilbert–Pólya Hamiltonian ax!om schema:
+/-- Hilbert–Pólya Hamiltonian axiom schema:
     nontrivial zeros of a chosen analytic continuation are represented as
     `1/2 + iγ`, with `γ` from a real spectrum. -/
 def hilbert_polya_hamiltonian (Z : ℂ → ℂ) : Type :=
@@ -240,6 +262,4 @@ theorem rh_zeta_zero_implies_graded_index_pole (Z : ℂ → ℂ) (s : ℂ) (hzer
     rhGradedIndexSingularity Z s :=
   rh_graded_supertrace_zero_at_zero Z hzero
 
-end
-
-end RiemannHypothesis
+end noncomputable section

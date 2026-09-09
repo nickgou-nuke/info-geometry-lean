@@ -25,8 +25,8 @@ real doubled Hestenes-Krein chiral carrier
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
 The five-grading closure packet assumes an explicit
-`SuperTKKConformalClosure.FiveGrading` property.  The chiral packet assumes an
-explicit `InvolutiveSelfDualCarrier` property.
+`SuperTKKConformalClosure.FiveGrading` witness.  The chiral packet assumes an
+explicit `InvolutiveSelfDualCarrier` witness.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 

@@ -25,7 +25,7 @@ noncomputable def superModel
     (superNumber : SuperSector → ℝ)
     (β μ ν : ℝ) :
     FiniteGibbs.Model (Data := SuperSector) (Theta := Unit) :=
-  fun g _ => effectiveSuperPotential State super energy particleNumber superNumber β μ ν g
+  ⟨fun g _ => effectiveSuperPotential State super energy particleNumber superNumber β μ ν g⟩
 
 /-- The super-model partition at temperature `1 / β` is the grand partition. -/
 theorem superModel_partition_eq_grandPartition
@@ -116,7 +116,7 @@ theorem outerVariationalObjective_eq_grandFreeEnergy_add_relativeEntropy
       exact superModel_weight_eq_outerWeight
         State super energy particleNumber superNumber β μ ν hβne fiber_nonempty g
 
-/-- The KL term in the outer variational property is nonnegative. -/
+/-- The KL term in the outer variational certificate is nonnegative. -/
 theorem outerVariationalGap_nonneg
     (super : Sector → SuperSector)
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)

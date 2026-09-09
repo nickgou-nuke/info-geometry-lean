@@ -1,7 +1,7 @@
 # 3D Mirror Symmetry for Instanton Moduli Spaces
 ## Multi-System Formalization of arXiv:2105.00588v3
 
-This directory contains formal implementations of 3D mirror symmetry for instanton moduli spaces across **six different formal systems**:
+This directory contains formal implementations of 3D mirror symmetry for instanton moduli spaces across **seven different formal systems**:
 
 - **SymPy** (Python) - Symbolic computation of Bethe equations, QQ-systems
 - **Lean 4** - Type-theoretic formalization with proofs

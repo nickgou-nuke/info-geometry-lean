@@ -399,7 +399,7 @@ def conservedObstructionFlowOfJones
 /-! ## 7. Discrete divisor/index link for arithmetic spectra -/
 
 /--
-A spectral divisor interface.
+A spectral divisor socket.
 
 This is the right way to connect discrete zeroes, including zeta/L-function
 zeroes, to an integer obstruction charge. The zeroes themselves are complex

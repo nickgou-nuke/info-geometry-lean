@@ -155,15 +155,10 @@ inductive GenKind where
   deriving DecidableEq, Repr
 
 /-- Edge-labelled generator. -/
-abbrev EdgeGen := Edge3 × GenKind
-
-namespace EdgeGen
-
-abbrev edge (g : EdgeGen) : Edge3 := g.1
-
-abbrev kind (g : EdgeGen) : GenKind := g.2
-
-end EdgeGen
+structure EdgeGen where
+  edge : Edge3
+  kind : GenKind
+  deriving DecidableEq, Repr
 
 /-- The degree of an edge generator for ambient dimension `D`. -/
 def genDegree (D : ℕ) (g : EdgeGen) : ℕ :=
@@ -177,7 +172,7 @@ def genDegree (D : ℕ) (g : EdgeGen) : ℕ :=
 @[simp] theorem beta_degree (D : ℕ) (e : Edge3) :
     genDegree D ⟨e, GenKind.beta⟩ = D - 1 := rfl
 
-/-- Even-dimensional property package for the quadric calculation. -/
+/-- Even-dimensional hypothesis package for the quadric calculation. -/
 structure EvenDimension where
   D : ℕ
   evenD : D % 2 = 0
@@ -293,6 +288,24 @@ theorem cooperad_action_eq
   C.cooperadCompatibility b g
 
 end DeRhamCohomologyData
+
+/-- Finite theorem-honest synthesis: the arity-three combinatorics and generator
+degrees compile; analytic de Rham completeness remains explicit comparison data. -/
+theorem quadratic_configuration3_synthesis (E : EvenDimension) :
+    (∀ e : Edge3, genDegree E.D ⟨e, GenKind.alpha⟩ = 1) ∧
+    (∀ e : Edge3, genDegree E.D ⟨e, GenKind.beta⟩ = E.D - 1) ∧
+    (∀ b : BlockDecomp3, ∃ e : Edge3, cooperadEdge b e = TargetFactor.internal) ∧
+    (∀ b : BlockDecomp3, ∀ e : Edge3,
+      cooperadEdge b e = TargetFactor.outer ∨ cooperadEdge b e = TargetFactor.internal) := by
+  constructor
+  · intro e
+    rfl
+  constructor
+  · intro e
+    rfl
+  constructor
+  · exact cooperad_has_internal_edge
+  · exact cooperad_edge_outer_or_internal
 
 end QuadraticConfiguration3
 

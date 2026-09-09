@@ -61,6 +61,24 @@ theorem mobius_zero_at_hagedorn (p : ℕ) :
     singlePrimeMobiusPartition p 0 = 0 := by
   simp [singlePrimeMobiusPartition, primeBoltzmannWeight]
 
+/-! ## Synthesis -/
+
+theorem primon_boson_fermion_duality_synthesis
+    (p : ℕ) (β : ℝ) (K : ℕ) (s : ℂ) :
+    -- Finite boson-mobius duality
+    singlePrimeBosonPartition p β K * singlePrimeMobiusPartition p β =
+      1 - (primeBoltzmannWeight p β) ^ (K + 1) ∧
+    -- Fermion-mobius product
+    singlePrimeFermionPartition p β * singlePrimeMobiusPartition p β =
+      1 - (primeBoltzmannWeight p β) ^ 2 ∧
+    -- Finite zero-temperature specialization
+    singlePrimeMobiusPartition p 0 = 0 ∧
+    -- CPT fixed point: Re(s) = 1/2 (from MajoranaPrimonSpectralBridge)
+    (MajoranaPrimonSpectralBridge.cptSpectralMap s = s ↔ s.re = 1/2) := by
+  exact ⟨finite_boson_mobius_duality p β K,
+    fermion_mobius_product p β,
+    mobius_zero_at_hagedorn p,
+    MajoranaPrimonSpectralBridge.cpt_fixed_point_iff_critical_line s⟩
 
 end PrimonBosonFermionDuality
 

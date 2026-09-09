@@ -6,6 +6,9 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 
 namespace InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 
+/-! These are selected, independently checked rows.  They are not a uniform
+    factorization theorem for the full `Fin 12 × Fin 189` table. -/
+
 open InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate

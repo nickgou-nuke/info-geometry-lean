@@ -9,7 +9,7 @@ namespace InfoGeometry.Arithmetic.WittenParityIndex
 This module verifies the finite algebraic parity sequence `(+1, -1, +1, -1)`
 for the first four symbolic Ramanujan-defect shapes.
 
-It is intentionally finite: it does not assert the Riemann property, analytic
+It is intentionally finite: it does not assert the Riemann hypothesis, analytic
 continuation, convergence of Ramanujan's formula, or a physical Witten-index
 theorem.  It records the closed polynomial parity that can be checked by the
 Lean kernel and connects that parity to the verified finite Bernoulli readouts
@@ -25,7 +25,7 @@ None.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 Analytic Ramanujan odd-zeta transformation, thermodynamic/KMS interpretation,
-and any Riemann-property-level statement.
+and any Riemann-hypothesis-level statement.
 
 The mathematical objects correspond to:
 - n = 1 : ζ(3) defect => Even Parity (+1)
@@ -85,20 +85,6 @@ theorem witten_parity_index_evaluation :
   unfold witten_parity_factor
   norm_num
 
-/-- The finite parity readout is `+1` on odd stages and `-1` on even stages. -/
-theorem witten_parity_factor_eq_neg_neg_one_pow (n : ℕ) :
-    witten_parity_factor n = -((-1 : ℝ) ^ n) := by
-  unfold witten_parity_factor
-  by_cases h : n % 2 = 0
-  · have h1 : n % 2 ≠ 1 := by omega
-    rw [if_neg h1]
-    rw [Even.neg_one_pow (Nat.even_iff.mpr h)]
-  · have h1 : n % 2 = 1 := by omega
-    rw [if_pos h1]
-    rw [Odd.neg_one_pow
-      (Nat.not_even_iff_odd.mp (fun he => h (Nat.even_iff.mp he)))]
-    norm_num
-
 end AlgebraicParity
 
 open InfoGeometry.Arithmetic.RamanujanDefectTower
@@ -114,10 +100,7 @@ theorem ramanujan_defect_layers_follow_witten_sequence :
       DefectParityTarget 2 (ramanujanBernoulliSide zetaFiveBernoulliReadout 2) ∧
       DefectParityTarget 3 (ramanujanBernoulliSide zetaSevenBernoulliReadout 3) ∧
       DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact zeta3_defect_parity
-  · exact zeta5_defect_parity
-  · exact zeta7_defect_parity
-  · exact zeta9_defect_parity
+  exact ⟨zeta3_defect_parity, zeta5_defect_parity,
+    zeta7_defect_parity, zeta9_defect_parity⟩
 
 end InfoGeometry.Arithmetic.WittenParityIndex

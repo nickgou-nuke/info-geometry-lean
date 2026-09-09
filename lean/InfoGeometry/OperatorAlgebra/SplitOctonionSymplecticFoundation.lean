@@ -113,66 +113,6 @@ theorem detZ_H : detZ H = -1 := rfl
 /-- The determinant of the diagonal unit is `1`. -/
 theorem detZ_oneZ : detZ oneZ = 1 := rfl
 
-theorem mulZ_oneZ (X : SplitOct) :
-    mulZ X oneZ = X := by
-  cases X
-  simp [mulZ, oneZ, addZ, ePlus, eMinus]
-
-theorem oneZ_mulZ (X : SplitOct) :
-    mulZ oneZ X = X := by
-  cases X
-  simp [mulZ, oneZ, addZ, ePlus, eMinus]
-
-theorem commZ_oneZ (X : SplitOct) :
-    commZ X oneZ = zeroZ := by
-  unfold commZ
-  rw [mulZ_oneZ, oneZ_mulZ]
-  cases X
-  simp [subZ, zeroZ]
-
-theorem antiCommZ_oneZ (X : SplitOct) :
-    antiCommZ X oneZ = addZ X X := by
-  unfold antiCommZ
-  rw [mulZ_oneZ, oneZ_mulZ]
-
-theorem oneZ_commZ (X : SplitOct) :
-    commZ oneZ X = zeroZ := by
-  unfold commZ
-  rw [oneZ_mulZ, mulZ_oneZ]
-  cases X
-  simp [subZ, zeroZ]
-
-theorem oneZ_antiCommZ (X : SplitOct) :
-    antiCommZ oneZ X = addZ X X := by
-  unfold antiCommZ
-  rw [oneZ_mulZ, mulZ_oneZ]
-
-theorem commZ_self (X : SplitOct) :
-    commZ X X = zeroZ := by
-  unfold commZ
-  cases X
-  simp [subZ, zeroZ]
-
-theorem subZ_swap (X Y : SplitOct) :
-    subZ X Y = negZ (subZ Y X) := by
-  cases X <;> cases Y
-  simp [subZ, negZ]
-
-theorem addZ_swap (X Y : SplitOct) :
-    addZ X Y = addZ Y X := by
-  cases X <;> cases Y
-  simp [addZ, add_comm]
-
-theorem commZ_swap (X Y : SplitOct) :
-    commZ Y X = negZ (commZ X Y) := by
-  unfold commZ
-  exact subZ_swap (mulZ Y X) (mulZ X Y)
-
-theorem antiCommZ_swap (X Y : SplitOct) :
-    antiCommZ Y X = antiCommZ X Y := by
-  unfold antiCommZ
-  exact addZ_swap (mulZ Y X) (mulZ X Y)
-
 /-- Canonical symplectic/hyperbolic commutator on each paired Zorn slot. -/
 theorem up_down_comm_eq_H (i : Fin 3) : commZ (up i) (down i) = H := by
   fin_cases i <;> rfl

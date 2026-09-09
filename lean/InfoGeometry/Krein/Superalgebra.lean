@@ -25,10 +25,34 @@ omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
 /-- Ordinary commutator `⁅A, B⁆` in `LieAlgebra`. -/
 lemma comm_eq_lie (A B : EndH H) : comm A B = ⁅A, B⁆ := rfl
 
+@[simp] lemma gradeConj_zero :
+    gradeConj (H := H) 0 = 0 := by
+  unfold gradeConj
+  simp
+
+@[simp] lemma gradeConj_add (A B : EndH H) :
+    gradeConj (H := H) (A + B) = gradeConj (H := H) A + gradeConj (H := H) B := by
+  unfold gradeConj
+  simp
+
+@[simp] lemma gradeConj_neg (A : EndH H) :
+    gradeConj (H := H) (-A) = -gradeConj (H := H) A := by
+  unfold gradeConj
+  simp
+
 @[simp] lemma gradeConj_sub (A B : EndH H) :
     gradeConj (H := H) (A - B) = gradeConj (H := H) A - gradeConj (H := H) B := by
-  rw [sub_eq_add_neg, gradeConj_add, gradeConj_neg]
-  simp only [sub_eq_add_neg]
+  simp [sub_eq_add_neg]
+
+@[simp] lemma gradeConj_smul (r : ℝ) (A : EndH H) :
+    gradeConj (H := H) (r • A) = r • gradeConj (H := H) A := by
+  unfold gradeConj
+  simp
+
+lemma gradeConj_involutive (A : EndH H) :
+    gradeConj (H := H) (gradeConj (H := H) A) = A := by
+  ext x
+  simp [gradeConj, ContinuousLinearMap.comp_assoc, KreinGradedModule.grade_invol]
 
 /-- Even projection in the `Γ`-conjugation splitting. -/
 noncomputable def evenPart (A : EndH H) : EndH H :=
@@ -47,14 +71,12 @@ lemma evenPart_add_oddPart (A : EndH H) :
 lemma evenPart_isEven (A : EndH H) :
     IsEven (H := H) (evenPart (H := H) A) := by
   unfold IsEven evenPart
-  rw [gradeConj_smul, gradeConj_add, gradeConj_involutive]
-  module
+  simp [gradeConj_involutive, add_comm]
 
 lemma oddPart_isOdd (A : EndH H) :
     IsOdd (H := H) (oddPart (H := H) A) := by
   unfold IsOdd oddPart
-  rw [gradeConj_smul, gradeConj_sub, gradeConj_involutive]
-  module
+  simp [gradeConj_involutive, sub_eq_add_neg]
 
 lemma evenPart_eq_of_isEven {A : EndH H} (hA : IsEven (H := H) A) :
     evenPart (H := H) A = A := by
@@ -133,6 +155,11 @@ lemma superComm_odd_odd
   rw [evenPart_eq_zero_of_isOdd (H := H) hA, oddPart_eq_of_isOdd (H := H) hA]
   rw [evenPart_eq_zero_of_isOdd (H := H) hB, oddPart_eq_of_isOdd (H := H) hB]
   simp [comm, anticomm]
+
+@[simp] lemma superComm_zero_left (B : EndH H) :
+    superComm (H := H) 0 B = 0 := by
+  unfold superComm evenPart oddPart comm anticomm
+  simp
 
 end KreinGradedModule
 

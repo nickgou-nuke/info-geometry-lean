@@ -20,7 +20,7 @@ states, creation and annihilation are partial basis maps, and the Hamiltonian
 readout is the finite prime-weighted number energy.
 
 Analytic specializations such as `holonomy s p = p^(1/2 - s)` are intentionally
-not hard-coded here. They belong to the analytic interface layer.
+not hard-coded here. They belong to the analytic/socket layer.
 
 No infinite Euler product.
 No analytic continuation.
@@ -36,7 +36,7 @@ namespace InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 
 open InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 
-/-- A finite property prime cutoff. -/
+/-- A finite certified prime cutoff. -/
 abbrev PrimeCutoff := PrimeExteriorGraphDirac.PrimeCutoff
 
 /-- Prime mode inside a finite cutoff. -/
@@ -127,96 +127,6 @@ theorem creationPush_sq_zero {P : PrimeCutoff}
   · have hmem : p ∈ insert p S := by simp
     simp [hp, hmem]
 
-theorem creationPush_comm_of_ne {P : PrimeCutoff}
-    {p q : PrimeMode P} (hpq : p ≠ q)
-    (f : CantorField P) (S : Vertex P) :
-    creationPush p (creationPush q f) S =
-      creationPush q (creationPush p f) S := by
-  by_cases hp : p ∈ S
-  · by_cases hq : q ∈ S
-    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq]
-    · have hpqS : p ∈ insert q S := by simp [hp]
-      simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq, hpqS]
-  · by_cases hq : q ∈ S
-    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq]
-    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq,
-        hpq, Ne.symm hpq, Finset.insert_comm]
-
-theorem annihilationPush_comm_of_ne {P : PrimeCutoff}
-    {p q : PrimeMode P} (hpq : p ≠ q)
-    (f : CantorField P) (S : Vertex P) :
-    annihilationPush p (annihilationPush q f) S =
-      annihilationPush q (annihilationPush p f) S := by
-  by_cases hp : p ∈ S
-  · by_cases hq : q ∈ S
-    · have herase : (S.erase q).erase p = (S.erase p).erase q := by
-        ext r
-        simp [and_left_comm]
-      simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
-        hp, hq, hpq, Ne.symm hpq, herase]
-    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
-        hp, hq]
-  · by_cases hq : q ∈ S
-    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
-        hp, hq, hpq]
-    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hp, hq]
-
-theorem creationPush_comm_of_ne_funext {P : PrimeCutoff}
-    {p q : PrimeMode P} (hpq : p ≠ q)
-    (f : CantorField P) :
-    (fun S => creationPush p (creationPush q f) S) =
-      (fun S => creationPush q (creationPush p f) S) := by
-  funext S
-  exact creationPush_comm_of_ne hpq f S
-
-theorem annihilationPush_comm_of_ne_funext {P : PrimeCutoff}
-    {p q : PrimeMode P} (hpq : p ≠ q)
-    (f : CantorField P) :
-    (fun S => annihilationPush p (annihilationPush q f) S) =
-      (fun S => annihilationPush q (annihilationPush p f) S) := by
-  funext S
-  exact annihilationPush_comm_of_ne hpq f S
-
-theorem creation_annihilationPush_comm_of_ne {P : PrimeCutoff}
-    {p q : PrimeMode P} (hpq : p ≠ q)
-    (f : CantorField P) (S : Vertex P) :
-    creationPush p (annihilationPush q f) S =
-      annihilationPush q (creationPush p f) S := by
-  by_cases hp : p ∈ S
-  · by_cases hq : q ∈ S
-    · have hp_erase : p ∈ S.erase q := by
-        simp [hp, hpq]
-      simp [creationPush, annihilationPush,
-        PrimeExteriorGraphDirac.create,
-        PrimeExteriorGraphDirac.annihilate, hp, hq, hp_erase]
-    · have hq_insert : q ∉ insert p S := by
-        simp [hq, Ne.symm hpq]
-      simp [creationPush, annihilationPush,
-        PrimeExteriorGraphDirac.create,
-        PrimeExteriorGraphDirac.annihilate, hp, hq]
-  · by_cases hq : q ∈ S
-    · have hq_insert : q ∈ insert p S := by
-        simp [hq]
-      have hp_erase : p ∉ S.erase q := by
-        simp [hp]
-      have hset : (insert p S).erase q = insert p (S.erase q) := by
-        ext r
-        by_cases hrp : r = p
-        · subst r
-          simp [hp, hpq]
-        · by_cases hrq : r = q
-          · subst r
-            simp [Finset.mem_erase, hpq, hrp]
-          · simp [Finset.mem_erase, hrp, hrq]
-      simp [creationPush, annihilationPush,
-        PrimeExteriorGraphDirac.create,
-        PrimeExteriorGraphDirac.annihilate, hp, hq, hq_insert,
-        hp_erase, hset]
-    · have hqp : q ≠ p := Ne.symm hpq
-      simp [creationPush, annihilationPush,
-        PrimeExteriorGraphDirac.create,
-        PrimeExteriorGraphDirac.annihilate, hp, hq, hqp]
-
 /-- Annihilation push-forward is nilpotent on a fixed prime axis: `ι_p² = 0`. -/
 @[simp, rep_depth thermo]
 theorem annihilationPush_sq_zero {P : PrimeCutoff}
@@ -232,7 +142,7 @@ Finite local CAR identity on Cantor fields:
 
 `ε_p ι_p + ι_p ε_p = 1`.
 
-This is a genuine operator lemma, not a property. It proves that the
+This is a genuine operator lemma, not a certificate. It proves that the
 creation/annihilation push-forwards close to the identity on each prime axis.
 -/
 @[rep_depth thermo]
@@ -1235,9 +1145,9 @@ theorem creationPush_eq_creationKernel_sum {P : PrimeCutoff}
   unfold creationPush creationKernel optionEval
   cases h : PrimeExteriorGraphDirac.create p S with
   | none =>
-      simp
+      simp [h]
   | some U =>
-      simp [Finset.sum_ite_eq]
+      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
 
 /--
 Single-axis annihilation action equals the corresponding single-axis kernel action.
@@ -1253,9 +1163,9 @@ theorem annihilationPush_eq_annihilationKernel_sum {P : PrimeCutoff}
   unfold annihilationPush annihilationKernel optionEval
   cases h : PrimeExteriorGraphDirac.annihilate p S with
   | none =>
-      simp
+      simp [h]
   | some U =>
-      simp [Finset.sum_ite_eq]
+      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
 
 /-! ## 3. Supercharges and finite Cantor--Dirac operator -/
 
@@ -1406,9 +1316,9 @@ theorem normalizedPrimeHolonomy_normSq {P : PrimeCutoff}
   unfold normalizedPrimeHolonomy Complex.normSq
   set a : ℝ := ((1 : ℝ) / 2 - s.re) * logPrime p
   set θ : ℝ := -(s.im * logPrime p)
-  simp [pow_two, mul_left_comm, mul_comm]
-  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 :=
-    Real.cos_sq_add_sin_sq θ
+  simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 := by
+    simpa [add_comm] using Real.cos_sq_add_sin_sq θ
   nlinarith [htrig]
 
 /--
@@ -1445,7 +1355,7 @@ theorem normalizedPrimeHolonomy_normSq_eq_one_iff {P : PrimeCutoff}
 Finite-cutoff version: all concrete normalized holonomies are unit-norm exactly
 on the critical line.
 
-The `Nonempty` property prevents the empty cutoff from making the left side
+The `Nonempty` assumption prevents the empty cutoff from making the left side
 vacuously true.
 -/
 @[rep_depth thermo]
@@ -2462,7 +2372,7 @@ theorem op_pairing_hermitian_of_kernel_conj_symm
         = ∑ S, ∑ T, (star (D.kernel s S T) * star (f T)) * g S := by
             simp [Finset.sum_mul]
     _ = ∑ S, ∑ T, star (f T) * (star (D.kernel s S T) * g S) := by
-            simp [mul_left_comm, mul_comm]
+            simp [mul_assoc, mul_left_comm, mul_comm]
     _ = ∑ T, ∑ S, star (f T) * (star (D.kernel s S T) * g S) := by
             rw [Finset.sum_comm]
     _ = ∑ T, ∑ S, star (f T) * (D.kernel s T S * g S) := by
@@ -2522,6 +2432,35 @@ theorem op_isSelfAdjoint_of_unitary_data
   · intro p
     exact D.weighted_mode_isAdjointPairRev_of_unitary s hAmp hU p
 
+/--
+Legacy compatibility alias.
+
+Prefer `op_isSelfAdjoint_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_isSelfAdjoint_of_unitary_data s hAmp hU
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  exact D.op_isSelfAdjoint_of_unitary_data s hAmp hU
 
 /--
 Zeta-specialized finite self-adjointness from unitary-data assumptions.
@@ -2531,8 +2470,8 @@ This eliminates explicit modewise adjoint hypotheses by deriving them from
 -/
 @[rep_depth thermo]
 theorem op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
-    (_hP : P.primes.Nonempty) (s : ℂ)
-    (_hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
     (hU : D.HolonomyUnitaryAt s)
     (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
     IsAdjointPair (P := P) (D.op s) (D.op s) := by
@@ -2603,6 +2542,41 @@ theorem kernel_conj_symm_of_op_pairing_hermitian
     exact hpair f g
   exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
 
+/--
+Legacy compatibility alias.
+
+Prefer `kernel_conj_symm_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+      hP s hhol hs hAmp
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `kernel_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
 
 /--
 Kernel Hermitian symmetry from unitary-data assumptions under zeta specialization.
@@ -2705,6 +2679,24 @@ theorem op_basisDelta_conj_symm_iff_kernel_conj_symm
   · intro hK S T
     exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
 
+/--
+Legacy compatibility alias.
+
+Prefer `op_basisDelta_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S := by
+    intro S T
+    exact D.kernel_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp S T
+  exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
 
 /--
 Basis-delta Hermitian symmetry from unitary-data assumptions under zeta specialization.
@@ -2756,6 +2748,39 @@ theorem op_basisDelta_conj_symm_of_op_pairing_hermitian
     exact D.kernel_conj_symm_of_op_pairing_hermitian s hpair S T
   exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
 
+/--
+Legacy compatibility alias.
+
+Prefer `op_basisDelta_conj_symm_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  exact D.op_basisDelta_conj_symm_of_unitary_data_of_zetaHolonomy
+    hP s hhol hs hAmp S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_pairing_hermitian_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact hself f g
 
 /--
 Full finite Hermitian pairing law from unitary-data assumptions under
@@ -2791,6 +2816,21 @@ theorem op_pairing_hermitian_of_unitary_data_of_zetaHolonomy
   exact D.op_pairing_hermitian_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
     hP s hhol hU hAmp f g
 
+/--
+Legacy compatibility alias.
+
+Prefer `op_pairing_hermitian_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  exact D.op_pairing_hermitian_of_unitary_data_of_zetaHolonomy
+    hP s hhol hs hAmp f g
 
 end FiniteCantorZetaDirac
 

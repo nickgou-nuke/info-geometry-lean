@@ -16,6 +16,7 @@ It kills the finite shadows first:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -352,19 +353,19 @@ end Circuit
 /-! ## 7. Owner theorems discharged constructively -/
 
 /-- Constructive proof of Bell-same support correlation. -/
-theorem bell_same_support :
+theorem bellSameSupportOwnerTarget :
     ∀ x : Bit × Bit,
       bellSameAmplitude x ≠ 0 ↔ x.1 = x.2 :=
   bellSame_nonzero_iff
 
 /-- Constructive proof of GHZ support correlation. -/
-theorem ghz_support :
+theorem ghzSupportOwnerTarget :
     ∀ x : TripleBit,
       ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c :=
   ghz_nonzero_iff
 
 /-- Constructive proof of the finite Bell-to-GHZ support transition. -/
-theorem bell_to_ghz_copy_support :
+theorem bellToGHZCopyOwnerTarget :
     ∀ x : Bit × Bit,
       bellSameAmplitude x ≠ 0 →
         ghzAmplitude (copyBobToCharlie x) ≠ 0 := by
@@ -372,7 +373,7 @@ theorem bell_to_ghz_copy_support :
   exact copyBellSame_to_GHZ h
 
 /-- Constructive proof of the classical single-flip complexity bound. -/
-theorem classical_single_flip_complexity_le :
+theorem classicalSingleFlipComplexityOwnerTarget :
     ∀ (n : ℕ) (s : BitString n),
       classicalSingleFlipComplexity s ≤ n := by
   intro n s
@@ -381,11 +382,27 @@ theorem classical_single_flip_complexity_le :
 /--
 Constructive proof of finite circuit gate-accounting additivity.
 -/
-theorem circuit_cost_append :
+theorem circuitCostAppendOwnerTarget :
     ∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
       Circuit.cost (C₁ ++ C₂) =
         Circuit.cost C₁ + Circuit.cost C₂ := by
   intro Wire C₁ C₂
   exact Circuit.cost_append C₁ C₂
+
+@[owner_target_tag]
+theorem finiteEntanglementComplexity_packet :
+    (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 ↔ x.1 = x.2) ∧
+      (∀ x : TripleBit, ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c) ∧
+      (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 →
+        ghzAmplitude (copyBobToCharlie x) ≠ 0) ∧
+      (∀ (n : ℕ) (s : BitString n), classicalSingleFlipComplexity s ≤ n) ∧
+      (∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
+        Circuit.cost (C₁ ++ C₂) =
+          Circuit.cost C₁ + Circuit.cost C₂) := by
+  exact ⟨bellSameSupportOwnerTarget,
+    ghzSupportOwnerTarget,
+    bellToGHZCopyOwnerTarget,
+    classicalSingleFlipComplexityOwnerTarget,
+    circuitCostAppendOwnerTarget⟩
 
 end InfoGeometry.Quantum.FiniteEntanglementComplexityCore

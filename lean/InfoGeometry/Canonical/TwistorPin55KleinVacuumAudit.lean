@@ -1,0 +1,12 @@
+import InfoGeometry.Canonical.TwistorPin55KleinVacuumBridge
+
+namespace InfoGeometry.Canonical.TwistorPin55KleinVacuumBridge
+
+#print axioms pinMinusVacuumRepresentative_klein_twist
+#print axioms purePinorVacuum_isPureSpinor
+#print axioms pinorVacuumCenter_action_pinMinus
+#print axioms pinorVacuumCenter_action_involutive
+#print axioms pinorVacuumCenter_action_central
+#print axioms pinMinus_is_klein_related_to_pinPlus
+
+end InfoGeometry.Canonical.TwistorPin55KleinVacuumBridge

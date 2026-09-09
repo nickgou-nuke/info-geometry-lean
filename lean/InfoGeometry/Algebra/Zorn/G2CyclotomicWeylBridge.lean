@@ -2,6 +2,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -132,6 +133,41 @@ theorem dihedral_action_preserves_sector
     (g : DihedralGroup 6) (r : Root) :
     (g • r).1 = r.1 := by
   cases g <;> rcases r with ⟨b, k⟩ <;> rfl
+
+theorem dihedral_mapsTo_sector_family :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun b : Bool => {r : Root | sector r = b})
+      (fun g : DihedralGroup 6 => fun r => g • r)
+      (fun _ b => b) := by
+  intro g b r hr
+  change (g • r).1 = b
+  change sector r = b at hr
+  rw [dihedral_action_preserves_sector g r]
+  exact hr
+
+theorem dihedral_sector_image_eq (g : DihedralGroup 6) (b : Bool) :
+    (fun r : Root => g • r) '' {r : Root | sector r = b} =
+      {r : Root | sector r = b} := by
+  apply Set.Subset.antisymm
+  · rintro _ ⟨r, hr, rfl⟩
+    change (g • r).1 = b
+    rw [dihedral_action_preserves_sector g r]
+    exact hr
+  · intro r hr
+    refine ⟨g⁻¹ • r, ?_, ?_⟩
+    · change (g⁻¹ • r).1 = b
+      rw [dihedral_action_preserves_sector g⁻¹ r]
+      exact hr
+    · simp
+
+theorem dihedral_composition_mapsTo_sector_family :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun b : Bool => {r : Root | sector r = b})
+      (fun gh : DihedralGroup 6 × DihedralGroup 6 =>
+        fun r => gh.1 • (gh.2 • r))
+      (fun _ b => b) := by
+  exact InfoGeometry.OperatorAlgebra.mapsToGrade_comp_family
+    dihedral_mapsTo_sector_family dihedral_mapsTo_sector_family
 
 theorem sectorSection_represents_orbit (r : Root) :
     ∃ g : DihedralGroup 6, g • sectorSection (sector r) = r := by
@@ -286,6 +322,11 @@ noncomputable instance dihedralRootFaithfulSMul :
 
 def dihedralRootPermutationRep : DihedralGroup 6 →* Equiv.Perm Root :=
   MulAction.toPermHom (DihedralGroup 6) Root
+
+@[simp] theorem dihedralRootPermutationRep_apply
+    (g : DihedralGroup 6) (r : Root) :
+    dihedralRootPermutationRep g r = g • r :=
+  rfl
 
 theorem dihedralRootPermutationRep_injective :
     Function.Injective dihedralRootPermutationRep := by

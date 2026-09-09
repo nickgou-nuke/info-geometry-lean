@@ -1,10 +1,11 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Drazin--Fierz bridge
 
-Böttcher--Spitkovsky-style two-projection interface for Drazin-stable Fierz
+Böttcher--Spitkovsky-style two-projection socket for Drazin-stable Fierz
 readouts, stated in expectation-only form.
 
 This file is a local operator chart, not a theorem that two projections
@@ -23,7 +24,7 @@ two projection chart W*(P,Q)
 ```
 
 Any statement that a Drazin-stable fiber lands on a Fierz quadric is explicitly
-a compatibility-property readout.
+a compatibility-assumption readout.
 -/
 
 noncomputable section
@@ -75,16 +76,14 @@ abbrev FiberMatrix :=
 The trace-free Böttcher--Spitkovsky fiber representation.
 
 In the paper the entries are essentially bounded complex functions on the
-spectrum of the relative-position operator `H`.  This interface keeps the domain
+spectrum of the relative-position operator `H`.  This socket keeps the domain
 as `ℝ`; spectral support and spectral measure are supplied separately.
 -/
 @[rep_depth operator]
-abbrev BSExpectationPhi := ℝ → FiberMatrix
+structure BSExpectationPhi where
+  fiber : ℝ → FiberMatrix
 
 namespace BSExpectationPhi
-
-abbrev fiber (Φ : BSExpectationPhi) : ℝ → FiberMatrix :=
-  Φ
 
 variable (Φ : BSExpectationPhi)
 
@@ -148,7 +147,7 @@ end BSExpectationPhi
 Essential separation from zero on a spectral stratum.
 
 `νH` is the spectral measure associated with the relative-position operator.
-This is a measure-theoretic interface; no spectral theorem is proved here.
+This is a measure-theoretic socket; no spectral theorem is proved here.
 -/
 @[rep_depth operator]
 def EssSeparatedFromZeroOn
@@ -206,7 +205,7 @@ structure NoTraceDrazinData
 
 end BSExpectationPhi
 
-/-! ## 3. Drazin-stable Fierz readout interfaces -/
+/-! ## 3. Drazin-stable Fierz readout sockets -/
 
 /--
 Model-specific map extracting normalized Fierz coordinates from the stable
@@ -385,28 +384,16 @@ def expectationFierzVector
 
 /-- Normalized expectation-valued Fierz coordinates. -/
 @[rep_depth operator]
-abbrev NormalizedFierzCoordinates := FierzChannel → ℂ
-
-namespace NormalizedFierzCoordinates
-
-abbrev coord (x : NormalizedFierzCoordinates) : FierzChannel → ℂ :=
-  x
-
-end NormalizedFierzCoordinates
+structure NormalizedFierzCoordinates where
+  coord : FierzChannel → ℂ
 
 /-- Model-specific residual for a normalized Fierz coordinate packet. -/
 @[rep_depth operator]
-abbrev FierzResidual := NormalizedFierzCoordinates → ℝ
-
-namespace FierzResidual
-
-abbrev residual (r : FierzResidual) : NormalizedFierzCoordinates → ℝ :=
-  r
-
-end FierzResidual
+structure FierzResidual where
+  residual : NormalizedFierzCoordinates → ℝ
 
 /--
-Compatibility property connecting trace-free Drazin-stable two-projection
+Compatibility assumption connecting trace-free Drazin-stable two-projection
 fibers to a chosen Fierz residual.
 
 This is not derived from the Böttcher--Spitkovsky criterion alone.
@@ -437,7 +424,7 @@ theorem drazin_filter_lands_on_fierz_quadric
     C.residual (C.readout Φ νH σH) = 0 :=
   C.sound Φ νH σH hD
 
-/-! ## 5. Strong alternating-projection limit interface -/
+/-! ## 5. Strong alternating-projection limit socket -/
 
 /-- Strong operator convergence of bounded-operator sequences. -/
 @[rep_depth operator]
@@ -474,7 +461,7 @@ theorem alternating_projection_strong_limit
     StrongTendsto A.step A.limit :=
   A.strong_limit
 
-/-! ## 6. Expectation-correlation Birkhoff interface -/
+/-! ## 6. Expectation-correlation Birkhoff socket -/
 
 /-- A stochastic channel observable sampled along discrete time. -/
 @[rep_depth projective]
@@ -552,7 +539,7 @@ def permutationMatrix4 (π : Equiv.Perm (Fin 4)) :
     Matrix (Fin 4) (Fin 4) ℝ :=
   fun i j => if π i = j then 1 else 0
 
-/-- Birkhoff decomposition interface for a bistochastic `4 × 4` matrix. -/
+/-- Birkhoff decomposition socket for a bistochastic `4 × 4` matrix. -/
 @[rep_depth projective]
 structure BirkhoffDecomposition4
     (B : Bistochastic4) where

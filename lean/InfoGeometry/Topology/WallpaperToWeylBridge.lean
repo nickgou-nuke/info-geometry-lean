@@ -72,7 +72,7 @@ theorem pg_exactness_gives_nonorientable_weyl_cancellation
     (pg : WallpaperGroupPG) (p : Lattice2D)
     {Semimetal ι : Type} [Fintype ι]
     (β : Semimetal → ι → ℤ)
-    (hExact : ∀ s, ModTwoChargeNeutral (β s))
+    (hExact : ExactAtLocalCharges β)
     (s : Semimetal) :
     pg.G (pg.T_y p) = pg.T_y.symm (pg.G p) ∧
       ModTwoChargeNeutral (β s) := by

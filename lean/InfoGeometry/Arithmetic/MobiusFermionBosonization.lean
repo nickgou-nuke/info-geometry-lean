@@ -96,6 +96,14 @@ def exteriorProduct
     (S T : FState PrimeLabel) : Option (FState PrimeLabel) :=
   if Disjoint S T then some (S ∪ T) else none
 
+/-- Disjoint exterior states multiply to their union. -/
+theorem exteriorProduct_eq_some_union_of_disjoint
+    {PrimeLabel : Type*} [DecidableEq PrimeLabel]
+    {S T : FState PrimeLabel}
+    (h : Disjoint S T) :
+    exteriorProduct S T = some (S ∪ T) := by
+  simp [exteriorProduct, h]
+
 /-- Overlapping exterior states multiply to zero/none. -/
 theorem exteriorProduct_eq_none_of_not_disjoint
     {PrimeLabel : Type*} [DecidableEq PrimeLabel]
@@ -267,5 +275,20 @@ structure DeterminantVandermondeComparisonGate
   vandermonde : VandermondeReadout
   compare : DeterminantReadout → VandermondeReadout → Prop
   valid_law : compare determinant vandermonde
+
+namespace DeterminantVandermondeComparisonGate
+
+/--
+Explicit debt: a determinant/Vandermonde comparison needs a concrete owner
+model, not a caller-chosen predicate bundled with its own proof.
+-/
+theorem valid
+    {DeterminantReadout VandermondeReadout : Type*}
+    (G : DeterminantVandermondeComparisonGate
+      DeterminantReadout VandermondeReadout) :
+    G.compare G.determinant G.vandermonde :=
+    G.valid_law
+
+end DeterminantVandermondeComparisonGate
 
 end InfoGeometry.Arithmetic.MobiusFermionBosonization

@@ -42,7 +42,7 @@ instance : CoeFun (AdditiveModularFlow (H := H))
     (σ : AdditiveModularFlow (H := H)) : σ 0 = 1 :=
   by
     change σ.toFun (Multiplicative.toAdd.symm 0) = 1
-    exact σ.toFun.map_one
+    simpa using σ.toFun.map_one
 
 @[simp] theorem AdditiveModularFlow.map_add
     (σ : AdditiveModularFlow (H := H)) (s t : ℝ) :
@@ -248,7 +248,7 @@ theorem flowUnitCocycle_cocycle
 /--
 Canonical unit cocycle.
 
-This gives a concrete `IsConnesCocycle` property for any additive modular flow,
+This gives a concrete `IsConnesCocycle` witness for any additive modular flow,
 so downstream consumers can avoid carrying a free cocycle parameter when they
 only need existence.
 -/
@@ -533,7 +533,7 @@ theorem cocycleLogPotential_add
 Canonical flow-unit branch of logarithmic cocycle additivity.
 
 This removes the explicit `hCocycle : IsConnesCocycle σ u` argument on the
-flow-native unit branch by constructing the cocycle property from `σ` itself via
+flow-native unit branch by constructing the cocycle witness from `σ` itself via
 `flowUnitCocycle_isConnesCocycle`.
 -/
 theorem cocycleLogPotential_add_flowUnitCocycle

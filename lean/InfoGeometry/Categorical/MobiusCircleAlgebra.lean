@@ -10,7 +10,7 @@ coefficient transform under a linear fractional change of coordinates.
 The variables with suffix `bar` are algebraically independent here.  A complex
 specialization is obtained by taking them to be the corresponding complex
 conjugates.  Keeping the statement over an arbitrary commutative ring gives a
-small, robust property for the symbolic expansion.
+small, robust certificate for the symbolic expansion.
 -/
 
 namespace InfoGeometry.Categorical.MobiusCircleAlgebra

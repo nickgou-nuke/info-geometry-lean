@@ -86,4 +86,16 @@ theorem logBranchShift_add (m n : ℤ) :
   norm_num
   ring
 
+/-- Synthesis: scalar and traceless roots of `-I` coexist in `M₂(ℂ)`. -/
+theorem negative_identity_root_synthesis :
+    ((I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * (I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      -(1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    ((I • σ₂) * (I • σ₂) = -(1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  exact ⟨scalar_i_square_root_neg_one, iσ₂_square_root_neg_one⟩
+
+#check T_sq
+#check traceless_square_root_neg_one
+#check negative_identity_root_synthesis
+#check logBranchShift_add
+
 end BiquaternionNegativeRootsLog

@@ -4,7 +4,8 @@ namespace InfoGeometry.Canonical.AlbertCayleyDickson
 
 open AlbertStep
 
-variable {F A : Type*} [CommRing F] [NonAssocRing A] [Module F A] [SMulCommClass F A A] [IsScalarTower F A A] [StarRing A]
+variable {F A : Type*} [CommRing F] [Ring A] [Algebra F A] [Module F A]
+  [SMulCommClass F A A] [IsScalarTower F A A] [StarRing A]
 
 /-- Addition for AlbertStep -/
 instance {γ : F} : Add (AlbertStep F A γ) where
@@ -42,17 +43,23 @@ theorem cdEmbed_neg {γ : F} (x : A) :
 
 theorem cdEmbed_smul {γ : F} (c : F) (x : A) :
     cdEmbed (γ := γ) (c • x) = c • cdEmbed x := by
-  ext <;> simp [cdEmbed]
+  ext
+  · rfl
+  · change (0 : A) = c • (0 : A)
+    rw [Algebra.smul_def, mul_zero]
 
 theorem cdEmbed_conj {γ : F} (x : A) :
-    cdEmbed (γ := γ) (star x) = conj (cdEmbed x) := by
+    cdEmbed (γ := γ) (star x) = conj (γ := γ) (cdEmbed x) := by
   simp [cdEmbed, conj]
 
 theorem cdEmbed_mul {γ : F} (x y : A) :
-    cdEmbed (γ := γ) (x * y) = mul (cdEmbed x) (cdEmbed y) := by
+    cdEmbed (γ := γ) (x * y) =
+      mul (γ := γ) (cdEmbed x) (cdEmbed y) := by
   ext
-  · simp [cdEmbed, mul]
-  · simp [cdEmbed, mul]
+  · change x * y = x * y + γ • (star (0 : A) * 0)
+    simp [Algebra.smul_def]
+  · change (0 : A) = 0 * x + 0 * star y
+    simp
 
 theorem cdEmbed_injective {γ : F} :
     Function.Injective (cdEmbed (F := F) (A := A) (γ := γ)) := by
@@ -67,24 +74,31 @@ theorem cdDelay_add {γ : F} (x y : A) :
   ext <;> simp [cdDelay]
 
 theorem cdDelay_conj {γ : F} (x : A) :
-    conj (cdDelay (γ := γ) x) = -cdDelay x := by
+    conj (F := F) (A := A) (γ := γ) (cdDelay (γ := γ) x) =
+      -cdDelay (γ := γ) x := by
   ext <;> simp [cdDelay, conj]
 
 theorem cdDelay_mul_formula {γ : F} (x y : A) :
-    mul (cdDelay (γ := γ) x) (cdDelay y) = cdEmbed (γ • (star y * x)) := by
+    mul (F := F) (A := A) (γ := γ) (cdDelay (γ := γ) x) (cdDelay (γ := γ) y) =
+      cdEmbed (γ := γ) (γ • (star y * x)) := by
   ext
   · simp [cdDelay, cdEmbed, mul]
   · simp [cdDelay, cdEmbed, mul]
 
 theorem cdDelay_not_mul_in_general [Nontrivial A] :
-    mul (cdDelay (γ := (1 : F)) (1 : A)) (cdDelay (1 : A)) ≠ cdDelay ((1 : A) * 1) := by
+    mul (F := F) (A := A) (γ := (1 : F)) (cdDelay (γ := (1 : F)) (1 : A))
+        (cdDelay (γ := (1 : F)) (1 : A)) ≠
+      cdDelay (γ := (1 : F)) ((1 : A) * 1) := by
   intro h
-  have h1 : mul (cdDelay (γ := (1 : F)) (1 : A)) (cdDelay (1 : A)) = cdEmbed (1 : A) := by
-    rw [cdDelay_mul_formula]
-    simp
+  have h1 : mul (F := F) (A := A) (γ := (1 : F))
+      (cdDelay (γ := (1 : F)) (1 : A))
+      (cdDelay (γ := (1 : F)) (1 : A)) = cdEmbed (γ := (1 : F)) (1 : A) := by
+    rw [cdDelay_mul_formula (F := F) (A := A) (γ := (1 : F))]
+    simp [Algebra.smul_def]
   rw [h1] at h
   have h2 : (cdEmbed (γ := (1 : F)) (1 : A)).p = (cdDelay (γ := (1 : F)) ((1 : A) * 1)).p := congrArg AlbertStep.p h
-  revert h2
-  simp [cdEmbed, cdDelay]
+  rw [mul_one] at h2
+  change (1 : A) = 0 at h2
+  exact (one_ne_zero : (1 : A) ≠ 0) h2
 
 end InfoGeometry.Canonical.AlbertCayleyDickson

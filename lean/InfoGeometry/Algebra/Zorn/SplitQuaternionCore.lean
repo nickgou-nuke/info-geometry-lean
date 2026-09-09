@@ -86,26 +86,6 @@ def genVec : Fin 4 → CZ
 def coreSubmodule : Submodule ℝ CZ :=
   Submodule.span ℝ (Set.range genVec)
 
-theorem genVec_linearIndependent : LinearIndependent ℝ genVec := by
-  rw [Fintype.linearIndependent_iff]
-  intro g hg i
-  have ha := congrArg (fun X : CZ => X.a) hg
-  have hb := congrArg (fun X : CZ => X.b) hg
-  have hx0 := congrArg (fun X : CZ => X.x 0) hg
-  have hy0 := congrArg (fun X : CZ => X.y 0) hg
-  have hx1 := congrArg (fun X : CZ => X.x 1) hg
-  fin_cases i <;>
-    simp [genVec, iUnit, lUnit, kUnit, zMul,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross,
-      Fin.sum_univ_four] at ha hb hx0 hy0 ⊢ <;>
-    linarith
-
-theorem coreSubmodule_finrank : Module.finrank ℝ coreSubmodule = 4 := by
-  rw [show coreSubmodule = Submodule.span ℝ (Set.range genVec) by rfl]
-  rw [finrank_span_eq_card genVec_linearIndependent]
-  rfl
-
 /-! ## Bilinearity of `zMul` (componentwise over ℝ) -/
 
 /-- `zMul` distributes over addition in its left argument. -/

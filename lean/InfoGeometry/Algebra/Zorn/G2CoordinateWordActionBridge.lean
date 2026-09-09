@@ -21,6 +21,18 @@ def coordinateWordAction : List Bool → Equiv.Perm G2CoordinateRoot
   | bit :: word =>
       (if bit then s1Root else s2Root).trans (coordinateWordAction word)
 
+theorem coordinateWordAction_append (u v : List Bool) :
+    coordinateWordAction (u ++ v) =
+      coordinateWordAction v * coordinateWordAction u := by
+  induction u with
+  | nil => simp [coordinateWordAction]
+  | cons bit u ih =>
+      simp only [List.cons_append, coordinateWordAction]
+      rw [ih]
+      cases bit <;>
+        apply Equiv.ext <;> intro x <;>
+        simp [Equiv.Perm.mul_def, Equiv.trans_apply]
+
 theorem coordinateWordAction_apply_signed
     (word : List Bool) (r : SignedPositiveRoot) :
     coordinateWordAction word (signedRootCoordinate r) =

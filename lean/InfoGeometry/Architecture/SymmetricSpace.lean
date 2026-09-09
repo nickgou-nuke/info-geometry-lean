@@ -52,7 +52,7 @@ variable {G : Type _} [Group G]
 abbrev InvolutiveMulAut (G : Type _) [Group G] :=
   { θ : MulAut G // Function.Involutive θ }
 
-/-- Build a `CartanInvolution` from a `MulAut` involution property. -/
+/-- Build a `CartanInvolution` from a `MulAut` involution witness. -/
 def CartanInvolution.ofMulAutInvolution
     (θ : MulAut G) (hθ : Function.Involutive θ) :
     CartanInvolution G where

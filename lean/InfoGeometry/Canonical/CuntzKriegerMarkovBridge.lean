@@ -33,6 +33,14 @@ theorem golden_matrix_trace_eq : (!![1, 1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ).t
   change (1 : ℤ) + 0 = 1
   ring
 
+/-- Cuntz-Krieger Partial Isometry System for a 2x2 Transition Matrix A. -/
+structure CuntzKriegerSystem (A : Matrix (Fin 2) (Fin 2) ℝ) (R : Type*) [Ring R] [Algebra ℝ R] where
+  S : Fin 2 → R
+  S_star : Fin 2 → R
+  ortho : ∀ (i j : Fin 2), i ≠ j → S_star i * S j = 0
+  cuntz_krieger_rel : ∀ (i : Fin 2),
+    S_star i * S i = A i 0 • (S 0 * S_star 0) + A i 1 • (S 1 * S_star 1)
+
 /-- Cuntz Algebra 𝒪₂ Specialization: All A_ij = 1. -/
 def cuntez2Matrix : Matrix (Fin 2) (Fin 2) ℝ :=
   !![1, 1; 1, 1]
@@ -40,11 +48,9 @@ def cuntez2Matrix : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- **Theorem**: Cuntz Algebra 𝒪₂ Projection Sum Identity:
     S₀* S₀ = S₀ S₀* + S₁ S₁*. -/
 theorem cuntz2_projection_sum_identity (R : Type*) [Ring R] [Algebra ℝ R]
-    (S S_star : Fin 2 → R)
-    (h : S_star 0 * S 0 =
-      cuntez2Matrix 0 0 • (S 0 * S_star 0) +
-        cuntez2Matrix 0 1 • (S 1 * S_star 1)) :
-    S_star 0 * S 0 = S 0 * S_star 0 + S 1 * S_star 1 := by
+    (sys : CuntzKriegerSystem cuntez2Matrix R) :
+    sys.S_star 0 * sys.S 0 = sys.S 0 * sys.S_star 0 + sys.S 1 * sys.S_star 1 := by
+  have h := sys.cuntz_krieger_rel 0
   dsimp [cuntez2Matrix] at h
   rw [h]
   simp
@@ -54,11 +60,9 @@ theorem cuntz2_projection_sum_identity (R : Type*) [Ring R] [Algebra ℝ R]
 theorem golden_cuntz_krieger_node1_identity (R : Type*) [Ring R] [Algebra ℝ R]
     (A_real : Matrix (Fin 2) (Fin 2) ℝ)
     (hA : A_real 1 0 = 1 ∧ A_real 1 1 = 0)
-    (S S_star : Fin 2 → R)
-    (h : S_star 1 * S 1 =
-      A_real 1 0 • (S 0 * S_star 0) +
-        A_real 1 1 • (S 1 * S_star 1)) :
-    S_star 1 * S 1 = S 0 * S_star 0 := by
+    (sys : CuntzKriegerSystem A_real R) :
+    sys.S_star 1 * sys.S 1 = sys.S 0 * sys.S_star 0 := by
+  have h := sys.cuntz_krieger_rel 1
   rw [hA.1, hA.2] at h
   rw [h]
   simp

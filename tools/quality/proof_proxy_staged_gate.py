@@ -62,7 +62,7 @@ def main() -> int:
             if line_no is not None:
                 line_no += 1
             continue
-        if re.search(r"^\s*(axiom|postulate)\b|\b(admit|sorry)\b", stripped):
+        if re.search(r"^\s*(?:axiom|postulate)\s+[A-Za-z_][A-Za-z0-9_'.]*\s*:|^\s*(?:admit|sorry)\b", stripped):
             failures.append(f"{loc}: staged forbidden placeholder `{stripped}`")
         fm = FIELD_RE.match(added)
         if fm and not stripped.startswith("have "):

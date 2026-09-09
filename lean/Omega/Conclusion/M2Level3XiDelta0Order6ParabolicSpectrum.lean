@@ -35,7 +35,7 @@ theorem paper_conclusion_m2_level3_xi_delta0_order6_parabolic_spectrum :
         4 + 2 * 0 + 3 * 4 + 6 * 4 ∧
       Fintype.card conclusion_m2_level3_xi_delta0_order6_cycletypes_flag_fiber =
         8 + 2 * 4 + 3 * 8 + 6 * 20 := by
-  have hcycle := paper_conclusion_m2_level3_xi_delta0_order6_cycletypes PUnit.unit
+  have hcycle := paper_conclusion_m2_level3_xi_delta0_order6_cycletypes ()
   rcases hcycle with ⟨hkCard, hsCard, hfCard, hk, hs, hf⟩
   refine ⟨hk, hs, hf, ?_, ?_, ?_⟩
   · norm_num at hkCard ⊢

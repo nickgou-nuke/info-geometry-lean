@@ -373,5 +373,16 @@ theorem z3GradingOperator_star (hwStar : star w = w * w) (hwStar2 : star (w * w)
   simp only [star_add, star_smul, hp1_star, hp2_star, hp3_star, hp0_star]
   rw [hwStar, hwStar2]
 
+/-- **Master Synthesis**: Non-commutative Z₃ Fractional SUSY Grading Automorphism. -/
+theorem master_toeplitz_cuntz_three_z3_grading_synthesis (hw3 : w * w * w = 1) :
+    z3GradingOperator g w * z3GradingOperatorInv g w = 1 ∧
+    z3GradingOperatorInv g w * z3GradingOperator g w = 1 ∧
+    z3GradingOperator g w * z3GradingOperator g w * z3GradingOperator g w = 1 ∧
+    z3GradingOperator g w * cyclicSupercharge g * z3GradingOperatorInv g w = w • cyclicSupercharge g := ⟨
+  z3GradingOperator_mul_inv g w hw3,
+  z3GradingOperator_inv_mul g w hw3,
+  z3GradingOperator_cube g w hw3,
+  cyclicSupercharge_z3_covariance g w hw3
+⟩
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeZ3GradingBridge

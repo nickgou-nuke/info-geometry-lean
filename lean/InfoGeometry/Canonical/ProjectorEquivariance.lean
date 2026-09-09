@@ -157,17 +157,8 @@ Fixed-grading sector-swap packet for the phase flip:
 theorem fixedGrading_projectorSwap :
     plusProjectorAfterPhaseFlip (E := E) = minusProjector (E := E)
       ∧ minusProjectorAfterPhaseFlip (E := E) = plusProjector (E := E) := by
-  refine ⟨?_, ?_⟩
-  · exact plusProjectorAfterPhaseFlip_eq_minusProjector (E := E)
-  · exact minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)
-
-/-- The native unflipped projectors resolve the identity. -/
-@[rep_depth krein]
-theorem projectorResolution :
-    plusProjector (E := E) + minusProjector (E := E) = IdH := by
-  rw [plusProjector_eq_spectralPlusProj (E := E),
-    minusProjector_eq_spectralMinusProj (E := E)]
-  simpa [add_comm] using (spectralProj_sum (E := E))
+  exact ⟨plusProjectorAfterPhaseFlip_eq_minusProjector (E := E),
+    minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)⟩
 
 omit [CompleteSpace E] in
 /-- Tautological equivariance identity on the `u_+` transport shell. -/

@@ -103,28 +103,12 @@ theorem iteratedVirasoroCocycle_two_resonant (c : ℝ) (m : Int) :
     iteratedVirasoroCocycle 2 c m (-m) = (c / 12) * (((m : ℝ)^3) - (m : ℝ)) := by
   rw [iteratedVirasoroCocycle_two, virasoroCocycleDensity_eq_resonant (c := c) (m := m) (n := -m) (by simp)]
 
-/-- Readout data attached to a nilpotent cross-flux seed.
-
-The carrier is the ordinary product of the seed and its linear readout; the
-subtype predicate contains exactly the two required laws. -/
-abbrev NilpotentFluxReadout (A : Type*) [Ring A] [Algebra ℝ A] :=
-  {p : A × (A ⊗[ℝ] A →ₗ[ℝ] ℝ) //
-    p.1 * p.1 = 0 ∧ p.2 (crossFlux (R := ℝ) p.1) = 1}
-
-namespace NilpotentFluxReadout
-
-variable {A : Type*} [Ring A] [Algebra ℝ A]
-
-abbrev N (S : NilpotentFluxReadout A) : A := S.1.1
-
-abbrev ρ (S : NilpotentFluxReadout A) : A ⊗[ℝ] A →ₗ[ℝ] ℝ := S.1.2
-
-theorem hN (S : NilpotentFluxReadout A) : S.N * S.N = 0 := S.2.1
-
-theorem crossRead (S : NilpotentFluxReadout A) :
-    S.ρ (crossFlux (R := ℝ) S.N) = 1 := S.2.2
-
-end NilpotentFluxReadout
+/-- Readout data attached to a nilpotent cross-flux seed. -/
+structure NilpotentFluxReadout (A : Type*) [Ring A] [Algebra ℝ A] where
+  N : A
+  ρ : A ⊗[ℝ] A →ₗ[ℝ] ℝ
+  hN : N * N = 0
+  crossRead : ρ (crossFlux (R := ℝ) N) = 1
 
 /-- Under a linear readout, `liftFlux^2` contributes exactly twice the cross term. -/
 theorem liftFlux_sq_readout
@@ -306,7 +290,7 @@ theorem splitChannelRelativeEntropy_offResonant
   simp [splitChannelRelativeEntropy, iteratedVirasoroCocycle, iteratedCentralCoefficient,
     hRes]
 
-/-- Minimal Casini bridge property from split-channel profile matching.
+/-- Minimal Casini bridge witness from split-channel profile matching.
 
 If the cocycle entropy potential increments match split-channel drops and those
 match the phase-aligned RN generator, we get a `MinimalCasiniIncrementBridge`
@@ -573,9 +557,7 @@ theorem modularDisplacement_is_squareZero_coordinate (X : M2R)
     (hFlow : modularFlowOperator 1 = (1 : M2R) + (1 : ℝ) • X) :
     X = modularDisplacement ∧ X * X = (0 : M2R) := by
   have hX : X = modularDisplacement := (modularDisplacement_iff_flow_linear_at_one X).1 hFlow
-  refine ⟨?_, ?_⟩
-  · exact hX
-  · simpa [hX] using modularDisplacement_sq_zero
+  exact ⟨hX, by simpa [hX] using modularDisplacement_sq_zero⟩
 
 /-- Vacuum expectation of the local information free-energy is exactly zero. -/
 theorem vacuumExpectation_informationFreeEnergy_vac (StateSpace : Type*) [AddCommGroup StateSpace]

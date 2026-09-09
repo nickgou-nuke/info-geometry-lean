@@ -87,6 +87,30 @@ theorem casimir_central_E : comm Casimir E = 0 := by
 theorem casimir_central_F : comm Casimir F = 0 := by
   ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [comm, Casimir, H, E, F, S, nvec, nbar, e, ebar, Matrix.mul_apply]
 
+inductive Concept where
+  | Wareham_CGA_Dilator
+  | Null_Basis_n_nbar
+  | SL2R_Subalgebra
+  | SO21_Isomorphic_Form
+  | Quadratic_Casimir_3
+  deriving DecidableEq, Repr
+
+inductive Edge where
+  | generated_by
+  | anticommutes_with
+  | closes_to
+  | has_casimir
+  | isomorphic_to
+  deriving DecidableEq, Repr
+
+def edgeHolds : Concept → Edge → Concept → Bool
+  | Concept.Wareham_CGA_Dilator, Edge.generated_by, Concept.Null_Basis_n_nbar => true
+  | Concept.Wareham_CGA_Dilator, Edge.closes_to, Concept.SL2R_Subalgebra => true
+  | Concept.SL2R_Subalgebra, Edge.isomorphic_to, Concept.SO21_Isomorphic_Form => true
+  | Concept.SL2R_Subalgebra, Edge.has_casimir, Concept.Quadratic_Casimir_3 => true
+  | Concept.Null_Basis_n_nbar, Edge.anticommutes_with, Concept.Wareham_CGA_Dilator => true
+  | _, _, _ => false
+
 end WarehamCGADilatorSL2
 
 end noncomputable section

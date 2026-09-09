@@ -11,7 +11,7 @@ noncomputable section
 
 Connes--Wilson readback for the Hestenes--Krein detailed-balance lane.
 
-This file is deliberately a thin calibration layer.  It does not construct a
+This file is deliberately a thin calibration socket.  It does not construct a
 new noncommutative differential calculus, a Connes 2-cycle complex, or a global
 Type-III determinant.  Instead it identifies three already theorem-safe
 surfaces:
@@ -73,7 +73,7 @@ def IsWilsonRadonNikodymCalibrated
 Predicate: the logarithmic RN increment is invariant under common positive
 Weyl rescaling.
 
-This is the abstract law for the concrete identity
+This is the abstract socket for the concrete identity
 `log ((c * x) / (c * y)) = log (x / y)` with `c > 0`.
 -/
 def IsRNLogCommonPositiveScaleInvariant
@@ -151,7 +151,7 @@ structure Bridge
   /-- Inverse temperature for the real Hestenes KMS boundary. -/
   beta : ℝ
 
-  /-- Real state/readout used by the Hestenes KMS layer. -/
+  /-- Real state/readout used by the Hestenes KMS socket. -/
   realState : EndH → ℝ
 
   /-- Real KMS/detailed-balance boundary for the supplied readout. -/
@@ -288,86 +288,6 @@ theorem wilsonHolonomy_eq_neg_log_ratio
           (NaturalConeVolumeBridge.atomExpectation W.volume child /
             NaturalConeVolumeBridge.atomExpectation W.volume parent) :=
             W.radonNikodymLog_eq_neg_log_ratio parent child
-
-@[rep_depth projective]
-theorem radonNikodymLog_self
-    (parent : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0) :
-    W.radonNikodymLog parent parent = 0 := by
-  rw [W.radonNikodymLog_eq_neg_log_ratio parent parent]
-  rw [div_self hparent, Real.log_one, neg_zero]
-
-@[rep_depth projective]
-theorem wilsonHolonomy_self
-    (parent : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0) :
-    W.wilsonHolonomy parent parent = 0 := by
-  calc
-    W.wilsonHolonomy parent parent = W.radonNikodymLog parent parent :=
-      W.wilsonHolonomy_eq_radonNikodymLog parent parent
-    _ = 0 := W.radonNikodymLog_self parent hparent
-
-@[rep_depth projective]
-theorem radonNikodymLog_reverse
-    (parent child : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
-    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0) :
-    W.radonNikodymLog parent child =
-      -W.radonNikodymLog child parent := by
-  rw [W.radonNikodymLog_eq_neg_log_ratio parent child,
-    W.radonNikodymLog_eq_neg_log_ratio child parent]
-  rw [Real.log_div hchild hparent, Real.log_div hparent hchild]
-  ring
-
-@[rep_depth projective]
-theorem radonNikodymLog_add
-    (parent child grandchild : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
-    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0)
-    (hgrandchild :
-      NaturalConeVolumeBridge.atomExpectation W.volume grandchild ≠ 0) :
-    W.radonNikodymLog parent child + W.radonNikodymLog child grandchild =
-      W.radonNikodymLog parent grandchild := by
-  rw [W.radonNikodymLog_eq_neg_log_ratio parent child,
-    W.radonNikodymLog_eq_neg_log_ratio child grandchild,
-    W.radonNikodymLog_eq_neg_log_ratio parent grandchild]
-  rw [Real.log_div hchild hparent, Real.log_div hgrandchild hchild,
-    Real.log_div hgrandchild hparent]
-  ring
-
-@[rep_depth projective]
-theorem wilsonHolonomy_reverse
-    (parent child : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
-    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0) :
-    W.wilsonHolonomy parent child =
-      -W.wilsonHolonomy child parent := by
-  calc
-    W.wilsonHolonomy parent child = W.radonNikodymLog parent child :=
-      W.wilsonHolonomy_eq_radonNikodymLog parent child
-    _ = -W.radonNikodymLog child parent :=
-      W.radonNikodymLog_reverse parent child hparent hchild
-    _ = -W.wilsonHolonomy child parent := by
-      rw [W.wilsonHolonomy_eq_radonNikodymLog child parent]
-
-@[rep_depth projective]
-theorem wilsonHolonomy_add
-    (parent child grandchild : Word)
-    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
-    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0)
-    (hgrandchild :
-      NaturalConeVolumeBridge.atomExpectation W.volume grandchild ≠ 0) :
-    W.wilsonHolonomy parent child + W.wilsonHolonomy child grandchild =
-      W.wilsonHolonomy parent grandchild := by
-  calc
-    W.wilsonHolonomy parent child + W.wilsonHolonomy child grandchild =
-        W.radonNikodymLog parent child + W.radonNikodymLog child grandchild := by
-          rw [W.wilsonHolonomy_eq_radonNikodymLog parent child,
-            W.wilsonHolonomy_eq_radonNikodymLog child grandchild]
-    _ = W.radonNikodymLog parent grandchild :=
-      W.radonNikodymLog_add parent child grandchild hparent hchild hgrandchild
-    _ = W.wilsonHolonomy parent grandchild :=
-      (W.wilsonHolonomy_eq_radonNikodymLog parent grandchild).symm
 
 /--
 Projective Weyl gauge invariance of the RN logarithmic increment.

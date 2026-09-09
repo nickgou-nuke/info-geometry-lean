@@ -217,7 +217,7 @@ noncomputable instance : Audit.Node3_NilpotentShear V :=
 **Full unification**: On the 2×2 causal model over ℝ:
 
   - P_exact = dℝ  (forward cone — proved dependencies)
-  - P_coexact = δℝ (backward cone — property holes)
+  - P_coexact = δℝ (backward cone — certificate holes)
   - P_harmonic = 0 (no harmonic component)
 -/
 theorem tri_facet_causal_unification :

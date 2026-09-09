@@ -1,7 +1,26 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 import InfoGeometry.Canonical.LeeYangAsanoFullReduction
+
+/-!
+# InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification
+
+Klein-four / Möbius-CPT compactification socket for the remaining
+nondegenerate Asano topological branch.
+
+This file does not prove the Riemann-sphere covering theorem.
+
+It packages the expected finite symmetry mechanism:
+
+* four-element Klein orbit carrier;
+* Möbius/CPT endpoint representatives;
+* endpoint alternative extraction;
+* reduction from that extraction to `AsanoNondegenerateTopologicalTheorem`.
+
+The actual global covering proof must instantiate this certificate.
+-/
 
 noncomputable section
 
@@ -15,10 +34,6 @@ inductive KleinV4AsanoSymmetry where
   | cpt
   | mobiusCpt
 deriving DecidableEq, Repr, Fintype
-
-theorem card_KleinV4AsanoSymmetry :
-    Fintype.card KleinV4AsanoSymmetry = 4 := by
-  decide
 
 /--
 The two endpoint alternatives already consumed by
@@ -36,10 +51,6 @@ inductive AsanoEndpointAlternative where
   | infinityValueInK₂
 deriving DecidableEq, Repr, Fintype
 
-theorem card_AsanoEndpointAlternative :
-    Fintype.card AsanoEndpointAlternative = 2 := by
-  decide
-
 /-- Interprets an endpoint label as the actual endpoint proposition. -/
 @[rep_depth operator]
 def endpointAlternativeHolds
@@ -53,15 +64,15 @@ def endpointAlternativeHolds
       B ≠ 0 ∧ -(B / D) ∈ K₂
 
 /--
-Klein-four / Möbius-CPT compactification property.
+Klein-four / Möbius-CPT compactification certificate.
 
-This is the geometric interface for the missing global argument.
+This is the geometric socket for the missing global argument.
 
-The property says: under the nondegenerate Asano hypotheses and a contracted
+The certificate says: under the nondegenerate Asano hypotheses and a contracted
 root, the compactified V4 orbit analysis selects one endpoint representative
 and proves that its endpoint alternative holds.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure AsanoKleinV4CompactificationCertificate where
   /-- Selected V4 chart element. This makes the finite symmetry reduction explicit. -/
   symmetry :
@@ -120,7 +131,7 @@ structure AsanoKleinV4CompactificationCertificate where
 
 /--
 Certificate-to-endpoint bridge: under the nondegenerate root hypotheses, a
-Klein-V4 compactification property yields the concrete endpoint disjunction
+Klein-V4 compactification certificate yields the concrete endpoint disjunction
 consumed by the native Asano endpoint theorem.
 -/
 @[rep_depth operator]
@@ -152,7 +163,7 @@ theorem endpoint_disjunction_of_kleinV4_compactification
         (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
 
 /--
-A Klein-four / Möbius-CPT compactification property closes the remaining
+A Klein-four / Möbius-CPT compactification certificate closes the remaining
 nondegenerate topological Asano branch.
 -/
 @[rep_depth operator]
@@ -173,7 +184,7 @@ theorem asano_nondegenerate_topological_of_kleinV4_compactification
 
 /--
 Full Asano contraction from the Klein-four / Möbius-CPT compactification
-property.
+certificate.
 -/
 @[rep_depth operator]
 theorem asano_contraction_full_of_kleinV4_compactification
@@ -196,7 +207,7 @@ theorem asano_contraction_full_of_kleinV4_compactification
     h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 /--
-Paired full Asano closure from the Klein-four property through the
+Paired full Asano closure from the Klein-four certificate through the
 topological reduction path:
 1) outside forbidden set implies contraction nonvanishing;
 2) contracted root implies forbidden-set membership.
@@ -247,7 +258,7 @@ theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification
       V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 /--
-Direct full Asano contraction from the Klein-four property through the
+Direct full Asano contraction from the Klein-four certificate through the
 endpoint-based nondegenerate reduction (without routing through the abstract
 `AsanoNondegenerateTopologicalTheorem` wrapper).
 -/

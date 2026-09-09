@@ -10,7 +10,20 @@ namespace Omega.PhysicalSpacetimeSkeleton
 
 universe u
 
-open Omega.PhysicalSpacetimeSkeleton.KernelizationTemplate
+/-- Chapter-local package collecting the ten paper-facing outputs used in the procedural grand
+chain: instantiation, transport, local potential, local redshift, audited seed rank/positivity,
+global Lorentz gluing/value, and affine/Einstein gravitational closure. -/
+structure ProceduralGrandChain where
+  instantiation : Prop
+  clockTransport : Prop
+  localClockPotential : Prop
+  localRedshift : Prop
+  auditedSeedRankThree : Prop
+  auditedSeedQuadraticPositive : Prop
+  globalLorentzMetric : Prop
+  globalLorentzValue : Prop
+  gravitationalAffineClosure : Prop
+  gravitationalEinsteinClosure : Prop
 
 /-- Paper-facing procedural grand chain: the chapter-local package is assembled by gluing the
 already formalized wrappers for instantiation, clock transport, local clock potential, local
@@ -18,16 +31,6 @@ redshift, audited seeds, global Lorentz structure, and gravitational scalar uniq
     thm:physical-spacetime-procedural-grand-chain -/
 theorem paper_physical_spacetime_procedural_grand_chain :
     ∀ (I : Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.AcceptableInstantiation)
-      (localGlobalTrivial :
-        ∀ {a : I.Addr}, (I.Fiber a).Nonempty → ¬ I.Obstructed a)
-      (localGlobalNull :
-        ∀ {a : I.Addr}, I.Fiber a = (∅ : Set I.Obj) → I.NullReadout a)
-      (witnessObstructed : I.Obstructed I.witness)
-      (hinv : ∀ {x x' y y'}, I.R.r x x' → I.R.r y y' → I.K x y = I.K x' y')
-      (hpsd : ∀ {ι : Type} [Fintype ι] (ψ : ι → I.Visible) (a : ι → ℝ),
-        0 ≤ quadraticEnergy I.K ψ a)
-      (continuumLimit : Prop)
-      (continuumWitness : continuumLimit)
       {ClockC : Type*} [AddGroup ClockC]
       (delta : ClockC → ClockC) (ThetaU dDeltaTau dA OmegaU : ClockC)
       (hTheta : delta ThetaU = dDeltaTau - dA)
@@ -42,65 +45,23 @@ theorem paper_physical_spacetime_procedural_grand_chain :
       (v : Fin 3 → ℝ) (hv : v ≠ 0)
       {ι : Type u} [Fintype ι]
       (F : Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.CompatibleLorentzFamily ι)
-      (metric_compat :
-        ∀ {i j} {x : F.Chart i} {y : F.Chart j},
-          F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y)
-      (lorentz : ∀ i x,
-        Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.IsLorentzValue (F.metric i x))
-      (G : MinimalSecondOrderCovariantClosure) (admissible : Prop) (hAdm : admissible)
-      (affineActionEquivalence :
-        admissible → ∃ a b divergence : ℝ,
-          G.gravitationalScalar = a * G.ricciScalar + b + divergence)
-      (normalizeAffinePart :
-        admissible →
-          ∀ {a b divergence : ℝ},
-            G.gravitationalScalar = a * G.ricciScalar + b + divergence →
-              a = 1 ∧ b = -2 * G.cosmologicalConstant),
-      ((I.Fiber I.witness = (∅ : Set I.Obj) ∧ I.NullReadout I.witness) ∧
-        (∀ {ι : Type} [Fintype ι] (ψ ψ' : ι → I.Visible) (a : ι → ℝ),
-          (∀ i, I.R.r (ψ i) (ψ' i)) →
-            quadraticEnergy I.K ψ a = quadraticEnergy I.K ψ' a ∧
-              0 ≤ quadraticEnergy I.K ψ a) ∧
-          continuumLimit) ∧
-        delta ThetaU = OmegaU ∧
-        (∃ φU : ClockC, ThetaU = delta φU) ∧
-        nuB / nuA = N A / N B ∧
-        Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix.rank = 3 ∧
-        0 <
-          dotProduct v
-            ((Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix.transpose *
-                Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix).mulVec v) ∧
-        (∃ g :
-            Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.maximalAdmissibleDomain F →
-              ℝ,
-          ∀ i x,
-            g
-                (Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.pointClass F i x) =
-              F.metric i x) ∧
-        (∃ g :
-            Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.maximalAdmissibleDomain F →
-              ℝ,
-          ∀ q,
-            Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.IsLorentzValue (g q)) ∧
-        (∃ a b divergence : ℝ, G.gravitationalScalar = a * G.ricciScalar + b + divergence) ∧
-        (∃ a b : ℝ,
-          a = 1 ∧
-            b = -2 * G.cosmologicalConstant ∧
-              a * G.ricciScalar + b = G.ricciScalar - 2 * G.cosmologicalConstant) := by
-  intro I localGlobalTrivial localGlobalNull witnessObstructed hinv hpsd continuumLimit
-    continuumWitness ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact
-    U N A B deltaT nuA nuB hNA hNB hT hA hB v hv ι _ F metric_compat lorentz G admissible hAdm
-    affineActionEquivalence normalizeAffinePart
+      (G : MinimalSecondOrderCovariantClosure) (hAdm : G.admissible),
+      ∃ chain : ProceduralGrandChain,
+        chain.instantiation ∧
+        chain.clockTransport ∧
+        chain.localClockPotential ∧
+        chain.localRedshift ∧
+        chain.auditedSeedRankThree ∧
+        chain.auditedSeedQuadraticPositive ∧
+        chain.globalLorentzMetric ∧
+        chain.globalLorentzValue ∧
+        chain.gravitationalAffineClosure ∧
+        chain.gravitationalEinsteinClosure := by
+  intro I ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact
+    U N A B deltaT nuA nuB hNA hNB hT hA hB v hv ι _ F G hAdm
   have hInst :
-      (I.Fiber I.witness = (∅ : Set I.Obj) ∧ I.NullReadout I.witness) ∧
-        (∀ {ι : Type} [Fintype ι] (ψ ψ' : ι → I.Visible) (a : ι → ℝ),
-          (∀ i, I.R.r (ψ i) (ψ' i)) →
-            quadraticEnergy I.K ψ a = quadraticEnergy I.K ψ' a ∧
-              0 ≤ quadraticEnergy I.K ψ a) ∧
-          continuumLimit :=
-    Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.paper_physical_spacetime_instantiation_criterion
-      I localGlobalTrivial localGlobalNull witnessObstructed hinv hpsd continuumLimit
-        continuumWitness
+      Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.InstantiatesPhysicalSpacetime I :=
+    Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.paper_physical_spacetime_instantiation_criterion I
   have hClock : delta ThetaU = OmegaU :=
     paper_physical_spacetime_clock_transport_equation delta ThetaU dDeltaTau dA OmegaU
       hTheta hDeltaTau hOmega
@@ -121,10 +82,43 @@ theorem paper_physical_spacetime_procedural_grand_chain :
       v hv
   obtain ⟨g, hg, hLorentz⟩ :=
     Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.paper_physical_spacetime_global_lorentz_structure
-      F metric_compat lorentz
+      F
   obtain ⟨ga, gb, divergence, hAffine, hga, hgb, hEinstein⟩ :=
-    paper_physical_spacetime_gravitational_scalar_uniqueness G admissible hAdm
-      affineActionEquivalence normalizeAffinePart
+    paper_physical_spacetime_gravitational_scalar_uniqueness G hAdm
+  refine
+    ⟨{ instantiation :=
+         Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.InstantiatesPhysicalSpacetime I
+       clockTransport := delta ThetaU = OmegaU
+       localClockPotential := ∃ φU : ClockC, ThetaU = delta φU
+       localRedshift := nuB / nuA = N A / N B
+       auditedSeedRankThree :=
+         Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix.rank = 3
+       auditedSeedQuadraticPositive :=
+         0 <
+           dotProduct v
+             ((Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix.transpose *
+                 Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree.auditedSeedMatrix).mulVec v)
+       globalLorentzMetric :=
+         ∃ g :
+             Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.maximalAdmissibleDomain F →
+               ℝ,
+           ∀ i x,
+             g
+                 (Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.pointClass F i x) =
+               F.metric i x
+       globalLorentzValue :=
+         ∃ g :
+             Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.maximalAdmissibleDomain F →
+               ℝ,
+           ∀ q,
+             Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure.IsLorentzValue (g q)
+       gravitationalAffineClosure :=
+         ∃ a b divergence : ℝ, G.gravitationalScalar = a * G.ricciScalar + b + divergence
+       gravitationalEinsteinClosure :=
+         ∃ a b : ℝ,
+           a = 1 ∧
+             b = -2 * G.cosmologicalConstant ∧
+               a * G.ricciScalar + b = G.ricciScalar - 2 * G.cosmologicalConstant }, ?_⟩
   refine ⟨hInst, hClock, hPotential, hRedshift, hRank, hQuad, ?_, ?_, ?_, ?_⟩
   · exact ⟨g, hg⟩
   · exact ⟨g, hLorentz⟩

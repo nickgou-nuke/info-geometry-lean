@@ -91,8 +91,8 @@ theorem crystalChildAttentionWeight_eq_depthOne_cylinderKMSWeight (b : Bool) :
 
 /-- Read the two children of a Bloch mode at a binary crystal cell as a branch vector. -/
 def blochChildVector (B : BinaryBlochWave) (w : BinaryLattice) : TwoBranchVector
-  | 0 => (B.mode (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w false)).re
-  | 1 => (B.mode (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w true)).re
+  | 0 => (B.mode (BinaryWord.child w false)).re
+  | 1 => (B.mode (BinaryWord.child w true)).re
 
 /-- The real Bloch branch anomaly at a binary crystal cell. -/
 def blochBranchAnomaly (B : BinaryBlochWave) (w : BinaryLattice) : ℝ :=
@@ -118,8 +118,8 @@ attention fixes that local child readout.
 theorem balancedBlochWave_children_fixed_by_attention
     (B : BinaryBlochWave) (w : BinaryLattice)
     (hchildren :
-      (B.mode (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w false)).re =
-        (B.mode (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w true)).re) :
+      (B.mode (BinaryWord.child w false)).re =
+        (B.mode (BinaryWord.child w true)).re) :
     applyMirrorAttention (blochChildVector B w) = blochChildVector B w := by
   apply balancedBlochVector_fixed_by_attention
   unfold blochBranchAnomaly blochChildVector branchAnomaly

@@ -1,21 +1,82 @@
-import Mathlib
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic
 
 /-!
-# Endomorphisms of a principal left ideal
+# Idempotent corner commutant
 
-For an idempotent `e` in a semiring, the principal left ideal `A e` is an
-`A`-module.  Right multiplication by an element of the corner `e A e` gives
-an `A`-linear endomorphism of `A e`.  This file proves the elementary
-evaluation-at-`e` classification of those endomorphisms.
+Let `A` be a unital associative algebra and let `e : A` satisfy `e * e = e`.
+The principal left ideal
 
-No primitivity, simplicity, fullness, or Morita equivalence is assumed here.
+`Ae = {x : A | x * e = x}`
+
+carries the restricted left action of `A`.  This file proves the exact
+regular-ideal analogue of the usual evaluation-at-the-unit commutant theorem:
+every `R`-linear endomorphism of `Ae` commuting with all restricted left
+multiplications is right multiplication by its value at `e`.
+
+That value lies in the corner
+
+`eAe = {c : A | e * c = c ∧ c * e = c}`.
+
+Thus the commutant carrier is canonically equivalent to the corner carrier.
+No primitivity, simplicity, finite-dimensionality, norm, or topology is used.
+Primitivity is needed only in later specializations that identify `eAe` with a
+division algebra or with the scalar field.
 -/
 
 namespace InfoGeometry.Algebra.IdempotentCornerCommutant
 
+section CornerCarrier
+
 variable {A : Type*} [Semiring A]
 
-noncomputable def principalLeftIdeal (e : A) (he : e * e = e) : Submodule A A where
+/-- The algebraic corner carrier `eAe`, recorded by its two support equations. -/
+def Corner (e : A) :=
+  {c : A // e * c = c ∧ c * e = c}
+
+/-- The principal left ideal `Ae = {x : A | x * e = x}`. -/
+def principalLeftIdeal (e : A) : Set A :=
+  {x : A | x * e = x}
+
+/-- The principal right ideal `eA = {y : A | e * y = y}`. -/
+def principalRightIdeal (e : A) : Set A :=
+  {y : A | e * y = y}
+
+/-- Multiplication inherited by the corner carrier. -/
+def cornerMul (e : A) (c d : Corner e) : Corner e :=
+  ⟨c.1 * d.1, by
+    constructor
+    · calc
+        e * (c.1 * d.1) = (e * c.1) * d.1 := by rw [← mul_assoc]
+        _ = c.1 * d.1 := by rw [c.2.1]
+    · calc
+        (c.1 * d.1) * e = c.1 * (d.1 * e) := by rw [mul_assoc]
+        _ = c.1 * d.1 := by rw [d.2.2]⟩
+
+/-- The idempotent itself is the internal unit of its corner. -/
+def cornerUnit (e : A) (he : e * e = e) : Corner e :=
+  ⟨e, he, he⟩
+
+@[simp]
+theorem cornerMul_val (e : A) (c d : Corner e) :
+    (cornerMul e c d).1 = c.1 * d.1 :=
+  rfl
+
+@[simp]
+theorem cornerUnit_val (e : A) (he : e * e = e) :
+    (cornerUnit e he).1 = e :=
+  rfl
+
+end CornerCarrier
+
+section LinearCommutant
+
+variable {R A : Type*}
+variable [CommSemiring R] [Semiring A] [Algebra R A]
+
+/-- The principal left ideal `Ae`, viewed as an `R`-submodule of `A`. -/
+def principalLeftIdealSubmodule (e : A) : Submodule R A where
   carrier := {x | x * e = x}
   zero_mem' := by simp
   add_mem' := by
@@ -23,280 +84,221 @@ noncomputable def principalLeftIdeal (e : A) (he : e * e = e) : Submodule A A wh
     change (x + y) * e = x + y
     rw [add_mul, hx, hy]
   smul_mem' := by
-    intro a x hx
-    change (a * x) * e = a * x
-    rw [mul_assoc, hx]
+    intro r x hx
+    change (r • x) * e = r • x
+    rw [Algebra.smul_mul_assoc, hx]
 
-@[simp] theorem mem_principalLeftIdeal_iff
-    (e : A) (he : e * e = e) (x : A) :
-    x ∈ principalLeftIdeal e he ↔ x * e = x := Iff.rfl
+/-- The native carrier of the principal left ideal `Ae`. -/
+abbrev PrincipalLeftIdeal (e : A) : Type _ :=
+  ↥(principalLeftIdealSubmodule (R := R) e)
 
-def corner (e : A) (he : e * e = e) : Type _ :=
-  {c : A // c * e = c ∧ e * c = c}
+/-- The idempotent, regarded as the distinguished vector of `Ae`. -/
+def idempotentVector (e : A) (he : e * e = e) :
+    PrincipalLeftIdeal (R := R) e :=
+  ⟨e, he⟩
 
-noncomputable def cornerMul
-    (e : A) (he : e * e = e)
-    (c d : corner e he) : corner e he :=
-  ⟨c.1 * d.1, by
-    constructor
-    · rw [mul_assoc, d.2.1]
-    · rw [← mul_assoc, c.2.2]⟩
+/-- A corner element is automatically an element of the principal left ideal. -/
+def cornerToLeftIdeal (e : A) (c : Corner e) :
+    PrincipalLeftIdeal (R := R) e :=
+  ⟨c.1, c.2.2⟩
 
-noncomputable def cornerOne
-    (e : A) (he : e * e = e) : corner e he :=
-  ⟨e, he, he⟩
-
-noncomputable def cornerZero
-    (e : A) (he : e * e = e) : corner e he :=
-  ⟨0, by simp, by simp⟩
-
-/-- An idempotent is primitive when it has no nonzero proper idempotent
-subelement.  This is only a predicate; no primitivity is assumed globally. -/
-def IsPrimitiveIdempotent (e : A) (he : e * e = e) : Prop :=
-  ∀ f : A, f * f = f → f * e = f → e * f = f →
-    f = 0 ∨ f = e
-
-theorem cornerMul_assoc
-    (e : A) (he : e * e = e)
-    (a b c : corner e he) :
-    cornerMul e he (cornerMul e he a b) c =
-      cornerMul e he a (cornerMul e he b c) := by
-  apply Subtype.ext
-  exact mul_assoc a.1 b.1 c.1
-
-theorem cornerMul_one
-    (e : A) (he : e * e = e)
-    (a : corner e he) :
-    cornerMul e he a (cornerOne e he) = a := by
-  apply Subtype.ext
-  exact a.2.1
-
-theorem cornerOne_mul
-    (e : A) (he : e * e = e)
-    (a : corner e he) :
-    cornerMul e he (cornerOne e he) a = a := by
-  apply Subtype.ext
-  exact a.2.2
-
-noncomputable def rightCornerMap
-    (e : A) (he : e * e = e)
-    (c : corner e he) :
-    principalLeftIdeal e he →ₗ[A] principalLeftIdeal e he where
-  toFun x := ⟨x.1 * c.1, by
-    change (x.1 * c.1) * e = x.1 * c.1
-    rw [mul_assoc, c.2.1]
-  ⟩
+/-- Restricted left multiplication by `a : A` on the principal left ideal `Ae`. -/
+def leftAction (e a : A) :
+    Module.End R (PrincipalLeftIdeal (R := R) e) where
+  toFun x :=
+    ⟨a * x.1, by
+      calc
+        (a * x.1) * e = a * (x.1 * e) := by rw [mul_assoc]
+        _ = a * x.1 := by rw [x.2]⟩
   map_add' x y := by
-    ext
+    apply Subtype.ext
+    simp [mul_add]
+  map_smul' r x := by
+    apply Subtype.ext
+    simp [Algebra.mul_smul_comm]
+
+/-- Right multiplication by a corner element on `Ae`. -/
+def rightCornerAction (e : A) (c : Corner e) :
+    Module.End R (PrincipalLeftIdeal (R := R) e) where
+  toFun x :=
+    ⟨x.1 * c.1, by
+      calc
+        (x.1 * c.1) * e = x.1 * (c.1 * e) := by rw [mul_assoc]
+        _ = x.1 * c.1 := by rw [c.2.2]⟩
+  map_add' x y := by
+    apply Subtype.ext
     simp [add_mul]
-  map_smul' a x := by
-    ext
-    simp [smul_eq_mul, mul_assoc]
-
-theorem rightCornerMap_apply
-    (e : A) (he : e * e = e)
-    (c : corner e he)
-    (x : principalLeftIdeal e he) :
-    rightCornerMap e he c x = ⟨x.1 * c.1, by
-      change (x.1 * c.1) * e = x.1 * c.1
-      rw [mul_assoc, c.2.1]
-    ⟩ := rfl
-
-theorem rightCornerMap_comp_apply
-    (e : A) (he : e * e = e)
-    (c d : corner e he)
-    (x : principalLeftIdeal e he) :
-    rightCornerMap e he c (rightCornerMap e he d x) =
-      rightCornerMap e he (cornerMul e he d c) x := by
-  apply Subtype.ext
-  simp only [rightCornerMap_apply]
-  change (x.1 * d.1) * c.1 = x.1 * (d.1 * c.1)
-  rw [mul_assoc]
-
-theorem rightCornerMap_comp
-    (e : A) (he : e * e = e)
-    (c d : corner e he) :
-    (rightCornerMap e he c).comp (rightCornerMap e he d) =
-      rightCornerMap e he (cornerMul e he d c) := by
-  ext x
-  simpa [LinearMap.comp_apply] using rightCornerMap_comp_apply e he c d x
-
-noncomputable def corner_of_idempotent_endomorphism
-    (e : A) (he : e * e = e)
-    (T : Module.End A (principalLeftIdeal e he)) :
-    corner e he := by
-  refine ⟨T ⟨e, he⟩, (T ⟨e, he⟩).property, ?_⟩
-  have h := T.map_smul e (⟨e, he⟩ : principalLeftIdeal e he)
-  have he' : e • (⟨e, he⟩ : principalLeftIdeal e he) = ⟨e, he⟩ := by
+  map_smul' r x := by
     apply Subtype.ext
-    simp [smul_eq_mul, he]
-  rw [he'] at h
-  have hc := congrArg
-    (fun z : principalLeftIdeal e he => (z : A)) h.symm
-  simpa only [smul_eq_mul] using hc
+    simp [Algebra.smul_mul_assoc]
 
-theorem corner_endomorphism_eq_rightCornerMap
-    (e : A) (he : e * e = e)
-    (T : Module.End A (principalLeftIdeal e he)) :
-    T = rightCornerMap e he
-      (corner_of_idempotent_endomorphism e he T) := by
-  apply LinearMap.ext
-  intro x
-  have hx : x.1 = x.1 * e := x.2.symm
-  calc
-    T x = T (x.1 • (⟨e, he⟩ : principalLeftIdeal e he)) := by
-      congr 1
-      apply Subtype.ext
-      change x.1 = x.1 * e
-      exact hx
-    _ = x.1 • T ⟨e, he⟩ := by
-      rw [map_smul]
-    _ = rightCornerMap e he
-      (corner_of_idempotent_endomorphism e he T) x := by
-      rfl
+@[simp]
+theorem leftAction_apply (e a : A)
+    (x : PrincipalLeftIdeal (R := R) e) :
+    ((leftAction (R := R) e a x : PrincipalLeftIdeal (R := R) e) : A) =
+      a * (x : A) :=
+  rfl
 
-/-! The evaluation-at-the-idempotent argument also makes the corner action
-injective.  No primitivity or fullness hypothesis is needed. -/
+@[simp]
+theorem rightCornerAction_apply (e : A) (c : Corner e)
+    (x : PrincipalLeftIdeal (R := R) e) :
+    ((rightCornerAction (R := R) e c x : PrincipalLeftIdeal (R := R) e) : A) =
+      (x : A) * c.1 :=
+  rfl
 
-theorem rightCornerMap_injective
-    (e : A) (he : e * e = e) :
-    Function.Injective (rightCornerMap e he) := by
-  intro c d hcd
+@[simp]
+theorem leftAction_idempotentVector (e : A) (he : e * e = e) :
+    leftAction (R := R) e e (idempotentVector (R := R) e he) =
+      idempotentVector (R := R) e he := by
   apply Subtype.ext
-  have h := LinearMap.congr_fun hcd (⟨e, he⟩ : principalLeftIdeal e he)
-  have h' := congrArg Subtype.val h
-  simpa [rightCornerMap_apply, c.2.2, d.2.2] using h'
+  exact he
 
-/-- The corner is exactly the endomorphism carrier of the principal left ideal.
+@[simp]
+theorem rightCornerAction_idempotentVector
+    (e : A) (he : e * e = e) (c : Corner e) :
+    rightCornerAction (R := R) e c (idempotentVector (R := R) e he) =
+      cornerToLeftIdeal (R := R) e c := by
+  apply Subtype.ext
+  exact c.2.1
 
-This is an equivalence of carriers.  It does not identify the corner with a
-field or assert any Morita fullness property. -/
-noncomputable def cornerEndEquiv
-    (e : A) (he : e * e = e) :
-    corner e he ≃ Module.End A (principalLeftIdeal e he) where
-  toFun := rightCornerMap e he
-  invFun := corner_of_idempotent_endomorphism e he
-  left_inv := by
-    intro c
-    apply Subtype.ext
-    have h := congrArg Subtype.val
-      (rightCornerMap_apply e he c (⟨e, he⟩ : principalLeftIdeal e he))
-    simpa [c.2.2] using h
-  right_inv := by
-    intro T
-    exact (corner_endomorphism_eq_rightCornerMap e he T).symm
+/-- Pointwise commutant of the restricted left regular action on `Ae`. -/
+def leftIdealCommutant (e : A) :
+    Set (Module.End R (PrincipalLeftIdeal (R := R) e)) :=
+  {T | ∀ (a : A) (x : PrincipalLeftIdeal (R := R) e),
+    T (leftAction (R := R) e a x) =
+      leftAction (R := R) e a (T x)}
 
-theorem cornerEndEquiv_cornerOne
-    (e : A) (he : e * e = e) :
-    cornerEndEquiv e he (cornerOne e he) =
-      (LinearMap.id : Module.End A (principalLeftIdeal e he)) := by
+/-- Every corner right action commutes with every restricted left action. -/
+theorem rightCornerAction_mem_leftIdealCommutant
+    (e : A) (c : Corner e) :
+    rightCornerAction (R := R) e c ∈ leftIdealCommutant (R := R) e := by
+  intro a x
+  apply Subtype.ext
+  exact mul_assoc a (x : A) c.1
+
+/-- Corner multiplication is represented in the opposite order by composition. -/
+theorem rightCornerAction_cornerMul
+    (e : A) (c d : Corner e) :
+    rightCornerAction (R := R) e (cornerMul e c d) =
+      (rightCornerAction (R := R) e d).comp
+        (rightCornerAction (R := R) e c) := by
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  change x.1 * e = x.1
+  exact (mul_assoc (x : A) c.1 d.1).symm
+
+/-- The internal corner unit acts identically on `Ae`. -/
+@[simp]
+theorem rightCornerAction_cornerUnit
+    (e : A) (he : e * e = e) :
+    rightCornerAction (R := R) e (cornerUnit e he) = LinearMap.id := by
+  apply LinearMap.ext
+  intro x
+  apply Subtype.ext
   exact x.2
 
-theorem cornerEndEquiv_cornerZero
-    (e : A) (he : e * e = e) :
-    cornerEndEquiv e he (cornerZero e he) =
-      (0 : Module.End A (principalLeftIdeal e he)) := by
+/--
+Evaluate a commuting endomorphism at `e`.  The result is automatically supported
+by `e` on both sides and hence belongs to the corner `eAe`.
+-/
+def cornerOfCommutant
+    (e : A) (he : e * e = e)
+    (T : Module.End R (PrincipalLeftIdeal (R := R) e))
+    (hT : T ∈ leftIdealCommutant (R := R) e) : Corner e := by
+  refine ⟨(T (idempotentVector (R := R) e he)).1, ?_, ?_⟩
+  · have h := hT e (idempotentVector (R := R) e he)
+    rw [leftAction_idempotentVector (R := R) e he] at h
+    simpa [leftAction] using (congrArg Subtype.val h).symm
+  · exact (T (idempotentVector (R := R) e he)).2
+
+@[simp]
+theorem cornerOfCommutant_val
+    (e : A) (he : e * e = e)
+    (T : Module.End R (PrincipalLeftIdeal (R := R) e))
+    (hT : T ∈ leftIdealCommutant (R := R) e) :
+    (cornerOfCommutant (R := R) e he T hT).1 =
+      (T (idempotentVector (R := R) e he)).1 :=
+  rfl
+
+/--
+Every endomorphism commuting with the restricted left action is right
+multiplication by its value at the idempotent.
+-/
+theorem eq_rightCornerAction_of_mem_leftIdealCommutant
+    (e : A) (he : e * e = e)
+    (T : Module.End R (PrincipalLeftIdeal (R := R) e))
+    (hT : T ∈ leftIdealCommutant (R := R) e) :
+    T = rightCornerAction (R := R) e
+      (cornerOfCommutant (R := R) e he T hT) := by
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  simp [cornerEndEquiv, cornerZero, rightCornerMap_apply]
+  have h := hT (x : A) (idempotentVector (R := R) e he)
+  have hx :
+      leftAction (R := R) e (x : A) (idempotentVector (R := R) e he) = x := by
+    apply Subtype.ext
+    exact x.2
+  rw [hx] at h
+  simpa [leftAction, rightCornerAction] using congrArg Subtype.val h
 
-theorem idempotent_endomorphism_eq_zero_or_id_of_primitive
-    (e : A) (he : e * e = e)
-    (hprimitive : IsPrimitiveIdempotent e he)
-    (T : Module.End A (principalLeftIdeal e he))
-    (hT : T.comp T = T) :
-    T = 0 ∨ T = (LinearMap.id : Module.End A (principalLeftIdeal e he)) := by
-  let c : corner e he := corner_of_idempotent_endomorphism e he T
-  have hc : cornerMul e he c c = c := by
-    apply (cornerEndEquiv e he).injective
-    calc
-      cornerEndEquiv e he (cornerMul e he c c) =
-          (cornerEndEquiv e he c).comp (cornerEndEquiv e he c) := by
-        simpa [cornerEndEquiv] using
-          (rightCornerMap_comp e he c c).symm
-      _ = T.comp T := by
-        rw [show cornerEndEquiv e he c = T by
-          simpa [cornerEndEquiv] using
-            (corner_endomorphism_eq_rightCornerMap e he T).symm]
-      _ = T := hT
-      _ = cornerEndEquiv e he c :=
-        by simpa [cornerEndEquiv] using
-          (corner_endomorphism_eq_rightCornerMap e he T)
-  have hcorner : c = cornerZero e he ∨ c = cornerOne e he := by
-    have hsub_left : c.1 * e = c.1 := c.2.1
-    have hsub_right : e * c.1 = c.1 := c.2.2
-    rcases hprimitive c.1 (by
-      simpa [cornerMul] using congrArg Subtype.val hc) hsub_left hsub_right with h | h
-    · left
-      apply Subtype.ext
-      simpa [cornerZero] using h
-    · right
-      apply Subtype.ext
-      simpa [cornerOne] using h
-  rcases hcorner with h | h
-  · left
-    rw [← cornerEndEquiv_cornerZero e he]
-    simpa [cornerEndEquiv] using
-      (show T = cornerEndEquiv e he (cornerZero e he) by
-        calc
-          T = cornerEndEquiv e he c := by
-            simpa [cornerEndEquiv] using
-              (corner_endomorphism_eq_rightCornerMap e he T)
-          _ = cornerEndEquiv e he (cornerZero e he) := congrArg (cornerEndEquiv e he) h)
-  · right
-    rw [← cornerEndEquiv_cornerOne e he]
-    simpa [cornerEndEquiv] using
-      (show T = cornerEndEquiv e he (cornerOne e he) by
-        calc
-          T = cornerEndEquiv e he c := by
-            simpa [cornerEndEquiv] using
-              (corner_endomorphism_eq_rightCornerMap e he T)
-          _ = cornerEndEquiv e he (cornerOne e he) := congrArg (cornerEndEquiv e he) h)
+/-- The corner action is faithful; evaluation at `e` recovers the corner element. -/
+theorem rightCornerAction_injective
+    (e : A) (he : e * e = e) :
+    Function.Injective (rightCornerAction (R := R) e) := by
+  intro c d h
+  apply Subtype.ext
+  have hApply := congrArg
+    (fun T : Module.End R (PrincipalLeftIdeal (R := R) e) =>
+      T (idempotentVector (R := R) e he)) h
+  have hVal := congrArg Subtype.val hApply
+  change e * c.1 = e * d.1 at hVal
+  rw [c.2.1, d.2.1] at hVal
+  exact hVal
 
-/-! The endomorphism equivalence is contravariant for corner
-multiplication: composition of right multiplications reverses the corner
-factors.  This is the concrete opposite-algebra law; no primitivity or
-fullness is involved. -/
+/-- Exact range characterization of the commutant on the principal left ideal. -/
+theorem leftIdealCommutant_eq_rightCornerRange
+    (e : A) (he : e * e = e) :
+    leftIdealCommutant (R := R) e =
+      {T | ∃ c : Corner e, T = rightCornerAction (R := R) e c} := by
+  ext T
+  constructor
+  · intro hT
+    exact ⟨cornerOfCommutant (R := R) e he T hT,
+      eq_rightCornerAction_of_mem_leftIdealCommutant (R := R) e he T hT⟩
+  · rintro ⟨c, rfl⟩
+    exact rightCornerAction_mem_leftIdealCommutant (R := R) e c
 
-theorem cornerEndEquiv_comp
-    (e : A) (he : e * e = e)
-    (c d : corner e he) :
-    cornerEndEquiv e he (cornerMul e he d c) =
-      (cornerEndEquiv e he c).comp (cornerEndEquiv e he d) := by
-  simpa [cornerEndEquiv] using (rightCornerMap_comp e he c d).symm
+/--
+Canonical carrier equivalence between the corner `eAe` and the full commutant
+of the restricted left action on `Ae`.
 
-/-! Evaluation at `e` exposes the opposite multiplication law directly:
-the corner representative of a composite endomorphism is obtained by
-reversing the corner factors.  This is the reusable Morita statement before
-bundling any additional algebra structure on the corner carrier. -/
-theorem corner_of_comp
-    (e : A) (he : e * e = e)
-    (T S : Module.End A (principalLeftIdeal e he)) :
-    corner_of_idempotent_endomorphism e he (T.comp S) =
-      cornerMul e he
-        (corner_of_idempotent_endomorphism e he S)
-        (corner_of_idempotent_endomorphism e he T) := by
-  apply (cornerEndEquiv e he).injective
-  calc
-    cornerEndEquiv e he
-        (corner_of_idempotent_endomorphism e he (T.comp S)) =
-        T.comp S := (cornerEndEquiv e he).right_inv (T.comp S)
-    _ = cornerEndEquiv e he
-        (cornerMul e he
-          (corner_of_idempotent_endomorphism e he S)
-          (corner_of_idempotent_endomorphism e he T)) := by
-      rw [cornerEndEquiv_comp]
-      have hT : cornerEndEquiv e he
-          (corner_of_idempotent_endomorphism e he T) = T := by
-        exact (corner_endomorphism_eq_rightCornerMap e he T).symm
-      have hS : cornerEndEquiv e he
-          (corner_of_idempotent_endomorphism e he S) = S := by
-        exact (corner_endomorphism_eq_rightCornerMap e he S).symm
-      rw [hT, hS]
+The separate theorem `rightCornerAction_cornerMul` records that multiplication
+is transported with the opposite order.
+-/
+def cornerEquivLeftIdealCommutant
+    (e : A) (he : e * e = e) :
+    Corner e ≃
+      {T : Module.End R (PrincipalLeftIdeal (R := R) e) //
+        T ∈ leftIdealCommutant (R := R) e} where
+  toFun c :=
+    ⟨rightCornerAction (R := R) e c,
+      rightCornerAction_mem_leftIdealCommutant (R := R) e c⟩
+  invFun T :=
+    cornerOfCommutant (R := R) e he T.1 T.2
+  left_inv c := by
+    apply rightCornerAction_injective (R := R) e he
+    exact
+      (eq_rightCornerAction_of_mem_leftIdealCommutant
+        (R := R) e he
+        (rightCornerAction (R := R) e c)
+        (rightCornerAction_mem_leftIdealCommutant (R := R) e c)).symm
+  right_inv T := by
+    apply Subtype.ext
+    exact
+      (eq_rightCornerAction_of_mem_leftIdealCommutant
+        (R := R) e he T.1 T.2).symm
+
+end LinearCommutant
 
 end InfoGeometry.Algebra.IdempotentCornerCommutant
+

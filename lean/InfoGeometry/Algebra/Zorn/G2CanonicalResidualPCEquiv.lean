@@ -5,7 +5,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 
 /-!
-# Concrete longest-cell residual equivalence
+# Concrete longest-cell product-image equivalence
 
 The canonical residual PC-word map is already proved injective.  At the
 longest Weyl element its source and the verified unipotent subgroup both have

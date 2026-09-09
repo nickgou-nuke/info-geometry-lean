@@ -27,11 +27,12 @@ import Mathlib.Algebra.Category.Ring.Limits
 /-!
 # Infinite-Dimensional Operator Algebra Colimit
 
-The infinite-dimensional observable algebra is represented directly by
-Mathlib's `colimit F` in `RingCat`; this file does not introduce an alias for
-that native carrier. The Tomita-Takesaki statement below is the
-domain-specific theorem: a natural isomorphism of finite-stage diagrams
-induces the corresponding native colimit isomorphism.
+This file defines the infinite-dimensional observable algebra (Von Neumann algebra of the
+Rindler wedge) as the categorical direct colimit of finite-dimensional matrix algebras.
+
+We define a functor `F : J ⥤ RingCat` (where `J` is the filtered poset of finite sub-regions)
+and instantiate the infinite limit as `colimit F`. We connect this to the Tomita-Takesaki
+geometric reflection, ensuring the commutant maps across the colimit.
 
 ## Audit Protocol Map
 
@@ -55,6 +56,9 @@ variable {J : Type u} [Category.{u} J] [IsFiltered J]
 -- The directed diagram of finite sub-region operator algebras.
 variable (F : J ⥤ RingCat.{u})
 
+/-- The infinite-dimensional observable algebra is the colimit of the finite sub-regions diagram. -/
+noncomputable def infiniteObservableAlgebra [HasColimit F] : RingCat.{u} := colimit F
+
 -- Functor representing the commutant (e.g., opposite ring) diagram of the finite sub-regions.
 variable (F_commutant : J ⥤ RingCat.{u})
 
@@ -67,7 +71,7 @@ The commutant maps across the colimit: the Tomita-Takesaki reflection
 extends to an isomorphism of the infinite-dimensional algebras.
 -/
 noncomputable def tomita_takesaki_colimit [HasColimit F] [HasColimit F_commutant] :
-    CategoryTheory.Limits.colimit F ≅ CategoryTheory.Limits.colimit F_commutant :=
+    infiniteObservableAlgebra F ≅ infiniteObservableAlgebra F_commutant :=
   HasColimit.isoOfNatIso tomita_takesaki
 
 end InfoGeometry.Categorical.OperatorAlgebraColimit

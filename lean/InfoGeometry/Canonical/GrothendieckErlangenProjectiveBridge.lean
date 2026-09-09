@@ -2,24 +2,17 @@ import InfoGeometry.Canonical.GrothendieckGroup
 import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
-import InfoGeometry.Canonical.PositiveRayCore
-import InfoGeometry.Canonical.RelativePotentialCore
 
 /-!
 # InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
 
-Canonical bridge between the Grothendieck group structure, Erlangen symmetry,
+Thin canonical bridge between the existing Grothendieck, Erlangen symmetry,
 and Gromov--Witten projective-count owner surfaces.
 
-This file provides genuine machine-checked theorems connecting:
-1. Canonical Grothendieck group isomorphism `K₀(ℕ) ≃+ ℤ`.
-2. Erlangen operator geometry as symmetry invariants under group actions.
-3. Gromov–Witten projective count scale invariance and normalization.
-4. The 1-cocycle identity and antisymmetry for relative modular potentials.
-5. The multiplicative Radon–Nikodym composition law for projective count densities.
-
-All proofs are complete in native Mathlib with zero `sorry`s.
--/
+This file re-exports theorem-backed readouts only. It does not add a new
+Grothendieck theory, a new symmetry principle, or a new count normalization
+theorem.
+ -/
 
 noncomputable section
 
@@ -27,14 +20,11 @@ namespace InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Canonical.ErlangenOperator2
-open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 open InfoGeometry.GromovWittenErlangen
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
-
-variable {α : Type*} [Fintype α] [Nonempty α]
 
 /-- Canonical `K₀(ℕ) ≃ ℤ` bridge under the existing Grothendieck owner theorem. -/
 noncomputable def k0_equiv_int_bridge : Grothendieck ℕ ≃+ ℤ :=
@@ -149,68 +139,5 @@ theorem gw_projectiveHamiltonianProfile_self
     projectiveCountHamiltonianProfile
         B.counts B.counts B.counts_pos B.counts_pos i = 0 :=
   B.projectiveHamiltonianProfile_self i
-
-/-!
-=============================================================================
-NEW THEOREMS: 1-Cocycle Laws & Multiplicative Radon–Nikodym Group Homomorphism
-=============================================================================
--/
-
-/-- 
-  THEOREM 1: The Relative Modular Potential satisfies the 1-Cocycle Identity.
-  For any three projective positive states q, q₀, q₁, the relative potentials add transitively:
-    V(q, q₁) = V(q, q₀) + V(q₀, q₁)
--/
-theorem relativeModularPotential_transitive_cocycle
-    (q q₀ q₁ : PositiveRay α) (a : α) :
-    relativeModularPotential q q₁ a =
-      relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a :=
-  relativeModularPotential_cocycle q q₀ q₁ a
-
-/-- 
-  THEOREM 2: Antisymmetry of the Relative Modular Potential.
-  Reversing the observer and reference inverts the modular potential sign:
-    V(q₀, q) = - V(q, q₀)
--/
-theorem relativeModularPotential_antisymm
-    (q q₀ : PositiveRay α) (a : α) :
-    relativeModularPotential q₀ q a = - relativeModularPotential q q₀ a := by
-  have h := relativeModularPotential_transitive_cocycle (α := α) q₀ q q₀ a
-  rw [relativeModularPotential_self] at h
-  linarith
-
-/-- 
-  THEOREM 3: Multiplicative Radon–Nikodym Group Composition.
-  The relative density Δ(q, q₁) factors multiplicatively through any intermediate state q₀:
-    Δ(q, q₁) = Δ(q, q₀) * Δ(q₀, q₁)
--/
-theorem relativeDensity_multiplicative_cocycle
-    (q q₀ q₁ : PositiveRay α) (a : α) :
-    relativeDensity q q₁ a = relativeDensity q q₀ a * relativeDensity q₀ q₁ a := by
-  exact relativeDensity_cocycle q q₀ q₁ a
-
-/--
-THEOREM 4 (Discrete Cocycle ↔ Continuous dlogRN Bridge):
-The additive cocycle identity on `PositiveRay` and the multiplicative
-Radon--Nikodym composition law satisfy the same algebraic pattern as the
-continuous logarithmic derivative chain rule `dlogRN_mul`.
-
-Specifically:
-- Discrete: `V(q,q₁) = V(q,q₀) + V(q₀,q₁)` and `Δ(q,q₁) = Δ(q,q₀)·Δ(q₀,q₁)`
-- Continuous: `dlog_D(Δ₁₂·Δ₂₃) = dlog_D(Δ₁₂) + dlog_D(Δ₂₃)`
-
-Both express that the logarithmic derivative is a group homomorphism from the
-multiplicative group to the additive group. The discrete version operates on
-positive projective rays via the canonical gauge section; the continuous version
-operates on commutative-ring elements with a linear derivation.
--/
-theorem discreteCocycle_continuousDlog_bridge
-    (q q₀ q₁ : PositiveRay α) (a : α) :
-    (relativeModularPotential q q₁ a =
-       relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a) ∧
-    (relativeDensity q q₁ a =
-       relativeDensity q q₀ a * relativeDensity q₀ q₁ a) :=
-  ⟨relativeModularPotential_cocycle q q₀ q₁ a,
-   relativeDensity_cocycle q q₀ q₁ a⟩
 
 end InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge

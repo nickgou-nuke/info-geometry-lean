@@ -130,5 +130,3 @@ theorem normalizedTrace_dual_compatibility
   exact normalizedTrace_stageEmbedMap h x
 
 end InfoGeometry.Canonical.Cl11FilteredInductiveInverseColimitBridge
-
-end

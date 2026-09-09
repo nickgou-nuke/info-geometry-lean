@@ -1,0 +1,50 @@
+import InfoGeometry.Streaming.TwoBoundaryWeakPristineChain
+
+/-!
+# Transitive axiom inspection for finite two-boundary weak values
+
+Execution of this file asks Lean for the transitive axioms of every new public
+owner.  It is not itself a certificate before elaboration.
+-/
+
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing_add_left
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing_add_right
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing_smul_left
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing_smul_right
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.RegularBoundaryPair
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.overlap
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.numerator
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValueLinear
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue_one
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue_operator_balance
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weak_flux_conserved_of_zero_endpoint_density
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.rescalePre
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.rescalePost
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue_rescalePre
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue_rescalePost
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.legacyMatrixEnd
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.pairing_fin2_eq_legacy_cinner
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.ofLegacyRegularPair
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.weakValue_ofLegacyRegularPair
+#print axioms InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional.some_weakValue_eq_legacy
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.preState
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.postState
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.boundaryPair
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorProjector
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorSpinZ
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorProjector_sq
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorProjector_mul_spinZ
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorSpinZ_mul_projector
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorSpinZ_sq
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorProjector_weakValue
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorSpinZ_weakValue
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.WeakPropertySeparation
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.cheshireWitness
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.corridorSpinZ_square_weakValue
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.weakValue_not_multiplicative
+#print axioms InfoGeometry.Streaming.WeakPropertySeparation.weak_property_separation_packet
+#print axioms InfoGeometry.Streaming.TwoBoundaryWeakPristineChain.finite_weak_separation_chain
+#print axioms InfoGeometry.Streaming.TwoBoundaryWeakPristineChain.operator_continuity_has_weak_readout
+#print axioms InfoGeometry.Streaming.TwoBoundaryWeakPristineChain.two_boundary_weak_closure_packet

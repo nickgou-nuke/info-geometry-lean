@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # Spin-Unruh Calibration
@@ -65,12 +66,12 @@ noncomputable def unruhTemperatureNatural
 /--
 Unruh calibration datum.
 
-The equality is carried as a model property because it depends on the
+The equality is carried as a model certificate because it depends on the
 normalization of modular flow, physical time, and units.
 -/
 structure UnruhTemperatureCalibration
     (State : Type*) where
-  /-- Spin-modular/boost compatibility property. -/
+  /-- Spin-modular/boost compatibility witness. -/
   spinModular :
     SpinModularCompatibility State
 
@@ -102,7 +103,7 @@ end UnruhTemperatureCalibration
 Modular acceleration calibration.
 
 This is the constructive natural-unit Unruh calibration.  The final temperature
-formula is not stored as a property: it is derived from the physical inverse
+formula is not stored as a hypothesis: it is derived from the physical inverse
 temperature calibration `β = 2π / a` and the definition `T = β⁻¹`.
 -/
 structure ModularAccelerationCalibration where
@@ -227,7 +228,7 @@ def unitModularAccelerationCalibration : ModularAccelerationCalibration where
   temperature_eq_inv_beta := rfl
 
 /-- The concrete unit modular acceleration calibration has the Unruh readout laws. -/
-theorem modularUnruhCalibration_properties :
+theorem modularUnruhCalibrationOwnerTarget :
     unitModularAccelerationCalibration.betaModular = 2 * Real.pi ∧
       unitModularAccelerationCalibration.betaPhysical =
         (2 * Real.pi) / unitModularAccelerationCalibration.acceleration ∧
@@ -256,7 +257,7 @@ def unitSpinUnruhCalibration
     field_simp [Real.pi_ne_zero]
 
 /-- The concrete unit-acceleration spin-Unruh calibration has the readout laws. -/
-theorem spinUnruhCalibration_properties
+theorem spinUnruhCalibrationOwnerTarget
     (State : Type*) :
     (unitSpinUnruhCalibration State).temperature =
         unruhTemperatureNatural (unitSpinUnruhCalibration State).spinModular ∧
@@ -280,9 +281,9 @@ attribute [rep_depth operator]
   ModularBoostTemperatureCalibration
   ModularBoostTemperatureCalibration.temperature_eq_unruh
   unitModularAccelerationCalibration
-  modularUnruhCalibration_properties
+  modularUnruhCalibrationOwnerTarget
   unitSpinModularCompatibility
   unitSpinUnruhCalibration
-  spinUnruhCalibration_properties
+  spinUnruhCalibrationOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

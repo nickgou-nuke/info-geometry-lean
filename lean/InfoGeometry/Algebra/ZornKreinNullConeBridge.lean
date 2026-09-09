@@ -29,9 +29,9 @@ theorem master_zorn_krein_null_cone_synthesis
     (h_lightlike : (x1^2 + x6^2 + x7^2 + x8^2) - (x5^2 + x2^2 + x3^2 + x4^2) = 0) :
     ((x1 + x5) * (x1 - x5) + ((x6 + x2) * (x6 - x2) + (x7 + x3) * (x7 - x3) + (x8 + x4) * (x8 - x4))
       = (x1^2 + x6^2 + x7^2 + x8^2) - (x5^2 + x2^2 + x3^2 + x4^2)) ∧
-    ((x1 + x5) * (x1 - x5) + ((x6 + x2) * (x6 - x2) + (x7 + x3) * (x7 - x3) + (x8 + x4) * (x8 - x4)) = 0) := by
-  refine ⟨?_, ?_⟩
-  · exact krein_44_to_zorn_determinant_isometry x1 x2 x3 x4 x5 x6 x7 x8
-  · exact krein_lightcone_implies_zorn_null_cone x1 x2 x3 x4 x5 x6 x7 x8 h_lightlike
+    ((x1 + x5) * (x1 - x5) + ((x6 + x2) * (x6 - x2) + (x7 + x3) * (x7 - x3) + (x8 + x4) * (x8 - x4)) = 0) := ⟨
+  krein_44_to_zorn_determinant_isometry x1 x2 x3 x4 x5 x6 x7 x8,
+  krein_lightcone_implies_zorn_null_cone x1 x2 x3 x4 x5 x6 x7 x8 h_lightlike
+⟩
 
 end InfoGeometry.Algebra.ZornKreinNullConeBridge

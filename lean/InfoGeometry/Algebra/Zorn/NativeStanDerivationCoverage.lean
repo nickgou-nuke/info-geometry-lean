@@ -58,6 +58,16 @@ noncomputable def nativeCircularBasis (i : Fin 8) : VZ :=
   canonicalVectorEquiv
     (InfoGeometry.Lie.SplitOctonionCircularPeirceBasis.circularPeirceBasis i)
 
+noncomputable def ellCanonicalVectorLinearEquiv :
+    InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.CanonicalZorn ≃ₗ[ℝ] VZ :=
+  { InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv with
+    map_add' := by
+      intro X Y
+      rfl
+    map_smul' := by
+      intro r X
+      rfl }
+
 theorem chiralOperatorNativeReadout_nativeCircularBasis
     (g : InfoGeometry.OperatorAlgebra.ChiralGenerator) :
     nativeCircularBasis (chiralGeneratorIndex g) =
@@ -295,9 +305,28 @@ theorem circularPeirceBasis_vector_span_top :
         (Set.range (fun i : Fin 8 =>
           canonicalVectorLinearEquiv
             (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis i))) = ⊤ := by
-  simpa only [Module.Basis.map_apply] using
-    (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis.map
-      canonicalVectorLinearEquiv).span_eq
+  apply Submodule.eq_top_iff'.mpr
+  intro X
+  let Z : InfoGeometry.Lie.CanonicalZornDerivation.CZ :=
+    ellCanonicalVectorLinearEquiv.symm X
+  have h :=
+    InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis_sum_repr Z
+  have hX := congrArg
+    ellCanonicalVectorLinearEquiv h
+  have hZX :
+      ellCanonicalVectorLinearEquiv Z = X := by
+    simp [Z]
+  have hm : ∑ i : Fin 8,
+      (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis.equivFun Z i) •
+        ellCanonicalVectorLinearEquiv
+          (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis i) ∈
+      Submodule.span ℝ (Set.range (fun i : Fin 8 =>
+          ellCanonicalVectorLinearEquiv
+          (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis i))) := by
+    exact Submodule.sum_mem _ (fun i _ =>
+      Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩))
+  rw [← hZX, ← hX]
+  simpa only [map_sum, map_smul] using hm
 
 noncomputable def nativeEllCircularBasis (i : Fin 8) : VZ :=
   canonicalVectorLinearEquiv
@@ -305,9 +334,7 @@ noncomputable def nativeEllCircularBasis (i : Fin 8) : VZ :=
 
 theorem nativeEllCircularBasis_span_top :
     Submodule.span ℝ (Set.range nativeEllCircularBasis) = ⊤ := by
-  simpa only [nativeEllCircularBasis, Module.Basis.map_apply] using
-    (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis.map
-      canonicalVectorLinearEquiv).span_eq
+  exact circularPeirceBasis_vector_span_top
 
 theorem nativeEllCircularPairDerivations_span_top :
     Submodule.span ℝ

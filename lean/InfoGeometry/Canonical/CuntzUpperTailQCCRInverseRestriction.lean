@@ -36,7 +36,7 @@ def upperTailQCCRParameterRestrictionCone (m : ℕ) :
   pt := qCcrParameterTopologicalLimit Stage T.toContinuousStarInductiveSystem
   π :=
     { app := fun j =>
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram Stage
             T.toContinuousStarInductiveSystem) j.1
       naturality := by
@@ -52,7 +52,7 @@ noncomputable def upperTailQCCRParameterRestrictionMap (m : ℕ) :
     qCcrParameterTopologicalLimit Stage T.toContinuousStarInductiveSystem ⟶
       qCcrParameterTopologicalLimit
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) :=
-  limit.lift
+  topologicalInverseLift
     (qCcrParameterTopologicalDiagram
       (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
     (upperTailQCCRParameterRestrictionCone Stage T m)
@@ -61,10 +61,10 @@ noncomputable def upperTailQCCRParameterRestrictionMap (m : ℕ) :
 theorem upperTailQCCRParameterRestrictionMap_projection
     (m : ℕ) (j : UpperNatIndex m) :
     upperTailQCCRParameterRestrictionMap Stage T m ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j =
-      limit.π
+      topologicalInverseProjection
         (qCcrParameterTopologicalDiagram Stage
           T.toContinuousStarInductiveSystem) j.1 := by
   exact topologicalInverseLift_projection
@@ -78,7 +78,7 @@ def upperTailQCCRZeroFiberRestrictionCone (m : ℕ) :
   pt := qCcrParameterZeroFiberTopologicalLimit Stage T.toContinuousStarInductiveSystem
   π :=
     { app := fun j =>
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram Stage
             T.toContinuousStarInductiveSystem) j.1
       naturality := by
@@ -96,7 +96,7 @@ noncomputable def upperTailQCCRZeroFiberRestrictionMap (m : ℕ) :
     qCcrParameterZeroFiberTopologicalLimit Stage T.toContinuousStarInductiveSystem ⟶
       qCcrParameterZeroFiberTopologicalLimit
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) :=
-  limit.lift
+  topologicalInverseLift
     (qCcrParameterZeroFiberTopologicalDiagram
       (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
     (upperTailQCCRZeroFiberRestrictionCone Stage T m)
@@ -105,10 +105,10 @@ noncomputable def upperTailQCCRZeroFiberRestrictionMap (m : ℕ) :
 theorem upperTailQCCRZeroFiberRestrictionMap_projection
     (m : ℕ) (j : UpperNatIndex m) :
     upperTailQCCRZeroFiberRestrictionMap Stage T m ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j =
-      limit.π
+      topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram Stage
           T.toContinuousStarInductiveSystem) j.1 := by
   exact topologicalInverseLift_projection

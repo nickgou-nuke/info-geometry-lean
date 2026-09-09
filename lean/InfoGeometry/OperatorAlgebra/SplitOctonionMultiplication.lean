@@ -16,7 +16,7 @@ and a concrete nonassociative multiplication table:
 ```
 
 Theorems below lock the basis table, idempotent diagonal units, nilpotent
-upper/lower units, a concrete nonzero associator property, and basis
+upper/lower units, a concrete nonzero associator witness, and basis
 alternativity checks.  This is a multiplication layer only: it does not assert a
 `G₂(2)` automorphism theorem, an `SU(3)` stabilizer theorem, or a particle
 classification theorem.
@@ -52,25 +52,6 @@ def subZ (X Y : SplitOct) : SplitOct :=
 /-- Zorn determinant / split norm. -/
 def detZ (X : SplitOct) : ℤ :=
   X.a * X.b - (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2)
-
-/-- Coordinate diagonalisation of the native integral split norm.
-
-This proves the `(4,4)` signature identity in coordinates.  It does not
-assert an `E₈` lattice identification or a maximal-order theorem.
--/
-theorem detZ_split_signature (X : SplitOct) :
-    4 * detZ X =
-      (X.a + X.b) ^ 2 - (X.a - X.b) ^ 2
-        - (X.x0 + X.y0) ^ 2 + (X.x0 - X.y0) ^ 2
-        - (X.x1 + X.y1) ^ 2 + (X.x1 - X.y1) ^ 2
-        - (X.x2 + X.y2) ^ 2 + (X.x2 - X.y2) ^ 2 := by
-  simp [detZ]
-  ring
-
-/-- Coordinate expansion of the Zorn determinant. -/
-theorem detZ_coordinate_formula (X : SplitOct) :
-    detZ X = X.a * X.b -
-      (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2) := rfl
 
 /-- True Zorn split-octonion multiplication. -/
 def mulZ (X Y : SplitOct) : SplitOct :=
@@ -108,24 +89,6 @@ instance : Zero SplitOct := ⟨zeroZ⟩
 instance : Neg SplitOct := ⟨negZ⟩
 instance : Sub SplitOct := ⟨subZ⟩
 
-@[simp] theorem zero_a : (0 : SplitOct).a = 0 := rfl
-@[simp] theorem zero_b : (0 : SplitOct).b = 0 := rfl
-@[simp] theorem zero_x0 : (0 : SplitOct).x0 = 0 := rfl
-@[simp] theorem zero_x1 : (0 : SplitOct).x1 = 0 := rfl
-@[simp] theorem zero_x2 : (0 : SplitOct).x2 = 0 := rfl
-@[simp] theorem zero_y0 : (0 : SplitOct).y0 = 0 := rfl
-@[simp] theorem zero_y1 : (0 : SplitOct).y1 = 0 := rfl
-@[simp] theorem zero_y2 : (0 : SplitOct).y2 = 0 := rfl
-
-@[simp] theorem neg_a (X : SplitOct) : (-X).a = -X.a := rfl
-@[simp] theorem neg_b (X : SplitOct) : (-X).b = -X.b := rfl
-@[simp] theorem neg_x0 (X : SplitOct) : (-X).x0 = -X.x0 := rfl
-@[simp] theorem neg_x1 (X : SplitOct) : (-X).x1 = -X.x1 := rfl
-@[simp] theorem neg_x2 (X : SplitOct) : (-X).x2 = -X.x2 := rfl
-@[simp] theorem neg_y0 (X : SplitOct) : (-X).y0 = -X.y0 := rfl
-@[simp] theorem neg_y1 (X : SplitOct) : (-X).y1 = -X.y1 := rfl
-@[simp] theorem neg_y2 (X : SplitOct) : (-X).y2 = -X.y2 := rfl
-
 @[simp] theorem add_a (X Y : SplitOct) : (X + Y).a = X.a + Y.a := rfl
 @[simp] theorem add_b (X Y : SplitOct) : (X + Y).b = X.b + Y.b := rfl
 @[simp] theorem add_x0 (X Y : SplitOct) : (X + Y).x0 = X.x0 + Y.x0 := rfl
@@ -134,37 +97,6 @@ instance : Sub SplitOct := ⟨subZ⟩
 @[simp] theorem add_y0 (X Y : SplitOct) : (X + Y).y0 = X.y0 + Y.y0 := rfl
 @[simp] theorem add_y1 (X Y : SplitOct) : (X + Y).y1 = X.y1 + Y.y1 := rfl
 @[simp] theorem add_y2 (X Y : SplitOct) : (X + Y).y2 = X.y2 + Y.y2 := rfl
-
-instance : AddCommGroup SplitOct where
-  add := (· + ·)
-  add_assoc := by
-    intro a b c
-    ext <;>
-      simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-    <;> ring
-  zero := 0
-  zero_add := by
-    intro a
-    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-  add_zero := by
-    intro a
-    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-  neg := Neg.neg
-  neg_add_cancel := by
-    intro a
-    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-  add_comm := by
-    intro a b
-    ext <;>
-      simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-    <;> ring
-  nsmul := nsmulRec
-  nsmul_zero := by intro a; rfl
-  nsmul_succ := by intro n a; rfl
-  zsmul := zsmulRec
-  zsmul_zero' := by intro a; rfl
-  zsmul_succ' := by intro n a; rfl
-  zsmul_neg' := by intro n a; rfl
 
 /-- The associative backbone of the split-octonion product. -/
 def assocMul (X Y : SplitOct) : SplitOct :=
@@ -209,19 +141,6 @@ def associator (X Y Z : SplitOct) : SplitOct := subZ (mulZ (mulZ X Y) Z) (mulZ X
 def leftRegular (X : SplitOct) : SplitOct → SplitOct :=
   fun Y => mulZ X Y
 
-def leftRegularAddHom (X : SplitOct) : SplitOct →+ SplitOct where
-  toFun := leftRegular X
-  map_zero' := by
-    cases X
-    ext <;> simp [leftRegular, mulZ]
-  map_add' Y Z := by
-    cases X; cases Y; cases Z
-    ext <;> simp [leftRegular, mulZ, add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
-    <;> ring
-
-def leftRegularLinear (X : SplitOct) : SplitOct →ₗ[ℤ] SplitOct :=
-  (leftRegularAddHom X).toIntLinearMap
-
 /-- The failure of left-regular multiplication to be multiplicative is the
 negative of the explicit associator. -/
 theorem leftRegular_mul_defect (X Y Z : SplitOct) :
@@ -240,29 +159,6 @@ theorem leftRegular_mul_defect (X Y Z : SplitOct) :
 theorem leftRegular_normZ_mul (X Y : SplitOct) :
     normZ (leftRegular X Y) = normZ X * normZ Y := by
   simp [leftRegular, normZ_mul]
-
-theorem leftRegularLinear_range_isotropic (X : SplitOct)
-    (hX : normZ X = 0) :
-    ∀ Y : SplitOct, Y ∈ LinearMap.range (leftRegularLinear X) → normZ Y = 0 := by
-  intro Y hY
-  rcases hY with ⟨Z, rfl⟩
-  dsimp [leftRegularLinear, leftRegularAddHom, leftRegular]
-  rw [normZ_mul, hX, zero_mul]
-
-/-- Right-regular action on the true nonassociative `SplitOct` carrier. -/
-def rightRegular (X : SplitOct) : SplitOct → SplitOct :=
-  fun Y => mulZ Y X
-
-/-- Right-regular multiplication inherits norm composition from `mulZ`. -/
-theorem rightRegular_normZ_mul (X Y : SplitOct) :
-    normZ (rightRegular X Y) = normZ Y * normZ X := by
-  simp [rightRegular, normZ_mul]
-
-theorem rightRegular_mul_defect (X Y Z : SplitOct) :
-    subZ (rightRegular X (rightRegular Y Z))
-        (rightRegular (mulZ Y X) Z) =
-      associator Z Y X := by
-  rfl
 
 /-- First diagonal idempotent. -/
 def ePlus : SplitOct := ⟨1, 0, 0, 0, 0, 0, 0, 0⟩
@@ -366,6 +262,73 @@ def basisMul : Basis8 → Basis8 → SplitOct
 @[simp] theorem basisElem_mul (i j : Basis8) : mulZ (basisElem i) (basisElem j) = basisMul i j := by
   cases i <;> cases j <;> decide
 
+/-- Full 8×8 multiplication-table packet for the indexed split-octonion basis. -/
+theorem basis_table_packet :
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.ePlus) = ePlus ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.eMinus) = zeroZ ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up0) = up0 ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up1) = up1 ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up2) = up2 ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down0) = zeroZ ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down1) = zeroZ ∧
+      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down2) = zeroZ ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.ePlus) = zeroZ ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.eMinus) = eMinus ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up0) = zeroZ ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up1) = zeroZ ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up2) = zeroZ ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down0) = down0 ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down1) = down1 ∧
+      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down2) = down2 ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.ePlus) = zeroZ ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.eMinus) = up0 ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.up0) = zeroZ ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.up1) = down2 ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.up2) = negZ down1 ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.down0) = ePlus ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.down1) = zeroZ ∧
+      mulZ (basisElem Basis8.up0) (basisElem Basis8.down2) = zeroZ ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.ePlus) = zeroZ ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.eMinus) = up1 ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.up0) = negZ down2 ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.up1) = zeroZ ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.up2) = down0 ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.down0) = zeroZ ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.down1) = ePlus ∧
+      mulZ (basisElem Basis8.up1) (basisElem Basis8.down2) = zeroZ ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.ePlus) = zeroZ ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.eMinus) = up2 ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.up0) = down1 ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.up1) = negZ down0 ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.up2) = zeroZ ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.down0) = zeroZ ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.down1) = zeroZ ∧
+      mulZ (basisElem Basis8.up2) (basisElem Basis8.down2) = ePlus ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.ePlus) = down0 ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.eMinus) = zeroZ ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.up0) = eMinus ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.up1) = zeroZ ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.up2) = zeroZ ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.down0) = zeroZ ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.down1) = negZ up2 ∧
+      mulZ (basisElem Basis8.down0) (basisElem Basis8.down2) = up1 ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.ePlus) = down1 ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.eMinus) = zeroZ ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.up0) = zeroZ ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.up1) = eMinus ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.up2) = zeroZ ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.down0) = up2 ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.down1) = zeroZ ∧
+      mulZ (basisElem Basis8.down1) (basisElem Basis8.down2) = negZ up0 ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.ePlus) = down2 ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.eMinus) = zeroZ ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.up0) = zeroZ ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.up1) = zeroZ ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.up2) = eMinus ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.down0) = negZ up1 ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.down1) = up0 ∧
+      mulZ (basisElem Basis8.down2) (basisElem Basis8.down2) = zeroZ := by
+  decide
 
 /-- Index readout for upper units. -/
 def up : Fin 3 → SplitOct
@@ -411,22 +374,6 @@ theorem up_mul_down_same (i : Fin 3) : mulZ (up i) (down i) = ePlus := by
 theorem down_mul_up_same (i : Fin 3) : mulZ (down i) (up i) = eMinus := by
   fin_cases i <;> decide
 
-/-- The two Peirce idempotents sum to the Zorn identity `⟨1,1,0,...⟩`. -/
-theorem ePlus_add_eMinus : ePlus + eMinus = ⟨1, 1, 0, 0, 0, 0, 0, 0⟩ := by
-  ext <;> simp [ePlus, eMinus]
-
-/-- Jordan (anticommutator) combination of matched chiral pairs equals the
-    Peirce identity `ePlus + eMinus`. -/
-theorem anticommutator_up_down_same (i : Fin 3) :
-    mulZ (up i) (down i) + mulZ (down i) (up i) = ePlus + eMinus := by
-  fin_cases i <;> decide
-
-/-- Lie (commutator) combination of matched chiral pairs equals the
-    Peirce difference `ePlus - eMinus`. -/
-theorem commutator_up_down_same (i : Fin 3) :
-    mulZ (up i) (down i) - mulZ (down i) (up i) = ePlus - eMinus := by
-  fin_cases i <;> decide
-
 theorem up0_mul_up1 : mulZ up0 up1 = down2 := by decide
 theorem up1_mul_up2 : mulZ up1 up2 = down0 := by decide
 theorem up2_mul_up0 : mulZ up2 up0 = down1 := by decide
@@ -441,10 +388,10 @@ theorem down1_mul_down0 : mulZ down1 down0 = up2 := by decide
 theorem down2_mul_down1 : mulZ down2 down1 = up0 := by decide
 theorem down0_mul_down2 : mulZ down0 down2 = up1 := by decide
 
-/-- Concrete nonassociativity property: `(u₀u₁)v₁ - u₀(u₁v₁) = u₀`. -/
+/-- Concrete nonassociativity witness: `(u₀u₁)v₁ - u₀(u₁v₁) = u₀`. -/
 theorem associator_up0_up1_down1 : associator up0 up1 down1 = up0 := by decide
 
-/-- The concrete associator property is nonzero. -/
+/-- The concrete associator witness is nonzero. -/
 theorem associator_up0_up1_down1_ne_zero : associator up0 up1 down1 ≠ zeroZ := by decide
 
 /-- The split-octonion multiplication is not associative. -/
@@ -496,31 +443,6 @@ def conjZ (X : SplitOct) : SplitOct :=
 /-- Scalar embedding: `r ↦ (r, 0; 0, r)`, the identity element when `r = 1`. -/
 def scalarZ (r : ℤ) : SplitOct :=
   ⟨r, r, 0, 0, 0, 0, 0, 0⟩
-
-theorem scalarZ_mul_eq_zero_of_ne_zero
-    {r : ℤ} {X : SplitOct} (hX : X ≠ zeroZ)
-    (h : mulZ (scalarZ r) X = zeroZ) : r = 0 := by
-  by_contra hr
-  apply hX
-  cases X with
-  | mk a b x0 x1 x2 y0 y1 y2 =>
-    have ha : r * a = 0 := by have := congrArg SplitOct.a h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hb : r * b = 0 := by have := congrArg SplitOct.b h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hx0 : r * x0 = 0 := by have := congrArg SplitOct.x0 h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hx1 : r * x1 = 0 := by have := congrArg SplitOct.x1 h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hx2 : r * x2 = 0 := by have := congrArg SplitOct.x2 h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hy0 : r * y0 = 0 := by have := congrArg SplitOct.y0 h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hy1 : r * y1 = 0 := by have := congrArg SplitOct.y1 h; simpa [scalarZ, mulZ, zeroZ] using this
-    have hy2 : r * y2 = 0 := by have := congrArg SplitOct.y2 h; simpa [scalarZ, mulZ, zeroZ] using this
-    ext <;> simp [zeroZ]
-    · exact (mul_eq_zero.mp ha).resolve_left hr
-    · exact (mul_eq_zero.mp hb).resolve_left hr
-    · exact (mul_eq_zero.mp hx0).resolve_left hr
-    · exact (mul_eq_zero.mp hx1).resolve_left hr
-    · exact (mul_eq_zero.mp hx2).resolve_left hr
-    · exact (mul_eq_zero.mp hy0).resolve_left hr
-    · exact (mul_eq_zero.mp hy1).resolve_left hr
-    · exact (mul_eq_zero.mp hy2).resolve_left hr
 
 /-! ## Trace/determinant truth cross-section -/
 
@@ -659,26 +581,25 @@ structure ZornStatisticalVariety where
 
 /-- Algebraic inverse-determinant capacity.  This is the determinant part of a
 log-barrier readback, not an analytic logarithm over `ℤ`. -/
-def zornLogBarrierCapacity (M : ZornStatisticalVariety) : ℤ := by
+def zornLogBarrierCapacity (M : ZornStatisticalVariety) : ℤ :=
   letI := M.det_invertible
-  exact ⅟ M.base.det
+  ⅟ M.base.det
 
 /-- Three coordinate entries of the determinant-capacity tensor on the base.
 
 This is a symbolic/algebraic tensor readback.  It is not promoted as a Fisher
 metric from a proved smooth Hessian. -/
-abbrev FisherMetricTensor := ℤ × ℤ × ℤ
-
-/-- Coordinate accessors for the native triple representation. -/
-abbrev FisherMetricTensor.g_trace_trace (G : FisherMetricTensor) : ℤ := G.1
-abbrev FisherMetricTensor.g_trace_det (G : FisherMetricTensor) : ℤ := G.2.1
-abbrev FisherMetricTensor.g_det_det (G : FisherMetricTensor) : ℤ := G.2.2
+structure FisherMetricTensor where
+  g_trace_trace : ℤ
+  g_trace_det : ℤ
+  g_det_det : ℤ
+  deriving DecidableEq, Repr
 
 /-- Algebraic determinant-capacity tensor: only the determinant entry survives. -/
-def computeFisherMetric (M : ZornStatisticalVariety) : FisherMetricTensor := by
+def computeFisherMetric (M : ZornStatisticalVariety) : FisherMetricTensor :=
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  exact (0, 0, invDet * invDet)
+  ⟨0, 0, invDet * invDet⟩
 
 /-! ### Algebraic information-geometry readbacks -/
 
@@ -688,27 +609,25 @@ This is the truth-cross-section of a proposed Christoffel-symbol formula.  It is
 only an algebraic readback over the determinant-invertible integer owner lane;
 it does not assert a smooth manifold, Levi-Civita connection, geodesic equation,
 or curvature theorem. -/
-abbrev CapacityConnectionSymbol := ℤ
-
-/-- Compatibility accessor for the native integer coefficient carrier. -/
-abbrev CapacityConnectionSymbol.gamma_det_det_det
-    (C : CapacityConnectionSymbol) : ℤ := C
+structure CapacityConnectionSymbol where
+  gamma_det_det_det : ℤ
+  deriving DecidableEq, Repr
 
 /-- Algebraic inverse-cubic determinant-capacity coefficient. -/
-def capacityConnectionZ (M : ZornStatisticalVariety) : CapacityConnectionSymbol := by
+def capacityConnectionZ (M : ZornStatisticalVariety) : CapacityConnectionSymbol :=
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  exact -(2 * (invDet * invDet * invDet))
+  ⟨-2 * (invDet * invDet * invDet)⟩
 
 /-- Cleared algebraic KL-style jet.
 
 This is twice the symbolic contrast, avoiding division by `2` over the integer
 owner lane.  It is not a theorem about analytic KL divergence, Taylor expansion,
 or a Fisher-Hessian identification. -/
-def twiceAlgebraicKLJet (M : ZornStatisticalVariety) (d_det : ℤ) : ℤ := by
+def twiceAlgebraicKLJet (M : ZornStatisticalVariety) (d_det : ℤ) : ℤ :=
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  exact 2 * (invDet * d_det) + (invDet * invDet) * (d_det * d_det)
+  2 * (invDet * d_det) + (invDet * invDet) * (d_det * d_det)
 
 /-- Two symbolic capacity-defect charges.  These are algebraic labels, not a
 cohomology theory or a geometric lattice-disclination construction. -/
@@ -727,7 +646,7 @@ charge. -/
 def defectWarpedCapacityTensor (M : ZornStatisticalVariety)
     (d : CapacityDefect) : FisherMetricTensor :=
   let g := computeFisherMetric M
-  (g.g_trace_trace, g.g_trace_det, g.g_det_det + capacityDefectCharge d)
+  ⟨g.g_trace_trace, g.g_trace_det, g.g_det_det + capacityDefectCharge d⟩
 
 /-! ### Axiom-clean raw algebraic cores
 
@@ -738,7 +657,7 @@ smooth information geometry. -/
 /-- Raw inverse-cubic capacity coefficient from an explicitly supplied inverse
 determinant coordinate. -/
 def rawCapacityConnection (invDet : ℤ) : CapacityConnectionSymbol :=
-  -2 * (invDet * invDet * invDet)
+  ⟨-2 * (invDet * invDet * invDet)⟩
 
 /-- Axiom-clean definitional readback for the raw inverse-cubic coefficient. -/
 theorem rawCapacityConnection_readback (invDet : ℤ) :
@@ -825,27 +744,8 @@ theorem left_alternative_cancellation (X Y : SplitOct) :
 
 /-- Right alternative cancellation. -/
 theorem right_alternative_cancellation (X Y : SplitOct) : 
-    mulZ (mulZ X Y) (conjZ Y) = mulZ (scalarZ (detZ Y)) X := by
+    mulZ (mulZ Y X) (conjZ X) = mulZ (scalarZ (detZ X)) Y := by
   ext <;> simp [mulZ, conjZ, scalarZ, detZ] <;> ring_nf
-
-@[simp] theorem mulZ_zeroZ (X : SplitOct) : mulZ X zeroZ = zeroZ := by
-  ext <;> simp [mulZ, zeroZ]
-
-@[simp] theorem zeroZ_mulZ (X : SplitOct) : mulZ zeroZ X = zeroZ := by
-  ext <;> simp [mulZ, zeroZ]
-
-/-- 🏆 THEOREM (Manivel Lemma 2.3.9 / Theorem 2.3.10):
-    If `X ≠ 0` and `X·Y = 0` (i.e. `Y ∈ ker L_X`), then `normZ Y = 0` (the kernel is isotropic). -/
-theorem leftRegularLinear_ker_isotropic
-    {X : SplitOct} (hX : X ≠ zeroZ) :
-    ∀ Y : SplitOct, Y ∈ LinearMap.ker (leftRegularLinear X) → normZ Y = 0 := by
-  intro Y hY
-  have hmul : mulZ X Y = zeroZ := hY
-  have hcancel := right_alternative_cancellation X Y
-  rw [hmul, zeroZ_mulZ] at hcancel
-  have hs : mulZ (scalarZ (normZ Y)) X = zeroZ := by
-    simpa [normZ] using hcancel.symm
-  exact scalarZ_mul_eq_zero_of_ne_zero hX hs
 
 /-- Middle Moufang identity for the split octonions. -/
 theorem moufang_identity (X Y Z : SplitOct) : 

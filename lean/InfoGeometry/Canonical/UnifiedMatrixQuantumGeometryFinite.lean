@@ -179,23 +179,6 @@ theorem qK_mul_qI : qK * qI = qJ := by
 def pauliPointRaw (t x y z : ℂ) : Mat2 :=
   !![t + z, x - Complex.I * y; x + Complex.I * y, t - z]
 
-/-- The raw Pauli point has trace equal to twice its scalar coordinate. -/
-theorem pauliPointRaw_trace (t x y z : ℂ) :
-    Matrix.trace (pauliPointRaw t x y z) = 2 * t := by
-  rw [Matrix.trace, Fin.sum_univ_two]
-  simp [pauliPointRaw]
-  ring
-
-/-- Real-coordinate Pauli spacetime points are Hermitian matrices. -/
-theorem pauliPointRaw_conjTranspose_of_real (t x y z : ℝ) :
-    Matrix.conjTranspose
-        (pauliPointRaw (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ)) =
-      pauliPointRaw (t : ℂ) (x : ℂ) (y : ℂ) (z : ℂ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [pauliPointRaw, Complex.conj_I]
-  all_goals ring
-
 /-- Normalized Pauli spacetime matrix `1/sqrt(2)` at the determinant level. -/
 def pauliPointDet (t x y z : ℂ) : ℂ :=
   (1 / 2 : ℂ) * (pauliPointRaw t x y z).det
@@ -225,23 +208,6 @@ theorem minkowski_readout_eq_neg_two_det (t x y z : ℂ) :
 def densityMatrix (n1 n2 n3 : ℂ) : Mat2 :=
   !![(1 + n3) / 2, (n1 - Complex.I * n2) / 2;
      (n1 + Complex.I * n2) / 2, (1 - n3) / 2]
-
-/-- The Bloch density matrix has unit trace independently of its radius. -/
-theorem densityMatrix_trace (n1 n2 n3 : ℂ) :
-    Matrix.trace (densityMatrix n1 n2 n3) = 1 := by
-  rw [Matrix.trace, Fin.sum_univ_two]
-  simp [densityMatrix]
-  ring
-
-/-- Real-coordinate Bloch density matrices are Hermitian. -/
-theorem densityMatrix_conjTranspose_of_real (n1 n2 n3 : ℝ) :
-    Matrix.conjTranspose
-        (densityMatrix (n1 : ℂ) (n2 : ℂ) (n3 : ℂ)) =
-      densityMatrix (n1 : ℂ) (n2 : ℂ) (n3 : ℂ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [densityMatrix, Complex.conj_I]
-  all_goals ring
 
 /-- Determinant of the Bloch density matrix. -/
 theorem densityMatrix_det (n1 n2 n3 : ℂ) :

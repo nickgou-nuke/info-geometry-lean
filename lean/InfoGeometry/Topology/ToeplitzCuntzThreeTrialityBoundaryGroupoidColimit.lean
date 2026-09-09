@@ -172,6 +172,5 @@ theorem arrowCompose_inverse_right (a : TrialityArrow) :
     arrowCompose a (arrowInverse a) = arrowIdentity (arrowTarget a) := by
   simp [arrowCompose, arrowInverse, arrowIdentity, arrowTarget]
 
-end InfoGeometry.Topology.ToeplitzCuntzThreeTriality
 
-end
+end InfoGeometry.Topology.ToeplitzCuntzThreeTriality

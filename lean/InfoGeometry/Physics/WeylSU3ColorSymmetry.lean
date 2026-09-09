@@ -194,10 +194,9 @@ theorem weyl_su3_color_symmetry_synthesis
       c • weylAct swap23 C ∧
     permMatrix swap12 * permMatrix swap12 = (1 : M3C) ∧
     permMatrix swap23 * permMatrix swap23 = (1 : M3C) := by
-  refine ⟨weylAct_swap12_transport A B C c h,
-    weylAct_swap23_transport A B C c h, ?_, ?_⟩
-  · exact permMatrix_swap12_sq
-  · exact permMatrix_swap23_sq
+  exact ⟨weylAct_swap12_transport A B C c h,
+    weylAct_swap23_transport A B C c h,
+    permMatrix_swap12_sq, permMatrix_swap23_sq⟩
 
 end WeylSU3ColorSymmetry
 

@@ -37,29 +37,24 @@ Real-coordinate quaternion used for the Hurwitz/lattice layer.
 The genuine Hurwitz order condition is recorded separately by predicates below:
 the algebraic norm identities only need the ambient quaternion coordinates.
 -/
-abbrev HurwitzQuaternion := ℝ × ℝ × ℝ × ℝ
+structure HurwitzQuaternion where
+  a0 : ℝ
+  a1 : ℝ
+  a2 : ℝ
+  a3 : ℝ
 
 namespace HurwitzQuaternion
 
-abbrev a0 (q : HurwitzQuaternion) : ℝ := q.1
-
-abbrev a1 (q : HurwitzQuaternion) : ℝ := q.2.1
-
-abbrev a2 (q : HurwitzQuaternion) : ℝ := q.2.2.1
-
-abbrev a3 (q : HurwitzQuaternion) : ℝ := q.2.2.2
-
-
 /-- Quaternion conjugation. -/
 def conj (q : HurwitzQuaternion) : HurwitzQuaternion :=
-  (q.a0, -q.a1, -q.a2, -q.a3)
+  { a0 := q.a0, a1 := -q.a1, a2 := -q.a2, a3 := -q.a3 }
 
 /-- Hamilton quaternion multiplication in real coordinates. -/
 def mul (p q : HurwitzQuaternion) : HurwitzQuaternion :=
-  (p.a0 * q.a0 - p.a1 * q.a1 - p.a2 * q.a2 - p.a3 * q.a3,
-   p.a0 * q.a1 + p.a1 * q.a0 + p.a2 * q.a3 - p.a3 * q.a2,
-   p.a0 * q.a2 - p.a1 * q.a3 + p.a2 * q.a0 + p.a3 * q.a1,
-   p.a0 * q.a3 + p.a1 * q.a2 - p.a2 * q.a1 + p.a3 * q.a0)
+  { a0 := p.a0 * q.a0 - p.a1 * q.a1 - p.a2 * q.a2 - p.a3 * q.a3
+  , a1 := p.a0 * q.a1 + p.a1 * q.a0 + p.a2 * q.a3 - p.a3 * q.a2
+  , a2 := p.a0 * q.a2 - p.a1 * q.a3 + p.a2 * q.a0 + p.a3 * q.a1
+  , a3 := p.a0 * q.a3 + p.a1 * q.a2 - p.a2 * q.a1 + p.a3 * q.a0 }
 
 instance : Mul HurwitzQuaternion where
   mul := mul
@@ -288,6 +283,25 @@ theorem infiniteHurwitzTrace_mellin_bridge
     (M : InfiniteHurwitzTraceModel) (shift : ℝ) (s : ℂ) :
     M.heatTrace shift s = M.gamma s * M.infiniteHurwitzTrace shift s :=
   M.mellin_bridge shift s
+
+/--
+Bundled finite Hurwitz/twisted-sector bridge.
+
+It records the norm positivity needed for logarithmic energies, the
+multiplicative quaternion norm, and the shifted finite Hurwitz-zeta trace.
+-/
+theorem hurwitz_twisted_sector_synthesis
+    (p q : HurwitzQuaternion) (h_nonzero : q.a0 ≠ 0)
+    (N : ℕ) (a : ℝ) (s : ℂ) :
+    0 < q.normSq ∧
+      (p * q).normSq = p.normSq * q.normSq ∧
+      finiteHurwitzZetaTrace N a s = finiteShiftedDirichletTrace N a s ∧
+      finiteHurwitzZetaTrace (N + 1) 1 s =
+        InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellinTrace N s := by
+  exact ⟨HurwitzQuaternion.normSq_pos_of_a0_ne_zero q h_nonzero,
+    HurwitzQuaternion.normSq_mul p q,
+    finiteHurwitzZetaTrace_eq_shiftedDirichlet N a s,
+    finiteHurwitzZetaTrace_shift_one_eq_primon N s⟩
 
 /-- Even/odd split term identity for the half-shifted Dirichlet summand. -/
 theorem half_shift_term_identity (n : ℕ) (s : ℂ) :

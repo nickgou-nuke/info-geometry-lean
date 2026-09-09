@@ -17,15 +17,9 @@ namespace MobiusWittenKleinIndex
 /-! ## Twisted Witten index cancellation -/
 
 /-- One positive-energy supersymmetric boson/fermion doublet with the same glide eigenvalue. -/
-abbrev SUSYPair := ℂ × ℂ
-
-namespace SUSYPair
-
-abbrev weight (P : SUSYPair) : ℂ := P.1
-
-abbrev glideEigenvalue (P : SUSYPair) : ℂ := P.2
-
-end SUSYPair
+structure SUSYPair where
+  weight : ℂ
+  glideEigenvalue : ℂ
 
 /-- Contribution of one paired doublet to `Tr G(-1)^F e^{-βH}`. -/
 def pairContribution (P : SUSYPair) : ℂ :=
@@ -63,5 +57,14 @@ theorem surviving_fixed_line_mode_not_odd {k : ℕ} {c : ℂ}
   intro hodd
   apply hnz
   exact pg_fixed_line_extinction hodd hrel
+
+/-- Consolidated finite Witten-index and glide-parity synthesis. -/
+theorem mobius_witten_klein_index_synthesis :
+    (∀ P : SUSYPair, pairContribution P = 0) ∧
+    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
+    (∀ {k : ℕ} {c : ℂ}, c = pgPhase k * c → c ≠ 0 → ¬ Odd k) := by
+  exact ⟨fun P => pairContribution_zero P,
+    fun hodd hrel => pg_fixed_line_extinction hodd hrel,
+    fun hrel hnz => surviving_fixed_line_mode_not_odd hrel hnz⟩
 
 end MobiusWittenKleinIndex

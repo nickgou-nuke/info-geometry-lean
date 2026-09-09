@@ -142,7 +142,7 @@ interface.  This is a direct use of `CompatibleProofFamily.to_limit`, not a
 new global analytic theorem.
 -/
 theorem compatibleProofFamily_to_inductiveLimit
-    (S : SequentialStageSystem)
+    (S : SequentialColimitSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
     (hread : S.LimitReadout F.1 Pinf)
@@ -155,12 +155,36 @@ Transport a compatible finite-stage theorem forward by `m` stages and then read
 it at the same colimit point.
 -/
 theorem compatibleProofFamily_transported_to_inductiveLimit
-    (S : SequentialStageSystem)
+    (S : SequentialColimitSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
     (hread : S.LimitReadout F.1 Pinf)
     (n m : ℕ) (x : S.Stage n) (hx : F.1 n x) :
     Pinf (S.toLimit (n + m) (S.bondSeq n m x)) :=
   hread (n + m) (S.bondSeq n m x) (F.transport n m x hx)
+
+/-! ## 5. Explicit global colimit-owner obligation -/
+
+/--
+Debt: the full global de Rham obstruction theorem requires an owner-side
+categorical construction of the relevant global de Rham cohomology group and
+comparison map.
+-/
+structure FullGlobalDeRhamObstructionDebt where
+  -- Formal definitions pending
+
+/--
+Debt: the full global symplectic-manifold construction requires an owner-side
+manifold, closed nondegenerate two-form, and global quotient/comparison theorem.
+-/
+structure FullGlobalSymplecticManifoldConstructionDebt where
+  -- Formal definitions pending
+
+/--
+Debt: the full 5D Kaluza--Klein and quantization theorem requires owner-side
+field-equation, bundle, integrality, and operator quantization hypotheses.
+-/
+structure Full5DKaluzaKleinQuantizationDebt where
+  -- Formal definitions pending
 
 end InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit

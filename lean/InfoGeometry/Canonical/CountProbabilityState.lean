@@ -50,7 +50,7 @@ theorem empirical_distribution_sum_eq_one
   rw [← Finset.sum_div]
   exact div_self htotal_ne
 
-/-- Packaging property for the empirical probability state. -/
+/-- Packaging witness for the empirical probability state. -/
 private theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : empirical_nontrivial N) :
     ∃ P : ProbabilityDist α, ∀ x : α, (P x).toReal = empirical_distribution N x :=

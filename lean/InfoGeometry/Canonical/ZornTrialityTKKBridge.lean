@@ -97,11 +97,23 @@ theorem laneGrade_mirror_diagonal :
     laneGrade (laneMirror SplitOctonionLane.diagonalProjector) = z0 := by
   rfl
 
-/-- The associator property stays in the extremal grade under the mirror. -/
+/-- The associator witness stays in the extremal grade under the mirror. -/
 @[simp]
 theorem laneGrade_mirror_associator :
     laneGrade (laneMirror SplitOctonionLane.associatorWitness) = p2 := by
   rfl
+
+/-- Summary theorem: the canonical split-octonion lanes land in the expected TKK grades. -/
+theorem canonical_lane_grade_synthesis :
+    laneGrade SplitOctonionLane.diagonalProjector = z0 ∧
+    laneGrade SplitOctonionLane.upperNilpotent = p1 ∧
+    laneGrade SplitOctonionLane.lowerNilpotent = m1 ∧
+    laneGrade SplitOctonionLane.associatorWitness = p2 ∧
+    laneMirror (laneMirror SplitOctonionLane.upperNilpotent) =
+      SplitOctonionLane.upperNilpotent := by
+  exact ⟨laneGrade_diagonalProjector, laneGrade_upperNilpotent,
+    laneGrade_lowerNilpotent, laneGrade_associatorWitness,
+    laneMirror_involutive _⟩
 
 /-!
 The routing record carried no independent data: both its sector and grade were
@@ -119,17 +131,6 @@ def sector (r : LaneRouting) : ZornSector := laneSector r.lane
 def grade (r : LaneRouting) : TKKGrade := sectorGrade r.sector
 
 end LaneRouting
-
-theorem canonical_lane_grade_synthesis :
-    laneGrade SplitOctonionLane.diagonalProjector = z0 ∧
-    laneGrade SplitOctonionLane.upperNilpotent = p1 ∧
-    laneGrade SplitOctonionLane.lowerNilpotent = m1 ∧
-    laneGrade SplitOctonionLane.associatorWitness = p2 ∧
-    laneMirror (laneMirror SplitOctonionLane.upperNilpotent) =
-      SplitOctonionLane.upperNilpotent := by
-  exact ⟨laneGrade_diagonalProjector, laneGrade_upperNilpotent,
-    laneGrade_lowerNilpotent, laneGrade_associatorWitness,
-    laneMirror_involutive _⟩
 
 /-- A canonical routing record for the four named generators. -/
 def canonicalRouting : SplitOctonionLane → LaneRouting := id

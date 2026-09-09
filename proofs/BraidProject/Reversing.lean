@@ -58,10 +58,10 @@ inductive second_rw_closure (rels : FreeMonoid (α × Bool) → FreeMonoid (α �
 --   | refl c hc =>
 --     induction h2 with
 --     | refl d hd => rfl
---     | reg a _ _ => sorry
---     | trans _ _ _ _ => sorry
---   | reg a _ _ => sorry
---   | trans _ _ _ _ => sorry
+--     | reg a _ _ => unproved obligation
+--     | trans _ _ _ _ => unproved obligation
+--   | reg a _ _ => unproved obligation
+--   | trans _ _ _ _ => unproved obligation
 open Braid
 -- need some kind of PresentedGroup.mk
 theorem braid_rel_holds (h1 : first_rw_closure reversing_rels a b) :

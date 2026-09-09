@@ -34,14 +34,9 @@ theorem fockExponentQuarter_nonpos (u : RPhase1) :
   have hnorm : 0 ≤ normSq1 u := normSq1_nonneg u
   linarith
 
-abbrev FronsdalRankOneOrbit := (Fin 2 → ℚ) × (Fin 2 → ℚ)
-
-namespace FronsdalRankOneOrbit
-
-abbrev p (x : FronsdalRankOneOrbit) : Fin 2 → ℚ := x.1
-abbrev q (x : FronsdalRankOneOrbit) : Fin 2 → ℚ := x.2
-
-end FronsdalRankOneOrbit
+structure FronsdalRankOneOrbit where
+  p : Fin 2 → ℚ
+  q : Fin 2 → ℚ
 
 def U (x : FronsdalRankOneOrbit) (a b : Fin 2) : ℚ := x.p a * x.q b
 
@@ -51,7 +46,6 @@ def josephMinor (x : FronsdalRankOneOrbit) : ℚ :=
 theorem rank_one_joseph_minor_zero (x : FronsdalRankOneOrbit) :
     josephMinor x = 0 := by
   unfold josephMinor U
-  simp only [FronsdalRankOneOrbit.p, FronsdalRankOneOrbit.q]
   ring
 
 def quadraticEmbeddingTrace2 (x : FronsdalRankOneOrbit) : ℚ := U x 0 0 + U x 1 1
@@ -70,6 +64,39 @@ def rankOneJosephRelation : FronsdalRankOneOrbit → ℚ := josephMinor
 theorem rankOneJosephRelation_zero (x : FronsdalRankOneOrbit) :
     rankOneJosephRelation x = 0 :=
   rank_one_joseph_minor_zero x
+
+inductive Concept where
+  | Sars_Weyl_Colimit
+  | Regular_Weyl_GNS_State
+  | Fronsdal_2005
+  | Singular_Coadjoint_Orbit
+  | Joseph_Ideal_Constraints
+  | Rank_One_Moment_Map
+  deriving DecidableEq, Repr
+
+inductive Edge where
+  | GNS_completion
+  | defines_quantization
+  | cut_out_by
+  | annihilates
+  | embeds_as
+  deriving DecidableEq, Repr
+
+def edgeHolds : Concept → Edge → Concept → Bool
+  | Concept.Sars_Weyl_Colimit, Edge.GNS_completion, Concept.Regular_Weyl_GNS_State => true
+  | Concept.Fronsdal_2005, Edge.defines_quantization, Concept.Joseph_Ideal_Constraints => true
+  | Concept.Singular_Coadjoint_Orbit, Edge.cut_out_by, Concept.Joseph_Ideal_Constraints => true
+  | Concept.Joseph_Ideal_Constraints, Edge.annihilates, Concept.Regular_Weyl_GNS_State => true
+  | Concept.Rank_One_Moment_Map, Edge.embeds_as, Concept.Singular_Coadjoint_Orbit => true
+  | _, _, _ => false
+
+theorem graph_kernel :
+    edgeHolds Concept.Sars_Weyl_Colimit Edge.GNS_completion Concept.Regular_Weyl_GNS_State = true ∧
+    edgeHolds Concept.Fronsdal_2005 Edge.defines_quantization Concept.Joseph_Ideal_Constraints = true ∧
+    edgeHolds Concept.Singular_Coadjoint_Orbit Edge.cut_out_by Concept.Joseph_Ideal_Constraints = true ∧
+    edgeHolds Concept.Joseph_Ideal_Constraints Edge.annihilates Concept.Regular_Weyl_GNS_State = true ∧
+    edgeHolds Concept.Rank_One_Moment_Map Edge.embeds_as Concept.Singular_Coadjoint_Orbit = true := by
+  decide
 
 end SarsGNSFronsdalJoseph
 

@@ -2,6 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
+import InfoGeometry.AsanoRuelle.MobiusPoleBlowup
 
 /-!
 # InfoGeometry.Canonical.WeylGaugeAsanoEndpointBridge

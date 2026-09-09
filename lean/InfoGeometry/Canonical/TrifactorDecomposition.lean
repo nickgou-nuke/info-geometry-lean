@@ -13,7 +13,7 @@ relabels its three facets as the projective/modular sectors:
 * `P_zero`:  `0` null-boundary sector (`det = 0`).
 
 The algebra is intentionally finite and polynomial: no spectral theorem,
-external property, or analytic branch cut is used.
+external certificate, or analytic branch cut is used.
 -/
 
 namespace InfoGeometry.Canonical.TrifactorDecomposition

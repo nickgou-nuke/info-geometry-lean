@@ -21,11 +21,17 @@ open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget
 
+theorem projectiveLimitUnitIntervalMeasure_map_subtypeVal :
+    Measure.map Subtype.val projectiveLimitUnitIntervalMeasure =
+      projectiveLimitReadoutMeasure := by
+  dsimp [projectiveLimitUnitIntervalMeasure, projectiveLimitReadoutMeasure]
+  rw [Measure.map_map continuous_subtype_val.measurable
+    continuous_projectiveLimitUnitIntervalReadout.measurable]
+  rfl
+
 theorem projectiveLimitReadoutMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitReadoutMeasure := by
   rw [← projectiveLimitUnitIntervalMeasure_map_subtypeVal]
-  letI : IsProbabilityMeasure projectiveLimitUnitIntervalMeasure :=
-    projectiveLimitUnitIntervalMeasure_isProbabilityMeasure
   exact Measure.isProbabilityMeasure_map continuous_subtype_val.aemeasurable
 
 end InfoGeometry.Canonical.CantorReadoutMeasurePushforward

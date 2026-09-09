@@ -25,11 +25,11 @@ open Set Filter
 local instance : T2Space ℝ := TopologicalSpace.t2Space_of_metrizableSpace
 
 def realBinaryPartialReadout
-    (N : ℕ) (w : (ℕ → Bool)) : ℝ :=
+    (N : ℕ) (w : InfiniteBinaryWordSpace) : ℝ :=
   ∑ n ∈ Finset.range N, realBinaryTerm w n
 
 theorem realBinaryPartialReadout_congr_of_prefix
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (h : ∀ n < N, w n = v n) :
     realBinaryPartialReadout N w = realBinaryPartialReadout N v := by
   unfold realBinaryPartialReadout
@@ -39,52 +39,19 @@ theorem realBinaryPartialReadout_congr_of_prefix
   rw [h n (Finset.mem_range.mp hn)]
 
 theorem realBinaryPartialReadout_zero
-    (w : (ℕ → Bool)) :
+    (w : InfiniteBinaryWordSpace) :
     realBinaryPartialReadout 0 w = 0 := by
   simp [realBinaryPartialReadout]
 
 theorem realBinaryPartialReadout_succ
-    (N : ℕ) (w : (ℕ → Bool)) :
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
     realBinaryPartialReadout (N + 1) w =
       realBinaryPartialReadout N w + realBinaryTerm w N := by
   unfold realBinaryPartialReadout
   rw [Finset.sum_range_succ]
 
-theorem realBinaryPartialReadout_boundaryCons
-    (N : ℕ) (a : Bool) (w : (ℕ → Bool)) :
-    realBinaryPartialReadout (N + 1) (boundaryCons a w) =
-      (if a then (1 / 2 : ℝ) else 0) +
-        (1 / 2 : ℝ) * realBinaryPartialReadout N w := by
-  induction N with
-  | zero =>
-      simp [realBinaryPartialReadout, realBinaryTerm, boundaryCons]
-  | succ N ih =>
-      rw [realBinaryPartialReadout_succ, ih,
-        realBinaryPartialReadout_succ N w]
-      dsimp [realBinaryTerm, boundaryCons]
-      simp only [Nat.succ_eq_add_one, Nat.add_assoc, Nat.add_comm N 1]
-      rw [pow_add]
-      split <;> split <;> simp <;> ring
-
-theorem realBinaryPartialReadout_nonnegative
-    (N : ℕ) (w : (ℕ → Bool)) :
-    0 ≤ realBinaryPartialReadout N w := by
-  unfold realBinaryPartialReadout
-  exact Finset.sum_nonneg fun n hn => by
-    dsimp [realBinaryTerm]
-    split <;> positivity
-
-theorem realBinaryPartialReadout_mono
-    {N M : ℕ} (hNM : N ≤ M) (w : (ℕ → Bool)) :
-    realBinaryPartialReadout N w ≤ realBinaryPartialReadout M w := by
-  unfold realBinaryPartialReadout
-  exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hNM)
-    (fun n hn hnot => by
-      dsimp [realBinaryTerm]
-      split <;> positivity)
-
 theorem realBinaryPartialReadout_difference_at_first_difference
-    {w v : (ℕ → Bool)} {k : ℕ}
+    {w v : InfiniteBinaryWordSpace} {k : ℕ}
     (hprefix : ∀ n < k, w n = v n)
     (hdiff : w k ≠ v k) :
     realBinaryPartialReadout (k + 1) w -
@@ -100,7 +67,7 @@ theorem realBinaryPartialReadout_difference_at_first_difference
     simp [realBinaryTerm, hw, hv] at hdiff ⊢
 
 theorem realBinaryReadout_sub_partial_le_geometricTail
-    (N : ℕ) (w : (ℕ → Bool)) :
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
     realBinaryReadout w - realBinaryPartialReadout N w ≤
       ∑' n : ℕ, (1 / 2 : ℝ) ^ (n + N + 1) := by
   have hterm : ∀ n : ℕ,
@@ -156,13 +123,13 @@ theorem geometricTail_eq_half_pow
   ring
 
 theorem realBinaryReadout_sub_partial_le_half_pow
-    (N : ℕ) (w : (ℕ → Bool)) :
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
     realBinaryReadout w - realBinaryPartialReadout N w ≤ (1 / 2 : ℝ) ^ N := by
   exact le_trans (realBinaryReadout_sub_partial_le_geometricTail N w)
     (by rw [geometricTail_eq_half_pow N])
 
 theorem realBinaryReadout_sub_partial_lt_half_pow_of_false
-    (N : ℕ) (w : (ℕ → Bool))
+    (N : ℕ) (w : InfiniteBinaryWordSpace)
     (hfalse : ∃ m ≥ N, w m = false) :
     realBinaryReadout w - realBinaryPartialReadout N w < (1 / 2 : ℝ) ^ N := by
   obtain ⟨m, hmN, hmfalse⟩ := hfalse
@@ -199,7 +166,7 @@ theorem realBinaryReadout_sub_partial_lt_half_pow_of_false
   linarith
 
 theorem realBinaryPartialReadout_le_readout
-    (N : ℕ) (w : (ℕ → Bool)) :
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
     realBinaryPartialReadout N w ≤ realBinaryReadout w := by
   dsimp [realBinaryPartialReadout, realBinaryReadout]
   exact (realBinaryTerm_summable w).sum_le_tsum (Finset.range N)
@@ -208,24 +175,8 @@ theorem realBinaryPartialReadout_le_readout
       dsimp [realBinaryTerm]
       positivity)
 
-theorem abs_realBinaryReadout_sub_partial_le_half_pow
-    (N : ℕ) (w : (ℕ → Bool)) :
-    |realBinaryReadout w - realBinaryPartialReadout N w| ≤
-      (1 / 2 : ℝ) ^ N := by
-  rw [abs_of_nonneg (sub_nonneg.mpr
-    (realBinaryPartialReadout_le_readout N w))]
-  exact realBinaryReadout_sub_partial_le_half_pow N w
-
-theorem realBinaryPartialReadout_mem_unitInterval
-    (N : ℕ) (w : (ℕ → Bool)) :
-    realBinaryPartialReadout N w ∈ Set.Icc (0 : ℝ) 1 := by
-  constructor
-  · exact realBinaryPartialReadout_nonnegative N w
-  · exact le_trans (realBinaryPartialReadout_le_readout N w)
-      (realBinaryReadout_mem_unitInterval w).2
-
 theorem realBinaryPartialReadout_tendsto_readout
-    (w : (ℕ → Bool)) :
+    (w : InfiniteBinaryWordSpace) :
     Filter.Tendsto
       (fun N => realBinaryPartialReadout N w)
       Filter.atTop
@@ -249,14 +200,14 @@ theorem realBinaryPartialReadout_tendsto_readout
   linarith
 
 theorem realBinaryReadout_injective_on_canonical
-    {w v : (ℕ → Bool)}
+    {w v : InfiniteBinaryWordSpace}
     (hw : CanonicalBinaryWord w)
     (hv : CanonicalBinaryWord v)
     (hreadout : realBinaryReadout w = realBinaryReadout v) :
     w = v := by
   by_contra hne
   obtain ⟨k, hprefix, hdiff⟩ := exists_first_binary_difference hne
-  have hfalse_after (u : (ℕ → Bool))
+  have hfalse_after (u : InfiniteBinaryWordSpace)
       (hu : CanonicalBinaryWord u) :
       ∃ m ≥ k + 1, u m = false := by
     by_contra hnone
@@ -324,17 +275,8 @@ theorem realBinaryReadout_injective_on_canonical
           linarith
       | true => exact hdiff (by rw [hwk, hvk])
 
-/-- The canonical readout is injective on the canonical-word subtype. -/
-theorem realBinaryReadout_injective_on_canonicalSpace :
-    Function.Injective
-      (fun w : {w : (ℕ → Bool) // CanonicalBinaryWord w} =>
-        realBinaryReadout w.val) := by
-  intro w v hreadout
-  apply Subtype.ext
-  exact realBinaryReadout_injective_on_canonical w.property v.property hreadout
-
 theorem abs_realBinaryReadout_sub_le_of_prefix
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
     |realBinaryReadout w - realBinaryReadout v| ≤ (1 / 2 : ℝ) ^ N := by
   have hpartial :
@@ -352,7 +294,7 @@ theorem abs_realBinaryReadout_sub_le_of_prefix
   constructor <;> linarith [hpartial]
 
 theorem realBinaryReadout_lt_one_of_canonical
-    (w : (ℕ → Bool)) (hw : CanonicalBinaryWord w) :
+    (w : InfiniteBinaryWordSpace) (hw : CanonicalBinaryWord w) :
     realBinaryReadout w < 1 := by
   have hfalse : ∃ m ≥ 0, w m = false := by
     by_contra hnone
@@ -368,27 +310,22 @@ theorem realBinaryReadout_lt_one_of_canonical
   norm_num [hzero] at hstrict ⊢
   linarith
 
-theorem realBinaryReadout_lt_one_on_canonicalSpace
-    (w : {w : (ℕ → Bool) // CanonicalBinaryWord w}) :
-    realBinaryReadout w.val < 1 :=
-  realBinaryReadout_lt_one_of_canonical w.val w.property
-
 theorem continuous_realBinaryPartialReadout
     (N : ℕ) :
-    Continuous (fun w : (ℕ → Bool) => realBinaryPartialReadout N w) := by
+    Continuous (fun w : InfiniteBinaryWordSpace => realBinaryPartialReadout N w) := by
   unfold realBinaryPartialReadout
   apply continuous_finset_sum
   intro n hn
   unfold realBinaryTerm
   have hbool : Continuous (fun b : Bool => if b = true then (1 : ℝ) else 0) :=
     continuous_of_discreteTopology
-  have hterm : Continuous (fun w : (ℕ → Bool) =>
+  have hterm : Continuous (fun w : InfiniteBinaryWordSpace =>
       if w n = true then (1 : ℝ) else 0) :=
     hbool.comp (continuous_apply n)
   exact hterm.mul continuous_const
 
 theorem continuous_realBinaryReadout :
-    Continuous (fun w : (ℕ → Bool) => realBinaryReadout w) := by
+    Continuous (fun w : InfiniteBinaryWordSpace => realBinaryReadout w) := by
   rw [continuous_iff_continuousAt]
   intro w
   change Tendsto realBinaryReadout (𝓝 w) (𝓝 (realBinaryReadout w))
@@ -399,12 +336,12 @@ theorem continuous_realBinaryReadout :
       Filter.atTop (𝓝 0) :=
     tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
   obtain ⟨N, hN⟩ := (Metric.tendsto_atTop.1 hpow) ε hε
-  let C : Set (ℕ → Bool) :=
+  let C : Set InfiniteBinaryWordSpace :=
     ⋂ n ∈ Finset.range N, {v | v n = w n}
   have hCopen : IsOpen C := by
     apply isOpen_biInter_finset
     intro n hn
-    change IsOpen ((fun v : (ℕ → Bool) => v n) ⁻¹' ({w n} : Set Bool))
+    change IsOpen ((fun v : InfiniteBinaryWordSpace => v n) ⁻¹' ({w n} : Set Bool))
     apply (continuous_apply n).isOpen_preimage
     exact isOpen_discrete _
   have hwC : w ∈ C := by
@@ -432,7 +369,7 @@ theorem continuous_realBinaryReadout :
   exact mem_of_superset hCnhds hsubset'
 
 theorem realBinaryReadout_boundaryCons
-    (a : Bool) (w : (ℕ → Bool)) :
+    (a : Bool) (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (boundaryCons a w) =
       (if a then (1 / 2 : ℝ) else 0) +
         (1 / 2 : ℝ) * realBinaryReadout w := by
@@ -454,7 +391,7 @@ theorem realBinaryReadout_boundaryCons
   norm_num [realBinaryTerm, boundaryCons]
 
 theorem realBinaryReadout_boundaryTail
-    (w : (ℕ → Bool)) :
+    (w : InfiniteBinaryWordSpace) :
     (1 / 2 : ℝ) * realBinaryReadout (boundaryTail w) =
       realBinaryReadout w -
         (if boundaryHead w then (1 / 2 : ℝ) else 0) := by
@@ -468,28 +405,8 @@ def finitePrefixReadout : List Bool → ℝ
       (if b then (1 / 2 : ℝ) else 0) +
         (1 / 2 : ℝ) * finitePrefixReadout bs
 
-theorem finitePrefixReadout_append
-    (bs cs : List Bool) :
-    finitePrefixReadout (bs ++ cs) =
-      finitePrefixReadout bs +
-        (1 / 2 : ℝ) ^ bs.length * finitePrefixReadout cs := by
-  induction bs with
-  | nil => simp [finitePrefixReadout]
-  | cons b bs ih =>
-      simp only [List.cons_append, finitePrefixReadout, List.length_cons]
-      rw [ih, pow_succ]
-      cases b <;> ring
-
-theorem finitePrefixReadout_complement (bs : List Bool) :
-    finitePrefixReadout (bs.map (fun b => !b)) =
-      (1 - (1 / 2 : ℝ) ^ bs.length) - finitePrefixReadout bs := by
-  induction bs with
-  | nil => simp [finitePrefixReadout]
-  | cons b bs ih =>
-      cases b <;> simp [finitePrefixReadout, ih, pow_succ] <;> ring
-
 theorem realBinaryReadout_boundaryConsList
-    (bs : List Bool) (w : (ℕ → Bool)) :
+    (bs : List Bool) (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (boundaryConsList bs w) =
       finitePrefixReadout bs +
         (1 / 2 : ℝ) ^ bs.length * realBinaryReadout w := by
@@ -502,7 +419,7 @@ theorem realBinaryReadout_boundaryConsList
       ring_nf
 
 theorem realBinaryReadout_prefix_tail_decomposition
-    (N : ℕ) (w : (ℕ → Bool)) :
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
     realBinaryReadout w =
       finitePrefixReadout (boundaryPrefix N w) +
         (1 / 2 : ℝ) ^ N *

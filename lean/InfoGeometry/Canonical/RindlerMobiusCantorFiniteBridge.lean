@@ -67,7 +67,7 @@ theorem rinder_projective_log_split (c : RindlerCoordinates) :
 /-! ## Prefix approximants form a genuine Cauchy sequence -/
 
 theorem realBinaryPartialReadout_cauchy
-    (w : (ℕ → Bool)) :
+    (w : InfiniteBinaryWordSpace) :
     CauchySeq (fun N : ℕ => realBinaryPartialReadout N w) := by
   rw [Metric.cauchySeq_iff]
   intro ε hε
@@ -94,7 +94,7 @@ theorem realBinaryPartialReadout_cauchy
       linarith
 
 theorem finite_prefixes_cauchy_basis
-    (w : (ℕ → Bool)) :
+    (w : InfiniteBinaryWordSpace) :
     ∀ ε > 0, ∃ N, ∀ v,
       (∀ n < N, v n = w n) →
         |realBinaryReadout v - realBinaryReadout w| < ε := by
@@ -166,13 +166,13 @@ theorem projectiveLimit_partialReadout_tendsto
 
 /-! ## Cuntz branch readouts -/
 
-theorem realBinaryReadout_leftShift (w : (ℕ → Bool)) :
+theorem realBinaryReadout_leftShift (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (leftShift w) =
       (1 / 2 : ℝ) * realBinaryReadout w := by
   simpa [leftShift, prefixBit, boundaryCons] using
     (realBinaryReadout_boundaryCons false w)
 
-theorem realBinaryReadout_rightShift (w : (ℕ → Bool)) :
+theorem realBinaryReadout_rightShift (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (rightShift w) =
       (1 / 2 : ℝ) + (1 / 2 : ℝ) * realBinaryReadout w := by
   simpa [rightShift, prefixBit, boundaryCons] using
@@ -194,18 +194,18 @@ def leftShiftProjectiveLimit (p : PrefixProjectiveLimit) : PrefixProjectiveLimit
 def rightShiftProjectiveLimit (p : PrefixProjectiveLimit) : PrefixProjectiveLimit :=
   PrefixProjectiveLimit.ofCantor (rightShift (toCantor p))
 
-theorem continuous_leftShift : Continuous (leftShift : (ℕ → Bool) →
-    (ℕ → Bool)) := by
-  change Continuous (fun x : (ℕ → Bool) =>
+theorem continuous_leftShift : Continuous (leftShift : InfiniteBinaryWordSpace →
+    InfiniteBinaryWordSpace) := by
+  change Continuous (fun x : InfiniteBinaryWordSpace =>
     fun n => prefixBit false x n)
   exact continuous_pi fun n => by
     cases n with
     | zero => exact continuous_const
     | succ n => exact continuous_apply n
 
-theorem continuous_rightShift : Continuous (rightShift : (ℕ → Bool) →
-    (ℕ → Bool)) := by
-  change Continuous (fun x : (ℕ → Bool) =>
+theorem continuous_rightShift : Continuous (rightShift : InfiniteBinaryWordSpace →
+    InfiniteBinaryWordSpace) := by
+  change Continuous (fun x : InfiniteBinaryWordSpace =>
     fun n => prefixBit true x n)
   exact continuous_pi fun n => by
     cases n with
@@ -267,7 +267,7 @@ theorem projectiveLimit_ext_of_all_prefixes
   exact h N
 
 theorem initialSegment_cylinders_nhds_basis
-    (x : (ℕ → Bool)) :
+    (x : InfiniteBinaryWordSpace) :
     (nhds x).HasBasis (fun _ : ℕ => True)
       (fun N => initialSegmentCylinder x N) := by
   apply (nhds_hasBasis_finiteCoordinateCylinder x).to_hasBasis
@@ -324,7 +324,7 @@ theorem projectiveLimit_prefix_fiber_cover (N : ℕ) :
   ext q
   constructor
   · intro _
-    exact Set.mem_univ q
+    trivial
   · intro _
     exact Set.mem_iUnion.2 ⟨q.π N, rfl⟩
 
@@ -441,17 +441,17 @@ theorem projectiveLimit_tomita_fixed_complex_readout
 
 theorem compact_projectiveLimit :
     IsCompact (Set.univ : Set PrefixProjectiveLimit) := by
-  have hcompact : IsCompact (Set.univ : Set (ℕ → Bool)) :=
+  have hcompact : IsCompact (Set.univ : Set InfiniteBinaryWordSpace) :=
     isCompact_univ
   have himage := hcompact.image
     PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit.continuous_toFun
   rw [Set.image_univ] at himage
   change IsCompact (Set.range
     (PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit :
-      (ℕ → Bool) → PrefixProjectiveLimit)) at himage
+      InfiniteBinaryWordSpace → PrefixProjectiveLimit)) at himage
   have hrange : Set.range
       (PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit :
-        (ℕ → Bool) → PrefixProjectiveLimit) = Set.univ :=
+        InfiniteBinaryWordSpace → PrefixProjectiveLimit) = Set.univ :=
     PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit.surjective.range_eq
   rw [hrange] at himage
   exact himage
@@ -528,9 +528,9 @@ theorem projectiveLimit_isTotallyDisconnected :
 
 /-! ## The binary-expansion ambiguity, exhibited constructively -/
 
-def zeroWord : (ℕ → Bool) := fun _ => false
+def zeroWord : InfiniteBinaryWordSpace := fun _ => false
 
-def oneWord : (ℕ → Bool) := fun _ => true
+def oneWord : InfiniteBinaryWordSpace := fun _ => true
 
 private theorem boundaryPrefix_cons_zeroWord
     (N : ℕ) (b : BitWord N) :
@@ -566,7 +566,7 @@ theorem zeroTail_extension_readout
 theorem projectiveLimit_prefix_fiber_nonempty
     (N : ℕ) (b : BitWord N) :
     ∃ p : PrefixProjectiveLimit, p.π N = b := by
-  let x : (ℕ → Bool) :=
+  let x : InfiniteBinaryWordSpace :=
     InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryConsList
       (List.ofFn b) zeroWord
   refine ⟨ofCantor x, ?_⟩
@@ -587,7 +587,7 @@ theorem binaryReadout_oneWord :
   simpa [zeroWord, binaryReadout_zeroWord] using h
 
 theorem binaryReadout_boundaryCons_formula
-    (a : Bool) (w : (ℕ → Bool)) :
+    (a : Bool) (w : InfiniteBinaryWordSpace) :
     binaryReadout (boundaryCons a w) =
       (if a then (1 / 2 : ℂ) else 0) +
         (1 / 2 : ℂ) * binaryReadout w := by

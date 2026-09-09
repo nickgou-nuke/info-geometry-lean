@@ -78,7 +78,7 @@ end GeneralizedSymmetricEigenproblem
 
 /--
 Jensen-style inverse-iteration data at finite dimension.  The convergence and
-spectral-minimum facts are supplied by an owner proof or numerical property.
+spectral-minimum facts are supplied by an owner proof or numerical certificate.
 -/
 structure JensenInverseIterationData (n : ℕ) where
   problem : GeneralizedSymmetricEigenproblem n
@@ -106,7 +106,7 @@ theorem target_mem_unaccelerated_interval (j : ℕ) :
 end JensenInverseIterationData
 
 /--
-Accelerated Jensen inclusion property.  The field `accelerated_is_smaller_root`
+Accelerated Jensen inclusion certificate.  The field `accelerated_is_smaller_root`
 connects the chosen accelerated radius with the quadratic from equation (6), and
 `accelerated_bounds_target` records the spectral conclusion of Jensen's theorem.
 -/

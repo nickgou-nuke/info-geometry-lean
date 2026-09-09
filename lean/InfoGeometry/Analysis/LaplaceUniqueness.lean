@@ -299,7 +299,7 @@ theorem bromwich_contour_shift
 /--
 Direct Bromwich uniqueness on a vertical line.
 
-If two Laplace data agree on the same Bromwich contour and both sorry the
+If two Laplace data agree on the same Bromwich contour and both admit the
 vertical-line inversion hypotheses, then the underlying functions agree.
 -/
 theorem bromwich_unique_on_vertical_line

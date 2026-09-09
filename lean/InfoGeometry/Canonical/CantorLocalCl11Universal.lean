@@ -128,11 +128,21 @@ theorem representationLocalCl11Relation
     CantorBinaryTiltCARCCRBridge.IsLocalCl11Relation
       (representationPositive R) (representationNegative R) := by
   refine ⟨R.gamma_sq 0, ?_, ?_⟩
-  · apply mul_sq_neg_one_of_sq_one_of_anticomm
-    · exact R.gamma_sq 0
-    · exact R.gamma_sq 1
-    · rw [R.gamma_anticomm 0 1 (by decide)]
-      simp
+  · have h : R.gamma 1 * R.gamma 0 =
+        -(R.gamma 0 * R.gamma 1) := by
+      have hc : R.gamma 0 * R.gamma 1 + R.gamma 1 * R.gamma 0 = 0 := by
+        rw [R.gamma_anticomm 0 1 (by decide)]
+        simp
+      exact eq_neg_of_add_eq_zero_right hc
+    calc
+      (R.gamma 0 * R.gamma 1) * (R.gamma 0 * R.gamma 1) =
+          R.gamma 0 * (R.gamma 1 * R.gamma 0) * R.gamma 1 := by
+            noncomm_ring
+      _ = R.gamma 0 * (-(R.gamma 0 * R.gamma 1)) * R.gamma 1 := by
+            rw [h]
+      _ = -(R.gamma 0 * R.gamma 0) * (R.gamma 1 * R.gamma 1) := by
+            noncomm_ring
+      _ = -1 := by rw [R.gamma_sq 0, R.gamma_sq 1]; simp
   · have h : R.gamma 0 * R.gamma 1 + R.gamma 1 * R.gamma 0 = 0 := by
       rw [R.gamma_anticomm 0 1 (by decide)]
       simp
@@ -146,12 +156,6 @@ theorem representationLocalCl11Relation
           R.gamma 0 * (R.gamma 1 * R.gamma 0) by noncomm_ring]
     rw [R.gamma_sq 0, hrev, mul_neg, ← mul_assoc, R.gamma_sq 0]
     simp
-
-@[simp] theorem representationPositive_eq (R : CantorCliffordRepresentation Op) :
-    representationPositive R = R.gamma 0 := rfl
-
-@[simp] theorem representationNegative_eq (R : CantorCliffordRepresentation Op) :
-    representationNegative R = R.gamma 0 * R.gamma 1 := rfl
 
 theorem real_cl11_matrix_equivalence_injective :
     Function.Injective cl11EquivMat := cl11EquivMat.injective
@@ -195,21 +199,6 @@ theorem real_cl11_matrix_packet_linearly_independent :
   · exact (real_cl11_matrix_coordinate_decomposition_unique
       (l 0) (l 1) (l 2) (l 3) (by simpa [Fin.sum_univ_four] using hsum)).2.2.2
 
-theorem representationPositive_eq_binary
-    (P : BinaryWordTiltReadout Op)
-    (R : CantorCliffordRepresentation Op)
-    (h0 : R.gamma 0 = P.bitOperator false) :
-    representationPositive R = localCl11Positive P := by
-  simp [representationPositive, localCl11Positive, h0]
-
-theorem representationNegative_eq_binary
-    (P : BinaryWordTiltReadout Op)
-    (R : CantorCliffordRepresentation Op)
-    (h0 : R.gamma 0 = P.bitOperator false)
-    (h1 : R.gamma 1 = P.bitOperator true) :
-    representationNegative R = localCl11Negative P := by
-  simp [representationNegative, localCl11Positive, localCl11Negative, h0, h1]
-
 theorem localCl11AlgebraHom_eq_representationHom
     (P : BinaryWordTiltReadout Op)
     (R : CantorCliffordRepresentation Op)
@@ -219,7 +208,9 @@ theorem localCl11AlgebraHom_eq_representationHom
       cl11AlgebraHom (representationPositive R) (representationNegative R)
         (representationLocalCl11Relation R) := by
   apply cl11AlgebraHom_ext
-  · exact (representationPositive_eq_binary P R h0).symm
-  · exact (representationNegative_eq_binary P R h0 h1).symm
+  · change localCl11Positive P = representationPositive R
+    simpa [representationPositive, localCl11Positive] using h0.symm
+  · change localCl11Negative P = representationNegative R
+    simpa [representationNegative, localCl11Negative] using congrArg₂ (· * ·) h0.symm h1.symm
 
 end InfoGeometry.Canonical.CantorLocalCl11Universal

@@ -26,7 +26,7 @@ Unlike the separate Hilbert--Schmidt owner, the construction here contains:
 * the modular interpolation `ρ^s A ρ^(1-s)`;
 * the interval integral over `s ∈ [0,1]`.
 
-No diagonalization or commutativity property is imposed on observables.
+No diagonalization or commutativity hypothesis is imposed on observables.
 -/
 
 /-- Finite complex Hilbert space carrying the operator algebra. -/
@@ -85,7 +85,7 @@ theorem finiteOperatorTrace_star
   exact Matrix.trace_conjTranspose _
 
 /-- Cyclicity of the finite operator trace for two arbitrary operators.  No
-commutativity property is imposed on the operator algebra. -/
+commutativity hypothesis is imposed on the operator algebra. -/
 theorem finiteOperatorTrace_mul_comm
     (A B : FiniteOperatorAlgebra n) :
     finiteOperatorTrace (A * B) =
@@ -170,17 +170,6 @@ def kuboMoriIntegrand
     (s : ℝ) : ℂ :=
   finiteOperatorTrace
     (D.rpow s * star A * D.rpow (1 - s) * B)
-
-theorem kuboMoriIntegrand_one_one
-    (D : FaithfulDensityOperator n) (s : ℝ) :
-    D.kuboMoriIntegrand (1 : FiniteOperatorAlgebra n)
-        (1 : FiniteOperatorAlgebra n) s = 1 := by
-  unfold kuboMoriIntegrand
-  simp only [star_one, mul_one]
-  rw [← D.rpow_add]
-  have hs : s + (1 - s) = 1 := by ring
-  rw [hs, D.rpow_one]
-  exact D.trace_one
 
 /-- At a fixed Cartan/modular-flow parameter `s`, the Kubo--Mori kernel is a
 complex-linear functional of the transported observable `B`.
@@ -307,10 +296,7 @@ def maximallyMixedFaithfulDensityTwo :
         exact matrixOfOp_id]
     simp [Matrix.trace]
 
-/-! The same canonical faithful density is available at every dyadic UHF
-dimension.  This supplies the finite-state datum for the existing filtered
-BKM kernel without asserting transition compatibility. -/
-
+/-- The same canonical faithful density is available at every dyadic dimension `2 ^ n`. -/
 def maximallyMixedFaithfulDensityPowTwo (n : ℕ) :
     FaithfulDensityOperator (2 ^ n) where
   rho :=
@@ -334,7 +320,32 @@ def maximallyMixedFaithfulDensityPowTwo (n : ℕ) :
         exact matrixOfOp_id]
     simp [Matrix.trace]
 
-/-- Concrete noncommutativity property in the operator carrier used by the BKM
+theorem maximallyMixed_bkm_kernel_eq_normalized_trace
+    (n : ℕ) (s : ℝ) (B : FiniteOperatorAlgebra (2 ^ n)) :
+    (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : FiniteOperatorAlgebra (2 ^ n)) s B =
+      (1 / (2 ^ n : ℂ)) * finiteOperatorTrace B := by
+  rw [FaithfulDensityOperator.kuboMoriKernelFunctional_apply]
+  unfold FaithfulDensityOperator.kuboMoriIntegrand
+  simp only [star_one, mul_one]
+  rw [← (maximallyMixedFaithfulDensityPowTwo n).rpow_add]
+  have hs : s + (1 - s) = 1 := by ring
+  rw [hs, (maximallyMixedFaithfulDensityPowTwo n).rpow_one]
+  change finiteOperatorTrace
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))) * B) = _
+  unfold finiteOperatorTrace
+  change Matrix.trace (matrixOfOp
+    (((1 / (2 ^ n : ℝ)) • (1 : FiniteOperatorAlgebra (2 ^ n))).comp B)) = _
+  rw [matrixOfOp_comp, matrixOfOp_real_smul]
+  have h_one : matrixOfOp (1 : FiniteOperatorAlgebra (2 ^ n)) =
+      (1 : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ) := by
+    change matrixOfOp
+        (ContinuousLinearMap.id ℂ (FiniteHilbertSpace (2 ^ n))) = 1
+    exact matrixOfOp_id
+  rw [h_one, Matrix.smul_mul, one_mul, Matrix.trace_smul]
+  simp [smul_eq_mul]
+
+/-- Concrete noncommutativity witness in the operator carrier used by the BKM
 construction. -/
 theorem exists_noncommuting_finiteOperators :
     ∃ A B : FiniteOperatorAlgebra 2, A * B ≠ B * A := by

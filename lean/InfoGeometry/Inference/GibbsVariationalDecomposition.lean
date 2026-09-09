@@ -13,7 +13,7 @@ import InfoGeometry.Inference.GibbsVariational
 # Gibbs variational decomposition
 
 The entropy-regularized finite objective differs from its Gibbs value by a
-nonnegative relative-entropy term. This is the finite primal-dual property
+nonnegative relative-entropy term. This is the finite primal-dual certificate
 for the Gibbs optimizer.
 -/
 

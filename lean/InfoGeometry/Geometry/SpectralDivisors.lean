@@ -138,11 +138,11 @@ theorem kernelSpectralDivisor_of_spectralDivisor_kernelDiff
 end NoncommutativeCauchyKernel
 
 /--
-Completeness property for a noncommutative Cauchy kernel.
+Completeness certificate for a noncommutative Cauchy kernel.
 
 The kernel itself proves `admissible → invertible difference`.  This extra
-property is exactly the converse: every invertible difference lies in the
-admissible resolvent domain.  Only with this property do admissibility
+certificate is exactly the converse: every invertible difference lies in the
+admissible resolvent domain.  Only with this certificate do admissibility
 failure and ordinary spectral-divisor failure coincide.
 -/
 def KernelAdmissibilityComplete
@@ -169,7 +169,7 @@ noncomputable def scalarComplexKernelAdmissibilityComplete :
     exact hunit.ne_zero
 
 /--
-With a completeness property, kernel spectral divisors are exactly spectral
+With a completeness certificate, kernel spectral divisors are exactly spectral
 divisors of the difference function.
 -/
 theorem kernelSpectralDivisor_iff_spectralDivisor_kernelDiff
@@ -224,26 +224,24 @@ Spectral divisor data.
 
 `multiplicity z` is the local integer multiplicity / divisor order.
 -/
-abbrev SpectralDivisorDatum
+structure SpectralDivisorDatum
     (Point Value : Type*)
-    [Monoid Value] :=
-  {p : (Point → Value) × (Point → ℤ) //
+    [Monoid Value] where
+  /-- The spectral function/operator family. -/
+  F : Point → Value
+  /-- Local divisor multiplicity. -/
+  multiplicity : Point → ℤ
+  /-- Off the divisor locus, multiplicity is zero. -/
+  multiplicity_zero_off_divisor :
     ∀ z : Point,
-      ¬ IsSpectralDivisor p.1 z →
-        p.2 z = 0}
+      ¬ IsSpectralDivisor F z →
+        multiplicity z = 0
 
 namespace SpectralDivisorDatum
 
 variable {Point Value : Type*}
 variable [Monoid Value]
 variable (D : SpectralDivisorDatum Point Value)
-
-abbrev F : Point → Value := D.1.1
-abbrev multiplicity : Point → ℤ := D.1.2
-abbrev multiplicity_zero_off_divisor :
-    ∀ z : Point,
-      ¬ IsSpectralDivisor D.F z →
-        D.multiplicity z = 0 := D.2
 
 /-- The divisor locus of the spectral datum. -/
 def divisorLocus : Set Point :=
@@ -573,7 +571,7 @@ theorem boundaryIntegral_eq_iff_winding_eq
   · intro h
     rw [W.boundaryIntegral_eq_winding_smul Ω₁, W.boundaryIntegral_eq_winding_smul Ω₂, h]
 
-/-- Regions with the same property winding have the same boundary residue. -/
+/-- Regions with the same certified winding have the same boundary residue. -/
 theorem boundaryIntegral_eq_of_winding_eq
     {Ω₁ Ω₂ : Region}
     (hΩ : W.winding Ω₁ = W.winding Ω₂) :
@@ -585,17 +583,18 @@ end WindingNumberDatum
 
 /-! ## 5. Explicit finite divisor counting -/
 
-/-- Finite list of divisor points enclosed by a region. -/
-abbrev FiniteDivisorCounter
+/--
+A finite divisor counter for a region.
+
+The enclosed divisor charge is computed by summing the multiplicities of an
+explicit finite list of enclosed divisor points.
+-/
+structure FiniteDivisorCounter
     (Region Point Value : Type*)
     [Monoid Value]
-    (D : SpectralDivisorDatum Point Value) := Region → List Point
-
-abbrev FiniteDivisorCounter.enclosedDivisors
-    {Region Point Value : Type*}
-    [Monoid Value]
-    {D : SpectralDivisorDatum Point Value}
-    (C : FiniteDivisorCounter Region Point Value D) : Region → List Point := C
+    (D : SpectralDivisorDatum Point Value) where
+  /-- Finite list of divisor points enclosed by a region. -/
+  enclosedDivisors : Region → List Point
 
 namespace FiniteDivisorCounter
 
@@ -724,7 +723,7 @@ theorem boundaryIntegral_ne_zero_iff_enclosedMultiplicity_ne_zero
 
 end DivisorWindingCalibration
 
-/-! ## 7. Topological index / K-homology pairing -/
+/-! ## 7. Topological index / K-homology pairing socket -/
 
 /--
 A topological index datum extracted from a concrete winding datum.

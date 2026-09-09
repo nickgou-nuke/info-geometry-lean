@@ -31,7 +31,7 @@ A compatibility name for the canonical five-graded conformal inversion owner.
 
 Its source/sink, incoming/outgoing, and center-stability laws are theorems
 derived from involutivity and the grade-swap equation; they are not duplicated
-as property fields here.
+as witness fields here.
 -/
 abbrev ConformalFiveGradeSystem (M : Type*) :=
   FiveGradedConformalInversion M
@@ -40,7 +40,7 @@ abbrev ConformalFiveGradeSystem (M : Type*) :=
 One-step visible-loss / grade-two-gain ledger.
 
 The burden is placed at the instantiation boundary:
-`visibleLoss_eq_gradeTwoGain` is the local conservation property.
+`visibleLoss_eq_gradeTwoGain` is the local conservation witness.
 -/
 structure GradeTwoInformationLedger (State Info : Type*) where
   visible  : State → ℤ

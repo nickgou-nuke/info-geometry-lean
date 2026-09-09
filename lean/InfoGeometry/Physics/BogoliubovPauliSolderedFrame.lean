@@ -25,7 +25,7 @@ None.
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 * Curved tetrad-derived spin connection.
-* Curved tetrad postulat3 for arbitrary coframes.
+* Curved tetrad postulate for arbitrary coframes.
 * Global spinor-bundle/tangent-bundle equivalence.
 * A nonzero creator leg with full CAR/Fock dynamics identified with curved
   soldering data.
@@ -132,19 +132,9 @@ local notation "EndH" =>
 The canonical single mode: a Bogoljubov operator coordinate and a Pauli/tetrad
 soldering coordinate carried together.
 -/
-abbrev BogoljubovPauliTetradMode := EndH × Vec22
-
-namespace BogoljubovPauliTetradMode
-
-abbrev operator
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (m : BogoljubovPauliTetradMode (E := E)) :
-    InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E := m.1
-abbrev solder
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (m : BogoljubovPauliTetradMode (E := E)) : Vec22 := m.2
-
-end BogoljubovPauliTetradMode
+structure BogoljubovPauliTetradMode where
+  operator : EndH
+  solder : Vec22
 
 /-- Backwards English spelling for the same single merged mode. -/
 abbrev BogoliubovPauliTetradMode :=
@@ -169,12 +159,10 @@ def singleBogoljubovPauliTetradFrame :
     BogoliubovFrame (BogoljubovPauliTetradMode (E := E))
       (BogoljubovPauliTetradState (E := E)) where
   annihilator m :=
-    ((canonicalPhaseBogoliubovFrame (E := E)).annihilator
-        (BogoljubovPauliTetradMode.operator m),
-      pauliTetradSoldering (BogoljubovPauliTetradMode.solder m))
+    ((canonicalPhaseBogoliubovFrame (E := E)).annihilator m.operator,
+      pauliTetradSoldering m.solder)
   creator m :=
-    ((canonicalPhaseBogoliubovFrame (E := E)).creator
-        (BogoljubovPauliTetradMode.operator m), 0)
+    ((canonicalPhaseBogoliubovFrame (E := E)).creator m.operator, 0)
 
 /-- Backwards English spelling for the canonical single merged frame. -/
 abbrev singleBogoliubovPauliTetradFrame :
@@ -182,6 +170,7 @@ abbrev singleBogoliubovPauliTetradFrame :
       (BogoljubovPauliTetradState (E := E)) :=
   singleBogoljubovPauliTetradFrame (E := E)
 
+omit [CompleteSpace E] in
 /--
 The single merged Bogoljubov frame reconstructs the operator and the
 Pauli/tetrad soldered matrix in one readout.
@@ -190,14 +179,13 @@ theorem singleBogoljubov_pauli_tetrad_reconstruct
     (m : BogoljubovPauliTetradMode (E := E)) :
     (singleBogoljubovPauliTetradFrame (E := E)).annihilator m
       + (singleBogoljubovPauliTetradFrame (E := E)).creator m =
-        (BogoljubovPauliTetradMode.operator m,
-          pauliTetradSoldering (BogoljubovPauliTetradMode.solder m)) := by
+        (m.operator, pauliTetradSoldering m.solder) := by
   apply Prod.ext
-  · exact canonicalPhaseBogoliubovFrame_reconstruct (E := E)
-      (BogoljubovPauliTetradMode.operator m)
+  · exact canonicalPhaseBogoliubovFrame_reconstruct (E := E) m.operator
   · ext i j
     simp [singleBogoljubovPauliTetradFrame]
 
+omit [CompleteSpace E] in
 /--
 The soldering component of the single merged Bogoljubov frame has the
 Pauli/tetrad determinant readout.
@@ -205,10 +193,8 @@ Pauli/tetrad determinant readout.
 theorem singleBogoljubov_pauli_tetrad_det_eq_q22
     (m : BogoljubovPauliTetradMode (E := E)) :
     ((singleBogoljubovPauliTetradFrame (E := E)).annihilator m).2.det =
-      InfoGeometry.Clifford.Soldering.q22
-        (BogoljubovPauliTetradMode.solder m) := by
-  exact InfoGeometry.Clifford.Soldering.det_soldering_eq_q22
-    (BogoljubovPauliTetradMode.solder m)
+      InfoGeometry.Clifford.Soldering.q22 m.solder := by
+  exact InfoGeometry.Clifford.Soldering.det_soldering_eq_q22 m.solder
 
 /--
 Compatibility input type for the merged Bogoliubov frame.
@@ -305,18 +291,6 @@ theorem unifiedBogoliubov_pauli_tetrad_reconstruct
     simp
   · ext i j
     simp
-
-omit [CompleteSpace E] in
-theorem unifiedBogoliubov_reconstruct
-    (m : UnifiedBogoliubovMode (E := E)) :
-    (unifiedBogoliubovPauliTetradFrame (E := E)).annihilator m
-      + (unifiedBogoliubovPauliTetradFrame (E := E)).creator m =
-      match m with
-      | Sum.inl A => (A, 0)
-      | Sum.inr v => (0, pauliTetradSoldering v) := by
-  cases m with
-  | inl A => exact unifiedBogoliubov_operator_reconstruct A
-  | inr v => exact unifiedBogoliubov_pauli_tetrad_reconstruct v
 
 omit [CompleteSpace E] in
 /--

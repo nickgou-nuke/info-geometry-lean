@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
 import InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
+import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormInverse
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2IndexTwoRankOneBN2
 
@@ -266,7 +267,14 @@ theorem correctedT_borel_split (b : SplitOctF2Aut)
       _ = G2TwoSylowSubgroup.pcWord e := by
         apply congrArg G2TwoSylowSubgroup.pcWord
         dsimp [hExp]
-        group
+        change InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcCombine
+          correctedTRankOneExponent
+          (InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcCombine
+            (InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcInverse
+              correctedTRankOneExponent) e) = e
+        rw [← InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcCombine_assoc,
+          InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcCombine_right_inverse,
+          InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm.pcCombine_zero_left]
 
 theorem correctedT_sq : correctedT * correctedT = 1 := by
   rw [← correctedT_inv]

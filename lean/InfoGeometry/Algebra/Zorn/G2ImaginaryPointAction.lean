@@ -25,9 +25,13 @@ instance : Fintype Point := Subtype.fintype (fun X : Imaginary =>
 deriving instance DecidableEq for Point
 
 private theorem automorphism_map_zero (f : SplitOctF2Aut) : f.1 zero = zero := by
-  have h := f.2.2.1 (0 : SplitOctF2) 0
-  rw [add_self 0] at h
-  exact h.trans (add_self (f.1 0))
+  have h := f.2.2.1 (zero : SplitOctF2) zero
+  have h0 : add (zero : SplitOctF2) zero = zero := by
+    rfl
+  have hself : add (f.1 zero) (f.1 zero) = zero := by
+    simp [add, zero]
+  rw [h0] at h
+  exact h.trans hself
 
 private theorem automorphism_map_nonzero (f : SplitOctF2Aut) (X : Imaginary)
     (hX : X ≠ zeroImaginary) :

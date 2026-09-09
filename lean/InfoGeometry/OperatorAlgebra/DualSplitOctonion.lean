@@ -142,10 +142,8 @@ theorem lifted_associator_base_ne_zero :
 
 This is carrier data only.  The product/ideal conditions are predicates below,
 not fields smuggled as closure. -/
-abbrev AutCandidate := DualSplitOct → DualSplitOct
-
-/-- Compatibility accessor for the underlying endomap of an automorphism candidate. -/
-abbrev AutCandidate.carrierMap (F : AutCandidate) : DualSplitOct → DualSplitOct := F
+structure AutCandidate where
+  carrierMap : DualSplitOct → DualSplitOct
 
 namespace AutCandidate
 
@@ -161,13 +159,13 @@ def PreservesEpsilonIdeal (F : AutCandidate) : Prop :=
 def FixesEpsilon (F : AutCandidate) : Prop :=
   F.carrierMap dualEpsilon = dualEpsilon
 
-/-- Predicate package for a future property.  This is not a classification. -/
+/-- Predicate package for a future certificate.  This is not a classification. -/
 def IsDualSplitOctonionAutCandidate (F : AutCandidate) : Prop :=
   PreservesMul F ∧ PreservesEpsilonIdeal F
 
 /-- Identity candidate. -/
 def idCandidate : AutCandidate :=
-  id
+  ⟨id⟩
 
 theorem id_preserves_mul : PreservesMul idCandidate := by
   intro X Y

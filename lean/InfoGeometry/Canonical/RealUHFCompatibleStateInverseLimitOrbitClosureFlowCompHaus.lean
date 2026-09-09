@@ -65,5 +65,4 @@ theorem orbitClosureFlowCompHausIso_comp_apply
   exact flow.orbitClosureFlowCompHausIso_comp_apply ρ s t y
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitOrbitClosureFlowCompHaus
-
 end

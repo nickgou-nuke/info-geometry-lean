@@ -21,6 +21,13 @@ open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 
 abbrev Vec3 := Fin 3 → ℝ
 
+/-! The determinant is the native Mathlib determinant of the matrix whose
+rows are the three vectors.  Keeping this definition local to the tensor
+owner avoids importing any unrelated physics-side determinant alias. -/
+def det3 (u v w : Vec3) : ℝ :=
+  u 0 * v 1 * w 2 + u 1 * v 2 * w 0 + u 2 * v 0 * w 1 -
+    u 0 * v 2 * w 1 - u 1 * v 0 * w 2 - u 2 * v 1 * w 0
+
 theorem nativeCross_eq_mathlib_cross (u v : Vec3) :
     ZornMatrix.cross u v =
       InfoGeometry.Physics.ZornMatrixSU3.crossProduct u v := by

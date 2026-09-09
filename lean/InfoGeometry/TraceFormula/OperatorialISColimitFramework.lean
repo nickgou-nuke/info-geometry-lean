@@ -142,7 +142,7 @@ theorem tomitaRelativeDelta_stage_identity_sub_one_eq_centeredRelativeRatio
       InfoGeometry.TraceFormula.ItakuraSaito.centeredRelativeRatio
         a.val b.val := by
   simp [tomitaRelativeDelta_apply,
-    InfoGeometry.TraceFormula.ItakuraSaito.centeredRelativeRatio, mul_assoc]
+    InfoGeometry.TraceFormula.ItakuraSaito.centeredRelativeRatio]
 
 /- The centered relative modular deviation has the native normalized-stage
 trace readout in the colimit. -/
@@ -153,7 +153,7 @@ theorem tauInfinity_tomitaRelativeDelta_stage_centered_readout
           (tomitaRelativeDelta (R := ℝ) a b (1 : MatrixStage n) - 1)) =
       normalizedTrace n (a.val * b.inv - 1) := by
   rw [tauInfinity_stage]
-  simp [tomitaRelativeDelta_apply, mul_assoc]
+  simp [tomitaRelativeDelta_apply]
 
 theorem tauInfinity_tomitaRelativeDelta_stage_conjugation_invariant
     (n : ℕ) (u : (MatrixStage n)ˣ) (x : MatrixStage n) :
@@ -241,7 +241,7 @@ theorem realMatrixOperator_mul_comp
     (fun M : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ => M i j)
     ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).map_mul A B)
   have hmulC := congrArg Complex.ofReal hmul
-  simpa [Matrix.mul_apply] using hmulC
+  simp [Matrix.mul_apply]
 
 /- The BKM functional therefore reads a finite Onsager product as the
    normalized real UHF trace of the corresponding matrix product. -/
@@ -292,19 +292,37 @@ theorem bkm_realMatrixOperator_tomita_conjugation_invariant
   rw [tauInfinity_stage, tauInfinity_stage] at htrace
   exact congrArg Complex.ofReal htrace
 
+/-- Bounded-operator to matrix coordinates linear map at stage n. -/
+def operatorToMatrixLinearMap (n : ℕ) :
+    SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n) →ₗ[ℂ]
+      InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.MatrixStage n where
+  toFun := CblinfunMatrix.matrixOfOp
+  map_add' := CblinfunMatrix.matrixOfOp_add
+  map_smul' := matrixOfOp_complex_smul
+
+theorem traceColimitFunctional_inclusion_bkm
+    (n : ℕ) (s : ℝ) (B : SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n)) :
+    traceColimitFunctional concreteData
+        (traceColimitInclusion concreteData n (CblinfunMatrix.matrixOfOp B)) =
+      (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
+        (1 : SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n)) s B := by
+  rw [traceColimitFunctional_inclusion concreteData n (CblinfunMatrix.matrixOfOp B),
+    maximallyMixed_bkm_kernel_eq_normalized_trace]
+  rfl
+
 /- The existing operator-coordinate filtered colimit reads the real BitWord
     stage through the same BKM functional as the UHF trace.  This is the
     concrete comparison theorem between the operator colimit and the real
     matrix colimit; it uses the repository-owned operator cocone rather than
     introducing a second descent construction. -/
 theorem concreteOperator_colimit_realMatrixOperator_readout
-    (n : ℕ) (s : ℝ) (A : MatrixStage n) :
-    traceColimitFunctional concreteStep concrete_trace_compatible
-        (traceColimitInclusion concreteStep n
+    (n : ℕ) (s : ℝ) (A : InfoGeometry.Algebra.PrimonColimitAlgebra.MatrixStage n) :
+    traceColimitFunctional concreteData
+        (traceColimitInclusion concreteData n
           (operatorToMatrixLinearMap n (realMatrixOperator n A))) =
       Complex.ofReal (normalizedTrace n A) := by
-  change traceColimitFunctional concreteStep concrete_trace_compatible
-      (traceColimitInclusion concreteStep n
+  change traceColimitFunctional concreteData
+      (traceColimitInclusion concreteData n
         (CblinfunMatrix.matrixOfOp (realMatrixOperator n A))) = _
   rw [traceColimitFunctional_inclusion_bkm]
   exact bkm_realMatrixOperator_readout n s A
@@ -317,8 +335,8 @@ theorem concreteOperator_colimit_realMatrixOperator_readout
 theorem concreteOperator_colimit_tracePairingNative_readout
     (n : ℕ) (s : ℝ)
     (X Y : InfoGeometry.Physics.TraceOperatorSpace (BitWord n)) :
-    traceColimitFunctional concreteStep concrete_trace_compatible
-        (traceColimitInclusion concreteStep n
+    traceColimitFunctional concreteData
+        (traceColimitInclusion concreteData n
           (operatorToMatrixLinearMap n
             ((realMatrixOperator n
                 (traceOperatorSpaceMatrixStageEquiv n X)).comp
@@ -326,8 +344,8 @@ theorem concreteOperator_colimit_tracePairingNative_readout
                 (traceOperatorSpaceMatrixStageEquiv n Y))))) =
       Complex.ofReal
         ((1 / (2 ^ n : ℝ)) * InfoGeometry.Physics.tracePairingNative X Y) := by
-  change traceColimitFunctional concreteStep concrete_trace_compatible
-      (traceColimitInclusion concreteStep n
+  change traceColimitFunctional concreteData
+      (traceColimitInclusion concreteData n
         (CblinfunMatrix.matrixOfOp
           ((realMatrixOperator n
               (traceOperatorSpaceMatrixStageEquiv n X)).comp
@@ -394,7 +412,7 @@ theorem normalized_finiteIS_modular_readout
         a.val b.val = _
   rw [ItakuraSaito.normalized_itakuraSaitoDivergence_eq]
   rw [tauInfinity_stage]
-  simp [tomitaRelativeDelta_apply, mul_assoc]
+  simp [tomitaRelativeDelta_apply]
 
 theorem normalized_finiteIS_bkm_modular_readout
     (n : ℕ) (a b : (MatrixStage n)ˣ) (s : ℝ) :

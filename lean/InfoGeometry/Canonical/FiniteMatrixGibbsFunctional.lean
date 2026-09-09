@@ -19,6 +19,20 @@ open Matrix
 
 namespace InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 
+def admissibleBeta (β : ℝ) : Prop := 1 < β
+
+def phaseBoundary (β : ℝ) : Prop := β ≤ 1
+
+theorem admissibleBeta_or_phaseBoundary (β : ℝ) :
+    admissibleBeta β ∨ phaseBoundary β := by
+  unfold admissibleBeta phaseBoundary
+  exact lt_or_ge 1 β
+
+theorem phaseBoundary_not_admissible {β : ℝ}
+    (hβ : phaseBoundary β) : ¬ admissibleBeta β := by
+  unfold phaseBoundary admissibleBeta at *
+  exact not_lt_of_ge hβ
+
 def expWeight (β : ℝ) : ℝ → ℝ := fun r => Real.exp (-β * r)
 
 def gibbsDensity {n : Type*} [Fintype n] [DecidableEq n]
@@ -297,5 +311,60 @@ theorem gibbsFunctional_kms {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
     congrArg
       (fun z : ℂ => (Matrix.trace (gibbsDensity H hH β))⁻¹ * z)
       hKMS
+
+/-! A single finite-stage packet for downstream transport.  Every component is
+proved on the same matrix carrier, so the packet does not introduce a second
+state or operator representation. -/
+
+theorem finite_gibbs_functional_capstone
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ)
+    (X Y : Matrix n n ℂ) :
+    gibbsFunctional H hH β 1 = 1 ∧
+      0 ≤ (gibbsFunctional H hH β (star X * X)).re ∧
+      gibbsFunctional H hH β (star X) =
+        star (gibbsFunctional H hH β X) ∧
+      gibbsFunctional H hH β (H * X - X * H) = 0 ∧
+      gibbsFunctional H hH β (X * Y) =
+        gibbsFunctional H hH β
+          (Y * gibbsImaginaryTimeAlgEquiv H hH β X) :=
+  ⟨gibbsFunctional_one H hH β,
+    gibbsFunctional_positive H hH β X,
+    gibbsFunctional_star H hH β X,
+    gibbsFunctional_commutator_zero H hH β X,
+    gibbsFunctional_kms H hH β X Y⟩
+
+theorem finite_gibbs_functional_of_admissible_beta
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ)
+    (hβ : admissibleBeta β) (X Y : Matrix n n ℂ) :
+    gibbsFunctional H hH β 1 = 1 ∧
+      0 ≤ (gibbsFunctional H hH β (star X * X)).re ∧
+      gibbsFunctional H hH β (X * Y) =
+        gibbsFunctional H hH β
+          (Y * gibbsImaginaryTimeAlgEquiv H hH β X) := by
+  exact ⟨gibbsFunctional_one H hH β,
+    gibbsFunctional_positive H hH β X,
+    gibbsFunctional_kms H hH β X Y⟩
+
+/-! The finite phase split is a logical decomposition of the real parameter.
+It records exactly where the normalized matrix functional is used, while the
+boundary branch carries no unsupported state-classification claim. -/
+
+theorem finite_gibbs_phase_split
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (H : Matrix n n ℂ) (hH : H.IsHermitian) (β : ℝ)
+    (X Y : Matrix n n ℂ) :
+    phaseBoundary β ∨
+      (admissibleBeta β ∧
+        gibbsFunctional H hH β 1 = 1 ∧
+        0 ≤ (gibbsFunctional H hH β (star X * X)).re ∧
+        gibbsFunctional H hH β (X * Y) =
+          gibbsFunctional H hH β
+            (Y * gibbsImaginaryTimeAlgEquiv H hH β X)) := by
+  rcases admissibleBeta_or_phaseBoundary β with hβ | hβ
+  · right
+    exact ⟨hβ, finite_gibbs_functional_of_admissible_beta H hH β hβ X Y⟩
+  · exact Or.inl hβ
 
 end InfoGeometry.Canonical.FiniteMatrixGibbsFunctional

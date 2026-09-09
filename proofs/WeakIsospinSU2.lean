@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Weak Isospin SU(2) — Pauli algebra over ℂ

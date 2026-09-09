@@ -54,7 +54,7 @@ theorem braid_eq_of_grid (h : grid a b c d) :
   | sides i => rfl
   | top_left i => rfl
   | adjacent i =>
-      apply PresentedMonoid.sound
+      apply BraidPresentedMonoid.sound
       rw [← mul_assoc, ← mul_assoc]
       rename_i k h_dist
       rcases Nat.dist_eq_one h_dist with ha | hb
@@ -66,7 +66,7 @@ theorem braid_eq_of_grid (h : grid a b c d) :
       rw [hb]
       apply braid_rels_m_inf.adjacent
   | separated i j h =>
-      apply PresentedMonoid.sound
+      apply BraidPresentedMonoid.sound
       rcases h
       · rename_i h1
         apply Con'Gen.Rel.of
@@ -76,13 +76,13 @@ theorem braid_eq_of_grid (h : grid a b c d) :
       apply Con'Gen.Rel.of
       exact braid_rels_m_inf.separated _ _ h2
   | vertical _ _ h1_ih h2_ih =>
-      apply PresentedMonoid.sound
+      apply BraidPresentedMonoid.sound
       rw [mul_assoc]
       apply (Con'Gen.Rel.mul (Con'Gen.Rel.refl _) (Quotient.exact h2_ih)).trans
       rw [← mul_assoc, ← mul_assoc]
       exact Con'Gen.Rel.mul (Quotient.exact h1_ih) (Con'Gen.Rel.refl _)
   | horizontal _ _ h1_ih h2_ih =>
-      apply PresentedMonoid.sound
+      apply BraidPresentedMonoid.sound
       rw [← mul_assoc]
       apply (Con'Gen.Rel.mul (Quotient.exact h1_ih) (Con'Gen.Rel.refl _)).trans
       rw [mul_assoc, mul_assoc]
@@ -319,3 +319,4 @@ theorem splittable_horizontally_of_grid {a b c d : FreeMonoid' ℕ} (h : grid a 
     rcases h2_ih m n heq with ⟨o, p, q, hg3, hg4, heq'⟩
     use l * o, p, q
     exact ⟨grid.horizontal hg1 hg3, ⟨grid.horizontal hg2 hg4, heq'⟩⟩
+

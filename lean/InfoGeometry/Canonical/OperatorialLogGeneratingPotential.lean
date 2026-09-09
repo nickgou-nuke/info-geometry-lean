@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 Concrete theorem-rooted log-generating potentials for bounded operatorial
 exponential families.
 
-The scalar log-generating potential is not an extra property field.  It is the
+The scalar log-generating potential is not an extra witness field.  It is the
 logarithm of a scalar readout applied to a bounded operator exponential:
 
 `Φ_K(τ) = log (ω (exp (τ • K)))`.

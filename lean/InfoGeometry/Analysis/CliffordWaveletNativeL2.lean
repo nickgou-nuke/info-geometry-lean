@@ -60,7 +60,7 @@ the product of the two fluctuation norms.
 
 For centered operator vectors `x = (A - ⟨A⟩) ψ` and
 `y = (B - ⟨B⟩) ψ`, the left side is the commutator expectation up to the
-standard factor of two.  No commutativity or diagonalization property is
+standard factor of two.  No commutativity or diagonalization hypothesis is
 used.
 -/
 theorem imaginary_inner_uncertainty_bound (x y : H) :

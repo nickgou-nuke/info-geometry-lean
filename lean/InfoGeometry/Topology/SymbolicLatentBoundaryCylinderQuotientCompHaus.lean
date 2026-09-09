@@ -52,6 +52,5 @@ theorem boundaryReadoutCompHausHom_isQuotientMap
   rw [boundaryReadoutCompHausHom_forget S]
   exact boundaryReadout_isQuotientMap_of_compactSpace S h_surj
 
-end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHaus
 
-end
+end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHaus

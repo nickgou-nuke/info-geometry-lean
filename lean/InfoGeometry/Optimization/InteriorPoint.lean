@@ -21,7 +21,7 @@ noncomputable def CentralPathPotential [Fintype n] [DecidableEq n]
 -/
 /-- A finite-dimensional Newton equation for an explicitly supplied gradient and
 linear Hessian action.  This is the algebraic obligation for a direction; it is
-not hidden behind a vacuous property field. -/
+not hidden behind a vacuous witness field. -/
 def IsNewtonInteriorDirection
     (gradient : Matrix n n ℝ)
     (hessianAction : Matrix n n ℝ →ₗ[ℝ] Matrix n n ℝ)

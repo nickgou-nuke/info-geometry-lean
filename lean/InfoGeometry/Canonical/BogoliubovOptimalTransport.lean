@@ -11,7 +11,7 @@ Canonical regular-lane optimal-transport surfaces for Bogoliubov evolution.
 This file keeps to owner data already present in `CertifiedModularReduction`:
 - `Preg/Pzero` projector split,
 - regular generator `Kambient`,
-- property support/kill laws.
+- certified support/kill laws.
 
 No new physics axioms are introduced.
 -/
@@ -58,7 +58,7 @@ theorem alignmentObstruction_eq_zero
 
 /--
 Owner `χ`-obstruction for inertial-vs-curved transport regime:
-the property spectral/metric anomaly.
+the certified spectral/metric anomaly.
 -/
 @[rep_depth operator]
 noncomputable def chiObstruction

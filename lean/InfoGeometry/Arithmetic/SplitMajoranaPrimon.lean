@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.SplitMajoranaPrimon
@@ -252,6 +254,7 @@ theorem rawHyperbolicChiralIndex_eq_pfaffian_difference
 /-! ## Infinite/zeta readout -/
 
 /-- Mathlib-backed infinite Euler-product readout on the standard half-plane. -/
+@[bridge_target_tag]
 theorem infiniteEulerProductZeta_readout {s : ℂ} (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
   simpa using InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge hs

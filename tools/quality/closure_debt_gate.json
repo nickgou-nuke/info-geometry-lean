@@ -159,7 +159,7 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
-      "pattern": "structure LocalClockGaugeSymmetryData"
+      "pattern": "structure LocalClockGaugeSymmetryCertificate"
     },
     {
       "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",

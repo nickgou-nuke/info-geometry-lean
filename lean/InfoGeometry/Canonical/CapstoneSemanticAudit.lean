@@ -13,7 +13,7 @@ open scoped InnerProductSpace
 Lean-native semantic audit helpers for the current canonical capstones.
 
 This file provides:
-1. explicit ax!om-surface print checks for the three capstone theorems,
+1. explicit axiom-surface print checks for the three capstone theorems,
 2. a non-vacuity degeneration lemma for the zero-apex regime,
 3. a similarity-equivariance lemma for the idempotent+commutation hypotheses
    behind block-diagonal decoupling.
@@ -59,7 +59,7 @@ theorem spectralProjector_eq_one_of_apex_zero
 
 /--
 Non-vacuity degeneration:
-under the same commutation property, CP-003 active/apex split collapses to the
+under the same commutation witness, CP-003 active/apex split collapses to the
 active block when the apex projector is zero.
 -/
 @[rep_depth transport]
@@ -85,7 +85,7 @@ section OmitCompleteSpaceSimilarity
 omit [CompleteSpace E]
 
 /--
-Similarity transport preserves the idempotence+commutation property package used
+Similarity transport preserves the idempotence+commutation witness package used
 by block-diagonal decoupling.
 -/
 @[rep_depth transport]

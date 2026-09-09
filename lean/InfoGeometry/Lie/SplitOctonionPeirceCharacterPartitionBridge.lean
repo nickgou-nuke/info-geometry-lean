@@ -23,9 +23,8 @@ abbrev CarrierEnd := Module.End ℝ Carrier
 def exteriorDegreeParity : CarrierEnd where
   toFun x i :=
     if i.val = 0 then x i
-    else if i.val < 4 then -x i
-    else if i.val < 7 then x i
-    else -x i
+    else if i.val < 5 then -x i
+    else x i
   map_add' x y := by
     ext i
     dsimp
@@ -100,8 +99,7 @@ theorem exteriorDegreeParityTrace_eq :
   classical
   have hdiag : ∀ i : Fin 8,
       (exteriorDegreeParity (coordinateBasisVector i)) i =
-        if i.val = 0 then 1 else if i.val < 4 then -1
-          else if i.val < 7 then 1 else -1 := by
+        if i.val = 0 then 1 else if i.val < 5 then -1 else 1 := by
     intro i
     fin_cases i <;> simp [coordinateBasisVector, exteriorDegreeParity]
   simp only [exteriorDegreeParityTrace, peirceCoordinateTrace, hdiag]
@@ -113,7 +111,7 @@ theorem peirceCharacterProductTrace_eq :
   have hdiag : ∀ i : Fin 8,
       (peirceCharacterProduct (coordinateBasisVector i)) i =
         if i.val = 0 then 1 else if i.val < 4 then -1
-          else if i.val < 7 then -1 else 1 := by
+          else if i.val < 5 then 1 else -1 := by
     intro i
     fin_cases i <;> simp [coordinateBasisVector, peirceCharacterProduct,
       peirceSheetParity, peirceGrading, exteriorDegreeParity,

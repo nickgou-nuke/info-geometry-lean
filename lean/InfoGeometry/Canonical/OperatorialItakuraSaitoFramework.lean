@@ -54,7 +54,7 @@ open InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
 /-! ## Unified finite and noncommutative value channels -/
 
 abbrev FiniteOperatorModel (Op : Type*) [AddGroup Op] :=
-  NoncommutativeItakuraSaitoModel Op
+  NoncommutativeItakuraSaitoPacket Op
 
 def finiteOperatorValue
     {Op : Type*} [AddGroup Op]
@@ -65,10 +65,9 @@ def finiteOperatorValue
 theorem finiteOperatorValue_self
     {Op : Type*} [AddGroup Op]
     (P : FiniteOperatorModel Op)
-    (hzero : ∀ X : Op, P.readout.readout (P.readout.product X 0) = 0)
     (X : Op) :
     finiteOperatorValue P X X = 0 := by
-  exact P.divergence_self hzero X
+  exact P.divergence_self X
 
 /-! ## Tomita--Takesaki relative modular channel -/
 
@@ -76,7 +75,6 @@ section RelativeModular
 
 variable {A Modular : Type*}
 variable [Zero A] [Zero Modular] [Mul Modular]
-variable [CStarAlgebra Modular] [PartialOrder Modular]
 
 /-- The Tomita--Takesaki relative modular operator `Delta_{phi,psi}`. -/
 def relativeDelta
@@ -89,6 +87,29 @@ def relativeLogDelta
     (D : RelativeModularDatum A Modular)
     (φ ψ : OperatorWeight A) : Modular :=
   D.relativeLogBetween φ ψ
+
+@[simp]
+theorem relativeDelta_eq_datum
+    (D : RelativeModularDatum A Modular)
+    (φ ψ : OperatorWeight A) :
+    relativeDelta D φ ψ = D.relativeModular φ ψ :=
+  rfl
+
+@[simp]
+theorem relativeLogDelta_eq_datum
+    (D : RelativeModularDatum A Modular)
+    (φ ψ : OperatorWeight A) :
+    relativeLogDelta D φ ψ = D.relativeLogBetween φ ψ :=
+  rfl
+
+theorem relativeDelta_chain
+    (D : RelativeModularDatum A Modular)
+    (φ ψ η : OperatorWeight A) :
+    relativeDelta D φ ψ * relativeDelta D ψ η =
+      relativeDelta D φ η :=
+  D.relativeModular_mul φ ψ η
+
+variable [CStarAlgebra Modular]
 
 /-- The genuine relative-modular Itakura--Saito operator. -/
 def relativeOperatorItakuraSaito
@@ -166,26 +187,7 @@ theorem relativeOperatorItakuraSaito_eq_delta_sub_one_add_hamiltonian
   exact InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence.operatorItakuraSaito_eq_delta_sub_one_add_hamiltonian
     (relativeDelta D φ ψ) (relativeLogDelta D φ ψ) K hK
 
-@[simp]
-theorem relativeDelta_eq_datum
-    (D : RelativeModularDatum A Modular)
-    (φ ψ : OperatorWeight A) :
-    relativeDelta D φ ψ = D.relativeModular φ ψ :=
-  rfl
-
-@[simp]
-theorem relativeLogDelta_eq_datum
-    (D : RelativeModularDatum A Modular)
-    (φ ψ : OperatorWeight A) :
-    relativeLogDelta D φ ψ = D.relativeLogBetween φ ψ :=
-  rfl
-
-theorem relativeDelta_chain
-    (D : RelativeModularDatum A Modular)
-    (φ ψ η : OperatorWeight A) :
-    relativeDelta D φ ψ * relativeDelta D ψ η =
-      relativeDelta D φ η :=
-  D.relativeModular_mul φ ψ η
+variable [PartialOrder Modular]
 
 /-- The Tomita-channel readout is the Araki readout under the native
     normalization hypothesis.  The logarithmic datum remains the supplied

@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.MetriplecticCore
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauThermodynamics
-import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
 import Mathlib.Tactic
@@ -15,12 +14,12 @@ State-dynamics layer for the Souriau/Metriplectic/Optimal-Transport corridor.
 
 This module is intentionally conservative:
 
-- Souriau thermodynamics supplies an operatorial thermal readout through the
-  imported `MomentGeneratingReadout` and its normalized trace moments.
+- Souriau thermodynamics supplies the Lie-geometric thermal readout
+  `K_β(x) = ⟪J(x), β⟫`.
 - Metriplectic data keeps the reversible Poisson sector separate from the
   dissipative metric sector.
-- Optimal transport is carried by an explicit metric/cost/mobility property.
-- JKO updates are recorded as a variational property, not a convergence theorem.
+- Optimal transport is carried by an explicit metric/cost/mobility witness.
+- JKO updates are recorded as a variational witness, not a convergence theorem.
 - Metric transport of projector layers is imported as a compatibility gate,
   not conflated with transport on probability densities.
 
@@ -41,7 +40,6 @@ open MetricTransport
 open InfoGeometry.Canonical.MetriplecticCore
 open InfoGeometry.Canonical.SouriauMetriplectic
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
-open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open SouriauThermodynamics
 open scoped ComplexOrder
 
@@ -54,45 +52,42 @@ abbrev GeneralizedSouriauTemperature (LieAlgebra : Type*) :=
 
 abbrev Density (State : Type*) := State → ℝ
 
-/-- Souriau Lie-thermodynamic data with an operatorial normalized-trace readout. -/
+/-- Souriau Lie-thermodynamic data: moment map, generalized temperature, and pairing. -/
 @[rep_depth thermo]
 structure SouriauLieThermoData
-    (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [AddMonoid LieAlgebra]
-    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
-  operatorial : MomentGeneratingReadout LieAlgebra Observable
+    (State LieGroup LieAlgebra LieDual : Type*) where
+  momentMap : State → LieDual
   beta : GeneralizedSouriauTemperature LieAlgebra
-  observable : State → Observable
+  pairing : LieDual → LieAlgebra → ℝ
 
 namespace SouriauLieThermoData
 
-variable {State LieGroup LieAlgebra LieDual Observable : Type*} [AddMonoid LieAlgebra]
-variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
+variable {State LieGroup LieAlgebra LieDual : Type*}
 
-/-- Souriau thermal readout from the operatorial first moment. -/
+/-- Souriau thermal Hamiltonian `K_β(x) = ⟪J(x), β⟫`. -/
 @[rep_depth thermo]
-def K_beta (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable)
+def K_beta (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual)
     (x : State) : ℝ :=
-  D.beta.beta * D.operatorial.firstMoment D.beta.generator (D.observable x)
+  D.beta.beta * D.pairing (D.momentMap x) D.beta.generator
 
 /-- Formal Gibbs weight `exp(-K_β(x))`. -/
 @[rep_depth thermo]
 noncomputable def gibbsWeight
-    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable)
+    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual)
     (x : State) : ℝ :=
   Real.exp (-D.K_beta x)
 
 @[rep_depth thermo]
-theorem K_beta_eq_operatorial_firstMoment
-    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable)
+theorem K_beta_eq_pairing
+    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual)
     (x : State) :
     D.K_beta x =
-      D.beta.beta * D.operatorial.firstMoment D.beta.generator (D.observable x) :=
+      D.beta.beta * D.pairing (D.momentMap x) D.beta.generator :=
   rfl
 
 @[rep_depth thermo]
 theorem gibbsWeight_eq_exp_neg_K_beta
-    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable)
+    (D : SouriauLieThermoData State LieGroup LieAlgebra LieDual)
     (x : State) :
     D.gibbsWeight x = Real.exp (-D.K_beta x) :=
   rfl
@@ -107,22 +102,18 @@ Casimir reversibility, Onsager positivity, and entropy splitting now come from
 `InfiniteCoadjointOrbitMetriplecticContext`.
 -/
 @[rep_depth thermo]
-structure SouriauTransportFlow
-    (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [AddMonoid LieAlgebra]
-    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
-  thermo : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable
+structure SouriauTransportFlow (State LieGroup LieAlgebra LieDual : Type*) where
+  thermo : SouriauLieThermoData State LieGroup LieAlgebra LieDual
   dynamics :
     InfiniteCoadjointOrbitMetriplecticContext State LieAlgebra LieDual
 
 namespace SouriauTransportFlow
 
-variable {State LieGroup LieAlgebra LieDual Observable : Type*} [AddMonoid LieAlgebra]
-variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
+variable {State LieGroup LieAlgebra LieDual : Type*}
 
 /-- Reversible Souriau motion closes on the selected coadjoint orbit. -/
 theorem reversible_transport_preserves_coadjoint_orbit
-    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual Observable)
+    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual)
     (x : State) :
     F.dynamics.isOnCoadjointOrbit
       (F.dynamics.moment (F.dynamics.reversibleVectorField x)) :=
@@ -130,17 +121,24 @@ theorem reversible_transport_preserves_coadjoint_orbit
 
 /-- The reversible coadjoint channel preserves entropy in the Casimir sense. -/
 theorem reversible_entropy_rate_eq_zero
-    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual Observable)
+    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual)
     (x : State) :
     F.dynamics.reversibleEntropyRate x = 0 :=
   F.dynamics.reversibleEntropyRate_eq_zero x
 
 /-- The metric/Onsager channel has nonnegative entropy production. -/
 theorem metric_entropy_rate_nonnegative
-    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual Observable)
+    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual)
     (x : State) :
     0 ≤ F.dynamics.metricEntropyRate x :=
   F.dynamics.metricEntropyRate_nonnegative x
+
+/-- The full Souriau metriplectic evolution satisfies the owner second law. -/
+theorem total_entropy_rate_nonnegative
+    (F : SouriauTransportFlow State LieGroup LieAlgebra LieDual)
+    (x : State) :
+    0 ≤ F.dynamics.totalEntropyRate x :=
+  F.dynamics.coadjoint_orbit_metriplectic_second_law x
 
 end SouriauTransportFlow
 
@@ -174,23 +172,23 @@ linear operator on density functions.  No proposition-valued metric,
 continuity, regularity, or positivity markers are stored.
 -/
 @[rep_depth thermo]
-structure OptimalTransportMetricData (State : Type*) where
+structure OptimalTransportMetricWitness (State : Type*) where
   metric : PseudoMetricSpace (Density State)
   mobilityOperator : Density State →ₗ[ℝ] Density State
 
-namespace OptimalTransportMetricData
+namespace OptimalTransportMetricWitness
 
 variable {State : Type*}
 
 /-- Transport cost is the distance supplied by the native pseudometric owner. -/
 def cost
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (ρ σ : Density State) : ℝ :=
   W.metric.dist ρ σ
 
 /-- Native transport costs are nonnegative. -/
 theorem cost_nonnegative
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (ρ σ : Density State) :
     0 ≤ W.cost ρ σ := by
   letI : PseudoMetricSpace (Density State) := W.metric
@@ -198,14 +196,14 @@ theorem cost_nonnegative
 
 /-- Native transport cost vanishes on the diagonal. -/
 theorem cost_self
-    (W : OptimalTransportMetricData State) (ρ : Density State) :
+    (W : OptimalTransportMetricWitness State) (ρ : Density State) :
     W.cost ρ ρ = 0 := by
   letI : PseudoMetricSpace (Density State) := W.metric
   exact dist_self ρ
 
 /-- Native transport cost is symmetric. -/
 theorem cost_comm
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (ρ σ : Density State) :
     W.cost ρ σ = W.cost σ ρ := by
   letI : PseudoMetricSpace (Density State) := W.metric
@@ -213,7 +211,7 @@ theorem cost_comm
 
 /-- Native transport cost satisfies the triangle inequality. -/
 theorem cost_triangle
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (ρ σ τ : Density State) :
     W.cost ρ τ ≤ W.cost ρ σ + W.cost σ τ := by
   letI : PseudoMetricSpace (Density State) := W.metric
@@ -221,7 +219,7 @@ theorem cost_triangle
 
 /-- Mobility preserves addition because it is a native linear map. -/
 theorem mobilityOperator_add
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (ρ σ : Density State) :
     W.mobilityOperator (ρ + σ) =
       W.mobilityOperator ρ + W.mobilityOperator σ :=
@@ -229,12 +227,12 @@ theorem mobilityOperator_add
 
 /-- Mobility commutes with real scaling because it is a native linear map. -/
 theorem mobilityOperator_smul
-    (W : OptimalTransportMetricData State)
+    (W : OptimalTransportMetricWitness State)
     (a : ℝ) (ρ : Density State) :
     W.mobilityOperator (a • ρ) = a • W.mobilityOperator ρ :=
   W.mobilityOperator.map_smul a ρ
 
-end OptimalTransportMetricData
+end OptimalTransportMetricWitness
 
 /-- Free-energy functional with the entropy/expectation split recorded explicitly. -/
 @[rep_depth thermo]
@@ -266,6 +264,12 @@ def freeEnergy (F : FreeEnergyFunctional State) : Density State → ℝ :=
   fun ρ => F.entropyTerm ρ + F.expectationTerm ρ
 
 @[rep_depth thermo]
+theorem freeEnergy_eq
+    (F : FreeEnergyFunctional State) (ρ : Density State) :
+    F.freeEnergy ρ = F.entropyTerm ρ + F.expectationTerm ρ :=
+  rfl
+
+@[rep_depth thermo]
 theorem freeEnergy_eq_split
     (F : FreeEnergyFunctional State) (ρ : Density State) :
     F.freeEnergy ρ = F.entropyTerm ρ + F.expectationTerm ρ :=
@@ -291,10 +295,10 @@ theorem freeEnergy_sublevel_closed
 
 end FreeEnergyFunctional
 
-/-- Dissipative Wasserstein/Onsager gradient-flow property. -/
+/-- Dissipative Wasserstein/Onsager gradient-flow witness. -/
 @[rep_depth thermo]
 structure WassersteinGradientFlow (State : Type*) where
-  ot : OptimalTransportMetricData State
+  ot : OptimalTransportMetricWitness State
   freeEnergy : FreeEnergyFunctional State
   stepSize : ℝ
   stepSize_pos : 0 < stepSize
@@ -351,7 +355,7 @@ theorem freeEnergy_decay
 
 end WassersteinGradientFlow
 
-/-- JKO step recorded as a variational property. -/
+/-- JKO step recorded as a variational witness. -/
 @[rep_depth thermo]
 structure JKOTimeStep (State : Type*) where
   previous : Density State
@@ -397,15 +401,14 @@ end EquilibriumCandidate
 State-dynamics packet combining Souriau transport, metriplectic split, and
 optimal transport.
 
-The object is intentionally a property container, not a global theorem.
+The object is intentionally a witness container, not a global theorem.
 -/
 @[rep_depth thermo]
 structure SouriauMetriplecticOTFlow
     (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [AddMonoid LieAlgebra]
-    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
-  souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable
-  transport : SouriauTransportFlow State LieGroup LieAlgebra LieDual Observable
+    [Ring Observable] where
+  souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual
+  transport : SouriauTransportFlow State LieGroup LieAlgebra LieDual
   metriplectic : MetriplecticSystem Observable
   gradientFlow : WassersteinGradientFlow State
   reversibleFlow : Density State → Density State
@@ -420,14 +423,13 @@ def totalFlowFormula
 namespace SouriauMetriplecticOTFlow
 
 variable {State LieGroup LieAlgebra LieDual Observable : Type*}
-variable [AddMonoid LieAlgebra]
-variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
+variable [Ring Observable]
 
 /-- The optimal-transport metric is owned by the installed JKO flow. -/
 def ot
     (F : SouriauMetriplecticOTFlow
       State LieGroup LieAlgebra LieDual Observable) :
-    OptimalTransportMetricData State :=
+    OptimalTransportMetricWitness State :=
   F.gradientFlow.ot
 
 /-- The free-energy functional is owned by the installed JKO flow. -/
@@ -459,6 +461,14 @@ theorem totalFlow_eq_add_at
     F.totalFlow ρ = totalFlowFormula F.reversibleFlow F.dissipativeFlow ρ :=
   rfl
 
+/-- Expanded pointwise total-flow equation used by downstream bridges. -/
+theorem totalFlow_eq_reversible_add_dissipative
+    (F : SouriauMetriplecticOTFlow
+      State LieGroup LieAlgebra LieDual Observable)
+    (ρ : Density State) :
+    F.totalFlow ρ = F.reversibleFlow ρ + F.dissipativeFlow ρ :=
+  rfl
+
 /-- The JKO leg decreases the installed free energy. -/
 theorem dissipative_freeEnergy_decay
     (F : SouriauMetriplecticOTFlow
@@ -480,7 +490,7 @@ structure MetricTransportCompatibility
   (P P' : ProjectorPair R)
   (State : Type*) where
   projectorTransport : SimilarityTransport P P'
-  otWitness : OptimalTransportMetricData State
+  otWitness : OptimalTransportMetricWitness State
 
 /-- The Radon-Nikodym derivative log(ρ/σ). -/
 noncomputable def logRadonNikodym (ρ σ : ℝ) : ℝ :=
@@ -534,6 +544,15 @@ noncomputable def commutativeRelativeEntropy
     (logData : LogRadonNikodymHamiltonian State)
     (expectation : Density State →ₗ[ℝ] ℝ) : ℝ :=
   expectation logData.relativeModularHamiltonian
+
+/-- Native expectation readback for the commutative relative entropy. -/
+theorem commutativeRelativeEntropy_eq_expectation
+    {State : Type*}
+    (logData : LogRadonNikodymHamiltonian State)
+    (expectation : Density State →ₗ[ℝ] ℝ) :
+    commutativeRelativeEntropy logData expectation =
+      expectation logData.relativeModularHamiltonian :=
+  rfl
 
 /-- Linearity of a commutative expectation under addition of log generators. -/
 theorem relativeEntropyExpectation_add
@@ -694,7 +713,7 @@ end OperatorialLogPotentialLayer
 
 /--
 Finite bridge packet: a finite Souriau/Onsager shadow equipped with an
-optimal-transport metric property and a metric-transport compatibility gate.
+optimal-transport metric witness and a metric-transport compatibility gate.
 -/
 @[rep_depth thermo]
 structure FiniteSouriauMetriplecticOTBridge
@@ -702,12 +721,21 @@ structure FiniteSouriauMetriplecticOTBridge
     {R : Type*} [Ring R]
     (P P' : ProjectorPair R) where
   metriplectic : MetriplecticContext (α := α)
-  ot : OptimalTransportMetricData α
+  ot : OptimalTransportMetricWitness α
   compatibility : MetricTransportCompatibility P P' α
   finiteFreeEnergy : FreeEnergyFunctional α
   equilibrium : EquilibriumCandidate α
 
-/-! A typed partition readout and its regularity/positivity data. -/
+/--
+The Thermodynamic Engine (Grand Canonical Partition & Free Energy Gradient).
+
+The Grand Canonical Ensemble of Ensembles: we sum over all possible lengths of
+binary words, i.e., all possible combinations of prime numbers.
+
+The unnormalized partition function is Z(s) = Π_p (1 - p^{-s})^{-1} (Euler product).
+The Free Energy potential Φ(s) = log Z(s).
+The Thermodynamic Force driving optimal transport is F = ∇Φ = ∇ log Z(s).
+-/
 @[rep_depth transport, capstone]
 structure GrandCanonicalPartitionFunction where
   /-- The logarithm of the partition function (free energy potential). -/
@@ -715,6 +743,9 @@ structure GrandCanonicalPartitionFunction where
   
   /-- Chemical potential field regulating new mode generation. -/
   chemicalPotential : ℝ
+  
+  /-- Partition is positive for physical interpretability. -/
+  partition_pos : ∀ s, 0 < Real.exp (logPartition s)
   
   /-- The logarithmic partition function is smooth in the Mathlib sense. -/
   logPartition_smooth : ContDiff ℝ ⊤ logPartition
@@ -743,13 +774,6 @@ theorem partition_eq_exp_logPartition (G : GrandCanonicalPartitionFunction) (s :
     partitionFormula G.logPartition s = Real.exp (G.logPartition s) :=
   rfl
 
-/-- Positivity of the exponential partition readout is derived, not supplied
-as an independent ensemble axiom. -/
-theorem partitionFormula_pos (G : GrandCanonicalPartitionFunction) (s : ℝ) :
-    0 < partitionFormula G.logPartition s := by
-  rw [partition_eq_exp_logPartition]
-  exact Real.exp_pos _
-
 /--
 The logarithmic derivative of the partition function.
 This is the thermodynamic force density that drives the Wasserstein OT.
@@ -759,8 +783,15 @@ noncomputable def logPartitionDerivative
     (G : GrandCanonicalPartitionFunction) (s : ℝ) : ℝ :=
   deriv G.logPartition s
 
+/-- The logarithmic partition derivative is Mathlib's real derivative. -/
+@[simp]
+theorem logPartitionDerivative_eq_deriv
+    (G : GrandCanonicalPartitionFunction) (s : ℝ) :
+    G.logPartitionDerivative s = deriv G.logPartition s :=
+  rfl
+
 /--
-A pointwise derivative property computes the thermodynamic force density.
+A pointwise derivative certificate computes the thermodynamic force density.
 -/
 theorem logPartitionDerivative_eq_of_hasDerivAt
     (G : GrandCanonicalPartitionFunction) {s force : ℝ}
@@ -829,7 +860,7 @@ But the Grand Canonical system breaks detailed balance due to mode generation.
 This creates entropy production (non-zero gradient of free energy).
 -/
 @[rep_depth thermo]
-structure BrokenDetailedBalanceData (State : Type*) where
+structure BrokenDetailedBalanceWitness (State : Type*) where
   /-- Density / probability measure on state space. -/
   density : Density State
 
@@ -860,34 +891,42 @@ structure BrokenDetailedBalanceData (State : Type*) where
   entropyProduction_zero_implies_detailed_balance :
     ∀ x, entropyProduction x = 0 → forwardFlux x = backwardFlux x
 
-namespace BrokenDetailedBalanceData
+namespace BrokenDetailedBalanceWitness
 
 variable {State : Type*}
 
 /-- The balance defect is the forward-minus-backward flux. -/
 theorem balanceDefect_eq_flux_difference
-    (B : BrokenDetailedBalanceData State) (x : State) :
+    (B : BrokenDetailedBalanceWitness State) (x : State) :
     B.balanceDefect x = B.forwardFlux x - B.backwardFlux x :=
   B.balanceDefect_eq x
 
 /-- Detailed balance is equivalent to vanishing of the installed balance defect. -/
 theorem detailedBalance_iff_balanceDefect_eq_zero
-    (B : BrokenDetailedBalanceData State) (x : State) :
+    (B : BrokenDetailedBalanceWitness State) (x : State) :
     B.forwardFlux x = B.backwardFlux x ↔ B.balanceDefect x = 0 := by
   rw [B.balanceDefect_eq]
   exact sub_eq_zero.symm
 
 /-- Zero entropy production forces zero balance defect. -/
 theorem balanceDefect_eq_zero_of_entropyProduction_eq_zero
-    (B : BrokenDetailedBalanceData State) (x : State)
+    (B : BrokenDetailedBalanceWitness State) (x : State)
     (hzero : B.entropyProduction x = 0) :
     B.balanceDefect x = 0 := by
   apply (B.detailedBalance_iff_balanceDefect_eq_zero x).1
   exact B.entropyProduction_zero_implies_detailed_balance x hzero
 
-end BrokenDetailedBalanceData
+end BrokenDetailedBalanceWitness
 
-/-! A supplied scalar readout and its realization as a state-space field. -/
+/--
+Riemann-Weil Explicit Formula as a Wasserstein Vector Field.
+
+The explicit formula ∑_{n} Λ(n) n^{-s} (sum over prime powers with von Mangoldt weights)
+is precisely the logarithmic derivative of the Euler product: d/ds log Π(1 - p^{-s})^{-1}.
+
+This means the explicit formula IS the Wasserstein gradient vector field that drives
+optimal transport through the Cantor crystal.
+-/
 @[rep_depth transport, capstone]
 structure ExplicitFormulaVectorField (State : Type*) where
   /-- The supplied Riemann-Weil explicit formula sum. -/
@@ -935,15 +974,9 @@ theorem wasserstein_driven_by_riemann_weil
       riemannWeilExplicitFormula E.explicitFormula (E.coordinate x) := by
   exact E.wasserstein_from_explicit x
 
-theorem wassersteinField_eq_zero_iff_explicitFormula_eq_zero
-    (E : ExplicitFormulaVectorField State) (x : State) :
-    E.wassersteinField x = 0 ↔
-      E.explicitFormula (E.coordinate x) = 0 := by
-  rw [E.wasserstein_from_explicit]
-
 end ExplicitFormulaVectorField
 
-/-- Data of an RG/free-energy flow, without a fabricated fixed-point property. -/
+/-- Data of an RG/free-energy flow, without a fabricated fixed-point witness. -/
 @[rep_depth transport]
 structure RGFlowData (State : Type*) where
   freeEnergy : State → ℝ
@@ -1092,11 +1125,18 @@ theorem continuum_emergence_via_equilibration
 
 end RGFixedPointEquilibrium
 
+/--
+Conservative bridge packet connecting the installed grand-canonical, detailed-
+balance, optimal-transport, explicit-formula, and RG fixed-point owners.
+
+This is a witness container only: it records the intended alignment between the
+owners without claiming the analytic identification itself.
+-/
 @[rep_depth transport]
 structure GrandCanonicalThermodynamicBridge (State : Type*) where
   grandCanonical : GrandCanonicalPartitionFunction
   logForce : LogPartitionGradientField State
-  brokenDetailedBalance : BrokenDetailedBalanceData State
+  brokenDetailedBalance : BrokenDetailedBalanceWitness State
   transport : WassersteinGradientFlow State
   explicitFormula : ExplicitFormulaVectorField State
   rgFlow : RGFlowData State
@@ -1113,15 +1153,13 @@ theorem thermodynamicForce_eq_explicitFormula
     B.logForce.thermodynamicForce x = B.explicitFormula.wassersteinField x :=
   B.force_matches_explicitFormula x
 
-theorem thermodynamicForce_eq_zero_iff_explicitFormula_eq_zero
-    (B : GrandCanonicalThermodynamicBridge State) (x : State) :
-    B.logForce.thermodynamicForce x = 0 ↔
-      B.explicitFormula.explicitFormula (B.explicitFormula.coordinate x) = 0 := by
-  rw [B.thermodynamicForce_eq_explicitFormula x]
-  exact B.explicitFormula.wassersteinField_eq_zero_iff_explicitFormula_eq_zero x
-
 end GrandCanonicalThermodynamicBridge
 
+/--
+The Driving Force of the Metriplectic Optimal Transport.
+In the Grand Canonical Ensemble of the prime gas, the gradient flow 
+is driven by the logarithmic derivative of the Souriau partition function.
+-/
 @[rep_depth transport]
 theorem optimal_transport_driven_by_log_partition_gradient
     (State : Type*) (B : GrandCanonicalThermodynamicBridge State) :
@@ -1129,6 +1167,10 @@ theorem optimal_transport_driven_by_log_partition_gradient
   funext x
   exact B.force_matches_explicitFormula x
 
+/--
+THE RIEMANN-WEIL EXPLICIT FORMULA AS A WASSERSTEIN VECTOR FIELD.
+Because Z(s) is the Euler product, ∇ log Z is the explicit formula.
+-/
 @[rep_depth transport]
 theorem riemann_weil_is_wasserstein_gradient
     (State : Type*) (F : LogPartitionGradientField State) (E : ExplicitFormulaVectorField State)
@@ -1138,6 +1180,11 @@ theorem riemann_weil_is_wasserstein_gradient
   funext x
   rw [hEquiv]
 
+/--
+THE CONTINUUM EMERGENCE VIA THERMODYNAMIC EQUILIBRATION.
+The informational manifold reaches its smooth Calabi-Yau state at the RG fixed point,
+where the Riemann-Weil driving force (broken detailed balance) is equilibrated.
+-/
 theorem continuum_emergence_via_equilibration
     (State : Type*) [NormedAddCommGroup State]
     (E : RGFlowData State) (x : State)

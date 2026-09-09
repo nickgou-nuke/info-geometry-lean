@@ -12,7 +12,8 @@ noncomputable section
 namespace SkyrmionTopology
 
 /-- Skyrmion Topological Charge (Pontryagin Index) Q ∈ ℤ. -/
-abbrev SkyrmionState := ℤ
+structure SkyrmionState where
+  topologicalCharge : ℤ       -- Integer winding number Q
 
 namespace SkyrmionState
 
@@ -20,7 +21,7 @@ variable (skyrmion : SkyrmionState)
 
 /-- Skyrmion Bound Fractional Electric Charge q = e * Q -/
 def skyrmionElectricCharge (e : ℝ) : ℝ :=
-  e * (skyrmion : ℝ)
+  e * (skyrmion.topologicalCharge : ℝ)
 
 /-- **Theorem**: Skyrmion Electric Charge Linearity under topological charge addition. -/
 theorem skyrmion_charge_add (e : ℝ) (Q1 Q2 : ℤ) :
@@ -29,9 +30,9 @@ theorem skyrmion_charge_add (e : ℝ) (Q1 Q2 : ℤ) :
   ring
 
 /-- **Theorem**: Trivial Ferromagnetic Ground State (Q = 0) carries zero Skyrmion charge. -/
-theorem skyrmion_zero_charge (e : ℝ) (h_zero : skyrmion = 0) :
+theorem skyrmion_zero_charge (e : ℝ) (h_zero : skyrmion.topologicalCharge = 0) :
     skyrmion.skyrmionElectricCharge e = 0 := by
-  dsimp [skyrmionElectricCharge] at *
+  dsimp [skyrmionElectricCharge]
   rw [h_zero]
   ring
 

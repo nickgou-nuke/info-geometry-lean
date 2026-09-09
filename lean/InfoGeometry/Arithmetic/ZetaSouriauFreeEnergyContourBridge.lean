@@ -139,6 +139,22 @@ theorem displacementFreeEnergyLevelSet_map_mem_of_invariant
   rw [mem_displacementFreeEnergyLevelSet_iff]
   exact displacementFreeEnergy_invariant A moment beta
 
+theorem zetaSouriauDisplacementPartition_pos
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → Chart) (beta : Chart) :
+    0 < zetaSouriauDisplacementPartition moment beta := by
+  unfold zetaSouriauDisplacementPartition
+  have hne : (Finset.univ : Finset State).Nonempty := by
+    obtain ⟨x⟩ := (inferInstance : Nonempty State)
+    exact ⟨x, Finset.mem_univ x⟩
+  exact Finset.sum_pos (fun _ _ => Real.exp_pos _) hne
+
+theorem zetaSouriauDisplacementPartition_ne_zero
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → Chart) (beta : Chart) :
+    zetaSouriauDisplacementPartition moment beta ≠ 0 :=
+  ne_of_gt (zetaSouriauDisplacementPartition_pos moment beta)
+
 theorem displacementFreeEnergy_master_packet
     {State : Type*} [Fintype State] [Nonempty State]
     (A : ZetaSouriauLieSymmetry)

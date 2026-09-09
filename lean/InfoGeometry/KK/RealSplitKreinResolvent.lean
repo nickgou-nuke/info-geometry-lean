@@ -57,45 +57,6 @@ def shiftedApply
     R.shiftedApply ⟨R.resolvent x, R.resolvent_mem_domain x⟩ = x :=
   R.left_resolvent x
 
-/-- The stored left-resolvent identity makes the shifted operator surjective.
-
-This is the exact algebraic consequence available from the packet; no right
-resolvent identity is inferred. -/
-lemma shiftedApply_surjective
-    (R : RealSplitKreinResolventData H domain D) :
-    Function.Surjective R.shiftedApply := by
-  intro x
-  exact ⟨⟨R.resolvent x, R.resolvent_mem_domain x⟩,
-    R.shiftedApply_resolvent x⟩
-
-/-- A left inverse forces the bounded resolvent representative to be injective. -/
-lemma resolvent_injective
-    (R : RealSplitKreinResolventData H domain D) :
-    Function.Injective R.resolvent := by
-  intro x y hxy
-  calc
-    x = R.shiftedApply ⟨R.resolvent x, R.resolvent_mem_domain x⟩ :=
-      (R.shiftedApply_resolvent x).symm
-    _ = R.shiftedApply ⟨R.resolvent y, R.resolvent_mem_domain y⟩ := by
-      apply congrArg R.shiftedApply
-      apply Subtype.ext
-      exact hxy
-    _ = y := R.shiftedApply_resolvent y
-
-/-- If the shifted operator is also injective, the stored left inverse is a
-right inverse on the operator domain. -/
-lemma resolvent_shiftedApply
-    (R : RealSplitKreinResolventData H domain D)
-    (hinj : Function.Injective R.shiftedApply)
-    (x : {x // x ∈ domain}) :
-    R.resolvent (R.shiftedApply x) = x.1 := by
-  have hsub :
-      (⟨R.resolvent (R.shiftedApply x),
-          R.resolvent_mem_domain (R.shiftedApply x)⟩ : {x // x ∈ domain}) = x := by
-    apply hinj
-    simp only [R.shiftedApply_resolvent]
-  exact congrArg Subtype.val hsub
-
 /-- The concrete resolvent representative is compact as a bounded operator. -/
 lemma isCompactOperator
     (R : RealSplitKreinResolventData H domain D) :

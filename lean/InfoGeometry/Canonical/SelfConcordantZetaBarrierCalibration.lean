@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SelfConcordantZetaBarrier
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration
@@ -7,13 +8,13 @@ import InfoGeometry.Meta.Architecture
 Thin calibration wrapper for the self-concordant zeta barrier.
 
 This file does not prove a new variational theorem.  It packages the existing
-`SelfConcordantZetaBarrier.VariationalRHTarget` with an explicit supplied
-calibration property `zeros_are_barrier_critical`, and reexports the owner
+`SelfConcordantZetaBarrier.VariationalRHTarget` with an explicit witness for
+the missing bridge `zeros_are_barrier_critical`, and reexports the owner
 theorem `variationalRH_implies_criticalLine`.
 
 The intent is architectural: keep the self-concordant barrier as the native
 optimization owner, and keep the zeta-period zero-to-barrier-critical bridge as
-an explicit calibration datum rather than an unconditional theorem.
+the supplied calibration datum.
 -/
 
 noncomputable section
@@ -23,34 +24,37 @@ namespace InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
-/-- Reexport of the supplied barrier-critical bridge. -/
+/--
+Calibration packet connecting the self-concordant barrier owner to the missing
+variational bridge.
+
+`barrier` is the owner-side variational target.
+`zeros_are_barrier_critical` is the explicit supplied bridge certificate.
+-/
 @[rep_depth operator]
+structure SelfConcordantZetaBarrierCalibrationPacket where
+  barrier : VariationalRHTarget
+
+variable (C : SelfConcordantZetaBarrierCalibrationPacket)
+
+/-- Reexport of the supplied barrier-critical bridge. -/
+@[bridge_target_tag, rep_depth operator]
 theorem zeros_are_barrier_critical
-    (xi : ℂ → ℂ)
-    (zeros_are_barrier_critical :
-      ∀ s₀ : ℂ, xi s₀ = 0 →
-        ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) → ∀ σ : ℝ,
-          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ)
-    (s₀ : ℂ) (hz : xi s₀ = 0)
+    (s₀ : ℂ) (hz : C.barrier.xi s₀ = 0)
     (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (σ : ℝ) :
     primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ :=
-  zeros_are_barrier_critical s₀ hz S hS σ
+  C.barrier.zeros_are_barrier_critical s₀ hz S hS σ
 
 /--
 The calibrated barrier still forces the critical line once the supplied
-bridge property is present.
+bridge certificate is present.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem criticalLine_of_calibration
-    (xi : ℂ → ℂ)
-    (zeros_are_barrier_critical :
-      ∀ s₀ : ℂ, xi s₀ = 0 →
-        ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) → ∀ σ : ℝ,
-          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ)
     (s₀ : ℂ)
-    (hz : xi s₀ = 0) :
+    (hz : C.barrier.xi s₀ = 0) :
     OnCriticalLine s₀ := by
   exact SelfConcordantZetaBarrier.variationalRH_implies_criticalLine
-    xi zeros_are_barrier_critical s₀ hz
+    C.barrier s₀ hz
 
 end InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration

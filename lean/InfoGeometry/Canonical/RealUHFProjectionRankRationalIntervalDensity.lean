@@ -83,6 +83,6 @@ theorem denseRange_dyadicToRealInterval :
   simpa [dyadicToRealInterval, rationalToRealInterval] using
     denseRange_rationalToRealInterval
 
-end InfoGeometry.Canonical.RealUHFProjectionRankRationalIntervalDensity
+end RealUHFProjectionRankRationalIntervalDensity
 
-end
+end Canonical

@@ -1,6 +1,7 @@
-import Mathlib
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Algebra.ZornVectorMatrix
+
+set_option maxHeartbeats 800000
 
 namespace InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 
@@ -21,6 +22,11 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
 @[simp] theorem canonicalVectorEquiv_symm_apply (X : VZ) :
     canonicalVectorEquiv.symm X = ⟨X.a, X.b, X.v, X.w⟩ := rfl
 
+@[simp] theorem canonicalVectorEquiv_symm_zero_record :
+    canonicalVectorEquiv.symm
+      (⟨0, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0, 0⟩ : VZ) = (0 : CZ) := by
+  rfl
+
 @[simp] theorem canonicalVectorEquiv_zero :
     canonicalVectorEquiv (0 : CZ) = InfoGeometry.Algebra.ZornVectorMatrix.zero := by
   rfl
@@ -35,11 +41,6 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
     canonicalVectorEquiv (X - Y) =
       InfoGeometry.Algebra.ZornVectorMatrix.sub
         (canonicalVectorEquiv X) (canonicalVectorEquiv Y) := by
-  rfl
-
-@[simp] theorem canonicalVectorEquiv_neg (X : CZ) :
-    canonicalVectorEquiv (-X) =
-      InfoGeometry.Algebra.ZornVectorMatrix.neg (canonicalVectorEquiv X) := by
   rfl
 
 @[simp] theorem canonicalVectorEquiv_smul (r : ℝ) (X : CZ) :
@@ -67,18 +68,6 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
       r • canonicalVectorEquiv.symm X := by
   apply canonicalVectorEquiv.injective
   simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_smul]
-
-@[simp] theorem canonicalVectorEquiv_symm_neg (X : VZ) :
-    canonicalVectorEquiv.symm (InfoGeometry.Algebra.ZornVectorMatrix.neg X) =
-      -canonicalVectorEquiv.symm X := by
-  apply canonicalVectorEquiv.injective
-  simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_neg]
-
-@[simp] theorem canonicalVectorEquiv_symm_sub (X Y : VZ) :
-    canonicalVectorEquiv.symm (InfoGeometry.Algebra.ZornVectorMatrix.sub X Y) =
-      canonicalVectorEquiv.symm X - canonicalVectorEquiv.symm Y := by
-  apply canonicalVectorEquiv.injective
-  simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_sub]
 
 @[simp] theorem canonicalVectorEquiv_symm_one :
     canonicalVectorEquiv.symm InfoGeometry.Algebra.ZornVectorMatrix.one = (1 : CZ) := by
@@ -123,6 +112,46 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
   apply canonicalVectorEquiv.injective
   simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_mul]
 
+@[simp] theorem canonical_one_coordinates :
+    (1 : CZ).a = 1 ∧ (1 : CZ).b = 1 ∧ (1 : CZ).x = 0 ∧ (1 : CZ).y = 0 := by
+  exact ⟨rfl, rfl, rfl, rfl⟩
+
+@[simp] theorem canonical_zero_coordinates :
+    (0 : CZ).a = 0 ∧ (0 : CZ).b = 0 ∧ (0 : CZ).x = 0 ∧ (0 : CZ).y = 0 := by
+  exact ⟨rfl, rfl, rfl, rfl⟩
+
+@[simp] theorem canonical_one_a : (1 : CZ).a = 1 := rfl
+@[simp] theorem canonical_one_b : (1 : CZ).b = 1 := rfl
+@[simp] theorem canonical_one_x : (1 : CZ).x = 0 := rfl
+@[simp] theorem canonical_one_y : (1 : CZ).y = 0 := rfl
+@[simp] theorem canonical_zero_a : (0 : CZ).a = 0 := rfl
+@[simp] theorem canonical_zero_b : (0 : CZ).b = 0 := rfl
+@[simp] theorem canonical_zero_x : (0 : CZ).x = 0 := rfl
+@[simp] theorem canonical_zero_y : (0 : CZ).y = 0 := rfl
+
+/-- The coordinate readout of the two native chiral basis families.
+
+This packages the `Pi.single` normalization at the canonical carrier, so
+downstream product proofs can use coordinates without unfolding the
+projection-based `One` and `Zero` instances.  The two cases are deliberately
+kept in one theorem: they are the same basis normalization with the upper and
+lower vector slots interchanged.
+-/
+@[simp] theorem canonical_basis_coordinates (i j : Fin 3) :
+    ((InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i).a = 0 ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i).b = 0 ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i).x j =
+        (if i = j then 1 else 0) ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i).y j = 0) ∧
+    ((InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i).a = 0 ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i).b = 0 ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i).x j = 0 ∧
+      (InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i).y j =
+        (if i = j then 1 else 0)) := by
+  constructor <;>
+    simp [InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis,
+      InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis, Pi.single_apply, eq_comm]
+
 theorem add_mul (X Y Z : CZ) : (X + Y) * Z = X * Z + Y * Z := by
   apply canonicalVectorEquiv.injective
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_add]
@@ -163,14 +192,106 @@ theorem mul_sub (X Y Z : CZ) : X * (Y - Z) = X * Y - X * Z := by
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_zero]
   exact InfoGeometry.Algebra.ZornVectorMatrix.mul_zero _
 
-@[simp] theorem mul_one (X : CZ) : X * (1 : CZ) = X := by
-  apply canonicalVectorEquiv.injective
-  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_one]
-  exact InfoGeometry.Algebra.ZornVectorMatrix.mul_one _
-
 @[simp] theorem one_mul (X : CZ) : (1 : CZ) * X = X := by
   apply canonicalVectorEquiv.injective
-  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_one]
+  simp only [canonicalVectorEquiv_mul]
   exact InfoGeometry.Algebra.ZornVectorMatrix.one_mul _
+
+@[simp] theorem mul_one (X : CZ) : X * (1 : CZ) = X := by
+  apply canonicalVectorEquiv.injective
+  simp only [canonicalVectorEquiv_mul]
+  exact InfoGeometry.Algebra.ZornVectorMatrix.mul_one _
+
+@[simp] theorem canonicalUpperBasis_map (i : Fin 3) :
+    canonicalVectorEquiv
+        (InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i) =
+      InfoGeometry.Algebra.ZornVectorMatrix.U i := by
+  apply InfoGeometry.Algebra.ZornVectorMatrix.ext
+  all_goals simp [canonicalVectorEquiv,
+    InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis,
+    InfoGeometry.Algebra.ZornVectorMatrix.U,
+    InfoGeometry.Algebra.ZornVec3.basis]
+  · funext j
+    fin_cases i <;> fin_cases j <;> simp [InfoGeometry.Algebra.ZornVec3.basis,
+      Pi.single_apply]
+  · funext j
+    simp
+
+@[simp] theorem canonicalLowerBasis_map (i : Fin 3) :
+    canonicalVectorEquiv
+        (InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i) =
+      InfoGeometry.Algebra.ZornVectorMatrix.V i := by
+  apply InfoGeometry.Algebra.ZornVectorMatrix.ext
+  all_goals simp [canonicalVectorEquiv,
+    InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis,
+    InfoGeometry.Algebra.ZornVectorMatrix.V,
+    InfoGeometry.Algebra.ZornVec3.basis]
+  · funext j
+    simp
+  · funext j
+    fin_cases i <;> fin_cases j <;> simp [InfoGeometry.Algebra.ZornVec3.basis,
+      Pi.single_apply]
+
+theorem canonicalUpperLower_mul (i j : Fin 3) :
+    InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i *
+        InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) j =
+      if i = j then InfoGeometry.Canonical.ZornMatrix.zornPlus else 0 := by
+  fin_cases i <;> fin_cases j
+  all_goals apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp [InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis,
+      InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis,
+      InfoGeometry.Canonical.ZornMatrix.mul_def,
+      InfoGeometry.Canonical.ZornMatrix.add_def,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.zornPlus] <;> try ring
+
+theorem canonicalLowerUpper_mul (i j : Fin 3) :
+    InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i *
+        InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) j =
+      if i = j then InfoGeometry.Canonical.ZornMatrix.zornMinus else 0 := by
+  fin_cases i <;> fin_cases j
+  all_goals apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp [InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis,
+      InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis,
+      InfoGeometry.Canonical.ZornMatrix.mul_def,
+      InfoGeometry.Canonical.ZornMatrix.add_def,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.zornMinus] <;> try ring
+
+theorem canonicalUpperUpper_anticomm (i j : Fin 3) :
+    InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i *
+        InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) j +
+      InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) j *
+        InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis (R := ℝ) i = 0 := by
+  fin_cases i <;> fin_cases j
+  all_goals apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp [InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis,
+      InfoGeometry.Canonical.ZornMatrix.mul_def,
+      InfoGeometry.Canonical.ZornMatrix.add_def,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> try ring
+
+theorem canonicalLowerLower_anticomm (i j : Fin 3) :
+    InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i *
+        InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) j +
+      InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) j *
+        InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis (R := ℝ) i = 0 := by
+  fin_cases i <;> fin_cases j
+  all_goals apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp [InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis,
+      InfoGeometry.Canonical.ZornMatrix.mul_def,
+      InfoGeometry.Canonical.ZornMatrix.add_def,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> try ring
 
 end InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

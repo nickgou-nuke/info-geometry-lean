@@ -161,5 +161,4 @@ theorem stageObservationRangeFlowHomeomorph_trans_apply
     Real.exp_add, mul_assoc]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeFlowHomeomorph
-
 end

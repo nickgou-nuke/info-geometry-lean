@@ -124,7 +124,7 @@ theorem transported_hasZeroMode (t : ℝ) :
     (H := B.ownedOperator)
     B.owner_hasZeroMode
 
-/-- Explicit property form of modularly transported zero-mode persistence. -/
+/-- Explicit witness form of modularly transported zero-mode persistence. -/
 @[rep_depth operator]
 theorem transported_exists_zeroMode (t : ℝ) :
     ∃ v : H₂, (B.transportedOperator t) v = 0 ∧ v ≠ 0 := by

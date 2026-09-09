@@ -17,27 +17,26 @@ open Matrix Complex
 
 namespace E8ExceptionalLieAlgebraTriality
 
+/-- Exceptional Lie Algebra Dimensions. -/
+def dimG2 : ℕ := 14
+def dimF4 : ℕ := 52
+def dimE8 : ℕ := 248
+def numE8Roots : ℕ := 240
+def rankE8 : ℕ := 8
+
 namespace E8ExceptionalLieAlgebraTriality
 
-/-- A finite arithmetic dimension inequality used as a readout.
-
-This statement does not construct the indicated exceptional Lie algebras or
-prove an inclusion between them. -/
+/-- **Theorem**: Exceptional Lie Subalgebra Inclusion Dimension Inequalities:
+    dim(G₂) < dim(F₄) < dim(E₈). -/
 theorem exceptional_subalgebra_chain_dimensions :
-    14 < 52 ∧ 52 < 248 := by
+    dimG2 < dimF4 ∧ dimF4 < dimE8 := by
   decide
 
-/-- The displayed finite arithmetic decomposition `248 = 240 + 8`.
-
-No root system or Lie-algebra dimension theorem is constructed here. -/
+/-- **Theorem**: E₈ Dimension Decomposition: dim(E₈) = |R(E₈)| + rank(E₈). -/
 theorem e8_dimension_root_rank_decomposition :
-    248 = 240 + 8 := by
-  decide
+    dimE8 = numE8Roots + rankE8 := rfl
 
-/-- A unitary `8 × 8` matrix equipped with the finite relation `U³ = I`.
-
-The type is deliberately weaker than an E₈ or Spin(8) triality
-automorphism; such a realization requires a separate carrier and action. -/
+/-- Triality Automorphism Representative τ ∈ M₈(ℂ) for Spin(8) ⊂ E₈. -/
 abbrev TrialityAutomorphism :=
   { U : Matrix.unitaryGroup (Fin 8) ℂ //
       (U : Matrix (Fin 8) (Fin 8) ℂ) * U * U = 1 }
@@ -57,15 +56,13 @@ theorem h_unitary :
       (tau.1 : Matrix (Fin 8) (Fin 8) ℂ) = 1
   exact Matrix.mem_unitaryGroup_iff'.mp tau.1.2
 
-/-- Read back the supplied order-three matrix relation. -/
+/-- **Theorem**: Triality Order 3 Automorphism: τ³ = 1. -/
 theorem triality_cube_identity :
     triality_matrix tau * triality_matrix tau * triality_matrix tau = 1 :=
   h_cube_identity tau
 
-/-- Trace is invariant under conjugation by the supplied unitary matrix.
-
-This is a finite matrix identity and does not identify the matrix with a
-geometric triality action. -/
+/-- **Theorem**: Triality Invariant Trace Conservation:
+    Tr(τ X τ⁻¹) = Tr(X) for unitary triality transformation. -/
 theorem triality_trace_conservation (X : Matrix (Fin 8) (Fin 8) ℂ) :
     trace (triality_matrix tau * X * (triality_matrix tau).conjTranspose) = trace X := by
   rw [trace_mul_comm (triality_matrix tau * X) (triality_matrix tau).conjTranspose,

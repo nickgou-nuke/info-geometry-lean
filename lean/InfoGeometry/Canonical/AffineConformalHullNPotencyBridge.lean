@@ -80,11 +80,11 @@ theorem inHull_iff_zero_or_rootOfUnity (n : ℕ) (hn : 2 ≤ n) (z : ℂ) :
 
 /-- Fractional spin parameter $s = m / (n - 1)$ on the $n$-potent boundary. -/
 def fractionalSpin (m : ℕ) (n : ℕ) : ConformalSpin :=
-  (m : ℚ) / ((n : ℚ) - 1)
+  ⟨(m : ℚ) / ((n : ℚ) - 1)⟩
 
 /-- Topological phase acquired by a state with conformal spin $s$ under a full $2\pi$ rotation. -/
 def topologicalPhase (s : ConformalSpin) : ℂ :=
-  Complex.exp (2 * Real.pi * Complex.I * (s : ℂ))
+  Complex.exp (2 * Real.pi * Complex.I * (s.S : ℂ))
 
 /-- The phase $\theta(m / (n - 1))$ is an $(n - 1)$-th root of unity. -/
 theorem topologicalPhase_pow_eq_one (n : ℕ) (hn : 2 ≤ n) (m : ℕ) :
@@ -122,32 +122,34 @@ theorem fractionalSpin_in_hull (n : ℕ) (hn : 2 ≤ n) (m : ℕ) :
   exact topologicalPhase_pow_eq_one n hn m
 
 /-- 3-Potent Hull (Tripotent / Bose-Fermi / Horizon): $n = 3$, spins $s \in \{0, 1/2\}$. -/
-theorem fractionalSpin_zero_three : fractionalSpin 0 3 = 0 := by
+theorem fractionalSpin_zero_three : (fractionalSpin 0 3).S = 0 := by
   dsimp [fractionalSpin]; norm_num
 
-theorem fractionalSpin_one_three : fractionalSpin 1 3 = 1 / 2 := by
+theorem fractionalSpin_one_three : (fractionalSpin 1 3).S = (1 : ℚ) / 2 := by
   dsimp [fractionalSpin]; norm_num
 
-theorem tripotent_spin_zero_in_hull : inHull 3 (topologicalPhase 0) := by
+theorem tripotent_spin_zero_in_hull : inHull 3 (topologicalPhase ⟨0⟩) := by
   have h := fractionalSpin_in_hull 3 (by norm_num) 0
-  rwa [fractionalSpin_zero_three] at h
+  convert h using 1 <;> norm_num [fractionalSpin, topologicalPhase]
 
-theorem tripotent_spin_half_in_hull : inHull 3 (topologicalPhase (1 / 2)) := by
+theorem tripotent_spin_half_in_hull :
+    inHull 3 (topologicalPhase ⟨(1 : ℚ) / 2⟩) := by
   have h := fractionalSpin_in_hull 3 (by norm_num) 1
-  rwa [fractionalSpin_one_three] at h
+  convert h using 1 <;> norm_num [fractionalSpin, topologicalPhase]
 
 /-- 4-Potent Hull ($\mathbb{Z}_3$ Parafermion carrier): $n = 4$, contains parafermion spin $h_\psi = 2/3$. -/
-theorem fractionalSpin_two_four : fractionalSpin 2 4 = 2 / 3 := by
+theorem fractionalSpin_two_four : (fractionalSpin 2 4).S = (2 : ℚ) / 3 := by
   dsimp [fractionalSpin]; norm_num
 
 theorem z3_parafermion_spin_two_thirds_in_hull :
-    inHull 4 (topologicalPhase (2 / 3)) := by
+    inHull 4 (topologicalPhase ⟨(2 : ℚ) / 3⟩) := by
   have h := fractionalSpin_in_hull 4 (by norm_num) 2
-  rwa [fractionalSpin_two_four] at h
+  convert h using 1 <;> norm_num [fractionalSpin, topologicalPhase]
 
 /-- 6-Potent Hull (Georgiev–Hadjiivanov Fibonacci anyon carrier):
     Conformal weight $h_\varepsilon = 2/5$ and topological twist $\theta_\tau = \exp(4\pi i / 5) \in \mu_5$. -/
-def georgievHadjiivanovFibonacciSpin : ConformalSpin := 2 / 5
+def georgievHadjiivanovFibonacciSpin : ConformalSpin :=
+  ⟨(2 : ℚ) / 5⟩
 
 theorem fractionalSpin_two_six : fractionalSpin 2 6 = georgievHadjiivanovFibonacciSpin := by
   dsimp [fractionalSpin, georgievHadjiivanovFibonacciSpin]; norm_num

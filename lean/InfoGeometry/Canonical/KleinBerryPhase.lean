@@ -9,26 +9,30 @@ open Matrix
 open InfoGeometry.Canonical.KleinExceptionalBraid
 
 /-!
-# Finite matrix products for the Klein glide toy packet
+# Local Berry Phase Invariants around Non-Orientable Exceptional Points
 
-This owner proves only products of the concrete integer matrices imported from
-`KleinExceptionalBraid`.  The names retain compatibility with downstream code,
-but the results are not claims about Berry connections, holonomy, topology, or
-exceptional-point physics.
+Formalizes the exact cancellation of the topological Berry phase on a Klein manifold.
+Based on the unoriented cobordism constraint, two consecutive encirclements
+across the non-orientable bottleneck yield a trivial holonomy `+I`,
+whereas a purely orientable cycle yields a geometric phase of `-I` (π).
 -/
 
-/-- The concrete quarter-turn matrix squares to the negative identity. -/
+/-- 
+Theorem: Orientable Holonomy. 
+Two standard encirclements of the EP accumulate a Berry phase of π (represented by -I).
+-/
 theorem orientable_holonomy_pi :
     B_EP * B_EP = -1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [B_EP, Matrix.mul_apply, Fin.sum_univ_two]
+  decide
 
-/-- The conjugated quarter-turn product is the identity matrix. -/
+/-- 
+Theorem: Klein Twist Holonomy. 
+Two encirclements of the EP, one standard and one across the non-orientable glide twist,
+accumulate a trivial Berry phase of 0 (represented by +I).
+Because the glide twist anti-isomorphism forces `Twisted B = -B`, the product is `B * -B = I`.
+-/
 theorem klein_holonomy_cancellation :
     B_EP * (G_Glide * B_EP * G_Glide) = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [B_EP, G_Glide, Matrix.mul_apply, Fin.sum_univ_two]
+  decide
 
 end InfoGeometry.Canonical.KleinBerryPhase

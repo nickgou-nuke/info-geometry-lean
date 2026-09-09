@@ -14,7 +14,7 @@ This module formalizes only the conservative algebraic core:
 * probability weights can be supplied as squares of amplitude weights;
 * finite products of probability weights are squares of finite amplitude
   products;
-* Pfaffian and supercharge interpretations are property gates.
+* Pfaffian and supercharge interpretations are witness gates.
 
 No Riemann Hypothesis theorem, no zero-location theorem, no Super-Virasoro
 construction, and no infinite Pfaffian/determinant theorem is asserted here.
@@ -121,7 +121,7 @@ Amplitude/probability square-root packet.
 
 This packages the finite version of `Ψ(n)^2 = ρ(n)`.
 -/
-structure FiniteAmplitudeSquareRootData
+structure FiniteAmplitudeSquareRootPacket
     (α R : Type*) [CommMonoid R] where
   support : Finset α
   amplitude : α → R
@@ -129,11 +129,11 @@ structure FiniteAmplitudeSquareRootData
   local_square :
     ∀ a ∈ support, probability a = amplitude a ^ 2
 
-namespace FiniteAmplitudeSquareRootData
+namespace FiniteAmplitudeSquareRootPacket
 
 variable
     {α R : Type*} [CommMonoid R]
-    (P : FiniteAmplitudeSquareRootData α R)
+    (P : FiniteAmplitudeSquareRootPacket α R)
 
 /-- Product-level square-root law for the packet. -/
 theorem probabilityProduct_eq_amplitudeProduct_sq :
@@ -142,7 +142,7 @@ theorem probabilityProduct_eq_amplitudeProduct_sq :
   finiteProbabilityProduct_eq_amplitudeProduct_sq
     P.support P.amplitude P.probability P.local_square
 
-end FiniteAmplitudeSquareRootData
+end FiniteAmplitudeSquareRootPacket
 
 
 

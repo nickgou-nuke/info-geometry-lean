@@ -115,5 +115,3 @@ theorem operatorObservationRangeCovariantFixedPointSet_flow_invariant
       rw [hii]
 
 end InfoGeometry.Topology
-
-end

@@ -93,21 +93,17 @@ def nilpotentLimitSquareRoot : MatrixSquareRootTranslation where
 theorem projectiveGlideSquareRoot_square_law :
     ∀ x, projectiveGlideSquareRoot.op (projectiveGlideSquareRoot.op x) =
       projectiveGlideSquareRoot.evenTranslation x :=
-  by
-    intro x
-    exact kGlide_sq
+  projectiveGlideSquareRoot.square_law
 
 /-- Named square law for the bulk supercharge structure. -/
 theorem superchargeSquareRoot_square_law :
     superchargeSquareRoot.odd * superchargeSquareRoot.odd = superchargeSquareRoot.evenTranslation :=
-  by
-    exact Q_sq
+  superchargeSquareRoot.square_law
 
 /-- Named square law for the nilpotent-limit structure. -/
 theorem nilpotentLimitSquareRoot_square_law :
     nilpotentLimitSquareRoot.odd * nilpotentLimitSquareRoot.odd =
       nilpotentLimitSquareRoot.evenTranslation :=
-  by
-    exact qNil_sq_zero
+  nilpotentLimitSquareRoot.square_law
 
 end ProjectiveGlideSuperchargeUnification

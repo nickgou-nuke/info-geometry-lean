@@ -10,7 +10,7 @@ import InfoGeometry.Clifford.LogCftMonodromy
 # Bost-Connes Zeta-Volume Comparison
 
 This module packages a theorem-safe zeta-volume comparison interface by
-instantiating `AmplituhedronZetaComparison` from an explicit comparison
+instantiating `AmplituhedronZetaEquivalence` from an explicit comparison
 premise. It provides the Bost--Connes zeta readout, local summand bridges to
 Bost--Connes KMS projection weights, and a readback theorem for supplied
 volume comparisons. It does not assert a global analytic equality between the
@@ -97,10 +97,10 @@ theorem normalized_trace_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
 def bost_connes_amplituhedron_synthesis
     (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : ∀ (β : ℂ) (L : ℕ), bost_connes_zeta β = Vol L) :
-    InfoGeometry.Canonical.BostConnesAmplituhedronBoundary.AmplituhedronZetaComparison ℂ where
+    AmplituhedronZetaEquivalence ℂ where
   Z := bost_connes_zeta
   Vol := Vol
-  comparison β L := hComparison β L
+  equivalence β L := hComparison β L
 
 /-- Read back the family equality using the explicit comparison. -/
 theorem bost_connes_comparison_readback (Vol : AmplituhedronVolumeData ℂ)
@@ -109,6 +109,6 @@ theorem bost_connes_comparison_readback (Vol : AmplituhedronVolumeData ℂ)
       (bost_connes_amplituhedron_synthesis Vol hComparison).Z β =
         (bost_connes_amplituhedron_synthesis Vol hComparison).Vol L := by
   intro β L
-  exact (bost_connes_amplituhedron_synthesis Vol hComparison).comparison β L
+  exact (bost_connes_amplituhedron_synthesis Vol hComparison).equivalence β L
 
 end

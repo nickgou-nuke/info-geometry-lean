@@ -185,28 +185,55 @@ def solderedBasis : Fin 8 → SplitZornC
   exact V_mul_self_zero i
 
 @[simp] theorem chiralSigmaMinus_zero_mul_one :
-    chiralSigmaMinus 0 * chiralSigmaMinus 1 = -(chiralSigmaPlus 2) := by
-  exact V_zero_mul_V_one
+    chiralSigmaMinus 0 * chiralSigmaMinus 1 =
+      ZornMatrix.sub (0 : SplitZornC) (chiralSigmaPlus 2) := by
+  ext j
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaMinus_one_mul_two :
-    chiralSigmaMinus 1 * chiralSigmaMinus 2 = -(chiralSigmaPlus 0) := by
-  exact V_one_mul_V_two
+    chiralSigmaMinus 1 * chiralSigmaMinus 2 =
+      ZornMatrix.sub (0 : SplitZornC) (chiralSigmaPlus 0) := by
+  ext j
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaMinus_two_mul_zero :
-    chiralSigmaMinus 2 * chiralSigmaMinus 0 = -(chiralSigmaPlus 1) := by
-  exact V_two_mul_V_zero
+    chiralSigmaMinus 2 * chiralSigmaMinus 0 =
+      ZornMatrix.sub (0 : SplitZornC) (chiralSigmaPlus 1) := by
+  ext j
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, ZornMatrix.sub, zero, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaMinus_one_mul_zero :
     chiralSigmaMinus 1 * chiralSigmaMinus 0 = chiralSigmaPlus 2 := by
-  exact V_one_mul_V_zero
+  ext j
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaMinus_two_mul_one :
     chiralSigmaMinus 2 * chiralSigmaMinus 1 = chiralSigmaPlus 0 := by
-  exact V_two_mul_V_one
+  ext j
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaMinus_zero_mul_two :
     chiralSigmaMinus 0 * chiralSigmaMinus 2 = chiralSigmaPlus 1 := by
-  exact V_zero_mul_V_two
+  ext j
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;> simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [V, U, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
 @[simp] theorem chiralSigmaPlus_mul_minus (i j : Fin 3) :
     chiralSigmaPlus i * chiralSigmaMinus j =

@@ -24,13 +24,13 @@ open InfoGeometry.Prequantum.AlgebraicGNSState
 
 /-- The normalized real matrix-trace state net for the concrete tower. -/
 def concreteStateNet :
-    CompatibleAlgebraicStateNet (realInductiveNet concreteStep) :=
-  compatibleRealStateNet concreteStep concrete_trace_compatible
+    CompatibleAlgebraicStateNet (realInductiveNet concreteData) :=
+compatibleRealStateNet concreteData
 
 @[simp] theorem concreteStateNet_state (n : ℕ) (A : MatrixStage n) :
     (concreteStateNet.state n) A =
       (matrixTraceFunctional n A).re := by
-  exact compatibleRealStateNet_state concreteStep concrete_trace_compatible n A
+  exact compatibleRealStateNet_state concreteData n A
 
 theorem concreteStateNet_normalized (n : ℕ) :
     concreteStateNet.state n 1 = 1 := by
@@ -50,7 +50,7 @@ theorem concreteStateNet_stable_map
     concreteStateNet.state n (concreteMap hmn A) =
       concreteStateNet.state m A := by
   have h_embed :
-      (realInductiveNet concreteStep).embedMap m n hmn A =
+      (realInductiveNet concreteData).embedMap m n hmn A =
         concreteMap hmn A := by
     induction hmn with
     | refl =>
@@ -60,11 +60,11 @@ theorem concreteStateNet_stable_map
     | @step n h ih =>
         rw [InductiveAlgebraNet.embedMap_succ]
         change concreteStep n
-            ((realInductiveNet concreteStep).embedMap m n h A) = _
+            ((realInductiveNet concreteData).embedMap m n h A) = _
         rw [ih]
         change concreteStep n (concreteMap h A) =
-          map concreteStep (Nat.le.step h) A
-        rw [map_succ concreteStep h]
+          map concreteData (Nat.le.step h) A
+        rw [map_succ concreteData h]
         rfl
   rw [← h_embed]
   exact CompatibleAlgebraicStateNet.stable_embedMap

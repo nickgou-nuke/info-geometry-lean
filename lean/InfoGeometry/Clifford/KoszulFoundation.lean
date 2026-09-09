@@ -22,37 +22,6 @@ variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable {Q : QuadraticForm R M}
 
-section TwoVectorGradeSplit
-
-variable {K : Type*} [Field K] [CharZero K]
-variable {N : Type*} [AddCommGroup N] [Module K N]
-variable {P : QuadraticForm K N}
-
-/-- The symmetric two-vector Clifford channel. -/
-def scalarTwoVectorChannel (v w : N) : CliffordAlgebra P :=
-  (1 / 2 : K) • algebraMap K (CliffordAlgebra P) (QuadraticMap.polar P v w)
-
-/-- The antisymmetric two-vector Clifford channel. -/
-def bivectorTwoVectorChannel (v w : N) : CliffordAlgebra P :=
-  (1 / 2 : K) •
-    (CliffordAlgebra.ι P v * CliffordAlgebra.ι P w -
-      CliffordAlgebra.ι P w * CliffordAlgebra.ι P v)
-
-/-- Two Clifford vector generators split into scalar and bivector channels. -/
-theorem clifford_twoVector_grade_split (v w : N) :
-    CliffordAlgebra.ι P v * CliffordAlgebra.ι P w =
-      scalarTwoVectorChannel v w + bivectorTwoVectorChannel v w := by
-  have h := CliffordAlgebra.ι_mul_ι_add_swap (Q := P) v w
-  unfold scalarTwoVectorChannel bivectorTwoVectorChannel
-  rw [show (1 / 2 : K) • algebraMap K (CliffordAlgebra P)
-        (QuadraticMap.polar P v w) =
-      (1 / 2 : K) •
-        (CliffordAlgebra.ι P v * CliffordAlgebra.ι P w +
-          CliffordAlgebra.ι P w * CliffordAlgebra.ι P v) by rw [h]]
-  module
-
-end TwoVectorGradeSplit
-
 /-- The native Clifford anticommutator is the polar form of the quadratic form. -/
 theorem clifford_polarization (v w : M) :
     CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w +
@@ -66,7 +35,7 @@ theorem clifford_orthogonal_anticommute (v w : M) (h : Q.IsOrtho v w) :
       -(CliffordAlgebra.ι Q w * CliffordAlgebra.ι Q v) :=
   CliffordAlgebra.ι_mul_ι_comm_of_isOrtho h
 
-/-- The same anticommutation conclusion from an explicit polar-zero property. -/
+/-- The same anticommutation conclusion from an explicit polar-zero hypothesis. -/
 theorem clifford_anticommute_of_polar_eq_zero
     (v w : M) (h : QuadraticMap.polar Q v w = 0) :
     CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w =
@@ -160,7 +129,7 @@ theorem clifford_anticommute_listProduct
                 simp [pow_succ, mul_assoc]
 
 /--
-A `List.Pairwise` orthogonality property on `v :: vectors` supplies the
+A `List.Pairwise` orthogonality hypothesis on `v :: vectors` supplies the
 head-to-tail hypotheses needed to move `ι Q v` through the volume element.
 -/
 theorem clifford_anticommute_listProduct_of_pairwise_cons
@@ -172,7 +141,7 @@ theorem clifford_anticommute_listProduct_of_pairwise_cons
   clifford_anticommute_listProduct v vectors
     (fun _ hw => List.rel_of_pairwise_cons h hw)
 
-/--
+/-
 Adjoining a vector orthogonal to every factor gives the recursive square law
 for an ordered Clifford volume element.  The sign records the number of
 factors crossed before the two copies of the new generator meet.
@@ -209,16 +178,12 @@ theorem cliffordVolumeElement_cons_sq
     _ = s • (algebraMap R (CliffordAlgebra Q) (Q v) * (V * V)) := by
           rw [CliffordAlgebra.ι_sq_scalar]
 
-/-- Scalar obtained by recursively collecting the signed generator squares. -/
+/-! Scalar recursion for the square of an orthogonal ordered Clifford product. -/
 def cliffordVolumeSquareScalar (Q : QuadraticForm R M) : List M → R
   | [] => 1
   | v :: vectors =>
       (-1 : R) ^ vectors.length * Q v * cliffordVolumeSquareScalar Q vectors
 
-/--
-The square of a pairwise-orthogonal ordered Clifford product is the scalar
-obtained from the generator squares and the Koszul crossing signs.
--/
 theorem cliffordVolumeElement_sq_of_pairwise
     (vectors : List M) (h : vectors.Pairwise (fun v w => Q.IsOrtho v w)) :
     cliffordVolumeElement Q vectors * cliffordVolumeElement Q vectors =

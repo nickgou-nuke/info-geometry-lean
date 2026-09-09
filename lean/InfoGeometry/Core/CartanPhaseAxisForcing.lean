@@ -84,7 +84,7 @@ theorem commutator_KI_eq_zero_of_mem_even
 
 /--
 Constructive variant of the Cartan-grade collapse theorem using an explicit
-even-sector property object instead of a bare membership proof.
+even-sector witness object instead of a bare membership proof.
 -/
 theorem commutator_KI_eq_zero_of_evenWitness
     {L : Type _} [LieRing L] [LieAlgebra ℝ L]

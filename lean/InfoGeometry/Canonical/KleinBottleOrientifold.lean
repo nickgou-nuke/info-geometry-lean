@@ -58,7 +58,7 @@ Bridge packet tying the prime-gas MaxEnt data to the Klein bottle orientifold
 hypotheses.
 
 This is the topological filter surface: the prime gas remains a Jaynes packet,
-and the orientifold effect remains an explicit property block.
+and the orientifold effect remains an explicit hypothesis block.
 -/
 @[rep_depth transport]
 structure OrientifoldPrimeGasPacket (D : PrimeGasJaynesData) where
@@ -69,17 +69,11 @@ structure OrientifoldPrimeGasPacket (D : PrimeGasJaynesData) where
 Topological support packet for the square-free sector.
 
 This keeps the square-killing claim as a theorem-shaped surface rather than
-as a kernel ax!om.
+as a kernel axiom.
 -/
 @[rep_depth transport]
-abbrev SquareFreeSupportPacket :=
-  {n : ℕ // Squarefree n}
-
-namespace SquareFreeSupportPacket
-
-abbrev label (P : SquareFreeSupportPacket) : ℕ := P.1
-abbrev squareFree (P : SquareFreeSupportPacket) : Squarefree P.label := P.2
-
-end SquareFreeSupportPacket
+structure SquareFreeSupportPacket where
+  label : ℕ
+  squareFree : Squarefree label
 
 end InfoGeometry.Canonical.KleinBottleOrientifold

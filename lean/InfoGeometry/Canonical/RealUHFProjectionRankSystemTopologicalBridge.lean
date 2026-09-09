@@ -43,6 +43,6 @@ theorem finiteStageNormalizedTraceCLM_restriction_natural_apply
     (finiteStageNormalizedTraceCLM_restriction_natural n)
   exact h
 
-end InfoGeometry.Canonical.RealUHFProjectionRankSystemTopologicalBridge
+end RealUHFProjectionRankSystemTopologicalBridge
 
-end
+end Canonical

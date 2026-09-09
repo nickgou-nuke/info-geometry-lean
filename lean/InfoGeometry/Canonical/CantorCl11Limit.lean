@@ -27,39 +27,48 @@ completion, a Virasoro/SUSY identification, or any global representation
 surjectivity theorem.
 -/
 
+abbrev InfiniteBinaryWordSpace := FractalCantorCliffordFockBridge.InfiniteBinaryWordSpace
+
+abbrev Prefix (_ : ℕ) : Type := List Bool
+
+abbrev Stage (n : ℕ) : Type := InfoGeometry.Clifford.Cl11TensorTower.MatStage n
+
+abbrev Limit : Type := InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit
+
 /-- The repo-owned finite prefix of a Cantor boundary word at depth `n`. -/
-def prefixAt (n : ℕ)
-    (ξ : (ℕ → Bool)) : List Bool :=
+def prefixAt (n : ℕ) (ξ : InfiniteBinaryWordSpace) : Prefix n :=
   boundaryPrefix n ξ
 
-@[simp] theorem prefixAt_zero (ξ : (ℕ → Bool)) :
+@[simp] theorem prefixAt_zero (ξ : InfiniteBinaryWordSpace) :
     prefixAt 0 ξ = [] := by
   rfl
 
-@[simp] theorem prefixAt_succ (n : ℕ) (ξ : (ℕ → Bool)) :
+@[simp] theorem prefixAt_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
     prefixAt (n + 1) ξ = boundaryHead ξ :: prefixAt n (boundaryTail ξ) := by
   rfl
 
-@[simp] theorem prefixAt_length (n : ℕ) (ξ : (ℕ → Bool)) :
-    (prefixAt n ξ).length = n := by
-  exact boundaryPrefix_length n ξ
+/-- The boundary reconstruction theorem, re-exported for the direct-limit bridge. -/
+theorem prefix_boundary_reconstruction
+    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    ξ = boundaryConsList (prefixAt n ξ) (boundaryIterateTail n ξ) :=
+  boundary_finite_reconstruction n ξ
 
 /-- A prefix-indexed stage family specialized along one boundary code. -/
 def prefixStageSequence
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool)) :
-    ∀ n : ℕ, InfoGeometry.Clifford.Cl11TensorTower.MatStage n :=
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace) :
+    ∀ n : ℕ, Stage n :=
   fun n => F n (prefixAt n ξ)
 
 @[simp] theorem prefixStageSequence_zero
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool)) :
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace) :
     prefixStageSequence F ξ 0 = F 0 [] := by
   rfl
 
 theorem prefixStageSequence_succ
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace)
     (hF : ∀ n : ℕ,
       stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
     (n : ℕ) :
@@ -70,8 +79,8 @@ theorem prefixStageSequence_succ
 
 /-- A prefix-compatible stage family has constant image in the algebraic direct limit. -/
 theorem prefix_family_constant_in_limit
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace)
     (hF : ∀ n : ℕ,
       stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ)) :
     ∀ n : ℕ,
@@ -83,10 +92,10 @@ theorem prefix_family_constant_in_limit
       (F := prefixStageSequence F ξ)
       (hF := prefixStageSequence_succ F ξ hF) n
 
-/-- InfoGeometry.Clifford.Cl11TensorTower.MatStage-zero square-zero data remain square-zero along a prefix-compatible family. -/
+/-- Stage-zero square-zero data remain square-zero along a prefix-compatible family. -/
 theorem prefix_family_square_zero_in_limit
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace)
     (hF : ∀ n : ℕ,
       stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
     (h0 : F 0 [] * F 0 [] = 0) :
@@ -103,10 +112,10 @@ theorem prefix_family_square_zero_in_limit
       (hF := prefixStageSequence_succ F ξ hF)
       (h0 := h0') n
 
-/-- InfoGeometry.Clifford.Cl11TensorTower.MatStage-zero idempotent data remain idempotent along a prefix-compatible family. -/
+/-- Stage-zero idempotent data remain idempotent along a prefix-compatible family. -/
 theorem prefix_family_idempotent_in_limit
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace)
     (hF : ∀ n : ℕ,
       stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
     (h0 : F 0 [] * F 0 [] = F 0 []) :
@@ -124,10 +133,10 @@ theorem prefix_family_idempotent_in_limit
       (hF := prefixStageSequence_succ F ξ hF)
       (h0 := h0') n
 
-/-- InfoGeometry.Clifford.Cl11TensorTower.MatStage-zero involutive data remain involutive along a prefix-compatible family. -/
+/-- Stage-zero involutive data remain involutive along a prefix-compatible family. -/
 theorem prefix_family_involution_in_limit
-    (F : ∀ n : ℕ, List Bool → InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
+    (F : ∀ n : ℕ, Prefix n → Stage n)
+    (ξ : InfiniteBinaryWordSpace)
     (hF : ∀ n : ℕ,
       stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
     (h0 : F 0 [] * F 0 [] = 1) :
@@ -143,132 +152,6 @@ theorem prefix_family_involution_in_limit
       (F := prefixStageSequence F ξ)
       (hF := prefixStageSequence_succ F ξ hF)
       (h0 := h0') n
-
-theorem prefix_families_product_constant_in_limit
-    (F G : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
-    (hF : ∀ n : ℕ,
-      stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
-    (hG : ∀ n : ℕ,
-      stageEmbed n (G n (prefixAt n ξ)) = G (n + 1) (prefixAt (n + 1) ξ)) :
-    ∀ n : ℕ,
-      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-          (F n (prefixAt n ξ) * G n (prefixAt n ξ)) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0
-          (F 0 [] * G 0 []) := by
-  let H : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n :=
-    fun n w => F n w * G n w
-  have hH : ∀ n : ℕ,
-      stageEmbed n (H n (prefixAt n ξ)) =
-        H (n + 1) (prefixAt (n + 1) ξ) := by
-    intro n
-    change stageEmbed n
-        (F n (prefixAt n ξ) * G n (prefixAt n ξ)) = _
-    rw [map_mul, hF n, hG n]
-  intro n
-  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-      (H n (prefixAt n ξ)) =
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0 (H 0 [])
-  simpa using
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.finite_sequence_constant_in_limit
-      (F := fun m => H m (prefixAt m ξ))
-      (hF := hH) n
-
-theorem prefix_families_add_constant_in_limit
-    (F G : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
-    (hF : ∀ n : ℕ,
-      stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
-    (hG : ∀ n : ℕ,
-      stageEmbed n (G n (prefixAt n ξ)) = G (n + 1) (prefixAt (n + 1) ξ)) :
-    ∀ n : ℕ,
-      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-          (F n (prefixAt n ξ) + G n (prefixAt n ξ)) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0
-          (F 0 [] + G 0 []) := by
-  let H : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n :=
-    fun n w => F n w + G n w
-  have hH : ∀ n : ℕ,
-      stageEmbed n (H n (prefixAt n ξ)) =
-        H (n + 1) (prefixAt (n + 1) ξ) := by
-    intro n
-    change stageEmbed n
-        (F n (prefixAt n ξ) + G n (prefixAt n ξ)) = _
-    rw [map_add, hF n, hG n]
-  intro n
-  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-      (H n (prefixAt n ξ)) =
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0 (H 0 [])
-  simpa using
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.finite_sequence_constant_in_limit
-      (F := fun m => H m (prefixAt m ξ))
-      (hF := hH) n
-
-theorem prefix_families_sub_constant_in_limit
-    (F G : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
-    (hF : ∀ n : ℕ,
-      stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ))
-    (hG : ∀ n : ℕ,
-      stageEmbed n (G n (prefixAt n ξ)) = G (n + 1) (prefixAt (n + 1) ξ)) :
-    ∀ n : ℕ,
-      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-          (F n (prefixAt n ξ) - G n (prefixAt n ξ)) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0
-          (F 0 [] - G 0 []) := by
-  let H : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n :=
-    fun n w => F n w - G n w
-  have hH : ∀ n : ℕ,
-      stageEmbed n (H n (prefixAt n ξ)) =
-        H (n + 1) (prefixAt (n + 1) ξ) := by
-    intro n
-    change stageEmbed n
-        (F n (prefixAt n ξ) - G n (prefixAt n ξ)) = _
-    rw [map_sub, hF n, hG n]
-  intro n
-  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-      (H n (prefixAt n ξ)) =
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0 (H 0 [])
-  simpa using
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.finite_sequence_constant_in_limit
-      (F := fun m => H m (prefixAt m ξ))
-      (hF := hH) n
-
-theorem prefix_family_smul_constant_in_limit
-    (r : ℝ)
-    (F : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-    (ξ : (ℕ → Bool))
-    (hF : ∀ n : ℕ,
-      stageEmbed n (F n (prefixAt n ξ)) = F (n + 1) (prefixAt (n + 1) ξ)) :
-    ∀ n : ℕ,
-      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-          (r • F n (prefixAt n ξ)) =
-        InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0
-          (r • F 0 []) := by
-  let H : ∀ n : ℕ, List Bool →
-      InfoGeometry.Clifford.Cl11TensorTower.MatStage n :=
-    fun n w => r • F n w
-  have hH : ∀ n : ℕ,
-      stageEmbed n (H n (prefixAt n ξ)) =
-        H (n + 1) (prefixAt (n + 1) ξ) := by
-    intro n
-    change stageEmbed n (r • F n (prefixAt n ξ)) = _
-    rw [map_smul, hF n]
-  intro n
-  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
-      (H n (prefixAt n ξ)) =
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 0 (H 0 [])
-  simpa using
-    InfoGeometry.Clifford.Cl11TensorTowerLimit.finite_sequence_constant_in_limit
-      (F := fun m => H m (prefixAt m ξ))
-      (hF := hH) n
 
 /- #### BUCKET 2: CONDITIONAL THEOREMS -/
 -- [Empty.]

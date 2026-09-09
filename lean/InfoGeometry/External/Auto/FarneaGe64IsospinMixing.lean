@@ -130,6 +130,21 @@ theorem alpha2_extracted_reported_window :
       alpha2_extracted < (26 / 1000 : ℚ) := by
   norm_num [alpha2_extracted, alpha2_from_BE1, BE1_64Ge_Wu, BE1_66Ge_Wu]
 
+def formalSummary : Prop :=
+  isNZ 32 32 ∧
+    massNumber 32 32 = 64 ∧
+    T3 32 32 = 0 ∧
+    quadrupoleContent largeMixingDelta = 1521 / 1621 ∧
+    BE1_64Ge_Wu / BE1_66Ge_Wu = 247 / 3700 ∧
+    alpha2_extracted = 741 / 29600 ∧
+    100 * alpha2_extracted = 741 / 296
+
+theorem formalSummary_proved : formalSummary := by
+  exact ⟨Ge64_NZ.1, Ge64_NZ.2.1, Ge64_NZ.2.2,
+    large_delta_quadrupole_content_exact,
+    BE1_64Ge_order_of_magnitude_below_66Ge.1,
+    alpha2_extracted_exact, alpha2_extracted_percent⟩
+
 end FarneaGe64IsospinMixing
 
 end noncomputable section

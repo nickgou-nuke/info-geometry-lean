@@ -53,14 +53,15 @@ private theorem dot_smul_right (r : ℝ) (u v : Fin 3 → ℝ) :
 
 theorem null_zorn_is_spinor_outer_product
     (Z : CanonicalZorn)
-    (hnull : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z = 0)
+    (hnull : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      realCrossProduct3 Z = 0)
     (ha : Z.a ≠ 0) :
     ∃ L R : ZornSpinor, Z = spinorOuterProduct L R := by
   let L : ZornSpinor := (Z.a, Z.y)
   let R : ZornSpinor := (1, Z.a⁻¹ • Z.x)
   have hdet : Z.a * Z.b = InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y := by
-    unfold InfoGeometry.Algebra.Zorn.ZornMatrix.detZ at hnull
-    linarith
+    simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ] using
+      (sub_eq_zero.mp hnull)
   have hb : Z.b = Z.a⁻¹ * InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y := by
     field_simp [ha]
     simpa [mul_comm, mul_left_comm, mul_assoc] using hdet
@@ -76,7 +77,8 @@ theorem null_zorn_is_spinor_outer_product
 
 theorem pure_vector_null_is_orthogonal
     (Z : CanonicalZorn)
-    (hnull : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z = 0)
+    (hnull : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      realCrossProduct3 Z = 0)
     (hpure : Z.a = 0 ∧ Z.b = 0) :
     InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y = 0 := by
   simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, hpure.1, hpure.2] using hnull

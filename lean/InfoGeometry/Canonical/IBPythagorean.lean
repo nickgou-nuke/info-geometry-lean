@@ -188,7 +188,7 @@ private lemma IBLocalFreeEnergy_eq_add_marginal_llr
   ring
 
 /--
-Analytic property for the KL/Pythagorean marginal-descent step at fixed encoder.
+Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
 
 This isolates the genuine measure-theoretic content away from the purely algebraic
 composition theorem in `IBMonotonicity`.
@@ -207,7 +207,7 @@ def IBMarginalPythagoreanWitness
       + klDiv (q_new : Measure T) (q_old : Measure T) hKL_marginal
 
 /--
-Analytic property for the KL/Pythagorean marginal-descent step at fixed encoder.
+Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
 
 This is the inequality-level corollary of the exact Pythagorean decomposition.
 -/
@@ -465,7 +465,7 @@ theorem IBMarginalDescentWitness.of_pythagorean
     (klDiv_nonneg (q_new : Measure T) (q_old : Measure T) h.1)
 
 omit [Nonempty T] in
-theorem IB_marginal_descent_from_property
+theorem IB_marginal_descent_from_witness
     (pX : ProbabilityMeasure X)
     (q_old q_new : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)
@@ -496,6 +496,28 @@ theorem IB_marginal_descent_of_pythagorean
     (pX := pX) (q_old := q_old) (q_new := q_new)
     (β := β) (D := D) (encoder := encoder)
     (hKL_old := hKL_old) (hKL_new := hKL_new) h)
+
+theorem IB_next_marginal_descent_from_witness
+    (pX : ProbabilityMeasure X)
+    (q_n : ProbabilityMeasure T)
+    (β : ℝ) (D : X → T → ℝ)
+    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
+    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
+    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
+    (hKL_next :
+      FiniteKLFamily
+        ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
+        (IBNextEncoder q_n β D hInt))
+    (h :
+      IBMarginalDescentWitness
+        pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
+        β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next) :
+    IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
+      (IBNextEncoder q_n β D hInt) hKL_next
+      ≤
+    IBGlobalFreeEnergy pX q_n β D
+      (IBNextEncoder q_n β D hInt) hKL_current :=
+  h
 
 theorem IB_next_marginal_descent_of_pythagorean
     (pX : ProbabilityMeasure X)

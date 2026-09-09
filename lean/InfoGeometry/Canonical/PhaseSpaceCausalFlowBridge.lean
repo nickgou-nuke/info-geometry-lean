@@ -67,7 +67,7 @@ carrier under the explicit KKT wing hypotheses. -/
   KKTGeneralizedInverseBridge.mpChiralGap_isGZero
     (X := doubledSpaceCl11Action (E := H)) (CIK := CIK) hA hAMP
 
-/-- The property dilation gap lands in grade zero on the canonical doubled
+/-- The certified dilation gap lands in grade zero on the canonical doubled
 carrier under the explicit KKT wing hypotheses. -/
 @[rep_depth krein] theorem correctedOwner_dilationGap_isGZero
     (CIK : CertifiedInverseKernel (DoubledSpace H))
@@ -77,7 +77,7 @@ carrier under the explicit KKT wing hypotheses. -/
   KKTGeneralizedInverseBridge.dilationGap_isGZero
     (X := doubledSpaceCl11Action (E := H)) (CIK := CIK) hA hAMP
 
-/-- The property Drazin core projector lands in grade zero on the canonical
+/-- The certified Drazin core projector lands in grade zero on the canonical
 doubled carrier under the explicit KKT wing hypotheses. -/
 @[rep_depth krein] theorem correctedOwner_drazinCoreProj_isGZero
     (CIK : CertifiedInverseKernel (DoubledSpace H))

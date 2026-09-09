@@ -10,16 +10,17 @@ This module formalizes the statement:
   Tomita commutant.
 
 If the lost component also has a carrier readout on the chiral lightcone, then
-local absorption is property as reflection into the commutant chiral
+local absorption is certified as reflection into the commutant chiral
 lightcone.
 
 This file does not claim that every CP map automatically routes into the
-commutant. That routing is a proof-carrying Tomita/Stinespring property.
+commutant. That routing is a proof-carrying Tomita/Stinespring witness.
 -/
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -73,7 +74,7 @@ A Stinespring-Tomita dilation of a local channel.
 `globalEvolution` is the dilated evolution.
 
 `leakage x` is the part not seen by the local observer. The key Tomita
-property is that this leakage lies in the commutant side.
+certificate is that this leakage lies in the commutant side.
 -/
 structure StinespringTomitaDilation
     (Op GlobalOp : Type*)
@@ -339,13 +340,20 @@ The compatibility name is the Stinespring-Tomita owner itself. Concrete
 implementations are therefore represented directly by the dilation carrying
 complete positivity, representation, compression, and Tomita routing laws.
 -/
+abbrev StinespringTomitaDilationCompatibility
+    (Op GlobalOp : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    (Φ : LocalChannel Op) :=
+  StinespringTomitaDilation Op GlobalOp Φ
+
 /-- Construct the Stinespring-Tomita dilation from compatibility data. -/
-theorem stinespringTomitaDilation_properties
+theorem stinespringTomitaDilationOwnerTarget
     (Op GlobalOp : Type*)
     [Ring Op] [Module ℝ Op]
     [Ring GlobalOp] [Module ℝ GlobalOp]
     (Φ : LocalChannel Op)
-    (h : StinespringTomitaDilation Op GlobalOp Φ) :
+    (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
     (∀ x : Op,
         Φ.map x =
           h.compress (h.globalEvolution (h.embed x))) ∧
@@ -359,5 +367,65 @@ theorem stinespringTomitaDilation_properties
   · exact h.embed_mem_observable
   · exact h.leakage_mem_commutant
   · exact h.accounting
+
+/-- Packet readout for one Stinespring-Tomita compatibility witness. -/
+theorem stinespringTomitaDilation_packet
+    (Op GlobalOp : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
+    (∀ x : Op,
+        Φ.map x =
+          h.compress (h.globalEvolution (h.embed x))) ∧
+      (∀ x : Op, h.embed x ∈ h.tomita.M) ∧
+      (∀ x : Op, h.leakage x ∈ h.tomita.Mcomm) ∧
+      (∀ x : Op,
+        h.globalEvolution (h.embed x) =
+          h.embed (Φ.map x) + h.leakage x) :=
+  stinespringTomitaDilationOwnerTarget Op GlobalOp Φ h
+
+/-!
+The chiral-lightcone compatibility name is likewise the concrete dilation
+owner, not a one-field witness packet.
+-/
+abbrev StinespringTomitaChiralLightconeCompatibility
+    (Op GlobalOp H : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (Φ : LocalChannel Op) :=
+  StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ
+
+/-- Construct the chiral-lightcone Stinespring-Tomita refinement from compatibility data. -/
+theorem stinespringTomitaChiralLightconeOwnerTarget :
+  ∀ (Op GlobalOp H : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H],
+  ∀ (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H),
+  ∀ (C : ModuleCircularPolarization H),
+  ∀ Φ : LocalChannel Op,
+    StinespringTomitaChiralLightconeCompatibility Op GlobalOp H Q C Φ →
+      Nonempty
+        (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) := by
+  intro Op GlobalOp H _ _ _ _ _ _ Q C Φ h
+  exact ⟨h⟩
+
+/-- Packet readout for one chiral-lightcone Stinespring-Tomita compatibility witness. -/
+theorem stinespringTomitaChiralLightcone_packet
+    (Op GlobalOp H : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaChiralLightconeCompatibility Op GlobalOp H Q C Φ) :
+    Nonempty
+      (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) :=
+  stinespringTomitaChiralLightconeOwnerTarget Op GlobalOp H Q C Φ h
 
 end InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone

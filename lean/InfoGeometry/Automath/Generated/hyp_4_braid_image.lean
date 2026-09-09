@@ -14,6 +14,6 @@ Objects: braid-image, yang-baxter, fibonacci, non-abelian -/
 theorem hyp_4_braid_image :
     fibonacciBraidCuntzRepresentation R * fibonacciBraidCuntzRepresentation B * fibonacciBraidCuntzRepresentation R =
     fibonacciBraidCuntzRepresentation B * fibonacciBraidCuntzRepresentation R * fibonacciBraidCuntzRepresentation B :=
-  property4_yang_baxter_relation
+  hypothesis4_yang_baxter_relation
 
 end Automath.Generated

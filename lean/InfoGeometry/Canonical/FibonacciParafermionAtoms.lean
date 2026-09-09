@@ -494,7 +494,7 @@ Honesty status for the algebraic projector fragment below:
 - `Z3Parafermion.drazin_eq_chiral_sum`
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-[Kernel-checked theorems whose statements explicitly require the property `O^3 = O`.]
+[Kernel-checked theorems whose statements explicitly require the witness `O^3 = O`.]
 - `Z3Parafermion.O_pow_4`
 - `Z3Parafermion.O_pow_4_eq_O_sq`
 - `Z3Parafermion.proj_up_orthogonal_down`

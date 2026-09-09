@@ -85,101 +85,54 @@ theorem fibTensorObj_unit_right (X : FibCat) :
 
 /-! ## Skeletal coherence isomorphisms
 
-The object-level fusion equalities above give canonical coherence
-isomorphisms in the explicit skeletal category.  These are identity
-transports; they do not claim that the nontrivial Fibonacci `F`-matrix has
-already been bundled as a monoidal associator.
+The object-level fusion equalities give canonical transport isomorphisms in
+the explicit skeletal category.  These are equality transports; they do not
+claim that the nontrivial Fibonacci `F`-matrix has been bundled as a
+monoidal associator.
 -/
 
-/-- Canonical associator obtained by transport across the fusion-object equality. -/
 noncomputable def fibAssociator (X Y Z : FibCat) :
     fibTensorObj (fibTensorObj X Y) Z ≅
       fibTensorObj X (fibTensorObj Y Z) :=
   CategoryTheory.eqToIso (fibTensorObj_assoc X Y Z)
 
-/-- Canonical left unitor for the skeletal fusion object. -/
 noncomputable def fibLeftUnitor (X : FibCat) :
     fibTensorObj fibTensorUnit X ≅ X :=
   CategoryTheory.eqToIso (fibTensorObj_unit_left X)
 
-/-- Canonical right unitor for the skeletal fusion object. -/
 noncomputable def fibRightUnitor (X : FibCat) :
     fibTensorObj X fibTensorUnit ≅ X :=
   CategoryTheory.eqToIso (fibTensorObj_unit_right X)
 
 @[simp] theorem fibAssociator_hom (X Y Z : FibCat) :
     (fibAssociator X Y Z).hom =
-      CategoryTheory.eqToHom (fibTensorObj_assoc X Y Z) :=
-  rfl
+      CategoryTheory.eqToHom (fibTensorObj_assoc X Y Z) := rfl
 
 @[simp] theorem fibLeftUnitor_hom (X : FibCat) :
     (fibLeftUnitor X).hom =
-      CategoryTheory.eqToHom (fibTensorObj_unit_left X) :=
-  rfl
+      CategoryTheory.eqToHom (fibTensorObj_unit_left X) := rfl
 
 @[simp] theorem fibRightUnitor_hom (X : FibCat) :
     (fibRightUnitor X).hom =
-      CategoryTheory.eqToHom (fibTensorObj_unit_right X) :=
-  rfl
+      CategoryTheory.eqToHom (fibTensorObj_unit_right X) := rfl
 
 theorem fibAssociator_hom_inv_id (X Y Z : FibCat) :
-    (fibAssociator X Y Z).hom ≫ (fibAssociator X Y Z).inv = 𝟙 _ := by
-  exact (fibAssociator X Y Z).hom_inv_id
+    (fibAssociator X Y Z).hom ≫ (fibAssociator X Y Z).inv = 𝟙 _ :=
+  (fibAssociator X Y Z).hom_inv_id
 
 theorem fibLeftUnitor_hom_inv_id (X : FibCat) :
-    (fibLeftUnitor X).hom ≫ (fibLeftUnitor X).inv = 𝟙 _ := by
-  exact (fibLeftUnitor X).hom_inv_id
+    (fibLeftUnitor X).hom ≫ (fibLeftUnitor X).inv = 𝟙 _ :=
+  (fibLeftUnitor X).hom_inv_id
 
 theorem fibRightUnitor_hom_inv_id (X : FibCat) :
-    (fibRightUnitor X).hom ≫ (fibRightUnitor X).inv = 𝟙 _ := by
-  exact (fibRightUnitor X).hom_inv_id
+    (fibRightUnitor X).hom ≫ (fibRightUnitor X).inv = 𝟙 _ :=
+  (fibRightUnitor X).hom_inv_id
 
-/--
-The remaining categorical closure debt is the bundled `MonoidalCategory`
-instance.  The finite tensor bifunctor and the skeletal equality-transport
-coherence laws are already proved below; the nontrivial Fibonacci `F`-matrix
-associator remains a separate representation-level construction.
+/-- 
+Open Debt: The MonoidalCategory instance.
+The tensor product of objects is defined via `fusionMultiplicity`.
+The associator `α_` is constructed from the verified `MTC_FusionMatrix` (F-matrix).
 -/
-theorem reindex_add
-    {m n m' n' : Type*}
-    (eₘ : m ≃ m') (eₙ : n ≃ n')
-    (A B : Matrix m n ℂ) :
-    Matrix.reindex eₘ eₙ (A + B) =
-      Matrix.reindex eₘ eₙ A + Matrix.reindex eₘ eₙ B := by
-  ext i j
-  rfl
-
-theorem reindex_reindex
-    {m n m' n' m'' n'' : Type*}
-    (e₁ : m ≃ m') (e₂ : n ≃ n')
-    (e₁' : m' ≃ m'') (e₂' : n' ≃ n'')
-    (A : Matrix m n ℂ) :
-    Matrix.reindex e₁' e₂' (Matrix.reindex e₁ e₂ A) =
-      Matrix.reindex (e₁.trans e₁') (e₂.trans e₂') A := by
-  exact Matrix.reindexLinearEquiv_comp_apply (R := ℂ) (A := ℂ)
-    e₁ e₂ e₁' e₂' A
-
-@[simp] theorem fin_equiv_cast_proof_irrel {n m : Nat} (h₁ h₂ : n = m) :
-    Equiv.cast (congrArg Fin h₁) = Equiv.cast (congrArg Fin h₂) := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem equiv_cast_proof_irrel {α β : Sort u} (h₁ h₂ : α = β) :
-    Equiv.cast h₁ = Equiv.cast h₂ := by
-  cases h₁
-  cases h₂
-  rfl
-
-@[simp] theorem matrix_reindex_cast_proof_irrel
-    {m n p q : Nat} (h₁ h₂ : m = n) (k₁ k₂ : p = q)
-    (A : Matrix (Fin m) (Fin p) ℂ) :
-    Matrix.reindex (Equiv.cast (congrArg Fin h₁))
-        (Equiv.cast (congrArg Fin k₁)) A =
-      Matrix.reindex (Equiv.cast (congrArg Fin h₂))
-        (Equiv.cast (congrArg Fin k₂)) A := by
-  rw [fin_equiv_cast_proof_irrel h₁ h₂, fin_equiv_cast_proof_irrel k₁ k₂]
-
 noncomputable def blockDiag2 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) :
   Matrix (Fin (m₁ + m₂)) (Fin (n₁ + n₂)) α :=
   Matrix.reindex finSumFinEquiv finSumFinEquiv (Matrix.fromBlocks A 0 0 B)
@@ -189,65 +142,9 @@ noncomputable def blockDiag3 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ m₃ n�
   Matrix (Fin (m₁ + m₂ + m₃)) (Fin (n₁ + n₂ + n₃)) α :=
   blockDiag2 (blockDiag2 A B) C
 
-theorem blockDiag2_add
-    {α : Type} [AddCommMonoid α]
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A A' : Matrix (Fin m₁) (Fin n₁) α)
-    (B B' : Matrix (Fin m₂) (Fin n₂) α) :
-    blockDiag2 (A + A') (B + B') =
-      blockDiag2 A B + blockDiag2 A' B' := by
-  unfold blockDiag2
-  ext i j
-  simp only [Matrix.reindex]
-  cases hi : finSumFinEquiv.symm i with
-  | inl i' =>
-      cases hj : finSumFinEquiv.symm j with
-      | inl j' => simp [hi, hj, Matrix.fromBlocks]
-      | inr j' => simp [hi, hj, Matrix.fromBlocks]
-  | inr i' =>
-      cases hj : finSumFinEquiv.symm j with
-      | inl j' => simp [hi, hj, Matrix.fromBlocks]
-      | inr j' => simp [hi, hj, Matrix.fromBlocks]
-
-theorem blockDiag3_add
-    {α : Type} [AddCommMonoid α]
-    {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
-    (A A' : Matrix (Fin m₁) (Fin n₁) α)
-    (B B' : Matrix (Fin m₂) (Fin n₂) α)
-    (C C' : Matrix (Fin m₃) (Fin n₃) α) :
-    blockDiag3 (A + A') (B + B') (C + C') =
-      blockDiag3 A B C + blockDiag3 A' B' C' := by
-  unfold blockDiag3
-  rw [blockDiag2_add]
-  rw [blockDiag2_add]
-
 noncomputable def kron {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) ℂ) (B : Matrix (Fin m₂) (Fin n₂) ℂ) :
   Matrix (Fin (m₁ * m₂)) (Fin (n₁ * n₂)) ℂ :=
   Matrix.reindex finProdFinEquiv finProdFinEquiv (Matrix.kronecker A B)
-
-theorem kron_add_left
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A B : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (C : Matrix (Fin m₂) (Fin n₂) ℂ) :
-    kron (A + B) C = kron A C + kron B C := by
-  unfold kron
-  change Matrix.reindex finProdFinEquiv finProdFinEquiv
-      (Matrix.kroneckerMap (fun x y : ℂ => x * y) (A + B) C) = _
-  rw [Matrix.add_kronecker]
-  ext i j
-  rfl
-
-theorem kron_add_right
-    {m₁ n₁ m₂ n₂ : ℕ}
-    (A : Matrix (Fin m₁) (Fin n₁) ℂ)
-    (B C : Matrix (Fin m₂) (Fin n₂) ℂ) :
-    kron A (B + C) = kron A B + kron A C := by
-  unfold kron
-  change Matrix.reindex finProdFinEquiv finProdFinEquiv
-      (Matrix.kroneckerMap (fun x y : ℂ => x * y) A (B + C)) = _
-  rw [Matrix.kronecker_add]
-  ext i j
-  rfl
 
 theorem reindex_mul
     {m n o m' n' o' : Type*} [Fintype n] [Fintype n']
@@ -306,7 +203,6 @@ noncomputable def fibTensorHom {X₁ X₂ Y₁ Y₂ : FibCat} (f : FibHom X₁ X
     (Equiv.cast (by simp [fibTensorObj]))
     (blockDiag3 (kron f.unit_comp g.tau_comp) (kron f.tau_comp g.unit_comp) (kron f.tau_comp g.tau_comp))
 
-set_option maxHeartbeats 1000000 in
 @[simp]
 theorem fibTensorHom_id (X Y : FibCat) :
     fibTensorHom (FibHom.id X) (FibHom.id Y) =
@@ -324,105 +220,22 @@ theorem fibTensorHom_comp
   ext <;>
     simp [fibTensorHom, FibHom.comp]
 
-@[simp]
-theorem fibTensorHom_add_left
-    {X₁ X₂ X₃ Y₁ Y₂ : FibCat}
-    (f g : FibHom X₁ X₂) (h : FibHom Y₁ Y₂) :
-    fibTensorHom (f + g) h =
-      fibTensorHom f h + fibTensorHom g h := by
-  apply FibHom.ext
-  · change Matrix.reindex _ _
-        (blockDiag2 (kron (f.unit_comp + g.unit_comp) h.unit_comp)
-          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_left, kron_add_left, blockDiag2_add, reindex_add]
-  · change Matrix.reindex _ _
-        (blockDiag3 (kron (f.unit_comp + g.unit_comp) h.tau_comp)
-          (kron (f.tau_comp + g.tau_comp) h.unit_comp)
-          (kron (f.tau_comp + g.tau_comp) h.tau_comp)) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_left, kron_add_left, kron_add_left,
-      blockDiag3_add, reindex_add]
-
-@[simp]
-theorem fibTensorHom_add_right
-    {X₁ X₂ Y₁ Y₂ Y₃ : FibCat}
-    (f : FibHom X₁ X₂) (g h : FibHom Y₁ Y₂) :
-    fibTensorHom f (g + h) =
-      fibTensorHom f g + fibTensorHom f h := by
-  apply FibHom.ext
-  · change Matrix.reindex _ _
-        (blockDiag2 (kron f.unit_comp (g.unit_comp + h.unit_comp))
-          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_right, kron_add_right, blockDiag2_add, reindex_add]
-  · change Matrix.reindex _ _
-        (blockDiag3 (kron f.unit_comp (g.tau_comp + h.tau_comp))
-          (kron f.tau_comp (g.unit_comp + h.unit_comp))
-          (kron f.tau_comp (g.tau_comp + h.tau_comp))) = _
-    change _ = Matrix.reindex _ _ _ + Matrix.reindex _ _ _
-    rw [kron_add_right, kron_add_right, kron_add_right,
-      blockDiag3_add, reindex_add]
-
-/-! ## Skeletal pentagon and triangle coherence -/
-
-/-- Tensoring equality transport on the left is equality transport of the
-tensor-object equality. -/
 theorem fibTensorHom_left_eqToHom
     {X₁ X₂ Y : FibCat} (hX : X₁ = X₂) :
     fibTensorHom (CategoryTheory.eqToHom hX) (FibHom.id Y) =
       CategoryTheory.eqToHom (congrArg (fun X => fibTensorObj X Y) hX) := by
   cases hX
-  change fibTensorHom (FibHom.id X₁) (FibHom.id Y) =
-    FibHom.id (fibTensorObj X₁ Y)
+  change fibTensorHom (FibHom.id X₁) (FibHom.id Y) = FibHom.id (fibTensorObj X₁ Y)
   exact fibTensorHom_id X₁ Y
 
-/-- Tensoring equality transport on the right is equality transport of the
-tensor-object equality. -/
 theorem fibTensorHom_right_eqToHom
     {X Y₁ Y₂ : FibCat} (hY : Y₁ = Y₂) :
     fibTensorHom (FibHom.id X) (CategoryTheory.eqToHom hY) =
       CategoryTheory.eqToHom (congrArg (fun Y => fibTensorObj X Y) hY) := by
   cases hY
-  change fibTensorHom (FibHom.id X) (FibHom.id Y₁) =
-    FibHom.id (fibTensorObj X Y₁)
+  change fibTensorHom (FibHom.id X) (FibHom.id Y₁) = FibHom.id (fibTensorObj X Y₁)
   exact fibTensorHom_id X Y₁
 
-theorem fibTensorHom_eqToHom_eqToHom
-    {X₁ X₂ Y₁ Y₂ : FibCat} (hX : X₁ = X₂) (hY : Y₁ = Y₂) :
-    fibTensorHom (CategoryTheory.eqToHom hX) (CategoryTheory.eqToHom hY) =
-      CategoryTheory.eqToHom (congrArg₂ fibTensorObj hX hY) := by
-  cases hX
-  cases hY
-  change fibTensorHom (FibHom.id X₁) (FibHom.id Y₁) =
-    FibHom.id (fibTensorObj X₁ Y₁)
-  exact fibTensorHom_id X₁ Y₁
-
-theorem fibEqToHom_comp_eqToHom
-    {X Y Z : FibCat} (h₁ : X = Y) (h₂ : Y = Z) :
-    FibHom.comp (CategoryTheory.eqToHom h₁)
-        (CategoryTheory.eqToHom h₂) =
-      CategoryTheory.eqToHom (h₁.trans h₂) := by
-  cases h₁
-  cases h₂
-  change FibHom.comp (FibHom.id X) (FibHom.id X) = FibHom.id X
-  ext <;> simp [FibHom.comp, FibHom.id]
-
-theorem fibEqToHom_comp_eqToHom_comp_eqToHom
-    {W X Y Z : FibCat} (h₁ : W = X) (h₂ : X = Y) (h₃ : Y = Z) :
-    FibHom.comp
-        (FibHom.comp (CategoryTheory.eqToHom h₁)
-          (CategoryTheory.eqToHom h₂))
-        (CategoryTheory.eqToHom h₃) =
-      CategoryTheory.eqToHom ((h₁.trans h₂).trans h₃) := by
-  rw [fibEqToHom_comp_eqToHom h₁ h₂,
-    fibEqToHom_comp_eqToHom (h₁.trans h₂) h₃]
-
-/-- The skeletal equality-transport associator satisfies Mac Lane's pentagon.
-
-This is the strict skeletal coherence packet supplied by the verified fusion
-object equalities. It does not identify the nontrivial Fibonacci `F`-matrix
-with the associator. -/
 theorem fibAssociator_pentagon (W X Y Z : FibCat) :
     (fibAssociator (fibTensorObj W X) Y Z).hom ≫
         (fibAssociator W X (fibTensorObj Y Z)).hom =
@@ -435,8 +248,6 @@ theorem fibAssociator_pentagon (W X Y Z : FibCat) :
   rw [fibTensorHom_right_eqToHom (fibTensorObj_assoc X Y Z)]
   simp
 
-/-- The skeletal equality-transport associator and unitors satisfy Mac Lane's
-triangle. -/
 theorem fibAssociator_triangle (X Y : FibCat) :
     (fibAssociator X fibTensorUnit Y).hom ≫
         (fibTensorHom (FibHom.id X) (fibLeftUnitor Y).hom) =
@@ -567,10 +378,13 @@ noncomputable def fibTensorBifunctor : FibCat ⥤ (FibCat ⥤ FibCat) where
 ## Remaining closure debt
 
 This file is verified scaffolding only; no `MonoidalCategory`/`BraidedCategory`
-instance is declared.  The remaining debt is specifically the
-representation-level Fibonacci `F`/`R` associator and braiding natural
-isomorphisms, together with their block-level hexagon readouts.  The skeletal
-object tensor, tensor bifunctor, pentagon, and triangle are kernel-closed.
+instance is declared.
+
+Exact kernel-checked lemmas still owed before full monoidal closure:
+- TODO: associator unit/tau block lemmas from `MTC_FusionMatrix`
+- TODO: pentagon/triangle proofs as `FibHom.ext` calc chains
+- TODO: braiding naturality `right/left` as `FibHom.ext` simp calc
+- TODO: hexagon forward/reverse as `FibHom.ext` block calc
 -/
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

@@ -74,7 +74,7 @@ theorem toQuantumPresentation_generator_eq_dirac
     (G.toQuantumPresentation.generator ψ) = G.diracGenerator ψ := by
   rfl
 
-/-- Tagged presentation property for this graph-Dirac lane. -/
+/-- Tagged presentation witness for this graph-Dirac lane. -/
 @[rep_depth operator]
 def taggedPresentation (G : GraphMetricDirac) : TaggedPresentation where
   lane := PresentationLane.graphDirac

@@ -295,4 +295,35 @@ theorem partition_root_to_critical_line_of_unitCircle_localization
   exact re_riemannCayleyInverse_eq_half_of_norm_eq_one
     (hLeeYang z hroot) hz_ne
 
+/--
+Reusable root-to-critical-line transport under intrinsic geometric hypotheses:
+zero-freeness on the open unit disk and reciprocal symmetry of the zero set.
+
+This removes the answer-shaped Lee--Yang premise `∀ w, Z w = 0 → ‖w‖ = 1` in
+favor of two structural hypotheses from which unit-circle localization follows.
+-/
+theorem partition_root_to_critical_line_of_disk_free_reciprocal_symmetry
+    {Z : ℂ → ℂ} {z : ℂ}
+    (h_disk_free : ∀ w : ℂ, ‖w‖ < 1 → Z w ≠ 0)
+    (h_symm : ∀ w : ℂ, w ≠ 0 → (Z w = 0 ↔ Z w⁻¹ = 0))
+    (hroot : Z z = 0)
+    (hz_ne : z ≠ -1) :
+    (riemannCayleyInverse z).re = 1 / 2 := by
+  have h_norm_one : ‖z‖ = 1 := by
+    rcases lt_trichotomy ‖z‖ 1 with hlt | heq | hgt
+    · exfalso
+      exact h_disk_free z hlt hroot
+    · exact heq
+    · exfalso
+      have hz0 : z ≠ 0 := by
+        intro hz0
+        rw [hz0] at hgt
+        norm_num at hgt
+      have hroot_inv : Z z⁻¹ = 0 := (h_symm z hz0).mp hroot
+      have h_inv_lt : ‖z⁻¹‖ < 1 := by
+        rw [norm_inv]
+        exact inv_lt_one_of_one_lt₀ hgt
+      exact h_disk_free z⁻¹ h_inv_lt hroot_inv
+  exact re_riemannCayleyInverse_eq_half_of_norm_eq_one h_norm_one hz_ne
+
 end InfoGeometry.Analysis.AsanoLeeYangCircle

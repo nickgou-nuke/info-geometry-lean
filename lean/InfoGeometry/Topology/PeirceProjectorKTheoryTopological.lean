@@ -54,5 +54,3 @@ theorem isLocallyConstant_peirceKTheoryReadout
     exact peirceKTheoryReadout_eq (R := R) (G := G) φ T
   rw [hconst]
   exact IsLocallyConstant.const (X := R) (y := φ (classOf (1 : R)))
-
-end

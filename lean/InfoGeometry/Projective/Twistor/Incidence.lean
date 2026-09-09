@@ -55,15 +55,15 @@ end TwistorIncidenceDatum
 /-! ## Concrete Penrose null-projective owner
 
 The projective null twistor carrier is provided by the canonical Penrose
-twistor owner.  The explicit property below is the nonzero vector
+twistor owner.  The explicit witness below is the nonzero vector
 `(1, 0, 1, 0)`, which is null for the `(2,2)` helicity form.
 -/
 
 abbrev PenroseProjectiveNullTwistor : Type :=
   InfoGeometry.Twistor.PenroseTwistor.NullTwistorSpace
 
-noncomputable def penroseProjectiveNullTwistor :
-    PenroseProjectiveNullTwistor := by
+noncomputable def penroseProjectiveNullTwistor_nonempty :
+    Nonempty PenroseProjectiveNullTwistor := by
   let z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier :=
     fun i => if i = 0 then 1 else if i = 2 then 1 else 0
   have hz : z ≠ 0 := by
@@ -75,10 +75,6 @@ noncomputable def penroseProjectiveNullTwistor :
       InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply]
     norm_num [z, Fin.sum_univ_succ]
     simp [z]
-  exact InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull
-
-theorem penroseProjectiveNullTwistor_nonempty :
-    Nonempty PenroseProjectiveNullTwistor :=
-  ⟨penroseProjectiveNullTwistor⟩
+  exact ⟨InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull⟩
 
 end InfoGeometry.Projective.Twistor

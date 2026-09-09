@@ -62,21 +62,22 @@ def defectCompilation (U : UnifiedRejectionWitness) : Prop :=
 
 /-- The linear-algebra branch combines the compiled Toeplitz--PSD witness with the endpoint-heat
 package and the endpoint non-substitutability clause from the joint verifier. -/
-def toeplitzPsdEndpointBranch (U : UnifiedRejectionWitness)
-    {monotoneToEndpointAtom exponentialErrorBound minDepthFormula : Prop} : Prop :=
+def toeplitzPsdEndpointBranch (U : UnifiedRejectionWitness) : Prop :=
   compiledToeplitzTrueBlockPsd U.toeplitzCertificate ∧
     0 ≤ compiledToeplitzCaratheodoryLowerBound U.toeplitzCertificate U.radius ∧
     0 < compiledToeplitzSchurDelta U.toeplitzCertificate U.radius ∧
     compiledToeplitzSchurBound U.toeplitzCertificate U.radius < 1 ∧
-    ((U.boundaryVerifier.radiusBlindspotClosed ∧
-        U.boundaryVerifier.addressCollisionClosed ∧
-        U.boundaryVerifier.endpointHeatClosed ∧
+    ((U.boundaryVerifier.axes.radiusBlindspotClosed ∧
+        U.boundaryVerifier.axes.addressCollisionClosed ∧
+        U.boundaryVerifier.axes.endpointHeatClosed ∧
         U.boundaryVerifier.toeplitzPsdPassed) →
       U.boundaryVerifier.verifierResult = .certificate) ∧
-    (monotoneToEndpointAtom ∧ exponentialErrorBound ∧ minDepthFormula) ∧
-    ((U.boundaryVerifier.radiusBlindspotClosed ∧
-        U.boundaryVerifier.addressCollisionClosed ∧
-        ¬ U.boundaryVerifier.endpointHeatClosed) →
+    (U.endpointHeat.monotoneToEndpointAtom ∧
+      U.endpointHeat.exponentialErrorBound ∧
+      U.endpointHeat.minDepthFormula) ∧
+    ((U.boundaryVerifier.axes.radiusBlindspotClosed ∧
+        U.boundaryVerifier.axes.addressCollisionClosed ∧
+        ¬ U.boundaryVerifier.axes.endpointHeatClosed) →
       U.boundaryVerifier.verifierResult ≠ .certificate)
 
 end UnifiedRejectionWitness
@@ -86,35 +87,8 @@ open UnifiedRejectionWitness
 /-- Paper label: `prop:typed-address-biaxial-completion-unified-rejection-rule`. -/
 theorem paper_typed_address_biaxial_completion_unified_rejection_rule
     (U : UnifiedRejectionWitness)
-    {monotoneToEndpointAtom exponentialErrorBound minDepthFormula : Prop}
-    (hMonotoneToEndpointAtom : monotoneToEndpointAtom)
-    (hExponentialErrorBound : exponentialErrorBound)
-    (deriveMinDepthFormula : monotoneToEndpointAtom → exponentialErrorBound → minDepthFormula)
-    (hBoundaryAccepts : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.addressCollisionClosed → U.boundaryVerifier.endpointHeatClosed →
-        U.boundaryVerifier.toeplitzPsdPassed →
-          U.boundaryVerifier.verifierResult = .certificate)
-    (hBoundaryRadius : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.radiusBlindspotClosed)
-    (hBoundaryAddress : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.addressCollisionClosed)
-    (hBoundaryEndpoint : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.endpointHeatClosed)
-    (hBoundaryRadiusNonSubstitutable : U.boundaryVerifier.addressCollisionClosed →
-      U.boundaryVerifier.endpointHeatClosed → ¬ U.boundaryVerifier.radiusBlindspotClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
-    (hBoundaryAddressNonSubstitutable : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.endpointHeatClosed → ¬ U.boundaryVerifier.addressCollisionClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
-    (hBoundaryEndpointNonSubstitutable : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.addressCollisionClosed → ¬ U.boundaryVerifier.endpointHeatClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
     (hUnitarySliceLocked : U.defectCertificate.certificateLoop.unitarySliceLocked) :
-    U.addressConsistency ∧ U.defectCompilation ∧
-      U.toeplitzPsdEndpointBranch
-        (monotoneToEndpointAtom := monotoneToEndpointAtom)
-        (exponentialErrorBound := exponentialErrorBound)
-        (minDepthFormula := minDepthFormula) := by
+    U.addressConsistency ∧ U.defectCompilation ∧ U.toeplitzPsdEndpointBranch := by
   have hAddr :=
     paper_typed_address_biaxial_completion_read_us_typed_precision
       U.address U.verifier U.certificate?
@@ -126,15 +100,10 @@ theorem paper_typed_address_biaxial_completion_unified_rejection_rule
       U.toeplitzCertificate U.radius_nonneg U.radius_lt_one
   have hJoint :=
     paper_typed_address_biaxial_completion_boundary_joint_sufficiency
-      U.boundaryVerifier hBoundaryAccepts hBoundaryRadius hBoundaryAddress hBoundaryEndpoint
-      hBoundaryRadiusNonSubstitutable hBoundaryAddressNonSubstitutable
-      hBoundaryEndpointNonSubstitutable
+      U.boundaryVerifier
   have hEndpoint :=
     paper_typed_address_biaxial_completion_boundary_endpoint_orthogonal
-      hMonotoneToEndpointAtom hExponentialErrorBound deriveMinDepthFormula U.boundaryVerifier
-      hBoundaryAccepts hBoundaryRadius hBoundaryAddress hBoundaryEndpoint
-      hBoundaryRadiusNonSubstitutable hBoundaryAddressNonSubstitutable
-      hBoundaryEndpointNonSubstitutable
+      U.boundaryVerifier U.endpointHeat
   have hDefectCompilation : U.defectCompilation := by
     simpa [UnifiedRejectionWitness.defectCompilation] using hDefect
   refine ⟨hAddr, hDefectCompilation, ?_⟩

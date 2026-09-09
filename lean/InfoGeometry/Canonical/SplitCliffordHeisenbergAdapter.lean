@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.SplitCliffordCurrentLift
 
 Lie-level Heisenberg current adapter for the split-Clifford direct limit.
 
-This module defines the explicit constructive property for an affine current
+This module defines the explicit constructive witness for an affine current
 mapping, strictly tracking the central commutation and Heisenberg bracket laws
 natively over the real Lie algebra `SplitCliffordInfinity`.
 
@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.SplitCliffordDirectLimit
 set_option synthInstance.maxHeartbeats 200000
 
 /-- 
-A proof-carrying property structure for split-derived candidate currents.
+A proof-carrying witness structure for split-derived candidate currents.
 
 This packages the essential Lie-level fields required to identify an affine 
 Heisenberg sub-algebra within the split completion. 
@@ -46,12 +46,12 @@ namespace SplitCliffordCurrentMorphism
 
 variable (M : SplitCliffordCurrentMorphism)
 
-/-- Derivation of the explicit Heisenberg bracket law from the property. -/
+/-- Derivation of the explicit Heisenberg bracket law from the witness. -/
 theorem heisenberg_bracket_law_holds (m n : ℤ) :
     ⁅M.Jmode m, M.Jmode n⁆ = ((m : ℝ) * (if m + n = 0 then 1 else 0)) • M.Kcentral :=
   M.current_bracket m n
 
-/-- Derivation of the central commutation law from the property. -/
+/-- Derivation of the central commutation law from the witness. -/
 theorem central_commutation_law_holds (X : SplitCliffordInfinity) :
     ⁅M.Kcentral, X⁆ = 0 :=
   M.central_commutes X

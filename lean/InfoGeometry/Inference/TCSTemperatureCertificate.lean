@@ -10,10 +10,10 @@ import InfoGeometry.Inference.GibbsTemperatureCertificate
 import InfoGeometry.Inference.TCSPoissonModel
 
 /-!
-# TCS Gibbs temperature property
+# TCS Gibbs temperature certificate
 
-This constructor connects the generic property to the physical TCS model.
-The Fisher positive-definiteness property remains an explicit property: the
+This constructor connects the generic certificate to the physical TCS model.
+The Fisher positive-definiteness witness remains an explicit assumption: the
 preceding Fisher theory proves positive semidefiniteness, not identifiability.
 -/
 

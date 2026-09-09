@@ -17,12 +17,12 @@ namespace InfoGeometry.Algebra.SupergradedBracket
 universe u
 
 /-- Associative commutator. -/
-abbrev commutator {A : Type u} [Mul A] [Sub A] (x y : A) : A :=
-  InfoGeometry.Algebra.InvariantTransport.commutator x y
+def commutator {A : Type u} [Mul A] [Sub A] (x y : A) : A :=
+  x * y - y * x
 
 /-- Odd--odd anticommutator. -/
-abbrev anticommutator {A : Type u} [Mul A] [Add A] (x y : A) : A :=
-  InfoGeometry.Algebra.InvariantTransport.anticommutator x y
+def anticommutator {A : Type u} [Mul A] [Add A] (x y : A) : A :=
+  x * y + y * x
 
 /--
 The parity-controlled superbracket.
@@ -33,24 +33,6 @@ parity combinations are ordinary commutators.
 def superBracket {A : Type u} [Mul A] [Add A] [Sub A]
     (px py : Bool) (x y : A) : A :=
   if px && py then anticommutator x y else commutator x y
-
-def parityAdd (p q : Bool) : Bool := Bool.xor p q
-
-@[simp] theorem parityAdd_false_left (p : Bool) :
-    parityAdd false p = p := by
-  cases p <;> rfl
-
-@[simp] theorem parityAdd_false_right (p : Bool) :
-    parityAdd p false = p := by
-  cases p <;> rfl
-
-theorem parityAdd_comm (p q : Bool) :
-    parityAdd p q = parityAdd q p := by
-  cases p <;> cases q <;> rfl
-
-theorem parityAdd_assoc (p q r : Bool) :
-    parityAdd (parityAdd p q) r = parityAdd p (parityAdd q r) := by
-  cases p <;> cases q <;> cases r <;> rfl
 
 @[simp]
 theorem superBracket_odd_odd {A : Type u} [Mul A] [Add A] [Sub A] (x y : A) :
@@ -74,74 +56,22 @@ variable {A B : Type u} [Ring A] [Ring B]
 /-- Ring homomorphisms preserve commutators. -/
 theorem map_commutator (φ : A →+* B) (x y : A) :
     φ (commutator x y) = commutator (φ x) (φ y) := by
-  exact (InvariantTransport.commutator_transport φ x y).symm
+  simp [commutator]
 
 /-- Ring homomorphisms preserve odd--odd anticommutators. -/
 theorem map_anticommutator (φ : A →+* B) (x y : A) :
     φ (anticommutator x y) = anticommutator (φ x) (φ y) := by
-  exact (InvariantTransport.anticommutator_transport φ x y).symm
-
-theorem superBracket_jacobi
-    {A : Type u} [Ring A] (p q r : Bool) (x y z : A) :
-    (if p && r then -1 else 1) *
-          superBracket p (parityAdd q r) x
-            (superBracket q r y z) +
-      (if q && p then -1 else 1) *
-          superBracket q (parityAdd r p) y
-            (superBracket r p z x) +
-      (if r && q then -1 else 1) *
-          superBracket r (parityAdd p q) z
-            (superBracket p q x y) = 0 := by
-  cases p <;> cases q <;> cases r <;>
-    simp [superBracket, parityAdd, commutator, anticommutator,
-      InvariantTransport.commutator, InvariantTransport.anticommutator] <;>
-    noncomm_ring
+  simp [anticommutator]
 
 /-- Ring homomorphisms preserve parity-controlled superbrackets. -/
 theorem map_superBracket (φ : A →+* B) (px py : Bool) (x y : A) :
     φ (superBracket px py x y) = superBracket px py (φ x) (φ y) := by
   cases px <;> cases py <;> simp [superBracket, map_commutator, map_anticommutator]
 
-/-- Actual homogeneity for a grading automorphism, not merely a parity label. -/
-def IsHomogeneous {A : Type u} [Ring A]
-    (γ : A →+* A) (p : Bool) (x : A) : Prop :=
-  γ x = if p then -x else x
-
-theorem isHomogeneous_even_iff {A : Type u} [Ring A]
-    (γ : A →+* A) (x : A) :
-    IsHomogeneous γ false x ↔ γ x = x := by
-  simp [IsHomogeneous]
-
-theorem isHomogeneous_odd_iff {A : Type u} [Ring A]
-    (γ : A →+* A) (x : A) :
-    IsHomogeneous γ true x ↔ γ x = -x := by
-  simp [IsHomogeneous]
-
-theorem map_isHomogeneous
-    {A B : Type u} [Ring A] [Ring B]
-    (γA : A →+* A) (γB : B →+* B) (φ : A →+* B)
-    (hγ : ∀ x, γB (φ x) = φ (γA x))
-    {p : Bool} {x : A}
-    (hx : IsHomogeneous γA p x) :
-    IsHomogeneous γB p (φ x) := by
-  unfold IsHomogeneous at hx ⊢
-  rw [hγ, hx]
-  cases p <;> simp
-
 /-- Superbracket transport in the direction convenient for image calculations. -/
 theorem superBracket_transport (φ : A →+* B) (px py : Bool) (x y : A) :
     superBracket px py (φ x) (φ y) = φ (superBracket px py x y) := by
   exact (map_superBracket φ px py x y).symm
-
-theorem superBracket_label_swap
-    (px py : Bool) (x y : A) :
-    superBracket px py x y =
-      if px && py then superBracket py px y x else -superBracket py px y x := by
-  cases px <;> cases py <;>
-    simp [superBracket, commutator, anticommutator,
-      InvariantTransport.commutator, InvariantTransport.anticommutator,
-      sub_eq_add_neg] <;>
-    first | noncomm_ring | abel
 
 /-- A finite superbracket identity transports through a ring homomorphism. -/
 theorem superBracket_eq_transport

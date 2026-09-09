@@ -12,17 +12,8 @@ A Generalized Cone based on a Quadratic Form Q.
 This captures the "textbook" Lorentz/Minkowski structure 
 as a primitive for your doubled space.
 -/
-abbrev CausalStructure (V : Type*) [AddCommGroup V] [Module ℝ V] :=
-  QuadraticForm ℝ V
-
-namespace CausalStructure
-
-abbrev Q
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (C : CausalStructure V) : QuadraticForm ℝ V :=
-  C
-
-end CausalStructure
+structure CausalStructure (V : Type*) [AddCommGroup V] [Module ℝ V] where
+  Q : QuadraticForm ℝ V
 
 namespace CausalStructure
 

@@ -147,7 +147,7 @@ Full state-level optical response calibration with explicit polarization
 eigen-response.
 
 This extends the compatibility surface without replacing the older
-`OpticalResponseCalibration` API.  The Fresnel data are still property-gated by
+`OpticalResponseCalibration` API.  The Fresnel data are still witness-gated by
 the supplied material and boundary calibration.
 -/
 structure OpticalResponseEigenCalibration

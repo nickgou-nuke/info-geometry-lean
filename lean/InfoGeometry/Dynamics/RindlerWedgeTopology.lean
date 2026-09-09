@@ -9,32 +9,36 @@ namespace InfoGeometry.Dynamics.RindlerWedgeTopology
 open InfoGeometry.Dynamics.RindlerWedge
 open InfoGeometry.Dynamics.RapiditySpace
 
+instance : TopologicalSpace RindlerCoordinates :=
+  TopologicalSpace.induced (fun c => (c.radius, c.time)) inferInstance
+
 def timeShift (lam : ℝ) (coords : RindlerCoordinates) : RindlerCoordinates :=
-  ⟨(coords.radius, coords.time + lam), coords.radius_pos⟩
+  { radius := coords.radius
+    time := coords.time + lam
+    radius_pos := coords.radius_pos }
 
 theorem continuous_timeShift (lam : ℝ) :
     Continuous (timeShift lam) := by
-  apply Continuous.subtype_mk
-  exact Continuous.prodMk (continuous_subtype_val.fst)
-    ((continuous_subtype_val.snd).add continuous_const)
+  have hr : Continuous (fun c : RindlerCoordinates => c.radius) :=
+    continuous_fst.comp (continuous_induced_dom :
+      Continuous (fun c : RindlerCoordinates => (c.radius, c.time)))
+  have ht : Continuous (fun c : RindlerCoordinates => c.time) :=
+    continuous_snd.comp (continuous_induced_dom :
+      Continuous (fun c : RindlerCoordinates => (c.radius, c.time)))
+  apply continuous_induced_rng.mpr
+  exact Continuous.prodMk hr (ht.add continuous_const)
 
 def timeShiftHomeomorph (lam : ℝ) : RindlerCoordinates ≃ₜ RindlerCoordinates where
   toFun := timeShift lam
   invFun := timeShift (-lam)
   left_inv := by
     intro coords
-    apply Subtype.ext
-    change (coords.radius, (coords.time + lam) + -lam) =
-      (coords.radius, coords.time)
-    congr 1
-    ring
+    cases coords
+    simp [timeShift]
   right_inv := by
     intro coords
-    apply Subtype.ext
-    change (coords.radius, (coords.time + -lam) + lam) =
-      (coords.radius, coords.time)
-    congr 1
-    ring
+    cases coords
+    simp [timeShift]
   continuous_toFun := continuous_timeShift lam
   continuous_invFun := by
     simpa using continuous_timeShift (-lam)
@@ -46,11 +50,14 @@ def radiusSquared : RindlerCoordinates → ℝ :=
   fun coords => coords.radius ^ 2
 
 theorem continuous_radiusSquared : Continuous radiusSquared := by
-  exact (continuous_subtype_val.fst).pow 2
+  have hr : Continuous (fun c : RindlerCoordinates => c.radius) :=
+    continuous_fst.comp (continuous_induced_dom :
+      Continuous (fun c : RindlerCoordinates => (c.radius, c.time)))
+  exact hr.pow 2
 
 theorem radiusSquared_timeShift (lam : ℝ) (coords : RindlerCoordinates) :
     radiusSquared (timeShift lam coords) = radiusSquared coords := by
-  rfl
+  simp [radiusSquared, timeShift]
 
 theorem radiusSquared_timeShiftHomeomorph (lam : ℝ) (coords : RindlerCoordinates) :
     radiusSquared (timeShiftHomeomorph lam coords) = radiusSquared coords := by
@@ -59,6 +66,12 @@ theorem radiusSquared_timeShiftHomeomorph (lam : ℝ) (coords : RindlerCoordinat
 
 theorem continuous_rindlerToMinkowski :
     Continuous (rindlerToMinkowski : RindlerCoordinates → LightConeColumn) := by
+  have hr : Continuous (fun c : RindlerCoordinates => c.radius) :=
+    continuous_fst.comp (continuous_induced_dom :
+      Continuous (fun c : RindlerCoordinates => (c.radius, c.time)))
+  have ht : Continuous (fun c : RindlerCoordinates => c.time) :=
+    continuous_snd.comp (continuous_induced_dom :
+      Continuous (fun c : RindlerCoordinates => (c.radius, c.time)))
   apply continuous_pi
   intro i
   apply continuous_pi

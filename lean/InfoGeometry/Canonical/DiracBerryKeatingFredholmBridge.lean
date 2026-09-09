@@ -6,10 +6,12 @@ set_option linter.unusedVariables false
 /-!
 # Dirac Berry-Keating Fredholm Bridge
 
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
+This module contains finite linear-algebra statements and a conditional
+zero-set readout. It does not construct a Fredholm operator or prove RH.
 
 1. **Finite Stage Dirac Operator $D_n$**:
-   Sum of Cuntz-Majorana generators $D_n = \sum_{i < n} (S_i + S_i^*)$.
+   Sum of two supplied operator families. No adjoint or Cuntz relations are
+   imposed on the family named `S_star`.
 
 2. **Zero-Mode Predicate**:
    Defines non-trivial kernel objects $\operatorname{HasZeroMode}(D) := \exists v \neq 0, D(v) = 0$.
@@ -18,11 +20,12 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
    Proves natively that if a non-zero state $v \in \ker(D_n) \setminus \{0\}$ exists at finite stage $n$, and the transition map $\psi_n$ is injective ($\ker(\psi_n) = \bot$) and commutes with the boundary operator ($D_{\text{boundary}} \circ \psi_n = \psi_n \circ D_n$), then $\psi_n(v)$ is a non-zero zero-mode of $D_{\text{boundary}}$, proving $\operatorname{HasZeroMode}(D_{\text{boundary}})$.
 
 4. **RH Spectral Duality Predicate**:
-   Connects Riemann Zeta zeros to zero-modes of the boundary Dirac operator:
+   Assumes an equivalence between zeros of a supplied function and zero-modes:
    $$\zeta(s) = 0 \iff \operatorname{HasZeroMode}(D_s(s)).$$
 
-5. **Zero-Free Region Trivial Index Theorem**:
-   Proves natively that in the zero-free region $\zeta(s) \neq 0$, the boundary Dirac operator has no non-trivial zero-modes.
+5. **Conditional kernel vanishing**:
+   Under that assumed equivalence, a nonzero function value implies trivial
+   kernel. No cokernel or Fredholm index is computed.
 -/
 
 namespace InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
@@ -34,9 +37,31 @@ def StageDiracOperator {V : Type*} [AddCommGroup V] [Module ℂ V]
     (n : ℕ) (S S_star : ℕ → (V →ₗ[ℂ] V)) : V →ₗ[ℂ] V :=
   ∑ i ∈ Finset.range n, (S i + S_star i)
 
-/-- 2. Non-Trivial Zero Modes (Kernel Objects) representing the Fredholm Index Defect. -/
+/-- Existence of a nonzero kernel vector; this does not determine an index. -/
 def HasZeroMode {V : Type*} [AddCommGroup V] [Module ℂ V] (D : V →ₗ[ℂ] V) : Prop :=
   ∃ v : V, v ≠ 0 ∧ D v = 0
+
+/-- The zero-mode predicate is exactly nontriviality of the native kernel. -/
+theorem hasZeroMode_iff_ker_ne_bot {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (D : V →ₗ[ℂ] V) : HasZeroMode D ↔ LinearMap.ker D ≠ ⊥ := by
+  constructor
+  · rintro ⟨v, hv, hD⟩ hk
+    have hm : v ∈ LinearMap.ker D := hD
+    rw [hk, Submodule.mem_bot] at hm
+    exact hv hm
+  · intro hk
+    by_contra hn
+    apply hk
+    apply le_antisymm ?_ bot_le
+    intro v hv
+    change v = 0
+    by_contra hne
+    exact hn ⟨v, hne, hv⟩
+
+/-- Absence of zero modes means injectivity, not index zero. -/
+theorem not_hasZeroMode_iff_injective {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (D : V →ₗ[ℂ] V) : ¬ HasZeroMode D ↔ Function.Injective D := by
+  rw [hasZeroMode_iff_ker_ne_bot, not_not, LinearMap.ker_eq_bot]
 
 /--
 **Main Theorem 1: Kernel Protection Survival Theorem (Твърдост на Ядрото)**
@@ -70,8 +95,8 @@ def RHSpectralDuality {V_colimit : Type*} [AddCommGroup V_colimit] [Module ℂ V
   ∀ s : ℂ, riemannZeta s = 0 ↔ HasZeroMode (D_s s)
 
 /--
-**Main Theorem 2: Zero-Free Region Implies Trivial Fredholm Index**
-Proves natively that in the zero-free region $\zeta(s) \neq 0$, the boundary Dirac operator has no topological zero-mode defects.
+Conditional absence of zero modes. The historical declaration name mentions
+an index, but its conclusion is only kernel vanishing under `h_duality`.
 -/
 theorem zero_free_region_trivial_index
     {V_colimit : Type*} [AddCommGroup V_colimit] [Module ℂ V_colimit]

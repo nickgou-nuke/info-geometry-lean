@@ -109,6 +109,18 @@ theorem low_degree_candidate_ranks :
 theorem top_candidate_rank_zero : candidateRank 12 = 0 := by
   rfl
 
+/-- Summary of the finite algebraic data proved in this file. -/
+theorem corrected_d4_candidate_synthesis :
+    genDegree alpha12 = 1 ∧
+    genDegree beta12 = 3 ∧
+    vadd (vsub (reduceAlphaProduct a12a23) (reduceAlphaProduct a12a13))
+      (reduceAlphaProduct a23a13) = 0 ∧
+    candidateRank 0 = 1 ∧
+    candidateRank 1 = 3 ∧
+    candidateRank 2 = 2 ∧
+    candidateRank 12 = 0 := by
+  exact ⟨rfl, rfl, alpha_arnold_relation, rfl, rfl, rfl, rfl⟩
+
 end NonIsoConf3QuadricD4Model
 
 end noncomputable section

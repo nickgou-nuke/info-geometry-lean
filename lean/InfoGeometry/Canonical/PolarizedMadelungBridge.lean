@@ -117,6 +117,7 @@ noncomputable def phaseOrbit
   (NormedSpace.exp (θ • modularComplexI (E := E))) S.ψ
 
 omit [CompleteSpace E] in
+omit [CompleteSpace E] in
 @[simp] theorem phaseOrbit_zero
     (S : PolarizedDoubledAmplitude (E := E)) :
     S.phaseOrbit 0 = S.ψ := by
@@ -136,21 +137,6 @@ theorem phaseOrbit_eq_complex_iOrbit
     S.phaseOrbit θ = (NormedSpace.exp (θ • complex_i (E := E))) S.ψ := by
   unfold phaseOrbit
   rw [modularComplexI_eq_complex_i]
-
-omit [CompleteSpace E] in
-/-- The Madelung phase orbit is the orbit of the native doubled-carrier clock
-axis.  This is a carrier-preserving identification; it does not identify the
-separate `Fin 2` matrix parabolic-clock carrier with `DoubledSpace E`. -/
-theorem phaseOrbit_eq_clockAxisOrbit
-    (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) :
-    S.phaseOrbit θ =
-      (NormedSpace.exp (θ • InfoGeometry.Krein.clockAxis (E := E))) S.ψ := by
-  unfold phaseOrbit
-  change
-    (NormedSpace.exp (θ • InfoGeometry.Canonical.TomitaTakesaki.clockAxis
-      (E := E))) S.ψ =
-      (NormedSpace.exp (θ • InfoGeometry.Krein.clockAxis (E := E))) S.ψ
-  rfl
 
 /-- Modular conjugation reverses the `Jε` phase orbit. -/
 theorem modularConjugationJ_phaseOrbit_eq_reverse
@@ -324,12 +310,10 @@ open InfoGeometry.Canonical.StateDependentTransport
 State-dependent generator field on the doubled carrier.
 This keeps the generator operatorial and avoids scalar diagonal proxies.
 -/
-abbrev StateGeneratorField := H₂ → EndH
+structure StateGeneratorField where
+  generator : H₂ → EndH
 
 namespace StateGeneratorField
-
-/-- Compatibility accessor for the native operator-valued field. -/
-abbrev generator (G : StateGeneratorField (E := E)) : H₂ → EndH := G
 
 noncomputable def toStateModularDatum
     (G : StateGeneratorField (E := E)) : StateModularDatum E :=

@@ -8,7 +8,6 @@ import InfoGeometry.Automath.Generated.hyp_4_braid_image
 import InfoGeometry.Automath.Generated.hyp_5_k_theory
 import InfoGeometry.Automath.Generated.hyp_pin55_krein
 import InfoGeometry.Automath.Generated.su3_gellmann_lie_algebra
-import InfoGeometry.Automath.Generated.test_hyp
 import InfoGeometry.Automath.Generated.causal_zorn_presheaf
 import InfoGeometry.Automath.Generated.cl11_supergraded_closure
 import InfoGeometry.Automath.Generated.zorn_supergraded_closure

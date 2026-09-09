@@ -84,7 +84,11 @@ theorem comparedBoundaryMonodromy_eq_native
         (PresentedGroup.of B3Gen.sig1 : BoundaryBraidGroup)) :
     comparedBoundaryMonodromy Q n L p exchangeClasses fiberComparison =
       boundaryBraidLinearRepresentation := by
-  exact b3_hom_ext _ _ h0 h1
+  apply PresentedGroup.ext
+  intro x
+  cases x with
+  | sig0 => exact h0
+  | sig1 => exact h1
 
 /-! ## Comparison from two based loop classes -/
 

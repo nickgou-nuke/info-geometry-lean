@@ -55,26 +55,6 @@ theorem parabolicTimeFlow_add (t₁ t₂ : ℂ) :
       lcftParabolicFlowStep (t₁ + t₂) :=
   lcftParabolicFlow_composition t₁ t₂
 
-/-- Negative time is the inverse of the square-zero parabolic flow. -/
-theorem lcftParabolicFlow_neg_mul (t : ℂ) :
-    lcftParabolicFlowStep (-t) * lcftParabolicFlowStep t =
-      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  rw [lcftParabolicFlow_composition]
-  simp [lcftParabolicFlowStep]
-
-/-- The inverse identity also holds in the opposite multiplication order. -/
-theorem lcftParabolicFlow_mul_neg (t : ℂ) :
-    lcftParabolicFlowStep t * lcftParabolicFlowStep (-t) =
-      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  rw [lcftParabolicFlow_composition]
-  simp [lcftParabolicFlowStep]
-
-/-- The parabolic inverse is exactly the flow at the negated clock value. -/
-theorem lcftParabolicFlow_inverse (t : ℂ) :
-    (lcftParabolicFlowStep t)⁻¹ = lcftParabolicFlowStep (-t) := by
-  apply Matrix.inv_eq_right_inv
-  exact lcftParabolicFlow_mul_neg t
-
 /-- Repeated complex parabolic flow is just flow at the accumulated parameter. -/
 theorem lcftParabolicFlow_pow (t : ℂ) (n : ℕ) :
     lcftParabolicFlowStep t ^ n =
@@ -138,24 +118,6 @@ theorem splitQuaternionParabolicFlow_composition (T₁ T₂ : ℝ) :
       _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow,
       _root_.InfoGeometry.Clifford.sqMul]
   all_goals ring
-
-/-- Negative real time cancels the split-quaternion parabolic flow. -/
-theorem splitQuaternionParabolicFlow_neg_mul (T : ℝ) :
-    splitQuaternionParabolicFlowStep (-T) * splitQuaternionParabolicFlowStep T =
-      (1 : SplitQuaternion) := by
-  rw [splitQuaternionParabolicFlow_composition]
-  simp [splitQuaternionParabolicFlowStep,
-    _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow,
-    _root_.InfoGeometry.Clifford.sqOne]
-
-/-- The opposite multiplication order gives the same exact cancellation. -/
-theorem splitQuaternionParabolicFlow_mul_neg (T : ℝ) :
-    splitQuaternionParabolicFlowStep T * splitQuaternionParabolicFlowStep (-T) =
-      (1 : SplitQuaternion) := by
-  rw [splitQuaternionParabolicFlow_composition]
-  simp [splitQuaternionParabolicFlowStep,
-    _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow,
-    _root_.InfoGeometry.Clifford.sqOne]
 
 /-- The split-quaternion parabolic flow is norm-one, inherited from the owner lane. -/
 theorem norm_splitQuaternionParabolicFlowStep (T : ℝ) :

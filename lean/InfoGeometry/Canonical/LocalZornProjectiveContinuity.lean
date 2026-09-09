@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.LocalZornProjectiveAction
+import InfoGeometry.Twistor.ProjectiveNullConfigurationTopology
 
 namespace InfoGeometry.Canonical
 
@@ -24,9 +25,8 @@ noncomputable instance realProjectiveBoundaryTopology :
 theorem continuous_localSL2ProjectiveAction (g : SL2R) :
     Continuous (localSL2ProjectiveAction g) := by
   unfold localSL2ProjectiveAction
-  unfold Projectivization.map
-  apply Continuous.quotient_map'
-  · fun_prop
+  exact InfoGeometry.Twistor.ProjectiveNullConfigurationTopology.projectivization_map_continuous
+    g.toLin'.toLinearMap g.toLin'.injective (by fun_prop)
 
 theorem continuous_modularBoostProjectiveAction (s : ℝ) :
     Continuous (modularBoostProjectiveAction s) := by

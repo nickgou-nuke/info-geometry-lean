@@ -188,7 +188,7 @@ theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeed
 
 /--
 Winding periodicity obtained from the forcing predicate, with no explicit
-commutation property in the theorem signature.
+commutation assumption in the theorem signature.
 -/
 theorem winding_orbit_periodicity_of_forcingSeed
     (hMod : EndH) (N : ℤ)
@@ -224,7 +224,7 @@ theorem winding_orbit_periodicity_of_IsPhaseLinear_modularTransportGenerator
 
 /--
 Successor branch-cut periodicity for the canonical modular transport generator
-obtained from the forcing predicate.  This removes the raw `Commute` property
+obtained from the forcing predicate.  This removes the raw `Commute` hypothesis
 from the successor-readback surface by first deriving clock-axis commutation from
 the phase-linear owner route.
 -/
@@ -273,7 +273,7 @@ def windingOrbitObstruction (K : EndH) (N : ℤ) : EndH :=
 /--
 Clock-faithful exponential branch predicate.
 
-This is the exact extra property needed for the reverse D1 direction. It is
+This is the exact extra hypothesis needed for the reverse D1 direction. It is
 not global injectivity of the exponential map, which would be false on winding
 branches. It only says that, on the chosen branch and generator, zero winding
 obstruction is a faithful detector of clock-axis commutation.
@@ -284,16 +284,16 @@ def IsClockFaithfulExponentialBranch (K : EndH) (N : ℤ) : Prop :=
     Commute K (clockAxis H)
 
 /--
-Local gauge data for clock-faithful winding branches.
+Local gauge certificate for clock-faithful winding branches.
 
 The Weyl field/shift/response fields record the local-gauge data. The only
 non-formal analytic content required for D1 is the final faithful-readout field:
 if the gauge readout cannot distinguish the two exponential branch values, then
 the clock commutator must vanish. This isolates the needed local symmetry
-property instead of replacing it with global exponential injectivity.
+hypothesis instead of replacing it with global exponential injectivity.
 -/
 @[rep_depth transport]
-structure LocalClockGaugeSymmetryData (K : EndH) (N : ℤ) where
+structure LocalClockGaugeSymmetryCertificate (K : EndH) (N : ℤ) where
   gaugeField : InfoGeometry.Canonical.WeylGaugeField EndH EndH
   gaugeShift : InfoGeometry.Canonical.WeylGaugeParameter EndH EndH
   response : InfoGeometry.Canonical.GeometricResponse EndH EndH
@@ -306,12 +306,12 @@ structure LocalClockGaugeSymmetryData (K : EndH) (N : ℤ) where
         Commute K (clockAxis H)
 
 /--
-The local Weyl gauge fields in a clock-gauge property have invariant
-responses under the property local shift.
+The local Weyl gauge fields in a clock-gauge certificate have invariant
+responses under the certified local shift.
 -/
 theorem localClockGauge_response_transform_eq
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryData (H := H) K N) :
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
     (C.gaugeField.transform C.gaugeShift).respond C.response C.logGenerator =
       C.gaugeField.respond C.response C.logGenerator := by
   exact InfoGeometry.Canonical.WeylGaugeField.respond_transform_eq_of_isGaugeInvariant
@@ -323,7 +323,7 @@ exponential branch required for the reverse D1 implication.
 -/
 theorem clockFaithfulExponentialBranch_of_localClockGaugeSymmetry
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryData (H := H) K N) :
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
     IsClockFaithfulExponentialBranch (H := H) K N := by
   intro hExp
   exact C.branch_readout_faithful (congrArg C.response.responseOf hExp)
@@ -344,7 +344,7 @@ theorem windingOrbitObstruction_eq_zero_of_commute
 On a clock-faithful exponential branch, zero winding obstruction is exactly
 clock-axis commutation.  This packages the generic reverse direction at the
 owner surface instead of forcing downstream modular-transport callers to carry a
-bare `Commute K (clockAxis H)` property.
+bare `Commute K (clockAxis H)` hypothesis.
 -/
 theorem windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
     (K : EndH) (N : ℤ)
@@ -358,14 +358,14 @@ theorem windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
     exact windingOrbitObstruction_eq_zero_of_commute (H := H) K N hComm
 
 /--
-A property local clock-gauge symmetry package supplies the faithful branch
+A certified local clock-gauge symmetry package supplies the faithful branch
 needed to recover raw clock-axis commutation from vanishing winding
 obstruction, removing the explicit
-`IsClockFaithfulExponentialBranch` property from the reverse D1 owner lane.
+`IsClockFaithfulExponentialBranch` hypothesis from the reverse D1 owner lane.
 -/
 theorem commute_clockAxis_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryData (H := H) K N)
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N)
     (hObs : windingOrbitObstruction K N = 0) :
     Commute K (clockAxis H) := by
   exact
@@ -405,7 +405,7 @@ theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_IsPhaseLine
 
 /--
 Cartan-even (gauge) sector is automatically winding-periodic: no extra
-commutation property is required.
+commutation hypothesis is required.
 -/
 theorem winding_orbit_periodicity_modularGeneratorGaugePart
     (hMod : EndH) (N : ℤ) :
@@ -484,7 +484,7 @@ theorem modularTransportGenerator_commutes_clockAxis_of_cartanGradeForcingSeed
 
 /--
 Winding periodicity obtained from detailed equilibrium, with no explicit
-commutation property in the theorem signature.
+commutation hypothesis in the theorem signature.
 -/
 theorem winding_orbit_periodicity_of_detailedEquilibrium
     (hMod : EndH) (N : ℤ)
@@ -610,7 +610,7 @@ theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanGradeFor
 
 /--
 Cartan-grade forcing bridge for the winding owner:
-if an explicit Cartan symmetric-pair property places the modular generator
+if an explicit Cartan symmetric-pair certificate places the modular generator
 and clock axis in the phase-axis forcing pattern, and the same commutator is
 also forced into the even sector, then the concrete transport commutator
 vanishes by the real even/odd intersection rule.
@@ -705,7 +705,7 @@ theorem nonEquilibriumClockDefect_eq_zero_iff_commute
     exact sub_eq_zero.mpr hComm.eq
 
 /--
-Cartan dual-grade forcing produces the actual `Commute` property required by
+Cartan dual-grade forcing produces the actual `Commute` witness required by
 the winding periodicity owner theorem.
 -/
 theorem modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
@@ -727,7 +727,7 @@ theorem modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
 
 /--
 Winding periodicity obtained directly from an explicit Cartan dual-grade
-property, without an exposed raw commutation property.
+certificate, without an exposed raw commutation hypothesis.
 -/
 theorem winding_orbit_periodicity_of_cartanDualGrade
     (hMod : EndH) (N : ℤ)
@@ -753,7 +753,7 @@ theorem winding_orbit_periodicity_of_cartanDualGrade
 
 /--
 Successor branch periodicity obtained directly from the Cartan dual-grade
-property.
+certificate.
 -/
 theorem winding_orbit_periodicity_succ_of_cartanDualGrade
     (hMod : EndH) (N : ℤ)
@@ -902,9 +902,9 @@ theorem noncommutingScaleLane_iff_cartanScaleSource_ne_zero
 /--
 Concrete phase-axis Cartan closure for D1:
 the full modular-generator clock commutator vanishes once the scale-clock
-source commutator is property in the even sector.  The scale-clock commutator
+source commutator is certified in the even sector.  The scale-clock commutator
 is already odd by `PhaseAxisCartanSymmetricLie`; this theorem is the maintained
-bridge from that dual-grade property to the winding owner.
+bridge from that dual-grade certificate to the winding owner.
 -/
 theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem_phaseAxis_even
     (hMod : EndH)
@@ -985,7 +985,7 @@ theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_detailedEqu
 
 /--
 Clock-equilibrium is the exact source condition needed by the winding owner:
-zero clock defect gives the commutation property and therefore zero winding
+zero clock defect gives the commutation witness and therefore zero winding
 obstruction.
 -/
 theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_clockEquilibrium
@@ -1029,7 +1029,7 @@ theorem clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBran
 
 /--
 With an explicit clock-faithful exponential branch, clock equilibrium is
-equivalent to zero winding obstruction. Without this faithfulness property,
+equivalent to zero winding obstruction. Without this faithfulness hypothesis,
 only the forward direction is source-owned.
 -/
 theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch

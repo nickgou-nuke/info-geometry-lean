@@ -117,9 +117,11 @@ theorem convex_iff_eGeodesicConvex
   convexOn_univ_iff_eGeodesicConvex f
 
 /-- Data witnessing that `dualCoord` is bijective with a chosen inverse. -/
-abbrev GradientBijection
-    (H : HessianGeometry Θ) :=
-  { e : Θ ≃ (Θ →L[ℝ] ℝ) // e.toFun = dualCoord H }
+structure GradientBijection
+    (H : HessianGeometry Θ) where
+  invDual : (Θ →L[ℝ] ℝ) → Θ
+  left_inv : ∀ θ, invDual (dualCoord H θ) = θ
+  right_inv : ∀ η, dualCoord H (invDual η) = η
 
 /-- Dual (`m`-) geodesic: affine interpolation in dual coordinates, pulled back by the inverse gradient. -/
 noncomputable def mGeodesic
@@ -127,7 +129,7 @@ noncomputable def mGeodesic
     (hGrad : GradientBijection H)
     (x y : Θ)
     (t : ℝ) : Θ :=
-  hGrad.1.symm ((1 - t) • dualCoord H x + t • dualCoord H y)
+  hGrad.invDual ((1 - t) • dualCoord H x + t • dualCoord H y)
 
 @[simp]
 lemma mGeodesic_zero
@@ -135,12 +137,7 @@ lemma mGeodesic_zero
     (hGrad : GradientBijection H)
     (x y : Θ) :
     mGeodesic H hGrad x y 0 = x := by
-  unfold mGeodesic
-  simp only [sub_zero, zero_smul, add_zero, one_smul]
-  calc
-    hGrad.1.symm (dualCoord H x) = hGrad.1.symm (hGrad.1 x) := by
-      exact congrArg hGrad.1.symm (congrFun hGrad.2 x).symm
-    _ = x := hGrad.1.left_inv x
+  simp [mGeodesic, hGrad.left_inv]
 
 @[simp]
 lemma mGeodesic_one
@@ -148,12 +145,7 @@ lemma mGeodesic_one
     (hGrad : GradientBijection H)
     (x y : Θ) :
     mGeodesic H hGrad x y 1 = y := by
-  unfold mGeodesic
-  simp only [sub_self, zero_smul, zero_add, one_smul]
-  calc
-    hGrad.1.symm (dualCoord H y) = hGrad.1.symm (hGrad.1 y) := by
-      exact congrArg hGrad.1.symm (congrFun hGrad.2 y).symm
-    _ = y := hGrad.1.left_inv y
+  simp [mGeodesic, hGrad.left_inv]
 
 lemma dualCoord_mGeodesic
     (H : HessianGeometry Θ)
@@ -162,18 +154,7 @@ lemma dualCoord_mGeodesic
     (t : ℝ) :
     dualCoord H (mGeodesic H hGrad x y t)
       = (1 - t) • dualCoord H x + t • dualCoord H y := by
-  simp only [mGeodesic]
-  calc
-    dualCoord H
-        (hGrad.1.symm ((1 - t) • dualCoord H x + t • dualCoord H y)) =
-        hGrad.1 (hGrad.1.symm ((1 - t) • dualCoord H x + t • dualCoord H y)) := by
-      change dualCoord H (hGrad.1.symm
-        ((1 - t) • dualCoord H x + t • dualCoord H y)) =
-        hGrad.1.toFun (hGrad.1.symm
-          ((1 - t) • dualCoord H x + t • dualCoord H y))
-      exact (congrFun hGrad.2 _).symm
-    _ = (1 - t) • dualCoord H x + t • dualCoord H y :=
-      Equiv.apply_symm_apply hGrad.1 _
+  simp [mGeodesic, hGrad.right_inv]
 
 /-- Algebraic three-point identity for the Hessian/Bregman divergence. -/
 lemma divergence_three_point

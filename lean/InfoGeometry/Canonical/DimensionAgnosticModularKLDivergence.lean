@@ -12,7 +12,7 @@ throughout the repo:
 `generalizedKL μ ν = Z μ * generalizedKL (normalize μ) (normalize ν) + gklTerm (Z μ) (Z ν)`.
 
 The infinite-measure extension remains an explicit open problem and must be
-added with a concrete property theorem before this file is broadened again.
+added with a concrete witness theorem before this file is broadened again.
 -/
 
 namespace InfoGeometry.Canonical.DimensionAgnosticModularKLDivergence

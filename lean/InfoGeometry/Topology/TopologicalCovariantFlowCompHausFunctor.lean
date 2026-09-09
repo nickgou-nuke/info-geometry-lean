@@ -642,5 +642,3 @@ theorem topologicalCovariantQuotientCompHausContinuousAction_add
   rw [hcancel]
 
 end InfoGeometry.Topology
-
-end

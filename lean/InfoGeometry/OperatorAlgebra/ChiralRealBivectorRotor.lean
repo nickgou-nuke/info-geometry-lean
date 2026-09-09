@@ -110,6 +110,5 @@ theorem conjugate_rotor (mirror : Units A) (B : A) (θ : ℝ)
     conjugate_one, hB]
   simp [sub_eq_add_neg]
 
-end InfoGeometry.OperatorAlgebra.ChiralRealBivectorRotor
 
-end
+end InfoGeometry.OperatorAlgebra.ChiralRealBivectorRotor

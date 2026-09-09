@@ -186,5 +186,3 @@ theorem g2_real_split_capstone :
   exact fun D s t => zornFlowRealAut_add D s t
 
 end InfoGeometry.Lie.G2TwoRealSplitClassification
-
-end

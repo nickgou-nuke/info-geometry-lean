@@ -69,12 +69,12 @@ variable [KreinSpace H] [KreinGradedModule H]
 noncomputable def K (X : RealSplitKreinKasparovCycle A B H) : EndH H :=
   X.cl11.K
 
-/-- The `A`-action is grading-even by primitive property. -/
+/-- The `A`-action is grading-even by primitive hypothesis. -/
 lemma π_even_apply (X : RealSplitKreinKasparovCycle A B H) (a : A) :
     KreinGradedModule.IsEven (H := H) (X.π a) :=
   X.π_even a
 
-/-- The `B`-action is grading-even by primitive property. -/
+/-- The `B`-action is grading-even by primitive hypothesis. -/
 lemma ρ_even_apply (X : RealSplitKreinKasparovCycle A B H) (b : B) :
     KreinGradedModule.IsEven (H := H) (X.ρ b) :=
   X.ρ_even b

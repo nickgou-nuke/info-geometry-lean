@@ -1,0 +1,25 @@
+import InfoGeometry.LLM.SphericalVMFFieldDerivatives
+import InfoGeometry.LLM.ContinuousMeanFieldClosure
+
+/-!
+# Transitive axiom audit for the spherical vMF frontier
+
+This executable audit is intentionally separate from the theorem owners. It asks
+Lean for the transitive axiom dependencies of the measure, exponential-family,
+field-derivative, cumulant, covariance-Hessian, and closure-remainder surfaces.
+-/
+
+#print axioms InfoGeometry.LLM.SphericalVMF.integrableExpSet_spinObservable_eq_univ
+#print axioms InfoGeometry.LLM.SphericalVMF.sphereHaarProbability_apply_univ
+#print axioms InfoGeometry.LLM.SphericalVMF.partition_pos
+#print axioms InfoGeometry.LLM.SphericalVMF.law_tilted_spinObservable
+#print axioms InfoGeometry.LLM.SphericalVMF.deriv_directionalPotential_eq_inner_response
+#print axioms InfoGeometry.LLM.SphericalVMF.deriv_projectedResponseLine_zero_eq_covarianceHessian
+#print axioms InfoGeometry.LLM.SphericalVMF.iteratedDeriv_two_projectedResponseLine_zero_eq_cumulant_three
+#print axioms InfoGeometry.LLM.SphericalVMF.deriv_vmfFieldDirectionalPotential_eq_beta_mul_response
+#print axioms InfoGeometry.LLM.SphericalVMF.inner_vmfResponse_eq_inv_mul_deriv_fieldPotential
+#print axioms InfoGeometry.LLM.SphericalVMF.iteratedDeriv_two_vmfFieldDirectionalPotential_zero_eq_beta_sq_covariance
+#print axioms InfoGeometry.LLM.SphericalVMF.vmfFieldDirectionalCumulant_eq_directionalCumulant
+#print axioms InfoGeometry.LLM.SphericalVMF.vmfPartition_zero_field
+#print axioms InfoGeometry.LLM.ContinuousMeanFieldClosure.closureDefect_eq_quadraticClosureTerm_add_remainder
+#print axioms InfoGeometry.LLM.ContinuousMeanFieldClosure.norm_closureDefect_sub_quadraticClosureTerm_le_thirdMoment

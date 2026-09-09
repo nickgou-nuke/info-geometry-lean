@@ -44,7 +44,16 @@ FORENSIC_PREFIXES = (
 
 def tracked_lean_files() -> list[Path]:
     result = subprocess.run(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+        [
+            "git",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            "*.lean",
+            ":(exclude)archive/upstream_pr_extraction/*",
+        ],
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -91,8 +100,9 @@ def main() -> int:
     parser.add_argument("--format", choices=("text", "json"), default="text")
     args = parser.parse_args()
 
+    tracked_files = tracked_lean_files()
     records = []
-    for path in tracked_lean_files():
+    for path in tracked_files:
         findings = scan(path)
         if findings:
             records.append(
@@ -108,7 +118,7 @@ def main() -> int:
         counts[record["classification"]] += len(record["findings"])
 
     report = {
-        "tracked_lean_files": len(tracked_lean_files()),
+        "tracked_lean_files": len(tracked_files),
         "debt_files": len(records),
         "debt_findings": sum(len(record["findings"]) for record in records),
         "finding_counts_by_classification": counts,

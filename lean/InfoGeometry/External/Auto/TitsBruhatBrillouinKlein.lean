@@ -23,7 +23,7 @@ maximal torus/Brillouin torus is replaced by a Klein bottle.
 
 noncomputable section
 
-namespace InfoGeometry.External.Auto.TitsBruhatBrillouinKlein
+namespace TitsBruhatBrillouinKlein
 
 /-! ## 1. Concrete affine homogeneous matrix model over ℚ -/
 
@@ -113,17 +113,12 @@ theorem tits_uses_same_relation
 /-! ## 3. Cohomological/nonsymmorphic twist as Z₂ parity mechanism -/
 
 /-- Orientation reversal sends a signed charge to its negative. -/
-abbrev OrientationReversalZ2 := ℤ
-
-namespace OrientationReversalZ2
-
-abbrev charge (O : OrientationReversalZ2) : ℤ := O
-
-end OrientationReversalZ2
+structure OrientationReversalZ2 where
+  charge : ℤ
 
 /-- The signed integer is not the invariant; its mod-two parity is. -/
 theorem parity_survives_reversal (O : OrientationReversalZ2) :
     O.charge % 2 = (-O.charge) % 2 := by
   exact (Int.neg_emod_two O.charge).symm
 
-end InfoGeometry.External.Auto.TitsBruhatBrillouinKlein
+end TitsBruhatBrillouinKlein

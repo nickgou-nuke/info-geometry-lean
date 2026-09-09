@@ -11,10 +11,10 @@ open scoped MatrixOrder
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Lower owner for the spectral-root compatibility property identifying the square
+Lower owner for the spectral-root compatibility witness identifying the square
 of a Dirac operator with the Hessian metric operator at a chosen basepoint.
 
-This file isolates the root property consumed by spectral, transport, and
+This file isolates the root witness consumed by spectral, transport, and
 geometry bridge layers without bundling the larger spectral-triple surface.
 -/
 structure DiracMetricCompatibility
@@ -153,7 +153,7 @@ theorem eq_canonicalDiracOfMetric_of_isPositive_of_sq_eq_metric
   exact congrArg (fun A : E →ₗ[ℝ] E => A v) hEqLin
 
 -- theorem-class: derived
-/-- A positive compatibility property is forced to be the canonical positive Dirac root. -/
+/-- A positive compatibility witness is forced to be the canonical positive Dirac root. -/
 theorem eq_canonicalDiracOfMetric_of_isPositive
     {D : E →L[ℝ] E}
     (C : DiracMetricCompatibility (E := E) D H x₀)
@@ -163,7 +163,7 @@ theorem eq_canonicalDiracOfMetric_of_isPositive
     (E := E) H x₀ hPos C.dirac_sq_eq_metric
 
 /--
-Canonical compatibility property produced from the symmetric nonnegative quadratic form carried by
+Canonical compatibility witness produced from the symmetric nonnegative quadratic form carried by
 `H.metricOp x₀`.
 -/
 noncomputable def ofMetric

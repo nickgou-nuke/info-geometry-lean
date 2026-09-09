@@ -21,12 +21,11 @@ def conclusion_realinput40_arity_hardwall_completeness_top_exponent : ℕ :=
 the two endpoint charges `0` and `1/2` are realized, the zero-charge determinant witness holds,
 all surviving coefficients are nonnegative, and the degree bound is controlled by `n / 2`. -/
 def conclusion_realinput40_arity_hardwall_completeness_statement
-    (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
-      lengthTwoSharpWitness : Prop) : Prop :=
-  coboundaryNormalization ∧
-    edgeAuditWithPotential ∧
-    primitiveCycleDensityBound ∧
-    lengthTwoSharpWitness ∧
+    (D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData) : Prop :=
+  D.coboundaryNormalization ∧
+    D.edgeAuditWithPotential ∧
+    D.primitiveCycleDensityBound ∧
+    D.lengthTwoSharpWitness ∧
     real_input_40_arity_charge_det_closed_charpoly 0 0 = 0 ∧
     (0 : ℚ) ≤ conclusion_realinput40_arity_hardwall_completeness_average_charge false ∧
     conclusion_realinput40_arity_hardwall_completeness_average_charge false ≤ 1 / 2 ∧
@@ -34,7 +33,7 @@ def conclusion_realinput40_arity_hardwall_completeness_statement
     conclusion_realinput40_arity_hardwall_completeness_average_charge true ≤ 1 / 2 ∧
     conclusion_realinput40_arity_hardwall_completeness_average_charge false = 0 ∧
     conclusion_realinput40_arity_hardwall_completeness_average_charge true = 1 / 2 ∧
-    (∀ t ∈ real_input_40_arity_2d_nonnegative_terms primitiveCycleDensityBound,
+    (∀ t ∈ real_input_40_arity_2d_nonnegative_terms D,
       0 ≤ t.qExponent ∧ ¬ t.qExponent < 0 ∧ 0 ≤ (t.coefficient : ℤ)) ∧
     ∀ n : ℕ, 1 ≤ n →
       conclusion_realinput40_arity_hardwall_completeness_top_exponent ≤ n / 2
@@ -44,22 +43,11 @@ coboundary certificate gives the primitive density/no-Laurent package, the lengt
 realizes the top endpoint, the closed determinant has the zero-charge root, and the 2D
 nonnegativity plus degree-bound wrappers force the hard-wall coefficient package. -/
 theorem paper_conclusion_realinput40_arity_hardwall_completeness
-    (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
-      lengthTwoSharpWitness : Prop)
-    (hNorm : coboundaryNormalization)
-    (deriveEdgeAudit : coboundaryNormalization → edgeAuditWithPotential)
-    (derivePrimitiveCycleDensityBound : edgeAuditWithPotential → primitiveCycleDensityBound)
-    (deriveLengthTwoSharpWitness : primitiveCycleDensityBound → lengthTwoSharpWitness) :
-    conclusion_realinput40_arity_hardwall_completeness_statement coboundaryNormalization
-      edgeAuditWithPotential primitiveCycleDensityBound lengthTwoSharpWitness := by
-  have hCoboundary := paper_real_input_40_arity_charge_coboundary
-    coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound hNorm
-    deriveEdgeAudit derivePrimitiveCycleDensityBound
-  rcases hCoboundary with ⟨hNorm, hAudit, hBound⟩
-  have hDensity := paper_real_input_40_arity_charge_density_bound
-    coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound lengthTwoSharpWitness
-    hNorm deriveEdgeAudit derivePrimitiveCycleDensityBound deriveLengthTwoSharpWitness
-  have hNonneg := paper_real_input_40_arity_2d_nonnegative primitiveCycleDensityBound hBound
+    (D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData) :
+    conclusion_realinput40_arity_hardwall_completeness_statement D := by
+  rcases paper_real_input_40_arity_charge_coboundary D with ⟨hNorm, hAudit, hBound⟩
+  have hDensity := paper_real_input_40_arity_charge_density_bound D
+  have hNonneg := paper_real_input_40_arity_2d_nonnegative D
   have hDetClosed := paper_real_input_40_arity_charge_det_closed
   refine ⟨hNorm, hAudit, hBound, hDensity.2, ?_, ?_, ?_, ?_, ?_, rfl, rfl, ?_, ?_⟩
   · simpa using (hDetClosed.2.2.2 0).2

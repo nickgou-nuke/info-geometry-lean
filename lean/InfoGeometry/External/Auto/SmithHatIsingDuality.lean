@@ -88,9 +88,44 @@ def energyDualitySum (J Tc TcDual eps epsDual : ℝ) : ℝ :=
 def nearestNeighborCorrelation (energy : ℝ) (spinNumber : ℝ) : ℝ :=
   -energy / (2 * spinNumber)
 
+/-- The temperature-duality equation is exactly the statement that the product is `1`. -/
+theorem kramers_wannier_temperature_duality
+    {J Tc TcDual : ℝ}
+    (h : temperatureDualityProduct J Tc TcDual = 1) :
+    Real.sinh (2 * J / Tc) * Real.sinh (2 * J / TcDual) = 1 := by
+  exact h
+
+/-- The energy-duality equation is exactly the statement that the normalized sum is `1`. -/
+theorem kramers_wannier_energy_duality
+    {J Tc TcDual eps epsDual : ℝ}
+    (h : energyDualitySum J Tc TcDual eps epsDual = 1) :
+    eps / coth (2 * J / Tc) + epsDual / coth (2 * J / TcDual) = 1 := by
+  exact h
+
 /-- The original and dual Smith-kite labels are distinct. -/
 theorem original_ne_dual : SmithKiteLattice.original ≠ SmithKiteLattice.dual := by
   decide
 
+/-! ## 3. Synthesis -/
+
+/-- Capstone: finite paper data and exact duality equations compile. -/
+theorem smith_hat_ising_duality_synthesis :
+    smithHatSides = 13 ∧
+    smithHatKites = 8 ∧
+    maxReportedSpinNumber = 939201 ∧
+    reportedCriticalTemperature .original = 2405 / 1000 ∧
+    reportedCriticalTemperature .dual = 2143 / 1000 ∧
+    reportedCriticalTemperatureTolerance = 5 / 10000 ∧
+    reportedCriticalEnergyPerSpin .original = -1319 / 1000 ∧
+    reportedCriticalEnergyPerSpin .dual = -1505 / 1000 ∧
+    ProjectiveWallpaperGaugePSA.allWallpaperGroups.length = 17 ∧
+    SmithKiteLattice.original ≠ SmithKiteLattice.dual := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl,
+    ProjectiveWallpaperGaugePSA.allWallpaperGroups_length,
+    original_ne_dual⟩
+
+#check smith_hat_ising_duality_synthesis
+#check kramers_wannier_temperature_duality
+#check kramers_wannier_energy_duality
 
 end SmithHatIsingDuality

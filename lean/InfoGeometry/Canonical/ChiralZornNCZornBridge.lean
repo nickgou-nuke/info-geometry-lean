@@ -177,6 +177,5 @@ theorem matrixTwo_sigma_mixed_commutator
       operatorSubChannel (nPlus (operatorDot U V)) (nMinus (operatorDot V U)) := by
   exact mixed_chiral_commutator_channel U V
 
-end InfoGeometry.Canonical.ChiralZornNCZornBridge
 
-end
+end InfoGeometry.Canonical.ChiralZornNCZornBridge

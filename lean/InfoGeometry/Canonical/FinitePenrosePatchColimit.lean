@@ -51,7 +51,7 @@ def localStateSequentialSystem
     (cone_comm : ∀ (n : ℕ) (x : localState (α := α) S (Twr.stage n)),
       toLimit (n + 1) (mapLocalState (α := α) S (PLift.up (Twr.bond n)) x) =
         toLimit n x) :
-    SequentialStageSystem where
+    SequentialColimitSystem where
   Stage := fun n => localState (α := α) S (Twr.stage n)
   Limit := Limit
   bond := fun n => mapLocalState (α := α) S (PLift.up (Twr.bond n))
@@ -96,7 +96,7 @@ theorem transported_localState_property_to_same_limit
     Pinf
       (toLimit (n + m)
         ((localStateSequentialSystem (α := α) (S := S) Twr Limit toLimit cone_comm).bondSeq n m x)) :=
-  SequentialStageSystem.transported_stage_property_to_same_limit
+  SequentialColimitSystem.transported_stage_property_to_same_limit
     (S := localStateSequentialSystem (α := α) (S := S) Twr Limit toLimit cone_comm)
     P Pinf hP hread n m x hx
 
@@ -115,7 +115,7 @@ theorem transported_localState_limit_eq
     toLimit (n + m)
         ((localStateSequentialSystem (α := α) (S := S) Twr Limit toLimit cone_comm).bondSeq n m x) =
       toLimit n x :=
-  SequentialStageSystem.transported_limit_point_eq
+  SequentialColimitSystem.transported_limit_point_eq
     (S := localStateSequentialSystem (α := α) (S := S) Twr Limit toLimit cone_comm)
     n m x
 

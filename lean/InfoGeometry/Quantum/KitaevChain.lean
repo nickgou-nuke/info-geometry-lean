@@ -37,6 +37,13 @@ structure KitaevCocycle (C : KitaevCell) where
   U : ℝ → C.core.V →ₗ[ℝ] C.core.V
   cocycle : ∀ s t : ℝ, U (s + t) = (U s).comp (U t)
 
+/-- Trivial identity cocycle (useful neutral element in the finite scaffold). -/
+def trivialKitaevCocycle (C : KitaevCell) : KitaevCocycle C where
+  U := fun _ => LinearMap.id
+  cocycle := by
+    intro s t
+    simp
+
 /-- Pfaffian attached to a Kitaev cell. -/
 noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
   let _ : NormedAddCommGroup c.core.V := c.instV
@@ -50,6 +57,10 @@ noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
 noncomputable def macroscopicVolume (chain : List KitaevCell) : ℝ :=
   (chain.map (fun c : KitaevCell => c.pfaffian)).prod
 
+/-- Definitional form of the tiling identity. -/
+theorem macroscopicVolume_eq_prod_pfaffians (chain : List KitaevCell) :
+    macroscopicVolume chain = (chain.map (fun c : KitaevCell => c.pfaffian)).prod := rfl
+
 /--
 Concatenation law for the finite tiling volume: the macroscopic volume of two
 concatenated chains factors as the product of their macroscopic volumes.
@@ -58,17 +69,36 @@ theorem macroscopicVolume_append (chain₁ chain₂ : List KitaevCell) :
     macroscopicVolume (chain₁ ++ chain₂) = macroscopicVolume chain₁ * macroscopicVolume chain₂ := by
   simp [macroscopicVolume, List.map_append, List.prod_append]
 
+noncomputable def topologicalIndex (chain : List KitaevCell) : SignType :=
+  SignType.sign (macroscopicVolume chain)
+
 /-- Singleton normalization: a one-cell chain has macroscopic volume equal to its Pfaffian. -/
 theorem macroscopicVolume_singleton (c : KitaevCell) :
     macroscopicVolume [c] = c.pfaffian := by
   simp [macroscopicVolume]
 
+/-!
+The finite chain volume is independent of the ordering of its cells.  This is
+the precise permutation/coherence statement available for the present
+scaffold: it uses the commutativity of the scalar Pfaffian product, without
+asserting a general Pfaffian transformation law that the current owner does
+not provide.
+-/
+theorem macroscopicVolume_perm {chain₁ chain₂ : List KitaevCell}
+    (h : List.Perm chain₁ chain₂) :
+    macroscopicVolume chain₁ = macroscopicVolume chain₂ := by
+  unfold macroscopicVolume
+  exact (h.map (fun c : KitaevCell => c.pfaffian)).prod_eq
+
 /--
 Sign-valued (`{-1,0,1}`) topological index of a finite Kitaev chain, obtained
 as the sign of the macroscopic Pfaffian product.
 -/
-noncomputable def topologicalIndex (chain : List KitaevCell) : SignType :=
-  SignType.sign (macroscopicVolume chain)
+theorem topologicalIndex_perm {chain₁ chain₂ : List KitaevCell}
+    (h : List.Perm chain₁ chain₂) :
+    topologicalIndex chain₁ = topologicalIndex chain₂ := by
+  unfold topologicalIndex
+  rw [macroscopicVolume_perm h]
 
 /--
 The chain topological sign index is multiplicative under concatenation.
@@ -114,6 +144,11 @@ theorem isCritical_iff_topologicalIndex_eq_zero (chain : List KitaevCell) :
   unfold IsCritical topologicalIndex
   simpa using
     (sign_eq_zero_iff : SignType.sign (macroscopicVolume chain) = 0 ↔ macroscopicVolume chain = 0).symm
+
+/-- A one-cell chain is defective exactly when it is critical. -/
+theorem hasDefect_singleton_iff_isCritical (c : KitaevCell) :
+    HasDefect [c] ↔ IsCritical [c] := by
+  simp [HasDefect, IsDefect, IsCritical, macroscopicVolume_singleton]
 
 /-- A chain has a defect exactly when its macroscopic Pfaffian product vanishes. -/
 theorem hasDefect_iff_isCritical (chain : List KitaevCell) :
@@ -534,7 +569,7 @@ For distinct Majorana modes `γ₁`, `γ₂`, `γ₃`, the elementary exchange o
 `U₁₂ * U₂₃ - U₂₃ * U₁₂ = (inv_sqrt2 * inv_sqrt2 * 2) • (γ₁ * γ₃)`.
 
 When `inv_sqrt2 = 1 / √2`, the scalar factor is `1`, yielding
-`[U₁₂, U₂₃] = γ₁ * γ₃`.  Non-vanishing requires a separate property on
+`[U₁₂, U₂₃] = γ₁ * γ₃`.  Non-vanishing requires a separate hypothesis on
 the chosen representation. -/
 theorem braid_non_abelian_commutator {A : Type*} [Ring A] {N : ℕ}
     (inv_sqrt2 : A) (h_comm : ∀ x : A, inv_sqrt2 * x = x * inv_sqrt2)
@@ -593,7 +628,7 @@ theorem braid_non_abelian_commutator {A : Type*} [Ring A] {N : ℕ}
 nonzero product of the two outer Majorana modes.
 
 The preceding formula is representation-independent.  This corollary keeps
-the required non-vanishing property explicit instead of silently asserting it
+the required non-vanishing witness explicit instead of silently asserting it
 for every abstract `MajoranaCliffordOperators` datum. -/
 theorem braid_commutator_ne_zero_of_outer_product_ne_zero
     {A : Type*} [Ring A] {N : ℕ}
@@ -612,7 +647,7 @@ theorem braid_commutator_ne_zero_of_outer_product_ne_zero
 
 Membership in `braidNormalizationLocus` supplies the scalar normalization;
 the only representation-specific input remains the explicit nonzero outer
-product property. -/
+product witness. -/
 theorem real_braid_commutator_eq_outer_product
     {N : ℕ} (r : ℝ) (hr : r ∈ braidNormalizationLocus (A := ℝ))
     (ops : MajoranaCliffordOperators N ℝ)

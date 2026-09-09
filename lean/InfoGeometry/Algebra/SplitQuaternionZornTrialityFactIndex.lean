@@ -38,6 +38,7 @@ open InfoGeometry.Algebra.SplitQuaternionMatrices
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.CPT
 open InfoGeometry.Algebra.AnyonFiniteSpinBraid
+open InfoGeometry.Clifford.SplitCliffordBoundary
 
 /-- Split-quaternion trace-zero determinant readback: the live owner proves the
 `(1,2)` form `y² - x² - z²`. -/
@@ -88,33 +89,32 @@ theorem peirce_opposing_channels_to_00
   peirce01_mul_peirce10 hp x y
 
 /-- Zorn upper Peirce projector is null. -/
-theorem zorn_pPlus_null {R : Type*} [CommRing R] :
-    ZornMatrix.IsNull (pPlus : ZornMatrix R) :=
-  pPlus_isNull
+theorem zorn_pPlus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
+    ZornMatrix.IsNull cp (pPlus : ZornMatrix R) :=
+  pPlus_isNull cp
 
 /-- Zorn lower Peirce projector is null. -/
-theorem zorn_pMinus_null {R : Type*} [CommRing R] :
-    ZornMatrix.IsNull (pMinus : ZornMatrix R) :=
-  pMinus_isNull
+theorem zorn_pMinus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
+    ZornMatrix.IsNull cp (pMinus : ZornMatrix R) :=
+  pMinus_isNull cp
 
 /-- Every upper off-diagonal Zorn lightray is null. -/
 theorem zorn_upper_lightray_null {R : Type*} [CommRing R]
-    (v : Fin 3 → R) :
-    ZornMatrix.IsNull (upperLightray v) :=
-  upperLightray_isNull v
+    (cp : CrossProduct3 R) (v : Fin 3 → R) :
+    ZornMatrix.IsNull cp (upperLightray v) :=
+  upperLightray_isNull cp v
 
 /-- Every lower off-diagonal Zorn lightray is null. -/
 theorem zorn_lower_lightray_null {R : Type*} [CommRing R]
-    (w : Fin 3 → R) :
-    ZornMatrix.IsNull (lowerLightray w) :=
-  lowerLightray_isNull w
+    (cp : CrossProduct3 R) (w : Fin 3 → R) :
+    ZornMatrix.IsNull cp (lowerLightray w) :=
+  lowerLightray_isNull cp w
 
 /-- The `Cl(1,1)` chiral projectors are orthogonal. -/
 theorem cl11_chiral_sheets_orthogonal
     {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K) :
-    Cl11AtomLaws atom → chiralProjectorPlus atom * chiralProjectorMinus atom = 0 := by
-  intro h
-  exact chiral_sheets_orthogonal atom h
+    chiralProjectorPlus atom * chiralProjectorMinus atom = 0 :=
+  chiral_sheets_orthogonal atom
 
 /-- The `Cl(1,1)` chiral projectors partition unity. -/
 theorem cl11_chiral_sheets_partition_unity
@@ -125,11 +125,14 @@ theorem cl11_chiral_sheets_partition_unity
 /-- The `Cl(1,1)` Euler operator reverses the two chiral sheets. -/
 theorem cl11_euler_reverses_chiral_sheets
     {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K) :
-    Cl11AtomLaws atom →
-      chiralProjectorPlus atom * EulerOperator atom =
-        EulerOperator atom * chiralProjectorMinus atom := by
-  intro h
-  exact euler_operator_reverses_chiral_sheets atom h
+    chiralProjectorPlus atom * EulerOperator atom =
+      EulerOperator atom * chiralProjectorMinus atom :=
+  euler_operator_reverses_chiral_sheets atom
+
+/-- The repo-owned split `Cl(4,4)` boundary packet, including its label-level
+`S₃` generation-rotation component. -/
+def splitCl44BoundaryPacket : SplitCliffordBoundaryPacket :=
+  canonicalSplitCliffordBoundaryPacket
 
 /-- Concrete finite `B₃` spin operators satisfy the Artin braid packet. -/
 theorem finite_b3_spin_artin_packet :

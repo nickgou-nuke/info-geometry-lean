@@ -2,9 +2,12 @@ import Mathlib
 
 namespace Omega.EA
 
-/-- A `C^1` hidden trajectory composed with a `C^1` readout is again `C^1`; hence a finite
+/-- Concrete `C^1` chain-rule obstruction for a smooth hidden trajectory in a finite-dimensional
+state space (`ℝ × ℝ`) and a smooth scalar readout.
+
+A `C^1` hidden trajectory composed with a `C^1` readout is again `C^1`; hence a finite
 dimensional smooth hidden state cannot by itself produce an everywhere nondifferentiable visible
-signal. This is the concrete chain-rule obstruction in the state space `ℝ × ℝ`.
+signal.
     prop:groupoid-zeckendorf-smooth-projection-nogo -/
 theorem paper_groupoid_zeckendorf_smooth_projection_nogo_spec :
     ∀ (γ : ℝ → ℝ × ℝ) (O : ℝ × ℝ → ℝ),

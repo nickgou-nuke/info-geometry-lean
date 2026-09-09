@@ -1,0 +1,15 @@
+import InfoGeometry.Nuclear.DetectorInformationGeometry
+import InfoGeometry.Probability.FiniteLogTransportAudit
+import InfoGeometry.Probability.SimplexExtensionAudit
+import InfoGeometry.Probability.DetectorCrossSectionDualityAudit
+import InfoGeometry.Nuclear.ApollonianBipolarFieldAudit
+
+/-! Integrated audit: finite ensemble, robust location, and the existing
+binary, GENERIC, modular and spectroscopic owners. -/
+#print axioms InfoGeometry.Probability.DetectorEnsembleTransport.transport_preserves_row_product
+#print axioms InfoGeometry.Probability.DetectorEnsembleTransport.rateSurprisal_weyl
+#print axioms InfoGeometry.Probability.DetectorEnsembleTransport.gauge_center_residual
+#print axioms InfoGeometry.Probability.DetectorEnsembleTransport.centered_factorization_unique
+#print axioms InfoGeometry.Nuclear.DetectorInformationGeometry.geometric_response_massieu
+#print axioms InfoGeometry.Nuclear.DetectorInformationGeometry.loss_state_modular_phase
+#print axioms InfoGeometry.Nuclear.DetectorInformationGeometry.ensemble_modular_frequency

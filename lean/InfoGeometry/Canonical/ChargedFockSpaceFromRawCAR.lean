@@ -30,7 +30,7 @@ Heisenberg current representation.
 noncomputable def chargedFockSpaceWitnessFromRawCAR
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
-    SplitCARCurrentProperty 𝕜 A (ChargedFockSpace 𝕜 α) where
+    SplitCARCurrentWitness 𝕜 A (ChargedFockSpace 𝕜 α) where
   source := C
   J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
   trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
@@ -48,7 +48,7 @@ theorem chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep
   rfl
 
 /--
-The Virasoro stress-energy modes derived from the raw CAR property match the canonical
+The Virasoro stress-energy modes derived from the raw CAR witness match the canonical
 Sugawara representation.
 -/
 theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode

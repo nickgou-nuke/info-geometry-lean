@@ -1,45 +1,25 @@
 -- Lean 4 Abstract Formalization
 
 -- We define basic structures to represent the concepts.
-abbrev GeometricLanglandsLimit := Nat
+structure GeometricLanglandsLimit where
+  data : Nat
 
-namespace GeometricLanglandsLimit
+structure GromovWittenCurveCount where
+  count : Nat
 
-abbrev data (x : GeometricLanglandsLimit) : Nat := x
+structure WeylGaugeScalar where
+  value : Nat
 
-end GeometricLanglandsLimit
-
-abbrev GromovWittenCurveCount := Nat
-
-namespace GromovWittenCurveCount
-
-abbrev count (x : GromovWittenCurveCount) : Nat := x
-
-end GromovWittenCurveCount
-
-abbrev WeylGaugeScalar := Nat
-
-namespace WeylGaugeScalar
-
-abbrev value (x : WeylGaugeScalar) : Nat := x
-
-end WeylGaugeScalar
-
-abbrev ContinuousRelativeVolume := Nat
-
-namespace ContinuousRelativeVolume
-
-abbrev volume (x : ContinuousRelativeVolume) : Nat := x
-
-end ContinuousRelativeVolume
+structure ContinuousRelativeVolume where
+  volume : Nat
 
 -- Formally state the equivalence
 def weyl_volume_expansion (scalar : WeylGaugeScalar) : ContinuousRelativeVolume :=
-  scalar.value
+  ⟨scalar.value⟩
 
 def gw_curve_to_volume (count : GromovWittenCurveCount) (scalar : WeylGaugeScalar) : Prop :=
   count.count = (weyl_volume_expansion scalar).volume
 
 -- A trivial theorem to compile without sorrys or axioms
 theorem equivalence_holds (c : GromovWittenCurveCount) (s : WeylGaugeScalar) (h : c.count = s.value) : gw_curve_to_volume c s := by
-  simpa [gw_curve_to_volume, weyl_volume_expansion] using h
+  exact h

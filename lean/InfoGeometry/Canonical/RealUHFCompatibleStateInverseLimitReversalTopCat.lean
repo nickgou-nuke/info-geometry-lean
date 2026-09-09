@@ -76,5 +76,4 @@ theorem fixedPointOrbitClosure_natural
   exact (reversalData J hJ).fixedPointOrbitClosureTopCatHom_natural ρ hρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitReversalTopCat
-
 end

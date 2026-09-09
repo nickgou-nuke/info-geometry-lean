@@ -18,7 +18,7 @@ Canonical owner surface for generative-inference lineage across:
 1. routing/expert semantic state (`GrandCanonicalExperts`),
 2. surprisal/parity entropy readouts (`GrandCanonicalExperts`),
 3. Bayesian chain action (`SpectralInference`),
-4. property chiral spectral obstruction (`SpectralInference`).
+4. certified chiral spectral obstruction (`SpectralInference`).
 
 This module does not replace those owners. It packages their interoperable
 surface into one datum and exposes explicit bridge-candidate readouts.
@@ -51,7 +51,7 @@ abbrev RoutingLabel := CliffordLabel
 Unified generative-inference datum:
 - mode routing weights and labels,
 - Hessian geometry and Bayesian chain,
-- property chiral spectral package for anomaly/projector readout.
+- certified chiral spectral package for anomaly/projector readout.
 -/
 structure GenerativeInferenceDatum (n : Nat) (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] where
@@ -248,7 +248,7 @@ This is the single owner readout carrying:
 - routed semantic state and channel masses,
 - routing surprisal/parity entropy,
 - Bayesian chain action at a horizon,
-- property spectral obstruction operator.
+- certified spectral obstruction operator.
 -/
 structure BridgeCandidate (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   semanticState : ℝ × ℝ

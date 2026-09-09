@@ -49,7 +49,7 @@ def PhiSupportFaithful
 
 /-- Helper expressing the shifted Rényi formula `log (Phi s) / s`.
 
-The faithfulness property is carried explicitly for interface stability. -/
+The faithfulness hypothesis is carried explicitly for interface stability. -/
 noncomputable def renyiBridge
     {α : Type} [Fintype α]
     (N_func : InfoGeometry.EmpiricalCounts α)

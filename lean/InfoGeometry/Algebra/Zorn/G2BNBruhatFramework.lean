@@ -5,9 +5,11 @@ import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatCounting
 import InfoGeometry.Algebra.Zorn.G2TwoDihedralSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
+import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
+import InfoGeometry.GroupTheory.DoubleCoset
 import Mathlib.Tactic
 
 /-!
@@ -39,6 +41,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
+open InfoGeometry.GroupTheory.DoubleCoset
 open InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
 
 def s : DihedralGroup 6 := DihedralGroup.sr 0
@@ -267,6 +270,24 @@ theorem concreteWeylElement_eq_zero_of_mem_unipotentSubgroup
     have hval : autMatrix (concreteWeylElement 11) 2 2 = 0 := rfl
     rw [hval] at he
     exact (zero_ne_one he).elim
+
+theorem weylNF_one_false_not_mem_unipotentSubgroup :
+    G2ConcreteWeylG2.weylNF 1 false ∉
+      unipotentSubgroup := by
+  intro h
+  have h7 : concreteWeylElement 7 ∈ unipotentSubgroup := by
+    rw [G2ConcreteWeylG2.concreteWeylElement_seven_eq_weylNF_one_false]
+    exact h
+  have hi := concreteWeylElement_eq_zero_of_mem_unipotentSubgroup 7 h7
+  omega
+
+theorem identity_doubleCoset_disjoint_weylNF_one_false :
+    Disjoint (doubleCoset unipotentSubgroup 1 unipotentSubgroup)
+      (doubleCoset unipotentSubgroup
+        (G2ConcreteWeylG2.weylNF 1 false) unipotentSubgroup) := by
+  exact InfoGeometry.GroupTheory.DoubleCoset.disjoint_doubleCoset_one_of_not_mem
+    unipotentSubgroup (G2ConcreteWeylG2.weylNF 1 false)
+    weylNF_one_false_not_mem_unipotentSubgroup
 
 /-- 🏆 THEOREM (Triviality of Maximal Split Torus / BN Intersection):
 The intersection of the concrete unipotent Borel subgroup `B` and the concrete

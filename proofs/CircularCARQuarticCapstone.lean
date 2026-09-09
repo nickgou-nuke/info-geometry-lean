@@ -1,5 +1,5 @@
 import proofs.TwelveFoldSheetColorOmega
-import proofs.HestenesCircularSheetCAR
+import InfoGeometry.Canonical.HestenesCircularSheetCAR
 
 /-!
 # Quartic phase action on the circular CAR basis

@@ -37,34 +37,15 @@ None.
 
 BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers or renamed placeholders.]
+[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
 
 None.
 -/
 
-def FiniteExponentialFamilyData (α : Type _) [Fintype α] : Type _ :=
-  {p : ProbabilityDist α × (α → ℝ) //
-    ∀ x, 0 < (p.1 x).toReal}
-
-namespace FiniteExponentialFamilyData
-
-/-- Native product projection for the base probability distribution. -/
-abbrev base {α : Type _} [Fintype α]
-    (F : FiniteExponentialFamilyData α) : ProbabilityDist α :=
-  F.1.1
-
-/-- Native product projection for the sufficient statistic. -/
-abbrev stat {α : Type _} [Fintype α]
-    (F : FiniteExponentialFamilyData α) : α → ℝ :=
-  F.1.2
-
-/-- Native subtype proof of strict positivity of the base distribution. -/
-theorem base_pos {α : Type _} [Fintype α]
-    (F : FiniteExponentialFamilyData α) :
-    ∀ x, 0 < (F.base x).toReal :=
-  F.2
-
-end FiniteExponentialFamilyData
+structure FiniteExponentialFamilyData (α : Type _) [Fintype α] where
+  base : ProbabilityDist α
+  stat : α → ℝ
+  base_pos : ∀ x, 0 < (base x).toReal
 
 variable {α : Type _} [Fintype α]
 

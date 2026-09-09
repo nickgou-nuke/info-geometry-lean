@@ -59,17 +59,4 @@ theorem split_g2_flow_is_one_parameter_subgroup
       zornFlowRealAut D s * zornFlowRealAut D t :=
   zornFlowRealAut_add D s t
 
-/-! A single theorem exposing the complete real-form package proved here. -/
-
-theorem split_g2_real_form_capstone :
-      Module.finrank ℝ
-        InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 ∧
-      Fintype.card RootIndex = 12 ∧
-      Function.Bijective nativeRootIndex := by
-  exact ⟨parameter_model_is_fourteen_dimensional,
-    root_system_card_12,
-    ⟨nativeRootIndex_injective, nativeRootIndex_surjective⟩⟩
-
 end InfoGeometry.Lie.SplitG2RealFormCapstone
-
-end

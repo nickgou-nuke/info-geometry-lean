@@ -67,5 +67,3 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
   exact Φ.observationQuotientRangeFlowCompHausIso_inv_apply S h_cont t q
 
 end InfoGeometry.Topology
-
-end

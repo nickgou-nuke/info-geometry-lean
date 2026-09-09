@@ -1,4 +1,4 @@
-import proofs.HestenesHermitianAdjoint
+import InfoGeometry.Canonical.HestenesHermitianAdjoint
 
 /-!
 # Native Hestenes Hermitian/Krein adjoint

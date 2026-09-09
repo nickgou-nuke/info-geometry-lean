@@ -13,9 +13,9 @@ noncomputable section
 
 namespace InfoGeometry.Topology.CantorBoundaryCuntzFamily
 
-abbrev Boundary := ℕ → Fin 4
-abbrev BoundaryFunctions := Boundary → ℂ
-abbrev BoundaryEnd := BoundaryFunctions →ₗ[ℂ] BoundaryFunctions
+abbrev Boundary := C4Boundary
+abbrev BoundaryFunctions := C4Functions
+abbrev BoundaryEnd := C4Functions →ₗ[ℂ] C4Functions
 
 /-- The creation operator associated to a finite word. -/
 def cuntzWordS : List (Fin 4) → BoundaryEnd
@@ -49,7 +49,7 @@ theorem cuntzWordS_apply_cons
     (f : BoundaryFunctions) (b : Boundary) :
     cuntzWordS (i :: w) f b =
       if headN b = i then cuntzWordS w f (tailN b) else 0 := by
-  rfl
+  simp [cuntzWordS, cuntzS]
 
 theorem cuntzWordS_apply_nil (f : BoundaryFunctions) (b : Boundary) :
     cuntzWordS ([] : List (Fin 4)) f b = f b := by

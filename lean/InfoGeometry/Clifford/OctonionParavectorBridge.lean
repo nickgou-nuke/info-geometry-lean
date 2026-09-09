@@ -125,33 +125,6 @@ theorem imaginary_mul_imaginary_swap (D : OctonionParavectorData V) (u v : V) :
   · simp [paravectorMul, imaginary]
     exact D.cross_anticomm u v
 
-/-- The symmetric product of two pure-imaginary paravectors is its scalar
-    inner-product channel. -/
-theorem imaginary_mul_imaginary_add_swap (D : OctonionParavectorData V)
-    (u v : V) :
-    paravectorMul D (imaginary u) (imaginary v) +
-        paravectorMul D (imaginary v) (imaginary u) =
-      scalar (-2 * D.inner u v) := by
-  rw [imaginary_mul_imaginary, imaginary_mul_imaginary_swap]
-  ext
-  · simp [scalar]
-    ring
-  · change D.cross u v + -D.cross u v = 0
-    module
-
-/-- The antisymmetric product of two pure-imaginary paravectors is its vector
-    cross-product channel. -/
-theorem imaginary_mul_imaginary_sub_swap (D : OctonionParavectorData V)
-    (u v : V) :
-    paravectorMul D (imaginary u) (imaginary v) -
-        paravectorMul D (imaginary v) (imaginary u) =
-      imaginary (2 • D.cross u v) := by
-  rw [imaginary_mul_imaginary, imaginary_mul_imaginary_swap]
-  ext
-  · simp [imaginary]
-  · simp [imaginary]
-    module
-
 /-- A pure-imaginary paravector squares to the negative quadratic norm in the
 scalar line. -/
 theorem imaginary_sq (D : OctonionParavectorData V) (u : V) :
@@ -250,10 +223,9 @@ theorem octonion_paravector_bridge_synthesis
       (∀ x y : Paravector V,
         S.projectParavector (S.includeParavector x * S.includeParavector y) =
           paravectorMul D x y) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact one_paravectorMul D
-  · exact paravectorMul_one D
-  · exact imaginary_sq D
-  · exact S.projected_mul
+  exact ⟨one_paravectorMul D,
+    paravectorMul_one D,
+    imaginary_sq D,
+    S.projected_mul⟩
 
 end InfoGeometry.Clifford.OctonionParavectorBridge

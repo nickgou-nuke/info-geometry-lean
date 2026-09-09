@@ -24,30 +24,17 @@ Typed Fierz readout package.
 It records scalar channels and the algebraic closure identity they must satisfy.
 -/
 @[rep_depth operator]
-structure FierzChannelReadoutDatum where
+structure FierzChannelReadout where
   State : Type
   scalar : State → ℝ
   symplectic : State → ℝ
   hilbert : State → ℝ
   area : State → ℝ
-
-def FierzChannelReadoutValid (R : FierzChannelReadoutDatum) : Prop :=
-  (∀ ψ, 0 ≤ R.hilbert ψ) ∧
-    (∀ ψ, (R.hilbert ψ)^2 = (R.scalar ψ)^2 + (R.symplectic ψ)^2 + 4 * (R.area ψ))
-
-def FierzChannelReadout :=
-  {R : FierzChannelReadoutDatum // FierzChannelReadoutValid R}
+  hilbert_nonneg : ∀ ψ, 0 ≤ hilbert ψ
+  fierzIdentity :
+    ∀ ψ, (hilbert ψ)^2 = (scalar ψ)^2 + (symplectic ψ)^2 + 4 * (area ψ)
 
 namespace FierzChannelReadout
-
-abbrev State (R : FierzChannelReadout) := R.1.State
-abbrev scalar (R : FierzChannelReadout) : R.State → ℝ := R.1.scalar
-abbrev symplectic (R : FierzChannelReadout) : R.State → ℝ := R.1.symplectic
-abbrev hilbert (R : FierzChannelReadout) : R.State → ℝ := R.1.hilbert
-abbrev area (R : FierzChannelReadout) : R.State → ℝ := R.1.area
-abbrev hilbert_nonneg (R : FierzChannelReadout) : ∀ ψ, 0 ≤ R.hilbert ψ := R.2.1
-abbrev fierzIdentity (R : FierzChannelReadout) :
-    ∀ ψ, (R.hilbert ψ)^2 = (R.scalar ψ)^2 + (R.symplectic ψ)^2 + 4 * (R.area ψ) := R.2.2
 
 /-- Majorana-shadow predicate on a Fierz readout package. -/
 @[rep_depth operator]
@@ -65,20 +52,6 @@ theorem fierz_majorana
   unfold IsMajoranaShadow at hMajorana
   rw [hMajorana] at hBase
   simpa using hBase
-
-/-- The Majorana-shadow condition is equivalent to the squared-channel readout identity. -/
-@[rep_depth operator]
-theorem fierz_majorana_iff
-    (R : FierzChannelReadout)
-    (ψ : R.State) :
-    R.IsMajoranaShadow ψ ↔
-      (R.hilbert ψ)^2 = (R.scalar ψ)^2 + (R.symplectic ψ)^2 := by
-  constructor
-  · exact R.fierz_majorana ψ
-  · intro h
-    unfold IsMajoranaShadow
-    have hBase := R.fierzIdentity ψ
-    nlinarith
 
 /--
 Translator map from Fierz readout package to the generic presentation
@@ -135,16 +108,16 @@ local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 Canonical doubled-carrier Fierz readout package from existing owner channels.
 -/
 @[rep_depth operator]
-noncomputable def doubledFierzReadout : FierzChannelReadout :=
-  ⟨{ State := H₂
-     scalar := infoScalar (E := E)
-     symplectic := infoSymplectic (E := E)
-     hilbert := infoHilbert (E := E)
-     area := infoArea (E := E) },
-    ⟨InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E),
-      information_fierz_identity (E := E)⟩⟩
+noncomputable def doubledFierzReadout : FierzChannelReadout where
+  State := H₂
+  scalar := infoScalar (E := E)
+  symplectic := infoSymplectic (E := E)
+  hilbert := infoHilbert (E := E)
+  area := infoArea (E := E)
+  hilbert_nonneg := InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E)
+  fierzIdentity := information_fierz_identity (E := E)
 
-/-- Tagged presentation property for the doubled/Krein Fierz lane. -/
+/-- Tagged presentation witness for the doubled/Krein Fierz lane. -/
 @[rep_depth operator]
 noncomputable def taggedDoubledFierzPresentation : TaggedPresentation where
   lane := PresentationLane.doubledKrein
@@ -158,50 +131,6 @@ theorem doubledFierz_majorana
       = ((doubledFierzReadout (E := E)).scalar ψ)^2
         + ((doubledFierzReadout (E := E)).symplectic ψ)^2 := by
   exact FierzChannelReadout.fierz_majorana (R := doubledFierzReadout (E := E)) ψ hMajorana
-
-/-- The doubled-carrier Majorana-shadow condition is equivalent to the squared-channel identity. -/
-@[rep_depth operator]
-theorem doubledFierz_majorana_iff
-    (ψ : H₂) :
-    (doubledFierzReadout (E := E)).IsMajoranaShadow ψ ↔
-      ((doubledFierzReadout (E := E)).hilbert ψ)^2
-        = ((doubledFierzReadout (E := E)).scalar ψ)^2
-          + ((doubledFierzReadout (E := E)).symplectic ψ)^2 := by
-  simpa using
-    (FierzChannelReadout.fierz_majorana_iff
-      (R := doubledFierzReadout (E := E)) ψ)
-
-/-- On the doubled Majorana-shadow lane, the Hilbert readout is the square root
-of the scalar-plus-symplectic power. -/
-@[rep_depth operator]
-theorem doubledFierz_majorana_sqrt
-    (ψ : H₂)
-    (hMajorana : (doubledFierzReadout (E := E)).IsMajoranaShadow ψ) :
-    (doubledFierzReadout (E := E)).hilbert ψ =
-      Real.sqrt
-        (((doubledFierzReadout (E := E)).scalar ψ)^2 +
-          ((doubledFierzReadout (E := E)).symplectic ψ)^2) := by
-  have hsq_nonneg :
-      0 ≤ ((doubledFierzReadout (E := E)).scalar ψ)^2 +
-        ((doubledFierzReadout (E := E)).symplectic ψ)^2 := by
-    rw [← doubledFierz_majorana (E := E) ψ hMajorana]
-    exact sq_nonneg ((doubledFierzReadout (E := E)).hilbert ψ)
-  have h1 :
-      (doubledFierzReadout (E := E)).hilbert ψ ≤
-        Real.sqrt
-          (((doubledFierzReadout (E := E)).scalar ψ)^2 +
-            ((doubledFierzReadout (E := E)).symplectic ψ)^2) := by
-    rw [Real.le_sqrt ((doubledFierzReadout (E := E)).hilbert_nonneg ψ) hsq_nonneg]
-    rw [doubledFierz_majorana (E := E) ψ hMajorana]
-  have h2 :
-      Real.sqrt
-        (((doubledFierzReadout (E := E)).scalar ψ)^2 +
-          ((doubledFierzReadout (E := E)).symplectic ψ)^2) ≤
-        (doubledFierzReadout (E := E)).hilbert ψ := by
-    rw [Real.sqrt_le_iff]
-    refine ⟨(doubledFierzReadout (E := E)).hilbert_nonneg ψ, ?_⟩
-    rw [doubledFierz_majorana (E := E) ψ hMajorana]
-  exact le_antisymm h1 h2
 
 end DoubledCarrier
 

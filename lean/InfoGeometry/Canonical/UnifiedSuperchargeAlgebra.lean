@@ -44,7 +44,7 @@ theorem square_transport_preserved
     {A B : Type*} [Ring A] [Ring B]
     (e : A ≃+* B) (x : A) :
     e (x * x) = e x * e x := by
-  exact map_mul e x x
+  simpa using (map_mul e x x).symm
 
 /--
 Similarity/conjugation transports squares covariantly:
@@ -216,41 +216,47 @@ def isParabolic
     (v : V) : Prop :=
   v * v = 0
 
-/-
-`isParabolic` is intentionally the square-zero predicate itself.  The former
-`ChiralCone` class stored this definitional equivalence as a field, which made
-the API accept a tautological proof witness rather than adding structure.
-Expose the equivalence directly so callers provide only the algebraic
-operations they actually use.
+/--
+Chiral null-cone carrier with a star involution and square-zero/parabolic
+equivalence surface.
 -/
 @[rep_depth thermo]
-theorem isParabolic_iff_square_zero
-    {V : Type*} [Mul V] [Zero V] (v : V) :
-    isParabolic v ↔ v * v = 0 := Iff.rfl
+class ChiralCone (V : Type*) extends AddCommGroup V, Mul V, Zero V where
+  starInvolution : V → V
+  nilpotent_core : ∀ v : V, (v * v = 0) ↔ isParabolic v
 
+/--
+In any `ChiralCone`, square-zero implies parabolic by definition.
+-/
 @[rep_depth thermo]
-theorem square_zero_isParabolic
-    {V : Type*} [Mul V] [Zero V] {v : V}
+theorem chiralCone_nilpotent_isParabolic
+    {V : Type*} [ChiralCone V] {v : V}
     (hv : v * v = 0) :
-    isParabolic v := hv
+    isParabolic v := by
+  exact (ChiralCone.nilpotent_core v).1 hv
 
+/--
+In any `ChiralCone`, parabolic implies square-zero by definition.
+-/
 @[rep_depth thermo]
-theorem isParabolic_square_zero
-    {V : Type*} [Mul V] [Zero V] {v : V}
+theorem chiralCone_isParabolic_nilpotent
+    {V : Type*} [ChiralCone V] {v : V}
     (hv : isParabolic v) :
-    v * v = 0 := hv
+    v * v = 0 := by
+  exact (ChiralCone.nilpotent_core v).2 hv
 
 /--
 Two null-cone generators with square-zero hypotheses are parabolic.
 -/
 @[rep_depth thermo]
 theorem chiral_null_generators_parabolic
-    {V : Type*} [Mul V] [Zero V]
+    {V : Type*} [ChiralCone V]
     {ePlus eMinus : V}
     (hPlus : ePlus * ePlus = 0)
     (hMinus : eMinus * eMinus = 0) :
     isParabolic ePlus ∧ isParabolic eMinus := by
-  exact ⟨hPlus, hMinus⟩
+  exact ⟨chiralCone_nilpotent_isParabolic hPlus,
+    chiralCone_nilpotent_isParabolic hMinus⟩
 
 /--
 Three-way square class used in the Cayley--Klein local corridor.
@@ -317,10 +323,10 @@ theorem hasCKSignature_of_square_eq_neg_one
   simpa [hasCKSignature] using h
 
 /--
-Conjugation preserves hyperbolic square law `x² = 1` via constructive signature property.
+Conjugation preserves hyperbolic square law `x² = 1` via constructive signature witness.
 -/
 @[rep_depth thermo]
-theorem conjugation_preserves_square_one_of_property
+theorem conjugation_preserves_square_one_of_witness
     (u : Units ℂ) (x : ℂ)
     (hx : hasCKSignature x CKSignature.hyperbolic) :
     (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = 1 := by
@@ -338,13 +344,13 @@ theorem hasHyperbolic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := (map_mul e x x).symm
+      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
       _ = e 1 := by rw [hx]
       _ = (1 : B) := by simp
   · intro hx
     have hmap : e (x * x) = (1 : B) := by
       calc
-        e (x * x) = e x * e x := map_mul e x x
+        e (x * x) = e x * e x := by simpa using (map_mul e x x)
         _ = 1 := hx
     exact e.injective (by simpa using hmap)
 
@@ -359,13 +365,13 @@ theorem hasParabolic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := (map_mul e x x).symm
+      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
       _ = e 0 := by rw [hx]
       _ = (0 : B) := by simp
   · intro hx
     have hmap : e (x * x) = (0 : B) := by
       calc
-        e (x * x) = e x * e x := map_mul e x x
+        e (x * x) = e x * e x := by simpa using (map_mul e x x)
         _ = 0 := hx
     exact e.injective (by simpa using hmap)
 
@@ -380,13 +386,13 @@ theorem hasElliptic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := (map_mul e x x).symm
+      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
       _ = e (-(1 : A)) := by rw [hx]
       _ = (-(1 : B)) := by simp
   · intro hx
     have hmap : e (x * x) = (-(1 : B)) := by
       calc
-        e (x * x) = e x * e x := map_mul e x x
+        e (x * x) = e x * e x := by simpa using (map_mul e x x)
         _ = (-(1 : B)) := hx
     exact e.injective (by simpa using hmap)
 
@@ -725,7 +731,7 @@ theorem wick_twist_hyperbolic_to_elliptic
     (ω * B) * (ω * B) = -(1 : A) := by
   calc
     (ω * B) * (ω * B) = -(B * B) := wick_twist_square_flip ω B hω hcomm
-    _ = -(1 : A) := by rw [hB]
+    _ = -(1 : A) := by simpa [hB]
 
 /--
 Wick specialization in the reverse direction:
@@ -742,7 +748,7 @@ theorem wick_twist_elliptic_to_hyperbolic
     (ω * B) * (ω * B) = (1 : A) := by
   calc
     (ω * B) * (ω * B) = -(B * B) := wick_twist_square_flip ω B hω hcomm
-    _ = (1 : A) := by rw [hB]; simp
+    _ = (1 : A) := by simpa [hB]
 
 /--
 Transport/conjugation corollary: if `x² = κ` then transported element keeps
@@ -755,8 +761,8 @@ theorem square_class_transport
     (hx : x * x = κ) :
     e x * e x = e κ := by
   calc
-    e x * e x = e (x * x) := (map_mul e x x).symm
-    _ = e κ := by rw [hx]
+    e x * e x = e (x * x) := by simpa using (map_mul e x x)
+    _ = e κ := by simpa [hx]
 
 /--
 Transport cannot flip `+1` to `-1` when the codomain is not characteristic `2`.
@@ -861,7 +867,7 @@ theorem conjugation_preserves_square_zero_basic
 
 /--
 Wick twist preserves parabolic nilpotency:
-if `B² = 0`, then `(ωB)² = 0` under the same commuting property.
+if `B² = 0`, then `(ωB)² = 0` under the same commuting hypothesis.
 -/
 @[rep_depth thermo]
 theorem wick_twist_parabolic_stable
@@ -1594,7 +1600,7 @@ def nambuTau3 {A : Type*} [AddCommGroup A] : NambuSpinor A →+ NambuSpinor A wh
   toFun v := (v.1, -v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm]
+    ext <;> simp [add_comm, add_left_comm, add_assoc]
 
 /--
 Particle-hole swap on the doubled Nambu-Gorkov carrier.
@@ -1604,7 +1610,7 @@ def nambuSwap {A : Type*} [AddCommGroup A] : NambuSpinor A →+ NambuSpinor A wh
   toFun v := (v.2, v.1)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp
+    ext <;> simp [add_comm, add_left_comm, add_assoc]
 
 /--
 `τ₃` is involutive.
@@ -1633,7 +1639,7 @@ def nambuBlockDiag {A : Type*} [AddCommGroup A]
   toFun v := (a v.1, d v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp
+    ext <;> simp [add_comm, add_left_comm, add_assoc]
 
 /--
 Off-block-diagonal operator on doubled Nambu-Gorkov carrier.
@@ -1644,7 +1650,7 @@ def nambuBlockOffDiag {A : Type*} [AddCommGroup A]
   toFun v := (b v.2, c v.1)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp
+    ext <;> simp [add_comm, add_left_comm, add_assoc]
 
 /--
 Full `2×2` Nambu-Gorkov block operator in component form.
@@ -1655,7 +1661,7 @@ def nambuBlockFull {A : Type*} [AddCommGroup A]
   toFun v := (a v.1 + b v.2, c v.1 + d v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm]
+    ext <;> simp [add_comm, add_left_comm, add_assoc]
 
 /--
 Any finite Nambu block operator decomposes into diagonal + off-diagonal lanes.
@@ -1665,7 +1671,7 @@ theorem nambuBlock_decomposition
     {A : Type*} [AddCommGroup A]
     (a b c d : A →+ A) (v : NambuSpinor A) :
     nambuBlockFull a b c d v = nambuBlockDiag a d v + nambuBlockOffDiag b c v := by
-  ext <;> simp [nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag, add_comm]
+  ext <;> simp [nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag, add_comm, add_left_comm, add_assoc]
 
 /--
 Pure diagonal specialization of the full Nambu block.
@@ -1701,7 +1707,7 @@ theorem nambuBlockFull_sq_expansion
       =
     (a (a v.1) + a (b v.2) + (b (c v.1) + b (d v.2)),
       c (a v.1) + c (b v.2) + (d (c v.1) + d (d v.2))) := by
-  ext <;> simp [nambuBlockFull, add_comm, add_left_comm]
+  ext <;> simp [nambuBlockFull, add_assoc, add_comm, add_left_comm]
 
 /--
 If the pairing channels are pairwise-zero (`b ∘ c = 0`, `c ∘ b = 0`), the full
@@ -1727,7 +1733,7 @@ theorem nambuBlockFull_sq_of_offdiag_pairwise_zero
     _ =
       (a (a v.1) + a (b v.2) + b (d v.2),
         c (a v.1) + d (c v.1) + d (d v.2)) := by
-          simp [hbc, hcb, add_comm, add_left_comm]
+          simp [hbc, hcb, add_assoc, add_comm, add_left_comm]
 
 /--
 If all mixed couplings and off-diagonal round-trips vanish, the full Nambu
@@ -1753,7 +1759,7 @@ theorem nambuBlockFull_sq_pure_diag_of_cross_zero
         c (a v.1) + d (c v.1) + d (d v.2)) := by
           exact nambuBlockFull_sq_of_offdiag_pairwise_zero a b c d hbc hcb v
     _ = (a (a v.1), d (d v.2)) := by
-          simp [hab, hbd, hca, hdc]
+          simp [hab, hbd, hca, hdc, add_assoc]
 
 /--
 Operator-form collapse of the full Nambu square to a diagonal square under
@@ -1825,7 +1831,7 @@ theorem nambuTau3_offDiag_anticomm
     (b c : A →+ A) (v : NambuSpinor A) :
     nambuTau3 (nambuBlockOffDiag b c v) =
       - (nambuBlockOffDiag b c (nambuTau3 v)) := by
-  ext <;> simp [nambuTau3, nambuBlockOffDiag]
+  ext <;> simp [nambuTau3, nambuBlockOffDiag, add_comm, add_left_comm, add_assoc]
 
 /--
 `τ₃` commutes with diagonal Nambu blocks:
@@ -1850,7 +1856,7 @@ theorem nambuTau3_full_split
     nambuTau3 (nambuBlockFull a b c d v) =
       nambuBlockDiag a d (nambuTau3 v) - nambuBlockOffDiag b c (nambuTau3 v) := by
   ext <;> simp [nambuTau3, nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag,
-    sub_eq_add_neg, add_comm]
+    sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
 
 /--
 Square of an off-diagonal Nambu block is diagonal in the doubled carrier.
@@ -1956,7 +1962,7 @@ theorem endo_add_sq_pointwise
     {A : Type*} [AddCommGroup A]
     (b c : A →+ A) (x : A) :
     (b + c) ((b + c) x) = b (b x) + (b (c x) + (c (b x) + c (c x))) := by
-  simp [add_comm, add_left_comm]
+  simp [add_assoc, add_comm, add_left_comm]
 
 /--
 If two endomorphisms are square-zero and satisfy CAR anticommutation
@@ -2112,7 +2118,7 @@ theorem majorana_plus_not_parabolic_of_nontrivial
   exact hx ((h1 x).symm.trans (h0 x))
 
 /--
-Owner-side CAR rigidity on the Majorana-plus lane, property-free:
+Owner-side CAR rigidity on the Majorana-plus lane, witness-free:
 under `NoZeroSMulDivisors ℤ A` and nontriviality, hyperbolic excludes elliptic.
 -/
 @[rep_depth thermo]
@@ -2169,7 +2175,7 @@ theorem nambu_offdiag_car_sum_sq_id
     ∀ v : NambuSpinor A,
       ((b + c) ((b + c) v.1), (b + c) ((b + c) v.2)) = v := by
   intro v
-  ext <;> simp [hbb, hcc, hcar]
+  ext <;> simp [endo_car_sum_sq_id, hbb, hcc, hcar]
 
 /--
 Concrete Cantor/prime CAR bridge:
@@ -2493,7 +2499,7 @@ each added local `Cl(1,1) ≃ M₂(ℝ)` cell doubles the linear size.
 @[rep_depth thermo]
 theorem bott_tensor_size_step (N : ℕ) :
     2 ^ (N + 1) = 2 ^ N * 2 := by
-  exact pow_succ 2 N
+  simpa [pow_succ, Nat.mul_comm] using (pow_succ 2 N)
 
 /--
 `N` local `Cl(1,1)` cells correspond to matrix size `2^N`.
@@ -2588,7 +2594,7 @@ theorem finite_central_lane_cutoff_succ
             _ =
                 Finset.sum (Finset.Icc (i + 1) N) (fun j => z i j) + z i (N + 1) := by
                   rw [Finset.sum_insert hnotMem]
-                  simp [add_comm]
+                  simp [add_comm, add_left_comm, add_assoc]
     _ =
         (Finset.sum (Finset.range (N + 1))
           (fun i => Finset.sum (Finset.Icc (i + 1) N) (fun j => z i j)))
@@ -2924,7 +2930,7 @@ theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_defect :
 /--
 Best available repo-native paired odd candidate on the Drazin lane.
 
-At present this is a Majorana-conjugate property rather than a fully independent
+At present this is a Majorana-conjugate witness rather than a fully independent
 owner-defined `Q̄_D`: it is `Q_D` viewed through the Majorana fixed-sector bridge.
 -/
 @[rep_depth transport]
@@ -3011,7 +3017,7 @@ theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_defect_of_com
 /--
 Nontrivial Kramers-conjugated odd candidate on the Drazin lane.
 
-Unlike the Majorana property above, this really uses an external symmetry action:
+Unlike the Majorana witness above, this really uses an external symmetry action:
 `Θ * Q_D * Θ`.
 -/
 @[rep_depth transport]
@@ -3090,14 +3096,12 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 Transport package for the primitive supercharges on the quasilattice lane.
 -/
 @[rep_depth transport]
-abbrev TransportedSuperchargePackage :=
-  BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)
+structure TransportedSuperchargePackage where
+  V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)
 
 namespace TransportedSuperchargePackage
 
 variable (T : TransportedSuperchargePackage (E := E))
-
-abbrev V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E) := T
 
 /-- Transported parity supercharge `QΠ(t)`. -/
 noncomputable abbrev QPi_t (t : ℝ) : EndH :=
@@ -3434,17 +3438,22 @@ theorem offdiag_hyperbolic_of_square_id
   simpa [bogoliubovMixingGenerator] using
     bogoliubov_generator_hyperbolic_of_square_id (𝕜 := 𝕜) (E := E) T h
 
-/-
-Square-zero predicate on the linear operator lane.  Square-zero alone is not
-a Drazin-index theorem, so this definition exposes only the property proved.
+/--
+Minimal Drazin-index-1 surrogate on the off-diagonal lane:
+strict nilpotency (`T² = 0`).
 -/
-def hasSquareZero (T : E →ₗ[𝕜] E) : Prop :=
+def hasDrazinIndexOneSurrogate (T : E →ₗ[𝕜] E) : Prop :=
   T.comp T = 0
 
-theorem hasSquareZero_iff_parabolic
+theorem hasDrazinIndexOneSurrogate_iff_parabolic
     (T : E →ₗ[𝕜] E) :
-    hasSquareZero T ↔ hasLinearSquareClass T CKSignature.parabolic := by
+    hasDrazinIndexOneSurrogate T ↔ hasLinearSquareClass T CKSignature.parabolic := by
   rfl
+
+theorem offdiag_hasDrazinIndexOneSurrogate_of_square_zero
+    (T : NambuGorkovLinearOp (𝕜 := 𝕜) (E := E))
+    (h : T.offdiag.comp T.offdiag = 0) :
+    hasDrazinIndexOneSurrogate T.offdiag := h
 
 theorem linear_square_hyperbolic_not_parabolic
     (T : E →ₗ[𝕜] E)
@@ -3612,7 +3621,7 @@ theorem matsubaraFrequency_neg
   calc
     (2 * Real.pi * ((-n : ℤ) : ℝ)) / β
         = (-(2 * Real.pi * ((n : ℤ) : ℝ))) / β := by
-            simp [mul_comm, mul_left_comm]
+            simp [mul_assoc, mul_comm, mul_left_comm]
     _ = -((2 * Real.pi * ((n : ℤ) : ℝ)) / β) := by ring
     _ = -matsubaraFrequency β n := by rfl
 
@@ -3714,7 +3723,7 @@ theorem bogoliubov_hyperbolic_not_parabolic
   exact hx ((h1 x).symm.trans (h0 x))
 
 /--
-Non-collapse of the hyperbolic Bogoliubov lane, property-free:
+Non-collapse of the hyperbolic Bogoliubov lane, witness-free:
 if `B² = id`, it cannot also be elliptic under
 `NoZeroSMulDivisors ℤ A` and nontriviality.
 -/
@@ -3862,16 +3871,16 @@ theorem exceptionalPoint_nambu_offdiag_parabolic
     hasEndoSquareClass (nambuBlockOffDiag b c) CKSignature.parabolic := by
   simpa using nambu_offdiag_has_parabolic_square (A := A) b c hbc hcb
 
-/-
-The square-zero predicate is exactly the parabolic square class on the linear
-operator lane.  No Drazin index is inferred here.
+/--
+Drazin-index-1 surrogate on the linear operator lane:
+strict nilpotency is equivalent to parabolic class.
 -/
 @[rep_depth thermo]
-theorem parabolic_square_zero_iff
+theorem parabolic_drazinIndexOneSurrogate_iff
     {𝕜 E : Type*} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E]
     (T : E →ₗ[𝕜] E) :
-    hasSquareZero T ↔ hasLinearSquareClass T CKSignature.parabolic := by
-  simpa using hasSquareZero_iff_parabolic (𝕜 := 𝕜) (E := E) T
+    hasDrazinIndexOneSurrogate T ↔ hasLinearSquareClass T CKSignature.parabolic := by
+  simpa using hasDrazinIndexOneSurrogate_iff_parabolic (𝕜 := 𝕜) (E := E) T
 
 end ParabolicSectorAPI
 

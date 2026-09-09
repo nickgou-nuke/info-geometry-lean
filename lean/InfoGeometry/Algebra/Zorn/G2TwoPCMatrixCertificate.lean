@@ -156,6 +156,81 @@ def matrixWord (e : PCExponent) : Matrix (Fin 8) (Fin 8) F2 :=
   (matrixFactor (e 1) C1 *
   matrixFactor (e 0) C0))))
 
+/-! CAS support certificate: rows in the invariant set
+`{0,1,2,3,6,7}` never enter coordinates `4,5`. -/
+def rowSixSupport (M : Matrix (Fin 8) (Fin 8) F2) : Prop :=
+  ∀ i, i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 6 ∨ i = 7 →
+    M i 4 = 0 ∧ M i 5 = 0
+
+lemma rowSixSupport_mul (A B : Matrix (Fin 8) (Fin 8) F2)
+    (hA : rowSixSupport A) (hB : rowSixSupport B) :
+    rowSixSupport (A * B) := by
+  intro i hi
+  rcases hA i hi with ⟨hA4, hA5⟩
+  have hB0 := hB 0 (Or.inl rfl)
+  have hB1 := hB 1 (Or.inr (Or.inl rfl))
+  have hB2 := hB 2 (Or.inr (Or.inr (Or.inl rfl)))
+  have hB3 := hB 3 (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
+  have hB6 := hB 6 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  have hB7 := hB 7 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
+  constructor
+  · rw [Matrix.mul_apply]
+    simp only [Fin.sum_univ_succ]
+    simp [hA4, hA5, hB0, hB1, hB2, hB3, hB6, hB7]
+  · rw [Matrix.mul_apply]
+    simp only [Fin.sum_univ_succ]
+    simp [hA4, hA5, hB0, hB1, hB2, hB3, hB6, hB7]
+
+lemma matrixFactor_rowSixSupport (b : Bool) (M : Matrix (Fin 8) (Fin 8) F2)
+    (hM : rowSixSupport M) : rowSixSupport (matrixFactor b M) := by
+  cases b
+  · intro i hi
+    rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;>
+      simp [matrixFactor]
+  · exact hM
+
+lemma C0_rowSixSupport : rowSixSupport C0 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+lemma C1_rowSixSupport : rowSixSupport C1 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+lemma C2_rowSixSupport : rowSixSupport C2 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+lemma C3_rowSixSupport : rowSixSupport C3 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+lemma C4_rowSixSupport : rowSixSupport C4 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+lemma C5_rowSixSupport : rowSixSupport C5 := by
+  intro i hi
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+
+theorem matrixWord_rowSixSupport (e : PCExponent) : rowSixSupport (matrixWord e) := by
+  apply rowSixSupport_mul
+  · exact matrixFactor_rowSixSupport _ _ C5_rowSixSupport
+  apply rowSixSupport_mul
+  · exact matrixFactor_rowSixSupport _ _ C4_rowSixSupport
+  apply rowSixSupport_mul
+  · exact matrixFactor_rowSixSupport _ _ C3_rowSixSupport
+  apply rowSixSupport_mul
+  · exact matrixFactor_rowSixSupport _ _ C2_rowSixSupport
+  apply rowSixSupport_mul
+  · exact matrixFactor_rowSixSupport _ _ C1_rowSixSupport
+  exact matrixFactor_rowSixSupport _ _ C0_rowSixSupport
+
+theorem matrixWord_entry_six_five (e : PCExponent) : matrixWord e 6 5 = 0 := by
+  have h := matrixWord_rowSixSupport e 6
+    (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  exact h.2
+
 lemma matrix_mul_entry_two_two_of_support
     (A B : Matrix (Fin 8) (Fin 8) F2)
     (a : F2)

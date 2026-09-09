@@ -1,6 +1,5 @@
 import Mathlib.NumberTheory.Bernoulli
 import Mathlib.NumberTheory.LSeries.Dirichlet
-import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
 import Mathlib.NumberTheory.LSeries.Nonvanishing
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
@@ -28,221 +27,46 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 def riemannXi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta s
 
-/-! The logarithmic derivative of the completed readout splits into the
-algebraic factors and the completed zeta factor.  This is the finite,
-pointwise identity needed before introducing any global Hadamard sum. -/
-
-theorem riemannXi_logDeriv_eq
-    {s : ℂ} (hs0 : s ≠ 0) (hs1 : s ≠ 1)
-    (hΛ : completedRiemannZeta s ≠ 0) :
-    logDeriv riemannXi s =
-      1 / s + 1 / (s - 1) + logDeriv completedRiemannZeta s := by
+/-! The completed functional equation transports directly to the polynomially
+normalized `riemannXi` used by this owner. -/
+theorem riemannXi_one_sub (s : ℂ) :
+    riemannXi (1 - s) = riemannXi s := by
   unfold riemannXi
-  have hsmul : (1 / 2 : ℂ) ≠ 0 := by norm_num
-  have hsub : s - 1 ≠ 0 := sub_ne_zero.mpr hs1
-  have hfirst : (1 / 2 : ℂ) * s ≠ 0 := mul_ne_zero hsmul hs0
-  have hsecond : (1 / 2 : ℂ) * s * (s - 1) ≠ 0 :=
-    mul_ne_zero hfirst hsub
-  have hpoly : DifferentiableAt ℂ
-      (fun z : ℂ => (1 / 2 : ℂ) * z * (z - 1)) s := by
-    fun_prop
-  have hcompleted : DifferentiableAt ℂ completedRiemannZeta s :=
-    differentiableAt_completedZeta hs0 hs1
-  have hprod := logDeriv_mul (f := fun z : ℂ => (1 / 2 : ℂ) * z * (z - 1))
-    (g := completedRiemannZeta) s hsecond hΛ hpoly hcompleted
-  have hlinear := logDeriv_mul (f := fun z : ℂ => (1 / 2 : ℂ) * z)
-    (g := fun z : ℂ => z - 1) s hfirst hsub (by fun_prop) (by fun_prop)
-  calc
-    logDeriv riemannXi s =
-        logDeriv (fun z : ℂ => (1 / 2 : ℂ) * z * (z - 1)) s +
-          logDeriv completedRiemannZeta s := by
-      change logDeriv (fun z : ℂ =>
-        (1 / 2 : ℂ) * z * (z - 1) * completedRiemannZeta z) s = _
-      exact hprod
-    _ = 1 / s + 1 / (s - 1) + logDeriv completedRiemannZeta s := by
-      have hshift : logDeriv (fun z : ℂ => z - 1) s = 1 / (s - 1) := by
-        rw [logDeriv_apply]
-        have hd : deriv (fun z : ℂ => z - 1) s = 1 := by
-          simpa using (hasDerivAt_id s).sub_const (1 : ℂ)
-        rw [hd]
-      rw [hlinear, logDeriv_const_mul _ _ hsmul, logDeriv_id', hshift]
-
-/-! Native archimedean logarithmic derivative. -/
-
-theorem logDeriv_Gammaℝ_eq
-    {s : ℂ} (hs : 0 < s.re) :
-    logDeriv Complex.Gammaℝ s =
-      -((1 / 2 : ℂ) * Complex.log (Real.pi : ℂ)) +
-        (1 / 2 : ℂ) * Complex.digamma (s / 2) := by
-  have hGammaℝ : Complex.Gammaℝ = fun z : ℂ =>
-      (Real.pi : ℂ) ^ (-z / 2) * Complex.Gamma (z / 2) := by
-    funext z
-    exact Complex.Gammaℝ_def z
-  rw [hGammaℝ]
-  have hhalf : 0 < (s / 2).re := by
-    norm_num [Complex.div_re]
-    linarith
-  have hGamma : Complex.Gamma (s / 2) ≠ 0 :=
-    Complex.Gamma_ne_zero_of_re_pos hhalf
-  have hGammaDiff : DifferentiableAt ℂ Complex.Gamma (s / 2) := by
-    apply Complex.differentiableAt_Gamma
-    intro m h
-    have hh := hhalf
-    rw [h] at hh
-    norm_num at hh
-    exact (not_lt_of_ge (Nat.cast_nonneg m) hh)
-  have hpowDiff : DifferentiableAt ℂ
-      (fun z : ℂ => (Real.pi : ℂ) ^ (-z / 2)) s := by
-    apply (differentiableAt_id.neg.div_const (2 : ℂ)).const_cpow
-    exact Or.inl (ofReal_ne_zero.mpr Real.pi_ne_zero)
-  have hcompDiff : DifferentiableAt ℂ (fun z : ℂ => Complex.Gamma (z / 2)) s :=
-    hGammaDiff.comp s (by fun_prop)
-  have hpow : (Real.pi : ℂ) ^ (-s / 2) ≠ 0 := by
-    simp [Real.pi_ne_zero]
-  have hmul := logDeriv_mul (f := fun z : ℂ => (Real.pi : ℂ) ^ (-z / 2))
-    (g := fun z : ℂ => Complex.Gamma (z / 2)) s hpow hGamma hpowDiff hcompDiff
-  have hpowReadout : logDeriv (fun z : ℂ => (Real.pi : ℂ) ^ (-z / 2)) s =
-      -((1 / 2 : ℂ) * Complex.log (Real.pi : ℂ)) := by
-    rw [logDeriv_apply]
-    have hderiv := Complex.deriv_const_cpow
-      (f := fun z : ℂ => -z / 2) (x := s) (by fun_prop) (Real.pi : ℂ)
-    rw [hderiv]
-    have hd : deriv (fun z : ℂ => -z / 2) s = -(1 / 2 : ℂ) := by
-      convert ((hasDerivAt_id s).neg.div_const (2 : ℂ)).deriv using 1 <;> norm_num
-    rw [hd]
-    field_simp [hpow]
-  have hcompReadout : logDeriv (fun z : ℂ => Complex.Gamma (z / 2)) s =
-      (1 / 2 : ℂ) * Complex.digamma (s / 2) := by
-    have hcomp := logDeriv_comp (f := Complex.Gamma)
-      (g := fun z : ℂ => z / 2) (x := s) hGammaDiff (by fun_prop)
-    rw [show logDeriv (fun z : ℂ => Complex.Gamma (z / 2)) s =
-        logDeriv Complex.Gamma (s / 2) *
-          deriv (fun z : ℂ => z / 2) s by
-      simpa only [Function.comp_apply] using hcomp]
-    rw [Complex.digamma_def]
-    have hd : deriv (fun z : ℂ => z / 2) s = (1 / 2 : ℂ) := by
-      simpa using ((hasDerivAt_id s).div_const (2 : ℂ)).deriv
-    rw [hd]
-    ring
-  rw [hmul, hpowReadout, hcompReadout]
-
-/-! The completed factorization can be differentiated on the absolute
-convergence half-plane.  The local equality is used through an eventual
-equality, so this theorem does not extend the Dirichlet-series formula past
-its genuine domain of convergence. -/
-
-theorem completedRiemannZeta_logDeriv_eq_product
-    {s : ℂ} (hs : 1 < s.re) :
-    logDeriv completedRiemannZeta s =
-      logDeriv riemannZeta s + logDeriv Complex.Gammaℝ s := by
-  have hs0 : s ≠ 0 := by
-    intro h
-    rw [h] at hs
-    norm_num at hs
-  have hζ : riemannZeta s ≠ 0 := riemannZeta_ne_zero_of_one_lt_re hs
-  have hΓ : Complex.Gammaℝ s ≠ 0 :=
-    Complex.Gammaℝ_ne_zero_of_re_pos (zero_lt_one.trans hs)
-  have hcompleted : completedRiemannZeta s =
-      riemannZeta s * Complex.Gammaℝ s := by
-    have h := riemannZeta_def_of_ne_zero hs0
-    exact (eq_div_iff hΓ).mp h |>.symm
-  have hs1 : s ≠ 1 := by
-    intro h
-    rw [h] at hs
-    norm_num at hs
-  have hζDiff : DifferentiableAt ℂ riemannZeta s :=
-    differentiableAt_riemannZeta hs1
-  have hΓDiff : DifferentiableAt ℂ Complex.Gammaℝ s := by
-    rw [show Complex.Gammaℝ = fun z : ℂ =>
-      (Real.pi : ℂ) ^ (-z / 2) * Complex.Gamma (z / 2) by
-        funext z
-        exact Complex.Gammaℝ_def z]
-    have hhalf : 0 < (s / 2).re := by
-      norm_num [Complex.div_re]
-      linarith
-    have hGammaDiff : DifferentiableAt ℂ Complex.Gamma (s / 2) := by
-      apply Complex.differentiableAt_Gamma
-      intro m hm
-      have hh := hhalf
-      rw [hm] at hh
-      norm_num at hh
-      exact (not_lt_of_ge (Nat.cast_nonneg m) hh)
-    have hpowDiff : DifferentiableAt ℂ
-        (fun z : ℂ => (Real.pi : ℂ) ^ (-z / 2)) s := by
-      apply (differentiableAt_id.neg.div_const (2 : ℂ)).const_cpow
-      exact Or.inl (ofReal_ne_zero.mpr Real.pi_ne_zero)
-    exact hpowDiff.mul (hGammaDiff.comp s (by fun_prop))
-  have hprod := logDeriv_mul (f := riemannZeta)
-    (g := Complex.Gammaℝ) s hζ hΓ hζDiff hΓDiff
-  have hopen : IsOpen {z : ℂ | 1 < z.re} :=
-    isOpen_lt continuous_const Complex.continuous_re
-  have heq : ∀ᶠ z in nhds s,
-      completedRiemannZeta z = riemannZeta z * Complex.Gammaℝ z := by
-    filter_upwards [hopen.mem_nhds hs] with z hz
-    have hz0 : z ≠ 0 := by
-      intro h
-      rw [h] at hz
-      norm_num at hz
-    have hΓz : Complex.Gammaℝ z ≠ 0 :=
-      Complex.Gammaℝ_ne_zero_of_re_pos (zero_lt_one.trans hz)
-    have hdef := riemannZeta_def_of_ne_zero hz0
-    exact (eq_div_iff hΓz).mp hdef |>.symm
-  have hderiv : deriv completedRiemannZeta s =
-      deriv (fun z : ℂ => riemannZeta z * Complex.Gammaℝ z) s :=
-    Filter.EventuallyEq.deriv_eq heq
-  calc
-    logDeriv completedRiemannZeta s =
-        logDeriv (fun z : ℂ => riemannZeta z * Complex.Gammaℝ z) s := by
-      rw [logDeriv_apply, logDeriv_apply, hderiv, hcompleted]
-    _ = logDeriv riemannZeta s + logDeriv Complex.Gammaℝ s := hprod
-
-theorem completedRiemannZeta_logDeriv_eq
-    {s : ℂ} (hs : 1 < s.re) :
-    logDeriv completedRiemannZeta s =
-      logDeriv riemannZeta s -
-        ((1 / 2 : ℂ) * Complex.log (Real.pi : ℂ)) +
-        (1 / 2 : ℂ) * Complex.digamma (s / 2) := by
-  rw [completedRiemannZeta_logDeriv_eq_product hs, logDeriv_Gammaℝ_eq
-    (zero_lt_one.trans hs)]
+  rw [completedRiemannZeta_one_sub]
   ring
 
-/-! The concrete `riemannXi` readout inherits the differentiability domain of
-the completed zeta factor.  The removable behavior at `0` and `1` is a
-separate analytic owner obligation; no extension across those points is
-claimed here. -/
-
-theorem differentiableAt_riemannXi {s : ℂ} (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
-    DifferentiableAt ℂ riemannXi s := by
-  have hζ : DifferentiableAt ℂ completedRiemannZeta s :=
-    differentiableAt_completedZeta hs0 hs1
-  unfold riemannXi
-  fun_prop
-
-/-- The concrete completed `riemannXi` readout is nonzero on the absolute
-convergence half-plane.  This supplies a genuine nontrivial witness for
-constructors that consume the actual completed function; it makes no claim
-about zeros in the critical strip. -/
+/-! The normalized completed readout is zero-free in the absolute-convergence
+half-plane.  This is a consequence of Mathlib's zeta zero-free theorem and
+the nonvanishing of the real Gamma factor, not a statement about the critical
+strip. -/
 theorem riemannXi_ne_zero_of_one_lt_re {s : ℂ} (hs : 1 < s.re) :
     riemannXi s ≠ 0 := by
   have hs0 : s ≠ 0 := by
     intro h
-    rw [h] at hs
+    subst s
     norm_num at hs
-  have hs1 : s ≠ 1 := by
+  have hs1 : s - 1 ≠ 0 := by
     intro h
-    rw [h] at hs
+    have h' : s = 1 := sub_eq_zero.mp h
+    rw [h'] at hs
     norm_num at hs
-  have hGamma : Gammaℝ s ≠ 0 := Gammaℝ_ne_zero_of_re_pos (zero_lt_one.trans hs)
-  have hZeta : riemannZeta s ≠ 0 := riemannZeta_ne_zero_of_one_lt_re hs
-  have hs1' : s - 1 ≠ 0 := sub_ne_zero.mpr hs1
+  have hGamma : Gammaℝ s ≠ 0 :=
+    Gammaℝ_ne_zero_of_re_pos (by linarith)
   have hcompleted : completedRiemannZeta s = riemannZeta s * Gammaℝ s := by
     have h := riemannZeta_def_of_ne_zero hs0
     exact (eq_div_iff hGamma).mp h |>.symm
   unfold riemannXi
   rw [hcompleted]
-  exact mul_ne_zero
-    (mul_ne_zero (mul_ne_zero (by norm_num) hs0) hs1')
-    (mul_ne_zero hZeta hGamma)
+  intro hzero
+  rcases mul_eq_zero.mp hzero with hzero | hzero
+  · rcases mul_eq_zero.mp hzero with hzero | hzero
+    · rcases mul_eq_zero.mp hzero with hhalf | hs
+      · norm_num at hhalf
+      · exact hs0 hs
+    · exact hs1 hzero
+  · rcases mul_eq_zero.mp hzero with hzero | hzero
+    · exact (riemannZeta_ne_zero_of_one_lt_re hs) hzero
+    · exact hGamma hzero
 
 /-- Symmetry-adapted coordinate `z = s - 1/2`. -/
 def toSymmetryAdapted (s : ℂ) : ℂ :=
@@ -252,48 +76,9 @@ def toSymmetryAdapted (s : ℂ) : ℂ :=
 def fromSymmetryAdapted (z : ℂ) : ℂ :=
   z + (1 / 2 : ℂ)
 
-theorem fromSymmetryAdapted_toSymmetryAdapted (s : ℂ) :
-    fromSymmetryAdapted (toSymmetryAdapted s) = s := by
-  simp [fromSymmetryAdapted, toSymmetryAdapted]
-
-theorem toSymmetryAdapted_fromSymmetryAdapted (z : ℂ) :
-    toSymmetryAdapted (fromSymmetryAdapted z) = z := by
-  simp [fromSymmetryAdapted, toSymmetryAdapted]
-
-theorem toSymmetryAdapted_one_sub (s : ℂ) :
-    toSymmetryAdapted (1 - s) = -toSymmetryAdapted s := by
-  simp [toSymmetryAdapted]
-  ring
-
-theorem fromSymmetryAdapted_neg (z : ℂ) :
-    fromSymmetryAdapted (-z) = 1 - fromSymmetryAdapted z := by
-  simp [fromSymmetryAdapted]
-  ring
-
 /-- `Ξ(z) = ξ(s(z))`. -/
 def symmetryAdaptedXi (z : ℂ) : ℂ :=
   riemannXi (fromSymmetryAdapted z)
-
-theorem symmetryAdaptedXi_toSymmetryAdapted (s : ℂ) :
-    symmetryAdaptedXi (toSymmetryAdapted s) = riemannXi s := by
-  unfold symmetryAdaptedXi
-  rw [fromSymmetryAdapted_toSymmetryAdapted]
-
-theorem differentiableAt_symmetryAdaptedXi {z : ℂ}
-    (h0 : fromSymmetryAdapted z ≠ 0)
-    (h1 : fromSymmetryAdapted z ≠ 1) :
-    DifferentiableAt ℂ symmetryAdaptedXi z := by
-  unfold symmetryAdaptedXi
-  apply (differentiableAt_riemannXi h0 h1).comp z
-  change DifferentiableAt ℂ (fun w : ℂ => w + (1 / 2 : ℂ)) z
-  exact (differentiableAt_id (𝕜 := ℂ) (x := z)).add_const (1 / 2 : ℂ)
-
-/-- The completed `riemannXi` readout is invariant under `s ↦ 1 - s`. -/
-theorem riemannXi_one_sub (s : ℂ) :
-    riemannXi (1 - s) = riemannXi s := by
-  unfold riemannXi
-  rw [completedRiemannZeta_one_sub]
-  ring
 
 /-- `Ξ` is strictly even: `Ξ(z) = Ξ(-z)`. -/
 theorem symmetryAdaptedXi_is_even (z : ℂ) :
@@ -302,10 +87,6 @@ theorem symmetryAdaptedXi_is_even (z : ℂ) :
   have h1 : -(z) + (1 / 2 : ℂ) = 1 - (z + (1 / 2 : ℂ)) := by ring
   rw [h1, completedRiemannZeta_one_sub]
   ring
-
-theorem symmetryAdaptedXi_neg (z : ℂ) :
-    symmetryAdaptedXi (-z) = symmetryAdaptedXi z := by
-  exact (symmetryAdaptedXi_is_even z).symm
 
 /-! ## 2. Equivalent Representations of the Riemann Zeta Function -/
 
@@ -401,9 +182,46 @@ theorem dirichletSeriesZeta_eq_riemannZeta (s : ℂ) (hs : 1 < s.re) :
   simpa [dirichletSeriesZeta] using
     (zeta_eq_tsum_one_div_nat_add_one_cpow (s := s) hs).symm
 
+/-- Closed target statement for the Euler product identity. -/
+def EulerProductZetaTarget (s : ℂ) : Prop :=
+  1 < s.re → eulerProductZeta s = riemannZeta s
+
+/-- Closed target statement for the Dirichlet-series identity. -/
+def DirichletSeriesZetaTarget (s : ℂ) : Prop :=
+  1 < s.re → dirichletSeriesZeta s = riemannZeta s
+
+/-- The Euler-product target is already closed from mathlib. -/
+theorem eulerProductZetaTarget_closed (s : ℂ) : EulerProductZetaTarget s :=
+  eulerProductZeta_eq_riemannZeta s
+
+/-- The Dirichlet-series target is already closed from mathlib. -/
+theorem dirichletSeriesZetaTarget_closed (s : ℂ) : DirichletSeriesZetaTarget s :=
+  dirichletSeriesZeta_eq_riemannZeta s
+
+/-- Closed target statement for the eta-quotient identity. -/
+def DirichletEtaQuotientTarget (s : ℂ) : Prop :=
+  0 < s.re → s ≠ 1 →
+    riemannZeta s = (1 - (2 : ℂ) ^ (1 - s))⁻¹ * dirichletEta s
+
+/-- Explicit closure debt: the eta-quotient proof on `0 < Re(s)` is deferred. -/
+def EtaQuotientAnalyticContinuationDebt : Prop :=
+  DirichletEtaQuotientTarget 0
+
+/-- Explicit closure debt: completed-ξ reflection on the full complex plane. -/
+def CompletedXiFunctionalEquationDebt (s : ℂ) : Prop :=
+  completedRiemannZeta s = completedRiemannZeta (1 - s)
+
+/-- The completed-ξ reflection target follows from Mathlib's functional equation. -/
 theorem completedXiFunctionalEquation (s : ℂ) :
-    completedRiemannZeta s = completedRiemannZeta (1 - s) := by
+    CompletedXiFunctionalEquationDebt s := by
   exact (completedRiemannZeta_one_sub s).symm
+
+/-! ## 5. Ramanujan-style odd-zeta transformation targets -/
+
+/-- Transparent target for Ramanujan's odd-zeta transformation. -/
+def RamanujanOddZetaTarget (n : ℕ) (α β : ℝ) : Prop :=
+  0 < n → 0 < α → 0 < β → α * β = Real.pi ^ 2 →
+    InfoGeometry.Arithmetic.RamanujanOddZeta.RamanujanOddZetaFormula n α β
 
 end InfoGeometry.Arithmetic.RiemannZetaEquivalences
 

@@ -55,7 +55,7 @@ def prefixDiagram : ℕᵒᵖ ⥤ TopCat where
 /-! The cone whose projections are the finite boundary prefixes. -/
 
 def prefixCone : Cone prefixDiagram where
-  pt := TopCat.of (ℕ → Bool)
+  pt := TopCat.of CantorBoundary
   π :=
     { app := fun n =>
         { hom' :=
@@ -72,7 +72,7 @@ def prefixCone : Cone prefixDiagram where
 /-! The map induced by an arbitrary compatible cone. -/
 
 def prefixLimitLift (s : Cone prefixDiagram) : s.pt ⟶ prefixCone.pt := by
-  let f : s.pt → (ℕ → Bool) :=
+  let f : s.pt → CantorBoundary :=
     fun x n => s.π.app (Opposite.op (n + 1)) x (Fin.last n)
   have hf : Continuous f := by
     apply continuous_pi
@@ -138,7 +138,7 @@ noncomputable instance prefixLimit_compactSpace :
 noncomputable instance prefixLimit_t2Space :
     T2Space (↑(limit prefixDiagram)) := by
   letI : T2Space (↑prefixCone.pt) := by
-    change T2Space (ℕ → Bool)
+    change T2Space CantorBoundary
     infer_instance
   exact (TopCat.homeoOfIso prefixBoundaryLimitIso).t2Space
 
@@ -149,7 +149,7 @@ theorem prefixBoundaryLimitIso_hom_comp (n : ℕ) :
     (limit.isLimit prefixDiagram) (Opposite.op n)
 
 theorem prefixBoundaryLimitIso_hom_apply (n : ℕ)
-    (x : (ℕ → Bool)) (i : Fin n) :
+    (x : CantorBoundary) (i : Fin n) :
     (limit.π prefixDiagram (Opposite.op n)).hom
         (prefixBoundaryLimitIso.hom.hom x) i = x i := by
   have h := congrArg (fun q => (ConcreteCategory.hom q) x)
@@ -163,9 +163,7 @@ noncomputable def prependBitHom (b : Bool) :
     prefixCone.pt ⟶ prefixCone.pt :=
   { hom' :=
       { toFun := prependBit b
-        continuous_toFun :=
-          InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_prependBit
-            b } }
+        continuous_toFun := continuous_prependBit b } }
 
 noncomputable def prefixLimitPrependBit (b : Bool) :
     (limit prefixDiagram) ⟶ limit prefixDiagram :=
@@ -256,32 +254,6 @@ theorem prefixLimitBranchSet_range_cover (x : ↑(limit prefixDiagram)) :
     Set.range (prependBit true)
   exact prependBit_range_cover (H.symm x)
 
-theorem prefixLimitPrependBit_range_partition :
-    Set.range (ConcreteCategory.hom (prefixLimitPrependBit false)) ∩
-        Set.range (ConcreteCategory.hom (prefixLimitPrependBit true)) =
-      (∅ : Set (↑(limit prefixDiagram))) ∧
-      Set.range (ConcreteCategory.hom (prefixLimitPrependBit false)) ∪
-          Set.range (ConcreteCategory.hom (prefixLimitPrependBit true)) =
-        Set.univ := by
-  constructor
-  · rw [prefixLimitPrependBit_range false,
-      prefixLimitPrependBit_range true]
-    ext x
-    constructor
-    · intro hx
-      exact False.elim ((Set.disjoint_left.mp
-        prefixLimitBranchSet_false_true_disjoint hx.1) hx.2)
-    · intro hx
-      simp at hx
-  · ext x
-    constructor
-    · intro hx
-      exact Set.mem_univ x
-    · intro hx
-      rw [prefixLimitPrependBit_range false,
-        prefixLimitPrependBit_range true]
-      exact prefixLimitBranchSet_range_cover x
-
 /-! Finite-cylinder topology transported to the categorical limit object. -/
 
 def prefixLimitCylinderSet (n : ℕ) (w : BitWord n) :
@@ -346,7 +318,7 @@ theorem prefixLimit_projection_eq_boundaryPrefix (n : ℕ)
     ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x) i
   simpa using h
 
-def extendWord (n : ℕ) (w : BitWord n) : (ℕ → Bool) :=
+def extendWord (n : ℕ) (w : BitWord n) : CantorBoundary :=
   fun k => if hk : k < n then w ⟨k, hk⟩ else false
 
 theorem boundaryPrefix_extendWord (n : ℕ) (w : BitWord n) :
@@ -443,7 +415,7 @@ theorem prefixLimitCylinderSet_iUnion_eq_univ (n : ℕ) :
   ext x
   constructor
   · intro hx
-    exact Set.mem_univ x
+    trivial
   · intro hx
     obtain ⟨w, hw⟩ := prefixLimitCylinderSet_mem_partition n x
     exact Set.mem_iUnion.2 ⟨w, hw⟩

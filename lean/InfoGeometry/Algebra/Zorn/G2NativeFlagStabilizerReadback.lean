@@ -79,9 +79,9 @@ theorem nativeFlagStabilizer_eq_unipotentSubgroup_of_card_eq
   · exact unipotentSubgroup_le_nativeFlagStabilizer
 
 set_option maxRecDepth 100000 in
-theorem nativeFlagStabilizer_card_eq_64_of_flag_transitive
+theorem nativeFlagStabilizer_card_eq_64_of_flag_transitive_sigma
     (h_enum : Fintype.card SplitOctF2Aut = 12096)
-    (h_flag_card : Fintype.card IntrinsicFlag = 189)
+    (h_flag_card : Fintype.card (Σ p : OctImIsotropicPoint, IntrinsicLine p) = 189)
     (h_trans : Function.Surjective
       (fun g : SplitOctF2Aut => g • baseIntrinsicFlag)) :
     Fintype.card nativeFlagStabilizer = 64 := by
@@ -94,7 +94,9 @@ theorem nativeFlagStabilizer_card_eq_64_of_flag_transitive
       (MulAction.orbit SplitOctF2Aut baseIntrinsicFlag) = 189 := by
     let e := InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient.orbitToTarget
       baseIntrinsicFlag h_trans
-    rw [← h_flag_card]
+    have htarget : Fintype.card IntrinsicFlag = 189 := by
+      simpa [IntrinsicFlag] using h_flag_card
+    rw [← htarget]
     exact Fintype.card_congr e
   have h := MulAction.card_orbit_mul_card_stabilizer_eq_card_group
     SplitOctF2Aut baseIntrinsicFlag
@@ -103,6 +105,16 @@ theorem nativeFlagStabilizer_card_eq_64_of_flag_transitive
     rw [horbit, h_enum] at h
     omega
   simpa [nativeFlagStabilizer] using hcardStab
+
+set_option maxRecDepth 100000 in
+theorem nativeFlagStabilizer_card_eq_64_of_flag_transitive
+    (h_enum : Fintype.card SplitOctF2Aut = 12096)
+    (h_flag_card : Fintype.card IntrinsicFlag = 189)
+    (h_trans : Function.Surjective
+      (fun g : SplitOctF2Aut => g • baseIntrinsicFlag)) :
+    Fintype.card nativeFlagStabilizer = 64 := by
+  simpa [IntrinsicFlag] using
+    nativeFlagStabilizer_card_eq_64_of_flag_transitive_sigma h_enum h_flag_card h_trans
 
 theorem nativeFlagStabilizer_preserves_base_line
     {g : SplitOctF2Aut}

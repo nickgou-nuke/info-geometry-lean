@@ -15,6 +15,19 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 def baseLongRoot : G2Root := (RootLength.Long, 0)
 
+theorem rootSubgroup_eq_rec_val {α β : G2Root} (h : α = β)
+    (x : rootSubgroup α) :
+    ((Eq.rec x (congrArg rootSubgroup h) : rootSubgroup β).val) = x.val := by
+  cases h
+  rfl
+
+theorem rootSubgroupEquiv_cast_apply_val {α β : G2Root} (h : α = β)
+    (e : Bool ≃ rootSubgroup α) (t : Bool) :
+    ((cast (congrArg (fun r : G2Root => Bool ≃ rootSubgroup r) h) e) t :
+      SplitOctF2Aut) = (e t : SplitOctF2Aut) := by
+  cases h
+  rfl
+
 theorem baseLongRoot_rootAut : rootAut baseLongRoot = g4Aut := by
   rfl
 
@@ -180,12 +193,45 @@ noncomputable def rootSubgroupEquivBool (α : G2Root) :
   Equiv.ofBijective (rootSubgroupMap α)
     ⟨rootSubgroupMap_injective α, rootSubgroupMap_surjective α⟩
 
+theorem rootSubgroupEquivBool_apply (α : G2Root) (t : Bool) :
+    (rootSubgroupEquivBool α t).val = xRoot α t := by
+  rfl
+
+noncomputable def longRootSubgroupEquivNative (i : Fin 6) :
+    Bool ≃ rootSubgroup (RootLength.Long, (i : ZMod 6)) :=
+  rootSubgroupEquivBool (RootLength.Long, (i : ZMod 6))
+
+theorem longRootSubgroupEquivNative_apply (i : Fin 6) (t : Bool) :
+    (longRootSubgroupEquivNative i t).val =
+      xRoot (RootLength.Long, (i : ZMod 6)) t := by
+  exact rootSubgroupEquivBool_apply (RootLength.Long, (i : ZMod 6)) t
+
+theorem longRootSubgroupEquivNative_card (i : Fin 6) :
+    Nat.card (rootSubgroup (RootLength.Long, (i : ZMod 6))) = 2 := by
+  simpa using (Nat.card_congr (longRootSubgroupEquivNative i)).symm
+
 theorem rootSubgroupEquiv_c_apply (α : G2Root) (t : Bool) :
     (rootSubgroupEquiv_c α).toEquiv (rootSubgroupEquivBool α t) =
       rootSubgroupEquivBool (cAction α) t := by
   apply Subtype.ext
   change c * xRoot α t * c⁻¹ = xRoot (cAction α) t
   exact c_xRoot_c α t
+
+theorem cIterRootSubgroupEquiv_coe_eq_xRoot (n : Nat) (t : Bool) :
+    (cIterRootSubgroupEquiv n t : SplitOctF2Aut) = xRoot (cIterRoot n) t := by
+  induction n with
+  | zero =>
+      rfl
+  | succ n ih =>
+      simp only [cIterRootSubgroupEquiv, Equiv.trans_apply, cIterRoot]
+      have hsub : cIterRootSubgroupEquiv n t =
+          rootSubgroupEquivBool (cIterRoot n) t := by
+        apply Subtype.ext
+        exact ih
+      rw [hsub]
+      have h := congrArg (fun z : rootSubgroup (cAction (cIterRoot n)) =>
+          (z : SplitOctF2Aut)) (rootSubgroupEquiv_c_apply (cIterRoot n) t)
+      simpa only [rootSubgroupEquivBool_apply] using h
 
 theorem rootSubgroupEquiv_s_apply (α : G2Root) (t : Bool) :
     (rootSubgroupEquiv_s α).toEquiv (rootSubgroupEquivBool α t) =

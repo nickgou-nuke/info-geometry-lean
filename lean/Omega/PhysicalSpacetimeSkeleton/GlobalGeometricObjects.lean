@@ -17,27 +17,24 @@ structure GlobalGeometricObjects {ι : Type u} [Fintype ι]
 admissible quotient domain.
     prop:physical-spacetime-global-geometric-objects -/
 theorem paper_physical_spacetime_global_geometric_objects :
-    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
-      (metric_compat :
-        ∀ {i j} {x : F.Chart i} {y : F.Chart j},
-          F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y),
+    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι),
       ∃! G : GlobalGeometricObjects F,
         ∀ i x, G.metric (pointClass F i x) = F.metric i x := by
-  intro ι _ F metric_compat
-  refine ⟨⟨globalMetric F metric_compat⟩, ?_, ?_⟩
+  intro ι _ F
+  refine ⟨⟨globalMetric F⟩, ?_, ?_⟩
   · intro i x
     rfl
   · intro G hG
     cases G with
     | mk metric =>
-        have hmetric : metric = globalMetric F metric_compat := by
+        have hmetric : metric = globalMetric F := by
           funext q
           refine Quotient.inductionOn q ?_
           intro p
           rcases p with ⟨i, x⟩
           calc
             metric (pointClass F i x) = F.metric i x := by simpa using hG i x
-            _ = globalMetric F metric_compat (pointClass F i x) := by rfl
+            _ = globalMetric F (pointClass F i x) := by rfl
         cases hmetric
         rfl
 

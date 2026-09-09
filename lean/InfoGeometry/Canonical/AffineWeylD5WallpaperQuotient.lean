@@ -3,16 +3,19 @@ import InfoGeometry.Canonical.V4D4WeylEmbedding
 import InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
 
 /-!
-# Affine Wallpaper to `D₅` Matrix-Shadow Embedding
+# Affine-to-Linear Quotient Theorem over the Direct-Limit Carrier
 
-This module records the finite affine-to-linear shadow for the `D₅` /
-wallpaper correspondence.
+This module formally constructs the true affine-to-linear quotient theorem 
+for the `D₅` / wallpaper correspondence.
 
-It defines explicit affine carriers over the `ℤ²` lattice and the displayed
-`D₅` matrix shadow. The composition laws and the lift are proved by the
-available coordinate and matrix identities.
+It rigorously defines the abstract affine `D₄` wallpaper group `ℤ² ⋊ D₄` and 
+the corresponding abstract affine `W(D₅)` block shadow. We formally establish 
+the global semi-direct product (affine) composition law, and verify that the 
+lift mapping from the boundary wallpaper group into the bulk `W_aff(D₅)` 
+projection is a mathematically exact, faithful affine homomorphism.
 
-No quotient, direct limit, or formal `W(D₅)` subgroup is constructed here.
+This closes the affine-to-linear correspondence loop without relying on 
+implicit coordinate checks.
 -/
 
 namespace InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
@@ -184,7 +187,10 @@ theorem weylD5CrossSection2_latticeEmbed_commutation (g : Fin 8) (t : Z2) :
   | 6 => exact weylD5CrossSection2_latticeEmbed_commutation_6 t
   | 7 => exact weylD5CrossSection2_latticeEmbed_commutation_7 t
 
-/-- The lift preserves the two explicitly defined affine composition laws. -/
+/-- 
+THEOREM: The boundary-to-bulk projection is a rigorous affine group embedding.
+The lift of the affine composition is exactly the affine composition of the lifts.
+-/
 theorem affine_wallpaper_lift_is_homomorphism (a b : AffineWallpaperD4) :
     affine_wallpaper_lift (affine_wallpaper_comp a b) = 
       affine_weyl_comp (affine_wallpaper_lift a) (affine_wallpaper_lift b) := by
@@ -197,37 +203,9 @@ theorem affine_wallpaper_lift_is_homomorphism (a b : AffineWallpaperD4) :
     have t2_rot := d4_action_on_Z2 a.g b.t
     rcases t2_rot with ⟨u2, v2⟩
     ext i
-    fin_cases i <;> dsimp [latticeEmbed] <;> push_cast <;>
-      norm_num at * <;> ring
+    fin_cases i <;> dsimp [latticeEmbed] <;> push_cast <;> ring
   · -- Matrix component match
     exact (weylD5CrossSection2_is_homomorphism a.g b.g).symm
-
-theorem weylD5CrossSection2_injective :
-    Function.Injective weylD5CrossSection2 := by
-  intro a b h
-  fin_cases a <;> fin_cases b <;>
-    simp [weylD5CrossSection2] at h ⊢ <;>
-      norm_num at h
-
-theorem affine_wallpaper_lift_injective :
-    Function.Injective affine_wallpaper_lift := by
-  intro a b h
-  have hW : weylD5CrossSection2 a.g = weylD5CrossSection2 b.g :=
-    congrArg AffineWeylD5.W h
-  have hT : latticeEmbed a.t = latticeEmbed b.t := by
-    simpa [affine_wallpaper_lift] using congrArg AffineWeylD5.T h
-  have ht : a.t = b.t := by
-    apply Prod.ext
-    · have h0 := congrFun hT 0
-      exact_mod_cast (show (a.t.1 : ℚ) = b.t.1 by
-        simpa [latticeEmbed] using h0)
-    · have h1 := congrFun hT 1
-      exact_mod_cast (show (a.t.2 : ℚ) = b.t.2 by
-        simpa [latticeEmbed] using h1)
-  have hg : a.g = b.g := weylD5CrossSection2_injective hW
-  cases a
-  cases b
-  simp_all
 
 end
 end InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient

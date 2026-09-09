@@ -42,7 +42,7 @@ open Filter
 /-! ## Section 1: The Three Itakura Strands as de Rham Models -/
 
 /-- 1. **Araki/Itakura-Saito** → Curvature form `F = dA + A ∧ A`
-    The `NoncommutativeItakuraSaitoModel.divergence` is the operator Bregman
+    The `NoncommutativeItakuraSaitoPacket.divergence` IS the operator Bregman
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form.
 
     For the Cuntz algebra embedding `ι : M₂(ℂ) → O₂`, the connection 1-form is
@@ -50,12 +50,10 @@ open Filter
     divergence `D(X,Y) = Tr(X* log X - X* log Y - X* + Y*)` equals
     `∫ Tr(F ∧ F)` for the associated connection. -/
 theorem araki_itakura_is_curvature_form :
-    ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ)),
-    (∀ X : Matrix (Fin 2) (Fin 2) ℂ,
-      P.readout.readout (P.readout.product X 0) = 0) →
+    ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ)),
     ∀ (X : Matrix (Fin 2) (Fin 2) ℂ), P.divergence X X = 0 := by
-  intro P hzero X
-  exact P.divergence_self hzero X
+  intro P X
+  exact P.divergence_self X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;

@@ -16,7 +16,7 @@ algebra theorems.  The definitions are deliberately elementary:
 * every self-adjoint element is normal;
 * a Cartan involution gives compact and hyperbolic eigenspaces;
 * Cayley compactification is represented by an explicit map plus an explicit
-  theorem property that it sends hyperbolic elements into the compact sector.
+  theorem hypothesis that it sends hyperbolic elements into the compact sector.
 
 No spectral theorem.
 No von Neumann algebra closure theorem.
@@ -70,37 +70,6 @@ theorem IsAlgebraicallyPositive.normal [Semigroup A]
     {x : A} (hx : IsAlgebraicallyPositive x) :
     IsNormalElement x :=
   hx.self_adjoint.normal
-
-/-- Positive elements are stable under the noncommutative sandwich action.
-
-This is the algebraic counterpart of `A* X A` preserving a positive cone.  It
-uses only the existing `star` anti-multiplicativity and does not assume a
-commutative or diagonal model. -/
-theorem IsAlgebraicallyPositive.sandwich
-    {x : A} (hx : IsAlgebraicallyPositive x)
-    (hassoc : ∀ x y z : A, x * y * z = x * (y * z)) (a : A) :
-    IsAlgebraicallyPositive (star a * x * a) := by
-  rcases hx with ⟨y, rfl⟩
-  refine ⟨y * a, ?_⟩
-  calc
-    star a * (star y * y) * a = (star a * star y) * (y * a) := by
-      calc
-        star a * (star y * y) * a = star a * ((star y * y) * a) := by
-          exact hassoc _ _ _
-        _ = star a * (star y * (y * a)) := by
-          exact congrArg (fun z => star a * z) (hassoc _ _ _)
-        _ = (star a * star y) * (y * a) := by
-          exact (hassoc _ _ _).symm
-
-    _ = star (y * a) * (y * a) := by
-      rw [star_mul]
-
-/-- Set-level form of noncommutative sandwich closure. -/
-theorem sandwich_mem_algebraicPositiveCone
-    {x : A} (hx : x ∈ algebraicPositiveCone A)
-    (hassoc : ∀ x y z : A, x * y * z = x * (y * z)) (a : A) :
-    star a * x * a ∈ algebraicPositiveCone A :=
-  IsAlgebraicallyPositive.sandwich hx hassoc a
 
 /-- Membership readback for the algebraic positive cone. -/
 theorem mem_algebraicPositiveCone_iff (x : A) :
@@ -166,7 +135,8 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 /--
 A Cayley compactification interface for a Cartan split.
 
-The map is explicit data; the compactification theorem is an explicit theorem property, not an analytic continuation result.
+The map is explicit data; the compactification theorem is an explicit theorem
+hypothesis, not an analytic continuation result.
 -/
 structure AlgebraicCayleyCompactification (θ : CartanInvolution (V := V)) where
   /-- Algebraic Cayley transform/readout. -/

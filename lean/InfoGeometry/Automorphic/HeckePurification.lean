@@ -3,7 +3,7 @@ InfoGeometry/Automorphic/HeckePurification.lean
 
 Hecke spectral purification for Siegel-Langlands resonance.
 
-This module formalizes a proof-carrying Hecke-Sugawara purification property.
+This module formalizes a proof-carrying Hecke-Sugawara purification witness.
 It calibrates operator-algebraic Sugawara readouts against arithmetic
 automorphic L-functions when the required Hecke compatibility is supplied by a
 concrete model.
@@ -41,7 +41,7 @@ universe uBulk uBoundary uHecke
 Witness that the Sugawara stress-tensor readout on the Siegel boundary
 intertwines with the Hecke action on the bulk.
 
-This is the core 'Purification' property. It states that the boundary constant
+This is the core 'Purification' witness. It states that the boundary constant
 term (Siegel projection) of a bulk Hecke action is compatible with the
 operatorial Sugawara readout.
 -/
@@ -78,8 +78,8 @@ structure HeckeSugawaraIntertwining
   Kernel-level Hecke compatibility derived from the supplied intertwining data.
 
   Any bulk state already in the Siegel cuspidal kernel stays in that kernel
-  after applying a supplied Hecke operator.  This replaces the former generic
-  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
+  after applying a supplied Hecke operator.  This is an explicit
+  theorem-shaped compatibility obligation supplied by the bridge datum.
   -/
   hecke_preserves_cuspidal_kernel :
     ∀ (i : HeckeIndex) ⦃F : Bulk⦄,
@@ -140,6 +140,16 @@ theorem hecke_preserves_cuspidal_kernel_of_intertwining
     W.siegel ((H.intertwining i).bulkOp F) = 0 :=
   H.hecke_preserves_cuspidal_kernel i hF
 
+/-- Re-export of the purified central-charge/L-value calibration. -/
+theorem purified_charge_eq_l_value
+    (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
+    (chi : JointEigenvalue HeckeIndex)
+    (P : CuspidalEigenpacket R chi)
+    (s : State) :
+    charge_eval (EAV.centralChargeReadout s) =
+      L_func.value chi 0 :=
+  H.purification_law chi P s
+
 /-- The hidden grade-memory readout also matches the Hecke L-value at zero. -/
 theorem hiddenGradeMemory_eq_l_value
     (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
@@ -149,20 +159,20 @@ theorem hiddenGradeMemory_eq_l_value
     charge_eval (EAV.calibratedHiddenGradeMemoryReadout s) =
       L_func.value chi 0 := by
   rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
-  exact H.purification_law chi P s
+  exact H.purified_charge_eq_l_value chi P s
 
 end HeckeSugawaraIntertwining
 
 /--
-A supplied Langlands/Sugawara bridge and a Hecke purification property together
+A supplied Langlands/Sugawara bridge and a Hecke purification witness together
 provide the two certificates needed by the Siegel-Langlands resonance lane:
 
 * the purified Sugawara readout equals the Hecke L-value at zero;
 * the Langlands/Sugawara bridge is inhabited.
 
-The bridge itself is not constructed from the Hecke property alone; Euler
+The bridge itself is not constructed from the Hecke witness alone; Euler
 products, completed functional equations, and affine/Virasoro calibration remain
-separate property data.
+separate witness data.
 -/
 theorem langlandsSugawaraBridge_nonempty_of_purification
     {Bulk : Type uBulk} {Boundary : Type uBoundary} {HeckeIndex : Type uHecke}
@@ -191,7 +201,7 @@ theorem langlandsSugawaraBridge_nonempty_of_purification
     (P : CuspidalEigenpacket R chi)
     (s : State)
     {W_L : SiegelEisensteinWitness Bulk Boundary}
-    (P_L : ProjectedAutomorphicLFunctionData W_L)
+    (P_L : ProjectedAutomorphicLFunctionWitness W_L)
     {BridgeVir BridgeState : Type*}
     [AddCommGroup BridgeVir] [Module ℝ BridgeVir]
     [LieRing BridgeVir] [LieAlgebra ℝ BridgeVir]
@@ -199,6 +209,6 @@ theorem langlandsSugawaraBridge_nonempty_of_purification
     (B_L : LanglandsSugawaraBridge P_L Finite AffineAlg BridgeVir BridgeState) :
     charge_eval (EAV.centralChargeReadout s) = L_func.value chi 0 ∧
       Nonempty (LanglandsSugawaraBridge P_L Finite AffineAlg BridgeVir BridgeState) :=
-  ⟨H.purification_law chi P s, ⟨B_L⟩⟩
+  ⟨HeckeSugawaraIntertwining.purified_charge_eq_l_value H chi P s, ⟨B_L⟩⟩
 
 end InfoGeometry.Automorphic.HeckePurification

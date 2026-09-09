@@ -61,4 +61,21 @@ theorem qNil_anticommutator_zero : qNil * qNil + qNil * qNil = 0 := by
   rw [qNil_sq_zero]
   simp
 
+/-- Main synthesis theorem. -/
+theorem supercharge_square_synthesis :
+    Q * Q = H ∧
+    Q * Q + Q * Q = (2 : ℂ) • H ∧
+    parityF * parityF = H ∧
+    parityF * Q + Q * parityF = 0 ∧
+    qNil * qNil = 0 ∧
+    qNil * qNil + qNil * qNil = 0 := by
+  exact ⟨Q_sq, Q_anticommutator, parityF_sq, parity_anticommutes_Q,
+    qNil_sq_zero, qNil_anticommutator_zero⟩
+
+#check Q_sq
+#check Q_anticommutator
+#check parity_anticommutes_Q
+#check qNil_sq_zero
+#check supercharge_square_synthesis
+
 end SuperchargeSquare

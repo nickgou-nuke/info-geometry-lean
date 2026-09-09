@@ -1,11 +1,23 @@
-import InfoGeometry.Canonical.OperatorialHessianBridge
-import InfoGeometry.Canonical.SouriauOperatorBregmanModular
+import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Real.Basic
 
-/-!
-# Bergman-kernel compatibility surface
+namespace InfoGeometry.Complex
 
-The former declarations called the scalar pairing `z * conj w` a Bergman
-kernel.  That is not a Bergman-kernel construction and had no consumers.  The
-repository's genuine information-kernel geometry is operatorial and is owned
-by the imported Hessian/Bregman modules.
--/
+open scoped ComplexConjugate
+
+/-- A simple complex-valued localization kernel built from the standard
+Hermitian pairing on `ℂ`. -/
+def localizedBergmanKernel (z w : ℂ) : ℂ :=
+  z * conj w
+
+/-- The kernel is conjugate-symmetric on swapped arguments. -/
+theorem localizedBergmanKernel_conj_symm (z w : ℂ) :
+    conj (localizedBergmanKernel z w) = localizedBergmanKernel w z := by
+  simp [localizedBergmanKernel, mul_comm, mul_left_comm, mul_assoc]
+
+/-- The diagonal localization readout is the squared norm. -/
+theorem localizedBergmanKernel_diag (z : ℂ) :
+    localizedBergmanKernel z z = Complex.normSq z := by
+  simpa [localizedBergmanKernel] using (Complex.mul_conj z)
+
+end InfoGeometry.Complex

@@ -55,7 +55,7 @@ def logCFTKMSCanonical
 
 theorem logCFTKMS_beta_pos (T : LogCFTKMSModularTriple (H := H)) :
     0 < (T.readout.beta : ℝ) :=
-  T.readout.beta.property
+  T.readout.beta_pos
 
 theorem logCFTKMS_flow_zero (T : LogCFTKMSModularTriple (H := H)) :
     ∀ X : H →L[ℝ] H, T.readout.flow 0 X = X :=

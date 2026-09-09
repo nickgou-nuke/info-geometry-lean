@@ -44,6 +44,27 @@ def wittenStatus (nBosonZero nFermionZero : ℤ) : SusyStatus :=
   else if nBosonZero = 0 ∧ nFermionZero = 0 then .broken
   else .unbroken
 
+/-- Nonzero Witten index gives the unbroken branch. -/
+theorem wittenStatus_unbroken_of_index_ne_zero
+    {nB nF : ℤ} (h : wittenIndex nB nF ≠ 0) :
+    wittenStatus nB nF = .unbroken := by
+  simp [wittenStatus, h]
+
+/-- If both zero-energy counts vanish, the finite classifier is broken. -/
+theorem wittenStatus_broken_zero_zero :
+    wittenStatus 0 0 = .broken := by
+  rfl
+
+/-- Equal nonzero counts give the third Witten unbroken branch. -/
+theorem wittenStatus_unbroken_equal_nonzero :
+    wittenStatus 1 1 = .unbroken := by
+  rfl
+
+/-- The paper's non-trivial-zero count pattern has vanishing index but unbroken status. -/
+theorem nontrivial_zero_count_pattern :
+    wittenIndex 1 1 = 0 ∧ wittenStatus 1 1 = .unbroken := by
+  exact ⟨rfl, rfl⟩
+
 /-! ## Abstract zeta/PT scalar condition -/
 
 /-- Abstract complex coordinate `s = σ + iω` represented by its two real parts. -/
@@ -61,25 +82,9 @@ def conjCoord (s : ZetaCoordinate) : ZetaCoordinate where
   sigma := s.sigma
   omega := -s.omega
 
-theorem oneMinus_involutive (s : ZetaCoordinate) :
-    oneMinus (oneMinus s) = s := by
-  cases s
-  simp [oneMinus]
-
-theorem conjCoord_involutive (s : ZetaCoordinate) :
-    conjCoord (conjCoord s) = s := by
-  cases s
-  simp [conjCoord]
-
 /-- Critical-line predicate `σ=1/2`. -/
 def OnCriticalLine (s : ZetaCoordinate) : Prop :=
   s.sigma = (1 / 2 : ℝ)
-
-theorem oneMinus_eq_conj_iff_onCriticalLine (s : ZetaCoordinate) :
-    oneMinus s = conjCoord s ↔ OnCriticalLine s := by
-  cases s
-  simp [oneMinus, conjCoord, OnCriticalLine]
-  constructor <;> intro h <;> linarith
 
 /-- The paper's finite scalar `PT` equality for an abstract zeta readout. -/
 def PTScalarCondition (zeta : ZetaCoordinate → ℂ) (s : ZetaCoordinate) : Prop :=

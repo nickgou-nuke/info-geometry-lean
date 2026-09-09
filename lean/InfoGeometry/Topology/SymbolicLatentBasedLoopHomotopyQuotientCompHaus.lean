@@ -94,5 +94,3 @@ theorem symbolicLatentBasedLoopHomotopyQuotientCompHausHom_comp
       f g hxy hyz)
 
 end InfoGeometry.Topology
-
-end

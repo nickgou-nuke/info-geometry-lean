@@ -1,12 +1,12 @@
 /-
 InfoGeometry/OperatorAlgebra/VirasoroProjectBridge.lean
 
-Partial transport between the abstract Virasoro interface and the
+Partial transport between the abstract Virasoro socket and the
 `VirasoroProject` surface.
 
 This file is honest about its scope:
 
-- the concrete `VirasoroDatum` realization is property by `VirasoroProject`.
+- the concrete `VirasoroDatum` realization is certified by `VirasoroProject`.
 - the Sugawara central charge calibration for the Heisenberg case is honest debt.
 -/
 
@@ -70,7 +70,7 @@ theorem virasoro_project_has_realized_datum :
   ⟨virasoroProjectVirasoroDatum, virasoroProjectVirasoroDatum_realizes⟩
 
 /-- Alias for compatibility with prime bridge naming. -/
-theorem virasoro_project_is_property :
+theorem virasoro_project_is_certified :
     ∃ V : VirasoroDatum (VirasoroAlgebra ℝ), VirasoroProjectRealizes V :=
   virasoro_project_has_realized_datum
 

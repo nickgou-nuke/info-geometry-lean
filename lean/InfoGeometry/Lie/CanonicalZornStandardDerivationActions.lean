@@ -908,5 +908,3 @@ theorem opposite_standard_double_cross_1_5 :
     InfoGeometry.Algebra.ZornVectorMatrix.smul,
     InfoGeometry.Algebra.ZornVec3.basis,
     InfoGeometry.Canonical.ZornMatrix.coordEquiv, canonicalVectorEquiv] at hc
-
-end

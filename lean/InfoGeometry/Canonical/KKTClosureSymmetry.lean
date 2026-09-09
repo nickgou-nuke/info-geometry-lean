@@ -197,7 +197,7 @@ theorem KKTClosureSymmetry.mem_subgroup
   exact S.preserves
 
 /--
-`[even, odd]` closure property on the generator packet:
+`[even, odd]` closure witness on the generator packet:
 if a unit preserves `(Γ_S, Γ_G, Q_D, H_D, Z_D)`, then it preserves
 the commutator lane `[Γ_S, Q_D]`.
 -/
@@ -217,7 +217,7 @@ theorem commutator_GammaS_QD_conjugation_invariant_of_preserves
           rw [hS, hQ]
 
 /--
-`[even, odd]` closure property on the generator packet:
+`[even, odd]` closure witness on the generator packet:
 if a unit preserves `(Γ_S, Γ_G, Q_D, H_D, Z_D)`, then it preserves
 the commutator lane `[Γ_G, Q_D]`.
 -/
@@ -237,7 +237,7 @@ theorem commutator_GammaG_QD_conjugation_invariant_of_preserves
           rw [hG, hQ]
 
 /--
-`{odd, odd}` closure property:
+`{odd, odd}` closure witness:
 the anticommutator of the odd generator with itself lands in the even lane.
 -/
 @[rep_depth krein]
@@ -247,7 +247,7 @@ theorem anticommutator_QD_QD_eq_two_smul_HD (CIK : CertifiedInverseKernel E) :
   simp [two_smul]
 
 /--
-`{odd, odd}` closure property in split form:
+`{odd, odd}` closure witness in split form:
 `{Q_D,Q_D}` lands in `even ⊕ center` through the canonical split
 `H_D = H_kin + Z_D`.
 -/
@@ -270,7 +270,7 @@ theorem anticommutator_QD_QD_eq_two_smul_kinetic_plus_central
           (DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart (CIK := CIK) + ZD CIK) := by
           rw [hSplit]
 
-/-- Central channel property: `Z_D` is central on the full Drazin lane. -/
+/-- Central channel witness: `Z_D` is central on the full Drazin lane. -/
 @[rep_depth krein]
 theorem ZD_isDrazinLaneCentral (CIK : CertifiedInverseKernel E) :
     DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral CIK (ZD CIK) := by

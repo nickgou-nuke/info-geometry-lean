@@ -106,7 +106,6 @@ theorem hestenesGamma_sq (i : Fin 3) (q : HestenesCl11) :
       algebraMap ℝ DiracEnd44 (SplitQuaternion.normSq q) := by
   rw [hestenesGamma, hestenesCartesian, cl11Cartesian_gamma_sq]
   congr 1
-  simpa using (normSq_toHestenes (ofHestenes q)).symm
 
 /-- Full polarized Dirac relation on the Hestenes split-quaternion plane. -/
 theorem hestenesGamma_anticommutator

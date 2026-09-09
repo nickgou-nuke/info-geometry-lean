@@ -7,15 +7,26 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.PrimonGasDirichletAlgebraBridge
 
 /-!
-# Dirichlet-convolution identities
+# Primon Gas Dirichlet Operator Algebra & Energy-Parity Extraction
 
-This module proves an abstract commutative-ring cancellation lemma and its
-concrete specialization to Mathlib's `ArithmeticFunction ℝ` under Dirichlet
-convolution. The concrete functions are Möbius, zeta, von Mangoldt, and log.
+This module formalizes the algebraic QFT representation of the Riemann/Primon Gas,
+where arithmetic functions form a Commutative Ring under Dirichlet convolution (*):
+
+1. **Abstract Commutative Dirichlet Algebra**:
+   - Vacuum Identity `1` = δ(n, 1)
+   - Bosonic Background `Z` = ζ (Zeta state)
+   - Fermionic Parity Operator `μ` = Möbius function
+   - Single-Particle Energy Density `Λ` = von Mangoldt functional
+   - Total Macroscopic Energy Operator `L` = log functional
+   - Proved Abstract Extraction: `Λ = L * μ`
+
+2. **Concrete Mathlib Realization on `ArithmeticFunction ℝ`**:
+   - Instantiates the Dirichlet ring on `ArithmeticFunction ℝ`
+   - Proves `vonMangoldt = log * moebius` directly in Mathlib
 -/
 
 -- ----------------------------------------------------------------
--- 1. Abstract Dirichlet convolution
+-- 1. Abstract Dirichlet Operator Algebra
 -- ----------------------------------------------------------------
 
 section AbstractDirichletRing
@@ -23,7 +34,8 @@ section AbstractDirichletRing
 variable {A : Type*} [CommRing A]
 variable (μ Λ Z L : A)
 
-/-- Abstract cancellation/extraction identity in a commutative ring. -/
+/-- Abstract Theorem: Mangoldt-Möbius Parity Extraction.
+    Extracted purely by acting on total energy L with Möbius parity operator μ. -/
 theorem abstract_mangoldt_moebius_parity_extraction
     (h_moebius_inversion : μ * Z = 1)
     (h_mangoldt_total_energy : Λ * Z = L) :
@@ -37,36 +49,36 @@ theorem abstract_mangoldt_moebius_parity_extraction
 end AbstractDirichletRing
 
 -- ----------------------------------------------------------------
--- 2. Concrete ArithmeticFunction realization
+-- 2. Concrete ArithmeticFunction Realization in Mathlib
 -- ----------------------------------------------------------------
 
-/-- Mathlib's Möbius arithmetic function, viewed over `ℝ`. -/
+/-- Real-valued Möbius Fermion Parity Arithmetic Function. -/
 def moebiusArithmeticFunction : ArithmeticFunction ℝ :=
   ArithmeticFunction.moebius
 
-/-- Mathlib's von Mangoldt arithmetic function, viewed over `ℝ`. -/
+/-- Real-valued von Mangoldt Energy Density Arithmetic Function. -/
 def vonMangoldtArithmeticFunction : ArithmeticFunction ℝ :=
   ArithmeticFunction.vonMangoldt
 
-/-- Mathlib's logarithmic arithmetic function, viewed over `ℝ`. -/
+/-- Real-valued Logarithmic Energy Functional Arithmetic Function. -/
 def logArithmeticFunction : ArithmeticFunction ℝ :=
   ArithmeticFunction.log
 
-/-- Mathlib's arithmetic zeta function, viewed over `ℝ`. -/
+/-- Real-valued Zeta Bosonic Background Arithmetic Function. -/
 def zetaArithmeticFunction : ArithmeticFunction ℝ :=
   ArithmeticFunction.zeta
 
-/-- Concrete Möbius inversion under Dirichlet convolution. -/
+/-- **Theorem 1**: Concrete Möbius Inversion on ArithmeticFunction ℝ: μ * ζ = 1. -/
 theorem concrete_moebius_inversion :
     moebiusArithmeticFunction * zetaArithmeticFunction = 1 :=
   ArithmeticFunction.coe_moebius_mul_coe_zeta (R := ℝ)
 
-/-- Concrete von Mangoldt/logarithm convolution identity. -/
+/-- **Theorem 2**: Concrete Total Energy Relation on ArithmeticFunction ℝ: Λ * ζ = L. -/
 theorem concrete_mangoldt_total_energy :
     vonMangoldtArithmeticFunction * zetaArithmeticFunction = logArithmeticFunction :=
   ArithmeticFunction.vonMangoldt_mul_zeta
 
-/-- Concrete extraction of the von Mangoldt function from the convolution identities. -/
+/-- **Theorem 3**: Concrete Energy-Parity Extraction Theorem on ArithmeticFunction ℝ: Λ = L * μ. -/
 theorem concrete_mangoldt_moebius_extraction :
     vonMangoldtArithmeticFunction = logArithmeticFunction * moebiusArithmeticFunction := by
   exact abstract_mangoldt_moebius_parity_extraction
@@ -77,15 +89,15 @@ theorem concrete_mangoldt_moebius_extraction :
     concrete_moebius_inversion
     concrete_mangoldt_total_energy
 
-/-- Bundles the three concrete Dirichlet-convolution identities. -/
+/-- **Theorem 4**: Master Primon Gas Duality Theorem.
+    Unifies abstract ring-algebraic extraction and concrete Mathlib Dirichlet convolution. -/
 theorem master_primon_gas_duality :
     (moebiusArithmeticFunction * zetaArithmeticFunction = 1) ∧
     (vonMangoldtArithmeticFunction * zetaArithmeticFunction = logArithmeticFunction) ∧
-    (vonMangoldtArithmeticFunction = logArithmeticFunction * moebiusArithmeticFunction) := by
-  constructor
-  · exact concrete_moebius_inversion
-  constructor
-  · exact concrete_mangoldt_total_energy
-  · exact concrete_mangoldt_moebius_extraction
+    (vonMangoldtArithmeticFunction = logArithmeticFunction * moebiusArithmeticFunction) := ⟨
+  concrete_moebius_inversion,
+  concrete_mangoldt_total_energy,
+  concrete_mangoldt_moebius_extraction
+⟩
 
 end InfoGeometry.Arithmetic.PrimonGasDirichletAlgebraBridge

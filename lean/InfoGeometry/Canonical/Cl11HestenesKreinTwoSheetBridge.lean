@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.HestenesKreinFiniteStageCompatibility
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
+import InfoGeometry.Clifford.JordanWignerCAR
 import InfoGeometry.Categorical.TwoSheetKreinFilteredColimit
 import InfoGeometry.Clifford.SplitCliffordTransformKernel
 import Mathlib.Tactic.FinCases
@@ -120,13 +121,14 @@ def fMinusBase : Stage 0 := chiralProjMinus 1
 @[simp] theorem etaBase_sq : etaBase * etaBase = (1 : Stage 0) := by
   simpa [etaBase, gamma_0, InfoGeometry.Clifford.TowerMatrix.Jn] using
     (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_0_base
-      modularReflectionBase_sq 1)
+      InfoGeometry.Clifford.Cl11Matrix.J1_sq 1)
 
 @[simp] theorem fPlusBase_idempotent :
     fPlusBase * fPlusBase = fPlusBase := by
   have hΓ : globalChirality 1 * globalChirality 1 = (1 : Stage 0) := by
     simpa [globalChirality, InfoGeometry.Clifford.TowerMatrix.Jn] using
-      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base modularSignBase_sq 1)
+      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base
+        InfoGeometry.Clifford.JordanWignerCAR.gamma_chiral_base_sq 1)
   change InfoGeometry.Clifford.SplitCliffordTransformKernel.peircePlus
       (globalChirality 1) *
       InfoGeometry.Clifford.SplitCliffordTransformKernel.peircePlus
@@ -141,7 +143,8 @@ def fMinusBase : Stage 0 := chiralProjMinus 1
     fMinusBase * fMinusBase = fMinusBase := by
   have hΓ : globalChirality 1 * globalChirality 1 = (1 : Stage 0) := by
     simpa [globalChirality, InfoGeometry.Clifford.TowerMatrix.Jn] using
-      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base modularSignBase_sq 1)
+      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base
+        InfoGeometry.Clifford.JordanWignerCAR.gamma_chiral_base_sq 1)
   change InfoGeometry.Clifford.SplitCliffordTransformKernel.peirceMinus
       (globalChirality 1) *
       InfoGeometry.Clifford.SplitCliffordTransformKernel.peirceMinus
@@ -156,7 +159,8 @@ def fMinusBase : Stage 0 := chiralProjMinus 1
     fPlusBase * fMinusBase = 0 := by
   have hΓ : globalChirality 1 * globalChirality 1 = (1 : Stage 0) := by
     simpa [globalChirality, InfoGeometry.Clifford.TowerMatrix.Jn] using
-      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base modularSignBase_sq 1)
+      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base
+        InfoGeometry.Clifford.JordanWignerCAR.gamma_chiral_base_sq 1)
   change InfoGeometry.Clifford.SplitCliffordTransformKernel.peircePlus
       (globalChirality 1) *
       InfoGeometry.Clifford.SplitCliffordTransformKernel.peirceMinus
@@ -167,22 +171,23 @@ def fMinusBase : Stage 0 := chiralProjMinus 1
 
 @[simp] theorem etaBase_fPlusBase_etaBase :
     etaBase * fPlusBase * etaBase = fMinusBase := by
-  have hΓ : globalChirality 1 * globalChirality 1 = (1 : Stage 0) := by
-    simpa [globalChirality, InfoGeometry.Clifford.TowerMatrix.Jn] using
-      (InfoGeometry.Clifford.TowerMatrix.Jn_sq gamma_chiral_base modularSignBase_sq 1)
   have hanti : etaBase * globalChirality 1 = -(globalChirality 1 * etaBase) := by
     change ((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ gamma_0_base) *
         ((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ gamma_chiral_base) =
       -(((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ gamma_chiral_base) *
         ((1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ gamma_0_base))
     rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
-    have h := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ =>
-      (1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ M)
-      modularReflectionBase_modularSignBase_anticomm
-    convert h using 1 <;>
-      ext i j <;>
-      simp [one_mul, modularReflectionBase, modularSignBase,
-        gamma_chiral_base, Matrix.kroneckerMap, neg_mul, map_neg]
+    have hbase : gamma_0_base * gamma_chiral_base =
+        -(gamma_chiral_base * gamma_0_base) := by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [gamma_0_base, gamma_chiral_base, gamma_1_base,
+          InfoGeometry.Clifford.Cl11Matrix.J1,
+          InfoGeometry.Clifford.Cl11Matrix.Eminus, Matrix.mul_apply,
+          Fin.sum_univ_two]
+    rw [hbase]
+    ext i j
+    simp
   have hconj : etaBase * globalChirality 1 * etaBase = -globalChirality 1 := by
     calc
       etaBase * globalChirality 1 * etaBase =
@@ -199,8 +204,8 @@ def fMinusBase : Stage 0 := chiralProjMinus 1
   simp only [InfoGeometry.Clifford.SplitCliffordTransformKernel.peircePlus,
     InfoGeometry.Clifford.SplitCliffordTransformKernel.peirceMinus,
     add_mul, mul_add, smul_mul_assoc, mul_smul_comm, smul_add, smul_sub,
-    smul_smul, one_smul, hconj]
-  simp [sub_eq_add_neg, neg_smul]
+    hconj]
+  simp [sub_eq_add_neg]
 
 theorem etaBase_fMinusBase_etaBase :
     etaBase * fMinusBase * etaBase = fPlusBase := by

@@ -13,7 +13,7 @@ import DAG.MatrixRepresentation
 import DAG.GradedBottInclusion
 
 /-!
-# Millennium capstone ledger — no RH proof
+# Millennium arithmetic ledger — no RH proof
 
 This module is an import-compatible ledger for arithmetic ingredients that may
 be relevant to the repository's Hestenes--Krein/categorical-colimit RH

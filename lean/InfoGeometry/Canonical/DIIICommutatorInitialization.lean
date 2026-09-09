@@ -74,9 +74,9 @@ theorem anticommutator_P_H_eq_zero
     _ = 0 := by
       abel
 
-/-- The induced chiral property is available as an explicit existential theorem. -/
+/-- The induced chiral witness is available as an explicit existential theorem. -/
 @[rep_depth transport]
-theorem chiral_property_exists
+theorem chiral_witness_exists
     {H T P : EndH}
     [hDIII : TopologicalClassDIII (E := E) H T P] :
     ∃ C : EndH, C = T.comp P ∧ C.comp H = -(H.comp C) :=

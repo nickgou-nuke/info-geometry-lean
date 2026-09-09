@@ -107,4 +107,19 @@ theorem hopfImageNormSq_eq_one_of_s7_pair
   rw [hopfImageNormSq_eq_sum_sq, h]
   ring
 
+theorem section15_capstone :
+    (∀ a b c : Quat, (a * b) * c = a * (b * c)) ∧
+    (∀ q : Quat, Section8.Quat.conj (Section8.Quat.conj q) = q) ∧
+    (∀ p q : Quat,
+      Section8.Quat.conj (p * q) = Section8.Quat.conj q * Section8.Quat.conj p) ∧
+    (∀ q : Quat, Section8.Quat.normSq q ≠ 0 →
+      q * Quat.inverseCandidate q = 1 ∧ Quat.inverseCandidate q * q = 1) ∧
+    (∀ q1 q2 : Quat,
+      Section8.Quat.normSq (q1 * Section8.Quat.conj q2) =
+        Section8.Quat.normSq q1 * Section8.Quat.normSq q2) ∧
+    (∀ q1 q2 : Quat, IsS7Pair q1 q2 → hopfImageNormSq q1 q2 = 1) := by
+  exact ⟨Quat.mul_assoc, Quat.conj_conj, Quat.conj_mul,
+    (fun q h => ⟨Quat.mul_inverseCandidate q h, Quat.inverseCandidate_mul q h⟩),
+    Quat.normSq_mul_conj, hopfImageNormSq_eq_one_of_s7_pair⟩
+
 end Section15

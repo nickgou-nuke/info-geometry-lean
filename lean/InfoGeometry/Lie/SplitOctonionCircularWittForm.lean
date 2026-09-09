@@ -1,4 +1,7 @@
-import InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
+import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 
 /-!
 # The Witt form in genuine circular Peirce coordinates
@@ -14,7 +17,6 @@ noncomputable section
 
 namespace InfoGeometry.Lie.SplitOctonionCircularWittForm
 
-open InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes

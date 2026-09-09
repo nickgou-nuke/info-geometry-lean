@@ -93,5 +93,3 @@ theorem hestenesCuntzWordSample_eq_prime_power_sample
   rw [Real.log_pow 3 w.length]
 
 end InfoGeometry.Canonical.CuntzCantorHestenesScaleBridge
-
-end

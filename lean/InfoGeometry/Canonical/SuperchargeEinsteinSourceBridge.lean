@@ -14,7 +14,7 @@ Thin bridge from the transported defect lane to the conformal Einstein-source
 lane.
 
 This file keeps the bridge honest: the only new ingredient is an explicit
-compatibility property saying how transported chiral-kernel mismatch forces
+compatibility witness saying how transported chiral-kernel mismatch forces
 projector noncommutation on the conformal surface. Everything else is reused
 from existing owners.
 -/
@@ -43,7 +43,7 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 local notation "H₂" => DoubledSpace E
 
 /--
-Compatibility property between the transported supercharge/defect lane and the
+Compatibility witness between the transported supercharge/defect lane and the
 conformal projector lane.
 
 Only the load-bearing implication is required: transported chiral-kernel
@@ -348,13 +348,11 @@ theorem quasilatticeAnalyticalIndex_ne_zero_of_transportedChiralKernelDimMismatc
     quasilatticeAnalyticalIndex V X t hVX ≠ 0 := by
   classical
   intro hZero
-  cases hVX
-  rename_i hPlus hMinus
+  rcases hVX with ⟨hPlus, hMinus⟩
   letI := hPlus
   letI := hMinus
   have hEqInt :
-      (Module.finrank ℝ (quasilatticeChiralKernelSlicePlus V X t) : ℤ)
-        =
+      (Module.finrank ℝ (quasilatticeChiralKernelSlicePlus V X t) : ℤ) =
       (Module.finrank ℝ (quasilatticeChiralKernelSliceMinus V X t) : ℤ) := by
     exact sub_eq_zero.mp (by simpa [quasilatticeAnalyticalIndex] using hZero)
   exact hMismatch (Int.ofNat.inj hEqInt)
@@ -728,7 +726,7 @@ theorem chiralScale_ne_zero_and_einsteinEquation_of_quasilatticeAnalyticalIndex_
         (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
 
 /--
-Boundary-carrier compatibility property between the transported defect lane and
+Boundary-carrier compatibility witness between the transported defect lane and
 the conformal projector lane.
 -/
 @[rep_depth transport]

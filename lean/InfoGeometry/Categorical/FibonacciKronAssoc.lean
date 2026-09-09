@@ -5,6 +5,15 @@ namespace InfoGeometry.Categorical.FibonacciBraidedCategory
 
 open InfoGeometry.Categorical.FibonacciFinMulAssoc
 
+lemma reindex_comp
+    {m l m' n o n' : Type*}
+    (e₁ : m ≃ l) (e₂ : n ≃ o) (e₁' : l ≃ m') (e₂' : o ≃ n')
+    (M : Matrix m n ℂ) :
+    Matrix.reindex e₁' e₂' (Matrix.reindex e₁ e₂ M) =
+      Matrix.reindex (e₁.trans e₁') (e₂.trans e₂') M := by
+  ext i j
+  rfl
+
 set_option maxHeartbeats 20000000 in
 theorem kron_assoc
     {m₁ n₁ m₂ n₂ m₃ n₃ : ℕ}
@@ -28,9 +37,9 @@ theorem kron_assoc
     (finProdFinEquiv : Fin n₂ × Fin n₃ ≃ Fin (n₂ * n₃))
     A (Matrix.kroneckerMap f B C)
   rw [hleft]
-  simp only [reindex_reindex]
+  rw [reindex_comp]
   rw [hright]
-  simp only [reindex_reindex]
+  simp only [reindex_comp, Equiv.trans_assoc]
   change Matrix.reindex
       (leftAssocIndexEquiv m₁ m₂ m₃)
       (leftAssocIndexEquiv n₁ n₂ n₃) _ =
@@ -39,7 +48,7 @@ theorem kron_assoc
       (rightAssocIndexEquiv n₁ n₂ n₃) _
   rw [leftAssocIndexEquiv_eq_prodAssoc_trans_rightAssoc,
     leftAssocIndexEquiv_eq_prodAssoc_trans_rightAssoc]
-  rw [← reindex_reindex]
+  rw [← reindex_comp]
   exact congrArg
     (fun M => Matrix.reindex
       (rightAssocIndexEquiv m₁ m₂ m₃)

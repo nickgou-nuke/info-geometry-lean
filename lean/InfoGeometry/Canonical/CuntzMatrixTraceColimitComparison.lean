@@ -20,52 +20,25 @@ open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 @[simp] theorem trace_readout_agrees_on_stage
-    (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    (n : ℕ) (A : MatrixStage n) :
-    traceColimitFunctional T hT (traceColimitInclusion T n A) =
-      traceTopologicalColimitMap T hT (topologicalInclusion T n A) := by
-  rw [traceColimitFunctional_inclusion T hT,
-    traceTopologicalColimitMap_inclusion T hT]
+    (T : Data) (n : ℕ) (A : MatrixStage n) :
+    traceColimitFunctional T (traceColimitInclusion T n A) =
+      traceTopologicalColimitMap T (topologicalInclusion T n A) := by
+  rw [traceColimitFunctional_inclusion, traceTopologicalColimitMap_inclusion]
 
 theorem trace_readout_agrees_on_transition
-    (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
-    traceTopologicalColimitMap T hT
+    (T : Data) {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
+    traceTopologicalColimitMap T
         (topologicalInclusion T n (map T hmn A)) =
-      traceColimitFunctional T hT (traceColimitInclusion T m A) := by
+      traceColimitFunctional T (traceColimitInclusion T m A) := by
   rw [topologicalInclusion_transition]
-  rw [traceTopologicalColimitMap_inclusion T hT,
-    traceColimitFunctional_inclusion T hT]
+  rw [traceTopologicalColimitMap_inclusion,
+    traceColimitFunctional_inclusion]
 
 theorem trace_readout_is_stage_independent
-    (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
-    traceTopologicalColimitMap T hT
+    (T : Data) {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
+    traceTopologicalColimitMap T
         (topologicalInclusion T n (map T hmn A)) =
-      traceTopologicalColimitMap T hT (topologicalInclusion T m A) := by
+      traceTopologicalColimitMap T (topologicalInclusion T m A) := by
   rw [topologicalInclusion_transition]
-
-/-! ### Concrete matrix-tower specialization -/
-
-theorem concrete_trace_readout_agrees_on_stage
-    (n : ℕ) (A : MatrixStage n) :
-    traceColimitFunctional concreteStep concrete_trace_compatible
-        (traceColimitInclusion concreteStep n A) =
-      traceTopologicalColimitMap concreteStep concrete_trace_compatible
-        (topologicalInclusion concreteStep n A) := by
-  exact trace_readout_agrees_on_stage
-    concreteStep concrete_trace_compatible n A
-
-theorem concrete_trace_readout_is_stage_independent
-    {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
-    traceTopologicalColimitMap concreteStep concrete_trace_compatible
-        (topologicalInclusion concreteStep n (concreteMap hmn A)) =
-      traceColimitFunctional concreteStep concrete_trace_compatible
-        (traceColimitInclusion concreteStep m A) := by
-  exact trace_readout_agrees_on_transition
-    concreteStep concrete_trace_compatible hmn A
 
 end InfoGeometry.Canonical.CuntzMatrixTraceColimitComparison

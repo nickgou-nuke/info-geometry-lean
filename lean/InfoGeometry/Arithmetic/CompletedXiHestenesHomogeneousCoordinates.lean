@@ -386,5 +386,3 @@ theorem centeredHestenesCoordinate_antiunitary_reflection
   ring
 
 end InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
-
-end

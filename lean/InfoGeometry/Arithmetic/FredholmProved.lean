@@ -17,7 +17,7 @@ The repo contains:
 
 This file exposes only the finite and first-order facts that are kernel-checked
 by the owner files. The analytic Fredholm determinant for `T = -e^{-sH}` still
-requires the trace-class construction recorded in `FredholmClosureData`.
+requires the trace-class construction recorded in `FredholmClosureCertificate`.
 -/
 
 open Complex

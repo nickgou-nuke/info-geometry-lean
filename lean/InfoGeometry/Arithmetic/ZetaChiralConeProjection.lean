@@ -104,42 +104,45 @@ Centered completed-xi symmetry packet.
 `functional_equation` is the centered version of
 `xi(-u,-v) = xi(u,v)`.
 -/
-def CenteredXiSymmetry (xi : CenteredField) : Prop :=
-  (∀ x, star (xi x) = xi (conjugation x)) ∧
-  (∀ x, xi (functionalDual x) = xi x)
+structure CenteredXiSymmetryPacket where
+  xi : CenteredField
+  schwarz_reflection :
+    ∀ x, star (xi x) = xi (conjugation x)
+  functional_equation :
+    ∀ x, xi (functionalDual x) = xi x
 
-namespace CenteredXiSymmetry
+namespace CenteredXiSymmetryPacket
 
 /-- Schwarz reflection plus the centered functional equation make `xi` `J`-fixed. -/
-theorem xi_JInvariant (xi : CenteredField) (h : CenteredXiSymmetry xi) :
-    JInvariant xi := by
+theorem xi_JInvariant (X : CenteredXiSymmetryPacket) :
+    JInvariant X.xi := by
   intro x
   calc
-    zetaJAction xi x
-        = star (xi (criticalMirror x)) := by
+    zetaJAction X.xi x
+        = star (X.xi (criticalMirror x)) := by
             rfl
-    _ = xi (conjugation (criticalMirror x)) := by
-            rw [h.1 (criticalMirror x)]
-    _ = xi (functionalDual x) := by
+    _ = X.xi (conjugation (criticalMirror x)) := by
+            rw [X.schwarz_reflection (criticalMirror x)]
+    _ = X.xi (functionalDual x) := by
             rw [conjugation_criticalMirror_eq_functionalDual]
-    _ = xi x := h.2 x
+    _ = X.xi x := X.functional_equation x
 
 /-- The completed `xi` packet lies in the symbolic `J`-fixed cone. -/
-theorem xi_mem_JFixedCone (xi : CenteredField) (h : CenteredXiSymmetry xi) :
-    xi ∈ JFixedCone :=
-  xi_JInvariant xi h
+theorem xi_mem_JFixedCone (X : CenteredXiSymmetryPacket) :
+    X.xi ∈ JFixedCone :=
+  X.xi_JInvariant
 
 /-- The `J`-even projection of completed `xi` is completed `xi`. -/
-theorem xi_JEvenProjector_eq (xi : CenteredField) (h : CenteredXiSymmetry xi) :
-    JEvenProjector xi = xi :=
-  JEvenProjector_eq_self_of_JInvariant (xi_JInvariant xi h)
+theorem xi_JEvenProjector_eq (X : CenteredXiSymmetryPacket) :
+    JEvenProjector X.xi = X.xi :=
+  JEvenProjector_eq_self_of_JInvariant X.xi_JInvariant
 
 /-- The `J`-odd / scale-normal projection of completed `xi` is zero. -/
-theorem xi_JOddProjector_eq_zero (xi : CenteredField) (h : CenteredXiSymmetry xi) :
-    JOddProjector xi = 0 :=
-  JOddProjector_eq_zero_of_JInvariant (xi_JInvariant xi h)
+theorem xi_JOddProjector_eq_zero (X : CenteredXiSymmetryPacket) :
+    JOddProjector X.xi = 0 :=
+  JOddProjector_eq_zero_of_JInvariant X.xi_JInvariant
 
-end CenteredXiSymmetry
+end CenteredXiSymmetryPacket
 
 /-! ## Symbolic uncompleted-zeta odd density -/
 
@@ -211,12 +214,12 @@ def mk
 end ChiralConeAnchorReadout
 
 /-- Completed `xi` supplies a theorem-safe symbolic chiral-cone anchor. -/
-def CenteredXiSymmetry.toChiralConeAnchorReadout
-    (xi : CenteredField) (h : CenteredXiSymmetry xi) :
+def CenteredXiSymmetryPacket.toChiralConeAnchorReadout
+    (X : CenteredXiSymmetryPacket) :
     ChiralConeAnchorReadout :=
-  ChiralConeAnchorReadout.mk xi
-    (xi_mem_JFixedCone xi h)
-    (xi_JEvenProjector_eq xi h)
-    (xi_JOddProjector_eq_zero xi h)
+  ChiralConeAnchorReadout.mk X.xi
+    X.xi_mem_JFixedCone
+    X.xi_JEvenProjector_eq
+    X.xi_JOddProjector_eq_zero
 
 end InfoGeometry.Arithmetic.ZetaChiralConeProjection

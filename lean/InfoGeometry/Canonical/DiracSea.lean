@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorFockSpace
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Topology.FractalCantorFockWitness
 
 /-!
 # InfoGeometry.Canonical.DiracSea
@@ -25,8 +25,11 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.ModularNilpotentAutomorphism
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Canonical.CantorFockSpace
+
+/-- Carrier abstraction for a single-step Dirac-sea generator. -/
+abbrev DiracSeaOperator (Op : Type*) [Ring Op] := Op
 
 /-- The carrier step is the same square-zero modular seed (`N`). -/
 def step : M2R := SplitCliffordSourceWickBase.N
@@ -61,32 +64,33 @@ def canonicalDiracSea : DiracSeaAlgebra M2R where
   generator := step
   generator_sq_zero := step_sq_zero
 
-/-- Canonical (all-zero) boundary word used for the finite-prefix vacuum readout. -/
-abbrev diracVacuumBoundary : (ℕ → Bool) := vacuumBoundary
+/-- Carrier notation aligned with the existing Cantor boundary API. -/
+abbrev InfiniteDiracBoundary := InfiniteBinaryWordSpace
 
-/-- Vacuum-prefix state embedding into the property Hilbert carrier. -/
+/-- Canonical (all-zero) boundary word used for the finite-prefix vacuum readout. -/
+abbrev diracVacuumBoundary : InfiniteDiracBoundary := vacuumBoundary
+
+/-- Vacuum-prefix state embedding into the witness Hilbert carrier. -/
 def diracVacuumPrefixState
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (n : ℕ) : E :=
+    (W : CelikKocakInfiniteFockCarrierData E) (n : ℕ) : E :=
   cantorVacuumPrefixState (W := W) n
 
 /-- The vacuum-prefix at depth zero is the empty-cylinder basis vector. -/
 theorem diracVacuumPrefixState_zero
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) :
-    diracVacuumPrefixState (W := W) 0 = W.orbitBasis [] := by
+    (W : CelikKocakInfiniteFockCarrierData E) :
+    diracVacuumPrefixState (W := W) 0 = W.hilbertCarrier.orbitBasis [] := by
   simpa [diracVacuumPrefixState] using (cantorVacuumPrefixState_zero (W := W))
 
 /-- Finite-prefix recursion for the canonical Dirac boundary word. -/
 theorem diracVacuumPrefixState_succ
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (n : ℕ) :
+    (W : CelikKocakInfiniteFockCarrierData E) (n : ℕ) :
     diracVacuumPrefixState (W := W) (n + 1)
-      = W.orbitBasis
+      = W.hilbertCarrier.orbitBasis
           (boundaryPrefix (n + 1) diracVacuumBoundary) := by
-  simp [diracVacuumPrefixState, diracVacuumBoundary,
-    cantorVacuumPrefixState, cantorPrefixState,
-    boundaryPrefix_succ]
+  simp [diracVacuumPrefixState, diracVacuumBoundary, cantorVacuumPrefixState, cantorPrefixState]
 
 /--
 Bi-infinite (formal) Dirac-sea words and interface step.

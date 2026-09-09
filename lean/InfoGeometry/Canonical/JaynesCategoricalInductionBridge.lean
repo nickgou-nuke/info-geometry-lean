@@ -53,7 +53,7 @@ structure JaynesCategoricalCone where
   observation : ∀ n : Nat, FiniteProfile (Atom n)
   /-- References are transported by the bonding maps. -/
   reference_compatible : ∀ n : Nat,
-    bond n (reference n) = reference (n + 1)
+    bond n ((reference n).weight) = (reference (n + 1)).weight
   /-- Observations are transported by the bonding maps. -/
   observation_compatible : ∀ n : Nat,
     bond n (observation n) = observation (n + 1)
@@ -64,7 +64,7 @@ variable (P : JaynesCategoricalCone (Atom := Atom) (Limit := Limit))
 
 /-- The additive centered score at a finite stage. -/
 def centered (n : Nat) : ProfileStage Atom n :=
-    P.observation n - P.reference n
+  P.observation n - (P.reference n).weight
 
 omit [∀ n : Nat, Fintype (Atom n)] in
 /-- Centered scores are compatible with the finite profile-ring bonds. -/

@@ -76,9 +76,12 @@ theorem master_hodge_star_modular_conjugation_synthesis
     (hs.coderivative v = hs.star (hs.d (hs.star v))) ∧
     (tt.J (tt.J h) = h) ∧
     (tt.J (tt.Delta (tt.J h)) = tt.DeltaInv h) ∧
-    (tt.J (tt.M_to_commutant (tt.J h)) = h) := by
-  refine ⟨hs.star_fourth_power v, ?_, tt.conjugation_involution h,
-    tt.J_Delta_J h, tt.commutant_duality h⟩
-  rfl
+    (tt.J (tt.M_to_commutant (tt.J h)) = h) := ⟨
+  hs.star_fourth_power v,
+  rfl,
+  tt.conjugation_involution h,
+  tt.J_Delta_J h,
+  tt.commutant_duality h
+⟩
 
 end InfoGeometry.Canonical.HodgeStarModularConjugationBridge

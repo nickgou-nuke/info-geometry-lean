@@ -119,5 +119,3 @@ theorem id_comp (f : TopologicalCovariantFlowMorphism F G) :
 end TopologicalCovariantFlowMorphism
 
 end InfoGeometry.Topology
-
-end

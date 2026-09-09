@@ -1,15 +1,8 @@
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
 import InfoGeometry.Algebra.Zorn.G2CASNativePointAction
 
-/-!
-# Exported point-action/incidence compatibility audit
-
-The CAS permutations act on the native 63-point orbit.  The parabolic
-incidence certificate uses a separately indexed point/line table, so these
-permutations cannot be used as simultaneous point and line permutations.
-This owner records explicit kernel-checked obstructions rather than a false
-flag action.
--/
+/-! The exported CAS point permutations are not silently promoted to flag
+actions: this file records their certified incidence obstructions. -/
 
 namespace InfoGeometry.Algebra.Zorn.G2ExportedIncidenceGenerator
 

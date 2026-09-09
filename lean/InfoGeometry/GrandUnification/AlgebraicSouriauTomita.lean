@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.BoundaryMatrixUnitWick
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
-import InfoGeometry.Volume.ConnesCocycle
 
 /-!
 # Algebraic Souriau--Tomita roadmap, theorem-stack version
@@ -59,18 +58,21 @@ def MassieuVolumeSeparationSurface : Prop :=
     _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.volumeCocycleLog
       (ι := Fin 2) (fun _ => (0 : ℝ))
 
-/-! Genuine operator-valued Connes cocycle surface on the doubled carrier. -/
-def OperatorialConnesTransportSurface
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Prop :=
-  ∀
-      (K : _root_.InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E) (s t : ℝ),
-    _root_.InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (_root_.InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator K) (s + t) =
-      _root_.InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (_root_.InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator K) s *
-        (_root_.InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator K) s
-          (_root_.InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (_root_.InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator K) t)
+/-- Finite commuting Connes cocycle law with explicit scalar reference action. -/
+def FiniteConnesTransportSurface : Prop :=
+  ∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
+      (s t : ℝ),
+    (fun i =>
+        _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+          φ ψ (s + t) i) =
+      fun i =>
+        _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+          φ ψ s i *
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
+            φ s
+              (fun j =>
+                _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+                  φ ψ t j) i
 
 /-- H² Wick/Schwinger owner theorem surface, stated as the raw-CAR implication. -/
 def BoundaryWickAnomalySurface : Prop :=
@@ -99,6 +101,17 @@ def BoundaryWickAnomalySurface : Prop :=
             _root_.InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c) • (1 : A)
         else 0)
 
+/--
+Owner target for the corrected algebraic Souriau--Tomita roadmap.
+
+This is not a `Nonempty` wrapper around supplied data.  It is a conjunction of
+already-proved theorem surfaces.
+-/
+def AlgebraicSouriauTomitaTarget : Prop :=
+  H1VolumeCocycleSurface ∧
+    MassieuVolumeSeparationSurface ∧
+      FiniteConnesTransportSurface ∧
+        BoundaryWickAnomalySurface
 
 /-- The concrete H¹ diagonal volume-cocycle surface is available. -/
 theorem h1VolumeCocycleSurface :
@@ -111,14 +124,13 @@ theorem massieuVolumeSeparationSurface :
     MassieuVolumeSeparationSurface :=
   _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.massieuPotential_zero_fin_two_ne_volumeCocycleLog_zero
 
-/-- The native operator-valued modular flow satisfies the Connes cocycle law. -/
-theorem operatorialConnesTransportSurface :
-    ∀ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-      OperatorialConnesTransportSurface E := by
-  intro E _ _ _ K s t
+/-- The finite commuting Connes phase satisfies the scalar cocycle law. -/
+theorem finiteConnesTransportSurface :
+    FiniteConnesTransportSurface := by
+  intro φ ψ s t
   exact
-    _root_.InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
-      (_root_.InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator K) s t
+    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle
+      φ ψ s t
 
 /-- The boundary Wick/Schwinger commutator follows from raw CAR. -/
 theorem boundaryWickAnomalySurface :
@@ -133,12 +145,9 @@ Constructor for the corrected roadmap target.
 
 No external data are accepted: each component is discharged by its owner theorem.
 -/
-theorem algebraicSouriauTomita_properties :
-    (H1VolumeCocycleSurface ∧ MassieuVolumeSeparationSurface ∧ OperatorialConnesTransportSurface ℝ ∧ BoundaryWickAnomalySurface) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact h1VolumeCocycleSurface
-  · exact massieuVolumeSeparationSurface
-  · exact operatorialConnesTransportSurface ℝ
-  · exact boundaryWickAnomalySurface
+theorem constructAlgebraicSouriauTomitaTarget :
+    AlgebraicSouriauTomitaTarget := by
+  exact ⟨h1VolumeCocycleSurface, massieuVolumeSeparationSurface,
+    finiteConnesTransportSurface, boundaryWickAnomalySurface⟩
 
 end InfoGeometry.GrandUnification

@@ -27,21 +27,24 @@ open InfoGeometry.Canonical.ErlangenColimitResolution
 
 variable (Chain : ℕ → Type*) [∀ n : ℕ, Ring (Chain n)]
 
-/-! The q-dilation corridor is already a direct-limit tower on the invariant
-packet.  This file keeps only the honest transport surface into that tower. -/
+/--
+Colimit wrapper for a stagewise q-dilation corridor.
+
+The packet itself stays finite-stage and is supplied externally.  The wrapper
+exists so that the `n`-indexed readouts can be routed through the inductive
+colimit owner without inventing a parallel infrastructure.
+-/
 def qDilationColimitResolution
     (Invariants : ∀ n : ℕ, SupergradedClosureAt (Chain n))
     (Bonding : ∀ n : ℕ, BondingIntertwiner (Invariants n) (Invariants (n + 1)))
-    :
+    (A_infty : Type*) [Ring A_infty]
+    (GlobalInvariants : SupergradedClosureAt A_infty)
+    (global_embed : ∀ n : ℕ, BondingIntertwiner (Invariants n) GlobalInvariants) :
     ColimitInheritsInvariants Chain Invariants Bonding :=
-  ColimitInheritsInvariants.fromStages Chain Invariants Bonding
-
-/-- The colimit transport is exactly the direct-limit invariant packet. -/
-theorem qDilationColimitResolution_eq_fromStages
-    (Invariants : ∀ n : ℕ, SupergradedClosureAt (Chain n))
-    (Bonding : ∀ n : ℕ, BondingIntertwiner (Invariants n) (Invariants (n + 1))) :
-    qDilationColimitResolution (Chain := Chain) Invariants Bonding =
-      ColimitInheritsInvariants.fromStages Chain Invariants Bonding :=
-  rfl
+  resolveColimitInheritsInvariants_of_ambient
+    (Chain := Chain) (Invariants := Invariants) (Bonding := Bonding)
+    (A_infty := A_infty) (GlobalInvariants := GlobalInvariants)
+    global_embed
 
 end InfoGeometry.Topology.SuperCuntzDilationColimit
+

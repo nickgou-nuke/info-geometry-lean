@@ -33,6 +33,6 @@ theorem modularFlowProjection_eq_commutatorExpectation (K X : EndD H) (ψ : H) :
 theorem coordinateObservable_isBounded (X : EndD H) : Continuous X :=
   X.continuous
 
-end InfoGeometry.Canonical.ModularFlowProjection
+end ModularFlowProjection
 
-end
+end Canonical

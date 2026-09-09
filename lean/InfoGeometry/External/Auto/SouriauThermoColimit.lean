@@ -98,7 +98,7 @@ theorem souriau_cubic_operator_roots {q : ℝ} (hq : souriauCubicOperator q) :
     · exact Or.inr (Or.inr (by linarith [h1]))
   · exact Or.inl (by linarith [h11])
 
--- (Optional) property that the cubic mapping is total on roots of `OP^3=OP`.
+-- (Optional) witness that the cubic mapping is total on roots of `OP^3=OP`.
 -- theorem OPStateFromCubicValue_of_cubic ...
 -- omitted here to avoid additional branch normalization obligations.
 
@@ -307,23 +307,19 @@ theorem souriau_stage_boson_graded_cancellation (n : ℕ) (v : SouriauFockStage 
 /-- Split-signature paravector for the geometric/lightcone bookkeeping.
     Determinant is `σ² - γ²`; lightcone is `det = 0`.
 -/
-abbrev SplitParavector := ℝ × ℝ
-
-namespace SplitParavector
-
-def scalar (v : SplitParavector) : ℝ := v.1
-def bivector (v : SplitParavector) : ℝ := v.2
-
-end SplitParavector
+structure SplitParavector where
+  scalar : ℝ
+  bivector : ℝ
+deriving DecidableEq
 
 def SplitParavector.det (v : SplitParavector) : ℝ :=
-  SplitParavector.scalar v ^ 2 - SplitParavector.bivector v ^ 2
+  v.scalar ^ 2 - v.bivector ^ 2
 
 def SplitParavector.parabolic (v : SplitParavector) : Prop :=
   v.det = 0
 
 def paravectorTemperature (σ γ : ℝ) : SplitParavector :=
-  (σ, γ)
+  { scalar := σ, bivector := γ }
 
 theorem paravectorTemperature_det (σ γ : ℝ) :
     (paravectorTemperature σ γ).det = σ ^ 2 - γ ^ 2 := by
@@ -340,5 +336,24 @@ theorem paravectorLightcone_iff (σ γ : ℝ) :
     have h0 : σ ^ 2 - γ ^ 2 = 0 := sub_eq_zero.mpr hpar
     show (paravectorTemperature σ γ).parabolic
     simpa [SplitParavector.parabolic, SplitParavector.det, paravectorTemperature] using h0
+
+/-- Stagewise synthesis theorem used by narrative layers.
+    No analytic RH/global claims are added here.
+-/
+theorem souriau_thermo_colimit_synthesis :
+    (∀ n, ∀ v : SouriauFockStage n, souriauDenominatorZero n v →
+      souriauGradedIndexSingularity n v) ∧
+    (∀ n, ∀ v : SouriauFockStage n,
+      souriauGradedIndexSingularity n v → souriauDenominatorZero n v) ∧
+    (∀ n, ∀ v : SouriauFockStage n, (∀ i : Fin n, v i ≠ 1) →
+      souriauBosonicPartition n v * souriauMoebiusArithmeticIndex n v = 1) := by
+  constructor
+  · intro n v h
+    exact souriauGradedIndex_zero_of_denominator_zero n v h
+  constructor
+  · intro n v h
+    exact souriau_denominator_zero_of_gradedIndex_zero n v h
+  · intro n v h
+    exact souriau_stage_boson_graded_cancellation n v h
 
 end SouriauThermoColimit

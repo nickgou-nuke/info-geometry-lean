@@ -1,7 +1,7 @@
 import Lean
 import InfoGeometry.Meta.Trust
 import InfoGeometry.Meta.Admission
-import InfoGeometry.Lint.VacuityPackLint
+import InfoGeometry.Lint.WitnessLint
 import InfoGeometry.Lint.NonTriviality
 
 open Lean Elab Command InfoGeometry.Meta
@@ -25,8 +25,8 @@ register_option linter.pauli.grandUnity : Bool := {
   descr := "warn about grand unity via trivial reflexivity"
 }
 
-/-- Option to control the Pauli property-pack linter. -/
-register_option linter.pauli.property : Bool := {
+/-- Option to control the Pauli witness-pack linter. -/
+register_option linter.pauli.witness : Bool := {
   defValue := true
   descr := "warn about structures with generic Prop _statement/_sorry field pairs"
 }
@@ -50,7 +50,7 @@ def pauliLinter : Linter where
     let anyEnabled :=
       linter.pauli.admitUsage.get (← getOptions) ||
       linter.pauli.grandUnity.get (← getOptions) ||
-      linter.pauli.property.get (← getOptions)
+      linter.pauli.witness.get (← getOptions)
     unless anyEnabled do
       return
 
@@ -69,14 +69,14 @@ def pauliLinter : Linter where
       -- declaration kind from theorem/definition/instance.
       if declKind == ``Lean.Parser.Command.structure ||
          declKind == ``Lean.Parser.Command.structureTk then
-        if linter.pauli.property.get (← getOptions) then
+        if linter.pauli.witness.get (← getOptions) then
           -- Extract the structure name from the syntax
           let id := decl[1][0]
           if id.isIdent then
             let structName := (← getCurrNamespace) ++ id.getId
             if isInfoGeometry structName then
-              let pairs := detectVacuityPackPairs env structName
-              for diag in renderAllVacuityPackDiags structName pairs do
+              let pairs := detectWitnessPackPairs env structName
+              for diag in renderAllWitnessPackDiags structName pairs do
                 logError diag
 
       if declKind == ``Lean.Parser.Command.theorem ||

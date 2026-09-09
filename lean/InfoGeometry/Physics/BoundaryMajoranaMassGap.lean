@@ -36,29 +36,16 @@ theorem majoranaPairGap_nonneg (lambda : ℝ) :
   unfold majoranaPairGap
   exact abs_nonneg lambda
 
+/-- The explicit two-state splitting is twice the BdG gap. -/
+theorem majoranaPairSplitting_eq_two_mul_gap (lambda : ℝ) :
+    majoranaPairSplitting lambda = 2 * majoranaPairGap lambda :=
+  rfl
+
 /-- The one-pair gap vanishes exactly when the singular value vanishes. -/
 theorem majoranaPairGap_eq_zero_iff (lambda : ℝ) :
     majoranaPairGap lambda = 0 ↔ lambda = 0 := by
   unfold majoranaPairGap
   exact abs_eq_zero
-
-/-- The parity splitting inherits nonnegativity from the one-pair gap. -/
-theorem majoranaPairSplitting_nonneg (lambda : ℝ) :
-    0 ≤ majoranaPairSplitting lambda := by
-  unfold majoranaPairSplitting
-  exact mul_nonneg (by norm_num) (majoranaPairGap_nonneg lambda)
-
-/-- The parity splitting closes exactly when the Majorana pair gap closes. -/
-theorem majoranaPairSplitting_eq_zero_iff (lambda : ℝ) :
-    majoranaPairSplitting lambda = 0 ↔ lambda = 0 := by
-  unfold majoranaPairSplitting
-  constructor
-  · intro h
-    apply (majoranaPairGap_eq_zero_iff lambda).mp
-    nlinarith
-  · intro h
-    rw [h]
-    simp [majoranaPairGap]
 
 /-! ## 2. Explicit scalar Pfaffian transition model -/
 
@@ -94,6 +81,13 @@ def netChiralMajorana (rightModes leftModes : ℝ) : ℝ :=
 /-- Chiral Majorana central charge `c_- = (N_R - N_L)/2`. -/
 noncomputable def chiralMajoranaCentralCharge (rightModes leftModes : ℝ) : ℝ :=
   netChiralMajorana rightModes leftModes / 2
+
+/-- Chiral central charge is half the net chiral Majorana count. -/
+theorem chiralMajoranaCentralCharge_eq_half_net
+    (rightModes leftModes : ℝ) :
+    chiralMajoranaCentralCharge rightModes leftModes =
+      netChiralMajorana rightModes leftModes / 2 :=
+  rfl
 
 /-- If `c_- = 8`, then the net chiral Majorana count is `16`. -/
 theorem netChiral_eq_sixteen_of_cMinus_eq_eight
@@ -155,29 +149,6 @@ theorem weylScaledGap_pos {gap0 phi : ℝ}
     0 < weylScaledGap gap0 phi := by
   unfold weylScaledGap
   exact mul_pos (Real.exp_pos _) hgap0
-
-/-- Weyl scaling preserves the exact positivity locus of the reference gap. -/
-theorem weylScaledGap_pos_iff (gap0 phi : ℝ) :
-    0 < weylScaledGap gap0 phi ↔ 0 < gap0 := by
-  unfold weylScaledGap
-  constructor
-  · intro h
-    nlinarith [Real.exp_pos (-phi)]
-  · intro h
-    exact mul_pos (Real.exp_pos _) h
-
-@[simp] theorem weylScaledGap_zero (gap0 : ℝ) :
-    weylScaledGap gap0 0 = gap0 := by
-  simp [weylScaledGap]
-
-/-! Weyl rescalings compose additively in their logarithmic parameter. -/
-
-theorem weylScaledGap_add (gap0 phi psi : ℝ) :
-    weylScaledGap (weylScaledGap gap0 phi) psi =
-      weylScaledGap gap0 (phi + psi) := by
-  unfold weylScaledGap
-  rw [show -(phi + psi) = -phi + -psi by ring, Real.exp_add]
-  ring
 
 /-- Logarithmic Weyl gap scaling: `log Δ = log Δ₀ - φ`. -/
 theorem log_weylScaledGap_eq_log_gap0_sub_phi {gap0 phi : ℝ}

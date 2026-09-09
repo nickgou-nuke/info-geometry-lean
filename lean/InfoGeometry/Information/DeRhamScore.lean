@@ -20,7 +20,7 @@ theorem score_as_de_rham_potential (Q : ℝ → ℝ) (x : ℝ)
 
 /--
 Complex logarithmic derivative of a partition function on the principal-branch domain.
-This is the complex `d log Q = dQ / Q` readout; the slit-plane property is the
+This is the complex `d log Q = dQ / Q` readout; the slit-plane hypothesis is the
 branch condition for `Complex.log`, not a topological winding theorem.
 -/
 theorem complex_score_as_de_rham_potential (Q : ℂ → ℂ) (z : ℂ)

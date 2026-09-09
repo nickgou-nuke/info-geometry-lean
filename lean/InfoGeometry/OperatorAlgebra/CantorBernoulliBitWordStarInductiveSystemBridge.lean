@@ -83,7 +83,7 @@ theorem bitWordDyadicStarEmbedding_trace_compatible
   change matrixTraceState (n + 1)
       (concreteStep n (bitWordStageStarAlgEquiv n A)) =
     matrixTraceState n (bitWordStageStarAlgEquiv n A)
-  exact concrete_trace_compatible n (bitWordStageStarAlgEquiv n A)
+  exact concreteData.trace_compatible n (bitWordStageStarAlgEquiv n A)
 
 abbrev BitWordStarData :=
   ∀ n, BitWordMatrixStage n →⋆ₐ[ℂ] BitWordMatrixStage (n + 1)

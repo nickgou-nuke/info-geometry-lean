@@ -116,12 +116,12 @@ def qCcrParameterTopologicalDiagram : I ⥤ TopCat where
           (sys.map_comp (leOfHom f) (leOfHom g)).symm
 
 abbrev qCcrParameterTopologicalColimit : TopCat :=
-  colimit (qCcrParameterTopologicalDiagram Stage sys)
+  topologicalDirectColimit (qCcrParameterTopologicalDiagram Stage sys)
 
 def qCcrParameterTopologicalInjection (i : I) :
     (qCcrParameterTopologicalDiagram Stage sys).obj i ⟶
       qCcrParameterTopologicalColimit Stage sys :=
-  colimit.ι (qCcrParameterTopologicalDiagram Stage sys) i
+  topologicalDirectInjection (qCcrParameterTopologicalDiagram Stage sys) i
 
 theorem qCcrParameterTopologicalInjection_transition
     {i j : I} (hij : i ≤ j)
@@ -232,7 +232,7 @@ def qCcrParameterZeroFiberTransitionTopCatHom
       continuous_toFun :=
         continuous_qCcrParameterZeroFiberTransitionMap Stage sys hij }
 
-/-- Forget the fixed-q property and include a fiber point in the ambient
+/-- Forget the fixed-q witness and include a fiber point in the ambient
     residual zero-locus. -/
 def qCcrParameterZeroLocusFiberInclusionTopCatHom (i : I) (q : Stage i) :
     TopCat.of
@@ -332,12 +332,14 @@ theorem qCcrParameterZeroFiberToParameterNatTrans_app_closed_range
     Stage sys i).isClosed_range
 
 abbrev qCcrParameterZeroFiberTopologicalColimit : TopCat :=
-  colimit (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
+  FilteredColimit.Native.Topological.topologicalDirectColimit
+    (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
 
 def qCcrParameterZeroFiberTopologicalInjection (i : I) :
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys).obj i ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
-  colimit.ι (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
+  FilteredColimit.Native.Topological.topologicalDirectInjection
+    (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
 
 /-- Canonical map from the relation-locus colimit to the ambient parameter
 colimit, obtained by the natural inclusion of diagrams. -/

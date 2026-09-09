@@ -76,38 +76,6 @@ lemma bracket_lgen_lgen' (n m : ℤ) :
     bracket 𝕜 (lgen 𝕜 n) (lgen 𝕜 m) = (n - m : 𝕜) • lgen 𝕜 (n + m) := by
   simp only [bracket, Basis.constr_basis]
 
-@[simp]
-lemma bracket_lgen_self' (n : ℤ) :
-    bracket 𝕜 (lgen 𝕜 n) (lgen 𝕜 n) = 0 := by
-  rw [bracket_lgen_lgen']
-  simp
-
-lemma bracket_lgen_opposite (n : ℤ) :
-    bracket 𝕜 (lgen 𝕜 n) (lgen 𝕜 (-n)) =
-      (2 * n : 𝕜) • lgen 𝕜 0 := by
-  rw [bracket_lgen_lgen']
-  congr 1
-  norm_num
-
-lemma bracket_lgen_zero (n : ℤ) :
-    bracket 𝕜 (lgen 𝕜 0) (lgen 𝕜 n) =
-      (-n : 𝕜) • lgen 𝕜 n := by
-  rw [bracket_lgen_lgen']
-  simp
-
-lemma bracket_lgen_zero_right (n : ℤ) :
-    bracket 𝕜 (lgen 𝕜 n) (lgen 𝕜 0) =
-      (n : 𝕜) • lgen 𝕜 n := by
-  rw [bracket_lgen_lgen']
-  simp
-
-lemma bracket_lgen_opposite_reverse (n : ℤ) :
-    bracket 𝕜 (lgen 𝕜 (-n)) (lgen 𝕜 n) =
-      (-2 * n : 𝕜) • lgen 𝕜 0 := by
-  rw [bracket_lgen_lgen']
-  congr 1
-  norm_num
-
 lemma bracket_eq_neg_flip :
     bracket 𝕜 = -(bracket 𝕜).flip := by
   apply LinearMap.ext_basis (lgen _) (lgen _)

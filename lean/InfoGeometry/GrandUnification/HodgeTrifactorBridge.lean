@@ -14,7 +14,7 @@ It is a naming bridge only in the safe algebraic sense:
 * coexact sector   := `P_minus`.
 
 No analytic Hodge theorem, spectral-triple theorem, KMS statement, CFT claim, or
-Riemann-property claim is asserted here.
+Riemann-hypothesis claim is asserted here.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 `hodge_trifactor_decomposition`, `T_annihilates_harmonicSector`,
@@ -31,7 +31,7 @@ vanishing premise.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 Any identification with analytic Hodge decomposition, zeta zeros, Dirac-Hodge
-operators, KMS thermodynamics, CFT, or Riemann-property statements.
+operators, KMS thermodynamics, CFT, or Riemann-hypothesis statements.
 -/
 
 namespace InfoGeometry.GrandUnification.HodgeTrifactorBridge

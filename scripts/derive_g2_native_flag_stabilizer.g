@@ -44,6 +44,42 @@ Print("PC_POINT_FIX=", ForAll(pcgens,
 Print("PC_LINE_FIX=", ForAll(pcgens,
   function(g) return Set(List(AsSet(line), v -> OnLeft(v, g))) = line; end), "\n");
 pointAction := ActionHomomorphism(G, points, OnLeft);
+
+# The projected action above loses the distinction between elements with the
+# same point permutation.  Compute the stabilizer of the actual base flag in
+# G instead: this is the carrier whose generators may be transported to Lean.
+OnFlag := function(F, g)
+  return [OnLeft(F[1], g),
+    Set(List(AsSet(F[2]), v -> OnLeft(v, g)))];
+end;
+flagStabDirect := Stabilizer(G, [p, line], OnFlag);
+Print("DIRECT_FLAG_STABILIZER_SIZE=", Size(flagStabDirect), "\n");
+Print("DIRECT_FLAG_STABILIZER_GENERATORS=", Length(GeneratorsOfGroup(flagStabDirect)), "\n");
+Print("DIRECT_FLAG_EQUALS_U=", flagStabDirect = U, "\n");
+Print("DIRECT_FLAG_BASIS8_2_ORBIT=\n");
+orbitBasis8Two := Orbit(flagStabDirect,
+  [Zero(F),Zero(F),One(F),Zero(F),Zero(F),Zero(F),Zero(F),Zero(F)], OnLeft);
+Print("DIRECT_FLAG_BASIS8_2_ORBIT_SIZE=", Length(orbitBasis8Two), "\n");
+for v in orbitBasis8Two do
+  Print(List(v, x -> Int(x)), "\n");
+od;
+Print("DIRECT_FLAG_BASIS8_7_ORBIT=\n");
+orbitBasis8Seven := Orbit(flagStabDirect,
+  [Zero(F),Zero(F),Zero(F),Zero(F),Zero(F),Zero(F),Zero(F),One(F)], OnLeft);
+Print("DIRECT_FLAG_BASIS8_7_ORBIT_SIZE=", Length(orbitBasis8Seven), "\n");
+for v in orbitBasis8Seven do
+  Print(List(v, x -> Int(x)), "\n");
+od;
+Print("DIRECT_FLAG_PEEL2_CORRECTION_VECTOR_ORBIT=\n");
+peel2CorrectionVector :=
+  [One(F), One(F), Zero(F), One(F), Zero(F), Zero(F), One(F), One(F)];
+orbitPeel2Correction := Orbit(flagStabDirect,
+  peel2CorrectionVector, OnLeft);
+Print("DIRECT_FLAG_PEEL2_CORRECTION_ORBIT_SIZE=",
+  Length(orbitPeel2Correction), "\n");
+for v in orbitPeel2Correction do
+  Print(List(v, x -> Int(x)), "\n");
+od;
 lineIndices := Set(List(line, v -> Position(points, v)));
 Pact := Image(pointAction, Stabilizer(G, p, OnLeft));
 Print("POINT_STAB_SIZE=", Size(Pact), " LINE_ORBIT_SIZE=",
@@ -57,11 +93,50 @@ Print("NATIVE_FLAG_STABILIZER_GENERATORS=", Length(GeneratorsOfGroup(stab)), "\n
 emit := function(sg)
   local pre, bits;
   pre := PreImagesRepresentative(pointAction, sg);
+  if pre = fail then
+    Print("NATIVE_FLAG_PREIMAGE_FAIL\n");
+    return;
+  fi;
+  if Factorization(U, pre) = fail then
+    Print("NATIVE_FLAG_PREIMAGE_NOT_IN_U\n");
+    return;
+  fi;
   Print("NATIVE_FLAG_PC_WORD=", ExtRepOfObj(Factorization(U, pre)), "\n");
   bits := First(allBits, function(b) return leanPcMatrix(b) = pre; end);
   if bits = fail then Error("LEAN_PC_WORD_TRANSLATION failed"); fi;
   Print("NATIVE_FLAG_LEAN_BITS=", bits, "\n");
 end;
+emitDirect := function(pre)
+  local bits;
+  if Factorization(U, pre) = fail then
+    Print("DIRECT_FLAG_GENERATOR_NOT_IN_U\n");
+    return;
+  fi;
+  Print("DIRECT_FLAG_PC_WORD=", ExtRepOfObj(Factorization(U, pre)), "\n");
+  bits := First(allBits, function(b) return leanPcMatrix(b) = pre; end);
+  if bits = fail then Error("DIRECT_LEAN_PC_WORD_TRANSLATION failed"); fi;
+  Print("DIRECT_FLAG_LEAN_BITS=", bits, "\n");
+end;
+Print("POINT_STABILIZER_GENERATORS=", Length(GeneratorsOfGroup(Pact)), "\n");
+for sg in GeneratorsOfGroup(Pact) do emit(sg); od;
+Print("DIRECT_FLAG_GENERATOR_READBACK=\n");
+for sg in GeneratorsOfGroup(flagStabDirect) do emitDirect(sg); od;
+for name in ["s", "c2sh"] do
+  x := s;
+  if name = "c2sh" then x := c^2*s*h; fi;
+  Print("AMBIENT_", name, "_FIXES_POINT=", OnLeft(p, x) = p,
+    "_LINE_IMAGE=", OnSets(lineIndices, Image(pointAction, x)), "\n");
+od;
+for i in [1..6] do
+  for side in [1,2] do
+    x := pcgens[i] * s;
+    if side = 2 then x := s * pcgens[i]; fi;
+    if OnLeft(p, x) = p then
+      Print("PRODUCT_", i, "_", side, "_LINE_IMAGE=",
+        OnSets(lineIndices, Image(pointAction, x)), "\n");
+    fi;
+  od;
+od;
 for sg in GeneratorsOfGroup(stab) do emit(sg); od;
 if Size(stab) = 64 then Print("NATIVE_FLAG_STABILIZER_CAS=PASS\n");
 else Print("NATIVE_FLAG_STABILIZER_CAS=FAIL\n"); fi;

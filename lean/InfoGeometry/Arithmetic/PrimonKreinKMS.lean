@@ -15,7 +15,7 @@ It separates:
 * Möbius as square-free fermion parity;
 * the positive KMS normalizability guard `1 < β`;
 * the direct-sum real doubled Krein carrier;
-* a property-gated KMS boundary law on the doubled Krein operator algebra.
+* a witness-gated KMS boundary law on the doubled Krein operator algebra.
 
 It does not claim a Type III completion, a Tomita--Takesaki theorem for the
 finite model, an infinite zeta theorem, or that the Krein supertrace is a
@@ -82,22 +82,6 @@ theorem finiteFermionSupertrace_eq_eulerProduct
     PrimeSuperalgebra.finitePrimeDenominator]
     using PrimeSuperalgebra.finitePrimeSupertrace_eq_denominator P β
 
-/--
-The finite signed Krein/Möbius readout cancels the finite bosonic partition.
-
-This is the finite algebraic counterpart of the Möbius inverse identity.  It
-does not assert an infinite Euler product or identify a signed supertrace
-with a positive KMS state.
--/
-theorem finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one
-    (P : PrimeCutoff) (β : ℝ)
-    (hdenom : PrimeSuperalgebra.finitePrimeDenominator P β ≠ 0) :
-    finiteFermionSupertrace P β *
-        PrimeSuperalgebra.finiteBosonicPrimePartition P β = 1 := by
-  simpa [finiteFermionSupertrace] using
-    PrimeSuperalgebra.finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
-      P β hdenom
-
 lemma finiteFermionPartition_pos (P : PrimeCutoff) (β : ℝ) :
     0 < finiteFermionPartition P β := by
   rw [finiteFermionPartition_eq_eulerProduct]
@@ -145,60 +129,15 @@ for the positive Gibbs state.
 def NormalizableBeta (β : ℝ) : Prop :=
   1 < β
 
-/-- The normalizable region places every prime-mode weight strictly below one. -/
-lemma primeModeWeight_lt_one_of_normalizable
-    {β : ℝ} (hβ : NormalizableBeta β)
-    {p : ℕ} (hp : Nat.Prime p) :
-    primeModeWeight β p < 1 := by
-  have hβ0 : 1 < β := hβ
-  have hβ' : 0 < β := by linarith
-  have hlogp : 0 < Real.log (p : ℝ) := by
-    exact Real.log_pos (by exact_mod_cast hp.one_lt)
-  unfold primeModeWeight PrimeSuperalgebra.primeWeight
-  apply Real.exp_lt_one_iff.mpr
-  have hprod : 0 < β * Real.log (p : ℝ) := mul_pos hβ' hlogp
-  have hneg : -(β * Real.log (p : ℝ)) < 0 := neg_lt_zero.mpr hprod
-  simpa [PrimeSuperalgebra.primeEnergy] using hneg
-
-/-- The signed finite supertrace is positive in the normalizable region. -/
-lemma finiteFermionSupertrace_pos_of_normalizable
-    (P : PrimeCutoff) {β : ℝ} (hβ : NormalizableBeta β) :
-    0 < finiteFermionSupertrace P β := by
-  rw [finiteFermionSupertrace_eq_eulerProduct]
-  apply Finset.prod_pos
-  intro p hp
-  exact sub_pos.mpr
-    (primeModeWeight_lt_one_of_normalizable hβ (P.prime_mem p hp))
-
-/-- The finite boson/signed-supertrace cancellation needs no extra
-nonvanishing hypothesis once the normalizable region is supplied. -/
-theorem finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one_of_normalizable
-    (P : PrimeCutoff) {β : ℝ} (hβ : NormalizableBeta β) :
-    finiteFermionSupertrace P β *
-        PrimeSuperalgebra.finiteBosonicPrimePartition P β = 1 := by
-  have htrace : 0 < finiteFermionSupertrace P β :=
-    finiteFermionSupertrace_pos_of_normalizable P hβ
-  have hdenom : PrimeSuperalgebra.finitePrimeDenominator P β ≠ 0 := by
-    have hdenom_eq :
-        PrimeSuperalgebra.finitePrimeDenominator P β =
-          finiteFermionSupertrace P β := by
-      symm
-      simpa [finiteFermionSupertrace] using
-        PrimeSuperalgebra.finitePrimeSupertrace_eq_denominator P β
-    rw [hdenom_eq]
-    exact htrace.ne'
-  exact finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one P β
-    hdenom
-
 /--
-Finite arithmetic KMS interface with an explicit primon normalizability guard.
+Finite arithmetic KMS socket with an explicit primon normalizability guard.
 
-The KMS law is supplied by the existing `ArithmeticKMSData` interface.
+The KMS law is supplied by the existing `ArithmeticKMSWitness` interface.
 -/
-structure NormalizableArithmeticKMSData
+structure NormalizableArithmeticKMSSocket
     (State : Type*) where
-  /-- Finite arithmetic KMS property. -/
-  property : ArithmeticKMSData State
+  /-- Finite arithmetic KMS witness. -/
+  witness : ArithmeticKMSWitness State
   /-- Finite arithmetic support. -/
   support : Finset ℕ
   /-- Inverse temperature. -/
@@ -206,15 +145,15 @@ structure NormalizableArithmeticKMSData
   /-- Positive Gibbs normalizability guard. -/
   normalizable : NormalizableBeta beta
 
-namespace NormalizableArithmeticKMSData
+namespace NormalizableArithmeticKMSSocket
 
 variable {State : Type*}
 
 /-- Encoded finite arithmetic state. -/
-def encodedState (S : NormalizableArithmeticKMSData State) : State :=
-  S.property.stateOfFinset S.support
+def encodedState (S : NormalizableArithmeticKMSSocket State) : State :=
+  S.witness.stateOfFinset S.support
 
-end NormalizableArithmeticKMSData
+end NormalizableArithmeticKMSSocket
 
 /-! ## 4. KMS strip readout -/
 
@@ -287,17 +226,17 @@ theorem modular_j_reverses_splitDoubledKreinForm
 
 end DoubledKrein
 
-/-! ## 6. Real doubled Krein/KMS interface -/
+/-! ## 6. Real doubled Krein/KMS socket -/
 
 open InfoGeometry.Krein
 
 /--
-Real doubled Krein/KMS interface.
+Real doubled Krein/KMS socket.
 
 The KMS-like boundary law is the repository's finite Krein thermal predicate,
 not a global Tomita--Takesaki theorem.
 -/
-structure RealDoubledKreinKMSData
+structure RealDoubledKreinKMSSocket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Inverse temperature. -/
   beta : ℝ
@@ -310,33 +249,33 @@ structure RealDoubledKreinKMSData
   /-- Repository KMS-like boundary law. -/
   kms : InfoGeometry.Krein.satisfies_kms generator state beta
 
-namespace RealDoubledKreinKMSData
+namespace RealDoubledKreinKMSSocket
 
 variable
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-end RealDoubledKreinKMSData
+end RealDoubledKreinKMSSocket
 
 /-! ## 7. Combined primon doubled Krein/KMS bridge -/
 
 /--
 Combined bridge packet.
 
-The arithmetic KMS interface and doubled Krein interface share the same inverse
+The arithmetic KMS socket and doubled Krein socket share the same inverse
 temperature, while keeping positive KMS state data separate from indefinite
 Krein/supertrace bookkeeping.
 -/
-structure PrimonDoubledKreinKMSData
+structure PrimonDoubledKreinKMSSocket
     (State E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Positive finite arithmetic KMS side. -/
-  arithmetic : NormalizableArithmeticKMSData State
+  arithmetic : NormalizableArithmeticKMSSocket State
   /-- Direct-sum doubled Krein/KMS side. -/
-  krein : RealDoubledKreinKMSData E
+  krein : RealDoubledKreinKMSSocket E
   /-- Shared inverse-temperature readout. -/
   beta_agrees : krein.beta = arithmetic.beta
 
-namespace PrimonDoubledKreinKMSData
+namespace PrimonDoubledKreinKMSSocket
 
 variable
     {State E : Type*}
@@ -344,10 +283,10 @@ variable
 
 /-- The common inverse temperature is in the normalizable primon region. -/
 theorem arithmetic_beta_normalizable
-    (S : PrimonDoubledKreinKMSData State E) :
+    (S : PrimonDoubledKreinKMSSocket State E) :
     NormalizableBeta S.arithmetic.beta :=
   S.arithmetic.normalizable
 
-end PrimonDoubledKreinKMSData
+end PrimonDoubledKreinKMSSocket
 
 end InfoGeometry.Arithmetic.PrimonKreinKMS

@@ -121,7 +121,7 @@ omit [FiniteDimensional ℝ X] in
 /--
 Proof-carrying unit-volume route for RN entropy sourced vacuum gravity.
 
-This narrows the public property surface from a bare
+This narrows the public hypothesis surface from a bare
 `relativeVolumeChangeRN n M = 1` equality to the constructive
 `UnitRelativeVolumeBit` packet.
 -/

@@ -83,4 +83,17 @@ theorem gapped_energy_dominates_abs_gap (E μ Δ : ℝ) :
   rw [← habs]
   exact Real.sqrt_le_sqrt hle
 
+/-- Consolidated finite Fermi-level/gap package. -/
+theorem fermi_level_gap_synthesis :
+    (∀ μ, shiftedFermiLevel μ μ = 0) ∧
+    (∀ β μ, fermionFugacity β μ μ = 1) ∧
+    (∀ β μ, fermiLevelPartition β μ μ = 2) ∧
+    (∀ μ Δ, (quasiparticleEnergy μ μ Δ) ^ 2 = Δ ^ 2) ∧
+    (∀ Δ, 0 ≤ spectralGapAtFermi Δ) ∧
+    (∀ μ, quasiparticleEnergy μ μ 0 = 0) ∧
+    (∀ E μ Δ, spectralGapAtFermi Δ ≤ quasiparticleEnergy E μ Δ) := by
+  exact ⟨shiftedFermiLevel_zero, fermionFugacity_at_fermi,
+    fermiLevelPartition_at_fermi, quasiparticleEnergy_at_fermi_sq,
+    gap_nonnegative, zero_gap_closes_at_fermi, gapped_energy_dominates_abs_gap⟩
+
 end noncomputable section

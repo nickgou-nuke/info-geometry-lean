@@ -16,8 +16,6 @@ The Lorentz boosts act via the hyperbolic $l$ generator matching the signature $
 
 namespace InfoGeometry.Spacetime
 
-namespace SplitBiquaternionsRecovered
-
 open Matrix
 
 /-- The standard identity matrix. -/
@@ -59,7 +57,5 @@ This implements $e^{\theta \mathbf{i}} = \cos\theta + \mathbf{i}\sin\theta$ nati
 -/
 noncomputable def spatialRotationXY (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   (Real.cos θ) • splitOne + (Real.sin θ) • splitI
-
-end SplitBiquaternionsRecovered
 
 end InfoGeometry.Spacetime

@@ -203,7 +203,7 @@ theorem brewster_operator_phaseErlangerInvariant
     IsPhaseErlangerInvariantOperator (diagonalJones r_s 0) :=
   diagonalJones_phaseErlangerInvariant r_s 0
 
-/-! ## 5. Coordinate covariance boundary -/
+/-! ## 5. Coordinate covariance warning socket -/
 
 /--
 General Jones conjugation, intentionally not assumed to preserve the `s/p`
@@ -229,79 +229,6 @@ def conj
 def transportedCore
     (G : GeneralJonesConjugation) : JonesOperator :=
   G.conj Ps
-
-theorem conj_id (G : GeneralJonesConjugation) :
-    G.conj LinearMap.id = LinearMap.id := by
-  simpa [conj] using G.U_comp_Uinv
-
-theorem conj_zero (G : GeneralJonesConjugation) :
-    G.conj 0 = 0 := by
-  simp [conj]
-
-theorem conj_add (G : GeneralJonesConjugation)
-    (S T : JonesOperator) :
-    G.conj (S + T) = G.conj S + G.conj T := by
-  ext x
-  simp [conj, LinearMap.comp_apply]
-
-theorem conj_comp (G : GeneralJonesConjugation)
-    (S T : JonesOperator) :
-    G.conj (S.comp T) = (G.conj S).comp (G.conj T) := by
-  apply LinearMap.ext
-  intro x
-  simp only [conj, LinearMap.comp_apply]
-  have h := congrArg (fun f : JonesOperator => f (T (G.Uinv x)))
-    G.Uinv_comp_U
-  simp only [LinearMap.comp_apply, LinearMap.id_apply] at h
-  rw [h]
-
-theorem conj_injective (G : GeneralJonesConjugation) :
-    Function.Injective G.conj := by
-  intro S T hST
-  apply LinearMap.ext
-  intro x
-  have h := congrArg (fun f : JonesOperator =>
-      G.Uinv (f (G.U x))) hST
-  simp only [conj, LinearMap.comp_apply] at h
-  have hInv : ∀ y, G.Uinv (G.U y) = y := by
-    intro y
-    have hy := congrArg (fun f : JonesOperator => f y) G.Uinv_comp_U
-    simpa [LinearMap.comp_apply, LinearMap.id_apply] using hy
-  simp only [hInv] at h
-  exact h
-
-theorem commutes_of_conj_eq_self (G : GeneralJonesConjugation)
-    (T : JonesOperator) (hT : G.conj T = T) :
-    G.U.comp T = T.comp G.U := by
-  apply LinearMap.ext
-  intro x
-  have h := congrArg (fun f : JonesOperator => f (G.U x)) hT
-  simp only [conj, LinearMap.comp_apply] at h
-  have hInv : G.Uinv (G.U x) = x := by
-    have hx := congrArg (fun f : JonesOperator => f x) G.Uinv_comp_U
-    simpa [LinearMap.comp_apply, LinearMap.id_apply] using hx
-  rw [hInv] at h
-  exact h
-
-theorem conj_eq_self_of_commutes (G : GeneralJonesConjugation)
-    (T : JonesOperator) (hT : G.U.comp T = T.comp G.U) :
-    G.conj T = T := by
-  apply LinearMap.ext
-  intro x
-  have h := congrArg (fun f : JonesOperator => f (G.Uinv x)) hT
-  simp only [conj, LinearMap.comp_apply] at h ⊢
-  have hInv : G.U (G.Uinv x) = x := by
-    have hx := congrArg (fun f : JonesOperator => f x) G.U_comp_Uinv
-    simpa [LinearMap.comp_apply, LinearMap.id_apply] using hx
-  rw [hInv] at h
-  exact h
-
-theorem conj_eq_self_iff_commutes (G : GeneralJonesConjugation)
-    (T : JonesOperator) :
-    G.conj T = T ↔ G.U.comp T = T.comp G.U := by
-  constructor
-  · exact commutes_of_conj_eq_self G T
-  · exact conj_eq_self_of_commutes G T
 
 end GeneralJonesConjugation
 

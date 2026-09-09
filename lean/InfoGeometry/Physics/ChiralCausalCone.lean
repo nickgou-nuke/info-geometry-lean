@@ -64,21 +64,6 @@ theorem σPlus_eq_carAnn : σPlus = SplitClifford.carAnn := by
 theorem σMinus_eq_carCre : σMinus = SplitClifford.carCre := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [σMinus, SplitClifford.carCre]
 
-theorem σPlus_conjTranspose : σPlus.conjTranspose = σMinus := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [σPlus, σMinus, Matrix.conjTranspose_apply]
-
-theorem σMinus_conjTranspose : σMinus.conjTranspose = σPlus := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [σPlus, σMinus, Matrix.conjTranspose_apply]
-
-theorem σ3c_conjTranspose : σ3c.conjTranspose = σ3c := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [σ3c, Matrix.conjTranspose_apply]
-
 /-! ## `Cl(1,1)` atom to chiral CAR basis bridge -/
 
 /-- Entrywise complexification of the real `Cl(1,1)` CPT atom matrices. -/
@@ -431,18 +416,6 @@ theorem PPlus_add_PMinus : PPlus + PMinus = (1 : M2C) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [Matrix.add_apply]
 
-/-- The chiral decomposition can be rewritten through the projector partition `P₊ + P₋ = 1`. -/
-theorem chiral_decomposition_via_projectors (A : M2C) :
-    A = coeffI A • (PPlus + PMinus) + coeffPlus A • σPlus +
-        coeffMinus A • σMinus + coeff3 A • σ3c := by
-  rw [PPlus_add_PMinus]
-  exact chiral_decomposition A
-
-/-- Pointwise form of the chiral projector partition of the identity. -/
-@[simp] theorem PPlus_add_PMinus_apply (i j : Fin 2) :
-    (PPlus + PMinus) i j = (1 : M2C) i j := by
-  simpa using congrArg (fun M : M2C => M i j) PPlus_add_PMinus
-
 /-- P₊ - P₋ = σ³ — the projector difference gives the chirality grading. -/
 theorem PPlus_sub_PMinus : PPlus - PMinus = σ3c := by
   rw [PPlus_matrix, PMinus_matrix]
@@ -519,13 +492,6 @@ theorem solder_in_chiral_basis (t x y z : ℂ) :
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]; ring
   · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]
-
-/-- Pointwise readout of the soldering form in the chiral basis. -/
-@[simp] theorem solder_in_chiral_basis_apply (t x y z : ℂ) (i j : Fin 2) :
-    SolderingSpinConnectionBogoliubov.solder t x y z i j =
-      (t • (1 : M2C) + (x - Complex.I * y) • σPlus +
-        (x + Complex.I * y) • σMinus + z • σ3c) i j := by
-  simpa using congrArg (fun M : M2C => M i j) (solder_in_chiral_basis t x y z)
 
 /-- For a real 4-vector, the chiral coefficients are complex conjugates. This is
 the Hermiticity condition: the soldered matrix is Hermitian iff the 4-vector is real. -/
@@ -638,17 +604,6 @@ theorem circular_polarization_projector_decomposition
   rcases circular_polarization_closure epsPlus epsMinus h_comm h_anti with ⟨h1, h2⟩
   exact ⟨h1, h2, PPlus_add_PMinus, PPlus_sub_PMinus⟩
 
-/-- Pointwise readout of the circular polarization closure. -/
-@[simp] theorem circular_polarization_closure_apply
-    (epsPlus epsMinus : M2C)
-    (h_comm : epsPlus * epsMinus - epsMinus * epsPlus = σ3c)
-    (h_anti : epsPlus * epsMinus + epsMinus * epsPlus = (1 : M2C))
-    (i j : Fin 2) :
-    (epsPlus * epsMinus) i j = PPlus i j ∧
-    (epsMinus * epsPlus) i j = PMinus i j := by
-  rcases circular_polarization_closure epsPlus epsMinus h_comm h_anti with ⟨h1, h2⟩
-  exact ⟨congrArg (fun M : M2C => M i j) h1, congrArg (fun M : M2C => M i j) h2⟩
-
 /-! ## Full chiral algebraic closure synthesis
 
 The complete algebraic closure of the chiral basis `{I, σ⁺, σ⁻, σ³}` under both
@@ -667,19 +622,14 @@ theorem chiral_causal_cone_synthesis :
     (PPlus * PPlus = PPlus) ∧ (PMinus * PMinus = PMinus) ∧
     (PPlus * PMinus = 0) ∧ (PPlus + PMinus = (1 : M2C)) ∧ (PPlus - PMinus = σ3c) ∧
     (∀ t x y z : ℂ,
-      (SolderingSpinConnectionBogoliubov.solder t x y z).det = t^2 - x^2 - y^2 - z^2) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact chiral_decomposition
-  · exact comm_σPlus_σMinus
-  · exact anti_σPlus_σMinus
-  · exact σPlus_sq
-  · exact σMinus_sq
-  · exact PPlus_idempotent
-  · exact PMinus_idempotent
-  · exact PPlus_PMinus_orthogonal
-  · exact PPlus_add_PMinus
-  · exact PPlus_sub_PMinus
-  · exact SolderingSpinConnectionBogoliubov.solder_det
+      (SolderingSpinConnectionBogoliubov.solder t x y z).det = t^2 - x^2 - y^2 - z^2) :=
+  ⟨chiral_decomposition,
+   comm_σPlus_σMinus,
+   anti_σPlus_σMinus,
+   σPlus_sq, σMinus_sq,
+   PPlus_idempotent, PMinus_idempotent,
+   PPlus_PMinus_orthogonal, PPlus_add_PMinus, PPlus_sub_PMinus,
+   SolderingSpinConnectionBogoliubov.solder_det⟩
 
 #check σPlus_sq
 #check σMinus_sq

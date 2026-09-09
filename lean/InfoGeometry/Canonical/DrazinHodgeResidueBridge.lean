@@ -13,7 +13,7 @@ open InfoGeometry.Canonical
 /-!
 # Drazin/Hodge residue bridge
 
-This file is the property-gated bridge between the Drazin generalized-null
+This file is the witness-gated bridge between the Drazin generalized-null
 sector and a supplied Hodge/harmonic representative sector.
 
 The key calibration is explicit:
@@ -21,7 +21,7 @@ The key calibration is explicit:
 `HarmonicProjector = CIK.spectralComplementaryProjector`.
 
 No theorem here claims that an arbitrary Hodge Laplacian has kernel equal to the
-Drazin null sector.  The Laplacian readback is carried by the supplied property
+Drazin null sector.  The Laplacian readback is carried by the supplied witness
 `harmonic_fixed_iff_delta_zero`.
 -/
 
@@ -102,7 +102,7 @@ theorem drazinResidue_iff_harmonicRepresentative
     R.IsDrazinResidue x ↔ R.IsHarmonicRepresentative x :=
   (R.harmonicRepresentative_iff_drazinResidue x).symm
 
-/-- Harmonic representatives are exactly `Delta`-zero states by the supplied Hodge property. -/
+/-- Harmonic representatives are exactly `Delta`-zero states by the supplied Hodge witness. -/
 @[rep_depth krein]
 theorem harmonicRepresentative_iff_deltaZero
     (x : E) :

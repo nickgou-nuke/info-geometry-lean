@@ -149,13 +149,13 @@ end WeylBKMDriftMassCarrier
 /-! ## Compatibility with the existing `BKMDriftMetric` carrier -/
 
 /--
-Fusion interface from the earlier metric/stiffness carrier to the named modular
+Fusion socket from the earlier metric/stiffness carrier to the named modular
 mass carrier.
 -/
 @[rep_depth operator]
 structure BKMDriftMetricMassFusion
     (State : Type*) where
-  metric : BKMDriftMetricDatum State
+  metric : BKMDriftMetricCarrier State
   mass : WeylBKMDriftMassCarrier State
 
 /-- External predicate: mass drift/gauge channels are inherited from the metric carrier. -/

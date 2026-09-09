@@ -20,16 +20,19 @@ open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 open InfoGeometry.Algebra.ZornMatrix
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 theorem signalNorm_eq_circularPeirce_det
     (c : ℝ) (s : SignalCoordinates) :
     signalNorm c s =
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        realCrossProduct3
         (paperCanonicalLinearEquiv (toNativeZorn c s)) := by
   calc
     signalNorm c s = zornNorm (toNativeZorn c s) :=
       (native_zorn_norm_eq_signalNorm c s).symm
     _ = InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        realCrossProduct3
         (paperCanonicalLinearEquiv (toNativeZorn c s)) :=
       paperCanonicalLinearEquiv_norm (toNativeZorn c s)
 

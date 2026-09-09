@@ -26,7 +26,6 @@ open InfoGeometry.OperatorAlgebra.QCCRResidual
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.FiniteSingleModeCARMatrixBridge
 open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzGNSRepresentation
 open InfoGeometry.Algebra.CuntzFockRepresentation
 
 /-! ### One-mode CAR as the q=-1 specialization -/
@@ -45,7 +44,7 @@ theorem one_mode_car_anticommutator :
 
 /-- A Cuntz-derived CAR generator satisfies `{a, a⋆} = 1`, hence q = -1 q-CCR. -/
 theorem cuntz_derived_car_qccr_minus_one
-    {Op : Type*} [Ring Op] [StarRing Op] (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    {Op : Type*} [Ring Op] [StarRing Op] (C : CantorCuntzO2Carrier Op) :
     qCcrRelation (carFromCuntz C) (star (carFromCuntz C)) (-1) = 0 := by
   exact (qccr_fermionic_limit (carFromCuntz C) (star (carFromCuntz C))).2
     (by simpa [cantorAnticommutator] using
@@ -55,7 +54,7 @@ theorem cuntz_derived_car_qccr_minus_one
 
 /-- Cuntz isometries realize the q = 0 boundary `a⋆ a = 1`. -/
 theorem cuntz_generator_qccr_zero {R : Type*} [Ring R] [StarRing R]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
+    (C : _root_.CuntzAlgebra.Cuntz2Isometries R) :
     qCcrRelation (star (_root_.CuntzAlgebra.S1 C))
       (_root_.CuntzAlgebra.S1 C) 0 = 0 := by
   rw [qccr_to_cuntz_limit]
@@ -63,14 +62,21 @@ theorem cuntz_generator_qccr_zero {R : Type*} [Ring R] [StarRing R]
 
 /-- The same zero‑q relation on left multiplication in the (finite) Cuntz algebra. -/
 theorem fock_left_regular_cuntz_qccr_zero
+    (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
+    qCcrRelation
+        (leftMultiplication n (cuntzSdag n i))
+        (leftMultiplication n (cuntzS n i)) 0 x = 0 := by
+  simpa [qCcrRelation] using
+    leftMultiplication_cuntz_qccr_zero n i x
+
+/-! ### Operator-level q = 0 left-regular residue vanishes (pointwise-extensionality). -/
+
+theorem fock_left_regular_cuntz_qccr_zero_operator
     (n : ℕ) (i : Fin n) :
     qCcrRelation
         (leftMultiplication n (cuntzSdag n i))
         (leftMultiplication n (cuntzS n i)) 0 = 0 := by
-  apply (qccr_to_cuntz_limit _ _).2
   ext x
-  exact InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication_cuntz_isometry n i x
-
-/-! ### Operator-level q = 0 left-regular residue vanishes (pointwise-extensionality). -/
+  simpa using fock_left_regular_cuntz_qccr_zero n i x
 
 end InfoGeometry.Algebra.CARFockBridge

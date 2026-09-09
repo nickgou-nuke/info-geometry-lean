@@ -1,14 +1,12 @@
 import InfoGeometry.Canonical.FilteredQCCRCompatiblePointColimit
 import InfoGeometry.Canonical.CuntzTowerUpperTailActionColimit
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 /-!
 # Cuntz-generator points on an upper-tail q-CCR colimit
 
-The finite Cuntz generator property is now instantiated as a compatible point
+The finite Cuntz generator witness is now instantiated as a compatible point
 family on the upper-tail index category.  The resulting map is obtained by
-the generic filtered `TopCat` colimit construction, so the endpoint property
+the generic filtered `TopCat` colimit construction, so the endpoint witness
 is connected to the same noncommutative colimit as the transition maps.
 -/
 
@@ -26,11 +24,6 @@ open InfoGeometry.Canonical.CStarCuntzCARCCRTopologicalBridge
 open InfoGeometry.Physics.CStarCuntzTensorQuotient
 open CStarStateColimit.Native
 open FilteredColimit.Native.Topological
-
-local instance upperTailPUnitColimit (m : ℕ) :
-    HasColimit
-      ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) :=
-  (TopCat.topCat_hasColimitsOfShape.{0, 0, 0} (UpperNatIndex m)).has_colimit _
 
 variable (Stage : ℕ → Type)
 variable [∀ n, CStarAlgebra (Stage n)]
@@ -73,57 +66,44 @@ def upperTailCuntzPointFamily
     CompatibleQCCRPointFamily
       (sys := upperTailContinuousStarSystem Stage T m) where
   point := upperTailCuntzQCCRPoint Stage T m i
-
-theorem upperTailCuntzPointFamily_compatible
-    (m : ℕ) (i : Fin m) :
-    ∀ {j k : UpperNatIndex m} (hjk : j ≤ k),
-      qCcrParameterZeroFiberTransitionMap
-          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) hjk
-          ((upperTailCuntzPointFamily Stage T m i).point j) =
-        (upperTailCuntzPointFamily Stage T m i).point k := by
+  compatible := by
     intro j k hjk
     apply Subtype.ext
     apply Prod.ext
-    · simp [upperTailCuntzPointFamily,
-        qCcrParameterZeroFiberTransitionMap,
+    · simp [qCcrParameterZeroFiberTransitionMap,
         qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
         upperTailContinuousStarSystem, T.map_generator, map_star]
     · apply Prod.ext
-      · simp [upperTailCuntzPointFamily,
-          qCcrParameterZeroFiberTransitionMap,
+      · simp [qCcrParameterZeroFiberTransitionMap,
           qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
           upperTailContinuousStarSystem, T.map_generator]
-      · simp [upperTailCuntzPointFamily,
-          qCcrParameterZeroFiberTransitionMap,
+      · simp [qCcrParameterZeroFiberTransitionMap,
           qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
           upperTailContinuousStarSystem]
 
 noncomputable def upperTailCuntzQCCRColimitMap
     (m : ℕ) (i : Fin m) :
-    colimit
-        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) ⟶
+    topologicalDirectColimit
+        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) :=
   compatiblePointColimitMap
     (upperTailContinuousStarSystem Stage T m)
     (upperTailCuntzPointFamily Stage T m i)
-    (upperTailCuntzPointFamily_compatible Stage T m i)
 
 theorem upperTailCuntzQCCRColimitMap_stage
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) :
-    colimit.ι
-        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) j ≫
+    topologicalDirectInjection
+        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j ≫
         upperTailCuntzQCCRColimitMap Stage T m i =
       (compatiblePointNatTrans
         (upperTailContinuousStarSystem Stage T m)
-        (upperTailCuntzPointFamily Stage T m i)
-        (upperTailCuntzPointFamily_compatible Stage T m i)).app j ≫
+        (upperTailCuntzPointFamily Stage T m i)).app j ≫
         qCcrParameterZeroFiberTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j := by
   exact compatiblePointColimitMap_stage
     (upperTailContinuousStarSystem Stage T m)
-    (upperTailCuntzPointFamily Stage T m i)
-    (upperTailCuntzPointFamily_compatible Stage T m i) j
+    (upperTailCuntzPointFamily Stage T m i) j
 
 noncomputable def upperTailCuntzQCCRZeroFiberToParameterColimit
     (m : ℕ) :
@@ -148,8 +128,8 @@ theorem upperTailCuntzQCCRZeroFiberToParameterColimit_stage
 
 noncomputable def upperTailCuntzQCCRParameterColimitMap
     (m : ℕ) (i : Fin m) :
-    colimit
-        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) ⟶
+    topologicalDirectColimit
+        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) :=
   upperTailCuntzQCCRColimitMap Stage T m i ≫
@@ -158,15 +138,14 @@ noncomputable def upperTailCuntzQCCRParameterColimitMap
 theorem upperTailCuntzQCCRParameterColimitMap_stage_apply
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
     upperTailCuntzQCCRParameterColimitMap Stage T m i
-        (colimit.ι
-          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) j u) =
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u) =
       qCcrParameterTopologicalInjection
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
         (upperTailCuntzQCCRPoint Stage T m i j).1 := by
   have hpoint := compatiblePointColimitMap_stage_apply
     (upperTailContinuousStarSystem Stage T m)
-    (upperTailCuntzPointFamily Stage T m i)
-    (upperTailCuntzPointFamily_compatible Stage T m i) j u
+    (upperTailCuntzPointFamily Stage T m i) j u
   have hincl := qCcrParameterZeroFiberToParameterColimit_stage
     (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
   have hincl' := congrArg
@@ -182,8 +161,8 @@ theorem upperTailCuntzQCCRParameterColimitMap_stage_apply
     simpa [qCcrParameterZeroFiberToParameterNatTrans] using hincl'
   calc
     upperTailCuntzQCCRParameterColimitMap Stage T m i
-        (colimit.ι
-          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) j u) =
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u) =
       upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
         (qCcrParameterZeroFiberTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
@@ -227,7 +206,7 @@ noncomputable def upperTailQCCRParameterToFullColimitMap
     qCcrParameterTopologicalColimit
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) ⟶
       qCcrParameterTopologicalColimit Stage T.toContinuousStarInductiveSystem :=
-  colimit.desc
+  topologicalDirectDescend
     (qCcrParameterTopologicalDiagram
       (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
     (upperTailQCCRParameterToFullCocone Stage T m)
@@ -246,8 +225,8 @@ theorem upperTailQCCRParameterToFullColimitMap_stage
 
 noncomputable def upperTailCuntzQCCRFullParameterColimitMap
     (m : ℕ) (i : Fin m) :
-    colimit
-        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) ⟶
+    topologicalDirectColimit
+        ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage T.toContinuousStarInductiveSystem :=
   upperTailCuntzQCCRParameterColimitMap Stage T m i ≫
     upperTailQCCRParameterToFullColimitMap Stage T m
@@ -255,8 +234,8 @@ noncomputable def upperTailCuntzQCCRFullParameterColimitMap
 theorem upperTailCuntzQCCRFullParameterColimitMap_stage_apply
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
     upperTailCuntzQCCRFullParameterColimitMap Stage T m i
-        (colimit.ι
-          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) j u) =
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u) =
       qCcrParameterTopologicalInjection Stage T.toContinuousStarInductiveSystem j.1
         (upperTailCuntzQCCRPoint Stage T m i j).1 := by
   have hupper := upperTailCuntzQCCRParameterColimitMap_stage_apply
@@ -265,8 +244,8 @@ theorem upperTailCuntzQCCRFullParameterColimitMap_stage_apply
     Stage T m j (upperTailCuntzQCCRPoint Stage T m i j).1
   calc
     upperTailCuntzQCCRFullParameterColimitMap Stage T m i
-        (colimit.ι
-          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1})) j u) =
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u) =
       upperTailQCCRParameterToFullColimitMap Stage T m
         (qCcrParameterTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
@@ -282,12 +261,12 @@ theorem upperTailCuntzQCCRFullParameterColimitMap_cutoff_compat
     (m n : ℕ) (hmn : m ≤ n) (i : Fin m)
     (j : UpperNatIndex n) (u : PUnit) :
     upperTailCuntzQCCRFullParameterColimitMap Stage T m i
-        (colimit.ι
-          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit.{1}))
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit))
           ⟨j.1, le_trans hmn j.2⟩ u) =
       upperTailCuntzQCCRFullParameterColimitMap Stage T n (Fin.castLE hmn i)
-        (colimit.ι
-          ((Functor.const (UpperNatIndex n)).obj (TopCat.of PUnit.{1})) j u) := by
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex n)).obj (TopCat.of PUnit)) j u) := by
   have hm := upperTailCuntzQCCRFullParameterColimitMap_stage_apply
     Stage T m i ⟨j.1, le_trans hmn j.2⟩ u
   have hn := upperTailCuntzQCCRFullParameterColimitMap_stage_apply

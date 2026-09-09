@@ -154,8 +154,7 @@ theorem anticommutator_QQdag_diagonal_decomposition (n : ℕ) :
 theorem diagonal_sum_eq_sum_projectors_add_n (n : ℕ) :
     (∑ i : Fin n, (cuntzS n i * cuntzSdag n i + 1)) =
       (∑ i : Fin n, cuntzS n i * cuntzSdag n i) + (n : ℕ) • (1 : CuntzAlg n) := by
-  rw [Finset.sum_add_distrib, Finset.sum_const]
-  rw [Finset.card_fin]
+  simp [Finset.sum_add_distrib]
 
 /-- The diagonal part uses the Cuntz completeness relation: Σ_i P_i = 1.
     So Σ_i (P_i + 1) = 1 + n·1 = (n+1)·1. Wait, Σ P_i = 1, so Σ(P_i+1) = 1 + n.
@@ -217,7 +216,7 @@ theorem parity_commutes_anticommutator (n : ℕ) (x : CuntzAlg n) :
     from topological boundaries classified by K_0(O_n) ≅ Z/(n-1)Z. -/
 theorem central_charge_one_commutes (n : ℕ) (x : CuntzAlg n) :
     (1 : CuntzAlg n) * x = x * (1 : CuntzAlg n) := by
-  rw [one_mul, mul_one]
+  simp
 
 /-! ## Even subalgebra structure
 
@@ -241,10 +240,7 @@ theorem even_subalgebra_unital (n : ℕ) :
     parity n (1 : CuntzAlg n) = 1 ∧
     (∀ (x y : CuntzAlg n), parity n x = x → parity n y = y →
       parity n (x * y) = x * y) := by
-  refine ⟨?_, ?_⟩
-  · exact one_is_even n
-  · intro x y hx hy
-    exact even_subalgebra_mul_closed n hx hy
+  exact ⟨one_is_even n, λ x y hx hy => even_subalgebra_mul_closed n hx hy⟩
 
 /-- {Q, Qdag} is in the even subalgebra. -/
 theorem anticommutator_in_even_subalgebra (n : ℕ) :

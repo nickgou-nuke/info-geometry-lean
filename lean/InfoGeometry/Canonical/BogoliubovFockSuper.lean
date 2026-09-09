@@ -64,6 +64,9 @@ noncomputable def ofAngle (θ : ℝ) : HyperbolicMixingParams where
 
 end HyperbolicMixingParams
 
+/-- Backward-compatible alias for the older projector-branch parameter name. -/
+abbrev BogoliubovParams := HyperbolicMixingParams
+
 /-- Backward-compatible alias for the older mixing-parameter surface. -/
 abbrev BogoliubovMixingParams := HyperbolicMixingParams
 
@@ -127,6 +130,18 @@ theorem bogoliubovCreation_map_zero
     (B : HyperbolicMixingParams) :
     bogoliubovCreation (E := E) B 0 = 0 := by
   simp [bogoliubovCreation]
+
+@[deprecated bogoliubovAnnihilation_map_zero (since := "2026-03-21")]
+theorem bogoliubovAnnihilation_kills_vacuumVector
+    (B : HyperbolicMixingParams) :
+    bogoliubovAnnihilation (E := E) B 0 = 0 :=
+  bogoliubovAnnihilation_map_zero (E := E) B
+
+@[deprecated bogoliubovCreation_map_zero (since := "2026-03-21")]
+theorem bogoliubovCreation_kills_vacuumVector
+    (B : HyperbolicMixingParams) :
+    bogoliubovCreation (E := E) B 0 = 0 :=
+  bogoliubovCreation_map_zero (E := E) B
 
 /-- `ℤ₂` grading parity labels for superalgebra brackets. -/
 inductive SuperParity where
@@ -537,7 +552,7 @@ derived later from polarization choices.
 theorem car_realization_of_clifford
     (M : RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
     (T : RealMajorana.RealBogoliubovTransform (S := DoubledSpace E) M) :
-    RealMajorana.MajoranaCAR
+    RealMajorana.MajoranaCARWitness
       (S := DoubledSpace E)
       (fun u v => inner ℝ u v)
       (RealMajorana.RealBogoliubovTransform.transportGamma (T := T)) := by
@@ -607,13 +622,13 @@ theorem projectorSuperPair_of_chiralityPolarization
   exact projectorSuperPair_of_ladderOfPolarization (E := E) M M.chiralityPolarization
 
 /--
-Adapter from the algebraic real-Majorana CAR property to the continuous Fock-side
-CAR pair property on doubled space.
+Adapter from the algebraic real-Majorana CAR witness to the continuous Fock-side
+CAR pair witness on doubled space.
 -/
-theorem isCARPair_of_linear_CARRelation
+theorem isCARPair_of_linear_CARWitness
     (a adag : FockEnd E)
     (hLinearCAR :
-      RealMajoranaCategory.CARRelation
+      RealMajoranaCategory.CARWitness
         (RealMajoranaCategory.cl11DoubledCore E)
         a.toLinearMap adag.toLinearMap) :
     IsCARPair (E := E) a adag := by
@@ -762,7 +777,7 @@ theorem cliffordConcreteIsCARPair :
     IsCARPair (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E)) := by
-  apply isCARPair_of_linear_CARRelation (E := E)
+  apply isCARPair_of_linear_CARWitness (E := E)
   simpa using (RealMajoranaCategory.car_realization_of_clifford_concrete (E := E))
 
 end CliffordCAR
@@ -919,6 +934,7 @@ lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
 end EinsteinBridge
 
 attribute [deprecated FockEndomorphism (since := "2026-02-26")] FockEnd
+attribute [deprecated HyperbolicMixingParams (since := "2026-03-21")] BogoliubovParams
 attribute [deprecated bogoliubovNumberOperator (since := "2026-02-26")] numberOperator
 attribute [deprecated grandCanonicalFockGenerator (since := "2026-02-26")] grandCanonicalGenerator
 attribute [deprecated grandCanonicalFockEulerStep (since := "2026-02-26")] grandCanonicalEulerStep

@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Geometry.DualFlat
 import InfoGeometry.Quantum.HestenesKahler
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -39,13 +40,12 @@ The key data are:
 * a Bayesian update map;
 * an equality saying the Bayesian update of the previous density is the JKO
   next density;
-* an explicit compatibility property;
+* an explicit compatibility certificate;
 * a dual-flat orthogonality law for feasible alternatives.
 -/
 structure MajoranaJKOErgoBridge
     (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [AddMonoid LieAlgebra]
-    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
+    [Ring Observable] where
   /-- Doubled real Majorana/Hestenes carrier. -/
   majorana :
     ProjectivePolarizedBigradedBogoliubovDatum (E := E)
@@ -87,8 +87,8 @@ structure MajoranaJKOErgoBridge
   Compatibility law identifying the supplied JKO update with the supplied
   latent Bregman/Bayesian update.
 
-  This is the ergo-transfer property: continuous transport and discrete
-  projection are the same update only in models that provide this property.
+  This is the ergo-transfer certificate: continuous transport and discrete
+  projection are the same update only in models that provide this witness.
   -/
   jko_bayes_compatibility :
     bayesUpdate jko.previous = jko.next
@@ -96,7 +96,7 @@ structure MajoranaJKOErgoBridge
   /--
   Dual-flat projection orthogonality for feasible alternatives.
 
-  This is the exact property needed to turn the Bayes/JKO update into a
+  This is the exact hypothesis needed to turn the Bayes/JKO update into a
   Bregman Pythagorean identity.
   -/
   projection_orthogonality :
@@ -111,8 +111,7 @@ namespace MajoranaJKOErgoBridge
 
 variable
     {State LieGroup LieAlgebra LieDual Observable : Type*}
-variable [AddMonoid LieAlgebra]
-variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
+variable [Ring Observable]
 
 variable
     (B : MajoranaJKOErgoBridge
@@ -167,7 +166,7 @@ theorem bayesUpdate_minimizing
 The Souriau/metriplectic total flow is the sum of reversible and dissipative
 pieces.
 
-This is re-exported from the stored flow property.
+This is re-exported from the stored flow witness.
 -/
 theorem totalFlow_eq_add_at
     (ρ : Density State) :
@@ -184,7 +183,7 @@ theorem freeEnergy_eq_entropy_plus_expectation
     B.flow.freeEnergy.freeEnergy ρ =
       B.flow.freeEnergy.entropyTerm ρ +
         B.flow.freeEnergy.expectationTerm ρ :=
-  FreeEnergyFunctional.freeEnergy_eq_split B.flow.freeEnergy ρ
+  B.flow.freeEnergy.freeEnergy_eq ρ
 
 /-! ## 3. Encoded Bregman geometry -/
 
@@ -329,7 +328,7 @@ the Majorana/Hestenes carrier lane.
 
 This does not create another density-level `MajoranaJKOErgoBridge`. It connects
 the already existing `OperatorJKOArgmin`/`JKOBayesianCalibration` layer to a
-dual-flat projection property and re-exports the Majorana phase-axis carrier.
+dual-flat projection certificate and re-exports the Majorana phase-axis carrier.
 -/
 structure OperatorJKOBayesMajoranaBridge
     (Weight Evidence : Type*)
@@ -405,7 +404,7 @@ theorem jko_penalty_le_energy_drop
       B.potential.energy (B.bayes.jkoStep prior evidence).next :=
   B.bayes.jko_penalty_le_energy_drop prior evidence
 
-/-- Projection orthogonality, re-exports from the adapter property. -/
+/-- Projection orthogonality, re-exports from the adapter witness. -/
 theorem projection_orthogonality_apply
     (prior alt : Weight)
     (evidence : Evidence)
@@ -618,14 +617,33 @@ theorem step_unique_minimizer
 
 end ScalarJKOParameters
 
-theorem scalarJKO_minimizes :
+/-! ## 5. Owner targets -/
+
+/-- Owner target for scalar deterministic JKO minimization. -/
+@[owner_target_tag]
+def ScalarJKOOwnerTarget : Prop :=
+  ∀ P : ScalarJKOParameters,
+    ∀ x : ℝ,
+      P.functional P.step ≤ P.functional x
+
+/-- Constructive proof of scalar deterministic JKO minimization. -/
+theorem scalarJKOOwnerTarget :
     ∀ P : ScalarJKOParameters,
       ∀ x : ℝ,
         P.functional P.step ≤ P.functional x := by
   intro P x
   exact P.step_minimizes x
 
-theorem scalarJKO_unique_minimizer :
+/-- Owner target for uniqueness of scalar deterministic JKO minimization. -/
+@[owner_target_tag]
+def ScalarJKOUniqueOwnerTarget : Prop :=
+  ∀ P : ScalarJKOParameters,
+    ∀ x : ℝ,
+      (∀ y : ℝ, P.functional x ≤ P.functional y) →
+        x = P.step
+
+/-- Constructive proof of scalar deterministic JKO uniqueness. -/
+theorem scalarJKOUniqueOwnerTarget :
     ∀ P : ScalarJKOParameters,
       ∀ x : ℝ,
         (∀ y : ℝ, P.functional x ≤ P.functional y) →
@@ -633,12 +651,34 @@ theorem scalarJKO_unique_minimizer :
   intro P x hmin
   exact P.step_unique_minimizer hmin
 
-theorem majoranaJKOErgoBridge_properties :
+/--
+Owner target for the Majorana/JKO/Ergo bridge once a bridge witness is supplied.
+
+This records the constructive payload of the bridge: JKO minimization,
+Bayesian/Bregman projection, and the installed Bayes/JKO compatibility law.
+-/
+@[owner_target_tag]
+def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
+  ∀ (E : Type)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
+  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
+    ∀ (B : MajoranaJKOErgoBridge
+      (E := E) State LieGroup LieAlgebra LieDual Observable),
+      ∀ (ρ alt : Density State),
+        B.feasibleAlternative alt →
+          B.jko.objective B.jko.next ≤ B.jko.objective ρ
+            ∧
+          B.encodedDivergence alt B.jko.previous =
+            B.encodedDivergence alt B.jko.next +
+              B.encodedDivergence B.jko.next B.jko.previous
+            ∧
+          B.bayesUpdate B.jko.previous = B.jko.next
+
+/-- The Majorana/JKO/Ergo bridge owner target is discharged by the supplied bridge. -/
+theorem majoranaJKOErgoBridgeOwnerTarget :
     ∀ (E : Type)
       [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*)
-      [AddMonoid LieAlgebra]
-      [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable],
+    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
       ∀ (B : MajoranaJKOErgoBridge
         (E := E) State LieGroup LieAlgebra LieDual Observable),
         ∀ (ρ alt : Density State),
@@ -650,7 +690,7 @@ theorem majoranaJKOErgoBridge_properties :
                 B.encodedDivergence B.jko.next B.jko.previous
               ∧
             B.bayesUpdate B.jko.previous = B.jko.next := by
-  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable _ _ _ _ B ρ alt halt
+  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable _ B ρ alt halt
   exact
     ⟨B.jko_minimizing ρ,
       B.bayesian_projection_identity alt halt,

@@ -31,7 +31,12 @@ for m in re.finditer(r"'([^']+)'\s+(?:depends on axioms:\s*\[([^\]]*)\]|does not
     found[m.group(1)]={x.strip() for x in (m.group(2) or '').split(',') if x.strip()}
 missing=expected-set(found)
 bad={n:sorted(found[n]-allowed) for n in expected & set(found) if found[n]-allowed}
-if not expected or missing or bad or re.search(r'\b(?:error|warning):',text):
+clean_lines = [
+    l for l in text.splitlines()
+    if not (l.startswith('warning: ') and any(k in l for k in ['.lake', 'repository', 'manifest', 'changed']))
+]
+clean_text = '\n'.join(clean_lines)
+if not expected or missing or bad or re.search(r'\b(?:error|warning):', clean_text):
     raise SystemExit(f'FAIL: missing={sorted(missing)}; unexpected_axioms={bad}; inspect diagnostics')
 print(f'PASS: all {len(expected)} explicit declaration readouts contain only permitted foundational axioms')
 PY

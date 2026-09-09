@@ -1,7 +1,7 @@
 - **Total PRs indexed**: 170
-- **Open PRs**: 82
-- **Closed PRs**: 48
-- **Merged PRs**: 40
+- **Open PRs**: 80
+- **Closed PRs**: 49
+- **Merged PRs**: 41
 - **Branches fully merged into main (0 commits ahead)**: 0
 - **Branches with commits ahead of main**: 157
 
@@ -165,10 +165,10 @@
 | #152 | MERGED | `freudenthal-symplectic-contact-lie-representation` | 67 | 191 | 359 | Replace the false Freudenthal bracket with a faithful symplectic contact Lie representation |
 | #153 | MERGED | `two-boundary-weak-property-separation` | 0 | 0 | 6 | Formalize generic two-boundary weak functionals and static Cheshire separation |
 | #154 | MERGED | `cl55-grading-dyad-deck-reconstruction` | 0 | 0 | 10 | Separate Cl55 occupation grades, boundary dyads, affine deck actions and log-ratio relaxation |
-| #155 | OPEN | `projective-graph-cycles-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain full Zorn bilayer defects |
+| #155 | MERGED | `projective-graph-cycles-zorn-bilayer` | 0 | 0 | 14 | Construct projective graph cycle decomposition and retain full Zorn bilayer defects |
 | #156 | OPEN | `o55-contact-multigrading-formalism-release` | 102 | 191 | 394 | Construct the split O(5,5) contact multigrading and CAR–CCR representation |
 | #157 | OPEN | `o55-d5-multigraded-two-boundary-lift` | 25 | 191 | 369 | Lift two-boundary readouts to the full O(5,5) D5 multigrading |
-| #158 | OPEN | `projective-graph-hodge-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain nonassociative Zorn bilayer defects |
+| #158 | CLOSED | `projective-graph-hodge-zorn-bilayer` | 0 | 0 | 0 | Construct projective graph cycle decomposition and retain nonassociative Zorn bilayer defects |
 | #159 | MERGED | `complex-kramers-klein-pin55-multigrading` | 89 | 191 | 373 | Formalize complex Kramers symmetry, Klein deck quotient, and Pin(5,5) multigrading |
 | #160 | MERGED | `polarized-zorn-symmetry-reconstruction` | 0 | 0 | 11 | Formalize polarized Zorn symmetries, fundamental metric symmetry, and boundary coefficients |
 | #161 | MERGED | `polarized-minkowski55-native-clifford` | 0 | 0 | 6 | Connect polarized 10D quadratic data to native Cl(5,5), spinors, and exterior Hodge readout |

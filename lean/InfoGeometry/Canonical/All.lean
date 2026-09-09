@@ -2116,6 +2116,7 @@ import InfoGeometry.Canonical.CanonicalZornModularAAVBridge
 import InfoGeometry.Canonical.CanonicalZornPalatiniCurvature
 import InfoGeometry.Canonical.CanonicalZornFisherCooling
 import InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge
+import InfoGeometry.Canonical.BraidedYangMillsCurrentBridge
 
 namespace InfoGeometry
 

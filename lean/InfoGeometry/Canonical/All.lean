@@ -2119,6 +2119,7 @@ import InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge
 import InfoGeometry.Canonical.BraidedYangMillsCurrentBridge
 import InfoGeometry.Canonical.ManakovZornSolitonLaxBridge
 import InfoGeometry.Canonical.AAVWeakMeasurementKleinSeamBridge
+import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
 
 namespace InfoGeometry
 

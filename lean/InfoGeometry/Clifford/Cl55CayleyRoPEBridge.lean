@@ -84,8 +84,8 @@ theorem ropeBivector55_cayley_eq_neg
     ellipticCayley (ropeBivector55 i j) = -ropeBivector55 i j := by
   exact ellipticCayley_eq_neg (ropeBivector55 i j) (ropeBivector55_sq i j hij)
 
-/-- Split obstruction: for `K^2=1`, the two Cayley denominator factors are
-zero divisors of each other. -/
+/-- For `K^2=1`, the two Cayley factors multiply to zero.
+Neither factor is asserted nonzero: `K = 1` and `K = -1` are allowed. -/
 theorem split_cayley_denominator_product_zero
     (K : Cl55) (hK : K * K = (1 : Cl55)) :
     ((1 : Cl55) + K) * ((1 : Cl55) - K) = 0 := by

@@ -8,6 +8,7 @@
 > - [`InfoGeometry.Canonical.CanonicalZornFisherCooling`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornFisherCooling.lean)
 > - [`InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AnyonicFractalLoomQuantumComputerBridge.lean)
 > - [`InfoGeometry.Canonical.BraidedYangMillsCurrentBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/BraidedYangMillsCurrentBridge.lean)
+> - [`InfoGeometry.Canonical.ManakovZornSolitonLaxBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ManakovZornSolitonLaxBridge.lean)
 > - [`InfoGeometry.Canonical.SpectroscopyPoissonCoolingAmariBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SpectroscopyPoissonCoolingAmariBridge.lean)
 > - [`InfoGeometry.Canonical.ScaleFreeStringMembraneGrandCapstone`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ScaleFreeStringMembraneGrandCapstone.lean)
 
@@ -47,7 +48,7 @@
 | **Level 0: Binary Foundation** | Cuntz Isometries $S_0, S_1$ with $S_0 S_0^* + S_1 S_1^* = I$ | Conservative Cantor binary tree, boundary states | `cuntz_completeness`, `ryu_takayanagi_loom_match` |
 | **Level 1: Clifford Atom** | Krein Parabolic Rays on $\mathbb{R}^{4,4}$, $J = \sigma_x$ | Hardy space, dispersion $E^2 = \|\vec{k}\|^2 + m^2$ | `modularJ_involutive`, `seam_cross_overlap_zero` |
 | **Level 2: Strong Gauge Force** | 8D Lie algebra commutant under $\mathfrak{g}_2^*$ | Vacuum color stabilizer $\mathfrak{su}(3)_{\text{color}}$ | `projColor_commutes_K`, `projMatter_anticommutes_K` |
-| **Level 3: Nonlinear Solitons** | Lax Pair & Zero Curvature via Zorn product | Cross-phase modulation, Manakov boomerons | `zornAssociator_transverse_mode_vanishes` ($\chi^{(3)} = 4$) |
+| **Level 3: Nonlinear Solitons** | Lax Pair & Zero Curvature via Zorn product in [`ManakovZornSolitonLaxBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ManakovZornSolitonLaxBridge.lean) | Cross-phase modulation, Manakov boomerons | `zornAssociator_transverse_mode_vanishes` ($\chi^{(3)} = 4$) |
 | **Level 4: Palatini Gravity** | Plücker stitches on Klein quadric $\mathcal{Q} \subset \mathbb{PN}^5$ | Palatini action, $G_{\text{eff}} = G_0 / \rho$ | `stitch_on_klein_quadric`, `newton_coupling_scaling` |
 | **Level 5: Irreversible Arrow** | Archimedean screw information clock $N$ | Fisher cooling, $T_{\text{eff}} \sim 1/N$, $g^{(N)} = N g^{(1)}$ | `fisher_cooling_monotone`, `temperature_at_apex` |
 

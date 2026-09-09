@@ -32,6 +32,75 @@ def gradientEuclidean : (V → ℝ) →ₗ[ℝ] EuclideanSpace ℝ E where
 def gradientSubspace : Submodule ℝ (EuclideanSpace ℝ E) :=
   LinearMap.range (gradientEuclidean G)
 
+theorem coboundary_incidence_pairing (phi : V → ℝ) (J : E → ℝ) :
+    (∑ e, G.gaugeCoboundary phi e * J e) =
+      -(∑ v, phi v * G.incidenceMap J v) := by
+  classical
+  have gather (endpoint : E → V) :
+      (∑ v, phi v * ∑ e, if endpoint e = v then J e else 0) =
+        ∑ e, phi (endpoint e) * J e := by
+    simp_rw [Finset.mul_sum]
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro e _
+    simp [mul_ite, eq_comm]
+  calc
+    (∑ e, G.gaugeCoboundary phi e * J e) =
+        (∑ e, phi (G.dst e) * J e) - ∑ e, phi (G.src e) * J e := by
+      simp only [DirectedThermoGraph.gaugeCoboundary, sub_mul,
+        Finset.sum_sub_distrib]
+    _ = -((∑ v, phi v * ∑ e, if G.src e = v then J e else 0) -
+        ∑ v, phi v * ∑ e, if G.dst e = v then J e else 0) := by
+      rw [gather G.src, gather G.dst]
+      ring
+    _ = -(∑ v, phi v * G.incidenceMap J v) := by
+      simp only [DirectedThermoGraph.incidenceMap, mul_sub,
+        Finset.sum_sub_distrib]
+
+theorem mem_gradientSubspace_iff (a : EuclideanSpace ℝ E) :
+    a ∈ gradientSubspace G ↔ G.IsGradientFlow (fun e => a e) := by
+  constructor
+  · rintro ⟨phi, hphi⟩
+    refine ⟨phi, ?_⟩
+    intro e
+    exact (congrArg (fun z : EuclideanSpace ℝ E => z e) hphi).symm
+  · rintro ⟨phi, hphi⟩
+    refine ⟨phi, ?_⟩
+    ext e
+    exact (hphi e).symm
+
+theorem gradient_inner_incidence (phi : V → ℝ) (J : EuclideanSpace ℝ E) :
+    ⟪gradientEuclidean G phi, J⟫_ℝ =
+      -(∑ v, phi v * G.incidenceMap (fun e => J e) v) := by
+  simpa [PiLp.inner_apply, RCLike.inner_apply, mul_comm] using
+    coboundary_incidence_pairing G phi (fun e => J e)
+
+theorem mem_orthogonal_gradient_iff (J : EuclideanSpace ℝ E) :
+    J ∈ (gradientSubspace G)ᗮ ↔ G.IsCycleFlow (fun e => J e) := by
+  classical
+  constructor
+  · intro hJ v
+    let phi : V → ℝ := fun u => if u = v then 1 else 0
+    have hinner : ⟪gradientEuclidean G phi, J⟫_ℝ = 0 :=
+      ((gradientSubspace G).mem_orthogonal J).mp hJ _ ⟨phi, rfl⟩
+    rw [gradient_inner_incidence] at hinner
+    have hsum : (∑ u, phi u * G.incidenceMap (fun e => J e) u) =
+        G.incidenceMap (fun e => J e) v := by
+      simp [phi]
+    rw [hsum] at hinner
+    exact neg_eq_zero.mp hinner
+  · intro hJ
+    apply ((gradientSubspace G).mem_orthogonal J).mpr
+    rintro a ⟨phi, rfl⟩
+    rw [gradient_inner_incidence]
+    simp [hJ]
+
+theorem steady_pair_gauge_shift (J a : E → ℝ) (hJ : G.IsCycleFlow J)
+    (phi : V → ℝ) :
+    (∑ e, J e * (a e + G.gaugeCoboundary phi e)) = ∑ e, J e * a e := by
+  simp only [mul_add, Finset.sum_add_distrib]
+  rw [steady_pair_coboundary_zero G J hJ phi, add_zero]
+
 def gradientComponent (a : E → ℝ) : EuclideanSpace ℝ E :=
   (gradientSubspace G).starProjection (WithLp.toLp 2 a)
 

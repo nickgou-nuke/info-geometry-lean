@@ -1,7 +1,7 @@
 - **Total PRs indexed**: 170
-- **Open PRs**: 83
+- **Open PRs**: 82
 - **Closed PRs**: 48
-- **Merged PRs**: 39
+- **Merged PRs**: 40
 - **Branches fully merged into main (0 commits ahead)**: 0
 - **Branches with commits ahead of main**: 157
 
@@ -164,7 +164,7 @@
 | #151 | OPEN | `nuclear-fivegrade-car-ccr-soloviev-closure` | 9 | 191 | 336 | Close the finite nuclear five-grade CAR/BdG/CCR/Soloviev corridor |
 | #152 | MERGED | `freudenthal-symplectic-contact-lie-representation` | 67 | 191 | 359 | Replace the false Freudenthal bracket with a faithful symplectic contact Lie representation |
 | #153 | MERGED | `two-boundary-weak-property-separation` | 0 | 0 | 6 | Formalize generic two-boundary weak functionals and static Cheshire separation |
-| #154 | OPEN | `cl55-grading-dyad-deck-reconstruction` | 9 | 191 | 362 | Separate Cl55 occupation grades, boundary dyads, affine deck actions and log-ratio relaxation |
+| #154 | MERGED | `cl55-grading-dyad-deck-reconstruction` | 0 | 0 | 10 | Separate Cl55 occupation grades, boundary dyads, affine deck actions and log-ratio relaxation |
 | #155 | OPEN | `projective-graph-cycles-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain full Zorn bilayer defects |
 | #156 | OPEN | `o55-contact-multigrading-formalism-release` | 102 | 191 | 394 | Construct the split O(5,5) contact multigrading and CAR–CCR representation |
 | #157 | OPEN | `o55-d5-multigraded-two-boundary-lift` | 25 | 191 | 369 | Lift two-boundary readouts to the full O(5,5) D5 multigrading |

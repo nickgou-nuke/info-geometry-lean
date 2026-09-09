@@ -23,6 +23,11 @@ theorem leftCoupling_comp_apply (upper lower X : Z) :
   dsimp [leftCoupling, OperatorZornFourPotentialGauge.associator]
   exact (sub_sub_cancel ((upper * lower) * X) (upper * (lower * X))).symm
 
+theorem leftCoupling_square_apply (gap X : Z) :
+    leftCoupling gap (leftCoupling gap X) =
+      (gap * gap) * X - OperatorZornFourPotentialGauge.associator gap gap X :=
+  leftCoupling_comp_apply gap gap X
+
 def gapCommutator (D : Z →ₗ[ℝ] Z) (gap : Z) : Z →ₗ[ℝ] Z :=
   D.comp (leftCoupling gap) - (leftCoupling gap).comp D
 

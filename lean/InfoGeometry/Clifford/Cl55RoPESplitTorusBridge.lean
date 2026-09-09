@@ -5,6 +5,7 @@ import Mathlib.Tactic
 import InfoGeometry.Clifford.Cl55WittCircularAxes
 import InfoGeometry.Clifford.Cl55EllipticRotors
 import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
 
 noncomputable section
 
@@ -20,22 +21,23 @@ This module formalizes the native operator-algebraic foundations of Rotary Posit
 Embeddings (RoPE) inside the full split Clifford algebra $\mathrm{Cl}(5,5)$:
 
 1. **Elliptic RoPE Channel ($E_i^2 = -1$):**
-   - $R_i(\theta) = \cos\theta \cdot 1 + \sin\theta \cdot E_i \in \mathrm{Spin}(2) \subset \mathrm{Cl}(5,5)$
+   - $R_i(\theta) = \cos\theta \cdot 1 + \sin\theta \cdot E_i$ in the Clifford algebra.
    - $R_i(a) R_i(b) = R_i(a + b)$, $R_i(\theta) R_i(-\theta) = 1$.
    - Relative position law: $R_i(-m) R_i(n) = R_i(n - m)$.
 
 2. **Hyperbolic Split RoPE Channel ($H_i^2 = +1$):**
-   - $S_i(t) = \cosh t \cdot 1 + \sinh t \cdot H_i \in \mathrm{SO}^+(1,1) \subset \mathrm{Cl}(5,5)$
+   - $S_i(t) = \cosh t \cdot 1 + \sinh t \cdot H_i$ in the Clifford algebra.
    - $S_i(s) S_i(t) = S_i(s + t)$, $S_i(t) S_i(-t) = 1$.
    - Relative rapidity law: $S_i(-s) S_i(t) = S_i(t - s)$.
 
 3. **Geometric Bivectors & Disjoint Commuting Torus:**
    - $B_{ij} = H_i H_j$ for $i \neq j \implies B_{ij}^2 = -1$.
    - $R_{ij}(a) R_{ij}(b) = R_{ij}(a + b)$.
-   - For disjoint index pairs $\{i,j\} \cap \{k,l\} = \emptyset$, $[B_{ij}, B_{kl}] = 0$.
-   - Commuting 2-plane Cartan torus: $[R_{01}(\theta_1), R_{23}(\theta_2)] = 0$.
+   - For the disjoint pairs $(0,1)$ and $(2,3)$, $[B_{01}, B_{23}] = 0$.
+   - Their rotations commute: $[R_{01}(\theta_1), R_{23}(\theta_2)] = 0$.
 
-All proofs are native Lean 4 without `sorry`s.
+These are multiplication and inverse identities. Spin/SO membership and
+maximality of a torus require additional constructions; they are not asserted here.
 -/
 
 /-! ## 1. The Elliptic RoPE Rotor in `Cl(5,5)` -/
@@ -90,15 +92,13 @@ theorem splitRotor55_zero (i : Fin 5) : splitRotor55 i 0 = 1 := by
 /-- Exact 1-parameter boost group law: $S_i(s) S_i(t) = S_i(s + t)$. -/
 theorem splitRotor55_add (i : Fin 5) (s t : ℝ) :
     splitRotor55 i s * splitRotor55 i t = splitRotor55 i (s + t) := by
-  unfold splitRotor55
-  rw [add_mul, mul_add, mul_add]
-  simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one, smul_smul]
-  rw [hyperbolicAxis55_sq i]
-  have h_cosh : Real.cosh (s + t) = Real.cosh s * Real.cosh t + Real.sinh s * Real.sinh t := Real.cosh_add s t
-  have h_sinh : Real.sinh (s + t) = Real.sinh s * Real.cosh t + Real.cosh s * Real.sinh t := Real.sinh_add s t
-  rw [h_cosh, h_sinh, add_smul, add_smul]
-  simp only [mul_comm (Real.cosh t), mul_comm (Real.sinh t)]
-  abel
+  change InfoGeometry.OperatorAlgebra.hyperbolicRotor (hyperbolicAxis55 i)
+      (Real.cosh s) (Real.sinh s) *
+    InfoGeometry.OperatorAlgebra.hyperbolicRotor (hyperbolicAxis55 i)
+      (Real.cosh t) (Real.sinh t) = _
+  rw [InfoGeometry.OperatorAlgebra.hyperbolicRotor_mul _ (hyperbolicAxis55_sq i)]
+  simp only [InfoGeometry.OperatorAlgebra.hyperbolicRotor, splitRotor55,
+    Real.cosh_add, Real.sinh_add, add_comm]
 
 /-- Boost inverse property: $S_i(t) S_i(-t) = 1$. -/
 theorem splitRotor55_inv (i : Fin 5) (t : ℝ) :
@@ -194,7 +194,7 @@ theorem disjoint_bivector_commute_01_23 :
     _ = (hyperbolicAxis55 2 * hyperbolicAxis55 3) * (hyperbolicAxis55 0 * hyperbolicAxis55 1) := by
         simp only [mul_neg, neg_mul, neg_neg, mul_assoc]
 
-/-- **Theorem (Commuting 2-Plane Cartan Torus Action)**:
+/-- **Theorem (Commuting Two-Plane Rotations)**:
     $[R_{01}(\theta_1), R_{23}(\theta_2)] = 0$. -/
 theorem bivectorRotor55_commute_01_23 (theta1 theta2 : ℝ) :
     bivectorRotor55 0 1 theta1 * bivectorRotor55 2 3 theta2 =
@@ -215,7 +215,7 @@ Unifies:
 1. Native Elliptic RoPE additive group laws and relative position identity in $\mathrm{Cl}(5,5)$.
 2. Native Hyperbolic Split RoPE boost group laws and relative rapidity identity in $\mathrm{Cl}(5,5)$.
 3. Geometric bivectors $B_{ij}^2 = -1$ and group homomorphism $R_{ij}(a + b) = R_{ij}(a) R_{ij}(b)$.
-4. Exact disjoint bivector commutation $[B_{01}, B_{23}] = 0$ generating a 2-plane commuting Cartan torus.
+4. Exact disjoint bivector commutation $[B_{01}, B_{23}] = 0$ and commuting rotations.
 -/
 theorem grand_cl55_rope_split_torus_synthesis
     (i : Fin 5) (a b theta s t m n : ℝ)

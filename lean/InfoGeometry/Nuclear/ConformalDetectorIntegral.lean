@@ -144,12 +144,12 @@ theorem volume_over_rASq_eq_conformal_ratio
     volumeDensity cfg p / rA cfg p ^ 2 =
       cfg.c * ((p.xi + p.nu) / (p.xi - p.nu)) := by
   dsimp [volumeDensity, rA]
-  field_simp [ne_of_gt cfg.hc_pos, ne_of_gt (diff_pos p)] <;> ring
+  field_simp [ne_of_gt cfg.hc_pos, ne_of_gt (diff_pos p)]; ring
 
 theorem focal_ratio (cfg : SpheroidalOpticalConfig) (p : Point) :
     rB cfg p / rA cfg p = (p.xi + p.nu) / (p.xi - p.nu) := by
   dsimp [rA, rB]
-  field_simp [ne_of_gt cfg.hc_pos, ne_of_gt (diff_pos p)] <;> ring
+  field_simp [ne_of_gt cfg.hc_pos, ne_of_gt (diff_pos p)]
 
 theorem conformal_weight_eq_exp_two_rapidity
     (cfg : SpheroidalOpticalConfig) (p : Point) :
@@ -162,7 +162,7 @@ theorem fluxVolumeKernel_eq_ratio (cfg : SpheroidalOpticalConfig) (p : Point) :
       (cfg.c / (4 * Real.pi)) * ((p.xi + p.nu) / (p.xi - p.nu)) := by
   dsimp [fluxVolumeKernel, ApollonianBipolarField.fluxDensity, volumeDensity, rA]
   field_simp [ne_of_gt cfg.hc_pos, ne_of_gt (diff_pos p),
-    ne_of_gt Real.pi_pos] <;> ring
+    ne_of_gt Real.pi_pos]; ring
 
 theorem fluxVolumeKernel_eq_exp (cfg : SpheroidalOpticalConfig) (p : Point) :
     fluxVolumeKernel cfg p = (cfg.c / (4 * Real.pi)) * Real.exp (2 * rapidity cfg p) := by
@@ -180,7 +180,7 @@ theorem tanh_rapidity_eq_nu_div_xi (cfg : SpheroidalOpticalConfig) (p : Point) :
   rw [rapidity, FocalRapidity.tanh_rapidity_eq_difference_ratio
     (rA_pos cfg p) (rB_pos cfg p), focal_difference, focal_sum]
   have hxi : p.xi ≠ 0 := by linarith [p.hxi]
-  field_simp [ne_of_gt cfg.hc_pos, hxi] <;> ring
+  field_simp [ne_of_gt cfg.hc_pos, hxi]
 
 /-- The exact sech envelope in prolate focal coordinates. -/
 theorem sech_rapidity_eq_sqrt_ratio (cfg : SpheroidalOpticalConfig) (p : Point) :
@@ -190,7 +190,7 @@ theorem sech_rapidity_eq_sqrt_ratio (cfg : SpheroidalOpticalConfig) (p : Point) 
   rw [FocalRapidity.overlap, focal_product, focal_sum,
     Real.sqrt_mul (sq_nonneg cfg.c), Real.sqrt_sq (le_of_lt cfg.hc_pos)]
   have hxi : p.xi ≠ 0 := by linarith [p.hxi]
-  field_simp [ne_of_gt cfg.hc_pos, hxi] <;> ring
+  field_simp [ne_of_gt cfg.hc_pos, hxi]
 
 /-- A family approaching a focal boundary while remaining in the open chart. -/
 def approachingFocus (eps : ℝ) (h0 : 0 < eps) (h1 : eps < 1) : Point where
@@ -204,7 +204,7 @@ theorem approachingFocus_weight (eps : ℝ) (h0 : 0 < eps) (h1 : eps < 1) :
     ((approachingFocus eps h0 h1).xi + (approachingFocus eps h0 h1).nu) /
       ((approachingFocus eps h0 h1).xi - (approachingFocus eps h0 h1).nu) = 1 / eps := by
   dsimp [approachingFocus]
-  field_simp [ne_of_gt h0] <;> ring
+  field_simp [ne_of_gt h0]; ring
 
 end Point
 end SpheroidalOpticalConfig

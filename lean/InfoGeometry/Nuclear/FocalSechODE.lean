@@ -34,7 +34,7 @@ theorem hasDerivAt_sechSlope_raw (x : ℝ) :
   have hc : Real.cosh x ≠ 0 := ne_of_gt (Real.cosh_pos x)
   have h := ((Real.hasDerivAt_sinh x).neg).div
     ((Real.hasDerivAt_cosh x).pow 2) (pow_ne_zero 2 hc)
-  convert h using 1 <;> dsimp [sechSlope] <;> field_simp [hc] <;> ring
+  convert h using 1; dsimp [sechSlope]; field_simp [hc]; ring
 
 theorem hasDerivAt_sechSlope (x : ℝ) :
     HasDerivAt sechSlope (sechProfile x - 2 * sechProfile x ^ 3) x := by
@@ -42,7 +42,7 @@ theorem hasDerivAt_sechSlope (x : ℝ) :
   convert hasDerivAt_sechSlope_raw x using 1
   dsimp [sechProfile]
   rw [Real.sinh_sq]
-  field_simp [hc] <;> ring
+  field_simp [hc]; ring
 
 /-- Exact nonlinear stationary profile equation, stated with actual derivatives. -/
 theorem sech_stationary_ode (x : ℝ) :
@@ -57,7 +57,7 @@ theorem sech_energy_identity (x : ℝ) :
   dsimp [sechSlope, sechProfile]
   simp only [div_pow, neg_sq]
   rw [Real.sinh_sq]
-  field_simp [ne_of_gt (Real.cosh_pos x)] <;> ring
+  field_simp [ne_of_gt (Real.cosh_pos x)]
 
 @[simp] theorem sechProfile_zero : sechProfile 0 = 1 := by
   simp [sechProfile]

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.OperatorZornRealModule
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
+import InfoGeometry.Projective.PositiveOperatorExpectation
 
 /-! Bilayer action on the native nonassociative operator-Zorn carrier. -/
 noncomputable section
@@ -86,4 +87,59 @@ theorem gapCommutator_internalDerivative (p : A) (gap X : Z) :
   rw [coefficientDeriv_mul]
   exact add_sub_cancel_right (coefficientDeriv p gap * X) (gap * coefficientDeriv p X)
 
+theorem bilayer_internalDerivative_square (p : A) (gap X Y : Z) :
+    bilayer (internalDerivative p) gap (bilayer (internalDerivative p) gap (X,Y)) =
+      (coefficientDeriv p (coefficientDeriv p X) + (gap*gap)*X -
+          OperatorZornFourPotentialGauge.associator gap gap X +
+          coefficientDeriv p gap * Y,
+       coefficientDeriv p (coefficientDeriv p Y) + (gap*gap)*Y -
+          OperatorZornFourPotentialGauge.associator gap gap Y -
+          coefficientDeriv p gap * X) := by
+  simpa only [gapCommutator_internalDerivative] using
+    bilayer_square (internalDerivative p) gap X Y
+
+theorem sheetSwap_anticommutator (D : Z →ₗ[ℝ] Z) (gap X Y : Z) :
+    bilayer D gap ((LinearEquiv.prodComm ℝ Z Z) (X,Y)) +
+      (LinearEquiv.prodComm ℝ Z Z) (bilayer D gap (X,Y)) =
+        (gap*X + gap*X, gap*Y + gap*Y) := by
+  apply Prod.ext
+  · change (D Y + gap*X) + (gap*X - D Y) = gap*X + gap*X
+    abel
+  · change (gap*Y - D X) + (D X + gap*Y) = gap*Y + gap*Y
+    abel
+
+theorem pole_zeroMode :
+    bilayer (0 : Z →ₗ[ℝ] Z) (nPlus 1) (nMinus 1, 0) = (0,0) := by
+  apply Prod.ext
+  all_goals apply operatorZornMatrix_ext
+  all_goals first | (funext i; fin_cases i) | skip
+  all_goals simp [bilayer, twoSidedBilayer, leftCoupling, nPlus, nMinus,
+    NCZornElement.mul, NCZornElement.zornDot, NCZornElement.zornCross]
+  all_goals rfl
+
+theorem nonzero_coupling_has_nonzero_zeroMode [Nontrivial A] :
+    (nPlus (1 : A) : Z) ≠ 0 ∧ (nMinus (1 : A), (0 : Z)) ≠ (0,0) ∧
+      bilayer (0 : Z →ₗ[ℝ] Z) (nPlus 1) (nMinus 1, 0) = (0,0) := by
+  refine ⟨?_, ?_, pole_zeroMode⟩
+  · intro h
+    have hc := congrArg NCZornElement.n_plus h
+    exact one_ne_zero (by simpa [nPlus] using hc)
+  · intro h
+    have hc := congrArg (fun XY : Z × Z => XY.1.n_minus) h
+    exact one_ne_zero (by simpa [nMinus] using hc)
+
 end InfoGeometry.Canonical.OperatorZornBilayerDefect
+
+namespace InfoGeometry.Projective.PositiveOperatorExpectation
+
+open InfoGeometry.Canonical
+open OperatorZornBilayerDefect ExpectationRatioMetric OperatorZornStateGeometry
+
+theorem leftCoupling_square_defect_expectation :
+    (readout (ray twoWeights) diagonalState
+      (leftCoupling (curvedZorn * curvedZorn) (nPlus 1) -
+        leftCoupling curvedZorn (leftCoupling curvedZorn (nPlus 1)))).sigma_minus 2 =
+      (1/3 : ℝ) := by
+  exact associator_expectation_one_third
+
+end InfoGeometry.Projective.PositiveOperatorExpectation

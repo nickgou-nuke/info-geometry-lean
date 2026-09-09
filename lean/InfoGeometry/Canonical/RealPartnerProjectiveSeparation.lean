@@ -43,6 +43,15 @@ theorem phasePartner_not_mem_real_line {x : H₂} (hx : x ≠ 0) :
   obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp h
   exact phasePartner_ne_real_smul hx c hc.symm
 
+theorem kramersSymmetry_ne_real_smul (S : KramersSymmetry (E := E))
+    {x : H₂} (hx : x ≠ 0) (c : ℝ) : S.Θ x ≠ c • x := by
+  intro h
+  have hsq : S.Θ.toLinearMap.comp S.Θ.toLinearMap = -LinearMap.id := by
+    apply LinearMap.ext
+    intro y
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun F : H₂ →L[ℝ] H₂ => F y) S.square_neg
+  exact hx (squareMinusOne_eigenvector_zero S.Θ.toLinearMap hsq x c h)
+
 theorem phasePartner_eigenvalue_of_commuting
     (D : H₂ →L[ℝ] H₂)
     (hcomm : D.comp (phaseAxisK (E := E)) = (phaseAxisK (E := E)).comp D)

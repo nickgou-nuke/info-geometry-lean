@@ -118,10 +118,12 @@ invariants in both directions.
 -/
 @[rep_depth operator]
 structure BogoliubovFrameEquiv (T TD : EndH) where
-  /-- An admissible frame is an actual continuous-linear equivalence. -/
-  U : H₂ ≃L[ℝ] H₂
-  preserves : IsDrazinChiralGauge (E := E) T TD (U : EndH)
-  preserves_inv : IsDrazinChiralGauge (E := E) T TD (U.symm : EndH)
+  U : EndH
+  Uinv : EndH
+  left_inv : Uinv.comp U = ContinuousLinearMap.id ℝ H₂
+  right_inv : U.comp Uinv = ContinuousLinearMap.id ℝ H₂
+  preserves : IsDrazinChiralGauge (E := E) T TD U
+  preserves_inv : IsDrazinChiralGauge (E := E) T TD Uinv
 
 namespace BogoliubovFrameEquiv
 
@@ -168,16 +170,16 @@ theorem inverse_maps_regular_sector
     (F : BogoliubovFrameEquiv (E := E) T TD)
     {x : H₂} :
     IsInRegularSector (E := E) T TD x →
-      IsInRegularSector (E := E) T TD (F.U.symm x) := by
+      IsInRegularSector (E := E) T TD (F.Uinv x) := by
   intro hx
   rcases hx with ⟨y, hy⟩
-  refine ⟨F.U.symm y, ?_⟩
+  refine ⟨F.Uinv y, ?_⟩
   have hPreg := F.preserves_inv.1.1
-  have hApply : F.U.symm (Preg T TD y) = Preg T TD (F.U.symm y) := by
+  have hApply : F.Uinv (Preg T TD y) = Preg T TD (F.Uinv y) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPreg
   calc
-    Preg T TD (F.U.symm y) = F.U.symm (Preg T TD y) := hApply.symm
-    _ = F.U.symm x := by simp [hy]
+    Preg T TD (F.Uinv y) = F.Uinv (Preg T TD y) := hApply.symm
+    _ = F.Uinv x := by simp [hy]
 
 /-- Inverse transport preserves null/defect-sector membership. -/
 @[rep_depth operator]
@@ -186,24 +188,23 @@ theorem inverse_maps_null_sector
     (F : BogoliubovFrameEquiv (E := E) T TD)
     {x : H₂} :
     IsInNullSector (E := E) T TD x →
-      IsInNullSector (E := E) T TD (F.U.symm x) := by
+      IsInNullSector (E := E) T TD (F.Uinv x) := by
   intro hx
   rcases hx with ⟨y, hy⟩
-  refine ⟨F.U.symm y, ?_⟩
+  refine ⟨F.Uinv y, ?_⟩
   have hPzero := F.preserves_inv.1.2
-  have hApply : F.U.symm (Pzero T TD y) = Pzero T TD (F.U.symm y) := by
+  have hApply : F.Uinv (Pzero T TD y) = Pzero T TD (F.Uinv y) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPzero
   calc
-    Pzero T TD (F.U.symm y) = F.U.symm (Pzero T TD y) := hApply.symm
-    _ = F.U.symm x := by simp [hy]
+    Pzero T TD (F.Uinv y) = F.Uinv (Pzero T TD y) := hApply.symm
+    _ = F.Uinv x := by simp [hy]
 
 /-- Transport by `U` preserves the fixed chiral commutation law. -/
 @[rep_depth krein]
 theorem preserves_chiral
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
-    (F.U : EndH).comp (spectral_epsilon (E := E)) =
-      (spectral_epsilon (E := E)).comp (F.U : EndH) :=
+    F.U.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.U :=
   F.preserves.2
 
 /-- Inverse transport preserves the fixed chiral commutation law. -/
@@ -211,8 +212,7 @@ theorem preserves_chiral
 theorem inverse_preserves_chiral
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
-    (F.U.symm : EndH).comp (spectral_epsilon (E := E)) =
-      (spectral_epsilon (E := E)).comp (F.U.symm : EndH) :=
+    F.Uinv.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.Uinv :=
   F.preserves_inv.2
 
 end BogoliubovFrameEquiv

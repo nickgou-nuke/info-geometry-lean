@@ -271,7 +271,7 @@ theorem spinConnectionFlat_antisymmetric (mu a b : Fin 4) :
     spinConnectionFlat mu a b = -spinConnectionFlat mu b a := by
   simp [spinConnectionFlat]
 
-theorem tetrad_property_flat (mu nu a : Fin 4) :
+theorem tetrad_compatibility_flat (mu nu a : Fin 4) :
     (0 : ℝ) - 0 + spinConnectionFlat mu a nu = 0 := by
   simp [spinConnectionFlat]
 

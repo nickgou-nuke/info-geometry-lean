@@ -29,7 +29,7 @@ noncomputable def poissonTransportRowModel
       (Component := Component))
     (i : Observation) :
     FiniteGibbs.Model (Data := Component) (Theta := Unit) :=
-  fun j _ => C.cost i j
+  { energy := fun j _ => C.cost i j }
 
 omit [Nonempty Component] in
 theorem poissonTransportRowModel_weight_eq_assignment
@@ -37,7 +37,9 @@ theorem poissonTransportRowModel_weight_eq_assignment
       (Component := Component))
     (ε : ℝ) (i : Observation) (j : Component) :
     FiniteGibbs.weight (poissonTransportRowModel C i) () ε j =
-      poissonTransportAssignment C ε i j := rfl
+      poissonTransportAssignment C ε i j := by
+  unfold FiniteGibbs.weight FiniteGibbs.partitionFunction
+  rfl
 
 theorem poissonTransportAssignment_unique_entropy_minimizer
     (C : PoissonTransportCost (Observation := Observation)

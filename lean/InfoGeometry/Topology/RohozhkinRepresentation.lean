@@ -66,9 +66,7 @@ theorem descent_packet {moving : ℕ}
     (S : RohozhkinDelaunayBraidingSpec moving) :
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
       ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = S.gen g := by
-  refine ⟨?_, ?_⟩
-  · exact S.representation
-  · exact S.representation_of
+  exact ⟨S.representation, S.representation_of⟩
 
 end RohozhkinDelaunayBraidingSpec
 

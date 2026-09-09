@@ -77,38 +77,6 @@ def KAntilinear (A : EndH (E := E)) : Prop :=
 noncomputable def KConjugate (A : EndH (E := E)) : EndH (E := E) :=
   (modularK (E := E)).comp (A.comp (modularK (E := E)))
 
-@[simp] lemma KConjugate_KConjugate (A : EndH (E := E)) :
-    KConjugate (E := E) (KConjugate (E := E) A) = A := by
-  apply ContinuousLinearMap.ext
-  intro v
-  simp only [KConjugate, ContinuousLinearMap.comp_apply]
-  rw [modularK_apply_modularK]
-  rw [modularK_apply_modularK v]
-  simp [modularK_apply_modularK]
-
-@[simp] lemma KConjugate_add (A B : EndH (E := E)) :
-    KConjugate (E := E) (A + B) =
-      KConjugate (E := E) A + KConjugate (E := E) B := by
-  apply ContinuousLinearMap.ext
-  intro v
-  apply DoubledSpace.ext <;>
-    simp [KConjugate, ContinuousLinearMap.comp_apply]
-
-@[simp] lemma KConjugate_sub (A B : EndH (E := E)) :
-    KConjugate (E := E) (A - B) =
-      KConjugate (E := E) A - KConjugate (E := E) B := by
-  apply ContinuousLinearMap.ext
-  intro v
-  apply DoubledSpace.ext <;>
-    simp [KConjugate, ContinuousLinearMap.comp_apply]
-
-@[simp] lemma KConjugate_smul (c : ℝ) (A : EndH (E := E)) :
-    KConjugate (E := E) (c • A) = c • KConjugate (E := E) A := by
-  apply ContinuousLinearMap.ext
-  intro v
-  apply DoubledSpace.ext <;>
-    simp [KConjugate, ContinuousLinearMap.comp_apply]
-
 /-- `K`-linear part of an operator. -/
 noncomputable def KLinearPart (A : EndH (E := E)) : EndH (E := E) :=
   (1 / 2 : ℝ) • (A - KConjugate (E := E) A)
@@ -116,32 +84,6 @@ noncomputable def KLinearPart (A : EndH (E := E)) : EndH (E := E) :=
 /-- `K`-antilinear part of an operator. -/
 noncomputable def KAntilinearPart (A : EndH (E := E)) : EndH (E := E) :=
   (1 / 2 : ℝ) • (A + KConjugate (E := E) A)
-
-@[simp] theorem KLinearPart_idempotent (A : EndH (E := E)) :
-    KLinearPart (E := E) (KLinearPart (E := E) A) =
-      KLinearPart (E := E) A := by
-  unfold KLinearPart
-  rw [KConjugate_smul, KConjugate_sub, KConjugate_KConjugate]
-  module
-
-@[simp] theorem KAntilinearPart_idempotent (A : EndH (E := E)) :
-    KAntilinearPart (E := E) (KAntilinearPart (E := E) A) =
-      KAntilinearPart (E := E) A := by
-  unfold KAntilinearPart
-  rw [KConjugate_smul, KConjugate_add, KConjugate_KConjugate]
-  module
-
-@[simp] theorem KLinearPart_KAntilinearPart (A : EndH (E := E)) :
-    KLinearPart (E := E) (KAntilinearPart (E := E) A) = 0 := by
-  unfold KLinearPart KAntilinearPart
-  rw [KConjugate_smul, KConjugate_add, KConjugate_KConjugate]
-  module
-
-@[simp] theorem KAntilinearPart_KLinearPart (A : EndH (E := E)) :
-    KAntilinearPart (E := E) (KLinearPart (E := E) A) = 0 := by
-  unfold KAntilinearPart KLinearPart
-  rw [KConjugate_smul, KConjugate_sub, KConjugate_KConjugate]
-  module
 
 lemma KLinearPart_add_KAntilinearPart (A : EndH (E := E)) :
     KLinearPart (E := E) A + KAntilinearPart (E := E) A = A := by

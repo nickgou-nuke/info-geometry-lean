@@ -25,7 +25,7 @@ open scoped BigOperators
 variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
 theorem deriv_mean_eq_neg_variance
-    (params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data) (β : ℝ) :
+    (params : GrandCanonicalParams Data) (β : ℝ) :
     deriv (fun t : ℝ => mean params t) β = -variance params β := by
   have hfun :
       (fun t : ℝ => deriv (potential params) t) =
@@ -43,7 +43,7 @@ theorem deriv_mean_eq_neg_variance
   linarith
 
 private lemma hasDerivAt_firstMomentUnnormalized
-    (params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data) (β : ℝ) :
+    (params : GrandCanonicalParams Data) (β : ℝ) :
     HasDerivAt (firstMomentUnnormalized params)
       (-(secondMomentUnnormalized params β)) β := by
   classical
@@ -61,7 +61,7 @@ private lemma hasDerivAt_firstMomentUnnormalized
   simpa [Finset.sum_neg_distrib] using hsum
 
 theorem deriv_mean_at_inverse_temperature
-    (params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data) {ε : ℝ} (hε : 0 < ε) :
+    (params : GrandCanonicalParams Data) {ε : ℝ} (hε : 0 < ε) :
     deriv (fun t : ℝ => mean params t⁻¹) ε =
       variance params ε⁻¹ / ε ^ (2 : ℕ) := by
   have hnum : DifferentiableAt ℝ (firstMomentUnnormalized params) ε⁻¹ :=

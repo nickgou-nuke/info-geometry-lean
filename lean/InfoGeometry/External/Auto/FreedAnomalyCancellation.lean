@@ -13,16 +13,11 @@ class CommMonoid (M : Type) where
   mul_comm : ∀ a b, mul a b = mul b a
   mul_assoc : ∀ a b c, mul (mul a b) c = mul a (mul b c)
 
-abbrev ZornMatrix (M : Type) := M
-
-namespace ZornMatrix
-
-abbrev val {M : Type} (A : ZornMatrix M) : M := A
-
-end ZornMatrix
+structure ZornMatrix (M : Type) where
+  val : M
 
 def ZornMatrix.mul {M : Type} [CommMonoid M] (A B : ZornMatrix M) : ZornMatrix M :=
-  CommMonoid.mul A B
+  ⟨CommMonoid.mul A.val B.val⟩
 
 def ZornMatrix.det {M : Type} [CommMonoid M] (A : ZornMatrix M) : M :=
   A.val

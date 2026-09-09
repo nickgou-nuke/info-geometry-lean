@@ -70,5 +70,3 @@ theorem chiralCliffordBottLift_eq_ofStage
   rfl
 
 end InfoGeometry.Topology
-
-end

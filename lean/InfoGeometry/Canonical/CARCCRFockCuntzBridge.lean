@@ -34,7 +34,7 @@ theorem finite_car_qccr_anticommutator :
 
 theorem cuntz_derived_car_qccr_minus_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    (C : CantorCuntzO2Carrier Op) :
     qCcrRelation (carFromCuntz C) (star (carFromCuntz C)) (-1) = 0 := by
   exact (qccr_fermionic_limit (carFromCuntz C) (star (carFromCuntz C))).2
     (by simpa [cantorAnticommutator] using
@@ -43,7 +43,7 @@ theorem cuntz_derived_car_qccr_minus_one
 /-! ### Cuntz isometries as the `q = 0` boundary relation -/
 
 theorem cuntz_generator_qccr_zero {R : Type*} [Ring R] [StarRing R]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
+    (C : _root_.CuntzAlgebra.Cuntz2Isometries R) :
     qCcrRelation (star (_root_.CuntzAlgebra.S1 C))
       (_root_.CuntzAlgebra.S1 C) 0 = 0 := by
   rw [qccr_to_cuntz_limit]
@@ -54,7 +54,7 @@ fermionic endpoint would force its range projection to vanish, while the
 Cuntz isometry then forces `1 = 0`. -/
 theorem cuntz_generator_not_car
     {R : Type*} [Ring R] [StarRing R] [Nontrivial R]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
+    (C : _root_.CuntzAlgebra.Cuntz2Isometries R) :
     ¬ qCcrRelation (star (_root_.CuntzAlgebra.S1 C))
         (_root_.CuntzAlgebra.S1 C) (-1) = 0 := by
   intro hcar
@@ -92,15 +92,15 @@ theorem cuntz_generator_not_car
 theorem fock_left_regular_cuntz_qccr_zero
     (n : ℕ) (i : Fin n) (x : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg n) :
     qCcrRelation
-        (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
+        (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
           (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzSdag n i))
-        (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
+        (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
           (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzS n i)) 0 x = 0 := by
   have hqccr :
       qCcrRelation
-          (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
+          (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
             (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzSdag n i))
-          (InfoGeometry.Algebra.CuntzGNSRepresentation.leftMultiplication n
+          (InfoGeometry.Algebra.CuntzFockRepresentation.leftMultiplication n
             (InfoGeometry.Algebra.CuntzTensorQuotient.cuntzS n i)) 0 = 0 := by
     apply (qccr_to_cuntz_limit _ _).2
     ext y

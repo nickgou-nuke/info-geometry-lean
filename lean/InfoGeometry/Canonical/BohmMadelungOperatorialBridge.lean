@@ -87,7 +87,12 @@ theorem stateGeneratorField_inducedDerivation_eq_gauge_add_source
 
 /-- Constant state-generator field attached to a single doubled-space seed. -/
 abbrev constantStateGeneratorField (H : EndH) : StateGeneratorField (E := E) :=
-  fun _ => H
+  StateGeneratorField.mk (generator := fun _ => H)
+
+omit [CompleteSpace E] in
+@[simp] theorem constantStateGeneratorField_generator_apply
+    (H : EndH) (ψ : H₂) :
+    (constantStateGeneratorField (E := E) H).generator ψ = H := rfl
 
 @[rep_depth transport, simp]
 theorem constantStateGeneratorField_relativeModularGenerator_eq_modularTransportGenerator

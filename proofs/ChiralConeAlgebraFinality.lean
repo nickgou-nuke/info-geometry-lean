@@ -1,4 +1,4 @@
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.GNSModularObservables
 import proofs.EntropicChiralDeRhamFormalization
 

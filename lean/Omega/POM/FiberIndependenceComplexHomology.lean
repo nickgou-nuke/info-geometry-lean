@@ -16,30 +16,19 @@ rules out the contractible branch, the complex lies in the sphere branch; the re
 therefore concentrated in a single degree, and the reduced Euler characteristic is the usual
 sphere sign. -/
 def paper_pom_fiber_independence_complex_homology_statement : Prop :=
-  ∀ (pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-      joinDecomposition contractibleCase sphereCase : Prop),
-    pathCaseClassification →
-    joinDecomposition →
-    (pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree) →
-    (badModThreeComponent → joinDecomposition → contractibleCase) →
-    (allComponentsAvoidBadModThree → joinDecomposition → sphereCase) →
-    ¬ contractibleCase →
+  ∀ (D : FiberIndependenceComplexClassificationData),
+    ¬ D.contractibleCase →
       ∃ tau : ℕ,
-        sphereCase ∧
+        D.sphereCase ∧
         (∀ k, pom_fiber_independence_complex_homology_reduced_rank tau k =
           if k = tau then 1 else 0) ∧
         pom_fiber_independence_complex_homology_reduced_euler tau = (-1 : ℤ) ^ tau
 
 theorem paper_pom_fiber_independence_complex_homology :
     paper_pom_fiber_independence_complex_homology_statement := by
-  intro pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-    joinDecomposition contractibleCase sphereCase hPathCaseClassification hJoinDecomposition
-    classifyPathComponents badModThreeComponentForcesContraction allGoodComponentsGiveSphere
-    hnot_contractible
-  have hsphere : sphereCase := by
-    rcases paper_pom_fiber_independence_complex_classification hPathCaseClassification
-      hJoinDecomposition classifyPathComponents badModThreeComponentForcesContraction
-      allGoodComponentsGiveSphere with hcontractible | hsphere
+  intro D hnot_contractible
+  have hsphere : D.sphereCase := by
+    rcases paper_pom_fiber_independence_complex_classification D with hcontractible | hsphere
     · exact False.elim (hnot_contractible hcontractible)
     · exact hsphere
   refine ⟨0, hsphere, ?_, ?_⟩

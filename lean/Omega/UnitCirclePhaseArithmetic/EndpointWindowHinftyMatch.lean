@@ -18,13 +18,30 @@ noncomputable def app_jensen_offcritical_shift_boundary_delta (γ r0 : ℝ) : �
 noncomputable def endpointHinftyRate : ℝ :=
   Real.log (2 / Real.sqrt Real.goldenRatio) / Real.log Real.goldenRatio
 
+/-- Concrete endpoint-window asymptotic data under the scaling
+`Y_m = (4 / φ^2)^m`, `η_m = c * φ^{-m}`, with explicit closed forms for the window and
+probability scales. -/
+structure EndpointWindowHinftyMatchData where
+  m : ℕ
+  c : ℝ
+  Ym : ℝ
+  eta : ℝ
+  windowMass : ℝ
+  probabilityMass : ℝ
+  hYm : Ym = (4 / Real.goldenRatio ^ 2) ^ m
+  heta : eta = c * (Real.goldenRatio⁻¹) ^ m
+  hwindow : windowMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m
+  hprobability : probabilityMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m
+
+namespace EndpointWindowHinftyMatchData
+
 /-- The endpoint angle-window scale matches the `h_\infty` exponential rate. -/
-def windowExponentialMatch (m : ℕ) (c windowMass : ℝ) : Prop :=
-  windowMass = c * Real.goldenRatio ^ (endpointHinftyRate * (m : ℝ))
+def windowExponentialMatch (D : EndpointWindowHinftyMatchData) : Prop :=
+  D.windowMass = D.c * Real.goldenRatio ^ (endpointHinftyRate * (D.m : ℝ))
 
 /-- The corresponding endpoint probability scale matches the same `h_\infty` exponential rate. -/
-def probabilityExponentialMatch (m : ℕ) (c probabilityMass : ℝ) : Prop :=
-  probabilityMass = c * Real.goldenRatio ^ (endpointHinftyRate * (m : ℝ))
+def probabilityExponentialMatch (D : EndpointWindowHinftyMatchData) : Prop :=
+  D.probabilityMass = D.c * Real.goldenRatio ^ (endpointHinftyRate * (D.m : ℝ))
 
 private lemma endpoint_base_eq_hinfty_rate :
     (2 / Real.sqrt Real.goldenRatio : ℝ) = Real.goldenRatio ^ endpointHinftyRate := by
@@ -56,29 +73,25 @@ private lemma endpoint_scale_eq_rate (m : ℕ) :
     _ = Real.goldenRatio ^ (endpointHinftyRate * (m : ℝ)) := by
           rw [Real.rpow_mul (le_of_lt Real.goldenRatio_pos)]
 
-lemma windowExponentialMatch_proof (m : ℕ) (c windowMass : ℝ)
-    (hwindow : windowMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m) :
-    windowExponentialMatch m c windowMass := by
+lemma windowExponentialMatch_proof (D : EndpointWindowHinftyMatchData) : D.windowExponentialMatch := by
   unfold windowExponentialMatch
-  rw [hwindow, endpoint_scale_eq_rate]
+  rw [D.hwindow, endpoint_scale_eq_rate]
 
-lemma probabilityExponentialMatch_proof (m : ℕ) (c probabilityMass : ℝ)
-    (hprobability : probabilityMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m) :
-    probabilityExponentialMatch m c probabilityMass := by
+lemma probabilityExponentialMatch_proof (D : EndpointWindowHinftyMatchData) :
+    D.probabilityExponentialMatch := by
   unfold probabilityExponentialMatch
-  rw [hprobability, endpoint_scale_eq_rate]
+  rw [D.hprobability, endpoint_scale_eq_rate]
+
+end EndpointWindowHinftyMatchData
+
+open EndpointWindowHinftyMatchData
 
 /-- Under the standard endpoint scaling, both the angle-window measure and the endpoint
 probability inherit the same golden-ratio `h_\infty` exponential rate.
     thm:app-endpoint-window-hinfty-match -/
-theorem paper_app_endpoint_window_hinfty_match
-    (m : ℕ) (c windowMass probabilityMass : ℝ)
-    (hwindow : windowMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m)
-    (hprobability : probabilityMass = c * (2 / Real.sqrt Real.goldenRatio) ^ m) :
-    windowExponentialMatch m c windowMass ∧
-      probabilityExponentialMatch m c probabilityMass := by
-  exact ⟨windowExponentialMatch_proof m c windowMass hwindow,
-    probabilityExponentialMatch_proof m c probabilityMass hprobability⟩
+theorem paper_app_endpoint_window_hinfty_match (D : EndpointWindowHinftyMatchData) :
+    D.windowExponentialMatch ∧ D.probabilityExponentialMatch := by
+  exact ⟨D.windowExponentialMatch_proof, D.probabilityExponentialMatch_proof⟩
 
 /-- Paper label: `cor:app-jensen-offcritical-shift-boundary`.
 After rewriting `1 - sqrt (1 - q)` as `q / (1 + sqrt (1 - q))`, the boundary-layer correction is

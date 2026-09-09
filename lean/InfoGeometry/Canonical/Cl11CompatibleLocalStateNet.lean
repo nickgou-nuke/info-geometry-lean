@@ -103,13 +103,10 @@ def cl11CompatibleLocalStateNet : CompatibleLocalStateNet (A := MatStage) where
   algebra_A _ := inferInstance
   state := normalizedTraceLinear
   restrict := stageRestrict
-
-theorem cl11CompatibleLocalStateNet_compatible (n : ℕ) (a : MatStage (n + 1)) :
-    cl11CompatibleLocalStateNet.state (n + 1) a =
-      cl11CompatibleLocalStateNet.state n
-        (cl11CompatibleLocalStateNet.restrict n a) := by
-  symm
-  exact normalizedTrace_stageRestrict n a
+  compatible := by
+    intro n a
+    symm
+    exact normalizedTrace_stageRestrict n a
 
 /-- The state field of the compatible net is definitionally the packaged Markov trace. -/
 @[simp] theorem cl11CompatibleLocalStateNet_state_eq_markovTrace (n : ℕ) (A : MatStage n) :

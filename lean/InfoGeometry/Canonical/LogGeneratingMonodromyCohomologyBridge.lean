@@ -64,7 +64,9 @@ def logGeneratingMonodromy (n : ℤ) : ℂ :=
 theorem logGeneratingMonodromy_add (m n : ℤ) :
     logGeneratingMonodromy (m + n) =
       logGeneratingMonodromy m + logGeneratingMonodromy n := by
-  exact grothendieckWindingClass_add m n
+  unfold logGeneratingMonodromy grothendieckWindingClass
+  push_cast
+  ring
 
 theorem logGeneratingMonodromy_holonomy_trivial (n : ℤ) :
     Complex.exp (logGeneratingMonodromy n) = (1 : ℂ) := by
@@ -74,8 +76,8 @@ theorem logGeneratingMonodromy_period
     (n : ℤ) (R : ℝ) (hR : 0 < R) :
     logGeneratingMonodromy n =
       (n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z) := by
-  symm
-  exact grothendieckWindingClass_eq_circleIntegral n R hR
+  unfold logGeneratingMonodromy grothendieckWindingClass
+  rw [circleIntegral_grothendieck_dlog R hR]
 
 /-! ## Cohomological readout on the binary boundary -/
 

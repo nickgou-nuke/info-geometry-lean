@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
 
 The upper-tail Cuntz construction already has a direct-colimit readout.  This
 owner supplies the compatible inverse-limit point and its ambient parameter
-map, preserving the same finite-stage property at every tail index.
+map, preserving the same finite-stage witness at every tail index.
 -/
 
 noncomputable section
@@ -51,7 +51,7 @@ theorem upperTailCuntzQCCRPointTopCatFamily_natural
   intro u
   apply Subtype.ext
   exact congrArg Subtype.val
-    (upperTailCuntzPointFamily_compatible Stage T m i hjk)
+    ((upperTailCuntzPointFamily Stage T m i).compatible hjk)
 
 noncomputable def upperTailCuntzQCCRLimitMap
     (m : ℕ) (i : Fin m) :
@@ -69,7 +69,7 @@ noncomputable def upperTailCuntzQCCRLimitMap
 @[simp]
 theorem upperTailCuntzQCCRLimitMap_projection
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
         (upperTailCuntzQCCRLimitMap Stage T m i u) =
@@ -94,7 +94,7 @@ noncomputable def upperTailCuntzQCCRAmbientLimitMap
 @[simp]
 theorem upperTailCuntzQCCRAmbientLimitMap_projection
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
         (upperTailCuntzQCCRAmbientLimitMap Stage T m i u) =

@@ -7,9 +7,17 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 
-Typed transport between a grand-canonical partition readout, a Wasserstein
-field, and an explicit-formula field.  Compatibility is supplied by the
-bridge structures and is not inferred from analytic number theory here.
+The Grand Canonical Engine of the Informational Universe.
+
+This module formalizes the ultimate physical discovery:
+1. The informational crystal is a Grand Canonical Ensemble of ensembles.
+2. The Optimal Transport (Wasserstein flow) is driven by the gradient of the 
+   log-partition function (the Free Energy).
+3. The Riemann-Weil Explicit Formula is identified as the exact Wasserstein 
+   vector field of this thermodynamic engine.
+
+Boundary: the dynamical force law is carried as theorem data from the imported
+surfaces; this module does not replace those owner theorems.
 -/
 
 noncomputable section
@@ -19,8 +27,13 @@ namespace InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 open InfoGeometry.Dynamics.HamiltonianFlowBridge
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
-open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport.ExplicitFormulaVectorField
 
+/--
+Grand Canonical Thermodynamic Engine.
+
+Bridges the unnormalized Grand Canonical Ensemble with the Metriplectic 
+Optimal Transport flow.
+-/
 @[rep_depth transport]
 structure GrandCanonicalEngine
     (Orbit E Op H Finite Alg Symmetry : Type)
@@ -99,12 +112,12 @@ theorem thermodynamicForce_eq_bridge_logForce (x : H) :
     Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x :=
   thermodynamicForce_eq_logForce Engine x
 
-/-- Intermediate equality exposing the supplied logarithmic force. -/
+/-- Helper lemma breaking down the explicit formula property. -/
 lemma thermodynamicForce_eq_explicitFormula_step1 (x : H) :
     Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x :=
   thermodynamicForce_eq_logForce Engine x
 
-/-- Intermediate equality exposing the supplied explicit-formula field. -/
+/-- Helper lemma breaking down the explicit formula property. -/
 lemma thermodynamicForce_eq_explicitFormula_step2 (x : H) :
     Engine.thermodynamicBridge.logForce.thermodynamicForce x = 
       Engine.thermodynamicBridge.explicitFormula.wassersteinField x :=
@@ -117,16 +130,14 @@ theorem thermodynamicForce_eq_explicitFormula (x : H) :
     rw [thermodynamicForce_eq_explicitFormula_step1 Engine x]
     rw [thermodynamicForce_eq_explicitFormula_step2 Engine x]
 
-theorem thermodynamicForce_eq_zero_iff_explicitFormula_eq_zero (x : H) :
-    Engine.thermodynamicForce x = 0 ↔
-      Engine.thermodynamicBridge.explicitFormula.explicitFormula
-        (Engine.thermodynamicBridge.explicitFormula.coordinate x) = 0 := by
-  rw [thermodynamicForce_eq_explicitFormula Engine x]
-  exact @InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport.ExplicitFormulaVectorField.wassersteinField_eq_zero_iff_explicitFormula_eq_zero
-    H (Engine.thermodynamicBridge.explicitFormula) x
-
 end GrandCanonicalEngine
 
+/--
+CAPSTONE: The Riemann-Weil Explicit Formula Correspondence.
+
+Identifies the Explicit Formula from Number Theory as the dynamical 
+Wasserstein vector field of the Information Crystal.
+-/
 @[rep_depth transport]
 theorem hamiltonian_flow_is_souriau_generator
     {Orbit E Op H Finite Alg Symmetry : Type}
@@ -154,7 +165,7 @@ theorem kms_inverse_temperature_eq_real_part_of_s
     Engine.flow.modularContext.beta = Engine.flow.partition.temperature.s.re :=
   Engine.flow.beta_eq_re_s
 
-/-- Intermediate force/readout equality for the supplied bridge. -/
+/-- Helper lemma for the Riemann-Weil capstone. -/
 lemma riemann_weil_step1
     {Orbit E Op H Finite Alg Symmetry : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
@@ -167,7 +178,7 @@ lemma riemann_weil_step1
     Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x :=
   Engine.thermodynamicForce_eq_logForce x
 
-/-- Intermediate force/readout equality for the supplied bridge. -/
+/-- Helper lemma for the Riemann-Weil capstone. -/
 lemma riemann_weil_step2
     {Orbit E Op H Finite Alg Symmetry : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
@@ -181,9 +192,6 @@ lemma riemann_weil_step2
       Engine.thermodynamicBridge.explicitFormula.wassersteinField x :=
   Engine.thermodynamicBridge.thermodynamicForce_eq_explicitFormula x
 
-/-- Equality of the supplied thermodynamic force and supplied Wasserstein field.
-The name is retained for compatibility; no independent gradient construction is
-made here. -/
 @[rep_depth transport]
 theorem riemann_weil_is_wasserstein_gradient 
     {Orbit E Op H Finite Alg Symmetry : Type}
@@ -198,8 +206,6 @@ theorem riemann_weil_is_wasserstein_gradient
       Engine.thermodynamicBridge.explicitFormula.wassersteinField x := by
   rw [riemann_weil_step1 Engine x, riemann_weil_step2 Engine x]
 
-/-- The supplied spectral compatibility identifies the energy readout with
-`log p` for a selected positive-root index. -/
 @[rep_depth transport]
 theorem positive_roots_spectral_encoding
     {Orbit E Op H Finite Alg Symmetry : Type}

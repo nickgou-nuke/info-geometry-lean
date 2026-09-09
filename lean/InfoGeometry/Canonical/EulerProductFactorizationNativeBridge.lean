@@ -1,10 +1,13 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
 /-!
 # Native Euler Product Factorization Master Bridge
 
-This module replaces the vacuous property wrapper `eulerProductLaw`
+This module replaces the vacuous certificate wrapper `eulerProductLaw`
 with a **genuine, 100% kernel-checked Mathlib derivation** establishing the strict
 multiplicativity and bosonic lower bounds of Euler factors.
 

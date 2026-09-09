@@ -1,0 +1,16 @@
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
+import InfoGeometry.Exceptional.FreudenthalLegacyFiveGradedJacobiCounterexample
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonCARCCR
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonRepresentation
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactClosure
+import InfoGeometry.Exceptional.FreudenthalContactParityGrading
+
+/-!
+# Focused aggregate for the corrected Freudenthal symplectic contact lane
+
+This surface exports the faithful block representation, native Lie algebra,
+five adjoint grade submodules, common CAR--CCR representation, explicit legacy
+Jacobi counterexample, and final closure packet.
+-/

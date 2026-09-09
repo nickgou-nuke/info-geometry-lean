@@ -19,17 +19,10 @@ Instead of raw analytic functions, we define a structured state containing:
 - An abstract partition function.
 - An Euler-product representation.
 -/
-abbrev PrimeGasPartition :=
-  (ℂ → Prop) × (ℂ → ℂ) × (ℂ → ℂ)
-
-/-- Compatibility accessor for the convergence domain. -/
-abbrev PrimeGasPartition.convergenceDomain (P : PrimeGasPartition) : ℂ → Prop := P.1
-
-/-- Compatibility accessor for the abstract partition function. -/
-abbrev PrimeGasPartition.partitionFunction (P : PrimeGasPartition) : ℂ → ℂ := P.2.1
-
-/-- Compatibility accessor for the Euler-product readout. -/
-abbrev PrimeGasPartition.eulerProduct (P : PrimeGasPartition) : ℂ → ℂ := P.2.2
+structure PrimeGasPartition where
+  convergenceDomain : ℂ → Prop
+  partitionFunction : ℂ → ℂ
+  eulerProduct : ℂ → ℂ
 
 namespace PrimeGasPartition
 
@@ -59,38 +52,17 @@ end PrimeGasPartition
 /-! ### 2. Analytic Gates and Specialization -/
 
 /-- The Analytic Gate ensuring physical convergence of the partition function. -/
-abbrev AnalyticGate (P : PrimeGasPartition) :=
-  {β : ℂ // 1 < β.re ∧ P.convergenceDomain β}
-
-namespace AnalyticGate
-
-/-- Compatibility accessor for the gated complex parameter. -/
-abbrev β (G : AnalyticGate P) : ℂ := G.1
-
-/-- Compatibility accessor for the half-plane property. -/
-abbrev re_gt_one (G : AnalyticGate P) : 1 < G.β.re := G.2.1
-
-/-- Compatibility accessor for membership in the declared domain. -/
-abbrev inDomain (G : AnalyticGate P) : P.convergenceDomain G.β := G.2.2
-
-end AnalyticGate
+structure AnalyticGate (P : PrimeGasPartition) where
+  β : ℂ
+  re_gt_one : 1 < β.re
+  inDomain : P.convergenceDomain β
 
 /-- The exact prime-weight specialization bridging abstract states to `Nat.Primes`. -/
-abbrev PrimeWeightSpecialization (P : PrimeGasPartition) :=
-  (∀ s, P.partitionFunction s = P.eulerProduct s) ∧
-    (∀ s, P.eulerProduct s = ∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹)
-
-namespace PrimeWeightSpecialization
-
-/-- Compatibility accessor for the partition/Euler-product equality. -/
-abbrev partition_eq_eulerProduct (W : PrimeWeightSpecialization P) :
-    ∀ s, P.partitionFunction s = P.eulerProduct s := W.1
-
-/-- Compatibility accessor for the prime Euler-product equality. -/
-abbrev eulerProduct_eq_prime_tprod (W : PrimeWeightSpecialization P) :
-    ∀ s, P.eulerProduct s = ∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹ := W.2
-
-end PrimeWeightSpecialization
+structure PrimeWeightSpecialization (P : PrimeGasPartition) where
+  partition_eq_eulerProduct :
+    ∀ s, P.partitionFunction s = P.eulerProduct s
+  eulerProduct_eq_prime_tprod :
+    ∀ s, P.eulerProduct s = ∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹
 
 /-! ### 3. The Final Invariant Readout (The Bridge) -/
 

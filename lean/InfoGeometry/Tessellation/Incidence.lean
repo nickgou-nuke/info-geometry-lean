@@ -17,18 +17,11 @@ No cyclic cohomology or H³ gluing statement is introduced here.
 namespace InfoGeometry.Tessellation
 
 /-- A causal diamond is an idempotent sector. -/
-abbrev Diamond (A : Type*) [Semiring A] :=
-  {P : A // P * P = P}
-
-namespace Diamond
-
-/-- The sector idempotent. -/
-abbrev P {A : Type*} [Semiring A] (D : Diamond A) : A := D.1
-
-/-- The sector law. -/
-abbrev idem {A : Type*} [Semiring A] (D : Diamond A) : D.P * D.P = D.P := D.2
-
-end Diamond
+structure Diamond (A : Type*) [Semiring A] where
+  /-- The sector idempotent. -/
+  P : A
+  /-- The sector law. -/
+  idem : P * P = P
 
 /-!
 ## Directional orthogonality

@@ -104,19 +104,24 @@ theorem betti1_zero_K3 :
 Exact/coexact/harmonic interpretation packet for a discrete `1`-form on the
 filled triangle.
 -/
-def K3HarmonicMode (ω : Fin 3 → ℝ) : Prop :=
-  triangleBoundary2.mulVec ω = 0 ∧
-  triangleBoundary1.transpose.mulVec ω = 0
+structure K3HodgeModePacket where
+  ω : Fin 3 → ℝ
+  closed : triangleBoundary2.mulVec ω = 0
+  coclosed : triangleBoundary1.transpose.mulVec ω = 0
+
+namespace K3HodgeModePacket
+
+variable (P : K3HodgeModePacket)
 
 /-- Any `1`-form that is both closed and coclosed on the filled triangle vanishes. -/
-theorem K3HarmonicMode.eq_zero {ω : Fin 3 → ℝ}
-    (h : K3HarmonicMode ω) : ω = 0 :=
-  triangle_harmonic_one_forms_vanish ω h.1 h.2
+theorem harmonic_eq_zero : P.ω = 0 :=
+  triangle_harmonic_one_forms_vanish P.ω P.closed P.coclosed
 
 /-- Closed `1`-forms on the filled triangle are exact. -/
-theorem K3HarmonicMode.exact_readout {ω : Fin 3 → ℝ}
-    (h : K3HarmonicMode ω) :
-    ∃ y : Fin 3 → ℝ, triangleBoundary1.mulVec y = ω :=
-  triangle_betti1_zero.2 ω h.1
+theorem exact_readout :
+    ∃ y : Fin 3 → ℝ, triangleBoundary1.mulVec y = P.ω :=
+  triangle_betti1_zero.2 P.ω P.closed
+
+end K3HodgeModePacket
 
 end InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge

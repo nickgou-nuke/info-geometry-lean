@@ -110,16 +110,6 @@ theorem flow_mul
     σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
   flow_mul_apply σ t x y
 
-theorem flow_commute
-    (s t : ℝ) (x : A) :
-    σ.flow s (σ.flow t x) = σ.flow t (σ.flow s x) := by
-  exact InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_commute σ s t x
-
-theorem flow_neg_apply'
-    (t : ℝ) (x : A) :
-    σ.flow t (σ.flow (-t) x) = x := by
-  exact InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_neg_apply' σ t x
-
 end ModularFlow
 
 /-! ## 3. Connes cocycle derivative data -/
@@ -174,24 +164,6 @@ theorem chain_rule_apply
       C.cocycle φ η t :=
   C.chain_rule φ ψ η t
 
-/-- Four composable Connes cocycles are coherent under reassociation. -/
-theorem chain_rule_assoc
-    (φ ψ η ξ : Weight)
-    (t : ℝ) :
-    (C.cocycle φ ψ t * C.cocycle ψ η t) * C.cocycle η ξ t =
-      C.cocycle φ ψ t *
-        (C.cocycle ψ η t * C.cocycle η ξ t) := by
-  calc
-    (C.cocycle φ ψ t * C.cocycle ψ η t) * C.cocycle η ξ t =
-        C.cocycle φ η t * C.cocycle η ξ t := by
-          rw [C.chain_rule]
-    _ = C.cocycle φ ξ t := C.chain_rule φ η ξ t
-    _ = C.cocycle φ ψ t * C.cocycle ψ ξ t :=
-      (C.chain_rule φ ψ ξ t).symm
-    _ = C.cocycle φ ψ t *
-        (C.cocycle ψ η t * C.cocycle η ξ t) := by
-          rw [C.chain_rule ψ η ξ t, C.chain_rule φ ψ ξ t]
-
 end ConnesCocycleDerivative
 
 /-! ## 4. Spatial derivative data -/
@@ -241,25 +213,6 @@ theorem chain_rule_apply
     D.spatialDerivative φ ψ * D.spatialDerivative ψ η =
       D.spatialDerivative φ η :=
   D.chain_rule φ ψ η
-
-/-- Four composable weight comparisons are coherent under reassociation. -/
-theorem chain_rule_assoc
-    (φ ψ η ξ : Weight) :
-    (D.spatialDerivative φ ψ * D.spatialDerivative ψ η) *
-        D.spatialDerivative η ξ =
-      D.spatialDerivative φ ψ *
-        (D.spatialDerivative ψ η * D.spatialDerivative η ξ) := by
-  calc
-    (D.spatialDerivative φ ψ * D.spatialDerivative ψ η) *
-        D.spatialDerivative η ξ =
-      D.spatialDerivative φ η * D.spatialDerivative η ξ := by
-        rw [D.chain_rule]
-    _ = D.spatialDerivative φ ξ := D.chain_rule φ η ξ
-    _ = D.spatialDerivative φ ψ * D.spatialDerivative ψ ξ :=
-      (D.chain_rule φ ψ ξ).symm
-    _ = D.spatialDerivative φ ψ *
-        (D.spatialDerivative ψ η * D.spatialDerivative η ξ) := by
-        rw [D.chain_rule ψ η ξ, D.chain_rule φ ψ ξ]
 
 end ConnesSpatialDerivative
 
@@ -327,13 +280,11 @@ Positive scalar weight.
 
 This is the one-dimensional unnormalized cone model.
 -/
-abbrev PositiveScalarWeight := {mass : ℝ // 0 < mass}
+structure PositiveScalarWeight where
+  mass : ℝ
+  mass_pos : 0 < mass
 
 namespace PositiveScalarWeight
-
-abbrev mass (φ : PositiveScalarWeight) : ℝ := φ.1
-
-abbrev mass_pos (φ : PositiveScalarWeight) : 0 < φ.mass := φ.2
 
 /--
 Connes spatial derivative in the positive scalar cone:

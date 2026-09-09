@@ -2,19 +2,18 @@ import Mathlib.Tactic
 import Mathlib.Data.Complex.Basic
 
 /-!
-# arXiv:1608.03679 finite spectral-parameter algebra
+# arXiv:1608.03679 finite Hamiltonian algebra packet
 
 Paper: Carl M. Bender, Dorje C. Brody, and Markus P. Müller,
 *Hamiltonian for the zeros of the Riemann zeta function*,
 arXiv:1608.03679v4.
 
-This module formalizes the following elementary algebraic readouts appearing
-in the paper:
+This module formalizes the theorem-safe algebraic backbone of the paper:
 
 * the spectral parameter conversion `E = i(2z-1)` and
   `z = (1-iE)/2`;
-* an abstract boundary readout `ψ_z(0) = -ζ(z)`, so the corresponding
-  boundary condition is equivalent to `ζ(z)=0`;
+* the boundary readout `ψ_z(0) = -ζ(z)`, so the boundary condition
+  `ψ_z(0)=0` is equivalent to `ζ(z)=0`;
 * the finite algebraic direction from real `E` to the critical-line real part;
 * the commuting classical shadow `xp + px = 2xp` of the Berry--Keating
   Hamiltonian.
@@ -32,7 +31,7 @@ generic semiring.
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 No domain theorem, self-adjointness theorem, pseudo-Hermitian metric theorem,
-completeness theorem, or Riemann-property implication is proved here. The
+completeness theorem, or Riemann-hypothesis implication is proved here. The
 paper itself treats those analytic operator-theoretic points as the hard
 closure problem.
 -/
@@ -45,11 +44,11 @@ noncomputable section
 
 /-! ## Spectral parameter algebra -/
 
-/-- The spectral-parameter relation `E = i(2z-1)`. -/
+/-- The paper's Hamiltonian eigenvalue relation `E = i(2z-1)`. -/
 def benderEigenvalueRelation (z E : ℂ) : Prop :=
   E = Complex.I * (2 * z - 1)
 
-/-- The inverse spectral readout `z = (1-iE)/2`. -/
+/-- The inverse readout `z = (1-iE)/2` attached to the Bender Hamiltonian. -/
 def benderSpectralZ (E : ℂ) : ℂ :=
   (1 - Complex.I * E) / 2
 
@@ -72,7 +71,8 @@ theorem eigenvalueRelation_benderSpectralZ (E : ℂ) :
   ring
 
 /--
-If the spectral parameter `E` is real, the conversion has real part `1/2`.
+Real Hamiltonian eigenvalues land on the critical-line real part under the
+paper's spectral conversion.
 -/
 theorem criticalLine_realPart_of_real_eigenvalue {z E : ℂ} {t : ℝ}
     (hE : E = (t : ℂ))
@@ -84,8 +84,8 @@ theorem criticalLine_realPart_of_real_eigenvalue {z E : ℂ} {t : ℝ}
   simp [benderSpectralZ]
 
 /--
-Conversely, the explicit parameter `z = 1/2 + i t` has real parameter
-`E = -2t`.
+Conversely, a point explicitly parameterized as `z = 1/2 + i t` has real
+Hamiltonian eigenvalue `E = -2t`.
 -/
 theorem eigenvalueRelation_of_criticalLine_param (t : ℝ) :
     benderEigenvalueRelation
@@ -103,8 +103,8 @@ def boundaryCondition (psiAtZero : ℂ → ℂ) (z : ℂ) : Prop :=
   psiAtZero z = 0
 
 /--
-If a supplied boundary readout satisfies `ψ_z(0) = -ζ(z)`, its zero
-condition is equivalent to the zero condition for `ζ`.
+The paper's boundary readout: if `ψ_z(0) = -ζ(z)`, then the boundary condition
+is exactly the abstract zeta-zero condition.
 -/
 theorem boundaryCondition_iff_zeta_zero
     (psiAtZero zeta : ℂ → ℂ) {z : ℂ}
@@ -122,8 +122,8 @@ theorem boundaryCondition_iff_zeta_zero
     rw [hBoundaryReadout, hzeta, neg_zero]
 
 /--
-Combining the supplied boundary readout with the spectral relation yields a
-zeta zero from the boundary condition.
+Combining the boundary readout with the spectral relation: a boundary
+eigenstate whose readout is `-ζ(z)` is a zeta-zero eigenstate.
 -/
 theorem zeta_zero_of_boundary_eigenstate
     (psiAtZero zeta : ℂ → ℂ) {z E : ℂ}
@@ -136,7 +136,8 @@ theorem zeta_zero_of_boundary_eigenstate
 /-! ## Classical Berry--Keating shadow -/
 
 /--
-If two variables commute, the symmetric product `xp+px` is `2 * (xp)`.
+If the classical variables commute, the symmetric Berry--Keating expression
+`xp+px` collapses to `2xp`.
 -/
 theorem berryKeating_commuting_shadow {R : Type*} [Semiring R]
     {x p : R} (hcomm : p * x = x * p) :

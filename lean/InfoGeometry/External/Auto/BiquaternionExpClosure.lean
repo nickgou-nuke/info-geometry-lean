@@ -54,7 +54,7 @@ def biquaternion (α x y z : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /--
 The closed-form exponential of a biquaternion, directly returning a matrix
 in the same Pauli-basis space.
-This explicitly shows the self-closure: the output is a 2×2 complex matrix
+This explicitly witnesses the self-closure: the output is a 2×2 complex matrix
 constructed as a linear combination of I, σ₁, σ₂, σ₃.
 
 We assume a complex square root `r` has been chosen such that `r² = x² + y² + z²`.

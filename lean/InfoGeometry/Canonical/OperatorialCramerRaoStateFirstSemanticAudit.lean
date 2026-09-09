@@ -12,13 +12,13 @@ open scoped InnerProductSpace
 Lean-native audit/extraction surface for the state-first Chunk1/2/3/4 lane.
 
 This file provides:
-1. explicit ax!om-surface print checks for the three chunk capstones,
-2. a direct non-vacuity reduction property (Chunk-2 apex-zero reduction),
+1. explicit axiom-surface print checks for the three chunk capstones,
+2. a direct non-vacuity reduction witness (Chunk-2 apex-zero reduction),
 3. admissibility/measurability extraction witnesses (Chunk-3/4),
 4. package aliases for backward-compatible downstream consumers.
 
 This is an audit surface (inspection + extraction), not an internalized
-meta-theorem proving ax!om-freeness or global non-vacuity.
+meta-theorem proving axiom-freeness or global non-vacuity.
 -/
 
 -- Axiom-hygiene surface for the three chunk capstone targets.
@@ -66,7 +66,7 @@ theorem chunk2_active_only_reduction_audit
 
 /--
 Audit alias: Chunk-3 admissibility package exposes the flowed/compressed
-admissibility property and preserves the Cramér-Rao bound.
+admissibility witness and preserves the Cramér-Rao bound.
 -/
 @[rep_depth transport]
 theorem chunk3_admissibility_package_audit
@@ -96,7 +96,7 @@ theorem chunk3_admissibility_package_audit
       (E := E) (CIK := CIK) (S := S) τ t
 
 /--
-Audit property: Chunk-3 base admissibility on the canonical representative.
+Audit witness: Chunk-3 base admissibility on the canonical representative.
 -/
 @[rep_depth transport]
 theorem chunk3_admissibility_base_audit
@@ -113,7 +113,7 @@ theorem chunk3_admissibility_base_audit
       (E := E) (CIK := CIK) (S := S) τ t).1
 
 /--
-Audit property: Chunk-3 compressed/modular-flow admissibility.
+Audit witness: Chunk-3 compressed/modular-flow admissibility.
 -/
 @[rep_depth transport]
 theorem chunk3_admissibility_compressed_audit
@@ -135,7 +135,7 @@ theorem chunk3_admissibility_compressed_audit
       (E := E) (CIK := CIK) (S := S) τ t).2.1
 
 /--
-Audit property: Chunk-3 preserves the operatorial Cramér-Rao lower bound.
+Audit witness: Chunk-3 preserves the operatorial Cramér-Rao lower bound.
 -/
 @[rep_depth transport]
 theorem chunk3_cr_lower_bound_audit
@@ -204,7 +204,7 @@ theorem chunk4_measurable_uncertainty_package_audit
       (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX
 
 /--
-Audit property: Chunk-4 base measurable-operator gate on the canonical representative.
+Audit witness: Chunk-4 base measurable-operator gate on the canonical representative.
 -/
 @[rep_depth transport]
 theorem chunk4_measurable_base_audit
@@ -229,7 +229,7 @@ theorem chunk4_measurable_base_audit
       (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).1
 
 /--
-Audit property: Chunk-4 measurable gate after projector compression.
+Audit witness: Chunk-4 measurable gate after projector compression.
 -/
 @[rep_depth transport]
 theorem chunk4_measurable_compressed_audit
@@ -260,7 +260,7 @@ theorem chunk4_measurable_compressed_audit
       (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).2.1
 
 /--
-Audit property: Chunk-4 uncertainty inequality payload.
+Audit witness: Chunk-4 uncertainty inequality payload.
 -/
 @[rep_depth transport]
 theorem chunk4_uncertainty_inequality_audit
@@ -291,7 +291,7 @@ theorem chunk4_uncertainty_inequality_audit
       (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).2.2.1
 
 /--
-Audit property: Chunk-4 preserves the operatorial Cramér-Rao lower bound.
+Audit witness: Chunk-4 preserves the operatorial Cramér-Rao lower bound.
 -/
 @[rep_depth transport]
 theorem chunk4_cr_lower_bound_audit

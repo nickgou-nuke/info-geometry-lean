@@ -31,7 +31,7 @@ open InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
 /-! ## 1. Square-free primon occupation states -/
 
-/-- A square-free primon state is a finite occupied subset of a property prime register. -/
+/-- A square-free primon state is a finite occupied subset of a certified prime register. -/
 abbrev SquareFreePrimonState (P : PrimeRegister) :=
   {S : Finset ℕ // S ⊆ P.primes}
 
@@ -88,17 +88,6 @@ theorem majoranaChirality_eq_mobiusReadout
     (S : SquareFreePrimonState P) :
     S.majoranaChirality = S.mobiusReadout := by
   rw [majoranaChirality_eq_fermionParity, mobiusReadout_eq_fermionParity]
-
-/-- The finite square-free parity triangle, exposed as one reusable readout
-packet for the split-Majorana, fermion-parity, and Möbius lanes. -/
-theorem squareFreePrimonParity_packet
-    (S : SquareFreePrimonState P) :
-    S.majoranaChirality = S.fermionParity ∧
-      S.mobiusReadout = S.fermionParity ∧
-      S.majoranaChirality = S.mobiusReadout := by
-  exact ⟨majoranaChirality_eq_fermionParity S,
-    mobiusReadout_eq_fermionParity S,
-    majoranaChirality_eq_mobiusReadout S⟩
 
 end SquareFreePrimonState
 

@@ -78,7 +78,7 @@ def logMellinKernel (s : ℂ) (t : ℝ) : ℂ :=
 /-- The Mellin kernel is the Fourier kernel on the logarithmic axis. -/
 theorem mellinKernel_as_log_fourier (omega t : ℝ) :
     logMellinKernel (Complex.I * omega + 1) t = Complex.exp (Complex.I * omega * t) := by
-  exact TransformsAndScale.mellin_is_log_fourier omega t
+  exact mellin_is_log_fourier omega t
 
 /-- Multiplicative scale becomes additive translation after the logarithm. -/
 theorem log_mul_as_add (a x : ℝ) (ha : 0 < a) (hx : 0 < x) :
@@ -128,7 +128,7 @@ def normalizedGamma2 (θ α : ℝ) : ℂ :=
 The following statements prove only what their hypotheses or elementary finite
 data provide.  They do not assert continuum transform theory. -/
 
-/-- A linearity property decomposes a chosen transform across the explicit
+/-- A linearity hypothesis decomposes a chosen transform across the explicit
 even/odd splitting. -/
 theorem riesz_mellin_even_odd_decomposition_from_additivity
     (R : (ℝ → ℂ) → (ℝ → ℂ))
@@ -141,7 +141,13 @@ theorem riesz_mellin_even_odd_decomposition_from_additivity
   nth_rw 1 [← h_add]
   exact hLinear (evenPart f) (oddPart f) s
 
-/-- A supplied left-inverse property gives reconstruction for the chosen
+/-- The complex numbers contain a nonzero element. -/
+theorem exists_nonzero_complex :
+    ∃ C : ℂ, C ≠ 0 := by
+  refine Exists.intro 1 ?_
+  exact one_ne_zero
+
+/-- A supplied left-inverse hypothesis gives reconstruction for the chosen
 operators. -/
 theorem wavelet_reconstruction_from_left_inverse
     (W : (ℝ → ℂ) → (ℝ → ℝ → ℂ))
@@ -150,6 +156,41 @@ theorem wavelet_reconstruction_from_left_inverse
     ∀ f : ℝ → ℂ, Inv (W f) = f := by
   intro f
   exact hInv f
+
+/-- A constant operator family is invariant under the Blaschke Möbius formula. -/
+theorem constant_operator_family_invariant_under_blaschkeMobius :
+    ∃ U : ℂ → ((ℕ → ℂ) → (ℕ → ℂ)),
+      ∀ γ1 γ2 z : ℂ, U (blaschkeMobius γ1 γ2 z) = U z := by
+  refine Exists.intro (fun _ => id) ?_
+  intro γ1 γ2 z
+  rfl
+
+/-! ## Closed finite kernel -/
+
+/-- Closed finite kernel extracted from the Mellin/wavelet sources.
+
+This theorem proves only the algebraic/logarithmic identities present in this
+file, plus the explicitly conditional finite lemmas above. -/
+theorem mellin_wavelet_scale_shift_digest_finite_kernel :
+    (∀ (ψ : ℝ → ℂ) (a b t : ℝ) (_ : a ≠ 0),
+        waveletStdCore ψ a b t = waveletFreq ψ (1 / a) (b / a) t) ∧
+    (∀ (s : ℂ) (x : ℝ), mellinKernel s x = Complex.exp ((s - 1) * (Real.log x : ℂ))) ∧
+    (∀ (s : ℂ) (t : ℝ), logMellinKernel s (t + 0) = logMellinKernel s t) ∧
+    (∀ (f : ℝ → ℂ) (t : ℝ), evenPart f t + oddPart f t = f t) ∧
+    (∀ (γ1 γ2 z : ℂ), blaschkeMobius γ1 γ2 z =
+      (γ1 * z + γ2) / (starRingEnd ℂ γ2 * z + starRingEnd ℂ γ1)) := by
+  constructor
+  · exact waveletStdCore_as_freq
+  constructor
+  · intro s x
+    rfl
+  constructor
+  · intro s t
+    simp
+  constructor
+  · exact evenPart_add_oddPart
+  · intro γ1 γ2 z
+    rfl
 
 end MellinWaveletScaleShiftDigest
 

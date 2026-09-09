@@ -146,7 +146,8 @@ theorem quotient_alignment_of_concrete_cell_separation
             residualWord k i = residualWord k j := by
   apply quotient_alignment_of_cell_separation
   · intro k i hi
-    exact all_cells_representative_mem k i hi (hfac k i hi)
+    exact G2OneCellQuotientTransport.all_cells_representative_mem k i
+      (hfac k i hi)
   · exact hdisj
   · exact hresidual_align
 

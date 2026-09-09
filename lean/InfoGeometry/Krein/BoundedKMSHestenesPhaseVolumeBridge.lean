@@ -27,7 +27,6 @@ section Core
 
 variable {E LieAlgebra : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 variable [KreinSpace (DoubledSpace E)]
 
 local notation "H₂" => DoubledSpace E
@@ -49,7 +48,7 @@ local instance : IsScalarTower ℝ EndH EndH :=
   inferInstance
 
 /--
-Bounded KMS Hestenes phase-volume interface.
+Bounded KMS Hestenes phase-volume socket.
 
 `detUnits` is the multiplicative determinant/phase-volume channel on invertible
 operators.  `phaseVolume` is the general readout used on arbitrary bounded

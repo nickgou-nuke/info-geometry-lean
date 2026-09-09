@@ -25,7 +25,7 @@ open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 def finitePrefixReadoutFn {n : ℕ} (b : BitWord n) : ℝ :=
   finitePrefixReadout (List.ofFn b)
 
-theorem bitWordPrefix_list_eq (n : ℕ) (x : (ℕ → Bool)) :
+theorem bitWordPrefix_list_eq (n : ℕ) (x : CantorBoundary) :
     List.ofFn (InfoGeometry.Canonical.UHFInductiveColimitBoundary.boundaryPrefix n x) =
       InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryPrefix n x := by
   induction n generalizing x with
@@ -41,18 +41,6 @@ theorem bitWordPrefix_list_eq (n : ℕ) (x : (ℕ → Bool)) :
         UHFInductiveColimitBoundary.boundaryPrefix,
         FractalCantorCliffordFockBridge.boundaryTail] using ih
         (FractalCantorCliffordFockBridge.boundaryTail x)
-
-theorem finitePrefixReadoutFn_projective_prefix
-    (p : InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit)
-    (N : ℕ) :
-    finitePrefixReadoutFn (π N p) =
-      finitePrefixReadout
-        (InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryPrefix N
-          (toCantor p)) := by
-  unfold finitePrefixReadoutFn
-  have hl := bitWordPrefix_list_eq N (toCantor p)
-  rw [boundaryPrefix_toCantor_eq_word p N] at hl
-  exact congrArg finitePrefixReadout hl
 
 theorem projective_readout_prefix_tail
     (p : InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit) (N : ℕ) :

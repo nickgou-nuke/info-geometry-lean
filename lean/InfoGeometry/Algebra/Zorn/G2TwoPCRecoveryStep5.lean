@@ -161,9 +161,10 @@ lemma peel5_basis8_2_x2_of_basis8_4_fixed
   split
   · next hx2 =>
     rw [f.2.2.1, h4]
-    change (add2 (f.1 (basis8 2)).x2 (basis8 4).x2) = false
-    rw [hx2]
-    rfl
+    have hx4 : (f.1 (basis8 4)).x2 = true := by
+      rw [h4]
+      rfl
+    simpa [add, hx4, basis8] using hx2
   · next hx2 =>
     cases h : (f.1 (basis8 2)).x2
     · rfl

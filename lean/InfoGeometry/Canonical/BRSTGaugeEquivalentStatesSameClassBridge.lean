@@ -37,4 +37,31 @@ theorem brst_gauge_equivalent_states_same_class
   dsimp [brstExactToClosed]
   simp
 
+/-- **Theorem**: Master BRST Gauge Equivalent Physical-State Decoupling Synthesis.
+    Unifies:
+    1. Literal quotient decoupling theorem [Q χ] = 0 in H_Q.
+    2. Physical state gauge equivalence invariance theorem [ψ + Q χ] = [ψ] in H_Q.
+    3. Exact formal closure for gauge invariance of BRST physical state classes. -/
+theorem master_brst_gauge_equivalent_states_synthesis
+    (q : Module.End R (ExteriorAlgebra R V))
+    (hq2 : q.comp q = 0)
+    (psi : LinearMap.ker q)
+    (chi : ExteriorAlgebra R V) :
+    (Submodule.Quotient.mk (p := LinearMap.range (brstExactToClosed q hq2))
+      ⟨psi.1 + q chi, by
+        rw [LinearMap.mem_ker]
+        rw [LinearMap.map_add]
+        have hpsi : q psi.1 = 0 := psi.2
+        have hqchi : q (q chi) = 0 := LinearMap.congr_fun hq2 chi
+        rw [hpsi, hqchi, add_zero]⟩ =
+    (Submodule.Quotient.mk (p := LinearMap.range (brstExactToClosed q hq2)) psi : brstCohomologyModule q hq2)) ∧
+    (Submodule.Quotient.mk (p := LinearMap.range (brstExactToClosed q hq2))
+      ⟨q chi, by
+        have h := LinearMap.congr_fun hq2 chi
+        rw [LinearMap.mem_ker]
+        exact h⟩ = (Submodule.Quotient.mk 0 : brstCohomologyModule q hq2)) := ⟨
+  brst_gauge_equivalent_states_same_class q hq2 psi chi,
+  exact_state_class_eq_zero q hq2 chi
+⟩
+
 end InfoGeometry.Canonical.BRSTGaugeEquivalentStatesSameClassBridge

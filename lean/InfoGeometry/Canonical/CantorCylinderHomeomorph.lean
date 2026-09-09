@@ -1,6 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderClopen
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopology
-import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!
 # Homeomorphisms from finite-prefix cylinders to the Cantor boundary
@@ -12,7 +11,6 @@ statement and uses the existing `BitWord`/`prefixCylinder` owners.
 -/
 
 open Set TopologicalSpace
-open CategoryTheory
 
 namespace InfoGeometry.Canonical.CantorCylinderTopology
 
@@ -135,61 +133,6 @@ theorem prefixCylinderHomeomorph_apply
     (n : ℕ) (w : BitWord n) (x : CantorStream) :
     prefixCylinderHomeomorph n w x =
       ⟨prefixExtend w x, prefixExtend_mem_prefixCylinder w x⟩ :=
-  rfl
-
-@[simp] theorem prefixCylinderHomeomorph_symm_apply
-    (n : ℕ) (w : BitWord n) (y : prefixCylinder n w) :
-    (prefixCylinderHomeomorph n w).symm y =
-      prefixTailN n y.1 :=
-  rfl
-
-noncomputable def prefixCylinderCompHausSource : CompHaus := by
-  letI : CompactSpace CantorStream := ⟨isCompact_univ⟩
-  exact CompHaus.of CantorStream
-
-noncomputable def prefixCylinderCompHausTarget
-    (n : ℕ) (w : BitWord n) : CompHaus := by
-  letI : CompactSpace (prefixCylinder n w) :=
-    isCompact_iff_compactSpace.mp (isCompact_prefixCylinder n w)
-  exact CompHaus.of (prefixCylinder n w)
-
-noncomputable def prefixCylinderCompHausIso
-    (n : ℕ) (w : BitWord n) :
-    prefixCylinderCompHausSource ≅ prefixCylinderCompHausTarget n w := by
-  letI : CompactSpace CantorStream := ⟨isCompact_univ⟩
-  letI : CompactSpace (prefixCylinder n w) :=
-    isCompact_iff_compactSpace.mp (isCompact_prefixCylinder n w)
-  let e := prefixCylinderHomeomorph n w
-  letI : T2Space (prefixCylinder n w) := e.t2Space
-  change CompHaus.of CantorStream ≅ CompHaus.of (prefixCylinder n w)
-  exact
-    { hom := ⟨TopCat.ofHom
-        { toFun := e
-          continuous_toFun := e.continuous_toFun }⟩
-      inv := ⟨TopCat.ofHom
-        { toFun := e.symm
-          continuous_toFun := e.symm.continuous_toFun }⟩
-      hom_inv_id := by
-        apply ConcreteCategory.hom_ext
-        intro x
-        change e.symm (e x) = x
-        exact e.symm_apply_apply x
-      inv_hom_id := by
-        apply ConcreteCategory.hom_ext
-        intro y
-        change e (e.symm y) = y
-        exact e.apply_symm_apply y }
-
-theorem prefixCylinderCompHausIso_hom_apply
-    (n : ℕ) (w : BitWord n) (x : CantorStream) :
-    (prefixCylinderCompHausIso n w).hom x =
-      prefixCylinderHomeomorph n w x :=
-  rfl
-
-@[simp] theorem prefixCylinderCompHausIso_inv_apply
-    (n : ℕ) (w : BitWord n) (y : prefixCylinder n w) :
-    (prefixCylinderCompHausIso n w).inv y =
-      (prefixCylinderHomeomorph n w).symm y :=
   rfl
 
 end InfoGeometry.Canonical.CantorCylinderTopology

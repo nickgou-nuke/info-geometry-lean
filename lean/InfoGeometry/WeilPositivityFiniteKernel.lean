@@ -62,8 +62,8 @@ theorem finitePrimeComb_add (entries : List PrimePowerData) (f g : ℝ → ℝ) 
   induction entries with
   | nil => simp [finitePrimeComb]
   | cons p entries ih =>
-      simp [finitePrimeComb, ih, add_mul, mul_add, add_assoc, add_left_comm,
-        add_comm]
+      simp [finitePrimeComb, ih, add_mul, mul_add]
+      ring
 
 /-! ## Native quadratic positivity -/
 

@@ -76,4 +76,25 @@ theorem canonical_hestenesKrein_triality_packet
     HolographicEntanglementTrialityPacket E s n N :=
   canonical_holographic_entanglement_triality_packet (E := E) s n N
 
+/-! ### 4. Wrapper capstone -/
+
+/--
+Holography-facing capstone tying the two-state entropy readout to the canonical
+depth-indexed RT/triality/Krein packet.
+-/
+theorem holographic_triality_capstone
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (s : TrialitySector) (n N : ℕ) :
+    (vonNeumannEntropy (1 / 2 : ℝ) = Real.log 2) ∧
+      ((trialityCycle ^ 3) s = s) ∧
+      (vonNeumannEntropy (1 / 2 : ℝ) = Real.log 2 / (4 * newtonConstant)) ∧
+      HolographicEntanglementTrialityPacket E s n N ∧
+      braidEntanglementStep > 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact maxEntropy_twoState
+  · exact triality_order_three s
+  · exact rt_formula_with_newton_constant
+  · exact canonical_hestenesKrein_triality_packet (E := E) s n N
+  · exact braidEntanglementStep_pos
+
 end InfoGeometry.Holography.HolographicEntanglementSymmetry

@@ -25,8 +25,7 @@ identify the local OP1 shell with any global motivic model.
 [Theorems depending only on explicitly named premises.]
 
 - The OP1 side depends on explicit half-inverter coordinate hypotheses.
-- The q-CCR side depends on an explicit `QCCRSeed` and, for transport, an
-  explicit star-ring equivalence.
+- The q-CCR side depends on an explicit `QCCRSeed` or `QCCRToCuntzSocket`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Exact unproved mathematical gaps.]
@@ -43,7 +42,6 @@ namespace InfoGeometry.Projective.OctonionicKuzminBoundaryBridge
 open InfoGeometry.Projective.SplitOctonions
 open InfoGeometry.Projective.SplitOctonions.ZornMatrix
 open InfoGeometry.Projective.KuzminCuntzPath
-open InfoGeometry.Algebra.CuntzTensorQuotient
 
 variable {R : Type*} [CommRing R] [StarRing R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
@@ -111,16 +109,16 @@ theorem op1_boundary_with_transported_toeplitz_readout
     (vi vj x : ZornMatrix R V)
     (hx : is_half_inverter x)
     (hhalf : is_half_inverter vi ∨ is_half_inverter vj)
-    (H : QCCRSeed R)
-    (e : R ≃⋆+* CuntzToeplitzAlg 2)
-    (hq0 : H.q = (0 : R))
+    (H : QCCRToCuntzSocket R)
+    (hq0 : H.seed.q = (0 : R))
     (i j : Fin 2) :
     associator B vi x (star (mul B vj x)) = diag 0 0 ∧
-      e (H.creation i) * e (H.annihilation j) =
+      H.toCuntzToeplitz (H.seed.creation i) *
+          H.toCuntzToeplitz (H.seed.annihilation j) =
         (if i = j then 1 else 0) := by
   exact ⟨
     lemma_4_5_2_exact (B := B) vi vj x hx hhalf,
-    transported_toeplitz_orthogonality (H := H) (e := e) hq0 i j
+    transported_toeplitz_orthogonality (H := H) hq0 i j
   ⟩
 
 end InfoGeometry.Projective.OctonionicKuzminBoundaryBridge

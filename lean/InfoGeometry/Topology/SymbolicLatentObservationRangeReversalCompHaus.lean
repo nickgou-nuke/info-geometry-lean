@@ -85,5 +85,3 @@ theorem SymbolicLatentObservableModularReversal.toObservationRangeCompHausHom_fl
   rw [R.toQuotientCompHausHom_flow_reversal h_flow h_cont t]
 
 end InfoGeometry.Topology
-
-end

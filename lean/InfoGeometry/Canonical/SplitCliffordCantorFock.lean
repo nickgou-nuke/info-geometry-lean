@@ -107,9 +107,16 @@ theorem bitCharge_hopBit (b : Bool) :
   cases b <;> rfl
 
 /--
+A word in the binary Cantor lattice is a finite local approximation to an
+infinite Dirac-sea/Cantor configuration.
+-/
+abbrev BinaryWord :=
+  List Bool
+
+/--
 Finite parity charge of a binary word.
 -/
-def wordCharge : List Bool → ZMod 2
+def wordCharge : BinaryWord → ZMod 2
   | [] => 0
   | b :: bs => bitCharge b + wordCharge bs
 
@@ -119,13 +126,13 @@ Hop the first site of a finite binary word.
 This is the finite local generator.  Infinite/Cantor versions should be added
 only after the corresponding stream/cylinder owner surface is used.
 -/
-def hopHead : List Bool → List Bool
+def hopHead : BinaryWord → BinaryWord
   | [] => []
   | b :: bs => hopBit b :: bs
 
 /-- The head-hop is involutive. -/
 @[simp]
-theorem hopHead_involutive (w : List Bool) :
+theorem hopHead_involutive (w : BinaryWord) :
     hopHead (hopHead w) = w := by
   cases w with
   | nil => rfl
@@ -146,7 +153,7 @@ theorem wordCharge_hopHead_cons
 Two head-hops return the charge to its original value.
 -/
 theorem wordCharge_hopHead_twice
-    (w : List Bool) :
+    (w : BinaryWord) :
     wordCharge (hopHead (hopHead w)) = wordCharge w := by
   rw [hopHead_involutive]
 

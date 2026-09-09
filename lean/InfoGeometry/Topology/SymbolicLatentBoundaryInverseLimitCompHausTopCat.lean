@@ -40,5 +40,3 @@ theorem symbolicBoundaryPrefixLimitCompHausIso_inv_forget :
   rfl
 
 end InfoGeometry.Topology
-
-end

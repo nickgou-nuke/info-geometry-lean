@@ -49,26 +49,9 @@ operator carrier.
 Constructing `cooperadReadout` and `bcfwReadout` from positive-Grassmannian or
 plabic data remains the responsibility of the model instantiating this packet.
 -/
-def AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] : Type _ :=
-  Amplituhedron3Point Op × Op × Op
-
-namespace AmplituhedronBoundaryPacket
-
-/-- Native product projection for the three-point boundary algebra. -/
-abbrev amp {Op : Type*} [Ring Op]
-    (packet : AmplituhedronBoundaryPacket Op) : Amplituhedron3Point Op :=
-  packet.1
-
-/-- Native product projection for the cooperad readout. -/
-abbrev cooperadReadout {Op : Type*} [Ring Op]
-    (packet : AmplituhedronBoundaryPacket Op) : Op :=
-  packet.2.1
-
-/-- Native product projection for the BCFW readout. -/
-abbrev bcfwReadout {Op : Type*} [Ring Op]
-    (packet : AmplituhedronBoundaryPacket Op) : Op :=
-  packet.2.2
-
-end AmplituhedronBoundaryPacket
+structure AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] where
+  amp : Amplituhedron3Point Op
+  cooperadReadout : Op
+  bcfwReadout : Op
 
 end InfoGeometry.Topology.AmplituhedronBoundary

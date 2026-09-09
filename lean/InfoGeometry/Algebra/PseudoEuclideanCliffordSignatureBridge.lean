@@ -88,4 +88,16 @@ theorem gamma5_anticomm_gamma0 :
 
 end Cl13SpacetimeGenerators
 
+/-- **Theorem**: Master Pseudo-Euclidean Clifford Signature Synthesis.
+    Unifies:
+    1. Cl(1,1) Split Volume Form Invariance Γ² = +1.
+    2. Cl(1,3) Minkowski Spacetime Chiral Anticommutation {γ₅, γ₀} = 0. -/
+theorem master_pseudo_euclidean_clifford_synthesis
+    {R : Type*} [Ring R] (g11 : Cl11Generators R) (g13 : Cl13SpacetimeGenerators R) :
+    (g11.volumeForm * g11.volumeForm = 1) ∧
+    (g13.gamma5 * g13.gamma0 + g13.gamma0 * g13.gamma5 = 0) := ⟨
+  g11.volumeForm_squared,
+  g13.gamma5_anticomm_gamma0
+⟩
+
 end InfoGeometry.Algebra.PseudoEuclideanCliffordSignatureBridge

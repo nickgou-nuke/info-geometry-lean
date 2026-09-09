@@ -7,7 +7,7 @@ This file formalizes the algebraic part of the regularization pipeline.
 
 The analytic boundedness claims are represented as explicit coordinate
 contracts.  That is intentional: Lean should not hide the unbounded-operator
-work behind a `sorry`.  The finite SymPy witness in
+work behind an unproved assumption.  The finite SymPy witness in
 `regularization_cayley_pipeline.py` checks the concrete diagonal model.
 -/
 

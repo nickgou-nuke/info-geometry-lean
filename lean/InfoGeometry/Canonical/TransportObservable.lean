@@ -42,7 +42,7 @@ namespace AndreevDrazinReadout
 
 variable {Op : SpinorOp} {k : ℕ} (R : AndreevDrazinReadout Op k)
 
-/-- The readout exposes the Drazin-defect property used by the anomaly packet. -/
+/-- The readout exposes the Drazin-defect witness used by the anomaly packet. -/
 alias is_drazin_defective := DrazinAnomalyReadout.is_drazin_defective
 
 /-- The Andreev reflection probability carried by the readout. -/

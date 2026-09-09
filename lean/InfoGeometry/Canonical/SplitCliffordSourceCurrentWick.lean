@@ -91,7 +91,7 @@ theorem completed_current_commutator_from_rawCAR
 Constructive cutoff-to-completed commutator limit exchange for
 `normalOrderedCurrent`.
 
-This is the explicit source-side infinite closure statement with no property
+This is the explicit source-side infinite closure statement with no witness
 packet: the completed current commutator is exactly the Heisenberg central term.
 -/
 theorem normalOrderedCurrent_commutator_limit_exchange
@@ -134,7 +134,7 @@ theorem represented_current_commutator_chargedFock
   exact ⟨H.J, H.trunc, H.comm⟩
 
 /--
-Constructive charged-Fock current closure with no existential property packet.
+Constructive charged-Fock current closure with no existential witness packet.
 
 This is the direct source-side theorem on the explicit current family.
 -/
@@ -409,7 +409,7 @@ theorem sourceJfin_support_entry_finite (i j : Fin 4) :
     have hneNeg1 : n ≠ -1 := by intro h; exact hnin (by simp [S, h])
     have hz : sourceJfin n = 0 := by simp [sourceJfin, hne1, hneNeg1]
     have hentry : sourceJfin n i j ≠ 0 := by simpa [Function.mem_support] using hn
-    exact hentry (by simp [hz])
+    exact hentry (by simpa [hz])
   exact (Finset.finite_toSet S).subset hsubset
 
 /-- Explicit concrete commutator at the nontrivial mode pair. -/
@@ -482,17 +482,15 @@ theorem sourceJfin_constructive_window_J_trunc_comm_from_finiteCAR :
   · intro i j
     filter_upwards [hTruncE i j] with n hn
     simpa [sourceJfin_eq_JfinIndexed] using hn
-  · rw [sourceJfin_eq_JfinIndexed]
-    exact h11
-  · rw [sourceJfin_eq_JfinIndexed]
-    exact hNegNeg
+  · simpa [sourceJfin_eq_JfinIndexed] using h11
+  · simpa [sourceJfin_eq_JfinIndexed] using hNegNeg
   · simpa [sourceJfin_eq_JfinIndexed] using h1Neg
   · simpa [sourceJfin_eq_JfinIndexed] using hNeg1
 
 /--
 Concrete two-mode source-side `J/trunc/comm` table from finite CAR data.
 
-This is the real constructed finite property shape (table form), not an imported
+This is the real constructed finite witness shape (table form), not an imported
 Heisenberg packet.
 -/
 theorem sourceJfin_constructed_table :
@@ -761,10 +759,7 @@ theorem sourceJfin_pairComm_finsum_eq_zero
       have hm : m + n + 1 = 1 := by omega
       simpa [hm] using sourceJfin_comm_table_piecewise (-1) (m + n + 1)
     rw [hA, hB]
-    ext i j
-    all_goals fin_cases i
-    all_goals fin_cases j
-    all_goals norm_num
+    ext i j <;> fin_cases i <;> fin_cases j <;> norm_num
   · have hA :
       sourceJfin 1 * sourceJfin (m + n - 1) - sourceJfin (m + n - 1) * sourceJfin 1 = 0 := by
       have hm : m + n - 1 ≠ -1 := by
@@ -785,7 +780,7 @@ theorem sourceJfin_pairComm_finsum_eq_zero
 Off-diagonal pair-kernel vanishing (`m + n ≠ 0`) for the local source current.
 -/
 theorem sourceJfin_pairComm_finsum_eq_zero_of_add_ne_zero
-    (m n : Int) (_hmn : m + n ≠ 0) :
+    (m n : Int) (hmn : m + n ≠ 0) :
     (∑ᶠ k : Int, (sourceJfin (m - k) * sourceJfin (n + k) - sourceJfin (n + k) * sourceJfin (m - k)))
       = 0 := by
   simpa using sourceJfin_pairComm_finsum_eq_zero m n
@@ -797,7 +792,7 @@ In the finite two-mode model this is still zero after summing the two
 Jordan-Wigner crossings.
 -/
 theorem sourceJfin_pairComm_finsum_eq_zero_of_add_eq_zero
-    (m n : Int) (_hmn : m + n = 0) :
+    (m n : Int) (hmn : m + n = 0) :
     (∑ᶠ k : Int, (sourceJfin (m - k) * sourceJfin (n + k) - sourceJfin (n + k) * sourceJfin (m - k)))
       = 0 := by
   simpa using sourceJfin_pairComm_finsum_eq_zero m n
@@ -813,8 +808,8 @@ theorem sourceJfin_pairComm_finsum_piecewise
       =
     (if m + n = 0 then (0 : M4R) else 0) := by
   by_cases hmn : m + n = 0
-  · simp [hmn, sourceJfin_pairComm_finsum_eq_zero_of_add_eq_zero]
-  · simp [hmn, sourceJfin_pairComm_finsum_eq_zero_of_add_ne_zero]
+  · simp [hmn, sourceJfin_pairComm_finsum_eq_zero_of_add_eq_zero, hmn]
+  · simp [hmn, sourceJfin_pairComm_finsum_eq_zero_of_add_ne_zero, hmn]
 
 /-! ## External infinite-current completion (honest Heisenberg law) -/
 
@@ -896,7 +891,7 @@ raw CAR owner surface:
 
 `J n := normalOrderedCurrent C n`.
 
-No external represented property packet is used here.
+No external represented witness packet is used here.
 -/
 theorem rawCAR_infinite_current_completion
     {A : Type*} [Ring A]
@@ -1267,7 +1262,7 @@ theorem externalInfiniteJ_heisenberg_comm_diag_swap_neg
     have hInt : n = -m := by omega
     norm_num [hInt]
   rw [hnm_cast]
-  simp
+  simp [smul_neg]
 
 /--
 Combined owner-surface closure payload for the concrete external infinite
@@ -1618,7 +1613,7 @@ theorem externalInfiniteJ_currentSugawara_lgen_commutator_skew
       (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m))) := by
-  simp [LinearMap.commutator, sub_eq_add_neg]
+  simp [LinearMap.commutator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 /-! ## Closure Checklist: Section 1 (Infinite Source Current Construction) -/
 
@@ -1658,7 +1653,7 @@ theorem jw_mode_cutoff_stabilizes_apply
       Matrix.mulVec
         (InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW n) v := by
   filter_upwards [jw_mode_cutoff_stabilizes n] with N hN
-  simp [hN]
+  simpa [hN]
 
 theorem jw_mode_trunc_vector :
     ∀ v : Fin 4 → ℝ, ∀ᶠ n : Int in Filter.atTop,
@@ -1802,7 +1797,7 @@ theorem externalInfiniteJ_jacobi
   rw [heisenberg_comm_full (𝕜 := 𝕜) α n k]
   rw [heisenberg_comm_full (𝕜 := 𝕜) α k m]
   rw [heisenberg_comm_full (𝕜 := 𝕜) α m n]
-  simp [LinearMap.commutator, add_comm]
+  simp [LinearMap.commutator, add_assoc, add_left_comm, add_comm]
 
 /--
 Global commutator skew-symmetry for the explicit infinite source current family.
@@ -2299,13 +2294,13 @@ theorem virasoro_bracket_skew
       (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m))) := by
-  simp [LinearMap.commutator, sub_eq_add_neg]
+  simp [LinearMap.commutator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 theorem virasoro_jacobi
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
     (X Y Z : VirasoroProject.VirasoroAlgebra 𝕜) :
     ⁅X, ⁅Y, Z⁆⁆ = ⁅⁅X, Y⁆, Z⁆ + ⁅Y, ⁅X, Z⁆⁆ := by
-  exact leibniz_lie X Y Z
+  simpa using (leibniz_lie X Y Z)
 
 theorem virasoro_from_sugawara
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
@@ -2548,7 +2543,7 @@ theorem virasoro_rep_on_fock_apply_bracket_lgen
           (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
           ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
             (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)) := by
-          exact
+          simpa using
             LieAlgebra.Representation.apply_bracket_eq_commutator
               ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
               (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
@@ -3108,7 +3103,7 @@ theorem virasoro_rep_cgen_commutator_lgen_zero
     (0 :
       VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
         VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  exact virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α m
+  simpa using virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α m
 
 /--
 Representation-image bracket readout for central/l-mode generators.
@@ -3131,13 +3126,13 @@ theorem virasoro_rep_on_fock_apply_bracket_cgen_lgen
           (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
           ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
             (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)) := by
-          exact
+          simpa using
             LieAlgebra.Representation.apply_bracket_eq_commutator
               ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
               (VirasoroProject.VirasoroAlgebra.cgen 𝕜)
               (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
     _ = 0 := by
-          exact virasoro_rep_cgen_commutator_lgen_zero (𝕜 := 𝕜) α m
+          simpa using virasoro_rep_cgen_commutator_lgen_zero (𝕜 := 𝕜) α m
 
 /--
 Representation-image bracket readout for l-mode/central generators.
@@ -3160,13 +3155,13 @@ theorem virasoro_rep_on_fock_apply_bracket_lgen_cgen
           (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
           ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
             (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
-          exact
+          simpa using
             LieAlgebra.Representation.apply_bracket_eq_commutator
               ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
               (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
               (VirasoroProject.VirasoroAlgebra.cgen 𝕜)
     _ = 0 := by
-          exact virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α m
+          simpa using virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α m
 
 /--
 Unified represented Virasoro bracket readout on Fock endomorphisms:
@@ -3254,8 +3249,8 @@ theorem virasoro_rep_on_fock_apply_bracket_readout_two_negTwo
   refine ⟨?_, ?_⟩
   · simpa [hcoeff] using hLL
   · refine ⟨?_, ?_⟩
-    · exact hread.2.1
-    · exact hread.2.2
+    · simpa using hread.2.1
+    · simpa using hread.2.2
 
 /--
 Concrete represented bracket readout specialization at `(m,n) = (1,-1)`.
@@ -3425,7 +3420,7 @@ theorem externalInfiniteJ_heisenberg_comm_skew
     have hm_eq_neg_n : (m : 𝕜) = -(n : 𝕜) := by
       exact_mod_cast hm_int
     rw [h1, h2, hm_eq_neg_n]
-    simp
+    simp [smul_neg]
   · have h1 := heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := m) (n := n) hmn
     have h2 : (externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m) = 0 := by
       have hnm : n + m ≠ 0 := by simpa [add_comm] using hmn

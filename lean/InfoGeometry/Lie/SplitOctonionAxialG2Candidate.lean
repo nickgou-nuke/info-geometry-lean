@@ -1,6 +1,7 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!
 # Concrete candidate readout for the axial Cartan flow
@@ -20,6 +21,7 @@ namespace InfoGeometry.Lie.SplitOctonionAxialG2Candidate
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Canonical
 open InfoGeometry.Lie.SplitOctonionAxialCartanFlow
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
@@ -33,7 +35,7 @@ abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
 noncomputable def axialCartanG2TwoCandidate
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) :
-    G2TwoCandidate ℝ where
+    G2TwoCandidate realZornCompositionDatum where
   map := axialCartanFlow k t
   map_mulZ := by
     intro X Y
@@ -110,8 +112,8 @@ theorem axialCartanG2TwoCandidate_commute_apply
 
 theorem axialCartanG2TwoCandidate_preserves_product
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X Y : CZ) :
-    (axialCartanG2TwoCandidate k hk t).map (ZornMatrix.mulZ X Y) =
-      ZornMatrix.mulZ
+    (axialCartanG2TwoCandidate k hk t).map (realZornCompositionDatum.mulZ X Y) =
+      realZornCompositionDatum.mulZ
         ((axialCartanG2TwoCandidate k hk t).map X)
         ((axialCartanG2TwoCandidate k hk t).map Y) := by
   exact (axialCartanG2TwoCandidate k hk t).preserves_product X Y
@@ -129,35 +131,35 @@ theorem axialCartanG2TwoCandidate_injective
 
 theorem axialCartanG2TwoCandidate_preserves_null_cone
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X : CZ)
-    (hX : ZornMatrix.IsNull X) :
-    ZornMatrix.IsNull ((axialCartanG2TwoCandidate k hk t).map X) := by
+    (hX : ZornMatrix.IsNull realCrossProduct3 X) :
+    ZornMatrix.IsNull realCrossProduct3 ((axialCartanG2TwoCandidate k hk t).map X) := by
   exact (axialCartanG2TwoCandidate k hk t).preserves_null_cone X hX
 
 theorem axialCartanG2TwoCandidate_null_iff
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X : CZ) :
-    ZornMatrix.IsNull ((axialCartanG2TwoCandidate k hk t).map X) ↔
-      ZornMatrix.IsNull X := by
+    ZornMatrix.IsNull realCrossProduct3 ((axialCartanG2TwoCandidate k hk t).map X) ↔
+      ZornMatrix.IsNull realCrossProduct3 X := by
   unfold ZornMatrix.IsNull
-  rw [show ZornMatrix.detZ
-        ((axialCartanG2TwoCandidate k hk t).map X) = ZornMatrix.detZ X by
+  rw [show ZornMatrix.detZ realCrossProduct3
+        ((axialCartanG2TwoCandidate k hk t).map X) = ZornMatrix.detZ realCrossProduct3 X by
       simpa only [axialCartanG2TwoCandidate_apply] using
         axialCartanCompositionAut_preserves_det k hk t X]
 
 theorem axialCartanG2TwoCandidate_preserves_incident
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X Y : CZ) :
-    IncidentRep
+    IncidentRep realCrossProduct3
         ((axialCartanG2TwoCandidate k hk t).map X)
         ((axialCartanG2TwoCandidate k hk t).map Y) ↔
-      IncidentRep X Y := by
+      IncidentRep realCrossProduct3 X Y := by
   simpa only [axialCartanG2TwoCandidate_apply] using
     axialCartanFlow_preserves_incident k hk t X Y
 
 theorem axialCartanG2TwoCandidate_preserves_polar
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X Y : CZ) :
-    polarZ
+    polarZ realCrossProduct3
         ((axialCartanG2TwoCandidate k hk t).map X)
         ((axialCartanG2TwoCandidate k hk t).map Y) =
-      polarZ X Y := by
+      polarZ realCrossProduct3 X Y := by
   simpa only [axialCartanG2TwoCandidate_apply] using
     axialCartanFlow_preserves_polar k hk t X Y
 
@@ -176,13 +178,13 @@ theorem axialCartanG2TwoCandidate_preserves_anticolorPart
 theorem axialCartanG2TwoCandidate_boundary_packet
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) :
     (∀ X Y : CZ,
-      (axialCartanG2TwoCandidate k hk t).map (ZornMatrix.mulZ X Y) =
-        ZornMatrix.mulZ
+      (axialCartanG2TwoCandidate k hk t).map (realZornCompositionDatum.mulZ X Y) =
+        realZornCompositionDatum.mulZ
           ((axialCartanG2TwoCandidate k hk t).map X)
           ((axialCartanG2TwoCandidate k hk t).map Y)) ∧
       (∀ X : CZ,
-        ZornMatrix.detZ ((axialCartanG2TwoCandidate k hk t).map X) =
-          ZornMatrix.detZ X) ∧
+        ZornMatrix.detZ realCrossProduct3 ((axialCartanG2TwoCandidate k hk t).map X) =
+          ZornMatrix.detZ realCrossProduct3 X) ∧
       (∀ X : CZ,
         (axialCartanG2TwoCandidate k hk t).map (colorPart X) =
           colorPart ((axialCartanG2TwoCandidate k hk t).map X)) ∧

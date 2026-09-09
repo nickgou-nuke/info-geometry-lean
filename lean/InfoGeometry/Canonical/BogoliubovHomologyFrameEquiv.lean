@@ -16,7 +16,7 @@ open InfoGeometry.Canonical.HestenesCohomology
 /-!
 # Bogoliubov homology frame equivalence
 
-This file packages the real homology/cohomology frame-change interface.
+This file packages the real homology/cohomology frame-change socket.
 
 A frame equivalence is not just an invertible operator.  It carries explicit
 transport laws for the boundary, Drazin defect projector, harmonic projector,
@@ -45,10 +45,10 @@ structure HomologyFrameEquiv where
   Uinv : EndH
 
   /-- Left inverse law. -/
-  inverse_left : Uinv.comp U = ContinuousLinearMap.id ℝ H₂
+  left_inv : Uinv.comp U = ContinuousLinearMap.id ℝ H₂
 
   /-- Right inverse law. -/
-  inverse_right : U.comp Uinv = ContinuousLinearMap.id ℝ H₂
+  right_inv : U.comp Uinv = ContinuousLinearMap.id ℝ H₂
 
   /-- Source boundary/differential. -/
   Dsrc : EndH
@@ -89,7 +89,7 @@ namespace HomologyFrameEquiv
 
 variable (F : HomologyFrameEquiv (E := E))
 
-/-- The inverse-frame pullback of a scalar real property. -/
+/-- The inverse-frame pullback of a scalar real witness. -/
 @[rep_depth transport]
 noncomputable def transportScalarWitness
     (φ : H₂ →L[ℝ] ℝ) : H₂ →L[ℝ] ℝ :=
@@ -145,7 +145,7 @@ theorem transportedScalarWitness_readout_eq
   unfold transportScalarWitness
   have hx : F.Uinv (F.U x) = x := by
     simpa [ContinuousLinearMap.comp_apply] using
-      congrArg (fun T : EndH => T x) F.inverse_left
+      congrArg (fun T : EndH => T x) F.left_inv
   simp [hx]
 
 /-- Krein-pairing readouts are frame-invariant. -/
@@ -195,7 +195,7 @@ theorem transportedWitness_descends_on_source_homology
     {x y : H₂}
     (hxy : HomologyEquivalent (E := E) F.Dsrc x y) :
     φ (F.U x) = φ (F.U y) := by
-  exact property_descends_to_homologyEquivalent (E := E) hφ
+  exact witness_descends_to_homologyEquivalent (E := E) hφ
     (F.maps_homologyEquivalent hxy)
 
 end HomologyFrameEquiv

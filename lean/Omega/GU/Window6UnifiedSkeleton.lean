@@ -29,14 +29,9 @@ def paper_window6_unified_skeleton_statement : Prop :=
       (∀ boundary,
         window6AbelianizedParityChargeSplit (window6BoundaryCartanInclusion boundary) =
           ((0, 0), boundary)))) ∧
-    (∀ (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
-          lengthTwoSharpWitness : Prop),
-      coboundaryNormalization →
-      (coboundaryNormalization → edgeAuditWithPotential) →
-      (edgeAuditWithPotential → primitiveCycleDensityBound) →
-      (primitiveCycleDensityBound → lengthTwoSharpWitness) →
-      coboundaryNormalization ∧ edgeAuditWithPotential ∧ primitiveCycleDensityBound ∧
-        lengthTwoSharpWitness) ∧
+    (∀ D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData,
+      D.coboundaryNormalization ∧ D.edgeAuditWithPotential ∧ D.primitiveCycleDensityBound ∧
+        D.lengthTwoSharpWitness) ∧
     ((8 + 4 + 9 = 21 ∧
         8 * 2 + 4 * 3 + 9 * 4 = 64 ∧
         8 * 4 + 4 * 9 + 9 * 16 = 212) ∧
@@ -53,15 +48,9 @@ theorem paper_window6_unified_skeleton : paper_window6_unified_skeleton_statemen
   refine ⟨⟨paper_window6_bdry_uplift_residue_stratification,
       paper_window6_abelianized_parity_charge_root_cartan_splitting⟩, ?_, ?_, ?_,
     paper_su5_count_closure⟩
-  · intro coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
-      lengthTwoSharpWitness hNorm deriveEdgeAudit derivePrimitiveCycleDensityBound
-      deriveLengthTwoSharpWitness
-    have hCoboundary := Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_coboundary
-      coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound hNorm
-      deriveEdgeAudit derivePrimitiveCycleDensityBound
-    have hDensity := Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_density_bound
-      coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound lengthTwoSharpWitness
-      hNorm deriveEdgeAudit derivePrimitiveCycleDensityBound deriveLengthTwoSharpWitness
+  · intro D
+    have hCoboundary := Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_coboundary D
+    have hDensity := Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_density_bound D
     exact ⟨hCoboundary.1, hCoboundary.2.1, hDensity.1, hDensity.2⟩
   · exact ⟨Omega.Conclusion.window6_qmoment_triple, Omega.Conclusion.paper_window6_collision_prob⟩
   · refine ⟨paper_window6_chiral_compression_hypercube_adjacency 6 (by omega), ?_, ?_⟩

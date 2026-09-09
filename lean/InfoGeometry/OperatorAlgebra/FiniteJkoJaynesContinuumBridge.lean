@@ -59,8 +59,10 @@ def projectedFiniteStateFamily
     {E : OperatorErlangenSystem K A S}
     (P : E.SemigroupProjection)
     (F : FiniteStateCompatibleFamily (R := K) (A := A) (ι := ι)) :
-    FiniteStateCompatibleFamily (R := K) (A := A) (ι := ι) :=
-  ⟨(F.weight, fun i => P.projectState (F.sample i)), F.hweight⟩
+    FiniteStateCompatibleFamily (R := K) (A := A) (ι := ι) where
+  weight := F.weight
+  sample := fun i => P.projectState (F.sample i)
+  hweight := F.hweight
 
 @[simp]
 theorem projectedFiniteStateFamily_averageState

@@ -85,6 +85,5 @@ theorem normalizedIntervalReadout_coordinate
     coordinateTopCatHom n (normalizedIntervalReadout S) =
       S.normalizedReadoutInterval n := rfl
 
-end InfoGeometry.Canonical.RealUHFProjectionRankIntervalTopological
 
-end
+end InfoGeometry.Canonical.RealUHFProjectionRankIntervalTopological

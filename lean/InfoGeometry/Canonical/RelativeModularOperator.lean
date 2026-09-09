@@ -320,43 +320,10 @@ noncomputable abbrev relativeModularSupervolumeShadow
     (relativeModularVolumeShadow_pos (n := n) qPlus q0Plus)
     (relativeModularVolumeShadow_pos (n := n) qMinus q0Minus)
 
-@[simp, rep_depth operator, capstone]
-theorem relativeModularBerezinianShadow_common
-    (q q0 : PositiveRay (Fin n)) :
-    relativeModularBerezinianShadow (n := n) q q0 q q0 = 1 := by
-  unfold relativeModularBerezinianShadow
-  rw [div_self]
-  exact ne_of_gt (relativeModularVolumeShadow_pos (n := n) q q0)
-
-@[rep_depth operator, capstone]
-theorem relativeModularBerezinianShadow_swap
-    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
-    relativeModularBerezinianShadow (n := n) qMinus q0Minus qPlus q0Plus =
-      (relativeModularBerezinianShadow (n := n) qPlus q0Plus qMinus q0Minus)⁻¹ := by
-  unfold relativeModularBerezinianShadow
-  rw [inv_div]
-
 @[rep_depth operator]
 noncomputable def relativeModularBerezinianPotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) : ℝ :=
   -Real.log (relativeModularBerezinianShadow (n := n) qPlus q0Plus qMinus q0Minus)
-
-@[simp, rep_depth thermo, capstone]
-theorem relativeModularBerezinianPotential_common
-    (q q0 : PositiveRay (Fin n)) :
-    relativeModularBerezinianPotential (n := n) q q0 q q0 = 0 := by
-  unfold relativeModularBerezinianPotential
-  rw [relativeModularBerezinianShadow_common]
-  simp
-
-@[rep_depth thermo, capstone]
-theorem relativeModularBerezinianPotential_swap
-    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
-    relativeModularBerezinianPotential (n := n) qMinus q0Minus qPlus q0Plus =
-      -relativeModularBerezinianPotential (n := n) qPlus q0Plus qMinus q0Minus := by
-  unfold relativeModularBerezinianPotential
-  rw [relativeModularBerezinianShadow_swap]
-  rw [Real.log_inv]
 
 /-- Compatibility alias for the Berezinian negative-log readout. -/
 @[rep_depth operator]

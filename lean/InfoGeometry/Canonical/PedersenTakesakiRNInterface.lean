@@ -16,8 +16,8 @@ compiled interface with:
 
 - Type-III modular owner data,
 - a candidate density operator `delta`,
-- a Connes cocycle property,
-- a scalar-id reduction property used as current finite/surrogate readout,
+- a Connes cocycle witness,
+- a scalar-id reduction witness used as current finite/surrogate readout,
 - finite operator shadows attached to existing `relativeModularOperator` owners.
 -/
 
@@ -41,7 +41,7 @@ local notation "EndH" => YangMillsContinuum.EndH E
 Interface package for the missing Pedersen-Takesaki/Vaes operator-RN lane.
 
 `delta` is the candidate density operator; in this conservative surface we keep
-an explicit scalar-id property (`delta_eq_densityReadout_smul_id`) so downstream
+an explicit scalar-id witness (`delta_eq_densityReadout_smul_id`) so downstream
 modules can use it without over-claiming full affiliated-operator machinery.
 -/
 @[rep_depth transport]
@@ -60,7 +60,7 @@ namespace AffiliatedOperatorRNInterface
 
 variable (R : AffiliatedOperatorRNInterface (E := E))
 
-/-- Connes cocycle chain law carried by the interface property. -/
+/-- Connes cocycle chain law carried by the interface witness. -/
 @[rep_depth transport]
 theorem cocycle_chain (s t : ℝ) :
     R.cocycle (s + t) = R.cocycle s * R.base.additiveFlow s (R.cocycle t) :=

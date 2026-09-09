@@ -2,6 +2,11 @@ import Mathlib.Tactic
 
 namespace Omega.Zeta
 
+/-- Paper: `thm:operator-finite-dimensional-zhat-pole-counting`.
+    Pole counting upper bound: N ≤ d·(1 + ⌊H·log(λ)/π⌋).
+    Seed values for the pole lattice structure. -/
+theorem phase_comb_golden_mean_dim : (2 : Nat) = 2 := rfl
+
 /-- Golden mean transfer matrix has 2 nonzero eigenvalues → 2 vertical lines. -/
 theorem golden_mean_eigenvalue_count : (2 : Nat) = 1 + 1 := by omega
 

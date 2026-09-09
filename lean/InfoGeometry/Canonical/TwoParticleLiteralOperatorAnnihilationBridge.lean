@@ -56,9 +56,9 @@ theorem master_two_particle_literal_operator_annihilation_synthesis
     (h_single : a_u (singleParticleState beta) = beta u • vacuumState R U) :
     (a_u (twoParticleState alpha beta) =
       alpha u • singleParticleState beta - beta u • singleParticleState alpha) ∧
-    (twoParticleState alpha beta = creationOp alpha (singleParticleState beta)) := by
-  constructor
-  · exact annihilation_two_particle_operator_pairing u alpha beta a_u h_car h_single
-  · rfl
+    (twoParticleState alpha beta = creationOp alpha (singleParticleState beta)) := ⟨
+  annihilation_two_particle_operator_pairing u alpha beta a_u h_car h_single,
+  rfl
+⟩
 
 end InfoGeometry.Canonical.TwoParticleLiteralOperatorAnnihilationBridge

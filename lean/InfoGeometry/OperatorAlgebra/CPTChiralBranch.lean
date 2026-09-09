@@ -141,16 +141,22 @@ end CPTChiralTomitaBranch
 /-! ## 2. Owner target -/
 
 /-- Owner target for reading a supplied CPT-calibrated Tomita/chiral branch. -/
-theorem cptChiralBranch_properties
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (B : CPTChiralTomitaBranch Op) :
+def CPTChiralBranchOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
+  ∀ B : CPTChiralTomitaBranch Op,
     (∀ x : Op, B.tomita.Jconj x = (B.mirror.J * x) * B.mirror.J) ∧
     (∀ x : Op, x ∈ B.tomita.M → B.LeftSupported x →
       B.tomita.Jconj x ∈ B.tomita.Mcomm ∧
         B.RightSupported (B.tomita.Jconj x)) ∧
     (∀ x : Op, x ∈ B.tomita.M → B.RightSupported x →
       B.tomita.Jconj x ∈ B.tomita.Mcomm ∧
-        B.LeftSupported (B.tomita.Jconj x)) := by
+        B.LeftSupported (B.tomita.Jconj x))
+
+/-- A supplied CPT/chiral branch gives the Tomita mirror and chirality swap laws. -/
+theorem cptChiralBranchOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] :
+    CPTChiralBranchOwnerTarget Op := by
+  intro B
   exact ⟨
     (fun x => B.tomitaMirror_eq_J_conj x),
     (fun x hM hL => B.algebra_left_to_commutant_right hM hL),

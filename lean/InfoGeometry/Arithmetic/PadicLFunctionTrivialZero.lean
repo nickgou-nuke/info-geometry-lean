@@ -17,19 +17,11 @@ The components of the trivial zero derivative formula:
 - L_M_0: The complex L-function evaluated at s = 0.
 - Omega_inf: The complex period.
 -/
-abbrev TrivialZeroConjectureData := ℝ × ℝ × ℝ × ℝ
-
-namespace TrivialZeroConjectureData
-
-abbrev L_p_prime_0 (d : TrivialZeroConjectureData) : ℝ := d.1
-
-abbrev ell_p_M (d : TrivialZeroConjectureData) : ℝ := d.2.1
-
-abbrev L_M_0 (d : TrivialZeroConjectureData) : ℝ := d.2.2.1
-
-abbrev Omega_inf (d : TrivialZeroConjectureData) : ℝ := d.2.2.2
-
-end TrivialZeroConjectureData
+structure TrivialZeroConjectureData where
+  L_p_prime_0 : ℝ
+  ell_p_M : ℝ
+  L_M_0 : ℝ
+  Omega_inf : ℝ
 
 /--
 The Greenberg-Tilouine / Greenberg conjecture for the derivative of the p-adic L-function 
@@ -73,26 +65,5 @@ def padic_filtration_linear_combination_prop {V : Type} [AddCommGroup V] [Module
   b.lambda ≠ 0 →
   (2 * b.lambda) • omega_e b - (2 * b.lambda) • fil_minus1_second_vector b = 
   b.e_0 - (b.lambda ^ 2) • b.e_minus2
-
-/-- The displayed filtration identity is a finite module calculation. -/
-theorem padic_filtration_linear_combination
-    {V : Type} [AddCommGroup V] [Module ℝ V]
-    (b : PadicFiltrationBasis V) (h_lambda : b.lambda ≠ 0) :
-    (2 * b.lambda) • omega_e b - (2 * b.lambda) • fil_minus1_second_vector b =
-      b.e_0 - (b.lambda ^ 2) • b.e_minus2 := by
-  dsimp [omega_e, fil_minus1_second_vector]
-  have h_two_lambda : 2 * b.lambda ≠ 0 := mul_ne_zero (by norm_num) h_lambda
-  have h_inv : (2 * b.lambda) * (1 / (2 * b.lambda)) = (1 : ℝ) := by
-    field_simp [h_two_lambda]
-  simp only [smul_add, smul_smul, sub_eq_add_neg]
-  rw [h_inv]
-  module
-
-theorem padic_filtration_linear_combination_satisfies_prop
-    {V : Type} [AddCommGroup V] [Module ℝ V]
-    (b : PadicFiltrationBasis V) :
-    padic_filtration_linear_combination_prop b := by
-  intro h_lambda
-  exact padic_filtration_linear_combination b h_lambda
 
 end InfoGeometry.Arithmetic.PadicLFunction

@@ -29,12 +29,12 @@ open InfoGeometry.Canonical.CantorChirality
 open InfoGeometry.Canonical.CantorDiracPropagation
 
 /-- The massive Dirac operator D_m = D + v • Γ with v : ℂ. -/
-def MassiveDiracOp (v : ℂ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
+def MassiveDiracOp (v : ℂ) : InfoGeometry.Canonical.OmegaBoundaryRepresentation.CantorOp :=
   DiracOp + v • ChiralityOp
 
 /-- The massive Dirac operator squares to `(1 + v²) • 1` on the Cantor boundary. -/
 theorem massive_dirac_sq (v : ℂ) :
-    (MassiveDiracOp v) * (MassiveDiracOp v) = (1 + v^2) • (1 : (Module.End ℂ ((ℕ → Bool) → ℂ))) := by
+    (MassiveDiracOp v) * (MassiveDiracOp v) = (1 + v^2) • (1 : InfoGeometry.Canonical.OmegaBoundaryRepresentation.CantorOp) := by
   ext f x
   change (MassiveDiracOp v) (MassiveDiracOp v f) x = (1 + v^2) * f x
   dsimp [MassiveDiracOp]
@@ -62,7 +62,7 @@ theorem massive_dirac_sq (v : ℂ) :
   ring
 
 /-- If `1 + v² ≠ 0`, the kernel of the massive Dirac operator is trivial. -/
-theorem massive_dirac_ker_trivial (v : ℂ) (hv : 1 + v^2 ≠ 0) (ψ : ((ℕ → Bool) → ℂ))
+theorem massive_dirac_ker_trivial (v : ℂ) (hv : 1 + v^2 ≠ 0) (ψ : CantorSpace)
     (h_ker : MassiveDiracOp v ψ = 0) :
     ψ = 0 := by
   have h_sq : ((MassiveDiracOp v) * (MassiveDiracOp v)) ψ = 0 := by
@@ -78,8 +78,8 @@ theorem massive_dirac_ker_trivial (v : ℂ) (hv : 1 + v^2 ≠ 0) (ψ : ((ℕ →
     Because the zero-mode kernel of the massive Dirac operator is trivial,
     the Witten Index trace of the Chirality operator over the kernel projector `K` vanishes exactly. -/
 theorem witten_index_cancellation_massive (v : ℂ) (hv : 1 + v^2 ≠ 0)
-    (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (h_ker : (MassiveDiracOp v) * K = 0)
-    (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) :
+    (Γ : CantorOp) (K : CantorOp) (h_ker : (MassiveDiracOp v) * K = 0)
+    (trace : CantorOp →ₗ[ℂ] ℂ) :
     trace (Γ * K) = 0 := by
   have h_K_zero : K = 0 := by
     refine LinearMap.ext (fun f => ?_)

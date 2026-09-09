@@ -2,7 +2,7 @@ import Mathlib
 
 /-!
 QMS isolated proof targets for purifying the `QuantumOperatorialSouriauFamily`
-deferred interfaces in `InfoGeometry.Canonical.SouriauOperatorialLogPotential`.
+sockets in `InfoGeometry.Canonical.SouriauOperatorialLogPotential`.
 
 Mathematical context:
 - `LieAlgebra` is the parameter / Lie algebra carrier.
@@ -24,7 +24,7 @@ Existing mathlib/literature context:
   cannot be proved natively here.
 
 QMS purification move:
-- Replace impossible analytic deferred interfaces by positive readbacks of the explicit data
+- Replace impossible analytic sockets by positive readbacks of the explicit data
   already carried by the structure:
   1. partition function positivity `0 < Zβ`;
   2. normalized-state equation `ρβ = Zβ⁻¹ • exp(-Kβ)`.

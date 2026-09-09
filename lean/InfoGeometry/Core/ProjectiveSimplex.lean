@@ -48,15 +48,6 @@ lemma stdSimplex_eq_single_of_coord_eq_one {f : ι → ℝ} (hf : f ∈ stdSimpl
       simpa using (Finset.sum_eq_zero_iff_of_nonneg hnonneg).1 hzero
     simp [Pi.single_eq_of_ne hji, hne j (by simp [hji])]
 
-theorem stdSimplex_coord_eq_one_iff_single {f : ι → ℝ}
-    (hf : f ∈ stdSimplex ℝ ι) (i : ι) :
-    f i = 1 ↔ f = Pi.single i 1 := by
-  constructor
-  · exact stdSimplex_eq_single_of_coord_eq_one hf
-  · intro h
-    rw [h]
-    simp
-
 /-- Points of the simplex that are not a fixed vertex have that vertex-coordinate strictly below `1`. -/
 lemma stdSimplex_coord_lt_one_of_ne_single {f : ι → ℝ} (hf : f ∈ stdSimplex ℝ ι)
     (hneq : f ≠ Pi.single i 1) :
@@ -65,15 +56,6 @@ lemma stdSimplex_coord_lt_one_of_ne_single {f : ι → ℝ} (hf : f ∈ stdSimpl
   by_contra h
   have hi_eq : f i = 1 := le_antisymm hi_le (le_of_not_gt h)
   exact hneq (stdSimplex_eq_single_of_coord_eq_one (ι := ι) hf hi_eq)
-
-theorem stdSimplex_coord_lt_one_iff_ne_single {f : ι → ℝ}
-    (hf : f ∈ stdSimplex ℝ ι) (i : ι) :
-    f i < 1 ↔ f ≠ Pi.single i 1 := by
-  constructor
-  · intro hlt heq
-    rw [heq] at hlt
-    simp at hlt
-  · exact stdSimplex_coord_lt_one_of_ne_single hf
 
 /-- A canonical vertex of the standard simplex is an extreme point. -/
 theorem stdSimplex_single_extremePoints (i : ι) :

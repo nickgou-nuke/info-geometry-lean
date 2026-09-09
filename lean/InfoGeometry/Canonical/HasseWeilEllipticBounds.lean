@@ -8,7 +8,7 @@ import Mathlib.Tactic
 This file records scalar algebraic consequences of the elliptic Hasse trace
 inequality.  It does not construct an elliptic curve, Frobenius, étale
 cohomology, or a Weil proof of the trace inequality; the trace-square bound is
-an explicit theorem property.
+an explicit theorem hypothesis.
 
 ## Audit Protocol Map
 - BUCKET 1: CLOSED FINITE THEOREMS:

@@ -490,7 +490,7 @@ theorem trialitySupercharge_eq_modularJ :
         (to_doubled (WithLp.fst v) (WithLp.snd v))
       = modular_j (E := E) (to_doubled (WithLp.fst v) (WithLp.snd v))
   simp [LinearMap.add_apply, vectorToLeftSpinor_apply_to_doubled,
-    vectorToRightSpinor_apply_to_doubled]
+    vectorToRightSpinor_apply_to_doubled, modular_j_to_doubled]
   simpa [to_doubled] using
     (WithLp.toLp_add (p := (2 : ENNReal))
       (x := ((0 : E), WithLp.fst v))

@@ -14,14 +14,8 @@ open Polynomial
 variable {V : ℕ → Type*} [∀ n, AddCommGroup (V n)] [∀ n, Module ℝ (V n)]
 
 /-- Abstract representation of a Bernstein-Sato polynomial structure -/
-abbrev BernsteinSato (A : Type*) := Polynomial ℝ
-
-namespace BernsteinSato
-
-abbrev b_poly {A : Type*} (b : BernsteinSato A) : Polynomial ℝ :=
-  b
-
-end BernsteinSato
+structure BernsteinSato (A : Type*) where
+  b_poly : Polynomial ℝ
 
 /-- 
   The Spectral Stability Theorem.

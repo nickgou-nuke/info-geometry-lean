@@ -295,7 +295,7 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
 /--
 Wedge-calibrated CP-002 comparison theorem:
 the operator-level split is discharged from the canonical-flow commutation
-property, so no manual off-diagonal hypotheses are needed.
+witness, so no manual off-diagonal hypotheses are needed.
 -/
 @[rep_depth transport, capstone]
 theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_wedgeCalibrated

@@ -33,9 +33,9 @@ theorem colimit_dirac_hodge_chiral
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatStar : ∀ n,
-      map n (hodgeStar (stage n)) = hodgeStar target)
+      map n (stage n).hodgeStar = target.hodgeStar)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hstage : ∀ n, componentChiral stage n) :
     IsDiracHodgeChiral target := by
   have h := hstage 0
@@ -48,9 +48,9 @@ theorem colimit_dirac_hodge_chiral_of_stage
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatStar : ∀ n,
-      map n (hodgeStar (stage n)) = hodgeStar target)
+      map n (stage n).hodgeStar = target.hodgeStar)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hstage : ∀ n, IsDiracHodgeChiral (stage n)) :
     IsDiracHodgeChiral target := by
   exact colimit_dirac_hodge_chiral map stage target
@@ -58,16 +58,13 @@ theorem colimit_dirac_hodge_chiral_of_stage
 
 /-- Directed-system version of the chiral transport theorem. -/
 theorem colimit_dirac_hodge_chiral_of_directed_system
-    (transition : ∀ n, Op n →+* Op (n + 1))
     (map : ∀ n, Op n →+* OpInf)
-    (map_compat : ∀ n x,
-      map (n + 1) (transition n x) = map n x)
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatStar : ∀ n,
-      map n (hodgeStar (stage n)) = hodgeStar target)
+      map n (stage n).hodgeStar = target.hodgeStar)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hstage : ∀ n, IsDiracHodgeChiral (stage n)) :
     IsDiracHodgeChiral target := by
   exact colimit_dirac_hodge_chiral_of_stage map stage target
@@ -83,9 +80,9 @@ theorem colimit_laplacian_from_dirac
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatLaplacian : ∀ n,
-      map n (laplacian (stage n)) = laplacian target)
+      map n (stage n).laplacian = target.laplacian)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hstage : ∀ n, IsLaplacianFromDirac (stage n)) :
     IsLaplacianFromDirac target := by
   have h := hstage 0
@@ -99,15 +96,15 @@ theorem colimit_laplacian_commutes_hodge
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatStar : ∀ n,
-      map n (hodgeStar (stage n)) = hodgeStar target)
+      map n (stage n).hodgeStar = target.hodgeStar)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hcompatLaplacian : ∀ n,
-      map n (laplacian (stage n)) = laplacian target)
+      map n (stage n).laplacian = target.laplacian)
     (hstageChiral : ∀ n, IsDiracHodgeChiral (stage n))
     (hstageLaplacian : ∀ n, IsLaplacianFromDirac (stage n)) :
-    laplacian target * hodgeStar target =
-      hodgeStar target * laplacian target := by
+    target.laplacian * target.hodgeStar =
+      target.hodgeStar * target.laplacian := by
   exact laplacian_commutes_hodge_of_dirac_closure target
     (colimit_dirac_hodge_chiral map stage target
       hcompatStar hcompatDirac hstageChiral)
@@ -116,22 +113,19 @@ theorem colimit_laplacian_commutes_hodge
 
 /-- Directed-system version of the Laplacian/Hodge commutation transport. -/
 theorem colimit_laplacian_commutes_hodge_of_directed_system
-    (transition : ∀ n, Op n →+* Op (n + 1))
     (map : ∀ n, Op n →+* OpInf)
-    (map_compat : ∀ n x,
-      map (n + 1) (transition n x) = map n x)
     (stage : ∀ n, HodgeDiracLaplacianCarrier (Op n))
     (target : HodgeDiracLaplacianCarrier OpInf)
     (hcompatStar : ∀ n,
-      map n (hodgeStar (stage n)) = hodgeStar target)
+      map n (stage n).hodgeStar = target.hodgeStar)
     (hcompatDirac : ∀ n,
-      map n (dirac (stage n)) = dirac target)
+      map n (stage n).dirac = target.dirac)
     (hcompatLaplacian : ∀ n,
-      map n (laplacian (stage n)) = laplacian target)
+      map n (stage n).laplacian = target.laplacian)
     (hstageChiral : ∀ n, IsDiracHodgeChiral (stage n))
     (hstageLaplacian : ∀ n, IsLaplacianFromDirac (stage n)) :
-    laplacian target * hodgeStar target =
-      hodgeStar target * laplacian target := by
+    target.laplacian * target.hodgeStar =
+      target.hodgeStar * target.laplacian := by
   exact colimit_laplacian_commutes_hodge map stage target
     hcompatStar hcompatDirac hcompatLaplacian hstageChiral hstageLaplacian
 

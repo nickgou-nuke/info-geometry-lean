@@ -80,7 +80,7 @@ structure CertifiedBlockedTrialityDatum (blocks cellDim : Nat)
     extends BlockedTrialityDatum blocks cellDim where
   structured : IsStructuredTrinity toBlockedTrialityDatum
 
-/-- In a property package, each blockwise route equals its `V`-cell. -/
+/-- In a certified package, each blockwise route equals its `V`-cell. -/
 theorem routedCell_eq_value_of_structured
     {blocks cellDim : Nat}
     (T : CertifiedBlockedTrialityDatum blocks cellDim) (b : Fin blocks) :
@@ -107,14 +107,11 @@ structure SplitDoubledHead128 where
   majorana : MajoranaHalf64
   weyl : WeylHalf64
 
-/-- Native linear-map carrier for a Majorana-to-Weyl coupling. -/
-abbrev MajoranaWeylCoupling := MajoranaHalf64 →ₗ[ℝ] WeylHalf64
-
-abbrev MajoranaWeylCoupling.massMap
-    (C : MajoranaWeylCoupling) : MajoranaHalf64 →ₗ[ℝ] WeylHalf64 := C
-
-def MajoranaWeylCoupling.mk
-    (massMap : MajoranaHalf64 →ₗ[ℝ] WeylHalf64) : MajoranaWeylCoupling := massMap
+/--
+Mass-like coupling interface from Majorana to Weyl lanes.
+-/
+structure MajoranaWeylCoupling where
+  massMap : MajoranaHalf64 →ₗ[ℝ] WeylHalf64
 
 /-- Coupled Weyl lane after applying the mass-like Majorana→Weyl map. -/
 noncomputable def coupledWeylLane
@@ -168,7 +165,7 @@ abbrev BlockedQKV128 := BlockedQKV 16 8
 /-- Canonical blocked-triality datum for 128-dimensional heads. -/
 abbrev BlockedTriality128 := BlockedTrialityDatum 16 8
 
-/-- Canonical property blocked-triality datum for 128-dimensional heads. -/
+/-- Canonical certified blocked-triality datum for 128-dimensional heads. -/
 abbrev CertifiedBlockedTriality128 := CertifiedBlockedTrialityDatum 16 8
 
 /-- Dimension sanity check for the blocked ansatz. -/

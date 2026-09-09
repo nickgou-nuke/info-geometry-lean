@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.CyclotomicOperatorProjectors
 
 /-!
 # Native Mathlib Formalization: n-Potent Operator Algebraic Spectra
@@ -15,9 +16,12 @@ namespace InfoGeometry.Algebra.NPotentSpectra
 
 variable {R : Type*} [CommRing R]
 
-/-- Definition of an $n$-potent element in a commutative ring: $x^n = x$. -/
-def IsNPotent (x : R) (n : ℕ) : Prop :=
-  x ^ n = x
+/-- Compatibility name for the canonical n-potent predicate.
+
+The definition is owned by `CyclotomicOperatorProjectors`; this namespace
+retains the historical API used by the prime-potent hierarchy. -/
+abbrev IsNPotent (x : R) (n : ℕ) : Prop :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsNPotent x n
 
 /-! ### 1. Factorizations for Low Degrees (p = 2, 3, 5, 7, 11, 13) -/
 
@@ -138,9 +142,36 @@ section LinearOperatorLift
 
 variable {K M : Type*} [CommRing K] [AddCommGroup M] [Module K M]
 
-/-- Definition of an $n$-potent linear operator: $T^n = T$. -/
-def IsNPotentOperator (T : Module.End K M) (n : ℕ) : Prop :=
-  T ^ n = T
+/-! The operator instance is the same canonical monoid predicate; retaining
+this name preserves the historical API without creating a second owner. -/
+abbrev IsNPotentOperator (T : Module.End K M) (n : ℕ) : Prop :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsNPotent T n
+
+abbrev IsIdempotentOperator (T : Module.End K M) : Prop :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsIdempotent T
+
+abbrev IsRootOfUnityOperator (T : Module.End K M) (n : ℕ) : Prop :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsRootOfUnity T n
+
+abbrev IsNilpotentOperator (T : Module.End K M) (k : ℕ) : Prop :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.IsNilpotent T k
+
+theorem unipotentOperator_isUnit (T : Module.End K M) (k : ℕ)
+    (hT : IsNilpotentOperator T k) : IsUnit (1 + T) := by
+  exact InfoGeometry.Algebra.CyclotomicOperatorProjectors.unipotent_isUnit_of_nilpotent hT
+
+abbrev unipotentOperatorInvPoly (T : Module.End K M) (k : ℕ) : Module.End K M :=
+  InfoGeometry.Algebra.CyclotomicOperatorProjectors.unipotentInvPoly T k
+
+theorem unipotentOperator_mul_invPoly (T : Module.End K M) (k : ℕ)
+    (hT : IsNilpotentOperator T k) :
+    (1 + T) * unipotentOperatorInvPoly T k = 1 := by
+  exact InfoGeometry.Algebra.CyclotomicOperatorProjectors.unipotent_mul_inv_eq_one hT
+
+theorem unipotentOperator_invPoly_mul (T : Module.End K M) (k : ℕ)
+    (hT : IsNilpotentOperator T k) :
+    unipotentOperatorInvPoly T k * (1 + T) = 1 := by
+  exact InfoGeometry.Algebra.CyclotomicOperatorProjectors.unipotent_inv_mul_eq_one hT
 
 /-- Nonzero-mode projection operator: $P_1 = T^{n-1}$. -/
 def opProjNonzero (T : Module.End K M) (n : ℕ) : Module.End K M :=

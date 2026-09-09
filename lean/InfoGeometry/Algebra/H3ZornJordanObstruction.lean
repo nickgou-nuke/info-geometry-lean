@@ -3,10 +3,12 @@ import InfoGeometry.Algebra.H3ZornJordanIdentity
 /-!
 # Resolved H₃ Zorn obstruction audit
 
-This module keeps the historical sparse pair used during obstruction searches
-and records the current verified Jordan-law surface.  The global product law is
-proved in `H3ZornJordanIdentity`, so the historical sparse pair satisfies the
-law as well.
+This module keeps the historical sparse pair used during obstruction searches,
+but it does not claim that the pair disproves the Jordan law.  The previous
+`1 / 4` counterexample narrative was not retained as a theorem-honest result.
+
+The global product law is now proved in `H3ZornJordanIdentity`.  Consequently
+the historical sparse pair satisfies the law and cannot be a counterexample.
 -/
 
 namespace InfoGeometry.Algebra
@@ -34,11 +36,11 @@ def formerJordanObstructionQuestion : Prop :=
 /-- The historical pair satisfies the Jordan law by the native global proof. -/
 theorem formerJordanObstructionQuestion_proof :
     formerJordanObstructionQuestion := by
-  exact H3ZornJordanProductLaw_holds
+  exact H3ZornJordanProductLaw_proof
     formerJordanObstructionA formerJordanObstructionB
 
 /-- The historical pair also satisfies the scalar-free `T`-commutation
-readback. -/
+readback.  So it is not a counterexample in either formulation. -/
 def formerJordanObstructionQuestion_T : Prop :=
   T (T formerJordanObstructionA 1 formerJordanObstructionB) 1
       (T formerJordanObstructionA 1 formerJordanObstructionA) =

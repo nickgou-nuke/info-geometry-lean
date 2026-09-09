@@ -179,10 +179,20 @@ theorem native_annihilationSum_vacuumDefect_zero :
 
 theorem native_annihilationSum_creationSum :
     toeplitzAnnihilationSum * toeplitzCreationSum = (3 : Carrier) := by
+  have h_iso1 := nativeToeplitzThreeGenerators.V1_isometry
+  have h_iso2 := nativeToeplitzThreeGenerators.V2_isometry
+  have h_iso3 := nativeToeplitzThreeGenerators.V3_isometry
+  have h12 := nativeToeplitzThreeGenerators.V1_V2_ortho
+  have h21 := nativeToeplitzThreeGenerators.V2_V1_ortho
+  have h23 := nativeToeplitzThreeGenerators.V2_V3_ortho
+  have h32 := nativeToeplitzThreeGenerators.V3_V2_ortho
+  have h13 := nativeToeplitzThreeGenerators.V1_V3_ortho
+  have h31 := nativeToeplitzThreeGenerators.V3_V1_ortho
   unfold toeplitzAnnihilationSum toeplitzCreationSum
   rw [star_add, star_add]
   simp only [add_mul, mul_add]
-  simp [toeplitz_orthogonality]
+  rw [h_iso1, h_iso2, h_iso3, h12, h21, h23, h32, h13, h31]
+  abel_nf
   norm_num
 
 theorem native_vacuumCompression_creation_annihilation :

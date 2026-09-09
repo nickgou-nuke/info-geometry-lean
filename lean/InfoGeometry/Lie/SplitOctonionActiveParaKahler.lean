@@ -182,6 +182,7 @@ def activeCartesian (x : Active) : CartesianCoordinates :=
 
 theorem detZ_activeCartesian (x : Active) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (cartesianZornLinearEquiv (activeCartesian x)) =
       vecDot x.1 x.1 - vecDot x.2 x.2 := by
   rw [detZ_cartesianZornLinearEquiv]
@@ -197,6 +198,7 @@ theorem neutralPair_circular_self (x : Active) :
 
 theorem detZ_activeCartesian_eq_neg_half_neutralPair (x : Active) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (cartesianZornLinearEquiv (activeCartesian x)) =
       -(1 / 2 : ℝ) *
         neutralPair (circularChange x) (circularChange x) := by

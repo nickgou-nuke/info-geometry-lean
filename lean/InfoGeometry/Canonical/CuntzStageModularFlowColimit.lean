@@ -22,7 +22,7 @@ variable (Stage : ℕ → Type)
 variable [∀ n, CStarAlgebra (Stage n)]
 variable [∀ n, PartialOrder (Stage n)]
 variable (T : CuntzStarTower Stage)
-variable (Φ : CuntzStageModularFlowData Stage)
+variable (Φ : CuntzStageModularFlowData Stage T)
 
 /-- The underlying complex-linear diagram of the supplied star-inductive
 system. -/
@@ -48,11 +48,7 @@ def stageModuleDiagram : ℕ ⥤ ModuleCat ℂ where
 
 /-- The stagewise flow is a natural transformation of complex module
 diagrams. -/
-def modularFlowNatTrans
-    (hmap_naturality :
-      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
-    (t : ℝ) :
+def modularFlowNatTrans (t : ℝ) :
     stageModuleDiagram Stage T ⟶ stageModuleDiagram Stage T where
   app n := ModuleCat.ofHom
     ((Φ.flow n t).toAlgEquiv.toLinearMap)
@@ -62,60 +58,39 @@ def modularFlowNatTrans
     ext a
     rw [ModuleCat.comp_apply, ModuleCat.comp_apply]
     simpa [stageModuleDiagram] using
-      (hmap_naturality (leOfHom f) t a).symm
+      (Φ.map_naturality (leOfHom f) t a).symm
 
 /-- The induced complex-linear modular-flow map on the categorical colimit. -/
-def modularFlowColimitMap
-    (hmap_naturality :
-      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
-    (t : ℝ) :
+def modularFlowColimitMap (t : ℝ) :
     (colimit (stageModuleDiagram Stage T) : ModuleCat ℂ) ⟶
       (colimit (stageModuleDiagram Stage T) : ModuleCat ℂ) :=
-  colim.map (modularFlowNatTrans Stage T Φ hmap_naturality t)
+  colim.map (modularFlowNatTrans Stage T Φ t)
 
 @[simp] theorem modularFlowColimitMap_inclusion
-    (hmap_naturality :
-      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
     (t : ℝ) (n : ℕ) (a : Stage n) :
-    modularFlowColimitMap Stage T Φ hmap_naturality t
+    modularFlowColimitMap Stage T Φ t
         ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
       (colimit.ι (stageModuleDiagram Stage T) n).hom (Φ.flow n t a) := by
-  have hι := colimit.ι_map (modularFlowNatTrans Stage T Φ hmap_naturality t) n
+  have hι := colimit.ι_map (modularFlowNatTrans Stage T Φ t) n
   exact congrArg (fun f => f a) hι
 
-theorem modularFlowColimitMap_zero
-    (hflow_add :
-      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
-    (hmap_naturality :
-      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a)) :
-    modularFlowColimitMap Stage T Φ hmap_naturality 0 = 𝟙 _ := by
+theorem modularFlowColimitMap_zero :
+    modularFlowColimitMap Stage T Φ 0 = 𝟙 _ := by
   apply colimit.hom_ext
   intro n
   apply ModuleCat.hom_ext
   ext a
-  change modularFlowColimitMap Stage T Φ hmap_naturality 0
+  change modularFlowColimitMap Stage T Φ 0
       ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
     (colimit.ι (stageModuleDiagram Stage T) n).hom a
   rw [modularFlowColimitMap_inclusion]
   exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (CuntzStageModularFlowLemmas.flow_zero
-      (Stage := Stage) Φ hflow_add n a)
+    (Φ.flow_zero n a)
 
-theorem modularFlowColimitMap_add
-    (hflow_add :
-      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
-    (hmap_naturality :
-      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
-    (t s : ℝ) :
-    modularFlowColimitMap Stage T Φ hmap_naturality (t + s) =
-      modularFlowColimitMap Stage T Φ hmap_naturality s ≫
-        modularFlowColimitMap Stage T Φ hmap_naturality t := by
+theorem modularFlowColimitMap_add (t s : ℝ) :
+    modularFlowColimitMap Stage T Φ (t + s) =
+      modularFlowColimitMap Stage T Φ s ≫
+        modularFlowColimitMap Stage T Φ t := by
   apply colimit.hom_ext
   intro n
   apply ModuleCat.hom_ext
@@ -124,6 +99,6 @@ theorem modularFlowColimitMap_add
   rw [modularFlowColimitMap_inclusion, modularFlowColimitMap_inclusion,
     modularFlowColimitMap_inclusion]
   exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (hflow_add n t s a)
+    (Φ.flow_add n t s a)
 
 end InfoGeometry.Canonical.CuntzStageModularFlowColimit

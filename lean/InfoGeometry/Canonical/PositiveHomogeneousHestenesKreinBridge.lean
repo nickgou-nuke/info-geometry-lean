@@ -138,6 +138,5 @@ theorem splitBarrierReadout_bondIterate
 
 end FilteredBarrierReadout
 
-end InfoGeometry.Canonical.PositiveHomogeneousHestenesKreinBridge
 
-end
+end InfoGeometry.Canonical.PositiveHomogeneousHestenesKreinBridge

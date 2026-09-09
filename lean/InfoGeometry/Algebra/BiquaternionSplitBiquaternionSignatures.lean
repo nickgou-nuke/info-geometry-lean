@@ -30,27 +30,25 @@ open Matrix
 open scoped Matrix
 open InfoGeometry.Algebra.PauliQuaternionSplitComparison
 
+abbrev Mat2C := InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C
+abbrev Mat2R := InfoGeometryCore.M2R
+
 /-- The usual complex-biquaternion boost generator `i K`. -/
-def complexScalarTimesQuatK : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C :=
-  Complex.I • quatK
+def complexScalarTimesQuatK : Mat2C := Complex.I • quatK
 
 /-- Since `K²=-1` and `i²=-1`, the biquaternion boost generator squares to `+1`. -/
 theorem complexScalarTimesQuatK_sq :
-    complexScalarTimesQuatK * complexScalarTimesQuatK =
-      (1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C) := by
+    complexScalarTimesQuatK * complexScalarTimesQuatK = (1 : Mat2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [complexScalarTimesQuatK, quatK, Matrix.mul_apply, Fin.sum_univ_two,
       Complex.I_mul_I]
 
 /-- The algebraically correct closed boost shape for a square-`+1` generator. -/
-def complexBiquaternionBoostShape (φ : ℂ) :
-    InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C :=
-  Complex.cosh φ • (1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C) +
-    Complex.sinh φ • complexScalarTimesQuatK
+def complexBiquaternionBoostShape (φ : ℂ) : Mat2C :=
+  Complex.cosh φ • (1 : Mat2C) + Complex.sinh φ • complexScalarTimesQuatK
 
 /-- The compact quaternion rotation generator itself squares to `-1`. -/
-theorem quatK_rotation_generator_sq :
-    quatK * quatK = -(1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C) :=
+theorem quatK_rotation_generator_sq : quatK * quatK = -(1 : Mat2C) :=
   quatK_sq
 
 /-! ## Hyperbolic scalars as a product algebra -/
@@ -75,15 +73,14 @@ theorem hL_sq : hMul hL hL = hOne := by
 /-! ## `𝔻 ⊗ H_split` as `M₂(ℝ) × M₂(ℝ)` -/
 
 /-- Product model for hyperbolic-scalar extension of the real split-quaternion matrix owner. -/
-abbrev SplitBiquatProduct := InfoGeometryCore.M2R × InfoGeometryCore.M2R
+abbrev SplitBiquatProduct := Mat2R × Mat2R
 
 /-- Componentwise multiplication in the product model. -/
 def splitProductMul (X Y : SplitBiquatProduct) : SplitBiquatProduct :=
   (X.1 * Y.1, X.2 * Y.2)
 
 /-- Product unit. -/
-def splitProductOne : SplitBiquatProduct :=
-  ((1 : InfoGeometryCore.M2R), (1 : InfoGeometryCore.M2R))
+def splitProductOne : SplitBiquatProduct := ((1 : Mat2R), (1 : Mat2R))
 
 /-- The element `l ⊗ k_split` in `𝔻 ⊗ H_split ≃ M₂(ℝ) × M₂(ℝ)`. -/
 def hyperbolicTensorSplitK : SplitBiquatProduct :=
@@ -97,18 +94,14 @@ theorem hyperbolicTensorSplitK_sq :
 /-! ## `𝔻 ⊗ H` has the opposite sign for a compact quaternion unit -/
 
 /-- Product model for hyperbolic-scalar extension of the compact quaternion matrix packet. -/
-abbrev CompactBiquatProduct :=
-  InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C ×
-    InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C
+abbrev CompactBiquatProduct := Mat2C × Mat2C
 
 /-- Componentwise multiplication in the compact product model. -/
 def compactProductMul (X Y : CompactBiquatProduct) : CompactBiquatProduct :=
   (X.1 * Y.1, X.2 * Y.2)
 
 /-- Product unit in the compact product model. -/
-def compactProductOne : CompactBiquatProduct :=
-  ((1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C),
-    (1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C))
+def compactProductOne : CompactBiquatProduct := ((1 : Mat2C), (1 : Mat2C))
 
 /-- Product negation written explicitly. -/
 def compactProductNeg (X : CompactBiquatProduct) : CompactBiquatProduct :=
@@ -127,8 +120,7 @@ theorem hyperbolicTensorCompactK_sq :
 /-- Consolidated sign packet separating the two possible meanings of
 "split-biquaternion". -/
 theorem biquaternion_split_biquaternion_sign_packet :
-    complexScalarTimesQuatK * complexScalarTimesQuatK =
-        (1 : InfoGeometry.Algebra.PauliQuaternionSplitComparison.M2C) ∧
+    complexScalarTimesQuatK * complexScalarTimesQuatK = (1 : Mat2C) ∧
     hMul hL hL = hOne ∧
     splitProductMul hyperbolicTensorSplitK hyperbolicTensorSplitK = splitProductOne ∧
     compactProductMul hyperbolicTensorCompactK hyperbolicTensorCompactK =

@@ -1,5 +1,4 @@
 import InfoGeometry.Analysis.LogVolumeEntropyRate
-import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 import InfoGeometry.LinearAlgebra.FiniteJacobianLogDet
 
 noncomputable section
@@ -7,7 +6,6 @@ noncomputable section
 namespace InfoGeometry.Analysis.MatrixPathDeformationEntropy
 
 open InfoGeometry.Analysis.LogVolumeEntropyRate
-open InfoGeometry.Analysis.LieExponentialTraceDeterminant
 open InfoGeometry.Cocycle
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -86,34 +84,5 @@ theorem deriv_matrixPathCompressionPotential_of_jacobi
       -generatorTrace :=
   (hasDerivAt_matrixPathCompressionPotential_of_jacobi
     hdet hpos hJacobi).deriv
-
-/-!
-The Lie-exponential specialization is the concrete Jacobian redline: the
-negative log-volume potential is affine with slope minus the generator trace.
-This is still a finite matrix theorem; no measure-theoretic Radon--Nikodym
-identification is asserted here.
--/
-
-theorem matrixPathCompressionPotential_lieExponentialPath
-    (A : Matrix n n ℝ) (t : ℝ) :
-    matrixPathCompressionPotential (lieExponentialPath A) t =
-      -(t * Matrix.trace A) := by
-  change matrixLogdetBarrier (lieExponentialPath A t) =
-    -(t * Matrix.trace A)
-  unfold matrixLogdetBarrier logdetBarrier
-  rw [det_lieExponentialPath, abs_of_pos (Real.exp_pos _)]
-  simp
-
-theorem deriv_matrixPathCompressionPotential_lieExponentialPath
-    (A : Matrix n n ℝ) (t : ℝ) :
-    deriv (matrixPathCompressionPotential (lieExponentialPath A)) t =
-      -Matrix.trace A := by
-  have hfun :
-      matrixPathCompressionPotential (lieExponentialPath A) =
-        (fun u : ℝ => -(u * Matrix.trace A)) := by
-    funext u
-    exact matrixPathCompressionPotential_lieExponentialPath A u
-  rw [hfun]
-  simpa using ((hasDerivAt_id t).mul_const (Matrix.trace A)).neg.deriv
 
 end InfoGeometry.Analysis.MatrixPathDeformationEntropy

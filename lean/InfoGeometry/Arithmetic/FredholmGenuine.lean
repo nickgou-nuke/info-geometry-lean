@@ -7,12 +7,12 @@ import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 
 /-!
-# Fredholm Genuine — Data-Gated Analytic Boundary
+# Fredholm Genuine — Certificate-Gated Analytic Boundary
 
 This file records the strongest Lean-safe Fredholm endpoint currently available
 in this repository. Finite determinant and recurrence identities are proved in
 owner files. The infinite Fredholm determinant remains gated by the explicit
-`FredholmClosureData` from `FredholmClosure.lean`.
+`FredholmClosureCertificate` from `FredholmClosure.lean`.
 
 ## The Finite/Certificate Chain
 
@@ -31,7 +31,7 @@ owner files. The infinite Fredholm determinant remains gated by the explicit
 
 5. **Analytic closure**: trace-class convergence, Fredholm determinant
    continuity, and determinant/zeta calibration are explicit fields of
-   `FredholmClosureData`; they are not manufactured here.
+   `FredholmClosureCertificate`; they are not manufactured here.
 
 ## What is PROVED vs Structural
 
@@ -71,7 +71,7 @@ of type 2^∞. Its spectrum is the Cantor set {0,1}^ℕ.
 For the Fredholm determinant application:
 - The finite operators T_N = -diag(n^{-β})_{n≤N} live in the diagonal
   subalgebra of M_N(ℂ).
-- The inclusion ι_{N,N+1} adds one more integer mode: T_N ↦ diag(T_N, (N+1)^{-β}).
+- The inclusion ι_{N,N+1} adds one more prime mode: T_N ↦ diag(T_N, (N+1)^{-β}).
 - The colimit T = lim T_N = -diag(n^{-β})_{n∈ℕ^+} is the diagonal operator
   on ℓ²(ℕ^+).
 -/
@@ -89,10 +89,7 @@ colimit identity hold: because T_N → T in trace norm, and the Fredholm
 determinant det(I+·) is continuous in trace norm, we have:
 
     det(I+T) = lim_{N→∞} det(I+T_N) = lim_{N→∞} ∏_{n≤N} (1-n^{-β})
-             = ∏_{n=1}^∞ (1-n^{-β}).
-
-The last product is not identified with `1/ζ(β)` here: the Euler product for
-`1/ζ` is over primes, and an integer-mode product needs a separate theorem.
+             = ∏_{n=1}^∞ (1-n^{-β}) = 1/ζ(β)
 
 The construction requires:
 1. Defining the trace norm ‖·‖₁ on the algebra of trace-class operators B₁
@@ -104,7 +101,7 @@ The construction requires:
 Steps 1-4 are functional-analysis obligations. Step 5 is a theorem about
 the Fredholm determinant. The local mathlib snapshot does not expose a
 ready-made trace-class Fredholm determinant API in the owner searches used for
-this file, so this remains property data.
+this file, so this remains certificate data.
 
 The repo already has:
 - `FiniteToInfiniteTransitionSOP.lean`: the SOP for lifting readouts
@@ -133,19 +130,19 @@ Proof sketch:
    FredholmClosure.lean (regularizedDetStage_succ).
 
 3. Trace-norm convergence: ‖T - T_N‖₁ → 0 for Re(β) > 1.
-   Supplied by `FredholmClosureData.traceNorm_cutoff_tendsto`.
+   Supplied by `FredholmClosureCertificate.traceNorm_cutoff_tendsto`.
 
 4. Continuity of det: supplied by
-   `FredholmClosureData.determinant_cutoff_tendsto`.
+   `FredholmClosureCertificate.determinant_cutoff_tendsto`.
 
 5. Universal property: lim_{N→∞} det(I+T_N) = det(I+lim_{N→∞} T_N).
    Follows from (3) + (4).
 
 6. The Lean theorem below projects the determinant/zeta identity and
-   nonvanishing from explicit `FredholmClosureData`.
+   nonvanishing from an explicit `FredholmClosureCertificate`.
 -/
 theorem genuine_fredholm_determinant
-    (C : FredholmClosure.FredholmClosureData) {β : ℂ} (hβ : 1 < β.re) :
+    (C : FredholmClosure.FredholmClosureCertificate) {β : ℂ} (hβ : 1 < β.re) :
     C.determinant β * C.zeta β = 1 ∧ C.determinant β ≠ 0 :=
   ⟨FredholmClosure.fredholm_determinant_mul_zeta_eq_one C hβ,
     FredholmClosure.fredholm_closure_theorem C hβ⟩

@@ -15,7 +15,7 @@ and the checkable algebraic shadow behind its `S`-operators.
 * the five steering sectors give `1 + 5 * 3 = 16` basis slots;
 * every sector is assigned a three-dimensional triplet;
 * bilinear data splits into symmetric and antisymmetric readouts;
-* a finite non-associative magma property has a nonzero associator;
+* a finite non-associative magma witness has a nonzero associator;
 * abstract `O_5` and `O_16` Cuntz range projections are idempotent,
   orthogonal, and sum to the unit through the existing `CuntzNAlgebra` owner;
 * tripotent Drazin support/null facts are delegated to the existing
@@ -24,7 +24,7 @@ and the checkable algebraic shadow behind its `S`-operators.
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
 The Cuntz packets assume explicit `CuntzNAlgebra` witnesses.  The Drazin packet
-assumes only the explicit tripotent property `T ^ 3 = T`.
+assumes only the explicit tripotent hypothesis `T ^ 3 = T`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
@@ -146,10 +146,10 @@ def rightAssociatedReadout {α : Type*} (mul : α → α → α) (a b c : α) : 
   mul a (mul b c)
 
 /--
-Concrete non-associativity property.  This is not a sedenion theorem; it is the
+Concrete non-associativity witness.  This is not a sedenion theorem; it is the
 finite algebraic shape of the paper's associator: `(a*b)*c ≠ a*(b*c)`.
 -/
-theorem natSub_nonassociative_property :
+theorem natSub_nonassociative_witness :
     associatorReadout Nat.sub 5 3 1 ≠ rightAssociatedReadout Nat.sub 5 3 1 := by
   norm_num [associatorReadout, rightAssociatedReadout]
 
@@ -197,7 +197,7 @@ theorem sedenion_spinor_finite_digest_packet :
   exact ⟨
     SteeringSector.scalar_plus_five_triplets_eq_sixteen,
     SteeringSector.sum_tripletCardinality_eq_fifteen,
-    natSub_nonassociative_property⟩
+    natSub_nonassociative_witness⟩
 
 end InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 

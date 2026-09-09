@@ -26,7 +26,9 @@ theorem typed_address_biaxial_completion_support
       nullReadout modeStabilityCert residueQuotaCert endpointResolutionGate
       nullImpliesModeStability nullImpliesResidueQuota nullImpliesEndpointResolution hNull
   have hAxis : initialObject ∧ uniqueContinuousTransverse ∧ orthogonalExternalization :=
-    Omega.CircleDimension.paper_cdim_minimal_record_axis hInitial hUnique hOrthogonal
+    Omega.CircleDimension.paper_cdim_minimal_record_axis
+      ⟨initialObject, uniqueContinuousTransverse, orthogonalExternalization,
+       hInitial, hUnique, hOrthogonal⟩
   exact ⟨⟨hGap.1, hAxis.1⟩, hAxis.2.1⟩
 
 end Omega.TypedAddressBiaxialCompletion

@@ -69,12 +69,12 @@ theorem homogeneousConformalLift_scale (a : ℝ) (p : HomogeneousPAC44) :
 theorem homogeneousConformalLift_ne_zero_of_time_ne_zero
     (p : HomogeneousPAC44) (ht : p.t ≠ 0) :
     homogeneousConformalLift p ≠
-      ProjectiveAffineConformalClosure55.pacSplit55Zero := by
+      CanonicalZornNullProjectiveBoundaryBridge.pacSplit55Zero := by
   intro h
   have hu := congrArg PACSplit55.u h
   have hv := congrArg PACSplit55.v h
   dsimp [homogeneousConformalLift,
-    ProjectiveAffineConformalClosure55.pacSplit55Zero] at hu hv
+    CanonicalZornNullProjectiveBoundaryBridge.pacSplit55Zero] at hu hv
   have hu' : (p.t ^ 2 - Q44 p.x) / 2 = 0 := by
     simpa using hu
   have hv' : (p.t ^ 2 + Q44 p.x) / 2 = 0 := by
@@ -103,7 +103,7 @@ theorem linearNullPAC55_Q55 (x : PACSplit44) :
   simp [linearNullPAC55, Q55, Q44]
 
 theorem linearNullBoundaryLift_Q55 {Z : CanonicalZorn}
-    (hZ : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z = 0) :
+    (hZ : canonicalDet Z = 0) :
     Q55 (linearNullBoundaryLift Z) = 0 := by
   rw [linearNullBoundaryLift, linearNullPAC55_Q55,
     canonicalToPAC44_Q44, hZ]

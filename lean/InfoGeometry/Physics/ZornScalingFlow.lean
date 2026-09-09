@@ -21,18 +21,18 @@ noncomputable section
 
 namespace InfoGeometry.Physics.ZornScalingFlow
 
-@[reducible] def Vec3 := Fin 3 → ℂ
+abbrev Vec3 := Fin 3 → ℂ
 
 /-- Canonical Zorn coordinates from the split-octonion kernel. -/
-@[reducible] def Zorn := SplitOctonionBraidSU3.Zorn
+abbrev Zorn := SplitOctonionBraidSU3.Zorn
 
 /-- Canonical coordinate operations reused by the scaling layer. -/
-@[reducible] def dot3 := SplitOctonionBraidSU3.dot3
-@[reducible] def cross3 := SplitOctonionBraidSU3.cross3
-@[reducible] def zornMul := SplitOctonionBraidSU3.zornMul
-@[reducible] def zornAdd := SplitOctonionBraidSU3.zornAdd
-@[reducible] def zornZero := SplitOctonionBraidSU3.zornZero
-@[reducible] def zornNorm := SplitOctonionBraidSU3.zornNorm
+abbrev dot3 := SplitOctonionBraidSU3.dot3
+abbrev cross3 := SplitOctonionBraidSU3.cross3
+abbrev zornMul := SplitOctonionBraidSU3.zornMul
+abbrev zornAdd := SplitOctonionBraidSU3.zornAdd
+abbrev zornZero := SplitOctonionBraidSU3.zornZero
+abbrev zornNorm := SplitOctonionBraidSU3.zornNorm
 
 /-- Extensionality for Zorn coordinates. -/
 theorem zorn_ext {X Y : Zorn}

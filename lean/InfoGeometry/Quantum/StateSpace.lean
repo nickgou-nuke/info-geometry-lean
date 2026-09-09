@@ -58,7 +58,7 @@ abbrev Cl_inftyFunctional : Type :=
   Cl_infty →ₗ[ℝ] ℝ
 
 /--
-Algebraic Radon--Nikodym density property between normalized linear states on
+Algebraic Radon--Nikodym density witness between normalized linear states on
 `Cl_infty`.
 -/
 structure Cl_inftyRNDensity (ω φ : Cl_inftyState) where
@@ -173,32 +173,32 @@ def rnStatePath
   affineStatePath τ R.epsilonReadout R.epsilonReadout_one t
 
 /--
-Explicit algebraic RN path property when the density representation law is
+Explicit algebraic RN path witness when the density representation law is
 available.
 
 This records an exact owner-side readout law for the supplied affine path; it
 does not promote the construction to a general analytic RN theorem.
 -/
-abbrev ParabolicRNPath
+abbrev ParabolicRNPathWitness
     (τ : Cl_inftyState)
     (R : NilpotentRNReadout τ) : Prop :=
   ∀ (t : ℝ) (a : Cl_infty),
     (rnStatePath τ R t).toLinearMap a =
       τ.toLinearMap (parabolicRNDensity t * a)
 
-namespace ParabolicRNPath
+namespace ParabolicRNPathWitness
 
-/-- The explicit density representation yields a conventional RN property at each time. -/
+/-- The explicit density representation yields a conventional RN witness at each time. -/
 def densityAt
     {τ : Cl_inftyState}
     {R : NilpotentRNReadout τ}
-    (W : ParabolicRNPath τ R)
+    (W : ParabolicRNPathWitness τ R)
     (t : ℝ) :
   Cl_inftyRNDensity τ (rnStatePath τ R t) where
   density := parabolicRNDensity t
   rn_law := W t
 
-end ParabolicRNPath
+end ParabolicRNPathWitness
 
 /--
 First variation of the affine algebraic state path.

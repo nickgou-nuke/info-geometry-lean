@@ -76,26 +76,6 @@ theorem index_eq_finrank_ker_sub_finrank_coker :
         (Module.finrank ℝ (W ⧸ LinearMap.range F.operator) : ℤ) :=
   rfl
 
-/--
-If the operator is bijective, both the kernel and cokernel vanish, so the
-native algebraic Fredholm index is zero.  This is deliberately stated for
-the abstract datum and does not invoke any analytic Fredholm theory.
--/
-theorem index_eq_zero_of_bijective
-    (hbij : Function.Bijective F.operator) :
-    F.index = 0 := by
-  unfold FredholmIndexDatum.index
-  have hker : LinearMap.ker F.operator = ⊥ :=
-    LinearMap.ker_eq_bot.mpr hbij.1
-  have hrange : LinearMap.range F.operator = ⊤ :=
-    LinearMap.range_eq_top.mpr hbij.2
-  rw [hker, hrange]
-  have hzero : Module.finrank ℝ
-      (W ⧸ (⊤ : Submodule ℝ W)) = 0 := by
-    exact Module.finrank_zero_of_subsingleton
-  rw [hzero]
-  simp
-
 end FredholmIndexDatum
 
 /-! ## 2. Chiral kernel-count shadow -/
@@ -107,15 +87,14 @@ This is the algebraic shadow of
 
 `index(D₊) = dim ker D₊ - dim ker D₋`.
 -/
-abbrev ChiralKernelCount := ℕ × ℕ
+structure ChiralKernelCount where
+  /-- Left/chiral-positive zero modes. -/
+  leftKernel : ℕ
+
+  /-- Right/chiral-negative zero modes. -/
+  rightKernel : ℕ
 
 namespace ChiralKernelCount
-
-/-- Left/chiral-positive zero modes. -/
-abbrev leftKernel (C : ChiralKernelCount) : ℕ := C.1
-
-/-- Right/chiral-negative zero modes. -/
-abbrev rightKernel (C : ChiralKernelCount) : ℕ := C.2
 
 /-- The chiral index: `leftKernel - rightKernel`. -/
 def index
@@ -124,8 +103,9 @@ def index
 
 /-- The mirror count swaps left and right kernels. -/
 def mirror
-    (C : ChiralKernelCount) : ChiralKernelCount :=
-  (C.rightKernel, C.leftKernel)
+    (C : ChiralKernelCount) : ChiralKernelCount where
+  leftKernel := C.rightKernel
+  rightKernel := C.leftKernel
 
 /-- Mirroring reverses the chiral index. -/
 theorem mirror_index
@@ -238,8 +218,10 @@ structure ModularMirrorFredholmCompatibility
   This is the kernel-count shadow of `J P_L J = P_R`.
   -/
   mirror_swaps_kernelCount :
-    F.kernelCount.mirror =
-      (F.kernelCount.rightKernel, F.kernelCount.leftKernel)
+    F.kernelCount.mirror = {
+      leftKernel := F.kernelCount.rightKernel
+      rightKernel := F.kernelCount.leftKernel
+    }
 
 namespace ModularMirrorFredholmCompatibility
 
@@ -272,10 +254,10 @@ theorem J_D_comm_or_anticomm_eq :
 
 end ModularMirrorFredholmCompatibility
 
-/-! ## 5. Even Kasparov/Fredholm module datum -/
+/-! ## 5. Even Kasparov/Fredholm module socket -/
 
 /--
-A proof-carrying even Fredholm/Kasparov-cycle datum.
+A proof-carrying even Fredholm/Kasparov-cycle socket.
 
 This is not a full KK-theory implementation. It records the conditions needed
 downstream for index pairings:
@@ -324,7 +306,7 @@ structure EvenKasparovCycleDatum
       IsCompactOperator
         ((rep a * (F - ContinuousLinearMap.adjoint F) : H →L[ℝ] H) : H → H)
 
-  /-- Abstract Fredholm index pairing datum. -/
+  /-- Abstract Fredholm index pairing socket. -/
   indexPairing : A → ℤ
 
 /--
@@ -369,5 +351,29 @@ theorem ofIndexPairing_cocycleReadout
 
 end ChiralIndexFormulaDatum
 
+/-! ## 6. Owner targets -/
+
+/-- Owner target for constructing chiral Fredholm index data. -/
+def ChiralFredholmIndexOwnerTarget
+    (H : Type*) [AddCommGroup H] [Module ℝ H] : Prop :=
+  ∀ F : ChiralFredholmDatum H,
+    F.chi.comp F.chi = LinearMap.id ∧
+      F.chi.comp F.D = -(F.D.comp F.chi) ∧
+      F.fredholmIndex.index = F.kernelCount.index ∧
+      F.kernelCount.mirror.index = -F.kernelCount.index
+
+/-- Owner target for constructing an even Kasparov-cycle socket. -/
+def EvenKasparovCycleOwnerTarget
+    (A H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] : Prop :=
+  ∀ K : EvenKasparovCycleDatum A H,
+    K.chi.comp K.chi = ContinuousLinearMap.id ℝ H ∧
+      K.chi.comp K.F = -(K.F.comp K.chi) ∧
+      (∀ a : A, IsCompactOperator
+        ((K.F * K.rep a - K.rep a * K.F : H →L[ℝ] H) : H → H)) ∧
+      (∀ a : A, IsCompactOperator
+        ((K.rep a * (K.F * K.F - (1 : H →L[ℝ] H)) : H →L[ℝ] H) : H → H)) ∧
+      (∀ a : A, IsCompactOperator
+        ((K.rep a * (K.F - ContinuousLinearMap.adjoint K.F) : H →L[ℝ] H) : H → H))
 
 end InfoGeometry.OperatorAlgebra.ChiralFredholmIndex

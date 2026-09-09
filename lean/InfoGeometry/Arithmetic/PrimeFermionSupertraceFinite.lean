@@ -1,5 +1,22 @@
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 
+/-!
+# InfoGeometry.Arithmetic.PrimeFermionSupertraceFinite
+
+Finite fermionic prime-bit partition and supertrace identities.
+
+This sidecar proves the constructive finite Boolean product identities:
+
+* unsigned square-free fermionic partition:
+  `Σ_ε exp (-β * E ε) = Π_i (1 + exp (-β * log p_i))`;
+* signed exterior/Möbius supertrace:
+  `Σ_ε sign ε * exp (-β * E ε) = Π_i (1 - exp (-β * log p_i))`.
+
+The finite bit-energy and primitive Mellin identities are owned by
+`PrimitiveBinarySuperZetaBridge`.  This file does not assert infinite Euler
+products, analytic continuation, RH, or a cohomological zero theorem.
+-/
+
 noncomputable section
 
 open scoped BigOperators
@@ -12,6 +29,7 @@ namespace FinitePrimeBitLattice
 
 variable (P : PrimitiveBinarySuperZetaBridge.FinitePrimeBitLattice)
 
+/-- Local finite prime-bit Gibbs weight `exp (-β log p_i)`. -/
 def localPrimeWeight
     (β : ℝ)
     (i : P.Index) : ℝ :=
@@ -22,18 +40,22 @@ lemma localPrimeWeight_pos (β : ℝ) (i : P.Index) :
   unfold localPrimeWeight
   exact Real.exp_pos _
 
+/-- Fermionic sign of a finite binary occupation profile. -/
 def fermionSign
     (ε : P.Profile) : ℝ :=
   ∏ i : P.Index, if ε i then (-1 : ℝ) else 1
 
+/-- Unsigned finite fermionic square-free primon partition. -/
 def fermionicPartition
     (β : ℝ) : ℝ :=
   ∑ ε : P.Profile, Real.exp (-β * P.bitEnergy ε)
 
+/-- Signed finite fermionic exterior/Möbius supertrace. -/
 def fermionicSupertrace
     (β : ℝ) : ℝ :=
   ∑ ε : P.Profile, fermionSign P ε * Real.exp (-β * P.bitEnergy ε)
 
+/-- The Gibbs factor of a profile factors into local prime-bit weights. -/
 theorem exp_neg_mul_bitEnergy_eq_profile_product
     (β : ℝ)
     (ε : P.Profile) :
@@ -48,6 +70,12 @@ theorem exp_neg_mul_bitEnergy_eq_profile_product
   intro i _hi
   by_cases h : ε i <;> simp [h]
 
+/--
+Finite unsigned fermionic Euler product.
+
+This is the finite square-free partition identity, the finite precursor of the
+`ζ(s) / ζ(2s)` channel after an analytic infinite-product witness is supplied.
+-/
 theorem fermionicPartition_eq_product
     (β : ℝ) :
     fermionicPartition P β =
@@ -66,6 +94,12 @@ theorem fermionicPartition_eq_product
   rw [← Finset.sum_prod_piFinset]
   rw [Fintype.piFinset_univ]
 
+/--
+Finite signed fermionic Euler product.
+
+This is the finite Möbius/supertrace identity, the finite precursor of the
+`1 / ζ(s)` channel after an analytic infinite-product witness is supplied.
+-/
 theorem fermionicSupertrace_eq_product
     (β : ℝ) :
     fermionicSupertrace P β =
@@ -112,6 +146,10 @@ lemma fermionicSupertrace_ne_zero
   rw [fermionicSupertrace_eq_product]
   exact Finset.prod_ne_zero_iff.mpr (fun i _hi => h i)
 
+/--
+Primitive Mellin/Gibbs readout for the same finite profile, re-exported from
+the primitive binary bridge.
+-/
 theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
     (ε : P.Profile)
     (β : ℝ)

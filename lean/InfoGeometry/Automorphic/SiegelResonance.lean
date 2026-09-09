@@ -35,7 +35,7 @@ Witness for a split Siegel-Eisenstein boundary sequence.
 
 `eisenstein` is a chosen Eisenstein lift/section `ℰ_P`.
 
-The section ax!om says:
+The section axiom says:
 
 `𝔖_P ∘ ℰ_P = id`.
 
@@ -49,7 +49,7 @@ structure SiegelEisensteinWitness
   eisenstein : Boundary →ₗ[ℝ] Bulk
 
   /-- The Eisenstein lift is a strict right-inverse to the Siegel operator. -/
-  section_property :
+  section_axiom :
     siegel.comp eisenstein = LinearMap.id
 
 namespace SiegelEisensteinWitness
@@ -61,14 +61,14 @@ variable (W : SiegelEisensteinWitness Bulk Boundary)
 
 /-! ### 2. Basic section consequences -/
 
-/-- Pointwise form of the section ax!om. -/
+/-- Pointwise form of the section axiom. -/
 @[simp]
 theorem section_apply (b : Boundary) :
     W.siegel (W.eisenstein b) = b := by
   have h :=
     congrArg
       (fun f : Boundary →ₗ[ℝ] Boundary => f b)
-      W.section_property
+      W.section_axiom
   simpa [LinearMap.comp_apply] using h
 
 /-- The Siegel operator is surjective. -/

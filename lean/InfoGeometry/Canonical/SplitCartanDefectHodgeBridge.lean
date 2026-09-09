@@ -140,7 +140,7 @@ theorem relativeSurprisalOperator_eq_relativeSurprisal_of_potential_readout
       q q0 0 = κ + a)
     (h₁ : InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential
       q q0 1 = κ - a) :
-    InfoGeometry.Canonical.RelativeModularHamiltonian.relativeSurprisalOperator
+    InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator
         q q0 = relativeSurprisal κ a := by
   rw [relativeSurprisalOperator_fin_two_readout]
   ext i j

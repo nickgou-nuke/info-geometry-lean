@@ -59,7 +59,7 @@ def primonSpectralAtom {n : ℕ} (i : Fin (n + 1)) (s : ℂ) : ℂ :=
 /--
 Specialized finite-stage statement for Primon-style logarithmic weights.
 
-The theorem is still property-explicit: it does not define the improper
+The theorem is still assumption-explicit: it does not define the improper
 Mellin integral.  It packages the exact finite consequence of the atom formula.
 -/
 theorem finite_primon_mellin_bridge
@@ -98,5 +98,29 @@ theorem finite_primon_spectral_sum_eq_zeta_mellin_trace (n : ℕ) (s : ℂ) :
   apply Finset.sum_congr rfl
   intro i _
   exact primonSpectralAtom_eq_gammaNormalizedMellinMode i s
+
+/--
+Finite heat-kernel Mellin transform, finite Dirichlet trace, and KAN log-det
+generator are the same finite spectrum after Gamma normalization.
+-/
+theorem finite_primon_heat_mellin_zeta_KAN_bridge
+    {F : Type*} [AddCommMonoid F] (n : ℕ)
+    (M : FiniteMellinModel F (Fin (n + 1)))
+    (hAtom : ∀ (i : Fin (n + 1)) (s : ℂ),
+      M.spectralAtom i s = primonSpectralAtom i s)
+    (s : ℂ) :
+    M.mellin (∑ i : Fin (n + 1), M.heatAtom i) s =
+        M.gamma s *
+          InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellinTrace n s ∧
+      InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellinTrace n s =
+        InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonDirichletTrace n s ∧
+      Real.log (Matrix.det (InfoGeometry.Quantum.KANFormalization.KANFactor.total
+        (InfoGeometry.Quantum.PrimonCuntzTower.primonCuntzKANFactor n))) =
+        ∑ i : Fin (n + 1), Real.log ((i.1 + 1 : ℝ)) := by
+  have hMellin := finite_primon_mellin_bridge (n := n) M hAtom s
+  rw [finite_primon_spectral_sum_eq_zeta_mellin_trace n s] at hMellin
+  exact ⟨hMellin,
+    (InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellin_KAN_synthesis n s).2.1,
+    (InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellin_KAN_synthesis n s).2.2⟩
 
 end InfoGeometry.Quantum.MellinHeatKernelBridge

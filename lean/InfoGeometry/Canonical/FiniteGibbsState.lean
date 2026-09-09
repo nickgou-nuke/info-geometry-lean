@@ -80,6 +80,6 @@ theorem finiteGibbsState_stage_compatibility (n : ℕ) (A : MatrixState n) :
     change (matrixTraceRealAlgebraicState (n + 1)).eval
         (concreteStep n A) =
       (matrixTraceRealAlgebraicState n).eval A
-    exact congrArg Complex.re (concrete_trace_compatible n A)
+    exact congrArg Complex.re (concreteData.trace_compatible n A)
 
 end InfoGeometry.Canonical.FiniteGibbsState

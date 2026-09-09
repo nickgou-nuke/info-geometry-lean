@@ -45,7 +45,7 @@ theorem eulerProjectors_orthogonal :
 
 theorem r0Map_sq (w : EulerSpinor) : r0Map (r0Map w) = w := by
   change matrixApply cl55Atom.r0 (matrixApply cl55Atom.r0 w) = w
-  rw [← matrixApply_mul, cl55AtomLaws.1, matrixApply_one]
+  rw [← matrixApply_mul, cl55Atom.r0_sq, matrixApply_one]
 
 theorem euler_projector_decomposition (w : EulerSpinor) :
     w = eulerPlusMap w + eulerMinusMap w := by

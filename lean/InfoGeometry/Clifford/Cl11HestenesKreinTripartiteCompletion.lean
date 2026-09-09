@@ -73,10 +73,7 @@ theorem tripartite_local_flow_atom :
         (0 : InfoGeometry.Algebra.HypercomplexTriad.Mat2) := by
   rcases InfoGeometry.Algebra.HypercomplexTriad.local_cayley_klein_atom with
     ⟨hI, hE, hN, _hPp, _hPm, _hOrth, _hSum⟩
-  refine ⟨?_, ?_, ?_⟩
-  · exact hI
-  · exact hE
-  · exact hN
+  exact ⟨hI, hE, hN⟩
 
 /-- Parabolic tripartite flow unit: `(1 + N)` has right inverse `(1 - N)`. -/
 theorem tripartite_unipotent_flow_right_inverse :
@@ -96,21 +93,19 @@ theorem tripartite_unipotent_flow_left_inverse :
 theorem hestenesKrein_sigmaC_real_axis
     {A : Type*} [Monoid A]
     (H : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationData A)
-    (hH : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationLaw H)
     (t : ℝ) (a : A) :
     H.sigmaC (t : ℂ) a =
       InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma H.modular t a :=
-  InfoGeometry.Dynamics.sigmaC_real_axis_eq_sigma H hH t a
+  InfoGeometry.Dynamics.sigmaC_real_axis_eq_sigma H t a
 
 /-- Top-strip readout of a supplied Hestenes--Krein analytic-continuation datum. -/
 theorem hestenesKrein_sigmaC_top_strip
     {A : Type*} [Monoid A]
     (H : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationData A)
-    (hH : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationLaw H)
     (t : ℝ) (a : A) :
     H.sigmaC (InfoGeometry.Dynamics.complexClockPoint t H.beta) a =
       InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
-  InfoGeometry.Dynamics.sigmaC_top_strip_eq_sigma_shift H hH t a
+  InfoGeometry.Dynamics.sigmaC_top_strip_eq_sigma_shift H t a
 
 /--
 The corrected finite-to-infinite statement has two compatible components:
@@ -124,8 +119,6 @@ theorem finiteCarrier_and_hestenesKreinFlow
     intoCarrier (m + k) (finiteAdvance m k A) = intoCarrier m A ∧
       P.modularFlow.flow t (P.phaseAxis * B) =
         P.phaseAxis * P.modularFlow.flow t B := by
-  refine ⟨?_, ?_⟩
-  · exact intoCarrier_finiteAdvance m k A
-  · exact hestenesKrein_flow_phase_analytic P t B
+  exact ⟨intoCarrier_finiteAdvance m k A, hestenesKrein_flow_phase_analytic P t B⟩
 
 end InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion

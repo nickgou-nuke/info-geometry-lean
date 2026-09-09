@@ -101,12 +101,16 @@ theorem bondStarAlgHom_injective (n : ℕ) : Function.Injective (bondStarAlgHom 
   bondFun_injective n
 
 private theorem extendBitWord_eq_extendSucc (n : ℕ) (w : BitWord n) (b : Bool) :
-    CantorKMSState.extendBitWord n w b = extendSucc n w b := by
+    InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n w b = extendSucc n w b := by
   funext i
   by_cases hi : i.1 < n
-  · simp [CantorKMSState.extendBitWord, CantorKMSState.bitWordEquiv, extendSucc, hi]
+  · simp [InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord,
+      InfoGeometry.Canonical.CantorKMSState.bitWordEquiv,
+      extendSucc, hi]
   · have hi' : i.1 = n := by omega
-    simp [CantorKMSState.extendBitWord, CantorKMSState.bitWordEquiv, extendSucc, hi']
+    simp [InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord,
+      InfoGeometry.Canonical.CantorKMSState.bitWordEquiv,
+      extendSucc, hi']
 
 private theorem extendSucc_eq_iff (n : ℕ) (u : BitWord n) (b : Bool)
     (x : BitWord (n + 1)) :

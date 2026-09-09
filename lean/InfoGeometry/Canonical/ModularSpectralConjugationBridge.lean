@@ -132,7 +132,7 @@ theorem P_D_mul_activeModularConjugation_eq_zero
 
 /--
 Certified-kernel comparison theorem:
-if the bridged apex is the property spectral complement `Q₀`,
+if the bridged apex is the certified spectral complement `Q₀`,
 then active modular conjugation is exactly `J * P_D` on the regular lane.
 -/
 @[rep_depth transport]
@@ -175,7 +175,7 @@ theorem clockAxis_eq_modular_j_mul_modularSign :
             rw [InfoGeometry.Canonical.ProjectorEquivariance.spectral_epsilon_eq_modularSign (E := E)]
 
 /--
-Projector-first specialization of the property-kernel comparison theorem:
+Projector-first specialization of the certified-kernel comparison theorem:
 if the bridged wedge sign is `P₊ - P₋`, active modular conjugation is exactly
 `J * P_D` on the regular lane.
 -/

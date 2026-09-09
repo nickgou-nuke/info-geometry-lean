@@ -63,35 +63,3 @@ theorem vector_clifford_relation (V : ZornMatrix R) (ha : V.a = 0) (hb : V.b = 0
     simp
   rw [h3] at h1
   exact neg_inj.mp h1
-
-/-- Polarization of the split Clifford square relation for two pure vectors. -/
-theorem vector_clifford_polarization
-    (V W : ZornMatrix R)
-    (haV : V.a = 0) (hbV : V.b = 0)
-    (haW : W.a = 0) (hbW : W.b = 0)
-    (S : ZornMatrix R) :
-    V * (W * S) + W * (V * S) =
-      (dot V.x W.y + dot W.x V.y) • S := by
-  have hsum := vector_clifford_relation (V + W)
-    (by simp [haV, haW]) (by simp [hbV, hbW]) S
-  have hV := vector_clifford_relation V haV hbV S
-  have hW := vector_clifford_relation W haW hbW S
-  have hdot :
-      dot (V + W).x (V + W).y =
-        dot V.x V.y + dot V.x W.y + dot W.x V.y + dot W.x W.y := by
-    simp [dot, Finset.sum_add_distrib, add_mul, mul_add,
-      add_assoc, add_left_comm, add_comm]
-  simp only [add_mul', mul_add'] at hsum
-  rw [hdot, hV, hW] at hsum
-  simp only [add_smul, smul_add] at hsum
-  calc
-    V * (W * S) + W * (V * S) =
-        (dot V.x V.y • S + W * (V * S) +
-          (V * (W * S) + dot W.x W.y • S)) -
-          dot V.x V.y • S - dot W.x W.y • S := by abel
-    _ = (dot V.x V.y • S + dot V.x W.y • S +
-          dot W.x V.y • S + dot W.x W.y • S) -
-          dot V.x V.y • S - dot W.x W.y • S := by rw [hsum]
-    _ = (dot V.x W.y + dot W.x V.y) • S := by
-      rw [← add_smul, ← add_smul, ← add_smul]
-      module

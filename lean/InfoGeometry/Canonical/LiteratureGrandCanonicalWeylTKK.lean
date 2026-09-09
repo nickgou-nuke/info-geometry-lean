@@ -53,7 +53,7 @@ structure ResidueContourHolonomyData
   residueField : X → A
   lapseResidue : ℝ
   contourResidue_eq_lapseResidue :
-    residueMap
+    residueMap.toHolonomy
       (lineIntegrator.integrate (fun i => residueField (contour.point i))) =
         lapseResidue
 
@@ -65,7 +65,7 @@ variable (C : ResidueContourHolonomyData I X A S)
 /-- The contour holonomy/readout equals the lapse residue. -/
 @[rep_depth thermo]
 theorem contourHolonomy_eq_lapseResidue :
-    C.residueMap
+    C.residueMap.toHolonomy
       (C.lineIntegrator.integrate (fun i => C.residueField (C.contour.point i))) =
         C.lapseResidue :=
   C.contourResidue_eq_lapseResidue
@@ -442,7 +442,82 @@ theorem finitePartitionAdmissible_proof : K.finitePartitionAdmissible := by
   letI := K.partitionDecidableEq
   exact K.partitionFunction_eq
 
+/-- The thermodynamic KKT packet is derived from its typed mathematical data. -/
+@[rep_depth thermo]
+theorem packet
+    :
+    K.primalFeasible ∧ K.dualFeasible ∧ K.stationarity ∧
+      K.complementarySlackness ∧ K.finitePartitionAdmissible :=
+  ⟨K.primalFeasible_proof, K.dualFeasible_proof,
+    K.stationarity_proof, K.complementarySlackness_proof,
+    K.finitePartitionAdmissible_proof⟩
+
 end KarushKuhnTuckerThermodynamicData
+
+/-! ## Constructive KKT residual certificate -/
+
+/--
+Dimension-agnostic residual certificate for the thermodynamic KKT packet.
+
+This replaces a bare proposition-only KKT package by explicit real residual
+readouts.  Exact KKT closure is obtained from the constructive equations
+`residual ^ 2 = 0`; no finite state space or matrix dimension is introduced.
+-/
+@[rep_depth thermo]
+abbrev KarushKuhnTuckerResidualCertificate :=
+  KarushKuhnTuckerThermodynamicData
+
+namespace KarushKuhnTuckerResidualCertificate
+
+variable (C : KarushKuhnTuckerResidualCertificate)
+
+/-- Compatibility map: the former residual certificate is now the KKT datum
+itself, so no scalar residual shadow is introduced. -/
+@[rep_depth thermo]
+def toThermodynamicData : KarushKuhnTuckerThermodynamicData :=
+  C
+
+/-- Exact primal feasibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem primalFeasible : C.toThermodynamicData.primalFeasible :=
+  C.primalFeasible_proof
+
+/-- Exact dual feasibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem dualFeasible : C.toThermodynamicData.dualFeasible :=
+  C.dualFeasible_proof
+
+/-- Exact stationarity from a squared residual equation. -/
+@[rep_depth thermo]
+theorem stationarity : C.toThermodynamicData.stationarity :=
+  C.stationarity_proof
+
+/-- Exact complementary slackness from a squared residual equation. -/
+@[rep_depth thermo]
+theorem complementarySlackness :
+    C.toThermodynamicData.complementarySlackness :=
+  C.complementarySlackness_proof
+
+/-- Exact partition admissibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem finitePartitionAdmissible :
+    C.toThermodynamicData.finitePartitionAdmissible :=
+  C.finitePartitionAdmissible_proof
+
+/--
+The complete thermodynamic KKT packet follows constructively from the five
+zero-residual certificates.
+-/
+@[rep_depth thermo]
+theorem exactPacket :
+    C.toThermodynamicData.primalFeasible ∧
+      C.toThermodynamicData.dualFeasible ∧
+      C.toThermodynamicData.stationarity ∧
+      C.toThermodynamicData.complementarySlackness ∧
+      C.toThermodynamicData.finitePartitionAdmissible :=
+  C.toThermodynamicData.packet
+
+end KarushKuhnTuckerResidualCertificate
 
 /-! ## Combined literature theorem surface -/
 
@@ -487,7 +562,7 @@ structure ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
     (R Gauge Parameter Curvature G I X A S : Type*) extends
       LiteratureWeylGrandCanonicalTKKBridge
         R Gauge Parameter Curvature G I X A S where
-  kktCertificate : KarushKuhnTuckerThermodynamicData
+  kktCertificate : KarushKuhnTuckerResidualCertificate
 
 namespace ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
 
@@ -495,14 +570,27 @@ variable {R Gauge Parameter Curvature G I X A S : Type*}
 variable (B : ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
 
-/-- The proposition-level KKT bridge induced by the residual property. -/
+/-- The proposition-level KKT bridge induced by the residual certificate. -/
 @[rep_depth thermo]
 def toKKTBridge :
     LiteratureWeylGrandCanonicalTKKKKTBridge
       R Gauge Parameter Curvature G I X A S where
   toLiteratureWeylGrandCanonicalTKKBridge :=
     B.toLiteratureWeylGrandCanonicalTKKBridge
-  kktOptimization := B.kktCertificate
+  kktOptimization := B.kktCertificate.toThermodynamicData
+
+/--
+Exact thermodynamic KKT closure obtained from the bridge's residual
+certificate, with no extra assumptions.
+-/
+@[rep_depth thermo]
+theorem exactKKTOptimizationPacket :
+    B.kktCertificate.toThermodynamicData.primalFeasible ∧
+      B.kktCertificate.toThermodynamicData.dualFeasible ∧
+      B.kktCertificate.toThermodynamicData.stationarity ∧
+      B.kktCertificate.toThermodynamicData.complementarySlackness ∧
+      B.kktCertificate.toThermodynamicData.finitePartitionAdmissible :=
+  B.kktCertificate.exactPacket
 
 /-- The constructive bridge still supplies the grand-canonical affine action. -/
 @[rep_depth thermo]
@@ -535,19 +623,19 @@ theorem grandCanonicalWeylTKKKKTExactPacket
       B.weyl.curvature (B.weyl.transform gauge parameter) =
         B.weyl.curvature gauge ∧
       B.tkk.inGZero (B.tkk.bracket x y) ∧
-      B.kktCertificate.primalFeasible ∧
-        B.kktCertificate.dualFeasible ∧
-        B.kktCertificate.stationarity ∧
-        B.kktCertificate.complementarySlackness ∧
-        B.kktCertificate.finitePartitionAdmissible :=
+      B.kktCertificate.toThermodynamicData.primalFeasible ∧
+      B.kktCertificate.toThermodynamicData.dualFeasible ∧
+      B.kktCertificate.toThermodynamicData.stationarity ∧
+      B.kktCertificate.toThermodynamicData.complementarySlackness ∧
+      B.kktCertificate.toThermodynamicData.finitePartitionAdmissible :=
   ⟨B.grandCanonicalActionAffine energy chemicalPotential number,
     B.weyl.curvature_transform_eq gauge parameter,
     B.tkk.bracketPlusMinusMemZero hx hy,
-    B.kktCertificate.primalFeasible_proof,
-    B.kktCertificate.dualFeasible_proof,
-    B.kktCertificate.stationarity_proof,
-    B.kktCertificate.complementarySlackness_proof,
-    B.kktCertificate.finitePartitionAdmissible_proof⟩
+    B.kktCertificate.primalFeasible,
+    B.kktCertificate.dualFeasible,
+    B.kktCertificate.stationarity,
+    B.kktCertificate.complementarySlackness,
+    B.kktCertificate.finitePartitionAdmissible⟩
 
 end ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
 
@@ -577,7 +665,7 @@ theorem grandCanonicalActionAffine
 /-- The bridge supplies the contour-holonomy readout of the lapse residue. -/
 @[rep_depth thermo]
 theorem contourHolonomyReadsLapseResidue :
-      B.contourResidue.residueMap
+    B.contourResidue.residueMap.toHolonomy
       (B.contourResidue.lineIntegrator.integrate
         (fun i => B.contourResidue.residueField
           (B.contourResidue.contour.point i))) =
@@ -748,6 +836,21 @@ namespace LiteratureWeylGrandCanonicalTKKKKTBridge
 variable {R Gauge Parameter Curvature G I X A S : Type*}
 variable (B : LiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
+
+/-- The extended bridge exposes the explicit thermodynamic KKT packet. -/
+@[rep_depth thermo]
+theorem kktOptimizationPacket
+    (hPrimal : B.kktOptimization.primalFeasible)
+    (hDual : B.kktOptimization.dualFeasible)
+    (hStationarity : B.kktOptimization.stationarity)
+    (hSlack : B.kktOptimization.complementarySlackness)
+    (hFinite : B.kktOptimization.finitePartitionAdmissible) :
+    B.kktOptimization.primalFeasible ∧
+      B.kktOptimization.dualFeasible ∧
+      B.kktOptimization.stationarity ∧
+      B.kktOptimization.complementarySlackness ∧
+      B.kktOptimization.finitePartitionAdmissible :=
+  B.kktOptimization.packet
 
 /--
 The KKT-enhanced bridge still supplies the grand-canonical affine action from

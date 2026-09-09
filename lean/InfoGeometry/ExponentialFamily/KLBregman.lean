@@ -6,7 +6,7 @@ set_option linter.unusedSectionVars false
 # KL–Bregman Bridge (Finite Exponential Family)
 
 Algebraic bridge between parameterized KL divergence and Bregman divergence
-of the log-partition potential, with a derivative-mean compatibility property.
+of the log-partition potential, with a derivative-mean compatibility hypothesis.
 -/
 
 namespace InfoGeometry.ExponentialFamily
@@ -35,8 +35,8 @@ noncomputable abbrev entropicTransportObjective
 
 /-- Exponential-family log-partition viewed as a `LogPotential`. -/
 noncomputable def logPotential
-    (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ :=
-  fun θ => familyLogPartition F θ
+    (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ where
+  ψ := familyLogPartition F
 
 /-- OT naming alias for the convex potential gap driving the same objective. -/
 noncomputable abbrev entropicTransportPotentialGap

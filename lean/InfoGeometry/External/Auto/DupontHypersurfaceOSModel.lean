@@ -66,6 +66,21 @@ theorem productSignExponent_eq_codim_mul (n q q' : ℤ) :
     productSignExponent n q q' = stratumCodim n q * q' := by
   rfl
 
+/-- Consolidated product and differential-shift identities for the integer indices. -/
+theorem dupont_index_arithmetic_synthesis (n q n' q' : ℤ) :
+    cohomDegree n q + cohomDegree n' q' =
+      cohomDegree (n + n') (q + q') ∧
+    tateTwist n q + tateTwist n' q' =
+      tateTwist (n + n') (q + q') ∧
+    cohomDegree (n + 1) q = cohomDegree n q + 2 ∧
+    tateTwist (n + 1) q = tateTwist n q + 1 ∧
+    stratumCodim (n + 1) q = stratumCodim n q - 1 := by
+  exact ⟨product_cohomDegree n q n' q',
+    product_tateTwist n q n' q',
+    differential_cohomDegree_shift n q,
+    differential_tateTwist_shift n q,
+    differential_codim_shift n q⟩
+
 end DupontHypersurfaceOSModel
 
 end noncomputable section

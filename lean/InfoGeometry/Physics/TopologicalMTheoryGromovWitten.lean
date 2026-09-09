@@ -14,14 +14,8 @@ namespace TopologicalMTheory
   The Weyl Gauge. 
   In the thermodynamic KMS framework, the Weyl scale is fixed by the Rindler temperature β. 
 -/
-abbrev WeylGauge := ℝ
-
-namespace WeylGauge
-
-abbrev beta (W : WeylGauge) : ℝ :=
-  W
-
-end WeylGauge
+structure WeylGauge where
+  beta : ℝ
 
 /-- 
   The Liouville Action (Topological Free Energy F_top).
@@ -41,23 +35,14 @@ noncomputable def gromov_witten_partition_function (W : WeylGauge) : ℝ :=
   THE GRAND IDENTITY
   Volume(Amplituhedron) ≡ exp(Liouville Weyl Action) ≡ Z_{Gromov-Witten} ≡ ζ(2)
 -/
-abbrev GrandIdentity :=
-  {data : WeylGauge × ℝ //
-    data.1.beta = 2 ∧
-    data.2 = gromov_witten_partition_function data.1 ∧
-    data.2 = Real.pi ^ 2 / 6}
-
-namespace GrandIdentity
-
-abbrev weyl_scale (G : GrandIdentity) : WeylGauge := G.1.1
-abbrev horizon_fixed (G : GrandIdentity) : G.weyl_scale.beta = 2 := G.2.1
-abbrev amplituhedron_volume (G : GrandIdentity) : ℝ := G.1.2
-abbrev is_gromov_witten (G : GrandIdentity) :
-    G.amplituhedron_volume = gromov_witten_partition_function G.weyl_scale := G.2.2.1
-abbrev is_zeta_two (G : GrandIdentity) :
-    G.amplituhedron_volume = Real.pi ^ 2 / 6 := G.2.2.2
-
-end GrandIdentity
+structure GrandIdentity where
+  weyl_scale : WeylGauge
+  horizon_fixed : weyl_scale.beta = 2
+  amplituhedron_volume : ℝ
+  -- The volume maps exactly to the Gromov-Witten string count
+  is_gromov_witten : amplituhedron_volume = gromov_witten_partition_function weyl_scale
+  -- Which exactly evaluates to the Bost-Connes partition function (zeta(2) = pi^2/6)
+  is_zeta_two : amplituhedron_volume = Real.pi ^ 2 / 6
 
 /-- Proof of internal consistency of the Grand Identity. -/
 theorem grand_identity_consistency (G : GrandIdentity) : 

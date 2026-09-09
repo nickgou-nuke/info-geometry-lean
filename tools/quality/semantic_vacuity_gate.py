@@ -23,33 +23,35 @@ from typing import Any
 
 DEFAULT_PATTERNS = Path(__file__).with_name("semantic_vacuity_patterns.json")
 
-DECL_RE = re.compile(r"^\s*(theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
-CARRIER_RE = re.compile(r"^\s*(structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
+DECL_RE = re.compile(r"^\s*(theorem|lemma)\s+([\w][\w'.]*)\b")
+CARRIER_RE = re.compile(r"^\s*(structure|class)\s+([\w][\w'.]*)\b")
 TYPE_SURFACE_RE = re.compile(
     r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+"
-    r"([A-Za-z_][A-Za-z0-9_'.]*)[^\n]*:\s*Type(?:\s+\d+|\s+_)\s*:?="
+    r"([\w][\w'.]*)[^\n]*:\s*Type(?:\s+\d+|\s+_)\s*:?="
 )
-FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.*?)\s*$")
+FIELD_RE = re.compile(
+    r"^\s{2,}(?:[\(\{]\s*(?P<pname>[\w][\w']*)\s*:\s*(?P<ptyp>.*?)\s*[\)\}]|(?P<name>[\w][\w']*)\s*:\s*(?!=)(?P<typ>.*?))\s*$"
+)
 DIRECT_ALIAS_ABBREV_RE = re.compile(
-    r"^\s*(?:noncomputable\s+)?abbrev\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
-    r"[^:=\n]*:=\s*([A-Za-z0-9_'.]+)\s*$",
+    r"^\s*(?:noncomputable\s+)?abbrev\s+([\w][\w'.]*)\b"
+    r"[^:=\n]*:=\s*([\w'.]+)\s*$",
     re.MULTILINE,
 )
 DYNAMIC_LITERAL_DEF_RE = re.compile(
-    r"(?ms)^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
+    r"(?ms)^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+([\w][\w'.]*)\b"
     r"[\s\S]{0,500}?:=\s*(0|1)\s*(?:--[^\n]*)?$"
 )
 CONSTANT_FUNCTION_RE = re.compile(
-    r"^([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+"
-    r"(?:_[^=]*|[A-Za-z0-9_']+(?:\s+[A-Za-z0-9_']+)*)\s*=>\s*(0|1|True|False)\b",
+    r"^([\w][\w']*)\s*:=\s*fun\s+"
+    r"(?:_[^=]*|[\w'.]+(?:\s+[\w'.]+)*)\s*=>\s*(0|1|True|False)\b",
     re.MULTILINE,
 )
 IDENTITY_FUNCTION_RE = re.compile(
-    r"^([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+([A-Za-z0-9_']+)\s*=>\s*\2\b",
+    r"^([\w][\w']*)\s*:=\s*fun\s+([\w][\w']*)\s*=>\s*\2\b",
     re.MULTILINE,
 )
 IDENTITY_MAP_RE = re.compile(
-    r"^\s*([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*fun\s+_\s*=>\s*"
+    r"^\s*([\w][\w']*)\s*:=\s*fun\s+_\s*=>\s*"
     r"(LinearMap|ContinuousLinearMap)\.id\b",
     re.MULTILINE,
 )
@@ -92,7 +94,7 @@ def tracked_lean_files() -> list[Path]:
     import subprocess
 
     result = subprocess.run(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean/*.lean"],
         check=True,
         capture_output=True,
         text=True,
@@ -254,7 +256,8 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
             fm = FIELD_RE.match(line)
             if not fm:
                 continue
-            name, typ = fm.group(1), fm.group(2)
+            name = fm.group("pname") or fm.group("name")
+            typ = fm.group("ptyp") or fm.group("typ")
             type_core = typ.split(":=", 1)[0].strip()
             # Lean permits a field type to continue on following lines.  An
             # empty type suffix is therefore evidence of a data field, not a

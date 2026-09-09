@@ -26,5 +26,17 @@ theorem wick_two_point_vacuum_pairing (u : U) (alpha : U →ₗ[R] R) :
     (evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U) :=
   rfl
 
+/-- **Theorem**: Master Wick's Theorem Vacuum Contraction Synthesis.
+    Unifies:
+    1. Wick's two-point vacuum contraction pairing ⟨0| a_u ε_α |0⟩ = α(u) • |0⟩.
+    2. Annihilation operator vacuum state annihilation a_u |0⟩ = 0.
+    3. Fundamental foundation for AQFT time-ordered correlation functions. -/
+theorem master_wick_theorem_vacuum_contraction_synthesis
+    (u : U) (alpha : U →ₗ[R] R) :
+    (((evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U)) ∧
+     ((contractionOp (evaluationLinear u)) (vacuumState R U) = 0)) := ⟨
+  wick_two_point_vacuum_pairing u alpha,
+  annihilation_vacuum_zero u
+⟩
 
 end InfoGeometry.Canonical.WickTheoremVacuumContractionBridge

@@ -39,15 +39,10 @@ abbrev Vec4 := Fin 4 → ℚ
 /-! ## 1. Finite de Rham obstruction on a 3-cycle -/
 
 /-- A rational 1-cochain on the oriented cycle `0 → 1 → 2 → 0`. -/
-abbrev TriangleOneForm := ℚ × ℚ × ℚ
-
-namespace TriangleOneForm
-
-abbrev e01 (A : TriangleOneForm) : ℚ := A.1
-abbrev e12 (A : TriangleOneForm) : ℚ := A.2.1
-abbrev e20 (A : TriangleOneForm) : ℚ := A.2.2
-
-end TriangleOneForm
+structure TriangleOneForm where
+  e01 : ℚ
+  e12 : ℚ
+  e20 : ℚ
 
 /-- The cycle integral of a 1-form around `0 → 1 → 2 → 0`. -/
 def cycleIntegral (A : TriangleOneForm) : ℚ :=
@@ -76,7 +71,7 @@ theorem not_exact_of_cycleIntegral_ne_zero
 
 /-- The constant unit current around the 3-cycle has obstruction `3`. -/
 def unitCycleCurrent : TriangleOneForm :=
-  (1, 1, 1)
+  { e01 := 1, e12 := 1, e20 := 1 }
 
 @[simp] theorem cycleIntegral_unitCycleCurrent :
     cycleIntegral unitCycleCurrent = 3 := by
@@ -165,8 +160,8 @@ theorem halfSpin_prequantized (hbar : ℚ) :
 
 theorem directLimitCarrier_lifts_finiteIdentities_readback
     {ι : Type*} [Fintype ι] [Nonempty ι]
-    {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
-    {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    {State LieAlgebra LieDual : Type*}
     (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual) :
     Nonempty (FiniteMDPASJMDirectSystem.DirectLimitCarrier T) ∧
       ∃ ofStageMap : ∀ _n : ℕ, Op →
@@ -195,7 +190,7 @@ theorem directLimitCarrier_lifts_finiteIdentities_readback
                 (T.tower.stage n).flow)) ∧
         (∀ n,
           (T.tower.stage n).rn.entropy =
-            (T.tower.stage n).rn.expectation
+            (T.tower.stage n).rn.expectationBeta
               (T.tower.stage n).rn.modularPotential) ∧
         (∀ n,
           (T.tower.stage n).pathPacket.pathEntropy =

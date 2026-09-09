@@ -93,6 +93,17 @@ theorem covarianceCoeff_zero_of_constant {ι : Type} [Fintype ι]
     covarianceCoeff w (fun _ : ι => A) a b = 0 := by
   simp [covarianceCoeff, centeredCoeff_zero_of_constant (w := w) (A := A) hwsum]
 
+/-- Repaired finite packet for the MD matrix-statistics manuscript. -/
+theorem repaired_MD20250430071017_matrix_statistics_packet {ι : Type} [Fintype ι]
+    (w : ι → ℂ) (q : ι → LocalMatrixConfig) (A : LocalMatrixConfig)
+    (hwsum : ∑ i, w i = 1) :
+    (∀ i, pauliRecompose (q i) = q i) ∧
+    (∀ a b, covarianceCoeff w q a b = covarianceCoeff w q b a) ∧
+    (∀ a b, covarianceCoeff w (fun _ : ι => A) a b = 0) := by
+  exact ⟨fun i => localMatrix_recompose (q i),
+    fun a b => covarianceCoeff_symmetric w q a b,
+    fun a b => covarianceCoeff_zero_of_constant w A hwsum a b⟩
+
 end InfoGeometry.Physics.MD20250430071017MatrixStatistics
 
 end noncomputable section

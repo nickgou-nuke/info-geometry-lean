@@ -37,10 +37,10 @@ def prop_real_input_40_arity_charge_similarity_reduction_charge_matrix :
 conjugator gives the entrywise reduction, and determinant/trace are unchanged on the reduced
 block. -/
 def real_input_40_arity_charge_similarity_reduction_statement
-    (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound : Prop) : Prop :=
-  coboundaryNormalization ∧
-    edgeAuditWithPotential ∧
-    primitiveCycleDensityBound ∧
+    (D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData) : Prop :=
+  D.coboundaryNormalization ∧
+    D.edgeAuditWithPotential ∧
+    D.primitiveCycleDensityBound ∧
     prop_real_input_40_arity_charge_similarity_reduction_charge_matrix =
       prop_real_input_40_arity_charge_similarity_reduction_diagonal_conjugator *
         prop_real_input_40_arity_charge_similarity_reduction_base_matrix *
@@ -60,16 +60,9 @@ certificate supplies the normalization/audit package; on the reduced one-state q
 audited potential defines a diagonal conjugator, and the charge block is visibly similar to the
 normal-form block, so determinant and trace agree. -/
 theorem paper_real_input_40_arity_charge_similarity_reduction
-    (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound : Prop)
-    (hNorm : coboundaryNormalization)
-    (deriveEdgeAudit : coboundaryNormalization → edgeAuditWithPotential)
-    (derivePrimitiveCycleDensityBound : edgeAuditWithPotential → primitiveCycleDensityBound) :
-    real_input_40_arity_charge_similarity_reduction_statement coboundaryNormalization
-      edgeAuditWithPotential primitiveCycleDensityBound := by
-  have hCoboundary := paper_real_input_40_arity_charge_coboundary
-    coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound hNorm
-    deriveEdgeAudit derivePrimitiveCycleDensityBound
-  rcases hCoboundary with ⟨hNorm, hAudit, hBound⟩
+    (D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData) :
+    real_input_40_arity_charge_similarity_reduction_statement D := by
+  rcases paper_real_input_40_arity_charge_coboundary D with ⟨hNorm, hAudit, hBound⟩
   have hpot : realInput40ArityChargePotential 0 = -1 := rfl
   refine ⟨hNorm, hAudit, hBound, rfl, ?_, ?_, ?_⟩
   · intro i j

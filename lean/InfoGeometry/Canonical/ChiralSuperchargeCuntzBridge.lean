@@ -18,10 +18,10 @@ variable {V : Type*} [AddCommGroup V] (s : ChiralSupercharges V)
 
 /-- **Theorem**: Chiral Supercharge Nilpotency Q² = 0. -/
 theorem supercharge_nilpotent (x : V) :
-    s.Q (s.Q x) = 0 ∧ s.Qbar (s.Qbar x) = 0 := by
-  constructor
-  · exact s.Q_sq x
-  · exact s.Qbar_sq x
+    s.Q (s.Q x) = 0 ∧ s.Qbar (s.Qbar x) = 0 := ⟨
+  s.Q_sq x,
+  s.Qbar_sq x
+⟩
 
 end ChiralSupercharges
 
@@ -74,11 +74,9 @@ theorem master_chiral_supercharge_cuntz_synthesis
     (c.Splus_star * c.Splus = 1) ∧
     (c.Splus_star * c.Sminus = 0) ∧
     (c.ePlus * c.ePlus = c.ePlus) ∧
-    (c.eMinus * c.eMinus = c.eMinus) := by
-  have hq := s.supercharge_nilpotent v
-  exact ⟨
-  hq.1,
-  hq.2,
+    (c.eMinus * c.eMinus = c.eMinus) := ⟨
+  s.Q_sq v,
+  s.Qbar_sq v,
   c.isometry_plus,
   c.ortho_pm,
   (c.chiral_projections_idempotent).1,

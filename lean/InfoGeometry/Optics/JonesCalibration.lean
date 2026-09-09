@@ -544,18 +544,14 @@ At Brewster angle, `r_p = 0`, so the reflected operator is projectively a
 scalar multiple of `P_s`. The elementary core/nil support facts are derived as
 theorems from `brewster`.
 -/
-abbrev BrewsterDrazinCalibration
+structure BrewsterDrazinCalibration
     (Op : Type*) [Ring Op] [Algebra ℂ Op]
-    (J : JonesReflector Op) :=
-  J.IsBrewsterBranch
+    (J : JonesReflector Op) where
+  /-- Brewster branch hypothesis. -/
+  brewster :
+    J.IsBrewsterBranch
 
 namespace BrewsterDrazinCalibration
-
-/-- Compatibility accessor for the native branch predicate. -/
-abbrev brewster
-    {Op : Type*} [Ring Op] [Algebra ℂ Op]
-    {J : JonesReflector Op}
-    (B : BrewsterDrazinCalibration Op J) : J.IsBrewsterBranch := B
 
 variable {Op : Type*} [Ring Op] [Algebra ℂ Op]
 variable {J : JonesReflector Op}
@@ -703,18 +699,13 @@ This says that an optical evolution preserves a discrete obstruction charge.
 Then `TopologicalSnap` proves that a nontrivial optical sector cannot relax
 into a flat/unpolarized sector unless the charge is trivial.
 -/
-abbrev JonesObstructionFlow
-    (State Charge : Type*) [Zero Charge] :=
-  InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow State Charge
+structure JonesObstructionFlow
+    (State Charge : Type*) [Zero Charge] where
+  obstructionFlow :
+    InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow State Charge
 
 
 namespace JonesObstructionFlow
-
-/-- Compatibility accessor for the native conserved-flow carrier. -/
-abbrev obstructionFlow
-    {State Charge : Type*} [Zero Charge]
-    (F : JonesObstructionFlow State Charge) :
-    InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow State Charge := F
 
 variable {State Charge : Type*} [Zero Charge]
 variable (F : JonesObstructionFlow State Charge)

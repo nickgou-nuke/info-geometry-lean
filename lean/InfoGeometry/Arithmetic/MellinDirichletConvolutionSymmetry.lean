@@ -24,7 +24,7 @@ bridge:
    * the standard `1/2` is the normalized midpoint of the marked pair `0,1`.
 
 No infinite convergence theorem, analytic continuation theorem, or Riemann
-property claim is introduced here.
+hypothesis claim is introduced here.
 -/
 
 noncomputable section
@@ -107,13 +107,12 @@ theorem critical_mirror_negates_centered_sigma (z : ZetaAffineChart) :
 @[rep_depth thermo]
 theorem standard_midpoint_is_half :
     ZetaAffineChart.markedPairMidpoint 0 1 = (1 / 2 : ℝ) := by
-  exact ZetaAffineChart.standard_markedPairMidpoint
+  norm_num [ZetaAffineChart.markedPairMidpoint]
 
 @[rep_depth thermo]
 theorem standard_marked_pair_half_is_fixed :
     ZetaAffineChart.markedPairReflection 0 1 (1 / 2 : ℝ) = (1 / 2 : ℝ) := by
-  rw [ZetaAffineChart.standard_markedPairReflection_eq_functional_real]
-  norm_num
+  norm_num [ZetaAffineChart.markedPairReflection]
 
 @[rep_depth thermo]
 theorem normalized_midpoint_of_standard_pair_is_half :

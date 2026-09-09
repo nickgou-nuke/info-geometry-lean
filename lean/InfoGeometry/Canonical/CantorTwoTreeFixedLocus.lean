@@ -18,48 +18,33 @@ namespace InfoGeometry.Canonical.CantorTwoTreeFixedLocus
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
+abbrev Word := InfiniteBinaryWordSpace
+
 /-- Bitwise complement, representing the binary branch exchange. -/
-def tomitaWordConjugation
-    (w : (ℕ → Bool)) : (ℕ → Bool) :=
+def tomitaWordConjugation (w : Word) : Word :=
   fun n => !w n
 
-@[simp] theorem tomitaWordConjugation_apply
-    (w : (ℕ → Bool)) (n : ℕ) :
+@[simp] theorem tomitaWordConjugation_apply (w : Word) (n : ℕ) :
     tomitaWordConjugation w n = !w n :=
   rfl
 
-theorem tomitaWordConjugation_involutive
-    (w : (ℕ → Bool)) :
+theorem tomitaWordConjugation_involutive (w : Word) :
     tomitaWordConjugation (tomitaWordConjugation w) = w := by
   funext n
   cases h : w n <;> simp [tomitaWordConjugation, h]
 
-theorem tomitaWordConjugation_ne_self
-    (w : (ℕ → Bool)) :
-    tomitaWordConjugation w ≠ w := by
-  intro h
-  have h0 := congrFun h 0
-  cases hw : w 0 <;> simp [tomitaWordConjugation, hw] at h0
+/-- Two independent symbolic boundary trees. -/
+abbrev TwoTree := Word × Word
 
 /-- Tomita exchange of the two trees together with branch complement. -/
-def tomitaTwoTreeConjugation
-    (T : (ℕ → Bool) × (ℕ → Bool)) :
-    (ℕ → Bool) × (ℕ → Bool) :=
+def tomitaTwoTreeConjugation (T : TwoTree) : TwoTree :=
   (tomitaWordConjugation T.2, tomitaWordConjugation T.1)
 
-theorem tomitaTwoTreeConjugation_involutive
-    (T : (ℕ → Bool) × (ℕ → Bool)) :
+theorem tomitaTwoTreeConjugation_involutive (T : TwoTree) :
     tomitaTwoTreeConjugation (tomitaTwoTreeConjugation T) = T := by
   cases T with
   | mk left right =>
       simp [tomitaTwoTreeConjugation, tomitaWordConjugation_involutive]
-
-theorem tomitaTwoTreeConjugation_fixed_pair
-    (w : (ℕ → Bool)) :
-    tomitaTwoTreeConjugation
-        (w, tomitaWordConjugation w) =
-      (w, tomitaWordConjugation w) := by
-  simp [tomitaTwoTreeConjugation, tomitaWordConjugation_involutive]
 
 /-- The antiunitary scalar reflection used by the critical-line owner. -/
 def antiReflection (s : ℂ) : ℂ :=
@@ -69,8 +54,7 @@ theorem antiReflection_fixed_locus (s : ℂ) :
     antiReflection s = s ↔ s.re = 1 / 2 := by
   simpa [antiReflection, eq_comm] using critical_line_fixed_locus_iff s
 
-theorem twoTree_critical_fixed_locus
-    (T : (ℕ → Bool) × (ℕ → Bool)) (s : ℂ) :
+theorem twoTree_critical_fixed_locus (T : TwoTree) (s : ℂ) :
     (tomitaTwoTreeConjugation T = T ∧ antiReflection s = s) ↔
       (tomitaTwoTreeConjugation T = T ∧ s.re = 1 / 2) := by
   rw [antiReflection_fixed_locus]

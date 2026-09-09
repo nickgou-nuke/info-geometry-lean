@@ -138,6 +138,32 @@ theorem criticalLineRealReadout_zero_iff_xi_zero (Xi : ℂ → ℂ)
     criticalLineRealReadout Xi t = 0 ↔ Xi (1 / 2 + I * t) = 0 := by
   rw [← Complex.ofReal_eq_zero, criticalLineRealReadout_eq_xi Xi hXi t]
 
+theorem xi_critical_line_reflection (Xi : ℂ → ℂ)
+    (hXi : XiFunctionDatum Xi) (t : ℝ) :
+    Xi (1 / 2 + I * (-t)) = Xi (1 / 2 + I * t) := by
+  have hreal := xi_critical_line_is_real Xi hXi t
+  calc
+    Xi (1 / 2 + I * (-t)) = Xi (star (1 / 2 + I * t)) := by
+      congr 1
+      apply Complex.ext <;> simp
+    _ = star (Xi (1 / 2 + I * t)) := hXi.schwarz_refl _
+    _ = Xi (1 / 2 + I * t) := hreal
+
+theorem xi_critical_line_boundary_quotient_eq_one
+    (Xi : ℂ → ℂ) (hXi : XiFunctionDatum Xi) (t : ℝ)
+    (ht : Xi (1 / 2 + I * t) ≠ 0) :
+    Xi (1 / 2 + I * t) / Xi (1 / 2 + I * (-t)) = 1 := by
+  rw [xi_critical_line_reflection Xi hXi t]
+  exact div_self ht
+
+theorem criticalLineRealReadout_even (Xi : ℂ → ℂ)
+    (hXi : XiFunctionDatum Xi) (t : ℝ) :
+    criticalLineRealReadout Xi (-t) = criticalLineRealReadout Xi t := by
+  unfold criticalLineRealReadout
+  have h := congrArg Complex.re (xi_critical_line_reflection Xi hXi t)
+  norm_num at h ⊢
+  exact h
+
 /-! ### 3. Master Riemann Hypothesis Vicinity Synthesis Packet -/
 
 /-- 🏆 THEOREM 7: MASTER RIEMANN HYPOTHESIS VICINITY SYNTHESIS PACKET -/

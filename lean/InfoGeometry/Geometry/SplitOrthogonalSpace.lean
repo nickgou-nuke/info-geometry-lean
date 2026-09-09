@@ -6,7 +6,6 @@ No complex imports.
 -/
 
 import Mathlib.Topology.Basic
-import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Algebraic.SplitQuadraticForm
 
 noncomputable section
@@ -16,24 +15,28 @@ namespace InfoGeometry.Geometry.Cartan
 open InfoGeometry.Algebraic.SplitSignature
 
 /--
-Typed split-orthogonal Cartan stage carrier.
+Abstract split-orthogonal Cartan base space.
 
-The carrier and its topology are explicit data. This owner does not identify
-the data with the analytic symmetric space `O(n,n)/(O(n) × O(n))`; that
-identification requires a separate matrix/quotient construction.
+This is the formal placeholder for the symmetric space
+`O(n,n)/(O(n) × O(n))`. The concrete matrix model can be added later without
+changing the downstream cocycle or boundary APIs.
 -/
-structure SplitOrthogonalCartanSpace (_n : ℕ) where
+structure SplitOrthogonalCartanSpace (n : ℕ) where
   carrier : Type
-  topology : TopologicalSpace carrier
+  instTopologicalSpace : TopologicalSpace carrier
+
+attribute [instance] SplitOrthogonalCartanSpace.instTopologicalSpace
 
 /--
-Typed boundary carrier paired with a split-orthogonal stage.
+Abstract isotropic boundary carrier for split-orthogonal degeneration.
 
-No isotropic or quotient property is assumed by the type itself; those are
-separate theorem-level hypotheses for downstream boundary results.
+This is the natural boundary/readout object paired with
+`SplitOrthogonalCartanSpace`.
 -/
-structure SplitOrthogonalBoundary (_n : ℕ) where
+structure SplitOrthogonalBoundary (n : ℕ) where
   carrier : Type
-  topology : TopologicalSpace carrier
+  instTopologicalSpace : TopologicalSpace carrier
+
+attribute [instance] SplitOrthogonalBoundary.instTopologicalSpace
 
 end InfoGeometry.Geometry.Cartan

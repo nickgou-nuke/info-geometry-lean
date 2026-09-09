@@ -59,5 +59,4 @@ theorem mirror_preserves_realObservable
   rw [D.preserves_intervalReadout]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutObservable
-
 end

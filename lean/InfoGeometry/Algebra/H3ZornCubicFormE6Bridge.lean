@@ -35,4 +35,16 @@ theorem detCubic_zero :
 
 end DiagonalH3Zorn
 
+/-- **Theorem**: Master H3(O') Zorn Cubic Form & E6(6) Invariance Synthesis.
+    Unifies:
+    1. Cubic form homogeneity det(c X) = c³ det(X).
+    2. Zero element determinant det(0) = 0. -/
+theorem master_h3_zorn_cubic_form_e6_synthesis
+    {R : Type*} [CommRing R] (x : DiagonalH3Zorn R) (c : R) :
+    (DiagonalH3Zorn.detCubic (⟨c * x.d1, c * x.d2, c * x.d3⟩ : DiagonalH3Zorn R) = c ^ 3 * x.detCubic) ∧
+    (DiagonalH3Zorn.detCubic (⟨0, 0, 0⟩ : DiagonalH3Zorn R) = 0) := ⟨
+  x.detCubic_scale c,
+  DiagonalH3Zorn.detCubic_zero
+⟩
+
 end InfoGeometry.Algebra.H3ZornCubicFormE6Bridge

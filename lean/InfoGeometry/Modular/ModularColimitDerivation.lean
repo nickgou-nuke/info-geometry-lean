@@ -88,6 +88,36 @@ variable (dsys : LocalDerivationSystem (R := R) I A sys)
 variable {A_inf : Type*} [Ring A_inf] [Algebra R A_inf]
 variable (colim : AlgColimitCocone (R := R) I A sys A_inf)
 
+/-! Inner derivations are the native operator-surprisal instance of the local
+    derivation interface. -/
+
+def innerDerivation
+    (K : ∀ i, A i) (i : I) : A i →ₗ[R] A i :=
+  LinearMap.mulLeft R (K i) - LinearMap.mulRight R (K i)
+
+theorem innerDerivation_apply
+    (K : ∀ i, A i) (i : I) (x : A i) :
+    innerDerivation (R := R) K i x = K i * x - x * K i := by
+  rfl
+
+theorem innerDerivation_leibniz
+    (K : ∀ i, A i) (i : I) (x y : A i) :
+    innerDerivation (R := R) K i (x * y) =
+      innerDerivation (R := R) K i x * y + x * innerDerivation (R := R) K i y := by
+  simp only [innerDerivation_apply, mul_assoc, sub_mul, mul_sub]
+  noncomm_ring
+
+def innerDerivationSystem
+    (K : ∀ i, A i)
+    (hK : ∀ {i j : I} (hij : i ≤ j), sys.map hij (K i) = K j) :
+    LocalDerivationSystem (R := R) I A sys where
+  deriv := innerDerivation (R := R) K
+  deriv_leibniz := innerDerivation_leibniz (R := R) K
+  intertwine := by
+    intro i j hij x
+    rw [innerDerivation_apply (R := R), innerDerivation_apply (R := R)]
+    rw [map_sub, map_mul, map_mul, hK hij]
+
 /-- Pointwise evaluation of the global derivation: `δ_∞ (ι_i x_i) = ι_i (δ_i x_i)`. -/
 def colimitDerivVal (x : A_inf) : A_inf :=
   let rep := colim.surj_dense x
@@ -121,6 +151,17 @@ theorem colimitDerivVal_inr (i : I) (x : A i) :
         rw [dsys.intertwine]
     _ = colim.inr i (dsys.deriv i x) := by
         rw [colim.inr_comm (le_trans hjk hkm)]
+
+/- Finite-stage readout for the operator-surprisal inner derivation family. -/
+theorem colimitInnerDerivation_inr
+    (K : ∀ i, A i)
+    (hK : ∀ {i j : I} (hij : i ≤ j), sys.map hij (K i) = K j)
+    (i : I) (x : A i) :
+    colimitDerivVal sys (innerDerivationSystem sys K hK) colim
+        (colim.inr i x) =
+      colim.inr i (K i * x - x * K i) := by
+  rw [colimitDerivVal_inr]
+  rfl
 
 /-! =========================================================================
     5. Proof of the Leibniz Rule & Linear Properties

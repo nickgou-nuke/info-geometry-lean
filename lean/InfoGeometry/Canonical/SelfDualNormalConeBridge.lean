@@ -16,7 +16,7 @@ open InfoGeometry.Arithmetic.ProjectiveEntropy
 [Theorems that compile from explicitly named theorem parameters or imported verified premises.]
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-[Exact theorem statements that remain unproved. No wrappers, interfaces, fields, witnesses, certificates, or renamed placeholders.]
+[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
 -/
 
 /-- Unnormalized KL-style scalar readout. -/
@@ -79,7 +79,7 @@ theorem projectiveKL_eq_zero_of_eq_of_ne_zero
   unfold projectiveKL
   rw [div_self hp, Real.log_one, mul_zero]
 
-/-- Primitive-to-prime readout is nonnegative under the corresponding scalar ratio property. -/
+/-- Primitive-to-prime readout is nonnegative under the corresponding scalar ratio hypothesis. -/
 theorem primitiveToPrimeProjectiveKL_nonneg_of_one_le_ratio
     (candidate reference : Finset ℕ) (u : ℝ)
     (hp : 0 ≤ primitiveInvertedPartitionDensity candidate u)
@@ -90,7 +90,7 @@ theorem primitiveToPrimeProjectiveKL_nonneg_of_one_le_ratio
     0 ≤ primitiveToPrimeProjectiveKL candidate reference u := by
   exact projectiveKL_nonneg_of_nonneg_of_one_le_ratio hp hratio
 
-/-- Primitive-to-prime readout is positive under the corresponding scalar ratio property. -/
+/-- Primitive-to-prime readout is positive under the corresponding scalar ratio hypothesis. -/
 theorem primitiveToPrimeProjectiveKL_pos_of_one_lt_ratio
     (candidate reference : Finset ℕ) (u : ℝ)
     (hp : 0 < primitiveInvertedPartitionDensity candidate u)
@@ -111,7 +111,7 @@ theorem primitiveToPrimeProjectiveKL_eq_zero_of_density_eq
     primitiveToPrimeProjectiveKL candidate reference u = 0 := by
   exact projectiveKL_eq_zero_of_eq_of_ne_zero h hp
 
-/-- Prime-to-primitive readout is nonnegative under the corresponding scalar ratio property. -/
+/-- Prime-to-primitive readout is nonnegative under the corresponding scalar ratio hypothesis. -/
 theorem primeToPrimitiveProjectiveKL_nonneg_of_one_le_ratio
     (candidate reference : Finset ℕ) (u : ℝ)
     (hp : 0 ≤ arithmeticPrimeInvertedPartitionDensity reference u)
@@ -122,7 +122,7 @@ theorem primeToPrimitiveProjectiveKL_nonneg_of_one_le_ratio
     0 ≤ primeToPrimitiveProjectiveKL candidate reference u := by
   exact projectiveKL_nonneg_of_nonneg_of_one_le_ratio hp hratio
 
-/-- Prime-to-primitive readout is positive under the corresponding scalar ratio property. -/
+/-- Prime-to-primitive readout is positive under the corresponding scalar ratio hypothesis. -/
 theorem primeToPrimitiveProjectiveKL_pos_of_one_lt_ratio
     (candidate reference : Finset ℕ) (u : ℝ)
     (hp : 0 < arithmeticPrimeInvertedPartitionDensity reference u)

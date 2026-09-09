@@ -132,5 +132,3 @@ theorem SymbolicLatentChartEquivalence.imageCompHausEvaluation_natural_comp
   rfl
 
 end InfoGeometry.Topology
-
-end

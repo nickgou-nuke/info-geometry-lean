@@ -44,6 +44,14 @@ namespace CommutingInvolutions
 
 variable (S : CommutingInvolutions Op)
 
+theorem choose_left_right_orthogonal (C : ChiralInvolution Op) :
+    choose true C.Pleft C.Pright * choose false C.Pleft C.Pright = 0 := by
+  simp [choose, C.Pleft_mul_Pright]
+
+theorem choose_right_left_orthogonal (C : ChiralInvolution Op) :
+    choose false C.Pleft C.Pright * choose true C.Pleft C.Pright = 0 := by
+  simp [choose, C.Pright_mul_Pleft]
+
 def hyperbolicInvolution (S : CommutingInvolutions Op) : ChiralInvolution Op where
   chi := S.hyperbolic
   chi_sq := S.hyperbolic_sq
@@ -73,7 +81,94 @@ private theorem product_idem_of_commute
     _ = p * (p * q) * q := by rw [hpq]
     _ = (p * p) * (q * q) := by simp [mul_assoc]
     _ = p * q := by rw [hp, hq]
-    
+
+private theorem product_zero_of_left_orthogonal
+    {p p' q q' : Op} (hpp' : p * p' = 0)
+    (hqp' : q * p' = p' * q) :
+    (p * q) * (p' * q') = 0 := by
+  calc
+    (p * q) * (p' * q') = p * (q * p') * q' := by simp [mul_assoc]
+    _ = p * (p' * q) * q' := by rw [hqp']
+    _ = 0 := by rw [← mul_assoc p p' q, hpp']; simp
+
+private theorem product_zero_of_right_orthogonal
+    {p p' q q' : Op} (hqq' : q * q' = 0)
+    (hp'q : p' * q = q * p') :
+    (p * q) * (p' * q') = 0 := by
+  calc
+    (p * q) * (p' * q') = p * (q * p') * q' := by simp [mul_assoc]
+    _ = p * (p' * q) * q' := by rw [hp'q]
+    _ = (p * p') * (q * q') := by simp [mul_assoc]
+    _ = 0 := by rw [hqq']; simp
+
+theorem jointProjectors_hyperbolic_disjoint (σ σ' : Bool) :
+    S.jointProjector true σ * S.jointProjector false σ' = 0 := by
+  unfold jointProjector
+  apply product_zero_of_left_orthogonal
+  · exact (hyperbolicInvolution S).Pleft_mul_Pright
+  · exact (hyperbolic_projector_commutes_circular_projector S false σ).symm
+
+theorem jointProjectors_circular_disjoint (ε ε' : Bool) :
+    S.jointProjector ε true * S.jointProjector ε' false = 0 := by
+  unfold jointProjector
+  apply product_zero_of_right_orthogonal
+  · exact (circularInvolution S).Pleft_mul_Pright
+  · exact hyperbolic_projector_commutes_circular_projector S ε' true
+
+theorem jointProjectors_hyperbolic_disjoint_reverse (σ σ' : Bool) :
+    S.jointProjector false σ * S.jointProjector true σ' = 0 := by
+  unfold jointProjector
+  apply product_zero_of_left_orthogonal
+  · exact (hyperbolicInvolution S).Pright_mul_Pleft
+  · exact (hyperbolic_projector_commutes_circular_projector S true σ).symm
+
+theorem jointProjectors_circular_disjoint_reverse (ε ε' : Bool) :
+    S.jointProjector ε false * S.jointProjector ε' true = 0 := by
+  unfold jointProjector
+  apply product_zero_of_right_orthogonal
+  · exact (circularInvolution S).Pright_mul_Pleft
+  · exact hyperbolic_projector_commutes_circular_projector S ε' false
+
+theorem jointProjector_sum_circular (ε : Bool) :
+    S.jointProjector ε true + S.jointProjector ε false =
+      choose ε (hyperbolicInvolution S).Pleft (hyperbolicInvolution S).Pright := by
+  unfold jointProjector
+  cases ε <;> simp [choose]
+  · rw [← mul_add, (circularInvolution S).Pleft_add_Pright, mul_one]
+  · rw [← mul_add, (circularInvolution S).Pleft_add_Pright, mul_one]
+
+theorem jointProjector_sum_hyperbolic (σ : Bool) :
+    S.jointProjector true σ + S.jointProjector false σ =
+      choose σ (circularInvolution S).Pleft (circularInvolution S).Pright := by
+  unfold jointProjector
+  cases σ <;> simp [choose]
+  · rw [← add_mul, (hyperbolicInvolution S).Pleft_add_Pright, one_mul]
+  · rw [← add_mul, (hyperbolicInvolution S).Pleft_add_Pright, one_mul]
+
+theorem jointProjectors_pairwise_disjoint
+    (ε σ ε' σ' : Bool)
+    (h : ε ≠ ε' ∨ σ ≠ σ') :
+    S.jointProjector ε σ * S.jointProjector ε' σ' = 0 := by
+  rcases h with hε | hσ
+  · cases ε with
+    | false =>
+        cases ε' with
+        | false => exact False.elim (hε rfl)
+        | true => exact jointProjectors_hyperbolic_disjoint_reverse S σ σ'
+    | true =>
+        cases ε' with
+        | false => exact jointProjectors_hyperbolic_disjoint S σ σ'
+        | true => exact False.elim (hε rfl)
+  · cases σ with
+    | false =>
+        cases σ' with
+        | false => exact False.elim (hσ rfl)
+        | true => exact jointProjectors_circular_disjoint_reverse S ε ε'
+    | true =>
+        cases σ' with
+        | false => exact jointProjectors_circular_disjoint S ε ε'
+        | true => exact False.elim (hσ rfl)
+
 @[simp] theorem jointProjector_idem (ε σ : Bool) :
     S.jointProjector ε σ * S.jointProjector ε σ = S.jointProjector ε σ := by
   unfold jointProjector

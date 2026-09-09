@@ -121,5 +121,3 @@ theorem transport_preserves_quadratic (u : H) :
   exact D.transport_isKreinIsometry u u
 
 end InfoGeometry.Topology.OrderThreeKreinSpinorMetricCompatibility
-
-end

@@ -39,18 +39,17 @@ structure CompatibleTopologicalEquivAction
 variable (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))
 variable (T : CompatibleTopologicalEquivAction Stage sys A R)
 
+omit [Nonempty I] [IsDirectedOrder I] [∀ (i : I), PartialOrder (Stage i)] [∀ (i : I), StarOrderedRing (Stage i)] [PartialOrder B] [StarOrderedRing B] in
 theorem topologicalEquivAction_on_stage (i : I) (t : ℤ) (x : Stage i) :
     T.action t (R.ι i x) = R.ι i (A.action i t x) := by
   exact T.stage_agreement i t x
 
 theorem topologicalEquivAction_agrees_with_algebraicEquiv_on_stage
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (t : ℤ) (x : Stage i) :
     T.action t
-        (algebraicDescend Stage sys R hι_comm
+        (algebraicDescend Stage sys R
           (algebraicStarDirectLimitOf Stage sys i x)) =
-      algebraicDescend Stage sys R hι_comm
+      algebraicDescend Stage sys R
         (algebraicColimitActionEquiv Stage sys A t
           (algebraicStarDirectLimitOf Stage sys i x)) := by
   rw [algebraicDescend_of, algebraicColimitActionEquiv_apply,

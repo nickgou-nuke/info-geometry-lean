@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.TomitaTakesaki
 Tomita-specialized Connes-Araki endpoints over the generic core carrier.
 
 This lane is owner-facing and diagnostic-oriented: it reuses the generic
-Connes-Araki core plus the Tomita flow-unit cocycle property, while keeping the
+Connes-Araki core plus the Tomita flow-unit cocycle witness, while keeping the
 finite diagonal branch as a readout/diagnostic projection.
 
 The finite diagonal outputs are explicit shadow diagnostics induced by chosen
@@ -156,6 +156,16 @@ the operator unit and are used as thin diagnostics on top of the underlying
 non-commutative operator lane.
 -/
 
+/-- The Tomita modular-sign flow fixes the algebra unit. -/
+@[simp] theorem tomita_modularSignAdditiveModularFlow_map_one
+    (t : ℝ) :
+    TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H) t (1 : AlgebraEnd H) = 1 := by
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle]
+    using
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+        (H := H) (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t)
+
 /-- The Tomita flow-unit cocycle is pointwise the operator unit. -/
 @[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_apply
     (t : ℝ) :
@@ -169,7 +179,57 @@ non-commutative operator lane.
       (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
         (H := H) (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t)
 
-/-- Canonical Connes-cocycle property for the Tomita flow-unit lane. -/
+/-- Time-zero normalization of the Tomita unit cocycle on the Connes-Araki lane. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_zero
+    :
+  InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) 0
+      =
+    (1 : AlgebraEnd H) := by
+  simp
+
+/-- Tomita unit-cocycle at fixed time is operator unit. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Thin alias in Connes-Araki naming: Tomita flow-unit cocycle is identically unit. -/
+@[simp] theorem tomitaUnit_connesAraki_flowUnitCocycle_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Diagnostic alias: Tomita flow-unit cocycle is the shadow unit across Connes-Araki lanes. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Diagnostic readout alias: the shadow unit cocycle is the unit for each time slice. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_readout_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq_one (H := H) t)
+
+/-- Canonical Connes-cocycle witness for the Tomita flow-unit lane. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
     IsConnesCocycle
       (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
@@ -179,6 +239,91 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
   simpa using
     (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
       (H := H) (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+
+/-- Thin owner-facing alias: Tomita flow-unit cocycle is an operator-valued Connes cocycle. -/
+theorem tomitaUnit_connesAraki_flowUnitCocycle_isConnesCocycle :
+    IsConnesCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+          (E := H))) := by
+  simpa using
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H) (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+
+/-- Tomita-unit cocycle satisfies the Connes cocycle equation pointwise. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  exact
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
+      (H := H)
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/-- Diagnostic alias of the pointwise Connes-cocycle equation for shadow-transport. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  exact
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
+      (H := H)
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/-- Shadow readout alias of the Connes-cocycle transport identity. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_transport_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  exact
+    (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
+      (H := H) (s := s) (t := t))
+
+/-- Diagnostic ownership alias: Tomita flow-unit shadow cocycle is a Connes-cocycle. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_isConnesCocycle :
+    IsConnesCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+          (E := H))) := by
+  simpa using
+    (tomitaUnitConnesAraki_flowUnitCocycle_cocycle
+      (H := H))
 
 /--
 For any Tomita unit-cocycle Connes-Araki package, scalar descent of the
@@ -333,7 +478,7 @@ theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop
 
 /--
 Carrier-completing endpoint: Tomita-specialized Connes-Araki data gives the
-trajectorywise Bekenstein bound, while a thermal KMS-like property for the
+trajectorywise Bekenstein bound, while a thermal KMS-like hypothesis for the
 modular-sign generator is re-expressed directly in the Tomita modular-flow
 language used by the Connes-Araki carrier.
 -/
@@ -362,7 +507,7 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
 
 /--
 Owner-name form of the Tomita-specialized Bekenstein/KMS endpoint: the KMS
-property is stated directly on the root modular-sign operator `spectral_epsilon`.
+assumption is stated directly on the root modular-sign operator `spectral_epsilon`.
 -/
 theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root
     (D : TomitaConnesArakiData (H := H) u T)
@@ -386,7 +531,7 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
 
 /--
 Unit-cocycle specialization of the Tomita endpoint:
-the cocycle lane is fixed to the welded flow-unit cocycle property.
+the cocycle lane is fixed to the welded flow-unit cocycle witness.
 -/
 theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaUnitConnesArakiData
     (D : TomitaUnitConnesArakiData (H := H) T)

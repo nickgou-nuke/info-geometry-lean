@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/FresnelJonesReflection.lean
 
-Fresnel/Jones reflection data.
+Fresnel/Jones reflection sockets.
 
 The `s/p` basis is the Fresnel eigenbasis of a smooth isotropic interface.  The
 `L/R` circular basis is the Cartan/helicity/chiral basis.  They are related,
@@ -242,7 +242,7 @@ theorem circularReflection_brewster_apply_right
       (r_s / 2) * (C 0 + C 1) := by
   simp [circularReflection, sIndex, pIndex, mul_add]
 
-/-! ## 7. Non-diagonal and non-Jones cases -/
+/-! ## 7. Non-diagonal and non-Jones sockets -/
 
 /--
 Anisotropic or basis-mixing reflection datum.

@@ -150,16 +150,16 @@ theorem stuFreudenthalBoundary_iff_coordinates
     refine ⟨hq, ?_⟩
     by_contra hnot
     push_neg at hnot
-    exact hn ((zeroCharge_eq_iff Q).2
+    exact hn ((HeisenbergElement.zeroCharge_eq_iff Q).2
       ⟨hnot.1, hnot.2.1, hnot.2.2.1, hnot.2.2.2⟩)
   · rintro ⟨hq, hn⟩
     refine ⟨hq, ?_⟩
     intro hzero
     rcases hn with ha | hb | hx | hy
-    · exact ha ((zeroCharge_eq_iff Q).1 hzero).1
-    · exact hb ((zeroCharge_eq_iff Q).1 hzero).2.1
-    · exact hx ((zeroCharge_eq_iff Q).1 hzero).2.2.1
-    · exact hy ((zeroCharge_eq_iff Q).1 hzero).2.2.2
+    · exact ha ((HeisenbergElement.zeroCharge_eq_iff Q).1 hzero).1
+    · exact hb ((HeisenbergElement.zeroCharge_eq_iff Q).1 hzero).2.1
+    · exact hx ((HeisenbergElement.zeroCharge_eq_iff Q).1 hzero).2.2.1
+    · exact hy ((HeisenbergElement.zeroCharge_eq_iff Q).1 hzero).2.2.2
 
 theorem stuFreudenthalBoundary_smul_iff
     (r : ℝ) (hr : r ≠ 0) (Q : FreudenthalCharge STUCarrier) :

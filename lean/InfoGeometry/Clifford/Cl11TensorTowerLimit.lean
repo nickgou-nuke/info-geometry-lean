@@ -66,27 +66,56 @@ theorem stageStarMap_compat
     rw [hb]
     exact ih
 
-/-! The stagewise star compatibility descends to the iterated transition maps. -/
-
-theorem bondMap_star
-    (i j : ℕ) (h : i ≤ j) (x : Stage i) :
-    star (bondMap stageBond i j h x) =
-      bondMap stageBond i j h (star x) := by
+theorem bondMap_star (m n : ℕ) (h : m ≤ n) (x : Stage m) :
+    bondMap stageBond m n h (star x) = star (bondMap stageBond m n h x) := by
   refine Nat.le_induction
-    (m := i)
-    (P := fun t ht =>
-      star (bondMap stageBond i t ht x) =
-        bondMap stageBond i t ht (star x))
-    ?base ?succ j h
-  · simp [bondMap_refl]
-  · intro t hit ih
-    rw [bondMap_succ stageBond i t hit]
-    change star (stageBond t (bondMap stageBond i t hit x)) =
-      stageBond t (bondMap stageBond i t hit (star x))
-    change star (stageEmbed t (bondMap stageBond i t hit x)) =
-      stageEmbed t (bondMap stageBond i t hit (star x))
-    rw [← stageEmbed_star]
-    exact congrArg (fun y => stageEmbed t y) ih
+    (m := m)
+    (P := fun t ht => bondMap stageBond m t ht (star x) = star (bondMap stageBond m t ht x))
+    ?base ?succ n h
+  · dsimp only
+    have h1 : bondMap stageBond m m le_rfl (star x) = star x := by
+      simp [bondMap_refl]
+    have h2 : bondMap stageBond m m le_rfl x = x := by
+      simp [bondMap_refl]
+    rw [h1, h2]
+  · intro t ht ih
+    have hsucc := bondMap_succ stageBond m t ht
+    rw [hsucc, RingHom.comp_apply, RingHom.comp_apply, ih, stageBond]
+    exact stageEmbed_star t _
+
+noncomputable instance limitStar : Star Limit where
+  star :=
+    DirectLimit.map
+      (fun _ _ h => bondMap stageBond _ _ h)
+      (fun _ _ h => bondMap stageBond _ _ h)
+      (fun _ A => star A)
+      (by
+        intro m n h A
+        exact bondMap_star m n h A)
+
+@[simp] theorem limit_star_mk (n : ℕ) (A : Stage n) :
+    star (⟦⟨n, A⟩⟧ : Limit) = (⟦⟨n, star A⟩⟧ : Limit) := rfl
+
+@[simp] theorem ofStage_star (n : ℕ) (A : Stage n) :
+    ofStage n (star A) = star (ofStage n A) := rfl
+
+noncomputable instance limitStarRing : StarRing Limit where
+  star_involutive := by
+    intro x
+    induction x using DirectLimit.induction with
+    | _ n A => simp [limit_star_mk]
+  star_add := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n A B =>
+        rw [DirectLimit.add_def, limit_star_mk, limit_star_mk,
+          limit_star_mk, DirectLimit.add_def, star_add]
+  star_mul := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n A B =>
+        rw [DirectLimit.mul_def, limit_star_mk, limit_star_mk,
+          limit_star_mk, DirectLimit.mul_def, star_mul]
 
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
 -- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
@@ -118,156 +147,6 @@ noncomputable instance : Algebra ℝ Limit :=
     | _ n x =>
         rw [realAlgebraMap_stage]
         simpa using congrArg (ofStage n) (Algebra.commutes r x))
-
-noncomputable instance limitStar : Star Limit where
-  star :=
-    DirectLimit.map
-      (fun _ _ hij => bondMap stageBond _ _ hij)
-      (fun _ _ hij => bondMap stageBond _ _ hij)
-      (fun _ x => star x)
-      (by
-        intro i j hij x
-        exact (bondMap_star i j hij x).symm)
-
-@[simp] theorem limit_star_mk (n : ℕ) (x : Stage n) :
-    star (⟦⟨n, x⟩⟧ : Limit) =
-      (⟦⟨n, star x⟩⟧ : Limit) := rfl
-
-noncomputable instance limitStarRing : StarRing Limit where
-  star_involutive := by
-    intro x
-    induction x using DirectLimit.induction with
-    | _ n x => simp [limit_star_mk]
-  star_add := by
-    intro x y
-    induction x, y using DirectLimit.induction₂ with
-    | _ n x y =>
-        rw [DirectLimit.add_def, limit_star_mk, limit_star_mk,
-          limit_star_mk, DirectLimit.add_def, star_add]
-  star_mul := by
-    intro x y
-    induction x, y using DirectLimit.induction₂ with
-    | _ n x y =>
-        rw [DirectLimit.mul_def, limit_star_mk, limit_star_mk,
-          limit_star_mk, DirectLimit.mul_def, star_mul]
-
-noncomputable instance limitModuleReal : Module ℝ Limit :=
-  Module.compHom Limit (realAlgebraMap : ℝ →+* Limit)
-
-/-! ## The descended normalized trace -/
-
-theorem normalizedTrace_add (n : ℕ) (A B : Stage n) :
-    Cl11TensorTower.normalizedTrace n (A + B) =
-      Cl11TensorTower.normalizedTrace n A +
-        Cl11TensorTower.normalizedTrace n B := by
-  unfold Cl11TensorTower.normalizedTrace
-  rw [Matrix.trace_add]
-  ring
-
-theorem normalizedTrace_smul (n : ℕ) (c : ℝ) (A : Stage n) :
-    Cl11TensorTower.normalizedTrace n (c • A) =
-      c * Cl11TensorTower.normalizedTrace n A := by
-  unfold Cl11TensorTower.normalizedTrace
-  rw [Matrix.trace_smul]
-  simp only [smul_eq_mul]
-  ring
-
-theorem normalizedTrace_bondMap
-    (m n : ℕ) (h : m ≤ n) (A : Stage m) :
-    Cl11TensorTower.normalizedTrace n
-        (bondMap stageBond m n h A) =
-      Cl11TensorTower.normalizedTrace m A := by
-  refine Nat.le_induction
-    (m := m)
-    (P := fun k hk =>
-      Cl11TensorTower.normalizedTrace k
-          (bondMap stageBond m k hk A) =
-        Cl11TensorTower.normalizedTrace m A)
-    ?base ?succ n h
-  · simp [bondMap_refl]
-  · intro k hmk ih
-    rw [bondMap_succ stageBond m k hmk]
-    change Cl11TensorTower.normalizedTrace (k + 1)
-      (stageBond k (bondMap stageBond m k hmk A)) =
-      Cl11TensorTower.normalizedTrace m A
-    simpa [stageBond] using ih
-
-def limitTrace : Limit →ₗ[ℝ] ℝ where
-  toFun := DirectLimit.lift
-    (fun _ _ hij => bondMap stageBond _ _ hij)
-    (fun n A => Cl11TensorTower.normalizedTrace n A)
-    (by
-      intro m n h A
-      exact (normalizedTrace_bondMap m n h A).symm)
-  map_add' := by
-    intro x y
-    induction x, y using DirectLimit.induction₂ with
-    | _ n A B =>
-        simp only [DirectLimit.add_def, DirectLimit.lift_def]
-        exact normalizedTrace_add n A B
-  map_smul' := by
-    intro c x
-    induction x using DirectLimit.induction with
-    | _ n A =>
-        rw [show c • (⟦⟨n, A⟩⟧ : Limit) =
-          realAlgebraMap c * (⟦⟨n, A⟩⟧ : Limit) by rfl,
-          realAlgebraMap_stage n c]
-        change DirectLimit.lift
-            (fun _ _ hij => bondMap stageBond _ _ hij)
-            (fun n A => Cl11TensorTower.normalizedTrace n A) _
-            ((⟦⟨n, algebraMap ℝ (Stage n) c⟩⟧ : Limit) *
-              (⟦⟨n, A⟩⟧ : Limit)) = _
-        rw [DirectLimit.mul_def]
-        simp only [DirectLimit.lift_def, RingHom.id_apply, smul_eq_mul]
-        simpa [Algebra.algebraMap_eq_smul_one] using
-          (normalizedTrace_smul n c A)
-
-@[simp] theorem limitTrace_stage (n : ℕ) (A : Stage n) :
-    limitTrace (ofStage n A) = Cl11TensorTower.normalizedTrace n A := by
-  rfl
-
-@[simp] theorem limitTrace_one : limitTrace (1 : Limit) = 1 := by
-  calc
-    limitTrace (1 : Limit) = limitTrace (ofStage 0 (1 : Stage 0)) := by
-      exact congrArg limitTrace (map_one (ofStage 0)).symm
-    _ = Cl11TensorTower.normalizedTrace 0 (1 : Stage 0) :=
-      limitTrace_stage 0 (1 : Stage 0)
-    _ = 1 := by
-      unfold Cl11TensorTower.normalizedTrace
-      rw [Matrix.trace_one]
-      rw [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
-      norm_num
-
-theorem limitTrace_commutator_zero (X Y : Limit) :
-    limitTrace (X * Y - Y * X) = 0 := by
-  induction X, Y using DirectLimit.induction₂ with
-  | _ n A B =>
-      rw [DirectLimit.mul_def, DirectLimit.mul_def, DirectLimit.sub_def]
-      change Cl11TensorTower.normalizedTrace n (A * B - B * A) = 0
-      unfold Cl11TensorTower.normalizedTrace
-      rw [Matrix.trace_sub, Matrix.trace_mul_comm B A]
-      ring
-
-@[simp] theorem limit_star_realAlgebraMap (r : ℝ) :
-    star (realAlgebraMap r) = realAlgebraMap r := by
-  change star (⟦⟨0, (algebraMap ℝ (Stage 0)) r⟩⟧ : Limit) =
-    (⟦⟨0, (algebraMap ℝ (Stage 0)) r⟩⟧ : Limit)
-  rw [limit_star_mk]
-  apply congrArg (ofStage 0)
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Algebra.algebraMap_eq_smul_one, Matrix.star_apply]
-
-noncomputable instance limitStarModuleReal : StarModule ℝ Limit where
-  star_smul := by
-    intro r x
-    induction x using DirectLimit.induction with
-    | _ n A =>
-        change star (realAlgebraMap r * (⟦⟨n, A⟩⟧ : Limit)) =
-          realAlgebraMap (star r) * star (⟦⟨n, A⟩⟧ : Limit)
-        rw [star_mul, limit_star_realAlgebraMap, limit_star_mk]
-        simpa using
-          (Algebra.commutes r (star (⟦⟨n, A⟩⟧ : Limit))).symm
 
 @[simp]
 theorem ofStage_zero (n : ℕ) :

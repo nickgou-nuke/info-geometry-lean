@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.CoordinateFreeSouriau
 
 Coordinate-free spinor-side adapter over the Souriau conformal corridor.
 
-This is a finite property layer:
+This is a finite witness layer:
 
 * no global spin connection construction is claimed,
 * only local bilinear compatibility identities are formalized.

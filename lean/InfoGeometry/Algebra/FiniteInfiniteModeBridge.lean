@@ -18,9 +18,9 @@ The bridge is equation-shape only:
 * Virasoro closure is a shifted mode plus an explicit central cocycle;
 * Heisenberg closure is a central cocycle on resonant modes;
 * affine Kac-Moody closure is a loop-current bracket plus residue cocycle;
-* Sugawara closure is available only under the local truncation property.
+* Sugawara closure is available only under the local truncation hypothesis.
 
-No wrappers. No property fields. No completion claim.
+No wrappers. No witness fields. No completion claim.
 -/
 
 namespace InfoGeometry.Algebra.FiniteInfiniteModeBridge
@@ -85,6 +85,22 @@ theorem n2_mode_qgen_rgen_bracket_central
       else 0 := by
   simpa [N2ModeCentralExtension.N2CentralExt.cgen] using
     N2ModeCentralExtension.N2CentralExt.qgen_lie_rgen (ι := ι) (𝕜 := 𝕜) i j
+
+/--
+N=2 mode central-extension readback for arbitrary finite-support mode
+combinations.
+
+The bracket decomposes into the base Lie bracket and the explicit N=2 cocycle,
+exactly like the Virasoro/Heisenberg central-extension readbacks below.
+-/
+theorem n2_mode_bracket_eq_base_bracket_plus_cocycle
+    {ι : Type u} [DecidableEq ι]
+    (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+    (X Y : N2ModeCentralExtension.N2CentralExt ι 𝕜) :
+    ⁅X, Y⁆ =
+      ⟨⁅X.fst, Y.fst⁆,
+        N2ModeCentralExtension.N2ModeCocycle.cocycle (ι := ι) 𝕜 X.fst Y.fst⟩ := by
+  exact N2ModeCentralExtension.N2CentralExt.bracket_readback (ι := ι) (𝕜 := 𝕜) X Y
 
 /--
 The central component of the N=2 lifted `Qᵢ,Rⱼ` bracket is the resonant
@@ -290,10 +306,26 @@ theorem affine_current_bracket_structural_plus_central
   exact VirasoroProject.affineCurrentGen_bracket
     (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
 
+/--
+Affine Kac-Moody central-extension readback for arbitrary loop-current
+elements: loop bracket plus residue cocycle.
+-/
+theorem affine_bracket_eq_loop_bracket_plus_cocycle
+    (𝕜 : Type u) [CommRing 𝕜] [IsAddTorsionFree 𝕜]
+    (𝓰 : Type u) [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (X Y : VirasoroProject.AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs) :
+    ⁅X, Y⁆ =
+      ⟨⁅X.fst, Y.fst⁆,
+        VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X.fst Y.fst⟩ := by
+  rfl
+
 /-! ## Sugawara closure under local truncation -/
 
 /--
-Sugawara Virasoro closure under the actual local truncation property.
+Sugawara Virasoro closure under the actual local truncation hypothesis.
 
 This is the allowed finite-to-infinite step for operator modes: the theorem
 uses `heiTrunc`, so the formal mode sums are locally finite on each vector.

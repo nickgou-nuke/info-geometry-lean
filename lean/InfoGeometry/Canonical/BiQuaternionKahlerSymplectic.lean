@@ -11,7 +11,7 @@ This file does not construct a smooth hyperkähler manifold, Hamiltonian vector
 fields, Legendre transforms, or global Poisson geometry. It closes a finite
 `R^4` theorem surface: the first quaternionic complex structure, its Kähler
 readout, bilinearity, skewness, self-vanishing, and a concrete positivity
-readback showing that every nonzero vector has a symplectic property.
+readback showing that every nonzero vector has a symplectic witness.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 - `symplecticI_formula`
@@ -105,14 +105,6 @@ theorem symplecticI_apply_I4c_mulVec (x : R4) :
   simp [I4c, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
   ring
 
-/-! The bilinear Kähler compatibility behind the diagonal readout. -/
-
-theorem symplecticI_I4c_mulVec_eq_dot4 (x y : R4) :
-    symplecticI x (I4c.mulVec y) = dot4 x y := by
-  dsimp [symplecticI, dot4]
-  simp [I4c, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
-  ring
-
 theorem dot4_pos_of_exists_ne_zero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
     0 < dot4 x x := by
   rcases hx with ⟨i, hi⟩
@@ -138,7 +130,7 @@ theorem dot4_pos_of_exists_ne_zero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
       exact mul_self_pos.2 hi
     nlinarith [sq_nonneg (x 0), sq_nonneg (x 1), sq_nonneg (x 2), h3]
 
-theorem exists_symplectic_property_of_nonzero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
+theorem exists_symplectic_witness_of_nonzero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
     ∃ y : R4, 0 < symplecticI x y := by
   refine ⟨I4c.mulVec x, ?_⟩
   rw [symplecticI_apply_I4c_mulVec]

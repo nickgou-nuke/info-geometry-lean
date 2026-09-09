@@ -191,104 +191,7 @@ theorem modularAutomorphism_zero
   unfold modularAutomorphism
   simp
 
-theorem modularAutomorphism_add
-    (t : ℝ) (A B : M2R) :
-    modularAutomorphism t (A + B) =
-      modularAutomorphism t A + modularAutomorphism t B := by
-  simp [modularAutomorphism, add_mul, mul_add]
-
-theorem modularAutomorphism_smul
-    (t r : ℝ) (A : M2R) :
-    modularAutomorphism t (r • A) = r • modularAutomorphism t A := by
-  simp [modularAutomorphism, smul_eq_mul, mul_smul_comm, smul_mul_assoc]
-
-theorem modularAutomorphism_mul_pre
-    (t : ℝ) (A B : M2R) :
-    modularAutomorphism t (A * B) =
-      modularAutomorphism t A * modularAutomorphism t B := by
-  unfold modularAutomorphism
-  calc
-    nilpotentFlow t * (A * B) * nilpotentFlow (-t) =
-        nilpotentFlow t * A * B * nilpotentFlow (-t) := by
-      simp [mul_assoc]
-    _ = nilpotentFlow t * A *
-        (nilpotentFlow (-t) * nilpotentFlow t) * B *
-          nilpotentFlow (-t) := by
-      rw [nilpotentFlow_neg_mul]
-      simp [mul_assoc]
-    _ = (nilpotentFlow t * A * nilpotentFlow (-t)) *
-        (nilpotentFlow t * B * nilpotentFlow (-t)) := by
-      simp only [mul_assoc]
-
-theorem modularAutomorphism_neg
-    (t : ℝ) (A : M2R) :
-    modularAutomorphism t (-A) = -modularAutomorphism t A := by
-  simp [modularAutomorphism, neg_mul, mul_neg]
-
-theorem modularAutomorphism_commutator
-    (t : ℝ) (A B : M2R) :
-    modularAutomorphism t ⁅A, B⁆ =
-      ⁅modularAutomorphism t A, modularAutomorphism t B⁆ := by
-  rw [Ring.lie_def, Ring.lie_def, sub_eq_add_neg,
-    modularAutomorphism_add, modularAutomorphism_mul_pre,
-    modularAutomorphism_neg, modularAutomorphism_mul_pre]
-  simp [sub_eq_add_neg]
-
-@[simp] theorem modularAutomorphism_zero_matrix (t : ℝ) :
-    modularAutomorphism t (0 : M2R) = 0 := by
-  simp [modularAutomorphism]
-
-theorem modularAutomorphism_mul
-    (t : ℝ) (A B : M2R) :
-    modularAutomorphism t (A * B) =
-      modularAutomorphism t A * modularAutomorphism t B := by
-  exact modularAutomorphism_mul_pre t A B
-
-@[simp] theorem modularAutomorphism_one (t : ℝ) :
-    modularAutomorphism t (1 : M2R) = 1 := by
-  simp [modularAutomorphism, nilpotentFlow_mul_neg]
-
-@[simp] theorem modularAutomorphism_N (t : ℝ) :
-    modularAutomorphism t N = N := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [modularAutomorphism, nilpotentFlow, N, Matrix.mul_apply,
-      Fin.sum_univ_two]
-
-@[simp] theorem modularAutomorphism_Delta (t : ℝ) :
-    modularAutomorphism t Delta = Delta := by
-  rw [Delta, modularAutomorphism_add, modularAutomorphism_one,
-    modularAutomorphism_N]
-
-theorem modularAutomorphism_trace
-    (t : ℝ) (A : M2R) :
-    Matrix.trace (modularAutomorphism t A) = Matrix.trace A := by
-  simp [modularAutomorphism, Matrix.trace_mul_cycle,
-    nilpotentFlow_mul_neg]
-
-theorem modularAutomorphism_eq_self_of_commute_N
-    (t : ℝ) (A : M2R) (h : N * A = A * N) :
-    modularAutomorphism t A = A := by
-  rw [modularAutomorphism_exact_expansion]
-  have hcomm : N * A - A * N = 0 := sub_eq_zero.mpr h
-  have hNAN : N * A * N = 0 := by
-    calc
-      N * A * N = A * N * N := by rw [h]
-      _ = A * (N * N) := by rw [mul_assoc]
-      _ = 0 := by rw [N_sq_zero, mul_zero]
-  rw [hcomm]
-  rw [hNAN]
-  simp
-
-@[simp] theorem modularAutomorphism_modularFlux (t : ℝ) :
-    modularAutomorphism t modularFlux = modularFlux := by
-  rw [modularFlux_eq_N, modularAutomorphism_N]
-
-@[simp] theorem modularAutomorphism_logModular (t : ℝ) :
-    modularAutomorphism t logModular = logModular := by
-  rw [logModular_eq_N, modularAutomorphism_N]
-
-theorem modularAutomorphism_comp_pre
+theorem modularAutomorphism_comp
     (s t : ℝ) (A : M2R) :
     modularAutomorphism s (modularAutomorphism t A) =
       modularAutomorphism (s + t) A := by
@@ -302,62 +205,19 @@ theorem modularAutomorphism_comp_pre
   · simp [modularAutomorphism, nilpotentFlow, N, Matrix.mul_apply, Fin.sum_univ_two]
     ring
 
-@[simp] theorem modularAutomorphism_neg_comp_pre
-    (t : ℝ) (A : M2R) :
-    modularAutomorphism (-t) (modularAutomorphism t A) = A := by
-  rw [modularAutomorphism_comp_pre]
-  simp
-
-@[simp] theorem modularAutomorphism_comp_neg_pre
-    (t : ℝ) (A : M2R) :
-    modularAutomorphism t (modularAutomorphism (-t) A) = A := by
-  rw [modularAutomorphism_comp_pre]
-  simp
-
-theorem modularAutomorphism_injective (t : ℝ) :
-    Function.Injective (modularAutomorphism t) := by
-  intro A B h
-  have h' := congrArg (modularAutomorphism (-t)) h
-  simpa using h'
-
-theorem modularAutomorphism_surjective (t : ℝ) :
-    Function.Surjective (modularAutomorphism t) := by
-  intro A
-  refine ⟨modularAutomorphism (-t) A, ?_⟩
-  simpa using modularAutomorphism_comp_neg_pre t A
-
-theorem modularAutomorphism_det
-    (t : ℝ) (A : M2R) :
-    Matrix.det (modularAutomorphism t A) = Matrix.det A := by
-  unfold modularAutomorphism
-  rw [Matrix.det_mul, Matrix.det_mul]
-  have hdet := congrArg Matrix.det (nilpotentFlow_mul_neg t)
-  rw [Matrix.det_mul] at hdet
-  calc
-    Matrix.det (nilpotentFlow t) * Matrix.det A *
-        Matrix.det (nilpotentFlow (-t)) =
-        Matrix.det A *
-          (Matrix.det (nilpotentFlow t) * Matrix.det (nilpotentFlow (-t))) := by
-            ring
-    _ = Matrix.det A := by rw [hdet]; simp
-
-theorem modularAutomorphism_comp
-    (s t : ℝ) (A : M2R) :
-    modularAutomorphism s (modularAutomorphism t A) =
-      modularAutomorphism (s + t) A := by
-  exact modularAutomorphism_comp_pre s t A
-
 @[simp]
 theorem modularAutomorphism_neg_comp
     (t : ℝ) (A : M2R) :
     modularAutomorphism (-t) (modularAutomorphism t A) = A := by
-  exact modularAutomorphism_neg_comp_pre t A
+  rw [modularAutomorphism_comp]
+  simp
 
 @[simp]
 theorem modularAutomorphism_comp_neg
     (t : ℝ) (A : M2R) :
     modularAutomorphism t (modularAutomorphism (-t) A) = A := by
-  exact modularAutomorphism_comp_neg_pre t A
+  rw [modularAutomorphism_comp]
+  simp
 
 theorem nilpotentFlow_vacuum
     (t : ℝ) :

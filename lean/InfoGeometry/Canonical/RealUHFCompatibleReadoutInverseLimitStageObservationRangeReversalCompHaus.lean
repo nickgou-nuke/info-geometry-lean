@@ -104,6 +104,5 @@ theorem stageObservationRangeReversalCompHausIso_involutive_apply
   change z.1 = z.1
   rfl
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalCompHaus
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalCompHaus

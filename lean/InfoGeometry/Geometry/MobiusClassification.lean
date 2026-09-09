@@ -66,71 +66,11 @@ theorem classifySigma_hyperbolic_of_gt_four {s : SigmaPair}
   have hlt : ¬ s.1 < 4 := by linarith
   simp [classifySigma, hs2, hne, hlt]
 
-theorem classifySigma_hyperbolic_iff {s : SigmaPair} :
-    classifySigma s = MobiusClass.hyperbolic ↔
-      s.2 = 0 ∧ 4 < s.1 := by
-  constructor
-  · intro h
-    by_cases hzero : s.2 = 0
-    · by_cases hfour : s.1 = 4
-      · simp [classifySigma, hzero, hfour] at h
-      · by_cases hlt : s.1 < 4
-        · simp [classifySigma, hzero, hfour, hlt] at h
-        · have hgt : 4 < s.1 := lt_of_le_of_ne
-            (le_of_not_gt hlt) (Ne.symm hfour)
-          exact ⟨hzero, hgt⟩
-    · simp [classifySigma, hzero] at h
-  · rintro ⟨hzero, hgt⟩
-    exact classifySigma_hyperbolic_of_gt_four hzero hgt
-
 /-- Any nonzero secondary coordinate is classified as loxodromic. -/
 theorem classifySigma_loxodromic_of_second_ne_zero {s : SigmaPair}
     (hs2 : s.2 ≠ 0) :
     classifySigma s = MobiusClass.loxodromic := by
   simp [classifySigma, hs2]
-
-/-! The nonzero secondary coordinate is not only sufficient but necessary
-for the loxodromic branch of the classifier. -/
-theorem classifySigma_loxodromic_iff {s : SigmaPair} :
-    classifySigma s = MobiusClass.loxodromic ↔ s.2 ≠ 0 := by
-  constructor
-  · intro h
-    by_contra hs2
-    have hs2' : s.2 = 0 := by simpa using hs2
-    by_cases h4 : s.1 = 4
-    · simp [classifySigma, hs2', h4] at h
-    · by_cases hlt : s.1 < 4
-      · simp [classifySigma, hs2', h4, hlt] at h
-      · simp [classifySigma, hs2', h4, hlt] at h
-  · exact classifySigma_loxodromic_of_second_ne_zero
-
-theorem gaussianSquare_classify_loxodromic_of_mul_ne_zero
-    {a b : ℚ} (hab : a * b ≠ 0) :
-    classifySigma (gaussianSquare a b) = MobiusClass.loxodromic := by
-  apply classifySigma_loxodromic_iff.mpr
-  have ha : a ≠ 0 := by
-    intro ha
-    apply hab
-    simp [ha]
-  have hb : b ≠ 0 := by
-    intro hb
-    apply hab
-    simp [hb]
-  simp [gaussianSquare, ha, hb]
-
-theorem gaussianSquare_classify_loxodromic_iff {a b : ℚ} :
-    classifySigma (gaussianSquare a b) = MobiusClass.loxodromic ↔
-      a * b ≠ 0 := by
-  constructor
-  · intro h
-    have hsecondary : (gaussianSquare a b).2 ≠ 0 :=
-      classifySigma_loxodromic_iff.mp h
-    intro hab
-    apply hsecondary
-    rcases mul_eq_zero.mp hab with ha | hb
-    · simp [gaussianSquare, ha]
-    · simp [gaussianSquare, hb]
-  · exact gaussianSquare_classify_loxodromic_of_mul_ne_zero
 
 /-- A zero-secondary parameter with trace-squared below `4` is elliptic. -/
 theorem classifySigma_elliptic_of_lt_four {s : SigmaPair}
@@ -138,21 +78,6 @@ theorem classifySigma_elliptic_of_lt_four {s : SigmaPair}
     classifySigma s = MobiusClass.elliptic := by
   have hne : s.1 ≠ 4 := by linarith
   simp [classifySigma, hs2, hs1, hne]
-
-theorem classifySigma_elliptic_iff {s : SigmaPair} :
-    classifySigma s = MobiusClass.elliptic ↔
-      s.2 = 0 ∧ s.1 < 4 := by
-  constructor
-  · intro h
-    by_cases hzero : s.2 = 0
-    · by_cases hfour : s.1 = 4
-      · simp [classifySigma, hzero, hfour] at h
-      · by_cases hlt : s.1 < 4
-        · exact ⟨hzero, hlt⟩
-        · simp [classifySigma, hzero, hfour, hlt] at h
-    · simp [classifySigma, hzero] at h
-  · rintro ⟨hzero, hlt⟩
-    exact classifySigma_elliptic_of_lt_four hzero hlt
 
 /-- The parabolic class constructor is distinct from the elliptic constructor. -/
 theorem MobiusClass.parabolic_ne_elliptic :
@@ -169,20 +94,6 @@ theorem classifySigma_parabolic_of_eq_four {s : SigmaPair}
     (hs2 : s.2 = 0) (hs1 : s.1 = 4) :
     classifySigma s = MobiusClass.parabolic := by
   simp [classifySigma, hs2, hs1]
-
-theorem classifySigma_parabolic_iff {s : SigmaPair} :
-    classifySigma s = MobiusClass.parabolic ↔ s.2 = 0 ∧ s.1 = 4 := by
-  constructor
-  · intro h
-    by_cases hzero : s.2 = 0
-    · by_cases hfour : s.1 = 4
-      · exact ⟨hzero, hfour⟩
-      · by_cases hlt : s.1 < 4
-        · simp [classifySigma, hzero, hfour, hlt] at h
-        · simp [classifySigma, hzero, hfour, hlt] at h
-    · simp [classifySigma, hzero] at h
-  · rintro ⟨hzero, hfour⟩
-    exact classifySigma_parabolic_of_eq_four hzero hfour
 
 /-- The parabolic boundary value `4` cannot satisfy the elliptic strict bound `< 4`. -/
 theorem not_lt_four_of_eq_four {r : ℚ} (hr : r = 4) :

@@ -55,6 +55,16 @@ This measures the 'Area' of information enclosed by a belief loop.
 noncomputable def symplecticCurvature (u v : E) : ℝ :=
   K.ω u v
 
+theorem symplecticCurvature_eq_compatible_pairing (u v : E) :
+    K.symplecticCurvature u v =
+      inner ℝ (K.J u) (K.H.metricOp u v) := by
+  exact K.compatibility u v
+
+theorem complexStructure_apply_apply (u : E) :
+    K.J (K.J u) = -u := by
+  have h := congrArg (fun T : E →L[ℝ] E => T u) K.j_sq_eq_neg_id
+  simpa [ContinuousLinearMap.mul_apply] using h
+
 end KaehlerInformationGeometry
 
 end InfoGeometry.Canonical.KaehlerGeometry

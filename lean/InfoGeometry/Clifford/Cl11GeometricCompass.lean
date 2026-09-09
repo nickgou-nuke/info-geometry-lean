@@ -38,7 +38,8 @@ def chiralProjectorMinus : Matrix (Fin 2) (Fin 2) ℝ :=
 
 @[simp] theorem spaceGenerator_sq :
     spaceGenerator * spaceGenerator = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  exact modularReflectionBase_sq
+  simpa [spaceGenerator, gamma_0_base] using
+    InfoGeometry.Clifford.Cl11Matrix.J1_sq
 
 @[simp] theorem timeGenerator_sq :
     timeGenerator * timeGenerator =
@@ -63,9 +64,12 @@ theorem nullMinus_sq : nullMinus * nullMinus = 0 := by
 
 @[simp] theorem volumeElement_sq :
     volumeElement * volumeElement = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  change modularSignBase * modularSignBase =
-    (1 : Matrix (Fin 2) (Fin 2) ℝ)
-  exact modularSignBase_sq
+  unfold volumeElement spaceGenerator timeGenerator gamma_0_base gamma_1_base
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [InfoGeometry.Clifford.Cl11Matrix.J1,
+      InfoGeometry.Clifford.Cl11Matrix.Eminus, Matrix.mul_apply,
+      Fin.sum_univ_two]
 
 @[simp] theorem chiralProjectors_add :
     chiralProjectorPlus + chiralProjectorMinus =

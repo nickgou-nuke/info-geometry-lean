@@ -121,5 +121,4 @@ noncomputable def compatibleReadoutInverseLimitIso :
     (limit.isLimit readoutDiagram)
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimit
-
 end

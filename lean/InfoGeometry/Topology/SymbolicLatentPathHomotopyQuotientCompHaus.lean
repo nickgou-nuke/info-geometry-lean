@@ -170,4 +170,3 @@ theorem symbolicLatentPathHomotopyEndpointCompHausHom_natural_comp
 
 end InfoGeometry.Topology
 
-end

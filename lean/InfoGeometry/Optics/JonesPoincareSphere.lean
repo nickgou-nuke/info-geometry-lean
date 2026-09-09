@@ -56,22 +56,13 @@ theorem jonesSpinorEquiv_apply (J : JonesVec) :
 Real coordinate presentation of a finite Jones spinor:
 `alpha = aRe + i aIm`, `beta = bRe + i bIm`.
 -/
-def JonesSpinor : Type :=
-  (ℝ × ℝ) × (ℝ × ℝ)
+structure JonesSpinor where
+  aRe : ℝ
+  aIm : ℝ
+  bRe : ℝ
+  bIm : ℝ
 
 namespace JonesSpinor
-
-@[simp] def aRe (J : JonesSpinor) : ℝ :=
-  J.1.1
-
-@[simp] def aIm (J : JonesSpinor) : ℝ :=
-  J.1.2
-
-@[simp] def bRe (J : JonesSpinor) : ℝ :=
-  J.2.1
-
-@[simp] def bIm (J : JonesSpinor) : ℝ :=
-  J.2.2
 
 /-- First component intensity. -/
 def leftIntensity (J : JonesSpinor) : ℝ :=
@@ -104,7 +95,7 @@ def UnitIntensity (J : JonesSpinor) : Prop :=
 /-- The finite Stokes vector lies on the light cone. -/
 theorem stokes_lightcone_identity (J : JonesSpinor) :
     J.stokes1 ^ 2 + J.stokes2 ^ 2 + J.stokes3 ^ 2 = J.stokes0 ^ 2 := by
-  rcases J with ⟨⟨a, b⟩, ⟨c, d⟩⟩
+  rcases J with ⟨a, b, c, d⟩
   simp [stokes0, stokes1, stokes2, stokes3, leftIntensity, rightIntensity]
   ring
 
@@ -119,12 +110,18 @@ theorem poincare_sphere_identity_of_unitIntensity
 /-! ## Circular-basis poles and projectors -/
 
 /-- Positive circular-basis pole. -/
-def plusCircular : JonesSpinor :=
-  ((1, 0), (0, 0))
+def plusCircular : JonesSpinor where
+  aRe := 1
+  aIm := 0
+  bRe := 0
+  bIm := 0
 
 /-- Negative circular-basis pole. -/
-def minusCircular : JonesSpinor :=
-  ((0, 0), (1, 0))
+def minusCircular : JonesSpinor where
+  aRe := 0
+  aIm := 0
+  bRe := 1
+  bIm := 0
 
 theorem plusCircular_stokes :
     plusCircular.stokes0 = 1 ∧ plusCircular.stokes1 = 1 ∧
@@ -169,17 +166,18 @@ theorem circularProjectors_sum_one :
 /-! ## Pauli/Hestenes null readout -/
 
 /-- Stokes four-vector as a real Pauli/Hestenes paravector. -/
-def stokesMinkowski4 (J : JonesSpinor) : Minkowski4 := fun
-  | 0 => J.stokes0
-  | 1 => J.stokes2
-  | 2 => J.stokes3
-  | 3 => J.stokes1
+def stokesMinkowski4 (J : JonesSpinor) : Minkowski4 where
+  t := J.stokes0
+  x := J.stokes2
+  y := J.stokes3
+  z := J.stokes1
 
 /-- The Stokes four-vector is lightlike for the Pauli/Hestenes metric. -/
 theorem stokesMinkowski4_q (J : JonesSpinor) :
     (stokesMinkowski4 J).q = 0 := by
-  change J.stokes0 ^ 2 - J.stokes2 ^ 2 - J.stokes3 ^ 2 - J.stokes1 ^ 2 = 0
-  nlinarith [stokes_lightcone_identity J]
+  dsimp [stokesMinkowski4, Minkowski4.q]
+  have h := stokes_lightcone_identity J
+  nlinarith
 
 /-- The Stokes four-vector is a null Pauli/Hestenes vector. -/
 theorem stokesMinkowski4_isNull (J : JonesSpinor) :

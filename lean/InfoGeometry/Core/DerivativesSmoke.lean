@@ -13,7 +13,7 @@ namespace InfoGeometry.Core
 section
 
 variable {α : Type _} [Fintype α] [Nonempty α]
-variable (params : InfoGeometry.GrandCanonical.GrandCanonicalParams α) (β : ℝ)
+variable (params : GrandCanonicalParams α) (β : ℝ)
 
 example : 0 < partition params β :=
   gc_partition_pos params β
@@ -27,3 +27,4 @@ example : hessian params β = variance params β :=
 end
 
 end InfoGeometry.Core
+

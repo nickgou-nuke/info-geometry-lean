@@ -180,4 +180,33 @@ theorem second_moment_decimal_gap :
     (11781 : ℚ) / 10000 - (11777 : ℚ) / 10000 = 1 / 2500 := by
   norm_num
 
+/-- Synthesis theorem: the finite algebraic QPNM/Cuntz shadow is closed. -/
+theorem soloviev_qpnm_chiral_cuntz_synthesis :
+    Splus * Splus = 0 ∧
+    Sminus * Sminus = 0 ∧
+    Splus * Sminus = Nplus ∧
+    Sminus * Splus = Nminus ∧
+    Splus * Sminus + Sminus * Splus = Itwo ∧
+    comm h Splus = (2 : ℂ) • Splus ∧
+    comm h Sminus = (-2 : ℂ) • Sminus ∧
+    (∀ Eplus Eminus : ℝ, qpnmHamiltonian Eplus Eminus 0 = rpaTruncation Eplus Eminus) ∧
+    ((11781 : ℚ) / 10000 - (11777 : ℚ) / 10000 = 1 / 2500) := by
+  constructor
+  · exact Splus_nilpotent
+  constructor
+  · exact Sminus_nilpotent
+  constructor
+  · exact Splus_mul_Sminus_eq_Nplus
+  constructor
+  · exact Sminus_mul_Splus_eq_Nminus
+  constructor
+  · exact chiral_completeness
+  constructor
+  · exact coriolis_comm_Splus
+  constructor
+  · exact coriolis_comm_Sminus
+  constructor
+  · exact rpa_exact_when_coupling_zero
+  · exact second_moment_decimal_gap
+
 end SolovievQPNMChiralCuntz

@@ -25,25 +25,25 @@ open InfoGeometry.Canonical.OmegaBoundaryRepresentation
 open InfoGeometry.Canonical.CantorChirality
 
 /-- Microscopic left-handed chiral boundary state: eigenstate of `Γ` with eigenvalue `+1`. -/
-def IsLeftChiralState (f : ((ℕ → Bool) → ℂ)) : Prop :=
+def IsLeftChiralState (f : CantorSpace) : Prop :=
   ChiralityOp f = (1 : ℂ) • f
 
 /-- Microscopic right-handed chiral boundary state: eigenstate of `Γ` with eigenvalue `-1`. -/
-def IsRightChiralState (f : ((ℕ → Bool) → ℂ)) : Prop :=
+def IsRightChiralState (f : CantorSpace) : Prop :=
   ChiralityOp f = (-1 : ℂ) • f
 
 /-- Macroscopic left-handed circulation fluid state: positive vorticity eigenstate. -/
-def IsLeftCirculationState (f : ((ℕ → Bool) → ℂ)) (V : (Module.End ℂ ((ℕ → Bool) → ℂ))) (c : ℂ) : Prop :=
+def IsLeftCirculationState (f : CantorSpace) (V : CantorOp) (c : ℂ) : Prop :=
   V f = c • f
 
 /-- Macroscopic right-handed circulation fluid state: negative vorticity eigenstate. -/
-def IsRightCirculationState (f : ((ℕ → Bool) → ℂ)) (V : (Module.End ℂ ((ℕ → Bool) → ℂ))) (c : ℂ) : Prop :=
+def IsRightCirculationState (f : CantorSpace) (V : CantorOp) (c : ℂ) : Prop :=
   V f = (-c) • f
 
 /-- **Pauli-Dirac Spin-Vorticity Duality**
     Under the Gordon decomposition bridge `V = c • Γ` mapping fluid vorticity to chirality,
     the macroscopic fluid circulation states are equivalent to the microscopic chiral spinor states. -/
-theorem spin_vorticity_duality (f : ((ℕ → Bool) → ℂ)) (V : (Module.End ℂ ((ℕ → Bool) → ℂ))) (c : ℂ) (hc : c ≠ 0)
+theorem spin_vorticity_duality (f : CantorSpace) (V : CantorOp) (c : ℂ) (hc : c ≠ 0)
     (h_bridge : V = c • ChiralityOp) :
     (IsLeftChiralState f ↔ IsLeftCirculationState f V c) ∧
     (IsRightChiralState f ↔ IsRightCirculationState f V c) := by

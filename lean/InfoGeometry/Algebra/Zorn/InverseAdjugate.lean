@@ -18,6 +18,22 @@ variable {R : Type*} [CommRing R]
 def oneZ : ZornCell R :=
   ⟨1, 1, 0, 0, 0, 0, 0, 0⟩
 
+theorem mulZ_one (X : ZornCell R) : X * oneZ = X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  change mulZ _ _ = _
+  unfold mulZ oneZ
+  congr <;> ring
+
+theorem oneZ_mul (X : ZornCell R) : oneZ * X = X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  change mulZ _ _ = _
+  unfold mulZ oneZ
+  congr <;> ring
+
+theorem detZ_oneZ : detZ (oneZ : ZornCell R) = 1 := by
+  unfold detZ oneZ
+  ring
+
 /-- Scalar diagonal cell `c · 1`. -/
 def scalarZ (c : R) : ZornCell R :=
   ⟨c, c, 0, 0, 0, 0, 0, 0⟩
@@ -26,11 +42,6 @@ def scalarZ (c : R) : ZornCell R :=
 def scaleZ (c : R) (X : ZornCell R) : ZornCell R :=
   ⟨c * X.r, c * X.s, c * X.x1, c * X.x2, c * X.x3,
     c * X.y1, c * X.y2, c * X.y3⟩
-
-theorem scaleZ_scalarZ (c d : R) :
-    scaleZ c (scalarZ d) = scalarZ (c * d) := by
-  unfold scaleZ scalarZ
-  congr <;> ring
 
 /-- Right scalar extraction for the concrete Zorn product. -/
 theorem mul_scaleZ_right (c : R) (X Y : ZornCell R) :
@@ -55,6 +66,11 @@ theorem mul_scaleZ_left (c : R) (X Y : ZornCell R) :
 /-- Zorn conjugation / adjugate: swap diagonal slots and negate vector slots. -/
 def conjZ (X : ZornCell R) : ZornCell R :=
   ⟨X.s, X.r, -X.x1, -X.x2, -X.x3, -X.y1, -X.y2, -X.y3⟩
+
+theorem scaleZ_scalarZ (c d : R) :
+    scaleZ c (scalarZ d) = scalarZ (c * d) := by
+  unfold scaleZ scalarZ
+  congr <;> ring
 
 theorem conjZ_scalarZ (c : R) :
     conjZ (scalarZ c) = scalarZ c := by

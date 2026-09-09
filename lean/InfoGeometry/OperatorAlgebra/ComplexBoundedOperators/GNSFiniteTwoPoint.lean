@@ -62,7 +62,7 @@ theorem vector_state_recovers_omega (a : Two) :
   rfl
 
 /-- Cyclicity: every vector is `a Ω` for `a = x`. -/
-theorem cyclic_property (x : Two) :
+theorem cyclic_witness (x : Two) :
     ∃ a : Two, mulVec a omegaVec = x := by
   refine ⟨x, ?_⟩
   funext i

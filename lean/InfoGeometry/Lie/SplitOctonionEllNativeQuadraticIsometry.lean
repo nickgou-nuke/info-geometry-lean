@@ -52,18 +52,22 @@ def ellNativeFlowLinearEquiv (t : ℝ) : CZ ≃ₗ[ℝ] CZ where
 form.  The proof expands the actual mixed-coordinate `lUnit` action rather
 than replacing it by the distinct diagonal axial flow. -/
 theorem detZ_ellNativeFlow (t : ℝ) (Z : CZ) :
-    ZornMatrix.detZ (ellNativeFlow t Z) = ZornMatrix.detZ Z := by
+    ZornMatrix.detZ realCrossProduct3 (ellNativeFlow t Z) =
+      ZornMatrix.detZ realCrossProduct3 Z := by
+  unfold realCrossProduct3
   simp [ellNativeFlow, flowZero, flowPlus, flowMinus, ellGrading,
     ellCommutator, lUnit, zMul, ZornMatrix.detZ,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+    Fin.sum_univ_three]
   rw [Real.exp_neg]
   field_simp [Real.exp_ne_zero]
-  ring
+  ring_nf
 
 @[simp] theorem detZ_ellNativeFlowLinearEquiv (t : ℝ) (Z : CZ) :
-    ZornMatrix.detZ (ellNativeFlowLinearEquiv t Z) = ZornMatrix.detZ Z :=
+    ZornMatrix.detZ realCrossProduct3 (ellNativeFlowLinearEquiv t Z) =
+      ZornMatrix.detZ realCrossProduct3 Z :=
   detZ_ellNativeFlow t Z
 
 /-- The native closed flow as a Mathlib quadratic isometry. -/
@@ -85,7 +89,8 @@ def ellNativeFlowQuadraticIsometry (t : ℝ) :
 
 /-- Polarization of the Zorn determinant is invariant under the same flow. -/
 theorem polarZ_ellNativeFlow (t : ℝ) (X Y : CZ) :
-    polarZ (ellNativeFlow t X) (ellNativeFlow t Y) = polarZ X Y := by
+    polarZ realCrossProduct3 (ellNativeFlow t X) (ellNativeFlow t Y) =
+      polarZ realCrossProduct3 X Y := by
   unfold polarZ
   rw [← map_add, detZ_ellNativeFlow, detZ_ellNativeFlow,
     detZ_ellNativeFlow]
@@ -93,7 +98,8 @@ theorem polarZ_ellNativeFlow (t : ℝ) (X Y : CZ) :
 /-- The representative-level Zorn null cone is invariant in both
 directions under the native flow. -/
 theorem detZ_ellNativeFlow_eq_zero_iff (t : ℝ) (Z : CZ) :
-    ZornMatrix.detZ (ellNativeFlow t Z) = 0 ↔ ZornMatrix.detZ Z = 0 := by
+    ZornMatrix.detZ realCrossProduct3 (ellNativeFlow t Z) = 0 ↔
+      ZornMatrix.detZ realCrossProduct3 Z = 0 := by
   rw [detZ_ellNativeFlow]
 
 end InfoGeometry.Lie.SplitOctonionEllNativeQuadraticIsometry

@@ -169,8 +169,8 @@ theorem hyperbolicFlowZornEquiv_neg_apply (t : ℝ) (X : CanonicalZorn) :
 
 /-- The hyperbolic flow on CanonicalZorn preserves the zero-norm cone (and the full algebraic norm). -/
 theorem hyperbolicFlowZorn_preserves_norm (t : ℝ) (X : CanonicalZorn) :
-    detZ (hyperbolicFlowZorn t X) = detZ X := by
-  have h1 (Y : CanonicalZorn) : detZ Y = circularNormQuad (circularPeirceBasis.equivFun Y) := by
+    detZ realCrossProduct3 (hyperbolicFlowZorn t X) = detZ realCrossProduct3 X := by
+  have h1 (Y : CanonicalZorn) : detZ realCrossProduct3 Y = circularNormQuad (circularPeirceBasis.equivFun Y) := by
     rw [circularNorm_eq Y, circularPeirceBasis_coordinate_eq_equivFun Y]
     rfl
   rw [h1, h1]
@@ -200,7 +200,7 @@ noncomputable def hyperbolicFlowZornQuadraticIsometry (t : ℝ) :
 
 /-! The hyperbolic flow preserves the native split-octonion null cone. -/
 theorem hyperbolicFlowZorn_mem_nullCone_iff (t : ℝ) (X : CanonicalZorn) :
-    detZ (hyperbolicFlowZorn t X) = 0 ↔ detZ X = 0 := by
+    detZ realCrossProduct3 (hyperbolicFlowZorn t X) = 0 ↔ detZ realCrossProduct3 X = 0 := by
   rw [hyperbolicFlowZorn_preserves_norm]
 
 end InfoGeometry.Lie.SplitOctonionCircularHyperbolicZornFlow

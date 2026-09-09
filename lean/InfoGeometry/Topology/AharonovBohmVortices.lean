@@ -3,14 +3,14 @@ import Mathlib.Tactic
 /-!
 # Finite Aharonov--Bohm vortex phase certificates
 
-This module records a theorem-safe finite phase interface: a supplied phase whose
+This module records a theorem-safe finite phase socket: a supplied phase whose
 third power is `1` gives a stable triple-winding identity, and the corresponding
 `3 × 3` diagonal vortex operator cubes to the identity.
 
 It does **not** prove physical color confinement, Hawking radiation dynamics,
 LLM hallucination confinement, or a derivation of `SU(3)` from parafermions.
 Those interpretations require additional models outside this finite algebraic
-property.
+certificate.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -61,7 +61,7 @@ theorem diagonalVortexOperator_cube_eq_one {phase : ℂ} (h_phase : IsThirdRootP
     simp [diagonalVortexOperator, Matrix.mul_apply, Fin.sum_univ_three, hmul]
 
 /--
-A finite Aharonov--Bohm vortex phase property.
+A finite Aharonov--Bohm vortex phase certificate.
 
 The carrier is retained for compatibility; theorem owners above expose the
 actual phase obligations as explicit predicates.
@@ -71,12 +71,12 @@ structure AharonovBohmVortex where
   h_fractional_winding : phase ^ 3 = 1
   h_not_one : phase ≠ 1
 
-/-- Triple winding of a property third-root phase returns to the identity phase. -/
+/-- Triple winding of a certified third-root phase returns to the identity phase. -/
 theorem baryon_vortex_confinement (v : AharonovBohmVortex) :
     v.phase * v.phase * v.phase = 1 := by
   exact thirdRootPhase_triple_product v.h_fractional_winding
 
-/-- The finite `3 × 3` diagonal vortex operator associated to a property phase. -/
+/-- The finite `3 × 3` diagonal vortex operator associated to a certified phase. -/
 def vortexOperator (v : AharonovBohmVortex) : Matrix (Fin 3) (Fin 3) ℂ :=
   diagonalVortexOperator v.phase
 

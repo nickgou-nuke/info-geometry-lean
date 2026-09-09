@@ -205,7 +205,7 @@ structure Defect where
   witness : Option Name := none
   deriving Repr, Inhabited, ToJson
 
-structure TypedPathCandidate where
+structure LawfulPathCandidate where
   schemaVersion : Nat := schemaVersion
   src : Name
   dst : Name
@@ -275,7 +275,7 @@ structure CompatibleCone where
   deriving Repr, Inhabited, ToJson
 
 /-- Lawful cone: a compatible cone plus explicit bounded defect accounting. -/
-structure TypedCone where
+structure LawfulCone where
   base : CompatibleCone
   totalDefectCost : Nat
   defects : Array Defect := #[]
@@ -290,7 +290,7 @@ structure TypedCompositePath where
   deriving Repr, Inhabited, ToJson
 
 /-- Lawful finite composite path in the typed declaration/process category. -/
-structure TypedCompositePathWithDefects where
+structure LawfulTypedCompositePath where
   base : TypedCompositePath
   totalDefectCost : Nat
   defects : Array Defect := #[]
@@ -436,10 +436,10 @@ def PathStep.typedKind (step : PathStep) : DeclMorphismKind :=
         .dependency
 
 /--
-Bridge a `TypedPathCandidate` export row into the canonical typed path vocabulary.
+Bridge a `LawfulPathCandidate` export row into the canonical typed path vocabulary.
 The step morphisms are kept finite and explicit.
 -/
-def TypedPathCandidate.toTypedCompositePathWithDefects : TypedPathCandidate → TypedCompositePathWithDefects
+def LawfulPathCandidate.toLawfulTypedCompositePath : LawfulPathCandidate → LawfulTypedCompositePath
   | path =>
       let typedSteps := path.steps.map fun step =>
         { src := step.src
@@ -474,9 +474,9 @@ Lawful cone induced by a process event and bounded path witnesses.
 The defect accounting is aggregated only from those lawful paths whose
 destination is one of the semantic legs exported for the cone.
 -/
-def ProcessEvent.toTypedCone
-    (paths : Array TypedPathCandidate)
-    (ev : ProcessEvent) : TypedCone :=
+def ProcessEvent.toLawfulCone
+    (paths : Array LawfulPathCandidate)
+    (ev : ProcessEvent) : LawfulCone :=
   let base := ev.toCompatibleCone
   let legDsts := base.legs.map (·.dst)
   let relevantPaths := paths.filter fun path => path.src == ev.node && legDsts.contains path.dst

@@ -80,7 +80,7 @@ def fibStageExtend {n : ℕ} (s : FibBraidStage n) : FibBraidStage (n + 1) where
 /--
 Stage-extension map for the record model: it re-indexes the stage parameter
 from `n` to `n+1` while preserving the scalar fields and the supplied Artin
-relation property.
+relation witness.
 
 This is not a theorem about the shift automorphism of an Artin braid-group
 direct limit.

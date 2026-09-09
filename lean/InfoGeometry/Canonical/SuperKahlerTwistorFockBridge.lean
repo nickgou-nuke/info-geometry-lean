@@ -73,6 +73,6 @@ theorem cl11_single_site_witt_packet :
     InfoGeometry.Clifford.Cl11TensorTower.realEncodedWittAnnihilationBase_sq,
     InfoGeometry.Clifford.Cl11TensorTower.realEncodedWitt_anticomm⟩
 
-end InfoGeometry.Canonical.SuperKahlerTwistorFockBridge
+end SuperKahlerTwistorFockBridge
 
-end
+end Canonical

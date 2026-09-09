@@ -14,14 +14,10 @@ universe u
 theorem colimit_intertwiner_diff_zero_law
     (Stage : ℕ → Type u) [∀ n, AddCommGroup (Stage n)]
     (f : ∀ m n : ℕ, m ≤ n → Stage m →+ Stage n)
-    (F : CompatibleOperatorFamily Stage)
-    (hcommutes :
-      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F n (f m n h x) = f m n h (F m x))
+    (F : CompatibleOperatorFamily Stage f)
     (m n : ℕ) (h : m ≤ n) (x : Stage m) :
     F.operatedOf Stage f n (f m n h x) = F.operatedOf Stage f m x := by
-  exact CompatibleOperatorFamily.operatedOf_compatible
-    Stage f F hcommutes m n h x
+  exact CompatibleOperatorFamily.operatedOf_compatible Stage f F m n h x
 
 /-- A supplied anticommutation relation gives the vanishing anticommutator. -/
 theorem hestenes_krein_anticommutator_law

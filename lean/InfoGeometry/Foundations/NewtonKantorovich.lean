@@ -7,7 +7,7 @@ import InfoGeometry.Foundations.NewtonKantorovichCertificate
 /-!
 # InfoGeometry.Foundations.NewtonKantorovich
 
-Focused Newton--Kantorovich property layer for the scalar majorant lane.
+Focused Newton--Kantorovich certificate layer for the scalar majorant lane.
 -/
 
 namespace InfoGeometry.Foundations.NewtonKantorovich
@@ -59,7 +59,7 @@ theorem majorant_step_mono_on_interval
   exact (majorantSeq_mem_and_monotone_of_kantorovich_strict L η hL hη hcond).2
 
 /--
-Residual contraction (nonincreasing residual to `tMinus`) on the property
+Residual contraction (nonincreasing residual to `tMinus`) on the certified
 interval.
 -/
 theorem majorant_step_contractive_on_interval

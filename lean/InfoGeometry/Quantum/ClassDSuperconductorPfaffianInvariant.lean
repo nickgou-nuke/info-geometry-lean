@@ -136,12 +136,12 @@ Finite Class-D parameters in the topological regime.
 The Pfaffian product, its sign, and both high-symmetry bulk gaps are derived
 below; they are not stored as independent evidence.
 -/
-abbrev FiniteClassDParameters : Type :=
+abbrev FiniteClassDPfaffianWitness : Type :=
   Σ' mu : ℝ, Σ' t : ℝ, mu^2 < t^2
 
-namespace FiniteClassDParameters
+namespace FiniteClassDPfaffianWitness
 
-variable (W : FiniteClassDParameters)
+variable (W : FiniteClassDPfaffianWitness)
 
 abbrev mu : ℝ := W.1
 
@@ -149,7 +149,7 @@ abbrev t : ℝ := W.2.1
 
 abbrev h_topological : W.mu^2 < W.t^2 := W.2.2
 
-/-- The property's Pfaffian product is the canonical finite Kitaev product. -/
+/-- The witness's Pfaffian product is the canonical finite Kitaev product. -/
 def pfaffianProduct : ℝ :=
   kitaevPfaffianProduct W.mu W.t
 
@@ -186,10 +186,10 @@ theorem bulkGapPi :
     exact congrArg (fun x : ℝ => x^2) hmu
   exact (ne_of_lt W.h_topological) hsquares
 
-end FiniteClassDParameters
+end FiniteClassDPfaffianWitness
 
 theorem finiteClassDPfaffianWitness_exists :
-    Nonempty FiniteClassDParameters := by
+    Nonempty FiniteClassDPfaffianWitness := by
   exact ⟨⟨0, 1, by norm_num⟩⟩
 
 end InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant

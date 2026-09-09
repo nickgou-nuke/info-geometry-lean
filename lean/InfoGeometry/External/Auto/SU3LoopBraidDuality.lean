@@ -80,7 +80,7 @@ def quantumDeformationParameter (β : ℝ) (E : ℝ) (μ : ℝ) (Q : ℝ) (θ : 
 
 /-! The identification of a quantum `SU_q(3)` representation category with a
 Cuntz/Cuntz--Krieger model is not formalized here.  No proposition-valued
-property for that analytic statement is introduced. -/
+certificate for that analytic statement is introduced. -/
 
 /-! ## Cantor-loop gauge steps and braid covariance -/
 
@@ -128,6 +128,32 @@ theorem qColorBraid4_commutes_with_invariant_cantorLoopGaugeStep4
 /-! The DHR superselection-sector and loop-group equivalence layers require
 analytic and categorical owners that are not yet present.  This module asserts
 only the finite permutation and gauge-covariance shadow below. -/
+
+/-! ## The loop/braid/Cuntz synthesis -/
+
+/-- Finite theorem-backed shadow of the proposed loop/braid picture: the Weyl
+transpositions obey Artin and are involutions.  This theorem does not assert a
+loop-group, DHR-sector, quantum-group, or Cuntz equivalence. -/
+theorem su3_loop_braid_duality_synthesis :
+    swap12 ∘ swap23 ∘ swap12 = swap23 ∘ swap12 ∘ swap23 ∧
+    swap12 ∘ swap12 = id ∧ swap23 ∘ swap23 = id := by
+  exact ⟨swap12_swap23_braid, weyl_transpositions_square_to_identity⟩
+
+/-- Finite checked fusion law for the boundary picture: Weyl braid shadows obey
+Artin, q-scaled color braids obey Artin on the `3+1` lanes, and finite
+Cantor-loop gauge steps are braid-covariant. -/
+theorem su3_loop_braid_cantor_gauge_fusion_synthesis {V : Type*}
+    [AddCommMonoid V] [Module ℂ V]
+    (q : ℂ) (π : Equiv.Perm (Fin 3)) (w : Fin 3 → ℂ) (s : ℂ)
+    (ψ : ColorSpinor4 V) :
+    swap12 ∘ swap23 ∘ swap12 = swap23 ∘ swap12 ∘ swap23 ∧
+    qColorSigma0 q (qColorSigma1 q (qColorSigma0 q ψ)) =
+      qColorSigma1 q (qColorSigma0 q (qColorSigma1 q ψ)) ∧
+    qColorBraid4 q π (cantorLoopGaugeStep4 w s ψ) =
+      cantorLoopGaugeStep4 (fun i => w (π i)) s (qColorBraid4 q π ψ) := by
+  exact ⟨swap12_swap23_braid,
+    qColorBraid4_artin q ψ,
+    qColorBraid4_cantorLoopGaugeStep4_covariant q π w s ψ⟩
 
 end SU3LoopBraidDuality
 

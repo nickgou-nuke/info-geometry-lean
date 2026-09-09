@@ -65,5 +65,3 @@ theorem symbolicLatentAtlasRelativeFeatureRegionObservationCompHausHom_forget
   rfl
 
 end InfoGeometry.Topology
-
-end

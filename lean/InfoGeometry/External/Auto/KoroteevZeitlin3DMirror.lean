@@ -12,8 +12,6 @@ noncomputable section
 
 namespace KoroteevZeitlin
 
-namespace ThreeDMirror
-
 structure QuiverVariety where
   v : List ℕ  -- Dimension vectors for vertices
   w : List ℕ  -- Dimension vectors for framing
@@ -50,8 +48,6 @@ def QQ_system (r : ℕ) (Q_plus Q_minus : List (ℂ → ℂ)) (xi : List ℂ) (L
 /-- Trigonometric Ruijsenaars-Schneider Lax Matrix -/
 def tRS_LaxMatrix (_n : ℕ) (chi p : List ℂ) (hbar : ℂ) (i j : ℕ) : ℂ :=
   if i = j then p[i]! else (chi[j]! * (1 - hbar) / (chi[j]! - chi[i]! * hbar)) * p[j]!
-
-end ThreeDMirror
 
 end KoroteevZeitlin
 end noncomputable section

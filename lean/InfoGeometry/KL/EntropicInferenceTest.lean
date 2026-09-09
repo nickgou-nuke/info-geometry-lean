@@ -84,7 +84,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
             (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
   simpa using kl_chain_rule_toReal_strict p q hposp hposq
 
--- Constructive Jeffrey KL-Pythagorean decomposition in `toReal` form (no `KlChainRule` property).
+-- Constructive Jeffrey KL-Pythagorean decomposition in `toReal` form (no `KlChainRule` hypothesis).
 example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
     [MeasurableSpace X] [MeasurableSpace Θ]
     [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
@@ -102,7 +102,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
   simpa using kl_pythagorean_jeffrey_toReal_strict
     (p := p) (q := q) (p_x := marginal_x p) hposp hposq rfl
 
--- Constructive Jeffrey KL-Pythagorean decomposition in `ℝ≥0∞` form (no `KlChainRule` property).
+-- Constructive Jeffrey KL-Pythagorean decomposition in `ℝ≥0∞` form (no `KlChainRule` hypothesis).
 example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
     [MeasurableSpace X] [MeasurableSpace Θ]
     [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]

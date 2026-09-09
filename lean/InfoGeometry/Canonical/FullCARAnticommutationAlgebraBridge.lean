@@ -39,9 +39,23 @@ theorem creation_creation_car_anticommute (alpha beta : U →ₗ[R] R) (omega : 
 theorem annihilation_annihilation_car_anticommute (u v : U) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
     (contractionOp (evaluationLinear u)) ((contractionOp (evaluationLinear v)) omega) +
     (contractionOp (evaluationLinear v)) ((contractionOp (evaluationLinear u)) omega) = 0 :=
-  by
-    exact contraction_op_anticommute (R := R) (V := U →ₗ[R] R)
-      (evaluationLinear u) (evaluationLinear v) omega
+  contraction_op_anticommute (evaluationLinear u) (evaluationLinear v) omega
 
+/-- **Theorem**: Master Full CAR Anticommutation Algebra & Split Clifford Action Synthesis.
+    Unifies:
+    1. Creation-Creation CAR anti-commutativity {ε_α, ε_β} = 0 on ExteriorAlgebra R (Dual U).
+    2. Annihilation-Annihilation CAR anti-commutativity {a_u, a_v} = 0.
+    3. Mixed Creation-Annihilation evaluation scalar pairing ev_u(α) • ω = α(u) • ω.
+    4. Canonical CAR representation foundation on ExteriorAlgebra R (Dual U). -/
+theorem master_full_car_anticommutation_algebra_synthesis
+    (u v : U) (alpha beta : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
+    (creationOp alpha (creationOp beta omega) + creationOp beta (creationOp alpha omega) = 0) ∧
+    ((contractionOp (evaluationLinear u)) ((contractionOp (evaluationLinear v)) omega) +
+     (contractionOp (evaluationLinear v)) ((contractionOp (evaluationLinear u)) omega) = 0) ∧
+    (evaluationLinear u alpha = alpha u) := ⟨
+  creation_creation_car_anticommute alpha beta omega,
+  annihilation_annihilation_car_anticommute u v omega,
+  rfl
+⟩
 
 end InfoGeometry.Canonical.FullCARAnticommutationAlgebraBridge

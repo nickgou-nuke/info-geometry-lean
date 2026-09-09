@@ -1,12 +1,7 @@
 import InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 
-/-!
-# Erlangen-Langlands-Connes Capstone
-
-Import-only surface for `InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone`.
-The owner declarations remain in the capstone namespace; this file declares no
-theorem aliases.
+/-! Canonical namespace entry point for the existing Erlangen--Langlands--Connes
+capstone.  The mathematical owner remains in `InfoGeometry.Capstone`.
 -/
-
 namespace InfoGeometry.Canonical.ErlangenLanglandsConnesCapstone
 end InfoGeometry.Canonical.ErlangenLanglandsConnesCapstone

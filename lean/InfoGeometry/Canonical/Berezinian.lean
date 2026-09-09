@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import InfoGeometry.NCG.BerezinianGaussianFactorization
+import InfoGeometry.Canonical.BerezinianSuperBarrierBridge
 
 /-
 #### BUCKET 1: Berezinian algebraic identities
@@ -25,13 +27,6 @@ theorem ber_inv (a d : ℝ) (ha : a ≠ 0) (hd : d ≠ 0) :
 
 theorem ber_eq_one (a : ℝ) (ha : a ≠ 0) : ber a a ha = 1 := by
   simp [ber, div_self ha]
-
-/-- Reciprocal determinant blocks produce the square, not the unit.
-This is distinct from `ber_eq_one`: boson/signed cancellation and a
-Berezinian ratio are different finite identities. -/
-theorem ber_reciprocal_blocks (a : ℝ) (ha : a ≠ 0) :
-    ber a a⁻¹ (inv_ne_zero ha) = a ^ 2 := by
-  simp [ber, div_inv_eq_mul, pow_two]
 
 /-- Berezinian diagonal exponential-supertrace theorem. -/
 theorem ber_diagonal_exp_eq_exp_str (a d : ℝ) :

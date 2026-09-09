@@ -101,7 +101,7 @@ theorem topologicalBekensteinBound_of_barrierLift
   exact abs_nonneg _
 
 /--
-Proof-carrying barrier-lift property.
+Proof-carrying barrier-lift witness.
 
 This packages the scalar cocycle bridge together with the exact barrier-lift
 identity needed for the smallest constructive barrier route.
@@ -116,10 +116,10 @@ def BarrierLiftWitness
         CocycleEntropyPotential σ u hBridge k|
 
 /--
-Constructive barrier-lift property route to the topological Bekenstein bound.
+Constructive barrier-lift witness route to the topological Bekenstein bound.
 
 This removes the explicit `hBridge` and `hBarrierLift` pair from
-`topologicalBekensteinBound_of_barrierLift`: one proof-carrying property packet
+`topologicalBekensteinBound_of_barrierLift`: one proof-carrying witness packet
 suffices.
 -/
 theorem topologicalBekensteinBound_of_barrierLiftWitness
@@ -133,10 +133,10 @@ theorem topologicalBekensteinBound_of_barrierLiftWitness
     (hBridge := W.choose) (hBarrierLift := W.choose_spec)
 
 /--
-Proof-carrying Connes-cocycle barrier-lift property.
+Proof-carrying Connes-cocycle barrier-lift witness.
 
 This is the smallest compatibility packet for the cocycle-to-bound lane: it
-retains the named `IsConnesCocycle` property for legacy callers while bundling
+retains the named `IsConnesCocycle` witness for legacy callers while bundling
 the exact barrier-lift route into one constructive object.
 -/
 def ConnesCocycleBarrierLiftWitness
@@ -150,7 +150,7 @@ Constructive Connes-cocycle route to the topological Bekenstein bound.
 
 This removes the explicit triple `(hCocycle, hBridge, hBarrierLift)` from the
 compatibility surface: callers provide one proof-carrying packet, and the bound
-is discharged through the smaller barrier-lift property route.
+is discharged through the smaller barrier-lift witness route.
 -/
 theorem topologicalBekensteinBound_of_connesCocycleBarrierLiftWitness
   (σ : AdditiveModularFlow (H := H))
@@ -164,7 +164,7 @@ theorem topologicalBekensteinBound_of_connesCocycleBarrierLiftWitness
     W.2
 
 /--
-Compatibility cocycle-to-bound theorem.  The `IsConnesCocycle` property is
+Compatibility cocycle-to-bound theorem.  The `IsConnesCocycle` hypothesis is
 retained for named-argument callers, but the proof now routes through the
 smaller barrier-lift theorem above; the bound itself does not use the additive
 cocycle law.
@@ -466,10 +466,10 @@ theorem topologicalBekensteinBound_of_cocycleGeneratorLift
   exact le_trans (abs_nonneg _) hle
 
 /--
-Proof-carrying generator-lift property for a cocycle entropy potential.
+Proof-carrying generator-lift witness for a cocycle entropy potential.
 
 This bundles the scalar cocycle bridge together with the concrete generator-lift
-relation used by the property-minimal Bekenstein-bound route.
+relation used by the hypothesis-minimal Bekenstein-bound route.
 -/
 def CocycleGeneratorLiftWitness
   (σ : AdditiveModularFlow (H := H))
@@ -480,10 +480,10 @@ def CocycleGeneratorLiftWitness
       (CocycleEntropyPotential (H := H) σ u hBridge)
 
 /--
-Proof-carrying Connes-cocycle generator-lift property.
+Proof-carrying Connes-cocycle generator-lift witness.
 
-This bundles the legacy `IsConnesCocycle` compatibility interface together with
-the smaller proof-carrying generator-lift property, so downstream routes can
+This bundles the legacy `IsConnesCocycle` compatibility socket together with
+the smaller proof-carrying generator-lift witness, so downstream routes can
 consume one constructive packet instead of the explicit triple
 `(hCocycle, hBridge, hLift)`.
 -/
@@ -517,7 +517,7 @@ This is the constructive companion to
 `cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift`: the loose
 pair `(hBridge, hLift)` is recovered from one
 `CocycleGeneratorLiftWitness` packet, while the compatibility
-`IsConnesCocycle` property is kept unchanged.
+`IsConnesCocycle` hypothesis is kept unchanged.
 -/
 theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLiftWitness
   (σ : AdditiveModularFlow (H := H))
@@ -534,11 +534,11 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLiftWitness
 
 /--
 Witness-routed constructive route from a Connes cocycle and a generator-lift
-property packet to the topological Bekenstein bound.
+witness packet to the topological Bekenstein bound.
 
 This removes the explicit pair `(hBridge, hLift)` from
 `topologicalBekensteinBound_of_connesCocycle_generatorLift` while keeping the
-legacy `IsConnesCocycle` compatibility property unchanged.
+legacy `IsConnesCocycle` compatibility hypothesis unchanged.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_generatorLiftWitness
   (σ : AdditiveModularFlow (H := H))
@@ -554,7 +554,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLiftWitness
 
 /--
 Fully bundled constructive route from a Connes cocycle and a generator-lift
-property packet to the topological Bekenstein bound.
+witness packet to the topological Bekenstein bound.
 
 This removes the remaining explicit `hCocycle` argument from
 `topologicalBekensteinBound_of_connesCocycle_generatorLiftWitness`.
@@ -571,7 +571,7 @@ theorem topologicalBekensteinBound_of_connesCocycleGeneratorLiftWitness
 
 /--
 Compatibility wrapper for the older Connes-cocycle theorem surface.  The
-`IsConnesCocycle` property is retained for callers but the proof routes
+`IsConnesCocycle` hypothesis is retained for callers but the proof routes
 through the smaller generator-lift theorem above.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
@@ -592,7 +592,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
 /--
 Increment-level generator-lift control:
 under the concrete generator-lift condition, each cocycle increment is bounded
-by the corresponding trajectory RN barrier.  This is the property-minimal
+by the corresponding trajectory RN barrier.  This is the hypothesis-minimal
 route; no additive cocycle law is used.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
@@ -785,10 +785,10 @@ def CocycleNatMatchWitness
         = trajectoryRNGeneratorPotential (n := n) T k
 
 /--
-Constructive nat-match property route to the cocycle generator lift.
+Constructive nat-match witness route to the cocycle generator lift.
 
 This removes the explicit `hBridge` and `hMatch` pair from the generator-lift
-construction: one proof-carrying property packet suffices.
+construction: one proof-carrying witness packet suffices.
 -/
 theorem cocycleGeneratorLift_of_cocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
@@ -801,10 +801,10 @@ theorem cocycleGeneratorLift_of_cocycleNatMatchWitness
     (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.choose) (T := T) W.choose_spec
 
 /--
-Constructive nat-match property route to increment-level RN-barrier control.
+Constructive nat-match witness route to increment-level RN-barrier control.
 
 This narrows `cocycleIncrement_abs_le_trajectoryRNBarrier_of_natMatch` to a
-single proof-carrying property packet instead of separate `hBridge` and
+single proof-carrying witness packet instead of separate `hBridge` and
 `hMatch` inputs.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleNatMatchWitness
@@ -821,10 +821,10 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleNatMatchWitness
     (hBridge := W.choose) (hMatch := W.choose_spec)
 
 /--
-Constructive nat-match property route to the topological Bekenstein bound.
+Constructive nat-match witness route to the topological Bekenstein bound.
 
 This narrows `topologicalBekensteinBound_of_natMatch` to a single proof-carrying
-property packet instead of separate `hBridge` and `hMatch` inputs.
+witness packet instead of separate `hBridge` and `hMatch` inputs.
 -/
 theorem topologicalBekensteinBound_of_cocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
@@ -842,7 +842,7 @@ theorem topologicalBekensteinBound_of_cocycleNatMatchWitness
 /--
 Proof-carrying Connes-cocycle nat-match packet.
 
-This keeps the legacy `IsConnesCocycle` property for compatibility-sensitive
+This keeps the legacy `IsConnesCocycle` witness for compatibility-sensitive
 callers while bundling the concrete bridge and integer-time nat-match route into
 one constructive object.
 -/
@@ -857,7 +857,7 @@ Constructive Connes-cocycle nat-match route to the cocycle generator lift.
 
 This removes the explicit triple `(hCocycle, hBridge, hMatch)` from the
 generator-lift surface: once the proof-carrying nat-match packet is present, the
-generator lift is recovered directly through the smaller nat-match property route.
+generator lift is recovered directly through the smaller nat-match witness route.
 -/
 theorem cocycleGeneratorLift_of_connesCocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
@@ -875,7 +875,7 @@ control.
 
 This removes the explicit triple `(hCocycle, hBridge, hMatch)` from the
 increment-control surface: callers provide one proof-carrying packet, and the
-bound is discharged through the smaller nat-match property route.
+bound is discharged through the smaller nat-match witness route.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
@@ -925,12 +925,12 @@ def ZeroNormalizedCocycleGeneratorWitness
     CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
 
 /--
-Construct the zero-normalized generator property from the Connes cocycle law and
+Construct the zero-normalized generator witness from the Connes cocycle law and
 concrete generator-lift relation.
 
 This names the owner route that older wrappers previously rebuilt inline: the
 `IsConnesCocycle` packet is used only to derive zero-normalization, while the
-resulting proof-carrying property carries the bridge, lift, and zero datum as one
+resulting proof-carrying witness carries the bridge, lift, and zero datum as one
 constructive object for downstream Bekenstein routes.
 -/
 def zeroNormalizedCocycleGeneratorWitness_of_connesCocycle_generatorLift
@@ -949,11 +949,11 @@ def zeroNormalizedCocycleGeneratorWitness_of_connesCocycle_generatorLift
     (hCocycle := hCocycle) (hBridge := hBridge)
 
 /--
-Zero-normalized property route to integer-time matching.
+Zero-normalized witness route to integer-time matching.
 
-This reduces the explicit `hBridge`, `hLift`, and `hZero` property surface of
+This reduces the explicit `hBridge`, `hLift`, and `hZero` hypothesis surface of
 `cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero` to one
-proof-carrying property packet.
+proof-carrying witness packet.
 -/
 theorem cocycleEntropyPotential_natMatch_of_zeroNormalizedCocycleGeneratorWitness
   (σ : AdditiveModularFlow (H := H))
@@ -968,7 +968,7 @@ theorem cocycleEntropyPotential_natMatch_of_zeroNormalizedCocycleGeneratorWitnes
     W.choose_spec.1 W.choose_spec.2
 
 /--
-Recover the nat-match property from the zero-normalized generator property.
+Recover the nat-match witness from the zero-normalized generator witness.
 
 This converts the explicit `(hLift, hZero)` generator-normalization packet into
 `CocycleNatMatchWitness`, so downstream Bekenstein routes can consume the smaller
@@ -985,11 +985,11 @@ def cocycleNatMatchWitness_of_zeroNormalizedCocycleGeneratorWitness
       (n := n) (H := H) (σ := σ) (u := u) (T := T) W⟩
 
 /--
-Recover the concrete generator lift from the zero-normalized generator property.
+Recover the concrete generator lift from the zero-normalized generator witness.
 
 This removes the explicit `(hBridge, hLift)` pair from the generator-lift
 surface: once the proof-carrying zero-normalized packet is present, the selected
-cocycle bridge and its concrete lift are exported directly from that property.
+cocycle bridge and its concrete lift are exported directly from that witness.
 -/
 theorem cocycleGeneratorLift_of_zeroNormalizedCocycleGeneratorWitness
   (σ : AdditiveModularFlow (H := H))
@@ -1001,12 +1001,12 @@ theorem cocycleGeneratorLift_of_zeroNormalizedCocycleGeneratorWitness
   W.choose_spec.1
 
 /--
-Zero-normalized property route to generator-lift / nat-match equivalence.
+Zero-normalized witness route to generator-lift / nat-match equivalence.
 
 This removes the explicit `hBridge` and `hZero` inputs from
 `cocycleGeneratorLift_iff_natMatch_of_cocyclePotential_zero`: once the
 proof-carrying zero-normalized packet is present, the equivalence is available
-on that property directly.
+on that witness directly.
 -/
 theorem cocycleGeneratorLift_iff_natMatch_of_zeroNormalizedCocycleGeneratorWitness
   (σ : AdditiveModularFlow (H := H))
@@ -1024,7 +1024,7 @@ theorem cocycleGeneratorLift_iff_natMatch_of_zeroNormalizedCocycleGeneratorWitne
     (hBridge := W.choose) (hZero := W.choose_spec.2)
 
 /--
-Zero-normalized property route to increment-level RN-barrier control.
+Zero-normalized witness route to increment-level RN-barrier control.
 
 This removes the explicit `hBridge`, `hLift`, and `hZero` inputs from the
 increment bound: one proof-carrying packet supplies the selected cocycle bridge,
@@ -1046,7 +1046,7 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_zeroNormalizedCocycleGene
       (n := n) (H := H) (σ := σ) (u := u) (T := T) W)
 
 /--
-Zero-normalized property route to the topological Bekenstein bound.
+Zero-normalized witness route to the topological Bekenstein bound.
 
 This is the smallest constructive surface behind the older Connes-cocycle
 wrapper: one proof-carrying packet supplies the bridge, the concrete generator
@@ -1080,6 +1080,30 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift_zero
     (hBridge : ScalarCocycleBridge (H := H) σ)
     (hLift :
       CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge))
+    (hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (hLift := hLift)
+
+/--
+Compatibility wrapper for the older zero-anchored Connes-cocycle increment
+control surface. The `IsConnesCocycle` packet is retained for named-argument
+callers, but it is used only to derive zero-normalization before routing through
+`cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift_zero`.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLift_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
         (CocycleEntropyPotential (H := H) σ u hBridge)) :
     ∀ k : Nat,
       |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
@@ -1110,6 +1134,28 @@ theorem topologicalBekensteinBound_of_cocycleGeneratorLift_zero
   exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
     ⟨hBridge, hLift, hZero⟩
+
+/--
+Compatibility wrapper for the older zero-anchored Connes-cocycle theorem surface.
+The `IsConnesCocycle` packet is retained for named-argument callers, but it is
+used only to derive zero-normalization before routing through
+`topologicalBekensteinBound_of_cocycleGeneratorLift_zero`.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (zeroNormalizedCocycleGeneratorWitness_of_connesCocycle_generatorLift
+      (n := n) (H := H) (σ := σ) (u := u) (T := T)
+      (hCocycle := hCocycle) (hBridge := hBridge) (hLift := hLift))
 
 /--
 Casini-style relative-entropy profile on discrete Sinkhorn steps.
@@ -1161,7 +1207,7 @@ def MinimalCasiniIncrementBridge
 Proof-carrying minimal Casini increment packet.
 
 This bundles the cocycle bridge, the selected relative-entropy profile, and the
-minimal two-field Casini increment property needed for the smallest constructive
+minimal two-field Casini increment witness needed for the smallest constructive
 Casini route to the RN-barrier Bekenstein bound.
 -/
 def MinimalCasiniIncrementWitness
@@ -1173,10 +1219,10 @@ def MinimalCasiniIncrementWitness
       MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt
 
 /--
-Proof-carrying Connes/minimal-Casini property.
+Proof-carrying Connes/minimal-Casini witness.
 
-This bundles the legacy `IsConnesCocycle` compatibility interface together with the
-smaller proof-carrying minimal Casini increment property, so downstream routes
+This bundles the legacy `IsConnesCocycle` compatibility socket together with the
+smaller proof-carrying minimal Casini increment witness, so downstream routes
 can consume one constructive packet instead of the explicit pair
 `(hCocycle, W : MinimalCasiniIncrementWitness ...)`.
 -/
@@ -1206,7 +1252,7 @@ This is the constructive equality surface behind the generator-lift route: the
 older proof used the two fields of `MinimalCasiniIncrementBridge` inline every
 time a `CocycleGeneratorLift` was needed.  The equality is now an owned theorem,
 so downstream routes can consume the direct increment readback without carrying a
-separate bare `CocycleGeneratorLift` property.
+separate bare `CocycleGeneratorLift` hypothesis.
 -/
 theorem cocycleIncrement_eq_phaseRN_of_minimalCasiniIncrementBridge
   (σ : AdditiveModularFlow (H := H))
@@ -1278,7 +1324,7 @@ theorem relEnt_drop_nonneg_of_casiniIncrementBridge
 
 /--
 Minimal Casini-route increment control: the old increment-bound surface needed a
-bare `CocycleGeneratorLift` property.  On this narrowed relative-entropy
+bare `CocycleGeneratorLift` hypothesis.  On this narrowed relative-entropy
 branch the lift is recovered from the two increment-identification fields only;
 no additive cocycle, generator-lift, or relative-entropy monotonicity packet is
 carried.
@@ -1349,11 +1395,11 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_casiniIncre
     (hBridge := hBridge) (relEnt := relEnt) (hCasini := hCasini)
 
 /--
-Minimal Casini property route to cocycle increment control.
+Minimal Casini witness route to cocycle increment control.
 
 This removes the explicit `hBridge`, `relEnt`, and `hCasini` arguments from
 `cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrement` in
-favor of one proof-carrying property packet.
+favor of one proof-carrying witness packet.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrementWitness
   (σ : AdditiveModularFlow (H := H))
@@ -1370,12 +1416,12 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrementWit
     (hCasini := W.choose_spec.choose_spec)
 
 /--
-Minimal Casini property route to the direct cocycle-increment readback.
+Minimal Casini witness route to the direct cocycle-increment readback.
 
 This removes the explicit `hBridge`, `relEnt`, and `hCasini` theorem arguments
 from `cocycleIncrement_eq_phaseRN_of_minimalCasiniIncrementBridge`: the selected
 scalar bridge, relative-entropy profile, and two increment-identification fields
-are recovered from one proof-carrying property packet.
+are recovered from one proof-carrying witness packet.
 -/
 theorem cocycleIncrement_eq_phaseRN_of_minimalCasiniIncrementWitness
   (σ : AdditiveModularFlow (H := H))
@@ -1391,12 +1437,12 @@ theorem cocycleIncrement_eq_phaseRN_of_minimalCasiniIncrementWitness
     (T := T) (relEnt := W.choose_spec.choose) W.choose_spec.choose_spec
 
 /--
-Minimal Casini property route to the concrete cocycle generator lift.
+Minimal Casini witness route to the concrete cocycle generator lift.
 
 This removes the explicit `hBridge`, `relEnt`, and `hCasini` theorem arguments
 from `cocycleGeneratorLift_of_minimalCasiniIncrementBridge`: the selected scalar
 bridge, relative-entropy profile, and two increment-identification fields are
-recovered from one proof-carrying property packet.
+recovered from one proof-carrying witness packet.
 -/
 theorem cocycleGeneratorLift_of_minimalCasiniIncrementWitness
   (σ : AdditiveModularFlow (H := H))
@@ -1409,10 +1455,10 @@ theorem cocycleGeneratorLift_of_minimalCasiniIncrementWitness
     (T := T) (relEnt := W.choose_spec.choose) W.choose_spec.choose_spec
 
 /--
-Minimal Casini property route to integer-time matching under a Connes cocycle law.
+Minimal Casini witness route to integer-time matching under a Connes cocycle law.
 
 This removes the explicit `hBridge`, `relEnt`, and `hCasini` theorem arguments
-from the nat-match route: the property reconstructs the concrete generator lift,
+from the nat-match route: the witness reconstructs the concrete generator lift,
 while the cocycle law supplies the zero-time normalization needed for integer
 steps.
 -/
@@ -1454,7 +1500,7 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycleMinimalCasiniIncrementW
 Compatibility wrapper for the Connes/minimal-Casini nat-match route.
 
 The older explicit `hBridge`, `relEnt`, and `hCasini` surfaces are retained for
-callers, but the proof now routes through the proof-carrying property packet
+callers, but the proof now routes through the proof-carrying witness packet
 above.
 -/
 theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrement
@@ -1476,10 +1522,10 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrement
       (T := T) (relEnt := relEnt) hCasini)
 
 /--
-Minimal Casini-route cocycle-to-bound theorem through a proof-carrying property
+Minimal Casini-route cocycle-to-bound theorem through a proof-carrying witness
 packet.
 
-This is the smallest constructive Casini branch: one property bundles the bridge,
+This is the smallest constructive Casini branch: one witness bundles the bridge,
 relative-entropy profile, and the two increment-identification fields needed to
 reconstruct the cocycle generator lift and hence the RN-barrier bound.
 -/
@@ -1601,7 +1647,7 @@ noncomputable abbrev TomitaCocycleEntropyPotential
 /--
 Tomita-specialized generator-lift route to the Bekenstein bound.
 
-This is the property-minimal modular-sign branch: once the concrete generator
+This is the hypothesis-minimal modular-sign branch: once the concrete generator
 lift is present, the proof uses the already-owned RN-barrier comparison and does
 not carry an explicit `IsConnesCocycle` packet.
 -/
@@ -1622,7 +1668,7 @@ theorem topologicalBekensteinBound_of_tomitaGeneratorLift
       (u := u) (T := T) (hBridge := hBridge) (hLift := hLift)
 
 /--
-Proof-carrying Tomita generator-lift property.
+Proof-carrying Tomita generator-lift witness.
 
 This bundles the scalar bridge with the concrete generator-lift identity on the
 modular-sign lane, so downstream Tomita routes no longer need to thread the
@@ -1642,7 +1688,7 @@ Constructive Tomita generator-lift route to the Bekenstein bound.
 
 This removes the explicit `(hBridge, hLift)` theorem arguments from
 `topologicalBekensteinBound_of_tomitaGeneratorLift` in favor of one
-proof-carrying property packet.
+proof-carrying witness packet.
 -/
 theorem topologicalBekensteinBound_of_tomitaGeneratorLiftWitness
     (u : ℝ → AlgebraEnd H)
@@ -1654,10 +1700,10 @@ theorem topologicalBekensteinBound_of_tomitaGeneratorLiftWitness
     (hBridge := W.choose) (hLift := W.choose_spec)
 
 /--
-Proof-carrying Tomita/Connes generator-lift property.
+Proof-carrying Tomita/Connes generator-lift witness.
 
-This packages the legacy `IsConnesCocycle` interface together with the smaller
-Tomita generator-lift property, so the compatibility route can consume one
+This packages the legacy `IsConnesCocycle` socket together with the smaller
+Tomita generator-lift witness, so the compatibility route can consume one
 constructive object instead of the explicit triple
 `(hCocycle, hBridge, hLift)`.
 -/
@@ -1687,7 +1733,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycleGeneratorLiftWitness
     (n := n) (H := H) (u := u) (T := T) W.2
 
 /--
-Compatibility Tomita/Connes wrapper.  The `IsConnesCocycle` property is kept
+Compatibility Tomita/Connes wrapper.  The `IsConnesCocycle` hypothesis is kept
 for named-argument callers, but the proof now routes through the smaller
 `topologicalBekensteinBound_of_tomitaGeneratorLift` theorem above.
 -/
@@ -1741,7 +1787,7 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_generatorLift
 /--
 Tomita flow-unit integer-time matching on the canonical welded cocycle lane.
 
-This removes the explicit `IsConnesCocycle` property and scalar bridge from the
+This removes the explicit `IsConnesCocycle` witness and scalar bridge from the
 nat-match route: once the canonical flow-unit cocycle satisfies the concrete
 generator-lift equation, integer-time cocycle values are forced to coincide with
 the trajectory RN-generator potential.
@@ -1805,7 +1851,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
       (hCocycle := hCocycle) (hBridge := hBridge) (hMatch := hMatch)
 
 /--
-Tomita-specialized zero-normalized property route to the topological Bekenstein bound.
+Tomita-specialized zero-normalized witness route to the topological Bekenstein bound.
 
 This narrows the specialized zero-anchored Tomita lane to the existing
 proof-carrying `ZeroNormalizedCocycleGeneratorWitness` packet instead of
@@ -1825,10 +1871,10 @@ theorem topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitnes
       (u := u) (T := T) (W := W)
 
 /--
-Tomita flow-unit zero-normalized property endpoint on the canonical welded cocycle lane.
+Tomita flow-unit zero-normalized witness endpoint on the canonical welded cocycle lane.
 
 This removes the explicit cocycle choice and scalar bridge from the zero-anchored
-Tomita property surface by specializing to the owned flow-unit cocycle and unit
+Tomita witness surface by specializing to the owned flow-unit cocycle and unit
 scalar bridge.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitZeroNormalizedCocycleGeneratorWitness
@@ -1875,7 +1921,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
 /--
 Tomita flow-unit zero-anchored cocycle-to-bound theorem.
 
-This discharges the explicit `IsConnesCocycle` property, scalar bridge, and
+This discharges the explicit `IsConnesCocycle` witness, scalar bridge, and
 zero-normalization proof from the welded Tomita flow surface; only the concrete
 generator lift remains.
 -/
@@ -1933,7 +1979,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
 /--
 Tomita-specialized nat-match endpoint on the canonical flow-unit cocycle lane.
 
-This discharges both the explicit `IsConnesCocycle` property and the scalar bridge
+This discharges both the explicit `IsConnesCocycle` witness and the scalar bridge
 packet by using the canonical flow-unit cocycle and unit scalar bridge.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_natMatch
@@ -1964,7 +2010,7 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_natMatch
 Tomita-specialized Casini-route endpoint on the canonical flow-unit cocycle
 lane.
 
-This discharges the cocycle property from the welded Tomita flow surface and
+This discharges the cocycle witness from the welded Tomita flow surface and
 keeps only the Casini bridge as input data.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_casiniIncrement
@@ -2015,7 +2061,7 @@ def TomitaFlowUnitMinimalCasiniWitness
 
 /--
 Tomita flow-unit generator-lift recovery from the proof-carrying minimal Casini
-property.  This is the smallest owned lift route on the welded Tomita branch:
+witness.  This is the smallest owned lift route on the welded Tomita branch:
 callers no longer pass the relative-entropy profile and the two-field Casini
 packet separately.
 -/
@@ -2040,10 +2086,10 @@ theorem cocycleGeneratorLift_of_tomitaFlowUnitMinimalCasiniWitness
 
 /--
 Tomita flow-unit integer-time matching recovered from the proof-carrying
-minimal Casini property.
+minimal Casini witness.
 
 This removes the explicit `{relEnt, hCasini}` pair from the canonical Tomita
-nat-match route: the property first reconstructs the welded flow-unit generator
+nat-match route: the witness first reconstructs the welded flow-unit generator
 lift, and the owned flow-unit cocycle law then forces integer-time matching.
 -/
 theorem cocycleEntropyPotential_natMatch_of_tomitaFlowUnitMinimalCasiniWitness
@@ -2063,7 +2109,7 @@ theorem cocycleEntropyPotential_natMatch_of_tomitaFlowUnitMinimalCasiniWitness
       (n := n) (H := H) (T := T) W)
 
 /--
-Tomita flow-unit endpoint through a proof-carrying minimal Casini property.
+Tomita flow-unit endpoint through a proof-carrying minimal Casini witness.
 
 This removes the explicit `{relEnt, hCasini}` pair on the canonical Tomita
 flow-unit lane while keeping the older specialized theorem as a compatibility
@@ -2157,7 +2203,7 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
 
 /--
 Tomita flow-unit endpoint for increment control through a proof-carrying minimal
-Casini property.
+Casini witness.
 
 This is the increment-level companion to
 `topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniWitness`:
@@ -2190,7 +2236,7 @@ Tomita flow-unit endpoint for increment control from the legacy Casini packet.
 
 This compatibility theorem keeps the broad `CasiniIncrementBridge` input for
 callers, but its proof immediately descends to
-`MinimalCasiniIncrementBridge`; the explicit Tomita cocycle property, scalar
+`MinimalCasiniIncrementBridge`; the explicit Tomita cocycle witness, scalar
 bridge, free `CocycleGeneratorLift`, and direct use of the legacy
 `relEnt_monotone` field are all avoided on the increment-control route.
 -/

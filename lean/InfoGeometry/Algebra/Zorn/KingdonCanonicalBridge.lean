@@ -13,16 +13,13 @@ product, identity, and split norm. No associative algebra structure is imposed.
 
 namespace InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
-/- The two explicit Zorn carriers below remain distinct owners; only the
-  source-side name is expanded so this bridge does not create a third carrier. -/
+abbrev PhysicsZorn := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
 abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
 
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
-noncomputable def physicsCanonicalLinearEquiv :
-    InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix ≃ₗ[ℝ]
-      InfoGeometry.Canonical.ZornMatrix ℝ where
+noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] CanonicalZorn where
   toFun X := { a := X.a, b := X.b, x := X.x, y := X.y }
   invFun X := { a := X.a, b := X.b, x := X.x, y := X.y }
   left_inv X := by cases X; rfl
@@ -30,17 +27,13 @@ noncomputable def physicsCanonicalLinearEquiv :
   map_add' X Y := by ext <;> rfl
   map_smul' r X := by ext <;> rfl
 
-@[simp] theorem physicsCanonicalLinearEquiv_a
-    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physicsCanonicalLinearEquiv_a (X : PhysicsZorn) :
     (physicsCanonicalLinearEquiv X).a = X.a := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_b
-    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physicsCanonicalLinearEquiv_b (X : PhysicsZorn) :
     (physicsCanonicalLinearEquiv X).b = X.b := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_x
-    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physicsCanonicalLinearEquiv_x (X : PhysicsZorn) :
     (physicsCanonicalLinearEquiv X).x = X.x := rfl
-@[simp] theorem physicsCanonicalLinearEquiv_y
-    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physicsCanonicalLinearEquiv_y (X : PhysicsZorn) :
     (physicsCanonicalLinearEquiv X).y = X.y := rfl
 
 @[simp] theorem physicsCanonicalLinearEquiv_symm_a (X : CanonicalZorn) :
@@ -53,12 +46,10 @@ noncomputable def physicsCanonicalLinearEquiv :
     (physicsCanonicalLinearEquiv.symm X).y = X.y := rfl
 
 @[simp] theorem physicsCanonicalLinearEquiv_one :
-    physicsCanonicalLinearEquiv (1 : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) =
-      (1 : InfoGeometry.Canonical.ZornMatrix ℝ) := by
+    physicsCanonicalLinearEquiv (1 : PhysicsZorn) = (1 : CanonicalZorn) := by
   ext <;> rfl
 
-@[simp] theorem physicsCanonicalLinearEquiv_mul
-    (X Y : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physicsCanonicalLinearEquiv_mul (X Y : PhysicsZorn) :
     physicsCanonicalLinearEquiv (X * Y) =
       zMul (physicsCanonicalLinearEquiv X) (physicsCanonicalLinearEquiv Y) := by
   ext i <;> simp [physicsCanonicalLinearEquiv,
@@ -70,8 +61,7 @@ noncomputable def physicsCanonicalLinearEquiv :
     InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
     InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 
-@[simp] theorem physics_norm_eq_canonical_det
-    (X : InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix) :
+@[simp] theorem physics_norm_eq_canonical_det (X : PhysicsZorn) :
     InfoGeometry.Physics.ZornMatrixSU3.norm X =
       X.a * X.b - InfoGeometry.Canonical.ZornMatrix.dot X.x X.y := by
   simp [InfoGeometry.Physics.ZornMatrixSU3.norm,
@@ -97,6 +87,43 @@ noncomputable def kingdonCanonicalLinearEquiv :
   change physicsCanonicalLinearEquiv (realization 1) = 1
   rw [map_one, physicsCanonicalLinearEquiv_one]
 
+/-- The standard dot/cross structure on the canonical real Zorn carrier. -/
+noncomputable def realCrossProduct3 : CrossProduct3 ℝ where
+  dot := InfoGeometry.Canonical.ZornMatrix.dot
+  cross := InfoGeometry.Canonical.ZornMatrix.cross
+  dot_zero_left := by
+    intro v
+    simp [InfoGeometry.Canonical.ZornMatrix.dot]
+  dot_zero_right := by
+    intro v
+    simp [InfoGeometry.Canonical.ZornMatrix.dot]
+  cross_zero_left := by
+    intro v
+    funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.cross]
+  cross_zero_right := by
+    intro v
+    funext i
+    fin_cases i <;> simp [InfoGeometry.Canonical.ZornMatrix.cross]
+
+/-- The concrete real Zorn composition datum used by the split-`G₂` lane.
+Its determinant multiplicativity is transported from the checked physics-Zorn
+composition theorem through `physicsCanonicalLinearEquiv`. -/
+noncomputable def realZornCompositionDatum : ZornCompositionDatum ℝ where
+  toCrossProduct3 := realCrossProduct3
+  mulZ := zMul
+  detZ_mul X Y := by
+    let A : PhysicsZorn := physicsCanonicalLinearEquiv.symm X
+    let B : PhysicsZorn := physicsCanonicalLinearEquiv.symm Y
+    have h := InfoGeometry.Physics.ZornMatrixSU3.norm_mul A B
+    have hmul : physicsCanonicalLinearEquiv (A * B) = zMul X Y := by
+      simpa [A, B] using physicsCanonicalLinearEquiv_mul A B
+    rw [← hmul]
+    simpa [ZornMatrix.detZ, realCrossProduct3,
+      physics_norm_eq_canonical_det, A, B] using h
+
+@[simp] theorem realZornCompositionDatum_mulZ :
+    realZornCompositionDatum.mulZ = zMul := rfl
 
 /-- Real-linear automorphisms of the canonical Zorn multiplication. -/
 abbrev CanonicalLinearAut := CanonicalZorn ≃ₗ[ℝ] CanonicalZorn
@@ -127,13 +154,13 @@ def realZornTrace (X : CanonicalZorn) : ℝ := X.a + X.b
 This is the coefficient-uniqueness root used below to derive determinant
 preservation from multiplication preservation. -/
 theorem realZorn_quadratic (X : CanonicalZorn) :
-    zMul X X + ZornMatrix.detZ X • (1 : CanonicalZorn) =
+    zMul X X + ZornMatrix.detZ realCrossProduct3 X • (1 : CanonicalZorn) =
       realZornTrace X • X := by
   have h1a : (1 : CanonicalZorn).a = 1 := rfl
   have h1b : (1 : CanonicalZorn).b = 1 := rfl
   have h1x : (1 : CanonicalZorn).x = 0 := rfl
   have h1y : (1 : CanonicalZorn).y = 0 := rfl
-  ext i <;> simp [zMul, ZornMatrix.detZ, realZornTrace,
+  ext i <;> simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
@@ -143,12 +170,12 @@ theorem realZorn_quadratic (X : CanonicalZorn) :
   all_goals ring
 
 @[simp] theorem realZorn_det_smul_one (r : ℝ) :
-    ZornMatrix.detZ (r • (1 : CanonicalZorn)) = r ^ 2 := by
+    ZornMatrix.detZ realCrossProduct3 (r • (1 : CanonicalZorn)) = r ^ 2 := by
   have h1a : (1 : CanonicalZorn).a = 1 := rfl
   have h1b : (1 : CanonicalZorn).b = 1 := rfl
   have h1x : (1 : CanonicalZorn).x = 0 := rfl
   have h1y : (1 : CanonicalZorn).y = 0 := rfl
-  simp [ZornMatrix.detZ,
+  simp [ZornMatrix.detZ, realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot,
     Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
     h1a, h1b, h1x, h1y]
@@ -210,19 +237,21 @@ determinant. The proof transports the intrinsic quadratic equation and recovers
 its trace and determinant coefficients, treating scalar elements separately. -/
 @[simp] theorem realZornCompositionAut_preserves_det
     (φ : realZornCompositionAut) (X : CanonicalZorn) :
-    ZornMatrix.detZ ((φ : CanonicalLinearAut) X) = ZornMatrix.detZ X := by
+    ZornMatrix.detZ realCrossProduct3 ((φ : CanonicalLinearAut) X) =
+      ZornMatrix.detZ realCrossProduct3 X := by
   let Y : CanonicalZorn := (φ : CanonicalLinearAut) X
   have hmapRaw := congrArg (fun Z : CanonicalZorn =>
     (φ : CanonicalLinearAut) Z) (realZorn_quadratic X)
   have hmap :
-      zMul Y Y + ZornMatrix.detZ X • (1 : CanonicalZorn) =
+      zMul Y Y + ZornMatrix.detZ realCrossProduct3 X • (1 : CanonicalZorn) =
         realZornTrace X • Y := by
     simpa only [map_add, map_smul, realZornCompositionAut_preserves_mul,
       realZornCompositionAut_fix_one] using hmapRaw
   have hquadY := realZorn_quadratic Y
   have hcoeff :
       (realZornTrace Y - realZornTrace X) • Y =
-        (ZornMatrix.detZ Y - ZornMatrix.detZ X) • (1 : CanonicalZorn) := by
+        (ZornMatrix.detZ realCrossProduct3 Y -
+          ZornMatrix.detZ realCrossProduct3 X) • (1 : CanonicalZorn) := by
     rw [sub_smul, sub_smul, ← hquadY, ← hmap]
     abel
   by_cases hscalar : ∃ r : ℝ, Y = r • (1 : CanonicalZorn)
@@ -231,20 +260,23 @@ its trace and determinant coefficients, treating scalar elements separately. -/
       apply (φ : CanonicalLinearAut).injective
       change Y = (φ : CanonicalLinearAut) (r • (1 : CanonicalZorn))
       rw [hr, map_smul, realZornCompositionAut_fix_one]
-    change ZornMatrix.detZ Y = ZornMatrix.detZ X
+    change ZornMatrix.detZ realCrossProduct3 Y =
+      ZornMatrix.detZ realCrossProduct3 X
     rw [hr, hX, realZorn_det_smul_one]
   · have hzero := smul_eq_smul_one_coefficients hscalar hcoeff
-    change ZornMatrix.detZ Y = ZornMatrix.detZ X
+    change ZornMatrix.detZ realCrossProduct3 Y =
+      ZornMatrix.detZ realCrossProduct3 X
     exact sub_eq_zero.mp hzero.2
 
 /-- Polarization of the canonical split-octonion norm against the unit. -/
 theorem realZorn_det_add_one (X : CanonicalZorn) :
-    ZornMatrix.detZ (X + 1) = ZornMatrix.detZ X + realZornTrace X + 1 := by
+    ZornMatrix.detZ realCrossProduct3 (X + 1) =
+      ZornMatrix.detZ realCrossProduct3 X + realZornTrace X + 1 := by
   have h1a : (1 : CanonicalZorn).a = 1 := rfl
   have h1b : (1 : CanonicalZorn).b = 1 := rfl
   have h1x : (1 : CanonicalZorn).x = 0 := rfl
   have h1y : (1 : CanonicalZorn).y = 0 := rfl
-  simp [ZornMatrix.detZ, realZornTrace,
+  simp [ZornMatrix.detZ, realCrossProduct3, realZornTrace,
     InfoGeometry.Canonical.ZornMatrix.dot, h1a, h1b, h1x, h1y]
   ring
 
@@ -327,10 +359,11 @@ noncomputable def kingdonCompositionAut :
 /-- The transported Kingdon norm is exactly the canonical real Zorn determinant. -/
 theorem kingdonNorm_eq_realZorn_det (x : AbstractKingdon) :
     kingdonNorm x =
-      ZornMatrix.detZ (kingdonCanonicalLinearEquiv x) := by
+      ZornMatrix.detZ realCrossProduct3 (kingdonCanonicalLinearEquiv x) := by
   change InfoGeometry.Physics.ZornMatrixSU3.norm (realization x) =
-    ZornMatrix.detZ (physicsCanonicalLinearEquiv (realization x))
-  simp [ZornMatrix.detZ, physics_norm_eq_canonical_det]
+    ZornMatrix.detZ realCrossProduct3
+      (physicsCanonicalLinearEquiv (realization x))
+  simp [ZornMatrix.detZ, realCrossProduct3, physics_norm_eq_canonical_det]
 
 /-- Every multiplication automorphism in the Kingdon pullback preserves the
 native transported split-octonion norm. -/

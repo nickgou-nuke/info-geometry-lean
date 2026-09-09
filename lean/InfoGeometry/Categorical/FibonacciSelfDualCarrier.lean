@@ -5,7 +5,7 @@ import InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
 /-!
 # InfoGeometry.Categorical.FibonacciSelfDualCarrier
 
-Carrier interface for Fibonacci braid/direct-limit actions on a Hilbert
+Carrier socket for Fibonacci braid/direct-limit actions on a Hilbert
 self-dual cone.
 
 The purpose of this file is deliberately modest:
@@ -43,30 +43,26 @@ action of algebraic direct-limit matrix observables on the same carrier.  Both
 cone-preservation laws are explicit fields until a concrete Majorana/O(5,5) or
 operator-algebra realization proves them.
 -/
-structure ActionModel (A : Type*) [Semiring A] where
+structure Carrier (A : Type*) [Semiring A] where
   /-- Hilbert self-dual positive cone. -/
   positiveCone : SelfDualCone E
   /-- Finite Fibonacci braid-word action on the carrier. -/
   braidAction : FibonacciBraidWord → E → E
   /-- Algebraic direct-limit matrix-observable action on the carrier. -/
   limitObservableAction : Matrix (Fin 2) (Fin 2) A → E → E
+  /-- Finite braid words preserve the positive cone. -/
+  braidAction_preserves_positiveCone :
+    ∀ w : FibonacciBraidWord,
+      Set.MapsTo (braidAction w) (positiveCone.cone : Set E) positiveCone.cone
+  /-- Direct-limit matrix observables preserve the positive cone. -/
+  limitObservableAction_preserves_positiveCone :
+    ∀ M : Matrix (Fin 2) (Fin 2) A,
+      Set.MapsTo (limitObservableAction M) (positiveCone.cone : Set E) positiveCone.cone
 
-/-- The cone-preservation laws for an `ActionModel`.
-
-The carrier stores only the operators and cone.  Preservation is a theorem
-contract supplied by the concrete realization, not duplicated proof data. -/
-def ActionModelLaws {A : Type*} [Semiring A]
-    (C : ActionModel (E := E) A) : Prop :=
-  (∀ w : FibonacciBraidWord,
-    Set.MapsTo (C.braidAction w) (C.positiveCone.cone : Set E) C.positiveCone.cone) ∧
-  (∀ M : Matrix (Fin 2) (Fin 2) A,
-    Set.MapsTo (C.limitObservableAction M)
-      (C.positiveCone.cone : Set E) C.positiveCone.cone)
-
-namespace ActionModel
+namespace Carrier
 
 variable {A : Type*} [Semiring A]
-variable (C : ActionModel (E := E) A)
+variable (C : Carrier (E := E) A)
 
 /-- The carrier cone is equal to its Hilbert inner dual. -/
 theorem positiveCone_innerDual_eq :
@@ -75,59 +71,52 @@ theorem positiveCone_innerDual_eq :
 
 /-- Projection theorem: finite Fibonacci braid actions preserve the carrier cone. -/
 theorem braidAction_maps_positiveCone
-    (hC : ActionModelLaws C)
     (w : FibonacciBraidWord) :
     Set.MapsTo (C.braidAction w) (C.positiveCone.cone : Set E) C.positiveCone.cone :=
-  hC.1 w
+  C.braidAction_preserves_positiveCone w
 
 /-- Pointwise form of finite braid cone preservation. -/
 theorem braidAction_mem_positiveCone
-    (hC : ActionModelLaws C)
     (w : FibonacciBraidWord) {x : E}
     (hx : x ∈ (C.positiveCone.cone : Set E)) :
     C.braidAction w x ∈ (C.positiveCone.cone : Set E) :=
-  hC.1 w hx
+  C.braidAction_preserves_positiveCone w hx
 
 /-- Projection theorem: direct-limit matrix observables preserve the carrier cone. -/
 theorem limitObservableAction_maps_positiveCone
-    (hC : ActionModelLaws C)
     (M : Matrix (Fin 2) (Fin 2) A) :
     Set.MapsTo (C.limitObservableAction M) (C.positiveCone.cone : Set E) C.positiveCone.cone :=
-  hC.2 M
+  C.limitObservableAction_preserves_positiveCone M
 
 /-- Pointwise form of direct-limit observable cone preservation. -/
 theorem limitObservableAction_mem_positiveCone
-    (hC : ActionModelLaws C)
     (M : Matrix (Fin 2) (Fin 2) A) {x : E}
     (hx : x ∈ (C.positiveCone.cone : Set E)) :
-  C.limitObservableAction M x ∈ (C.positiveCone.cone : Set E) :=
-  hC.2 M hx
+    C.limitObservableAction M x ∈ (C.positiveCone.cone : Set E) :=
+  C.limitObservableAction_preserves_positiveCone M hx
 
 /-- Direct-limit `R` matrices preserve the carrier cone through the installed observable action. -/
 theorem limitRMatrix_mem_positiveCone
     {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
-    (D : ActionModel (E := E) (BraidLimit (Stage := Stage) bond))
-    (hD : ActionModelLaws D)
+    (D : Carrier (E := E) (BraidLimit (Stage := Stage) bond))
     (n : Nat) (q qInv : Stage n) {x : E}
     (hx : x ∈ (D.positiveCone.cone : Set E)) :
     D.limitObservableAction (limitRMatrix bond n q qInv) x ∈ (D.positiveCone.cone : Set E) :=
-  D.limitObservableAction_mem_positiveCone hD (limitRMatrix bond n q qInv) hx
+  D.limitObservableAction_mem_positiveCone (limitRMatrix bond n q qInv) hx
 
 /-- Direct-limit `B = F R F` matrices preserve the carrier cone through the installed action. -/
 theorem limitBMatrix_mem_positiveCone
     {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
-    (D : ActionModel (E := E) (BraidLimit (Stage := Stage) bond))
-    (hD : ActionModelLaws D)
+    (D : Carrier (E := E) (BraidLimit (Stage := Stage) bond))
     (n : Nat) (q qInv τ sqrtτ : Stage n) {x : E}
     (hx : x ∈ (D.positiveCone.cone : Set E)) :
     D.limitObservableAction (limitBMatrix bond n q qInv τ sqrtτ) x ∈
       (D.positiveCone.cone : Set E) :=
-  D.limitObservableAction_mem_positiveCone hD
-    (limitBMatrix bond n q qInv τ sqrtτ) hx
+  D.limitObservableAction_mem_positiveCone (limitBMatrix bond n q qInv τ sqrtτ) hx
 
-end ActionModel
+end Carrier
 
 /-! ## Proper-carrier staged self-dual extension -/
 

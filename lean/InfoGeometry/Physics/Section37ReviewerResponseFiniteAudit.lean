@@ -77,10 +77,9 @@ theorem repaired_section37_reviewer_response_packet
     entropyProductionVonNeumann H rho logRho = entropyProductionCyclic H rho logRho ∧
     entropyProductionVonNeumann H rho logRho = 0 ∧
     entropyProductionVonNeumann (hamiltonianAsymmetry H1 H2) rho logRho = 0 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact entropyProductionVonNeumann_eq_cyclic H rho logRho
-  · exact entropyProductionVonNeumann_zero_of_rho_commutes_logRho H rho logRho hcomm
-  · exact entropyProductionVonNeumann_zero_of_equal_hamiltonians H1 H2 rho logRho hH
+  exact ⟨entropyProductionVonNeumann_eq_cyclic H rho logRho,
+    entropyProductionVonNeumann_zero_of_rho_commutes_logRho H rho logRho hcomm,
+    entropyProductionVonNeumann_zero_of_equal_hamiltonians H1 H2 rho logRho hH⟩
 
 end InfoGeometry.Physics.Section37ReviewerResponseFiniteAudit
 

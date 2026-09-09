@@ -56,6 +56,16 @@ open InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 open InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 open InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 
+/-- Re-export of the infinite symbolic Cantor boundary. -/
+@[rep_depth operator]
+abbrev InfiniteBinaryWordSpace :=
+  InfoGeometry.Canonical.FractalCantorCliffordFockBridge.InfiniteBinaryWordSpace
+
+/-- Re-export of the finite binary path codes. -/
+@[rep_depth operator]
+abbrev FiniteBinaryWord :=
+  InfoGeometry.Canonical.FractalCantorCliffordFockBridge.FiniteBinaryWord
+
 /-! ## Native VirasoroProject owner -/
 
 /--
@@ -92,6 +102,16 @@ theorem virasoroProject_bracket :
             virasoroProjectVirasoroDatum.central :=
   virasoroProjectVirasoroDatum_bracket
 
+/--
+A proved Heisenberg current representation induces genuine Sugawara Virasoro
+modes; their bracket is inherited from `VirasoroProject.Sugawara`.
+-/
+@[rep_depth operator]
+abbrev heisenbergCurrent_sugawara_bracket
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (H :
+      InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep ℝ V) :=
+  currentHeisenbergVirasoroDatum_bracket H
 
 /--
 Compatibility packet for the Cantor/Cuntz/Kac--Moody/Virasoro owner surfaces.
@@ -132,11 +152,11 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
 
   /-- The prime-mode spinor square-root dictionary. -/
   boost :
-    PrimeSpinorSquareRootData ℕ ℝ
+    PrimeSpinorSquareRootPacket ℕ ℝ
 
   /-- Real Bogoliubov transformation shadow data. -/
   bogoljubov :
-    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket
       E Op Op Op Op Op
 
   /--
@@ -180,6 +200,23 @@ abbrev kacMoody : AffineCurrentDatum Finite Alg :=
 abbrev virasoro : VirasoroDatum Alg :=
   B.sugawara.bridge.virasoro
 
+/-- The bridge's affine readout is definitionally the Kac--Moody readout. -/
+@[rep_depth operator]
+theorem bridge_affine_eq :
+    B.bridge.affine = B.kacMoody :=
+  rfl
+
+/-- The bridge's Virasoro readout is definitionally the Virasoro readout. -/
+@[rep_depth operator]
+theorem bridge_virasoro_eq :
+    B.bridge.virasoro = B.virasoro :=
+  rfl
+
+/-- The Sugawara datum definitionally uses the exposed bridge readout. -/
+@[rep_depth operator]
+theorem sugawara_uses_bridge :
+    B.sugawara.bridge = B.bridge :=
+  rfl
 
 /-- The spinor-boost dictionary validates the bilinear partition law. -/
 @[rep_depth operator]
@@ -211,22 +248,41 @@ theorem majorana_packet_K_sq_eq_neg_id :
       -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
   InfoGeometry.Core.canonicalMajoranaK_sq_eq_neg_id (E := E)
 
+/-- Compatibility theorem for the recovered canonical Majorana square law. -/
+@[rep_depth krein]
+theorem majorana_packet_holds :
+    (InfoGeometry.Core.canonicalMajoranaK (E := E)).comp
+        (InfoGeometry.Core.canonicalMajoranaK (E := E)) =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
+  majorana_packet_K_sq_eq_neg_id (E := E)
 
 /-- The Bogoliubov shadow exposes the phase-axis force law from the Cartan shadow. -/
 @[rep_depth operator]
 theorem bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow
     [CompleteSpace E]
-    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.doubledKreinEnd
+    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
         (E := E)) :
-    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanGaugeShadow
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow
         (E := E) H +
-      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanScaleShadow
+      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanScaleShadow
         (E := E) H =
         BogoliubovTransport.modularTransportGenerator (E := E) H := by
   simpa using
-    (InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanGaugeShadow_add_cartanScaleShadow
+    (InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow_add_cartanScaleShadow
       (E := E) H)
 
+/-- Backwards-compatible name for the Bogoljubov phase-axis force law. -/
+@[rep_depth operator]
+theorem bogoljubov_packet_holds
+    [CompleteSpace E]
+    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
+        (E := E)) :
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow
+        (E := E) H +
+      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanScaleShadow
+        (E := E) H =
+        BogoliubovTransport.modularTransportGenerator (E := E) H :=
+  bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow (E := E) H
 
 end FractalCantorCuntzKacMoodyVirasoroBridge
 

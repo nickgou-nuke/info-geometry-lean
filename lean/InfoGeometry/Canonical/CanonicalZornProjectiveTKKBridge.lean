@@ -249,12 +249,9 @@ theorem canonical_triality_projective_five_grade_bridge (X : ZornCore.Zorn) :
       canonicalTriality (coreToCanonical X) ∧
     (canonicalGradedLane .upperNilpotent).2.grade = p1 ∧
     (canonicalGradedLane .lowerNilpotent).2.grade = m1 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact coreToCanonical_norm X
-  · exact zornConformalEmbed_null X
-  · exact coreToCanonical_triality X
-  · exact canonicalGradedLane_grade _
-  · exact canonicalGradedLane_grade _
+  exact ⟨coreToCanonical_norm X, zornConformalEmbed_null X,
+    coreToCanonical_triality X, canonicalGradedLane_grade _,
+    canonicalGradedLane_grade _⟩
 
 end CanonicalZornProjectiveTKKBridge
 

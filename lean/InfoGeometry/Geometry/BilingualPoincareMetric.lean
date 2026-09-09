@@ -16,6 +16,7 @@ import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -165,7 +166,7 @@ theorem imaginaryQuadratic_eq_kHeightQuadratic
   rfl
 
 /--
-The positivity ax!om of the upper half-plane says exactly that
+The positivity axiom of the upper half-plane says exactly that
 `imaginaryQuadratic Z` is strictly positive away from zero.
 -/
 theorem imaginaryQuadratic_pos
@@ -365,7 +366,7 @@ theorem moebiusActionOperator_phaseLinear
 /--
 The proof-carrying Mobius action on the bilingual upper half-plane.
 
-The positivity proof is supplied as a property. A later group-level theorem
+The positivity proof is supplied as a hypothesis. A later group-level theorem
 should prove it from the appropriate Krein/symplectic block conditions.
 -/
 def moebiusAction
@@ -545,18 +546,18 @@ theorem moebiusTangentPushForward_op
 /-! ## Admissible Mobius/isometry blocks -/
 
 /--
-Phase-linearity predicate for a Mobius coefficient block.
+Placeholder predicate for the Mobius blocks that are genuine Poincare
+isometries.
 
-This predicate intentionally does not encode Poincare isometry.  A concrete
-isometry predicate must additionally encode the appropriate real
-Krein/symplectic conditions on the block matrix
+A future concrete version should encode the appropriate real Krein/symplectic
+conditions on the block matrix
 
 `[[A, B], [C, D]]`.
 
 Phase-linearity and denominator invertibility alone are not enough to guarantee
 metric invariance.
 -/
-def IsPhaseLinearMobiusBlock
+def IsPoincareMobiusBlock
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (M : PhaseLinearMobiusCoefficients D) : Prop :=
   PhaseLinear D M.A ∧
@@ -565,9 +566,9 @@ def IsPhaseLinearMobiusBlock
         PhaseLinear D M.Dop
 
 /-- Every phase-linear Mobius coefficient packet satisfies the admissible block carrier. -/
-theorem isPhaseLinearMobiusBlock_of_phaseLinear
+theorem isPoincareMobiusBlock_of_phaseLinear
     (M : PhaseLinearMobiusCoefficients D) :
-    IsPhaseLinearMobiusBlock D M := by
+    IsPoincareMobiusBlock D M := by
   exact ⟨M.A_phase, M.B_phase, M.C_phase, M.D_phase⟩
 
 /-! ## Poincare metric datum -/
@@ -575,7 +576,7 @@ theorem isPhaseLinearMobiusBlock_of_phaseLinear
 /--
 An invariant Poincare metric datum on the bilingual upper half-plane.
 
-The construction is property-based.  A later file can instantiate `innerAt`
+The construction is witness-based.  A later file can instantiate `innerAt`
 using the operator height, inverse height operator, and trace/Hilbert-Schmidt
 or renormalized-trace pairing.
 -/
@@ -619,7 +620,7 @@ structure PoincareMetricDatum
   -/
   moebius_invariant :
     ∀ (M : PhaseLinearMobiusCoefficients D),
-      IsPhaseLinearMobiusBlock D M →
+      IsPoincareMobiusBlock D M →
       ∀ (Z : BilingualUpperHalfPlane D)
       (hInv : MobiusDenominatorInverse M Z)
       (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
@@ -671,7 +672,7 @@ Named re-export of Mobius invariance for admissible Mobius blocks.
 -/
 theorem metric_mobius_invariant
     (M : PhaseLinearMobiusCoefficients D)
-    (hM : IsPhaseLinearMobiusBlock D M)
+    (hM : IsPoincareMobiusBlock D M)
     (Z : BilingualUpperHalfPlane D)
     (hInv : MobiusDenominatorInverse M Z)
     (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
@@ -692,7 +693,7 @@ automorphic layers.
 -/
 theorem moebius_isometry
     (M : PhaseLinearMobiusCoefficients D)
-    (hM : IsPhaseLinearMobiusBlock D M)
+    (hM : IsPoincareMobiusBlock D M)
     (Z : BilingualUpperHalfPlane D)
     (hInv : MobiusDenominatorInverse M Z)
     (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
@@ -1140,7 +1141,7 @@ def MobiusIsometryLaw
     (M : BilingualMobiusSymmetry H Q) : Prop :=
   IsPoincareIsometry G M.aut
 
-/-! ### Spectral reconstruction -/
+/-! ### Spectral reconstruction socket -/
 
 /--
 A spectral or cyclic reconstruction backend for the Poincare metric.

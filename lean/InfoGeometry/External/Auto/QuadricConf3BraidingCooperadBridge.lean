@@ -46,4 +46,13 @@ theorem zero_cycles_give_potential_on_three_vertices
     ∃ potential : Vertex3 → ℝ, IsExact S potential :=
   zero_cycle_affinity_implies_detailed_balance S base hzero
 
+/-- Consolidated exact-cochain specialization to the two triangle orientations. -/
+theorem exact_three_vertex_cycle_summary
+    (S : EdgeSystem Vertex3) (potential : Vertex3 → ℝ)
+    (hExact : IsExact S potential) :
+    cycleEntropyProduction S triangle012 = 0 ∧
+    cycleEntropyProduction S triangle021 = 0 :=
+  ⟨exact_cochain_kills_triangle012 S potential hExact,
+    exact_cochain_kills_triangle021 S potential hExact⟩
+
 end QuadricConf3BraidingCooperadBridge

@@ -25,7 +25,7 @@ is not idempotent for an arbitrary path `γ : ℝ → ℂ`. Idempotence and
 range-invariance require spectral-separation and contour-admissibility
 hypotheses. This file therefore proves the genuine algebraic resolvent
 identities and packages the Riesz projection laws behind an admissibility
-property, rather than asserting false theorem-shaped placeholders.
+certificate, rather than asserting false theorem-shaped placeholders.
 -/
 
 namespace InfoGeometry.Canonical
@@ -137,19 +137,6 @@ theorem dunfordTaylorIntegral_const_contour
     (z₀ : ℂ) (f : ℂ → EndH) (a b : ℝ) :
     dunfordTaylorIntegral (fun _ : ℝ => z₀) f a b = 0 := by
   simp [dunfordTaylorIntegral]
-
-omit [CompleteSpace E] in
-/-- A contour with identically vanishing derivative contributes no integral.
-
-This is the exact degenerate-contour case available without introducing the
-regularity and resolvent-avoidance hypotheses required by the full
-Dunford--Taylor calculus.
--/
-theorem dunfordTaylorIntegral_zero_of_deriv_eq_zero
-    (γ : ℝ → ℂ) (f : ℂ → EndH) (a b : ℝ)
-    (hγ : ∀ t, deriv γ t = 0) :
-    dunfordTaylorIntegral γ f a b = 0 := by
-  simp [dunfordTaylorIntegral, hγ]
 
 /--
 The Riesz projection associated to a contour expression:

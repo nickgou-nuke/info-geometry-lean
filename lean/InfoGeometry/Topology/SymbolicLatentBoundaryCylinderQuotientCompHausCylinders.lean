@@ -93,5 +93,3 @@ theorem boundaryReadoutCompHausHom_preimage_prefixCylinder_stage
     S stage length w
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHaus
-
-end

@@ -284,6 +284,90 @@ def cutoffVertexBitWordEquiv (n : ℕ) :
   (booleanCoordinatesEquiv (CutoffMode n)).trans
     (Equiv.arrowCongr (Fintype.equivFin (CutoffMode n)) (Equiv.refl Bool))
 
+/-! ## Finite BK matrix and Jost operator representations -/
+
+def bkHamiltonianMatrix {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
+    Matrix (Vertex P) (Vertex P) ℂ :=
+  Matrix.diagonal (fun S => (bkEnergy logPrime S : ℂ))
+
+def bkJostDet {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) (z : ℂ) : ℂ :=
+  (z • (1 : Matrix (Vertex P) (Vertex P) ℂ) -
+      bkHamiltonianMatrix logPrime).det
+
+theorem bkHamiltonianMatrix_isHermitian {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
+    (bkHamiltonianMatrix logPrime).IsHermitian := by
+  unfold Matrix.IsHermitian bkHamiltonianMatrix
+  ext S T
+  by_cases hST : S = T
+  · subst hST
+    simp
+  · simp [Matrix.conjTranspose, Matrix.diagonal, hST, Ne.symm hST]
+
+theorem bkJostDet_eq_prod {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) (z : ℂ) :
+    bkJostDet logPrime z =
+      ∏ S : Vertex P, (z - (bkEnergy logPrime S : ℂ)) := by
+  unfold bkJostDet bkHamiltonianMatrix
+  have hdiag : z • (1 : Matrix (Vertex P) (Vertex P) ℂ) -
+      Matrix.diagonal (fun S => (bkEnergy logPrime S : ℂ)) =
+      Matrix.diagonal (fun S => z - (bkEnergy logPrime S : ℂ)) := by
+    ext S T
+    by_cases hST : S = T
+    · subst hST
+      simp [Matrix.diagonal]
+    · simp [Matrix.diagonal, hST]
+  rw [hdiag]
+  exact Matrix.det_diagonal
+
+theorem bkJostDet_zero_of_basisDelta_eigenvalue {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) (S : Vertex P) :
+    bkJostDet logPrime (bkEnergy logPrime S : ℂ) = 0 := by
+  rw [bkJostDet_eq_prod]
+  exact Finset.prod_eq_zero (Finset.mem_univ S) (sub_self _)
+
+theorem bkEnergy_primeEnergy_eq_stateEnergy {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (S : Vertex P) :
+    bkEnergy (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ)) S =
+      InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.stateEnergy S := by
+  unfold bkEnergy InfoGeometry.Arithmetic.PrimeExteriorGraphDirac.stateEnergy
+  rfl
+
+theorem bkEnergy_primeEnergy_eq_log_stateNat {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (S : Vertex P) :
+    bkEnergy (fun p : PrimeCantorBerryKeatingOperator.PrimeMode P => Real.log (p : ℝ)) S =
+      Real.log (InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge.stateNat S : ℝ) := by
+  have h_ne_zero : ∀ n ∈ natSetOfState S, (n : ℝ) ≠ 0 := by
+    intro n hn
+    exact_mod_cast (natSetOfState_prime_mem S n hn).ne_zero
+  unfold stateNat
+  rw [Nat.cast_prod, Real.log_prod h_ne_zero]
+  unfold natSetOfState bkEnergy
+  rw [Finset.sum_map]
+  rfl
+
+theorem bkHamiltonian_isSelfAdjoint {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) :
+    IsAdjointPair (P := P) (bkHamiltonian logPrime) (bkHamiltonian logPrime) := by
+  intro f g
+  unfold pairing bkHamiltonian
+  simp only [star_mul, Complex.star_def, Complex.conj_ofReal]
+  apply Finset.sum_congr rfl
+  intro S hS
+  ring
+
+theorem bkHamiltonian_basisDelta_eigenvector {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
+    (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ) (T : Vertex P) :
+    bkHamiltonian logPrime (PrimeCantorZetaDiracOperator.basisDelta T) =
+      (bkEnergy logPrime T : ℂ) • PrimeCantorZetaDiracOperator.basisDelta T := by
+  funext S
+  by_cases hST : S = T
+  · subst hST
+    simp [bkHamiltonian, PrimeCantorZetaDiracOperator.basisDelta]
+  · simp [bkHamiltonian, PrimeCantorZetaDiracOperator.basisDelta, hST]
+
 /-! ## Finite BK stage readout in the native complex UHF tower
 
 The prime-register cutoff has `2 ^ card (CutoffMode n)` vertices.  Reindexing

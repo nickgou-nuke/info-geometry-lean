@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Arithmetic/ProjectiveWeylGauge.lean
 
-Weyl-gauge decomposition data for projective arithmetic KL readouts.
+Weyl-gauge decomposition sockets for projective arithmetic KL readouts.
 
 This module reuses the finite shape/scale KL machinery from
 `PrimitiveProjectiveRays` and the compact temperature coordinate from
@@ -9,11 +9,11 @@ This module reuses the finite shape/scale KL machinery from
 
 It does not prove a global KL decomposition theorem, Itakura-Saito theorem,
 Jensen inequality, or zeta estimate.  The Weyl factorization laws are supplied
-as explicit property data.
+as explicit witness data.
 -/
 
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
-import InfoGeometry.Canonical.SelfDualNormalConeBridge
+import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 noncomputable section
@@ -215,7 +215,7 @@ def itakuraSaitoDistanceReadout : PairScaleInvariantReadout :=
     intro counts₁ counts₂ support u c hc
     exact projectiveItakuraSaitoDistance_scale_right counts₁ counts₂ support u c hc)
 
-/-! ## 3. Weyl-gauge KL decomposition property -/
+/-! ## 3. Weyl-gauge KL decomposition witness -/
 
 /--
 Proof-carrying Weyl-gauge decomposition of a finite arithmetic KL readout.
@@ -322,7 +322,7 @@ structure ProjectiveWeylGaugeCalibration
   /-- Model-specific scale-invariant shape-core readout. -/
   shapeCoreReadout : State → ℝ → ℝ
 
-  /-- Supplied Weyl decomposition property for every finite profile pair. -/
+  /-- Supplied Weyl decomposition witness for every finite profile pair. -/
   decompositionOf :
     ∀ counts₁ counts₂ : CountProfile, ∀ support : Finset ℕ, ∀ u : ℝ,
       ProjectiveWeylGaugeDecomposition counts₁ counts₂ support u

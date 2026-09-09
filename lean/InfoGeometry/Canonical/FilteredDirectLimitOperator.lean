@@ -11,91 +11,84 @@ variable
     [∀ n, AddCommGroup (Stage n)]
     (f : ∀ m n : ℕ, m ≤ n → Stage m →+ Stage n)
 
-/-- A family of additive stage operators.  Compatibility with transitions is
-supplied explicitly to the colimit constructions below. -/
-abbrev CompatibleOperatorFamily := ∀ n, Stage n →+ Stage n
+/-- A family of additive stage operators compatible with every transition map
+of a directed system. -/
+structure CompatibleOperatorFamily where
+  op : ∀ n, Stage n →+ Stage n
+  commutes :
+    ∀ m n (h : m ≤ n) x,
+      op n (f m n h x) = f m n h (op m x)
 
 namespace CompatibleOperatorFamily
 
-variable (F : CompatibleOperatorFamily Stage)
+variable (F : CompatibleOperatorFamily Stage f)
 
 /-- Canonical map from one stage into the algebraic direct limit, after
 applying the stage operator. -/
 def operatedOf (n : ℕ) :
     Stage n →+ AddCommGroup.DirectLimit Stage f :=
-  (AddCommGroup.DirectLimit.of Stage f n).comp (F n)
+  (AddCommGroup.DirectLimit.of Stage f n).comp (F.op n)
 
-/-- The operated canonical maps form a cocone when the supplied stage family
-commutes with every transition. -/
+/-- The operated canonical maps form a cocone over the original directed
+system. -/
 theorem operatedOf_compatible
-    (hcommutes :
-      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F n (f m n h x) = f m n h (F m x))
     (m n : ℕ) (h : m ≤ n) (x : Stage m) :
     operatedOf Stage f F n (f m n h x) =
       operatedOf Stage f F m x := by
   change
     AddCommGroup.DirectLimit.of Stage f n
-        (F n (f m n h x)) =
-      AddCommGroup.DirectLimit.of Stage f m (F m x)
-  rw [hcommutes m n h x]
+        (F.op n (f m n h x)) =
+      AddCommGroup.DirectLimit.of Stage f m (F.op m x)
+  rw [F.commutes m n h x]
   exact AddCommGroup.DirectLimit.of_f
-    (f := f) (i := m) (j := n) (hij := h) (x := F m x)
+    (f := f) (i := m) (j := n) (hij := h) (x := F.op m x)
 
 /-- The genuine additive operator induced on the algebraic filtered direct
 limit by the compatible finite-stage family. -/
-def directLimitOperator
-    (hcommutes :
-      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F n (f m n h x) = f m n h (F m x)) :
+def directLimitOperator :
     AddCommGroup.DirectLimit Stage f →+
       AddCommGroup.DirectLimit Stage f :=
   AddCommGroup.DirectLimit.lift
     Stage f
     (AddCommGroup.DirectLimit Stage f)
     (operatedOf Stage f F)
-    (operatedOf_compatible Stage f F hcommutes)
+    (operatedOf_compatible Stage f F)
 
 /-- The induced direct-limit operator agrees with every finite-stage operator
 on canonical representatives. -/
 @[simp] theorem directLimitOperator_of
-    (hcommutes :
-      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F n (f m n h x) = f m n h (F m x))
     (n : ℕ) (x : Stage n) :
-    directLimitOperator Stage f F hcommutes
+    directLimitOperator Stage f F
         (AddCommGroup.DirectLimit.of Stage f n x) =
-      AddCommGroup.DirectLimit.of Stage f n (F n x) := by
+      AddCommGroup.DirectLimit.of Stage f n (F.op n x) := by
   exact AddCommGroup.DirectLimit.lift_of
     (G := Stage)
     (f := f)
     (P := AddCommGroup.DirectLimit Stage f)
     (g := operatedOf Stage f F)
-    (Hg := operatedOf_compatible Stage f F hcommutes)
+    (Hg := operatedOf_compatible Stage f F)
     n x
 
+/-- A finite-stage zero mode maps to a zero mode of the induced direct-limit
+operator. -/
 theorem directLimitOperator_zero_of_stage_zero
-    (hcommutes :
-      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F n (f m n h x) = f m n h (F m x))
     {n : ℕ} {x : Stage n}
-    (hx : F n x = 0) :
-    directLimitOperator Stage f F hcommutes
+    (hx : F.op n x = 0) :
+    directLimitOperator Stage f F
         (AddCommGroup.DirectLimit.of Stage f n x) = 0 := by
-  rw [directLimitOperator_of Stage f F hcommutes n x, hx]
+  rw [directLimitOperator_of Stage f F n x, hx]
   exact map_zero (AddCommGroup.DirectLimit.of Stage f n)
 
+/-- If a canonical stage class is nonzero, a finite-stage zero mode becomes a
+nontrivial kernel element of the induced direct-limit operator. -/
 theorem directLimitKernel_of_stageKernel
-    (hcommutes :
-      ∀ m n (h : m ≤ n) x,
-        F n (f m n h x) = f m n h (F m x))
     {n : ℕ} {x : Stage n}
     (hclass : AddCommGroup.DirectLimit.of Stage f n x ≠ 0)
-    (hx : F n x = 0) :
+    (hx : F.op n x = 0) :
     AddCommGroup.DirectLimit.of Stage f n x ≠ 0 ∧
-      directLimitOperator Stage f F hcommutes
+      directLimitOperator Stage f F
         (AddCommGroup.DirectLimit.of Stage f n x) = 0 :=
-  ⟨hclass, directLimitOperator_zero_of_stage_zero Stage f F hcommutes hx⟩
+  ⟨hclass, directLimitOperator_zero_of_stage_zero Stage f F hx⟩
 
 end CompatibleOperatorFamily
 

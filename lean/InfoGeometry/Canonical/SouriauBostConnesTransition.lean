@@ -77,6 +77,12 @@ def diracSeaVacuumState (_γ : CrystallisedState) : DiracSeaBoundary :=
 
 end CrystallisedState
 
+/-- Pack a finite bulk state together with a chosen finite/local boundary readout. -/
+@[rep_depth thermo, capstone]
+structure BCTransitionData where
+  bulk : BulkState
+  irReadout : CrystallisedState
+
 /-- Formal root lattice associated to a finite bulk state. -/
 @[rep_depth thermo, capstone]
 def BulkState.rootLattice (bulk : BulkState) : FormalPrimeRootLattice where
@@ -93,6 +99,12 @@ def BulkState.thermalRootVariable (bulk : BulkState) (p : ℕ) : ℝ :=
 def canonicalCrystallisedReadout : CrystallisedState where
   boundaryWord := fun _ : ℕ => 0
   label := FibObject.unit
+
+/-- Construct the finite/local transition data packet from a finite bulk state. -/
+@[rep_depth thermo, capstone]
+def transitionDataOfBulk (bulk : BulkState) : BCTransitionData where
+  bulk := bulk
+  irReadout := canonicalCrystallisedReadout
 
 /-! ## Owner-backed finite/local readouts -/
 
@@ -175,13 +187,14 @@ theorem cayley_reflection_eq_fugacity_inversion
 /-- The RH route remains conditional on the supplied prime Lee--Yang hypotheses. -/
 @[rep_depth thermo, capstone]
 theorem conditional_RH_from_supplied_primeLeeYang
-    (partitionPolynomial : Polynomial ℂ)
-    (hLeeYang : ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {n : ℕ}
+    (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))
+    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
-    (hz : partitionPolynomial.IsRoot z)
+    (hz : W.partitionPolynomial.IsRoot z)
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) :=
-  by exact cayleyToTemperature_mem_criticalLine_of_unitCircle z (hLeeYang z hz) hpole
+  partitionRoot_mapsToCriticalLine W.partitionPolynomial hLeeYang hz hpole
 
 /-- A finite boundary readout exists for every finite bulk state. -/
 @[rep_depth thermo, capstone]
@@ -242,5 +255,79 @@ theorem diracSea_half_filled :
     diracSeaVacuum = (fun n : ℤ => n < 0) ∧
       (∀ w : DiracSeaBoundary, Option.bind (diracSeaStep w) diracSeaStep = none) := by
   exact ⟨rfl, diracSeaStep_square_zero⟩
+
+/-! ## Verified capstone matrix -/
+
+/--
+Verified finite/local matrix of the transition lane.
+
+This is a record of the owner-backed facts that are actually proved.  Analytic
+convergence and categorical coherence claims are intentionally excluded.
+-/
+@[rep_depth thermo, capstone]
+def VerifiedTransitionMatrix (bulk : BulkState) : Prop :=
+  weylDenominatorProduct bulk.rootLattice bulk.thermalRootVariable =
+      weylAlternatingSum bulk.rootLattice bulk.thermalRootVariable ∧
+    finitePrimonPartition bulk.rootLattice bulk.beta =
+      (evaluatedWeylDenominator bulk.rootLattice bulk.beta)⁻¹ ∧
+    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1) ∧
+    SouriauBostConnesClosureProofs.sewnChiralIndex
+        SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0 ∧
+    YangBaxterProof.q ^ 5 = -1 ∧
+      YangBaxterProof.τ ^ 2 + YangBaxterProof.τ = 1 ∧
+    0 < phi ∧ 1 < phi ∧ 0 < phiInv ∧
+      phi ^ 2 = phi + 1 ∧ phiInv ^ 2 + phiInv = 1 ∧
+    ‖R1_phase‖ = 1 ∧
+      ‖Rtau_phase‖ = 1 ∧
+        R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5)) ∧
+    diracSeaVacuum = (fun n : ℤ => n < 0) ∧
+      (∀ w : DiracSeaBoundary, Option.bind (diracSeaStep w) diracSeaStep = none)
+
+/-- Construct the verified finite/local matrix from the existing owner theorems. -/
+@[rep_depth thermo, capstone]
+theorem verifiedTransitionMatrix (bulk : BulkState) : VerifiedTransitionMatrix bulk := by
+  refine ⟨finite_weylDenominator_eq_alternatingSum bulk, ?_⟩
+  refine ⟨finite_primonPartition_eq_inverse_evaluatedWeylDenominator bulk, ?_⟩
+  refine ⟨thermal_cayley_tendsto_boundary_one, ?_⟩
+  refine ⟨concrete_canonical_sewn_boundary_anomaly_free, ?_⟩
+  refine ⟨yangBaxter_boundary_parameters.1, yangBaxter_boundary_parameters.2, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.2.2, ?_⟩
+  refine ⟨rmatrix_unitarity.1, rmatrix_unitarity.2.1, rmatrix_unitarity.2.2, ?_⟩
+  exact diracSea_half_filled
+
+/-- Public package constructor for the finite/local transition readout. -/
+@[rep_depth thermo, capstone]
+def souriau_bost_connes_transition_Package
+    (P : Finset ℕ) (primesP : ∀ p ∈ P, Nat.Prime p) (β : ℝ) (hβpos : 0 < β) :
+    BCTransitionData :=
+  transitionDataOfBulk
+    { primes := P
+      prime_mem := primesP
+      beta := β
+      beta_pos := hβpos }
+
+/-- The public package preserves the supplied finite cutoff and temperature. -/
+@[rep_depth thermo, capstone]
+theorem souriau_bost_connes_transition_Package_bulk
+    (P : Finset ℕ) (primesP : ∀ p ∈ P, Nat.Prime p) (β : ℝ) (hβpos : 0 < β) :
+    (souriau_bost_connes_transition_Package P primesP β hβpos).bulk.primes = P ∧
+      (souriau_bost_connes_transition_Package P primesP β hβpos).bulk.beta = β :=
+  ⟨rfl, rfl⟩
+
+/--
+The public package has a verified finite/local transition matrix.
+
+This is the theorem-safe capstone exported by this file.
+-/
+@[rep_depth thermo, capstone]
+theorem souriau_bost_connes_transition_verified
+    (P : Finset ℕ) (primesP : ∀ p ∈ P, Nat.Prime p) (β : ℝ) (hβpos : 0 < β) :
+    VerifiedTransitionMatrix
+      (souriau_bost_connes_transition_Package P primesP β hβpos).bulk :=
+  verifiedTransitionMatrix _
 
 end InfoGeometry.Canonical.SouriauBostConnesTransition

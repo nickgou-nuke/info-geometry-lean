@@ -1,0 +1,32 @@
+{
+  "owner": "InfoGeometry.Probability.DetectorEnsembleTransport",
+  "carrier": "Fin m -> Real",
+  "basis_order": "increasing Fin index",
+  "multiplication_convention": "positive scalar multiplication; log is additive",
+  "round_trip": {
+    "log_scales": [
+      0,
+      2,
+      4
+    ],
+    "centered": [
+      -2,
+      0,
+      2
+    ]
+  },
+  "round_trip_verified": true,
+  "round_trip_lean": "DetectorEnsembleTransport.lean final finite example",
+  "checks": {
+    "center_2": "0",
+    "separable_transport_2": "0",
+    "center_3": "0",
+    "separable_transport_3": "0",
+    "center_8": "0",
+    "separable_transport_8": "0",
+    "center_10": "0",
+    "separable_transport_10": "0",
+    "angular_recovery": "0"
+  },
+  "sha256": "da4e22f9fcdfeca2afbc2b328f59294676f307fdc7fe1012a755f533f35509ea"
+}

@@ -13,6 +13,8 @@ algebraic direct limit.
 
 noncomputable section
 
+set_option linter.unusedSectionVars false
+
 namespace CStarStateColimit.Native.FilteredStarAlgebraActionTopologicalCompatibility
 
 open CStarStateColimit.Native
@@ -50,13 +52,11 @@ theorem topologicalAction_on_stage (i : I) (t : ℤ) (x : Stage i) :
     (T.stage_agreement i t)
 
 theorem topologicalAction_agrees_with_algebraicAction_on_stage
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (t : ℤ) (x : Stage i) :
     T.action t
-        (algebraicDescend Stage sys R hι_comm
+        (algebraicDescend Stage sys R
           (algebraicStarDirectLimitOf Stage sys i x)) =
-      algebraicDescend Stage sys R hι_comm
+      algebraicDescend Stage sys R
         (algebraicColimitAction Stage sys A t
           (algebraicStarDirectLimitOf Stage sys i x)) := by
   rw [algebraicDescend_of, algebraicColimitAction_on_stage,
@@ -64,17 +64,15 @@ theorem topologicalAction_agrees_with_algebraicAction_on_stage
   exact (topologicalAction_on_stage Stage sys A R T i t x)
 
 theorem topologicalAction_agrees_with_algebraicEquiv_on_stage
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (t : ℤ) (x : Stage i) :
     T.action t
-        (algebraicDescend Stage sys R hι_comm
+        (algebraicDescend Stage sys R
           (algebraicStarDirectLimitOf Stage sys i x)) =
-      algebraicDescend Stage sys R hι_comm
+      algebraicDescend Stage sys R
         (algebraicColimitActionEquiv Stage sys A t
           (algebraicStarDirectLimitOf Stage sys i x)) := by
   simpa [algebraicColimitActionEquiv_apply] using
     topologicalAction_agrees_with_algebraicAction_on_stage
-      Stage sys A R T hι_comm i t x
+      Stage sys A R T i t x
 
 end CStarStateColimit.Native.FilteredStarAlgebraActionTopologicalCompatibility

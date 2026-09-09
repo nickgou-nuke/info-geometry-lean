@@ -10,8 +10,8 @@ DOI `10.11648/j.mcs.20261103.11`).
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 * `prime_of_no_small_prime_divisor_and_sq_bound`: the elementary least-prime
-  factor property behind the paper's Complete HPF certification bound.
-* `hpf_certification_prime`: the same property stated in HPF notation.
+  factor certificate behind the paper's Complete HPF certification bound.
+* `hpf_certification_prime`: the same certificate stated in HPF notation.
 * `goldbachPairingValue_example_twenty`: the paper's `L(C_10)=273` example.
 * `goldbachPairingRecover_example_twenty`: exact finite recovery of the
   `20 = 3+17 = 7+13` Goldbach state from the encoded fields.
@@ -33,7 +33,7 @@ DOI `10.11648/j.mcs.20261103.11`).
 
 namespace InfoGeometry.Topology.PapadakisPrimes
 
-/-! ## Hybrid Prime Factorization property -/
+/-! ## Hybrid Prime Factorization certificate -/
 
 /-- Additive or subtractive HPF branch. -/
 inductive HPFBranch where
@@ -52,7 +52,7 @@ def hpfValue (branch : HPFBranch) (A B : ℕ) : ℕ :=
   | HPFBranch.sub => natAbsDiff A B
 
 /--
-The elementary prime property beneath the paper's Complete HPF theorem.
+The elementary prime certificate beneath the paper's Complete HPF theorem.
 
 If `n > 1`, every prime divisor of `n` is at least `pNext`, and
 `n < pNext^2`, then `n` is prime.  In HPF applications, the disjoint complete

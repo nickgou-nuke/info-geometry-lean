@@ -12,9 +12,9 @@ This module records the precise finite logic:
 * an even centered function reflects zeros in pairs;
 * evenness alone permits off-axis zeros;
 * a separate `NoOffAxisZeros` complement is the exact missing selection
-  property needed to conclude `re z = 0`.
+  hypothesis needed to conclude `re z = 0`.
 
-No theorem here asserts the Riemann property, analytic continuation, or that
+No theorem here asserts the Riemann hypothesis, analytic continuation, or that
 the completed zeta zeros satisfy the complement.
 -/
 
@@ -29,20 +29,6 @@ def criticalCentered (z : ℂ) : ℂ :=
 /-- The centered critical line is the imaginary axis in `z = s - 1/2`. -/
 def centeredCriticalLine (z : ℂ) : Prop :=
   z.re = 0
-
-theorem criticalCentered_re (z : ℂ) :
-    (criticalCentered z).re = (1 / 2 : ℝ) + z.re := by
-  simp [criticalCentered]
-
-theorem criticalCentered_mem_line_iff (z : ℂ) :
-    centeredCriticalLine z ↔ (criticalCentered z).re = (1 / 2 : ℝ) := by
-  rw [centeredCriticalLine, criticalCentered_re]
-  constructor <;> intro h <;> linarith
-
-theorem centeredCriticalLine_neg {z : ℂ}
-    (hz : centeredCriticalLine z) :
-    centeredCriticalLine (-z) := by
-  simpa [centeredCriticalLine] using congrArg Neg.neg hz
 
 /-- A function is even in centered coordinates when it is invariant under `z ↦ -z`. -/
 def EvenCentered (F : ℂ → ℂ) : Prop :=
@@ -68,24 +54,24 @@ theorem even_zero_reflection {F : ℂ → ℂ} (hEven : EvenCentered F) {z : ℂ
 /-! ## Counterexample to the heuristic implication -/
 
 /-- A minimal even function with off-axis zeros: `z^2 - 1`. -/
-def evenOffAxisPolynomial (z : ℂ) : ℂ :=
+def evenOffAxisWitness (z : ℂ) : ℂ :=
   z ^ 2 - 1
 
-/-- The property is centered-even. -/
-theorem evenOffAxisPolynomial_even : EvenCentered evenOffAxisPolynomial := by
+/-- The witness is centered-even. -/
+theorem evenOffAxisWitness_even : EvenCentered evenOffAxisWitness := by
   intro z
-  unfold evenOffAxisPolynomial
+  unfold evenOffAxisWitness
   ring
 
-/-- `z = 1` is a zero of the property. -/
-theorem evenOffAxisPolynomial_one_zero : ZeroAt evenOffAxisPolynomial (1 : ℂ) := by
-  unfold ZeroAt evenOffAxisPolynomial
+/-- `z = 1` is a zero of the witness. -/
+theorem evenOffAxisWitness_one_zero : ZeroAt evenOffAxisWitness (1 : ℂ) := by
+  unfold ZeroAt evenOffAxisWitness
   norm_num
 
-/-- `z = -1` is the reflected zero of the property. -/
-theorem evenOffAxisPolynomial_neg_one_zero : ZeroAt evenOffAxisPolynomial (-1 : ℂ) := by
+/-- `z = -1` is the reflected zero of the witness. -/
+theorem evenOffAxisWitness_neg_one_zero : ZeroAt evenOffAxisWitness (-1 : ℂ) := by
   simpa using
-    (even_zero_reflection evenOffAxisPolynomial_even evenOffAxisPolynomial_one_zero)
+    (even_zero_reflection evenOffAxisWitness_even evenOffAxisWitness_one_zero)
 
 /-- The zero `z = 1` is not on the centered critical line. -/
 theorem one_not_centeredCriticalLine : ¬ centeredCriticalLine (1 : ℂ) := by
@@ -99,9 +85,9 @@ Even centered symmetry does not imply critical-line confinement.  The polynomial
 theorem even_symmetry_allows_off_axis_zero_pair :
     ∃ F : ℂ → ℂ, ∃ z : ℂ,
       EvenCentered F ∧ ZeroAt F z ∧ ZeroAt F (-z) ∧ z.re ≠ 0 := by
-  refine ⟨evenOffAxisPolynomial, (1 : ℂ), evenOffAxisPolynomial_even,
-    evenOffAxisPolynomial_one_zero, ?_, ?_⟩
-  · simpa using evenOffAxisPolynomial_neg_one_zero
+  refine ⟨evenOffAxisWitness, (1 : ℂ), evenOffAxisWitness_even,
+    evenOffAxisWitness_one_zero, ?_, ?_⟩
+  · simpa using evenOffAxisWitness_neg_one_zero
   · norm_num
 
 /-! ## The explicit complement needed for confinement -/
@@ -132,3 +118,4 @@ theorem zero_reflection_and_confinement_of_even_and_complement {F : ℂ → ℂ}
   exact ⟨even_zero_reflection hEven hz, centeredCriticalLine_of_noOffAxisZeros hNo hz⟩
 
 end InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
+

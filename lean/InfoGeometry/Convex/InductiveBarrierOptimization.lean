@@ -66,7 +66,7 @@ theorem barrierValue_iterateUpdate_le_start {X : Type*}
       have hN : feasible (iterateUpdate step N x) := feasible_iterateUpdate hfeas hx N
       exact le_trans (hdesc (iterateUpdate step N x) hN) ih
 
-/-- Consecutive finite iterates are barrier-monotone under the one-step descent property. -/
+/-- Consecutive finite iterates are barrier-monotone under the one-step descent hypothesis. -/
 theorem barrierValue_iterateUpdate_succ_le {X : Type*}
     {feasible : X → Prop} {barrier : X → ℝ} {step : X → X}
     (hfeas : ∀ x, feasible x → feasible (step x))

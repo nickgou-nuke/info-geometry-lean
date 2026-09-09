@@ -753,7 +753,7 @@ section StarCertifiedWeld
 
 /--
 Synthesis-facing Hestenes weld closure:
-under projector agreement on the star-property conformal surface, the Berry
+under projector agreement on the star-certified conformal surface, the Berry
 sector of the `K = Jε`-twisted Einstein-anomaly QGT is exactly the metric
 readout of the lifted projector obstruction.
 -/
@@ -776,7 +776,7 @@ section TopologicalSheetGlideReadout
 
 /--
 Forwarder to the topological owner: a constructed sheet/glide Berry connection generated from
-a base potential satisfies the odd potential law, without taking that law as a free property.
+a base potential satisfies the odd potential law, without taking that law as a free hypothesis.
 -/
 theorem sheetGlideOddBerryConnection_owner_odd
     {BZ : Type*} [TopologicalSpace BZ]

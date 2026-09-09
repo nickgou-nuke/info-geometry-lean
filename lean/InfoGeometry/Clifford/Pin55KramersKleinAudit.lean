@@ -1,0 +1,14 @@
+import InfoGeometry.Clifford.Pin55KramersKleinAll
+
+#print axioms InfoGeometry.Quantum.ComplexKramersAntiunitary.timeReversal_sq
+#print axioms InfoGeometry.Quantum.ComplexKramersAntiunitary.timeReversal_antiunitary
+#print axioms InfoGeometry.Topology.KleinDeckNormalForm.klein_conjugation_relation
+#print axioms InfoGeometry.Topology.KleinDeckNormalForm.abelianReadout_surjective
+#print axioms InfoGeometry.Topology.KleinAffineOrbitQuotient.affine_orbit_quotient_packet
+#print axioms InfoGeometry.Quantum.FiveGradedKramersModule.euler_kramers_anticommute
+#print axioms InfoGeometry.Clifford.O55SymmetricBlockGrading.commutator_mem_o55
+#print axioms InfoGeometry.Clifford.O55FiveGradeKramersBridge.native_o55_five_lane_packet
+#print axioms InfoGeometry.Clifford.Pin55KramersContactMultigrading.kramers_contact_packet
+#print axioms InfoGeometry.Clifford.Pin55KramersKleinFiveGradeClosure.complex_kramers_phase_packet
+#print axioms InfoGeometry.Clifford.Pin55KramersKleinFiveGradeClosure.klein_quotient_readout_packet
+#print axioms InfoGeometry.Clifford.Pin55KramersKleinFiveGradeClosure.o55_symmetric_pair_packet

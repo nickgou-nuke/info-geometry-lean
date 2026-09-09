@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Finite Pin(5,5)-style reflection and glide
+# Finite Pin(5,5)-style reflection and glide socket
 
 This module gives an explicit theorem-safe split-signature `(5,5)` finite
 coordinate model over `ℚ`.
@@ -13,8 +13,9 @@ It proves:
 * the affine glide obtained by composing that reflection with a half-translation
   in an unaffected coordinate squares to the full translation.
 
-The module packages the reflection data as a finite `Pin(5,5)`-style
-property over the coordinate model used by the rest of the topology lane.
+This is a finite `Pin(5,5)`-style reflection certificate, not a full
+construction of the Clifford algebra `Cl(5,5)`, the topological group
+`Pin(5,5)`, or a physical T-duality theorem.
 -/
 
 namespace InfoGeometry.Topology.Pin55ReflectionGlide
@@ -39,7 +40,7 @@ def translate1 (a : ℚ) (x : Vec55) : Vec55 :=
 def glide01 (x : Vec55) : Vec55 :=
   translate1 (1 / 2) (reflect0 x)
 
-/-- Abstract finite property for a split `(5,5)` reflection. -/
+/-- Abstract finite certificate for a split `(5,5)` reflection. -/
 structure Pin55Reflection where
   map : Vec55 → Vec55
   preserves_splitNorm : ∀ x, splitNorm55 (map x) = splitNorm55 x
@@ -56,7 +57,7 @@ theorem reflect0_involutive (x : Vec55) :
   ext i
   fin_cases i <;> simp [reflect0]
 
-/-- The coordinate reflection as a finite `Pin(5,5)`-style property. -/
+/-- The coordinate reflection as a finite `Pin(5,5)`-style certificate. -/
 def reflect0_pin55 : Pin55Reflection where
   map := reflect0
   preserves_splitNorm := reflect0_preserves_splitNorm

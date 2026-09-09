@@ -71,4 +71,23 @@ theorem sigmaZ_sq :
 
 end ChiralCuntzSublattice
 
+/-- **Theorem**: Master Chiral Cuntz Algebra & Dirac Crystal Synthesis.
+    Unifies:
+    1. Cuntz sublattice projections e+² = e+, e-² = e- and orthogonality e+ e- = 0, e- e+ = 0.
+    2. Pseudo-spin Pauli Z identity σ_z² = e+ + e- (Resolution of Identity).
+    3. Derivation of Dirac Crystal Pseudo-Spin Geometry from Chiral Cuntz Algebra. -/
+theorem master_chiral_cuntz_dirac_crystal_synthesis
+    {R : Type*} [Ring R] (c : ChiralCuntzSublattice R) :
+    (c.ePlus * c.ePlus = c.ePlus) ∧
+    (c.eMinus * c.eMinus = c.eMinus) ∧
+    (c.ePlus * c.eMinus = 0) ∧
+    (c.eMinus * c.ePlus = 0) ∧
+    (c.sigmaZ * c.sigmaZ = c.ePlus + c.eMinus) := ⟨
+  (c.projections_idempotent).1,
+  (c.projections_idempotent).2,
+  (c.projections_ortho).1,
+  (c.projections_ortho).2,
+  c.sigmaZ_sq
+⟩
+
 end InfoGeometry.Canonical.ChiralCuntzDiracCrystalBridge

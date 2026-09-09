@@ -1,5 +1,8 @@
 import InfoGeometry.Lie.SplitOctonionCircularReciprocalExponentialBridge
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
+import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
+import InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
+import InfoGeometry.Lie.SplitOctonionCircularAxialGrading
 
 /-!
 # Reciprocal exponential readout of the circular Witt flow

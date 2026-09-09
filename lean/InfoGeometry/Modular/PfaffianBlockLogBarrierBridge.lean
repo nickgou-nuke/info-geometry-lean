@@ -55,5 +55,3 @@ theorem pfaffianBlockPotential_eq_coordinateLog_sum (a : PositiveState ι) :
   exact (a.pos i).ne'
 
 end InfoGeometry.Modular.PfaffianBlockLogBarrierBridge
-
-end

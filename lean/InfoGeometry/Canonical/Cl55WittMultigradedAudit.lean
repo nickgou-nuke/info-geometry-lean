@@ -1,0 +1,23 @@
+import InfoGeometry.Canonical.Cl55WittMultigradedPristineChain
+
+/-!
+# Dependency audit for the local Cl(5,5) multigraded bridge
+
+Only declarations present in the current owner graph are audited here.  The
+upstream represented-weight and full readout declarations are intentionally
+not named until their owners exist locally.
+-/
+
+#print axioms InfoGeometry.Canonical.Cl55WittMultigrading.weightSpace_bracket_mem
+#print axioms InfoGeometry.Canonical.Cl55WittFullLieClosure.wittFiveGradeLieSubalgebra_eq_generatorLieSpan
+#print axioms InfoGeometry.Canonical.Cl55WittOrthogonalHierarchy.quadratic_core_dimension_fingerprint
+#print axioms InfoGeometry.Canonical.Cl55WittOrthogonalHierarchy.full_extension_dimension_fingerprint
+#print axioms InfoGeometry.Streaming.Cl55FiveGradeBoundaryReadout.complexSpinAction_bracket
+#print axioms InfoGeometry.Streaming.Cl55FiveGradeBoundaryReadout.complexSpinAction_injective
+#print axioms InfoGeometry.Streaming.Cl55FiveGradeBoundaryReadout.cl55BoundaryReadout_bracket
+#print axioms InfoGeometry.Canonical.Cl55WittMultigradedPristineChain.cl55_multigraded_pristine_chain
+#print axioms InfoGeometry.Canonical.Cl55WittMultigradedPristineChain.cl55_multigraded_bracket_chain
+#print axioms InfoGeometry.Canonical.Cl55WittChiralityRefinement.chiralityEven_bracket_chiralityEven
+#print axioms InfoGeometry.Canonical.Cl55WittChiralityRefinement.chiralityEven_bracket_chiralityOdd
+#print axioms InfoGeometry.Canonical.Cl55WittChiralityRefinement.chiralityOdd_bracket_chiralityEven
+#print axioms InfoGeometry.Canonical.Cl55WittChiralityRefinement.chiralityOdd_bracket_chiralityOdd

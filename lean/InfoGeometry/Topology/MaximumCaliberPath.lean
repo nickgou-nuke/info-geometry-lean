@@ -81,11 +81,11 @@ theorem caliber_eq_zero_of_detailed_balance
 
 end MaximumCaliberPacket
 
-/-! ## Explicit MaxCal optimizer and thermodynamic-gauge data -/
+/-! ## Explicit MaxCal optimizer and thermodynamic-gauge sockets -/
 
-/-- Abstract finite-path MaxCal variational data.
+/-- Abstract finite-path MaxCal variational socket.
 
-The optimizer property is explicit: this file does not prove analytic
+The optimizer certificate is explicit: this file does not prove analytic
 existence or uniqueness of path-entropy maximizers.
 -/
 structure MaximumCaliberOptimizer (Path : Type u) where
@@ -95,8 +95,13 @@ structure MaximumCaliberOptimizer (Path : Type u) where
   feasible : constraint optimizer
   maximizes : ∀ μ : Path → ℝ, constraint μ → caliber μ ≤ caliber optimizer
 
+namespace MaximumCaliberOptimizer
 
-/-- A MaxCal transition-asymmetry datum over an existing thermodynamic gauge flow. -/
+variable {Path : Type u} (M : MaximumCaliberOptimizer Path)
+
+end MaximumCaliberOptimizer
+
+/-- A MaxCal transition-asymmetry socket over an existing thermodynamic gauge flow. -/
 theorem entropy_production_eq_pathConstraint
     (flow : CausalNonequilibriumFlow Op) (pathConstraint : Op)
     (hconstraint :

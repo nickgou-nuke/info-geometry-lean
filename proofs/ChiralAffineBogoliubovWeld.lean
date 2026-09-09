@@ -1,5 +1,5 @@
 import proofs.SupergradedCuntzBdG
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.BogoliubovWeylChemicalPotential
 
 /-!

@@ -6,25 +6,17 @@ namespace Omega.POM
 the already formalized alternating-Witten parity package.
     cor:derived-fiber-independence-polynomial-minus-one-trichotomy -/
 theorem paper_derived_fiber_independence_polynomial_minus_one_trichotomy
-    {badModThreeComponent allComponentsAvoidBadModThree joinDecomposition
-        contractibleCase sphereCase : Prop}
-    (hJoinDecomposition : joinDecomposition)
-    (badModThreeComponentForcesContraction :
-      badModThreeComponent → joinDecomposition → contractibleCase)
-    (allGoodComponentsGiveSphere :
-      allComponentsAvoidBadModThree → joinDecomposition → sphereCase)
-    (L : List ℕ) (tau : ℕ)
+    (D : Omega.POM.FiberIndependenceComplexClassificationData) (L : List ℕ) (tau : ℕ)
     (E : Omega.POM.POMFiberStokesEulerBoundaryObservabilityData)
-    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → badModThreeComponent)
-    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → allComponentsAvoidBadModThree)
-    (hContractibleEuler : contractibleCase → E.reducedEulerCharacteristic = 0)
-    (hSphereEuler : sphereCase → E.reducedEulerCharacteristic = (-1 : ℤ) ^ (tau - 1))
-    (hTauPos : sphereCase → 1 ≤ tau) :
+    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → D.badModThreeComponent)
+    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → D.allComponentsAvoidBadModThree)
+    (hContractibleEuler : D.contractibleCase → E.reducedEulerCharacteristic = 0)
+    (hSphereEuler : D.sphereCase → E.reducedEulerCharacteristic = (-1 : ℤ) ^ (tau - 1))
+    (hTauPos : D.sphereCase → 1 ≤ tau) :
     (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → E.zAtMinusOne = 0) ∧
       (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → E.zAtMinusOne = (-1 : ℤ) ^ tau) := by
   exact
-    paper_derived_fiber_indcomplex_alternating_witten_parity hJoinDecomposition
-      badModThreeComponentForcesContraction allGoodComponentsGiveSphere L tau E hBad hGood
+    paper_derived_fiber_indcomplex_alternating_witten_parity D L tau E hBad hGood
       hContractibleEuler hSphereEuler hTauPos
 
 end Omega.POM

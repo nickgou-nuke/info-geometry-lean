@@ -13,7 +13,6 @@ set_option linter.unusedSectionVars false
 namespace InfoGeometry.Algebra.OSp12
 
 open scoped BigOperators
-open InfoGeometry.Algebra.SupergradedBracket
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -107,68 +106,27 @@ theorem projDown_mul_projUp (O : Op V) (hO3 : O ^ 3 = O) :
 
 structure OperatorSurface where
   Γ : Op V
+  hΓ : Γ * Γ = 1
   H : Op V
   Ep : Op V
   Em : Op V
   G1 : Op V
   G2 : Op V
-
-def OperatorSurfaceLaws (S : OperatorSurface (V := V)) : Prop :=
-  S.Γ * S.Γ = 1 ∧
-  S.Γ * S.H = S.H * S.Γ ∧
-  S.Γ * S.Ep = S.Ep * S.Γ ∧
-  S.Γ * S.Em = S.Em * S.Γ ∧
-  S.Γ * S.G1 = -(S.G1 * S.Γ) ∧
-  S.Γ * S.G2 = -(S.G2 * S.Γ) ∧
-  superBracket false false S.H S.Ep = (2 : ℝ) • S.Ep ∧
-  superBracket false false S.H S.Em = (-2 : ℝ) • S.Em ∧
-  superBracket false false S.Ep S.Em = S.H ∧
-  superBracket false true S.H S.G1 = (1 : ℝ) • S.G1 ∧
-  superBracket false true S.H S.G2 = (-1 : ℝ) • S.G2 ∧
-  superBracket false true S.Ep S.G2 = S.G1 ∧
-  superBracket false true S.Em S.G1 = S.G2 ∧
-  superBracket true true S.G1 S.G1 = (2 : ℝ) • S.Ep ∧
-  superBracket true true S.G2 S.G2 = (-2 : ℝ) • S.Em ∧
-  superBracket true true S.G1 S.G2 = -S.H
-
-theorem OperatorSurfaceLaws.hΓ {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : S.Γ * S.Γ = 1 := h.1
-
-theorem OperatorSurfaceLaws.G1_odd {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : S.Γ * S.G1 = -(S.G1 * S.Γ) := h.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.H_Ep {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false false S.H S.Ep = (2 : ℝ) • S.Ep := h.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.H_Em {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false false S.H S.Em = (-2 : ℝ) • S.Em := h.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.Ep_Em {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false false S.Ep S.Em = S.H := h.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.H_G1 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false true S.H S.G1 = (1 : ℝ) • S.G1 := h.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.H_G2 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false true S.H S.G2 = (-1 : ℝ) • S.G2 := h.2.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.Ep_G2 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false true S.Ep S.G2 = S.G1 := h.2.2.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.Em_G1 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket false true S.Em S.G1 = S.G2 := h.2.2.2.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.G1_G1 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket true true S.G1 S.G1 = (2 : ℝ) • S.Ep := h.2.2.2.2.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.G2_G2 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket true true S.G2 S.G2 = (-2 : ℝ) • S.Em := h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
-
-theorem OperatorSurfaceLaws.G1_G2 {S : OperatorSurface (V := V)}
-    (h : OperatorSurfaceLaws S) : superBracket true true S.G1 S.G2 = -S.H := by
-  rcases h with ⟨hΓ, hH, hEp, hEm, hG1, hG2, hHEp, hHEm,
-    hEpEm, hHG1, hHG2, hEpG2, hEmG1, hG1G1, hG2G2, hG1G2⟩
-  exact hG1G2
+  H_even : Γ * H = H * Γ
+  Ep_even : Γ * Ep = Ep * Γ
+  Em_even : Γ * Em = Em * Γ
+  G1_odd : Γ * G1 = -G1 * Γ
+  G2_odd : Γ * G2 = -G2 * Γ
+  H_Ep : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Ep = (2 : ℝ) • Ep
+  H_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Em = (-2 : ℝ) • Em
+  Ep_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false Ep Em = H
+  H_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G1 = (1 : ℝ) • G1
+  H_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G2 = (-1 : ℝ) • G2
+  Ep_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Ep G2 = G1
+  Em_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Em G1 = G2
+  G1_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G1 = (2 : ℝ) • Ep
+  G2_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G2 G2 = (-2 : ℝ) • Em
+  G1_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G2 = -H
 
 namespace OperatorSurface
 
@@ -194,16 +152,13 @@ theorem active_support_compression (O : Op V) :
   exact supportProjector_eq O
 
 /-- The first odd self-bracket relation determines its square. -/
-theorem G1_sq (S : OperatorSurface (V := V))
-    (hG1G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true
-      S.G1 S.G1 = (2 : ℝ) • S.Ep) :
+theorem G1_sq (S : OperatorSurface (V := V)) :
     S.G1 * S.G1 = S.Ep := by
-  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) hG1G1
+  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) S.G1_G1
   have h' :
       (1 / 2 : ℝ) • (S.G1 * S.G1) + (1 / 2 : ℝ) • (S.G1 * S.G1) = S.Ep := by
     simpa [InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      InfoGeometry.Algebra.InvariantTransport.anticommutator,
       smul_add, smul_smul] using h
   calc
     S.G1 * S.G1 =
@@ -212,16 +167,13 @@ theorem G1_sq (S : OperatorSurface (V := V))
     _ = S.Ep := h'
 
 /-- The second odd self-bracket relation determines its signed square. -/
-theorem G2_sq (S : OperatorSurface (V := V))
-    (hG2G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true
-      S.G2 S.G2 = (-2 : ℝ) • S.Em) :
+theorem G2_sq (S : OperatorSurface (V := V)) :
     S.G2 * S.G2 = -S.Em := by
-  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) hG2G2
+  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) S.G2_G2
   have h' :
       (1 / 2 : ℝ) • (S.G2 * S.G2) + (1 / 2 : ℝ) • (S.G2 * S.G2) = -S.Em := by
     simpa [InfoGeometry.Algebra.SupergradedBracket.superBracket,
       InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      InfoGeometry.Algebra.InvariantTransport.anticommutator,
       smul_add, smul_smul] using h
   calc
     S.G2 * S.G2 =
@@ -233,10 +185,7 @@ theorem G2_sq (S : OperatorSurface (V := V))
 The bosonized coproduct preserves the first odd--odd `osp(1|2)` closure
 relation.
 -/
-theorem bosonized_G1_self_anticommutator (S : OperatorSurface (V := V))
-    (hΓ : S.Γ * S.Γ = 1)
-    (hG1_odd : S.Γ * S.G1 = -(S.G1 * S.Γ))
-    (hG1_sq : S.G1 * S.G1 = S.Ep) :
+theorem bosonized_G1_self_anticommutator (S : OperatorSurface (V := V)) :
     InfoGeometry.Algebra.SupergradedBracket.anticommutator
         (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
           (R := ℝ) S.Γ S.G1)
@@ -247,16 +196,13 @@ theorem bosonized_G1_self_anticommutator (S : OperatorSurface (V := V))
           (R := ℝ) S.Ep := by
   exact
     InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd_self_anticommutator
-      (R := ℝ) S.Γ S.G1 S.Ep hΓ hG1_odd hG1_sq
+      (R := ℝ) S.Γ S.G1 S.Ep S.hΓ S.G1_odd S.G1_sq
 
 /--
 The bosonized coproduct preserves the signed second odd--odd `osp(1|2)`
 closure relation.
 -/
-theorem bosonized_G2_self_anticommutator (S : OperatorSurface (V := V))
-    (hΓ : S.Γ * S.Γ = 1)
-    (hG2_odd : S.Γ * S.G2 = -(S.G2 * S.Γ))
-    (hG2_sq : S.G2 * S.G2 = -S.Em) :
+theorem bosonized_G2_self_anticommutator (S : OperatorSurface (V := V)) :
     InfoGeometry.Algebra.SupergradedBracket.anticommutator
         (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
           (R := ℝ) S.Γ S.G2)
@@ -267,7 +213,7 @@ theorem bosonized_G2_self_anticommutator (S : OperatorSurface (V := V))
           (R := ℝ) (-S.Em) := by
   exact
     InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd_self_anticommutator
-      (R := ℝ) S.Γ S.G2 (-S.Em) hΓ hG2_odd hG2_sq
+      (R := ℝ) S.Γ S.G2 (-S.Em) S.hΓ S.G2_odd S.G2_sq
 
 /-
 The old `trivialOperatorSurface` supplied zero operators as a purported
@@ -277,14 +223,45 @@ operator and every closure proof must now be supplied by a genuine owner.
 -/
 def trivialOperatorSurface
     (Γ H Ep Em G1 G2 : Op V)
-    :
+    (hΓ : Γ * Γ = 1)
+    (H_even : Γ * H = H * Γ)
+    (Ep_even : Γ * Ep = Ep * Γ)
+    (Em_even : Γ * Em = Em * Γ)
+    (G1_odd : Γ * G1 = -G1 * Γ)
+    (G2_odd : Γ * G2 = -G2 * Γ)
+    (H_Ep : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Ep = (2 : ℝ) • Ep)
+    (H_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Em = (-2 : ℝ) • Em)
+    (Ep_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false Ep Em = H)
+    (H_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G1 = (1 : ℝ) • G1)
+    (H_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G2 = (-1 : ℝ) • G2)
+    (Ep_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Ep G2 = G1)
+    (Em_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Em G1 = G2)
+    (G1_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G1 = (2 : ℝ) • Ep)
+    (G2_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G2 G2 = (-2 : ℝ) • Em)
+    (G1_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G2 = -H) :
     OperatorSurface (V := V) :=
   { Γ := Γ
+    hΓ := hΓ
     H := H
     Ep := Ep
     Em := Em
     G1 := G1
-    G2 := G2 }
+    G2 := G2
+    H_even := H_even
+    Ep_even := Ep_even
+    Em_even := Em_even
+    G1_odd := G1_odd
+    G2_odd := G2_odd
+    H_Ep := H_Ep
+    H_Em := H_Em
+    Ep_Em := Ep_Em
+    H_G1 := H_G1
+    H_G2 := H_G2
+    Ep_G2 := Ep_G2
+    Em_G1 := Em_G1
+    G1_G1 := G1_G1
+    G2_G2 := G2_G2
+    G1_G2 := G1_G2 }
 
 end OperatorSurface
 

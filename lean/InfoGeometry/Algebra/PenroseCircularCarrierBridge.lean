@@ -61,20 +61,26 @@ theorem penrose_circular_transport_eq_zero_iff (z : TwistorCarrier) :
 
 theorem penrose_witt_zorn_norm_readback
     (Z : InfoGeometry.Twistor.PenroseIncidence.Twistor4) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+      (penroseWittZornMap Z) =
       penroseRealSplitSignature Z := by
   exact penroseWittZorn_norm_eq_splitSignature Z
 
 theorem penrose_quadratic_witt_zorn_compatibility
     (Z : InfoGeometry.Twistor.PenroseIncidence.Twistor4) :
     twistorRealQuadraticForm (penroseTwistor4CarrierEquiv Z) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (penroseWittZornMap Z) := by
   exact penroseTwistor4Carrier_quadratic_eq_wittZorn_norm Z
 
 theorem penrose_witt_null_iff_zorn_null
     (Z : InfoGeometry.Twistor.PenroseIncidence.Twistor4) :
     penroseRealSplitSignature Z = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (penroseWittZornMap Z) = 0 := by
   exact penrose_split_null_iff_zorn_null Z
 
 end InfoGeometry.Algebra.PenroseTwistorG2

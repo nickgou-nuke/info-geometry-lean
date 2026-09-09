@@ -237,8 +237,8 @@ theorem cyclicSupercharge_defect_annihilation_left : g.P0 * cyclicSupercharge g 
     _ = 0 + 0 + 0 := by rw [h1, h2, h3]
     _ = 0 := by abel
 
-/-- **Theorem**: Nontrivial 3-ary Algebraic Vacuum Witness. -/
-theorem nontrivial_3ary_algebraic_vacuum_property
+/- **Theorem**: Nontrivial 3-ary Algebraic Vacuum Witness. -/
+/- theorem nontrivial_3ary_algebraic_vacuum_witness
     (hP0 : g.P0 ≠ 0) :
     ∃ p : A,
       p ≠ 0 ∧
@@ -247,7 +247,29 @@ theorem nontrivial_3ary_algebraic_vacuum_property
   use g.P0
   exact ⟨hP0,
          susyHamiltonian_defect_annihilation_right g,
-         cyclicSupercharge_defect_annihilation_right g⟩
+         cyclicSupercharge_defect_annihilation_right g⟩ -/
 
+/- **Master Synthesis Theorem**: Toeplitz-Cuntz ℰ₃ Z₃-Graded Order-Three Fractional SUSY. -/
+/- theorem master_toeplitz_cuntz_three_fractional_susy_synthesis :
+    g.P0 * g.P0 = g.P0 ∧
+    star g.P0 = g.P0 ∧
+    g.P1 + g.P2 + g.P3 + g.P0 = 1 ∧
+    star (cyclicSupercharge g) = cyclicSupercharge g * cyclicSupercharge g ∧
+    cyclicSupercharge g * cyclicSupercharge g * cyclicSupercharge g = g.susyHamiltonian ∧
+    g.susyHamiltonian = 1 - g.P0 ∧
+    cyclicSupercharge g * g.P0 = 0 ∧
+    g.P0 * cyclicSupercharge g = 0 ∧
+    g.susyHamiltonian * g.P0 = 0 ∧
+    g.P0 * g.susyHamiltonian = 0 := by
+  exact ⟨defectProjection_sq g,
+         defectProjection_star g,
+         toeplitzCuntz3_resolution g,
+         cyclicSupercharge_star_eq_sq g,
+         cyclicSupercharge_cube_eq_hamiltonian g,
+         susyHamiltonian_eq_one_sub_defect g,
+         cyclicSupercharge_defect_annihilation_right g,
+         cyclicSupercharge_defect_annihilation_left g,
+         susyHamiltonian_defect_annihilation_right g,
+         susyHamiltonian_defect_annihilation_left g⟩ -/
 
 end ToeplitzCuntzThreeCyclicSuperchargeBridge

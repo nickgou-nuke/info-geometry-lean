@@ -20,9 +20,8 @@ abbrev CarrierEnd := Module.End ℝ Carrier
 @[simp] theorem exteriorDegreeParity_apply (x : Carrier) (i : Fin 8) :
     exteriorDegreeParity x i =
       if i.val = 0 then x i
-      else if i.val < 4 then -x i
-      else if i.val < 7 then x i
-      else -x i :=
+      else if i.val < 5 then -x i
+      else x i :=
   rfl
 
 @[simp] theorem peirceCharacterProduct_apply (x : Carrier) (i : Fin 8) :
@@ -73,6 +72,38 @@ theorem peirceCharacterProduct_sq_native :
           simp only [mul_assoc]
     _ = 1 := by
       rw [peirceSheetParity_sq_native, exteriorDegreeParity_sq, one_mul]
+
+theorem peirceSheetParity_commutes_characterProduct :
+    peirceSheetParity * peirceCharacterProduct =
+      peirceCharacterProduct * peirceSheetParity := by
+  unfold peirceCharacterProduct
+  calc
+    peirceSheetParity * (peirceSheetParity * exteriorDegreeParity) =
+        (peirceSheetParity * peirceSheetParity) * exteriorDegreeParity := by
+          rw [mul_assoc]
+    _ = exteriorDegreeParity := by
+          rw [peirceSheetParity_sq_native, one_mul]
+    _ = (peirceSheetParity * exteriorDegreeParity) * peirceSheetParity := by
+          calc
+            exteriorDegreeParity = 1 * exteriorDegreeParity := by simp
+            _ = (peirceSheetParity * peirceSheetParity) *
+                exteriorDegreeParity := by
+                  rw [peirceSheetParity_sq_native]
+            _ = peirceSheetParity *
+                (peirceSheetParity * exteriorDegreeParity) := by
+                  rw [mul_assoc]
+            _ = peirceSheetParity *
+                (exteriorDegreeParity * peirceSheetParity) := by
+                  rw [peirceParities_commute]
+            _ = (peirceSheetParity * exteriorDegreeParity) *
+                peirceSheetParity := by
+                  rw [← mul_assoc]
+
+theorem exteriorDegreeParity_commutes_characterProduct :
+    exteriorDegreeParity * peirceCharacterProduct =
+      peirceCharacterProduct * exteriorDegreeParity := by
+  unfold peirceCharacterProduct
+  rw [← mul_assoc, peirceParities_commute]
 
 theorem coordinateTrace_identity : coordinateTrace (1 : CarrierEnd) = 8 := by
   simp [coordinateTrace]

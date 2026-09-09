@@ -1,4 +1,4 @@
-import proofs.TwoSheetThreeColorWeyl
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
 /-!
 # Two-sheet operator coordinates

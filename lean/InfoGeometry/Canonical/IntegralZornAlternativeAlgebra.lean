@@ -13,7 +13,7 @@ This file records the algebraic properties that distinguish the integral Zorn
 composition law from an associative matrix algebra. The canonical complex
 product is proved left- and right-alternative by coordinates; injective scalar
 extension descends those identities to the integral algebra. A concrete
-mixed upper/lower-lane property proves genuine nonassociativity.
+mixed upper/lower-lane witness proves genuine nonassociativity.
 -/
 
 noncomputable section
@@ -260,7 +260,7 @@ theorem integralZornConj_mul (X Y : IntegralZorn) :
     (coreToCanonical (integralToCoreZorn X))
     (coreToCanonical (integralToCoreZorn Y))
 
-/-! ## Explicit nonassociativity property -/
+/-! ## Explicit nonassociativity witness -/
 
 def integralUpper (u : Fin 3 → ℤ) : IntegralZorn :=
   (0, u, ((fun _ => 0), 0))

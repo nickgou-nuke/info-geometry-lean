@@ -21,7 +21,7 @@ It formalizes the finite structural layer only:
 Boundary: this file does **not** prove the global isomorphism
 `Str₀(J₂(A_s)) ≃ Spin(q/2+1,q/2+1)`, the double-cover theorems, or the
 full orbit classification of Section 5.1.  Those are represented as explicit
-interfaces to be filled only by later kernel-checked constructions.
+interfaces/sockets to be filled only by later kernel-checked constructions.
 -/
 
 namespace InfoGeometry.Algebra.SplitJordanSpinor
@@ -242,7 +242,7 @@ structure ReducedStructureSpinBoundary where
   q_val : q = 2 ∨ q = 4 ∨ q = 8
   reducedStructureGroup : Type*
   spinGroup : Type*
-  /-- The boundary carries an actual equivalence property between its endpoints. -/
+  /-- The boundary carries an actual equivalence witness between its endpoints. -/
   expectedIsomorphism : Nonempty (reducedStructureGroup ≃ spinGroup)
 
 /--

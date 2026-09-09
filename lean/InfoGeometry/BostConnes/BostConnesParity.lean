@@ -43,34 +43,4 @@ theorem squarefreeProj_idempotent (n : ℕ) :
     squarefreeProj n * squarefreeProj n = squarefreeProj n := by
   by_cases hn : Squarefree n <;> simp [squarefreeProj, hn]
 
-theorem squarefreeProj_eq_one_iff (n : ℕ) :
-    squarefreeProj n = 1 ↔ Squarefree n := by
-  by_cases hn : Squarefree n <;> simp [squarefreeProj, hn]
-
-theorem squarefreeProj_eq_zero_iff (n : ℕ) :
-    squarefreeProj n = 0 ↔ ¬ Squarefree n := by
-  by_cases hn : Squarefree n <;> simp [squarefreeProj, hn]
-
-theorem moebius_eq_zero_iff_not_squarefree (n : ℕ) :
-    ArithmeticFunction.moebius n = 0 ↔ ¬ Squarefree n := by
-  constructor
-  · intro h
-    by_contra hn
-    have hsq := moebius_eq_liouvilleParity_of_squarefree hn
-    have hparity : liouvilleParity n ≠ 0 := by
-      simp [liouvilleParity]
-    exact hparity (by rw [← hsq, h])
-  · exact moebius_eq_zero_of_not_squarefree
-
-theorem moebius_eq_one_or_neg_one_of_squarefree
-    {n : ℕ} (hn : Squarefree n) :
-    ArithmeticFunction.moebius n = 1 ∨
-      ArithmeticFunction.moebius n = -1 := by
-  rw [moebius_eq_liouvilleParity_of_squarefree hn]
-  have hsq : liouvilleParity n ^ 2 = 1 := by
-    unfold liouvilleParity
-    rw [← pow_mul]
-    norm_num
-  exact sq_eq_one_iff.mp hsq
-
 end InfoGeometry.BostConnes

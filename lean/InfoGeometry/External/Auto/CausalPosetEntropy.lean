@@ -46,7 +46,7 @@ is completely bounded by the thermodynamic entropy flow.
 theorem strict_future_subset_entropy_domain (h_arrow : ArrowOfTime entropy) (x : α) :
     { y | x < y } ⊆ EntropyIncreasingDomain entropy x := by
   intro y hy
-  -- hy is the property that x < y
+  -- hy is the hypothesis that x < y
   -- h_arrow is the strict monotonicity of entropy
   exact h_arrow hy
 

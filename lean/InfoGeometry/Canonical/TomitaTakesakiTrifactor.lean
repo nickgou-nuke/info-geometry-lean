@@ -70,8 +70,8 @@ def modularAutomorphismRingHom (Delta : Aˣ) : A →+* A where
 
 /-- Inner modular automorphism as a coordinate-free representation channel. -/
 def modularAutomorphismChannel (Delta : Aˣ) :
-    ConnectionChannel (A := A) (B := A) :=
-  modularAutomorphismRingHom Delta
+    ConnectionChannel (A := A) (B := A) where
+  map := modularAutomorphismRingHom Delta
 
 /-- Modular automorphisms preserve commutators. -/
 theorem modularAutomorphism_commutator (Delta : Aˣ) (X Y : A) :
@@ -163,15 +163,15 @@ open TrifactorDecomposition
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
 /-- Tomita `+` sector: modular-flow/orientation-preserving readout. -/
-def modularFlowSector (T : R) : R :=
+abbrev modularFlowSector (T : R) : R :=
   P_plus T
 
 /-- Tomita `-` sector: mirror/conjugation readout. -/
-def modularMirrorSector (T : R) : R :=
+abbrev modularMirrorSector (T : R) : R :=
   P_minus T
 
 /-- Tomita `0` sector: centralizer/boundary-degenerate readout. -/
-def modularBoundarySector (T : R) : R :=
+abbrev modularBoundarySector (T : R) : R :=
   P_zero T
 
 /--

@@ -108,5 +108,4 @@ theorem compatibleReadoutInverseLimitIso_coordinateEvaluation
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitObservables
-
 end

@@ -3,7 +3,7 @@ InfoGeometry/Optics/FiniteJonesModel.lean
 
 Concrete finite Jones model.
 
-This file contains no physical property assumptions. It defines the concrete
+This file contains no physical witness sockets. It defines the concrete
 `2 × 2` Jones matrices used by the finite optical branch and proves the basic
 projector and Brewster rank-collapse facts directly.
 -/

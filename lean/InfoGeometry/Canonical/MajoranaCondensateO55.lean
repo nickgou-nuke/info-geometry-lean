@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorChirality
 import InfoGeometry.Canonical.BohmMadelungFisher
 import InfoGeometry.Canonical.CramerRaoUncertainty
-import InfoGeometry.Canonical.TKKJordanPairData
 
 /-!
 # Majorana Condensate, Pin(5,5) 5-Grading, and Witten Index Anomaly Cancellation
@@ -25,53 +24,25 @@ open InfoGeometry.Canonical.OmegaBoundaryRepresentation
 open InfoGeometry.Canonical.CantorDiracPropagation
 open InfoGeometry.Canonical.CantorChirality
 
-/--
-The noncommutative five-grade closure carried by an O(5,5) algebra.
-
-The grade is indexed by the TKK grades, rather than by an unstructured
-`Fin 5` label on individual elements.  The two closure fields are the actual
-bracket laws: brackets whose weight stays in `[-2,2]` land in the corresponding
-homogeneous submodule, while brackets outside that window vanish.
--/
-class Pin55_5GradedClosure (A : Type*) [Ring A] [LieRing A]
-    [LieAlgebra ℤ A] where
-  grade : TKKJordanPairData.TKKGrade → Submodule ℤ A
-  bracket_mem_some : ∀ {i j k : TKKJordanPairData.TKKGrade},
-    TKKJordanPairData.gradeAdd i j = some k →
-      ∀ {x y : A}, x ∈ grade i → y ∈ grade j → ⁅x, y⁆ ∈ grade k
-  bracket_eq_zero_none : ∀ {i j : TKKJordanPairData.TKKGrade},
-    TKKJordanPairData.gradeAdd i j = none →
-      ∀ {x y : A}, x ∈ grade i → y ∈ grade j → ⁅x, y⁆ = 0
-
-theorem Pin55_5GradedClosure.bracket_mem_grade
-    {A : Type*} [Ring A] [LieRing A] [LieAlgebra ℤ A]
-    (G : Pin55_5GradedClosure A)
-    {i j k : TKKJordanPairData.TKKGrade}
-    (hijk : TKKJordanPairData.gradeAdd i j = some k)
-    {x y : A} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
-    ⁅x, y⁆ ∈ G.grade k :=
-  G.bracket_mem_some hijk hx hy
-
-theorem Pin55_5GradedClosure.bracket_eq_zero_outside_window
-    {A : Type*} [Ring A] [LieRing A] [LieAlgebra ℤ A]
-    (G : Pin55_5GradedClosure A)
-    {i j : TKKJordanPairData.TKKGrade}
-    (hij : TKKJordanPairData.gradeAdd i j = none)
-    {x y : A} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
-    ⁅x, y⁆ = 0 :=
-  G.bracket_eq_zero_none hij hx hy
+/-- 5-Graded decomposition of the conformal algebra. -/
+class Pin55_5GradedClosure (A : Type*) [Ring A] where
+  grade_minus2 : A → Prop
+  grade_minus1 : A → Prop  -- Left Majorana Zero Modes
+  grade_zero   : A → Prop  -- Conformal rotations
+  grade_plus1  : A → Prop  -- Right Majorana Zero Modes
+  grade_plus2  : A → Prop
 
 /-- The Witten Index of the Dirac-Chirality system with a kernel projector `K`. -/
-def WittenIndex (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) : ℂ :=
+def WittenIndex (Γ : CantorOp) (K : CantorOp) (trace : CantorOp →ₗ[ℂ] ℂ) : ℂ :=
   trace (Γ * K)
 
 /-- **Witten Index Anomaly Cancellation**
     Because the boundary Dirac operator `D` squares to 1, any projector/operator `K` mapping into the
     kernel of `D` (i.e. `D * K = 0`) must vanish. Consequently, the Witten Index exactly cancels to 0. -/
 theorem witten_index_cancellation
-    (D : (Module.End ℂ ((ℕ → Bool) → ℂ))) (hD_sq : D * D = 1)
-    (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (h_ker : D * K = 0)
-    (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) :
+    (D : CantorOp) (hD_sq : D * D = 1)
+    (Γ : CantorOp) (K : CantorOp) (h_ker : D * K = 0)
+    (trace : CantorOp →ₗ[ℂ] ℂ) :
     WittenIndex Γ K trace = 0 := by
   have h_K_zero : K = 0 := by
     calc
@@ -84,7 +55,7 @@ theorem witten_index_cancellation
   rw [h_K_zero, mul_zero, LinearMap.map_zero]
 
 /-- The Majorana Bose-Einstein Condensate is the product of two nilpotent zero modes. -/
-def MajoranaCondensate (ψ_L ψ_R : (Module.End ℂ ((ℕ → Bool) → ℂ))) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
+def MajoranaCondensate (ψ_L ψ_R : CantorOp) : CantorOp :=
   ψ_L * ψ_R
 
 /-- A coherent state minimum-uncertainty certification.

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
-import InfoGeometry.Arithmetic.UnifiedCapstone
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 /-!
 # Erlangen-Langlands-Connes — Concrete Instantiations
@@ -81,7 +81,7 @@ theorem langlands_lfunction_euler_product_eq_riemannZeta
     {β : ℂ} (hRe : 1 < β.re) :
     InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
       riemannZeta β :=
-  InfoGeometry.Arithmetic.UnifiedCapstone.master_euler_product_eq_riemannZeta hRe
+  InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct_eq_riemannZeta hRe
 
 /--
 **Connes Theorem — Anomaly Cancellation on the 2×2 Model.**

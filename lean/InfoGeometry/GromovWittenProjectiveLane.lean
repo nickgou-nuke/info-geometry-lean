@@ -32,7 +32,7 @@ theorem constructErlangenLanglandsGromovLaneTarget
         GWMetricRelation × LanglandsMetricRelation) := by
   exact ⟨(lp, pg, gm, lm)⟩
 
-/-- A supplied full-chain property remains a supplied full-chain property. -/
+/-- A supplied full-chain witness remains a supplied full-chain witness. -/
 theorem constructErlangenLanglandsGWFromExplicitProduct
     (LanglandsProjectiveRelation ProjectiveGWRelation GWMetricRelation
       LanglandsMetricRelation : Type*)

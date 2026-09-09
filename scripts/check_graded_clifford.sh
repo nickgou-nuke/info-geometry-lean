@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Execute from the repository root in its pinned Lean/mathlib environment.
+set -euo pipefail
+OUT="reports/graded-clifford-kernel"
+mkdir -p "$OUT"
+if ! command -v lake >/dev/null 2>&1; then
+  printf '%s\n' 'NOT KERNEL CHECKED: lake is not installed or not on PATH.' | tee "$OUT/lean-attempt.log"
+  exit 127
+fi
+lake build InfoGeometry.Canonical.GradedCliffordPeirceReconstruction 2>&1 | tee "$OUT/build.log"
+lake env lean lean/InfoGeometry/Canonical/GradedCliffordPeirceAudit.lean 2>&1 | tee "$OUT/axioms.log"
+python3 - "$OUT/axioms.log" <<'PY'
+import re,sys
+from pathlib import Path
+text=Path(sys.argv[1]).read_text()
+audit=Path('lean/InfoGeometry/Canonical/GradedCliffordPeirceAudit.lean').read_text()
+expected=re.findall(r'^#print axioms (\S+)',audit,re.M)
+allowed={'propext','Classical.choice','Quot.sound'}
+for name in expected:
+    m=re.search(r"'?"+re.escape(name)+r"'?\s+(?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)",text,re.S)
+    if not m: raise SystemExit('FAIL: missing axiom report for '+name)
+    actual=set(re.findall(r'[A-Za-z_][A-Za-z0-9_.]*',m.group(1) or ''))
+    if not actual<=allowed:
+        raise SystemExit('FAIL: unapproved axioms for '+name+': '+str(actual-allowed))
+print('PASS:',len(expected),'complete transitive axiom reports; only approved logical axioms.')
+PY

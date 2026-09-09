@@ -19,14 +19,23 @@ def matrixUnit (n : ℕ) (i j : Fin (2 ^ n)) : MatrixStage n :=
 
 @[simp] theorem matrixUnit_mul_same (n : ℕ) (i j k : Fin (2 ^ n)) :
     matrixUnit n i j * matrixUnit n j k = matrixUnit n i k := by
-  simpa [matrixUnit] using
-    (Matrix.single_mul_single_same (c := (1 : ℂ)) i j k (1 : ℂ))
+  dsimp [matrixUnit]
+  rw [Matrix.single_mul_single_same]
+  simp
 
 @[simp] theorem matrixUnit_mul_of_ne (n : ℕ) (i j k l : Fin (2 ^ n))
     (h : j ≠ k) :
     matrixUnit n i j * matrixUnit n k l = 0 := by
-  simpa [matrixUnit] using
-    (Matrix.single_mul_single_of_ne (c := (1 : ℂ)) i j k h (1 : ℂ))
+  dsimp [matrixUnit]
+  exact Matrix.single_mul_single_of_ne (c := (1 : ℂ)) i j k h 1
+
+@[simp] theorem concreteMap_succ_step (n : ℕ) (x : MatrixStage n) :
+    concreteMap (Nat.le_succ n) x = concreteStep n x := by
+  change map concreteData (Nat.le.step (le_refl n)) x = concreteStep n x
+  rw [map_succ concreteData (le_refl n)]
+  dsimp [concreteData]
+  rw [map_id]
+  rfl
 
 theorem stageInjection_matrixUnit_succ (n : ℕ) (i j : Fin (2 ^ n)) :
     stageInjection (n + 1)

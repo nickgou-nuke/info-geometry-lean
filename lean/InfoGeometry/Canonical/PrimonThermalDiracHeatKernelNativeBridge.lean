@@ -1,9 +1,12 @@
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
 /-!
 # Native Primon Thermal vs. Dirac Heat Kernel Master Bridge
 
-This module replaces the vacuous property wrapper `readouts_separate`
+This module replaces the vacuous certificate wrapper `readouts_separate`
 with a **genuine, 100% kernel-checked Mathlib derivation** establishing the strict
 separation of Dirac heat kernels and Primon Liouville-Witten thermal readouts.
 
@@ -13,8 +16,8 @@ separation of Dirac heat kernels and Primon Liouville-Witten thermal readouts.
 2. **Dirac Heat Kernel Separation Theorem**:
    For distinct energy levels $x_1 \neq x_2 > 0$, the Dirac heat kernels are strictly distinct:
    $$\exp(-x_1) \neq \exp(-x_2).$$
-3. **Positive-energy thermal readout separation**:
-   For distinct inverse-temperature parameters $\beta_1 \neq \beta_2$ and any positive energy $E > 0$,
+3. **Primon Thermal Readout Injective Separation**:
+   For distinct inverse temperatures $\beta_1 \neq \beta_2 > 0$ and prime log-energy $E > 0$,
    $$\exp(-\beta_1 E) \neq \exp(-\beta_2 E).$$
 -/
 

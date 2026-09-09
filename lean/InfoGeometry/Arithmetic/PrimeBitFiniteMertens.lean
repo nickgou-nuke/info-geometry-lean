@@ -132,9 +132,13 @@ theorem sum_parity_eq_mertensFunction
   rw [← hset, ← herase]
 
 theorem primeCutoff_sum_parity_eq_mertensFunction (B : ℕ) :
-    ∑ ε ∈ S_B (primeCutoffRegister B) B, (-1 : ℤ) ^ ε.1.card =
+    ∑ ε ∈ S_B (⟨(primeCutoffRegister B).primes,
+      (primeCutoffRegister B).prime_mem⟩ : PrimeBitLattice) B,
+      (-1 : ℤ) ^ ε.1.card =
       mertensFunction B := by
-  apply sum_parity_eq_mertensFunction (primeCutoffRegister B) B
+  apply sum_parity_eq_mertensFunction
+    (⟨(primeCutoffRegister B).primes,
+      (primeCutoffRegister B).prime_mem⟩ : PrimeBitLattice) B
   intro p hp hpprime
   exact (mem_primesUpto_iff).2 ⟨hp, hpprime⟩
 

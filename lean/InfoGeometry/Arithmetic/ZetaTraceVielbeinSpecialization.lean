@@ -112,7 +112,7 @@ Prime-gas vielbein carrier.
 This packages the local Jacobians, global trace-log action, and both
 supervolume readouts as a single interface.
 -/
-structure PrimeVielbeinData where
+structure PrimeVielbeinCarrier where
   convergenceDomain : ℂ → Prop
   localJacobian : Nat.Primes → ℂ → ℂ
   localVolumeFactor : Nat.Primes → ℂ → ℂ
@@ -122,7 +122,7 @@ structure PrimeVielbeinData where
   eulerSupervolume : ℂ → ℂ
 
 /-- Canonical zeta-trace prime-vielbein carrier. -/
-def canonicalPrimeVielbein : PrimeVielbeinData where
+def canonicalPrimeVielbein : PrimeVielbeinCarrier where
   convergenceDomain := fun s => 1 < s.re
   localJacobian := primeLocalJacobian
   localVolumeFactor := primeLocalVolumeFactor
@@ -130,6 +130,24 @@ def canonicalPrimeVielbein : PrimeVielbeinData where
   effectiveAction := zetaTraceEffectiveAction
   traceLogSupervolume := zetaTraceSupervolume
   eulerSupervolume := zetaTraceEulerSupervolume
+
+@[simp]
+theorem canonicalPrimeVielbein_convergenceDomain
+    (s : ℂ) :
+    canonicalPrimeVielbein.convergenceDomain s ↔ 1 < s.re :=
+  Iff.rfl
+
+@[simp]
+theorem canonicalPrimeVielbein_traceLogSupervolume
+    (s : ℂ) :
+    canonicalPrimeVielbein.traceLogSupervolume s = zetaTraceSupervolume s :=
+  rfl
+
+@[simp]
+theorem canonicalPrimeVielbein_eulerSupervolume
+    (s : ℂ) :
+    canonicalPrimeVielbein.eulerSupervolume s = zetaTraceEulerSupervolume s :=
+  rfl
 
 /-- Canonical trace-log readout equals `riemannZeta` on the standard half-plane. -/
 theorem canonicalPrimeVielbein_traceLogSupervolume_eq_riemannZeta

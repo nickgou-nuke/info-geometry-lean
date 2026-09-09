@@ -40,4 +40,13 @@ theorem mul_modularJ_eq_scalar_detZ (X : SplitOct) :
     mulZ X (modularJ X) = scalarZ (detZ X) := by
   simpa [modularJ] using mul_conjZ_eq_scalar_detZ X
 
+/-- `J^2=\mathrm{id}\wedge J(XY)=J(Y)J(X)\wedge \detZ(JX)=\detZ(X)\wedge XJX=\detZ(X)\cdot 1`. -/
+theorem modularJ_structure_packet :
+    (∀ X : SplitOct, modularJ (modularJ X) = X) ∧
+      (∀ X Y : SplitOct, modularJ (mulZ X Y) = mulZ (modularJ Y) (modularJ X)) ∧
+      (∀ X : SplitOct, detZ (modularJ X) = detZ X) ∧
+      (∀ X : SplitOct, mulZ X (modularJ X) = scalarZ (detZ X)) := by
+  exact ⟨modularJ_involutive, modularJ_anti_automorphism,
+    detZ_modularJ_invariant, mul_modularJ_eq_scalar_detZ⟩
+
 end InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication

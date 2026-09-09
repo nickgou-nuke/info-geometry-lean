@@ -35,4 +35,52 @@ for i in [1..6] do
   od;
   Print("\n");
 od;
+# The Lean `matrixWord` convention is contravariant: generators are prepended.
+pcWord := function(exponents)
+  local result, i, k;
+  result := IdentityMat(8, F);
+  for i in [1..6] do
+    for k in [1..exponents[i]] do
+      result := leanGens[i] * result;
+    od;
+  od;
+  return result;
+end;;
+
+# Fixed-basis conjugations are discovered over the exported 64-word carrier.
+# The coordinate ranges follow the actual generator orders, including the two
+# order-four generators; this is deliberately not a binary-coordinate guess.
+pcConjugationData := [];;
+allCoords := Filtered(Tuples([0, 1, 2, 3], 6),
+  coords -> coords[1] <= 1 and coords[4] <= 1 and
+    coords[5] <= 1 and coords[6] <= 1);;
+for i in [2..6] do
+  for j in [1..i-1] do
+    target := leanGens[i]^-1 * leanGens[j] * leanGens[i];;
+    found := false;;
+    for coords in allCoords do
+      if pcWord(coords) = target then
+        Add(pcConjugationData, [i, j, coords]);;
+        found := true;;
+        break;
+      fi;
+    od;
+    if not found then Error("FIXED_LEAN_PC_CONJUGATION_NOT_IN_CARRIER_", i, "_", j); fi;
+  od;
+od;
+for relation in pcConjugationData do
+  i := relation[1];;
+  j := relation[2];;
+  exponents := relation[3];;
+  if leanGens[i]^-1 * leanGens[j] * leanGens[i] <> pcWord(exponents) then
+    Error("FIXED_LEAN_PC_CONJUGATION_FAIL_", i, "_", j);
+  fi;
+  Print("PCCONJ ", i, " ", j, " ");
+  for k in [1..6] do
+    if k > 1 then Print(","); fi;
+    Print(exponents[k]);
+  od;
+  Print("\n");
+od;
+Print("FIXED_LEAN_PC_CONJUGATIONS=PASS\n");
 QUIT;

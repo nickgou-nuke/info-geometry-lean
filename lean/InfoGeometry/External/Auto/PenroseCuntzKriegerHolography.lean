@@ -59,7 +59,9 @@ theorem cantorCylinder_refines (n : ℕ) :
   simp [cantorCylinderCount, pow_succ]
   ring
 
-theorem penroseCantorSpace_equiv : Nonempty ((ℕ → Bool) ≃ (ℕ → Bool)) := by
+def PenroseCantorSpace : Type := ℕ → Bool
+
+theorem penroseCantorSpace_equiv : Nonempty (PenroseCantorSpace ≃ (ℕ → Bool)) := by
   exact ⟨Equiv.refl _⟩
 
 end PenroseCuntzKriegerHolography

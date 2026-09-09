@@ -357,3 +357,4 @@ def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations :=
   | _ => 0
 
 end InfoGeometry.Algebra
+

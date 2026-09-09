@@ -130,5 +130,3 @@ theorem symbolicObservationQuotientRangeCompHausNaturalIso_inv_hom_id
       (X := X) (ι := ι)).inv_hom_id)
 
 end InfoGeometry.Topology
-
-end

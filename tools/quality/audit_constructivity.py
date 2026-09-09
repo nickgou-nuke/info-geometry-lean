@@ -264,7 +264,12 @@ def scan_manifest_consistency() -> list[Finding]:
 
 
 def scan_file(path: Path, *, include_review: bool = False) -> list[Finding]:
-    text = path.read_text()
+    if not path.is_file():
+        return []
+    try:
+        text = path.read_text()
+    except (OSError, UnicodeDecodeError):
+        return []
     scan_text = strip_comments(text)
     proof_hole_text = strip_comments(text, strip_strings=True, strip_quoted_identifiers=True)
     # Trace-class names may legitimately contain the token `admit` (for

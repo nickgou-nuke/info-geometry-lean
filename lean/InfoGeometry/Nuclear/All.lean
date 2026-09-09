@@ -1,0 +1,39 @@
+import InfoGeometry.Nuclear.GradedBathCommutant
+import InfoGeometry.Nuclear.FiveGradedOperatorTransport
+import InfoGeometry.Nuclear.NuclearChiralPRMBridge
+import InfoGeometry.Nuclear.NuclearChiralDoubletTwoSectorBridge
+import InfoGeometry.Nuclear.NuclearFiveGradedOperatorReexpression
+import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
+import InfoGeometry.Nuclear.NambuGorkovPeirceCarrierBridge
+import InfoGeometry.Nuclear.QuantumCramerRaoNuclearBarrierCapstone
+import InfoGeometry.Nuclear.NambuGorkovLorentzReadout
+import InfoGeometry.Nuclear.BdGSplitOctonionUnifiedCapstone
+import InfoGeometry.Nuclear.DIIITopologicalCompletenessCapstone
+import InfoGeometry.Nuclear.SolovievQuasiparticlePhononEigenproblem
+import InfoGeometry.Nuclear.NuclearPhononRPAAlgebra
+import InfoGeometry.Nuclear.NuclearQuasiparticleCARBridge
+import InfoGeometry.Nuclear.TwoLevelChiralOscillationBridge
+import InfoGeometry.Nuclear.CrossSectionDuality
+import InfoGeometry.Nuclear.ApollonianBipolarField
+import InfoGeometry.Probability.DetectorScaleInvariance
+import InfoGeometry.Nuclear.DetectorInformationGeometry
+import InfoGeometry.Nuclear.FocalRapidity
+import InfoGeometry.Nuclear.FocalSechODE
+import InfoGeometry.Nuclear.ConformalDetectorIntegral
+import InfoGeometry.Nuclear.DetectorBeerLambert
+import InfoGeometry.Nuclear.DetectorDiskIntegral
+import InfoGeometry.Nuclear.DetectorTransportKernel
+import InfoGeometry.Nuclear.DetectorVolumeResponse
+import InfoGeometry.Nuclear.DetectorResponseCore
+import InfoGeometry.Nuclear.DetectorResponseIntegral
+
+namespace InfoGeometry.Nuclear
+
+/-!
+# Nuclear Umbrella
+
+Umbrella module for nuclear structure, graded bath commutant dynamics,
+and Frauendorf Particle-Rotor Model (PRM) chirality.
+-/
+
+end InfoGeometry.Nuclear

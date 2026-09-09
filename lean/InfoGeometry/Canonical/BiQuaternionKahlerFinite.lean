@@ -115,6 +115,10 @@ theorem finitePoissonBracket_skew (dF dG : R4) :
 def fisherMetric (_q : R4) : Mat4 :=
   1
 
+theorem fisherMetric_symmetric (q : R4) :
+    (fisherMetric q)ᵀ = fisherMetric q := by
+  simp [fisherMetric]
+
 theorem fisherMetric_quadratic_nonneg (q v : R4) :
     0 ≤ dot4 v ((fisherMetric q).mulVec v) := by
   dsimp [fisherMetric, dot4]

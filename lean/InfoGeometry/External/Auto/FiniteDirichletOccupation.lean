@@ -141,6 +141,40 @@ theorem selectedWordContribution_eq_dirichlet
   simp [selectedWordContribution, dirichletWordContribution,
     selectedWeightProduct_eq_weight_occupied weight h_one h_mul modes bits]
 
+/--
+Consolidated finite Dirichlet occupation bridge.
+-/
+theorem finite_dirichlet_occupation_synthesis :
+    (∀ weight : ℕ → ℂ, ∀ modes,
+      selectedWeightProduct weight modes [] = 1) ∧
+    (∀ weight : ℕ → ℂ, ∀ p ps bits,
+      selectedWeightProduct weight (p :: ps) (false :: bits) =
+        selectedWeightProduct weight ps bits) ∧
+    (∀ weight : ℕ → ℂ, ∀ p ps bits,
+      selectedWeightProduct weight (p :: ps) (true :: bits) =
+        weight p * selectedWeightProduct weight ps bits) ∧
+    (∀ weight : ℕ → ℂ,
+      weight 1 = 1 →
+      (∀ a b : ℕ, weight (a * b) = weight a * weight b) →
+      ∀ modes bits,
+        selectedWeightProduct weight modes bits =
+          weight (occupiedInteger modes bits)) ∧
+    (∀ bits : List Bool, wordParity (false :: bits) = wordParity bits) ∧
+    (∀ bits : List Bool, wordParity (true :: bits) = -wordParity bits) ∧
+    (∀ weight : ℕ → ℂ,
+      weight 1 = 1 →
+      (∀ a b : ℕ, weight (a * b) = weight a * weight b) →
+      ∀ modes bits,
+        selectedWordContribution weight modes bits =
+          dirichletWordContribution weight modes bits) := by
+  exact ⟨fun weight modes => selectedWeightProduct_nil_bits weight modes,
+    selectedWeightProduct_cons_false,
+    selectedWeightProduct_cons_true,
+    selectedWeightProduct_eq_weight_occupied,
+    wordParity_cons_false,
+    wordParity_cons_true,
+    selectedWordContribution_eq_dirichlet⟩
+
 end FiniteDirichletOccupation
 
 end noncomputable section

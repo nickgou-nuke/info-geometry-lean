@@ -116,4 +116,20 @@ theorem anomaly55_zero : anomalyIndex 5 5 = 0 := by
 
 
 
+/-- Final capstone synthesis. -/
+theorem complete_holographic_dictionary_synthesis (fermionNumber : ℕ) (W : ℂ) :
+    mobiusValue fermionNumber = (-1 : ℤ) ^ fermionNumber ∧
+    (∀ k : ℤ × ℤ, glideReflect k = k ↔ k.2 = 0) ∧
+    (∀ s : ScalePoint, scaleReflect s = s ↔ criticalLine s) ∧
+    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
+    KNil * KNil = 0 ∧ (∀ K : M2C, nilItakuraSaito K = 0) ∧
+    (∀ β : ℝ, TwistedThermoZ W β = W) ∧
+    cliffordDim 5 5 = cliffordDim 1 1 * cliffordDim 4 4 ∧
+    2^2 * 16^2 = 32^2 ∧ anomalyIndex 5 5 = 0 := by
+  exact ⟨mobius_parity fermionNumber, glide_fixed_iff, scale_fixed_iff_critical,
+    pg_fixed_line_extinction, KNil_sq_zero, nilItakuraSaito_zero, twisted_thermo_beta_independent W,
+    cl55_factor_dim, matrix_factor_dim, anomaly55_zero⟩
+
+#check complete_holographic_dictionary_synthesis
+
 end CompleteHolographicDictionary

@@ -15,48 +15,18 @@ theorem paper_typed_address_biaxial_completion_unified_rejection_rule_corollary
     (nullImpliesModeStability : nullReadout → modeStabilityCert)
     (nullImpliesResidueQuota : nullReadout → residueQuotaCert)
     (nullImpliesEndpointResolution : nullReadout → endpointResolutionGate)
-    {monotoneToEndpointAtom exponentialErrorBound minDepthFormula : Prop}
-    (hMonotoneToEndpointAtom : monotoneToEndpointAtom)
-    (hExponentialErrorBound : exponentialErrorBound)
-    (deriveMinDepthFormula : monotoneToEndpointAtom → exponentialErrorBound → minDepthFormula)
     (hUnitarySliceLocked : U.defectCertificate.certificateLoop.unitarySliceLocked)
-    (hBoundaryAccepts : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.addressCollisionClosed → U.boundaryVerifier.endpointHeatClosed →
-        U.boundaryVerifier.toeplitzPsdPassed →
-          U.boundaryVerifier.verifierResult = .certificate)
-    (hBoundaryRadius : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.radiusBlindspotClosed)
-    (hBoundaryAddress : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.addressCollisionClosed)
-    (hBoundaryEndpoint : U.boundaryVerifier.verifierResult = .certificate →
-      U.boundaryVerifier.endpointHeatClosed)
-    (hBoundaryRadiusNonSubstitutable : U.boundaryVerifier.addressCollisionClosed →
-      U.boundaryVerifier.endpointHeatClosed → ¬ U.boundaryVerifier.radiusBlindspotClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
-    (hBoundaryAddressNonSubstitutable : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.endpointHeatClosed → ¬ U.boundaryVerifier.addressCollisionClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
-    (hBoundaryEndpointNonSubstitutable : U.boundaryVerifier.radiusBlindspotClosed →
-      U.boundaryVerifier.addressCollisionClosed → ¬ U.boundaryVerifier.endpointHeatClosed →
-        U.boundaryVerifier.verifierResult ≠ .certificate)
     (hReadout :
       A.nonNullReadout ↔
         U.boundaryVerifier.verifierResult = BoundaryVerifierResult.certificate)
     (hNoModeAxis : ¬ A.modeAxisPassed) (hNullAudit : nullReadout) :
     U.addressConsistency ∧
       U.defectCompilation ∧
-      U.toeplitzPsdEndpointBranch
-        (monotoneToEndpointAtom := monotoneToEndpointAtom)
-        (exponentialErrorBound := exponentialErrorBound)
-        (minDepthFormula := minDepthFormula) ∧
+      U.toeplitzPsdEndpointBranch ∧
       modeStabilityCert ∧ residueQuotaCert ∧ endpointResolutionGate ∧
       U.boundaryVerifier.verifierResult = BoundaryVerifierResult.null := by
   have hUnified :=
-    paper_typed_address_biaxial_completion_unified_rejection_rule U
-      hMonotoneToEndpointAtom hExponentialErrorBound deriveMinDepthFormula
-      hBoundaryAccepts hBoundaryRadius hBoundaryAddress hBoundaryEndpoint
-      hBoundaryRadiusNonSubstitutable hBoundaryAddressNonSubstitutable
-      hBoundaryEndpointNonSubstitutable hUnitarySliceLocked
+    paper_typed_address_biaxial_completion_unified_rejection_rule U hUnitarySliceLocked
   have hGap := paper_typed_address_biaxial_completion_completeness_gap_audit
     nullReadout modeStabilityCert residueQuotaCert endpointResolutionGate
     nullImpliesModeStability nullImpliesResidueQuota nullImpliesEndpointResolution hNullAudit

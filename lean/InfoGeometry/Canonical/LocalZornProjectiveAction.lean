@@ -42,6 +42,10 @@ noncomputable def localZornSliceProjectiveAction
     RealProjectiveBoundary → RealProjectiveBoundary :=
   localSL2ProjectiveAction (localZornSliceSL2 e he a b u v hnorm)
 
+noncomputable def modularBoostProjectiveAction (s : ℝ) :
+    RealProjectiveBoundary → RealProjectiveBoundary :=
+  localSL2ProjectiveAction (modularBoostSL2 s)
+
 theorem localZornSliceProjectiveAction_is_SL2
     (e : ZornVec3 ℝ)
     (he : ZornVec3.dot e e = 1)

@@ -309,28 +309,16 @@ structure GenesisSeed
     {C : ConformalCrossoverDatum V}
     (G : GenesisContext (V := V) (NewState := NewState) C)
     (P : ProjectiveNullRay C) where
+  /-- The new seed vector. -/
+  seed : NewState
+
+  /-- The seed is the image of the surviving generator. -/
+  seed_eq :
+    seed = G.seedMap P.generator
+
   /-- The seed is nonzero. -/
   seed_ne_zero :
-    G.seedMap P.generator ≠ 0
-
-namespace GenesisSeed
-
-variable {V NewState : Type*}
-variable [AddCommGroup V] [Module ℝ V]
-variable [AddCommGroup NewState] [Module ℝ NewState]
-variable {C : ConformalCrossoverDatum V}
-variable (G : GenesisContext (V := V) (NewState := NewState) C)
-variable (P : ProjectiveNullRay C)
-
-/-- The new seed vector determined by the surviving generator. -/
-abbrev seed (S : GenesisSeed G P) : NewState := G.seedMap P.generator
-
-/-- The seed is the image of the surviving generator. -/
-theorem seed_eq (S : GenesisSeed G P) :
-    S.seed = G.seedMap P.generator := by
-  rfl
-
-end GenesisSeed
+    seed ≠ 0
 
 /-- Construct the genesis seed from a surviving projective null ray. -/
 def genesisSeed
@@ -341,6 +329,8 @@ def genesisSeed
     (G : GenesisContext (V := V) (NewState := NewState) C)
     (P : ProjectiveNullRay C) :
     GenesisSeed G P where
+  seed := G.seedMap P.generator
+  seed_eq := rfl
   seed_ne_zero :=
     G.seed_nonzero P.generator P.generator_ne_zero
 

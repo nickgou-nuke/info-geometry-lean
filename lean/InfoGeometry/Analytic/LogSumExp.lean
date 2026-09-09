@@ -69,42 +69,6 @@ noncomputable def logSumExpVariance
     (w a : ι → ℝ) (θ : ℝ) : ℝ :=
   logSumExpSecondMoment w a θ - (logSumExpMean w a θ) ^ (2 : ℕ)
 
-lemma weightedVariance_eq_centered
-    {ι : Type _} [Fintype ι]
-    (p f : ι → ℝ) (hp : ∑ i, p i = 1) :
-    (∑ i, p i * (f i) ^ (2 : ℕ)) - (∑ i, p i * f i) ^ (2 : ℕ) =
-    ∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ) := by
-  have H :
-      (∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ)) =
-        (∑ i, p i * (f i) ^ (2 : ℕ)) -
-          (∑ i, p i * f i) ^ (2 : ℕ) := by
-    have h_expand :
-        (∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ)) =
-          ∑ i, (p i * (f i) ^ (2 : ℕ) -
-            2 * (∑ j, p j * f j) * (p i * f i) +
-            (∑ j, p j * f j) ^ (2 : ℕ) * p i) := by
-      apply Finset.sum_congr rfl
-      intro i _
-      have hi : (f i - ∑ j, p j * f j) ^ (2 : ℕ) =
-          (f i) ^ (2 : ℕ) - 2 * (∑ j, p j * f j) * f i +
-            (∑ j, p j * f j) ^ (2 : ℕ) := by ring
-      rw [hi]
-      ring
-    rw [h_expand]
-    have h_split :
-        (∑ i, (p i * (f i) ^ (2 : ℕ) -
-          2 * (∑ j, p j * f j) * (p i * f i) +
-          (∑ j, p j * f j) ^ (2 : ℕ) * p i)) =
-          (∑ i, p i * (f i) ^ (2 : ℕ)) -
-            (∑ i, 2 * (∑ j, p j * f j) * (p i * f i)) +
-            ∑ i, (∑ j, p j * f j) ^ (2 : ℕ) * p i := by
-      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
-    rw [h_split]
-    rw [← Finset.mul_sum, ← Finset.mul_sum]
-    rw [hp, mul_one]
-    ring
-  exact H.symm
-
 /-- `ε`-scaled partition sum `Z_ε(θ) = ∑ᵢ wᵢ exp((θ aᵢ)/ε)`. -/
 noncomputable def logSumExpScaledPartition
     {ι : Type _} [Fintype ι]
@@ -368,9 +332,38 @@ lemma logSumExpVariance_eq_centered
   unfold logSumExpVariance
   rw [logSumExpSecondMoment_eq_weighted_sum w a hw θ]
   rw [logSumExpMean_eq_weighted_sum w a hw θ]
-  exact weightedVariance_eq_centered
-    (fun i => logSumExpWeight w a θ i) a
-    (logSumExpWeight_sum_one w a hw θ)
+  let p : ι → ℝ := fun i => logSumExpWeight w a θ i
+  let m : ℝ := ∑ i, p i * a i
+  have hp : ∑ i, p i = 1 := logSumExpWeight_sum_one w a hw θ
+  have hpm : ∑ i, p i * m = m := by
+    rw [← Finset.sum_mul, hp]
+    ring
+  have hcenter :
+      ∑ i, p i * (a i - m) ^ (2 : ℕ) =
+        (∑ i, p i * (a i) ^ (2 : ℕ)) - m ^ (2 : ℕ) := by
+    simp only [sub_sq, mul_sub, mul_add]
+    have hterm (i : ι) :
+        p i * a i ^ 2 - p i * (2 * a i * m) + p i * m ^ 2 =
+          (p i * a i ^ 2 - p i * (2 * a i * m)) + p i * m ^ 2 := by ring
+    simp only [hterm, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    have hcross : ∑ i, p i * (2 * a i * m) = 2 * m ^ 2 := by
+      calc
+        _ = ∑ i, (2 * m) * (p i * a i) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          ring
+        _ = (2 * m) * ∑ i, p i * a i := by
+          symm
+          rw [Finset.mul_sum]
+        _ = 2 * m ^ 2 := by
+          rw [show (∑ i, p i * a i) = m by rfl]
+          ring
+    have hconst : ∑ i, p i * m ^ 2 = m ^ 2 := by
+      rw [← Finset.sum_mul, hp]
+      ring
+    rw [hcross, hconst]
+    ring
+  simpa [p, m] using hcenter.symm
 
 lemma logSumExp_deriv_eq_ratio
     {ι : Type _} [Fintype ι] [Nonempty ι]

@@ -19,8 +19,8 @@ set_option autoImplicit false
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
-[This file constructs the quotient type, multiplication descent, and group
- structure for PSL(2,Z).
+[This file constructs the quotient type and multiplication descent for PSL(2,Z).
+ It does not prove the full group structure on PSL2Z.
  It does not prove a modular action on the upper half-plane.
  It does not prove a U-duality theorem.]
 -/
@@ -50,17 +50,6 @@ abbrev SL2Z : Type :=
   {M : M2Z // det2 M = 1}
 
 namespace SL2Z
-
-def one : SL2Z :=
-  ⟨1, by
-    unfold det2
-    norm_num [Matrix.one_apply]⟩
-
-instance : One SL2Z := ⟨one⟩
-
-@[simp]
-theorem val_one : (1 : SL2Z).val = 1 :=
-  rfl
 
 @[ext]
 theorem ext {A B : SL2Z} (h : A.val = B.val) : A = B :=
@@ -117,57 +106,6 @@ theorem neg_mul_neg (A B : SL2Z) :
       rw [mul_neg]
     _ = A * B := by
       simp
-
-def inv (A : SL2Z) : SL2Z :=
-  ⟨!![A.val 1 1, -A.val 0 1; -A.val 1 0, A.val 0 0], by
-    have hdet : A.val 0 0 * A.val 1 1 - A.val 0 1 * A.val 1 0 = 1 := by
-      simpa [det2] using A.property
-    simpa [det2, mul_comm] using hdet⟩
-
-instance : Inv SL2Z := ⟨inv⟩
-
-@[simp]
-theorem val_inv (A : SL2Z) :
-    (A⁻¹).val = !![A.val 1 1, -A.val 0 1; -A.val 1 0, A.val 0 0] :=
-  rfl
-
-theorem mul_inv (A : SL2Z) : A * A⁻¹ = 1 := by
-  have hdet : A.val 0 0 * A.val 1 1 - A.val 0 1 * A.val 1 0 = 1 := by
-    simpa [det2] using A.property
-  apply ext
-  ext i j
-  fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    simpa [mul_comm] using hdet
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-    simpa [mul_comm, add_comm, sub_eq_add_neg] using hdet
-
-theorem inv_mul (A : SL2Z) : A⁻¹ * A = 1 := by
-  have hdet : A.val 0 0 * A.val 1 1 - A.val 0 1 * A.val 1 0 = 1 := by
-    simpa [det2] using A.property
-  apply ext
-  ext i j
-  fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    simpa [mul_comm] using hdet
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
-    <;> ring
-    simpa [mul_comm, add_comm, sub_eq_add_neg] using hdet
-
-theorem neg_inv (A : SL2Z) : (-A)⁻¹ = -(A⁻¹) := by
-  apply ext
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, inv]
 
 end SL2Z
 
@@ -246,96 +184,5 @@ theorem mul_mk (A B : SL2Z) :
 theorem mk_neg_eq_mk (A : SL2Z) :
     mk (-A) = mk A := by
   exact Quotient.sound (Or.inr rfl)
-
-instance : One Carrier where
-  one := mk (1 : SL2Z)
-
-@[simp]
-theorem mk_one : mk (1 : SL2Z) = (1 : Carrier) :=
-  rfl
-
-theorem carrier_mul_assoc (A B C : Carrier) :
-    (A * B) * C = A * (B * C) := by
-  induction A using Quotient.inductionOn with
-  | _ A =>
-    induction B using Quotient.inductionOn with
-    | _ B =>
-      induction C using Quotient.inductionOn with
-      | _ C =>
-        change mk ((A * B) * C) = mk (A * (B * C))
-        apply congrArg mk
-        apply SL2Z.ext
-        exact Matrix.mul_assoc A.val B.val C.val
-
-theorem carrier_one_mul (A : Carrier) :
-    (1 : Carrier) * A = A := by
-  induction A using Quotient.inductionOn with
-  | _ A =>
-    change mk ((1 : SL2Z) * A) = mk A
-    apply congrArg mk
-    apply SL2Z.ext
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [SL2Z.one, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem carrier_mul_one (A : Carrier) :
-    A * (1 : Carrier) = A := by
-  induction A using Quotient.inductionOn with
-  | _ A =>
-    change mk (A * (1 : SL2Z)) = mk A
-    apply congrArg mk
-    apply SL2Z.ext
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [SL2Z.one, Matrix.mul_apply, Fin.sum_univ_two]
-
-instance : Monoid Carrier where
-  one := 1
-  mul := mul
-  one_mul := carrier_one_mul
-  mul_one := carrier_mul_one
-  mul_assoc := carrier_mul_assoc
-
-def inv : Carrier → Carrier :=
-  Quotient.lift
-    (fun A : SL2Z => mk (A⁻¹))
-    (by
-      intro A B h
-      rcases h with rfl | h
-      · rfl
-      · subst A
-        change mk ((-B)⁻¹) = mk (B⁻¹)
-        rw [SL2Z.neg_inv]
-        exact mk_neg_eq_mk _)
-
-instance : Inv Carrier := ⟨inv⟩
-
-@[simp]
-theorem inv_mk (A : SL2Z) :
-    inv (mk A) = mk (A⁻¹) :=
-  rfl
-
-theorem carrier_mul_inv (A : Carrier) :
-    A * A⁻¹ = (1 : Carrier) := by
-  induction A using Quotient.inductionOn with
-  | _ A =>
-    change mk (A * A⁻¹) = mk (1 : SL2Z)
-    rw [SL2Z.mul_inv]
-
-theorem carrier_inv_mul (A : Carrier) :
-    A⁻¹ * A = (1 : Carrier) := by
-  induction A using Quotient.inductionOn with
-  | _ A =>
-    change mk (A⁻¹ * A) = mk (1 : SL2Z)
-    rw [SL2Z.inv_mul]
-
-instance : Group Carrier where
-  one := 1
-  mul := mul
-  inv := inv
-  one_mul := carrier_one_mul
-  mul_one := carrier_mul_one
-  mul_assoc := carrier_mul_assoc
-  inv_mul_cancel := carrier_inv_mul
 
 end InfoGeometry.Modular.PSL2Z

@@ -34,10 +34,17 @@ open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 open InfoGeometry.Lie.SplitOctonionCanonicalColorRootAction
 open InfoGeometry.Algebra.Zorn.G2ChiralOperatorNativeBridge
 
+noncomputable def nativeCanonicalVectorLinearEquiv :
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.CZ ≃ₗ[ℝ]
+      ZornVectorMatrix ℝ :=
+  { InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv with
+    map_add' := by intro X Y; rfl
+    map_smul' := by intro r X; rfl }
+
 noncomputable def nativeAut (φ : RealSplitOctonionAut) :
     ZornVectorMatrix ℝ ≃ₗ[ℝ] ZornVectorMatrix ℝ :=
-  canonicalVectorLinearEquiv.symm.trans
-    (φ.1.trans canonicalVectorLinearEquiv)
+  nativeCanonicalVectorLinearEquiv.symm.trans
+    (φ.1.trans nativeCanonicalVectorLinearEquiv)
 
 theorem nativeAut_map_mul (φ : RealSplitOctonionAut)
     (X Y : ZornVectorMatrix ℝ) :
@@ -595,12 +602,24 @@ automorphisms; no identification with the finite `SplitOctF2Aut` carrier is
 asserted here. -/
 
 noncomputable def realWeylCycle : RealSplitOctonionAut :=
-  InfoGeometry.Canonical.realSplitOctonionAutOfComposition
-    InfoGeometry.Canonical.canonicalColorCycleCompositionAut
+  { val := InfoGeometry.Canonical.canonicalColorCycleCompositionAut.1
+    property := by
+      constructor
+      · exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_fix_one
+          InfoGeometry.Canonical.canonicalColorCycleCompositionAut
+      · intro X Y
+        exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_mul
+          InfoGeometry.Canonical.canonicalColorCycleCompositionAut X Y }
 
 noncomputable def realWeylReflection : RealSplitOctonionAut :=
-  InfoGeometry.Canonical.realSplitOctonionAutOfComposition
-    InfoGeometry.Canonical.canonicalColorReflectionCompositionAut
+  { val := InfoGeometry.Canonical.canonicalColorReflectionCompositionAut.1
+    property := by
+      constructor
+      · exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_fix_one
+          InfoGeometry.Canonical.canonicalColorReflectionCompositionAut
+      · intro X Y
+        exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_mul
+          InfoGeometry.Canonical.canonicalColorReflectionCompositionAut X Y }
 
 theorem realWeylCycle_nativeCircularBasis (i : Fin 8) :
     nativeAut realWeylCycle (nativeCircularBasis i) =

@@ -60,5 +60,3 @@ theorem operatorObservationQuotientCompHausReadout_covariant
   exact operatorObservationQuotientReadout_covariant Φ t q
 
 end InfoGeometry.Topology
-
-end

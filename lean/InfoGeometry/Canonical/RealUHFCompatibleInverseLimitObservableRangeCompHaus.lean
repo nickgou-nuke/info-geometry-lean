@@ -156,6 +156,5 @@ theorem compatibleOrbitClosureToInverseStageObservationRange_flow_square
 
 end CompHaus
 
-end InfoGeometry.Canonical.RealUHFCompatibleInverseLimitObservableRangeCompHaus
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleInverseLimitObservableRangeCompHaus

@@ -50,22 +50,12 @@ export InfoGeometry.Topology.CuntzMap
   (map_unital
    map_star
    map_real_fixed_point_of_half_branch_scaling
+   discrete_modular_flow_apply_eq_map
    discrete_modular_flow_real_fixed_point_of_half_branch_scaling)
 
 export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
   (erlangen_o55_invariants)
 
 /- [1] FINITE CAR --------------------------------------------------------- -/
-
-/--
-Finite two-mode CAR readout from the split Clifford owner.
-
-This is the only local wrapper retained here because it conjoins two existing
-finite-CAR owner theorems into the standard capstone readout.
--/
-theorem finite_CAR_at_all_truncations (i j : Mode) (hij : i ≠ j) :
-    aMode i * adagMode i + adagMode i * aMode i = (1 : M4R) ∧
-    aMode i * aMode j + aMode j * aMode i = (0 : M4R) := by
-  exact ⟨same_mode_car i, cross_annihilate_anticomm i j hij⟩
 
 end InfoGeometry.Capstone.FockCapstone

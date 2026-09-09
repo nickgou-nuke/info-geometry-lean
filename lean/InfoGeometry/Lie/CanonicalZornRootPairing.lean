@@ -165,4 +165,92 @@ theorem simpleWeight_simpleCoroot_pairing (i j : Fin 2) :
   · simpa [simpleWeight, simpleCoroot] using shortSimpleCoroot_pairing_long
   · simpa [simpleWeight, simpleCoroot] using longSimpleCoroot_pairing_long
 
+theorem simpleWeight_linearIndependent :
+    LinearIndependent ℝ simpleWeight := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  fin_cases i
+  · have h0 := congrArg (fun w : Weight => w (simpleCoroot 0)) hg
+    have h1 := congrArg (fun w : Weight => w (simpleCoroot 1)) hg
+    simp [Fin.sum_univ_two, simpleWeight_simpleCoroot_pairing,
+      simpleCartanMatrix] at h0 h1
+    change g 0 = 0
+    nlinarith
+  · have h0 := congrArg (fun w : Weight => w (simpleCoroot 0)) hg
+    have h1 := congrArg (fun w : Weight => w (simpleCoroot 1)) hg
+    simp [Fin.sum_univ_two, simpleWeight_simpleCoroot_pairing,
+      simpleCartanMatrix] at h0 h1
+    change g 1 = 0
+    nlinarith
+
+theorem simpleWeight_span_top :
+    Submodule.span ℝ (Set.range simpleWeight) = (⊤ : Submodule ℝ Weight) := by
+  apply simpleWeight_linearIndependent.span_eq_top_of_card_eq_finrank
+  rw [Subspace.dual_finrank_eq, tracelessWeight_finrank]
+  rfl
+
+theorem simpleCoroot_linearIndependent :
+    LinearIndependent ℝ simpleCoroot := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  fin_cases i
+  · have h0 := congrArg (fun x : TracelessWeight => coordWeight 0 x) hg
+    have h1 := congrArg (fun x : TracelessWeight => coordWeight 1 x) hg
+    simp [Fin.sum_univ_two, simpleCoroot, coordWeight,
+      shortSimpleCoroot, longSimpleCoroot, tracelessWeightEquiv] at h0 h1
+    change g 0 = 0
+    nlinarith
+  · have h0 := congrArg (fun x : TracelessWeight => coordWeight 0 x) hg
+    have h1 := congrArg (fun x : TracelessWeight => coordWeight 1 x) hg
+    simp [Fin.sum_univ_two, simpleCoroot, coordWeight,
+      shortSimpleCoroot, longSimpleCoroot, tracelessWeightEquiv] at h0 h1
+    change g 1 = 0
+    nlinarith
+
+theorem simpleCoroot_span_top :
+    Submodule.span ℝ (Set.range simpleCoroot) =
+      (⊤ : Submodule ℝ TracelessWeight) := by
+  apply simpleCoroot_linearIndependent.span_eq_top_of_card_eq_finrank
+  simpa using tracelessWeight_finrank.symm
+
+def simpleCorootEvaluation : Weight →ₗ[ℝ] (Fin 2 → ℝ) where
+  toFun w := fun i => w (simpleCoroot i)
+  map_add' w v := by
+    funext i
+    simp
+  map_smul' a w := by
+    funext i
+    simp
+
+@[simp] theorem simpleCorootEvaluation_apply (w : Weight) (i : Fin 2) :
+    simpleCorootEvaluation w i = w (simpleCoroot i) := rfl
+
+theorem simpleCorootEvaluation_injective :
+    Function.Injective simpleCorootEvaluation := by
+  intro w v h
+  apply LinearMap.ext
+  intro x
+  have hx : x ∈ Submodule.span ℝ (Set.range simpleCoroot) := by
+    rw [simpleCoroot_span_top]
+    trivial
+  have hker : Submodule.span ℝ (Set.range simpleCoroot) ≤
+      LinearMap.ker (w - v) := by
+    apply Submodule.span_le.2
+    rintro x ⟨i, rfl⟩
+    change (w - v) (simpleCoroot i) = 0
+    apply sub_eq_zero.mpr
+    have hii := congrFun h i
+    simpa [simpleCorootEvaluation] using hii
+  have : (w - v) x = 0 := hker hx
+  simpa using sub_eq_zero.mp this
+
+noncomputable def simpleCorootEvaluationEquiv :
+    Weight ≃ₗ[ℝ] (Fin 2 → ℝ) :=
+  LinearEquiv.ofBijective simpleCorootEvaluation
+    ⟨simpleCorootEvaluation_injective,
+      (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
+        (by rw [Subspace.dual_finrank_eq, tracelessWeight_finrank,
+            Module.finrank_fin_fun])).mp
+        simpleCorootEvaluation_injective⟩
+
 end InfoGeometry.Lie.CanonicalZornRootPairing

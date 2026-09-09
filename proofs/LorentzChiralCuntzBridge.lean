@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralPoincareSouriauBridge
 import proofs.CuntzDeformedSuperPoincare
 import proofs.FierzIdentities

@@ -20,6 +20,8 @@ export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
    langlands_galois_state_separation
    ConnesAnomalyDikinStatement
    connes_anomaly_and_dikin_readout
+   TomitaJMatrixStatement
+   tomita_j_matrix_readout
    FibonacciQuantumGroupStatement
    fibonacci_quantum_group_readout
    TrinityCapstoneStatement
@@ -30,8 +32,7 @@ export InfoGeometry.Capstone.CommutantMoebiusLegendre
    supplied_o55_and_dirac_hodge_trace_window)
 
 export InfoGeometry.Capstone.FockCapstone
-  (finite_CAR_at_all_truncations
-   same_mode_car
+  (same_mode_car
    cross_annihilate_anticomm
    cross_mixed_anticomm
    Jmode_comm_swap

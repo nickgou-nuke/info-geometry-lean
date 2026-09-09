@@ -22,15 +22,9 @@ abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 /-- A finite two-coefficient jet through cubic order.
 `dikinMetric` is the quadratic coefficient and `amariCubic` is the cubic
 Amari--Chentsov/skewness coefficient. -/
-abbrev ModularBregmanJet := ℝ × ℝ
-
-namespace ModularBregmanJet
-
-abbrev dikinMetric (J : ModularBregmanJet) : ℝ := J.1
-
-abbrev amariCubic (J : ModularBregmanJet) : ℝ := J.2
-
-end ModularBregmanJet
+structure ModularBregmanJet where
+  dikinMetric : ℝ
+  amariCubic : ℝ
 
 /-- Cubic polynomial through third order:
 `ψ(ε)=g ε²/2 + C ε³/6`. -/
@@ -65,15 +59,9 @@ theorem thirdJet_eq_amari (J : ModularBregmanJet) :
     thirdJetAtZero J = J.amariCubic := rfl
 
 /-- A pair of finite cubic jets. -/
-abbrev ChiralCubicLift := ModularBregmanJet × ModularBregmanJet
-
-namespace ChiralCubicLift
-
-abbrev left (L : ChiralCubicLift) : ModularBregmanJet := L.1
-
-abbrev right (L : ChiralCubicLift) : ModularBregmanJet := L.2
-
-end ChiralCubicLift
+structure ChiralCubicLift where
+  left : ModularBregmanJet
+  right : ModularBregmanJet
 
 /-- Difference between the right and left cubic coefficients. -/
 def cubicTorsion (L : ChiralCubicLift) : ℝ :=
@@ -112,5 +100,24 @@ theorem jonesAct_apply (τ : ℝ) (v : Fin 2 → ℝ) :
     jonesAct τ v = fun i => if i = 0 then τ * v 1 else -τ * v 0 := by
   funext i
   fin_cases i <;> simp [jonesAct, jonesFierzTorsionMatrix, Fin.sum_univ_two]
+
+/-- Combined finite algebraic facts for the right jet and its left-right cubic difference. -/
+theorem amari_chentsov_fierz_torsion_synthesis (L : ChiralCubicLift) (ε : ℝ) :
+    potential L.right ε = dikinQuadratic L.right ε + poissonCubicTail L.right ε ∧
+    thirdJetAtZero L.right = L.right.amariCubic ∧
+    cubicTorsion L = L.right.amariCubic - L.left.amariCubic ∧
+    Matrix.trace (jonesFierzTorsionMatrix (cubicTorsion L)) = 0 ∧
+    (jonesFierzTorsionMatrix (cubicTorsion L))ᵀ =
+      - jonesFierzTorsionMatrix (cubicTorsion L) := by
+  constructor
+  · exact potential_eq_dikin_plus_tail L.right ε
+  constructor
+  · exact thirdJet_eq_amari L.right
+  constructor
+  · exact cubicTorsion_eq_amari_mismatch L
+  constructor
+  · exact jonesFierz_trace_zero (cubicTorsion L)
+  · exact jonesFierz_transpose (cubicTorsion L)
+
 
 end AmariChentsovFierzTorsion

@@ -196,7 +196,7 @@ theorem betheRootShift (N Z : ℕ) (u : ℕ → ℂ) :
     shiftedBetheRoot N Z (u N) - u N = betheRootShiftAmount N Z := by
   simp [shiftedBetheRoot]
 
-/-! ## 7. Extreme isospin-breaking finite property -/
+/-! ## 7. Extreme isospin-breaking finite witness -/
 
 structure SpinParity where
   J : ℕ
@@ -225,7 +225,7 @@ def hasGroundStateInversion {V : Type*} [AddCommGroup V] [Module ℂ V]
   J1 ≠ J2 ∧ H_ext.S_p < 1.0 ∧ |H_ext.beta2| > 0.3 ∧
     ∃ ΔE_split : ℝ, ΔE_split < 0.050 ∧ H_ext.pairing_gap > 0
 
-def propertyBaseHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
+def witnessBaseHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
     TKKHamiltonian_INC V where
   H_osc := 0
   H_rot := 0
@@ -237,9 +237,9 @@ def propertyBaseHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
   coeff_A := 0
   delta_trip := 0
 
-def propertyExtremeHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
+def witnessExtremeHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
     TKKHamiltonian_ExtremeISB V where
-  H_base := propertyBaseHamiltonian V
+  H_base := witnessBaseHamiltonian V
   H_continuum := 0
   H_deformation := 0
   H_pauli_def := 0
@@ -251,8 +251,8 @@ theorem a73_has_inversion {V : Type*} [AddCommGroup V] [Module ℂ V] :
     ∃ (H_ext : TKKHamiltonian_ExtremeISB V) (J1 J2 : SpinParity),
       J1 = ⟨5, false⟩ ∧ J2 = ⟨1, false⟩ ∧
         hasGroundStateInversion H_ext J1 J2 := by
-  refine ⟨propertyExtremeHamiltonian V, ⟨5, false⟩, ⟨1, false⟩, rfl, rfl, ?_⟩
-  unfold hasGroundStateInversion propertyExtremeHamiltonian
+  refine ⟨witnessExtremeHamiltonian V, ⟨5, false⟩, ⟨1, false⟩, rfl, rfl, ?_⟩
+  unfold hasGroundStateInversion witnessExtremeHamiltonian
   constructor
   · decide
   constructor

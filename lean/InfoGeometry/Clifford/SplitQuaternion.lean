@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
 set_option autoImplicit false
 
@@ -93,10 +92,6 @@ def mat_add_2x2 (A B : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ 
 def det_2x2 (M : Matrix (Fin 2) (Fin 2) ℝ) : ℝ :=
   M 0 0 * M 1 1 - M 0 1 * M 1 0
 
-theorem det_2x2_eq_matrix_det (M : Matrix (Fin 2) (Fin 2) ℝ) :
-    det_2x2 M = Matrix.det M := by
-  simp [det_2x2, Matrix.det_fin_two]
-
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
 -- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 
@@ -128,7 +123,9 @@ theorem norm_eq_det (q : SplitQuaternion) :
   simp [norm, toMatrix, det_2x2]
   ring_nf
 
-abbrev NormOneCoq := {q : SplitQuaternion // norm q = 1}
+structure NormOneCoq where
+  val : SplitQuaternion
+  property : norm val = 1
 
 @[ext]
 lemma NormOneCoq.ext {q1 q2 : NormOneCoq} (h : q1.val = q2.val) : q1 = q2 := by
@@ -168,32 +165,40 @@ instance : Group NormOneCoq where
     rw [conjugate_mul q.val, q.property]
     rfl
 
-abbrev SL2R := Matrix.SpecialLinearGroup (Fin 2) ℝ
+structure SL2R where
+  val : Matrix (Fin 2) (Fin 2) ℝ
+  property : det_2x2 val = 1
 
 @[ext]
 lemma SL2R.ext {A B : SL2R} (h : A.val = B.val) : A = B := by
-  exact Subtype.ext h
+  cases A
+  cases B
+  congr
 
 theorem det_2x2_mul (A B : Matrix (Fin 2) (Fin 2) ℝ) :
     det_2x2 (mat_mul_2x2 A B) = det_2x2 A * det_2x2 B := by
   simp [det_2x2, mat_mul_2x2]
   ring_nf
 
-def toSL2R (q : NormOneCoq) : SL2R :=
-  ⟨toMatrix q.val, by
-    rw [← det_2x2_eq_matrix_det, ← norm_eq_det]
-    exact q.property⟩
+instance : Mul SL2R where
+  mul A B := ⟨mat_mul_2x2 A.val B.val, by
+    rw [det_2x2_mul, A.property, B.property]
+    norm_num⟩
+
+def toSL2R (q : NormOneCoq) : SL2R where
+  val := toMatrix q.val
+  property := by
+    rw [← norm_eq_det]
+    exact q.property
 
 theorem toSL2R_mul (q1 q2 : NormOneCoq) :
     toSL2R (q1 * q2) = toSL2R q1 * toSL2R q2 := by
   apply SL2R.ext
-  change toMatrix (q1.val * q2.val) = toMatrix q1.val * toMatrix q2.val
-  rw [toMatrix_mul]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [mat_mul_2x2, Matrix.mul_apply]
+  exact toMatrix_mul q1.val q2.val
 
-abbrev NonZeroCoq := {q : SplitQuaternion // norm q ≠ 0}
+structure NonZeroCoq where
+  val : SplitQuaternion
+  property : norm val ≠ 0
 
 structure GL2R where
   val : Matrix (Fin 2) (Fin 2) ℝ

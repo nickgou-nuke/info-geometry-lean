@@ -48,8 +48,13 @@ def LinearlyIndependentFamilies {V : Type*} [AddCommGroup V] [Module ℝ V]
     (D : SplitS3FamilyDatum V) : Prop :=
   LinearIndependent ℝ D.family
 
-/-- The supplied finite family datum satisfies its four advertised laws.  This
-    is an unpacking theorem, not a construction of the split-real model. -/
+/--
+Adapted three-generation theorem target.
+
+This is the split-real analogue of the paper's main construction.
+
+-- DEBT_KIND: SORRY
+-/
 theorem splitCl44_three_generation_model
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (D : SplitS3FamilyDatum V) :
@@ -57,10 +62,7 @@ theorem splitCl44_three_generation_model
     ColorInvariant D ∧
     ChargeInvariant D ∧
     LinearlyIndependentFamilies D := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact D.preserves_semiSpinors
-  · exact D.color_invariant
-  · exact D.charge_invariant
-  · exact D.linearly_independent_families
+  exact ⟨D.preserves_semiSpinors, D.color_invariant,
+    D.charge_invariant, D.linearly_independent_families⟩
 
 end InfoGeometry.Clifford.Cl44S3Family

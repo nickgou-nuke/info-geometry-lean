@@ -52,5 +52,3 @@ theorem symbolicObservationRangeCompHausHomOfMorphism_eq_flow
   rw [symbolicObservationQuotientCompHausHomOfMorphism_eq_flow Φ h_flow t F hF]
 
 end InfoGeometry.Topology
-
-end

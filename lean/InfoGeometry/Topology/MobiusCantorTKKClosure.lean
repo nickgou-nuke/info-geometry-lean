@@ -1,7 +1,6 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
 import InfoGeometry.Topology.ArtinMonodromyPin55
 import InfoGeometry.External.Auto.UHFInductiveColimit
-import InfoGeometry.Clifford.Clifford55AnomalyOSP
 
 /-!
 # Möbius symmetry, Cantor fractal self-similarity, and TKK closure
@@ -59,25 +58,25 @@ theorem mobiusGammaJ_involutive (z : ℂ) :
 /-! ## Cantor fractal self-similarity -/
 
 /-- The 4-ary Cantor boundary is exactly recovered from head plus tail. -/
-theorem cantor_head_tail_self_similarity (b : (ℕ → Fin 4)) :
+theorem cantor_head_tail_self_similarity (b : C4Boundary) :
     prependN (headN b) (tailN b) = b :=
   prependN_headN_tailN b
 
 /-- Prepending a symbol creates a cylinder whose head and tail are known. -/
-theorem cantor_prepend_head_tail (i : Fin 4) (b : (ℕ → Fin 4)) :
+theorem cantor_prepend_head_tail (i : Fin 4) (b : C4Boundary) :
     headN (prependN i b) = i ∧ tailN (prependN i b) = b := by
   exact ⟨headN_prependN i b, tailN_prependN i b⟩
 
 /-- Cuntz operators implement the four self-similar Cantor branches. -/
 theorem cantor_cuntz_branch_orthogonality (i j : Fin 4) :
     cuntzT i * cuntzS j =
-      if i = j then (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) else 0 :=
+      if i = j then (1 : C4Functions →ₗ[ℂ] C4Functions) else 0 :=
   cuntz_ortho i j
 
 /-- The four Cantor/Cuntz branches partition the boundary. -/
 theorem cantor_cuntz_branch_partition :
     (∑ i : Fin 4, cuntzS i * cuntzT i) =
-      (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) :=
+      (1 : C4Functions →ₗ[ℂ] C4Functions) :=
   cuntz_partition
 
 /-- UHF cylinder compatibility: one more finite cut represents the same boundary
@@ -107,7 +106,7 @@ theorem tkk_pin55_anomaly_zero :
 /-- Capstone: Möbius symmetry, Cantor fractal recursion, and TKK centralizer
 closure are the same finite involutive/recursive closure pattern. -/
 theorem mobius_cantor_tkk_closure_synthesis
-    (z : ℂ) (b : (ℕ → Fin 4)) (i j : Fin 4)
+    (z : ℂ) (b : C4Boundary) (i j : Fin 4)
     (n : ℕ) (f : DiagAlg n) :
     mobiusJ (mobiusJ z) = z ∧
     mobiusGamma (mobiusGamma z) = z ∧
@@ -116,25 +115,24 @@ theorem mobius_cantor_tkk_closure_synthesis
     headN (prependN i b) = i ∧
     tailN (prependN i b) = b ∧
     cuntzT i * cuntzS j =
-      (if i = j then (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) else 0) ∧
+      (if i = j then (1 : C4Functions →ₗ[ℂ] C4Functions) else 0) ∧
     (∑ k : Fin 4, cuntzS k * cuntzT k) =
-      (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) ∧
+      (1 : C4Functions →ₗ[ℂ] C4Functions) ∧
     cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f ∧
     (∀ c : CentralizerAtom,
       centralizerValue c * centralizerValue c = (1 : ArtinMonodromyPin55.M2C)) ∧
     InfoGeometry.Clifford.Clifford55AnomalyOSP.anomalyIndex 5 5 = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact mobiusJ_involutive z
-  · exact mobiusGamma_involutive z
-  · exact mobiusJ_gamma_commute z
-  · exact cantor_head_tail_self_similarity b
-  · exact headN_prependN i b
-  · exact tailN_prependN i b
-  · exact cantor_cuntz_branch_orthogonality i j
-  · exact cantor_cuntz_branch_partition
-  · exact cantor_cut_fractal_step n f
-  · exact tkk_centralizer_atom_sq
-  · exact tkk_pin55_anomaly_zero
+  exact ⟨mobiusJ_involutive z,
+    mobiusGamma_involutive z,
+    mobiusJ_gamma_commute z,
+    cantor_head_tail_self_similarity b,
+    headN_prependN i b,
+    tailN_prependN i b,
+    cantor_cuntz_branch_orthogonality i j,
+    cantor_cuntz_branch_partition,
+    cantor_cut_fractal_step n f,
+    tkk_centralizer_atom_sq,
+    tkk_pin55_anomaly_zero⟩
 
 /-! ## Cartan Decomposition and TKK Projectors -/
 

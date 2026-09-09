@@ -23,7 +23,7 @@ variable {K : Type*} [Field K]
 variable {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
 /--
-A constructive Jordan-Chevalley interpolation property.
+A constructive Jordan-Chevalley interpolation witness.
 
 The semisimple component is explicitly realized as `Polynomial.aeval f p`
 for a polynomial `p` chosen from the singleton-adjoin decomposition.
@@ -33,12 +33,12 @@ structure JordanChevalleyInterpolation (f : Module.End K V) where
   poly : K[X]
   semisimple_eq : Polynomial.aeval f poly = split.semisimple
 
-/-- The semisimple component read from a polynomial interpolation property. -/
+/-- The semisimple component read from a polynomial interpolation witness. -/
 def semisimplePart {f : Module.End K V} (P : JordanChevalleyInterpolation f) :
     Module.End K V :=
   Polynomial.aeval f P.poly
 
-/-- The nilpotent component read from a polynomial interpolation property. -/
+/-- The nilpotent component read from a polynomial interpolation witness. -/
 def nilpotentPart {f : Module.End K V} (P : JordanChevalleyInterpolation f) :
     Module.End K V :=
   f - semisimplePart P

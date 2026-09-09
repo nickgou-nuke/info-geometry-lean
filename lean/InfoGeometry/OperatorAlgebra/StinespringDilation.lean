@@ -346,7 +346,7 @@ theorem heat_nonneg_from_hidden
 
 end HeatHiddenInformationBridge
 
-/-! ## 7. Metal mirror specialization interface -/
+/-! ## 7. Metal mirror specialization socket -/
 
 /--
 A metal mirror is an open-system optical channel equipped with a dilation and a
@@ -413,7 +413,7 @@ theorem heat_nonneg
 
 end MetalMirrorStinespringModel
 
-/-! ## 8. Lean dissipative-channel interface -/
+/-! ## 8. Lean dissipative-channel socket -/
 
 /--
 A dissipative visible-system channel together with an ideal lossless reference.
@@ -428,7 +428,7 @@ structure DissipativeChannel
   actual : Sys →L[ℝ] Sys
   ideal : Sys →L[ℝ] Sys
 
-/-! ## 9. Stinespring/Tomita dilation property -/
+/-! ## 9. Stinespring/Tomita dilation witness -/
 
 /--
 Stinespring/Tomita dilation of a dissipative channel.
@@ -685,7 +685,7 @@ variable
 
 /--
 Visible distinguishability cannot exceed the ideal budget once the contraction
-property is supplied.
+witness is supplied.
 -/
 theorem actual_distinguishability_le_ideal
     (L : VisibleDistinguishabilityLoss Sys C Dg)
@@ -707,7 +707,7 @@ A Stinespring/Tomita-style information dilation.
 
 `Env` is the inaccessible environment/commutant readout space.
 
-This is not a proof of Stinespring's theorem. It is the proof-carrying interface
+This is not a proof of Stinespring's theorem. It is the proof-carrying socket
 where a concrete Stinespring/Tomita dilation is installed.
 -/
 structure StinespringInformationDilation
@@ -913,30 +913,61 @@ end StinespringInformationDilation
 
 /-! ## 16. Owner targets -/
 
-/-! ## 16. Native Stinespring/Tomita theorems -/
+/--
+Owner target for the Stinespring/Tomita dilation layer.
 
-theorem stinespring_dilation
-    : ∀ (Sys Comm : Type*)
-        [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
-        [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
-      ∀ (C : DissipativeChannel Sys),
-      ∀ (D : StinespringTomitaDilation Sys Comm C),
-      ∀ x : Sys,
-        C.ideal x - C.actual x = D.recoverHidden (D.hiddenFlow x) := by
+It is witness-gated: once the dilation is supplied, the visible deficit is
+identified with recovered hidden flow.
+-/
+def StinespringDilationOwnerTarget : Prop :=
+  ∀ (Sys Comm : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
+  ∀ (C : DissipativeChannel Sys),
+  ∀ (D : StinespringTomitaDilation Sys Comm C),
+  ∀ x : Sys,
+    C.ideal x - C.actual x =
+      D.recoverHidden (D.hiddenFlow x)
+
+/--
+The owner target follows from the dilation conservation law.
+-/
+theorem stinespringDilationOwnerTarget :
+    StinespringDilationOwnerTarget := by
   intro Sys Comm _ _ _ _ C D x
   exact D.ideal_sub_actual_eq_recovered_hidden x
 
-theorem heat_hidden_information
-    : ∀ (Sys Comm : Type*)
-        [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
-        [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
-      ∀ (B : BregmanDivergenceDatum Sys),
-      ∀ (C : DissipativeChannel Sys),
-      ∀ (D : StinespringTomitaDilation Sys Comm C),
-      ∀ (W : HeatEqualsHiddenInformation Sys Comm B C D),
-      ∀ x : Sys,
-        heatLoss B C x = W.hiddenReadout.hiddenInfo (D.hiddenFlow x) := by
+/--
+Owner target for the heat-hidden-information bridge.
+-/
+def HeatHiddenInformationOwnerTarget : Prop :=
+  ∀ (Sys Comm : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
+  ∀ (B : BregmanDivergenceDatum Sys),
+  ∀ (C : DissipativeChannel Sys),
+  ∀ (D : StinespringTomitaDilation Sys Comm C),
+  ∀ (W : HeatEqualsHiddenInformation Sys Comm B C D),
+  ∀ x : Sys,
+    heatLoss B C x =
+      W.hiddenReadout.hiddenInfo (D.hiddenFlow x)
+
+/--
+The heat-hidden-information target follows from the supplied bridge datum.
+-/
+theorem heatHiddenInformationOwnerTarget :
+    HeatHiddenInformationOwnerTarget := by
   intro Sys Comm _ _ _ _ B C D W x
   exact W.heat_is_hidden_commutant_information x
+
+/--
+Owner target for supplying a Stinespring/Tomita information dilation.
+-/
+def StinespringInformationDilationOwnerTarget
+    (System Dilated Env : Type*)
+    [NormedAddCommGroup System] [NormedSpace ℝ System]
+    [NormedAddCommGroup Dilated] [NormedSpace ℝ Dilated]
+    [NormedAddCommGroup Env] [NormedSpace ℝ Env] : Prop :=
+  Nonempty (StinespringInformationDilation System Dilated Env)
 
 end InfoGeometry.OperatorAlgebra.StinespringDilation

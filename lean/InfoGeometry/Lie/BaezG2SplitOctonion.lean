@@ -182,8 +182,7 @@ omit [One A] in
 /-- Derivations are closed under commutator whenever multiplication is
 additively bilinear in the subtraction form needed for the calculation.  This is
 the kernel-checked Lie-algebra calculation behind the slogan
-`Lie(G₂) = Der(𝕆)`, with the classification statement carried by separate
-owners. -/
+`Lie(G₂) = Der(𝕆)`, with the classification statement kept out of scope. -/
 theorem IsNonAssocDerivation.commutator
     {D E : Module.End R A} (hD : IsNonAssocDerivation (R := R) (A := A) D)
     (hE : IsNonAssocDerivation (R := R) (A := A) E)
@@ -199,7 +198,7 @@ theorem IsNonAssocDerivation.commutator
   rw [hsub_mul, hmul_sub]
   abel
 
-open InfoGeometry.Lie.RealSplitOctonionDerivationData
+open InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
 /-- The repository's canonical real split-Cayley/Zorn carrier. -/
 abbrev SplitCayley := InfoGeometry.Lie.RealSplitOctonionDerivation.SplitCayley
@@ -227,11 +226,11 @@ theorem rot01Linear_is_derivation :
     IsNonAssocDerivation (R := ℝ) (A := SplitCayley) rot01Linear :=
   InfoGeometry.Lie.RealSplitOctonionDerivation.rot01Linear_isLeibniz
 
-/-- A bundled concrete nonzero split-Cayley `𝔤₂`-type derivation property. -/
+/-- A bundled concrete nonzero split-Cayley `𝔤₂`-type derivation witness. -/
 def rot01G2Derivation : SplitCayleyG2Derivation :=
   ⟨rot01Linear, rot01Linear_is_derivation⟩
 
-/-- Nonzero readout inherited from the native split-Cayley property. -/
+/-- Nonzero readout inherited from the native split-Cayley witness. -/
 theorem rot01G2Derivation_nonzero : ∃ X : SplitCayley, rot01G2Derivation.1 X ≠ 0 := by
   exact ⟨up0, rot01Real_nonzero_on_up0⟩
 

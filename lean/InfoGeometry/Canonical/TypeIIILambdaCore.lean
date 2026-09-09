@@ -101,7 +101,7 @@ structure ModularLambdaLattice (E : Type 0) [NormedAddCommGroup E]
   lattice : ModularMellinLattice E CIK
   q_eq : lattice.q = scale.q
   /--
-  Spectral restriction gate: any property eigenvalue/readout of the modular
+  Spectral restriction gate: any certified eigenvalue/readout of the modular
   Hamiltonian lies in the Type `III_λ` log-scale group.
   -/
   spectralReadoutInScale : ∀ eval : ℝ, eval ∈ scale.G

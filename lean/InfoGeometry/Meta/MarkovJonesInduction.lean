@@ -33,14 +33,11 @@ A finite-stage algebraic inductive net.
 The only structure is the one-step algebra embedding.  This is an algebraic
 interface for finite iterates; it is not a completed infinite algebra.
 -/
-abbrev InductiveAlgebraNet :=
-  ∀ n : Nat, A n →ₐ[𝕜] A (n + 1)
+structure InductiveAlgebraNet where
+  /-- One-step bonding homomorphism between finite algebra stages. -/
+  embed : ∀ n : Nat, A n →ₐ[𝕜] A (n + 1)
 
 namespace InductiveAlgebraNet
-
-abbrev embed (Net : InductiveAlgebraNet (𝕜 := 𝕜) (A := A)) :
-    ∀ n : Nat, A n →ₐ[𝕜] A (n + 1) :=
-  Net
 
 /-- The underlying one-step ring homomorphism of the algebraic bonding map. -/
 def embedRingHom (Net : InductiveAlgebraNet (𝕜 := 𝕜) (A := A))

@@ -81,6 +81,9 @@ structure MorphismHarvest where
   heuristicName : Array MorphismInfo
   deriving Repr
 
+def MorphismHarvest.canonical (h : MorphismHarvest) : Array MorphismInfo := h.tagged
+def MorphismHarvest.heuristicOnly (h : MorphismHarvest) : Array MorphismInfo := h.heuristicName
+
 def getAllMorphismsWithDiagnostics (env : Environment) (ns? : Option Name := none) :
     IO MorphismHarvest := do
   let mut canonical := #[]

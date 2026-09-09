@@ -20,6 +20,8 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.Clifford55
 
+open InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+
 /-- Explicit inverse candidate for `1 + J` when `J^2 = -1`. -/
 def ellipticCayleyDenInv (J : Cl55) : Cl55 :=
   (1 / 2 : ℝ) • ((1 : Cl55) - J)
@@ -31,10 +33,12 @@ theorem ellipticCayleyDenInv_right
   unfold ellipticCayleyDenInv
   rw [mul_smul_comm]
   calc
-    ((1 : Cl55) + J) * ((1 : Cl55) - J) =
-        (1 : Cl55) - J * J := by noncomm_ring
-    _ = 2 • (1 : Cl55) := by rw [hJ]; module
-  module
+    (1 / 2 : ℝ) • (((1 : Cl55) + J) * ((1 : Cl55) - J)) =
+        (1 / 2 : ℝ) • ((1 : Cl55) - J * J) := by rw [show
+          ((1 : Cl55) + J) * ((1 : Cl55) - J) = (1 : Cl55) - J * J by
+            noncomm_ring]
+    _ = (1 / 2 : ℝ) • (2 • (1 : Cl55)) := by rw [hJ]; module
+    _ = 1 := by module
 
 /-- If `J^2 = -1`, the explicit candidate is also a left inverse of `1+J`. -/
 theorem ellipticCayleyDenInv_left
@@ -43,10 +47,12 @@ theorem ellipticCayleyDenInv_left
   unfold ellipticCayleyDenInv
   rw [smul_mul_assoc]
   calc
-    ((1 : Cl55) - J) * ((1 : Cl55) + J) =
-        (1 : Cl55) - J * J := by noncomm_ring
-    _ = 2 • (1 : Cl55) := by rw [hJ]; module
-  module
+    (1 / 2 : ℝ) • (((1 : Cl55) - J) * ((1 : Cl55) + J)) =
+        (1 / 2 : ℝ) • ((1 : Cl55) - J * J) := by rw [show
+          ((1 : Cl55) - J) * ((1 : Cl55) + J) = (1 : Cl55) - J * J by
+            noncomm_ring]
+    _ = (1 / 2 : ℝ) • (2 • (1 : Cl55)) := by rw [hJ]; module
+    _ = 1 := by module
 
 /-- Native Cayley transform with the explicit elliptic denominator inverse. -/
 def ellipticCayley (J : Cl55) : Cl55 :=
@@ -60,10 +66,12 @@ theorem ellipticCayley_eq_neg
   unfold ellipticCayley ellipticCayleyDenInv
   rw [mul_smul_comm]
   calc
-    ((1 : Cl55) - J) * ((1 : Cl55) - J) =
-        (1 : Cl55) - 2 • J + J * J := by noncomm_ring
-    _ = -2 • J := by rw [hJ]; module
-  module
+    (1 / 2 : ℝ) • (((1 : Cl55) - J) * ((1 : Cl55) - J)) =
+        (1 / 2 : ℝ) • ((1 : Cl55) - 2 • J + J * J) := by rw [show
+          ((1 : Cl55) - J) * ((1 : Cl55) - J) =
+            (1 : Cl55) - 2 • J + J * J by noncomm_ring]
+    _ = (1 / 2 : ℝ) • (-2 • J) := by rw [hJ]; module
+    _ = -J := by module
 
 /-- Specialization to the native elliptic CAR axis. -/
 theorem ellipticAxis55_cayley_eq_neg (i : Fin 5) :
@@ -74,10 +82,10 @@ theorem ellipticAxis55_cayley_eq_neg (i : Fin 5) :
 theorem ropeBivector55_cayley_eq_neg
     {i j : Fin 5} (hij : i ≠ j) :
     ellipticCayley (ropeBivector55 i j) = -ropeBivector55 i j := by
-  exact ellipticCayley_eq_neg (ropeBivector55 i j) (ropeBivector55_sq hij)
+  exact ellipticCayley_eq_neg (ropeBivector55 i j) (ropeBivector55_sq i j hij)
 
-/-- Split obstruction: for `K^2=1`, the two Cayley denominator factors are
-zero divisors of each other. -/
+/-- For `K^2=1`, the two Cayley factors multiply to zero.
+Neither factor is asserted nonzero: `K = 1` and `K = -1` are allowed. -/
 theorem split_cayley_denominator_product_zero
     (K : Cl55) (hK : K * K = (1 : Cl55)) :
     ((1 : Cl55) + K) * ((1 : Cl55) - K) = 0 := by

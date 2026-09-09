@@ -17,15 +17,18 @@ theorem derivation_trace_zero
     LinearMap.trace ℝ CZ (D : EndCZ) = 0 := by
   exact canonicalZornDerivation_trace_zero D
 
+/-- The Burg / Stein divergence on SPD matrices. -/
+noncomputable abbrev burgDivergence {n : ℕ} (X Y : SPD n) : ℝ :=
+  steinLoss X Y
+
 /-- The Burg/Stein divergence on SPD splits as trace distortion plus
     log-determinant barrier difference. -/
 theorem burgStein_split {n : ℕ} (X Y : SPD n) :
     burgDivergence X Y =
       (Matrix.trace (normalizedDistortion X Y) - (n : ℝ)) +
       (logDetBarrier X - logDetBarrier Y) := by
-  have h₁ : burgDivergence X Y = Matrix.trace (normalizedDistortion X Y) + logDetBarrier X - logDetBarrier Y - (n : ℝ) := by
-    rw [burgDivergence_eq_trace_add_barrier_diff_sub_dim]
-    <;> ring
+  have h₁ : burgDivergence X Y = Matrix.trace (normalizedDistortion X Y) + logDetBarrier X - logDetBarrier Y - (n : ℝ) :=
+    steinLoss_eq_trace_add_barrier_diff_sub_dim X Y
   linarith
 
 /-- Trace distortion part: tr(Y⁻¹X) - n. -/
@@ -42,12 +45,10 @@ theorem shape_deformation_nonzero_divergence {n : ℕ} (X Y : SPD n)
     burgDivergence X Y = traceDistortionPart X Y := by
   have h₁ : burgDivergence X Y = traceDistortionPart X Y + (logDetBarrier X - logDetBarrier Y) := by
     calc
-      burgDivergence X Y = (Matrix.trace (normalizedDistortion X Y) - (n : ℝ)) + (logDetBarrier X - logDetBarrier Y) := by
-        rw [burgStein_split]
-        <;> ring
+      burgDivergence X Y = (Matrix.trace (normalizedDistortion X Y) - (n : ℝ)) + (logDetBarrier X - logDetBarrier Y) :=
+        burgStein_split X Y
       _ = traceDistortionPart X Y + (logDetBarrier X - logDetBarrier Y) := by
         simp [traceDistortionPart]
-        <;> ring
   have h₂ : logDetBarrier X - logDetBarrier Y = 0 := by
     have h₃ : Real.log (Matrix.det (normalizedDistortion X Y)) = 0 := by
       rw [h_det]
@@ -66,7 +67,7 @@ theorem shape_deformation_nonzero_divergence {n : ℕ} (X Y : SPD n)
         _ = -(-Real.log (Matrix.det X.mat)) + (-Real.log (Matrix.det Y.mat)) := by ring
         _ = -(logDetBarrier X - logDetBarrier Y) := by
           simp [logDetBarrier]
-          <;> ring
+          ring
     linarith
   linarith
 

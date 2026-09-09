@@ -7,11 +7,11 @@ import DAG.GraphHodge
 import DAG.ChiralDiracAnticommutation
 
 /-!
-# Riemann-property bridge interfaces and finite projections
+# Riemann-hypothesis bridge interfaces and finite projections
 
 This file keeps the RH bridge honest by exporting only kernel-checked facts
 from owner files and by making the analytic Fredholm half-plane claim an
-explicit property interface.
+explicit certificate interface.
 
 The closed local projections are:
 
@@ -90,36 +90,53 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
       0 := by
   exact DAG.ChiralDiracAnticommutation.dirac_anticommutes_gamma B1 B2
 
-/--
-Analytic property required for the Fredholm half-plane claim.
-
-This is a proposition about an explicitly supplied determinant.  The repo does
-not currently contain a trace-class Fredholm determinant theorem proving this
-property for a canonical determinant.
--/
+/-- Property that a candidate Fredholm determinant has no zeros in the open half-plane Re(s) > 1/2. -/
 def FredholmHalfPlaneProperty (determinant : ℂ → ℂ) : Prop :=
   ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
 
-theorem fredholmHalfPlaneProperty_ne_zero
-    {determinant : ℂ → ℂ}
-    (hdet : FredholmHalfPlaneProperty determinant)
+/--
+Analytic certificate required for the Fredholm half-plane claim.
+
+This is intentionally a data interface: the repo does not currently contain a
+trace-class Fredholm determinant theorem proving this certificate from first
+principles.
+-/
+def FredholmHalfPlaneCertificate : Type _ :=
+  {determinant : ℂ → ℂ // FredholmHalfPlaneProperty determinant}
+
+namespace FredholmHalfPlaneCertificate
+
+/-- The Fredholm determinant carried by the certificate. -/
+abbrev determinant (C : FredholmHalfPlaneCertificate) : ℂ → ℂ :=
+  C.1
+
+/-- The half-plane nonvanishing law carried by the certificate. -/
+theorem determinant_ne_zero
+    (C : FredholmHalfPlaneCertificate)
     (s : ℂ)
     (hs : (1 / 2 : ℝ) < s.re) :
-    determinant s ≠ 0 :=
-  hdet s hs
+    determinant C s ≠ 0 :=
+  C.2 s hs
+
+/-- Construct a Fredholm half-plane certificate from its determinant law. -/
+def mk
+    (determinant : ℂ → ℂ)
+    (h : ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0) :
+    FredholmHalfPlaneCertificate :=
+  ⟨determinant, h⟩
+
+end FredholmHalfPlaneCertificate
 
 /--
 **Formulation 4 (Fredholm Invertibility).**
 
-Projection from an explicit analytic property: if a Fredholm determinant
-property supplies nonvanishing on the open half-plane, the local readout is
+Projection from an explicit analytic certificate: if a Fredholm determinant
+certificate supplies nonvanishing on the open half-plane, the local readout is
 nonzero there.
 -/
 theorem fredholm_determinant_nonzero_on_critical_halfplane
-    {determinant : ℂ → ℂ}
-    (hdet : FredholmHalfPlaneProperty determinant)
-    {s : ℂ} (hs : (1 / 2 : ℝ) < s.re) :
-    determinant s ≠ 0 :=
-  fredholmHalfPlaneProperty_ne_zero hdet s hs
+    (C : FredholmHalfPlaneCertificate) {s : ℂ} (hs : (1 / 2 : ℝ) < s.re) :
+    C.determinant s ≠ 0 :=
+  C.determinant_ne_zero s hs
 
 end InfoGeometry.Arithmetic.RiemannHypothesis

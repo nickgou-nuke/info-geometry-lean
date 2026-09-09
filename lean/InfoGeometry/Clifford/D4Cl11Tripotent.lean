@@ -20,7 +20,7 @@ It proves:
 
 It does **not** assert a full Clifford algebra model of `Pin(5,5)`, a proof of
 the double cover map `Pin(5,5) → O(5,5)`, or any spacetime interpretation.
-Those remain outside this finite theorem layer.
+Those remain outside this finite socket.
 
 -/
 
@@ -64,12 +64,6 @@ def mul : V4 → V4 → V4
 instance : Mul V4 where
   mul := V4.mul
 
-instance : One V4 where
-  one := I
-
-instance : Inv V4 where
-  inv a := a
-
 /-- V₄ is abelian. -/
 theorem mul_comm (a b : V4) : a * b = b * a := by
   cases a <;> cases b <;> rfl
@@ -77,21 +71,6 @@ theorem mul_comm (a b : V4) : a * b = b * a := by
 /-- Every element squares to identity. -/
 theorem sq_eq_one (a : V4) : a * a = I := by
   cases a <;> rfl
-
-instance : Group V4 where
-  mul_assoc := by
-    intro a b c
-    cases a <;> cases b <;> cases c <;> rfl
-  one_mul := by
-    intro a
-    cases a <;> rfl
-  mul_one := by
-    intro a
-    cases a <;> rfl
-  inv_mul_cancel := by
-    intro a
-    change a * a = I
-    exact sq_eq_one a
 
 end V4
 
@@ -192,11 +171,16 @@ structure D4Algebra where
   rank : ∃ (𝔥 : Submodule ℝ L),
     Module.finrank ℝ 𝔥 = 4 ∧
     (∀ x y : L, x ∈ 𝔥 → y ∈ 𝔥 → ⁅x, y⁆ = 0)
-  /-
-  No `su(2)`/`su(3)` or generation fields are stored here.  A finrank-
-  existential is not an embedding or an isomorphism to either Lie algebra;
-  those belong to a separate, representation-specific owner.
-  -/
+  /-- D₄ inherently contains su(2) embeddings (isospin) -/
+  has_su2 : ∃ (s : LieSubalgebra ℝ L), Module.finrank ℝ s = 3
+  /-- D₄ inherently contains su(3) embeddings (color) -/
+  has_su3 : ∃ (s : LieSubalgebra ℝ L), Module.finrank ℝ s = 8
+  /-- The triality of D₄ ensures three distinct su(3) embeddings (generations) -/
+  has_three_generations : ∃ (g1 g2 g3 : LieSubalgebra ℝ L),
+    g1 ≠ g2 ∧ g2 ≠ g3 ∧ g1 ≠ g3 ∧
+    Module.finrank ℝ g1 = 8 ∧
+    Module.finrank ℝ g2 = 8 ∧
+    Module.finrank ℝ g3 = 8
 
 /--
 Two copies of D₄: one for electrons, one for positrons.

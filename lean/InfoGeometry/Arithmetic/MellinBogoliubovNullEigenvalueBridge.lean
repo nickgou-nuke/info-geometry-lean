@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 

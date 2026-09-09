@@ -28,12 +28,12 @@ structure PolarizationChannel
   channel : Op → Op
 
 
-/-- Rough reflection is represented by the native statistical channel carrier. -/
-abbrev RoughReflectionChannel
-    (Op : Type*) [Ring Op] := PolarizationChannel Op
-
-abbrev RoughReflectionChannel.toPolarizationChannel
-    {Op : Type*} [Ring Op]
-    (R : RoughReflectionChannel Op) : PolarizationChannel Op := R
+/--
+Rough reflection belongs to the channel/Mueller layer, not the pure Jones
+single-operator layer.
+-/
+structure RoughReflectionChannel
+    (Op : Type*) [Ring Op]
+    extends PolarizationChannel Op where
 
 end InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus

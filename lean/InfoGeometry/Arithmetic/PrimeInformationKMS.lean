@@ -38,154 +38,69 @@ open InfoGeometry.Thermodynamics
 
 /-! ## 1. Finite information normalization -/
 
+/--
+Finite prime information calibration packet.
+
+`modes` is a finite prime cutoff.  The packet keeps the inverse-temperature
+coordinate `beta` and the Souriau coordinate `temperature.s` separate, with an
+explicit proof that the real inverse temperature is the real part of the
+complex Souriau coordinate.
+-/
+@[rep_depth thermo]
+structure FinitePrimeInformationKMSPacket where
+  modes : Finset ℕ
+  prime_modes : ∀ p ∈ modes, Nat.Prime p
+  modes_nonempty : modes.Nonempty
+  beta : ℝ
+  temperature : InfoGeometry.Thermodynamics.SouriauTemperature
+  beta_eq_realPart_proof : beta = temperature.s.re
+
+namespace FinitePrimeInformationKMSPacket
 
 /-- Prime Boltzmann weight `w_p(β) = exp(-β log p)`. -/
 @[rep_depth thermo]
-def boltzmannWeight (beta : ℝ) (p : ℕ) : ℝ :=
-  Real.exp (-beta * Real.log p)
+def boltzmannWeight (β : ℝ) (p : ℕ) : ℝ :=
+  Real.exp (-β * Real.log p)
 
 /-- Finite prime information partition function. -/
 @[rep_depth thermo]
-def partition (modes : Finset ℕ) (beta : ℝ) : ℝ :=
-  Finset.sum modes (fun p => boltzmannWeight beta p)
+def partition (K : FinitePrimeInformationKMSPacket) : ℝ :=
+  Finset.sum K.modes (fun p => boltzmannWeight K.beta p)
 
 /-- The partition is positive on a nonempty finite prime cutoff. -/
 @[rep_depth thermo]
-theorem partition_pos (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
-    0 < partition modes beta := by
+theorem partition_pos (K : FinitePrimeInformationKMSPacket) :
+    0 < partition K := by
   unfold partition boltzmannWeight
   exact Finset.sum_pos
     (by
       intro p hp
       exact Real.exp_pos _)
-    h_nonempty
+    K.modes_nonempty
 
 /-- Normalized prime probability on the finite cutoff. -/
 @[rep_depth thermo]
-def normalizedProbability (modes : Finset ℕ) (beta : ℝ) (p : ℕ) : ℝ :=
-  boltzmannWeight beta p / partition modes beta
+def normalizedProbability (K : FinitePrimeInformationKMSPacket) (p : ℕ) : ℝ :=
+  boltzmannWeight K.beta p / partition K
 
 /-- Information surprisal after finite normalization. -/
 @[rep_depth thermo]
-def informationSurprisal (modes : Finset ℕ) (beta : ℝ) (p : ℕ) : ℝ :=
-  -Real.log (normalizedProbability modes beta p)
+def informationSurprisal (K : FinitePrimeInformationKMSPacket) (p : ℕ) : ℝ :=
+  -Real.log (normalizedProbability K p)
+
+/-- The Souriau inverse-temperature readout is the real part of the complex coordinate. -/
+@[rep_depth transport]
+theorem beta_eq_realPart_of_packet (K : FinitePrimeInformationKMSPacket) :
+    K.beta = K.temperature.s.re :=
+  K.beta_eq_realPart_proof
 
 /-- The normalized finite probabilities sum to one. -/
 @[rep_depth thermo]
-theorem normalizedProbability_sum_eq_one (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
-    Finset.sum modes (fun p => normalizedProbability modes beta p) = 1 := by
+theorem normalizedProbability_sum_eq_one (K : FinitePrimeInformationKMSPacket) :
+    Finset.sum K.modes (fun p => normalizedProbability K p) = 1 := by
   unfold normalizedProbability partition boltzmannWeight
   rw [← Finset.sum_div]
-  exact div_self (partition_pos modes beta h_nonempty).ne'
-
-/-- The normalized prime log-energy is the finite weighted-energy quotient. -/
-@[rep_depth thermo]
-theorem normalizedProbability_logEnergy_eq_weighted_quotient
-    (modes : Finset ℕ) (beta : ℝ) :
-    Finset.sum modes (fun p =>
-      normalizedProbability modes beta p * Real.log p) =
-      (Finset.sum modes (fun p => boltzmannWeight beta p * Real.log p)) /
-        partition modes beta := by
-  unfold normalizedProbability
-  calc
-    (∑ p ∈ modes, (boltzmannWeight beta p / partition modes beta) * Real.log p) =
-        ∑ p ∈ modes, (boltzmannWeight beta p * Real.log p) /
-          partition modes beta := by
-      apply Finset.sum_congr rfl
-      intro p hp
-      ring
-    _ = (∑ p ∈ modes, boltzmannWeight beta p * Real.log p) /
-          partition modes beta := by
-      rw [Finset.sum_div]
-
-/-- The normalized finite mean of the prime log-energy. -/
-@[rep_depth thermo]
-def normalizedLogEnergyMean (modes : Finset ℕ) (beta : ℝ) : ℝ :=
-  ∑ p ∈ modes, normalizedProbability modes beta p * Real.log p
-
-/-- The normalized finite variance of the prime log-energy. -/
-@[rep_depth thermo]
-def normalizedLogEnergyVariance (modes : Finset ℕ) (beta : ℝ) : ℝ :=
-  ∑ p ∈ modes,
-    normalizedProbability modes beta p *
-      (Real.log p - normalizedLogEnergyMean modes beta) ^ 2
-
-/-- The normalized finite logarithmic score has zero expectation. -/
-@[rep_depth thermo]
-theorem normalizedLogEnergyScore_mean_zero
-    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
-    ∑ p ∈ modes,
-      normalizedProbability modes beta p *
-        (-(Real.log p - normalizedLogEnergyMean modes beta)) = 0 := by
-  let μ := normalizedLogEnergyMean modes beta
-  have hnorm :
-      ∑ p ∈ modes, normalizedProbability modes beta p = 1 :=
-    normalizedProbability_sum_eq_one modes beta h_nonempty
-  have hcenter :
-      ∑ p ∈ modes,
-        normalizedProbability modes beta p * (Real.log p - μ) = 0 := by
-    simp_rw [mul_sub]
-    rw [Finset.sum_sub_distrib]
-    rw [← Finset.sum_mul]
-    dsimp [μ, normalizedLogEnergyMean]
-    rw [hnorm]
-    ring
-  calc
-    (∑ p ∈ modes,
-        normalizedProbability modes beta p *
-          (-(Real.log p - μ))) =
-        -(∑ p ∈ modes,
-          normalizedProbability modes beta p * (Real.log p - μ)) := by
-      rw [← Finset.sum_neg_distrib]
-      apply Finset.sum_congr rfl
-      intro p hp
-      ring
-    _ = 0 := by rw [hcenter]; ring
-
-/-- Normalized finite probabilities are nonnegative on the active cutoff. -/
-@[rep_depth thermo]
-theorem normalizedProbability_nonneg
-    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty)
-    (p : ℕ) (hp : p ∈ modes) :
-    0 ≤ normalizedProbability modes beta p := by
-  unfold normalizedProbability boltzmannWeight
-  exact div_nonneg (le_of_lt (Real.exp_pos _))
-    (le_of_lt (partition_pos modes beta h_nonempty))
-
-/-- The finite Fisher score-square readout is nonnegative. -/
-@[rep_depth thermo]
-theorem normalizedLogEnergyScoreSquare_nonneg
-    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
-    0 ≤ ∑ p ∈ modes,
-      normalizedProbability modes beta p *
-        (-(Real.log p - normalizedLogEnergyMean modes beta)) ^ 2 := by
-  apply Finset.sum_nonneg
-  intro p hp
-  exact mul_nonneg
-    (normalizedProbability_nonneg modes beta h_nonempty p hp)
-    (sq_nonneg _)
-
-/-- The finite score-square readout is exactly the normalized log-energy
-    variance. -/
-@[rep_depth thermo]
-theorem normalizedLogEnergyScoreSquare_eq_variance
-    (modes : Finset ℕ) (beta : ℝ) :
-    (∑ p ∈ modes,
-      normalizedProbability modes beta p *
-        (-(Real.log p - normalizedLogEnergyMean modes beta)) ^ 2) =
-      normalizedLogEnergyVariance modes beta := by
-  unfold normalizedLogEnergyVariance
-  apply Finset.sum_congr rfl
-  intro p hp
-  rw [neg_sq]
-
-/-- The normalized finite log-energy variance is nonnegative. -/
-@[rep_depth thermo]
-theorem normalizedLogEnergyVariance_nonneg
-    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
-    0 ≤ normalizedLogEnergyVariance modes beta := by
-  rw [← normalizedLogEnergyScoreSquare_eq_variance]
-  exact normalizedLogEnergyScoreSquare_nonneg modes beta h_nonempty
+  exact div_self (partition_pos K).ne'
 
 /--
 Normalized surprisal is `β log p + log Z` on the finite cutoff.
@@ -195,18 +110,21 @@ energy `log p`.
 -/
 @[rep_depth thermo]
 theorem informationSurprisal_eq_beta_log_add_logPartition
-    (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty)
+    (K : FinitePrimeInformationKMSPacket)
     (p : ℕ) :
-    informationSurprisal modes beta p =
-      beta * Real.log p + Real.log (partition modes beta) := by
-  unfold informationSurprisal normalizedProbability partition boltzmannWeight
-  have hnum : 0 < Real.exp (-beta * Real.log p) := Real.exp_pos _
+    FinitePrimeInformationKMSPacket.informationSurprisal K p =
+      K.beta * Real.log p + Real.log (FinitePrimeInformationKMSPacket.partition K) := by
+  unfold FinitePrimeInformationKMSPacket.informationSurprisal
+    FinitePrimeInformationKMSPacket.normalizedProbability
+    FinitePrimeInformationKMSPacket.partition
+    FinitePrimeInformationKMSPacket.boltzmannWeight
+  have hnum : 0 < Real.exp (-K.beta * Real.log p) := Real.exp_pos _
   change -Real.log
-      (Real.exp (-beta * Real.log p) /
-        partition modes beta) =
-    beta * Real.log p +
-      Real.log (partition modes beta)
-  rw [Real.log_div hnum.ne' (partition_pos modes beta h_nonempty).ne']
+      (Real.exp (-K.beta * Real.log p) /
+        FinitePrimeInformationKMSPacket.partition K) =
+    K.beta * Real.log p +
+      Real.log (FinitePrimeInformationKMSPacket.partition K)
+  rw [Real.log_div hnum.ne' (FinitePrimeInformationKMSPacket.partition_pos K).ne']
   rw [Real.log_exp]
   ring
 
@@ -215,16 +133,18 @@ Boltzmann weight equals the `p^{-β}` real power on prime modes.
 -/
 @[rep_depth thermo]
 theorem boltzmannWeight_eq_rpow
-    (modes : Finset ℕ) (beta : ℝ) (h_prime : ∀ p ∈ modes, Nat.Prime p)
-    (p : ℕ) (hp : p ∈ modes) :
-    boltzmannWeight beta p = (p : ℝ) ^ (-beta) := by
-  have hprime : Nat.Prime p := h_prime p hp
+    (K : FinitePrimeInformationKMSPacket)
+    (p : ℕ) (hp : p ∈ K.modes) :
+    boltzmannWeight K.beta p = (p : ℝ) ^ (-K.beta) := by
+  have hprime : Nat.Prime p := K.prime_modes p hp
   have hp0 : 0 < (p : ℝ) := by
     exact_mod_cast Nat.Prime.pos hprime
   unfold boltzmannWeight
   rw [Real.rpow_def_of_pos hp0]
   congr 1
   ring
+
+end FinitePrimeInformationKMSPacket
 
 /-! ## 2. Sector separation: bosonic zeta gas vs fermionic square-free gas -/
 
@@ -278,16 +198,6 @@ theorem finiteFullSUSYProduct_eq_one
     finiteFullSUSYProduct P β = 1 := by
   exact PrimeSuperalgebra.finiteFullSUSYProduct_eq_one P β hdenom
 
-/-- The named Möbius supertrace cancels the finite bosonic partition. -/
-@[rep_depth thermo]
-theorem mobiusSupertrace_mul_finiteBosonicPrimePartition_eq_one
-    (P : PrimeCutoff) (β : ℝ)
-    (hdenom : finitePrimeDenominator P β ≠ 0) :
-    mobiusSupertrace P β * finiteBosonicPrimePartition P β = 1 := by
-  simpa [mobiusSupertrace] using
-    (PrimeSuperalgebra.finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
-      P β hdenom)
-
 /-! ## 3. KMS normalization and Massieu/Bregman readouts -/
 
 /-- The finite grand-canonical KMS strip is nonempty at positive inverse temperature. -/
@@ -329,18 +239,14 @@ theorem beta_eq_realPart_of_massieuBridge
 @[rep_depth thermo]
 theorem massieu_eq_potential_of_massieuBridge
     (B : Bridge) (θ : ℝ) :
-    B.massieuModel.massieu θ =
-      InfoGeometry.GrandCanonical.potentialGC
-        (primeGrandCanonicalParams B.P B.energyWeight) θ B.chemicalPotential :=
+    B.massieuModel.massieu θ = B.packet.potential θ B.chemicalPotential :=
   B.massieu_eq_potential θ
 
 /-- The dual coordinate is the finite mean-shift readout. -/
 @[rep_depth thermo]
 theorem dualCoord_eq_meanShift_of_massieuBridge
     (B : Bridge) (θ : ℝ) :
-    B.massieuModel.dualCoord θ =
-      InfoGeometry.GrandCanonical.meanShift
-        (primeGrandCanonicalParams B.P B.energyWeight) θ B.chemicalPotential :=
+    B.massieuModel.dualCoord θ = B.packet.meanShift θ B.chemicalPotential :=
   B.dualCoord_eq_meanShift_of_bridge θ
 
 /-- The temperature-regularized Hamiltonian defect is nonnegative. -/

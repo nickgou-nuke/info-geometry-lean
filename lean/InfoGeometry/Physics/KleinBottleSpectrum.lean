@@ -1049,5 +1049,3 @@ theorem kleinBottle_finite_spectrum_synthesis
     finiteKleinHeatTrace_nonneg t a b evenMarks oddMarks⟩
 
 end InfoGeometry.Physics.KleinBottleSpectrum
-
-end

@@ -42,15 +42,15 @@ def nativeToeplitzThreeGenerators :
   V1 := toeplitzS 3 i0
   V2 := toeplitzS 3 i1
   V3 := toeplitzS 3 i2
-  V1_isometry := by simpa using toeplitz_orthogonality 3 i0 i0
-  V2_isometry := by simpa using toeplitz_orthogonality 3 i1 i1
-  V3_isometry := by simpa using toeplitz_orthogonality 3 i2 i2
-  V1_V2_ortho := by simpa using toeplitz_orthogonality 3 i0 i1
-  V2_V1_ortho := by simpa using toeplitz_orthogonality 3 i1 i0
-  V2_V3_ortho := by simpa using toeplitz_orthogonality 3 i1 i2
-  V3_V2_ortho := by simpa using toeplitz_orthogonality 3 i2 i1
-  V1_V3_ortho := by simpa using toeplitz_orthogonality 3 i0 i2
-  V3_V1_ortho := by simpa using toeplitz_orthogonality 3 i2 i0
+  V1_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i0
+  V2_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i1
+  V3_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i2
+  V1_V2_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i1
+  V2_V1_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i0
+  V2_V3_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i2
+  V3_V2_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i1
+  V1_V3_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i2
+  V3_V1_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i0
 
 @[simp] theorem native_V1 :
     nativeToeplitzThreeGenerators.V1 = toeplitzS 3 i0 := rfl

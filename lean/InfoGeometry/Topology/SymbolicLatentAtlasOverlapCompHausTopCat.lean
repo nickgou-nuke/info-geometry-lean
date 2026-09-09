@@ -79,5 +79,3 @@ theorem SymbolicLatentAtlas.overlapObservationCompHaus_transition_commutes
   exact A.overlapObservation_transition_commutes H
 
 end InfoGeometry.Topology
-
-end

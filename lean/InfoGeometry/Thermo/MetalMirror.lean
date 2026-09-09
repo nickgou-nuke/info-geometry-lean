@@ -9,7 +9,7 @@ Bregman divergence between the ideal reflected state and the actual reflected
 state.
 
 The total information-conserving picture is represented by a
-Stinespring-Tomita dilation property: the apparent loss in the system branch is
+Stinespring-Tomita dilation witness: the apparent loss in the system branch is
 routed into a mirrored commutant/environment branch.
 
 The public API is backend-generic and uses bounded real-linear channels. The
@@ -88,14 +88,16 @@ variable
 /-- Actual reflected state as a regular cone point. -/
 def actualPoint
     (U : RegularConePoint c) :
-    RegularConePoint c :=
-  ⟨M.actualFlow U.op, M.actual_preserves_cone U.op U.mem⟩
+    RegularConePoint c where
+  op := M.actualFlow U.op
+  mem := M.actual_preserves_cone U.op U.mem
 
 /-- Ideal reflected state as a regular cone point. -/
 def idealPoint
     (U : RegularConePoint c) :
-    RegularConePoint c :=
-  ⟨M.idealFlow U.op, M.ideal_preserves_cone U.op U.mem⟩
+    RegularConePoint c where
+  op := M.idealFlow U.op
+  mem := M.ideal_preserves_cone U.op U.mem
 
 @[simp]
 theorem actualPoint_op
@@ -132,7 +134,7 @@ end MetalMirrorChannel
 /-! ## 2. Stinespring-Tomita dilation -/
 
 /--
-A Stinespring-Tomita dilation property for a metal mirror.
+A Stinespring-Tomita dilation witness for a metal mirror.
 
 The conservation equality says that the ideal lossless comparison branch
 decomposes into the actual reflected system branch plus a Tomita-mirrored
@@ -266,6 +268,7 @@ structure MetalMirrorRicciFluxBridge
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
     {J L Obs : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
@@ -273,7 +276,7 @@ structure MetalMirrorRicciFluxBridge
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
     (M : MetalMirrorChannel c)
-    (B : BregmanRicciFluxBridge c ω gradPhi F J L Obs T R) where
+    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R) where
   /-- Left/source generator extracted from a regular cone input. -/
   sourceLeft : RegularConePoint c → J
 
@@ -293,6 +296,7 @@ variable
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
     {J L Obs : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
@@ -300,7 +304,7 @@ variable
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
     {M : MetalMirrorChannel c}
-    {B : BregmanRicciFluxBridge c ω gradPhi F J L Obs T R}
+    {B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R}
     (X : MetalMirrorRicciFluxBridge M B)
 
 /-- Re-export the heat/Ricci-flux bridge law. -/
@@ -314,41 +318,35 @@ end MetalMirrorRicciFluxBridge
 
 end RegularCone
 
-/-! ## 6. Backend-generic metal mirror property layer -/
+/-! ## 6. Backend-generic metal mirror witness layer -/
 
 /-! ### Regular cone and Bregman backend -/
 
 /-- A regular cone/domain on which the thermodynamic potential is valid. -/
-abbrev RegularConeDatum (Op : Type*) := Set Op
-
-/-- Compatibility accessor for the underlying regular cone/domain. -/
-abbrev RegularConeDatum.cone (Ω : RegularConeDatum Op) : Set Op := Ω
+structure RegularConeDatum
+    (Op : Type*) where
+  cone : Set Op
 
 /-- A point of a regular cone. -/
-abbrev RegularConePoint
+structure RegularConePoint
     {Op : Type*}
-    (Ω : RegularConeDatum Op) :=
-  {op : Op // op ∈ Ω.cone}
+    (Ω : RegularConeDatum Op) where
+  op : Op
+  mem : op ∈ Ω.cone
 
 namespace RegularConePoint
 
 variable {Op : Type*} {Ω : RegularConeDatum Op}
 
-/-- Compatibility accessor for the underlying cone point. -/
-abbrev op (U : RegularConePoint Ω) : Op := U.1
-
-/-- Compatibility accessor for cone membership. -/
-abbrev mem (U : RegularConePoint Ω) : U.op ∈ Ω.cone := U.2
-
 /-- Coercion to the underlying operator/state. -/
 instance : CoeOut (RegularConePoint Ω) Op where
-  coe U := U.1
+  coe U := U.op
 
 @[simp]
 theorem coe_mk
     (x : Op)
     (hx : x ∈ Ω.cone) :
-    ((⟨x, hx⟩ : RegularConePoint Ω) : Op) = x :=
+    ((RegularConePoint.mk x hx : RegularConePoint Ω) : Op) = x :=
   rfl
 
 end RegularConePoint
@@ -423,14 +421,16 @@ variable
 /-- Actual reflected state as a regular cone point. -/
 def actualPoint
     (U : RegularConePoint Ω) :
-    RegularConePoint Ω :=
-  ⟨M.actualFlow U.op, M.actual_preserves_cone U.op U.mem⟩
+    RegularConePoint Ω where
+  op := M.actualFlow U.op
+  mem := M.actual_preserves_cone U.op U.mem
 
 /-- Ideal reflected state as a regular cone point. -/
 def idealPoint
     (U : RegularConePoint Ω) :
-    RegularConePoint Ω :=
-  ⟨M.idealUnitary U.op, M.ideal_preserves_cone U.op U.mem⟩
+    RegularConePoint Ω where
+  op := M.idealUnitary U.op
+  mem := M.ideal_preserves_cone U.op U.mem
 
 /-- Native dissipative-branch predicate for the backend-generic channel. -/
 def ActualDissipativeBranch : Prop :=
@@ -455,7 +455,7 @@ end MetalMirrorChannel
 /-! ### Stinespring/Tomita dilation -/
 
 /--
-Stinespring/Tomita dilation property for the mirror.
+Stinespring/Tomita dilation witness for the mirror.
 
 The conservation law says that the ideal lossless channel decomposes into the
 observed dissipative channel plus a mirrored environment/commutant component.
@@ -556,13 +556,9 @@ Ricci/Bregman flux readout.
 This is intentionally abstract. Concrete geometry modules can instantiate it
 from a Hessian, curvature operator, Ricci tensor, or TKK flux bridge.
 -/
-abbrev RicciFluxReadout (Op : Type*) := Op → ℝ
-
-namespace RicciFluxReadout
-
-abbrev flux {Op : Type*} (R : RicciFluxReadout Op) : Op → ℝ := R
-
-end RicciFluxReadout
+structure RicciFluxReadout
+    (Op : Type*) where
+  flux : Op → ℝ
 
 /--
 Bridge saying that the metal-mirror Bregman heat equals the Ricci flux readout.
@@ -662,7 +658,7 @@ theorem metalMirrorRicciFluxBridge_of_admissible
     (h : MetalMirrorRicciFluxAdmissible Op) :
     MetalMirrorHeatRicciFluxBridge
       Op h.readout.bregman h.readout.channel
-        h.ricciFlux := by
+        { flux := h.ricciFlux } := by
   refine {
     heat_eq_flux := ?_
   }

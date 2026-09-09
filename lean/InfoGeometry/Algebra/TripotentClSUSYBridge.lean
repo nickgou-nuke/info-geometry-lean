@@ -203,10 +203,7 @@ theorem word_parity_matches_projectors :
           = wordParityZ2 (oddStep true) + wordParityZ2 (oddStep true) := wordParityZ2_append _ _
       _ = (1 : ZMod 2) + (1 : ZMod 2) := by rw [h_odd]
       _ = (0 : ZMod 2) := by decide
-  refine ⟨?_, ?_, ?_⟩
-  · exact h_odd
-  · exact h_even
-  · exact h_append
+  exact ⟨h_odd, h_even, h_append⟩
 
 
 

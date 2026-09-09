@@ -70,21 +70,4 @@ theorem hilbertSchmidt_dissipation_nonneg (dS : MatrixSpace n) :
     0 ≤ hilbertSchmidtPairing dS dS :=
   hilbertSchmidtPairing_nonneg dS
 
-/-- Packaged Hilbert--Schmidt Onsager summary: symmetry, dissipation
-nonnegativity, and the kernel-based energy conservation law. -/
-theorem hilbertSchmidt_metriplectic_summary
-    (sys : HilbertSchmidtMetriplecticSystem n) :
-    ((∀ A B : MatrixSpace n,
-        hilbertSchmidtPairing A B = hilbertSchmidtPairing B A) ∧
-      (∀ A : MatrixSpace n, 0 ≤ hilbertSchmidtPairing A A)) ∧
-    (hilbertSchmidtPairing
-        (sys.H * sys.rho - sys.rho * sys.H) sys.H = 0) := by
-  constructor
-  · constructor
-    · intro A B
-      exact hilbertSchmidtPairing_symm A B
-    · intro A
-      exact hilbertSchmidtPairing_nonneg A
-  · exact hilbertSchmidt_energy_conservation sys
-
 end SouriauHilbertSchmidtOnsager

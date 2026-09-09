@@ -57,17 +57,17 @@ Noncommutative Itakura--Saito/Burg packet.
 obtained only through the repository-owned product/readout interface.
 -/
 @[rep_depth operator]
-structure NoncommutativeItakuraSaitoModel (Op : Type*) [AddGroup Op] where
+structure NoncommutativeItakuraSaitoPacket (Op : Type*) [AddGroup Op] where
   /-- Product/readout interface: trace, KMS state, vector state, or regularized weight. -/
-  readout : OperatorPrimalDualData Op
+  readout : OperatorPrimalDualSocket Op
   /-- Operator Burg/log potential. -/
   potential : Op → ℝ
   /-- Operator gradient of the Burg/log potential. -/
   gradient : Op → Op
 
-namespace NoncommutativeItakuraSaitoModel
+namespace NoncommutativeItakuraSaitoPacket
 
-variable (P : NoncommutativeItakuraSaitoModel Op)
+variable (P : NoncommutativeItakuraSaitoPacket Op)
 
 /-- The noncommutative Itakura--Saito value is the repo-native operator Bregman readout. -/
 @[rep_depth operator]
@@ -81,18 +81,16 @@ theorem divergence_eq_operatorBregman (X Y : Op) :
 
 /-- Diagonal vanishing inherited from the operatorial Bregman owner. -/
 @[simp, rep_depth operator]
-theorem divergence_self
-    (hzero : ∀ X : Op, P.readout.readout (P.readout.product X 0) = 0)
-    (X : Op) :
+theorem divergence_self (X : Op) :
     P.divergence X X = 0 := by
-  exact operatorBregman_self P.readout hzero P.potential P.gradient X
+  simp [divergence]
 
-end NoncommutativeItakuraSaitoModel
+end NoncommutativeItakuraSaitoPacket
 
 section LinearSymmetry
 
 variable {Op : Type*} [AddCommGroup Op] [Module ℝ Op]
-variable (P : NoncommutativeItakuraSaitoModel Op)
+variable (P : NoncommutativeItakuraSaitoPacket Op)
 
 /--
 Operator Itakura--Saito invariance under a linear symmetry preserving the
@@ -108,7 +106,7 @@ theorem divergence_invariant_of_linear_symmetry
           P.readout.pairing (P.gradient X) Y)
     (X Y : Op) :
     P.divergence (T X) (T Y) = P.divergence X Y := by
-  simpa [NoncommutativeItakuraSaitoModel.divergence] using
+  simpa [NoncommutativeItakuraSaitoPacket.divergence] using
     operatorBregman_invariant_of_linear_symmetry
       P.readout P.potential P.gradient T hΦ hPair X Y
 
@@ -135,7 +133,7 @@ theorem restrictedAraki_eq_noncommutative_itakuraSaito
     {State Op : Type*} [AddGroup Op]
     (arakiRelativeEntropy : State → State → ℝ)
     (toOperator : State → Op)
-    (P : NoncommutativeItakuraSaitoModel Op)
+    (P : NoncommutativeItakuraSaitoPacket Op)
     (ω φ : State)
     (hcollapse :
       restrictedAraki arakiRelativeEntropy ω φ =
@@ -143,7 +141,7 @@ theorem restrictedAraki_eq_noncommutative_itakuraSaito
     restrictedAraki arakiRelativeEntropy ω φ =
       operatorBregman P.readout P.potential P.gradient
         (toOperator ω) (toOperator φ) := by
-  simpa [NoncommutativeItakuraSaitoModel.divergence] using hcollapse
+  simpa [NoncommutativeItakuraSaitoPacket.divergence] using hcollapse
 
 /-- Self-Araki vanishing after an explicit operator Itakura--Saito collapse. -/
 @[rep_depth operator]
@@ -151,15 +149,14 @@ theorem restrictedAraki_self_eq_zero_of_noncommutative_collapse
     {State Op : Type*} [AddGroup Op]
     (arakiRelativeEntropy : State → State → ℝ)
     (toOperator : State → Op)
-    (P : NoncommutativeItakuraSaitoModel Op)
-    (hzero : ∀ X : Op, P.readout.readout (P.readout.product X 0) = 0)
+    (P : NoncommutativeItakuraSaitoPacket Op)
     (ω : State)
     (hcollapse :
       restrictedAraki arakiRelativeEntropy ω ω =
         P.divergence (toOperator ω) (toOperator ω)) :
     restrictedAraki arakiRelativeEntropy ω ω = 0 := by
   rw [hcollapse]
-  exact P.divergence_self hzero (toOperator ω)
+  exact P.divergence_self (toOperator ω)
 
 /--
 Thermodynamic comparison readout after the noncommutative Araki/IS collapse.
@@ -173,7 +170,7 @@ theorem restrictedAraki_eq_entropyProductionScalar_of_operator_readouts
     {State Op Alg : Type*} [AddGroup Op] [Ring Alg]
     (arakiRelativeEntropy : State → State → ℝ)
     (toOperator : State → Op)
-    (P : NoncommutativeItakuraSaitoModel Op)
+    (P : NoncommutativeItakuraSaitoPacket Op)
     (flow : CausalNonequilibriumFlow Alg)
     (entropyProductionScalar : CausalNonequilibriumFlow Alg → ℝ)
     (ω φ : State)
@@ -191,15 +188,15 @@ KAN colimit compatibility readback for the parabolic/nilpotent sector.
 
 This deliberately does not use a matrix direct-limit carrier as an
 operator-Bregman carrier.  It only reads the nilpotent signature through the
-repository-owned `KANStageTower`.
+repository-owned `KANColimitTower`.
 -/
 @[rep_depth operator]
 theorem KAN_colimit_parabolic_nilpotent_readout
-    (T : InfoGeometry.Canonical.KANColimitBridge.KANStageTower)
+    (T : InfoGeometry.Canonical.KANColimitBridge.KANColimitTower)
     {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).nilpotentN x) :
     T.limit.nilpotentNInf (T.toLimit n x) :=
-  T.nilpotent_directLimit hx
+  T.nilpotent_colimit hx
 
 /-! ## Bounded doubled-carrier specialization -/
 
@@ -225,8 +222,8 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 def ofSouriauOperatorialBregmanPacket
     {LieAlgebra : Type*}
     (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra) :
-    NoncommutativeItakuraSaitoModel EndH where
-  readout := P.productReadout
+    NoncommutativeItakuraSaitoPacket EndH where
+  readout := P.socket
   potential := P.potential
   gradient := P.gradient
 
@@ -238,12 +235,68 @@ theorem ofSouriauOperatorialBregmanPacket_divergence
     (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra)
     (X Y : EndH) :
     (ofSouriauOperatorialBregmanPacket (E := E) P).divergence X Y =
-      P.divergence X Y := by
-  simp [ofSouriauOperatorialBregmanPacket,
-    NoncommutativeItakuraSaitoModel.divergence,
-    SouriauOperatorialBregmanPacket.divergence]
+      P.divergence X Y :=
+  rfl
 
 end BoundedDoubledCarrier
+
+/-! ## GNS / Relative Modular Operator Expectation -/
+
+section RelativeModularExpectation
+
+open scoped InnerProductSpace
+
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/--
+Socket for the relative modular operator and GNS state vector in Tomita-Takesaki theory.
+It carries the exact algebraic properties of the relative modular operator Δ_{φ|ω}
+associated with the GNS vector state Ω_ω.
+-/
+@[rep_depth operator]
+structure RelativeModularOperatorSocket (H : Type*)
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
+  /-- The GNS vector state Ω_ω representing state ω. -/
+  omegaVector : H
+  /-- The GNS vector is normalized: ⟨Ω_ω, Ω_ω⟩ = 1. -/
+  omegaVector_norm : inner ℝ omegaVector omegaVector = 1
+  /-- The relative modular operator Δ_{φ|ω}. -/
+  relativeModularOp : H →L[ℝ] H
+  /-- The expectation of the relative modular operator Δ is 1 (normalization of φ). -/
+  relativeModularOp_expectation : inner ℝ (relativeModularOp omegaVector) omegaVector = 1
+  /-- The logarithm of the relative modular operator, log Δ. -/
+  logRelativeModularOp : H →L[ℝ] H
+  /-- Araki relative entropy is defined as -⟨Ω_ω, log Δ_{φ|ω} Ω_ω⟩. -/
+  arakiRelativeEntropy : ℝ
+  /-- Definition of Araki relative entropy. -/
+  arakiRelativeEntropy_def :
+    arakiRelativeEntropy = - inner ℝ (logRelativeModularOp omegaVector) omegaVector
+
+/--
+The operator Itakura-Saito divergence of the relative modular operator:
+D_IS(Δ) = Δ - log Δ - I.
+-/
+@[rep_depth operator]
+def operatorItakuraSaito (S : RelativeModularOperatorSocket H) : H →L[ℝ] H :=
+  S.relativeModularOp - S.logRelativeModularOp - ContinuousLinearMap.id ℝ H
+
+/--
+The expectation value of the operator Itakura-Saito divergence under the state ω
+is exactly the Araki relative entropy:
+⟨Ω_ω, D_IS(Δ) Ω_ω⟩ = S(ω || φ).
+-/
+@[rep_depth operator]
+theorem operatorItakuraSaito_expectation_eq_araki
+    (S : RelativeModularOperatorSocket H) :
+    inner ℝ (operatorItakuraSaito S S.omegaVector) S.omegaVector = S.arakiRelativeEntropy := by
+  unfold operatorItakuraSaito
+  simp
+  rw [inner_sub_left, inner_sub_left]
+  rw [S.relativeModularOp_expectation, S.omegaVector_norm]
+  rw [S.arakiRelativeEntropy_def]
+  ring
+
+end RelativeModularExpectation
 
 end InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 

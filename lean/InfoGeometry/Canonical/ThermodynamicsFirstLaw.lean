@@ -11,22 +11,19 @@ import InfoGeometry.Canonical.DeRhamThermodynamicPotential
 import InfoGeometry.KMSGNS
 
 /-!
-# The First Law of Thermodynamics as the Derivation Exact Sequence
+# Inner derivations, quotient classes, and positive relative densities
 
-This module formalizes:
-1. **The Algebraic Decomposition of Total Dynamics (The First Law)**:
-   Total physical derivation $D_{\text{total}} \in \operatorname{Der}(A)$ projects to
-   macroscopic work $W = \pi(D_{\text{total}}) \in \operatorname{Out}(A)$ and
-   microscopic heat flow $\operatorname{ad}_K \in \operatorname{Inn}(A)$.
-2. **The Exact Sequence of Dynamics**:
-   $0 \to Z(A) \to A \to \operatorname{Der}(A) \to \operatorname{Out}(A) \to 0$.
-3. **Friction / Heating by Work (The Master Intertwiner)**:
-   $[D, \operatorname{ad}_K] = \operatorname{ad}_{D(K)}$.
-4. **Heat as Logarithmic Volume Dilation**:
-   The differential $dV = - \frac{d\Delta}{\Delta}$ connecting multiplicative volume
-   shifts to additive thermal potential.
+The historical thermodynamic names below denote three algebraic statements:
 
-All proofs are complete in native Mathlib with zero `sorry`s.
+* a derivation has zero quotient class exactly when it is inner;
+* the commutator of a derivation `D` with `ad K` equals `ad (D K)`;
+* the positive relative density equals the exponential of the negative
+  relative modular potential.
+
+The quotient statement does not choose a splitting or a unique inner
+representative. The commutator may vanish. The density identity is pointwise
+on canonical gauge sections of positive rays; it is not a differential-form
+or evolution equation. No physical interpretation is needed for these claims.
 -/
 
 noncomputable section
@@ -41,48 +38,35 @@ open InfoGeometry.Canonical.DeRhamPotential
 
 variable {A : Type*} [Ring A]
 
-/-- The total derivation space represents total rate of change of observables. -/
+/-- The additive derivations of the underlying ring. -/
 abbrev TotalDynamics (A : Type*) [Ring A] := Derivation A
 
-/-- Inner derivations represent microscopic thermodynamic heat flow (modular commutators). -/
+/-- The historical predicate `isHeatFlow` means that the derivation is inner. -/
 def isHeatFlow (D : Derivation A) : Prop :=
   ∃ K : A, ∀ x : A, D x = (modularDerivation K) x
 
-/-- The quotient space Out(A) represents macroscopic work (outer geometric derivations). -/
+/-- Quotient of derivations by the native inner-derivation relation. -/
 abbrev MacroscopicWork (A : Type*) [Ring A] :=
   ModularFlowHomogeneousSpace A
 
-/-- 
-  THEOREM 1: The First Law of Thermodynamics in Homological Algebra.
-  Every total dynamical derivation D projects to macroscopic work in Out(A),
-  and the kernel of this projection is precisely the microscopic heat flow Inn(A):
-    π(D) = 0 ↔ D ∈ Inn(A)
--/
+/-- The zero quotient class consists precisely of inner derivations. -/
 theorem first_law_exact_sequence (D : Derivation A) :
     modularFlowProjection D = outZero ↔ isHeatFlow D :=
   exact_sequence_inner_iff_kernel D
 
-/-- 
-  THEOREM 2: The Master Intertwiner (Friction / Heating Induced by Work).
-  Macroscopic geometric deformation D and microscopic thermal flow ad_K do not commute;
-  their Lie bracket generates an inner thermal flow governed by the work on the Hamiltonian:
-    [D, ad_K] = ad_{D(K)}
--/
+/-- Commuting a derivation with an inner derivation gives an inner derivation. -/
 theorem work_induces_heat_friction (D : Derivation A) (K : A) :
     Derivation.derivationCommutator D (modularDerivation K) = modularDerivation (D K) := by
   ext X
   exact dual_flow_commutator D K X
 
-/-- 
-  THEOREM 3: Heat is Logarithmic Volume Dilation.
-  The additive modular potential change equals the negative logarithm of the multiplicative volume:
-    Δ = exp(-V)
--/
+/-- Pointwise exponential recovery of the relative density from its potential. -/
 theorem heat_is_logarithmic_volume_dilation
     {α : Type*} [Fintype α] [Nonempty α]
     (q q₁ : PositiveRay α) (a : α) :
-    relativeDensity q q₁ a = Real.exp (- relativeModularPotential q q₁ a) :=
-  relativeDensity_eq_exp_neg_relativeModularPotential q q₁ a
+    relativeDensity q q₁ a = Real.exp (- relativeModularPotential q q₁ a) := by
+  rw [relativeDensity_eq_exp_relativeLogDensity,
+    relativeModularPotential_eq_neg_relativeLogDensity, neg_neg]
 
 end InfoGeometry.Canonical.Thermodynamics
 

@@ -62,48 +62,36 @@ abbrev sigma2 : Mat2C := _root_.InfoGeometry.Physics.Section30UnifiedMatrixFrame
 abbrev sigma3 : Mat2C := _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3
 
 /-- Real coordinates in the Pauli basis `{σ₀,σ₁,σ₂,σ₃}`. -/
-abbrev PauliCoord := ℝ × ℝ × ℝ × ℝ
-
-namespace PauliCoord
-
-abbrev t (v : PauliCoord) : ℝ := v.1
-
-abbrev x (v : PauliCoord) : ℝ := v.2.1
-
-abbrev y (v : PauliCoord) : ℝ := v.2.2.1
-
-abbrev z (v : PauliCoord) : ℝ := v.2.2.2
-
-end PauliCoord
+structure PauliCoord where
+  t : ℝ
+  x : ℝ
+  y : ℝ
+  z : ℝ
 
 @[ext]
 theorem PauliCoord.ext {a b : PauliCoord}
     (ht : a.t = b.t) (hx : a.x = b.x) (hy : a.y = b.y) (hz : a.z = b.z) :
     a = b := by
-  rcases a with ⟨a₀, a₁, a₂, a₃⟩
-  rcases b with ⟨b₀, b₁, b₂, b₃⟩
-  simp only [PauliCoord.t, PauliCoord.x, PauliCoord.y, PauliCoord.z] at ht hx hy hz
-  cases ht
-  cases hx
-  cases hy
-  cases hz
-  rfl
+  cases a
+  cases b
+  simp at ht hx hy hz
+  simp [ht, hx, hy, hz]
 
 /-- Coordinate negation. -/
 def negCoord (v : PauliCoord) : PauliCoord :=
-  (-v.t, -v.x, -v.y, -v.z)
+  { t := -v.t, x := -v.x, y := -v.y, z := -v.z }
 
 /-- Section00 complex structure `I` on Pauli coefficient space. -/
 def complexI (v : PauliCoord) : PauliCoord :=
-  (-v.x, v.t, -v.z, v.y)
+  { t := -v.x, x := v.t, y := -v.z, z := v.y }
 
 /-- Section00 complex structure `J` on Pauli coefficient space. -/
 def complexJ (v : PauliCoord) : PauliCoord :=
-  (-v.y, v.z, v.t, -v.x)
+  { t := -v.y, x := v.z, y := v.t, z := -v.x }
 
 /-- Section00 complex structure `K` on Pauli coefficient space. -/
 def complexK (v : PauliCoord) : PauliCoord :=
-  (-v.z, -v.y, v.x, v.t)
+  { t := -v.z, x := -v.y, y := v.x, z := v.t }
 
 /-- Hilbert-Schmidt metric in the Pauli basis: `1/2 Tr(σᵢ σⱼ)=δᵢⱼ`. -/
 def hsMetric (a b : PauliCoord) : ℝ :=
@@ -116,7 +104,7 @@ def toR4 (v : PauliCoord) :
 
 /-- Convert a canonical finite `R^4` vector back to Section00 coordinates. -/
 def ofR4 (v : _root_.InfoGeometry.Canonical.BiQuaternionKahlerFinite.R4) : PauliCoord :=
-  (v 0, v 1, v 2, v 3)
+  { t := v 0, x := v 1, y := v 2, z := v 3 }
 
 /-- Section00 `I` is exactly the canonical finite owner `I4c`. -/
 theorem complexI_eq_owner_I4c (v : PauliCoord) :
@@ -160,44 +148,32 @@ theorem complexK_sq (v : PauliCoord) :
 /-- `IJ = K`. -/
 theorem complexI_mul_complexJ (v : PauliCoord) :
     complexI (complexJ v) = complexK v := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, PauliCoord.t, PauliCoord.x,
-    PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK]
 
 /-- `JK = I`. -/
 theorem complexJ_mul_complexK (v : PauliCoord) :
     complexJ (complexK v) = complexI v := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, PauliCoord.t, PauliCoord.x,
-    PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK]
 
 /-- `KI = J`. -/
 theorem complexK_mul_complexI (v : PauliCoord) :
     complexK (complexI v) = complexJ v := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, PauliCoord.t, PauliCoord.x,
-    PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK]
 
 /-- `JI = -K`. -/
 theorem complexJ_mul_complexI (v : PauliCoord) :
     complexJ (complexI v) = negCoord (complexK v) := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, negCoord, PauliCoord.t,
-    PauliCoord.x, PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK, negCoord]
 
 /-- `KJ = -I`. -/
 theorem complexK_mul_complexJ (v : PauliCoord) :
     complexK (complexJ v) = negCoord (complexI v) := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, negCoord, PauliCoord.t,
-    PauliCoord.x, PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK, negCoord]
 
 /-- `IK = -J`. -/
 theorem complexI_mul_complexK (v : PauliCoord) :
     complexI (complexK v) = negCoord (complexJ v) := by
-  rcases v with ⟨t, x, y, z⟩
-  simp [complexI, complexJ, complexK, negCoord, PauliCoord.t,
-    PauliCoord.x, PauliCoord.y, PauliCoord.z]
+  ext <;> simp [complexI, complexJ, complexK, negCoord]
 
 /-- `I` preserves the finite Hilbert-Schmidt metric. -/
 theorem complexI_preserves_hsMetric (a b : PauliCoord) :
@@ -226,29 +202,23 @@ def pauliMatrix (v : PauliCoord) : Mat2C :=
 /-- Geometry-facing paravector with the same coordinates. -/
 def toMinkowski4 (v : PauliCoord) :
     _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4 :=
-  fun i => match i with
-    | 0 => v.t
-    | 1 => v.x
-    | 2 => v.y
-    | 3 => v.z
+  { t := v.t, x := v.x, y := v.y, z := v.z }
 
 /-- Pauli square packet, delegated to Section30. -/
 theorem pauli_square_packet :
     sigma1 * sigma1 = 1 ∧ sigma2 * sigma2 = 1 ∧ sigma3 * sigma3 = 1 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_sq
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_sq
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_sq
+  exact ⟨_root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_sq,
+    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_sq,
+    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_sq⟩
 
 /-- Pauli product packet, delegated to Section30. -/
 theorem pauli_product_packet :
     sigma1 * sigma2 = Complex.I • sigma3 ∧
       sigma2 * sigma3 = Complex.I • sigma1 ∧
         sigma3 * sigma1 = Complex.I • sigma2 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_mul_sigma2
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_mul_sigma3
-  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_mul_sigma1
+  exact ⟨_root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_mul_sigma2,
+    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_mul_sigma3,
+    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_mul_sigma1⟩
 
 /-- Section30 determinant readout for the Section00 Pauli matrix. -/
 theorem pauliMatrix_det (v : PauliCoord) :
@@ -299,16 +269,10 @@ At the spatial unit vector `(0,1,0,0)`, the ordinary quaternion norm is `+1`
 while the Pauli/Minkowski determinant readout is `-1`.
 -/
 theorem ordinaryQuaternionNorm_not_minkowski_spatial_unit :
-    ordinaryQuaternionNormSq ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ)) = 1 ∧
+    ordinaryQuaternionNormSq { t := 0, x := 1, y := 0, z := 0 } = 1 ∧
       _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4.q
-        (toMinkowski4 ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) = -1 := by
-  change ordinaryQuaternionNormSq ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ)) = 1 ∧
-    ((toMinkowski4 ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) 0) ^ 2 -
-      ((toMinkowski4 ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) 1) ^ 2 -
-      ((toMinkowski4 ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) 2) ^ 2 -
-      ((toMinkowski4 ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) 3) ^ 2 = -1
+        (toMinkowski4 { t := 0, x := 1, y := 0, z := 0 }) = -1 := by
   simp [ordinaryQuaternionNormSq, toMinkowski4,
-    PauliCoord.t, PauliCoord.x, PauliCoord.y, PauliCoord.z,
     _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4.q]
 
 /-- Geometry-facing determinant readout through `PauliParavectorBridge`. -/
@@ -318,6 +282,33 @@ theorem geometry_pauli_det (v : PauliCoord) :
       (((toMinkowski4 v).q : ℝ) : ℂ) := by
   simpa [toMinkowski4] using
     _root_.InfoGeometry.Geometry.PauliParavectorBridge.det_pauliMatrix (toMinkowski4 v)
+
+/--
+Finite Section00 packet:
+coefficient-space quaternion relations, Hilbert-Schmidt compatibility, and
+the owner-backed Pauli determinant readout are closed finite matrix-basis facts.
+-/
+theorem section00_finite_matrix_basis_packet (a b : PauliCoord) :
+    complexI (complexJ a) = complexK a ∧
+      complexJ (complexK a) = complexI a ∧
+        complexK (complexI a) = complexJ a ∧
+          hsMetric (complexI a) (complexI b) = hsMetric a b ∧
+            hsMetric (complexJ a) (complexJ b) = hsMetric a b ∧
+              hsMetric (complexK a) (complexK b) = hsMetric a b ∧
+                - (pauliMatrix a).det =
+                  _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.minkowskiForm
+                    a.t a.x a.y a.z ∧
+                  - (2 : ℂ) * (normalizedPauliMatrix a).det =
+                    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.minkowskiForm
+                      a.t a.x a.y a.z := by
+  exact ⟨complexI_mul_complexJ a,
+    complexJ_mul_complexK a,
+    complexK_mul_complexI a,
+    complexI_preserves_hsMetric a b,
+    complexJ_preserves_hsMetric a b,
+    complexK_preserves_hsMetric a b,
+    neg_det_pauliMatrix_eq_minkowskiForm a,
+    normalizedPauliMatrix_neg_two_det_eq_minkowskiForm a⟩
 
 end InfoGeometry.Physics.Section00MatrixBasisFramework
 

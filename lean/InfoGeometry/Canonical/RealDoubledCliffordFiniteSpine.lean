@@ -9,7 +9,7 @@ import InfoGeometry.Meta.Architecture
 
 Projection surface for the finite real doubled Clifford spine.
 
-This file introduces no new ontology and no property gates.  It only re-exports
+This file introduces no new ontology and no witness gates.  It only re-exports
 the already-owned finite theorem data:
 
 * `DoubledSpace` with `J`, `ε`, and `K = Jε`;

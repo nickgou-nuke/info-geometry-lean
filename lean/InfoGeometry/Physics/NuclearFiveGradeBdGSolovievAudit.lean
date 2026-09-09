@@ -1,0 +1,31 @@
+import InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure
+
+/-!
+# Transitive axiom audit for the finite nuclear closure
+
+These commands inspect elaborated declarations when Lean executes this file.
+Any occurrence of `sorryAx` or a project-specific custom axiom is a verification
+failure. This file does not replace kernel execution.
+-/
+
+#print axioms InfoGeometry.Physics.NuclearTwoModeCARFiveGrade.CAR_one
+#print axioms InfoGeometry.Physics.NuclearTwoModeCARFiveGrade.CAR_two
+#print axioms InfoGeometry.Physics.NuclearTwoModeCARFiveGrade.HasGrade.commutator
+#print axioms InfoGeometry.Physics.NuclearTwoModeCARFiveGrade.pairCreation_pairAnnihilation_commutator
+#print axioms InfoGeometry.Physics.NuclearTwoModeCARFiveGrade.nuclear_two_mode_five_grade_packet
+
+#print axioms InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation.represent_hasGrade
+#print axioms InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation.represented_commutator_hasGrade
+#print axioms InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation.nuclear_five_grade_representation_packet
+
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievCompression.bdgBlock_sq
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievCompression.solovievBlock_eq_center_add_bdg
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievCompression.compressedCenteredSoloviev_eq_mulVec
+
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.boson_CCR
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.pointwiseLift_commutes_bosonCreation
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.compressedOscillatorHamiltonian_eq_soloviev
+
+#print axioms InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure.finite_nuclear_lane_closure
+#print axioms InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure.soloviev_two_origin_packet
+

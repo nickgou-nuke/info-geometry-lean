@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Topology.WallpaperSymmetry
 
 /-!
-# Finite exceptional-point matrix property
+# Finite exceptional-point matrix witness
 
 This module repairs the cognitive-topology exceptional-point surface by
 removing vacuous existence claims.  It proves only a concrete finite matrix
@@ -17,13 +17,13 @@ from its scalar eigenvalue.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
-`pg_relation_keeps_explicit_jordan_property`.
+`pg_relation_keeps_explicit_jordan_witness`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 The theorem that wallpaper topology forces an exceptional point for an arbitrary
 non-Hermitian band/attention family is not proved here.  Neither is any theorem
-that real LLM training reaches this finite property.
+that real LLM training reaches this finite witness.
 -/
 
 noncomputable section
@@ -32,7 +32,7 @@ namespace InfoGeometry.CognitiveTopology.ExceptionalPoints
 
 open Matrix InfoGeometry.Topology.Wallpaper
 
-/-- Concrete `2 x 2` complex matrix carrier for the finite EP property. -/
+/-- Concrete `2 x 2` complex matrix carrier for the finite EP witness. -/
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
 /-- The nilpotent part of the standard size-two Jordan block. -/
@@ -45,7 +45,7 @@ def jordanBlock (lam : ℂ) : Mat2C :=
   lam • (1 : Mat2C) + jordanNilpotent
 
 /--
-A finite algebraic exceptional point property: the deviation from a scalar
+A finite algebraic exceptional point witness: the deviation from a scalar
 matrix is nonzero and square-zero.
 -/
 def IsMatrixExceptionalPoint (A : Mat2C) (lam : ℂ) : Prop :=
@@ -79,7 +79,7 @@ theorem jordanBlock_deviation_square_zero (lam : ℂ) :
         (jordanBlock lam - lam • (1 : Mat2C)) = 0 := by
   rw [jordanBlock_deviation, jordanNilpotent_square_zero]
 
-/-- The standard Jordan block is a finite matrix exceptional-point property. -/
+/-- The standard Jordan block is a finite matrix exceptional-point witness. -/
 theorem jordanBlock_is_matrixExceptionalPoint (lam : ℂ) :
     IsMatrixExceptionalPoint (jordanBlock lam) lam := by
   dsimp [IsMatrixExceptionalPoint]
@@ -89,14 +89,12 @@ theorem jordanBlock_is_matrixExceptionalPoint (lam : ℂ) :
 
 /--
 The wallpaper `pg` relation can be carried alongside the explicit Jordan
-property, but it is not used here to force the property to exist.
+witness, but it is not used here to force the witness to exist.
 -/
-theorem pg_relation_keeps_explicit_jordan_property (p : Lattice2D) (lam : ℂ)
+theorem pg_relation_keeps_explicit_jordan_witness (p : Lattice2D) (lam : ℂ)
     (h_pg : G (T_y p) = T_y.symm (G p)) :
     (G (T_y p) = T_y.symm (G p)) ∧ IsMatrixExceptionalPoint (jordanBlock lam) lam := by
-  refine ⟨?_, ?_⟩
-  · exact h_pg
-  · exact jordanBlock_is_matrixExceptionalPoint lam
+  exact ⟨h_pg, jordanBlock_is_matrixExceptionalPoint lam⟩
 
 end InfoGeometry.CognitiveTopology.ExceptionalPoints
 

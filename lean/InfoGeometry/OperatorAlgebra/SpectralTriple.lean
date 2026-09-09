@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SpectralTriple.lean
 
-Real, phase-compatible, integration-aware spectral triple data.
+Real, phase-compatible, integration-aware spectral triple sockets.
 
 This file separates:
 
@@ -265,7 +265,7 @@ def RealStructureDiracCompatible
 A represented real operator algebra.
 
 A future `StarRing` refinement should strengthen the interaction between
-`star` and the representation. This datum only requires the operation needed
+`star` and the representation. This socket only requires the operation needed
 to write `b*` in the opposite representation.
 -/
 structure RepresentedAlgebra
@@ -386,12 +386,12 @@ def ConnesDistanceAdmissibleValue
     lipschitzSeminorm ρ D a ≤ 1 ∧
       r = |φ.eval a - ψ.eval a|
 
-/-! ## 8. Renormalized integration data -/
+/-! ## 8. Renormalized integration sockets -/
 
 /--
 Dixmier-trace-like backend.
 
-This is the logarithmic-divergence datum. Use it for critical summability,
+This is the logarithmic-divergence socket. Use it for critical summability,
 where ordinary trace-class integration is not available.
 -/
 structure DixmierTraceDatum
@@ -420,7 +420,7 @@ end DixmierTraceDatum
 /--
 Zeta-function renormalization backend.
 
-This is the datum for readouts such as residues or finite parts of
+This is the socket for readouts such as residues or finite parts of
 
 `Tr(a |D|^{-s})`.
 -/
@@ -461,7 +461,7 @@ namespace RenormalizedIntegrationBackend
 
 variable {A : Type*} [Mul A]
 
-/-- A cyclic-cocycle readout is cyclic when its cyclicity property is supplied. -/
+/-- A cyclic-cocycle readout is cyclic when its cyclicity witness is supplied. -/
 theorem cyclicCocycle_cyclicity
     (readout : A → ℝ)
     (hcyc : ∀ a b : A, readout (a * b) = readout (b * a)) :
@@ -473,9 +473,9 @@ end RenormalizedIntegrationBackend
 /-! ## 9. Real, phase-compatible spectral triple -/
 
 /--
-A real, phase-compatible, integration-aware spectral triple datum.
+A real, phase-compatible, integration-aware spectral triple socket.
 
-This is deliberately property-based. It separates:
+This is deliberately witness-based. It separates:
 
 * `K`, the Hestenes phase axis;
 * `J`, the Connes real structure;
@@ -568,7 +568,7 @@ theorem lipschitz_nonneg
     0 ≤ T.lipschitz a :=
   lipschitzSeminorm_nonneg T.representedAlgebra T.spectralGenerator a
 
-/-- Order-one condition, re-exported as a theorem from the property. -/
+/-- Order-one condition, re-exported as a theorem from the witness. -/
 theorem orderOne_apply
     (T : PhaseRealSpectralTriple A H)
     (a b : A) :

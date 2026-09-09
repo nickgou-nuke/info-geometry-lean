@@ -4,17 +4,10 @@ noncomputable section
 
 namespace UthayakumaarMirrorKnockout
 
-abbrev Nucleus := ℕ × ℕ × ℕ
-
-namespace Nucleus
-
-def A (X : Nucleus) : ℕ := X.1
-
-def Z (X : Nucleus) : ℕ := X.2.1
-
-def N (X : Nucleus) : ℕ := X.2.2
-
-end Nucleus
+structure Nucleus where
+  A : ℕ
+  Z : ℕ
+  N : ℕ
 
 def twoTz (X : Nucleus) : ℤ :=
   (X.N : ℤ) - (X.Z : ℤ)
@@ -22,36 +15,28 @@ def twoTz (X : Nucleus) : ℤ :=
 def isMirrorPair (X Y : Nucleus) : Prop :=
   X.A = Y.A ∧ X.Z = Y.N ∧ X.N = Y.Z
 
-/- A mirror pair reverses the signed proton-neutron imbalance. -/
-theorem twoTz_eq_neg_of_isMirrorPair {X Y : Nucleus}
-    (hXY : isMirrorPair X Y) :
-    twoTz X = -twoTz Y := by
-  rcases hXY with ⟨_, hXZ, hXN⟩
-  dsimp [twoTz]
-  omega
-
-def Mn47 : Nucleus := (47, 25, 22)
-def Ti47 : Nucleus := (47, 22, 25)
-def Cr45 : Nucleus := (45, 24, 21)
-def Sc45 : Nucleus := (45, 21, 24)
+def Mn47 : Nucleus where A := 47; Z := 25; N := 22
+def Ti47 : Nucleus where A := 47; Z := 22; N := 25
+def Cr45 : Nucleus where A := 45; Z := 24; N := 21
+def Sc45 : Nucleus where A := 45; Z := 21; N := 24
 
 theorem Mn47_Ti47_mirror : isMirrorPair Mn47 Ti47 := by
-  norm_num [isMirrorPair, Nucleus.A, Nucleus.Z, Nucleus.N, Mn47, Ti47]
+  norm_num [isMirrorPair, Mn47, Ti47]
 
 theorem Cr45_Sc45_mirror : isMirrorPair Cr45 Sc45 := by
-  norm_num [isMirrorPair, Nucleus.A, Nucleus.Z, Nucleus.N, Cr45, Sc45]
+  norm_num [isMirrorPair, Cr45, Sc45]
 
 theorem twoTz_Mn47 : twoTz Mn47 = -3 := by
-  norm_num [twoTz, Nucleus.N, Nucleus.Z, Mn47]
+  norm_num [twoTz, Mn47]
 
 theorem twoTz_Ti47 : twoTz Ti47 = 3 := by
-  norm_num [twoTz, Nucleus.N, Nucleus.Z, Ti47]
+  norm_num [twoTz, Ti47]
 
 theorem twoTz_Cr45 : twoTz Cr45 = -3 := by
-  norm_num [twoTz, Nucleus.N, Nucleus.Z, Cr45]
+  norm_num [twoTz, Cr45]
 
 theorem twoTz_Sc45 : twoTz Sc45 = 3 := by
-  norm_num [twoTz, Nucleus.N, Nucleus.Z, Sc45]
+  norm_num [twoTz, Sc45]
 
 theorem mirror_twoTz_cancel_A47 :
     twoTz Mn47 + twoTz Ti47 = 0 := by
@@ -151,6 +136,19 @@ def spectroscopicFactorCMCorrection : ℚ := 1067 / 1000
 theorem cm_correction_positive :
     (1 : ℚ) < spectroscopicFactorCMCorrection := by
   norm_num [spectroscopicFactorCMCorrection]
+
+def formalSummary : Prop :=
+  isMirrorPair Mn47 Ti47 ∧ isMirrorPair Cr45 Sc45 ∧
+    twoTz Mn47 = -3 ∧ twoTz Ti47 = 3 ∧
+    Rs_Mn47_systematics < Rs_Ti47_systematics ∧
+    tau_Ti47_ps < tau_Mn47_ps ∧
+    |BM1_Mn47_over_Ti47 - 1| ≤ (1 / 10 : ℚ)
+
+theorem formalSummary_proved : formalSummary := by
+  exact ⟨Mn47_Ti47_mirror, Cr45_Sc45_mirror,
+    twoTz_Mn47, twoTz_Ti47,
+    stronger_binding_asymmetry_suppresses_Mn47,
+    Mn47_lifetime_longer, BM1_ratio_precision_10_percent⟩
 
 end UthayakumaarMirrorKnockout
 

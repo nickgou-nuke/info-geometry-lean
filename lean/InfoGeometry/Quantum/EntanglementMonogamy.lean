@@ -21,6 +21,7 @@ and an ER-style identification can evade that contradiction only by proving
 
 import Mathlib.Tactic
 import InfoGeometry.Geometry.EntanglementGeometry
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -77,7 +78,7 @@ variable {Q : BipartiteQuantumSystem}
 variable {R : BipartiteReadout Q}
 variable (E : EntanglementDatum Q R)
 
-/-- The stored state is property maximally entangled for the chosen readout. -/
+/-- The stored state is certified maximally entangled for the chosen readout. -/
 theorem state_maxEntangled :
     E.MaxEntangled E.state :=
   E.max_entangled
@@ -94,21 +95,21 @@ end EntanglementDatum
 /-! ## 1A. Explicit observable correlation witnesses -/
 
 /--
-An explicit observable correlation property.
+An explicit observable correlation witness.
 
 This does not define all of finite-dimensional entanglement theory. It does
 remove the weakest shadow: a claimed entanglement datum can expose concrete
 left/right observables, their marginal readouts, and their joint correlation
 readout.
 -/
-structure ObservableCorrelationData
+structure ObservableCorrelationWitness
     (Q : BipartiteQuantumSystem)
     (R : BipartiteReadout Q)
     (state : Q.State) where
-  /-- Left observable used in the property. -/
+  /-- Left observable used in the witness. -/
   leftObs : R.ObsL
 
-  /-- Right observable used in the property. -/
+  /-- Right observable used in the witness. -/
   rightObs : R.ObsR
 
   /-- Certified left marginal value. -/
@@ -132,12 +133,12 @@ structure ObservableCorrelationData
   correlation_eq :
     R.correlation state leftObs rightObs = jointValue
 
-namespace ObservableCorrelationData
+namespace ObservableCorrelationWitness
 
 variable {Q : BipartiteQuantumSystem}
 variable {R : BipartiteReadout Q}
 variable {state : Q.State}
-variable (W : ObservableCorrelationData Q R state)
+variable (W : ObservableCorrelationWitness Q R state)
 
 /-- The left marginal value is read from the chosen left observable. -/
 theorem left_readout :
@@ -154,18 +155,18 @@ theorem joint_readout :
     R.correlation state W.leftObs W.rightObs = W.jointValue :=
   W.correlation_eq
 
-end ObservableCorrelationData
+end ObservableCorrelationWitness
 
 /--
-An entanglement datum with an explicit observable property.
+An entanglement datum with an explicit observable witness.
 
 `MaxEntangled` remains model-specific, but the datum now carries a concrete
-readout property rather than only a detached calibration proposition.
+readout witness rather than only a detached calibration proposition.
 -/
 structure ReadoutEntanglementDatum
     (Q : BipartiteQuantumSystem)
     (R : BipartiteReadout Q) where
-  /-- The state being property. -/
+  /-- The state being certified. -/
   state : Q.State
 
   /-- Model-specific maximal-entanglement predicate. -/
@@ -174,8 +175,8 @@ structure ReadoutEntanglementDatum
   /-- Proof that the state satisfies the model-specific predicate. -/
   max_entangled : MaxEntangled state
 
-  /-- Explicit finite observable-correlation property for the state. -/
-  property : ObservableCorrelationData Q R state
+  /-- Explicit finite observable-correlation witness for the state. -/
+  witness : ObservableCorrelationWitness Q R state
 
 namespace ReadoutEntanglementDatum
 
@@ -183,16 +184,16 @@ variable {Q : BipartiteQuantumSystem}
 variable {R : BipartiteReadout Q}
 variable (E : ReadoutEntanglementDatum Q R)
 
-/-- The stored state is property maximally entangled for the chosen readout. -/
+/-- The stored state is certified maximally entangled for the chosen readout. -/
 theorem state_maxEntangled :
     E.MaxEntangled E.state :=
   E.max_entangled
 
-/-- The stored property exposes the property joint correlation value. -/
+/-- The stored witness exposes the certified joint correlation value. -/
 theorem joint_correlation_readout :
-    R.correlation E.state E.property.leftObs E.property.rightObs =
-      E.property.jointValue :=
-  E.property.correlation_eq
+    R.correlation E.state E.witness.leftObs E.witness.rightObs =
+      E.witness.jointValue :=
+  E.witness.correlation_eq
 
 end ReadoutEntanglementDatum
 
@@ -346,7 +347,7 @@ variable {M : MonogamyBackend}
 variable (E : EREPRIdentification M)
 
 /--
-An ER/EPR bridge identification refutes the independence property needed for
+An ER/EPR bridge identification refutes the independence hypothesis needed for
 the AMPS monogamy contradiction.
 -/
 theorem evades_amps_independence
@@ -361,7 +362,7 @@ Named ER/EPR escape-hatch theorem.
 
 This is not a theorem proving ER=EPR. It says that once a concrete bridge
 identification supplies an encoding of the interior with the radiation/distant
-mode, the independence property required by the AMPS contradiction is no
+mode, the independence hypothesis required by the AMPS contradiction is no
 longer available.
 -/
 theorem er_epr_evades_amps
@@ -457,15 +458,29 @@ theorem bridgeLength_monotone_after_thermalization
 
 end ComplexityBridgeBackend
 
-/-! ## 6. Native entanglement monogamy theorem -/
+/-! ## 6. Owner target -/
 
-theorem entanglement_monogamy
-    : ∀ (System : Type)
-        (MaxEntangled Independent : System → System → Prop),
-      (∀ A B C,
-        MaxEntangled A B → MaxEntangled A C → Independent B C → False) →
-      ∀ B A R : System,
-        MaxEntangled B A → MaxEntangled B R → Independent A R → False := by
+/--
+Owner target for the finite entanglement/monogamy/complexity layer.
+-/
+@[owner_target_tag]
+def EntanglementMonogamyOwnerTarget : Prop :=
+  ∀ (System : Type)
+    (MaxEntangled Independent : System → System → Prop),
+    (∀ A B C,
+      MaxEntangled A B →
+      MaxEntangled A C →
+      Independent B C →
+      False) →
+    ∀ B A R : System,
+      MaxEntangled B A →
+      MaxEntangled B R →
+      Independent A R →
+      False
+
+/-- The AMPS-style monogamy obstruction is constructively discharged. -/
+theorem entanglementMonogamyOwnerTarget :
+    EntanglementMonogamyOwnerTarget := by
   intro System MaxEntangled Independent hmonogamy B A R hBA hBR hAR
   exact hmonogamy B A R hBA hBR hAR
 

@@ -8,13 +8,24 @@ namespace Omega.Multiscale
 
 noncomputable section
 
-/-- Concrete finite-cover inverse-tower data for normalized bulk, boundary, and differential
-integrals. -/
+/-- Concrete finite-cover inverse-tower bookkeeping for normalized bulk, boundary, and
+differential integrals. Pullback along each covering map multiplies the corresponding integral by
+the covering degree, so dividing by the cumulative degree produces a level-independent normalized
+value. -/
 structure NormalizedStokesFiniteCoverInverseTowerSystem where
   coverDegree : ℕ → ℕ
+  coverDegree_two_le : ∀ n, 2 ≤ coverDegree n
   bulkIntegral : ℕ → ℝ
   boundaryIntegral : ℕ → ℝ
   differentialIntegral : ℕ → ℝ
+  bulkPullback :
+    ∀ n, bulkIntegral (n + 1) = (coverDegree n : ℝ) * bulkIntegral n
+  boundaryPullback :
+    ∀ n, boundaryIntegral (n + 1) = (coverDegree n : ℝ) * boundaryIntegral n
+  differentialPullback :
+    ∀ n, differentialIntegral (n + 1) = (coverDegree n : ℝ) * differentialIntegral n
+  levelwiseStokes :
+    ∀ n, differentialIntegral n = boundaryIntegral n
 
 namespace NormalizedStokesFiniteCoverInverseTowerSystem
 
@@ -30,105 +41,84 @@ def normalizedBoundary (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : 
 def normalizedDifferential (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) : ℝ :=
   S.differentialIntegral n / cumulativeCoverDegree S n
 
-lemma cumulativeCoverDegree_pos (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n) (n : ℕ) :
+lemma cumulativeCoverDegree_pos (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) :
     0 < cumulativeCoverDegree S n := by
   unfold cumulativeCoverDegree
   refine Finset.prod_pos ?_
   intro i hi
   have hdeg_pos_nat : 0 < S.coverDegree i := by
-    exact lt_of_lt_of_le (by decide : 0 < 2) (coverDegree_two_le i)
+    exact lt_of_lt_of_le (by decide : 0 < 2) (S.coverDegree_two_le i)
   exact_mod_cast hdeg_pos_nat
 
-lemma normalizedBulk_step (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n)
-    (bulkPullback : ∀ n, S.bulkIntegral (n + 1) = (S.coverDegree n : ℝ) * S.bulkIntegral n)
-    (n : ℕ) : normalizedBulk S (n + 1) = normalizedBulk S n := by
+lemma normalizedBulk_step (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) :
+    normalizedBulk S (n + 1) = normalizedBulk S n := by
   have hCum :
       cumulativeCoverDegree S (n + 1) =
         cumulativeCoverDegree S n * (S.coverDegree n : ℝ) := by
     unfold cumulativeCoverDegree
     rw [Finset.prod_range_succ]
-  have hCumNz : cumulativeCoverDegree S n ≠ 0 :=
-    (cumulativeCoverDegree_pos S coverDegree_two_le n).ne'
+  have hCumNz : cumulativeCoverDegree S n ≠ 0 := (cumulativeCoverDegree_pos S n).ne'
   have hDegPosNat : 0 < S.coverDegree n := by
-    exact lt_of_lt_of_le (by decide : 0 < 2) (coverDegree_two_le n)
+    exact lt_of_lt_of_le (by decide : 0 < 2) (S.coverDegree_two_le n)
   have hDegNz : (S.coverDegree n : ℝ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hDegPosNat
   unfold normalizedBulk
-  rw [bulkPullback n, hCum]
+  rw [S.bulkPullback n, hCum]
   field_simp [hCumNz, hDegNz]
 
-lemma normalizedBoundary_step (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n)
-    (boundaryPullback :
-      ∀ n, S.boundaryIntegral (n + 1) = (S.coverDegree n : ℝ) * S.boundaryIntegral n)
-    (n : ℕ) : normalizedBoundary S (n + 1) = normalizedBoundary S n := by
+lemma normalizedBoundary_step (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) :
+    normalizedBoundary S (n + 1) = normalizedBoundary S n := by
   have hCum :
       cumulativeCoverDegree S (n + 1) =
         cumulativeCoverDegree S n * (S.coverDegree n : ℝ) := by
     unfold cumulativeCoverDegree
     rw [Finset.prod_range_succ]
-  have hCumNz : cumulativeCoverDegree S n ≠ 0 :=
-    (cumulativeCoverDegree_pos S coverDegree_two_le n).ne'
+  have hCumNz : cumulativeCoverDegree S n ≠ 0 := (cumulativeCoverDegree_pos S n).ne'
   have hDegPosNat : 0 < S.coverDegree n := by
-    exact lt_of_lt_of_le (by decide : 0 < 2) (coverDegree_two_le n)
+    exact lt_of_lt_of_le (by decide : 0 < 2) (S.coverDegree_two_le n)
   have hDegNz : (S.coverDegree n : ℝ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hDegPosNat
   unfold normalizedBoundary
-  rw [boundaryPullback n, hCum]
+  rw [S.boundaryPullback n, hCum]
   field_simp [hCumNz, hDegNz]
 
-lemma normalizedDifferential_step (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n)
-    (differentialPullback :
-      ∀ n, S.differentialIntegral (n + 1) =
-        (S.coverDegree n : ℝ) * S.differentialIntegral n)
-    (n : ℕ) : normalizedDifferential S (n + 1) = normalizedDifferential S n := by
+lemma normalizedDifferential_step (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) :
+    normalizedDifferential S (n + 1) = normalizedDifferential S n := by
   have hCum :
       cumulativeCoverDegree S (n + 1) =
         cumulativeCoverDegree S n * (S.coverDegree n : ℝ) := by
     unfold cumulativeCoverDegree
     rw [Finset.prod_range_succ]
-  have hCumNz : cumulativeCoverDegree S n ≠ 0 :=
-    (cumulativeCoverDegree_pos S coverDegree_two_le n).ne'
+  have hCumNz : cumulativeCoverDegree S n ≠ 0 := (cumulativeCoverDegree_pos S n).ne'
   have hDegPosNat : 0 < S.coverDegree n := by
-    exact lt_of_lt_of_le (by decide : 0 < 2) (coverDegree_two_le n)
+    exact lt_of_lt_of_le (by decide : 0 < 2) (S.coverDegree_two_le n)
   have hDegNz : (S.coverDegree n : ℝ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hDegPosNat
   unfold normalizedDifferential
-  rw [differentialPullback n, hCum]
+  rw [S.differentialPullback n, hCum]
   field_simp [hCumNz, hDegNz]
 
-lemma normalizedStokes_levelwise (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (levelwiseStokes : ∀ n, S.differentialIntegral n = S.boundaryIntegral n) (n : ℕ) :
+lemma normalizedStokes_levelwise (S : NormalizedStokesFiniteCoverInverseTowerSystem) (n : ℕ) :
     normalizedDifferential S n = normalizedBoundary S n := by
   unfold normalizedDifferential normalizedBoundary
-  rw [levelwiseStokes n]
+  rw [S.levelwiseStokes n]
 
 end NormalizedStokesFiniteCoverInverseTowerSystem
 
 open NormalizedStokesFiniteCoverInverseTowerSystem
 
-/-- Pullback scaling by covering degree makes the normalized finite-level integrals invariant. -/
+/-- Pullback scaling by the covering degree makes the normalized bulk and boundary integrals
+level-independent; classical Stokes on each level then gives the normalized inverse-tower
+identity.
+    thm:app-normalized-stokes-finite-cover-inverse-tower -/
 theorem paper_app_normalized_stokes_finite_cover_inverse_tower
-    (S : NormalizedStokesFiniteCoverInverseTowerSystem)
-    (coverDegree_two_le : ∀ n, 2 ≤ S.coverDegree n)
-    (bulkPullback : ∀ n, S.bulkIntegral (n + 1) =
-      (S.coverDegree n : ℝ) * S.bulkIntegral n)
-    (boundaryPullback : ∀ n, S.boundaryIntegral (n + 1) =
-      (S.coverDegree n : ℝ) * S.boundaryIntegral n)
-    (differentialPullback : ∀ n, S.differentialIntegral (n + 1) =
-      (S.coverDegree n : ℝ) * S.differentialIntegral n)
-    (levelwiseStokes : ∀ n, S.differentialIntegral n = S.boundaryIntegral n) :
+    (S : NormalizedStokesFiniteCoverInverseTowerSystem) :
     (∀ n, normalizedBulk S (n + 1) = normalizedBulk S n) ∧
       (∀ n, normalizedBoundary S (n + 1) = normalizedBoundary S n) ∧
       (∀ n, normalizedDifferential S (n + 1) = normalizedDifferential S n) ∧
       (∀ n, normalizedDifferential S n = normalizedBoundary S n) := by
-  exact ⟨normalizedBulk_step S coverDegree_two_le bulkPullback,
-    normalizedBoundary_step S coverDegree_two_le boundaryPullback,
-    normalizedDifferential_step S coverDegree_two_le differentialPullback,
-    normalizedStokes_levelwise S levelwiseStokes⟩
+  exact ⟨normalizedBulk_step S, normalizedBoundary_step S, normalizedDifferential_step S,
+    normalizedStokes_levelwise S⟩
 
 end
 

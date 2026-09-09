@@ -100,17 +100,4 @@ def tailGlobalTopCatIso (i₀ : I) :
       gnsStageToHilbertColimit Stage sys ω j.1 x := by
   exact tailHilbertGlobalHomeomorph_stage Stage sys ω i₀ j x
 
-@[simp] theorem globalToTailTopCatMap_stage
-    (i₀ : I) (j : UpperIndex i₀)
-    (x : TailGNSStage Stage sys ω i₀ j) :
-    globalToTailTopCatMap Stage sys ω i₀
-        (gnsStageToHilbertColimit Stage sys ω j.1 x) =
-      stageToHilbertDirectLimit
-        (TailGNSStage Stage sys ω i₀)
-        (tailGNSIsometricDirectSystem Stage sys ω i₀) j x := by
-  change (tailHilbertGlobalHomeomorph Stage sys ω i₀).symm
-      (gnsStageToHilbertColimit Stage sys ω j.1 x) = _
-  rw [← tailHilbertGlobalHomeomorph_stage Stage sys ω i₀ j x]
-  exact (tailHilbertGlobalHomeomorph Stage sys ω i₀).symm_apply_apply _
-
 end CStarStateColimit.Native.FilteredGNSCofinalTailTopCatEquivalence

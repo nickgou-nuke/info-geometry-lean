@@ -7,7 +7,7 @@ if ! command -v lake >/dev/null 2>&1; then
   exit 127
 fi
 
-lake build InfoGeometry.Streaming.TwoBoundaryWeakPristineChain
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Streaming.TwoBoundaryWeakPristineChain
 
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT

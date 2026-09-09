@@ -1,9 +1,9 @@
 import InfoGeometry.Canonical.ProjectiveGraphZornBilayer
 
-#print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.coboundary_incidence_pairing
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradientEuclidean
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradientEuclidean_apply
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradientSubspace
+#print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.coboundary_incidence_pairing
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.mem_gradientSubspace_iff
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradient_inner_incidence
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.mem_orthogonal_gradient_iff
@@ -12,6 +12,7 @@ import InfoGeometry.Canonical.ProjectiveGraphZornBilayer
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradientComponent_mem
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.cycleComponent_mem
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.component_reconstruction
+#print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.gradientComponent_isGradient
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.component_unique
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.schnakenbergHodge
 #print axioms InfoGeometry.Canonical.SchnakenbergHodgeConstruction.schnakenberg_exists_unique

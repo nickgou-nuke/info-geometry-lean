@@ -52,7 +52,7 @@ def commutator (X Y : Envelope A) : Envelope A :=
 @[simp] theorem diagonal_zero :
     diagonal (0 : A) = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [diagonal, Algebra.smul_def]
+  fin_cases i <;> fin_cases j <;> simp [diagonal]
 
 @[simp] theorem diagonal_one :
     diagonal (1 : A) = 1 := by
@@ -72,6 +72,11 @@ def commutator (X Y : Envelope A) : Envelope A :=
 @[simp] theorem diagonal_sub (a b : A) :
     diagonal (a - b) = diagonal a - diagonal b := by
   simp [sub_eq_add_neg]
+
+@[simp] theorem diagonal_smul {R : Type*} [Semiring R] [Module R A] (r : R) (a : A) :
+    diagonal (r • a) = r • diagonal a := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [diagonal]
 
 @[simp] theorem diagonal_mul (a b : A) :
     diagonal (a * b) = diagonal a * diagonal b := by
@@ -113,11 +118,6 @@ theorem diagonal_injective :
 section Algebra
 
 variable [Algebra ℝ A]
-
-@[simp] theorem diagonal_smul (r : ℝ) (a : A) :
-    diagonal (r • a) = r • diagonal a := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [diagonal]
 
 /-- Diagonal embedding as an algebra homomorphism. -/
 def diagonalAlgHom : A →ₐ[ℝ] Envelope A where

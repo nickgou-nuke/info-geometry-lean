@@ -35,4 +35,21 @@ theorem symplecticContactCommonRepresentation_map_lie
         symplecticContactCommonRepresentationLieHom D v⁆ := by
   exact (symplecticContactCommonRepresentationLieHom D).map_lie u v
 
+abbrev symplecticContactCommonRepresentation (D : CubicJordanDatum J) :=
+  symplecticContactCommonRepresentationLieHom D
+
+theorem symplecticContactCommonRepresentation_injective (D : CubicJordanDatum J) :
+    Function.Injective (symplecticContactCommonRepresentation D) :=
+  symplecticContactCommonRepresentationLieHom_injective D
+
+theorem symplecticContactCommonRepresentation_bracket
+    (u v : FiveGradedCarrier D) :
+    symplecticContactCommonRepresentation D ⁅u, v⁆ =
+      symplecticContactCommonRepresentation D u *
+          symplecticContactCommonRepresentation D v -
+        symplecticContactCommonRepresentation D v *
+          symplecticContactCommonRepresentation D u := by
+  have h := symplecticContactCommonRepresentation_map_lie D u v
+  exact h
+
 end InfoGeometry.Exceptional.Freudenthal

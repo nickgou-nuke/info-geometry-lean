@@ -146,9 +146,18 @@ def main() -> int:
         action="store_true",
         help="Scan ignored Lean fixtures too (forensic mode).",
     )
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=Path,
+        help="Optional specific Lean files to scan. If omitted, scans all files.",
+    )
     args = parser.parse_args()
 
-    lean_files = lean_source_files(args.include_ignored)
+    if args.files:
+        lean_files = [p.resolve() for p in args.files if p.is_file() and p.suffix == ".lean"]
+    else:
+        lean_files = lean_source_files(args.include_ignored)
 
     results = []
     clean_count = 0

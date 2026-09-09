@@ -80,5 +80,29 @@ theorem native_o55_five_lane_packet :
       D ∈ gradeSpace ConformalGrade.zero := by
   exact ⟨u5_grade, u4_grade, v5_grade, v4_grade, D_grade⟩
 
+theorem o55_commutator_multigrade
+    (g h k : ConformalGrade) {x y : Alg 5}
+    (hx : x ∈ gradeSpace g) (hy : y ∈ gradeSpace h)
+    (hgrade : toInt k = toInt g + toInt h) :
+    x * y - y * x ∈ gradeSpace k ∧
+      o55FiveParity k = o55FiveParity g + o55FiveParity h := by
+  constructor
+  · exact gradeSpace_commutator_of_sum g h k hx hy hgrade
+  · unfold o55FiveParity
+    rw [hgrade, Int.cast_add]
+
+theorem o55_five_grade_kramers_packet
+    (g : ConformalGrade) (x : Alg 5)
+    (hx : x ∈ gradeSpace g) (v : H2) :
+    thetaOp x ∈ gradeSpace g.swap ∧
+      HasGrade (-toInt g) (kramers (includeConformalGrade g v)) ∧
+      o55FiveParity g.swap = o55FiveParity g ∧
+      kramers (kramers (includeConformalGrade g v)) =
+        -includeConformalGrade g v := by
+  exact ⟨theta_maps g x hx,
+    (kramers_o55_grade_parity_packet g v).1,
+    (kramers_o55_grade_parity_packet g v).2.1,
+    (kramers_o55_grade_parity_packet g v).2.2⟩
+
 end InfoGeometry.Clifford.O55FiveGradeKramersBridge
 end noncomputable section

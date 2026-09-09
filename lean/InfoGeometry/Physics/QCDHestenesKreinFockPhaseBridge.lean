@@ -62,6 +62,15 @@ theorem fockJ_commutes_hodge_square :
       (embeddedSplitOctonionHodgeDirac * embeddedSplitOctonionHodgeDirac) * fockJ := by
   exact masterHestenesPhase_commutes_hodgeDirac_square
 
+/-/ The finite two-sheet and five-mode axes are parallel square-minus-one
+structures; this packet keeps their carriers distinct. -/
+theorem two_sheet_and_fock_complex_axes_packet :
+    emergentComplexK * emergentComplexK =
+        -(1 : InfoGeometry.Canonical.TwoSheetComplexPolarization.SheetMat) ∧
+    fockJ * fockJ = -(1 : FockMat) ∧
+    fockJ * globalChirality 5 + globalChirality 5 * fockJ = 0 := by
+  exact ⟨emergentComplexK_sq, fockJ_sq, fockJ_anticomm_chirality⟩
+
 end InfoGeometry.Physics.QCDHestenesKreinFockPhaseBridge
 
 end noncomputable section

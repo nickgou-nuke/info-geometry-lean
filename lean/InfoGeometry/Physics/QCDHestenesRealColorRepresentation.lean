@@ -228,6 +228,22 @@ theorem realColorAction_injective : Function.Injective realColorAction := by
   have hcomplex := congrArg colorRealEquiv.symm hreal
   simpa [realColorAction] using hcomplex
 
+/-- The complete real-colour carrier packet: internal complex structure,
+conjugation, faithful action, and its commutator transport. -/
+theorem hestenes_real_color_packet :
+    realColorJ * realColorJ = -(1 : Module.End ℝ RealColorLane) ∧
+    realColorConj * realColorConj = (1 : Module.End ℝ RealColorLane) ∧
+    realColorConj * realColorJ = -(realColorJ * realColorConj) ∧
+    Function.Injective realColorAction ∧
+    (∀ A : M3C, realColorAction A * realColorJ = realColorJ * realColorAction A) ∧
+    (∀ A B : M3C,
+      realColorAction (A * B - B * A) =
+        realColorAction A * realColorAction B -
+          realColorAction B * realColorAction A) := by
+  exact ⟨realColorJ_sq, realColorConj_sq, realColorConj_anticomm_J,
+    realColorAction_injective, realColorAction_commutes_J,
+    realColorAction_commutator⟩
+
 end InfoGeometry.Physics.QCDHestenesRealColorRepresentation
 
 end noncomputable section

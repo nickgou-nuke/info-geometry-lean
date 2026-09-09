@@ -2114,6 +2114,8 @@ import InfoGeometry.Canonical.ScaleFreeStringMembraneGrandCapstone
 import InfoGeometry.Canonical.SpectroscopyPoissonCoolingAmariBridge
 import InfoGeometry.Canonical.CanonicalZornModularAAVBridge
 import InfoGeometry.Canonical.CanonicalZornPalatiniCurvature
+import InfoGeometry.Canonical.CanonicalZornFisherCooling
+import InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge
 
 namespace InfoGeometry
 

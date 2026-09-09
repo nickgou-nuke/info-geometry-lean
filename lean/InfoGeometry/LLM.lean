@@ -33,6 +33,9 @@ import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy
 import InfoGeometry.LLM.SpinTransformerFixedPoint
 import InfoGeometry.LLM.SpinTransformerQuenchRelax
+import InfoGeometry.LLM.SphericalVMFExponentialFamily
+import InfoGeometry.LLM.SphericalVMFFieldDerivatives
+import InfoGeometry.LLM.ContinuousMeanFieldClosure
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit

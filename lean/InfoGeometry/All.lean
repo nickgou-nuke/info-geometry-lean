@@ -4675,3 +4675,4 @@ import InfoGeometry.Canonical.CanonicalZornFisherCooling
 import InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge
 import InfoGeometry.Canonical.BraidedYangMillsCurrentBridge
 import InfoGeometry.Canonical.ManakovZornSolitonLaxBridge
+import InfoGeometry.Canonical.AAVWeakMeasurementKleinSeamBridge

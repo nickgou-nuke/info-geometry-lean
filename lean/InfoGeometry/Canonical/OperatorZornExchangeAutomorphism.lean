@@ -113,4 +113,51 @@ theorem exchange_coefficientDeriv (p : A) (X : OperatorZornMatrix A) :
     neg_mul, mul_neg, neg_neg]
   all_goals abel_nf
 
+theorem exchange_covariant (p : Fin 4 → A) (Phi : FourPotential A)
+    (xi : Fin 4) (X : OperatorZornMatrix A) :
+    exchange (covariant p Phi xi X) =
+      covariant p (fun i => exchange (Phi i)) xi (exchange X) := by
+  unfold covariant
+  rw [exchange_add, exchange_coefficientDeriv, exchange_mul]
+
+theorem exchange_fieldStrength (p : Fin 4 → A) (Phi : FourPotential A)
+    (xi eta : Fin 4) :
+    exchange (fieldStrength p Phi xi eta) =
+      fieldStrength p (fun i => exchange (Phi i)) xi eta := by
+  unfold fieldStrength
+  simp only [exchange_add, exchange_sub, exchange_coefficientDeriv, exchange_bracket]
+
+theorem exchange_curvatureAction (p : Fin 4 → A) (Phi : FourPotential A)
+    (xi eta : Fin 4) (X : OperatorZornMatrix A) :
+    exchange (curvatureAction p Phi xi eta X) =
+      curvatureAction p (fun i => exchange (Phi i)) xi eta (exchange X) := by
+  unfold curvatureAction
+  simp only [exchange_sub, exchange_covariant]
+
+theorem exchange_adjointCovariant (p : Fin 4 → A)
+    (Phi : FourPotential A) (xi : Fin 4) (X : OperatorZornMatrix A) :
+    exchange (adjointCovariant p Phi xi X) =
+      adjointCovariant p (fun i => exchange (Phi i)) xi (exchange X) := by
+  unfold adjointCovariant
+  rw [exchange_add, exchange_coefficientDeriv, exchange_bracket]
+
+theorem exchange_bianchi (p : Fin 4 → A) (Phi : FourPotential A)
+    (xi eta zeta : Fin 4) :
+    exchange (bianchi p Phi xi eta zeta) =
+      bianchi p (fun i => exchange (Phi i)) xi eta zeta := by
+  unfold bianchi
+  simp only [exchange_add, exchange_adjointCovariant, exchange_fieldStrength]
+
+theorem exchange_gauge (g : Aˣ) (X : OperatorZornMatrix A) :
+    exchange (OperatorZornGaugeCovariance.gauge g X) =
+      OperatorZornGaugeCovariance.gauge g (exchange X) := by
+  apply operatorZornMatrix_ext
+  all_goals first | (funext i) | skip
+  all_goals dsimp [exchange, OperatorZornGaugeCovariance.gauge, mapCoefficients,
+    OperatorZornRepresentationCurvatureBridge.mapOperatorVector, operatorZornCoordinates,
+    coefficientConjugation]
+  all_goals simp [mapCoefficients, exchange, operatorZornCoordinates,
+    OperatorZornRepresentationCurvatureBridge.mapOperatorVector,
+    coefficientConjugation]
+
 end InfoGeometry.Canonical.OperatorZornExchangeAutomorphism

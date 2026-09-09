@@ -1,0 +1,13 @@
+{
+  "lean_kernel_verified": false,
+  "native_launcher_exit_code": 2,
+  "native_result": "lake unavailable; no Lean elaboration or transitive axiom audit executed",
+  "independent_check_count": 74,
+  "independent_checks_passed": true,
+  "independent_checks_include": "Finite graph examples and exact polynomial identities over noncommuting coefficient words",
+  "python_syntax": "passed",
+  "bash_syntax": "passed",
+  "source_scan": "passed; lexical only",
+  "exact_report_sha256": "856730f28b8f2109219dddaaa3e9180a3f8e8325e8a95d35de7cc890b5c0e602",
+  "note": "The complete generated exact-check report is included in the source package and reproduced by the committed check script. This summary is not a Lean certificate."
+}

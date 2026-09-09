@@ -1,0 +1,45 @@
+{
+  "lean_kernel_verified": false,
+  "parent_commit": "71e683c8388acfd6101d554aaec0771cc886d2a2",
+  "source_modules": 5,
+  "theorem_count": 41,
+  "declaration_count": 56,
+  "source_token_scan": "passed; lexical only, not elaboration or transitive axiom verification",
+  "modules": [
+    {
+      "path": "lean/InfoGeometry/Canonical/SchnakenbergHodgeConstruction.lean",
+      "sha256": "41c1d170df99e0b0509f625a7d35a8537484e7240c5cc005d34da8053bd29cad",
+      "git_blob_sha": "7f1607c68f074d9e86add672fe265011c0b32c5e",
+      "theorems": 13,
+      "declarations": 18
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/GraphCycleEntropy.lean",
+      "sha256": "46ffaed8a0594665fb613105202331377857dde5ecb32a0346fc0bc879299bc5",
+      "git_blob_sha": "5dcb73faa8ec3e1e0402f053a161710c875ee77c",
+      "theorems": 13,
+      "declarations": 18
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RealPartnerProjectiveSeparation.lean",
+      "sha256": "f9e3c780bec6c684d2bd1d1c854c475a3581951c1329880df6be802e5f0a6d49",
+      "git_blob_sha": "47be6ea22e5ed6fad061d3ccd35a5fa51cd8d154",
+      "theorems": 5,
+      "declarations": 5
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornBilayerDefect.lean",
+      "sha256": "0d1f808ba41fd161eece7f72a1827bb24931696f7cd77a2224737a93a1e8de02",
+      "git_blob_sha": "848ce6b01b55333e74211ec7478182179c7571a0",
+      "theorems": 10,
+      "declarations": 15
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ProjectiveGraphZornBilayer.lean",
+      "sha256": "195ea8937af5f8d0422d95c53906d8f8df0734b3c4f173daf9af4c582c872929",
+      "git_blob_sha": "84c16816ea3a0244871dcbc45847edb39a5c95d1",
+      "theorems": 0,
+      "declarations": 0
+    }
+  ]
+}

@@ -122,7 +122,7 @@ theorem sinh_rapidity (hu : 0 < u) (hv : 0 < v) :
 theorem tanh_rapidity_eq_difference_ratio (hu : 0 < u) (hv : 0 < v) :
     Real.tanh (rapidity u v) = (v - u) / (u + v) := by
   rw [Real.tanh_eq_sinh_div_cosh, sinh_rapidity hu hv, cosh_rapidity hu hv]
-  field_simp [ne_of_gt (scale_pos u v), ne_of_gt (add_pos hu hv)] <;> ring
+  field_simp [ne_of_gt (scale_pos u v), ne_of_gt (add_pos hu hv)]
 
 theorem sech_rapidity_eq_overlap (hu : 0 < u) (hv : 0 < v) :
     sechProfile (rapidity u v) = overlap u v := by
@@ -136,8 +136,11 @@ theorem overlap_pos (hu : 0 < u) (hv : 0 < v) :
 
 theorem overlap_le_one (hu : 0 < u) (hv : 0 < v) :
     overlap u v ≤ 1 := by
-  rw [← sech_rapidity_eq_overlap hu hv, sechProfile]
-  exact (div_le_one (Real.cosh_pos _)).2 (Real.one_le_cosh _)
+  unfold overlap
+  apply (div_le_one (add_pos hu hv)).2
+  have hs := Real.sq_sqrt (le_of_lt (mul_pos hu hv))
+  have hn := Real.sqrt_nonneg (u * v)
+  nlinarith [sq_nonneg (u - v)]
 
 theorem overlap_sq (hu : 0 < u) (hv : 0 < v) :
     overlap u v ^ 2 = 4 * (u * v) / (u + v) ^ 2 := by

@@ -1,8 +1,10 @@
 # Prolate focal geometry, rapidity, and the sech profile
 
-Status: proof-script candidate; no Lean compiler run has been performed in the
-ChatGPT working environment. Do not describe this change as kernel-verified
-until the pinned repository build and axiom audit succeed.
+Status: all four PR Lean modules compiled sequentially against the pinned local
+repository environment, with zero compiler errors and zero module warnings.
+The eight-theorem axiom audit reports only `propext`, `Classical.choice`, and
+`Quot.sound`. This is targeted local verification, not a master-build result.
+GitHub Actions jobs did not start because of account billing/spending limits.
 
 ## Basis and reuse
 
@@ -114,3 +116,10 @@ lake env lean lean/InfoGeometry/Nuclear/ConformalDetectorIntegralAudit.lean
 Do not run these commands concurrently, change the pinned dependencies, or
 clean the existing build cache. Inspect the audit output for `sorryAx` and
 unexpected project axioms before promoting the candidate.
+
+## Review repairs
+
+The overlap upper bound uses `Real.sq_sqrt`, positivity, and `(u-v)^2 ≥ 0`;
+the unavailable `Real.one_le_cosh` reference was removed. Unreachable tactics
+and unnecessary sequencing in the profile and focal-coordinate proofs were
+removed. Mathematical statements and the existing flux-density owner are preserved.

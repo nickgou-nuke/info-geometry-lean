@@ -1,6 +1,6 @@
-# Detector response integral — Lean 4 candidate
+# Detector response integral — native Lean owners
 
-Status: proof implementations written; **not kernel-verified in the authoring session**. The local compiler attempt returned exit 127 (`lake` unavailable). Source scans, exact symbolic identities, and independent synthetic quadrature checks are supporting checks only.
+Status: integrated on `main` by commit `ec1aa539c`. On 2026-09-09 the locked build of `InfoGeometry.Nuclear.DetectorResponseAudit`, `InfoGeometry.Nuclear.DetectorResponseBridgeAudit`, and `InfoGeometry.Nuclear.All` passed (8,207 jobs). This verifies those targets, not a master build. The original authoring attempt in `validation/lean_attempt.log` predates integration and returned exit 127.
 
 Target: `nickgou-nuke/info-geometry-lean`, main commit `fdce23724bcbd3cc63f78c6e0cdca7e371d99c1f`.
 
@@ -21,6 +21,8 @@ response(mu,d,R,L,kappa) = integral over V of
 
 ## Source organization
 
+The sole maintained Lean sources are in `lean/InfoGeometry/Nuclear/` at the repository root. The eight former bundle copies were removed after comparing every file: all definitions and theorem statements remain in those native owners, with compilation repairs in three proof files. The mathematical progression remains cylinder geometry → transport kernel → volume response and Fubini → Beer–Lambert path integral → disk aperture integral → existing flux bridge. No mathematical API was removed.
+
 - `DetectorTransportKernel`: compact cylinder, true Euclidean source distance, material path, front-face entrance, continuity, positivity, domination.
 - `DetectorVolumeResponse`: actual 3D Bochner integral, integrability from compactness/continuity, native Fubini, acceptance monotonicity, linearity, explicit count normalization.
 - `DetectorBeerLambert`: actual path integral equals `1-exp(-mu*ell)` by the fundamental theorem of calculus, acceptance bounds, partial collision channel.
@@ -31,7 +33,7 @@ response(mu,d,R,L,kappa) = integral over V of
 
 There are 51 public core proof implementations, 3 public bridge implementations, and 2 private helpers. A count is not a certificate of elaboration or proof validity.
 
-## Verification without promotion
+## Verification
 
 From this bundle directory, against an existing pinned repository with its Mathlib dependencies built:
 
@@ -40,7 +42,7 @@ bash scripts/check_lean.sh /path/to/info-geometry-lean
 bash scripts/check_lean.sh /path/to/info-geometry-lean --bridge
 ```
 
-The second command also needs the existing `ApollonianBipolarField` object file on the repository's Lean search path. The script compiles sequentially into a fresh scratch directory, sets the source root explicitly, prints all public transitive axiom dependencies, and rejects `sorryAx`/`Lean.ofReduceBool`. It does not clean caches or overwrite active source files. Standard Lean axioms such as `Classical.choice`, `propext`, and `Quot.sound` are not custom physical assumptions. Review every report.
+The script builds the native owners through the shared repository build lock. Inspect active compiler processes before invoking it. Public axiom reports cover all 54 public theorems; standard Lean dependencies are `Classical.choice`, `propext`, and `Quot.sound`. The source audit checks report coverage without rewriting Lean files.
 
 Supporting checks, requiring Python plus SymPy, NumPy, and SciPy:
 
@@ -49,7 +51,7 @@ python3 scripts/audit_sources.py
 python3 scripts/check_math.py
 ```
 
-A successful general repository CI run does not certify these isolated candidate files. The dedicated compiler script must succeed.
+The symbolic and quadrature checks remain diagnostics, not substitutes for Lean verification.
 
 ## Scope and remaining proof obligations
 

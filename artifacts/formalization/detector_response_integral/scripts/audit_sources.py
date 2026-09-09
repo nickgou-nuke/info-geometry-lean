@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "lean" / "InfoGeometry" / "Nuclear"
+SOURCE = ROOT.parents[2] / "lean" / "InfoGeometry" / "Nuclear"
 OWNERS = ["DetectorTransportKernel", "DetectorVolumeResponse", "DetectorBeerLambert", "DetectorDiskIntegral"]
 BRIDGE = ["DetectorResponseIntegral"]
 
@@ -65,10 +65,12 @@ def main() -> None:
         ("DetectorResponseAudit", "DetectorResponseCore", core),
         ("DetectorResponseBridgeAudit", "DetectorResponseIntegral", bridge),
     ]:
-        (SOURCE / f"{name}.lean").write_text(
+        expected = (
             f"import InfoGeometry.Nuclear.{imported}\n\n" +
             "-- Request transitive kernel dependency reports for every public theorem.\n" +
             "".join(f"#print axioms {row['name']}\n" for row in rows if not row["private"]))
+        if (SOURCE / f"{name}.lean").read_text() != expected:
+            raise ValueError(f"{name}: public axiom report is out of date")
     report = {
         "status": "passed_source_scan_only",
         "kernel_verified": False,

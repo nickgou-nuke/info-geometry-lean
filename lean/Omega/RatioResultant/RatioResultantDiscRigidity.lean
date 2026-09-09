@@ -10,6 +10,8 @@ structure RatioResultantData (K : Type*) [Field K] where
   rootCount : ℕ
   root : Fin rootCount → K
   ratioCharacter : Equiv.Perm (Fin rootCount) →* ℤˣ
+  hrootCount : 3 ≤ rootCount
+  ratioCharacter_nontrivial : ratioCharacter ≠ 1
 
 namespace RatioResultantData
 
@@ -25,14 +27,11 @@ open RatioResultantData
 /-- The ordered-pair root-ratio character is a nontrivial quadratic character on `S_n`, so for
 `n ≥ 3` the symmetric-group classification forces it to be the sign character.
     thm:ratio-resultant-disc-rigidity -/
-theorem paper_ratio_resultant_disc_rigidity {K : Type*} [Field K]
-    (D : RatioResultantData K)
-    (hrootCount : 3 ≤ D.rootCount)
-    (ratioCharacter_nontrivial : D.ratioCharacter ≠ 1) :
+theorem paper_ratio_resultant_disc_rigidity {K : Type*} [Field K] (D : RatioResultantData K) :
     D.discriminantQuadraticRigidity := by
   rcases Omega.GU.paper_bdry_binary_jump_orientation_functor_uniqueness
-      D.rootCount hrootCount D.ratioCharacter with htriv | hsign
-  · exact (ratioCharacter_nontrivial htriv).elim
+      D.rootCount D.hrootCount D.ratioCharacter with htriv | hsign
+  · exact (D.ratioCharacter_nontrivial htriv).elim
   · simpa [RatioResultantData.discriminantQuadraticRigidity] using hsign
 
 end Omega.RatioResultant

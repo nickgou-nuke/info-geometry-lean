@@ -62,5 +62,3 @@ theorem isLocallyConstant_boundaryCyclotomicReadout (α : 𝕜) :
   simpa [boundaryCyclotomicReadout] using
     (IsLocallyConstant.of_discrete
       (f := boundaryCyclotomicReadout (𝕜 := 𝕜) α))
-
-end

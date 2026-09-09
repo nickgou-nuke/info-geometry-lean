@@ -6,7 +6,7 @@ Eliminating the Dark Energy Shadow.
 
 Following the Erlangen Program for Operator Algebras, geometry is defined
 as the algebraic invariants of the symmetry action.  The Casimir element
-is the fundamental constructive property for this geometry.
+is the fundamental constructive witness for this geometry.
 -/
 
 import Mathlib.Algebra.Ring.Defs
@@ -20,7 +20,7 @@ namespace IndividuatedCasimir
 
 open InfoGeometry.OperatorAlgebra
 
-/-! ## 1. The Algebraic Core (Albedo) -/
+/-! ## 1. The Algebraic Socket (Albedo) -/
 
 /--
 A constructively verified Operator Casimir.
@@ -30,28 +30,34 @@ A Casimir must be:
 1. Invariant under the symmetry action (Erlanger Invariant).
 2. Central in the operator algebra (Superselection Rule).
 -/
-abbrev VerifiedCasimir
+structure VerifiedCasimir
     {Op : Type*} [Ring Op]
     {G : Type*} [Group G]
-    (_α : SymmetryAction G Op) : Type _ := Op
+    (α : SymmetryAction G Op) where
+  /-- The Casimir element in the algebra. -/
+  C : Op
+
+  /-- The Casimir is fixed under the symmetry group action. -/
+  is_invariant : IsInvariant α C
+
+  /-- The Casimir commutes with all observables (centrality). -/
+  is_central : ∀ x : Op, C * x = x * C
 
 namespace VerifiedCasimir
 
 variable {Op : Type*} [Ring Op] {G : Type*} [Group G] {α : SymmetryAction G Op}
 
 /-- A Casimir belongs to the center of the operator algebra. -/
-theorem mem_center (C : VerifiedCasimir α)
-    (hcentral : ∀ x : Op, C * x = x * C) :
-    C ∈ Subring.center Op := by
+theorem mem_center (V : VerifiedCasimir α) :
+    V.C ∈ Subring.center Op := by
   rw [Subring.mem_center_iff]
   intro x
-  rw [hcentral x]
+  rw [V.is_central x]
 
 /-- A Casimir belongs to the invariant subring. -/
-theorem mem_invariantSubring (C : VerifiedCasimir α)
-    (hinvariant : IsInvariant α C) :
-    C ∈ invariantSubring α :=
-  hinvariant
+theorem mem_invariantSubring (V : VerifiedCasimir α) :
+    V.C ∈ invariantSubring α :=
+  V.is_invariant
 
 end VerifiedCasimir
 
@@ -75,3 +81,4 @@ abbrev VerifiedCasimirCompat
   IndividuatedCasimir.VerifiedCasimir α
 
 end InfoGeometry.OperatorAlgebra.LegacyVerifiedCasimir
+

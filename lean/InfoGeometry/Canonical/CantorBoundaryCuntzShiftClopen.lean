@@ -1,6 +1,4 @@
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopology
-import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
-import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!
 # Clopen images of the symbolic Cuntz branches
@@ -13,15 +11,13 @@ algebra; it is a topological consequence of the existing owner definitions.
 -/
 
 open Set TopologicalSpace
-open CategoryTheory
 
 namespace InfoGeometry.Canonical.CantorBoundaryCuntzShift
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
-open InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 
 theorem range_prefixBit_eq_coordinate_cylinder (b : Bool) :
-    Set.range (prefixBit b) = (fun x : (ℕ → Bool) => x 0) ⁻¹' ({b} : Set Bool) := by
+    Set.range (prefixBit b) = (fun x : CantorBoundary => x 0) ⁻¹' ({b} : Set Bool) := by
   ext y
   constructor
   · rintro ⟨x, rfl⟩
@@ -50,10 +46,6 @@ theorem isClopen_range_prefixBit (b : Bool) :
       IsClosed (Set.range (prefixBit b)) :=
   ⟨isOpen_range_prefixBit b, isClosed_range_prefixBit b⟩
 
-theorem isCompact_range_prefixBit (b : Bool) :
-    IsCompact (Set.range (prefixBit b)) := by
-  simpa [Set.range] using cantorBoundary_compact.image (continuous_prefixBit b)
-
 theorem range_prefixBit_false_disjoint_true :
     Disjoint (Set.range (prefixBit false)) (Set.range (prefixBit true)) := by
   rw [range_prefixBit_eq_coordinate_cylinder false,
@@ -70,7 +62,7 @@ theorem range_prefixBit_false_union_true :
   ext y
   constructor
   · intro
-    exact Set.mem_univ y
+    trivial
   · intro
     cases hbit : y 0 with
     | false =>
@@ -88,49 +80,8 @@ theorem range_prefixBit_false_union_true :
         | zero => exact hbit.symm
         | succ k => rfl
 
-theorem mem_range_prefixBit_iff (b : Bool) (y : (ℕ → Bool)) :
-    y ∈ Set.range (prefixBit b) ↔ y 0 = b := by
-  rw [range_prefixBit_eq_coordinate_cylinder b]
-  rfl
-
-theorem range_prefixBit_compl (b : Bool) :
-    (Set.range (prefixBit b))ᶜ = Set.range (prefixBit (!b)) := by
-  ext y
-  rw [mem_compl_iff, mem_range_prefixBit_iff,
-    mem_range_prefixBit_iff]
-  cases b <;> cases h : y 0 <;> simp
-
-theorem range_prefixBit_false_inter_true :
-    Set.range (prefixBit false) ∩ Set.range (prefixBit true) = (∅ : Set (ℕ → Bool)) := by
-  ext y
-  constructor
-  · intro hy
-    rcases hy with ⟨hyFalse, hyTrue⟩
-    have hFalse : y 0 = false := (mem_range_prefixBit_iff false y).1 hyFalse
-    have hTrue : y 0 = true := (mem_range_prefixBit_iff true y).1 hyTrue
-    rw [hFalse] at hTrue
-    cases hTrue
-  · intro hy
-    cases hy
-
-def prefixTail (y : (ℕ → Bool)) : (ℕ → Bool) :=
+def prefixTail (y : CantorBoundary) : CantorBoundary :=
   fun n => y (n + 1)
-
-@[simp]
-theorem prefixTail_prefixBit (b : Bool) (x : (ℕ → Bool)) :
-    prefixTail (prefixBit b x) = x := by
-  funext n
-  rfl
-
-theorem prefixBit_prefixTail_of_mem_range
-    {b : Bool} {y : (ℕ → Bool)}
-    (hy : y ∈ Set.range (prefixBit b)) :
-    prefixBit b (prefixTail y) = y := by
-  rcases hy with ⟨x, rfl⟩
-  funext n
-  cases n with
-  | zero => rfl
-  | succ k => rfl
 
 theorem continuous_prefixTail : Continuous (prefixTail) := by
   apply continuous_pi
@@ -138,7 +89,7 @@ theorem continuous_prefixTail : Continuous (prefixTail) := by
   exact continuous_apply (n + 1)
 
 noncomputable def prefixBitHomeomorphRange (b : Bool) :
-    (ℕ → Bool) ≃ₜ Set.range (prefixBit b) :=
+    CantorBoundary ≃ₜ Set.range (prefixBit b) :=
   { toEquiv :=
       { toFun := fun x => ⟨prefixBit b x, ⟨x, rfl⟩⟩
         invFun := fun y => prefixTail y.1
@@ -158,57 +109,8 @@ noncomputable def prefixBitHomeomorphRange (b : Bool) :
     continuous_toFun := (continuous_prefixBit b).subtype_mk (fun x => ⟨x, rfl⟩)
     continuous_invFun := continuous_prefixTail.comp continuous_subtype_val }
 
-theorem prefixBitHomeomorphRange_apply (b : Bool) (x : (ℕ → Bool)) :
+theorem prefixBitHomeomorphRange_apply (b : Bool) (x : CantorBoundary) :
     prefixBitHomeomorphRange b x = ⟨prefixBit b x, ⟨x, rfl⟩⟩ :=
-  rfl
-
-@[simp] theorem prefixBitHomeomorphRange_symm_apply
-    (b : Bool) (y : Set.range (prefixBit b)) :
-    (prefixBitHomeomorphRange b).symm y = prefixTail y.1 :=
-  rfl
-
-noncomputable def prefixBitRangeCompHausSource : CompHaus := by
-  letI : CompactSpace (ℕ → Bool) := ⟨cantorBoundary_compact⟩
-  exact CompHaus.of (ℕ → Bool)
-
-noncomputable def prefixBitRangeCompHausTarget (b : Bool) : CompHaus := by
-  letI : CompactSpace (ℕ → Bool) := ⟨cantorBoundary_compact⟩
-  letI : CompactSpace (Set.range (prefixBit b)) :=
-    isCompact_iff_compactSpace.mp (by
-      simpa using cantorBoundary_compact.image (continuous_prefixBit b))
-  exact CompHaus.of (Set.range (prefixBit b))
-
-noncomputable def prefixBitRangeCompHausIso (b : Bool) :
-    prefixBitRangeCompHausSource ≅ prefixBitRangeCompHausTarget b := by
-  letI : CompactSpace (ℕ → Bool) := ⟨cantorBoundary_compact⟩
-  letI : CompactSpace (Set.range (prefixBit b)) :=
-    isCompact_iff_compactSpace.mp (by
-      simpa using cantorBoundary_compact.image (continuous_prefixBit b))
-  let e := prefixBitHomeomorphRange b
-  letI : T2Space (Set.range (prefixBit b)) := e.t2Space
-  change CompHaus.of (ℕ → Bool) ≅ CompHaus.of (Set.range (prefixBit b))
-  exact
-    { hom := ⟨TopCat.ofHom
-        { toFun := e
-          continuous_toFun := e.continuous_toFun }⟩
-      inv := ⟨TopCat.ofHom
-        { toFun := e.symm
-          continuous_toFun := e.symm.continuous_toFun }⟩
-      hom_inv_id := by
-        apply ConcreteCategory.hom_ext
-        intro x
-        change e.symm (e x) = x
-        exact e.symm_apply_apply x
-      inv_hom_id := by
-        apply ConcreteCategory.hom_ext
-        intro y
-        change e (e.symm y) = y
-        exact e.apply_symm_apply y }
-
-theorem prefixBitRangeCompHausIso_hom_apply
-    (b : Bool) (x : ℕ → Bool) :
-    (prefixBitRangeCompHausIso b).hom x =
-      prefixBitHomeomorphRange b x :=
   rfl
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift

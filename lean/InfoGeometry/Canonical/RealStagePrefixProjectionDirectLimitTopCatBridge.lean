@@ -63,5 +63,3 @@ theorem prefixRank_directLimit_readout_factorization :
   exact dyadicDirectLimitEquiv.apply_symm_apply _
 
 end InfoGeometry.Canonical
-
-end

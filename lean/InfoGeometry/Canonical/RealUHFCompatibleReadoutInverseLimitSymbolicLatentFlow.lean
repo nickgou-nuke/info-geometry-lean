@@ -130,5 +130,4 @@ theorem scalarDilationSymbolicLatentFlow_orbitClosure_isClosedEmbedding
   scalarDilationSymbolicLatentFlow.orbitClosure_isClosedEmbedding ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitSymbolicLatentFlow
-
 end

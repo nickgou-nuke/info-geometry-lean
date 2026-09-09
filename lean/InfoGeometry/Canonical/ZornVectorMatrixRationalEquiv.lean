@@ -117,51 +117,61 @@ noncomputable def zornVectorMatrixRationalEquiv :
   let hleft : Function.LeftInverse fromZornLinear toZornLinear := by
     intro x
     funext b
-    cases b <;> simp [fromZornLinear, toZornLinear, fromZorn, toZorn] <;> ring
+    change fromZorn (toZorn x) b = x b
+    exact congrFun (fromZorn_toZorn x) b
   let hright : Function.RightInverse fromZornLinear toZornLinear := by
     intro Z
-    simpa [fromZornLinear, toZornLinear, fromZorn, toZorn] using toZorn_fromZorn Z
+    exact toZorn_fromZorn Z
   LinearEquiv.ofBijective toZornLinear ⟨hleft.injective, hright.surjective⟩
 
 @[simp] theorem rationalEquiv_one :
     zornVectorMatrixRationalEquiv (rationalBasis .one) =
       ({ a := 1, v := 0, w := 0, b := 1 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .one) = _
+  apply ZornVectorMatrix.ext <;>
+    simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_l :
     zornVectorMatrixRationalEquiv (rationalBasis .l) =
       ({ a := 1, v := 0, w := 0, b := -1 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .l) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_i :
     zornVectorMatrixRationalEquiv (rationalBasis .i) =
       ({ a := 0, v := ![1, 0, 0], w := ![-1, 0, 0], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .i) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_il :
     zornVectorMatrixRationalEquiv (rationalBasis .il) =
       ({ a := 0, v := ![-1, 0, 0], w := ![-1, 0, 0], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .il) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_j :
     zornVectorMatrixRationalEquiv (rationalBasis .j) =
       ({ a := 0, v := ![0, -1, 0], w := ![0, 1, 0], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .j) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_jl :
     zornVectorMatrixRationalEquiv (rationalBasis .jl) =
       ({ a := 0, v := ![0, 1, 0], w := ![0, 1, 0], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .jl) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_k :
     zornVectorMatrixRationalEquiv (rationalBasis .k) =
       ({ a := 0, v := ![0, 0, 1], w := ![0, 0, -1], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .k) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 @[simp] theorem rationalEquiv_kl :
     zornVectorMatrixRationalEquiv (rationalBasis .kl) =
       ({ a := 0, v := ![0, 0, -1], w := ![0, 0, -1], b := 0 } : ZornVectorMatrix ℚ) := by
-  simp [zornVectorMatrixRationalEquiv, toZornLinear, toZorn, rationalBasis]
+  change toZorn (rationalBasis .kl) = _
+  apply ZornVectorMatrix.ext <;> simp [toZorn, rationalBasis]
 
 def coordinateSplitNorm (x : StandardRationalSplitOctonion) : ℚ :=
   x .one ^ 2 - x .l ^ 2 + x .i ^ 2 - x .il ^ 2 +
@@ -181,8 +191,7 @@ theorem zornVectorMatrixRationalEquiv_preserves_norm
     (x : StandardRationalSplitOctonion) :
     ZornVectorMatrix.norm (zornVectorMatrixRationalEquiv x) =
       coordinateSplitNorm x := by
-  simp only [zornVectorMatrixRationalEquiv, LinearEquiv.coe_mk,
-    toZornLinear]
+  change ZornVectorMatrix.norm (toZorn x) = _
   simp [ZornVectorMatrix.norm, ZornVec3.dot, Fin.sum_univ_three,
     toZorn, coordinateSplitNorm]
   ring
@@ -191,10 +200,9 @@ theorem zornVectorMatrixRationalEquiv_map_conj
     (x : StandardRationalSplitOctonion) :
     zornVectorMatrixRationalEquiv (coordinateConj x) =
       ZornVectorMatrix.conj (zornVectorMatrixRationalEquiv x) := by
-  simp only [zornVectorMatrixRationalEquiv, LinearEquiv.coe_mk,
-    toZornLinear]
+  change toZorn (coordinateConj x) = ZornVectorMatrix.conj (toZorn x)
   apply ZornVectorMatrix.ext
-  · simp [coordinateConj, ZornVectorMatrix.conj, toZorn] <;> ring
+  · simp [coordinateConj, ZornVectorMatrix.conj, toZorn, sub_eq_add_neg]
   · funext i
     fin_cases i <;> simp [coordinateConj, ZornVectorMatrix.conj, toZorn] <;> ring
   · funext i

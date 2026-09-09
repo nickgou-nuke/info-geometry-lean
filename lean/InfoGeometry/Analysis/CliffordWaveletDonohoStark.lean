@@ -17,7 +17,7 @@ Clifford wavelet transform:
 
 * support and concentration readouts;
 * a positive uncertainty constant;
-* an explicit Donoho--Stark lower-bound property;
+* an explicit Donoho--Stark lower-bound hypothesis;
 * a noncollapse consequence for the weighted support product.
 
 It does not assert any prime-number, Lee--Yang, xi, Mertens, or RH theorem.
@@ -35,7 +35,7 @@ open InfoGeometry.Analysis.CliffordWaveletTransform
 Support/concentration interface for a Clifford wavelet model.
 
 The paper owner gives the analytic inequality; this structure records the
-support and concentration readouts together with the lower-bound property.
+support and concentration readouts together with the lower-bound hypothesis.
 -/
 @[rep_depth operator]
 structure CliffordDonohoStark (W : CliffordWaveletModel) where
@@ -72,7 +72,7 @@ structure CliffordDonohoStark (W : CliffordWaveletModel) where
   /--
   Donoho--Stark support lower bound.
 
-  This is an explicit analytic property of the interface.
+  This is an explicit analytic hypothesis of the interface.
   -/
   donoho_stark_support :
     W.admissible →

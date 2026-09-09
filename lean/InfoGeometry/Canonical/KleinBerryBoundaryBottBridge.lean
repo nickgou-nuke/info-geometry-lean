@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.KleinBerryBoundaryBottBridge
 
-Finite bridge between the Berry-holonomy property, the Klein boundary action,
+Finite bridge between the Berry-holonomy witness, the Klein boundary action,
 and the Bott-periodic split Clifford carrier.
 
 This file stays theorem-safe:
@@ -29,7 +29,7 @@ open InfoGeometry.Canonical.KleinBottleBoundaryAction
 open InfoGeometry.Clifford.CliffordBott
 
 /--
-Bundle the finite Berry-holonomy property, the finite Klein boundary action,
+Bundle the finite Berry-holonomy witness, the finite Klein boundary action,
 and the Bott-periodic nilpotent lift into one theorem-safe packet.
 
 This is the honest topological bridge available in source:

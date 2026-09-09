@@ -36,11 +36,144 @@ variable (D : NCDerivation A)
 instance : CoeFun (NCDerivation A) (fun _ => A → A) where
   coe D := D.toLinearMap
 
+instance : Zero (NCDerivation A) where
+  zero :=
+    { toLinearMap := 0
+      leibniz' := by simp }
+
+instance : Add (NCDerivation A) where
+  add D E :=
+    { toLinearMap := D.toLinearMap + E.toLinearMap
+      leibniz' := by
+        intro x y
+        simp only [LinearMap.add_apply, D.leibniz', E.leibniz']
+        simp only [add_mul, mul_add]
+        abel }
+
+instance : Neg (NCDerivation A) where
+  neg D :=
+    { toLinearMap := -D.toLinearMap
+      leibniz' := by
+        intro x y
+        simp only [LinearMap.neg_apply, D.leibniz']
+        simp only [neg_mul, mul_neg]
+        abel }
+
+instance : Sub (NCDerivation A) where
+  sub D E :=
+    { toLinearMap := D.toLinearMap - E.toLinearMap
+      leibniz' := by
+        intro x y
+        simp only [LinearMap.sub_apply, D.leibniz', E.leibniz']
+        simp only [sub_mul, mul_sub]
+        abel }
+
+@[ext] theorem ext {D E : NCDerivation A}
+    (h : ∀ a, D a = E a) : D = E := by
+  cases D with
+  | mk D hD =>
+    cases E with
+    | mk E hE =>
+      congr
+      ext a
+      exact h a
+
+@[simp] theorem zero_apply (x : A) : (0 : NCDerivation A) x = 0 := rfl
+
+@[simp] theorem add_apply (D E : NCDerivation A) (x : A) :
+    (D + E) x = D x + E x := rfl
+
+@[simp] theorem neg_apply (D : NCDerivation A) (x : A) :
+    (-D) x = -D x := rfl
+
+@[simp] theorem sub_apply (D E : NCDerivation A) (x : A) :
+    (D - E) x = D x - E x := rfl
+
 @[simp] theorem map_add (a b : A) : D (a + b) = D a + D b := D.toLinearMap.map_add a b
 @[simp] theorem map_sub (a b : A) : D (a - b) = D a - D b := D.toLinearMap.map_sub a b
 @[simp] theorem map_neg (a : A) : D (-a) = - D a := D.toLinearMap.map_neg a
 @[simp] theorem map_zero : D 0 = 0 := D.toLinearMap.map_zero
 @[simp] theorem leibniz (a b : A) : D (a * b) = D a * b + a * D b := D.leibniz' a b
+
+/-! The commutator of associative derivations is again a derivation. -/
+def commutator (D E : NCDerivation A) : NCDerivation A where
+  toLinearMap := D.toLinearMap.comp E.toLinearMap - E.toLinearMap.comp D.toLinearMap
+  leibniz' := by
+    intro x y
+    simp only [LinearMap.sub_apply, LinearMap.comp_apply, D.leibniz', E.leibniz',
+      D.toLinearMap.map_add, E.toLinearMap.map_add]
+    noncomm_ring
+
+@[simp] theorem commutator_apply (D E : NCDerivation A) (x : A) :
+    commutator D E x = D (E x) - E (D x) := rfl
+
+@[simp] theorem commutator_zero_left_apply (D : NCDerivation A) (x : A) :
+    commutator 0 D x = 0 := by
+  simp [commutator_apply]
+
+@[simp] theorem commutator_zero_right_apply (D : NCDerivation A) (x : A) :
+    commutator D 0 x = 0 := by
+  simp [commutator_apply]
+
+theorem commutator_add_left_apply (D E F : NCDerivation A) (x : A) :
+    commutator (D + E) F x = commutator D F x + commutator E F x := by
+  simp only [commutator_apply, add_apply, F.toLinearMap.map_add]
+  abel
+
+theorem commutator_add_right_apply (D E F : NCDerivation A) (x : A) :
+    commutator D (E + F) x = commutator D E x + commutator D F x := by
+  change D (E x + F x) - (E (D x) + F (D x)) =
+    D (E x) - E (D x) + (D (F x) - F (D x))
+  simp only [D.toLinearMap.map_add]
+  abel
+
+theorem commutator_neg_left_apply (D E : NCDerivation A) (x : A) :
+    commutator (-D) E x = -commutator D E x := by
+  simp only [commutator_apply, neg_apply, E.toLinearMap.map_neg]
+  abel
+
+theorem commutator_neg_right_apply (D E : NCDerivation A) (x : A) :
+    commutator D (-E) x = -commutator D E x := by
+  simp only [commutator_apply, neg_apply, D.toLinearMap.map_neg]
+  abel
+
+theorem commutator_swap_apply (D E : NCDerivation A) (x : A) :
+    commutator E D x = -commutator D E x := by
+  simp only [commutator_apply]
+  abel
+
+theorem commutator_jacobi_apply (D E F : NCDerivation A) (x : A) :
+    commutator D (commutator E F) x +
+        commutator E (commutator F D) x +
+        commutator F (commutator D E) x = 0 := by
+  simp only [commutator_apply, NCDerivation.map_sub]
+  noncomm_ring
+
+theorem commutator_zero_left (D : NCDerivation A) :
+    commutator 0 D = 0 := by
+  apply NCDerivation.ext
+  intro x
+  exact commutator_zero_left_apply D x
+
+theorem commutator_zero_right (D : NCDerivation A) :
+    commutator D 0 = 0 := by
+  apply NCDerivation.ext
+  intro x
+  exact commutator_zero_right_apply D x
+
+theorem commutator_swap (D E : NCDerivation A) :
+    commutator E D = -commutator D E := by
+  apply NCDerivation.ext
+  intro x
+  exact commutator_swap_apply D E x
+
+theorem commutator_jacobi (D E F : NCDerivation A) :
+    commutator D (commutator E F) +
+        commutator E (commutator F D) +
+        commutator F (commutator D E) = 0 := by
+  apply NCDerivation.ext
+  intro x
+  exact commutator_jacobi_apply D E F x
 
 /-- Derivation annihilates 1 in any ring -/
 @[simp]

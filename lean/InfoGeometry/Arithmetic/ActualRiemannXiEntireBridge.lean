@@ -181,4 +181,4 @@ theorem deriv_entireRiemannXi_criticalLine_odd (t : ℝ) :
   rw [hcoord]
   exact deriv_entireRiemannXi_one_sub _
 
-end InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+end ActualRiemannXiEntireBridge

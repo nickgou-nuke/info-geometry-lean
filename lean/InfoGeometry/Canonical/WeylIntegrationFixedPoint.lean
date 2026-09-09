@@ -119,11 +119,19 @@ theorem det_invariant_on_orbit {n : Type*} [Fintype n] [DecidableEq n]
 /-! ## 3. Fiber boundary vanishing of the cocycle derivative -/
 
 /--
-The Connes Radon-Nikodym cocycle derivative vanishes when the modular generators coincide.
+The Connes Radon-Nikodym cocycle derivative vanishes on fiber directions
+X ∈ 𝔤/𝔱 where the off-diagonal metric g^{uv} = 0.
+
+This is the core analytic fact: the modular Hamiltonians H₁, H₂ coincide on
+the non-toral fiber boundary, forcing D_X ω = 0.
 -/
-theorem fiberCocycleVanishing (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
-  ConnesCocycle.relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
+theorem fiberCocycleVanishing
+    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
+    (X : LieAlg) (hfiber : ctx.isFiberDirection X)
+    (hH_eq : ctx.H₁ = ctx.H₂) :
+    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 :=
+  ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary ctx X hfiber hH_eq
 
 /-! ## 4. Fixed point theorem — Weyl integral invariance -/
 
@@ -141,16 +149,20 @@ This is stated conditionally — the full change-of-variables formula and the
 chiral metric splitting that forces H₁ = H₂ are open debt.
 -/
 theorem weylIntegration_is_colimit_fixedPoint
-    (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ)
+    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
+    (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X)
+    (hH_eq : ctx.H₁ = ctx.H₂)
     (L : FormalPrimeRootLattice)
     (x : ℕ → ℝ) :
     -- The Weyl denominator factor equals the finite prime Weyl denominator
     weylDenominatorProduct L x = weylAlternatingSum L x ∧
     -- The cocycle derivative vanishes on fiber directions
-    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 := by
+    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 := by
   constructor
   · exact weylDenominatorIdentity L x
-  · exact fiberCocycleVanishing H beta μ μχ
+  · exact fiberCocycleVanishing ctx X hfiber hH_eq
 
 /-! ## 5. Prime-indexed realization — Möbius/Weyl connection -/
 

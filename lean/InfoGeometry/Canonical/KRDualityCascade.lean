@@ -37,10 +37,7 @@ open Matrix
 /-- A topological carrier with an explicit Real involution. -/
 structure RealInvolutionSpace (X : Type*) [TopologicalSpace X] where
   involution : X → X
-
-def RealInvolutionSpace.is_involution
-    {X : Type*} [TopologicalSpace X] (Inv : RealInvolutionSpace X) : Prop :=
-  ∀ x : X, Inv.involution (Inv.involution x) = x
+  is_involution : ∀ x, involution (involution x) = x
 
 /--
 Finite KR-theory shadow used by this file.
@@ -52,36 +49,28 @@ structure KRShadowClass (X : Type*) [TopologicalSpace X]
     (Inv : RealInvolutionSpace X) where
   dimensionIndex : ℤ
   chiralCharge : Fin 2 → ℤ
-
-def KRShadowClass.balance
-    {X : Type*} [TopologicalSpace X] (Inv : RealInvolutionSpace X)
-    (cl : KRShadowClass X Inv) : Prop :=
-  cl.chiralCharge 0 + cl.chiralCharge 1 = 0
+  balance : chiralCharge 0 + chiralCharge 1 = 0
 
 /--
 Finite Buscher shadow: reverse the degree and both local chiral charges.
 
-This captures the algebraic involution used by the finite cascade property.
+This captures the algebraic involution used by the finite cascade witness.
 -/
 def buscher_shift {X : Type*} [TopologicalSpace X]
     {Inv : RealInvolutionSpace X} (cl : KRShadowClass X Inv) :
     KRShadowClass X Inv :=
   { dimensionIndex := -cl.dimensionIndex
-    chiralCharge := fun i => -cl.chiralCharge i }
+    chiralCharge := fun i => -cl.chiralCharge i
+    balance := by
+      have h := cl.balance
+      omega }
 
 /-- The Buscher shadow preserves the local chiral balance condition. -/
 theorem buscher_shift_preserves_balance {X : Type*} [TopologicalSpace X]
-    {Inv : RealInvolutionSpace X} (cl : KRShadowClass X Inv)
-    (hbal : KRShadowClass.balance Inv cl) :
+    {Inv : RealInvolutionSpace X} (cl : KRShadowClass X Inv) :
     (buscher_shift cl).chiralCharge 0 +
-        (buscher_shift cl).chiralCharge 1 = 0 := by
-  have h : cl.chiralCharge 0 + cl.chiralCharge 1 = 0 := by
-    simpa [KRShadowClass.balance] using hbal
-  calc
-    -cl.chiralCharge 0 + -cl.chiralCharge 1 =
-        -(cl.chiralCharge 0 + cl.chiralCharge 1) := by ring
-    _ = -0 := congrArg Neg.neg h
-    _ = 0 := by simp
+        (buscher_shift cl).chiralCharge 1 = 0 :=
+  (buscher_shift cl).balance
 
 /-- Applying the finite Buscher shadow twice restores the KR shadow class. -/
 theorem buscher_shift_involutive {X : Type*} [TopologicalSpace X]
@@ -165,3 +154,4 @@ theorem finite_kr_buscher_o55_packet {X : Type*} [TopologicalSpace X]
     buscherFirst_parityFirstCell_anticomm⟩
 
 end InfoGeometry.Canonical.KRDualityCascade
+

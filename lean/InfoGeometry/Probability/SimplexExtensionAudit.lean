@@ -1,0 +1,102 @@
+import InfoGeometry.Probability.SimplexPairingAmplitude
+import InfoGeometry.Analysis.QuadraticResponseSimplex
+import InfoGeometry.Analysis.LogOddsSimplexGeometry
+import InfoGeometry.Probability.BinaryAitchisonMoments
+import InfoGeometry.Geometry.BinaryLegendreEntropyFlow
+import InfoGeometry.Modular.FiniteSimplexModularTime
+import InfoGeometry.Convex.BinaryBarrierSurprisal
+import InfoGeometry.Thermo.BinaryEntropyMetriplectic
+
+/-! Axiom audit of the concrete simplex extension, including constructed maps. -/
+
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.amplitudeEquiv
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.product_mem_stdSimplex
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.product_first_marginal
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.product_amplitude
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.product_amplitude_overlap
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.binary
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.binary_mismatch_probability
+#print axioms InfoGeometry.Probability.SimplexPairingAmplitude.binary_amplitude_outer_product
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.response_dilation_defect
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.response_coordinate_rescale
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.probability_coordinate_rescale
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.root_coordinate_rescale
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.normalized_response
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.response_eq_maximum_iff
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.response_simplex_nonneg
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.response_survival
+#print axioms InfoGeometry.Analysis.QuadraticResponseSimplex.quadratic_le_rational_response
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hasDerivAt_logistic
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hasDerivAt_logit
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hasDerivAt_fisherMix
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.logOdds_connection
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.binary_amplitude_speed
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.trajectory
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.trajectory_mem_Ioo
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.trajectory_logit
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hasDerivAt_trajectory
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.trajectory_acceleration
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.trajectory_geodesic
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hamiltonian
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.momentum
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.hamiltonian_on_momentum
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.characteristic
+#print axioms InfoGeometry.Analysis.LogOddsSimplexGeometry.stationary_hamilton_jacobi
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.positiveBinary
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.binary_clr
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.binary_clr_distance_sq
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.binary_clr_speed
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.centeredMoment
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.centeredMoment_two
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.centeredMoment_three
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.fourth_cumulant
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.hasDerivAt_fisherExp
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.massieu_second_derivative
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.entropyGradientField
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.entropy_gradient_production
+#print axioms InfoGeometry.Probability.BinaryAitchisonMoments.entropy_gradient_production_nonneg
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.legendreCurve
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.hasDerivAt_legendreCurve
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.legendre_metric_pullback
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.legendre_symplectic_pullback
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.legendre_metric_positive
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.entropyRelaxation
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.entropyRelaxation_mem_Ioo
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.hasDerivAt_entropyRelaxation
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.entropyRelaxation_entropy_derivative
+#print axioms InfoGeometry.Geometry.BinaryLegendreEntropyFlow.entropyRelaxation_entropy_nondecreasing
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_compose
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_chain
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_zero
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_diagonal
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_compose
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_zero
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_mul
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_diagonal
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.automorphism
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_from_clr
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_from_relative_log
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.phase_conj
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_star
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_entry_hasDerivAt
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.relativeLogAction_entry
+#print axioms InfoGeometry.Modular.FiniteSimplexModularTime.flow_hasDerivAt
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.barrier_trace_surprisal
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.entropy_weighted_surprisal
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.barrier_hessian_decomposition
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.hasDerivAt_barrierHessian
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.barrier_self_concordance
+#print axioms InfoGeometry.Convex.BinaryBarrierSurprisal.negative_log_conjugate
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.e
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.poisson
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.mobility
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.energyDifferential
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.entropyDifferential
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.energy_curve_derivative
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.entropy_curve_derivative
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.system
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.system_flow
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.oscillator_tangent_energy
+#print axioms InfoGeometry.Thermo.BinaryEntropyMetriplectic.system_entropy_rate

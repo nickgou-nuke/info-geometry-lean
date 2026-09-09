@@ -17,8 +17,6 @@ of a Primon gas whose underlying field is ℚ(√5).
 
 noncomputable section
 
-namespace PenroseArithmetic
-
 /-- The Golden Ratio φ, the fundamental scaling constant of the Penrose universe. -/
 def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
 
@@ -27,42 +25,18 @@ def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
     additive quantum of energy. -/
 def goldenEnergy : ℝ := Real.log goldenRatio
 
-end PenroseArithmetic
-
-namespace PenroseArithmetic
-
 /-- The Cut-and-Project Method: A 5D classical periodic lattice is projected 
     into a 2D physical shadow and a 3D internal (hidden) space. 
     This acts as the structural formalization of O(5,5) T-duality. -/
-abbrev CutAndProject5D :=
-  Σ lattice5D : Type,
-    Σ physical2D : Type,
-      Σ internal3D : Type,
-        (lattice5D → physical2D) ×
-          (lattice5D → internal3D) × Set internal3D
-
-namespace CutAndProject5D
-
-def lattice5D (data : CutAndProject5D) : Type := data.1
-
-def physical2D (data : CutAndProject5D) : Type := data.2.1
-
-def internal3D (data : CutAndProject5D) : Type := data.2.2.1
-
-def project_physical (data : CutAndProject5D) : data.lattice5D → data.physical2D :=
-  data.2.2.2.1
-
-def project_internal (data : CutAndProject5D) : data.lattice5D → data.internal3D :=
-  data.2.2.2.2.1
-
-def irrational_window (data : CutAndProject5D) : Set data.internal3D :=
-  data.2.2.2.2.2
-
-end CutAndProject5D
-
-end PenroseArithmetic
-
-namespace PenroseArithmetic
+structure CutAndProject5D where
+  lattice5D : Type
+  physical2D : Type
+  internal3D : Type
+  project_physical : lattice5D → physical2D
+  project_internal : lattice5D → internal3D
+  -- The fundamental constraint: the quasicrystal is the projection
+  -- of the 5D lattice restricted by an irrational window in the internal space.
+  irrational_window : Set internal3D
 
 /-- In the Golden Number Field ℚ(√5), distances are measured ultrametrically.
     The φ-adic distance between two points represents how many inflations (k) 
@@ -89,31 +63,32 @@ def inflationEnergy (k : ℤ) : ℝ :=
 
 /-- Integer coordinates for the golden ring `Z[φ]`: the pair `(a,b)` denotes
     `a + bφ`, with relation `φ² = φ + 1`. -/
-abbrev GoldenInt := ℤ × ℤ
+structure GoldenInt where
+  a : ℤ
+  b : ℤ
+  deriving DecidableEq, Repr
 
-namespace GoldenInt
-
-abbrev a (x : GoldenInt) : ℤ := x.1
-
-abbrev b (x : GoldenInt) : ℤ := x.2
-
-end GoldenInt
-
-def goldenAdd (x y : GoldenInt) : GoldenInt :=
-  (x.a + y.a, x.b + y.b)
+def goldenAdd (x y : GoldenInt) : GoldenInt where
+  a := x.a + y.a
+  b := x.b + y.b
 
 /-- Multiplication reduced by `φ² = φ + 1`. -/
-def goldenMul (x y : GoldenInt) : GoldenInt :=
-  (x.a * y.a + x.b * y.b,
-    x.a * y.b + x.b * y.a + x.b * y.b)
+def goldenMul (x y : GoldenInt) : GoldenInt where
+  a := x.a * y.a + x.b * y.b
+  b := x.a * y.b + x.b * y.a + x.b * y.b
 
-def goldenOne : GoldenInt := (1, 0)
+def goldenOne : GoldenInt where
+  a := 1
+  b := 0
 
-def goldenPhi : GoldenInt := (0, 1)
+def goldenPhi : GoldenInt where
+  a := 0
+  b := 1
 
 /-- Algebraic conjugation sends `φ` to `1 - φ`. -/
-def goldenConj (x : GoldenInt) : GoldenInt :=
-  (x.a + x.b, -x.b)
+def goldenConj (x : GoldenInt) : GoldenInt where
+  a := x.a + x.b
+  b := -x.b
 
 /-- Field norm of `a + bφ`: `(a+bφ)(a+b(1-φ)) = a² + ab - b²`. -/
 def goldenNorm (x : GoldenInt) : ℤ :=
@@ -190,7 +165,7 @@ theorem goldenMul_phi_phi :
 theorem goldenConj_involutive (x : GoldenInt) :
     goldenConj (goldenConj x) = x := by
   cases x
-  simp [goldenConj, GoldenInt.a, GoldenInt.b]
+  simp [goldenConj]
 
 theorem goldenNorm_conj (x : GoldenInt) :
     goldenNorm (goldenConj x) = goldenNorm x := by
@@ -214,7 +189,7 @@ theorem goldenEval_mul (x y : GoldenInt) :
     goldenEval (goldenMul x y) = goldenEval x * goldenEval y := by
   cases x
   cases y
-  simp [goldenEval, goldenMul, GoldenInt.a, GoldenInt.b]
+  simp [goldenEval, goldenMul]
   ring_nf
   rw [goldenRatio_sq]
   ring
@@ -243,7 +218,5 @@ theorem arithmetic_quantum_gravity_unification :
     goldenPrimeClass_split_19, goldenPrimeClass_inert_3, goldenPrimeClass_inert_13,
     goldenMul_phi_phi, goldenConj_involutive, goldenNorm_conj, goldenNorm_mul,
     goldenEval_mul⟩
-
-end PenroseArithmetic
 
 end noncomputable section

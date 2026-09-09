@@ -113,6 +113,7 @@ private theorem chiralNull_right_ell_eigenvector
       simp [chiralNull, realZornTrace, ellBasis, quaternionBasis,
         iUnit, jUnit, kQuaternionUnit, lUnit,
         InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul, hsmul,
+        realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross, smul_eq_mul]
   let X : Imaginary := ⟨chiralNull a.succ ε, hmem⟩
@@ -125,6 +126,7 @@ private theorem chiralNull_right_ell_eigenvector
       simp [chiralNull, ellBasis, quaternionBasis, iUnit, jUnit,
         kQuaternionUnit, lUnit,
         InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul, hsmul,
+        realCrossProduct3,
         InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross,

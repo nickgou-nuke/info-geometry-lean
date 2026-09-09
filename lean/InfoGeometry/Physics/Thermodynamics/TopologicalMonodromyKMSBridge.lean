@@ -37,7 +37,8 @@ def unipotentMonodromyReadoutDatum
     KMSReadoutDatum EndH where
   flow := fun t T => InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t * T
   state := fun _ => 0
-  beta := ⟨1, by norm_num⟩
+  beta := 1
+  beta_pos := by norm_num
   flow_zero := by
     intro T
     simp [InfoGeometry.Physics.Algebra.continuousUnipotentFlow]

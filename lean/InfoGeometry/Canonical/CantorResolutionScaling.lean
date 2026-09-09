@@ -30,20 +30,6 @@ open InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
 /-- Resolution at stage n of the Cantor tower. -/
 def resolutionAtStage (n : ℕ) : ℝ := 1 / ((n : ℝ) + 1)
 
-theorem resolutionAtStage_pos (n : ℕ) : 0 < resolutionAtStage n := by
-  dsimp [resolutionAtStage]
-  positivity
-
-theorem resolutionAtStage_le_inv_natCast {n : ℕ} (hn : 0 < n) :
-    resolutionAtStage n ≤ 1 / (n : ℝ) := by
-  have hn0 : 0 < (n : ℝ) := by
-    exact_mod_cast hn
-  have hn1 : 0 < (n : ℝ) + 1 := by
-    linarith
-  dsimp [resolutionAtStage]
-  apply (div_le_div_iff₀ hn1 hn0).2
-  linarith
-
 /--
 The Cayley Jacobian at β = n is quadratically bounded by 4/n².
 Information below resolution ~ 1/n is lost at rate ~ 1/n².

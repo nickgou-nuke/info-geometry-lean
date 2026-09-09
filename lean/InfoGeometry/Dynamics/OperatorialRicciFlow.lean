@@ -3,21 +3,20 @@ import Mathlib.Tactic
 /-!
 # InfoGeometry.Dynamics.OperatorialRicciFlow
 
-A finite algebraic subtraction-step readout.  It is not a Ricci-flow or
-curvature construction; those require a connection and a geometric carrier.
+A closed finite algebraic placeholder for operatorial Ricci-flow readback.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Dynamics.OperatorialRicciFlow
 
-/-- One explicit subtraction step on a carrier with a subtraction operation. -/
-def subtractionStep {E : Type*} [Sub E] (x v : E) : E :=
+/-- Euler step for a discrete flow on an additive group. -/
+def eulerStep {E : Type*} [Sub E] (x v : E) : E :=
   x - v
 
-/-- The finite step is definitionally subtraction by its supplied increment. -/
-theorem subtractionStep_eq {E : Type*} [Sub E] (x v : E) :
-    subtractionStep x v = x - v := by
+/-- The Euler step is definitionally subtraction by the velocity/defect. -/
+theorem eulerStep_eq {E : Type*} [Sub E] (x v : E) :
+    eulerStep x v = x - v := by
   rfl
 
 end InfoGeometry.Dynamics.OperatorialRicciFlow

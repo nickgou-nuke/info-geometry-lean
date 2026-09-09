@@ -66,15 +66,17 @@ theorem doubledModularSignCPTDatum_J_Kmod_anticommute :
   simp
 
 /-- The `Γ ∘ R` orientation is the negative of the canonical `R ∘ Γ` phase axis. -/
-theorem chiralComplexStructure_eq_neg_complex_i :
-    chiralComplexStructure (E := E) = -(complex_i (E := E)) := by
+theorem doubledModularSignCPTDatum_Kmod_eq_neg_gamma5_comp_etaChiral :
+    (doubledModularSignCPTDatum (E := E)).Kmod =
+      -((gamma5 (E := E)).comp (etaChiral (E := E))) := by
   calc
-    chiralComplexStructure (E := E) =
-        -((etaChiral (E := E)).comp (gamma5 (E := E))) := by
-          unfold chiralComplexStructure
-          rw [etaChiral_gamma5_anticommute]
-          simp
-    _ = -(complex_i (E := E)) := by
-          rfl
+    (doubledModularSignCPTDatum (E := E)).Kmod =
+        (doubledModularSignCPTDatum (E := E)).J.comp
+          (doubledModularSignCPTDatum (E := E)).eps :=
+      (doubledModularSignCPTDatum (E := E)).Kmod_eq
+    _ = (etaChiral (E := E)).comp (gamma5 (E := E)) := by rfl
+    _ = -((gamma5 (E := E)).comp (etaChiral (E := E))) :=
+      etaChiral_gamma5_anticommute
+    _ = -((gamma5 (E := E)).comp (etaChiral (E := E))) := by rfl
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinModularBridge

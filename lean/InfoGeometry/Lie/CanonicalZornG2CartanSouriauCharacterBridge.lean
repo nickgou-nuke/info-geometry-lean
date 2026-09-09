@@ -43,7 +43,7 @@ theorem unnormalizedGibbsKernel_eq_cartanCharacter {State : Type*}
 
 def canonicalCartanSouriauDatum : CartanSouriauDatum G2Cartan where
   momentMap x i := simpleWeightOnCartan i x
-  beta := fun i => Complex.I * (1 : ℂ)
+  beta := fun _ => Complex.I * (1 : ℂ)
 
 theorem canonicalCartanKernel_eq_canonicalG2Character (x : G2Cartan) :
     unnormalizedGibbsKernel canonicalCartanSouriauDatum x =

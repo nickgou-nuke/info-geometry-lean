@@ -73,6 +73,6 @@ theorem normalizedReadoutInterval_real_endpoint
     simp [dyadicToRealInterval,
       RealUHFProjectionRankSystem.normalizedReadoutInterval, h]
 
-end InfoGeometry.Canonical.RealUHFProjectionRankEndpointRigidity
+end RealUHFProjectionRankEndpointRigidity
 
-end
+end Canonical

@@ -74,10 +74,20 @@ theorem native_peirce_unit_idempotent :
     (E11 : Carrier) * E11 = E11 := E11_mul_E11
 
 theorem native_peirce_unit_vector (i : Fin 3) :
-    (E11 : Carrier) * U i = U i := E11_mul_U i
+    (E11 : Carrier) * U i = U i := by
+  fin_cases i <;> ext j <;>
+    simp [E11, U, Vec3.basis, mul, Vec3.add, Vec3.sub, Vec3.smul,
+      Vec3.dot, Vec3.cross] <;>
+    try { fin_cases j <;> simp [E11, U, Vec3.basis, mul, Vec3.add,
+      Vec3.sub, Vec3.smul, Vec3.dot, Vec3.cross] }
 
 theorem native_vector_unit_right (i : Fin 3) :
-    (U i : Carrier) * E22 = U i := U_mul_E22 i
+    (U i : Carrier) * E22 = U i := by
+  fin_cases i <;> ext j <;>
+    simp [E22, U, Vec3.basis, mul, Vec3.add, Vec3.sub, Vec3.smul,
+      Vec3.dot, Vec3.cross] <;>
+    try { fin_cases j <;> simp [E22, U, Vec3.basis, mul, Vec3.add,
+      Vec3.sub, Vec3.smul, Vec3.dot, Vec3.cross] }
 
 theorem native_vector_vector_anticommutator (i j : Fin 3) :
     (U i : Carrier) * U j + U j * U i = 0 := U_anticommute i j
@@ -91,10 +101,11 @@ def lowerLane (X : Carrier) : Prop :=
 
 theorem native_vector_product_lowerLane (i j : Fin 3) :
     lowerLane ((U i : Carrier) * U j) := by
-  rw [U_mul_U]
-  refine ⟨rfl, ?_, rfl⟩
-  funext k
-  fin_cases k <;> simp
+  fin_cases i <;> fin_cases j
+  all_goals
+    dsimp [lowerLane, U, mul, Vec3.basis, Vec3.dot, Vec3.cross,
+      Vec3.add, Vec3.sub, Vec3.smul]
+    simp
 
 theorem native_associator_parity_property :
     ((U 0 : Carrier) * U 1) * U 2 - U 0 * (U 1 * U 2) =
@@ -103,7 +114,7 @@ theorem native_associator_parity_property :
 
 theorem native_associator_parity_property_ne_zero :
     ((U 0 : Carrier) * U 1) * U 2 ≠ U 0 * (U 1 * U 2) := by
-  exact ZornMatrix.nonassociative_property (R := ℂ)
+  exact ZornMatrix.nonassociative_witness (R := ℂ)
 
 theorem native_sheet_closure_packet :
     (E11 : Carrier) * E11 = E11 ∧

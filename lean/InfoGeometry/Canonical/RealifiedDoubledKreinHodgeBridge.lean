@@ -153,22 +153,8 @@ theorem J_commutes_with_Ksq
 structure HodgeDifferentialData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   d₀ : DoubledSpace E → DoubledSpace E
   d₀Star : DoubledSpace E → DoubledSpace E
-
-namespace HodgeDifferentialData
-
-/-- The Hodge one-Laplacian is the composite `d₀ ∘ d₀Star`. -/
-abbrev hodge_one_laplacian
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (D : HodgeDifferentialData E) : DoubledSpace E → DoubledSpace E :=
-  D.d₀ ∘ D.d₀Star
-
-@[simp] theorem hodge_one_laplacian_eq
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (D : HodgeDifferentialData E) :
-    D.hodge_one_laplacian = D.d₀ ∘ D.d₀Star :=
-  rfl
-
-end HodgeDifferentialData
+  hodge_one_laplacian : DoubledSpace E → DoubledSpace E
+  hodge_one_laplacian_eq : hodge_one_laplacian = d₀ ∘ d₀Star
 
 class HodgePositivityCondition (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (D : HodgeDifferentialData E) : Prop where

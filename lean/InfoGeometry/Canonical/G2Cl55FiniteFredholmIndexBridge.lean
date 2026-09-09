@@ -54,7 +54,14 @@ noncomputable def hodgeFredholm :
 
 theorem hodgeFredholm_index_zero :
     (hodgeFredholm).index = 0 := by
-  exact FredholmIndexDatum.index_eq_zero_of_bijective
-    hodgeFredholm ⟨hodgeLinear_injective, hodgeLinear_surjective⟩
+  rw [FredholmIndexDatum.index_eq_finrank_ker_sub_finrank_coker]
+  change (Module.finrank ℝ (LinearMap.ker hodgeLinear) : ℤ) -
+      (Module.finrank ℝ (SpinorCarrier32 ⧸ LinearMap.range hodgeLinear) : ℤ) = 0
+  rw [hodgeLinear_ker_eq_bot]
+  have hrange : LinearMap.range hodgeLinear = ⊤ :=
+    LinearMap.range_eq_top.mpr hodgeLinear_surjective
+  rw [hrange]
+  rw [Submodule.finrank_quotient]
+  simp
 
 end InfoGeometry.Canonical.G2Cl55FiniteFredholmIndexBridge

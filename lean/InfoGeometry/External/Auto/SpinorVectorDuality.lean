@@ -9,8 +9,6 @@ two copies of one admissibility predicate.  A geometric spinor/vector bridge
 requires a separate representation owner.
 -/
 
-/-! ## The Klein-four multiplication table -/
-
 inductive V4
 | e : V4
 | a : V4
@@ -37,14 +35,10 @@ theorem mul_assoc (x y z : V4) : mul x (mul y z) = mul (mul x y) z := by
 
 end V4
 
-/-! ## A concrete action contract -/
-
 class KleinAction (M : Type) where
   act : V4 → M → M
   act_e : ∀ x, act V4.e x = x
   act_mul : ∀ g h x, act (V4.mul g h) x = act g (act h x)
-
-/-! ## Two copies of one predicate carrier -/
 
 abbrev AdmissiblePredicate (M : Type) := M → Prop
 
@@ -62,7 +56,6 @@ structure StateCopyEquivalence (A B : Type) where
   inverseOnLeft : ∀ a, invFun (toFun a) = a
   inverseOnRight : ∀ b, toFun (invFun b) = b
 
-/-- The canonical equivalence between two explicitly identical predicate copies. -/
 def predicateStateCopyEquiv (M : Type) (P : AdmissiblePredicate M) :
     StateCopyEquivalence (PredicateState M P) (PredicateStateCopy M P) where
   toFun s := ⟨s.val, s.admissible⟩

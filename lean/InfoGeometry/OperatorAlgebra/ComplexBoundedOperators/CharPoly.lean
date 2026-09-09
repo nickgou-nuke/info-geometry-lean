@@ -24,7 +24,7 @@ open Polynomial
 def UpperTriangular {R ι : Type*} [Zero R] [LT ι] (A : Matrix ι ι R) : Prop :=
   ∀ ⦃i j : ι⦄, j < i → A i j = 0
 
-/-- Explicit similarity property `A = P * B * Q`, with inverse equations. -/
+/-- Explicit similarity witness `A = P * B * Q`, with inverse equations. -/
 structure SimilarMatrixWitness {R ι : Type*}
     [Semiring R] [Fintype ι] [DecidableEq ι]
     (A B : Matrix ι ι R) where
@@ -41,7 +41,7 @@ structure SimilarMatrixWitness {R ι : Type*}
 
 namespace SimilarMatrixWitness
 
-/-- Reflexive similarity property. -/
+/-- Reflexive similarity witness. -/
 def refl {R ι : Type*}
     [Semiring R] [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι R) : SimilarMatrixWitness A A where

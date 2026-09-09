@@ -98,7 +98,7 @@ theorem readback_superBracket_GG_eventually_of_boundaryDefect_zero
     bond toLimit hcone N r s J ψ central_N hN
 
 /--
-A direct concrete colimit readback in `End ℝ` at the property mode families
+A direct concrete colimit readback in `End ℝ` at the witness mode families
 `J_mode0` and `psi_mode1` for the `[L,G]` mixed relation.
 -/
 theorem concrete_readback_trivial_bond_LG_mode01_r0 (N : ℤ) :
@@ -128,7 +128,7 @@ theorem concrete_readback_trivial_bond_LG_mode01_r0 (N : ℤ) :
       (psi_mode1 (𝕜 := ℝ) (1 : Module.End ℝ ℝ)) hdef
 
 /--
-A direct concrete colimit readback in `End ℝ` at the property mode families
+A direct concrete colimit readback in `End ℝ` at the witness mode families
 `J_mode0` and `psi_mode1` for the `{G,G}` anticommutator relation.
 -/
 theorem concrete_readback_trivial_bond_GG_mode01_r0_s1 (N : ℤ) :

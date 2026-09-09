@@ -17,6 +17,17 @@ namespace BM1MirrorNuclei
 -/
 
 /--
+M1 transition operator in the shell-model notation used by the surrounding
+notes.
+-/
+def M1_operator : String := "sqrt(3/4*pi) * (g_l^IV * L + g_s^IV * S)"
+
+/--
+Isovector M1 operator as a spin-isospin tensor.
+-/
+def M1_isovector : String := "sigma tau_0"
+
+/--
 The two Clebsch-Gordan signs for the mirror pair have the same square.
 -/
 theorem GT_M1_isospin_relation :
@@ -112,6 +123,16 @@ theorem BM1_mass_ordering :
 -/
 
 /--
+Shell correction factors for selected B(M1) mirror ratios.
+-/
+def BM1_shell_corrections : List (ℝ × String) :=
+  [(27, "mid-shell enhancement: x1.20"),
+   (31, "near-magic: x1.00"),
+   (35, "near-magic: x1.05"),
+   (39, "near-magic: x1.00"),
+   (43, "approaching N=28: x0.90")]
+
+/--
 Shell-corrected B(M1) ratio for selected nuclei.
 -/
 def BM1_ratio_with_shell_correction (A : ℝ) : ℝ :=
@@ -204,6 +225,28 @@ theorem BM1_A27_comparison (exp_val : ℝ) (h_exp_pos : exp_val > 0) :
   · unfold BM1_A27_discrepancy
     norm_num [BM1_ratio_with_shell_correction, BM1_ratio_prediction,
       default_chi_M1]
+
+/-!
+## Section 7: Summary
+-/
+
+/--
+Main finite summary: selected shell-corrected values, the coupling ratio, and
+the mass-dependence theorem all follow from the definitions above.
+-/
+theorem BM1_TKK_framework_summary :
+    (BM1_ratio_with_shell_correction 27 = (1547 : ℝ) / 550) ∧
+    (BM1_ratio_with_shell_correction 31 = (15963 : ℝ) / 6820) ∧
+    (BM1_ratio_with_shell_correction 43 = (198747 : ℝ) / 94600) ∧
+    (chi_ratio = 2 / 3) ∧
+    (BM1_ratio_prediction 27 default_chi_M1 >
+      BM1_ratio_prediction 43 default_chi_M1) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · norm_num [BM1_ratio_with_shell_correction, BM1_ratio_prediction, default_chi_M1]
+  · norm_num [BM1_ratio_with_shell_correction, BM1_ratio_prediction, default_chi_M1]
+  · norm_num [BM1_ratio_with_shell_correction, BM1_ratio_prediction, default_chi_M1]
+  · exact chi_ratio_value
+  · exact BM1_mass_dependence_monotonic 27 43 (by norm_num) (by norm_num)
 
 end BM1MirrorNuclei
 

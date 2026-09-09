@@ -16,6 +16,7 @@ algebraic commutation and annihilation identities under explicit hypotheses.
 namespace InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
 
 open LinearMap
+open scoped InnerProductSpace
 
 section
 
@@ -30,7 +31,7 @@ def commutator (A B : Module.End R V) : Module.End R V :=
 Algebraic Hodge packet with explicit differential, codifferential,
 and Laplacian definition.
 -/
-structure HodgeLaplacianData where
+structure HodgePacket where
   d : Module.End R V
   δ : Module.End R V
   d_sq : d.comp d = 0
@@ -38,9 +39,9 @@ structure HodgeLaplacianData where
   Δ : Module.End R V
   Δ_def : Δ = d.comp δ + δ.comp d
 
-namespace HodgeLaplacianData
+namespace HodgePacket
 
-variable (H : HodgeLaplacianData (R := R) (V := V))
+variable (H : HodgePacket (R := R) (V := V))
 
 /-- `[d, Δ] = 0` under the explicit Hodge packet laws. -/
 theorem d_commutes_Δ : commutator H.d H.Δ = 0 := by
@@ -101,7 +102,7 @@ This is the algebraic interface layer: no analytic closed-range/Fredholm
 proof is asserted here; those hypotheses are represented by explicit projector
 equations.
 -/
-structure ProjectorDecompositionData where
+structure DecompositionPacket where
   Pex : Module.End R V
   Pcoex : Module.End R V
   Pharm : Module.End R V
@@ -116,15 +117,53 @@ structure ProjectorDecompositionData where
   Pharm_Pcoex_zero : Pharm.comp Pcoex = 0
   partition_unity : Pex + Pcoex + Pharm = 1
 
-namespace ProjectorDecompositionData
+namespace DecompositionPacket
 
-variable (D : ProjectorDecompositionData (R := R) (V := V))
+variable (D : DecompositionPacket (R := R) (V := V))
 
 /-- Projector partition gives pointwise decomposition `x = Pex x + Pcoex x + Pharm x`. -/
 theorem decompose (x : V) :
     x = D.Pex x + D.Pcoex x + D.Pharm x := by
   have h := congrArg (fun f : Module.End R V => f x) D.partition_unity
   simpa [LinearMap.add_apply, add_assoc] using h.symm
+
+/-!
+The projector laws also give uniqueness of the three components.  This is
+purely algebraic: no inner product, closed-range, or analytic Green operator
+is being smuggled into the statement.
+-/
+theorem unique_decomposition (x a b c : V)
+    (hx : x = a + b + c)
+    (ha : D.Pex a = a) (hb : D.Pcoex b = b) (hc : D.Pharm c = c) :
+    a = D.Pex x ∧ b = D.Pcoex x ∧ c = D.Pharm x := by
+  have hxa : D.Pex x = a := by
+    rw [hx, map_add, map_add]
+    have hPexb : D.Pex b = 0 := by
+      have h := congrArg (fun f : Module.End R V => f b) D.Pex_Pcoex_zero
+      simpa [LinearMap.comp_apply, hb] using h
+    have hPexc : D.Pex c = 0 := by
+      have h := congrArg (fun f : Module.End R V => f c) D.Pex_Pharm_zero
+      simpa [LinearMap.comp_apply, hc] using h
+    simp [ha, hPexb, hPexc]
+  have hxb : D.Pcoex x = b := by
+    rw [hx, map_add, map_add]
+    have hPcoexa : D.Pcoex a = 0 := by
+      have h := congrArg (fun f : Module.End R V => f a) D.Pcoex_Pex_zero
+      simpa [LinearMap.comp_apply, ha] using h
+    have hPcoexc : D.Pcoex c = 0 := by
+      have h := congrArg (fun f : Module.End R V => f c) D.Pcoex_Pharm_zero
+      simpa [LinearMap.comp_apply, hc] using h
+    simp [hPcoexa, hb, hPcoexc]
+  have hxc : D.Pharm x = c := by
+    rw [hx, map_add, map_add]
+    have hPharma : D.Pharm a = 0 := by
+      have h := congrArg (fun f : Module.End R V => f a) D.Pharm_Pex_zero
+      simpa [LinearMap.comp_apply, ha] using h
+    have hPharmb : D.Pharm b = 0 := by
+      have h := congrArg (fun f : Module.End R V => f b) D.Pharm_Pcoex_zero
+      simpa [LinearMap.comp_apply, hb] using h
+    simp [hPharma, hPharmb, hc]
+  exact ⟨hxa.symm, hxb.symm, hxc.symm⟩
 
 /-- Pairwise orthogonality implies `(Pex + Pcoex)` is idempotent. -/
 theorem exact_coexact_sum_idem :
@@ -146,9 +185,45 @@ theorem partition_unity_explicit :
   rw [← D.harmonic_as_complement]
   exact D.partition_unity
 
-end ProjectorDecompositionData
+/-!
+The Pythagorean identity belongs to the inner-product layer, not to the
+algebraic projector packet.  We therefore state it with exactly the three
+pairwise orthogonality facts needed by the norm-addition theorem.
+-/
+theorem hodge_norm_sq_additive
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (a b h : V)
+    (hab : ⟪a, b⟫_ℝ = 0) (hah : ⟪a, h⟫_ℝ = 0)
+    (hbh : ⟪b, h⟫_ℝ = 0) :
+    ‖a + b + h‖ ^ 2 = ‖a‖ ^ 2 + ‖b‖ ^ 2 + ‖h‖ ^ 2 := by
+  have habh : ⟪a + b, h⟫_ℝ = 0 := by
+    simp [inner_add_left, hah, hbh]
+  have hfirst : ‖a + b + h‖ ^ 2 = ‖a + b‖ ^ 2 + ‖h‖ ^ 2 := by
+    simpa [pow_two] using
+      (norm_add_sq_eq_norm_sq_add_norm_sq_real habh)
+  have hsecond : ‖a + b‖ ^ 2 = ‖a‖ ^ 2 + ‖b‖ ^ 2 := by
+    simpa [pow_two] using
+      (norm_add_sq_eq_norm_sq_add_norm_sq_real hab)
+  rw [hfirst, hsecond]
 
-end HodgeLaplacianData
+theorem projector_norm_sq_additive
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    (D : DecompositionPacket (R := ℝ) (V := V)) (x : V)
+    (hexcoex : ⟪D.Pex x, D.Pcoex x⟫_ℝ = 0)
+    (hexharm : ⟪D.Pex x, D.Pharm x⟫_ℝ = 0)
+    (hcoexharm : ⟪D.Pcoex x, D.Pharm x⟫_ℝ = 0) :
+    ‖x‖ ^ 2 = ‖D.Pex x‖ ^ 2 + ‖D.Pcoex x‖ ^ 2 + ‖D.Pharm x‖ ^ 2 := by
+  have hx := D.decompose x
+  calc
+    ‖x‖ ^ 2 = ‖D.Pex x + D.Pcoex x + D.Pharm x‖ ^ 2 := by
+      rw [← hx]
+    _ = ‖D.Pex x‖ ^ 2 + ‖D.Pcoex x‖ ^ 2 + ‖D.Pharm x‖ ^ 2 :=
+      hodge_norm_sq_additive (D.Pex x) (D.Pcoex x) (D.Pharm x)
+        hexcoex hexharm hcoexharm
+
+end DecompositionPacket
+
+end HodgePacket
 end
 
 end InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition

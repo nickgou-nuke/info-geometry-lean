@@ -4,6 +4,18 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
-echo "[pre-push] running post-build quality gate"
-bash scripts/quality/post_build_gate.sh lean
+# Read remote ref info from stdin if supplied by git
+base_ref=""
+while read -r local_ref local_oid remote_ref remote_oid; do
+    if [ -n "$remote_oid" ] && [ "$remote_oid" != "0000000000000000000000000000000000000000" ]; then
+        base_ref="$remote_oid"
+    fi
+done
+
+echo "[pre-push] running incremental post-build quality gate"
+if [ -n "$base_ref" ]; then
+    bash scripts/quality/post_build_gate.sh --incremental --base="$base_ref"
+else
+    bash scripts/quality/post_build_gate.sh --incremental
+fi
 echo "[pre-push] quality gate passed"

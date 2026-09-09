@@ -67,4 +67,18 @@ theorem continued_represented_flow_is_analytic
     IsAnalytic (continueOnce X) :=
   analytic_continuation_is_invariant X (represented_flow_is_analytic X)
 
+/--
+Bundled statement: represented flows are analytic, and one continuation step
+preserves analyticity.
+-/
+theorem inductive_analytic_flow_synthesis
+    {T : LieAlgebraTower.{u}} (X : FlowElement T) :
+    IsAnalytic X ∧
+      colimitTrace (continueOnce X) = colimitTrace X ∧
+      IsAnalytic (continueOnce X) := by
+  exact ⟨represented_flow_is_analytic X,
+    continuation_trace_eq X,
+    continued_represented_flow_is_analytic X⟩
+
 end InfoGeometry.Quantum.InductiveAnalyticFlow
+

@@ -45,25 +45,19 @@ def pad1to2 (u : RPhaseSpace 1) : RPhaseSpace 2 :=
   unfold fockState normSq
   norm_num
 
-abbrev TwoStageWeylState := (RPhaseSpace 1 → ℂ) × (RPhaseSpace 2 → ℂ)
+structure TwoStageWeylState where
+  omega1 : RPhaseSpace 1 → ℂ
+  omega2 : RPhaseSpace 2 → ℂ
+  compatible : ∀ u : RPhaseSpace 1, omega2 (pad1to2 u) = omega1 u
 
-namespace TwoStageWeylState
-
-def omega1 (state : TwoStageWeylState) : RPhaseSpace 1 → ℂ := state.1
-
-def omega2 (state : TwoStageWeylState) : RPhaseSpace 2 → ℂ := state.2
-
-end TwoStageWeylState
-
-def fockTwoStageState : TwoStageWeylState := (fockState, fockState)
-
-theorem fockTwoStageState_compatible (u : RPhaseSpace 1) :
-    fockTwoStageState.omega2 (pad1to2 u) = fockTwoStageState.omega1 u := by
-  exact fock_state_compatible u
+def fockTwoStageState : TwoStageWeylState where
+  omega1 := fockState
+  omega2 := fockState
+  compatible := fock_state_compatible
 
 @[simp] theorem two_stage_fock_compatible (u : RPhaseSpace 1) :
     fockTwoStageState.omega2 (pad1to2 u) = fockTwoStageState.omega1 u :=
-  fockTwoStageState_compatible u
+  fockTwoStageState.compatible u
 
 theorem canonicalSigma_skew {n : ℕ} (u v : RPhaseSpace n) :
     canonicalSigma v u = -canonicalSigma u v := by

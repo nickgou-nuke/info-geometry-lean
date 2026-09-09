@@ -26,24 +26,6 @@ def chainApply {α : Type*} (next : Nat → α → α) (n : Nat) : Nat → α �
   | 0, x => x
   | k + 1, x => next (n + k) (chainApply next n k x)
 
-@[simp] theorem chainApply_zero {α : Type*}
-    (next : Nat → α → α) (n : Nat) (x : α) :
-    chainApply next n 0 x = x := rfl
-
-@[simp] theorem chainApply_succ {α : Type*}
-    (next : Nat → α → α) (n k : Nat) (x : α) :
-    chainApply next n (k + 1) x =
-      next (n + k) (chainApply next n k x) := rfl
-
-theorem chainApply_add {α : Type*}
-    (next : Nat → α → α) (n k l : Nat) (x : α) :
-    chainApply next n (k + l) x =
-      chainApply next (n + k) l (chainApply next n k x) := by
-  induction l with
-  | zero => simp [chainApply]
-  | succ l ih =>
-      simp [Nat.add_succ, chainApply, ih, Nat.add_assoc]
-
 /--
 Generic finite-chain predicate transport.
 
@@ -66,73 +48,6 @@ theorem invariant_preserved_along_finite_chain
   | succ k ih =>
       simpa [chainApply, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
         using hnext (n + k) (chainApply next n k x) ih
-
-theorem chainApply_add_preserved
-    {A : Type*} [Semiring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) (x y : A) :
-    chainApply (fun i a => φ i a) n k (x + y) =
-      chainApply (fun i a => φ i a) n k x +
-        chainApply (fun i a => φ i a) n k y := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih, map_add]
-
-theorem chainApply_mul_preserved
-    {A : Type*} [Semiring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) (x y : A) :
-    chainApply (fun i a => φ i a) n k (x * y) =
-      chainApply (fun i a => φ i a) n k x *
-        chainApply (fun i a => φ i a) n k y := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih, map_mul]
-
-theorem chainApply_neg_preserved
-    {A : Type*} [Ring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) (x : A) :
-    chainApply (fun i a => φ i a) n k (-x) =
-      -chainApply (fun i a => φ i a) n k x := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih, map_neg]
-
-theorem chainApply_sub_preserved
-    {A : Type*} [Ring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) (x y : A) :
-    chainApply (fun i a => φ i a) n k (x - y) =
-      chainApply (fun i a => φ i a) n k x -
-        chainApply (fun i a => φ i a) n k y := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih, map_sub]
-
-theorem chainApply_zero_preserved
-    {A : Type*} [Semiring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) :
-    chainApply (fun i a => φ i a) n k 0 = 0 := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih]
-
-theorem chainApply_one_preserved
-    {A : Type*} [Semiring A]
-    (φ : Nat → A →+* A)
-    (n k : Nat) :
-    chainApply (fun i a => φ i a) n k 1 = 1 := by
-  induction k with
-  | zero => simp [chainApply]
-  | succ k ih =>
-      simp [chainApply, ih]
 
 /--
 Square-zero/nilpotent identity is preserved along a finite chain of ring

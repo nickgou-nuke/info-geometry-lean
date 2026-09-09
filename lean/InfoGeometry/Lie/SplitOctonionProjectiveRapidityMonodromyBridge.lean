@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+import InfoGeometry.Krein.SplitBoost
 
 /-!
 # Split-Octonion Projective Rapidity, Triad Flow and Monodromy Bridge
@@ -63,6 +64,62 @@ theorem rapidity_boost (xp xm s : ℝ) (hxp : 0 < xp) (hxm : 0 < xm) :
   rw [Real.log_mul (ne_of_gt hpos) (ne_of_gt (Real.exp_pos (2 * s)))]
   rw [Real.log_exp]
   ring
+
+/-! The canonical split boost and the projective rapidity use the same
+parameter.  This is the transport theorem between the native `SplitComplex`
+boost owner and the ratio readout above. -/
+
+theorem rapidity_boostElement_mul
+    (t : ℝ) :
+    rapidity
+        (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.leftPart
+          (InfoGeometry.Krein.SplitBoost.boostElement t))
+        (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.rightPart
+          (InfoGeometry.Krein.SplitBoost.boostElement t)) =
+      t := by
+  unfold rapidity projZ
+  simp [InfoGeometry.Krein.SplitBoost.boostElement,
+    InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.leftPart,
+    InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.rightPart,
+    Real.cosh_add_sinh, Real.cosh_sub_sinh,
+    Real.log_div (ne_of_gt (Real.exp_pos t))
+      (ne_of_gt (Real.exp_pos (-t)))]
+  ring
+
+theorem rapidity_boostElement_action
+    (xp xm t : ℝ) (hxp : 0 < xp) (hxm : 0 < xm) :
+    rapidity
+      (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.leftPart
+        (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.mul
+          (InfoGeometry.Krein.SplitBoost.boostElement t)
+          (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.reconstruct
+            xp xm)))
+      (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.rightPart
+        (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.mul
+          (InfoGeometry.Krein.SplitBoost.boostElement t)
+          (InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.reconstruct
+            xp xm))) =
+      rapidity xp xm + t := by
+  rw [InfoGeometry.Krein.SplitBoost.boost_leftPart_mul,
+    InfoGeometry.Krein.SplitBoost.boost_rightPart_mul]
+  simp only [InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.leftPart,
+    InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.rightPart,
+    InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex.reconstruct]
+  have hleft : Real.exp t * ((xp + xm) / 2 + (xp - xm) / 2) =
+      Real.exp t * xp := by ring
+  have hright : Real.exp (-t) * ((xp + xm) / 2 - (xp - xm) / 2) =
+      Real.exp (-t) * xm := by ring
+  rw [hleft, hright]
+  unfold rapidity projZ
+  have hratio :
+      (Real.exp t * xp) / (Real.exp (-t) * xm) =
+        (xp * Real.exp (2 * t)) / xm := by
+    field_simp [ne_of_gt (Real.exp_pos t), ne_of_gt (Real.exp_pos (-t)),
+      ne_of_gt hxp, ne_of_gt hxm]
+    rw [← Real.exp_add]
+    ring_nf
+  rw [hratio]
+  exact rapidity_boost xp xm t hxp hxm
 
 /-- 🏆 THEOREM 5: Information surprisal difference matches $-2 \times$ rapidity. -/
 theorem surprisal_eq_rapidity (pp pm : ℝ) (hpp : 0 < pp) (hpm : 0 < pm) :

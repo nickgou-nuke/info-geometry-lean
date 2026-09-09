@@ -113,6 +113,18 @@ theorem second_half_isotropic (u v : E) :
 theorem mixed_pairing (u v : E) :
     metric (u, 0) (0, v) = inner ℝ u v := by simp [metric_apply]
 
+/-! ### Nondegeneracy of the finite mixed Hessian metric -/
+
+theorem metric_nondegenerate (U : Doubled E)
+    (hU : ∀ V : Doubled E, metric U V = 0) : U = 0 := by
+  have h₁ : inner ℝ U.1 U.1 = 0 := by
+    simpa [metric_apply] using hU (0, U.1)
+  have h₂ : inner ℝ U.2 U.2 = 0 := by
+    simpa [metric_apply] using hU (U.2, 0)
+  have h₁' : U.1 = 0 := inner_self_eq_zero.mp h₁
+  have h₂' : U.2 = 0 := inner_self_eq_zero.mp h₂
+  exact Prod.ext h₁' h₂'
+
 theorem grading_anti_isometry (U V : Doubled E) :
     metric (grading U) (grading V) = -metric U V := by
   simp [metric_apply]
@@ -128,6 +140,36 @@ theorem symplectic_apply (U V : Doubled E) :
 theorem symplectic_skew (U V : Doubled E) :
     symplectic U V = -symplectic V U := by
   simp [symplectic_apply, real_inner_comm]
+
+theorem symplectic_nondegenerate (U : Doubled E)
+    (hU : ∀ V : Doubled E, symplectic U V = 0) : U = 0 := by
+  have hgraded : grading U = 0 := by
+    apply metric_nondegenerate (grading U)
+    intro V
+    simpa [symplectic] using hU V
+  have hU' : grading (grading U) = 0 := by
+    rw [hgraded, map_zero]
+  simpa [grading_sq] using hU'
+
+theorem symplectic_left_ext {U W : Doubled E}
+    (h : ∀ V : Doubled E, symplectic U V = symplectic W V) : U = W := by
+  apply sub_eq_zero.mp
+  apply symplectic_nondegenerate (U - W)
+  intro V
+  have hV := h V
+  rw [symplectic_apply, symplectic_apply] at hV
+  rw [symplectic_apply]
+  simp only [Prod.fst_sub, Prod.snd_sub, inner_sub_left]
+  linear_combination hV
+
+theorem symplectic_right_ext {U W : Doubled E}
+    (h : ∀ V : Doubled E, symplectic V U = symplectic V W) : U = W := by
+  apply symplectic_left_ext
+  intro V
+  calc
+    symplectic U V = -symplectic V U := symplectic_skew U V
+    _ = -symplectic V W := by rw [h V]
+    _ = symplectic W V := by rw [symplectic_skew W V]
 
 theorem symplectic_exchange (U V : Doubled E) :
     symplectic (exchange U) (exchange V) = -symplectic U V := by
@@ -186,6 +228,31 @@ theorem hasFDerivAt_gradient (X : Doubled E) :
 theorem fderiv_potential (X : Doubled E) :
     fderiv ℝ potential X = potentialDerivative X :=
   (hasFDerivAt_potential X).fderiv
+
+theorem fderiv_potential_apply_eq_metric (X V : Doubled E) :
+    fderiv ℝ potential X V = metric X V := by
+  rw [fderiv_potential, potentialDerivative_eq_metric]
+
+theorem symplectic_grading_eq_fderiv_potential (X V : Doubled E) :
+    symplectic (grading X) V = fderiv ℝ potential X V := by
+  rw [symplectic_grading_left, ← fderiv_potential_apply_eq_metric]
+
+theorem grading_unique_for_potential_derivative {X Y : Doubled E}
+    (h : ∀ V : Doubled E,
+      symplectic X V = fderiv ℝ potential Y V) :
+    X = grading Y := by
+  apply symplectic_left_ext
+  intro V
+  calc
+    symplectic X V = fderiv ℝ potential Y V := h V
+    _ = symplectic (grading Y) V :=
+      (symplectic_grading_eq_fderiv_potential Y V).symm
+
+theorem fderiv_potential_apply_grading_eq_zero (X : Doubled E) :
+    fderiv ℝ potential X (grading X) = 0 := by
+  rw [← symplectic_grading_eq_fderiv_potential]
+  have h := symplectic_skew (grading X) (grading X)
+  linarith
 
 theorem fderiv_gradient (X : Doubled E) :
     fderiv ℝ gradient X = hessian :=

@@ -16,7 +16,7 @@ open Set InfoGeometry.Canonical.AsanoRuelleEndpoint
 open InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
 
 /--
-If `0 ∉ K₂`, the zero-free property evaluated at `z₂ = 0` forces
+If `0 ∉ K₂`, the zero-free hypothesis evaluated at `z₂ = 0` forces
 `-A/B ∈ K₁`.
 -/
 theorem asano_zero_slice_left
@@ -36,7 +36,7 @@ theorem asano_zero_slice_left
   exact h_eval h_zero
 
 /--
-If `0 ∉ K₁`, the zero-free property evaluated at `z₁ = 0` forces
+If `0 ∉ K₁`, the zero-free hypothesis evaluated at `z₁ = 0` forces
 `-A/C ∈ K₂`.
 -/
 theorem asano_zero_slice_right

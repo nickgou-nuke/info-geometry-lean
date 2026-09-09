@@ -40,21 +40,18 @@ private lemma bundledAssociator_add_right (X Y Z W : ZornVectorMatrix R) :
 
 private lemma bundledAssociator_left_alt (X Y : ZornVectorMatrix R) :
     bundledAssociator X X Y = 0 := by
-  simpa only [bundledAssociator, associator,
-    ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using
-    (associator_left_alternative X Y)
+  change associator X X Y = zero
+  exact associator_left_alternative X Y
 
 private lemma bundledAssociator_right_alt (X Y : ZornVectorMatrix R) :
     bundledAssociator X Y Y = 0 := by
-  simpa only [bundledAssociator, associator,
-    ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using
-    (associator_right_alternative X Y)
+  change associator X Y Y = zero
+  exact associator_right_alternative X Y
 
 private lemma bundledAssociator_flexible (X Y : ZornVectorMatrix R) :
     bundledAssociator X Y X = 0 := by
-  simpa only [bundledAssociator, associator,
-    ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using
-    (associator_flexible X Y)
+  change associator X Y X = zero
+  exact associator_flexible X Y
 
 private lemma bundledAssociator_swap12 (X Y Z : ZornVectorMatrix R) :
     bundledAssociator X Y Z = -bundledAssociator Y X Z := by
@@ -124,8 +121,7 @@ private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
       bundledAssociator X Y (X * Z) + bundledAssociator X Y (Z * X) -
         bundledAssociator X (X * Y) Z - X * bundledAssociator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h3
-    simpa only [_root_.sub_eq_add_neg, neg_neg, _root_.add_zero, _root_.sub_zero,
-      _root_.neg_zero,
+    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero,
       _root_.mul_neg, sub_neg_eq_add] using h3
   have hs :
       (bundledAssociator (X * X) Y Z - bundledAssociator X (X * Y) Z -
@@ -316,13 +312,12 @@ theorem adjoint_diagonal_composition
   rw [norm_mul, norm_conj, norm_conj, norm_smul, conj_smul,
     mul_smul, trace_smul, trace_conj_triple_reverse Y Z X] at hn
   rw [← trace_mul_cyclic X Y Z] at hn
-  have hn' :
-      norm (conj X * conj Z - p • Y) =
-        norm X * norm Z + p ^ 2 * norm Y -
-          p * trace ((X * Y) * Z) := by
-    simpa only [ZornVectorMatrix.sub_eq_add_neg, _root_.sub_eq_add_neg] using hn
-  rw [hn']
-  ring_nf
+  change (p * r - norm Z) * (p * q - norm X) -
+      norm (sub (mul (conj X) (conj Z)) (smul p Y)) =
+    (p * q * r - p * norm Y - q * norm Z - r * norm X +
+      trace (mul (mul X Y) Z)) * p
+  rw [hn]
+  ring
 
 /-- Polarization of the Zorn norm under addition, in trace-pairing form. -/
 theorem norm_add_eq_norm_add_norm_add_trace_mul_conj

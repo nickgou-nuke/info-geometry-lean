@@ -40,7 +40,7 @@ namespace TensorProduct
 open GradedTensorProduct
 end TensorProduct
 
-/-- The owned Albert split-doubling property. -/
+/-- The owned Albert split-doubling witness. -/
 theorem splitAlbert_zero_divisors :
     ∃ x y : AlbertStep ℝ (SplitQuaternion ℝ) (1 : ℝ),
       x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0 := by
@@ -132,16 +132,10 @@ theorem splitCl44_projective_null_nonempty :
     Nonempty InfoGeometry.Projective.SplitCl44NullBoundary.SplitCl44ProjectiveNullSpace :=
   InfoGeometry.Projective.SplitCl44NullBoundary.splitCl44ProjectiveNullSpace_nonempty
 
-/- The concrete conformal `Cl(5,5)` null pair is owned by the split Bott
-   construction. The `Nonempty` theorem below is retained only as a
-   compatibility readout for older route packets. -/
-noncomputable abbrev conformal_null_pair :
-    InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
-  InfoGeometry.Clifford.ConformalLift55.conformalNullPair
-
+/-- The conformal `Cl(5,5)` null-pair construction is still explicit theorem debt. -/
 theorem conformal_null_pair_exists :
     Nonempty InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
-  ⟨conformal_null_pair⟩
+  InfoGeometry.Clifford.ConformalLift55.conformalNullPair_exists
 
 /--
 The actual bridge theorem the repository owns:

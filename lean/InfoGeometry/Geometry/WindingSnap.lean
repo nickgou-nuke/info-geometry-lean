@@ -141,7 +141,7 @@ theorem boundaryIntegral_flow_eq_zero_of_flat
 /--
 A readout connecting states to residue regions.
 
-This removes the need to repeatedly pass an explicit property
+This removes the need to repeatedly pass an explicit hypothesis
 `F.winding x = W.winding (stateRegion x)`.
 -/
 def StateResidueReadout
@@ -184,8 +184,8 @@ def mk
     StateResidueReadout I N ω W F :=
   ⟨stateRegion, winding_eq_regionWinding⟩
 
-/-- Recover the nonzero residue property from the property packet. -/
-theorem boundaryIntegral_ne_zero_of_property
+/-- Recover the nonzero residue hypothesis from the witness packet. -/
+theorem boundaryIntegral_ne_zero_of_witness
     {x : State}
     (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0) :
     I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
@@ -208,13 +208,13 @@ theorem nonzero_boundaryIntegral_cannot_flow_to_flat
     (WindingNumberDatum.boundaryIntegral_eq_zero_of_winding_zero W hRegion)
 
 /-- Witness-routed residue obstruction theorem. -/
-theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_property
+theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_witness
     {x : State}
     (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0)
     (t : ℝ) :
   F.flow t x ∉ F.Flat :=
   R.nonzero_boundaryIntegral_cannot_flow_to_flat
-    (R.boundaryIntegral_ne_zero_of_property Wz) t
+    (R.boundaryIntegral_ne_zero_of_witness Wz) t
 
 /-- Equivalent version using nonzero region winding. -/
 theorem nonzero_region_winding_cannot_flow_to_flat

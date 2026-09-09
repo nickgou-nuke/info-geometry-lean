@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
+import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -31,6 +32,7 @@ namespace InfoGeometry.Canonical.BKMDriftMetric
 
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 open InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
+open InfoGeometry.SuperMetriplectic
 
 /--
 Raw BKM drift metric carrier.
@@ -40,7 +42,7 @@ homogeneous of Weyl weight two.  `gaugeScale` is the inverse weight-two
 normalizer.  `physicalMass` is the gauge-fixed scalar readout.
 -/
 @[rep_depth operator]
-structure BKMDriftMetricDatum
+structure BKMDriftMetricCarrier
     (State : Type*) where
   scale : ℝ → State → State
   driftIntensity : State → ℝ
@@ -51,14 +53,14 @@ structure BKMDriftMetricDatum
 @[rep_depth operator]
 def IsGaugeFixedBKMDriftMass
     {State : Type*}
-    (M : BKMDriftMetricDatum State) : Prop :=
+    (M : BKMDriftMetricCarrier State) : Prop :=
   ∀ s : State, M.physicalMass s = M.driftIntensity s * M.gaugeScale s
 
 /-- External predicate: the BKM drift intensity has Weyl weight two. -/
 @[rep_depth operator]
 def HasWeightTwoBKMDriftIntensity
     {State : Type*}
-    (M : BKMDriftMetricDatum State) : Prop :=
+    (M : BKMDriftMetricCarrier State) : Prop :=
   ∀ (c : ℝ) (s : State),
     M.driftIntensity (M.scale c s) = c ^ 2 * M.driftIntensity s
 
@@ -66,7 +68,7 @@ def HasWeightTwoBKMDriftIntensity
 @[rep_depth operator]
 def HasInverseWeightTwoBKMGauge
     {State : Type*}
-    (M : BKMDriftMetricDatum State) : Prop :=
+    (M : BKMDriftMetricCarrier State) : Prop :=
   ∀ (c : ℝ) (s : State),
     c ≠ 0 →
       M.gaugeScale (M.scale c s) = (c ^ 2)⁻¹ * M.gaugeScale s
@@ -75,13 +77,13 @@ def HasInverseWeightTwoBKMGauge
 @[rep_depth operator]
 def HasNonnegativeBKMGauge
     {State : Type*}
-    (M : BKMDriftMetricDatum State) : Prop :=
+    (M : BKMDriftMetricCarrier State) : Prop :=
   ∀ s : State, 0 ≤ M.gaugeScale s
 
-namespace BKMDriftMetricDatum
+namespace BKMDriftMetricCarrier
 
 variable {State : Type*}
-variable (M : BKMDriftMetricDatum State)
+variable (M : BKMDriftMetricCarrier State)
 
 /--
 Gauge-fixed BKM mass/stiffness is invariant under nonzero Weyl scaling.
@@ -111,12 +113,12 @@ theorem physicalMass_nonnegative
   rw [hM s]
   exact mul_nonneg (hI s) (hG s)
 
-end BKMDriftMetricDatum
+end BKMDriftMetricCarrier
 
 /-! ## Fusion with the existing Connes/BKM metric owner lane -/
 
 /--
-Canonical interface connecting an existing `BKMMetricDatum` to a Weyl-normalized
+Canonical socket connecting an existing `BKMMetricDatum` to a Weyl-normalized
 mass/stiffness readout.
 
 The equality between `metric φ X X` and `driftIntensity` is an external
@@ -129,7 +131,7 @@ structure ConnesBKMDriftFusion
   bkm : BKMMetricDatum Weight Tangent
   stateWeight : State → Weight
   tangentDrift : State → Tangent
-  metric : BKMDriftMetricDatum State
+  metric : BKMDriftMetricCarrier State
 
 /--
 External predicate: the carrier's drift intensity is the diagonal BKM metric of
@@ -176,5 +178,74 @@ theorem physicalMass_nonnegative
     (fun x => F.driftIntensity_nonnegative hcal x) hG s
 
 end ConnesBKMDriftFusion
+
+/-! ## Fusion with the existing operator KL/BKM Hessian owner lane -/
+
+/--
+Canonical socket connecting the operatorial KL/BKM Hessian packet to a
+Weyl-normalized drift mass/stiffness readout.
+-/
+@[rep_depth operator]
+structure OperatorBKMDriftFusion
+    (Op State : Type*) where
+  bkmHessian : OperatorBKMHessianPacket Op
+  driftGenerator : State → Op
+  metric : BKMDriftMetricCarrier State
+
+/--
+External predicate: the carrier's drift intensity is the diagonal BKM Hessian
+of the supplied operator generator.
+-/
+@[rep_depth operator]
+def DriftIntensityCalibratesOperatorBKM
+    {Op State : Type*}
+    (F : OperatorBKMDriftFusion Op State) : Prop :=
+  ∀ s : State,
+    F.metric.driftIntensity s =
+      F.bkmHessian.bkm (F.driftGenerator s) (F.driftGenerator s)
+
+namespace OperatorBKMDriftFusion
+
+variable {Op State : Type*}
+variable (F : OperatorBKMDriftFusion Op State)
+
+/--
+The calibrated operator BKM drift intensity is nonnegative by the imported
+operator KL/BKM owner theorem.
+-/
+@[rep_depth operator]
+theorem driftIntensity_nonnegative
+    (hcal : DriftIntensityCalibratesOperatorBKM F)
+    (s : State) :
+    0 ≤ F.metric.driftIntensity s := by
+  rw [hcal s]
+  exact F.bkmHessian.bkm_nonneg (F.driftGenerator s)
+
+/--
+The operatorial Hessian readout equals the calibrated BKM intensity.
+-/
+@[rep_depth operator]
+theorem hessian_drift_eq_intensity
+    (hcal : DriftIntensityCalibratesOperatorBKM F)
+    (s : State) :
+    F.bkmHessian.hessian (F.driftGenerator s) (F.driftGenerator s) =
+      F.metric.driftIntensity s := by
+  rw [F.bkmHessian.hessian_eq_bkm_form, hcal s]
+
+/--
+The calibrated physical operator BKM mass/stiffness is nonnegative after gauge
+fixing.
+-/
+@[rep_depth operator]
+theorem physicalMass_nonnegative
+    (hcal : DriftIntensityCalibratesOperatorBKM F)
+    (hM : IsGaugeFixedBKMDriftMass F.metric)
+    (hG : HasNonnegativeBKMGauge F.metric)
+    (s : State) :
+    0 ≤ F.metric.physicalMass s :=
+  F.metric.physicalMass_nonnegative hM
+    (fun x => F.driftIntensity_nonnegative hcal x) hG s
+
+end OperatorBKMDriftFusion
 
 end InfoGeometry.Canonical.BKMDriftMetric

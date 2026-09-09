@@ -1,3 +1,4 @@
-import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
+import Mathlib.Tactic
 
-/-! Compatibility path for the Bulgarian thermodynamic geometry owners. -/
+namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
+end InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge

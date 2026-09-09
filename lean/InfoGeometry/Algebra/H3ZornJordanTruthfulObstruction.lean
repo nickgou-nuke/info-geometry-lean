@@ -16,7 +16,7 @@ def H3ZornJordanTotalValidity : Prop :=
 
 /-- The total closure package follows from the McCrimmon operator proof. -/
 theorem H3ZornJordanTotalValidity_proof : H3ZornJordanTotalValidity :=
-  ⟨H3ZornJordanProductLaw_holds, TJordanCommutation_holds⟩
+  ⟨H3ZornJordanProductLaw_proof, TJordanCommutation_proof⟩
 
 /-- Total validity contains the product law as its first field. -/
 theorem H3ZornJordanProductLaw_of_totalValidity

@@ -33,15 +33,9 @@ open PrimonFinite
 /-! ## 1. Two-component prime spinors -/
 
 /-- A two-component chiral spinor over a coefficient ring. -/
-abbrev PrimeSpinor (R : Type*) := R × R
-
-namespace PrimeSpinor
-
-abbrev plus {R : Type*} (u : PrimeSpinor R) : R := u.1
-
-abbrev minus {R : Type*} (u : PrimeSpinor R) : R := u.2
-
-end PrimeSpinor
+structure PrimeSpinor (R : Type*) where
+  plus : R
+  minus : R
 
 /-- The positive one-prime thermal spinor `(1, a)`. -/
 def thermalSpinorPlus
@@ -136,10 +130,7 @@ theorem projectiveRatio_chiralBoostSpinor_eq_square
     (y : R) :
     projectiveRatio (chiralBoostSpinor y) = scalarWeightFromSpinor y := by
   unfold projectiveRatio chiralBoostSpinor scalarWeightFromSpinor
-  by_cases hy : y = 0
-  · simp [hy]
-  · change y * (y⁻¹)⁻¹ = y * y
-    rw [inv_inv]
+  simp
 
 /--
 One-prime Euler factor as a spinor bilinear.
@@ -284,23 +275,23 @@ Majorana spinor readout packet.
 This packages only the finite modes and amplitudes used by the finite spinor
 bilinear theorem.
 -/
-structure PrimeSpinorSquareRootData
+structure PrimeSpinorSquareRootPacket
     (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R] where
   modes : Finset PrimeLabel
   amplitude : PrimeLabel → R
 
-namespace PrimeSpinorSquareRootData
+namespace PrimeSpinorSquareRootPacket
 
 /-- Packet-level finite spinor bilinear partition theorem, proved from the owner theorem. -/
 theorem bilinear_partition
     {PrimeLabel R : Type*}
     [DecidableEq PrimeLabel] [CommRing R]
-    (P : PrimeSpinorSquareRootData PrimeLabel R) :
+    (P : PrimeSpinorSquareRootPacket PrimeLabel R) :
     finitePrimeSpinorBilinearProduct P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
         (fun p => scalarWeightFromSpinor (P.amplitude p)) :=
   finitePrimeSpinorBilinearProduct_eq_weylDenominator_squareWeights P.modes P.amplitude
 
-end PrimeSpinorSquareRootData
+end PrimeSpinorSquareRootPacket
 
 end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

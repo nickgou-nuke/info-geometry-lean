@@ -10,7 +10,7 @@ open scoped InnerProductSpace
 
 Closure package for the currently-owned operatorial supercharge lane.
 
-This file does not postulat3 a new “gap = charge” ontology. It only places the
+This file does not postulate a new “gap = charge” ontology. It only places the
 existing owners on one transport slice:
 
 - `SuperchargeGapHessianBridge` supplies the CPT-supercharge CCR anchor, the

@@ -127,6 +127,32 @@ theorem wordParity_cons_true (bits : List Bool) :
   rw [show (1 + occupationNumber bits) = occupationNumber bits + 1 by omega]
   simp [pow_succ]
 
+/--
+Consolidated arithmetic-UHF trace package:
+the finite UHF Boolean trace over prime weights is exactly the finite Euler
+superdeterminant, and appending a prime appends one graded Euler factor.
+-/
+theorem finite_arithmetic_uhf_trace_synthesis :
+    (∀ weight : ℕ → ℂ, ∀ modes : List ℕ,
+      finiteArithmeticSupertrace weight modes =
+        finiteEulerSuperdeterminant weight modes) ∧
+    (∀ weight : ℕ → ℂ, ∀ modes : List ℕ, ∀ p : ℕ,
+      finiteArithmeticSupertrace weight (modes ++ [p]) =
+        finiteArithmeticSupertrace weight modes * (1 - weight p)) ∧
+    (∀ p : ℕ, ∀ ps : List ℕ, ∀ bits : List Bool,
+      occupiedInteger (p :: ps) (false :: bits) = occupiedInteger ps bits) ∧
+    (∀ p : ℕ, ∀ ps : List ℕ, ∀ bits : List Bool,
+      occupiedInteger (p :: ps) (true :: bits) =
+        p * occupiedInteger ps bits) ∧
+    (∀ bits : List Bool, wordParity (false :: bits) = wordParity bits) ∧
+    (∀ bits : List Bool, wordParity (true :: bits) = -wordParity bits) := by
+  exact ⟨finiteArithmeticSupertrace_eq_euler,
+    finiteArithmeticSupertrace_snoc,
+    occupiedInteger_cons_false,
+    occupiedInteger_cons_true,
+    wordParity_cons_false,
+    wordParity_cons_true⟩
+
 end FiniteArithmeticUHFTrace
 
 end noncomputable section

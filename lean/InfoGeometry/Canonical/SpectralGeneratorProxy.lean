@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Canonical/SpectralGeneratorProxy.lean
 
-Bounded proxy interfaces for unbounded spectral generators.
+Bounded proxy sockets for unbounded spectral generators.
 
 This file does not fake an unbounded closed-operator API.  It records bounded
 data extracted from a spectral generator and proves the algebraic consequences
@@ -10,6 +10,7 @@ that can be proved at this layer.
 
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -174,7 +175,7 @@ theorem denominator_phase_linear :
 /--
 The supplied inverse commutes with the phase axis.
 
-This is not a property: it follows from denominator phase-linearity and the
+This is not a hypothesis: it follows from denominator phase-linearity and the
 left/right inverse laws.
 -/
 theorem denomInv_phase_linear :
@@ -210,6 +211,16 @@ theorem boundedCayley_phase_linear :
     PhaseLinear K R.boundedCayley := by
   exact PhaseLinear.comp R.numerator_phase_linear R.denomInv_phase_linear
 
+/-- Right inverse law for the denominator. -/
+theorem denominator_right_inverse :
+    R.denominator.comp R.denomInv = ContinuousLinearMap.id ℝ H := by
+  simpa [denominator] using R.denom_right_inverse
+
+/-- Left inverse law for the denominator. -/
+theorem denominator_left_inverse :
+    R.denomInv.comp R.denominator = ContinuousLinearMap.id ℝ H := by
+  simpa [denominator] using R.denom_left_inverse
+
 end PhaseResolventDatum
 
 /-! ## 3. Bounded transform proxy -/
@@ -237,9 +248,14 @@ namespace BoundedTransformDatum
 variable {K : EndR H}
 variable (B : BoundedTransformDatum K)
 
+/-- Named re-export of bounded-transform phase-linearity. -/
+theorem phase_linear :
+    PhaseLinear K B.F :=
+  B.F_phase_linear
+
 end BoundedTransformDatum
 
-/-! ## 4. Abstract adjoint and compact-defect interfaces -/
+/-! ## 4. Abstract adjoint and compact-defect sockets -/
 
 /--
 Abstract adjoint datum on bounded endomorphisms.
@@ -247,19 +263,14 @@ Abstract adjoint datum on bounded endomorphisms.
 This avoids hard-wiring a particular Hilbert-space adjoint API into the roadmap
 layer while keeping every downstream compact-defect statement bounded.
 -/
-abbrev OperatorAdjointDatum := EndR H → EndR H
-
-namespace OperatorAdjointDatum
-
-abbrev adj (a : OperatorAdjointDatum (H := H)) : EndR H → EndR H :=
-  a
-
-end OperatorAdjointDatum
+structure OperatorAdjointDatum where
+  /-- Abstract adjoint operation. -/
+  adj : EndR H → EndR H
 
 /--
-Bounded Kasparov/Fredholm-cycle interface.
+Bounded Kasparov/Fredholm-cycle socket.
 
-This is intentionally property-gated.  Compactness, Fredholmness, and
+This is intentionally witness-gated.  Compactness, Fredholmness, and
 commutator compactness are not consequences of the bounded transform alone.
 -/
 structure BoundedKasparovCycle
@@ -274,7 +285,7 @@ structure BoundedKasparovCycle
   /-- Adjoint datum. -/
   adjoint : OperatorAdjointDatum (H := H)
 
-  /-- Compact-operator ideal/interface. -/
+  /-- Compact-operator ideal/socket. -/
   compactIdeal : Set (EndR H)
 
   /-- The representation preserves the phase axis. -/
@@ -298,7 +309,42 @@ structure BoundedKasparovCycle
     ∀ a : A,
       F.comp (rep a) - (rep a).comp F ∈ compactIdeal
 
-/-! ## 5. Bridge from bounded transform to Kasparov interface -/
+namespace BoundedKasparovCycle
+
+variable {A : Type*}
+variable {K : EndR H}
+variable (C : BoundedKasparovCycle (H := H) A K)
+
+/-- Named re-export: the bounded transform is phase-linear. -/
+theorem F_phase :
+    PhaseLinear K C.F :=
+  C.F_phase_linear
+
+/-- Named re-export: representation elements are phase-linear. -/
+theorem rep_phase
+    (a : A) :
+    PhaseLinear K (C.rep a) :=
+  C.rep_phase_linear a
+
+/-- Named re-export: self-adjointness modulo compacts. -/
+theorem selfadjoint_compact :
+    C.F - C.adjoint.adj C.F ∈ C.compactIdeal :=
+  C.selfadjoint_mod_compact
+
+/-- Named re-export: square defect compactness. -/
+theorem square_compact :
+    C.F.comp C.F - ContinuousLinearMap.id ℝ H ∈ C.compactIdeal :=
+  C.square_mod_compact
+
+/-- Named re-export: commutator compactness. -/
+theorem commutator_compact
+    (a : A) :
+    C.F.comp (C.rep a) - (C.rep a).comp C.F ∈ C.compactIdeal :=
+  C.commutator_mod_compact a
+
+end BoundedKasparovCycle
+
+/-! ## 5. Bridge from bounded transform to Kasparov socket -/
 
 /--
 Admissibility data for promoting a bounded transform to a bounded Kasparov
@@ -317,7 +363,7 @@ structure KasparovAdmissibility
   /-- Adjoint datum. -/
   adjoint : OperatorAdjointDatum (H := H)
 
-  /-- Compact-operator ideal/interface. -/
+  /-- Compact-operator ideal/socket. -/
   compactIdeal : Set (EndR H)
 
   /-- The representation preserves the phase axis. -/
@@ -360,7 +406,51 @@ def toBoundedKasparovCycle :
   square_mod_compact := Adm.square_mod_compact
   commutator_mod_compact := Adm.commutator_mod_compact
 
+/-- The promoted cycle uses the supplied bounded transform. -/
+@[simp] theorem toBoundedKasparovCycle_F :
+    Adm.toBoundedKasparovCycle.F = B.F :=
+  rfl
+
+/-- The promoted cycle uses the supplied representation. -/
+@[simp] theorem toBoundedKasparovCycle_rep
+    (a : A) :
+    Adm.toBoundedKasparovCycle.rep a = Adm.rep a :=
+  rfl
+
+/-- The promoted cycle inherits the bounded-transform phase-linearity proof. -/
+theorem toBoundedKasparovCycle_F_phase :
+    PhaseLinear K Adm.toBoundedKasparovCycle.F :=
+  B.F_phase_linear
+
 end KasparovAdmissibility
+
+/-! ## 6. Constructive readouts -/
+
+/-- Supplied phase-resolvent data produce a phase-linear bounded Cayley transform. -/
+@[owner_target_tag]
+theorem phaseResolventOwnerTarget :
+    ∀ (K : EndR H) (R : PhaseResolventDatum K),
+      PhaseLinear K R.boundedCayley := by
+  intro K R
+  exact R.boundedCayley_phase_linear
+
+/-- Supplied bounded-transform data carry phase-linearity of `F`. -/
+@[owner_target_tag]
+theorem boundedTransformOwnerTarget :
+    ∀ (K : EndR H) (B : BoundedTransformDatum K),
+      PhaseLinear K B.F := by
+  intro K B
+  exact B.phase_linear
+
+/-- Admissibility data promote a bounded transform without changing its `F`. -/
+@[owner_target_tag]
+theorem boundedKasparovOwnerTarget :
+  ∀ (A : Type*) (K : EndR H) (B : BoundedTransformDatum K),
+    ∀ Adm : KasparovAdmissibility A K B,
+      Adm.toBoundedKasparovCycle.F = B.F ∧
+        PhaseLinear K Adm.toBoundedKasparovCycle.F := by
+  intro A K B Adm
+  exact ⟨Adm.toBoundedKasparovCycle_F, Adm.toBoundedKasparovCycle_F_phase⟩
 
 attribute [rep_depth operator]
   EndR
@@ -382,9 +472,16 @@ attribute [rep_depth operator]
   PhaseResolventDatum.denominator_phase_linear
   PhaseResolventDatum.boundedCayley_phase_linear
   BoundedTransformDatum
+  BoundedTransformDatum.phase_linear
   OperatorAdjointDatum
   BoundedKasparovCycle
+  BoundedKasparovCycle.F_phase
+  BoundedKasparovCycle.rep_phase
+  BoundedKasparovCycle.commutator_compact
   KasparovAdmissibility
   KasparovAdmissibility.toBoundedKasparovCycle
+  phaseResolventOwnerTarget
+  boundedTransformOwnerTarget
+  boundedKasparovOwnerTarget
 
 end InfoGeometry.Canonical.SpectralGeneratorProxy

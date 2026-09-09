@@ -16,7 +16,7 @@ open InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 /-!
 # Bott-stabilized frame equivalence
 
-This file is a theorem-safe interface for Bott/Clifford stabilization of the real
+This file is a theorem-safe socket for Bott/Clifford stabilization of the real
 Hestenes--Krein homology frame language.
 
 It does not construct a universal Clifford tensor product equivalence.  Instead
@@ -32,7 +32,7 @@ same readouts as the base frame:
 * Cartan weight preservation as an explicitly supplied operator transport law.
 -/
 
-section StabilizationInterface
+section StabilizationSocket
 
 variable {E F : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -65,7 +65,7 @@ structure BottStabilizedHomologyFrame where
   project : H₂F →L[ℝ] H₂E
 
   /-- Readback after stabilization recovers the base representative. -/
-  inverse_left : project.comp embed = ContinuousLinearMap.id ℝ H₂E
+  left_inv : project.comp embed = ContinuousLinearMap.id ℝ H₂E
 
   /-- Source boundary is transported into the stabilized source boundary. -/
   source_boundary :
@@ -103,7 +103,7 @@ theorem project_embed
     (x : H₂E) :
     S.project (S.embed x) = x := by
   simpa [ContinuousLinearMap.comp_apply] using
-    congrArg (fun T : H₂E →L[ℝ] H₂E => T x) S.inverse_left
+    congrArg (fun T : H₂E →L[ℝ] H₂E => T x) S.left_inv
 
 /-- Stabilization maps source cycles to source cycles. -/
 @[rep_depth transport]
@@ -189,19 +189,19 @@ theorem phase_axis_apply
   have h := congrArg (fun T : H₂E →L[ℝ] H₂F => T x) S.phase_axis
   simpa [ContinuousLinearMap.comp_apply] using h
 
-/-- Pull a stabilized scalar property back to the base carrier. -/
+/-- Pull a stabilized scalar witness back to the base carrier. -/
 @[rep_depth transport]
 noncomputable def pullbackStabilizedWitness
     (φ : H₂F →L[ℝ] ℝ) : H₂E →L[ℝ] ℝ :=
   φ.comp S.embed
 
-/-- Push a base scalar property to the stabilized carrier through the readback projection. -/
+/-- Push a base scalar witness to the stabilized carrier through the readback projection. -/
 @[rep_depth transport]
 noncomputable def stabilizedWitnessOfBase
     (φ : H₂E →L[ℝ] ℝ) : H₂F →L[ℝ] ℝ :=
   φ.comp S.project
 
-/-- Readout through a pushed-forward base property agrees after stabilization. -/
+/-- Readout through a pushed-forward base witness agrees after stabilization. -/
 @[rep_depth transport]
 theorem stabilizedWitnessOfBase_readout
     (φ : H₂E →L[ℝ] ℝ)
@@ -211,7 +211,7 @@ theorem stabilizedWitnessOfBase_readout
   simp [S.project_embed x]
 
 /--
-If the stabilized property vanishes on stabilized source boundaries, its pullback
+If the stabilized witness vanishes on stabilized source boundaries, its pullback
 vanishes on base source boundaries.
 -/
 @[rep_depth transport]
@@ -238,14 +238,14 @@ theorem pullbackStabilizedWitness_descends_on_base
     {x y : H₂E}
     (hxy : HomologyEquivalent (E := E) S.base.Dsrc x y) :
     φ (S.embed x) = φ (S.embed y) := by
-  exact property_descends_to_homologyEquivalent (E := F) hφ
+  exact witness_descends_to_homologyEquivalent (E := F) hφ
     (S.maps_source_homologyEquivalent hxy)
 
 end BottStabilizedHomologyFrame
 
-end StabilizationInterface
+end StabilizationSocket
 
-/-! ## Cartan-weight stabilization interface -/
+/-! ## Cartan-weight stabilization socket -/
 
 section CartanWeight
 

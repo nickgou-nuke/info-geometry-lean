@@ -1,4 +1,4 @@
-import InfoGeometry.Lie.RealSplitOctonionDerivationData
+import InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
 /-!
 # Typed real split-Cayley derivation surface
@@ -9,7 +9,7 @@ and Leibniz proofs into typed derivation objects.
 
 namespace InfoGeometry.Lie.RealSplitOctonionDerivation
 
-open InfoGeometry.Lie.RealSplitOctonionDerivationData
+open InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
 abbrev SplitCayley := SplitOctReal
 

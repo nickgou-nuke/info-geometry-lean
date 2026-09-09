@@ -38,11 +38,44 @@ theorem colimit_bilingual_left_assoc
       bilingualLeftAction (a₁ * a₂) x := by
   exact InfoGeometry.Physics.bilingualLeftAction_assoc a₁ a₂ x
 
+theorem colimit_bilingual_right_assoc
+    (x : ColimitCarrier F) (b₁ b₂ : (ColimitCarrier F)ᵐᵒᵖ) :
+    bilingualRightOppositeAction
+        (bilingualRightOppositeAction x b₂) b₁ =
+      bilingualRightOppositeAction x (b₁ * b₂) := by
+  exact InfoGeometry.Physics.bilingualRightOppositeAction_assoc x b₁ b₂
+
+theorem colimit_bilingual_left_commutator
+    (a b x : ColimitCarrier F) :
+    bilingualLeftAction a (bilingualLeftAction b x) -
+        bilingualLeftAction b (bilingualLeftAction a x) =
+      bilingualLeftAction (a * b - b * a) x := by
+  simp [InfoGeometry.Physics.bilingualLeftAction, mul_assoc,
+    sub_mul]
+
+theorem colimit_bilingual_right_commutator
+    (x : ColimitCarrier F) (b c : (ColimitCarrier F)ᵐᵒᵖ) :
+    bilingualRightOppositeAction
+          (bilingualRightOppositeAction x c) b -
+        bilingualRightOppositeAction
+          (bilingualRightOppositeAction x b) c =
+      bilingualRightOppositeAction x (b * c - c * b) := by
+  simp [InfoGeometry.Physics.bilingualRightOppositeAction,
+    MulOpposite.unop_mul, mul_assoc, mul_sub]
+
 theorem colimit_ι_bilingual_left
     (j : J) (a x : F.obj j) :
     (colimit.ι F j).hom (bilingualLeftAction a x) =
       bilingualLeftAction ((colimit.ι F j).hom a) ((colimit.ι F j).hom x) := by
   simp [InfoGeometry.Physics.bilingualLeftAction]
+
+theorem colimit_ι_bilingual_right
+    (j : J) (x : F.obj j) (b : (F.obj j)ᵐᵒᵖ) :
+    (colimit.ι F j).hom
+        (bilingualRightOppositeAction x b) =
+      bilingualRightOppositeAction ((colimit.ι F j).hom x)
+        (MulOpposite.op ((colimit.ι F j).hom (MulOpposite.unop b))) := by
+  simp [InfoGeometry.Physics.bilingualRightOppositeAction]
 
 theorem colimit_ι_bilingual_left_right_commute
     (j : J) (a x : F.obj j) (b : (F.obj j)ᵐᵒᵖ) :

@@ -22,17 +22,36 @@ open Cl11Fermions
 
 namespace InfoGeometry.Physics.OrbitIndexClosure
 
-/-! ## 1. Local Cl(1,1) compensation identities -/
+/-! ## 1. Local Cl(1,1) compensation data -/
+
+/-- A finite socket recording the local lightcone compensation identities. -/
+structure LocalCompensationData where
+  ePlus : CliffordAlgebra q11
+  eMinus : CliffordAlgebra q11
+  ePlus_sq : ePlus * ePlus = 0
+  eMinus_sq : eMinus * eMinus = 0
+  anticommutator : ePlus * eMinus + eMinus * ePlus = 1
+
+/-- The concrete Cl(1,1) pair `(b, bdag)` provides local compensation data. -/
+def cl11LocalCompensation : LocalCompensationData :=
+  { ePlus := b
+    eMinus := bdag
+    ePlus_sq := b_sq
+    eMinus_sq := bdag_sq
+    anticommutator := anticomm_bbdag }
+
+@[simp] theorem cl11LocalCompensation_ePlus :
+    cl11LocalCompensation.ePlus = b := rfl
+
+@[simp] theorem cl11LocalCompensation_eMinus :
+    cl11LocalCompensation.eMinus = bdag := rfl
 
 /-- The concrete local Cl(1,1) compensation packet is honest finite data. -/
 theorem cl11_local_compensation_identities :
     b * b = 0 ∧ bdag * bdag = 0 ∧ (b * bdag + bdag * b = 1) := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact b_sq
-  · exact bdag_sq
-  · exact anticomm_bbdag
+  exact ⟨b_sq, bdag_sq, anticomm_bbdag⟩
 
-/-! ## 2. Refined orbit tags available from the 5-graded model -/
+/-! ## 2. Refined orbit tags available from the 5-graded socket -/
 
 /--
 At the current finite level, every `JordanMatrix10D` carries a refined orbit tag
@@ -51,7 +70,8 @@ as exact algebraic data, but no global charge or index functional is defined in
 this file yet.
 -/
 theorem local_compensation_anticommutator :
-    b * bdag + bdag * b = 1 :=
-  anticomm_bbdag
+    cl11LocalCompensation.ePlus * cl11LocalCompensation.eMinus +
+      cl11LocalCompensation.eMinus * cl11LocalCompensation.ePlus = 1 := by
+  simpa [cl11LocalCompensation] using anticomm_bbdag
 
 end InfoGeometry.Physics.OrbitIndexClosure

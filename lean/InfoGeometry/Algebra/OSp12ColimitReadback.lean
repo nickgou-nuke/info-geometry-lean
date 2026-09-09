@@ -36,7 +36,6 @@ theorem readback_H_Ep
     (toLimit : ∀ _n : ℕ, EndV →+* EndV)
     (hcone : CompatibleCone (Stage := StageFamily) bond toLimit)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
-    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     superBracket false false (toLimit n (surf n).H) (toLimit n (surf n).Ep) =
       toLimit n ((2 : ℝ) • (surf n).Ep) := by
@@ -45,8 +44,7 @@ theorem readback_H_Ep
       (ofStage (bond := bond) n ((surf n).Ep)) =
     ofStage (bond := bond) n ((2 : ℝ) • (surf n).Ep) := by
     simpa [two_smul] using
-      superBracket_eq_transport (ofStage (bond := bond) n)
-        (OperatorSurfaceLaws.H_Ep (hSurf n))
+      superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Ep
   let φ := directLimitLift (Stage := StageFamily) bond toLimit hcone
   have hread := superBracket_eq_transport φ hcolim
   unfold ofStage at hread
@@ -61,7 +59,6 @@ theorem readback_H_Em
     (toLimit : ∀ _n : ℕ, EndV →+* EndV)
     (hcone : CompatibleCone (Stage := StageFamily) bond toLimit)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
-    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     superBracket false false (toLimit n (surf n).H) (toLimit n (surf n).Em) =
       toLimit n ((-2 : ℝ) • (surf n).Em) := by
@@ -70,8 +67,7 @@ theorem readback_H_Em
       (ofStage (bond := bond) n ((surf n).Em)) =
     ofStage (bond := bond) n ((-2 : ℝ) • (surf n).Em) := by
     simpa [two_smul] using
-      superBracket_eq_transport (ofStage (bond := bond) n)
-        (OperatorSurfaceLaws.H_Em (hSurf n))
+      superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Em
   let φ := directLimitLift (Stage := StageFamily) bond toLimit hcone
   have hread := superBracket_eq_transport φ hcolim
   unfold ofStage at hread
@@ -86,7 +82,6 @@ theorem readback_Ep_Em
     (toLimit : ∀ _n : ℕ, EndV →+* EndV)
     (hcone : CompatibleCone (Stage := StageFamily) bond toLimit)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
-    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     superBracket false false (toLimit n (surf n).Ep) (toLimit n (surf n).Em) =
       toLimit n (surf n).H := by
@@ -94,8 +89,7 @@ theorem readback_Ep_Em
       (ofStage (bond := bond) n ((surf n).Ep))
       (ofStage (bond := bond) n ((surf n).Em)) =
     ofStage (bond := bond) n ((surf n).H) := by
-    exact superBracket_eq_transport (ofStage (bond := bond) n)
-      (OperatorSurfaceLaws.Ep_Em (hSurf n))
+    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_Em
   let φ := directLimitLift (Stage := StageFamily) bond toLimit hcone
   have hread := superBracket_eq_transport φ hcolim
   unfold ofStage at hread
@@ -110,7 +104,6 @@ theorem readback_G1_G1
     (toLimit : ∀ _n : ℕ, EndV →+* EndV)
     (hcone : CompatibleCone (Stage := StageFamily) bond toLimit)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
-    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     superBracket true true (toLimit n (surf n).G1) (toLimit n (surf n).G1) =
       toLimit n ((2 : ℝ) • (surf n).Ep) := by
@@ -119,8 +112,7 @@ theorem readback_G1_G1
       (ofStage (bond := bond) n ((surf n).G1)) =
     ofStage (bond := bond) n ((2 : ℝ) • (surf n).Ep) := by
     simpa [two_smul] using
-      superBracket_eq_transport (ofStage (bond := bond) n)
-        (OperatorSurfaceLaws.G1_G1 (hSurf n))
+      superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G1
   let φ := directLimitLift (Stage := StageFamily) bond toLimit hcone
   have hread := superBracket_eq_transport φ hcolim
   unfold ofStage at hread
@@ -135,7 +127,6 @@ theorem readback_G2_G2
     (toLimit : ∀ _n : ℕ, EndV →+* EndV)
     (hcone : CompatibleCone (Stage := StageFamily) bond toLimit)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
-    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     superBracket true true (toLimit n (surf n).G2) (toLimit n (surf n).G2) =
       toLimit n ((-2 : ℝ) • (surf n).Em) := by
@@ -144,8 +135,7 @@ theorem readback_G2_G2
       (ofStage (bond := bond) n ((surf n).G2)) =
     ofStage (bond := bond) n ((-2 : ℝ) • (surf n).Em) := by
     simpa [two_smul] using
-      superBracket_eq_transport (ofStage (bond := bond) n)
-        (OperatorSurfaceLaws.G2_G2 (hSurf n))
+      superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G2_G2
   let φ := directLimitLift (Stage := StageFamily) bond toLimit hcone
   have hread := superBracket_eq_transport φ hcolim
   unfold ofStage at hread

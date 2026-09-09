@@ -95,11 +95,12 @@ theorem canonicalZorn_finrank : Module.finrank ℝ CZ = 8 := by
 /-- Exact transport of the native `(4,4)` determinant to the difference of
 the two Euclidean quaternion norms. -/
 theorem detZ_cartesianZornLinearEquiv (qr : CartesianCoordinates) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (cartesianZornLinearEquiv qr) =
       quaternionNorm qr.1 - quaternionNorm qr.2 := by
   rcases qr with ⟨⟨q0, q⟩, ⟨r0, r⟩⟩
-  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, quaternionNorm, dot]
+  simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
+    quaternionNorm, dot]
   ring
 
 /-- The normalized `ell` commutator in Cartesian coordinates: it kills the

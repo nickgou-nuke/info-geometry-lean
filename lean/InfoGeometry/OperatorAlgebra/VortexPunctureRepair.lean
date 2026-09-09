@@ -29,14 +29,8 @@ A localized puncture in a superconducting/order-parameter ledger.
 is defined intrinsically by nonzero winding rather than by an independent
 proposition field.
 -/
-abbrev LocalizedPuncture := ℤ
-
-namespace LocalizedPuncture
-
-/-- Compatibility accessor for the native integer winding carrier. -/
-abbrev winding (P : LocalizedPuncture) : ℤ := P
-
-end LocalizedPuncture
+structure LocalizedPuncture where
+  winding : ℤ
 
 /-- A puncture is topologically nontrivial if its winding is nonzero. -/
 def LocalizedPuncture.Nontrivial
@@ -101,7 +95,7 @@ A Majorana-style plug for a localized puncture.
 
 The plug is a closure-fixed state installed at the puncture.
 -/
-structure MajoranaPlugData
+structure MajoranaPlugWitness
     (Memory : Type*) [AddCommGroup Memory] [Module ℝ Memory]
     (V : VortexCoreDatum Memory) where
   plug : Memory
@@ -112,13 +106,13 @@ structure MajoranaPlugData
   /-- The core state is recovered/resolved by the plug. -/
   core_eq_plug : V.coreState = plug
 
-namespace MajoranaPlugData
+namespace MajoranaPlugWitness
 
 variable
     {Memory : Type*} [AddCommGroup Memory] [Module ℝ Memory]
     {V : VortexCoreDatum Memory}
 
-variable (P : MajoranaPlugData Memory V)
+variable (P : MajoranaPlugWitness Memory V)
 
 /-- The plug is pointwise fixed by closure. -/
 theorem theta_plug_eq_plug :
@@ -127,25 +121,25 @@ theorem theta_plug_eq_plug :
 
 /-- The core state is closure-fixed because it equals the plug. -/
 theorem theta_coreState_eq_coreState
-    (P : MajoranaPlugData Memory V) :
+    (P : MajoranaPlugWitness Memory V) :
     V.closure.theta V.coreState = V.coreState := by
-  rw [MajoranaPlugData.core_eq_plug P]
+  rw [MajoranaPlugWitness.core_eq_plug P]
   exact P.theta_plug_eq_plug
 
-end MajoranaPlugData
+end MajoranaPlugWitness
 
 /-! ## 4. YSR / subgap localized repair datum -/
 
 /--
-Localized subgap repair property.
+Localized subgap repair witness.
 
 This abstracts YSR-type or vortex-core subgap localization.
 
 It says an unresolved localized defect is isolated into a controlled subgap
 state. It does not assert topological Majorana protection unless paired with a
-`MajoranaPlugData`.
+`MajoranaPlugWitness`.
 -/
-structure SubgapRepairData
+structure SubgapRepairWitness
     (Memory : Type*) [AddCommGroup Memory] [Module ℝ Memory]
     (V : VortexCoreDatum Memory) where
   /-- Localized subgap state. -/
@@ -154,13 +148,16 @@ structure SubgapRepairData
   /-- The core state is represented by the localized subgap state. -/
   core_eq_subgap : V.coreState = subgapState
 
-namespace SubgapRepairData
+  /-- A repaired core has no residual mismatch with its localized state. -/
+  residual_eq_zero : V.coreState - subgapState = 0
+
+namespace SubgapRepairWitness
 
 variable
     {Memory : Type*} [AddCommGroup Memory] [Module ℝ Memory]
     {V : VortexCoreDatum Memory}
 
-variable (S : SubgapRepairData Memory V)
+variable (S : SubgapRepairWitness Memory V)
 
 /-- The core state is represented by the subgap state. -/
 theorem core_eq_subgap_state :
@@ -171,19 +168,17 @@ theorem core_eq_subgap_state :
 def Resolved : Prop :=
   V.coreState - S.subgapState = 0
 
-/-- Every subgap repair property is resolved by its concrete residual law. -/
+/-- Every subgap repair witness is resolved by its concrete residual law. -/
 theorem resolved :
     S.Resolved :=
-  by
-    unfold Resolved
-    rw [S.core_eq_subgap, sub_self]
+  S.residual_eq_zero
 
 /-- The residual formulation is equivalent to the represented-core law. -/
 theorem resolved_iff_core_eq_subgap :
     S.Resolved ↔ V.coreState = S.subgapState := by
   exact sub_eq_zero
 
-end SubgapRepairData
+end SubgapRepairWitness
 
 /-! ## 5. Audit bridge -/
 

@@ -25,7 +25,7 @@ variable [MeasurableSpace X] [MeasurableSpace T]
 variable [MeasurableSingletonClass X] [MeasurableSingletonClass T]
 variable [Nonempty T]
 
-/-- A complete finite Blahut-Arimoto descent property at one marginal step. -/
+/-- A complete finite Blahut-Arimoto descent witness at one marginal step. -/
 def IBDescentWitness
     (pX : ProbabilityMeasure X)
     (q_n : ProbabilityMeasure T)

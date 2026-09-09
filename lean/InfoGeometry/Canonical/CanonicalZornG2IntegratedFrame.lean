@@ -38,14 +38,16 @@ theorem canonical_g2_flow_frame
             D.1 t X *
           InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv
             D.1 t Y) ∧
-      (InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      (InfoGeometry.Canonical.ZornMatrix.detZ
           (InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv
             D.1 t X) =
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X) ∧
+        InfoGeometry.Canonical.ZornMatrix.detZ X) ∧
       (InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (InfoGeometry.Lie.CanonicalZornDerivationExponential.zornFlowLinearEquiv
             D.1 t X) ↔
-        InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull X) := by
+        InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X) := by
   refine ⟨g2Full_dim_eq_fourteen, zornFlowRealAut_add D s t,
     zornFlow_fixes_one D t, zornFlow_preserves_mul D t X Y, ?_, ?_⟩
   · exact zornFlow_preserves_detZ D t X

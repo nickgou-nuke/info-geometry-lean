@@ -30,9 +30,12 @@ def kleinPolar (P Q : Bivector4) : ℝ :=
 
 /-- Polarization of the native Zorn determinant on the active support. -/
 def activeDetPolar (X Y : ActiveSector) : ℝ :=
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y).1
-    - InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1
-    - InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y.1
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (X + Y).1
+    - InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X.1
+    - InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 Y.1
 
 /-- In Witt coordinates the Klein polar form is the cross-pairing between the
 two three-dimensional isotropic halves. -/

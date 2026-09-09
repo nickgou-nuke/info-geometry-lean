@@ -164,4 +164,43 @@ theorem kLog_trace (θ : ℝ) : Matrix.trace (kLog θ) = 0 := by simp [kLog, Mat
 theorem aLog_trace (α : ℝ) : Matrix.trace (aLog α) = 0 := by simp [aLog, Matrix.trace]
 theorem nLog_trace (n : ℝ) : Matrix.trace (nLog n) = 0 := by simp [nLog, Matrix.trace]
 
+/-- Consolidated chain theorem. -/
+theorem matrix2_kan_pauli_chain_synthesis :
+    (∀ a b c d : ℝ, (mat2 a b c d).det = det2 a b c d) ∧
+    (∀ {a b c d : ℝ}, 0 < det2 a b c d → (detNormalize a b c d).det = 1) ∧
+    (∀ a b c d : ℝ, wittenSupertrace (mat2 a b c d) = a - d) ∧
+    (∀ M : M2R, Matrix.trace (tracelessPart M) = 0) ∧
+    (∀ M : M2R, tracefulPart M + tracelessPart M = M) ∧
+    (∀ a b c d : ℝ, mat2 a b c d =
+      scalarCoord a b c d • sigma0 + sigma3Coord a b c d • sigma3 +
+      sigmaXCoord a b c d • sigmaX + iSigma2Coord a b c d • iSigma2) ∧
+    (∀ x z u v : ℝ, (x • sigma0 + z • sigma3 + u • sigmaX + v • iSigma2 : M2R).det =
+      x ^ 2 - z ^ 2 - u ^ 2 + v ^ 2) ∧
+    (∀ θ α n : ℝ, (KANMatrix θ α n).det = 1) ∧
+    (∀ θ : ℝ, Matrix.trace (kLog θ) = 0) ∧
+    (∀ α : ℝ, Matrix.trace (aLog α) = 0) ∧
+    (∀ n : ℝ, Matrix.trace (nLog n) = 0) := by
+  constructor
+  · exact mat2_det
+  constructor
+  · intro a b c d hΔ
+    exact detNormalize_det_one hΔ
+  constructor
+  · exact wittenSupertrace_mat2
+  constructor
+  · exact trace_tracelessPart
+  constructor
+  · exact traceful_add_traceless
+  constructor
+  · exact pauli_reconstruction
+  constructor
+  · exact pauli_det_formula
+  constructor
+  · exact KANMatrix_det
+  constructor
+  · exact kLog_trace
+  constructor
+  · exact aLog_trace
+  · exact nLog_trace
+
 end InfoGeometry.GrandUnification.Matrix2KANPauliChain

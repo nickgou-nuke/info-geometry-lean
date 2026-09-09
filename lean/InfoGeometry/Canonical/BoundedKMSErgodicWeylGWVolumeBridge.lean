@@ -9,8 +9,8 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
 
-Adapter joining the state-functional bounded-KMS ergodic fixed-point interface to
-the existing projective Weyl/GW physical-volume interface.
+Adapter joining the state-functional bounded-KMS ergodic fixed-point socket to
+the existing projective Weyl/GW physical-volume socket.
 
 This file does not introduce a new determinant or GW-volume owner.  Phase
 volume/determinant invariance is explicit model data.  The proved content is
@@ -35,7 +35,6 @@ section Core
 
 variable {E H LieAlgebra Functional State G T Target Coeff Word : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace (DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]
@@ -48,7 +47,7 @@ the already-owned standard-form face Weyl/GW physical-volume readout.
 
 `phaseVolume` is a determinant/phase-volume scalar readout only where the
 model supplies it.  Its modular-flow and renormalization invariance are
-property fields, not derived Type-III determinant claims.
+witness fields, not derived Type-III determinant claims.
 -/
 @[rep_depth projective]
 structure Bridge where

@@ -6,7 +6,10 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
 
 /-!
-# Genuine Berry-Keating Quantum Differential Operator Bridge
+# Real dilation differential identities
+
+These are identities for real differentiable functions. No Hilbert-space domain,
+self-adjoint realization, or spectral identification is asserted here.
 
 This module formalizes genuine, non-vacuous differential identities for the Berry-Keating operator in Mathlib 4:
 1. **Canonical Heisenberg-Weyl Commutator $[D, X] f = f$**:
@@ -15,10 +18,10 @@ This module formalizes genuine, non-vacuous differential identities for the Berr
    $$H f = \frac{1}{2} (X (D f) + D (X f)) = x \frac{df}{dx} + \frac{1}{2} f$$
 3. **Exact Monomial Scaling Eigenvalues $(X \circ D)(x^n) = n x^n$**:
    $$x \frac{d}{dx}(x^n) = n x^n \quad (\forall n \in \mathbb{N})$$
-4. **Exact Berry-Keating Spectrum on Monomials**:
+4. **Monomial differential identity**:
    $$H(x^n) = \left(n + \frac{1}{2}\right) x^n$$
 5. **Exact Integration by Parts and Boundary Pairing on $[0, 1]$**:
-   $$\int_0^1 (x f'(x) g(x) + x f(x) g'(x) + f(x) g(x)) \, dx = f(1) g(1) - f(0) g(0)$$
+   $$\int_0^1 (x f'(x) g(x) + x f(x) g'(x) + f(x) g(x)) \, dx = f(1) g(1)$$
 -/
 
 noncomputable section
@@ -84,14 +87,16 @@ theorem berry_keating_monomial_eigenvalue (n : ℕ) (x : ℝ) :
   rw [monomial_scaling_eigenvalue n x]
   ring
 
-/-- 🏆 THEOREM 5: Integration by Parts for Scaling Generator on [0, 1] -/
-theorem scaling_generator_integration_by_parts (f g : ℝ → ℝ)
-    (hf : ∀ x ∈ Set.uIcc (0:ℝ) 1, HasDerivAt f (deriv f x) x)
-    (hg : ∀ x ∈ Set.uIcc (0:ℝ) 1, HasDerivAt g (deriv g x) x)
-    (h_cont : Continuous (fun x => x * deriv f x * g x + x * f x * deriv g x + f x * g x)) :
-    ∫ x in (0:ℝ)..1, (x * deriv f x * g x + x * f x * deriv g x + f x * g x) =
-      f 1 * g 1 := by
-  have h_prod_deriv : ∀ x ∈ Set.uIcc (0:ℝ) 1,
+/-- Boundary pairing for the real dilation expression on an oriented interval.
+Only integrability of the differentiated product is required. -/
+theorem scaling_generator_boundary_pairing (f g : ℝ → ℝ) (a b : ℝ)
+    (hf : ∀ x ∈ Set.uIcc a b, HasDerivAt f (deriv f x) x)
+    (hg : ∀ x ∈ Set.uIcc a b, HasDerivAt g (deriv g x) x)
+    (hi : IntervalIntegrable
+      (fun x => x * deriv f x * g x + x * f x * deriv g x + f x * g x) volume a b) :
+    ∫ x in a..b, (x * deriv f x * g x + x * f x * deriv g x + f x * g x) =
+      b * f b * g b - a * f a * g a := by
+  have h_prod_deriv : ∀ x ∈ Set.uIcc a b,
       HasDerivAt (fun y => y * f y * g y) (x * deriv f x * g x + x * f x * deriv g x + f x * g x) x := by
     intro x hx
     have hx_id : HasDerivAt id 1 x := hasDerivAt_id x
@@ -107,11 +112,17 @@ theorem scaling_generator_integration_by_parts (f g : ℝ → ℝ)
     exact h_total
   have h_ftc := integral_eq_sub_of_hasDerivAt (f := fun y => y * f y * g y)
     (f' := fun x => x * deriv f x * g x + x * f x * deriv g x + f x * g x)
-    h_prod_deriv (h_cont.intervalIntegrable 0 1)
-  rw [h_ftc]
-  dsimp
-  have h_zero : (0 : ℝ) * f 0 * g 0 = 0 := by ring
-  have h_one : (1 : ℝ) * f 1 * g 1 = f 1 * g 1 := by ring
-  rw [h_zero, h_one, sub_zero]
+    h_prod_deriv hi
+  exact h_ftc
+
+/-- The coordinate factor makes the lower boundary term vanish at zero. -/
+theorem scaling_generator_integration_by_parts (f g : ℝ → ℝ)
+    (hf : ∀ x ∈ Set.uIcc (0:ℝ) 1, HasDerivAt f (deriv f x) x)
+    (hg : ∀ x ∈ Set.uIcc (0:ℝ) 1, HasDerivAt g (deriv g x) x)
+    (h_cont : Continuous (fun x => x * deriv f x * g x + x * f x * deriv g x + f x * g x)) :
+    ∫ x in (0:ℝ)..1, (x * deriv f x * g x + x * f x * deriv g x + f x * g x) =
+      f 1 * g 1 := by
+  simpa using scaling_generator_boundary_pairing f g 0 1 hf hg
+    (h_cont.intervalIntegrable 0 1)
 
 end InfoGeometry.Canonical.BerryKeating

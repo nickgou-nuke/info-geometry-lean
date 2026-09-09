@@ -28,7 +28,7 @@ abbrev DerivedD (C : ExactCouple R D E) (pq : Z2) :=
 The induced map `i' : image(i_pq) → image(i_(shiftI pq))`.
 
 An image element is already an element of `D (shiftI pq)`, so applying the next
-`i` lands definitionally in the next image, with the element itself as property.
+`i` lands definitionally in the next image, with the element itself as witness.
 -/
 def derivedI (C : ExactCouple R D E) (pq : Z2) :
     C.DerivedD pq →ₗ[R] C.DerivedD (shiftI pq) where

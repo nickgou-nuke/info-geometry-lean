@@ -133,12 +133,12 @@ theorem dyadicEntropyBits_nonneg (n : ℕ) :
   exact mul_nonneg (Nat.cast_nonneg n) (le_of_lt dyadicEntropyQuantum_pos)
 
 /--
-Finite Witten-cancelled dyadic horizon property.
+Finite Witten-cancelled dyadic horizon certificate.
 
 For a nonempty finite prime register, the owned Möbius/Witten supertrace cancels,
 and under the scalar area calibration `A = 4G log 2`, the Bekenstein--Hawking
 readout matches the two-branch dyadic Massieu entropy.  This is a finite
-synchronized property, not a thermodynamic-limit theorem.
+synchronized certificate, not a thermodynamic-limit theorem.
 -/
 theorem finiteWittenCancel_and_bekensteinHawkingDyadic
     (P : PrimeRegister) (hP : P.primes.Nonempty)
@@ -147,9 +147,8 @@ theorem finiteWittenCancel_and_bekensteinHawkingDyadic
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G =
         massieuPotential (ι := Fin 2) (fun _ => (0 : ℝ)) := by
-  refine ⟨?_, ?_⟩
-  · exact finite_witten_index_cancel P hP
-  · exact bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea
+  exact ⟨finite_witten_index_cancel P hP,
+    bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea⟩
 
 /--
 Finite Witten cancellation synchronized with an `n`-bit dyadic horizon
@@ -162,13 +161,12 @@ theorem finiteWittenCancel_and_bekensteinHawkingDyadicBits
     (harea : area = 4 * G * dyadicEntropyBits n) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G = dyadicEntropyBits n := by
-  refine ⟨?_, ?_⟩
-  · exact finite_witten_index_cancel P hP
-  · exact bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea
+  exact ⟨finite_witten_index_cancel P hP,
+    bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea⟩
 
 /--
 State-level Möbius/Fermion parity plus finite Witten cancellation and dyadic
-Bekenstein--Hawking calibration, bundled as one finite property.
+Bekenstein--Hawking calibration, bundled as one finite certificate.
 -/
 theorem primeBitState_mobiusParity_wittenCancel_bhDyadic
     (P : PrimeRegister) (hP : P.primes.Nonempty) (ψ : PrimeBitState P)
@@ -178,10 +176,9 @@ theorem primeBitState_mobiusParity_wittenCancel_bhDyadic
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G =
         massieuPotential (ι := Fin 2) (fun _ => (0 : ℝ)) := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact mobius_representedNatOfState_eq_fermionParity P ψ
-  · exact finite_witten_index_cancel P hP
-  · exact bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea
+  exact ⟨mobius_representedNatOfState_eq_fermionParity P ψ,
+    finite_witten_index_cancel P hP,
+    bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea⟩
 
 /--
 State-level Möbius/Fermion parity plus finite Witten cancellation and an
@@ -194,10 +191,9 @@ theorem primeBitState_mobiusParity_wittenCancel_bhDyadicBits
     ArithmeticFunction.moebius (representedNatOfState P ψ) = fermionParityOfState P ψ ∧
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G = dyadicEntropyBits n := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact mobius_representedNatOfState_eq_fermionParity P ψ
-  · exact finite_witten_index_cancel P hP
-  · exact bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea
+  exact ⟨mobius_representedNatOfState_eq_fermionParity P ψ,
+    finite_witten_index_cancel P hP,
+    bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea⟩
 
 end InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
 

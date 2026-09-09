@@ -1,6 +1,5 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
 import InfoGeometry.Probability.FiniteGibbsVariational
-import InfoGeometry.Analytic.LogSumExp
 
 /-!
 # Finite Gibbs relative thermodynamics
@@ -65,186 +64,6 @@ theorem logDensity_sub_logDensity
   unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity massieuPotential
   ring
 
-/-!
-The pointwise relative surprisal is the log-density difference with the
-orientation used by `kl θ η`.  This is an algebraic identity in the finite
-Cartan model; no measure-theoretic Radon--Nikodym construction is needed.
--/
-theorem surprisal_difference_eq_logDensity_sub_logDensity
-    (θ η : FiniteTemperature ι) (i : ι) :
-    InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
-        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i =
-      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
-        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
-  rw [InfoGeometry.Algebraic.CartanExponentialFamily.surprisal_eq_neg_logDensity,
-    InfoGeometry.Algebraic.CartanExponentialFamily.surprisal_eq_neg_logDensity]
-  ring
-
-/-!
-Expectation-level deviance readout: finite relative entropy is the expected
-difference of surprisals under the first Cartan state.
--/
-theorem relativeEntropy_eq_expect_surprisal_difference
-    (θ η : FiniteTemperature ι) :
-    relativeEntropy θ η =
-      InfoGeometry.Algebraic.CartanExponentialFamily.expect θ (fun i =>
-        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
-          InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i) := by
-  unfold relativeEntropy InfoGeometry.Algebraic.CartanExponentialFamily.kl
-    InfoGeometry.Algebraic.CartanExponentialFamily.expect
-  apply Finset.sum_congr rfl
-  intro i hi
-  change InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i *
-      (InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
-        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i) =
-    InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i *
-      (InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
-        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i)
-  rw [surprisal_difference_eq_logDensity_sub_logDensity θ η i]
-
-/-!
-The Cartan `kl` owner and the normalized finite-KL owner use the same
-probability law, but expose it through different coordinates.  This bridge
-allows the existing Gibbs inequality and equality-case theorems to be reused
-without duplicating their proofs here.
--/
-theorem relativeEntropy_eq_normalizedFiniteRelativeEntropy
-    [Nonempty ι] (θ η : FiniteTemperature ι)
-    (hθ : 0 < Z θ) (hη : 0 < Z η) :
-    relativeEntropy θ η =
-      InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy
-        (InfoGeometry.Algebraic.CartanExponentialFamily.prob θ)
-        (InfoGeometry.Algebraic.CartanExponentialFamily.prob η) := by
-  unfold relativeEntropy InfoGeometry.Algebraic.CartanExponentialFamily.kl
-    InfoGeometry.Algebraic.CartanExponentialFamily.expect
-  apply Finset.sum_congr rfl
-  intro i hi
-  have hθi : 0 < InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i :=
-    InfoGeometry.Algebraic.CartanExponentialFamily.prob_pos θ hθ i
-  have hηi : 0 < InfoGeometry.Algebraic.CartanExponentialFamily.prob η i :=
-    InfoGeometry.Algebraic.CartanExponentialFamily.prob_pos η hη i
-  have hlogθ :
-      Real.log (InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i) =
-      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
-    unfold InfoGeometry.Algebraic.CartanExponentialFamily.prob
-      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
-    rw [Real.log_div (Real.exp_ne_zero _) hθ.ne', Real.log_exp]
-    rfl
-  have hlogη :
-      Real.log (InfoGeometry.Algebraic.CartanExponentialFamily.prob η i) =
-      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
-    unfold InfoGeometry.Algebraic.CartanExponentialFamily.prob
-      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
-    rw [Real.log_div (Real.exp_ne_zero _) hη.ne', Real.log_exp]
-    rfl
-  rw [Real.log_div hθi.ne' hηi.ne', hlogθ, hlogη]
-
-/-- Nonnegativity transported from the normalized finite-KL owner. -/
-theorem relativeEntropy_nonneg
-    [Nonempty ι] (θ η : FiniteTemperature ι)
-    (hθ : 0 < Z θ) (hη : 0 < Z η) :
-    0 ≤ relativeEntropy θ η := by
-  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hθ hη]
-  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_nonneg
-    (prob θ) (prob η)
-    (fun i => prob_pos θ hθ i)
-    (fun i => prob_pos η hη i)
-    (prob_sum_one θ hθ)
-    (prob_sum_one η hη)
-
-/-- Equality in Cartan relative entropy is equality of normalized Gibbs laws.
-The common additive Cartan shift is intentionally not quotiented here. -/
-theorem relativeEntropy_eq_zero_iff_prob_eq
-    [Nonempty ι] (θ η : FiniteTemperature ι)
-    (hθ : 0 < Z θ) (hη : 0 < Z η) :
-    relativeEntropy θ η = 0 ↔ prob θ = prob η := by
-  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hθ hη]
-  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_eq_zero_iff
-    (prob θ) (prob η)
-    (fun i => prob_pos θ hθ i)
-    (fun i => prob_pos η hη i)
-    (prob_sum_one θ hθ)
-    (prob_sum_one η hη)
-
-/-!
-The additive Cartan gauge is invisible to the normalized Gibbs law.  This is
-the concrete finite consequence of the preceding equality characterization;
-it does not quotient the parameter space or identify it with the determinant
-readout.
--/
-theorem relativeEntropy_zero_of_common_shift
-    [Nonempty ι] (θ : FiniteTemperature ι) (c : ℝ) (hθ : 0 < Z θ) :
-    relativeEntropy θ (fun i => θ i + c) = 0 := by
-  apply (relativeEntropy_eq_zero_iff_prob_eq θ (fun i => θ i + c) hθ
-    (Z_pos (fun i => θ i + c))).2
-  funext i
-  exact (prob_add_const θ c i).symm
-
-/--
-Zero finite relative entropy characterizes precisely the additive Cartan
-gauge orbit.  This is the finite identifiability statement for the
-normalized Gibbs chart: equal probabilities determine the natural parameters
-up to one common scalar shift.
--/
-theorem relativeEntropy_eq_zero_iff_common_shift
-    [Nonempty ι] (θ η : FiniteTemperature ι)
-    (hθ : 0 < Z θ) (hη : 0 < Z η) :
-    relativeEntropy θ η = 0 ↔
-      ∃ c : ℝ, ∀ i, η i = θ i + c := by
-  constructor
-  · intro hzero
-    have hprob : prob θ = prob η :=
-      (relativeEntropy_eq_zero_iff_prob_eq θ η hθ hη).1 hzero
-    let c : ℝ := Phi η - Phi θ
-    refine ⟨c, ?_⟩
-    intro i
-    have hlogθ :
-        Real.log (prob θ i) =
-          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
-      unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
-      rw [Real.log_div (Real.exp_ne_zero _) hθ.ne', Real.log_exp]
-      rfl
-    have hlogη :
-        Real.log (prob η i) =
-          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
-      unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
-      rw [Real.log_div (Real.exp_ne_zero _) hη.ne', Real.log_exp]
-      rfl
-    have hlogDensity :
-        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i =
-          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
-      calc
-        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i =
-            Real.log (prob θ i) := hlogθ.symm
-        _ = Real.log (prob η i) := by rw [congrFun hprob i]
-        _ = InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := hlogη
-    unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity at hlogDensity
-    dsimp [c]
-    linarith
-  · rintro ⟨c, hc⟩
-    have hηeq : η = (fun i => θ i + c) := by
-      funext i
-      exact hc i
-    rw [hηeq]
-    exact relativeEntropy_zero_of_common_shift θ c hθ
-
-/--
-Strict finite Gibbs dissipation away from the additive Cartan gauge orbit.
-This is the exact finite Lyapunov criterion; no global convexity or analytic
-continuation is involved.
--/
-theorem relativeEntropy_pos_of_not_common_shift
-    [Nonempty ι] (θ η : FiniteTemperature ι)
-    (hθ : 0 < Z θ) (hη : 0 < Z η)
-    (hnot : ¬ ∃ c : ℝ, ∀ i, η i = θ i + c) :
-    0 < relativeEntropy θ η := by
-  have hnonneg : 0 ≤ relativeEntropy θ η :=
-    relativeEntropy_nonneg θ η hθ hη
-  have hne : relativeEntropy θ η ≠ 0 := by
-    intro hzero
-    exact hnot ((relativeEntropy_eq_zero_iff_common_shift θ η hθ hη).1 hzero)
-  exact lt_of_le_of_ne hnonneg (Ne.symm hne)
-
 /--
 The finite relative modular readout is exactly the Massieu-Bregman divergence.
 
@@ -268,6 +87,81 @@ theorem relativeEntropy_self
     relativeEntropy θ θ = 0 := by
   rw [relativeEntropy_eq_massieuBregman θ θ hZ, massieuBregman_self]
 
+lemma log_prob_eq_logDensity [Nonempty ι] (θ : FiniteTemperature ι) (hZ : 0 < Z θ) (i : ι) :
+    Real.log (prob θ i) = InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
+  unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity Phi
+  rw [Real.log_div (ne_of_gt (Real.exp_pos (θ i))) (ne_of_gt hZ)]
+  rw [Real.log_exp]
+
+/-- The Cartan relative entropy matches the native finite Gibbs relative entropy of the normalized state. -/
+theorem relativeEntropy_eq_normalizedFiniteRelativeEntropy
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    relativeEntropy θ η =
+      InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy (prob θ) (prob η) := by
+  unfold relativeEntropy kl expect InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy
+  apply Finset.sum_congr rfl
+  intro i _hi
+  have hpθ : 0 < prob θ i := prob_pos θ hZθ i
+  have hpη : 0 < prob η i := prob_pos η hZη i
+  rw [Real.log_div (ne_of_gt hpθ) (ne_of_gt hpη)]
+  rw [log_prob_eq_logDensity θ hZθ i]
+  rw [log_prob_eq_logDensity η hZη i]
+
+/-- Nonnegativity of the finite Cartan relative entropy. -/
+theorem relativeEntropy_nonneg
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    0 ≤ relativeEntropy θ η := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hZθ hZη]
+  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_nonneg (prob θ) (prob η)
+    (fun i => prob_pos θ hZθ i)
+    (fun i => prob_pos η hZη i)
+    (prob_sum_one θ hZθ)
+    (prob_sum_one η hZη)
+
+/-- Equality of finite Gibbs states is precisely a common shift along the central Cartan gauge direction. -/
+theorem relativeEntropy_eq_zero_iff_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η) :
+    relativeEntropy θ η = 0 ↔ ∃ c : ℝ, ∀ i : ι, η i = θ i + c := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hZθ hZη]
+  have hpos_θ : ∀ i, 0 < prob θ i := fun i => prob_pos θ hZθ i
+  have hpos_η : ∀ i, 0 < prob η i := fun i => prob_pos η hZη i
+  have hsum_θ : ∑ i, prob θ i = 1 := prob_sum_one θ hZθ
+  have hsum_η : ∑ i, prob η i = 1 := prob_sum_one η hZη
+  rw [InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_eq_zero_iff
+    (prob θ) (prob η) hpos_θ hpos_η hsum_θ hsum_η]
+  constructor
+  · intro hprob
+    use Phi η - Phi θ
+    intro i
+    have hpi : prob θ i = prob η i := congrFun hprob i
+    have hlog := congrArg Real.log hpi
+    rw [log_prob_eq_logDensity θ hZθ i, log_prob_eq_logDensity η hZη i] at hlog
+    unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity at hlog
+    linarith
+  · rintro ⟨c, hc⟩
+    ext i
+    unfold prob Z
+    have h_exp : ∀ j : ι, Real.exp (η j) = Real.exp (θ j) * Real.exp c := by
+      intro j
+      rw [hc j, Real.exp_add]
+    have h_sum : (∑ j, Real.exp (η j)) = (∑ j, Real.exp (θ j)) * Real.exp c := by
+      simp_rw [h_exp]
+      rw [← Finset.sum_mul]
+    rw [h_exp i, h_sum]
+    have hec : Real.exp c ≠ 0 := ne_of_gt (Real.exp_pos c)
+    rw [mul_div_mul_right _ _ hec]
+
+/-- Strict positivity of the finite Cartan relative entropy away from the central gauge shift. -/
+theorem relativeEntropy_pos_of_not_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι) (hZθ : 0 < Z θ) (hZη : 0 < Z η)
+    (hnot : ¬ ∃ c : ℝ, ∀ i : ι, η i = θ i + c) :
+    0 < relativeEntropy θ η := by
+  have hnonneg := relativeEntropy_nonneg θ η hZθ hZη
+  have hne : relativeEntropy θ η ≠ 0 := by
+    intro hz
+    exact hnot ((relativeEntropy_eq_zero_iff_common_shift θ η hZθ hZη).mp hz)
+  exact lt_of_le_of_ne hnonneg (Ne.symm hne)
+
 /-- The Fisher metric is the usual covariance formula. -/
 theorem fisherMetric_eq_covariance
     [Nonempty ι] (θ : FiniteTemperature ι) (X Y : ι → ℝ) (hZ : 0 < Z θ) :
@@ -280,32 +174,6 @@ theorem fisherMetric_self_nonneg
     [Nonempty ι] (θ : FiniteTemperature ι) (X : ι → ℝ) (hZ : 0 < Z θ) :
     0 ≤ fisherMetric θ X X := by
   exact fisherCov_self_nonneg θ X hZ
-
-/-- The finite Fisher self-covariance is strictly positive for every
-nonconstant observable.  This is the finite strictness criterion behind the
-Souriau/Fisher metric; no infinite or analytic identification is used. -/
-theorem fisherMetric_self_pos_of_nonconstant
-    [Nonempty ι] (θ : FiniteTemperature ι) (X : ι → ℝ) (hZ : 0 < Z θ)
-    (hX : ∃ i j : ι, X i ≠ X j) :
-    0 < fisherMetric θ X X := by
-  obtain ⟨i, j, hij⟩ := hX
-  have hcenter : ∃ k : ι, X k - expect θ X ≠ 0 := by
-    by_contra h
-    push_neg at h
-    apply hij
-    linarith [h i, h j]
-  obtain ⟨k, hk⟩ := hcenter
-  change 0 < fisherCov θ X X
-  unfold fisherCov
-  apply Finset.sum_pos' (s := Finset.univ)
-  · intro l hl
-    have hprob : 0 ≤ prob θ l := prob_nonneg (θ := θ) hZ l
-    simpa [pow_two, mul_assoc] using
-      mul_nonneg hprob (sq_nonneg (X l - expect θ X))
-  · refine ⟨k, Finset.mem_univ k, ?_⟩
-    have hprob : 0 < prob θ k := prob_pos θ hZ k
-    simpa [pow_two, mul_assoc] using
-      mul_pos hprob (sq_pos_of_ne_zero hk)
 
 /--
 At the symmetric Cartan point, centered directions reduce the Fisher metric to
@@ -413,155 +281,5 @@ theorem finiteScalarRelativeCocycle_stateChain
       t * (χ i - φ i) = t * (ψ i - φ i) + t * (χ i - ψ i) := by
     ring
   rw [h, Real.exp_add]
-
-/-!
-The next theorem is the finite, fully analytic part of the convex-duality
-dictionary: the directional derivative of the Massieu potential is the Gibbs
-expectation.  The proof is reduced to the native finite log-sum-exp derivative
-and therefore makes no measure-theoretic or infinite-dimensional claim.
--/
-
-theorem hasDerivAt_massieu_direction
-    [Nonempty ι] (θ X : FiniteTemperature ι) :
-    HasDerivAt
-      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i))
-      (expect θ X) 0 := by
-  let w : ι → ℝ := fun i => Real.exp (θ i)
-  have hcurve :
-      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i)) =
-        (fun t : ℝ => InfoGeometry.Analytic.logSumExp w X t) := by
-    funext t
-    unfold massieuPotential massieu Phi Z
-    unfold InfoGeometry.Analytic.logSumExp
-      InfoGeometry.Analytic.logSumExpPartition
-    congr 1
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [Real.exp_add]
-  rw [hcurve]
-  have hpart := InfoGeometry.Analytic.hasDerivAt_logSumExpPartition w X 0
-  have hpos : 0 < InfoGeometry.Analytic.logSumExpPartition w X 0 := by
-    unfold InfoGeometry.Analytic.logSumExpPartition w
-    apply Finset.sum_pos
-    · intro i hi
-      positivity
-    · exact Finset.univ_nonempty
-  have hlog := hpart.log hpos.ne'
-  have htarget :
-      InfoGeometry.Analytic.logSumExpMoment1 w X 0 /
-          InfoGeometry.Analytic.logSumExpPartition w X 0 = expect θ X := by
-    unfold InfoGeometry.Analytic.logSumExpMoment1
-      InfoGeometry.Analytic.logSumExpPartition expect w
-    simp only [zero_mul, Real.exp_zero, mul_one]
-    unfold prob Z
-    have hZ : Z θ ≠ 0 := (Z_pos θ).ne'
-    have hsum_pos : 0 < ∑ x, Real.exp (θ x) := by
-      exact Finset.sum_pos (fun x _ => Real.exp_pos _) Finset.univ_nonempty
-    apply (div_eq_iff (ne_of_gt hsum_pos)).2
-    have hterm :
-        (∑ i, (Real.exp (θ i) / ∑ j, Real.exp (θ j)) * X i) =
-          (∑ i, Real.exp (θ i) * X i) / ∑ j, Real.exp (θ j) := by
-      rw [Finset.sum_div]
-      apply Finset.sum_congr rfl
-      intro i hi
-      ring
-    rw [hterm]
-    field_simp [ne_of_gt hsum_pos]
-  rw [htarget] at hlog
-  exact hlog
-
-/--
-The second directional derivative is the Fisher covariance.  This is the
-finite Hessian statement corresponding to the preceding mean-value theorem.
--/
-theorem deriv2_massieu_direction
-    [Nonempty ι] (θ X : FiniteTemperature ι) :
-    deriv (fun t : ℝ =>
-      deriv (fun s : ℝ => massieuPotential (fun i => θ i + s * X i)) t) 0 =
-      fisherMetric θ X X := by
-  let w : ι → ℝ := fun i => Real.exp (θ i)
-  have hcurve :
-      (fun t : ℝ => massieuPotential (fun i => θ i + t * X i)) =
-        (fun t : ℝ => InfoGeometry.Analytic.logSumExp w X t) := by
-    funext t
-    unfold massieuPotential massieu Phi Z
-    unfold InfoGeometry.Analytic.logSumExp
-      InfoGeometry.Analytic.logSumExpPartition
-    congr 1
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [Real.exp_add]
-  rw [hcurve]
-  have hw : ∀ i, 0 < w i := fun i => Real.exp_pos _
-  rw [InfoGeometry.Analytic.logSumExp_secondDeriv_eq_variance w X hw 0]
-  rw [InfoGeometry.Analytic.logSumExpVariance_eq_centered w X hw 0]
-  have hweight (i : ι) :
-      InfoGeometry.Analytic.logSumExpWeight w X 0 i = prob θ i := by
-    unfold InfoGeometry.Analytic.logSumExpWeight w
-      InfoGeometry.Analytic.logSumExpPartition prob Z
-    simp
-  simp_rw [hweight]
-  simp [fisherMetric, fisherCov, expect, pow_two]
-  apply Finset.sum_congr rfl
-  intro i hi
-  ring
-
-/-- The same Hessian identity holds at every point of the finite exponential
-family trajectory, not only at its base point. -/
-theorem deriv2_massieu_direction_at
-    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ) :
-    deriv (fun s : ℝ =>
-      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t =
-      fisherMetric (fun i => θ i + t * X i) X X := by
-  let w : ι → ℝ := fun i => Real.exp (θ i)
-  have hcurve :
-      (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) =
-        (fun r : ℝ => InfoGeometry.Analytic.logSumExp w X r) := by
-    funext r
-    unfold massieuPotential massieu Phi Z
-    unfold InfoGeometry.Analytic.logSumExp
-      InfoGeometry.Analytic.logSumExpPartition
-    congr 1
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [Real.exp_add]
-  rw [hcurve]
-  have hw : ∀ i, 0 < w i := fun i => Real.exp_pos _
-  rw [InfoGeometry.Analytic.logSumExp_secondDeriv_eq_variance w X hw t]
-  rw [InfoGeometry.Analytic.logSumExpVariance_eq_centered w X hw t]
-  have hweight (i : ι) :
-      InfoGeometry.Analytic.logSumExpWeight w X t i =
-        prob (fun j => θ j + t * X j) i := by
-    unfold InfoGeometry.Analytic.logSumExpWeight w
-      InfoGeometry.Analytic.logSumExpPartition prob Z
-    rw [Real.exp_add]
-    congr 1
-    apply Finset.sum_congr rfl
-    intro j hj
-    rw [Real.exp_add]
-  simp_rw [hweight]
-  simp [fisherMetric, fisherCov, expect, pow_two]
-  apply Finset.sum_congr rfl
-  intro i hi
-  ring
-
-/-- Convexity of the finite Massieu potential along every exponential-family
-trajectory. -/
-theorem deriv2_massieu_direction_at_nonneg
-    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ) :
-    0 ≤ deriv (fun s : ℝ =>
-      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t := by
-  rw [deriv2_massieu_direction_at]
-  exact fisherMetric_self_nonneg _ _ (Z_pos _)
-
-/-- Strict convexity holds along a direction that is not constant on the
-finite state space. -/
-theorem deriv2_massieu_direction_at_pos_of_nonconstant
-    [Nonempty ι] (θ X : FiniteTemperature ι) (t : ℝ)
-    (hX : ∃ i j : ι, X i ≠ X j) :
-    0 < deriv (fun s : ℝ =>
-      deriv (fun r : ℝ => massieuPotential (fun i => θ i + r * X i)) s) t := by
-  rw [deriv2_massieu_direction_at]
-  exact fisherMetric_self_pos_of_nonconstant _ _ (Z_pos _) hX
 
 end InfoGeometry.Thermodynamics.FiniteGibbsRelative

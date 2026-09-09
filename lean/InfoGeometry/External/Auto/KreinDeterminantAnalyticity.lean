@@ -118,7 +118,7 @@ lemma hyperbolicFlow_analytic (θ : ℝ) : IsAnalyticFlow2 (hyperbolicFlow θ) :
     simp
   simp [Matrix.det_fin_two, hmul]
 
-/-- Logarithmic volume (Jacobi-Liouville) property on the concrete family above:
+/-- Logarithmic volume (Jacobi-Liouville) witness on the concrete family above:
     `diag(e^θ,e^{-θ})` has determinant one, so its determinant-log is zero.
     This replaces classical complex analyticity in the real doubled setting.
 -/
@@ -145,5 +145,23 @@ def ParafermionPhase.mul {N : ℕ} (a b : ParafermionPhase N) : ParafermionPhase
       (a.q * b.q) ^ N = (a.q ^ N) * (b.q ^ N) := by simp [mul_pow]
       _ = 1 * 1 := by rw [a.unit_order, b.unit_order]
       _ = 1 := by ring
+
+/-- Main synthesis for this analytic module: determinant is monoid homomorphic,
+    the analytic sectors are multiplicative, and parafermionic phases compose.
+-/
+theorem krein_determinant_analyticity_synthesis :
+    (∀ A B : TransferMatrix, IsAnalyticFlow2 A → IsAnalyticFlow2 B → IsAnalyticFlow (A * B)) ∧
+    (∀ A B : TransferMatrix, IsAnalyticFlow2 A → IsAnalyticFlow2 B →
+      IsAnalyticFlow (tensorFlow A B)) ∧
+    (∀ N : ℕ, ∀ a b : ParafermionPhase N,
+      (a.q * b.q) ^ N = 1) := by
+  constructor
+  · intro A B hA hB
+    exact analytic_mul A B hA hB
+  · constructor
+    · intro A B hA hB
+      exact tensorFlow_analytic A B hA hB
+    · intro N a b
+      simpa [ParafermionPhase.mul] using (ParafermionPhase.mul a b).unit_order
 
 end InfoGeometry.Quantum.KreinDeterminantAnalyticity

@@ -1,4 +1,7 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
 # Set-level regularity of the concrete completed-zeta readout
@@ -13,14 +16,38 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge
 
+open Complex
+open scoped Topology
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
+open InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+open InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus
+
+theorem differentiableAt_riemannXi_of_ne {s : ℂ}
+    (hs0 : s ≠ 0) (hs1 : s ≠ 1) : DifferentiableAt ℂ riemannXi s := by
+  have hev : ∀ᶠ z in 𝓝 s, z ≠ 0 ∧ z ≠ 1 := by
+    filter_upwards [isOpen_compl_singleton.mem_nhds hs0,
+      isOpen_compl_singleton.mem_nhds hs1] with z hz0 hz1
+    exact ⟨by simpa using hz0, by simpa using hz1⟩
+  have heq : ∀ᶠ z in 𝓝 s, riemannXi z = entireRiemannXi z :=
+    hev.mono (fun z hz => (entireRiemannXi_eq_riemannXi hz.1 hz.2).symm)
+  exact differentiable_entireRiemannXi.differentiableAt.congr_of_eventuallyEq heq
 
 theorem riemannXi_ne_zero_on_closedBall_of_one_lt_re
     (rho : ℂ) (R : ℝ)
     (hstrip : ∀ z ∈ Metric.closedBall rho R, 1 < z.re) :
     ∀ z ∈ Metric.closedBall rho R, riemannXi z ≠ 0 := by
   intro z hz
-  exact riemannXi_ne_zero_of_one_lt_re (hstrip z hz)
+  have hRe : 1 < z.re := hstrip z hz
+  have hz0 : z ≠ 0 := by
+    intro h
+    subst z
+    norm_num at hRe
+  have hz1 : z ≠ 1 := by
+    intro h
+    subst z
+    norm_num at hRe
+  rw [← entireRiemannXi_eq_riemannXi hz0 hz1]
+  exact entireRiemannXi_ne_zero_of_one_lt_re hRe
 
 theorem differentiableOn_riemannXi_of_one_lt_re :
     DifferentiableOn ℂ riemannXi {z : ℂ | 1 < z.re} := by
@@ -33,7 +60,7 @@ theorem differentiableOn_riemannXi_of_one_lt_re :
     intro h
     subst z
     norm_num at hz
-  exact (differentiableAt_riemannXi hz0 hz1).differentiableWithinAt
+  exact (differentiableAt_riemannXi_of_ne hz0 hz1).differentiableWithinAt
 
 theorem hasDerivAt_riemannXi_of_one_lt_re {s : ℂ} (hs : 1 < s.re) :
     HasDerivAt riemannXi (deriv riemannXi s) s := by
@@ -45,7 +72,7 @@ theorem hasDerivAt_riemannXi_of_one_lt_re {s : ℂ} (hs : 1 < s.re) :
     intro h
     subst s
     norm_num at hs
-  exact (differentiableAt_riemannXi hs0 hs1).hasDerivAt
+  exact (differentiableAt_riemannXi_of_ne hs0 hs1).hasDerivAt
 
 /-!
 The functional equation differentiates on the regular locus.  This is the
@@ -67,7 +94,7 @@ theorem riemannXi_deriv_one_sub
       s = 1 - (1 - s) := by ring
       _ = 1 - 1 := by rw [h]
       _ = 0 := by ring
-  have h_outer := (differentiableAt_riemannXi hs_ref0 hs_ref1).hasDerivAt
+  have h_outer := (differentiableAt_riemannXi_of_ne hs_ref0 hs_ref1).hasDerivAt
   have h_inner : HasDerivAt (fun x : ℂ => 1 - x) (-1 : ℂ) s := by
     convert (hasDerivAt_const (x := s) (1 : ℂ)).sub (hasDerivAt_id s) using 1 <;>
       simp
@@ -101,7 +128,7 @@ theorem differentiableOn_riemannXi_closedBall
     (h1 : ∀ z ∈ Metric.closedBall rho R, z ≠ 1) :
     DifferentiableOn ℂ riemannXi (Metric.closedBall rho R) := by
   intro z hz
-  exact (differentiableAt_riemannXi (h0 z hz) (h1 z hz)).differentiableWithinAt
+  exact (differentiableAt_riemannXi_of_ne (h0 z hz) (h1 z hz)).differentiableWithinAt
 
 theorem hasDerivAt_riemannXi_closedBall
     (rho : ℂ) (R : ℝ)
@@ -109,7 +136,7 @@ theorem hasDerivAt_riemannXi_closedBall
     (h1 : ∀ z ∈ Metric.closedBall rho R, z ≠ 1)
     {z : ℂ} (hz : z ∈ Metric.closedBall rho R) :
     HasDerivAt riemannXi (deriv riemannXi z) z := by
-  exact (differentiableAt_riemannXi (h0 z hz) (h1 z hz)).hasDerivAt
+  exact (differentiableAt_riemannXi_of_ne (h0 z hz) (h1 z hz)).hasDerivAt
 
 theorem continuousOn_riemannXi_closedBall
     (rho : ℂ) (R : ℝ)

@@ -87,6 +87,15 @@ noncomputable def canonicalToVectorDerivation
     canonicalToVectorDerivation D X =
       canonicalVectorEquiv (D.1 (canonicalVectorEquiv.symm X)) := rfl
 
+@[simp] theorem canonicalToVectorDerivation_zero (D : canonicalZornDerivations) :
+    canonicalToVectorDerivation D (0 : VZ) = 0 := by
+  exact InfoGeometry.Algebra.ZornVectorMatrix.Derivation.map_zero
+    (canonicalToVectorDerivation D)
+
+@[simp] theorem canonicalZornDerivation_map_zero
+    (D : canonicalZornDerivations) : D.1 0 = 0 := by
+  exact D.1.map_zero
+
 noncomputable def vectorCanonicalLinearEquiv :
     VDer ≃ₗ[ℝ] canonicalZornDerivations where
   toFun := vectorToCanonicalDerivation

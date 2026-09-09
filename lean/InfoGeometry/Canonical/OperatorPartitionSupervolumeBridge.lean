@@ -9,7 +9,7 @@ lane to the existing super-volume/Berezinian lane.
 
 This file does NOT claim that the partition is definitionally the Berezinian.
 Instead it exposes the smallest honest theorem surface available now:
-if the caller supplies an explicit property identifying the operatorial partition
+if the caller supplies an explicit witness identifying the operatorial partition
 with the generalized Berezinian scale, then the operatorial Massieu potential is
 exactly the logarithm of that super-volume quantity.
 
@@ -35,7 +35,7 @@ variable [FiniteDimensional ℝ H]
 namespace ConformalGibbsSouriauOperatorContext
 
 /--
-Exact log-supervolume bridge from an explicit partition/Berezinian property.
+Exact log-supervolume bridge from an explicit partition/Berezinian witness.
 
 This is the smallest truthful theorem currently available between the two lanes:
 - operatorial thermodynamic partition/Massieu, and

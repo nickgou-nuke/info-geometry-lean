@@ -54,7 +54,7 @@ it does not assert new global identifications without explicit hypotheses.
 namespace InfoGeometry.Canonical.Rosetta
 
 -- Re-export stable entry points here as they mature.
--- Keep theorem statements property-driven (compatibility witnesses explicit).
+-- Keep theorem statements assumption-driven (compatibility witnesses explicit).
 
 export InfoGeometry.Canonical.GrandUnification (
   JordanKKTData
@@ -200,9 +200,9 @@ export InfoGeometry.Canonical.WeylLineIntegrator (
 
 export InfoGeometry.Canonical.WeylTransportBridge (
   FlatCurvatureChiralScaleBridge
-  holonomy_eq_chiralScale_of_flat_compat
+  holonomy_eq_chiralScale_of_flat
   finiteSumFlatCurvatureChiralScaleBridge
-  finiteSum_holonomy_eq_chiralScale_of_flat_compat
+  finiteSum_holonomy_eq_chiralScale_of_flat
 )
 
 export InfoGeometry.Canonical.SuperInference (
@@ -214,9 +214,7 @@ export InfoGeometry.Canonical.SuperInference (
   susyHamiltonian
   superCharge_boson_eq_zero
   superCharge_fermion_eq_dualMap
-  susyHamiltonian_eq_charge_square
-  susyHamiltonian_eq_zero_of_dualMap_zero
-  susyHamiltonian_eq_self_of_fixed
+  susyHamiltonian_eq_self
 )
 
 export InfoGeometry.Experimental.ModularSpinorBridge (
@@ -226,15 +224,13 @@ export InfoGeometry.Experimental.ModularSpinorBridge (
   ModularBerryBridge
   SpinorInnovationBridge
   spinorBilinear_eq_berryPhase
-  spinorBilinear_eq_relativeModularPotential
+  spinorBilinear_eq_klDivergence
 )
 
 export InfoGeometry.Canonical.ChiralCliffordBridge (
   chiralGrading
   generalizedChiralPlus
   generalizedChiralMinus
-  chiralProjectorPlus
-  chiralProjectorMinus
   IsCompactBeliefUpdate
   IsNonCompactBeliefUpdate
   anomaly_as_structure_constant

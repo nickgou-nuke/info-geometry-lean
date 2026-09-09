@@ -92,7 +92,7 @@ noncomputable def ricciFromMetricOp [FiniteDimensional ℝ E]
   fun u v => - fderiv ℝ (fun y => fderiv ℝ (metricLogDet H) y u) x v / 2
 
 /--
-Regularity property for the log-determinant chain underlying
+Regularity hypothesis for the log-determinant chain underlying
 `ricciFromMetricOp`.
 
 This makes explicit the intended differentiable branch of the Ricci proxy,
@@ -328,7 +328,7 @@ lemma isEinsteinKaehlerAtWith_to_exists
     IsEinsteinKaehlerAt R K x := by
   exact ⟨c, h⟩
 
-/-- Converse: from an existential Einstein-Kähler property, extract the
+/-- Converse: from an existential Einstein-Kähler witness, extract the
 explicit constant. The constant is uniquely determined by any pair (u,v)
 with `K.H.metric x u v ≠ 0`. -/
 lemma isEinsteinKaehlerAt_to_with
@@ -711,7 +711,7 @@ lemma satisfiesMongeAmperePotential_iff
       ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x) := Iff.rfl
 
 /--
-Promote a density-form Monge-Ampere property to potential form once the target
+Promote a density-form Monge-Ampere witness to potential form once the target
 density is known to be an exponential potential.
 -/
 lemma satisfiesMongeAmperePotential_of_satisfiesMongeAmpere_eq_exp

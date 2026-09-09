@@ -9,7 +9,7 @@ def nameFromDotted (path : String) : Name :=
   (path.splitOn ".").foldl (init := Name.anonymous) fun acc seg =>
     Name.str acc seg
 
-/-- Legacy property-bearing classical Riesz surface. -/
+/-- Legacy witness-bearing classical Riesz surface. -/
 def legacyClassicalRieszName : Name :=
   nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.HasClassicalRieszDecompositionAtZero"
 
@@ -21,7 +21,7 @@ def legacyInfiniteAssumptionsName : Name :=
 def legacyCanonicalRieszDataName : Name :=
   nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.exists_rieszDrazinData_endCLM"
 
-/-- Field projections used by property-readback and projector-readback surfaces. -/
+/-- Field projections used by witness-readback and projector-readback surfaces. -/
 def legacyProjectionTargets : Array Name :=
   #[ nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.HasClassicalRieszDecompositionAtZero.D"
    , nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.HasClassicalRieszDecompositionAtZero.k"
@@ -86,7 +86,7 @@ def scanValues (target : Name) : CoreM (Array Name) := do
     | none => pure ()
   pure hits
 
-/-- Scan declarations that extract legacy property fields from values/proofs. -/
+/-- Scan declarations that extract legacy witness fields from values/proofs. -/
 def scanProjectionUsage (targets : Array Name) : CoreM (Array (Name × Array Name)) := do
   let env ← getEnv
   let mut hits : Array (Name × Array Name) := #[]

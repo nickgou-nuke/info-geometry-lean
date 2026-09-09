@@ -161,40 +161,6 @@ noncomputable def representativeModularPotential
 
 end Representatives
 
-section ScaleShape
-
-variable {α : Type u} [Fintype α] [Nonempty α]
-
-/--
-The logarithm of an unnormalised positive density splits into its total mass
-and its normalised shape.  This is the scalar form of
-
-`K_ρ = -(log Z) + K_(ρ/Z)`.
-
-The two terms remain on the native `PositiveMeasure` carrier; no operator or
-projective identification is introduced here.
--/
-theorem log_mass_add_log_normalized_density
-    (μ : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
-    Real.log (μ a) =
-      Real.log (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) +
-        Real.log (InfoGeometry.PositiveMeasure.normalize μ a) := by
-  rw [InfoGeometry.PositiveMeasure.normalize_apply]
-  rw [Real.log_div (μ.pos a).ne'
-    (InfoGeometry.PositiveMeasure.Z_ne_zero μ)]
-  ring
-
-/-- Negative-log version of `log_mass_add_log_normalized_density`. -/
-theorem neg_log_mass_scale_shape_split
-    (μ : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
-    -Real.log (μ a) =
-      -Real.log (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) -
-        Real.log (InfoGeometry.PositiveMeasure.normalize μ a) := by
-  rw [log_mass_add_log_normalized_density]
-  ring
-
-end ScaleShape
-
 section Rays
 
 variable {α : Type u} [Fintype α] [Nonempty α]
@@ -387,19 +353,6 @@ mass ratio induced by canonical normalization.
   exact representativeModularPotential_eq_neg_representativeRelativeLogDensity
     (μ := gaugeSection (α := α) q)
     (ν := gaugeSection (α := α) q0) a
-
-@[simp] theorem relativeDensity_eq_exp_neg_relativeModularPotential
-    (q q0 : PositiveRay α) (a : α) :
-    relativeDensity q q0 a = Real.exp (-relativeModularPotential q q0 a) := by
-  rw [relativeModularPotential_eq_neg_relativeLogDensity, neg_neg]
-  exact relativeDensity_eq_exp_relativeLogDensity q q0 a
-
-@[simp] theorem relativeModularPotential_eq_neg_log_relativeDensity
-    (q q0 : PositiveRay α) (a : α) :
-  relativeModularPotential q q0 a = -Real.log (relativeDensity q q0 a) := by
-  rw [relativeDensity_eq_exp_neg_relativeModularPotential]
-  rw [Real.log_exp]
-  ring
 
 @[rep_depth projective, simp]
 theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
@@ -655,20 +608,6 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
     (ν := gaugeSection (α := α) q0)
     (ξ := gaugeSection (α := α) q1) a
 
-/-- 
-  THE FUNDAMENTAL FUNCTOR THEOREM:
-  The relative density multiplicative 1-cocycle Δ(q, q₁) = Δ(q, q₀) · Δ(q₀, q₁)
-  translates under -ln into the modular potential additive 1-cocycle:
-    V(q, q₁) = V(q, q₀) + V(q₀, q₁)
--/
-theorem log_exponential_duality_cocycle (q q0 q1 : PositiveRay α) (a : α) :
-    (relativeDensity q q1 a = relativeDensity q q0 a * relativeDensity q0 q1 a) ∧
-    (relativeModularPotential q q1 a = relativeModularPotential q q0 a + relativeModularPotential q0 q1 a) ∧
-    (relativeDensity q q1 a = Real.exp (-relativeModularPotential q q1 a)) := by
-  exact ⟨relativeDensity_cocycle q q0 q1 a,
-         relativeModularPotential_cocycle q q0 q1 a,
-         relativeDensity_eq_exp_neg_relativeModularPotential q q1 a⟩
-
 attribute [rep_depth projective]
   representativeRelativeDensity
   representativeRelativeLogDensity
@@ -686,8 +625,6 @@ attribute [rep_depth projective]
   representativeRelativeLogDensity_cocycle
   representativeRelativeDensity_cocycle
   representativeModularPotential_cocycle
-  log_mass_add_log_normalized_density
-  neg_log_mass_scale_shape_split
   relativeDensity
   relativeLogDensity
   relativeModularPotential

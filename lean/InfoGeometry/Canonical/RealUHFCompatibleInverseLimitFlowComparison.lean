@@ -242,5 +242,4 @@ theorem flow_intertwining_square (D : Data) (t : ℝ) :
   simpa [toTopCatHom] using (D.flow_intertwines t ρ).symm
 
 end InfoGeometry.Canonical.RealUHFCompatibleInverseLimitFlowComparison
-
 end

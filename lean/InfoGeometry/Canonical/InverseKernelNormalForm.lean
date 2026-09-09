@@ -103,25 +103,25 @@ theorem rightChiralAnomaly_eq_zero_iff_spectralRangeCommute :
     CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_zero_iff_spectralRangeCommute
 
-/-- Constructive forward direction for the property left anomaly corridor. -/
+/-- Constructive forward direction for the certified left anomaly corridor. -/
 theorem spectralMetricCommute_of_chiralAnomaly_eq_zero
     (hχ : CIK.chiralAnomaly = 0) :
     CIK.SpectralMetricCommute :=
   (CIK.chiralAnomaly_eq_zero_iff_spectralMetricCommute).1 hχ
 
-/-- Constructive reverse direction for the property left anomaly corridor. -/
+/-- Constructive reverse direction for the certified left anomaly corridor. -/
 theorem chiralAnomaly_eq_zero_of_spectralMetricCommute
     (hComm : CIK.SpectralMetricCommute) :
     CIK.chiralAnomaly = 0 :=
   (CIK.chiralAnomaly_eq_zero_iff_spectralMetricCommute).2 hComm
 
-/-- Constructive forward direction for the property right anomaly corridor. -/
+/-- Constructive forward direction for the certified right anomaly corridor. -/
 theorem spectralRangeCommute_of_rightChiralAnomaly_eq_zero
     (hχ : CIK.rightChiralAnomaly = 0) :
     CIK.SpectralRangeCommute :=
   (CIK.rightChiralAnomaly_eq_zero_iff_spectralRangeCommute).1 hχ
 
-/-- Constructive reverse direction for the property right anomaly corridor. -/
+/-- Constructive reverse direction for the certified right anomaly corridor. -/
 theorem rightChiralAnomaly_eq_zero_of_spectralRangeCommute
     (hComm : CIK.SpectralRangeCommute) :
     CIK.rightChiralAnomaly = 0 :=

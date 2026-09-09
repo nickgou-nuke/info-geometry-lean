@@ -172,4 +172,16 @@ theorem refinement_halves_cellWidth (P : FinitePartition) :
   push_cast
   ring
 
+/-- A record carrying the finite partition identities proved in this file. -/
+structure JaynesFinitePartitionSynthesis where
+  partitionSumOne : ∀ (P : FinitePartition) (p : DiscreteDistribution P),
+    (∑ i : Fin P.n, p.prob i) = 1
+  uniformEntropyIsLogN : ∀ (P : FinitePartition),
+    discreteEntropy (uniformDistribution P) = Real.log (P.n : ℝ)
+  relativeEntropySelfZero : ∀ (P : FinitePartition) (p : DiscreteDistribution P),
+    relativeEntropy p p = 0
+
+  -- Textual summary of the finite statements carried by this record.
+  slogan : String
+
 end

@@ -49,8 +49,7 @@ theorem associativeRing_bridge_packet (a b x y z : A) :
       + jordanTriple x (jordanTriple b a y) z
       - jordanTriple x y (jordanTriple a b z) = 0 ∧
     ⁅a, ⁅b, x⁆⁆ + ⁅b, ⁅x, a⁆⁆ + ⁅x, ⁅a, b⁆⁆ = 0 := by
-  refine ⟨?_, ?_⟩
-  · exact jordanTriple_identity a b x y z
-  · simpa [Ring.lie_def] using (commutator_jacobi a b x)
+  exact ⟨jordanTriple_identity a b x y z, by
+    simpa [Ring.lie_def] using (commutator_jacobi a b x)⟩
 
 end InfoGeometry.Physics.ZornTkkAlgebraicClosure

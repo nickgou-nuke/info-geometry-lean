@@ -52,7 +52,7 @@ theorem minkowskiMetricCoeff_off_diag (μ ν : SpacetimeIndex) (hμν : μ ≠ �
     minkowskiMetricCoeff μ ν = 0 := by
   simp [minkowskiMetricCoeff, hμν]
 
-/-- Algebra commutator used by the Poincare interface. -/
+/-- Algebra commutator used by the Poincare socket. -/
 def poincareCommutator {A : Type*} [Ring A] (x y : A) : A :=
   x * y - y * x
 
@@ -86,12 +86,12 @@ theorem souriauEntropy_fourVector_eq_massieu_add_meanBetaEnergy {ι : Type*} [Fi
         (beta := (1 : ℝ)) (energy := betaProjectedEnergy β p))
 
 /--
-Minimal Poincare Lie-algebra interface.
+Minimal Poincare Lie-algebra socket.
 
 The Lorentz and translation generators are algebra elements satisfying the
 standard Poincare commutator relations with metric coefficients explicit.
 -/
-structure PoincareAlgebraData (A : Type*) [Ring A] where
+structure PoincareAlgebraSocket (A : Type*) [Ring A] where
   lorentz : SpacetimeIndex → SpacetimeIndex → A
   momentum : SpacetimeIndex → A
   lorentz_skew : ∀ μ ν, lorentz μ ν = -lorentz ν μ
@@ -109,24 +109,24 @@ structure PoincareAlgebraData (A : Type*) [Ring A] where
           minkowskiMetricCoeff σ ν • lorentz ρ μ +
           minkowskiMetricCoeff ρ ν • lorentz σ μ
 
-namespace PoincareAlgebraData
+namespace PoincareAlgebraSocket
 
-/-- Translation components commute in the Poincare interface. -/
-theorem momentum_commutator_zero {A : Type*} [Ring A] (P : PoincareAlgebraData A)
+/-- Translation components commute in the Poincare socket. -/
+theorem momentum_commutator_zero {A : Type*} [Ring A] (P : PoincareAlgebraSocket A)
     (μ ν : SpacetimeIndex) :
     poincareCommutator (P.momentum μ) (P.momentum ν) = 0 := by
   unfold poincareCommutator
   rw [P.momentum_commutes μ ν]
   simp
 
-theorem lorentz_momentum_commutator {A : Type*} [Ring A] (P : PoincareAlgebraData A)
+theorem lorentz_momentum_commutator {A : Type*} [Ring A] (P : PoincareAlgebraSocket A)
     (ρ σ μ : SpacetimeIndex) :
     poincareCommutator (P.lorentz ρ σ) (P.momentum μ) =
       minkowskiMetricCoeff σ μ • P.momentum ρ -
         minkowskiMetricCoeff ρ μ • P.momentum σ :=
   P.lorentz_momentum_bracket ρ σ μ
 
-theorem lorentz_lorentz_commutator {A : Type*} [Ring A] (P : PoincareAlgebraData A)
+theorem lorentz_lorentz_commutator {A : Type*} [Ring A] (P : PoincareAlgebraSocket A)
     (ρ σ μ ν : SpacetimeIndex) :
     poincareCommutator (P.lorentz ρ σ) (P.lorentz μ ν) =
       minkowskiMetricCoeff σ μ • P.lorentz ρ ν -
@@ -135,10 +135,10 @@ theorem lorentz_lorentz_commutator {A : Type*} [Ring A] (P : PoincareAlgebraData
         minkowskiMetricCoeff ρ ν • P.lorentz σ μ :=
   P.lorentz_lorentz_bracket ρ σ μ ν
 
-end PoincareAlgebraData
+end PoincareAlgebraSocket
 
 /-- Twistor/null-incidence data needed before the chiral algebra can be read geometrically. -/
-structure TwistorChiralNullData where
+structure TwistorChiralNullSocket where
   nullCone : InfoGeometry.Twistor.Incidence.Twistor → Prop
   incidence : InfoGeometry.Twistor.Incidence.Twistor →
     InfoGeometry.Twistor.Incidence.Twistor → Prop
@@ -149,13 +149,13 @@ structure TwistorChiralNullData where
   minus_incidence_null :
     ∀ Z W, chiralMinus Z → incidence Z W → nullCone W
 
-theorem plus_incidence_forces_null (T : TwistorChiralNullData)
+theorem plus_incidence_forces_null (T : TwistorChiralNullSocket)
     {Z W : InfoGeometry.Twistor.Incidence.Twistor}
     (hZ : T.chiralPlus Z) (hZW : T.incidence Z W) :
     T.nullCone W :=
   T.plus_incidence_null Z W hZ hZW
 
-theorem minus_incidence_forces_null (T : TwistorChiralNullData)
+theorem minus_incidence_forces_null (T : TwistorChiralNullSocket)
     {Z W : InfoGeometry.Twistor.Incidence.Twistor}
     (hZ : T.chiralMinus Z) (hZW : T.incidence Z W) :
     T.nullCone W :=
@@ -163,7 +163,7 @@ theorem minus_incidence_forces_null (T : TwistorChiralNullData)
 
 /--
 Chiral supercharge packet with explicit central charge, parity, beta four-vector,
-energy-momentum four-vector, and twistor incidence interface.
+energy-momentum four-vector, and twistor incidence socket.
 -/
 structure ChiralSuperPoincareSouriauPacket (A : Type*) [Ring A] where
   plusCharge : A
@@ -173,7 +173,7 @@ structure ChiralSuperPoincareSouriauPacket (A : Type*) [Ring A] where
   momentumOp : A
   beta4 : FourVector
   energyMomentum4 : FourVector
-  twistorData : TwistorChiralNullData
+  twistorSocket : TwistorChiralNullSocket
   plus_nilpotent : plusCharge * plusCharge = 0
   minus_nilpotent : minusCharge * minusCharge = 0
   momentum_eq_chiral_anticommutator :

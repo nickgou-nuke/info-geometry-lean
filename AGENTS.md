@@ -2,7 +2,7 @@
 
 > ⚠️ **CRITICAL SYSTEM OVERRIDE: NEVER RUN LAKE CLEAN**
 > You must read this before every command. NEVER RUN `lake clean`. NEVER delete the build cache.
-> Concurrent builds are also strictly BANNED. You must use `manage_task list` to verify no builds are running.
+> Concurrent builds are also strictly BANNED. Inspect running compiler processes before verification and use the repository's shared build lock for builds.
 > NEVER kill a running `lake` task unless you explicitly ask the user for authorization and receive approval.
 > ⚠️
 
@@ -152,9 +152,8 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 ## Sequential Build and Test Mandate
 **CRITICAL**: To prevent compilation race conditions, lock file contention, and resource saturation:
 - **Action**: You MUST never execute concurrent build, test, or compilation commands (e.g., `lake build`, `lake test`, `lake env lean`, `pytest`, `cargo`, `npm run dev`) at the same time.
-- **Pre-check**: Before executing any command that builds, compiles, or runs tests, you MUST inspect the current running background tasks via `manage_task list` to guarantee no other compiler-related task is active.
+- **Pre-check**: Before executing any command that builds, compiles, or runs tests, inspect running processes to verify no other compiler-related task is active. Run Lake builds through `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <targets>` so they acquire the shared build lock.
 
 ## Strict Build Cache Protection Mandate
 **CRITICAL**: You MUST never execute cache-destructive commands (e.g., `lake clean`, `rm -rf .lake/build`, `rm -rf .lake/packages`, `rm -rf .lake`) under any circumstances. Nuking the build cache deletes precompiled dependency oleans and breaks the environment, forcing long and unnecessary compilation loops. If you need to clean up build warnings, use targeted compiler commands or rebuild specific files. Never use global clean commands.
-
 

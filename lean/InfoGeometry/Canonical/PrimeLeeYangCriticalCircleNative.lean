@@ -41,6 +41,7 @@ theorem shiftedPrimeFugacity_onLeeYangCircle_iff_criticalLine
     · exfalso
       linarith
   · intro hs
-    exact C.shiftedPrimeFugacity_onLeeYangCircle_of_criticalLine s hs i
+    unfold OnLeeYangCircle
+    exact C.shiftedPrimeFugacity_normSq_of_criticalLine s hs i
 
 end InfoGeometry.Canonical.PrimeLeeYangCriticalCircleNative

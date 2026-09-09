@@ -10,9 +10,9 @@ open InfoGeometry.Canonical.MoorePenrose
 /-!
 # Inverse Kernel Cartan Core
 
-This file exposes the spectral Cartan seed of the property inverse-kernel
+This file exposes the spectral Cartan seed of the certified inverse-kernel
 package through a stable owner surface. The underlying Cartan algebra lives in
-`CartanDecomposition`; here we adapt it to the property inverse-kernel center
+`CartanDecomposition`; here we adapt it to the certified inverse-kernel center
 and connect it to the projector/complement algebra.
 -/
 
@@ -31,7 +31,7 @@ namespace CertifiedInverseKernel
 
 variable (CIK : CertifiedInverseKernel E)
 
-/-- Canonical spectral Cartan triple attached to the property inverse kernel. -/
+/-- Canonical spectral Cartan triple attached to the certified inverse kernel. -/
 noncomputable abbrev cartanTriple : InformationCartanTriple EndH :=
   CIK.toInformationCartanTriple
 

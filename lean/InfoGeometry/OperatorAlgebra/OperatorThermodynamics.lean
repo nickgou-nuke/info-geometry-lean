@@ -7,15 +7,15 @@ This module separates three facts:
 
 1. KMS thermality is modular/operator-algebraic.
 2. Partial trace is only the finite/type-I shadow.
-3. Some downstream readouts use an additional calibration layer comparing
-   modular flow with an external flow datum.
+3. Hawking/Unruh thermality requires a geometric horizon calibration
+   identifying modular flow with physical time/boost flow.
 
 In particular, the KMS theorem is a Tomita-Takesaki theorem, not a theorem of
 `Cl(1,1)` non-orientability by itself.  At this layer we prove only
-property-gated consequences: once an observer reduction is supplied together
+witness-gated consequences: once an observer reduction is supplied together
 with a KMS state for the modular flow, the local observer readout is KMS.
 Horizon radiation interpretations require a separate boost/Killing-flow
-calibration property.
+calibration witness.
 -/
 
 import Mathlib.Tactic
@@ -77,24 +77,11 @@ theorem flow_add_apply
     σ.flow (s + t) x = σ.flow s (σ.flow t x) :=
   σ.flow_add s t x
 
-theorem flow_commute
-    (s t : ℝ) (x : Op) :
-    σ.flow s (σ.flow t x) = σ.flow t (σ.flow s x) := by
-  rw [← σ.flow_add s t x, ← σ.flow_add t s x]
-  rw [add_comm]
-
 theorem flow_neg_apply
     (t : ℝ)
     (x : Op) :
     σ.flow (-t) (σ.flow t x) = x := by
   rw [← σ.flow_add (-t) t x]
-  simp
-
-theorem flow_neg_apply'
-    (t : ℝ)
-    (x : Op) :
-    σ.flow t (σ.flow (-t) x) = x := by
-  rw [← σ.flow_add t (-t) x]
   simp
 
 theorem flow_mul_apply
@@ -105,7 +92,7 @@ theorem flow_mul_apply
 
 end OperatorFlow
 
-/-! ## 2. KMS state -/
+/-! ## 2. KMS state socket -/
 
 /--
 KMS state at inverse temperature `beta`.
@@ -172,7 +159,7 @@ def kms_boundary_condition : Prop :=
       K.correlation A B ((t : ℂ) + (beta : ℂ) * Complex.I) =
         K.state.eval (σ.flow t B * A))
 
-/-- Re-export the genuine analytic KMS boundary property. -/
+/-- Re-export the genuine analytic KMS boundary certificate. -/
 theorem kms_boundary_holds :
     K.kms_boundary_condition :=
   ⟨K.correlation_differentiableOn_openStrip,
@@ -345,10 +332,10 @@ structure TomitaKMSThermalization
   modular_origin :
     ∀ t A, σ.flow t A = tomitaFlow.flow t A
 
-  /-- Calibration flow used for the geometric comparison. -/
+  /-- Physical horizon or wedge flow used for the geometric calibration. -/
   horizonFlow : OperatorFlow Op
 
-  /-- The Tomita carrier agrees with the chosen calibration flow. -/
+  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
   horizon_origin :
     ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
@@ -369,7 +356,7 @@ theorem exists_kms_state_for_observer :
   intro A
   exact Θ.thermal_eq_reduction A
 
-/-- The observer-reduced state carries the named KMS boundary property. -/
+/-- The observer-reduced state carries the named KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ beta where
   correlation := Θ.thermal.correlation
@@ -414,11 +401,11 @@ theorem thermal_agrees_with_global_on_observable
 end TomitaKMSThermalization
 
 /--
-A boundary or transport layer that routes observable degrees of freedom
+A horizon or topological boundary that routes observable degrees of freedom
 toward the commutant.
 
-The boundary/twist does not by itself create a KMS state; it supplies boundary
-data to which a modular thermalization property may be applied.
+The boundary/twist does not by itself create a KMS state; it supplies geometric
+partition data to which a modular thermalization witness may be applied.
 -/
 structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
@@ -438,9 +425,9 @@ structure HorizonCommutantBoundary
     {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
-Full thermodynamic horizon property:
+Full thermodynamic horizon witness:
 
-Tomita algebra/commutant routing, boundary data, observer reduction, and KMS
+Tomita algebra/commutant routing, horizon boundary, observer reduction, and KMS
 thermalization of the reduced state.
 -/
 structure HorizonKMSThermodynamics
@@ -475,7 +462,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.thermalization.reduction.observableEval :=
   H.thermalization.exists_kms_state_for_observer
 
-/-- The reduced observer state carries a KMS boundary property. -/
+/-- The reduced observer state carries a KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary
       H.thermalization.reduction.observableEval σ beta :=
@@ -483,12 +470,12 @@ def reduced_state_is_kms :
 
 end HorizonKMSThermodynamics
 
-/-! ## 5. Modular KMS theorem -/
+/-! ## 5. Modular KMS theorem socket -/
 
 /--
 A modular KMS datum.
 
-This is the formal Tomita-Takesaki relation: the state restricted to the
+This is the formal Tomita-Takesaki socket: the state restricted to the
 observable algebra is KMS for its modular flow.
 -/
 structure ModularKMSDatum
@@ -502,45 +489,25 @@ structure ModularKMSDatum
   /-- The modular/KMS state. -/
   kms : KMSState Op modularFlow beta
 
-theorem ModularKMSDatum.flow_invariant
-    {Op : Type*} [AddMonoid Op] [Monoid Op]
-    (M : ModularKMSDatum Op) (t : ℝ) (x : Op) :
-    M.kms.state.eval (M.modularFlow.flow t x) = M.kms.state.eval x :=
-  M.kms.flow_invariant t x
-
-theorem ModularKMSDatum.correlation_lower_boundary
-    {Op : Type*} [AddMonoid Op] [Monoid Op]
-    (M : ModularKMSDatum Op) (A B : Op) (t : ℝ) :
-    M.kms.correlation A B (t : ℂ) =
-      M.kms.state.eval (A * M.modularFlow.flow t B) :=
-  M.kms.correlation_lower_boundary A B t
-
-theorem ModularKMSDatum.correlation_upper_boundary
-    {Op : Type*} [AddMonoid Op] [Monoid Op]
-    (M : ModularKMSDatum Op) (A B : Op) (t : ℝ) :
-    M.kms.correlation A B ((t : ℂ) + (M.beta : ℂ) * Complex.I) =
-      M.kms.state.eval (M.modularFlow.flow t B * A) :=
-  M.kms.correlation_upper_boundary A B t
-
 
 /-! ## 6. Horizon / Unruh / Hawking calibration -/
 
 /--
-A calibration identifying modular time with an auxiliary comparison flow.
+A geometric calibration identifying modular time with physical horizon time.
 
-Without this field, the KMS state is modular-thermal but not yet compared to a
-separate flow datum.
+Without this field, the KMS state is modular-thermal but not yet physically
+identified as Unruh or Hawking radiation.
 -/
 structure HorizonFlowCalibration
     (Op : Type*) [AddMonoid Op] [Monoid Op]
     (σ : OperatorFlow Op) where
-  /-- Comparison flow, e.g. a boost-flow calibration in applications. -/
+  /-- Physical flow, e.g. boost or Killing horizon flow. -/
   physicalFlow : OperatorFlow Op
 
   /-- Relation between modular time and physical time. -/
   time_rescaling : ℝ
 
-  /-- Calibration: modular flow equals the comparison flow after rescaling. -/
+  /-- Calibration: modular flow equals the physical flow after rescaling. -/
   modular_eq_physical_after_rescaling :
     ∀ t x,
       σ.flow t x =
@@ -550,19 +517,20 @@ structure HorizonFlowCalibration
 /--
 Emergent thermal radiation datum.
 
-This does not claim to prove any continuum radiation theorem. It records that a
-modular KMS state plus a flow calibration yields a comparison readout.
+This does not claim to prove Hawking radiation from topology alone. It records
+that a modular KMS state plus a horizon-flow calibration yields a physical
+thermal readout.
 -/
 structure EmergentThermalRadiation
     (Op : Type*) [AddMonoid Op] [Monoid Op] where
-  /-- Modular KMS theorem. -/
+  /-- Modular KMS theorem socket. -/
   modularKMS : ModularKMSDatum Op
 
-  /-- Flow calibration. -/
+  /-- Horizon/boost-flow calibration. -/
   horizonCalibration :
     HorizonFlowCalibration Op modularKMS.modularFlow
 
-  /-- Inverse temperature after the calibration rescaling. -/
+  /-- Physical inverse temperature after the geometric rescaling. -/
   physicalBeta : ℝ
 
   /--
@@ -587,18 +555,6 @@ def modularThermalState :
 @[simp] theorem modularThermalState_eq_kms :
     E.modularThermalState = E.modularKMS.kms :=
   rfl
-
-theorem modular_flow_eq_calibrated_physical_flow
-    (t : ℝ) (x : Op) :
-    E.modularKMS.modularFlow.flow t x =
-      E.horizonCalibration.physicalFlow.flow
-        (E.horizonCalibration.time_rescaling * t) x :=
-  E.horizonCalibration.modular_eq_physical_after_rescaling t x
-
-theorem physicalBeta_eq_rescaled_modularBeta :
-    E.physicalBeta =
-      E.horizonCalibration.time_rescaling * E.modularKMS.beta :=
-  E.beta_calibration
 
 end EmergentThermalRadiation
 
@@ -634,13 +590,6 @@ namespace FlowDatum
 variable {Op : Type*}
 variable (σ : FlowDatum Op)
 
-theorem ext {σ τ : FlowDatum Op}
-    (h : σ.flow = τ.flow) : σ = τ := by
-  cases σ
-  cases τ
-  simp only [FlowDatum.mk.injEq]
-  exact h
-
 @[simp]
 theorem flow_zero_apply
     (x : Op) :
@@ -659,13 +608,6 @@ theorem flow_neg_apply
     σ.flow (-t) (σ.flow t x) = x := by
   rw [← σ.flow_add (-t) t x]
   simp
-
-theorem ext_flow {σ τ : FlowDatum Op}
-    (h : σ.flow = τ.flow) : σ = τ := by
-  cases σ
-  cases τ
-  cases h
-  rfl
 
 end FlowDatum
 
@@ -721,91 +663,6 @@ def toFlowDatum :
   flow_zero := σ.flow_zero
   flow_add := σ.flow_add
 
-@[simp] theorem toFlowDatum_flow
-    (σ : ModularFlow Op) (t : ℝ) :
-    σ.toFlowDatum.flow t = σ.flow t :=
-  rfl
-
-theorem toFlowDatum_injective :
-    Function.Injective (toFlowDatum : ModularFlow Op → FlowDatum Op) := by
-  intro σ τ h
-  have hflow :
-      (fun t => (σ.flow t : Op → Op)) =
-        (fun t => (τ.flow t : Op → Op)) := by
-    funext t A
-    simpa [toFlowDatum] using congrArg (fun x : FlowDatum Op => x.flow t A) h
-  have hring : σ.flow = τ.flow := by
-    funext t
-    apply RingEquiv.ext
-    intro A
-    exact congrFun (congrFun hflow t) A
-  cases σ with
-  | mk σ zeroσ addσ =>
-    cases τ with
-    | mk τ zeroτ addτ =>
-      dsimp at hring
-      cases hring
-      rfl
-
-theorem toFlowDatum_eq_iff
-    (σ τ : ModularFlow Op) :
-    σ.toFlowDatum = τ.toFlowDatum ↔ σ = τ := by
-  constructor
-  · intro h
-    exact (ModularFlow.toFlowDatum_injective (Op := Op)) h
-  · intro h
-    cases h
-    rfl
-
-/-- A plain flow whose time slices admit the ring-automorphism structure
-    carried by a `ModularFlow`.  This is the exact structured image of
-    `toFlowDatum`; no multiplicative information is discarded in this subtype.
--/
-def IsRingFlowDatum (σ : FlowDatum Op) : Prop :=
-  ∀ t : ℝ, ∃ e : Op ≃+* Op, ∀ A : Op, σ.flow t A = e A
-
-abbrev RingFlowDatum (Op : Type*) [Ring Op] :=
-  {σ : FlowDatum Op // IsRingFlowDatum σ}
-
-def toRingFlowDatum : ModularFlow Op → RingFlowDatum Op := fun σ =>
-  ⟨σ.toFlowDatum, fun t => ⟨σ.flow t, fun _ => rfl⟩⟩
-
-noncomputable def modularFlowEquivRingFlowDatum :
-    ModularFlow Op ≃ RingFlowDatum Op where
-  toFun := toRingFlowDatum
-  invFun ρ :=
-    let e : ℝ → Op ≃+* Op := fun t => Classical.choose (ρ.property t)
-    { flow := e
-      flow_zero := by
-        intro A
-        have he := Classical.choose_spec (ρ.property 0) A
-        exact he.symm.trans (ρ.1.flow_zero A)
-      flow_add := by
-        intro s t A
-        have h := ρ.1.flow_add s t A
-        have he_st := Classical.choose_spec (ρ.property (s + t)) A
-        have he_s := Classical.choose_spec (ρ.property s) (e t A)
-        have he_t := Classical.choose_spec (ρ.property t) A
-        calc
-          e (s + t) A = ρ.1.flow (s + t) A := (he_st.symm)
-          _ = ρ.1.flow s (ρ.1.flow t A) := h
-          _ = ρ.1.flow s (e t A) := by rw [he_t]
-          _ = e s (e t A) := he_s }
-  left_inv σ := by
-    apply ModularFlow.toFlowDatum_injective (Op := Op)
-    apply FlowDatum.ext_flow
-    funext t
-    apply Equiv.ext
-    intro A
-    exact (Classical.choose_spec ((toRingFlowDatum σ).property t) A).symm
-  right_inv ρ := by
-    apply Subtype.ext
-    apply FlowDatum.ext_flow
-    funext t
-    apply Equiv.ext
-    intro A
-    exact (Classical.choose_spec (ρ.property t) A).symm
-
 end ModularFlow
 
 /-!
@@ -819,7 +676,7 @@ abbrev StateFunctional (Op : Type*) [AddMonoid Op] :=
 /-! ## 2. KMS condition -/
 
 /--
-A proof-carrying KMS analytic property.
+A proof-carrying KMS analytic certificate.
 
 The true KMS condition is an analytic strip-boundary condition.  This algebraic
 layer records it as named data, not as an automatically true proposition.
@@ -868,7 +725,7 @@ def boundaryCondition
       K.correlation A B ((t : ℂ) + (β : ℂ) * Complex.I) =
         ω.eval (σ.flow t B * A))
 
-/-- A genuine analytic property proves its derived boundary predicate. -/
+/-- A genuine analytic certificate proves its derived boundary predicate. -/
 theorem boundaryCondition_holds
     (K : KMSAnalyticCertificate σ β ω) :
     K.boundaryCondition :=
@@ -948,9 +805,9 @@ structure KMSAnalyticBoundary
 /--
 Tomita-KMS datum.
 
-This is the abstract interface for the Tomita-Takesaki theorem: a faithful normal
+This is the abstract socket for the Tomita-Takesaki theorem: a faithful normal
 state is KMS with respect to its modular automorphism group.  The analytic
-theorem itself is supplied here as the `kms` property.
+theorem itself is supplied here as the `kms` certificate.
 -/
 structure TomitaKMSDatum
     (Op : Type*) [Ring Op] where
@@ -968,7 +825,7 @@ structure TomitaKMSDatum
     ∀ t : ℝ, ∀ A : Op,
       state.eval (modularFlow.flow t A) = state.eval A
 
-  /-- KMS analytic property. -/
+  /-- KMS analytic certificate. -/
   kms :
     KMSAnalyticCertificate modularFlow.toFlowDatum beta state
 
@@ -1157,10 +1014,10 @@ structure TomitaKMSThermalization
   modular_origin :
     ∀ t A, σ.flow t A = tomitaFlow.flow t A
 
-  /-- Calibration flow used for the geometric comparison. -/
+  /-- Physical horizon or wedge flow used for the geometric calibration. -/
   horizonFlow : ModularFlow Op
 
-  /-- The Tomita carrier agrees with the chosen calibration flow. -/
+  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
   horizon_origin :
     ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
@@ -1181,7 +1038,7 @@ theorem exists_kms_state_for_observer :
   intro A
   exact Θ.thermal_eq_reduction A
 
-/-- The observer-reduced state carries the named KMS boundary property. -/
+/-- The observer-reduced state carries the named KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ β where
   correlation := Θ.thermal.kms.correlation
@@ -1229,11 +1086,11 @@ theorem thermal_agrees_with_global_on_observable
 end TomitaKMSThermalization
 
 /--
-A boundary or transport layer that routes observable degrees of freedom
+A horizon or topological boundary that routes observable degrees of freedom
 toward the commutant.
 
 The boundary/twist does not by itself create a KMS state; it supplies geometric
-partition data to which a modular thermalization property may be applied.
+partition data to which a modular thermalization witness may be applied.
 -/
 structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
@@ -1253,7 +1110,7 @@ structure HorizonCommutantBoundary
     {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
-Full thermodynamic horizon property:
+Full thermodynamic horizon witness:
 
 Tomita algebra/commutant routing, horizon boundary, observer reduction, and KMS
 thermalization of the reduced state.
@@ -1292,7 +1149,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.thermalization.reduction.observableEval :=
   H.thermalization.exists_kms_state_for_observer
 
-/-- The reduced observer state carries a KMS boundary property. -/
+/-- The reduced observer state carries a KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary
       H.thermalization.reduction.observableEval σ β :=
@@ -1303,7 +1160,7 @@ end HorizonKMSThermodynamics
 /-! ## 5. Thermodynamic emergence across an observable/commutant split -/
 
 /--
-Thermalization property for an observer restricted to the visible algebra.
+Thermalization witness for an observer restricted to the visible algebra.
 
 The state seen by the observer is KMS with respect to the visible modular flow.
 This replaces the heuristic "tracing out the commutant produces a thermal
@@ -1324,7 +1181,7 @@ structure ObservableKMSReduction
   beta :
     ℝ
 
-  /-- KMS property for the visible state. -/
+  /-- KMS witness for the visible state. -/
   visibleKMS :
     KMSState Visible visibleFlow beta
 
@@ -1362,34 +1219,36 @@ theorem thermal_eval_eq_global_visible_eval
 
 end ObservableKMSReduction
 
-/-! ## 6. Flow calibration -/
+/-! ## 6. Horizon/Hawking-Unruh calibration socket -/
 
 /--
-Geometric calibration turning modular KMS thermality into a comparison readout.
+Geometric calibration turning modular KMS thermality into a Hawking/Unruh
+readout.
 
 This is not automatic from the algebraic KMS state alone.  It requires a
-geometric statement comparing modular time with another flow.
+geometric statement identifying modular time with physical horizon or wedge
+time.
 -/
 structure HorizonThermalCalibration
     (Visible : Type*) [Ring Visible] where
-  /-- Calibration inverse temperature. -/
+  /-- Physical inverse temperature. -/
   betaPhysical : ℝ
 
   /-- Modular flow of the visible observer algebra. -/
   modularFlow : ModularFlow Visible
 
-  /-- Calibration flow on the visible observer algebra. -/
+  /-- Physical horizon/wedge flow on the visible observer algebra. -/
   horizonFlow : ModularFlow Visible
 
-  /-- Modular time is identified with the calibrated flow. -/
+  /-- Modular time is identified with the calibrated horizon flow. -/
   modularFlow_is_horizon_time :
     ∀ t A, modularFlow.flow t A = horizonFlow.flow t A
 
-  /-- Actual KMS state supplying the thermal readout. -/
+  /-- Actual KMS state supplying the thermal Hawking/Unruh readout. -/
   KMS_is_hawking_unruh_readout :
     KMSState Visible modularFlow.toFlowDatum betaPhysical
 
-/-- A branch is visible KMS reduction plus geometric calibration. -/
+/-- A Hawking/Unruh branch is visible KMS reduction plus geometric calibration. -/
 structure HawkingUnruhBranch
     (Global Visible : Type*) [AddMonoid Global] [Mul Global]
     [Ring Visible] where
@@ -1397,11 +1256,11 @@ structure HawkingUnruhBranch
   reduction :
     ObservableKMSReduction Global Visible
 
-  /-- Flow calibration. -/
+  /-- Horizon/wedge calibration. -/
   calibration :
     HorizonThermalCalibration Visible
 
-  /-- The reduction temperature agrees with the calibrated temperature. -/
+  /-- The reduction temperature agrees with the calibrated physical temperature. -/
   beta_matches :
     reduction.beta = calibration.betaPhysical
 

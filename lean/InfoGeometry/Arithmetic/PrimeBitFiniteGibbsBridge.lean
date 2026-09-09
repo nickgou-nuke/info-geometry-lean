@@ -41,12 +41,12 @@ instance primeBitSubsetNonempty (L : PrimeBitLattice) :
 /-- The logarithmic energy model on the finite powerset carrier. -/
 def primeBitGibbsModel (L : PrimeBitLattice) :
     Model (Data := PrimeBitSubset L) (Theta := Unit) :=
-  fun S _ => primeBitEnergy L S.1
+  ⟨fun S _ => primeBitEnergy L S.1⟩
 
 /-- The same logarithmic energy as a native grand-canonical parameter. -/
 def primeBitGrandCanonicalParams (L : PrimeBitLattice) :
     GrandCanonicalParams (PrimeBitSubset L) :=
-  fun S => primeBitEnergy L S.1
+  ⟨fun S => primeBitEnergy L S.1⟩
 
 /-- Cartan parameters presenting the same prime-bit Gibbs law in the finite
 Massieu owner.  This is a readout bridge, not a new state carrier. -/
@@ -161,7 +161,7 @@ theorem primeBitGrandCanonical_mean_eq_fermionic_weighted_energy
       GrandCanonical.gibbsWeight
           (primeBitGrandCanonicalParams L) β S *
         primeBitEnergy L S.1) = _
-  simp_rw [InfoGeometry.GrandCanonical.gibbsWeight, primeBitGrandCanonicalParams]
+  simp_rw [InfoGeometry.GrandCanonical.gibbsWeight]
   rw [primeBitGrandCanonical_partition_eq_fermionic]
   symm
   rw [Finset.sum_subtype (F := primeBitSubsetFintype L)
@@ -171,6 +171,7 @@ theorem primeBitGrandCanonical_mean_eq_fermionic_weighted_energy
     (fun S =>
       (Real.exp (-β * primeBitEnergy L S) /
         primeBitFermionicPartition L β) * primeBitEnergy L S)]
+  rfl
 
 theorem primeBitGibbs_partition_eq_fermionic
     (L : PrimeBitLattice) (ε : ℝ) :
@@ -212,7 +213,7 @@ theorem primeBitGibbs_weight_eq_fermionic
       Real.exp (-ε⁻¹ * primeBitEnergy L S.1) /
         primeBitFermionicPartition L ε⁻¹
   rw [primeBitGibbs_partition_eq_fermionic]
-  congr 1
+  congr 2
   rw [div_eq_mul_inv]
   ring
 
@@ -253,8 +254,8 @@ theorem primeBitTemperatureSusceptibility_eq_weightedVariance
         (GrandCanonical.gibbsWeight
           (primeBitGrandCanonicalParams L) ε⁻¹)
         (fun S : PrimeBitSubset L => primeBitEnergy L S.1) := by
-  unfold temperatureSusceptibility
-  rfl
+  exact temperatureSusceptibility_eq_weightedVariance
+    (fun S : PrimeBitSubset L => primeBitEnergy L S.1) ε
 
 theorem primeBitTemperatureSusceptibility_nonneg
     (L : PrimeBitLattice) (ε : ℝ) :
@@ -270,7 +271,7 @@ theorem primeBitTemperatureSusceptibility_eq_zero_iff
       ∀ S : PrimeBitSubset L,
         primeBitEnergy L S.1 =
           GrandCanonical.mean
-            (fun S : PrimeBitSubset L => primeBitEnergy L S.1) ε⁻¹ := by
+            (primeBitGrandCanonicalParams L) ε⁻¹ := by
   exact temperatureSusceptibility_eq_zero_iff
     (fun S : PrimeBitSubset L => primeBitEnergy L S.1) ε
 

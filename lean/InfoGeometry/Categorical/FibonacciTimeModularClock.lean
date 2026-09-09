@@ -55,6 +55,18 @@ def StabilizedClock {A : Type*} [Semiring A]
     (σ : CoefficientTick A) (M : Matrix (Fin 2) (Fin 2) A) : Prop :=
   tickMatrix σ M = M
 
+@[simp]
+theorem tickMatrixIter_zero {A : Type*} [Semiring A]
+    (σ : CoefficientTick A) (M : Matrix (Fin 2) (Fin 2) A) :
+    tickMatrixIter σ 0 M = M :=
+  rfl
+
+@[simp]
+theorem tickMatrixIter_succ {A : Type*} [Semiring A]
+    (σ : CoefficientTick A) (n : Nat) (M : Matrix (Fin 2) (Fin 2) A) :
+    tickMatrixIter σ (n + 1) M = tickMatrix σ (tickMatrixIter σ n M) :=
+  rfl
+
 /-- One-tick stabilization implies stabilization under every discrete tick. -/
 theorem tickMatrixIter_eq_of_stabilized {A : Type*} [Semiring A]
     (σ : CoefficientTick A) {M : Matrix (Fin 2) (Fin 2) A}
@@ -65,29 +77,27 @@ theorem tickMatrixIter_eq_of_stabilized {A : Type*} [Semiring A]
   | zero =>
       rfl
   | succ n ih =>
-      simp only [tickMatrixIter]
-      rw [ih]
+      rw [tickMatrixIter_succ, ih]
       exact hM
 
 /-! ## Carrier readouts for stabilized monodromy ticks -/
 
 /-- Every ticked matrix observable preserves the installed self-dual cone. -/
 theorem tickedObservable_mem_positiveCone {A : Type*} [Semiring A]
-    (C : ActionModel (E := E) A)
-    (hC : InfoGeometry.Categorical.FibonacciSelfDualCarrier.ActionModelLaws C)
+    (C : Carrier (E := E) A)
     (σ : CoefficientTick A)
     (n : Nat) (M : Matrix (Fin 2) (Fin 2) A) {x : E}
     (hx : x ∈ (C.positiveCone.cone : Set E)) :
     C.limitObservableAction (tickMatrixIter σ n M) x ∈
       (C.positiveCone.cone : Set E) :=
-  C.limitObservableAction_mem_positiveCone hC (tickMatrixIter σ n M) hx
+  C.limitObservableAction_mem_positiveCone (tickMatrixIter σ n M) hx
 
 /--
 If the parabolic/monodromy clock observable is stabilized by one tick, then
 the carrier action is pointwise unchanged by all discrete ticks.
 -/
 theorem stabilizedClock_action_eq {A : Type*} [Semiring A]
-    (C : ActionModel (E := E) A)
+    (C : Carrier (E := E) A)
     (σ : CoefficientTick A)
     {M : Matrix (Fin 2) (Fin 2) A}
     (hM : StabilizedClock σ M)
@@ -101,15 +111,14 @@ Stabilized clocks preserve the cone after any number of monodromy ticks, read
 as the original stabilized observable.
 -/
 theorem stabilizedClock_action_mem_positiveCone {A : Type*} [Semiring A]
-    (C : ActionModel (E := E) A)
-    (hC : InfoGeometry.Categorical.FibonacciSelfDualCarrier.ActionModelLaws C)
+    (C : Carrier (E := E) A)
     (σ : CoefficientTick A)
     {M : Matrix (Fin 2) (Fin 2) A}
     (hM : StabilizedClock σ M)
     (n : Nat) {x : E}
     (hx : x ∈ (C.positiveCone.cone : Set E)) :
     C.limitObservableAction M x ∈ (C.positiveCone.cone : Set E) := by
-  have htick := tickedObservable_mem_positiveCone C hC σ n M hx
+  have htick := tickedObservable_mem_positiveCone C σ n M hx
   simpa [stabilizedClock_action_eq C σ hM n x] using htick
 
 /-! ## Parabolic nilpotent clock law -/

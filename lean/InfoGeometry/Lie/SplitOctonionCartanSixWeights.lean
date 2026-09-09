@@ -30,6 +30,23 @@ def weightFunctional (i : Fin 3) : TracelessWeight →ₗ[ℝ] ℝ where
 @[simp] theorem weightFunctional_apply (i : Fin 3) (k : TracelessWeight) :
     weightFunctional i k = k.1 i := rfl
 
+/-- A Cartan eigenstate together with its three quantum-number labels.
+
+The labels are linear functionals on the native rank-two traceless Cartan
+plane.  The eigenvalue equation is quantified over that plane, so this is a
+genuine algebraic readout rather than an informal particle interpretation.
+-/
+structure CartanEigenstate where
+  state : CanonicalZorn
+  quantumNumber : TracelessWeight →ₗ[ℝ] ℝ
+  eigen : ∀ k : TracelessWeight,
+    axialCartanEnd k.1 (cartesianZornLinearEquiv (rootPlus 0)) =
+      quantumNumber k • cartesianZornLinearEquiv (rootPlus 0)
+
+/-! The concrete signed channels below provide the canonical quantum labels.
+The indexed eigenvalue statements are kept as the primary API; the structure
+above is only a small packaging layer for downstream consumers. -/
+
 /-- The three positive weights sum to zero as functionals on the traceless
 Cartan plane. -/
 theorem weightFunctional_sum_zero :

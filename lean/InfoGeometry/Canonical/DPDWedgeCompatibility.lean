@@ -48,7 +48,7 @@ variable {W : HasModularSpectralWedge E}
 
 /--
 Kernel/sign convention lock on the compatible DPD/wedge lane:
-the wedge-kernel projector is exactly the property Drazin complementary
+the wedge-kernel projector is exactly the certified Drazin complementary
 projector `Q_D := 1 - P_D`.
 -/
 @[rep_depth transport]
@@ -75,7 +75,7 @@ theorem activeProjector_eq_one_sub_spectralComplementaryProjector
           simpa [add_assoc] using W.resolution
 
 /--
-With the kernel convention lock, the wedge sign squares to the property
+With the kernel convention lock, the wedge sign squares to the certified
 regular Drazin projector:
 `ε_wedge^2 = P_D`.
 -/
@@ -173,7 +173,7 @@ theorem dilationGap_eq_half_wedgeSign
           rw [two_smul_dilationGap_eq_wedgeSign comp]
 
 /--
-Canonical constructor from a DPD/wedge compatibility property to the wedge-flow
+Canonical constructor from a DPD/wedge compatibility witness to the wedge-flow
 calibration packet used on the modular spectral bridge lane.
 -/
 @[rep_depth transport]
@@ -259,7 +259,7 @@ noncomputable def relativeModularActiveShapePart
   CIK.spectralProjector * RMO * CIK.spectralProjector
 
 /--
-If a relative modular operator candidate commutes with the property active
+If a relative modular operator candidate commutes with the certified active
 projector `P_D`, then both mixed Drazin blocks vanish.
 -/
 @[rep_depth transport]

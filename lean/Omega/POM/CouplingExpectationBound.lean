@@ -111,8 +111,8 @@ test-set gap over all subsets of the state space. -/
 noncomputable def pushforwardTvDistance [Fintype β] (Ω : Finset α) (X Y : α → β) : ℝ :=
   (((Finset.univ : Finset β).powerset).sup' (by simp) fun A : Finset β => eventGap Ω X Y A)
 
-/-- Data for the optimality statement: a finite state space together with a
-subset whose gap saturates the coupling error. -/
+/-- Data for the optimality statement: a finite state space together with a witness subset whose
+gap saturates the coupling error. -/
 structure CurvatureTvOptimalData where
   α : Type*
   β : Type*
@@ -122,9 +122,9 @@ structure CurvatureTvOptimalData where
   hΩ : 0 < Ω.card
   X : α → β
   Y : α → β
-  sharpSet : Finset β
-  sharpSetRealizesError :
-    eventGap Ω X Y sharpSet = probability Ω (fun ω => X ω ≠ Y ω)
+  witnessSet : Finset β
+  witnessRealizesError :
+    eventGap Ω X Y witnessSet = probability Ω (fun ω => X ω ≠ Y ω)
 
 attribute [instance] CurvatureTvOptimalData.instFintypeβ
 attribute [instance] CurvatureTvOptimalData.instDecEqβ
@@ -141,7 +141,7 @@ noncomputable def CurvatureTvOptimalData.tvDistance (D : CurvatureTvOptimalData)
 def CurvatureTvOptimalData.tvDistanceLeCurvatureError (D : CurvatureTvOptimalData) : Prop :=
   D.tvDistance ≤ D.curvatureError
 
-/-- The sharp subset saturates the coupling bound, so the constant is optimal. -/
+/-- The witness subset saturates the coupling bound, so the constant is optimal. -/
 def CurvatureTvOptimalData.boundSharp (D : CurvatureTvOptimalData) : Prop :=
   D.tvDistance = D.curvatureError
 
@@ -195,8 +195,8 @@ theorem eventGap_le_pushforwardTvDistance [Fintype β] (Ω : Finset α) (X Y : �
     (Finset.le_sup' (s := ((Finset.univ : Finset β).powerset))
       (f := fun B : Finset β => eventGap Ω X Y B) hA)
 
-/-- The coupling inequality bounds the pushforward total variation by the curvature error, and a
-sharp subset shows that this constant is optimal.
+/-- The coupling inequality bounds the pushforward total variation by the curvature error, and an
+explicit witness subset shows that this constant is sharp.
     prop:pom-curvature-tv-optimal -/
 theorem paper_pom_curvature_tv_optimal (D : CurvatureTvOptimalData) :
     D.tvDistanceLeCurvatureError ∧ D.boundSharp := by
@@ -209,7 +209,7 @@ theorem paper_pom_curvature_tv_optimal (D : CurvatureTvOptimalData) :
     · dsimp [CurvatureTvOptimalData.tvDistance, CurvatureTvOptimalData.curvatureError]
       exact pushforwardTvDistance_le_curvatureError D.Ω D.hΩ D.X D.Y
     · dsimp [CurvatureTvOptimalData.curvatureError, CurvatureTvOptimalData.tvDistance]
-      simpa [D.sharpSetRealizesError] using
-        (eventGap_le_pushforwardTvDistance D.Ω D.X D.Y D.sharpSet)
+      simpa [D.witnessRealizesError] using
+        (eventGap_le_pushforwardTvDistance D.Ω D.X D.Y D.witnessSet)
 
 end Omega.POM.CouplingExpectationBound

@@ -3,7 +3,7 @@ import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
 import Omega.POM.MicrocanonicalPosteriorModuliCLT
 import Omega.POM.MicrocanonicalQueryDistortionStrongConversePlane
-import Omega.POM.OptimalSuccessBound
+import Omega.POM.WitnessExtractionOptimalSuccess
 
 namespace Omega.POM
 
@@ -56,7 +56,7 @@ theorem paper_pom_microcanonical_query_plus_bits_phase :
   refine ⟨?_, ?_⟩
   · intro X _ posteriorModulus hPosteriorPos B
     obtain ⟨Succ, hSucc, hBound⟩ :=
-      pom_optimal_success_bound (X := X) posteriorModulus hPosteriorPos B
+      paper_pom_witness_extraction_optimal_success (X := X) posteriorModulus hPosteriorPos B
     refine ⟨Succ, hSucc, ?_, hBound⟩
     simp [pom_microcanonical_query_plus_bits_phase_expected_success, hSucc]
   · intro beta H_w V_w successExponent hBeta0 hBeta1 hBits hUpper hLower

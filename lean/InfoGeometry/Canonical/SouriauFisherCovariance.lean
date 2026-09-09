@@ -32,6 +32,7 @@ structure CartanStatePermutationAction where
 
 variable (sys : CartanStatePermutationAction D)
 
+omit [Fintype State] [Nonempty State] in
 theorem realGibbsKernel_covariance (g : G) (beta : Fin 2 → ℝ) (x : State) :
     realGibbsKernel D (sys.Ad g beta) (sys.stateEquiv g x) =
       realGibbsKernel D beta x * Real.exp (sys.cocycle g (sys.Ad g beta)) := by
@@ -41,6 +42,7 @@ theorem realGibbsKernel_covariance (g : G) (beta : Fin 2 → ℝ) (x : State) :
       -realPairingEnergy D beta x + sys.cocycle g (sys.Ad g beta) := by ring
   rw [h1, Real.exp_add]
 
+omit [Nonempty State] in
 theorem realGibbsPartition_covariance (g : G) (beta : Fin 2 → ℝ) :
     realGibbsPartition D (sys.Ad g beta) =
       realGibbsPartition D beta * Real.exp (sys.cocycle g (sys.Ad g beta)) := by
@@ -52,6 +54,7 @@ theorem realGibbsPartition_covariance (g : G) (beta : Fin 2 → ℝ) :
   simp_rw [realGibbsKernel_covariance D sys g beta]
   rw [← Finset.sum_mul]
 
+omit [Nonempty State] in
 theorem realGibbsWeight_invariance (g : G) (beta : Fin 2 → ℝ) (x : State) :
     realGibbsWeight D (sys.Ad g beta) (sys.stateEquiv g x) =
       realGibbsWeight D beta x := by
@@ -71,7 +74,7 @@ theorem souriauMassieu_covariance (g : G) (beta : Fin 2 → ℝ) :
 
 /-- The concrete parameter-space action forms a valid Souriau Thermodynamic Action. -/
 def toSouriauThermodynamicAction : SouriauThermodynamicAction G (Fin 2 → ℝ) where
-  action := fun g => sys.Ad g
+  action := ⟨sys.Ad⟩
   cocycle := fun g => -sys.cocycle g
   Psi := fun beta => souriauMassieu D beta
   heatVector := fun beta => souriauChargeMeanFunctional D beta
@@ -199,6 +202,7 @@ def souriauFisherBilinear (beta u v : Fin 2 → ℝ) : ℝ :=
     fisherSouriauQuadratic D beta u -
     fisherSouriauQuadratic D beta v) / 2
 
+omit [Nonempty State] in
 theorem fisherSouriauQuadratic_smul
     (beta v : Fin 2 → ℝ) (c : ℝ) :
     fisherSouriauQuadratic D beta (c • v) =
@@ -225,6 +229,7 @@ theorem fisherSouriauQuadratic_smul
         v x * fisherSouriauMatrix D beta x x_1 * v x_1 := by
       rw [Finset.mul_sum]
 
+omit [Nonempty State] in
 theorem souriauFisherBilinear_diag (beta v : Fin 2 → ℝ) :
     souriauFisherBilinear D beta v v = fisherSouriauQuadratic D beta v := by
   unfold souriauFisherBilinear
@@ -235,6 +240,7 @@ theorem souriauFisherBilinear_diag (beta v : Fin 2 → ℝ) :
   rw [fisherSouriauQuadratic_smul]
   ring
 
+omit [Nonempty State] in
 theorem souriauFisherBilinear_symmetric (beta u v : Fin 2 → ℝ) :
     souriauFisherBilinear D beta u v = souriauFisherBilinear D beta v u := by
   unfold souriauFisherBilinear

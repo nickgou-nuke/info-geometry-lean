@@ -128,16 +128,16 @@ def gnsTopologicalCocone :
 /-- The universal continuous map from the categorical TopCat colimit of the
 GNS stages to the concrete Hilbert colimit. -/
 noncomputable def gnsTopologicalColimitToHilbert :
-    colimit (gnsTopologicalDiagram Stage sys ω) ⟶
+    topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
       (gnsTopologicalCocone Stage sys ω).pt :=
-  colimit.desc
+  topologicalDirectDescend
     (gnsTopologicalDiagram Stage sys ω)
     (gnsTopologicalCocone Stage sys ω)
 
 @[reassoc]
 theorem gnsTopologicalColimitToHilbert_stage
     (i : I) :
-    colimit.ι
+    topologicalDirectInjection
         (gnsTopologicalDiagram Stage sys ω) i ≫
       gnsTopologicalColimitToHilbert Stage sys ω =
       (gnsTopologicalCocone Stage sys ω).ι.app i := by
@@ -145,21 +145,11 @@ theorem gnsTopologicalColimitToHilbert_stage
     (gnsTopologicalDiagram Stage sys ω)
     (gnsTopologicalCocone Stage sys ω) i
 
-theorem gnsTopologicalColimitToHilbert_stage_apply
-    (i : I) (x : (ω.state i).functional.GNS) :
-    gnsTopologicalColimitToHilbert Stage sys ω
-        (colimit.ι
-          (gnsTopologicalDiagram Stage sys ω) i x) =
-      gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x := by
-  have h := congrArg (fun f => f x)
-    (gnsTopologicalColimitToHilbert_stage Stage sys ω i)
-  simpa only [ConcreteCategory.comp_apply] using h
-
 theorem gnsTopologicalColimitToHilbert_unique
-    (f : colimit (gnsTopologicalDiagram Stage sys ω) ⟶
+    (f : topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
       (gnsTopologicalCocone Stage sys ω).pt)
     (h : ∀ i : I,
-      colimit.ι (gnsTopologicalDiagram Stage sys ω) i ≫ f =
+      topologicalDirectInjection (gnsTopologicalDiagram Stage sys ω) i ≫ f =
         (gnsTopologicalCocone Stage sys ω).ι.app i) :
     f = gnsTopologicalColimitToHilbert Stage sys ω := by
   apply topologicalDirectDescend_unique
@@ -167,29 +157,5 @@ theorem gnsTopologicalColimitToHilbert_unique
     (gnsTopologicalCocone Stage sys ω) f
   intro i
   exact h i
-
-/- The categorical TopCat colimit map has dense range because it contains the
-   dense union of the concrete completed-stage images. -/
-theorem gnsTopologicalColimitToHilbert_denseRange :
-    DenseRange (gnsTopologicalColimitToHilbert Stage sys ω) := by
-  apply Dense.mono
-    (s₁ := ⋃ i : I,
-      Set.range
-        (gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i))
-    (s₂ := Set.range (gnsTopologicalColimitToHilbert Stage sys ω))
-  · intro y hy
-    rcases Set.mem_iUnion.mp hy with ⟨i, hy⟩
-    rcases hy with ⟨x, rfl⟩
-    refine ⟨colimit.ι
-        (gnsTopologicalDiagram Stage sys ω) i x, ?_⟩
-    change gnsTopologicalColimitToHilbert Stage sys ω
-        (colimit.ι
-          (gnsTopologicalDiagram Stage sys ω) i x) =
-      gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x
-    simpa only [ConcreteCategory.comp_apply] using
-      congrArg (fun f => f x)
-        (gnsTopologicalColimitToHilbert_stage Stage sys ω i)
-  · exact dense_iUnion_range_gnsStageToHilbertColimitContinuousLinearMap
-      Stage sys ω
 
 end CStarStateColimit.Native.FilteredGNSHilbertColimitTopology

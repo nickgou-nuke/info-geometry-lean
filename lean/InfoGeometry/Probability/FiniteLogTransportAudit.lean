@@ -1,0 +1,28 @@
+import InfoGeometry.Probability.FiniteLogTransport
+
+/-! Axiom readback for every theorem in the finite robust transport owners. -/
+#print axioms InfoGeometry.Probability.FiniteMedianShift.loss_continuous
+#print axioms InfoGeometry.Probability.FiniteMedianShift.exists_median
+#print axioms InfoGeometry.Probability.FiniteMedianShift.median_translation
+#print axioms InfoGeometry.Probability.FiniteMedianShift.majority_bound
+#print axioms InfoGeometry.Probability.FiniteMedianShift.strict_majority_exact
+#print axioms InfoGeometry.Probability.FiniteMedianShift.median_minimizes
+#print axioms InfoGeometry.Probability.FiniteMedianShift.median_constant
+#print axioms InfoGeometry.Probability.FiniteMedianShift.median_le_of_majority
+#print axioms InfoGeometry.Probability.FiniteMedianShift.median_interval
+#print axioms InfoGeometry.Probability.FiniteLogTransport.sum_center
+#print axioms InfoGeometry.Probability.FiniteLogTransport.center_add
+#print axioms InfoGeometry.Probability.FiniteLogTransport.center_const_add
+#print axioms InfoGeometry.Probability.FiniteLogTransport.center_idempotent
+#print axioms InfoGeometry.Probability.FiniteLogTransport.product_centered_scales
+#print axioms InfoGeometry.Probability.FiniteLogTransport.unique_centering_constant
+#print axioms InfoGeometry.Probability.FiniteLogTransport.center_eq_clr
+#print axioms InfoGeometry.Probability.FiniteLogTransport.logRow_channel_cancel
+#print axioms InfoGeometry.Probability.FiniteLogTransport.logRow_gauge
+#print axioms InfoGeometry.Probability.FiniteLogTransport.log_transport
+#print axioms InfoGeometry.Probability.FiniteLogTransport.transport_residual
+#print axioms InfoGeometry.Probability.FiniteLogTransport.separable_transport
+#print axioms InfoGeometry.Probability.FiniteLogTransport.spectrumShift_separable
+#print axioms InfoGeometry.Probability.FiniteLogTransport.robustTransport_separable
+#print axioms InfoGeometry.Probability.FiniteLogTransport.spectrumShift_robust
+#print axioms InfoGeometry.Probability.FiniteLogTransport.center_error_bound

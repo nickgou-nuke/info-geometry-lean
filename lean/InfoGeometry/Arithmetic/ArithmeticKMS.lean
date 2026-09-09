@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Arithmetic/ArithmeticKMS.lean
 
-Theorem-gated KMS interfaces for the finite arithmetic/Riemann-gas sidecar.
+Witness-gated KMS sockets for the finite arithmetic/Riemann-gas sidecar.
 
 This module does not prove the Bost-Connes theorem, KMS existence/uniqueness,
 spontaneous symmetry breaking, the prime number theorem, or a global
@@ -83,43 +83,6 @@ lemma projectiveArithmeticGibbsPartition_pos_of_mem_gt_one
     rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
     positivity
 
-/-- Projective temperature does not change which finite supports have positive
-Gibbs mass. -/
-theorem projectiveArithmeticGibbsPartition_pos_iff_mem_gt_one
-    (A : Finset ℕ) (u : ℝ) :
-    0 < projectiveArithmeticGibbsPartition A u ↔ ∃ n ∈ A, 1 < n := by
-  constructor
-  · intro h
-    by_contra hmem
-    push_neg at hmem
-    have hz : projectiveArithmeticGibbsPartition A u = 0 := by
-      unfold projectiveArithmeticGibbsPartition arithmeticGibbsPartition
-      rw [Finset.sum_eq_zero]
-      intro n hn
-      unfold arithmeticGibbsWeight
-      rw [primitiveMellinKernel_eq_zero_of_le_one (hmem n hn)]
-    linarith
-  · exact projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u
-
-/-- Projective Gibbs mass vanishes exactly when every support index is at most
-the cutoff `1`. -/
-theorem projectiveArithmeticGibbsPartition_zero_iff_forall_le_one
-    (A : Finset ℕ) (u : ℝ) :
-    projectiveArithmeticGibbsPartition A u = 0 ↔ ∀ n ∈ A, n ≤ 1 := by
-  constructor
-  · intro h n hn
-    by_contra hle
-    have hpos : 0 < projectiveArithmeticGibbsPartition A u :=
-      projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u
-        ⟨n, hn, lt_of_not_ge hle⟩
-    linarith
-  · intro h
-    unfold projectiveArithmeticGibbsPartition arithmeticGibbsPartition
-    rw [Finset.sum_eq_zero]
-    intro n hn
-    unfold arithmeticGibbsWeight
-    rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
-
 /-- In the compact cold sector `u ∈ (0, 1)`, the corresponding `β` satisfies `1 < β`. -/
 theorem one_lt_beta_of_projective_cold {u : ℝ}
     (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
@@ -156,16 +119,35 @@ theorem cold_phase_of_projective_Ioo
     PhaseAtProjectiveTemperature u ArithmeticKMSPhase.cold :=
   one_lt_beta_of_projective_cold hu
 
-/-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS interface -/
+/-! An explicit subtype for the normalizable finite-temperature branch.  The
+phase labels above remain available for routing; this subtype is used when a
+theorem genuinely needs the strict inequality `1 < β`. -/
+abbrev ColdInverseTemperature : Type := {β : ℝ // 1 < β}
+
+namespace ColdInverseTemperature
+
+abbrev value (β : ColdInverseTemperature) : ℝ := β.1
+
+theorem one_lt (β : ColdInverseTemperature) : 1 < β.value := β.2
+
+theorem phase (β : ColdInverseTemperature) :
+    PhaseAtBeta β.value ArithmeticKMSPhase.cold := β.2
+
+end ColdInverseTemperature
+
+def cold_inverse_temperature_mk (β : ℝ) (hβ : 1 < β) :
+    ColdInverseTemperature := ⟨β, hβ⟩
+
+/-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) modular/KMS socket -/
 
 /--
-Finite arithmetic KMS property.
+Finite arithmetic KMS witness.
 
-`State` is an arbitrary model carrier. The property stores only the state
+`State` is an arbitrary model carrier. The witness stores only the state
 encoding and the modular-flow calibration; the finite KMS statement is derived
 as a separate theorem.
 -/
-structure ArithmeticKMSData
+structure ArithmeticKMSWitness
     (State : Type*) where
   /-- Encode a finite arithmetic support as a model state. -/
   stateOfFinset : Finset ℕ → State
@@ -179,20 +161,10 @@ structure ArithmeticKMSData
       modularFlowReadout (stateOfFinset A) β =
         arithmeticGibbsPartition A β
 
-/--
-Native Mathlib construction of the finite arithmetic KMS property.
-This explicit model over `Finset ℕ` pays off the formal closure debt
-by providing a fully constructive proof that such a state encoding exists.
--/
-def arithmeticKMSModel : ArithmeticKMSData (Finset ℕ) where
-  stateOfFinset := id
-  modularFlowReadout := fun s β => arithmeticGibbsPartition s β
-  modularFlow_eq_gibbsPartition := fun A β => rfl
-
-namespace ArithmeticKMSData
+namespace ArithmeticKMSWitness
 
 variable {State : Type*}
-variable (K : ArithmeticKMSData State)
+variable (K : ArithmeticKMSWitness State)
 
 /-- Derived finite arithmetic equilibrium predicate. -/
 def IsKMSAt (s : State) (β : ℝ) : Prop :=
@@ -224,7 +196,7 @@ theorem modularFlowReadout_nonneg
 
 /-- The finite arithmetic Gibbs partition at `β = 0` is the cardinality of
 its support restricted to `n > 1`. This is a real calibration fact, not a
-property placeholder. -/
+certificate placeholder. -/
 theorem arithmeticGibbsPartition_zero_eq_card_filter (A : Finset ℕ) :
     arithmeticGibbsPartition A 0 = (A.filter fun n => 1 < n).card := by
   classical
@@ -270,26 +242,9 @@ theorem arithmeticGibbsPartition_zero_iff_forall_le_one (A : Finset ℕ) :
     intro n hn
     rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
 
-/-- The finite Gibbs partition is positive exactly when the support contains
-an index strictly above the zero-temperature cutoff. -/
-theorem arithmeticGibbsPartition_pos_iff_mem_gt_one
-    (A : Finset ℕ) (β : ℝ) :
-    0 < arithmeticGibbsPartition A β ↔ ∃ n ∈ A, 1 < n := by
-  constructor
-  · intro h
-    by_contra hmem
-    push_neg at hmem
-    have hβ : arithmeticGibbsPartition A β = 0 := by
-      unfold arithmeticGibbsPartition arithmeticGibbsWeight
-      rw [Finset.sum_eq_zero]
-      intro n hn
-      rw [primitiveMellinKernel_eq_zero_of_le_one (hmem n hn)]
-    linarith
-  · exact arithmeticGibbsPartition_pos_of_mem_gt_one A β
-
-/-- KMS property implies the state is KMS at all temperatures. -/
+/-- KMS certificate implies the state is KMS at all temperatures. -/
 theorem kms_at_all_temperatures
-    (K : ArithmeticKMSData State)
+    (K : ArithmeticKMSWitness State)
     (A : Finset ℕ)
     (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
@@ -297,8 +252,8 @@ theorem kms_at_all_temperatures
 
 /-- Two KMS witnesses with matching state encoding, modular flow, and KMS
 predicate are equal. -/
-theorem kms_property_eq_of_flow_eq
-    (K1 K2 : ArithmeticKMSData State)
+theorem kms_witness_eq_of_flow_eq
+    (K1 K2 : ArithmeticKMSWitness State)
     (hstate : ∀ A, K1.stateOfFinset A = K2.stateOfFinset A)
     (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β) :
     K1 = K2 := by
@@ -315,19 +270,19 @@ theorem kms_property_eq_of_flow_eq
       cases hf
       simp
 
-end ArithmeticKMSData
+end ArithmeticKMSWitness
 
-/-! ## 4. Projective KMS property -/
+/-! ## 4. Projective KMS witness -/
 
 /--
-Projective-temperature version of the finite arithmetic KMS property.
+Projective-temperature version of the finite arithmetic KMS witness.
 
 The compact variable `u` is restricted by explicit hypotheses in the theorem
-payload. The property stores only the state encoding and the projective-flow
+payload. The witness stores only the state encoding and the projective-flow
 calibration. No global analytic continuation through the critical point is
 claimed.
 -/
-structure ProjectiveArithmeticKMSData
+structure ProjectiveArithmeticKMSWitness
     (State : Type*) where
   /-- Encode a finite arithmetic support as a model state. -/
   stateOfFinset : Finset ℕ → State
@@ -341,10 +296,10 @@ structure ProjectiveArithmeticKMSData
       projectiveModularFlowReadout (stateOfFinset A) u =
         projectiveArithmeticGibbsPartition A u
 
-namespace ProjectiveArithmeticKMSData
+namespace ProjectiveArithmeticKMSWitness
 
 variable {State : Type*}
-variable (K : ProjectiveArithmeticKMSData State)
+variable (K : ProjectiveArithmeticKMSWitness State)
 
 /-- Derived compact-sector projective equilibrium predicate. -/
 def IsProjectiveKMSAt (s : State) (u : ℝ) : Prop :=
@@ -382,18 +337,18 @@ lemma projectiveModularFlowReadout_pos_of_mem_gt_one
   rw [K.projectiveFlow_eq_gibbsPartition A u hu]
   exact projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u h
 
-end ProjectiveArithmeticKMSData
+end ProjectiveArithmeticKMSWitness
 
 /-! ## 5. Prime/projective-flow compatibility -/
 
 /--
-Compatibility between a projective KMS property and the finite von Mangoldt
+Compatibility between a projective KMS witness and the finite von Mangoldt
 prime-flow calibration.
 -/
 structure ProjectiveKMSPrimeCompatibility
     (State : Type*) where
-  /-- Projective arithmetic KMS property. -/
-  kms : ProjectiveArithmeticKMSData State
+  /-- Projective arithmetic KMS witness. -/
+  kms : ProjectiveArithmeticKMSWitness State
 
   /-- Projective prime-flow calibration. -/
   prime : ProjectivePrimeCalibration State
@@ -424,29 +379,12 @@ theorem primeFlow_eq_kmsFlow
       C.kms.projectiveModularFlowReadout (C.kms.stateOfFinset A) u :=
   C.prime_flow_eq_kms_flow A u hu
 
-/-- The compatible prime flow has the calibrated finite Gibbs readout. -/
-theorem primeFlow_eq_projectiveArithmeticGibbsPartition
-    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    C.prime.modularFlowReadout (C.prime.stateOfFinset A) u =
-      projectiveArithmeticGibbsPartition A u := by
-  rw [C.primeFlow_eq_kmsFlow A hu]
-  exact C.kms.projectiveModularFlowReadout_eq_gibbsPartition A hu
-
 /-- The compatible prime flow is nonnegative in the compact cold sector. -/
 theorem primeFlow_nonneg
     (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     0 ≤ C.prime.modularFlowReadout (C.prime.stateOfFinset A) u := by
   rw [C.primeFlow_eq_kmsFlow A hu]
   exact C.kms.projectiveModularFlowReadout_nonneg A hu
-
-/-- The compatible prime flow is positive when the support contains a mode
-with arithmetic energy strictly above the unit mode. -/
-theorem primeFlow_pos_of_mem_gt_one
-    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1)
-    (h : ∃ n ∈ A, 1 < n) :
-    0 < C.prime.modularFlowReadout (C.prime.stateOfFinset A) u := by
-  rw [C.primeFlow_eq_kmsFlow A hu]
-  exact C.kms.projectiveModularFlowReadout_pos_of_mem_gt_one A hu h
 
 end ProjectiveKMSPrimeCompatibility
 

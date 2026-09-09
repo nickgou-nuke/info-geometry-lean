@@ -77,7 +77,7 @@ theorem deriv_informationPartitionFunction_zero
   (hasDerivAt_informationPartitionFunction_zero (ω := ω) (K := K)).deriv
 
 /--
-Log-partition derivative at `τ = 0` under the nondegeneracy property
+Log-partition derivative at `τ = 0` under the nondegeneracy hypothesis
 `ω(1) ≠ 0`.
 -/
 theorem hasDerivAt_logInformationPartitionFunction_zero

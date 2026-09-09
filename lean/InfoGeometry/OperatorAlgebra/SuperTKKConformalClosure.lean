@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean
 
-Super-TKK conformal closure data.
+Super-TKK conformal closure sockets.
 
 This file records the safe algebraic version of the slogan:
 
@@ -22,11 +22,12 @@ The concrete operatorial central-charge owner remains the existing canonical
 lane in `Canonical.OperatorialCentralCharge`,
 `Canonical.SuperchargeOddOddDecomposition`, and
 `Canonical.SuperchargeCentralChargeClosure`. This file is only the abstract
-super-TKK interface over `TKKConformalClosure.TKKRicciFluxDatum`.
+super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
 -/
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -34,7 +35,7 @@ namespace InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 
 
-/-! ## 1. Five-grade closure -/
+/-! ## 1. Five-grade closure socket -/
 
 /--
 A five-grading on a Lie algebra with explicit coordinates.
@@ -48,7 +49,7 @@ coordinates, and `decomposition_symm_apply` says reconstruction is the sum of
 the five grade components.
 -/
 structure FiveGrading
-    (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
+    (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] where
   gNegTwo : Submodule ℝ L
   gNegOne : Submodule ℝ L
   gZero : Submodule ℝ L
@@ -100,7 +101,7 @@ structure FiveGrading
 
 namespace FiveGrading
 
-variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+variable {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (G : FiveGrading L)
 
 /-- Coordinates of an element in the five-grade decomposition. -/
@@ -140,15 +141,6 @@ theorem neg_one_pos_one_mem_zero
     (hY : Y ∈ G.gPosOne) :
     ⁅X, Y⁆ ∈ G.gZero :=
   G.bracket_neg_one_pos_one X Y hX hY
-
-/-- The reversed mixed bracket lands in grade zero by Lie skew-symmetry. -/
-theorem pos_one_neg_one_mem_zero
-    {X Y : L}
-    (hX : X ∈ G.gPosOne)
-    (hY : Y ∈ G.gNegOne) :
-    ⁅X, Y⁆ ∈ G.gZero := by
-  rw [← lie_skew]
-  exact G.gZero.neg_mem (G.bracket_neg_one_pos_one Y X hY hX)
 
 /-- Re-export: grade zero is closed under the bracket. -/
 theorem zero_zero_mem_zero
@@ -190,24 +182,6 @@ theorem zero_neg_two_mem_neg_two
     ⁅X, Y⁆ ∈ G.gNegTwo :=
   G.bracket_zero_neg_two X Y hX hY
 
-/-- The reversed positive extremal action follows from Lie skew-symmetry. -/
-theorem pos_two_zero_mem_pos_two
-    {X Y : L}
-    (hX : X ∈ G.gPosTwo)
-    (hY : Y ∈ G.gZero) :
-    ⁅X, Y⁆ ∈ G.gPosTwo := by
-  rw [← lie_skew]
-  exact G.gPosTwo.neg_mem (G.bracket_zero_pos_two Y X hY hX)
-
-/-- The reversed negative extremal action follows from Lie skew-symmetry. -/
-theorem neg_two_zero_mem_neg_two
-    {X Y : L}
-    (hX : X ∈ G.gNegTwo)
-    (hY : Y ∈ G.gZero) :
-    ⁅X, Y⁆ ∈ G.gNegTwo := by
-  rw [← lie_skew]
-  exact G.gNegTwo.neg_mem (G.bracket_zero_neg_two Y X hY hX)
-
 /-- The positive grade-two sector is closed under addition. -/
 theorem pos_two_add_mem
     {X Y : L}
@@ -226,7 +200,7 @@ theorem pos_two_is_abelian
 
 end FiveGrading
 
-/-! ## 2. Supercharge square-root data -/
+/-! ## 2. Supercharge square-root socket -/
 
 /--
 Supercharge square-root data over a five-graded even Lie algebra.
@@ -313,7 +287,7 @@ structure SuperchargeSquareRoot
 namespace SuperchargeSquareRoot
 
 variable
-    {L Odd : Type*} [LieRing L] [LieAlgebra ℝ L]
+    {L Odd : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     {G : FiveGrading L}
 
@@ -407,8 +381,8 @@ This is the local induction step for the translation lane.
 -/
 theorem map_mixed_supercharge_mem_translation
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [LieRing L₁] [LieAlgebra ℝ L₁]
-    [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -444,8 +418,8 @@ This is the local induction step for the positive central lane.
 -/
 theorem map_left_left_supercharge_mem_pos_two
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [LieRing L₁] [LieAlgebra ℝ L₁]
-    [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -480,8 +454,8 @@ positive grade-two sector.
 -/
 theorem map_left_left_supercharge_charges_commute
     {L₁ L₂ Odd₁ Odd₂ : Type*}
-    [LieRing L₁] [LieAlgebra ℝ L₁]
-    [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
     [AddCommGroup Odd₁] [Module ℝ Odd₁]
     [AddCommGroup Odd₂] [Module ℝ Odd₂]
     {G₁ : FiveGrading L₁}
@@ -527,7 +501,7 @@ a same-left-chirality supercharge anticommutator.
 -/
 structure SuperTKKDefectAbsorption
     (L Odd State Geometry : Type*)
-    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -543,7 +517,7 @@ structure SuperTKKDefectAbsorption
     Geometry →ₗ[ℝ] L
 
   /--
-  Constructive absorption property.
+  Constructive absorption witness.
 
   For every closure defect, produce two left-chiral supercharges whose
   anticommutator is exactly the lifted defect.
@@ -560,7 +534,7 @@ namespace SuperTKKDefectAbsorption
 
 variable
     {L Odd State Geometry : Type*}
-    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -766,7 +740,7 @@ are supplied.
 -/
 structure BPSDefectBridge
     {L Odd State Geometry : Type*}
-    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -786,7 +760,7 @@ namespace BPSDefectBridge
 
 variable
     {L Odd State Geometry : Type*}
-    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
@@ -823,5 +797,36 @@ theorem heat_eq_zero_of_bps
   B.heat_eq_zero_of_bps hBPS
 
 end BPSDefectBridge
+
+/-! ## 6. Owner target -/
+
+/--
+Owner target for super-TKK defect absorption.
+
+Once an absorption witness is supplied, every TKK closure defect has an
+explicit same-left-chirality supercharge-square representative.
+-/
+@[owner_target_tag]
+def SuperTKKDefectAbsorptionOwnerTarget : Prop :=
+  ∀ (L Odd State Geometry : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Odd] [Module ℝ Odd]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry],
+  ∀ R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry,
+  ∀ A : SuperTKKDefectAbsorption L Odd State Geometry R,
+  ∀ X : L,
+  ∀ s : State,
+    ∃ Q : Odd, ∃ Rq : Odd,
+      Q ∈ A.supercharges.qLeft ∧
+      Rq ∈ A.supercharges.qLeft ∧
+      A.geometryLift (R.closureDefect.defect X s) =
+        A.supercharges.superAnticommutator Q Rq
+
+/-- The owner target follows from the supplied absorption witness. -/
+theorem superTKKDefectAbsorptionOwnerTarget :
+    SuperTKKDefectAbsorptionOwnerTarget := by
+  intro L Odd State Geometry _ _ _ _ _ _ _ _ _ _ R A X s
+  exact A.closure_defect_has_left_left_square X s
 
 end InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure

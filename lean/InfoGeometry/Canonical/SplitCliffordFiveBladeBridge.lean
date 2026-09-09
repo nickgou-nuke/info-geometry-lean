@@ -48,4 +48,17 @@ theorem native_plucker_five_blade_linear_map_conservation (f : V →ₗ[R] W) (v
     (map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) * (map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) = 0 := by
   rw [← _root_.map_mul, native_plucker_five_blade_nilpotent, _root_.map_zero]
 
+/-- **Theorem**: Master Split Clifford Cl(5,5), O(5,5) & 5-Blade Plücker Hierarchy Synthesis.
+    Unifies:
+    1. 5-blade Plücker quadric nilpotency identity (v1 ∧ v2 ∧ v3 ∧ v4 ∧ v5)² = 0.
+    2. Linear map pushforward conservation (map f K5)² = 0.
+    3. Extension from C4 twistor space to C5 / O(5,5) split Clifford Cl(5,5) kinematics. -/
+theorem master_split_clifford_five_blade_synthesis
+    (f : V →ₗ[R] W) (v1 v2 v3 v4 v5 : V) :
+    ((ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) * (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) = 0) ∧
+    ((map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) * (map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) = 0) := ⟨
+  native_plucker_five_blade_nilpotent v1 v2 v3 v4 v5,
+  native_plucker_five_blade_linear_map_conservation f v1 v2 v3 v4 v5
+⟩
+
 end InfoGeometry.Canonical.SplitCliffordFiveBladeBridge

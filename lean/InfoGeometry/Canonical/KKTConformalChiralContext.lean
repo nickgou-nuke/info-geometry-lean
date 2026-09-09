@@ -14,7 +14,7 @@ set_option linter.unusedSectionVars false
 Operatorial context bridge for the KKT, conformal/TKK, and chiral-cone
 closure surfaces.
 
-This file deliberately stays on the property operator/Krein lane.  It does
+This file deliberately stays on the certified operator/Krein lane.  It does
 not identify these closure theorems with finite block matrices or finite
 character shadows.  It records the explicit context in which the already
 proved owner theorems can be used together.
@@ -47,7 +47,7 @@ local notation "EndH" => E →L[ℝ] E
 /--
 Certified operator context joining:
 
-* a conformal/KKT property inverse-kernel carrier,
+* a conformal/KKT certified inverse-kernel carrier,
 * an explicit split-`Cl(1,1)` grading action with the required KKT wing
   hypotheses,
 * and a conformal belief algebra carrying the Cartan closure relations.
@@ -71,14 +71,14 @@ namespace OperatorContext
 
 variable (C : OperatorContext (E := E))
 
-/-- The property inverse-kernel carrier exposed by the conformal context. -/
+/-- The certified inverse-kernel carrier exposed by the conformal context. -/
 @[rep_depth krein]
 abbrev CIK : CertifiedInverseKernel E :=
   C.CCI.toCertifiedInverseKernel
 
 /-! ## KKT closure -/
 
-/-- The property Drazin supercharge satisfies the KKT odd-odd closure. -/
+/-- The certified Drazin supercharge satisfies the KKT odd-odd closure. -/
 @[rep_depth krein]
 theorem anticommutator_QD_QD_eq_two_smul_HD :
     DrazinSupercharge.anticommutator (QD C.CIK) (QD C.CIK) =
@@ -101,7 +101,7 @@ def kktClosureSymmetrySubgroup : Subgroup EndHˣ :=
 KKT/TKK structure group on this operatorial surface.
 
 This is not a new group: it is the existing repo-native subgroup of units
-preserving the property KKT generator packet, exposed under the
+preserving the certified KKT generator packet, exposed under the
 structure-group name for the conformal/Jordan-Lie lift.
 -/
 @[rep_depth krein]
@@ -171,7 +171,7 @@ theorem commutator_weylDilation_weylDilation
 
 /-! ## Certified conformal/KKT bridge -/
 
-/-- The conformal dilation generator is the property inverse-kernel dilation gap. -/
+/-- The conformal dilation generator is the certified inverse-kernel dilation gap. -/
 @[rep_depth krein]
 theorem conformalD_eq_dilationGap :
     C.CCI.toConformalInference.D = C.CIK.dilationGap :=
@@ -214,7 +214,7 @@ theorem spectralCommutator_compact_mem_chiralOperatorCone
   ChiralOperatorConeClosure.spectralCommutator_compact_mem_chiralOperatorCone
     (CIK := C.CIK) hA hB
 
-/-- The property Drazin supercharge is enrolled in the chiral operator cone. -/
+/-- The certified Drazin supercharge is enrolled in the chiral operator cone. -/
 @[rep_depth krein]
 theorem supercharge_mem_chiralOperatorCone :
     IsInChiralOperatorCone C.CIK

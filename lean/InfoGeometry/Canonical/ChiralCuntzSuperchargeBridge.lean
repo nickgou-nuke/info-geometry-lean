@@ -4,8 +4,11 @@ namespace ChiralCuntzSuperchargeBridge
 
 open CuntzAlgebra
 
-variable {R : Type*} [Ring R] [StarRing R]
-  (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R)
+/-- The chiral bridge uses the canonical noncommutative Cuntz `O₂` owner. -/
+abbrev Cuntz2System (R : Type*) [Ring R] [StarRing R] :=
+  _root_.CuntzAlgebra.Cuntz2Isometries R
+
+variable {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R)
 
 /-- Right-moving chiral supercharge `Q₊ = S₁ S₂*`. -/
 def Q_plus : R := _root_.CuntzAlgebra.S1 sys * star (_root_.CuntzAlgebra.S2 sys)

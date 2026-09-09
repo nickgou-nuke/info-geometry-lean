@@ -10,19 +10,11 @@ open InfoGeometry.Clifford
 
 /-- Base structure representing the 4-vector spacetime / M₂(ℝ) operator space 
     using the real Pauli matrices basis: I, σx, ε=iσy, σz. -/
-def RealPauliOp := ℝ × (ℝ × (ℝ × ℝ))
-
-namespace RealPauliOp
-
-abbrev t (X : RealPauliOp) : ℝ := X.1
-
-abbrev x (X : RealPauliOp) : ℝ := X.2.1
-
-abbrev y (X : RealPauliOp) : ℝ := X.2.2.1
-
-abbrev z (X : RealPauliOp) : ℝ := X.2.2.2
-
-end RealPauliOp
+structure RealPauliOp where
+  t : ℝ
+  x : ℝ
+  y : ℝ
+  z : ℝ
 
 /-- Trace isolates the time coordinate. -/
 def trace (X : RealPauliOp) : ℝ := 2 * X.t
@@ -41,14 +33,14 @@ def smul (c : ℝ) (X : RealPauliOp) : RealPauliOp :=
 lemma det_smul (c : ℝ) (X : RealPauliOp) :
   det (smul c X) = c^2 * det X := by
   unfold det smul
-  simp [RealPauliOp.t, RealPauliOp.x, RealPauliOp.y, RealPauliOp.z]
+  dsimp
   ring
 
 /-- CLOSED THEOREM 2: The trace scales linearly with scalar multiplication. -/
 lemma trace_smul (c : ℝ) (X : RealPauliOp) :
   trace (smul c X) = c * trace X := by
   unfold trace smul
-  simp [RealPauliOp.t]
+  dsimp
   ring
 
 /-- CLOSED THEOREM 3: Trace is affine on convex combinations. -/
@@ -59,7 +51,6 @@ lemma trace_affine_combo (A B : RealPauliOp) (p : ℝ) :
            p * A.z + (1 - p) * B.z⟩
       = p * trace A + (1 - p) * trace B := by
   unfold trace
-  simp [RealPauliOp.t]
   ring
 
 
@@ -69,7 +60,7 @@ lemma trace_affine_combo (A B : RealPauliOp) (p : ℝ) :
 /-- Mapping operators into the bounded affine space (Poincaré/Bloch geometry). -/
 def to_density (X : RealPauliOp) (c : ℝ) : RealPauliOp := smul c X
 
-/-- Explicit property guaranteeing projection to Trace = 1. -/
+/-- Explicit witness guaranteeing projection to Trace = 1. -/
 def NormalizedTrace (X : RealPauliOp) (c : ℝ) : Prop :=
   c * trace X = 1
 
@@ -154,9 +145,7 @@ theorem density_interior_convex (A B : RealPauliOp) (p : ℝ) (hp0 : 0 ≤ p) (h
     unfold trace at hBt
     linarith
   unfold detMinkowski at hAd hBd ⊢
-  change A.1 = 1 / 2 at hAt2
-  change B.1 = 1 / 2 at hBt2
-  simp [RealPauliOp.t, RealPauliOp.x, RealPauliOp.y, RealPauliOp.z] at hAd hBd ⊢
+  dsimp
   rw [hAt2] at hAd
   rw [hBt2] at hBd
   rw [hAt2, hBt2]
@@ -173,7 +162,6 @@ theorem density_interior_convex (A B : RealPauliOp) (p : ℝ) (hp0 : 0 ≤ p) (h
   have hx := h_sq_conv A.x B.x
   have hy := h_sq_conv A.y B.y
   have hz := h_sq_conv A.z B.z
-  simp [RealPauliOp.x, RealPauliOp.y, RealPauliOp.z] at hx hy hz
   rcases eq_or_lt_of_le hp0 with hp_zero | hp_pos
   · subst hp_zero
     simp only [zero_mul, sub_zero, zero_add] at hx hy hz ⊢

@@ -111,6 +111,12 @@ def IsInverseWeightTwoGauge
     c ≠ 0 →
       G.gaugeScale (G.scale c s) = (c ^ 2)⁻¹ * G.gaugeScale s
 
+namespace AutomorphicScaleBridge
+
+variable {State : Type*}
+variable (G : AutomorphicScaleBridge State)
+
+end AutomorphicScaleBridge
 
 /--
 Physical Weyl/GW volume carrier.
@@ -174,7 +180,7 @@ theorem physicalVolume_weylInvariant
 end WeylGWVolumeCarrier
 
 /--
-Canonical fusion interface connecting projective GW counts, Drazin/GW volume, and
+Canonical fusion socket connecting projective GW counts, Drazin/GW volume, and
 Weyl gauge-fixed physical volume.
 
 This is a carrier.  The equality between the physical volume and the Drazin/GW
@@ -237,7 +243,7 @@ end ProjectiveDrazinWeylGWVolumeFusion
 /-! ## Determinant/RG/Weyl readout fusion -/
 
 /--
-Fusion interface for the three separate volume-readout mechanisms:
+Fusion socket for the three separate volume-readout mechanisms:
 
 * determinant-like phase volume under modular/ring flow,
 * renormalization fixed-point volume density,
@@ -321,7 +327,7 @@ variable [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]
 
 /--
-Fusion interface from standard-form natural-cone face volume to the projective
+Fusion socket from standard-form natural-cone face volume to the projective
 Weyl/GW physical-volume readout.
 
 The Ω-volume owner supplies finite localized expectations on cone faces.  The

@@ -85,7 +85,7 @@ theorem chiralKreinForm_left_projected_left_projected (u v : H₂ (E := E)) :
     DoubledSpace.ext rfl rfl
   rw [← hu, ← hv, leftChiralProjector_to_doubled,
     leftChiralProjector_to_doubled]
-  exact chiralKreinForm_left_isotropic _ _
+  simp [chiralKreinForm_to_doubled]
 
 theorem chiralKreinForm_right_projected_right_projected (u v : H₂ (E := E)) :
     chiralKreinForm (E := E)
@@ -97,7 +97,7 @@ theorem chiralKreinForm_right_projected_right_projected (u v : H₂ (E := E)) :
     DoubledSpace.ext rfl rfl
   rw [← hu, ← hv, rightChiralProjector_to_doubled,
     rightChiralProjector_to_doubled]
-  exact chiralKreinForm_right_isotropic _ _
+  simp [chiralKreinForm_to_doubled]
 
 theorem chiralKreinForm_left_right_projected (u v : H₂ (E := E)) :
     chiralKreinForm (E := E)
@@ -110,7 +110,7 @@ theorem chiralKreinForm_left_right_projected (u v : H₂ (E := E)) :
     DoubledSpace.ext rfl rfl
   rw [← hu, ← hv, leftChiralProjector_to_doubled,
     rightChiralProjector_to_doubled]
-  exact chiralKreinForm_left_right _ _
+  simp [chiralKreinForm_to_doubled]
 
 theorem chiralKreinForm_right_left_projected (u v : H₂ (E := E)) :
     chiralKreinForm (E := E)
@@ -123,6 +123,6 @@ theorem chiralKreinForm_right_left_projected (u v : H₂ (E := E)) :
     DoubledSpace.ext rfl rfl
   rw [← hu, ← hv, rightChiralProjector_to_doubled,
     leftChiralProjector_to_doubled]
-  exact chiralKreinForm_right_left _ _
+  simp [chiralKreinForm_to_doubled]
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements

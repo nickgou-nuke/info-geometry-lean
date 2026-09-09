@@ -1,23 +1,30 @@
 import Mathlib.Tactic
-import InfoGeometry.Projective.NonIsoConf3RankIngestion
 
 /-!
-# Factor-stratified polynomial identities
+# Factor-stratified de Rham certificate shell
 
-This owner contains the finite polynomial identities and conditional rank
-arithmetic that are available in Lean.  External computer-algebra execution
-status is deliberately not encoded as a mathematical structure or theorem.
+This file records the currently observed external audit surface for
+`f = q(a) q(b) q(a-b)` in ambient dimension `8`.
+
+It is theorem-honest:
+- the Singular/Macaulay2 outputs are stored as plain data;
+- arithmetic consequences of that data are proved in Lean;
+- de Rham closure is *not* claimed unless the external lanes actually return it.
 -/
 
 namespace InfoGeometry.Projective.FactorStratifiedDeRhamCertificate
 
-open InfoGeometry.Projective.NonIsoConf3RankIngestion
 open Polynomial
 
+/-! ## Exact arithmetic shadows of the verified external packets -/
+
+/-- The exact quadratic Bernstein-Sato polynomial observed for each individual factor. -/
 noncomputable def factorBernsteinPoly : ℤ[X] := X ^ 2 + 3 * X + 2
 
+/-- The exact cubic Bernstein-Sato polynomial observed for the three-factor ideal. -/
 noncomputable def generalBernsteinPoly : ℤ[X] := X ^ 3 + 10 * X ^ 2 + 33 * X + 36
 
+/-- The exact finite-field complement count polynomial recorded by the audit. -/
 def complementCountPoly (p : ℤ) : ℤ :=
   p ^ 8 - 3 * p ^ 7 + 7 * p ^ 5 - 4 * p ^ 4 - 4 * p ^ 3 + 3 * p ^ 2
 
@@ -69,12 +76,29 @@ theorem complementCountPoly_at_seven :
     complementCountPoly 7 = 3400992 := by
   norm_num [complementCountPoly]
 
-theorem candidateFixture_still_arithmetically_consistent :
-    RankDataConsistent candidateLocalBettiData :=
-  candidateLocalBettiData_consistent
+/-! ## Direct finite-stratum arithmetic
 
-theorem future_candidateFixture_spinTiled_rank32 :
-    candidateLocalBettiData.totalRank * PenroseSpinTiling.spinTilingMultiplicity = 32 :=
-  candidateLocalBettiData_spinTiled_rank32
+The bounded external computation is not represented as a certificate or a
+status-bearing witness.  Its finite numerical content is stated directly;
+analytic de Rham closure remains a separate theorem frontier.
+-/
+
+def ambientDimension : ℕ := 8
+def pairIntersectionDimension : ℕ := 6
+def tripleIntersectionDimension : ℕ := 5
+def singularLocusDimension : ℕ := 6
+
+def pairCodimension : ℕ := ambientDimension - pairIntersectionDimension
+def tripleCodimension : ℕ := ambientDimension - tripleIntersectionDimension
+def singularLocusCodimension : ℕ := ambientDimension - singularLocusDimension
+
+theorem pairCodimension_eq_two : pairCodimension = 2 := by
+  rfl
+
+theorem tripleCodimension_eq_three : tripleCodimension = 3 := by
+  rfl
+
+theorem singularLocusCodimension_eq_two : singularLocusCodimension = 2 := by
+  rfl
 
 end InfoGeometry.Projective.FactorStratifiedDeRhamCertificate

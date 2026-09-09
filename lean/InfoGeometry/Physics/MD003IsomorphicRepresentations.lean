@@ -259,6 +259,33 @@ theorem md003_unnormalized_fierz_identity (A Ap B Bp : Fin 2) :
       UnifiedMatrixBasis.I₂, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂,
       UnifiedMatrixBasis.σ₃, Fin.sum_univ_four] <;> norm_num
 
+/-- Repaired theorem-safe Chapter 3 packet. -/
+theorem repaired_MD003_isomorphic_representations_packet
+    (c dt dx dy dz : ℂ) (hc : IsPauliNormalization c) :
+    (-2 : ℂ) * Matrix.det (normalizedPauliSpacetimeMatrix c dt dx dy dz) =
+        -(dt * dt) + (dx * dx + dy * dy + dz * dz) ∧
+    traceForm (normalizedPauliSpacetimeMatrix c dt dx dy dz)
+        (normalizedPauliSpacetimeMatrix c dt dx dy dz) =
+          quaternionNormSq dt dx dy dz ∧
+    traceForm (normalizedAxis c 0) (normalizedPauliSpacetimeMatrix c dt dx dy dz) = dt ∧
+    traceForm (normalizedAxis c 1) (normalizedPauliSpacetimeMatrix c dt dx dy dz) = dx ∧
+    traceForm (normalizedAxis c 2) (normalizedPauliSpacetimeMatrix c dt dx dy dz) = dy ∧
+    traceForm (normalizedAxis c 3) (normalizedPauliSpacetimeMatrix c dt dx dy dz) = dz ∧
+    biquatUnit1 * biquatUnit2 = biquatUnit3 ∧
+    Complex.I * traceForm UnifiedMatrixBasis.σ₁ (biquatMatrix 0 dx dy dz) / 2 = dx ∧
+    (∀ A Ap B Bp : Fin 2,
+      unnormalizedSolderingContraction A Ap B Bp =
+        -2 * epsilonSpinor A B * epsilonSpinor Ap Bp) := by
+  exact ⟨md003_minkowski_metric_from_determinant c dt dx dy dz hc,
+    md003_quaternion_norm_eq_trace_self c dt dx dy dz hc,
+    md003_trace_recover_time c dt dx dy dz hc,
+    md003_trace_recover_x c dt dx dy dz hc,
+    md003_trace_recover_y c dt dx dy dz hc,
+    md003_trace_recover_z c dt dx dy dz hc,
+    biquat_basis_multiplication_packet.2.2.2.1,
+    (biquat_trace_recover 0 dx dy dz).2.1,
+    fun A Ap B Bp => md003_unnormalized_fierz_identity A Ap B Bp⟩
+
 end InfoGeometry.Physics.MD003IsomorphicRepresentations
 
 end noncomputable section

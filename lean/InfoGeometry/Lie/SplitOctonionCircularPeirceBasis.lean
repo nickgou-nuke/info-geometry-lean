@@ -228,7 +228,7 @@ theorem circularPeirceBasis_span_top :
   exact circularPeirceBasis.span_eq
 
 theorem circularPeirceBasis_norm_formula (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X =
       circularCoordinate (cartesianZornLinearEquiv.symm X) 0 *
           circularCoordinate (cartesianZornLinearEquiv.symm X) 4 -
         (circularCoordinate (cartesianZornLinearEquiv.symm X) 1 *
@@ -239,12 +239,12 @@ theorem circularPeirceBasis_norm_formula (X : CZ) :
             circularCoordinate (cartesianZornLinearEquiv.symm X) 7) := by
   rcases X with ⟨a, x, y, b⟩
   simp [cartesianZornLinearEquiv_symm_apply, circularCoordinate,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot]
   ring
 
 theorem circularPeirceBasis_null_iff (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X = 0 ↔
       circularCoordinate (cartesianZornLinearEquiv.symm X) 0 *
           circularCoordinate (cartesianZornLinearEquiv.symm X) 4 =
         circularCoordinate (cartesianZornLinearEquiv.symm X) 1 *

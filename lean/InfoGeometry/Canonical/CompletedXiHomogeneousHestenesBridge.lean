@@ -206,5 +206,3 @@ theorem homogeneousRatio_pair_critical_iff (s : ℂ) :
     (criticalLine_iff_cayleyCircle s)
 
 end InfoGeometry.Canonical.CompletedXiHomogeneousHestenesBridge
-
-end

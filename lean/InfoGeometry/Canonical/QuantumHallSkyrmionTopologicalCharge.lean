@@ -17,8 +17,8 @@ open Matrix Complex
 namespace QuantumHallSkyrmionTopologicalCharge
 
 /-- SU(2) Non-Abelian Field Strength Representation in Mₙ(ℂ). -/
-abbrev SkyrmionFieldStrength (n : ℕ) [DecidableEq (Fin n)] :=
-  Matrix (Fin n) (Fin n) ℂ
+structure SkyrmionFieldStrength (n : ℕ) [DecidableEq (Fin n)] where
+  field_tensor : Matrix (Fin n) (Fin n) ℂ
 
 namespace SkyrmionFieldStrength
 

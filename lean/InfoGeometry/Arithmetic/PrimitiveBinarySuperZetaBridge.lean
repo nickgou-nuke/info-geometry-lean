@@ -13,7 +13,7 @@ Constructive finite bridge between:
 * finite Souriau-zeta partitions.
 
 This file does not prove the primitive-set theorem, an infinite Euler product,
-the Riemann property, or a prime-factorization antichain theorem.  It proves
+the Riemann hypothesis, or a prime-factorization antichain theorem.  It proves
 the finite bit-energy identity and the resulting Gibbs/Mellin kernel identity.
 -/
 
@@ -308,7 +308,7 @@ theorem primitiveFinset_image_of_profileAntichain
   exact (congrArg P.bitInteger hεη).trans hbη
 
 /--
-Constructive order-free primitive support property.
+Constructive order-free primitive support witness.
 
 This is the correct first replacement for a vague primitive/binary-lattice
 claim: the antichain condition is now an explicit finite predicate.

@@ -28,6 +28,5 @@ theorem SymbolicLatentFlowQuotient.orbitClosureFlowCompHausIso_hom_natural
     symbolicLatentOrbitClosureInclusion K q ≫ K.actTopCatHom t
   exact K.orbitClosureFlowTopCatHom_natural q t
 
-end InfoGeometry.Topology
 
-end
+end InfoGeometry.Topology

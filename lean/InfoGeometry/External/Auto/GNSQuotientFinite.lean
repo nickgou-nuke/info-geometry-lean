@@ -141,4 +141,20 @@ theorem nullExample_ne_zero : nullExample ≠ 0 := by
   have h01 := congrFun (congrFun h 0) 1
   simp [nullExample] at h01
 
+/-- Synthesis theorem for the finite quotient GNS construction. -/
+theorem finite_gns_quotient_synthesis :
+    (∀ A : M2C, inner cyclic (representation A cyclic) = omega A) ∧
+    (∀ u : GNSSpace, ∃ A : M2C, representation A cyclic = u) ∧
+    gnsClass nullExample = gnsClass 0 ∧
+    nullExample ≠ 0 := by
+  constructor
+  · intro A
+    exact gns_expectation_value A
+  · constructor
+    · intro u
+      exact cyclic_is_cyclic u
+    · constructor
+      · exact nullExample_eq_zero_in_GNS
+      · exact nullExample_ne_zero
+
 end GNSQuotientFinite

@@ -5,16 +5,16 @@ open Matrix Complex
 /-!
 # Spinor monodromy stepping stone
 
-This file formalizes the abstract bridge requested after concrete
-biquaternion/braid constructions:
+This file formalizes the abstract bridge requested after the concrete
+biquaternion/braid witnesses:
 
 * a half-twist operator whose square is the full twist;
 * spinorial monodromy means the full twist acts by `-I`;
 * consequently the half-twist is a square root of negative identity;
 * logarithm branches are shifted by integral `2πi` data.
 
-The point is deliberately theorem-honest and reusable for later concrete
-monodromy matrices.
+The point is deliberately theorem-honest and reusable: later braid/KZ/cyclic-cover
+models can instantiate this socket with their concrete monodromy matrices.
 -/
 
 noncomputable section
@@ -53,5 +53,17 @@ theorem logBranchShift_neg (n : ℤ) :
     logBranchShift (-n) = -logBranchShift n := by
   unfold logBranchShift
   norm_num
+
+/-- Synthesis: concrete spinor full twist and logarithm winding data. -/
+theorem spinor_monodromy_stepping_stone_synthesis :
+    spinorGate * spinorGate = -(1 : M2C) ∧
+    spinorGate ^ 4 = (1 : M2C) ∧
+    (∀ m n : ℤ, logBranchShift (m + n) = logBranchShift m + logBranchShift n) := by
+  exact ⟨spinorGate_sq, spinorGate_fourth_identity, logBranchShift_add⟩
+
+#check spinorGate_sq
+#check spinorGate_fourth_identity
+#check logBranchShift_add
+#check spinor_monodromy_stepping_stone_synthesis
 
 end SpinorMonodromySteppingStone

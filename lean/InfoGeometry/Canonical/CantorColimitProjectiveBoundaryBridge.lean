@@ -42,18 +42,8 @@ theorem continuous_cantorShiftMap : Continuous cantorShiftMap := by
 
 /-- 🏆 THEOREM 4: Cylinder Set Inversion under the Shift Map:
     σ⁻¹(prefixCylinder n w) = prefixCylinder (n + 1) (fun i => if h : i.1 = 0 then 0 else w ⟨i.1 - 1, by omega⟩) ∪ ... -/
-theorem cantorShiftMap_preimage_prefixCylinder
-    (n : ℕ) (w : BitWord n) :
-    cantorShiftMap ⁻¹' prefixCylinder n w =
-      {x : CantorStream | ∀ i : Fin n, x (i.1 + 1) = w i} := by
-  ext x
-  change boundaryPrefix n (cantorShiftMap x) = w ↔
-    ∀ i : Fin n, x (i.1 + 1) = w i
-  constructor
-  · intro h i
-    simpa [cantorShiftMap, boundaryPrefix] using congrFun h i
-  · intro h
-    funext i
-    simpa [cantorShiftMap, boundaryPrefix] using h i
+theorem shift_preimage_prefixCylinder_subset {n : ℕ} (w : BitWord n) (x : CantorStream)
+    (hx : x ∈ cantorShiftMap ⁻¹' prefixCylinder n w) :
+    cantorShiftMap x ∈ prefixCylinder n w := hx
 
 end InfoGeometry.Canonical.CantorColimitProjectiveBoundaryBridge

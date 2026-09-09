@@ -167,15 +167,8 @@ theorem repaired_section34_strengthened_formalism_packet
       densityStressShadow g rhoD V nu mu) ∧
     bqI * bqI = -1 ∧ bqJ * bqJ = -1 ∧ bqK * bqK = -1 ∧
     bqI * bqJ = bqK ∧ bqJ * bqK = bqI ∧ bqK * bqI = bqJ := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro mu nu
-    exact densityStressShadow_symmetric g rhoD V hg mu nu
-  · exact bqI_sq
-  · exact bqJ_sq
-  · exact bqK_sq
-  · exact bqI_mul_bqJ
-  · exact bqJ_mul_bqK
-  · exact bqK_mul_bqI
+  exact ⟨fun mu nu => densityStressShadow_symmetric g rhoD V hg mu nu,
+    bqI_sq, bqJ_sq, bqK_sq, bqI_mul_bqJ, bqJ_mul_bqK, bqK_mul_bqI⟩
 
 end InfoGeometry.Physics.Section34StrengthenedFormalism
 

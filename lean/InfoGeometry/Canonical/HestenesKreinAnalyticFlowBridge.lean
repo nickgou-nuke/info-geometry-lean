@@ -8,7 +8,7 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 
-Flow and rotor-generator data for real Hestenes--Krein analyticity.
+Flow and rotor-generator sockets for real Hestenes--Krein analyticity.
 
 This file does not construct a KMS flow, Tomita flow, analytic strip, or
 holomorphic functional calculus. It records theorem-safe readbacks:
@@ -36,7 +36,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 /--
 A Hestenes--Krein analytic flow on real doubled endomorphisms.
 
-This is supplied data: it does not construct the flow from a modular Hamiltonian.
+This is a socket: it does not construct the flow from a modular Hamiltonian.
 It records that a supplied flow preserves the internal Hestenes phase-axis
 analytic sector.
 -/
@@ -112,7 +112,7 @@ theorem commutator_with_generator_is_hestenesAnalytic
 
 /--
 The generator commutator itself is the Hestenes--Krein infinitesimal action
-law.
+socket.
 -/
 @[rep_depth operator]
 noncomputable def infinitesimalAction

@@ -43,7 +43,7 @@ def matrixTraceRealAlgebraicState (n : ℕ) :
   positive := by
     intro A
     rw [matrixTraceRealLinearMap_apply]
-    exact matrixTraceState_realPart_star_mul_self_nonneg n A
+    exact matrixTraceState_nonneg n A
   symmetric := by
     intro A B
     rw [matrixTraceRealLinearMap_apply, matrixTraceRealLinearMap_apply]
@@ -74,11 +74,10 @@ theorem matrixTraceRealAlgebraicState_positive (n : ℕ) (A : MatrixStage n) :
   (matrixTraceRealAlgebraicState n).positive A
 
 def realInductiveNet (T : Data) :
-    InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) :=
-  fun n => (T n).toAlgHom.restrictScalars ℝ
+    InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) where
+  embed n := (T.step n).toAlgHom.restrictScalars ℝ
 
-def realTraceNet (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
+def realTraceNet (T : Data) :
     MarkovTraceNet (realInductiveNet T) where
   trace := matrixTraceRealLinearMap
   trace_one := by
@@ -87,34 +86,19 @@ def realTraceNet (T : Data)
   trace_stable := by
     intro n A
     rw [matrixTraceRealLinearMap_apply, matrixTraceRealLinearMap_apply]
-    have h := congrArg Complex.re (hT n A)
-    simpa [matrixTraceState] using h
+    have h := congrArg Complex.re (T.trace_compatible n A)
+    exact h
 
-def compatibleRealStateNet (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
+def compatibleRealStateNet (T : Data) :
     CompatibleAlgebraicStateNet (realInductiveNet T) :=
   CompatibleAlgebraicStateNet.ofMarkovTraceNet
-    (realTraceNet T hT) (by
+    (realTraceNet T) (by
       intro n A
-      exact matrixTraceState_realPart_star_mul_self_nonneg n A)
+      exact matrixTraceState_nonneg n A)
 
-theorem compatibleRealStateNet_state (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    (n : ℕ) (A : MatrixStage n) :
-    (compatibleRealStateNet T hT).state n A =
+theorem compatibleRealStateNet_state (T : Data) (n : ℕ) (A : MatrixStage n) :
+    (compatibleRealStateNet T).state n A =
       (matrixTraceRealAlgebraicState n).toLinearMap A :=
-  rfl
-
-/- The real part of the complex colimit readout agrees with the compatible
-   algebraic state on every finite-stage representative. -/
-theorem realPart_traceColimitFunctional_inclusion
-    (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    (n : ℕ) (A : MatrixStage n) :
-    (traceColimitFunctional T hT
-      (traceColimitInclusion T n A)).re =
-      (compatibleRealStateNet T hT).state n A := by
-  rw [traceColimitFunctional_inclusion T hT]
   rfl
 
 end InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge

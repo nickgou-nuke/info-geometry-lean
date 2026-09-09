@@ -88,55 +88,6 @@ structure Matrix2D where
 def omega (x y : Vector2D) : ℝ :=
   x.x1 * y.x2 - x.x2 * y.x1
 
-/-! ## The finite para-complex compatibility packet -/
-
-/-- The split involution on the two-dimensional phase-space carrier. -/
-def paraK (v : Vector2D) : Vector2D :=
-  ⟨v.x1, -v.x2⟩
-
-/-- The neutral bilinear form obtained from `omega` and the split involution. -/
-def neutralMetric (x y : Vector2D) : ℝ :=
-  omega x (paraK y)
-
-theorem paraK_square (v : Vector2D) :
-    paraK (paraK v) = v := by
-  cases v
-  simp [paraK]
-
-theorem omega_paraK_anti_invariant (x y : Vector2D) :
-    omega (paraK x) (paraK y) = -omega x y := by
-  unfold omega paraK
-  ring
-
-theorem neutralMetric_formula (x y : Vector2D) :
-    neutralMetric x y = -(x.x1 * y.x2 + x.x2 * y.x1) := by
-  unfold neutralMetric omega paraK
-  ring
-
-theorem neutralMetric_symmetric (x y : Vector2D) :
-    neutralMetric x y = neutralMetric y x := by
-  rw [neutralMetric_formula, neutralMetric_formula]
-  ring
-
-theorem neutralMetric_paraK_anti_isometry (x y : Vector2D) :
-    neutralMetric (paraK x) (paraK y) = -neutralMetric x y := by
-  simp [neutralMetric_formula, paraK]
-  ring
-
-theorem neutralMetric_nondegenerate (x : Vector2D)
-    (h : ∀ y : Vector2D, neutralMetric x y = 0) :
-    x = ⟨0, 0⟩ := by
-  have h₁ := h ⟨0, 1⟩
-  have h₂ := h ⟨1, 0⟩
-  rw [neutralMetric_formula] at h₁ h₂
-  norm_num at h₁ h₂
-  have hx₁ : x.x1 = 0 := by
-    exact h₁
-  have hx₂ : x.x2 = 0 := by
-    exact h₂
-  cases x
-  simp_all
-
 /-- The determinant of a `2 × 2` real matrix. -/
 def det_2d (L : Matrix2D) : ℝ :=
   L.a * L.d - L.b * L.c

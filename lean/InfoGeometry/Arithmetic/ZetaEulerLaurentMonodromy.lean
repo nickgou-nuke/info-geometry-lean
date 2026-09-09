@@ -314,5 +314,3 @@ theorem exp_divisorMonodromy_eq_one (m : ℤ) :
   exact holonomyPhase_is_root_of_unity m
 
 end InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
-
-end

@@ -12,8 +12,11 @@ def P_31 : Nucleus := ⟨15, 16⟩
 def S_31 : Nucleus := ⟨16, 15⟩
 
 /-- The A=31 Mirror Pair. -/
-def A31Pair : MirrorPair :=
-  ⟨(P_31, S_31), by constructor <;> rfl⟩
+def A31Pair : MirrorPair where
+  nuc1 := P_31
+  nuc2 := S_31
+  mirror_cond_Z := rfl
+  mirror_cond_N := rfl
 
 /-- Experimental B(E1) value for S-31 in Weisskopf units (or relevant scaled units). -/
 def B_E1_S : ℝ := 7.2

@@ -21,6 +21,7 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -95,12 +96,11 @@ A verified Casimir is fixed by a displayed conjugation inverse pair.
 theorem verifiedCasimir_fixed_under_conjugation
     {G : Type*} [Group G]
     {α : SymmetryAction G Op}
-    (C : VerifiedCasimir α)
-    (hcentral : IsCentral C)
+    (V : VerifiedCasimir α)
     (u v : Op)
     (huv : u * v = 1) :
-    u * C * v = C :=
-  central_fixed_under_conjugation hcentral u v huv
+    u * V.C * v = V.C :=
+  central_fixed_under_conjugation V.is_central u v huv
 
 /-! ## 2. Cl(4,4) trace-Casimir specialization -/
 
@@ -109,16 +109,16 @@ The Drazin-core Clifford-trace Dirac-Souriau Casimir is fixed by a displayed
 conjugation inverse pair on the Dirac-Souriau observable algebra.
 -/
 theorem diracSouriauCasimir_fixed_under_conjugation
+    {G : Type*} [Group G]
+    (S : OperatorSymmetryAction G DiracSouriauOp)
     (T : DiracSouriauCoreTrace)
     (u v : DiracSouriauOp)
     (huv : u * v = 1) :
-    u * diracSouriauCasimir T * v =
-      diracSouriauCasimir T := by
-  dsimp [diracSouriauCasimir, DiracSouriauCoreTrace.constructCasimirElement]
-  simp only [Matrix.mul_smul, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_one]
-  rw [huv]
+    u * (diracSouriauCasimir S T).C * v =
+      (diracSouriauCasimir S T).C :=
+  verifiedCasimir_fixed_under_conjugation (diracSouriauCasimir S T) u v huv
 
-/-! ## 3. Casimir invariance theorem -/
+/-! ## 3. Owner theorem -/
 
 /--
 Owner theorem for algebraic Casimir anchoring.
@@ -126,16 +126,27 @@ Owner theorem for algebraic Casimir anchoring.
 Once a verified Casimir and an explicit inverse pair are displayed, conjugation
 fixes the Casimir.  This is not a modular-flow theorem.
 -/
-theorem verifiedCasimir_invariant_under_inverse_pair :
+theorem casimirInvarianceOwnerTarget :
   ∀ (Op : Type*) [Ring Op],
   ∀ (G : Type*) [Group G],
   ∀ (α : SymmetryAction G Op),
-  ∀ (C : VerifiedCasimir α),
-  ∀ (hcentral : IsCentral C),
+  ∀ (V : VerifiedCasimir α),
   ∀ u v : Op,
     u * v = 1 →
-      u * C * v = C := by
-  intro Op _ G _ α C hcentral u v huv
-  exact verifiedCasimir_fixed_under_conjugation C hcentral u v huv
+      u * V.C * v = V.C := by
+  intro Op _ G _ α V u v huv
+  exact verifiedCasimir_fixed_under_conjugation V u v huv
+
+@[owner_target_tag]
+theorem casimirInvariance_packet
+    (Op : Type*) [Ring Op]
+    (G : Type*) [Group G]
+    (α : SymmetryAction G Op)
+    (V : VerifiedCasimir α)
+    (u v : Op)
+    (huv : u * v = 1) :
+    u * V.C * v = V.C ∧
+      IsCentral V.C := by
+  exact ⟨casimirInvarianceOwnerTarget Op G α V u v huv, V.is_central⟩
 
 end InfoGeometry.OperatorAlgebra.CasimirInvariance

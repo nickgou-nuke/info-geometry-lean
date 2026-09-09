@@ -225,16 +225,6 @@ def fibFusionLZeroLift (L : V →ₗ[𝕜] V) :
     (fun n => fibFusionLZeroReadout L n)
     (fun i j hij x => fibFusionLZeroReadout_tensorMap L i j hij x)
 
-/-! The universal property gives a readout for every finite-stage class, not
-    only for the distinguished Fibonacci vector. -/
-
-omit [CharZero 𝕜] in
-theorem fibFusionGrothendieck_lzero_lift_of
-    (L : V →ₗ[𝕜] V) (n : Nat) (x : fibFusionClass) :
-    fibFusionLZeroLift L (fibFusionOf n x) =
-      fibFusionLZeroReadout L n x := by
-  rw [fibFusionLZeroLift, fibFusionOf, AddCommGroup.DirectLimit.lift_of]
-
 omit [CharZero 𝕜] in
 /-- The finite Fibonacci vector at every stage reads as the chosen operator `L`. -/
 theorem fibFusionLZeroReadout_vector
@@ -298,7 +288,7 @@ def chargedFockHeisenbergMode (α : 𝕜) (k : Int) :
   ModuleOfModuleAlgebra.lsmul 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)
     (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 k))
 
-/-- The charged Fock Heisenberg current satisfies the Sugawara local truncation property. -/
+/-- The charged Fock Heisenberg current satisfies the Sugawara local truncation hypothesis. -/
 theorem chargedFockHeisenbergMode_eventually_eq_zero
     (α : 𝕜) (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
     atTop.Eventually (fun k : Int => chargedFockHeisenbergMode (𝕜 := 𝕜) α k v = 0) := by

@@ -78,5 +78,3 @@ theorem continuous_finiteTripleNormalizationPacket :
 theorem isLocallyConstant_finiteTripleNormalizationPacket :
     IsLocallyConstant finiteTripleNormalizationPacket := by
   exact IsLocallyConstant.of_discrete (f := finiteTripleNormalizationPacket)
-
-end

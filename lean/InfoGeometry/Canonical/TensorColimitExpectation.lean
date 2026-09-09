@@ -23,10 +23,11 @@ variable {R : Type u} [CommSemiring R]
 variable {A : ℕ → Type v}
 variable [∀ n, Semiring (A n)] [∀ n, Algebra R (A n)]
 
-/- A family of finite-stage linear functionals. -/
-abbrev CompatibleFunctionalFamily
-    (bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1)) : Type _ :=
-  ∀ n : ℕ, A n →ₗ[R] R
+/-- A compatible family of finite-stage linear functionals. -/
+structure CompatibleFunctionalFamily
+    (bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1)) where
+  omega : ∀ n : ℕ, A n →ₗ[R] R
+  compatible : ∀ n (x : A n), omega (n + 1) (bond n x) = omega n x
 
 /--
 A supplied algebraic inductive-colimit carrier for a tensor tower.
@@ -53,25 +54,25 @@ variable (L : TensorInductiveLimit bond)
 abbrev LimitFunctional := L.AInf →ₗ[R] R
 
 /-- The global functional restricts to the finite functional family. -/
-def ExtendsFamily (F : CompatibleFunctionalFamily (A := A) bond)
+def ExtendsFamily (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional) : Prop :=
-  ∀ n (x : A n), Ω (L.inj n x) = F n x
+  ∀ n (x : A n), Ω (L.inj n x) = F.omega n x
 
 /-- Readback: a supplied global functional recovers each finite-stage functional. -/
 theorem limit_functional_recovers_stage
-    (F : CompatibleFunctionalFamily (A := A) bond)
+    (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional)
     (hΩ : L.ExtendsFamily F Ω)
     (n : ℕ) (x : A n) :
-    Ω (L.inj n x) = F n x :=
+    Ω (L.inj n x) = F.omega n x :=
   hΩ n x
 
 /-- Existence of an extending global functional implies finite compatibility. -/
 theorem extending_limit_functional_implies_compatible
-    (F : CompatibleFunctionalFamily (A := A) bond)
+    (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional)
     (hΩ : L.ExtendsFamily F Ω) :
-    ∀ n (x : A n), F (n + 1) (bond n x) = F n x := by
+    ∀ n (x : A n), F.omega (n + 1) (bond n x) = F.omega n x := by
   intro n x
   rw [← hΩ (n + 1) (bond n x), L.inj_compat n x, hΩ n x]
 
@@ -89,9 +90,9 @@ structure ConditionalExpectation (n : ℕ) where
   unital : E 1 = 1
   bimodule : ∀ (a b : A n) (x : L.AInf),
     E (L.inj n a * x * L.inj n b) = a * E x * b
-  state_compat : ∀ (F : CompatibleFunctionalFamily (A := A) bond)
+  state_compat : ∀ (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional), L.ExtendsFamily F Ω →
-      ∀ x : L.AInf, Ω x = F n (E x)
+      ∀ x : L.AInf, Ω x = F.omega n (E x)
 
 namespace ConditionalExpectation
 
@@ -114,21 +115,21 @@ theorem bimodule_property (a b : A n) (x : L.AInf) :
 
 /-- Readback of state compatibility through a local expectation. -/
 theorem state_compatibility
-    (F : CompatibleFunctionalFamily (A := A) bond)
+    (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional)
     (hΩ : L.ExtendsFamily F Ω)
     (x : L.AInf) :
-    Ω x = F n (CE.E x) :=
+    Ω x = F.omega n (CE.E x) :=
   CE.state_compat F Ω hΩ x
 
 /-- On the embedded finite stage, state compatibility reduces to the finite functional. -/
 theorem state_compatibility_on_stage
     (CE : ConditionalExpectation L n)
-    (F : CompatibleFunctionalFamily (A := A) bond)
+    (F : CompatibleFunctionalFamily bond)
     (Ω : L.LimitFunctional)
     (hΩ : L.ExtendsFamily F Ω)
     (x : A n) :
-    Ω (L.inj n x) = F n x := by
+    Ω (L.inj n x) = F.omega n x := by
   rw [ConditionalExpectation.state_compat CE F Ω hΩ (L.inj n x), CE.projection x]
 
 end ConditionalExpectation

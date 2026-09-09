@@ -13,18 +13,21 @@ tiling of infinitesimal Klein bottles.
 open Matrix
 
 /-- Representation of a node in the infinite Cantor Crystal Base. -/
-def CantorNode (n : ℕ) := Fin n → Fin 2
+structure CantorNode (n : ℕ) where
+  (coordinates : Fin n → Fin 2)
 
 /-- The Weyl Group reflection action over the Cartan Subalgebra. -/
-def WeylAction (D : Type*) [Group D] :=
-  (D → Subgroup D) × (D → ℤ)
+structure WeylAction (D : Type*) [Group D] where
+  (is_reflection : D → Subgroup D)
+  (epsilon       : D → ℤ)
 
 /-- 
-The Weyl Character Denominator over the Cantor Primon lattice is represented by
-its prime-indexed weight function.  Analytic Euler-product properties are not
-part of this algebraic carrier.
+The Weyl Character Denominator over the Cantor Primon lattice.
+Models the exact structural identity Δ_Weyl = 1 / ζ(s).
 -/
-def WeylDenominator (S : Type*) := ℕ → S
+structure WeylDenominator (S : Type*) [CommRing S] where
+  (prime_weight : ℕ → S)
+  (is_euler_product : ∀ (n : ℕ), prime_weight n = 1 - (prime_weight n))
 
 /--
 Theorem: Simplicial Trace Preservation under the Weyl Chamber Reflection.

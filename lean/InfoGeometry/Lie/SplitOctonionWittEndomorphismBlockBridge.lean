@@ -122,4 +122,5 @@ theorem block_diag_preserves_chiral (A : Mat4) (D : Mat4) :
   · intro h; exact h.1
   · intro h; refine ⟨h, ?_, ?_⟩ <;> ext i j <;> simp
 
+
 end InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge

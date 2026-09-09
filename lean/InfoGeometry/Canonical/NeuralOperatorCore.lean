@@ -71,7 +71,7 @@ structure NeuralOperatorApproximationContract
     ∀ input : X → Y, domain input →
       costModel.totalCost (N input) (target input) ≤ costBound
 
-/-- Contract projection: nonnegativity of the property bound. -/
+/-- Contract projection: nonnegativity of the certified bound. -/
 @[rep_depth operator]
 theorem costBound_nonneg
     {X : Type u} {Y : Type v} {Z : Type w}

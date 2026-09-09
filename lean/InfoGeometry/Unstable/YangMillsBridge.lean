@@ -36,7 +36,7 @@ abbrev ExpectationSeedJointKernelCommutator
     CommutatorOrthogonalOnOmega (F := F) Ω
 
 /--
-Legacy compatibility alias for the old bundled seed-KMS property name.
+Legacy compatibility alias for the old bundled seed-KMS hypothesis name.
 -/
 abbrev ExpectationSeedKMSHypotheses
     {F : Type}
@@ -50,7 +50,7 @@ attribute [deprecated ExpectationSeedJointKernelCommutator (since := "2026-03-20
   ExpectationSeedKMSHypotheses
 
 /--
-Bundle-level KMS theorem routed directly through the canonical split-property theorem.
+Bundle-level KMS theorem routed directly through the canonical split-hypothesis theorem.
 -/
 theorem omegaSeed_kms_of_jointKernel_commutator_bundle
     {F : Type}
@@ -64,7 +64,7 @@ theorem omegaSeed_kms_of_jointKernel_commutator_bundle
     (F := F) (K := K) (β := β) (Ω := Ω) hStruct.1 hStruct.2
 
 /--
-Legacy compatibility theorem for the old bundled seed-KMS property.
+Legacy compatibility theorem for the old bundled seed-KMS hypothesis.
 -/
 theorem omegaSeed_kms_of_hypotheses
     {F : Type}
@@ -113,14 +113,14 @@ def ofModels
 end SUNGaugeInstantiation
 
 /--
-Concrete constructive QFT property bundle over the finite canonical predicates.
+Concrete constructive QFT witness bundle over the finite canonical predicates.
 
-This is not an arbitrary ax!om carrier: it records the actual reflection/OS/Wightman
+This is not an arbitrary axiom carrier: it records the actual reflection/OS/Wightman
 claims for a fixed `(K, β, Ω)` triple.
 -/
 structure QFTConstructiveLayer (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] where
-  /-- Observable algebra endomorphism driving the finite KMS property. -/
+  /-- Observable algebra endomorphism driving the finite KMS witness. -/
   K : AlgebraEnd E
   /-- Inverse-temperature parameter. -/
   β : ℝ
@@ -176,7 +176,7 @@ def expectationSeedReflectionPositivity
   SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β
 
 /--
-Constructive reflection-positivity property from the bundled canonical seed-KMS conditions.
+Constructive reflection-positivity witness from the bundled canonical seed-KMS conditions.
 -/
 theorem expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
     (K : AlgebraEnd E)
@@ -263,7 +263,7 @@ def finiteOsterwalderSchraderLayer
     modularConjugationJ (E := E) Ω = Ω
 
 /--
-Constructive finite OS-like property from canonical positive-time geometry.
+Constructive finite OS-like witness from canonical positive-time geometry.
 -/
 theorem finiteOsterwalderSchraderLayer_of_positiveTimeVector
     (Ω : InfoGeometry.Krein.DoubledSpace E)
@@ -288,7 +288,7 @@ def finiteWightmanReconstructionLayer
       ω ≠ 0
 
 /--
-Constructive finite Wightman-like property from expectation-seed KMS data.
+Constructive finite Wightman-like witness from expectation-seed KMS data.
 -/
 theorem finiteWightmanReconstructionLayer_of_expectationSeed
     (K : AlgebraEnd E)
@@ -324,7 +324,7 @@ def ofExpectationSeedKMS
 
 /--
 Constructive constructor with explicit positive-time geometry:
-reflection property records both KMS-like and modular quadratic positivity.
+reflection witness records both KMS-like and modular quadratic positivity.
 -/
 def ofExpectationSeedKMSPositiveTime
     (K : AlgebraEnd E)
@@ -344,7 +344,7 @@ def ofExpectationSeedKMSPositiveTime
 
 /--
 Fully constructive finite constructor:
-all three property fields are instantiated from canonical modular data.
+all three witness fields are instantiated from canonical modular data.
 -/
 def ofExpectationSeedKMSFinite
     (K : AlgebraEnd E)
@@ -421,7 +421,7 @@ structure FiniteGaugeGapBridge (E : Type) [NormedAddCommGroup E]
   su_inst : SUNGaugeInstantiation
   /-- Chiral RG model currently available in the canonical layer. -/
   rg_model : ChiralAsymptoticModel E
-  /-- Constructive finite QFT property bundle. -/
+  /-- Constructive finite QFT witness bundle. -/
   qft_layer : QFTConstructiveLayer E
   /-- Candidate strict spectral gap (`λ₁`). -/
   spectral_gap : ℝ
@@ -496,7 +496,7 @@ def ofExpectationSeedLayersPositiveTime
 
 /--
 Fully constructive finite bridge constructor:
-no external reflection/OS/Wightman property inputs are required.
+no external reflection/OS/Wightman witness inputs are required.
 -/
 def ofExpectationSeedLayersFinite
     (su_inst : SUNGaugeInstantiation)
@@ -543,7 +543,7 @@ noncomputable def ofExpectationSeedLayersFiniteFromLogDet
 end FiniteGaugeGapBridge
 
 /-- Obligation 1: nontrivial `SU(N)` gauge rank (`N ≥ 2`). The `su_model` and `psu_model`
-    fields in `SUNGaugeInstantiation` structurally guarantee an explicit gauge property exists. -/
+    fields in `SUNGaugeInstantiation` structurally guarantee an explicit gauge witness exists. -/
 def has_su_n_instantiation (B : FiniteGaugeGapBridge E) : Prop :=
   2 ≤ B.su_inst.n
 
@@ -565,12 +565,12 @@ lemma asymptotic_freedom_of_bridge_rg_model
     IsAsymptoticallyFree B.rg_model.flow :=
   asymptotic_freedom_of_negative_beta B.rg_model
 
-/-- The bridge carries a strict positive gap-parameter property by construction. -/
+/-- The bridge carries a strict positive gap-parameter witness by construction. -/
 lemma strict_mass_gap_of_bridge (B : FiniteGaugeGapBridge E) :
     has_strict_positive_gap_parameter B :=
   B.spectral_gap_pos
 
-/-- The bridge carries the chiral-to-gap lower bound property. -/
+/-- The bridge carries the chiral-to-gap lower bound witness. -/
 lemma chiral_scale_bounds_gap_parameter (B : FiniteGaugeGapBridge E) :
     B.rg_model.gamma ≤ B.spectral_gap :=
   B.gamma_le_spectral_gap

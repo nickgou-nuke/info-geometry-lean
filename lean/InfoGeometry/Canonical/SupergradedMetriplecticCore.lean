@@ -40,7 +40,7 @@ theorem metric_H_zero (x : A) : S.metric x S.Hamiltonian = 0 :=
 theorem poisson_entropy_zero (x : A) : S.poisson x S.Entropy = 0 :=
   S.entropy_casimir x
 
-/-- First-law style readback with explicit Poisson diagonal property. -/
+/-- First-law style readback with explicit Poisson diagonal witness. -/
 theorem leibniz_H_H_eq_zero
     (h_poisson_diag : S.poisson S.Hamiltonian S.Hamiltonian = 0) :
     S.leibniz S.Hamiltonian S.Hamiltonian = 0 := by

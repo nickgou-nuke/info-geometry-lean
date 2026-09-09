@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 
@@ -44,7 +46,7 @@ parity.
 This is the exact bridge:
 `Π = c*d = 1 - 2N` maps to `1 - 2 occupation`.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carParity_readout_eq_booleanLocalParity
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -61,7 +63,7 @@ theorem carParity_readout_eq_booleanLocalParity
 /--
 Membership form: if `p ∈ S`, the CAR parity readout is `-1`.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carParity_readout_eq_neg_one_of_mem
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -77,7 +79,7 @@ theorem carParity_readout_eq_neg_one_of_mem
 /--
 Vacancy form: if `p ∉ S`, the CAR parity readout is `+1`.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carParity_readout_eq_one_of_not_mem
     {Op : Type*} [Ring Op]
     (E : ExteriorCARPair Op)
@@ -90,23 +92,11 @@ theorem carParity_readout_eq_one_of_not_mem
   rw [carParity_readout_eq_booleanLocalParity E χ p S hN]
   exact localParity_eq_one_of_not_mem hp
 
-/-- The evaluated local parity is an involution. -/
-theorem carParity_readout_sq
-    {Op : Type*} [Ring Op]
-    (E : ExteriorCARPair Op)
-    (χ : Op →+* ℤ)
-    (p : ℕ)
-    (S : Finset ℕ)
-    (hN : χ E.numberOp = occupationInt p S) :
-    χ E.parityOp * χ E.parityOp = 1 := by
-  rw [carParity_readout_eq_booleanLocalParity E χ p S hN]
-  by_cases hp : p ∈ S <;> simp [localParity, hp]
-
 
 /-! ## 2. Global CAR chirality readout -/
 
 /--
-Global CAR parity readout over a property prime register.
+Global CAR parity readout over a certified prime register.
 
 The local CAR pair is indexed by the underlying prime mode.
 The readout `χ` is an abstract ring-valued evaluation map into `ℤ`.
@@ -123,7 +113,7 @@ def carGlobalChiralityReadout
 If every local CAR number operator evaluates to Boolean occupation, then the
 global CAR parity readout equals Boolean global chirality.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_booleanChirality
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -143,7 +133,7 @@ theorem carGlobalChiralityReadout_eq_booleanChirality
 /--
 Global CAR chirality readout equals finite Boolean fermion parity.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_fermionParity
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -162,7 +152,7 @@ theorem carGlobalChiralityReadout_eq_fermionParity
 Global CAR chirality readout equals the Möbius value of the represented
 square-free integer.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem carGlobalChiralityReadout_eq_mobius
     {Op : Type*} [Ring Op]
     (P : PrimeRegister)
@@ -178,12 +168,12 @@ theorem carGlobalChiralityReadout_eq_mobius
   exact (mobius_representedNat_eq_fermionParity P v).symm
 
 
-/-! ## 3. Finite CAR/Boolean-cube theorem -/
+/-! ## 3. Bridge theorem packet -/
 
 /--
 The finite CAR/Boolean-cube bridge is closed.
 -/
-theorem primeBooleanCubeCARBridge_readouts :
+theorem primeBooleanCubeCARBridgeOwnerTarget :
     ∀ {Op : Type*} [Ring Op]
       (P : PrimeRegister)
       (v : Vertex P)
@@ -201,5 +191,21 @@ theorem primeBooleanCubeCARBridge_readouts :
     ⟨ carGlobalChiralityReadout_eq_booleanChirality P v E χ hN,
       carGlobalChiralityReadout_eq_fermionParity P v E χ hN,
       carGlobalChiralityReadout_eq_mobius P v E χ hN ⟩
+
+@[owner_target_tag, bridge_target_tag, rep_depth thermo]
+theorem primeBooleanCubeCARBridge_packet
+    {Op : Type*} [Ring Op]
+    (P : PrimeRegister)
+    (v : Vertex P)
+    (E : ℕ → ExteriorCARPair Op)
+    (χ : Op →+* ℤ)
+    (hN :
+      ∀ p ∈ P.primes,
+        χ ((E p).numberOp) = occupationInt p v.val) :
+    carGlobalChiralityReadout P E χ = globalChirality P v.val ∧
+    carGlobalChiralityReadout P E χ = fermionParity v ∧
+    carGlobalChiralityReadout P E χ =
+      ArithmeticFunction.moebius (representedNat v) :=
+  primeBooleanCubeCARBridgeOwnerTarget P v E χ hN
 
 end InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge

@@ -26,7 +26,7 @@ def conclusion_capacity_groupoid_bidirectional_complete_invariant_recovered_hist
 
 /-- Wedderburn package imported from the window-`6` groupoid algebra decomposition. -/
 def conclusion_capacity_groupoid_bidirectional_complete_invariant_wedderburn_package : Prop :=
-  let D : derived_window6_groupoid_elliott_boundary_face_data := Unit.unit
+  let D : derived_window6_groupoid_elliott_boundary_face_data := ()
   D.wedderburn_decomposition
 
 /-- The capacity curve, its discrete differences, and the window-`6` groupoid algebra carry the
@@ -61,7 +61,6 @@ theorem paper_conclusion_capacity_groupoid_bidirectional_complete_invariant :
     simp [conclusion_capacity_groupoid_bidirectional_complete_invariant_capacity_curve,
       conclusion_capacity_groupoid_bidirectional_complete_invariant_histogram]
   · simpa [conclusion_capacity_groupoid_bidirectional_complete_invariant_wedderburn_package] using
-      (paper_derived_window6_groupoid_elliott_boundary_face
-        (Unit.unit : derived_window6_groupoid_elliott_boundary_face_data)).1
+      (paper_derived_window6_groupoid_elliott_boundary_face ()).1
 
 end Omega.Conclusion

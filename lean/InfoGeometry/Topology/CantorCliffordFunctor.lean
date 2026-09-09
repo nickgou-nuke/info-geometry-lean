@@ -45,27 +45,6 @@ instance (n : ℕ) : Algebra ℝ (Cl Q n) := by dsimp [Cl]; infer_instance
 def Cl_bonding_map_mn (m n : ℕ) (h : m ≤ n) : Cl Q m →ₐ[ℝ] Cl Q n :=
   CliffordAlgebra.map (V_inclusion_mn Q h_Q_compat m n h)
 
-@[simp] theorem V_inclusion_mn_apply
-    (m n : ℕ) (h : m ≤ n) (x : V m) (i : Fin (2 * n)) :
-    V_inclusion_mn Q h_Q_compat m n h x i =
-      if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0 := by
-  rfl
-
-theorem V_inclusion_mn_injective
-    (m n : ℕ) (h : m ≤ n) :
-    Function.Injective (V_inclusion_mn Q h_Q_compat m n h) := by
-  intro x y hxy
-  funext i
-  have hi : i.val < 2 * n := by
-    exact lt_of_lt_of_le i.isLt (Nat.mul_le_mul_left 2 h)
-  have hcoord := congrFun hxy ⟨i.val, hi⟩
-  simpa [V_inclusion_mn_apply, i.isLt] using hcoord
-
-@[simp] theorem Cl_bonding_map_mn_one
-    (m n : ℕ) (h : m ≤ n) :
-    Cl_bonding_map_mn Q h_Q_compat m n h 1 = 1 := by
-  exact map_one (Cl_bonding_map_mn Q h_Q_compat m n h)
-
 abbrev J : Type := ℕ
 
 def CliffordTowerFunctor : J ⥤ AlgCat ℝ where

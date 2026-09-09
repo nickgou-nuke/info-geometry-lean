@@ -376,7 +376,7 @@ theorem transported_first_bianchi_forces_associator_zero_of_same_map
     simpa [hcyc1, hcyc2, add_assoc] using hB
   have hzero : (3 : ℝ) •
       _root_.associator (B.carrierMap X) (B.carrierMap Y) (B.carrierMap Z) = 0 := by
-    convert hthree using 1 <;> module
+    (convert hthree using 1; module)
   exact (smul_eq_zero.mp hzero).resolve_left (by norm_num)
 
 theorem zorn_leftRightCommutator_apply_eq_associator

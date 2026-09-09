@@ -27,6 +27,11 @@ theorem stageLimitOf_injective (n : ℕ) :
   apply directLimitOf_injective
   exact primeBond_injective
 
+theorem stageLimitOf_surjective (x : PrimonAlgebra) :
+    ∃ (n : ℕ) (y : PrimeStage n), stageLimitOf n y = x := by
+  rcases Quotient.exists_rep x with ⟨⟨n, y⟩, rfl⟩
+  exact ⟨n, y, rfl⟩
+
 theorem stageLimitOf_eq_iff {n : ℕ} {x y : PrimeStage n} :
     stageLimitOf n x = stageLimitOf n y ↔ x = y := by
   exact directLimitOf_eq_iff_of_injective primeBond primeBond_injective

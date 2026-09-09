@@ -30,10 +30,10 @@ theorem unified_architecture_of_anomaly_proof
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (S0 c : ℝ) (hc : 0 < c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : CuntzKTheoryPairing.TrivialK0Model) (x : K1)
+    (k : CuntzKTheoryPairing.O2_K0) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : CuntzKTheoryPairing.ConnesChernPairing CuntzKTheoryPairing.TrivialK0Model K1).pair k x)
+      (inferInstance : CuntzKTheoryPairing.ConnesChernPairing CuntzKTheoryPairing.O2_K0 K1).pair k x)
     (β : ℝ) (S : Finset ℕ)
     (hβ : 0 < β) (hS : ∀ p ∈ S, 1 < p) :
     C.δK = 0 ∧
@@ -63,5 +63,41 @@ theorem unified_architecture_of_anomaly_proof
   have hCPT : PrimonSuperThermo.totalCPTPartition β S = 1 :=
     PrimonSuperThermo.totalCPTPartition_is_one β S hβ hS
   exact ⟨hδ, hBase, hUniq, hLeak, hAxis, hCPT⟩
+
+/--
+Condensed conclusion: if the three sector hypotheses are met, the anomaly is topologically
+and analytically trapped and CPT thermodynamics is algebraically normalized.
+-/
+theorem unified_architecture_summary_no_leak_and_axis
+    (f : ℝ → ℝ)
+    (hConvex : StrictConvexOn ℝ (Set.Ioo (0 : ℝ) 1) f)
+    (hSymm : ∀ σ ∈ Set.Ioo (0 : ℝ) 1, f (1 - σ) = f σ)
+    (σ : ℝ)
+    (hσ : σ ∈ Set.Ioo (0 : ℝ) 1)
+    (hσ_ne : σ ≠ InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.criticalAxis)
+    (H : Type*) [AddCommGroup H] [Module ℂ H]
+    (C : AnomalousKMSFlow.ModularAnomalyContext H)
+    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
+    (S0 c : ℝ) (hc : 0 < c)
+    {K1 : Type*} [AddCommGroup K1]
+    (k : CuntzKTheoryPairing.O2_K0) (x : K1)
+    (hPair :
+      AnomalousKMSFlow.anomalousIndex H C =
+      (inferInstance : CuntzKTheoryPairing.ConnesChernPairing CuntzKTheoryPairing.O2_K0 K1).pair k x)
+    (β : ℝ) (S : Finset ℕ)
+    (hβ : 0 < β) (hS : ∀ p ∈ S, 1 < p) :
+    ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0 ∧
+    (∀ δ : Module.End ℂ H,
+      ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
+        ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔ δ = C.δK) ∧
+    (∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0) ∧
+    (f InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.criticalAxis < f σ) ∧
+    (PrimonSuperThermo.totalCPTPartition β S = 1) := by
+  have hSum :=
+    unified_architecture_of_anomaly_proof
+      (f := f) hConvex hSymm σ hσ hσ_ne
+      (H := H) C hFaith S0 c hc k x hPair β S hβ hS
+  rcases hSum with ⟨_hδ, hBase, hUniq, hLeak, hAxis, hCPT⟩
+  exact ⟨hBase, hUniq, hLeak, hAxis, hCPT⟩
 
 end InfoGeometry.Canonical.UnifiedAnomalyArchitecture

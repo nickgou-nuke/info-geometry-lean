@@ -5,7 +5,7 @@ Native algebraic pieces of the Asano contraction lemma.
 
 This file deliberately proves only kernel-checkable algebraic cases of the
 Asano contraction argument.  It does not package the full Ruelle/Asano theorem
-as a property and it does not claim the Möbius/Riemann-sphere case.
+as a witness and it does not claim the Möbius/Riemann-sphere case.
 
 The sign convention used here is the standard signed product obstruction:
 if the contraction `A + D z` vanishes, then the zero lies in `-K₁K₂`.
@@ -613,6 +613,36 @@ theorem asanoRuelle_premise_of_nonDegenerate_endpoint
     h0₁ h0₂ hzf hD hend hw
 
 /--
+Derive the nondegenerate endpoint alternative from a topological-endpoint
+specification evaluated at contracted roots.
+
+This is the bridge from the explicit topological target surface in
+`InfoGeometry.AsanoRuelle.TopologicalEndpoint` to the algebraic endpoint
+alternative consumed in this file.
+-/
+theorem nonDegenerate_endpoint_of_topologicalEndpointSpec
+    {K₁ K₂ : Set ℂ} {A B C D : ℂ}
+    (hK₁_closed : IsClosed K₁)
+    (hK₂_closed : IsClosed K₂)
+    (hK₂_bdd : Bornology.IsBounded K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
+    (hD : D ≠ 0)
+    (hdet : A * D - B * C ≠ 0)
+    (hTop :
+      ∀ z : ℂ, ∀ hQ : A + D * z = 0,
+          InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim
+            K₁ K₂ hK₁_closed hK₂_closed hK₂_bdd
+            A B C D z
+            (fun z₁ z₂ hz₁ hz₂ => hzf z₁ z₂ hz₁ hz₂)
+            hD hdet hQ) :
+    (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂) := by
+  have hroot : A + D * (-(A / D)) = 0 := by
+    field_simp [hD]
+    ring
+  simpa [InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim, neg_div] using
+    hTop (-(A / D)) hroot
+
+/--
 Rank-one algebraic Asano closure.
 
 Assume the original two-variable affine polynomial is zero-free whenever
@@ -763,7 +793,7 @@ Nondegenerate contracted Asano closure under the explicit Asano-Ruelle root
 membership premise.
 
 This theorem isolates the exact remaining geometric debt in the nondegenerate
-branch (`D ≠ 0`, `AD - BC ≠ 0`) as a single input property:
+branch (`D ≠ 0`, `AD - BC ≠ 0`) as a single input hypothesis:
 every contracted zero belongs to the signed product obstruction set.
 -/
 theorem asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate
@@ -958,7 +988,7 @@ theorem contracted_zero_mem_signedProduct_of_endpoint_nonDeg
         h0₁ h0₂ hzf hD (hEndpointNonDeg hD hdet) hzero
 
 /--
-Contrapositive full closure under the endpoint-nondegenerate property:
+Contrapositive full closure under the endpoint-nondegenerate hypothesis:
 outside the signed-product obstruction, there is no contracted zero.
 -/
 theorem not_isContractedZero_of_not_mem_signedProduct_of_endpoint_nonDeg

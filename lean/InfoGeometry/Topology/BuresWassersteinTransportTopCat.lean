@@ -16,6 +16,15 @@ namespace InfoGeometry.Topology.BuresWassersteinTransportTopCat
 
 open InfoGeometry.Thermo.BuresWassersteinKMSCost
 
+instance {State : Type*} [TopologicalSpace State]
+    {Ω : PositiveStateDomain State} : TopologicalSpace (PositiveState Ω) :=
+  TopologicalSpace.induced PositiveState.val inferInstance
+
+theorem continuous_positiveState_val {State : Type*} [TopologicalSpace State]
+    {Ω : PositiveStateDomain State} :
+    Continuous (PositiveState.val : PositiveState Ω → State) :=
+  continuous_induced_dom
+
 structure ContinuousKMSHolonomyTransport
     (State : Type*) [TopologicalSpace State]
     (Ω : PositiveStateDomain State)
@@ -30,9 +39,9 @@ variable (H : ContinuousKMSHolonomyTransport State Ω)
 
 theorem continuous_transported :
     Continuous H.transported := by
-  exact (H.continuous_transport.comp continuous_subtype_val).subtype_mk
-    (fun ρ : PositiveState Ω =>
-      H.preserves_domain ρ.val ρ.property)
+  refine continuous_induced_rng.mpr ?_
+  change Continuous (fun ρ : PositiveState Ω => H.transport ρ.val)
+  exact H.continuous_transport.comp continuous_positiveState_val
 
 def toTopCatHom :
     TopCat.of (PositiveState Ω) ⟶ TopCat.of (PositiveState Ω) :=

@@ -73,7 +73,7 @@ variable
   {R : UnitFrameRealization V}
 
 /--
-For a property exponential relative frame, `d ln Delta = -K'` induces the
+For a certified exponential relative frame, `d ln Delta = -K'` induces the
 opposite inner commutator derivation.
 -/
 theorem innerDerivation_dLnDelta_eq_neg_generatorDerivative

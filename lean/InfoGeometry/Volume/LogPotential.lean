@@ -41,4 +41,6 @@ end LogPotential
 
 namespace InfoGeometry.Volume.LogPotential
 
+export _root_.LogPotential (LogAbsVolume logAbsVolume_add)
+
 end InfoGeometry.Volume.LogPotential

@@ -9,7 +9,7 @@ zeta zeros.
 For `s = β + i t`, `β` is damping and `t` is an oscillatory phase parameter.
 Zeros of an analytically continued zeta-like function are represented as exact
 cancellations (destructive interference).  The Riemann Hypothesis is not proved
-here; it is represented as an explicit ax!om field of a model.
+here; it is represented as an explicit axiom field of a model.
 -/
 
 noncomputable section
@@ -54,7 +54,7 @@ def finiteComplexArithmeticTraceComplex (s : ℂ) (N : ℕ) : ℂ :=
 def bosonicPoleModel (β : ℂ) : ℂ :=
   (β - 1)⁻¹
 
-/-- RH model: we keep RH-strength assumptions explicit as an ax!om block. -/
+/-- RH model: we keep RH-strength assumptions explicit as an axiom block. -/
 structure RHModel where
   zeta : ℂ → ℂ
   h_nontrivial_zero_on_line :
@@ -92,11 +92,11 @@ theorem gradedFermionicIndexPole_of_zeta_zero
   exact hzero
 
 
-/-- Hilbert–Pólya shape property in a minimal form: zeros lie on `Re(s)=1/2`. -/
+/-- Hilbert–Pólya shape hypothesis in a minimal form: zeros lie on `Re(s)=1/2`. -/
 def HilbertPólya_shape (Z : ℂ → ℂ) : Prop :=
   ∀ ρ : ℂ, Z ρ = 0 → ∃ γ : ℝ, ρ = (1 / 2 : ℂ) + γ * Complex.I
 
-/-- Projection from the shape property to RH-style critical-line localization. -/
+/-- Projection from the shape hypothesis to RH-style critical-line localization. -/
 theorem hp_shape_implies_rh {
     M : RHModel
   } (hHP : HilbertPólya_shape M.zeta) {s : ℂ}
@@ -142,5 +142,33 @@ theorem finiteComplexTrace_zero_phase (β : ℝ) (N : ℕ) :
 /-- Repackaged cancellation condition in the finite complex trace. -/
 def finiteCancellation (M : RHModel) (s : ℂ) (N : ℕ) : Prop :=
   M.zeta s = 0 → finiteComplexArithmeticTraceComplex s N = 0
+
+/-- Consolidated complex-temperature/RH-boundary package. -/
+theorem complex_temperature_rh_synthesis :
+    (∀ β t, (complexTemperature β t).re = β) ∧
+    (∀ β t, (complexTemperature β t).im = t) ∧
+    (∀ β t, criticalBalanceLine (complexTemperature β t) ↔ β = 1 / 2) ∧
+    (∀ n, arithmeticPhase 0 n = 1) ∧
+    (∀ β N, finiteComplexArithmeticTrace β 0 N =
+      (Finset.range N).sum fun k => (arithmeticDampingWeight β (k + 1) : ℂ)) ∧
+    (∀ M : RHModel, ∀ s, criticalStrip s → cancellationZero M.zeta s →
+      criticalBalanceLine s) ∧
+    (∀ M : RHModel, ∀ s N, finiteCancellation M s N ↔ (M.zeta s = 0 →
+      finiteComplexArithmeticTraceComplex s N = 0)) := by
+  constructor
+  · exact complexTemperature_re
+  constructor
+  · exact complexTemperature_im
+  constructor
+  · exact criticalBalanceLine_complexTemperature
+  constructor
+  · exact arithmeticPhase_zero
+  constructor
+  · exact finiteComplexTrace_zero_phase
+  constructor
+  · intro M s hstrip hzero
+    exact M.h_nontrivial_zero_on_line s hstrip hzero
+  intro M s N
+  rfl
 
 end noncomputable section

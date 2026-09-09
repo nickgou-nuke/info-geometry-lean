@@ -22,7 +22,7 @@ open InfoGeometry.Clifford.ConformalLift55
 variable (P : ConformalNullPair)
 
 /-- The standard CGA origin generator. -/
-abbrev n_zero : Cl55 := P.u
+def n_zero : Cl55 := P.u
 
 /-- The standard CGA infinity generator. -/
 def n_infty : Cl55 := (-2 : ℝ) • P.v
@@ -48,16 +48,6 @@ theorem geoInv_sq (x : Cl55) (x_sq : ℝ)
         = (1 / x_sq) * ((1 / x_sq) * x_sq) := by rw [mul_assoc]
     _ = (1 / x_sq) * 1 := by rw [div_mul_cancel₀ 1 hx]
     _ = 1 / x_sq := by rw [mul_one]
-
-/-- Geometric inversion is involutive when the second application uses the
-reciprocal quadratic scalar. -/
-theorem geoInv_involutive (x : Cl55) (x_sq : ℝ) (hx : x_sq ≠ 0) :
-    geoInv (geoInv x x_sq) (1 / x_sq) = x := by
-  dsimp [geoInv]
-  rw [smul_smul]
-  have hscalar : (1 / (1 / x_sq)) * (1 / x_sq) = (1 : ℝ) := by
-    field_simp
-  rw [hscalar, one_smul]
 
 /-- The conformal inversion sphere `S = u + v`. -/
 def S : Cl55 := P.u + P.v
@@ -146,15 +136,6 @@ theorem S_x_S_eq_neg_x (x : Cl55)
     _ = - (S P * S P) * x := by noncomm_ring
     _ = - (1 : Cl55) * x := by rw [hS2]
     _ = -x := by noncomm_ring
-
-/-- Conjugation by the conformal inversion sphere is an involution. -/
-theorem S_conjugation_involutive (x : Cl55) :
-    S P * (S P * x * S P) * S P = x := by
-  have hS2 : S P * S P = 1 := S_sq P
-  calc
-    S P * (S P * x * S P) * S P =
-        (S P * S P) * x * (S P * S P) := by noncomm_ring
-    _ = x := by rw [hS2]; simp
 
 /--
 Reflection/inversion law for the projective conformal embedding.
@@ -284,7 +265,7 @@ end InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
-- All theorems are parameterized by an explicit `ConformalNullPair` property `P`.
+- All theorems are parameterized by an explicit `ConformalNullPair` witness `P`.
 - `conformal_inversion_maps_to_geoInv` and `F_sq_zero` additionally require explicit orthogonality hypotheses.
 
 #### BUCKET 3: OPEN CLOSURE DEBT

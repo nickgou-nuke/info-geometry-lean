@@ -1,8 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Clifford.Clifford55
-import InfoGeometry.Canonical.Pin55NativeCover
-
-open CliffordAlgebra
 
 /-!
 # Artin-word parity into finite central signs
@@ -37,58 +34,15 @@ def cmul : CentralSign → CentralSign → CentralSign
 instance : Mul CentralSign where
   mul := cmul
 
-instance : One CentralSign where
-  one := I
-
-instance : Inv CentralSign where
-  inv := fun
-    | I => I
-    | negI => negI
-
-instance : Monoid CentralSign where
-  mul := (· * ·)
-  one := I
-  mul_assoc := by
-    intro a b c
-    cases a <;> cases b <;> cases c <;> decide
-  one_mul := by
-    intro a
-    cases a <;> decide
-  mul_one := by
-    intro a
-    cases a <;> decide
-
-instance : Group CentralSign where
-  mul := (· * ·)
-  one := I
-  inv := Inv.inv
-  mul_assoc := by
-    intro a b c
-    cases a <;> cases b <;> cases c <;> decide
-  one_mul := by
-    intro a
-    cases a <;> decide
-  mul_one := by
-    intro a
-    cases a <;> decide
-  inv_mul_cancel := by
-    intro a
-    cases a <;> decide
-
-instance : CommGroup CentralSign where
-  mul_comm := by
-    intro a b
-    cases a <;> cases b <;> decide
-
 /-- The nontrivial central element squares to the identity. -/
-@[simp] theorem negI_sq : negI * negI = I := rfl
+theorem negI_sq : negI * negI = I := rfl
 
 /-- `I` is a left unit. -/
-@[simp] theorem I_mul (a : CentralSign) : I * a = a := by
+theorem I_mul (a : CentralSign) : I * a = a := by
   cases a <;> rfl
 
 /-- `I` is a right unit. -/
-@[simp] theorem mul_I (a : CentralSign) : a * I = a := by
+theorem mul_I (a : CentralSign) : a * I = a := by
   cases a <;> rfl
 
 /-- The centralizer multiplication is commutative. -/
@@ -96,109 +50,49 @@ theorem cmul_comm (a b : CentralSign) : a * b = b * a := by
   cases a <;> cases b <;> rfl
 
 /-- Winding parity as centralizer monodromy: even windings give `I`, odd give `-I`. -/
-def centralFromWinding : ℕ → CentralSign
-  | 0 => I
-  | n + 1 => negI * centralFromWinding n
-
-@[simp] theorem centralFromWinding_zero :
-    centralFromWinding 0 = I := rfl
-
-@[simp] theorem centralFromWinding_succ (n : ℕ) :
-    centralFromWinding (n + 1) = negI * centralFromWinding n := rfl
+def centralFromWinding (w : ℕ) : CentralSign :=
+  if Even w then I else negI
 
 /-- Even winding is central-trivial. -/
 theorem centralFromWinding_even {w : ℕ} (h : Even w) : centralFromWinding w = I := by
-  rcases h with ⟨k, rfl⟩
-  induction k with
-  | zero => rfl
-  | succ k ih =>
-      simp [Nat.succ_add, centralFromWinding, ih]
+  simp [centralFromWinding, h]
 
 /-- Odd winding is the nontrivial central element. -/
 theorem centralFromWinding_odd {w : ℕ} (h : Odd w) : centralFromWinding w = negI := by
-  rcases h with ⟨k, rfl⟩
-  have hk : centralFromWinding (k + k) = I :=
-    centralFromWinding_even (w := k + k) (Even.add_self k)
-  rw [show 2 * k + 1 = (k + k) + 1 by omega]
-  simp [centralFromWinding, hk]
+  simp [centralFromWinding, Nat.not_even_iff_odd.mpr h]
 
 /-- A finite positive Artin word, represented by generator indices. -/
 abbrev ArtinWord := List ℕ
 
-instance artinWordMonoid : Monoid ArtinWord where
-  mul := List.append
-  one := []
-  mul_assoc := List.append_assoc
-  one_mul := List.nil_append
-  mul_one := List.append_nil
-
-/-! The semantic API name makes explicit that this is the length-parity
-character, not the quarter-turn spinor phase from the separate braid owner. -/
-def artinParitySign (w : ArtinWord) : CentralSign :=
+/-- The scalar centralizer monodromy of an Artin word is its length parity. -/
+def artinCentralMonodromy (w : ArtinWord) : CentralSign :=
   centralFromWinding w.length
 
-/-! Backward-compatible name: this is the parity character, not spinorial
-half-twist monodromy. -/
-@[reducible] def artinCentralMonodromy := artinParitySign
-
-/-- Central parity is additive under concatenation of words. -/
-theorem centralFromWinding_add (m n : ℕ) :
-    centralFromWinding (m + n) =
-      centralFromWinding m * centralFromWinding n := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-      rw [Nat.succ_add, centralFromWinding_succ, ih]
-      simp [centralFromWinding_succ, mul_assoc]
-
-@[simp] theorem artinParitySign_append (w₁ w₂ : ArtinWord) :
-    artinParitySign (w₁ ++ w₂) =
-      artinParitySign w₁ * artinParitySign w₂ := by
-  rw [artinParitySign, artinParitySign, artinParitySign,
-    List.length_append, centralFromWinding_add]
-
-/-- The Artin length-parity character as a native monoid homomorphism. -/
-def artinParitySignMonoidHom : ArtinWord →* CentralSign where
-  toFun := artinParitySign
-  map_one' := by
-    change centralFromWinding 0 = I
-    simp [centralFromWinding]
-  map_mul' w₁ w₂ := artinParitySign_append w₁ w₂
-
-/-- Short semantic alias for the parity character homomorphism. -/
-@[reducible] def artinParitySignHom : ArtinWord →* CentralSign :=
-  artinParitySignMonoidHom
-
-/-- Adjacent Artin braid relation preserves the parity character. -/
-theorem adjacent_artin_parity (i : ℕ) :
+/-- Adjacent Artin braid relation preserves central monodromy. -/
+theorem adjacent_artin_monodromy (i : ℕ) :
     artinCentralMonodromy [i, i + 1, i] =
       artinCentralMonodromy [i + 1, i, i + 1] := by
   rfl
 
-/-- Trivial two-letter commutation on separated indices preserves the parity character. -/
-theorem separated_artin_parity (i j : ℕ) (_hij : i + 2 ≤ j ∨ j + 2 ≤ i) :
+/-- Separated Artin commutation preserves central monodromy. -/
+theorem separated_artin_monodromy (i j : ℕ) :
     artinCentralMonodromy [i, j] = artinCentralMonodromy [j, i] := by
   rfl
 
 /-- The adjacent braid word has odd winding and therefore maps to `-I`. -/
-theorem adjacent_artin_parity_negI (i : ℕ) :
+theorem adjacent_artin_hits_negI (i : ℕ) :
     artinCentralMonodromy [i, i + 1, i] = negI := by
-  norm_num [artinParitySign, centralFromWinding]
+  norm_num [artinCentralMonodromy, centralFromWinding]
 
 /-- A separated two-generator exchange has even winding and therefore maps to `I`. -/
-theorem separated_artin_parity_I (i j : ℕ) :
+theorem separated_artin_hits_I (i j : ℕ) :
     artinCentralMonodromy [i, j] = I := by
-  norm_num [artinParitySign, centralFromWinding]
+  norm_num [artinCentralMonodromy, centralFromWinding]
 
 /-- An `n`-fold winding datum for a target finite central sign. -/
-structure NFoldCentralWinding (n : ℕ) (target : CentralSign) where
+structure NFoldCentralRoot (n : ℕ) (target : CentralSign) where
   winding : ℕ
   hits_target : centralFromWinding (n * winding) = target
-
-/-- Semantic name for the finite datum above.  It witnesses an `n`-fold
-winding and does not assert existence of an algebraic `n`th root. -/
-@[reducible] def NFoldCentralRoot := NFoldCentralWinding
-@[reducible] def NFoldWindingDatum := NFoldCentralWinding
 
 theorem odd_unit_winding_negI {n : ℕ} (h : Odd n) :
     centralFromWinding (n * 1) = negI := by
@@ -209,12 +103,12 @@ theorem even_unit_winding_I {n : ℕ} (h : Even n) :
   simpa using centralFromWinding_even (w := n) h
 
 /-- For odd `n`, unit winding maps to the nontrivial central sign. -/
-def oddUnitRootOfNegI {n : ℕ} (h : Odd n) : NFoldCentralWinding n negI where
+def oddUnitRootOfNegI {n : ℕ} (h : Odd n) : NFoldCentralRoot n negI where
   winding := 1
   hits_target := odd_unit_winding_negI h
 
 /-- For even `n`, unit winding maps to the trivial central sign. -/
-def evenUnitRootOfI {n : ℕ} (h : Even n) : NFoldCentralWinding n I where
+def evenUnitRootOfI {n : ℕ} (h : Even n) : NFoldCentralRoot n I where
   winding := 1
   hits_target := even_unit_winding_I h
 
@@ -232,8 +126,8 @@ theorem fullTwistWinding_even (n : ℕ) : Even (fullTwistWinding n) := by
       omega
     exact Even.mul_left hpred n
 
-/-- Therefore the full twist has trivial parity character. -/
-theorem fullTwist_parity_trivial (n : ℕ) :
+/-- Therefore the full twist has trivial `{I,-I}` centralizer monodromy. -/
+theorem fullTwist_central_trivial (n : ℕ) :
     centralFromWinding (fullTwistWinding n) = I := by
   exact centralFromWinding_even (fullTwistWinding_even n)
 
@@ -276,97 +170,14 @@ theorem neg_one_mem_pin55 : (-1 : InfoGeometry.Clifford.Clifford55.Cl55) ∈ Inf
   · rw [Unitary.mem_iff]
     simp
 
-/-- The scalar `-1` is in the canonical `Spin(5,5)` subgroup (hence in the even part). -/
-theorem neg_one_mem_spin55 : (-1 : InfoGeometry.Clifford.Clifford55.Cl55) ∈ InfoGeometry.Clifford.Clifford55.Spin55 := by
-  rw [spinGroup.mem_iff]
-  constructor
-  · exact neg_one_mem_pin55
-  · change (-1 : InfoGeometry.Clifford.Clifford55.Cl55) ∈
-      (CliffordAlgebra.even InfoGeometry.Clifford.Clifford55.Q55).toSubring.toSubmonoid
-    exact (CliffordAlgebra.even InfoGeometry.Clifford.Clifford55.Q55).neg_mem <|
-      by
-        simp
-
 /-- The nontrivial `{I,-I}` element as an actual `Pin(5,5)` element. -/
 def negOnePin55 : InfoGeometry.Clifford.Clifford55.Pin55 :=
   ⟨(-1 : InfoGeometry.Clifford.Clifford55.Cl55), neg_one_mem_pin55⟩
-
-/-- The central sign `-I` as an actual `Spin(5,5)` element; this is the central scalar lift, not
-an orthogonal reflection. -/
-def negOneSpin55 : InfoGeometry.Clifford.Clifford55.Spin55 :=
-  ⟨(-1 : InfoGeometry.Clifford.Clifford55.Cl55), neg_one_mem_spin55⟩
 
 /-- The centralizer elements map into the Pin(5,5) group over the identity. -/
 def centralizerElement (c : CentralSign) : InfoGeometry.Clifford.Clifford55.Pin55 :=
   match c with
   | I => 1
   | negI => negOnePin55
-
-/-- The centralizer elements map into the Spin(5,5) group over the identity. -/
-def centralizerElementSpin (c : CentralSign) : InfoGeometry.Clifford.Clifford55.Spin55 :=
-  match c with
-  | I => 1
-  | negI => negOneSpin55
-
-/-- Central sign as a Pin(5,5) monoid morphism. -/
-def centralizerElementHom : CentralSign →* InfoGeometry.Clifford.Clifford55.Pin55 where
-  toFun := centralizerElement
-  map_one' := rfl
-  map_mul' := by
-    intro a b
-    cases a <;> cases b <;> ext <;>
-      simp [centralizerElement, negOnePin55, negI_sq]
-
-/-- Central sign as a Spin(5,5) monoid morphism. -/
-def centralizerElementSpinHom : CentralSign →* InfoGeometry.Clifford.Clifford55.Spin55 where
-  toFun := centralizerElementSpin
-  map_one' := rfl
-  map_mul' := by
-    intro a b
-    cases a <;> cases b <;> ext <;>
-      simp [centralizerElementSpin, negOneSpin55, negI_sq]
-
-@[simp] theorem centralizerElement_apply (c : CentralSign) :
-    centralizerElementHom c = centralizerElement c := rfl
-
-@[simp] theorem centralizerElement_I :
-    centralizerElement I = (1 : InfoGeometry.Clifford.Clifford55.Pin55) := rfl
-
-@[simp] theorem centralizerElement_negI :
-    centralizerElement negI = negOnePin55 := rfl
-
-theorem centralizerElement_mul (a b : CentralSign) :
-    centralizerElement (a * b) =
-      centralizerElement a * centralizerElement b := by
-  simpa [centralizerElementHom] using
-    (map_mul centralizerElementHom a b)
-
-@[simp] theorem centralizerElementSpin_apply (c : CentralSign) :
-    centralizerElementSpinHom c = centralizerElementSpin c := rfl
-
-/-- Every parity sign lies over the identity under the native Pin orthogonal
-action.  This is the finite sign-kernel readout, not the spinor half-twist
-representation. -/
-theorem centralizerElementHom_mem_native_kernel (c : CentralSign) :
-    centralizerElementHom c ∈
-      (InfoGeometry.Clifford.Clifford55.pin55NativeOrthogonalAction).ker := by
-  cases c with
-  | I =>
-      simp [centralizerElementHom, centralizerElement]
-  | negI =>
-      have hneg : negOnePin55 = InfoGeometry.Clifford.Clifford55.negOnePin := by
-        apply Subtype.ext
-        change (-1 : InfoGeometry.Clifford.Clifford55.Cl55) =
-          (InfoGeometry.Clifford.Clifford55.negOnePin :
-            InfoGeometry.Clifford.Clifford55.Cl55)
-        rw [InfoGeometry.Clifford.Clifford55.negOnePin_coe]
-      rw [show centralizerElementHom negI = negOnePin55 by
-        rfl, hneg]
-      exact InfoGeometry.Clifford.Clifford55.negOnePin_mem_pin55NativeOrthogonalAction_kernel
-
-@[simp] theorem centralizerElementHom_native_action (c : CentralSign) :
-    InfoGeometry.Clifford.Clifford55.pin55NativeOrthogonalAction
-        (centralizerElementHom c) = 1 := by
-  exact centralizerElementHom_mem_native_kernel c
 
 end InfoGeometry.Topology.ArtinCentralizerMonodromy

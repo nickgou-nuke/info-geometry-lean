@@ -10,9 +10,9 @@ open CuntzFibonacciBraidInclusion
 Yang-Baxter braid relation for Fibonacci representation in O_2
 Source: InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 Objects: fibonacciBraidCuntzRepresentation, R, B -/
-theorem property4_yang_baxter_relation :
+theorem hypothesis4_yang_baxter_relation :
     fibonacciBraidCuntzRepresentation R * fibonacciBraidCuntzRepresentation B * fibonacciBraidCuntzRepresentation R =
     fibonacciBraidCuntzRepresentation B * fibonacciBraidCuntzRepresentation R * fibonacciBraidCuntzRepresentation B :=
-  InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses.property4_yang_baxter_relation
+  InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses.hypothesis4_yang_baxter_relation
 
 end Automath.Generated

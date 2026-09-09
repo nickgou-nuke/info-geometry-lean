@@ -18,7 +18,9 @@ open InfoGeometry.Algebra.Zorn.G2TwoFiniteChevalleyGroup
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
+open InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 open InfoGeometry.Lie.CanonicalZornRootSystemComparison
+open InfoGeometry.Lie.CanonicalZornRootPairing
 open InfoGeometry.Canonical
 open InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
 open InfoGeometry.Algebra.Zorn.G2Unipotent
@@ -34,6 +36,26 @@ theorem real_split_g2_derivation_finrank :
 
 theorem real_split_g2_root_count : Fintype.card RootIndex = 12 := by
   exact rootIndex_card
+
+/-!
+The finite-dimensional native root certificate for the split real `G₂` lane.
+
+This deliberately packages only facts already owned by the native Cartan/root
+decomposition.  In particular, it does not introduce a second Lie algebra
+carrier or assert a Chevalley normalization of root vectors.
+-/
+theorem real_split_g2_finite_dimensional_certificate :
+    Module.finrank ℝ cartanRootSpan = 2 ∧
+      Module.finrank ℝ rootSpaceSum = 12 ∧
+      Module.finrank ℝ RealSplitG2LieAlgebra = 14 ∧
+      (∀ i j : Fin 2,
+        (P.root (nativeRootIndex (nativeSimpleIndex i)))
+            (P.coroot (nativeRootIndex (nativeSimpleIndex j))) =
+          simpleCartanMatrix i j) := by
+  refine ⟨cartanRootSpan_finrank, rootSpaceSum_finrank,
+    finrank_canonicalZornDerivations, ?_⟩
+  intro i j
+  exact native_simple_cartan_matrix i j
 
 theorem positive_root_parameter_card :
     Fintype.card PositiveRootCoordinates = 64 := by

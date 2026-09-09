@@ -32,7 +32,7 @@ namespace InfoGeometry.Canonical.SplitZornNullBoundary
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-/-- Coordinatewise zero Zorn cell over `ℝ`, used only as a finite boundary property. -/
+/-- Coordinatewise zero Zorn cell over `ℝ`, used only as a finite boundary witness. -/
 def zornZero : ZornCell ℝ where
   r := 0
   s := 0

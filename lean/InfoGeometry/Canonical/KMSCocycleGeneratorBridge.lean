@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SinkhornKMSCore
 
 Bridge from exact Sinkhorn-step KMS closure to the cocycle generator-lift lane.
 
-This file isolates the missing "entropy-time weld" as a concrete property surface:
+This file isolates the missing "entropy-time weld" as a concrete witness surface:
 if cocycle increments and phase generators are represented by opposite KMS pairing
 defects, then exact KMS closure forces the concrete cocycle generator lift.
 -/
@@ -25,7 +25,7 @@ variable {E : Type}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-KMS pairing property for the cocycle/phase corridor:
+KMS pairing witness for the cocycle/phase corridor:
 - cocycle increment is represented by a forward KMS pairing defect;
 - phase RN generator is represented by the corresponding backward defect.
 -/
@@ -54,7 +54,7 @@ structure KMSPairingWitness
         - ω (k + 1) (leftObs k * modularShift (E := E) K β (rightObs k))
 
 /--
-Exact Sinkhorn-step KMS closure plus a pairing property yields the concrete
+Exact Sinkhorn-step KMS closure plus a pairing witness yields the concrete
 cocycle generator-lift identity.
 -/
 theorem cocycleGeneratorLift_of_sinkhornKMSClosure_pairingWitness
@@ -95,7 +95,7 @@ theorem cocycleGeneratorLift_of_sinkhornKMSClosure_pairingWitness
 /--
 Control-form variant:
 Sinkhorn KMS control first closes to exact stepwise KMS, then yields the same
-cocycle generator-lift conclusion under the pairing property.
+cocycle generator-lift conclusion under the pairing witness.
 -/
 theorem cocycleGeneratorLift_of_sinkhornKMSControl_pairingWitness
     (T : SinkhornTrajectory n)
@@ -119,7 +119,7 @@ theorem cocycleGeneratorLift_of_sinkhornKMSControl_pairingWitness
     hClosure hPair
 
 /--
-Cocycle law + exact Sinkhorn-step KMS closure + pairing property imply the
+Cocycle law + exact Sinkhorn-step KMS closure + pairing witness imply the
 topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornKMSClosure_pairingWitness
@@ -148,7 +148,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornKMSClosure_pairi
 
 /--
 Control-form Bekenstein endpoint:
-Connes cocycle law plus Sinkhorn KMS control and the pairing property imply the
+Connes cocycle law plus Sinkhorn KMS control and the pairing witness imply the
 topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornKMSControl_pairingWitness

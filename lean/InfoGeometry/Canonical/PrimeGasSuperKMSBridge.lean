@@ -1,45 +1,126 @@
-import InfoGeometry.Canonical.AlgebraicKMSStateColimit
+import Mathlib.Data.Real.Basic
+import InfoGeometry.Meta.Architecture
 
 /-!
-# Noncommutative primon KMS carrier
+# InfoGeometry.Canonical.PrimeGasSuperKMS
 
-The former version of this file packaged unrelated real-valued readouts and
-called their stored equalities a super-KMS bridge.  The native owner is the
-algebraic Cuntz matrix colimit: a KMS datum is an invertible colimit density,
-and its boundary identity is proved by noncommutative multiplication and
-trace cyclicity.
+Bridge between a prime-gas max-entropy packet and a super-KMS temperature
+packet.
 
-No scalar temperature packet or equality-only surrogate is introduced here.
+The super-temperature is owned by the KMS target.  It is not duplicated in the
+bridge and no separate compatibility witness is required.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 namespace InfoGeometry.Canonical.PrimeGasSuperKMS
 
-open InfoGeometry.Canonical.AlgebraicKMSStateColimit
+/-- Minimal owner-level prime-gas max-entropy packet. -/
+@[rep_depth operator]
+structure PrimeGasMaxEntPacket where
+  partitionFunction : ℝ
+  entropyReadout : ℝ
+  freeEnergyReadout : ℝ
 
-/-- A primon KMS bridge is an actual invertible density in the noncommutative
-algebraic Cuntz matrix colimit. -/
+/-- Native equality relation between the Jaynes and RN entropy readouts. -/
+@[rep_depth operator]
+abbrev PrimeGasJaynesRNBridge :=
+  {readouts : ℝ × ℝ // readouts.1 = readouts.2}
+
+namespace PrimeGasJaynesRNBridge
+
+abbrev jaynesEntropy (B : PrimeGasJaynesRNBridge) : ℝ :=
+  B.1.1
+
+abbrev rnEntropy (B : PrimeGasJaynesRNBridge) : ℝ :=
+  B.1.2
+
+theorem jaynes_eq_rn (B : PrimeGasJaynesRNBridge) :
+    B.jaynesEntropy = B.rnEntropy :=
+  B.2
+
+end PrimeGasJaynesRNBridge
+
+/-- Super-geometric temperature split into even and odd readouts. -/
+@[rep_depth operator]
+structure SuperGeometricTemperature where
+  evenTemperature : ℝ
+  oddTemperature : ℝ
+
+/-- KMS target packet for the prime-gas bridge. -/
+@[rep_depth operator]
+structure PrimeGasKMSTargetBridge where
+  superTemperature : SuperGeometricTemperature
+  zero_odd :
+    superTemperature.oddTemperature = 0
+  absorption : ℝ
+  spontaneousEmission : ℝ
+  stimulatedEmission : ℝ
+  detailedBalance :
+    absorption = spontaneousEmission + stimulatedEmission
+
+/-- Extract the super-geometric temperature from a KMS target packet. -/
+def toSuperGeometricTemperature
+    (K : PrimeGasKMSTargetBridge) : SuperGeometricTemperature :=
+  K.superTemperature
+
+@[simp]
+theorem toSuperGeometricTemperature_eq
+    (K : PrimeGasKMSTargetBridge) :
+    toSuperGeometricTemperature K = K.superTemperature :=
+  rfl
+
+@[simp]
+theorem toSuperGeometricTemperature_zero_odd
+    (K : PrimeGasKMSTargetBridge) :
+    (toSuperGeometricTemperature K).oddTemperature = 0 :=
+  K.zero_odd
+
+/-- Prime-gas/super-KMS bridge using the KMS target as temperature owner. -/
+@[rep_depth operator]
 structure PrimeGasSuperKMSBridge where
-  density : Carrierˣ
+  primeGas : PrimeGasMaxEntPacket
+  jaynesRN : PrimeGasJaynesRNBridge
+  kmsTarget : PrimeGasKMSTargetBridge
+
+/-- The bridge temperature is canonically the temperature owned by its KMS target. -/
+def PrimeGasSuperKMSBridge.superTemperature
+    (B : PrimeGasSuperKMSBridge) : SuperGeometricTemperature :=
+  toSuperGeometricTemperature B.kmsTarget
 
 namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)
 
-/-- The native imaginary-time automorphism determined by the bridge density. -/
-def imaginaryTime : Carrier ≃ₐ[ℂ] Carrier :=
-  deltaImaginaryTimeAlgEquiv B.density
+/-- The bridge's stored super-temperature is exactly the KMS target temperature. -/
+@[simp]
+theorem superTemperature_eq_kmsTargetTemperature :
+    B.superTemperature = B.kmsTarget.superTemperature :=
+  rfl
 
-/-- The actual noncommutative KMS boundary identity carried by the bridge. -/
-theorem kms_boundary (x y : Carrier) :
-    deltaWeightedFunctional B.density (x * y) =
-      deltaWeightedFunctional B.density (y * B.imaginaryTime x) := by
-  exact deltaWeightedFunctional_kms B.density x y
+/-- The bridge's super-temperature is the same as the extracted KMS temperature. -/
+@[simp]
+theorem superTemperature_eq_toSuperGeometricTemperature :
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
+  rfl
+
+/-- The odd super-temperature vanishes by the stored KMS witness. -/
+@[simp]
+theorem superTemperature_odd_eq_zero :
+    B.superTemperature.oddTemperature = 0 :=
+  toSuperGeometricTemperature_zero_odd B.kmsTarget
+
+/-- Detailed balance is exposed directly from the KMS target packet. -/
+theorem detailedBalance :
+    B.kmsTarget.absorption =
+      B.kmsTarget.spontaneousEmission + B.kmsTarget.stimulatedEmission :=
+  B.kmsTarget.detailedBalance
+
+/-- The Jaynes and RN entropy readouts agree by the stored witness. -/
+theorem jaynesEntropy_eq_rnEntropy :
+    B.jaynesRN.jaynesEntropy = B.jaynesRN.rnEntropy :=
+  B.jaynesRN.jaynes_eq_rn
 
 end PrimeGasSuperKMSBridge
 
 end InfoGeometry.Canonical.PrimeGasSuperKMS
-
-end noncomputable section

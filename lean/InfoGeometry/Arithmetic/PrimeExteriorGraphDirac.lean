@@ -20,7 +20,7 @@ The weighted Hodge-square readout is exactly the prime-weighted number operator.
 No infinite Euler product.
 No analytic continuation.
 No Hilbert--Polya claim.
-No RH/Mertens interface.
+No RH/Mertens socket.
 -/
 
 noncomputable section
@@ -33,7 +33,7 @@ open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-- A finite prime cutoff, using the existing property prime register. -/
+/-- A finite prime cutoff, using the existing certified prime register. -/
 abbrev PrimeCutoff := PrimeRegister
 
 /-- A prime mode inside a finite cutoff. -/
@@ -71,8 +71,7 @@ theorem flip_involutive
     (p : PrimeMode P)
     (S : Vertex P) :
     flip p (flip p S) = S := by
-  change majoranaFlip p (majoranaFlip p S) = S
-  exact majoranaFlip_involutive p S
+  simpa [flip] using majoranaFlip_involutive p S
 
 /-- The flipped mode is occupied iff it was previously unoccupied. -/
 @[simp]
@@ -81,8 +80,7 @@ theorem mem_flip_self
     (p : PrimeMode P)
     (S : Vertex P) :
     p ∈ flip p S ↔ p ∉ S := by
-  change p ∈ majoranaFlip p S ↔ p ∉ S
-  exact mem_majoranaFlip_self p S
+  simpa [flip] using mem_majoranaFlip_self p S
 
 /-- Other modes are unaffected by the prime-axis flip. -/
 @[simp]
@@ -273,16 +271,6 @@ theorem weightedNumberEnergy_eq_sum_occupied
       S.sum weight := by
   rfl
 
-/-- The weighted number energy is nonnegative when occupied-mode weights are. -/
-theorem weightedNumberEnergy_nonneg
-    (P : PrimeCutoff)
-    (weight : PrimeMode P → ℝ)
-    (S : Vertex P)
-    (hweight : ∀ p ∈ S, 0 ≤ weight p) :
-    0 ≤ weightedNumberEnergy P weight S := by
-  unfold weightedNumberEnergy
-  exact SquareFreePrimeState.squareFreeEnergy_nonneg S hweight
-
 /-- The weighted Hodge-square energy equals the occupied-mode sum. -/
 theorem weightedHodgeSquareEnergy_eq_sum_occupied
     (P : PrimeCutoff)
@@ -292,16 +280,6 @@ theorem weightedHodgeSquareEnergy_eq_sum_occupied
       S.sum weight := by
   rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy]
   exact weightedNumberEnergy_eq_sum_occupied P weight S
-
-/-- The occupied Hodge-square energy is nonnegative under nonnegative weights. -/
-theorem weightedHodgeSquareEnergy_nonneg
-    (P : PrimeCutoff)
-    (weight : PrimeMode P → ℝ)
-    (S : Vertex P)
-    (hweight : ∀ p ∈ S, 0 ≤ weight p) :
-    0 ≤ weightedHodgeSquareEnergy P weight S := by
-  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy]
-  exact weightedNumberEnergy_nonneg P weight S hweight
 
 /--
 Arithmetic specialization: `primeEnergy p = log p`.
@@ -363,9 +341,7 @@ theorem flip_involutive
     (p : PrimeMode D.P)
     (v : D.Vertex) :
     D.flip p (D.flip p v) = v := by
-  change PrimeExteriorGraphDirac.flip p
-      (PrimeExteriorGraphDirac.flip p v) = v
-  exact PrimeExteriorGraphDirac.flip_involutive p v
+  simpa [flip] using PrimeExteriorGraphDirac.flip_involutive p v
 
 /-- Weighted Hamiltonian readout on a finite exterior vertex. -/
 def hamiltonian
@@ -487,7 +463,7 @@ theorem globalMajoranaChirality_eq_mobius_primeProduct
   have hprod :
       (∏ p ∈ S.map e, p) = ∏ p ∈ S, (p : ℕ) := by
     have hmap := Finset.prod_map S e (fun p : ℕ => p)
-    exact hmap
+    simpa [e, primeModeEmbedding] using hmap
   calc
     globalMajoranaChirality S = (-1 : ℤ) ^ S.card := by
       simpa [globalMajoranaChirality] using
@@ -539,7 +515,7 @@ theorem cantorDiracWittenCharacter_eq_mobius_sum
           intro p hp
           rcases Finset.mem_map.mp hp with ⟨q, hq, rfl⟩
           exact P.prime_mem q.1 q.property))
-  simp [hμ]
+  simpa [hμ]
 
 /-- Unit-weight Witten cancellation on every nonempty finite prime-exterior lattice. -/
 theorem cantorDiracWittenCharacter_unit_cancel

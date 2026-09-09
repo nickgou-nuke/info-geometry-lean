@@ -65,6 +65,6 @@ theorem normalizedRealReadout_eq_stage
   exact dyadicToRealInterval_coordinate_eq_compatible
     (normalizedIntervalReadout S) n
 
-end InfoGeometry.Canonical.RealUHFProjectionRankCompletionReadoutSquare
+end RealUHFProjectionRankCompletionReadoutSquare
 
-end
+end Canonical

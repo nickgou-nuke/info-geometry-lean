@@ -44,7 +44,7 @@ If `e` is a de Bruijn expression and `e' = deBruijnToPHOAS e`,
 then the binding depth of each subexpression is preserved.
 -/
 lemma translation_preserves_depth (e : Expr) : True := by
-  trivial
+  sorry
 
 /-!
 ### L2: Graph Walk Correspondence
@@ -55,7 +55,7 @@ there exists a walk `w'` in the PHOAS binding tree of
 is isomorphic.
 -/
 lemma walk_correspondence (e : Expr) (w : Walk e) : True := by
-  trivial
+  sorry
 
 /-!
 ### L3: Context Mapping
@@ -65,7 +65,7 @@ is given by a context mapping `ctx : ℕ → Var` that shifts
 appropriately under binders.
 -/
 lemma context_mapping_commutes (ctx : ℕ → Var) (e : Expr) : True := by
-  trivial
+  sorry
 
 /-!
 ### L4: Query Result Isomorphism
@@ -74,7 +74,7 @@ Under the walk correspondence and context mapping, the query
 results are isomorphic: `query_deBruijn(e, p) ≅ query_PHOAS(e', p')`.
 -/
 lemma query_isomorphism (e : Expr) (p : Predicate) : True := by
-  trivial
+  sorry
 
 /--
 **Main Theorem: PHOAS/de Bruijn Coherence.**

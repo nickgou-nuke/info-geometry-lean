@@ -23,6 +23,40 @@ namespace InfoGeometry.Analysis.CauchyWinding
 
 open Complex Real intervalIntegral
 
+def circlePoint (c : ℂ) (r t : ℝ) : ℂ :=
+  c + (r : ℂ) * exp (I * (t : ℂ))
+
+theorem circlePoint_sub_center (c : ℂ) (r t : ℝ) :
+    circlePoint c r t - c = (r : ℂ) * exp (I * (t : ℂ)) := by
+  simp [circlePoint]
+
+theorem norm_circlePoint_sub_center (c : ℂ) (r t : ℝ) (hr : 0 ≤ r) :
+    ‖circlePoint c r t - c‖ = r := by
+  rw [circlePoint_sub_center]
+  rw [norm_mul, Complex.norm_real, norm_exp]
+  simp [abs_of_nonneg hr]
+
+theorem circlePoint_ne_of_lt_distance (c d : ℂ) (r t : ℝ)
+    (hr : 0 ≤ r) (h : r < ‖d - c‖) : circlePoint c r t ≠ d := by
+  intro hEq
+  have hnorm : ‖circlePoint c r t - c‖ = r :=
+    norm_circlePoint_sub_center c r t hr
+  have hdist : ‖circlePoint c r t - c‖ = ‖d - c‖ := by
+    rw [hEq]
+  linarith
+
+theorem circlePoint_zero_ne_one_of_lt_one (r t : ℝ)
+    (hr : 0 ≤ r) (hr1 : r < 1) :
+    circlePoint 0 r t ≠ 1 := by
+  apply circlePoint_ne_of_lt_distance 0 1 r t hr
+  simpa using hr1
+
+theorem circlePoint_one_ne_zero_of_lt_one (r t : ℝ)
+    (hr : 0 ≤ r) (hr1 : r < 1) :
+    circlePoint 1 r t ≠ 0 := by
+  apply circlePoint_ne_of_lt_distance 1 0 r t hr
+  simpa using hr1
+
 /-- 🏆 THEOREM 1: Exact Constant Quotient of Circle Logarithmic Derivative -/
 theorem circle_log_deriv_quotient (r : ℝ) (hr : 0 < r) (t : ℝ) :
     (I * (r : ℂ) * exp (I * (t : ℂ))) / ((r : ℂ) * exp (I * (t : ℂ))) = I := by
@@ -33,6 +67,50 @@ theorem circle_log_deriv_quotient (r : ℝ) (hr : 0 < r) (t : ℝ) :
   have h_assoc : I * (r : ℂ) * exp (I * (t : ℂ)) = I * ((r : ℂ) * exp (I * (t : ℂ))) := by ring
   rw [h_assoc]
   exact mul_div_cancel_right₀ I h_prod_ne
+
+/- The same local quotient after translating the circle to an arbitrary
+center.  This is the pullback calculation used by a residue integral. -/
+theorem translated_circle_log_deriv_quotient (c : ℂ) (r : ℝ) (hr : 0 < r)
+    (t : ℝ) :
+    (I * ((c + (r : ℂ) * exp (I * (t : ℂ))) - c)) /
+        ((c + (r : ℂ) * exp (I * (t : ℂ))) - c) = I := by
+  have hcancel :
+      (c + (r : ℂ) * exp (I * (t : ℂ))) - c =
+        (r : ℂ) * exp (I * (t : ℂ)) := by ring
+  rw [hcancel]
+  rw [← mul_assoc]
+  exact circle_log_deriv_quotient r hr t
+
+/- Its parameter integral is therefore the standard positively oriented
+one-turn value. -/
+theorem translated_circle_log_deriv_integral (c : ℂ) (r : ℝ) (hr : 0 < r) :
+    ∫ t in (0 : ℝ)..(2 * π),
+      (I * ((c + (r : ℂ) * exp (I * (t : ℂ))) - c)) /
+        ((c + (r : ℂ) * exp (I * (t : ℂ))) - c) =
+      (2 * (π : ℂ) * I : ℂ) := by
+  have hfun : ∀ t : ℝ,
+      (I * ((c + (r : ℂ) * exp (I * (t : ℂ))) - c)) /
+        ((c + (r : ℂ) * exp (I * (t : ℂ))) - c) = I := by
+    intro t
+    exact translated_circle_log_deriv_quotient c r hr t
+  simp_rw [hfun]
+  rw [intervalIntegral.integral_const]
+  simp only [sub_zero]
+  have h_smul : (2 * π : ℝ) • I = ((2 * π : ℝ) : ℂ) * I := by
+    exact rfl
+  rw [h_smul]
+  push_cast
+  ring
+
+/- Normalization by the phase period gives the unit winding readout. -/
+theorem translated_circle_normalized_log_deriv_integral (c : ℂ) (r : ℝ)
+    (hr : 0 < r) (h2pi : (2 * (π : ℂ) * I) ≠ 0) :
+    (1 / (2 * (π : ℂ) * I)) *
+        (∫ t in (0 : ℝ)..(2 * π),
+          (I * ((c + (r : ℂ) * exp (I * (t : ℂ))) - c)) /
+            ((c + (r : ℂ) * exp (I * (t : ℂ))) - c)) = 1 := by
+  rw [translated_circle_log_deriv_integral c r hr]
+  exact one_div_mul_cancel h2pi
 
 /-- 🏆 THEOREM 2: Exact Circle Contour Integral Around a Simple Pole Equals 2πi -/
 theorem circle_pole_integral :

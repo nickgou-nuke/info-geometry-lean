@@ -35,6 +35,23 @@ theorem flagRepresentative_eq_generator_mul_of_predecessor_word
   rw [h, evaluateWord_cons]
   simp [evaluateToken]
 
+/-! The first genuine same-cell word seam is suffix-oriented: the word at
+    index 2 extends the word at index 1 by the two-token suffix `(4,1),(1,1)`.
+    This is intentionally kept at the word/evaluator boundary; factorized
+    compatibility is a separate obligation. -/
+theorem flagRepWords_2_eq_append_1 :
+    flagRepWords (2 : Fin 189) =
+      flagRepWords (1 : Fin 189) ++ [((4 : Fin 8), 1), ((1 : Fin 8), 1)] := by
+  decide
+
+theorem flagRepresentative_2_eq_right_step_1 :
+    flagRepresentative (2 : Fin 189) =
+      flagRepresentative (1 : Fin 189) *
+        evaluateWord [((4 : Fin 8), 1), ((1 : Fin 8), 1)] := by
+  unfold flagRepresentative
+  rw [flagRepWords_2_eq_append_1, evaluateWord_append]
+
+
 set_option maxRecDepth 100000 in
 theorem flagCells_partition :
     Finset.univ.biUnion flagCells = Finset.univ := by

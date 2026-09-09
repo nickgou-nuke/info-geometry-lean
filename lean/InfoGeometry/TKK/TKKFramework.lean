@@ -4,8 +4,6 @@ set_option linter.unusedVariables false
 
 namespace InfoGeometry.TKK
 
--- The five graded carriers are indexed by a native finite family.  Bracket
--- closure laws belong to separate structures/theorems and are not implicit.
 abbrev TKKGrading (E : Type _) [AddCommGroup E] [Module ℝ E] :=
   Fin 5 → Set E
 
@@ -21,15 +19,23 @@ abbrev «g₋₂» (G : TKKGrading E) : Set E := G 4
 
 end TKKGrading
 
-/-- Finite diagonal isospin operator on the two four-dimensional sectors. -/
 def isospin_operator (c : Fin 4 → ℝ) : Matrix (Fin 8) (Fin 8) ℝ :=
   Matrix.diagonal fun i : Fin 8 =>
     if h : i.1 < 4 then c ⟨i.1, h⟩ else 0
 
-/-- Exchange the two marked points and leave all other inputs unchanged. -/
-noncomputable def mirror_map (ψ : ℝ → ℝ) : ℝ → ℝ := fun x => if x = 0 then ψ 1 else if x = 1 then ψ 0 else ψ x
+noncomputable def mirror_map (ψ : ℝ → ℝ) : ℝ → ℝ :=
+  fun x => if x = 0 then ψ 1 else if x = 1 then ψ 0 else ψ x
 
--- Key lemma: isospin asymmetry ↔ N≠Z
+theorem mirror_map_involutive (ψ : ℝ → ℝ) (x : ℝ) :
+    mirror_map (mirror_map ψ) x = ψ x := by
+  by_cases h0 : x = 0
+  · subst h0
+    simp [mirror_map]
+  · by_cases h1 : x = 1
+    · subst h1
+      simp [mirror_map]
+    · simp [mirror_map, h0, h1]
+
 theorem isospin_asymmetry_eq_NZ (ψ : ℝ → ℝ) (c : Fin 4 → ℝ) :
     (isospin_operator c ≠ 0) ↔ (∃ i : Fin 4, c i ≠ 0) := by
   constructor

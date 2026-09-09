@@ -27,8 +27,6 @@ coadjoint-orbit metriplectic second law.
 
 namespace InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 
-open InfoGeometry.Canonical.SouriauKreinMetriplectic
-
 universe u v w
 
 /--
@@ -70,10 +68,10 @@ structure InfiniteCoadjointOrbitMetriplecticContext
   /-- The metric/Onsager leg is a valid orbit-level state update. -/
 -- theorem-class: bridge
   metric_preserves_state : ∀ x : Orbit, isOnCoadjointOrbit (moment (metricVectorField x))
-  /-- Casimir property: the reversible leg produces no entropy. -/
+  /-- Casimir hypothesis: the reversible leg produces no entropy. -/
 -- theorem-class: bridge
   casimir_reversible : ∀ x : Orbit, reversibleEntropyRate x = 0
-  /-- Onsager positivity property for the noncommutative/operator metric leg. -/
+  /-- Onsager positivity hypothesis for the noncommutative/operator metric leg. -/
 -- theorem-class: bridge
   onsager_metric_nonnegative : ∀ x : Orbit, 0 ≤ metricEntropyRate x
   /-- Metriplectic split of the total entropy-production channel. -/
@@ -87,23 +85,12 @@ namespace InfiniteCoadjointOrbitMetriplecticContext
 variable {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
 variable (C : InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg)
 
-/-!
-The total entropy-production channel is nonnegative once the two native
-metriple-ctic laws are combined.  This is a derived theorem, not an additional
-context field: the reversible contribution vanishes by the Casimir law and the
-remaining metric contribution is nonnegative by the Onsager law.
--/
-theorem totalEntropyRate_nonnegative (x : Orbit) :
-    0 ≤ C.totalEntropyRate x := by
-  rw [C.total_entropy_split x, C.casimir_reversible x]
-  simpa using C.onsager_metric_nonnegative x
-
 /--
 Canonical dimension-agnostic constructor where the selected coadjoint orbit is
 the image of the moment map.
 
 This removes the basic orbit-membership and flow-closure obligations from the
-property surface: for an arbitrary carrier `Orbit`, both the reversible and
+hypothesis surface: for an arbitrary carrier `Orbit`, both the reversible and
 metric updates still land in `Set.range moment` by construction.  The analytic
 content that cannot be derived from the image predicate alone remains explicit:
 Casimir reversibility, Onsager nonnegativity, and the metriplectic entropy split.
@@ -177,70 +164,6 @@ def ofMomentImageSquareDissipation
     (total_entropy_split := by
       intro x
       simp)
-
-/-!
-## Native operatorial closure
-
-The generic context above correctly asks for Casimir, Onsager, and entropy
-splitting laws as data.  This constructor discharges those obligations in the
-owned operatorial Cramer--Rao lane: its metric channel is the operatorial
-entropy-production quadratic form, whose positivity follows from the native
-comparison-state Cauchy--Schwarz theorem.
--/
-
-noncomputable def ofMomentImageOperatorialCramerRao
-    {E : Type}
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (moment : Orbit → LieCoalg)
-    (geometricTemperature : LieAlg)
-    (reversibleVectorField metricVectorField : Orbit → Orbit)
-    (entropy : Orbit → ℝ)
-    (C : OperatorialMetriplecticContext (E := E))
-    (R : OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext C)
-    (xForce yForce : Orbit → ℝ) :
-    InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg :=
-  ofMomentImage
-    (moment := moment)
-    (geometricTemperature := geometricTemperature)
-    (reversibleVectorField := reversibleVectorField)
-    (metricVectorField := metricVectorField)
-    (entropy := entropy)
-    (reversibleEntropyRate := fun _ => 0)
-    (metricEntropyRate := fun x =>
-      C.operatorialEntropyProduction (xForce x) (yForce x))
-    (totalEntropyRate := fun x =>
-      C.operatorialEntropyProduction (xForce x) (yForce x))
-    (casimir_reversible := by
-      intro x
-      rfl)
-    (onsager_metric_nonnegative := by
-      intro x
-      exact
-        C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
-          R (xForce x) (yForce x))
-    (total_entropy_split := by
-      intro x
-      simp)
-
-theorem operatorialCramerRao_totalEntropyRate_nonnegative
-    {E : Type}
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (moment : Orbit → LieCoalg)
-    (geometricTemperature : LieAlg)
-    (reversibleVectorField metricVectorField : Orbit → Orbit)
-    (entropy : Orbit → ℝ)
-    (C : OperatorialMetriplecticContext (E := E))
-    (R : OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext C)
-    (xForce yForce : Orbit → ℝ)
-    (x : Orbit) :
-    0 ≤ (ofMomentImageOperatorialCramerRao
-      (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
-      moment geometricTemperature reversibleVectorField metricVectorField
-      entropy C R xForce yForce).totalEntropyRate x := by
-  change 0 ≤ C.operatorialEntropyProduction (xForce x) (yForce x)
-  exact
-    C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
-      R (xForce x) (yForce x)
 
 namespace SquareDissipation
 
@@ -427,7 +350,7 @@ theorem reversibleEntropyRate_eq_zero (x : Orbit) :
   C.casimir_reversible x
 
 -- theorem-class: bridge
-/-- Metric/Onsager channel is nonnegative by the explicit operatorial positivity property. -/
+/-- Metric/Onsager channel is nonnegative by the explicit operatorial positivity hypothesis. -/
 @[rep_depth transport]
 theorem metricEntropyRate_nonnegative (x : Orbit) :
     0 ≤ C.metricEntropyRate x :=
@@ -637,6 +560,29 @@ def fenchel_legendre_contact
 
 /-- The entropy-gradient law exposed as a proposition from its proof owner. -/
 def entropy_gradient_eq_beta
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.entropyGradient = C.betaOfMoment
+
+def first_variation_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuGradient = C.thermodynamicMoment
+
+def second_variation_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuHessian = C.fisherHessian
+
+def fenchel_legendre_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  ∀ Q : LieCoalg,
+    C.souriauEntropy Q =
+      C.thermodynamicPairing (C.betaOfMoment Q) Q +
+        C.massieuPotential (C.betaOfMoment Q)
+
+def entropy_gradient_law
     (C : InfiniteCoadjointOrbitHessianContext
       Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
   C.entropyGradient = C.betaOfMoment
@@ -864,7 +810,7 @@ variable {Feature : Type*}
 variable [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
 
 /--
-Analytic Gibbs-Souriau property for the infinite/coordinateless lane.
+Analytic Gibbs-Souriau witness for the infinite/coordinateless lane.
 
 This is not a finite state shadow and it does not hide differentiation under an
 integral behind prose.  A concrete model must supply the actual integration
@@ -877,7 +823,7 @@ dissipation route.
 structure GibbsSouriauGramAnalyticWitness
     (Orbit : Type u) (Θ : Type*) [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
     (Feature : Type*) [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature] where
-  /-- Distinguished geometric-temperature point where the analytic property is valid. -/
+  /-- Distinguished geometric-temperature point where the analytic witness is valid. -/
   beta : Θ
   /-- Coadjoint moment map. -/
   moment : Orbit → MomentCoord Θ
@@ -917,7 +863,7 @@ structure GibbsSouriauGramAnalyticWitness
 -- theorem-class: bridge
   entropyGradient_at_moment :
     entropyGradient (dualCoord massieu beta) = beta
-  /-- Second variation: Fisher is the Massieu Hessian at the property point. -/
+  /-- Second variation: Fisher is the Massieu Hessian at the witness point. -/
 -- theorem-class: bridge
   fisherEquiv_eq_massieuHessian :
     (fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian massieu beta
@@ -942,7 +888,7 @@ namespace GibbsSouriauGramAnalyticWitness
 
 variable {Orbit : Type u}
 
-/-- Convert the analytic property into the repo-owned Legendre inverse data. -/
+/-- Convert the analytic witness into the repo-owned Legendre inverse data. -/
 @[rep_depth transport]
 noncomputable def toLegendreContinuousLinearEquivInverseData
     (W : GibbsSouriauGramAnalyticWitness Orbit Θ Feature) :
@@ -957,9 +903,9 @@ noncomputable def toLegendreContinuousLinearEquivInverseData
 
 -- theorem-class: bridge
 /--
-The analytic Gibbs-Souriau property discharges the previously prose-only
+The analytic Gibbs-Souriau witness discharges the previously prose-only
 partition, first-variation, second-variation, Gram, and covariance claims at
-the property point.
+the witness point.
 -/
 @[rep_depth transport]
 theorem integral_covariance_gram_legendre_packet
@@ -1355,21 +1301,6 @@ theorem fisher_hessian_eq_covariance (β : LieAlg) :
   C.fisher_eq_covariance β
 
 -- theorem-class: bridge
-/--
-The Massieu second variation is the moment covariance after identifying the
-intermediate Fisher/Hessian readout.  This is the finite algebraic
-composition used by concrete orbit models to pass from the potential to the
-covariance form.
--/
-@[rep_depth transport]
-theorem massieu_hessian_eq_moment_covariance (β : LieAlg) :
-    C.massieuHessian β = C.momentCovariance β := by
-  calc
-    C.massieuHessian β = C.fisherHessian β :=
-      congrFun C.second_variation_eq_fisher_proof β
-    _ = C.momentCovariance β := C.fisher_eq_covariance β
-
--- theorem-class: bridge
 /-- Fisher symmetry in the full coadjoint-orbit Hessian interface. -/
 @[rep_depth transport]
 theorem fisher_hessian_symmetric (β : LieAlg) (X Y : Tangent) :
@@ -1547,7 +1478,7 @@ variable
 
 -- theorem-class: bridge
 /--
-The smooth Legendre property supplies the actual two-sided inverse laws for the
+The smooth Legendre witness supplies the actual two-sided inverse laws for the
 temperature/moment Hessian pair.
 -/
 @[rep_depth thermo]
@@ -1561,7 +1492,7 @@ theorem two_sided_inverse_laws :
 -- theorem-class: bridge
 /--
 Discharge the Souriau infinite-context inverse-Fisher readout equality from a
-smooth Legendre inverse-Hessian property.
+smooth Legendre inverse-Hessian witness.
 -/
 @[rep_depth thermo]
 theorem legendre_entropy_hessian_eq_inverse_fisher_at
@@ -2316,7 +2247,7 @@ attribute [terminal] fisher_onsager_metriplectic_constructive_proof_packet
 /--
 Full analytic-to-metriplectic packet.
 
-This composes the explicit Gibbs-Souriau analytic property
+This composes the explicit Gibbs-Souriau analytic witness
 (`partition = integral`, first variation, second variation, Gram Fisher, and
 centered-moment covariance) with the already-owned infinite
 Legendre/Gram/square-dissipation theorem.  The result is still
@@ -2449,7 +2380,7 @@ attribute [infrastructure] operatorial_metric_gate_from_regular_cone
 -- theorem-class: bridge
 /--
 Square-response operatorial gate for the full coadjoint-orbit theorem
-interface.  This avoids a naked PSD property when the concrete operator model
+interface.  This avoids a naked PSD hypothesis when the concrete operator model
 proves the two diagonal responses are squares and the mixed response vanishes.
 -/
 @[rep_depth transport]

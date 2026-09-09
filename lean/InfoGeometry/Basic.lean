@@ -15,6 +15,7 @@ enabling seamless integration with Mathlib's `Measure` and `ProbabilityMeasure` 
 ## Main results
 - `FinProb`: Alias for `PMF α`, the canonical discrete probability law.
 - `potential`: Information-geometric potential defined as the negative log-likelihood ratio.
+- `kl_div`: backward-compatible top-level wrapper for `InfoGeometry.KL.kl_div`.
 -/
 
 namespace InfoGeometry
@@ -105,10 +106,16 @@ theorem potential_smul_right_ae
   simpa [potential, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
     congrArg (fun t : ℝ => -t) hx
 
+/-- Backward-compatible top-level wrapper for `InfoGeometry.KL.kl_div`. -/
+noncomputable abbrev kl_div
+    {α : Type*} [MeasurableSpace α]
+    (μ ν : MeasureTheory.Measure α) : ℝ≥0∞ :=
+  InfoGeometry.KL.kl_div μ ν
+
 /-- Backward-compatible top-level finite wrapper over the canonical measure KL surface. -/
 noncomputable def fin_kl_div
     {α : Type*} [MeasurableSpace α] (p q : FinProb α) : ℝ≥0∞ :=
-  InfoGeometry.KL.kl_div p.toMeasure q.toMeasure
+  kl_div p.toMeasure q.toMeasure
 
 /-- Discrete convenience wrapper for the potential. -/
 noncomputable def fin_potential

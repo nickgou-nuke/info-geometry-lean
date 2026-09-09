@@ -14,14 +14,9 @@ namespace ChiralityPseudoscalar
   The Chirality Operator γ₅ / Pseudoscalar / Cuntz Parity η.
   It is a linear map that squares to the identity.
 -/
-abbrev ChiralityOperator (V : Type) [AddCommGroup V] [Module ℝ V] :=
-  {gamma5 : V →ₗ[ℝ] V // gamma5 ∘ₗ gamma5 = LinearMap.id}
-
-abbrev ChiralityOperator.gamma5 {V : Type} [AddCommGroup V] [Module ℝ V]
-    (op : ChiralityOperator V) : V →ₗ[ℝ] V := op.1
-
-abbrev ChiralityOperator.sq_eq_id {V : Type} [AddCommGroup V] [Module ℝ V]
-    (op : ChiralityOperator V) : op.gamma5 ∘ₗ op.gamma5 = LinearMap.id := op.2
+structure ChiralityOperator (V : Type) [AddCommGroup V] [Module ℝ V] where
+  gamma5 : V →ₗ[ℝ] V
+  sq_eq_id : gamma5 ∘ₗ gamma5 = LinearMap.id
 
 variable {V : Type} [AddCommGroup V] [Module ℝ V]
 

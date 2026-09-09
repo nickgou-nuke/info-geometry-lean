@@ -33,7 +33,7 @@ theorem stateSpaceBasepoint_mem (n : ℕ) :
   refine ⟨1, ?_⟩
   simp [stateSpaceBasepoint]
 
-/-- The finite interface state space is nonempty, with basepoint `x₀`. -/
+/-- The finite socket state space is nonempty, witnessed by the basepoint. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
   exact ⟨stateSpaceBasepoint n, stateSpaceBasepoint_mem n⟩
 

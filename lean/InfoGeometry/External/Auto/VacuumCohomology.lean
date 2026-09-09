@@ -13,18 +13,10 @@ namespace VacuumCohomology
 
 /-- Cognitive state space modeled as a real vector space. 
 We represent the DAG node state geometrically. -/
-abbrev DAGNode (V : Type*) [AddCommGroup V] [Module ℝ V] :=
-  V × ℝ × ℝ
-
-namespace DAGNode
-
-variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-
-def state (node : DAGNode V) : V := node.1
-def winding_number (node : DAGNode V) : ℝ := node.2.1
-def entropy (node : DAGNode V) : ℝ := node.2.2
-
-end DAGNode
+structure DAGNode (V : Type*) [AddCommGroup V] [Module ℝ V] where
+  state : V
+  winding_number : ℝ
+  entropy : ℝ
 
 /-- Boundary Operator ∂: Cohomological boundary. We model a 2-term complex V → V. -/
 structure BoundaryOperator (V : Type*) [AddCommGroup V] [Module ℝ V] where
@@ -94,6 +86,16 @@ theorem corriolis_force_balance (M : MetriplecticTensor V) (v : V) (ω : ℝ) :
   have h_zero : M.poisson v v = 0 := by linarith
   rw [h_zero]
   ring
+
+/-- Synthesis Theorem: Vacuum is the cohomological foundation. 
+All boundaries in the complex vanish when properly projected, and inherently fall into the vacuum state. -/
+theorem vacuum_is_cohomological_foundation (bnd : BoundaryOperator V) :
+    (0 ∈ vacuum_state bnd) ∧
+    (∀ v : V, bnd.d (bnd.d v) = 0) := by
+  constructor
+  · exact Submodule.zero_mem (vacuum_state bnd)
+  · intro v
+    exact boundary_squared_vanishes bnd v
 
 end VacuumCohomology
 end noncomputable section

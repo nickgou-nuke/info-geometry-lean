@@ -36,17 +36,10 @@ abbrev ZornMatrix := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
 --===============================================================
 
 /-- Nuclear spin (half-integer values) -/
-abbrev NuclearSpin := {twoJ : ℕ // 0 < twoJ}
-
-namespace NuclearSpin
-
-abbrev twoJ (J : NuclearSpin) : ℕ :=
-  J.1
-
-abbrev nonneg (J : NuclearSpin) : J.1 > 0 :=
-  J.2
-
-end NuclearSpin
+structure NuclearSpin where
+  twoJ : ℕ  -- 2*J to keep it integer
+  nonneg : twoJ > 0
+  deriving Repr
 
 /-- Coulomb Energy Difference (CED) measurement -/
 structure CEDMeasurement where

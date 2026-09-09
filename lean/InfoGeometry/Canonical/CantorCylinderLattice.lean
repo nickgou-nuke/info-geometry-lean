@@ -28,21 +28,24 @@ namespace InfoGeometry.Canonical.CantorCylinderLattice
 
 /-! ## 1. Cantor cylinder type -/
 
-/-- The set of all level-n cylinder sets is `Set (Fin n → Bool)`.
+/-- Binary words of length `n`, indexing level-n Cantor cylinders. -/
+abbrev BinaryWord (n : ℕ) := Fin n → Bool
+
+/-- The set of all level-n cylinder sets is `Set (BinaryWord n)`.
 
 This inherits `BooleanAlgebra` from `Set.instBooleanAlgebra`. -/
-example (n : ℕ) : BooleanAlgebra (Set (Fin n → Bool)) := inferInstance
+example (n : ℕ) : BooleanAlgebra (Set (BinaryWord n)) := inferInstance
 
 /-- The set of all level-n cylinder sets is a `CompleteLattice`. -/
-example (n : ℕ) : CompleteLattice (Set (Fin n → Bool)) := inferInstance
+example (n : ℕ) : CompleteLattice (Set (BinaryWord n)) := inferInstance
 
 /-! ## 2. Singleton cylinders as atoms -/
 
 /-- The singleton cylinder set for a given binary word. -/
-def cylinder (n : ℕ) (w : Fin n → Bool) : Set (Fin n → Bool) := {w}
+def cylinder (n : ℕ) (w : BinaryWord n) : Set (BinaryWord n) := {w}
 
 /-- Two distinct words give disjoint cylinders. -/
-theorem cylinder_disjoint {n : ℕ} {w w' : Fin n → Bool}
+theorem cylinder_disjoint {n : ℕ} {w w' : BinaryWord n}
     (h : w ≠ w') :
     cylinder n w ⊓ cylinder n w' = ⊥ := by
   simp only [cylinder, Set.bot_eq_empty]
@@ -52,33 +55,33 @@ theorem cylinder_disjoint {n : ℕ} {w w' : Fin n → Bool}
 
 /-- The union of all singleton cylinders at level n is the full set. -/
 theorem cylinder_iSup_eq_top (n : ℕ) :
-    ⨆ w : Fin n → Bool, cylinder n w = ⊤ := by
+    ⨆ w : BinaryWord n, cylinder n w = ⊤ := by
   ext x
   simp [cylinder, Set.mem_iUnion]
 
 /-! ## 3. Refinement: parent-child relationship -/
 
 /-- Extend a word of length `n` to length `n+1` by appending a bit. -/
-def extendWord {n : ℕ} (w : Fin n → Bool) (b : Bool) : (Fin (n + 1) → Bool) :=
+def extendWord {n : ℕ} (w : BinaryWord n) (b : Bool) : BinaryWord (n + 1) :=
   Fin.snoc w b
 
 /-- The left child word (appending `false`). -/
-def leftChild {n : ℕ} (w : Fin n → Bool) : (Fin (n + 1) → Bool) :=
+def leftChild {n : ℕ} (w : BinaryWord n) : BinaryWord (n + 1) :=
   extendWord w false
 
 /-- The right child word (appending `true`). -/
-def rightChild {n : ℕ} (w : Fin n → Bool) : (Fin (n + 1) → Bool) :=
+def rightChild {n : ℕ} (w : BinaryWord n) : BinaryWord (n + 1) :=
   extendWord w true
 
 /-- A level-(n+1) word restricts to a level-n word by dropping the last bit. -/
-def truncateWord {n : ℕ} (w : (Fin (n + 1) → Bool)) : Fin n → Bool :=
+def truncateWord {n : ℕ} (w : BinaryWord (n + 1)) : BinaryWord n :=
   Fin.init w
 
-@[simp] theorem truncateWord_leftChild {n : ℕ} (w : Fin n → Bool) :
+@[simp] theorem truncateWord_leftChild {n : ℕ} (w : BinaryWord n) :
     truncateWord (leftChild w) = w := by
   simp [truncateWord, leftChild, extendWord]
 
-@[simp] theorem truncateWord_rightChild {n : ℕ} (w : Fin n → Bool) :
+@[simp] theorem truncateWord_rightChild {n : ℕ} (w : BinaryWord n) :
     truncateWord (rightChild w) = w := by
   simp [truncateWord, rightChild, extendWord]
 
@@ -94,13 +97,13 @@ theorem rightChild_injective {n : ℕ} :
   have htrunc := congrArg truncateWord h
   simpa using htrunc
 
-@[simp] theorem leftChild_ne_rightChild {n : ℕ} (w₁ w₂ : Fin n → Bool) :
+@[simp] theorem leftChild_ne_rightChild {n : ℕ} (w₁ w₂ : BinaryWord n) :
     leftChild w₁ ≠ rightChild w₂ := by
   intro h
   have hlast := congrFun h (Fin.last n)
   simp [leftChild, rightChild, extendWord] at hlast
 
-@[simp] theorem rightChild_ne_leftChild {n : ℕ} (w₁ w₂ : Fin n → Bool) :
+@[simp] theorem rightChild_ne_leftChild {n : ℕ} (w₁ w₂ : BinaryWord n) :
     rightChild w₁ ≠ leftChild w₂ := by
   intro h
   exact leftChild_ne_rightChild w₂ w₁ h.symm
@@ -109,9 +112,9 @@ theorem rightChild_injective {n : ℕ} :
 
 This is the fundamental refinement identity:
   `e_{n,w} = e_{n+1,w0} ∨ e_{n+1,w1}` -/
-theorem cylinder_refinement {n : ℕ} (w : Fin n → Bool) :
+theorem cylinder_refinement {n : ℕ} (w : BinaryWord n) :
     cylinder (n + 1) (leftChild w) ⊔ cylinder (n + 1) (rightChild w)
-      = {v : (Fin (n + 1) → Bool) | truncateWord v = w} := by
+      = {v : BinaryWord (n + 1) | truncateWord v = w} := by
   ext v
   constructor
   · intro hv
@@ -137,24 +140,12 @@ theorem cylinder_refinement {n : ℕ} (w : Fin n → Bool) :
 /-! ## 4. Level-n partition -/
 
 /-- The level-n partition: the set of all singleton cylinders at level n. -/
-def levelPartition (n : ℕ) : Set (Set (Fin n → Bool)) :=
+def levelPartition (n : ℕ) : Set (Set (BinaryWord n)) :=
   Set.range (cylinder n)
 
-theorem cylinder_injective {n : ℕ} :
-    Function.Injective (@cylinder n) := by
-  intro w v h
-  simpa [cylinder] using h
-
-theorem levelPartition_natCard (n : ℕ) :
-    Nat.card (levelPartition n) = 2 ^ n := by
-  change Nat.card (Set.range (cylinder n)) = 2 ^ n
-  rw [← Nat.card_congr
-    (Equiv.ofInjective (cylinder n) (cylinder_injective (n := n)))]
-  simp
-
 /-- Every word belongs to exactly one cylinder in the partition. -/
-theorem mem_unique_cylinder {n : ℕ} (v : Fin n → Bool) :
-    ∃! w : Fin n → Bool, v ∈ cylinder n w := by
+theorem mem_unique_cylinder {n : ℕ} (v : BinaryWord n) :
+    ∃! w : BinaryWord n, v ∈ cylinder n w := by
   exact ⟨v, rfl, fun w hw => hw.symm⟩
 
 /-! ## 5. Idempotence of cylinder indicators -/
@@ -163,13 +154,13 @@ theorem mem_unique_cylinder {n : ℕ} (v : Fin n → Bool) :
 
 For central idempotents in a commutative algebra, `e² = e` translates to
 `e ∩ e = e` in the set-lattice model. -/
-theorem cylinder_idempotent {n : ℕ} (w : Fin n → Bool) :
+theorem cylinder_idempotent {n : ℕ} (w : BinaryWord n) :
     cylinder n w ⊓ cylinder n w = cylinder n w := by
   simp [cylinder]
 
 /-- Complementarity: the complement of a cylinder is the union of all other cylinders. -/
-theorem cylinder_compl {n : ℕ} (w : Fin n → Bool) :
-    (cylinder n w)ᶜ = {v : Fin n → Bool | v ≠ w} := by
+theorem cylinder_compl {n : ℕ} (w : BinaryWord n) :
+    (cylinder n w)ᶜ = {v : BinaryWord n | v ≠ w} := by
   ext v
   simp [cylinder]
 
@@ -177,23 +168,23 @@ theorem cylinder_compl {n : ℕ} (w : Fin n → Bool) :
 
 /-- Characteristic function of a finite cylinder-sector set. -/
 noncomputable def setIndicator (R : Type*) [Zero R] [One R] {n : ℕ}
-    (S : Set (Fin n → Bool)) : (Fin n → Bool) → R := by
+    (S : Set (BinaryWord n)) : BinaryWord n → R := by
   classical
   exact fun v => if v ∈ S then 1 else 0
 
 @[simp] theorem setIndicator_apply_mem {R : Type*} [Zero R] [One R]
-    {n : ℕ} {S : Set (Fin n → Bool)} {v : Fin n → Bool} (hv : v ∈ S) :
+    {n : ℕ} {S : Set (BinaryWord n)} {v : BinaryWord n} (hv : v ∈ S) :
     setIndicator R S v = 1 := by
   simp [setIndicator, hv]
 
 @[simp] theorem setIndicator_apply_not_mem {R : Type*} [Zero R] [One R]
-    {n : ℕ} {S : Set (Fin n → Bool)} {v : Fin n → Bool} (hv : v ∉ S) :
+    {n : ℕ} {S : Set (BinaryWord n)} {v : BinaryWord n} (hv : v ∉ S) :
     setIndicator R S v = 0 := by
   simp [setIndicator, hv]
 
 /-- Characteristic functions of finite sector sets are idempotents. -/
 theorem setIndicator_idempotent {R : Type*} [MonoidWithZero R]
-    {n : ℕ} (S : Set (Fin n → Bool)) :
+    {n : ℕ} (S : Set (BinaryWord n)) :
     IsIdempotentElem (setIndicator R S) := by
   rw [IsIdempotentElem]
   funext v
@@ -201,14 +192,14 @@ theorem setIndicator_idempotent {R : Type*} [MonoidWithZero R]
 
 /-- Meet of finite sector sets maps to multiplication of characteristic idempotents. -/
 theorem setIndicator_inf_eq_mul {R : Type*} [MonoidWithZero R]
-    {n : ℕ} (S T : Set (Fin n → Bool)) :
+    {n : ℕ} (S T : Set (BinaryWord n)) :
     setIndicator R (S ⊓ T) = setIndicator R S * setIndicator R T := by
   funext v
   by_cases hS : v ∈ S <;> by_cases hT : v ∈ T <;> simp [setIndicator, hS, hT]
 
 /-- Join of finite sector sets maps to the Boolean idempotent formula `e + f - e*f`. -/
 theorem setIndicator_sup_eq_add_sub_mul {R : Type*} [Ring R]
-    {n : ℕ} (S T : Set (Fin n → Bool)) :
+    {n : ℕ} (S T : Set (BinaryWord n)) :
     setIndicator R (S ⊔ T) =
       setIndicator R S + setIndicator R T - setIndicator R S * setIndicator R T := by
   funext v
@@ -216,7 +207,7 @@ theorem setIndicator_sup_eq_add_sub_mul {R : Type*} [Ring R]
 
 /-- Complement of a finite sector set maps to `1 - e`. -/
 theorem setIndicator_compl_eq_one_sub {R : Type*} [Ring R]
-    {n : ℕ} (S : Set (Fin n → Bool)) :
+    {n : ℕ} (S : Set (BinaryWord n)) :
     setIndicator R Sᶜ = 1 - setIndicator R S := by
   funext v
   by_cases hS : v ∈ S <;> simp [setIndicator, hS]
@@ -224,51 +215,38 @@ theorem setIndicator_compl_eq_one_sub {R : Type*} [Ring R]
 /-- Empty sector has zero characteristic idempotent. -/
 @[simp] theorem setIndicator_empty {R : Type*} [Zero R] [One R]
     {n : ℕ} :
-    setIndicator R (∅ : Set (Fin n → Bool)) = 0 := by
-  funext v
-  simp [setIndicator]
-
-@[simp] theorem setIndicator_univ {R : Type*} [Zero R] [One R]
-    {n : ℕ} :
-    setIndicator R (Set.univ : Set (Fin n → Bool)) = 1 := by
+    setIndicator R (∅ : Set (BinaryWord n)) = 0 := by
   funext v
   simp [setIndicator]
 
 /-- Disjoint sector sets have orthogonal characteristic idempotents. -/
 theorem setIndicator_mul_eq_zero_of_inf_eq_bot {R : Type*} [MonoidWithZero R]
-    {n : ℕ} {S T : Set (Fin n → Bool)} (h : S ⊓ T = ⊥) :
+    {n : ℕ} {S T : Set (BinaryWord n)} (h : S ⊓ T = ⊥) :
     setIndicator R S * setIndicator R T = 0 := by
   rw [← setIndicator_inf_eq_mul, h]
   simp
 
 /-- Characteristic function of a singleton Cantor cylinder. -/
 noncomputable def cylinderIndicator (R : Type*) [Zero R] [One R]
-    {n : ℕ} (w : Fin n → Bool) : (Fin n → Bool) → R :=
+    {n : ℕ} (w : BinaryWord n) : BinaryWord n → R :=
   setIndicator R (cylinder n w)
-
-theorem sum_cylinderIndicator_eq_one {R : Type*} [Ring R]
-    {n : ℕ} :
-    (∑ w : Fin n → Bool, cylinderIndicator R w) = 1 := by
-  classical
-  funext v
-  simp [cylinderIndicator, setIndicator, cylinder]
 
 /-- Cylinder characteristic functions are idempotents in the finite function algebra. -/
 theorem cylinderIndicator_idempotent {R : Type*} [MonoidWithZero R]
-    {n : ℕ} (w : Fin n → Bool) :
+    {n : ℕ} (w : BinaryWord n) :
     IsIdempotentElem (cylinderIndicator R w) :=
   setIndicator_idempotent (R := R) (cylinder n w)
 
 /-- Distinct Cantor cylinder idempotents are orthogonal. -/
 theorem cylinderIndicator_mul_eq_zero_of_ne {R : Type*} [MonoidWithZero R]
-    {n : ℕ} {w w' : Fin n → Bool} (h : w ≠ w') :
+    {n : ℕ} {w w' : BinaryWord n} (h : w ≠ w') :
     cylinderIndicator R w * cylinderIndicator R w' = 0 := by
   exact setIndicator_mul_eq_zero_of_inf_eq_bot (R := R) (cylinder_disjoint h)
 
 /-- Algebraic characteristic-function form of the Cantor refinement rule. -/
 theorem cylinderIndicator_refinement {R : Type*} [Ring R]
-    {n : ℕ} (w : Fin n → Bool) :
-    setIndicator R ({v : (Fin (n + 1) → Bool) | truncateWord v = w}) =
+    {n : ℕ} (w : BinaryWord n) :
+    setIndicator R ({v : BinaryWord (n + 1) | truncateWord v = w}) =
       cylinderIndicator R (leftChild w) + cylinderIndicator R (rightChild w) := by
   have hchildren :
       cylinder (n + 1) (leftChild w) ⊓ cylinder (n + 1) (rightChild w) = ⊥ := by
@@ -277,7 +255,7 @@ theorem cylinderIndicator_refinement {R : Type*} [Ring R]
     have hlast := congr_fun h (Fin.last n)
     simp [leftChild, rightChild, extendWord] at hlast
   calc
-    setIndicator R ({v : (Fin (n + 1) → Bool) | truncateWord v = w})
+    setIndicator R ({v : BinaryWord (n + 1) | truncateWord v = w})
         = setIndicator R
             (cylinder (n + 1) (leftChild w) ⊔ cylinder (n + 1) (rightChild w)) := by
           rw [cylinder_refinement]
@@ -290,34 +268,10 @@ theorem cylinderIndicator_refinement {R : Type*} [Ring R]
           rw [setIndicator_mul_eq_zero_of_inf_eq_bot (R := R) hchildren]
           simp [cylinderIndicator]
 
-/- The two refined cylinder indicators form an orthogonal decomposition. -/
-theorem cylinderIndicator_refinement_orthogonal_decomposition
-    {R : Type*} [Ring R]
-    {n : ℕ} (w : Fin n → Bool) :
-    let left := cylinderIndicator R (leftChild w)
-    let right := cylinderIndicator R (rightChild w)
-    left * right = 0 ∧ right * left = 0 ∧
-      setIndicator R {v : (Fin (n + 1) → Bool) | truncateWord v = w} =
-        left + right := by
-  dsimp
-  have hne : leftChild w ≠ rightChild w := by
-    intro h
-    have hlast := congr_fun h (Fin.last n)
-    simp [leftChild, rightChild, extendWord] at hlast
-  have hzero :
-      cylinderIndicator R (leftChild w) *
-          cylinderIndicator R (rightChild w) = 0 :=
-    cylinderIndicator_mul_eq_zero_of_ne hne
-  have hzero' :
-      cylinderIndicator R (rightChild w) *
-          cylinderIndicator R (leftChild w) = 0 := by
-    exact cylinderIndicator_mul_eq_zero_of_ne (Ne.symm hne)
-  exact ⟨hzero, hzero', cylinderIndicator_refinement w⟩
-
 /-! ## 7. Completeness -/
 
 /-- The cylinder lattice at level n is a complete Boolean algebra. -/
-instance completeBoolAlgebra (n : ℕ) : CompleteBooleanAlgebra (Set (Fin n → Bool)) :=
+instance completeBoolAlgebra (n : ℕ) : CompleteBooleanAlgebra (Set (BinaryWord n)) :=
   inferInstance
 
 end InfoGeometry.Canonical.CantorCylinderLattice

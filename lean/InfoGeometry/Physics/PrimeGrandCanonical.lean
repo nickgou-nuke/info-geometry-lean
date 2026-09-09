@@ -29,51 +29,26 @@ theorem single_mode_partition_mu_zero (p_neg_beta : ℝ) :
   dsimp [single_mode_partition]
   ring_nf
 
-theorem single_mode_partition_mul_denominator
-    (p_neg_beta z : ℝ) (hden : 1 - z * p_neg_beta ≠ 0) :
-    (1 - z * p_neg_beta) * single_mode_partition p_neg_beta z = 1 := by
-  unfold single_mode_partition
-  field_simp
-
-theorem single_mode_partition_ne_zero
-    (p_neg_beta z : ℝ) (hden : 1 - z * p_neg_beta ≠ 0) :
-    single_mode_partition p_neg_beta z ≠ 0 := by
-  unfold single_mode_partition
-  exact div_ne_zero one_ne_zero hden
-
-@[simp] theorem single_mode_partition_zero_fugacity
-    (p_neg_beta : ℝ) :
-    single_mode_partition p_neg_beta 0 = 1 := by
-  simp [single_mode_partition]
-
-@[simp] theorem single_mode_grand_potential_zero_fugacity
-    (p_neg_beta : ℝ) :
-    single_mode_grand_potential p_neg_beta 0 = 0 := by
-  simp [single_mode_grand_potential]
-
 /-- 
   The Modular Hamiltonian generator H for the Bost-Connes KMS state.
   H|n> = ln(n)|n>
 -/
-abbrev ModularHamiltonian :=
-  { f : ℝ → ℝ // ∀ n > 0, f n = Real.log n }
+structure ModularHamiltonian where
+  eigenvalue : ℝ → ℝ
+  is_log : ∀ n > 0, eigenvalue n = Real.log n
 
-namespace ModularHamiltonian
+/-- The trace partition of the total Hamiltonian recovers a supplied zeta-product
+readout.  This is an explicit finite equality socket, not a vacuous placeholder
+for the infinite Euler product theorem. -/
+def total_partition_zeta (β : ℝ) (H : ModularHamiltonian)
+    (tracePartition zetaProduct : ℝ) : Prop :=
+  (∀ n > 0, H.eigenvalue n = Real.log n) ∧ tracePartition = zetaProduct
 
-abbrev eigenvalue (H : ModularHamiltonian) : ℝ → ℝ :=
-  H.1
-
-theorem is_log (H : ModularHamiltonian) :
-    ∀ n > 0, H.eigenvalue n = Real.log n :=
-  H.2
-
-end ModularHamiltonian
-
-/-- The modular Hamiltonian eigenvalue law and a finite trace readout equality. -/
-theorem modularHamiltonian_trace_readout_of_eq (H : ModularHamiltonian)
+/-- Constructor/readout for the finite zeta partition socket. -/
+theorem total_partition_zeta_of_eq (β : ℝ) (H : ModularHamiltonian)
     {tracePartition zetaProduct : ℝ}
     (h : tracePartition = zetaProduct) :
-    (∀ n > 0, H.eigenvalue n = Real.log n) ∧ tracePartition = zetaProduct :=
+    total_partition_zeta β H tracePartition zetaProduct :=
   ⟨H.is_log, h⟩
 
 end InfoGeometry

@@ -122,13 +122,15 @@ def chiralPoleOrbitSpace : ChiralPole → Bool :=
 
 /-- Unit Weyl gauge on the two-pole orbit. -/
 def chiralPoleUnitWeylGauge :
-    WeylKMSGromovWittenCounts.WeylGaugeWeight ChiralPole :=
-  ⟨fun _ => 1, by intro p; norm_num⟩
+    WeylKMSGromovWittenCounts.WeylGaugeWeight ChiralPole where
+  weight := fun _ => 1
+  positive := by intro p; norm_num
 
 /-- Unit KMS state on the two-pole orbit. -/
 def chiralPoleUnitKMSState :
-    WeylKMSGromovWittenCounts.KMSOrbitState ChiralPole :=
-  ⟨fun _ => 1, by intro p; norm_num⟩
+    WeylKMSGromovWittenCounts.KMSOrbitState ChiralPole where
+  expect := fun _ => 1
+  nonnegative := by intro p; norm_num
 
 /-- The Möbius `e₊/e₋` signed zero-mode count cancels exactly. -/
 theorem moebius_chiral_pole_weightedZeroModeCount_zero :

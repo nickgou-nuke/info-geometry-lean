@@ -16,7 +16,7 @@ u₀ ↦ u₁ ↦ u₂ ↦ u₀,
 v₀ ↦ v₁ ↦ v₂ ↦ v₀.
 ```
 
-This is a concrete `G₂(2)`-type automorphism property for the split-octonion
+This is a concrete `G₂(2)`-type automorphism witness for the split-octonion
 multiplication table.  It is not a group-classification theorem saying that the
 full automorphism group is `G₂(2)`, and it does not assert any `SU(3)` stabilizer
 or particle-classification theorem.
@@ -37,16 +37,6 @@ theorem rho_ePlus : rho ePlus = ePlus := by
 /-- `rho` fixes the negative diagonal idempotent. -/
 theorem rho_eMinus : rho eMinus = eMinus := by
   exact Eq.refl eMinus
-
-/-- The cyclic map preserves the additive zero. -/
-@[simp] theorem rho_zero : rho (0 : SplitOct) = 0 := by
-  rfl
-
-/-- The cyclic map is additive on the explicit Zorn carrier. -/
-theorem rho_add (X Y : SplitOct) : rho (X + Y) = rho X + rho Y := by
-  cases X
-  cases Y
-  rfl
 
 /-- `rho` cyclically permutes the upper `1 + 3` vector slots. -/
 theorem rho_upper_slots : rho up0 = up1 ∧ rho up1 = up2 ∧ rho up2 = up0 := by

@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 
-
 /-
 InfoGeometry/Arithmetic/PrimeBitLattice.lean
 
@@ -27,8 +26,6 @@ open Finset
 
 noncomputable section
 
-
-
 /-! ## 1. Data model -/
 
 /-- A finite family of prime labels, explicitly packaged for transport. -/
@@ -50,7 +47,6 @@ def PrimeBitState (L : PrimeBitLattice) :=
 def primeBitEnergy (_L : PrimeBitLattice) (ε : Finset ℕ) : ℝ :=
   Finset.sum ε (fun p => Real.log p)
 
-/-- The sum of the natural logarithms of a finite set of primes is non-negative. -/
 lemma primeBitEnergy_nonneg (L : PrimeBitLattice) (ε : PrimeBitState L) :
     0 ≤ primeBitEnergy L ε.1 := by
   unfold primeBitEnergy
@@ -135,14 +131,12 @@ theorem primeBitFermionicPartition_eq_factorizedRealRpow
 )
       rw [Real.exp_log hp0]
 
-/-- The sum over subsets of `exp(-β * sum log p)` is strictly positive. -/
 lemma primeBitFermionicPartition_pos (L : PrimeBitLattice) (β : ℝ) :
     0 < primeBitFermionicPartition L β := by
   rw [primeBitFermionicPartition_eq_factorizedProduct]
   exact Finset.prod_pos (fun p _hp => by
     exact add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (Real.exp_pos _)))
 
-/-- The sum over subsets of `exp(-β * sum log p)` is non-zero. -/
 lemma primeBitFermionicPartition_ne_zero (L : PrimeBitLattice) (β : ℝ) :
     primeBitFermionicPartition L β ≠ 0 :=
   (primeBitFermionicPartition_pos L β).ne'

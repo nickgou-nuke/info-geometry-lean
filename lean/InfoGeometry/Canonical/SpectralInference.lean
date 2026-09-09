@@ -84,7 +84,7 @@ end SpectralTriple
 /-! ### 3. Drazin Regularization and Spectral Action -/
 
 /--
-A property-level regularized spectral triple.
+A witness-level regularized spectral triple.
 The Dirac package is equipped with a chosen Drazin-regularization candidate `DD`,
 but no certification is stored in this compatibility layer.
 -/
@@ -123,7 +123,7 @@ namespace CertifiedRegularizedSpectralTriple
 
 variable (CRST : CertifiedRegularizedSpectralTriple E)
 
-/-- Forgetful map from the property layer to the property-level regularized package. -/
+/-- Forgetful map from the certified layer to the witness-level regularized package. -/
 abbrev toRegularizedSpectralTriple : RegularizedSpectralTriple E :=
   { toSpectralTriple := CRST.toSpectralTriple
     DD := CRST.DD
@@ -135,16 +135,16 @@ noncomputable def spectralAction (Λ : ℝ) : ℝ :=
 
 /-
 The following projector lemmas are purely algebraic and do not use the ambient
-finite-dimensional property needed by the global constructors.
+finite-dimensional hypothesis needed by the global constructors.
 -/
 omit [FiniteDimensional ℝ E] in
-/-- The property Drazin projector is idempotent. -/
+/-- The certified Drazin projector is idempotent. -/
 theorem spectralProjector_idempotent :
     IsDrazinInverse.projection CRST.D CRST.DD * IsDrazinInverse.projection CRST.D CRST.DD
       = IsDrazinInverse.projection CRST.D CRST.DD := by
   simpa using IsDrazinInverse.projection_is_idempotent CRST.hDrazin
 
-/-- Global finite-dimensional constructor for the property regularized layer. -/
+/-- Global finite-dimensional constructor for the certified regularized layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :
     ∃ CRST : CertifiedRegularizedSpectralTriple E, CRST.toSpectralTriple = ST := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
@@ -156,7 +156,7 @@ end CertifiedRegularizedSpectralTriple
 /-! ### 4. Chiral Unification -/
 
 /--
-A property-level chiral spectral triple.
+A witness-level chiral spectral triple.
 The Dirac package is equipped with chosen Drazin- and Moore-Penrose-style
 regularization candidates, but no certification is stored in this
 compatibility layer.
@@ -202,7 +202,7 @@ namespace CertifiedChiralSpectralTriple
 
 variable (CCST : CertifiedChiralSpectralTriple E)
 
-/-- Adapter from the property chiral spectral surface to the canonical inverse kernel. -/
+/-- Adapter from the certified chiral spectral surface to the canonical inverse kernel. -/
 abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel E :=
   { toInverseKernel := { A := CCST.D, A_D := CCST.DD, A_MP := CCST.DP }
     drazinIndex := CCST.drazinIndex
@@ -222,7 +222,7 @@ noncomputable abbrev chiralAnomalyOperator : E →L[ℝ] E :=
   spectralProjector CCST * metricProjector CCST
     - metricProjector CCST * spectralProjector CCST
 
-/-- Forgetful map from the property layer to the property-level chiral package. -/
+/-- Forgetful map from the certified layer to the witness-level chiral package. -/
 abbrev toChiralSpectralTriple : ChiralSpectralTriple E :=
   { toSpectralTriple := CCST.toSpectralTriple
     DD := CCST.DD
@@ -237,7 +237,7 @@ noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
   ChiralSpectralTriple.chiralSpectralAction CCST.toChiralSpectralTriple Λ
 
 omit [FiniteDimensional ℝ E] in
-/-- The property Drazin spectral projector is idempotent. -/
+/-- The certified Drazin spectral projector is idempotent. -/
 theorem spectralProjector_idempotent :
     IsDrazinInverse.projection CCST.D CCST.DD * IsDrazinInverse.projection CCST.D CCST.DD
       = IsDrazinInverse.projection CCST.D CCST.DD := by
@@ -247,7 +247,7 @@ theorem spectralProjector_idempotent :
       CCST.toCertifiedInverseKernel.spectralProjector_idempotent
 
 omit [FiniteDimensional ℝ E] in
-/-- The property Moore-Penrose left projector is idempotent. -/
+/-- The certified Moore-Penrose left projector is idempotent. -/
 theorem metricProjector_idempotent :
     IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
       * IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
@@ -258,7 +258,7 @@ theorem metricProjector_idempotent :
       CCST.toCertifiedInverseKernel.metricProjector_idempotent
 
 omit [FiniteDimensional ℝ E] in
-/-- The property Moore-Penrose left projector is self-adjoint. -/
+/-- The certified Moore-Penrose left projector is self-adjoint. -/
 theorem metricProjector_star :
     star (IsMoorePenroseInverse.leftProjector CCST.D CCST.DP)
       = IsMoorePenroseInverse.leftProjector CCST.D CCST.DP := by
@@ -268,7 +268,7 @@ theorem metricProjector_star :
       CCST.toCertifiedInverseKernel.metricProjector_star
 
 omit [FiniteDimensional ℝ E] in
-/-- The property chiral anomaly vanishes exactly when the property projectors commute. -/
+/-- The certified chiral anomaly vanishes exactly when the certified projectors commute. -/
 theorem chiralAnomalyOperator_eq_zero_iff_projectors_commute :
     chiralAnomalyOperator CCST = 0 ↔
       spectralProjector CCST * metricProjector CCST
@@ -276,7 +276,7 @@ theorem chiralAnomalyOperator_eq_zero_iff_projectors_commute :
   simp [chiralAnomalyOperator, sub_eq_zero]
 
 omit [FiniteDimensional ℝ E] in
-/-- Commuting property projectors force vanishing property anomaly scale. -/
+/-- Commuting certified projectors force vanishing certified anomaly scale. -/
 theorem epsilon_eq_zero_of_projectors_commute
     (hComm :
       spectralProjector CCST * metricProjector CCST
@@ -301,7 +301,7 @@ theorem epsilon_eq_zero_of_projectors_commute
     InfoGeometry.Canonical.MoorePenrose.epsilon]
   simp [hChi]
 
-/-- Global finite-dimensional constructor for the property chiral layer. -/
+/-- Global finite-dimensional constructor for the certified chiral layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :
     ∃ CCST : CertifiedChiralSpectralTriple E, CCST.toSpectralTriple = ST := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
@@ -332,7 +332,7 @@ namespace InfoSpectralTriple
 
 variable (IST : InfoSpectralTriple E)
 
-/-- Constructor from a lower spectral-root compatibility property. -/
+/-- Constructor from a lower spectral-root compatibility witness. -/
 def ofCompatibility
     (ST : SpectralTriple E)
     (H : HessianGeometry E)

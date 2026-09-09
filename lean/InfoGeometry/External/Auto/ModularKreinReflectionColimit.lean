@@ -96,7 +96,7 @@ variable {R : Type*} [Semiring R]
 
 /-- A very small concrete model: constant stage and identity reflection.
 
-This is not the modular/Krein geometry itself.  It is the minimal property that
+This is not the modular/Krein geometry itself.  It is the minimal witness that
 the abstract tower interface is constructible by an actual Lean object.
 -/
 def trivialKreinTower : KreinTower (R := R) where

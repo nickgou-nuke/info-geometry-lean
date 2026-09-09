@@ -45,7 +45,7 @@ def HasZeroMode (H : EndS (S := S)) : Prop :=
 /-! The operator-level zero-mode proposition is the native existential
 statement: a nonzero vector lies in the kernel. -/
 @[rep_depth operator]
-def OperatorZeroMode
+def OperatorZeroModeWitness
     (H : EndS (S := S)) : Prop :=
   ∃ v : S, H v = 0 ∧ v ≠ 0
 
@@ -168,7 +168,7 @@ noncomputable def toPlus
 end PolarizationOdd
 
 omit [CompleteSpace S] in
-/-- A nontrivial kernel yields an explicit nonzero zero-mode property. -/
+/-- A nontrivial kernel yields an explicit nonzero zero-mode witness. -/
 theorem exists_zeroMode_of_hasZeroMode
     {H : EndS (S := S)}
   (hH : HasZeroMode (S := S) H) :
@@ -178,10 +178,10 @@ theorem exists_zeroMode_of_hasZeroMode
   refine ⟨v, ?_, hv0⟩
   simpa using hv
 
-/-- An operator-level zero-mode property certifies a nontrivial kernel. -/
+/-- An operator-level zero-mode witness certifies a nontrivial kernel. -/
 theorem hasZeroMode_of_operatorZeroModeWitness
     {H : EndS (S := S)}
-    (W : OperatorZeroMode (S := S) H) :
+    (W : OperatorZeroModeWitness (S := S) H) :
     HasZeroMode (S := S) H := by
   rcases W with ⟨v, hv, hv0⟩
   unfold HasZeroMode
@@ -189,10 +189,10 @@ theorem hasZeroMode_of_operatorZeroModeWitness
   refine ⟨v, ?_, hv0⟩
   simpa [LinearMap.mem_ker] using hv
 
-/-- Read the kernel property directly from an operator-level zero-mode packet. -/
+/-- Read the kernel witness directly from an operator-level zero-mode packet. -/
 theorem exists_zeroMode_of_operatorZeroModeWitness
     {H : EndS (S := S)}
-    (W : OperatorZeroMode (S := S) H) :
+    (W : OperatorZeroModeWitness (S := S) H) :
     ∃ v : S, H v = 0 ∧ v ≠ 0 := by
   exact W
 
@@ -249,7 +249,7 @@ theorem hasZeroMode_of_dim_mismatch
 
   exact hdim (le_antisymm hle₁ hle₂)
 
-/-- Explicit property form of `hasZeroMode_of_dim_mismatch`. -/
+/-- Explicit witness form of `hasZeroMode_of_dim_mismatch`. -/
 theorem exists_zeroMode_of_dim_mismatch
     [FiniteDimensional ℝ S]
     (P0 : KPolarization (S := S) M)
@@ -299,7 +299,7 @@ theorem hasZeroMode_conjugate_of_hasZeroMode
   exact hBv_ne hBvZero
 
 /--
-Explicit property form of `hasZeroMode_conjugate_of_hasZeroMode`.
+Explicit witness form of `hasZeroMode_conjugate_of_hasZeroMode`.
 -/
 theorem exists_zeroMode_of_hasZeroMode_conjugate
     (T : RealBogoliubovTransform (S := S) M)
@@ -409,7 +409,7 @@ theorem dim_mismatch_of_topologicalIndexZ2_eq_one
     (chain := chain) hTopo
 
 /--
-Boundary-localized open-chain property: there are nonzero zero modes in both
+Boundary-localized open-chain witness: there are nonzero zero modes in both
 polarization sectors for the concrete Pfaffian-weighted chain operator.
 -/
 def BoundaryLocalizedZeroModePair
@@ -423,21 +423,29 @@ def BoundaryLocalizedZeroModePair
 
 /- The existing existential predicate is the owner; no second proof package is
    introduced for the same pair of zero-mode witnesses. -/
-abbrev BoundaryLocalizedZeroMode
+abbrev BoundaryLocalizedZeroModeWitness
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell) : Prop :=
   BoundaryLocalizedZeroModePair (M := M) (P0 := P0) localOp chain
 
-omit [FiniteDimensional ℝ S] in
-/--
-Forget the polarization support and keep only the plus-sector operator kernel
-property.
--/
-lemma operatorZeroMode_of_boundaryLocalizedPlus
+@[rep_depth krein]
+noncomputable def boundaryLocalizedZeroModeWitnessOfPair
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell)
-    (W : BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain) :
-    OperatorZeroMode
+    (hPair : BoundaryLocalizedZeroModePair (M := M) (P0 := P0) localOp chain) :
+    BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain := by
+  exact hPair
+
+/--
+Forget the polarization support and keep only the plus-sector operator kernel
+witness.
+-/
+@[rep_depth operator]
+noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedPlus
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (W : BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain) :
+    OperatorZeroModeWitness
       (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
   by
@@ -446,16 +454,16 @@ lemma operatorZeroMode_of_boundaryLocalizedPlus
     let hPair2 := Classical.choose_spec hPair1
     exact ⟨Classical.choose W, hPair2.2.2.2.2.1, hPair2.1⟩
 
-omit [FiniteDimensional ℝ S] in
 /--
 Forget the polarization support and keep only the minus-sector operator kernel
-property.
+witness.
 -/
-lemma operatorZeroMode_of_boundaryLocalizedMinus
+@[rep_depth operator]
+noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedMinus
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell)
-    (W : BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain) :
-    OperatorZeroMode
+    (W : BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain) :
+    OperatorZeroModeWitness
       (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
   by
@@ -465,19 +473,19 @@ lemma operatorZeroMode_of_boundaryLocalizedMinus
     exact ⟨Classical.choose hPair1, hPair2.2.2.2.2.2, hPair2.2.1⟩
 
 /--
-Any boundary-localized plus/minus zero-mode property already certifies a
+Any boundary-localized plus/minus zero-mode witness already certifies a
 dimension-agnostic operator zero mode.
 -/
 theorem hasZeroMode_of_boundaryLocalizedZeroModeWitness
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell)
-    (W : BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain) :
+    (W : BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain) :
     HasZeroMode
       (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
   exact hasZeroMode_of_operatorZeroModeWitness
     (S := S)
-    (operatorZeroMode_of_boundaryLocalizedPlus
+    (operatorZeroModeWitnessOfBoundaryLocalizedPlus
       (M := M) (P0 := P0) localOp chain W)
 
 /--
@@ -487,12 +495,12 @@ finite-dimensional argument.
 theorem exists_zeroMode_of_boundaryLocalizedZeroModeWitness
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell)
-    (W : BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain) :
+    (W : BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain) :
     ∃ v : S,
       (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧ v ≠ 0 := by
   exact exists_zeroMode_of_operatorZeroModeWitness
     (S := S)
-    (operatorZeroMode_of_boundaryLocalizedPlus
+    (operatorZeroModeWitnessOfBoundaryLocalizedPlus
       (M := M) (P0 := P0) localOp chain W)
 
 /--
@@ -520,76 +528,8 @@ abbrev SimplifiedBoundaryModel
   (BoundaryLocalizedZeroModePair (M := M) (P0 := P0) localOp chain →
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus)
 
-theorem exists_zeroMode_of_simplifiedBoundaryModel_of_negativePhase
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hNeg : topologicalIndex chain = -1)
-    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    ∃ v : S,
-      (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧
-        v ≠ 0 := by
-  rcases hSimple.1 hNeg with
-    ⟨ψplus, ψminus, hψplus, hψminus, hψplus_mem, hψminus_mem,
-      hψplus_zero, hψminus_zero⟩
-  exact ⟨ψplus, hψplus_zero, hψplus⟩
-
-theorem exists_zeroMode_of_simplifiedBoundaryModel_of_topologicalIndexZ2_eq_one
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hTopo : topologicalIndexZ2 chain = 1)
-    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    ∃ v : S,
-      (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧
-        v ≠ 0 := by
-  exact exists_zeroMode_of_simplifiedBoundaryModel_of_negativePhase
-    (M := M) (P0 := P0) localOp chain
-    (topologicalIndex_eq_neg_one_of_topologicalIndexZ2_eq_one chain hTopo)
-    hSimple
-
-theorem hasZeroMode_of_simplifiedBoundaryModel_of_negativePhase
-    [FiniteDimensional ℝ S]
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hNeg : topologicalIndex chain = -1)
-    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    HasZeroMode
-      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
-  unfold HasZeroMode
-  refine (ContinuousLinearMap.toLinearMap
-      (globalChainOperatorFromOpenChain (S := S) localOp chain)).ker.ne_bot_iff.mpr ?_
-  rcases exists_zeroMode_of_simplifiedBoundaryModel_of_negativePhase
-      (M := M) (P0 := P0) localOp chain hNeg hSimple with ⟨v, hv, hv0⟩
-  exact ⟨v, by simpa [LinearMap.mem_ker] using hv, hv0⟩
-
-theorem hasZeroMode_of_simplifiedBoundaryModel_of_topologicalIndexZ2_eq_one
-    [FiniteDimensional ℝ S]
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hTopo : topologicalIndexZ2 chain = 1)
-    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    HasZeroMode
-      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
-  exact hasZeroMode_of_simplifiedBoundaryModel_of_negativePhase
-    (M := M) (P0 := P0) localOp chain
-    (topologicalIndex_eq_neg_one_of_topologicalIndexZ2_eq_one chain hTopo)
-    hSimple
-
-theorem exists_zeroMode_of_boundaryLocalizationBridge_of_negativePhase
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hNeg : topologicalIndex chain = -1)
-    (hBridge : BoundaryLocalizationBridge
-      (M := M) (P0 := P0) localOp chain) :
-    ∃ v : S,
-      (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧
-        v ≠ 0 := by
-  rcases hBridge.1 hNeg with
-    ⟨ψplus, ψminus, hψplus, hψminus, hψplus_mem, hψminus_mem,
-      hψplus_zero, hψminus_zero⟩
-  exact ⟨ψplus, hψplus_zero, hψplus⟩
-
 /--
-Structure-valued boundary property extracted directly from a simplified boundary
+Structure-valued boundary witness extracted directly from a simplified boundary
 model in the negative phase.
 -/
 @[rep_depth krein]
@@ -598,12 +538,13 @@ noncomputable def boundaryLocalizedZeroModeWitness_of_negativePhase_of_simplifie
     (chain : List KitaevCell)
     (hNeg : topologicalIndex chain = -1)
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain :=
-  hSimple.1 hNeg
+    BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain :=
+  boundaryLocalizedZeroModeWitnessOfPair
+    (M := M) (P0 := P0) localOp chain (hSimple.1 hNeg)
 
 /--
-Structure-valued boundary property extracted from the turnkey `topologicalIndexZ2`
-phase property and a simplified boundary model.
+Structure-valued boundary witness extracted from the turnkey `topologicalIndexZ2`
+phase assumption and a simplified boundary model.
 -/
 @[rep_depth krein]
 noncomputable def boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -611,7 +552,7 @@ noncomputable def boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_
     (chain : List KitaevCell)
     (hTopo : topologicalIndexZ2 chain = 1)
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    BoundaryLocalizedZeroMode (M := M) (P0 := P0) localOp chain := by
+    BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain := by
   have hNeg : topologicalIndex chain = -1 :=
     topologicalIndex_eq_neg_one_of_topologicalIndexZ2_eq_one
       (chain := chain) hTopo
@@ -619,7 +560,7 @@ noncomputable def boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_
     (M := M) (P0 := P0) localOp chain hNeg hSimple
 
 /--
-Dimension-agnostic operator zero-mode property extracted from a simplified
+Dimension-agnostic operator zero-mode witness extracted from a simplified
 boundary model in the negative phase.
 -/
 @[rep_depth operator]
@@ -628,17 +569,17 @@ noncomputable def operatorZeroModeWitness_of_negativePhase_of_simplifiedBoundary
     (chain : List KitaevCell)
     (hNeg : topologicalIndex chain = -1)
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    OperatorZeroMode
+    OperatorZeroModeWitness
       (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
-operatorZeroMode_of_boundaryLocalizedPlus
+  operatorZeroModeWitnessOfBoundaryLocalizedPlus
     (M := M) (P0 := P0) localOp chain
     (boundaryLocalizedZeroModeWitness_of_negativePhase_of_simplifiedBoundaryModel
       (M := M) (P0 := P0) localOp chain hNeg hSimple)
 
 /--
-Dimension-agnostic operator zero-mode property extracted from the turnkey
-`topologicalIndexZ2 = 1` phase property and a simplified boundary model.
+Dimension-agnostic operator zero-mode witness extracted from the turnkey
+`topologicalIndexZ2 = 1` phase assumption and a simplified boundary model.
 -/
 @[rep_depth operator]
 noncomputable def operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -646,10 +587,10 @@ noncomputable def operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simpli
     (chain : List KitaevCell)
     (hTopo : topologicalIndexZ2 chain = 1)
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    OperatorZeroMode
+    OperatorZeroModeWitness
       (S := S)
       (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
-  operatorZeroMode_of_boundaryLocalizedPlus
+  operatorZeroModeWitnessOfBoundaryLocalizedPlus
     (M := M) (P0 := P0) localOp chain
     (boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
       (M := M) (P0 := P0) localOp chain hTopo hSimple)
@@ -657,7 +598,7 @@ noncomputable def operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simpli
 /--
 Dimension-agnostic bulk-boundary consequence from a simplified boundary model:
 the operator has a nontrivial kernel directly from the explicit boundary
-zero-mode property, without passing through a finite-dimensional mismatch
+zero-mode witness, without passing through a finite-dimensional mismatch
 argument.
 -/
 theorem hasSurfaceZeroMode_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -773,7 +714,7 @@ Canonical data package for a transported Weyl zero-mode pair under a real
 Bogoliubov transform.
 -/
 @[rep_depth krein]
-abbrev WeylZeroModeUnderBogoliubov
+abbrev WeylZeroModeWitnessUnderBogoliubov
     (T : RealBogoliubovTransform (S := S) M)
     (localOp : KitaevCell → EndS (S := S))
     (chain : List KitaevCell) : Prop :=
@@ -787,7 +728,7 @@ abbrev WeylZeroModeUnderBogoliubov
 
 omit [FiniteDimensional ℝ S] in
 /--
-Structure-valued transported Weyl property extracted from the existential
+Structure-valued transported Weyl witness extracted from the existential
 Bogoliubov transport theorem.
 -/
 @[rep_depth krein]
@@ -798,13 +739,13 @@ noncomputable def weylZeroModeWitnessUnderBogoliubov_of_preservesChiralityPolari
     (chain : List KitaevCell)
     (hPair : BoundaryLocalizedZeroModePair
       (M := M) (P0 := M.chiralityPolarization) localOp chain) :
-    WeylZeroModeUnderBogoliubov (S := S) (M := M) T localOp chain := by
+    WeylZeroModeWitnessUnderBogoliubov (S := S) (M := M) T localOp chain := by
   exact weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
     (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair
 
 omit [FiniteDimensional ℝ S] in
 /--
-Structure-valued transported Weyl property extracted directly from a simplified
+Structure-valued transported Weyl witness extracted directly from a simplified
 boundary model in the negative phase.
 -/
 @[rep_depth krein]
@@ -815,7 +756,7 @@ noncomputable def weylZeroModeWitnessUnderBogoliubov_of_negativePhase_of_simplif
     (chain : List KitaevCell)
     (hNeg : topologicalIndex chain = -1)
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := M.chiralityPolarization) localOp chain) :
-    WeylZeroModeUnderBogoliubov (S := S) (M := M) T localOp chain :=
+    WeylZeroModeWitnessUnderBogoliubov (S := S) (M := M) T localOp chain :=
   weylZeroModeWitnessUnderBogoliubov_of_preservesChiralityPolarization
     (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain)
     (hSimple.1 hNeg)
@@ -887,7 +828,7 @@ def HasSurfaceZeroMode (chain : List KitaevCell) : Prop :=
 Bulk-boundary correspondence under explicit bridge hypotheses.
 
 `hOdd` encodes particle-hole-type spectral symmetry at the operator level,
-and `hDimFromIndex` is the index-to-dimension-mismatch bridge property.
+and `hDimFromIndex` is the index-to-dimension-mismatch bridge hypothesis.
 -/
 theorem bulk_boundary_correspondence
     (chain : List KitaevCell)
@@ -952,28 +893,8 @@ theorem bulk_boundary_correspondence_concrete
     (dim_mismatch_of_topologicalIndexZ2_eq_one
       (M := M) (P0 := P0) chain hTopo hNegPhaseDimMismatch)
 
-theorem hasZeroMode_bulk_boundary_concrete
-    [FiniteDimensional ℝ S]
-    (localOp : KitaevCell → EndS (S := S))
-    (chain : List KitaevCell)
-    (hTopo : topologicalIndexZ2 chain = 1)
-    (hPHS : ∀ c : KitaevCell,
-      ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
-    (hNegPhaseDimMismatch :
-      topologicalIndex chain = -1 →
-        Module.finrank ℝ P0.plus
-          ≠ Module.finrank ℝ P0.minus) :
-    HasZeroMode
-      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
-  exact hasZeroMode_of_dim_mismatch (M := M) P0
-    (globalChainOperatorFromOpenChain (S := S) localOp chain)
-    (polarizationOdd_globalChainOperatorFromOpenChain
-      (M := M) (P0 := P0) (localOp := localOp) hPHS chain)
-    (dim_mismatch_of_topologicalIndexZ2_eq_one
-      (M := M) (P0 := P0) chain hTopo hNegPhaseDimMismatch)
-
 /--
-Concrete information-sink property in the topological phase for the
+Concrete information-sink witness in the topological phase for the
 Pfaffian-weighted finite open-chain operator.
 -/
 theorem zero_mode_is_information_sink_concrete
@@ -1029,7 +950,7 @@ theorem bulk_boundary_correspondence_concrete_of_boundaryLocalization
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hLoc)
 
 /--
-End-to-end concrete zero-mode property from chain data plus
+End-to-end concrete zero-mode witness from chain data plus
 boundary-localization assumptions.
 -/
 theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization
@@ -1072,7 +993,7 @@ theorem bulk_boundary_correspondence_concrete_of_boundaryLocalization_under_bogo
       (chain := chain) hTopo hPHS hLoc)
 
 /--
-Bogoliubov-stable concrete information-sink property:
+Bogoliubov-stable concrete information-sink witness:
 a boundary-localized zero mode persists under real Bogoliubov conjugation.
 -/
 theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization_under_bogoliubov
@@ -1122,7 +1043,7 @@ theorem bulk_boundary_correspondence_concrete_of_simplifiedBoundaryModel
 /--
 Turnkey sibling theorem:
 from a simplified boundary model package, derive the concrete end-to-end
-zero-mode sink property in one step.
+zero-mode sink witness in one step.
 -/
 theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel
     (localOp : KitaevCell → EndS (S := S))
@@ -1164,7 +1085,7 @@ theorem bulk_boundary_correspondence_concrete_of_simplifiedBoundaryModel_under_b
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hSimple)
 
 /--
-Bogoliubov-stable simplified-boundary-model zero-mode property.
+Bogoliubov-stable simplified-boundary-model zero-mode witness.
 -/
 theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel_under_bogoliubov
     (T : RealBogoliubovTransform (S := S) M)

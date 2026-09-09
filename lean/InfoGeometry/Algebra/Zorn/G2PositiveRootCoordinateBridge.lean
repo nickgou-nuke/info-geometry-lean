@@ -63,4 +63,13 @@ noncomputable def rootCoordinateEquiv :
           {x : ℤ × ℤ // x ∈ phiPlus}) := by
   rfl
 
+/-! The highest positive label is expressed in the same integer-coordinate
+    carrier as the simple labels.  This is a coordinate identity, not an
+    additional Euclidean or representation-theoretic assumption. -/
+
+theorem rootCoordinates_three_alpha_two_beta :
+    rootCoordinates .three_alpha_two_beta =
+      3 • rootCoordinates .alpha + 2 • rootCoordinates .beta := by
+  norm_num [rootCoordinates]
+
 end InfoGeometry.Algebra.Zorn.G2PositiveRootCoordinateBridge

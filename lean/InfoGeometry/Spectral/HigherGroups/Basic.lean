@@ -23,17 +23,18 @@ open InfoGeometry.Spectral.Homotopy.Smash
 
 set_option autoImplicit false
 
+@[simp]
 theorem loopSpace_eq (X : PointedReadout) :
     LoopSpace X = X := by
   rfl
 
+@[simp]
 theorem iteratedLoopSpace_eq (n : ℕ) (X : PointedReadout) :
     IteratedLoopSpace n X = X := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      change LoopSpace (IteratedLoopSpace n X) = X
-      rw [ih]
+      simp [IteratedLoopSpace, loopSpace_eq, ih]
 
 /-
   1. Higher-group style objects
@@ -172,32 +173,6 @@ def Stabilization {n k : ℕ} (_H : k ≥ n + 2) :
 -/
 
 def GTypeHom {n k : ℕ} (G H : GType n k) : Type := PointedMap (GType_B G) (GType_B H)
-
-/-- Identity morphism in the finite higher-group readout. -/
-def GTypeHom.id {n k : ℕ} (G : GType n k) : GTypeHom G G :=
-  PointedMap.id (GType_B G)
-
-/-- Composition of finite higher-group readout morphisms. -/
-def GTypeHom.comp {n k : ℕ} {G H K : GType n k}
-    (g : GTypeHom H K) (f : GTypeHom G H) : GTypeHom G K :=
-  PointedMap.comp g f
-
-@[simp]
-theorem GTypeHom.comp_id {n k : ℕ} {G H : GType n k} (f : GTypeHom G H) :
-    GTypeHom.comp (GTypeHom.id H) f = f :=
-  PointedMap.comp_id f
-
-@[simp]
-theorem GTypeHom.id_comp {n k : ℕ} {G H : GType n k} (f : GTypeHom G H) :
-    GTypeHom.comp f (GTypeHom.id G) = f :=
-  PointedMap.id_comp f
-
-theorem GTypeHom.comp_assoc {n k : ℕ}
-    {G H K L : GType n k}
-    (h : GTypeHom K L) (g : GTypeHom H K) (f : GTypeHom G H) :
-    GTypeHom.comp h (GTypeHom.comp g f) =
-      GTypeHom.comp (GTypeHom.comp h g) f :=
-  PointedMap.comp_assoc h g f
 
 /-- Two morphisms in the finite pointed-readout layer are equal when their
 underlying functions agree pointwise. This is the concrete equality statement

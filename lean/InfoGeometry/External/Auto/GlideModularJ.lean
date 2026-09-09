@@ -35,6 +35,9 @@ theorem inv_eq_self_of_modularJ {J : G} (hJ : IsModularJ J) : J⁻¹ = J := by
     J⁻¹ = J⁻¹ * (J * J) := by rw [hJ]; simp
     _ = J := by group
 
+/-- Modular conjugation is literally a glide-inversion relation. -/
+theorem modularJ_is_glide {J Δ : G} (h : ModularJInverts J Δ) : GlideInverts J Δ := h
+
 /-- With `J²=1`, the Tomita form `J Δ J = Δ⁻¹` follows. -/
 theorem modularJ_tomita_form {J Δ : G} (hJ : IsModularJ J) (hInv : ModularJInverts J Δ) :
     J * Δ * J = Δ⁻¹ := by
@@ -71,5 +74,23 @@ theorem modularJ_reverses_zpow {J Δ : G} (hJ : IsModularJ J) (hInv : ModularJIn
   rw [inv_eq_self_of_modularJ hJ] at hconj
   rw [hconj]
   exact inv_zpow' Δ n
+
+/-- Main synthesis theorem: glide = modular `J` at the algebraic skeleton. -/
+theorem glide_modular_j_synthesis (J Δ : G)
+    (hJ : IsModularJ J) (hInv : ModularJInverts J Δ) :
+    J * J = 1 ∧
+    J * Δ * J = Δ⁻¹ ∧
+    GlideInverts J Δ ∧
+    J * Δ * J * Δ = 1 ∧
+    (∀ n : ℤ, J * Δ^n * J = Δ^(-n)) := by
+  constructor
+  · simpa using hJ
+  · constructor
+    · exact modularJ_tomita_form hJ hInv
+    · constructor
+      · exact modularJ_is_glide hInv
+      · constructor
+        · exact modularJ_klein_word hJ hInv
+        · exact modularJ_reverses_zpow hJ hInv
 
 end GlideModularJ

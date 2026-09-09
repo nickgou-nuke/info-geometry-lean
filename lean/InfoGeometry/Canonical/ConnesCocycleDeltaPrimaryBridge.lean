@@ -29,11 +29,12 @@ variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {n : ℕ} [Nonempty (Fin n)]
 
-/-- Finite `Δ` operator readout from the relative-modular owner. -/
+/-- Finite `Δ` shadow induced by a Type-III RN interface readout. -/
 @[rep_depth operator]
-noncomputable def deltaFiniteOperator
+noncomputable def deltaFiniteShadow
+    (rho : ℝ)
     (q q0 : PositiveRay (Fin n)) : Matrix (Fin n) (Fin n) ℝ :=
-  relativeModularOperator (n := n) q q0
+  rho • relativeModularOperator (n := n) q q0
 
 /--
 -- theorem-class: lower bridge identification
@@ -41,67 +42,73 @@ Finite shadow chain law induced from the owner cocycle
 `relativeModularOperator_cocycle`.
 -/
 @[rep_depth operator]
-theorem deltaFiniteOperator_chain
+theorem deltaFiniteShadow_chain
+    (rho : ℝ)
     (q q0 q1 : PositiveRay (Fin n)) :
-    deltaFiniteOperator (n := n) q q1
+    deltaFiniteShadow (n := n) rho q q1
       =
-    deltaFiniteOperator (n := n) q q0
+    deltaFiniteShadow (n := n) rho q q0
       * relativeModularOperator (n := n) q0 q1 := by
-  exact relativeModularOperator_cocycle (n := n) q q0 q1
+  unfold deltaFiniteShadow
+  rw [relativeModularOperator_cocycle]
+  rw [smul_mul_assoc]
 
-/-- Support-compressed finite `Δ` operator for a fixed finite support projector. -/
+/-- Support-compressed finite `Δ` shadow for a fixed finite support projector. -/
 @[rep_depth operator]
-noncomputable def deltaFiniteSupportOperator
+noncomputable def deltaFiniteSupportShadow
+    (rho : ℝ)
     (s : Finset (Fin n))
     (q q0 : PositiveRay (Fin n)) : Matrix (Fin n) (Fin n) ℝ :=
-  supportProjector (n := n) s * deltaFiniteOperator (n := n) q q0
+  supportProjector (n := n) s * deltaFiniteShadow (n := n) rho q q0
 
 /--
 -- theorem-class: transport lemma
 Support-compressed finite shadow chain law.
 -/
 @[rep_depth operator]
-theorem deltaFiniteSupportOperator_chain
+theorem deltaFiniteSupportShadow_chain
+    (rho : ℝ)
     (s : Finset (Fin n))
     (q q0 q1 : PositiveRay (Fin n)) :
-    deltaFiniteSupportOperator (n := n) s q q1
+    deltaFiniteSupportShadow (n := n) rho s q q1
       =
-    deltaFiniteSupportOperator (n := n) s q q0
+    deltaFiniteSupportShadow (n := n) rho s q q0
       * relativeModularOperator (n := n) q0 q1 := by
-  unfold deltaFiniteSupportOperator
-  rw [deltaFiniteOperator_chain (n := n) q q0 q1]
+  unfold deltaFiniteSupportShadow
+  rw [deltaFiniteShadow_chain (n := n) rho q q0 q1]
   simp [mul_assoc]
 
 /--
 -- theorem-class: capstone consumer theorem
 Bridge package combining:
 1) Connes cocycle chaining on the Type-III interface flow,
-2) finite `Δ`-operator state composition,
-3) support-compressed finite `Δ`-operator composition.
+2) finite `Δ`-shadow state composition,
+3) support-compressed finite `Δ`-shadow composition.
 -/
 @[rep_depth transport, capstone]
 theorem connes_to_deltaFiniteSupport_package
     (σ : AdditiveModularFlow (H := E))
     (u : ℝ → AlgebraEnd E)
     (hCocycle : IsConnesCocycle σ u)
+    (rho : ℝ)
     (s : Finset (Fin n))
     (q q0 q1 : PositiveRay (Fin n))
     (a b : ℝ) :
     (u (a + b) = u a * σ a (u b))
       ∧
-    (deltaFiniteOperator (n := n) q q1
+    (deltaFiniteShadow (n := n) rho q q1
         =
-      deltaFiniteOperator (n := n) q q0
+      deltaFiniteShadow (n := n) rho q q0
         * relativeModularOperator (n := n) q0 q1)
       ∧
-    (deltaFiniteSupportOperator (n := n) s q q1
+    (deltaFiniteSupportShadow (n := n) rho s q q1
         =
-      deltaFiniteSupportOperator (n := n) s q q0
+      deltaFiniteSupportShadow (n := n) rho s q q0
         * relativeModularOperator (n := n) q0 q1) := by
   refine ⟨?_, ?_, ?_⟩
   · exact hCocycle a b
-  · exact deltaFiniteOperator_chain (n := n) q q0 q1
-  · exact deltaFiniteSupportOperator_chain (n := n) s q q0 q1
+  · exact deltaFiniteShadow_chain (n := n) rho q q0 q1
+  · exact deltaFiniteSupportShadow_chain (n := n) rho s q q0 q1
 
 end TypeIIIToFiniteSupport
 

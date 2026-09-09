@@ -91,3 +91,5 @@ theorem conf3ArnoldBraidShadow_sigma2_sq :
   exact InfoGeometry.Topology.ArtinBraidS3Quotient.sigma2_sq
 
 end
+
+end InfoGeometry.Topology.Conf3ArnoldBraidShadowTopological

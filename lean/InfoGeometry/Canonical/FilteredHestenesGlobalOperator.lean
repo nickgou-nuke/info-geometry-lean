@@ -11,24 +11,13 @@ open InfoGeometry.Canonical.FilteredHestenesKreinColimit
 
 /-- Compatible continuous-linear operators on the finite stages of a
 Hestenes--Krein filtered cone. -/
-structure LinearFamilyDatum (C : HestenesKreinCone) where
+structure LinearFamily (C : HestenesKreinCone) where
   op : ∀ n, DoubledSpace (C.Base n) →L[ℝ] DoubledSpace (C.Base n)
-
-def LinearFamilyValid (F : LinearFamilyDatum C) : Prop :=
-  (∀ n, IsHestenesHolomorphicDifferential
-      (E := C.Base n) (F := C.Base n) (F.op n)) ∧
-    (∀ n, (C.bond n).comp (F.op n) = (F.op (n + 1)).comp (C.bond n))
-
-def LinearFamily (C : HestenesKreinCone) :=
-  {F : LinearFamilyDatum C // LinearFamilyValid F}
-
-namespace LinearFamily
-
-abbrev op {C : HestenesKreinCone} (F : LinearFamily C) := F.1.op
-abbrev op_hestenes {C : HestenesKreinCone} (F : LinearFamily C) := F.2.1
-abbrev op_bond {C : HestenesKreinCone} (F : LinearFamily C) := F.2.2
-
-end LinearFamily
+  op_hestenes :
+    ∀ n, IsHestenesHolomorphicDifferential
+      (E := C.Base n) (F := C.Base n) (op n)
+  op_bond :
+    ∀ n, (C.bond n).comp (op n) = (op (n + 1)).comp (C.bond n)
 
 /-- The cone maps cover the chosen filtered carrier.  This is the concrete
 joint-epimorphism condition needed for uniqueness of descended maps. -/

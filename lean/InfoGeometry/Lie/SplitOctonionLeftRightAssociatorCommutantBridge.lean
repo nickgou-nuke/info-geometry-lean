@@ -81,4 +81,5 @@ def standardDerivation (x y : A) : Module.End ℝ A :=
   (leftMul x * rightMul y - rightMul y * leftMul x) +
   (rightMul x * rightMul y - rightMul y * rightMul x)
 
+
 end InfoGeometry.Lie.SplitOctonionLeftRightAssociatorCommutantBridge

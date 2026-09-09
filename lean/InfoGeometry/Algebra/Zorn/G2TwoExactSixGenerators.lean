@@ -9,6 +9,10 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 
+lemma bitToF2_add2 (a b : Bool) :
+    bitToF2 (add2 a b) = bitToF2 a + bitToF2 b := by
+  cases a <;> cases b <;> rfl
+
 lemma F2_mul_two (x : F2) : x * 2 = 0 := by fin_cases x <;> rfl
 lemma F2_mul_three (x : F2) : x * 3 = x := by fin_cases x <;> rfl
 lemma F2_mul_four (x : F2) : x * 4 = 0 := by fin_cases x <;> rfl
@@ -103,16 +107,16 @@ theorem g1_mul (X Y : SplitOctF2) : g1 (mul X Y) = mul (g1 X) (g1 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g1, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf 
+    simp only [g1, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_and] <;>
+    ring
 
 theorem g2_mul (X Y : SplitOctF2) : g2 (mul X Y) = mul (g2 X) (g2 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g2, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
+    simp only [g2, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
     simp only [F2_mul_two] <;>
     ring
@@ -121,8 +125,8 @@ theorem g3_mul (X Y : SplitOctF2) : g3 (mul X Y) = mul (g3 X) (g3 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g3, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
+    simp only [g3, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
     simp only [F2_mul_two, F2_mul_three, F2_mul_four] <;>
     ring
@@ -131,8 +135,8 @@ theorem g4_mul (X Y : SplitOctF2) : g4 (mul X Y) = mul (g4 X) (g4 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g4, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
+    simp only [g4, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
     simp only [F2_mul_two] <;>
     ring
@@ -141,8 +145,8 @@ theorem g5_mul (X Y : SplitOctF2) : g5 (mul X Y) = mul (g5 X) (g5 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g5, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
+    simp only [g5, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
     ring_nf <;>
     simp only [F2_mul_two] <;>
     ring
@@ -151,8 +155,8 @@ theorem g6_mul (X Y : SplitOctF2) : g6 (mul X Y) = mul (g6 X) (g6 Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [g6, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf 
+    simp only [g6, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_and] <;>
+    ring 
 
 end InfoGeometry.Algebra.Zorn.G2TwoExactSixGenerators

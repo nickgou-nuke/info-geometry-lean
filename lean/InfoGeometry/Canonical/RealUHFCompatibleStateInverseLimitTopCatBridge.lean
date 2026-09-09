@@ -37,5 +37,3 @@ theorem normalizedTraceColimitMap_matches_coordinate
   exact normalizedTraceColimitMap_matches_inverse_family n A
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCatBridge
-
-end

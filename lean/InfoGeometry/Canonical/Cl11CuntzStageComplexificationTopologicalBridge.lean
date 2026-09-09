@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
 import InfoGeometry.Canonical.JordanWignerCantorRepresentation
-import InfoGeometry.Canonical.SouriauOnsagerBKMBridge
 
 /-!
 # Stage-level real-to-complex bridge for the two matrix towers
@@ -28,7 +27,6 @@ open InfoGeometry.Canonical.CuntzMatrixTraceTower
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
 open InfoGeometry.Canonical.JordanWignerCantorRepresentation
-open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix
 
 abbrev ClStage (n : ℕ) : Type := MatStage n
 abbrev ComplexStage (n : ℕ) : Type := MatrixStage n
@@ -187,28 +185,6 @@ theorem complexifyClStage_trace (n : ℕ) (A : ClStage n) :
   rw [Complex.ofReal_sum]
   exact Equiv.sum_comp (idxEquivFinPowTwo n).symm
     (fun i => Complex.ofReal (A i i))
-
-/-! The same finite readout through the genuine bounded-operator trace used by
-the Kubo--Mori owner.  This is a finite complexification theorem, not a
-noncommutative log-determinant identification. -/
-
-theorem complexifyClStage_finiteOperatorTrace (n : ℕ) (A : ClStage n) :
-    SouriauOnsagerBKM.finiteOperatorTrace
-        (matrixOp (complexifyClStage n A)) =
-      Complex.ofReal (Matrix.trace A) := by
-  unfold SouriauOnsagerBKM.finiteOperatorTrace
-  rw [matrixOfOp_matrixOp]
-  exact complexifyClStage_trace n A
-
-theorem complexifyClStage_finiteOperatorNormalizedTrace (n : ℕ) (A : ClStage n) :
-    (1 / (2 ^ n : ℂ)) *
-        SouriauOnsagerBKM.finiteOperatorTrace
-          (matrixOp (complexifyClStage n A)) =
-      Complex.ofReal (normalizedTrace n A) := by
-  rw [complexifyClStage_finiteOperatorTrace]
-  unfold normalizedTrace
-  rw [Complex.ofReal_div]
-  simp [div_eq_mul_inv, mul_comm]
 
 theorem complexifyClStage_normalizedTrace (n : ℕ) (A : ClStage n) :
     matrixTraceFunctional n (complexifyClStage n A) =

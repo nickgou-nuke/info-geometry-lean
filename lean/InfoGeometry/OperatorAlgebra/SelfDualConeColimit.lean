@@ -40,7 +40,7 @@ def IsSelfDualCone {E : Type*} (pairing : E → E → ℝ) (K : Set E) : Prop :=
 Finite carrier-step lemma for an increasing family of self-dual cones.
 
 If `x` and `y` lie in stages `i` and `j`, then both lie in the common finite
-stage `max i j`, so the stagewise self-duality property yields the
+stage `max i j`, so the stagewise self-duality hypothesis yields the
 nonnegative pairing statement there.
 -/
 theorem selfDualCone_closed_under_carrier_step

@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 import InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 /-!
-# Section 32 repaired: finite quaternionic emergent-spacetime algebra
+# Section 32 repaired: quaternionic emergent-spacetime finite socket
 
 The source text states an axiomatic quaternionic-emergent-spacetime program.  In
 this repository we keep only the finite algebra that the kernel can check:
@@ -12,7 +12,7 @@ this repository we keep only the finite algebra that the kernel can check:
   quaternion sign convention;
 * this file adds the conformal/Bloch-radius spacetime parametrization
   `t · (I + r n·σ)`, its density-matrix readback, determinant formula, null
-  boundary property, scalar conformal covariance, and a finite Lüders
+  boundary certificate, scalar conformal covariance, and a finite Lüders
   projection numerator identity.
 
 The informal claims that time, gravity, torsion, Einstein equations,
@@ -35,16 +35,6 @@ def blochSpacetimePoint (t r n1 n2 n3 : ℂ) : Mat2 :=
 /-- The associated trace-one Bloch density at radius `r`. -/
 def blochDensityAtRadius (r n1 n2 n3 : ℂ) : Mat2 :=
   densityMatrix (r * n1) (r * n2) (r * n3)
-
-/-- The spacetime point carries scalar trace `2t`. -/
-theorem blochSpacetimePoint_trace (t r n1 n2 n3 : ℂ) :
-    Matrix.trace (blochSpacetimePoint t r n1 n2 n3) = 2 * t := by
-  rw [blochSpacetimePoint, pauliPointRaw_trace]
-
-/-- The associated Bloch density remains trace one for every radius. -/
-theorem blochDensityAtRadius_trace (r n1 n2 n3 : ℂ) :
-    Matrix.trace (blochDensityAtRadius r n1 n2 n3) = 1 := by
-  rw [blochDensityAtRadius, densityMatrix_trace]
 
 /-- The Section 32 point is exactly `2t` times the associated density matrix. -/
 theorem blochSpacetimePoint_eq_two_t_smul_density (t r n1 n2 n3 : ℂ) :
@@ -69,7 +59,7 @@ theorem blochSpacetimePoint_minkowski_readout (t r n1 n2 n3 : ℂ) :
   rw [blochSpacetimePoint, pauliPointRaw_det]
   ring
 
-/-- Unit direction and boundary radius give the finite null determinant property. -/
+/-- Unit direction and boundary radius give the finite null determinant certificate. -/
 theorem blochSpacetimePoint_det_zero_of_unit_boundary (t r n1 n2 n3 : ℂ)
     (hunit : n1 ^ 2 + n2 ^ 2 + n3 ^ 2 = 1) (hr : r ^ 2 = 1) :
     (blochSpacetimePoint t r n1 n2 n3).det = 0 := by
@@ -111,10 +101,9 @@ theorem repaired_section32_quaternionic_spacetime_packet
         (blochCross1 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ1 +
           blochCross2 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ2 +
           blochCross3 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ3) := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact quaternion_literal_i_j_sign_obstruction
-  · exact blochSpacetimePoint_det_zero_of_unit_boundary t r n1 n2 n3 hunit hr
-  · exact vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 (r * n1) (r * n2) (r * n3)
+  exact ⟨quaternion_literal_i_j_sign_obstruction,
+    blochSpacetimePoint_det_zero_of_unit_boundary t r n1 n2 n3 hunit hr,
+    vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 (r * n1) (r * n2) (r * n3)⟩
 
 end InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 

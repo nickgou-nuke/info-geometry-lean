@@ -66,8 +66,8 @@ theorem prepend_k (i j k : ℕ) (h1: j>=i+2) (h2 : i<k∧k<j) :
         simp only [add_tsub_cancel_right, mul_left_inj]
         rw [← sigma_neg_last lt]
       rw [H7, ← H10]
-      have H := @PresentedMonoid.append_right _ _ _ _ (of (j'-1)) (PresentedMonoid.exact H2)
-      exact (PresentedMonoid.sound H).trans H9
+      have H := @BraidPresentedMonoid.append_right _ _ _ _ (of (j'-1)) (BraidPresentedMonoid.exact H2)
+      exact (BraidPresentedMonoid.sound H).trans H9
     --induction case of the inductive case
     intro new_k k_bigger new_k_lt _
     have H7: (of new_k * (sigma_neg i' j')) = of new_k * of i' * (sigma_neg (i'+1) j') := by
@@ -560,9 +560,10 @@ theorem common_right_mul_inf_mk (u v : FreeMonoid' ℕ) : ∃ (u' v' : FreeMonoi
     v_length v_under) with ⟨u', hu', _⟩
   exact Exists.intro u' (Exists.intro v' (hv'.trans hu'.symm))
 
-theorem common_right_mul_inf (u v : PresentedMonoid (@braid_rels_m_inf)) :
-    ∃ (u' v' : FreeMonoid' ℕ ), ((u * (PresentedMonoid.mk (braid_rels_m_inf) v'))) =
-    v * PresentedMonoid.mk (braid_rels_m_inf) u' := by
+theorem common_right_mul_inf (u v : BraidPresentedMonoid (@braid_rels_m_inf)) :
+    ∃ (u' v' : FreeMonoid' ℕ ), ((u * (BraidPresentedMonoid.mk (braid_rels_m_inf) v'))) =
+    v * BraidPresentedMonoid.mk (braid_rels_m_inf) u' := by
   induction u
   induction v
   exact common_right_mul_inf_mk _ _
+

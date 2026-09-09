@@ -1,4 +1,4 @@
-import proofs.HestenesClPlus14
+import InfoGeometry.Canonical.HestenesClPlus14
 #check LinearMap.mk₂
 #check CliffordAlgebra.even.lift
 #check CliffordAlgebra.even.lift_ι

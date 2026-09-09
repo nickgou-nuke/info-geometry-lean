@@ -31,12 +31,30 @@ used by the Hamiltonian-flow layer.
 @[rep_depth transport]
 structure BinaryCrystalHamiltonianFlowBridge
     (𝔤 : Type*) where
+  /-- Binary-crystal owner target. -/
+  crystalOwner : BinaryCrystalWeylBlochOwnerTarget
+
   /-- Souriau/Weyl finite character packet. -/
-  souriauPacket : SouriauWeylPartitionData 𝔤
+  souriauPacket : SouriauWeylPartitionPacket 𝔤
 
 namespace BinaryCrystalHamiltonianFlowBridge
 
 variable (B : BinaryCrystalHamiltonianFlowBridge 𝔤)
+
+/-- The binary crystal packet still supplies the binary-owner target. -/
+@[rep_depth transport]
+theorem crystal_ownerTarget :
+    (∀ w : BinaryLattice,
+      binaryUnitCell w =
+        ({w} : Set BinaryLattice)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w false)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w true))
+    ∧ (∀ w : BinaryLattice, ∀ b : Bool,
+        wordParity (TypeIIIModularCantorSystem.BinaryWord.child w b) = not (wordParity w))
+    ∧ (∀ {G : Type*} [Group G] [MulAction G BinaryLattice]
+        (g : G) (f : BinaryCrystalObservable) (w : BinaryLattice),
+        adjointAction (G := G) g f (g • w) = f w) :=
+  binaryCrystalWeylBlochOwnerTarget
 
 /-- The Souriau partition function is read as a Souriau character on the crystal side. -/
 @[rep_depth transport]

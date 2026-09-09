@@ -71,33 +71,35 @@ def coordinateEquiv : Cl11 ≃ HestenesCl11 where
 
 /-- Grade involution is transported without a convention change. -/
 @[simp] theorem toHestenes_gradeInvolution (q : Cl11) :
-    toHestenes (gradeInvolution q) =
+    toHestenes (InfoGeometry.Clifford.Cl11CoordinateAlgebra.gradeInvolution q) =
       InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.gradeInvolution
         (toHestenes q) := by
-  ext <;> simp [toHestenes, gradeInvolution,
+  ext <;> simp [toHestenes, InfoGeometry.Clifford.Cl11CoordinateAlgebra.gradeInvolution,
     InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.gradeInvolution]
 
 /-- Reversion is transported without a convention change. -/
 @[simp] theorem toHestenes_reverse (q : Cl11) :
-    toHestenes (reverse q) =
+    toHestenes (InfoGeometry.Clifford.Cl11CoordinateAlgebra.reverse q) =
       InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.reversion
         (toHestenes q) := by
-  ext <;> simp [toHestenes, reverse,
+  ext <;> simp [toHestenes, InfoGeometry.Clifford.Cl11CoordinateAlgebra.reverse,
     InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.reversion]
 
 /-- Clifford conjugation, rather than grade involution or reversion alone, is
 the transported split-quaternion conjugation. -/
 @[simp] theorem toHestenes_cliffordConjugate (q : Cl11) :
-    toHestenes (cliffordConjugate q) =
+    toHestenes (InfoGeometry.Clifford.Cl11CoordinateAlgebra.cliffordConjugate q) =
       InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.cliffordConjugation
         (toHestenes q) := by
-  ext <;> simp [toHestenes, cliffordConjugate, gradeInvolution, reverse,
+  ext <;> simp [toHestenes, InfoGeometry.Clifford.Cl11CoordinateAlgebra.cliffordConjugate,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.gradeInvolution,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.reverse,
     InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.cliffordConjugation]
 
 /-- The coordinate Clifford conjugation is exactly grade involution after
 reversion, stated in the common Hestenes carrier. -/
 theorem transported_conjugation_is_grade_after_reversion (q : Cl11) :
-    toHestenes (cliffordConjugate q) =
+    toHestenes (InfoGeometry.Clifford.Cl11CoordinateAlgebra.cliffordConjugate q) =
       InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.gradeInvolution
         (InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.reversion
           (toHestenes q)) := by
@@ -107,9 +109,8 @@ theorem transported_conjugation_is_grade_after_reversion (q : Cl11) :
 /-- The `(2,2)` quadratic form agrees exactly across the equivalence. -/
 @[simp] theorem normSq_toHestenes (q : Cl11) :
     InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.normSq
-      (toHestenes q) = splitNorm q := by
+      (toHestenes q) = InfoGeometry.Clifford.Cl11CoordinateAlgebra.splitNorm q := by
   dsimp [toHestenes, InfoGeometry.Canonical.HestenesDiracAdjoint.SplitQuaternion.normSq, splitNorm]
-  ring
 
 /-- Polarized Hestenes norm form. This is the bilinear form whose diagonal is
 the split-quaternion norm. -/

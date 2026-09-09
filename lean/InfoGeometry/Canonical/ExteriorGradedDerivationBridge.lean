@@ -54,5 +54,23 @@ theorem two_form_square_leibniz
     D.d (F * F) = D.d F * F + F * D.d F :=
   two_form_leibniz D F F hF
 
+/-- **Theorem**: Master Exterior Graded Derivation Synthesis.
+    Unifies:
+    1. Graded exterior derivation structure IsGradedDerivation d.
+    2. Derivation of odd-degree 1-form Leibniz rule d(A·y) = dA·y - A·dy from (-1)^1 = -1.
+    3. Derivation of even-degree 2-form Leibniz rule d(F·y) = dF·y + F·dy from (-1)^2 = +1.
+    4. Proof closure for even curvature square product rule d(F·F) = dF·F + F·dF. -/
+theorem master_exterior_graded_derivation_synthesis
+    (D : ExteriorDifferentialData R V)
+    (A F y : ExteriorAlgebra R V)
+    (hA : IsHomogeneousExteriorDegree 1 A)
+    (hF : IsHomogeneousExteriorDegree 2 F) :
+    (D.d (A * y) = D.d A * y - A * D.d y) ∧
+    (D.d (F * y) = D.d F * y + F * D.d y) ∧
+    (D.d (F * F) = D.d F * F + F * D.d F) := ⟨
+  one_form_leibniz D A y hA,
+  two_form_leibniz D F y hF,
+  two_form_square_leibniz D F hF
+⟩
 
 end InfoGeometry.Canonical.ExteriorGradedDerivationBridge

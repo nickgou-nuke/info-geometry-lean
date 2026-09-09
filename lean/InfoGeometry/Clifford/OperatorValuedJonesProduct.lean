@@ -115,13 +115,14 @@ noncomputable def causalReconstructionChannel :
     ConnectionChannel
       (A := CausalOperatorCoordinates B)
       (B := Matrix (Fin 2) (Fin 2) B) :=
-  (causalOperatorCoordinatesRingEquiv (B := B)).toRingHom
+  { map := (causalOperatorCoordinatesRingEquiv (B := B)).toRingHom }
 
 /-- Operator-coordinate commutators reconstruct to matrix commutators. -/
 theorem reconstruct_causal_commutator
     (A C : CausalOperatorCoordinates B) :
     reconstruct_causal (commutator A C) =
       commutator (reconstruct_causal A) (reconstruct_causal C) := by
+  change (causalReconstructionChannel (B := B)).map (commutator A C) = _
   exact ConnectionChannel.map_commutator
     (causalReconstructionChannel (B := B)) A C
 
@@ -132,6 +133,7 @@ theorem reconstruct_causal_twoSlotCurvature
       twoSlotCurvature
         (reconstruct_causal dAC) (reconstruct_causal dCA)
         (reconstruct_causal A) (reconstruct_causal C) := by
+  change (causalReconstructionChannel (B := B)).map (twoSlotCurvature dAC dCA A C) = _
   exact ConnectionChannel.map_twoSlotCurvature
     (causalReconstructionChannel (B := B)) dAC dCA A C
 
@@ -143,6 +145,8 @@ theorem reconstruct_causal_twoSlotTorsionLeft
         (reconstruct_causal dEAC) (reconstruct_causal dECA)
         (reconstruct_causal OA) (reconstruct_causal EC)
         (reconstruct_causal OC) (reconstruct_causal EA) := by
+  change (causalReconstructionChannel (B := B)).map
+      (twoSlotTorsionLeft dEAC dECA OA EC OC EA) = _
   exact ConnectionChannel.map_twoSlotTorsionLeft
     (causalReconstructionChannel (B := B)) dEAC dECA OA EC OC EA
 
@@ -152,6 +156,9 @@ theorem reconstruct_causal_cyclicSum_of_zero
     (h : cyclicSum X Y Z = 0) :
     cyclicSum (reconstruct_causal X) (reconstruct_causal Y)
       (reconstruct_causal Z) = 0 := by
+  change cyclicSum ((causalReconstructionChannel (B := B)).map X)
+      ((causalReconstructionChannel (B := B)).map Y)
+      ((causalReconstructionChannel (B := B)).map Z) = 0
   exact ConnectionChannel.map_cyclicSum_of_zero
     (causalReconstructionChannel (B := B)) X Y Z h
 

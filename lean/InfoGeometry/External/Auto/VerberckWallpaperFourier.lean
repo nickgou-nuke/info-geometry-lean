@@ -91,4 +91,28 @@ theorem pg_fixed_line_extinction {k₁ : ℕ} {c : ℂ}
       _ = 0 := hsub
   exact (mul_eq_zero.mp h2).resolve_left (by norm_num)
 
+/-- Combined synthesis of the Verberck Fourier mechanisms. -/
+theorem verberck_wallpaper_fourier_synthesis :
+    (∀ k₁ k₂ : ℤ,
+      p6R (p6R (p6R (p6R (p6R (p6R (k₁, k₂)))))) = (k₁, k₂)) ∧
+    (∀ k₁ : ℕ, pgPhase k₁ * pgPhase k₁ = 1) ∧
+    (∀ k₁ : ℕ, Odd k₁ → pgPhase k₁ = -1) ∧
+    (∀ {k₁ : ℕ} {c : ℂ}, Odd k₁ → c = pgPhase k₁ * c → c = 0) := by
+  constructor
+  · intro k₁ k₂
+    exact (p6_orbit_eq30 k₁ k₂).2.2.2.2.2
+  constructor
+  · exact pgPhase_sq
+  constructor
+  · intro k₁ hodd
+    exact pgPhase_odd hodd
+  · intro k₁ c hodd hrel
+    exact pg_fixed_line_extinction hodd hrel
+
+#check p6_orbit_eq30
+#check p6_coefficient_cycle
+#check pgPhase_sq
+#check pg_fixed_line_extinction
+#check verberck_wallpaper_fourier_synthesis
+
 end VerberckWallpaperFourier

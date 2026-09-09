@@ -75,20 +75,26 @@ private theorem godelEncode_append (primes : ℕ → ℕ) (u v : PrimeRegisterHi
     godelEncode primes (u ++ v) = godelEncode primes u * integerShift primes u.length v := by
   simpa [godelEncode, integerShift] using godelEncodeFrom_append primes 0 u v
 
+/-- Concrete input data for the dynamic prime-register concatenation law. -/
+structure DynamicPrimeRegisterConcatenationData where
+  primes : ℕ → ℕ
+  left : PrimeRegisterHistory
+  right : PrimeRegisterHistory
+
 /-- Word concatenation is semidirect multiplication on histories, and the integer Gödel shadow
 factors through the induced shift on prime slices. -/
-def concatenation_law (primes : ℕ → ℕ) (left right : PrimeRegisterHistory) : Prop :=
-  historyOfWord (left ++ right) = semidirectMul (historyOfWord left) (historyOfWord right) ∧
-    godelEncode primes (left ++ right) =
-      godelEncode primes left * integerShift primes left.length right
+def DynamicPrimeRegisterConcatenationData.concatenation_law
+    (h : DynamicPrimeRegisterConcatenationData) : Prop :=
+  historyOfWord (h.left ++ h.right) = semidirectMul (historyOfWord h.left) (historyOfWord h.right) ∧
+    godelEncode h.primes (h.left ++ h.right) =
+      godelEncode h.primes h.left * integerShift h.primes h.left.length h.right
 
 /-- Dynamic prime-register concatenation is the semidirect-product law on histories, and its
 integerized Gödel shadow factors as a left prefix times the shifted right prefix.
     thm:emergent-arithmetic-dynamic-prime-register-concatenation -/
 theorem paper_emergent_arithmetic_dynamic_prime_register_concatenation
-    (primes : ℕ → ℕ) (left right : PrimeRegisterHistory) :
-    concatenation_law primes left right := by
-  dsimp [concatenation_law]
-  exact ⟨historyOfWord_append left right, godelEncode_append primes left right⟩
+    (h : DynamicPrimeRegisterConcatenationData) : h.concatenation_law := by
+  dsimp [DynamicPrimeRegisterConcatenationData.concatenation_law]
+  exact ⟨historyOfWord_append h.left h.right, godelEncode_append h.primes h.left h.right⟩
 
 end Omega.EA

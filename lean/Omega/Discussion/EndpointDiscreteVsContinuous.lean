@@ -7,12 +7,10 @@ namespace Omega.Discussion
 continuous transverse channel is the unique one packaged by the minimal-record-axis theorem.
     cor:discussion-endpoint-discrete-vs-continuous -/
 theorem paper_discussion_endpoint_discrete_vs_continuous
-    (m : Nat) {uniqueContinuousTransverse : Prop}
-    (hUnique : uniqueContinuousTransverse) :
+    (m : Nat) (D : Omega.CircleDimension.MinimalRecordAxisData) :
     (Omega.Discussion.chebyAdams m 0 = 0 ∨ Omega.Discussion.chebyAdams m 0 = -2 ∨
         Omega.Discussion.chebyAdams m 0 = 2) ∧
-      uniqueContinuousTransverse := by
-  exact ⟨(paper_half_angle_z4_residue m).1,
-    paper_discussion_unique_continuous_transversal hUnique⟩
+      D.uniqueContinuousTransverse := by
+  exact ⟨(paper_half_angle_z4_residue m).1, paper_discussion_unique_continuous_transversal D⟩
 
 end Omega.Discussion

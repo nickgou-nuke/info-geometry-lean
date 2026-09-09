@@ -28,41 +28,42 @@ open InfoGeometry.Projective.TwistorAmplituhedronBoundary
 open InfoGeometry.Projective.PenroseSpinTiling
 open InfoGeometry.Geometry.PauliParavectorBridge
 
-theorem circleIntegral_grothendieck_dlog_readout (R : ℝ) (hR : 0 < R) :
+theorem finite_bridge_packet :
+  (∀ (R : ℝ) (hR : 0 < R),
     (∮ z in C((0 : ℂ), R), grothendieck_dlog z) =
-      (2 * Real.pi * Complex.I : ℂ) := by
-  exact circleIntegral_grothendieck_dlog R hR
-
-theorem grothendieck_dlog_winding_readout (R : ℝ) (hR : 0 < R) (n : ℤ) :
+      (2 * Real.pi * Complex.I : ℂ)) ∧
+  (∀ (R : ℝ) (hR : 0 < R) (n : ℤ),
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z)) =
-      (1 : ℂ) := by
-  exact grothendieckTomitaWilsonBridge n R hR
-
-theorem arnold_mixed_relation_kernel_readout
-    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+      (1 : ℂ)) ∧
+  (∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
     {A : Type*} [Semiring A]
-    (w12 w23 w31 : ArnoldExterior R M) (φ : ArnoldExterior R M →+* A)
-    (hKer : arnoldMixedRelation R M w12 w23 w31 ∈ RingHom.ker φ) :
-    φ (arnoldMixedRelation R M w12 w23 w31) = 0 := by
-  exact arnold_mixed_relation_vanishes_under_kernel_membership
-    (R := R) (M := M) (A := A) w12 w23 w31 φ hKer
-
-theorem triple_nonnull_pairwise_common_twistor_exclusion
-    (X₁ X₂ X₃ : InfoGeometry.Clifford.Soldering.Vec22)
-    (hTriple : TripleNonNull X₁ X₂ X₃) :
-    (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
-      InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧
-      InfoGeometry.Twistor.Incidence.Incident Z X₂ ∧ Z.2 ≠ 0) ∧
-    (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
-      InfoGeometry.Twistor.Incidence.Incident Z X₂ ∧
-      InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧ Z.2 ≠ 0) ∧
-    (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
-      InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧
-      InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧ Z.2 ≠ 0) := by
-  exact triple_nonnull_excludes_pairwise_common_twistors X₁ X₂ X₃ hTriple
-
-theorem pauliMatrix_determinant_readout (v : Minkowski4) :
-    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ) := by
-  exact det_pauliMatrix v
+    (w12 w23 w31 : ArnoldExterior R M) (φ : ArnoldExterior R M →+* A),
+    arnoldMixedRelation R M w12 w23 w31 ∈ RingHom.ker φ →
+      φ (arnoldMixedRelation R M w12 w23 w31) = 0) ∧
+  (∀ (X₁ X₂ X₃ : InfoGeometry.Clifford.Soldering.Vec22),
+    TripleNonNull X₁ X₂ X₃ →
+      (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
+        InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧
+        InfoGeometry.Twistor.Incidence.Incident Z X₂ ∧ Z.2 ≠ 0) ∧
+      (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
+        InfoGeometry.Twistor.Incidence.Incident Z X₂ ∧
+        InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧ Z.2 ≠ 0) ∧
+      (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
+        InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧
+        InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧ Z.2 ≠ 0)) ∧
+  (∀ v : Minkowski4,
+    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ)) := by
+  refine ⟨?residue, ?winding, ?arnold, ?twistor, ?determinantCarrier⟩
+  · intro R hR
+    exact circleIntegral_grothendieck_dlog R hR
+  · intro R hR n
+    exact grothendieckTomitaWilsonBridge n R hR
+  · intro R _ M _ _ A _ w12 w23 w31 φ hKer
+    exact arnold_mixed_relation_vanishes_under_kernel_membership
+      (R := R) (M := M) (A := A) w12 w23 w31 φ hKer
+  · intro X₁ X₂ X₃ hTriple
+    exact triple_nonnull_excludes_pairwise_common_twistors X₁ X₂ X₃ hTriple
+  · intro v
+    exact det_pauliMatrix v
 
 end InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge

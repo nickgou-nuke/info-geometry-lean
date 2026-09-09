@@ -11,7 +11,7 @@ This file contains two theorem-backed finite-stage representations.
 * `realMatToCantor` is the existing real matrix/operator algebra equivalence
   `MatStage n ≃ₐ[ℝ] Module.End ℝ (Idx n → ℝ)`.
 * `complexMatToCantor` is a concrete algebra homomorphism
-  `MatStage n →ₐ[ℝ] Module.End ℂ ((Fin n → Bool) → ℂ)`, obtained by entrywise complexification,
+  `MatStage n →ₐ[ℝ] CantorOp n`, obtained by entrywise complexification,
   reindexing from tower indices to finite Cantor addresses, and
   `Matrix.toLinAlgEquiv` over the endpoint-function basis.
 * `globalRealCantorAlgEquiv` and `globalCantorInverseEquiv` are the
@@ -92,9 +92,11 @@ theorem realMatToCantor_symm_realCantorOpEmbed (n : ℕ) (X : RealCantorOp n) :
 
 /-- The binary tower index set and the finite Cantor-address set have the same cardinality. -/
 theorem idx_card_eq_cantorAddress_card (n : ℕ) :
-    Fintype.card (Idx n) = Fintype.card (((Fin n) → Bool)) := by
-  rw [idx_card_pow_two]
-  simp
+    Fintype.card (Idx n) = Fintype.card (CantorAddress n) := by
+  induction n with
+  | zero => simp [Idx, CantorAddress]
+  | succ n ih =>
+      simp [Idx, CantorAddress, ih, pow_succ, Nat.mul_comm]
 
 /-- Canonical Boolean encoding of `Fin 2`. -/
 def fin2EquivBool : Fin 2 ≃ Bool where
@@ -108,7 +110,7 @@ def fin2EquivBool : Fin 2 ≃ Bool where
     cases b <;> simp
 
 /-- Canonical orientation equivalence from tower indices to finite Cantor addresses. -/
-def idxEquivCantorAddress : (n : ℕ) → Idx n ≃ ((Fin n) → Bool)
+def idxEquivCantorAddress : (n : ℕ) → Idx n ≃ CantorAddress n
   | 0 =>
       { toFun := fun _ i => Fin.elim0 i
         invFun := fun _ => default
@@ -186,19 +188,17 @@ noncomputable def complexifyMatrixAlgHom (n : ℕ) :
 
 /-- Complexified and reindexed matrix representation over finite Cantor addresses. -/
 noncomputable def complexMatToMatrix (n : ℕ) :
-    MatStage n →ₐ[ℝ] Matrix (((Fin n) → Bool)) (((Fin n) → Bool)) ℂ :=
+    MatStage n →ₐ[ℝ] Matrix (CantorAddress n) (CantorAddress n) ℂ :=
   (Matrix.reindexAlgEquiv ℝ ℂ (idxEquivCantorAddress n)).toAlgHom.comp
     (complexifyMatrixAlgHom n)
 
 /-- Concrete finite-stage algebra homomorphism into complex Cantor endpoint operators. -/
-noncomputable def complexMatToCantor (n : ℕ) :
-    MatStage n →ₐ[ℝ] Module.End ℂ ((Fin n → Bool) → ℂ) :=
-  ((Matrix.toLinAlgEquiv (Pi.basisFun ℂ (((Fin n) → Bool)))).toAlgHom.restrictScalars ℝ).comp
+noncomputable def complexMatToCantor (n : ℕ) : MatStage n →ₐ[ℝ] CantorOp n :=
+  ((Matrix.toLinAlgEquiv (Pi.basisFun ℂ (CantorAddress n))).toAlgHom.restrictScalars ℝ).comp
     (complexMatToMatrix n)
 
 @[simp] theorem complexMatToCantor_map_one (n : ℕ) :
-    complexMatToCantor n (1 : MatStage n) =
-      (1 : Module.End ℂ ((Fin n → Bool) → ℂ)) := by
+    complexMatToCantor n (1 : MatStage n) = (1 : CantorOp n) := by
   simp [complexMatToCantor]
 
 @[simp] theorem complexMatToCantor_map_mul (n : ℕ) (A B : MatStage n) :
@@ -206,8 +206,7 @@ noncomputable def complexMatToCantor (n : ℕ) :
   simp [complexMatToCantor]
 
 @[simp] theorem complexMatToCantor_map_zero (n : ℕ) :
-    complexMatToCantor n (0 : MatStage n) =
-      (0 : Module.End ℂ ((Fin n → Bool) → ℂ)) := by
+    complexMatToCantor n (0 : MatStage n) = (0 : CantorOp n) := by
   simp [complexMatToCantor]
 
 @[simp] theorem complexMatToCantor_map_add (n : ℕ) (A B : MatStage n) :
@@ -218,7 +217,7 @@ noncomputable def complexMatToCantor (n : ℕ) :
 theorem complexMatToCantor_injective (n : ℕ) : Function.Injective (complexMatToCantor n) := by
   intro A B h
   have hmat : complexMatToMatrix n A = complexMatToMatrix n B := by
-    exact (Matrix.toLinAlgEquiv (Pi.basisFun ℂ (((Fin n) → Bool)))).injective h
+    exact (Matrix.toLinAlgEquiv (Pi.basisFun ℂ (CantorAddress n))).injective h
   have hidx : complexifyMatrixAlgHom n A = complexifyMatrixAlgHom n B := by
     exact (Matrix.reindexAlgEquiv ℝ ℂ (idxEquivCantorAddress n)).injective hmat
   ext i j

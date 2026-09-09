@@ -136,8 +136,7 @@ theorem finiteDelta_action_lifts_to_colimit
   have hinv :
       (((stageUnitToColimit n δ)⁻¹ : Carrierˣ) : Carrier) =
         stageInjection n ((δ⁻¹ : (MatrixStage n)ˣ) : MatrixStage n) := by
-    simpa [stageUnitToColimit] using
-      (stageUnitToColimit_coe n (δ⁻¹ : (MatrixStage n)ˣ))
+    exact stageUnitToColimit_coe n (δ⁻¹ : (MatrixStage n)ˣ)
   rw [hinv, ← stageInjection_mul, ← stageInjection_mul]
 
 /-- Colimit trace readback of the lifted finite modular action. -/

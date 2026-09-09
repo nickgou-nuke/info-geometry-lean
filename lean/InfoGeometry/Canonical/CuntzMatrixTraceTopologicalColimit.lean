@@ -44,23 +44,21 @@ def topologicalDiagram (T : Data) : ℕ ⥤ TopCat where
     simpa [continuousTransition] using h
 
 abbrev topologicalColimitObject (T : Data) : TopCat :=
-  colimit (topologicalDiagram T)
+  topologicalDirectColimit (topologicalDiagram T)
 
 abbrev topologicalColimit (T : Data) : Type :=
   (topologicalColimitObject T)
 
 def topologicalInclusion (T : Data) (n : ℕ) :
     (topologicalDiagram T).obj n ⟶ topologicalColimitObject T :=
-  colimit.ι (topologicalDiagram T) n
+  topologicalDirectInjection (topologicalDiagram T) n
 
 def continuousTrace (n : ℕ) : ContinuousMap (MatrixStage n) ℂ :=
   { toFun := matrixTraceFunctional n
     continuous_toFun :=
       (matrixTraceFunctional n).continuous_of_finiteDimensional }
 
-def traceTopologicalCocone (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
-    Cocone (topologicalDiagram T) where
+def traceTopologicalCocone (T : Data) : Cocone (topologicalDiagram T) where
   pt := TopCat.of ℂ
   ι :=
     { app := fun n => TopCat.ofHom (continuousTrace n)
@@ -72,31 +70,27 @@ def traceTopologicalCocone (T : Data)
         change matrixTraceFunctional n (map T (leOfHom f) A) =
           matrixTraceFunctional m A
         simpa [matrixTraceState] using
-    trace_compatible T hT (leOfHom f) A }
+          trace_compatible T (leOfHom f) A }
 
-noncomputable def traceTopologicalColimitMap (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
+noncomputable def traceTopologicalColimitMap (T : Data) :
     topologicalColimitObject T ⟶ TopCat.of ℂ :=
-  colimit.desc (topologicalDiagram T) (traceTopologicalCocone T hT)
+  topologicalDirectDescend (topologicalDiagram T) (traceTopologicalCocone T)
 
-theorem traceTopologicalColimitMap_inclusion (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
-    (n : ℕ)
+theorem traceTopologicalColimitMap_inclusion (T : Data) (n : ℕ)
     (A : MatrixStage n) :
-    traceTopologicalColimitMap T hT (topologicalInclusion T n A) =
+    traceTopologicalColimitMap T (topologicalInclusion T n A) =
       matrixTraceFunctional n A := by
   have h := topologicalDirectDescend_stage
-    (topologicalDiagram T) (traceTopologicalCocone T hT) n
+    (topologicalDiagram T) (traceTopologicalCocone T) n
   exact congrArg (fun f => f A) h
 
 theorem traceTopologicalColimitMap_unique (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (f : topologicalColimitObject T ⟶ TopCat.of ℂ)
     (h : ∀ (n : ℕ) (A : MatrixStage n),
       f (topologicalInclusion T n A) = matrixTraceFunctional n A) :
-    f = traceTopologicalColimitMap T hT := by
+    f = traceTopologicalColimitMap T := by
   apply topologicalDirectDescend_unique
-    (topologicalDiagram T) (traceTopologicalCocone T hT) f
+    (topologicalDiagram T) (traceTopologicalCocone T) f
   intro n
   apply TopCat.hom_ext
   apply ContinuousMap.ext

@@ -48,6 +48,36 @@ theorem quotientRepresentative_eq_left_smul_of_pc_matrix
   rw [hgroup]
   exact ⟨e, rfl⟩
 
+theorem quotient_orbit_witness_of_collected_factorization
+    (k : Fin 12) (i : Fin 189)
+    (hfac : flagRepresentative i =
+      collect (leftFactorWord k i) *
+        weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+        collect (rightFactorWord k i)) :
+    ∃ b : SplitOctF2Aut,
+      b ∈ G2TwoPCSubgroupClosure.unipotentSubgroup ∧
+        quotientRepresentative i =
+          b • (QuotientGroup.mk
+            (weylNF (orbitWeyl k).1 (orbitWeyl k).2) : CarrierQuotient) := by
+  let b : SplitOctF2Aut := collect (leftFactorWord k i)
+  let w : SplitOctF2Aut := weylNF (orbitWeyl k).1 (orbitWeyl k).2
+  refine ⟨b, collect_mem_unipotentSubgroup _, ?_⟩
+  change quotientRepresentative i =
+    b • (QuotientGroup.mk w : CarrierQuotient)
+  change QuotientGroup.mk (flagRepresentative i) =
+    QuotientGroup.mk (b * w)
+  rw [QuotientGroup.eq]
+  have hri :
+      (collect (rightFactorWord k i))⁻¹ ∈
+        G2TwoPCSubgroupClosure.unipotentSubgroup :=
+    G2TwoPCSubgroupClosure.unipotentSubgroup.inv_mem
+      (collect_mem_unipotentSubgroup _)
+  obtain ⟨e, he⟩ := hri
+  refine ⟨e, ?_⟩
+  rw [hfac]
+  simp [b, w, mul_assoc]
+  rw [← he]
+
 theorem quotient_witness_cell_one_45 :
     quotientRepresentative 45 =
     collect (leftFactorWord 1 45) •

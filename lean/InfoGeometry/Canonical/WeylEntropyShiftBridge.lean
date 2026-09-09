@@ -26,24 +26,28 @@ The homogeneous readout supplies
 The positivity field supplies the domain needed for the entropy/log readout.
 -/
 @[rep_depth operator]
-abbrev WeylHomogeneousEntropy (Op : Type*) :=
-  {W : WeylHomogeneousOperatorReadout Op // ∀ A, 0 < W.readout A}
+structure WeylHomogeneousEntropy (Op : Type*) where
+  homogeneous : WeylHomogeneousOperatorReadout Op
+  readout_pos : ∀ A, 0 < homogeneous.readout A
 
 namespace WeylHomogeneousEntropy
 
 variable {Op : Type*}
-
-abbrev homogeneous (W : WeylHomogeneousEntropy Op) :
-    WeylHomogeneousOperatorReadout Op := W.1
-abbrev readout_pos (W : WeylHomogeneousEntropy Op) :
-    ∀ A, 0 < W.homogeneous.readout A := W.2
-
 variable (W : WeylHomogeneousEntropy Op)
 
 /-- Entropy/log readout of the positive homogeneous partition. -/
 @[rep_depth operator]
 noncomputable def entropy (A : Op) : ℝ :=
   Real.log (W.homogeneous.readout A)
+
+/-- Direct readback of the partition/readout scaling law. -/
+@[rep_depth operator]
+theorem readout_scale
+    (c : ℝ)
+    (A : Op) :
+    W.homogeneous.readout (W.homogeneous.scale c A) =
+      c ^ W.homogeneous.weight * W.homogeneous.readout A :=
+  W.homogeneous.readout_scale c A
 
 /--
 Logarithmic Weyl shift.
@@ -62,7 +66,7 @@ theorem entropy_scale_shift
   calc
     Real.log (W.homogeneous.readout (W.homogeneous.scale c A))
         = Real.log (c ^ W.homogeneous.weight * W.homogeneous.readout A) := by
-            rw [W.homogeneous.readout_scale_law]
+            rw [W.homogeneous.readout_scale]
     _ = Real.log (c ^ W.homogeneous.weight) +
           Real.log (W.homogeneous.readout A) := by
             rw [Real.log_mul (pow_ne_zero W.homogeneous.weight hc)

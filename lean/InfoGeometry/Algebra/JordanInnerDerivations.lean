@@ -173,16 +173,31 @@ theorem h3Zorn_traceBilin_jordanLmul_assoc (a x y : H3Zorn ℝ) :
   simp only [candidateJordanMul, T_outer_formula, traceBilin_smul_left,
     traceBilin_smul_right]
   rw [crossProduct_one, crossProduct_one]
-  simp only [traceBilin_sub_left, traceBilin_sub_right, traceBilin_add_left,
-    traceBilin_add_right, traceBilin_smul_left, traceBilin_smul_right,
-    traceBilin_one, linearTrace_crossProduct]
+  have hsubL (u v z : H3Zorn ℝ) :
+      traceBilin (u - v) z = traceBilin u z - traceBilin v z := by
+    rw [sub_eq_add_neg, traceBilin_add_left]
+    have hv : traceBilin (-v) z = -traceBilin v z := by
+      rw [show -v = (-1 : ℝ) • v by module, traceBilin_smul_left]
+      simp
+    rw [hv]
+    simp only [sub_eq_add_neg]
+  have hsubR (z u v : H3Zorn ℝ) :
+      traceBilin z (u - v) = traceBilin z u - traceBilin z v := by
+    calc
+      traceBilin z (u - v) = traceBilin (u - v) z := traceBilin_symm _ _
+      _ = traceBilin u z - traceBilin v z := hsubL _ _ _
+      _ = traceBilin z u - traceBilin z v := by rw [traceBilin_symm u z, traceBilin_symm v z]
+  rw [hsubL, hsubL, hsubR, hsubR]
+  simp only [traceBilin_add_left, traceBilin_add_right, traceBilin_smul_left,
+    traceBilin_smul_right, traceBilin_one,
+    linearTrace_crossProduct]
   rw [traceBilin_crossProduct_assoc a x y]
   rw [traceBilin_symm x (crossProduct a y)]
   rw [traceBilin_crossProduct_assoc a y x]
   rw [crossProduct_symm y x]
   rw [traceBilin_symm (1 : H3Zorn ℝ) y, traceBilin_one]
-  rw [traceBilin_symm a x]
-  ring
+  rw [traceBilin_symm x a]
+  ring_nf
 
 theorem h3ZornJordanInnerDerivation_linearTrace_zero
     (a b x : H3Zorn ℝ) :

@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.HestenesPhaseSemilinear
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -22,7 +23,7 @@ complex. It records theorem-safe predicates and readbacks:
 * homology equivalence means difference by a generated boundary;
 * cocycles/coboundaries are the dual predicate-level analogues;
 * Drazin-null cycles are generalized-kernel vectors `A^k x = 0`;
-* pairings and Bogoliubov transport of pairings are supplied as data;
+* pairings and Bogoliubov transport of pairings are supplied as sockets;
 * Cartan eigen-operator weights are reused from the existing owner module.
 
 The owner language is real doubled/Hestenes--Krein. No scalar-complex
@@ -40,7 +41,7 @@ open InfoGeometry.Canonical.Drazin
 /--
 A real boundary operator.
 
-This is the minimal chain-complex datum: `d² = 0`, without committing to a
+This is the minimal chain-complex socket: `d² = 0`, without committing to a
 normed carrier or a quotient construction.
 -/
 @[rep_depth operator]
@@ -132,24 +133,33 @@ theorem homologyEquivalent_equivalence :
     exact B.homologyEquivalent_trans hxy hyz
 
 /--
-A real homology property/readout. It descends to homology if it vanishes on
+A real homology witness/readout. It descends to homology if it vanishes on
 boundaries.
 -/
-/- A linear functional that vanishes on boundaries descends across homology. -/
+@[rep_depth operator]
+def BoundaryVanishingWitness : Type _ :=
+  { eval : C →ₗ[ℝ] ℝ // ∀ y : C, eval (B.d y) = 0 }
+
+namespace BoundaryVanishingWitness
+
+variable {B}
+variable (ω : BoundaryVanishingWitness B)
+
+/-- Boundary-vanishing witnesses are constant on homology classes. -/
 @[rep_depth operator]
 theorem descends_to_homology_equivalence
-    (ω : C →ₗ[ℝ] ℝ)
-    (hω : ∀ y : C, ω (B.d y) = 0)
     {x y : C}
     (hxy : B.HomologyEquivalent x y) :
-    ω x = ω y := by
+    ω.1 x = ω.1 y := by
   unfold HomologyEquivalent IsBoundary at hxy
   rcases hxy with ⟨b, hb⟩
-  have hzero : ω (x - y) = 0 := by
+  have hzero : ω.1 (x - y) = 0 := by
     rw [← hb]
-    exact hω b
+    exact ω.2 b
   rw [map_sub] at hzero
   exact sub_eq_zero.mp hzero
+
+end BoundaryVanishingWitness
 
 end RealBoundaryOperator
 
@@ -175,7 +185,7 @@ variable {Chain Cochain : Type*}
 variable [AddCommGroup Chain] [Module ℝ Chain]
 variable (P : RealPairing Chain Cochain)
 
-/-- A property/cochain vanishes on boundaries. -/
+/-- A witness/cochain vanishes on boundaries. -/
 @[rep_depth operator]
 def VanishesOnBoundaries
     (B : RealBoundaryOperator Chain)
@@ -344,29 +354,11 @@ This is the projector-facing predicate for the Drazin homology-like residue.
 def IsDrazinDefectState (Q : EndH) (x : H₂) : Prop :=
   Q x = x
 
-/-- A transport preserves the generalized null sector of `A^k`. -/
+/-- Socket predicate: a transport preserves the generalized null sector of `A^k`. -/
 @[rep_depth operator]
 def PreservesDrazinNullCycles (A U : EndH) (k : ℕ) : Prop :=
   ∀ x, IsDrazinNullCycle (E := E) A k x →
     IsDrazinNullCycle (E := E) A k (U x)
-
-theorem preservesDrazinNullCycles_of_power_commutes
-    {A U : EndH} {k : ℕ}
-    (hcomm : U.comp (A ^ k) = (A ^ k).comp U) :
-    PreservesDrazinNullCycles (E := E) A U k := by
-  intro x hx
-  unfold IsDrazinNullCycle at hx ⊢
-  have hpoint := congrArg (fun F : EndH => F x) hcomm
-  change U ((A ^ k) x) = (A ^ k) (U x) at hpoint
-  rw [hx, map_zero] at hpoint
-  exact hpoint.symm
-
-theorem preservesDrazinNullCycles_of_commutes
-    {A U : EndH} (hcomm : Commute U A) :
-    ∀ k : ℕ, PreservesDrazinNullCycles (E := E) A U k := by
-  intro k
-  apply preservesDrazinNullCycles_of_power_commutes (E := E)
-  exact (hcomm.pow_right k).eq
 
 /-- Readback for supplied Drazin-null stability. -/
 @[rep_depth operator]
@@ -381,7 +373,7 @@ theorem drazinNullCycle_transport
 /-! ## Real linear witnesses -/
 
 /--
-A real linear property pairs trivially with generated boundaries.
+A real linear witness pairs trivially with generated boundaries.
 
 This is the safe cohomology-facing condition: arbitrary nonlinear pairings do
 not descend to homology classes.
@@ -392,11 +384,11 @@ def PairsTriviallyOnBoundaries
   ∀ y : H₂, φ (D y) = 0
 
 /-!
-A real linear property that vanishes on boundaries descends to
+A real linear witness that vanishes on boundaries descends to
 homology-equivalence classes.
 -/
 @[rep_depth transport]
-theorem property_descends_to_homologyEquivalent
+theorem witness_descends_to_homologyEquivalent
     {D : EndH} {φ : H₂ →L[ℝ] ℝ}
     (hφ : PairsTriviallyOnBoundaries (E := E) D φ)
     {x y : H₂}
@@ -522,19 +514,23 @@ theorem complementaryProjection_fixes_drazinNullCycle
 end ModuleEndDrazinResidue
 
 /-- A real pairing between homology-side vectors and cohomology witnesses. -/
-abbrev RealPairingData (Cochain : Type u) := RealPairing H₂ Cochain
+@[socket_debt_tag, rep_depth transport]
+structure RealPairingSocket (Cochain : Type u) where
+  pairing : H₂ → Cochain → ℝ
+  pairing_sub_left :
+    ∀ x y φ, pairing (x - y) φ = pairing x φ - pairing y φ
 
-namespace RealPairingData
+namespace RealPairingSocket
 
 variable {Cochain : Type u}
-variable (P : RealPairingData (E := E) Cochain)
+variable (P : RealPairingSocket (E := E) Cochain)
 
-/-- A property pairs trivially with all generated boundaries. -/
+/-- A witness pairs trivially with all generated boundaries. -/
 @[rep_depth transport]
 def PairsTriviallyOnBoundaries (D : EndH) (φ : Cochain) : Prop :=
   ∀ y : H₂, P.pairing (D y) φ = 0
 
-/-- A representative cohomology property detects a homology representative. -/
+/-- A representative cohomology witness detects a homology representative. -/
 @[rep_depth transport]
 def Detects (x : H₂) (φ : Cochain) : Prop :=
   P.pairing x φ ≠ 0
@@ -542,7 +538,7 @@ def Detects (x : H₂) (φ : Cochain) : Prop :=
 /--
 A chain/cochain transport preserves the real pairing readout.
 
-This is the abstract law used by K/Bogoliubov/Krein-preserving frame maps:
+This is the abstract socket used by K/Bogoliubov/Krein-preserving frame maps:
 the concrete proof that a frame preserves `K`, Drazin sectors, and the Krein
 form can be supplied upstream, while this dictionary records the readout law.
 -/
@@ -562,7 +558,7 @@ theorem pairing_readout_invariant_of_preservesPairingTransport
     P.pairing (transportChain x) (transportCochain φ) = P.pairing x φ :=
   hT x φ
 
-/-- A detecting property remains detecting under a pairing-preserving transport. -/
+/-- A detecting witness remains detecting under a pairing-preserving transport. -/
 @[rep_depth transport]
 theorem detects_transport_of_preservesPairingTransport
     {transportChain : H₂ → H₂}
@@ -576,7 +572,7 @@ theorem detects_transport_of_preservesPairingTransport
   exact hDetects
 
 /--
-If a property kills boundaries, it has the same pairing value on homologous
+If a witness kills boundaries, it has the same pairing value on homologous
 representatives.
 -/
 @[rep_depth transport]
@@ -591,32 +587,32 @@ theorem pairing_eq_of_homologyEquivalent
     rw [← hz]
     exact hφ z
   have hsub : P.pairing (x - y) φ = P.pairing x φ - P.pairing y φ :=
-    P.sub_left x y φ
+    P.pairing_sub_left x y φ
   rw [hboundary] at hsub
   exact sub_eq_zero.mp hsub.symm
 
-end RealPairingData
+end RealPairingSocket
 
-/-! ## Frame transport of properties and pairings -/
+/-! ## Frame transport of witnesses and pairings -/
 
-/-- Transport a real property by a supplied inverse-frame map. -/
+/-- Transport a real witness by a supplied inverse-frame map. -/
 @[rep_depth transport]
-noncomputable def transportedProperty
+noncomputable def transportWitness
     (Uinv : EndH) (φ : H₂ →L[ℝ] ℝ) : H₂ →L[ℝ] ℝ :=
   φ.comp Uinv
 
 /--
-If `Uinv` is a left inverse for `U`, the transported property has the same
+If `Uinv` is a left inverse for `U`, the transported witness has the same
 readout on the transported state.
 -/
 @[rep_depth transport]
-theorem transportedProperty_readout_eq
+theorem transportedWitness_readout_eq
     {U Uinv : EndH}
     (hLeft : Uinv.comp U = ContinuousLinearMap.id ℝ H₂)
     (φ : H₂ →L[ℝ] ℝ)
     (x : H₂) :
-    transportedProperty (E := E) Uinv φ (U x) = φ x := by
-  unfold transportedProperty
+    transportWitness (E := E) Uinv φ (U x) = φ x := by
+  unfold transportWitness
   have hx : Uinv (U x) = x := by
     simpa [ContinuousLinearMap.comp_apply] using
       congrArg (fun F : EndH => F x) hLeft
@@ -681,12 +677,12 @@ section LinearCohomologyWitnesses
 variable {W : Type u}
 variable [AddCommGroup W] [Module ℝ W]
 
-/-- Linear real cocycle: a property killed by a real linear coboundary operator. -/
+/-- Linear real cocycle: a witness killed by a real linear coboundary operator. -/
 @[rep_depth transport]
 def IsLinearRealCocycle (δ : W →ₗ[ℝ] W) (φ : W) : Prop :=
   δ φ = 0
 
-/-- Linear real coboundary: a property generated by a real linear coboundary operator. -/
+/-- Linear real coboundary: a witness generated by a real linear coboundary operator. -/
 @[rep_depth transport]
 def IsLinearRealCoboundary (δ : W →ₗ[ℝ] W) (φ : W) : Prop :=
   ∃ ψ : W, δ ψ = φ

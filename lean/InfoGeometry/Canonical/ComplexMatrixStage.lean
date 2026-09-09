@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 /-!
@@ -197,6 +198,35 @@ theorem bond_diagonal (n : ℕ) (f : DiagAlg n) :
       subst w
       exact hlast rfl
     simp [bond, bondFun, diagonal, diagEmbedSucc, hlast, hvw]
+
+/-- The diagonal successor embedding as a linear map. -/
+def diagEmbedSuccLinear (n : ℕ) : DiagAlg n →ₗ[ℂ] DiagAlg (n + 1) where
+  toFun := diagEmbedSucc n
+  map_add' := diagEmbedSucc_add n
+  map_smul' := by
+    intro c f
+    ext w
+    rfl
+
+/-- The finite-cylinder realization as a linear map. -/
+def cylinderLinear (n : ℕ) : DiagAlg n →ₗ[ℂ] ((ℕ → Bool) → ℂ) where
+  toFun := cylinder n
+  map_add' := by
+    intro f g
+    exact cylinder_add n f g
+  map_smul' := by
+    intro c f
+    ext b
+    rfl
+
+theorem cylinderLinear_compatible_succ (n : ℕ) :
+    (cylinderLinear (n + 1)).comp (diagEmbedSuccLinear n) =
+      cylinderLinear n := by
+  apply LinearMap.ext
+  intro f
+  apply funext
+  intro b
+  exact congrFun (cylinder_compatible_succ n f) b
 
 def boundaryRealization (n : ℕ) : DiagAlg n →ₗ[ℂ] ((ℕ → Bool) → ℂ) :=
   cylinderLinear n

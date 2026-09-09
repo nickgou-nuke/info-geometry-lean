@@ -51,5 +51,3 @@ theorem boundaryReadoutToPrefixLimitCompHausHom_stage_apply
   exact boundaryReadoutToPrefixLimit_stage_apply D S n x i
 
 end InfoGeometry.Topology
-
-end

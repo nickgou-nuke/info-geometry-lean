@@ -55,5 +55,3 @@ theorem isLocallyConstant_cuntzGrothendieckReadout :
     exact cuntzGrothendieckReadout_eq (A := A) O2
   rw [hconst]
   exact IsLocallyConstant.const (X := CuntzTwoAlgebra A) (y := classOf (1 : A))
-
-end

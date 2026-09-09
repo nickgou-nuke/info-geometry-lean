@@ -1,4 +1,4 @@
-import proofs.HestenesCircularSheetCAR
+import InfoGeometry.Canonical.HestenesCircularSheetCAR
 
 /-!
 # Hestenes phase, boost, and rotation rotor normal forms

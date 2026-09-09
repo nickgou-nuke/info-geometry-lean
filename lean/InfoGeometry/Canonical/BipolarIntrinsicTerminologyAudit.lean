@@ -1,0 +1,38 @@
+import InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain
+
+/-!
+# Transitive axiom inspection for the intrinsic terminology correction
+
+These commands inspect elaborated declarations once Lean executes this file.
+Any occurrence of `sorryAx` or a project-specific axiom is a verification
+failure. This audit does not substitute for an actual kernel run.
+-/
+
+#print axioms InfoGeometry.Analysis.BipolarMobiusPunctureEquiv.mobiusPunctureEquiv
+#print axioms InfoGeometry.Analysis.BipolarMobiusPunctureEquiv.inverseCrossRatio01_crossRatio01
+#print axioms InfoGeometry.Analysis.BipolarMobiusPunctureEquiv.crossRatio01_inverseCrossRatio01
+
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.hasDerivAt_logitCoordinate
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.hasDerivAt_intervalBarrier
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.hasDerivAt_intervalBarrierGradient
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.intervalBarrierGradient_eq_zero_iff
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.logitCoordinate_logistic
+#print axioms InfoGeometry.Convex.BipolarLogitBarrierDuality.intervalBarrier_logistic
+
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.deck_involutive
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.deck_ne_self
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.roots_eq_or_eq_neg
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.squareRootCartanLift_det
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.squareRootCartanLift_deck
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.fundamentalAction_deck
+#print axioms InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent.observableAction_deck
+
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyBerezinian_eq
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyOdd_inverse_certificate
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.negCothHalfExp_bipolarLog
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.superCayleyBerezinian_crossRatio01
+#print axioms InfoGeometry.NCG.BipolarCayleyBerezinianRealization.det_superCayleyOdd_crossRatio01_eq_zero_iff
+
+#print axioms InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain.pristine_berezinian_realization_core
+#print axioms InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain.bipolar_intrinsic_terminology_pristine_chain
+

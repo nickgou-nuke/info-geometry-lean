@@ -81,6 +81,6 @@ theorem normalizedTraceReadoutFamily_eq_state_readout
       (normalizedTraceState n).toLinearMap.toContinuousLinearMap := by
   rfl
 
-end InfoGeometry.Canonical.Cl11FiniteNormalizedTraceState
+end Cl11FiniteNormalizedTraceState
 
-end
+end Canonical

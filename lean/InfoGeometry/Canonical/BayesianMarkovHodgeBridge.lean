@@ -14,7 +14,7 @@ This file stays inside the existing owner surfaces:
   orthogonality to exact/coexact local errors.
 
 The bridge is deliberately explicit: a supplied stationary state is read out as
-an edge current, and that current is then property as harmonic/protected in
+an edge current, and that current is then certified as harmonic/protected in
 the finite Hodge layer.
 -/
 
@@ -38,10 +38,10 @@ variable [∀ n, Semiring (A n)] [∀ n, Algebra R (A n)]
 A stationary Bayesian state on the tensor limit is read out as a finite
 degree-one Hodge current.
 -/
-structure BayesianMarkovHodgeData
+structure BayesianMarkovHodgePacket
     (bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1))
     (L : TensorInductiveLimit bond) where
-  kms : KMSStationarityData L
+  kms : KMSStationarityPacket L
   n0 : ℕ
   n1 : ℕ
   n2 : ℕ
@@ -52,11 +52,11 @@ structure BayesianMarkovHodgeData
   stateToCurrent_eq : stateToCurrent kms.kmsState = current
   harmonic_current : IsHarmonicCodeState d0 d1 current
 
-namespace BayesianMarkovHodgeData
+namespace BayesianMarkovHodgePacket
 
 variable {bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1)}
 variable {L : TensorInductiveLimit bond}
-variable (B : BayesianMarkovHodgeData (A := A) bond L)
+variable (B : BayesianMarkovHodgePacket (A := A) bond L)
 
 /-- The stationary KMS state is read out as the supplied current. -/
 theorem stationary_current_readout :
@@ -99,6 +99,6 @@ theorem stationary_current_hodge_protection
   hodge_orthogonal_protection B.d0 B.d1
     (B.stationary_current_is_harmonic) he hc
 
-end BayesianMarkovHodgeData
+end BayesianMarkovHodgePacket
 
 end InfoGeometry.Canonical.BayesianMarkovHodgeBridge

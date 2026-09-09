@@ -35,7 +35,7 @@ def SpectralPrimalCompatibility
 /--
 At a compatible basepoint `θ₀`, the reduced Einstein-Hilbert action proxy is
 exactly `-6` times the dual pairing minus the dual potential along the
-Hohenberg-Kohn property covector.
+Hohenberg-Kohn witness covector.
 -/
 theorem einsteinHilbertAction_eq_neg_six_dual_pairing_sub_dual_of_compatible
     (ψ : Θ → ℝ)

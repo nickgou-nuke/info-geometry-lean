@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.ZornVectorMatrix
 import Mathlib.Tactic
 
 /-!
@@ -38,6 +39,23 @@ def signalNorm (c : ℝ) (s : SignalCoordinates) : ℝ :=
     (s.position 0 ^ 2 + s.position 1 ^ 2 + s.position 2 ^ 2) -
     c ^ 2 * s.time ^ 2
 
+/-! Direct realization in the linear native carrier used by the derivation
+API.  This does not alter the older non-associative coordinate carrier. -/
+def toNativeVectorZorn (c : ℝ) (s : SignalCoordinates) :
+    InfoGeometry.Algebra.ZornVectorMatrix ℝ where
+  a := s.omega + c * s.time
+  v := fun i => s.lambda i - s.position i
+  w := fun i => s.lambda i + s.position i
+  b := s.omega - c * s.time
+
+theorem native_vector_zorn_norm_eq_signalNorm (c : ℝ) (s : SignalCoordinates) :
+    InfoGeometry.Algebra.ZornVectorMatrix.norm (toNativeVectorZorn c s) =
+      signalNorm c s := by
+    simp [toNativeVectorZorn, signalNorm,
+      InfoGeometry.Algebra.ZornVectorMatrix.norm,
+      InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+    ring
+
 theorem native_zorn_norm_eq_signalNorm (c : ℝ) (s : SignalCoordinates) :
     zornNorm (toNativeZorn c s) = signalNorm c s := by
   simp [toNativeZorn, signalNorm, zornNorm, Vec3.dot, Vec3.add, Vec3.sub,
@@ -46,6 +64,11 @@ theorem native_zorn_norm_eq_signalNorm (c : ℝ) (s : SignalCoordinates) :
 
 def IsZeroNorm (c : ℝ) (s : SignalCoordinates) : Prop :=
   signalNorm c s = 0
+
+theorem isZeroNorm_iff_native_vector_zorn_norm_zero (c : ℝ) (s : SignalCoordinates) :
+    IsZeroNorm c s ↔
+      InfoGeometry.Algebra.ZornVectorMatrix.norm (toNativeVectorZorn c s) = 0 := by
+  rw [IsZeroNorm, native_vector_zorn_norm_eq_signalNorm]
 
 theorem isZeroNorm_iff_native_zorn_norm_zero (c : ℝ) (s : SignalCoordinates) :
     IsZeroNorm c s ↔ zornNorm (toNativeZorn c s) = 0 := by

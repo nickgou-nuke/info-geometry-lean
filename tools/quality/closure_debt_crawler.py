@@ -45,8 +45,12 @@ DECL_HEADER_RE = re.compile(
     re.M,
 )
 
-# Restrict hard proof-hole detection to term-level placeholders. `sorryAx`/`admitAx`
-# may appear as metadata identifiers and are handled separately as advisory context.
+# Restrict hard proof-hole detection to term-level placeholders.  Kernel axiom
+# dependencies are not inferred from source spelling: `sorryAx`/`admitAx` may
+# legitimately occur in audit/meta code, while a proof can depend on them
+# without spelling either identifier.  The authoritative check is
+# `Lean.collectAxioms`, so source crawling must not manufacture debt from these
+# names.
 PROOF_HOLE_RE = re.compile(r"(?<!\.)(?<!\w)(?:sorry|admit)(?!\w)")
 AXIOM_DECL_RE = re.compile(r"^\s*axiom\b", re.M)
 POSTULATE_DECL_RE = re.compile(r"^\s*postulate\b", re.M)
@@ -207,7 +211,12 @@ def classify_block(kind: str, name: str, line: int, block: str) -> list[Finding]
             )
         )
 
-    if PROOF_HOLE_RE.search(block):
+    # A declaration block may contain ordinary implementation text, including
+    # audit strings such as `sorryAx`/`admitAx`.  Those are not proof terms.
+    # Restrict this hard source check to declarations whose RHS is a proof
+    # (and keep the file-level termination scan below for recursive proofs).
+    if kind in {"theorem", "lemma", "example", "instance"} \
+            and PROOF_HOLE_RE.search(proof_body(block)):
         out.append(
             Finding(
                 category="proof-hole",
@@ -216,18 +225,6 @@ def classify_block(kind: str, name: str, line: int, block: str) -> list[Finding]
                 declaration_kind=kind,
                 declaration_name=name,
                 detail="declaration body contains sorry/admit placeholder",
-            )
-        )
-
-    if re.search(r"\b(?:sorryAx|admitAx)\b", block):
-        out.append(
-            Finding(
-                category="kernel-placeholder-reference",
-                severity="advisory",
-                line=line,
-                declaration_kind=kind,
-                declaration_name=name,
-                detail="declaration references sorryAx/admitAx symbol; verify this is metadata/lint context, not a proof hole",
             )
         )
 
@@ -296,7 +293,11 @@ def classify_block(kind: str, name: str, line: int, block: str) -> list[Finding]
     if kind in {"structure", "class"}:
         for field in PROP_LIKE_FIELD_RE.finditer(block):
             field_name = field.group(1)
-            field_type = field.group(2).strip()
+            # Structure fields may have a default value (`:= ...`).  The
+            # declaration type ends before that initializer; inspecting the
+            # initializer makes ordinary data fields containing `=` look like
+            # proposition/equality lockers.
+            field_type = field.group(2).split(":=", 1)[0].strip()
             if field_name in {"where", "extends"}:
                 continue
             if prop_like_field_type(field_type):

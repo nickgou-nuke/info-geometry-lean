@@ -338,7 +338,7 @@ namespace SchurDecompositionPacket
 
 variable {K : Type*} [Field K] {n : ℕ}
 
-/-- Similarity property carried by a Schur packet. -/
+/-- Similarity witness carried by a Schur packet. -/
 def similarWitness (S : SchurDecompositionPacket K n) :
     SimilarMatrixWitness S.A S.B where
   P := S.P
@@ -356,7 +356,7 @@ theorem schur_decomposition (S : SchurDecompositionPacket K n) :
       diagList S.B = S.eigenvalues :=
   ⟨S.factorization, S.P_mul_Q, S.Q_mul_P, S.upper_triangular, S.diag_eq⟩
 
-/-- The upper-triangular component of a property Schur decomposition. -/
+/-- The upper-triangular component of a certified Schur decomposition. -/
 def schurUpperTriangular (S : SchurDecompositionPacket K n) :
     Matrix (Fin n) (Fin n) K :=
   S.B
@@ -431,7 +431,7 @@ structure SchurStepPacket (K : Type*) [Field K] (n : ℕ) where
   /-- Eigenvector equation in matrix-vector form. -/
   eigenvector_eq :
     A.mulVec eigenvector = fun i => eigenvalue * eigenvector i
-  /-- Nonzero eigenvector property. -/
+  /-- Nonzero eigenvector witness. -/
   eigenvector_ne_zero : eigenvector ≠ 0
   /-- Basis completion used by the step. -/
   basisCompletion : BasisCompletionPacket K (n + 1)
@@ -577,7 +577,7 @@ Recursive Schur tail assembly in block form.
 
 This is the AFP-style recursive seam: the first Schur step is rewritten into a
 block matrix whose lower-right block is the recursive tail decomposition, and
-the whole block form is conjugated by the tail similarity property.
+the whole block form is conjugated by the tail similarity witness.
 
 The theorem is stated on the block-reindexed matrix because that is the honest
 recursive object produced by the AFP proof.
@@ -610,7 +610,7 @@ end SchurStepPacket
 /--
 Upper block-triangular characteristic-polynomial packet.
 
-This is the AFP `char_poly_0_block` conclusion, stated as a reusable property
+This is the AFP `char_poly_0_block` conclusion, stated as a reusable certified
 carrier over `Matrix.fromBlocks`.
 -/
 theorem char_poly_fromBlocks_zero₁₂
@@ -631,7 +631,7 @@ structure CharpolyUpperBlockPacket (K : Type*) [CommRing K]
   A : Matrix (n ⊕ m) (n ⊕ m) K
   /-- Block decomposition with zero lower-left block. -/
   A_eq : A = Matrix.fromBlocks B C 0 D
-  /-- Characteristic polynomial multiplicativity property. -/
+  /-- Characteristic polynomial multiplicativity witness. -/
   charpoly_eq : A.charpoly = B.charpoly * D.charpoly
 
 namespace CharpolyUpperBlockPacket
@@ -668,7 +668,7 @@ structure CharpolyLowerBlockPacket (K : Type*) [CommRing K]
   A : Matrix (n ⊕ m) (n ⊕ m) K
   /-- Block decomposition with zero upper-right block. -/
   A_eq : A = Matrix.fromBlocks B 0 C D
-  /-- Characteristic polynomial multiplicativity property. -/
+  /-- Characteristic polynomial multiplicativity witness. -/
   charpoly_eq : A.charpoly = B.charpoly * D.charpoly
 
 namespace CharpolyLowerBlockPacket

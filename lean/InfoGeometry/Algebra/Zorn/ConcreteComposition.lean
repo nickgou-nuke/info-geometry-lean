@@ -77,18 +77,6 @@ theorem polarZ_comm (X Y : ZornCell R) :
   unfold polarZ addZ detZ
   ring
 
-theorem polarZ_add_left (X Y Z : ZornCell R) :
-    polarZ (addZ X Y) Z = polarZ X Z + polarZ Y Z := by
-  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
-  rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
-  rcases Z with ⟨r'', s'', x1'', x2'', x3'', y1'', y2'', y3''⟩
-  unfold polarZ addZ detZ
-  ring
-
-theorem polarZ_add_right (X Y Z : ZornCell R) :
-    polarZ X (addZ Y Z) = polarZ X Y + polarZ X Z := by
-  rw [polarZ_comm, polarZ_add_left, polarZ_comm Y X, polarZ_comm Z X]
-
 /--
 Self-polarization identity for the Zorn determinant:
 

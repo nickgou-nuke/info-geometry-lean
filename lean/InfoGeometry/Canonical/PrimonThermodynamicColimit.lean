@@ -2,7 +2,7 @@ import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.CategoryTheory.Limits.Filtered
 import Mathlib.Tactic
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
-import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.External.Auto.FermionicPrimonPartition
 
 /-!
@@ -25,6 +25,7 @@ expectation values under the algebraic stage maps.
 noncomputable section
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveLimitBoundary
 open CategoryTheory CategoryTheory.Limits
 
 namespace InfoGeometry.Canonical.PrimonThermodynamicColimit
@@ -217,6 +218,7 @@ theorem expectedValue_zero_eq_stageTrace (n : ℕ) (f : DiagAlg n) :
     _ = (1 / (2 ^ n : ℂ)) * ∑ x : BitWord n, f x := by
           congr 1
           norm_num
+    _ = (2 ^ n : ℂ)⁻¹ * ∑ x : BitWord n, f x := by rw [one_div]
 
 /-- The expected value is invariant under the diagonal successor embedding. -/
 theorem expectedValue_compatible_succ (f : DiagAlg n) :

@@ -123,6 +123,37 @@ theorem gnsRep_mul (ω : GNSState A_inf) (a b : A_inf) (v : GNSCarrier ω) :
   change gnsRepOp ω (a * b) (gnsProj ω x) = gnsRepOp ω a (gnsRepOp ω b (gnsProj ω x))
   rw [gnsRep_apply, gnsRep_apply, gnsRep_apply, mul_assoc]
 
+/-! The GNS representation transports the associative inner derivation. -/
+
+theorem gnsRep_commutator (ω : GNSState A_inf) (a b : A_inf)
+    (v : GNSCarrier ω) :
+    gnsRepOp ω (a * b - b * a) v =
+      gnsRepOp ω a (gnsRepOp ω b v) -
+        gnsRepOp ω b (gnsRepOp ω a v) := by
+  obtain ⟨x, rfl⟩ :=
+    (Submodule.Quotient.mk_surjective (gnsNullSubmodule ω) v)
+  change gnsRepOp ω (a * b - b * a) (gnsProj ω x) =
+    gnsRepOp ω a (gnsRepOp ω b (gnsProj ω x)) -
+      gnsRepOp ω b (gnsRepOp ω a (gnsProj ω x))
+  rw [gnsRep_apply, gnsRep_apply, gnsRep_apply, gnsRep_apply]
+  rw [gnsRep_apply]
+  simp only [sub_mul, mul_assoc]
+  exact (gnsProj ω).map_sub _ _
+
+/-! The representation also transports the second inner derivation. -/
+
+theorem gnsRep_nested_commutator (ω : GNSState A_inf) (a b c : A_inf)
+    (v : GNSCarrier ω) :
+    gnsRepOp ω (a * (b * c - c * b) - (b * c - c * b) * a) v =
+      gnsRepOp ω a (gnsRepOp ω b (gnsRepOp ω c v) -
+        gnsRepOp ω c (gnsRepOp ω b v)) -
+      (gnsRepOp ω b (gnsRepOp ω c (gnsRepOp ω a v)) -
+        gnsRepOp ω c (gnsRepOp ω b (gnsRepOp ω a v))) := by
+  have h₁ := gnsRep_commutator ω a (b * c - c * b) v
+  have h₂ := gnsRep_commutator ω b c v
+  have h₃ := gnsRep_commutator ω b c (gnsRepOp ω a v)
+  rw [h₁, h₂, h₃]
+
 /-! =========================================================================
     4. GNS Pre-Hilbert Inner Product
     ========================================================================= -/
@@ -264,4 +295,3 @@ theorem gns_expectation_value (ω : GNSState A_inf) (a b : A_inf) :
   rw [gnsRep_apply, gnsInner_proj, star_one, one_mul]
 
 end InfoGeometry.Modular.ColimitGNS
-

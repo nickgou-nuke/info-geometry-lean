@@ -19,7 +19,7 @@ Not closed here:
 * construction of the limit map itself from the finite q-CCR owners;
 * any claim that the finite q-CCR algebra is already the colimit.
 
-The bridge is property-gated: the infinite carrier map is an explicit field.
+The bridge is assumption-gated: the infinite carrier map is an explicit field.
 -/
 
 namespace InfoGeometry.Projective.KuzminInductiveLimitBridge

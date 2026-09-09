@@ -4,8 +4,6 @@ import InfoGeometry.External.Auto.ComplexTemperatureRH
 import InfoGeometry.External.Auto.LieFlowCompilerBridge
 import InfoGeometry.External.Auto.uhf_cantor_boundary
 
-open UhfCantorBoundary
-
 /-!
   Honest extracted theorem seeds from `/home/goutev/g&t.txt`.
 
@@ -26,7 +24,7 @@ theorem exponential_reconstruction_surjective
 
 /-- The diagonal UHF boundary is canonically identified with binary strings. -/
 theorem crystallization_unifies_continuum :
-    Nonempty ((ℕ → Bool) ≃ (ℕ → Bool)) := by
+    Nonempty (CantorBoundary ≃ (ℕ → Bool)) := by
   exact ⟨cantor_is_diagonal_spectrum⟩
 
 /-- The thermal Cayley coordinate tends to the boundary point `1`. -/

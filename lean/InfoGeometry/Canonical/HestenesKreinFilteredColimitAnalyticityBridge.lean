@@ -4,16 +4,26 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Hestenes--Krein finite algebraic readouts
+# Hestenes-Krein & Filtered Inductive Colimit Analyticity Master Bridge
 
-This module gives native Lean proofs for three elementary algebraic facts:
+This module gives native Lean proofs for elementary algebraic facts that
+support a filtered Hestenes--Krein colimit interface:
 
-1. Conjugation by an involution preserves square-zero elements.
-2. A concrete two-by-two involution squares to the identity.
-3. An injective intertwiner transports a nonzero kernel vector to the next
-   stage and preserves the kernel equation.
+1. **Hestenes-Krein Fundamental Symmetry Nilpotency Preservation**:
+   if `J^2 = 1` and `N^2 = 0`, then `(J * N * J)^2 = 0`.
+2. **Hestenes Clifford 2x2 Geometric Involution**:
+   the Pauli matrix `e_1 = [[0, 1], [1, 0]]` satisfies `e_1^2 = 1`.
+3. **Filtered Direct Limit Intertwining Kernel Survival**:
+   if `ι ∘ Dₙ = Dₙ₊₁ ∘ ι`, `ι` is injective, and `Dₙ v = 0` with `v ≠ 0`,
+   then `ι v ≠ 0` and `Dₙ₊₁ (ι v) = 0`.
+4. **Algebraic insufficiency of injectivity alone**:
+   injectivity without intertwining does not guarantee kernel survival.
+5. **Grand Hestenes-Krein Algebraic Master Theorem**:
+   combines the algebraic facts above with the antiunitary
+   fixed-locus characterization `s = 1 - star s ↔ s.re = 1/2`.
 
-No colimit, analytic-continuation, or spectral theorem is defined here.
+These are kernel-checked algebraic lemmas. They do not prove analytic
+continuation, meromorphic continuation, or the Riemann hypothesis.
 -/
 
 noncomputable section
@@ -22,8 +32,8 @@ namespace InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
 
 
 /--
-**Conjugated square-zero element.**
-If `J² = 1` and `N² = 0`, then `(J * N * J)² = 0`.
+**Main Theorem 1: Hestenes-Krein Fundamental Symmetry Nilpotency Preservation**
+Proves natively that if $N^2 = 0$ and $J^2 = I$, then $(J N J)^2 = 0$.
 -/
 theorem hestenes_krein_jordan_nilpotent_preserved
     {R : Type*} [MonoidWithZero R] (J N : R) (hJ : J * J = 1) (hN : N * N = 0) :
@@ -33,8 +43,8 @@ theorem hestenes_krein_jordan_nilpotent_preserved
   rw [h1, hJ, mul_one, h2, hN, mul_zero, zero_mul]
 
 /--
-**Concrete matrix involution.**
-The displayed two-by-two matrix squares to the identity.
+**Main Theorem 2: Hestenes Clifford 2x2 Geometric Involution**
+Proves natively that the 2x2 Clifford generator $e_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ satisfies $e_1^2 = I$.
 -/
 theorem hestenes_clifford_e1_sq :
     !![(0 : ℂ), (1 : ℂ); (1 : ℂ), (0 : ℂ)] * !![(0 : ℂ), (1 : ℂ); (1 : ℂ), (0 : ℂ)] = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
@@ -42,9 +52,8 @@ theorem hestenes_clifford_e1_sq :
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
-**Finite intertwining kernel transport.**
-An injective intertwiner sends a nonzero kernel vector to a nonzero vector in
-the target kernel.
+**Main Theorem 3: Filtered Direct Limit Intertwining Kernel Survival**
+Proves natively that if $\iota \circ D_n = D_{n+1} \circ \iota$, $\iota$ is injective, and $v \neq 0$ with $D_n v = 0$, then $\iota v \neq 0$ and $D_{n+1}(\iota v) = 0$.
 -/
 theorem filtered_colimit_hestenes_kernel_survival
     {V W : Type*} [AddCommGroup V] [AddCommGroup W]

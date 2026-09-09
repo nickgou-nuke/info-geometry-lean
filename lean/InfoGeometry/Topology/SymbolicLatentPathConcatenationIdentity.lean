@@ -4,7 +4,6 @@ import InfoGeometry.Topology.SymbolicLatentPathReparametrization
 import InfoGeometry.Topology.SymbolicLatentPath
 import InfoGeometry.Topology.SymbolicLatentLoop
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyComposition
-import InfoGeometry.Topology.SymbolicLatentPathHomotopyComposition
 
 namespace InfoGeometry.Topology
 

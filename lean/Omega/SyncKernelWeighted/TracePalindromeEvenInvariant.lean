@@ -4,80 +4,88 @@ import Omega.SyncKernelWeighted.TracePalindrome
 
 namespace Omega.SyncKernelWeighted
 
+/-- Concrete even-degree package for the trace-palindrome normalization. The even degree is
+recorded by its half-degree `k`, so the palindromic trace polynomial is `(u + 1)^(2k)`. -/
+structure TracePalindromeEvenInvariantData where
+  halfDegree : ℕ
+
+namespace TracePalindromeEvenInvariantData
+
 /-- The even degree `n = 2k`. -/
-def evenDegree (halfDegree : ℕ) : ℕ :=
-  2 * halfDegree
+def evenDegree (D : TracePalindromeEvenInvariantData) : ℕ :=
+  2 * D.halfDegree
 
 /-- The even-palindrome normalization `u^{-k} a_{2k}(u)`, written in the equivalent
 division-free form `u^k a_{2k}(u^{-1})`. -/
-def normalizedTrace (halfDegree : ℕ) (u : ℚ) : ℚ :=
-  u ^ halfDegree * tracePalindromeFamily (evenDegree halfDegree) u⁻¹
+def normalizedTrace (D : TracePalindromeEvenInvariantData) (u : ℚ) : ℚ :=
+  u ^ D.halfDegree * tracePalindromeFamily D.evenDegree u⁻¹
 
 /-- The inversion-invariant coordinate `t = u + u^{-1}`. -/
 def invariantCoordinate (u : ℚ) : ℚ :=
   u + u⁻¹
 
 /-- The descended polynomial in the coordinate `t = u + u^{-1}`. -/
-def invariantPolynomial (halfDegree : ℕ) (t : ℚ) : ℚ :=
-  (t + 2) ^ halfDegree
+def invariantPolynomial (D : TracePalindromeEvenInvariantData) (t : ℚ) : ℚ :=
+  (t + 2) ^ D.halfDegree
 
 /-- The normalized even trace factors through the inversion-invariant coordinate. -/
-def descendsToInvariantCoordinate (halfDegree : ℕ) : Prop :=
-  ∀ u : ℚ, u ≠ 0 → normalizedTrace halfDegree u =
-    invariantPolynomial halfDegree (invariantCoordinate u)
+def descendsToInvariantCoordinate (D : TracePalindromeEvenInvariantData) : Prop :=
+  ∀ u : ℚ, u ≠ 0 → D.normalizedTrace u = D.invariantPolynomial (invariantCoordinate u)
 
 /-- The normalized even trace is fixed by `u ↦ u^{-1}`. -/
-def fixedByInversion (halfDegree : ℕ) : Prop :=
-  ∀ u : ℚ, u ≠ 0 → normalizedTrace halfDegree u⁻¹ = normalizedTrace halfDegree u
+def fixedByInversion (D : TracePalindromeEvenInvariantData) : Prop :=
+  ∀ u : ℚ, u ≠ 0 → D.normalizedTrace u⁻¹ = D.normalizedTrace u
 
 /-- The descended polynomial is the unique decomposition witness on the image of the substitution
 `t = u + u^{-1}`. -/
-def invariantPolynomialUniqueOnImage (halfDegree : ℕ) : Prop :=
+def invariantPolynomialUniqueOnImage (D : TracePalindromeEvenInvariantData) : Prop :=
   ∀ P : ℚ → ℚ,
-    (∀ u : ℚ, u ≠ 0 → normalizedTrace halfDegree u = P (invariantCoordinate u)) →
-      ∀ t : ℚ, (∃ u : ℚ, u ≠ 0 ∧ invariantCoordinate u = t) →
-        P t = invariantPolynomial halfDegree t
+    (∀ u : ℚ, u ≠ 0 → D.normalizedTrace u = P (invariantCoordinate u)) →
+      ∀ t : ℚ, (∃ u : ℚ, u ≠ 0 ∧ invariantCoordinate u = t) → P t = D.invariantPolynomial t
 
 /-- Paper-facing invariant decomposition package for the normalized even palindrome. -/
-def hasInvariantDecomposition (halfDegree : ℕ) : Prop :=
-  descendsToInvariantCoordinate halfDegree ∧ fixedByInversion halfDegree ∧
-    invariantPolynomialUniqueOnImage halfDegree
+def hasInvariantDecomposition (D : TracePalindromeEvenInvariantData) : Prop :=
+  D.descendsToInvariantCoordinate ∧ D.fixedByInversion ∧ D.invariantPolynomialUniqueOnImage
 
-lemma normalizedTrace_eq_invariant (halfDegree : ℕ) (u : ℚ) (hu : u ≠ 0) :
-    normalizedTrace halfDegree u = invariantPolynomial halfDegree (invariantCoordinate u) := by
+lemma normalizedTrace_eq_invariant (D : TracePalindromeEvenInvariantData) (u : ℚ) (hu : u ≠ 0) :
+    D.normalizedTrace u = D.invariantPolynomial (invariantCoordinate u) := by
   unfold normalizedTrace invariantPolynomial invariantCoordinate evenDegree tracePalindromeFamily
   have hbase : u * (u⁻¹ + 1) ^ 2 = u + u⁻¹ + 2 := by
     field_simp [hu]
     ring
   calc
-    u ^ halfDegree * (u⁻¹ + 1) ^ (2 * halfDegree)
-        = u ^ halfDegree * ((u⁻¹ + 1) ^ 2) ^ halfDegree := by rw [pow_mul]
-    _ = (u * (u⁻¹ + 1) ^ 2) ^ halfDegree := by rw [← mul_pow]
-    _ = (u + u⁻¹ + 2) ^ halfDegree := by rw [hbase]
-    _ = (u + u⁻¹ + 2) ^ halfDegree := rfl
+    u ^ D.halfDegree * (u⁻¹ + 1) ^ (2 * D.halfDegree)
+        = u ^ D.halfDegree * ((u⁻¹ + 1) ^ 2) ^ D.halfDegree := by rw [pow_mul]
+    _ = (u * (u⁻¹ + 1) ^ 2) ^ D.halfDegree := by rw [← mul_pow]
+    _ = (u + u⁻¹ + 2) ^ D.halfDegree := by rw [hbase]
+    _ = (u + u⁻¹ + 2) ^ D.halfDegree := rfl
 
-lemma descendsToInvariantCoordinate_true (halfDegree : ℕ) :
-    descendsToInvariantCoordinate halfDegree := by
+lemma descendsToInvariantCoordinate_true (D : TracePalindromeEvenInvariantData) :
+    D.descendsToInvariantCoordinate := by
   intro u hu
-  exact normalizedTrace_eq_invariant halfDegree u hu
+  exact D.normalizedTrace_eq_invariant u hu
 
-lemma fixedByInversion_true (halfDegree : ℕ) : fixedByInversion halfDegree := by
+lemma fixedByInversion_true (D : TracePalindromeEvenInvariantData) :
+    D.fixedByInversion := by
   intro u hu
-  rw [normalizedTrace_eq_invariant halfDegree u⁻¹ (inv_ne_zero hu),
-    normalizedTrace_eq_invariant halfDegree u hu]
+  rw [D.normalizedTrace_eq_invariant u⁻¹ (inv_ne_zero hu), D.normalizedTrace_eq_invariant u hu]
   simp [invariantCoordinate, add_comm]
 
-lemma invariantPolynomialUniqueOnImage_true (halfDegree : ℕ) :
-    invariantPolynomialUniqueOnImage halfDegree := by
+lemma invariantPolynomialUniqueOnImage_true (D : TracePalindromeEvenInvariantData) :
+    D.invariantPolynomialUniqueOnImage := by
   intro P hP t ht
   rcases ht with ⟨u, hu, rfl⟩
-  rw [← hP u hu, normalizedTrace_eq_invariant halfDegree u hu]
+  rw [← hP u hu, D.normalizedTrace_eq_invariant u hu]
+
+end TracePalindromeEvenInvariantData
+
+open TracePalindromeEvenInvariantData
 
 /-- Paper label: `lem:trace-palindrome-even-invariant`. -/
-theorem paper_trace_palindrome_even_invariant (halfDegree : ℕ) :
-    hasInvariantDecomposition halfDegree := by
+theorem paper_trace_palindrome_even_invariant (D : TracePalindromeEvenInvariantData) :
+    D.hasInvariantDecomposition := by
   let _ := paper_trace_palindrome
-  exact ⟨descendsToInvariantCoordinate_true halfDegree, fixedByInversion_true halfDegree,
-    invariantPolynomialUniqueOnImage_true halfDegree⟩
+  exact ⟨D.descendsToInvariantCoordinate_true, D.fixedByInversion_true,
+    D.invariantPolynomialUniqueOnImage_true⟩
 
 end Omega.SyncKernelWeighted

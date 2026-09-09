@@ -268,5 +268,3 @@ theorem compactSymbolicLatentQuotientRangeNaturalIso_app_hom
     ((compactSymbolicLatentQuotientRangeNaturalIso (ι := ι)).inv_hom_id)
 
 end InfoGeometry.Topology
-
-end

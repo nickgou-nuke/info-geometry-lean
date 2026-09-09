@@ -9,7 +9,7 @@ This sidecar installs the standard matrix
 
 as an `SL2R` lift whose square is the named central lift `negIdSL2R`.  Since
 that lift acts trivially on the real upper half-plane, the existing
-`ProjectiveLiftTemperatureInversion` interface turns this into a genuine closure
+`ProjectiveLiftTemperatureInversion` socket turns this into a genuine closure
 involution on positive Souriau temperatures.
 
 The file does not claim a modular-form theorem, KMS existence theorem, or a
@@ -46,10 +46,11 @@ theorem modularS_sq :
 /--
 The standard modular `S` projective lift.
 
-This is the property Lean anchor for the physical inversion `τ ↦ -1 / τ`.
+This is the certified Lean anchor for the physical inversion `τ ↦ -1 / τ`.
 -/
-def modularSLiftInversion : ProjectiveLiftTemperatureInversion :=
-  ⟨modularS, Or.inr modularS_sq⟩
+def modularSLiftInversion : ProjectiveLiftTemperatureInversion where
+  element := modularS
+  element_sq_lift := Or.inr modularS_sq
 
 @[simp]
 theorem modularSLiftInversion_element :
@@ -76,23 +77,21 @@ theorem unitImaginary_im :
 theorem modularS_smul_unitImaginary :
     modularS • unitImaginary = unitImaginary := by
   have h :
-      modularS • ((0, ⟨1, by norm_num⟩) : RealUpperHalfPlane) =
-        ((0, ⟨1, by norm_num⟩) : RealUpperHalfPlane) := by
-    apply RealUpperHalfPlane.ext
-    · rw [RealUpperHalfPlane.smul_def, RealUpperHalfPlane.moebius_x]
-      norm_num [RealUpperHalfPlane.a, RealUpperHalfPlane.b,
-        RealUpperHalfPlane.c, RealUpperHalfPlane.d,
-        RealUpperHalfPlane.denomSq, modularS]
-    · rw [RealUpperHalfPlane.smul_def, RealUpperHalfPlane.moebius_y]
-      norm_num [RealUpperHalfPlane.a, RealUpperHalfPlane.b,
-        RealUpperHalfPlane.c, RealUpperHalfPlane.d,
-        RealUpperHalfPlane.denomSq, modularS]
+      toRealUpperHalfPlane (modularS • unitImaginary) =
+        toRealUpperHalfPlane unitImaginary := by
+    ext <;>
+      simp [unitImaginary, PositiveSouriauTemperature.temp, modularS, smul_def, ofRealUpperHalfPlane,
+        toRealUpperHalfPlane, RealUpperHalfPlane.smul_def,
+        RealUpperHalfPlane.moebius, RealUpperHalfPlane.a,
+        RealUpperHalfPlane.b, RealUpperHalfPlane.c, RealUpperHalfPlane.d,
+        RealUpperHalfPlane.denomSq]
   calc
     modularS • unitImaginary
         = ofRealUpperHalfPlane
-            (modularS • toRealUpperHalfPlane unitImaginary) := rfl
+            (toRealUpperHalfPlane (modularS • unitImaginary)) := by
+            rw [ofRealUpperHalfPlane_toRealUpperHalfPlane]
     _ = ofRealUpperHalfPlane (toRealUpperHalfPlane unitImaginary) := by
-      exact congrArg ofRealUpperHalfPlane h
+            rw [h]
     _ = unitImaginary := by
             rw [ofRealUpperHalfPlane_toRealUpperHalfPlane]
 

@@ -155,9 +155,10 @@ namespace CandidateContractionRecord
 
 /-- Build a candidate record from graph endpoints and already-bounded tensor ports. -/
 def ofPorts (endpoints : GraphEndpoints) (source target : TensorPort)
-    (binderDepth scopeDepth sourceBondDim targetBondDim : ℕ) : CandidateContractionRecord :=
-  (endpoints, DeBruijnPayload.ofPorts source target binderDepth scopeDepth sourceBondDim
-    targetBondDim)
+    (binderDepth scopeDepth sourceBondDim targetBondDim : ℕ) : CandidateContractionRecord where
+  endpoints := endpoints
+  payload := DeBruijnPayload.ofPorts source target binderDepth scopeDepth sourceBondDim
+    targetBondDim
 
 @[simp] theorem ofPorts_endpoints (endpoints : GraphEndpoints) (source target : TensorPort)
     (binderDepth scopeDepth sourceBondDim targetBondDim : ℕ) :

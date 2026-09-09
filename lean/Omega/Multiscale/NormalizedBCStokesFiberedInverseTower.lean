@@ -24,6 +24,18 @@ structure NormalizedBCStokesFiberedInverseTowerData where
   baseBoundary : ℕ → ℝ
   baseBulk : ℕ → ℝ
   baseDAlpha : ℕ → ℝ
+  baseDegree_pos : ∀ n, 0 < baseDegree n
+  fiberDegree_pos : ∀ n, 0 < fiberDegree n
+  beckChevalleyBoundary_raw :
+    ∀ n, fiberBoundary (n + 1) = transportedBoundary n * fiberDegree n
+  beckChevalleyBulk_raw :
+    ∀ n, fiberBulk (n + 1) = transportedBulk n * fiberDegree n
+  fubiniBoundary_raw :
+    ∀ n, totalBoundary n = baseBoundary n * Finset.prod (Finset.range n) fiberDegree
+  fubiniBulk_raw :
+    ∀ n, totalBulk n = baseBulk n * Finset.prod (Finset.range n) fiberDegree
+  differentialFiberIntegration_raw :
+    ∀ n, totalDAlpha n = baseDAlpha n * Finset.prod (Finset.range n) fiberDegree
 
 namespace NormalizedBCStokesFiberedInverseTowerData
 
@@ -66,21 +78,34 @@ def normalizedBaseBulk (D : NormalizedBCStokesFiberedInverseTowerData) (n : ℕ)
 def normalizedBaseDAlpha (D : NormalizedBCStokesFiberedInverseTowerData) (n : ℕ) : ℝ :=
   D.baseDAlpha n / D.cumulativeBaseDegree n
 
-theorem cumulativeBaseDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData)
-    (baseDegree_pos : ∀ n, 0 < D.baseDegree n) (n : ℕ) :
+def normalizedBeckChevalley (D : NormalizedBCStokesFiberedInverseTowerData) : Prop :=
+  ∀ n,
+    D.normalizedFiberBoundary (n + 1) = D.normalizedTransportedBoundary n ∧
+      D.normalizedFiberBulk (n + 1) = D.normalizedTransportedBulk n
+
+def normalizedFubiniFactorization (D : NormalizedBCStokesFiberedInverseTowerData) : Prop :=
+  ∀ n,
+    D.normalizedTotalBulk n = D.normalizedBaseBulk n ∧
+      D.normalizedTotalBoundary n = D.normalizedBaseBoundary n
+
+def normalizedStokesEquivalence (D : NormalizedBCStokesFiberedInverseTowerData) : Prop :=
+  ∀ n,
+    D.normalizedTotalDAlpha n = D.normalizedBaseDAlpha n ∧
+      D.normalizedTotalBoundary n = D.normalizedBaseBoundary n ∧
+      (D.normalizedTotalDAlpha n = D.normalizedTotalBoundary n ↔
+        D.normalizedBaseDAlpha n = D.normalizedBaseBoundary n)
+
+theorem cumulativeBaseDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData) (n : ℕ) :
     0 < D.cumulativeBaseDegree n := by
-  exact Finset.prod_pos fun i _ => baseDegree_pos i
+  exact Finset.prod_pos fun i _ => D.baseDegree_pos i
 
-theorem cumulativeFiberDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData)
-    (fiberDegree_pos : ∀ n, 0 < D.fiberDegree n) (n : ℕ) :
+theorem cumulativeFiberDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData) (n : ℕ) :
     0 < D.cumulativeFiberDegree n := by
-  exact Finset.prod_pos fun i _ => fiberDegree_pos i
+  exact Finset.prod_pos fun i _ => D.fiberDegree_pos i
 
-theorem cumulativeTotalDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData)
-    (baseDegree_pos : ∀ n, 0 < D.baseDegree n)
-    (fiberDegree_pos : ∀ n, 0 < D.fiberDegree n) (n : ℕ) :
+theorem cumulativeTotalDegree_pos (D : NormalizedBCStokesFiberedInverseTowerData) (n : ℕ) :
     0 < D.cumulativeTotalDegree n := by
-  exact Finset.prod_pos fun i _ => mul_pos (baseDegree_pos i) (fiberDegree_pos i)
+  exact Finset.prod_pos fun i _ => mul_pos (D.baseDegree_pos i) (D.fiberDegree_pos i)
 
 theorem cumulativeTotalDegree_factorization (D : NormalizedBCStokesFiberedInverseTowerData)
     (n : ℕ) :
@@ -108,59 +133,33 @@ open NormalizedBCStokesFiberedInverseTowerData
 /-- Normalized Beck--Chevalley, Fubini, and Stokes equivalence for the fibered inverse tower.
     thm:app-normalized-bc-stokes-fibered-inverse-tower -/
 theorem paper_app_normalized_bc_stokes_fibered_inverse_tower
-    (D : NormalizedBCStokesFiberedInverseTowerData)
-    (baseDegree_pos : ∀ n, 0 < D.baseDegree n)
-    (fiberDegree_pos : ∀ n, 0 < D.fiberDegree n)
-    (beckChevalleyBoundary_raw :
-      ∀ n, D.fiberBoundary (n + 1) = D.transportedBoundary n * D.fiberDegree n)
-    (beckChevalleyBulk_raw :
-      ∀ n, D.fiberBulk (n + 1) = D.transportedBulk n * D.fiberDegree n)
-    (fubiniBoundary_raw :
-      ∀ n, D.totalBoundary n = D.baseBoundary n * Finset.prod (Finset.range n) D.fiberDegree)
-    (fubiniBulk_raw :
-      ∀ n, D.totalBulk n = D.baseBulk n * Finset.prod (Finset.range n) D.fiberDegree)
-    (differentialFiberIntegration_raw :
-      ∀ n, D.totalDAlpha n = D.baseDAlpha n * Finset.prod (Finset.range n) D.fiberDegree) :
-    (∀ n, D.normalizedFiberBoundary (n + 1) = D.normalizedTransportedBoundary n ∧
-      D.normalizedFiberBulk (n + 1) = D.normalizedTransportedBulk n) ∧
-      (∀ n, D.normalizedTotalBulk n = D.normalizedBaseBulk n ∧
-        D.normalizedTotalBoundary n = D.normalizedBaseBoundary n) ∧
-      (∀ n, D.normalizedTotalDAlpha n = D.normalizedBaseDAlpha n ∧
-        D.normalizedTotalBoundary n = D.normalizedBaseBoundary n ∧
-        (D.normalizedTotalDAlpha n = D.normalizedTotalBoundary n ↔
-          D.normalizedBaseDAlpha n = D.normalizedBaseBoundary n)) := by
-  have hBC :
-      ∀ n, D.normalizedFiberBoundary (n + 1) = D.normalizedTransportedBoundary n ∧
-        D.normalizedFiberBulk (n + 1) = D.normalizedTransportedBulk n := by
+    (D : NormalizedBCStokesFiberedInverseTowerData) :
+    D.normalizedBeckChevalley ∧ D.normalizedFubiniFactorization ∧ D.normalizedStokesEquivalence := by
+  have hBC : normalizedBeckChevalley D := by
     intro n
     have hCum :
         cumulativeFiberDegree D (n + 1) = cumulativeFiberDegree D n * D.fiberDegree n := by
       simp [cumulativeFiberDegree, Finset.prod_range_succ]
-    have hCumNz : cumulativeFiberDegree D n ≠ 0 :=
-      (cumulativeFiberDegree_pos D fiberDegree_pos n).ne'
-    have hFiberNz : D.fiberDegree n ≠ 0 := (fiberDegree_pos n).ne'
+    have hCumNz : cumulativeFiberDegree D n ≠ 0 := (cumulativeFiberDegree_pos D n).ne'
+    have hFiberNz : D.fiberDegree n ≠ 0 := (D.fiberDegree_pos n).ne'
     constructor
     · unfold normalizedFiberBoundary normalizedTransportedBoundary
-      rw [beckChevalleyBoundary_raw n, hCum]
+      rw [D.beckChevalleyBoundary_raw n, hCum]
       field_simp [hCumNz, hFiberNz]
     · unfold normalizedFiberBulk normalizedTransportedBulk
-      rw [beckChevalleyBulk_raw n, hCum]
+      rw [D.beckChevalleyBulk_raw n, hCum]
       field_simp [hCumNz, hFiberNz]
-  have hFubini :
-      ∀ n, D.normalizedTotalBulk n = D.normalizedBaseBulk n ∧
-        D.normalizedTotalBoundary n = D.normalizedBaseBoundary n := by
+  have hFubini : normalizedFubiniFactorization D := by
     intro n
     have hTotal :
         cumulativeTotalDegree D n = cumulativeBaseDegree D n * cumulativeFiberDegree D n :=
       cumulativeTotalDegree_factorization D n
-    have hBaseNz : cumulativeBaseDegree D n ≠ 0 :=
-      (cumulativeBaseDegree_pos D baseDegree_pos n).ne'
-    have hFiberNz : cumulativeFiberDegree D n ≠ 0 :=
-      (cumulativeFiberDegree_pos D fiberDegree_pos n).ne'
+    have hBaseNz : cumulativeBaseDegree D n ≠ 0 := (cumulativeBaseDegree_pos D n).ne'
+    have hFiberNz : cumulativeFiberDegree D n ≠ 0 := (cumulativeFiberDegree_pos D n).ne'
     have hBulkRaw : D.totalBulk n = D.baseBulk n * cumulativeFiberDegree D n := by
-      simpa [cumulativeFiberDegree] using fubiniBulk_raw n
+      simpa [cumulativeFiberDegree] using D.fubiniBulk_raw n
     have hBoundaryRaw : D.totalBoundary n = D.baseBoundary n * cumulativeFiberDegree D n := by
-      simpa [cumulativeFiberDegree] using fubiniBoundary_raw n
+      simpa [cumulativeFiberDegree] using D.fubiniBoundary_raw n
     constructor
     · unfold normalizedTotalBulk normalizedBaseBulk
       rw [hBulkRaw, hTotal]
@@ -168,21 +167,15 @@ theorem paper_app_normalized_bc_stokes_fibered_inverse_tower
     · unfold normalizedTotalBoundary normalizedBaseBoundary
       rw [hBoundaryRaw, hTotal]
       field_simp [hBaseNz, hFiberNz]
-  have hStokes :
-      ∀ n, D.normalizedTotalDAlpha n = D.normalizedBaseDAlpha n ∧
-        D.normalizedTotalBoundary n = D.normalizedBaseBoundary n ∧
-        (D.normalizedTotalDAlpha n = D.normalizedTotalBoundary n ↔
-          D.normalizedBaseDAlpha n = D.normalizedBaseBoundary n) := by
+  have hStokes : normalizedStokesEquivalence D := by
     intro n
     have hTotal :
         cumulativeTotalDegree D n = cumulativeBaseDegree D n * cumulativeFiberDegree D n :=
       cumulativeTotalDegree_factorization D n
-    have hBaseNz : cumulativeBaseDegree D n ≠ 0 :=
-      (cumulativeBaseDegree_pos D baseDegree_pos n).ne'
-    have hFiberNz : cumulativeFiberDegree D n ≠ 0 :=
-      (cumulativeFiberDegree_pos D fiberDegree_pos n).ne'
+    have hBaseNz : cumulativeBaseDegree D n ≠ 0 := (cumulativeBaseDegree_pos D n).ne'
+    have hFiberNz : cumulativeFiberDegree D n ≠ 0 := (cumulativeFiberDegree_pos D n).ne'
     have hDiffRaw : D.totalDAlpha n = D.baseDAlpha n * cumulativeFiberDegree D n := by
-      simpa [cumulativeFiberDegree] using differentialFiberIntegration_raw n
+      simpa [cumulativeFiberDegree] using D.differentialFiberIntegration_raw n
     have hDiff :
         normalizedTotalDAlpha D n = normalizedBaseDAlpha D n := by
       unfold normalizedTotalDAlpha normalizedBaseDAlpha

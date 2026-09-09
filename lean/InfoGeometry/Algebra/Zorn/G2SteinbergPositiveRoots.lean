@@ -36,8 +36,14 @@ def uMidFun (X : SplitOctF2) : SplitOctF2 :=
 def uMidEquiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := uMidFun
   invFun := uMidFun
-  left_inv X := by rcases X; ext <;> simp [uMidFun, add2]
-  right_inv X := by rcases X; ext <;> simp [uMidFun, add2]
+  left_inv X := by
+    rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+    revert a b x0 x1 x2 y0 y1 y2
+    native_decide
+  right_inv X := by
+    rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+    revert a b x0 x1 x2 y0 y1 y2
+    native_decide
 
 /-- Proof that `uMidEquiv` preserves the split-octonion unit, addition, and multiplication. -/
 theorem isSplitOctF2Aut_uMid : IsSplitOctF2Aut uMidEquiv := by
@@ -49,13 +55,15 @@ theorem isSplitOctF2Aut_uMid : IsSplitOctF2Aut uMidEquiv := by
     · rfl
     · rfl
     · dsimp [uMidEquiv, uMidFun, add]
-      exact xor_swap x01 x02 x21 x22
+      revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
+      native_decide
     · rfl
     · rfl
     · rfl
     · rfl
     · dsimp [uMidEquiv, uMidFun, add]
-      exact xor_swap y21 y22 y01 y02
+      revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
+      native_decide
   · intro X Y
     rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
     rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
@@ -426,7 +434,7 @@ PART 4: Ordered 3-Root Unipotent Words and Exact Injectivity
 -/
 
 /-- The 8 ordered unipotent words from the 3 root elements uShort, uLong, uMid -/
-def unipotentWord3 (b : Bool × Bool × Bool) : SplitOctF2Aut :=
+noncomputable def unipotentWord3 (b : Bool × Bool × Bool) : SplitOctF2Aut :=
   (if b.1 then uShort else 1) *
   (if b.2.1 then uLong else 1) *
   (if b.2.2 then uMid else 1)

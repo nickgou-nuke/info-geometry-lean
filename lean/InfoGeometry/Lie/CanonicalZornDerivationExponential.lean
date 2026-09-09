@@ -105,7 +105,7 @@ theorem coordEnd_apply (D : EndCZ) (u : V8) :
     coordEnd D u = coordLE (D (coordLE.symm u)) := rfl
 
 @[simp]
-theorem coordEnd_coordLE (D : EndCZ) (X : CZ) :
+theorem coordEnd_apply_coordLE (D : EndCZ) (X : CZ) :
     coordEnd D (coordLE X) = coordLE (D X) := by
   simp [coordEnd, coordEndLinear]
 
@@ -293,7 +293,7 @@ theorem zornFlowLinearEquiv_fixed_of_derivation_eq_zero
   apply coordLE.injective
   rw [coordLE_zornFlowLinearEquiv]
   have hcoord : coordEnd D (coordLE X) = 0 := by
-    rw [coordEnd_coordLE, hX, map_zero]
+    rw [coordEnd_apply_coordLE, hX, map_zero]
   exact flow_apply_eq_self_of_apply_eq_zero (coordEnd D) (coordLE X) hcoord t
 
 end InfoGeometry.Lie.CanonicalZornDerivationExponential

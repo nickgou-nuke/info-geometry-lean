@@ -301,6 +301,7 @@ linear equivalence to the Zorn carrier. -/
 theorem isIsotropic_iff_detZ (X : SplitOctonion) :
     splitOctonionCompositionAlgebra.isIsotropic X ↔
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (splitOctonionCanonicalZornEquiv X) = 0 := by
   rw [isIsotropic_iff_normSQ, splitOctonionCanonicalZornEquiv_norm]
 

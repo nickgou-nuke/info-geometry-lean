@@ -5,10 +5,10 @@ import InfoGeometry.Canonical.ZornSpinor
 /-!
 # Split-octonion classification core
 
-This file works on the explicit Zorn carrier and proves the two property
+This file works on the explicit Zorn carrier and proves the two witness
 existence statements in a coordinate form.
 
-It stays away from any associative `[Ring]` property.  The carrier is the
+It stays away from any associative `[Ring]` hypothesis.  The carrier is the
 nonassociative `InfoGeometry.Canonical.ZornMatrix`.
 -/
 
@@ -323,7 +323,7 @@ theorem nonzero_associator_of_y_ne_zero
       simp at h'
       exact h2 h'.2
 
-/-- A non-scalar Zorn element has a nonzero associator property. -/
+/-- A non-scalar Zorn element has a nonzero associator witness. -/
 theorem nonzero_associator_of_not_scalar
     (x : InfoGeometry.Canonical.ZornMatrix R)
     (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :

@@ -71,6 +71,24 @@ def infiniteAdjacent (i j : InfiniteBraidGenerators) : Prop :=
 def infiniteSeparated (i j : InfiniteBraidGenerators) : Prop :=
   i + 2 ≤ j ∨ j + 2 ≤ i
 
+theorem adjacent_embeds_to_infinite
+    {n : ℕ} {i j : FiniteBraidGenerators n}
+    (h : finiteAdjacent i j) :
+    infiniteAdjacent (finiteToInfinite i) (finiteToInfinite j) := by
+  exact h
+
+theorem separated_embeds_to_infinite
+    {n : ℕ} {i j : FiniteBraidGenerators n}
+    (h : finiteSeparated i j) :
+    infiniteSeparated (finiteToInfinite i) (finiteToInfinite j) := by
+  exact h
+
+theorem adjacent_stable_under_succ
+    {n : ℕ} {i j : FiniteBraidGenerators n}
+    (h : finiteAdjacent i j) :
+    finiteAdjacent (finiteSuccEmbed n i) (finiteSuccEmbed n j) := by
+  exact h
+
 theorem separated_stable_under_succ
     {n : ℕ} {i j : FiniteBraidGenerators n}
     (h : finiteSeparated i j) :
@@ -106,6 +124,32 @@ theorem wordSuccEmbed_length {n : ℕ} (w : FiniteBraidWord n) :
     (wordSuccEmbed w).length = w.length := by
   simp [wordSuccEmbed]
 
+/--
+Consolidated complement: the finite braid-generator tower has a stable
+infinite boundary, and adjacent/separated Artin relation indices are preserved.
+-/
+theorem braid_inductive_colimit_complement_synthesis :
+    (∀ n : ℕ, Fintype.card (FiniteBraidGenerators n) = n) ∧
+    (∀ n : ℕ, Function.Injective (@finiteToInfinite n)) ∧
+    (∀ n : ℕ, ∀ i : FiniteBraidGenerators n,
+      finiteToInfinite (finiteSuccEmbed n i) = finiteToInfinite i) ∧
+    (∀ n : ℕ, ∀ i j : FiniteBraidGenerators n,
+      finiteAdjacent i j →
+        infiniteAdjacent (finiteToInfinite i) (finiteToInfinite j)) ∧
+    (∀ n : ℕ, ∀ i j : FiniteBraidGenerators n,
+      finiteSeparated i j →
+        infiniteSeparated (finiteToInfinite i) (finiteToInfinite j)) ∧
+    (∀ n : ℕ, ∀ w : FiniteBraidWord n,
+      wordToInfinite (wordSuccEmbed w) = wordToInfinite w) ∧
+    (∀ n : ℕ, ∀ w : FiniteBraidWord n,
+      (wordToInfinite w).length = w.length) := by
+  exact ⟨finite_stage_card,
+    finiteToInfinite_injective,
+    finiteToInfinite_succ_compatible,
+    fun _ _ _ h => adjacent_embeds_to_infinite h,
+    fun _ _ _ h => separated_embeds_to_infinite h,
+    fun _ w => wordToInfinite_succ_compatible w,
+    fun _ w => wordToInfinite_length w⟩
 
 end BraidInductiveColimitComplement
 

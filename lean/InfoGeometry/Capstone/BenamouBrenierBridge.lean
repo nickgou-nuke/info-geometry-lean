@@ -224,12 +224,12 @@ fractal Cantor boundaries via the exact TrivSqZeroExt `discreteDuhamelSum`.
 -/
 def TrivSqZeroExtDuhamel (n : ℕ) :
     DuhamelOperatorDerivative S (TrivSqZeroExt S N) (TrivSqZeroExt S N) :=
-  { K := fun β => inl β
-    directionToInsertion := fun δ => δ
-    higherSimplexOrderedForms := fun
+  (fun β => inl β,
+    fun δ => δ,
+    fun
       | 1, β, [δ] => discreteDuhamelSum β (δ.snd) n
-      | _, _, _ => 0
-    traceStateKMSReadout := fun _ => 0 }
+      | _, _, _ => 0,
+    fun _ => 0)
 
 /--
 Physical Test Instantiation: Exact Non-Commutative Expansion for the SE(3) Dual Quaternion Twist.

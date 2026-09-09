@@ -61,7 +61,7 @@ theorem paper_conclusion_m2_level3_steinberg_parabolic_c1_artin :
       conclusion_m2_level3_steinberg_parabolic_c1_artin_xi_neg_mult = 36 ∧
       conclusion_m2_level3_steinberg_parabolic_c1_artin_parabolic_c1 = (27, 18) ∧
       conclusion_m2_level3_steinberg_parabolic_c1_artin_tame_artin = (54, 36) := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys PUnit.unit with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys () with
     ⟨_, _, _, _, _, _, hSt, _, _⟩
   refine ⟨hSt, rfl, rfl, rfl, rfl, ?_, ?_⟩
   · norm_num [conclusion_m2_level3_steinberg_parabolic_c1_artin_parabolic_c1,

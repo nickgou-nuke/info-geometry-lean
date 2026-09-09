@@ -104,5 +104,3 @@ theorem coxeter_conj_cylinderProjection
   D.covariance w
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeCoxeterCylinderCovariance
-
-end

@@ -1,6 +1,6 @@
 import Mathlib
 import proofs.CuntzKriegerPrimon
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Hameroff 1998 Orch OR / microtubule arithmetic

@@ -11,7 +11,7 @@ local quotient lane on the noncollision domain:
 
 * a finite alternating Gibbs numerator,
 * a finite Vandermonde denominator,
-* an explicit property that the numerator vanishes on the denominator
+* an explicit hypothesis that the numerator vanishes on the denominator
   collision locus,
 * a quotient readout defined only when the denominator is nonzero.
 -/
@@ -48,7 +48,7 @@ variable (P : LocalCancellationShadowPacket σ)
 @[rep_depth thermo]
 def denominator : ℝ :=
   VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-  P.data.denominatorPacket.denominatorNodes
+    P.data.denominatorPacket.denominatorWitness
 
 /-- The finite numerator value. -/
 @[rep_depth thermo]
@@ -83,7 +83,7 @@ theorem denominator_ne_zero_iff_injective :
     P.denominator ≠ 0 ↔ Function.Injective P.data.denominatorPacket.denominatorNodes := by
   exact P.data.denominatorPacket.denominator_ne_zero_iff_injective
 
-/-- On the collision locus, the numerator vanishes by property. -/
+/-- On the collision locus, the numerator vanishes by hypothesis. -/
 @[rep_depth thermo]
 theorem numerator_eq_zero_of_collision
     (hcoll :

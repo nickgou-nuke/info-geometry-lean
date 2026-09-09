@@ -4,7 +4,7 @@ import Mathlib.Tactic
 # Published thesis architecture seal
 
 A final publication-level capstone.  Concrete algebraic kernels are proved;
-large physical/geometric readings are outside the finite theorem owners.
+large physical/geometric readings are represented as theorem-honest sockets.
 
 Slogan:
 `Spacetime is the invariant determinant geometry of spin.  The Squash projects;

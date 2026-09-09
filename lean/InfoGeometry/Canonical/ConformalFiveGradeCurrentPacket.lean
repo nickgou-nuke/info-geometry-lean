@@ -39,6 +39,15 @@ structure FiveGradeBoundaryCurrentPacket
     [Fintype ι] [DecidableEq ι] [Ring R] where
   inversion : FiveGradedConformalInversion L
   occ : ι → ℤ
+  matrixUnitWick :
+    ∀ a b c d : ι,
+      algebraCommutator
+          (normalOrderedMatrixUnit (R := R) occ a b)
+          (normalOrderedMatrixUnit (R := R) occ c d)
+        =
+        (if b = c then normalOrderedMatrixUnit (R := R) occ a d else 0)
+          - (if a = d then normalOrderedMatrixUnit (R := R) occ c b else 0)
+          + wickCorrection (R := R) occ a b c d
 
 namespace FiveGradeBoundaryCurrentPacket
 
@@ -68,7 +77,7 @@ theorem matrixUnitWick_readout
       (if b = c then normalOrderedMatrixUnit (R := R) P.occ a d else 0)
         - (if a = d then normalOrderedMatrixUnit (R := R) P.occ c b else 0)
         + wickCorrection (R := R) P.occ a b c d := by
-  exact normalOrdered_matrixUnit_commutator P.occ a b c d
+  simpa using P.matrixUnitWick a b c d
 
 /-- The source sector is carried to the sink sector by the packet inversion. -/
 theorem source_to_sink

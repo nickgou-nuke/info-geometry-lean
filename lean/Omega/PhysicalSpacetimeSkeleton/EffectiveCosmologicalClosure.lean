@@ -7,11 +7,7 @@ namespace Omega.PhysicalSpacetimeSkeleton
 cosmological term by the residual vacuum energy density.
     cor:physical-spacetime-effective-cosmological-closure -/
 theorem paper_physical_spacetime_effective_cosmological_closure
-    (D : AdmissibleEinsteinClosure) (admissible : Prop) (hAdm : admissible)
-    (eulerLagrange_identity :
-      admissible →
-        D.einsteinTensor + D.cosmologicalConstant * D.metric =
-          D.couplingConstant * D.stressEnergy)
+    (D : AdmissibleEinsteinClosure) (hAdm : D.admissible)
     (hPure : D.stressEnergy = D.residualLagrangian * D.metric) :
     D.einsteinTensor +
         (D.cosmologicalConstant - D.couplingConstant * D.residualLagrangian) * D.metric =
@@ -19,8 +15,7 @@ theorem paper_physical_spacetime_effective_cosmological_closure
   have hEin :
       D.einsteinTensor + D.cosmologicalConstant * D.metric =
         D.couplingConstant * D.residualLagrangian * D.metric := by
-    have hEin0 := paper_physical_spacetime_admissible_global_einstein_equation D admissible hAdm
-      eulerLagrange_identity
+    have hEin0 := paper_physical_spacetime_admissible_global_einstein_equation D hAdm
     rw [hPure] at hEin0
     simpa [mul_assoc] using hEin0
   nlinarith [hEin]

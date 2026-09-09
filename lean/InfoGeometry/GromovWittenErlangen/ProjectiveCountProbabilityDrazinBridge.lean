@@ -109,7 +109,7 @@ end GWProjectiveCountProbabilityBridge
 Drazin localization attached to the canonical GW projective-count/probability
 readout.
 
-This is the property-gated L5 attachment: the existing Drazin localization edge
+This is the witness-gated L5 attachment: the existing Drazin localization edge
 data is calibrated as a readout of the projective count/probability/operator
 lane.
 -/

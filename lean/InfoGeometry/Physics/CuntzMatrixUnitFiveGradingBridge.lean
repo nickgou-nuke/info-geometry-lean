@@ -21,21 +21,16 @@ open InfoGeometry.Algebra.CuntzMatrixUnits
 
 abbrev Cuntz3 := CuntzAlg 3
 
-noncomputable def hop (i j : Fin 3) : Cuntz3 := E 3 i j
+noncomputable abbrev hop := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.hop
+abbrev commutator := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.commutator
+abbrev colourWeight := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.colourWeight
+noncomputable abbrev gradingOp := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.gradingOp
+abbrev IsGradedComponent :=
+  InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.IsGradedComponent
 
 theorem hop_mul_hop (i j k l : Fin 3) :
     hop i j * hop k l = if j = k then hop i l else 0 := by
-  simpa [hop] using matrix_unit_mul 3 i j k l
-
-def commutator (x y : Cuntz3) : Cuntz3 := x * y - y * x
-
-def colourWeight (i : Fin 3) : ℤ :=
-  if i = 0 then 1 else if i = 1 then -1 else 0
-
-noncomputable def gradingOp : Cuntz3 := hop 0 0 - hop 1 1
-
-def IsGradedComponent (h : Cuntz3) (k : ℂ) (x : Cuntz3) : Prop :=
-  commutator h x = k • x
+  exact InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.hop_mul_hop i j k l
 
 theorem gradingOp_comm_hop (i j : Fin 3) :
     commutator gradingOp (hop i j) =

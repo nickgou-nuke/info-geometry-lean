@@ -18,7 +18,7 @@ The type III side is routed through `TypeIIIIntegrationDatum`:
 The modular-kernel side is the Drazin defect sector `q * x = x`.
 
 The equivalence between the zero-volume null space and the defect sector is
-kept theorem-safe by an explicit compatibility property.  The bridge does not
+kept theorem-safe by an explicit compatibility witness.  The bridge does not
 invent a trace on the type III base algebra.
 -/
 
@@ -52,7 +52,7 @@ structure ZeroVolumeNullSpacePacket where
   drazin : AlgebraicDrazinSplit M
 
   /--
-  Compatibility property: the compressed topological volume vanishes exactly
+  Compatibility witness: the compressed topological volume vanishes exactly
   on the Drazin defect sector.
   -/
   volume_vanishes_iff_defect_fixed :
@@ -93,7 +93,7 @@ theorem zero_volume_iff_modularKernel (x : M) :
 The zero-volume null space coincides with the Drazin singular sector.
 
 This is the theorem-safe version of the draft statement: the equivalence is
-carried by the explicit compatibility property on the packet.
+carried by the explicit compatibility witness on the packet.
 -/
 theorem zero_volume_is_singular_sector :
     B.zeroVolumeNullSpace = B.modularKernel := by

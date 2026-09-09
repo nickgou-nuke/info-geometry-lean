@@ -4,14 +4,14 @@ InfoGeometry/OperatorAlgebra/DIIICosmicCrossoverBridge.lean
 Constructive bridge from the DIII CPT branch to the cosmic Andreev crossover
 carrier.
 
-This file replaces the crossover swap property by the concrete DIII
+This file replaces the crossover swap hypothesis by the concrete DIII
 particle-hole/CPT conjugation:
 
   theta x = C * x * C.
 
 The existing DIII branch theorems prove that this closure swaps the two chiral
 half-projectors.  Therefore the diagonal survives and the chiral imbalance is
-anti-fixed without an additional reflection property.
+anti-fixed without an additional reflection witness.
 -/
 
 import Mathlib.Tactic
@@ -89,18 +89,26 @@ theorem cosmicCrossoverInterpretation_holds :
       D.cptClosure.theta D.P_right = D.P_left :=
   ⟨D.cptClosure_theta_P_left, D.cptClosure_theta_P_right⟩
 
+/--
+The DIII CPT branch constructs a cosmic Andreev crossover witness whose old/new
+data are the left/right chiral projectors.
+-/
+def toCosmicCrossoverWitness : CosmicCrossoverWitness Op where
+  boundary := D.toAndreevBoundaryDatum
+  oldNullData := D.P_left
+  newMetricData := D.P_right
+  reflection := D.cptClosure_theta_P_left
+
 /-- The DIII chiral diagonal survives the CPT/crossover closure. -/
 theorem cpt_crossover_diagonal_fixed :
     D.P_left + D.P_right ∈ D.cptClosure.Fixed :=
-  D.cptClosure.diagonal_fixed_of_swap
-    D.cptClosure_theta_P_left D.cptClosure_theta_P_right
+  (D.toCosmicCrossoverWitness).crossover_diagonal_fixed
 
 /-- The DIII chiral imbalance is anti-fixed by the CPT/crossover closure. -/
 theorem cpt_chiral_imbalance_anti_fixed :
     D.cptClosure.theta (D.P_left - D.P_right) =
       -(D.P_left - D.P_right) :=
-  D.cptClosure.difference_anti_fixed_of_swap
-    D.cptClosure_theta_P_left D.cptClosure_theta_P_right
+  (D.toCosmicCrossoverWitness).crossover_imbalance_anti_fixed
 
 end DIIICPTBranchDatum
 

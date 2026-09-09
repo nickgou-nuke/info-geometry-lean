@@ -228,6 +228,25 @@ theorem exteriorGrade3_wedge (v : V3) (ψ : Exterior3) :
   rw [map_mul, gradeInvolution_ι]
   simp only [neg_mul]
 
+/-! Grade involution on the canonical iterated exterior product. -/
+
+theorem exteriorGrade3_ιMulti (n : ℕ) (v : Fin n → V3) :
+    exteriorGrade3 (ExteriorAlgebra.ιMulti ℝ n v) =
+      ((-1 : ℝ) ^ n) • ExteriorAlgebra.ιMulti ℝ n v := by
+  induction n with
+  | zero => simp [ExteriorAlgebra.ιMulti_zero_apply, exteriorGrade3]
+  | succ n ih =>
+      rw [ExteriorAlgebra.ιMulti_succ_apply]
+      change exteriorGrade3
+          (exteriorWedge3 (v 0)
+            (ExteriorAlgebra.ιMulti ℝ n (Matrix.vecTail v))) = _
+      rw [exteriorGrade3_wedge, ih (Matrix.vecTail v), map_smul]
+      change -(((-1 : ℝ) ^ n) •
+        (ExteriorAlgebra.ι ℝ (v 0) *
+          ExteriorAlgebra.ιMulti ℝ n (Matrix.vecTail v))) = _
+      rw [pow_succ]
+      module
+
 theorem exteriorGrade3_contract (φ : Module.Dual ℝ V3) (ψ : Exterior3) :
     exteriorGrade3 (exteriorContract3 φ ψ) =
       -(exteriorContract3 φ (exteriorGrade3 ψ)) := by

@@ -42,5 +42,3 @@ theorem prefixRankReadoutTopCatHom_right_cancel
   exact congrFun hgh x
 
 end InfoGeometry.Canonical
-
-end

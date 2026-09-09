@@ -21,6 +21,7 @@ open Matrix
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.PrimonColimitAlgebra
+open InfoGeometry.TraceFormula.DeterminantBondNative
 
 /-! The determinant law is discharged by the native BitWord reindexing proof. -/
 
@@ -55,7 +56,7 @@ lemma matrixBondFun_eq_reindex_kronecker (n : ℕ) (P : MatrixStage n) :
           subst wp
           cases vb <;> cases wb <;>
             simp [matrixBondFun, Matrix.reindex, Matrix.kroneckerMap,
-              bitWordSuccEquiv, lastBit, hvb, hwb]
+              bitWordSuccEquiv, hvb, hwb]
 
 theorem determinant_bond_block (n : ℕ) (P : MatrixStage n) :
     Matrix.det (matrixBond n P) = (Matrix.det P) ^ 2 := by

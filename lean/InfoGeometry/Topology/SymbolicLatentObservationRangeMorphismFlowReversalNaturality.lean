@@ -48,5 +48,3 @@ theorem symbolicObservationRangeCompHausHomOfMorphism_flow_reversal
     R h_flow h_cont t
 
 end InfoGeometry.Topology
-
-end

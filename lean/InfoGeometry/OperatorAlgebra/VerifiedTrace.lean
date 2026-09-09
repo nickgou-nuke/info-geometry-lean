@@ -14,7 +14,7 @@ implies similarity invariance:
 
 whenever `U` has a two-sided inverse.
 
-No vacuous trace-invariance property is used.
+No vacuous trace-invariance certificate is used.
 -/
 
 import Mathlib.Tactic
@@ -71,11 +71,14 @@ theorem matrix_trace_invariant_under_transport
 set_option linter.dupNamespace false
 
 /-!
-The trace carrier is the operator-to-scalar map itself. Conjugation
-invariance is exposed as a theorem with its proof supplied at the call site.
+A verified trace is an operator-to-scalar map with a proved conjugation
+invariance law.  The subtype is the native proof-carrying carrier.
 -/
-abbrev VerifiedTrace
-    (Op Scalar : Type*) [Monoid Op] := Op → Scalar
+def VerifiedTrace
+    (Op Scalar : Type*) [Monoid Op] :=
+  {tr : Op → Scalar //
+    ∀ (A : Op) (U : InvertibleTransport Op),
+      tr (U.conjugate A) = tr A}
 
 namespace VerifiedTrace
 
@@ -83,25 +86,21 @@ variable {Op Scalar : Type*} [Monoid Op]
 variable (T : VerifiedTrace Op Scalar)
 
 abbrev tr : Op → Scalar :=
-  T
+  T.1
 
 theorem invariant
-    (hT : ∀ (A : Op) (U : InvertibleTransport Op),
-      T (U.conjugate A) = T A)
     (A : Op) (U : InvertibleTransport Op) :
-    T (U.conjugate A) = T A :=
-  hT A U
+    T.tr (U.conjugate A) = T.tr A :=
+  T.2 A U
 
 /--
 Re-export trace invariance.
 -/
 theorem conjugation_invariant
-    (hT : ∀ (A : Op) (U : InvertibleTransport Op),
-      T (U.conjugate A) = T A)
     (A : Op)
     (U : InvertibleTransport Op) :
-    T (U.conjugate A) = T A :=
-  T.invariant hT A U
+    T.tr (U.conjugate A) = T.tr A :=
+  T.invariant A U
 
 end VerifiedTrace
 
@@ -111,8 +110,10 @@ ring.
 -/
 def matrixVerifiedTrace
     (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R] :
-  VerifiedTrace (Matrix n n R) R :=
-  Matrix.trace
+    VerifiedTrace (Matrix n n R) R :=
+  ⟨Matrix.trace, by
+    intro A U
+    exact matrix_trace_invariant_under_transport A U⟩
 
 /-! ## 3. Real finite matrix specialization -/
 

@@ -49,8 +49,7 @@ theorem cuntzCompatiblePointTopCatFamily_natural
   apply ContinuousMap.ext
   intro u
   apply Subtype.ext
-  exact congrArg Subtype.val
-    (CompatibleCuntzPointFamily.toQCCR_compatible sys family hij)
+  exact congrArg Subtype.val (family.toQCCR.compatible hij)
 
 noncomputable def cuntzCompatiblePointLimitMap
     (family : CompatibleCuntzPointFamily sys) :
@@ -64,7 +63,7 @@ noncomputable def cuntzCompatiblePointLimitMap
 @[simp]
 theorem cuntzCompatiblePointLimitMap_projection
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit) :
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (cuntzCompatiblePointLimitMap sys family u) =
       cuntzCompatiblePointTopCatFamily sys family i u := by
@@ -83,7 +82,7 @@ noncomputable def cuntzCompatiblePointAmbientLimitMap
 @[simp]
 theorem cuntzCompatiblePointAmbientLimitMap_projection
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit) :
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterTopologicalDiagram Stage sys) i
         (cuntzCompatiblePointAmbientLimitMap sys family u) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i

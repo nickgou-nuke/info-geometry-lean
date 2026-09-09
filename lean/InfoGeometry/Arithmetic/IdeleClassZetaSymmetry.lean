@@ -365,21 +365,19 @@ Three-layer symmetry element:
 * `layer.arithmetic` models the profinite arithmetic/Galois unit;
 * `parity` models the Fourier/Pontryagin `Z₂` involution.
 -/
-abbrev ThreeLayerIdeleSymmetry (G : Type*) :=
-  IdeleClassLayer G × FourierParity
+structure ThreeLayerIdeleSymmetry (G : Type*) where
+  layer : IdeleClassLayer G
+  parity : FourierParity
 
 namespace ThreeLayerIdeleSymmetry
-
-abbrev layer {G : Type*} (A : ThreeLayerIdeleSymmetry G) : IdeleClassLayer G := A.1
-
-abbrev parity {G : Type*} (A : ThreeLayerIdeleSymmetry G) : FourierParity := A.2
-
 
 variable {G : Type*}
 
 @[ext] theorem ext {A B : ThreeLayerIdeleSymmetry G}
     (hlayer : A.layer = B.layer) (hparity : A.parity = B.parity) : A = B := by
-  exact Prod.ext hlayer hparity
+  cases A
+  cases B
+  simp_all
 
 section CommGroup
 
@@ -401,36 +399,22 @@ def compose (A B : ThreeLayerIdeleSymmetry G) : ThreeLayerIdeleSymmetry G :=
 @[simp] theorem identity_compose (A : ThreeLayerIdeleSymmetry G) :
     compose identity A = A := by
   cases A with
-  | mk layerValue parityValue =>
-    cases layerValue
-    cases parityValue with
-    | identity =>
-      apply ext
-      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-          FourierParity.actOnIdele]
-      · rfl
-    | dual =>
-      apply ext
-      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-          FourierParity.actOnIdele]
-      · rfl
+  | mk layer parity =>
+    cases layer
+    cases parity <;>
+      ext <;>
+      simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+        FourierParity.actOnIdele]
 
 @[simp] theorem compose_identity (A : ThreeLayerIdeleSymmetry G) :
     compose A identity = A := by
   cases A with
-  | mk layerValue parityValue =>
-    cases layerValue
-    cases parityValue with
-    | identity =>
-      apply ext
-      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-          FourierParity.actOnIdele, IdeleClassLayer.inverse]
-      · rfl
-    | dual =>
-      apply ext
-      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-          FourierParity.actOnIdele, IdeleClassLayer.inverse]
-      · rfl
+  | mk layer parity =>
+    cases layer
+    cases parity <;>
+      ext <;>
+      simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+        FourierParity.actOnIdele, IdeleClassLayer.inverse]
 
 end CommGroup
 
@@ -502,7 +486,7 @@ theorem tracePartition_eq_zetaReadout
 
 end ThreeLayerIdeleSymmetry
 
-/-! ## Adelic quotient equivalence -/
+/-! ## Proof-carrying adelic quotient socket -/
 
 /--
 Proof-carrying decomposition packet for a concrete construction of the rational
@@ -512,24 +496,27 @@ Supplying this packet is the precise place where a future full adelic owner can
 prove that its quotient model is equivalent to the product of the positive-scale
 and arithmetic/Galois layers.  This module only consumes that equivalence.
 -/
-def RationalIdeleClassEquiv (ClassGroup G : Type*) : Type _ :=
-  ClassGroup ≃ IdeleClassLayer G
+structure RationalIdeleClassDecomposition (ClassGroup G : Type*) where
+  toLayers : ClassGroup → IdeleClassLayer G
+  fromLayers : IdeleClassLayer G → ClassGroup
+  left_inv : ∀ c : ClassGroup, fromLayers (toLayers c) = c
+  right_inv : ∀ x : IdeleClassLayer G, toLayers (fromLayers x) = x
 
-namespace RationalIdeleClassEquiv
+namespace RationalIdeleClassDecomposition
 
 variable {ClassGroup G : Type*}
-variable (D : RationalIdeleClassEquiv ClassGroup G)
+variable (D : RationalIdeleClassDecomposition ClassGroup G)
 
 /-- Round-trip from an idele class to the layer decomposition and back. -/
 theorem from_to (c : ClassGroup) :
-    D.symm (D.toFun c) = c :=
-  D.symm_apply_apply c
+    D.fromLayers (D.toLayers c) = c :=
+  D.left_inv c
 
 /-- Round-trip from layer data to the class-group model and back. -/
 theorem to_from (x : IdeleClassLayer G) :
-    D.toFun (D.symm x) = x :=
-  D.apply_symm_apply x
+    D.toLayers (D.fromLayers x) = x :=
+  D.right_inv x
 
-end RationalIdeleClassEquiv
+end RationalIdeleClassDecomposition
 
 end InfoGeometry.Arithmetic.IdeleClassZetaSymmetry

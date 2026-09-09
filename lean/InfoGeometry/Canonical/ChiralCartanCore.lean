@@ -15,7 +15,7 @@ noncomputable def chiralGrading (CI : ConformalInference E) : E →L[ℝ] E :=
   let P_L := IsMoorePenroseInverse.leftProjector CI.A CI.A_MP
   P_R - P_L
 
-/-- The chiral grading is exactly twice the property inverse-kernel dilation gap. -/
+/-- The chiral grading is exactly twice the certified inverse-kernel dilation gap. -/
 theorem chiralGrading_eq_two_smul_dilationGap (CI : ConformalInference E) :
     chiralGrading CI =
       (2 : ℝ) •

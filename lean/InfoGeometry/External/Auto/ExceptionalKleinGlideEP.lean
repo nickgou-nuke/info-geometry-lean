@@ -62,4 +62,17 @@ theorem square_one_of_glide_fixed_and_inverse {g a : B}
   rw [hmul]
   group
 
+/-- Main synthesis theorem for "EPs do the glide". -/
+theorem exceptional_klein_glide_ep_synthesis (g a : B)
+    (h : KleinGlideRelation g a) :
+    glidePartner g a = a⁻¹ ∧
+    kleinWord g a = 1 ∧
+    glidePartner g a * a = 1 := by
+  exact ⟨h, klein_word_trivial_of_glide_inverse h, charge_times_glide_partner_trivial h⟩
+
+#check klein_word_trivial_of_glide_inverse
+#check glide_inverse_of_klein_word_trivial
+#check square_one_of_glide_fixed_and_inverse
+#check exceptional_klein_glide_ep_synthesis
+
 end ExceptionalKleinGlideEP

@@ -36,12 +36,12 @@ inclusion has a maximal element between a seed subsystem and an ambient
 subsystem.
 -/
 theorem maximal_boundary_attractor_exists
-    (seed U : Set (ℕ → Bool))
+    (seed U : Set InfiniteBinaryWordSpace)
     (hseedU : seed ⊆ U)
     (hseed : BoundarySubsystem seed) :
-    ∃ M : Set (ℕ → Bool),
+    ∃ M : Set InfiniteBinaryWordSpace,
       seed ⊆ M ∧ M ⊆ U ∧ BoundarySubsystem M ∧
-      ∀ N : Set (ℕ → Bool),
+      ∀ N : Set InfiniteBinaryWordSpace,
         seed ⊆ N → N ⊆ U → BoundarySubsystem N →
         M ⊆ N → N = M :=
   zorn_maximal_boundarySubsystem seed U hseedU hseed
@@ -58,10 +58,10 @@ arbitrarily deep finite representatives.
 -/
 theorem maximal_boundary_with_splitClifford_representatives
     (z : SplitCliffordInfinity)
-    (seed U : Set (ℕ → Bool))
+    (seed U : Set InfiniteBinaryWordSpace)
     (hseedU : seed ⊆ U)
     (hseed : BoundarySubsystem seed) :
-    ∃ M : Set (ℕ → Bool),
+    ∃ M : Set InfiniteBinaryWordSpace,
       seed ⊆ M ∧
         M ⊆ U ∧
           BoundarySubsystem M ∧
@@ -70,7 +70,7 @@ theorem maximal_boundary_with_splitClifford_representatives
             (∀ N : ℕ, ∃ n ≥ N, ∃ x : SplitClNNAlg n,
               DirectLimit.Module.of ℝ ℕ SplitClNNAlg
                 (fun m n h => splitCliffordMap m n h) n x = z) ∧
-            ∀ N : Set (ℕ → Bool),
+            ∀ N : Set InfiniteBinaryWordSpace,
               seed ⊆ N →
                 N ⊆ U →
                   BoundarySubsystem N →
@@ -178,10 +178,10 @@ This bundles only the currently formalized statements:
 structure TwinOrderStability where
   boundary :
     ∀ (z : SplitCliffordInfinity)
-      (seed U : Set (ℕ → Bool))
+      (seed U : Set InfiniteBinaryWordSpace)
       (_ : seed ⊆ U)
       (_ : BoundarySubsystem seed),
-      ∃ M : Set (ℕ → Bool),
+      ∃ M : Set InfiniteBinaryWordSpace,
         seed ⊆ M ∧
           M ⊆ U ∧
             BoundarySubsystem M ∧
@@ -190,7 +190,7 @@ structure TwinOrderStability where
               (∀ N : ℕ, ∃ n ≥ N, ∃ x : SplitClNNAlg n,
                 DirectLimit.Module.of ℝ ℕ SplitClNNAlg
                   (fun m n h => splitCliffordMap m n h) n x = z) ∧
-              ∀ N : Set (ℕ → Bool),
+              ∀ N : Set InfiniteBinaryWordSpace,
                 seed ⊆ N →
                   N ⊆ U →
                     BoundarySubsystem N →

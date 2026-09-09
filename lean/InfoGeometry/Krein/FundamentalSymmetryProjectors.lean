@@ -134,78 +134,6 @@ theorem K_minus_idempotent
     abel
   rw [hsub, smul_add, ← add_smul, hhalf, one_smul]
 
-/-- The positive Krein projector is idempotent as a linear map. -/
-theorem K_plus_comp_self
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ)
-    (hhalf : half + half = 1) :
-    (K_plus half J).comp (K_plus half J) = K_plus half J := by
-  apply LinearMap.ext
-  intro x
-  exact K_plus_idempotent J hJ2 half hhalf x
-
-/-- The negative Krein projector is idempotent as a linear map. -/
-theorem K_minus_comp_self
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ)
-    (hhalf : half + half = 1) :
-    (K_minus half J).comp (K_minus half J) = K_minus half J := by
-  apply LinearMap.ext
-  intro x
-  exact K_minus_idempotent J hJ2 half hhalf x
-
-/-- The two eigensector projectors annihilate each other pointwise. -/
-theorem K_plus_K_minus_zero
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ)
-    (x : V) :
-    K_plus half J (K_minus half J x) = 0 := by
-  rw [K_plus_apply, J_K_minus J hJ2 half x]
-  have hcancel : K_minus half J x + -K_minus half J x = 0 := by
-    exact add_neg_cancel _
-  rw [hcancel, smul_zero]
-
-theorem K_minus_K_plus_zero
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ)
-    (x : V) :
-    K_minus half J (K_plus half J x) = 0 := by
-  rw [K_minus_apply, J_K_plus J hJ2 half x]
-  have hcancel : K_plus half J x - K_plus half J x = 0 := by
-    exact sub_self _
-  rw [hcancel, smul_zero]
-
-theorem K_plus_add_K_minus_eq_id
-    (J : V →ₗ[ℝ] V)
-    (half : ℝ)
-    (hhalf : half + half = 1) :
-    K_plus half J + K_minus half J = LinearMap.id := by
-  apply LinearMap.ext
-  intro x
-  simpa using K_plus_add_K_minus J half hhalf x
-
-theorem K_plus_comp_K_minus_eq_zero
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ) :
-    (K_plus half J).comp (K_minus half J) = 0 := by
-  apply LinearMap.ext
-  intro x
-  simpa using K_plus_K_minus_zero J hJ2 half x
-
-theorem K_minus_comp_K_plus_eq_zero
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (half : ℝ) :
-    (K_minus half J).comp (K_plus half J) = 0 := by
-  apply LinearMap.ext
-  intro x
-  simpa using K_minus_K_plus_zero J hJ2 half x
-
 /-- Right negation exits a symmetric left-linear indefinite pairing. -/
 theorem indef_inner_neg_right
     (indefInner : V → V → ℝ)
@@ -231,23 +159,5 @@ theorem K_plus_K_minus_orthogonal
     indefInner (K_plus half J x) (K_minus half J y) = 0 :=
   self_dual_anti_self_dual_orthogonal
     indefInner indefInner_comm indefInner_smul_left J hJ2 hJadj half x y
-
-/-- The reverse order of the two Krein eigensectors is orthogonal as well. -/
-theorem K_minus_K_plus_orthogonal
-    (indefInner : V → V → ℝ)
-    (indefInner_comm : ∀ x y, indefInner x y = indefInner y x)
-    (indefInner_smul_left : ∀ c x y, indefInner (c • x) y = c * indefInner x y)
-    (J : V →ₗ[ℝ] V)
-    (hJ2 : J.comp J = LinearMap.id)
-    (hJadj : ∀ x y, indefInner (J x) y = indefInner x (J y))
-    (half : ℝ)
-    (x y : V) :
-    indefInner (K_minus half J x) (K_plus half J y) = 0 := by
-  calc
-    indefInner (K_minus half J x) (K_plus half J y) =
-        indefInner (K_plus half J y) (K_minus half J x) :=
-      indefInner_comm _ _
-    _ = 0 := K_plus_K_minus_orthogonal
-      indefInner indefInner_comm indefInner_smul_left J hJ2 hJadj half y x
 
 end InfoGeometry.Krein.FundamentalSymmetryProjectors

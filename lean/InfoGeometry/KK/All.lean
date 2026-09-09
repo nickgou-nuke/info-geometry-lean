@@ -11,12 +11,7 @@ import InfoGeometry.KK.RealSplitKKTBridge
 import InfoGeometry.KK.RealSplitKreinBoundedTransform
 import InfoGeometry.KK.RealSplitKreinCompactOperator
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
-import InfoGeometry.KK.RealSplitKreinEquivarianceBridge
-import InfoGeometry.KK.RealSplitKreinHilbertizationBridge
-import InfoGeometry.KK.RealCl55KasparovCycleBridge
-import InfoGeometry.KK.G2IntegratedKasparovEquivarianceBridge
 import InfoGeometry.KK.RealSplitKreinResolvent
-import InfoGeometry.KK.RealSplitKreinLinearResolventBridge
 import InfoGeometry.KK.RealSplitKreinUnboundedCycle
 
 namespace InfoGeometry

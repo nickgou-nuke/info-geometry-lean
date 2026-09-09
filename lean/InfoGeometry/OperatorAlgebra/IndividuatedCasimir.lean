@@ -63,33 +63,56 @@ end InvertibleTransport
 
 /-! ## 2. Verified Casimir -/
 
+/--
+A verified Casimir element is an element with a proved centrality law.
+
+This is not a vacuous `Prop` socket. Downstream users receive the centrality
+theorem as data.
+-/
+structure VerifiedCasimir
+    (Op : Type*) [Mul Op] where
+  element : Op
+  central :
+    ∀ X : Op, element * X = X * element
+
 namespace VerifiedCasimir
 
 variable {Op : Type*} [Monoid Op]
+variable (C : VerifiedCasimir Op)
 
 /--
 A verified Casimir is fixed by every invertible conjugation.
 -/
-theorem central_fixed_by_conjugation
-    (C : Op)
-    (central : ∀ X : Op, C * X = X * C)
+theorem fixed_by_conjugation
     (U : InvertibleTransport Op) :
-    U.conjugate C = C := by
+    U.conjugate C.element = C.element := by
   dsimp [InvertibleTransport.conjugate]
   calc
-    U.val * C * U.inv
-        = C * U.val * U.inv := by
-            rw [← central U.val]
-    _ = C * (U.val * U.inv) := by
+    U.val * C.element * U.inv
+        = C.element * U.val * U.inv := by
+            rw [← C.central U.val]
+    _ = C.element * (U.val * U.inv) := by
             rw [mul_assoc]
-    _ = C * 1 := by
+    _ = C.element * 1 := by
             rw [U.val_inv]
-    _ = C := by
+    _ = C.element := by
             simp
 
 end VerifiedCasimir
 
 /-! ## 3. Scalar Casimirs are constructively central -/
+
+/--
+A scalar element of an algebra is a verified Casimir.
+-/
+def scalarVerifiedCasimir
+    (Op : Type*) [Ring Op] [Algebra ℝ Op]
+    (a : ℝ) :
+    VerifiedCasimir Op where
+  element := algebraMap ℝ Op a
+  central := by
+    intro X
+    exact Algebra.commutes a X
 
 /--
 Scalar Casimirs are invariant under invertible conjugation.
@@ -100,8 +123,7 @@ theorem scalarVerifiedCasimir_fixed_by_conjugation
     (U : InvertibleTransport Op) :
     U.conjugate (algebraMap ℝ Op a) =
       algebraMap ℝ Op a :=
-  VerifiedCasimir.central_fixed_by_conjugation (algebraMap ℝ Op a)
-    (fun X => Algebra.commutes a X) U
+  (scalarVerifiedCasimir Op a).fixed_by_conjugation U
 
 /-! ## 4. Finite Clifford frame -/
 
@@ -190,13 +212,20 @@ theorem quadraticCasimir_central
   exact Algebra.commutes F.quadraticScalar X
 
 /--
+The quadratic Clifford Casimir packaged as a verified Casimir.
+-/
+def quadraticVerifiedCasimir :
+    VerifiedCasimir Op where
+  element := F.quadraticCasimir
+  central := F.quadraticCasimir_central
+
+/--
 The quadratic Clifford Casimir is invariant under every invertible conjugation.
 -/
 theorem quadraticCasimir_fixed_by_conjugation
     (U : InvertibleTransport Op) :
     U.conjugate F.quadraticCasimir = F.quadraticCasimir :=
-  VerifiedCasimir.central_fixed_by_conjugation F.quadraticCasimir
-    F.quadraticCasimir_central U
+  F.quadraticVerifiedCasimir.fixed_by_conjugation U
 
 end CliffordFrame
 

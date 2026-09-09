@@ -26,12 +26,6 @@ theorem poissonBregman_zero (lam : ℝ) :
     poissonBregman 0 lam = lam := by
   simp [poissonBregman]
 
-theorem poissonBregman_self (x : ℝ) :
-    poissonBregman x x = 0 := by
-  by_cases hx : x = 0
-  · simp [hx, poissonBregman]
-  · simp [poissonBregman, hx]
-
 theorem poissonBregman_nonneg
     {y lam : ℝ} (hy : 0 ≤ y) (hlam : 0 < lam) :
     0 ≤ poissonBregman y lam := by

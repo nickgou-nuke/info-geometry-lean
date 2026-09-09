@@ -22,10 +22,6 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.SplitCliffordJordanWigner
 
-attribute [local simp] Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero
-  Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
-  Matrix.cons_val_three
-
 abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
 
 /-- Mode 1 annihilation operator: `a₁ = a ⊗ 𝕀`. -/
@@ -69,44 +65,6 @@ theorem cross_mixed_anticommute :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [a1, a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
-
-/-- Each annihilation operator is nilpotent. -/
-theorem mode1_square_zero :
-    a1 * a1 = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [a1, Matrix.mul_apply, Fin.sum_univ_four]
-
-theorem mode2_square_zero :
-    a2 * a2 = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [a2, Matrix.mul_apply, Fin.sum_univ_four]
-
-/-- Each creation operator is nilpotent. -/
-theorem mode1Dag_square_zero :
-    a1Dag * a1Dag = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [a1Dag, Matrix.mul_apply, Fin.sum_univ_four]
-
-theorem mode2Dag_square_zero :
-    a2Dag * a2Dag = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
-
-/-- The reversed mixed cross anticommutator also vanishes. -/
-theorem cross_mixed_anticommute_rev :
-    a2Dag * a1 + a1 * a2Dag = 0 := by
-  simpa [add_comm] using cross_mixed_anticommute
-
-/-- Creation operators in distinct modes anticommute. -/
-theorem cross_creation_anticommute :
-    a1Dag * a2Dag + a2Dag * a1Dag = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [a1Dag, a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- Local CAR for mode 1: `{a₁, a₁†} = 1`. -/
 theorem mode1_car_identity :

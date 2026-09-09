@@ -18,6 +18,7 @@ Key Results:
 2. `normalizedTrace_one`: $\tau_n(1) = 1$.
 3. `normalizedTrace_embed`: $\tau_{n+1}(\text{diagEmbedSucc } n f) = \tau_n(f)$ (Inductive Trace Preservation).
 4. `normalizedTrace_seq`: $\tau_{n+m}(\iota_{n \to n+m}(f)) = \tau_n(f)$ for all $m \in \mathbb{N}$.
+5. `kms_trace_readback_synthesis`: Consolidated KMS trace readback synthesis.
 -/
 
 /-- Normalized trace at stage $n$ on $\text{DiagAlg } n$. -/
@@ -97,5 +98,14 @@ theorem normalizedTrace_seq (n : ℕ) (f : DiagAlg n) : ∀ m : ℕ,
         normalizedTrace ((n + m) + 1) (diagEmbedSucc (n + m) (diagEmbedSeq n m f)) := rfl
     rw [h_step, normalizedTrace_embed (n + m), normalizedTrace_seq n f m]
 
+/-- **Consolidated KMS Trace Readback Synthesis Theorem**
+    Shows that finite-stage normalized trace $\tau_n$ is normalized ($\tau_n(1) = 1$),
+    strictly preserves trace under single-step inclusions, and scales invariantly
+    across arbitrary $m$-step $A_\infty$ colimit maps. -/
+theorem kms_trace_readback_synthesis :
+    (∀ n : ℕ, normalizedTrace n 1 = 1) ∧
+    (∀ n : ℕ, ∀ f : DiagAlg n, normalizedTrace (n + 1) (diagEmbedSucc n f) = normalizedTrace n f) ∧
+    (∀ (n m : ℕ) (f : DiagAlg n), normalizedTrace (n + m) (diagEmbedSeq n m f) = normalizedTrace n f) := by
+  exact ⟨normalizedTrace_one, normalizedTrace_embed, fun n m f => normalizedTrace_seq n f m⟩
 
 end InfoGeometry.Canonical.KMSTraceColimit

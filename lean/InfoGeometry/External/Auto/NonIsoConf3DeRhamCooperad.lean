@@ -35,15 +35,10 @@ inductive ModelChoice where
 
 /-- Exterior-product signature for `(1+t)^3(1+t^(D-1))^2`: three phase bits and
 two flux bits. -/
-abbrev ProductBasis := (Fin 3 → Bool) × (Fin 2 → Bool)
-
-namespace ProductBasis
-
-abbrev phase (b : ProductBasis) : Fin 3 → Bool := b.1
-
-abbrev flux (b : ProductBasis) : Fin 2 → Bool := b.2
-
-end ProductBasis
+structure ProductBasis where
+  phase : Fin 3 → Bool
+  flux : Fin 2 → Bool
+  deriving DecidableEq, Fintype, Repr
 
 /-- The product/Leray-collapse candidate has total rank `32`. -/
 theorem productBasis_card : Fintype.card ProductBasis = 32 := by
@@ -116,28 +111,30 @@ theorem osAlphaBasis_card : Fintype.card OSAlphaBasis = 6 := by
           fin_cases i <;> rfl }
 
 /-- Two independent flux bits, contributing `(1+t^(D-1))^2`. -/
-abbrev FluxBasis := Fin 2 → Bool
-
-namespace FluxBasis
-
-abbrev flux (b : FluxBasis) : Fin 2 → Bool := b
-
-end FluxBasis
+structure FluxBasis where
+  flux : Fin 2 → Bool
+  deriving DecidableEq, Fintype, Repr
 
 /-- The two-flux exterior skeleton has total rank `4`. -/
 theorem fluxBasis_card : Fintype.card FluxBasis = 4 := by
-  simp [FluxBasis]
+  rw [show Fintype.card FluxBasis = Fintype.card (Fin 2 → Bool) from ?_]
+  · simp
+  · exact Fintype.card_congr
+      { toFun := fun b => b.flux
+        invFun := fun f => ⟨f⟩
+        left_inv := by
+          intro b
+          cases b
+          rfl
+        right_inv := by
+          intro f
+          rfl }
 
 /-- OS-alpha plus two flux bits: rank `6*4=24`. -/
-abbrev OSFluxBasis := OSAlphaBasis × FluxBasis
-
-namespace OSFluxBasis
-
-abbrev alpha (b : OSFluxBasis) : OSAlphaBasis := b.1
-
-abbrev flux (b : OSFluxBasis) : FluxBasis := b.2
-
-end OSFluxBasis
+structure OSFluxBasis where
+  alpha : OSAlphaBasis
+  flux : FluxBasis
+  deriving DecidableEq, Fintype, Repr
 
 /-- The OS-alpha candidate has total rank `24`. -/
 theorem osFluxBasis_card : Fintype.card OSFluxBasis = 24 := by
@@ -177,19 +174,16 @@ inductive BetaEdge where
   | b12 | b13 | b23
   deriving DecidableEq, Fintype, Repr
 
-/-- The finite named relation used by the arity-three alpha skeleton. -/
-inductive ArnoldRelationKind where
-  | alphaTriangle
-  deriving DecidableEq, Repr
-
-/-- A typed finite relation descriptor; its degree is mathematical data. -/
+/-- Named Arnold triangle relation in degree two. -/
 structure ArnoldRelation where
-  kind : ArnoldRelationKind
+  name : String
   degree : ℕ
+  deriving Repr
 
 /-- The alpha Arnold relation in degree two. -/
-def alphaArnold : ArnoldRelation :=
-  { kind := ArnoldRelationKind.alphaTriangle, degree := 2 }
+def alphaArnold : ArnoldRelation where
+  name := "alpha12*alpha23 - alpha12*alpha13 + alpha23*alpha13 = 0"
+  degree := 2
 
 @[simp] theorem alphaArnold_degree : alphaArnold.degree = 2 := rfl
 

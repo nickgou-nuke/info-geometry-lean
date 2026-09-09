@@ -429,8 +429,8 @@ def ij_close (a b c d : FreeMonoid' ℕ) := ∀ i j, (Nat.dist i j = 1) → a = 
   --     rw [h3.1, h3.2, one_mul]
   --     rw [h3.1] at h1
   --     have H4 := word_side_side _ _ _ h1
-  --   sorry
-  -- | horizontal h1 h2 h1_ih h2_ih => sorry
+  --   unproved obligation
+  -- | horizontal h1 h2 h1_ih h2_ih => unproved obligation
 
 
 theorem helpier_close {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_close a b c d := by
@@ -593,8 +593,8 @@ theorem helpier_ij {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_st a b c 
   rw [H.2]
   exact ⟨H.1, rfl⟩
 
-theorem i_both_one : grid a b 1 1 → PresentedMonoid.rel braid_rels_m_inf a b := by
+theorem i_both_one : grid a b 1 1 → BraidPresentedMonoid.rel braid_rels_m_inf a b := by
   intro h
-  apply PresentedMonoid.exact
+  apply BraidPresentedMonoid.exact
   rw [← mul_one a, ← mul_one b]
   exact braid_eq_of_grid h

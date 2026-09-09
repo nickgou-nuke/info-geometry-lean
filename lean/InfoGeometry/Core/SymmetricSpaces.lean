@@ -84,7 +84,7 @@ abbrev cartanSymmetryOfInvolutiveMulAut
     (θ : InvolutiveMulAut G) (x y : G) : G :=
   InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut θ x y
 
-/-- Core alias for the canonical symmetric pair induced by an involution property. -/
+/-- Core alias for the canonical symmetric pair induced by an involution witness. -/
 abbrev symmetricPairOfInvolution
     (θ : MulAut G) (hθ : Function.Involutive θ) : SymmetricPair G :=
   InfoGeometry.Architecture.symmetricPairOfInvolution θ hθ

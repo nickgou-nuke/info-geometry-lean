@@ -186,6 +186,14 @@ theorem signalConj_signalMul (c : ℝ) (hc : c ≠ 0)
     toNativeZorn_signalMul, toNativeZorn_signalConj,
     toNativeZorn_signalConj, signalNativeConj_mul]
 
+private theorem native_zornNorm_mul (X Y : ZornMatrix ℝ) :
+    zornNorm (X * Y) = zornNorm X * zornNorm Y := by
+  rcases X with ⟨a, v, w, b⟩
+  rcases Y with ⟨c, x, y, d⟩
+  simp [zornNorm, ZornMatrix.mul, Vec3.dot, Vec3.cross, Vec3.add,
+    Vec3.sub, Vec3.smul]
+  ring
+
 theorem signalNorm_signalMul (c : ℝ) (hc : c ≠ 0)
     (s t : SignalCoordinates) :
     signalNorm c (signalMul c hc s t) =
@@ -193,7 +201,7 @@ theorem signalNorm_signalMul (c : ℝ) (hc : c ≠ 0)
   rw [← native_zorn_norm_eq_signalNorm,
     ← native_zorn_norm_eq_signalNorm,
     ← native_zorn_norm_eq_signalNorm]
-  rw [toNativeZorn_signalMul, zornNorm_mul]
+  rw [toNativeZorn_signalMul, native_zornNorm_mul]
 
 end
 end InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge

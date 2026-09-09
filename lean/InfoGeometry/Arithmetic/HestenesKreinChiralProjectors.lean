@@ -15,8 +15,8 @@ This file stays on the algebraic side:
 * pointwise projections of fields and kernels.
 
 No bridge tags.
-No deferred-interface imports.
-No property carrier.
+No socket imports.
+No certificate carrier.
 No Virasoro placeholder.
 -/
 
@@ -114,30 +114,6 @@ theorem projectMinus_eq_smul_minusCoeff (z : SplitComplex) :
   ext <;> simp [projectMinus, minusCoeff, eMinus,
     SplitComplex.mul, SplitComplex.smul] <;> ring
 
-theorem plusCoeff_projectPlus (z : SplitComplex) :
-    plusCoeff (projectPlus z) = plusCoeff z := by
-  cases z
-  simp [projectPlus, plusCoeff, ePlus, SplitComplex.mul]
-  ring
-
-theorem minusCoeff_projectPlus (z : SplitComplex) :
-    minusCoeff (projectPlus z) = 0 := by
-  cases z
-  simp [projectPlus, minusCoeff, ePlus, SplitComplex.mul]
-  ring
-
-theorem plusCoeff_projectMinus (z : SplitComplex) :
-    plusCoeff (projectMinus z) = 0 := by
-  cases z
-  simp [projectMinus, plusCoeff, eMinus, SplitComplex.mul]
-  ring
-
-theorem minusCoeff_projectMinus (z : SplitComplex) :
-    minusCoeff (projectMinus z) = minusCoeff z := by
-  cases z
-  simp [projectMinus, minusCoeff, eMinus, SplitComplex.mul]
-  ring
-
 /-- `P₊² = P₊`. -/
 theorem projectPlus_idempotent (z : SplitComplex) :
     projectPlus (projectPlus z) = projectPlus z := by
@@ -186,19 +162,19 @@ theorem splitTemperature_chiral_decomposition
 /-- Antiunitary reflection sends `u` to `1-v`. -/
 theorem antiunitaryReflection_leftCone
     (s : SplitSouriauTemperature) :
-    leftCone (splitReflection s) =
+    leftCone (antiunitaryReflection s) =
       1 - rightCone s := by
   cases s
-  simp [leftCone, rightCone, splitReflection]
+  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
   ring_nf
 
 /-- Antiunitary reflection sends `v` to `1-u`. -/
 theorem antiunitaryReflection_rightCone
     (s : SplitSouriauTemperature) :
-    rightCone (splitReflection s) =
+    rightCone (antiunitaryReflection s) =
       1 - leftCone s := by
   cases s
-  simp [leftCone, rightCone, splitReflection]
+  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
   ring_nf
 
 

@@ -2,8 +2,6 @@ import Mathlib.Tactic
 
 open Matrix
 
-namespace ExternalTestAF
-
 def M : Matrix (Fin 2) (Fin 2) ℕ :=
   !![1, 1; 1, 0]
 
@@ -39,5 +37,3 @@ lemma penrose_af_dimension (n : ℕ) :
       _ = 1 * af_dim n 0 + 0 * af_dim n 1 := rfl
       _ = af_dim n 0 := by ring
       _ = Nat.fib (n + 1) := ih0
-
-end ExternalTestAF

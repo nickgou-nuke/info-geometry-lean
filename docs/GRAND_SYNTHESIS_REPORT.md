@@ -7,6 +7,7 @@
 > - [`InfoGeometry.Canonical.CanonicalZornPalatiniCurvature`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornPalatiniCurvature.lean)
 > - [`InfoGeometry.Canonical.CanonicalZornFisherCooling`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CanonicalZornFisherCooling.lean)
 > - [`InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AnyonicFractalLoomQuantumComputerBridge.lean)
+> - [`InfoGeometry.Canonical.BraidedYangMillsCurrentBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/BraidedYangMillsCurrentBridge.lean)
 > - [`InfoGeometry.Canonical.SpectroscopyPoissonCoolingAmariBridge`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SpectroscopyPoissonCoolingAmariBridge.lean)
 > - [`InfoGeometry.Canonical.ScaleFreeStringMembraneGrandCapstone`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ScaleFreeStringMembraneGrandCapstone.lean)
 

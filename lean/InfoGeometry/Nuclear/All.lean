@@ -17,6 +17,15 @@ import InfoGeometry.Nuclear.CrossSectionDuality
 import InfoGeometry.Nuclear.ApollonianBipolarField
 import InfoGeometry.Probability.DetectorScaleInvariance
 import InfoGeometry.Nuclear.DetectorInformationGeometry
+import InfoGeometry.Nuclear.FocalRapidity
+import InfoGeometry.Nuclear.FocalSechODE
+import InfoGeometry.Nuclear.ConformalDetectorIntegral
+import InfoGeometry.Nuclear.DetectorBeerLambert
+import InfoGeometry.Nuclear.DetectorDiskIntegral
+import InfoGeometry.Nuclear.DetectorTransportKernel
+import InfoGeometry.Nuclear.DetectorVolumeResponse
+import InfoGeometry.Nuclear.DetectorResponseCore
+import InfoGeometry.Nuclear.DetectorResponseIntegral
 
 namespace InfoGeometry.Nuclear
 

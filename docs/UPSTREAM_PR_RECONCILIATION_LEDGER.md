@@ -176,7 +176,7 @@
 | #163 | OPEN | `operator-zorn-twin-cyclotomic-reconstruction` | 42 | 191 | 394 | Preserve full operator-Zorn twin fields and construct coefficient Fourier sectors |
 | #164 | OPEN | `graded-clifford-peirce-fourier-reconstruction` | 2 | 191 | 339 | Construct fourth-root Fourier projectors and native exterior-degree Peirce bridges |
 | #165 | OPEN | `exterior-cyclotomic-peirce-reconstruction` | 2 | 191 | 341 | Construct exterior degree-mod-four projectors and finite Peirce corners from native Clifford parity |
-| #166 | OPEN | `dirac-hodge-spin-zorn-grade-intertwiners` | 132 | 191 | 398 | Formalize Dirac–Hodge, real spin, and graded operator-Zorn intertwiners |
+| #166 | MERGED | `dirac-hodge-spin-zorn-grade-intertwiners` | 132 | 191 | 398 | Formalize Dirac–Hodge, real spin, and graded operator-Zorn intertwiners |
 | #167 | OPEN | `mcbal-full-native-corridor-audit` | 4 | 191 | 331 | Map the full mcbal comparison onto the native Sinkhorn–Hodge–IB corridor |
 | #168 | OPEN | `mcbal-spherical-vmf-native` | 18 | 191 | 338 | Formalize spherical vMF measure, cumulant, and controlled closure calculus |
 | #169 | OPEN | `formalization/detector-response-integral-20260908` | 1 | 32 | 14 | Nuclear: actual detector response integral — isolated Lean candidate |

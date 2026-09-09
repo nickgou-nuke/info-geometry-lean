@@ -71,6 +71,20 @@ theorem injChargeMinus_contact_grade (x : FreudenthalCharge J) :
   rw [symplecticContactEuler_bracket]
   apply FiveGradedCarrier.ext <;> simp [injChargeMinus]
 
+theorem injSympZero_contact_grade (T : SymplecticTKKZero D) :
+    injSympZero D T ∈ symplecticContactGradeSpace D 0 := by
+  change SymplecticContactHasGrade D 0 (injSympZero D T)
+  unfold SymplecticContactHasGrade
+  rw [symplecticContactEuler_bracket]
+  apply FiveGradedCarrier.ext <;> simp [injSympZero]
+
+theorem genHscale_contact_grade (h : ℝ) :
+    genHscale D h ∈ symplecticContactGradeSpace D 0 := by
+  change SymplecticContactHasGrade D 0 (genHscale D h)
+  unfold SymplecticContactHasGrade
+  rw [symplecticContactEuler_bracket]
+  apply FiveGradedCarrier.ext <;> simp [genHscale]
+
 theorem injChargePlus_contact_grade (x : FreudenthalCharge J) :
     injChargePlus D x ∈ symplecticContactGradeSpace D 1 := by
   change SymplecticContactHasGrade D 1 (injChargePlus D x)
@@ -84,5 +98,37 @@ theorem genEplus_contact_grade (a : ℝ) :
   unfold SymplecticContactHasGrade
   rw [symplecticContactEuler_bracket]
   apply FiveGradedCarrier.ext <;> simp [genEplus]
+
+theorem symplecticContact_extreme_bracket :
+    ⁅genEplus D 1, genEminus D 1⁆ = symplecticContactEuler D := by
+  apply FiveGradedCarrier.ext <;>
+    simp [symplecticContactEuler, symplecticContact_lieBracket_eq,
+      symplecticContactBracket, genEplus, genEminus, genHscale]
+
+theorem symplecticContact_minus1_minus1 (x y : FreudenthalCharge J) :
+    ⁅injChargeMinus D x, injChargeMinus D y⁆ =
+      genEminus D (-2 * FreudenthalCharge.symplecticForm D x y) :=
+  corrected_minus1_minus1_bracket D x y
+
+theorem symplecticContact_plus1_plus1 (x y : FreudenthalCharge J) :
+    ⁅injChargePlus D x, injChargePlus D y⁆ =
+      genEplus D (2 * FreudenthalCharge.symplecticForm D x y) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [symplecticContact_lieBracket_eq, symplecticContactBracket,
+      injChargePlus, genEplus]
+
+theorem symplectic_contact_five_grade_packet :
+    genEminus D 1 ∈ symplecticContactGradeSpace D (-2) ∧
+      (∀ x, injChargeMinus D x ∈ symplecticContactGradeSpace D (-1)) ∧
+      (∀ T, injSympZero D T ∈ symplecticContactGradeSpace D 0) ∧
+      (∀ x, injChargePlus D x ∈ symplecticContactGradeSpace D 1) ∧
+      genEplus D 1 ∈ symplecticContactGradeSpace D 2 ∧
+      ⁅genEplus D 1, genEminus D 1⁆ = symplecticContactEuler D := by
+  exact ⟨genEminus_contact_grade D 1,
+    injChargeMinus_contact_grade D,
+    injSympZero_contact_grade D,
+    injChargePlus_contact_grade D,
+    genEplus_contact_grade D 1,
+    symplecticContact_extreme_bracket D⟩
 
 end InfoGeometry.Exceptional.Freudenthal

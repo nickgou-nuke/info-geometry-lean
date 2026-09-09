@@ -25,6 +25,7 @@ import InfoGeometry.Thermo.BipolarDissipativeGENERIC
 import InfoGeometry.Thermo.BipolarThreeCoordinateGENERIC
 import InfoGeometry.Thermo.BipolarGENERICRestriction
 import InfoGeometry.Potential.Thermo
+import InfoGeometry.Thermo.LambdaReductionAffinity
 
 namespace InfoGeometry
 

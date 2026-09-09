@@ -100,4 +100,15 @@ theorem finrank_f4BasisSpan_eq_52_of_soldering
   have hLI := f4Basis_linearIndependent_of_soldering hS
   simpa [f4BasisSpan] using finrank_span_eq_card hLI
 
+/-! The remaining carrier dimension is a conditional transfer theorem: it
+requires the explicit certificate and the generation equality, which are kept
+as hypotheses rather than asserted here. -/
+theorem finrank_F4Derivations_eq_52_of_soldering_and_generation
+    (hS : CertificateIsSoldered)
+    (hgen : f4BasisSpan = H3ZornF4Derivations) :
+    Module.finrank ℝ H3ZornF4Derivations = 52 := by
+  change Module.finrank ℝ H3ZornF4Derivations.toSubmodule = 52
+  rw [← hgen]
+  exact finrank_f4BasisSpan_eq_52_of_soldering hS
+
 end InfoGeometry.Canonical.F4ActionSolderingBridge

@@ -4,6 +4,7 @@ import Mathlib.Tactic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Canonical.SMNormalizedGaugeEmbedding
 
 /-!
 # Chamseddine-Connes Spectral Action & Noncommutative Standard Model Capstone
@@ -26,13 +27,15 @@ spectral Higgs potential non-negativity $V(H) \ge 0$, and spontaneous symmetry b
 3. **Spontaneous Symmetry Breaking & Higgs Mass Term**:
    - Shifted Higgs field: $h = v + \phi$.
    - Proved: `shiftedHiggsPotential_expansion`: $V(v + \phi) = 4 \lambda v^2 \phi^2 + 4 \lambda v \phi^3 + \lambda \phi^4$.
-   - Proved: `gutWeakAngleSinSq_bounds`: GUT scale weak mixing angle $\sin^2 \theta_W = 3/8 \in (0, 1)$.
+   - The GUT-scale weak angle is now read from `SMNormalizedGaugeEmbedding`, where
+     `Tr(T3^2)=2`, `Tr(Y^2)=10/3`, the normalization index is `5/3`, and
+     the normalized coupling ratio forces `sin^2 theta_W = 3/8`.
 
 4. **Master Synthesis**:
    - Unifies algebra dimension, potential non-negativity, vacuum vanishing, mass term expansion,
-     GUT weak angle bounds, and Yang-Baxter topological braid integrability $F \cdot B \cdot F = R$ and $F^2 = 1$.
+     derived GUT weak angle bounds, and Yang-Baxter topological braid integrability $F \cdot B \cdot F = R$ and $F^2 = 1$.
 
-All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+The weak angle is no longer introduced here as an independent numerical constant.
 -/
 
 open scoped BigOperators
@@ -104,14 +107,23 @@ theorem shiftedHiggsPotential_expansion (lambda v phi : ℝ) :
   dsimp [shiftedHiggsPotential, spectralHiggsPotential]
   ring
 
-/-- Weinberg weak mixing angle at the GUT unification scale: $\sin^2 \theta_W = 3/8$. -/
-def gutWeakAngleSinSq : ℝ := 3 / 8
+/-- GUT-scale Weinberg weak mixing angle read from the normalized one-generation
+Standard-Model electroweak embedding.  It is not an independent constant. -/
+def gutWeakAngleSinSq : ℝ :=
+  (InfoGeometry.Canonical.SMNormalizedGaugeEmbedding.derivedWeakAngleSinSq : ℝ)
+
+/-- The derived GUT-scale weak angle is exactly `3/8`. -/
+theorem gutWeakAngleSinSq_eq_three_eighths :
+    gutWeakAngleSinSq = 3 / 8 := by
+  rw [gutWeakAngleSinSq,
+    InfoGeometry.Canonical.SMNormalizedGaugeEmbedding.derivedWeakAngleSinSq_eq_three_eighths]
+  norm_num
 
 /-- 🏆 THEOREM 5 (Chamseddine-Connes GUT Scale Weak Angle Bound):
     $0 < \sin^2 \theta_W < 1$. -/
 theorem gutWeakAngleSinSq_bounds :
     0 < gutWeakAngleSinSq ∧ gutWeakAngleSinSq < 1 := by
-  dsimp [gutWeakAngleSinSq]
+  rw [gutWeakAngleSinSq_eq_three_eighths]
   constructor <;> norm_num
 
 /-! ### 4. Master Synthesis Theorem -/
@@ -128,8 +140,8 @@ Unifies:
    $V(v) = 0$.
 4. **Second-Order Mass Generation Expansion**:
    $V(v + \phi) = 4 \lambda v^2 \phi^2 + \dots$.
-5. **GUT Weak Mixing Angle Range**:
-   $0 < \sin^2 \theta_W < 1$.
+5. **Derived GUT Weak Mixing Angle**:
+   $\sin^2\theta_W = 3/8$ from the normalized electroweak trace embedding.
 6. **Yang-Baxter Topological Integrability**:
    $F \cdot B \cdot F = R$ and $F^2 = 1$.
 -/
@@ -139,6 +151,7 @@ theorem grand_chamseddine_connes_standard_model_synthesis
     (0 ≤ spectralHiggsPotential lambda v h) ∧
     (spectralHiggsPotential lambda v v = 0) ∧
     (shiftedHiggsPotential lambda v phi = 4 * lambda * v ^ 2 * phi ^ 2 + 4 * lambda * v * phi ^ 3 + lambda * phi ^ 4) ∧
+    (gutWeakAngleSinSq = 3 / 8) ∧
     (0 < gutWeakAngleSinSq ∧ gutWeakAngleSinSq < 1) ∧
     (YangBaxterProof.F * YangBaxterProof.F = (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
     (YangBaxterProof.F * YangBaxterProof.B * YangBaxterProof.F = YangBaxterProof.R) :=
@@ -146,6 +159,7 @@ theorem grand_chamseddine_connes_standard_model_synthesis
    spectralHiggsPotential_nonneg lambda v h h_lambda,
    spectralHiggsPotential_vacuum lambda v,
    shiftedHiggsPotential_expansion lambda v phi,
+   gutWeakAngleSinSq_eq_three_eighths,
    gutWeakAngleSinSq_bounds,
    F_sq,
    F_B_F_eq_R⟩

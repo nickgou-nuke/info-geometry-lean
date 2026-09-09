@@ -2131,6 +2131,7 @@ import InfoGeometry.Canonical.CanonicalZornD4E6TrialityBridge
 import InfoGeometry.Canonical.TwistedHeckeKleinBostConnesBridge
 import InfoGeometry.Canonical.ChiralHeckeAdelicKleinReductionBridge
 import InfoGeometry.Canonical.FibonacciAnionBraidBridge
+import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
 
 namespace InfoGeometry
 

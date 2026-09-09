@@ -1,7 +1,7 @@
 - **Total PRs indexed**: 170
-- **Open PRs**: 90
+- **Open PRs**: 89
 - **Closed PRs**: 47
-- **Merged PRs**: 33
+- **Merged PRs**: 34
 - **Branches fully merged into main (0 commits ahead)**: 0
 - **Branches with commits ahead of main**: 157
 
@@ -171,7 +171,7 @@
 | #158 | OPEN | `projective-graph-hodge-zorn-bilayer` | 29 | 191 | 381 | Construct projective graph cycle decomposition and retain nonassociative Zorn bilayer defects |
 | #159 | MERGED | `complex-kramers-klein-pin55-multigrading` | 89 | 191 | 373 | Formalize complex Kramers symmetry, Klein deck quotient, and Pin(5,5) multigrading |
 | #160 | OPEN | `polarized-zorn-symmetry-reconstruction` | 10 | 191 | 373 | Formalize polarized Zorn symmetries, fundamental metric symmetry, and boundary coefficients |
-| #161 | OPEN | `polarized-minkowski55-native-clifford` | 2 | 191 | 342 | Connect polarized 10D quadratic data to native Cl(5,5), spinors, and exterior Hodge readout |
+| #161 | MERGED | `polarized-minkowski55-native-clifford` | 0 | 0 | 6 | Connect polarized 10D quadratic data to native Cl(5,5), spinors, and exterior Hodge readout |
 | #162 | MERGED | `operator-zorn-twin-weyl-klein-dirac-kahler` | 110 | 191 | 387 | Formalize twin 4-operator Zorn, modular commutant, and Klein Dirac–Kähler blocks |
 | #163 | MERGED | `operator-zorn-twin-cyclotomic-reconstruction` | 42 | 191 | 394 | Preserve full operator-Zorn twin fields and construct coefficient Fourier sectors |
 | #164 | MERGED | `graded-clifford-peirce-fourier-reconstruction` | 2 | 191 | 339 | Construct fourth-root Fourier projectors and native exterior-degree Peirce bridges |

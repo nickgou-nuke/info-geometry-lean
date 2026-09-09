@@ -1,4 +1,0 @@
-import InfoGeometry.Projective.Twistor.Basic.Density
-import InfoGeometry.Projective.Twistor.Basic.ParameterDomain
-import InfoGeometry.Projective.Twistor.Basic.Reparametrization
-import InfoGeometry.Projective.Twistor.Basic.StatisticalFamily

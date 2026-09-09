@@ -1,3 +1,0 @@
-import InfoGeometry.Krein.Clifford
-import InfoGeometry.Clifford.Lift
-import InfoGeometry.Canonical.SplitCliffordTensorBridge

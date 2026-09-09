@@ -1,2 +1,0 @@
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.Bridge
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.RelativeDeterminant

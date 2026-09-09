@@ -1,2 +1,0 @@
-import InfoGeometry.GW.VirasoroWardEquilibrium
-

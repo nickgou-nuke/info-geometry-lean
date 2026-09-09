@@ -1,4 +1,0 @@
-import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Readout
-import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.PairCancellation
-import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Pfaffian
-import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Packet

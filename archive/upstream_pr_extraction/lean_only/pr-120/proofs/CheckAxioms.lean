@@ -1,8 +1,0 @@
-import proofs.Root
-
-#print axioms nonzero_null_patch_rank_eq_one
-#print axioms nonzero_null_patch_outer_product
-#print axioms bogoliubov_preserves_kreinMetric
-#print axioms bogoliubov_preserves_kreinNull
-#print axioms kreinAdjoint_bogoliubov
-#print axioms bogoliubovTransform_eq

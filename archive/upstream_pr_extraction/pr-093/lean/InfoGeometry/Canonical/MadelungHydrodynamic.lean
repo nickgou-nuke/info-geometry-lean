@@ -1,9 +1,0 @@
-import InfoGeometry.Canonical.MadelungHydrodynamicPressureBridge
-import InfoGeometry.Canonical.MadelungTopologicalSpin
-import InfoGeometry.Canonical.MadelungNavierStokesClosure
-
-noncomputable section
-
-namespace InfoGeometry.Canonical.MadelungHydrodynamic
-
-end InfoGeometry.Canonical.MadelungHydrodynamic

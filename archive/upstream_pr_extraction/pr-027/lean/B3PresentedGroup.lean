@@ -1,1 +1,0 @@
-/media/goutev/SP DS72/auto/proofs/B3PresentedGroup.lean

@@ -1,1 +1,0 @@
-import InfoGeometry.Topology.ArtinBraidS3Quotient

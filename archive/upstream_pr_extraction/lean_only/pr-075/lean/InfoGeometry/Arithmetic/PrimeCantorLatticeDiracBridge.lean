@@ -1,3 +1,0 @@
-import InfoGeometry.Arithmetic.PrimeBooleanCube
-import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
-import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac

@@ -1,1 +1,0 @@
-import InfoGeometry.Algebra.QuadraticJordanH3Zorn

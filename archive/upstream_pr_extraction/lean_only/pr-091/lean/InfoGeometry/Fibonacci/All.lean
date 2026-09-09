@@ -1,7 +1,0 @@
-import InfoGeometry.Fibonacci.FibAnyonThm1
-import InfoGeometry.Fibonacci.FibAnyonThm2
-import InfoGeometry.Fibonacci.FibAnyonThm3
-import InfoGeometry.Fibonacci.FibAnyonSpectralObstruction
-import InfoGeometry.Fibonacci.FibAnyonThm4
-import InfoGeometry.Fibonacci.FibAnyonThm5
-import InfoGeometry.Fibonacci.HexagonCocycle

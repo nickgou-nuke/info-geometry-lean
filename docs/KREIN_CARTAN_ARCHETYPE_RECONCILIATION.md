@@ -1,6 +1,6 @@
 # Krein–Cartan archetype reconciliation
 
-Status: source audit in progress; no new kernel or master-build certification.
+Status: source audit in progress; targeted owner builds verified; master gates incomplete.
 Starting revision: `20f780b1f`.
 
 ## Preserved mathematical intent
@@ -89,3 +89,38 @@ Before compilation, inspect running compiler processes and use the repository's
 shared build lock for Lake builds. The user corrected the stale task-tool memo.
 Browser-harness requires local Chrome remote debugging before literature
 verification can proceed. No claim of exhaustive literature review is made.
+
+## Verified boundary and contraction record (2026-09-09)
+
+The locked builds of `IwasawaMaurerCartanBdGBridge` (3,102 jobs) and
+`IwasawaCuntzKleinWeakBridge` (8,305 jobs) succeeded before this contraction.
+Dependency and linter warnings remain; neither result certifies the master
+quality gates or the physical interpretations.
+
+A recursive content scan of 5,956,472 files (Git metadata and protected
+`.lake/packages` excluded, default ripgrep binary handling) found the targeted
+packet and duplicate names only in the bridge and its generated `.ilean`.
+The complete output is `/tmp/krein-interface-dependents.jsonl`; the scan exited
+successfully with 15 matched lines and no errors.
+
+Preserved content when contracting the packet and two forwarding declarations:
+
+- `cuntz_car_ladder_nilpotent`: the identical base CAR squaring law remains
+  `kawamuraCAR_base_nilpotent` in `lean/InfoGeometry/Algebra.lean`.
+- `horocycle_realizes_cuntz_nilpotency`: the identical matrix squaring law remains
+  `matN_maurer_cartan_sq` in `IwasawaMaurerCartanBdGBridge.lean`.
+- `IwasawaCuntzKleinWeakIntegrationPacket`, its constructor, and its reflexive
+  certification theorem merely package existing proofs. Every other field's
+  mathematical proposition remains an individual theorem in the bridge.
+  Their intended compatibility chain still requires actual representation maps;
+  a collection of propositions does not supply the missing maps.
+
+No Cuntz-to-Clifford equivalence, doubled-space compatibility, modular dynamics,
+or physical condensation theorem is inferred from this contraction.
+
+Post-contraction verification: the shared-lock build rebuilt
+`InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge` successfully (8,305 jobs;
+owner compilation 4.1 seconds). `git diff --cached --check` passed. Existing
+linter/dependency warnings remain. Full log: `/tmp/krein-contraction-build.log`.
+This validates the retained Lean declarations after removing the 77-line
+redundant surface; it does not certify the remaining interpretation claims.

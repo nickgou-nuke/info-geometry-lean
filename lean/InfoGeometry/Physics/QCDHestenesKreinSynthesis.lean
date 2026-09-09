@@ -29,6 +29,7 @@ open InfoGeometry.Physics.QCDHestenesRealColorRepresentation
 open InfoGeometry.Physics.QCDHestenesKreinFockPhaseBridge
 open InfoGeometry.Physics.QCDHestenesKreinInterfaces
 open InfoGeometry.Physics.QCDZornCl55FureyBridge
+open InfoGeometry.Clifford.Cl11TensorTower
 
 /-- The real colour carrier with its internal Hestenes complex structure. -/
 def realColorInternalComplex : InternalComplexCarrier RealColorLane where
@@ -44,6 +45,27 @@ theorem internal_complex_prerequisites_packet :
         -(1 : Module.End ℝ RealColorLane) ∧
     fockJ * fockJ = -(1 : FockMat) := by
   exact ⟨realColorJ_sq, fockJ_sq⟩
+
+theorem hestenes_krein_parallel_packet :
+    realColorJ * realColorJ = -(1 : Module.End ℝ RealColorLane) ∧
+    realColorConj * realColorConj = (1 : Module.End ℝ RealColorLane) ∧
+    realColorConj * realColorJ = -(realColorJ * realColorConj) ∧
+    Function.Injective realColorAction ∧
+    (∀ A : M3C, realColorAction A * realColorJ = realColorJ * realColorAction A) ∧
+    fockJ * fockJ = -(1 : FockMat) ∧
+    fockJ * globalChirality 5 + globalChirality 5 * fockJ = 0 := by
+  exact ⟨realColorJ_sq, realColorConj_sq, realColorConj_anticomm_J,
+    realColorAction_injective, realColorAction_commutes_J,
+    fockJ_sq, fockJ_anticomm_chirality⟩
+
+theorem hestenes_zorn_furey_carrier_packet :
+    Function.Injective canonicalZornToCl55 ∧
+    (∀ i : Fin 3,
+      canonicalZornToCl55 (canonicalColorGenerator i) =
+        (2 : ℝ) • InfoGeometry.Clifford.Clifford55.chiralPlus55 i) ∧
+    realColorJ * realColorJ = -(1 : Module.End ℝ RealColorLane) := by
+  exact ⟨canonicalZornToCl55_injective,
+    canonicalZornToCl55_colorGenerator, realColorJ_sq⟩
 
 end InfoGeometry.Physics.QCDHestenesKreinSynthesis
 

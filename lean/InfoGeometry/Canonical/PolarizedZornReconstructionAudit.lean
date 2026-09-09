@@ -60,6 +60,7 @@ import InfoGeometry.Canonical.PolarizedZornReconstruction
 #print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.hilbertized_nonneg
 #print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.hilbertized_zero_iff
 #print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.hilbertized_pos
+#print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.zornChirality
 #print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.diagonal_negative_witness
 #print axioms InfoGeometry.Canonical.ZornPolarizationMetricBridge.null_not_square_zero
 #print axioms InfoGeometry.Clifford.PolarizedFourVectorNeutralCarrier.FourVectorLayout

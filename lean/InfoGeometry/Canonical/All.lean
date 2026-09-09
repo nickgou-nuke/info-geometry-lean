@@ -2129,6 +2129,7 @@ import InfoGeometry.Canonical.CanonicalZornAlbertE6Bridge
 import InfoGeometry.Canonical.CanonicalZornAmariMoebiusBridge
 import InfoGeometry.Canonical.CanonicalZornD4E6TrialityBridge
 import InfoGeometry.Canonical.TwistedHeckeKleinBostConnesBridge
+import InfoGeometry.Canonical.ChiralHeckeAdelicKleinReductionBridge
 
 namespace InfoGeometry
 

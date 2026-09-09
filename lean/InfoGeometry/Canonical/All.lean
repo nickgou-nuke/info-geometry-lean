@@ -2122,6 +2122,7 @@ import InfoGeometry.Canonical.AAVWeakMeasurementKleinSeamBridge
 import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
 import InfoGeometry.Canonical.ModularWedgeAAVInterferenceBridge
 import InfoGeometry.Canonical.KreinRindlerBogoliubovBridge
+import InfoGeometry.Canonical.IwasawaMaurerCartanBdGBridge
 
 namespace InfoGeometry
 

@@ -75,32 +75,6 @@ theorem gradient_inner_incidence (phi : V → ℝ) (J : EuclideanSpace ℝ E) :
   simpa [PiLp.inner_apply, RCLike.inner_apply, mul_comm] using
     coboundary_incidence_pairing G phi (fun e => J e)
 
-theorem mem_orthogonal_gradient_iff (J : EuclideanSpace ℝ E) :
-    J ∈ (gradientSubspace G)ᗮ ↔ G.IsCycleFlow (fun e => J e) := by
-  classical
-  constructor
-  · intro hJ v
-    let phi : V → ℝ := fun u => if u = v then 1 else 0
-    have hinner : ⟪gradientEuclidean G phi, J⟫_ℝ = 0 :=
-      ((gradientSubspace G).mem_orthogonal J).mp hJ _ ⟨phi, rfl⟩
-    rw [gradient_inner_incidence] at hinner
-    have hsum : (∑ u, phi u * G.incidenceMap (fun e => J e) u) =
-        G.incidenceMap (fun e => J e) v := by
-      simp [phi]
-    rw [hsum] at hinner
-    exact neg_eq_zero.mp hinner
-  · intro hJ
-    apply ((gradientSubspace G).mem_orthogonal J).mpr
-    rintro a ⟨phi, rfl⟩
-    rw [gradient_inner_incidence]
-    simp [hJ]
-
-theorem steady_pair_gauge_shift (J a : E → ℝ) (hJ : G.IsCycleFlow J)
-    (phi : V → ℝ) :
-    (∑ e, J e * (a e + G.gaugeCoboundary phi e)) = ∑ e, J e * a e := by
-  simp only [mul_add, Finset.sum_add_distrib]
-  rw [steady_pair_coboundary_zero G J hJ phi, add_zero]
-
 def gradientComponent (a : E → ℝ) : EuclideanSpace ℝ E :=
   (gradientSubspace G).starProjection (WithLp.toLp 2 a)
 
@@ -176,6 +150,12 @@ theorem steady_pair_coboundary_zero (J : E → ℝ) (hJ : G.IsCycleFlow J)
           simp_rw [Finset.sum_sub_distrib]
           ring
     _ = 0 := by simpa [hzero]
+
+theorem steady_pair_gauge_shift (J a : E → ℝ) (hJ : G.IsCycleFlow J)
+    (phi : V → ℝ) :
+    (∑ e, J e * (a e + G.gaugeCoboundary phi e)) = ∑ e, J e * a e := by
+  simp only [mul_add, Finset.sum_add_distrib]
+  rw [steady_pair_coboundary_zero G J hJ phi, add_zero]
 
 theorem steady_pair_cycleComponent (J a : E → ℝ) (hJ : G.IsCycleFlow J) :
     (∑ e, J e * a e) =
